@@ -1,0 +1,6 @@
+[component_0]
+type = Library
+name = K1CDesc
+parent = K1C
+required_libraries = MC K1CInfo K1CAsmPrinter Support
+add_to_library_groups = K1C
