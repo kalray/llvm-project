@@ -40,11 +40,6 @@ public:
 
 #include "K1CGenMCPseudoLowering.inc"
 
-void LowerK1CMachineInstrToMCInst(const MachineInstr *MI, MCInst &OutMI,
-                                  const AsmPrinter &AP) {
-  OutMI.setOpcode(MI->getOpcode());
-}
-
 void K1CAsmPrinter::EmitInstruction(const MachineInstr *MI) {
   // Do any auto-generated pseudo lowerings.
   if (emitPseudoExpansionLowering(*OutStreamer, MI))
