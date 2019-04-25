@@ -21,6 +21,7 @@ add_llvm_target(K1CCodeGen
     K1CFrameLowering.cpp
     K1CTargetObjectFile.cpp
     K1CSubtarget.cpp
+    K1CMCInstLower.cpp
     )
 
 add_subdirectory(TargetInfo)
