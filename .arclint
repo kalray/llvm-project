@@ -1,0 +1,13 @@
+{
+  "linters": {
+    "Text linter": {
+      "type": "text",
+      "severity": {
+        "2": "warning"
+      }
+    },
+    "Merge Conflicts": {
+      "type": "merge-conflict"
+    }
+  }
+}

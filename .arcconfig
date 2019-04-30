@@ -1,4 +1,4 @@
 {
-  "repository.callsign" : "G",
-  "conduit_uri" : "https://reviews.llvm.org/"
+  "repository.callsign": "LLVMPROJECT",
+  "phabricator.codereview": "true"
 }
