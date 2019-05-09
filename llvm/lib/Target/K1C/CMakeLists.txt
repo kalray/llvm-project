@@ -7,7 +7,7 @@ tablegen(LLVM K1CGenDAGISel.inc -gen-dag-isel)
 tablegen(LLVM K1CGenSubtargetInfo.inc -gen-subtarget)
 tablegen(LLVM K1CGenMCPseudoLowering.inc -gen-pseudo-lowering)
 #tablegen(LLVM K1CGenCompressInstEmitter.inc -gen-compress-inst-emitter)
-#tablegen(LLVM K1CGenCallingConv.inc -gen-callingconv)
+tablegen(LLVM K1CGenCallingConv.inc -gen-callingconv)
 
 add_public_tablegen_target(K1CCommonTableGen)
 
