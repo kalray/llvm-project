@@ -18,22 +18,43 @@ class K1C_PseudoInstr<dag outs, dag ins, string asmstr, list<dag> pattern>
 def __UNKNOWN_ITIN__ : InstrItinClass {
 }
 
+def Signed10 : Operand<i32>, ImmLeaf<i32,  [{
+  return Imm>=-(1<<9) && Imm<(1<<9);
+}]>;
+
+def Signed16 : Operand<i32>, ImmLeaf<i32, [{
+  return Imm>=-(1<<15) && Imm<(1<<15);
+}]>;
+
+def Signed32 : Operand<i32>, ImmLeaf<i32, [{return isInt<32>(Imm);}]>;
+
+def Signed37 : Operand<i64>, ImmLeaf<i64, [{
+  return Imm>=-(1<<36) && Imm<(1<<36);
+}]>;
+
+def Signed43 : Operand<i64>, ImmLeaf<i64, [{
+  return Imm>=-(1<<42) && Imm<(1<<42);
+}]>;
+
+def Wrapped64 : Operand<i64>, ImmLeaf<i64, [{return isInt<64>(Imm);}]>;
+
+def Pcrel27 : Operand<i64> {
+}
+
+
 def Sysnumber : Operand<OtherVT> {
 }
 
-def Signed10 : Operand<OtherVT> {
+def VariantMod : Operand<i8> {
+  let PrintMethod = "printVariantMod";
 }
 
-def VariantMod : Operand<OtherVT> {
+def ScalingMod : Operand<i8> {
+  let PrintMethod = "printScalingMod";
 }
 
-def Signed37 : Operand<OtherVT> {
-}
-
-def Wrapped64 : Operand<OtherVT> {
-}
-
-def ScalarcondMod : Operand<OtherVT> {
+def ScalarcondMod : Operand<i8> {
+  let PrintMethod = "printScalarcondMod";
 }
 
 def Signed27 : Operand<OtherVT> {
@@ -42,8 +63,6 @@ def Signed27 : Operand<OtherVT> {
 def Signed54 : Operand<OtherVT> {
 }
 
-def ScalingMod : Operand<OtherVT> {
-}
 
 def SpeculateMod : Operand<OtherVT> {
 }
@@ -63,11 +82,6 @@ def Unsigned6 : Operand<OtherVT> {
 def ComparisonMod : Operand<OtherVT> {
 }
 
-def Signed16 : Operand<OtherVT> {
-}
-
-def Signed43 : Operand<OtherVT> {
-}
 
 def FloatcompMod : Operand<OtherVT> {
 }
@@ -81,8 +95,6 @@ def SilentMod : Operand<OtherVT> {
 def Pcrel17 : Operand<OtherVT> {
 }
 
-def Pcrel27 : Operand<OtherVT> {
-}
 
 def SimplecondMod : Operand<OtherVT> {
 }
@@ -95,3 +107,6 @@ def SaturateMod : Operand<OtherVT> {
 
 def RectifyMod : Operand<OtherVT> {
 }
+
+def SDT_K1CCall : SDTypeProfile<0, -1, [SDTCisVT<0, i64>]>;
+def Call : SDNode<"K1CISD::CALL", SDT_K1CCall, [SDNPHasChain, SDNPOptInGlue, SDNPOutGlue, SDNPVariadic]>;

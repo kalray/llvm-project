@@ -10,7 +10,7 @@ class MCOperand;
 class K1CInstPrinter : public MCInstPrinter {
 public:
   K1CInstPrinter(const MCAsmInfo &MAI, const MCInstrInfo &MII,
-                const MCRegisterInfo &MRI)
+                 const MCRegisterInfo &MRI)
       : MCInstPrinter(MAI, MII, MRI) {}
 
   void printInst(const MCInst *MI, raw_ostream &O, StringRef Annot,
@@ -32,6 +32,18 @@ public:
                        raw_ostream &O);
   static const char *getRegisterName(unsigned RegNo/*,
                                      unsigned AltIdx = 0 /*K1::ABIRegAltName*/);
+
+  void printVariantMod(const MCInst *MI, unsigned OpNo,
+                       /*const MCSubtargetInfo &STI,*/ raw_ostream &O);
+
+  void printScalingMod(const MCInst *MI, unsigned OpNo,
+                       /*const MCSubtargetInfo &STI,*/ raw_ostream &O);
+
+  void printScalarcondMod(const MCInst *MI, unsigned OpNo,
+                       /*const MCSubtargetInfo &STI,*/ raw_ostream &O);
+
+  void printMemOperand(const MCInst *MI, unsigned OpNo,
+                       /*const MCSubtargetInfo &STI,*/ raw_ostream &O);
 };
 } // namespace llvm
 
