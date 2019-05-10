@@ -12,7 +12,12 @@ namespace llvm {
 class K1CSubtarget;
 
 namespace K1CISD {
-enum NodeType : unsigned { FIRST_NUMBER = ISD::BUILTIN_OP_END, RET, CALL };
+enum NodeType : unsigned {
+  FIRST_NUMBER = ISD::BUILTIN_OP_END,
+  RET,
+  CALL,
+  Wrapper,
+};
 } // namespace K1CISD
 
 class K1CTargetLowering : public TargetLowering {
