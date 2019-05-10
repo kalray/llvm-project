@@ -179,7 +179,7 @@ def MemRI : Operand<iPTR> {
 }
 
 // def K1CSW : K1C_INSTRUCTION<(outs), (ins MemRI:$addr, SingleReg:$val), "sw $addr = $val", [(store i32:$val,ADDRri:$addr)], NoItinerary>;
-// def K1CSD : K1C_INSTRUCTION<(outs), (ins MemRI:$addr, SingleReg:$val), "sd $addr = $val", [(store i64:$val,ADDRri:$addr)], NoItinerary>;
+def K1CSD : K1C_INSTRUCTION<(outs), (ins MemRI:$addr, SingleReg:$val), "sd $addr = $val", [(store i64:$val,ADDRri:$addr)], NoItinerary>;
 
 //def : Pat<(store ADDRri:$addr, SingleReg:$value),
 //    (K1CSD MemRI:$addr, SingleReg:$value)>;

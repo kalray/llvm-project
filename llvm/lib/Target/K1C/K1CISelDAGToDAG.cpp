@@ -40,22 +40,41 @@ bool K1CDAGToDAGISel::SelectAddrFI(SDValue Addr, SDValue &FrameIndex) {
   return false;
 }
 
-bool K1CDAGToDAGISel::SelectAddrRI(SDValue Addr, SDValue &Base, SDValue &Index) {
+bool K1CDAGToDAGISel::SelectAddrRI(SDValue Addr, SDValue &Base,
+                                   SDValue &Index) {
   if (FrameIndexSDNode *FIN = dyn_cast<FrameIndexSDNode>(Addr)) {
     Base = CurDAG->getRegister(K1C::R12, MVT::i64);
     Index = CurDAG->getTargetFrameIndex(
         FIN->getIndex(), TLI->getPointerTy(CurDAG->getDataLayout()));
     return true;
-  } 
+  }
+  if (Addr.getOpcode() == ISD::ADD) {
+    if (ConstantSDNode *CN = dyn_cast<ConstantSDNode>(Addr.getOperand(1))) {
+      if (isInt<64>(CN->getSExtValue())) {
+        if (FrameIndexSDNode *FIN =
+                dyn_cast<FrameIndexSDNode>(Addr.getOperand(0))) {
+          // Constant offset from frame ref
+          return false;
+          /*Base = CurDAG->getTargetFrameIndex(
+              FIN->getIndex(), TLI->getPointerTy(CurDAG->getDataLayout()));*/
+        } else {
+          Base = Addr.getOperand(0);
+        }
+        Index = CurDAG->getTargetConstant(CN->getZExtValue(), SDLoc(Addr),
+                                          MVT::i64);
+        return true;
+      }
+    }
+  }
   Base = Addr;
   Index = CurDAG->getTargetConstant(0, SDLoc(Addr), MVT::i64);
   return true;
 }
 
-bool K1CDAGToDAGISel::SelectAddrRR(SDValue Addr, SDValue &Base, SDValue &Index) {
+bool K1CDAGToDAGISel::SelectAddrRR(SDValue Addr, SDValue &Base,
+                                   SDValue &Index) {
   return false;
 }
-
 
 void K1CDAGToDAGISel::Select(SDNode *Node) {
   if (Node->isMachineOpcode()) {

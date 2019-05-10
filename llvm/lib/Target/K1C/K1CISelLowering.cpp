@@ -203,8 +203,6 @@ SDValue K1CTargetLowering::LowerCall(CallLoweringInfo &CLI,
       // Queue up the argument copies and emit them at the end.
       RegsToPass.push_back(std::make_pair(VA.getLocReg(), ArgValue));
     } else {
-      assert(false && "Storing arguments on stack not yet working");
-      
       assert(VA.isMemLoc() && "Argument not register or memory");
       assert(!isTailCall && "Tail call not allowed if stack is used "
                             "for passing parameters");
@@ -213,9 +211,11 @@ SDValue K1CTargetLowering::LowerCall(CallLoweringInfo &CLI,
       if (!StackPtr.getNode())
         StackPtr = DAG.getCopyFromReg(Chain, dl, K1C::R12, PtrVT);
 
-      // Emit the store.
+      // Create a store off the stack pointer for this argument.
+      SDValue PtrOff = DAG.getIntPtrConstant(VA.getLocMemOffset(), dl);
+      PtrOff = DAG.getNode(ISD::ADD, dl, MVT::i64, StackPtr, PtrOff);
       MemOpChains.push_back(
-          DAG.getStore(Chain, dl, DAG.getIntPtrConstant(VA.getLocMemOffset(), dl), StackPtr, MachinePointerInfo()));                            
+          DAG.getStore(Chain, dl, ArgValue, PtrOff, MachinePointerInfo()));
     }
   }
 

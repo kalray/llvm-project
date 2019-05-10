@@ -43,54 +43,11 @@ void K1CFrameLowering::adjustReg(MachineBasicBlock &MBB,
       .setMIFlag(Flag);
 }
 
-unsigned findScratchRegister(MachineBasicBlock &MBB, bool UseAtEnd) {
-  RegScavenger RS;
-
-  unsigned ScratchRegister = K1C::R16;
-
-  RS.enterBasicBlock(MBB);
-
-  if (UseAtEnd && !MBB.empty()) {
-    // The scratch register will be used at the end of the block, so must
-    // consider all registers used within the block
-
-    MachineBasicBlock::iterator MBBI = MBB.getFirstTerminator();
-    // If no terminator, back iterator up to previous instruction.
-    if (MBBI == MBB.end())
-      MBBI = std::prev(MBBI);
-
-    if (MBBI != MBB.begin())
-      RS.forward(MBBI);
-  }
-
-  if (!RS.isRegUsed(ScratchRegister))
-    return ScratchRegister;
-
-  // Get the list of callee-saved registers for the target.
-  MachineFunction *MF = MBB.getParent();
-  const K1CSubtarget &Subtarget = MF->getSubtarget<K1CSubtarget>();
-  const K1CRegisterInfo &RegInfo = *Subtarget.getRegisterInfo();
-  const MCPhysReg *CSRegs = RegInfo.getCalleeSavedRegs(MBB.getParent());
-
-  // Get all the available registers in the block.
-  BitVector BV = RS.getRegsAvailable(&K1C::SingleRegRegClass);
-
-  // We shouldn't use callee-saved registers as scratch registers as they may be
-  // available when looking for a candidate block for shrink wrapping but not
-  // available when the actual prologue/epilogue is being emitted because they
-  // were added as live-in to the prologue block by PrologueEpilogueInserter.
-  for (int i = 0; CSRegs[i]; ++i)
-    BV.reset(CSRegs[i]);
-
-  int FirstScratchReg = BV.find_first();
-  ScratchRegister =
-      FirstScratchReg == -1 ? (unsigned)K1C::NoRegister : FirstScratchReg;
-
-  return ScratchRegister;
-}
-
 void K1CFrameLowering::emitPrologue(MachineFunction &MF,
                                     MachineBasicBlock &MBB) const {
+
+  bool leafProc = isLeafProc(MF);
+
   assert(&MF.front() == &MBB && "Shrink-wrapping not yet supported");
 
   MachineBasicBlock::iterator MBBI = MBB.begin();
@@ -106,23 +63,12 @@ void K1CFrameLowering::emitPrologue(MachineFunction &MF,
   DebugLoc DL;
   unsigned SPReg = getSPReg(STI);
 
-  adjustReg(MBB, MBBI, DL, GetStackOpCode((uint64_t)StackSize), SPReg, SPReg, -StackSize,
-            MachineInstr::FrameSetup);
+  adjustReg(MBB, MBBI, DL, GetStackOpCode((uint64_t)StackSize), SPReg, SPReg,
+            -StackSize, MachineInstr::FrameSetup);
 
   const K1CInstrInfo *TII = STI.getInstrInfo();
 
-  if (!isLeafProc(MF)) {
-    unsigned ScratchReg = findScratchRegister(MBB, false);
-    assert(ScratchReg != K1C::NoRegister);
-
-    BuildMI(MBB, MBBI, DL, TII->get(K1C::GET), ScratchReg)
-        .addReg(K1C::RA)
-        .setMIFlag(MachineInstr::FrameSetup);
-    BuildMI(MBB, MBBI, DL, TII->get(K1C::SDd0))
-        .addImm(0)
-        .addReg(SPReg)
-        .addReg(ScratchReg, RegState::Kill)
-        .setMIFlag(MachineInstr::FrameSetup);
+  if (!leafProc) {
   }
 }
 
@@ -135,6 +81,9 @@ bool K1CFrameLowering::isLeafProc(MachineFunction &MF) const {
 
 void K1CFrameLowering::emitEpilogue(MachineFunction &MF,
                                     MachineBasicBlock &MBB) const {
+
+  bool leafProc = isLeafProc(MF);
+
   MachineBasicBlock::iterator MBBI = MBB.getLastNonDebugInstr();
   MachineFrameInfo &MFI = MF.getFrameInfo();
 
@@ -148,18 +97,7 @@ void K1CFrameLowering::emitEpilogue(MachineFunction &MF,
 
   const K1CInstrInfo *TII = STI.getInstrInfo();
 
-  if (!isLeafProc(MF)) {
-    unsigned ScratchReg = findScratchRegister(MBB, true);
-    assert(ScratchReg != K1C::NoRegister);
-
-    BuildMI(MBB, MBBI, DL, TII->get(K1C::LDd0), ScratchReg)
-        .addImm(0)
-        .addReg(SPReg)
-        .addImm(0)
-        .setMIFlag(MachineInstr::FrameDestroy);
-    BuildMI(MBB, MBBI, DL, TII->get(K1C::SETd2), K1C::RA)
-        .addReg(ScratchReg, RegState::Kill)
-        .setMIFlag(MachineInstr::FrameDestroy);
+  if (!leafProc) {
   }
 
   // Deallocate stack
@@ -185,7 +123,6 @@ void K1CFrameLowering::determineCalleeSaves(MachineFunction &MF,
                                             RegScavenger *RS) const {
   TargetFrameLowering::determineCalleeSaves(MF, SavedRegs, RS);
 
-  // SavedRegs.set(K1C::RA);
   // Unconditionally spill RA and FP only if the function uses a frame
   // pointer.
   if (hasFP(MF)) {
