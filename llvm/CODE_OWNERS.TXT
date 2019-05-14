@@ -202,6 +202,10 @@ N: Evgeniy Stepanov
 E: eugenis@google.com
 D: MemorySanitizer (LLVM part)
 
+N: Laurent Thevenoux
+E: lthevenoux@kalray.eu
+D: K1C Backend
+
 N: Craig Topper
 E: craig.topper@gmail.com
 E: craig.topper@intel.com
