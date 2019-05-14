@@ -384,6 +384,8 @@ set(LLVM_ALL_TARGETS
   WebAssembly
   X86
   XCore
+  RISCV
+  K1C
   )
 
 # List of targets with JIT support:
