@@ -68,6 +68,7 @@ StringRef Triple::getArchTypeName(ArchType Kind) {
   case shave:          return "shave";
   case wasm32:         return "wasm32";
   case wasm64:         return "wasm64";
+  case k1c:            return "k1c";
   case renderscript32: return "renderscript32";
   case renderscript64: return "renderscript64";
   }
@@ -144,6 +145,8 @@ StringRef Triple::getArchTypePrefix(ArchType Kind) {
 
   case riscv32:
   case riscv64:     return "riscv";
+
+  case k1c:         return "k1c";
   }
 }
 
@@ -315,6 +318,7 @@ Triple::ArchType Triple::getArchTypeForLLVMName(StringRef Name) {
     .Case("wasm64", wasm64)
     .Case("renderscript32", renderscript32)
     .Case("renderscript64", renderscript64)
+    .Case("k1c", k1c)
     .Default(UnknownArch);
 }
 
@@ -443,6 +447,7 @@ static Triple::ArchType parseArch(StringRef ArchName) {
     .Case("wasm64", Triple::wasm64)
     .Case("renderscript32", Triple::renderscript32)
     .Case("renderscript64", Triple::renderscript64)
+    .Case("k1c", Triple::k1c)
     .Default(Triple::UnknownArch);
 
   // Some architectures require special parsing logic just to compute the
@@ -701,6 +706,7 @@ static Triple::ObjectFormatType getDefaultFormat(const Triple &T) {
   case Triple::tcele:
   case Triple::thumbeb:
   case Triple::xcore:
+  case Triple::k1c:
     return Triple::ELF;
 
   case Triple::ppc:
@@ -1284,6 +1290,7 @@ static unsigned getArchPointerBitWidth(llvm::Triple::ArchType Arch) {
   case llvm::Triple::spir64:
   case llvm::Triple::wasm64:
   case llvm::Triple::renderscript64:
+  case llvm::Triple::k1c:
     return 64;
   }
   llvm_unreachable("Invalid architecture value");
@@ -1312,6 +1319,7 @@ Triple Triple::get32BitArchVariant() const {
   case Triple::msp430:
   case Triple::systemz:
   case Triple::ppc64le:
+  case Triple::k1c:
     T.setArch(UnknownArch);
     break;
 
@@ -1404,6 +1412,7 @@ Triple Triple::get64BitArchVariant() const {
   case Triple::x86_64:
   case Triple::wasm64:
   case Triple::renderscript64:
+  case Triple::k1c:
     // Already 64-bit.
     break;
 
@@ -1462,6 +1471,7 @@ Triple Triple::getBigEndianArchVariant() const {
   case Triple::xcore:
   case Triple::renderscript32:
   case Triple::renderscript64:
+  case Triple::k1c:
 
   // ARM is intentionally unsupported here, changing the architecture would
   // drop any arch suffixes.
@@ -1553,6 +1563,7 @@ bool Triple::isLittleEndian() const {
   case Triple::tcele:
   case Triple::renderscript32:
   case Triple::renderscript64:
+  case Triple::k1c:
     return true;
   default:
     return false;
