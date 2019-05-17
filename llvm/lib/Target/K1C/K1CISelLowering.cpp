@@ -297,12 +297,15 @@ SDValue K1CTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
 SDValue K1CTargetLowering::lowerGlobalAddress(SDValue Op,
                                               SelectionDAG &DAG) const {
   SDLoc DL(Op);
-  EVT Ty = Op.getValueType();
+  auto PtrVT = getPointerTy(DAG.getDataLayout());
   GlobalAddressSDNode *N = cast<GlobalAddressSDNode>(Op);
   const GlobalValue *GV = N->getGlobal();
 
   if (isPositionIndependent())
     report_fatal_error("Unable to lowerGlobalAddress");
 
-  return SDValue(DAG.getTargetGlobalAddress(GV, DL, Ty, 0, 0));
+  SDValue Result = DAG.getTargetGlobalAddress(GV, DL, PtrVT, 0);
+  Result = DAG.getNode(K1CISD::Wrapper, DL, PtrVT, Result);
+
+  return Result;
 }
