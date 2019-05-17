@@ -777,12 +777,14 @@ def X15 : XRF<15, "$a60a61a62a63", [C240, C241, C242, C243, C244, C245, C246, C2
 
 def PSReg : RegisterClass<"K1C", [i1, i8, i16, i32, i64, f16, f32, f64, v8i8, v4i16, v2i32, v4f16, v2f32], 64, (add PS)>;
 
+let Size = 64 in
 def RAReg : RegisterClass<"K1C", [i1, i8, i16, i32, i64, f16, f32, f64, v8i8, v4i16, v2i32, v4f16, v2f32], 64, (add RA)>;
 
 // SRF - System Register File
 def SystemReg : RegisterClass<"K1C", [i1, i8, i16, i32, i64, f16, f32, f64, v8i8, v4i16, v2i32, v4f16, v2f32], 64, (add PC, PS, SPC, SPS, SSPC, SSPS, SR3, SR4, CS, RA, PI, LS, LE, LC, EA, EV, RES0, RES1, RES2, RES3, EV4, MEN, PMSA, AESPC, PM0, PM1, PM2, PM3, PMC, SR0, SR1, SR2, T0V, T1V, T0R, T1R, TC, WDC, WDR, ILE, ILL, ILH, MMC, TEL, TEH, DV, OCE0, OCE1, OCEC, OCEA, ES, ILR, WS, MES)>;
 
 // GRF - General Register File
+let Size = 64 in
 def SingleReg : RegisterClass<"K1C", [i1, i8, i16, i32, i64, f16, f32, f64, v8i8, v4i16, v2i32, v4f16, v2f32], 64, (add R0, R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21, R22, R23, R24, R25, R26, R27, R28, R29, R30, R31, R32, R33, R34, R35, R36, R37, R38, R39, R40, R41, R42, R43, R44, R45, R46, R47, R48, R49, R50, R51, R52, R53, R54, R55, R56, R57, R58, R59, R60, R61, R62, R63)>;
 
 // PRF - Paired Register File
