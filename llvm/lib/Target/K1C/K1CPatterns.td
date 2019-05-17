@@ -7,6 +7,10 @@
 //
 //===----------------------------------------------------------------------===//
 
+def SDTK1CWrapper : SDTypeProfile<1, 1, [SDTCisSameAs<0, 1>, SDTCisPtrTy<0>]>;
+
+def K1CWrapper : SDNode<"K1CISD::Wrapper", SDTK1CWrapper>;
+
 //
 // Function return
 //
@@ -14,12 +18,13 @@
 def K1CRetNode : SDNode<"K1CISD::RET", SDTNone,
                        [SDNPHasChain, SDNPOptInGlue, SDNPMayLoad, SDNPVariadic]>;
 
+
 //let isBarrier = 1, isReturn = 1, isTerminator = 1 in
 //def K1CRet : K1C_INSTRUCTION<(outs), (ins), "ret", [(K1CRetNode)], NoItinerary>;
 
 def : Pat<(K1CRetNode),(RET)>;
 
-def : Pat<(Call tglobaladdr:$func),(CALL Pcrel27:$func)>;
+def : Pat<(Call (K1CWrapper tglobaladdr:$func)),(CALL Pcrel27:$func)>;
 def : Pat<(Call texternalsym:$func),(CALL Pcrel27:$func)>;
 
 def Bundle : K1C_INSTRUCTION<(outs), (ins), ";;", [], NoItinerary>;
@@ -87,6 +92,21 @@ def : Pat<(store (i64 SingleReg:$rs1), AddrFI:$rs2),
 def : Pat<(store (i32 SingleReg:$rs1), iPTR:$rs2),
     (SWd0 (i32 0), SingleReg:$rs2, SingleReg:$rs1)>;
 
+def : Pat<(K1CWrapper tglobaladdr:$dst),
+    (MAKEd2 tglobaladdr:$dst)>;
+
+def : Pat<(truncstorei8 (i32 SingleReg:$rs1), (i64 SingleReg:$rs2)),
+    (SBd0 (i32 0), SingleReg:$rs2, SingleReg:$rs1)>;
+
+def : Pat<(truncstorei16 (i32 SingleReg:$rs1), (i64 SingleReg:$rs2)),
+    (SHd0 (i32 0), SingleReg:$rs2, SingleReg:$rs1)>;
+
+def : Pat<(store (i32 SingleReg:$rs1), (i64 SingleReg:$rs2)),
+    (SWd0 (i32 0), SingleReg:$rs2, SingleReg:$rs1)>;
+
+def : Pat<(store (i64 SingleReg:$rs1), (i64 SingleReg:$rs2)),
+    (SDd0 (i32 0), SingleReg:$rs2, SingleReg:$rs1)>;
+
 /*def : Pat<(store (i64 SingleReg:$rs1), (i64 SingleReg:$rs2)),
     (SDd3 SingleReg:$rs1, (i64 R12), SingleReg:$rs2, (i8 0))>;*/
 
@@ -130,6 +150,18 @@ def : Pat<(loadi32 (iPTR AddrFI:$rs2)),
 
 def : Pat<(loadi64 (iPTR AddrFI:$rs2)),
     (LDd0 Signed10:$rs2, (i64 R12), (i8 0))>;
+
+def : Pat<(i32 (extloadi8 (iPTR SingleReg:$rs2))),
+    (LBZd0 (i32 0), SingleReg:$rs2, (i8 0))>;
+
+def : Pat<(i32 (extloadi16 (iPTR SingleReg:$rs2))),
+    (LHZd0 (i32 0), SingleReg:$rs2, (i8 0))>;
+
+def : Pat<(loadi32 (iPTR SingleReg:$rs2)),
+    (LWZd0 (i32 0), SingleReg:$rs2, (i8 0))>;
+
+def : Pat<(loadi64 (iPTR SingleReg:$rs2)),
+    (LDd0 (i32 0), SingleReg:$rs2, (i8 0))>;
 
 //def : Pat<(i32 (sext_inreg i32:$val, i16)), (SXHD SingleReg:$val)>;
 
