@@ -45,6 +45,18 @@ public:
                        raw_ostream &O);
   static const char *getRegisterName(unsigned RegNo /*,
                                      unsigned AltIdx = 0 /*K1::ABIRegAltName*/);
+
+  void printVariantMod(const MCInst *MI, unsigned OpNo,
+                       /*const MCSubtargetInfo &STI,*/ raw_ostream &O);
+
+  void printScalingMod(const MCInst *MI, unsigned OpNo,
+                       /*const MCSubtargetInfo &STI,*/ raw_ostream &O);
+
+  void printScalarcondMod(const MCInst *MI, unsigned OpNo,
+                          /*const MCSubtargetInfo &STI,*/ raw_ostream &O);
+
+  void printMemOperand(const MCInst *MI, unsigned OpNo,
+                       /*const MCSubtargetInfo &STI,*/ raw_ostream &O);
 };
 } // namespace llvm
 
