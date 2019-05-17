@@ -242,7 +242,7 @@ multiclass MC_06<string OpcStr> {
 //   defm SH
 //   defm SW
 //   defm SD
-multiclass MC_07<string OpcStr> {
+multiclass MC_07<string OpcStr> { // $a1=12, $a2=$r12, $a3=$r0
   def d0 : SIGNED10_REGISTERZ_REGISTERT_SIMPLE
     <(outs), (ins Signed10:$a1, SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
@@ -913,19 +913,19 @@ multiclass MC_1A<string OpcStr> {
 //   defm MAKE
 multiclass MC_1B<string OpcStr> {
   def d0 : REGISTERW_SIGNED16_SIMPLE
-    <(outs SingleReg:$a1), (ins Signed16:$a2),
-     !strconcat (OpcStr, " $a1 = $a2"),
-     [ ],
+    <(outs SingleReg:$SingleReg), (ins Signed16:$Signed16),
+     !strconcat (OpcStr, " $SingleReg = $Signed16"),
+     [/*(set i32:$SingleReg, Signed16:$Signed16)*/],
      __UNKNOWN_ITIN__>;
   def d1 : REGISTERW_EXTEND6_UPPER27_LOWER10_DOUBLE
     <(outs SingleReg:$a1), (ins Signed43:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
-     [ ],
+     [ /*(set i64:$a1, Signed43:$a2)*/],
      __UNKNOWN_ITIN__>;
   def d2 : REGISTERW_EXTEND27_UPPER27_LOWER10_TRIPLE
-    <(outs SingleReg:$a1), (ins Wrapped64:$a2),
-     !strconcat (OpcStr, " $a1 = $a2"),
-     [ ],
+    <(outs SingleReg:$SingleReg), (ins Wrapped64:$Wrapped64),
+     !strconcat (OpcStr, " $SingleReg = $Wrapped64"),
+     [ /*(set i64:$SingleReg, Wrapped64:$Wrapped64)*/],
      __UNKNOWN_ITIN__>;
 }
 
@@ -1420,7 +1420,7 @@ def BREAK : SIMPLE
    __UNKNOWN_ITIN__>;
 
 // 1 insns: ['RET']
-let Uses=[RA] in
+let Uses=[RA],isBarrier = 1, isReturn = 1, isTerminator = 1 in
 def RET : SIMPLE
   <(outs), (ins),
    "ret",
@@ -1503,7 +1503,7 @@ def GOTO : PCREL27_SIMPLE
    [ ]>;
 
 // 1 insns: ['CALL']
-let Defs=[RA] in
+let Defs=[RA], isCall=1 in
 def CALL : PCREL27_SIMPLE
   <(outs), (ins Pcrel27:$a1),
    "call $a1",
