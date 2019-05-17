@@ -14,6 +14,7 @@
 def K1CRetNode : SDNode<"K1CISD::RET", SDTNone,
                        [SDNPHasChain, SDNPOptInGlue, SDNPMayLoad, SDNPVariadic]>;
 
+let isBarrier = 1, isReturn = 1, isTerminator = 1 in
 def K1CRet : K1C_INSTRUCTION<(outs), (ins), "ret", [(K1CRetNode)], NoItinerary>;
 
 def Bundle : K1C_INSTRUCTION<(outs), (ins), ";;", [], NoItinerary>;
