@@ -48,6 +48,12 @@ public:
 
 protected:
   const K1CSubtarget &STI;
+
+private:
+  void adjustStack(MachineFunction &MF) const;
+  void adjustReg(MachineBasicBlock &MBB, MachineBasicBlock::iterator MBBI,
+                 const DebugLoc &DL, unsigned OpCode, unsigned DestReg,
+                 unsigned SrcReg, int64_t Val, MachineInstr::MIFlag) const;
 };
 
 } // namespace llvm
