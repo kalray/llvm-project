@@ -20,23 +20,29 @@
 
 using namespace llvm;
 
-static MCOperand LowerOperand(const MachineInstr *MI, const MachineOperand &MO,
-                              AsmPrinter &AP) {
+static bool LowerK1CMachineOperandToMCOperand(const MachineOperand &MO,
+                                              MCOperand &MCOp, AsmPrinter &AP) {
   switch (MO.getType()) {
   default:
     llvm_unreachable("unknown operand typey");
     break;
   case MachineOperand::MO_Register:
     if (MO.isImplicit())
-      break;
-    return MCOperand::createReg(MO.getReg());
+      return false;
+    MCOp = MCOperand::createReg(MO.getReg());
+    break;
   case MachineOperand::MO_Immediate:
-    return MCOperand::createImm(MO.getImm());
+    MCOp = MCOperand::createImm(MO.getImm());
+    break;
   case MachineOperand::MO_RegisterMask:
+    return false;
+  case MachineOperand::MO_GlobalAddress:
+    MCOp = MCOperand::createExpr(
+        MCSymbolRefExpr::create(AP.getSymbol(MO.getGlobal()), AP.OutContext));
     break;
   }
 
-  return MCOperand();
+  return true;
 }
 
 void llvm::LowerK1CMachineInstrToMCInst(const MachineInstr *MI, MCInst &OutMI,
@@ -44,9 +50,8 @@ void llvm::LowerK1CMachineInstrToMCInst(const MachineInstr *MI, MCInst &OutMI,
   OutMI.setOpcode(MI->getOpcode());
 
   for (const MachineOperand &MO : MI->operands()) {
-    MCOperand MCOp = LowerOperand(MI, MO, AP);
-
-    if (MCOp.isValid())
+    MCOperand MCOp;
+    if (LowerK1CMachineOperandToMCOperand(MO, MCOp, AP))
       OutMI.addOperand(MCOp);
   }
 }
