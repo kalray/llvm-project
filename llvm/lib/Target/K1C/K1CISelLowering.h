@@ -29,7 +29,8 @@ namespace K1CISD {
 enum NodeType : unsigned {
   FIRST_NUMBER = ISD::BUILTIN_OP_END,
   RET,
-  CALL
+  CALL,
+  Wrapper,
 };
 } // namespace K1CISD
 
