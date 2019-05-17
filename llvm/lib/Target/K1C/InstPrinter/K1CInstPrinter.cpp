@@ -59,3 +59,97 @@ K1CInstPrinter::printOperand(const MCInst *MI, unsigned OpNo,
   assert(MO.isExpr() && "Unknown operand kind in printOperand");
   MO.getExpr()->print(O, &MAI);
 }
+
+void K1CInstPrinter::printVariantMod(
+    const MCInst *MI, unsigned OpNo,
+    /*const MCSubtargetInfo &STI,*/ raw_ostream &O) {
+  const MCOperand &MO = MI->getOperand(OpNo);
+  int variant = MO.getImm();
+  switch (variant) {
+  case 0:
+    break;
+  case 1:
+    O << ".s";
+    break;
+  case 2:
+    O << ".u";
+    break;
+  case 3:
+    O << ".us";
+    break;
+  }
+}
+
+void K1CInstPrinter::printScalingMod(
+    const MCInst *MI, unsigned OpNo,
+    /*const MCSubtargetInfo &STI,*/ raw_ostream &O) {
+  const MCOperand &MO = MI->getOperand(OpNo);
+  int variant = MO.getImm();
+  switch (variant) {
+  case 0:
+    break;
+  case 1:
+    O << ".xs";
+    break;
+  }
+}
+
+void K1CInstPrinter::printScalarcondMod(
+    const MCInst *MI, unsigned OpNo,
+    /*const MCSubtargetInfo &STI,*/ raw_ostream &O) {
+  const MCOperand &MO = MI->getOperand(OpNo);
+  int variant = MO.getImm();
+  switch (variant) {
+  case 0:
+    O << ".dnez";
+    break;
+  case 1:
+    O << ".deqz";
+    break;
+  case 2:
+    O << ".dltz";
+    break;
+  case 3:
+    O << ".dgez";
+    break;
+  case 4:
+    O << ".dlez";
+    break;
+  case 5:
+    O << ".dgtz";
+    break;
+  case 6:
+    O << ".odd";
+    break;
+  case 7:
+    O << ".even";
+    break;
+  case 8:
+    O << ".wnez";
+    break;
+  case 9:
+    O << ".weqz";
+    break;
+  case 10:
+    O << ".wltz";
+    break;
+  case 11:
+    O << ".wgez";
+    break;
+  case 12:
+    O << ".wlez";
+    break;
+  case 13:
+    O << ".wgtz";
+    break;
+  }
+}
+
+void K1CInstPrinter::printMemOperand(
+    const MCInst *MI, unsigned OpNo,
+    /*const MCSubtargetInfo &STI,*/ raw_ostream &O) {
+  printOperand(MI, OpNo + 1, O);
+  O << "[";
+  printOperand(MI, OpNo, O);
+  O << "]";
+}

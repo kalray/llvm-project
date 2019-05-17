@@ -86,6 +86,9 @@ void K1CFrameLowering::adjustReg(MachineBasicBlock &MBB,
 
 void K1CFrameLowering::emitPrologue(MachineFunction &MF,
                                     MachineBasicBlock &MBB) const {
+
+  bool leafProc = isLeafProc(MF);
+
   assert(&MF.front() == &MBB && "Shrink-wrapping not yet supported");
 
   MachineBasicBlock::iterator MBBI = MBB.begin();
@@ -101,21 +104,27 @@ void K1CFrameLowering::emitPrologue(MachineFunction &MF,
   DebugLoc DL;
   unsigned SPReg = getSPReg(STI);
 
-  unsigned OpCode = [StackSize]() {
-    if (isInt<10>(StackSize))
-      return K1C::ADDDd1;
-    else if (isInt<37>(StackSize))
-      return K1C::ADDDd2;
-    else
-      return K1C::ADDDd3;
-  }();
+  adjustReg(MBB, MBBI, DL, GetStackOpCode((uint64_t)StackSize), SPReg, SPReg,
+            -StackSize, MachineInstr::FrameSetup);
 
-  adjustReg(MBB, MBBI, DL, OpCode, SPReg, SPReg, -StackSize,
-            MachineInstr::FrameSetup);
+  const K1CInstrInfo *TII = STI.getInstrInfo();
+
+  if (!leafProc) {
+  }
+}
+
+bool K1CFrameLowering::isLeafProc(MachineFunction &MF) const {
+  // MachineRegisterInfo &MRI = MF.getRegInfo();
+  MachineFrameInfo &MFI = MF.getFrameInfo();
+
+  return !(MFI.hasCalls() /* || hasFP(MF)*/);
 }
 
 void K1CFrameLowering::emitEpilogue(MachineFunction &MF,
                                     MachineBasicBlock &MBB) const {
+
+  bool leafProc = isLeafProc(MF);
+
   MachineBasicBlock::iterator MBBI = MBB.getLastNonDebugInstr();
   MachineFrameInfo &MFI = MF.getFrameInfo();
 
@@ -125,32 +134,86 @@ void K1CFrameLowering::emitEpilogue(MachineFunction &MF,
   if (StackSize == 0)
     return;
 
-  DebugLoc DL;
-  adjustReg(MBB, MBBI, DL, K1C::ADDDd1, SPReg, SPReg, StackSize,
+  DebugLoc DL = MBBI->getDebugLoc();
+
+  const K1CInstrInfo *TII = STI.getInstrInfo();
+
+  if (!leafProc) {
+  }
+
+  // Deallocate stack
+  adjustReg(MBB, MBBI, DL, GetStackOpCode(StackSize), SPReg, SPReg, StackSize,
             MachineInstr::FrameDestroy);
 }
 
 int K1CFrameLowering::getFrameIndexReference(const MachineFunction &MF, int FI,
                                              unsigned &FrameReg) const {
-  return 0;
+  const MachineFrameInfo &MFI = MF.getFrameInfo();
+  const TargetRegisterInfo *RI = MF.getSubtarget().getRegisterInfo();
+  FrameReg = RI->getFrameRegister(MF);
+  int Offset = MFI.getObjectOffset(FI) - getOffsetOfLocalArea() +
+               MFI.getOffsetAdjustment();
+
+  Offset += MF.getFrameInfo().getStackSize();
+
+  return Offset;
 }
 
 void K1CFrameLowering::determineCalleeSaves(MachineFunction &MF,
                                             BitVector &SavedRegs,
-                                            RegScavenger *RS) const {}
+                                            RegScavenger *RS) const {
+  TargetFrameLowering::determineCalleeSaves(MF, SavedRegs, RS);
+
+  // Unconditionally spill RA and FP only if the function uses a frame
+  // pointer.
+  if (hasFP(MF)) {
+    SavedRegs.set(K1C::R14);
+  }
+}
 
 void
 K1CFrameLowering::processFunctionBeforeFrameFinalized(MachineFunction &MF,
                                                       RegScavenger *RS) const {}
 
-bool K1CFrameLowering::hasFP(const MachineFunction &MF) const { return false; }
+bool K1CFrameLowering::hasFP(const MachineFunction &MF) const {
+  const TargetRegisterInfo *RegInfo = MF.getSubtarget().getRegisterInfo();
+
+  const MachineFrameInfo &MFI = MF.getFrameInfo();
+  return MF.getTarget().Options.DisableFramePointerElim(MF) ||
+         RegInfo->needsStackRealignment(MF) || MFI.hasVarSizedObjects() ||
+         MFI.isFrameAddressTaken();
+}
 
 bool K1CFrameLowering::hasReservedCallFrame(const MachineFunction &MF) const {
-  return false;
+  return !MF.getFrameInfo().hasVarSizedObjects();
 }
 
 MachineBasicBlock::iterator K1CFrameLowering::eliminateCallFramePseudoInstr(
     MachineFunction &MF, MachineBasicBlock &MBB,
     MachineBasicBlock::iterator MI) const {
+
+  unsigned SPReg = K1C::R12;
+  DebugLoc DL = MI->getDebugLoc();
+
+  if (!hasReservedCallFrame(MF)) {
+    // If space has not been reserved for a call frame, ADJCALLSTACKDOWN and
+    // ADJCALLSTACKUP must be converted to instructions manipulating the stack
+    // pointer. This is necessary when there is a variable length stack
+    // allocation (e.g. alloca), which means it's not possible to allocate
+    // space for outgoing arguments from within the function prologue.
+    int64_t Amount = MI->getOperand(0).getImm();
+
+    if (Amount != 0) {
+      // Ensure the stack remains aligned after adjustment.
+      Amount = alignSPAdjust(Amount);
+
+      if (MI->getOpcode() == K1C::ADJCALLSTACKDOWN)
+        Amount = -Amount;
+
+      adjustReg(MBB, MI, DL, GetStackOpCode(Amount), SPReg, SPReg, Amount,
+                MachineInstr::NoFlags);
+    }
+  }
+
   return MBB.erase(MI);
 }

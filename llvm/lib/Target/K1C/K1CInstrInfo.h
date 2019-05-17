@@ -26,6 +26,21 @@ class K1CInstrInfo : public K1CGenInstrInfo {
 
 public:
   K1CInstrInfo();
+
+  void copyPhysReg(MachineBasicBlock &MBB, MachineBasicBlock::iterator MBBI,
+                   const DebugLoc &DL, unsigned DstReg, unsigned SrcReg,
+                   bool KillSrc) const override;
+
+  void loadRegFromStackSlot(MachineBasicBlock &MBB,
+                            MachineBasicBlock::iterator MI, unsigned DestReg,
+                            int FrameIndex, const TargetRegisterClass *RC,
+                            const TargetRegisterInfo *TRI) const override;
+
+  void storeRegToStackSlot(MachineBasicBlock &MBB,
+                           MachineBasicBlock::iterator MBBI, unsigned SrcReg,
+                           bool IsKill, int FrameIndex,
+                           const TargetRegisterClass *RC,
+                           const TargetRegisterInfo *TRI) const override;
 };
 
 } // namespace llvm
