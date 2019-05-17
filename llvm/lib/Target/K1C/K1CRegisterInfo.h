@@ -25,6 +25,8 @@ struct K1CRegisterInfo : public K1CGenRegisterInfo {
 
   K1CRegisterInfo(unsigned HwMode);
 
+  const uint32_t *getCallPreservedMask(const MachineFunction &MF,
+                                       CallingConv::ID) const override;
   const MCPhysReg *getCalleeSavedRegs(const MachineFunction *MF) const override;
   BitVector getReservedRegs(const MachineFunction &MF) const override;
 

@@ -28,7 +28,8 @@ class K1CSubtarget;
 namespace K1CISD {
 enum NodeType : unsigned {
   FIRST_NUMBER = ISD::BUILTIN_OP_END,
-  RET
+  RET,
+  CALL
 };
 } // namespace K1CISD
 
@@ -39,6 +40,8 @@ public:
   explicit K1CTargetLowering(const TargetMachine &TM, const K1CSubtarget &STI);
 
   const char *getTargetNodeName(unsigned Opcode) const override;
+
+  SDValue LowerOperation(SDValue Op, SelectionDAG &DAG) const override;
 
 private:
   SDValue LowerFormalArguments(SDValue Chain, CallingConv::ID CallConv,
@@ -57,6 +60,8 @@ private:
 
   SDValue LowerCall(TargetLowering::CallLoweringInfo &CLI,
                     SmallVectorImpl<SDValue> &InVals) const override;
+
+  SDValue lowerGlobalAddress(SDValue Op, SelectionDAG &DAG) const;
 };
 
 } // namespace llvm
