@@ -88,10 +88,12 @@ def ComparisonMod : Operand<i8> {
 def FloatcompMod : Operand<OtherVT> {
 }
 
-def RoundingMod : Operand<OtherVT> {
+def RoundingMod : Operand<i8> {
+  let PrintMethod = "printRoundingMod";
 }
 
-def SilentMod : Operand<OtherVT> {
+def SilentMod : Operand<i8> {
+  let PrintMethod = "printSilentMod";
 }
 
 def SimplecondMod : Operand<OtherVT> {
