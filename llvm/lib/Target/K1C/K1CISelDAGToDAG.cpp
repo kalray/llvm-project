@@ -40,7 +40,7 @@ public:
   bool SelectAddrRI(SDValue Addr, SDValue &Index, SDValue &Base);
   bool SelectAddrRR(SDValue Addr, SDValue &Index, SDValue &Base);
 
-  MachineSDNode *buildMake(SDLoc &DL, uint64_t Imm, EVT VT) const;
+  MachineSDNode *buildMake(SDLoc &DL, SDNode *Imm, EVT VT) const;
 #include "K1CGenDAGISel.inc"
 };
 
@@ -107,31 +107,62 @@ void K1CDAGToDAGISel::Select(SDNode *Node) {
   unsigned Opcode = Node->getOpcode();
 
   switch (Opcode) {
+  case ISD::ConstantFP:
   case ISD::Constant:
-    ConstantSDNode *C = cast<ConstantSDNode>(Node);
-    uint64_t Imm;
-    Imm = C->getZExtValue();
-
     SDLoc DL(Node);
-    ReplaceNode(Node, buildMake(DL, Imm, Node->getValueType(0)));
+    ReplaceNode(Node, buildMake(DL, Node, Node->getValueType(0)));
     return;
   }
   SelectCode(Node);
 }
 
 // Select the correct variant of MAKE instruction based on the imm value
-MachineSDNode *K1CDAGToDAGISel::buildMake(SDLoc &DL, uint64_t Imm,
+MachineSDNode *K1CDAGToDAGISel::buildMake(SDLoc &DL, SDNode *Imm,
                                           EVT VT) const {
-  unsigned opCode = opCode = K1C::MAKEd2;
-  if (isInt<16>(Imm))
-    opCode = K1C::MAKEd0;
-  else {
-    if (isInt<43>(Imm))
-      opCode = K1C::MAKEd1;
-  }
 
-  return CurDAG->getMachineNode(opCode, DL, VT,
-                                CurDAG->getTargetConstant(Imm, DL, MVT::i64));
+  unsigned ImmCode = Imm->getOpcode();
+  unsigned MakeCode = K1C::MAKEd2;
+  MachineSDNode *MakeInsn;
+
+  switch (ImmCode) {
+  default:
+    llvm_unreachable("unknown immediate opcode");
+
+  case ISD::ConstantFP: {
+    ConstantFPSDNode *CST = cast<ConstantFPSDNode>(Imm);
+    unsigned BitWidth;
+
+    if (CST->getConstantFPValue()->getType()->isHalfTy()) {
+      MakeCode = K1C::MAKEd0;
+      BitWidth = 16;
+    } else if (CST->getConstantFPValue()->getType()->isFloatTy()) {
+      MakeCode = K1C::MAKEd1;
+      BitWidth = 32;
+    } else if (CST->getConstantFPValue()->getType()->isDoubleTy()) {
+      BitWidth = 64;
+    } else
+      llvm_unreachable("unknown floating point immediate type");
+
+    MakeInsn = CurDAG->getMachineNode(
+        MakeCode, DL, VT,
+        CurDAG->getTargetConstantFP(CST->getValueAPF(), DL,
+                                    MVT::getFloatingPointVT(BitWidth)));
+  } break;
+
+  case ISD::Constant: {
+    ConstantSDNode *CST = cast<ConstantSDNode>(Imm);
+    uint64_t Imm = CST->getZExtValue();
+
+    if (isInt<16>(Imm))
+      MakeCode = K1C::MAKEd0;
+    else if (isInt<43>(Imm))
+      MakeCode = K1C::MAKEd1;
+
+    MakeInsn = CurDAG->getMachineNode(
+        MakeCode, DL, VT, CurDAG->getTargetConstant(Imm, DL, MVT::i64));
+  } break;
+  }
+  return MakeInsn;
 }
 
 FunctionPass *llvm::createK1CISelDag(K1CTargetMachine &TM) {
