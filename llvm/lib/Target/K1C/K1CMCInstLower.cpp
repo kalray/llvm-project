@@ -35,6 +35,22 @@ static bool LowerK1CMachineOperandToMCOperand(const MachineOperand &MO,
       return false;
     MCOp = MCOperand::createReg(MO.getReg());
     break;
+  case MachineOperand::MO_FPImmediate: {
+    const ConstantFP *Imm = MO.getFPImm();
+    if (Imm->getType()->isHalfTy()) {
+      // force half value to hold in the 16 least significant bit of a double
+      double d;
+      uint64_t n = Imm->getValueAPF().bitcastToAPInt().getZExtValue();
+      std::memcpy(&d, &n, sizeof n);
+      MCOp = MCOperand::createFPImm(d);
+    } else if (Imm->getType()->isFloatTy())
+      MCOp = MCOperand::createFPImm(Imm->getValueAPF().convertToFloat());
+    else if (Imm->getType()->isDoubleTy())
+      MCOp = MCOperand::createFPImm(Imm->getValueAPF().convertToDouble());
+    else
+      llvm_unreachable("unknown floating point immediate type");
+    break;
+  }
   case MachineOperand::MO_Immediate:
     MCOp = MCOperand::createImm(MO.getImm());
     break;
