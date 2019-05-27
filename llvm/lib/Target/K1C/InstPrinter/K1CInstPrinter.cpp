@@ -21,6 +21,7 @@
 #include "llvm/Support/CommandLine.h"
 #include "llvm/Support/ErrorHandling.h"
 #include "llvm/Support/FormattedStream.h"
+#include <sstream>
 
 using namespace llvm;
 
@@ -48,6 +49,42 @@ K1CInstPrinter::printOperand(const MCInst *MI, unsigned OpNo,
 
   if (MO.isReg()) {
     printRegName(O, MO.getReg());
+    return;
+  }
+
+  if (MO.isFPImm()) {
+    unsigned Opcode = MI->getOpcode();
+    switch (Opcode) {
+    // FP is a half
+    case K1C::MAKEd0: {
+      // Convert FPImm to an hexadecimal integer string.
+      std::stringstream s;
+      // MC can't converts half to double, so half float value holds
+      // on the 16 least significant bits of a double)
+      double i = MO.getFPImm();
+      s << "0x" << std::hex << *reinterpret_cast<uint16_t *>(&i);
+      O << s.str();
+    } break;
+    // FP is a float
+    case K1C::MAKEd1: {
+      // Convert FPImm to an hexadecimal integer string
+      std::stringstream s;
+      // MC converts all floating point immediate operands to double.
+      // Convert them back to float should be safe except for nan
+      // payload values.
+      auto f = float(MO.getFPImm());
+      s << "0x" << std::hex << *reinterpret_cast<uint32_t *>(&f);
+      O << s.str();
+    } break;
+    // FP is a double
+    default: {
+      // Convert FPImm to an hexadecimal integer string
+      std::stringstream s;
+      double i = MO.getFPImm();
+      s << "0x" << std::hex << *reinterpret_cast<uint64_t *>(&i);
+      O << s.str();
+    } break;
+    }
     return;
   }
 
@@ -203,4 +240,52 @@ void K1CInstPrinter::printMemOperand(
   O << "[";
   printOperand(MI, OpNo + 1, O);
   O << "]";
+}
+
+void K1CInstPrinter::printRoundingMod(const MCInst *MI, unsigned OpNo,
+                                      raw_ostream &O) {
+  const MCOperand &MO = MI->getOperand(OpNo);
+  int rounding = MO.getImm();
+  switch (rounding) {
+  case 0: // Round to Nearest, ties to Even
+    O << ".rn";
+    break;
+  case 1: // Round Upward
+    O << ".ru";
+    break;
+  case 2: // Round Downward
+    O << ".rd";
+    break;
+  case 3: // Round toward Zero
+    O << ".rz";
+    break;
+  case 4: // Round to Nearest, ties Away from zero
+    O << ".rna";
+    break;
+  case 5: // Round no Nearest, ties to Zero
+    O << ".rnz";
+    break;
+  case 6: // Round to Odd
+    O << ".ro";
+    break;
+  case 7: // Use CS rounding
+    break;
+  default:
+    llvm_unreachable("illegal rounding mode");
+  }
+}
+
+void K1CInstPrinter::printSilentMod(const MCInst *MI, unsigned OpNo,
+                                    raw_ostream &O) {
+  const MCOperand &MO = MI->getOperand(OpNo);
+  int silent = MO.getImm();
+  switch (silent) {
+  case 0: // Effects on CS
+    break;
+  case 1: // Silent on CS
+    O << ".s";
+    break;
+  default:
+    llvm_unreachable("illegal silent mode");
+  }
 }

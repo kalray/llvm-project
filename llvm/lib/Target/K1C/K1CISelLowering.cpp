@@ -59,6 +59,10 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   addRegisterClass(MVT::i32, &K1C::SingleRegRegClass);
   addRegisterClass(MVT::i64, &K1C::SingleRegRegClass);
 
+  addRegisterClass(MVT::f16, &K1C::SingleRegRegClass);
+  addRegisterClass(MVT::f32, &K1C::SingleRegRegClass);
+  addRegisterClass(MVT::f64, &K1C::SingleRegRegClass);
+
   // Compute derived properties from the register classes
   computeRegisterProperties(STI.getRegisterInfo());
 
@@ -113,6 +117,16 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
        im != (unsigned)ISD::LAST_INDEXED_MODE; ++im) {
     setIndexedLoadAction(im, MVT::i32, Legal);
     setIndexedStoreAction(im, MVT::i32, Legal);
+  }
+
+  setOperationAction(ISD::ConstantFP, MVT::f16, Legal);
+  setOperationAction(ISD::ConstantFP, MVT::f32, Legal);
+  setOperationAction(ISD::ConstantFP, MVT::f64, Legal);
+
+  for (MVT VT : MVT::fp_valuetypes()) {
+    setLoadExtAction(ISD::EXTLOAD, VT, MVT::f16, Expand);
+    setLoadExtAction(ISD::EXTLOAD, VT, MVT::f32, Expand);
+    setLoadExtAction(ISD::EXTLOAD, VT, MVT::f64, Expand);
   }
 
   // Effectively disable jump table generation.
@@ -183,11 +197,13 @@ K1CTargetLowering::LowerReturn(SDValue Chain, CallingConv::ID CallConv,
     assert(VA.isRegLoc() && "Can only return in registers!");
     SDValue Arg = OutVals[i];
 
-    if (VA.getValVT() != MVT::i64) {
-      if (SExt)
-        Arg = DAG.getSExtOrTrunc(Arg, DL, MVT::i64);
-      else
-        Arg = DAG.getZExtOrTrunc(Arg, DL, MVT::i64);
+    if (VA.getValVT().isScalarInteger()) {
+      if (VA.getValVT() != MVT::i64) {
+        if (SExt)
+          Arg = DAG.getSExtOrTrunc(Arg, DL, MVT::i64);
+        else
+          Arg = DAG.getZExtOrTrunc(Arg, DL, MVT::i64);
+      }
     }
 
     Chain = DAG.getCopyToReg(Chain, DL, VA.getLocReg(), Arg, Flag);
