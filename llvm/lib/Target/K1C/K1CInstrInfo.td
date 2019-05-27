@@ -1196,7 +1196,7 @@ multiclass MC_25<string OpcStr> {
      [ ],
      __UNKNOWN_ITIN__>;
   def d3 : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
-    <(outs SingleReg:$a3), (ins SingleReg:$a33, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
+    <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
      [ ],
      __UNKNOWN_ITIN__>;
@@ -2121,7 +2121,7 @@ def FSISRD : REGISTERW_REGISTERZ_SIMPLE
    __UNKNOWN_ITIN__>;
 
 // 1 insns: ['FWIDENLWD']
-let Uses=[CS], Defs=[CS] in
+let Defs=[CS] in
 def FWIDENLWD : SILENT2_REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fwidenlwd$a1 $a2 = $a3",
@@ -2187,7 +2187,7 @@ def FSISRW : REGISTERW_REGISTERZ_SIMPLE
    __UNKNOWN_ITIN__>;
 
 // 1 insns: ['FWIDENLHW']
-let Uses=[CS], Defs=[CS] in
+let Defs=[CS] in
 def FWIDENLHW : SILENT2_REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fwidenlhw$a1 $a2 = $a3",
