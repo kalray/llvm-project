@@ -145,6 +145,57 @@ void K1CInstPrinter::printScalarcondMod(
   }
 }
 
+void K1CInstPrinter::printComparisonMod(
+    const MCInst *MI, unsigned OpNo,
+    /*const MCSubtargetInfo &STI,*/ raw_ostream &O) {
+  const MCOperand &MO = MI->getOperand(OpNo);
+  int variant = MO.getImm();
+  switch (variant) {
+  case 0:
+    O << ".ne";
+    break;
+  case 1:
+    O << ".eq";
+    break;
+  case 2:
+    O << ".lt";
+    break;
+  case 3:
+    O << ".ge";
+    break;
+  case 4:
+    O << ".le";
+    break;
+  case 5:
+    O << ".gt";
+    break;
+  case 6:
+    O << ".ltu";
+    break;
+  case 7:
+    O << ".geu";
+    break;
+  case 8:
+    O << ".leu";
+    break;
+  case 9:
+    O << ".gtu";
+    break;
+  case 10:
+    O << ".all";
+    break;
+  case 11:
+    O << ".nall";
+    break;
+  case 12:
+    O << ".any";
+    break;
+  case 13:
+    O << ".none";
+    break;
+  }
+}
+
 void K1CInstPrinter::printMemOperand(
     const MCInst *MI, unsigned OpNo,
     /*const MCSubtargetInfo &STI,*/ raw_ostream &O) {
