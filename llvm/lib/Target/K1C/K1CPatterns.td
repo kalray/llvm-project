@@ -26,6 +26,7 @@ def : Pat<(K1CRetNode),(RET)>;
 
 def : Pat<(Call (K1CWrapper tglobaladdr:$func)),(CALL Pcrel27:$func)>;
 def : Pat<(Call texternalsym:$func),(CALL Pcrel27:$func)>;
+def : Pat<(Call SingleReg:$func),(ICALL SingleReg:$func)>;
 
 def Bundle : K1C_INSTRUCTION<(outs), (ins), ";;", [], NoItinerary>;
 
