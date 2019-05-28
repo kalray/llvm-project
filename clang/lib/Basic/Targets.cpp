@@ -20,6 +20,7 @@
 #include "Targets/AVR.h"
 #include "Targets/BPF.h"
 #include "Targets/Hexagon.h"
+#include "Targets/K1C.h"
 #include "Targets/Lanai.h"
 #include "Targets/Le64.h"
 #include "Targets/MSP430.h"
@@ -451,6 +452,14 @@ TargetInfo *AllocateTarget(const llvm::Triple &Triple,
 
   case llvm::Triple::tcele:
     return new TCELETargetInfo(Triple, Opts);
+
+  case llvm::Triple::k1c:
+    switch (os) {
+    case llvm::Triple::ClusterOS:
+      return new ClusterOSTargetInfo<K1cTargetInfo>(Triple, Opts);
+    default:
+      return new ClusterOSTargetInfo<K1cTargetInfo>(Triple, Opts);
+    }
 
   case llvm::Triple::x86:
     if (Triple.isOSDarwin())

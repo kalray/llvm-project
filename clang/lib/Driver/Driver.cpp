@@ -12,6 +12,7 @@
 #include "ToolChains/AMDGPU.h"
 #include "ToolChains/AVR.h"
 #include "ToolChains/Ananas.h"
+#include "ToolChains/ClusterOS.h"
 #include "ToolChains/BareMetal.h"
 #include "ToolChains/Clang.h"
 #include "ToolChains/CloudABI.h"
@@ -4804,6 +4805,9 @@ const ToolChain &Driver::getToolChain(const ArgList &Args,
       break;
     case llvm::Triple::Ananas:
       TC = std::make_unique<toolchains::Ananas>(*this, Target, Args);
+      break;
+    case llvm::Triple::ClusterOS:
+      TC = llvm::make_unique<toolchains::ClusterOS>(*this, Target, Args);
       break;
     case llvm::Triple::CloudABI:
       TC = std::make_unique<toolchains::CloudABI>(*this, Target, Args);

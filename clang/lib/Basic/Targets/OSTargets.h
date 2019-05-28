@@ -71,6 +71,22 @@ public:
       : OSTargetInfo<Target>(Triple, Opts) {}
 };
 
+// ClusterOS target
+template <typename Target>
+class LLVM_LIBRARY_VISIBILITY ClusterOSTargetInfo
+    : public OSTargetInfo<Target> {
+protected:
+  void getOSDefines(const LangOptions &Opts, const llvm::Triple &Triple,
+                    MacroBuilder &Builder) const override {
+    // ClusterOS defines
+    Builder.defineMacro("__CLUSTER_OS__");
+  }
+
+public:
+  ClusterOSTargetInfo(const llvm::Triple &Triple, const TargetOptions &Opts)
+      : OSTargetInfo<Target>(Triple, Opts) {}
+};
+
 void getDarwinDefines(MacroBuilder &Builder, const LangOptions &Opts,
                       const llvm::Triple &Triple, StringRef &PlatformName,
                       VersionTuple &PlatformMinVersion);

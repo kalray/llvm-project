@@ -193,7 +193,8 @@ public:
     Hurd,       // GNU/Hurd
     WASI,       // Experimental WebAssembly OS
     Emscripten,
-    LastOSType = Emscripten
+    ClusterOS,  // Kalray ClusterOS
+    LastOSType = ClusterOS
   };
   enum EnvironmentType {
     UnknownEnvironment,
