@@ -554,7 +554,7 @@ multiclass MC_0F<string OpcStr> {
      [ ],
      __UNKNOWN_ITIN__>;
   def d1 : REGISTERW_REGISTERZ_SIGNED10_SIMPLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10:$a3),
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10_64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
      __UNKNOWN_ITIN__>;
@@ -1625,7 +1625,13 @@ def NOP : SIMPLE
    "nop",
    [ ],
    __UNKNOWN_ITIN__>;
-
+/*
+def NOTRUNC : REGISTERW_REGISTERZ_SIMPLE
+  <(outs SingleReg:$a1), (ins SingleReg:$a2),
+   "nop",
+   [ ],
+   __UNKNOWN_ITIN__>;
+*/
 // 1 insns: ['STSUD']
 def STSUD : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),

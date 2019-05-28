@@ -9,7 +9,7 @@
 
 def SDTK1CWrapper : SDTypeProfile<1, 1, [SDTCisSameAs<0, 1>, SDTCisPtrTy<0>]>;
 
-def K1CWrapper : SDNode<"K1CISD::Wrapper", SDTK1CWrapper>;
+def K1CWrapper : SDNode<"K1CISD::WRAPPER", SDTK1CWrapper>;
 
 //
 // Function return
@@ -55,22 +55,12 @@ def ADJCALLSTACKUP : K1C_PseudoInstr<(outs), (ins i32imm:$amt1, i32imm:$amt2),
                             [(callseq_end timm:$amt1, timm:$amt2)]>;
 
 // MAKE patterns disabled - selection is done in code
-/*def : Pat<(Signed16:$imm), (MAKEd0 Signed16:$imm)>;
+/*
+def : Pat<(Signed16:$imm), (MAKEd0 Signed16:$imm)>;
 def : Pat<(Signed43:$imm), (MAKEd1 Signed43:$imm)>;
-def : Pat<(Wrapped64:$imm), (MAKEd2 Wrapped64:$imm)>;*/
-
+def : Pat<(Wrapped64:$imm), (MAKEd2 Wrapped64:$imm)>;
+*/
 def : Pat<(K1CWrapper tglobaladdr:$dst), (MAKEd2 tglobaladdr:$dst)>;
-
-
-// ADD patterns
-def : Pat<(add i32:$rs1, i32:$rs2), (ADDWd0 SingleReg:$rs1, SingleReg:$rs2)>;
-def : Pat<(add i64:$rs1, i64:$rs2), (ADDDd0 SingleReg:$rs1, SingleReg:$rs2)>;
-
-def : Pat<(add i32:$rs1, Signed32:$rs2), (ADDWd1 SingleReg:$rs1, Signed32:$rs2)>;
-
-// AND patterns
-def : Pat<(and i32:$rs1, Signed32:$rs2), (ANDWd1 SingleReg:$rs1, Signed32:$rs2)>;
-def : Pat<(and i64:$rs1, Wrapped64:$rs2), (ANDDd3 SingleReg:$rs1, Wrapped64:$rs2)>;
 
 def MemRR : Operand<iPTR>, ComplexPattern<iPTR, 2, "SelectAddrRR", [], []> {
   let PrintMethod = "printMemOperand";
@@ -82,6 +72,8 @@ def AddrRI : Operand<iPTR>, ComplexPattern<iPTR, 2, "SelectAddrRI", [frameindex]
   let PrintMethod = "printMemOperand";
   let MIOperandInfo = (ops i64imm:$offset, SingleReg:$baseReg );
 }
+
+//def : Pat<(i32 (trunc i64:$x)), (NOTRUNC SingleReg:$x)>;
 
 // store instructions with register-immediate addressing mode
 def SBri : K1C_INSTRUCTION<(outs), (ins AddrRI:$addr, SingleReg:$val), "sb $addr = $val", [], NoItinerary>;
@@ -108,6 +100,7 @@ def : Pat<(truncstorei8 i64:$val, AddrRI:$addr), (SBri AddrRI:$addr, SingleReg:$
 def : Pat<(truncstorei8 i32:$val, AddrRI:$addr), (SBri AddrRI:$addr, SingleReg:$val)>;
 def : Pat<(truncstorei16 i64:$val, AddrRI:$addr), (SHri AddrRI:$addr, SingleReg:$val)>;
 def : Pat<(truncstorei16 i32:$val, AddrRI:$addr), (SHri AddrRI:$addr, SingleReg:$val)>;
+def : Pat<(truncstorei32 i64:$val, AddrRI:$addr), (SWri AddrRI:$addr, SingleReg:$val)>;
 
 def : Pat<(truncstorei8 (i32 SingleReg:$val), (i64 SingleReg:$base)), (SBd0 (i64 0), SingleReg:$base, SingleReg:$val)>;
 def : Pat<(truncstorei16 (i32 SingleReg:$val), (i64 SingleReg:$base)), (SHd0 (i64 0), SingleReg:$base, SingleReg:$val)>;
@@ -180,76 +173,60 @@ def : Pat<(i64 (sext_inreg i64:$val, i32)), (SXWD SingleReg:$val)>;
 // Unconditional branch
 def : Pat<(br bb:$addr), (GOTO Pcrel27:$addr)>;
 
-
-
 // Conditional branches(setcc)
 def : Pat<(brcond (i64 (setle (i32 SingleReg:$lhs), i32:$rhs)), bb:$dst),
         (CB (COMPWd1 SingleReg:$lhs, Wrapped32:$rhs, (i8 4/*COMPW.le*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
-
 def : Pat<(brcond (i64 (setgt (i32 SingleReg:$lhs), i32:$rhs)), bb:$dst),
         (CB (COMPWd1 SingleReg:$lhs, Wrapped32:$rhs, (i8 5/*COMPW.gt*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
-
 def : Pat<(brcond (i64 (setge (i32 SingleReg:$lhs), i32:$rhs)), bb:$dst),
         (CB (COMPWd1 SingleReg:$lhs, Wrapped32:$rhs, (i8 3/*COMPW.ge*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
-
 def : Pat<(brcond (i64 (setne (i32 SingleReg:$lhs), i32:$rhs)), bb:$dst),
         (CB (COMPWd1 SingleReg:$lhs, Wrapped32:$rhs, (i8 0/*COMPW.ne*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
-
 def : Pat<(brcond (i64 (seteq (i32 SingleReg:$lhs), i32:$rhs)), bb:$dst),
         (CB (COMPWd1 SingleReg:$lhs, Wrapped32:$rhs, (i8 1/*COMPW.eq*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
-
 def : Pat<(brcond (i64 (setlt (i32 SingleReg:$lhs), i32:$rhs)), bb:$dst),
         (CB (COMPWd1 SingleReg:$lhs, Wrapped32:$rhs, (i8 2/*COMPW.lt*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
-
 def : Pat<(brcond (i64 (setugt (i32 SingleReg:$lhs), i32:$rhs)), bb:$dst),
         (CB (COMPWd1 SingleReg:$lhs, Wrapped32:$rhs, (i8 9/*COMPW.gtu*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
-
 def : Pat<(brcond (i64 (setuge (i32 SingleReg:$lhs), i32:$rhs)), bb:$dst),
         (CB (COMPWd1 SingleReg:$lhs, Wrapped32:$rhs, (i8 7/*COMPW.geu*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
-
 def : Pat<(brcond (i64 (setult (i32 SingleReg:$lhs), i32:$rhs)), bb:$dst),
         (CB (COMPWd1 SingleReg:$lhs, Wrapped32:$rhs, (i8 6/*COMPW.ltu*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
-
 def : Pat<(brcond (i64 (setule (i32 SingleReg:$lhs), i32:$rhs)), bb:$dst),
         (CB (COMPWd1 SingleReg:$lhs, Wrapped32:$rhs, (i8 8/*COMPW.leu*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
 
-
-
-
-
 def : Pat<(brcond (i64 (setle (i64 SingleReg:$lhs), i64:$rhs)), bb:$dst),
         (CB (COMPDd2 SingleReg:$lhs, Wrapped64:$rhs, (i8 4/*COMPW.le*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
-
 def : Pat<(brcond (i64 (setgt (i64 SingleReg:$lhs), i64:$rhs)), bb:$dst),
         (CB (COMPDd2 SingleReg:$lhs, Wrapped64:$rhs, (i8 5/*COMPW.gt*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
-
 def : Pat<(brcond (i64 (setge (i64 SingleReg:$lhs), i64:$rhs)), bb:$dst),
         (CB (COMPDd2 SingleReg:$lhs, Wrapped64:$rhs, (i8 3/*COMPW.ge*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
-
 def : Pat<(brcond (i64 (setne (i64 SingleReg:$lhs), i64:$rhs)), bb:$dst),
         (CB (COMPDd2 SingleReg:$lhs, Wrapped64:$rhs, (i8 0/*COMPW.ne*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
-
 def : Pat<(brcond (i64 (seteq (i64 SingleReg:$lhs), i64:$rhs)), bb:$dst),
         (CB (COMPDd2 SingleReg:$lhs, Wrapped64:$rhs, (i8 1/*COMPW.eq*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
-
 def : Pat<(brcond (i64 (setlt (i64 SingleReg:$lhs), i64:$rhs)), bb:$dst),
         (CB (COMPDd2 SingleReg:$lhs, Wrapped64:$rhs, (i8 2/*COMPW.lt*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
-
 def : Pat<(brcond (i64 (setugt (i64 SingleReg:$lhs), i64:$rhs)), bb:$dst),
         (CB (COMPDd2 SingleReg:$lhs, Wrapped64:$rhs, (i8 9/*COMPW.gtu*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
-
 def : Pat<(brcond (i64 (setuge (i64 SingleReg:$lhs), i64:$rhs)), bb:$dst),
         (CB (COMPDd2 SingleReg:$lhs, Wrapped64:$rhs, (i8 7/*COMPW.geu*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
-
 def : Pat<(brcond (i64 (setult (i64 SingleReg:$lhs), i64:$rhs)), bb:$dst),
         (CB (COMPDd2 SingleReg:$lhs, Wrapped64:$rhs, (i8 6/*COMPW.ltu*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
-
 def : Pat<(brcond (i64 (setule (i64 SingleReg:$lhs), i64:$rhs)), bb:$dst),
         (CB (COMPDd2 SingleReg:$lhs, Wrapped64:$rhs, (i8 8/*COMPW.leu*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
-
-def : Pat<(shl i64:$rs1, i64:$rs2), (SLLDd0 SingleReg:$rs1, SingleReg:$rs2)>;
-def : Pat<(shl i32:$rs1, i32:$rs2), (SLLWd0 SingleReg:$rs1, SingleReg:$rs2)>;
 
 def : Pat<(brind (i32 SingleReg:$r)), (IGOTO SingleReg:$r)>;
 
 def : Pat<(brind (i64 SingleReg:$r)), (IGOTO SingleReg:$r)>;
+
+//def : Pat<(store ADDRri:$addr, SingleReg:$value),
+//    (K1CSD MemRI:$addr, SingleReg:$value)>;
+
+//===----------------------------------------------------------------------===//
+//  FPU Instructions - Patterns
+//===----------------------------------------------------------------------===//
+
+//===----------------------------------------------------------------------===//
+//  Synthetic Instructions - Patterns
+//===----------------------------------------------------------------------===//
