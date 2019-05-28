@@ -40,42 +40,6 @@ public:
 
 #include "K1CGenMCPseudoLowering.inc"
 
-bool LowerK1CMachineOperandToMCOperand(const MachineOperand &MO,
-                                       MCOperand &MCOp, const AsmPrinter &AP) {
-  switch (MO.getType()) {
-  default:
-    report_fatal_error(
-        "LowerK1CMachineOperandToMCOperand: unknown operand type");
-  case MachineOperand::MO_Register:
-    // Ignore all implicit register operands.
-    if (MO.isImplicit())
-      return false;
-    MCOp = MCOperand::createReg(MO.getReg());
-    break;
-  case MachineOperand::MO_RegisterMask:
-    // Regmasks are like implicit defs.
-    return false;
-  case MachineOperand::MO_Immediate:
-    MCOp = MCOperand::createImm(MO.getImm());
-    break;
-  case MachineOperand::MO_GlobalAddress:
-    MCOp = MCOperand::createExpr(
-        MCSymbolRefExpr::create(AP.getSymbol(MO.getGlobal()), AP.OutContext));
-    break;
-  }
-  return true;
-}
-
-void LowerK1CMachineInstrToMCInst(const MachineInstr *MI, MCInst &OutMI,
-                                  const AsmPrinter &AP) {
-  OutMI.setOpcode(MI->getOpcode());
-  for (const MachineOperand &MO : MI->operands()) {
-    MCOperand MCOp;
-    if (LowerK1CMachineOperandToMCOperand(MO, MCOp, AP))
-      OutMI.addOperand(MCOp);
-  }
-}
-
 void K1CAsmPrinter::EmitInstruction(const MachineInstr *MI) {
   // Do any auto-generated pseudo lowerings.
   if (emitPseudoExpansionLowering(*OutStreamer, MI))
