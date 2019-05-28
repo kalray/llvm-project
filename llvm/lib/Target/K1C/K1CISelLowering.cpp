@@ -56,11 +56,16 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::BR_CC, MVT::i32, Expand);
   setOperationAction(ISD::BR_CC, MVT::i64, Expand);
 
+  setOperationAction(ISD::BR_JT, MVT::Other, Expand);
+
   for (unsigned im = (unsigned)ISD::PRE_INC;
        im != (unsigned)ISD::LAST_INDEXED_MODE; ++im) {
     setIndexedLoadAction(im, MVT::i32, Legal);
     setIndexedStoreAction(im, MVT::i32, Legal);
   }
+
+  // Effectively disable jump table generation.
+  setMinimumJumpTableEntries(INT_MAX);
 }
 
 const char *K1CTargetLowering::getTargetNodeName(unsigned Opcode) const {
