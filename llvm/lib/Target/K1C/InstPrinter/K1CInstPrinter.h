@@ -57,6 +57,9 @@ public:
 
   void printMemOperand(const MCInst *MI, unsigned OpNo,
                        /*const MCSubtargetInfo &STI,*/ raw_ostream &O);
+
+  void printComparisonMod(const MCInst *MI, unsigned OpNo,
+                          /*const MCSubtargetInfo &STI,*/ raw_ostream &O);
 };
 } // namespace llvm
 

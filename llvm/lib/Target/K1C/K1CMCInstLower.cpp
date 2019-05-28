@@ -26,6 +26,10 @@ static bool LowerK1CMachineOperandToMCOperand(const MachineOperand &MO,
   default:
     llvm_unreachable("unknown operand typey");
     break;
+  case MachineOperand::MO_MachineBasicBlock:
+    MCOp = MCOperand::createExpr(
+        MCSymbolRefExpr::create(MO.getMBB()->getSymbol(), AP.OutContext));
+    break;
   case MachineOperand::MO_Register:
     if (MO.isImplicit())
       return false;
