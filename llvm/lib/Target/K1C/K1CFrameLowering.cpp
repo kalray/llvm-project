@@ -86,9 +86,6 @@ void K1CFrameLowering::adjustReg(MachineBasicBlock &MBB,
 
 void K1CFrameLowering::emitPrologue(MachineFunction &MF,
                                     MachineBasicBlock &MBB) const {
-
-  bool leafProc = isLeafProc(MF);
-
   assert(&MF.front() == &MBB && "Shrink-wrapping not yet supported");
 
   MachineBasicBlock::iterator MBBI = MBB.begin();
@@ -106,25 +103,16 @@ void K1CFrameLowering::emitPrologue(MachineFunction &MF,
 
   adjustReg(MBB, MBBI, DL, GetStackOpCode((uint64_t)StackSize), SPReg, SPReg,
             -StackSize, MachineInstr::FrameSetup);
-
-  const K1CInstrInfo *TII = STI.getInstrInfo();
-
-  if (!leafProc) {
-  }
 }
 
 bool K1CFrameLowering::isLeafProc(MachineFunction &MF) const {
-  // MachineRegisterInfo &MRI = MF.getRegInfo();
   MachineFrameInfo &MFI = MF.getFrameInfo();
 
-  return !(MFI.hasCalls() /* || hasFP(MF)*/);
+  return !(MFI.hasCalls());
 }
 
 void K1CFrameLowering::emitEpilogue(MachineFunction &MF,
                                     MachineBasicBlock &MBB) const {
-
-  bool leafProc = isLeafProc(MF);
-
   MachineBasicBlock::iterator MBBI = MBB.getLastNonDebugInstr();
   MachineFrameInfo &MFI = MF.getFrameInfo();
 
@@ -135,11 +123,6 @@ void K1CFrameLowering::emitEpilogue(MachineFunction &MF,
     return;
 
   DebugLoc DL = MBBI->getDebugLoc();
-
-  const K1CInstrInfo *TII = STI.getInstrInfo();
-
-  if (!leafProc) {
-  }
 
   // Deallocate stack
   adjustReg(MBB, MBBI, DL, GetStackOpCode(StackSize), SPReg, SPReg, StackSize,
@@ -176,12 +159,8 @@ K1CFrameLowering::processFunctionBeforeFrameFinalized(MachineFunction &MF,
                                                       RegScavenger *RS) const {}
 
 bool K1CFrameLowering::hasFP(const MachineFunction &MF) const {
-  const TargetRegisterInfo *RegInfo = MF.getSubtarget().getRegisterInfo();
-
-  const MachineFrameInfo &MFI = MF.getFrameInfo();
-  return MF.getTarget().Options.DisableFramePointerElim(MF) ||
-         RegInfo->needsStackRealignment(MF) || MFI.hasVarSizedObjects() ||
-         MFI.isFrameAddressTaken();
+  // TODO : FP is not used at the moment
+  return false;
 }
 
 bool K1CFrameLowering::hasReservedCallFrame(const MachineFunction &MF) const {

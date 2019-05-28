@@ -43,8 +43,8 @@ public:
                        raw_ostream &O);
   bool printAliasInstr(const MCInst *MI, /*const MCSubtargetInfo &STI,*/
                        raw_ostream &O);
-  static const char *getRegisterName(unsigned RegNo /*,
-                                     unsigned AltIdx = 0 /*K1::ABIRegAltName*/);
+
+  static const char *getRegisterName(unsigned RegNo);
 
   void printVariantMod(const MCInst *MI, unsigned OpNo,
                        /*const MCSubtargetInfo &STI,*/ raw_ostream &O);
