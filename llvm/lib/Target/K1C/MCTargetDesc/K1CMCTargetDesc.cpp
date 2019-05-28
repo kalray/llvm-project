@@ -64,7 +64,7 @@ static MCTargetStreamer *createK1CTargetStreamer(MCStreamer &S,
                                                  formatted_raw_ostream &OS,
                                                  MCInstPrinter *InstPrint,
                                                  bool isVerboseAsm) {
-  return new K1CTargetStreamer(S, OS);
+  return new K1CTargetStreamer(S);
 }
 
 extern "C" void LLVMInitializeK1CTargetMC() {
