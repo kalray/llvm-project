@@ -100,20 +100,18 @@ void K1CInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
 
   if (K1C::SingleRegRegClass.hasSubClassEq(RC)) {
     BuildMI(MBB, I, DL, get(K1C::LDd0), DstReg)
+        .addImm(0)
         .addFrameIndex(FI)
-        .addReg(K1C::R12, 0)
-        .addImm(0);
+        .addImm(0); // variantMod
   }
   if (K1C::RARegRegClass.hasSubClassEq(RC)) {
     unsigned ScratchReg = findScratchRegister(MBB, true);
     BuildMI(MBB, I, DL, get(K1C::LDd0), ScratchReg)
-        .addFrameIndex(FI)
-        .addReg(K1C::R12)
         .addImm(0)
-        .setMIFlag(MachineInstr::FrameDestroy);
+        .addFrameIndex(FI)
+        .addImm(0); // variantMod
     BuildMI(MBB, I, DL, get(K1C::SETd2), K1C::RA)
-        .addReg(ScratchReg, RegState::Kill)
-        .setMIFlag(MachineInstr::FrameDestroy);
+        .addReg(ScratchReg, RegState::Kill);
   }
 }
 
@@ -127,19 +125,13 @@ void K1CInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
     DL = I->getDebugLoc();
 
   if (K1C::SingleRegRegClass.hasSubClassEq(RC)) {
-    BuildMI(MBB, I, DL, get(K1C::SDd0))
-        .addFrameIndex(FI)
-        .addReg(K1C::R12, 0)
-        .addReg(SrcReg, getKillRegState(IsKill)); //.addMemOperand(MMO)
+    BuildMI(MBB, I, DL, get(K1C::SDd0)).addImm(0).addFrameIndex(FI).addReg(
+        SrcReg, getKillRegState(IsKill));
   }
   if (K1C::RARegRegClass.hasSubClassEq(RC)) {
     unsigned ScratchReg = findScratchRegister(MBB, false);
-    BuildMI(MBB, I, DL, get(K1C::GET), ScratchReg).addReg(K1C::RA).setMIFlag(
-        MachineInstr::FrameSetup);
-    BuildMI(MBB, I, DL, get(K1C::SDd0))
-        .addFrameIndex(FI)
-        .addReg(K1C::R12)
-        .addReg(ScratchReg, RegState::Kill)
-        .setMIFlag(MachineInstr::FrameSetup);
+    BuildMI(MBB, I, DL, get(K1C::GET), ScratchReg).addReg(K1C::RA);
+    BuildMI(MBB, I, DL, get(K1C::SDd0)).addImm(0).addFrameIndex(FI).addReg(
+        ScratchReg, RegState::Kill);
   }
 }

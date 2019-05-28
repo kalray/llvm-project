@@ -27,23 +27,17 @@ class K1C_PseudoInstr<dag outs, dag ins, string asmstr, list<dag> pattern>
 def __UNKNOWN_ITIN__ : InstrItinClass {
 }
 
-def Signed10 : Operand<i32>, ImmLeaf<i32,  [{
-  return Imm>=-(1<<9) && Imm<(1<<9);
-}]>;
+def Signed10 : Operand<i64>, ImmLeaf<i64,  [{return isInt<10>(Imm);}]>;
 
-def Signed16 : Operand<i32>, ImmLeaf<i32, [{
-  return Imm>=-(1<<15) && Imm<(1<<15);
-}]>;
+def Signed16 : Operand<i64>, ImmLeaf<i64, [{return isInt<16>(Imm);}]>;
 
 def Signed32 : Operand<i32>, ImmLeaf<i32, [{return isInt<32>(Imm);}]>;
 
-def Signed37 : Operand<i64>, ImmLeaf<i64, [{
-  return Imm>=-(1<<36) && Imm<(1<<36);
-}]>;
+def Signed37 : Operand<i64>, ImmLeaf<i64, [{return isInt<37>(Imm);}]>;
 
-def Signed43 : Operand<i64>, ImmLeaf<i64, [{
-  return Imm>=-(1<<42) && Imm<(1<<42);
-}]>;
+def Signed43 : Operand<i64>, ImmLeaf<i64, [{return isInt<43>(Imm);}]>;
+
+def Wrapped32 : Operand<i32>, ImmLeaf<i32, [{return isInt<32>(Imm);}]>;
 
 def Wrapped64 : Operand<i64>, ImmLeaf<i64, [{return isInt<64>(Imm);}]>;
 
@@ -77,9 +71,6 @@ def SpeculateMod : Operand<OtherVT> {
 }
 
 def ColumnselMod : Operand<OtherVT> {
-}
-
-def Wrapped32 : Operand<OtherVT> {
 }
 
 def Splat32Mod : Operand<OtherVT> {
