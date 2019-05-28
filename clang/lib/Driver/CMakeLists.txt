@@ -74,6 +74,7 @@ add_clang_library(clangDriver
   ToolChains/PPCLinux.cpp
   ToolChains/InterfaceStubs.cpp
   ToolChains/ZOS.cpp
+  ToolChains/ClusterOS.cpp
   Types.cpp
   XRayArgs.cpp
 
