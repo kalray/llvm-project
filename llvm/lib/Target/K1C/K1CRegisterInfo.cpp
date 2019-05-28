@@ -59,19 +59,20 @@ void K1CRegisterInfo::eliminateFrameIndex(MachineBasicBlock::iterator II,
                                           RegScavenger *RS) const {
   MachineInstr &MI = *II;
   MachineFunction &MF = *MI.getParent()->getParent();
-  MachineRegisterInfo &MRI = MF.getRegInfo();
-  const K1CInstrInfo *TII = MF.getSubtarget<K1CSubtarget>().getInstrInfo();
 
   DebugLoc DL = MI.getDebugLoc();
 
   int FrameIndex = MI.getOperand(FIOperandNum).getIndex();
   unsigned FrameReg;
   int Offset =
-      getFrameLowering(MF)->getFrameIndexReference(MF, FrameIndex, FrameReg);
+      getFrameLowering(MF)->getFrameIndexReference(MF, FrameIndex, FrameReg) +
+      MI.getOperand(FIOperandNum - 1).getImm();
 
-  MI.getOperand(FIOperandNum).ChangeToImmediate(Offset);
+  MI.getOperand(FIOperandNum).ChangeToRegister(FrameReg, false, false, false);
+  MI.getOperand(FIOperandNum - 1).ChangeToImmediate(Offset);
 }
 
 unsigned K1CRegisterInfo::getFrameRegister(const MachineFunction &MF) const {
-  return K1C::R14;
+  const TargetFrameLowering *TFI = getFrameLowering(MF);
+  return TFI->hasFP(MF) ? K1C::R14 : K1C::R12;
 }

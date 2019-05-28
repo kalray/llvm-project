@@ -685,7 +685,7 @@ multiclass MC_12<string OpcStr> {
      [ ],
      __UNKNOWN_ITIN__>;
   def d1 : REGISTERW_REGISTERZ_SIGNED10_SIMPLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10:$a3),
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed32:$a3), // Signed10
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
      __UNKNOWN_ITIN__>;
