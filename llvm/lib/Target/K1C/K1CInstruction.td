@@ -27,7 +27,8 @@ class K1C_PseudoInstr<dag outs, dag ins, string asmstr, list<dag> pattern>
 def __UNKNOWN_ITIN__ : InstrItinClass {
 }
 
-def Signed10 : Operand<i64>, ImmLeaf<i64,  [{return isInt<10>(Imm);}]>;
+def Signed10 : Operand<i64>, ImmLeaf<i64, [{return isInt<10>(Imm);}]>;
+def Signed10_64 : Operand<i64>, ImmLeaf<i64, [{return isInt<10>(Imm);}]>;
 
 def Signed16 : Operand<i64>, ImmLeaf<i64, [{return isInt<16>(Imm);}]>;
 
@@ -41,9 +42,11 @@ def Wrapped32 : Operand<i32>, ImmLeaf<i32, [{return isInt<32>(Imm);}]>;
 
 def Wrapped64 : Operand<i64>, ImmLeaf<i64, [{return isInt<64>(Imm);}]>;
 
-def Pcrel27 : Operand<iPTR> {
+def Pcrel17 : Operand<iPTR> {
 }
 
+def Pcrel27 : Operand<iPTR> {
+}
 
 def Sysnumber : Operand<OtherVT> {
 }
@@ -90,10 +93,6 @@ def RoundingMod : Operand<OtherVT> {
 
 def SilentMod : Operand<OtherVT> {
 }
-
-def Pcrel17 : Operand<iPTR> {
-}
-
 
 def SimplecondMod : Operand<OtherVT> {
 }
