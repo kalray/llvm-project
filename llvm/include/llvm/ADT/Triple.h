@@ -219,6 +219,7 @@ public:
     Hurd,       // GNU/Hurd
     WASI,       // Experimental WebAssembly OS
     Emscripten,
+    ClusterOS,  // Kalray ClusterOS
     ShaderModel, // DirectX ShaderModel
     LastOSType = ShaderModel
   };
