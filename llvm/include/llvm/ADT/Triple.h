@@ -188,7 +188,8 @@ public:
     HermitCore, // HermitCore Unikernel/Multikernel
     Hurd,       // GNU/Hurd
     WASI,       // Experimental WebAssembly OS
-    LastOSType = WASI
+    ClusterOS,  // Kalray ClusterOS
+    LastOSType = ClusterOS
   };
   enum EnvironmentType {
     UnknownEnvironment,
