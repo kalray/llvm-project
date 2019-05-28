@@ -175,3 +175,73 @@ def : Pat<(i32 (sext_inreg i32:$val, i16)), (SXHD SingleReg:$val)>;
 def : Pat<(i64 (sext_inreg i64:$val, i8)), (SXBD SingleReg:$val)>;
 def : Pat<(i64 (sext_inreg i64:$val, i16)), (SXHD SingleReg:$val)>;
 def : Pat<(i64 (sext_inreg i64:$val, i32)), (SXWD SingleReg:$val)>;
+
+// Unconditional branch
+def : Pat<(br bb:$addr), (GOTO Pcrel27:$addr)>;
+
+
+
+// Conditional branches(setcc)
+def : Pat<(brcond (i64 (setle (i32 SingleReg:$lhs), i32:$rhs)), bb:$dst),
+        (CB (COMPWd1 SingleReg:$lhs, Wrapped32:$rhs, (i8 4/*COMPW.le*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
+
+def : Pat<(brcond (i64 (setgt (i32 SingleReg:$lhs), i32:$rhs)), bb:$dst),
+        (CB (COMPWd1 SingleReg:$lhs, Wrapped32:$rhs, (i8 5/*COMPW.gt*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
+
+def : Pat<(brcond (i64 (setge (i32 SingleReg:$lhs), i32:$rhs)), bb:$dst),
+        (CB (COMPWd1 SingleReg:$lhs, Wrapped32:$rhs, (i8 3/*COMPW.ge*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
+
+def : Pat<(brcond (i64 (setne (i32 SingleReg:$lhs), i32:$rhs)), bb:$dst),
+        (CB (COMPWd1 SingleReg:$lhs, Wrapped32:$rhs, (i8 0/*COMPW.ne*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
+
+def : Pat<(brcond (i64 (seteq (i32 SingleReg:$lhs), i32:$rhs)), bb:$dst),
+        (CB (COMPWd1 SingleReg:$lhs, Wrapped32:$rhs, (i8 1/*COMPW.eq*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
+
+def : Pat<(brcond (i64 (setlt (i32 SingleReg:$lhs), i32:$rhs)), bb:$dst),
+        (CB (COMPWd1 SingleReg:$lhs, Wrapped32:$rhs, (i8 2/*COMPW.lt*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
+
+def : Pat<(brcond (i64 (setugt (i32 SingleReg:$lhs), i32:$rhs)), bb:$dst),
+        (CB (COMPWd1 SingleReg:$lhs, Wrapped32:$rhs, (i8 9/*COMPW.gtu*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
+
+def : Pat<(brcond (i64 (setuge (i32 SingleReg:$lhs), i32:$rhs)), bb:$dst),
+        (CB (COMPWd1 SingleReg:$lhs, Wrapped32:$rhs, (i8 7/*COMPW.geu*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
+
+def : Pat<(brcond (i64 (setult (i32 SingleReg:$lhs), i32:$rhs)), bb:$dst),
+        (CB (COMPWd1 SingleReg:$lhs, Wrapped32:$rhs, (i8 6/*COMPW.ltu*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
+
+def : Pat<(brcond (i64 (setule (i32 SingleReg:$lhs), i32:$rhs)), bb:$dst),
+        (CB (COMPWd1 SingleReg:$lhs, Wrapped32:$rhs, (i8 8/*COMPW.leu*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
+
+
+
+
+
+def : Pat<(brcond (i64 (setle (i64 SingleReg:$lhs), i64:$rhs)), bb:$dst),
+        (CB (COMPDd2 SingleReg:$lhs, Wrapped64:$rhs, (i8 4/*COMPW.le*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
+
+def : Pat<(brcond (i64 (setgt (i64 SingleReg:$lhs), i64:$rhs)), bb:$dst),
+        (CB (COMPDd2 SingleReg:$lhs, Wrapped64:$rhs, (i8 5/*COMPW.gt*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
+
+def : Pat<(brcond (i64 (setge (i64 SingleReg:$lhs), i64:$rhs)), bb:$dst),
+        (CB (COMPDd2 SingleReg:$lhs, Wrapped64:$rhs, (i8 3/*COMPW.ge*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
+
+def : Pat<(brcond (i64 (setne (i64 SingleReg:$lhs), i64:$rhs)), bb:$dst),
+        (CB (COMPDd2 SingleReg:$lhs, Wrapped64:$rhs, (i8 0/*COMPW.ne*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
+
+def : Pat<(brcond (i64 (seteq (i64 SingleReg:$lhs), i64:$rhs)), bb:$dst),
+        (CB (COMPDd2 SingleReg:$lhs, Wrapped64:$rhs, (i8 1/*COMPW.eq*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
+
+def : Pat<(brcond (i64 (setlt (i64 SingleReg:$lhs), i64:$rhs)), bb:$dst),
+        (CB (COMPDd2 SingleReg:$lhs, Wrapped64:$rhs, (i8 2/*COMPW.lt*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
+
+def : Pat<(brcond (i64 (setugt (i64 SingleReg:$lhs), i64:$rhs)), bb:$dst),
+        (CB (COMPDd2 SingleReg:$lhs, Wrapped64:$rhs, (i8 9/*COMPW.gtu*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
+
+def : Pat<(brcond (i64 (setuge (i64 SingleReg:$lhs), i64:$rhs)), bb:$dst),
+        (CB (COMPDd2 SingleReg:$lhs, Wrapped64:$rhs, (i8 7/*COMPW.geu*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
+
+def : Pat<(brcond (i64 (setult (i64 SingleReg:$lhs), i64:$rhs)), bb:$dst),
+        (CB (COMPDd2 SingleReg:$lhs, Wrapped64:$rhs, (i8 6/*COMPW.ltu*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
+
+def : Pat<(brcond (i64 (setule (i64 SingleReg:$lhs), i64:$rhs)), bb:$dst),
+        (CB (COMPDd2 SingleReg:$lhs, Wrapped64:$rhs, (i8 8/*COMPW.leu*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
