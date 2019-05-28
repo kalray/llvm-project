@@ -51,6 +51,20 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
 
   setSchedulingPreference(Sched::Source);
 
+  setOperationAction(ISD::SDIV,     MVT::i32, Promote);
+  setOperationAction(ISD::SDIVREM,  MVT::i32, Promote);
+  setOperationAction(ISD::SREM,     MVT::i32, Promote);
+  setOperationAction(ISD::UDIV,     MVT::i32, Promote);
+  setOperationAction(ISD::UDIVREM,  MVT::i32, Promote);
+  setOperationAction(ISD::UREM,     MVT::i32, Promote);
+
+  setOperationAction(ISD::SDIV,     MVT::i64, Expand);
+  setOperationAction(ISD::SDIVREM,  MVT::i64, Expand);
+  setOperationAction(ISD::SREM,     MVT::i64, Expand);
+  setOperationAction(ISD::UDIV,     MVT::i64, Expand);
+  setOperationAction(ISD::UDIVREM,  MVT::i64, Expand);
+  setOperationAction(ISD::UREM,     MVT::i64, Expand);
+
   setOperationAction(ISD::GlobalAddress, MVT::i64, Custom);
 
   setOperationAction(ISD::BR_CC, MVT::i32, Expand);
@@ -74,6 +88,8 @@ const char *K1CTargetLowering::getTargetNodeName(unsigned Opcode) const {
     return "K1C::RET";
   case K1CISD::CALL:
     return "K1C::CALL";
+  case K1CISD::WRAPPER:
+    return "K1C::WRAPPER";
   default:
     return NULL;
   }
@@ -256,6 +272,10 @@ SDValue K1CTargetLowering::LowerCall(CallLoweringInfo &CLI,
     Glue = Chain.getValue(1);
   }
 
+  if (ExternalSymbolSDNode *S = dyn_cast<ExternalSymbolSDNode>(Callee)) {
+    Callee = DAG.getTargetExternalSymbol(S->getSymbol(), PtrVT, 0);
+  }
+
   SmallVector<SDValue, 8> Ops;
   Ops.push_back(Chain);
   Ops.push_back(Callee);
@@ -326,7 +346,7 @@ SDValue K1CTargetLowering::lowerGlobalAddress(SDValue Op,
     report_fatal_error("Unable to lowerGlobalAddress");
 
   SDValue Result = DAG.getTargetGlobalAddress(GV, DL, PtrVT, 0);
-  Result = DAG.getNode(K1CISD::Wrapper, DL, PtrVT, Result);
+  Result = DAG.getNode(K1CISD::WRAPPER, DL, PtrVT, Result);
 
   return Result;
 }
