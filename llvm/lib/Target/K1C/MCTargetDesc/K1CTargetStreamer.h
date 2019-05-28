@@ -16,10 +16,9 @@
 namespace llvm {
 
 class K1CTargetStreamer : public MCTargetStreamer {
-  formatted_raw_ostream &OS;
 
 public:
-  K1CTargetStreamer(MCStreamer &S, formatted_raw_ostream &OS);
+  K1CTargetStreamer(MCStreamer &S);
 };
 
 } // namespace llvm
