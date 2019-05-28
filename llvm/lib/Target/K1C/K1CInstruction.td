@@ -41,7 +41,7 @@ def Wrapped32 : Operand<i32>, ImmLeaf<i32, [{return isInt<32>(Imm);}]>;
 
 def Wrapped64 : Operand<i64>, ImmLeaf<i64, [{return isInt<64>(Imm);}]>;
 
-def Pcrel27 : Operand<i64> {
+def Pcrel27 : Operand<iPTR> {
 }
 
 
@@ -66,7 +66,6 @@ def Signed27 : Operand<OtherVT> {
 def Signed54 : Operand<OtherVT> {
 }
 
-
 def SpeculateMod : Operand<OtherVT> {
 }
 
@@ -79,9 +78,9 @@ def Splat32Mod : Operand<OtherVT> {
 def Unsigned6 : Operand<OtherVT> {
 }
 
-def ComparisonMod : Operand<OtherVT> {
+def ComparisonMod : Operand<i8> {
+  let PrintMethod = "printComparisonMod";
 }
-
 
 def FloatcompMod : Operand<OtherVT> {
 }
@@ -92,7 +91,7 @@ def RoundingMod : Operand<OtherVT> {
 def SilentMod : Operand<OtherVT> {
 }
 
-def Pcrel17 : Operand<OtherVT> {
+def Pcrel17 : Operand<iPTR> {
 }
 
 

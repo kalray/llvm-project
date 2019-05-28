@@ -1497,6 +1497,7 @@ def SYNCGROUP : REGISTERZ_SIMPLE
    __UNKNOWN_ITIN__>;
 
 // 1 insns: ['GOTO']
+let isBranch=1, isTerminator=1 in
 def GOTO : PCREL27_SIMPLE
   <(outs), (ins Pcrel27:$a1),
    "goto $a1",
@@ -1510,6 +1511,7 @@ def CALL : PCREL27_SIMPLE
    [ ]>;
 
 // 1 insns: ['CB']
+let isBranch=1, isTerminator=1 in
 def CB : BRANCHCOND_REGISTERZ_PCREL17_SIMPLE
   <(outs), (ins SingleReg:$a2, Pcrel17:$a3, ScalarcondMod:$a1),
    "cb$a1 $a2? $a3",
