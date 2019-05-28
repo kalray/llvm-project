@@ -36,38 +36,31 @@ public:
 
   void Select(SDNode *Node) override;
 
-  bool SelectAddrFI(SDValue Addr, SDValue &FrameIndex);
+  bool SelectAddrRI(SDValue Addr, SDValue &Index, SDValue &Base);
+  bool SelectAddrRR(SDValue Addr, SDValue &Index, SDValue &Base);
 
-  bool SelectAddrRI(SDValue Addr, SDValue &Base, SDValue &Index);
-  bool SelectAddrRR(SDValue Addr, SDValue &Base, SDValue &Index);
+  MachineSDNode *buildMake(SDLoc &DL, uint64_t Imm, EVT VT) const;
 #include "K1CGenDAGISel.inc"
 };
 
 } // namespace
 
-bool K1CDAGToDAGISel::SelectAddrFI(SDValue Addr, SDValue &FrameIndex) {
-  if (auto FIN = dyn_cast<FrameIndexSDNode>(Addr)) {
-    FrameIndex = CurDAG->getTargetFrameIndex(FIN->getIndex(), MVT::i64);
-    return true;
-  }
-  return false;
-}
-
-bool K1CDAGToDAGISel::SelectAddrRI(SDValue Addr, SDValue &Base,
-                                   SDValue &Index) {
+bool K1CDAGToDAGISel::SelectAddrRI(SDValue Addr, SDValue &Index,
+                                   SDValue &Base) {
   if (FrameIndexSDNode *FIN = dyn_cast<FrameIndexSDNode>(Addr)) {
-    Base = CurDAG->getRegister(K1C::R12, MVT::i64);
-    Index = CurDAG->getTargetFrameIndex(
+    Base = CurDAG->getTargetFrameIndex(
         FIN->getIndex(), TLI->getPointerTy(CurDAG->getDataLayout()));
+    Index = CurDAG->getTargetConstant(0, SDLoc(Addr), MVT::i64);
     return true;
   }
-  if (Addr.getOpcode() == ISD::ADD) {
+  if (Addr.getOpcode() == ISD::ADD || Addr.getOpcode() == ISD::OR) {
     if (ConstantSDNode *CN = dyn_cast<ConstantSDNode>(Addr.getOperand(1))) {
       if (isInt<64>(CN->getSExtValue())) {
         if (FrameIndexSDNode *FIN =
                 dyn_cast<FrameIndexSDNode>(Addr.getOperand(0))) {
           // Constant offset from frame ref
-          return false;
+          Base = CurDAG->getTargetFrameIndex(
+              FIN->getIndex(), TLI->getPointerTy(CurDAG->getDataLayout()));
         } else {
           Base = Addr.getOperand(0);
         }
@@ -82,8 +75,18 @@ bool K1CDAGToDAGISel::SelectAddrRI(SDValue Addr, SDValue &Base,
   return true;
 }
 
-bool K1CDAGToDAGISel::SelectAddrRR(SDValue Addr, SDValue &Base,
-                                   SDValue &Index) {
+bool K1CDAGToDAGISel::SelectAddrRR(SDValue Addr, SDValue &Index,
+                                   SDValue &Base) {
+  if (Addr.getOpcode() == ISD::ADD || Addr.getOpcode() == ISD::OR) {
+    if (RegisterSDNode *IREG = dyn_cast<RegisterSDNode>(Addr.getOperand(0))) {
+      if (RegisterSDNode *BaseREG =
+              dyn_cast<RegisterSDNode>(Addr.getOperand(1))) {
+        Base = CurDAG->getRegister(IREG->getReg(), MVT::i64);
+        Index = CurDAG->getRegister(BaseREG->getReg(), MVT::i64);
+        return true;
+      }
+    }
+  }
   return false;
 }
 
@@ -95,12 +98,31 @@ void K1CDAGToDAGISel::Select(SDNode *Node) {
   unsigned Opcode = Node->getOpcode();
 
   switch (Opcode) {
-  case ISD::FrameIndex:
-    int FI = cast<FrameIndexSDNode>(Node)->getIndex();
-    printf("ISD::FrameIndex %i\n", FI);
-    break;
+  case ISD::Constant:
+    ConstantSDNode *C = cast<ConstantSDNode>(Node);
+    uint64_t Imm;
+    Imm = C->getZExtValue();
+
+    SDLoc DL(Node);
+    ReplaceNode(Node, buildMake(DL, Imm, Node->getValueType(0)));
+    return;
   }
   SelectCode(Node);
+}
+
+// Select the correct variant of MAKE instruction based on the imm value
+MachineSDNode *K1CDAGToDAGISel::buildMake(SDLoc &DL, uint64_t Imm,
+                                          EVT VT) const {
+  unsigned opCode = opCode = K1C::MAKEd2;
+  if (isInt<16>(Imm))
+    opCode = K1C::MAKEd0;
+  else {
+    if (isInt<43>(Imm))
+      opCode = K1C::MAKEd1;
+  }
+
+  return CurDAG->getMachineNode(opCode, DL, VT,
+                                CurDAG->getTargetConstant(Imm, DL, MVT::i64));
 }
 
 FunctionPass *llvm::createK1CISelDag(K1CTargetMachine &TM) {

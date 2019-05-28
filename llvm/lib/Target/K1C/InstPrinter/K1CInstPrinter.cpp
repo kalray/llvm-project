@@ -148,8 +148,8 @@ void K1CInstPrinter::printScalarcondMod(
 void K1CInstPrinter::printMemOperand(
     const MCInst *MI, unsigned OpNo,
     /*const MCSubtargetInfo &STI,*/ raw_ostream &O) {
-  printOperand(MI, OpNo + 1, O);
-  O << "[";
   printOperand(MI, OpNo, O);
+  O << "[";
+  printOperand(MI, OpNo + 1, O);
   O << "]";
 }
