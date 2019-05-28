@@ -223,6 +223,7 @@ StringRef Triple::getOSTypeName(OSType Kind) {
   case WatchOS: return "watchos";
   case Win32: return "windows";
   case ZOS: return "zos";
+  case ClusterOS: return "cos";
   }
 
   llvm_unreachable("Invalid OSType");
@@ -536,6 +537,7 @@ static Triple::OSType parseOS(StringRef OSName) {
     .StartsWith("hurd", Triple::Hurd)
     .StartsWith("wasi", Triple::WASI)
     .StartsWith("emscripten", Triple::Emscripten)
+    .StartsWith("cos", Triple::ClusterOS)
     .Default(Triple::UnknownOS);
 }
 
