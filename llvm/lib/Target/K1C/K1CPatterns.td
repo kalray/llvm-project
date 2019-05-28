@@ -245,3 +245,10 @@ def : Pat<(brcond (i64 (setult (i64 SingleReg:$lhs), i64:$rhs)), bb:$dst),
 
 def : Pat<(brcond (i64 (setule (i64 SingleReg:$lhs), i64:$rhs)), bb:$dst),
         (CB (COMPDd2 SingleReg:$lhs, Wrapped64:$rhs, (i8 8/*COMPW.leu*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
+
+def : Pat<(shl i64:$rs1, i64:$rs2), (SLLDd0 SingleReg:$rs1, SingleReg:$rs2)>;
+def : Pat<(shl i32:$rs1, i32:$rs2), (SLLWd0 SingleReg:$rs1, SingleReg:$rs2)>;
+
+def : Pat<(brind (i32 SingleReg:$r)), (IGOTO SingleReg:$r)>;
+
+def : Pat<(brind (i64 SingleReg:$r)), (IGOTO SingleReg:$r)>;
