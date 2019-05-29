@@ -13,6 +13,7 @@
 
 #include "K1CISelLowering.h"
 #include "K1C.h"
+#include "K1CMachineFunctionInfo.h"
 #include "K1CTargetMachine.h"
 #include "llvm/ADT/Statistic.h"
 #include "llvm/CodeGen/CallingConvLower.h"
@@ -66,6 +67,10 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::UREM,     MVT::i64, Expand);
 
   setOperationAction(ISD::GlobalAddress, MVT::i64, Custom);
+  setOperationAction(ISD::VASTART, MVT::Other, Custom);
+  setOperationAction(ISD::VAARG, MVT::Other, Custom);
+  setOperationAction(ISD::VACOPY, MVT::Other, Expand);
+  setOperationAction(ISD::VAEND, MVT::Other, Expand);
 
   setOperationAction(ISD::BR_CC, MVT::i32, Expand);
   setOperationAction(ISD::BR_CC, MVT::i64, Expand);
@@ -152,6 +157,10 @@ K1CTargetLowering::LowerReturn(SDValue Chain, CallingConv::ID CallConv,
   return DAG.getNode(K1CISD::RET, DL, MVT::Other, RetOps);
 }
 
+static const MCPhysReg ArgGPRs[] = { K1C::R0, K1C::R1, K1C::R2,  K1C::R3,
+                                     K1C::R4, K1C::R5, K1C::R6,  K1C::R7,
+                                     K1C::R8, K1C::R9, K1C::R10, K1C::R11 };
+
 SDValue K1CTargetLowering::LowerFormalArguments(
     SDValue Chain, CallingConv::ID CallConv, bool IsVarArg,
     const SmallVectorImpl<ISD::InputArg> &Ins, const SDLoc &DL,
@@ -167,8 +176,7 @@ SDValue K1CTargetLowering::LowerFormalArguments(
 
   MachineFunction &MF = DAG.getMachineFunction();
   MachineRegisterInfo &RegInfo = MF.getRegInfo();
-
-  assert(!IsVarArg && "VarArg is not supported");
+  std::vector<SDValue> OutChains;
 
   SmallVector<CCValAssign, 16> ArgLocs;
   CCState CCInfo(CallConv, IsVarArg, DAG.getMachineFunction(), ArgLocs,
@@ -196,6 +204,49 @@ SDValue K1CTargetLowering::LowerFormalArguments(
         DAG.getLoad(VA.getValVT(), DL, Chain,
                     DAG.getFrameIndex(FI, getPointerTy(MF.getDataLayout())),
                     MachinePointerInfo::getFixedStack(MF, FI)));
+  }
+
+  if (IsVarArg) {
+    ArrayRef<MCPhysReg> ArgRegs = makeArrayRef(ArgGPRs);
+    unsigned Idx = CCInfo.getFirstUnallocated(ArgRegs);
+    int VaArgOffset = CCInfo.getNextStackOffset();
+    int VarArgsSaveSize = 0;
+    MachineFrameInfo &MFI = MF.getFrameInfo();
+    K1CMachineFunctionInfo *K1CFI = MF.getInfo<K1CMachineFunctionInfo>();
+
+    if (ArgRegs.size() == Idx) {
+      VaArgOffset = CCInfo.getNextStackOffset();
+      VarArgsSaveSize = 0;
+    } else {
+      VarArgsSaveSize = 8 * (ArgRegs.size() - Idx);
+      VaArgOffset = -VarArgsSaveSize;
+    }
+
+    int FI = MFI.CreateFixedObject(8, VaArgOffset, true);
+    K1CFI->setVarArgsFrameIndex(FI);
+
+    // Copy the integer registers that may have been used for passing varargs
+    // to the vararg save area.
+    for (unsigned I = Idx; I < ArgRegs.size(); ++I, VaArgOffset += 8) {
+      const unsigned Reg =
+          RegInfo.createVirtualRegister(&K1C::SingleRegRegClass);
+      RegInfo.addLiveIn(ArgRegs[I], Reg);
+      SDValue ArgValue = DAG.getCopyFromReg(Chain, DL, Reg, MVT::i64);
+      FI = MFI.CreateFixedObject(8, VaArgOffset, true);
+      SDValue PtrOff = DAG.getFrameIndex(FI, getPointerTy(DAG.getDataLayout()));
+      SDValue Store = DAG.getStore(Chain, DL, ArgValue, PtrOff,
+                                   MachinePointerInfo::getFixedStack(MF, FI));
+      OutChains.push_back(Store);
+    }
+
+    K1CFI->setVarArgsSaveSize(VarArgsSaveSize);
+  }
+
+  // All stores are grouped in one node to allow the matching between
+  // the size of Ins and InVals. This only happens for vararg functions.
+  if (!OutChains.empty()) {
+    OutChains.push_back(Chain);
+    Chain = DAG.getNode(ISD::TokenFactor, DL, MVT::Other, OutChains);
   }
 
   return Chain;
@@ -230,15 +281,41 @@ SDValue K1CTargetLowering::LowerCall(CallLoweringInfo &CLI,
   // Keep stack frames 8-byte aligned.
   ArgsSize = (ArgsSize + 7) & ~7;
 
+  // Create local copies for byval args
+  SmallVector<SDValue, 8> ByValArgs;
+  for (unsigned i = 0, e = Outs.size(); i != e; ++i) {
+    ISD::ArgFlagsTy Flags = Outs[i].Flags;
+    if (!Flags.isByVal())
+      continue;
+
+    SDValue Arg = OutVals[i];
+    unsigned Size = Flags.getByValSize();
+    unsigned Align = Flags.getByValAlign();
+
+    int FI = MF.getFrameInfo().CreateStackObject(Size, Align, /*isSS=*/false);
+    SDValue FIPtr = DAG.getFrameIndex(FI, getPointerTy(DAG.getDataLayout()));
+    SDValue SizeNode = DAG.getConstant(Size, dl, MVT::i64);
+
+    Chain = DAG.getMemcpy(Chain, dl, FIPtr, Arg, SizeNode, Align,
+                          /*IsVolatile=*/false,
+                          /*AlwaysInline=*/false, false /*isTailCall*/,
+                          MachinePointerInfo(), MachinePointerInfo());
+    ByValArgs.push_back(FIPtr);
+  }
+
   Chain = DAG.getCALLSEQ_START(Chain, ArgsSize, 0, dl);
 
   SmallVector<std::pair<unsigned, SDValue>, 8> RegsToPass;
   SmallVector<SDValue, 8> MemOpChains;
   SDValue StackPtr;
 
-  for (unsigned i = 0, e = ArgLocs.size(); i != e; ++i) {
+  for (unsigned i = 0, j = 0, e = ArgLocs.size(); i != e; ++i) {
     CCValAssign &VA = ArgLocs[i];
     SDValue ArgValue = OutVals[i];
+    ISD::ArgFlagsTy Flags = Outs[i].Flags;
+
+    if (Flags.isByVal())
+      ArgValue = ByValArgs[j++];
 
     if (VA.isRegLoc()) {
       // Queue up the argument copies and emit them at the end.
@@ -332,6 +409,12 @@ SDValue K1CTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
     report_fatal_error("unimplemented operand");
   case ISD::GlobalAddress:
     return lowerGlobalAddress(Op, DAG);
+  case ISD::VASTART:
+    return lowerVASTART(Op, DAG);
+  case ISD::VAARG:
+    return lowerVAARG(Op, DAG);
+  case ISD::FRAMEADDR:
+    return lowerFRAMEADDR(Op, DAG);
   }
 }
 
@@ -349,4 +432,64 @@ SDValue K1CTargetLowering::lowerGlobalAddress(SDValue Op,
   Result = DAG.getNode(K1CISD::WRAPPER, DL, PtrVT, Result);
 
   return Result;
+}
+
+SDValue K1CTargetLowering::lowerVASTART(SDValue Op, SelectionDAG &DAG) const {
+  MachineFunction &MF = DAG.getMachineFunction();
+  K1CMachineFunctionInfo *FuncInfo = MF.getInfo<K1CMachineFunctionInfo>();
+
+  SDLoc DL(Op);
+  SDValue FI = DAG.getFrameIndex(FuncInfo->getVarArgsFrameIndex(),
+                                 getPointerTy(MF.getDataLayout()));
+
+  // vastart just stores the address of the VarArgsFrameIndex slot into the
+  // memory location argument.
+  const Value *SV = cast<SrcValueSDNode>(Op.getOperand(2))->getValue();
+  return DAG.getStore(Op.getOperand(0), DL, FI, Op.getOperand(1),
+                      MachinePointerInfo(SV));
+}
+
+SDValue K1CTargetLowering::lowerVAARG(SDValue Op, SelectionDAG &DAG) const {
+  SDNode *Node = Op.getNode();
+  EVT VT = Node->getValueType(0);
+  SDValue InChain = Node->getOperand(0);
+  SDValue VAListPtr = Node->getOperand(1);
+  EVT PtrVT = VAListPtr.getValueType();
+  const Value *SV = cast<SrcValueSDNode>(Node->getOperand(2))->getValue();
+  SDLoc DL(Node);
+  SDValue VAList =
+      DAG.getLoad(PtrVT, DL, InChain, VAListPtr, MachinePointerInfo(SV));
+  // Increment the pointer, VAList, to the next vaarg.
+  // Increment va_list pointer to the next multiple of 64 bits / 8 bytes
+  int increment = (VT.getSizeInBits() + 63) / 64 * 8;
+  SDValue NextPtr = DAG.getNode(ISD::ADD, DL, PtrVT, VAList,
+                                DAG.getIntPtrConstant(increment, DL));
+  // Store the incremented VAList to the legalized pointer.
+  InChain = DAG.getStore(VAList.getValue(1), DL, NextPtr, VAListPtr,
+                         MachinePointerInfo(SV));
+  // Load the actual argument out of the pointer VAList.
+  // We can't count on greater alignment than the word size.
+  return DAG.getLoad(VT, DL, InChain, VAList, MachinePointerInfo(), 8);
+}
+
+SDValue K1CTargetLowering::lowerFRAMEADDR(SDValue Op, SelectionDAG &DAG) const {
+  const K1CRegisterInfo &RI = *Subtarget.getRegisterInfo();
+  MachineFunction &MF = DAG.getMachineFunction();
+  MachineFrameInfo &MFI = MF.getFrameInfo();
+  MFI.setFrameAddressIsTaken(true);
+  unsigned FrameReg = RI.getFrameRegister(MF);
+  int XLenInBytes = 8;
+
+  EVT VT = Op.getValueType();
+  SDLoc DL(Op);
+  SDValue FrameAddr = DAG.getCopyFromReg(DAG.getEntryNode(), DL, FrameReg, VT);
+  unsigned Depth = cast<ConstantSDNode>(Op.getOperand(0))->getZExtValue();
+  while (Depth--) {
+    int Offset = -(XLenInBytes * 2);
+    SDValue Ptr = DAG.getNode(ISD::ADD, DL, VT, FrameAddr,
+                              DAG.getIntPtrConstant(Offset, DL));
+    FrameAddr =
+        DAG.getLoad(VT, DL, DAG.getEntryNode(), Ptr, MachinePointerInfo());
+  }
+  return FrameAddr;
 }
