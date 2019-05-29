@@ -36,6 +36,7 @@ public:
 
   void Select(SDNode *Node) override;
 
+  bool SelectAddrFI(SDValue Addr, SDValue &Base);
   bool SelectAddrRI(SDValue Addr, SDValue &Index, SDValue &Base);
   bool SelectAddrRR(SDValue Addr, SDValue &Index, SDValue &Base);
 
@@ -44,6 +45,14 @@ public:
 };
 
 } // namespace
+
+bool K1CDAGToDAGISel::SelectAddrFI(SDValue Addr, SDValue &Base) {
+  if (auto FIN = dyn_cast<FrameIndexSDNode>(Addr)) {
+    Base = CurDAG->getTargetFrameIndex(FIN->getIndex(), MVT::i64);
+    return true;
+  }
+  return false;
+}
 
 bool K1CDAGToDAGISel::SelectAddrRI(SDValue Addr, SDValue &Index,
                                    SDValue &Base) {

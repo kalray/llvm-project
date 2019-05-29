@@ -67,13 +67,13 @@ def MemRR : Operand<iPTR>, ComplexPattern<iPTR, 2, "SelectAddrRR", [], []> {
   let MIOperandInfo = (ops SingleReg:$indexReg, SingleReg:$baseReg);
 }
 
+def AddrFI : ComplexPattern<iPTR, 1, "SelectAddrFI", [frameindex], []>;
+
 // extracts offsset and register (or frameindex)
 def AddrRI : Operand<iPTR>, ComplexPattern<iPTR, 2, "SelectAddrRI", [frameindex], []> {
   let PrintMethod = "printMemOperand";
   let MIOperandInfo = (ops i64imm:$offset, SingleReg:$baseReg );
 }
-
-//def : Pat<(i32 (trunc i64:$x)), (NOTRUNC SingleReg:$x)>;
 
 // store instructions with register-immediate addressing mode
 def SBri : K1C_INSTRUCTION<(outs), (ins AddrRI:$addr, SingleReg:$val), "sb $addr = $val", [], NoItinerary>;
@@ -216,17 +216,8 @@ def : Pat<(brcond (i64 (setult (i64 SingleReg:$lhs), i64:$rhs)), bb:$dst),
 def : Pat<(brcond (i64 (setule (i64 SingleReg:$lhs), i64:$rhs)), bb:$dst),
         (CB (COMPDd2 SingleReg:$lhs, Wrapped64:$rhs, (i8 8/*COMPW.leu*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
 
+def : Pat<(i64 AddrFI:$fi), (ADDDd3 SingleReg:$fi,(i64 0) )>;
+
 def : Pat<(brind (i32 SingleReg:$r)), (IGOTO SingleReg:$r)>;
 
 def : Pat<(brind (i64 SingleReg:$r)), (IGOTO SingleReg:$r)>;
-
-//def : Pat<(store ADDRri:$addr, SingleReg:$value),
-//    (K1CSD MemRI:$addr, SingleReg:$value)>;
-
-//===----------------------------------------------------------------------===//
-//  FPU Instructions - Patterns
-//===----------------------------------------------------------------------===//
-
-//===----------------------------------------------------------------------===//
-//  Synthetic Instructions - Patterns
-//===----------------------------------------------------------------------===//
