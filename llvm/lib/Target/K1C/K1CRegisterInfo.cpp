@@ -64,12 +64,32 @@ void K1CRegisterInfo::eliminateFrameIndex(MachineBasicBlock::iterator II,
 
   int FrameIndex = MI.getOperand(FIOperandNum).getIndex();
   unsigned FrameReg;
-  int Offset =
-      getFrameLowering(MF)->getFrameIndexReference(MF, FrameIndex, FrameReg) +
-      MI.getOperand(FIOperandNum - 1).getImm();
+  int Offset;
+  // Check if the previous operand is immediate, if true replace it with the
+  // computed value
+  if (MI.getOperand(FIOperandNum - 1).isImm()) {
+    Offset =
+        getFrameLowering(MF)->getFrameIndexReference(MF, FrameIndex, FrameReg) +
+        MI.getOperand(FIOperandNum - 1).getImm();
 
-  MI.getOperand(FIOperandNum).ChangeToRegister(FrameReg, false, false, false);
-  MI.getOperand(FIOperandNum - 1).ChangeToImmediate(Offset);
+    MI.getOperand(FIOperandNum).ChangeToRegister(FrameReg, false, false, false);
+    MI.getOperand(FIOperandNum - 1).ChangeToImmediate(Offset);
+  } else {
+    // Check if the next operand is immediate, if true replace it with the
+    // computed value
+    if (FIOperandNum + 1 < MI.getNumOperands() &&
+        MI.getOperand(FIOperandNum + 1).isImm()) {
+      Offset = getFrameLowering(MF)
+                   ->getFrameIndexReference(MF, FrameIndex, FrameReg) +
+               MI.getOperand(FIOperandNum + 1).getImm();
+
+      MI.getOperand(FIOperandNum)
+          .ChangeToRegister(FrameReg, false, false, false);
+      MI.getOperand(FIOperandNum + 1).ChangeToImmediate(Offset);
+    } else {
+      llvm_unreachable("could not eliminate frame index");
+    }
+  }
 }
 
 unsigned K1CRegisterInfo::getFrameRegister(const MachineFunction &MF) const {
