@@ -40,6 +40,7 @@
 //===----------------------------------------------------------------------===//
 
 #include "K1CFrameLowering.h"
+#include "K1CMachineFunctionInfo.h"
 #include "K1CSubtarget.h"
 #include "MCTargetDesc/K1CMCTargetDesc.h"
 #include "llvm/CodeGen/MachineFrameInfo.h"
@@ -55,9 +56,11 @@ static unsigned getSPReg(const K1CSubtarget &STI) { return K1C::R12; }
 void K1CFrameLowering::adjustStack(MachineFunction &MF) const {
   MachineFrameInfo &MFI = MF.getFrameInfo();
   const K1CRegisterInfo *RI = STI.getRegisterInfo();
+  auto *K1CFI = MF.getInfo<K1CMachineFunctionInfo>();
 
   // Get the real stack size.
   uint64_t StackSize = MFI.getStackSize();
+  StackSize += K1CFI->getVarArgsSaveSize();
 
   // Get the alignment.
 
@@ -90,6 +93,7 @@ void K1CFrameLowering::emitPrologue(MachineFunction &MF,
 
   MachineBasicBlock::iterator MBBI = MBB.begin();
   MachineFrameInfo &MFI = MF.getFrameInfo();
+  auto *K1CFI = MF.getInfo<K1CMachineFunctionInfo>();
 
   adjustStack(MF);
 
@@ -102,7 +106,7 @@ void K1CFrameLowering::emitPrologue(MachineFunction &MF,
   unsigned SPReg = getSPReg(STI);
 
   adjustReg(MBB, MBBI, DL, GetStackOpCode((uint64_t)StackSize), SPReg, SPReg,
-            -StackSize, MachineInstr::FrameSetup);
+            -StackSize + K1CFI->getVarArgsSaveSize(), MachineInstr::FrameSetup);
 }
 
 bool K1CFrameLowering::isLeafProc(MachineFunction &MF) const {
@@ -115,6 +119,7 @@ void K1CFrameLowering::emitEpilogue(MachineFunction &MF,
                                     MachineBasicBlock &MBB) const {
   MachineBasicBlock::iterator MBBI = MBB.getLastNonDebugInstr();
   MachineFrameInfo &MFI = MF.getFrameInfo();
+  auto *K1CFI = MF.getInfo<K1CMachineFunctionInfo>();
 
   uint64_t StackSize = MFI.getStackSize();
 
@@ -125,7 +130,8 @@ void K1CFrameLowering::emitEpilogue(MachineFunction &MF,
   DebugLoc DL = MBBI->getDebugLoc();
 
   // Deallocate stack
-  adjustReg(MBB, MBBI, DL, GetStackOpCode(StackSize), SPReg, SPReg, StackSize,
+  adjustReg(MBB, MBBI, DL, GetStackOpCode(StackSize), SPReg, SPReg,
+            StackSize - K1CFI->getVarArgsSaveSize(),
             MachineInstr::FrameDestroy);
 }
 
@@ -133,9 +139,10 @@ int K1CFrameLowering::getFrameIndexReference(const MachineFunction &MF, int FI,
                                              unsigned &FrameReg) const {
   const MachineFrameInfo &MFI = MF.getFrameInfo();
   const TargetRegisterInfo *RI = MF.getSubtarget().getRegisterInfo();
+  auto *K1CFI = MF.getInfo<K1CMachineFunctionInfo>();
   FrameReg = RI->getFrameRegister(MF);
   int Offset = MFI.getObjectOffset(FI) - getOffsetOfLocalArea() +
-               MFI.getOffsetAdjustment();
+               MFI.getOffsetAdjustment() - K1CFI->getVarArgsSaveSize();
 
   Offset += MF.getFrameInfo().getStackSize();
 
