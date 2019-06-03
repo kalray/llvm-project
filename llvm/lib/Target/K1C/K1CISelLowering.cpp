@@ -424,12 +424,18 @@ SDValue K1CTargetLowering::lowerGlobalAddress(SDValue Op,
   auto PtrVT = getPointerTy(DAG.getDataLayout());
   GlobalAddressSDNode *N = cast<GlobalAddressSDNode>(Op);
   const GlobalValue *GV = N->getGlobal();
+  int64_t Offset = N->getOffset();
 
   if (isPositionIndependent())
     report_fatal_error("Unable to lowerGlobalAddress");
 
   SDValue Result = DAG.getTargetGlobalAddress(GV, DL, PtrVT, 0);
   Result = DAG.getNode(K1CISD::WRAPPER, DL, PtrVT, Result);
+
+  if (Offset != 0) {
+    SDValue PtrOff = DAG.getIntPtrConstant(Offset, DL);
+    Result = DAG.getNode(ISD::ADD, DL, MVT::i64, Result, PtrOff);
+  }
 
   return Result;
 }
