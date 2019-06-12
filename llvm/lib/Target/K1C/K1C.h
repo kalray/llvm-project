@@ -29,6 +29,9 @@ FunctionPass *createK1CISelDag(K1CTargetMachine &TM);
 
 void LowerK1CMachineInstrToMCInst(const MachineInstr *MI, MCInst &OutMI,
                                   AsmPrinter &AP);
+
+FunctionPass *createK1CExpandPseudoPass();
+void initializeK1CExpandPseudoPass(PassRegistry &);
 }
 
 #endif // LLVM_LIB_TARGET_K1C_K1C_H
