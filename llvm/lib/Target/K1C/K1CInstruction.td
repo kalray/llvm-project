@@ -13,16 +13,18 @@ class K1C_INSTRUCTION<dag outs, dag ins, string asmstr, list<dag> pattern,
 
   dag OutOperandList = outs;
   dag InOperandList = ins;
-  let AsmString = asmstr;
+  let AsmString = asmstr # "\t";
   let Pattern = pattern;
   let Namespace = "K1C";
+
 }
 
-class K1C_PseudoInstr<dag outs, dag ins, string asmstr, list<dag> pattern>
+class K1C_PseudoInstr<dag outs, dag ins, list<dag> pattern, string asmstr="">
    : K1C_INSTRUCTION<outs, ins, asmstr, pattern, NoItinerary>
 {
   let isPseudo = 1;
 }
+
 
 def __UNKNOWN_ITIN__ : InstrItinClass {
 }

@@ -66,6 +66,11 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::UDIVREM,  MVT::i64, Expand);
   setOperationAction(ISD::UREM,     MVT::i64, Expand);
 
+  setOperationAction(ISD::SELECT_CC, MVT::i32, Expand);
+  setOperationAction(ISD::SELECT_CC, MVT::i64, Expand);
+  setOperationAction(ISD::SELECT, MVT::i32, Custom);
+  setOperationAction(ISD::SELECT, MVT::i64, Custom);
+
   setOperationAction(ISD::GlobalAddress, MVT::i64, Custom);
   setOperationAction(ISD::VASTART, MVT::Other, Custom);
   setOperationAction(ISD::VAARG, MVT::Other, Custom);
@@ -95,6 +100,8 @@ const char *K1CTargetLowering::getTargetNodeName(unsigned Opcode) const {
     return "K1C::CALL";
   case K1CISD::WRAPPER:
     return "K1C::WRAPPER";
+  case K1CISD::SELECT_CC:
+    return "K1C::SELECT_CC";
   default:
     return NULL;
   }
@@ -415,6 +422,8 @@ SDValue K1CTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
     return lowerVAARG(Op, DAG);
   case ISD::FRAMEADDR:
     return lowerFRAMEADDR(Op, DAG);
+  case ISD::SELECT:
+    return lowerSELECT(Op, DAG);
   }
 }
 
@@ -498,4 +507,20 @@ SDValue K1CTargetLowering::lowerFRAMEADDR(SDValue Op, SelectionDAG &DAG) const {
         DAG.getLoad(VT, DL, DAG.getEntryNode(), Ptr, MachinePointerInfo());
   }
   return FrameAddr;
+}
+
+SDValue K1CTargetLowering::lowerSELECT(SDValue Op, SelectionDAG &DAG) const {
+
+  SDValue CondV = Op.getOperand(0);
+  SDValue TrueV = Op.getOperand(1);
+  SDValue FalseV = Op.getOperand(2);
+  SDLoc DL(Op);
+
+  SDVTList VTs = DAG.getVTList(Op.getValueType());
+  SDValue Zero = DAG.getConstant(0, DL, MVT::i64);
+  SDValue Ops[] = { CondV, Zero, TrueV, FalseV };
+
+  SDValue result = DAG.getNode(K1CISD::SELECT_CC, DL, VTs, Ops);
+
+  return result;
 }

@@ -14,6 +14,7 @@ add_llvm_target(K1CCodeGen
     K1CISelDAGToDAG.cpp
     K1CISelLowering.cpp
     K1CAsmPrinter.cpp
+    K1CExpandPseudoInsts.cpp
     K1CInstrInfo.cpp
     K1CRegisterInfo.cpp
     K1CTargetMachine.cpp
