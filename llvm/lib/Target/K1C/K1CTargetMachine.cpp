@@ -27,6 +27,8 @@ using namespace llvm;
 
 extern "C" void LLVMInitializeK1CTarget() {
   RegisterTargetMachine<K1CTargetMachine> X(getTheK1CTarget());
+  auto PR = PassRegistry::getPassRegistry();
+  initializeK1CExpandPseudoPass(*PR);
 }
 
 static Reloc::Model getEffectiveRelocModel(const Triple &TT,
@@ -61,6 +63,8 @@ public:
   }
 
   bool addInstSelector() override;
+
+  void addPreEmitPass() override;
 };
 } // namespace
 
@@ -73,3 +77,5 @@ bool K1CPassConfig::addInstSelector() {
 
   return false;
 }
+
+void K1CPassConfig::addPreEmitPass() { addPass(createK1CExpandPseudoPass()); }
