@@ -11,6 +11,10 @@ def SDTK1CWrapper : SDTypeProfile<1, 1, [SDTCisSameAs<0, 1>, SDTCisPtrTy<0>]>;
 
 def K1CWrapper : SDNode<"K1CISD::WRAPPER", SDTK1CWrapper>;
 
+def SDT_K1CSelectCC : SDTypeProfile<1, 4, [SDTCisVT<0, i32>, SDTCisVT<1, i64>, SDTCisVT<2, i64>]>;
+
+def SelectCC : SDNode<"K1CISD::SELECT_CC", SDT_K1CSelectCC, []>;
+
 //
 // Function return
 //
@@ -48,11 +52,9 @@ def callseq_end   : SDNode<"ISD::CALLSEQ_END",   SDT_SimpleCallSeqEnd,
                            [SDNPHasChain, SDNPOptInGlue, SDNPOutGlue]>;
 
 def ADJCALLSTACKDOWN : K1C_PseudoInstr<(outs), (ins i32imm:$amt, i32imm:$amt2),
-                               "ADJCALLSTACKDOWN $amt",
-                               [(callseq_start timm:$amt, timm:$amt2)]>;
+                               [(callseq_start timm:$amt, timm:$amt2)], "ADJCALLSTACKDOWN $amt">;
 def ADJCALLSTACKUP : K1C_PseudoInstr<(outs), (ins i32imm:$amt1, i32imm:$amt2),
-                            "ADJCALLSTACKUP $amt1",
-                            [(callseq_end timm:$amt1, timm:$amt2)]>;
+                            [(callseq_end timm:$amt1, timm:$amt2)], "ADJCALLSTACKUP $amt1">;
 
 // MAKE patterns disabled - selection is done in code
 /*
@@ -174,50 +176,23 @@ def : Pat<(i64 (sext_inreg i64:$val, i32)), (SXWD SingleReg:$val)>;
 def : Pat<(br bb:$addr), (GOTO Pcrel27:$addr)>;
 
 // Conditional branches(setcc)
-def : Pat<(brcond (i64 (setle (i32 SingleReg:$lhs), i32:$rhs)), bb:$dst),
-        (CB (COMPWd1 SingleReg:$lhs, Wrapped32:$rhs, (i8 4/*COMPW.le*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
-def : Pat<(brcond (i64 (setgt (i32 SingleReg:$lhs), i32:$rhs)), bb:$dst),
-        (CB (COMPWd1 SingleReg:$lhs, Wrapped32:$rhs, (i8 5/*COMPW.gt*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
-def : Pat<(brcond (i64 (setge (i32 SingleReg:$lhs), i32:$rhs)), bb:$dst),
-        (CB (COMPWd1 SingleReg:$lhs, Wrapped32:$rhs, (i8 3/*COMPW.ge*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
-def : Pat<(brcond (i64 (setne (i32 SingleReg:$lhs), i32:$rhs)), bb:$dst),
-        (CB (COMPWd1 SingleReg:$lhs, Wrapped32:$rhs, (i8 0/*COMPW.ne*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
-def : Pat<(brcond (i64 (seteq (i32 SingleReg:$lhs), i32:$rhs)), bb:$dst),
-        (CB (COMPWd1 SingleReg:$lhs, Wrapped32:$rhs, (i8 1/*COMPW.eq*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
-def : Pat<(brcond (i64 (setlt (i32 SingleReg:$lhs), i32:$rhs)), bb:$dst),
-        (CB (COMPWd1 SingleReg:$lhs, Wrapped32:$rhs, (i8 2/*COMPW.lt*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
-def : Pat<(brcond (i64 (setugt (i32 SingleReg:$lhs), i32:$rhs)), bb:$dst),
-        (CB (COMPWd1 SingleReg:$lhs, Wrapped32:$rhs, (i8 9/*COMPW.gtu*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
-def : Pat<(brcond (i64 (setuge (i32 SingleReg:$lhs), i32:$rhs)), bb:$dst),
-        (CB (COMPWd1 SingleReg:$lhs, Wrapped32:$rhs, (i8 7/*COMPW.geu*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
-def : Pat<(brcond (i64 (setult (i32 SingleReg:$lhs), i32:$rhs)), bb:$dst),
-        (CB (COMPWd1 SingleReg:$lhs, Wrapped32:$rhs, (i8 6/*COMPW.ltu*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
-def : Pat<(brcond (i64 (setule (i32 SingleReg:$lhs), i32:$rhs)), bb:$dst),
-        (CB (COMPWd1 SingleReg:$lhs, Wrapped32:$rhs, (i8 8/*COMPW.leu*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
-
-def : Pat<(brcond (i64 (setle (i64 SingleReg:$lhs), i64:$rhs)), bb:$dst),
-        (CB (COMPDd2 SingleReg:$lhs, Wrapped64:$rhs, (i8 4/*COMPW.le*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
-def : Pat<(brcond (i64 (setgt (i64 SingleReg:$lhs), i64:$rhs)), bb:$dst),
-        (CB (COMPDd2 SingleReg:$lhs, Wrapped64:$rhs, (i8 5/*COMPW.gt*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
-def : Pat<(brcond (i64 (setge (i64 SingleReg:$lhs), i64:$rhs)), bb:$dst),
-        (CB (COMPDd2 SingleReg:$lhs, Wrapped64:$rhs, (i8 3/*COMPW.ge*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
-def : Pat<(brcond (i64 (setne (i64 SingleReg:$lhs), i64:$rhs)), bb:$dst),
-        (CB (COMPDd2 SingleReg:$lhs, Wrapped64:$rhs, (i8 0/*COMPW.ne*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
-def : Pat<(brcond (i64 (seteq (i64 SingleReg:$lhs), i64:$rhs)), bb:$dst),
-        (CB (COMPDd2 SingleReg:$lhs, Wrapped64:$rhs, (i8 1/*COMPW.eq*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
-def : Pat<(brcond (i64 (setlt (i64 SingleReg:$lhs), i64:$rhs)), bb:$dst),
-        (CB (COMPDd2 SingleReg:$lhs, Wrapped64:$rhs, (i8 2/*COMPW.lt*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
-def : Pat<(brcond (i64 (setugt (i64 SingleReg:$lhs), i64:$rhs)), bb:$dst),
-        (CB (COMPDd2 SingleReg:$lhs, Wrapped64:$rhs, (i8 9/*COMPW.gtu*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
-def : Pat<(brcond (i64 (setuge (i64 SingleReg:$lhs), i64:$rhs)), bb:$dst),
-        (CB (COMPDd2 SingleReg:$lhs, Wrapped64:$rhs, (i8 7/*COMPW.geu*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
-def : Pat<(brcond (i64 (setult (i64 SingleReg:$lhs), i64:$rhs)), bb:$dst),
-        (CB (COMPDd2 SingleReg:$lhs, Wrapped64:$rhs, (i8 6/*COMPW.ltu*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
-def : Pat<(brcond (i64 (setule (i64 SingleReg:$lhs), i64:$rhs)), bb:$dst),
-        (CB (COMPDd2 SingleReg:$lhs, Wrapped64:$rhs, (i8 8/*COMPW.leu*/)), Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
+def : Pat<(brcond i32:$cond, bb:$dst), (CB SingleReg:$cond, Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
+def : Pat<(brcond i64:$cond, bb:$dst), (CB SingleReg:$cond, Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
 
 def : Pat<(i64 AddrFI:$fi), (ADDDd3 SingleReg:$fi,(i64 0) )>;
 
 def : Pat<(brind (i32 SingleReg:$r)), (IGOTO SingleReg:$r)>;
 
 def : Pat<(brind (i64 SingleReg:$r)), (IGOTO SingleReg:$r)>;
+
+def Select_Instr : K1C_PseudoInstr<(outs SingleReg:$dst),
+        (ins SingleReg:$cmp, SingleReg:$tmpVar, SingleReg:$truev, SingleReg:$falsev),[]>;
+
+def : Pat<(SelectCC i64:$cmp, i64:$zero, i32:$truev, i32:$falsev),
+        (Select_Instr SingleReg:$cmp, $zero, i32imm:$truev, i32imm:$falsev)>;
+
+def : Pat<(SelectCC i64:$cmp, i64:$zero, i64:$truev, i64:$falsev),
+        (Select_Instr SingleReg:$cmp, $zero, SingleReg:$truev, SingleReg:$falsev)>;
+
+def : Pat<(SelectCC i64:$cmp, i64:$zero, (K1CWrapper tglobaladdr:$truef), (K1CWrapper tglobaladdr:$falsef)),
+        (Select_Instr SingleReg:$cmp, $zero, SingleReg:$truef, SingleReg:$falsef)>;
