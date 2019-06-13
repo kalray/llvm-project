@@ -692,6 +692,8 @@ public:
     return getArch() == Triple::nvptx || getArch() == Triple::nvptx64;
   }
 
+  bool isK1C() const { return getArch() == Triple::k1c; }
+
   /// Tests whether the target is Thumb (little and big endian).
   bool isThumb() const {
     return getArch() == Triple::thumb || getArch() == Triple::thumbeb;

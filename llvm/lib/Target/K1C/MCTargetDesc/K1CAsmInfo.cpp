@@ -22,4 +22,6 @@ K1CMCAsmInfo::K1CMCAsmInfo(const Triple &TT) {
   CommentString = "#";
   SupportsDebugInformation = true;
   Data64bitsDirective = "\t.8byte\t";
+  DwarfRegNumForCFI = true;
+  ExceptionsType = ExceptionHandling::DwarfCFI;
 }
