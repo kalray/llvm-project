@@ -107,6 +107,16 @@ void K1CFrameLowering::emitPrologue(MachineFunction &MF,
 
   adjustReg(MBB, MBBI, DL, GetStackOpCode((uint64_t)StackSize), SPReg, SPReg,
             -StackSize + K1CFI->getVarArgsSaveSize(), MachineInstr::FrameSetup);
+
+  int CFAOffset = -StackSize + K1CFI->getVarArgsSaveSize();
+  unsigned CFIIndex =
+      MF.addFrameInst(MCCFIInstruction::createDefCfaOffset(nullptr, CFAOffset));
+
+  const K1CInstrInfo *TII = STI.getInstrInfo();
+
+  BuildMI(MBB, MBBI, DL, TII->get(TargetOpcode::CFI_INSTRUCTION))
+      .addCFIIndex(CFIIndex)
+      .setMIFlags(MachineInstr::FrameSetup);
 }
 
 bool K1CFrameLowering::isLeafProc(MachineFunction &MF) const {
@@ -133,6 +143,15 @@ void K1CFrameLowering::emitEpilogue(MachineFunction &MF,
   adjustReg(MBB, MBBI, DL, GetStackOpCode(StackSize), SPReg, SPReg,
             StackSize - K1CFI->getVarArgsSaveSize(),
             MachineInstr::FrameDestroy);
+
+  unsigned CFIIndex =
+      MF.addFrameInst(MCCFIInstruction::createDefCfaOffset(nullptr, 0));
+
+  const K1CInstrInfo *TII = STI.getInstrInfo();
+
+  BuildMI(MBB, MBBI, DL, TII->get(TargetOpcode::CFI_INSTRUCTION))
+      .addCFIIndex(CFIIndex)
+      .setMIFlags(MachineInstr::FrameDestroy);
 }
 
 int K1CFrameLowering::getFrameIndexReference(const MachineFunction &MF, int FI,
