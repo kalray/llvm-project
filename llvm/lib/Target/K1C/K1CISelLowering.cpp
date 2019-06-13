@@ -336,6 +336,8 @@ SDValue K1CTargetLowering::LowerCall(CallLoweringInfo &CLI,
       if (!StackPtr.getNode())
         StackPtr = DAG.getCopyFromReg(Chain, dl, K1C::R12, PtrVT);
 
+      MF.getFrameInfo().CreateStackObject(8, 8, false);
+
       // Create a store off the stack pointer for this argument.
       SDValue PtrOff = DAG.getIntPtrConstant(VA.getLocMemOffset(), dl);
       PtrOff = DAG.getNode(ISD::ADD, dl, MVT::i64, StackPtr, PtrOff);
