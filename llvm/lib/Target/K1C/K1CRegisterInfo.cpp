@@ -90,6 +90,23 @@ void K1CRegisterInfo::eliminateFrameIndex(MachineBasicBlock::iterator II,
       llvm_unreachable("could not eliminate frame index");
     }
   }
+  // if the instruction is used to save $ra on the stack
+  // cfi offset instruction is added
+  if (MI.getFlags() & (1 << 14)) {
+    MachineBasicBlock &MBB = *MI.getParent();
+    const K1CSubtarget &Subtarget = MF.getSubtarget<K1CSubtarget>();
+    const K1CRegisterInfo &RegInfo = *Subtarget.getRegisterInfo();
+    const K1CInstrInfo &TII = *Subtarget.getInstrInfo();
+
+    MachineFrameInfo &MFI = MF.getFrameInfo();
+    int64_t StackSize = (int64_t)MFI.getStackSize();
+
+    unsigned CFIOffset = MF.addFrameInst(MCCFIInstruction::createOffset(
+        nullptr, RegInfo.getDwarfRegNum(K1C::RA, true), Offset - StackSize));
+    BuildMI(MBB, MI, DL, TII.get(TargetOpcode::CFI_INSTRUCTION))
+        .addCFIIndex(CFIOffset)
+        .setMIFlags(MachineInstr::FrameSetup);
+  }
 }
 
 unsigned K1CRegisterInfo::getFrameRegister(const MachineFunction &MF) const {
