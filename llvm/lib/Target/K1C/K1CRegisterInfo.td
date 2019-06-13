@@ -91,13 +91,13 @@ class XRF<bits<6> num, string n, list<Register> subregs> : K1RegisterWithSubRegs
 def PC    : SRF< 0,    "$pc",  ["$s0"]>, DwarfRegNum<[ 64]>;
 def PS    : SRF< 1,    "$ps",  ["$s1"]>, DwarfRegNum<[ 65]>;
 def SPC   : SRF< 2,   "$spc",  ["$s2"]>, DwarfRegNum<[ 66]>;
-def SPS   : SRF< 3,   "$sps",  ["$s3"]>, DwarfRegNum<[ 67]>;
+def SPS   : SRF< 3,   "$sps",  ["$s3"]>, DwarfRegNum<[ 73]>; // !! changed with RA
 def SSPC  : SRF< 4,  "$sspc",  ["$s4"]>, DwarfRegNum<[ 68]>;
 def SSPS  : SRF< 5,  "$ssps",  ["$s5"]>, DwarfRegNum<[ 69]>;
 def SR3   : SRF< 6,   "$sr3",  ["$s6"]>, DwarfRegNum<[ 70]>;
 def SR4   : SRF< 7,   "$sr4",  ["$s7"]>, DwarfRegNum<[ 71]>;
 def CS    : SRF< 8,    "$cs",  ["$s8"]>, DwarfRegNum<[ 72]>;
-def RA    : SRF< 9,    "$ra",  ["$s9"]>, DwarfRegNum<[ 73]>;
+def RA    : SRF< 9,    "$ra",  ["$s9"]>, DwarfRegNum<[ 67]>; //!! 67
 def PI    : SRF<10,   "$pcr", ["$s10"]>, DwarfRegNum<[ 74]>;
 def LS    : SRF<11,    "$ls", ["$s11"]>, DwarfRegNum<[ 75]>;
 def LE    : SRF<12,    "$le", ["$s12"]>, DwarfRegNum<[ 76]>;

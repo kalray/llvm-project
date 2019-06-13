@@ -125,15 +125,23 @@ void K1CInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
     DL = I->getDebugLoc();
 
   if (K1C::SingleRegRegClass.hasSubClassEq(RC)) {
-    BuildMI(MBB, I, DL, get(K1C::SDd0)).addImm(0).addFrameIndex(FI).addReg(
-        SrcReg, getKillRegState(IsKill));
-  }
-  if (K1C::RARegRegClass.hasSubClassEq(RC)) {
-    unsigned ScratchReg = findScratchRegister(MBB, false);
-    BuildMI(MBB, I, DL, get(K1C::GET), ScratchReg).addReg(K1C::RA);
     BuildMI(MBB, I, DL, get(K1C::SDd0))
         .addImm(0)
         .addFrameIndex(FI)
-        .addReg(ScratchReg, RegState::Kill);
+        .addReg(SrcReg, getKillRegState(IsKill))
+        .setMIFlags(MachineInstr::FrameSetup);
+  }
+  if (K1C::RARegRegClass.hasSubClassEq(RC)) {
+    unsigned ScratchReg = findScratchRegister(MBB, false);
+    BuildMI(MBB, I, DL, get(K1C::GET), ScratchReg).addReg(K1C::RA).setMIFlags(
+        MachineInstr::FrameSetup);
+
+    // set flag to mark that $ra is saved with this instruction
+    // at frame index elimination cfi instruction will be added
+    BuildMI(MBB, I, DL, get(K1C::SDd0))
+        .addImm(0)
+        .addFrameIndex(FI)
+        .addReg(ScratchReg, RegState::Kill)
+        .setMIFlags(1 << 14);
   }
 }
