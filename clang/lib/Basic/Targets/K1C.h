@@ -27,6 +27,12 @@ public:
   K1CTargetInfo(const llvm::Triple &Triple, const TargetOptions &)
       : TargetInfo(Triple) {
     NoAsmVariants = true;
+
+    HasLegalHalfType = true;
+    HasFloat16 = true;
+    HalfWidth = 16;
+    HalfAlign = 16;
+
     LongWidth = LongAlign = PointerWidth = PointerAlign = 64;
     MaxAtomicPromoteWidth = MaxAtomicInlineWidth = 64;
     resetDataLayout("e-m:e-p:64:64-i64:64-i128:128-n64-S128");
