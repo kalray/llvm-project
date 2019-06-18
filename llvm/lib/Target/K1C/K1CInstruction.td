@@ -16,7 +16,6 @@ class K1C_INSTRUCTION<dag outs, dag ins, string asmstr, list<dag> pattern,
   let AsmString = asmstr # "\t";
   let Pattern = pattern;
   let Namespace = "K1C";
-
 }
 
 class K1C_PseudoInstr<dag outs, dag ins, list<dag> pattern, string asmstr="">
@@ -29,20 +28,22 @@ class K1C_PseudoInstr<dag outs, dag ins, list<dag> pattern, string asmstr="">
 def __UNKNOWN_ITIN__ : InstrItinClass {
 }
 
-def Signed10 : Operand<i64>, ImmLeaf<i64, [{return isInt<10>(Imm);}]>;
+def Signed10_32 : Operand<i32>, ImmLeaf<i32, [{return isInt<10>(Imm);}]>;
 def Signed10_64 : Operand<i64>, ImmLeaf<i64, [{return isInt<10>(Imm);}]>;
 
-def Signed16 : Operand<i64>, ImmLeaf<i64, [{return isInt<16>(Imm);}]>;
+def Signed16_32 : Operand<i32>, ImmLeaf<i32, [{return isInt<16>(Imm);}]>;
+def Signed16_64 : Operand<i64>, ImmLeaf<i64, [{return isInt<16>(Imm);}]>;
 
-def Signed32 : Operand<i32>, ImmLeaf<i32, [{return isInt<32>(Imm);}]>;
-
-def Signed37 : Operand<i64>, ImmLeaf<i64, [{return isInt<37>(Imm);}]>;
+def Signed37_32 : Operand<i32>, ImmLeaf<i32, [{return isInt<37>(Imm);}]>;
+def Signed37_64 : Operand<i64>, ImmLeaf<i64, [{return isInt<37>(Imm);}]>;
 
 def Signed43 : Operand<i64>, ImmLeaf<i64, [{return isInt<43>(Imm);}]>;
 
 def Wrapped32 : Operand<i32>, ImmLeaf<i32, [{return isInt<32>(Imm);}]>;
 
 def Wrapped64 : Operand<i64>, ImmLeaf<i64, [{return isInt<64>(Imm);}]>;
+
+def Unsigned6 : Operand<i64>, ImmLeaf<i64, [{return isUInt<6>(Imm);}]>;
 
 def Pcrel17 : Operand<iPTR> {
 }
@@ -78,9 +79,6 @@ def ColumnselMod : Operand<OtherVT> {
 }
 
 def Splat32Mod : Operand<OtherVT> {
-}
-
-def Unsigned6 : Operand<OtherVT> {
 }
 
 def ComparisonMod : Operand<i8> {
