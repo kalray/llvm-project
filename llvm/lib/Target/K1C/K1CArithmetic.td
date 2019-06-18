@@ -188,155 +188,123 @@
 
 // ADDD
 def : Pat<(add i64:$rs1, i64:$rs2), (ADDDd0 SingleReg:$rs1, SingleReg:$rs2)>;
-// Correct match immediate not supported yed
-//def : Pat<(add i64:$rs1, Wrapped64:$rs2), (ADDDd3 SingleReg:$rs1, Wrapped64:$rs2)>;
+def : Pat<(add i64:$rs1, Signed10_64:$rs2), (ADDDd1 SingleReg:$rs1, Signed10_64:$rs2)>;
+def : Pat<(add i64:$rs1, Signed37_64:$rs2), (ADDDd2 SingleReg:$rs1, Signed37_64:$rs2)>;
+def : Pat<(add i64:$rs1, Wrapped64:$rs2), (ADDDd3 SingleReg:$rs1, Wrapped64:$rs2)>;
 
 // ADDW
 def : Pat<(add i32:$rs1, i32:$rs2), (ADDWd0 SingleReg:$rs1, SingleReg:$rs2)>;
-// Correct match immediate not supported yed
-//def : Pat<(add i32:$rs1, Signed32:$rs2), (ADDWd1 SingleReg:$rs1, Signed32:$rs2)>;
+def : Pat<(add i32:$rs1, Signed10_32:$rs2), (ADDWd1 SingleReg:$rs1, Signed10_32:$rs2)>;
+def : Pat<(add i32:$rs1, Signed37_32:$rs2), (ADDWd2 SingleReg:$rs1, Signed37_32:$rs2)>;
 
 // ANDD
 def : Pat<(and i64:$rs1, i64:$rs2), (ANDDd0 SingleReg:$rs1, SingleReg:$rs2)>;
-// Correct match immediate not supported yed
-//def : Pat<(and i64:$rs1, imm:$rs2), (ANDDd3 SingleReg:$rs1, imm:$rs2)>;
+def : Pat<(and i64:$rs1, Signed10_64:$rs2), (ANDDd1 SingleReg:$rs1, Signed10_64:$rs2)>;
+def : Pat<(and i64:$rs1, Signed37_64:$rs2), (ANDDd2 SingleReg:$rs1, Signed37_64:$rs2)>;
+def : Pat<(and i64:$rs1, Wrapped64:$rs2), (ANDDd3 SingleReg:$rs1, Wrapped64:$rs2)>;
 
 // ANDW
 def : Pat<(and i32:$rs1, i32:$rs2), (ANDWd0 SingleReg:$rs1, SingleReg:$rs2)>;
-// Correct match immediate not supported yed
-//def : Pat<(and i32:$rs1, Signed32:$rs2), (ANDWd1 SingleReg:$rs1, Signed32:$rs2)>;
+def : Pat<(and i32:$rs1, Signed10_32:$rs2), (ANDWd1 SingleReg:$rs1, Signed10_32:$rs2)>;
+def : Pat<(and i32:$rs1, Signed37_32:$rs2), (ANDWd2 SingleReg:$rs1, Signed37_32:$rs2)>;
 
-// COMPD
-def : Pat<(i64 (seteq i64:$lhs, i64:$rhs)),
-        (COMPDd3 SingleReg:$lhs, SingleReg:$rhs, (i8 1/*COMPD.eq*/))>;
-def : Pat<(i64 (setne i64:$lhs, i64:$rhs)),
-        (COMPDd3 SingleReg:$lhs, SingleReg:$rhs, (i8 0/*COMPD.ne*/))>;
-def : Pat<(i64 (setugt i64:$lhs, i64:$rhs)),
-        (COMPDd3 SingleReg:$lhs, SingleReg:$rhs, (i8 9/*COMPD.gtu*/))>;
-def : Pat<(i64 (setuge i64:$lhs, i64:$rhs)),
-        (COMPDd3 SingleReg:$lhs, SingleReg:$rhs, (i8 7/*COMPD.geu*/))>;
-def : Pat<(i64 (setult i64:$lhs, i64:$rhs)),
-        (COMPDd3 SingleReg:$lhs, SingleReg:$rhs, (i8 6/*COMPD.ltu*/))>;
-def : Pat<(i64 (setule i64:$lhs, i64:$rhs)),
-        (COMPDd3 SingleReg:$lhs, SingleReg:$rhs, (i8 8/*COMPD.leu*/))>;
-def : Pat<(i64 (setgt i64:$lhs, i64:$rhs)),
-        (COMPDd3 SingleReg:$lhs, SingleReg:$rhs, (i8 5/*COMPD.gt*/))>;
-def : Pat<(i64 (setge i64:$lhs, i64:$rhs)),
-        (COMPDd3 SingleReg:$lhs, SingleReg:$rhs, (i8 3/*COMPD.ge*/))>;
-def : Pat<(i64 (setlt i64:$lhs, i64:$rhs)),
-        (COMPDd3 SingleReg:$lhs, SingleReg:$rhs, (i8 2/*COMPD.lt*/))>;
-def : Pat<(i64 (setle i64:$lhs, i64:$rhs)),
-        (COMPDd3 SingleReg:$lhs, SingleReg:$rhs, (i8 4/*COMPD.le*/))>;
+multiclass COMP_Pat<SDNode Node, int Mod> {
+  //COMPD
+  def : Pat<(i64 (Node i64:$lhs, i64:$rhs)),
+        (COMPDd3 SingleReg:$lhs, SingleReg:$rhs, (i8 Mod))>;
+  def : Pat<(i32 (trunc (i64 (Node i64:$lhs, i64:$rhs)))),
+        (COMPDd3 SingleReg:$lhs, SingleReg:$rhs, (i8 Mod))>;
+  def : Pat<(i64 (Node i64:$lhs, Signed10_64:$rhs)),
+        (COMPDd0 SingleReg:$lhs, Signed10_64:$rhs, (i8 Mod))>;
+  def : Pat<(i32 (trunc (i64 (Node i64:$lhs, Signed10_64:$rhs)))),
+        (COMPDd0 SingleReg:$lhs, Signed10_64:$rhs, (i8 Mod))>;
+  def : Pat<(i64 (Node i64:$lhs, Signed37_64:$rhs)),
+        (COMPDd1 SingleReg:$lhs, Signed37_64:$rhs, (i8 Mod))>;
+  def : Pat<(i32 (trunc (i64 (Node i64:$lhs, Signed37_64:$rhs)))),
+        (COMPDd1 SingleReg:$lhs, Signed37_64:$rhs, (i8 Mod))>;
+  def : Pat<(i64 (Node i64:$lhs, Wrapped64:$rhs)),
+        (COMPDd2 SingleReg:$lhs, Wrapped64:$rhs, (i8 Mod))>;
+  def : Pat<(i32 (trunc (i64 (Node i64:$lhs, Wrapped64:$rhs)))),
+        (COMPDd2 SingleReg:$lhs, Wrapped64:$rhs, (i8 Mod))>;
 
-def : Pat<(i32 (trunc (i64 (seteq i64:$lhs, i64:$rhs)))),
-        (COMPDd3 SingleReg:$lhs, SingleReg:$rhs, (i8 1/*COMPD.eq*/))>;
-def : Pat<(i32 (trunc (i64 (setne i64:$lhs, i64:$rhs)))),
-        (COMPDd3 SingleReg:$lhs, SingleReg:$rhs, (i8 0/*COMPD.ne*/))>;
-def : Pat<(i32 (trunc (i64 (setugt i64:$lhs, i64:$rhs)))),
-        (COMPDd3 SingleReg:$lhs, SingleReg:$rhs, (i8 9/*COMPD.gtu*/))>;
-def : Pat<(i32 (trunc (i64 (setuge i64:$lhs, i64:$rhs)))),
-        (COMPDd3 SingleReg:$lhs, SingleReg:$rhs, (i8 7/*COMPD.geu*/))>;
-def : Pat<(i32 (trunc (i64 (setult i64:$lhs, i64:$rhs)))),
-        (COMPDd3 SingleReg:$lhs, SingleReg:$rhs, (i8 6/*COMPD.ltu*/))>;
-def : Pat<(i32 (trunc (i64 (setule i64:$lhs, i64:$rhs)))),
-        (COMPDd3 SingleReg:$lhs, SingleReg:$rhs, (i8 8/*COMPD.leu*/))>;
-def : Pat<(i32 (trunc (i64 (setgt i64:$lhs, i64:$rhs)))),
-        (COMPDd3 SingleReg:$lhs, SingleReg:$rhs, (i8 5/*COMPD.gt*/))>;
-def : Pat<(i32 (trunc (i64 (setge i64:$lhs, i64:$rhs)))),
-        (COMPDd3 SingleReg:$lhs, SingleReg:$rhs, (i8 3/*COMPD.ge*/))>;
-def : Pat<(i32 (trunc (i64 (setlt i64:$lhs, i64:$rhs)))),
-        (COMPDd3 SingleReg:$lhs, SingleReg:$rhs, (i8 2/*COMPD.lt*/))>;
-def : Pat<(i32 (trunc (i64 (setle i64:$lhs, i64:$rhs)))),
-        (COMPDd3 SingleReg:$lhs, SingleReg:$rhs, (i8 4/*COMPD.le*/))>;
+  //COMPW
+  def : Pat<(i64 (Node i32:$lhs, i32:$rhs)),
+        (COMPWd0 SingleReg:$lhs, SingleReg:$rhs, (i8 Mod))>;
+  def : Pat<(i32 (trunc (i64 (Node i32:$lhs, i32:$rhs)))),
+        (COMPWd0 SingleReg:$lhs, SingleReg:$rhs, (i8 Mod))>;
+  def : Pat<(i64 (Node i32:$lhs, Wrapped32:$rhs)),
+        (COMPWd1 SingleReg:$lhs, Wrapped32:$rhs, (i8 Mod))>;
+  def : Pat<(i32 (trunc (i64 (Node i32:$lhs, Wrapped32:$rhs)))),
+        (COMPWd1 SingleReg:$lhs, Wrapped32:$rhs, (i8 Mod))>;
+}
 
-// COMPW
-def : Pat<(i64 (seteq i32:$lhs, i32:$rhs)),
-        (COMPWd0 SingleReg:$lhs, SingleReg:$rhs, (i8 1/*COMPW.eq*/))>;
-def : Pat<(i64 (setne i32:$lhs, i32:$rhs)),
-        (COMPWd0 SingleReg:$lhs, SingleReg:$rhs, (i8 0/*COMPW.ne*/))>;
-def : Pat<(i64 (setugt i32:$lhs, i32:$rhs)),
-        (COMPWd0 SingleReg:$lhs, SingleReg:$rhs, (i8 9/*COMPW.gtu*/))>;
-def : Pat<(i64 (setuge i32:$lhs, i32:$rhs)),
-        (COMPWd0 SingleReg:$lhs, SingleReg:$rhs, (i8 7/*COMPW.geu*/))>;
-def : Pat<(i64 (setult i32:$lhs, i32:$rhs)),
-        (COMPWd0 SingleReg:$lhs, SingleReg:$rhs, (i8 6/*COMPW.ltu*/))>;
-def : Pat<(i64 (setule i32:$lhs, i32:$rhs)),
-        (COMPWd0 SingleReg:$lhs, SingleReg:$rhs, (i8 8/*COMPW.leu*/))>;
-def : Pat<(i64 (setgt i32:$lhs, i32:$rhs)),
-        (COMPWd0 SingleReg:$lhs, SingleReg:$rhs, (i8 5/*COMPW.gt*/))>;
-def : Pat<(i64 (setge i32:$lhs, i32:$rhs)),
-        (COMPWd0 SingleReg:$lhs, SingleReg:$rhs, (i8 3/*COMPW.ge*/))>;
-def : Pat<(i64 (setlt i32:$lhs, i32:$rhs)),
-        (COMPWd0 SingleReg:$lhs, SingleReg:$rhs, (i8 2/*COMPW.lt*/))>;
-def : Pat<(i64 (setle i32:$lhs, i32:$rhs)),
-        (COMPWd0 SingleReg:$lhs, SingleReg:$rhs, (i8 4/*COMPW.le*/))>;
-
-def : Pat<(i32 (trunc (i64 (seteq i32:$lhs, i32:$rhs)))),
-        (COMPWd0 SingleReg:$lhs, SingleReg:$rhs, (i8 1/*COMPW.eq*/))>;
-def : Pat<(i32 (trunc (i64 (setne i32:$lhs, i32:$rhs)))),
-        (COMPWd0 SingleReg:$lhs, SingleReg:$rhs, (i8 0/*COMPW.ne*/))>;
-def : Pat<(i32 (trunc (i64 (setugt i32:$lhs, i32:$rhs)))),
-        (COMPWd0 SingleReg:$lhs, SingleReg:$rhs, (i8 9/*COMPW.gtu*/))>;
-def : Pat<(i32 (trunc (i64 (setuge i32:$lhs, i32:$rhs)))),
-        (COMPWd0 SingleReg:$lhs, SingleReg:$rhs, (i8 7/*COMPW.geu*/))>;
-def : Pat<(i32 (trunc (i64 (setult i32:$lhs, i32:$rhs)))),
-        (COMPWd0 SingleReg:$lhs, SingleReg:$rhs, (i8 6/*COMPW.ltu*/))>;
-def : Pat<(i32 (trunc (i64 (setule i32:$lhs, i32:$rhs)))),
-        (COMPWd0 SingleReg:$lhs, SingleReg:$rhs, (i8 8/*COMPW.leu*/))>;
-def : Pat<(i32 (trunc (i64 (setgt i32:$lhs, i32:$rhs)))),
-        (COMPWd0 SingleReg:$lhs, SingleReg:$rhs, (i8 5/*COMPW.gt*/))>;
-def : Pat<(i32 (trunc (i64 (setge i32:$lhs, i32:$rhs)))),
-        (COMPWd0 SingleReg:$lhs, SingleReg:$rhs, (i8 3/*COMPW.ge*/))>;
-def : Pat<(i32 (trunc (i64 (setlt i32:$lhs, i32:$rhs)))),
-        (COMPWd0 SingleReg:$lhs, SingleReg:$rhs, (i8 2/*COMPW.lt*/))>;
-def : Pat<(i32 (trunc (i64 (setle i32:$lhs, i32:$rhs)))),
-        (COMPWd0 SingleReg:$lhs, SingleReg:$rhs, (i8 4/*COMPW.le*/))>;
+defm : COMP_Pat<seteq,   1/*.eq*/>;
+defm : COMP_Pat<setne,   0/*.ne*/>;
+defm : COMP_Pat<setugt,  9/*.gtu*/>;
+defm : COMP_Pat<setuge,  7/*.geu*/>;
+defm : COMP_Pat<setult,  6/*.ltu*/>;
+defm : COMP_Pat<setule,  8/*.leu*/>;
+defm : COMP_Pat<setgt,   5/*.gt*/>;
+defm : COMP_Pat<setge,   3/*.ge*/>;
+defm : COMP_Pat<setlt,   2/*.lt*/>;
+defm : COMP_Pat<setle,   4/*.le*/>;
 
 // ORD
 def : Pat<(or i64:$rs1, i64:$rs2), (ORDd0 SingleReg:$rs1, SingleReg:$rs2)>;
-// Correct match immediate not supported yed
-//def : Pat<(or i64:$rs1, Signed10_64:$rs2), (ORDd1 SingleReg:$rs1, Signed10_64:$rs2)>;
-//def : Pat<(or i64:$rs1, Signed37:$rs2), (ORDd2 SingleReg:$rs1, Signed37:$rs2)>;
-//def : Pat<(or i64:$rs1, Wrapped64:$rs2), (ORDd3 SingleReg:$rs1, Wrapped64:$rs2)>;
+def : Pat<(or i64:$rs1, Signed10_64:$rs2), (ORDd1 SingleReg:$rs1, Signed10_64:$rs2)>;
+def : Pat<(or i64:$rs1, Signed37_64:$rs2), (ORDd2 SingleReg:$rs1, Signed37_64:$rs2)>;
+def : Pat<(or i64:$rs1, Wrapped64:$rs2), (ORDd3 SingleReg:$rs1, Wrapped64:$rs2)>;
 
 // ORW
 def : Pat<(or i32:$rs1, i32:$rs2), (ORWd0 SingleReg:$rs1, SingleReg:$rs2)>;
-// Correct match immediate not supported yed
-//def : Pat<(or i32:$rs1, Signed32:$rs2), (ORWd1 SingleReg:$rs1, Signed32:$rs2)>;
+def : Pat<(or i32:$rs1, Signed10_32:$rs2), (ORWd1 SingleReg:$rs1, Signed10_32:$rs2)>;
+def : Pat<(or i32:$rs1, Signed37_32:$rs2), (ORWd2 SingleReg:$rs1, Signed37_32:$rs2)>;
 
 // SBFD
 def : Pat<(sub i64:$rs1, i64:$rs2), (SBFDd0 SingleReg:$rs2, SingleReg:$rs1)>;
-// Correct match immediate not supported yed
-//def : Pat<(sub i64:$rs1, Wrapped64:$rs2), (SBFDd3 SingleReg:$rs1, Wrapped64:$rs2)>;
+def : Pat<(sub Signed10_64:$rs1, i64:$rs2), (SBFDd1 SingleReg:$rs2, Signed10_64:$rs1)>;
+def : Pat<(sub Signed37_64:$rs1, i64:$rs2), (SBFDd2 SingleReg:$rs2, Signed37_64:$rs1)>;
+def : Pat<(sub Wrapped64:$rs1, i64:$rs2), (SBFDd3 SingleReg:$rs2, Wrapped64:$rs1)>;
 
 // SBFW
 def : Pat<(sub i32:$rs1, i32:$rs2), (SBFWd0 SingleReg:$rs2, SingleReg:$rs1)>;
-// Correct match immediate not supported yed
-//def : Pat<(sub i32:$rs1, Signed32:$rs2), (SBFWd1 SingleReg:$rs1, Signed32:$rs2)>;
+def : Pat<(sub Signed10_32:$rs1, i32:$rs2), (SBFWd1 SingleReg:$rs2, Signed10_32:$rs1)>;
+def : Pat<(sub Signed37_32:$rs1, i32:$rs2), (SBFWd2 SingleReg:$rs2, Signed37_32:$rs1)>;
 
 // SLLD
 def : Pat<(shl i64:$rs1, i64:$rs2), (SLLDd0 SingleReg:$rs1, SingleReg:$rs2)>;
+def : Pat<(shl i64:$rs1, Unsigned6:$rs2), (SLLDd1 SingleReg:$rs1, Unsigned6:$rs2)>;
 
 // SLLW
 def : Pat<(shl i32:$rs1, i64:$rs2), (SLLWd0 SingleReg:$rs1, SingleReg:$rs2)>;
+def : Pat<(shl i32:$rs1, Unsigned6:$rs2), (SLLWd1 SingleReg:$rs1, Unsigned6:$rs2)>;
 
 // SRAD
 def : Pat<(sra i64:$rs1, i64:$rs2), (SRADd0 SingleReg:$rs1, SingleReg:$rs2)>;
+def : Pat<(sra i64:$rs1, Unsigned6:$rs2), (SRADd1 SingleReg:$rs1, Unsigned6:$rs2)>;
 
 // SRAW
 def : Pat<(sra i32:$rs1, i64:$rs2), (SRAWd0 SingleReg:$rs1, SingleReg:$rs2)>;
+def : Pat<(sra i32:$rs1, Unsigned6:$rs2), (SRAWd1 SingleReg:$rs1, Unsigned6:$rs2)>;
 
 // SRLD
 def : Pat<(srl i64:$rs1, i64:$rs2), (SRLDd0 SingleReg:$rs1, SingleReg:$rs2)>;
+def : Pat<(srl i64:$rs1, Unsigned6:$rs2), (SRLDd1 SingleReg:$rs1, Unsigned6:$rs2)>;
 
 // SRLW
 def : Pat<(srl i32:$rs1, i64:$rs2), (SRLWd0 SingleReg:$rs1, SingleReg:$rs2)>;
+def : Pat<(srl i32:$rs1, Unsigned6:$rs2), (SRLWd1 SingleReg:$rs1, Unsigned6:$rs2)>;
 
 // XORD
 def : Pat<(xor i64:$rs1, i64:$rs2), (XORDd0 SingleReg:$rs1, SingleReg:$rs2)>;
+def : Pat<(xor i64:$rs1, Signed10_64:$rs2), (XORDd1 SingleReg:$rs1, Signed10_64:$rs2)>;
+def : Pat<(xor i64:$rs1, Signed37_64:$rs2), (XORDd2 SingleReg:$rs1, Signed37_64:$rs2)>;
+def : Pat<(xor i64:$rs1, Wrapped64:$rs2), (XORDd3 SingleReg:$rs1, Wrapped64:$rs2)>;
 
 // XORW
 def : Pat<(xor i32:$rs1, i32:$rs2), (XORWd0 SingleReg:$rs1, SingleReg:$rs2)>;
+def : Pat<(xor i32:$rs1, Signed10_32:$rs2), (XORWd1 SingleReg:$rs1, Signed10_32:$rs2)>;
+def : Pat<(xor i32:$rs1, Signed37_32:$rs2), (XORWd2 SingleReg:$rs1, Signed37_32:$rs2)>;
 
 //===----------------------------------------------------------------------===//
 //  MAU Instructions - Patterns
@@ -416,6 +384,10 @@ def : Pat<(xor i32:$rs1, i32:$rs2), (XORWd0 SingleReg:$rs1, SingleReg:$rs2)>;
 
 // MULD
 def : Pat<(mul i64:$rs1, i64:$rs2), (MULDd0 SingleReg:$rs1, SingleReg:$rs2)>;
+def : Pat<(mul i64:$rs1, Signed10_64:$rs2), (MULDd1 SingleReg:$rs1, Signed10_64:$rs2)>;
+def : Pat<(mul i64:$rs1, Signed37_64:$rs2), (MULDd2 SingleReg:$rs1, Signed37_64:$rs2)>;
+def : Pat<(mul i64:$rs1, Wrapped64:$rs2), (MULDd3 SingleReg:$rs1, Wrapped64:$rs2)>;
 
 // MULW
 def : Pat<(mul i32:$rs1, i32:$rs2), (MULWd0 SingleReg:$rs1, SingleReg:$rs2)>;
+def : Pat<(mul i32:$rs1, Wrapped32:$rs2), (MULWd1 SingleReg:$rs1, Wrapped32:$rs2)>;
