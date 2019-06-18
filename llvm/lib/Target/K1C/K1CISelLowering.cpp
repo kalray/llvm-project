@@ -52,19 +52,26 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
 
   setSchedulingPreference(Sched::Source);
 
-  setOperationAction(ISD::SDIV,     MVT::i32, Promote);
-  setOperationAction(ISD::SDIVREM,  MVT::i32, Promote);
-  setOperationAction(ISD::SREM,     MVT::i32, Promote);
-  setOperationAction(ISD::UDIV,     MVT::i32, Promote);
-  setOperationAction(ISD::UDIVREM,  MVT::i32, Promote);
-  setOperationAction(ISD::UREM,     MVT::i32, Promote);
+  setOperationAction(ISD::SDIV, MVT::i32, Promote);
+  setOperationAction(ISD::SDIVREM, MVT::i32, Promote);
+  setOperationAction(ISD::SREM, MVT::i32, Promote);
+  setOperationAction(ISD::UDIV, MVT::i32, Promote);
+  setOperationAction(ISD::UDIVREM, MVT::i32, Promote);
+  setOperationAction(ISD::UREM, MVT::i32, Promote);
 
-  setOperationAction(ISD::SDIV,     MVT::i64, Expand);
-  setOperationAction(ISD::SDIVREM,  MVT::i64, Expand);
-  setOperationAction(ISD::SREM,     MVT::i64, Expand);
-  setOperationAction(ISD::UDIV,     MVT::i64, Expand);
-  setOperationAction(ISD::UDIVREM,  MVT::i64, Expand);
-  setOperationAction(ISD::UREM,     MVT::i64, Expand);
+  setOperationAction(ISD::SDIV, MVT::i64, Expand);
+  setOperationAction(ISD::SDIVREM, MVT::i64, Expand);
+  setOperationAction(ISD::SREM, MVT::i64, Expand);
+  setOperationAction(ISD::UDIV, MVT::i64, Expand);
+  setOperationAction(ISD::UDIVREM, MVT::i64, Expand);
+  setOperationAction(ISD::UREM, MVT::i64, Expand);
+
+  for (auto VT : { MVT::i32, MVT::i64 }) {
+    setOperationAction(ISD::SMUL_LOHI, VT, Expand);
+    setOperationAction(ISD::UMUL_LOHI, VT, Expand);
+    setOperationAction(ISD::MULHS, VT, Expand);
+    setOperationAction(ISD::MULHU, VT, Expand);
+  }
 
   setOperationAction(ISD::SELECT_CC, MVT::i32, Expand);
   setOperationAction(ISD::SELECT_CC, MVT::i64, Expand);
