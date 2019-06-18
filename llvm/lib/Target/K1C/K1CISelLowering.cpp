@@ -92,6 +92,13 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setMinimumJumpTableEntries(INT_MAX);
 }
 
+EVT K1CTargetLowering::getSetCCResultType(const DataLayout &DL, LLVMContext &,
+                                          EVT VT) const {
+  if (!VT.isVector())
+    return getPointerTy(DL);
+  return VT.changeVectorElementTypeToInteger();
+}
+
 const char *K1CTargetLowering::getTargetNodeName(unsigned Opcode) const {
   switch (Opcode) {
   case K1CISD::RET:
