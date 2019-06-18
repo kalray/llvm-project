@@ -81,11 +81,11 @@ multiclass MC_02<string OpcStr> {
 //   defm LD
 multiclass MC_03<string OpcStr> {
   def d0 : VARIANT_REGISTERW_SIGNED10_REGISTERZ_SIMPLE
-    <(outs SingleReg:$a2), (ins Signed10:$a3, SingleReg:$a4, VariantMod:$a1),
+    <(outs SingleReg:$a2), (ins Signed10_64:$a3, SingleReg:$a4, VariantMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
      [ ]>;
   def d1 : VARIANT_REGISTERW_UPPER27_LOWER10_REGISTERZ_DOUBLE
-    <(outs SingleReg:$a2), (ins Signed37:$a3, SingleReg:$a4, VariantMod:$a1),
+    <(outs SingleReg:$a2), (ins Signed37_64:$a3, SingleReg:$a4, VariantMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
      [ ]>;
   def d2 : VARIANT_REGISTERW_EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
@@ -114,11 +114,11 @@ multiclass MC_03<string OpcStr> {
 //   defm LQ
 multiclass MC_04<string OpcStr> {
   def d0 : VARIANT_REGISTERM_SIGNED10_REGISTERZ_SIMPLE
-    <(outs PairedReg:$a2), (ins Signed10:$a3, SingleReg:$a4, VariantMod:$a1),
+    <(outs PairedReg:$a2), (ins Signed10_64:$a3, SingleReg:$a4, VariantMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
      [ ]>;
   def d1 : VARIANT_REGISTERM_UPPER27_LOWER10_REGISTERZ_DOUBLE
-    <(outs PairedReg:$a2), (ins Signed37:$a3, SingleReg:$a4, VariantMod:$a1),
+    <(outs PairedReg:$a2), (ins Signed37_64:$a3, SingleReg:$a4, VariantMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
      [ ]>;
   def d2 : VARIANT_REGISTERM_EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
@@ -147,11 +147,11 @@ multiclass MC_04<string OpcStr> {
 //   defm LO
 multiclass MC_05<string OpcStr> {
   def d0 : VARIANT_REGISTERN_SIGNED10_REGISTERZ_SIMPLE
-    <(outs QuadReg:$a2), (ins Signed10:$a3, SingleReg:$a4, VariantMod:$a1),
+    <(outs QuadReg:$a2), (ins Signed10_64:$a3, SingleReg:$a4, VariantMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
      [ ]>;
   def d1 : VARIANT_REGISTERN_UPPER27_LOWER10_REGISTERZ_DOUBLE
-    <(outs QuadReg:$a2), (ins Signed37:$a3, SingleReg:$a4, VariantMod:$a1),
+    <(outs QuadReg:$a2), (ins Signed37_64:$a3, SingleReg:$a4, VariantMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
      [ ]>;
   def d2 : VARIANT_REGISTERN_EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
@@ -180,11 +180,11 @@ multiclass MC_05<string OpcStr> {
 //   defm LV
 multiclass MC_06<string OpcStr> {
   def d0 : SPECULATE_REGISTERA_SIGNED10_REGISTERZ_SIMPLE
-    <(outs AccelReg:$a2), (ins Signed10:$a3, SingleReg:$a4, SpeculateMod:$a1),
+    <(outs AccelReg:$a2), (ins Signed10_64:$a3, SingleReg:$a4, SpeculateMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
      [ ]>;
   def d1 : SPECULATE_REGISTERA_UPPER27_LOWER10_REGISTERZ_DOUBLE
-    <(outs AccelReg:$a2), (ins Signed37:$a3, SingleReg:$a4, SpeculateMod:$a1),
+    <(outs AccelReg:$a2), (ins Signed37_64:$a3, SingleReg:$a4, SpeculateMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
      [ ]>;
   def d2 : SPECULATE_REGISTERA_EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
@@ -208,11 +208,11 @@ multiclass MC_06<string OpcStr> {
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4[$a5]"),
      [ ]>;
   def d7 : COLUMNSEL_SPECULATE_REGISTERAQ_SIGNED10_REGISTERZ_SIMPLE
-    <(outs ExtendReg:$a3), (ins Signed10:$a4, SingleReg:$a5, ColumnselMod:$a1, SpeculateMod:$a2),
+    <(outs ExtendReg:$a3), (ins Signed10_64:$a4, SingleReg:$a5, ColumnselMod:$a1, SpeculateMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4[$a5]"),
      [ ]>;
   def d8 : COLUMNSEL_SPECULATE_REGISTERAQ_UPPER27_LOWER10_REGISTERZ_DOUBLE
-    <(outs ExtendReg:$a3), (ins Signed37:$a4, SingleReg:$a5, ColumnselMod:$a1, SpeculateMod:$a2),
+    <(outs ExtendReg:$a3), (ins Signed37_64:$a4, SingleReg:$a5, ColumnselMod:$a1, SpeculateMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4[$a5]"),
      [ ]>;
   def d9 : COLUMNSEL_SPECULATE_REGISTERAQ_EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
@@ -244,12 +244,12 @@ multiclass MC_06<string OpcStr> {
 //   defm SD
 multiclass MC_07<string OpcStr> { // $a1=12, $a2=$r12, $a3=$r0
   def d0 : SIGNED10_REGISTERZ_REGISTERT_SIMPLE
-    <(outs), (ins Signed10:$a1, SingleReg:$a2, SingleReg:$a3),
+    <(outs), (ins Signed10_64:$a1, SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [ ],
      __UNKNOWN_ITIN__>;
   def d1 : UPPER27_LOWER10_REGISTERZ_REGISTERT_DOUBLE
-    <(outs), (ins Signed37:$a1, SingleReg:$a2, SingleReg:$a3),
+    <(outs), (ins Signed37_64:$a1, SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [ ],
      __UNKNOWN_ITIN__>;
@@ -284,12 +284,12 @@ multiclass MC_07<string OpcStr> { // $a1=12, $a2=$r12, $a3=$r0
 //   defm SQ
 multiclass MC_08<string OpcStr> {
   def d0 : SIGNED10_REGISTERZ_REGISTERU_SIMPLE
-    <(outs), (ins Signed10:$a1, SingleReg:$a2, PairedReg:$a3),
+    <(outs), (ins Signed10_64:$a1, SingleReg:$a2, PairedReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [ ],
      __UNKNOWN_ITIN__>;
   def d1 : UPPER27_LOWER10_REGISTERZ_REGISTERU_DOUBLE
-    <(outs), (ins Signed37:$a1, SingleReg:$a2, PairedReg:$a3),
+    <(outs), (ins Signed37_64:$a1, SingleReg:$a2, PairedReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [ ],
      __UNKNOWN_ITIN__>;
@@ -323,11 +323,11 @@ multiclass MC_08<string OpcStr> {
 //   defm SO
 multiclass MC_09<string OpcStr> {
   def d0 : SIGNED10_REGISTERZ_REGISTERV_SIMPLE
-    <(outs), (ins Signed10:$a1, SingleReg:$a2, QuadReg:$a3),
+    <(outs), (ins Signed10_64:$a1, SingleReg:$a2, QuadReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [ ]>;
   def d1 : UPPER27_LOWER10_REGISTERZ_REGISTERV_DOUBLE
-    <(outs), (ins Signed37:$a1, SingleReg:$a2, QuadReg:$a3),
+    <(outs), (ins Signed37_64:$a1, SingleReg:$a2, QuadReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [ ]>;
   def d2 : EXTEND27_UPPER27_LOWER10_REGISTERZ_REGISTERV_TRIPLE
@@ -356,11 +356,11 @@ multiclass MC_09<string OpcStr> {
 //   defm SV
 multiclass MC_0A<string OpcStr> {
   def d0 : SIGNED10_REGISTERZ_REGISTERE_SIMPLE
-    <(outs), (ins Signed10:$a1, SingleReg:$a2, AccelReg:$a3),
+    <(outs), (ins Signed10_64:$a1, SingleReg:$a2, AccelReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [ ]>;
   def d1 : UPPER27_LOWER10_REGISTERZ_REGISTERE_DOUBLE
-    <(outs), (ins Signed37:$a1, SingleReg:$a2, AccelReg:$a3),
+    <(outs), (ins Signed37_64:$a1, SingleReg:$a2, AccelReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [ ]>;
   def d2 : EXTEND27_UPPER27_LOWER10_REGISTERZ_REGISTERE_TRIPLE
@@ -390,12 +390,12 @@ multiclass MC_0A<string OpcStr> {
 //   defm ACSWAPD
 multiclass MC_0B<string OpcStr> {
   def d0 : SIGNED10_REGISTERZ_REGISTERU_SIMPLE
-    <(outs), (ins Signed10:$a1, SingleReg:$a2, PairedReg:$a3),
+    <(outs), (ins Signed10_64:$a1, SingleReg:$a2, PairedReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [ ],
      __UNKNOWN_ITIN__>;
   def d1 : UPPER27_LOWER10_REGISTERZ_REGISTERU_DOUBLE
-    <(outs), (ins Signed37:$a1, SingleReg:$a2, PairedReg:$a3),
+    <(outs), (ins Signed37_64:$a1, SingleReg:$a2, PairedReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [ ],
      __UNKNOWN_ITIN__>;
@@ -426,11 +426,11 @@ multiclass MC_0B<string OpcStr> {
 //   defm ALCLRD
 multiclass MC_0C<string OpcStr> {
   def d0 : REGISTERW_SIGNED10_REGISTERZ_SIMPLE
-    <(outs SingleReg:$a1), (ins Signed10:$a2, SingleReg:$a3),
+    <(outs SingleReg:$a1), (ins Signed10_64:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2[$a3]"),
      [ ]>;
   def d1 : REGISTERW_UPPER27_LOWER10_REGISTERZ_DOUBLE
-    <(outs SingleReg:$a1), (ins Signed37:$a2, SingleReg:$a3),
+    <(outs SingleReg:$a1), (ins Signed37_64:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2[$a3]"),
      [ ]>;
   def d2 : REGISTERW_EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
@@ -460,12 +460,12 @@ multiclass MC_0C<string OpcStr> {
 //   defm AFADDD
 multiclass MC_0D<string OpcStr> {
   def d0 : SIGNED10_REGISTERZ_REGISTERT_SIMPLE
-    <(outs), (ins Signed10:$a1, SingleReg:$a2, SingleReg:$a3),
+    <(outs), (ins Signed10_64:$a1, SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [ ],
      __UNKNOWN_ITIN__>;
   def d1 : UPPER27_LOWER10_REGISTERZ_REGISTERT_DOUBLE
-    <(outs), (ins Signed37:$a1, SingleReg:$a2, SingleReg:$a3),
+    <(outs), (ins Signed37_64:$a1, SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [ ],
      __UNKNOWN_ITIN__>;
@@ -503,11 +503,11 @@ multiclass MC_0D<string OpcStr> {
 //   defm IINVALS
 multiclass MC_0E<string OpcStr> {
   def d0 : SIGNED10_REGISTERZ_SIMPLE
-    <(outs), (ins Signed10:$a1, SingleReg:$a2),
+    <(outs), (ins Signed10_64:$a1, SingleReg:$a2),
      !strconcat (OpcStr, " $a1[$a2]"),
      [ ]>;
   def d1 : UPPER27_LOWER10_REGISTERZ_DOUBLE
-    <(outs), (ins Signed37:$a1, SingleReg:$a2),
+    <(outs), (ins Signed37_64:$a1, SingleReg:$a2),
      !strconcat (OpcStr, " $a1[$a2]"),
      [ ]>;
   def d2 : EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
@@ -559,7 +559,7 @@ multiclass MC_0F<string OpcStr> {
      [ ],
      __UNKNOWN_ITIN__>;
   def d2 : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37:$a3),
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37_64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
      __UNKNOWN_ITIN__>;
@@ -583,12 +583,12 @@ multiclass MC_10<string OpcStr> {
      [],
      __UNKNOWN_ITIN__>;
   def d1 : REGISTERW_REGISTERZ_SIGNED10_SIMPLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10:$a3),
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10_64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
      __UNKNOWN_ITIN__>;
   def d2 : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37:$a3),
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37_64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
      __UNKNOWN_ITIN__>;
@@ -685,12 +685,12 @@ multiclass MC_12<string OpcStr> {
      [ ],
      __UNKNOWN_ITIN__>;
   def d1 : REGISTERW_REGISTERZ_SIGNED10_SIMPLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed32:$a3), // Signed10
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10_32:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
      __UNKNOWN_ITIN__>;
   def d2 : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37:$a3),
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37_32:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
      __UNKNOWN_ITIN__>;
@@ -705,12 +705,12 @@ multiclass MC_13<string OpcStr> {
      [ ],
      __UNKNOWN_ITIN__>;
   def d1 : REGISTERW_REGISTERZ_SIGNED10_SIMPLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10:$a3),
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10_32:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
      __UNKNOWN_ITIN__>;
   def d2 : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37:$a3),
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37_32:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
      __UNKNOWN_ITIN__>;
@@ -856,11 +856,11 @@ multiclass MC_17<string OpcStr> {
 //   defm COMPD
 multiclass MC_18<string OpcStr> {
   def d0 : COMPARISON_REGISTERW_REGISTERZ_SIGNED10_SIMPLE
-    <(outs SingleReg:$a2), (ins SingleReg:$a3, Signed10:$a4, ComparisonMod:$a1),
+    <(outs SingleReg:$a2), (ins SingleReg:$a3, Signed10_64:$a4, ComparisonMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
      [ ]>;
   def d1 : COMPARISON_REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
-    <(outs SingleReg:$a2), (ins SingleReg:$a3, Signed37:$a4, ComparisonMod:$a1),
+    <(outs SingleReg:$a2), (ins SingleReg:$a3, Signed37_64:$a4, ComparisonMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
      [ ]>;
   def d2 : COMPARISON_REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
@@ -892,11 +892,11 @@ multiclass MC_19<string OpcStr> {
 //   defm CMOVED
 multiclass MC_1A<string OpcStr> {
   def d0 : SCALARCOND_REGISTERZ_REGISTERW_SIGNED10_SIMPLE
-    <(outs SingleReg:$a3), (ins SingleReg:$a2, Signed10:$a4, ScalarcondMod:$a1),
+    <(outs SingleReg:$a3), (ins SingleReg:$a2, Signed10_64:$a4, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2? $a3 = $a4"),
      [ ]>;
   def d1 : SCALARCOND_REGISTERZ_REGISTERW_UPPER27_LOWER10_DOUBLE
-    <(outs SingleReg:$a3), (ins SingleReg:$a2, Signed37:$a4, ScalarcondMod:$a1),
+    <(outs SingleReg:$a3), (ins SingleReg:$a2, Signed37_64:$a4, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2? $a3 = $a4"),
      [ ]>;
   def d2 : SCALARCOND_REGISTERZ_REGISTERW_EXTEND27_UPPER27_LOWER10_TRIPLE
@@ -913,7 +913,7 @@ multiclass MC_1A<string OpcStr> {
 //   defm MAKE
 multiclass MC_1B<string OpcStr> {
   def d0 : REGISTERW_SIGNED16_SIMPLE
-    <(outs SingleReg:$SingleReg), (ins Signed16:$Signed16),
+    <(outs SingleReg:$SingleReg), (ins Signed16_64:$Signed16),
      !strconcat (OpcStr, " $SingleReg = $Signed16"),
      [/*(set i32:$SingleReg, Signed16:$Signed16)*/],
      __UNKNOWN_ITIN__>;
@@ -933,7 +933,7 @@ multiclass MC_1B<string OpcStr> {
 //   defm PCREL
 multiclass MC_1C<string OpcStr> {
   def d0 : REGISTERW_SIGNED16_SIMPLE
-    <(outs SingleReg:$a1), (ins Signed16:$a2),
+    <(outs SingleReg:$a1), (ins Signed16_64:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
      [ ],
      __UNKNOWN_ITIN__>;
@@ -974,12 +974,12 @@ multiclass MC_1E<string OpcStr> {
      [ ],
      __UNKNOWN_ITIN__>;
   def d1 : REGISTERW_REGISTERZ_SIGNED10_SIMPLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10:$a3),
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10_64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
      __UNKNOWN_ITIN__>;
   def d2 : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37:$a3),
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37_64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
      __UNKNOWN_ITIN__>;
@@ -1002,12 +1002,12 @@ multiclass MC_1F<string OpcStr> {
      [ ],
      __UNKNOWN_ITIN__>;
   def d1 : REGISTERM_REGISTERZ_SIGNED10_SIMPLE
-    <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, Signed10:$a3),
+    <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, Signed10_64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
      __UNKNOWN_ITIN__>;
   def d2 : REGISTERM_REGISTERZ_UPPER27_LOWER10_DOUBLE
-    <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, Signed37:$a3),
+    <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, Signed37_64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
      __UNKNOWN_ITIN__>;
@@ -1034,12 +1034,12 @@ multiclass MC_20<string OpcStr> {
      [ ],
      __UNKNOWN_ITIN__>;
   def d1 : REGISTERW_REGISTERZ_SIGNED10_SIMPLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10:$a3),
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10_64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
      __UNKNOWN_ITIN__>;
   def d2 : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37:$a3),
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37_64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
      __UNKNOWN_ITIN__>;
@@ -1062,12 +1062,12 @@ multiclass MC_21<string OpcStr> {
      [ ],
      __UNKNOWN_ITIN__>;
   def d1 : REGISTERM_REGISTERZ_SIGNED10_SIMPLE
-    <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, Signed10:$a3),
+    <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, Signed10_64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
      __UNKNOWN_ITIN__>;
   def d2 : REGISTERM_REGISTERZ_UPPER27_LOWER10_DOUBLE
-    <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, Signed37:$a3),
+    <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, Signed37_64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
      __UNKNOWN_ITIN__>;
@@ -1137,12 +1137,12 @@ multiclass MC_23<string OpcStr> {
 //   defm FFMSWD
 multiclass MC_24<string OpcStr> {
   def d0 : REGISTERW_REGISTERZ_SIGNED10_SIMPLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10:$a3),
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10_64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
      __UNKNOWN_ITIN__>;
   def d1 : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37:$a3),
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37_64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
      __UNKNOWN_ITIN__>;
@@ -1181,12 +1181,12 @@ multiclass MC_24<string OpcStr> {
 //   defm FDOT2WD
 multiclass MC_25<string OpcStr> {
   def d0 : REGISTERW_REGISTERZ_SIGNED10_SIMPLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10:$a3),
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10_64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
      __UNKNOWN_ITIN__>;
   def d1 : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37:$a3),
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37_64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
      __UNKNOWN_ITIN__>;
@@ -1209,12 +1209,12 @@ multiclass MC_25<string OpcStr> {
 //   defm FMULCWDC
 multiclass MC_26<string OpcStr> {
   def d0 : REGISTERM_REGISTERZ_SIGNED10_SIMPLE
-    <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, Signed10:$a3),
+    <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, Signed10_64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
      __UNKNOWN_ITIN__>;
   def d1 : REGISTERM_REGISTERZ_UPPER27_LOWER10_DOUBLE
-    <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, Signed37:$a3),
+    <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, Signed37_64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
      __UNKNOWN_ITIN__>;
@@ -1237,12 +1237,12 @@ multiclass MC_26<string OpcStr> {
 //   defm FFMSHWQ
 multiclass MC_27<string OpcStr> {
   def d0 : REGISTERM_REGISTERZ_SIGNED10_SIMPLE
-    <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, Signed10:$a3),
+    <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, Signed10_64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
      __UNKNOWN_ITIN__>;
   def d1 : REGISTERM_REGISTERZ_UPPER27_LOWER10_DOUBLE
-    <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, Signed37:$a3),
+    <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, Signed37_64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
      __UNKNOWN_ITIN__>;
