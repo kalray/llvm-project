@@ -448,9 +448,9 @@ TargetInfo *AllocateTarget(const llvm::Triple &Triple,
   case llvm::Triple::k1c:
     switch (os) {
     case llvm::Triple::ClusterOS:
-      return new ClusterOSTargetInfo<K1cTargetInfo>(Triple, Opts);
+      return new ClusterOSTargetInfo<K1CTargetInfo>(Triple, Opts);
     default:
-      return new ClusterOSTargetInfo<K1cTargetInfo>(Triple, Opts);
+      return new ClusterOSTargetInfo<K1CTargetInfo>(Triple, Opts);
     }
 
   case llvm::Triple::x86:

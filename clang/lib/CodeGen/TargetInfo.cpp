@@ -9252,6 +9252,167 @@ public:
 } // namespace
 
 //===----------------------------------------------------------------------===//
+// K1C ABI Implementation
+//===----------------------------------------------------------------------===//
+
+namespace {
+class K1CABIInfo : public ABIInfo {
+public:
+  K1CABIInfo(CodeGenTypes &CGT) : ABIInfo(CGT) {}
+
+  void computeInfo(CGFunctionInfo &FI) const override;
+
+  Address EmitVAArg(CodeGenFunction &CGF, Address VAListAddr, QualType Ty) const
+      override;
+
+private:
+  static unsigned alignment;
+  ABIArgInfo classifyType(QualType Ty, uint64_t Size) const;
+  ABIArgInfo classifyReturnType(QualType RetTy, uint64_t SizeLimit) const;
+  ABIArgInfo classifyArgumentType(QualType ArgTy) const;
+
+  // Coercion type builder for structs passed in registers. The coercion type
+  // serves one purpose:
+  //
+  // 1. Pad structs to a multiple of 64 bits, so they are passed 'left-aligned'
+  //    in registers.
+  //
+  struct CoerceBuilder {
+    llvm::LLVMContext &Context;
+    const llvm::DataLayout &DL;
+    SmallVector<llvm::Type *, 8> Elems;
+    uint64_t Size;
+
+    CoerceBuilder(llvm::LLVMContext &c, const llvm::DataLayout &dl)
+        : Context(c), DL(dl), Size(0) {}
+
+    // Pad Elems with integers until Size is ToSize.
+    void pad(uint64_t ToSize) {
+      assert(ToSize >= Size && "Cannot remove elements");
+      if (ToSize == Size)
+        return;
+
+      // Finish the current alignment-bit word.
+      uint64_t Aligned = llvm::alignTo(Size, alignment);
+      if (Aligned > Size && Aligned <= ToSize) {
+        Elems.push_back(llvm::IntegerType::get(Context, Aligned - Size));
+        Size = Aligned;
+      }
+
+      // Add whole alignment-bit words.
+      while (Size + alignment <= ToSize) {
+        Elems.push_back(llvm::Type::getInt64Ty(Context));
+        Size += alignment;
+      }
+    }
+
+    // Add a struct type to the coercion type, starting at Offset (in bits).
+    void addStruct(uint64_t Offset, llvm::StructType *StrTy) {
+      const llvm::StructLayout *Layout = DL.getStructLayout(StrTy);
+      for (unsigned i = 0, e = StrTy->getNumElements(); i != e; ++i) {
+        llvm::Type *ElemTy = StrTy->getElementType(i);
+        uint64_t ElemOffset = Offset + Layout->getElementOffsetInBits(i);
+        switch (ElemTy->getTypeID()) {
+        case llvm::Type::StructTyID:
+          addStruct(ElemOffset, cast<llvm::StructType>(ElemTy));
+          break;
+        case llvm::Type::PointerTyID:
+          if (ElemOffset % alignment == 0) {
+            pad(ElemOffset);
+            Elems.push_back(ElemTy);
+            Size += alignment;
+          }
+          break;
+        default:
+          break;
+        }
+      }
+    }
+
+    // Check if Ty is a usable substitute for the coercion type.
+    bool isUsableType(llvm::StructType *Ty) const {
+      return llvm::makeArrayRef(Elems) == Ty->elements();
+    }
+
+    // Get the coercion type as a literal struct type.
+    llvm::Type *getType() const {
+      if (Elems.size() == 1)
+        return Elems.front();
+      else
+        return llvm::StructType::get(Context, Elems);
+    }
+  };
+};
+} // end anonymous namespace
+
+namespace {
+class K1CTargetCodeGenInfo : public TargetCodeGenInfo {
+public:
+  K1CTargetCodeGenInfo(CodeGenTypes &CGT)
+      : TargetCodeGenInfo(new K1CABIInfo(CGT)) {}
+};
+} // end anonymous namespace
+
+unsigned K1CABIInfo::alignment = 64;
+
+void K1CABIInfo::computeInfo(CGFunctionInfo &FI) const {
+  FI.getReturnInfo() = classifyReturnType(FI.getReturnType(), 64 * 12);
+  for (auto &I : FI.arguments())
+    I.info = classifyArgumentType(I.type);
+}
+
+Address K1CABIInfo::EmitVAArg(CodeGenFunction &CGF, Address VAListAddr,
+                              QualType Ty) const {
+  return EmitVAArgInstr(CGF, VAListAddr, Ty, classifyArgumentType(Ty));
+}
+
+ABIArgInfo K1CABIInfo::classifyReturnType(QualType RetTy,
+                                          uint64_t SizeLimit) const {
+  if (RetTy->isVoidType())
+    return ABIArgInfo::getIgnore();
+
+  uint64_t Size = getContext().getTypeSize(RetTy);
+
+  // Anything too big to fit in registers is passed with an explicit indirect
+  // pointer / sret pointer.
+  if (Size > SizeLimit)
+    return getNaturalAlignIndirect(RetTy, /*ByVal=*/false);
+
+  return classifyType(RetTy, Size);
+}
+
+ABIArgInfo K1CABIInfo::classifyArgumentType(QualType ArgTy) const {
+  uint64_t Size = getContext().getTypeSize(ArgTy);
+
+  return classifyType(ArgTy, Size);
+}
+
+ABIArgInfo K1CABIInfo::classifyType(QualType Ty, uint64_t Size) const {
+  // Treat an enum type as its underlying type.
+  if (const EnumType *EnumTy = Ty->getAs<EnumType>())
+    Ty = EnumTy->getDecl()->getIntegerType();
+
+  // Other non-aggregates go in registers.
+  if (!isAggregateTypeForABI(Ty))
+    return ABIArgInfo::getDirect();
+
+  // This is a small aggregate type that should be passed in registers.
+  // Build a coercion type from the LLVM struct type.
+  llvm::StructType *StrTy = dyn_cast<llvm::StructType>(CGT.ConvertType(Ty));
+  if (!StrTy)
+    return ABIArgInfo::getDirect();
+
+  CoerceBuilder CB(getVMContext(), getDataLayout());
+  CB.addStruct(0, StrTy);
+  CB.pad(llvm::alignTo(CB.DL.getTypeSizeInBits(StrTy), alignment));
+
+  // Try to use the original type for coercion.
+  llvm::Type *CoerceTy = CB.isUsableType(StrTy) ? StrTy : CB.getType();
+
+  return ABIArgInfo::getDirect(CoerceTy);
+}
+
+//===----------------------------------------------------------------------===//
 // Driver code
 //===----------------------------------------------------------------------===//
 
@@ -9431,6 +9592,8 @@ const TargetCodeGenInfo &CodeGenModule::getTargetCodeGenInfo() {
   case llvm::Triple::spir:
   case llvm::Triple::spir64:
     return SetCGInfo(new SPIRTargetCodeGenInfo(Types));
+  case llvm::Triple::k1c:
+    return SetCGInfo(new K1CTargetCodeGenInfo(Types));
   }
 }
 
