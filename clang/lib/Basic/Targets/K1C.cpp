@@ -20,7 +20,7 @@
 using namespace clang;
 using namespace clang::targets;
 
-void K1cTargetInfo::getTargetDefines(const LangOptions &Opts,
+void K1CTargetInfo::getTargetDefines(const LangOptions &Opts,
                                      MacroBuilder &Builder) const {
   DefineStd(Builder, "unix", Opts);
   defineCPUMacros(Builder, "k1c", /*Tuning=*/false);
