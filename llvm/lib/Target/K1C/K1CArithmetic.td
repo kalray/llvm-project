@@ -212,29 +212,17 @@ multiclass COMP_Pat<SDNode Node, int Mod> {
   //COMPD
   def : Pat<(i64 (Node i64:$lhs, i64:$rhs)),
         (COMPDd3 SingleReg:$lhs, SingleReg:$rhs, (i8 Mod))>;
-  def : Pat<(i32 (trunc (i64 (Node i64:$lhs, i64:$rhs)))),
-        (COMPDd3 SingleReg:$lhs, SingleReg:$rhs, (i8 Mod))>;
   def : Pat<(i64 (Node i64:$lhs, Signed10_64:$rhs)),
-        (COMPDd0 SingleReg:$lhs, Signed10_64:$rhs, (i8 Mod))>;
-  def : Pat<(i32 (trunc (i64 (Node i64:$lhs, Signed10_64:$rhs)))),
         (COMPDd0 SingleReg:$lhs, Signed10_64:$rhs, (i8 Mod))>;
   def : Pat<(i64 (Node i64:$lhs, Signed37_64:$rhs)),
         (COMPDd1 SingleReg:$lhs, Signed37_64:$rhs, (i8 Mod))>;
-  def : Pat<(i32 (trunc (i64 (Node i64:$lhs, Signed37_64:$rhs)))),
-        (COMPDd1 SingleReg:$lhs, Signed37_64:$rhs, (i8 Mod))>;
   def : Pat<(i64 (Node i64:$lhs, Wrapped64:$rhs)),
-        (COMPDd2 SingleReg:$lhs, Wrapped64:$rhs, (i8 Mod))>;
-  def : Pat<(i32 (trunc (i64 (Node i64:$lhs, Wrapped64:$rhs)))),
         (COMPDd2 SingleReg:$lhs, Wrapped64:$rhs, (i8 Mod))>;
 
   //COMPW
   def : Pat<(i64 (Node i32:$lhs, i32:$rhs)),
         (COMPWd0 SingleReg:$lhs, SingleReg:$rhs, (i8 Mod))>;
-  def : Pat<(i32 (trunc (i64 (Node i32:$lhs, i32:$rhs)))),
-        (COMPWd0 SingleReg:$lhs, SingleReg:$rhs, (i8 Mod))>;
   def : Pat<(i64 (Node i32:$lhs, Wrapped32:$rhs)),
-        (COMPWd1 SingleReg:$lhs, Wrapped32:$rhs, (i8 Mod))>;
-  def : Pat<(i32 (trunc (i64 (Node i32:$lhs, Wrapped32:$rhs)))),
         (COMPWd1 SingleReg:$lhs, Wrapped32:$rhs, (i8 Mod))>;
 }
 

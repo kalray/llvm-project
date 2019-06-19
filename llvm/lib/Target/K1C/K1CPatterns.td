@@ -15,6 +15,10 @@ def SDT_K1CSelectCC : SDTypeProfile<1, 4, [SDTCisVT<0, i32>, SDTCisVT<1, i64>, S
 
 def SelectCC : SDNode<"K1CISD::SELECT_CC", SDT_K1CSelectCC, []>;
 
+def SDT_K1CTruncate : SDTypeProfile<1, 1, [SDTCisVT<0, i32>]>;
+
+def Truncate : SDNode<"K1CISD::TRUNCATE", SDT_K1CTruncate, []>;
+
 //
 // Function return
 //
@@ -196,3 +200,8 @@ def : Pat<(SelectCC i64:$cmp, i64:$zero, i64:$truev, i64:$falsev),
 
 def : Pat<(SelectCC i64:$cmp, i64:$zero, (K1CWrapper tglobaladdr:$truef), (K1CWrapper tglobaladdr:$falsef)),
         (Select_Instr SingleReg:$cmp, $zero, SingleReg:$truef, SingleReg:$falsef)>;
+
+def Truncate_Instr : K1C_PseudoInstr<(outs SingleReg:$dst), (ins SingleReg:$param),[]>;
+
+def : Pat<(Truncate i32:$param), (Truncate_Instr SingleReg:$param)>;
+def : Pat<(Truncate i64:$param), (Truncate_Instr SingleReg:$param)>;
