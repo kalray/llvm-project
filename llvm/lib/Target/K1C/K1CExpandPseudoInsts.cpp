@@ -146,6 +146,9 @@ bool K1CExpandPseudo::expandMI(MachineBasicBlock &MBB,
   case K1C::Select_Instr:
     expandSelectInstr(TII, MBB, MBBI);
     return true;
+  case K1C::Truncate_Instr:
+    MBBI->eraseFromParent();
+    return true;
   default:
     break;
   }
