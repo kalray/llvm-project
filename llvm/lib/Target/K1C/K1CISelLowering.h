@@ -31,7 +31,8 @@ enum NodeType : unsigned {
   RET,
   CALL,
   WRAPPER,
-  SELECT_CC
+  SELECT_CC,
+  TRUNCATE
 };
 } // namespace K1CISD
 
@@ -71,6 +72,7 @@ private:
   SDValue lowerVAARG(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerFRAMEADDR(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerSELECT(SDValue Op, SelectionDAG &DAG) const;
+  SDValue lowerTRUNCATE(SDValue Op, SelectionDAG &DAG) const;
 };
 
 } // namespace llvm

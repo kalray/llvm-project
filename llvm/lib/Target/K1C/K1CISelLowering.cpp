@@ -80,17 +80,25 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::UDIVREM, MVT::i64, Expand);
   setOperationAction(ISD::UREM, MVT::i64, Expand);
 
+  for (auto VT : { MVT::i1, MVT::i8, MVT::i16 }) {
+    setOperationAction(ISD::SIGN_EXTEND_INREG, VT, Expand);
+  }
+
   for (auto VT : { MVT::i32, MVT::i64 }) {
     setOperationAction(ISD::SMUL_LOHI, VT, Expand);
     setOperationAction(ISD::UMUL_LOHI, VT, Expand);
     setOperationAction(ISD::MULHS, VT, Expand);
     setOperationAction(ISD::MULHU, VT, Expand);
-  }
 
-  setOperationAction(ISD::SELECT_CC, MVT::i32, Expand);
-  setOperationAction(ISD::SELECT_CC, MVT::i64, Expand);
-  setOperationAction(ISD::SELECT, MVT::i32, Custom);
-  setOperationAction(ISD::SELECT, MVT::i64, Custom);
+    setOperationAction(ISD::SELECT_CC, VT, Expand);
+    setOperationAction(ISD::SELECT, VT, Custom);
+
+    setOperationAction(ISD::TRUNCATE, VT, Custom);
+
+    setOperationAction(ISD::SIGN_EXTEND_INREG, VT, Expand);
+
+    setOperationAction(ISD::BR_CC, VT, Expand);
+  }
 
   setOperationAction(ISD::GlobalAddress, MVT::i64, Custom);
   setOperationAction(ISD::VASTART, MVT::Other, Custom);
@@ -98,8 +106,6 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::VACOPY, MVT::Other, Expand);
   setOperationAction(ISD::VAEND, MVT::Other, Expand);
 
-  setOperationAction(ISD::BR_CC, MVT::i32, Expand);
-  setOperationAction(ISD::BR_CC, MVT::i64, Expand);
 
   setOperationAction(ISD::BR_JT, MVT::Other, Expand);
 
@@ -130,6 +136,8 @@ const char *K1CTargetLowering::getTargetNodeName(unsigned Opcode) const {
     return "K1C::WRAPPER";
   case K1CISD::SELECT_CC:
     return "K1C::SELECT_CC";
+  case K1CISD::TRUNCATE:
+    return "K1C::TRUNCATE";
   default:
     return NULL;
   }
@@ -454,6 +462,8 @@ SDValue K1CTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
     return lowerFRAMEADDR(Op, DAG);
   case ISD::SELECT:
     return lowerSELECT(Op, DAG);
+  case ISD::TRUNCATE:
+    return lowerTRUNCATE(Op, DAG);
   }
 }
 
@@ -553,4 +563,9 @@ SDValue K1CTargetLowering::lowerSELECT(SDValue Op, SelectionDAG &DAG) const {
   SDValue result = DAG.getNode(K1CISD::SELECT_CC, DL, VTs, Ops);
 
   return result;
+}
+
+SDValue K1CTargetLowering::lowerTRUNCATE(SDValue Op, SelectionDAG &DAG) const {
+  return DAG.getNode(K1CISD::TRUNCATE, SDLoc(Op),
+                     DAG.getVTList(Op.getValueType()), { Op.getOperand(0) });
 }
