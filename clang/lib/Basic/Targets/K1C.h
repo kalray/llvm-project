@@ -22,9 +22,9 @@
 namespace clang {
 namespace targets {
 
-class LLVM_LIBRARY_VISIBILITY K1cTargetInfo : public TargetInfo {
+class LLVM_LIBRARY_VISIBILITY K1CTargetInfo : public TargetInfo {
 public:
-  K1cTargetInfo(const llvm::Triple &Triple, const TargetOptions &)
+  K1CTargetInfo(const llvm::Triple &Triple, const TargetOptions &)
       : TargetInfo(Triple) {
     NoAsmVariants = true;
     LongWidth = LongAlign = PointerWidth = PointerAlign = 64;

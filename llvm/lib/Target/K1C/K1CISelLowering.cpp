@@ -36,6 +36,20 @@ using namespace llvm;
 
 #include "K1CGenCallingConv.inc"
 
+static bool CC_SRET_K1C(unsigned ValNo, MVT ValVT, MVT LocVT,
+                        CCValAssign::LocInfo LocInfo, ISD::ArgFlagsTy ArgFlags,
+                        CCState &State) {
+  if (ArgFlags.isSRet()) {
+    if (unsigned Reg = State.AllocateReg(K1C::R15)) {
+      State.addLoc(CCValAssign::getReg(ValNo, ValVT, Reg, LocVT, LocInfo));
+      return false;
+    }
+    return true;
+  }
+
+  return CC_K1C(ValNo, ValVT, LocVT, LocInfo, ArgFlags, State);
+}
+
 K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
                                      const K1CSubtarget &STI)
     : TargetLowering(TM), Subtarget(STI) {
@@ -202,7 +216,7 @@ SDValue K1CTargetLowering::LowerFormalArguments(
   SmallVector<CCValAssign, 16> ArgLocs;
   CCState CCInfo(CallConv, IsVarArg, DAG.getMachineFunction(), ArgLocs,
                  *DAG.getContext());
-  CCInfo.AnalyzeFormalArguments(Ins, CC_K1C);
+  CCInfo.AnalyzeFormalArguments(Ins, CC_SRET_K1C);
 
   for (auto &VA : ArgLocs) {
     if (VA.isRegLoc()) {
@@ -294,7 +308,7 @@ SDValue K1CTargetLowering::LowerCall(CallLoweringInfo &CLI,
   SmallVector<CCValAssign, 16> ArgLocs;
   CCState CCInfo(CallConv, isVarArg, DAG.getMachineFunction(), ArgLocs,
                  *DAG.getContext());
-  CCInfo.AnalyzeCallOperands(Outs, CC_K1C);
+  CCInfo.AnalyzeCallOperands(Outs, CC_SRET_K1C);
 
   // Get the size of the outgoing arguments stack space requirement.
   unsigned ArgsSize = CCInfo.getNextStackOffset();
