@@ -70,7 +70,6 @@
 // COMPNHQ
 // COMPNWP
 // COMPUWD
-// COMPW
 // COMPWD
 // CTZD
 // CTZW
@@ -119,9 +118,7 @@
 // ORND
 // ORNW
 // PCREL
-// ROLW
 // ROLWPS
-// RORW
 // RORWPS
 // SATD
 // SATUD
@@ -185,6 +182,14 @@
 // SXMBHQ
 // SXMHWP
 //---------------//
+
+// defm ROLW
+// defm RORW
+multiclass MC_16_Pat<SDNode Node, Operand OpR1, Operand OpR2,
+                    K1C_INSTRUCTION RRInstr, K1C_INSTRUCTION RIInstr> {
+  def : Pat<(Node OpR1:$rs1, OpR2:$rs2), (RRInstr SingleReg:$rs1, SingleReg:$rs2)>;
+  def : Pat<(Node OpR1:$rs, Unsigned6:$is), (RIInstr SingleReg:$rs, Unsigned6:$is)>;
+}
 
 // ADDD
 def : Pat<(add i64:$rs1, i64:$rs2), (ADDDd0 SingleReg:$rs1, SingleReg:$rs2)>;
@@ -282,6 +287,12 @@ def : Pat<(srl i64:$rs1, Unsigned6:$rs2), (SRLDd1 SingleReg:$rs1, Unsigned6:$rs2
 // SRLW
 def : Pat<(srl i32:$rs1, i64:$rs2), (SRLWd0 SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(srl i32:$rs1, Unsigned6:$rs2), (SRLWd1 SingleReg:$rs1, Unsigned6:$rs2)>;
+
+// ROLW
+defm : MC_16_Pat<rotl, i32, i64, ROLWd0, ROLWd1>;
+
+// RORW
+defm : MC_16_Pat<rotr, i32, i64, RORWd0, RORWd1>;
 
 // XORD
 def : Pat<(xor i64:$rs1, i64:$rs2), (XORDd0 SingleReg:$rs1, SingleReg:$rs2)>;
