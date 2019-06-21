@@ -119,6 +119,7 @@ def : Pat<(truncstorei32 (i64 SingleReg:$val), (i64 SingleReg:$base)), (SWd0 (i6
 
 
 // Load patterns
+def loadi1 : PatFrag<(ops node:$ptr), (i1 (load node:$ptr))>;
 def loadi8 : PatFrag<(ops node:$ptr), (i8 (load node:$ptr))>;
 def loadi16 : PatFrag<(ops node:$ptr), (i16 (load node:$ptr))>;
 def loadi32 : PatFrag<(ops node:$ptr), (i32 (load node:$ptr))>;
@@ -126,6 +127,12 @@ def loadi64 : PatFrag<(ops node:$ptr), (i64 (load node:$ptr))>;
 def loadf16 : PatFrag<(ops node:$ptr), (f16 (load node:$ptr))>;
 def loadf32 : PatFrag<(ops node:$ptr), (f32 (load node:$ptr))>;
 def loadf64 : PatFrag<(ops node:$ptr), (f64 (load node:$ptr))>;
+
+// load i1 in i32
+def : Pat<(i32 (sextloadi1 AddrRI:$addr)), (LBSri AddrRI:$addr)>;
+def : Pat<(i32 (zextloadi1 AddrRI:$addr)), (LBZri AddrRI:$addr)>;
+def : Pat<(i32 (extloadi1 AddrRI:$addr)), (LBZri AddrRI:$addr)>;
+def : Pat<(i32 (extloadi1 (iPTR SingleReg:$rs2))), (LBZd0 (i64 0), SingleReg:$rs2, (i8 0))>;
 
 // load i8 in i32
 def : Pat<(i32 (sextloadi8 AddrRI:$addr)), (LBSri AddrRI:$addr)>;
@@ -138,6 +145,12 @@ def : Pat<(i32 (sextloadi16 AddrRI:$addr)), (LHSri AddrRI:$addr)>;
 def : Pat<(i32 (zextloadi16 AddrRI:$addr)), (LHZri AddrRI:$addr)>;
 def : Pat<(i32 (extloadi16 AddrRI:$addr)), (LHZri AddrRI:$addr)>;
 def : Pat<(i32 (extloadi16 (iPTR SingleReg:$rs2))), (LHZd0 (i64 0), SingleReg:$rs2, (i8 0))>;
+
+// load i1 in i64
+def : Pat<(i64 (sextloadi1 AddrRI:$addr)), (LBSri AddrRI:$addr)>;
+def : Pat<(i64 (zextloadi1 AddrRI:$addr)), (LBZri AddrRI:$addr)>;
+def : Pat<(i64 (extloadi1 AddrRI:$addr)), (LBZri AddrRI:$addr)>;
+def : Pat<(i64 (extloadi1 (iPTR SingleReg:$rs2))), (LBZd0 (i64 0), SingleReg:$rs2, (i8 0))>;
 
 // load i8 in i64
 def : Pat<(i64 (sextloadi8 AddrRI:$addr)), (LBSri AddrRI:$addr)>;
@@ -158,6 +171,7 @@ def : Pat<(i64 (extloadi32 AddrRI:$addr)), (LWZri AddrRI:$addr)>;
 def : Pat<(i64 (extloadi32 (iPTR SingleReg:$rs2))), (LWZd0 (i64 0), SingleReg:$rs2, (i8 0))>;
 def : Pat<(loadi32 (iPTR SingleReg:$rs2)), (LWZd0 (i64 0), SingleReg:$rs2, (i8 0))>;
 
+def : Pat<(loadi1 AddrRI:$addr), (LBZri AddrRI:$addr)>;
 def : Pat<(loadi8 AddrRI:$addr), (LBZri AddrRI:$addr)>;
 def : Pat<(loadi16 AddrRI:$addr), (LHZri AddrRI:$addr)>;
 def : Pat<(loadi32 AddrRI:$addr), (LWZri AddrRI:$addr)>;
