@@ -1164,15 +1164,12 @@ multiclass MC_24<string OpcStr> {
 //   defm FMULHQ
 //   defm FMULWC
 //   defm FMULCWC
-//   defm FADDD
 //   defm FADDWP
-//   defm FADDHQ
 //   defm FADDCWC
 //   defm FSBFD
 //   defm FSBFWP
 //   defm FSBFHQ
 //   defm FSBFCWC
-//   defm FADDW
 //   defm FSBFW
 //   defm FMULHW
 //   defm FMULW
@@ -1186,19 +1183,64 @@ multiclass MC_25<string OpcStr> {
      [ ],
      __UNKNOWN_ITIN__>;
   def d1 : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37_64:$a3),
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary32Imm:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
      __UNKNOWN_ITIN__>;
   def d2 : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped64:$a3),
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary64Imm:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
      __UNKNOWN_ITIN__>;
   def d3 : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
     <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
-     [/* no direct match, see K1CFPPatterns.td */],
+     [ ],
+     __UNKNOWN_ITIN__>;
+}
+
+// multiclass MC_25H is used by:
+//   defm FADDHQ
+multiclass MC_25H<string OpcStr, SDNode OpNode = fadd> {
+  def ri : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary16Imm:$a3),
+     !strconcat (OpcStr, " $a1 = $a2, $a3"),
+     [(set f16:$a1, (OpNode f16:$a2, Binary16Imm:$a3))],
+     __UNKNOWN_ITIN__>;
+  def rr : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+    <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
+     !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
+     [/* no direct match, see K1CFloatingPoint.td */],
+     __UNKNOWN_ITIN__>;
+}
+
+// multiclass MC_25W is used by:
+//   defm FADDW
+multiclass MC_25W<string OpcStr, SDNode OpNode = fadd> {
+  def ri : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary32Imm:$a3),
+     !strconcat (OpcStr, " $a1 = $a2, $a3"),
+     [(set f32:$a1, (OpNode f32:$a2, Binary32Imm:$a3))],
+     __UNKNOWN_ITIN__>;
+  def rr : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+    <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
+     !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
+     [/* no direct match, see K1CFloatingPoint.td */],
+     __UNKNOWN_ITIN__>;
+}
+
+// multiclass MC_25D is used by:
+//   defm FADDD
+multiclass MC_25D<string OpcStr, SDNode OpNode = fadd> {
+  def ri : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary64Imm:$a3),
+     !strconcat (OpcStr, " $a1 = $a2, $a3"),
+     [(set f64:$a1, (OpNode f64:$a2, Binary64Imm:$a3))],
+     __UNKNOWN_ITIN__>;
+  def rr : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+    <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
+     !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
+     [/* no direct match, see K1CFloatingPoint.td */],
      __UNKNOWN_ITIN__>;
 }
 
@@ -3169,13 +3211,13 @@ defm FMULCWC : MC_25<"fmulcwc">;
 defm FMULCWDC : MC_26<"fmulcwdc">;
 
 // 4 insns: ['FADDD', 'FADDD', 'FADDD', 'FADDD']
-defm FADDD : MC_25<"faddd">;
+defm FADDD : MC_25D<"faddd", fadd>;
 
 // 4 insns: ['FADDWP', 'FADDWP', 'FADDWP', 'FADDWP']
 defm FADDWP : MC_25<"faddwp">;
 
 // 4 insns: ['FADDHQ', 'FADDHQ', 'FADDHQ', 'FADDHQ']
-defm FADDHQ : MC_25<"faddhq">;
+defm FADDHQ : MC_25H<"faddhq">;
 
 // 1 insns: ['FADDDP']
 def FADDDP : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE
@@ -3271,7 +3313,7 @@ defm FFMSWDP : MC_27<"ffmswdp">;
 defm FFMSHWQ : MC_27<"ffmshwq">;
 
 // 4 insns: ['FADDW', 'FADDW', 'FADDW', 'FADDW']
-defm FADDW : MC_25<"faddw">;
+defm FADDW : MC_25W<"faddw", fadd>;
 
 // 4 insns: ['FSBFW', 'FSBFW', 'FSBFW', 'FSBFW']
 defm FSBFW : MC_25<"fsbfw">;
