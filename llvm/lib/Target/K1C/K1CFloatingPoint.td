@@ -49,7 +49,7 @@ def : Pat<(loadf64 AddrRI:$addr), (LDri AddrRI:$addr)>;
 // FPU Insns
 
 // FABS, see K1CInstrInfo.td
-// FADDC
+// FADDC -> TODO
 // FADD, see K1CInstrInfo.td for immediate patterns
 def : Pat<(fadd f16:$rs1, f16:$rs2), (FADDHQrr SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
 def : Pat<(fadd f32:$rs1, f32:$rs2), (FADDWrr SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
@@ -124,14 +124,15 @@ def : Pat<(i64 (setune f64:$rz, f64:$ry)), (FCOMPDrr SingleReg:$rz, SingleReg:$r
 // FMM2A
 // FMM2S
 // FMM2
-// FMULC
+// FMULC -> TODO
 // FMUL
+// FMUL*C -> TODO
 // FNARROW
 def : Pat<(f16 (fpround f32:$val)), (FNARROWWH SingleReg:$val, ROUND_CS, SILENT_OFF)>;
 def : Pat<(f16 (fpround f64:$val)), (FNARROWWH (FNARROWDW SingleReg:$val, ROUND_CS, SILENT_OFF), ROUND_CS, SILENT_OFF)>;
 def : Pat<(f32 (fpround f64:$val)), (FNARROWDW SingleReg:$val, ROUND_CS, SILENT_OFF)>;
 // FNEG
-// FSBFC
+// FSBFC -> TODO
 // FSBF
 // FSDIV
 // FSINV
