@@ -2125,7 +2125,7 @@ let Defs=[CS] in
 def FWIDENLWD : SILENT2_REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fwidenlwd$a1 $a2 = $a3",
-   [/* no direct match, see K1CFPPatterns.td */]>;
+   [/* no direct match, see K1CFloatingPoint.td */]>;
 
 // 1 insns: ['FWIDENMWD']
 let Uses=[CS], Defs=[CS] in
@@ -2135,11 +2135,11 @@ def FWIDENMWD : SILENT2_REGISTERW_REGISTERZ_SIMPLE
    [ ]>;
 
 // 1 insns: ['FNARROWDW']
-let Uses=[CS], Defs=[CS] in
+let Defs=[CS] in
 def FNARROWDW : ROUNDING2_SILENT2_REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a3), (ins SingleReg:$a4, RoundingMod:$a1, SilentMod:$a2),
    "fnarrowdw$a1$a2 $a3 = $a4",
-   [ ],
+   [/* no direct match, see K1CFloatingPoint.td */],
    __UNKNOWN_ITIN__>;
 
 // 1 insns: ['FNEGW']
@@ -2191,7 +2191,7 @@ let Defs=[CS] in
 def FWIDENLHW : SILENT2_REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fwidenlhw$a1 $a2 = $a3",
-   [/* no direct match, see K1CFPPatterns.td */]>;
+   [/* no direct match, see K1CFloatingPoint.td */]>;
 
 // 1 insns: ['FWIDENMHW']
 let Uses=[CS], Defs=[CS] in
@@ -2201,11 +2201,11 @@ def FWIDENMHW : SILENT2_REGISTERW_REGISTERZ_SIMPLE
    [ ]>;
 
 // 1 insns: ['FNARROWWH']
-let Uses=[CS], Defs=[CS] in
+let Defs=[CS] in
 def FNARROWWH : ROUNDING2_SILENT2_REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a3), (ins SingleReg:$a4, RoundingMod:$a1, SilentMod:$a2),
    "fnarrowwh$a1$a2 $a3 = $a4",
-   [ ],
+   [/* no direct match, see K1CFloatingPoint.td */],
    __UNKNOWN_ITIN__>;
 
 // 1 insns: ['FNEGWP']
