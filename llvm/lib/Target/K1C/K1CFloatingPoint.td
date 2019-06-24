@@ -38,7 +38,7 @@ def : Pat<(loadf64 AddrRI:$addr), (LDri AddrRI:$addr)>;
 
 // FPU Insns
 
-// FABS
+// FABS, see K1CInstrInfo.td
 // FADDC
 // FADD
 def : Pat<(fadd f32:$rs1, f32:$rs2), (FADDWd3 SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
