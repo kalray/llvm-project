@@ -40,9 +40,10 @@ def : Pat<(loadf64 AddrRI:$addr), (LDri AddrRI:$addr)>;
 
 // FABS, see K1CInstrInfo.td
 // FADDC
-// FADD
-def : Pat<(fadd f32:$rs1, f32:$rs2), (FADDWd3 SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
-def : Pat<(fadd f64:$rs1, f64:$rs2), (FADDDd3 SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
+// FADD, see K1CInstrInfo.td for immediate patterns
+def : Pat<(fadd f16:$rs1, f16:$rs2), (FADDHQrr SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
+def : Pat<(fadd f32:$rs1, f32:$rs2), (FADDWrr SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
+def : Pat<(fadd f64:$rs1, f64:$rs2), (FADDDrr SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
 // FCDIV
 // FCOMP
 // FDOT2
