@@ -101,9 +101,6 @@ def : Pat<(store (i8 SingleReg:$val), AddrRI:$addr), (SBri AddrRI:$addr,SingleRe
 def : Pat<(store (i16 SingleReg:$val), AddrRI:$addr), (SHri AddrRI:$addr,SingleReg:$val)>;
 def : Pat<(store (i32 SingleReg:$val), AddrRI:$addr), (SWri AddrRI:$addr,SingleReg:$val)>;
 def : Pat<(store (i64 SingleReg:$val), AddrRI:$addr), (SDri AddrRI:$addr,SingleReg:$val)>;
-def : Pat<(store (f16 SingleReg:$val), AddrRI:$addr), (SHri AddrRI:$addr,SingleReg:$val)>;
-def : Pat<(store (f32 SingleReg:$val), AddrRI:$addr), (SWri AddrRI:$addr,SingleReg:$val)>;
-def : Pat<(store (f64 SingleReg:$val), AddrRI:$addr), (SDri AddrRI:$addr,SingleReg:$val)>;
 
 def : Pat<(truncstorei8 i64:$val, AddrRI:$addr), (SBri AddrRI:$addr, SingleReg:$val)>;
 def : Pat<(truncstorei8 i32:$val, AddrRI:$addr), (SBri AddrRI:$addr, SingleReg:$val)>;
@@ -124,9 +121,6 @@ def loadi8 : PatFrag<(ops node:$ptr), (i8 (load node:$ptr))>;
 def loadi16 : PatFrag<(ops node:$ptr), (i16 (load node:$ptr))>;
 def loadi32 : PatFrag<(ops node:$ptr), (i32 (load node:$ptr))>;
 def loadi64 : PatFrag<(ops node:$ptr), (i64 (load node:$ptr))>;
-def loadf16 : PatFrag<(ops node:$ptr), (f16 (load node:$ptr))>;
-def loadf32 : PatFrag<(ops node:$ptr), (f32 (load node:$ptr))>;
-def loadf64 : PatFrag<(ops node:$ptr), (f64 (load node:$ptr))>;
 
 // load i1 in i32
 def : Pat<(i32 (sextloadi1 AddrRI:$addr)), (LBSri AddrRI:$addr)>;
@@ -178,10 +172,6 @@ def : Pat<(loadi32 AddrRI:$addr), (LWZri AddrRI:$addr)>;
 def : Pat<(loadi64 AddrRI:$addr), (LDri AddrRI:$addr)>;
 def : Pat<(loadi64 (iPTR SingleReg:$rs2)), (LDd0 (i64 0), SingleReg:$rs2, (i8 0))>;
 
-def : Pat<(loadf16 AddrRI:$addr), (LHZri AddrRI:$addr)>;
-def : Pat<(loadf32 AddrRI:$addr), (LWZri AddrRI:$addr)>;
-def : Pat<(loadf64 AddrRI:$addr), (LDri AddrRI:$addr)>;
-
 // Zero/sign extend patterns
 def : Pat<(i64 (anyext i8:$val)), (ZXBD SingleReg:$val)>;
 def : Pat<(i64 (anyext i16:$val)), (ZXHD SingleReg:$val)>;
@@ -199,9 +189,6 @@ def : Pat<(i32 (sext_inreg i32:$val, i16)), (SXHD SingleReg:$val)>;
 def : Pat<(i64 (sext_inreg i64:$val, i8)), (SXBD SingleReg:$val)>;
 def : Pat<(i64 (sext_inreg i64:$val, i16)), (SXHD SingleReg:$val)>;
 def : Pat<(i64 (sext_inreg i64:$val, i32)), (SXWD SingleReg:$val)>;
-
-def : Pat<(f64 (fpextend f32:$val)), (FWIDENLWD SingleReg:$val, (i8 0))>;
-def : Pat<(f32 (fpextend f16:$val)), (FWIDENLHW SingleReg:$val, (i8 0))>;
 
 // Unconditional branch
 def : Pat<(br bb:$addr), (GOTO Pcrel27:$addr)>;
@@ -232,7 +219,3 @@ def Truncate_Instr : K1C_PseudoInstr<(outs SingleReg:$dst), (ins SingleReg:$para
 
 def : Pat<(Truncate i32:$param), (Truncate_Instr SingleReg:$param)>;
 def : Pat<(Truncate i64:$param), (Truncate_Instr SingleReg:$param)>;
-
-// FADD patterns
-def : Pat<(fadd f32:$rs1, f32:$rs2), (FADDWd3 SingleReg:$rs1, SingleReg:$rs2, (i8 7), (i8 0))>;
-def : Pat<(fadd f64:$rs1, f64:$rs2), (FADDDd3 SingleReg:$rs1, SingleReg:$rs2, (i8 7), (i8 0))>;
