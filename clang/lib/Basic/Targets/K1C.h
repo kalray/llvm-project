@@ -30,12 +30,20 @@ public:
 
     HasLegalHalfType = true;
     HasFloat16 = true;
-    HalfWidth = 16;
-    HalfAlign = 16;
+    HalfWidth = HalfAlign = 16;
+    FloatWidth = FloatAlign = 32;
+    DoubleWidth = DoubleAlign = 64;
+    LongDoubleWidth = LongDoubleAlign = 64;
+
+    HalfFormat = &llvm::APFloat::IEEEhalf();
+    FloatFormat = &llvm::APFloat::IEEEsingle();
+    DoubleFormat = &llvm::APFloat::IEEEdouble();
+    LongDoubleFormat = &llvm::APFloat::IEEEdouble();
 
     LongWidth = LongAlign = PointerWidth = PointerAlign = 64;
     MaxAtomicPromoteWidth = MaxAtomicInlineWidth = 64;
-    resetDataLayout("e-m:e-p:64:64-i64:64-i128:128-n64-S128");
+    resetDataLayout(
+        "e-m:e-p:64:64-i64:64-i128:128-f16:16-f32:32-f64:64-n64-S128");
   }
 
   void getTargetDefines(const LangOptions &Opts, MacroBuilder &Builder) const
