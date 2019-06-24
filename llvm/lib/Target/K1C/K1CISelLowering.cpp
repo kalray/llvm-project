@@ -126,9 +126,9 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
     setIndexedStoreAction(im, MVT::i32, Legal);
   }
 
-  setOperationAction(ISD::ConstantFP, MVT::f16, Legal);
-  setOperationAction(ISD::ConstantFP, MVT::f32, Legal);
-  setOperationAction(ISD::ConstantFP, MVT::f64, Legal);
+  for (auto VT : { MVT::f16, MVT::f32, MVT::f64 }) {
+    setOperationAction(ISD::ConstantFP, VT, Legal);
+  }
 
   for (MVT VT : MVT::fp_valuetypes()) {
     setLoadExtAction(ISD::EXTLOAD, VT, MVT::f16, Expand);
