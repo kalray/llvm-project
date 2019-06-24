@@ -110,3 +110,19 @@ def RectifyMod : Operand<OtherVT> {
 
 def SDT_K1CCall : SDTypeProfile<0, -1, [SDTCisVT<0, i64>]>;
 def Call : SDNode<"K1CISD::CALL", SDT_K1CCall, [SDNPHasChain, SDNPOptInGlue, SDNPOutGlue, SDNPVariadic]>;
+
+def Binary16Imm : Operand<f16>, FPImmLeaf<f16, [{
+      return isInt<16>(Imm.bitcastToAPInt().getZExtValue());
+    }]> {
+  let PrintMethod = "printBinary16ImmOperand";
+}
+def Binary32Imm : Operand<f32>, FPImmLeaf<f32, [{
+      return isInt<32>(Imm.bitcastToAPInt().getZExtValue());
+    }]> {
+  let PrintMethod = "printBinary32ImmOperand";
+}
+def Binary64Imm : Operand<f64>, FPImmLeaf<f64, [{
+      return isInt<64>(Imm.bitcastToAPInt().getZExtValue());
+    }]> {
+  let PrintMethod = "printBinary64ImmOperand";
+}
