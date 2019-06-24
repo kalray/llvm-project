@@ -63,6 +63,12 @@ public:
 
   void printRoundingMod(const MCInst *MI, unsigned OpNo, raw_ostream &O);
   void printSilentMod(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+
+  void printBinary16ImmOperand(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printBinary32ImmOperand(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printBinary64ImmOperand(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printFPImmOperand(const MCInst *MI, unsigned OpNo, unsigned Size,
+                         raw_ostream &O);
 };
 } // namespace llvm
 
