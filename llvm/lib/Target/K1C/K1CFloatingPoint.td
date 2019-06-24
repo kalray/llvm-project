@@ -60,6 +60,9 @@ def : Pat<(fadd f64:$rs1, f64:$rs2), (FADDDd3 SingleReg:$rs1, SingleReg:$rs2, RO
 // FMULC
 // FMUL
 // FNARROW
+def : Pat<(f16 (fpround f32:$val)), (FNARROWWH SingleReg:$val, ROUND_CS, SILENT_OFF)>;
+def : Pat<(f16 (fpround f64:$val)), (FNARROWWH (FNARROWDW SingleReg:$val, ROUND_CS, SILENT_OFF), ROUND_CS, SILENT_OFF)>;
+def : Pat<(f32 (fpround f64:$val)), (FNARROWDW SingleReg:$val, ROUND_CS, SILENT_OFF)>;
 // FNEG
 // FSBFC
 // FSBF
@@ -68,4 +71,5 @@ def : Pat<(fadd f64:$rs1, f64:$rs2), (FADDDd3 SingleReg:$rs1, SingleReg:$rs2, RO
 // FSISR
 // FWIDEN
 def : Pat<(f64 (fpextend f32:$val)), (FWIDENLWD SingleReg:$val, SILENT_OFF)>;
+def : Pat<(f64 (fpextend f16:$val)), (FWIDENLWD (FWIDENLHW SingleReg:$val, SILENT_OFF), SILENT_OFF)>;
 def : Pat<(f32 (fpextend f16:$val)), (FWIDENLHW SingleReg:$val, SILENT_OFF)>;
