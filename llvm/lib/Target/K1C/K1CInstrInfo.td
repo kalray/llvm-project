@@ -1198,7 +1198,7 @@ multiclass MC_25<string OpcStr> {
   def d3 : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
     <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
-     [ ],
+     [/* no direct match, see K1CFPPatterns.td */],
      __UNKNOWN_ITIN__>;
 }
 
@@ -2125,7 +2125,7 @@ let Defs=[CS] in
 def FWIDENLWD : SILENT2_REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fwidenlwd$a1 $a2 = $a3",
-   [ ]>;
+   [/* no direct match, see K1CFPPatterns.td */]>;
 
 // 1 insns: ['FWIDENMWD']
 let Uses=[CS], Defs=[CS] in
@@ -2191,7 +2191,7 @@ let Defs=[CS] in
 def FWIDENLHW : SILENT2_REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fwidenlhw$a1 $a2 = $a3",
-   [ ]>;
+   [/* no direct match, see K1CFPPatterns.td */]>;
 
 // 1 insns: ['FWIDENMHW']
 let Uses=[CS], Defs=[CS] in
