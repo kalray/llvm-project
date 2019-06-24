@@ -13,6 +13,7 @@ include "K1CRegisterInfo.td"
 include "K1CInstrInfo.td"
 include "K1CPatterns.td"
 include "K1CArithmetic.td"
+include "K1CFloatingPoint.td"
 include "K1CCallingConv.td"
 
 def K1CInstrInfo : InstrInfo {
