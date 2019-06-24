@@ -56,34 +56,17 @@ K1CInstPrinter::printOperand(const MCInst *MI, unsigned OpNo,
     unsigned Opcode = MI->getOpcode();
     switch (Opcode) {
     // FP is a half
-    case K1C::MAKEd0: {
-      // Convert FPImm to an hexadecimal integer string.
-      std::stringstream s;
-      // MC can't converts half to double, so half float value holds
-      // on the 16 least significant bits of a double)
-      double i = MO.getFPImm();
-      s << "0x" << std::hex << *reinterpret_cast<uint16_t *>(&i);
-      O << s.str();
-    } break;
+    case K1C::MAKEd0:
+      printBinary16ImmOperand(MI, OpNo, O);
+      break;
     // FP is a float
-    case K1C::MAKEd1: {
-      // Convert FPImm to an hexadecimal integer string
-      std::stringstream s;
-      // MC converts all floating point immediate operands to double.
-      // Convert them back to float should be safe except for nan
-      // payload values.
-      auto f = float(MO.getFPImm());
-      s << "0x" << std::hex << *reinterpret_cast<uint32_t *>(&f);
-      O << s.str();
-    } break;
+    case K1C::MAKEd1:
+      printBinary32ImmOperand(MI, OpNo, O);
+      break;
     // FP is a double
-    default: {
-      // Convert FPImm to an hexadecimal integer string
-      std::stringstream s;
-      double i = MO.getFPImm();
-      s << "0x" << std::hex << *reinterpret_cast<uint64_t *>(&i);
-      O << s.str();
-    } break;
+    default:
+      printBinary64ImmOperand(MI, OpNo, O);
+      break;
     }
     return;
   }
@@ -288,4 +271,59 @@ void K1CInstPrinter::printSilentMod(const MCInst *MI, unsigned OpNo,
   default:
     llvm_unreachable("illegal silent mode");
   }
+}
+
+void K1CInstPrinter::printBinary16ImmOperand(const MCInst *MI, unsigned OpNo,
+                                             raw_ostream &O) {
+  printFPImmOperand(MI, OpNo, 16, O);
+  return;
+}
+void K1CInstPrinter::printBinary32ImmOperand(const MCInst *MI, unsigned OpNo,
+                                             raw_ostream &O) {
+  printFPImmOperand(MI, OpNo, 32, O);
+  return;
+}
+void K1CInstPrinter::printBinary64ImmOperand(const MCInst *MI, unsigned OpNo,
+                                             raw_ostream &O) {
+  printFPImmOperand(MI, OpNo, 64, O);
+  return;
+}
+
+void K1CInstPrinter::printFPImmOperand(const MCInst *MI, unsigned OpNo,
+                                       unsigned Size, raw_ostream &O) {
+  const MCOperand &MO = MI->getOperand(OpNo);
+  switch (Size) {
+  // FP is a half
+  case 16: {
+    // Convert FPImm to an hexadecimal integer string.
+    std::stringstream s;
+    // MC can't converts half to double, so half float value holds
+    // on the 16 least significant bits of a double)
+    double i = MO.getFPImm();
+    s << "0x" << std::hex << *reinterpret_cast<uint16_t *>(&i);
+    O << s.str();
+  } break;
+  // FP is a float
+  case 32: {
+    // Convert FPImm to an hexadecimal integer string
+    std::stringstream s;
+    // MC converts all floating point immediate operands to double.
+    // Convert them back to float should be safe except for nan
+    // payload values.
+    auto f = float(MO.getFPImm());
+    s << "0x" << std::hex << *reinterpret_cast<uint32_t *>(&f);
+    O << s.str();
+  } break;
+  // FP is a double
+  case 64: {
+    // Convert FPImm to an hexadecimal integer string
+    std::stringstream s;
+    double i = MO.getFPImm();
+    s << "0x" << std::hex << *reinterpret_cast<uint64_t *>(&i);
+    O << s.str();
+  } break;
+  default:
+    llvm_unreachable("illegal size");
+  }
+  return;
 }
