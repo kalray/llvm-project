@@ -44,9 +44,10 @@ K1CTargetMachine::K1CTargetMachine(const Target &T, const Triple &TT,
                                    Optional<Reloc::Model> RM,
                                    Optional<CodeModel::Model> CM,
                                    CodeGenOpt::Level OL, bool JIT)
-    : LLVMTargetMachine(T, "e-m:e-p:64:64-i64:64-i128:128-n64-S128", TT, CPU,
-                        FS, Options, getEffectiveRelocModel(TT, RM),
-                        getEffectiveCodeModel(CM, CodeModel::Small), OL),
+    : LLVMTargetMachine(
+          T, "e-m:e-p:64:64-i64:64-i128:128-f16:16-f32:32-f64:64-n64-S128", TT,
+          CPU, FS, Options, getEffectiveRelocModel(TT, RM),
+          getEffectiveCodeModel(CM, CodeModel::Small), OL),
       TLOF(make_unique<K1CELFTargetObjectFile>()),
       Subtarget(TT, CPU, FS, *this) {
   initAsmInfo();
