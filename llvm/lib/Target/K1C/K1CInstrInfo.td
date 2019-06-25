@@ -949,18 +949,26 @@ multiclass MC_1C<string OpcStr> {
      __UNKNOWN_ITIN__>;
 }
 
-// multiclass MC_1D is used by:
+// multiclass MC_1DW is used by:
 //   defm FCOMPW
-//   defm FCOMPD
-multiclass MC_1D<string OpcStr> {
-  def d0 : FLOATCOMP_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+multiclass MC_1DW<string OpcStr> {
+  def rr : FLOATCOMP_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
     <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, FloatcompMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
-     [ ]>;
-  def d1 : FLOATCOMP_REGISTERW_REGISTERZ_UPPER27_LOWER5_DOUBLE
-    <(outs SingleReg:$a2), (ins SingleReg:$a3, Wrapped32:$a4, FloatcompMod:$a1),
+     [/* no direct match, see K1CFloatingPoint.td */]>;
+  def ri : FLOATCOMP_REGISTERW_REGISTERZ_UPPER27_LOWER5_DOUBLE
+    <(outs SingleReg:$a2), (ins SingleReg:$a3, Binary32Imm:$a4, FloatcompMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
-     [ ]>;
+     [/* no direct match, see K1CFloatingPoint.td */]>;
+}
+
+// multiclass MC_1DD is used by:
+//   defm FCOMPD
+multiclass MC_1DD<string OpcStr> {
+  def rr : FLOATCOMP_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+    <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, FloatcompMod:$a1),
+     !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
+     [/* no direct match, see K1CFloatingPoint.td */]>;
 }
 
 // multiclass MC_1E is used by:
@@ -2592,10 +2600,10 @@ def CMOVEHQ : SIMDCOND_REGISTERZ_REGISTERW_REGISTERY_SIMPLE
    [ ]>;
 
 // 2 insns: ['FCOMPW', 'FCOMPW']
-defm FCOMPW : MC_1D<"fcompw">;
+defm FCOMPW : MC_1DW<"fcompw">;
 
 // 2 insns: ['FCOMPD', 'FCOMPD']
-defm FCOMPD : MC_1D<"fcompd">;
+defm FCOMPD : MC_1DD<"fcompd">;
 
 // 1 insns: ['FCOMPNWP']
 def FCOMPNWP : FLOATCOMP_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
@@ -2607,7 +2615,7 @@ def FCOMPNWP : FLOATCOMP_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
 def FCOMPNHQ : FLOATCOMP_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, FloatcompMod:$a1),
    "fcompnhq$a1 $a2 = $a3, $a4",
-   [ ]>;
+   [/* no direct match, see K1CFloatingPoint.td */]>;
 
 // 1 insns: ['FSDIVD']
 let Uses=[CS], Defs=[CS] in

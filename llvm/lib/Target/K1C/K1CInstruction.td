@@ -85,7 +85,8 @@ def ComparisonMod : Operand<i8> {
   let PrintMethod = "printComparisonMod";
 }
 
-def FloatcompMod : Operand<OtherVT> {
+def FloatcompMod : Operand<i8> {
+  let PrintMethod = "printFloatcompMod";
 }
 
 def RoundingMod : Operand<i8> {

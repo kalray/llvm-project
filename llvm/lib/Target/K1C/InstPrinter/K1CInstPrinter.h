@@ -63,6 +63,7 @@ public:
 
   void printRoundingMod(const MCInst *MI, unsigned OpNo, raw_ostream &O);
   void printSilentMod(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printFloatcompMod(const MCInst *MI, unsigned OpNo, raw_ostream &O);
 
   void printBinary16ImmOperand(const MCInst *MI, unsigned OpNo, raw_ostream &O);
   void printBinary32ImmOperand(const MCInst *MI, unsigned OpNo, raw_ostream &O);
