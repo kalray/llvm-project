@@ -273,6 +273,40 @@ void K1CInstPrinter::printSilentMod(const MCInst *MI, unsigned OpNo,
   }
 }
 
+void K1CInstPrinter::printFloatcompMod(const MCInst *MI, unsigned OpNo,
+                                       raw_ostream &O) {
+  const MCOperand &MO = MI->getOperand(OpNo);
+  int floatcomp = MO.getImm();
+  switch (floatcomp) {
+  case 0: // Ordered and Not Equal
+    O << ".one";
+    break;
+  case 1: // Unordered or Equal
+    O << ".ueq";
+    break;
+  case 2: // Ordered and Equal
+    O << ".oeq";
+    break;
+  case 3: // Unordered and Not Equal
+    O << ".une";
+    break;
+  case 4: // Ordered and Less Than
+    O << ".olt";
+    break;
+  case 5: // Unordered or Greater Than or Equal
+    O << ".uge";
+    break;
+  case 6: // Ordered and Greater Than or Equal
+    O << ".oge";
+    break;
+  case 7: // Unordered or Less Than
+    O << ".ult";
+    break;
+  default:
+    llvm_unreachable("illegal rounding mode");
+  }
+}
+
 void K1CInstPrinter::printBinary16ImmOperand(const MCInst *MI, unsigned OpNo,
                                              raw_ostream &O) {
   printFPImmOperand(MI, OpNo, 16, O);

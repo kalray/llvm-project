@@ -21,6 +21,16 @@ def ROUND_NZ : ROUNDING<5>;
 def ROUND_O  : ROUNDING<6>;
 def ROUND_CS : ROUNDING<7>;
 
+class FCOMP<int N> : PatLeaf<(i8 N)>;
+def FCOMP_ONE : FCOMP<0>;
+def FCOMP_UEQ : FCOMP<1>;
+def FCOMP_OEQ : FCOMP<2>;
+def FCOMP_UNE : FCOMP<3>;
+def FCOMP_OLT : FCOMP<4>;
+def FCOMP_UGE : FCOMP<5>;
+def FCOMP_OGE : FCOMP<6>;
+def FCOMP_ULT : FCOMP<7>;
+
 // Store
 def : Pat<(store (f16 SingleReg:$val), AddrRI:$addr), (SHri AddrRI:$addr, SingleReg:$val)>;
 def : Pat<(store (f32 SingleReg:$val), AddrRI:$addr), (SWri AddrRI:$addr, SingleReg:$val)>;
@@ -45,7 +55,63 @@ def : Pat<(fadd f16:$rs1, f16:$rs2), (FADDHQrr SingleReg:$rs1, SingleReg:$rs2, R
 def : Pat<(fadd f32:$rs1, f32:$rs2), (FADDWrr SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
 def : Pat<(fadd f64:$rs1, f64:$rs2), (FADDDrr SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
 // FCDIV
-// FCOMP
+// FCOMP (TODO: factorize these patterns in ISelLowering pass)
+def : Pat<(i64 (setoeq f16:$rz, f16:$ry)), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, FCOMP_OEQ)>;
+def : Pat<(i64 (setogt f16:$rz, f16:$ry)), (FCOMPNHQ SingleReg:$ry, SingleReg:$rz, FCOMP_OLT)>;
+def : Pat<(i64 (setoge f16:$rz, f16:$ry)), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, FCOMP_OGE)>;
+def : Pat<(i64 (setolt f16:$rz, f16:$ry)), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, FCOMP_OLT)>;
+def : Pat<(i64 (setole f16:$rz, f16:$ry)), (FCOMPNHQ SingleReg:$ry, SingleReg:$rz, FCOMP_OGE)>;
+def : Pat<(i64 (setone f16:$rz, f16:$ry)), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, FCOMP_ONE)>;
+def : Pat<(i64 (seto f16:$rz, f16:$ry)), (ORDd0 (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, FCOMP_OEQ), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, FCOMP_ONE))>;
+def : Pat<(i64 (setuo f16:$rz, f16:$ry)), (ORDd0 (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, FCOMP_UEQ), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, FCOMP_UNE))>;
+def : Pat<(i64 (setueq f16:$rz, f16:$ry)), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, FCOMP_UEQ)>;
+def : Pat<(i64 (setugt f16:$rz, f16:$ry)), (FCOMPNHQ SingleReg:$ry, SingleReg:$rz, FCOMP_ULT)>;
+def : Pat<(i64 (setuge f16:$rz, f16:$ry)), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, FCOMP_UGE)>;
+def : Pat<(i64 (setult f16:$rz, f16:$ry)), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, FCOMP_ULT)>;
+def : Pat<(i64 (setule f16:$rz, f16:$ry)), (FCOMPNHQ SingleReg:$ry, SingleReg:$rz, FCOMP_UGE)>;
+def : Pat<(i64 (setune f16:$rz, f16:$ry)), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, FCOMP_UNE)>;
+def : Pat<(i64 (setoeq f32:$rz, Binary32Imm:$imm)), (FCOMPWri SingleReg:$rz, Binary32Imm:$imm, FCOMP_OEQ)>;
+def : Pat<(i64 (setogt Binary32Imm:$imm, f32:$ry)), (FCOMPWri SingleReg:$ry, Binary32Imm:$imm, FCOMP_OLT)>;
+def : Pat<(i64 (setoge f32:$rz, Binary32Imm:$imm)), (FCOMPWri SingleReg:$rz, Binary32Imm:$imm, FCOMP_OGE)>;
+def : Pat<(i64 (setolt f32:$rz, Binary32Imm:$imm)), (FCOMPWri SingleReg:$rz, Binary32Imm:$imm, FCOMP_OLT)>;
+def : Pat<(i64 (setole Binary32Imm:$imm, f32:$ry)), (FCOMPWri SingleReg:$ry, Binary32Imm:$imm, FCOMP_OGE)>;
+def : Pat<(i64 (setone f32:$rz, Binary32Imm:$imm)), (FCOMPWri SingleReg:$rz, Binary32Imm:$imm, FCOMP_ONE)>;
+def : Pat<(i64 (seto f32:$rz, Binary32Imm:$imm)), (ORDd0 (FCOMPWrr SingleReg:$rz, Binary32Imm:$imm, FCOMP_OEQ), (FCOMPWrr SingleReg:$rz, Binary32Imm:$imm, FCOMP_ONE))>;
+def : Pat<(i64 (setuo f32:$rz, Binary32Imm:$imm)), (ORDd0 (FCOMPWrr SingleReg:$rz, Binary32Imm:$imm, FCOMP_UEQ), (FCOMPWrr SingleReg:$rz, Binary32Imm:$imm, FCOMP_UNE))>;
+def : Pat<(i64 (setueq f32:$rz, Binary32Imm:$imm)), (FCOMPWri SingleReg:$rz, Binary32Imm:$imm, FCOMP_UEQ)>;
+def : Pat<(i64 (setugt Binary32Imm:$imm, f32:$ry)), (FCOMPWri SingleReg:$ry, Binary32Imm:$imm, FCOMP_ULT)>;
+def : Pat<(i64 (setuge f32:$rz, Binary32Imm:$imm)), (FCOMPWri SingleReg:$rz, Binary32Imm:$imm, FCOMP_UGE)>;
+def : Pat<(i64 (setult f32:$rz, Binary32Imm:$imm)), (FCOMPWri SingleReg:$rz, Binary32Imm:$imm, FCOMP_ULT)>;
+def : Pat<(i64 (setule Binary32Imm:$imm, f32:$ry)), (FCOMPWri SingleReg:$ry, Binary32Imm:$imm, FCOMP_UGE)>;
+def : Pat<(i64 (setune f32:$rz, Binary32Imm:$imm)), (FCOMPWri SingleReg:$rz, Binary32Imm:$imm, FCOMP_UNE)>;
+def : Pat<(i64 (setoeq f32:$rz, f32:$ry)), (FCOMPWrr SingleReg:$rz, SingleReg:$ry, FCOMP_OEQ)>;
+def : Pat<(i64 (setogt f32:$rz, f32:$ry)), (FCOMPWrr SingleReg:$ry, SingleReg:$rz, FCOMP_OLT)>;
+def : Pat<(i64 (setoge f32:$rz, f32:$ry)), (FCOMPWrr SingleReg:$rz, SingleReg:$ry, FCOMP_OGE)>;
+def : Pat<(i64 (setolt f32:$rz, f32:$ry)), (FCOMPWrr SingleReg:$rz, SingleReg:$ry, FCOMP_OLT)>;
+def : Pat<(i64 (setole f32:$rz, f32:$ry)), (FCOMPWrr SingleReg:$ry, SingleReg:$rz, FCOMP_OGE)>;
+def : Pat<(i64 (setone f32:$rz, f32:$ry)), (FCOMPWrr SingleReg:$rz, SingleReg:$ry, FCOMP_ONE)>;
+def : Pat<(i64 (seto f32:$rz, f32:$ry)), (ORDd0 (FCOMPWrr SingleReg:$rz, SingleReg:$ry, FCOMP_OEQ), (FCOMPWrr SingleReg:$rz, SingleReg:$ry, FCOMP_ONE))>;
+def : Pat<(i64 (setuo f32:$rz, f32:$ry)), (ORDd0 (FCOMPWrr SingleReg:$rz, SingleReg:$ry, FCOMP_UEQ), (FCOMPWrr SingleReg:$rz, SingleReg:$ry, FCOMP_UNE))>;
+def : Pat<(i64 (setueq f32:$rz, f32:$ry)), (FCOMPWrr SingleReg:$rz, SingleReg:$ry, FCOMP_UEQ)>;
+def : Pat<(i64 (setugt f32:$rz, f32:$ry)), (FCOMPWrr SingleReg:$ry, SingleReg:$rz, FCOMP_ULT)>;
+def : Pat<(i64 (setuge f32:$rz, f32:$ry)), (FCOMPWrr SingleReg:$rz, SingleReg:$ry, FCOMP_UGE)>;
+def : Pat<(i64 (setult f32:$rz, f32:$ry)), (FCOMPWrr SingleReg:$rz, SingleReg:$ry, FCOMP_ULT)>;
+def : Pat<(i64 (setule f32:$rz, f32:$ry)), (FCOMPWrr SingleReg:$ry, SingleReg:$rz, FCOMP_UGE)>;
+def : Pat<(i64 (setune f32:$rz, f32:$ry)), (FCOMPWrr SingleReg:$rz, SingleReg:$ry, FCOMP_UNE)>;
+def : Pat<(i64 (setoeq f64:$rz, f64:$ry)), (FCOMPDrr SingleReg:$rz, SingleReg:$ry, FCOMP_OEQ)>;
+def : Pat<(i64 (setogt f64:$rz, f64:$ry)), (FCOMPDrr SingleReg:$ry, SingleReg:$rz, FCOMP_OLT)>;
+def : Pat<(i64 (setoge f64:$rz, f64:$ry)), (FCOMPDrr SingleReg:$rz, SingleReg:$ry, FCOMP_OGE)>;
+def : Pat<(i64 (setolt f64:$rz, f64:$ry)), (FCOMPDrr SingleReg:$rz, SingleReg:$ry, FCOMP_OLT)>;
+def : Pat<(i64 (setole f64:$rz, f64:$ry)), (FCOMPDrr SingleReg:$ry, SingleReg:$rz, FCOMP_OGE)>;
+def : Pat<(i64 (setone f64:$rz, f64:$ry)), (FCOMPDrr SingleReg:$rz, SingleReg:$ry, FCOMP_ONE)>;
+def : Pat<(i64 (seto f64:$rz, f64:$ry)), (ORDd0 (FCOMPDrr SingleReg:$rz, SingleReg:$ry, FCOMP_OEQ), (FCOMPDrr SingleReg:$rz, SingleReg:$ry, FCOMP_ONE))>;
+def : Pat<(i64 (setuo f64:$rz, f64:$ry)), (ORDd0 (FCOMPDrr SingleReg:$rz, SingleReg:$ry, FCOMP_UEQ), (FCOMPDrr SingleReg:$rz, SingleReg:$ry, FCOMP_UNE))>;
+def : Pat<(i64 (setueq f64:$rz, f64:$ry)), (FCOMPDrr SingleReg:$rz, SingleReg:$ry, FCOMP_UEQ)>;
+def : Pat<(i64 (setugt f64:$rz, f64:$ry)), (FCOMPDrr SingleReg:$ry, SingleReg:$rz, FCOMP_ULT)>;
+def : Pat<(i64 (setuge f64:$rz, f64:$ry)), (FCOMPDrr SingleReg:$rz, SingleReg:$ry, FCOMP_UGE)>;
+def : Pat<(i64 (setult f64:$rz, f64:$ry)), (FCOMPDrr SingleReg:$rz, SingleReg:$ry, FCOMP_ULT)>;
+def : Pat<(i64 (setule f64:$rz, f64:$ry)), (FCOMPDrr SingleReg:$ry, SingleReg:$rz, FCOMP_UGE)>;
+def : Pat<(i64 (setune f64:$rz, f64:$ry)), (FCOMPDrr SingleReg:$rz, SingleReg:$ry, FCOMP_UNE)>;
 // FDOT2
 // FFMA
 // FFMS
