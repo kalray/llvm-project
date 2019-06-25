@@ -130,6 +130,7 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::ConstantFP, VT, Legal);
 
     setOperationAction(ISD::FABS, VT, Legal);
+    setOperationAction(ISD::BR_CC, VT, Expand);
   }
 
   for (MVT VT : MVT::fp_valuetypes()) {
