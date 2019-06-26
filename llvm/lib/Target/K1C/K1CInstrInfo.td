@@ -1172,11 +1172,8 @@ multiclass MC_24<string OpcStr> {
 //   defm FMULCWC
 //   defm FADDWP
 //   defm FADDCWC
-//   defm FSBFD
 //   defm FSBFWP
-//   defm FSBFHQ
 //   defm FSBFCWC
-//   defm FSBFW
 //   defm FMULHW
 //   defm FMULWD
 //   defm FDOT2W
@@ -1207,6 +1204,7 @@ multiclass MC_25<string OpcStr> {
 // multiclass MC_25H is used by:
 //   defm FADDHQ
 //   defm FMULHQ
+//   defm FSBFHQ
 multiclass MC_25H<string OpcStr, SDNode OpNode = fadd> {
   def ri : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary16Imm:$a3),
@@ -1223,6 +1221,7 @@ multiclass MC_25H<string OpcStr, SDNode OpNode = fadd> {
 // multiclass MC_25W is used by:
 //   defm FADDW
 //   defm FMULW
+//   defm FSBFW
 multiclass MC_25W<string OpcStr, SDNode OpNode = fadd> {
   def ri : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary32Imm:$a3),
@@ -1239,6 +1238,7 @@ multiclass MC_25W<string OpcStr, SDNode OpNode = fadd> {
 // multiclass MC_25D is used by:
 //   defm FADDD
 //   defm FMULD
+//   defm FSBSD
 multiclass MC_25D<string OpcStr, SDNode OpNode = fadd> {
   def ri : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary64Imm:$a3),
@@ -3255,13 +3255,13 @@ def FADDCWCP : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE
    [ ]>;
 
 // 4 insns: ['FSBFD', 'FSBFD', 'FSBFD', 'FSBFD']
-defm FSBFD : MC_25<"fsbfd">;
+defm FSBFD : MC_25D<"fsbfd", fsub>;
 
 // 4 insns: ['FSBFWP', 'FSBFWP', 'FSBFWP', 'FSBFWP']
 defm FSBFWP : MC_25<"fsbfwp">;
 
 // 4 insns: ['FSBFHQ', 'FSBFHQ', 'FSBFHQ', 'FSBFHQ']
-defm FSBFHQ : MC_25<"fsbfhq">;
+defm FSBFHQ : MC_25H<"fsbfhq", fsub>;
 
 // 1 insns: ['FSBFDP']
 def FSBFDP : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE
@@ -3324,7 +3324,7 @@ defm FFMSHWQ : MC_27<"ffmshwq">;
 defm FADDW : MC_25W<"faddw", fadd>;
 
 // 4 insns: ['FSBFW', 'FSBFW', 'FSBFW', 'FSBFW']
-defm FSBFW : MC_25<"fsbfw">;
+defm FSBFW : MC_25W<"fsbfw", fsub>;
 
 // 4 insns: ['FMULHW', 'FMULHW', 'FMULHW', 'FMULHW']
 defm FMULHW : MC_25<"fmulhw">;
