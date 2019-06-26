@@ -115,8 +115,8 @@ def : Pat<(i64 (setune f64:$rz, f64:$ry)), (FCOMPDrr SingleReg:$rz, SingleReg:$r
 // FDOT2 -> TODO
 // FFMA  -> TODO
 // FFMS  -> TODO
-// FINV
-// FISR
+// FINV  -> TODO
+// FISR  -> TODO
 // FIXED
 // FLOAT
 // FMAX  -> TODO
@@ -135,8 +135,8 @@ def : Pat<(f32 (fpround f64:$val)), (FNARROWDW SingleReg:$val, ROUND_CS, SILENT_
 // FSBFC -> TODO
 // FSBF
 // FSDIV -> TODO
-// FSINV
-// FSISR
+// FSINV -> TODO
+// FSISR -> TODO
 // FWIDEN
 def : Pat<(f64 (fpextend f32:$val)), (FWIDENLWD SingleReg:$val, SILENT_OFF)>;
 def : Pat<(f64 (fpextend f16:$val)), (FWIDENLWD (FWIDENLHW SingleReg:$val, SILENT_OFF), SILENT_OFF)>;
