@@ -112,18 +112,18 @@ def : Pat<(i64 (setuge f64:$rz, f64:$ry)), (FCOMPDrr SingleReg:$rz, SingleReg:$r
 def : Pat<(i64 (setult f64:$rz, f64:$ry)), (FCOMPDrr SingleReg:$rz, SingleReg:$ry, FCOMP_ULT)>;
 def : Pat<(i64 (setule f64:$rz, f64:$ry)), (FCOMPDrr SingleReg:$ry, SingleReg:$rz, FCOMP_UGE)>;
 def : Pat<(i64 (setune f64:$rz, f64:$ry)), (FCOMPDrr SingleReg:$rz, SingleReg:$ry, FCOMP_UNE)>;
-// FDOT2
-// FFMA
-// FFMS
+// FDOT2 -> TODO
+// FFMA  -> TODO
+// FFMS  -> TODO
 // FINV
 // FISR
 // FIXED
 // FLOAT
-// FMAX
-// FMIN
-// FMM2A
-// FMM2S
-// FMM2
+// FMAX  -> TODO
+// FMIN  -> TODO
+// FMM2A -> TODO
+// FMM2S -> TODO
+// FMM2  -> TODO
 // FMULC -> TODO
 // FMUL
 // FMUL*C -> TODO
