@@ -136,7 +136,10 @@ def : Pat<(f16 (fpround f64:$val)), (FNARROWWH (FNARROWDW SingleReg:$val, ROUND_
 def : Pat<(f32 (fpround f64:$val)), (FNARROWDW SingleReg:$val, ROUND_CS, SILENT_OFF)>;
 // FNEG, see K1CInstrInfo.td
 // FSBFC -> TODO
-// FSBF
+// FSBF, see K1CInstrInfo.td for immediate patterns
+def : Pat<(fsub f16:$rs1, f16:$rs2), (FSBFHQrr SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
+def : Pat<(fsub f32:$rs1, f32:$rs2), (FSBFWrr SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
+def : Pat<(fsub f64:$rs1, f64:$rs2), (FSBFDrr SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
 // FSDIV -> TODO
 // FSINV -> TODO
 // FSISR -> TODO
