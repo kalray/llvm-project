@@ -2146,7 +2146,7 @@ def SBFCID : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
 def FNEGD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fnegd $a1 = $a2",
-   [ ],
+   [(set f64:$a1, (fneg f64:$a2))],
    __UNKNOWN_ITIN__>;
 
 // 1 insns: ['FABSD']
@@ -2196,7 +2196,7 @@ def FNARROWDW : ROUNDING2_SILENT2_REGISTERW_REGISTERZ_SIMPLE
 def FNEGW : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fnegw $a1 = $a2",
-   [ ],
+   [(set f32:$a1, (fneg f32:$a2))],
    __UNKNOWN_ITIN__>;
 
 // 1 insns: ['FABSW']
@@ -2262,7 +2262,7 @@ def FNARROWWH : ROUNDING2_SILENT2_REGISTERW_REGISTERZ_SIMPLE
 def FNEGWP : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fnegwp $a1 = $a2",
-   [ ],
+   [(set v2f32:$a1, (fneg v2f32:$a2))],
    __UNKNOWN_ITIN__>;
 
 // 1 insns: ['FABSWP']
@@ -2312,7 +2312,7 @@ def FNARROWDWP : ROUNDING2_SILENT2_REGISTERW_REGISTERP_SIMPLE
 def FNEGHQ : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fneghq $a1 = $a2",
-   [ ],
+   [(set f16:$a1, (fneg f16:$a2))],
    __UNKNOWN_ITIN__>;
 
 // 1 insns: ['FABSHQ']
