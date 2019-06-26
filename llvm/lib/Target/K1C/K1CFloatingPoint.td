@@ -54,7 +54,7 @@ def : Pat<(loadf64 AddrRI:$addr), (LDri AddrRI:$addr)>;
 def : Pat<(fadd f16:$rs1, f16:$rs2), (FADDHQrr SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
 def : Pat<(fadd f32:$rs1, f32:$rs2), (FADDWrr SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
 def : Pat<(fadd f64:$rs1, f64:$rs2), (FADDDrr SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
-// FCDIV
+// FCDIV -> TODO
 // FCOMP (TODO: factorize these patterns in ISelLowering pass)
 def : Pat<(i64 (setoeq f16:$rz, f16:$ry)), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, FCOMP_OEQ)>;
 def : Pat<(i64 (setogt f16:$rz, f16:$ry)), (FCOMPNHQ SingleReg:$ry, SingleReg:$rz, FCOMP_OLT)>;
@@ -134,7 +134,7 @@ def : Pat<(f32 (fpround f64:$val)), (FNARROWDW SingleReg:$val, ROUND_CS, SILENT_
 // FNEG
 // FSBFC -> TODO
 // FSBF
-// FSDIV
+// FSDIV -> TODO
 // FSINV
 // FSISR
 // FWIDEN
