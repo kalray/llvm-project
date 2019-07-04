@@ -25,4 +25,9 @@ void K1CTargetInfo::getTargetDefines(const LangOptions &Opts,
   DefineStd(Builder, "unix", Opts);
   defineCPUMacros(Builder, "k1c", /*Tuning=*/false);
   Builder.defineMacro("__ELF__");
+  Builder.defineMacro("__k1__");
+  Builder.defineMacro("__K1__");
+  Builder.defineMacro("__K1_64__");
+  Builder.defineMacro("__k1c__");
+  Builder.defineMacro("__K1C__");
 }
