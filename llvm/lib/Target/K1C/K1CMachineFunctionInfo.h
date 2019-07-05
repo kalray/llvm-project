@@ -26,7 +26,13 @@ private:
   /// FrameIndex for start of varargs area
   int VarArgsFrameIndex = 0;
   /// Size of the save area used for varargs
-  int VarArgsSaveSize = 0;
+  unsigned VarArgsSaveSize = 0;
+  /// Max size of outgoing args
+  unsigned OutgoingArgsMaxSize = 0;
+  // Arguments passed in memory size
+  unsigned MemArgsSaveSize = 0;
+  /// Min-max index for CSR
+  std::pair<int, int> CSRIndices = { 0, 0 };
 
 public:
   //  K1CMachineFunctionInfo() = default;
@@ -37,7 +43,21 @@ public:
   void setVarArgsFrameIndex(int Index) { VarArgsFrameIndex = Index; }
 
   unsigned getVarArgsSaveSize() const { return VarArgsSaveSize; }
-  void setVarArgsSaveSize(int Size) { VarArgsSaveSize = Size; }
+  void setVarArgsSaveSize(unsigned Size) { VarArgsSaveSize = Size; }
+
+  unsigned getOutgoingArgsMaxSize() const { return OutgoingArgsMaxSize; }
+  void setOutgoingArgsMaxSize(unsigned Size) {
+    if (Size > OutgoingArgsMaxSize)
+      OutgoingArgsMaxSize = Size;
+  }
+
+  unsigned getMemArgsSaveSize() const { return MemArgsSaveSize; }
+  void setMemArgsSaveSize(unsigned Size) { MemArgsSaveSize = Size; }
+
+  const std::pair<int, int> &getCSRIndices() const { return CSRIndices; }
+  void setCSRIndices(const std::pair<int, int> &Indices) {
+    CSRIndices = Indices;
+  }
 };
 
 } // end namespace llvm
