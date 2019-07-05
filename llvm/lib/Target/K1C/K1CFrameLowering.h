@@ -23,7 +23,7 @@ class K1CSubtarget;
 class K1CFrameLowering : public TargetFrameLowering {
 public:
   explicit K1CFrameLowering(const K1CSubtarget &STI)
-      : TargetFrameLowering(StackGrowsDown,
+      : TargetFrameLowering(StackGrowsUp,
                             /*StackAlignment=*/16,
                             /*LocalAreaOffset=*/0),
         STI(STI) {}
@@ -39,6 +39,17 @@ public:
 
   void processFunctionBeforeFrameFinalized(MachineFunction &MF,
                                            RegScavenger *RS) const override;
+
+  bool spillCalleeSavedRegisters(MachineBasicBlock &MBB,
+                                 MachineBasicBlock::iterator MI,
+                                 const std::vector<CalleeSavedInfo> &CSI,
+                                 const TargetRegisterInfo *TRI) const override;
+
+  bool restoreCalleeSavedRegisters(MachineBasicBlock &MBB,
+                                   MachineBasicBlock::iterator MI,
+                                   std::vector<CalleeSavedInfo> &CSI,
+                                   const TargetRegisterInfo *TRI) const
+      override;
 
   bool hasFP(const MachineFunction &MF) const override;
   bool isLeafProc(MachineFunction &MF) const;

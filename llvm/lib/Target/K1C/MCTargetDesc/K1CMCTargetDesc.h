@@ -29,4 +29,7 @@ Target &getTheK1CTarget();
 #define GET_INSTRINFO_ENUM
 #include "K1CGenInstrInfo.inc"
 
+static inline unsigned getSPReg() { return llvm::K1C::R12; }
+static inline unsigned getFPReg() { return llvm::K1C::R14; }
+
 #endif // LLVM_LIB_TARGET_K1C_MCTARGETDESC_K1CMCTARGETDESC_H

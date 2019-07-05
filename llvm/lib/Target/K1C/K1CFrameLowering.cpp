@@ -51,8 +51,6 @@
 
 using namespace llvm;
 
-static unsigned getSPReg(const K1CSubtarget &STI) { return K1C::R12; }
-
 void K1CFrameLowering::adjustStack(MachineFunction &MF) const {
   MachineFrameInfo &MFI = MF.getFrameInfo();
   const K1CRegisterInfo *RI = STI.getRegisterInfo();
@@ -61,9 +59,10 @@ void K1CFrameLowering::adjustStack(MachineFunction &MF) const {
   // Get the real stack size.
   uint64_t StackSize = MFI.getStackSize();
   StackSize += K1CFI->getVarArgsSaveSize();
+  StackSize += K1CFI->getOutgoingArgsMaxSize();
+  StackSize -= K1CFI->getMemArgsSaveSize();
 
   // Get the alignment.
-
   uint64_t StackAlign = RI->needsStackRealignment(MF) ? MFI.getMaxAlignment()
                                                       : getStackAlignment();
 
@@ -103,10 +102,10 @@ void K1CFrameLowering::emitPrologue(MachineFunction &MF,
     return;
 
   DebugLoc DL;
-  unsigned SPReg = getSPReg(STI);
+  unsigned SPReg = getSPReg();
 
   adjustReg(MBB, MBBI, DL, GetStackOpCode((uint64_t)StackSize), SPReg, SPReg,
-            -StackSize + K1CFI->getVarArgsSaveSize(), MachineInstr::FrameSetup);
+            -StackSize, MachineInstr::FrameSetup);
 
   int CFAOffset = -StackSize + K1CFI->getVarArgsSaveSize();
   unsigned CFIIndex =
@@ -129,20 +128,16 @@ void K1CFrameLowering::emitEpilogue(MachineFunction &MF,
                                     MachineBasicBlock &MBB) const {
   MachineBasicBlock::iterator MBBI = MBB.getLastNonDebugInstr();
   MachineFrameInfo &MFI = MF.getFrameInfo();
-  auto *K1CFI = MF.getInfo<K1CMachineFunctionInfo>();
-
   uint64_t StackSize = MFI.getStackSize();
 
-  unsigned SPReg = getSPReg(STI);
   if (StackSize == 0)
     return;
 
   DebugLoc DL = MBBI->getDebugLoc();
 
   // Deallocate stack
-  adjustReg(MBB, MBBI, DL, GetStackOpCode(StackSize), SPReg, SPReg,
-            StackSize - K1CFI->getVarArgsSaveSize(),
-            MachineInstr::FrameDestroy);
+  adjustReg(MBB, MBBI, DL, GetStackOpCode(StackSize), getSPReg(), getSPReg(),
+            StackSize, MachineInstr::FrameDestroy);
 
   unsigned CFIIndex =
       MF.addFrameInst(MCCFIInstruction::createDefCfaOffset(nullptr, 0));
@@ -157,15 +152,23 @@ void K1CFrameLowering::emitEpilogue(MachineFunction &MF,
 int K1CFrameLowering::getFrameIndexReference(const MachineFunction &MF, int FI,
                                              unsigned &FrameReg) const {
   const MachineFrameInfo &MFI = MF.getFrameInfo();
-  const TargetRegisterInfo *RI = MF.getSubtarget().getRegisterInfo();
   auto *K1CFI = MF.getInfo<K1CMachineFunctionInfo>();
-  FrameReg = RI->getFrameRegister(MF);
+  FrameReg = getSPReg();
+  auto const &indices = K1CFI->getCSRIndices();
+
+  if (hasFP(MF) && (indices.first > FI || FI > indices.second))
+    FrameReg = getFPReg();
+
   int Offset = MFI.getObjectOffset(FI) - getOffsetOfLocalArea() +
-               MFI.getOffsetAdjustment() - K1CFI->getVarArgsSaveSize();
+               MFI.getOffsetAdjustment();
 
-  Offset += MF.getFrameInfo().getStackSize();
+  int OffsetAdjust = -K1CFI->getMemArgsSaveSize();
+  if (FI < 0)
+    OffsetAdjust = MFI.getStackSize();
+  else if (!hasFP(MF))
+    OffsetAdjust += K1CFI->getOutgoingArgsMaxSize();
 
-  return Offset;
+  return Offset + OffsetAdjust;
 }
 
 void K1CFrameLowering::determineCalleeSaves(MachineFunction &MF,
@@ -176,7 +179,8 @@ void K1CFrameLowering::determineCalleeSaves(MachineFunction &MF,
   // Unconditionally spill RA and FP only if the function uses a frame
   // pointer.
   if (hasFP(MF)) {
-    SavedRegs.set(K1C::R14);
+    SavedRegs.set(K1C::RA);
+    SavedRegs.set(getFPReg());
   }
 }
 
@@ -184,20 +188,58 @@ void
 K1CFrameLowering::processFunctionBeforeFrameFinalized(MachineFunction &MF,
                                                       RegScavenger *RS) const {}
 
-bool K1CFrameLowering::hasFP(const MachineFunction &MF) const {
-  // TODO : FP is not used at the moment
+bool K1CFrameLowering::spillCalleeSavedRegisters(
+    MachineBasicBlock &MBB, MachineBasicBlock::iterator MI,
+    const std::vector<CalleeSavedInfo> &CSI,
+    const TargetRegisterInfo *TRI) const {
+  const K1CInstrInfo *TII = STI.getInstrInfo();
+  MachineFunction *MF = MBB.getParent();
+
+  if (hasFP(*MBB.getParent())) {
+    DebugLoc DL = MI->getDebugLoc();
+    BuildMI(MBB, MI, DL, TII->get(K1C::COPYD), getFPReg()).addReg(getSPReg());
+  }
+
+  MI = MBB.begin();
+  for (const CalleeSavedInfo &CS : CSI) {
+    // Insert the spill to the stack frame.
+    unsigned Reg = CS.getReg();
+    const TargetRegisterClass *RC = TRI->getMinimalPhysRegClass(Reg);
+    TII->storeRegToStackSlot(MBB, MI, Reg, true, CS.getFrameIdx(), RC, TRI);
+  }
+
+  auto *K1CFI = MF->getInfo<K1CMachineFunctionInfo>();
+  K1CFI->setCSRIndices({ CSI.front().getFrameIdx(), CSI.back().getFrameIdx() });
+
+  return true;
+}
+
+bool K1CFrameLowering::restoreCalleeSavedRegisters(
+    MachineBasicBlock &MBB, MachineBasicBlock::iterator MI,
+    std::vector<CalleeSavedInfo> &CSI, const TargetRegisterInfo *TRI) const {
+  const K1CInstrInfo *TII = STI.getInstrInfo();
+
+  if (hasFP(*MBB.getParent())) {
+    DebugLoc DL = MI->getDebugLoc();
+    BuildMI(MBB, MI, DL, TII->get(K1C::COPYD), getSPReg()).addReg(getFPReg());
+  }
+
   return false;
 }
 
+bool K1CFrameLowering::hasFP(const MachineFunction &MF) const {
+  const MachineFrameInfo &MFI = MF.getFrameInfo();
+  return MFI.hasVarSizedObjects();
+}
+
 bool K1CFrameLowering::hasReservedCallFrame(const MachineFunction &MF) const {
-  return !MF.getFrameInfo().hasVarSizedObjects();
+  return !hasFP(MF);
 }
 
 MachineBasicBlock::iterator K1CFrameLowering::eliminateCallFramePseudoInstr(
     MachineFunction &MF, MachineBasicBlock &MBB,
     MachineBasicBlock::iterator MI) const {
 
-  unsigned SPReg = K1C::R12;
   DebugLoc DL = MI->getDebugLoc();
 
   if (!hasReservedCallFrame(MF)) {
@@ -215,8 +257,8 @@ MachineBasicBlock::iterator K1CFrameLowering::eliminateCallFramePseudoInstr(
       if (MI->getOpcode() == K1C::ADJCALLSTACKDOWN)
         Amount = -Amount;
 
-      adjustReg(MBB, MI, DL, GetStackOpCode(Amount), SPReg, SPReg, Amount,
-                MachineInstr::NoFlags);
+      adjustReg(MBB, MI, DL, GetStackOpCode(Amount), getSPReg(), getSPReg(),
+                Amount, MachineInstr::NoFlags);
     }
   }
 
