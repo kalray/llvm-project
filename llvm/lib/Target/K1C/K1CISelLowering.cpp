@@ -66,7 +66,7 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   // Compute derived properties from the register classes
   computeRegisterProperties(STI.getRegisterInfo());
 
-  setStackPointerRegisterToSaveRestore(K1C::R12);
+  setStackPointerRegisterToSaveRestore(getSPReg());
 
   setSchedulingPreference(Sched::Source);
 
@@ -113,6 +113,10 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::VAARG, MVT::Other, Custom);
   setOperationAction(ISD::VACOPY, MVT::Other, Expand);
   setOperationAction(ISD::VAEND, MVT::Other, Expand);
+
+  setOperationAction(ISD::STACKSAVE, MVT::Other, Expand);
+  setOperationAction(ISD::STACKRESTORE, MVT::Other, Expand);
+  setOperationAction(ISD::DYNAMIC_STACKALLOC, MVT::i64, Expand);
 
   setOperationAction(ISD::BR_JT, MVT::Other, Expand);
 
@@ -245,6 +249,8 @@ SDValue K1CTargetLowering::LowerFormalArguments(
                  *DAG.getContext());
   CCInfo.AnalyzeFormalArguments(Ins, CC_SRET_K1C);
 
+  unsigned MemArgsSaveSize = 0;
+
   for (auto &VA : ArgLocs) {
     if (VA.isRegLoc()) {
       EVT RegVT = VA.getLocVT();
@@ -259,50 +265,56 @@ SDValue K1CTargetLowering::LowerFormalArguments(
     }
 
     assert(VA.isMemLoc());
+
     unsigned Offset = VA.getLocMemOffset();
-    unsigned ValSize = VA.getValVT().getSizeInBits() / 8;
-    int FI = MF.getFrameInfo().CreateFixedObject(ValSize, Offset, true);
+    int FI = MF.getFrameInfo().CreateFixedObject(8, Offset, false);
     InVals.push_back(
         DAG.getLoad(VA.getValVT(), DL, Chain,
                     DAG.getFrameIndex(FI, getPointerTy(MF.getDataLayout())),
                     MachinePointerInfo::getFixedStack(MF, FI)));
+
+    MemArgsSaveSize += 8;
   }
+
+  K1CMachineFunctionInfo *K1CFI = MF.getInfo<K1CMachineFunctionInfo>();
 
   if (IsVarArg) {
     ArrayRef<MCPhysReg> ArgRegs = makeArrayRef(ArgGPRs);
     unsigned Idx = CCInfo.getFirstUnallocated(ArgRegs);
-    int VaArgOffset = CCInfo.getNextStackOffset();
+    int VarArgsOffset = CCInfo.getNextStackOffset();
     int VarArgsSaveSize = 0;
     MachineFrameInfo &MFI = MF.getFrameInfo();
-    K1CMachineFunctionInfo *K1CFI = MF.getInfo<K1CMachineFunctionInfo>();
+    const unsigned ArgRegsSize = ArgRegs.size();
+    int FI;
 
-    if (ArgRegs.size() == Idx) {
-      VaArgOffset = CCInfo.getNextStackOffset();
-      VarArgsSaveSize = 0;
+    if (Idx >= ArgRegsSize) {
+      FI = MFI.CreateFixedObject(8, VarArgsOffset, true);
+      MemArgsSaveSize += 8;
     } else {
-      VarArgsSaveSize = 8 * (ArgRegs.size() - Idx);
-      VaArgOffset = -VarArgsSaveSize;
+      FI = -(int)(MFI.getNumFixedObjects() + 1);
+      VarArgsOffset = (Idx - ArgRegs.size()) * 8;
+      VarArgsSaveSize = -VarArgsOffset;
     }
 
-    int FI = MFI.CreateFixedObject(8, VaArgOffset, true);
     K1CFI->setVarArgsFrameIndex(FI);
+    K1CFI->setVarArgsSaveSize(VarArgsSaveSize);
 
     // Copy the integer registers that may have been used for passing varargs
     // to the vararg save area.
-    for (unsigned I = Idx; I < ArgRegs.size(); ++I, VaArgOffset += 8) {
+    for (unsigned I = Idx; I < ArgRegs.size(); ++I, VarArgsOffset += 8) {
       const unsigned Reg =
           RegInfo.createVirtualRegister(&K1C::SingleRegRegClass);
       RegInfo.addLiveIn(ArgRegs[I], Reg);
       SDValue ArgValue = DAG.getCopyFromReg(Chain, DL, Reg, MVT::i64);
-      FI = MFI.CreateFixedObject(8, VaArgOffset, true);
+      int FI = MFI.CreateFixedObject(8, VarArgsOffset, true);
       SDValue PtrOff = DAG.getFrameIndex(FI, getPointerTy(DAG.getDataLayout()));
       SDValue Store = DAG.getStore(Chain, DL, ArgValue, PtrOff,
                                    MachinePointerInfo::getFixedStack(MF, FI));
       OutChains.push_back(Store);
     }
-
-    K1CFI->setVarArgsSaveSize(VarArgsSaveSize);
   }
+
+  K1CFI->setMemArgsSaveSize(MemArgsSaveSize);
 
   // All stores are grouped in one node to allow the matching between
   // the size of Ins and InVals. This only happens for vararg functions.
@@ -317,7 +329,7 @@ SDValue K1CTargetLowering::LowerFormalArguments(
 SDValue K1CTargetLowering::LowerCall(CallLoweringInfo &CLI,
                                      SmallVectorImpl<SDValue> &InVals) const {
   SelectionDAG &DAG = CLI.DAG;
-  SDLoc &dl = CLI.DL;
+  SDLoc &DL = CLI.DL;
   SmallVectorImpl<ISD::OutputArg> &Outs = CLI.Outs;
   SmallVectorImpl<SDValue> &OutVals = CLI.OutVals;
   SmallVectorImpl<ISD::InputArg> &Ins = CLI.Ins;
@@ -328,6 +340,7 @@ SDValue K1CTargetLowering::LowerCall(CallLoweringInfo &CLI,
   bool isVarArg = CLI.IsVarArg;
   EVT PtrVT = getPointerTy(DAG.getDataLayout());
   MachineFunction &MF = DAG.getMachineFunction();
+  K1CMachineFunctionInfo *FuncInfo = MF.getInfo<K1CMachineFunctionInfo>();
 
   isTailCall = false;
 
@@ -356,20 +369,21 @@ SDValue K1CTargetLowering::LowerCall(CallLoweringInfo &CLI,
 
     int FI = MF.getFrameInfo().CreateStackObject(Size, Align, /*isSS=*/false);
     SDValue FIPtr = DAG.getFrameIndex(FI, getPointerTy(DAG.getDataLayout()));
-    SDValue SizeNode = DAG.getConstant(Size, dl, MVT::i64);
+    SDValue SizeNode = DAG.getConstant(Size, DL, MVT::i64);
 
-    Chain = DAG.getMemcpy(Chain, dl, FIPtr, Arg, SizeNode, Align,
+    Chain = DAG.getMemcpy(Chain, DL, FIPtr, Arg, SizeNode, Align,
                           /*IsVolatile=*/false,
                           /*AlwaysInline=*/false, false /*isTailCall*/,
                           MachinePointerInfo(), MachinePointerInfo());
     ByValArgs.push_back(FIPtr);
   }
 
-  Chain = DAG.getCALLSEQ_START(Chain, ArgsSize, 0, dl);
+  Chain = DAG.getCALLSEQ_START(Chain, ArgsSize, 0, DL);
 
   SmallVector<std::pair<unsigned, SDValue>, 8> RegsToPass;
   SmallVector<SDValue, 8> MemOpChains;
   SDValue StackPtr;
+  unsigned OutgoingArgsSize = 0;
 
   for (unsigned i = 0, j = 0, e = ArgLocs.size(); i != e; ++i) {
     CCValAssign &VA = ArgLocs[i];
@@ -389,27 +403,29 @@ SDValue K1CTargetLowering::LowerCall(CallLoweringInfo &CLI,
 
       // Work out the address of the stack slot.
       if (!StackPtr.getNode())
-        StackPtr = DAG.getCopyFromReg(Chain, dl, K1C::R12, PtrVT);
+        StackPtr = DAG.getCopyFromReg(Chain, DL, getSPReg(), PtrVT);
 
-      MF.getFrameInfo().CreateStackObject(8, 8, false);
+      OutgoingArgsSize += 8;
 
       // Create a store off the stack pointer for this argument.
-      SDValue PtrOff = DAG.getIntPtrConstant(VA.getLocMemOffset(), dl);
-      PtrOff = DAG.getNode(ISD::ADD, dl, MVT::i64, StackPtr, PtrOff);
+      SDValue PtrOff = DAG.getIntPtrConstant(VA.getLocMemOffset(), DL);
+      PtrOff = DAG.getNode(ISD::ADD, DL, MVT::i64, StackPtr, PtrOff);
       MemOpChains.push_back(
-          DAG.getStore(Chain, dl, ArgValue, PtrOff, MachinePointerInfo()));
+          DAG.getStore(Chain, DL, ArgValue, PtrOff, MachinePointerInfo()));
     }
   }
 
+  FuncInfo->setOutgoingArgsMaxSize(OutgoingArgsSize);
+
   // Join the stores, which are independent of one another.
   if (!MemOpChains.empty())
-    Chain = DAG.getNode(ISD::TokenFactor, dl, MVT::Other, MemOpChains);
+    Chain = DAG.getNode(ISD::TokenFactor, DL, MVT::Other, MemOpChains);
 
   SDValue Glue;
 
   // Build a sequence of copy-to-reg nodes, chained and glued together.
   for (auto &Reg : RegsToPass) {
-    Chain = DAG.getCopyToReg(Chain, dl, Reg.first, Reg.second, Glue);
+    Chain = DAG.getCopyToReg(Chain, DL, Reg.first, Reg.second, Glue);
     Glue = Chain.getValue(1);
   }
 
@@ -438,12 +454,12 @@ SDValue K1CTargetLowering::LowerCall(CallLoweringInfo &CLI,
   // Emit the call.
   SDVTList NodeTys = DAG.getVTList(MVT::Other, MVT::Glue);
 
-  Chain = DAG.getNode(K1CISD::CALL, dl, NodeTys, Ops);
+  Chain = DAG.getNode(K1CISD::CALL, DL, NodeTys, Ops);
   Glue = Chain.getValue(1);
 
   // Mark the end of the call, which is glued to the call itself.
-  Chain = DAG.getCALLSEQ_END(Chain, DAG.getConstant(ArgsSize, dl, PtrVT, true),
-                             DAG.getConstant(0, dl, PtrVT, true), Glue, dl);
+  Chain = DAG.getCALLSEQ_END(Chain, DAG.getConstant(ArgsSize, DL, PtrVT, true),
+                             DAG.getConstant(0, DL, PtrVT, true), Glue, DL);
   Glue = Chain.getValue(1);
 
   // Assign locations to each value returned by this call.
@@ -456,7 +472,7 @@ SDValue K1CTargetLowering::LowerCall(CallLoweringInfo &CLI,
   for (auto &VA : RVLocs) {
     // Copy the value out
     SDValue RetValue =
-        DAG.getCopyFromReg(Chain, dl, VA.getLocReg(), VA.getLocVT(), Glue);
+        DAG.getCopyFromReg(Chain, DL, VA.getLocReg(), VA.getLocVT(), Glue);
     // Glue the RetValue to the end of the call sequence
     Chain = RetValue.getValue(1);
     Glue = RetValue.getValue(2);
@@ -547,11 +563,10 @@ SDValue K1CTargetLowering::lowerVAARG(SDValue Op, SelectionDAG &DAG) const {
 }
 
 SDValue K1CTargetLowering::lowerFRAMEADDR(SDValue Op, SelectionDAG &DAG) const {
-  const K1CRegisterInfo &RI = *Subtarget.getRegisterInfo();
   MachineFunction &MF = DAG.getMachineFunction();
   MachineFrameInfo &MFI = MF.getFrameInfo();
   MFI.setFrameAddressIsTaken(true);
-  unsigned FrameReg = RI.getFrameRegister(MF);
+  unsigned FrameReg = getSPReg();
   int XLenInBytes = 8;
 
   EVT VT = Op.getValueType();
