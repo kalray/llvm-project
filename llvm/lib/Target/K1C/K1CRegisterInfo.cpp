@@ -47,9 +47,9 @@ BitVector K1CRegisterInfo::getReservedRegs(const MachineFunction &MF) const {
   BitVector Reserved(getNumRegs());
 
   // Use markSuperRegs to ensure any register aliases are also reserved
-  markSuperRegs(Reserved, K1C::R12);
+  markSuperRegs(Reserved, getSPReg());
   markSuperRegs(Reserved, K1C::R13);
-  markSuperRegs(Reserved, K1C::R14);
+  markSuperRegs(Reserved, getFPReg());
   markSuperRegs(Reserved, K1C::RA);
   return Reserved;
 }
@@ -111,5 +111,5 @@ void K1CRegisterInfo::eliminateFrameIndex(MachineBasicBlock::iterator II,
 
 unsigned K1CRegisterInfo::getFrameRegister(const MachineFunction &MF) const {
   const TargetFrameLowering *TFI = getFrameLowering(MF);
-  return TFI->hasFP(MF) ? K1C::R14 : K1C::R12;
+  return TFI->hasFP(MF) ? getFPReg() : getSPReg();
 }
