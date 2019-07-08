@@ -55,6 +55,15 @@ public:
   ClusterOS(const Driver &D, const llvm::Triple &Triple,
             const llvm::opt::ArgList &Args);
 
+  void AddClangSystemIncludeArgs(const llvm::opt::ArgList &DriverArgs,
+                                 llvm::opt::ArgStringList &CC1Args) const
+      override;
+
+  void addClangTargetOptions(const llvm::opt::ArgList &DriverArgs,
+                             llvm::opt::ArgStringList &CC1Args,
+                             Action::OffloadKind DeviceOffloadKind) const
+      override;
+
 protected:
   Tool *buildAssembler() const override;
   Tool *buildLinker() const override;
