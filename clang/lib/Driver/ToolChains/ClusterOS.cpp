@@ -81,3 +81,23 @@ Tool *ClusterOS::buildAssembler() const {
 Tool *ClusterOS::buildLinker() const {
   return new tools::clusteros::Linker(*this);
 }
+
+void ClusterOS::AddClangSystemIncludeArgs(const ArgList &DriverArgs,
+                                          ArgStringList &CC1Args) const {
+  if (DriverArgs.hasArg(options::OPT_nostdinc) ||
+      DriverArgs.hasArg(options::OPT_nostdlibinc))
+    return;
+
+  std::string gcc_path(GetProgramPath("k1-cos-gcc"));
+  StringRef gcc_prefix = llvm::sys::path::parent_path(gcc_path);
+
+  addExternCSystemInclude(DriverArgs, CC1Args,
+                          gcc_prefix + "/../k1-cos/include");
+}
+
+void
+ClusterOS::addClangTargetOptions(const llvm::opt::ArgList &DriverArgs,
+                                 llvm::opt::ArgStringList &CC1Args,
+                                 Action::OffloadKind DeviceOffloadKind) const {
+  CC1Args.push_back("-nostdsysteminc");
+}
