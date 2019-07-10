@@ -219,3 +219,9 @@ def Truncate_Instr : K1C_PseudoInstr<(outs SingleReg:$dst), (ins SingleReg:$para
 
 def : Pat<(Truncate i32:$param), (Truncate_Instr SingleReg:$param)>;
 def : Pat<(Truncate i64:$param), (Truncate_Instr SingleReg:$param)>;
+
+def : Pat<(cttz i32:$src), (CTZW SingleReg:$src)>;
+def : Pat<(cttz i64:$src), (CTZD SingleReg:$src)>;
+
+def : Pat<(ctlz i32:$src), (CLZW SingleReg:$src)>;
+def : Pat<(ctlz i64:$src), (CLZD SingleReg:$src)>;
