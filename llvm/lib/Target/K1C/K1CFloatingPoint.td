@@ -31,6 +31,8 @@ def FCOMP_UGE : FCOMP<5>;
 def FCOMP_OGE : FCOMP<6>;
 def FCOMP_ULT : FCOMP<7>;
 
+def DEFAULT_FPCONV_SHIFT : PatLeaf<(i64 0)>;
+
 // Store
 def : Pat<(store (f16 SingleReg:$val), AddrRI:$addr), (SHri AddrRI:$addr, SingleReg:$val)>;
 def : Pat<(store (f32 SingleReg:$val), AddrRI:$addr), (SWri AddrRI:$addr, SingleReg:$val)>;
@@ -118,7 +120,31 @@ def : Pat<(i64 (setune f64:$rz, f64:$ry)), (FCOMPDrr SingleReg:$rz, SingleReg:$r
 // FINV  -> TODO
 // FISR  -> TODO
 // FIXED
+def : Pat<(i32 (fp_to_uint f16:$val)), (FIXEDUW (FWIDENLHW SingleReg:$val, SILENT_OFF), DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF)>;
+def : Pat<(i64 (fp_to_uint f16:$val)), (FIXEDUD (FWIDENLWD (FWIDENLHW SingleReg:$val, SILENT_OFF), SILENT_OFF), DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF)>;
+def : Pat<(i32 (fp_to_uint f32:$val)), (FIXEDUW SingleReg:$val, DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF)>;
+def : Pat<(i64 (fp_to_uint f32:$val)), (FIXEDUD (FWIDENLWD SingleReg:$val, SILENT_OFF), DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF)>;
+def : Pat<(i32 (fp_to_uint f64:$val)), (FIXEDUD SingleReg:$val, DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF)>;
+def : Pat<(i64 (fp_to_uint f64:$val)), (FIXEDUD SingleReg:$val, DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF)>;
+def : Pat<(i32 (fp_to_sint f16:$val)), (FIXEDW (FWIDENLHW SingleReg:$val, SILENT_OFF), DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF)>;
+def : Pat<(i64 (fp_to_sint f16:$val)), (FIXEDD (FWIDENLWD (FWIDENLHW SingleReg:$val, SILENT_OFF), SILENT_OFF), DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF)>;
+def : Pat<(i32 (fp_to_sint f32:$val)), (FIXEDW SingleReg:$val, DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF)>;
+def : Pat<(i64 (fp_to_sint f32:$val)), (FIXEDD (FWIDENLWD SingleReg:$val, SILENT_OFF), DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF)>;
+def : Pat<(i32 (fp_to_sint f64:$val)), (FIXEDD SingleReg:$val, DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF)>;
+def : Pat<(i64 (fp_to_sint f64:$val)), (FIXEDD SingleReg:$val, DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF)>;
 // FLOAT
+def : Pat<(f16 (uint_to_fp i32:$val)), (FNARROWWH (FLOATUW SingleReg:$val, DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF), ROUND_CS, SILENT_OFF)>;
+def : Pat<(f16 (uint_to_fp i64:$val)), (FNARROWWH (FNARROWDW (FLOATUD SingleReg:$val, DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF), ROUND_CS, SILENT_OFF), ROUND_CS, SILENT_OFF)>;
+def : Pat<(f32 (uint_to_fp i32:$val)), (FLOATUW SingleReg:$val, DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF)>;
+def : Pat<(f32 (uint_to_fp i64:$val)), (FLOATUW (SATUDd0 SingleReg:$val, (i32 32)), DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF)>;
+def : Pat<(f64 (uint_to_fp i32:$val)), (FLOATUD (ZXWD SingleReg:$val), DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF)>;
+def : Pat<(f64 (uint_to_fp i64:$val)), (FLOATUD SingleReg:$val, DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF)>;
+def : Pat<(f16 (sint_to_fp i32:$val)), (FNARROWWH (FLOATW SingleReg:$val, DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF), ROUND_CS, SILENT_OFF)>;
+def : Pat<(f16 (sint_to_fp i64:$val)), (FNARROWWH (FNARROWDW (FLOATD SingleReg:$val, DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF), ROUND_CS, SILENT_OFF), ROUND_CS, SILENT_OFF)>;
+def : Pat<(f32 (sint_to_fp i32:$val)), (FLOATW SingleReg:$val, DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF)>;
+def : Pat<(f32 (sint_to_fp i64:$val)), (FLOATW (SATDd0 SingleReg:$val, (i32 32)), DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF)>;
+def : Pat<(f64 (sint_to_fp i32:$val)), (FLOATD (SXWD SingleReg:$val), DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF)>;
+def : Pat<(f64 (sint_to_fp i64:$val)), (FLOATD SingleReg:$val, DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF)>;
 // FMAX  -> TODO
 // FMIN  -> TODO
 // FMM2A -> TODO
