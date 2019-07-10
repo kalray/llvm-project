@@ -2719,7 +2719,7 @@ def FMAXHQ : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
 def FLOATD : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE
   <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
    "floatd$a1$a2 $a3 = $a4, $a5",
-   [ ]>;
+   [/* no direct match, see K1CFloatingPoint.td */]>;
 
 // 1 insns: ['FLOATWP']
 def FLOATWP : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE
@@ -2731,13 +2731,13 @@ def FLOATWP : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE
 def FLOATW : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE
   <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
    "floatw$a1$a2 $a3 = $a4, $a5",
-   [ ]>;
+   [/* no direct match, see K1CFloatingPoint.td */]>;
 
 // 1 insns: ['FLOATUD']
 def FLOATUD : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE
   <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
    "floatud$a1$a2 $a3 = $a4, $a5",
-   [ ]>;
+   [/* no direct match, see K1CFloatingPoint.td */]>;
 
 // 1 insns: ['FLOATUWP']
 def FLOATUWP : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE
@@ -2749,13 +2749,13 @@ def FLOATUWP : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE
 def FLOATUW : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE
   <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
    "floatuw$a1$a2 $a3 = $a4, $a5",
-   [ ]>;
+   [/* no direct match, see K1CFloatingPoint.td */]>;
 
 // 1 insns: ['FIXEDD']
 def FIXEDD : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE
   <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fixedd$a1$a2 $a3 = $a4, $a5",
-   [ ]>;
+   [/* no direct match, see K1CFloatingPoint.td */]>;
 
 // 1 insns: ['FIXEDWP']
 def FIXEDWP : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE
@@ -2767,13 +2767,13 @@ def FIXEDWP : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE
 def FIXEDW : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE
   <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fixedw$a1$a2 $a3 = $a4, $a5",
-   [ ]>;
+   [/* no direct match, see K1CFloatingPoint.td */]>;
 
 // 1 insns: ['FIXEDUD']
 def FIXEDUD : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE
   <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fixedud$a1$a2 $a3 = $a4, $a5",
-   [ ]>;
+   [/* no direct match, see K1CFloatingPoint.td */]>;
 
 // 1 insns: ['FIXEDUWP']
 def FIXEDUWP : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE
@@ -2785,7 +2785,7 @@ def FIXEDUWP : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE
 def FIXEDUW : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE
   <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fixeduw$a1$a2 $a3 = $a4, $a5",
-   [ ]>;
+   [/* no direct match, see K1CFloatingPoint.td */]>;
 
 // 4 insns: ['MADDD', 'MADDD', 'MADDD', 'MADDD']
 defm MADDD : MC_1E<"maddd">;
