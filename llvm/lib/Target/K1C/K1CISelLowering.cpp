@@ -104,6 +104,8 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::BR_CC, VT, Expand);
 
     setOperationAction(ISD::BSWAP, VT, Expand);
+
+    setOperationAction(ISD::CTPOP, VT, Expand);
   }
   setOperationAction(ISD::ROTL, MVT::i64, Expand);
   setOperationAction(ISD::ROTR, MVT::i64, Expand);
