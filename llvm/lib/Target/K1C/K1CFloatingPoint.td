@@ -38,6 +38,8 @@ def : Pat<(store (f16 SingleReg:$val), AddrRI:$addr), (SHri AddrRI:$addr, Single
 def : Pat<(store (f32 SingleReg:$val), AddrRI:$addr), (SWri AddrRI:$addr, SingleReg:$val)>;
 def : Pat<(store (f64 SingleReg:$val), AddrRI:$addr), (SDri AddrRI:$addr, SingleReg:$val)>;
 
+def : Pat<(truncstoref32 f64:$val, AddrRI:$addr), (SWri AddrRI:$addr, (FNARROWDW SingleReg:$val, ROUND_CS, SILENT_OFF))>;
+
 // Load
 def loadf16 : PatFrag<(ops node:$ptr), (f16 (load node:$ptr))>;
 def loadf32 : PatFrag<(ops node:$ptr), (f32 (load node:$ptr))>;
