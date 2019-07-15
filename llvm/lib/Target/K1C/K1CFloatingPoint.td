@@ -49,6 +49,17 @@ def : Pat<(loadf16 AddrRI:$addr), (LHZri AddrRI:$addr)>;
 def : Pat<(loadf32 AddrRI:$addr), (LWZri AddrRI:$addr)>;
 def : Pat<(loadf64 AddrRI:$addr), (LDri AddrRI:$addr)>;
 
+// Bitcast
+class BITCAST
+  <ValueType DstVT, ValueType SrcVT, RegisterClass DstRC>
+  : Pat<(DstVT (bitconvert (SrcVT DstRC:$src))), (DstVT DstRC:$src)>;
+
+def : BITCAST<f16, i16, SingleReg>;
+def : BITCAST<f32, i32, SingleReg>;
+def : BITCAST<f64, i64, SingleReg>;
+def : BITCAST<i16, f16, SingleReg>;
+def : BITCAST<i32, f32, SingleReg>;
+def : BITCAST<i64, f64, SingleReg>;
 
 // FPU Insns
 
