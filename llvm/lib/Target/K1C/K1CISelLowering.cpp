@@ -111,6 +111,7 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::ROTR, MVT::i64, Expand);
 
   setOperationAction(ISD::GlobalAddress, MVT::i64, Custom);
+  setOperationAction(ISD::GlobalTLSAddress, MVT::i64, Custom);
   setOperationAction(ISD::VASTART, MVT::Other, Custom);
   setOperationAction(ISD::VAARG, MVT::Other, Custom);
   setOperationAction(ISD::VACOPY, MVT::Other, Expand);
@@ -495,6 +496,8 @@ SDValue K1CTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
     report_fatal_error("unimplemented operand");
   case ISD::GlobalAddress:
     return lowerGlobalAddress(Op, DAG);
+  case ISD::GlobalTLSAddress:
+    return lowerGlobalTLSAddress(Op, DAG);
   case ISD::VASTART:
     return lowerVASTART(Op, DAG);
   case ISD::VAARG:
@@ -528,6 +531,35 @@ SDValue K1CTargetLowering::lowerGlobalAddress(SDValue Op,
   }
 
   return Result;
+}
+
+SDValue K1CTargetLowering::lowerGlobalTLSAddress(SDValue Op,
+                                                 SelectionDAG &DAG) const {
+
+  MachineFunction &MF = DAG.getMachineFunction();
+  GlobalAddressSDNode *N = cast<GlobalAddressSDNode>(Op);
+  const GlobalValue *GV = N->getGlobal();
+  TLSModel::Model model = DAG.getTarget().getTLSModel(GV);
+
+  switch (model) {
+  default:
+    if (MF.getSubtarget().getTargetTriple().isOSClusterOS())
+      report_fatal_error("ClusterOS only supports TLS model LocalExec");
+    else
+      report_fatal_error("Unknown TLSModel");
+  case TLSModel::LocalExec:
+    SDLoc DL(Op);
+    int64_t Offset = N->getOffset();
+    EVT PtrVT = getPointerTy(DAG.getDataLayout());
+
+    SDValue Result = DAG.getTargetGlobalAddress(GV, DL, PtrVT, Offset);
+    Result = DAG.getNode(K1CISD::WRAPPER, DL, PtrVT, Result);
+    Result = DAG.getNode(ISD::ADD, DL, PtrVT,
+                         DAG.getRegister(K1C::R13, MVT::i64), Result);
+    return Result;
+  }
+
+  return SDValue();
 }
 
 SDValue K1CTargetLowering::lowerVASTART(SDValue Op, SelectionDAG &DAG) const {
