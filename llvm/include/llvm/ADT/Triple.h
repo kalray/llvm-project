@@ -493,6 +493,10 @@ public:
     return getEnvironment() == Triple::MacABI;
   }
 
+  bool isOSClusterOS() const {
+    return getOS() == Triple::ClusterOS;
+  }
+
   bool isOSNetBSD() const {
     return getOS() == Triple::NetBSD;
   }
