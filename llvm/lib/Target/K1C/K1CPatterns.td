@@ -60,6 +60,12 @@ def ADJCALLSTACKDOWN : K1C_PseudoInstr<(outs), (ins i32imm:$amt, i32imm:$amt2),
 def ADJCALLSTACKUP : K1C_PseudoInstr<(outs), (ins i32imm:$amt1, i32imm:$amt2),
                             [(callseq_end timm:$amt1, timm:$amt2)], "ADJCALLSTACKUP $amt1">;
 
+def MAKETLS : REGISTERW_EXTEND27_UPPER27_LOWER10_TRIPLE
+  <(outs SingleReg:$SingleReg), (ins Wrapped64:$Wrapped64),
+  "make $SingleReg = @tprel($Wrapped64)",
+  [],
+  __UNKNOWN_ITIN__>;
+
 // MAKE patterns disabled - selection is done in code
 /*
 def : Pat<(Signed16:$imm), (MAKEd0 Signed16:$imm)>;
@@ -67,6 +73,7 @@ def : Pat<(Signed43:$imm), (MAKEd1 Signed43:$imm)>;
 def : Pat<(Wrapped64:$imm), (MAKEd2 Wrapped64:$imm)>;
 */
 def : Pat<(K1CWrapper tglobaladdr:$dst), (MAKEd2 tglobaladdr:$dst)>;
+def : Pat<(K1CWrapper tglobaltlsaddr:$dst), (MAKETLS tglobaltlsaddr:$dst)>;
 
 def MemRR : Operand<iPTR>, ComplexPattern<iPTR, 2, "SelectAddrRR", [], []> {
   let PrintMethod = "printMemOperand";

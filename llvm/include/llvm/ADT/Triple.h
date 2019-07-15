@@ -499,6 +499,10 @@ public:
                                            isMacCatalystEnvironment()));
   }
 
+  bool isOSClusterOS() const {
+    return getOS() == Triple::ClusterOS;
+  }
+
   bool isOSNetBSD() const {
     return getOS() == Triple::NetBSD;
   }
