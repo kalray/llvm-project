@@ -9266,7 +9266,9 @@ public:
       override;
 
 private:
-  static unsigned alignment;
+  static const unsigned Alignment;
+  static const unsigned RegSize;
+  static const unsigned NumRegs;
   ABIArgInfo classifyType(QualType Ty, uint64_t Size) const;
   ABIArgInfo classifyReturnType(QualType RetTy, uint64_t SizeLimit) const;
   ABIArgInfo classifyArgumentType(QualType ArgTy) const;
@@ -9293,16 +9295,16 @@ private:
         return;
 
       // Finish the current alignment-bit word.
-      uint64_t Aligned = llvm::alignTo(Size, alignment);
+      uint64_t Aligned = llvm::alignTo(Size, Alignment);
       if (Aligned > Size && Aligned <= ToSize) {
         Elems.push_back(llvm::IntegerType::get(Context, Aligned - Size));
         Size = Aligned;
       }
 
       // Add whole alignment-bit words.
-      while (Size + alignment <= ToSize) {
+      while (Size + Alignment <= ToSize) {
         Elems.push_back(llvm::Type::getInt64Ty(Context));
-        Size += alignment;
+        Size += Alignment;
       }
     }
 
@@ -9317,10 +9319,10 @@ private:
           addStruct(ElemOffset, cast<llvm::StructType>(ElemTy));
           break;
         case llvm::Type::PointerTyID:
-          if (ElemOffset % alignment == 0) {
+          if (ElemOffset % Alignment == 0) {
             pad(ElemOffset);
             Elems.push_back(ElemTy);
-            Size += alignment;
+            Size += Alignment;
           }
           break;
         default:
@@ -9353,17 +9355,37 @@ public:
 };
 } // end anonymous namespace
 
-unsigned K1CABIInfo::alignment = 64;
+const unsigned K1CABIInfo::Alignment = 64;
+const unsigned K1CABIInfo::RegSize = 64;
+const unsigned K1CABIInfo::NumRegs = 12;
 
 void K1CABIInfo::computeInfo(CGFunctionInfo &FI) const {
-  FI.getReturnInfo() = classifyReturnType(FI.getReturnType(), 64 * 12);
+  FI.getReturnInfo() =
+      classifyReturnType(FI.getReturnType(), RegSize * NumRegs);
   for (auto &I : FI.arguments())
     I.info = classifyArgumentType(I.type);
 }
 
 Address K1CABIInfo::EmitVAArg(CodeGenFunction &CGF, Address VAListAddr,
                               QualType Ty) const {
-  return EmitVAArgInstr(CGF, VAListAddr, Ty, classifyArgumentType(Ty));
+  ABIArgInfo AI = classifyArgumentType(Ty);
+  llvm::Type *ArgTy = CGT.ConvertType(Ty);
+  if (AI.canHaveCoerceToType() && !AI.getCoerceToType())
+    AI.setCoerceToType(ArgTy);
+  CharUnits SlotSize = CharUnits::fromQuantity(8);
+
+  CGBuilderTy &Builder = CGF.Builder;
+  Address Addr(Builder.CreateLoad(VAListAddr, "ap.cur"), SlotSize);
+  llvm::Type *ArgPtrTy = llvm::PointerType::getUnqual(ArgTy);
+
+  auto AllocSize = getDataLayout().getTypeAllocSize(AI.getCoerceToType());
+  CharUnits Stride = CharUnits::fromQuantity(AllocSize).alignTo(SlotSize);
+
+  llvm::Value *NextPtr =
+      Builder.CreateConstInBoundsByteGEP(Addr.getPointer(), Stride, "ap.next");
+  Builder.CreateStore(NextPtr, VAListAddr);
+
+  return Builder.CreateBitCast(Addr, ArgPtrTy, "arg.addr");
 }
 
 ABIArgInfo K1CABIInfo::classifyReturnType(QualType RetTy,
@@ -9404,7 +9426,7 @@ ABIArgInfo K1CABIInfo::classifyType(QualType Ty, uint64_t Size) const {
 
   CoerceBuilder CB(getVMContext(), getDataLayout());
   CB.addStruct(0, StrTy);
-  CB.pad(llvm::alignTo(CB.DL.getTypeSizeInBits(StrTy), alignment));
+  CB.pad(llvm::alignTo(CB.DL.getTypeSizeInBits(StrTy), Alignment));
 
   // Try to use the original type for coercion.
   llvm::Type *CoerceTy = CB.isUsableType(StrTy) ? StrTy : CB.getType();
