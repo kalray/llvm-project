@@ -61,12 +61,16 @@ K1CInstPrinter::printOperand(const MCInst *MI, unsigned OpNo,
       break;
     // FP is a float
     case K1C::MAKEd1:
+    case K1C::CMOVEDd1:
       printBinary32ImmOperand(MI, OpNo, O);
       break;
     // FP is a double
-    default:
+    case K1C::MAKEd2:
+    case K1C::CMOVEDd2:
       printBinary64ImmOperand(MI, OpNo, O);
       break;
+    default:
+      llvm_unreachable("unable to determine FPImm size");
     }
     return;
   }
