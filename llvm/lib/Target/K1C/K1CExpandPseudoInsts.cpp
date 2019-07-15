@@ -114,6 +114,17 @@ static void InsertCMOVEInstr(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
         .addImm(BranchValueImm)
         .addImm(Comp); /* DNEZ */
   } break;
+  case MachineOperand::MO_FPImmediate: {
+    const ConstantFP *Imm = MI.getOperand(Operand).getFPImm();
+
+    BuildMI(
+        MBB, MBBI, DL,
+        TII->get(Imm->getType()->isFloatTy() ? K1C::CMOVEDd1 : K1C::CMOVEDd2))
+        .addReg(ScratchReg)
+        .addReg(CmpReg)
+        .addFPImm(Imm)
+        .addImm(Comp); /* DNEZ */
+  } break;
   default:
     llvm_unreachable("Operator type not handled");
     break;
