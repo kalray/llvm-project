@@ -70,6 +70,9 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
       if (A.getOption().matches(options::OPT_l)) {
         std::string larg = std::string("-l") + std::string(A.getValue());
         CmdArgs.push_back(Args.MakeArgString(larg.c_str()));
+      } else if (A.getOption().matches(options::OPT_Wl_COMMA)) {
+        std::string Wlarg = std::string("-Wl,") + std::string(A.getValue());
+        CmdArgs.push_back(Args.MakeArgString(Wlarg));
       } else
         llvm_unreachable("unsupported input arg kind");
     }
@@ -82,6 +85,12 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
   // -shared option management
   if (Args.getLastArg(options::OPT_shared))
     CmdArgs.push_back(Args.MakeArgString("-shared"));
+
+  if (Args.getLastArg(options::OPT_T)) {
+    std::string Targ = std::string("-T") +
+                       std::string(Args.getLastArg(options::OPT_T)->getValue());
+    CmdArgs.push_back(Args.MakeArgString(Targ));
+  }
 
   if (Args.hasArg(options::OPT_v))
     CmdArgs.push_back("-Wl,-v");
