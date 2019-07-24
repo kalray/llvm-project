@@ -58,8 +58,33 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
   CmdArgs.push_back("-o");
   CmdArgs.push_back(Output.getFilename());
 
+  // Group all input files
   for (const auto &II : Inputs)
-    CmdArgs.push_back(II.getFilename());
+    if (II.isFilename())
+      CmdArgs.push_back(II.getFilename());
+
+  // Ensure that -l args are at the end of the cmd line
+  for (const auto &II : Inputs) {
+    if (II.isInputArg()) {
+      const Arg &A = II.getInputArg();
+      if (A.getOption().matches(options::OPT_l)) {
+        std::string larg = std::string("-l") + std::string(A.getValue());
+        CmdArgs.push_back(Args.MakeArgString(larg.c_str()));
+      } else
+        llvm_unreachable("unsupported input arg kind");
+    }
+  }
+
+  // -nostdlib option management
+  if (Args.hasArg(options::OPT_nostdlib))
+    CmdArgs.push_back(Args.MakeArgString("-nostdlib"));
+
+  // -shared option management
+  if (Args.getLastArg(options::OPT_shared))
+    CmdArgs.push_back(Args.MakeArgString("-shared"));
+
+  if (Args.hasArg(options::OPT_v))
+    CmdArgs.push_back("-Wl,-v");
 
   const char *Exec =
       Args.MakeArgString(getToolChain().GetProgramPath("k1-cos-gcc"));
