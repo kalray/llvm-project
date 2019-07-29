@@ -1547,7 +1547,7 @@ def SYNCGROUP : REGISTERZ_SIMPLE
    __UNKNOWN_ITIN__>;
 
 // 1 insns: ['GOTO']
-let isBranch=1, isTerminator=1 in
+let isBarrier = 1, isBranch = 1, isTerminator = 1 in
 def GOTO : PCREL27_SIMPLE
   <(outs), (ins Pcrel27:$a1),
    "goto $a1",
