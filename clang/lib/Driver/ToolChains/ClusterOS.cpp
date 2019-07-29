@@ -72,6 +72,8 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
       } else if (A.getOption().matches(options::OPT_Wl_COMMA)) {
         std::string Wlarg = std::string("-Wl,") + std::string(A.getValue());
         CmdArgs.push_back(Args.MakeArgString(Wlarg));
+      } else if (A.getOption().matches(options::OPT_Z_reserved_lib_stdcxx)) {
+        CmdArgs.push_back("-lstdc++");
       } else
         llvm_unreachable("unsupported input arg kind");
     }
@@ -126,6 +128,21 @@ void ClusterOS::AddClangSystemIncludeArgs(const ArgList &DriverArgs,
 
   addExternCSystemInclude(DriverArgs, CC1Args,
                           gcc_prefix + "/../k1-cos/include");
+}
+
+void ClusterOS::AddClangCXXStdlibIncludeArgs(const ArgList &DriverArgs,
+                                             ArgStringList &CC1Args) const {
+  if (DriverArgs.hasArg(options::OPT_nostdincxx) ||
+      DriverArgs.hasArg(options::OPT_nostdlibinc))
+    return;
+
+  std::string gcc_path(GetProgramPath("k1-cos-gcc"));
+  StringRef gcc_prefix = llvm::sys::path::parent_path(gcc_path);
+  StringRef cxx_stdlib_path = gcc_prefix.str() + "/../k1-cos/include/c++/7.4.1";
+
+  addExternCSystemInclude(DriverArgs, CC1Args, cxx_stdlib_path);
+  addExternCSystemInclude(DriverArgs, CC1Args, cxx_stdlib_path + "/k1-cos");
+  addExternCSystemInclude(DriverArgs, CC1Args, cxx_stdlib_path + "/backward");
 }
 
 void
