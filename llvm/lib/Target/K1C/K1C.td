@@ -15,6 +15,7 @@ include "K1CPatterns.td"
 include "K1CArithmetic.td"
 include "K1CFloatingPoint.td"
 include "K1CCallingConv.td"
+include "K1CPICPatterns.td"
 
 def K1CInstrInfo : InstrInfo {
 }

@@ -32,7 +32,10 @@ enum NodeType : unsigned {
   CALL,
   WRAPPER,
   SELECT_CC,
-  TRUNCATE
+  TRUNCATE,
+  PICInternIndirection,
+  PICExternIndirection,
+  PICPCRelativeGOTAddr
 };
 } // namespace K1CISD
 
