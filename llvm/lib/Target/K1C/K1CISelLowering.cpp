@@ -32,7 +32,7 @@
 
 using namespace llvm;
 
-#define DEBUG_TYPE "K1C-lower"
+#define DEBUG_TYPE "K1CISelLowering"
 
 #include "K1CGenCallingConv.inc"
 
@@ -172,6 +172,12 @@ const char *K1CTargetLowering::getTargetNodeName(unsigned Opcode) const {
     return "K1C::SELECT_CC";
   case K1CISD::TRUNCATE:
     return "K1C::TRUNCATE";
+  case K1CISD::PICInternIndirection:
+    return "K1C::PICInternIndirection";
+  case K1CISD::PICExternIndirection:
+    return "K1C::PICExternIndirection";
+  case K1CISD::PICPCRelativeGOTAddr:
+    return "K1C::PICPCRelativeGOTAddr";
   default:
     return NULL;
   }
@@ -519,23 +525,80 @@ SDValue K1CTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
 
 SDValue K1CTargetLowering::lowerGlobalAddress(SDValue Op,
                                               SelectionDAG &DAG) const {
+  LLVM_DEBUG(dbgs() << "== K1CTargetLowering::lowerGlobalAddress(Op, DAG)"
+                    << '\n');
+  LLVM_DEBUG(dbgs() << "Op: " << '\n'; Op.dump());
+  LLVM_DEBUG(dbgs() << "DAG: " << '\n'; DAG.dump());
+
   SDLoc DL(Op);
   auto PtrVT = getPointerTy(DAG.getDataLayout());
   GlobalAddressSDNode *N = cast<GlobalAddressSDNode>(Op);
   const GlobalValue *GV = N->getGlobal();
   int64_t Offset = N->getOffset();
+  SDValue Result;
 
-  if (isPositionIndependent())
-    report_fatal_error("Unable to lowerGlobalAddress");
+  // -fPIC enabled
+  if (isPositionIndependent()) {
+    LLVM_DEBUG(dbgs() << "LT: " << GV->getLinkage()
+                      << " isPrivate: " << GV->hasPrivateLinkage() << '\n');
 
-  SDValue Result = DAG.getTargetGlobalAddress(GV, DL, PtrVT, 0);
-  Result = DAG.getNode(K1CISD::WRAPPER, DL, PtrVT, Result);
+    GlobalValue::LinkageTypes LT = GV->getLinkage();
+    switch (LT) {
+    case GlobalValue::CommonLinkage:
+    case GlobalValue::ExternalLinkage: {
+      LLVM_DEBUG(dbgs() << "@got(sym)[gaddr]" << '\n');
 
-  if (Offset != 0) {
-    SDValue PtrOff = DAG.getIntPtrConstant(Offset, DL);
-    Result = DAG.getNode(ISD::ADD, DL, MVT::i64, Result, PtrOff);
+      SDValue GlobalSymbol = DAG.getTargetGlobalAddress(GV, DL, PtrVT);
+      SDValue GOTAddr = DAG.getNode(K1CISD::PICPCRelativeGOTAddr, DL, PtrVT);
+
+      // Indirect global symbol using GOT with
+      // @got(GLOBALSYMBOL)[GOTADDR] asm macro.  Note: function
+      // symbols don't need indirection since everything is handled by
+      // the loader. Consequently, call indirections are ignored at
+      // insn selection.
+      SDValue DataPtr = DAG.getNode(K1CISD::PICExternIndirection, DL, PtrVT,
+                                    GOTAddr, GlobalSymbol);
+
+      if (Offset != 0)
+        Result = DAG.getNode(ISD::ADD, DL, PtrVT, DataPtr,
+                             DAG.getConstant(Offset, DL, PtrVT));
+      else
+        Result = DataPtr;
+
+    } break;
+    case GlobalValue::InternalLinkage:
+    case GlobalValue::PrivateLinkage: {
+      LLVM_DEBUG(dbgs() << "@gotoff(sym)" << '\n');
+
+      SDValue GlobalSymbol = DAG.getTargetGlobalAddress(GV, DL, PtrVT);
+      SDValue GOTAddr = DAG.getNode(K1CISD::PICPCRelativeGOTAddr, DL, PtrVT);
+
+      // Indirect global symbol using GOT with @gotoff(GLOBALSYMBOL)
+      // asm macro.
+      SDValue DataPtr = DAG.getNode(K1CISD::PICInternIndirection, DL, PtrVT,
+                                    GOTAddr, GlobalSymbol);
+
+      if (Offset != 0)
+        Result = DAG.getNode(ISD::ADD, DL, PtrVT, DataPtr,
+                             DAG.getConstant(Offset, DL, PtrVT));
+      else
+        Result = DataPtr;
+
+    } break;
+    default:
+      llvm_unreachable("Unsupported LinkageType");
+    }
+  } else {
+    Result = DAG.getTargetGlobalAddress(GV, DL, PtrVT, 0);
+    Result = DAG.getNode(K1CISD::WRAPPER, DL, PtrVT, Result);
+
+    if (Offset != 0) {
+      SDValue PtrOff = DAG.getIntPtrConstant(Offset, DL);
+      Result = DAG.getNode(ISD::ADD, DL, MVT::i64, Result, PtrOff);
+    }
   }
 
+  LLVM_DEBUG(dbgs() << "Result: " << '\n'; Result.dump());
   return Result;
 }
 
