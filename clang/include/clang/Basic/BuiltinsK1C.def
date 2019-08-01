@@ -1,0 +1,54 @@
+//===-- BuiltinsK1C.def - K1C Builtin function database ----------*- C++ -*-==//
+//
+//                     The LLVM Compiler Infrastructure
+//
+// This file is distributed under the University of Illinois Open Source
+// License. See LICENSE.TXT for details.
+//
+//===----------------------------------------------------------------------===//
+//
+// This file defines the K1C-specific builtin function database. Users of
+// this file must define the BUILTIN macro to make use of this information.
+//
+//===----------------------------------------------------------------------===//
+
+// The format of this database matches clang/Basic/Builtins.def.
+
+// This file was automatically generated, DO NOT EDIT.
+// Last generated: 2018-10-17 13:24:46.083693.
+
+BUILTIN(__builtin_k1_set_ps, "vii", "")
+BUILTIN(__builtin_k1_syncgroup, "vUi", "")
+BUILTIN(__builtin_k1_insf, "ULiULiUiUi", "")
+BUILTIN(__builtin_k1_extfz, "ULiULiUiUi", "")
+BUILTIN(__builtin_k1_extfs, "LiULiUiUi", "")
+BUILTIN(__builtin_k1_stsuw, "iii", "")
+BUILTIN(__builtin_k1_abdw, "iii", "")
+BUILTIN(__builtin_k1_minw, "iii", "")
+BUILTIN(__builtin_k1_minuw, "UiUiUi", "")
+BUILTIN(__builtin_k1_maxw, "iii", "")
+BUILTIN(__builtin_k1_maxuw, "UiUiUi", "")
+BUILTIN(__builtin_k1_absw, "ii", "")
+BUILTIN(__builtin_k1_sath, "ii", "")
+BUILTIN(__builtin_k1_addsw, "iii", "")
+BUILTIN(__builtin_k1_sbfsw, "iii", "")
+BUILTIN(__builtin_k1_clzw, "UiUi", "")
+BUILTIN(__builtin_k1_clsw, "UiUi", "")
+BUILTIN(__builtin_k1_cbsw, "UiUi", "")
+BUILTIN(__builtin_k1_ctzw, "UiUi", "")
+
+BUILTIN(__builtin_k1_acswapd, "ULLLiv*UWiUWi", "")
+BUILTIN(__builtin_k1_acswapw, "ULLLiv*UWiUWi", "")
+BUILTIN(__builtin_k1_afaddd, "ULLiv*LLi", "")
+BUILTIN(__builtin_k1_afaddw, "ULiv*Li", "")
+BUILTIN(__builtin_k1_alclrd, "ULLiv*", "")
+BUILTIN(__builtin_k1_alclrw, "ULiv*", "")
+BUILTIN(__builtin_k1_fence, "v", "")
+BUILTIN(__builtin_k1_dinval, "v", "")
+BUILTIN(__builtin_k1_get, "ULLiLi", "")
+BUILTIN(__builtin_k1_ldu, "ULLiCv*", "")
+BUILTIN(__builtin_k1_lwzu, "ULiCv*", "")
+BUILTIN(__builtin_k1_wfxl, "vUcULLi", "")
+BUILTIN(__builtin_k1_wfxm, "vUcULLi", "")
+
+#undef BUILTIN
