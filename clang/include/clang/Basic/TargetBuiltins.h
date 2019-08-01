@@ -200,6 +200,16 @@ namespace clang {
     };
   }
 
+  /// K1C builtins
+  namespace K1C {
+  enum {
+    LastTIBuiltin = clang::Builtin::FirstTSBuiltin - 1,
+  #define BUILTIN(ID, TYPE, ATTRS) BI##ID,
+  #include "clang/Basic/BuiltinsK1C.def"
+    LastTSBuiltin
+  };
+  }
+
 } // end namespace clang.
 
 #endif
