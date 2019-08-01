@@ -31,3 +31,10 @@ void K1CTargetInfo::getTargetDefines(const LangOptions &Opts,
   Builder.defineMacro("__k1c__");
   Builder.defineMacro("__K1C__");
 }
+
+const Builtin::Info K1CTargetInfo::BuiltinInfo[] = {
+#define BUILTIN(ID, TYPE, ATTRS)                                               \
+  { #ID, TYPE, ATTRS, nullptr, ALL_LANGUAGES, nullptr }                        \
+  ,
+#include "clang/Basic/BuiltinsK1C.def"
+};
