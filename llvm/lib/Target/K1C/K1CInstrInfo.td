@@ -1486,6 +1486,7 @@ def RFE : SIMPLE
    __UNKNOWN_ITIN__>;
 
 // 1 insns: ['IGOTO']
+let isBarrier=1, isBranch=1, isIndirectBranch=1, isTerminator=1 in
 def IGOTO : REGISTERZ_SIMPLE
   <(outs), (ins SingleReg:$a1),
    "igoto $a1",
@@ -1493,7 +1494,7 @@ def IGOTO : REGISTERZ_SIMPLE
    __UNKNOWN_ITIN__>;
 
 // 1 insns: ['ICALL']
-let Defs=[RA] in
+let Defs=[RA], isCall=1, isIndirectBranch=1 in
 def ICALL : REGISTERZ_SIMPLE
   <(outs), (ins SingleReg:$a1),
    "icall $a1",
