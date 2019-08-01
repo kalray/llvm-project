@@ -16,6 +16,7 @@
 
 #include "clang/Basic/TargetInfo.h"
 #include "clang/Basic/TargetOptions.h"
+#include "clang/Basic/TargetBuiltins.h"
 #include "llvm/ADT/Triple.h"
 #include "llvm/Support/Compiler.h"
 
@@ -23,6 +24,8 @@ namespace clang {
 namespace targets {
 
 class LLVM_LIBRARY_VISIBILITY K1CTargetInfo : public TargetInfo {
+  static const Builtin::Info BuiltinInfo[];
+
 public:
   K1CTargetInfo(const llvm::Triple &Triple, const TargetOptions &)
       : TargetInfo(Triple) {
@@ -49,7 +52,10 @@ public:
   void getTargetDefines(const LangOptions &Opts, MacroBuilder &Builder) const
       override;
 
-  ArrayRef<Builtin::Info> getTargetBuiltins() const override { return None; }
+  ArrayRef<Builtin::Info> getTargetBuiltins() const override {
+    return llvm::makeArrayRef(BuiltinInfo, clang::K1C::LastTSBuiltin -
+                                               Builtin::FirstTSBuiltin);
+  }
 
   BuiltinVaListKind getBuiltinVaListKind() const override {
     return TargetInfo::VoidPtrBuiltinVaList;
