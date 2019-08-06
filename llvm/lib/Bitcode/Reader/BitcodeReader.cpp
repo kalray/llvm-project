@@ -1724,6 +1724,9 @@ static uint64_t getRawAttributeMask(Attribute::AttrKind Val) {
   case Attribute::WillReturn:
     return 1ULL << 62;
   case Attribute::NoFree:
+    // return 1ULL << 63; // Temp fix, hope to be fixed in future llvm releases
+    llvm_unreachable("nofree attribute temporarily disabled by Kalray");
+  case Attribute::MPPANative:
     return 1ULL << 63;
   default:
     // Other attributes are not supported in the raw format,
@@ -2001,6 +2004,8 @@ static Attribute::AttrKind getAttrFromCode(uint64_t Code) {
     return Attribute::MustProgress;
   case bitc::ATTR_KIND_HOT:
     return Attribute::Hot;
+  case bitc::ATTR_KIND_MPPANATIVE:
+    return Attribute::MPPANative;
   case bitc::ATTR_KIND_PRESPLIT_COROUTINE:
     return Attribute::PresplitCoroutine;
   }
