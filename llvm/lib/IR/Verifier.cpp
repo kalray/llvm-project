@@ -1650,6 +1650,7 @@ static bool isFuncOnlyAttr(Attribute::AttrKind Kind) {
   case Attribute::NullPointerIsValid:
   case Attribute::MustProgress:
   case Attribute::NoProfile:
+  case Attribute::MPPANative:
     return true;
   default:
     break;
