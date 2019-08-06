@@ -6664,6 +6664,17 @@ static void handleCFGuardAttr(Sema &S, Decl *D, const ParsedAttr &AL) {
   D->addAttr(::new (S.Context) CFGuardAttr(S.Context, AL, Arg));
 }
 
+static void handleMPPANativeAttr(Sema &S, Decl *D, const ParsedAttr &AL) {
+  if (!isFunctionOrMethod(D)) {
+    S.Diag(D->getLocation(), diag::warn_attribute_wrong_decl_type)
+        << "'MPPANative'" << ExpectedFunction;
+    return;
+  }
+  if (!checkAttributeNumArgs(S, AL, 0))
+    return;
+  handleSimpleAttribute<MPPANativeAttr>(S, D, AL);
+}
+
 //===----------------------------------------------------------------------===//
 // Top Level Sema Entry Points
 //===----------------------------------------------------------------------===//
@@ -7459,6 +7470,10 @@ static void ProcessDeclAttribute(Sema &S, Scope *scope, Decl *D,
 
   case ParsedAttr::AT_UseHandle:
     handleHandleAttr<UseHandleAttr>(S, D, AL);
+    break;
+
+  case ParsedAttr::AT_MPPANative:
+    handleMPPANativeAttr(S, D, AL);
     break;
   }
 }

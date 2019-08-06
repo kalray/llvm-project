@@ -61,6 +61,9 @@ def InlineHint : EnumAttr<"inlinehint">;
 /// Force argument to be passed in register.
 def InReg : EnumAttr<"inreg">;
 
+/// K1GCC function.
+def MPPANative : EnumAttr<"MPPANative">;
+
 /// Build jump-instruction tables and replace refs.
 def JumpTable : EnumAttr<"jumptable">;
 
