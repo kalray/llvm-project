@@ -351,6 +351,8 @@ std::string Attribute::getAsString(bool InAttrGrp) const {
     return "zeroext";
   if (hasAttribute(Attribute::Cold))
     return "cold";
+  if (hasAttribute(Attribute::MPPANative))
+    return "MPPANative";
 
   // FIXME: These should be output like this:
   //

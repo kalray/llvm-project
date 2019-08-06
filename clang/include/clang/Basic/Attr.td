@@ -1847,6 +1847,12 @@ def Pure : InheritableAttr {
   let Documentation = [Undocumented];
 }
 
+def MPPANative : InheritableAttr {
+  let Spellings = [Clang<"mppa_native">];
+  let Subjects = SubjectList<[Function]>;
+  let Documentation = [Undocumented];
+}
+
 def Regparm : TypeAttr {
   let Spellings = [GCC<"regparm">];
   let Args = [UnsignedArgument<"NumParams">];

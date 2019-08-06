@@ -1547,8 +1547,13 @@ void CodeGenModule::SetFunctionAttributes(GlobalDecl GD, llvm::Function *F,
   if (!IsIncompleteFunction) {
     SetLLVMFunctionAttributes(GD, getTypes().arrangeGlobalDeclaration(GD), F);
     // Setup target-specific attributes.
-    if (F->isDeclaration())
+    if (F->isDeclaration()) {
       getTargetCodeGenInfo().setTargetAttributes(FD, F, *this);
+      if (FD->hasAttr<MPPANativeAttr>()) {
+        F->addAttribute(llvm::AttributeList::FunctionIndex,
+                        llvm::Attribute::MPPANative);
+      }
+    }
   }
 
   // Add the Returned attribute for "this", except for iOS 5 and earlier
