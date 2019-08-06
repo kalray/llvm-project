@@ -408,6 +408,8 @@ std::string Attribute::getAsString(bool InAttrGrp) const {
     }
     return Result;
   }
+  if (hasAttribute(Attribute::MPPANative))
+    return "MPPANative";
 
   // FIXME: These should be output like this:
   //

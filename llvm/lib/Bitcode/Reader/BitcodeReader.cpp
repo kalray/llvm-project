@@ -1279,10 +1279,14 @@ static uint64_t getRawAttributeMask(Attribute::AttrKind Val) {
   case Attribute::WillReturn:
     return 1ULL << 62;
   case Attribute::NoFree:
-    return 1ULL << 63;
+    // return 1ULL << 63; // Temporary fix, should be fixed in next LLVM version
+    llvm_unreachable("nofree attribute temporarily disabled by Kalray");
+    break;
   case Attribute::NoSync:
     llvm_unreachable("nosync attribute not supported in raw format");
     break;
+  case Attribute::MPPANative:
+    return 1ULL << 63;
   case Attribute::Dereferenceable:
     llvm_unreachable("dereferenceable attribute not supported in raw format");
     break;
@@ -1540,6 +1544,8 @@ static Attribute::AttrKind getAttrFromCode(uint64_t Code) {
     return Attribute::ImmArg;
   case bitc::ATTR_KIND_SANITIZE_MEMTAG:
     return Attribute::SanitizeMemTag;
+  case bitc::ATTR_KIND_MPPANATIVE:
+    return Attribute::MPPANative;
   }
 }
 

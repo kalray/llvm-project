@@ -6593,6 +6593,17 @@ static void handleMSAllocatorAttr(Sema &S, Decl *D, const ParsedAttr &AL) {
   handleSimpleAttribute<MSAllocatorAttr>(S, D, AL);
 }
 
+static void handleMPPANativeAttr(Sema &S, Decl *D, const ParsedAttr &AL) {
+  if (!isFunctionOrMethod(D)) {
+    S.Diag(D->getLocation(), diag::warn_attribute_wrong_decl_type)
+        << "'MPPANative'" << ExpectedFunction;
+    return;
+  }
+  if (!checkAttributeNumArgs(S, AL, 0))
+    return;
+  handleSimpleAttribute<MPPANativeAttr>(S, D, AL);
+}
+
 //===----------------------------------------------------------------------===//
 // Top Level Sema Entry Points
 //===----------------------------------------------------------------------===//
@@ -7340,6 +7351,10 @@ static void ProcessDeclAttribute(Sema &S, Scope *scope, Decl *D,
 
   case ParsedAttr::AT_MSAllocator:
     handleMSAllocatorAttr(S, D, AL);
+    break;
+
+  case ParsedAttr::AT_MPPANative:
+    handleMPPANativeAttr(S, D, AL);
     break;
   }
 }
