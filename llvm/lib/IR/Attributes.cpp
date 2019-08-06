@@ -473,6 +473,8 @@ std::string Attribute::getAsString(bool InAttrGrp) const {
     }
     return Result;
   }
+  if (hasAttribute(Attribute::MPPANative))
+    return "MPPANative";
 
   const bool IsByRef = hasAttribute(Attribute::ByRef);
   if (IsByRef || hasAttribute(Attribute::Preallocated)) {
