@@ -37,11 +37,9 @@ public:
                                    const MachineInstr *MI);
 
   bool PrintAsmOperand(const MachineInstr *MI, unsigned OpNo,
-                       unsigned AsmVariant, const char *ExtraCode,
-                       raw_ostream &OS) override;
+                       const char *ExtraCode, raw_ostream &OS) override;
   bool PrintAsmMemoryOperand(const MachineInstr *MI, unsigned OpNo,
-                             unsigned AsmVariant, const char *ExtraCode,
-                             raw_ostream &OS) override;
+                             const char *ExtraCode, raw_ostream &OS) override;
 };
 
 } // end of namespace
@@ -70,13 +68,10 @@ void K1CAsmPrinter::EmitInstruction(const MachineInstr *MI) {
 }
 
 bool K1CAsmPrinter::PrintAsmOperand(const MachineInstr *MI, unsigned OpNo,
-                                    unsigned AsmVariant, const char *ExtraCode,
-                                    raw_ostream &OS) {
-  if (AsmVariant != 0)
-    report_fatal_error("There are no defined alternate asm variants");
+                                    const char *ExtraCode, raw_ostream &OS) {
 
   // First try the generic code, which knows about modifiers like 'c' and 'n'.
-  if (!AsmPrinter::PrintAsmOperand(MI, OpNo, AsmVariant, ExtraCode, OS))
+  if (!AsmPrinter::PrintAsmOperand(MI, OpNo, ExtraCode, OS))
     return false;
 
   if (!ExtraCode) {
@@ -97,11 +92,8 @@ bool K1CAsmPrinter::PrintAsmOperand(const MachineInstr *MI, unsigned OpNo,
 }
 
 bool K1CAsmPrinter::PrintAsmMemoryOperand(const MachineInstr *MI, unsigned OpNo,
-                                          unsigned AsmVariant,
                                           const char *ExtraCode,
                                           raw_ostream &OS) {
-  if (AsmVariant != 0)
-    report_fatal_error("There are no defined alternate asm variants");
 
   if (!ExtraCode) {
     const MachineOperand &MO = MI->getOperand(OpNo);
@@ -114,7 +106,7 @@ bool K1CAsmPrinter::PrintAsmMemoryOperand(const MachineInstr *MI, unsigned OpNo,
     return false;
   }
 
-  return AsmPrinter::PrintAsmMemoryOperand(MI, OpNo, AsmVariant, ExtraCode, OS);
+  return AsmPrinter::PrintAsmMemoryOperand(MI, OpNo, ExtraCode, OS);
 }
 
 extern "C" void LLVMInitializeK1CAsmPrinter() {
