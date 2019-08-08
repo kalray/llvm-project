@@ -34,7 +34,7 @@ struct K1CRegisterInfo : public K1CGenRegisterInfo {
                            unsigned FIOperandNum,
                            RegScavenger *RS = nullptr) const override;
 
-  unsigned getFrameRegister(const MachineFunction &MF) const override;
+  llvm::Register getFrameRegister(const MachineFunction &MF) const override;
 };
 
 } // namespace llvm

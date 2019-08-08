@@ -9765,9 +9765,8 @@ Address K1CABIInfo::EmitVAArg(CodeGenFunction &CGF, Address VAListAddr,
   auto AllocSize = getDataLayout().getTypeAllocSize(AI.getCoerceToType());
   CharUnits Stride = CharUnits::fromQuantity(AllocSize).alignTo(SlotSize);
 
-  llvm::Value *NextPtr =
-      Builder.CreateConstInBoundsByteGEP(Addr.getPointer(), Stride, "ap.next");
-  Builder.CreateStore(NextPtr, VAListAddr);
+  Address NextPtr = Builder.CreateConstInBoundsByteGEP(Addr, Stride, "ap.next");
+  Builder.CreateStore(NextPtr.getPointer(), VAListAddr);
 
   return Builder.CreateBitCast(Addr, ArgPtrTy, "arg.addr");
 }
