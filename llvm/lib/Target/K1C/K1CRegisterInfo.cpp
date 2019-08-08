@@ -22,6 +22,7 @@
 #include "llvm/CodeGen/TargetFrameLowering.h"
 #include "llvm/CodeGen/TargetInstrInfo.h"
 #include "llvm/Support/ErrorHandling.h"
+#include "llvm/MC/MCDwarf.h"
 
 #define GET_REGINFO_TARGET_DESC
 #include "K1CGenRegisterInfo.inc"
@@ -109,7 +110,8 @@ void K1CRegisterInfo::eliminateFrameIndex(MachineBasicBlock::iterator II,
   }
 }
 
-unsigned K1CRegisterInfo::getFrameRegister(const MachineFunction &MF) const {
+llvm::Register
+K1CRegisterInfo::getFrameRegister(const MachineFunction &MF) const {
   const TargetFrameLowering *TFI = getFrameLowering(MF);
   return TFI->hasFP(MF) ? getFPReg() : getSPReg();
 }
