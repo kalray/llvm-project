@@ -33,7 +33,6 @@ void clusteros::Assembler::ConstructJob(Compilation &C, const JobAction &JA,
 
   Args.AddAllArgValues(CmdArgs, options::OPT_Wa_COMMA, options::OPT_Xassembler);
 
-  CmdArgs.push_back("-m64");
   CmdArgs.push_back("-o");
   CmdArgs.push_back(Output.getFilename());
 
