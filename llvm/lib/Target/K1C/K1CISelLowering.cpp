@@ -256,6 +256,7 @@ SDValue K1CTargetLowering::LowerFormalArguments(
     report_fatal_error("Unsupported calling convention");
   case CallingConv::C:
   case CallingConv::Fast:
+  case CallingConv::SPIR_KERNEL:
     break;
   }
 
