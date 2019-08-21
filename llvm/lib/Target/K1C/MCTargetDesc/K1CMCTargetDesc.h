@@ -14,13 +14,31 @@
 #ifndef LLVM_LIB_TARGET_K1C_MCTARGETDESC_K1CMCTARGETDESC_H
 #define LLVM_LIB_TARGET_K1C_MCTARGETDESC_K1CMCTARGETDESC_H
 
-#include "llvm/Config/config.h"
-#include "llvm/MC/MCTargetOptions.h"
 #include "llvm/Support/DataTypes.h"
-#include "llvm/Target/TargetMachine.h"
+
+#include <memory>
 
 namespace llvm {
+class MCAsmBackend;
+class MCCodeEmitter;
+class MCInstrInfo;
+class MCContext;
+class MCObjectTargetWriter;
+class MCTargetOptions;
+class MCRegisterInfo;
+class MCSubtargetInfo;
+class Target;
+
 Target &getTheK1CTarget();
+
+MCCodeEmitter *createK1CMCCodeEmitter(const MCInstrInfo &MCII,
+                                      const MCRegisterInfo &MRI,
+                                      MCContext &Ctx);
+MCAsmBackend *createK1CAsmBackend(const Target &T, const MCSubtargetInfo &STI,
+                                  const MCRegisterInfo &MRI,
+                                  const MCTargetOptions &Options);
+std::unique_ptr<MCObjectTargetWriter> createK1CELFObjectWriter(bool Is64Bit,
+                                                               uint8_t OSABI);
 } // namespace llvm
 
 #define GET_REGINFO_ENUM
@@ -28,6 +46,9 @@ Target &getTheK1CTarget();
 
 #define GET_INSTRINFO_ENUM
 #include "K1CGenInstrInfo.inc"
+
+#define GET_SUBTARGETINFO_ENUM
+#include "K1CGenSubtargetInfo.inc"
 
 static inline unsigned getSPReg() { return llvm::K1C::R12; }
 static inline unsigned getFPReg() { return llvm::K1C::R14; }
