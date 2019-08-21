@@ -60,6 +60,11 @@ static MCInstPrinter *createK1CMCInstPrinter(const Triple &T,
   return new K1CInstPrinter(MAI, MII, MRI);
 }
 
+static MCSubtargetInfo *createK1CMCSubtargetInfo(const Triple &TT,
+                                                 StringRef CPU, StringRef FS) {
+  return createK1CMCSubtargetInfoImpl(TT, CPU, FS);
+}
+
 static MCTargetStreamer *createK1CTargetStreamer(MCStreamer &S,
                                                  formatted_raw_ostream &OS,
                                                  MCInstPrinter *InstPrint,
@@ -75,4 +80,9 @@ extern "C" void LLVMInitializeK1CTargetMC() {
                                         createK1CMCInstPrinter);
   TargetRegistry::RegisterAsmTargetStreamer(getTheK1CTarget(),
                                             createK1CTargetStreamer);
+  TargetRegistry::RegisterMCSubtargetInfo(getTheK1CTarget(),
+                                          createK1CMCSubtargetInfo);
+  TargetRegistry::RegisterMCAsmBackend(getTheK1CTarget(), createK1CAsmBackend);
+  TargetRegistry::RegisterMCCodeEmitter(getTheK1CTarget(),
+                                        createK1CMCCodeEmitter);
 }
