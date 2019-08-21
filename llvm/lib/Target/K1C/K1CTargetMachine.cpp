@@ -69,6 +69,29 @@ public:
 };
 } // namespace
 
+const K1CSubtarget *
+K1CTargetMachine::getSubtargetImpl(const Function &F) const {
+  Attribute CPUAttr = F.getFnAttribute("target-cpu");
+  Attribute FSAttr = F.getFnAttribute("target-features");
+
+  std::string CPU = !CPUAttr.hasAttribute(Attribute::None)
+                        ? CPUAttr.getValueAsString().str()
+                        : TargetCPU;
+  std::string FS = !FSAttr.hasAttribute(Attribute::None)
+                       ? FSAttr.getValueAsString().str()
+                       : TargetFS;
+
+  auto &I = SubtargetMap[CPU + FS];
+  if (!I) {
+    // This needs to be done before we create a new subtarget since any
+    // creation will depend on the TM and the code generation flags on the
+    // function that reside in TargetOptions.
+    resetTargetOptions(F);
+    I = llvm::make_unique<K1CSubtarget>(TargetTriple, CPU, FS, *this);
+  }
+  return I.get();
+}
+
 TargetPassConfig *K1CTargetMachine::createPassConfig(PassManagerBase &PM) {
   return new K1CPassConfig(*this, PM);
 }

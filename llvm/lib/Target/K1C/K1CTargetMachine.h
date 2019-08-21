@@ -25,6 +25,7 @@ namespace llvm {
 class K1CTargetMachine : public LLVMTargetMachine {
   std::unique_ptr<TargetLoweringObjectFile> TLOF;
   K1CSubtarget Subtarget;
+  mutable StringMap<std::unique_ptr<K1CSubtarget> > SubtargetMap;
 
 public:
   K1CTargetMachine(const Target &T, const Triple &TT, StringRef CPU,
@@ -32,9 +33,8 @@ public:
                    Optional<Reloc::Model> RM, Optional<CodeModel::Model> CM,
                    CodeGenOpt::Level OL, bool JIT);
 
-  const K1CSubtarget *getSubtargetImpl(const Function &) const override {
-    return &Subtarget;
-  }
+  const K1CSubtarget *getSubtargetImpl() const { return &Subtarget; }
+  const K1CSubtarget *getSubtargetImpl(const Function &F) const override;
 
   TargetPassConfig *createPassConfig(PassManagerBase &PM) override;
 
