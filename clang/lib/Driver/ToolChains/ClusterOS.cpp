@@ -96,8 +96,8 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
   if (Args.hasArg(options::OPT_v))
     CmdArgs.push_back("-Wl,-v");
 
-  const char *Exec =
-      Args.MakeArgString(getToolChain().GetProgramPath("k1-cos-gcc"));
+  const char *Exec = Args.MakeArgString(getToolChain().GetProgramPath(
+      C.getDriver().CCCIsCXX() ? "k1-cos-g++" : "k1-cos-gcc"));
   C.addCommand(llvm::make_unique<Command>(JA, *this, Exec, CmdArgs, Inputs));
 }
 
