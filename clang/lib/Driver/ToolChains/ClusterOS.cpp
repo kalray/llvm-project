@@ -123,11 +123,13 @@ void ClusterOS::AddClangSystemIncludeArgs(const ArgList &DriverArgs,
       DriverArgs.hasArg(options::OPT_nostdlibinc))
     return;
 
-  std::string gcc_path(GetProgramPath("k1-cos-gcc"));
-  StringRef gcc_prefix = llvm::sys::path::parent_path(gcc_path);
+  std::string GCCPath = GetProgramPath("k1-cos-gcc");
+  StringRef GCCPrefix = llvm::sys::path::parent_path(GCCPath);
 
-  addExternCSystemInclude(DriverArgs, CC1Args,
-                          gcc_prefix + "/../k1-cos/include");
+  SmallString<128> IncludeDir(llvm::sys::path::parent_path(GCCPrefix));
+
+  llvm::sys::path::append(IncludeDir, "k1-cos", "include");
+  addSystemInclude(DriverArgs, CC1Args, IncludeDir.str());
 }
 
 void ClusterOS::AddClangCXXStdlibIncludeArgs(const ArgList &DriverArgs,
@@ -136,13 +138,17 @@ void ClusterOS::AddClangCXXStdlibIncludeArgs(const ArgList &DriverArgs,
       DriverArgs.hasArg(options::OPT_nostdlibinc))
     return;
 
-  std::string gcc_path(GetProgramPath("k1-cos-gcc"));
-  StringRef gcc_prefix = llvm::sys::path::parent_path(gcc_path);
-  StringRef cxx_stdlib_path = gcc_prefix.str() + "/../k1-cos/include/c++/7.4.1";
+  std::string GCCPath = GetProgramPath("k1-cos-gcc");
+  StringRef GCCPrefix = llvm::sys::path::parent_path(GCCPath);
 
-  addExternCSystemInclude(DriverArgs, CC1Args, cxx_stdlib_path);
-  addExternCSystemInclude(DriverArgs, CC1Args, cxx_stdlib_path + "/k1-cos");
-  addExternCSystemInclude(DriverArgs, CC1Args, cxx_stdlib_path + "/backward");
+  SmallString<128> IncludeDir(llvm::sys::path::parent_path(GCCPrefix));
+
+  llvm::sys::path::append(IncludeDir, "k1-cos", "include", "c++", "7.4.1");
+  addSystemInclude(DriverArgs, CC1Args, IncludeDir.str());
+  llvm::sys::path::append(IncludeDir, "k1-cos");
+  addSystemInclude(DriverArgs, CC1Args, IncludeDir.str());
+  llvm::sys::path::append(IncludeDir, "backward");
+  addSystemInclude(DriverArgs, CC1Args, IncludeDir.str());
 }
 
 void
