@@ -22,6 +22,7 @@ add_llvm_target(K1CCodeGen
     K1CTargetObjectFile.cpp
     K1CSubtarget.cpp
     K1CMCInstLower.cpp
+    K1CLoadStorePacking.cpp
     )
 
 add_subdirectory(TargetInfo)
