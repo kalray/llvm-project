@@ -31,7 +31,10 @@ void LowerK1CMachineInstrToMCInst(const MachineInstr *MI, MCInst &OutMI,
                                   AsmPrinter &AP);
 
 FunctionPass *createK1CExpandPseudoPass();
+FunctionPass *createK1CLoadStorePackingPass();
+
 void initializeK1CExpandPseudoPass(PassRegistry &);
+void initializeK1CLoadStorePackingPassPass(PassRegistry &);
 }
 
 #endif // LLVM_LIB_TARGET_K1C_K1C_H
