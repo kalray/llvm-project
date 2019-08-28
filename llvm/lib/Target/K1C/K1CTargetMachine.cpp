@@ -29,6 +29,7 @@ extern "C" void LLVMInitializeK1CTarget() {
   RegisterTargetMachine<K1CTargetMachine> X(getTheK1CTarget());
   auto PR = PassRegistry::getPassRegistry();
   initializeK1CExpandPseudoPass(*PR);
+  initializeK1CLoadStorePackingPassPass(*PR);
 }
 
 static Reloc::Model getEffectiveRelocModel(const Triple &TT,
@@ -64,6 +65,7 @@ public:
   }
 
   bool addInstSelector() override;
+  void addPreRegAlloc() override;
 
   void addPreEmitPass() override;
 };
@@ -100,6 +102,11 @@ bool K1CPassConfig::addInstSelector() {
   addPass(createK1CISelDag(getK1CTargetMachine()));
 
   return false;
+}
+
+void K1CPassConfig::addPreRegAlloc() {
+  if (getOptLevel() >= CodeGenOpt::Default)
+    addPass(createK1CLoadStorePackingPass());
 }
 
 void K1CPassConfig::addPreEmitPass() { addPass(createK1CExpandPseudoPass()); }
