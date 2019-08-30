@@ -26,17 +26,11 @@ def Truncate : SDNode<"K1CISD::TRUNCATE", SDT_K1CTruncate, []>;
 def K1CRetNode : SDNode<"K1CISD::RET", SDTNone,
                        [SDNPHasChain, SDNPOptInGlue, SDNPMayLoad, SDNPVariadic]>;
 
-
-//let isBarrier = 1, isReturn = 1, isTerminator = 1 in
-//def K1CRet : K1C_INSTRUCTION<(outs), (ins), "ret", [(K1CRetNode)], NoItinerary>;
-
 def : Pat<(K1CRetNode),(RET)>;
 
 def : Pat<(Call (K1CWrapper tglobaladdr:$func)),(CALL Pcrel27:$func)>;
 def : Pat<(Call texternalsym:$func),(CALL Pcrel27:$func)>;
 def : Pat<(Call SingleReg:$func),(ICALL SingleReg:$func)>;
-
-def Bundle : K1C_INSTRUCTION<(outs), (ins), ";;", [], NoItinerary>;
 
 /*let isBarrier = 1, isReturn = 1, isTerminator = 1 in
 def PseudoRET : K1C_PseudoInstr<(outs), (ins), "ret", [(K1CRetNode)]>,
@@ -64,7 +58,7 @@ def MAKETLS : REGISTERW_EXTEND27_UPPER27_LOWER10_TRIPLE
   <(outs SingleReg:$SingleReg), (ins Wrapped64:$Wrapped64),
   "make $SingleReg = @tlsle($Wrapped64)",
   [],
-  __UNKNOWN_ITIN__>;
+  ALU_TINY_Y>;
 
 // MAKE patterns disabled - selection is done in code
 /*
@@ -88,20 +82,24 @@ def AddrRI : Operand<iPTR>, ComplexPattern<iPTR, 2, "SelectAddrRI", [frameindex]
   let MIOperandInfo = (ops i64imm:$offset, SingleReg:$baseReg );
 }
 
+// FIXME: for now it's selected the wider itinerary (LSU_AUXR_Y), because
+// the right one can't be determined (LSU_AUXR, LSU_AUXR_X, LSU_AUXR_Y)
 // store instructions with register-immediate addressing mode
-def SBri : K1C_INSTRUCTION<(outs), (ins AddrRI:$addr, SingleReg:$val), "sb $addr = $val", [], NoItinerary>;
-def SHri : K1C_INSTRUCTION<(outs), (ins AddrRI:$addr, SingleReg:$val), "sh $addr = $val", [], NoItinerary>;
-def SWri : K1C_INSTRUCTION<(outs), (ins AddrRI:$addr, SingleReg:$val), "sw $addr = $val", [], NoItinerary>;
-def SDri : K1C_INSTRUCTION<(outs), (ins AddrRI:$addr, SingleReg:$val), "sd $addr = $val", [], NoItinerary>;
+def SBri : K1C_INSTRUCTION<(outs), (ins AddrRI:$addr, SingleReg:$val), "sb $addr = $val", [], LSU_AUXR_Y>;
+def SHri : K1C_INSTRUCTION<(outs), (ins AddrRI:$addr, SingleReg:$val), "sh $addr = $val", [], LSU_AUXR_Y>;
+def SWri : K1C_INSTRUCTION<(outs), (ins AddrRI:$addr, SingleReg:$val), "sw $addr = $val", [], LSU_AUXR_Y>;
+def SDri : K1C_INSTRUCTION<(outs), (ins AddrRI:$addr, SingleReg:$val), "sd $addr = $val", [], LSU_AUXR_Y>;
 
+// FIXME: for now it's selected the wider itinerary (LSU_AUXW_Y), because
+// the right one can't be determined (LSU_AUXW, LSU_AUXW_X, LSU_AUXW_Y)
 // load instructions with register-immediate addressing mode
-def LBSri : K1C_INSTRUCTION<(outs SingleReg:$out), (ins AddrRI:$addr), "lbs $out = $addr", [], NoItinerary>;
-def LBZri : K1C_INSTRUCTION<(outs SingleReg:$out), (ins AddrRI:$addr), "lbz $out = $addr", [], NoItinerary>;
-def LHSri : K1C_INSTRUCTION<(outs SingleReg:$out), (ins AddrRI:$addr), "lhs $out = $addr", [], NoItinerary>;
-def LHZri : K1C_INSTRUCTION<(outs SingleReg:$out), (ins AddrRI:$addr), "lhz $out = $addr", [], NoItinerary>;
-def LWSri : K1C_INSTRUCTION<(outs SingleReg:$out), (ins AddrRI:$addr), "lws $out = $addr", [], NoItinerary>;
-def LWZri : K1C_INSTRUCTION<(outs SingleReg:$out), (ins AddrRI:$addr), "lwz $out = $addr", [], NoItinerary>;
-def LDri : K1C_INSTRUCTION<(outs SingleReg:$out), (ins AddrRI:$addr), "ld $out = $addr", [], NoItinerary>;
+def LBSri : K1C_INSTRUCTION<(outs SingleReg:$out), (ins AddrRI:$addr), "lbs $out = $addr", [], LSU_AUXW_Y>;
+def LBZri : K1C_INSTRUCTION<(outs SingleReg:$out), (ins AddrRI:$addr), "lbz $out = $addr", [], LSU_AUXW_Y>;
+def LHSri : K1C_INSTRUCTION<(outs SingleReg:$out), (ins AddrRI:$addr), "lhs $out = $addr", [], LSU_AUXW_Y>;
+def LHZri : K1C_INSTRUCTION<(outs SingleReg:$out), (ins AddrRI:$addr), "lhz $out = $addr", [], LSU_AUXW_Y>;
+def LWSri : K1C_INSTRUCTION<(outs SingleReg:$out), (ins AddrRI:$addr), "lws $out = $addr", [], LSU_AUXW_Y>;
+def LWZri : K1C_INSTRUCTION<(outs SingleReg:$out), (ins AddrRI:$addr), "lwz $out = $addr", [], LSU_AUXW_Y>;
+def LDri : K1C_INSTRUCTION<(outs SingleReg:$out), (ins AddrRI:$addr), "ld $out = $addr", [], LSU_AUXW_Y>;
 
 // Store patterns
 def : Pat<(store (i8 SingleReg:$val), AddrRI:$addr), (SBri AddrRI:$addr,SingleReg:$val)>;

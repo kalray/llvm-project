@@ -7,6 +7,7 @@ tablegen(LLVM K1CGenDAGISel.inc -gen-dag-isel)
 tablegen(LLVM K1CGenSubtargetInfo.inc -gen-subtarget)
 tablegen(LLVM K1CGenMCPseudoLowering.inc -gen-pseudo-lowering)
 tablegen(LLVM K1CGenCallingConv.inc -gen-callingconv)
+tablegen(LLVM K1CGenDFAPacketizer.inc -gen-dfa-packetizer)
 
 add_public_tablegen_target(K1CCommonTableGen)
 
@@ -23,6 +24,7 @@ add_llvm_target(K1CCodeGen
     K1CSubtarget.cpp
     K1CMCInstLower.cpp
     K1CLoadStorePacking.cpp
+    K1CVLIWPacketizer.cpp
     )
 
 add_subdirectory(TargetInfo)

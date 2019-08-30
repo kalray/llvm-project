@@ -45,12 +45,20 @@ void K1CAsmPrinter::EmitInstruction(const MachineInstr *MI) {
   if (emitPseudoExpansionLowering(*OutStreamer, MI))
     return;
 
-  MCInst TmpInst;
-  LowerK1CMachineInstrToMCInst(MI, TmpInst, *this);
-  EmitToStreamer(*OutStreamer, TmpInst);
-  MCInst bundleInst;
-  bundleInst.setOpcode(K1C::Bundle);
-  EmitToStreamer(*OutStreamer, bundleInst);
+  if (MI->isBundle()) {
+    for (auto MII = ++MI->getIterator();
+         MII != MI->getParent()->instr_end() && MII->isInsideBundle(); ++MII) {
+      MCInst TmpInst;
+      LowerK1CMachineInstrToMCInst(&*MII, TmpInst, *this);
+      EmitToStreamer(*OutStreamer, TmpInst);
+    }
+  } else {
+    MCInst TmpInst;
+    LowerK1CMachineInstrToMCInst(MI, TmpInst, *this);
+    EmitToStreamer(*OutStreamer, TmpInst);
+  }
+
+  OutStreamer->EmitRawText(StringRef("\t;;\n"));
 }
 
 extern "C" void LLVMInitializeK1CAsmPrinter() {
