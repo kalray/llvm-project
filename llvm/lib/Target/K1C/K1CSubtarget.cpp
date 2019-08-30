@@ -26,7 +26,9 @@ using namespace llvm;
 
 void K1CSubtarget::anchor() {}
 
+// FIXME: "generic" -> CPU (depends on correct K1CSubtarget initialization)
 K1CSubtarget::K1CSubtarget(const Triple &TT, const std::string &CPU,
                            const std::string &FS, const TargetMachine &TM)
-    : K1CGenSubtargetInfo(TT, CPU, FS), FrameLowering(*this), InstrInfo(),
-      RegInfo(getHwMode()), TLInfo(TM, *this) {}
+    : K1CGenSubtargetInfo(TT, "generic", FS), FrameLowering(*this), InstrInfo(),
+      RegInfo(getHwMode()), TLInfo(TM, *this),
+      InstrItins(getInstrItineraryForCPU("generic")) {}
