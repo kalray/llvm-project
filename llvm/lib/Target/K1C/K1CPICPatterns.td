@@ -16,7 +16,7 @@ def PICPCRELGOTADDR : REGISTERW_EXTEND27_UPPER27_LOWER10_TRIPLE
   <(outs SingleReg:$gotaddr), (ins ),
    "pcrel $gotaddr = @gotaddr()",
    [(set (i64 SingleReg:$gotaddr), (PICPCRelativeGOTAddr ))],
-   __UNKNOWN_ITIN__>;
+   ALU_FULL>;
 
 def PICINTERNINDIRECTION : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
   <(outs SingleReg:$symaddr), (ins SingleReg:$gotaddr, Wrapped64:$gotoff),
@@ -24,7 +24,7 @@ def PICINTERNINDIRECTION : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
    [(set (i64 SingleReg:$symaddr),
          (PICInternIndirection (i64 SingleReg:$gotaddr),
                                (i64 tglobaladdr:$gotoff)))],
-   __UNKNOWN_ITIN__>;
+   ALU_TINY_Y>;
 
 def PICEXTERNINDIRECTION : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
   <(outs SingleReg:$symaddr), (ins SingleReg:$gotaddr, Wrapped64:$gotoff),
@@ -32,7 +32,7 @@ def PICEXTERNINDIRECTION : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
    [(set (i64 SingleReg:$symaddr),
          (PICExternIndirection (i64 SingleReg:$gotaddr),
                                (i64 tglobaladdr:$gotoff)))],
-   __UNKNOWN_ITIN__>;
+   LSU_AUXW_Y>;
 
 let Defs=[RA], isCall=1 in
 def CALLPLT : PCREL27_SIMPLE

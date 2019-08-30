@@ -29,6 +29,7 @@ type = Library
 name = K1CCodeGen
 parent = K1C
 required_libraries =
+  Analysis
   AsmPrinter
   Core
   CodeGen

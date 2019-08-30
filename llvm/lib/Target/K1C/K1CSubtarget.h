@@ -36,6 +36,7 @@ class K1CSubtarget : public K1CGenSubtargetInfo {
   K1CRegisterInfo RegInfo;
   K1CTargetLowering TLInfo;
   SelectionDAGTargetInfo TSInfo;
+  InstrItineraryData InstrItins;
 
 public:
   // Initializes the data members to match that of the specified triple.
@@ -56,6 +57,9 @@ public:
   }
   const SelectionDAGTargetInfo *getSelectionDAGInfo() const override {
     return &TSInfo;
+  }
+  const InstrItineraryData *getInstrItineraryData() const override {
+    return &InstrItins;
   }
 };
 } // namespace llvm

@@ -45,6 +45,7 @@ std::unique_ptr<MCObjectTargetWriter> createK1CELFObjectWriter(bool Is64Bit,
 #include "K1CGenRegisterInfo.inc"
 
 #define GET_INSTRINFO_ENUM
+#define GET_INSTRINFO_SCHED_ENUM
 #include "K1CGenInstrInfo.inc"
 
 #define GET_SUBTARGETINFO_ENUM
