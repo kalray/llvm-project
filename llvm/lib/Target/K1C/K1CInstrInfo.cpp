@@ -25,6 +25,7 @@
 #include "llvm/Support/TargetRegistry.h"
 
 #define GET_INSTRINFO_CTOR_DTOR
+#include "K1CGenDFAPacketizer.inc"
 #include "K1CGenInstrInfo.inc"
 
 using namespace llvm;
@@ -144,4 +145,10 @@ void K1CInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
         .addReg(ScratchReg, RegState::Kill)
         .setMIFlags(1 << 14);
   }
+}
+
+DFAPacketizer *
+K1CInstrInfo::CreateTargetScheduleState(const TargetSubtargetInfo &STI) const {
+  const InstrItineraryData *II = STI.getInstrItineraryData();
+  return static_cast<const K1CSubtarget &>(STI).createDFAPacketizer(II);
 }

@@ -9,6 +9,7 @@
 
 include "llvm/Target/Target.td"
 
+include "K1CSchedule.td"
 include "K1CRegisterInfo.td"
 include "K1CInstrInfo.td"
 include "K1CPatterns.td"
@@ -28,4 +29,4 @@ def K1C : Target {
     let InstructionSet = K1CInstrInfo;
 }
 
-def : Processor<"generic", NoItineraries, []>;
+def : ProcessorModel<"generic", K1CSchedMachineModel, []>;
