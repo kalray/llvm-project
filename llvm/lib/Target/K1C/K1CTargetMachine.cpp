@@ -30,6 +30,7 @@ extern "C" void LLVMInitializeK1CTarget() {
   auto PR = PassRegistry::getPassRegistry();
   initializeK1CExpandPseudoPass(*PR);
   initializeK1CLoadStorePackingPassPass(*PR);
+  initializeK1CPacketizerPass(*PR);
 }
 
 static Reloc::Model getEffectiveRelocModel(const Triple &TT,
@@ -109,4 +110,7 @@ void K1CPassConfig::addPreRegAlloc() {
     addPass(createK1CLoadStorePackingPass());
 }
 
-void K1CPassConfig::addPreEmitPass() { addPass(createK1CExpandPseudoPass()); }
+void K1CPassConfig::addPreEmitPass() {
+  addPass(createK1CExpandPseudoPass());
+  addPass(createK1CPacketizerPass(getOptLevel() >= CodeGenOpt::Default), false);
+}

@@ -29,7 +29,7 @@ multiclass MC_00<string OpcStr> {
     <(outs), (ins SingleReg:$a1),
      !strconcat (OpcStr, " $a1"),
      [], // pattern missing
-     NoItinerary>;
+     ALL>;
   def d1 : SYSNUMBER_SIMPLE
     <(outs), (ins Sysnumber:$a1), // Sysnumber ?!?
      !strconcat (OpcStr, " $a1"),
@@ -247,37 +247,37 @@ multiclass MC_07<string OpcStr> { // $a1=12, $a2=$r12, $a3=$r0
     <(outs), (ins Signed10_64:$a1, SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     LSU_AUXR>;
   def d1 : UPPER27_LOWER10_REGISTERZ_REGISTERT_DOUBLE
     <(outs), (ins Signed37_64:$a1, SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     LSU_AUXR_X>;
   def d2 : EXTEND27_UPPER27_LOWER10_REGISTERZ_REGISTERT_TRIPLE
     <(outs), (ins Wrapped64:$a1, SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     LSU_AUXR_Y>;
   def d3 : SCALING_REGISTERY_REGISTERZ_REGISTERT_SIMPLE
     <(outs), (ins SingleReg:$a2, SingleReg:$a3, SingleReg:$a4, ScalingMod:$a1),
      !strconcat (OpcStr, "$a1 $a2[$a3] = $a4"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     LSU_AUXR>;
   def d4 : LSUCOND_REGISTERY_REGISTERZ_REGISTERT_SIMPLE
     <(outs), (ins SingleReg:$a2, SingleReg:$a3, SingleReg:$a4, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2? [$a3] = $a4"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     LSU_AUXR>;
   def d5 : LSUCOND_REGISTERY_OFFSET27_REGISTERZ_REGISTERT_DOUBLE
     <(outs), (ins SingleReg:$a2, Signed27:$a3, SingleReg:$a4, SingleReg:$a5, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2? $a3[$a4] = $a5"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     LSU_AUXR_X>;
   def d6 : LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_REGISTERT_TRIPLE
     <(outs), (ins SingleReg:$a2, Signed54:$a3, SingleReg:$a4, SingleReg:$a5, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2? $a3[$a4] = $a5"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     LSU_AUXR_Y>;
 }
 
 // multiclass MC_08 is used by:
@@ -287,12 +287,12 @@ multiclass MC_08<string OpcStr> {
     <(outs), (ins Signed10_64:$a1, SingleReg:$a2, PairedReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     LSU_AUXR>;
   def d1 : UPPER27_LOWER10_REGISTERZ_REGISTERU_DOUBLE
     <(outs), (ins Signed37_64:$a1, SingleReg:$a2, PairedReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     LSU_AUXR_X>;
   def d2 : EXTEND27_UPPER27_LOWER10_REGISTERZ_REGISTERU_TRIPLE
     <(outs), (ins Wrapped64:$a1, SingleReg:$a2, PairedReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
@@ -301,22 +301,22 @@ multiclass MC_08<string OpcStr> {
     <(outs), (ins SingleReg:$a2, SingleReg:$a3, PairedReg:$a4, ScalingMod:$a1),
      !strconcat (OpcStr, "$a1 $a2[$a3] = $a4"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     LSU_AUXR>;
   def d4 : LSUCOND_REGISTERY_REGISTERZ_REGISTERU_SIMPLE
     <(outs), (ins SingleReg:$a2, SingleReg:$a3, PairedReg:$a4, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2? [$a3] = $a4"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     LSU_AUXR>;
   def d5 : LSUCOND_REGISTERY_OFFSET27_REGISTERZ_REGISTERU_DOUBLE
     <(outs), (ins SingleReg:$a2, Signed27:$a3, SingleReg:$a4, PairedReg:$a5, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2? $a3[$a4] = $a5"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     LSU_AUXR_X>;
   def d6 : LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_REGISTERU_TRIPLE
     <(outs), (ins SingleReg:$a2, Signed54:$a3, SingleReg:$a4, PairedReg:$a5, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2? $a3[$a4] = $a5"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     LSU_AUXR_Y>;
 }
 
 // multiclass MC_09 is used by:
@@ -393,32 +393,32 @@ multiclass MC_0B<string OpcStr> {
     <(outs), (ins Signed10_64:$a1, SingleReg:$a2, PairedReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     LSU_AUXR_AUXW>;
   def d1 : UPPER27_LOWER10_REGISTERZ_REGISTERU_DOUBLE
     <(outs), (ins Signed37_64:$a1, SingleReg:$a2, PairedReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     LSU_AUXR_AUXW_X>;
   def d2 : SCALING_REGISTERY_REGISTERZ_REGISTERU_SIMPLE
     <(outs), (ins SingleReg:$a2, SingleReg:$a3, PairedReg:$a4, ScalingMod:$a1),
      !strconcat (OpcStr, "$a1 $a2[$a3] = $a4"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     LSU_AUXR_AUXW>;
   def d3 : LSUCOND_REGISTERY_REGISTERZ_REGISTERU_SIMPLE
     <(outs), (ins SingleReg:$a2, SingleReg:$a3, PairedReg:$a4, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2? [$a3] = $a4"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     LSU_AUXR_AUXW>;
   def d4 : LSUCOND_REGISTERY_OFFSET27_REGISTERZ_REGISTERU_DOUBLE
     <(outs), (ins SingleReg:$a2, Signed27:$a3, SingleReg:$a4, PairedReg:$a5, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2? $a3[$a4] = $a5"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     LSU_AUXR_AUXW_X>;
   def d5 : LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_REGISTERU_TRIPLE
     <(outs), (ins SingleReg:$a2, Signed54:$a3, SingleReg:$a4, PairedReg:$a5, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2? $a3[$a4] = $a5"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     LSU_AUXR_AUXW_Y>;
 }
 
 // multiclass MC_0C is used by:
@@ -463,37 +463,37 @@ multiclass MC_0D<string OpcStr> {
     <(outs), (ins Signed10_64:$a1, SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     LSU_AUXR_AUXW>;
   def d1 : UPPER27_LOWER10_REGISTERZ_REGISTERT_DOUBLE
     <(outs), (ins Signed37_64:$a1, SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     LSU_AUXR_AUXW_X>;
   def d2 : EXTEND27_UPPER27_LOWER10_REGISTERZ_REGISTERT_TRIPLE
     <(outs), (ins Wrapped64:$a1, SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     LSU_AUXR_AUXW_Y>;
   def d3 : SCALING_REGISTERY_REGISTERZ_REGISTERT_SIMPLE
     <(outs), (ins SingleReg:$a2, SingleReg:$a3, SingleReg:$a4, ScalingMod:$a1),
      !strconcat (OpcStr, "$a1 $a2[$a3] = $a4"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     LSU_AUXR_AUXW>;
   def d4 : LSUCOND_REGISTERY_REGISTERZ_REGISTERT_SIMPLE
     <(outs), (ins SingleReg:$a2, SingleReg:$a3, SingleReg:$a4, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2? [$a3] = $a4"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     LSU_AUXR_AUXW>;
   def d5 : LSUCOND_REGISTERY_OFFSET27_REGISTERZ_REGISTERT_DOUBLE
     <(outs), (ins SingleReg:$a2, Signed27:$a3, SingleReg:$a4, SingleReg:$a5, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2? $a3[$a4] = $a5"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     LSU_AUXR_AUXW_X>;
   def d6 : LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_REGISTERT_TRIPLE
     <(outs), (ins SingleReg:$a2, Signed54:$a3, SingleReg:$a4, SingleReg:$a5, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2? $a3[$a4] = $a5"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     LSU_AUXR_AUXW_Y>;
 }
 
 // multiclass MC_0E is used by:
@@ -552,22 +552,22 @@ multiclass MC_0F<string OpcStr> {
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     ALU_TINY>;
   def d1 : REGISTERW_REGISTERZ_SIGNED10_SIMPLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10_64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     ALU_TINY>;
   def d2 : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37_64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     ALU_TINY_X>;
   def d3 : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     ALU_TINY_Y>;
 }
 
 // multiclass MC_10 is used by:
@@ -581,22 +581,22 @@ multiclass MC_10<string OpcStr> {
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [],
-     __UNKNOWN_ITIN__>;
+     ALU_LITE>;
   def d1 : REGISTERW_REGISTERZ_SIGNED10_SIMPLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10_64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     ALU_LITE>;
   def d2 : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37_64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     ALU_LITE_X>;
   def d3 : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     ALU_LITE_Y>;
 }
 
 // multiclass MC_11 is used by:
@@ -655,12 +655,12 @@ multiclass MC_11<string OpcStr> {
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     ALU_LITE>;
   def d1 : REGISTERW_REGISTERZ_UPPER27_LOWER5_DOUBLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped32:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     ALU_LITE_X>;
 }
 
 // multiclass MC_12 is used by:
@@ -683,17 +683,17 @@ multiclass MC_12<string OpcStr> {
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     ALU_TINY>;
   def d1 : REGISTERW_REGISTERZ_SIGNED10_SIMPLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10_32:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     ALU_TINY_X>;
   def d2 : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37_32:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     ALU_TINY>;
 }
 
 // multiclass MC_13 is used by:
@@ -703,17 +703,17 @@ multiclass MC_13<string OpcStr> {
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     ALU_LITE>;
   def d1 : REGISTERW_REGISTERZ_SIGNED10_SIMPLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10_32:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     ALU_LITE>;
   def d2 : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37_32:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     ALU_LITE_X>;
 }
 
 // multiclass MC_14 is used by:
@@ -734,12 +734,12 @@ multiclass MC_14<string OpcStr> {
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     ALU_TINY>;
   def d1 : SPLAT32_REGISTERW_REGISTERZ_UPPER27_LOWER5_DOUBLE
     <(outs SingleReg:$a2), (ins SingleReg:$a3, Wrapped32:$a4, Splat32Mod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     ALU_TINY_X>;
 }
 
 // multiclass MC_15 is used by:
@@ -790,12 +790,12 @@ multiclass MC_15<string OpcStr> {
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     ALU_LITE>;
   def d1 : SPLAT32_REGISTERW_REGISTERZ_UPPER27_LOWER5_DOUBLE
     <(outs SingleReg:$a2), (ins SingleReg:$a3, Wrapped32:$a4, Splat32Mod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     ALU_LITE_X>;
 }
 
 // multiclass MC_16 is used by:
@@ -824,12 +824,12 @@ multiclass MC_16<string OpcStr> {
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     ALU_LITE>;
   def d1 : REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Unsigned6:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     ALU_LITE>;
 }
 
 // multiclass MC_17 is used by:
@@ -844,12 +844,12 @@ multiclass MC_17<string OpcStr> {
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     ALU_TINY>;
   def d1 : REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Unsigned6:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     ALU_TINY>;
 }
 
 // multiclass MC_18 is used by:
@@ -871,7 +871,7 @@ multiclass MC_18<string OpcStr> {
     <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, ComparisonMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     ALU_TINY>;
 }
 
 // multiclass MC_19 is used by:
@@ -881,7 +881,7 @@ multiclass MC_19<string OpcStr> {
     <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, ComparisonMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     ALU_TINY>;
   def d1 : COMPARISON_REGISTERW_REGISTERZ_UPPER27_LOWER5_DOUBLE
     <(outs SingleReg:$a2), (ins SingleReg:$a3, Wrapped32:$a4, ComparisonMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
@@ -916,17 +916,17 @@ multiclass MC_1B<string OpcStr> {
     <(outs SingleReg:$SingleReg), (ins Signed16_64:$Signed16),
      !strconcat (OpcStr, " $SingleReg = $Signed16"),
      [/*(set i32:$SingleReg, Signed16:$Signed16)*/],
-     __UNKNOWN_ITIN__>;
+     ALU_TINY>;
   def d1 : REGISTERW_EXTEND6_UPPER27_LOWER10_DOUBLE
     <(outs SingleReg:$a1), (ins Signed43:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
      [ /*(set i64:$a1, Signed43:$a2)*/],
-     __UNKNOWN_ITIN__>;
+     ALU_TINY_X>;
   def d2 : REGISTERW_EXTEND27_UPPER27_LOWER10_TRIPLE
     <(outs SingleReg:$SingleReg), (ins Wrapped64:$Wrapped64),
      !strconcat (OpcStr, " $SingleReg = $Wrapped64"),
      [ /*(set i64:$SingleReg, Wrapped64:$Wrapped64)*/],
-     __UNKNOWN_ITIN__>;
+     ALU_TINY_Y>;
 }
 
 // multiclass MC_1C is used by:
@@ -936,17 +936,17 @@ multiclass MC_1C<string OpcStr> {
     <(outs SingleReg:$a1), (ins Signed16_64:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     ALU_FULL>;
   def d1 : REGISTERW_EXTEND6_UPPER27_LOWER10_DOUBLE
     <(outs SingleReg:$a1), (ins Signed43:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     ALU_FULL_X>;
   def d2 : REGISTERW_EXTEND27_UPPER27_LOWER10_TRIPLE
     <(outs SingleReg:$a1), (ins Wrapped64:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     ALU_FULL_Y>;
 }
 
 // multiclass MC_1DW is used by:
@@ -980,22 +980,22 @@ multiclass MC_1E<string OpcStr> {
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     MAU_AUXR>;
   def d1 : REGISTERW_REGISTERZ_SIGNED10_SIMPLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10_64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     MAU_AUXR>;
   def d2 : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37_64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     MAU_AUXR_X>;
   def d3 : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     MAU_AUXR_Y>;
 }
 
 // multiclass MC_1F is used by:
@@ -1008,22 +1008,22 @@ multiclass MC_1F<string OpcStr> {
     <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     MAU_AUXR>;
   def d1 : REGISTERM_REGISTERZ_SIGNED10_SIMPLE
     <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, Signed10_64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     MAU_AUXR>;
   def d2 : REGISTERM_REGISTERZ_UPPER27_LOWER10_DOUBLE
     <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, Signed37_64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     MAU_AUXR_X>;
   def d3 : REGISTERM_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
     <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, Wrapped64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     MAU_AUXR_Y>;
 }
 
 // multiclass MC_20 is used by:
@@ -1040,22 +1040,22 @@ multiclass MC_20<string OpcStr> {
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     MAU>;
   def d1 : REGISTERW_REGISTERZ_SIGNED10_SIMPLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10_64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     MAU_X>;
   def d2 : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37_64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     MAU_Y>;
   def d3 : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     MAU>;
 }
 
 // multiclass MC_21 is used by:
@@ -1068,22 +1068,22 @@ multiclass MC_21<string OpcStr> {
     <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     MAU>;
   def d1 : REGISTERM_REGISTERZ_SIGNED10_SIMPLE
     <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, Signed10_64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     MAU>;
   def d2 : REGISTERM_REGISTERZ_UPPER27_LOWER10_DOUBLE
     <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, Signed37_64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     MAU_X>;
   def d3 : REGISTERM_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
     <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, Wrapped64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     MAU_Y>;
 }
 
 // multiclass MC_22 is used by:
@@ -1100,12 +1100,12 @@ multiclass MC_22<string OpcStr> {
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     MAU>;
   def d1 : REGISTERW_REGISTERZ_UPPER27_LOWER5_DOUBLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped32:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     MAU_X>;
 }
 
 // multiclass MC_23 is used by:
@@ -1122,12 +1122,12 @@ multiclass MC_23<string OpcStr> {
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     MAU_AUXR>;
   def d1 : REGISTERW_REGISTERZ_UPPER27_LOWER5_DOUBLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped32:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     MAU_AUXR_X>;
 }
 
 // multiclass MC_24 is used by:
@@ -1148,22 +1148,22 @@ multiclass MC_24<string OpcStr> {
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10_64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     MAU_AUXR>;
   def d1 : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37_64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     MAU_AUXR_X>;
   def d2 : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     MAU_AUXR_Y>;
   def d3 : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
     <(outs SingleReg:$a3), (ins SingleReg:$a33, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     MAU_AUXR>;
 }
 
 // multiclass MC_25 is used by:
@@ -1183,22 +1183,22 @@ multiclass MC_25<string OpcStr> {
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10_64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     MAU>;
   def d1 : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary32Imm:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     MAU_X>;
   def d2 : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary64Imm:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     MAU_Y>;
   def d3 : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
     <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     MAU>;
 }
 
 // multiclass MC_25H is used by:
@@ -1210,12 +1210,12 @@ multiclass MC_25H<string OpcStr, SDNode OpNode = fadd> {
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary16Imm:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [(set f16:$a1, (OpNode f16:$a2, Binary16Imm:$a3))],
-     __UNKNOWN_ITIN__>;
+     MAU_X>;
   def rr : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
     <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
      [/* no direct match, see K1CFloatingPoint.td */],
-     __UNKNOWN_ITIN__>;
+     MAU>;
 }
 
 // multiclass MC_25W is used by:
@@ -1227,12 +1227,12 @@ multiclass MC_25W<string OpcStr, SDNode OpNode = fadd> {
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary32Imm:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [(set f32:$a1, (OpNode f32:$a2, Binary32Imm:$a3))],
-     __UNKNOWN_ITIN__>;
+     MAU_X>;
   def rr : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
     <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
      [/* no direct match, see K1CFloatingPoint.td */],
-     __UNKNOWN_ITIN__>;
+     MAU>;
 }
 
 // multiclass MC_25D is used by:
@@ -1244,12 +1244,12 @@ multiclass MC_25D<string OpcStr, SDNode OpNode = fadd> {
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary64Imm:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [(set f64:$a1, (OpNode f64:$a2, Binary64Imm:$a3))],
-     __UNKNOWN_ITIN__>;
+     MAU_Y>;
   def rr : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
     <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
      [/* no direct match, see K1CFloatingPoint.td */],
-     __UNKNOWN_ITIN__>;
+     MAU>;
 }
 
 // multiclass MC_26 is used by:
@@ -1262,22 +1262,22 @@ multiclass MC_26<string OpcStr> {
     <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, Signed10_64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     MAU>;
   def d1 : REGISTERM_REGISTERZ_UPPER27_LOWER10_DOUBLE
     <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, Signed37_64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     MAU_X>;
   def d2 : REGISTERM_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
     <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, Wrapped64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     MAU_Y>;
   def d3 : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE
     <(outs PairedReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     MAU>;
 }
 
 // multiclass MC_27 is used by:
@@ -1290,22 +1290,22 @@ multiclass MC_27<string OpcStr> {
     <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, Signed10_64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     MAU_AUXR>;
   def d1 : REGISTERM_REGISTERZ_UPPER27_LOWER10_DOUBLE
     <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, Signed37_64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     MAU_AUXR_X>;
   def d2 : REGISTERM_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
     <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, Wrapped64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     MAU_AUXR_Y>;
   def d3 : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE
     <(outs PairedReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
      [ ],
-     __UNKNOWN_ITIN__>;
+     MAU_AUXR>;
 }
 
 // multiclass MC_28 is used by:
@@ -1395,14 +1395,14 @@ def AWAIT : SIMPLE
   <(outs), (ins),
    "await",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALL>;
 
 // 1 insns: ['SLEEP']
 def SLEEP : SIMPLE
   <(outs), (ins),
    "sleep",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALL>;
 
 // 1 insns: ['STOP']
 let Uses=[PS] in
@@ -1410,28 +1410,28 @@ def STOP : SIMPLE
   <(outs), (ins),
    "stop",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALL>;
 
 // 1 insns: ['BARRIER']
 def BARRIER : SIMPLE
   <(outs), (ins),
    "barrier",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALL>;
 
 // 1 insns: ['TLBREAD']
 def TLBREAD : SIMPLE
   <(outs), (ins),
    "tlbread",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALL>;
 
 // 1 insns: ['TLBPROBE']
 def TLBPROBE : SIMPLE
   <(outs), (ins),
    "tlbprobe",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALL>;
 
 // 1 insns: ['TLBWRITE']
 let Uses=[PS] in
@@ -1439,35 +1439,28 @@ def TLBWRITE : SIMPLE
   <(outs), (ins),
    "tlbwrite",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALL>;
 
 // 1 insns: ['TLBDINVAL']
 def TLBDINVAL : SIMPLE
   <(outs), (ins),
    "tlbdinval",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALL>;
 
 // 1 insns: ['TLBIINVAL']
 def TLBIINVAL : SIMPLE
   <(outs), (ins),
    "tlbiinval",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALL>;
 
 // 1 insns: ['ERROP']
 def ERROP : SIMPLE
   <(outs), (ins),
    "errop",
    [ ],
-   __UNKNOWN_ITIN__>;
-
-// 1 insns: ['BREAK']
-def BREAK : SIMPLE
-  <(outs), (ins),
-   "break",
-   [ ],
-   __UNKNOWN_ITIN__>;
+   ALL>;
 
 // 1 insns: ['RET']
 let Uses=[RA],isBarrier = 1, isReturn = 1, isTerminator = 1 in
@@ -1475,7 +1468,7 @@ def RET : SIMPLE
   <(outs), (ins),
    "ret",
    [ ],
-   __UNKNOWN_ITIN__>;
+   BCU>;
 
 // 1 insns: ['RFE']
 let Uses=[PS, SPC, SSPC], Defs=[SPC] in
@@ -1483,7 +1476,7 @@ def RFE : SIMPLE
   <(outs), (ins),
    "rfe",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALL>;
 
 // 1 insns: ['IGOTO']
 let isBarrier=1, isBranch=1, isIndirectBranch=1, isTerminator=1 in
@@ -1491,7 +1484,7 @@ def IGOTO : REGISTERZ_SIMPLE
   <(outs), (ins SingleReg:$a1),
    "igoto $a1",
    [ ],
-   __UNKNOWN_ITIN__>;
+   BCU>;
 
 // 1 insns: ['ICALL']
 let Defs=[RA], isCall=1, isIndirectBranch=1 in
@@ -1499,7 +1492,7 @@ def ICALL : REGISTERZ_SIMPLE
   <(outs), (ins SingleReg:$a1),
    "icall $a1",
    [ ],
-   __UNKNOWN_ITIN__>;
+   BCU>;
 
 // 2 insns: ['SCALL', 'SCALL']
 defm SCALL : MC_00<"scall">;
@@ -1528,7 +1521,7 @@ def IGET : REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a11),
    "iget $a1",
    [ ],
-   __UNKNOWN_ITIN__>;
+   BCU_TINY_TINY_MAU_XNOP>;
 
 // 3 insns: ['SET', 'SET', 'SET']
 defm SET : MC_02<"set">;
@@ -1538,14 +1531,14 @@ def WAITIT : REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a11),
    "waitit $a1",
    [ ],
-   __UNKNOWN_ITIN__>;
+   BCU_TINY_TINY_MAU_XNOP>;
 
 // 1 insns: ['SYNCGROUP']
 def SYNCGROUP : REGISTERZ_SIMPLE
   <(outs), (ins SingleReg:$a1),
    "syncgroup $a1",
    [ ],
-   __UNKNOWN_ITIN__>;
+   BCU>;
 
 // 1 insns: ['GOTO']
 let isBarrier = 1, isBranch = 1, isTerminator = 1 in
@@ -1654,41 +1647,35 @@ def DINVAL : SIMPLE
   <(outs), (ins),
    "dinval",
    [ ],
-   __UNKNOWN_ITIN__>;
+   LSU>;
 
 // 1 insns: ['IINVAL']
 def IINVAL : SIMPLE
   <(outs), (ins),
    "iinval",
    [ ],
-   __UNKNOWN_ITIN__>;
+   LSU>;
 
 // 1 insns: ['FENCE']
 def FENCE : SIMPLE
   <(outs), (ins),
    "fence",
    [ ],
-   __UNKNOWN_ITIN__>;
+   LSU>;
 
 // 1 insns: ['NOP']
 def NOP : SIMPLE
   <(outs), (ins),
    "nop",
    [ ],
-   __UNKNOWN_ITIN__>;
-/*
-def NOTRUNC : REGISTERW_REGISTERZ_SIMPLE
-  <(outs SingleReg:$a1), (ins SingleReg:$a2),
-   "nop",
-   [ ],
-   __UNKNOWN_ITIN__>;
-*/
+   ALU_NOP>;
+
 // 1 insns: ['STSUD']
 def STSUD : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "stsud $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 4 insns: ['ADDD', 'ADDD', 'ADDD', 'ADDD']
 defm ADDD : MC_0F<"addd">;
@@ -1800,7 +1787,7 @@ def STSUW : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "stsuw $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 3 insns: ['ADDW', 'ADDW', 'ADDW']
 defm ADDW : MC_12<"addw">;
@@ -2117,7 +2104,7 @@ def ADDCD : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "addcd $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_FULL>;
 
 // 1 insns: ['SBFCD']
 let Uses=[CS], Defs=[CS] in
@@ -2125,7 +2112,7 @@ def SBFCD : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "sbfcd $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_FULL>;
 
 // 1 insns: ['ADDCID']
 let Uses=[CS], Defs=[CS] in
@@ -2133,7 +2120,7 @@ def ADDCID : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "addcid $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_FULL>;
 
 // 1 insns: ['SBFCID']
 let Uses=[CS], Defs=[CS] in
@@ -2141,21 +2128,21 @@ def SBFCID : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "sbfcid $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_FULL>;
 
 // 1 insns: ['FNEGD']
 def FNEGD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fnegd $a1 = $a2",
    [(set f64:$a1, (fneg f64:$a2))],
-   __UNKNOWN_ITIN__>;
+   ALU_FULL>;
 
 // 1 insns: ['FABSD']
 def FABSD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fabsd $a1 = $a2",
    [(set f64:$a1, (fabs f64:$a2))],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['FSINVD']
 let Uses=[CS], Defs=[CS] in
@@ -2169,7 +2156,7 @@ def FSISRD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fsisrd $a1 = $a2",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['FWIDENLWD']
 let Defs=[CS] in
@@ -2191,21 +2178,21 @@ def FNARROWDW : ROUNDING2_SILENT2_REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a3), (ins SingleReg:$a4, RoundingMod:$a1, SilentMod:$a2),
    "fnarrowdw$a1$a2 $a3 = $a4",
    [/* no direct match, see K1CFloatingPoint.td */],
-   __UNKNOWN_ITIN__>;
+   ALU_FULL>;
 
 // 1 insns: ['FNEGW']
 def FNEGW : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fnegw $a1 = $a2",
    [(set f32:$a1, (fneg f32:$a2))],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['FABSW']
 def FABSW : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fabsw $a1 = $a2",
    [(set f32:$a1, (fabs f32:$a2))],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['FINVW']
 let Uses=[CS], Defs=[CS] in
@@ -2213,7 +2200,7 @@ def FINVW : ROUNDING2_SILENT2_REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a3), (ins SingleReg:$a4, RoundingMod:$a1, SilentMod:$a2),
    "finvw$a1$a2 $a3 = $a4",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_FULL>;
 
 // 1 insns: ['FISRW']
 let Uses=[CS], Defs=[CS] in
@@ -2221,7 +2208,7 @@ def FISRW : ROUNDING2_SILENT2_REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a3), (ins SingleReg:$a4, RoundingMod:$a1, SilentMod:$a2),
    "fisrw$a1$a2 $a3 = $a4",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_FULL>;
 
 // 1 insns: ['FSINVW']
 let Uses=[CS], Defs=[CS] in
@@ -2235,7 +2222,7 @@ def FSISRW : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fsisrw $a1 = $a2",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['FWIDENLHW']
 let Defs=[CS] in
@@ -2257,21 +2244,21 @@ def FNARROWWH : ROUNDING2_SILENT2_REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a3), (ins SingleReg:$a4, RoundingMod:$a1, SilentMod:$a2),
    "fnarrowwh$a1$a2 $a3 = $a4",
    [/* no direct match, see K1CFloatingPoint.td */],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['FNEGWP']
 def FNEGWP : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fnegwp $a1 = $a2",
    [(set v2f32:$a1, (fneg v2f32:$a2))],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['FABSWP']
 def FABSWP : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fabswp $a1 = $a2",
    [(set v2f32:$a1, (fabs v2f32:$a2))],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['FSINVWP']
 let Uses=[CS], Defs=[CS] in
@@ -2285,7 +2272,7 @@ def FSISRWP : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fsisrwp $a1 = $a2",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['FWIDENLHWP']
 let Uses=[CS], Defs=[CS] in
@@ -2307,21 +2294,21 @@ def FNARROWDWP : ROUNDING2_SILENT2_REGISTERW_REGISTERP_SIMPLE
   <(outs SingleReg:$a3), (ins PairedReg:$a4, RoundingMod:$a1, SilentMod:$a2),
    "fnarrowdwp$a1$a2 $a3 = $a4",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_FULL>;
 
 // 1 insns: ['FNEGHQ']
 def FNEGHQ : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fneghq $a1 = $a2",
    [(set f16:$a1, (fneg f16:$a2))],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['FABSHQ']
 def FABSHQ : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fabshq $a1 = $a2",
    [(set f16:$a1, (fabs f16:$a2))],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['FNARROWWHQ']
 let Uses=[CS], Defs=[CS] in
@@ -2329,7 +2316,7 @@ def FNARROWWHQ : ROUNDING2_SILENT2_REGISTERW_REGISTERP_SIMPLE
   <(outs SingleReg:$a3), (ins PairedReg:$a4, RoundingMod:$a1, SilentMod:$a2),
    "fnarrowwhq$a1$a2 $a3 = $a4",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['INSF']
 def INSF : REGISTERW_REGISTERZ_STOPBIT2_STOPBIT4_STARTBIT_SIMPLE
@@ -2444,28 +2431,28 @@ def COMPWD : COMPARISON_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, ComparisonMod:$a1),
    "compwd$a1 $a2 = $a3, $a4",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['COMPUWD']
 def COMPUWD : COMPARISON_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, ComparisonMod:$a1),
    "compuwd$a1 $a2 = $a3, $a4",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['COMPNWP']
 def COMPNWP : COMPARISON_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, ComparisonMod:$a1),
    "compnwp$a1 $a2 = $a3, $a4",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_TINY>;
 
 // 1 insns: ['COMPNHQ']
 def COMPNHQ : COMPARISON_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, ComparisonMod:$a1),
    "compnhq$a1 $a2 = $a3, $a4",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_TINY>;
 
 // 4 insns: ['CMOVED', 'CMOVED', 'CMOVED', 'CMOVED']
 defm CMOVED : MC_1A<"cmoved">;
@@ -2487,112 +2474,112 @@ def CLZW : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "clzw $a1 = $a2",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['CLSW']
 def CLSW : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "clsw $a1 = $a2",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['CBSW']
 def CBSW : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "cbsw $a1 = $a2",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['CTZW']
 def CTZW : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "ctzw $a1 = $a2",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['CLZD']
 def CLZD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "clzd $a1 = $a2",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['CLSD']
 def CLSD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "clsd $a1 = $a2",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['CBSD']
 def CBSD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "cbsd $a1 = $a2",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['CTZD']
 def CTZD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "ctzd $a1 = $a2",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['CLZWP']
 def CLZWP : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "clzwp $a1 = $a2",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['CLSWP']
 def CLSWP : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "clswp $a1 = $a2",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['CBSWP']
 def CBSWP : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "cbswp $a1 = $a2",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['CTZWP']
 def CTZWP : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "ctzwp $a1 = $a2",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['SXLHWP']
 def SXLHWP : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "sxlhwp $a1 = $a2",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['SXMHWP']
 def SXMHWP : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "sxmhwp $a1 = $a2",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['SXLBHQ']
 def SXLBHQ : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "sxlbhq $a1 = $a2",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['SXMBHQ']
 def SXMBHQ : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "sxmbhq $a1 = $a2",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['CMOVEHQ']
 def CMOVEHQ : SIMDCOND_REGISTERZ_REGISTERW_REGISTERY_SIMPLE
@@ -2665,56 +2652,56 @@ def FMIND : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fmind $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['FMAXD']
 def FMAXD : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fmaxd $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['FMINW']
 def FMINW : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fminw $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['FMAXW']
 def FMAXW : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fmaxw $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['FMINWP']
 def FMINWP : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fminwp $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['FMAXWP']
 def FMAXWP : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fmaxwp $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['FMINHQ']
 def FMINHQ : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fminhq $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['FMAXHQ']
 def FMAXHQ : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fmaxhq $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['FLOATD']
 def FLOATD : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE
@@ -2796,7 +2783,7 @@ def MSBFD : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a11, SingleReg:$a2, SingleReg:$a3),
    "msbfd $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   MAU_AUXR>;
 
 // 4 insns: ['MADDWP', 'MADDWP', 'MADDWP', 'MADDWP']
 defm MADDWP : MC_1E<"maddwp">;
@@ -2806,7 +2793,7 @@ def MSBFWP : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a11, SingleReg:$a2, SingleReg:$a3),
    "msbfwp $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   MAU_AUXR>;
 
 // 4 insns: ['MADDHQ', 'MADDHQ', 'MADDHQ', 'MADDHQ']
 defm MADDHQ : MC_1E<"maddhq">;
@@ -2816,49 +2803,49 @@ def MSBFHQ : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a11, SingleReg:$a2, SingleReg:$a3),
    "msbfhq $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   MAU_AUXR>;
 
 // 1 insns: ['MADDHWQ']
 def MADDHWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
    "maddhwq $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   MAU_AUXR>;
 
 // 1 insns: ['MSBFHWQ']
 def MSBFHWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
    "msbfhwq $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   MAU_AUXR>;
 
 // 1 insns: ['MADDUHWQ']
 def MADDUHWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
    "madduhwq $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   MAU_AUXR>;
 
 // 1 insns: ['MSBFUHWQ']
 def MSBFUHWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
    "msbfuhwq $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   MAU_AUXR>;
 
 // 1 insns: ['MADDSUHWQ']
 def MADDSUHWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
    "maddsuhwq $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   MAU_AUXR>;
 
 // 1 insns: ['MSBFSUHWQ']
 def MSBFSUHWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
    "msbfsuhwq $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   MAU_AUXR>;
 
 // 4 insns: ['MADDDT', 'MADDDT', 'MADDDT', 'MADDDT']
 defm MADDDT : MC_1F<"madddt">;
@@ -2877,28 +2864,28 @@ def MSBFDT : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
    "msbfdt $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   MAU_AUXR>;
 
 // 1 insns: ['MSBFUDT']
 def MSBFUDT : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
    "msbfudt $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   MAU_AUXR>;
 
 // 1 insns: ['MSBFSUDT']
 def MSBFSUDT : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
    "msbfsudt $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   MAU_AUXR>;
 
 // 1 insns: ['MSBFUZDT']
 def MSBFUZDT : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
    "msbfuzdt $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   MAU_AUXR>;
 
 // 4 insns: ['MULD', 'MULD', 'MULD', 'MULD']
 defm MULD : MC_20<"muld">;
@@ -2920,28 +2907,28 @@ def CMULXDT : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
    "cmulxdt $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   MAU_AUXR>;
 
 // 1 insns: ['CMULGLXDT']
 def CMULGLXDT : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
    "cmulglxdt $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   MAU_AUXR>;
 
 // 1 insns: ['CMULGMXDT']
 def CMULGMXDT : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
    "cmulgmxdt $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   MAU_AUXR>;
 
 // 1 insns: ['CMULGHXDT']
 def CMULGHXDT : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
    "cmulghxdt $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   MAU_AUXR>;
 
 // 2 insns: ['CRCBELMW', 'CRCBELMW']
 defm CRCBELMW : MC_22<"crcbelmw">;
@@ -3011,42 +2998,42 @@ def MULCWC : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "mulcwc $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   MAU>;
 
 // 1 insns: ['MULWDC']
 def MULWDC : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "mulwdc $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   MAU>;
 
 // 1 insns: ['MULCWDC']
 def MULCWDC : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "mulcwdc $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   MAU>;
 
 // 1 insns: ['MULHWQ']
 def MULHWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "mulhwq $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   MAU>;
 
 // 1 insns: ['MULUHWQ']
 def MULUHWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "muluhwq $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   MAU>;
 
 // 1 insns: ['MULSUHWQ']
 def MULSUHWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "mulsuhwq $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   MAU>;
 
 // 2 insns: ['MADDWD', 'MADDWD']
 defm MADDWD : MC_23<"maddwd">;
@@ -3089,84 +3076,84 @@ def MADDWDP : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
    "maddwdp $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   MAU_AUXR>;
 
 // 1 insns: ['MADDUWDP']
 def MADDUWDP : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
    "madduwdp $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   MAU_AUXR>;
 
 // 1 insns: ['MADDSUWDP']
 def MADDSUWDP : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
    "maddsuwdp $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   MAU_AUXR>;
 
 // 1 insns: ['MM2AWQ']
 def MM2AWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
    "mm2awq $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   MAU_AUXR>;
 
 // 1 insns: ['MSBFWDP']
 def MSBFWDP : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
    "msbfwdp $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   MAU_AUXR>;
 
 // 1 insns: ['MSBFUWDP']
 def MSBFUWDP : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
    "msbfuwdp $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   MAU_AUXR>;
 
 // 1 insns: ['MSBFSUWDP']
 def MSBFSUWDP : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
    "msbfsuwdp $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   MAU_AUXR>;
 
 // 1 insns: ['MM2SWQ']
 def MM2SWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
    "mm2swq $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   MAU_AUXR>;
 
 // 1 insns: ['MULWDP']
 def MULWDP : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "mulwdp $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   MAU>;
 
 // 1 insns: ['MULUWDP']
 def MULUWDP : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "muluwdp $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   MAU>;
 
 // 1 insns: ['MULSUWDP']
 def MULSUWDP : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "mulsuwdp $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   MAU>;
 
 // 1 insns: ['MM2WQ']
 def MM2WQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "mm2wq $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   MAU>;
 
 // 4 insns: ['FFMAD', 'FFMAD', 'FFMAD', 'FFMAD']
 defm FFMAD : MC_24<"ffmad">;
@@ -3359,28 +3346,28 @@ def FMM2AWQ : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a3), (ins PairedReg:$a33, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fmm2awq$a1$a2 $a3 = $a4, $a5",
    [ ],
-   __UNKNOWN_ITIN__>;
+   MAU_AUXR>;
 
 // 1 insns: ['FMM2SWQ']
 def FMM2SWQ : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a3), (ins PairedReg:$a33, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fmm2swq$a1$a2 $a3 = $a4, $a5",
    [ ],
-   __UNKNOWN_ITIN__>;
+   MAU_AUXR>;
 
 // 1 insns: ['FMM2WQ']
 def FMM2WQ : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fmm2wq$a1$a2 $a3 = $a4, $a5",
    [ ],
-   __UNKNOWN_ITIN__>;
+   MAU>;
 
 // 1 insns: ['COPYQ']
 def COPYQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "copyq $a1 = $a2, $a3",
    [ ],
-   __UNKNOWN_ITIN__>;
+   MAU>;
 
 // 1 insns: ['COPYO']
 def COPYO : REGISTERN_REGISTERQ_SIMPLE
@@ -3588,154 +3575,154 @@ def COPYD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "copyd $a1 = $a2",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_TINY>;
 
 // 1 insns: ['NOTD']
 def NOTD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "notd $a1 = $a2",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_TINY>;
 
 // 1 insns: ['NEGD']
 def NEGD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "negd $a1 = $a2",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_TINY>;
 
 // 1 insns: ['ABSD']
 def ABSD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "absd $a1 = $a2",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['ZXBD']
 def ZXBD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "zxbd $a1 = $a2",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['SXBD']
 def SXBD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "sxbd $a1 = $a2",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['ZXHD']
 def ZXHD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "zxhd $a1 = $a2",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['SXHD']
 def SXHD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "sxhd $a1 = $a2",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['ZXWD']
 def ZXWD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "zxwd $a1 = $a2",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['SXWD']
 def SXWD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "sxwd $a1 = $a2",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['SATDH']
 def SATDH : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "satdh $a1 = $a2",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['SATUDH']
 def SATUDH : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "satudh $a1 = $a2",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['SATDW']
 def SATDW : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "satdw $a1 = $a2",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['SATUDW']
 def SATUDW : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "satudw $a1 = $a2",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['COPYW']
 def COPYW : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "copyw $a1 = $a2",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_TINY>;
 
 // 1 insns: ['NOTW']
 def NOTW : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "notw $a1 = $a2",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_TINY>;
 
 // 1 insns: ['NEGW']
 def NEGW : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "negw $a1 = $a2",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_TINY>;
 
 // 1 insns: ['ABSW']
 def ABSW : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "absw $a1 = $a2",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['NEGWP']
 def NEGWP : REGISTERW_REGISTERZ_DOUBLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "negwp $a1 = $a2",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_TINY>;
 
 // 1 insns: ['ABSWP']
 def ABSWP : REGISTERW_REGISTERZ_DOUBLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "abswp $a1 = $a2",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 1 insns: ['NEGHQ']
 def NEGHQ : REGISTERW_REGISTERZ_DOUBLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "neghq $a1 = $a2",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_TINY>;
 
 // 1 insns: ['ABSHQ']
 def ABSHQ : REGISTERW_REGISTERZ_DOUBLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "abshq $a1 = $a2",
    [ ],
-   __UNKNOWN_ITIN__>;
+   ALU_LITE>;
 
 // 2 insns: ['COPYV', 'COPYV']
 defm COPYV : MC_2B<"copyv">;

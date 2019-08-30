@@ -16,6 +16,7 @@ class K1C_INSTRUCTION<dag outs, dag ins, string asmstr, list<dag> pattern,
   let AsmString = asmstr # "\t";
   let Pattern = pattern;
   let Namespace = "K1C";
+  let Itinerary = itin;
 }
 
 class K1C_PseudoInstr<dag outs, dag ins, list<dag> pattern, string asmstr="">
@@ -24,9 +25,6 @@ class K1C_PseudoInstr<dag outs, dag ins, list<dag> pattern, string asmstr="">
   let isPseudo = 1;
 }
 
-
-def __UNKNOWN_ITIN__ : InstrItinClass {
-}
 
 def Signed10_32 : Operand<i32>, ImmLeaf<i32, [{return isInt<10>(Imm);}]>;
 def Signed10_64 : Operand<i64>, ImmLeaf<i64, [{return isInt<10>(Imm);}]>;
