@@ -105,7 +105,7 @@ void K1CInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
         .addFrameIndex(FI)
         .addImm(0); // variantMod
   }
-  if (K1C::RARegRegClass.hasSubClassEq(RC)) {
+  if (K1C::OnlyraRegRegClass.hasSubClassEq(RC)) {
     unsigned ScratchReg = findScratchRegister(MBB, true);
     BuildMI(MBB, I, DL, get(K1C::LDd0), ScratchReg)
         .addImm(0)
@@ -132,7 +132,7 @@ void K1CInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
         .addReg(SrcReg, getKillRegState(IsKill))
         .setMIFlags(MachineInstr::FrameSetup);
   }
-  if (K1C::RARegRegClass.hasSubClassEq(RC)) {
+  if (K1C::OnlyraRegRegClass.hasSubClassEq(RC)) {
     unsigned ScratchReg = findScratchRegister(MBB, false);
     BuildMI(MBB, I, DL, get(K1C::GET), ScratchReg).addReg(K1C::RA).setMIFlags(
         MachineInstr::FrameSetup);
