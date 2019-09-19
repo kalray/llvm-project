@@ -38,35 +38,32 @@ multiclass MC_00<string OpcStr> {
 }
 
 // multiclass MC_01 is used by:
-//   defm FXLW
-//   defm FXMW
+//   defm WFXL
+//   defm WFXM
 multiclass MC_01<string OpcStr> {
   def d0 : SYSTEMT2_REGISTERZ_SIMPLE
-    <(outs NopcpsReg:$a1), (ins NopcpsReg:$a11, SingleReg:$a2),
+    <(outs OnlyfxReg:$a1), (ins SingleReg:$a2),
      !strconcat (OpcStr, " $a1, $a2"),
-     []>; //
-  // ?!? PS unknown  created PSReg
-  def d1 : SYSTEMPS_REGISTERZ_SIMPLE
-    <(outs PSReg:$a1), (ins PSReg:$a11, SingleReg:$a2),
-     !strconcat (OpcStr, " $a1, $a2"),
-     []>; // PATTERN
+     []>; // pattern missing
+  // def d1 : SYSTEMALONE_REGISTERZ_SIMPLE <- not defined yet
+  //   <(outs AloneReg:$a1), (ins SingleReg:$a2),
+  //    !strconcat (OpcStr, " $a1, $a2"),
+  //    []>; // pattern missing
 }
 
 // multiclass MC_02 is used by:
 //   defm SET
 multiclass MC_02<string OpcStr> {
-  def d0 : SYSTEMT2_REGISTERZ_SIMPLE
-    <(outs NopcpsReg:$a1), (ins NopcpsReg:$a11, SingleReg:$a2),
-     !strconcat (OpcStr, " $a1, $a2"),
-     []>;
-  // ?!? PS unknown created PSReg
-  def d1 : SYSTEMPS_REGISTERZ_SIMPLE
-    <(outs PSReg:$a1), (ins PSReg:$a11, SingleReg:$a2),
-     !strconcat (OpcStr, " $a1, $a2"),
-     []>;
-  // ?!? RA unknown created RAReg
+  // def d0 : SYSTEMT3_REGISTERZ_SIMPLE <- not defined yet
+  //   <(outs ??:$a1), (ins SingleReg:$a2),
+  //    !strconcat (OpcStr, " $a1, $a2"),
+  //    []>;
+  // def d1 : SYSTEMALONE_REGISTERZ_SIMPLE <- not defined yet
+  //   <(outs ??:$a1), (ins SingleReg:$a2),
+  //    !strconcat (OpcStr, " $a1, $a2"),
+  //    []>;
   def d2 : SYSTEMRA_REGISTERZ_SIMPLE
-    <(outs RAReg:$a1), (ins SingleReg:$a2),
+    <(outs OnlyraReg:$a1), (ins SingleReg:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
      []>;
 }
@@ -1471,7 +1468,7 @@ def RET : SIMPLE
    BCU>;
 
 // 1 insns: ['RFE']
-let Uses=[PS, SPC, SSPC], Defs=[SPC] in
+let Uses=[PS, SPC], Defs=[SPC] in
 def RFE : SIMPLE
   <(outs), (ins),
    "rfe",
@@ -1504,11 +1501,11 @@ def LOOPDO : REGISTERZ_PCREL17_SIMPLE
    "loopdo $a1, $a2",
    [ ]>;
 
-// 2 insns: ['FXLW', 'FXLW']
-defm FXLW : MC_01<"fxlw">;
+// 2 insns: ['WFXL', 'WFXM']
+defm WFXL : MC_01<"wfxl">;
 
-// 2 insns: ['FXMW', 'FXMW']
-defm FXMW : MC_01<"fxmw">;
+// 2 insns: ['WFXL', 'WFXM']
+defm XFXM : MC_01<"wfxm">;
 
 // 1 insns: ['GET']
 def GET : REGISTERZ_SYSTEMS2_SIMPLE

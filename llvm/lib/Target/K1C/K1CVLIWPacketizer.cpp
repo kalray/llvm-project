@@ -339,10 +339,11 @@ bool K1CPacketizerList::isSetOrWFXL(unsigned Opcode) {
   switch (Opcode) {
   default:
     return false;
-  case K1C::SETd0:
-  case K1C::SETd1:
+    // case K1C::SETd0: Not defined yet
+    // case K1C::SETd1: Not defined yet
   case K1C::SETd2:
-    // case K1C::WFXL: Not defined yet
+  case K1C::WFXLd0:
+    // case K1C::WFXLd1: Not defined yet
     return true;
   }
 }
