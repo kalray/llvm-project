@@ -112,6 +112,8 @@ bool K1CLoadStorePackingPass::runOnMachineFunction(MachineFunction &MF) {
         [this](MachineBasicBlock::iterator LocInstr,
                std::vector<MachineBasicBlock::iterator>::iterator ItStart,
                unsigned Count) {
+          LLVM_DEBUG(dbgs() << "PackAndReplaceLoad " << *LocInstr);
+          LLVM_DEBUG(dbgs() << "\nPackAndReplaceLoad Count=" << Count << "\n");
           this->PackAndReplaceLoad(LocInstr, ItStart, Count);
         },
         1, 2);
@@ -124,6 +126,7 @@ bool K1CLoadStorePackingPass::runOnMachineFunction(MachineFunction &MF) {
                unsigned Count)
             ->void { this->PackAndReplaceStore(LocInstr, ItStart, Count); },
         0, 1);
+
     ChangedRegs.clear();
   }
 
@@ -171,6 +174,11 @@ void K1CLoadStorePackingPass::PackAndReplaceLoad(
     MachineBasicBlock::iterator LocInstr,
     std::vector<MachineBasicBlock::iterator>::iterator ItStart,
     unsigned Count) {
+  if ((*LocInstr).getParent() == nullptr) {
+    LLVM_DEBUG(dbgs() << "invalid instruction without valid MBB " << *LocInstr
+                      << "\n");
+    return;
+  }
   const bool isPair = Count == 2;
   const unsigned Opcode =
       getPackOpcode(isPair, (*ItStart)->getOperand(1).getImm(), LoadOpcodes);
@@ -178,11 +186,15 @@ void K1CLoadStorePackingPass::PackAndReplaceLoad(
       isPair ? &K1C::PairedRegRegClass : &K1C::QuadRegRegClass;
 
   unsigned Reg = MRI->createVirtualRegister(TRC);
-  BuildMI(*(*ItStart)->getParent(), LocInstr, (*ItStart)->getDebugLoc(),
-          TII->get(Opcode), Reg)
-      .addImm((*ItStart)->getOperand(1).getImm())
+  MachineInstrBuilder mib =
+      BuildMI(*(*ItStart)->getParent(), LocInstr, (*ItStart)->getDebugLoc(),
+              TII->get(Opcode), Reg);
+
+  mib.addImm((*ItStart)->getOperand(1).getImm())
       .addReg((*ItStart)->getOperand(2).getReg())
       .addImm(0);
+
+  LLVM_DEBUG(dbgs() << "added " << *mib << "\n");
 
   ChangedRegs[Reg] = Count;
 
@@ -193,13 +205,19 @@ void K1CLoadStorePackingPass::PackAndReplaceLoad(
              RE = MRI->reg_end();
          RI != RE;) {
       MachineOperand &O = *RI;
+      LLVM_DEBUG(dbgs() << "substVirtReg " << O.getReg() << " with " << Reg
+                        << "\n");
       ++RI;
       O.substVirtReg(Reg, Ind, *TRI);
     }
     ++Ind;
+    LLVM_DEBUG(dbgs() << "removed " << *(*ItStart) << "\n");
+
     (*ItStart)->eraseFromParent();
     ++ItStart;
   }
+
+  LLVM_DEBUG(dbgs() << "added(2) " << *mib << "\n");
 }
 
 // FIXME: improve store packing, do not depends on loads
@@ -309,10 +327,11 @@ bool K1CLoadStorePackingPass::PackBlock(MachineBasicBlock &MBB,
             ++Count;
           }
 
-          if (Count > 1)
+          if (Count > 1) {
             PackAndReplaceInstr(
                 FirstInstr[(*ItStart)->getOperand(OperandReg).getReg()],
                 ItStart, Count == 4 ? Count : 2);
+          }
 
           ++It;
         }
