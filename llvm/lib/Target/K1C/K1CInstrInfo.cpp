@@ -105,6 +105,18 @@ void K1CInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
         .addFrameIndex(FI)
         .addImm(0); // variantMod
   }
+  if (K1C::PairedRegRegClass.hasSubClassEq(RC)) {
+    BuildMI(MBB, I, DL, get(K1C::LQd0), DstReg)
+        .addImm(0)
+        .addFrameIndex(FI)
+        .addImm(0); // variantMod
+  }
+  if (K1C::QuadRegRegClass.hasSubClassEq(RC)) {
+    BuildMI(MBB, I, DL, get(K1C::LOd0), DstReg)
+        .addImm(0)
+        .addFrameIndex(FI)
+        .addImm(0); // variantMod
+  }
   if (K1C::OnlyraRegRegClass.hasSubClassEq(RC)) {
     unsigned ScratchReg = findScratchRegister(MBB, true);
     BuildMI(MBB, I, DL, get(K1C::LDd0), ScratchReg)
@@ -127,6 +139,20 @@ void K1CInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
 
   if (K1C::SingleRegRegClass.hasSubClassEq(RC)) {
     BuildMI(MBB, I, DL, get(K1C::SDd0))
+        .addImm(0)
+        .addFrameIndex(FI)
+        .addReg(SrcReg, getKillRegState(IsKill))
+        .setMIFlags(MachineInstr::FrameSetup);
+  }
+  if (K1C::PairedRegRegClass.hasSubClassEq(RC)) {
+    BuildMI(MBB, I, DL, get(K1C::SQd0))
+        .addImm(0)
+        .addFrameIndex(FI)
+        .addReg(SrcReg, getKillRegState(IsKill))
+        .setMIFlags(MachineInstr::FrameSetup);
+  }
+  if (K1C::QuadRegRegClass.hasSubClassEq(RC)) {
+    BuildMI(MBB, I, DL, get(K1C::SOd0))
         .addImm(0)
         .addFrameIndex(FI)
         .addReg(SrcReg, getKillRegState(IsKill))
