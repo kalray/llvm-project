@@ -403,7 +403,6 @@ SDValue K1CTargetLowering::LowerCall(CallLoweringInfo &CLI,
   SmallVector<std::pair<unsigned, SDValue>, 8> RegsToPass;
   SmallVector<SDValue, 8> MemOpChains;
   SDValue StackPtr;
-  unsigned OutgoingArgsSize = 0;
 
   for (unsigned i = 0, j = 0, e = ArgLocs.size(); i != e; ++i) {
     CCValAssign &VA = ArgLocs[i];
@@ -425,8 +424,6 @@ SDValue K1CTargetLowering::LowerCall(CallLoweringInfo &CLI,
       if (!StackPtr.getNode())
         StackPtr = DAG.getCopyFromReg(Chain, DL, getSPReg(), PtrVT);
 
-      OutgoingArgsSize += 8;
-
       // Create a store off the stack pointer for this argument.
       SDValue PtrOff = DAG.getIntPtrConstant(VA.getLocMemOffset(), DL);
       PtrOff = DAG.getNode(ISD::ADD, DL, MVT::i64, StackPtr, PtrOff);
@@ -435,7 +432,7 @@ SDValue K1CTargetLowering::LowerCall(CallLoweringInfo &CLI,
     }
   }
 
-  FuncInfo->setOutgoingArgsMaxSize(OutgoingArgsSize);
+  FuncInfo->setOutgoingArgsMaxSize(ArgsSize);
 
   // Join the stores, which are independent of one another.
   if (!MemOpChains.empty())
