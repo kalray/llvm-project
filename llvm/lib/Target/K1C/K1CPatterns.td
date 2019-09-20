@@ -49,10 +49,12 @@ def callseq_start : SDNode<"ISD::CALLSEQ_START", SDT_SimpleCallSeqStart,
 def callseq_end   : SDNode<"ISD::CALLSEQ_END",   SDT_SimpleCallSeqEnd,
                            [SDNPHasChain, SDNPOptInGlue, SDNPOutGlue]>;
 
+let Defs = [R12], Uses = [R12] in {
 def ADJCALLSTACKDOWN : K1C_PseudoInstr<(outs), (ins i32imm:$amt, i32imm:$amt2),
                                [(callseq_start timm:$amt, timm:$amt2)], "ADJCALLSTACKDOWN $amt">;
 def ADJCALLSTACKUP : K1C_PseudoInstr<(outs), (ins i32imm:$amt1, i32imm:$amt2),
                             [(callseq_end timm:$amt1, timm:$amt2)], "ADJCALLSTACKUP $amt1">;
+} // Defs = [R12], Uses = [R12]
 
 def MAKETLS : REGISTERW_EXTEND27_UPPER27_LOWER10_TRIPLE
   <(outs SingleReg:$SingleReg), (ins Wrapped64:$Wrapped64),
