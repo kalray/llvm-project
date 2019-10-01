@@ -37,6 +37,8 @@ def DEFAULT_FPCONV_SHIFT : PatLeaf<(i64 0)>;
 def : Pat<(store (f16 SingleReg:$val), AddrRI:$addr), (SHri AddrRI:$addr, SingleReg:$val)>;
 def : Pat<(store (f32 SingleReg:$val), AddrRI:$addr), (SWri AddrRI:$addr, SingleReg:$val)>;
 def : Pat<(store (f64 SingleReg:$val), AddrRI:$addr), (SDri AddrRI:$addr, SingleReg:$val)>;
+def : Pat<(store (v2f32 SingleReg:$val), AddrRI:$addr), (SDri AddrRI:$addr, SingleReg:$val)>;
+def : Pat<(store (v4f16 SingleReg:$val), AddrRI:$addr), (SDri AddrRI:$addr, SingleReg:$val)>;
 
 def : Pat<(truncstoref32 f64:$val, AddrRI:$addr), (SWri AddrRI:$addr, (FNARROWDW SingleReg:$val, ROUND_CS, SILENT_OFF))>;
 
@@ -44,11 +46,14 @@ def : Pat<(truncstoref32 f64:$val, AddrRI:$addr), (SWri AddrRI:$addr, (FNARROWDW
 def loadf16 : PatFrag<(ops node:$ptr), (f16 (load node:$ptr))>;
 def loadf32 : PatFrag<(ops node:$ptr), (f32 (load node:$ptr))>;
 def loadf64 : PatFrag<(ops node:$ptr), (f64 (load node:$ptr))>;
+def loadv4f16 : PatFrag<(ops node:$ptr), (v4f16 (load node:$ptr))>;
+def loadv2f32 : PatFrag<(ops node:$ptr), (v2f32 (load node:$ptr))>;
 
 def : Pat<(loadf16 AddrRI:$addr), (LHZri AddrRI:$addr)>;
 def : Pat<(loadf32 AddrRI:$addr), (LWZri AddrRI:$addr)>;
 def : Pat<(loadf64 AddrRI:$addr), (LDri AddrRI:$addr)>;
-
+def : Pat<(loadv2f32 AddrRI:$addr), (LDri AddrRI:$addr)>;
+def : Pat<(loadv4f16 AddrRI:$addr), (LDri AddrRI:$addr)>;
 // Bitcast
 class BITCAST
   <ValueType DstVT, ValueType SrcVT, RegisterClass DstRC>
@@ -69,6 +74,8 @@ def : BITCAST<i64, f64, SingleReg>;
 def : Pat<(fadd f16:$rs1, f16:$rs2), (FADDHQrr SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
 def : Pat<(fadd f32:$rs1, f32:$rs2), (FADDWrr SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
 def : Pat<(fadd f64:$rs1, f64:$rs2), (FADDDrr SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
+def : Pat<(fadd v4f16:$rs1, v4f16:$rs2), (FADDHQrr SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
+def : Pat<(fadd v2f32:$rs1, v2f32:$rs2), (FADDWPd3 SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
 // FCDIV -> TODO
 // FCOMP (TODO: factorize these patterns in ISelLowering pass)
 def : Pat<(i64 (setoeq f16:$rz, f16:$ry)), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, FCOMP_OEQ)>;
@@ -182,6 +189,8 @@ def : Pat<(f32 (fpround f64:$val)), (FNARROWDW SingleReg:$val, ROUND_CS, SILENT_
 def : Pat<(fsub f16:$rs1, f16:$rs2), (FSBFHQrr SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
 def : Pat<(fsub f32:$rs1, f32:$rs2), (FSBFWrr SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
 def : Pat<(fsub f64:$rs1, f64:$rs2), (FSBFDrr SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
+def : Pat<(fsub v4f16:$rs1, v4f16:$rs2), (FSBFHQrr SingleReg:$rs2, SingleReg:$rs1, ROUND_CS, SILENT_OFF)>;
+def : Pat<(fsub v2f32:$rs1, v2f32:$rs2), (FSBFWPd3 SingleReg:$rs2, SingleReg:$rs1, ROUND_CS, SILENT_OFF)>;
 // FSDIV -> TODO
 // FSINV -> TODO
 // FSISR -> TODO
@@ -189,3 +198,15 @@ def : Pat<(fsub f64:$rs1, f64:$rs2), (FSBFDrr SingleReg:$rs1, SingleReg:$rs2, RO
 def : Pat<(f64 (fpextend f32:$val)), (FWIDENLWD SingleReg:$val, SILENT_OFF)>;
 def : Pat<(f64 (fpextend f16:$val)), (FWIDENLWD (FWIDENLHW SingleReg:$val, SILENT_OFF), SILENT_OFF)>;
 def : Pat<(f32 (fpextend f16:$val)), (FWIDENLHW SingleReg:$val, SILENT_OFF)>;
+
+def : Pat<(v2f32 (build_vector f32:$v1, f32:$v2)),
+      (ORDd0
+              (SLLDd1 SingleReg:$v2, (i64 32)),
+              SingleReg:$v1
+      )>;
+
+def : Pat<(v4i16 (build_vector f32:$v1, f32:$v2, f32:$v3, f32:$v4)),
+      (ORDd0
+              (ORDd0 (SLLDd1 SingleReg:$v1, (i64 48)), (SLLDd1 SingleReg:$v2, (i64 32))),
+              (ORDd0 (SLLDd1 SingleReg:$v3, (i64 16)), SingleReg:$v4)
+      )>;
