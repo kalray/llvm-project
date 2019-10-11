@@ -84,8 +84,7 @@ void K1CPacketizerList::endPacket(MachineBasicBlock *MBB,
 }
 
 bool K1CPacketizerList::isSoloInstruction(const MachineInstr &MI) {
-  return !ValidOptLevel || MI.getDesc().getSchedClass() == K1C::Sched::ALL ||
-         MI.isCFIInstruction();
+  return !ValidOptLevel || MI.getDesc().getSchedClass() == K1C::Sched::ALL;
 }
 
 bool K1CPacketizerList::usesCarry(unsigned Opcode) {
@@ -98,6 +97,18 @@ bool K1CPacketizerList::usesCarry(unsigned Opcode) {
   case K1C::SBFCID:
     return true;
   }
+}
+
+// Ignore bundling of pseudo instructions.
+bool K1CPacketizerList::ignorePseudoInstruction(const MachineInstr &MI,
+                                                const MachineBasicBlock *) {
+  if (MI.isDebugInstr())
+    return true;
+
+  if (MI.isCFIInstruction())
+    return true;
+
+  return false;
 }
 
 bool K1CPacketizerList::isALU(unsigned ScheduleCode) {
@@ -335,6 +346,77 @@ bool K1CPacketizerList::shouldBeLastInBundle(unsigned opcode) {
   }
 }
 
+static MachineBasicBlock::iterator
+moveInstrOut(MachineInstr &MI, MachineBasicBlock::iterator BundleIt,
+             bool Before) {
+  MachineBasicBlock::instr_iterator InsertPt;
+  if (Before)
+    InsertPt = BundleIt.getInstrIterator();
+  else
+    InsertPt = std::next(BundleIt).getInstrIterator();
+
+  MachineBasicBlock &B = *MI.getParent();
+  // The instruction should at least be bundled with the preceding instruction
+  // (there will always be one, i.e. BUNDLE, if nothing else).
+  assert(MI.isBundledWithPred());
+  if (MI.isBundledWithSucc()) {
+    MI.clearFlag(MachineInstr::BundledSucc);
+    MI.clearFlag(MachineInstr::BundledPred);
+  } else {
+    // If it's not bundled with the successor (i.e. it is the last one
+    // in the bundle), then we can simply unbundle it from the predecessor,
+    // which will take care of updating the predecessor's flag.
+    MI.unbundleFromPred();
+  }
+  B.splice(InsertPt, &B, MI.getIterator());
+
+  // Get the size of the bundle without asserting.
+  MachineBasicBlock::const_instr_iterator I = BundleIt.getInstrIterator();
+  MachineBasicBlock::const_instr_iterator E = B.instr_end();
+  unsigned Size = 0;
+  for (++I; I != E && I->isBundledWithPred(); ++I)
+    ++Size;
+
+  // If there are still two or more instructions, then there is nothing
+  // else to be done.
+  if (Size > 1)
+    return BundleIt;
+  // Otherwise, extract the single instruction out and delete the bundle.
+  MachineBasicBlock::iterator NextIt = std::next(BundleIt);
+  MachineInstr &SingleI = *BundleIt->getNextNode();
+  SingleI.unbundleFromPred();
+  assert(!SingleI.isBundledWithSucc());
+  BundleIt->eraseFromParent();
+  return NextIt;
+}
+
+void K1CPacketizerList::moveCFIDebugInstructions(MachineFunction &MF) {
+  for (auto &B : MF) {
+    MachineBasicBlock::iterator BundleIt;
+    MachineBasicBlock::instr_iterator NextI;
+    for (auto I = B.instr_begin(), E = B.instr_end(); I != E; I = NextI) {
+      NextI = std::next(I);
+      MachineInstr &MI = *I;
+      if (MI.isBundle())
+        BundleIt = I;
+      if (!MI.isInsideBundle())
+        continue;
+      bool InsertBeforeBundle;
+
+      if (MI.isCFIInstruction()) {
+        // Insert at the begining of the next bundle
+        InsertBeforeBundle = false;
+      } else if (MI.isDebugInstr()) {
+        InsertBeforeBundle = true;
+      } else {
+        continue;
+      }
+
+      BundleIt = moveInstrOut(MI, BundleIt, InsertBeforeBundle);
+    }
+  }
+}
+
 bool K1CPacketizerList::isSetOrWFXL(unsigned Opcode) {
   switch (Opcode) {
   default:
@@ -435,8 +517,23 @@ bool K1CPacketizer::runOnMachineFunction(MachineFunction &MF) {
   K1CPacketizerList Packetizer(MF, MLI, AA, ValidOptLevel);
 
   for (auto &MB : MF) {
+    auto End = MB.end();
+    auto MI = MB.begin();
+    while (MI != End) {
+      auto NextI = std::next(MI);
+      if (MI->isKill() || MI->isImplicitDef()) {
+        MB.erase(MI);
+        End = MB.end();
+      }
+      MI = NextI;
+    }
+  }
+
+  for (auto &MB : MF) {
     Packetizer.PacketizeMIs(&MB, MB.begin(), MB.end());
   }
+
+  Packetizer.moveCFIDebugInstructions(MF);
 
   return true;
 }

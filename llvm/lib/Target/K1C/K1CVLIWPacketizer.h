@@ -36,6 +36,11 @@ public:
 
   int getSchedClassIssueSize(const MachineInstr &MI);
 
+  bool ignorePseudoInstruction(const MachineInstr &MI,
+                               const MachineBasicBlock *) override;
+
+  void moveCFIDebugInstructions(MachineFunction &MF);
+
 private:
   int PacketSize;
   bool ValidOptLevel;
