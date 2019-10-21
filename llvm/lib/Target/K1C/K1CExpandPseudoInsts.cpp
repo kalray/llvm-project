@@ -150,33 +150,12 @@ static bool expandSelectInstr(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
   return true;
 }
 
-static bool expandTruncateInstr(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
-                                MachineBasicBlock::iterator MBBI) {
-  MachineInstr &MI = *MBBI;
-  DebugLoc DL = MI.getDebugLoc();
-
-  unsigned DestReg = MI.getOperand(0).getReg();
-
-  if (MI.getOperand(1).getType() == MachineOperand::MO_Register) {
-    unsigned Arg = MI.getOperand(1).getReg();
-    BuildMI(MBB, MBBI, DL, TII->get(K1C::COPYD)).addReg(DestReg).addReg(Arg);
-  } else {
-    llvm_unreachable("Operator type not handled");
-  }
-
-  MI.eraseFromParent();
-  return true;
-}
-
 bool K1CExpandPseudo::expandMI(MachineBasicBlock &MBB,
                                MachineBasicBlock::iterator MBBI,
                                MachineBasicBlock::iterator &NextMBBI) {
   switch (MBBI->getOpcode()) {
   case K1C::Select_Instr:
     expandSelectInstr(TII, MBB, MBBI);
-    return true;
-  case K1C::Truncate_Instr:
-    expandTruncateInstr(TII, MBB, MBBI);
     return true;
   default:
     break;
