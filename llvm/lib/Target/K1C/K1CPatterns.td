@@ -62,7 +62,7 @@ def ADJCALLSTACKUP : K1C_PseudoInstr<(outs), (ins i32imm:$amt1, i32imm:$amt2),
 
 def MAKETLS : REGISTERW_EXTEND27_UPPER27_LOWER10_TRIPLE
   <(outs SingleReg:$SingleReg), (ins Wrapped64:$Wrapped64),
-  "make $SingleReg = @tprel($Wrapped64)",
+  "make $SingleReg = @tlsle($Wrapped64)",
   [],
   __UNKNOWN_ITIN__>;
 
