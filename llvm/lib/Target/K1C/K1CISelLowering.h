@@ -76,7 +76,6 @@ private:
   SDValue lowerVAARG(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerFRAMEADDR(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerSELECT(SDValue Op, SelectionDAG &DAG) const;
-  SDValue lowerTRUNCATE(SDValue Op, SelectionDAG &DAG) const;
 };
 
 } // namespace llvm
