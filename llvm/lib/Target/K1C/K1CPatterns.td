@@ -228,10 +228,19 @@ def : Pat<(SelectCC i64:$cmp, i64:$zero, i64:$truev, i64:$falsev),
 def : Pat<(SelectCC i64:$cmp, i64:$zero, (K1CWrapper tglobaladdr:$truef), (K1CWrapper tglobaladdr:$falsef)),
         (Select_Instr SingleReg:$cmp, $zero, SingleReg:$truef, SingleReg:$falsef)>;
 
-def Truncate_Instr : K1C_PseudoInstr<(outs SingleReg:$dst), (ins SingleReg:$param),[]>;
+def : Pat<(i1 (trunc i64:$param)), (ANDDd1 SingleReg:$param, (i64 1))>;
+def : Pat<(i8 (trunc i64:$param)), (ZXBD SingleReg:$param)>;
+def : Pat<(i16 (trunc i64:$param)), (ZXHD SingleReg:$param)>;
+def : Pat<(i32 (trunc i64:$param)), (ZXWD SingleReg:$param)>;
 
-def : Pat<(Truncate i32:$param), (Truncate_Instr SingleReg:$param)>;
-def : Pat<(Truncate i64:$param), (Truncate_Instr SingleReg:$param)>;
+def : Pat<(i1 (trunc i32:$param)), (ANDWd1 SingleReg:$param, (i32 1))>;
+def : Pat<(i8 (trunc i32:$param)), (ZXBD SingleReg:$param)>;
+def : Pat<(i16 (trunc i32:$param)), (ZXHD SingleReg:$param)>;
+
+def : Pat<(i1 (trunc i16:$param)), (ANDWd1 SingleReg:$param, (i32 1))>;
+def : Pat<(i8 (trunc i16:$param)), (ZXBD SingleReg:$param)>;
+
+def : Pat<(i1 (trunc i8:$param)), (ANDWd1 SingleReg:$param, (i32 1))>;
 
 def : Pat<(cttz i32:$src), (CTZW SingleReg:$src)>;
 def : Pat<(cttz i64:$src), (CTZD SingleReg:$src)>;
