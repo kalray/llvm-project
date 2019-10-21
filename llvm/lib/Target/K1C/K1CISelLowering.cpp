@@ -113,8 +113,6 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::SELECT_CC, VT, Expand);
     setOperationAction(ISD::SELECT, VT, Custom);
 
-    setOperationAction(ISD::TRUNCATE, VT, Custom);
-
     setOperationAction(ISD::SIGN_EXTEND_INREG, VT, Expand);
 
     setOperationAction(ISD::BR_CC, VT, Expand);
@@ -186,8 +184,6 @@ const char *K1CTargetLowering::getTargetNodeName(unsigned Opcode) const {
     return "K1C::WRAPPER";
   case K1CISD::SELECT_CC:
     return "K1C::SELECT_CC";
-  case K1CISD::TRUNCATE:
-    return "K1C::TRUNCATE";
   case K1CISD::PICInternIndirection:
     return "K1C::PICInternIndirection";
   case K1CISD::PICExternIndirection:
@@ -532,8 +528,6 @@ SDValue K1CTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
     return lowerFRAMEADDR(Op, DAG);
   case ISD::SELECT:
     return lowerSELECT(Op, DAG);
-  case ISD::TRUNCATE:
-    return lowerTRUNCATE(Op, DAG);
   }
 }
 
@@ -718,9 +712,4 @@ SDValue K1CTargetLowering::lowerSELECT(SDValue Op, SelectionDAG &DAG) const {
   SDValue result = DAG.getNode(K1CISD::SELECT_CC, DL, VTs, Ops);
 
   return result;
-}
-
-SDValue K1CTargetLowering::lowerTRUNCATE(SDValue Op, SelectionDAG &DAG) const {
-  return DAG.getNode(K1CISD::TRUNCATE, SDLoc(Op),
-                     DAG.getVTList(Op.getValueType()), { Op.getOperand(0) });
 }
