@@ -100,10 +100,6 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::FDIV, MVT::v2f32, Expand);
   setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2f32, Expand);
 
-  for (auto VT : { MVT::i1, MVT::i8, MVT::i16 }) {
-    setOperationAction(ISD::SIGN_EXTEND_INREG, VT, Expand);
-  }
-
   for (auto VT : { MVT::i32, MVT::i64 }) {
     setOperationAction(ISD::SMUL_LOHI, VT, Expand);
     setOperationAction(ISD::UMUL_LOHI, VT, Expand);
@@ -112,8 +108,6 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
 
     setOperationAction(ISD::SELECT_CC, VT, Expand);
     setOperationAction(ISD::SELECT, VT, Custom);
-
-    setOperationAction(ISD::SIGN_EXTEND_INREG, VT, Expand);
 
     setOperationAction(ISD::BR_CC, VT, Expand);
 
