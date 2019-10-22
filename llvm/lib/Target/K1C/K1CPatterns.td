@@ -185,7 +185,60 @@ def : Pat<(loadv4i16 AddrRI:$addr), (LDri AddrRI:$addr)>;
 def : Pat<(loadv2i32 AddrRI:$addr), (LDri AddrRI:$addr)>;
 def : Pat<(loadi64 (iPTR SingleReg:$rs2)), (LDd0 (i64 0), SingleReg:$rs2, (i8 0))>;
 
-// Zero/sign extend patterns
+// sign extend optimizations
+def : Pat<(and i64:$val, (i64 0xffffffff)),(ZXWD SingleReg:$val)>;
+def : Pat<(and i32:$val, (i32 0xffff)),(ZXHD SingleReg:$val)>;
+def : Pat<(and i32:$val, (i32 0xff)),(ZXBD SingleReg:$val)>;
+
+def : Pat<(and (i64 (anyext i32:$val)),(i64 0xffffffff)), (ZXWD SingleReg:$val)>;
+def : Pat<(and (i64 (anyext i32:$val)),(i64 0xffff)), (ZXHD SingleReg:$val)>;
+def : Pat<(and (i64 (anyext i32:$val)),(i64 0xff)), (ZXBD SingleReg:$val)>;
+
+def : Pat<(i64 (sext_inreg (i64 (anyext i32:$val)), i8)), (SXBD SingleReg:$val)>;
+def : Pat<(i64 (sext_inreg (i64 (anyext i32:$val)), i16)), (SXHD SingleReg:$val)>;
+def : Pat<(i64 (sext_inreg (i64 (anyext i32:$val)), i32)), (SXWD SingleReg:$val)>;
+
+// eliminate zero extend for shift ops second operand
+multiclass SHIFT_PAT32<SDNode n, SDNode instr>
+{
+        def : Pat<(n i32:$r1, (and (i64 (anyext i32:$val)),(i64 0xff))), (instr SingleReg:$r1, SingleReg:$val)>;
+        def : Pat<(n i32:$r1, (and (i64 (anyext i32:$val)),(i64 0xffff))), (instr SingleReg:$r1, SingleReg:$val)>;
+
+        def : Pat<(n i32:$r1, (i64 (zext (i32 (sext_inreg i32:$val,i8))))), (instr SingleReg:$r1, SingleReg:$val)>;
+        def : Pat<(n i32:$r1, (i64 (zext (i32 (sext_inreg i32:$val,i16))))), (instr SingleReg:$r1, SingleReg:$val)>;
+        def : Pat<(n i32:$r1, (i64 (zext i32:$val))), (instr SingleReg:$r1, SingleReg:$val)>;
+}
+multiclass SHIFT_PAT64<SDNode n, SDNode instr>
+{ 
+        def : Pat<(n i64:$r1,
+                (and (i64 (sext_inreg (i64 (anyext i32:$val)),i8)),(i64 0xffffffff))),(instr SingleReg:$r1, SingleReg:$val)>;
+        def : Pat<(n i64:$r1,
+                (and (i64 (sext_inreg (i64 (anyext i32:$val)),i16)),(i64 0xffffffff))),(instr SingleReg:$r1, SingleReg:$val)>;
+
+        def : Pat<(n i64:$r1,
+                (and (i64 (anyext i32:$val)), (i64 255))),(instr SingleReg:$r1, SingleReg:$val)>;
+        def : Pat<(n i64:$r1,
+                (and (i64 (anyext i32:$val)), (i64 0xffff))),(instr SingleReg:$r1, SingleReg:$val)>;
+        def : Pat<(n i64:$r1,
+                (i64 (zext i32:$val))),(instr SingleReg:$r1, SingleReg:$val)>;
+}
+
+defm : SHIFT_PAT32<shl, SLLWd0>;
+defm : SHIFT_PAT32<sra, SRAWd0>;
+defm : SHIFT_PAT32<srl, SRLWd0>;
+defm : SHIFT_PAT64<shl, SLLDd0>;
+defm : SHIFT_PAT64<sra, SRADd0>;
+defm : SHIFT_PAT64<srl, SRLDd0>;
+
+// Zero/sign extend patterns to i32
+def : Pat<(i32 (anyext i8:$val)), (ZXBD SingleReg:$val)>;
+def : Pat<(i32 (anyext i16:$val)), (ZXHD SingleReg:$val)>;
+def : Pat<(i32 (zext i8:$val)), (ZXBD SingleReg:$val)>;
+def : Pat<(i32 (sext i8:$val)), (SXBD SingleReg:$val)>;
+def : Pat<(i32 (zext i16:$val)), (ZXHD SingleReg:$val)>;
+def : Pat<(i32 (sext i16:$val)), (SXHD SingleReg:$val)>;
+
+// Zero/sign extend patterns to i64
 def : Pat<(i64 (anyext i8:$val)), (ZXBD SingleReg:$val)>;
 def : Pat<(i64 (anyext i16:$val)), (ZXHD SingleReg:$val)>;
 def : Pat<(i64 (anyext i32:$val)), (ZXWD SingleReg:$val)>;
