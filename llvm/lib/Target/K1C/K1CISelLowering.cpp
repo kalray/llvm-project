@@ -212,32 +212,11 @@ K1CTargetLowering::LowerReturn(SDValue Chain, CallingConv::ID CallConv,
 
   SDValue Flag;
   SmallVector<SDValue, 4> RetOps(1, Chain);
-  // RetOps.push_back(SDValue());
-
-  const Function &F = DAG.getMachineFunction().getFunction();
-
-  // Get caller attribute list for the return value to see what kind of extend
-  // is needed
-  AttributeList CallerAttrs = F.getAttributes();
-
-  bool SExt = true;
-  if (CallerAttrs.hasAttribute(AttributeList::ReturnIndex, Attribute::ZExt))
-    SExt = false;
 
   for (unsigned int i = 0; i != RVLocs.size(); ++i) {
     CCValAssign &VA = RVLocs[i];
     assert(VA.isRegLoc() && "Can only return in registers!");
     SDValue Arg = OutVals[i];
-
-    if (VA.getValVT().isScalarInteger()) {
-      if (VA.getValVT() != MVT::i64) {
-        if (SExt)
-          Arg = DAG.getSExtOrTrunc(Arg, DL, MVT::i64);
-        else
-          Arg = DAG.getZExtOrTrunc(Arg, DL, MVT::i64);
-      }
-    }
-
     Chain = DAG.getCopyToReg(Chain, DL, VA.getLocReg(), Arg, Flag);
     Flag = Chain.getValue(1);
     RetOps.push_back(DAG.getRegister(VA.getLocReg(), VA.getLocVT()));
