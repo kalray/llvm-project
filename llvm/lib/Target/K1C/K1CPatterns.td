@@ -252,6 +252,7 @@ def : Pat<(i64 (sext i32:$val)), (SXWD SingleReg:$val)>;
 def : Pat<(i32 (sext_inreg i32:$val, i8)), (SXBD SingleReg:$val)>;
 def : Pat<(i32 (sext_inreg i32:$val, i16)), (SXHD SingleReg:$val)>;
 
+def : Pat<(i64 (sext_inreg i64:$val, i1)), (ANDDd1 SingleReg:$val, (i64 1))>;
 def : Pat<(i64 (sext_inreg i64:$val, i8)), (SXBD SingleReg:$val)>;
 def : Pat<(i64 (sext_inreg i64:$val, i16)), (SXHD SingleReg:$val)>;
 def : Pat<(i64 (sext_inreg i64:$val, i32)), (SXWD SingleReg:$val)>;
