@@ -35,7 +35,8 @@ enum NodeType : unsigned {
   TRUNCATE,
   PICInternIndirection,
   PICExternIndirection,
-  PICPCRelativeGOTAddr
+  PICPCRelativeGOTAddr,
+  TAIL
 };
 } // namespace K1CISD
 
@@ -76,6 +77,10 @@ private:
   SDValue lowerVAARG(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerFRAMEADDR(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerSELECT(SDValue Op, SelectionDAG &DAG) const;
+
+  bool IsEligibleForTailCallOptimization(
+      CCState &CCInfo, CallLoweringInfo &CLI, MachineFunction &MF,
+      const SmallVector<CCValAssign, 16> &ArgsLocs) const;
 };
 
 } // namespace llvm
