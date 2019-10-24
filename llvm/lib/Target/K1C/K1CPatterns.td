@@ -7,7 +7,21 @@
 //
 //===----------------------------------------------------------------------===//
 
+let isCall = 1, isBarrier = 1, isBranch = 1, isTerminator = 1, isReturn = 1, Uses = [R12] in
+def TAIL : PCREL27_SIMPLE
+  <(outs), (ins Pcrel27:$a1),
+   "goto $a1",
+   [ ]>;
+
+let isCall = 1, isBarrier = 1, isBranch = 1, isIndirectBranch = 1, isTerminator = 1, isReturn = 1, Uses = [R12] in
+def ITAIL : REGISTERZ_SIMPLE
+  <(outs), (ins SingleReg:$a1),
+   "igoto $a1",
+   [ ],
+   BCU>;
+
 def SDTK1CWrapper : SDTypeProfile<1, 1, [SDTCisSameAs<0, 1>, SDTCisPtrTy<0>]>;
+def SDTK1CTail : SDTypeProfile<0, -1, [SDTCisVT<0, i64>]>;
 
 def K1CWrapper : SDNode<"K1CISD::WRAPPER", SDTK1CWrapper>;
 
@@ -18,6 +32,8 @@ def SelectCC : SDNode<"K1CISD::SELECT_CC", SDT_K1CSelectCC, []>;
 def SDT_K1CTruncate : SDTypeProfile<1, 1, [SDTCisVT<0, i32>]>;
 
 def Truncate : SDNode<"K1CISD::TRUNCATE", SDT_K1CTruncate, []>;
+
+def Tail : SDNode <"K1CISD::TAIL", SDTK1CTail, [SDNPHasChain, SDNPOptInGlue, SDNPOutGlue, SDNPVariadic]>;
 
 //
 // Function return
@@ -31,6 +47,10 @@ def : Pat<(K1CRetNode),(RET)>;
 def : Pat<(Call (K1CWrapper tglobaladdr:$func)),(CALL Pcrel27:$func)>;
 def : Pat<(Call texternalsym:$func),(CALL Pcrel27:$func)>;
 def : Pat<(Call SingleReg:$func),(ICALL SingleReg:$func)>;
+
+def : Pat<(Tail (K1CWrapper tglobaladdr:$func)),(TAIL Pcrel27:$func)>;
+def : Pat<(Tail texternalsym:$func), (TAIL Pcrel27:$func)>;
+def : Pat<(Tail SingleReg:$func),(ITAIL SingleReg:$func)>;
 
 /*let isBarrier = 1, isReturn = 1, isTerminator = 1 in
 def PseudoRET : K1C_PseudoInstr<(outs), (ins), "ret", [(K1CRetNode)]>,
