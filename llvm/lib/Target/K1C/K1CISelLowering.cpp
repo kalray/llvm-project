@@ -34,6 +34,8 @@ using namespace llvm;
 
 #define DEBUG_TYPE "K1CISelLowering"
 
+STATISTIC(NumTailCalls, "Number of tail calls");
+
 #include "K1CGenCallingConv.inc"
 
 static bool CC_SRET_K1C(unsigned ValNo, MVT ValVT, MVT LocVT,
@@ -188,6 +190,8 @@ const char *K1CTargetLowering::getTargetNodeName(unsigned Opcode) const {
     return "K1C::PICExternIndirection";
   case K1CISD::PICPCRelativeGOTAddr:
     return "K1C::PICPCRelativeGOTAddr";
+  case K1CISD::TAIL:
+    return "K1C::TAIL";
   default:
     return NULL;
   }
@@ -344,20 +348,27 @@ SDValue K1CTargetLowering::LowerCall(CallLoweringInfo &CLI,
   SmallVectorImpl<ISD::InputArg> &Ins = CLI.Ins;
   SDValue Chain = CLI.Chain;
   SDValue Callee = CLI.Callee;
-  bool &isTailCall = CLI.IsTailCall;
+  bool &IsTailCall = CLI.IsTailCall;
   CallingConv::ID CallConv = CLI.CallConv;
   bool isVarArg = CLI.IsVarArg;
   EVT PtrVT = getPointerTy(DAG.getDataLayout());
   MachineFunction &MF = DAG.getMachineFunction();
   K1CMachineFunctionInfo *FuncInfo = MF.getInfo<K1CMachineFunctionInfo>();
 
-  isTailCall = false;
-
   // Analyze operands of the call, assigning locations to each operand.
   SmallVector<CCValAssign, 16> ArgLocs;
   CCState CCInfo(CallConv, isVarArg, DAG.getMachineFunction(), ArgLocs,
                  *DAG.getContext());
   CCInfo.AnalyzeCallOperands(Outs, CC_SRET_K1C);
+
+  if (IsTailCall)
+    IsTailCall = IsEligibleForTailCallOptimization(CCInfo, CLI, MF, ArgLocs);
+
+  if (IsTailCall)
+    ++NumTailCalls;
+  else if (CLI.CS && CLI.CS.isMustTailCall())
+    report_fatal_error("failed to perform tail call elimination on a call"
+                       "site marked musttail");
 
   // Get the size of the outgoing arguments stack space requirement.
   unsigned ArgsSize = CCInfo.getNextStackOffset();
@@ -382,12 +393,13 @@ SDValue K1CTargetLowering::LowerCall(CallLoweringInfo &CLI,
 
     Chain = DAG.getMemcpy(Chain, DL, FIPtr, Arg, SizeNode, Align,
                           /*IsVolatile=*/false,
-                          /*AlwaysInline=*/false, false /*isTailCall*/,
+                          /*AlwaysInline=*/false, false /*IsTailCall*/,
                           MachinePointerInfo(), MachinePointerInfo());
     ByValArgs.push_back(FIPtr);
   }
 
-  Chain = DAG.getCALLSEQ_START(Chain, ArgsSize, 0, DL);
+  if (!IsTailCall)
+    Chain = DAG.getCALLSEQ_START(Chain, ArgsSize, 0, DL);
 
   SmallVector<std::pair<unsigned, SDValue>, 8> RegsToPass;
   SmallVector<SDValue, 8> MemOpChains;
@@ -406,7 +418,7 @@ SDValue K1CTargetLowering::LowerCall(CallLoweringInfo &CLI,
       RegsToPass.push_back(std::make_pair(VA.getLocReg(), ArgValue));
     } else {
       assert(VA.isMemLoc() && "Argument not register or memory");
-      assert(!isTailCall && "Tail call not allowed if stack is used "
+      assert(!IsTailCall && "Tail call not allowed if stack is used "
                             "for passing parameters");
 
       // Work out the address of the stack slot.
@@ -445,7 +457,7 @@ SDValue K1CTargetLowering::LowerCall(CallLoweringInfo &CLI,
   for (auto &Reg : RegsToPass)
     Ops.push_back(DAG.getRegister(Reg.first, Reg.second.getValueType()));
 
-  if (!isTailCall) {
+  if (!IsTailCall) {
     // Add a register mask operand representing the call-preserved registers.
     const TargetRegisterInfo *TRI = Subtarget.getRegisterInfo();
     const uint32_t *Mask = TRI->getCallPreservedMask(MF, CallConv);
@@ -459,6 +471,11 @@ SDValue K1CTargetLowering::LowerCall(CallLoweringInfo &CLI,
 
   // Emit the call.
   SDVTList NodeTys = DAG.getVTList(MVT::Other, MVT::Glue);
+
+  if (IsTailCall) {
+    MF.getFrameInfo().setHasTailCall();
+    return DAG.getNode(K1CISD::TAIL, DL, NodeTys, Ops);
+  }
 
   Chain = DAG.getNode(K1CISD::CALL, DL, NodeTys, Ops);
   Glue = Chain.getValue(1);
@@ -689,4 +706,58 @@ SDValue K1CTargetLowering::lowerSELECT(SDValue Op, SelectionDAG &DAG) const {
   SDValue result = DAG.getNode(K1CISD::SELECT_CC, DL, VTs, Ops);
 
   return result;
+}
+
+bool K1CTargetLowering::IsEligibleForTailCallOptimization(
+    CCState &CCInfo, CallLoweringInfo &CLI, MachineFunction &MF,
+    const SmallVector<CCValAssign, 16> &ArgsLocs) const {
+  auto &Callee = CLI.Callee;
+  auto CalleeCC = CLI.CallConv;
+  auto IsVarArg = CLI.IsVarArg;
+  auto &Outs = CLI.Outs;
+  auto &Caller = MF.getFunction();
+  auto CallerCC = Caller.getCallingConv();
+
+  // Do not tail call opt functions with "disable-tail-calls" attribute.
+  if (Caller.getFnAttribute("disable-tail-calls").getValueAsString() == "true")
+    return false;
+
+  // Do not tail call opt functions with varargs, unless arguments are all
+  // passed in registers.
+  if (IsVarArg)
+    for (unsigned Idx = 0, End = ArgsLocs.size(); Idx != End; ++Idx)
+      if (!ArgsLocs[Idx].isRegLoc())
+        return false;
+
+  // Do not tail call opt if the stack is used to pass parameters.
+  if (CCInfo.getNextStackOffset() != 0)
+    return false;
+
+  // Do not tail call opt if either caller or callee uses struct return
+  // semantics.
+  auto IsCallerStructRet = Caller.hasStructRetAttr();
+  auto IsCalleeStructRet = Outs.empty() ? false : Outs[0].Flags.isSRet();
+  if (IsCallerStructRet || IsCalleeStructRet)
+    return false;
+
+  // Externally-defined functions with weak linkage should not be
+  // tail-called. The behaviour of branch instructions in this situation (as
+  // used for tail calls) is implementation-defined, so we cannot rely on the
+  // linker replacing the tail call with a return.
+  if (GlobalAddressSDNode *G = dyn_cast<GlobalAddressSDNode>(Callee)) {
+    const GlobalValue *GV = G->getGlobal();
+    if (GV->hasExternalWeakLinkage())
+      return false;
+  }
+
+  // The callee has to preserve all registers the caller needs to preserve.
+  if (CalleeCC != CallerCC) {
+    const K1CRegisterInfo *TRI = Subtarget.getRegisterInfo();
+    const uint32_t *CallerPreserved = TRI->getCallPreservedMask(MF, CallerCC);
+    const uint32_t *CalleePreserved = TRI->getCallPreservedMask(MF, CalleeCC);
+    if (!TRI->regmaskSubsetEqual(CallerPreserved, CalleePreserved))
+      return false;
+  }
+
+  return true;
 }
