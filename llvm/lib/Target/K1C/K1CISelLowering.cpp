@@ -58,9 +58,7 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   // set up the register classes
   addRegisterClass(MVT::i32, &K1C::SingleRegRegClass);
   addRegisterClass(MVT::i64, &K1C::SingleRegRegClass);
-  addRegisterClass(MVT::v4i16, &K1C::SingleRegRegClass);
   addRegisterClass(MVT::v2i32, &K1C::SingleRegRegClass);
-  // v8i8, v4i16, v2i32, v4f16, v2f32
 
   addRegisterClass(MVT::f16, &K1C::SingleRegRegClass);
   addRegisterClass(MVT::f32, &K1C::SingleRegRegClass);
@@ -89,16 +87,22 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::UDIVREM, MVT::i64, Expand);
   setOperationAction(ISD::UREM, MVT::i64, Expand);
 
-  setOperationAction(ISD::UDIV, MVT::v4i16, Expand);
-  setOperationAction(ISD::SDIV, MVT::v4i16, Expand);
-  setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v4i16, Expand);
+  for (auto VT : {MVT::v2i32}) {
+    setOperationAction(ISD::UDIV, VT, Expand);
+    setOperationAction(ISD::SDIV, VT, Expand);
+    setOperationAction(ISD::EXTRACT_VECTOR_ELT, VT, Expand);
+    setOperationAction(ISD::INSERT_VECTOR_ELT, VT, Expand);
+    setOperationAction(ISD::VECTOR_SHUFFLE, VT, Expand);
+    setOperationAction(ISD::SCALAR_TO_VECTOR, VT, Expand);
+  }
 
-  setOperationAction(ISD::UDIV, MVT::v2i32, Expand);
-  setOperationAction(ISD::SDIV, MVT::v2i32, Expand);
-  setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2i32, Expand);
-
-  setOperationAction(ISD::FDIV, MVT::v2f32, Expand);
-  setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2f32, Expand);
+  for (auto VT : {MVT::v2f32, MVT::v4f16}) {
+    setOperationAction(ISD::FDIV, VT, Expand);
+    setOperationAction(ISD::EXTRACT_VECTOR_ELT, VT, Expand);
+    setOperationAction(ISD::INSERT_VECTOR_ELT, VT, Expand);
+    setOperationAction(ISD::VECTOR_SHUFFLE, VT, Expand);
+    setOperationAction(ISD::SCALAR_TO_VECTOR, VT, Expand);
+  }
 
   for (auto VT : { MVT::i32, MVT::i64 }) {
     setOperationAction(ISD::SMUL_LOHI, VT, Expand);
