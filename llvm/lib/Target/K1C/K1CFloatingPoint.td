@@ -205,8 +205,8 @@ def : Pat<(v2f32 (build_vector f32:$v1, f32:$v2)),
               SingleReg:$v1
       )>;
 
-def : Pat<(v4i16 (build_vector f32:$v1, f32:$v2, f32:$v3, f32:$v4)),
+def : Pat<(v4f16 (build_vector f16:$v1, f16:$v2, f16:$v3, f16:$v4)),
       (ORDd0
-              (ORDd0 (SLLDd1 SingleReg:$v1, (i64 48)), (SLLDd1 SingleReg:$v2, (i64 32))),
-              (ORDd0 (SLLDd1 SingleReg:$v3, (i64 16)), SingleReg:$v4)
+              (ORDd0 (SLLDd1 SingleReg:$v4, (i64 48)), (SLLDd1 SingleReg:$v3, (i64 32))),
+              (ORDd0 (SLLDd1 SingleReg:$v2, (i64 16)), SingleReg:$v1)
       )>;

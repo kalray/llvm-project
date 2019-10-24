@@ -108,7 +108,6 @@ def : Pat<(store (i8 SingleReg:$val), AddrRI:$addr), (SBri AddrRI:$addr,SingleRe
 def : Pat<(store (i16 SingleReg:$val), AddrRI:$addr), (SHri AddrRI:$addr,SingleReg:$val)>;
 def : Pat<(store (i32 SingleReg:$val), AddrRI:$addr), (SWri AddrRI:$addr,SingleReg:$val)>;
 def : Pat<(store (i64 SingleReg:$val), AddrRI:$addr), (SDri AddrRI:$addr,SingleReg:$val)>;
-def : Pat<(store (v4i16 SingleReg:$val), AddrRI:$addr), (SDri AddrRI:$addr,SingleReg:$val)>;
 def : Pat<(store (v2i32 SingleReg:$val), AddrRI:$addr), (SDri AddrRI:$addr,SingleReg:$val)>;
 
 def : Pat<(truncstorei8 i64:$val, AddrRI:$addr), (SBri AddrRI:$addr, SingleReg:$val)>;
@@ -130,7 +129,6 @@ def loadi8 : PatFrag<(ops node:$ptr), (i8 (load node:$ptr))>;
 def loadi16 : PatFrag<(ops node:$ptr), (i16 (load node:$ptr))>;
 def loadi32 : PatFrag<(ops node:$ptr), (i32 (load node:$ptr))>;
 def loadi64 : PatFrag<(ops node:$ptr), (i64 (load node:$ptr))>;
-def loadv4i16 : PatFrag<(ops node:$ptr), (v4i16 (load node:$ptr))>;
 def loadv2i32 : PatFrag<(ops node:$ptr), (v2i32 (load node:$ptr))>;
 
 // load i1 in i32
@@ -181,7 +179,6 @@ def : Pat<(loadi8 AddrRI:$addr), (LBZri AddrRI:$addr)>;
 def : Pat<(loadi16 AddrRI:$addr), (LHZri AddrRI:$addr)>;
 def : Pat<(loadi32 AddrRI:$addr), (LWZri AddrRI:$addr)>;
 def : Pat<(loadi64 AddrRI:$addr), (LDri AddrRI:$addr)>;
-def : Pat<(loadv4i16 AddrRI:$addr), (LDri AddrRI:$addr)>;
 def : Pat<(loadv2i32 AddrRI:$addr), (LDri AddrRI:$addr)>;
 def : Pat<(loadi64 (iPTR SingleReg:$rs2)), (LDd0 (i64 0), SingleReg:$rs2, (i8 0))>;
 
@@ -301,12 +298,6 @@ def : Pat<(cttz i64:$src), (CTZD SingleReg:$src)>;
 
 def : Pat<(ctlz i32:$src), (CLZW SingleReg:$src)>;
 def : Pat<(ctlz i64:$src), (CLZD SingleReg:$src)>;
-
-def : Pat<(v4i16 (build_vector i32:$v1, i32:$v2, i32:$v3, i32:$v4)),
-        (ORDd0
-                (ORDd0 (SLLDd1 SingleReg:$v1, (i64 48)), (SLLDd1 SingleReg:$v2, (i64 32))),
-                (ORDd0 (SLLDd1 SingleReg:$v3, (i64 16)), SingleReg:$v4)
-        )>;
 
 def : Pat<(v2i32 (build_vector i32:$v1, i32:$v2)),
         (ORDd0
