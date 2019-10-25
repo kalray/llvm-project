@@ -65,6 +65,10 @@ static bool LowerK1CMachineOperandToMCOperand(const MachineOperand &MO,
         MCSymbolRefExpr::create(AP.GetExternalSymbolSymbol(MO.getSymbolName()),
           AP.OutContext));
     break;
+  case MachineOperand::MO_BlockAddress:
+    MCOp = MCOperand::createExpr(MCSymbolRefExpr::create(
+        AP.GetBlockAddressSymbol(MO.getBlockAddress()), AP.OutContext));
+    break;
   }
 
   return true;
