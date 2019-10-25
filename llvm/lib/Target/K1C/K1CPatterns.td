@@ -29,10 +29,6 @@ def SDT_K1CSelectCC : SDTypeProfile<1, 4, [SDTCisVT<0, i32>, SDTCisVT<1, i64>, S
 
 def SelectCC : SDNode<"K1CISD::SELECT_CC", SDT_K1CSelectCC, []>;
 
-def SDT_K1CTruncate : SDTypeProfile<1, 1, [SDTCisVT<0, i32>]>;
-
-def Truncate : SDNode<"K1CISD::TRUNCATE", SDT_K1CTruncate, []>;
-
 def Tail : SDNode <"K1CISD::TAIL", SDTK1CTail, [SDNPHasChain, SDNPOptInGlue, SDNPOutGlue, SDNPVariadic]>;
 
 //
@@ -90,6 +86,7 @@ def : Pat<(Wrapped64:$imm), (MAKEd2 Wrapped64:$imm)>;
 */
 def : Pat<(K1CWrapper tglobaladdr:$dst), (MAKEd2 tglobaladdr:$dst)>;
 def : Pat<(K1CWrapper tglobaltlsaddr:$dst), (MAKETLS tglobaltlsaddr:$dst)>;
+def : Pat<(K1CWrapper tblockaddress:$dst), (MAKEd2 tblockaddress:$dst)>;
 
 def MemRR : Operand<iPTR>, ComplexPattern<iPTR, 2, "SelectAddrRR", [], []> {
   let PrintMethod = "printMemOperand";
