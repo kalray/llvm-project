@@ -32,11 +32,11 @@ enum NodeType : unsigned {
   CALL,
   WRAPPER,
   SELECT_CC,
-  TRUNCATE,
+  TAIL,
   PICInternIndirection,
   PICExternIndirection,
   PICPCRelativeGOTAddr,
-  TAIL
+  PICWRAPPER
 };
 } // namespace K1CISD
 
@@ -77,6 +77,7 @@ private:
   SDValue lowerVAARG(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerFRAMEADDR(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerSELECT(SDValue Op, SelectionDAG &DAG) const;
+  SDValue lowerBlockAddress(SDValue Op, SelectionDAG &DAG) const;
 
   bool IsEligibleForTailCallOptimization(
       CCState &CCInfo, CallLoweringInfo &CLI, MachineFunction &MF,
