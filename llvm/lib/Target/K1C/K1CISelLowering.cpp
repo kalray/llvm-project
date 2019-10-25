@@ -124,6 +124,7 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::ROTL, MVT::i64, Expand);
   setOperationAction(ISD::ROTR, MVT::i64, Expand);
 
+  setOperationAction(ISD::BlockAddress, MVT::i64, Custom);
   setOperationAction(ISD::GlobalAddress, MVT::i64, Custom);
   setOperationAction(ISD::GlobalTLSAddress, MVT::i64, Custom);
   setOperationAction(ISD::VASTART, MVT::Other, Custom);
@@ -522,6 +523,8 @@ SDValue K1CTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
     return lowerFRAMEADDR(Op, DAG);
   case ISD::SELECT:
     return lowerSELECT(Op, DAG);
+  case ISD::BlockAddress:
+    return lowerBlockAddress(Op, DAG);
   }
 }
 
@@ -760,4 +763,24 @@ bool K1CTargetLowering::IsEligibleForTailCallOptimization(
   }
 
   return true;
+}
+
+SDValue K1CTargetLowering::lowerBlockAddress(SDValue Op,
+                                             SelectionDAG &DAG) const {
+  BlockAddressSDNode *N = cast<BlockAddressSDNode>(Op);
+  const BlockAddress *BA = N->getBlockAddress();
+  int64_t Offset = N->getOffset();
+  auto PtrVT = getPointerTy(DAG.getDataLayout());
+
+  SDLoc DL(Op);
+
+  SDValue Result = DAG.getTargetBlockAddress(BA, PtrVT, Offset);
+
+  // -fPIC
+  if (isPositionIndependent())
+    Result = DAG.getNode(K1CISD::PICWRAPPER, DL, PtrVT, Result);
+  else
+    Result = DAG.getNode(K1CISD::WRAPPER, DL, PtrVT, Result);
+
+  return Result;
 }
