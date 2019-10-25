@@ -10,6 +10,7 @@
 def PICInternIndirection : SDNode<"K1CISD::PICInternIndirection", SDTIntBinOp>;
 def PICExternIndirection : SDNode<"K1CISD::PICExternIndirection", SDTIntBinOp>;
 def PICPCRelativeGOTAddr : SDNode<"K1CISD::PICPCRelativeGOTAddr", SDTUNDEF>;
+def PICK1CWrapper : SDNode<"K1CISD::PICWRAPPER", SDTK1CWrapper>;
 
 
 def PICPCRELGOTADDR : REGISTERW_EXTEND27_UPPER27_LOWER10_TRIPLE
@@ -46,3 +47,9 @@ def CALLPLT : PCREL27_SIMPLE
 def : Pat<(Call (PICExternIndirection (i64 SingleReg:$gotaddr),
                                       (i64 tglobaladdr:$gotoff))),
           (CALLPLT Pcrel27:$gotoff, SingleReg:$gotaddr)>;
+
+def PICPCREL : REGISTERW_EXTEND27_UPPER27_LOWER10_TRIPLE
+  <(outs SingleReg:$SingleReg), (ins Wrapped64:$Wrapped64),
+  "pcrel $SingleReg = @pcrel($Wrapped64)",
+  [(set (i64 SingleReg:$SingleReg), (PICK1CWrapper tblockaddress:$Wrapped64))],
+  ALU_FULL_Y>;
