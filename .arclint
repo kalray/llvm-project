@@ -1,13 +1,22 @@
 {
-  "linters": {
-    "Text linter": {
-      "type": "text",
-      "severity": {
-        "2": "warning"
-      }
-    },
-    "Merge Conflicts": {
-      "type": "merge-conflict"
+    "linters": {
+        "Text linter": {
+            "type": "text",
+            "severity": {
+                "2": "warning"
+            }
+        },
+        "Merge Conflicts": {
+            "type": "merge-conflict"
+        },
+        "clang-format": {
+            "type": "clang-format",
+            "bin": "/work/common/tools/creduce-llvm/root/bin/clang-format",
+            "flags": ["-style=llvm"],
+            "include": [
+                "(\\.(c|h)$)",
+                "(\\.(cpp|hpp)$)"
+            ]
+        }
     }
-  }
 }
