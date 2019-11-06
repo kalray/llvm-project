@@ -387,32 +387,32 @@ multiclass MC_0A<string OpcStr> {
 //   defm ACSWAPD
 multiclass MC_0B<string OpcStr> {
   def d0 : SIGNED10_REGISTERZ_REGISTERU_SIMPLE
-    <(outs), (ins Signed10_64:$a1, SingleReg:$a2, PairedReg:$a3),
+    <(outs SingleReg:$o), (ins Signed10_64:$a1, SingleReg:$a2, PairedReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [ ],
      LSU_AUXR_AUXW>;
   def d1 : UPPER27_LOWER10_REGISTERZ_REGISTERU_DOUBLE
-    <(outs), (ins Signed37_64:$a1, SingleReg:$a2, PairedReg:$a3),
+    <(outs SingleReg:$o), (ins Signed37_64:$a1, SingleReg:$a2, PairedReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [ ],
      LSU_AUXR_AUXW_X>;
   def d2 : SCALING_REGISTERY_REGISTERZ_REGISTERU_SIMPLE
-    <(outs), (ins SingleReg:$a2, SingleReg:$a3, PairedReg:$a4, ScalingMod:$a1),
+    <(outs SingleReg:$o), (ins SingleReg:$a2, SingleReg:$a3, PairedReg:$a4, ScalingMod:$a1),
      !strconcat (OpcStr, "$a1 $a2[$a3] = $a4"),
      [ ],
      LSU_AUXR_AUXW>;
   def d3 : LSUCOND_REGISTERY_REGISTERZ_REGISTERU_SIMPLE
-    <(outs), (ins SingleReg:$a2, SingleReg:$a3, PairedReg:$a4, ScalarcondMod:$a1),
+    <(outs SingleReg:$o), (ins SingleReg:$a2, SingleReg:$a3, PairedReg:$a4, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2? [$a3] = $a4"),
      [ ],
      LSU_AUXR_AUXW>;
   def d4 : LSUCOND_REGISTERY_OFFSET27_REGISTERZ_REGISTERU_DOUBLE
-    <(outs), (ins SingleReg:$a2, Signed27:$a3, SingleReg:$a4, PairedReg:$a5, ScalarcondMod:$a1),
+    <(outs SingleReg:$o), (ins SingleReg:$a2, Signed27:$a3, SingleReg:$a4, PairedReg:$a5, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2? $a3[$a4] = $a5"),
      [ ],
      LSU_AUXR_AUXW_X>;
   def d5 : LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_REGISTERU_TRIPLE
-    <(outs), (ins SingleReg:$a2, Signed54:$a3, SingleReg:$a4, PairedReg:$a5, ScalarcondMod:$a1),
+    <(outs SingleReg:$o), (ins SingleReg:$a2, Signed54:$a3, SingleReg:$a4, PairedReg:$a5, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2? $a3[$a4] = $a5"),
      [ ],
      LSU_AUXR_AUXW_Y>;
@@ -457,17 +457,17 @@ multiclass MC_0C<string OpcStr> {
 //   defm AFADDD
 multiclass MC_0D<string OpcStr> {
   def d0 : SIGNED10_REGISTERZ_REGISTERT_SIMPLE
-    <(outs), (ins Signed10_64:$a1, SingleReg:$a2, SingleReg:$a3),
+    <(outs SingleReg:$o), (ins Signed10_64:$a1, SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [ ],
      LSU_AUXR_AUXW>;
   def d1 : UPPER27_LOWER10_REGISTERZ_REGISTERT_DOUBLE
-    <(outs), (ins Signed37_64:$a1, SingleReg:$a2, SingleReg:$a3),
+    <(outs SingleReg:$o), (ins Signed37_64:$a1, SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [ ],
      LSU_AUXR_AUXW_X>;
   def d2 : EXTEND27_UPPER27_LOWER10_REGISTERZ_REGISTERT_TRIPLE
-    <(outs), (ins Wrapped64:$a1, SingleReg:$a2, SingleReg:$a3),
+    <(outs SingleReg:$o), (ins Wrapped64:$a1, SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [ ],
      LSU_AUXR_AUXW_Y>;
