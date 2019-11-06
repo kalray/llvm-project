@@ -213,19 +213,19 @@ def : Pat<(and i32:$rs1, Signed37_32:$rs2), (ANDWd2 SingleReg:$rs1, Signed37_32:
 
 multiclass COMP_Pat<SDNode Node, int Mod> {
   //COMPD
-  def : Pat<(i64 (Node i64:$lhs, i64:$rhs)),
+  def : Pat<(i32 (Node i64:$lhs, i64:$rhs)),
         (COMPDd3 SingleReg:$lhs, SingleReg:$rhs, (i8 Mod))>;
-  def : Pat<(i64 (Node i64:$lhs, Signed10_64:$rhs)),
+  def : Pat<(i32 (Node i64:$lhs, Signed10_64:$rhs)),
         (COMPDd0 SingleReg:$lhs, Signed10_64:$rhs, (i8 Mod))>;
-  def : Pat<(i64 (Node i64:$lhs, Signed37_64:$rhs)),
+  def : Pat<(i32 (Node i64:$lhs, Signed37_64:$rhs)),
         (COMPDd1 SingleReg:$lhs, Signed37_64:$rhs, (i8 Mod))>;
-  def : Pat<(i64 (Node i64:$lhs, Wrapped64:$rhs)),
+  def : Pat<(i32 (Node i64:$lhs, Wrapped64:$rhs)),
         (COMPDd2 SingleReg:$lhs, Wrapped64:$rhs, (i8 Mod))>;
 
   //COMPW
-  def : Pat<(i64 (Node i32:$lhs, i32:$rhs)),
+  def : Pat<(i32 (Node i32:$lhs, i32:$rhs)),
         (COMPWd0 SingleReg:$lhs, SingleReg:$rhs, (i8 Mod))>;
-  def : Pat<(i64 (Node i32:$lhs, Wrapped32:$rhs)),
+  def : Pat<(i32 (Node i32:$lhs, Wrapped32:$rhs)),
         (COMPWd1 SingleReg:$lhs, Wrapped32:$rhs, (i8 Mod))>;
 }
 

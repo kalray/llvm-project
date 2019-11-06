@@ -33,6 +33,16 @@ extern "C" void LLVMInitializeK1CTarget() {
   initializeK1CPacketizerPass(*PR);
 }
 
+unsigned llvm::GetImmOpCode(int64_t imm, unsigned i10code, unsigned i37code,
+                            unsigned i64code) {
+  if (isInt<10>(imm))
+    return i10code;
+  else if (isInt<37>(imm))
+    return i37code;
+  else
+    return i64code;
+}
+
 static Reloc::Model getEffectiveRelocModel(const Triple &TT,
                                            Optional<Reloc::Model> RM) {
   if (!RM.hasValue())
@@ -65,6 +75,7 @@ public:
     return getTM<K1CTargetMachine>();
   }
 
+  void addIRPasses() override;
   bool addInstSelector() override;
   void addPreRegAlloc() override;
 
@@ -97,6 +108,11 @@ K1CTargetMachine::getSubtargetImpl(const Function &F) const {
 
 TargetPassConfig *K1CTargetMachine::createPassConfig(PassManagerBase &PM) {
   return new K1CPassConfig(*this, PM);
+}
+
+void K1CPassConfig::addIRPasses() {
+  addPass(createAtomicExpandPass());
+  TargetPassConfig::addIRPasses();
 }
 
 bool K1CPassConfig::addInstSelector() {

@@ -164,15 +164,16 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
     setLoadExtAction(ISD::EXTLOAD, VT, MVT::f64, Expand);
   }
 
+  setMaxAtomicSizeInBitsSupported(64);
+  setMinCmpXchgSizeInBits(32);
+
   // Effectively disable jump table generation.
   setMinimumJumpTableEntries(INT_MAX);
 }
 
 EVT K1CTargetLowering::getSetCCResultType(const DataLayout &DL, LLVMContext &,
                                           EVT VT) const {
-  if (!VT.isVector())
-    return getPointerTy(DL);
-  return MVT::i1;
+  return MVT::i32;
 }
 
 const char *K1CTargetLowering::getTargetNodeName(unsigned Opcode) const {
@@ -526,6 +527,27 @@ SDValue K1CTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
   case ISD::BlockAddress:
     return lowerBlockAddress(Op, DAG);
   }
+}
+
+Instruction *K1CTargetLowering::emitLeadingFence(IRBuilder<> &Builder,
+                                                 Instruction *Inst,
+                                                 AtomicOrdering Ord) const {
+  if (isa<LoadInst>(Inst) && Ord == AtomicOrdering::SequentiallyConsistent)
+    return Builder.CreateFence(Ord);
+  if (isa<StoreInst>(Inst) && Ord != AtomicOrdering::Monotonic)
+    return Builder.CreateFence(Ord);
+  return nullptr;
+}
+
+Instruction *K1CTargetLowering::emitTrailingFence(IRBuilder<> &Builder,
+                                                  Instruction *Inst,
+                                                  AtomicOrdering Ord) const {
+  if (isa<LoadInst>(Inst) && isAcquireOrStronger(Ord))
+    return Builder.CreateFence(AtomicOrdering::Acquire);
+  if (isa<StoreInst>(Inst) && Ord == AtomicOrdering::SequentiallyConsistent)
+    return Builder.CreateFence(Ord);
+
+  return nullptr;
 }
 
 SDValue K1CTargetLowering::lowerGlobalAddress(SDValue Op,
