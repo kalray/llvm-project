@@ -105,7 +105,7 @@ bool K1CPacketizerList::ignorePseudoInstruction(const MachineInstr &MI,
   if (MI.isDebugInstr())
     return true;
 
-  if (MI.isCFIInstruction())
+  if (MI.isPosition())
     return true;
 
   return false;
@@ -406,7 +406,7 @@ void K1CPacketizerList::moveCFIDebugInstructions(MachineFunction &MF) {
       if (MI.isCFIInstruction()) {
         // Insert at the begining of the next bundle
         InsertBeforeBundle = false;
-      } else if (MI.isDebugInstr()) {
+      } else if (MI.isDebugInstr() || MI.isLabel()) {
         InsertBeforeBundle = true;
       } else {
         continue;
