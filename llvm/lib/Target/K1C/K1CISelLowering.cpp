@@ -96,6 +96,20 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::INSERT_VECTOR_ELT, VT, Expand);
     setOperationAction(ISD::VECTOR_SHUFFLE, VT, Expand);
     setOperationAction(ISD::SCALAR_TO_VECTOR, VT, Expand);
+
+    setOperationAction(ISD::SETCC, VT, Expand);
+
+    setOperationAction(ISD::SDIV, VT, Expand);
+    setOperationAction(ISD::SDIVREM, VT, Expand);
+    setOperationAction(ISD::SREM, VT, Expand);
+    setOperationAction(ISD::UDIV, VT, Expand);
+    setOperationAction(ISD::UDIVREM, VT, Expand);
+    setOperationAction(ISD::UREM, VT, Expand);
+    setOperationAction(ISD::SHL, VT, Expand);
+    setOperationAction(ISD::SRL, VT, Expand);
+    setOperationAction(ISD::SRA, VT, Expand);
+    setOperationAction(ISD::MULHS, VT, Expand);
+    setOperationAction(ISD::MULHU, VT, Expand);
   }
 
   for (auto VT : {MVT::v2f32, MVT::v4f16}) {
@@ -171,9 +185,11 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setMinimumJumpTableEntries(INT_MAX);
 }
 
-EVT K1CTargetLowering::getSetCCResultType(const DataLayout &DL, LLVMContext &,
+EVT K1CTargetLowering::getSetCCResultType(const DataLayout &DL, LLVMContext &C,
                                           EVT VT) const {
-  return MVT::i32;
+  if (!VT.isVector())
+    return MVT::i32;
+  return EVT::getVectorVT(C, MVT::i32, VT.getVectorNumElements());
 }
 
 const char *K1CTargetLowering::getTargetNodeName(unsigned Opcode) const {
