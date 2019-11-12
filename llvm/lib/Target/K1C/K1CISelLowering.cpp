@@ -166,6 +166,7 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::BR_CC, VT, Expand);
 
     setOperationAction(ISD::FDIV, VT, VT == MVT::f16 ? Promote : Expand);
+    setOperationAction(ISD::FREM, VT, VT == MVT::f16 ? Promote : Expand);
     setOperationAction(ISD::FSQRT, VT, VT == MVT::f16 ? Promote : Expand);
 
     setOperationAction(ISD::SELECT_CC, VT, Expand);
