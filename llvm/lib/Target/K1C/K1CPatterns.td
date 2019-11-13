@@ -132,6 +132,7 @@ def : Pat<(store (i16 SingleReg:$val), AddrRI:$addr), (SHri AddrRI:$addr,SingleR
 def : Pat<(store (i32 SingleReg:$val), AddrRI:$addr), (SWri AddrRI:$addr,SingleReg:$val)>;
 def : Pat<(store (i64 SingleReg:$val), AddrRI:$addr), (SDri AddrRI:$addr,SingleReg:$val)>;
 def : Pat<(store (v2i32 SingleReg:$val), AddrRI:$addr), (SDri AddrRI:$addr,SingleReg:$val)>;
+def : Pat<(store (v4i16 SingleReg:$val), AddrRI:$addr), (SDri AddrRI:$addr,SingleReg:$val)>;
 
 def : Pat<(truncstorei8 i64:$val, AddrRI:$addr), (SBri AddrRI:$addr, SingleReg:$val)>;
 def : Pat<(truncstorei8 i32:$val, AddrRI:$addr), (SBri AddrRI:$addr, SingleReg:$val)>;
@@ -153,6 +154,7 @@ def loadi16 : PatFrag<(ops node:$ptr), (i16 (load node:$ptr))>;
 def loadi32 : PatFrag<(ops node:$ptr), (i32 (load node:$ptr))>;
 def loadi64 : PatFrag<(ops node:$ptr), (i64 (load node:$ptr))>;
 def loadv2i32 : PatFrag<(ops node:$ptr), (v2i32 (load node:$ptr))>;
+def loadv4i16 : PatFrag<(ops node:$ptr), (v4i16 (load node:$ptr))>;
 
 // load i1 in i32
 def : Pat<(i32 (sextloadi1 AddrRI:$addr)), (LBSri AddrRI:$addr)>;
@@ -203,6 +205,7 @@ def : Pat<(loadi16 AddrRI:$addr), (LHZri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(loadi32 AddrRI:$addr), (LWZri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(loadi64 AddrRI:$addr), (LDri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(loadv2i32 AddrRI:$addr), (LDri AddrRI:$addr, (i8 0 /*cached*/))>;
+def : Pat<(loadv4i16 AddrRI:$addr), (LDri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(loadi64 (iPTR SingleReg:$rs2)), (LDd0 (i64 0), SingleReg:$rs2, (i8 0))>;
 
 // sign extend optimizations
@@ -330,4 +333,10 @@ def : Pat<(v2i32 (build_vector i32:$v1, i32:$v2)),
         (ORDd0
                 (SLLDd1 SingleReg:$v2, (i64 32)),
                 SingleReg:$v1
+        )>;
+
+def : Pat<(v4i16 (build_vector i32:$v1, i32:$v2, i32:$v3, i32:$v4)),
+        (ORDd0
+                (ORDd0 (SLLDd1 SingleReg:$v4, (i64 48)), (SLLDd1 SingleReg:$v3, (i64 32))),
+                (ORDd0 (SLLDd1 SingleReg:$v2, (i64 16)), SingleReg:$v1)
         )>;
