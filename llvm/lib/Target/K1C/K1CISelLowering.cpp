@@ -61,6 +61,7 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   addRegisterClass(MVT::i32, &K1C::SingleRegRegClass);
   addRegisterClass(MVT::i64, &K1C::SingleRegRegClass);
   addRegisterClass(MVT::v2i32, &K1C::SingleRegRegClass);
+  addRegisterClass(MVT::v4i16, &K1C::SingleRegRegClass);
 
   addRegisterClass(MVT::f16, &K1C::SingleRegRegClass);
   addRegisterClass(MVT::f32, &K1C::SingleRegRegClass);
@@ -89,7 +90,18 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::UDIVREM, MVT::i64, Expand);
   setOperationAction(ISD::UREM, MVT::i64, Expand);
 
-  for (auto VT : {MVT::v2i32}) {
+  setOperationAction(ISD::MULHU, MVT::v4i16, Custom);
+  setOperationAction(ISD::MULHS, MVT::v4i16, Custom);
+
+  setLoadExtAction(ISD::ZEXTLOAD, MVT::v2i32, MVT::v2i16, Expand);
+  setLoadExtAction(ISD::EXTLOAD, MVT::v2i32, MVT::v2i16, Expand);
+  setLoadExtAction(ISD::SEXTLOAD, MVT::v2i32, MVT::v2i16, Expand);
+
+  setTruncStoreAction(MVT::v2i32, MVT::v2i16, Expand);
+
+  setOperationAction(ISD::SIGN_EXTEND_INREG, MVT::v2i16, Expand);
+
+  for (auto VT : {MVT::v2i32, MVT::v4i16}) {
     setOperationAction(ISD::UDIV, VT, Expand);
     setOperationAction(ISD::SDIV, VT, Expand);
     setOperationAction(ISD::EXTRACT_VECTOR_ELT, VT, Expand);
@@ -108,9 +120,10 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::SHL, VT, Expand);
     setOperationAction(ISD::SRL, VT, Expand);
     setOperationAction(ISD::SRA, VT, Expand);
-    setOperationAction(ISD::MULHS, VT, Expand);
-    setOperationAction(ISD::MULHU, VT, Expand);
   }
+
+  setOperationAction(ISD::MULHU, MVT::v2i32, Expand);
+  setOperationAction(ISD::MULHS, MVT::v2i32, Expand);
 
   for (auto VT : {MVT::v2f32, MVT::v4f16}) {
     setOperationAction(ISD::FDIV, VT, Expand);
@@ -549,6 +562,10 @@ SDValue K1CTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
     return lowerFRAMEADDR(Op, DAG);
   case ISD::SELECT:
     return lowerSELECT(Op, DAG);
+  case ISD::MULHS:
+    return lowerMULHV4I16(Op, DAG, true);
+  case ISD::MULHU:
+    return lowerMULHV4I16(Op, DAG, false);
   case ISD::BlockAddress:
     return lowerBlockAddress(Op, DAG);
   case ISD::INTRINSIC_VOID:
@@ -883,4 +900,69 @@ K1CTargetLowering::getRegForInlineAsmConstraint(const TargetRegisterInfo *TRI,
   }
 
   return TargetLowering::getRegForInlineAsmConstraint(TRI, Constraint, VT);
+}
+
+SDValue K1CTargetLowering::lowerMULHV4I16(SDValue Op, SelectionDAG &DAG,
+                                          bool Signed) const {
+  SDLoc DL(Op);
+
+  ISD::NodeType ExtensionType = Signed ? ISD::SIGN_EXTEND : ISD::ZERO_EXTEND;
+
+  SDValue A1 =
+      DAG.getNode(ISD::EXTRACT_VECTOR_ELT, DL, MVT::i16,
+                  {Op.getOperand(0), DAG.getConstant(0, DL, MVT::i64)});
+  SDValue A1Ext = DAG.getNode(ExtensionType, DL, MVT::i32, A1);
+
+  SDValue A2 =
+      DAG.getNode(ISD::EXTRACT_VECTOR_ELT, DL, MVT::i16,
+                  {Op.getOperand(0), DAG.getConstant(1, DL, MVT::i64)});
+  SDValue A2Ext = DAG.getNode(ExtensionType, DL, MVT::i32, A2);
+
+  SDValue A3 =
+      DAG.getNode(ISD::EXTRACT_VECTOR_ELT, DL, MVT::i16,
+                  {Op.getOperand(0), DAG.getConstant(2, DL, MVT::i64)});
+  SDValue A3Ext = DAG.getNode(ExtensionType, DL, MVT::i32, A3);
+
+  SDValue A4 =
+      DAG.getNode(ISD::EXTRACT_VECTOR_ELT, DL, MVT::i16,
+                  {Op.getOperand(0), DAG.getConstant(3, DL, MVT::i64)});
+  SDValue A4Ext = DAG.getNode(ExtensionType, DL, MVT::i32, A4);
+
+  SDValue B1 =
+      DAG.getNode(ISD::EXTRACT_VECTOR_ELT, DL, MVT::i16,
+                  {Op.getOperand(1), DAG.getConstant(0, DL, MVT::i64)});
+  SDValue B1Ext = DAG.getNode(ExtensionType, DL, MVT::i32, B1);
+
+  SDValue B2 =
+      DAG.getNode(ISD::EXTRACT_VECTOR_ELT, DL, MVT::i16,
+                  {Op.getOperand(1), DAG.getConstant(1, DL, MVT::i64)});
+  SDValue B2Ext = DAG.getNode(ExtensionType, DL, MVT::i32, B2);
+
+  SDValue B3 =
+      DAG.getNode(ISD::EXTRACT_VECTOR_ELT, DL, MVT::i16,
+                  {Op.getOperand(1), DAG.getConstant(2, DL, MVT::i64)});
+  SDValue B3Ext = DAG.getNode(ExtensionType, DL, MVT::i32, B3);
+
+  SDValue B4 =
+      DAG.getNode(ISD::EXTRACT_VECTOR_ELT, DL, MVT::i16,
+                  {Op.getOperand(1), DAG.getConstant(3, DL, MVT::i64)});
+  SDValue B4Ext = DAG.getNode(ExtensionType, DL, MVT::i32, B4);
+
+  // Multiplying each element and shifting it in order to keep only the most
+  // significant 16 bits
+  SDValue R1 = DAG.getNode(ISD::SRL, DL, MVT::i32,
+                           DAG.getNode(ISD::MUL, DL, MVT::i32, {A1Ext, B1Ext}),
+                           DAG.getConstant(16, DL, MVT::i32));
+  SDValue R2 = DAG.getNode(ISD::SRL, DL, MVT::i32,
+                           DAG.getNode(ISD::MUL, DL, MVT::i32, {A2Ext, B2Ext}),
+                           DAG.getConstant(16, DL, MVT::i32));
+  SDValue R3 = DAG.getNode(ISD::SRL, DL, MVT::i32,
+                           DAG.getNode(ISD::MUL, DL, MVT::i32, {A3Ext, B3Ext}),
+                           DAG.getConstant(16, DL, MVT::i32));
+  SDValue R4 = DAG.getNode(ISD::SRL, DL, MVT::i32,
+                           DAG.getNode(ISD::MUL, DL, MVT::i32, {A4Ext, B4Ext}),
+                           DAG.getConstant(16, DL, MVT::i32));
+
+  // Building a vector from the computed values
+  return DAG.getNode(ISD::BUILD_VECTOR, DL, MVT::v4i16, {R1, R2, R3, R4});
 }

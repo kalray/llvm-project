@@ -72,6 +72,16 @@ def : BITCAST<f64, i64, SingleReg>;
 def : BITCAST<i16, f16, SingleReg>;
 def : BITCAST<i32, f32, SingleReg>;
 def : BITCAST<i64, f64, SingleReg>;
+def : BITCAST<v4i16, i64, SingleReg>;
+def : BITCAST<i64, v4i16, SingleReg>;
+def : BITCAST<v4i16, f64, SingleReg>;
+def : BITCAST<f64, v4i16, SingleReg>;
+def : BITCAST<v2i32, f64, SingleReg>;
+def : BITCAST<f64, v2i32, SingleReg>;
+def : BITCAST<v2i32, v4i16, SingleReg>;
+def : BITCAST<v4i16, v2i32, SingleReg>;
+def : BITCAST<i64, v2i32, SingleReg>;
+def : BITCAST<v2i32, i64, SingleReg>;
 
 // FPU Insns
 

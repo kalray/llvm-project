@@ -107,7 +107,6 @@
 // MINW
 // MINWP
 // MOVETQ
-// MULHQ
 // NANDD
 // NANDW
 // NOP
@@ -199,13 +198,14 @@ def : Pat<(add i64:$rs1, Signed37_64:$rs2), (ADDDd2 SingleReg:$rs1, Signed37_64:
 def : Pat<(add i64:$rs1, Wrapped64:$rs2), (ADDDd3 SingleReg:$rs1, Wrapped64:$rs2)>;
 
 // ADDHQ
+def : Pat<(add v4i16:$rs1, v4i16:$rs2), (ADDHQd0 SingleReg:$rs1, SingleReg:$rs2)>;
 
 // ADDW
 def : Pat<(add i32:$rs1, i32:$rs2), (ADDWd0 SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(add i32:$rs1, Signed10_32:$rs2), (ADDWd1 SingleReg:$rs1, Signed10_32:$rs2)>;
 def : Pat<(add i32:$rs1, Signed37_32:$rs2), (ADDWd2 SingleReg:$rs1, Signed37_32:$rs2)>;
 
-//ADDWP
+// ADDWP
 def : Pat<(add v2i32:$rs1, v2i32:$rs2), (ADDWPd0 SingleReg:$rs1, SingleReg:$rs2)>;
 
 // ANDD
@@ -214,6 +214,8 @@ def : Pat<(and i64:$rs1, Signed10_64:$rs2), (ANDDd1 SingleReg:$rs1, Signed10_64:
 def : Pat<(and i64:$rs1, Signed37_64:$rs2), (ANDDd2 SingleReg:$rs1, Signed37_64:$rs2)>;
 def : Pat<(and i64:$rs1, Wrapped64:$rs2), (ANDDd3 SingleReg:$rs1, Wrapped64:$rs2)>;
 def : Pat<(and v2i32:$rs1, v2i32:$rs2), (ANDDd0 SingleReg:$rs1, SingleReg:$rs2)>;
+
+def : Pat<(and v4i16:$rs1, v4i16:$rs2), (ANDDd0 SingleReg:$rs1, SingleReg:$rs2)>;
 
 // ANDW
 def : Pat<(and i32:$rs1, i32:$rs2), (ANDWd0 SingleReg:$rs1, SingleReg:$rs2)>;
@@ -256,6 +258,8 @@ def : Pat<(or i64:$rs1, Signed37_64:$rs2), (ORDd2 SingleReg:$rs1, Signed37_64:$r
 def : Pat<(or i64:$rs1, Wrapped64:$rs2), (ORDd3 SingleReg:$rs1, Wrapped64:$rs2)>;
 def : Pat<(or v2i32:$rs1, v2i32:$rs2), (ORDd0 SingleReg:$rs1, SingleReg:$rs2)>;
 
+def : Pat<(or v4i16:$rs1, v4i16:$rs2), (ORDd0 SingleReg:$rs1, SingleReg:$rs2)>;
+
 // ORW
 def : Pat<(or i32:$rs1, i32:$rs2), (ORWd0 SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(or i32:$rs1, Signed10_32:$rs2), (ORWd1 SingleReg:$rs1, Signed10_32:$rs2)>;
@@ -266,6 +270,9 @@ def : Pat<(sub i64:$rs1, i64:$rs2), (SBFDd0 SingleReg:$rs2, SingleReg:$rs1)>;
 def : Pat<(sub Signed10_64:$rs1, i64:$rs2), (SBFDd1 SingleReg:$rs2, Signed10_64:$rs1)>;
 def : Pat<(sub Signed37_64:$rs1, i64:$rs2), (SBFDd2 SingleReg:$rs2, Signed37_64:$rs1)>;
 def : Pat<(sub Wrapped64:$rs1, i64:$rs2), (SBFDd3 SingleReg:$rs2, Wrapped64:$rs1)>;
+
+// SBFHQ
+def : Pat<(sub v4i16:$rs1, v4i16:$rs2), (SBFHQd0 SingleReg:$rs2, SingleReg:$rs1)>;
 
 def : Pat<(ineg i32:$v), (NEGW SingleReg:$v)>;
 def : Pat<(ineg i64:$v), (NEGD SingleReg:$v)>;
@@ -314,6 +321,8 @@ def : Pat<(xor i64:$rs1, Signed10_64:$rs2), (XORDd1 SingleReg:$rs1, Signed10_64:
 def : Pat<(xor i64:$rs1, Signed37_64:$rs2), (XORDd2 SingleReg:$rs1, Signed37_64:$rs2)>;
 def : Pat<(xor i64:$rs1, Wrapped64:$rs2), (XORDd3 SingleReg:$rs1, Wrapped64:$rs2)>;
 def : Pat<(xor v2i32:$rs1, v2i32:$rs2), (XORDd0 SingleReg:$rs1, SingleReg:$rs2)>;
+
+def : Pat<(xor v4i16:$rs1, v4i16:$rs2), (XORDd0 SingleReg:$rs1, SingleReg:$rs2)>;
 
 // XORW
 def : Pat<(xor i32:$rs1, i32:$rs2), (XORWd0 SingleReg:$rs1, SingleReg:$rs2)>;
@@ -403,6 +412,9 @@ def : Pat<(mul i64:$rs1, Wrapped64:$rs2), (MULDd3 SingleReg:$rs1, Wrapped64:$rs2
 // MULW
 def : Pat<(mul i32:$rs1, i32:$rs2), (MULWd0 SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(mul i32:$rs1, Wrapped32:$rs2), (MULWd1 SingleReg:$rs1, Wrapped32:$rs2)>;
+
+// MULHQ
+def : Pat<(mul v4i16:$rs1, v4i16:$rs2), (MULHQd0 SingleReg:$rs1, SingleReg:$rs2)>;
 
 // MULWP
 def : Pat<(mul v2i32:$rs1, v2i32:$rs2), (MULWPd0 SingleReg:$rs1, SingleReg:$rs2)>;
