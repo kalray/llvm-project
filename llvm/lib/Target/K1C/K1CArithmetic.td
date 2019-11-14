@@ -214,7 +214,6 @@ def : Pat<(and i64:$rs1, Signed10_64:$rs2), (ANDDd1 SingleReg:$rs1, Signed10_64:
 def : Pat<(and i64:$rs1, Signed37_64:$rs2), (ANDDd2 SingleReg:$rs1, Signed37_64:$rs2)>;
 def : Pat<(and i64:$rs1, Wrapped64:$rs2), (ANDDd3 SingleReg:$rs1, Wrapped64:$rs2)>;
 def : Pat<(and v2i32:$rs1, v2i32:$rs2), (ANDDd0 SingleReg:$rs1, SingleReg:$rs2)>;
-
 def : Pat<(and v4i16:$rs1, v4i16:$rs2), (ANDDd0 SingleReg:$rs1, SingleReg:$rs2)>;
 
 // ANDW
@@ -257,7 +256,6 @@ def : Pat<(or i64:$rs1, Signed10_64:$rs2), (ORDd1 SingleReg:$rs1, Signed10_64:$r
 def : Pat<(or i64:$rs1, Signed37_64:$rs2), (ORDd2 SingleReg:$rs1, Signed37_64:$rs2)>;
 def : Pat<(or i64:$rs1, Wrapped64:$rs2), (ORDd3 SingleReg:$rs1, Wrapped64:$rs2)>;
 def : Pat<(or v2i32:$rs1, v2i32:$rs2), (ORDd0 SingleReg:$rs1, SingleReg:$rs2)>;
-
 def : Pat<(or v4i16:$rs1, v4i16:$rs2), (ORDd0 SingleReg:$rs1, SingleReg:$rs2)>;
 
 // ORW
@@ -321,7 +319,6 @@ def : Pat<(xor i64:$rs1, Signed10_64:$rs2), (XORDd1 SingleReg:$rs1, Signed10_64:
 def : Pat<(xor i64:$rs1, Signed37_64:$rs2), (XORDd2 SingleReg:$rs1, Signed37_64:$rs2)>;
 def : Pat<(xor i64:$rs1, Wrapped64:$rs2), (XORDd3 SingleReg:$rs1, Wrapped64:$rs2)>;
 def : Pat<(xor v2i32:$rs1, v2i32:$rs2), (XORDd0 SingleReg:$rs1, SingleReg:$rs2)>;
-
 def : Pat<(xor v4i16:$rs1, v4i16:$rs2), (XORDd0 SingleReg:$rs1, SingleReg:$rs2)>;
 
 // XORW
