@@ -97,9 +97,24 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setLoadExtAction(ISD::EXTLOAD, MVT::v2i32, MVT::v2i16, Expand);
   setLoadExtAction(ISD::SEXTLOAD, MVT::v2i32, MVT::v2i16, Expand);
 
+  setLoadExtAction(ISD::ZEXTLOAD, MVT::v2i32, MVT::v2i8, Expand);
+  setLoadExtAction(ISD::EXTLOAD, MVT::v2i32, MVT::v2i8, Expand);
+  setLoadExtAction(ISD::SEXTLOAD, MVT::v2i32, MVT::v2i8, Expand);
+
+  setLoadExtAction(ISD::ZEXTLOAD, MVT::v4i16, MVT::v4i8, Expand);
+  setLoadExtAction(ISD::EXTLOAD, MVT::v4i16, MVT::v4i8, Expand);
+  setLoadExtAction(ISD::SEXTLOAD, MVT::v4i16, MVT::v4i8, Expand);
+
   setTruncStoreAction(MVT::v2i32, MVT::v2i16, Expand);
+  setTruncStoreAction(MVT::v2i32, MVT::v2i8, Expand);
+  setTruncStoreAction(MVT::v4i16, MVT::v4i8, Expand);
+
+  setOperationAction(ISD::AND, MVT::v8i8, Expand);
+  setOperationAction(ISD::OR, MVT::v8i8, Expand);
+  setOperationAction(ISD::XOR, MVT::v8i8, Expand);
 
   setOperationAction(ISD::SIGN_EXTEND_INREG, MVT::v2i16, Expand);
+  setOperationAction(ISD::SIGN_EXTEND_INREG, MVT::v2i32, Expand);
 
   for (auto VT : {MVT::v2i32, MVT::v4i16}) {
     setOperationAction(ISD::UDIV, VT, Expand);
