@@ -62,8 +62,11 @@ void K1CFrameLowering::adjustStack(MachineFunction &MF) const {
   StackSize -= K1CFI->getMemArgsSaveSize();
 
   // Get the alignment.
-  uint64_t StackAlign = RI->needsStackRealignment(MF) ? MFI.getMaxAlignment()
-                                                      : getStackAlignment();
+  uint64_t StackAlign = getStackAlignment();
+  if (RI->needsStackRealignment(MF)) {
+    const uint64_t MaxAlign = MFI.getMaxAlignment();
+    StackAlign = MaxAlign ? MaxAlign : StackAlign;
+  }
 
   // Align the stack.
   StackSize = alignTo(StackSize, StackAlign);
