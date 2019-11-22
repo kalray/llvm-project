@@ -12,6 +12,7 @@
 //
 //===----------------------------------------------------------------------===//
 
+#include "InstPrinter/K1CInstPrinter.h"
 #include "K1C.h"
 #include "MCTargetDesc/K1CMCTargetDesc.h"
 #include "llvm/CodeGen/AsmPrinter.h"
@@ -34,6 +35,13 @@ public:
 
   bool emitPseudoExpansionLowering(MCStreamer &OutStreamer,
                                    const MachineInstr *MI);
+
+  bool PrintAsmOperand(const MachineInstr *MI, unsigned OpNo,
+                       unsigned AsmVariant, const char *ExtraCode,
+                       raw_ostream &OS) override;
+  bool PrintAsmMemoryOperand(const MachineInstr *MI, unsigned OpNo,
+                             unsigned AsmVariant, const char *ExtraCode,
+                             raw_ostream &OS) override;
 };
 
 } // end of namespace
@@ -59,6 +67,54 @@ void K1CAsmPrinter::EmitInstruction(const MachineInstr *MI) {
   }
 
   OutStreamer->EmitRawText(StringRef("\t;;\n"));
+}
+
+bool K1CAsmPrinter::PrintAsmOperand(const MachineInstr *MI, unsigned OpNo,
+                                    unsigned AsmVariant, const char *ExtraCode,
+                                    raw_ostream &OS) {
+  if (AsmVariant != 0)
+    report_fatal_error("There are no defined alternate asm variants");
+
+  // First try the generic code, which knows about modifiers like 'c' and 'n'.
+  if (!AsmPrinter::PrintAsmOperand(MI, OpNo, AsmVariant, ExtraCode, OS))
+    return false;
+
+  if (!ExtraCode) {
+    const MachineOperand &MO = MI->getOperand(OpNo);
+    switch (MO.getType()) {
+    case MachineOperand::MO_Immediate:
+      OS << MO.getImm();
+      return false;
+    case MachineOperand::MO_Register:
+      OS << K1CInstPrinter::getRegisterName(MO.getReg());
+      return false;
+    default:
+      break;
+    }
+  }
+
+  return true;
+}
+
+bool K1CAsmPrinter::PrintAsmMemoryOperand(const MachineInstr *MI, unsigned OpNo,
+                                          unsigned AsmVariant,
+                                          const char *ExtraCode,
+                                          raw_ostream &OS) {
+  if (AsmVariant != 0)
+    report_fatal_error("There are no defined alternate asm variants");
+
+  if (!ExtraCode) {
+    const MachineOperand &MO = MI->getOperand(OpNo);
+    // For now, we only support register memory operands in registers and
+    // assume there is no addend
+    if (!MO.isReg())
+      return true;
+
+    OS << "0(" << K1CInstPrinter::getRegisterName(MO.getReg()) << ")";
+    return false;
+  }
+
+  return AsmPrinter::PrintAsmMemoryOperand(MI, OpNo, AsmVariant, ExtraCode, OS);
 }
 
 extern "C" void LLVMInitializeK1CAsmPrinter() {
