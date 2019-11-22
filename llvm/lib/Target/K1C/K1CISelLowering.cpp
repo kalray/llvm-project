@@ -850,3 +850,34 @@ SDValue K1CTargetLowering::lowerBlockAddress(SDValue Op,
 
   return Result;
 }
+
+#define GET_REGISTER_MATCHER
+#include "K1CGenAsmMatcher.inc"
+
+std::pair<unsigned, const TargetRegisterClass *>
+K1CTargetLowering::getRegForInlineAsmConstraint(const TargetRegisterInfo *TRI,
+                                                StringRef Constraint,
+                                                MVT VT) const {
+  if (Constraint.size() == 1) {
+    switch (Constraint[0]) {
+    case 'r':
+      if (VT == MVT::i32 || VT == MVT::i64)
+        return std::make_pair(0U, &K1C::SingleRegRegClass);
+      llvm_unreachable("unsuported register type");
+    default:
+      break;
+    }
+  }
+  if (Constraint.size() >= 4 && Constraint.front() == '{' &&
+      Constraint.back() == '}') {
+    StringRef regName = Constraint.substr(1, Constraint.size() - 2);
+    unsigned RegNo = MatchRegisterName(regName);
+    if (RegNo == 0) {
+      RegNo = MatchRegisterAltName(regName);
+    }
+    if (K1C::SingleRegRegClass.contains(RegNo))
+      return std::make_pair(RegNo, &K1C::SingleRegRegClass);
+  }
+
+  return TargetLowering::getRegForInlineAsmConstraint(TRI, Constraint, VT);
+}

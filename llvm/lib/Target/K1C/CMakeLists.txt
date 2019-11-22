@@ -1,5 +1,6 @@
 set(LLVM_TARGET_DEFINITIONS K1C.td)
 
+tablegen(LLVM K1CGenAsmMatcher.inc -gen-asm-matcher)
 tablegen(LLVM K1CGenAsmWriter.inc -gen-asm-writer)
 tablegen(LLVM K1CGenRegisterInfo.inc -gen-register-info)
 tablegen(LLVM K1CGenInstrInfo.inc -gen-instr-info)
