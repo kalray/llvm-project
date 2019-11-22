@@ -36,7 +36,9 @@ enum NodeType : unsigned {
   PICInternIndirection,
   PICExternIndirection,
   PICPCRelativeGOTAddr,
-  PICWRAPPER
+  PICWRAPPER,
+  FENCE,
+  DINVAL
 };
 } // namespace K1CISD
 
@@ -87,10 +89,15 @@ private:
   SDValue lowerFRAMEADDR(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerSELECT(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerBlockAddress(SDValue Op, SelectionDAG &DAG) const;
+  SDValue lowerINTRINSIC_VOID(SDValue Op, SelectionDAG &DAG) const;
 
   bool IsEligibleForTailCallOptimization(
       CCState &CCInfo, CallLoweringInfo &CLI, MachineFunction &MF,
       const SmallVector<CCValAssign, 16> &ArgsLocs) const;
+
+  std::pair<unsigned, const TargetRegisterClass *>
+  getRegForInlineAsmConstraint(const TargetRegisterInfo *TRI,
+                               StringRef Constraint, MVT VT) const override;
 };
 
 } // namespace llvm

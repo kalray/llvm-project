@@ -31,6 +31,9 @@ def SelectCC : SDNode<"K1CISD::SELECT_CC", SDT_K1CSelectCC, []>;
 
 def Tail : SDNode <"K1CISD::TAIL", SDTK1CTail, [SDNPHasChain, SDNPOptInGlue, SDNPOutGlue, SDNPVariadic]>;
 
+def Fence : SDNode<"K1CISD::FENCE", SDTNone, [SDNPHasChain]>;
+def Dinval : SDNode<"K1CISD::DINVAL", SDTNone, [SDNPHasChain]>;
+
 //
 // Function return
 //
@@ -73,8 +76,8 @@ def ADJCALLSTACKUP : K1C_PseudoInstr<(outs), (ins i32imm:$amt1, i32imm:$amt2),
 } // Defs = [R12], Uses = [R12]
 
 def MAKETLS : REGISTERW_EXTEND27_UPPER27_LOWER10_TRIPLE
-  <(outs SingleReg:$SingleReg), (ins Wrapped64:$Wrapped64),
-  "make $SingleReg = @tlsle($Wrapped64)",
+  <(outs SingleReg:$SingleReg), (ins Wrapped64:$imm),
+  "make $SingleReg = @tlsle($imm)",
   [],
   ALU_TINY_Y>;
 
@@ -266,6 +269,7 @@ def : Pat<(i64 (sext i16:$val)), (SXHD SingleReg:$val)>;
 def : Pat<(i64 (zext i32:$val)), (ZXWD SingleReg:$val)>;
 def : Pat<(i64 (sext i32:$val)), (SXWD SingleReg:$val)>;
 
+def : Pat<(i32 (sext_inreg i32:$val, i1)), (ANDWd1 SingleReg:$val, (i32 1))>;
 def : Pat<(i32 (sext_inreg i32:$val, i8)), (SXBD SingleReg:$val)>;
 def : Pat<(i32 (sext_inreg i32:$val, i16)), (SXHD SingleReg:$val)>;
 
@@ -318,6 +322,9 @@ def : Pat<(cttz i64:$src), (CTZD SingleReg:$src)>;
 
 def : Pat<(ctlz i32:$src), (CLZW SingleReg:$src)>;
 def : Pat<(ctlz i64:$src), (CLZD SingleReg:$src)>;
+
+def : Pat<(Fence), (FENCE)>;
+def : Pat<(Dinval), (DINVAL)>;
 
 def : Pat<(v2i32 (build_vector i32:$v1, i32:$v2)),
         (ORDd0
