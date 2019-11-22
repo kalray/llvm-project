@@ -50,5 +50,6 @@ BUILTIN(__builtin_k1_ldu, "ULLiCv*", "")
 BUILTIN(__builtin_k1_lwzu, "ULiCv*", "")
 BUILTIN(__builtin_k1_wfxl, "vUcULLi", "")
 BUILTIN(__builtin_k1_wfxm, "vUcULLi", "")
+BUILTIN(__builtin_k1_sbmm8, "ULLiiULLi", "")
 
 #undef BUILTIN
