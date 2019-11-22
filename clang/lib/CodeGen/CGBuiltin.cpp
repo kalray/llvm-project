@@ -5430,6 +5430,8 @@ static Value *EmitTargetArchBuiltinExpr(CodeGenFunction *CGF,
     return CGF->EmitWebAssemblyBuiltinExpr(BuiltinID, E);
   case llvm::Triple::hexagon:
     return CGF->EmitHexagonBuiltinExpr(BuiltinID, E);
+  case llvm::Triple::k1c:
+    return CGF->EmitK1CBuiltinExpr(BuiltinID, E);
   case llvm::Triple::riscv32:
   case llvm::Triple::riscv64:
     return CGF->EmitRISCVBuiltinExpr(BuiltinID, E, ReturnValue);
@@ -19406,4 +19408,53 @@ Value *CodeGenFunction::EmitRISCVBuiltinExpr(unsigned BuiltinID,
 
   llvm::Function *F = CGM.getIntrinsic(ID, IntrinsicTypes);
   return Builder.CreateCall(F, Ops, "");
+}
+
+Value *CodeGenFunction::EmitK1CBuiltinExpr(unsigned BuiltinID,
+                                           const CallExpr *E) {
+  switch (BuiltinID) {
+  case K1C::BI__builtin_k1_get: {
+    SourceLocation Loc = E->getExprLoc();
+    Value *Reg =
+        EmitScalarConversion(EmitScalarExpr(E->getArg(0)),
+                             E->getArg(0)->getType(), getContext().IntTy, Loc);
+
+    Value *Callee = CGM.getIntrinsic(Intrinsic::k1c_get);
+    return Builder.CreateCall(Callee, {Reg});
+  }
+  case K1C::BI__builtin_k1_dinval: {
+    Value *Callee = CGM.getIntrinsic(Intrinsic::k1c_dinval);
+    return Builder.CreateCall(Callee, {});
+  }
+  case K1C::BI__builtin_k1_fence: {
+    Value *Callee = CGM.getIntrinsic(Intrinsic::k1c_fence);
+    return Builder.CreateCall(Callee, {});
+  }
+  case K1C::BI__builtin_k1_wfxl: {
+    SourceLocation Loc = E->getExprLoc();
+    Value *A1 = EmitScalarConversion(EmitScalarExpr(E->getArg(0)),
+                                     E->getArg(0)->getType(),
+                                     getContext().UnsignedIntTy, Loc);
+    Value *A2 = EmitScalarConversion(EmitScalarExpr(E->getArg(1)),
+                                     E->getArg(1)->getType(),
+                                     getContext().UnsignedLongLongTy, Loc);
+
+    Value *Callee = CGM.getIntrinsic(Intrinsic::k1c_wfxl);
+    return Builder.CreateCall(Callee, {A1, A2});
+  }
+
+  case K1C::BI__builtin_k1_sbmm8: {
+    SourceLocation Loc = E->getExprLoc();
+    Value *A1 =
+        EmitScalarConversion(EmitScalarExpr(E->getArg(0)),
+                             E->getArg(0)->getType(), getContext().IntTy, Loc);
+    Value *A2 = EmitScalarConversion(EmitScalarExpr(E->getArg(1)),
+                                     E->getArg(1)->getType(),
+                                     getContext().UnsignedLongLongTy, Loc);
+
+    Value *Callee = CGM.getIntrinsic(Intrinsic::k1c_sbmm8);
+    return Builder.CreateCall(Callee, {A1, A2});
+  }
+  }
+  return nullptr;
 }
