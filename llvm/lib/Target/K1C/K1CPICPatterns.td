@@ -21,7 +21,7 @@ def PICPCRELGOTADDR : REGISTERW_EXTEND27_UPPER27_LOWER10_TRIPLE
 
 def PICINTERNINDIRECTION : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
   <(outs SingleReg:$symaddr), (ins SingleReg:$gotaddr, Wrapped64:$gotoff),
-   "addd $symaddr = $gotaddr, @gotoff($gotoff)",
+   "addd $symaddr = $gotaddr, @gotoff( $gotoff )",
    [(set (i64 SingleReg:$symaddr),
          (PICInternIndirection (i64 SingleReg:$gotaddr),
                                (i64 tglobaladdr:$gotoff)))],
@@ -29,7 +29,7 @@ def PICINTERNINDIRECTION : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
 
 def PICEXTERNINDIRECTION : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
   <(outs SingleReg:$symaddr), (ins SingleReg:$gotaddr, Wrapped64:$gotoff),
-   "ld $symaddr = @got($gotoff)[$gotaddr]",
+   "ld $symaddr = @got( $gotoff )[$gotaddr]",
    [(set (i64 SingleReg:$symaddr),
          (PICExternIndirection (i64 SingleReg:$gotaddr),
                                (i64 tglobaladdr:$gotoff)))],
@@ -50,6 +50,6 @@ def : Pat<(Call (PICExternIndirection (i64 SingleReg:$gotaddr),
 
 def PICPCREL : REGISTERW_EXTEND27_UPPER27_LOWER10_TRIPLE
   <(outs SingleReg:$SingleReg), (ins Wrapped64:$Wrapped64),
-  "pcrel $SingleReg = @pcrel($Wrapped64)",
+  "pcrel $SingleReg = @pcrel( $Wrapped64 )",
   [(set (i64 SingleReg:$SingleReg), (PICK1CWrapper tblockaddress:$Wrapped64))],
   ALU_FULL_Y>;
