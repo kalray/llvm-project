@@ -91,15 +91,15 @@ multiclass MC_03<string OpcStr> {
      [ ]>;
   def d3 : VARIANT_LSUCOND_REGISTERY_REGISTERW_REGISTERZ_SIMPLE
     <(outs SingleReg:$a4), (ins SingleReg:$a3, SingleReg:$a5, SingleReg:$a44, VariantMod:$a1, ScalarcondMod:$a2),
-     !strconcat (OpcStr, "$a1$a2 $a3? $a4 = [$a5]"),
+     !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = [$a5]"),
      [ ]>;
   def d4 : VARIANT_LSUCOND_REGISTERY_REGISTERW_OFFSET27_REGISTERZ_DOUBLE
     <(outs SingleReg:$a4), (ins SingleReg:$a3, Signed27:$a5, SingleReg:$a6, SingleReg:$a44, VariantMod:$a1, ScalarcondMod:$a2),
-     !strconcat (OpcStr, "$a1$a2 $a3? $a4 = $a5[$a6]"),
+     !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = $a5[$a6]"),
      [ ]>;
   def d5 : VARIANT_LSUCOND_REGISTERY_REGISTERW_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
     <(outs SingleReg:$a4), (ins SingleReg:$a3, Signed54:$a5, SingleReg:$a6, SingleReg:$a44, VariantMod:$a1, ScalarcondMod:$a2),
-     !strconcat (OpcStr, "$a1$a2 $a3? $a4 = $a5[$a6]"),
+     !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = $a5[$a6]"),
      [ ]>;
   def d6 : VARIANT_SCALING_REGISTERW_REGISTERY_REGISTERZ_SIMPLE
     <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, VariantMod:$a1, ScalingMod:$a2),
@@ -124,15 +124,15 @@ multiclass MC_04<string OpcStr> {
      [ ]>;
   def d3 : VARIANT_LSUCOND_REGISTERY_REGISTERM_REGISTERZ_SIMPLE
     <(outs PairedReg:$a4), (ins SingleReg:$a3, SingleReg:$a5, PairedReg:$a44, VariantMod:$a1, ScalarcondMod:$a2),
-     !strconcat (OpcStr, "$a1$a2 $a3? $a4 = [$a5]"),
+     !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = [$a5]"),
      [ ]>;
   def d4 : VARIANT_LSUCOND_REGISTERY_REGISTERM_OFFSET27_REGISTERZ_DOUBLE
     <(outs PairedReg:$a4), (ins SingleReg:$a3, Signed27:$a5, SingleReg:$a6, PairedReg:$a44, VariantMod:$a1, ScalarcondMod:$a2),
-     !strconcat (OpcStr, "$a1$a2 $a3? $a4 = $a5[$a6]"),
+     !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = $a5[$a6]"),
      [ ]>;
   def d5 : VARIANT_LSUCOND_REGISTERY_REGISTERM_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
     <(outs PairedReg:$a4), (ins SingleReg:$a3, Signed54:$a5, SingleReg:$a6, PairedReg:$a44, VariantMod:$a1, ScalarcondMod:$a2),
-     !strconcat (OpcStr, "$a1$a2 $a3? $a4 = $a5[$a6]"),
+     !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = $a5[$a6]"),
      [ ]>;
   def d6 : VARIANT_SCALING_REGISTERM_REGISTERY_REGISTERZ_SIMPLE
     <(outs PairedReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, VariantMod:$a1, ScalingMod:$a2),
@@ -157,15 +157,15 @@ multiclass MC_05<string OpcStr> {
      [ ]>;
   def d3 : VARIANT_LSUCOND_REGISTERY_REGISTERN_REGISTERZ_SIMPLE
     <(outs QuadReg:$a4), (ins SingleReg:$a3, SingleReg:$a5, QuadReg:$a44, VariantMod:$a1, ScalarcondMod:$a2),
-     !strconcat (OpcStr, "$a1$a2 $a3? $a4 = [$a5]"),
+     !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = [$a5]"),
      [ ]>;
   def d4 : VARIANT_LSUCOND_REGISTERY_REGISTERN_OFFSET27_REGISTERZ_DOUBLE
     <(outs QuadReg:$a4), (ins SingleReg:$a3, Signed27:$a5, SingleReg:$a6, QuadReg:$a44, VariantMod:$a1, ScalarcondMod:$a2),
-     !strconcat (OpcStr, "$a1$a2 $a3? $a4 = $a5[$a6]"),
+     !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = $a5[$a6]"),
      [ ]>;
   def d5 : VARIANT_LSUCOND_REGISTERY_REGISTERN_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
     <(outs QuadReg:$a4), (ins SingleReg:$a3, Signed54:$a5, SingleReg:$a6, QuadReg:$a44, VariantMod:$a1, ScalarcondMod:$a2),
-     !strconcat (OpcStr, "$a1$a2 $a3? $a4 = $a5[$a6]"),
+     !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = $a5[$a6]"),
      [ ]>;
   def d6 : VARIANT_SCALING_REGISTERN_REGISTERY_REGISTERZ_SIMPLE
     <(outs QuadReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, VariantMod:$a1, ScalingMod:$a2),
@@ -190,15 +190,15 @@ multiclass MC_06<string OpcStr> {
      [ ]>;
   def d3 : SPECULATE_LSUCOND_REGISTERY_REGISTERA_REGISTERZ_SIMPLE
     <(outs AccelReg:$a4), (ins SingleReg:$a3, SingleReg:$a5, AccelReg:$a44, SpeculateMod:$a1, ScalarcondMod:$a2),
-     !strconcat (OpcStr, "$a1$a2 $a3? $a4 = [$a5]"),
+     !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = [$a5]"),
      [ ]>;
   def d4 : SPECULATE_LSUCOND_REGISTERY_REGISTERA_OFFSET27_REGISTERZ_DOUBLE
     <(outs AccelReg:$a4), (ins SingleReg:$a3, Signed27:$a5, SingleReg:$a6, AccelReg:$a44, SpeculateMod:$a1, ScalarcondMod:$a2),
-     !strconcat (OpcStr, "$a1$a2 $a3? $a4 = $a5[$a6]"),
+     !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = $a5[$a6]"),
      [ ]>;
   def d5 : SPECULATE_LSUCOND_REGISTERY_REGISTERA_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
     <(outs AccelReg:$a4), (ins SingleReg:$a3, Signed54:$a5, SingleReg:$a6, AccelReg:$a44, SpeculateMod:$a1, ScalarcondMod:$a2),
-     !strconcat (OpcStr, "$a1$a2 $a3? $a4 = $a5[$a6]"),
+     !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = $a5[$a6]"),
      [ ]>;
   def d6 : SPECULATE_SCALING_REGISTERA_REGISTERY_REGISTERZ_SIMPLE
     <(outs AccelReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, SpeculateMod:$a1, ScalingMod:$a2),
@@ -218,15 +218,15 @@ multiclass MC_06<string OpcStr> {
      [ ]>;
   def da : COLUMNSEL_SPECULATE_LSUCOND_REGISTERY_REGISTERAQ_REGISTERZ_SIMPLE
     <(outs ExtendReg:$a5), (ins SingleReg:$a4, SingleReg:$a6, ColumnselMod:$a1, SpeculateMod:$a2, ScalarcondMod:$a3),
-     !strconcat (OpcStr, "$a1$a2$a3 $a4? $a5 = [$a6]"),
+     !strconcat (OpcStr, "$a1$a2$a3 $a4 ? $a5 = [$a6]"),
      [ ]>;
   def db : COLUMNSEL_SPECULATE_LSUCOND_REGISTERY_REGISTERAQ_OFFSET27_REGISTERZ_DOUBLE
     <(outs ExtendReg:$a5), (ins SingleReg:$a4, Signed27:$a6, SingleReg:$a7, ColumnselMod:$a1, SpeculateMod:$a2, ScalarcondMod:$a3),
-     !strconcat (OpcStr, "$a1$a2$a3 $a4? $a5 = $a6[$a7]"),
+     !strconcat (OpcStr, "$a1$a2$a3 $a4 ? $a5 = $a6[$a7]"),
      [ ]>;
   def dc : COLUMNSEL_SPECULATE_LSUCOND_REGISTERY_REGISTERAQ_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
     <(outs ExtendReg:$a5), (ins SingleReg:$a4, Signed54:$a6, SingleReg:$a7, ColumnselMod:$a1, SpeculateMod:$a2, ScalarcondMod:$a3),
-     !strconcat (OpcStr, "$a1$a2$a3 $a4? $a5 = $a6[$a7]"),
+     !strconcat (OpcStr, "$a1$a2$a3 $a4 ? $a5 = $a6[$a7]"),
      [ ]>;
   def dd : COLUMNSEL_SPECULATE_SCALING_REGISTERAQ_REGISTERY_REGISTERZ_SIMPLE
     <(outs ExtendReg:$a4), (ins SingleReg:$a5, SingleReg:$a6, ColumnselMod:$a1, SpeculateMod:$a2, ScalingMod:$a3),
@@ -262,17 +262,17 @@ multiclass MC_07<string OpcStr> { // $a1=12, $a2=$r12, $a3=$r0
      LSU_AUXR>;
   def d4 : LSUCOND_REGISTERY_REGISTERZ_REGISTERT_SIMPLE
     <(outs), (ins SingleReg:$a2, SingleReg:$a3, SingleReg:$a4, ScalarcondMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2? [$a3] = $a4"),
+     !strconcat (OpcStr, "$a1 $a2 ? [$a3] = $a4"),
      [ ],
      LSU_AUXR>;
   def d5 : LSUCOND_REGISTERY_OFFSET27_REGISTERZ_REGISTERT_DOUBLE
     <(outs), (ins SingleReg:$a2, Signed27:$a3, SingleReg:$a4, SingleReg:$a5, ScalarcondMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2? $a3[$a4] = $a5"),
+     !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
      [ ],
      LSU_AUXR_X>;
   def d6 : LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_REGISTERT_TRIPLE
     <(outs), (ins SingleReg:$a2, Signed54:$a3, SingleReg:$a4, SingleReg:$a5, ScalarcondMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2? $a3[$a4] = $a5"),
+     !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
      [ ],
      LSU_AUXR_Y>;
 }
@@ -301,17 +301,17 @@ multiclass MC_08<string OpcStr> {
      LSU_AUXR>;
   def d4 : LSUCOND_REGISTERY_REGISTERZ_REGISTERU_SIMPLE
     <(outs), (ins SingleReg:$a2, SingleReg:$a3, PairedReg:$a4, ScalarcondMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2? [$a3] = $a4"),
+     !strconcat (OpcStr, "$a1 $a2 ? [$a3] = $a4"),
      [ ],
      LSU_AUXR>;
   def d5 : LSUCOND_REGISTERY_OFFSET27_REGISTERZ_REGISTERU_DOUBLE
     <(outs), (ins SingleReg:$a2, Signed27:$a3, SingleReg:$a4, PairedReg:$a5, ScalarcondMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2? $a3[$a4] = $a5"),
+     !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
      [ ],
      LSU_AUXR_X>;
   def d6 : LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_REGISTERU_TRIPLE
     <(outs), (ins SingleReg:$a2, Signed54:$a3, SingleReg:$a4, PairedReg:$a5, ScalarcondMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2? $a3[$a4] = $a5"),
+     !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
      [ ],
      LSU_AUXR_Y>;
 }
@@ -337,15 +337,15 @@ multiclass MC_09<string OpcStr> {
      [ ]>;
   def d4 : LSUCOND_REGISTERY_REGISTERZ_REGISTERV_SIMPLE
     <(outs), (ins SingleReg:$a2, SingleReg:$a3, QuadReg:$a4, ScalarcondMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2? [$a3] = $a4"),
+     !strconcat (OpcStr, "$a1 $a2 ? [$a3] = $a4"),
      [ ]>;
   def d5 : LSUCOND_REGISTERY_OFFSET27_REGISTERZ_REGISTERV_DOUBLE
     <(outs), (ins SingleReg:$a2, Signed27:$a3, SingleReg:$a4, QuadReg:$a5, ScalarcondMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2? $a3[$a4] = $a5"),
+     !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
      [ ]>;
   def d6 : LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_REGISTERV_TRIPLE
     <(outs), (ins SingleReg:$a2, Signed54:$a3, SingleReg:$a4, QuadReg:$a5, ScalarcondMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2? $a3[$a4] = $a5"),
+     !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
      [ ]>;
 }
 
@@ -370,15 +370,15 @@ multiclass MC_0A<string OpcStr> {
      [ ]>;
   def d4 : LSUCOND_REGISTERY_REGISTERZ_REGISTERE_SIMPLE
     <(outs), (ins SingleReg:$a2, SingleReg:$a3, AccelReg:$a4, ScalarcondMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2? [$a3] = $a4"),
+     !strconcat (OpcStr, "$a1 $a2 ? [$a3] = $a4"),
      [ ]>;
   def d5 : LSUCOND_REGISTERY_OFFSET27_REGISTERZ_REGISTERE_DOUBLE
     <(outs), (ins SingleReg:$a2, Signed27:$a3, SingleReg:$a4, AccelReg:$a5, ScalarcondMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2? $a3[$a4] = $a5"),
+     !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
      [ ]>;
   def d6 : LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_REGISTERE_TRIPLE
     <(outs), (ins SingleReg:$a2, Signed54:$a3, SingleReg:$a4, AccelReg:$a5, ScalarcondMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2? $a3[$a4] = $a5"),
+     !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
      [ ]>;
 }
 
@@ -403,17 +403,17 @@ multiclass MC_0B<string OpcStr> {
      LSU_AUXR_AUXW>;
   def d3 : LSUCOND_REGISTERY_REGISTERZ_REGISTERU_SIMPLE
     <(outs SingleReg:$o), (ins SingleReg:$a2, SingleReg:$a3, PairedReg:$a4, ScalarcondMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2? [$a3] = $a4"),
+     !strconcat (OpcStr, "$a1 $a2 ? [$a3] = $a4"),
      [ ],
      LSU_AUXR_AUXW>;
   def d4 : LSUCOND_REGISTERY_OFFSET27_REGISTERZ_REGISTERU_DOUBLE
     <(outs SingleReg:$o), (ins SingleReg:$a2, Signed27:$a3, SingleReg:$a4, PairedReg:$a5, ScalarcondMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2? $a3[$a4] = $a5"),
+     !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
      [ ],
      LSU_AUXR_AUXW_X>;
   def d5 : LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_REGISTERU_TRIPLE
     <(outs SingleReg:$o), (ins SingleReg:$a2, Signed54:$a3, SingleReg:$a4, PairedReg:$a5, ScalarcondMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2? $a3[$a4] = $a5"),
+     !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
      [ ],
      LSU_AUXR_AUXW_Y>;
 }
@@ -440,15 +440,15 @@ multiclass MC_0C<string OpcStr> {
      [ ]>;
   def d4 : LSUCOND_REGISTERY_REGISTERW_REGISTERZ_SIMPLE
     <(outs SingleReg:$a3), (ins SingleReg:$a2, SingleReg:$a4, SingleReg:$a33, ScalarcondMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2? $a3 = [$a4]"),
+     !strconcat (OpcStr, "$a1 $a2 ? $a3 = [$a4]"),
      [ ]>;
   def d5 : LSUCOND_REGISTERY_REGISTERW_OFFSET27_REGISTERZ_DOUBLE
     <(outs SingleReg:$a3), (ins SingleReg:$a2, Signed27:$a4, SingleReg:$a5, SingleReg:$a33, ScalarcondMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2? $a3 = $a4[$a5]"),
+     !strconcat (OpcStr, "$a1 $a2 ? $a3 = $a4[$a5]"),
      [ ]>;
   def d6 : LSUCOND_REGISTERY_REGISTERW_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
     <(outs SingleReg:$a3), (ins SingleReg:$a2, Signed54:$a4, SingleReg:$a5, SingleReg:$a33, ScalarcondMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2? $a3 = $a4[$a5]"),
+     !strconcat (OpcStr, "$a1 $a2 ? $a3 = $a4[$a5]"),
      [ ]>;
 }
 
@@ -478,17 +478,17 @@ multiclass MC_0D<string OpcStr> {
      LSU_AUXR_AUXW>;
   def d4 : LSUCOND_REGISTERY_REGISTERZ_REGISTERT_SIMPLE
     <(outs), (ins SingleReg:$a2, SingleReg:$a3, SingleReg:$a4, ScalarcondMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2? [$a3] = $a4"),
+     !strconcat (OpcStr, "$a1 $a2 ? [$a3] = $a4"),
      [ ],
      LSU_AUXR_AUXW>;
   def d5 : LSUCOND_REGISTERY_OFFSET27_REGISTERZ_REGISTERT_DOUBLE
     <(outs), (ins SingleReg:$a2, Signed27:$a3, SingleReg:$a4, SingleReg:$a5, ScalarcondMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2? $a3[$a4] = $a5"),
+     !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
      [ ],
      LSU_AUXR_AUXW_X>;
   def d6 : LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_REGISTERT_TRIPLE
     <(outs), (ins SingleReg:$a2, Signed54:$a3, SingleReg:$a4, SingleReg:$a5, ScalarcondMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2? $a3[$a4] = $a5"),
+     !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
      [ ],
      LSU_AUXR_AUXW_Y>;
 }
@@ -517,15 +517,15 @@ multiclass MC_0E<string OpcStr> {
      [ ]>;
   def d4 : LSUCOND_REGISTERY_REGISTERZ_SIMPLE
     <(outs), (ins SingleReg:$a2, SingleReg:$a3, ScalarcondMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2? [$a3]"),
+     !strconcat (OpcStr, "$a1 $a2 ? [$a3]"),
      [ ]>;
   def d5 : LSUCOND_REGISTERY_OFFSET27_REGISTERZ_DOUBLE
     <(outs), (ins SingleReg:$a2, Signed27:$a3, SingleReg:$a4, ScalarcondMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2? $a3[$a4]"),
+     !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4]"),
      [ ]>;
   def d6 : LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
     <(outs), (ins SingleReg:$a2, Signed54:$a3, SingleReg:$a4, ScalarcondMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2? $a3[$a4]"),
+     !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4]"),
      [ ]>;
 }
 
@@ -890,19 +890,19 @@ multiclass MC_19<string OpcStr> {
 multiclass MC_1A<string OpcStr> {
   def d0 : SCALARCOND_REGISTERZ_REGISTERW_SIGNED10_SIMPLE
     <(outs SingleReg:$a3), (ins SingleReg:$a2, Signed10_64:$a4, ScalarcondMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2? $a3 = $a4"),
+     !strconcat (OpcStr, "$a1 $a2 ? $a3 = $a4"),
      [ ]>;
   def d1 : SCALARCOND_REGISTERZ_REGISTERW_UPPER27_LOWER10_DOUBLE
     <(outs SingleReg:$a3), (ins SingleReg:$a2, Signed37_64:$a4, ScalarcondMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2? $a3 = $a4"),
+     !strconcat (OpcStr, "$a1 $a2 ? $a3 = $a4"),
      [ ]>;
   def d2 : SCALARCOND_REGISTERZ_REGISTERW_EXTEND27_UPPER27_LOWER10_TRIPLE
     <(outs SingleReg:$a3), (ins SingleReg:$a2, Wrapped64:$a4, ScalarcondMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2? $a3 = $a4"),
+     !strconcat (OpcStr, "$a1 $a2 ? $a3 = $a4"),
      [ ]>;
   def d3 : SCALARCOND_REGISTERZ_REGISTERW_REGISTERY_SIMPLE
     <(outs SingleReg:$a3), (ins SingleReg:$a2, SingleReg:$a4, ScalarcondMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2? $a3 = $a4"),
+     !strconcat (OpcStr, "$a1 $a2 ? $a3 = $a4"),
      [ ]>;
 }
 
@@ -1555,7 +1555,7 @@ def CALL : PCREL27_SIMPLE
 let isBranch=1, isTerminator=1 in
 def CB : BRANCHCOND_REGISTERZ_PCREL17_SIMPLE
   <(outs), (ins SingleReg:$a2, Pcrel17:$a3, ScalarcondMod:$a1),
-   "cb$a1 $a2? $a3",
+   "cb$a1 $a2 ? $a3",
    [ ]>;
 
 // 7 insns: ['LBZ', 'LBZ', 'LBZ', 'LBZ', 'LBZ', 'LBZ', 'LBZ']
@@ -2457,7 +2457,7 @@ defm CMOVED : MC_1A<"cmoved">;
 // 1 insns: ['CMOVEWP']
 def CMOVEWP : SIMDCOND_REGISTERZ_REGISTERW_REGISTERY_SIMPLE
   <(outs SingleReg:$a3), (ins SingleReg:$a2, SingleReg:$a33, SingleReg:$a4, SimplecondMod:$a1),
-   "cmovewp$a1 $a2? $a3 = $a4",
+   "cmovewp$a1 $a2 ? $a3 = $a4",
    [ ]>;
 
 // 3 insns: ['MAKE', 'MAKE', 'MAKE']
@@ -2581,7 +2581,7 @@ def SXMBHQ : REGISTERW_REGISTERZ_SIMPLE
 // 1 insns: ['CMOVEHQ']
 def CMOVEHQ : SIMDCOND_REGISTERZ_REGISTERW_REGISTERY_SIMPLE
   <(outs SingleReg:$a3), (ins SingleReg:$a2, SingleReg:$a33, SingleReg:$a4, SimplecondMod:$a1),
-   "cmovehq$a1 $a2? $a3 = $a4",
+   "cmovehq$a1 $a2 ? $a3 = $a4",
    [ ]>;
 
 // 2 insns: ['FCOMPW', 'FCOMPW']
