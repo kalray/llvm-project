@@ -23,6 +23,7 @@ class K1C_PseudoInstr<dag outs, dag ins, list<dag> pattern, string asmstr="">
    : K1C_INSTRUCTION<outs, ins, asmstr, pattern, NoItinerary>
 {
   let isPseudo = 1;
+  let isCodeGenOnly = 1;
 }
 
 
