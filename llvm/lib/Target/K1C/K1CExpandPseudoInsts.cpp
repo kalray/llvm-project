@@ -811,6 +811,65 @@ static bool expandACMPSWAPInstr(unsigned int opCode, const K1CInstrInfo *TII,
   return true;
 }
 
+static bool expandGetInstr(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
+                           MachineBasicBlock::iterator MBBI) {
+  MachineInstr &MI = *MBBI;
+  DebugLoc DL = MI.getDebugLoc();
+
+  unsigned DestReg = MI.getOperand(0).getReg();
+  int64_t regNo = MI.getOperand(1).getImm();
+
+  BuildMI(MBB, MBBI, DL, TII->get(K1C::GET), DestReg)
+      .addReg(K1C::SystemRegRegClass.getRegister(regNo));
+
+  MI.eraseFromParent();
+  return true;
+}
+
+static bool expandWFXLInstr(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
+                            MachineBasicBlock::iterator MBBI) {
+  MachineInstr &MI = *MBBI;
+  DebugLoc DL = MI.getDebugLoc();
+
+  unsigned int sysReg =
+      K1C::SystemRegRegClass.getRegister(MI.getOperand(0).getImm());
+  unsigned valReg = MI.getOperand(1).getReg();
+
+  BuildMI(MBB, MBBI, DL, TII->get(K1C::WFXLd0), sysReg).addReg(valReg);
+
+  MI.eraseFromParent();
+  return true;
+}
+
+static bool expandSBMM8Instr(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
+                             MachineBasicBlock::iterator MBBI) {
+  MachineInstr &MI = *MBBI;
+  DebugLoc DL = MI.getDebugLoc();
+
+  unsigned outReg = MI.getOperand(0).getReg();
+  unsigned inReg = MI.getOperand(1).getReg();
+
+  if (MI.getOperand(2).isReg()) {
+    unsigned valReg = MI.getOperand(2).getReg();
+
+    BuildMI(MBB, MBBI, DL, TII->get(K1C::SBMM8d0), outReg)
+        .addReg(inReg)
+        .addReg(valReg);
+  } else {
+    int64_t imm = MI.getOperand(2).getImm();
+
+    BuildMI(
+        MBB, MBBI, DL,
+        TII->get(GetImmOpCode(imm, K1C::SBMM8d1, K1C::SBMM8d2, K1C::SBMM8d3)),
+        outReg)
+        .addReg(inReg)
+        .addImm(imm);
+  }
+
+  MI.eraseFromParent();
+  return true;
+}
+
 bool K1CExpandPseudo::expandMI(MachineBasicBlock &MBB,
                                MachineBasicBlock::iterator MBBI,
                                MachineBasicBlock::iterator &NextMBBI) {
@@ -850,7 +909,16 @@ bool K1CExpandPseudo::expandMI(MachineBasicBlock &MBB,
   case K1C::ALOADNAND64_Instr:
     expandALOADOPInstr(MBBI->getOpcode(), TII, MBB, MBBI, NextMBBI);
     return true;
-
+  case K1C::GET_Instr:
+    expandGetInstr(TII, MBB, MBBI);
+    return true;
+  case K1C::WFXL_Instr:
+    expandWFXLInstr(TII, MBB, MBBI);
+    return true;
+  case K1C::SBMM8rr_Instr:
+  case K1C::SBMM8ri_Instr:
+    expandSBMM8Instr(TII, MBB, MBBI);
+    return true;
   default:
     break;
   }
