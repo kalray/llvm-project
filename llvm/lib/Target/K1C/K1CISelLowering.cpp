@@ -181,6 +181,8 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setMaxAtomicSizeInBitsSupported(64);
   setMinCmpXchgSizeInBits(32);
 
+  setOperationAction(ISD::INTRINSIC_VOID, MVT::Other, Custom);
+
   // Effectively disable jump table generation.
   setMinimumJumpTableEntries(INT_MAX);
 }
@@ -210,6 +212,10 @@ const char *K1CTargetLowering::getTargetNodeName(unsigned Opcode) const {
     return "K1C::PICPCRelativeGOTAddr";
   case K1CISD::TAIL:
     return "K1C::TAIL";
+  case K1CISD::FENCE:
+    return "K1C::FENCE";
+  case K1CISD::DINVAL:
+    return "K1C::DINVAL";
   default:
     return NULL;
   }
@@ -542,6 +548,8 @@ SDValue K1CTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
     return lowerSELECT(Op, DAG);
   case ISD::BlockAddress:
     return lowerBlockAddress(Op, DAG);
+  case ISD::INTRINSIC_VOID:
+    return lowerINTRINSIC_VOID(Op, DAG);
   }
 }
 
@@ -747,6 +755,26 @@ SDValue K1CTargetLowering::lowerSELECT(SDValue Op, SelectionDAG &DAG) const {
   SDValue result = DAG.getNode(K1CISD::SELECT_CC, DL, VTs, Ops);
 
   return result;
+}
+
+SDValue K1CTargetLowering::lowerINTRINSIC_VOID(SDValue Op,
+                                               SelectionDAG &DAG) const {
+  unsigned IntNo = cast<ConstantSDNode>(Op.getOperand(1))->getZExtValue();
+  SDLoc DL(Op);
+
+  SDValue Chain = Op.getOperand(0);
+
+  switch (IntNo) {
+  default:
+    return {}; // Don't custom lower most intrinsics.
+
+  case Intrinsic::k1c_fence: {
+    return DAG.getNode(K1CISD::FENCE, DL, MVT::Other, Chain);
+  }
+  case Intrinsic::k1c_dinval: {
+    return DAG.getNode(K1CISD::DINVAL, DL, MVT::Other, Chain);
+  }
+  }
 }
 
 bool K1CTargetLowering::IsEligibleForTailCallOptimization(
