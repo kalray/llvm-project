@@ -18,16 +18,23 @@ include "K1CFloatingPoint.td"
 include "K1CCallingConv.td"
 include "K1CPICPatterns.td"
 include "K1CAtomic.td"
+include "K1CIntrinsic.td"
 
 def K1CInstrInfo : InstrInfo {
 }
 
+def K1CAsmParser : AsmParser {
+  let ShouldEmitMatchRegisterAltName = 1;
+}
+
 def K1CAsmWriter : AsmWriter {
-    int PassSubtarget = 1;
 }
 
 def K1C : Target {
     let InstructionSet = K1CInstrInfo;
+
+    let AssemblyParsers = [K1CAsmParser];
+    let AssemblyWriters = [K1CAsmWriter];
 }
 
 def : ProcessorModel<"generic", K1CSchedMachineModel, []>;
