@@ -348,14 +348,9 @@ bool K1CPacketizerList::shouldBeLastInBundle(unsigned opcode) {
   }
 }
 
-static MachineBasicBlock::iterator
+static MachineBasicBlock::instr_iterator
 moveInstrOut(MachineInstr &MI, MachineBasicBlock::iterator BundleIt,
-             bool Before) {
-  MachineBasicBlock::instr_iterator InsertPt;
-  if (Before)
-    InsertPt = BundleIt.getInstrIterator();
-  else
-    InsertPt = std::next(BundleIt).getInstrIterator();
+             MachineBasicBlock::instr_iterator InsertPt) {
 
   MachineBasicBlock &B = *MI.getParent();
   // The instruction should at least be bundled with the preceding instruction
@@ -382,39 +377,48 @@ moveInstrOut(MachineInstr &MI, MachineBasicBlock::iterator BundleIt,
   // If there are still two or more instructions, then there is nothing
   // else to be done.
   if (Size > 1)
-    return BundleIt;
+    return InsertPt;
+
   // Otherwise, extract the single instruction out and delete the bundle.
-  MachineBasicBlock::iterator NextIt = std::next(BundleIt);
   MachineInstr &SingleI = *BundleIt->getNextNode();
   SingleI.unbundleFromPred();
   assert(!SingleI.isBundledWithSucc());
   BundleIt->eraseFromParent();
-  return NextIt;
+  return InsertPt;
 }
 
 void K1CPacketizerList::moveCFIDebugInstructions(MachineFunction &MF) {
   for (auto &B : MF) {
     MachineBasicBlock::iterator BundleIt;
     MachineBasicBlock::instr_iterator NextI;
+
+    MachineBasicBlock::instr_iterator LastLocation = B.instr_begin();
+    MachineBasicBlock::iterator LastBundle = B.instr_end();
+
     for (auto I = B.instr_begin(), E = B.instr_end(); I != E; I = NextI) {
       NextI = std::next(I);
       MachineInstr &MI = *I;
-      if (MI.isBundle())
-        BundleIt = I;
-      if (!MI.isInsideBundle())
-        continue;
-      bool InsertBeforeBundle;
 
-      if (MI.isCFIInstruction()) {
-        // Insert at the begining of the next bundle
-        InsertBeforeBundle = false;
-      } else if (MI.isDebugInstr() || MI.isLabel()) {
-        InsertBeforeBundle = true;
-      } else {
-        continue;
+      if (MI.isBundle()) {
+        BundleIt = I;
       }
 
-      BundleIt = moveInstrOut(MI, BundleIt, InsertBeforeBundle);
+      if (!MI.isInsideBundle())
+        continue;
+
+      if (MI.isCFIInstruction()) {
+        if (LastBundle == BundleIt)
+          LastLocation = moveInstrOut(MI, BundleIt, LastLocation);
+        else
+          LastLocation = moveInstrOut(MI, BundleIt,
+                                      std::next(BundleIt).getInstrIterator());
+
+        LastBundle = BundleIt;
+      }
+
+      if (MI.isDebugInstr() || MI.isLabel()) {
+        moveInstrOut(MI, BundleIt, BundleIt.getInstrIterator());
+      }
     }
   }
 }
