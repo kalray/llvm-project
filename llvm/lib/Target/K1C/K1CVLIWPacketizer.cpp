@@ -84,6 +84,8 @@ void K1CPacketizerList::endPacket(MachineBasicBlock *MBB,
 }
 
 bool K1CPacketizerList::isSoloInstruction(const MachineInstr &MI) {
+  if (MI.isInlineAsm())
+    return true;
   return !ValidOptLevel || MI.getDesc().getSchedClass() == K1C::Sched::ALL;
 }
 
