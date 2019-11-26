@@ -93,6 +93,7 @@ private:
   SDValue lowerINTRINSIC_VOID(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerBUILD_VECTOR(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerBUILD_VECTORV2_I64(SDValue Op, SelectionDAG &DAG) const;
+  SDValue lowerINSERT_VECTOR_ELT(SDValue Op, SelectionDAG &DAG) const;
 
   bool IsEligibleForTailCallOptimization(
       CCState &CCInfo, CallLoweringInfo &CLI, MachineFunction &MF,
