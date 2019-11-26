@@ -195,6 +195,7 @@ def : Pat<(f64 (sint_to_fp i64:$val)), (FLOATD SingleReg:$val, DEFAULT_FPCONV_SH
 def : Pat<(fmul f16:$rs1, f16:$rs2), (FMULHQrr SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
 def : Pat<(fmul f32:$rs1, f32:$rs2), (FMULWrr SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
 def : Pat<(fmul f64:$rs1, f64:$rs2), (FMULDrr SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
+def : Pat<(fmul v2f32:$rs1, v2f32:$rs2), (FMULWPd3 SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
 // FMUL*C -> TODO
 // FNARROW
 def : Pat<(f16 (fpround f32:$val)), (FNARROWWH SingleReg:$val, ROUND_CS, SILENT_OFF)>;
