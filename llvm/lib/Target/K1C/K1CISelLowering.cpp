@@ -120,7 +120,6 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::UDIV, VT, Expand);
     setOperationAction(ISD::SDIV, VT, Expand);
     setOperationAction(ISD::EXTRACT_VECTOR_ELT, VT, Expand);
-    setOperationAction(ISD::INSERT_VECTOR_ELT, VT, Expand);
     setOperationAction(ISD::VECTOR_SHUFFLE, VT, Expand);
     setOperationAction(ISD::SCALAR_TO_VECTOR, VT, Expand);
 
@@ -137,16 +136,20 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::SRA, VT, Expand);
   }
 
+  setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v4i16, Expand);
+  setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v2i32, Custom);
+  setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v2f32, Custom);
+
   setOperationAction(ISD::MULHU, MVT::v2i32, Expand);
   setOperationAction(ISD::MULHS, MVT::v2i32, Expand);
 
   for (auto VT : {MVT::v2f32, MVT::v4f16}) {
     setOperationAction(ISD::FDIV, VT, Expand);
     setOperationAction(ISD::EXTRACT_VECTOR_ELT, VT, Expand);
-    setOperationAction(ISD::INSERT_VECTOR_ELT, VT, Expand);
     setOperationAction(ISD::VECTOR_SHUFFLE, VT, Expand);
     setOperationAction(ISD::SCALAR_TO_VECTOR, VT, Expand);
   }
+  setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v4f16, Expand);
 
   for (auto VT : { MVT::i32, MVT::i64 }) {
     setOperationAction(ISD::SMUL_LOHI, VT, Expand);
@@ -591,6 +594,8 @@ SDValue K1CTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
     return lowerINTRINSIC_VOID(Op, DAG);
   case ISD::BUILD_VECTOR:
     return lowerBUILD_VECTOR(Op, DAG);
+  case ISD::INSERT_VECTOR_ELT:
+    return lowerINSERT_VECTOR_ELT(Op, DAG);
   }
 }
 
@@ -1064,4 +1069,80 @@ SDValue K1CTargetLowering::lowerBUILD_VECTORV2_I64(SDValue Op,
                             DAG.getTargetConstant(32, DL, MVT::i64)}),
         0);
   }
+}
+
+SDValue K1CTargetLowering::lowerINSERT_VECTOR_ELT(SDValue Op,
+                                                  SelectionDAG &DAG) const {
+  SDValue Vec = Op->getOperand(0);
+  SDValue Val = Op->getOperand(1);
+  SDValue Idx = Op->getOperand(2);
+  SDLoc dl(Op);
+  if (ConstantSDNode *InsertPos = dyn_cast<ConstantSDNode>(Idx)) {
+    bool IsImm = false;
+    uint64_t ImmVal;
+    if (isa<ConstantSDNode>(Val)) {
+      IsImm = true;
+      ImmVal = dyn_cast<ConstantSDNode>(Val)->getZExtValue();
+    } else if (isa<ConstantFPSDNode>(Val)) {
+      IsImm = true;
+      ImmVal = dyn_cast<ConstantFPSDNode>(Val)
+                   ->getValueAPF()
+                   .bitcastToAPInt()
+                   .getZExtValue();
+    }
+    if (IsImm) {
+      if (InsertPos->getZExtValue() == 0) {
+        SDValue V =
+            DAG.getNode(ISD::AND, dl, MVT::i64, DAG.getBitcast(MVT::i64, Vec),
+                        DAG.getConstant(0xffffffff00000000, dl, MVT::i64));
+        return DAG.getBitcast(
+            Op.getValueType(),
+            DAG.getNode(
+                ISD::OR, dl, MVT::i64,
+                {V, DAG.getConstant(ImmVal & 0xffffffff, dl, MVT::i64)}));
+      } else {
+        SDValue V =
+            DAG.getNode(ISD::AND, dl, MVT::i64, DAG.getBitcast(MVT::i64, Vec),
+                        DAG.getConstant(0xffffffff, dl, MVT::i64));
+        return DAG.getBitcast(
+            Op.getValueType(),
+            DAG.getNode(ISD::OR, dl, MVT::i64,
+                        {V, DAG.getConstant(ImmVal << 32, dl, MVT::i64)}));
+      }
+    } else {
+      SDValue stopbit, startbit;
+      uint64_t StartIdx = InsertPos->getZExtValue() * 32;
+      stopbit = DAG.getTargetConstant(StartIdx + 31, dl, MVT::i64);
+      startbit = DAG.getTargetConstant(StartIdx, dl, MVT::i64);
+      return SDValue(DAG.getMachineNode(K1C::INSF, dl, MVT::i64,
+                                        {Vec, Val, stopbit, startbit}),
+                     0);
+    }
+
+    // catch pattern in td
+    return Op;
+  }
+  SDValue Tmp1 = Vec;
+  SDValue Tmp2 = Val;
+  SDValue Tmp3 = Idx;
+
+  EVT VT = Tmp1.getValueType();
+  EVT EltVT = VT.getVectorElementType();
+  SDValue StackPtr = DAG.CreateStackTemporary(VT);
+
+  int SPFI = cast<FrameIndexSDNode>(StackPtr.getNode())->getIndex();
+
+  // Store the vector.
+  SDValue Ch = DAG.getStore(
+      DAG.getEntryNode(), dl, Tmp1, StackPtr,
+      MachinePointerInfo::getFixedStack(DAG.getMachineFunction(), SPFI));
+
+  SDValue StackPtr2 = getVectorElementPointer(DAG, StackPtr, VT, Tmp3);
+
+  // Store the scalar value.
+  Ch = DAG.getTruncStore(Ch, dl, Tmp2, StackPtr2, MachinePointerInfo(), EltVT);
+  // Load the updated vector.
+  return DAG.getLoad(
+      VT, dl, Ch, StackPtr,
+      MachinePointerInfo::getFixedStack(DAG.getMachineFunction(), SPFI));
 }
