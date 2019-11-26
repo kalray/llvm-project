@@ -329,12 +329,6 @@ def : Pat<(ctlz i64:$src), (CLZD SingleReg:$src)>;
 def : Pat<(Fence), (FENCE)>;
 def : Pat<(Dinval), (DINVAL)>;
 
-def : Pat<(v2i32 (build_vector i32:$v1, i32:$v2)),
-        (ORDd0
-                (SLLDd1 SingleReg:$v2, (i64 32)),
-                (ZXWD SingleReg:$v1)
-        )>;
-
 def : Pat<(v4i16 (build_vector i32:$v1, i32:$v2, i32:$v3, i32:$v4)),
         (ORDd0
                 (ORDd0 (SLLDd1 SingleReg:$v4, (i64 48)), (SLLDd1 (ZXHD SingleReg:$v3), (i64 32))),

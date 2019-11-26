@@ -83,6 +83,13 @@ def : BITCAST<v4i16, v2i32, SingleReg>;
 def : BITCAST<i64, v2i32, SingleReg>;
 def : BITCAST<v2i32, i64, SingleReg>;
 
+def : BITCAST<v2f32, f64, SingleReg>;
+def : BITCAST<f64, v2f32, SingleReg>;
+def : BITCAST<v2i32, i64, SingleReg>;
+def : BITCAST<i64, v2i32, SingleReg>;
+
+def : BITCAST<v2f32, i64, SingleReg>;
+
 // FPU Insns
 
 // FABS, see K1CInstrInfo.td
@@ -216,12 +223,6 @@ def : Pat<(fsub v2f32:$rs1, v2f32:$rs2), (FSBFWPd3 SingleReg:$rs2, SingleReg:$rs
 def : Pat<(f64 (fpextend f32:$val)), (FWIDENLWD SingleReg:$val, SILENT_OFF)>;
 def : Pat<(f64 (fpextend f16:$val)), (FWIDENLWD (FWIDENLHW SingleReg:$val, SILENT_OFF), SILENT_OFF)>;
 def : Pat<(f32 (fpextend f16:$val)), (FWIDENLHW SingleReg:$val, SILENT_OFF)>;
-
-def : Pat<(v2f32 (build_vector f32:$v1, f32:$v2)),
-      (ORDd0
-              (SLLDd1 SingleReg:$v2, (i64 32)),
-              SingleReg:$v1
-      )>;
 
 def : Pat<(v4f16 (build_vector f16:$v1, f16:$v2, f16:$v3, f16:$v4)),
       (ORDd0
