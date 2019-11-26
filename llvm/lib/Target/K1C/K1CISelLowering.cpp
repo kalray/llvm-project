@@ -209,6 +209,10 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
     setLoadExtAction(ISD::EXTLOAD, VT, MVT::f64, Expand);
   }
 
+  for (auto VT : {MVT::v2i32, MVT::v2f32}) {
+    setOperationAction(ISD::BUILD_VECTOR, VT, Custom);
+  }
+
   setMaxAtomicSizeInBitsSupported(64);
   setMinCmpXchgSizeInBits(32);
 
@@ -585,6 +589,8 @@ SDValue K1CTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
     return lowerBlockAddress(Op, DAG);
   case ISD::INTRINSIC_VOID:
     return lowerINTRINSIC_VOID(Op, DAG);
+  case ISD::BUILD_VECTOR:
+    return lowerBUILD_VECTOR(Op, DAG);
   }
 }
 
@@ -980,4 +986,82 @@ SDValue K1CTargetLowering::lowerMULHV4I16(SDValue Op, SelectionDAG &DAG,
 
   // Building a vector from the computed values
   return DAG.getNode(ISD::BUILD_VECTOR, DL, MVT::v4i16, {R1, R2, R3, R4});
+}
+
+SDValue K1CTargetLowering::lowerBUILD_VECTOR(SDValue Op,
+                                             SelectionDAG &DAG) const {
+  if (Op.getValueType() == MVT::v2f32 || Op.getValueType() == MVT::v2i32)
+    return lowerBUILD_VECTORV2_I64(Op, DAG);
+
+  llvm_unreachable("Unsupported lowering for this type!");
+}
+
+SDValue K1CTargetLowering::lowerBUILD_VECTORV2_I64(SDValue Op,
+                                                   SelectionDAG &DAG) const {
+  SDLoc DL(Op);
+
+  SDValue Op1 = Op.getOperand(0);
+  SDValue Op2 = Op.getOperand(1);
+
+  bool IsOp1Const = false;
+  bool IsOp2Const = false;
+
+  uint64_t Op1Val;
+  uint64_t Op2Val;
+
+  if (isa<ConstantSDNode>(Op1)) {
+    auto *Op1Const = dyn_cast<ConstantSDNode>(Op1);
+    Op1Val = Op1Const->getZExtValue();
+    IsOp1Const = true;
+  } else if (isa<ConstantFPSDNode>(Op1)) {
+    auto *Op1Const = dyn_cast<ConstantFPSDNode>(Op1);
+    Op1Val = Op1Const->getValueAPF().bitcastToAPInt().getZExtValue();
+    IsOp1Const = true;
+  }
+
+  if (isa<ConstantSDNode>(Op2)) {
+    auto *Op2Const = dyn_cast<ConstantSDNode>(Op2);
+    Op2Val = Op2Const->getZExtValue();
+    IsOp2Const = true;
+  } else if (isa<ConstantFPSDNode>(Op2)) {
+    auto *Op2Const = dyn_cast<ConstantFPSDNode>(Op2);
+    Op2Val = Op2Const->getValueAPF().bitcastToAPInt().getZExtValue();
+    IsOp2Const = true;
+  }
+
+  if (IsOp1Const && IsOp2Const) { // imm imm
+    uint64_t R = ((Op2Val << 32) | Op1Val);
+
+    return DAG.getBitcast(Op.getValueType(), DAG.getConstant(R, DL, MVT::i64));
+  } else if (IsOp1Const) { // imm reg
+    Op1Val &= 0xFFFFFFFF;
+
+    SDValue ShiftedOp2 = DAG.getNode(
+        ISD::SHL, DL, MVT::i64,
+        {SDValue(DAG.getMachineNode(TargetOpcode::COPY, DL, MVT::i64,
+                                    DAG.getBitcast(MVT::i32, Op2)),
+                 0),
+         DAG.getConstant(32, DL, MVT::i32)});
+
+    return DAG.getBitcast(
+        Op.getValueType(),
+        DAG.getNode(ISD::OR, DL, MVT::i64,
+                    {ShiftedOp2, DAG.getConstant(Op1Val, DL, MVT::i64)}));
+  } else if (IsOp2Const) { // reg imm
+    Op2Val <<= 32;
+
+    SDValue Op1Val = DAG.getNode(ISD::ZERO_EXTEND, DL, MVT::i64,
+                                 DAG.getBitcast(MVT::i32, Op1));
+
+    return DAG.getBitcast(
+        Op.getValueType(),
+        DAG.getNode(ISD::OR, DL, MVT::i64,
+                    {Op1Val, DAG.getConstant(Op2Val, DL, MVT::i64)}));
+  } else { // reg reg
+    return SDValue(
+        DAG.getMachineNode(K1C::INSF, DL, Op.getValueType(),
+                           {Op1, Op2, DAG.getTargetConstant(63, DL, MVT::i64),
+                            DAG.getTargetConstant(32, DL, MVT::i64)}),
+        0);
+  }
 }

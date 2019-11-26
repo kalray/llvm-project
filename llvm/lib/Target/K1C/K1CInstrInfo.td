@@ -2316,6 +2316,7 @@ def FNARROWWHQ : ROUNDING2_SILENT2_REGISTERW_REGISTERP_SIMPLE
    ALU_LITE>;
 
 // 1 insns: ['INSF']
+let Constraints = "$a1 = $a11" in
 def INSF : REGISTERW_REGISTERZ_STOPBIT2_STOPBIT4_STARTBIT_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a11, SingleReg:$a2, Unsigned6:$a3, Unsigned6:$a4),
    "insf $a1 = $a2, $a3, $a4",
