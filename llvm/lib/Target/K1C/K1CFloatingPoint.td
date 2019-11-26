@@ -90,6 +90,8 @@ def : BITCAST<i64, v2i32, SingleReg>;
 
 def : BITCAST<v2f32, i64, SingleReg>;
 def : BITCAST<i64, v2f32, SingleReg>;
+def : BITCAST<v2i32, v2f32, SingleReg>;
+def : BITCAST<v2f32, v2i32, SingleReg>;
 
 // FPU Insns
 
