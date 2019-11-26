@@ -91,6 +91,8 @@ private:
   SDValue lowerMULHV4I16(SDValue Op, SelectionDAG &DAG, bool Signed) const;
   SDValue lowerBlockAddress(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerINTRINSIC_VOID(SDValue Op, SelectionDAG &DAG) const;
+  SDValue lowerBUILD_VECTOR(SDValue Op, SelectionDAG &DAG) const;
+  SDValue lowerBUILD_VECTORV2_I64(SDValue Op, SelectionDAG &DAG) const;
 
   bool IsEligibleForTailCallOptimization(
       CCState &CCInfo, CallLoweringInfo &CLI, MachineFunction &MF,
