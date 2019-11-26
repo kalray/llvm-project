@@ -274,6 +274,7 @@ def : Pat<(sub v4i16:$rs1, v4i16:$rs2), (SBFHQd0 SingleReg:$rs2, SingleReg:$rs1)
 
 def : Pat<(ineg i32:$v), (NEGW SingleReg:$v)>;
 def : Pat<(ineg i64:$v), (NEGD SingleReg:$v)>;
+def : Pat<(sub (v2i32 (bitconvert (i64 0))),v2i32:$v), (NEGWP SingleReg:$v)>;
 
 // SBFW
 def : Pat<(sub i32:$rs1, i32:$rs2), (SBFWd0 SingleReg:$rs2, SingleReg:$rs1)>;
