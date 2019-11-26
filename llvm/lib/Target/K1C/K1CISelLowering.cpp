@@ -119,7 +119,6 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   for (auto VT : {MVT::v2i32, MVT::v4i16}) {
     setOperationAction(ISD::UDIV, VT, Expand);
     setOperationAction(ISD::SDIV, VT, Expand);
-    setOperationAction(ISD::EXTRACT_VECTOR_ELT, VT, Expand);
     setOperationAction(ISD::VECTOR_SHUFFLE, VT, Expand);
     setOperationAction(ISD::SCALAR_TO_VECTOR, VT, Expand);
 
@@ -139,17 +138,20 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v4i16, Expand);
   setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v2i32, Custom);
   setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v2f32, Custom);
+  setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2i32, Custom);
+  setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v4i16, Expand);
 
   setOperationAction(ISD::MULHU, MVT::v2i32, Expand);
   setOperationAction(ISD::MULHS, MVT::v2i32, Expand);
 
   for (auto VT : {MVT::v2f32, MVT::v4f16}) {
     setOperationAction(ISD::FDIV, VT, Expand);
-    setOperationAction(ISD::EXTRACT_VECTOR_ELT, VT, Expand);
     setOperationAction(ISD::VECTOR_SHUFFLE, VT, Expand);
     setOperationAction(ISD::SCALAR_TO_VECTOR, VT, Expand);
   }
   setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v4f16, Expand);
+  setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v4f16, Expand);
+  setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2f32, Custom);
 
   for (auto VT : { MVT::i32, MVT::i64 }) {
     setOperationAction(ISD::SMUL_LOHI, VT, Expand);
@@ -596,6 +598,8 @@ SDValue K1CTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
     return lowerBUILD_VECTOR(Op, DAG);
   case ISD::INSERT_VECTOR_ELT:
     return lowerINSERT_VECTOR_ELT(Op, DAG);
+  case ISD::EXTRACT_VECTOR_ELT:
+    return lowerEXTRACT_VECTOR_ELT(Op, DAG);
   }
 }
 
@@ -1145,4 +1149,42 @@ SDValue K1CTargetLowering::lowerINSERT_VECTOR_ELT(SDValue Op,
   return DAG.getLoad(
       VT, dl, Ch, StackPtr,
       MachinePointerInfo::getFixedStack(DAG.getMachineFunction(), SPFI));
+}
+
+SDValue K1CTargetLowering::lowerEXTRACT_VECTOR_ELT(SDValue Op,
+                                                   SelectionDAG &DAG) const {
+  SDValue Vec = Op.getOperand(0);
+  SDValue Idx = Op.getOperand(1);
+  SDLoc dl(Op);
+
+  if (isa<ConstantSDNode>(Idx)) {
+    // use patterns in td
+    return Op;
+  }
+
+  EVT VecVT = Vec.getValueType();
+  SDValue StackPtr = DAG.CreateStackTemporary(VecVT);
+  SDValue Ch =
+      DAG.getStore(DAG.getEntryNode(), dl, Vec, StackPtr, MachinePointerInfo());
+
+  StackPtr = getVectorElementPointer(DAG, StackPtr, VecVT, Idx);
+
+  SDValue NewLoad;
+
+  if (Op.getValueType().isVector())
+    NewLoad =
+        DAG.getLoad(Op.getValueType(), dl, Ch, StackPtr, MachinePointerInfo());
+  else
+    NewLoad =
+        DAG.getExtLoad(ISD::EXTLOAD, dl, Op.getValueType(), Ch, StackPtr,
+                       MachinePointerInfo(), VecVT.getVectorElementType());
+
+  DAG.ReplaceAllUsesOfValueWith(Ch, SDValue(NewLoad.getNode(), 1));
+
+  SmallVector<SDValue, 6> NewLoadOperands(NewLoad->op_begin(),
+                                          NewLoad->op_end());
+  NewLoadOperands[0] = Ch;
+  NewLoad =
+      SDValue(DAG.UpdateNodeOperands(NewLoad.getNode(), NewLoadOperands), 0);
+  return NewLoad;
 }
