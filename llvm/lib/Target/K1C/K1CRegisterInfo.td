@@ -1321,7 +1321,7 @@ def SystemReg : RegisterClass<"K1C",
 // GRF - General Register File
 let Size = 64 in
 def SingleReg : RegisterClass<"K1C",
-  [i64, i1, i8, i16, i32, f16, f32, f64, v8i8, v4i16, v2i32, v4f16, v2f32],
+  [i64, i1, i8, i16, i32, f16, f32, f64, v8i8, v4i16, v2i16, v2i32, v4f16, v2f16, v2f32],
   64, (add
     R0,  R1,  R2,  R3,  R4,  R5,  R6,  R7,  R8,  R9, R10, R11, R12, R13, R14,
    R15, R16, R17, R18, R19, R20, R21, R22, R23, R24, R25, R26, R27, R28, R29,
