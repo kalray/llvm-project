@@ -61,33 +61,29 @@ def : Pat<(loadf64 AddrRI:$addr), (LDri AddrRI:$addr, VARIANT_CACHED)>;
 def : Pat<(loadv2f32 AddrRI:$addr), (LDri AddrRI:$addr, VARIANT_CACHED)>;
 def : Pat<(loadv4f16 AddrRI:$addr), (LDri AddrRI:$addr, VARIANT_CACHED)>;
 
-// Bitcast
-class BITCAST
-  <ValueType DstVT, ValueType SrcVT, RegisterClass DstRC>
-  : Pat<(DstVT (bitconvert (SrcVT DstRC:$src))), (DstVT DstRC:$src)>;
-
+// 16 bits
 def : BITCAST<f16, i16, SingleReg>;
-def : BITCAST<f32, i32, SingleReg>;
-def : BITCAST<f64, i64, SingleReg>;
 def : BITCAST<i16, f16, SingleReg>;
+
+// 32 bits
+def : BITCAST<f32, i32, SingleReg>;
 def : BITCAST<i32, f32, SingleReg>;
+def : BITCAST<v2i16, f32, SingleReg>;
+def : BITCAST<f32, v2i16, SingleReg>;
+def : BITCAST<v2f16, i32, SingleReg>;
+def : BITCAST<i32, v2f16, SingleReg>;
+def : BITCAST<v2f16, v2i16, SingleReg>;
+def : BITCAST<v2i16, v2f16, SingleReg>;
+
+// 64 bits
+def : BITCAST<f64, i64, SingleReg>;
 def : BITCAST<i64, f64, SingleReg>;
-def : BITCAST<v4i16, i64, SingleReg>;
-def : BITCAST<i64, v4i16, SingleReg>;
 def : BITCAST<v4i16, f64, SingleReg>;
 def : BITCAST<f64, v4i16, SingleReg>;
 def : BITCAST<v2i32, f64, SingleReg>;
 def : BITCAST<f64, v2i32, SingleReg>;
-def : BITCAST<v2i32, v4i16, SingleReg>;
-def : BITCAST<v4i16, v2i32, SingleReg>;
-def : BITCAST<i64, v2i32, SingleReg>;
-def : BITCAST<v2i32, i64, SingleReg>;
-
 def : BITCAST<v2f32, f64, SingleReg>;
 def : BITCAST<f64, v2f32, SingleReg>;
-def : BITCAST<v2i32, i64, SingleReg>;
-def : BITCAST<i64, v2i32, SingleReg>;
-
 def : BITCAST<v2f32, i64, SingleReg>;
 def : BITCAST<i64, v2f32, SingleReg>;
 def : BITCAST<v2i32, v2f32, SingleReg>;
