@@ -62,11 +62,13 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   addRegisterClass(MVT::i64, &K1C::SingleRegRegClass);
   addRegisterClass(MVT::v2i32, &K1C::SingleRegRegClass);
   addRegisterClass(MVT::v4i16, &K1C::SingleRegRegClass);
+  addRegisterClass(MVT::v2i16, &K1C::SingleRegRegClass);
 
   addRegisterClass(MVT::f16, &K1C::SingleRegRegClass);
   addRegisterClass(MVT::f32, &K1C::SingleRegRegClass);
   addRegisterClass(MVT::f64, &K1C::SingleRegRegClass);
   addRegisterClass(MVT::v4f16, &K1C::SingleRegRegClass);
+  addRegisterClass(MVT::v2f16, &K1C::SingleRegRegClass);
   addRegisterClass(MVT::v2f32, &K1C::SingleRegRegClass);
 
   // Compute derived properties from the register classes
@@ -109,6 +111,9 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setTruncStoreAction(MVT::v2i32, MVT::v2i8, Expand);
   setTruncStoreAction(MVT::v4i16, MVT::v4i8, Expand);
 
+  setOperationAction(ISD::TRUNCATE, MVT::v2i16, Expand);
+  setOperationAction(ISD::EXTRACT_SUBVECTOR, MVT::v2i16, Expand);
+
   setOperationAction(ISD::AND, MVT::v8i8, Expand);
   setOperationAction(ISD::OR, MVT::v8i8, Expand);
   setOperationAction(ISD::XOR, MVT::v8i8, Expand);
@@ -116,7 +121,13 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::SIGN_EXTEND_INREG, MVT::v2i16, Expand);
   setOperationAction(ISD::SIGN_EXTEND_INREG, MVT::v2i32, Expand);
 
-  for (auto VT : {MVT::v2i32, MVT::v4i16}) {
+  setOperationAction(ISD::BUILD_VECTOR, MVT::v2i16, Custom);
+  setOperationAction(ISD::BUILD_VECTOR, MVT::v2f16, Custom);
+
+  setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2f16, Expand);
+  setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2i16, Expand);
+
+  for (auto VT : {MVT::v2i32, MVT::v4i16, MVT::v2i16}) {
     setOperationAction(ISD::UDIV, VT, Expand);
     setOperationAction(ISD::SDIV, VT, Expand);
     setOperationAction(ISD::VECTOR_SHUFFLE, VT, Expand);
@@ -1000,13 +1011,63 @@ SDValue K1CTargetLowering::lowerMULHV4I16(SDValue Op, SelectionDAG &DAG,
 SDValue K1CTargetLowering::lowerBUILD_VECTOR(SDValue Op,
                                              SelectionDAG &DAG) const {
   if (Op.getValueType() == MVT::v2f32 || Op.getValueType() == MVT::v2i32)
-    return lowerBUILD_VECTORV2_I64(Op, DAG);
+    return lowerBUILD_VECTOR_V2_64bit(Op, DAG);
+
+  if (Op.getValueType() == MVT::v2i16 || Op.getValueType() == MVT::v2f16)
+    return lowerBUILD_VECTOR_V2_32bit(Op, DAG);
 
   llvm_unreachable("Unsupported lowering for this type!");
 }
 
-SDValue K1CTargetLowering::lowerBUILD_VECTORV2_I64(SDValue Op,
-                                                   SelectionDAG &DAG) const {
+SDValue K1CTargetLowering::lowerBUILD_VECTOR_V2_32bit(SDValue Op,
+                                                      SelectionDAG &DAG) const {
+  SDLoc DL(Op);
+
+  SDValue Op1 = Op.getOperand(0);
+  SDValue Op2 = Op.getOperand(1);
+
+  uint64_t Op1Val;
+  uint64_t Op2Val;
+
+  bool IsOp1Const = false;
+  bool IsOp2Const = false;
+
+  if (isa<ConstantSDNode>(Op1)) {
+    auto *Op1Const = dyn_cast<ConstantSDNode>(Op1);
+    Op1Val = Op1Const->getZExtValue();
+    IsOp1Const = true;
+  } else if (isa<ConstantFPSDNode>(Op1)) {
+    auto *Op1Const = dyn_cast<ConstantFPSDNode>(Op1);
+    Op1Val = Op1Const->getValueAPF().bitcastToAPInt().getZExtValue();
+    IsOp1Const = true;
+  }
+
+  if (isa<ConstantSDNode>(Op2)) {
+    auto *Op2Const = dyn_cast<ConstantSDNode>(Op2);
+    Op2Val = Op2Const->getZExtValue();
+    IsOp2Const = true;
+  } else if (isa<ConstantFPSDNode>(Op2)) {
+    auto *Op2Const = dyn_cast<ConstantFPSDNode>(Op2);
+    Op2Val = Op2Const->getValueAPF().bitcastToAPInt().getZExtValue();
+    IsOp2Const = true;
+  }
+
+  // imm imm
+  if (IsOp1Const && IsOp2Const) {
+    uint64_t R = ((Op2Val << 16) | (Op1Val & 0xFFFF));
+
+    return DAG.getBitcast(Op.getValueType(), DAG.getConstant(R, DL, MVT::i32));
+  } else {
+    return SDValue(
+        DAG.getMachineNode(K1C::INSF, DL, Op.getValueType(),
+                           {Op1, Op2, DAG.getTargetConstant(31, DL, MVT::i64),
+                            DAG.getTargetConstant(16, DL, MVT::i64)}),
+        0);
+  }
+}
+
+SDValue K1CTargetLowering::lowerBUILD_VECTOR_V2_64bit(SDValue Op,
+                                                      SelectionDAG &DAG) const {
   SDLoc DL(Op);
 
   SDValue Op1 = Op.getOperand(0);
@@ -1039,7 +1100,7 @@ SDValue K1CTargetLowering::lowerBUILD_VECTORV2_I64(SDValue Op,
   }
 
   if (IsOp1Const && IsOp2Const) { // imm imm
-    uint64_t R = ((Op2Val << 32) | Op1Val);
+    uint64_t R = ((Op2Val << 32) | (Op1Val & 0xFFFFFFFF));
 
     return DAG.getBitcast(Op.getValueType(), DAG.getConstant(R, DL, MVT::i64));
   } else if (IsOp1Const) { // imm reg
