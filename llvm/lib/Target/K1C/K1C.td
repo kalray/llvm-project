@@ -13,6 +13,11 @@ include "K1CSchedule.td"
 include "K1CRegisterInfo.td"
 include "K1CInstrInfo.td"
 include "K1CPatterns.td"
+
+class BITCAST
+  <ValueType DstVT, ValueType SrcVT, RegisterClass DstRC>
+  : Pat<(DstVT (bitconvert (SrcVT DstRC:$src))), (DstVT DstRC:$src)>;
+
 include "K1CArithmetic.td"
 include "K1CFloatingPoint.td"
 include "K1CCallingConv.td"

@@ -130,6 +130,8 @@ def LDri : K1C_INSTRUCTION<(outs SingleReg:$out), (ins AddrRI:$addr, VariantMod:
 def : Pat<(store (i8 SingleReg:$val), AddrRI:$addr), (SBri AddrRI:$addr,SingleReg:$val)>;
 def : Pat<(store (i16 SingleReg:$val), AddrRI:$addr), (SHri AddrRI:$addr,SingleReg:$val)>;
 def : Pat<(store (i32 SingleReg:$val), AddrRI:$addr), (SWri AddrRI:$addr,SingleReg:$val)>;
+def : Pat<(store (v2i16 SingleReg:$val), AddrRI:$addr), (SWri AddrRI:$addr,SingleReg:$val)>;
+def : Pat<(store (v2f16 SingleReg:$val), AddrRI:$addr), (SWri AddrRI:$addr,SingleReg:$val)>;
 def : Pat<(store (i64 SingleReg:$val), AddrRI:$addr), (SDri AddrRI:$addr,SingleReg:$val)>;
 def : Pat<(store (v2i32 SingleReg:$val), AddrRI:$addr), (SDri AddrRI:$addr,SingleReg:$val)>;
 def : Pat<(store (v4i16 SingleReg:$val), AddrRI:$addr), (SDri AddrRI:$addr,SingleReg:$val)>;
@@ -155,6 +157,8 @@ def loadi32 : PatFrag<(ops node:$ptr), (i32 (load node:$ptr))>;
 def loadi64 : PatFrag<(ops node:$ptr), (i64 (load node:$ptr))>;
 def loadv2i32 : PatFrag<(ops node:$ptr), (v2i32 (load node:$ptr))>;
 def loadv4i16 : PatFrag<(ops node:$ptr), (v4i16 (load node:$ptr))>;
+def loadv2i16 : PatFrag<(ops node:$ptr), (v2i16 (load node:$ptr))>;
+def loadv2f16 : PatFrag<(ops node:$ptr), (v2f16 (load node:$ptr))>;
 
 // load i1 in i32
 def : Pat<(i32 (sextloadi1 AddrRI:$addr)), (LBSri AddrRI:$addr)>;
@@ -203,6 +207,8 @@ def : Pat<(loadi1 AddrRI:$addr), (LBZri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(loadi8 AddrRI:$addr), (LBZri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(loadi16 AddrRI:$addr), (LHZri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(loadi32 AddrRI:$addr), (LWZri AddrRI:$addr, (i8 0 /*cached*/))>;
+def : Pat<(loadv2i16 AddrRI:$addr), (LWZri AddrRI:$addr, (i8 0 /*cached*/))>;
+def : Pat<(loadv2f16 AddrRI:$addr), (LWZri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(loadi64 AddrRI:$addr), (LDri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(loadv2i32 AddrRI:$addr), (LDri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(loadv4i16 AddrRI:$addr), (LDri AddrRI:$addr, (i8 0 /*cached*/))>;

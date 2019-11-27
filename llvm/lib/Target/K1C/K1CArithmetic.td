@@ -183,6 +183,18 @@
 // SXMHWP
 //---------------//
 
+// 64 bits
+def : BITCAST<v4i16, i64, SingleReg>;
+def : BITCAST<i64, v4i16, SingleReg>;
+def : BITCAST<v2i32, v4i16, SingleReg>;
+def : BITCAST<v4i16, v2i32, SingleReg>;
+def : BITCAST<i64, v2i32, SingleReg>;
+def : BITCAST<v2i32, i64, SingleReg>;
+
+// 32 bits
+def : BITCAST<v2i16, i32, SingleReg>;
+def : BITCAST<i32, v2i16, SingleReg>;
+
 // defm ROLW
 // defm RORW
 multiclass MC_16_Pat<SDNode Node, Operand OpR1, Operand OpR2,
@@ -220,6 +232,7 @@ def : Pat<(and v4i16:$rs1, v4i16:$rs2), (ANDDd0 SingleReg:$rs1, SingleReg:$rs2)>
 def : Pat<(and i32:$rs1, i32:$rs2), (ANDWd0 SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(and i32:$rs1, Signed10_32:$rs2), (ANDWd1 SingleReg:$rs1, Signed10_32:$rs2)>;
 def : Pat<(and i32:$rs1, Signed37_32:$rs2), (ANDWd2 SingleReg:$rs1, Signed37_32:$rs2)>;
+def : Pat<(and v2i16:$rs1, v2i16:$rs2), (ANDWd0 SingleReg:$rs1, SingleReg:$rs2)>;
 
 multiclass COMP_Pat<SDNode Node, int Mod> {
   //COMPD
@@ -262,6 +275,7 @@ def : Pat<(or v4i16:$rs1, v4i16:$rs2), (ORDd0 SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(or i32:$rs1, i32:$rs2), (ORWd0 SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(or i32:$rs1, Signed10_32:$rs2), (ORWd1 SingleReg:$rs1, Signed10_32:$rs2)>;
 def : Pat<(or i32:$rs1, Signed37_32:$rs2), (ORWd2 SingleReg:$rs1, Signed37_32:$rs2)>;
+def : Pat<(or v2i16:$rs1, v2i16:$rs2), (ORWd0 SingleReg:$rs1, SingleReg:$rs2)>;
 
 // SBFD
 def : Pat<(sub i64:$rs1, i64:$rs2), (SBFDd0 SingleReg:$rs2, SingleReg:$rs1)>;
@@ -275,6 +289,7 @@ def : Pat<(sub v4i16:$rs1, v4i16:$rs2), (SBFHQd0 SingleReg:$rs2, SingleReg:$rs1)
 def : Pat<(ineg i32:$v), (NEGW SingleReg:$v)>;
 def : Pat<(ineg i64:$v), (NEGD SingleReg:$v)>;
 def : Pat<(sub (v2i32 (bitconvert (i64 0))),v2i32:$v), (NEGWP SingleReg:$v)>;
+def : Pat<(sub (v2i16 (bitconvert (i32 0))),v2i16:$v), (NEGHQ SingleReg:$v)>;
 
 // SBFW
 def : Pat<(sub i32:$rs1, i32:$rs2), (SBFWd0 SingleReg:$rs2, SingleReg:$rs1)>;
@@ -326,6 +341,7 @@ def : Pat<(xor v4i16:$rs1, v4i16:$rs2), (XORDd0 SingleReg:$rs1, SingleReg:$rs2)>
 def : Pat<(xor i32:$rs1, i32:$rs2), (XORWd0 SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(xor i32:$rs1, Signed10_32:$rs2), (XORWd1 SingleReg:$rs1, Signed10_32:$rs2)>;
 def : Pat<(xor i32:$rs1, Signed37_32:$rs2), (XORWd2 SingleReg:$rs1, Signed37_32:$rs2)>;
+def : Pat<(xor v2i16:$rs1, v2i16:$rs2), (XORWd0 SingleReg:$rs1, SingleReg:$rs2)>;
 
 //===----------------------------------------------------------------------===//
 //  MAU Instructions - Patterns
