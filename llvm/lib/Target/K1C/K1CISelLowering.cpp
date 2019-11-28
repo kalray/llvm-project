@@ -125,8 +125,8 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::BUILD_VECTOR, MVT::v2i16, Custom);
   setOperationAction(ISD::BUILD_VECTOR, MVT::v2f16, Custom);
 
-  setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2f16, Expand);
-  setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2i16, Expand);
+  setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2f16, Custom);
+  setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2i16, Custom);
 
   for (auto VT : {MVT::v2i32, MVT::v4i16, MVT::v2i16}) {
     setOperationAction(ISD::UDIV, VT, Expand);
@@ -151,6 +151,7 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v2i32, Custom);
   setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v2f32, Custom);
   setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2i32, Custom);
+  setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2i16, Custom);
   setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v4i16, Expand);
 
   setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v2i16, Custom);
@@ -166,6 +167,7 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   }
   setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v4f16, Expand);
   setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v4f16, Expand);
+  setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2f16, Expand);
   setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2f32, Custom);
 
   for (auto VT : { MVT::i32, MVT::i64 }) {
@@ -1226,13 +1228,22 @@ SDValue K1CTargetLowering::lowerINSERT_VECTOR_ELT(SDValue Op,
 SDValue K1CTargetLowering::lowerEXTRACT_VECTOR_ELT(SDValue Op,
                                                    SelectionDAG &DAG) const {
   SDValue Vec = Op.getOperand(0);
+
+  if (Vec.getValueType() == MVT::v2f32 || Vec.getValueType() == MVT::v2i32)
+    return lowerEXTRACT_VECTOR_ELT_V2_64bit(Op, DAG);
+
+  if (Vec.getValueType() == MVT::v2i16 || Vec.getValueType() == MVT::v2f16)
+    return lowerEXTRACT_VECTOR_ELT_V2_32bit(Op, DAG);
+
+  llvm_unreachable("Unsupported lowering for this type!");
+}
+
+SDValue
+K1CTargetLowering::lowerEXTRACT_VECTOR_ELT_REGISTER(SDValue Op,
+                                                    SelectionDAG &DAG) const {
+  SDValue Vec = Op.getOperand(0);
   SDValue Idx = Op.getOperand(1);
   SDLoc dl(Op);
-
-  if (isa<ConstantSDNode>(Idx)) {
-    // use patterns in td
-    return Op;
-  }
 
   EVT VecVT = Vec.getValueType();
   SDValue StackPtr = DAG.CreateStackTemporary(VecVT);
@@ -1259,4 +1270,45 @@ SDValue K1CTargetLowering::lowerEXTRACT_VECTOR_ELT(SDValue Op,
   NewLoad =
       SDValue(DAG.UpdateNodeOperands(NewLoad.getNode(), NewLoadOperands), 0);
   return NewLoad;
+}
+
+SDValue
+K1CTargetLowering::lowerEXTRACT_VECTOR_ELT_V2_32bit(SDValue Op,
+                                                    SelectionDAG &DAG) const {
+  SDValue Vec = Op.getOperand(0);
+  SDValue Idx = Op.getOperand(1);
+  SDLoc dl(Op);
+
+  bool IsIdxConst = isa<ConstantSDNode>(Idx);
+
+  if (IsIdxConst) {
+    uint64_t IdxVal = dyn_cast<ConstantSDNode>(Idx)->getZExtValue();
+    if (IdxVal == 0) {
+      return DAG.getNode(ISD::AND, dl, MVT::i32,
+                         {DAG.getBitcast(MVT::i32, Vec),
+                          DAG.getConstant(0xFFFF, dl, MVT::i32)});
+    } else if (IdxVal == 1) {
+      SDValue ShiftedVec = DAG.getNode(
+          ISD::SRA, dl, MVT::i32,
+          {DAG.getBitcast(MVT::i32, Vec), DAG.getConstant(16, dl, MVT::i32)});
+
+      return DAG.getNode(ISD::AND, dl, MVT::i32, ShiftedVec,
+                         DAG.getConstant(0xFFFF, dl, MVT::i32));
+    }
+    llvm_unreachable("Unsupported lowering for this index!");
+  }
+  return lowerEXTRACT_VECTOR_ELT_REGISTER(Op, DAG);
+}
+
+SDValue
+K1CTargetLowering::lowerEXTRACT_VECTOR_ELT_V2_64bit(SDValue Op,
+                                                    SelectionDAG &DAG) const {
+  SDValue Idx = Op.getOperand(1);
+
+  if (isa<ConstantSDNode>(Idx)) {
+    // use patterns in td
+    return Op;
+  }
+
+  return lowerEXTRACT_VECTOR_ELT_REGISTER(Op, DAG);
 }
