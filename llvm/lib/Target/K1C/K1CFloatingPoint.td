@@ -46,7 +46,15 @@ def : Pat<(store (f64 SingleReg:$val), AddrRI:$addr), (SDri AddrRI:$addr, Single
 def : Pat<(store (v2f32 SingleReg:$val), AddrRI:$addr), (SDri AddrRI:$addr, SingleReg:$val)>;
 def : Pat<(store (v4f16 SingleReg:$val), AddrRI:$addr), (SDri AddrRI:$addr, SingleReg:$val)>;
 
+def truncstoref16 : PatFrag<(ops node:$val, node:$ptr),
+                            (truncstore node:$val, node:$ptr)> {
+  let IsStore = 1;
+  let MemoryVT = f16;
+}
+
 def : Pat<(truncstoref32 f64:$val, AddrRI:$addr), (SWri AddrRI:$addr, (FNARROWDW SingleReg:$val, ROUND_CS, SILENT_OFF))>;
+
+def : Pat<(truncstoref16 f32:$val, AddrRI:$addr), (SHri AddrRI:$addr, (FNARROWWH SingleReg:$val, ROUND_CS, SILENT_OFF))>;
 
 // Load
 def loadf16 : PatFrag<(ops node:$ptr), (f16 (load node:$ptr))>;
