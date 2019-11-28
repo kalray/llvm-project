@@ -71,6 +71,7 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   addRegisterClass(MVT::v4f16, &K1C::SingleRegRegClass);
   addRegisterClass(MVT::v2f16, &K1C::SingleRegRegClass);
   addRegisterClass(MVT::v2f32, &K1C::SingleRegRegClass);
+  addRegisterClass(MVT::v4f32, &K1C::PairedRegRegClass);
 
   // Compute derived properties from the register classes
   computeRegisterProperties(STI.getRegisterInfo());
@@ -128,7 +129,7 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2f16, Custom);
   setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2i16, Custom);
 
-  for (auto VT : {MVT::v2i32, MVT::v4i16, MVT::v2i16}) {
+  for (auto VT : {MVT::v2i32, MVT::v4i16, MVT::v2i16, MVT::v4f32}) {
     setOperationAction(ISD::UDIV, VT, Expand);
     setOperationAction(ISD::SDIV, VT, Expand);
     setOperationAction(ISD::VECTOR_SHUFFLE, VT, Expand);
@@ -150,17 +151,22 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v4i16, Expand);
   setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v2i32, Custom);
   setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v2f32, Custom);
+  setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v4f32, Expand);
   setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2i32, Custom);
+  setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2f32, Custom);
   setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2i16, Custom);
   setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v4i16, Expand);
+  setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v4f32, Expand);
 
   setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v2i16, Custom);
   setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v2f16, Custom);
 
+  setOperationAction(ISD::EXTRACT_SUBVECTOR, MVT::v2f32, Expand);
+
   setOperationAction(ISD::MULHU, MVT::v2i32, Expand);
   setOperationAction(ISD::MULHS, MVT::v2i32, Expand);
 
-  for (auto VT : {MVT::v2f32, MVT::v4f16}) {
+  for (auto VT : {MVT::v2f32, MVT::v4f16, MVT::v4f32}) {
     setOperationAction(ISD::FDIV, VT, Expand);
     setOperationAction(ISD::VECTOR_SHUFFLE, VT, Expand);
     setOperationAction(ISD::SCALAR_TO_VECTOR, VT, Expand);
@@ -349,8 +355,11 @@ SDValue K1CTargetLowering::LowerFormalArguments(
     if (VA.isRegLoc()) {
       EVT RegVT = VA.getLocVT();
 
-      const unsigned VReg =
-          RegInfo.createVirtualRegister(&K1C::SingleRegRegClass);
+      unsigned VReg;
+      if (VA.getValVT() == MVT::v4f32)
+        VReg = RegInfo.createVirtualRegister(&K1C::PairedRegRegClass);
+      else
+        VReg = RegInfo.createVirtualRegister(&K1C::SingleRegRegClass);
       RegInfo.addLiveIn(VA.getLocReg(), VReg);
       SDValue ArgIn = DAG.getCopyFromReg(Chain, DL, VReg, RegVT);
 
