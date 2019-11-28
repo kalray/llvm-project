@@ -42,6 +42,16 @@ void K1CInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
         .addReg(SrcReg, getKillRegState(KillSrc));
     return;
   }
+  if (K1C::PairedRegRegClass.contains(DstReg, SrcReg)) {
+    MachineFunction *MF = MBB.getParent();
+    const K1CRegisterInfo *TRI =
+        (const K1CRegisterInfo *)MF->getSubtarget().getRegisterInfo();
+
+    BuildMI(MBB, MBBI, DL, get(K1C::COPYQ), DstReg)
+        .addReg(TRI->getSubReg(SrcReg, 1), getKillRegState(KillSrc))
+        .addReg(TRI->getSubReg(SrcReg, 2), getKillRegState(KillSrc));
+    return;
+  }
 }
 
 unsigned findScratchRegister(MachineBasicBlock &MBB, bool UseAtEnd) {
