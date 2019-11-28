@@ -60,6 +60,7 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   // set up the register classes
   addRegisterClass(MVT::i32, &K1C::SingleRegRegClass);
   addRegisterClass(MVT::i64, &K1C::SingleRegRegClass);
+  addRegisterClass(MVT::v2i16, &K1C::SingleRegRegClass);
   addRegisterClass(MVT::v2i32, &K1C::SingleRegRegClass);
   addRegisterClass(MVT::v4i16, &K1C::SingleRegRegClass);
   addRegisterClass(MVT::v2i16, &K1C::SingleRegRegClass);
@@ -151,6 +152,9 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v2f32, Custom);
   setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2i32, Custom);
   setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v4i16, Expand);
+
+  setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v2i16, Custom);
+  setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v2f16, Custom);
 
   setOperationAction(ISD::MULHU, MVT::v2i32, Expand);
   setOperationAction(ISD::MULHS, MVT::v2i32, Expand);
@@ -1138,6 +1142,15 @@ SDValue K1CTargetLowering::lowerBUILD_VECTOR_V2_64bit(SDValue Op,
 
 SDValue K1CTargetLowering::lowerINSERT_VECTOR_ELT(SDValue Op,
                                                   SelectionDAG &DAG) const {
+
+  EVT ScalarVT = Op.getValueType().getScalarType();
+
+  uint64_t ElementBitSize = ScalarVT.getSizeInBits();
+
+  uint64_t Mask = (ElementBitSize == 16) ? 0xFFFF : 0xFFFFFFFF;
+
+  auto TotalSizeType = (ElementBitSize == 16) ? MVT::i32 : MVT::i64;
+
   SDValue Vec = Op->getOperand(0);
   SDValue Val = Op->getOperand(1);
   SDValue Idx = Op->getOperand(2);
@@ -1157,35 +1170,33 @@ SDValue K1CTargetLowering::lowerINSERT_VECTOR_ELT(SDValue Op,
     }
     if (IsImm) {
       if (InsertPos->getZExtValue() == 0) {
-        SDValue V =
-            DAG.getNode(ISD::AND, dl, MVT::i64, DAG.getBitcast(MVT::i64, Vec),
-                        DAG.getConstant(0xffffffff00000000, dl, MVT::i64));
-        return DAG.getBitcast(
-            Op.getValueType(),
-            DAG.getNode(
-                ISD::OR, dl, MVT::i64,
-                {V, DAG.getConstant(ImmVal & 0xffffffff, dl, MVT::i64)}));
+        SDValue V = DAG.getNode(
+            ISD::AND, dl, TotalSizeType, DAG.getBitcast(TotalSizeType, Vec),
+            DAG.getConstant((Mask << ElementBitSize), dl, TotalSizeType));
+        return DAG.getBitcast(Op.getValueType(),
+                              DAG.getNode(ISD::OR, dl, TotalSizeType,
+                                          {V, DAG.getConstant(ImmVal & Mask, dl,
+                                                              TotalSizeType)}));
       } else {
-        SDValue V =
-            DAG.getNode(ISD::AND, dl, MVT::i64, DAG.getBitcast(MVT::i64, Vec),
-                        DAG.getConstant(0xffffffff, dl, MVT::i64));
+        SDValue V = DAG.getNode(ISD::AND, dl, TotalSizeType,
+                                DAG.getBitcast(TotalSizeType, Vec),
+                                DAG.getConstant(Mask, dl, TotalSizeType));
         return DAG.getBitcast(
             Op.getValueType(),
-            DAG.getNode(ISD::OR, dl, MVT::i64,
-                        {V, DAG.getConstant(ImmVal << 32, dl, MVT::i64)}));
+            DAG.getNode(ISD::OR, dl, TotalSizeType,
+                        {V, DAG.getConstant(ImmVal << ElementBitSize, dl,
+                                            TotalSizeType)}));
       }
     } else {
       SDValue stopbit, startbit;
-      uint64_t StartIdx = InsertPos->getZExtValue() * 32;
-      stopbit = DAG.getTargetConstant(StartIdx + 31, dl, MVT::i64);
+      uint64_t StartIdx = InsertPos->getZExtValue() * ElementBitSize;
+      stopbit =
+          DAG.getTargetConstant(StartIdx + ElementBitSize - 1, dl, MVT::i64);
       startbit = DAG.getTargetConstant(StartIdx, dl, MVT::i64);
       return SDValue(DAG.getMachineNode(K1C::INSF, dl, MVT::i64,
                                         {Vec, Val, stopbit, startbit}),
                      0);
     }
-
-    // catch pattern in td
-    return Op;
   }
   SDValue Tmp1 = Vec;
   SDValue Tmp2 = Val;
