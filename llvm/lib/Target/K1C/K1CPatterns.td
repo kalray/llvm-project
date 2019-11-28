@@ -111,6 +111,7 @@ def SBri : K1C_INSTRUCTION<(outs), (ins AddrRI:$addr, SingleReg:$val), "sb $addr
 def SHri : K1C_INSTRUCTION<(outs), (ins AddrRI:$addr, SingleReg:$val), "sh $addr = $val", [], LSU_AUXR_Y>;
 def SWri : K1C_INSTRUCTION<(outs), (ins AddrRI:$addr, SingleReg:$val), "sw $addr = $val", [], LSU_AUXR_Y>;
 def SDri : K1C_INSTRUCTION<(outs), (ins AddrRI:$addr, SingleReg:$val), "sd $addr = $val", [], LSU_AUXR_Y>;
+def SQri : K1C_INSTRUCTION<(outs), (ins AddrRI:$addr, PairedReg:$val), "sq $addr = $val", [], LSU_AUXR_Y>;
 
 // FIXME: for now it's selected the wider itinerary (LSU_AUXW_Y), because
 // the right one can't be determined (LSU_AUXW, LSU_AUXW_X, LSU_AUXW_Y)
@@ -124,6 +125,7 @@ def LHZri : K1C_INSTRUCTION<(outs SingleReg:$out), (ins AddrRI:$addr, VariantMod
 def LWSri : K1C_INSTRUCTION<(outs SingleReg:$out), (ins AddrRI:$addr), "lws $out = $addr", [], LSU_AUXW_Y>;
 def LWZri : K1C_INSTRUCTION<(outs SingleReg:$out), (ins AddrRI:$addr, VariantMod:$var), "lwz$var $out = $addr", [], LSU_AUXW_Y>;
 def LDri : K1C_INSTRUCTION<(outs SingleReg:$out), (ins AddrRI:$addr, VariantMod:$var), "ld$var $out = $addr", [], LSU_AUXW_Y>;
+def LQri : K1C_INSTRUCTION<(outs PairedReg:$out), (ins AddrRI:$addr, VariantMod:$var), "lq$var $out = $addr", [], LSU_AUXW_Y>;
 }
 
 // Store patterns
