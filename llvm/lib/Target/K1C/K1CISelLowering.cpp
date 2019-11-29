@@ -237,7 +237,7 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
     setLoadExtAction(ISD::EXTLOAD, VT, MVT::f64, Expand);
   }
 
-  for (auto VT : {MVT::v2i32, MVT::v2f32}) {
+  for (auto VT : {MVT::v2i32, MVT::v2f32, MVT::v4f32}) {
     setOperationAction(ISD::BUILD_VECTOR, VT, Custom);
   }
 
@@ -1031,6 +1031,9 @@ SDValue K1CTargetLowering::lowerBUILD_VECTOR(SDValue Op,
   if (Op.getValueType() == MVT::v2i16 || Op.getValueType() == MVT::v2f16)
     return lowerBUILD_VECTOR_V2_32bit(Op, DAG);
 
+  if (Op.getValueType() == MVT::v4f32)
+    return lowerBUILD_VECTOR_V4_128bit(Op, DAG);
+
   llvm_unreachable("Unsupported lowering for this type!");
 }
 
@@ -1082,8 +1085,12 @@ SDValue K1CTargetLowering::lowerBUILD_VECTOR_V2_32bit(SDValue Op,
 }
 
 SDValue K1CTargetLowering::lowerBUILD_VECTOR_V2_64bit(SDValue Op,
-                                                      SelectionDAG &DAG) const {
+                                                      SelectionDAG &DAG,
+                                                      bool useINSF) const {
   SDLoc DL(Op);
+
+  if (Op.isUndef())
+    return Op;
 
   SDValue Op1 = Op.getOperand(0);
   SDValue Op2 = Op.getOperand(1);
@@ -1143,12 +1150,64 @@ SDValue K1CTargetLowering::lowerBUILD_VECTOR_V2_64bit(SDValue Op,
         DAG.getNode(ISD::OR, DL, MVT::i64,
                     {Op1Val, DAG.getConstant(Op2Val, DL, MVT::i64)}));
   } else { // reg reg
-    return SDValue(
-        DAG.getMachineNode(K1C::INSF, DL, Op.getValueType(),
-                           {Op1, Op2, DAG.getTargetConstant(63, DL, MVT::i64),
-                            DAG.getTargetConstant(32, DL, MVT::i64)}),
-        0);
+    if (Op1.isUndef() && Op2.isUndef())
+      return SDValue(
+          DAG.getMachineNode(TargetOpcode::IMPLICIT_DEF, DL, Op.getValueType()),
+          0);
+    if (useINSF) {
+      return SDValue(
+          DAG.getMachineNode(K1C::INSF, DL, Op.getValueType(),
+                             {Op1, Op2, DAG.getTargetConstant(63, DL, MVT::i64),
+                              DAG.getTargetConstant(32, DL, MVT::i64)}),
+          0);
+    } else {
+      SDValue ShiftedOp2 = DAG.getNode(
+          ISD::SHL, DL, MVT::i64,
+          {SDValue(DAG.getMachineNode(TargetOpcode::COPY, DL, MVT::i64,
+                                      DAG.getBitcast(MVT::i32, Op2)),
+                   0),
+           DAG.getConstant(32, DL, MVT::i32)});
+      SDValue Op1Val = DAG.getNode(ISD::ZERO_EXTEND, DL, MVT::i64,
+                                   DAG.getBitcast(MVT::i32, Op1));
+
+      return DAG.getBitcast(
+          Op.getValueType(),
+          DAG.getNode(ISD::OR, DL, MVT::i64, {Op1Val, ShiftedOp2}));
+    }
   }
+}
+
+SDValue
+K1CTargetLowering::lowerBUILD_VECTOR_V4_128bit(SDValue Op,
+                                               SelectionDAG &DAG) const {
+  SDLoc DL(Op);
+  SDValue V1 = Op.getOperand(0);
+  SDValue V2 = Op.getOperand(1);
+  SDValue V3 = Op.getOperand(2);
+  SDValue V4 = Op.getOperand(3);
+
+  EVT VT = Op.getValueType();
+  LLVMContext &Ctx = *DAG.getContext();
+  EVT HalfVT = VT.getHalfNumVectorElementsVT(Ctx);
+
+  SDValue VecLow = lowerBUILD_VECTOR_V2_64bit(
+      DAG.getNode(ISD::BUILD_VECTOR, DL, HalfVT, {V1, V2}), DAG, false);
+  SDValue VecHi = lowerBUILD_VECTOR_V2_64bit(
+      DAG.getNode(ISD::BUILD_VECTOR, DL, HalfVT, {V3, V4}), DAG, false);
+
+  SDValue ImpV =
+      SDValue(DAG.getMachineNode(TargetOpcode::IMPLICIT_DEF, DL, VT), 0);
+  SDValue InsLow =
+      SDValue(DAG.getMachineNode(
+                  TargetOpcode::INSERT_SUBREG, DL, VT,
+                  {ImpV, VecLow, DAG.getTargetConstant(1, DL, MVT::i64)}),
+              0);
+  if (VecHi.isUndef())
+    return InsLow;
+  return SDValue(DAG.getMachineNode(
+                     TargetOpcode::INSERT_SUBREG, DL, VT,
+                     {InsLow, VecHi, DAG.getTargetConstant(2, DL, MVT::i64)}),
+                 0);
 }
 
 SDValue K1CTargetLowering::lowerINSERT_VECTOR_ELT(SDValue Op,
