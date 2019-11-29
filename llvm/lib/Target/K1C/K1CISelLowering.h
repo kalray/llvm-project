@@ -93,7 +93,9 @@ private:
   SDValue lowerINTRINSIC_VOID(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerBUILD_VECTOR(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerBUILD_VECTOR_V2_32bit(SDValue Op, SelectionDAG &DAG) const;
-  SDValue lowerBUILD_VECTOR_V2_64bit(SDValue Op, SelectionDAG &DAG) const;
+  SDValue lowerBUILD_VECTOR_V2_64bit(SDValue Op, SelectionDAG &DAG,
+                                     bool useINSF = true) const;
+  SDValue lowerBUILD_VECTOR_V4_128bit(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerINSERT_VECTOR_ELT(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerEXTRACT_VECTOR_ELT(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerEXTRACT_VECTOR_ELT_REGISTER(SDValue Op, SelectionDAG &DAG) const;
