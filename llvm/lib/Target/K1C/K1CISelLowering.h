@@ -97,6 +97,9 @@ private:
                                      bool useINSF = true) const;
   SDValue lowerBUILD_VECTOR_V4_128bit(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerINSERT_VECTOR_ELT(SDValue Op, SelectionDAG &DAG) const;
+  SDValue lowerINSERT_VECTOR_ELT_V4_128bit(SDLoc &DL, SelectionDAG &DAG,
+                                           SDValue Vec, SDValue Val,
+                                           uint64_t index) const;
   SDValue lowerEXTRACT_VECTOR_ELT(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerEXTRACT_VECTOR_ELT_REGISTER(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerEXTRACT_VECTOR_ELT_V2_32bit(SDValue Op, SelectionDAG &DAG) const;
