@@ -156,7 +156,7 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2f32, Custom);
   setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2i16, Custom);
   setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v4i16, Expand);
-  setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v4f32, Expand);
+  setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v4f32, Custom);
 
   setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v2i16, Custom);
   setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v2f16, Custom);
@@ -1331,8 +1331,9 @@ SDValue K1CTargetLowering::lowerEXTRACT_VECTOR_ELT(SDValue Op,
                                                    SelectionDAG &DAG) const {
   SDValue Vec = Op.getOperand(0);
 
-  if (Vec.getValueType() == MVT::v2f32 || Vec.getValueType() == MVT::v2i32)
-    return lowerEXTRACT_VECTOR_ELT_V2_64bit(Op, DAG);
+  if (Vec.getValueType() == MVT::v2f32 || Vec.getValueType() == MVT::v2i32 ||
+      Vec.getValueType() == MVT::v4f32)
+    return lowerEXTRACT_VECTOR_ELT_TDPATTERN(Op, DAG);
 
   if (Vec.getValueType() == MVT::v2i16 || Vec.getValueType() == MVT::v2f16)
     return lowerEXTRACT_VECTOR_ELT_V2_32bit(Op, DAG);
@@ -1403,8 +1404,8 @@ K1CTargetLowering::lowerEXTRACT_VECTOR_ELT_V2_32bit(SDValue Op,
 }
 
 SDValue
-K1CTargetLowering::lowerEXTRACT_VECTOR_ELT_V2_64bit(SDValue Op,
-                                                    SelectionDAG &DAG) const {
+K1CTargetLowering::lowerEXTRACT_VECTOR_ELT_TDPATTERN(SDValue Op,
+                                                     SelectionDAG &DAG) const {
   SDValue Idx = Op.getOperand(1);
 
   if (isa<ConstantSDNode>(Idx)) {
