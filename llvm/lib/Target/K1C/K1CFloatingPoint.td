@@ -245,9 +245,3 @@ def : Pat<(v4f16 (build_vector f16:$v1, f16:$v2, f16:$v3, f16:$v4)),
 
 def : Pat<(extractelt (v2f32 SingleReg:$v), 0), (COPY SingleReg:$v)>;
 def : Pat<(extractelt (v2f32 SingleReg:$v), 1), (SRADd1 SingleReg :$v, (i64 32))>;
-
-def : Pat<(v4f32 (build_vector f32:$v1, f32:$v2, f32:$v3, f32:$v4)),
-    (INSERT_SUBREG
-      (INSERT_SUBREG (v4f32 (IMPLICIT_DEF)), (INSF SingleReg:$v1, SingleReg:$v2, 63, 32), 1),
-      (INSF SingleReg:$v3, SingleReg:$v4, 63, 32), 2
-    )>;
