@@ -151,7 +151,7 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v4i16, Expand);
   setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v2i32, Custom);
   setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v2f32, Custom);
-  setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v4f32, Expand);
+  setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v4f32, Custom);
   setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2i32, Custom);
   setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2f32, Custom);
   setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2i16, Custom);
@@ -1226,6 +1226,10 @@ SDValue K1CTargetLowering::lowerINSERT_VECTOR_ELT(SDValue Op,
   SDValue Idx = Op->getOperand(2);
   SDLoc dl(Op);
   if (ConstantSDNode *InsertPos = dyn_cast<ConstantSDNode>(Idx)) {
+    if (Vec.getValueType() == MVT::v4f32)
+      return lowerINSERT_VECTOR_ELT_V4_128bit(dl, DAG, Vec, Val,
+                                              InsertPos->getZExtValue());
+
     bool IsImm = false;
     uint64_t ImmVal;
     if (isa<ConstantSDNode>(Val)) {
@@ -1291,6 +1295,36 @@ SDValue K1CTargetLowering::lowerINSERT_VECTOR_ELT(SDValue Op,
   return DAG.getLoad(
       VT, dl, Ch, StackPtr,
       MachinePointerInfo::getFixedStack(DAG.getMachineFunction(), SPFI));
+}
+
+SDValue K1CTargetLowering::lowerINSERT_VECTOR_ELT_V4_128bit(
+    SDLoc &dl, SelectionDAG &DAG, SDValue Vec, SDValue Val,
+    uint64_t index) const {
+  SDValue v1, subRegIdx, mask;
+  if (index % 2 == 0) {
+    subRegIdx = DAG.getTargetConstant(index == 0 ? 1 : 2, dl, MVT::i32);
+    v1 = DAG.getNode(ISD::ZERO_EXTEND, dl, MVT::i64,
+                     DAG.getBitcast(MVT::i32, Val));
+    mask = DAG.getConstant(0xffffffff00000000, dl, MVT::i64);
+  } else {
+    subRegIdx = DAG.getTargetConstant(index == 1 ? 1 : 2, dl, MVT::i32);
+    SDValue val32 = SDValue(DAG.getMachineNode(TargetOpcode::COPY, dl, MVT::i64,
+                                               DAG.getBitcast(MVT::i32, Val)),
+                            0);
+    v1 = DAG.getNode(ISD::SHL, dl, MVT::i64,
+                     {val32, DAG.getConstant(32, dl, MVT::i32)});
+    mask = DAG.getConstant(0xffffffff, dl, MVT::i64);
+  }
+  SDValue subreg = SDValue(DAG.getMachineNode(TargetOpcode::EXTRACT_SUBREG, dl,
+                                              MVT::i64, {Vec, subRegIdx}),
+                           0);
+
+  SDValue v2 = DAG.getNode(ISD::AND, dl, MVT::i64, {subreg, mask});
+
+  SDValue orResult = DAG.getNode(ISD::OR, dl, MVT::i64, {v1, v2});
+  return SDValue(DAG.getMachineNode(TargetOpcode::INSERT_SUBREG, dl, MVT::v4f32,
+                                    {Vec, orResult, subRegIdx}),
+                 0);
 }
 
 SDValue K1CTargetLowering::lowerEXTRACT_VECTOR_ELT(SDValue Op,
