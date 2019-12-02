@@ -57,11 +57,11 @@ namespace {
 
 } // end anonymous namespace
 
-static const std::array<StringRef, 17> validArchs = {
+static const std::array<StringRef, 17> validArchs = {{
     "i386",   "x86_64", "x86_64h",  "armv4t",  "arm",    "armv5e",
     "armv6",  "armv6m", "armv7",    "armv7em", "armv7k", "armv7m",
     "armv7s", "arm64",  "arm64_32", "ppc",     "ppc64",
-};
+}};
 
 static Error malformedError(const Twine &Msg) {
   return make_error<GenericBinaryError>("truncated or malformed object (" +
