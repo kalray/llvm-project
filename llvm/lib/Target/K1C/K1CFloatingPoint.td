@@ -46,6 +46,7 @@ def : Pat<(store (f64 SingleReg:$val), AddrRI:$addr), (SDri AddrRI:$addr, Single
 def : Pat<(store (v2f32 SingleReg:$val), AddrRI:$addr), (SDri AddrRI:$addr, SingleReg:$val)>;
 def : Pat<(store (v4f16 SingleReg:$val), AddrRI:$addr), (SDri AddrRI:$addr, SingleReg:$val)>;
 def : Pat<(store (v4f32 PairedReg:$val), AddrRI: $addr), (SQri AddrRI:$addr, PairedReg:$val)>;
+def : Pat<(store (v2f64 PairedReg:$val), AddrRI: $addr), (SQri AddrRI:$addr, PairedReg:$val)>;
 
 def truncstoref16 : PatFrag<(ops node:$val, node:$ptr),
                             (truncstore node:$val, node:$ptr)> {
@@ -64,6 +65,7 @@ def loadf64 : PatFrag<(ops node:$ptr), (f64 (load node:$ptr))>;
 def loadv4f16 : PatFrag<(ops node:$ptr), (v4f16 (load node:$ptr))>;
 def loadv2f32 : PatFrag<(ops node:$ptr), (v2f32 (load node:$ptr))>;
 def loadv4f32 : PatFrag<(ops node:$ptr), (v4f32 (load node:$ptr))>;
+def loadv2f64 : PatFrag<(ops node:$ptr), (v2f64 (load node:$ptr))>;
 
 def : Pat<(loadf16 AddrRI:$addr), (LHZri AddrRI:$addr, VARIANT_CACHED)>;
 def : Pat<(loadf32 AddrRI:$addr), (LWZri AddrRI:$addr, VARIANT_CACHED)>;
@@ -71,6 +73,7 @@ def : Pat<(loadf64 AddrRI:$addr), (LDri AddrRI:$addr, VARIANT_CACHED)>;
 def : Pat<(loadv2f32 AddrRI:$addr), (LDri AddrRI:$addr, VARIANT_CACHED)>;
 def : Pat<(loadv4f16 AddrRI:$addr), (LDri AddrRI:$addr, VARIANT_CACHED)>;
 def : Pat<(loadv4f32 AddrRI:$addr), (LQri AddrRI:$addr, VARIANT_CACHED)>;
+def : Pat<(loadv2f64 AddrRI:$addr), (LQri AddrRI:$addr, VARIANT_CACHED)>;
 
 // 16 bits
 def : BITCAST<f16, i16, SingleReg>;
@@ -111,6 +114,7 @@ def : Pat<(fadd f64:$rs1, f64:$rs2), (FADDDrr SingleReg:$rs1, SingleReg:$rs2, RO
 def : Pat<(fadd v4f16:$rs1, v4f16:$rs2), (FADDHQrr SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
 def : Pat<(fadd v2f32:$rs1, v2f32:$rs2), (FADDWPd3 SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
 def : Pat<(fadd v4f32:$rs1, v4f32:$rs2), (FADDWQ PairedReg:$rs1, PairedReg:$rs2, ROUND_CS, SILENT_OFF)>;
+def : Pat<(fadd v2f64:$rs1, v2f64:$rs2), (FADDDP PairedReg:$rs1, PairedReg:$rs2, ROUND_CS, SILENT_OFF)>;
 // FCDIV -> TODO
 // FCOMP (TODO: factorize these patterns in ISelLowering pass)
 def : Pat<(i32 (setoeq f16:$rz, f16:$ry)), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, FCOMP_OEQ)>;
@@ -223,12 +227,13 @@ def : Pat<(f32 (fpround f64:$val)), (FNARROWDW SingleReg:$val, ROUND_CS, SILENT_
 // FNEG, see K1CInstrInfo.td
 // FSBFC -> TODO
 // FSBF, see K1CInstrInfo.td for immediate patterns
-def : Pat<(fsub f16:$rs1, f16:$rs2), (FSBFHQrr SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
-def : Pat<(fsub f32:$rs1, f32:$rs2), (FSBFWrr SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
-def : Pat<(fsub f64:$rs1, f64:$rs2), (FSBFDrr SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
+def : Pat<(fsub f16:$rs1, f16:$rs2), (FSBFHQrr SingleReg:$rs2, SingleReg:$rs1, ROUND_CS, SILENT_OFF)>;
+def : Pat<(fsub f32:$rs1, f32:$rs2), (FSBFWrr SingleReg:$rs2, SingleReg:$rs1, ROUND_CS, SILENT_OFF)>;
+def : Pat<(fsub f64:$rs1, f64:$rs2), (FSBFDrr SingleReg:$rs2, SingleReg:$rs1, ROUND_CS, SILENT_OFF)>;
 def : Pat<(fsub v4f16:$rs1, v4f16:$rs2), (FSBFHQrr SingleReg:$rs2, SingleReg:$rs1, ROUND_CS, SILENT_OFF)>;
 def : Pat<(fsub v2f32:$rs1, v2f32:$rs2), (FSBFWPd3 SingleReg:$rs2, SingleReg:$rs1, ROUND_CS, SILENT_OFF)>;
 def : Pat<(fsub v4f32:$rs1, v4f32:$rs2), (FSBFWQ PairedReg:$rs2, PairedReg:$rs1, ROUND_CS, SILENT_OFF)>;
+def : Pat<(fsub v2f64:$rs1, v2f64:$rs2), (FSBFDP PairedReg:$rs2, PairedReg:$rs1, ROUND_CS, SILENT_OFF)>;
 // FSDIV -> TODO
 // FSINV -> TODO
 // FSISR -> TODO
@@ -250,3 +255,12 @@ def : Pat<(extractelt (v4f32 PairedReg:$v), 0), (f32 (EXTRACT_SUBREG $v, 1))>;
 def : Pat<(extractelt (v4f32 PairedReg:$v), 1), (SRADd1 (f32 (EXTRACT_SUBREG $v, 1)), (i64 32))>;
 def : Pat<(extractelt (v4f32 PairedReg:$v), 2), (f32 (EXTRACT_SUBREG $v, 2))>;
 def : Pat<(extractelt (v4f32 PairedReg:$v), 3), (SRADd1 (f32 (EXTRACT_SUBREG $v, 2)), (i64 32))>;
+
+def : Pat<(v2f64 (build_vector f64:$v1, f64:$v2)),
+  (INSERT_SUBREG
+    (INSERT_SUBREG (v2f64 (IMPLICIT_DEF)), SingleReg:$v1, 1),
+    SingleReg:$v2, 2
+  )>;
+
+def : Pat<(extractelt (v2f64 PairedReg:$v), 0), (f64 (EXTRACT_SUBREG $v, 1))>;
+def : Pat<(extractelt (v2f64 PairedReg:$v), 1), (f64 (EXTRACT_SUBREG $v, 2))>;
