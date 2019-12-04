@@ -52,4 +52,20 @@ BUILTIN(__builtin_k1_wfxl, "vUcULLi", "")
 BUILTIN(__builtin_k1_wfxm, "vUcULLi", "")
 BUILTIN(__builtin_k1_sbmm8, "ULLiiULLi", "")
 
+BUILTIN(__builtin_k1_fabswp, "V2fV2f", "")
+BUILTIN(__builtin_k1_fabswq, "V4fV4f", "")
+BUILTIN(__builtin_k1_fabsdp, "V2dV2d", "")
+
+BUILTIN(__builtin_k1_fnegwp, "V2fV2f", "")
+BUILTIN(__builtin_k1_fnegwq, "V4fV4f", "")
+BUILTIN(__builtin_k1_fnegdp, "V2dV2d", "")
+
+BUILTIN(__builtin_k1_fmaxwp, "V2fV2fV2f", "")
+BUILTIN(__builtin_k1_fmaxwq, "V4fV4fV4f", "")
+BUILTIN(__builtin_k1_fmaxdp, "V2dV2dV2d", "")
+
+BUILTIN(__builtin_k1_fminwp, "V2fV2fV2f", "")
+BUILTIN(__builtin_k1_fminwq, "V4fV4fV4f", "")
+BUILTIN(__builtin_k1_fmindp, "V2dV2dV2d", "")
+
 #undef BUILTIN
