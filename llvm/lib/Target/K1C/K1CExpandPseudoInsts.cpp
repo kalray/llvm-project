@@ -870,6 +870,55 @@ static bool expandSBMM8Instr(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
   return true;
 }
 
+static bool expandUnaryPairedRegInstrOpcode(unsigned int OpCode,
+                                            const K1CInstrInfo *TII,
+                                            MachineBasicBlock &MBB,
+                                            MachineBasicBlock::iterator MBBI) {
+  MachineInstr &MI = *MBBI;
+  DebugLoc DL = MI.getDebugLoc();
+
+  MachineFunction *MF = MBB.getParent();
+  const K1CRegisterInfo *TRI =
+      (const K1CRegisterInfo *)MF->getSubtarget().getRegisterInfo();
+
+  unsigned outReg = MI.getOperand(0).getReg();
+  unsigned inReg = MI.getOperand(1).getReg();
+
+  BuildMI(MBB, MBBI, DL, TII->get(OpCode), TRI->getSubReg(outReg, 1))
+      .addReg(TRI->getSubReg(inReg, 1));
+  BuildMI(MBB, MBBI, DL, TII->get(OpCode), TRI->getSubReg(outReg, 2))
+      .addReg(TRI->getSubReg(inReg, 2));
+
+  MI.eraseFromParent();
+  return true;
+}
+
+static bool expandBinaryPairedRegInstrOpcode(unsigned int OpCode,
+                                             const K1CInstrInfo *TII,
+                                             MachineBasicBlock &MBB,
+                                             MachineBasicBlock::iterator MBBI) {
+  MachineInstr &MI = *MBBI;
+  DebugLoc DL = MI.getDebugLoc();
+
+  MachineFunction *MF = MBB.getParent();
+  const K1CRegisterInfo *TRI =
+      (const K1CRegisterInfo *)MF->getSubtarget().getRegisterInfo();
+
+  unsigned outReg = MI.getOperand(0).getReg();
+  unsigned v1Reg = MI.getOperand(1).getReg();
+  unsigned v2Reg = MI.getOperand(2).getReg();
+
+  BuildMI(MBB, MBBI, DL, TII->get(OpCode), TRI->getSubReg(outReg, 1))
+      .addReg(TRI->getSubReg(v1Reg, 1))
+      .addReg(TRI->getSubReg(v2Reg, 1));
+  BuildMI(MBB, MBBI, DL, TII->get(OpCode), TRI->getSubReg(outReg, 2))
+      .addReg(TRI->getSubReg(v1Reg, 2))
+      .addReg(TRI->getSubReg(v2Reg, 2));
+
+  MI.eraseFromParent();
+  return true;
+}
+
 bool K1CExpandPseudo::expandMI(MachineBasicBlock &MBB,
                                MachineBasicBlock::iterator MBBI,
                                MachineBasicBlock::iterator &NextMBBI) {
@@ -918,6 +967,30 @@ bool K1CExpandPseudo::expandMI(MachineBasicBlock &MBB,
   case K1C::SBMM8rr_Instr:
   case K1C::SBMM8ri_Instr:
     expandSBMM8Instr(TII, MBB, MBBI);
+    return true;
+  case K1C::FABSWQ_Instr:
+    expandUnaryPairedRegInstrOpcode(K1C::FABSWP, TII, MBB, MBBI);
+    return true;
+  case K1C::FABSDP_Instr:
+    expandUnaryPairedRegInstrOpcode(K1C::FABSD, TII, MBB, MBBI);
+    return true;
+  case K1C::FNEGWQ_Instr:
+    expandUnaryPairedRegInstrOpcode(K1C::FNEGWP, TII, MBB, MBBI);
+    return true;
+  case K1C::FNEGDP_Instr:
+    expandUnaryPairedRegInstrOpcode(K1C::FNEGD, TII, MBB, MBBI);
+    return true;
+  case K1C::FMAXWQ_Instr:
+    expandBinaryPairedRegInstrOpcode(K1C::FMAXWP, TII, MBB, MBBI);
+    return true;
+  case K1C::FMAXDP_Instr:
+    expandBinaryPairedRegInstrOpcode(K1C::FMAXD, TII, MBB, MBBI);
+    return true;
+  case K1C::FMINWQ_Instr:
+    expandBinaryPairedRegInstrOpcode(K1C::FMINWP, TII, MBB, MBBI);
+    return true;
+  case K1C::FMINDP_Instr:
+    expandBinaryPairedRegInstrOpcode(K1C::FMIND, TII, MBB, MBBI);
     return true;
   default:
     break;
