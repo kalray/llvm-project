@@ -13554,6 +13554,42 @@ Value *CodeGenFunction::EmitK1CBuiltinExpr(unsigned BuiltinID,
     Value *Callee = CGM.getIntrinsic(Intrinsic::k1c_sbmm8);
     return Builder.CreateCall(Callee, {A1, A2});
   }
+
+  case K1C::BI__builtin_k1_fabswp:
+    return emitUnaryBuiltin(*this, E, Intrinsic::k1c_fabswp);
+
+  case K1C::BI__builtin_k1_fabswq:
+    return emitUnaryBuiltin(*this, E, Intrinsic::k1c_fabswq);
+
+  case K1C::BI__builtin_k1_fabsdp:
+    return emitUnaryBuiltin(*this, E, Intrinsic::k1c_fabsdp);
+
+  case K1C::BI__builtin_k1_fnegwp:
+    return emitUnaryBuiltin(*this, E, Intrinsic::k1c_fnegwp);
+
+  case K1C::BI__builtin_k1_fnegwq:
+    return emitUnaryBuiltin(*this, E, Intrinsic::k1c_fnegwq);
+
+  case K1C::BI__builtin_k1_fnegdp:
+    return emitUnaryBuiltin(*this, E, Intrinsic::k1c_fnegdp);
+
+  case K1C::BI__builtin_k1_fmaxwp:
+    return emitBinaryBuiltin(*this, E, Intrinsic::k1c_fmaxwp);
+
+  case K1C::BI__builtin_k1_fmaxwq:
+    return emitBinaryBuiltin(*this, E, Intrinsic::k1c_fmaxwq);
+
+  case K1C::BI__builtin_k1_fmaxdp:
+    return emitBinaryBuiltin(*this, E, Intrinsic::k1c_fmaxdp);
+
+  case K1C::BI__builtin_k1_fminwp:
+    return emitBinaryBuiltin(*this, E, Intrinsic::k1c_fminwp);
+
+  case K1C::BI__builtin_k1_fminwq:
+    return emitBinaryBuiltin(*this, E, Intrinsic::k1c_fminwq);
+
+  case K1C::BI__builtin_k1_fmindp:
+    return emitBinaryBuiltin(*this, E, Intrinsic::k1c_fmindp);
   }
   return nullptr;
 }
