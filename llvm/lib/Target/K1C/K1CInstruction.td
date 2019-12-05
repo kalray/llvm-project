@@ -88,7 +88,7 @@ def FloatcompMod : Operand<i8> {
   let PrintMethod = "printFloatcompMod";
 }
 
-def RoundingMod : Operand<i8> {
+def RoundingMod : Operand<i32>, ImmLeaf<i32, [{return = (0 <= Imm) && (Imm <= 7);}]> {
   let PrintMethod = "printRoundingMod";
 }
 

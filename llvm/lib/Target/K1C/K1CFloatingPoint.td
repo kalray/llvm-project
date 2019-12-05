@@ -11,7 +11,7 @@ class SILENT<int N> : PatLeaf<(i8 N)>;
 def SILENT_OFF : SILENT<0>;
 def SILENT_ON  : SILENT<1>;
 
-class ROUNDING<int N> : PatLeaf<(i8 N)>;
+class ROUNDING<int N> : PatLeaf<(i32 N)>;
 def ROUND_NE : ROUNDING<0>;
 def ROUND_U  : ROUNDING<1>;
 def ROUND_D  : ROUNDING<2>;

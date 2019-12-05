@@ -1156,6 +1156,7 @@ multiclass MC_24<string OpcStr> {
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [ ],
      MAU_AUXR_Y>;
+  let Constraints = "$a3 = $a33" in
   def d3 : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
     <(outs SingleReg:$a3), (ins SingleReg:$a33, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
@@ -3340,6 +3341,7 @@ def FDOT2WDP : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE
    [ ]>;
 
 // 1 insns: ['FMM2AWQ']
+let Constraints = "$a3 = $a33" in
 def FMM2AWQ : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a3), (ins PairedReg:$a33, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fmm2awq$a1$a2 $a3 = $a4, $a5",
