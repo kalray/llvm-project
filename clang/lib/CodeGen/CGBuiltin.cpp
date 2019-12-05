@@ -13509,6 +13509,74 @@ Value *CodeGenFunction::EmitHexagonBuiltinExpr(unsigned BuiltinID,
   return nullptr;
 }
 
+static int K1C_getRoundingModifier(clang::ASTContext &Ctx,
+                                   const clang::Expr *E) {
+  if (E->isNullPointerConstant(Ctx, Expr::NPC_NeverValueDependent)) {
+    return 7;
+  }
+  if (E->getStmtClass() == Stmt::StringLiteralClass) {
+    int modifier;
+    StringRef Str = cast<clang::StringLiteral>(E)->getString();
+    if (Str.equals_lower(".rn"))
+      modifier = 0;
+    else if (Str.equals_lower(".ru"))
+      modifier = 1;
+    else if (Str.equals_lower(".rd"))
+      modifier = 2;
+    else if (Str.equals_lower(".rz"))
+      modifier = 3;
+    else if (Str.equals_lower(".rna"))
+      modifier = 4;
+    else if (Str.equals_lower(".rnz"))
+      modifier = 5;
+    else if (Str.equals_lower(".ro"))
+      modifier = 6;
+    else {
+      modifier = -1;
+    }
+    return modifier;
+  }
+
+  return -1;
+}
+
+static Value *K1C_emitBinaryRoundingBuiltin(CodeGenFunction &CGF,
+                                            const CallExpr *E,
+                                            unsigned IntrinsicID) {
+  Value *Arg1 = CGF.EmitScalarExpr(E->getArg(0));
+  Value *Arg2 = CGF.EmitScalarExpr(E->getArg(1));
+
+  int Modifier = K1C_getRoundingModifier(CGF.getContext(),
+                                         E->getArg(2)->IgnoreParenImpCasts());
+
+  if (Modifier == -1)
+    CGF.CGM.Error(E->getArg(2)->getBeginLoc(), "invalid rounding modifier");
+
+  Value *Arg3 = ConstantInt::get(CGF.IntTy, Modifier);
+
+  Value *Callee = CGF.CGM.getIntrinsic(IntrinsicID);
+  return CGF.Builder.CreateCall(Callee, {Arg1, Arg2, Arg3});
+}
+
+static Value *K1C_emitTernaryRoundingBuiltin(CodeGenFunction &CGF,
+                                             const CallExpr *E,
+                                             unsigned IntrinsicID) {
+  Value *Arg1 = CGF.EmitScalarExpr(E->getArg(0));
+  Value *Arg2 = CGF.EmitScalarExpr(E->getArg(1));
+  Value *Arg3 = CGF.EmitScalarExpr(E->getArg(2));
+
+  int Modifier = K1C_getRoundingModifier(CGF.getContext(),
+                                         E->getArg(3)->IgnoreParenImpCasts());
+
+  if (Modifier == -1)
+    CGF.CGM.Error(E->getArg(3)->getBeginLoc(), "invalid rounding modifier");
+
+  Value *Arg4 = ConstantInt::get(CGF.IntTy, Modifier);
+
+  Value *Callee = CGF.CGM.getIntrinsic(IntrinsicID);
+  return CGF.Builder.CreateCall(Callee, {Arg1, Arg2, Arg3, Arg4});
+}
+
 Value *CodeGenFunction::EmitK1CBuiltinExpr(unsigned BuiltinID,
                                            const CallExpr *E) {
   switch (BuiltinID) {
@@ -13590,6 +13658,96 @@ Value *CodeGenFunction::EmitK1CBuiltinExpr(unsigned BuiltinID,
 
   case K1C::BI__builtin_k1_fmindp:
     return emitBinaryBuiltin(*this, E, Intrinsic::k1c_fmindp);
+
+  case K1C::BI__builtin_k1_faddwp:
+    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_faddwp);
+
+  case K1C::BI__builtin_k1_faddcwc:
+    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_faddcwc);
+
+  case K1C::BI__builtin_k1_faddwq:
+    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_faddwq);
+
+  case K1C::BI__builtin_k1_faddcwcp:
+    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_faddcwcp);
+
+  case K1C::BI__builtin_k1_fadddp:
+    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_fadddp);
+
+  case K1C::BI__builtin_k1_faddcdc:
+    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_faddcdc);
+
+  case K1C::BI__builtin_k1_fsbfwp:
+    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_fsbfwp);
+
+  case K1C::BI__builtin_k1_fsbfcwc:
+    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_fsbfcwc);
+
+  case K1C::BI__builtin_k1_fsbfwq:
+    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_fsbfwq);
+
+  case K1C::BI__builtin_k1_fsbfcwcp:
+    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_fsbfcwcp);
+
+  case K1C::BI__builtin_k1_fsbfdp:
+    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_fsbfdp);
+
+  case K1C::BI__builtin_k1_fsbfcdc:
+    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_fsbfcdc);
+
+  case K1C::BI__builtin_k1_fmulwp:
+    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_fmulwp);
+
+  case K1C::BI__builtin_k1_fmulwc:
+    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_fmulwc);
+
+  case K1C::BI__builtin_k1_fmulcwc:
+    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_fmulcwc);
+
+  case K1C::BI__builtin_k1_fmulwq:
+    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_fmulwq);
+
+  case K1C::BI__builtin_k1_fmulwcp:
+    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_fmulwcp);
+
+  case K1C::BI__builtin_k1_fmulcwcp:
+    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_fmulcwcp);
+
+  case K1C::BI__builtin_k1_fmuldp:
+    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_fmuldp);
+
+  case K1C::BI__builtin_k1_fmuldc:
+    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_fmuldc);
+
+  case K1C::BI__builtin_k1_fmulcdc:
+    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_fmulcdc);
+
+  case K1C::BI__builtin_k1_fmm2wq:
+    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_fmm2wq);
+
+  case K1C::BI__builtin_k1_ffmawp:
+    return K1C_emitTernaryRoundingBuiltin(*this, E, Intrinsic::k1c_ffmawp);
+
+  case K1C::BI__builtin_k1_ffmawq:
+    return K1C_emitTernaryRoundingBuiltin(*this, E, Intrinsic::k1c_ffmawq);
+
+  case K1C::BI__builtin_k1_ffmadp:
+    return K1C_emitTernaryRoundingBuiltin(*this, E, Intrinsic::k1c_ffmadp);
+
+  case K1C::BI__builtin_k1_fmm2awq:
+    return K1C_emitTernaryRoundingBuiltin(*this, E, Intrinsic::k1c_fmm2awq);
+
+  case K1C::BI__builtin_k1_ffmswp:
+    return K1C_emitTernaryRoundingBuiltin(*this, E, Intrinsic::k1c_ffmswp);
+
+  case K1C::BI__builtin_k1_ffmswq:
+    return K1C_emitTernaryRoundingBuiltin(*this, E, Intrinsic::k1c_ffmswq);
+
+  case K1C::BI__builtin_k1_ffmsdp:
+    return K1C_emitTernaryRoundingBuiltin(*this, E, Intrinsic::k1c_ffmsdp);
+
+  case K1C::BI__builtin_k1_fmm2swq:
+    return K1C_emitTernaryRoundingBuiltin(*this, E, Intrinsic::k1c_fmm2swq);
   }
   return nullptr;
 }
