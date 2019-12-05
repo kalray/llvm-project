@@ -919,6 +919,182 @@ static bool expandBinaryPairedRegInstrOpcode(unsigned int OpCode,
   return true;
 }
 
+static bool expandRoundingPairInstrOpcodes(unsigned int OpCode1,
+                                           unsigned int OpCode2,
+                                           const K1CInstrInfo *TII,
+                                           MachineBasicBlock &MBB,
+                                           MachineBasicBlock::iterator MBBI) {
+  MachineInstr &MI = *MBBI;
+  DebugLoc DL = MI.getDebugLoc();
+
+  MachineFunction *MF = MBB.getParent();
+  const K1CRegisterInfo *TRI =
+      (const K1CRegisterInfo *)MF->getSubtarget().getRegisterInfo();
+
+  unsigned outReg = MI.getOperand(0).getReg();
+  unsigned v1Reg = MI.getOperand(1).getReg();
+  unsigned v2Reg = MI.getOperand(2).getReg();
+  int64_t rounding = MI.getOperand(3).getImm();
+
+  BuildMI(MBB, MBBI, DL, TII->get(OpCode1), TRI->getSubReg(outReg, 1))
+      .addReg(TRI->getSubReg(v1Reg, 1))
+      .addReg(TRI->getSubReg(v2Reg, 1))
+      .addImm(rounding)
+      .addImm(0);
+  BuildMI(MBB, MBBI, DL, TII->get(OpCode2), TRI->getSubReg(outReg, 2))
+      .addReg(TRI->getSubReg(v1Reg, 2))
+      .addReg(TRI->getSubReg(v2Reg, 2))
+      .addImm(rounding)
+      .addImm(0);
+
+  MI.eraseFromParent();
+  return true;
+}
+
+static bool expandFMULDCInstr(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
+                              MachineBasicBlock::iterator MBBI) {
+  MachineInstr &MI = *MBBI;
+  DebugLoc DL = MI.getDebugLoc();
+
+  MachineFunction *MF = MBB.getParent();
+  const K1CRegisterInfo *TRI =
+      (const K1CRegisterInfo *)MF->getSubtarget().getRegisterInfo();
+
+  unsigned outReg = MI.getOperand(0).getReg();
+  unsigned v1Reg = MI.getOperand(1).getReg();
+  unsigned v2Reg = MI.getOperand(2).getReg();
+  int64_t rounding = MI.getOperand(3).getImm();
+
+  BuildMI(MBB, MBBI, DL, TII->get(K1C::FMULDrr), TRI->getSubReg(outReg, 1))
+      .addReg(TRI->getSubReg(v1Reg, 1))
+      .addReg(TRI->getSubReg(v2Reg, 1))
+      .addImm(rounding)
+      .addImm(0);
+  BuildMI(MBB, MBBI, DL, TII->get(K1C::FFMSDd3), TRI->getSubReg(outReg, 1))
+      .addReg(TRI->getSubReg(outReg, 1))
+      .addReg(TRI->getSubReg(v1Reg, 2))
+      .addReg(TRI->getSubReg(v2Reg, 2))
+      .addImm(rounding)
+      .addImm(0);
+  BuildMI(MBB, MBBI, DL, TII->get(K1C::FMULDrr), TRI->getSubReg(outReg, 2))
+      .addReg(TRI->getSubReg(v1Reg, 1))
+      .addReg(TRI->getSubReg(v2Reg, 2))
+      .addImm(rounding)
+      .addImm(0);
+  BuildMI(MBB, MBBI, DL, TII->get(K1C::FFMADd3), TRI->getSubReg(outReg, 2))
+      .addReg(TRI->getSubReg(outReg, 2))
+      .addReg(TRI->getSubReg(v2Reg, 1))
+      .addReg(TRI->getSubReg(v1Reg, 2))
+      .addImm(rounding)
+      .addImm(0);
+
+  MI.eraseFromParent();
+  return true;
+}
+
+static bool expandFMULCDCInstr(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
+                               MachineBasicBlock::iterator MBBI) {
+  MachineInstr &MI = *MBBI;
+  DebugLoc DL = MI.getDebugLoc();
+
+  MachineFunction *MF = MBB.getParent();
+  const K1CRegisterInfo *TRI =
+      (const K1CRegisterInfo *)MF->getSubtarget().getRegisterInfo();
+
+  unsigned outReg = MI.getOperand(0).getReg();
+  unsigned Scratch = MI.getOperand(1).getReg();
+  unsigned v1Reg = MI.getOperand(2).getReg();
+  unsigned v2Reg = MI.getOperand(3).getReg();
+  int64_t rounding = MI.getOperand(4).getImm();
+
+  BuildMI(MBB, MBBI, DL, TII->get(K1C::FMULDrr), Scratch)
+      .addReg(TRI->getSubReg(v1Reg, 1))
+      .addReg(TRI->getSubReg(v2Reg, 1))
+      .addImm(rounding)
+      .addImm(0);
+  BuildMI(MBB, MBBI, DL, TII->get(K1C::COPYD), TRI->getSubReg(outReg, 1))
+      .addReg(TRI->getSubReg(v2Reg, 2));
+  BuildMI(MBB, MBBI, DL, TII->get(K1C::FFMADd3), TRI->getSubReg(outReg, 1))
+      .addReg(TRI->getSubReg(outReg, 1))
+      .addReg(Scratch)
+      .addReg(TRI->getSubReg(v1Reg, 2))
+      .addImm(rounding)
+      .addImm(0);
+  BuildMI(MBB, MBBI, DL, TII->get(K1C::FMULDrr), Scratch)
+      .addReg(TRI->getSubReg(v2Reg, 1))
+      .addReg(TRI->getSubReg(v1Reg, 2))
+      .addImm(rounding)
+      .addImm(0);
+  BuildMI(MBB, MBBI, DL, TII->get(K1C::COPYD), TRI->getSubReg(outReg, 2))
+      .addReg(TRI->getSubReg(v2Reg, 2));
+  BuildMI(MBB, MBBI, DL, TII->get(K1C::FFMSDd3), TRI->getSubReg(outReg, 2))
+      .addReg(TRI->getSubReg(outReg, 2))
+      .addReg(Scratch)
+      .addReg(TRI->getSubReg(v1Reg, 1))
+      .addImm(rounding)
+      .addImm(0);
+
+  MI.eraseFromParent();
+  return true;
+}
+
+static bool
+expandRoundingPairedRegInOutInstr(unsigned int OpCode, const K1CInstrInfo *TII,
+                                  MachineBasicBlock &MBB,
+                                  MachineBasicBlock::iterator MBBI) {
+  MachineInstr &MI = *MBBI;
+  DebugLoc DL = MI.getDebugLoc();
+
+  MachineFunction *MF = MBB.getParent();
+  const K1CRegisterInfo *TRI =
+      (const K1CRegisterInfo *)MF->getSubtarget().getRegisterInfo();
+
+  unsigned outReg = MI.getOperand(0).getReg();
+  unsigned v1Reg = MI.getOperand(1).getReg();
+  unsigned v2Reg = MI.getOperand(2).getReg();
+  int64_t rounding = MI.getOperand(4).getImm();
+
+  BuildMI(MBB, MBBI, DL, TII->get(OpCode), TRI->getSubReg(outReg, 1))
+      .addReg(TRI->getSubReg(outReg, 1))
+      .addReg(TRI->getSubReg(v1Reg, 1))
+      .addReg(TRI->getSubReg(v2Reg, 1))
+      .addImm(rounding)
+      .addImm(0);
+
+  BuildMI(MBB, MBBI, DL, TII->get(OpCode), TRI->getSubReg(outReg, 2))
+      .addReg(TRI->getSubReg(outReg, 2))
+      .addReg(TRI->getSubReg(v1Reg, 2))
+      .addReg(TRI->getSubReg(v2Reg, 2))
+      .addImm(rounding)
+      .addImm(0);
+
+  MI.eraseFromParent();
+  return true;
+}
+
+static bool expandRoundingInOutInstr(unsigned int OpCode,
+                                     const K1CInstrInfo *TII,
+                                     MachineBasicBlock &MBB,
+                                     MachineBasicBlock::iterator MBBI) {
+  MachineInstr &MI = *MBBI;
+  DebugLoc DL = MI.getDebugLoc();
+
+  unsigned outReg = MI.getOperand(0).getReg();
+  unsigned v1Reg = MI.getOperand(1).getReg();
+  unsigned v2Reg = MI.getOperand(2).getReg();
+  int64_t rounding = MI.getOperand(4).getImm();
+
+  BuildMI(MBB, MBBI, DL, TII->get(OpCode), outReg)
+      .addReg(outReg)
+      .addReg(v1Reg)
+      .addReg(v2Reg)
+      .addImm(rounding)
+      .addImm(0);
+
+  MI.eraseFromParent();
+  return true;
+}
+
 bool K1CExpandPseudo::expandMI(MachineBasicBlock &MBB,
                                MachineBasicBlock::iterator MBBI,
                                MachineBasicBlock::iterator &NextMBBI) {
@@ -992,6 +1168,48 @@ bool K1CExpandPseudo::expandMI(MachineBasicBlock &MBB,
   case K1C::FMINDP_Instr:
     expandBinaryPairedRegInstrOpcode(K1C::FMIND, TII, MBB, MBBI);
     return true;
+  case K1C::FMULWCP_Instr:
+    expandRoundingPairInstrOpcodes(K1C::FMULWCd3, K1C::FMULWCd3, TII, MBB,
+                                   MBBI);
+    return true;
+  case K1C::FMULCWCP_Instr:
+    expandRoundingPairInstrOpcodes(K1C::FMULCWCd3, K1C::FMULCWCd3, TII, MBB,
+                                   MBBI);
+    return true;
+  case K1C::FMULDP_Instr:
+    expandRoundingPairInstrOpcodes(K1C::FMULDrr, K1C::FMULDrr, TII, MBB, MBBI);
+    return true;
+  case K1C::FMULDC_Instr:
+    expandFMULDCInstr(TII, MBB, MBBI);
+    return true;
+  case K1C::FMULCDC_Instr:
+    expandFMULCDCInstr(TII, MBB, MBBI);
+    return true;
+  case K1C::FFMAWP_Instr:
+    expandRoundingInOutInstr(K1C::FFMAWPd3, TII, MBB, MBBI);
+    return true;
+  case K1C::FFMAWQ_Instr:
+    expandRoundingPairedRegInOutInstr(K1C::FFMAWPd3, TII, MBB, MBBI);
+    return true;
+  case K1C::FFMADP_Instr:
+    expandRoundingPairedRegInOutInstr(K1C::FFMADd3, TII, MBB, MBBI);
+    return true;
+  case K1C::FMM2AWQ_Instr:
+    expandRoundingInOutInstr(K1C::FMM2AWQ, TII, MBB, MBBI);
+    return true;
+  case K1C::FFMSWP_Instr:
+    expandRoundingInOutInstr(K1C::FFMSWPd3, TII, MBB, MBBI);
+    return true;
+  case K1C::FFMSWQ_Instr:
+    expandRoundingPairedRegInOutInstr(K1C::FFMSWPd3, TII, MBB, MBBI);
+    return true;
+  case K1C::FFMSDP_Instr:
+    expandRoundingPairedRegInOutInstr(K1C::FFMSDd3, TII, MBB, MBBI);
+    return true;
+  case K1C::FMM2SWQ_Instr:
+    expandRoundingInOutInstr(K1C::FMM2SWQ, TII, MBB, MBBI);
+    return true;
+
   default:
     break;
   }
