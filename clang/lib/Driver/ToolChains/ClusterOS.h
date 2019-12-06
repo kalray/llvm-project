@@ -71,6 +71,9 @@ public:
 protected:
   Tool *buildAssembler() const override;
   Tool *buildLinker() const override;
+
+private:
+  std::string getIncludeDirRoot() const;
 };
 
 } // end namespace toolchains
