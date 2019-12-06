@@ -109,6 +109,12 @@ ClusterOS::ClusterOS(const Driver &D, const llvm::Triple &Triple,
   getFilePaths().push_back(getDriver().SysRoot + "/usr/lib");
 }
 
+std::string ClusterOS::getIncludeDirRoot() const {
+  std::string GCCPath = GetProgramPath("k1-cos-gcc");
+  StringRef GCCPrefix = llvm::sys::path::parent_path(GCCPath);
+  return llvm::sys::path::parent_path(GCCPrefix).str() + "/k1-cos/include";
+}
+
 Tool *ClusterOS::buildAssembler() const {
   return new tools::clusteros::Assembler(*this);
 }
@@ -123,13 +129,7 @@ void ClusterOS::AddClangSystemIncludeArgs(const ArgList &DriverArgs,
       DriverArgs.hasArg(options::OPT_nostdlibinc))
     return;
 
-  std::string GCCPath = GetProgramPath("k1-cos-gcc");
-  StringRef GCCPrefix = llvm::sys::path::parent_path(GCCPath);
-
-  SmallString<128> IncludeDir(llvm::sys::path::parent_path(GCCPrefix));
-
-  llvm::sys::path::append(IncludeDir, "k1-cos", "include");
-  addSystemInclude(DriverArgs, CC1Args, IncludeDir.str());
+  addSystemInclude(DriverArgs, CC1Args, getIncludeDirRoot());
 }
 
 void ClusterOS::AddClangCXXStdlibIncludeArgs(const ArgList &DriverArgs,
@@ -138,17 +138,11 @@ void ClusterOS::AddClangCXXStdlibIncludeArgs(const ArgList &DriverArgs,
       DriverArgs.hasArg(options::OPT_nostdlibinc))
     return;
 
-  std::string GCCPath = GetProgramPath("k1-cos-gcc");
-  StringRef GCCPrefix = llvm::sys::path::parent_path(GCCPath);
-
-  SmallString<128> IncludeDir(llvm::sys::path::parent_path(GCCPrefix));
-
-  llvm::sys::path::append(IncludeDir, "k1-cos", "include", "c++", "7.4.1");
-  addSystemInclude(DriverArgs, CC1Args, IncludeDir.str());
-  llvm::sys::path::append(IncludeDir, "k1-cos");
-  addSystemInclude(DriverArgs, CC1Args, IncludeDir.str());
-  llvm::sys::path::append(IncludeDir, "backward");
-  addSystemInclude(DriverArgs, CC1Args, IncludeDir.str());
+  addSystemInclude(DriverArgs, CC1Args, getIncludeDirRoot() + "/c++/7.4.1");
+  addSystemInclude(DriverArgs, CC1Args,
+                   getIncludeDirRoot() + "/c++/7.4.1/k1-cos");
+  addSystemInclude(DriverArgs, CC1Args,
+                   getIncludeDirRoot() + "/c++/7.4.1/backward");
 }
 
 void
