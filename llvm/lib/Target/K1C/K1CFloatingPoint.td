@@ -102,6 +102,8 @@ def : BITCAST<v2f32, i64, SingleReg>;
 def : BITCAST<i64, v2f32, SingleReg>;
 def : BITCAST<v2i32, v2f32, SingleReg>;
 def : BITCAST<v2f32, v2i32, SingleReg>;
+def : BITCAST<i64, v4f16, SingleReg>;
+def : BITCAST<v4f16, i64, SingleReg>;
 
 // FPU Insns
 
@@ -241,12 +243,6 @@ def : Pat<(fsub v2f64:$rs1, v2f64:$rs2), (FSBFDP PairedReg:$rs2, PairedReg:$rs1,
 def : Pat<(f64 (fpextend f32:$val)), (FWIDENLWD SingleReg:$val, SILENT_OFF)>;
 def : Pat<(f64 (fpextend f16:$val)), (FWIDENLWD (FWIDENLHW SingleReg:$val, SILENT_OFF), SILENT_OFF)>;
 def : Pat<(f32 (fpextend f16:$val)), (FWIDENLHW SingleReg:$val, SILENT_OFF)>;
-
-def : Pat<(v4f16 (build_vector f16:$v1, f16:$v2, f16:$v3, f16:$v4)),
-      (ORDd0
-              (ORDd0 (SLLDd1 SingleReg:$v4, (i64 48)), (SLLDd1 SingleReg:$v3, (i64 32))),
-              (ORDd0 (SLLDd1 SingleReg:$v2, (i64 16)), SingleReg:$v1)
-      )>;
 
 def : Pat<(extractelt (v2f32 SingleReg:$v), 0), (COPY SingleReg:$v)>;
 def : Pat<(extractelt (v2f32 SingleReg:$v), 1), (SRADd1 SingleReg :$v, (i64 32))>;

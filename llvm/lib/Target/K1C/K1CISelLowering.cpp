@@ -124,9 +124,6 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::SIGN_EXTEND_INREG, MVT::v2i16, Expand);
   setOperationAction(ISD::SIGN_EXTEND_INREG, MVT::v2i32, Expand);
 
-  setOperationAction(ISD::BUILD_VECTOR, MVT::v2i16, Custom);
-  setOperationAction(ISD::BUILD_VECTOR, MVT::v2f16, Custom);
-
   setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2f16, Custom);
   setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2i16, Custom);
 
@@ -241,7 +238,8 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
     setLoadExtAction(ISD::EXTLOAD, VT, MVT::f64, Expand);
   }
 
-  for (auto VT : {MVT::v2i32, MVT::v2f32, MVT::v4f32}) {
+  for (auto VT : {MVT::v2i16, MVT::v4i16, MVT::v2i32, MVT::v2f16, MVT::v4f16,
+                  MVT::v2f32, MVT::v4f32}) {
     setOperationAction(ISD::BUILD_VECTOR, VT, Custom);
   }
 
@@ -1027,18 +1025,99 @@ SDValue K1CTargetLowering::lowerMULHV4I16(SDValue Op, SelectionDAG &DAG,
   return DAG.getNode(ISD::BUILD_VECTOR, DL, MVT::v4i16, {R1, R2, R3, R4});
 }
 
+static unsigned selectExtend(unsigned BitSize) {
+  // i8 and i16 are not legal, explicit selection must be done
+  switch (BitSize) {
+  default:
+    llvm_unreachable("Unknown extend for this type");
+  case 8:
+    return K1C::ZXBD;
+  case 16:
+    return K1C::ZXHD;
+  case 32:
+    return K1C::ZXWD;
+  }
+}
+
+static SDValue lowerBUILD_VECTORGeneric(const SDValue &Op, SelectionDAG &DAG) {
+  SDLoc DL(Op);
+  uint64_t CurrentVal = 0;
+  unsigned char RegMap = 0;
+  const unsigned NumOperands = Op.getNumOperands();
+  EVT VectorType = Op.getValueType();
+  const unsigned VectorSize = VectorType.getVectorNumElements();
+  const unsigned BitSize = VectorType.getScalarSizeInBits();
+
+  for (unsigned i = 0; i < NumOperands; ++i) {
+    uint64_t OpVal = 0;
+    if (auto *OpConst = dyn_cast<ConstantSDNode>(Op.getOperand(i)))
+      OpVal = OpConst->getZExtValue();
+    else if (auto *OpConst = dyn_cast<ConstantFPSDNode>(Op.getOperand(i)))
+      OpVal = OpConst->getValueAPF().bitcastToAPInt().getZExtValue();
+    else
+      RegMap |= 1 << i;
+
+    CurrentVal |= OpVal << (i * BitSize);
+  }
+
+  SDValue PartSDVal = DAG.getConstant(CurrentVal, DL, MVT::i64);
+
+  if (RegMap & 1) {
+    if (RegMap == ((1 << VectorSize) - 1)) {
+      PartSDVal = Op.getOperand(0);
+    } else {
+      SDValue ZESDVal = SDValue(DAG.getMachineNode(selectExtend(BitSize), DL,
+                                                   MVT::i64, Op.getOperand(0)),
+                                0);
+      PartSDVal = DAG.getNode(ISD::OR, DL, MVT::i64, {ZESDVal, PartSDVal});
+    }
+
+    RegMap ^= 1;
+  } else if (RegMap & (1 << (VectorSize - 1))) {
+    RegMap ^= (1 << (VectorSize - 1));
+
+    SDValue SHLSDVal = DAG.getNode(
+        ISD::SHL, DL, MVT::i64,
+        {SDValue(DAG.getMachineNode(TargetOpcode::COPY, DL, MVT::i64,
+                                    Op.getOperand(NumOperands - 1)),
+                 0),
+         DAG.getConstant(64 - BitSize, DL, MVT::i64)});
+    PartSDVal = DAG.getNode(ISD::OR, DL, MVT::i64, {SHLSDVal, PartSDVal});
+  }
+
+  for (unsigned i = 0; i < NumOperands; ++i) {
+    if (RegMap & (1 << i)) {
+      const uint64_t StartBit = i * BitSize;
+      const uint64_t StopBit = StartBit + BitSize - 1;
+      PartSDVal = SDValue(
+          DAG.getMachineNode(K1C::INSF, DL, MVT::i64,
+                             {PartSDVal, Op.getOperand(i),
+                              DAG.getTargetConstant(StopBit, DL, MVT::i64),
+                              DAG.getTargetConstant(StartBit, DL, MVT::i64)}),
+          0);
+    }
+  }
+
+  return DAG.getBitcast(Op.getValueType(), PartSDVal);
+}
+
 SDValue K1CTargetLowering::lowerBUILD_VECTOR(SDValue Op,
                                              SelectionDAG &DAG) const {
-  if (Op.getValueType() == MVT::v2f32 || Op.getValueType() == MVT::v2i32)
-    return lowerBUILD_VECTOR_V2_64bit(Op, DAG);
-
-  if (Op.getValueType() == MVT::v2i16 || Op.getValueType() == MVT::v2f16)
+  switch (Op.getSimpleValueType().SimpleTy) {
+  default:
+    llvm_unreachable("Unsupported lowering for this type!");
+  case MVT::v2i16:
+  case MVT::v2f16:
     return lowerBUILD_VECTOR_V2_32bit(Op, DAG);
-
-  if (Op.getValueType() == MVT::v4f32)
+  case MVT::v4i16:
+  case MVT::v4f16:
+    return lowerBUILD_VECTORGeneric(Op, DAG);
+  case MVT::v2i32:
+  case MVT::v2f32:
+    return lowerBUILD_VECTOR_V2_64bit(Op, DAG);
+  case MVT::v4f32:
     return lowerBUILD_VECTOR_V4_128bit(Op, DAG);
-
-  llvm_unreachable("Unsupported lowering for this type!");
+  }
 }
 
 SDValue K1CTargetLowering::lowerBUILD_VECTOR_V2_32bit(SDValue Op,
