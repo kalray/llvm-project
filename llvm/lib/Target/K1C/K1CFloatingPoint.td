@@ -260,3 +260,14 @@ def : Pat<(v2f64 (build_vector f64:$v1, f64:$v2)),
 
 def : Pat<(extractelt (v2f64 PairedReg:$v), 0), (f64 (EXTRACT_SUBREG $v, 1))>;
 def : Pat<(extractelt (v2f64 PairedReg:$v), 1), (f64 (EXTRACT_SUBREG $v, 2))>;
+
+
+def : Pat<(fcopysign f64:$v1, f64:$v2), (INSF SingleReg:$v1, (f64 (SRADd1 SingleReg:$v2, 63)), 63, 63)>;
+def : Pat<(fcopysign f64:$v1, f32:$v2), (INSF SingleReg:$v1, (f64 (SRAWd1 SingleReg:$v2, 31)), 63, 63)>;
+def : Pat<(fcopysign f64:$v1, f16:$v2), (INSF SingleReg:$v1, (f64 (SRAWd1 SingleReg:$v2, 15)), 63, 63)>;
+def : Pat<(fcopysign f32:$v1, f64:$v2), (INSF SingleReg:$v1, (f64 (SRADd1 SingleReg:$v2, 63)), 31, 31)>;
+def : Pat<(fcopysign f32:$v1, f32:$v2), (INSF SingleReg:$v1, (f64 (SRAWd1 SingleReg:$v2, 31)), 31, 31)>;
+def : Pat<(fcopysign f32:$v1, f16:$v2), (INSF SingleReg:$v1, (f64 (SRAWd1 SingleReg:$v2, 15)), 31, 31)>;
+def : Pat<(fcopysign f16:$v1, f64:$v2), (INSF SingleReg:$v1, (f64 (SRADd1 SingleReg:$v2, 63)), 15, 15)>;
+def : Pat<(fcopysign f16:$v1, f32:$v2), (INSF SingleReg:$v1, (f64 (SRAWd1 SingleReg:$v2, 31)), 15, 15)>;
+def : Pat<(fcopysign f16:$v1, f16:$v2), (INSF SingleReg:$v1, (f64 (SRAWd1 SingleReg:$v2, 15)), 15, 15)>;
