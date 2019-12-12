@@ -1,7 +1,11 @@
 def FENCE_Instr : K1C_PseudoInstr<(outs),(ins Signed37_32:$a, Signed37_32:$b), []>;
+
+let isIndirectBranch = 1 in
+{
 def ASWAP8_Instr : K1C_PseudoInstr<(outs SingleReg:$res, PairedReg:$scratch, SingleReg:$sbase, SingleReg:$sval, SingleReg:$scount), (ins AddrRI:$ptr, SingleReg:$val), []>;
 def ASWAP32_Instr : K1C_PseudoInstr<(outs SingleReg:$res, PairedReg:$scratch), (ins AddrRI:$ptr, SingleReg:$val), []>;
 def ASWAP64_Instr : K1C_PseudoInstr<(outs SingleReg:$res, PairedReg:$scratch), (ins AddrRI:$ptr, SingleReg:$val), []>;
+}
 
 def : Pat<(atomic_fence imm:$a,imm:$b), (FENCE_Instr Signed37_32:$a,Signed37_32:$b)>;
 
@@ -26,6 +30,9 @@ def : Pat<(atomic_swap_64 AddrRI:$addr, i64:$val), (ASWAP64_Instr AddrRI:$addr, 
 
 def ALOADADD32_Instr : K1C_PseudoInstr<(outs SingleReg:$res), (ins AddrRI:$ptr, SingleReg:$val), []>;
 def ALOADADD64_Instr : K1C_PseudoInstr<(outs SingleReg:$res), (ins AddrRI:$ptr, SingleReg:$val), []>;
+
+let isIndirectBranch = 1 in
+{
 def ALOADSUB32_Instr : K1C_PseudoInstr<(outs SingleReg:$res, PairedReg:$scratch), (ins AddrRI:$ptr, SingleReg:$val), []>;
 def ALOADSUB64_Instr : K1C_PseudoInstr<(outs SingleReg:$res, PairedReg:$scratch), (ins AddrRI:$ptr, SingleReg:$val), []>;
 def ALOADAND32_Instr : K1C_PseudoInstr<(outs SingleReg:$res, PairedReg:$scratch), (ins AddrRI:$ptr, SingleReg:$val), []>;
@@ -36,6 +43,7 @@ def ALOADOR32_Instr : K1C_PseudoInstr<(outs SingleReg:$res, PairedReg:$scratch),
 def ALOADOR64_Instr : K1C_PseudoInstr<(outs SingleReg:$res, PairedReg:$scratch), (ins AddrRI:$ptr, SingleReg:$val), []>;
 def ALOADNAND32_Instr : K1C_PseudoInstr<(outs SingleReg:$res, PairedReg:$scratch), (ins AddrRI:$ptr, SingleReg:$val), []>;
 def ALOADNAND64_Instr : K1C_PseudoInstr<(outs SingleReg:$res, PairedReg:$scratch), (ins AddrRI:$ptr, SingleReg:$val), []>;
+}
 
 
 def : Pat<(atomic_load_add_32 AddrRI:$addr, i32:$val), (ALOADADD32_Instr AddrRI:$addr, SingleReg:$val)>;

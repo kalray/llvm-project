@@ -35,11 +35,13 @@ void LowerK1CMachineInstrToMCInst(const MachineInstr *MI, MCInst &OutMI,
 
 FunctionPass *createK1CExpandPseudoPass();
 FunctionPass *createK1CLoadStorePackingPass();
+FunctionPass *createK1CHardwareLoopsPass();
 FunctionPass *createK1CPacketizerPass(bool ValidOptLevel);
 
 void initializeK1CExpandPseudoPass(PassRegistry &);
 void initializeK1CLoadStorePackingPassPass(PassRegistry &);
 void initializeK1CPacketizerPass(PassRegistry &);
+void initializeK1CHardwareLoopsPass(PassRegistry &);
 } // namespace llvm
 
 #endif // LLVM_LIB_TARGET_K1C_K1C_H

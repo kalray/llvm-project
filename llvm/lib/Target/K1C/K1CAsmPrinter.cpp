@@ -51,6 +51,9 @@ void K1CAsmPrinter::EmitInstruction(const MachineInstr *MI) {
   if (emitPseudoExpansionLowering(*OutStreamer, MI))
     return;
 
+  if (MI->getOpcode() == K1C::ENDLOOP)
+    return;
+
   if (MI->isBundle()) {
     for (auto MII = ++MI->getIterator();
          MII != MI->getParent()->instr_end() && MII->isInsideBundle(); ++MII) {
