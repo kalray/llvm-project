@@ -25,12 +25,17 @@
 
 using namespace llvm;
 
+static cl::opt<bool>
+    DisableHardwareLoops("disable-k1c-hwloops", cl::Hidden,
+                         cl::desc("Disable Hardware Loops for K1C target"));
+
 extern "C" void LLVMInitializeK1CTarget() {
   RegisterTargetMachine<K1CTargetMachine> X(getTheK1CTarget());
   auto PR = PassRegistry::getPassRegistry();
   initializeK1CExpandPseudoPass(*PR);
   initializeK1CLoadStorePackingPassPass(*PR);
   initializeK1CPacketizerPass(*PR);
+  initializeK1CHardwareLoopsPass(*PR);
 }
 
 unsigned llvm::GetImmOpCode(int64_t imm, unsigned i10code, unsigned i37code,
@@ -122,8 +127,11 @@ bool K1CPassConfig::addInstSelector() {
 }
 
 void K1CPassConfig::addPreRegAlloc() {
-  if (getOptLevel() >= CodeGenOpt::Default)
+  if (getOptLevel() >= CodeGenOpt::Default) {
     addPass(createK1CLoadStorePackingPass());
+    if (!DisableHardwareLoops)
+      addPass(createK1CHardwareLoopsPass());
+  }
 }
 
 void K1CPassConfig::addPreEmitPass() {
