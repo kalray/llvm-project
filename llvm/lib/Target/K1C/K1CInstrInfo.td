@@ -1496,7 +1496,7 @@ def ICALL : REGISTERZ_SIMPLE
 defm SCALL : MC_00<"scall">;
 
 // 1 insns: ['LOOPDO']
-let Uses=[PS], Defs=[LC, LE, LS] in
+let Uses=[PS] , Defs=[LC, LE, LS], isBarrier = 1, isTerminator = 1, isBranch=1, isIndirectBranch=1 in
 def LOOPDO : REGISTERZ_PCREL17_SIMPLE
   <(outs), (ins SingleReg:$a1, Pcrel17:$a2),
    "loopdo $a1, $a2",
