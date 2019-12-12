@@ -232,6 +232,23 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::SELECT, VT, Custom);
   }
 
+  setOperationAction(ISD::SELECT_CC, MVT::v2f64, Expand);
+  setOperationAction(ISD::SELECT, MVT::v2f64, Expand);
+
+  setOperationAction(ISD::FP_TO_SINT, MVT::v2i16, Expand);
+  setOperationAction(ISD::FP_TO_SINT, MVT::v2f64, Expand);
+  setOperationAction(ISD::FP_TO_UINT, MVT::v2i16, Expand);
+  setOperationAction(ISD::FP_TO_UINT, MVT::v2f64, Expand);
+
+  setOperationAction(ISD::SINT_TO_FP, MVT::v2i16, Expand);
+  setOperationAction(ISD::SINT_TO_FP, MVT::v2f64, Expand);
+  setOperationAction(ISD::UINT_TO_FP, MVT::v2i16, Expand);
+  setOperationAction(ISD::UINT_TO_FP, MVT::v2f64, Expand);
+
+  setTruncStoreAction(MVT::v2i16, MVT::v2i8, Expand);
+  setLoadExtAction(ISD::SEXTLOAD, MVT::v2i16, MVT::v2i8, Expand);
+  setLoadExtAction(ISD::ZEXTLOAD, MVT::v2i16, MVT::v2i8, Expand);
+
   for (MVT VT : MVT::fp_valuetypes()) {
     setLoadExtAction(ISD::EXTLOAD, VT, MVT::f16, Expand);
     setLoadExtAction(ISD::EXTLOAD, VT, MVT::f32, Expand);
