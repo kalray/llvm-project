@@ -1,3 +1,6 @@
+def: Pat<(int_k1c_dinval), (DINVAL)>;
+def: Pat<(int_k1c_fence), (FENCE)>;
+
 def GET_Instr : K1C_PseudoInstr<(outs SingleReg:$dst), (ins Signed37_32:$param),[]>;
 def WFXL_Instr : K1C_PseudoInstr<(outs), (ins Signed37_32:$sysreg, SingleReg:$val),[]>;
 def SBMM8ri_Instr : K1C_PseudoInstr<(outs SingleReg: $dst), (ins SingleReg:$r, Wrapped64:$r2), []>;
