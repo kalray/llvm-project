@@ -36,9 +36,7 @@ enum NodeType : unsigned {
   PICInternIndirection,
   PICExternIndirection,
   PICPCRelativeGOTAddr,
-  PICWRAPPER,
-  FENCE,
-  DINVAL
+  PICWRAPPER
 };
 } // namespace K1CISD
 
@@ -90,7 +88,6 @@ private:
   SDValue lowerSELECT(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerMULHV4I16(SDValue Op, SelectionDAG &DAG, bool Signed) const;
   SDValue lowerBlockAddress(SDValue Op, SelectionDAG &DAG) const;
-  SDValue lowerINTRINSIC_VOID(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerBUILD_VECTOR(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerBUILD_VECTOR_V2_32bit(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerBUILD_VECTOR_V2_64bit(SDValue Op, SelectionDAG &DAG,
