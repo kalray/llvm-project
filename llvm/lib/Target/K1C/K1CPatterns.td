@@ -31,9 +31,6 @@ def SelectCC : SDNode<"K1CISD::SELECT_CC", SDT_K1CSelectCC, []>;
 
 def Tail : SDNode <"K1CISD::TAIL", SDTK1CTail, [SDNPHasChain, SDNPOptInGlue, SDNPOutGlue, SDNPVariadic]>;
 
-def Fence : SDNode<"K1CISD::FENCE", SDTNone, [SDNPHasChain]>;
-def Dinval : SDNode<"K1CISD::DINVAL", SDTNone, [SDNPHasChain]>;
-
 //
 // Function return
 //
@@ -333,9 +330,6 @@ def : Pat<(cttz i64:$src), (CTZD SingleReg:$src)>;
 
 def : Pat<(ctlz i32:$src), (CLZW SingleReg:$src)>;
 def : Pat<(ctlz i64:$src), (CLZD SingleReg:$src)>;
-
-def : Pat<(Fence), (FENCE)>;
-def : Pat<(Dinval), (DINVAL)>;
 
 def : Pat<(extractelt (v2i32 SingleReg:$v), 0), (COPY SingleReg:$v)>;
 def : Pat<(extractelt (v2i32 SingleReg:$v), 1), (SRADd1 SingleReg :$v, (i64 32))>;

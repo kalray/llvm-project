@@ -1647,6 +1647,7 @@ defm DZEROL : MC_0E<"dzerol">;
 defm IINVALS : MC_0E<"iinvals">;
 
 // 1 insns: ['DINVAL']
+let hasSideEffects = 1 in
 def DINVAL : SIMPLE
   <(outs), (ins),
    "dinval",
@@ -1661,6 +1662,7 @@ def IINVAL : SIMPLE
    LSU>;
 
 // 1 insns: ['FENCE']
+let hasSideEffects = 1 in
 def FENCE : SIMPLE
   <(outs), (ins),
    "fence",
