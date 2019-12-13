@@ -386,33 +386,39 @@ multiclass MC_0A<string OpcStr> {
 //   defm ACSWAPW
 //   defm ACSWAPD
 multiclass MC_0B<string OpcStr> {
+  let Constraints = "$o = $a3" in
   def d0 : SIGNED10_REGISTERZ_REGISTERU_SIMPLE
-    <(outs SingleReg:$o), (ins Signed10_64:$a1, SingleReg:$a2, PairedReg:$a3),
+    <(outs PairedReg:$o), (ins Signed10_64:$a1, SingleReg:$a2, PairedReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [ ],
      LSU_AUXR_AUXW>;
+  let Constraints = "$o = $a3" in
   def d1 : UPPER27_LOWER10_REGISTERZ_REGISTERU_DOUBLE
-    <(outs SingleReg:$o), (ins Signed37_64:$a1, SingleReg:$a2, PairedReg:$a3),
+    <(outs PairedReg:$o), (ins Signed37_64:$a1, SingleReg:$a2, PairedReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [ ],
      LSU_AUXR_AUXW_X>;
+  let Constraints = "$o = $a4" in
   def d2 : SCALING_REGISTERY_REGISTERZ_REGISTERU_SIMPLE
-    <(outs SingleReg:$o), (ins SingleReg:$a2, SingleReg:$a3, PairedReg:$a4, ScalingMod:$a1),
+    <(outs PairedReg:$o), (ins SingleReg:$a2, SingleReg:$a3, PairedReg:$a4, ScalingMod:$a1),
      !strconcat (OpcStr, "$a1 $a2[$a3] = $a4"),
      [ ],
      LSU_AUXR_AUXW>;
+  let Constraints = "$o = $a4" in
   def d3 : LSUCOND_REGISTERY_REGISTERZ_REGISTERU_SIMPLE
-    <(outs SingleReg:$o), (ins SingleReg:$a2, SingleReg:$a3, PairedReg:$a4, ScalarcondMod:$a1),
+    <(outs PairedReg:$o), (ins SingleReg:$a2, SingleReg:$a3, PairedReg:$a4, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? [$a3] = $a4"),
      [ ],
      LSU_AUXR_AUXW>;
+  let Constraints = "$o = $a5" in
   def d4 : LSUCOND_REGISTERY_OFFSET27_REGISTERZ_REGISTERU_DOUBLE
-    <(outs SingleReg:$o), (ins SingleReg:$a2, Signed27:$a3, SingleReg:$a4, PairedReg:$a5, ScalarcondMod:$a1),
+    <(outs PairedReg:$o), (ins SingleReg:$a2, Signed27:$a3, SingleReg:$a4, PairedReg:$a5, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
      [ ],
      LSU_AUXR_AUXW_X>;
+  let Constraints = "$o = $a5" in
   def d5 : LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_REGISTERU_TRIPLE
-    <(outs SingleReg:$o), (ins SingleReg:$a2, Signed54:$a3, SingleReg:$a4, PairedReg:$a5, ScalarcondMod:$a1),
+    <(outs PairedReg:$o), (ins SingleReg:$a2, Signed54:$a3, SingleReg:$a4, PairedReg:$a5, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
      [ ],
      LSU_AUXR_AUXW_Y>;

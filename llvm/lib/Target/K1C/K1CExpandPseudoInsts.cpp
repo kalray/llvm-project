@@ -453,7 +453,7 @@ static bool expandAtomicSwap8(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
       .addReg(compReg)
       .addReg(scratchVal);
 
-  BuildMI(LoopMBB, DL, TII->get(K1C::ACSWAPWd1), compReg)
+  BuildMI(LoopMBB, DL, TII->get(K1C::ACSWAPWd1), scratchPairedReg)
       .addImm(0)
       .addReg(scratchBase)
       .addReg(scratchPairedReg);
@@ -532,7 +532,7 @@ static bool expandASWAPInstr(unsigned int opCode, const K1CInstrInfo *TII,
 
   BuildMI(LoopMBB, DL, TII->get(getAtomicCopy(opCode)), compReg).addReg(valReg);
 
-  BuildMI(LoopMBB, DL, TII->get(getAtomicSwap(opCode)), compReg)
+  BuildMI(LoopMBB, DL, TII->get(getAtomicSwap(opCode)), scratchPairedReg)
       .addImm(offset)
       .addReg(baseReg)
       .addReg(scratchPairedReg);
@@ -684,7 +684,7 @@ static bool expandALOADOPInstr(unsigned int opCode, const K1CInstrInfo *TII,
         .addReg(compReg);
   }
 
-  BuildMI(LoopMBB, DL, TII->get(getAtomicSwap(opCode)), compReg)
+  BuildMI(LoopMBB, DL, TII->get(getAtomicSwap(opCode)), scratchPairedReg)
       .addImm(offset)
       .addReg(baseReg)
       .addReg(scratchPairedReg);
@@ -769,7 +769,7 @@ static bool expandACMPSWAPInstr(unsigned int opCode, const K1CInstrInfo *TII,
   BuildMI(LoopMBB, DL, TII->get(getAtomicCopy(opCode)), compReg)
       .addReg(desiredReg);
 
-  BuildMI(LoopMBB, DL, TII->get(getAtomicSwap(opCode)), compReg)
+  BuildMI(LoopMBB, DL, TII->get(getAtomicSwap(opCode)), scratchPairedReg)
       .addImm(offset)
       .addReg(baseReg)
       .addReg(scratchPairedReg);
