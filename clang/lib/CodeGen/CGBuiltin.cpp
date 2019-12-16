@@ -13589,15 +13589,32 @@ Value *CodeGenFunction::EmitK1CBuiltinExpr(unsigned BuiltinID,
     Value *Callee = CGM.getIntrinsic(Intrinsic::k1c_get);
     return Builder.CreateCall(Callee, {Reg});
   }
-  case K1C::BI__builtin_k1_dinval: {
-    Value *Callee = CGM.getIntrinsic(Intrinsic::k1c_dinval);
+  case K1C::BI__builtin_k1_dinval:
+  case K1C::BI__builtin_k1_fence:
+  case K1C::BI__builtin_k1_stop: {
+    unsigned IDD;
+
+    switch (BuiltinID) {
+    case K1C::BI__builtin_k1_dinval:
+      IDD = Intrinsic::k1c_dinval;
+      break;
+    case K1C::BI__builtin_k1_fence:
+      IDD = Intrinsic::k1c_fence;
+      break;
+    case K1C::BI__builtin_k1_stop:
+      IDD = Intrinsic::k1c_stop;
+      break;
+    default:
+      llvm_unreachable("missing K1C intrinsics");
+    }
+
+    Value *Callee = CGM.getIntrinsic(IDD);
     return Builder.CreateCall(Callee, {});
   }
-  case K1C::BI__builtin_k1_fence: {
-    Value *Callee = CGM.getIntrinsic(Intrinsic::k1c_fence);
-    return Builder.CreateCall(Callee, {});
-  }
-  case K1C::BI__builtin_k1_wfxl: {
+
+  case K1C::BI__builtin_k1_wfxl:
+  case K1C::BI__builtin_k1_wfxm:
+  case K1C::BI__builtin_k1_set: {
     SourceLocation Loc = E->getExprLoc();
     Value *A1 = EmitScalarConversion(EmitScalarExpr(E->getArg(0)),
                                      E->getArg(0)->getType(),
@@ -13606,8 +13623,42 @@ Value *CodeGenFunction::EmitK1CBuiltinExpr(unsigned BuiltinID,
                                      E->getArg(1)->getType(),
                                      getContext().UnsignedLongLongTy, Loc);
 
-    Value *Callee = CGM.getIntrinsic(Intrinsic::k1c_wfxl);
+    unsigned IDD;
+    switch (BuiltinID) {
+      case K1C::BI__builtin_k1_wfxl:
+        IDD = Intrinsic::k1c_wfxl;
+        break;
+      case K1C::BI__builtin_k1_wfxm:
+        IDD = Intrinsic::k1c_wfxm;
+        break;
+      case K1C::BI__builtin_k1_set:
+        IDD = Intrinsic::k1c_set;
+        break;
+    default:
+      llvm_unreachable("missing K1C intrinsics");
+    }
+
+    Value *Callee = CGM.getIntrinsic(IDD);
     return Builder.CreateCall(Callee, {A1, A2});
+  }
+
+  case K1C::BI__builtin_k1_acswapw: {
+    SourceLocation Loc = E->getExprLoc();
+    Value *Addr = Builder.CreateBitCast(EmitScalarExpr(E->getArg(0)), Int8PtrTy);
+    Value *Expect = EmitScalarConversion(EmitScalarExpr(E->getArg(1)),
+                                         E->getArg(1)->getType(), getContext().IntTy, Loc);
+    Value *Update =
+      EmitScalarConversion(EmitScalarExpr(E->getArg(2)),
+                           E->getArg(2)->getType(), getContext().IntTy, Loc);
+    Value *Callee = CGM.getIntrinsic(Intrinsic::k1c_acswapw);
+    return Builder.CreateCall(Callee, {Addr, Expect, Update});
+  }
+
+  case K1C::BI__builtin_k1_lwzu: {
+    Value* Addr = EmitScalarExpr(E->getArg(0));
+    Value* Bitcast = Builder.CreateBitCast(Addr, Int8PtrTy);
+    Value *Callee = CGM.getIntrinsic(Intrinsic::k1c_lwzu);
+    return Builder.CreateZExtOrBitCast(Builder.CreateCall(Callee, {Bitcast}), ConvertType(E->getType()));
   }
 
   case K1C::BI__builtin_k1_sbmm8: {
