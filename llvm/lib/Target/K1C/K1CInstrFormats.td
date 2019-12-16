@@ -45,6 +45,13 @@ class SYSTEMT2_REGISTERZ_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
   : K1C_INSTRUCTION <outs, ins, asmstr, pattern, BCU>;
 
+// SYSTEMT3_REGISTERZ_SIMPLE has been added by hand for SETd0 insn
+// SYSTEMT2_REGISTERZ_SIMPLE may be obsolete
+let Size = 4 in
+class SYSTEMT3_REGISTERZ_SIMPLE
+  <dag outs, dag ins, string asmstr, list<dag> pattern>
+  : K1C_INSTRUCTION <outs, ins, asmstr, pattern, BCU>;
+
 // 3 insns: ['FXLW', 'FXMW', 'SET']
 
 let Size = 4 in
