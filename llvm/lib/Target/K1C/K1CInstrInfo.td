@@ -54,10 +54,10 @@ multiclass MC_01<string OpcStr> {
 // multiclass MC_02 is used by:
 //   defm SET
 multiclass MC_02<string OpcStr> {
-  // def d0 : SYSTEMT3_REGISTERZ_SIMPLE <- not defined yet
-  //   <(outs ??:$a1), (ins SingleReg:$a2),
-  //    !strconcat (OpcStr, " $a1, $a2"),
-  //    []>;
+  def d0 : SYSTEMT3_REGISTERZ_SIMPLE
+    <(outs SystemReg:$a1), (ins SingleReg:$a2),
+     !strconcat (OpcStr, " $a1 = $a2"),
+     []>;
   // def d1 : SYSTEMALONE_REGISTERZ_SIMPLE <- not defined yet
   //   <(outs ??:$a1), (ins SingleReg:$a2),
   //    !strconcat (OpcStr, " $a1, $a2"),
@@ -1410,6 +1410,7 @@ def SLEEP : SIMPLE
 
 // 1 insns: ['STOP']
 let Uses=[PS] in
+let hasSideEffects = 1 in
 def STOP : SIMPLE
   <(outs), (ins),
    "stop",
@@ -1512,7 +1513,7 @@ def LOOPDO : REGISTERZ_PCREL17_SIMPLE
 defm WFXL : MC_01<"wfxl">;
 
 // 2 insns: ['WFXL', 'WFXM']
-defm XFXM : MC_01<"wfxm">;
+defm WFXM : MC_01<"wfxm">;
 
 // 1 insns: ['GET']
 def GET : REGISTERZ_SYSTEMS2_SIMPLE
