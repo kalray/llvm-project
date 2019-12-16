@@ -49,6 +49,7 @@ private:
 
   bool usesCarry(unsigned opcode);
   bool isSetOrWFXL(unsigned Opcode);
+  bool isSetOrWFXLOrWFXM(unsigned Opcode);
   bool useFloatingPointIEEE754(unsigned opcode);
 
   bool isALU(unsigned scheduleCode);
