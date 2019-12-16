@@ -194,7 +194,8 @@ public:
     WASI,       // Experimental WebAssembly OS
     Emscripten,
     ClusterOS,  // Kalray ClusterOS
-    LastOSType = ClusterOS
+    K1ELF,      // Kalray ELF
+    LastOSType = K1ELF
   };
   enum EnvironmentType {
     UnknownEnvironment,
@@ -496,6 +497,8 @@ public:
   bool isOSClusterOS() const {
     return getOS() == Triple::ClusterOS;
   }
+
+  bool isOSK1ELF() const { return getOS() == Triple::K1ELF; }
 
   bool isOSNetBSD() const {
     return getOS() == Triple::NetBSD;
