@@ -220,6 +220,7 @@ public:
     WASI,       // Experimental WebAssembly OS
     Emscripten,
     ClusterOS,  // Kalray ClusterOS
+    K1ELF,      // Kalray ELF
     ShaderModel, // DirectX ShaderModel
     LastOSType = ShaderModel
   };
@@ -528,6 +529,8 @@ public:
   bool isOSClusterOS() const {
     return getOS() == Triple::ClusterOS;
   }
+
+  bool isOSK1ELF() const { return getOS() == Triple::K1ELF; }
 
   bool isOSNetBSD() const {
     return getOS() == Triple::NetBSD;
