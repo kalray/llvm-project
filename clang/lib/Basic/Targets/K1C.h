@@ -25,6 +25,7 @@ namespace targets {
 
 class LLVM_LIBRARY_VISIBILITY K1CTargetInfo : public TargetInfo {
   static const Builtin::Info BuiltinInfo[];
+  static const TargetInfo::GCCRegAlias GCCRegAliases[];
 
 public:
   K1CTargetInfo(const llvm::Triple &Triple, const TargetOptions &)
@@ -65,9 +66,7 @@ public:
 
   ArrayRef<const char *> getGCCRegNames() const override;
 
-  ArrayRef<TargetInfo::GCCRegAlias> getGCCRegAliases() const override {
-    return None;
-  }
+  ArrayRef<TargetInfo::GCCRegAlias> getGCCRegAliases() const override;
 
   bool validateAsmConstraint(const char *&Name,
                              TargetInfo::ConstraintInfo &Info) const override {
