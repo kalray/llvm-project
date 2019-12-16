@@ -213,6 +213,7 @@ StringRef Triple::getOSTypeName(OSType Kind) {
   case Hurd: return "hurd";
   case WASI: return "wasi";
   case ClusterOS: return "cos";
+  case K1ELF: return "elfmppa";
   }
 
   llvm_unreachable("Invalid OSType");
@@ -514,6 +515,7 @@ static Triple::OSType parseOS(StringRef OSName) {
     .StartsWith("hurd", Triple::Hurd)
     .StartsWith("wasi", Triple::WASI)
     .StartsWith("cos", Triple::ClusterOS)
+    .StartsWith("elfmppa", Triple::K1ELF)
     .Default(Triple::UnknownOS);
 }
 
