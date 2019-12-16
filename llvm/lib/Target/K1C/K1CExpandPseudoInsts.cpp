@@ -818,8 +818,10 @@ static bool expandGetInstr(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
   return true;
 }
 
-static bool expandWFXLInstr(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
-                            MachineBasicBlock::iterator MBBI) {
+static bool expandSystemRegValueInstr(unsigned int Opcode,
+                                      const K1CInstrInfo *TII,
+                                      MachineBasicBlock &MBB,
+                                      MachineBasicBlock::iterator MBBI) {
   MachineInstr &MI = *MBBI;
   DebugLoc DL = MI.getDebugLoc();
 
@@ -827,7 +829,7 @@ static bool expandWFXLInstr(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
       K1C::SystemRegRegClass.getRegister(MI.getOperand(0).getImm());
   unsigned valReg = MI.getOperand(1).getReg();
 
-  BuildMI(MBB, MBBI, DL, TII->get(K1C::WFXLd0), sysReg).addReg(valReg);
+  BuildMI(MBB, MBBI, DL, TII->get(Opcode), sysReg).addReg(valReg);
 
   MI.eraseFromParent();
   return true;
@@ -1130,7 +1132,13 @@ bool K1CExpandPseudo::expandMI(MachineBasicBlock &MBB,
     expandGetInstr(TII, MBB, MBBI);
     return true;
   case K1C::WFXL_Instr:
-    expandWFXLInstr(TII, MBB, MBBI);
+    expandSystemRegValueInstr(K1C::WFXLd0, TII, MBB, MBBI);
+    return true;
+  case K1C::WFXM_Instr:
+    expandSystemRegValueInstr(K1C::WFXMd0, TII, MBB, MBBI);
+    return true;
+  case K1C::SET_Instr:
+    expandSystemRegValueInstr(K1C::SETd0, TII, MBB, MBBI);
     return true;
   case K1C::SBMM8rr_Instr:
   case K1C::SBMM8ri_Instr:
