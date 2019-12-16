@@ -88,6 +88,21 @@ public:
       : OSTargetInfo<Target>(Triple, Opts) {}
 };
 
+// K1ELF target
+template <typename Target>
+class LLVM_LIBRARY_VISIBILITY K1ELFTargetInfo : public OSTargetInfo<Target> {
+protected:
+  void getOSDefines(const LangOptions &Opts, const llvm::Triple &Triple,
+                    MacroBuilder &Builder) const override {
+    // Kalray ELF toolchain defines
+    Builder.defineMacro("__ELF__");
+  }
+
+public:
+  K1ELFTargetInfo(const llvm::Triple &Triple, const TargetOptions &Opts)
+      : OSTargetInfo<Target>(Triple, Opts) {}
+};
+
 void getDarwinDefines(MacroBuilder &Builder, const LangOptions &Opts,
                       const llvm::Triple &Triple, StringRef &PlatformName,
                       VersionTuple &PlatformMinVersion);

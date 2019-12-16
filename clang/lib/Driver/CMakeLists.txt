@@ -66,6 +66,7 @@ add_clang_library(clangDriver
   ToolChains/WebAssembly.cpp
   ToolChains/XCore.cpp
   ToolChains/ClusterOS.cpp
+  ToolChains/K1ELF.cpp
   Types.cpp
   XRayArgs.cpp
 
