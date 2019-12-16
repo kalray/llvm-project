@@ -2,14 +2,24 @@ def: Pat<(int_k1c_dinval), (DINVAL)>;
 def: Pat<(int_k1c_fence), (FENCE)>;
 
 def GET_Instr : K1C_PseudoInstr<(outs SingleReg:$dst), (ins Signed37_32:$param),[]>;
+def SET_Instr : K1C_PseudoInstr<(outs), (ins Signed37_32:$sysreg, SingleReg:$val),[]>;
 def WFXL_Instr : K1C_PseudoInstr<(outs), (ins Signed37_32:$sysreg, SingleReg:$val),[]>;
+def WFXM_Instr : K1C_PseudoInstr<(outs), (ins Signed37_32:$sysreg, SingleReg:$val),[]>;
 def SBMM8ri_Instr : K1C_PseudoInstr<(outs SingleReg: $dst), (ins SingleReg:$r, Wrapped64:$r2), []>;
 def SBMM8rr_Instr : K1C_PseudoInstr<(outs SingleReg: $dst), (ins SingleReg:$r, SingleReg:$r2), []>;
 
 def: Pat<(int_k1c_get Signed37_32:$r), (GET_Instr Signed37_32:$r)>;
+def: Pat<(int_k1c_stop), (STOP)>;
 def: Pat<(int_k1c_wfxl Signed37_32:$r, i64:$val), (WFXL_Instr Signed37_32:$r, SingleReg:$val)>;
+def: Pat<(int_k1c_wfxm Signed37_32:$r, i64:$val), (WFXM_Instr Signed37_32:$r, SingleReg:$val)>;
+def: Pat<(int_k1c_set Signed37_32:$r, i64:$val), (SET_Instr Signed37_32:$r, SingleReg:$val)>;
 def: Pat<(int_k1c_sbmm8 SingleReg:$r, imm:$r2), (SBMM8ri_Instr SingleReg:$r, Wrapped64:$r2)>;
 def: Pat<(int_k1c_sbmm8 SingleReg:$r, SingleReg:$r2), (SBMM8rr_Instr SingleReg:$r, SingleReg:$r2)>;
+
+def: Pat<(int_k1c_lwzu AddrRI:$addr), (LWZri AddrRI:$addr, (i8 2))>;
+def: Pat<(int_k1c_acswapw i64:$addr, i32:$expect, i32:$update), (i32 (EXTRACT_SUBREG
+  (v2i64 (ACSWAPWd0 (i64 0), SingleReg:$addr, (INSERT_SUBREG (INSERT_SUBREG (v2i64 (IMPLICIT_DEF)),
+    SingleReg:$expect, 1), SingleReg:$update, 2))), 2))>;
 
 def FABSWQ_Instr : K1C_PseudoInstr<(outs PairedReg: $dst), (ins PairedReg:$r), []>;
 def FABSDP_Instr : K1C_PseudoInstr<(outs PairedReg: $dst), (ins PairedReg:$r), []>;
