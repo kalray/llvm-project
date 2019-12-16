@@ -2,9 +2,15 @@ let TargetPrefix = "k1c" in {
 
 def int_k1c_dinval : Intrinsic<[], [],[]>;
 def int_k1c_fence : Intrinsic<[], [],[]>;
+def int_k1c_stop : GCCBuiltin<"__builtin_k1_stop">, Intrinsic<[], [],[]>;
 def int_k1c_get : Intrinsic<[llvm_i64_ty], [llvm_i32_ty],[IntrReadMem]>;
+def int_k1c_set : Intrinsic<[], [llvm_i32_ty, llvm_i64_ty], []>;
 def int_k1c_wfxl : Intrinsic<[], [llvm_i32_ty, llvm_i64_ty], []>;
+def int_k1c_wfxm : Intrinsic<[], [llvm_i32_ty, llvm_i64_ty], []>;
 def int_k1c_sbmm8 : Intrinsic<[llvm_i64_ty], [llvm_i32_ty, llvm_i64_ty], []>;
+
+def int_k1c_lwzu: Intrinsic<[llvm_i32_ty], [llvm_ptr_ty], [IntrReadMem]>;
+def int_k1c_acswapw: Intrinsic<[llvm_i32_ty], [llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty], []>;
 
 def int_k1c_fabswp: GCCBuiltin<"__builtin_k1_fabswp">, Intrinsic<[llvm_v2f32_ty], [llvm_v2f32_ty], [IntrNoMem]>;
 def int_k1c_fabswq: GCCBuiltin<"__builtin_k1_fabswq">, Intrinsic<[llvm_v4f32_ty], [llvm_v4f32_ty], [IntrNoMem]>;
