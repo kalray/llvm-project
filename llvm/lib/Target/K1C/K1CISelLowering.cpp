@@ -746,8 +746,10 @@ SDValue K1CTargetLowering::lowerGlobalTLSAddress(SDValue Op,
 
   switch (model) {
   default:
-    if (MF.getSubtarget().getTargetTriple().isOSClusterOS())
-      report_fatal_error("ClusterOS only supports TLS model LocalExec");
+    if (MF.getSubtarget().getTargetTriple().isOSClusterOS() ||
+        MF.getSubtarget().getTargetTriple().isOSK1ELF())
+      report_fatal_error(
+          "ClusterOS and K1ELF only supports TLS model LocalExec");
     else
       report_fatal_error("Unknown TLSModel");
   case TLSModel::LocalExec:
