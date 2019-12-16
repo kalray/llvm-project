@@ -88,6 +88,12 @@ void K1CPacketizerList::endPacket(MachineBasicBlock *MBB,
 bool K1CPacketizerList::isSoloInstruction(const MachineInstr &MI) {
   if (MI.isInlineAsm())
     return true;
+
+  // WFXL, WFXM, and SET instructions have to be alone in a bundle if they write
+  // an AloneReg register.
+  if (isSetOrWFXLOrWFXM(MI.getOpcode()))
+    return K1C::AloneRegRegClass.contains(MI.getOperand(0).getReg());
+
   return !ValidOptLevel || MI.getDesc().getSchedClass() == K1C::Sched::ALL;
 }
 
@@ -433,13 +439,17 @@ bool K1CPacketizerList::isSetOrWFXL(unsigned Opcode) {
   switch (Opcode) {
   default:
     return false;
-    // case K1C::SETd0: Not defined yet
+  case K1C::SETd0:
     // case K1C::SETd1: Not defined yet
   case K1C::SETd2:
   case K1C::WFXLd0:
     // case K1C::WFXLd1: Not defined yet
     return true;
   }
+}
+
+bool K1CPacketizerList::isSetOrWFXLOrWFXM(unsigned Opcode) {
+  return isSetOrWFXL(Opcode) || Opcode == K1C::WFXMd0;
 }
 
 bool K1CPacketizerList::isALUCarryWithSetOrWFXL(unsigned ISchedClass,
@@ -453,7 +463,7 @@ bool K1CPacketizerList::isALUFP754OrMAUFP754WithSetOrWFX_(unsigned ISchedClass,
                                                           unsigned JOpcode) {
   return ((isALU(ISchedClass) && useFloatingPointIEEE754(IOpcode)) ||
           (isMAU(ISchedClass) && useFloatingPointIEEE754(IOpcode))) &&
-         (isSetOrWFXL(JOpcode) /*|| JOpcode == K1C::WFXM*/);
+         isSetOrWFXLOrWFXM(JOpcode);
 }
 
 bool K1CPacketizerList::isLegalToPacketizeTogether(SUnit *SUI, SUnit *SUJ) {
