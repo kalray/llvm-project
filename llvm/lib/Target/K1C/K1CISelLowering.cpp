@@ -1028,6 +1028,19 @@ static unsigned selectExtend(unsigned BitSize) {
   }
 }
 
+static uint64_t selectMask(unsigned Size) {
+  switch (Size) {
+  default:
+    llvm_unreachable("Unsupported mask for this size!");
+  case 8:
+    return 0xff;
+  case 16:
+    return 0xffff;
+  case 32:
+    return 0xffffffff;
+  }
+}
+
 static SDValue lowerBUILD_VECTORGeneric(const SDValue &Op, SelectionDAG &DAG) {
   SDLoc DL(Op);
   uint64_t CurrentVal = 0;
@@ -1036,7 +1049,9 @@ static SDValue lowerBUILD_VECTORGeneric(const SDValue &Op, SelectionDAG &DAG) {
   EVT VectorType = Op.getValueType();
   const unsigned VectorSize = VectorType.getVectorNumElements();
   const unsigned BitSize = VectorType.getScalarSizeInBits();
+  uint64_t Mask = selectMask(BitSize);
 
+  // Pack constants and mark non-constants indices
   for (unsigned i = 0; i < NumOperands; ++i) {
     uint64_t OpVal = 0;
     if (auto *OpConst = dyn_cast<ConstantSDNode>(Op.getOperand(i)))
@@ -1046,7 +1061,7 @@ static SDValue lowerBUILD_VECTORGeneric(const SDValue &Op, SelectionDAG &DAG) {
     else
       RegMap |= 1 << i;
 
-    CurrentVal |= OpVal << (i * BitSize);
+    CurrentVal |= (OpVal & Mask) << (i * BitSize);
   }
 
   SDValue PartSDVal = DAG.getConstant(CurrentVal, DL, MVT::i64);
