@@ -56,6 +56,7 @@ def truncstoref16 : PatFrag<(ops node:$val, node:$ptr),
 
 def : Pat<(truncstoref32 f64:$val, AddrRI:$addr), (SWri AddrRI:$addr, (FNARROWDW SingleReg:$val, ROUND_CS, SILENT_OFF))>;
 
+def : Pat<(truncstoref16 f64:$val, AddrRI:$addr), (SHri AddrRI:$addr, (FNARROWWH (FNARROWDW SingleReg:$val, ROUND_CS, SILENT_OFF), ROUND_CS, SILENT_OFF))>;
 def : Pat<(truncstoref16 f32:$val, AddrRI:$addr), (SHri AddrRI:$addr, (FNARROWWH SingleReg:$val, ROUND_CS, SILENT_OFF))>;
 
 // Load
