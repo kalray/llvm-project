@@ -134,6 +134,7 @@ def : Pat<(store (v2f16 SingleReg:$val), AddrRI:$addr), (SWri AddrRI:$addr,Singl
 def : Pat<(store (i64 SingleReg:$val), AddrRI:$addr), (SDri AddrRI:$addr,SingleReg:$val)>;
 def : Pat<(store (v2i32 SingleReg:$val), AddrRI:$addr), (SDri AddrRI:$addr,SingleReg:$val)>;
 def : Pat<(store (v4i16 SingleReg:$val), AddrRI:$addr), (SDri AddrRI:$addr,SingleReg:$val)>;
+def : Pat<(store (v2i64 PairedReg:$val), AddrRI:$addr), (SQri AddrRI:$addr,PairedReg:$val)>;
 
 def : Pat<(truncstorei8 i64:$val, AddrRI:$addr), (SBri AddrRI:$addr, SingleReg:$val)>;
 def : Pat<(truncstorei8 i32:$val, AddrRI:$addr), (SBri AddrRI:$addr, SingleReg:$val)>;
@@ -158,6 +159,7 @@ def loadv2i32 : PatFrag<(ops node:$ptr), (v2i32 (load node:$ptr))>;
 def loadv4i16 : PatFrag<(ops node:$ptr), (v4i16 (load node:$ptr))>;
 def loadv2i16 : PatFrag<(ops node:$ptr), (v2i16 (load node:$ptr))>;
 def loadv2f16 : PatFrag<(ops node:$ptr), (v2f16 (load node:$ptr))>;
+def loadv2i64 : PatFrag<(ops node:$ptr), (v2i64 (load node:$ptr))>;
 
 // load i1 in i32
 def : Pat<(i32 (sextloadi1 AddrRI:$addr)), (LBSri AddrRI:$addr)>;
@@ -211,6 +213,7 @@ def : Pat<(loadv2f16 AddrRI:$addr), (LWZri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(loadi64 AddrRI:$addr), (LDri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(loadv2i32 AddrRI:$addr), (LDri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(loadv4i16 AddrRI:$addr), (LDri AddrRI:$addr, (i8 0 /*cached*/))>;
+def : Pat<(loadv2i64 AddrRI:$addr), (LQri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(loadi64 (iPTR SingleReg:$rs2)), (LDd0 (i64 0), SingleReg:$rs2, (i8 0))>;
 
 // sign extend optimizations
@@ -336,3 +339,12 @@ def : Pat<(extractelt (v2i32 SingleReg:$v), 1), (SRADd1 SingleReg :$v, (i64 32))
 
 let isBarrier=1, isBranch=1, isPseudo=1, isIndirectBranch=1, isTerminator=1 in
 def ENDLOOP : REGISTERZ_SIMPLE <(outs), (ins), "ENDLOOP", [ ], ALL>;
+
+def : Pat<(v2i64 (build_vector i64:$v1, i64:$v2)),
+  (INSERT_SUBREG
+    (INSERT_SUBREG (v2i64 (IMPLICIT_DEF)), SingleReg:$v1, 1),
+    SingleReg:$v2, 2
+  )>;
+
+def : Pat<(extractelt (v2i64 PairedReg:$v), 0), (i64 (EXTRACT_SUBREG $v, 1))>;
+def : Pat<(extractelt (v2i64 PairedReg:$v), 1), (i64 (EXTRACT_SUBREG $v, 2))>;
