@@ -64,6 +64,7 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   addRegisterClass(MVT::v2i32, &K1C::SingleRegRegClass);
   addRegisterClass(MVT::v4i16, &K1C::SingleRegRegClass);
   addRegisterClass(MVT::v2i16, &K1C::SingleRegRegClass);
+  addRegisterClass(MVT::v2i64, &K1C::PairedRegRegClass);
 
   addRegisterClass(MVT::f16, &K1C::SingleRegRegClass);
   addRegisterClass(MVT::f32, &K1C::SingleRegRegClass);
@@ -127,7 +128,8 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2f16, Custom);
   setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2i16, Custom);
 
-  for (auto VT : {MVT::v2i32, MVT::v4i16, MVT::v2i16, MVT::v4f32, MVT::v2f64}) {
+  for (auto VT : {MVT::v2i32, MVT::v4i16, MVT::v2i16, MVT::v2i64, MVT::v4f32,
+                  MVT::v2f64}) {
     setOperationAction(ISD::UDIV, VT, Expand);
     setOperationAction(ISD::SDIV, VT, Expand);
     setOperationAction(ISD::VECTOR_SHUFFLE, VT, Expand);
@@ -151,12 +153,14 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v2f32, Custom);
   setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v4f32, Custom);
   setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v2f64, Custom);
+  setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v2i64, Custom);
   setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2i32, Custom);
   setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2f32, Custom);
   setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2i16, Custom);
   setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v4i16, Expand);
   setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v4f32, Custom);
   setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2f64, Custom);
+  setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2i64, Custom);
 
   setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v2i16, Custom);
   setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v2f16, Custom);
@@ -166,7 +170,7 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::MULHU, MVT::v2i32, Expand);
   setOperationAction(ISD::MULHS, MVT::v2i32, Expand);
 
-  for (auto VT : {MVT::v2f32, MVT::v4f16, MVT::v4f32, MVT::v2f64}) {
+  for (auto VT : {MVT::v2f32, MVT::v4f16, MVT::v4f32, MVT::v2f64, MVT::v2i64}) {
     setOperationAction(ISD::FDIV, VT, Expand);
     setOperationAction(ISD::VECTOR_SHUFFLE, VT, Expand);
     setOperationAction(ISD::SCALAR_TO_VECTOR, VT, Expand);
@@ -176,6 +180,10 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v4f16, Expand);
   setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2f16, Expand);
   setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2f32, Custom);
+
+  setOperationAction(ISD::ADD, MVT::v2i64, Expand);
+  setOperationAction(ISD::SUB, MVT::v2i64, Expand);
+  setOperationAction(ISD::MUL, MVT::v2i64, Expand);
 
   for (auto VT : { MVT::i32, MVT::i64 }) {
     setOperationAction(ISD::SMUL_LOHI, VT, Expand);
@@ -369,7 +377,8 @@ SDValue K1CTargetLowering::LowerFormalArguments(
       EVT RegVT = VA.getLocVT();
 
       unsigned VReg;
-      if (VA.getValVT() == MVT::v4f32 || VA.getValVT() == MVT::v2f64)
+      if (VA.getValVT() == MVT::v4f32 || VA.getValVT() == MVT::v2f64 ||
+          VA.getValVT() == MVT::v2i64)
         VReg = RegInfo.createVirtualRegister(&K1C::PairedRegRegClass);
       else
         VReg = RegInfo.createVirtualRegister(&K1C::SingleRegRegClass);
@@ -1316,7 +1325,7 @@ SDValue K1CTargetLowering::lowerINSERT_VECTOR_ELT(SDValue Op,
     if (Vec.getValueType() == MVT::v4f32)
       return lowerINSERT_VECTOR_ELT_V4_128bit(dl, DAG, Vec, Val,
                                               InsertPos->getZExtValue());
-    if (Vec.getValueType() == MVT::v2f64)
+    if (Vec.getValueType() == MVT::v2f64 || Vec.getValueType() == MVT::v2i64)
       return lowerINSERT_VECTOR_ELT_V2_128bit(dl, DAG, Vec, Val,
                                               InsertPos->getZExtValue());
 
@@ -1421,8 +1430,8 @@ SDValue K1CTargetLowering::lowerINSERT_VECTOR_ELT_V2_128bit(
     SDLoc &dl, SelectionDAG &DAG, SDValue Vec, SDValue Val,
     uint64_t index) const {
   SDValue subRegIdx = DAG.getTargetConstant(index + 1, dl, MVT::i32);
-  return SDValue(DAG.getMachineNode(TargetOpcode::INSERT_SUBREG, dl, MVT::v2f64,
-                                    {Vec, Val, subRegIdx}),
+  return SDValue(DAG.getMachineNode(TargetOpcode::INSERT_SUBREG, dl,
+                                    Vec.getValueType(), {Vec, Val, subRegIdx}),
                  0);
 }
 
@@ -1431,7 +1440,8 @@ SDValue K1CTargetLowering::lowerEXTRACT_VECTOR_ELT(SDValue Op,
   SDValue Vec = Op.getOperand(0);
 
   if (Vec.getValueType() == MVT::v2f32 || Vec.getValueType() == MVT::v2i32 ||
-      Vec.getValueType() == MVT::v4f32 || Vec.getValueType() == MVT::v2f64)
+      Vec.getValueType() == MVT::v4f32 || Vec.getValueType() == MVT::v2f64 ||
+      Vec.getValueType() == MVT::v2i64)
     return lowerEXTRACT_VECTOR_ELT_TDPATTERN(Op, DAG);
 
   if (Vec.getValueType() == MVT::v2i16 || Vec.getValueType() == MVT::v2f16)
