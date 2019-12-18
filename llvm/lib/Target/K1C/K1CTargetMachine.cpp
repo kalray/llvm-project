@@ -29,6 +29,10 @@ static cl::opt<bool>
     DisableHardwareLoops("disable-k1c-hwloops", cl::Hidden,
                          cl::desc("Disable Hardware Loops for K1C target"));
 
+static cl::opt<bool>
+    DisableBundling("disable-k1c-bundling", cl::Hidden,
+                    cl::desc("Disable Bundling Pass for K1C target"));
+
 extern "C" void LLVMInitializeK1CTarget() {
   RegisterTargetMachine<K1CTargetMachine> X(getTheK1CTarget());
   auto PR = PassRegistry::getPassRegistry();
@@ -136,5 +140,7 @@ void K1CPassConfig::addPreRegAlloc() {
 
 void K1CPassConfig::addPreEmitPass() {
   addPass(createK1CExpandPseudoPass());
-  addPass(createK1CPacketizerPass(getOptLevel() >= CodeGenOpt::Default), false);
+  addPass(createK1CPacketizerPass(getOptLevel() >= CodeGenOpt::Default &&
+                                  !DisableBundling),
+          false);
 }
