@@ -217,23 +217,15 @@ def : Pat<(loadv2i64 AddrRI:$addr), (LQri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(loadi64 (iPTR SingleReg:$rs2)), (LDd0 (i64 0), SingleReg:$rs2, (i8 0))>;
 
 // sign extend optimizations
-def : Pat<(and i64:$val, (i64 0xffffffff)),(ZXWD SingleReg:$val)>;
-def : Pat<(and i32:$val, (i32 0xffff)),(ZXHD SingleReg:$val)>;
-def : Pat<(and i32:$val, (i32 0xff)),(ZXBD SingleReg:$val)>;
-
-def : Pat<(and (i64 (anyext i32:$val)),(i64 0xffffffff)), (ZXWD SingleReg:$val)>;
-def : Pat<(and (i64 (anyext i32:$val)),(i64 0xffff)), (ZXHD SingleReg:$val)>;
-def : Pat<(and (i64 (anyext i32:$val)),(i64 0xff)), (ZXBD SingleReg:$val)>;
-
-def : Pat<(i64 (sext_inreg (i64 (anyext i32:$val)), i8)), (SXBD SingleReg:$val)>;
-def : Pat<(i64 (sext_inreg (i64 (anyext i32:$val)), i16)), (SXHD SingleReg:$val)>;
-def : Pat<(i64 (sext_inreg (i64 (anyext i32:$val)), i32)), (SXWD SingleReg:$val)>;
+def : Pat<(and SingleReg:$val,(i64 0xffffffff)), (ZXWD SingleReg:$val)>;
+def : Pat<(and SingleReg:$val,(i32 0xffff)), (ZXHD SingleReg:$val)>;
+def : Pat<(and SingleReg:$val,(i32 0xff)), (ZXBD SingleReg:$val)>;
 
 // eliminate zero extend for shift ops second operand
 multiclass SHIFT_PAT32<SDNode n, SDNode instr>
 {
-        def : Pat<(n i32:$r1, (and (i64 (anyext i32:$val)),(i64 0xff))), (instr SingleReg:$r1, SingleReg:$val)>;
-        def : Pat<(n i32:$r1, (and (i64 (anyext i32:$val)),(i64 0xffff))), (instr SingleReg:$r1, SingleReg:$val)>;
+        def : Pat<(n i32:$r1, (and SingleReg:$val,(i64 0xff))), (instr SingleReg:$r1, SingleReg:$val)>;
+        def : Pat<(n i32:$r1, (and SingleReg:$val,(i64 0xffff))), (instr SingleReg:$r1, SingleReg:$val)>;
 
         def : Pat<(n i32:$r1, (i64 (zext (i32 (sext_inreg i32:$val,i8))))), (instr SingleReg:$r1, SingleReg:$val)>;
         def : Pat<(n i32:$r1, (i64 (zext (i32 (sext_inreg i32:$val,i16))))), (instr SingleReg:$r1, SingleReg:$val)>;
@@ -242,14 +234,14 @@ multiclass SHIFT_PAT32<SDNode n, SDNode instr>
 multiclass SHIFT_PAT64<SDNode n, SDNode instr>
 { 
         def : Pat<(n i64:$r1,
-                (and (i64 (sext_inreg (i64 (anyext i32:$val)),i8)),(i64 0xffffffff))),(instr SingleReg:$r1, SingleReg:$val)>;
+                (and (i64 (sext_inreg SingleReg:$val,i8)),(i64 0xffffffff))),(instr SingleReg:$r1, SingleReg:$val)>;
         def : Pat<(n i64:$r1,
-                (and (i64 (sext_inreg (i64 (anyext i32:$val)),i16)),(i64 0xffffffff))),(instr SingleReg:$r1, SingleReg:$val)>;
+                (and (i64 (sext_inreg SingleReg:$val,i16)),(i64 0xffffffff))),(instr SingleReg:$r1, SingleReg:$val)>;
 
         def : Pat<(n i64:$r1,
-                (and (i64 (anyext i32:$val)), (i64 255))),(instr SingleReg:$r1, SingleReg:$val)>;
+                (and SingleReg:$val, (i64 255))),(instr SingleReg:$r1, SingleReg:$val)>;
         def : Pat<(n i64:$r1,
-                (and (i64 (anyext i32:$val)), (i64 0xffff))),(instr SingleReg:$r1, SingleReg:$val)>;
+                (and SingleReg:$val, (i64 0xffff))),(instr SingleReg:$r1, SingleReg:$val)>;
         def : Pat<(n i64:$r1,
                 (i64 (zext i32:$val))),(instr SingleReg:$r1, SingleReg:$val)>;
 }
@@ -262,17 +254,17 @@ defm : SHIFT_PAT64<sra, SRADd0>;
 defm : SHIFT_PAT64<srl, SRLDd0>;
 
 // Zero/sign extend patterns to i32
-def : Pat<(i32 (anyext i8:$val)), (ZXBD SingleReg:$val)>;
-def : Pat<(i32 (anyext i16:$val)), (ZXHD SingleReg:$val)>;
+def : Pat<(i32 (anyext i8:$val)), (COPY SingleReg:$val)>;
+def : Pat<(i32 (anyext i16:$val)), (COPY SingleReg:$val)>;
 def : Pat<(i32 (zext i8:$val)), (ZXBD SingleReg:$val)>;
 def : Pat<(i32 (sext i8:$val)), (SXBD SingleReg:$val)>;
 def : Pat<(i32 (zext i16:$val)), (ZXHD SingleReg:$val)>;
 def : Pat<(i32 (sext i16:$val)), (SXHD SingleReg:$val)>;
 
 // Zero/sign extend patterns to i64
-def : Pat<(i64 (anyext i8:$val)), (ZXBD SingleReg:$val)>;
-def : Pat<(i64 (anyext i16:$val)), (ZXHD SingleReg:$val)>;
-def : Pat<(i64 (anyext i32:$val)), (ZXWD SingleReg:$val)>;
+def : Pat<(i64 (anyext i8:$val)), (COPY SingleReg:$val)>;
+def : Pat<(i64 (anyext i16:$val)), (COPY SingleReg:$val)>;
+def : Pat<(i64 (anyext i32:$val)), (COPY SingleReg:$val)>;
 def : Pat<(i64 (zext i8:$val)), (ZXBD SingleReg:$val)>;
 def : Pat<(i64 (sext i8:$val)), (SXBD SingleReg:$val)>;
 def : Pat<(i64 (zext i16:$val)), (ZXHD SingleReg:$val)>;
@@ -280,14 +272,14 @@ def : Pat<(i64 (sext i16:$val)), (SXHD SingleReg:$val)>;
 def : Pat<(i64 (zext i32:$val)), (ZXWD SingleReg:$val)>;
 def : Pat<(i64 (sext i32:$val)), (SXWD SingleReg:$val)>;
 
-def : Pat<(i32 (sext_inreg i32:$val, i1)), (ANDWd1 SingleReg:$val, (i32 1))>;
-def : Pat<(i32 (sext_inreg i32:$val, i8)), (SXBD SingleReg:$val)>;
-def : Pat<(i32 (sext_inreg i32:$val, i16)), (SXHD SingleReg:$val)>;
+def : Pat<(i32 (sext_inreg SingleReg:$val, i1)), (ANDWd1 SingleReg:$val, (i32 1))>;
+def : Pat<(i32 (sext_inreg SingleReg:$val, i8)), (SXBD SingleReg:$val)>;
+def : Pat<(i32 (sext_inreg SingleReg:$val, i16)), (SXHD SingleReg:$val)>;
 
-def : Pat<(i64 (sext_inreg i64:$val, i1)), (ANDDd1 SingleReg:$val, (i64 1))>;
-def : Pat<(i64 (sext_inreg i64:$val, i8)), (SXBD SingleReg:$val)>;
-def : Pat<(i64 (sext_inreg i64:$val, i16)), (SXHD SingleReg:$val)>;
-def : Pat<(i64 (sext_inreg i64:$val, i32)), (SXWD SingleReg:$val)>;
+def : Pat<(i64 (sext_inreg SingleReg:$val, i1)), (ANDDd1 SingleReg:$val, (i64 1))>;
+def : Pat<(i64 (sext_inreg SingleReg:$val, i8)), (SXBD SingleReg:$val)>;
+def : Pat<(i64 (sext_inreg SingleReg:$val, i16)), (SXHD SingleReg:$val)>;
+def : Pat<(i64 (sext_inreg SingleReg:$val, i32)), (SXWD SingleReg:$val)>;
 
 // Unconditional branch
 def : Pat<(br bb:$addr), (GOTO Pcrel27:$addr)>;
