@@ -26,6 +26,8 @@
 
 using namespace llvm;
 
+#define DEBUG_TYPE "k1c-bundling"
+
 namespace {
 
 class K1CPacketizer : public MachineFunctionPass {
@@ -104,11 +106,15 @@ bool K1CPacketizerList::usesCarry(unsigned Opcode) {
 // Ignore bundling of pseudo instructions.
 bool K1CPacketizerList::ignorePseudoInstruction(const MachineInstr &MI,
                                                 const MachineBasicBlock *) {
-  if (MI.isDebugInstr())
+  if (MI.isDebugInstr()) {
+    LLVM_DEBUG(dbgs() << "ignorePseudoInstruction::isDebugInst "; MI.dump(););
     return true;
+  }
 
-  if (MI.isPosition())
+  if (MI.isPosition()) {
+    LLVM_DEBUG(dbgs() << "ignorePseudoInstruction::isPosition "; MI.dump(););
     return true;
+  }
 
   return false;
 }
@@ -455,30 +461,53 @@ bool K1CPacketizerList::isLegalToPacketizeTogether(SUnit *SUI, SUnit *SUJ) {
   MachineInstr &I = *SUI->getInstr();
   MachineInstr &J = *SUJ->getInstr();
 
-  if (shouldBeLastInBundle(J.getOpcode()))
+  if (shouldBeLastInBundle(J.getOpcode())) {
+    LLVM_DEBUG(dbgs() << "  (k1c)shouldBeLastInBundle ";);
     return false;
+  }
+
+  MachineFunction *MF = I.getParent()->getParent();
+  const K1CRegisterInfo *TRI =
+      (const K1CRegisterInfo *)MF->getSubtarget().getRegisterInfo();
 
   if (J.getNumOperands() > 0 && J.getDesc().getNumDefs() == 1 &&
-      J.getOperand(0).isReg()) {
+      J.getOperand(0).isReg() && !J.getOperand(0).isImplicit()) {
+
     // Handle Write after Write case
     // Handle Read after Write case
-    for (unsigned IInd = 0; IInd < I.getNumOperands(); ++IInd)
-      if (I.getOperand(IInd).isReg() &&
-          J.getOperand(0).getReg() == I.getOperand(IInd).getReg() &&
-          J.getOperand(0).getSubReg() == I.getOperand(IInd).getSubReg())
-        return false;
+
+    // Iterate all subregs including self reg of J output operand of instr J
+    for (MCSubRegIterator JSubRegs(J.getOperand(0).getReg(), TRI,
+                                   /*IncludeSelf=*/true);
+         JSubRegs.isValid(); ++JSubRegs) {
+      int JReg = *JSubRegs;
+
+      // Iterate all operands of I
+      for (unsigned IInd = 0; IInd < I.getNumOperands(); ++IInd) {
+        if (I.getOperand(IInd).isReg() && !I.getOperand(IInd).isImplicit()) {
+          // Iterate all subregs including self reg of IInd operand of instr I
+          for (MCSubRegIterator ISubRegs(I.getOperand(IInd).getReg(), TRI,
+                                         /*IncludeSelf=*/true);
+               ISubRegs.isValid(); ++ISubRegs) {
+            int IReg = *ISubRegs;
+            if (JReg == IReg) {
+              LLVM_DEBUG(dbgs()
+                             << "  (k1c)write after write/read after write\n";);
+              return false;
+            }
+          }
+        }
+      }
+    }
   }
 
   // Rule 1
-  // Two data dependent instructions may not be scheduled within a single bundle
-  for (unsigned JInd = 0; JInd < SUJ->Succs.size(); ++JInd) {
-    if (SUJ->Succs[JInd].getSUnit() != SUI)
-      continue;
-
-    SDep::Kind DepType = SUJ->Succs[JInd].getKind();
-
-    if (DepType == SDep::Data)
-      return false;
+  // Two instructions with side effects may not be scheduled within a single
+  // bundle
+  if (SUI->getInstr()->hasUnmodeledSideEffects() &&
+      SUJ->getInstr()->hasUnmodeledSideEffects()) {
+    LLVM_DEBUG(dbgs() << "  (k1c)rule 1\n";);
+    return false;
   }
 
   // Rule 2
@@ -492,8 +521,10 @@ bool K1CPacketizerList::isLegalToPacketizeTogether(SUnit *SUI, SUnit *SUJ) {
   // Rule 3 (Specialization of Rule 2) An ALU instruction that produces a carry
   // must not be bundled with a set or wfxl instruction on CS.
   if (isALUCarryWithSetOrWFXL(ISchedClass, I.getOpcode(), J.getOpcode()) ||
-      isALUCarryWithSetOrWFXL(JSchedClass, J.getOpcode(), I.getOpcode()))
+      isALUCarryWithSetOrWFXL(JSchedClass, J.getOpcode(), I.getOpcode())) {
+    LLVM_DEBUG(dbgs() << "  (k1c)rule 3\n";);
     return false;
+  }
 
   // Rule 4 (Specialization of Rule 2) An ALU or MAU instruction that produces
   // an IEEE 754 float- ing point flag must not be bundled with a set or wfx*
@@ -502,8 +533,10 @@ bool K1CPacketizerList::isLegalToPacketizeTogether(SUnit *SUI, SUnit *SUJ) {
   if (isALUFP754OrMAUFP754WithSetOrWFX_(ISchedClass, I.getOpcode(),
                                         J.getOpcode()) ||
       isALUFP754OrMAUFP754WithSetOrWFX_(JSchedClass, J.getOpcode(),
-                                        I.getOpcode()))
+                                        I.getOpcode())) {
+    LLVM_DEBUG(dbgs() << "  (k1c)rule 4\n";);
     return false;
+  }
 
   // Rule 5 If a (i)get or waitit instruction is issued within a bundle, then
   // the BCU and the tiny ALU unit inside the MAU are used. As a consequence: -
