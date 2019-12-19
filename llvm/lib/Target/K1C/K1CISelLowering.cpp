@@ -125,9 +125,6 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::SIGN_EXTEND_INREG, MVT::v2i16, Expand);
   setOperationAction(ISD::SIGN_EXTEND_INREG, MVT::v2i32, Expand);
 
-  setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2f16, Custom);
-  setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2i16, Custom);
-
   for (auto VT : {MVT::v2i32, MVT::v4i16, MVT::v2i16, MVT::v2i64, MVT::v4f32,
                   MVT::v2f64}) {
     setOperationAction(ISD::UDIV, VT, Expand);
@@ -148,22 +145,18 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::SRA, VT, Expand);
   }
 
-  setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v4i16, Expand);
-  setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v2i32, Custom);
-  setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v2f32, Custom);
-  setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v4f32, Custom);
-  setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v2f64, Custom);
-  setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v2i64, Custom);
-  setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2i32, Custom);
-  setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2f32, Custom);
-  setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2i16, Custom);
-  setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v4i16, Expand);
-  setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v4f32, Custom);
-  setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2f64, Custom);
-  setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2i64, Custom);
+  for (auto VT : {MVT::v2i16, MVT::v4i16, MVT::v2i32, MVT::v2f16, MVT::v4f16,
+                  MVT::v2f32, MVT::v4f32}) {
+    setOperationAction(ISD::BUILD_VECTOR, VT, Custom);
+  }
 
-  setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v2i16, Custom);
+  for (auto VT : {MVT::v2i16, MVT::v4i16, MVT::v2i32, MVT::v2i64, MVT::v4f16,
+                  MVT::v2f32, MVT::v4f32, MVT::v2f64}) {
+    setOperationAction(ISD::INSERT_VECTOR_ELT, VT, Custom);
+    setOperationAction(ISD::EXTRACT_VECTOR_ELT, VT, Custom);
+  }
   setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v2f16, Custom);
+  setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2f16, Expand);
 
   setOperationAction(ISD::EXTRACT_SUBVECTOR, MVT::v2f32, Expand);
 
@@ -176,10 +169,6 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::SCALAR_TO_VECTOR, VT, Expand);
   }
   setOperationAction(ISD::FMUL, MVT::v2f64, Expand);
-  setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v4f16, Expand);
-  setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v4f16, Expand);
-  setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2f16, Expand);
-  setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v2f32, Custom);
 
   setOperationAction(ISD::ADD, MVT::v2i64, Expand);
   setOperationAction(ISD::SUB, MVT::v2i64, Expand);
@@ -261,11 +250,6 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
     setLoadExtAction(ISD::EXTLOAD, VT, MVT::f16, Expand);
     setLoadExtAction(ISD::EXTLOAD, VT, MVT::f32, Expand);
     setLoadExtAction(ISD::EXTLOAD, VT, MVT::f64, Expand);
-  }
-
-  for (auto VT : {MVT::v2i16, MVT::v4i16, MVT::v2i32, MVT::v2f16, MVT::v4f16,
-                  MVT::v2f32, MVT::v4f32}) {
-    setOperationAction(ISD::BUILD_VECTOR, VT, Custom);
   }
 
   setMaxAtomicSizeInBitsSupported(64);
@@ -1050,6 +1034,19 @@ static uint64_t selectMask(unsigned Size) {
   }
 }
 
+static SDValue getINSF(const SDLoc &DL, const SDValue &Vec, const SDValue &Val,
+                       unsigned ElementBitSize, unsigned Pos,
+                       SelectionDAG &DAG) {
+  const uint64_t StartBit = Pos * ElementBitSize;
+  const uint64_t StopBit = StartBit + ElementBitSize - 1;
+
+  return SDValue(DAG.getMachineNode(
+                     K1C::INSF, DL, MVT::i64,
+                     {Vec, Val, DAG.getTargetConstant(StopBit, DL, MVT::i64),
+                      DAG.getTargetConstant(StartBit, DL, MVT::i64)}),
+                 0);
+}
+
 static SDValue lowerBUILD_VECTORGeneric(const SDValue &Op, SelectionDAG &DAG) {
   SDLoc DL(Op);
   uint64_t CurrentVal = 0;
@@ -1099,16 +1096,8 @@ static SDValue lowerBUILD_VECTORGeneric(const SDValue &Op, SelectionDAG &DAG) {
   }
 
   for (unsigned i = 0; i < NumOperands; ++i) {
-    if (RegMap & (1 << i)) {
-      const uint64_t StartBit = i * BitSize;
-      const uint64_t StopBit = StartBit + BitSize - 1;
-      PartSDVal = SDValue(
-          DAG.getMachineNode(K1C::INSF, DL, MVT::i64,
-                             {PartSDVal, Op.getOperand(i),
-                              DAG.getTargetConstant(StopBit, DL, MVT::i64),
-                              DAG.getTargetConstant(StartBit, DL, MVT::i64)}),
-          0);
-    }
+    if (RegMap & (1 << i))
+      PartSDVal = getINSF(DL, PartSDVal, Op.getOperand(i), BitSize, i, DAG);
   }
 
   return DAG.getBitcast(Op.getValueType(), PartSDVal);
@@ -1306,93 +1295,86 @@ K1CTargetLowering::lowerBUILD_VECTOR_V4_128bit(SDValue Op,
                  0);
 }
 
+static SDValue makeInsertConst(const SDLoc &DL, SDValue Vec, MVT Type,
+                               uint64_t Mask, uint64_t ImmVal,
+                               unsigned StartIdx, SelectionDAG &DAG) {
+  Vec = DAG.getNode(
+      ISD::AND, DL, Type,
+      SDValue(DAG.getMachineNode(TargetOpcode::COPY, DL, Type, Vec), 0),
+      DAG.getConstant(~(Mask << StartIdx), DL, Type));
+
+  return DAG.getNode(ISD::OR, DL, Type,
+                     {Vec, DAG.getConstant(ImmVal << StartIdx, DL, Type)});
+}
+
+static MVT selectType(unsigned Size) {
+  switch (Size) {
+  default:
+    llvm_unreachable("Unsupported type for this size!");
+  case 8:
+  case 16:
+  case 32:
+    return MVT::i32;
+  case 64:
+  case 128:
+    return MVT::i64;
+  }
+}
+
 SDValue K1CTargetLowering::lowerINSERT_VECTOR_ELT(SDValue Op,
                                                   SelectionDAG &DAG) const {
+  SDValue Vec = Op.getOperand(0);
+  SDValue Val = Op.getOperand(1);
+  SDValue Idx = Op.getOperand(2);
+  SDLoc DL(Op);
+  EVT VecVT = Op.getValueType();
 
-  EVT ScalarVT = Op.getValueType().getScalarType();
-
-  uint64_t ElementBitSize = ScalarVT.getSizeInBits();
-
-  uint64_t Mask = (ElementBitSize == 16) ? 0xFFFF : 0xFFFFFFFF;
-
-  auto TotalSizeType = (ElementBitSize == 16) ? MVT::i32 : MVT::i64;
-
-  SDValue Vec = Op->getOperand(0);
-  SDValue Val = Op->getOperand(1);
-  SDValue Idx = Op->getOperand(2);
-  SDLoc dl(Op);
   if (ConstantSDNode *InsertPos = dyn_cast<ConstantSDNode>(Idx)) {
+    unsigned ElementBitSize = VecVT.getScalarSizeInBits();
+    uint64_t Mask = selectMask(ElementBitSize);
+    auto SizeType = selectType(VecVT.getSizeInBits());
+
     if (Vec.getValueType() == MVT::v4f32)
-      return lowerINSERT_VECTOR_ELT_V4_128bit(dl, DAG, Vec, Val,
+      return lowerINSERT_VECTOR_ELT_V4_128bit(DL, DAG, Vec, Val,
                                               InsertPos->getZExtValue());
     if (Vec.getValueType() == MVT::v2f64 || Vec.getValueType() == MVT::v2i64)
-      return lowerINSERT_VECTOR_ELT_V2_128bit(dl, DAG, Vec, Val,
+      return lowerINSERT_VECTOR_ELT_V2_128bit(DL, DAG, Vec, Val,
                                               InsertPos->getZExtValue());
 
-    bool IsImm = false;
     uint64_t ImmVal;
-    if (isa<ConstantSDNode>(Val)) {
-      IsImm = true;
-      ImmVal = dyn_cast<ConstantSDNode>(Val)->getZExtValue();
-    } else if (isa<ConstantFPSDNode>(Val)) {
-      IsImm = true;
-      ImmVal = dyn_cast<ConstantFPSDNode>(Val)
-                   ->getValueAPF()
-                   .bitcastToAPInt()
-                   .getZExtValue();
-    }
-    if (IsImm) {
-      if (InsertPos->getZExtValue() == 0) {
-        SDValue V = DAG.getNode(
-            ISD::AND, dl, TotalSizeType, DAG.getBitcast(TotalSizeType, Vec),
-            DAG.getConstant((Mask << ElementBitSize), dl, TotalSizeType));
-        return DAG.getBitcast(Op.getValueType(),
-                              DAG.getNode(ISD::OR, dl, TotalSizeType,
-                                          {V, DAG.getConstant(ImmVal & Mask, dl,
-                                                              TotalSizeType)}));
-      } else {
-        SDValue V = DAG.getNode(ISD::AND, dl, TotalSizeType,
-                                DAG.getBitcast(TotalSizeType, Vec),
-                                DAG.getConstant(Mask, dl, TotalSizeType));
-        return DAG.getBitcast(
-            Op.getValueType(),
-            DAG.getNode(ISD::OR, dl, TotalSizeType,
-                        {V, DAG.getConstant(ImmVal << ElementBitSize, dl,
-                                            TotalSizeType)}));
-      }
-    } else {
-      SDValue stopbit, startbit;
-      uint64_t StartIdx = InsertPos->getZExtValue() * ElementBitSize;
-      stopbit =
-          DAG.getTargetConstant(StartIdx + ElementBitSize - 1, dl, MVT::i64);
-      startbit = DAG.getTargetConstant(StartIdx, dl, MVT::i64);
-      return SDValue(DAG.getMachineNode(K1C::INSF, dl, MVT::i64,
-                                        {Vec, Val, stopbit, startbit}),
-                     0);
-    }
+    if (auto *OpConst = dyn_cast<ConstantSDNode>(Val))
+      ImmVal = OpConst->getZExtValue();
+    else if (auto *OpConst = dyn_cast<ConstantFPSDNode>(Val))
+      ImmVal = OpConst->getValueAPF().bitcastToAPInt().getZExtValue();
+    else
+      return getINSF(DL, Vec, Val, ElementBitSize, InsertPos->getZExtValue(),
+                     DAG);
+
+    const unsigned StartBit = ElementBitSize * InsertPos->getZExtValue();
+    return DAG.getBitcast(
+        Op.getValueType(),
+        makeInsertConst(DL, Vec, SizeType, Mask, ImmVal, StartBit, DAG));
   }
-  SDValue Tmp1 = Vec;
-  SDValue Tmp2 = Val;
-  SDValue Tmp3 = Idx;
 
-  EVT VT = Tmp1.getValueType();
-  EVT EltVT = VT.getVectorElementType();
-  SDValue StackPtr = DAG.CreateStackTemporary(VT);
+  EVT EltVT = VecVT.getVectorElementType();
 
+  SDValue StackPtr = DAG.CreateStackTemporary(VecVT);
   int SPFI = cast<FrameIndexSDNode>(StackPtr.getNode())->getIndex();
 
   // Store the vector.
   SDValue Ch = DAG.getStore(
-      DAG.getEntryNode(), dl, Tmp1, StackPtr,
+      DAG.getEntryNode(), DL, Vec, StackPtr,
       MachinePointerInfo::getFixedStack(DAG.getMachineFunction(), SPFI));
 
-  SDValue StackPtr2 = getVectorElementPointer(DAG, StackPtr, VT, Tmp3);
+  // Calculate insert location.
+  SDValue StackPtr2 = getVectorElementPointer(DAG, StackPtr, VecVT, Idx);
 
   // Store the scalar value.
-  Ch = DAG.getTruncStore(Ch, dl, Tmp2, StackPtr2, MachinePointerInfo(), EltVT);
+  Ch = DAG.getTruncStore(Ch, DL, Val, StackPtr2, MachinePointerInfo(), EltVT);
+
   // Load the updated vector.
   return DAG.getLoad(
-      VT, dl, Ch, StackPtr,
+      VecVT, DL, Ch, StackPtr,
       MachinePointerInfo::getFixedStack(DAG.getMachineFunction(), SPFI));
 }
 
@@ -1437,17 +1419,21 @@ SDValue K1CTargetLowering::lowerINSERT_VECTOR_ELT_V2_128bit(
 
 SDValue K1CTargetLowering::lowerEXTRACT_VECTOR_ELT(SDValue Op,
                                                    SelectionDAG &DAG) const {
-  SDValue Vec = Op.getOperand(0);
-
-  if (Vec.getValueType() == MVT::v2f32 || Vec.getValueType() == MVT::v2i32 ||
-      Vec.getValueType() == MVT::v4f32 || Vec.getValueType() == MVT::v2f64 ||
-      Vec.getValueType() == MVT::v2i64)
-    return lowerEXTRACT_VECTOR_ELT_TDPATTERN(Op, DAG);
-
-  if (Vec.getValueType() == MVT::v2i16 || Vec.getValueType() == MVT::v2f16)
+  switch (Op.getOperand(0).getSimpleValueType().SimpleTy) {
+  default:
+    llvm_unreachable("Unsupported lowering for this type!");
+  case MVT::v2i16:
+  case MVT::v2f16:
     return lowerEXTRACT_VECTOR_ELT_V2_32bit(Op, DAG);
-
-  llvm_unreachable("Unsupported lowering for this type!");
+  case MVT::v4i16:
+  case MVT::v2i32:
+  case MVT::v2i64:
+  case MVT::v4f16:
+  case MVT::v2f32:
+  case MVT::v4f32:
+  case MVT::v2f64:
+    return lowerEXTRACT_VECTOR_ELT_TDPATTERN(Op, DAG);
+  }
 }
 
 SDValue
