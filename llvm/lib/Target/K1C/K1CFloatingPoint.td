@@ -268,6 +268,10 @@ def : Pat<(v2f64 (build_vector f64:$v1, f64:$v2)),
 def : Pat<(extractelt (v2f64 PairedReg:$v), 0), (f64 (EXTRACT_SUBREG $v, 1))>;
 def : Pat<(extractelt (v2f64 PairedReg:$v), 1), (f64 (EXTRACT_SUBREG $v, 2))>;
 
+def : Pat<(extractelt (v4f16 SingleReg:$v), 0), (EXTFZ SingleReg:$v, 15, 0)>;
+def : Pat<(extractelt (v4f16 SingleReg:$v), 1), (EXTFZ SingleReg:$v, 31, 16)>;
+def : Pat<(extractelt (v4f16 SingleReg:$v), 2), (EXTFZ SingleReg:$v, 47, 32)>;
+def : Pat<(extractelt (v4f16 SingleReg:$v), 3), (SRLDd1 SingleReg:$v, (i64 48))>;
 
 def : Pat<(fcopysign f64:$v1, f64:$v2), (INSF SingleReg:$v1, (f64 (SRADd1 SingleReg:$v2, 63)), 63, 63)>;
 def : Pat<(fcopysign f64:$v1, f32:$v2), (INSF SingleReg:$v1, (f64 (SRAWd1 SingleReg:$v2, 31)), 63, 63)>;

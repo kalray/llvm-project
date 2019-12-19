@@ -20,6 +20,9 @@ def ITAIL : REGISTERZ_SIMPLE
    [ ],
    BCU>;
 
+let isBarrier=1, isBranch=1, isPseudo=1, isIndirectBranch=1, isTerminator=1 in
+def ENDLOOP : REGISTERZ_SIMPLE <(outs), (ins), "ENDLOOP", [ ], ALL>;
+
 def SDTK1CWrapper : SDTypeProfile<1, 1, [SDTCisSameAs<0, 1>, SDTCisPtrTy<0>]>;
 def SDTK1CTail : SDTypeProfile<0, -1, [SDTCisVT<0, i64>]>;
 
@@ -329,8 +332,15 @@ def : Pat<(ctlz i64:$src), (CLZD SingleReg:$src)>;
 def : Pat<(extractelt (v2i32 SingleReg:$v), 0), (COPY SingleReg:$v)>;
 def : Pat<(extractelt (v2i32 SingleReg:$v), 1), (SRADd1 SingleReg :$v, (i64 32))>;
 
-let isBarrier=1, isBranch=1, isPseudo=1, isIndirectBranch=1, isTerminator=1 in
-def ENDLOOP : REGISTERZ_SIMPLE <(outs), (ins), "ENDLOOP", [ ], ALL>;
+def : Pat<(i32 (vector_extract (v4i16 SingleReg:$v), 0)), (EXTFZ SingleReg:$v, 15, 0)>;
+def : Pat<(i32 (vector_extract (v4i16 SingleReg:$v), 1)), (EXTFZ SingleReg:$v, 31, 16)>;
+def : Pat<(i32 (vector_extract (v4i16 SingleReg:$v), 2)), (EXTFZ SingleReg:$v, 47, 32)>;
+def : Pat<(i32 (vector_extract (v4i16 SingleReg:$v), 3)), (SRLDd1 SingleReg:$v, (i64 48))>;
+
+def : Pat<(i32 (sext_inreg (vector_extract (v4i16 SingleReg:$v), 0), i16)), (EXTFS SingleReg:$v, 15, 0)>;
+def : Pat<(i32 (sext_inreg (vector_extract (v4i16 SingleReg:$v), 1), i16)), (EXTFS SingleReg:$v, 31, 16)>;
+def : Pat<(i32 (sext_inreg (vector_extract (v4i16 SingleReg:$v), 2), i16)), (EXTFS SingleReg:$v, 47, 32)>;
+def : Pat<(i32 (sext_inreg (vector_extract (v4i16 SingleReg:$v), 3), i16)), (SRADd1 SingleReg:$v, (i64 48))>;
 
 def : Pat<(v2i64 (build_vector i64:$v1, i64:$v2)),
   (INSERT_SUBREG
