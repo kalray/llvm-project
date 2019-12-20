@@ -183,8 +183,8 @@ def : Pat<(i32 (setult f64:$rz, f64:$ry)), (FCOMPDrr SingleReg:$rz, SingleReg:$r
 def : Pat<(i32 (setule f64:$rz, f64:$ry)), (FCOMPDrr SingleReg:$ry, SingleReg:$rz, FCOMP_UGE)>;
 def : Pat<(i32 (setune f64:$rz, f64:$ry)), (FCOMPDrr SingleReg:$rz, SingleReg:$ry, FCOMP_UNE)>;
 // SELECT_CC expanded to SELECT
-def : Pat<(SelectCC i64:$cmp, i64:$zero, f32:$truev, f32:$falsev), (Select_Instr SingleReg:$cmp, $zero, Binary32Imm:$truev, Binary32Imm:$falsev)>;
-def : Pat<(SelectCC i64:$cmp, i64:$zero, f64:$truev, f64:$falsev), (Select_Instr SingleReg:$cmp, $zero, Binary64Imm:$truev, Binary64Imm:$falsev)>;
+def : Pat<(SelectCC i64:$cmp, f32:$truev, f32:$falsev), (Select_Instr SingleReg:$cmp, Binary32Imm:$truev, Binary32Imm:$falsev)>;
+def : Pat<(SelectCC i64:$cmp, f64:$truev, f64:$falsev), (Select_Instr SingleReg:$cmp, Binary64Imm:$truev, Binary64Imm:$falsev)>;
 // FDOT2 -> TODO
 // FFMA  -> TODO
 // FFMS  -> TODO

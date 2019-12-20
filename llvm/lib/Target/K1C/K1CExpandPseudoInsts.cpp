@@ -75,13 +75,12 @@ static void InsertCMOVEInstr(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
   MachineInstr &MI = *MBBI;
   DebugLoc DL = MI.getDebugLoc();
 
+  unsigned DestReg = MI.getOperand(0).getReg();
   unsigned CmpReg = MI.getOperand(1).getReg();
-  unsigned ScratchReg = MI.getOperand(2).getReg();
 
   switch (MI.getOperand(Operand).getType()) {
   case MachineOperand::MO_GlobalAddress:
-    BuildMI(MBB, MBBI, DL, TII->get(K1C::CMOVEDd3))
-        .addReg(ScratchReg)
+    BuildMI(MBB, MBBI, DL, TII->get(K1C::CMOVEDd3), DestReg)
         .addReg(CmpReg)
         .addGlobalAddress(MI.getOperand(Operand).getGlobal())
         .addImm(Comp); /* DNEZ */
@@ -89,8 +88,7 @@ static void InsertCMOVEInstr(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
   case MachineOperand::MO_Register: {
     unsigned BranchValue = MI.getOperand(Operand).getReg();
 
-    BuildMI(MBB, MBBI, DL, TII->get(K1C::CMOVEDd3))
-        .addReg(ScratchReg)
+    BuildMI(MBB, MBBI, DL, TII->get(K1C::CMOVEDd3), DestReg)
         .addReg(CmpReg)
         .addReg(BranchValue)
         .addImm(Comp); /* DNEZ */
@@ -100,8 +98,8 @@ static void InsertCMOVEInstr(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
 
     BuildMI(MBB, MBBI, DL,
             TII->get(GetImmOpCode(BranchValueImm, K1C::CMOVEDd0, K1C::CMOVEDd1,
-                                  K1C::CMOVEDd2)))
-        .addReg(ScratchReg)
+                                  K1C::CMOVEDd2)),
+            DestReg)
         .addReg(CmpReg)
         .addImm(BranchValueImm)
         .addImm(Comp); /* DNEZ */
@@ -111,8 +109,8 @@ static void InsertCMOVEInstr(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
 
     BuildMI(
         MBB, MBBI, DL,
-        TII->get(Imm->getType()->isFloatTy() ? K1C::CMOVEDd1 : K1C::CMOVEDd2))
-        .addReg(ScratchReg)
+        TII->get(Imm->getType()->isFloatTy() ? K1C::CMOVEDd1 : K1C::CMOVEDd2),
+        DestReg)
         .addReg(CmpReg)
         .addFPImm(Imm)
         .addImm(Comp); /* DNEZ */
@@ -128,14 +126,8 @@ static bool expandSelectInstr(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
   MachineInstr &MI = *MBBI;
   DebugLoc DL = MI.getDebugLoc();
 
-  unsigned DestReg = MI.getOperand(0).getReg();
-  unsigned ScratchReg = MI.getOperand(2).getReg();
-
-  InsertCMOVEInstr(TII, MBB, MBBI, 3, 0);
-  InsertCMOVEInstr(TII, MBB, MBBI, 4, 1);
-
-  BuildMI(MBB, MBBI, DL, TII->get(K1C::COPYD)).addReg(DestReg).addReg(
-      ScratchReg);
+  InsertCMOVEInstr(TII, MBB, MBBI, 2, 0);
+  InsertCMOVEInstr(TII, MBB, MBBI, 3, 1);
 
   // Remove the present instruction
   MI.eraseFromParent();
