@@ -829,8 +829,7 @@ SDValue K1CTargetLowering::lowerSELECT(SDValue Op, SelectionDAG &DAG) const {
   SDLoc DL(Op);
 
   SDVTList VTs = DAG.getVTList(Op.getValueType());
-  SDValue Zero = DAG.getConstant(0, DL, MVT::i64);
-  SDValue Ops[] = { CondV, Zero, TrueV, FalseV };
+  SDValue Ops[] = {CondV, TrueV, FalseV};
 
   SDValue result = DAG.getNode(K1CISD::SELECT_CC, DL, VTs, Ops);
 

@@ -28,7 +28,7 @@ def SDTK1CTail : SDTypeProfile<0, -1, [SDTCisVT<0, i64>]>;
 
 def K1CWrapper : SDNode<"K1CISD::WRAPPER", SDTK1CWrapper>;
 
-def SDT_K1CSelectCC : SDTypeProfile<1, 4, [SDTCisVT<0, i32>, SDTCisVT<1, i64>, SDTCisVT<2, i64>]>;
+def SDT_K1CSelectCC : SDTypeProfile<1, 3, [SDTCisVT<0, i32>, SDTCisVT<1, i64>]>;
 
 def SelectCC : SDNode<"K1CISD::SELECT_CC", SDT_K1CSelectCC, []>;
 
@@ -297,17 +297,18 @@ def : Pat<(brind (i32 SingleReg:$r)), (IGOTO SingleReg:$r)>;
 
 def : Pat<(brind (i64 SingleReg:$r)), (IGOTO SingleReg:$r)>;
 
+let Constraints = "@earlyclobber $dst" in
 def Select_Instr : K1C_PseudoInstr<(outs SingleReg:$dst),
-        (ins SingleReg:$cmp, SingleReg:$tmpVar, SingleReg:$truev, SingleReg:$falsev),[]>;
+        (ins SingleReg:$cmp, SingleReg:$truev, SingleReg:$falsev),[]>;
 
-def : Pat<(SelectCC i64:$cmp, i64:$zero, i32:$truev, i32:$falsev),
-        (Select_Instr SingleReg:$cmp, $zero, i32imm:$truev, i32imm:$falsev)>;
+def : Pat<(SelectCC i64:$cmp, i32:$truev, i32:$falsev),
+        (Select_Instr SingleReg:$cmp, i32imm:$truev, i32imm:$falsev)>;
 
-def : Pat<(SelectCC i64:$cmp, i64:$zero, i64:$truev, i64:$falsev),
-        (Select_Instr SingleReg:$cmp, $zero, SingleReg:$truev, SingleReg:$falsev)>;
+def : Pat<(SelectCC i64:$cmp, i64:$truev, i64:$falsev),
+        (Select_Instr SingleReg:$cmp, SingleReg:$truev, SingleReg:$falsev)>;
 
-def : Pat<(SelectCC i64:$cmp, i64:$zero, (K1CWrapper tglobaladdr:$truef), (K1CWrapper tglobaladdr:$falsef)),
-        (Select_Instr SingleReg:$cmp, $zero, SingleReg:$truef, SingleReg:$falsef)>;
+def : Pat<(SelectCC i64:$cmp, (K1CWrapper tglobaladdr:$truef), (K1CWrapper tglobaladdr:$falsef)),
+        (Select_Instr SingleReg:$cmp, SingleReg:$truef, SingleReg:$falsef)>;
 
 def : Pat<(i1 (trunc i64:$param)), (ANDDd1 SingleReg:$param, (i64 1))>;
 def : Pat<(i8 (trunc i64:$param)), (ZXBD SingleReg:$param)>;
