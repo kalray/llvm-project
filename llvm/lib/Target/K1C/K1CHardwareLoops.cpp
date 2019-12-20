@@ -59,37 +59,6 @@ static bool isAddOperator(unsigned opcode) {
   return false;
 }
 
-static bool isStoreOperator(unsigned opcode) {
-  switch (opcode) {
-  case K1C::SBri:
-  case K1C::SHri:
-  case K1C::SWri:
-  case K1C::SDri:
-    return true;
-  default:
-    return false;
-  }
-
-  return false;
-}
-
-static bool isLoadOperator(unsigned opcode) {
-  switch (opcode) {
-  case K1C::LBSri:
-  case K1C::LBZri:
-  case K1C::LHSri:
-  case K1C::LHZri:
-  case K1C::LWSri:
-  case K1C::LWZri:
-  case K1C::LDri:
-    return true;
-  default:
-    return false;
-  }
-
-  return false;
-}
-
 static bool isSubOperator(unsigned opcode) {
   switch (opcode) {
   case K1C::SBFDd0:
@@ -194,31 +163,19 @@ bool K1CHardwareLoops::BackTraceRegValue(MachineLoop *L,
                                          int64_t &CmpVal, int64_t &Bump) {
 
   unsigned regNr = regToSearchFor;
-  int stackIndex = 0;
-  bool isOnStack = false;
-
   bool Done = false;
 
   headerIt = std::prev(headerIt);
   // Condition basick block register backtrace
   do {
-    // The stack index was filled with a register
-    if (isStoreOperator(headerIt->getOpcode()) && isOnStack &&
-        headerIt->getOperand(1).getIndex() == stackIndex) {
-      isOnStack = false;
-      regNr = headerIt->getOperand(2).getReg();
-    }
-
     if (headerIt->getOpcode() == K1C::PHI &&
         headerIt->getOperand(0).getReg() == regNr) {
-      isOnStack = false;
       regNr = headerIt->getOperand(1).getReg();
     }
 
     if (isAddOperator(headerIt->getOpcode()) &&
         headerIt->getOperand(0).getReg() == regNr &&
         headerIt->getOperand(2).isImm()) {
-      isOnStack = false;
       regNr = headerIt->getOperand(1).getReg();
       Bump = headerIt->getOperand(2).getImm();
     }
@@ -226,23 +183,10 @@ bool K1CHardwareLoops::BackTraceRegValue(MachineLoop *L,
     if (isSubOperator(headerIt->getOpcode()) &&
         headerIt->getOperand(0).getReg() == regNr &&
         headerIt->getOperand(2).isImm()) {
-      isOnStack = false;
       regNr = headerIt->getOperand(1).getReg();
       Bump = headerIt->getOperand(2).getImm();
     }
 
-    // The register was loaded from a stack index
-    if (isLoadOperator(headerIt->getOpcode()) &&
-        headerIt->getOperand(0).getReg() == regNr) {
-
-      if (headerIt->getOperand(2).isReg()) {
-        isOnStack = false;
-        regNr = headerIt->getOperand(2).getReg();
-      } else {
-        isOnStack = true;
-        stackIndex = headerIt->getOperand(2).getIndex();
-      }
-    }
     if (headerIt == HeaderMBB->begin())
       Done = true;
     else
@@ -254,13 +198,6 @@ bool K1CHardwareLoops::BackTraceRegValue(MachineLoop *L,
   instr_iterator I = PreheaderMBB->instr_end();
   I = std::prev(I);
   do {
-    if (isStoreOperator(I->getOpcode())) {
-      if (I->getOperand(1).getIndex() == stackIndex) {
-        isOnStack = false;
-        regNr = I->getOperand(2).getReg();
-      }
-    }
-
     if (isMakeOperator(I->getOpcode()) &&
         (I->getOperand(0).getReg() == regNr)) {
       CmpVal = I->getOperand(1).getImm();
