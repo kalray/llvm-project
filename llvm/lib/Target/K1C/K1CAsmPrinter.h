@@ -47,6 +47,9 @@ public:
                              raw_ostream &OS) override;
 
   void EmitDebugValue(const MCExpr *Value, unsigned Size) const override;
+
+  void emitInlineAsmEnd(const MCSubtargetInfo &StartInfo,
+                        const MCSubtargetInfo *EndInfo) const override;
 };
 
 } // end of namespace

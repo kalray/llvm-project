@@ -108,6 +108,11 @@ void K1CAsmPrinter::EmitDebugValue(const MCExpr *Value, unsigned Size) const {
   AsmPrinter::EmitDebugValue(Value, Size);
 }
 
+void K1CAsmPrinter::emitInlineAsmEnd(const MCSubtargetInfo &StartInfo,
+                                     const MCSubtargetInfo *EndInfo) const {
+  OutStreamer->EmitRawText(StringRef("\t;;\n"));
+}
+
 extern "C" void LLVMInitializeK1CAsmPrinter() {
   RegisterAsmPrinter<K1CAsmPrinter> X(getTheK1CTarget());
 }
