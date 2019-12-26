@@ -173,6 +173,9 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::ADD, MVT::v2i64, Expand);
   setOperationAction(ISD::SUB, MVT::v2i64, Expand);
   setOperationAction(ISD::MUL, MVT::v2i64, Expand);
+  setOperationAction(ISD::OR, MVT::v2i64, Expand);
+  setOperationAction(ISD::AND, MVT::v2i64, Expand);
+  setOperationAction(ISD::XOR, MVT::v2i64, Expand);
 
   for (auto VT : { MVT::i32, MVT::i64 }) {
     setOperationAction(ISD::SMUL_LOHI, VT, Expand);
