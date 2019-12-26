@@ -113,10 +113,9 @@ def SWri : K1C_INSTRUCTION<(outs), (ins AddrRI:$addr, SingleReg:$val), "sw $addr
 def SDri : K1C_INSTRUCTION<(outs), (ins AddrRI:$addr, SingleReg:$val), "sd $addr = $val", [], LSU_AUXR_Y>;
 def SQri : K1C_INSTRUCTION<(outs), (ins AddrRI:$addr, PairedReg:$val), "sq $addr = $val", [], LSU_AUXR_Y>;
 
-// FIXME: for now it's selected the wider itinerary (LSU_AUXW_Y), because
-// the right one can't be determined (LSU_AUXW, LSU_AUXW_X, LSU_AUXW_Y)
-// load instructions with register-immediate addressing mode
-let mayLoad = 1 in
+// FIXME: set load instructions sizes and itineraries to the right ones. For
+// now, the wider ones are selected.
+let mayLoad = 1, Size = 12 in
 {
 def LBSri : K1C_INSTRUCTION<(outs SingleReg:$out), (ins AddrRI:$addr), "lbs $out = $addr", [], LSU_AUXW_Y>;
 def LBZri : K1C_INSTRUCTION<(outs SingleReg:$out), (ins AddrRI:$addr, VariantMod:$var), "lbz$var $out = $addr", [], LSU_AUXW_Y>;
