@@ -17,6 +17,7 @@ class K1CTargetMachine;
 
 class K1CELFTargetObjectFile : public TargetLoweringObjectFileELF {
   void Initialize(MCContext &Ctx, const TargetMachine &TM) override;
+  const MCExpr *getDebugThreadLocalSymbol(const MCSymbol *Sym) const override;
 };
 
 } // end namespace llvm

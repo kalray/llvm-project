@@ -19,33 +19,7 @@
 #include "llvm/MC/MCStreamer.h"
 #include "llvm/Support/TargetRegistry.h"
 
-using namespace llvm;
-
-namespace {
-
-class K1CAsmPrinter : public AsmPrinter {
-public:
-  explicit K1CAsmPrinter(TargetMachine &TM,
-                         std::unique_ptr<MCStreamer> Streamer)
-      : AsmPrinter(TM, std::move(Streamer)) {}
-
-  StringRef getPassName() const override { return "K1C Assembly Printer"; }
-
-  void EmitInstruction(const MachineInstr *MI) override;
-
-  bool emitPseudoExpansionLowering(MCStreamer &OutStreamer,
-                                   const MachineInstr *MI);
-
-  bool PrintAsmOperand(const MachineInstr *MI, unsigned OpNo,
-                       unsigned AsmVariant, const char *ExtraCode,
-                       raw_ostream &OS) override;
-  bool PrintAsmMemoryOperand(const MachineInstr *MI, unsigned OpNo,
-                             unsigned AsmVariant, const char *ExtraCode,
-                             raw_ostream &OS) override;
-};
-
-} // end of namespace
-
+#include "K1CAsmPrinter.h"
 #include "K1CGenMCPseudoLowering.inc"
 
 void K1CAsmPrinter::EmitInstruction(const MachineInstr *MI) {
@@ -118,6 +92,20 @@ bool K1CAsmPrinter::PrintAsmMemoryOperand(const MachineInstr *MI, unsigned OpNo,
   }
 
   return AsmPrinter::PrintAsmMemoryOperand(MI, OpNo, AsmVariant, ExtraCode, OS);
+}
+
+void K1CAsmPrinter::EmitDebugValue(const MCExpr *Value, unsigned Size) const {
+  if (Value->getKind() == llvm::MCBinaryExpr::ExprKind::SymbolRef) {
+    switch (dyn_cast<MCSymbolRefExpr>(Value)->getKind()) {
+      // Do not emit debug value for TLS data
+    case MCSymbolRefExpr::VK_K1C_TLSLE:
+      return;
+    default:
+      break;
+    }
+  }
+
+  AsmPrinter::EmitDebugValue(Value, Size);
 }
 
 extern "C" void LLVMInitializeK1CAsmPrinter() {
