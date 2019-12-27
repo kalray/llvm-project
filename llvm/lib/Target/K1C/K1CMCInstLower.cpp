@@ -24,7 +24,7 @@ static bool LowerK1CMachineOperandToMCOperand(const MachineOperand &MO,
                                               MCOperand &MCOp, AsmPrinter &AP) {
   switch (MO.getType()) {
   default:
-    llvm_unreachable("unknown operand typey");
+    llvm_unreachable("unknown operand type");
     break;
   case MachineOperand::MO_MachineBasicBlock:
     MCOp = MCOperand::createExpr(
