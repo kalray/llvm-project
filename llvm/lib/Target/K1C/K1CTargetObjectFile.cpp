@@ -17,3 +17,9 @@ void K1CELFTargetObjectFile::Initialize(MCContext &Ctx,
   TargetLoweringObjectFileELF::Initialize(Ctx, TM);
   InitializeELF(TM.Options.UseInitArray);
 }
+
+const MCExpr *
+K1CELFTargetObjectFile::getDebugThreadLocalSymbol(const MCSymbol *Sym) const {
+  return MCSymbolRefExpr::create(Sym, MCSymbolRefExpr::VK_K1C_TLSLE,
+                                 getContext());
+}
