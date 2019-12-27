@@ -296,6 +296,8 @@ public:
     VK_AMDGPU_REL32_HI,      // symbol@rel32@hi
     VK_AMDGPU_REL64,         // symbol@rel64
 
+    VK_K1C_TLSLE,
+
     VK_TPREL,
     VK_DTPREL
   };
