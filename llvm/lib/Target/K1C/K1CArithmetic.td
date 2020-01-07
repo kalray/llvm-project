@@ -286,11 +286,6 @@ def : Pat<(sub Wrapped64:$rs1, i64:$rs2), (SBFDd3 SingleReg:$rs2, Wrapped64:$rs1
 // SBFHQ
 def : Pat<(sub v4i16:$rs1, v4i16:$rs2), (SBFHQd0 SingleReg:$rs2, SingleReg:$rs1)>;
 
-def : Pat<(ineg i32:$v), (NEGW SingleReg:$v)>;
-def : Pat<(ineg i64:$v), (NEGD SingleReg:$v)>;
-def : Pat<(sub (v2i32 (bitconvert (i64 0))),v2i32:$v), (NEGWP SingleReg:$v)>;
-def : Pat<(sub (v2i16 (bitconvert (i32 0))),v2i16:$v), (NEGHQ SingleReg:$v)>;
-
 // SBFW
 def : Pat<(sub i32:$rs1, i32:$rs2), (SBFWd0 SingleReg:$rs2, SingleReg:$rs1)>;
 def : Pat<(sub Signed10_32:$rs1, i32:$rs2), (SBFWd1 SingleReg:$rs2, Signed10_32:$rs1)>;

@@ -233,7 +233,12 @@ def : Pat<(fmul v4f32:$rs1, v4f32:$rs2), (FMULWQ PairedReg:$rs1, PairedReg:$rs2,
 def : Pat<(f16 (fpround f32:$val)), (FNARROWWH SingleReg:$val, ROUND_CS, SILENT_OFF)>;
 def : Pat<(f16 (fpround f64:$val)), (FNARROWWH (FNARROWDW SingleReg:$val, ROUND_CS, SILENT_OFF), ROUND_CS, SILENT_OFF)>;
 def : Pat<(f32 (fpround f64:$val)), (FNARROWDW SingleReg:$val, ROUND_CS, SILENT_OFF)>;
-// FNEG, see K1CInstrInfo.td
+// FNEG, see K1CInstrInfo.td for f32, f64, v2f32, v4f16
+def : Pat<(fneg f16:$rs), (FNEGHQ SingleReg:$rs)>;
+def : Pat<(fneg v2f16:$rs), (FNEGHQ SingleReg:$rs)>;
+def : Pat<(vfneg v2f16:$rs), (FNEGHQ SingleReg:$rs)>;
+def : Pat<(vfneg v4f16:$rs), (FNEGHQ SingleReg:$rs)>;
+def : Pat<(vfneg v2f32:$rs), (FNEGWP SingleReg:$rs)>;
 // FSBFC -> TODO
 // FSBF, see K1CInstrInfo.td for immediate patterns
 def : Pat<(fsub f16:$rs1, f16:$rs2), (FSBFHQrr SingleReg:$rs2, SingleReg:$rs1, ROUND_CS, SILENT_OFF)>;
