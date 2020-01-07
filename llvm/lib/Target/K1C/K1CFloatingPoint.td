@@ -120,6 +120,7 @@ def : BITCAST<v2i64, v2f64, PairedReg>;
 def : Pat<(fadd f16:$rs1, f16:$rs2), (FADDHQrr SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
 def : Pat<(fadd f32:$rs1, f32:$rs2), (FADDWrr SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
 def : Pat<(fadd f64:$rs1, f64:$rs2), (FADDDrr SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
+def : Pat<(fadd v2f16:$rs1, v2f16:$rs2), (FADDHQrr SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
 def : Pat<(fadd v4f16:$rs1, v4f16:$rs2), (FADDHQrr SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
 def : Pat<(fadd v2f32:$rs1, v2f32:$rs2), (FADDWPd3 SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
 def : Pat<(fadd v4f32:$rs1, v4f32:$rs2), (FADDWQ PairedReg:$rs1, PairedReg:$rs2, ROUND_CS, SILENT_OFF)>;
@@ -226,6 +227,8 @@ def : Pat<(f64 (sint_to_fp i64:$val)), (FLOATD SingleReg:$val, DEFAULT_FPCONV_SH
 def : Pat<(fmul f16:$rs1, f16:$rs2), (FMULHQrr SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
 def : Pat<(fmul f32:$rs1, f32:$rs2), (FMULWrr SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
 def : Pat<(fmul f64:$rs1, f64:$rs2), (FMULDrr SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
+def : Pat<(fmul v2f16:$rs1, v2f16:$rs2), (FMULHQrr SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
+def : Pat<(fmul v4f16:$rs1, v4f16:$rs2), (FMULHQrr SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
 def : Pat<(fmul v2f32:$rs1, v2f32:$rs2), (FMULWPd3 SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
 def : Pat<(fmul v4f32:$rs1, v4f32:$rs2), (FMULWQ PairedReg:$rs1, PairedReg:$rs2, ROUND_CS, SILENT_OFF)>;
 // FMUL*C -> TODO
@@ -244,6 +247,7 @@ def : Pat<(vfneg v2f32:$rs), (FNEGWP SingleReg:$rs)>;
 def : Pat<(fsub f16:$rs1, f16:$rs2), (FSBFHQrr SingleReg:$rs2, SingleReg:$rs1, ROUND_CS, SILENT_OFF)>;
 def : Pat<(fsub f32:$rs1, f32:$rs2), (FSBFWrr SingleReg:$rs2, SingleReg:$rs1, ROUND_CS, SILENT_OFF)>;
 def : Pat<(fsub f64:$rs1, f64:$rs2), (FSBFDrr SingleReg:$rs2, SingleReg:$rs1, ROUND_CS, SILENT_OFF)>;
+def : Pat<(fsub v2f16:$rs1, v2f16:$rs2), (FSBFHQrr SingleReg:$rs2, SingleReg:$rs1, ROUND_CS, SILENT_OFF)>;
 def : Pat<(fsub v4f16:$rs1, v4f16:$rs2), (FSBFHQrr SingleReg:$rs2, SingleReg:$rs1, ROUND_CS, SILENT_OFF)>;
 def : Pat<(fsub v2f32:$rs1, v2f32:$rs2), (FSBFWPd3 SingleReg:$rs2, SingleReg:$rs1, ROUND_CS, SILENT_OFF)>;
 def : Pat<(fsub v4f32:$rs1, v4f32:$rs2), (FSBFWQ PairedReg:$rs2, PairedReg:$rs1, ROUND_CS, SILENT_OFF)>;
