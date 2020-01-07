@@ -99,6 +99,10 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::MULHU, MVT::v4i16, Custom);
   setOperationAction(ISD::MULHS, MVT::v4i16, Custom);
 
+  setLoadExtAction(ISD::ZEXTLOAD, MVT::v2i16, MVT::v2i8, Expand);
+  setLoadExtAction(ISD::EXTLOAD, MVT::v2i16, MVT::v2i8, Expand);
+  setLoadExtAction(ISD::SEXTLOAD, MVT::v2i16, MVT::v2i8, Expand);
+
   setLoadExtAction(ISD::ZEXTLOAD, MVT::v2i32, MVT::v2i16, Expand);
   setLoadExtAction(ISD::EXTLOAD, MVT::v2i32, MVT::v2i16, Expand);
   setLoadExtAction(ISD::SEXTLOAD, MVT::v2i32, MVT::v2i16, Expand);
@@ -116,7 +120,9 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setTruncStoreAction(MVT::v4i16, MVT::v4i8, Expand);
 
   setOperationAction(ISD::TRUNCATE, MVT::v2i16, Expand);
+  setOperationAction(ISD::TRUNCATE, MVT::v2i32, Expand);
   setOperationAction(ISD::EXTRACT_SUBVECTOR, MVT::v2i16, Expand);
+  setOperationAction(ISD::EXTRACT_SUBVECTOR, MVT::v2f16, Expand);
 
   setOperationAction(ISD::AND, MVT::v8i8, Expand);
   setOperationAction(ISD::OR, MVT::v8i8, Expand);
@@ -124,6 +130,7 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
 
   setOperationAction(ISD::SIGN_EXTEND_INREG, MVT::v2i16, Expand);
   setOperationAction(ISD::SIGN_EXTEND_INREG, MVT::v2i32, Expand);
+  setOperationAction(ISD::SIGN_EXTEND_INREG, MVT::v2i64, Expand);
 
   for (auto VT : {MVT::v2i32, MVT::v4i16, MVT::v2i16, MVT::v2i64, MVT::v4f32,
                   MVT::v2f64}) {
@@ -163,13 +170,15 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::MULHU, MVT::v2i32, Expand);
   setOperationAction(ISD::MULHS, MVT::v2i32, Expand);
 
-  for (auto VT : {MVT::v2f32, MVT::v4f16, MVT::v4f32, MVT::v2f64, MVT::v2i64}) {
+  for (auto VT : {MVT::v2f16, MVT::v2f32, MVT::v4f16, MVT::v4f32, MVT::v2f64,
+                  MVT::v2i64}) {
     setOperationAction(ISD::FDIV, VT, Expand);
     setOperationAction(ISD::VECTOR_SHUFFLE, VT, Expand);
     setOperationAction(ISD::SCALAR_TO_VECTOR, VT, Expand);
   }
   setOperationAction(ISD::FMUL, MVT::v2f64, Expand);
 
+  setOperationAction(ISD::AND, MVT::v2i64, Expand);
   setOperationAction(ISD::ADD, MVT::v2i64, Expand);
   setOperationAction(ISD::SUB, MVT::v2i64, Expand);
   setOperationAction(ISD::MUL, MVT::v2i64, Expand);
@@ -234,19 +243,45 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::SELECT_CC, MVT::v2f64, Expand);
   setOperationAction(ISD::SELECT, MVT::v2f64, Expand);
 
-  setOperationAction(ISD::FP_TO_SINT, MVT::v2i16, Expand);
-  setOperationAction(ISD::FP_TO_SINT, MVT::v2f64, Expand);
-  setOperationAction(ISD::FP_TO_UINT, MVT::v2i16, Expand);
-  setOperationAction(ISD::FP_TO_UINT, MVT::v2f64, Expand);
+  for (auto VT : {MVT::v2i16, MVT::v2i32, MVT::v2i64, MVT::v4i16}) {
+    setOperationAction(ISD::FP_TO_SINT, VT, Expand);
+    setOperationAction(ISD::FP_TO_UINT, VT, Expand);
+    setOperationAction(ISD::SINT_TO_FP, VT, Expand);
+    setOperationAction(ISD::UINT_TO_FP, VT, Expand);
+  }
 
-  setOperationAction(ISD::SINT_TO_FP, MVT::v2i16, Expand);
-  setOperationAction(ISD::SINT_TO_FP, MVT::v2f64, Expand);
-  setOperationAction(ISD::UINT_TO_FP, MVT::v2i16, Expand);
-  setOperationAction(ISD::UINT_TO_FP, MVT::v2f64, Expand);
+  setOperationAction(ISD::FP_ROUND, MVT::v4f16, Expand);
+  setOperationAction(ISD::FP_ROUND, MVT::v2f16, Expand);
+  setOperationAction(ISD::FP_ROUND, MVT::v2f32, Expand);
+  setOperationAction(ISD::FP_EXTEND, MVT::v2f32, Expand);
+  setOperationAction(ISD::FP_EXTEND, MVT::v4f32, Expand);
+  setOperationAction(ISD::FP_EXTEND, MVT::v2f64, Expand);
 
   setTruncStoreAction(MVT::v2i16, MVT::v2i8, Expand);
-  setLoadExtAction(ISD::SEXTLOAD, MVT::v2i16, MVT::v2i8, Expand);
-  setLoadExtAction(ISD::ZEXTLOAD, MVT::v2i16, MVT::v2i8, Expand);
+  setTruncStoreAction(MVT::v2i64, MVT::v2i8, Expand);
+  setTruncStoreAction(MVT::v2i64, MVT::v2i16, Expand);
+  setTruncStoreAction(MVT::v2f32, MVT::v2f16, Expand);
+  setTruncStoreAction(MVT::v2i64, MVT::v2i32, Expand);
+  setTruncStoreAction(MVT::v2f64, MVT::v2f16, Expand);
+  setTruncStoreAction(MVT::v2f64, MVT::v2f32, Expand);
+  setTruncStoreAction(MVT::v4f32, MVT::v4f16, Expand);
+
+  setOperationAction(ISD::SIGN_EXTEND, MVT::v2i32, Expand);
+  setOperationAction(ISD::ZERO_EXTEND, MVT::v2i32, Expand);
+  setOperationAction(ISD::ANY_EXTEND, MVT::v2i32, Expand);
+
+  setOperationAction(ISD::SIGN_EXTEND, MVT::v2i64, Expand);
+  setOperationAction(ISD::ZERO_EXTEND, MVT::v2i64, Expand);
+  setOperationAction(ISD::ANY_EXTEND, MVT::v2i64, Expand);
+
+  setLoadExtAction(ISD::SEXTLOAD, MVT::v2i64, MVT::v2i8, Expand);
+  setLoadExtAction(ISD::ZEXTLOAD, MVT::v2i64, MVT::v2i8, Expand);
+
+  setLoadExtAction(ISD::EXTLOAD, MVT::v2f32, MVT::v2f16, Expand);
+  setLoadExtAction(ISD::EXTLOAD, MVT::v2f64, MVT::v2f16, Expand);
+
+  setLoadExtAction(ISD::EXTLOAD, MVT::v4f32, MVT::v4f16, Expand);
+  setLoadExtAction(ISD::EXTLOAD, MVT::v2f64, MVT::v2f32, Expand);
 
   for (MVT VT : MVT::fp_valuetypes()) {
     setLoadExtAction(ISD::EXTLOAD, VT, MVT::f16, Expand);

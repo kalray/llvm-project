@@ -210,6 +210,7 @@ def : Pat<(add i64:$rs1, Signed37_64:$rs2), (ADDDd2 SingleReg:$rs1, Signed37_64:
 def : Pat<(add i64:$rs1, Wrapped64:$rs2), (ADDDd3 SingleReg:$rs1, Wrapped64:$rs2)>;
 
 // ADDHQ
+def : Pat<(add v2i16:$rs1, v2i16:$rs2), (ADDHQd0 SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(add v4i16:$rs1, v4i16:$rs2), (ADDHQd0 SingleReg:$rs1, SingleReg:$rs2)>;
 
 // ADDW
@@ -285,6 +286,7 @@ def : Pat<(sub Wrapped64:$rs1, i64:$rs2), (SBFDd3 SingleReg:$rs2, Wrapped64:$rs1
 
 // SBFHQ
 def : Pat<(sub v4i16:$rs1, v4i16:$rs2), (SBFHQd0 SingleReg:$rs2, SingleReg:$rs1)>;
+def : Pat<(sub v2i16:$rs1, v2i16:$rs2), (SBFHQd0 SingleReg:$rs2, SingleReg:$rs1)>;
 
 // SBFW
 def : Pat<(sub i32:$rs1, i32:$rs2), (SBFWd0 SingleReg:$rs2, SingleReg:$rs1)>;
@@ -423,6 +425,7 @@ def : Pat<(mul i32:$rs1, i32:$rs2), (MULWd0 SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(mul i32:$rs1, Wrapped32:$rs2), (MULWd1 SingleReg:$rs1, Wrapped32:$rs2)>;
 
 // MULHQ
+def : Pat<(mul v2i16:$rs1, v2i16:$rs2), (MULHQd0 SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(mul v4i16:$rs1, v4i16:$rs2), (MULHQd0 SingleReg:$rs1, SingleReg:$rs2)>;
 
 // MULWP
