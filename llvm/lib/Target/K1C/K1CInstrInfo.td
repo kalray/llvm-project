@@ -2307,7 +2307,7 @@ def FNARROWDWP : ROUNDING2_SILENT2_REGISTERW_REGISTERP_SIMPLE
 def FNEGHQ : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fneghq $a1 = $a2",
-   [(set f16:$a1, (fneg f16:$a2))],
+   [(set v4f16:$a1, (fneg v4f16:$a2))],
    ALU_LITE>;
 
 // 1 insns: ['FABSHQ']
@@ -3597,7 +3597,7 @@ def NOTD : REGISTERW_REGISTERZ_SIMPLE
 def NEGD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "negd $a1 = $a2",
-   [ ],
+   [(set i64:$a1, (ineg i64:$a2))],
    ALU_TINY>;
 
 // 1 insns: ['ABSD']
@@ -3695,7 +3695,7 @@ def NOTW : REGISTERW_REGISTERZ_SIMPLE
 def NEGW : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "negw $a1 = $a2",
-   [ ],
+   [(set i32:$a1, (ineg i32:$a2))],
    ALU_TINY>;
 
 // 1 insns: ['ABSW']
@@ -3709,7 +3709,7 @@ def ABSW : REGISTERW_REGISTERZ_SIMPLE
 def NEGWP : REGISTERW_REGISTERZ_DOUBLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "negwp $a1 = $a2",
-   [ ],
+   [(set v2i32:$a1, (vineg v2i32:$a2))],
    ALU_TINY>;
 
 // 1 insns: ['ABSWP']
@@ -3723,7 +3723,7 @@ def ABSWP : REGISTERW_REGISTERZ_DOUBLE
 def NEGHQ : REGISTERW_REGISTERZ_DOUBLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "neghq $a1 = $a2",
-   [ ],
+   [(set v4i16:$a1, (vineg v4i16:$a2))],
    ALU_TINY>;
 
 // 1 insns: ['ABSHQ']
