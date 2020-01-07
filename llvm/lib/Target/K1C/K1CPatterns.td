@@ -350,3 +350,14 @@ def : Pat<(v2i64 (build_vector i64:$v1, i64:$v2)),
 
 def : Pat<(extractelt (v2i64 PairedReg:$v), 0), (i64 (EXTRACT_SUBREG $v, 1))>;
 def : Pat<(extractelt (v2i64 PairedReg:$v), 1), (i64 (EXTRACT_SUBREG $v, 2))>;
+
+//===----------------------------------------------------------------------===//
+//  Synthetic Instructions - Patterns
+//===----------------------------------------------------------------------===//
+
+// NEGD, see K1CInstrInfo.td
+// NEGHQ, see K1CInstrInfo.td for v4i16
+def : Pat<(vineg v2i16:$v), (NEGHQ SingleReg:$v)>;
+
+// NEGW, see K1CInstrInfo.td
+// NEGWP, see K1CInstrInfo.td
