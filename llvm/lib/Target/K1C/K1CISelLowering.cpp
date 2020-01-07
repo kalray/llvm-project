@@ -219,7 +219,6 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::ConstantFP, VT, Legal);
 
     setOperationAction(ISD::FABS, VT, Legal);
-    setOperationAction(ISD::FNEG, VT, Legal);
     setOperationAction(ISD::BR_CC, VT, Expand);
 
     setOperationAction(ISD::FDIV, VT, VT == MVT::f16 ? Promote : Expand);
