@@ -247,10 +247,21 @@ bool K1CHardwareLoops::ParseLoop(MachineLoop *L, int64_t &EndVal, int &Cond,
       } // REG-IMM case
       // REG-REG case
       else if (I->getOperand(1).isReg() && I->getOperand(2).isReg()) {
+
+        int64_t BumpOp1 = 0;
+        int64_t BumpOp2 = 0;
+        int64_t StartValOp1 = 0;
+        int64_t StartValOp2 = 0;
+        bool BacktraceOp1 = BackTraceRegValue(L, I, I->getOperand(1).getReg(),
+                                              StartValOp1, BumpOp1);
+        bool BacktraceOp2 = BackTraceRegValue(L, I, I->getOperand(2).getReg(),
+                                              StartValOp2, BumpOp2);
+
         // If the register's value could not be traced, then the loop can not
         // be parsed
-        if (BackTraceRegValue(L, I, I->getOperand(1).getReg(), StartVal,
-                              Bump)) {
+        if (BacktraceOp1 && BumpOp2 == 0) {
+          Bump = BumpOp1;
+          StartVal = StartValOp1;
 
           // This line should be removed when cases for Bump != 1 and StartVal
           // != 1 are implemented
@@ -265,8 +276,9 @@ bool K1CHardwareLoops::ParseLoop(MachineLoop *L, int64_t &EndVal, int &Cond,
         } else {
           // If the register's value could not be traced, then the loop can not
           // be parsed
-          if (BackTraceRegValue(L, I, I->getOperand(2).getReg(), StartVal,
-                                Bump)) {
+          if (BacktraceOp2 && BumpOp1 == 0) {
+            Bump = BumpOp2;
+            StartVal = StartValOp2;
 
             // This line should be removed when cases for Bump != 1 and StartVal
             // != 1 are implemented
