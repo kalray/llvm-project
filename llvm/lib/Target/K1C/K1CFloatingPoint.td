@@ -260,14 +260,17 @@ def : Pat<(f64 (fpextend f32:$val)), (FWIDENLWD SingleReg:$val, SILENT_OFF)>;
 def : Pat<(f64 (fpextend f16:$val)), (FWIDENLWD (FWIDENLHW SingleReg:$val, SILENT_OFF), SILENT_OFF)>;
 def : Pat<(f32 (fpextend f16:$val)), (FWIDENLHW SingleReg:$val, SILENT_OFF)>;
 
+// v2f32
 def : Pat<(extractelt (v2f32 SingleReg:$v), 0), (COPY SingleReg:$v)>;
 def : Pat<(extractelt (v2f32 SingleReg:$v), 1), (SRADd1 SingleReg :$v, (i64 32))>;
 
+// v4f32
 def : Pat<(extractelt (v4f32 PairedReg:$v), 0), (f32 (EXTRACT_SUBREG $v, 1))>;
 def : Pat<(extractelt (v4f32 PairedReg:$v), 1), (SRADd1 (f32 (EXTRACT_SUBREG $v, 1)), (i64 32))>;
 def : Pat<(extractelt (v4f32 PairedReg:$v), 2), (f32 (EXTRACT_SUBREG $v, 2))>;
 def : Pat<(extractelt (v4f32 PairedReg:$v), 3), (SRADd1 (f32 (EXTRACT_SUBREG $v, 2)), (i64 32))>;
 
+// v2f64
 def : Pat<(v2f64 (build_vector f64:$v1, f64:$v2)),
   (INSERT_SUBREG
     (INSERT_SUBREG (v2f64 (IMPLICIT_DEF)), SingleReg:$v1, 1),
@@ -277,6 +280,11 @@ def : Pat<(v2f64 (build_vector f64:$v1, f64:$v2)),
 def : Pat<(extractelt (v2f64 PairedReg:$v), 0), (f64 (EXTRACT_SUBREG $v, 1))>;
 def : Pat<(extractelt (v2f64 PairedReg:$v), 1), (f64 (EXTRACT_SUBREG $v, 2))>;
 
+// v2f16
+def : Pat<(extractelt v2f16:$v, 0), (ZXHD SingleReg:$v)>;
+def : Pat<(extractelt v2f16:$v, 1), (SRLDd1 SingleReg:$v, (i64 16))>;
+
+// v4f16
 def : Pat<(extractelt (v4f16 SingleReg:$v), 0), (EXTFZ SingleReg:$v, 15, 0)>;
 def : Pat<(extractelt (v4f16 SingleReg:$v), 1), (EXTFZ SingleReg:$v, 31, 16)>;
 def : Pat<(extractelt (v4f16 SingleReg:$v), 2), (EXTFZ SingleReg:$v, 47, 32)>;
