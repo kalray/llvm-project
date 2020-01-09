@@ -128,6 +128,9 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::OR, MVT::v8i8, Expand);
   setOperationAction(ISD::XOR, MVT::v8i8, Expand);
 
+  setOperationAction(ISD::SIGN_EXTEND, MVT::v2i64, Expand);
+  setOperationAction(ISD::ANY_EXTEND, MVT::v2i64, Expand);
+
   setOperationAction(ISD::SIGN_EXTEND_INREG, MVT::v2i16, Expand);
   setOperationAction(ISD::SIGN_EXTEND_INREG, MVT::v2i32, Expand);
   setOperationAction(ISD::SIGN_EXTEND_INREG, MVT::v2i64, Expand);
@@ -166,7 +169,9 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::EXTRACT_SUBVECTOR, MVT::v2f32, Expand);
 
   setOperationAction(ISD::MULHU, MVT::v2i32, Expand);
+  setOperationAction(ISD::MULHU, MVT::v2i64, Expand);
   setOperationAction(ISD::MULHS, MVT::v2i32, Expand);
+  setOperationAction(ISD::MULHS, MVT::v2i64, Expand);
 
   for (auto VT : {MVT::v2f16, MVT::v2f32, MVT::v4f16, MVT::v4f32, MVT::v2f64,
                   MVT::v2i64}) {
@@ -183,6 +188,9 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::OR, MVT::v2i64, Expand);
   setOperationAction(ISD::AND, MVT::v2i64, Expand);
   setOperationAction(ISD::XOR, MVT::v2i64, Expand);
+
+  setOperationAction(ISD::SMUL_LOHI, MVT::v2i64, Expand);
+  setOperationAction(ISD::UMUL_LOHI, MVT::v2i64, Expand);
 
   for (auto VT : { MVT::i32, MVT::i64 }) {
     setOperationAction(ISD::SMUL_LOHI, VT, Expand);
@@ -1059,16 +1067,10 @@ static unsigned selectExtend(unsigned BitSize) {
 }
 
 static uint64_t selectMask(unsigned Size) {
-  switch (Size) {
-  default:
-    llvm_unreachable("Unsupported mask for this size!");
-  case 8:
-    return 0xff;
-  case 16:
-    return 0xffff;
-  case 32:
-    return 0xffffffff;
-  }
+  if (4 < Size && Size <= 64 && Size % 2 == 0)
+    return Size == 64 ? UINT64_MAX : (1L << Size) - 1L;
+
+  llvm_unreachable("Unsupported size, cannot select mask!");
 }
 
 static SDValue getINSF(const SDLoc &DL, const SDValue &Vec, const SDValue &Val,
