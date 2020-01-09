@@ -1089,6 +1089,94 @@ static bool expandRoundingInOutInstr(unsigned int OpCode,
   return true;
 }
 
+static bool expandStore(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
+                        MachineBasicBlock::iterator MBBI) {
+  MachineInstr &MI = *MBBI;
+  DebugLoc DL = MI.getDebugLoc();
+
+  int64_t offset = MI.getOperand(0).getImm();
+  unsigned base = MI.getOperand(1).getReg();
+  unsigned val = MI.getOperand(2).getReg();
+
+  unsigned OpCode;
+  switch (MBBI->getOpcode()) {
+  case K1C::SBri:
+    OpCode = GetImmOpCode(offset, K1C::SBd0, K1C::SBd1, K1C::SBd2);
+    break;
+  case K1C::SHri:
+    OpCode = GetImmOpCode(offset, K1C::SHd0, K1C::SHd1, K1C::SHd2);
+    break;
+  case K1C::SWri:
+    OpCode = GetImmOpCode(offset, K1C::SWd0, K1C::SWd1, K1C::SWd2);
+    break;
+  case K1C::SDri:
+    OpCode = GetImmOpCode(offset, K1C::SDd0, K1C::SDd1, K1C::SDd2);
+    break;
+  case K1C::SQri:
+    OpCode = GetImmOpCode(offset, K1C::SQd0, K1C::SQd1, K1C::SQd2);
+    break;
+  case K1C::SOri:
+    OpCode = GetImmOpCode(offset, K1C::SOd0, K1C::SOd1, K1C::SOd2);
+    break;
+  }
+  BuildMI(MBB, MBBI, DL, TII->get(OpCode))
+      .addImm(offset)
+      .addReg(base)
+      .addReg(val);
+
+  MI.eraseFromParent();
+  return true;
+}
+
+static bool expandLoad(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
+                       MachineBasicBlock::iterator MBBI) {
+  MachineInstr &MI = *MBBI;
+  DebugLoc DL = MI.getDebugLoc();
+
+  unsigned outputReg = MI.getOperand(0).getReg();
+  int64_t offset = MI.getOperand(1).getImm();
+  unsigned base = MI.getOperand(2).getReg();
+  int64_t variant = MI.getOperand(3).getImm();
+
+  unsigned OpCode;
+  switch (MBBI->getOpcode()) {
+  case K1C::LBSri:
+    OpCode = GetImmOpCode(offset, K1C::LBSd0, K1C::LBSd1, K1C::LBSd2);
+    break;
+  case K1C::LBZri:
+    OpCode = GetImmOpCode(offset, K1C::LBZd0, K1C::LBZd1, K1C::LBZd2);
+    break;
+  case K1C::LHSri:
+    OpCode = GetImmOpCode(offset, K1C::LHSd0, K1C::LHSd1, K1C::LHSd2);
+    break;
+  case K1C::LHZri:
+    OpCode = GetImmOpCode(offset, K1C::LHZd0, K1C::LHZd1, K1C::LHZd2);
+    break;
+  case K1C::LWSri:
+    OpCode = GetImmOpCode(offset, K1C::LWSd0, K1C::LWSd1, K1C::LWSd2);
+    break;
+  case K1C::LWZri:
+    OpCode = GetImmOpCode(offset, K1C::LWZd0, K1C::LWZd1, K1C::LWZd2);
+    break;
+  case K1C::LDri:
+    OpCode = GetImmOpCode(offset, K1C::LDd0, K1C::LDd1, K1C::LDd2);
+    break;
+  case K1C::LQri:
+    OpCode = GetImmOpCode(offset, K1C::LQd0, K1C::LQd1, K1C::LQd2);
+    break;
+  case K1C::LOri:
+    OpCode = GetImmOpCode(offset, K1C::LOd0, K1C::LOd1, K1C::LOd2);
+    break;
+  }
+  BuildMI(MBB, MBBI, DL, TII->get(OpCode), outputReg)
+      .addImm(offset)
+      .addReg(base)
+      .addImm(variant);
+
+  MI.eraseFromParent();
+  return true;
+}
+
 bool K1CExpandPseudo::expandMI(MachineBasicBlock &MBB,
                                MachineBasicBlock::iterator MBBI,
                                MachineBasicBlock::iterator &NextMBBI) {
@@ -1208,6 +1296,25 @@ bool K1CExpandPseudo::expandMI(MachineBasicBlock &MBB,
     return true;
   case K1C::FMM2SWQ_Instr:
     expandRoundingInOutInstr(K1C::FMM2SWQ, TII, MBB, MBBI);
+    return true;
+  case K1C::SBri:
+  case K1C::SHri:
+  case K1C::SWri:
+  case K1C::SDri:
+  case K1C::SQri:
+  case K1C::SOri:
+    expandStore(TII, MBB, MBBI);
+    return true;
+  case K1C::LBSri:
+  case K1C::LBZri:
+  case K1C::LHSri:
+  case K1C::LHZri:
+  case K1C::LWSri:
+  case K1C::LWZri:
+  case K1C::LDri:
+  case K1C::LQri:
+  case K1C::LOri:
+    expandLoad(TII, MBB, MBBI);
     return true;
 
   default:
