@@ -104,28 +104,29 @@ def AddrRI : Operand<iPTR>, ComplexPattern<iPTR, 2, "SelectAddrRI", [frameindex]
   let MIOperandInfo = (ops i64imm:$offset, SingleReg:$baseReg );
 }
 
-// FIXME: for now it's selected the wider itinerary (LSU_AUXR_Y), because
-// the right one can't be determined (LSU_AUXR, LSU_AUXR_X, LSU_AUXR_Y)
-// store instructions with register-immediate addressing mode
-def SBri : K1C_INSTRUCTION<(outs), (ins AddrRI:$addr, SingleReg:$val), "sb $addr = $val", [], LSU_AUXR_Y>;
-def SHri : K1C_INSTRUCTION<(outs), (ins AddrRI:$addr, SingleReg:$val), "sh $addr = $val", [], LSU_AUXR_Y>;
-def SWri : K1C_INSTRUCTION<(outs), (ins AddrRI:$addr, SingleReg:$val), "sw $addr = $val", [], LSU_AUXR_Y>;
-def SDri : K1C_INSTRUCTION<(outs), (ins AddrRI:$addr, SingleReg:$val), "sd $addr = $val", [], LSU_AUXR_Y>;
-def SQri : K1C_INSTRUCTION<(outs), (ins AddrRI:$addr, PairedReg:$val), "sq $addr = $val", [], LSU_AUXR_Y>;
-
-// FIXME: set load instructions sizes and itineraries to the right ones. For
-// now, the wider ones are selected.
-let mayLoad = 1, Size = 12 in
+let mayStore = 1 in
 {
-def LBSri : K1C_INSTRUCTION<(outs SingleReg:$out), (ins AddrRI:$addr), "lbs $out = $addr", [], LSU_AUXW_Y>;
-def LBZri : K1C_INSTRUCTION<(outs SingleReg:$out), (ins AddrRI:$addr, VariantMod:$var), "lbz$var $out = $addr", [], LSU_AUXW_Y>;
-def LHSri : K1C_INSTRUCTION<(outs SingleReg:$out), (ins AddrRI:$addr), "lhs $out = $addr", [], LSU_AUXW_Y>;
-def LHZri : K1C_INSTRUCTION<(outs SingleReg:$out), (ins AddrRI:$addr, VariantMod:$var), "lhz$var $out = $addr", [], LSU_AUXW_Y>;
-def LWSri : K1C_INSTRUCTION<(outs SingleReg:$out), (ins AddrRI:$addr), "lws $out = $addr", [], LSU_AUXW_Y>;
-def LWZri : K1C_INSTRUCTION<(outs SingleReg:$out), (ins AddrRI:$addr, VariantMod:$var), "lwz$var $out = $addr", [], LSU_AUXW_Y>;
-def LDri : K1C_INSTRUCTION<(outs SingleReg:$out), (ins AddrRI:$addr, VariantMod:$var), "ld$var $out = $addr", [], LSU_AUXW_Y>;
-def LQri : K1C_INSTRUCTION<(outs PairedReg:$out), (ins AddrRI:$addr, VariantMod:$var), "lq$var $out = $addr", [], LSU_AUXW_Y>;
+def SBri : K1C_PseudoInstr<(outs), (ins AddrRI:$addr, SingleReg:$val), []>;
+def SHri : K1C_PseudoInstr<(outs), (ins AddrRI:$addr, SingleReg:$val), []>;
+def SWri : K1C_PseudoInstr<(outs), (ins AddrRI:$addr, SingleReg:$val), []>;
+def SDri : K1C_PseudoInstr<(outs), (ins AddrRI:$addr, SingleReg:$val), []>;
+def SQri : K1C_PseudoInstr<(outs), (ins AddrRI:$addr, PairedReg:$val), []>;
+def SOri : K1C_PseudoInstr<(outs), (ins AddrRI:$addr, PairedReg:$val), []>;
 }
+
+let mayLoad = 1 in
+{
+def LBSri : K1C_PseudoInstr<(outs SingleReg:$out), (ins AddrRI:$addr, VariantMod:$var), []>;
+def LBZri : K1C_PseudoInstr<(outs SingleReg:$out), (ins AddrRI:$addr, VariantMod:$var), []>;
+def LHSri : K1C_PseudoInstr<(outs SingleReg:$out), (ins AddrRI:$addr, VariantMod:$var), []>;
+def LHZri : K1C_PseudoInstr<(outs SingleReg:$out), (ins AddrRI:$addr, VariantMod:$var), []>;
+def LWSri : K1C_PseudoInstr<(outs SingleReg:$out), (ins AddrRI:$addr, VariantMod:$var), []>;
+def LWZri : K1C_PseudoInstr<(outs SingleReg:$out), (ins AddrRI:$addr, VariantMod:$var), []>;
+def LDri : K1C_PseudoInstr<(outs SingleReg:$out), (ins AddrRI:$addr, VariantMod:$var), []>;
+def LQri : K1C_PseudoInstr<(outs PairedReg:$out), (ins AddrRI:$addr, VariantMod:$var), []>;
+def LOri : K1C_PseudoInstr<(outs PairedReg:$out), (ins AddrRI:$addr, VariantMod:$var), []>;
+}
+
 
 // Store patterns
 def : Pat<(store (i8 SingleReg:$val), AddrRI:$addr), (SBri AddrRI:$addr,SingleReg:$val)>;
@@ -164,43 +165,43 @@ def loadv2f16 : PatFrag<(ops node:$ptr), (v2f16 (load node:$ptr))>;
 def loadv2i64 : PatFrag<(ops node:$ptr), (v2i64 (load node:$ptr))>;
 
 // load i1 in i32
-def : Pat<(i32 (sextloadi1 AddrRI:$addr)), (LBSri AddrRI:$addr)>;
+def : Pat<(i32 (sextloadi1 AddrRI:$addr)), (LBSri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(i32 (zextloadi1 AddrRI:$addr)), (LBZri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(i32 (extloadi1 AddrRI:$addr)), (LBZri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(i32 (extloadi1 (iPTR SingleReg:$rs2))), (LBZd0 (i64 0), SingleReg:$rs2, (i8 0))>;
 
 // load i8 in i32
-def : Pat<(i32 (sextloadi8 AddrRI:$addr)), (LBSri AddrRI:$addr)>;
+def : Pat<(i32 (sextloadi8 AddrRI:$addr)), (LBSri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(i32 (zextloadi8 AddrRI:$addr)), (LBZri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(i32 (extloadi8 AddrRI:$addr)), (LBZri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(i32 (extloadi8 (iPTR SingleReg:$rs2))), (LBZd0 (i64 0), SingleReg:$rs2, (i8 0))>;
 
 // load i16 in i32
-def : Pat<(i32 (sextloadi16 AddrRI:$addr)), (LHSri AddrRI:$addr)>;
+def : Pat<(i32 (sextloadi16 AddrRI:$addr)), (LHSri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(i32 (zextloadi16 AddrRI:$addr)), (LHZri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(i32 (extloadi16 AddrRI:$addr)), (LHZri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(i32 (extloadi16 (iPTR SingleReg:$rs2))), (LHZd0 (i64 0), SingleReg:$rs2, (i8 0))>;
 
 // load i1 in i64
-def : Pat<(i64 (sextloadi1 AddrRI:$addr)), (LBSri AddrRI:$addr)>;
+def : Pat<(i64 (sextloadi1 AddrRI:$addr)), (LBSri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(i64 (zextloadi1 AddrRI:$addr)), (LBZri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(i64 (extloadi1 AddrRI:$addr)), (LBZri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(i64 (extloadi1 (iPTR SingleReg:$rs2))), (LBZd0 (i64 0), SingleReg:$rs2, (i8 0))>;
 
 // load i8 in i64
-def : Pat<(i64 (sextloadi8 AddrRI:$addr)), (LBSri AddrRI:$addr)>;
+def : Pat<(i64 (sextloadi8 AddrRI:$addr)), (LBSri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(i64 (zextloadi8 AddrRI:$addr)), (LBZri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(i64 (extloadi8 AddrRI:$addr)), (LBZri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(i64 (extloadi8 (iPTR SingleReg:$rs2))), (LBZd0 (i64 0), SingleReg:$rs2, (i8 0))>;
 
 // load i16 in i64
-def : Pat<(i64 (sextloadi16 AddrRI:$addr)), (LHSri AddrRI:$addr)>;
+def : Pat<(i64 (sextloadi16 AddrRI:$addr)), (LHSri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(i64 (zextloadi16 AddrRI:$addr)), (LHZri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(i64 (extloadi16 AddrRI:$addr)), (LHZri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(i64 (extloadi16 (iPTR SingleReg:$rs2))), (LHZd0 (i64 0), SingleReg:$rs2, (i8 0))>;
 
 // load i32 in i64
-def : Pat<(i64 (sextloadi32 AddrRI:$addr)), (LWSri AddrRI:$addr)>;
+def : Pat<(i64 (sextloadi32 AddrRI:$addr)), (LWSri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(i64 (zextloadi32 AddrRI:$addr)), (LWZri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(i64 (extloadi32 AddrRI:$addr)), (LWZri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(i64 (extloadi32 (iPTR SingleReg:$rs2))), (LWZd0 (i64 0), SingleReg:$rs2, (i8 0))>;
