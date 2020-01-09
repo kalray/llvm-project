@@ -411,13 +411,14 @@ SDValue K1CTargetLowering::LowerFormalArguments(
     assert(VA.isMemLoc());
 
     unsigned Offset = VA.getLocMemOffset();
-    int FI = MF.getFrameInfo().CreateFixedObject(8, Offset, false);
+    unsigned StoreSize = VA.getValVT().getStoreSize();
+    int FI = MF.getFrameInfo().CreateFixedObject(StoreSize, Offset, false);
     InVals.push_back(
         DAG.getLoad(VA.getValVT(), DL, Chain,
                     DAG.getFrameIndex(FI, getPointerTy(MF.getDataLayout())),
                     MachinePointerInfo::getFixedStack(MF, FI)));
 
-    MemArgsSaveSize += 8;
+    MemArgsSaveSize += StoreSize;
   }
 
   K1CMachineFunctionInfo *K1CFI = MF.getInfo<K1CMachineFunctionInfo>();
