@@ -110,26 +110,26 @@ void K1CInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
     DL = I->getDebugLoc();
 
   if (K1C::SingleRegRegClass.hasSubClassEq(RC)) {
-    BuildMI(MBB, I, DL, get(K1C::LDd0), DstReg)
+    BuildMI(MBB, I, DL, get(K1C::LDri), DstReg)
         .addImm(0)
         .addFrameIndex(FI)
         .addImm(0); // variantMod
   }
   if (K1C::PairedRegRegClass.hasSubClassEq(RC)) {
-    BuildMI(MBB, I, DL, get(K1C::LQd0), DstReg)
+    BuildMI(MBB, I, DL, get(K1C::LQri), DstReg)
         .addImm(0)
         .addFrameIndex(FI)
         .addImm(0); // variantMod
   }
   if (K1C::QuadRegRegClass.hasSubClassEq(RC)) {
-    BuildMI(MBB, I, DL, get(K1C::LOd0), DstReg)
+    BuildMI(MBB, I, DL, get(K1C::LOri), DstReg)
         .addImm(0)
         .addFrameIndex(FI)
         .addImm(0); // variantMod
   }
   if (K1C::OnlyraRegRegClass.hasSubClassEq(RC)) {
     unsigned ScratchReg = findScratchRegister(MBB, true);
-    BuildMI(MBB, I, DL, get(K1C::LDd0), ScratchReg)
+    BuildMI(MBB, I, DL, get(K1C::LDri), ScratchReg)
         .addImm(0)
         .addFrameIndex(FI)
         .addImm(0); // variantMod
@@ -148,21 +148,21 @@ void K1CInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
     DL = I->getDebugLoc();
 
   if (K1C::SingleRegRegClass.hasSubClassEq(RC)) {
-    BuildMI(MBB, I, DL, get(K1C::SDd0))
+    BuildMI(MBB, I, DL, get(K1C::SDri))
         .addImm(0)
         .addFrameIndex(FI)
         .addReg(SrcReg, getKillRegState(IsKill))
         .setMIFlags(MachineInstr::FrameSetup);
   }
   if (K1C::PairedRegRegClass.hasSubClassEq(RC)) {
-    BuildMI(MBB, I, DL, get(K1C::SQd0))
+    BuildMI(MBB, I, DL, get(K1C::SQri))
         .addImm(0)
         .addFrameIndex(FI)
         .addReg(SrcReg, getKillRegState(IsKill))
         .setMIFlags(MachineInstr::FrameSetup);
   }
   if (K1C::QuadRegRegClass.hasSubClassEq(RC)) {
-    BuildMI(MBB, I, DL, get(K1C::SOd0))
+    BuildMI(MBB, I, DL, get(K1C::SOri))
         .addImm(0)
         .addFrameIndex(FI)
         .addReg(SrcReg, getKillRegState(IsKill))
@@ -175,7 +175,7 @@ void K1CInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
 
     // set flag to mark that $ra is saved with this instruction
     // at frame index elimination cfi instruction will be added
-    BuildMI(MBB, I, DL, get(K1C::SDd0))
+    BuildMI(MBB, I, DL, get(K1C::SDri))
         .addImm(0)
         .addFrameIndex(FI)
         .addReg(ScratchReg, RegState::Kill)
