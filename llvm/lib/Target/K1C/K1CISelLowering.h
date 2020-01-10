@@ -85,6 +85,7 @@ private:
   SDValue lowerVASTART(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerVAARG(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerFRAMEADDR(SDValue Op, SelectionDAG &DAG) const;
+  SDValue lowerFSUB(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerSELECT(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerMULHV4I16(SDValue Op, SelectionDAG &DAG, bool Signed) const;
   SDValue lowerBlockAddress(SDValue Op, SelectionDAG &DAG) const;
