@@ -236,6 +236,8 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::FABS, VT, Legal);
     setOperationAction(ISD::BR_CC, VT, Expand);
 
+    setOperationAction(ISD::FSUB, VT, Custom);
+
     setOperationAction(ISD::FDIV, VT, VT == MVT::f16 ? Promote : Expand);
     setOperationAction(ISD::FREM, VT, VT == MVT::f16 ? Promote : Expand);
     setOperationAction(ISD::FSQRT, VT, VT == MVT::f16 ? Promote : Expand);
@@ -660,6 +662,8 @@ SDValue K1CTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
     return lowerVAARG(Op, DAG);
   case ISD::FRAMEADDR:
     return lowerFRAMEADDR(Op, DAG);
+  case ISD::FSUB:
+    return lowerFSUB(Op, DAG);
   case ISD::SELECT:
     return lowerSELECT(Op, DAG);
   case ISD::MULHS:
@@ -865,6 +869,25 @@ SDValue K1CTargetLowering::lowerFRAMEADDR(SDValue Op, SelectionDAG &DAG) const {
         DAG.getLoad(VT, DL, DAG.getEntryNode(), Ptr, MachinePointerInfo());
   }
   return FrameAddr;
+}
+
+SDValue K1CTargetLowering::lowerFSUB(SDValue Op, SelectionDAG &DAG) const {
+  switch (Op.getSimpleValueType().SimpleTy) {
+  default:
+    return Op;
+  case MVT::f16:
+  case MVT::f32:
+  case MVT::f64:
+    if (auto *ConstFPNode = dyn_cast<ConstantFPSDNode>(Op.getOperand(0))) {
+      uint64_t Val = ConstFPNode->getValueAPF().bitcastToAPInt().getZExtValue();
+
+      if (Val == 0)
+        return DAG.getNode(ISD::FNEG, SDLoc(Op), Op.getValueType(),
+                           Op.getOperand(1));
+    }
+
+    return Op;
+  }
 }
 
 SDValue K1CTargetLowering::lowerSELECT(SDValue Op, SelectionDAG &DAG) const {
