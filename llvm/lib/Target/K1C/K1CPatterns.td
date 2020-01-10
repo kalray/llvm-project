@@ -34,6 +34,12 @@ def SelectCC : SDNode<"K1CISD::SELECT_CC", SDT_K1CSelectCC, []>;
 
 def Tail : SDNode <"K1CISD::TAIL", SDTK1CTail, [SDNPHasChain, SDNPOptInGlue, SDNPOutGlue, SDNPVariadic]>;
 
+def GetSystemReg : SDNode <"K1CISD::GetSystemReg", SDTypeProfile<1, 1, [SDTCisSameAs<0, 1>]>>;
+def GETSYSTEMREG : REGISTERZ_SYSTEMS2_SIMPLE
+  <(outs SingleReg:$dst), (ins SystemReg:$sr),
+   "get $dst = $sr",
+   [(set (i64 SingleReg:$dst), (GetSystemReg SystemReg:$sr))]>;
+
 //
 // Function return
 //

@@ -329,6 +329,8 @@ const char *K1CTargetLowering::getTargetNodeName(unsigned Opcode) const {
     return "K1C::PICPCRelativeGOTAddr";
   case K1CISD::TAIL:
     return "K1C::TAIL";
+  case K1CISD::GetSystemReg:
+    return "K1C::GetSystemReg";
   default:
     return NULL;
   }
@@ -652,6 +654,8 @@ SDValue K1CTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
   switch (Op.getOpcode()) {
   default:
     report_fatal_error("unimplemented operand");
+  case ISD::RETURNADDR:
+    return lowerRETURNADDR(Op, DAG);
   case ISD::GlobalAddress:
     return lowerGlobalAddress(Op, DAG);
   case ISD::GlobalTLSAddress:
@@ -700,6 +704,24 @@ Instruction *K1CTargetLowering::emitTrailingFence(IRBuilder<> &Builder,
     return Builder.CreateFence(Ord);
 
   return nullptr;
+}
+
+SDValue K1CTargetLowering::lowerRETURNADDR(SDValue Op,
+                                           SelectionDAG &DAG) const {
+  auto VT = getPointerTy(DAG.getDataLayout());
+  SDLoc DL(Op);
+
+  // This node takes one operand, the depth of the return address to return. A
+  // depth of zero corresponds to the current function's return address, a depth
+  // of one to the parent's return address, and so on.
+  unsigned Depth = cast<ConstantSDNode>(Op.getOperand(0))->getZExtValue();
+  if (Depth) {
+    // Depth > 0 not supported yet
+    report_fatal_error("Unsupported Depth for lowerRETURNADDR");
+  }
+
+  SDValue RAReg = DAG.getRegister(K1C::RA, VT);
+  return DAG.getNode(K1CISD::GetSystemReg, DL, VT, RAReg);
 }
 
 SDValue K1CTargetLowering::lowerGlobalAddress(SDValue Op,

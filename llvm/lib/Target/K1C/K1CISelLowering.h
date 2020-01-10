@@ -33,6 +33,7 @@ enum NodeType : unsigned {
   WRAPPER,
   SELECT_CC,
   TAIL,
+  GetSystemReg,
   PICInternIndirection,
   PICExternIndirection,
   PICPCRelativeGOTAddr,
@@ -80,6 +81,7 @@ private:
   EVT getSetCCResultType(const DataLayout &DL, LLVMContext &Context,
                          EVT VT) const override;
 
+  SDValue lowerRETURNADDR(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerGlobalAddress(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerGlobalTLSAddress(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerVASTART(SDValue Op, SelectionDAG &DAG) const;
