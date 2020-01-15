@@ -67,7 +67,7 @@ void K1CRegisterInfo::eliminateFrameIndex(MachineBasicBlock::iterator II,
   int Offset;
   // Check if the previous operand is immediate, if true replace it with the
   // computed value
-  if (MI.getOperand(FIOperandNum - 1).isImm()) {
+  if (FIOperandNum > 0 && MI.getOperand(FIOperandNum - 1).isImm()) {
     Offset =
         getFrameLowering(MF)->getFrameIndexReference(MF, FrameIndex, FrameReg) +
         MI.getOperand(FIOperandNum - 1).getImm();
