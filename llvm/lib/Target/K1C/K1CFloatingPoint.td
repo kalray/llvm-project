@@ -113,6 +113,8 @@ def : BITCAST<v2i64, v4f32, PairedReg>;
 def : BITCAST<v4f32, v2i64, PairedReg>;
 def : BITCAST<v2f64, v2i64, PairedReg>;
 def : BITCAST<v2i64, v2f64, PairedReg>;
+def : BITCAST<v4f32, v4i32, PairedReg>;
+def : BITCAST<v4i32, v4f32, PairedReg>;
 
 // FPU Insns
 

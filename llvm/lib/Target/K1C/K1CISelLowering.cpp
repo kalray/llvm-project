@@ -65,6 +65,7 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   addRegisterClass(MVT::v4i16, &K1C::SingleRegRegClass);
   addRegisterClass(MVT::v2i16, &K1C::SingleRegRegClass);
   addRegisterClass(MVT::v2i64, &K1C::PairedRegRegClass);
+  addRegisterClass(MVT::v4i32, &K1C::PairedRegRegClass);
 
   addRegisterClass(MVT::f16, &K1C::SingleRegRegClass);
   addRegisterClass(MVT::f32, &K1C::SingleRegRegClass);
@@ -123,6 +124,7 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
 
   setOperationAction(ISD::TRUNCATE, MVT::v2i16, Expand);
   setOperationAction(ISD::TRUNCATE, MVT::v2i32, Expand);
+  setOperationAction(ISD::TRUNCATE, MVT::v4i16, Expand);
   setOperationAction(ISD::EXTRACT_SUBVECTOR, MVT::v2i16, Expand);
   setOperationAction(ISD::EXTRACT_SUBVECTOR, MVT::v2f16, Expand);
 
@@ -138,8 +140,8 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::SIGN_EXTEND_INREG, MVT::v2i32, Expand);
   setOperationAction(ISD::SIGN_EXTEND_INREG, MVT::v2i64, Expand);
 
-  for (auto VT : {MVT::v2i32, MVT::v4i16, MVT::v2i16, MVT::v2i64, MVT::v4f32,
-                  MVT::v2f64}) {
+  for (auto VT : {MVT::v2i32, MVT::v4i16, MVT::v2i16, MVT::v2i64, MVT::v4i32,
+                  MVT::v4f32, MVT::v2f64}) {
     setOperationAction(ISD::UDIV, VT, Expand);
     setOperationAction(ISD::SDIV, VT, Expand);
     setOperationAction(ISD::VECTOR_SHUFFLE, VT, Expand);
@@ -158,23 +160,26 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::SRA, VT, Expand);
   }
 
-  for (auto VT : {MVT::v2i16, MVT::v4i16, MVT::v2i32, MVT::v2f16, MVT::v4f16,
-                  MVT::v2f32, MVT::v4f32}) {
+  for (auto VT : {MVT::v2i16, MVT::v4i16, MVT::v2i32, MVT::v4i32, MVT::v2f16,
+                  MVT::v4f16, MVT::v2f32, MVT::v4f32}) {
     setOperationAction(ISD::BUILD_VECTOR, VT, Custom);
   }
 
-  for (auto VT : {MVT::v2i16, MVT::v4i16, MVT::v2i32, MVT::v2i64, MVT::v2f16,
-                  MVT::v4f16, MVT::v2f32, MVT::v4f32, MVT::v2f64}) {
+  for (auto VT : {MVT::v2i16, MVT::v4i16, MVT::v2i32, MVT::v2i64, MVT::v4i32,
+                  MVT::v2f16, MVT::v4f16, MVT::v2f32, MVT::v4f32, MVT::v2f64}) {
     setOperationAction(ISD::INSERT_VECTOR_ELT, VT, Custom);
     setOperationAction(ISD::EXTRACT_VECTOR_ELT, VT, Custom);
   }
 
   setOperationAction(ISD::EXTRACT_SUBVECTOR, MVT::v2f32, Expand);
+  setOperationAction(ISD::EXTRACT_SUBVECTOR, MVT::v2i32, Expand);
 
   setOperationAction(ISD::MULHU, MVT::v2i32, Expand);
   setOperationAction(ISD::MULHU, MVT::v2i64, Expand);
   setOperationAction(ISD::MULHS, MVT::v2i32, Expand);
   setOperationAction(ISD::MULHS, MVT::v2i64, Expand);
+  setOperationAction(ISD::MULHU, MVT::v4i32, Expand);
+  setOperationAction(ISD::MULHS, MVT::v4i32, Expand);
 
   for (auto VT : {MVT::v2f16, MVT::v2f32, MVT::v4f16, MVT::v4f32, MVT::v2f64,
                   MVT::v2i64}) {
@@ -191,6 +196,12 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::OR, MVT::v2i64, Expand);
   setOperationAction(ISD::AND, MVT::v2i64, Expand);
   setOperationAction(ISD::XOR, MVT::v2i64, Expand);
+
+  setOperationAction(ISD::ADD, MVT::v4i32, Expand);
+  setOperationAction(ISD::SUB, MVT::v4i32, Expand);
+  setOperationAction(ISD::AND, MVT::v4i32, Expand);
+  setOperationAction(ISD::OR, MVT::v4i32, Expand);
+  setOperationAction(ISD::XOR, MVT::v4i32, Expand);
 
   setOperationAction(ISD::SMUL_LOHI, MVT::v2i64, Expand);
   setOperationAction(ISD::UMUL_LOHI, MVT::v2i64, Expand);
@@ -418,7 +429,7 @@ SDValue K1CTargetLowering::LowerFormalArguments(
 
       unsigned VReg;
       if (VA.getValVT() == MVT::v4f32 || VA.getValVT() == MVT::v2f64 ||
-          VA.getValVT() == MVT::v2i64)
+          VA.getValVT() == MVT::v2i64 || VA.getValVT() == MVT::v4i32)
         VReg = RegInfo.createVirtualRegister(&K1C::PairedRegRegClass);
       else
         VReg = RegInfo.createVirtualRegister(&K1C::SingleRegRegClass);
@@ -1176,6 +1187,7 @@ SDValue K1CTargetLowering::lowerBUILD_VECTOR(SDValue Op,
   case MVT::v2i32:
   case MVT::v2f32:
     return lowerBUILD_VECTOR_V2_64bit(Op, DAG);
+  case MVT::v4i32:
   case MVT::v4f32:
     return lowerBUILD_VECTOR_V4_128bit(Op, DAG);
   }
@@ -1262,6 +1274,16 @@ SDValue K1CTargetLowering::lowerBUILD_VECTOR_V2_64bit(SDValue Op,
   } else if (isa<ConstantFPSDNode>(Op2)) {
     auto *Op2Const = dyn_cast<ConstantFPSDNode>(Op2);
     Op2Val = Op2Const->getValueAPF().bitcastToAPInt().getZExtValue();
+    IsOp2Const = true;
+  }
+
+  if (Op1.isUndef()) {
+    Op1Val = 0;
+    IsOp1Const = true;
+  }
+
+  if (Op2.isUndef()) {
+    Op2Val = 0;
     IsOp2Const = true;
   }
 
@@ -1401,7 +1423,7 @@ SDValue K1CTargetLowering::lowerINSERT_VECTOR_ELT(SDValue Op,
     uint64_t Mask = selectMask(ElementBitSize);
     auto SizeType = selectType(VecVT.getSizeInBits());
 
-    if (Vec.getValueType() == MVT::v4f32)
+    if (Vec.getValueType() == MVT::v4f32 || Vec.getValueType() == MVT::v4i32)
       return lowerINSERT_VECTOR_ELT_V4_128bit(DL, DAG, Vec, Val,
                                               InsertPos->getZExtValue());
     if (Vec.getValueType() == MVT::v2f64 || Vec.getValueType() == MVT::v2i64)
