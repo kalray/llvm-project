@@ -143,6 +143,7 @@ def : Pat<(store (i64 SingleReg:$val), AddrRI:$addr), (SDri AddrRI:$addr,SingleR
 def : Pat<(store (v2i32 SingleReg:$val), AddrRI:$addr), (SDri AddrRI:$addr,SingleReg:$val)>;
 def : Pat<(store (v4i16 SingleReg:$val), AddrRI:$addr), (SDri AddrRI:$addr,SingleReg:$val)>;
 def : Pat<(store (v2i64 PairedReg:$val), AddrRI:$addr), (SQri AddrRI:$addr,PairedReg:$val)>;
+def : Pat<(store (v4i32 PairedReg:$val), AddrRI:$addr), (SQri AddrRI:$addr,PairedReg:$val)>;
 
 def : Pat<(truncstorei8 i64:$val, AddrRI:$addr), (SBri AddrRI:$addr, SingleReg:$val)>;
 def : Pat<(truncstorei8 i32:$val, AddrRI:$addr), (SBri AddrRI:$addr, SingleReg:$val)>;
@@ -168,6 +169,7 @@ def loadv4i16 : PatFrag<(ops node:$ptr), (v4i16 (load node:$ptr))>;
 def loadv2i16 : PatFrag<(ops node:$ptr), (v2i16 (load node:$ptr))>;
 def loadv2f16 : PatFrag<(ops node:$ptr), (v2f16 (load node:$ptr))>;
 def loadv2i64 : PatFrag<(ops node:$ptr), (v2i64 (load node:$ptr))>;
+def loadv4i32 : PatFrag<(ops node:$ptr), (v4i32 (load node:$ptr))>;
 
 // load i1 in i32
 def : Pat<(i32 (sextloadi1 AddrRI:$addr)), (LBSri AddrRI:$addr, (i8 0 /*cached*/))>;
@@ -222,6 +224,7 @@ def : Pat<(loadi64 AddrRI:$addr), (LDri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(loadv2i32 AddrRI:$addr), (LDri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(loadv4i16 AddrRI:$addr), (LDri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(loadv2i64 AddrRI:$addr), (LQri AddrRI:$addr, (i8 0 /*cached*/))>;
+def : Pat<(loadv4i32 AddrRI:$addr), (LQri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(loadi64 (iPTR SingleReg:$rs2)), (LDd0 (i64 0), SingleReg:$rs2, (i8 0))>;
 
 // sign extend optimizations
@@ -369,6 +372,12 @@ def : Pat<(v2i64 (build_vector i64:$v1, i64:$v2)),
 
 def : Pat<(extractelt (v2i64 PairedReg:$v), 0), (i64 (EXTRACT_SUBREG $v, 1))>;
 def : Pat<(extractelt (v2i64 PairedReg:$v), 1), (i64 (EXTRACT_SUBREG $v, 2))>;
+
+// v4i32
+def : Pat<(extractelt (v4i32 PairedReg:$v), 0), (i32 (EXTRACT_SUBREG $v, 1))>;
+def : Pat<(extractelt (v4i32 PairedReg:$v), 1), (SRADd1 (i32 (EXTRACT_SUBREG $v, 1)), (i64 32))>;
+def : Pat<(extractelt (v4i32 PairedReg:$v), 2), (i32 (EXTRACT_SUBREG $v, 2))>;
+def : Pat<(extractelt (v4i32 PairedReg:$v), 3), (SRADd1 (i32 (EXTRACT_SUBREG $v, 2)), (i64 32))>;
 
 //===----------------------------------------------------------------------===//
 //  Synthetic Instructions - Patterns
