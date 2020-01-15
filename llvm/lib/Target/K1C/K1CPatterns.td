@@ -381,3 +381,10 @@ def : Pat<(vineg v2i16:$v), (NEGHQ SingleReg:$v)>;
 
 // NEGW, see K1CInstrInfo.td
 // NEGWP, see K1CInstrInfo.td
+
+// NOTW, see K1CInstrInfo.td for i32
+def : Pat<(vinot v2i16:$v), (NOTW SingleReg:$v)>;
+
+// NOTD, see K1CInstrInfo.td for i64
+def : Pat<(vinot v4i16:$v), (NOTD SingleReg:$v)>;
+def : Pat<(vinot v2i32:$v), (NOTD SingleReg:$v)>;
