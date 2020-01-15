@@ -133,7 +133,6 @@ def LQri : K1C_PseudoInstr<(outs PairedReg:$out), (ins AddrRI:$addr, VariantMod:
 def LOri : K1C_PseudoInstr<(outs PairedReg:$out), (ins AddrRI:$addr, VariantMod:$var), []>;
 }
 
-
 // Store patterns
 def : Pat<(store (i8 SingleReg:$val), AddrRI:$addr), (SBri AddrRI:$addr,SingleReg:$val)>;
 def : Pat<(store (i16 SingleReg:$val), AddrRI:$addr), (SHri AddrRI:$addr,SingleReg:$val)>;
