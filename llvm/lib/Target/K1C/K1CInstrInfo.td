@@ -3590,7 +3590,7 @@ def COPYD : REGISTERW_REGISTERZ_SIMPLE
 def NOTD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "notd $a1 = $a2",
-   [ ],
+   [(set i64:$a1, (not i64:$a2))],
    ALU_TINY>;
 
 // 1 insns: ['NEGD']
@@ -3688,7 +3688,7 @@ def COPYW : REGISTERW_REGISTERZ_SIMPLE
 def NOTW : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "notw $a1 = $a2",
-   [ ],
+   [(set i32:$a1, (not i32:$a2))],
    ALU_TINY>;
 
 // 1 insns: ['NEGW']
