@@ -48,7 +48,8 @@ public:
 
 bool K1CDAGToDAGISel::SelectAddrFI(SDValue Addr, SDValue &Base) {
   if (auto FIN = dyn_cast<FrameIndexSDNode>(Addr)) {
-    Base = CurDAG->getTargetFrameIndex(FIN->getIndex(), MVT::i64);
+    Base = CurDAG->getTargetFrameIndex(
+        FIN->getIndex(), TLI->getPointerTy(CurDAG->getDataLayout()));
     return true;
   }
   return false;
@@ -56,29 +57,39 @@ bool K1CDAGToDAGISel::SelectAddrFI(SDValue Addr, SDValue &Base) {
 
 bool K1CDAGToDAGISel::SelectAddrRI(SDValue Addr, SDValue &Index,
                                    SDValue &Base) {
-  if (FrameIndexSDNode *FIN = dyn_cast<FrameIndexSDNode>(Addr)) {
+  if (auto FIN = dyn_cast<FrameIndexSDNode>(Addr)) {
     Base = CurDAG->getTargetFrameIndex(
         FIN->getIndex(), TLI->getPointerTy(CurDAG->getDataLayout()));
     Index = CurDAG->getTargetConstant(0, SDLoc(Addr), MVT::i64);
     return true;
   }
+  if (auto BaseReg = dyn_cast<RegisterSDNode>(Addr)) {
+    Base = CurDAG->getRegister(BaseReg->getReg(), MVT::i64);
+    Index = CurDAG->getTargetConstant(0, SDLoc(Addr), MVT::i64);
+    return true;
+  }
   if (Addr.getOpcode() == ISD::ADD || Addr.getOpcode() == ISD::OR) {
-    if (ConstantSDNode *CN = dyn_cast<ConstantSDNode>(Addr.getOperand(1))) {
-      if (isInt<64>(CN->getSExtValue())) {
-        if (FrameIndexSDNode *FIN =
-                dyn_cast<FrameIndexSDNode>(Addr.getOperand(0))) {
-          // Constant offset from frame ref
-          Base = CurDAG->getTargetFrameIndex(
-              FIN->getIndex(), TLI->getPointerTy(CurDAG->getDataLayout()));
-        } else {
-          Base = Addr.getOperand(0);
-        }
-        Index = CurDAG->getTargetConstant(CN->getZExtValue(), SDLoc(Addr),
-                                          MVT::i64);
-        return true;
+    if (auto CN = dyn_cast<ConstantSDNode>(Addr.getOperand(1))) {
+      Index =
+          CurDAG->getTargetConstant(CN->getZExtValue(), SDLoc(Addr), MVT::i64);
+      if (auto FIN = dyn_cast<FrameIndexSDNode>(Addr.getOperand(0))) {
+        Base = CurDAG->getTargetFrameIndex(
+            FIN->getIndex(), TLI->getPointerTy(CurDAG->getDataLayout()));
+      } else {
+        Base = Addr.getOperand(0);
       }
+      return true;
+    }
+    if (auto FIN = dyn_cast<FrameIndexSDNode>(Addr.getOperand(0))) {
+      Base = SDValue(CurDAG->getMachineNode(K1C::ADDDd3, SDLoc(Addr), MVT::i64,
+                                            Addr.getOperand(0),
+                                            Addr.getOperand(1)),
+                     0);
+      Index = CurDAG->getTargetConstant(0, SDLoc(Addr), MVT::i64);
+      return true;
     }
   }
+
   Base = Addr;
   Index = CurDAG->getTargetConstant(0, SDLoc(Addr), MVT::i64);
   return true;
