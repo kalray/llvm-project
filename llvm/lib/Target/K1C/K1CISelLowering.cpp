@@ -98,6 +98,8 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
 
   setOperationAction(ISD::MULHU, MVT::v4i16, Custom);
   setOperationAction(ISD::MULHS, MVT::v4i16, Custom);
+  setOperationAction(ISD::MULHU, MVT::v2i16, Custom);
+  setOperationAction(ISD::MULHS, MVT::v2i16, Custom);
 
   setLoadExtAction(ISD::ZEXTLOAD, MVT::v2i16, MVT::v2i8, Expand);
   setLoadExtAction(ISD::EXTLOAD, MVT::v2i16, MVT::v2i8, Expand);
@@ -131,6 +133,7 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::SIGN_EXTEND, MVT::v2i64, Expand);
   setOperationAction(ISD::ANY_EXTEND, MVT::v2i64, Expand);
 
+  setOperationAction(ISD::SIGN_EXTEND_INREG, MVT::v4i16, Expand);
   setOperationAction(ISD::SIGN_EXTEND_INREG, MVT::v2i16, Expand);
   setOperationAction(ISD::SIGN_EXTEND_INREG, MVT::v2i32, Expand);
   setOperationAction(ISD::SIGN_EXTEND_INREG, MVT::v2i64, Expand);
@@ -248,8 +251,11 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::SELECT, VT, Custom);
   }
 
-  setOperationAction(ISD::SELECT_CC, MVT::v2f64, Expand);
-  setOperationAction(ISD::SELECT, MVT::v2f64, Expand);
+  for (auto VT : {MVT::v2f64, MVT::v2i64, MVT::v4i32, MVT::v2i32, MVT::v2i16,
+                  MVT::v4i16, MVT::v8i8}) {
+    setOperationAction(ISD::SELECT_CC, VT, Expand);
+    setOperationAction(ISD::SELECT, VT, Expand);
+  }
 
   for (auto VT : {MVT::v2i16, MVT::v2i32, MVT::v2i64, MVT::v4i16}) {
     setOperationAction(ISD::FP_TO_SINT, VT, Expand);
@@ -264,6 +270,9 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::FP_EXTEND, MVT::v2f32, Expand);
   setOperationAction(ISD::FP_EXTEND, MVT::v4f32, Expand);
   setOperationAction(ISD::FP_EXTEND, MVT::v2f64, Expand);
+
+  setOperationAction(ISD::FNEG, MVT::v2f64, Expand);
+  setOperationAction(ISD::FNEG, MVT::v4f32, Expand);
 
   setTruncStoreAction(MVT::v2i16, MVT::v2i8, Expand);
   setTruncStoreAction(MVT::v2i64, MVT::v2i8, Expand);
@@ -671,9 +680,9 @@ SDValue K1CTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
   case ISD::SELECT:
     return lowerSELECT(Op, DAG);
   case ISD::MULHS:
-    return lowerMULHV4I16(Op, DAG, true);
+    return lowerMULHVectorGeneric(Op, DAG, true);
   case ISD::MULHU:
-    return lowerMULHV4I16(Op, DAG, false);
+    return lowerMULHVectorGeneric(Op, DAG, false);
   case ISD::BlockAddress:
     return lowerBlockAddress(Op, DAG);
   case ISD::BUILD_VECTOR:
@@ -1032,69 +1041,35 @@ K1CTargetLowering::getRegForInlineAsmConstraint(const TargetRegisterInfo *TRI,
   return TargetLowering::getRegForInlineAsmConstraint(TRI, Constraint, VT);
 }
 
-SDValue K1CTargetLowering::lowerMULHV4I16(SDValue Op, SelectionDAG &DAG,
-                                          bool Signed) const {
+SDValue K1CTargetLowering::lowerMULHVectorGeneric(SDValue Op, SelectionDAG &DAG,
+                                                  bool Signed) const {
   SDLoc DL(Op);
 
   ISD::NodeType ExtensionType = Signed ? ISD::SIGN_EXTEND : ISD::ZERO_EXTEND;
 
-  SDValue A1 =
-      DAG.getNode(ISD::EXTRACT_VECTOR_ELT, DL, MVT::i16,
-                  {Op.getOperand(0), DAG.getConstant(0, DL, MVT::i64)});
-  SDValue A1Ext = DAG.getNode(ExtensionType, DL, MVT::i32, A1);
+  EVT VectorType = Op.getValueType();
+  unsigned VectorSize = VectorType.getVectorNumElements();
+  const unsigned BitSize = VectorType.getScalarSizeInBits();
+  EVT ScalarType = VectorType.getScalarType();
 
-  SDValue A2 =
-      DAG.getNode(ISD::EXTRACT_VECTOR_ELT, DL, MVT::i16,
-                  {Op.getOperand(0), DAG.getConstant(1, DL, MVT::i64)});
-  SDValue A2Ext = DAG.getNode(ExtensionType, DL, MVT::i32, A2);
-
-  SDValue A3 =
-      DAG.getNode(ISD::EXTRACT_VECTOR_ELT, DL, MVT::i16,
-                  {Op.getOperand(0), DAG.getConstant(2, DL, MVT::i64)});
-  SDValue A3Ext = DAG.getNode(ExtensionType, DL, MVT::i32, A3);
-
-  SDValue A4 =
-      DAG.getNode(ISD::EXTRACT_VECTOR_ELT, DL, MVT::i16,
-                  {Op.getOperand(0), DAG.getConstant(3, DL, MVT::i64)});
-  SDValue A4Ext = DAG.getNode(ExtensionType, DL, MVT::i32, A4);
-
-  SDValue B1 =
-      DAG.getNode(ISD::EXTRACT_VECTOR_ELT, DL, MVT::i16,
-                  {Op.getOperand(1), DAG.getConstant(0, DL, MVT::i64)});
-  SDValue B1Ext = DAG.getNode(ExtensionType, DL, MVT::i32, B1);
-
-  SDValue B2 =
-      DAG.getNode(ISD::EXTRACT_VECTOR_ELT, DL, MVT::i16,
-                  {Op.getOperand(1), DAG.getConstant(1, DL, MVT::i64)});
-  SDValue B2Ext = DAG.getNode(ExtensionType, DL, MVT::i32, B2);
-
-  SDValue B3 =
-      DAG.getNode(ISD::EXTRACT_VECTOR_ELT, DL, MVT::i16,
-                  {Op.getOperand(1), DAG.getConstant(2, DL, MVT::i64)});
-  SDValue B3Ext = DAG.getNode(ExtensionType, DL, MVT::i32, B3);
-
-  SDValue B4 =
-      DAG.getNode(ISD::EXTRACT_VECTOR_ELT, DL, MVT::i16,
-                  {Op.getOperand(1), DAG.getConstant(3, DL, MVT::i64)});
-  SDValue B4Ext = DAG.getNode(ExtensionType, DL, MVT::i32, B4);
-
-  // Multiplying each element and shifting it in order to keep only the most
-  // significant 16 bits
-  SDValue R1 = DAG.getNode(ISD::SRL, DL, MVT::i32,
-                           DAG.getNode(ISD::MUL, DL, MVT::i32, {A1Ext, B1Ext}),
-                           DAG.getConstant(16, DL, MVT::i32));
-  SDValue R2 = DAG.getNode(ISD::SRL, DL, MVT::i32,
-                           DAG.getNode(ISD::MUL, DL, MVT::i32, {A2Ext, B2Ext}),
-                           DAG.getConstant(16, DL, MVT::i32));
-  SDValue R3 = DAG.getNode(ISD::SRL, DL, MVT::i32,
-                           DAG.getNode(ISD::MUL, DL, MVT::i32, {A3Ext, B3Ext}),
-                           DAG.getConstant(16, DL, MVT::i32));
-  SDValue R4 = DAG.getNode(ISD::SRL, DL, MVT::i32,
-                           DAG.getNode(ISD::MUL, DL, MVT::i32, {A4Ext, B4Ext}),
-                           DAG.getConstant(16, DL, MVT::i32));
-
+  SmallVector<SDValue, 8> RV;
+  for (unsigned int i = 0; i < VectorSize; i++) {
+    SDValue AVal =
+        DAG.getNode(ISD::EXTRACT_VECTOR_ELT, DL, ScalarType,
+                    {Op.getOperand(0), DAG.getConstant(i, DL, MVT::i64)});
+    SDValue AValExt = DAG.getNode(ExtensionType, DL, MVT::i32, AVal);
+    SDValue BVal =
+        DAG.getNode(ISD::EXTRACT_VECTOR_ELT, DL, ScalarType,
+                    {Op.getOperand(1), DAG.getConstant(i, DL, MVT::i64)});
+    SDValue BValExt = DAG.getNode(ExtensionType, DL, MVT::i32, BVal);
+    SDValue R =
+        DAG.getNode(ISD::SRL, DL, MVT::i32,
+                    DAG.getNode(ISD::MUL, DL, MVT::i32, {AValExt, BValExt}),
+                    DAG.getConstant(BitSize, DL, MVT::i32));
+    RV.push_back(R);
+  }
   // Building a vector from the computed values
-  return DAG.getNode(ISD::BUILD_VECTOR, DL, MVT::v4i16, {R1, R2, R3, R4});
+  return DAG.getBuildVector(VectorType, DL, RV);
 }
 
 static unsigned selectExtend(unsigned BitSize) {

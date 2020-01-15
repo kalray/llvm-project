@@ -89,7 +89,8 @@ private:
   SDValue lowerFRAMEADDR(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerFSUB(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerSELECT(SDValue Op, SelectionDAG &DAG) const;
-  SDValue lowerMULHV4I16(SDValue Op, SelectionDAG &DAG, bool Signed) const;
+  SDValue lowerMULHVectorGeneric(SDValue Op, SelectionDAG &DAG,
+                                 bool Signed) const;
   SDValue lowerBlockAddress(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerBUILD_VECTOR(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerBUILD_VECTOR_V2_32bit(SDValue Op, SelectionDAG &DAG) const;
