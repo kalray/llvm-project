@@ -1359,10 +1359,17 @@ K1CTargetLowering::lowerBUILD_VECTOR_V4_128bit(SDValue Op,
   LLVMContext &Ctx = *DAG.getContext();
   EVT HalfVT = VT.getHalfNumVectorElementsVT(Ctx);
 
-  SDValue VecLow = lowerBUILD_VECTOR_V2_64bit(
-      DAG.getNode(ISD::BUILD_VECTOR, DL, HalfVT, {V1, V2}), DAG, false);
-  SDValue VecHi = lowerBUILD_VECTOR_V2_64bit(
-      DAG.getNode(ISD::BUILD_VECTOR, DL, HalfVT, {V3, V4}), DAG, false);
+  SDValue VecLow = DAG.getNode(ISD::BUILD_VECTOR, DL, HalfVT, {V1, V2});
+  // if BUILD_VECTOR is still necessary after folding
+  if (!VecLow.isUndef() && VecLow.getOpcode() == ISD::BUILD_VECTOR) {
+    VecLow = lowerBUILD_VECTOR_V2_64bit(VecLow, DAG, false);
+  }
+
+  SDValue VecHi = DAG.getNode(ISD::BUILD_VECTOR, DL, HalfVT, {V3, V4});
+  // if BUILD_VECTOR is still necessary after folding
+  if (!VecHi.isUndef() && VecHi.getOpcode() == ISD::BUILD_VECTOR) {
+    VecHi = lowerBUILD_VECTOR_V2_64bit(VecHi, DAG, false);
+  }
 
   SDValue ImpV =
       SDValue(DAG.getMachineNode(TargetOpcode::IMPLICIT_DEF, DL, VT), 0);
