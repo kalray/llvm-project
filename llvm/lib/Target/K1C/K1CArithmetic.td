@@ -183,6 +183,10 @@
 // SXMHWP
 //---------------//
 
+// 128 bits
+def : BITCAST<v4i32, v2i64, PairedReg>;
+def : BITCAST<v2i64, v4i32, PairedReg>;
+
 // 64 bits
 def : BITCAST<v4i16, i64, SingleReg>;
 def : BITCAST<i64, v4i16, SingleReg>;
@@ -411,7 +415,6 @@ def : Pat<(xor v2i16:$rs1, v2i16:$rs2), (XORWd0 SingleReg:$rs1, SingleReg:$rs2)>
 // MULWD
 // MULWDC
 // MULWDP
-// MULWQ
 //---------------//
 
 // MULD
@@ -430,3 +433,6 @@ def : Pat<(mul v4i16:$rs1, v4i16:$rs2), (MULHQd0 SingleReg:$rs1, SingleReg:$rs2)
 
 // MULWP
 def : Pat<(mul v2i32:$rs1, v2i32:$rs2), (MULWPd0 SingleReg:$rs1, SingleReg:$rs2)>;
+
+// MULWQ
+def : Pat<(mul v4i32:$rs1, v4i32:$rs2), (MULWQ PairedReg:$rs1, PairedReg:$rs2)>;
