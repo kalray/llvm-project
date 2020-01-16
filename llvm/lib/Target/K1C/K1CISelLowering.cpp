@@ -60,6 +60,7 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   // set up the register classes
   addRegisterClass(MVT::i32, &K1C::SingleRegRegClass);
   addRegisterClass(MVT::i64, &K1C::SingleRegRegClass);
+  addRegisterClass(MVT::v8i8, &K1C::SingleRegRegClass);
   addRegisterClass(MVT::v2i16, &K1C::SingleRegRegClass);
   addRegisterClass(MVT::v2i32, &K1C::SingleRegRegClass);
   addRegisterClass(MVT::v4i16, &K1C::SingleRegRegClass);
@@ -101,6 +102,8 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::MULHS, MVT::v4i16, Custom);
   setOperationAction(ISD::MULHU, MVT::v2i16, Custom);
   setOperationAction(ISD::MULHS, MVT::v2i16, Custom);
+  setOperationAction(ISD::MULHU, MVT::v8i8, Custom);
+  setOperationAction(ISD::MULHS, MVT::v8i8, Custom);
 
   setLoadExtAction(ISD::ZEXTLOAD, MVT::v2i16, MVT::v2i8, Expand);
   setLoadExtAction(ISD::EXTLOAD, MVT::v2i16, MVT::v2i8, Expand);
@@ -125,6 +128,7 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::TRUNCATE, MVT::v2i16, Expand);
   setOperationAction(ISD::TRUNCATE, MVT::v2i32, Expand);
   setOperationAction(ISD::TRUNCATE, MVT::v4i16, Expand);
+  setOperationAction(ISD::TRUNCATE, MVT::v4i32, Expand);
   setOperationAction(ISD::EXTRACT_SUBVECTOR, MVT::v2i16, Expand);
   setOperationAction(ISD::EXTRACT_SUBVECTOR, MVT::v2f16, Expand);
 
@@ -139,9 +143,10 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::SIGN_EXTEND_INREG, MVT::v2i16, Expand);
   setOperationAction(ISD::SIGN_EXTEND_INREG, MVT::v2i32, Expand);
   setOperationAction(ISD::SIGN_EXTEND_INREG, MVT::v2i64, Expand);
+  setOperationAction(ISD::SIGN_EXTEND_INREG, MVT::v4i16, Expand);
 
   for (auto VT : {MVT::v2i32, MVT::v4i16, MVT::v2i16, MVT::v2i64, MVT::v4i32,
-                  MVT::v4f32, MVT::v2f64}) {
+                  MVT::v8i8, MVT::v4f32, MVT::v2f64}) {
     setOperationAction(ISD::UDIV, VT, Expand);
     setOperationAction(ISD::SDIV, VT, Expand);
     setOperationAction(ISD::VECTOR_SHUFFLE, VT, Expand);
@@ -160,13 +165,14 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::SRA, VT, Expand);
   }
 
-  for (auto VT : {MVT::v2i16, MVT::v4i16, MVT::v2i32, MVT::v4i32, MVT::v2f16,
-                  MVT::v4f16, MVT::v2f32, MVT::v4f32}) {
+  for (auto VT : {MVT::v2i16, MVT::v4i16, MVT::v2i32, MVT::v4i32, MVT::v8i8,
+                  MVT::v2f16, MVT::v4f16, MVT::v2f32, MVT::v4f32}) {
     setOperationAction(ISD::BUILD_VECTOR, VT, Custom);
   }
 
-  for (auto VT : {MVT::v2i16, MVT::v4i16, MVT::v2i32, MVT::v2i64, MVT::v4i32,
-                  MVT::v2f16, MVT::v4f16, MVT::v2f32, MVT::v4f32, MVT::v2f64}) {
+  for (auto VT :
+       {MVT::v2i16, MVT::v4i16, MVT::v2i32, MVT::v2i64, MVT::v4i32, MVT::v8i8,
+        MVT::v2f16, MVT::v4f16, MVT::v2f32, MVT::v4f32, MVT::v2f64}) {
     setOperationAction(ISD::INSERT_VECTOR_ELT, VT, Custom);
     setOperationAction(ISD::EXTRACT_VECTOR_ELT, VT, Custom);
   }
@@ -205,6 +211,7 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
 
   setOperationAction(ISD::SMUL_LOHI, MVT::v2i64, Expand);
   setOperationAction(ISD::UMUL_LOHI, MVT::v2i64, Expand);
+  setOperationAction(ISD::MUL, MVT::v8i8, Expand);
 
   for (auto VT : { MVT::i32, MVT::i64 }) {
     setOperationAction(ISD::SMUL_LOHI, VT, Expand);
@@ -1183,6 +1190,7 @@ SDValue K1CTargetLowering::lowerBUILD_VECTOR(SDValue Op,
     return lowerBUILD_VECTOR_V2_32bit(Op, DAG);
   case MVT::v4i16:
   case MVT::v4f16:
+  case MVT::v8i8:
     return lowerBUILD_VECTORGeneric(Op, DAG);
   case MVT::v2i32:
   case MVT::v2f32:

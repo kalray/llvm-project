@@ -7,6 +7,9 @@
 //
 //===----------------------------------------------------------------------===//
 
+def : BITCAST<i64, v8i8, SingleReg>;
+def : BITCAST<v8i8, i64, SingleReg>;
+
 let isCall = 1, isBarrier = 1, isBranch = 1, isTerminator = 1, isReturn = 1, Uses = [R12] in
 def TAIL : PCREL27_SIMPLE
   <(outs), (ins Pcrel27:$a1),
@@ -140,6 +143,7 @@ def : Pat<(store (i32 SingleReg:$val), AddrRI:$addr), (SWri AddrRI:$addr,SingleR
 def : Pat<(store (v2i16 SingleReg:$val), AddrRI:$addr), (SWri AddrRI:$addr,SingleReg:$val)>;
 def : Pat<(store (v2f16 SingleReg:$val), AddrRI:$addr), (SWri AddrRI:$addr,SingleReg:$val)>;
 def : Pat<(store (i64 SingleReg:$val), AddrRI:$addr), (SDri AddrRI:$addr,SingleReg:$val)>;
+def : Pat<(store (v8i8 SingleReg:$val), AddrRI:$addr), (SDri AddrRI:$addr,SingleReg:$val)>;
 def : Pat<(store (v2i32 SingleReg:$val), AddrRI:$addr), (SDri AddrRI:$addr,SingleReg:$val)>;
 def : Pat<(store (v4i16 SingleReg:$val), AddrRI:$addr), (SDri AddrRI:$addr,SingleReg:$val)>;
 def : Pat<(store (v2i64 PairedReg:$val), AddrRI:$addr), (SQri AddrRI:$addr,PairedReg:$val)>;
@@ -164,6 +168,7 @@ def loadi8 : PatFrag<(ops node:$ptr), (i8 (load node:$ptr))>;
 def loadi16 : PatFrag<(ops node:$ptr), (i16 (load node:$ptr))>;
 def loadi32 : PatFrag<(ops node:$ptr), (i32 (load node:$ptr))>;
 def loadi64 : PatFrag<(ops node:$ptr), (i64 (load node:$ptr))>;
+def loadv8i8 : PatFrag<(ops node:$ptr), (v8i8 (load node:$ptr))>;
 def loadv2i32 : PatFrag<(ops node:$ptr), (v2i32 (load node:$ptr))>;
 def loadv4i16 : PatFrag<(ops node:$ptr), (v4i16 (load node:$ptr))>;
 def loadv2i16 : PatFrag<(ops node:$ptr), (v2i16 (load node:$ptr))>;
@@ -221,6 +226,7 @@ def : Pat<(loadi32 AddrRI:$addr), (LWZri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(loadv2i16 AddrRI:$addr), (LWZri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(loadv2f16 AddrRI:$addr), (LWZri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(loadi64 AddrRI:$addr), (LDri AddrRI:$addr, (i8 0 /*cached*/))>;
+def : Pat<(loadv8i8 AddrRI:$addr), (LDri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(loadv2i32 AddrRI:$addr), (LDri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(loadv4i16 AddrRI:$addr), (LDri AddrRI:$addr, (i8 0 /*cached*/))>;
 def : Pat<(loadv2i64 AddrRI:$addr), (LQri AddrRI:$addr, (i8 0 /*cached*/))>;
@@ -291,6 +297,8 @@ def : Pat<(i64 (sext_inreg SingleReg:$val, i1)), (EXTFS SingleReg:$val, 0, 0)>;
 def : Pat<(i64 (sext_inreg SingleReg:$val, i8)), (SXBD SingleReg:$val)>;
 def : Pat<(i64 (sext_inreg SingleReg:$val, i16)), (SXHD SingleReg:$val)>;
 def : Pat<(i64 (sext_inreg SingleReg:$val, i32)), (SXWD SingleReg:$val)>;
+
+def : Pat<(v8i8 (sext_inreg SingleReg:$val, v8i1)), (COPY SingleReg:$val)>;
 
 // Unconditional branch
 def : Pat<(br bb:$addr), (GOTO Pcrel27:$addr)>;
@@ -378,6 +386,16 @@ def : Pat<(extractelt (v4i32 PairedReg:$v), 0), (i32 (EXTRACT_SUBREG $v, 1))>;
 def : Pat<(extractelt (v4i32 PairedReg:$v), 1), (SRADd1 (i32 (EXTRACT_SUBREG $v, 1)), (i64 32))>;
 def : Pat<(extractelt (v4i32 PairedReg:$v), 2), (i32 (EXTRACT_SUBREG $v, 2))>;
 def : Pat<(extractelt (v4i32 PairedReg:$v), 3), (SRADd1 (i32 (EXTRACT_SUBREG $v, 2)), (i64 32))>;
+
+// v8i8
+def : Pat<(i32 (vector_extract (v8i8 SingleReg:$v), 0)), (EXTFZ SingleReg:$v, 7, 0)>;
+def : Pat<(i32 (vector_extract (v8i8 SingleReg:$v), 1)), (EXTFZ SingleReg:$v, 15, 8)>;
+def : Pat<(i32 (vector_extract (v8i8 SingleReg:$v), 2)), (EXTFZ SingleReg:$v, 23, 16)>;
+def : Pat<(i32 (vector_extract (v8i8 SingleReg:$v), 3)), (EXTFZ SingleReg:$v, 31, 24)>;
+def : Pat<(i32 (vector_extract (v8i8 SingleReg:$v), 4)), (EXTFZ SingleReg:$v, 39, 32)>;
+def : Pat<(i32 (vector_extract (v8i8 SingleReg:$v), 5)), (EXTFZ SingleReg:$v, 47, 40)>;
+def : Pat<(i32 (vector_extract (v8i8 SingleReg:$v), 6)), (EXTFZ SingleReg:$v, 55, 48)>;
+def : Pat<(i32 (vector_extract (v8i8 SingleReg:$v), 7)), (SRLDd1 SingleReg:$v, (i64 56))>;
 
 //===----------------------------------------------------------------------===//
 //  Synthetic Instructions - Patterns

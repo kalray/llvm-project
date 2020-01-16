@@ -436,3 +436,33 @@ def : Pat<(mul v2i32:$rs1, v2i32:$rs2), (MULWPd0 SingleReg:$rs1, SingleReg:$rs2)
 
 // MULWQ
 def : Pat<(mul v4i32:$rs1, v4i32:$rs2), (MULWQ PairedReg:$rs1, PairedReg:$rs2)>;
+
+def : Pat<(add v8i8:$v1, v8i8:$v2),
+      (XORDd0
+            (ADDDd0
+                  (ANDDd3 SingleReg:$v1, 0x7f7f7f7f7f7f7f7f),
+                  (ANDDd3 SingleReg:$v2, 0x7f7f7f7f7f7f7f7f)
+            ),
+            (ANDDd3
+                  (XORDd0
+                        SingleReg:$v1, SingleReg:$v2
+                  ),
+                  0x8080808080808080
+            )
+      )>;
+
+def : Pat<(sub v8i8:$v1, v8i8:$v2),
+      (XORDd0
+            (ANDDd3
+                  (NXORDd0 SingleReg:$v1, SingleReg:$v2),
+                  0x8080808080808080
+            ),
+            (SBFDd0
+                  (ANDDd3 SingleReg:$v2, 0x7f7f7f7f7f7f7f7f),
+                  (ORDd3 SingleReg:$v1, 0x8080808080808080)
+            )
+      )>;
+
+def : Pat<(and v8i8:$v1, v8i8:$v2), (ANDDd0 SingleReg:$v1, SingleReg:$v2)>;
+def : Pat<(or v8i8:$v1, v8i8:$v2), (ORDd0 SingleReg:$v1, SingleReg:$v2)>;
+def : Pat<(xor v8i8:$v1, v8i8:$v2), (XORDd0 SingleReg:$v1, SingleReg:$v2)>;
