@@ -61,7 +61,8 @@ void k1elf::Linker::ConstructJob(Compilation &C, const JobAction &JA,
   if (!Args.hasArg(options::OPT_nostdlib)) {
     // crti.o
     // crtbegin.o
-    CmdArgs.push_back(Args.MakeArgString(LDPrefix + "/../k1-elf/lib/crt0.o"));
+    CmdArgs.push_back(
+        Args.MakeArgString(LDPrefix + "/../k1-llvm/elf/lib/crt0.o"));
   }
 
   for (const auto &II : Inputs)
@@ -69,11 +70,11 @@ void k1elf::Linker::ConstructJob(Compilation &C, const JobAction &JA,
       CmdArgs.push_back(II.getFilename());
 
   if (!Args.hasArg(options::OPT_nostdlib)) {
+    CmdArgs.push_back(
+        Args.MakeArgString("-L" + LDPrefix + "/../k1-llvm/elf/lib"));
+
     CmdArgs.push_back("-melf64k1");
     CmdArgs.push_back("-Tbare.ld");
-
-    CmdArgs.push_back(Args.MakeArgString("-L" + LDPrefix + "/../k1-elf/lib"));
-
     CmdArgs.push_back("--start-group");
     CmdArgs.push_back("-lc");
     CmdArgs.push_back("-lgloss");
@@ -119,5 +120,5 @@ void K1ELF::AddClangSystemIncludeArgs(const ArgList &DriverArgs,
 
   addSystemInclude(DriverArgs, CC1Args,
                    llvm::sys::path::parent_path(LDPrefix).str() +
-                       "/k1-elf/include");
+                       "/k1-llvm/elf/include");
 }
