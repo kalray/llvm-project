@@ -124,6 +124,8 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setTruncStoreAction(MVT::v2i32, MVT::v2i16, Expand);
   setTruncStoreAction(MVT::v2i32, MVT::v2i8, Expand);
   setTruncStoreAction(MVT::v4i16, MVT::v4i8, Expand);
+  setTruncStoreAction(MVT::v4i32, MVT::v4i16, Expand);
+  setTruncStoreAction(MVT::v4i32, MVT::v4i8, Expand);
 
   setOperationAction(ISD::TRUNCATE, MVT::v2i16, Expand);
   setOperationAction(ISD::TRUNCATE, MVT::v2i32, Expand);
@@ -139,6 +141,7 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::SIGN_EXTEND, MVT::v2i64, Expand);
   setOperationAction(ISD::ANY_EXTEND, MVT::v2i64, Expand);
 
+  setOperationAction(ISD::SIGN_EXTEND_INREG, MVT::v4i32, Expand);
   setOperationAction(ISD::SIGN_EXTEND_INREG, MVT::v4i16, Expand);
   setOperationAction(ISD::SIGN_EXTEND_INREG, MVT::v2i16, Expand);
   setOperationAction(ISD::SIGN_EXTEND_INREG, MVT::v2i32, Expand);
@@ -275,7 +278,7 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::SELECT, VT, Expand);
   }
 
-  for (auto VT : {MVT::v2i16, MVT::v2i32, MVT::v2i64, MVT::v4i16}) {
+  for (auto VT : {MVT::v2i16, MVT::v2i32, MVT::v2i64, MVT::v4i16, MVT::v4i32}) {
     setOperationAction(ISD::FP_TO_SINT, VT, Expand);
     setOperationAction(ISD::FP_TO_UINT, VT, Expand);
     setOperationAction(ISD::SINT_TO_FP, VT, Expand);
@@ -309,8 +312,15 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::ZERO_EXTEND, MVT::v2i64, Expand);
   setOperationAction(ISD::ANY_EXTEND, MVT::v2i64, Expand);
 
+  setOperationAction(ISD::SIGN_EXTEND, MVT::v4i32, Expand);
+  setOperationAction(ISD::ZERO_EXTEND, MVT::v4i32, Expand);
+  setOperationAction(ISD::ANY_EXTEND, MVT::v4i32, Expand);
+
   setLoadExtAction(ISD::SEXTLOAD, MVT::v2i64, MVT::v2i8, Expand);
   setLoadExtAction(ISD::ZEXTLOAD, MVT::v2i64, MVT::v2i8, Expand);
+
+  setLoadExtAction(ISD::SEXTLOAD, MVT::v4i32, MVT::v4i8, Expand);
+  setLoadExtAction(ISD::ZEXTLOAD, MVT::v4i32, MVT::v4i8, Expand);
 
   setLoadExtAction(ISD::EXTLOAD, MVT::v2f32, MVT::v2f16, Expand);
   setLoadExtAction(ISD::EXTLOAD, MVT::v2f64, MVT::v2f16, Expand);
