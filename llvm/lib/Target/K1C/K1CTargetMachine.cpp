@@ -26,18 +26,18 @@
 using namespace llvm;
 
 static cl::opt<bool>
-    DisableHardwareLoops("disable-k1c-hwloops", cl::Hidden,
-                         cl::desc("Disable Hardware Loops for K1C target"));
+DisableHardwareLoops("disable-k1c-hwloops", cl::Hidden,
+                     cl::desc("Disable Hardware Loops for K1C target"));
 
 static cl::opt<bool>
-    DisableBundling("disable-k1c-bundling", cl::Hidden,
-                    cl::desc("Disable Bundling Pass for K1C target"));
+DisableBundling("disable-k1c-bundling", cl::Hidden,
+                cl::desc("Disable Bundling Pass for K1C target"));
 
-static cl::opt<bool> DisableLoadStorePacking(
-    "disable-k1c-loadstore-packing", cl::Hidden,
-    cl::desc("Disable Load/Store Packing Pass for K1C target"));
+static cl::opt<bool>
+DisableLoadStorePacking("disable-k1c-loadstore-packing", cl::Hidden,
+                        cl::desc("Disable Load/Store Packing Pass for K1C target"));
 
-extern "C" void LLVMInitializeK1CTarget() {
+extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeK1CTarget() {
   RegisterTargetMachine<K1CTargetMachine> X(getTheK1CTarget());
   auto PR = PassRegistry::getPassRegistry();
   initializeK1CExpandPseudoPass(*PR);
@@ -73,7 +73,7 @@ K1CTargetMachine::K1CTargetMachine(const Target &T, const Triple &TT,
           T, "e-m:e-p:64:64-i64:64-i128:128-f16:16-f32:32-f64:64-n64-S128", TT,
           CPU, FS, Options, getEffectiveRelocModel(TT, RM),
           getEffectiveCodeModel(CM, CodeModel::Small), OL),
-      TLOF(make_unique<K1CELFTargetObjectFile>()),
+      TLOF(std::make_unique<K1CELFTargetObjectFile>()),
       Subtarget(TT, CPU, FS, *this) {
   initAsmInfo();
 }
@@ -114,7 +114,7 @@ K1CTargetMachine::getSubtargetImpl(const Function &F) const {
     // creation will depend on the TM and the code generation flags on the
     // function that reside in TargetOptions.
     resetTargetOptions(F);
-    I = llvm::make_unique<K1CSubtarget>(TargetTriple, CPU, FS, *this);
+    I = std::make_unique<K1CSubtarget>(TargetTriple, CPU, FS, *this);
   }
   return I.get();
 }

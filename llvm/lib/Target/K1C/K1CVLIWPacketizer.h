@@ -22,7 +22,7 @@ class K1CPacketizerList : public VLIWPacketizerList {
 
 public:
   K1CPacketizerList(MachineFunction &MF, MachineLoopInfo &MLI,
-                    AliasAnalysis *AA, bool ValidOptLevel);
+                    AAResults *AA, bool ValidOptLevel);
 
   bool isSoloInstruction(const MachineInstr &MI) override;
   bool isLegalToPacketizeTogether(SUnit *SUI, SUnit *SUJ) override;
