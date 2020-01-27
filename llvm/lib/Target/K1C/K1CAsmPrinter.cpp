@@ -107,6 +107,6 @@ void K1CAsmPrinter::emitInlineAsmEnd(const MCSubtargetInfo &StartInfo,
   OutStreamer->EmitRawText(StringRef("\t;;\n"));
 }
 
-extern "C" void LLVMInitializeK1CAsmPrinter() {
+extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeK1CAsmPrinter() {
   RegisterAsmPrinter<K1CAsmPrinter> X(getTheK1CTarget());
 }

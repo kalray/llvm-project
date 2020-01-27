@@ -43,7 +43,7 @@ void clusteros::Assembler::ConstructJob(Compilation &C, const JobAction &JA,
 
   const char *Exec =
       Args.MakeArgString(getToolChain().GetProgramPath("k1-cos-as"));
-  C.addCommand(llvm::make_unique<Command>(JA, *this, Exec, CmdArgs, Inputs));
+  C.addCommand(std::make_unique<Command>(JA, *this, Exec, CmdArgs, Inputs));
 }
 
 void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
@@ -100,7 +100,7 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
 
   const char *Exec = Args.MakeArgString(getToolChain().GetProgramPath(
       C.getDriver().CCCIsCXX() ? "k1-cos-g++" : "k1-cos-gcc"));
-  C.addCommand(llvm::make_unique<Command>(JA, *this, Exec, CmdArgs, Inputs));
+  C.addCommand(std::make_unique<Command>(JA, *this, Exec, CmdArgs, Inputs));
 }
 
 // ClusterOS - ClusterOS tool chain which can call as(1) and ld(1) directly.
@@ -155,4 +155,9 @@ ClusterOS::addClangTargetOptions(const llvm::opt::ArgList &DriverArgs,
                                  llvm::opt::ArgStringList &CC1Args,
                                  Action::OffloadKind DeviceOffloadKind) const {
   CC1Args.push_back("-nostdsysteminc");
+
+  // ClusterOS linker doesn't support init_array but old behavior with ctors/dtors
+  if (!DriverArgs.hasFlag(options::OPT_fuse_init_array,
+                          options::OPT_fno_use_init_array, false))
+    CC1Args.push_back("-fno-use-init-array");
 }

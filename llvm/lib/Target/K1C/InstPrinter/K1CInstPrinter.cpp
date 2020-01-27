@@ -31,9 +31,9 @@ using namespace llvm;
 #define PRINT_ALIAS_INSTR
 #include "K1CGenAsmWriter.inc"
 
-void K1CInstPrinter::printInst(const MCInst *MI, raw_ostream &O,
-                               StringRef Annot, const MCSubtargetInfo &STI) {
-  printInstruction(MI, /*STI,*/ O);
+void K1CInstPrinter::printInst(const MCInst *MI, uint64_t Address, StringRef Annot,
+                               const MCSubtargetInfo &STI, raw_ostream &O) {
+  printInstruction(MI, Address, O);
 }
 
 void K1CInstPrinter::printRegName(raw_ostream &O, unsigned RegNo) const {
