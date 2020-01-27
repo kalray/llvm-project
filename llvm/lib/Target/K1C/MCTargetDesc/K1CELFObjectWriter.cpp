@@ -51,5 +51,5 @@ bool K1CELFObjectWriter::needsRelocateWithSymbol(const MCSymbol &Sym,
 
 std::unique_ptr<MCObjectTargetWriter>
 llvm::createK1CELFObjectWriter(bool Is64Bit, uint8_t OSABI) {
-  return llvm::make_unique<K1CELFObjectWriter>(Is64Bit, OSABI);
+  return std::make_unique<K1CELFObjectWriter>(Is64Bit, OSABI);
 }

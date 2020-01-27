@@ -16,11 +16,13 @@
 #include "K1CInstrInfo.h"
 #include "K1CTargetMachine.h"
 
+#include "llvm/InitializePasses.h"
 #include "llvm/Analysis/AliasAnalysis.h"
 #include "llvm/CodeGen/MachineFunctionPass.h"
 #include "llvm/CodeGen/MachineLoopInfo.h"
 #include "llvm/CodeGen/ScheduleDAG.h"
 #include "llvm/CodeGen/TargetSchedule.h"
+
 
 #define MAX_SYLLABLES_BYTE_COUNT (8 /* Syllables */ * 4 /* 32 bits words */)
 
@@ -55,15 +57,15 @@ private:
 } // end anonymous namespace
 
 char K1CPacketizer::ID = 0;
-INITIALIZE_PASS_BEGIN(K1CPacketizer, "k1c-packetizer", "K1C Packetizer", false,
-                      false)
-INITIALIZE_PASS_DEPENDENCY(AAResultsWrapperPass)
+INITIALIZE_PASS_BEGIN(K1CPacketizer, "k1c-packetizer",
+                      "K1C Packetizer", false, false)
 INITIALIZE_PASS_DEPENDENCY(MachineLoopInfo)
-INITIALIZE_PASS_END(K1CPacketizer, "k1c-packetizer", "K1C Packetizer", false,
-                    false)
+INITIALIZE_PASS_DEPENDENCY(AAResultsWrapperPass)
+INITIALIZE_PASS_END(K1CPacketizer, "k1c-packetizer",
+                    "K1C Packetizer", false, false)
 
 K1CPacketizerList::K1CPacketizerList(MachineFunction &MF, MachineLoopInfo &MLI,
-                                     AliasAnalysis *AA, bool ValidOptLevel)
+                                     AAResults *AA, bool ValidOptLevel)
     : VLIWPacketizerList(MF, MLI, AA), PacketSize(0),
       ValidOptLevel(ValidOptLevel) {}
 

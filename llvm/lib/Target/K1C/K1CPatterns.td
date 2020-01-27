@@ -334,11 +334,11 @@ def : Pat<(i8 (trunc i16:$param)), (ZXBD SingleReg:$param)>;
 
 def : Pat<(i1 (trunc i8:$param)), (ANDWd0 SingleReg:$param, (i32 1))>;
 
-def : Pat<(cttz i32:$src), (CTZW SingleReg:$src)>;
-def : Pat<(cttz i64:$src), (CTZD SingleReg:$src)>;
+def : Pat<(i32 (cttz i32:$src)), (CTZW SingleReg:$src)>;
+def : Pat<(i64 (cttz i64:$src)), (CTZD SingleReg:$src)>;
 
-def : Pat<(ctlz i32:$src), (CLZW SingleReg:$src)>;
-def : Pat<(ctlz i64:$src), (CLZD SingleReg:$src)>;
+def : Pat<(i32 (ctlz i32:$src)), (CLZW SingleReg:$src)>;
+def : Pat<(i64 (ctlz i64:$src)), (CLZD SingleReg:$src)>;
 
 // v2i32
 def : Pat<(extractelt (v2i32 SingleReg:$v), 0), (COPY SingleReg:$v)>;

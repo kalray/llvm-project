@@ -24,19 +24,20 @@
 #include "llvm/Support/ErrorHandling.h"
 #include "llvm/Support/TargetRegistry.h"
 
+using namespace llvm;
+
 #define GET_INSTRINFO_CTOR_DTOR
 #include "K1CGenDFAPacketizer.inc"
 #include "K1CGenInstrInfo.inc"
 
-using namespace llvm;
 
 K1CInstrInfo::K1CInstrInfo()
     : K1CGenInstrInfo(K1C::ADJCALLSTACKDOWN, K1C::ADJCALLSTACKUP) {}
 
 void K1CInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
                                MachineBasicBlock::iterator MBBI,
-                               const DebugLoc &DL, unsigned DstReg,
-                               unsigned SrcReg, bool KillSrc) const {
+                               const DebugLoc &DL, MCRegister DstReg,
+                               MCRegister SrcReg, bool KillSrc) const {
   if (K1C::SingleRegRegClass.contains(DstReg, SrcReg)) {
     BuildMI(MBB, MBBI, DL, get(K1C::COPYD), DstReg)
         .addReg(SrcReg, getKillRegState(KillSrc));
