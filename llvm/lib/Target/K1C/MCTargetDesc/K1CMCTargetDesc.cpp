@@ -48,7 +48,8 @@ static MCRegisterInfo *createK1CMCRegisterInfo(const Triple &TT) {
 }
 
 static MCAsmInfo *createK1CMCAsmInfo(const MCRegisterInfo &MRI,
-                                     const Triple &TT) {
+                                     const Triple &TT,
+                                     const MCTargetOptions &Options) {
   return new K1CMCAsmInfo(TT);
 }
 
@@ -72,7 +73,7 @@ static MCTargetStreamer *createK1CTargetStreamer(MCStreamer &S,
   return new K1CTargetStreamer(S);
 }
 
-extern "C" void LLVMInitializeK1CTargetMC() {
+extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeK1CTargetMC() {
   TargetRegistry::RegisterMCAsmInfo(getTheK1CTarget(), createK1CMCAsmInfo);
   TargetRegistry::RegisterMCInstrInfo(getTheK1CTarget(), createK1CMCInstrInfo);
   TargetRegistry::RegisterMCRegInfo(getTheK1CTarget(), createK1CMCRegisterInfo);

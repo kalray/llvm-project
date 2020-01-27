@@ -36,6 +36,7 @@
 #include "llvm/IR/IntrinsicsARM.h"
 #include "llvm/IR/IntrinsicsBPF.h"
 #include "llvm/IR/IntrinsicsHexagon.h"
+#include "llvm/IR/IntrinsicsK1C.h"
 #include "llvm/IR/IntrinsicsNVPTX.h"
 #include "llvm/IR/IntrinsicsPowerPC.h"
 #include "llvm/IR/IntrinsicsR600.h"
@@ -14981,6 +14982,25 @@ static int K1C_getRoundingModifier(clang::ASTContext &Ctx,
   return -1;
 }
 
+static Value *K1C_emitUnaryBuiltin(CodeGenFunction &CGF,
+                               const CallExpr *E,
+                               unsigned IntrinsicID) {
+  llvm::Value *Src0 = CGF.EmitScalarExpr(E->getArg(0));
+
+  Function *F = CGF.CGM.getIntrinsic(IntrinsicID);
+  return CGF.Builder.CreateCall(F, Src0);
+}
+
+static Value *K1C_emitBinaryBuiltin(CodeGenFunction &CGF,
+                                const CallExpr *E,
+                                unsigned IntrinsicID) {
+  llvm::Value *Src0 = CGF.EmitScalarExpr(E->getArg(0));
+  llvm::Value *Src1 = CGF.EmitScalarExpr(E->getArg(1));
+
+  Function *F = CGF.CGM.getIntrinsic(IntrinsicID);
+  return CGF.Builder.CreateCall(F, { Src0, Src1 });
+}
+
 static Value *K1C_emitBinaryRoundingBuiltin(CodeGenFunction &CGF,
                                             const CallExpr *E,
                                             unsigned IntrinsicID) {
@@ -15116,40 +15136,40 @@ Value *CodeGenFunction::EmitK1CBuiltinExpr(unsigned BuiltinID,
   }
 
   case K1C::BI__builtin_k1_fabswp:
-    return emitUnaryBuiltin(*this, E, Intrinsic::k1c_fabswp);
+    return K1C_emitUnaryBuiltin(*this, E, Intrinsic::k1c_fabswp);
 
   case K1C::BI__builtin_k1_fabswq:
-    return emitUnaryBuiltin(*this, E, Intrinsic::k1c_fabswq);
+    return K1C_emitUnaryBuiltin(*this, E, Intrinsic::k1c_fabswq);
 
   case K1C::BI__builtin_k1_fabsdp:
-    return emitUnaryBuiltin(*this, E, Intrinsic::k1c_fabsdp);
+    return K1C_emitUnaryBuiltin(*this, E, Intrinsic::k1c_fabsdp);
 
   case K1C::BI__builtin_k1_fnegwp:
-    return emitUnaryBuiltin(*this, E, Intrinsic::k1c_fnegwp);
+    return K1C_emitUnaryBuiltin(*this, E, Intrinsic::k1c_fnegwp);
 
   case K1C::BI__builtin_k1_fnegwq:
-    return emitUnaryBuiltin(*this, E, Intrinsic::k1c_fnegwq);
+    return K1C_emitUnaryBuiltin(*this, E, Intrinsic::k1c_fnegwq);
 
   case K1C::BI__builtin_k1_fnegdp:
-    return emitUnaryBuiltin(*this, E, Intrinsic::k1c_fnegdp);
+    return K1C_emitUnaryBuiltin(*this, E, Intrinsic::k1c_fnegdp);
 
   case K1C::BI__builtin_k1_fmaxwp:
-    return emitBinaryBuiltin(*this, E, Intrinsic::k1c_fmaxwp);
+    return K1C_emitBinaryBuiltin(*this, E, Intrinsic::k1c_fmaxwp);
 
   case K1C::BI__builtin_k1_fmaxwq:
-    return emitBinaryBuiltin(*this, E, Intrinsic::k1c_fmaxwq);
+    return K1C_emitBinaryBuiltin(*this, E, Intrinsic::k1c_fmaxwq);
 
   case K1C::BI__builtin_k1_fmaxdp:
-    return emitBinaryBuiltin(*this, E, Intrinsic::k1c_fmaxdp);
+    return K1C_emitBinaryBuiltin(*this, E, Intrinsic::k1c_fmaxdp);
 
   case K1C::BI__builtin_k1_fminwp:
-    return emitBinaryBuiltin(*this, E, Intrinsic::k1c_fminwp);
+    return K1C_emitBinaryBuiltin(*this, E, Intrinsic::k1c_fminwp);
 
   case K1C::BI__builtin_k1_fminwq:
-    return emitBinaryBuiltin(*this, E, Intrinsic::k1c_fminwq);
+    return K1C_emitBinaryBuiltin(*this, E, Intrinsic::k1c_fminwq);
 
   case K1C::BI__builtin_k1_fmindp:
-    return emitBinaryBuiltin(*this, E, Intrinsic::k1c_fmindp);
+    return K1C_emitBinaryBuiltin(*this, E, Intrinsic::k1c_fmindp);
 
   case K1C::BI__builtin_k1_faddwp:
     return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_faddwp);

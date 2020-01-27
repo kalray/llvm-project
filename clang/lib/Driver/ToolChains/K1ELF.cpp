@@ -41,7 +41,7 @@ void k1elf::Assembler::ConstructJob(Compilation &C, const JobAction &JA,
 
   const char *Exec =
       Args.MakeArgString(getToolChain().GetProgramPath("k1-elf-as"));
-  C.addCommand(llvm::make_unique<Command>(JA, *this, Exec, CmdArgs, Inputs));
+  C.addCommand(std::make_unique<Command>(JA, *this, Exec, CmdArgs, Inputs));
 }
 
 void k1elf::Linker::ConstructJob(Compilation &C, const JobAction &JA,
@@ -95,7 +95,7 @@ void k1elf::Linker::ConstructJob(Compilation &C, const JobAction &JA,
 
   const char *Exec =
       Args.MakeArgString(getToolChain().GetProgramPath("k1-elf-ld"));
-  C.addCommand(llvm::make_unique<Command>(JA, *this, Exec, CmdArgs, Inputs));
+  C.addCommand(std::make_unique<Command>(JA, *this, Exec, CmdArgs, Inputs));
 }
 
 K1ELF::K1ELF(const Driver &D, const llvm::Triple &Triple, const ArgList &Args)

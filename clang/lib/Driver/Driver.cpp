@@ -4808,10 +4808,10 @@ const ToolChain &Driver::getToolChain(const ArgList &Args,
       TC = std::make_unique<toolchains::Ananas>(*this, Target, Args);
       break;
     case llvm::Triple::ClusterOS:
-      TC = llvm::make_unique<toolchains::ClusterOS>(*this, Target, Args);
+      TC = std::make_unique<toolchains::ClusterOS>(*this, Target, Args);
       break;
     case llvm::Triple::K1ELF:
-      TC = llvm::make_unique<toolchains::K1ELF>(*this, Target, Args);
+      TC = std::make_unique<toolchains::K1ELF>(*this, Target, Args);
       break;
     case llvm::Triple::CloudABI:
       TC = std::make_unique<toolchains::CloudABI>(*this, Target, Args);
