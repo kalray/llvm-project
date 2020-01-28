@@ -198,10 +198,6 @@ def externref : ValueType<0  , 162>;   // WebAssembly's externref type
 def x86amx : ValueType<8192, 163>;   // X86 AMX value
 
 
-// K1C value types
-def v64f16 : ValueType<1024,156>; // 64 x f16 vector value
-def v16f64 : ValueType<1024,157>; // 16 x f64 vector value
-
 def token  : ValueType<0  , 248>;   // TokenTy
 def MetadataVT: ValueType<0, 249>;  // Metadata
 
