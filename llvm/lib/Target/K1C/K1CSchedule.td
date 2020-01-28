@@ -42,7 +42,7 @@ def ALU_TINY : InstrItinClass;
 def ALU_TINY_X : InstrItinClass;
 def ALU_TINY_Y : InstrItinClass;
 def BCU : InstrItinClass;
-def BCU_CRRW : InstrItinClass;
+def BCU_CRRP_CRWL_CRWH : InstrItinClass;
 def BCU_TINY_AUXW_CRRP : InstrItinClass;
 def BCU_TINY_TINY_MAU_XNOP : InstrItinClass;
 def LSU : InstrItinClass;
@@ -160,7 +160,7 @@ def K1CItinList {
       InstrStage<1, [BCU_UNIT]>
     ]>,
 
-    InstrItinData<BCU_CRRW, [
+    InstrItinData<BCU_CRRP_CRWL_CRWH, [
       InstrStage<1, [CMB_BCU_CRRP_CRW_UNIT]>
     ]>,
 
