@@ -177,59 +177,59 @@ multiclass MC_05<string OpcStr> {
 //   defm LV
 multiclass MC_06<string OpcStr> {
   def d0 : SPECULATE_REGISTERA_SIGNED10_REGISTERZ_SIMPLE
-    <(outs AccelReg:$a2), (ins Signed10_64:$a3, SingleReg:$a4, SpeculateMod:$a1),
+    <(outs VectorReg:$a2), (ins Signed10_64:$a3, SingleReg:$a4, SpeculateMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
      [ ]>;
   def d1 : SPECULATE_REGISTERA_UPPER27_LOWER10_REGISTERZ_DOUBLE
-    <(outs AccelReg:$a2), (ins Signed37_64:$a3, SingleReg:$a4, SpeculateMod:$a1),
+    <(outs VectorReg:$a2), (ins Signed37_64:$a3, SingleReg:$a4, SpeculateMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
      [ ]>;
   def d2 : SPECULATE_REGISTERA_EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
-    <(outs AccelReg:$a2), (ins Wrapped64:$a3, SingleReg:$a4, SpeculateMod:$a1),
+    <(outs VectorReg:$a2), (ins Wrapped64:$a3, SingleReg:$a4, SpeculateMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
      [ ]>;
   def d3 : SPECULATE_LSUCOND_REGISTERY_REGISTERA_REGISTERZ_SIMPLE
-    <(outs AccelReg:$a4), (ins SingleReg:$a3, SingleReg:$a5, AccelReg:$a44, SpeculateMod:$a1, ScalarcondMod:$a2),
+    <(outs VectorReg:$a4), (ins SingleReg:$a3, SingleReg:$a5, VectorReg:$a44, SpeculateMod:$a1, ScalarcondMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = [$a5]"),
      [ ]>;
   def d4 : SPECULATE_LSUCOND_REGISTERY_REGISTERA_OFFSET27_REGISTERZ_DOUBLE
-    <(outs AccelReg:$a4), (ins SingleReg:$a3, Signed27:$a5, SingleReg:$a6, AccelReg:$a44, SpeculateMod:$a1, ScalarcondMod:$a2),
+    <(outs VectorReg:$a4), (ins SingleReg:$a3, Signed27:$a5, SingleReg:$a6, VectorReg:$a44, SpeculateMod:$a1, ScalarcondMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = $a5[$a6]"),
      [ ]>;
   def d5 : SPECULATE_LSUCOND_REGISTERY_REGISTERA_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
-    <(outs AccelReg:$a4), (ins SingleReg:$a3, Signed54:$a5, SingleReg:$a6, AccelReg:$a44, SpeculateMod:$a1, ScalarcondMod:$a2),
+    <(outs VectorReg:$a4), (ins SingleReg:$a3, Signed54:$a5, SingleReg:$a6, VectorReg:$a44, SpeculateMod:$a1, ScalarcondMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = $a5[$a6]"),
      [ ]>;
   def d6 : SPECULATE_SCALING_REGISTERA_REGISTERY_REGISTERZ_SIMPLE
-    <(outs AccelReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, SpeculateMod:$a1, ScalingMod:$a2),
+    <(outs VectorReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, SpeculateMod:$a1, ScalingMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4[$a5]"),
      [ ]>;
   def d7 : COLUMN_SPECULATE_REGISTERAQ_SIGNED10_REGISTERZ_SIMPLE
-    <(outs ExtendReg:$a3), (ins Signed10_64:$a4, SingleReg:$a5, ColumnselMod:$a1, SpeculateMod:$a2),
+    <(outs MatrixReg:$a3), (ins Signed10_64:$a4, SingleReg:$a5, ColumnselMod:$a1, SpeculateMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4[$a5]"),
      [ ]>;
   def d8 : COLUMN_SPECULATE_REGISTERAQ_UPPER27_LOWER10_REGISTERZ_DOUBLE
-    <(outs ExtendReg:$a3), (ins Signed37_64:$a4, SingleReg:$a5, ColumnselMod:$a1, SpeculateMod:$a2),
+    <(outs MatrixReg:$a3), (ins Signed37_64:$a4, SingleReg:$a5, ColumnselMod:$a1, SpeculateMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4[$a5]"),
      [ ]>;
   def d9 : COLUMN_SPECULATE_REGISTERAQ_EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
-    <(outs ExtendReg:$a3), (ins Wrapped64:$a4, SingleReg:$a5, ColumnselMod:$a1, SpeculateMod:$a2),
+    <(outs MatrixReg:$a3), (ins Wrapped64:$a4, SingleReg:$a5, ColumnselMod:$a1, SpeculateMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4[$a5]"),
      [ ]>;
   def da : COLUMN_SPECULATE_LSUCOND_REGISTERY_REGISTERAQ_REGISTERZ_SIMPLE
-    <(outs ExtendReg:$a5), (ins SingleReg:$a4, SingleReg:$a6, ColumnselMod:$a1, SpeculateMod:$a2, ScalarcondMod:$a3),
+    <(outs MatrixReg:$a5), (ins SingleReg:$a4, SingleReg:$a6, ColumnselMod:$a1, SpeculateMod:$a2, ScalarcondMod:$a3),
      !strconcat (OpcStr, "$a1$a2$a3 $a4 ? $a5 = [$a6]"),
      [ ]>;
   def db : COLUMN_SPECULATE_LSUCOND_REGISTERY_REGISTERAQ_OFFSET27_REGISTERZ_DOUBLE
-    <(outs ExtendReg:$a5), (ins SingleReg:$a4, Signed27:$a6, SingleReg:$a7, ColumnselMod:$a1, SpeculateMod:$a2, ScalarcondMod:$a3),
+    <(outs MatrixReg:$a5), (ins SingleReg:$a4, Signed27:$a6, SingleReg:$a7, ColumnselMod:$a1, SpeculateMod:$a2, ScalarcondMod:$a3),
      !strconcat (OpcStr, "$a1$a2$a3 $a4 ? $a5 = $a6[$a7]"),
      [ ]>;
   def dc : COLUMN_SPECULATE_LSUCOND_REGISTERY_REGISTERAQ_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
-    <(outs ExtendReg:$a5), (ins SingleReg:$a4, Signed54:$a6, SingleReg:$a7, ColumnselMod:$a1, SpeculateMod:$a2, ScalarcondMod:$a3),
+    <(outs MatrixReg:$a5), (ins SingleReg:$a4, Signed54:$a6, SingleReg:$a7, ColumnselMod:$a1, SpeculateMod:$a2, ScalarcondMod:$a3),
      !strconcat (OpcStr, "$a1$a2$a3 $a4 ? $a5 = $a6[$a7]"),
      [ ]>;
   def dd : COLUMN_SPECULATE_SCALING_REGISTERAQ_REGISTERY_REGISTERZ_SIMPLE
-    <(outs ExtendReg:$a4), (ins SingleReg:$a5, SingleReg:$a6, ColumnselMod:$a1, SpeculateMod:$a2, ScalingMod:$a3),
+    <(outs MatrixReg:$a4), (ins SingleReg:$a5, SingleReg:$a6, ColumnselMod:$a1, SpeculateMod:$a2, ScalingMod:$a3),
      !strconcat (OpcStr, "$a1$a2$a3 $a4 = $a5[$a6]"),
      [ ]>;
 }
@@ -353,31 +353,31 @@ multiclass MC_09<string OpcStr> {
 //   defm SV
 multiclass MC_0A<string OpcStr> {
   def d0 : SIGNED10_REGISTERZ_REGISTERE_SIMPLE
-    <(outs), (ins Signed10_64:$a1, SingleReg:$a2, AccelReg:$a3),
+    <(outs), (ins Signed10_64:$a1, SingleReg:$a2, VectorReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [ ]>;
   def d1 : UPPER27_LOWER10_REGISTERZ_REGISTERE_DOUBLE
-    <(outs), (ins Signed37_64:$a1, SingleReg:$a2, AccelReg:$a3),
+    <(outs), (ins Signed37_64:$a1, SingleReg:$a2, VectorReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [ ]>;
   def d2 : EXTEND27_UPPER27_LOWER10_REGISTERZ_REGISTERE_TRIPLE
-    <(outs), (ins Wrapped64:$a1, SingleReg:$a2, AccelReg:$a3),
+    <(outs), (ins Wrapped64:$a1, SingleReg:$a2, VectorReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [ ]>;
   def d3 : SCALING_REGISTERY_REGISTERZ_REGISTERE_SIMPLE
-    <(outs), (ins SingleReg:$a2, SingleReg:$a3, AccelReg:$a4, ScalingMod:$a1),
+    <(outs), (ins SingleReg:$a2, SingleReg:$a3, VectorReg:$a4, ScalingMod:$a1),
      !strconcat (OpcStr, "$a1 $a2[$a3] = $a4"),
      [ ]>;
   def d4 : LSUCOND_REGISTERY_REGISTERZ_REGISTERE_SIMPLE
-    <(outs), (ins SingleReg:$a2, SingleReg:$a3, AccelReg:$a4, ScalarcondMod:$a1),
+    <(outs), (ins SingleReg:$a2, SingleReg:$a3, VectorReg:$a4, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? [$a3] = $a4"),
      [ ]>;
   def d5 : LSUCOND_REGISTERY_OFFSET27_REGISTERZ_REGISTERE_DOUBLE
-    <(outs), (ins SingleReg:$a2, Signed27:$a3, SingleReg:$a4, AccelReg:$a5, ScalarcondMod:$a1),
+    <(outs), (ins SingleReg:$a2, Signed27:$a3, SingleReg:$a4, VectorReg:$a5, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
      [ ]>;
   def d6 : LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_REGISTERE_TRIPLE
-    <(outs), (ins SingleReg:$a2, Signed54:$a3, SingleReg:$a4, AccelReg:$a5, ScalarcondMod:$a1),
+    <(outs), (ins SingleReg:$a2, Signed54:$a3, SingleReg:$a4, VectorReg:$a5, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
      [ ]>;
 }
@@ -1329,19 +1329,19 @@ multiclass MC_28<string OpcStr> {
 //   defm ALIGNO
 multiclass MC_29<string OpcStr> {
   def d0 : REGISTERN_REGISTERBE_REGISTERCO_BYTESHIFT_SIMPLE
-    <(outs QuadReg:$a1), (ins AccelRegE:$a2, AccelRegO:$a3, Unsigned6:$a4),
+    <(outs QuadReg:$a1), (ins VectorRegE:$a2, VectorRegO:$a3, Unsigned6:$a4),
      !strconcat (OpcStr, " $a1 = $a2, $a3, $a4"),
      [ ]>;
   def d1 : REGISTERN_REGISTERBO_REGISTERCE_BYTESHIFT_SIMPLE
-    <(outs QuadReg:$a1), (ins AccelRegO:$a2, AccelRegE:$a3, Unsigned6:$a4),
+    <(outs QuadReg:$a1), (ins VectorRegO:$a2, VectorRegE:$a3, Unsigned6:$a4),
      !strconcat (OpcStr, " $a1 = $a2, $a3, $a4"),
      [ ]>;
   def d2 : REGISTERN_REGISTERBE_REGISTERCO_REGISTERZ_SIMPLE
-    <(outs QuadReg:$a1), (ins AccelRegE:$a2, AccelRegO:$a3, SingleReg:$a4),
+    <(outs QuadReg:$a1), (ins VectorRegE:$a2, VectorRegO:$a3, SingleReg:$a4),
      !strconcat (OpcStr, " $a1 = $a2, $a3, $a4"),
      [ ]>;
   def d3 : REGISTERN_REGISTERBO_REGISTERCE_REGISTERZ_SIMPLE
-    <(outs QuadReg:$a1), (ins AccelRegO:$a2, AccelRegE:$a3, SingleReg:$a4),
+    <(outs QuadReg:$a1), (ins VectorRegO:$a2, VectorRegE:$a3, SingleReg:$a4),
      !strconcat (OpcStr, " $a1 = $a2, $a3, $a4"),
      [ ]>;
 }
@@ -1350,19 +1350,19 @@ multiclass MC_29<string OpcStr> {
 //   defm ALIGNV
 multiclass MC_2A<string OpcStr> {
   def d0 : REGISTERA_REGISTERBE_REGISTERCO_BYTESHIFT_SIMPLE
-    <(outs AccelReg:$a1), (ins AccelRegE:$a2, AccelRegO:$a3, Unsigned6:$a4),
+    <(outs VectorReg:$a1), (ins VectorRegE:$a2, VectorRegO:$a3, Unsigned6:$a4),
      !strconcat (OpcStr, " $a1 = $a2, $a3, $a4"),
      [ ]>;
   def d1 : REGISTERA_REGISTERBO_REGISTERCE_BYTESHIFT_SIMPLE
-    <(outs AccelReg:$a1), (ins AccelRegO:$a2, AccelRegE:$a3, Unsigned6:$a4),
+    <(outs VectorReg:$a1), (ins VectorRegO:$a2, VectorRegE:$a3, Unsigned6:$a4),
      !strconcat (OpcStr, " $a1 = $a2, $a3, $a4"),
      [ ]>;
   def d2 : REGISTERA_REGISTERBE_REGISTERCO_REGISTERZ_SIMPLE
-    <(outs AccelReg:$a1), (ins AccelRegE:$a2, AccelRegO:$a3, SingleReg:$a4),
+    <(outs VectorReg:$a1), (ins VectorRegE:$a2, VectorRegO:$a3, SingleReg:$a4),
      !strconcat (OpcStr, " $a1 = $a2, $a3, $a4"),
      [ ]>;
   def d3 : REGISTERA_REGISTERBO_REGISTERCE_REGISTERZ_SIMPLE
-    <(outs AccelReg:$a1), (ins AccelRegO:$a2, AccelRegE:$a3, SingleReg:$a4),
+    <(outs VectorReg:$a1), (ins VectorRegO:$a2, VectorRegE:$a3, SingleReg:$a4),
      !strconcat (OpcStr, " $a1 = $a2, $a3, $a4"),
      [ ]>;
 }
@@ -1371,11 +1371,11 @@ multiclass MC_2A<string OpcStr> {
 //   defm COPYV
 multiclass MC_2B<string OpcStr> {
   def d0 : REGISTERA_REGISTERBE_SIMPLE
-    <(outs AccelReg:$a1), (ins AccelRegE:$a2),
+    <(outs VectorReg:$a1), (ins VectorRegE:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
      [ ]>;
   def d1 : REGISTERA_REGISTERBO_SIMPLE
-    <(outs AccelReg:$a1), (ins AccelRegO:$a2),
+    <(outs VectorReg:$a1), (ins VectorRegO:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
      [ ]>;
 }
@@ -1384,11 +1384,11 @@ multiclass MC_2B<string OpcStr> {
 //   defm MOVEFO
 multiclass MC_2C<string OpcStr> {
   def d0 : REGISTERN_REGISTERBE_SIMPLE
-    <(outs QuadReg:$a1), (ins AccelRegE:$a2),
+    <(outs QuadReg:$a1), (ins VectorRegE:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
      [ ]>;
   def d1 : REGISTERN_REGISTERBO_SIMPLE
-    <(outs QuadReg:$a1), (ins AccelRegO:$a2),
+    <(outs QuadReg:$a1), (ins VectorRegO:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
      [ ]>;
 }
@@ -3395,187 +3395,187 @@ defm ALIGNV : MC_2A<"alignv">;
 
 // 1 insns: ['MT4X4D']
 def MT4X4D : REGISTERAQ_REGISTERBQ_SIMPLE
-  <(outs ExtendReg:$a1), (ins ExtendReg:$a2),
+  <(outs MatrixReg:$a1), (ins MatrixReg:$a2),
    "mt4x4d $a1 = $a2",
    [ ]>;
 
 // 1 insns: ['MM4ABW']
 def MM4ABW : REGISTERAP_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
-  <(outs WideReg:$a1), (ins WideReg:$a2, AccelReg:$a3, AccelReg:$a4),
+  <(outs WideReg:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mm4abw $a1 = $a2, $a3, $a4",
    [ ]>;
 
 // 1 insns: ['MM4AUBW']
 def MM4AUBW : REGISTERAP_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
-  <(outs WideReg:$a1), (ins WideReg:$a2, AccelReg:$a3, AccelReg:$a4),
+  <(outs WideReg:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mm4aubw $a1 = $a2, $a3, $a4",
    [ ]>;
 
 // 1 insns: ['MM4ASUBW']
 def MM4ASUBW : REGISTERAP_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
-  <(outs WideReg:$a1), (ins WideReg:$a2, AccelReg:$a3, AccelReg:$a4),
+  <(outs WideReg:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mm4asubw $a1 = $a2, $a3, $a4",
    [ ]>;
 
 // 1 insns: ['MM4AUSBW']
 def MM4AUSBW : REGISTERAP_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
-  <(outs WideReg:$a1), (ins WideReg:$a2, AccelReg:$a3, AccelReg:$a4),
+  <(outs WideReg:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mm4ausbw $a1 = $a2, $a3, $a4",
    [ ]>;
 
 // 1 insns: ['MM4AHBD0']
 def MM4AHBD0 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
-  <(outs ExtendReg:$a1), (ins ExtendReg:$a2, AccelReg:$a3, AccelReg:$a4),
+  <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mm4ahbd0 $a1 = $a2, $a3, $a4",
    [ ]>;
 
 // 1 insns: ['MM4AUHBD0']
 def MM4AUHBD0 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
-  <(outs ExtendReg:$a1), (ins ExtendReg:$a2, AccelReg:$a3, AccelReg:$a4),
+  <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mm4auhbd0 $a1 = $a2, $a3, $a4",
    [ ]>;
 
 // 1 insns: ['MM4ASUHBD0']
 def MM4ASUHBD0 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
-  <(outs ExtendReg:$a1), (ins ExtendReg:$a2, AccelReg:$a3, AccelReg:$a4),
+  <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mm4asuhbd0 $a1 = $a2, $a3, $a4",
    [ ]>;
 
 // 1 insns: ['MM4AUSHBD0']
 def MM4AUSHBD0 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
-  <(outs ExtendReg:$a1), (ins ExtendReg:$a2, AccelReg:$a3, AccelReg:$a4),
+  <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mm4aushbd0 $a1 = $a2, $a3, $a4",
    [ ]>;
 
 // 1 insns: ['MM4AHBD1']
 def MM4AHBD1 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
-  <(outs ExtendReg:$a1), (ins ExtendReg:$a2, AccelReg:$a3, AccelReg:$a4),
+  <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mm4ahbd1 $a1 = $a2, $a3, $a4",
    [ ]>;
 
 // 1 insns: ['MM4AUHBD1']
 def MM4AUHBD1 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
-  <(outs ExtendReg:$a1), (ins ExtendReg:$a2, AccelReg:$a3, AccelReg:$a4),
+  <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mm4auhbd1 $a1 = $a2, $a3, $a4",
    [ ]>;
 
 // 1 insns: ['MM4ASUHBD1']
 def MM4ASUHBD1 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
-  <(outs ExtendReg:$a1), (ins ExtendReg:$a2, AccelReg:$a3, AccelReg:$a4),
+  <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mm4asuhbd1 $a1 = $a2, $a3, $a4",
    [ ]>;
 
 // 1 insns: ['MM4AUSHBD1']
 def MM4AUSHBD1 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
-  <(outs ExtendReg:$a1), (ins ExtendReg:$a2, AccelReg:$a3, AccelReg:$a4),
+  <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mm4aushbd1 $a1 = $a2, $a3, $a4",
    [ ]>;
 
 // 1 insns: ['MM4AHD']
 def MM4AHD : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
-  <(outs ExtendReg:$a1), (ins ExtendReg:$a2, AccelReg:$a3, AccelReg:$a4),
+  <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mm4ahd $a1 = $a2, $a3, $a4",
    [ ]>;
 
 // 1 insns: ['MM4AUHD']
 def MM4AUHD : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
-  <(outs ExtendReg:$a1), (ins ExtendReg:$a2, AccelReg:$a3, AccelReg:$a4),
+  <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mm4auhd $a1 = $a2, $a3, $a4",
    [ ]>;
 
 // 1 insns: ['MM4ASUHD']
 def MM4ASUHD : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
-  <(outs ExtendReg:$a1), (ins ExtendReg:$a2, AccelReg:$a3, AccelReg:$a4),
+  <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mm4asuhd $a1 = $a2, $a3, $a4",
    [ ]>;
 
 // 1 insns: ['MM4AUSHD']
 def MM4AUSHD : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
-  <(outs ExtendReg:$a1), (ins ExtendReg:$a2, AccelReg:$a3, AccelReg:$a4),
+  <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mm4aushd $a1 = $a2, $a3, $a4",
    [ ]>;
 
 // 1 insns: ['FMM4AHW0']
 let Uses=[CS], Defs=[CS] in
 def FMM4AHW0 : REGISTERA0_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
-  <(outs BlockReg0M4:$a1), (ins WideReg:$a2, AccelReg:$a3, AccelReg:$a4),
+  <(outs BlockReg0M4:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "fmm4ahw0 $a1 = $a2, $a3, $a4",
    [ ]>;
 
 // 1 insns: ['FMM4AHW1']
 let Uses=[CS], Defs=[CS] in
 def FMM4AHW1 : REGISTERA1_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
-  <(outs BlockReg1M4:$a1), (ins WideReg:$a2, AccelReg:$a3, AccelReg:$a4),
+  <(outs BlockReg1M4:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "fmm4ahw1 $a1 = $a2, $a3, $a4",
    [ ]>;
 
 // 1 insns: ['FMM4AHW2']
 let Uses=[CS], Defs=[CS] in
 def FMM4AHW2 : REGISTERA2_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
-  <(outs BlockReg2M4:$a1), (ins WideReg:$a2, AccelReg:$a3, AccelReg:$a4),
+  <(outs BlockReg2M4:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "fmm4ahw2 $a1 = $a2, $a3, $a4",
    [ ]>;
 
 // 1 insns: ['FMM4AHW3']
 let Uses=[CS], Defs=[CS] in
 def FMM4AHW3 : REGISTERA3_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
-  <(outs BlockReg3M4:$a1), (ins WideReg:$a2, AccelReg:$a3, AccelReg:$a4),
+  <(outs BlockReg3M4:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "fmm4ahw3 $a1 = $a2, $a3, $a4",
    [ ]>;
 
 // 1 insns: ['CONVDHV0']
 let Uses=[CS] in
 def CONVDHV0 : ROUNDINT_SATURATE_REGISTERAL_REGISTERBQ_SIMPLE
-  <(outs BlockRegE:$a3), (ins ExtendReg:$a4, RoundintMod:$a1, SaturateMod:$a2),
+  <(outs BlockRegE:$a3), (ins MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2),
    "convdhv0$a1$a2 $a3 = $a4",
    [ ]>;
 
 // 1 insns: ['CONVDHV1']
 let Uses=[CS] in
 def CONVDHV1 : ROUNDINT_SATURATE_REGISTERAH_REGISTERBQ_SIMPLE
-  <(outs BlockRegO:$a3), (ins ExtendReg:$a4, RoundintMod:$a1, SaturateMod:$a2),
+  <(outs BlockRegO:$a3), (ins MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2),
    "convdhv1$a1$a2 $a3 = $a4",
    [ ]>;
 
 // 1 insns: ['CONVWBV0']
 let Uses=[CS] in
 def CONVWBV0 : ROUNDINT_SATURATE_REGISTERAX_REGISTERBQ_SIMPLE
-  <(outs CoproReg0M4:$a3), (ins ExtendReg:$a4, RoundintMod:$a1, SaturateMod:$a2),
+  <(outs CoproReg0M4:$a3), (ins MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2),
    "convwbv0$a1$a2 $a3 = $a4",
    [ ]>;
 
 // 1 insns: ['CONVWBV1']
 let Uses=[CS] in
 def CONVWBV1 : ROUNDINT_SATURATE_REGISTERAY_REGISTERBQ_SIMPLE
-  <(outs CoproReg1M4:$a3), (ins ExtendReg:$a4, RoundintMod:$a1, SaturateMod:$a2),
+  <(outs CoproReg1M4:$a3), (ins MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2),
    "convwbv1$a1$a2 $a3 = $a4",
    [ ]>;
 
 // 1 insns: ['CONVWBV2']
 let Uses=[CS] in
 def CONVWBV2 : ROUNDINT_SATURATE_REGISTERAZ_REGISTERBQ_SIMPLE
-  <(outs CoproReg2M4:$a3), (ins ExtendReg:$a4, RoundintMod:$a1, SaturateMod:$a2),
+  <(outs CoproReg2M4:$a3), (ins MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2),
    "convwbv2$a1$a2 $a3 = $a4",
    [ ]>;
 
 // 1 insns: ['CONVWBV3']
 let Uses=[CS] in
 def CONVWBV3 : ROUNDINT_SATURATE_REGISTERAT_REGISTERBQ_SIMPLE
-  <(outs CoproReg3M4:$a3), (ins ExtendReg:$a4, RoundintMod:$a1, SaturateMod:$a2),
+  <(outs CoproReg3M4:$a3), (ins MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2),
    "convwbv3$a1$a2 $a3 = $a4",
    [ ]>;
 
 // 1 insns: ['FSCALEWV']
 let Uses=[CS], Defs=[CS] in
 def FSCALEWV : XROUNDING_SILENT2_RECTIFY_REGISTERA_REGISTERB_SIMPLE
-  <(outs AccelReg:$a4), (ins AccelReg:$a5, RoundingMod:$a1, SilentMod:$a2, RectifyMod:$a3),
+  <(outs VectorReg:$a4), (ins VectorReg:$a5, RoundingMod:$a1, SilentMod:$a2, RectifyMod:$a3),
    "fscalewv$a1$a2$a3 $a4 = $a5",
    [ ]>;
 
 // 1 insns: ['FNARROWWHV']
 let Uses=[CS], Defs=[CS] in
 def FNARROWWHV : XROUNDING_SILENT2_REGISTERA_REGISTERBP_SIMPLE
-  <(outs AccelReg:$a3), (ins WideReg:$a4, RoundingMod:$a1, SilentMod:$a2),
+  <(outs VectorReg:$a3), (ins WideReg:$a4, RoundingMod:$a1, SilentMod:$a2),
    "fnarrowwhv$a1$a2 $a3 = $a4",
    [ ]>;
 
