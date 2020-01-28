@@ -146,14 +146,6 @@ def FlagVT : ValueType<0  , 110>;   // Pre-RA sched glue
 def isVoid : ValueType<0  , 111>;   // Produces no value
 def untyped: ValueType<8  , 112>;   // Produces an untyped value
 def ExceptRef: ValueType<0, 113>;   // WebAssembly's except_ref type
-
-// K1 value types
-def v16f16 : ValueType<256, 114>; // 16 x f16 vector value
-def v32f16 : ValueType<512, 115>; // 32 x f16 vector value
-def v64f16 : ValueType<1024,116>; // 64 x f16 vector value
-def v32f32 : ValueType<1024,117>; // 32 x f32 vector value
-def v16f64 : ValueType<1024,118>; // 16 x f64 vector value
-
 def token  : ValueType<0  , 248>;   // TokenTy
 def MetadataVT: ValueType<0, 249>;  // Metadata
 
