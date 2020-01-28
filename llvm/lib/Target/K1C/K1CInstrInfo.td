@@ -204,31 +204,31 @@ multiclass MC_06<string OpcStr> {
     <(outs AccelReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, SpeculateMod:$a1, ScalingMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4[$a5]"),
      [ ]>;
-  def d7 : COLUMNSEL_SPECULATE_REGISTERAQ_SIGNED10_REGISTERZ_SIMPLE
+  def d7 : COLUMN_SPECULATE_REGISTERAQ_SIGNED10_REGISTERZ_SIMPLE
     <(outs ExtendReg:$a3), (ins Signed10_64:$a4, SingleReg:$a5, ColumnselMod:$a1, SpeculateMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4[$a5]"),
      [ ]>;
-  def d8 : COLUMNSEL_SPECULATE_REGISTERAQ_UPPER27_LOWER10_REGISTERZ_DOUBLE
+  def d8 : COLUMN_SPECULATE_REGISTERAQ_UPPER27_LOWER10_REGISTERZ_DOUBLE
     <(outs ExtendReg:$a3), (ins Signed37_64:$a4, SingleReg:$a5, ColumnselMod:$a1, SpeculateMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4[$a5]"),
      [ ]>;
-  def d9 : COLUMNSEL_SPECULATE_REGISTERAQ_EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
+  def d9 : COLUMN_SPECULATE_REGISTERAQ_EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
     <(outs ExtendReg:$a3), (ins Wrapped64:$a4, SingleReg:$a5, ColumnselMod:$a1, SpeculateMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4[$a5]"),
      [ ]>;
-  def da : COLUMNSEL_SPECULATE_LSUCOND_REGISTERY_REGISTERAQ_REGISTERZ_SIMPLE
+  def da : COLUMN_SPECULATE_LSUCOND_REGISTERY_REGISTERAQ_REGISTERZ_SIMPLE
     <(outs ExtendReg:$a5), (ins SingleReg:$a4, SingleReg:$a6, ColumnselMod:$a1, SpeculateMod:$a2, ScalarcondMod:$a3),
      !strconcat (OpcStr, "$a1$a2$a3 $a4 ? $a5 = [$a6]"),
      [ ]>;
-  def db : COLUMNSEL_SPECULATE_LSUCOND_REGISTERY_REGISTERAQ_OFFSET27_REGISTERZ_DOUBLE
+  def db : COLUMN_SPECULATE_LSUCOND_REGISTERY_REGISTERAQ_OFFSET27_REGISTERZ_DOUBLE
     <(outs ExtendReg:$a5), (ins SingleReg:$a4, Signed27:$a6, SingleReg:$a7, ColumnselMod:$a1, SpeculateMod:$a2, ScalarcondMod:$a3),
      !strconcat (OpcStr, "$a1$a2$a3 $a4 ? $a5 = $a6[$a7]"),
      [ ]>;
-  def dc : COLUMNSEL_SPECULATE_LSUCOND_REGISTERY_REGISTERAQ_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
+  def dc : COLUMN_SPECULATE_LSUCOND_REGISTERY_REGISTERAQ_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
     <(outs ExtendReg:$a5), (ins SingleReg:$a4, Signed54:$a6, SingleReg:$a7, ColumnselMod:$a1, SpeculateMod:$a2, ScalarcondMod:$a3),
      !strconcat (OpcStr, "$a1$a2$a3 $a4 ? $a5 = $a6[$a7]"),
      [ ]>;
-  def dd : COLUMNSEL_SPECULATE_SCALING_REGISTERAQ_REGISTERY_REGISTERZ_SIMPLE
+  def dd : COLUMN_SPECULATE_SCALING_REGISTERAQ_REGISTERY_REGISTERZ_SIMPLE
     <(outs ExtendReg:$a4), (ins SingleReg:$a5, SingleReg:$a6, ColumnselMod:$a1, SpeculateMod:$a2, ScalingMod:$a3),
      !strconcat (OpcStr, "$a1$a2$a3 $a4 = $a5[$a6]"),
      [ ]>;
