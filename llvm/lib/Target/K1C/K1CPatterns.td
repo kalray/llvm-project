@@ -263,12 +263,12 @@ multiclass SHIFT_PAT64<SDNode n, SDNode instr>
                 (i64 (zext i32:$val))),(instr SingleReg:$r1, SingleReg:$val)>;
 }
 
-defm : SHIFT_PAT32<shl, SLLWd0>;
-defm : SHIFT_PAT32<sra, SRAWd0>;
-defm : SHIFT_PAT32<srl, SRLWd0>;
-defm : SHIFT_PAT64<shl, SLLDd0>;
-defm : SHIFT_PAT64<sra, SRADd0>;
-defm : SHIFT_PAT64<srl, SRLDd0>;
+defm : SHIFT_PAT32<shl, SLLWd1>;
+defm : SHIFT_PAT32<sra, SRAWd1>;
+defm : SHIFT_PAT32<srl, SRLWd1>;
+defm : SHIFT_PAT64<shl, SLLDd1>;
+defm : SHIFT_PAT64<sra, SRADd1>;
+defm : SHIFT_PAT64<srl, SRLDd1>;
 
 // Zero/sign extend patterns to i32
 def : Pat<(i32 (anyext i8:$val)), (COPY SingleReg:$val)>;
@@ -331,14 +331,14 @@ def : Pat<(i8 (trunc i64:$param)), (ZXBD SingleReg:$param)>;
 def : Pat<(i16 (trunc i64:$param)), (ZXHD SingleReg:$param)>;
 def : Pat<(i32 (trunc i64:$param)), (ZXWD SingleReg:$param)>;
 
-def : Pat<(i1 (trunc i32:$param)), (ANDWd1 SingleReg:$param, (i32 1))>;
+def : Pat<(i1 (trunc i32:$param)), (ANDWd0 SingleReg:$param, (i32 1))>;
 def : Pat<(i8 (trunc i32:$param)), (ZXBD SingleReg:$param)>;
 def : Pat<(i16 (trunc i32:$param)), (ZXHD SingleReg:$param)>;
 
-def : Pat<(i1 (trunc i16:$param)), (ANDWd1 SingleReg:$param, (i32 1))>;
+def : Pat<(i1 (trunc i16:$param)), (ANDWd0 SingleReg:$param, (i32 1))>;
 def : Pat<(i8 (trunc i16:$param)), (ZXBD SingleReg:$param)>;
 
-def : Pat<(i1 (trunc i8:$param)), (ANDWd1 SingleReg:$param, (i32 1))>;
+def : Pat<(i1 (trunc i8:$param)), (ANDWd0 SingleReg:$param, (i32 1))>;
 
 def : Pat<(cttz i32:$src), (CTZW SingleReg:$src)>;
 def : Pat<(cttz i64:$src), (CTZD SingleReg:$src)>;
