@@ -1,4 +1,4 @@
-//===-- K1InstrInfo.td - Target Description for K1 Target -----------------===//
+//===-- K1CInstrInfo.td - Target Description for K1C Target ---------------===//
 //
 //                     The LLVM Compiler Infrastructure
 //
@@ -7,7 +7,7 @@
 //
 //===----------------------------------------------------------------------===//
 //
-// This file describes the K1 instructions in TableGen format.
+// This file describes the K1C instructions in TableGen format.
 //
 //===----------------------------------------------------------------------===//
 
@@ -16,7 +16,7 @@
 //===----------------------------------------------------------------------===//
 
 // This file was automatically generated, DO NOT EDIT.
-// Last generated: 2019-03-18 11:14:10.983261.
+// Last generated: 2020-01-30 23:46:59.701573.
 
 include "K1CInstruction.td"
 include "K1CInstrFormats.td"
@@ -28,13 +28,12 @@ multiclass MC_00<string OpcStr> {
   def d0 : REGISTERZ_SIMPLE
     <(outs), (ins SingleReg:$a1),
      !strconcat (OpcStr, " $a1"),
-     [], // pattern missing
+     [/* no straightforward pattern */],
      ALL>;
   def d1 : SYSNUMBER_SIMPLE
-    <(outs), (ins Sysnumber:$a1), // Sysnumber ?!?
+    <(outs), (ins Sysnumber:$a1),
      !strconcat (OpcStr, " $a1"),
-     []>; // pattern missing
-
+     [/* no straightforward pattern */]>;
 }
 
 // multiclass MC_01 is used by:
@@ -44,31 +43,72 @@ multiclass MC_01<string OpcStr> {
   def d0 : SYSTEMT2_REGISTERZ_SIMPLE
     <(outs OnlyfxReg:$a1), (ins SingleReg:$a2),
      !strconcat (OpcStr, " $a1, $a2"),
-     []>; // pattern missing
-  // def d1 : SYSTEMALONE_REGISTERZ_SIMPLE <- not defined yet
-  //   <(outs AloneReg:$a1), (ins SingleReg:$a2),
-  //    !strconcat (OpcStr, " $a1, $a2"),
-  //    []>; // pattern missing
+     [/* no straightforward pattern */]>;
+  def d1 : SYSTEMALONE_REGISTERZ_SIMPLE
+    <(outs AloneReg:$a1), (ins SingleReg:$a2),
+     !strconcat (OpcStr, " $a1, $a2"),
+     [/* no straightforward pattern */]>;
+  def d2 : SYSTEMT4_REGISTERZ_SIMPLE
+    <(outs SystemReg:$a1), (ins SingleReg:$a2),
+     !strconcat (OpcStr, " $a1, $a2"),
+     [/* no straightforward pattern */]>;
 }
 
 // multiclass MC_02 is used by:
-//   defm SET
+//   defm GET
 multiclass MC_02<string OpcStr> {
-  def d0 : SYSTEMT3_REGISTERZ_SIMPLE
-    <(outs SystemReg:$a1), (ins SingleReg:$a2),
+  def d0 : REGISTERZ_SYSTEMS2_SIMPLE
+    <(outs SingleReg:$a1), (ins OnlygetReg:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
-     []>;
-  // def d1 : SYSTEMALONE_REGISTERZ_SIMPLE <- not defined yet
-  //   <(outs ??:$a1), (ins SingleReg:$a2),
-  //    !strconcat (OpcStr, " $a1, $a2"),
-  //    []>;
-  def d2 : SYSTEMRA_REGISTERZ_SIMPLE
-    <(outs OnlyraReg:$a1), (ins SingleReg:$a2),
+     [/* no straightforward pattern */]>;
+  def d1 : REGISTERZ_SYSTEMS3_SIMPLE
+    <(outs SingleReg:$a1), (ins SystemReg:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
-     []>;
+     [/* no straightforward pattern */]>;
 }
 
 // multiclass MC_03 is used by:
+//   defm SET
+multiclass MC_03<string OpcStr> {
+  def d0 : SYSTEMT3_REGISTERZ_SIMPLE
+    <(outs OnlysetReg:$a1), (ins SingleReg:$a2),
+     !strconcat (OpcStr, " $a1 = $a2"),
+     [/* no straightforward pattern */]>;
+  def d1 : SYSTEMALONE_REGISTERZ_SIMPLE
+    <(outs AloneReg:$a1), (ins SingleReg:$a2),
+     !strconcat (OpcStr, " $a1 = $a2"),
+     [/* no straightforward pattern */]>;
+  def d2 : SYSTEMRA_REGISTERZ_SIMPLE
+    <(outs OnlyraReg:$a1), (ins SingleReg:$a2),
+     !strconcat (OpcStr, " $a1 = $a2"),
+     [/* no straightforward pattern */]>;
+  def d3 : SYSTEMT4_REGISTERZ_SIMPLE
+    <(outs SystemReg:$a1), (ins SingleReg:$a2),
+     !strconcat (OpcStr, " $a1 = $a2"),
+     [/* no straightforward pattern */]>;
+}
+
+// multiclass MC_04 is used by:
+//   defm RSWAP
+multiclass MC_04<string OpcStr> {
+  let Constraints = "$a1 = $a1o, $a2 = $a2o" in
+  def d0 : REGISTERZ_SYSTEMS4_SIMPLE
+    <(outs SingleReg:$a1o, OnlyswapReg:$a2o), (ins SingleReg:$a1, OnlyswapReg:$a2),
+     !strconcat (OpcStr, " $a1 = $a2"),
+     [/* no straightforward pattern */]>;
+  let Constraints = "$a1 = $a1o, $a2 = $a2o" in
+  def d1 : REGISTERZ_SYSTEMALONE_SIMPLE
+    <(outs SingleReg:$a1o, AloneReg:$a2o), (ins SingleReg:$a1, AloneReg:$a2),
+     !strconcat (OpcStr, " $a1 = $a2"),
+     [/* no straightforward pattern */]>;
+  let Constraints = "$a1 = $a1o, $a2 = $a2o" in
+  def d2 : REGISTERZ_SYSTEMS3_SIMPLE
+    <(outs SingleReg:$a1o, SystemReg:$a2o), (ins SingleReg:$a1, SystemReg:$a2),
+     !strconcat (OpcStr, " $a1 = $a2"),
+     [/* no straightforward pattern */]>;
+}
+
+// multiclass MC_05 is used by:
 //   defm LBZ
 //   defm LBS
 //   defm LHZ
@@ -76,466 +116,506 @@ multiclass MC_02<string OpcStr> {
 //   defm LWZ
 //   defm LWS
 //   defm LD
-multiclass MC_03<string OpcStr> {
+multiclass MC_05<string OpcStr> {
   def d0 : VARIANT_REGISTERW_SIGNED10_REGISTERZ_SIMPLE
-    <(outs SingleReg:$a2), (ins Signed10_64:$a3, SingleReg:$a4, VariantMod:$a1),
+    <(outs SingleReg:$a2), (ins Signed10:$a3, SingleReg:$a4, VariantMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
-     [ ]>;
+     [/* no straightforward pattern */]>;
   def d1 : VARIANT_REGISTERW_UPPER27_LOWER10_REGISTERZ_DOUBLE
-    <(outs SingleReg:$a2), (ins Signed37_64:$a3, SingleReg:$a4, VariantMod:$a1),
+    <(outs SingleReg:$a2), (ins Signed37:$a3, SingleReg:$a4, VariantMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
-     [ ]>;
+     [/* no straightforward pattern */]>;
   def d2 : VARIANT_REGISTERW_EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
     <(outs SingleReg:$a2), (ins Wrapped64:$a3, SingleReg:$a4, VariantMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
-     [ ]>;
+     [/* no straightforward pattern */]>;
+  let Constraints = "$a4 = $a4o" in
   def d3 : VARIANT_LSUCOND_REGISTERY_REGISTERW_REGISTERZ_SIMPLE
-    <(outs SingleReg:$a4), (ins SingleReg:$a3, SingleReg:$a5, SingleReg:$a44, VariantMod:$a1, ScalarcondMod:$a2),
+    <(outs SingleReg:$a4o), (ins SingleReg:$a3, SingleReg:$a5, SingleReg:$a4, VariantMod:$a1, ScalarcondMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = [$a5]"),
-     [ ]>;
+     [/* no straightforward pattern */]>;
+  let Constraints = "$a4 = $a4o" in
   def d4 : VARIANT_LSUCOND_REGISTERY_REGISTERW_OFFSET27_REGISTERZ_DOUBLE
-    <(outs SingleReg:$a4), (ins SingleReg:$a3, Signed27:$a5, SingleReg:$a6, SingleReg:$a44, VariantMod:$a1, ScalarcondMod:$a2),
+    <(outs SingleReg:$a4o), (ins SingleReg:$a3, Signed27:$a5, SingleReg:$a6, SingleReg:$a4, VariantMod:$a1, ScalarcondMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = $a5[$a6]"),
-     [ ]>;
+     [/* no straightforward pattern */]>;
+  let Constraints = "$a4 = $a4o" in
   def d5 : VARIANT_LSUCOND_REGISTERY_REGISTERW_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
-    <(outs SingleReg:$a4), (ins SingleReg:$a3, Signed54:$a5, SingleReg:$a6, SingleReg:$a44, VariantMod:$a1, ScalarcondMod:$a2),
+    <(outs SingleReg:$a4o), (ins SingleReg:$a3, Signed54:$a5, SingleReg:$a6, SingleReg:$a4, VariantMod:$a1, ScalarcondMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = $a5[$a6]"),
-     [ ]>;
+     [/* no straightforward pattern */]>;
   def d6 : VARIANT_SCALING_REGISTERW_REGISTERY_REGISTERZ_SIMPLE
     <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, VariantMod:$a1, ScalingMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4[$a5]"),
-     [ ]>;
-}
-
-// multiclass MC_04 is used by:
-//   defm LQ
-multiclass MC_04<string OpcStr> {
-  def d0 : VARIANT_REGISTERM_SIGNED10_REGISTERZ_SIMPLE
-    <(outs PairedReg:$a2), (ins Signed10_64:$a3, SingleReg:$a4, VariantMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
-     [ ]>;
-  def d1 : VARIANT_REGISTERM_UPPER27_LOWER10_REGISTERZ_DOUBLE
-    <(outs PairedReg:$a2), (ins Signed37_64:$a3, SingleReg:$a4, VariantMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
-     [ ]>;
-  def d2 : VARIANT_REGISTERM_EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
-    <(outs PairedReg:$a2), (ins Wrapped64:$a3, SingleReg:$a4, VariantMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
-     [ ]>;
-  def d3 : VARIANT_LSUCOND_REGISTERY_REGISTERM_REGISTERZ_SIMPLE
-    <(outs PairedReg:$a4), (ins SingleReg:$a3, SingleReg:$a5, PairedReg:$a44, VariantMod:$a1, ScalarcondMod:$a2),
-     !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = [$a5]"),
-     [ ]>;
-  def d4 : VARIANT_LSUCOND_REGISTERY_REGISTERM_OFFSET27_REGISTERZ_DOUBLE
-    <(outs PairedReg:$a4), (ins SingleReg:$a3, Signed27:$a5, SingleReg:$a6, PairedReg:$a44, VariantMod:$a1, ScalarcondMod:$a2),
-     !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = $a5[$a6]"),
-     [ ]>;
-  def d5 : VARIANT_LSUCOND_REGISTERY_REGISTERM_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
-    <(outs PairedReg:$a4), (ins SingleReg:$a3, Signed54:$a5, SingleReg:$a6, PairedReg:$a44, VariantMod:$a1, ScalarcondMod:$a2),
-     !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = $a5[$a6]"),
-     [ ]>;
-  def d6 : VARIANT_SCALING_REGISTERM_REGISTERY_REGISTERZ_SIMPLE
-    <(outs PairedReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, VariantMod:$a1, ScalingMod:$a2),
-     !strconcat (OpcStr, "$a1$a2 $a3 = $a4[$a5]"),
-     [ ]>;
-}
-
-// multiclass MC_05 is used by:
-//   defm LO
-multiclass MC_05<string OpcStr> {
-  def d0 : VARIANT_REGISTERN_SIGNED10_REGISTERZ_SIMPLE
-    <(outs QuadReg:$a2), (ins Signed10_64:$a3, SingleReg:$a4, VariantMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
-     [ ]>;
-  def d1 : VARIANT_REGISTERN_UPPER27_LOWER10_REGISTERZ_DOUBLE
-    <(outs QuadReg:$a2), (ins Signed37_64:$a3, SingleReg:$a4, VariantMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
-     [ ]>;
-  def d2 : VARIANT_REGISTERN_EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
-    <(outs QuadReg:$a2), (ins Wrapped64:$a3, SingleReg:$a4, VariantMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
-     [ ]>;
-  def d3 : VARIANT_LSUCOND_REGISTERY_REGISTERN_REGISTERZ_SIMPLE
-    <(outs QuadReg:$a4), (ins SingleReg:$a3, SingleReg:$a5, QuadReg:$a44, VariantMod:$a1, ScalarcondMod:$a2),
-     !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = [$a5]"),
-     [ ]>;
-  def d4 : VARIANT_LSUCOND_REGISTERY_REGISTERN_OFFSET27_REGISTERZ_DOUBLE
-    <(outs QuadReg:$a4), (ins SingleReg:$a3, Signed27:$a5, SingleReg:$a6, QuadReg:$a44, VariantMod:$a1, ScalarcondMod:$a2),
-     !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = $a5[$a6]"),
-     [ ]>;
-  def d5 : VARIANT_LSUCOND_REGISTERY_REGISTERN_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
-    <(outs QuadReg:$a4), (ins SingleReg:$a3, Signed54:$a5, SingleReg:$a6, QuadReg:$a44, VariantMod:$a1, ScalarcondMod:$a2),
-     !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = $a5[$a6]"),
-     [ ]>;
-  def d6 : VARIANT_SCALING_REGISTERN_REGISTERY_REGISTERZ_SIMPLE
-    <(outs QuadReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, VariantMod:$a1, ScalingMod:$a2),
-     !strconcat (OpcStr, "$a1$a2 $a3 = $a4[$a5]"),
-     [ ]>;
+     [/* no straightforward pattern */]>;
 }
 
 // multiclass MC_06 is used by:
-//   defm LV
+//   defm LQ
 multiclass MC_06<string OpcStr> {
-  def d0 : SPECULATE_REGISTERA_SIGNED10_REGISTERZ_SIMPLE
-    <(outs VectorReg:$a2), (ins Signed10_64:$a3, SingleReg:$a4, SpeculateMod:$a1),
+  def d0 : VARIANT_REGISTERM_SIGNED10_REGISTERZ_SIMPLE
+    <(outs PairedReg:$a2), (ins Signed10:$a3, SingleReg:$a4, VariantMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
-     [ ]>;
-  def d1 : SPECULATE_REGISTERA_UPPER27_LOWER10_REGISTERZ_DOUBLE
-    <(outs VectorReg:$a2), (ins Signed37_64:$a3, SingleReg:$a4, SpeculateMod:$a1),
+     [/* no straightforward pattern */]>;
+  def d1 : VARIANT_REGISTERM_UPPER27_LOWER10_REGISTERZ_DOUBLE
+    <(outs PairedReg:$a2), (ins Signed37:$a3, SingleReg:$a4, VariantMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
-     [ ]>;
-  def d2 : SPECULATE_REGISTERA_EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
-    <(outs VectorReg:$a2), (ins Wrapped64:$a3, SingleReg:$a4, SpeculateMod:$a1),
+     [/* no straightforward pattern */]>;
+  def d2 : VARIANT_REGISTERM_EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
+    <(outs PairedReg:$a2), (ins Wrapped64:$a3, SingleReg:$a4, VariantMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
-     [ ]>;
-  def d3 : SPECULATE_LSUCOND_REGISTERY_REGISTERA_REGISTERZ_SIMPLE
-    <(outs VectorReg:$a4), (ins SingleReg:$a3, SingleReg:$a5, VectorReg:$a44, SpeculateMod:$a1, ScalarcondMod:$a2),
+     [/* no straightforward pattern */]>;
+  let Constraints = "$a4 = $a4o" in
+  def d3 : VARIANT_LSUCOND_REGISTERY_REGISTERM_REGISTERZ_SIMPLE
+    <(outs PairedReg:$a4o), (ins SingleReg:$a3, SingleReg:$a5, PairedReg:$a4, VariantMod:$a1, ScalarcondMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = [$a5]"),
-     [ ]>;
-  def d4 : SPECULATE_LSUCOND_REGISTERY_REGISTERA_OFFSET27_REGISTERZ_DOUBLE
-    <(outs VectorReg:$a4), (ins SingleReg:$a3, Signed27:$a5, SingleReg:$a6, VectorReg:$a44, SpeculateMod:$a1, ScalarcondMod:$a2),
+     [/* no straightforward pattern */]>;
+  let Constraints = "$a4 = $a4o" in
+  def d4 : VARIANT_LSUCOND_REGISTERY_REGISTERM_OFFSET27_REGISTERZ_DOUBLE
+    <(outs PairedReg:$a4o), (ins SingleReg:$a3, Signed27:$a5, SingleReg:$a6, PairedReg:$a4, VariantMod:$a1, ScalarcondMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = $a5[$a6]"),
-     [ ]>;
-  def d5 : SPECULATE_LSUCOND_REGISTERY_REGISTERA_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
-    <(outs VectorReg:$a4), (ins SingleReg:$a3, Signed54:$a5, SingleReg:$a6, VectorReg:$a44, SpeculateMod:$a1, ScalarcondMod:$a2),
+     [/* no straightforward pattern */]>;
+  let Constraints = "$a4 = $a4o" in
+  def d5 : VARIANT_LSUCOND_REGISTERY_REGISTERM_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
+    <(outs PairedReg:$a4o), (ins SingleReg:$a3, Signed54:$a5, SingleReg:$a6, PairedReg:$a4, VariantMod:$a1, ScalarcondMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = $a5[$a6]"),
-     [ ]>;
-  def d6 : SPECULATE_SCALING_REGISTERA_REGISTERY_REGISTERZ_SIMPLE
-    <(outs VectorReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, SpeculateMod:$a1, ScalingMod:$a2),
+     [/* no straightforward pattern */]>;
+  def d6 : VARIANT_SCALING_REGISTERM_REGISTERY_REGISTERZ_SIMPLE
+    <(outs PairedReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, VariantMod:$a1, ScalingMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4[$a5]"),
-     [ ]>;
-  def d7 : COLUMN_SPECULATE_REGISTERAQ_SIGNED10_REGISTERZ_SIMPLE
-    <(outs MatrixReg:$a3), (ins Signed10_64:$a4, SingleReg:$a5, ColumnselMod:$a1, SpeculateMod:$a2),
-     !strconcat (OpcStr, "$a1$a2 $a3 = $a4[$a5]"),
-     [ ]>;
-  def d8 : COLUMN_SPECULATE_REGISTERAQ_UPPER27_LOWER10_REGISTERZ_DOUBLE
-    <(outs MatrixReg:$a3), (ins Signed37_64:$a4, SingleReg:$a5, ColumnselMod:$a1, SpeculateMod:$a2),
-     !strconcat (OpcStr, "$a1$a2 $a3 = $a4[$a5]"),
-     [ ]>;
-  def d9 : COLUMN_SPECULATE_REGISTERAQ_EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
-    <(outs MatrixReg:$a3), (ins Wrapped64:$a4, SingleReg:$a5, ColumnselMod:$a1, SpeculateMod:$a2),
-     !strconcat (OpcStr, "$a1$a2 $a3 = $a4[$a5]"),
-     [ ]>;
-  def da : COLUMN_SPECULATE_LSUCOND_REGISTERY_REGISTERAQ_REGISTERZ_SIMPLE
-    <(outs MatrixReg:$a5), (ins SingleReg:$a4, SingleReg:$a6, ColumnselMod:$a1, SpeculateMod:$a2, ScalarcondMod:$a3),
-     !strconcat (OpcStr, "$a1$a2$a3 $a4 ? $a5 = [$a6]"),
-     [ ]>;
-  def db : COLUMN_SPECULATE_LSUCOND_REGISTERY_REGISTERAQ_OFFSET27_REGISTERZ_DOUBLE
-    <(outs MatrixReg:$a5), (ins SingleReg:$a4, Signed27:$a6, SingleReg:$a7, ColumnselMod:$a1, SpeculateMod:$a2, ScalarcondMod:$a3),
-     !strconcat (OpcStr, "$a1$a2$a3 $a4 ? $a5 = $a6[$a7]"),
-     [ ]>;
-  def dc : COLUMN_SPECULATE_LSUCOND_REGISTERY_REGISTERAQ_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
-    <(outs MatrixReg:$a5), (ins SingleReg:$a4, Signed54:$a6, SingleReg:$a7, ColumnselMod:$a1, SpeculateMod:$a2, ScalarcondMod:$a3),
-     !strconcat (OpcStr, "$a1$a2$a3 $a4 ? $a5 = $a6[$a7]"),
-     [ ]>;
-  def dd : COLUMN_SPECULATE_SCALING_REGISTERAQ_REGISTERY_REGISTERZ_SIMPLE
-    <(outs MatrixReg:$a4), (ins SingleReg:$a5, SingleReg:$a6, ColumnselMod:$a1, SpeculateMod:$a2, ScalingMod:$a3),
-     !strconcat (OpcStr, "$a1$a2$a3 $a4 = $a5[$a6]"),
-     [ ]>;
+     [/* no straightforward pattern */]>;
 }
 
 // multiclass MC_07 is used by:
+//   defm LO
+multiclass MC_07<string OpcStr> {
+  def d0 : VARIANT_REGISTERN_SIGNED10_REGISTERZ_SIMPLE
+    <(outs QuadReg:$a2), (ins Signed10:$a3, SingleReg:$a4, VariantMod:$a1),
+     !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
+     [/* no straightforward pattern */]>;
+  def d1 : VARIANT_REGISTERN_UPPER27_LOWER10_REGISTERZ_DOUBLE
+    <(outs QuadReg:$a2), (ins Signed37:$a3, SingleReg:$a4, VariantMod:$a1),
+     !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
+     [/* no straightforward pattern */]>;
+  def d2 : VARIANT_REGISTERN_EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
+    <(outs QuadReg:$a2), (ins Wrapped64:$a3, SingleReg:$a4, VariantMod:$a1),
+     !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
+     [/* no straightforward pattern */]>;
+  let Constraints = "$a4 = $a4o" in
+  def d3 : VARIANT_LSUCOND_REGISTERY_REGISTERN_REGISTERZ_SIMPLE
+    <(outs QuadReg:$a4o), (ins SingleReg:$a3, SingleReg:$a5, QuadReg:$a4, VariantMod:$a1, ScalarcondMod:$a2),
+     !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = [$a5]"),
+     [/* no straightforward pattern */]>;
+  let Constraints = "$a4 = $a4o" in
+  def d4 : VARIANT_LSUCOND_REGISTERY_REGISTERN_OFFSET27_REGISTERZ_DOUBLE
+    <(outs QuadReg:$a4o), (ins SingleReg:$a3, Signed27:$a5, SingleReg:$a6, QuadReg:$a4, VariantMod:$a1, ScalarcondMod:$a2),
+     !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = $a5[$a6]"),
+     [/* no straightforward pattern */]>;
+  let Constraints = "$a4 = $a4o" in
+  def d5 : VARIANT_LSUCOND_REGISTERY_REGISTERN_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
+    <(outs QuadReg:$a4o), (ins SingleReg:$a3, Signed54:$a5, SingleReg:$a6, QuadReg:$a4, VariantMod:$a1, ScalarcondMod:$a2),
+     !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = $a5[$a6]"),
+     [/* no straightforward pattern */]>;
+  def d6 : VARIANT_SCALING_REGISTERN_REGISTERY_REGISTERZ_SIMPLE
+    <(outs QuadReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, VariantMod:$a1, ScalingMod:$a2),
+     !strconcat (OpcStr, "$a1$a2 $a3 = $a4[$a5]"),
+     [/* no straightforward pattern */]>;
+}
+
+// multiclass MC_08 is used by:
+//   defm LV
+multiclass MC_08<string OpcStr> {
+  let Defs = [CS] in
+  def d0 : SPECULATE_REGISTERA_SIGNED10_REGISTERZ_SIMPLE
+    <(outs VectorReg:$a2), (ins Signed10:$a3, SingleReg:$a4, SpeculateMod:$a1),
+     !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
+     [/* no straightforward pattern */]>;
+  let Defs = [CS] in
+  def d1 : SPECULATE_REGISTERA_UPPER27_LOWER10_REGISTERZ_DOUBLE
+    <(outs VectorReg:$a2), (ins Signed37:$a3, SingleReg:$a4, SpeculateMod:$a1),
+     !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
+     [/* no straightforward pattern */]>;
+  let Defs = [CS] in
+  def d2 : SPECULATE_REGISTERA_EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
+    <(outs VectorReg:$a2), (ins Wrapped64:$a3, SingleReg:$a4, SpeculateMod:$a1),
+     !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
+     [/* no straightforward pattern */]>;
+  let Defs = [CS], Constraints = "$a4 = $a4o" in
+  def d3 : SPECULATE_LSUCOND_REGISTERY_REGISTERA_REGISTERZ_SIMPLE
+    <(outs VectorReg:$a4o), (ins SingleReg:$a3, SingleReg:$a5, VectorReg:$a4, SpeculateMod:$a1, ScalarcondMod:$a2),
+     !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = [$a5]"),
+     [/* no straightforward pattern */]>;
+  let Defs = [CS], Constraints = "$a4 = $a4o" in
+  def d4 : SPECULATE_LSUCOND_REGISTERY_REGISTERA_OFFSET27_REGISTERZ_DOUBLE
+    <(outs VectorReg:$a4o), (ins SingleReg:$a3, Signed27:$a5, SingleReg:$a6, VectorReg:$a4, SpeculateMod:$a1, ScalarcondMod:$a2),
+     !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = $a5[$a6]"),
+     [/* no straightforward pattern */]>;
+  let Defs = [CS], Constraints = "$a4 = $a4o" in
+  def d5 : SPECULATE_LSUCOND_REGISTERY_REGISTERA_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
+    <(outs VectorReg:$a4o), (ins SingleReg:$a3, Signed54:$a5, SingleReg:$a6, VectorReg:$a4, SpeculateMod:$a1, ScalarcondMod:$a2),
+     !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = $a5[$a6]"),
+     [/* no straightforward pattern */]>;
+  let Defs = [CS] in
+  def d6 : SPECULATE_SCALING_REGISTERA_REGISTERY_REGISTERZ_SIMPLE
+    <(outs VectorReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, SpeculateMod:$a1, ScalingMod:$a2),
+     !strconcat (OpcStr, "$a1$a2 $a3 = $a4[$a5]"),
+     [/* no straightforward pattern */]>;
+  let Defs = [CS] in
+  def d7 : COLUMN_SPECULATE_REGISTERAQ_SIGNED10_REGISTERZ_SIMPLE
+    <(outs MatrixReg:$a3), (ins Signed10:$a4, SingleReg:$a5, ColumnMod:$a1, SpeculateMod:$a2),
+     !strconcat (OpcStr, "$a1$a2 $a3 = $a4[$a5]"),
+     [/* no straightforward pattern */]>;
+  let Defs = [CS] in
+  def d8 : COLUMN_SPECULATE_REGISTERAQ_UPPER27_LOWER10_REGISTERZ_DOUBLE
+    <(outs MatrixReg:$a3), (ins Signed37:$a4, SingleReg:$a5, ColumnMod:$a1, SpeculateMod:$a2),
+     !strconcat (OpcStr, "$a1$a2 $a3 = $a4[$a5]"),
+     [/* no straightforward pattern */]>;
+  let Defs = [CS] in
+  def d9 : COLUMN_SPECULATE_REGISTERAQ_EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
+    <(outs MatrixReg:$a3), (ins Wrapped64:$a4, SingleReg:$a5, ColumnMod:$a1, SpeculateMod:$a2),
+     !strconcat (OpcStr, "$a1$a2 $a3 = $a4[$a5]"),
+     [/* no straightforward pattern */]>;
+  let Defs = [CS] in
+  def da : COLUMN_SPECULATE_LSUCOND_REGISTERY_REGISTERAQ_REGISTERZ_SIMPLE
+    <(outs MatrixReg:$a5), (ins SingleReg:$a4, SingleReg:$a6, ColumnMod:$a1, SpeculateMod:$a2, ScalarcondMod:$a3),
+     !strconcat (OpcStr, "$a1$a2$a3 $a4 ? $a5 = [$a6]"),
+     [/* no straightforward pattern */]>;
+  let Defs = [CS] in
+  def db : COLUMN_SPECULATE_LSUCOND_REGISTERY_REGISTERAQ_OFFSET27_REGISTERZ_DOUBLE
+    <(outs MatrixReg:$a5), (ins SingleReg:$a4, Signed27:$a6, SingleReg:$a7, ColumnMod:$a1, SpeculateMod:$a2, ScalarcondMod:$a3),
+     !strconcat (OpcStr, "$a1$a2$a3 $a4 ? $a5 = $a6[$a7]"),
+     [/* no straightforward pattern */]>;
+  let Defs = [CS] in
+  def dc : COLUMN_SPECULATE_LSUCOND_REGISTERY_REGISTERAQ_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
+    <(outs MatrixReg:$a5), (ins SingleReg:$a4, Signed54:$a6, SingleReg:$a7, ColumnMod:$a1, SpeculateMod:$a2, ScalarcondMod:$a3),
+     !strconcat (OpcStr, "$a1$a2$a3 $a4 ? $a5 = $a6[$a7]"),
+     [/* no straightforward pattern */]>;
+  let Defs = [CS] in
+  def dd : COLUMN_SPECULATE_SCALING_REGISTERAQ_REGISTERY_REGISTERZ_SIMPLE
+    <(outs MatrixReg:$a4), (ins SingleReg:$a5, SingleReg:$a6, ColumnMod:$a1, SpeculateMod:$a2, ScalingMod:$a3),
+     !strconcat (OpcStr, "$a1$a2$a3 $a4 = $a5[$a6]"),
+     [/* no straightforward pattern */]>;
+}
+
+// multiclass MC_09 is used by:
 //   defm SB
 //   defm SH
 //   defm SW
 //   defm SD
-multiclass MC_07<string OpcStr> { // $a1=12, $a2=$r12, $a3=$r0
+multiclass MC_09<string OpcStr> {
   def d0 : SIGNED10_REGISTERZ_REGISTERT_SIMPLE
-    <(outs), (ins Signed10_64:$a1, SingleReg:$a2, SingleReg:$a3),
+    <(outs), (ins Signed10:$a1, SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
-     [ ],
+     [/* no straightforward pattern */],
      LSU_AUXR>;
   def d1 : UPPER27_LOWER10_REGISTERZ_REGISTERT_DOUBLE
-    <(outs), (ins Signed37_64:$a1, SingleReg:$a2, SingleReg:$a3),
+    <(outs), (ins Signed37:$a1, SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
-     [ ],
+     [/* no straightforward pattern */],
      LSU_AUXR_X>;
   def d2 : EXTEND27_UPPER27_LOWER10_REGISTERZ_REGISTERT_TRIPLE
     <(outs), (ins Wrapped64:$a1, SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
-     [ ],
+     [/* no straightforward pattern */],
      LSU_AUXR_Y>;
   def d3 : SCALING_REGISTERY_REGISTERZ_REGISTERT_SIMPLE
     <(outs), (ins SingleReg:$a2, SingleReg:$a3, SingleReg:$a4, ScalingMod:$a1),
      !strconcat (OpcStr, "$a1 $a2[$a3] = $a4"),
-     [ ],
+     [/* no straightforward pattern */],
      LSU_AUXR>;
   def d4 : LSUCOND_REGISTERY_REGISTERZ_REGISTERT_SIMPLE
     <(outs), (ins SingleReg:$a2, SingleReg:$a3, SingleReg:$a4, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? [$a3] = $a4"),
-     [ ],
+     [/* no straightforward pattern */],
      LSU_AUXR>;
   def d5 : LSUCOND_REGISTERY_OFFSET27_REGISTERZ_REGISTERT_DOUBLE
     <(outs), (ins SingleReg:$a2, Signed27:$a3, SingleReg:$a4, SingleReg:$a5, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
-     [ ],
+     [/* no straightforward pattern */],
      LSU_AUXR_X>;
   def d6 : LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_REGISTERT_TRIPLE
     <(outs), (ins SingleReg:$a2, Signed54:$a3, SingleReg:$a4, SingleReg:$a5, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
-     [ ],
+     [/* no straightforward pattern */],
      LSU_AUXR_Y>;
 }
 
-// multiclass MC_08 is used by:
+// multiclass MC_0A is used by:
 //   defm SQ
-multiclass MC_08<string OpcStr> {
+multiclass MC_0A<string OpcStr> {
   def d0 : SIGNED10_REGISTERZ_REGISTERU_SIMPLE
-    <(outs), (ins Signed10_64:$a1, SingleReg:$a2, PairedReg:$a3),
+    <(outs), (ins Signed10:$a1, SingleReg:$a2, PairedReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
-     [ ],
+     [/* no straightforward pattern */],
      LSU_AUXR>;
   def d1 : UPPER27_LOWER10_REGISTERZ_REGISTERU_DOUBLE
-    <(outs), (ins Signed37_64:$a1, SingleReg:$a2, PairedReg:$a3),
+    <(outs), (ins Signed37:$a1, SingleReg:$a2, PairedReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
-     [ ],
+     [/* no straightforward pattern */],
      LSU_AUXR_X>;
   def d2 : EXTEND27_UPPER27_LOWER10_REGISTERZ_REGISTERU_TRIPLE
     <(outs), (ins Wrapped64:$a1, SingleReg:$a2, PairedReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
-     [ ]>;
+     [/* no straightforward pattern */]>;
   def d3 : SCALING_REGISTERY_REGISTERZ_REGISTERU_SIMPLE
     <(outs), (ins SingleReg:$a2, SingleReg:$a3, PairedReg:$a4, ScalingMod:$a1),
      !strconcat (OpcStr, "$a1 $a2[$a3] = $a4"),
-     [ ],
+     [/* no straightforward pattern */],
      LSU_AUXR>;
   def d4 : LSUCOND_REGISTERY_REGISTERZ_REGISTERU_SIMPLE
     <(outs), (ins SingleReg:$a2, SingleReg:$a3, PairedReg:$a4, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? [$a3] = $a4"),
-     [ ],
+     [/* no straightforward pattern */],
      LSU_AUXR>;
   def d5 : LSUCOND_REGISTERY_OFFSET27_REGISTERZ_REGISTERU_DOUBLE
     <(outs), (ins SingleReg:$a2, Signed27:$a3, SingleReg:$a4, PairedReg:$a5, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
-     [ ],
+     [/* no straightforward pattern */],
      LSU_AUXR_X>;
   def d6 : LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_REGISTERU_TRIPLE
     <(outs), (ins SingleReg:$a2, Signed54:$a3, SingleReg:$a4, PairedReg:$a5, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
-     [ ],
+     [/* no straightforward pattern */],
      LSU_AUXR_Y>;
 }
 
-// multiclass MC_09 is used by:
+// multiclass MC_0B is used by:
 //   defm SO
-multiclass MC_09<string OpcStr> {
+multiclass MC_0B<string OpcStr> {
   def d0 : SIGNED10_REGISTERZ_REGISTERV_SIMPLE
-    <(outs), (ins Signed10_64:$a1, SingleReg:$a2, QuadReg:$a3),
+    <(outs), (ins Signed10:$a1, SingleReg:$a2, QuadReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
-     [ ]>;
+     [/* no straightforward pattern */]>;
   def d1 : UPPER27_LOWER10_REGISTERZ_REGISTERV_DOUBLE
-    <(outs), (ins Signed37_64:$a1, SingleReg:$a2, QuadReg:$a3),
+    <(outs), (ins Signed37:$a1, SingleReg:$a2, QuadReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
-     [ ]>;
+     [/* no straightforward pattern */]>;
   def d2 : EXTEND27_UPPER27_LOWER10_REGISTERZ_REGISTERV_TRIPLE
     <(outs), (ins Wrapped64:$a1, SingleReg:$a2, QuadReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
-     [ ]>;
+     [/* no straightforward pattern */]>;
   def d3 : SCALING_REGISTERY_REGISTERZ_REGISTERV_SIMPLE
     <(outs), (ins SingleReg:$a2, SingleReg:$a3, QuadReg:$a4, ScalingMod:$a1),
      !strconcat (OpcStr, "$a1 $a2[$a3] = $a4"),
-     [ ]>;
+     [/* no straightforward pattern */]>;
   def d4 : LSUCOND_REGISTERY_REGISTERZ_REGISTERV_SIMPLE
     <(outs), (ins SingleReg:$a2, SingleReg:$a3, QuadReg:$a4, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? [$a3] = $a4"),
-     [ ]>;
+     [/* no straightforward pattern */]>;
   def d5 : LSUCOND_REGISTERY_OFFSET27_REGISTERZ_REGISTERV_DOUBLE
     <(outs), (ins SingleReg:$a2, Signed27:$a3, SingleReg:$a4, QuadReg:$a5, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
-     [ ]>;
+     [/* no straightforward pattern */]>;
   def d6 : LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_REGISTERV_TRIPLE
     <(outs), (ins SingleReg:$a2, Signed54:$a3, SingleReg:$a4, QuadReg:$a5, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
-     [ ]>;
-}
-
-// multiclass MC_0A is used by:
-//   defm SV
-multiclass MC_0A<string OpcStr> {
-  def d0 : SIGNED10_REGISTERZ_REGISTERE_SIMPLE
-    <(outs), (ins Signed10_64:$a1, SingleReg:$a2, VectorReg:$a3),
-     !strconcat (OpcStr, " $a1[$a2] = $a3"),
-     [ ]>;
-  def d1 : UPPER27_LOWER10_REGISTERZ_REGISTERE_DOUBLE
-    <(outs), (ins Signed37_64:$a1, SingleReg:$a2, VectorReg:$a3),
-     !strconcat (OpcStr, " $a1[$a2] = $a3"),
-     [ ]>;
-  def d2 : EXTEND27_UPPER27_LOWER10_REGISTERZ_REGISTERE_TRIPLE
-    <(outs), (ins Wrapped64:$a1, SingleReg:$a2, VectorReg:$a3),
-     !strconcat (OpcStr, " $a1[$a2] = $a3"),
-     [ ]>;
-  def d3 : SCALING_REGISTERY_REGISTERZ_REGISTERE_SIMPLE
-    <(outs), (ins SingleReg:$a2, SingleReg:$a3, VectorReg:$a4, ScalingMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2[$a3] = $a4"),
-     [ ]>;
-  def d4 : LSUCOND_REGISTERY_REGISTERZ_REGISTERE_SIMPLE
-    <(outs), (ins SingleReg:$a2, SingleReg:$a3, VectorReg:$a4, ScalarcondMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2 ? [$a3] = $a4"),
-     [ ]>;
-  def d5 : LSUCOND_REGISTERY_OFFSET27_REGISTERZ_REGISTERE_DOUBLE
-    <(outs), (ins SingleReg:$a2, Signed27:$a3, SingleReg:$a4, VectorReg:$a5, ScalarcondMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
-     [ ]>;
-  def d6 : LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_REGISTERE_TRIPLE
-    <(outs), (ins SingleReg:$a2, Signed54:$a3, SingleReg:$a4, VectorReg:$a5, ScalarcondMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
-     [ ]>;
-}
-
-// multiclass MC_0B is used by:
-//   defm ACSWAPW
-//   defm ACSWAPD
-multiclass MC_0B<string OpcStr> {
-  let Constraints = "$o = $a3" in
-  def d0 : SIGNED10_REGISTERZ_REGISTERU_SIMPLE
-    <(outs PairedReg:$o), (ins Signed10_64:$a1, SingleReg:$a2, PairedReg:$a3),
-     !strconcat (OpcStr, " $a1[$a2] = $a3"),
-     [ ],
-     LSU_AUXR_AUXW>;
-  let Constraints = "$o = $a3" in
-  def d1 : UPPER27_LOWER10_REGISTERZ_REGISTERU_DOUBLE
-    <(outs PairedReg:$o), (ins Signed37_64:$a1, SingleReg:$a2, PairedReg:$a3),
-     !strconcat (OpcStr, " $a1[$a2] = $a3"),
-     [ ],
-     LSU_AUXR_AUXW_X>;
-  let Constraints = "$o = $a4" in
-  def d2 : SCALING_REGISTERY_REGISTERZ_REGISTERU_SIMPLE
-    <(outs PairedReg:$o), (ins SingleReg:$a2, SingleReg:$a3, PairedReg:$a4, ScalingMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2[$a3] = $a4"),
-     [ ],
-     LSU_AUXR_AUXW>;
-  let Constraints = "$o = $a4" in
-  def d3 : LSUCOND_REGISTERY_REGISTERZ_REGISTERU_SIMPLE
-    <(outs PairedReg:$o), (ins SingleReg:$a2, SingleReg:$a3, PairedReg:$a4, ScalarcondMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2 ? [$a3] = $a4"),
-     [ ],
-     LSU_AUXR_AUXW>;
-  let Constraints = "$o = $a5" in
-  def d4 : LSUCOND_REGISTERY_OFFSET27_REGISTERZ_REGISTERU_DOUBLE
-    <(outs PairedReg:$o), (ins SingleReg:$a2, Signed27:$a3, SingleReg:$a4, PairedReg:$a5, ScalarcondMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
-     [ ],
-     LSU_AUXR_AUXW_X>;
-  let Constraints = "$o = $a5" in
-  def d5 : LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_REGISTERU_TRIPLE
-    <(outs PairedReg:$o), (ins SingleReg:$a2, Signed54:$a3, SingleReg:$a4, PairedReg:$a5, ScalarcondMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
-     [ ],
-     LSU_AUXR_AUXW_Y>;
+     [/* no straightforward pattern */]>;
 }
 
 // multiclass MC_0C is used by:
-//   defm ALCLRW
-//   defm ALCLRD
+//   defm SV
 multiclass MC_0C<string OpcStr> {
-  def d0 : REGISTERW_SIGNED10_REGISTERZ_SIMPLE
-    <(outs SingleReg:$a1), (ins Signed10_64:$a2, SingleReg:$a3),
-     !strconcat (OpcStr, " $a1 = $a2[$a3]"),
-     [ ]>;
-  def d1 : REGISTERW_UPPER27_LOWER10_REGISTERZ_DOUBLE
-    <(outs SingleReg:$a1), (ins Signed37_64:$a2, SingleReg:$a3),
-     !strconcat (OpcStr, " $a1 = $a2[$a3]"),
-     [ ]>;
-  def d2 : REGISTERW_EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
-    <(outs SingleReg:$a1), (ins Wrapped64:$a2, SingleReg:$a3),
-     !strconcat (OpcStr, " $a1 = $a2[$a3]"),
-     [ ]>;
-  def d3 : SCALING_REGISTERW_REGISTERY_REGISTERZ_SIMPLE
-    <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, ScalingMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
-     [ ]>;
-  def d4 : LSUCOND_REGISTERY_REGISTERW_REGISTERZ_SIMPLE
-    <(outs SingleReg:$a3), (ins SingleReg:$a2, SingleReg:$a4, SingleReg:$a33, ScalarcondMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2 ? $a3 = [$a4]"),
-     [ ]>;
-  def d5 : LSUCOND_REGISTERY_REGISTERW_OFFSET27_REGISTERZ_DOUBLE
-    <(outs SingleReg:$a3), (ins SingleReg:$a2, Signed27:$a4, SingleReg:$a5, SingleReg:$a33, ScalarcondMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2 ? $a3 = $a4[$a5]"),
-     [ ]>;
-  def d6 : LSUCOND_REGISTERY_REGISTERW_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
-    <(outs SingleReg:$a3), (ins SingleReg:$a2, Signed54:$a4, SingleReg:$a5, SingleReg:$a33, ScalarcondMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2 ? $a3 = $a4[$a5]"),
-     [ ]>;
+  let Defs = [CS] in
+  def d0 : SIGNED10_REGISTERZ_REGISTERE_SIMPLE
+    <(outs), (ins Signed10:$a1, SingleReg:$a2, VectorReg:$a3),
+     !strconcat (OpcStr, " $a1[$a2] = $a3"),
+     [/* no straightforward pattern */]>;
+  let Defs = [CS] in
+  def d1 : UPPER27_LOWER10_REGISTERZ_REGISTERE_DOUBLE
+    <(outs), (ins Signed37:$a1, SingleReg:$a2, VectorReg:$a3),
+     !strconcat (OpcStr, " $a1[$a2] = $a3"),
+     [/* no straightforward pattern */]>;
+  let Defs = [CS] in
+  def d2 : EXTEND27_UPPER27_LOWER10_REGISTERZ_REGISTERE_TRIPLE
+    <(outs), (ins Wrapped64:$a1, SingleReg:$a2, VectorReg:$a3),
+     !strconcat (OpcStr, " $a1[$a2] = $a3"),
+     [/* no straightforward pattern */]>;
+  let Defs = [CS] in
+  def d3 : SCALING_REGISTERY_REGISTERZ_REGISTERE_SIMPLE
+    <(outs), (ins SingleReg:$a2, SingleReg:$a3, VectorReg:$a4, ScalingMod:$a1),
+     !strconcat (OpcStr, "$a1 $a2[$a3] = $a4"),
+     [/* no straightforward pattern */]>;
+  let Defs = [CS] in
+  def d4 : LSUCOND_REGISTERY_REGISTERZ_REGISTERE_SIMPLE
+    <(outs), (ins SingleReg:$a2, SingleReg:$a3, VectorReg:$a4, ScalarcondMod:$a1),
+     !strconcat (OpcStr, "$a1 $a2 ? [$a3] = $a4"),
+     [/* no straightforward pattern */]>;
+  let Defs = [CS] in
+  def d5 : LSUCOND_REGISTERY_OFFSET27_REGISTERZ_REGISTERE_DOUBLE
+    <(outs), (ins SingleReg:$a2, Signed27:$a3, SingleReg:$a4, VectorReg:$a5, ScalarcondMod:$a1),
+     !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
+     [/* no straightforward pattern */]>;
+  let Defs = [CS] in
+  def d6 : LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_REGISTERE_TRIPLE
+    <(outs), (ins SingleReg:$a2, Signed54:$a3, SingleReg:$a4, VectorReg:$a5, ScalarcondMod:$a1),
+     !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
+     [/* no straightforward pattern */]>;
 }
 
 // multiclass MC_0D is used by:
-//   defm AFADDW
-//   defm AFADDD
+//   defm ACSWAPW
+//   defm ACSWAPD
 multiclass MC_0D<string OpcStr> {
-  def d0 : SIGNED10_REGISTERZ_REGISTERT_SIMPLE
-    <(outs SingleReg:$o), (ins Signed10_64:$a1, SingleReg:$a2, SingleReg:$a3),
+  let Constraints = "$a3 = $a3o" in
+  def d0 : SIGNED10_REGISTERZ_REGISTERU_SIMPLE
+    <(outs PairedReg:$a3o), (ins Signed10:$a1, SingleReg:$a2, PairedReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
-     [ ],
+     [/* no straightforward pattern */],
      LSU_AUXR_AUXW>;
-  def d1 : UPPER27_LOWER10_REGISTERZ_REGISTERT_DOUBLE
-    <(outs SingleReg:$o), (ins Signed37_64:$a1, SingleReg:$a2, SingleReg:$a3),
+  let Constraints = "$a3 = $a3o" in
+  def d1 : UPPER27_LOWER10_REGISTERZ_REGISTERU_DOUBLE
+    <(outs PairedReg:$a3o), (ins Signed37:$a1, SingleReg:$a2, PairedReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
-     [ ],
+     [/* no straightforward pattern */],
      LSU_AUXR_AUXW_X>;
-  def d2 : EXTEND27_UPPER27_LOWER10_REGISTERZ_REGISTERT_TRIPLE
-    <(outs SingleReg:$o), (ins Wrapped64:$a1, SingleReg:$a2, SingleReg:$a3),
-     !strconcat (OpcStr, " $a1[$a2] = $a3"),
-     [ ],
-     LSU_AUXR_AUXW_Y>;
-  def d3 : SCALING_REGISTERY_REGISTERZ_REGISTERT_SIMPLE
-    <(outs), (ins SingleReg:$a2, SingleReg:$a3, SingleReg:$a4, ScalingMod:$a1),
+  let Constraints = "$a4 = $a4o" in
+  def d2 : SCALING_REGISTERY_REGISTERZ_REGISTERU_SIMPLE
+    <(outs PairedReg:$a4o), (ins SingleReg:$a2, SingleReg:$a3, PairedReg:$a4, ScalingMod:$a1),
      !strconcat (OpcStr, "$a1 $a2[$a3] = $a4"),
-     [ ],
+     [/* no straightforward pattern */],
      LSU_AUXR_AUXW>;
-  def d4 : LSUCOND_REGISTERY_REGISTERZ_REGISTERT_SIMPLE
-    <(outs), (ins SingleReg:$a2, SingleReg:$a3, SingleReg:$a4, ScalarcondMod:$a1),
+  let Constraints = "$a4 = $a4o" in
+  def d3 : LSUCOND_REGISTERY_REGISTERZ_REGISTERU_SIMPLE
+    <(outs PairedReg:$a4o), (ins SingleReg:$a2, SingleReg:$a3, PairedReg:$a4, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? [$a3] = $a4"),
-     [ ],
+     [/* no straightforward pattern */],
      LSU_AUXR_AUXW>;
-  def d5 : LSUCOND_REGISTERY_OFFSET27_REGISTERZ_REGISTERT_DOUBLE
-    <(outs), (ins SingleReg:$a2, Signed27:$a3, SingleReg:$a4, SingleReg:$a5, ScalarcondMod:$a1),
+  let Constraints = "$a5 = $a5o" in
+  def d4 : LSUCOND_REGISTERY_OFFSET27_REGISTERZ_REGISTERU_DOUBLE
+    <(outs PairedReg:$a5o), (ins SingleReg:$a2, Signed27:$a3, SingleReg:$a4, PairedReg:$a5, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
-     [ ],
+     [/* no straightforward pattern */],
      LSU_AUXR_AUXW_X>;
-  def d6 : LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_REGISTERT_TRIPLE
-    <(outs), (ins SingleReg:$a2, Signed54:$a3, SingleReg:$a4, SingleReg:$a5, ScalarcondMod:$a1),
+  let Constraints = "$a5 = $a5o" in
+  def d5 : LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_REGISTERU_TRIPLE
+    <(outs PairedReg:$a5o), (ins SingleReg:$a2, Signed54:$a3, SingleReg:$a4, PairedReg:$a5, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
-     [ ],
+     [/* no straightforward pattern */],
      LSU_AUXR_AUXW_Y>;
 }
 
 // multiclass MC_0E is used by:
+//   defm ALCLRW
+//   defm ALCLRD
+multiclass MC_0E<string OpcStr> {
+  def d0 : REGISTERW_SIGNED10_REGISTERZ_SIMPLE
+    <(outs SingleReg:$a1), (ins Signed10:$a2, SingleReg:$a3),
+     !strconcat (OpcStr, " $a1 = $a2[$a3]"),
+     [/* no straightforward pattern */]>;
+  def d1 : REGISTERW_UPPER27_LOWER10_REGISTERZ_DOUBLE
+    <(outs SingleReg:$a1), (ins Signed37:$a2, SingleReg:$a3),
+     !strconcat (OpcStr, " $a1 = $a2[$a3]"),
+     [/* no straightforward pattern */]>;
+  def d2 : REGISTERW_EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
+    <(outs SingleReg:$a1), (ins Wrapped64:$a2, SingleReg:$a3),
+     !strconcat (OpcStr, " $a1 = $a2[$a3]"),
+     [/* no straightforward pattern */]>;
+  def d3 : SCALING_REGISTERW_REGISTERY_REGISTERZ_SIMPLE
+    <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, ScalingMod:$a1),
+     !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
+     [/* no straightforward pattern */]>;
+  let Constraints = "$a3 = $a3o" in
+  def d4 : LSUCOND_REGISTERY_REGISTERW_REGISTERZ_SIMPLE
+    <(outs SingleReg:$a3o), (ins SingleReg:$a2, SingleReg:$a4, SingleReg:$a3, ScalarcondMod:$a1),
+     !strconcat (OpcStr, "$a1 $a2 ? $a3 = [$a4]"),
+     [/* no straightforward pattern */]>;
+  let Constraints = "$a3 = $a3o" in
+  def d5 : LSUCOND_REGISTERY_REGISTERW_OFFSET27_REGISTERZ_DOUBLE
+    <(outs SingleReg:$a3o), (ins SingleReg:$a2, Signed27:$a4, SingleReg:$a5, SingleReg:$a3, ScalarcondMod:$a1),
+     !strconcat (OpcStr, "$a1 $a2 ? $a3 = $a4[$a5]"),
+     [/* no straightforward pattern */]>;
+  let Constraints = "$a3 = $a3o" in
+  def d6 : LSUCOND_REGISTERY_REGISTERW_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
+    <(outs SingleReg:$a3o), (ins SingleReg:$a2, Signed54:$a4, SingleReg:$a5, SingleReg:$a3, ScalarcondMod:$a1),
+     !strconcat (OpcStr, "$a1 $a2 ? $a3 = $a4[$a5]"),
+     [/* no straightforward pattern */]>;
+}
+
+// multiclass MC_0F is used by:
+//   defm ALADDW
+//   defm ALADDD
+multiclass MC_0F<string OpcStr> {
+  let Constraints = "$a3 = $a3o" in
+  def d0 : SIGNED10_REGISTERZ_REGISTERT_SIMPLE
+    <(outs SingleReg:$a3o), (ins Signed10:$a1, SingleReg:$a2, SingleReg:$a3),
+     !strconcat (OpcStr, " $a1[$a2] = $a3"),
+     [/* no straightforward pattern */],
+     LSU_AUXR_AUXW>;
+  let Constraints = "$a3 = $a3o" in
+  def d1 : UPPER27_LOWER10_REGISTERZ_REGISTERT_DOUBLE
+    <(outs SingleReg:$a3o), (ins Signed37:$a1, SingleReg:$a2, SingleReg:$a3),
+     !strconcat (OpcStr, " $a1[$a2] = $a3"),
+     [/* no straightforward pattern */],
+     LSU_AUXR_AUXW_X>;
+  let Constraints = "$a3 = $a3o" in
+  def d2 : EXTEND27_UPPER27_LOWER10_REGISTERZ_REGISTERT_TRIPLE
+    <(outs SingleReg:$a3o), (ins Wrapped64:$a1, SingleReg:$a2, SingleReg:$a3),
+     !strconcat (OpcStr, " $a1[$a2] = $a3"),
+     [/* no straightforward pattern */],
+     LSU_AUXR_AUXW_Y>;
+  let Constraints = "$a4 = $a4o" in
+  def d3 : SCALING_REGISTERY_REGISTERZ_REGISTERT_SIMPLE
+    <(outs SingleReg:$a4o), (ins SingleReg:$a2, SingleReg:$a3, SingleReg:$a4, ScalingMod:$a1),
+     !strconcat (OpcStr, "$a1 $a2[$a3] = $a4"),
+     [/* no straightforward pattern */],
+     LSU_AUXR_AUXW>;
+  let Constraints = "$a4 = $a4o" in
+  def d4 : LSUCOND_REGISTERY_REGISTERZ_REGISTERT_SIMPLE
+    <(outs SingleReg:$a4o), (ins SingleReg:$a2, SingleReg:$a3, SingleReg:$a4, ScalarcondMod:$a1),
+     !strconcat (OpcStr, "$a1 $a2 ? [$a3] = $a4"),
+     [/* no straightforward pattern */],
+     LSU_AUXR_AUXW>;
+  let Constraints = "$a5 = $a5o" in
+  def d5 : LSUCOND_REGISTERY_OFFSET27_REGISTERZ_REGISTERT_DOUBLE
+    <(outs SingleReg:$a5o), (ins SingleReg:$a2, Signed27:$a3, SingleReg:$a4, SingleReg:$a5, ScalarcondMod:$a1),
+     !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
+     [/* no straightforward pattern */],
+     LSU_AUXR_AUXW_X>;
+  let Constraints = "$a5 = $a5o" in
+  def d6 : LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_REGISTERT_TRIPLE
+    <(outs SingleReg:$a5o), (ins SingleReg:$a2, Signed54:$a3, SingleReg:$a4, SingleReg:$a5, ScalarcondMod:$a1),
+     !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
+     [/* no straightforward pattern */],
+     LSU_AUXR_AUXW_Y>;
+}
+
+// multiclass MC_10 is used by:
 //   defm DTOUCHL
 //   defm DINVALL
 //   defm DZEROL
 //   defm IINVALS
-multiclass MC_0E<string OpcStr> {
+multiclass MC_10<string OpcStr> {
   def d0 : SIGNED10_REGISTERZ_SIMPLE
-    <(outs), (ins Signed10_64:$a1, SingleReg:$a2),
+    <(outs), (ins Signed10:$a1, SingleReg:$a2),
      !strconcat (OpcStr, " $a1[$a2]"),
-     [ ]>;
+     [/* no straightforward pattern */]>;
   def d1 : UPPER27_LOWER10_REGISTERZ_DOUBLE
-    <(outs), (ins Signed37_64:$a1, SingleReg:$a2),
+    <(outs), (ins Signed37:$a1, SingleReg:$a2),
      !strconcat (OpcStr, " $a1[$a2]"),
-     [ ]>;
+     [/* no straightforward pattern */]>;
   def d2 : EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
     <(outs), (ins Wrapped64:$a1, SingleReg:$a2),
      !strconcat (OpcStr, " $a1[$a2]"),
-     [ ]>;
+     [/* no straightforward pattern */]>;
   def d3 : REGISTERY_REGISTERZ_SIMPLE
     <(outs), (ins SingleReg:$a1, SingleReg:$a2),
      !strconcat (OpcStr, " $a1[$a2]"),
-     [ ]>;
+     [/* no straightforward pattern */]>;
   def d4 : LSUCOND_REGISTERY_REGISTERZ_SIMPLE
     <(outs), (ins SingleReg:$a2, SingleReg:$a3, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? [$a3]"),
-     [ ]>;
+     [/* no straightforward pattern */]>;
   def d5 : LSUCOND_REGISTERY_OFFSET27_REGISTERZ_DOUBLE
     <(outs), (ins SingleReg:$a2, Signed27:$a3, SingleReg:$a4, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4]"),
-     [ ]>;
+     [/* no straightforward pattern */]>;
   def d6 : LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
     <(outs), (ins SingleReg:$a2, Signed54:$a3, SingleReg:$a4, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4]"),
-     [ ]>;
+     [/* no straightforward pattern */]>;
 }
 
-// multiclass MC_0F is used by:
+// multiclass MC_11 is used by:
 //   defm ADDD
 //   defm SBFD
 //   defm MIND
@@ -550,59 +630,59 @@ multiclass MC_0E<string OpcStr> {
 //   defm NXORD
 //   defm ANDND
 //   defm ORND
-multiclass MC_0F<string OpcStr> {
+multiclass MC_11<string OpcStr> {
   def d0 : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
+     [/* no straightforward pattern */],
      ALU_TINY>;
   def d1 : REGISTERW_REGISTERZ_SIGNED10_SIMPLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10_64:$a3),
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
+     [/* no straightforward pattern */],
      ALU_TINY>;
   def d2 : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37_64:$a3),
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
+     [/* no straightforward pattern */],
      ALU_TINY_X>;
   def d3 : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
+     [/* no straightforward pattern */],
      ALU_TINY_Y>;
 }
 
-// multiclass MC_10 is used by:
+// multiclass MC_12 is used by:
 //   defm ABDD
 //   defm SBMM8
 //   defm SBMMT8
 //   defm ADDSD
 //   defm SBFSD
-multiclass MC_10<string OpcStr> {
+multiclass MC_12<string OpcStr> {
   def d0 : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [],
+     [/* no straightforward pattern */],
      ALU_LITE>;
   def d1 : REGISTERW_REGISTERZ_SIGNED10_SIMPLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10_64:$a3),
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
+     [/* no straightforward pattern */],
      ALU_LITE>;
   def d2 : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37_64:$a3),
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
+     [/* no straightforward pattern */],
      ALU_LITE_X>;
   def d3 : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
+     [/* no straightforward pattern */],
      ALU_LITE_Y>;
 }
 
-// multiclass MC_11 is used by:
+// multiclass MC_13 is used by:
 //   defm ADDX2D
 //   defm ADDX4D
 //   defm ADDX8D
@@ -653,20 +733,20 @@ multiclass MC_10<string OpcStr> {
 //   defm SBFX4UWD
 //   defm SBFX8UWD
 //   defm SBFX16UWD
-multiclass MC_11<string OpcStr> {
+multiclass MC_13<string OpcStr> {
   def d0 : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
+     [/* no straightforward pattern */],
      ALU_LITE>;
   def d1 : REGISTERW_REGISTERZ_UPPER27_LOWER5_DOUBLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped32:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
+     [/* no straightforward pattern */],
      ALU_LITE_X>;
 }
 
-// multiclass MC_12 is used by:
+// multiclass MC_14 is used by:
 //   defm ADDW
 //   defm SBFW
 //   defm MINW
@@ -681,45 +761,45 @@ multiclass MC_11<string OpcStr> {
 //   defm NXORW
 //   defm ANDNW
 //   defm ORNW
-multiclass MC_12<string OpcStr> {
-  def d0 : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
+multiclass MC_14<string OpcStr> {
+  def d0 : REGISTERW_REGISTERZ_SIGNED10_SIMPLE
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10W:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
+     [/* no straightforward pattern */],
      ALU_TINY>;
-  def d1 : REGISTERW_REGISTERZ_SIGNED10_SIMPLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10_32:$a3),
+  def d1 : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37W:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
+     [/* no straightforward pattern */],
      ALU_TINY_X>;
-  def d2 : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37_32:$a3),
+  def d2 : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
+     [/* no straightforward pattern */],
      ALU_TINY>;
 }
 
-// multiclass MC_13 is used by:
+// multiclass MC_15 is used by:
 //   defm ABDW
-multiclass MC_13<string OpcStr> {
-  def d0 : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+multiclass MC_15<string OpcStr> {
+  def d0 : REGISTERW_REGISTERZ_SIGNED10_SIMPLE
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10W:$a3),
+     !strconcat (OpcStr, " $a1 = $a2, $a3"),
+     [/* no straightforward pattern */],
+     ALU_LITE>;
+  def d1 : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37W:$a3),
+     !strconcat (OpcStr, " $a1 = $a2, $a3"),
+     [/* no straightforward pattern */],
+     ALU_LITE_X>;
+  def d2 : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
+     [/* no straightforward pattern */],
      ALU_LITE>;
-  def d1 : REGISTERW_REGISTERZ_SIGNED10_SIMPLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10_32:$a3),
-     !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
-     ALU_LITE>;
-  def d2 : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37_32:$a3),
-     !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
-     ALU_LITE_X>;
 }
 
-// multiclass MC_14 is used by:
+// multiclass MC_16 is used by:
 //   defm ADDWP
 //   defm SBFWP
 //   defm MINWP
@@ -732,20 +812,20 @@ multiclass MC_13<string OpcStr> {
 //   defm MINUHQ
 //   defm MAXHQ
 //   defm MAXUHQ
-multiclass MC_14<string OpcStr> {
+multiclass MC_16<string OpcStr> {
   def d0 : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
+     [/* no straightforward pattern */],
      ALU_TINY>;
   def d1 : SPLAT32_REGISTERW_REGISTERZ_UPPER27_LOWER5_DOUBLE
     <(outs SingleReg:$a2), (ins SingleReg:$a3, Wrapped32:$a4, Splat32Mod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
-     [ ],
+     [/* no straightforward pattern */],
      ALU_TINY_X>;
 }
 
-// multiclass MC_15 is used by:
+// multiclass MC_17 is used by:
 //   defm ABDWP
 //   defm ADDCWC
 //   defm SBFCWC
@@ -788,20 +868,20 @@ multiclass MC_14<string OpcStr> {
 //   defm LNANDHQ
 //   defm LORHQ
 //   defm LNORHQ
-multiclass MC_15<string OpcStr> {
+multiclass MC_17<string OpcStr> {
   def d0 : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
+     [/* no straightforward pattern */],
      ALU_LITE>;
   def d1 : SPLAT32_REGISTERW_REGISTERZ_UPPER27_LOWER5_DOUBLE
     <(outs SingleReg:$a2), (ins SingleReg:$a3, Wrapped32:$a4, Splat32Mod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
-     [ ],
+     [/* no straightforward pattern */],
      ALU_LITE_X>;
 }
 
-// multiclass MC_16 is used by:
+// multiclass MC_18 is used by:
 //   defm SATD
 //   defm SATUD
 //   defm SRSD
@@ -822,214 +902,213 @@ multiclass MC_15<string OpcStr> {
 //   defm SRAHQS
 //   defm SRLHQS
 //   defm SLSHQS
-multiclass MC_16<string OpcStr> {
+multiclass MC_18<string OpcStr> {
   def d0 : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
+     [/* no straightforward pattern */],
      ALU_LITE>;
   def d1 : REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Unsigned6:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
+     [/* no straightforward pattern */],
      ALU_LITE>;
 }
 
-// multiclass MC_17 is used by:
+// multiclass MC_19 is used by:
 //   defm SLLD
 //   defm SRAD
 //   defm SRLD
 //   defm SLLW
 //   defm SRAW
 //   defm SRLW
-multiclass MC_17<string OpcStr> {
-  def d0 : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
-     !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
-     ALU_TINY>;
-  def d1 : REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE
+multiclass MC_19<string OpcStr> {
+  def d0 : REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Unsigned6:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
+     [/* no straightforward pattern */],
+     ALU_TINY>;
+  def d1 : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
+     !strconcat (OpcStr, " $a1 = $a2, $a3"),
+     [/* no straightforward pattern */],
      ALU_TINY>;
 }
 
-// multiclass MC_18 is used by:
+// multiclass MC_1A is used by:
 //   defm COMPD
-multiclass MC_18<string OpcStr> {
+multiclass MC_1A<string OpcStr> {
   def d0 : COMPARISON_REGISTERW_REGISTERZ_SIGNED10_SIMPLE
-    <(outs SingleReg:$a2), (ins SingleReg:$a3, Signed10_64:$a4, ComparisonMod:$a1),
+    <(outs SingleReg:$a2), (ins SingleReg:$a3, Signed10:$a4, ComparisonMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
-     [ ]>;
+     [/* no straightforward pattern */]>;
   def d1 : COMPARISON_REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
-    <(outs SingleReg:$a2), (ins SingleReg:$a3, Signed37_64:$a4, ComparisonMod:$a1),
+    <(outs SingleReg:$a2), (ins SingleReg:$a3, Signed37:$a4, ComparisonMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
-     [ ]>;
+     [/* no straightforward pattern */]>;
   def d2 : COMPARISON_REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
     <(outs SingleReg:$a2), (ins SingleReg:$a3, Wrapped64:$a4, ComparisonMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
-     [ ]>;
+     [/* no straightforward pattern */]>;
   def d3 : COMPARISON_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
     <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, ComparisonMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
-     [ ],
+     [/* no straightforward pattern */],
      ALU_TINY>;
 }
 
-// multiclass MC_19 is used by:
+// multiclass MC_1B is used by:
 //   defm COMPW
-multiclass MC_19<string OpcStr> {
+multiclass MC_1B<string OpcStr> {
   def d0 : COMPARISON_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
     <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, ComparisonMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
-     [ ],
+     [/* no straightforward pattern */],
      ALU_TINY>;
   def d1 : COMPARISON_REGISTERW_REGISTERZ_UPPER27_LOWER5_DOUBLE
     <(outs SingleReg:$a2), (ins SingleReg:$a3, Wrapped32:$a4, ComparisonMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
-     [ ]>;
+     [/* no straightforward pattern */]>;
 }
 
-// multiclass MC_1A is used by:
+// multiclass MC_1C is used by:
 //   defm CMOVED
-multiclass MC_1A<string OpcStr> {
+multiclass MC_1C<string OpcStr> {
   def d0 : SCALARCOND_REGISTERZ_REGISTERW_SIGNED10_SIMPLE
-    <(outs SingleReg:$a3), (ins SingleReg:$a2, Signed10_64:$a4, ScalarcondMod:$a1),
+    <(outs SingleReg:$a3), (ins SingleReg:$a2, Signed10:$a4, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? $a3 = $a4"),
-     [ ]>;
+     [/* no straightforward pattern */]>;
   def d1 : SCALARCOND_REGISTERZ_REGISTERW_UPPER27_LOWER10_DOUBLE
-    <(outs SingleReg:$a3), (ins SingleReg:$a2, Signed37_64:$a4, ScalarcondMod:$a1),
+    <(outs SingleReg:$a3), (ins SingleReg:$a2, Signed37:$a4, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? $a3 = $a4"),
-     [ ]>;
+     [/* no straightforward pattern */]>;
   def d2 : SCALARCOND_REGISTERZ_REGISTERW_EXTEND27_UPPER27_LOWER10_TRIPLE
     <(outs SingleReg:$a3), (ins SingleReg:$a2, Wrapped64:$a4, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? $a3 = $a4"),
-     [ ]>;
+     [/* no straightforward pattern */]>;
   def d3 : SCALARCOND_REGISTERZ_REGISTERW_REGISTERY_SIMPLE
     <(outs SingleReg:$a3), (ins SingleReg:$a2, SingleReg:$a4, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? $a3 = $a4"),
-     [ ]>;
+     [/* no straightforward pattern */]>;
 }
 
-// multiclass MC_1B is used by:
+// multiclass MC_1D is used by:
 //   defm MAKE
-multiclass MC_1B<string OpcStr> {
+multiclass MC_1D<string OpcStr> {
   def d0 : REGISTERW_SIGNED16_SIMPLE
-    <(outs SingleReg:$SingleReg), (ins Signed16_64:$Signed16),
-     !strconcat (OpcStr, " $SingleReg = $Signed16"),
-     [/*(set i32:$SingleReg, Signed16:$Signed16)*/],
+    <(outs SingleReg:$a1), (ins Signed16:$a2),
+     !strconcat (OpcStr, " $a1 = $a2"),
+     [/* no straightforward pattern */],
      ALU_TINY>;
   def d1 : REGISTERW_EXTEND6_UPPER27_LOWER10_DOUBLE
     <(outs SingleReg:$a1), (ins Signed43:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
-     [ /*(set i64:$a1, Signed43:$a2)*/],
+     [/* no straightforward pattern */],
      ALU_TINY_X>;
   def d2 : REGISTERW_EXTEND27_UPPER27_LOWER10_TRIPLE
-    <(outs SingleReg:$SingleReg), (ins Wrapped64:$Wrapped64),
-     !strconcat (OpcStr, " $SingleReg = $Wrapped64"),
-     [ /*(set i64:$SingleReg, Wrapped64:$Wrapped64)*/],
+    <(outs SingleReg:$a1), (ins Wrapped64:$a2),
+     !strconcat (OpcStr, " $a1 = $a2"),
+     [/* no straightforward pattern */],
      ALU_TINY_Y>;
 }
 
-// multiclass MC_1C is used by:
+// multiclass MC_1E is used by:
 //   defm PCREL
-multiclass MC_1C<string OpcStr> {
+multiclass MC_1E<string OpcStr> {
   def d0 : REGISTERW_SIGNED16_SIMPLE
-    <(outs SingleReg:$a1), (ins Signed16_64:$a2),
+    <(outs SingleReg:$a1), (ins Signed16:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
-     [ ],
+     [/* no straightforward pattern */],
      ALU_FULL>;
   def d1 : REGISTERW_EXTEND6_UPPER27_LOWER10_DOUBLE
     <(outs SingleReg:$a1), (ins Signed43:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
-     [ ],
+     [/* no straightforward pattern */],
      ALU_FULL_X>;
   def d2 : REGISTERW_EXTEND27_UPPER27_LOWER10_TRIPLE
     <(outs SingleReg:$a1), (ins Wrapped64:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
-     [ ],
+     [/* no straightforward pattern */],
      ALU_FULL_Y>;
 }
 
-// multiclass MC_1DW is used by:
+// multiclass MC_1F is used by:
 //   defm FCOMPW
-multiclass MC_1DW<string OpcStr> {
-  def rr : FLOATCOMP_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+multiclass MC_1F<string OpcStr> {
+  def d0 : FLOATCOMP_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32
     <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, FloatcompMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
-     [/* no direct match, see K1CFloatingPoint.td */]>;
-  def ri : FLOATCOMP_REGISTERW_REGISTERZ_UPPER27_LOWER5_DOUBLE
-    <(outs SingleReg:$a2), (ins SingleReg:$a3, Binary32Imm:$a4, FloatcompMod:$a1),
+     [/* no straightforward pattern */]>;
+  def d1 : FLOATCOMP_REGISTERW_REGISTERZ_UPPER27_LOWER5_DOUBLE_BINARY32
+    <(outs SingleReg:$a2), (ins SingleReg:$a3, Binary32:$a4, FloatcompMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
-     [/* no direct match, see K1CFloatingPoint.td */]>;
+     [/* no straightforward pattern */]>;
 }
 
-// multiclass MC_1DD is used by:
-//   defm FCOMPD
-multiclass MC_1DD<string OpcStr> {
-  def rr : FLOATCOMP_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
-    <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, FloatcompMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
-     [/* no direct match, see K1CFloatingPoint.td */]>;
-}
-
-// multiclass MC_1E is used by:
+// multiclass MC_20 is used by:
 //   defm MADDD
 //   defm MADDWP
 //   defm MADDHQ
-multiclass MC_1E<string OpcStr> {
-  def d0 : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
+multiclass MC_20<string OpcStr> {
+  let Constraints = "$a1 = $a1o" in
+  def d0 : REGISTERW_REGISTERZ_SIGNED10_SIMPLE
+    <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, Signed10:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
+     [/* no straightforward pattern */],
      MAU_AUXR>;
-  def d1 : REGISTERW_REGISTERZ_SIGNED10_SIMPLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10_64:$a3),
+  let Constraints = "$a1 = $a1o" in
+  def d1 : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
+    <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, Signed37:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
-     MAU_AUXR>;
-  def d2 : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37_64:$a3),
-     !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
+     [/* no straightforward pattern */],
      MAU_AUXR_X>;
-  def d3 : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped64:$a3),
+  let Constraints = "$a1 = $a1o" in
+  def d2 : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
+    <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, Wrapped64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
+     [/* no straightforward pattern */],
      MAU_AUXR_Y>;
+  let Constraints = "$a1 = $a1o" in
+  def d3 : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+    <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, SingleReg:$a3),
+     !strconcat (OpcStr, " $a1 = $a2, $a3"),
+     [/* no straightforward pattern */],
+     MAU_AUXR>;
 }
 
-// multiclass MC_1F is used by:
+// multiclass MC_21 is used by:
 //   defm MADDDT
 //   defm MADDUDT
 //   defm MADDSUDT
 //   defm MADDUZDT
-multiclass MC_1F<string OpcStr> {
-  def d0 : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
-    <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
+multiclass MC_21<string OpcStr> {
+  let Constraints = "$a1 = $a1o" in
+  def d0 : REGISTERM_REGISTERZ_SIGNED10_SIMPLE
+    <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, Signed10:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
+     [/* no straightforward pattern */],
      MAU_AUXR>;
-  def d1 : REGISTERM_REGISTERZ_SIGNED10_SIMPLE
-    <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, Signed10_64:$a3),
+  let Constraints = "$a1 = $a1o" in
+  def d1 : REGISTERM_REGISTERZ_UPPER27_LOWER10_DOUBLE
+    <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, Signed37:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
-     MAU_AUXR>;
-  def d2 : REGISTERM_REGISTERZ_UPPER27_LOWER10_DOUBLE
-    <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, Signed37_64:$a3),
-     !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
+     [/* no straightforward pattern */],
      MAU_AUXR_X>;
-  def d3 : REGISTERM_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
-    <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, Wrapped64:$a3),
+  let Constraints = "$a1 = $a1o" in
+  def d2 : REGISTERM_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
+    <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, Wrapped64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
+     [/* no straightforward pattern */],
      MAU_AUXR_Y>;
+  let Constraints = "$a1 = $a1o" in
+  def d3 : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+    <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
+     !strconcat (OpcStr, " $a1 = $a2, $a3"),
+     [/* no straightforward pattern */],
+     MAU_AUXR>;
 }
 
-// multiclass MC_20 is used by:
+// multiclass MC_22 is used by:
 //   defm MULD
 //   defm DOT2WD
 //   defm DOT2UWD
@@ -1038,80 +1117,62 @@ multiclass MC_1F<string OpcStr> {
 //   defm MULWP
 //   defm MULHQ
 //   defm MULWC
-multiclass MC_20<string OpcStr> {
-  def d0 : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
+multiclass MC_22<string OpcStr> {
+  def d0 : REGISTERW_REGISTERZ_SIGNED10_SIMPLE
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
+     [/* no straightforward pattern */],
      MAU>;
-  def d1 : REGISTERW_REGISTERZ_SIGNED10_SIMPLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10_64:$a3),
+  def d1 : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
+     [/* no straightforward pattern */],
      MAU_X>;
-  def d2 : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37_64:$a3),
-     !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
-     MAU_Y>;
-  def d3 : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
+  def d2 : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
+     [/* no straightforward pattern */],
+     MAU_Y>;
+  def d3 : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
+     !strconcat (OpcStr, " $a1 = $a2, $a3"),
+     [/* no straightforward pattern */],
      MAU>;
 }
 
-// multiclass MC_21 is used by:
+// multiclass MC_23 is used by:
 //   defm MULDT
 //   defm MULUDT
 //   defm MULSUDT
 //   defm CMULDT
-multiclass MC_21<string OpcStr> {
-  def d0 : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
-    <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
+multiclass MC_23<string OpcStr> {
+  def d0 : REGISTERM_REGISTERZ_SIGNED10_SIMPLE
+    <(outs PairedReg:$a1), (ins SingleReg:$a2, Signed10:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
+     [/* no straightforward pattern */],
      MAU>;
-  def d1 : REGISTERM_REGISTERZ_SIGNED10_SIMPLE
-    <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, Signed10_64:$a3),
+  def d1 : REGISTERM_REGISTERZ_UPPER27_LOWER10_DOUBLE
+    <(outs PairedReg:$a1), (ins SingleReg:$a2, Signed37:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
-     MAU>;
-  def d2 : REGISTERM_REGISTERZ_UPPER27_LOWER10_DOUBLE
-    <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, Signed37_64:$a3),
-     !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
+     [/* no straightforward pattern */],
      MAU_X>;
-  def d3 : REGISTERM_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
-    <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, Wrapped64:$a3),
+  def d2 : REGISTERM_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
+    <(outs PairedReg:$a1), (ins SingleReg:$a2, Wrapped64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
+     [/* no straightforward pattern */],
      MAU_Y>;
+  def d3 : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+    <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
+     !strconcat (OpcStr, " $a1 = $a2, $a3"),
+     [/* no straightforward pattern */],
+     MAU>;
 }
 
-// multiclass MC_22 is used by:
+// multiclass MC_24 is used by:
 //   defm CRCBELMW
 //   defm CRCBELLW
 //   defm CRCLELMW
 //   defm CRCLELLW
-//   defm MULWD
-//   defm MULUWD
-//   defm MULSUWD
-//   defm MULW
-multiclass MC_22<string OpcStr> {
-  def d0 : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
-     !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
-     MAU>;
-  def d1 : REGISTERW_REGISTERZ_UPPER27_LOWER5_DOUBLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped32:$a3),
-     !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
-     MAU_X>;
-}
-
-// multiclass MC_23 is used by:
 //   defm MADDWD
 //   defm MADDUWD
 //   defm MADDSUWD
@@ -1120,57 +1181,119 @@ multiclass MC_22<string OpcStr> {
 //   defm MSBFUWD
 //   defm MSBFSUWD
 //   defm MSBFW
-multiclass MC_23<string OpcStr> {
-  def d0 : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
-     !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
-     MAU_AUXR>;
-  def d1 : REGISTERW_REGISTERZ_UPPER27_LOWER5_DOUBLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped32:$a3),
-     !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
-     MAU_AUXR_X>;
-}
-
-// multiclass MC_24 is used by:
-//   defm FFMAD
-//   defm FFMAWP
-//   defm FFMAHQ
-//   defm FFMSD
-//   defm FFMSWP
-//   defm FFMSHQ
-//   defm FFMAHW
-//   defm FFMAW
-//   defm FFMAWD
-//   defm FFMSHW
-//   defm FFMSW
-//   defm FFMSWD
 multiclass MC_24<string OpcStr> {
-  def d0 : REGISTERW_REGISTERZ_SIGNED10_SIMPLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10_64:$a3),
+  let Constraints = "$a1 = $a1o" in
+  def d0 : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+    <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
+     [/* no straightforward pattern */],
      MAU_AUXR>;
-  def d1 : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37_64:$a3),
+  let Constraints = "$a1 = $a1o" in
+  def d1 : REGISTERW_REGISTERZ_UPPER27_LOWER5_DOUBLE
+    <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, Wrapped32:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
+     [/* no straightforward pattern */],
      MAU_AUXR_X>;
-  def d2 : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped64:$a3),
-     !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
-     MAU_AUXR_Y>;
-  let Constraints = "$a3 = $a33" in
-  def d3 : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
-    <(outs SingleReg:$a3), (ins SingleReg:$a33, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
-     !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
-     [ ],
-     MAU_AUXR>;
 }
 
 // multiclass MC_25 is used by:
+//   defm MULWD
+//   defm MULUWD
+//   defm MULSUWD
+//   defm MULW
+multiclass MC_25<string OpcStr> {
+  def d0 : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
+     !strconcat (OpcStr, " $a1 = $a2, $a3"),
+     [/* no straightforward pattern */],
+     MAU>;
+  def d1 : REGISTERW_REGISTERZ_UPPER27_LOWER5_DOUBLE
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped32:$a3),
+     !strconcat (OpcStr, " $a1 = $a2, $a3"),
+     [/* no straightforward pattern */],
+     MAU_X>;
+}
+
+// multiclass MC_26 is used by:
+//   defm FFMAD
+//   defm FFMSD
+//   defm FFMAWD
+//   defm FFMSWD
+multiclass MC_26<string OpcStr> {
+  let Constraints = "$a1 = $a1o" in
+  def d0 : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARY64
+    <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, Binary64:$a3),
+     !strconcat (OpcStr, " $a1 = $a2, $a3"),
+     [/* no straightforward pattern */],
+     MAU_AUXR_Y>;
+  let Constraints = "$a3 = $a3o" in
+  def d1 : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY64
+    <(outs SingleReg:$a3o), (ins SingleReg:$a3, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
+     !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
+     [/* no straightforward pattern */],
+     MAU_AUXR>;
+}
+
+// multiclass MC_27 is used by:
+//   defm FFMAWP
+//   defm FFMSWP
+//   defm FFMAHW
+//   defm FFMAW
+//   defm FFMSHW
+//   defm FFMSW
+multiclass MC_27<string OpcStr> {
+  let Constraints = "$a1 = $a1o" in
+  def d0 : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE_BINARY32
+    <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, Binary32:$a3),
+     !strconcat (OpcStr, " $a1 = $a2, $a3"),
+     [/* no straightforward pattern */],
+     MAU_AUXR_X>;
+  let Constraints = "$a3 = $a3o" in
+  def d1 : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32
+    <(outs SingleReg:$a3o), (ins SingleReg:$a3, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
+     !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
+     [/* no straightforward pattern */],
+     MAU_AUXR>;
+}
+
+// multiclass MC_28 is used by:
+//   defm FFMAHQ
+//   defm FFMSHQ
+multiclass MC_28<string OpcStr> {
+  let Constraints = "$a1 = $a1o" in
+  def d0 : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARY16
+    <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, Binary16:$a3),
+     !strconcat (OpcStr, " $a1 = $a2, $a3"),
+     [/* no straightforward pattern */],
+     MAU_AUXR_Y>;
+  let Constraints = "$a3 = $a3o" in
+  def d1 : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY16
+    <(outs SingleReg:$a3o), (ins SingleReg:$a3, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
+     !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
+     [/* no straightforward pattern */],
+     MAU_AUXR>;
+}
+
+// multiclass MC_29 is used by:
+//   defm FMULD
+//   defm FADDD
+//   defm FSBFD
+//   defm FMULWD
+//   defm FDOT2WD
+multiclass MC_29<string OpcStr> {
+  def d0 : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARY64
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary64:$a3),
+     !strconcat (OpcStr, " $a1 = $a2, $a3"),
+     [/* no straightforward pattern */],
+     MAU_Y>;
+  def d1 : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY64
+    <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
+     !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
+     [/* no straightforward pattern */],
+     MAU>;
+}
+
+// multiclass MC_2A is used by:
 //   defm FMULWP
 //   defm FMULWC
 //   defm FMULCWC
@@ -1178,2563 +1301,2081 @@ multiclass MC_24<string OpcStr> {
 //   defm FADDCWC
 //   defm FSBFWP
 //   defm FSBFCWC
-//   defm FMULHW
-//   defm FMULWD
-//   defm FDOT2W
-//   defm FDOT2WD
-multiclass MC_25<string OpcStr> {
-  def d0 : REGISTERW_REGISTERZ_SIGNED10_SIMPLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10_64:$a3),
-     !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
-     MAU>;
-  def d1 : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary32Imm:$a3),
-     !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
-     MAU_X>;
-  def d2 : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary64Imm:$a3),
-     !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
-     MAU_Y>;
-  def d3 : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
-    <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
-     !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
-     [ ],
-     MAU>;
-}
-
-// multiclass MC_25H is used by:
-//   defm FADDHQ
-//   defm FMULHQ
-//   defm FSBFHQ
-multiclass MC_25H<string OpcStr, SDNode OpNode = fadd> {
-  def ri : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary16Imm:$a3),
-     !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [(set f16:$a1, (OpNode f16:$a2, Binary16Imm:$a3))],
-     MAU_X>;
-  def rr : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
-    <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
-     !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
-     [/* no direct match, see K1CFloatingPoint.td */],
-     MAU>;
-}
-
-// multiclass MC_25W is used by:
 //   defm FADDW
-//   defm FMULW
 //   defm FSBFW
-multiclass MC_25W<string OpcStr, SDNode OpNode = fadd> {
-  def ri : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary32Imm:$a3),
-     !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [(set f32:$a1, (OpNode f32:$a2, Binary32Imm:$a3))],
-     MAU_X>;
-  def rr : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
-    <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
-     !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
-     [/* no direct match, see K1CFloatingPoint.td */],
-     MAU>;
-}
-
-// multiclass MC_25D is used by:
-//   defm FADDD
-//   defm FMULD
-//   defm FSBSD
-multiclass MC_25D<string OpcStr, SDNode OpNode = fadd> {
-  def ri : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary64Imm:$a3),
-     !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [(set f64:$a1, (OpNode f64:$a2, Binary64Imm:$a3))],
-     MAU_Y>;
-  def rr : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
-    <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
-     !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
-     [/* no direct match, see K1CFloatingPoint.td */],
-     MAU>;
-}
-
-// multiclass MC_26 is used by:
-//   defm FMULWDP
-//   defm FMULHWQ
-//   defm FMULWDC
-//   defm FMULCWDC
-multiclass MC_26<string OpcStr> {
-  def d0 : REGISTERM_REGISTERZ_SIGNED10_SIMPLE
-    <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, Signed10_64:$a3),
-     !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
-     MAU>;
-  def d1 : REGISTERM_REGISTERZ_UPPER27_LOWER10_DOUBLE
-    <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, Signed37_64:$a3),
-     !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
-     MAU_X>;
-  def d2 : REGISTERM_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
-    <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, Wrapped64:$a3),
-     !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
-     MAU_Y>;
-  def d3 : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE
-    <(outs PairedReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
-     !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
-     [ ],
-     MAU>;
-}
-
-// multiclass MC_27 is used by:
-//   defm FFMAWDP
-//   defm FFMAHWQ
-//   defm FFMSWDP
-//   defm FFMSHWQ
-multiclass MC_27<string OpcStr> {
-  def d0 : REGISTERM_REGISTERZ_SIGNED10_SIMPLE
-    <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, Signed10_64:$a3),
-     !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
-     MAU_AUXR>;
-  def d1 : REGISTERM_REGISTERZ_UPPER27_LOWER10_DOUBLE
-    <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, Signed37_64:$a3),
-     !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
-     MAU_AUXR_X>;
-  def d2 : REGISTERM_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
-    <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, Wrapped64:$a3),
-     !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ],
-     MAU_AUXR_Y>;
-  def d3 : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE
-    <(outs PairedReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
-     !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
-     [ ],
-     MAU_AUXR>;
-}
-
-// multiclass MC_28 is used by:
-//   defm MOVETQ
-multiclass MC_28<string OpcStr> {
-  def d0 : REGISTERAL_REGISTERZ_REGISTERY_SIMPLE
-    <(outs BlockRegE:$a1), (ins SingleReg:$a2, SingleReg:$a3),
-     !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ]>;
-  def d1 : REGISTERAH_REGISTERZ_REGISTERY_SIMPLE
-    <(outs BlockRegO:$a1), (ins SingleReg:$a2, SingleReg:$a3),
-     !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [ ]>;
-}
-
-// multiclass MC_29 is used by:
-//   defm ALIGNO
-multiclass MC_29<string OpcStr> {
-  def d0 : REGISTERN_REGISTERBE_REGISTERCO_BYTESHIFT_SIMPLE
-    <(outs QuadReg:$a1), (ins VectorRegE:$a2, VectorRegO:$a3, Unsigned6:$a4),
-     !strconcat (OpcStr, " $a1 = $a2, $a3, $a4"),
-     [ ]>;
-  def d1 : REGISTERN_REGISTERBO_REGISTERCE_BYTESHIFT_SIMPLE
-    <(outs QuadReg:$a1), (ins VectorRegO:$a2, VectorRegE:$a3, Unsigned6:$a4),
-     !strconcat (OpcStr, " $a1 = $a2, $a3, $a4"),
-     [ ]>;
-  def d2 : REGISTERN_REGISTERBE_REGISTERCO_REGISTERZ_SIMPLE
-    <(outs QuadReg:$a1), (ins VectorRegE:$a2, VectorRegO:$a3, SingleReg:$a4),
-     !strconcat (OpcStr, " $a1 = $a2, $a3, $a4"),
-     [ ]>;
-  def d3 : REGISTERN_REGISTERBO_REGISTERCE_REGISTERZ_SIMPLE
-    <(outs QuadReg:$a1), (ins VectorRegO:$a2, VectorRegE:$a3, SingleReg:$a4),
-     !strconcat (OpcStr, " $a1 = $a2, $a3, $a4"),
-     [ ]>;
-}
-
-// multiclass MC_2A is used by:
-//   defm ALIGNV
+//   defm FMULHW
+//   defm FMULW
+//   defm FDOT2W
 multiclass MC_2A<string OpcStr> {
-  def d0 : REGISTERA_REGISTERBE_REGISTERCO_BYTESHIFT_SIMPLE
-    <(outs VectorReg:$a1), (ins VectorRegE:$a2, VectorRegO:$a3, Unsigned6:$a4),
-     !strconcat (OpcStr, " $a1 = $a2, $a3, $a4"),
-     [ ]>;
-  def d1 : REGISTERA_REGISTERBO_REGISTERCE_BYTESHIFT_SIMPLE
-    <(outs VectorReg:$a1), (ins VectorRegO:$a2, VectorRegE:$a3, Unsigned6:$a4),
-     !strconcat (OpcStr, " $a1 = $a2, $a3, $a4"),
-     [ ]>;
-  def d2 : REGISTERA_REGISTERBE_REGISTERCO_REGISTERZ_SIMPLE
-    <(outs VectorReg:$a1), (ins VectorRegE:$a2, VectorRegO:$a3, SingleReg:$a4),
-     !strconcat (OpcStr, " $a1 = $a2, $a3, $a4"),
-     [ ]>;
-  def d3 : REGISTERA_REGISTERBO_REGISTERCE_REGISTERZ_SIMPLE
-    <(outs VectorReg:$a1), (ins VectorRegO:$a2, VectorRegE:$a3, SingleReg:$a4),
-     !strconcat (OpcStr, " $a1 = $a2, $a3, $a4"),
-     [ ]>;
+  def d0 : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE_BINARY32
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary32:$a3),
+     !strconcat (OpcStr, " $a1 = $a2, $a3"),
+     [/* no straightforward pattern */],
+     MAU_X>;
+  def d1 : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32
+    <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
+     !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
+     [/* no straightforward pattern */],
+     MAU>;
 }
 
 // multiclass MC_2B is used by:
-//   defm COPYV
+//   defm FMULHQ
+//   defm FADDHQ
+//   defm FSBFHQ
 multiclass MC_2B<string OpcStr> {
-  def d0 : REGISTERA_REGISTERBE_SIMPLE
-    <(outs VectorReg:$a1), (ins VectorRegE:$a2),
-     !strconcat (OpcStr, " $a1 = $a2"),
-     [ ]>;
-  def d1 : REGISTERA_REGISTERBO_SIMPLE
-    <(outs VectorReg:$a1), (ins VectorRegO:$a2),
-     !strconcat (OpcStr, " $a1 = $a2"),
-     [ ]>;
+  def d0 : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARY16
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary16:$a3),
+     !strconcat (OpcStr, " $a1 = $a2, $a3"),
+     [/* no straightforward pattern */],
+     MAU_Y>;
+  def d1 : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY16
+    <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
+     !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
+     [/* no straightforward pattern */],
+     MAU>;
 }
 
 // multiclass MC_2C is used by:
-//   defm MOVEFO
+//   defm FMULWDP
+//   defm FMULWDC
+//   defm FMULCWDC
 multiclass MC_2C<string OpcStr> {
+  def d0 : REGISTERM_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARY64
+    <(outs PairedReg:$a1), (ins SingleReg:$a2, Binary64:$a3),
+     !strconcat (OpcStr, " $a1 = $a2, $a3"),
+     [/* no straightforward pattern */],
+     MAU_Y>;
+  def d1 : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE_BINARY64
+    <(outs PairedReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
+     !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
+     [/* no straightforward pattern */],
+     MAU>;
+}
+
+// multiclass MC_2D is used by:
+//   defm FMULHWQ
+multiclass MC_2D<string OpcStr> {
+  def d0 : REGISTERM_REGISTERZ_UPPER27_LOWER10_DOUBLE_BINARYREG
+    <(outs PairedReg:$a1), (ins SingleReg:$a2, Binary32:$a3),
+     !strconcat (OpcStr, " $a1 = $a2, $a3"),
+     [/* no straightforward pattern */],
+     MAU_X>;
+  def d1 : REGISTERM_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARYREG
+    <(outs PairedReg:$a1), (ins SingleReg:$a2, Binary64:$a3),
+     !strconcat (OpcStr, " $a1 = $a2, $a3"),
+     [/* no straightforward pattern */],
+     MAU_Y>;
+  def d2 : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE_BINARYREG
+    <(outs PairedReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
+     !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
+     [/* no straightforward pattern */],
+     MAU>;
+}
+
+// multiclass MC_2E is used by:
+//   defm FFMAWDP
+//   defm FFMSWDP
+multiclass MC_2E<string OpcStr> {
+  let Constraints = "$a1 = $a1o" in
+  def d0 : REGISTERM_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARY64
+    <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, Binary64:$a3),
+     !strconcat (OpcStr, " $a1 = $a2, $a3"),
+     [/* no straightforward pattern */],
+     MAU_AUXR_Y>;
+  let Constraints = "$a3 = $a3o" in
+  def d1 : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE_BINARY64
+    <(outs PairedReg:$a3o), (ins PairedReg:$a3, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
+     !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
+     [/* no straightforward pattern */],
+     MAU_AUXR>;
+}
+
+// multiclass MC_2F is used by:
+//   defm FFMAHWQ
+//   defm FFMSHWQ
+multiclass MC_2F<string OpcStr> {
+  let Constraints = "$a1 = $a1o" in
+  def d0 : REGISTERM_REGISTERZ_UPPER27_LOWER10_DOUBLE_BINARYREG
+    <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, Binary32:$a3),
+     !strconcat (OpcStr, " $a1 = $a2, $a3"),
+     [/* no straightforward pattern */],
+     MAU_AUXR_X>;
+  let Constraints = "$a1 = $a1o" in
+  def d1 : REGISTERM_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARYREG
+    <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, Binary64:$a3),
+     !strconcat (OpcStr, " $a1 = $a2, $a3"),
+     [/* no straightforward pattern */],
+     MAU_AUXR_Y>;
+  let Constraints = "$a3 = $a3o" in
+  def d2 : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE_BINARYREG
+    <(outs PairedReg:$a3o), (ins PairedReg:$a3, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
+     !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
+     [/* no straightforward pattern */],
+     MAU_AUXR>;
+}
+
+// multiclass MC_30 is used by:
+//   defm MOVETQ
+multiclass MC_30<string OpcStr> {
+  let Defs = [CS] in
+  def d0 : REGISTERAL_REGISTERZ_REGISTERY_SIMPLE
+    <(outs BlockRegE:$a1), (ins SingleReg:$a2, SingleReg:$a3),
+     !strconcat (OpcStr, " $a1 = $a2, $a3"),
+     [/* no straightforward pattern */]>;
+  let Defs = [CS] in
+  def d1 : REGISTERAH_REGISTERZ_REGISTERY_SIMPLE
+    <(outs BlockRegO:$a1), (ins SingleReg:$a2, SingleReg:$a3),
+     !strconcat (OpcStr, " $a1 = $a2, $a3"),
+     [/* no straightforward pattern */]>;
+}
+
+// multiclass MC_31 is used by:
+//   defm ALIGNO
+multiclass MC_31<string OpcStr> {
+  let Defs = [CS] in
+  def d0 : REGISTERN_REGISTERBE_REGISTERCO_BYTESHIFT_SIMPLE
+    <(outs QuadReg:$a1), (ins VectorRegE:$a2, VectorRegO:$a3, Unsigned6:$a4),
+     !strconcat (OpcStr, " $a1 = $a2, $a3, $a4"),
+     [/* no straightforward pattern */]>;
+  let Defs = [CS] in
+  def d1 : REGISTERN_REGISTERBO_REGISTERCE_BYTESHIFT_SIMPLE
+    <(outs QuadReg:$a1), (ins VectorRegO:$a2, VectorRegE:$a3, Unsigned6:$a4),
+     !strconcat (OpcStr, " $a1 = $a2, $a3, $a4"),
+     [/* no straightforward pattern */]>;
+  let Defs = [CS] in
+  def d2 : REGISTERN_REGISTERBE_REGISTERCO_REGISTERZ_SIMPLE
+    <(outs QuadReg:$a1), (ins VectorRegE:$a2, VectorRegO:$a3, SingleReg:$a4),
+     !strconcat (OpcStr, " $a1 = $a2, $a3, $a4"),
+     [/* no straightforward pattern */]>;
+  let Defs = [CS] in
+  def d3 : REGISTERN_REGISTERBO_REGISTERCE_REGISTERZ_SIMPLE
+    <(outs QuadReg:$a1), (ins VectorRegO:$a2, VectorRegE:$a3, SingleReg:$a4),
+     !strconcat (OpcStr, " $a1 = $a2, $a3, $a4"),
+     [/* no straightforward pattern */]>;
+}
+
+// multiclass MC_32 is used by:
+//   defm ALIGNV
+multiclass MC_32<string OpcStr> {
+  let Defs = [CS] in
+  def d0 : REGISTERA_REGISTERBE_REGISTERCO_BYTESHIFT_SIMPLE
+    <(outs VectorReg:$a1), (ins VectorRegE:$a2, VectorRegO:$a3, Unsigned6:$a4),
+     !strconcat (OpcStr, " $a1 = $a2, $a3, $a4"),
+     [/* no straightforward pattern */]>;
+  let Defs = [CS] in
+  def d1 : REGISTERA_REGISTERBO_REGISTERCE_BYTESHIFT_SIMPLE
+    <(outs VectorReg:$a1), (ins VectorRegO:$a2, VectorRegE:$a3, Unsigned6:$a4),
+     !strconcat (OpcStr, " $a1 = $a2, $a3, $a4"),
+     [/* no straightforward pattern */]>;
+  let Defs = [CS] in
+  def d2 : REGISTERA_REGISTERBE_REGISTERCO_REGISTERZ_SIMPLE
+    <(outs VectorReg:$a1), (ins VectorRegE:$a2, VectorRegO:$a3, SingleReg:$a4),
+     !strconcat (OpcStr, " $a1 = $a2, $a3, $a4"),
+     [/* no straightforward pattern */]>;
+  let Defs = [CS] in
+  def d3 : REGISTERA_REGISTERBO_REGISTERCE_REGISTERZ_SIMPLE
+    <(outs VectorReg:$a1), (ins VectorRegO:$a2, VectorRegE:$a3, SingleReg:$a4),
+     !strconcat (OpcStr, " $a1 = $a2, $a3, $a4"),
+     [/* no straightforward pattern */]>;
+}
+
+// multiclass MC_33 is used by:
+//   defm COPYV
+multiclass MC_33<string OpcStr> {
+  let Defs = [CS] in
+  def d0 : REGISTERA_REGISTERBE_SIMPLE
+    <(outs VectorReg:$a1), (ins VectorRegE:$a2),
+     !strconcat (OpcStr, " $a1 = $a2"),
+     [/* no straightforward pattern */]>;
+  let Defs = [CS] in
+  def d1 : REGISTERA_REGISTERBO_SIMPLE
+    <(outs VectorReg:$a1), (ins VectorRegO:$a2),
+     !strconcat (OpcStr, " $a1 = $a2"),
+     [/* no straightforward pattern */]>;
+}
+
+// multiclass MC_34 is used by:
+//   defm MOVEFO
+multiclass MC_34<string OpcStr> {
+  let Defs = [CS] in
   def d0 : REGISTERN_REGISTERBE_SIMPLE
     <(outs QuadReg:$a1), (ins VectorRegE:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
-     [ ]>;
+     [/* no straightforward pattern */]>;
+  let Defs = [CS] in
   def d1 : REGISTERN_REGISTERBO_SIMPLE
     <(outs QuadReg:$a1), (ins VectorRegO:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
-     [ ]>;
+     [/* no straightforward pattern */]>;
 }
 
 
-// 1 insns: ['AWAIT']
 def AWAIT : SIMPLE
   <(outs), (ins),
    "await",
-   [ ],
+   [/* no straightforward pattern */],
    ALL>;
 
-// 1 insns: ['SLEEP']
 def SLEEP : SIMPLE
   <(outs), (ins),
    "sleep",
-   [ ],
+   [/* no straightforward pattern */],
    ALL>;
 
-// 1 insns: ['STOP']
-let Uses=[PS] in
-let hasSideEffects = 1 in
 def STOP : SIMPLE
   <(outs), (ins),
    "stop",
-   [ ],
+   [/* no straightforward pattern */],
    ALL>;
 
-// 1 insns: ['BARRIER']
 def BARRIER : SIMPLE
   <(outs), (ins),
    "barrier",
-   [ ],
+   [/* no straightforward pattern */],
    ALL>;
 
-// 1 insns: ['TLBREAD']
 def TLBREAD : SIMPLE
   <(outs), (ins),
    "tlbread",
-   [ ],
+   [/* no straightforward pattern */],
    ALL>;
 
-// 1 insns: ['TLBPROBE']
 def TLBPROBE : SIMPLE
   <(outs), (ins),
    "tlbprobe",
-   [ ],
+   [/* no straightforward pattern */],
    ALL>;
 
-// 1 insns: ['TLBWRITE']
-let Uses=[PS] in
 def TLBWRITE : SIMPLE
   <(outs), (ins),
    "tlbwrite",
-   [ ],
+   [/* no straightforward pattern */],
    ALL>;
 
-// 1 insns: ['TLBDINVAL']
 def TLBDINVAL : SIMPLE
   <(outs), (ins),
    "tlbdinval",
-   [ ],
+   [/* no straightforward pattern */],
    ALL>;
 
-// 1 insns: ['TLBIINVAL']
 def TLBIINVAL : SIMPLE
   <(outs), (ins),
    "tlbiinval",
-   [ ],
+   [/* no straightforward pattern */],
    ALL>;
 
-// 1 insns: ['ERROP']
 def ERROP : SIMPLE
   <(outs), (ins),
    "errop",
-   [ ],
+   [/* no straightforward pattern */],
    ALL>;
 
-// 1 insns: ['RET']
-let Uses=[RA],isBarrier = 1, isReturn = 1, isTerminator = 1 in
+let Uses = [RA], isBarrier = 1, isReturn = 1, isTerminator = 1 in
 def RET : SIMPLE
   <(outs), (ins),
    "ret",
-   [ ],
+   [/* no straightforward pattern */],
    BCU>;
 
-// 1 insns: ['RFE']
-let Uses=[PS, SPC], Defs=[SPC] in
 def RFE : SIMPLE
   <(outs), (ins),
    "rfe",
-   [ ],
+   [/* no straightforward pattern */],
    ALL>;
 
-// 1 insns: ['IGOTO']
-let isBarrier=1, isBranch=1, isIndirectBranch=1, isTerminator=1 in
+let isBarrier = 1, isBranch = 1, isIndirectBranch = 1, isTerminator = 1 in
 def IGOTO : REGISTERZ_SIMPLE
   <(outs), (ins SingleReg:$a1),
    "igoto $a1",
-   [ ],
+   [/* no straightforward pattern */],
    BCU>;
 
-// 1 insns: ['ICALL']
-let Defs=[RA], isCall=1, isIndirectBranch=1 in
+let Defs = [RA], isCall = 1, isIndirectBranch = 1 in
 def ICALL : REGISTERZ_SIMPLE
   <(outs), (ins SingleReg:$a1),
    "icall $a1",
-   [ ],
+   [/* no straightforward pattern */],
    BCU>;
 
-// 2 insns: ['SCALL', 'SCALL']
 defm SCALL : MC_00<"scall">;
 
-// 1 insns: ['LOOPDO']
-let Uses=[PS] , Defs=[LC, LE, LS], isBarrier = 1, isTerminator = 1, isBranch=1, isIndirectBranch=1 in
+let isBarrier = 1, isBranch = 1, isIndirectBranch = 1, isTerminator = 1 in
+let Uses = [PS] in
 def LOOPDO : REGISTERZ_PCREL17_SIMPLE
   <(outs), (ins SingleReg:$a1, Pcrel17:$a2),
    "loopdo $a1, $a2",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 2 insns: ['WFXL', 'WFXM']
 defm WFXL : MC_01<"wfxl">;
 
-// 2 insns: ['WFXL', 'WFXM']
 defm WFXM : MC_01<"wfxm">;
 
-// 1 insns: ['GET']
-def GET : REGISTERZ_SYSTEMS2_SIMPLE
-  <(outs SingleReg:$a1), (ins SystemReg:$a2),
-   "get $a1 = $a2",
-   [ ]>;
+defm GET : MC_02<"get">;
 
-// 1 insns: ['IGET']
+let Constraints = "$a1 = $a1o" in
 def IGET : REGISTERZ_SIMPLE
-  <(outs SingleReg:$a1), (ins SingleReg:$a11),
+  <(outs SingleReg:$a1o), (ins SingleReg:$a1),
    "iget $a1",
-   [ ],
+   [/* no straightforward pattern */],
    BCU_TINY_TINY_MAU_XNOP>;
 
-// 3 insns: ['SET', 'SET', 'SET']
-defm SET : MC_02<"set">;
+defm SET : MC_03<"set">;
 
-// 1 insns: ['WAITIT']
+defm RSWAP : MC_04<"rswap">;
+
+let Constraints = "$a1 = $a1o" in
 def WAITIT : REGISTERZ_SIMPLE
-  <(outs SingleReg:$a1), (ins SingleReg:$a11),
+  <(outs SingleReg:$a1o), (ins SingleReg:$a1),
    "waitit $a1",
-   [ ],
+   [/* no straightforward pattern */],
    BCU_TINY_TINY_MAU_XNOP>;
 
-// 1 insns: ['SYNCGROUP']
 def SYNCGROUP : REGISTERZ_SIMPLE
   <(outs), (ins SingleReg:$a1),
    "syncgroup $a1",
-   [ ],
+   [/* no straightforward pattern */],
    BCU>;
 
-// 1 insns: ['GOTO']
 let isBarrier = 1, isBranch = 1, isTerminator = 1 in
 def GOTO : PCREL27_SIMPLE
   <(outs), (ins Pcrel27:$a1),
    "goto $a1",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['CALL']
-let Defs=[RA], isCall=1 in
+let Defs = [RA], isCall = 1 in
 def CALL : PCREL27_SIMPLE
   <(outs), (ins Pcrel27:$a1),
    "call $a1",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['CB']
-let isBranch=1, isTerminator=1 in
+let isBranch = 1, isTerminator = 1 in
 def CB : BRANCHCOND_REGISTERZ_PCREL17_SIMPLE
   <(outs), (ins SingleReg:$a2, Pcrel17:$a3, ScalarcondMod:$a1),
    "cb$a1 $a2 ? $a3",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 7 insns: ['LBZ', 'LBZ', 'LBZ', 'LBZ', 'LBZ', 'LBZ', 'LBZ']
-defm LBZ : MC_03<"lbz">;
+defm LBZ : MC_05<"lbz">;
 
-// 7 insns: ['LBS', 'LBS', 'LBS', 'LBS', 'LBS', 'LBS', 'LBS']
-defm LBS : MC_03<"lbs">;
+defm LBS : MC_05<"lbs">;
 
-// 7 insns: ['LHZ', 'LHZ', 'LHZ', 'LHZ', 'LHZ', 'LHZ', 'LHZ']
-defm LHZ : MC_03<"lhz">;
+defm LHZ : MC_05<"lhz">;
 
-// 7 insns: ['LHS', 'LHS', 'LHS', 'LHS', 'LHS', 'LHS', 'LHS']
-defm LHS : MC_03<"lhs">;
+defm LHS : MC_05<"lhs">;
 
-// 7 insns: ['LWZ', 'LWZ', 'LWZ', 'LWZ', 'LWZ', 'LWZ', 'LWZ']
-defm LWZ : MC_03<"lwz">;
+defm LWZ : MC_05<"lwz">;
 
-// 7 insns: ['LWS', 'LWS', 'LWS', 'LWS', 'LWS', 'LWS', 'LWS']
-defm LWS : MC_03<"lws">;
+defm LWS : MC_05<"lws">;
 
-// 7 insns: ['LD', 'LD', 'LD', 'LD', 'LD', 'LD', 'LD']
-defm LD : MC_03<"ld">;
+defm LD : MC_05<"ld">;
 
-// 7 insns: ['LQ', 'LQ', 'LQ', 'LQ', 'LQ', 'LQ', 'LQ']
-defm LQ : MC_04<"lq">;
+defm LQ : MC_06<"lq">;
 
-// 7 insns: ['LO', 'LO', 'LO', 'LO', 'LO', 'LO', 'LO']
-defm LO : MC_05<"lo">;
+defm LO : MC_07<"lo">;
 
-// 14 insns: ['LV', 'LV', 'LV', 'LV', 'LV', 'LV', 'LV', 'LV', 'LV', 'LV', 'LV', 'LV', 'LV', 'LV']
-defm LV : MC_06<"lv">;
+defm LV : MC_08<"lv">;
 
-// 7 insns: ['SB', 'SB', 'SB', 'SB', 'SB', 'SB', 'SB']
-defm SB : MC_07<"sb">;
+defm SB : MC_09<"sb">;
 
-// 7 insns: ['SH', 'SH', 'SH', 'SH', 'SH', 'SH', 'SH']
-defm SH : MC_07<"sh">;
+defm SH : MC_09<"sh">;
 
-// 7 insns: ['SW', 'SW', 'SW', 'SW', 'SW', 'SW', 'SW']
-defm SW : MC_07<"sw">;
+defm SW : MC_09<"sw">;
 
-// 7 insns: ['SD', 'SD', 'SD', 'SD', 'SD', 'SD', 'SD']
-defm SD : MC_07<"sd">;
+defm SD : MC_09<"sd">;
 
-// 7 insns: ['SQ', 'SQ', 'SQ', 'SQ', 'SQ', 'SQ', 'SQ']
-defm SQ : MC_08<"sq">;
+defm SQ : MC_0A<"sq">;
 
-// 7 insns: ['SO', 'SO', 'SO', 'SO', 'SO', 'SO', 'SO']
-defm SO : MC_09<"so">;
+defm SO : MC_0B<"so">;
 
-// 7 insns: ['SV', 'SV', 'SV', 'SV', 'SV', 'SV', 'SV']
-defm SV : MC_0A<"sv">;
+defm SV : MC_0C<"sv">;
 
-// 6 insns: ['ACSWAPW', 'ACSWAPW', 'ACSWAPW', 'ACSWAPW', 'ACSWAPW', 'ACSWAPW']
-defm ACSWAPW : MC_0B<"acswapw">;
+defm ACSWAPW : MC_0D<"acswapw">;
 
-// 6 insns: ['ACSWAPD', 'ACSWAPD', 'ACSWAPD', 'ACSWAPD', 'ACSWAPD', 'ACSWAPD']
-defm ACSWAPD : MC_0B<"acswapd">;
+defm ACSWAPD : MC_0D<"acswapd">;
 
-// 7 insns: ['ALCLRW', 'ALCLRW', 'ALCLRW', 'ALCLRW', 'ALCLRW', 'ALCLRW', 'ALCLRW']
-defm ALCLRW : MC_0C<"alclrw">;
+defm ALCLRW : MC_0E<"alclrw">;
 
-// 7 insns: ['ALCLRD', 'ALCLRD', 'ALCLRD', 'ALCLRD', 'ALCLRD', 'ALCLRD', 'ALCLRD']
-defm ALCLRD : MC_0C<"alclrd">;
+defm ALCLRD : MC_0E<"alclrd">;
 
-// 7 insns: ['AFADDW', 'AFADDW', 'AFADDW', 'AFADDW', 'AFADDW', 'AFADDW', 'AFADDW']
-defm AFADDW : MC_0D<"afaddw">;
+defm ALADDW : MC_0F<"aladdw">;
 
-// 7 insns: ['AFADDD', 'AFADDD', 'AFADDD', 'AFADDD', 'AFADDD', 'AFADDD', 'AFADDD']
-defm AFADDD : MC_0D<"afaddd">;
+defm ALADDD : MC_0F<"aladdd">;
 
-// 7 insns: ['DTOUCHL', 'DTOUCHL', 'DTOUCHL', 'DTOUCHL', 'DTOUCHL', 'DTOUCHL', 'DTOUCHL']
-defm DTOUCHL : MC_0E<"dtouchl">;
+defm DTOUCHL : MC_10<"dtouchl">;
 
-// 7 insns: ['DINVALL', 'DINVALL', 'DINVALL', 'DINVALL', 'DINVALL', 'DINVALL', 'DINVALL']
-defm DINVALL : MC_0E<"dinvall">;
+defm DINVALL : MC_10<"dinvall">;
 
-// 7 insns: ['DZEROL', 'DZEROL', 'DZEROL', 'DZEROL', 'DZEROL', 'DZEROL', 'DZEROL']
-defm DZEROL : MC_0E<"dzerol">;
+defm DZEROL : MC_10<"dzerol">;
 
-// 7 insns: ['IINVALS', 'IINVALS', 'IINVALS', 'IINVALS', 'IINVALS', 'IINVALS', 'IINVALS']
-defm IINVALS : MC_0E<"iinvals">;
+defm IINVALS : MC_10<"iinvals">;
 
-// 1 insns: ['DINVAL']
 let hasSideEffects = 1 in
 def DINVAL : SIMPLE
   <(outs), (ins),
    "dinval",
-   [ ],
+   [/* no straightforward pattern */],
    LSU>;
 
-// 1 insns: ['IINVAL']
 def IINVAL : SIMPLE
   <(outs), (ins),
    "iinval",
-   [ ],
+   [/* no straightforward pattern */],
    LSU>;
 
-// 1 insns: ['FENCE']
 let hasSideEffects = 1 in
 def FENCE : SIMPLE
   <(outs), (ins),
    "fence",
-   [ ],
+   [/* no straightforward pattern */],
    LSU>;
 
-// 1 insns: ['NOP']
 def NOP : SIMPLE
   <(outs), (ins),
    "nop",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_NOP>;
 
-// 1 insns: ['STSUD']
 def STSUD : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "stsud $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_LITE>;
 
-// 4 insns: ['ADDD', 'ADDD', 'ADDD', 'ADDD']
-defm ADDD : MC_0F<"addd">;
+defm ADDD : MC_11<"addd">;
 
-// 4 insns: ['SBFD', 'SBFD', 'SBFD', 'SBFD']
-defm SBFD : MC_0F<"sbfd">;
+defm SBFD : MC_11<"sbfd">;
 
-// 4 insns: ['ABDD', 'ABDD', 'ABDD', 'ABDD']
-defm ABDD : MC_10<"abdd">;
+defm ABDD : MC_12<"abdd">;
 
-// 4 insns: ['MIND', 'MIND', 'MIND', 'MIND']
-defm MIND : MC_0F<"mind">;
+defm MIND : MC_11<"mind">;
 
-// 4 insns: ['MINUD', 'MINUD', 'MINUD', 'MINUD']
-defm MINUD : MC_0F<"minud">;
+defm MINUD : MC_11<"minud">;
 
-// 4 insns: ['MAXD', 'MAXD', 'MAXD', 'MAXD']
-defm MAXD : MC_0F<"maxd">;
+defm MAXD : MC_11<"maxd">;
 
-// 4 insns: ['MAXUD', 'MAXUD', 'MAXUD', 'MAXUD']
-defm MAXUD : MC_0F<"maxud">;
+defm MAXUD : MC_11<"maxud">;
 
-// 4 insns: ['ANDD', 'ANDD', 'ANDD', 'ANDD']
-defm ANDD : MC_0F<"andd">;
+defm ANDD : MC_11<"andd">;
 
-// 4 insns: ['NANDD', 'NANDD', 'NANDD', 'NANDD']
-defm NANDD : MC_0F<"nandd">;
+defm NANDD : MC_11<"nandd">;
 
-// 4 insns: ['ORD', 'ORD', 'ORD', 'ORD']
-defm ORD : MC_0F<"ord">;
+defm ORD : MC_11<"ord">;
 
-// 4 insns: ['NORD', 'NORD', 'NORD', 'NORD']
-defm NORD : MC_0F<"nord">;
+defm NORD : MC_11<"nord">;
 
-// 4 insns: ['XORD', 'XORD', 'XORD', 'XORD']
-defm XORD : MC_0F<"xord">;
+defm XORD : MC_11<"xord">;
 
-// 4 insns: ['NXORD', 'NXORD', 'NXORD', 'NXORD']
-defm NXORD : MC_0F<"nxord">;
+defm NXORD : MC_11<"nxord">;
 
-// 4 insns: ['ANDND', 'ANDND', 'ANDND', 'ANDND']
-defm ANDND : MC_0F<"andnd">;
+defm ANDND : MC_11<"andnd">;
 
-// 4 insns: ['ORND', 'ORND', 'ORND', 'ORND']
-defm ORND : MC_0F<"ornd">;
+defm ORND : MC_11<"ornd">;
 
-// 4 insns: ['SBMM8', 'SBMM8', 'SBMM8', 'SBMM8']
-defm SBMM8 : MC_10<"sbmm8">;
+defm SBMM8 : MC_12<"sbmm8">;
 
-// 4 insns: ['SBMMT8', 'SBMMT8', 'SBMMT8', 'SBMMT8']
-defm SBMMT8 : MC_10<"sbmmt8">;
+defm SBMMT8 : MC_12<"sbmmt8">;
 
-// 4 insns: ['ADDSD', 'ADDSD', 'ADDSD', 'ADDSD']
-defm ADDSD : MC_10<"addsd">;
+defm ADDSD : MC_12<"addsd">;
 
-// 4 insns: ['SBFSD', 'SBFSD', 'SBFSD', 'SBFSD']
-defm SBFSD : MC_10<"sbfsd">;
+defm SBFSD : MC_12<"sbfsd">;
 
-// 2 insns: ['ADDX2D', 'ADDX2D']
-defm ADDX2D : MC_11<"addx2d">;
+defm ADDX2D : MC_13<"addx2d">;
 
-// 2 insns: ['ADDX4D', 'ADDX4D']
-defm ADDX4D : MC_11<"addx4d">;
+defm ADDX4D : MC_13<"addx4d">;
 
-// 2 insns: ['ADDX8D', 'ADDX8D']
-defm ADDX8D : MC_11<"addx8d">;
+defm ADDX8D : MC_13<"addx8d">;
 
-// 2 insns: ['ADDX16D', 'ADDX16D']
-defm ADDX16D : MC_11<"addx16d">;
+defm ADDX16D : MC_13<"addx16d">;
 
-// 2 insns: ['SBFX2D', 'SBFX2D']
-defm SBFX2D : MC_11<"sbfx2d">;
+defm SBFX2D : MC_13<"sbfx2d">;
 
-// 2 insns: ['SBFX4D', 'SBFX4D']
-defm SBFX4D : MC_11<"sbfx4d">;
+defm SBFX4D : MC_13<"sbfx4d">;
 
-// 2 insns: ['SBFX8D', 'SBFX8D']
-defm SBFX8D : MC_11<"sbfx8d">;
+defm SBFX8D : MC_13<"sbfx8d">;
 
-// 2 insns: ['SBFX16D', 'SBFX16D']
-defm SBFX16D : MC_11<"sbfx16d">;
+defm SBFX16D : MC_13<"sbfx16d">;
 
-// 2 insns: ['ADDWD', 'ADDWD']
-defm ADDWD : MC_11<"addwd">;
+defm ADDWD : MC_13<"addwd">;
 
-// 2 insns: ['SBFWD', 'SBFWD']
-defm SBFWD : MC_11<"sbfwd">;
+defm SBFWD : MC_13<"sbfwd">;
 
-// 2 insns: ['ADDUWD', 'ADDUWD']
-defm ADDUWD : MC_11<"adduwd">;
+defm ADDUWD : MC_13<"adduwd">;
 
-// 2 insns: ['SBFUWD', 'SBFUWD']
-defm SBFUWD : MC_11<"sbfuwd">;
+defm SBFUWD : MC_13<"sbfuwd">;
 
-// 2 insns: ['LANDD', 'LANDD']
-defm LANDD : MC_11<"landd">;
+defm LANDD : MC_13<"landd">;
 
-// 2 insns: ['LNANDD', 'LNANDD']
-defm LNANDD : MC_11<"lnandd">;
+defm LNANDD : MC_13<"lnandd">;
 
-// 2 insns: ['LORD', 'LORD']
-defm LORD : MC_11<"lord">;
+defm LORD : MC_13<"lord">;
 
-// 2 insns: ['LNORD', 'LNORD']
-defm LNORD : MC_11<"lnord">;
+defm LNORD : MC_13<"lnord">;
 
-// 1 insns: ['STSUW']
 def STSUW : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "stsuw $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_LITE>;
 
-// 3 insns: ['ADDW', 'ADDW', 'ADDW']
-defm ADDW : MC_12<"addw">;
+defm ADDW : MC_14<"addw">;
 
-// 3 insns: ['SBFW', 'SBFW', 'SBFW']
-defm SBFW : MC_12<"sbfw">;
+defm SBFW : MC_14<"sbfw">;
 
-// 3 insns: ['ABDW', 'ABDW', 'ABDW']
-defm ABDW : MC_13<"abdw">;
+defm ABDW : MC_15<"abdw">;
 
-// 3 insns: ['MINW', 'MINW', 'MINW']
-defm MINW : MC_12<"minw">;
+defm MINW : MC_14<"minw">;
 
-// 3 insns: ['MINUW', 'MINUW', 'MINUW']
-defm MINUW : MC_12<"minuw">;
+defm MINUW : MC_14<"minuw">;
 
-// 3 insns: ['MAXW', 'MAXW', 'MAXW']
-defm MAXW : MC_12<"maxw">;
+defm MAXW : MC_14<"maxw">;
 
-// 3 insns: ['MAXUW', 'MAXUW', 'MAXUW']
-defm MAXUW : MC_12<"maxuw">;
+defm MAXUW : MC_14<"maxuw">;
 
-// 3 insns: ['ANDW', 'ANDW', 'ANDW']
-defm ANDW : MC_12<"andw">;
+defm ANDW : MC_14<"andw">;
 
-// 3 insns: ['NANDW', 'NANDW', 'NANDW']
-defm NANDW : MC_12<"nandw">;
+defm NANDW : MC_14<"nandw">;
 
-// 3 insns: ['ORW', 'ORW', 'ORW']
-defm ORW : MC_12<"orw">;
+defm ORW : MC_14<"orw">;
 
-// 3 insns: ['NORW', 'NORW', 'NORW']
-defm NORW : MC_12<"norw">;
+defm NORW : MC_14<"norw">;
 
-// 3 insns: ['XORW', 'XORW', 'XORW']
-defm XORW : MC_12<"xorw">;
+defm XORW : MC_14<"xorw">;
 
-// 3 insns: ['NXORW', 'NXORW', 'NXORW']
-defm NXORW : MC_12<"nxorw">;
+defm NXORW : MC_14<"nxorw">;
 
-// 3 insns: ['ANDNW', 'ANDNW', 'ANDNW']
-defm ANDNW : MC_12<"andnw">;
+defm ANDNW : MC_14<"andnw">;
 
-// 3 insns: ['ORNW', 'ORNW', 'ORNW']
-defm ORNW : MC_12<"ornw">;
+defm ORNW : MC_14<"ornw">;
 
-// 2 insns: ['ADDSW', 'ADDSW']
-defm ADDSW : MC_11<"addsw">;
+defm ADDSW : MC_13<"addsw">;
 
-// 2 insns: ['SBFSW', 'SBFSW']
-defm SBFSW : MC_11<"sbfsw">;
+defm SBFSW : MC_13<"sbfsw">;
 
-// 2 insns: ['ADDX2W', 'ADDX2W']
-defm ADDX2W : MC_11<"addx2w">;
+defm ADDX2W : MC_13<"addx2w">;
 
-// 2 insns: ['ADDX4W', 'ADDX4W']
-defm ADDX4W : MC_11<"addx4w">;
+defm ADDX4W : MC_13<"addx4w">;
 
-// 2 insns: ['ADDX8W', 'ADDX8W']
-defm ADDX8W : MC_11<"addx8w">;
+defm ADDX8W : MC_13<"addx8w">;
 
-// 2 insns: ['ADDX16W', 'ADDX16W']
-defm ADDX16W : MC_11<"addx16w">;
+defm ADDX16W : MC_13<"addx16w">;
 
-// 2 insns: ['SBFX2W', 'SBFX2W']
-defm SBFX2W : MC_11<"sbfx2w">;
+defm SBFX2W : MC_13<"sbfx2w">;
 
-// 2 insns: ['SBFX4W', 'SBFX4W']
-defm SBFX4W : MC_11<"sbfx4w">;
+defm SBFX4W : MC_13<"sbfx4w">;
 
-// 2 insns: ['SBFX8W', 'SBFX8W']
-defm SBFX8W : MC_11<"sbfx8w">;
+defm SBFX8W : MC_13<"sbfx8w">;
 
-// 2 insns: ['SBFX16W', 'SBFX16W']
-defm SBFX16W : MC_11<"sbfx16w">;
+defm SBFX16W : MC_13<"sbfx16w">;
 
-// 2 insns: ['AVGW', 'AVGW']
-defm AVGW : MC_11<"avgw">;
+defm AVGW : MC_13<"avgw">;
 
-// 2 insns: ['AVGUW', 'AVGUW']
-defm AVGUW : MC_11<"avguw">;
+defm AVGUW : MC_13<"avguw">;
 
-// 2 insns: ['AVGRW', 'AVGRW']
-defm AVGRW : MC_11<"avgrw">;
+defm AVGRW : MC_13<"avgrw">;
 
-// 2 insns: ['AVGRUW', 'AVGRUW']
-defm AVGRUW : MC_11<"avgruw">;
+defm AVGRUW : MC_13<"avgruw">;
 
-// 2 insns: ['LANDW', 'LANDW']
-defm LANDW : MC_11<"landw">;
+defm LANDW : MC_13<"landw">;
 
-// 2 insns: ['LNANDW', 'LNANDW']
-defm LNANDW : MC_11<"lnandw">;
+defm LNANDW : MC_13<"lnandw">;
 
-// 2 insns: ['LORW', 'LORW']
-defm LORW : MC_11<"lorw">;
+defm LORW : MC_13<"lorw">;
 
-// 2 insns: ['LNORW', 'LNORW']
-defm LNORW : MC_11<"lnorw">;
+defm LNORW : MC_13<"lnorw">;
 
-// 2 insns: ['ADDWP', 'ADDWP']
-defm ADDWP : MC_14<"addwp">;
+defm ADDWP : MC_16<"addwp">;
 
-// 2 insns: ['SBFWP', 'SBFWP']
-defm SBFWP : MC_14<"sbfwp">;
+defm SBFWP : MC_16<"sbfwp">;
 
-// 2 insns: ['ABDWP', 'ABDWP']
-defm ABDWP : MC_15<"abdwp">;
+defm ABDWP : MC_17<"abdwp">;
 
-// 2 insns: ['MINWP', 'MINWP']
-defm MINWP : MC_14<"minwp">;
+defm MINWP : MC_16<"minwp">;
 
-// 2 insns: ['MINUWP', 'MINUWP']
-defm MINUWP : MC_14<"minuwp">;
+defm MINUWP : MC_16<"minuwp">;
 
-// 2 insns: ['MAXWP', 'MAXWP']
-defm MAXWP : MC_14<"maxwp">;
+defm MAXWP : MC_16<"maxwp">;
 
-// 2 insns: ['MAXUWP', 'MAXUWP']
-defm MAXUWP : MC_14<"maxuwp">;
+defm MAXUWP : MC_16<"maxuwp">;
 
-// 2 insns: ['ADDCWC', 'ADDCWC']
-defm ADDCWC : MC_15<"addcwc">;
+defm ADDCWC : MC_17<"addcwc">;
 
-// 2 insns: ['SBFCWC', 'SBFCWC']
-defm SBFCWC : MC_15<"sbfcwc">;
+defm SBFCWC : MC_17<"sbfcwc">;
 
-// 2 insns: ['ADDSWP', 'ADDSWP']
-defm ADDSWP : MC_15<"addswp">;
+defm ADDSWP : MC_17<"addswp">;
 
-// 2 insns: ['SBFSWP', 'SBFSWP']
-defm SBFSWP : MC_15<"sbfswp">;
+defm SBFSWP : MC_17<"sbfswp">;
 
-// 2 insns: ['ADDX2WP', 'ADDX2WP']
-defm ADDX2WP : MC_15<"addx2wp">;
+defm ADDX2WP : MC_17<"addx2wp">;
 
-// 2 insns: ['ADDX4WP', 'ADDX4WP']
-defm ADDX4WP : MC_15<"addx4wp">;
+defm ADDX4WP : MC_17<"addx4wp">;
 
-// 2 insns: ['ADDX8WP', 'ADDX8WP']
-defm ADDX8WP : MC_15<"addx8wp">;
+defm ADDX8WP : MC_17<"addx8wp">;
 
-// 2 insns: ['ADDX16WP', 'ADDX16WP']
-defm ADDX16WP : MC_15<"addx16wp">;
+defm ADDX16WP : MC_17<"addx16wp">;
 
-// 2 insns: ['SBFX2WP', 'SBFX2WP']
-defm SBFX2WP : MC_15<"sbfx2wp">;
+defm SBFX2WP : MC_17<"sbfx2wp">;
 
-// 2 insns: ['SBFX4WP', 'SBFX4WP']
-defm SBFX4WP : MC_15<"sbfx4wp">;
+defm SBFX4WP : MC_17<"sbfx4wp">;
 
-// 2 insns: ['SBFX8WP', 'SBFX8WP']
-defm SBFX8WP : MC_15<"sbfx8wp">;
+defm SBFX8WP : MC_17<"sbfx8wp">;
 
-// 2 insns: ['SBFX16WP', 'SBFX16WP']
-defm SBFX16WP : MC_15<"sbfx16wp">;
+defm SBFX16WP : MC_17<"sbfx16wp">;
 
-// 2 insns: ['AVGWP', 'AVGWP']
-defm AVGWP : MC_15<"avgwp">;
+defm AVGWP : MC_17<"avgwp">;
 
-// 2 insns: ['AVGUWP', 'AVGUWP']
-defm AVGUWP : MC_15<"avguwp">;
+defm AVGUWP : MC_17<"avguwp">;
 
-// 2 insns: ['AVGRWP', 'AVGRWP']
-defm AVGRWP : MC_15<"avgrwp">;
+defm AVGRWP : MC_17<"avgrwp">;
 
-// 2 insns: ['AVGRUWP', 'AVGRUWP']
-defm AVGRUWP : MC_15<"avgruwp">;
+defm AVGRUWP : MC_17<"avgruwp">;
 
-// 2 insns: ['LANDWP', 'LANDWP']
-defm LANDWP : MC_15<"landwp">;
+defm LANDWP : MC_17<"landwp">;
 
-// 2 insns: ['LNANDWP', 'LNANDWP']
-defm LNANDWP : MC_15<"lnandwp">;
+defm LNANDWP : MC_17<"lnandwp">;
 
-// 2 insns: ['LORWP', 'LORWP']
-defm LORWP : MC_15<"lorwp">;
+defm LORWP : MC_17<"lorwp">;
 
-// 2 insns: ['LNORWP', 'LNORWP']
-defm LNORWP : MC_15<"lnorwp">;
+defm LNORWP : MC_17<"lnorwp">;
 
-// 2 insns: ['ADDHQ', 'ADDHQ']
-defm ADDHQ : MC_14<"addhq">;
+defm ADDHQ : MC_16<"addhq">;
 
-// 2 insns: ['SBFHQ', 'SBFHQ']
-defm SBFHQ : MC_14<"sbfhq">;
+defm SBFHQ : MC_16<"sbfhq">;
 
-// 2 insns: ['ABDHQ', 'ABDHQ']
-defm ABDHQ : MC_15<"abdhq">;
+defm ABDHQ : MC_17<"abdhq">;
 
-// 2 insns: ['MINHQ', 'MINHQ']
-defm MINHQ : MC_14<"minhq">;
+defm MINHQ : MC_16<"minhq">;
 
-// 2 insns: ['MINUHQ', 'MINUHQ']
-defm MINUHQ : MC_14<"minuhq">;
+defm MINUHQ : MC_16<"minuhq">;
 
-// 2 insns: ['MAXHQ', 'MAXHQ']
-defm MAXHQ : MC_14<"maxhq">;
+defm MAXHQ : MC_16<"maxhq">;
 
-// 2 insns: ['MAXUHQ', 'MAXUHQ']
-defm MAXUHQ : MC_14<"maxuhq">;
+defm MAXUHQ : MC_16<"maxuhq">;
 
-// 2 insns: ['ADDCHCP', 'ADDCHCP']
-defm ADDCHCP : MC_15<"addchcp">;
+defm ADDCHCP : MC_17<"addchcp">;
 
-// 2 insns: ['SBFCHCP', 'SBFCHCP']
-defm SBFCHCP : MC_15<"sbfchcp">;
+defm SBFCHCP : MC_17<"sbfchcp">;
 
-// 2 insns: ['ADDSHQ', 'ADDSHQ']
-defm ADDSHQ : MC_15<"addshq">;
+defm ADDSHQ : MC_17<"addshq">;
 
-// 2 insns: ['SBFSHQ', 'SBFSHQ']
-defm SBFSHQ : MC_15<"sbfshq">;
+defm SBFSHQ : MC_17<"sbfshq">;
 
-// 2 insns: ['ADDX2HQ', 'ADDX2HQ']
-defm ADDX2HQ : MC_15<"addx2hq">;
+defm ADDX2HQ : MC_17<"addx2hq">;
 
-// 2 insns: ['ADDX4HQ', 'ADDX4HQ']
-defm ADDX4HQ : MC_15<"addx4hq">;
+defm ADDX4HQ : MC_17<"addx4hq">;
 
-// 2 insns: ['ADDX8HQ', 'ADDX8HQ']
-defm ADDX8HQ : MC_15<"addx8hq">;
+defm ADDX8HQ : MC_17<"addx8hq">;
 
-// 2 insns: ['ADDX16HQ', 'ADDX16HQ']
-defm ADDX16HQ : MC_15<"addx16hq">;
+defm ADDX16HQ : MC_17<"addx16hq">;
 
-// 2 insns: ['SBFX2HQ', 'SBFX2HQ']
-defm SBFX2HQ : MC_15<"sbfx2hq">;
+defm SBFX2HQ : MC_17<"sbfx2hq">;
 
-// 2 insns: ['SBFX4HQ', 'SBFX4HQ']
-defm SBFX4HQ : MC_15<"sbfx4hq">;
+defm SBFX4HQ : MC_17<"sbfx4hq">;
 
-// 2 insns: ['SBFX8HQ', 'SBFX8HQ']
-defm SBFX8HQ : MC_15<"sbfx8hq">;
+defm SBFX8HQ : MC_17<"sbfx8hq">;
 
-// 2 insns: ['SBFX16HQ', 'SBFX16HQ']
-defm SBFX16HQ : MC_15<"sbfx16hq">;
+defm SBFX16HQ : MC_17<"sbfx16hq">;
 
-// 2 insns: ['AVGHQ', 'AVGHQ']
-defm AVGHQ : MC_15<"avghq">;
+defm AVGHQ : MC_17<"avghq">;
 
-// 2 insns: ['AVGUHQ', 'AVGUHQ']
-defm AVGUHQ : MC_15<"avguhq">;
+defm AVGUHQ : MC_17<"avguhq">;
 
-// 2 insns: ['AVGRHQ', 'AVGRHQ']
-defm AVGRHQ : MC_15<"avgrhq">;
+defm AVGRHQ : MC_17<"avgrhq">;
 
-// 2 insns: ['AVGRUHQ', 'AVGRUHQ']
-defm AVGRUHQ : MC_15<"avgruhq">;
+defm AVGRUHQ : MC_17<"avgruhq">;
 
-// 2 insns: ['LANDHQ', 'LANDHQ']
-defm LANDHQ : MC_15<"landhq">;
+defm LANDHQ : MC_17<"landhq">;
 
-// 2 insns: ['LNANDHQ', 'LNANDHQ']
-defm LNANDHQ : MC_15<"lnandhq">;
+defm LNANDHQ : MC_17<"lnandhq">;
 
-// 2 insns: ['LORHQ', 'LORHQ']
-defm LORHQ : MC_15<"lorhq">;
+defm LORHQ : MC_17<"lorhq">;
 
-// 2 insns: ['LNORHQ', 'LNORHQ']
-defm LNORHQ : MC_15<"lnorhq">;
+defm LNORHQ : MC_17<"lnorhq">;
 
-// 2 insns: ['ADDX2WD', 'ADDX2WD']
-defm ADDX2WD : MC_11<"addx2wd">;
+defm ADDX2WD : MC_13<"addx2wd">;
 
-// 2 insns: ['ADDX4WD', 'ADDX4WD']
-defm ADDX4WD : MC_11<"addx4wd">;
+defm ADDX4WD : MC_13<"addx4wd">;
 
-// 2 insns: ['ADDX8WD', 'ADDX8WD']
-defm ADDX8WD : MC_11<"addx8wd">;
+defm ADDX8WD : MC_13<"addx8wd">;
 
-// 2 insns: ['ADDX16WD', 'ADDX16WD']
-defm ADDX16WD : MC_11<"addx16wd">;
+defm ADDX16WD : MC_13<"addx16wd">;
 
-// 2 insns: ['SBFX2WD', 'SBFX2WD']
-defm SBFX2WD : MC_11<"sbfx2wd">;
+defm SBFX2WD : MC_13<"sbfx2wd">;
 
-// 2 insns: ['SBFX4WD', 'SBFX4WD']
-defm SBFX4WD : MC_11<"sbfx4wd">;
+defm SBFX4WD : MC_13<"sbfx4wd">;
 
-// 2 insns: ['SBFX8WD', 'SBFX8WD']
-defm SBFX8WD : MC_11<"sbfx8wd">;
+defm SBFX8WD : MC_13<"sbfx8wd">;
 
-// 2 insns: ['SBFX16WD', 'SBFX16WD']
-defm SBFX16WD : MC_11<"sbfx16wd">;
+defm SBFX16WD : MC_13<"sbfx16wd">;
 
-// 2 insns: ['ADDX2UWD', 'ADDX2UWD']
-defm ADDX2UWD : MC_11<"addx2uwd">;
+defm ADDX2UWD : MC_13<"addx2uwd">;
 
-// 2 insns: ['ADDX4UWD', 'ADDX4UWD']
-defm ADDX4UWD : MC_11<"addx4uwd">;
+defm ADDX4UWD : MC_13<"addx4uwd">;
 
-// 2 insns: ['ADDX8UWD', 'ADDX8UWD']
-defm ADDX8UWD : MC_11<"addx8uwd">;
+defm ADDX8UWD : MC_13<"addx8uwd">;
 
-// 2 insns: ['ADDX16UWD', 'ADDX16UWD']
-defm ADDX16UWD : MC_11<"addx16uwd">;
+defm ADDX16UWD : MC_13<"addx16uwd">;
 
-// 2 insns: ['SBFX2UWD', 'SBFX2UWD']
-defm SBFX2UWD : MC_11<"sbfx2uwd">;
+defm SBFX2UWD : MC_13<"sbfx2uwd">;
 
-// 2 insns: ['SBFX4UWD', 'SBFX4UWD']
-defm SBFX4UWD : MC_11<"sbfx4uwd">;
+defm SBFX4UWD : MC_13<"sbfx4uwd">;
 
-// 2 insns: ['SBFX8UWD', 'SBFX8UWD']
-defm SBFX8UWD : MC_11<"sbfx8uwd">;
+defm SBFX8UWD : MC_13<"sbfx8uwd">;
 
-// 2 insns: ['SBFX16UWD', 'SBFX16UWD']
-defm SBFX16UWD : MC_11<"sbfx16uwd">;
+defm SBFX16UWD : MC_13<"sbfx16uwd">;
 
-// 1 insns: ['ADDCD']
-let Uses=[CS], Defs=[CS] in
+let Defs = [CS] in
 def ADDCD : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "addcd $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_FULL>;
 
-// 1 insns: ['SBFCD']
-let Uses=[CS], Defs=[CS] in
+let Defs = [CS] in
 def SBFCD : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "sbfcd $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_FULL>;
 
-// 1 insns: ['ADDCID']
-let Uses=[CS], Defs=[CS] in
+let Defs = [CS] in
 def ADDCID : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "addcid $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_FULL>;
 
-// 1 insns: ['SBFCID']
-let Uses=[CS], Defs=[CS] in
+let Defs = [CS] in
 def SBFCID : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "sbfcid $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_FULL>;
 
-// 1 insns: ['FNEGD']
-def FNEGD : REGISTERW_REGISTERZ_SIMPLE
+def FNEGD : REGISTERW_REGISTERZ_SIMPLE_BINARY64
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fnegd $a1 = $a2",
-   [(set f64:$a1, (fneg f64:$a2))],
-   ALU_FULL>;
+   [(set f64:$a1, (fneg f64:$a2))]>;
 
-// 1 insns: ['FABSD']
-def FABSD : REGISTERW_REGISTERZ_SIMPLE
+def FABSD : REGISTERW_REGISTERZ_SIMPLE_BINARY64
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fabsd $a1 = $a2",
-   [(set f64:$a1, (fabs f64:$a2))],
-   ALU_LITE>;
+   [(set f64:$a1, (fabs f64:$a2))]>;
 
-// 1 insns: ['FSINVD']
-let Uses=[CS], Defs=[CS] in
-def FSINVD : SILENT2_REGISTERW_REGISTERZ_SIMPLE
+let Defs = [CS] in
+def FSINVD : SILENT2_REGISTERW_REGISTERZ_SIMPLE_BINARY64
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fsinvd$a1 $a2 = $a3",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FSISRD']
-def FSISRD : REGISTERW_REGISTERZ_SIMPLE
+def FSISRD : REGISTERW_REGISTERZ_SIMPLE_BINARY64
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fsisrd $a1 = $a2",
-   [ ],
-   ALU_LITE>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FWIDENLWD']
-let Defs=[CS] in
-def FWIDENLWD : SILENT2_REGISTERW_REGISTERZ_SIMPLE
+let Defs = [CS] in
+def FWIDENLWD : SILENT2_REGISTERW_REGISTERZ_SIMPLE_BINARYREG
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fwidenlwd$a1 $a2 = $a3",
-   [/* no direct match, see K1CFloatingPoint.td */]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FWIDENMWD']
-let Uses=[CS], Defs=[CS] in
-def FWIDENMWD : SILENT2_REGISTERW_REGISTERZ_SIMPLE
+let Defs = [CS] in
+def FWIDENMWD : SILENT2_REGISTERW_REGISTERZ_SIMPLE_BINARYREG
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fwidenmwd$a1 $a2 = $a3",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FNARROWDW']
-let Defs=[CS] in
-def FNARROWDW : ROUNDING2_SILENT2_REGISTERW_REGISTERZ_SIMPLE
+let Defs = [CS] in
+def FNARROWDW : ROUNDING2_SILENT2_REGISTERW_REGISTERZ_SIMPLE_BINARYREG
   <(outs SingleReg:$a3), (ins SingleReg:$a4, RoundingMod:$a1, SilentMod:$a2),
    "fnarrowdw$a1$a2 $a3 = $a4",
-   [/* no direct match, see K1CFloatingPoint.td */],
+   [/* no straightforward pattern */],
    ALU_FULL>;
 
-// 1 insns: ['FNEGW']
-def FNEGW : REGISTERW_REGISTERZ_SIMPLE
+def FNEGW : REGISTERW_REGISTERZ_SIMPLE_BINARY32
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fnegw $a1 = $a2",
-   [(set f32:$a1, (fneg f32:$a2))],
-   ALU_LITE>;
+   [(set f32:$a1, (fneg f32:$a2))]>;
 
-// 1 insns: ['FABSW']
-def FABSW : REGISTERW_REGISTERZ_SIMPLE
+def FABSW : REGISTERW_REGISTERZ_SIMPLE_BINARY32
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fabsw $a1 = $a2",
-   [(set f32:$a1, (fabs f32:$a2))],
-   ALU_LITE>;
+   [(set f32:$a1, (fabs f32:$a2))]>;
 
-// 1 insns: ['FINVW']
-let Uses=[CS], Defs=[CS] in
-def FINVW : ROUNDING2_SILENT2_REGISTERW_REGISTERZ_SIMPLE
+let Defs = [CS] in
+def FINVW : ROUNDING2_SILENT2_REGISTERW_REGISTERZ_SIMPLE_BINARY32
   <(outs SingleReg:$a3), (ins SingleReg:$a4, RoundingMod:$a1, SilentMod:$a2),
    "finvw$a1$a2 $a3 = $a4",
-   [ ],
-   ALU_FULL>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FISRW']
-let Uses=[CS], Defs=[CS] in
-def FISRW : ROUNDING2_SILENT2_REGISTERW_REGISTERZ_SIMPLE
+let Defs = [CS] in
+def FISRW : ROUNDING2_SILENT2_REGISTERW_REGISTERZ_SIMPLE_BINARY32
   <(outs SingleReg:$a3), (ins SingleReg:$a4, RoundingMod:$a1, SilentMod:$a2),
    "fisrw$a1$a2 $a3 = $a4",
-   [ ],
-   ALU_FULL>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FSINVW']
-let Uses=[CS], Defs=[CS] in
-def FSINVW : SILENT2_REGISTERW_REGISTERZ_SIMPLE
+let Defs = [CS] in
+def FSINVW : SILENT2_REGISTERW_REGISTERZ_SIMPLE_BINARY32
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fsinvw$a1 $a2 = $a3",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FSISRW']
-def FSISRW : REGISTERW_REGISTERZ_SIMPLE
+def FSISRW : REGISTERW_REGISTERZ_SIMPLE_BINARY32
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fsisrw $a1 = $a2",
-   [ ],
-   ALU_LITE>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FWIDENLHW']
-let Defs=[CS] in
-def FWIDENLHW : SILENT2_REGISTERW_REGISTERZ_SIMPLE
+let Defs = [CS] in
+def FWIDENLHW : SILENT2_REGISTERW_REGISTERZ_SIMPLE_BINARYREG
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fwidenlhw$a1 $a2 = $a3",
-   [/* no direct match, see K1CFloatingPoint.td */]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FWIDENMHW']
-let Uses=[CS], Defs=[CS] in
-def FWIDENMHW : SILENT2_REGISTERW_REGISTERZ_SIMPLE
+let Defs = [CS] in
+def FWIDENMHW : SILENT2_REGISTERW_REGISTERZ_SIMPLE_BINARYREG
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fwidenmhw$a1 $a2 = $a3",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FNARROWWH']
-let Defs=[CS] in
-def FNARROWWH : ROUNDING2_SILENT2_REGISTERW_REGISTERZ_SIMPLE
+let Defs = [CS] in
+def FNARROWWH : ROUNDING2_SILENT2_REGISTERW_REGISTERZ_SIMPLE_BINARYREG
   <(outs SingleReg:$a3), (ins SingleReg:$a4, RoundingMod:$a1, SilentMod:$a2),
    "fnarrowwh$a1$a2 $a3 = $a4",
-   [/* no direct match, see K1CFloatingPoint.td */],
+   [/* no straightforward pattern */],
    ALU_LITE>;
 
-// 1 insns: ['FNEGWP']
-def FNEGWP : REGISTERW_REGISTERZ_SIMPLE
+def FNEGWP : REGISTERW_REGISTERZ_SIMPLE_BINARY32
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fnegwp $a1 = $a2",
-   [(set v2f32:$a1, (fneg v2f32:$a2))],
-   ALU_LITE>;
+   [(set v2f32:$a1, (fneg v2f32:$a2))]>;
 
-// 1 insns: ['FABSWP']
-def FABSWP : REGISTERW_REGISTERZ_SIMPLE
+def FABSWP : REGISTERW_REGISTERZ_SIMPLE_BINARY32
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fabswp $a1 = $a2",
-   [(set v2f32:$a1, (fabs v2f32:$a2))],
-   ALU_LITE>;
+   [(set v2f32:$a1, (fabs v2f32:$a2))]>;
 
-// 1 insns: ['FSINVWP']
-let Uses=[CS], Defs=[CS] in
-def FSINVWP : SILENT2_REGISTERW_REGISTERZ_SIMPLE
+let Defs = [CS] in
+def FSINVWP : SILENT2_REGISTERW_REGISTERZ_SIMPLE_BINARY32
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fsinvwp$a1 $a2 = $a3",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FSISRWP']
-def FSISRWP : REGISTERW_REGISTERZ_SIMPLE
+def FSISRWP : REGISTERW_REGISTERZ_SIMPLE_BINARY32
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fsisrwp $a1 = $a2",
-   [ ],
-   ALU_LITE>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FWIDENLHWP']
-let Uses=[CS], Defs=[CS] in
-def FWIDENLHWP : SILENT2_REGISTERW_REGISTERZ_SIMPLE
+let Defs = [CS] in
+def FWIDENLHWP : SILENT2_REGISTERW_REGISTERZ_SIMPLE_BINARYREG
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fwidenlhwp$a1 $a2 = $a3",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FWIDENMHWP']
-let Uses=[CS], Defs=[CS] in
-def FWIDENMHWP : SILENT2_REGISTERW_REGISTERZ_SIMPLE
+let Defs = [CS] in
+def FWIDENMHWP : SILENT2_REGISTERW_REGISTERZ_SIMPLE_BINARYREG
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fwidenmhwp$a1 $a2 = $a3",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FNARROWDWP']
-let Uses=[CS], Defs=[CS] in
-def FNARROWDWP : ROUNDING2_SILENT2_REGISTERW_REGISTERP_SIMPLE
+let Defs = [CS] in
+def FNARROWDWP : ROUNDING2_SILENT2_REGISTERW_REGISTERP_SIMPLE_BINARYREG
   <(outs SingleReg:$a3), (ins PairedReg:$a4, RoundingMod:$a1, SilentMod:$a2),
    "fnarrowdwp$a1$a2 $a3 = $a4",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_FULL>;
 
-// 1 insns: ['FNEGHQ']
-def FNEGHQ : REGISTERW_REGISTERZ_SIMPLE
+def FNEGHQ : REGISTERW_REGISTERZ_SIMPLE_BINARY16
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fneghq $a1 = $a2",
-   [(set v4f16:$a1, (fneg v4f16:$a2))],
-   ALU_LITE>;
+   [(set v4f16:$a1, (fneg v4f16:$a2))]>;
 
-// 1 insns: ['FABSHQ']
-def FABSHQ : REGISTERW_REGISTERZ_SIMPLE
+def FABSHQ : REGISTERW_REGISTERZ_SIMPLE_BINARY16
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fabshq $a1 = $a2",
-   [(set f16:$a1, (fabs f16:$a2))],
-   ALU_LITE>;
+   [(set f16:$a1, (fabs f16:$a2))]>;
 
-// 1 insns: ['FNARROWWHQ']
-let Uses=[CS], Defs=[CS] in
-def FNARROWWHQ : ROUNDING2_SILENT2_REGISTERW_REGISTERP_SIMPLE
+let Defs = [CS] in
+def FNARROWWHQ : ROUNDING2_SILENT2_REGISTERW_REGISTERP_SIMPLE_BINARYREG
   <(outs SingleReg:$a3), (ins PairedReg:$a4, RoundingMod:$a1, SilentMod:$a2),
    "fnarrowwhq$a1$a2 $a3 = $a4",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_LITE>;
 
-// 1 insns: ['INSF']
-let Constraints = "$a1 = $a11" in
+let Constraints = "$a1 = $a1o" in
 def INSF : REGISTERW_REGISTERZ_STOPBIT2_STOPBIT4_STARTBIT_SIMPLE
-  <(outs SingleReg:$a1), (ins SingleReg:$a11, SingleReg:$a2, Unsigned6:$a3, Unsigned6:$a4),
+  <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, Unsigned6:$a3, Unsigned6:$a4),
    "insf $a1 = $a2, $a3, $a4",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['EXTFZ']
 def EXTFZ : REGISTERW_REGISTERZ_STOPBIT2_STOPBIT4_STARTBIT_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2, Unsigned6:$a3, Unsigned6:$a4),
    "extfz $a1 = $a2, $a3, $a4",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['EXTFS']
 def EXTFS : REGISTERW_REGISTERZ_STOPBIT2_STOPBIT4_STARTBIT_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2, Unsigned6:$a3, Unsigned6:$a4),
    "extfs $a1 = $a2, $a3, $a4",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['CLRF']
 def CLRF : REGISTERW_REGISTERZ_STOPBIT2_STOPBIT4_STARTBIT_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2, Unsigned6:$a3, Unsigned6:$a4),
    "clrf $a1 = $a2, $a3, $a4",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 2 insns: ['SATD', 'SATD']
-defm SATD : MC_16<"satd">;
+defm SATD : MC_18<"satd">;
 
-// 2 insns: ['SATUD', 'SATUD']
-defm SATUD : MC_16<"satud">;
+defm SATUD : MC_18<"satud">;
 
-// 2 insns: ['SRSD', 'SRSD']
-defm SRSD : MC_16<"srsd">;
+defm SRSD : MC_18<"srsd">;
 
-// 2 insns: ['SLLD', 'SLLD']
-defm SLLD : MC_17<"slld">;
+defm SLLD : MC_19<"slld">;
 
-// 2 insns: ['SRAD', 'SRAD']
-defm SRAD : MC_17<"srad">;
+defm SRAD : MC_19<"srad">;
 
-// 2 insns: ['SRLD', 'SRLD']
-defm SRLD : MC_17<"srld">;
+defm SRLD : MC_19<"srld">;
 
-// 2 insns: ['SLSD', 'SLSD']
-defm SLSD : MC_16<"slsd">;
+defm SLSD : MC_18<"slsd">;
 
-// 2 insns: ['SRSW', 'SRSW']
-defm SRSW : MC_16<"srsw">;
+defm SRSW : MC_18<"srsw">;
 
-// 2 insns: ['SLLW', 'SLLW']
-defm SLLW : MC_17<"sllw">;
+defm SLLW : MC_19<"sllw">;
 
-// 2 insns: ['SRAW', 'SRAW']
-defm SRAW : MC_17<"sraw">;
+defm SRAW : MC_19<"sraw">;
 
-// 2 insns: ['SRLW', 'SRLW']
-defm SRLW : MC_17<"srlw">;
+defm SRLW : MC_19<"srlw">;
 
-// 2 insns: ['SLSW', 'SLSW']
-defm SLSW : MC_16<"slsw">;
+defm SLSW : MC_18<"slsw">;
 
-// 2 insns: ['ROLW', 'ROLW']
-defm ROLW : MC_16<"rolw">;
+defm ROLW : MC_18<"rolw">;
 
-// 2 insns: ['RORW', 'RORW']
-defm RORW : MC_16<"rorw">;
+defm RORW : MC_18<"rorw">;
 
-// 2 insns: ['SRSWPS', 'SRSWPS']
-defm SRSWPS : MC_16<"srswps">;
+defm SRSWPS : MC_18<"srswps">;
 
-// 2 insns: ['SLLWPS', 'SLLWPS']
-defm SLLWPS : MC_16<"sllwps">;
+defm SLLWPS : MC_18<"sllwps">;
 
-// 2 insns: ['SRAWPS', 'SRAWPS']
-defm SRAWPS : MC_16<"srawps">;
+defm SRAWPS : MC_18<"srawps">;
 
-// 2 insns: ['SRLWPS', 'SRLWPS']
-defm SRLWPS : MC_16<"srlwps">;
+defm SRLWPS : MC_18<"srlwps">;
 
-// 2 insns: ['SLSWPS', 'SLSWPS']
-defm SLSWPS : MC_16<"slswps">;
+defm SLSWPS : MC_18<"slswps">;
 
-// 2 insns: ['ROLWPS', 'ROLWPS']
-defm ROLWPS : MC_16<"rolwps">;
+defm ROLWPS : MC_18<"rolwps">;
 
-// 2 insns: ['RORWPS', 'RORWPS']
-defm RORWPS : MC_16<"rorwps">;
+defm RORWPS : MC_18<"rorwps">;
 
-// 2 insns: ['SRSHQS', 'SRSHQS']
-defm SRSHQS : MC_16<"srshqs">;
+defm SRSHQS : MC_18<"srshqs">;
 
-// 2 insns: ['SLLHQS', 'SLLHQS']
-defm SLLHQS : MC_16<"sllhqs">;
+defm SLLHQS : MC_18<"sllhqs">;
 
-// 2 insns: ['SRAHQS', 'SRAHQS']
-defm SRAHQS : MC_16<"srahqs">;
+defm SRAHQS : MC_18<"srahqs">;
 
-// 2 insns: ['SRLHQS', 'SRLHQS']
-defm SRLHQS : MC_16<"srlhqs">;
+defm SRLHQS : MC_18<"srlhqs">;
 
-// 2 insns: ['SLSHQS', 'SLSHQS']
-defm SLSHQS : MC_16<"slshqs">;
+defm SLSHQS : MC_18<"slshqs">;
 
-// 4 insns: ['COMPD', 'COMPD', 'COMPD', 'COMPD']
-defm COMPD : MC_18<"compd">;
+defm COMPD : MC_1A<"compd">;
 
-// 2 insns: ['COMPW', 'COMPW']
-defm COMPW : MC_19<"compw">;
+defm COMPW : MC_1B<"compw">;
 
-// 1 insns: ['COMPWD']
 def COMPWD : COMPARISON_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, ComparisonMod:$a1),
    "compwd$a1 $a2 = $a3, $a4",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_LITE>;
 
-// 1 insns: ['COMPUWD']
 def COMPUWD : COMPARISON_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, ComparisonMod:$a1),
    "compuwd$a1 $a2 = $a3, $a4",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_LITE>;
 
-// 1 insns: ['COMPNWP']
 def COMPNWP : COMPARISON_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, ComparisonMod:$a1),
    "compnwp$a1 $a2 = $a3, $a4",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_TINY>;
 
-// 1 insns: ['COMPNHQ']
 def COMPNHQ : COMPARISON_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, ComparisonMod:$a1),
    "compnhq$a1 $a2 = $a3, $a4",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_TINY>;
 
-// 4 insns: ['CMOVED', 'CMOVED', 'CMOVED', 'CMOVED']
-defm CMOVED : MC_1A<"cmoved">;
+defm CMOVED : MC_1C<"cmoved">;
 
-// 1 insns: ['CMOVEWP']
+let Constraints = "$a3 = $a3o" in
 def CMOVEWP : SIMDCOND_REGISTERZ_REGISTERW_REGISTERY_SIMPLE
-  <(outs SingleReg:$a3), (ins SingleReg:$a2, SingleReg:$a33, SingleReg:$a4, SimplecondMod:$a1),
+  <(outs SingleReg:$a3o), (ins SingleReg:$a2, SingleReg:$a3, SingleReg:$a4, SimplecondMod:$a1),
    "cmovewp$a1 $a2 ? $a3 = $a4",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 3 insns: ['MAKE', 'MAKE', 'MAKE']
-defm MAKE : MC_1B<"make">;
+defm MAKE : MC_1D<"make">;
 
-// 3 insns: ['PCREL', 'PCREL', 'PCREL']
-defm PCREL : MC_1C<"pcrel">;
+defm PCREL : MC_1E<"pcrel">;
 
-// 1 insns: ['CLZW']
 def CLZW : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "clzw $a1 = $a2",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_LITE>;
 
-// 1 insns: ['CLSW']
 def CLSW : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "clsw $a1 = $a2",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_LITE>;
 
-// 1 insns: ['CBSW']
 def CBSW : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "cbsw $a1 = $a2",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_LITE>;
 
-// 1 insns: ['CTZW']
 def CTZW : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "ctzw $a1 = $a2",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_LITE>;
 
-// 1 insns: ['CLZD']
 def CLZD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "clzd $a1 = $a2",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_LITE>;
 
-// 1 insns: ['CLSD']
 def CLSD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "clsd $a1 = $a2",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_LITE>;
 
-// 1 insns: ['CBSD']
 def CBSD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "cbsd $a1 = $a2",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_LITE>;
 
-// 1 insns: ['CTZD']
 def CTZD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "ctzd $a1 = $a2",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_LITE>;
 
-// 1 insns: ['CLZWP']
 def CLZWP : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "clzwp $a1 = $a2",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_LITE>;
 
-// 1 insns: ['CLSWP']
 def CLSWP : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "clswp $a1 = $a2",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_LITE>;
 
-// 1 insns: ['CBSWP']
 def CBSWP : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "cbswp $a1 = $a2",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_LITE>;
 
-// 1 insns: ['CTZWP']
 def CTZWP : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "ctzwp $a1 = $a2",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_LITE>;
 
-// 1 insns: ['SXLHWP']
 def SXLHWP : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "sxlhwp $a1 = $a2",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_LITE>;
 
-// 1 insns: ['SXMHWP']
 def SXMHWP : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "sxmhwp $a1 = $a2",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_LITE>;
 
-// 1 insns: ['SXLBHQ']
 def SXLBHQ : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "sxlbhq $a1 = $a2",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_LITE>;
 
-// 1 insns: ['SXMBHQ']
 def SXMBHQ : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "sxmbhq $a1 = $a2",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_LITE>;
 
-// 1 insns: ['CMOVEHQ']
+let Constraints = "$a3 = $a3o" in
 def CMOVEHQ : SIMDCOND_REGISTERZ_REGISTERW_REGISTERY_SIMPLE
-  <(outs SingleReg:$a3), (ins SingleReg:$a2, SingleReg:$a33, SingleReg:$a4, SimplecondMod:$a1),
+  <(outs SingleReg:$a3o), (ins SingleReg:$a2, SingleReg:$a3, SingleReg:$a4, SimplecondMod:$a1),
    "cmovehq$a1 $a2 ? $a3 = $a4",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 2 insns: ['FCOMPW', 'FCOMPW']
-defm FCOMPW : MC_1DW<"fcompw">;
+defm FCOMPW : MC_1F<"fcompw">;
 
-// 2 insns: ['FCOMPD', 'FCOMPD']
-defm FCOMPD : MC_1DD<"fcompd">;
+def FCOMPD : FLOATCOMP_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY64
+  <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, FloatcompMod:$a1),
+   "fcompd$a1 $a2 = $a3, $a4",
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FCOMPNWP']
-def FCOMPNWP : FLOATCOMP_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+def FCOMPNWP : FLOATCOMP_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, FloatcompMod:$a1),
    "fcompnwp$a1 $a2 = $a3, $a4",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FCOMPNHQ']
-def FCOMPNHQ : FLOATCOMP_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+def FCOMPNHQ : FLOATCOMP_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY16
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, FloatcompMod:$a1),
    "fcompnhq$a1 $a2 = $a3, $a4",
-   [/* no direct match, see K1CFloatingPoint.td */]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FSDIVD']
-let Uses=[CS], Defs=[CS] in
-def FSDIVD : SILENT2_REGISTERW_REGISTERP_SIMPLE
+let Defs = [CS] in
+def FSDIVD : SILENT2_REGISTERW_REGISTERP_SIMPLE_BINARY64
   <(outs SingleReg:$a2), (ins PairedReg:$a3, SilentMod:$a1),
    "fsdivd$a1 $a2 = $a3",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FCDIVD']
-let Uses=[CS], Defs=[CS] in
-def FCDIVD : SILENT2_REGISTERW_REGISTERP_SIMPLE
+let Defs = [CS] in
+def FCDIVD : SILENT2_REGISTERW_REGISTERP_SIMPLE_BINARY64
   <(outs SingleReg:$a2), (ins PairedReg:$a3, SilentMod:$a1),
    "fcdivd$a1 $a2 = $a3",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FSDIVW']
-let Uses=[CS], Defs=[CS] in
-def FSDIVW : SILENT2_REGISTERW_REGISTERP_SIMPLE
+let Defs = [CS] in
+def FSDIVW : SILENT2_REGISTERW_REGISTERP_SIMPLE_BINARY32
   <(outs SingleReg:$a2), (ins PairedReg:$a3, SilentMod:$a1),
    "fsdivw$a1 $a2 = $a3",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FCDIVW']
-let Uses=[CS], Defs=[CS] in
-def FCDIVW : SILENT2_REGISTERW_REGISTERP_SIMPLE
+let Defs = [CS] in
+def FCDIVW : SILENT2_REGISTERW_REGISTERP_SIMPLE_BINARY32
   <(outs SingleReg:$a2), (ins PairedReg:$a3, SilentMod:$a1),
    "fcdivw$a1 $a2 = $a3",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FSDIVWP']
-let Uses=[CS], Defs=[CS] in
-def FSDIVWP : SILENT2_REGISTERW_REGISTERP_SIMPLE
+let Defs = [CS] in
+def FSDIVWP : SILENT2_REGISTERW_REGISTERP_SIMPLE_BINARY32
   <(outs SingleReg:$a2), (ins PairedReg:$a3, SilentMod:$a1),
    "fsdivwp$a1 $a2 = $a3",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FCDIVWP']
-let Uses=[CS], Defs=[CS] in
-def FCDIVWP : SILENT2_REGISTERW_REGISTERP_SIMPLE
+let Defs = [CS] in
+def FCDIVWP : SILENT2_REGISTERW_REGISTERP_SIMPLE_BINARY32
   <(outs SingleReg:$a2), (ins PairedReg:$a3, SilentMod:$a1),
    "fcdivwp$a1 $a2 = $a3",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FMIND']
-def FMIND : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+def FMIND : REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY64
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fmind $a1 = $a2, $a3",
-   [ ],
-   ALU_LITE>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FMAXD']
-def FMAXD : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+def FMAXD : REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY64
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fmaxd $a1 = $a2, $a3",
-   [ ],
-   ALU_LITE>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FMINW']
-def FMINW : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+def FMINW : REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fminw $a1 = $a2, $a3",
-   [ ],
-   ALU_LITE>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FMAXW']
-def FMAXW : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+def FMAXW : REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fmaxw $a1 = $a2, $a3",
-   [ ],
-   ALU_LITE>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FMINWP']
-def FMINWP : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+def FMINWP : REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fminwp $a1 = $a2, $a3",
-   [ ],
-   ALU_LITE>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FMAXWP']
-def FMAXWP : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+def FMAXWP : REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fmaxwp $a1 = $a2, $a3",
-   [ ],
-   ALU_LITE>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FMINHQ']
-def FMINHQ : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+def FMINHQ : REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY16
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fminhq $a1 = $a2, $a3",
-   [ ],
-   ALU_LITE>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FMAXHQ']
-def FMAXHQ : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+def FMAXHQ : REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY16
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fmaxhq $a1 = $a2, $a3",
-   [ ],
-   ALU_LITE>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FLOATD']
-def FLOATD : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE
+def FLOATD : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE_BINARY64
   <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
    "floatd$a1$a2 $a3 = $a4, $a5",
-   [/* no direct match, see K1CFloatingPoint.td */]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FLOATWP']
-def FLOATWP : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE
+def FLOATWP : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE_BINARY32
   <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
    "floatwp$a1$a2 $a3 = $a4, $a5",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FLOATW']
-def FLOATW : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE
+def FLOATW : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE_BINARY32
   <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
    "floatw$a1$a2 $a3 = $a4, $a5",
-   [/* no direct match, see K1CFloatingPoint.td */]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FLOATUD']
-def FLOATUD : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE
+def FLOATUD : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE_BINARY64
   <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
    "floatud$a1$a2 $a3 = $a4, $a5",
-   [/* no direct match, see K1CFloatingPoint.td */]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FLOATUWP']
-def FLOATUWP : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE
+def FLOATUWP : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE_BINARY32
   <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
    "floatuwp$a1$a2 $a3 = $a4, $a5",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FLOATUW']
-def FLOATUW : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE
+def FLOATUW : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE_BINARY32
   <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
    "floatuw$a1$a2 $a3 = $a4, $a5",
-   [/* no direct match, see K1CFloatingPoint.td */]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FIXEDD']
-def FIXEDD : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE
+def FIXEDD : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE_BINARY64
   <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fixedd$a1$a2 $a3 = $a4, $a5",
-   [/* no direct match, see K1CFloatingPoint.td */]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FIXEDWP']
-def FIXEDWP : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE
+def FIXEDWP : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE_BINARY32
   <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fixedwp$a1$a2 $a3 = $a4, $a5",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FIXEDW']
-def FIXEDW : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE
+def FIXEDW : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE_BINARY32
   <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fixedw$a1$a2 $a3 = $a4, $a5",
-   [/* no direct match, see K1CFloatingPoint.td */]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FIXEDUD']
-def FIXEDUD : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE
+def FIXEDUD : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE_BINARY64
   <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fixedud$a1$a2 $a3 = $a4, $a5",
-   [/* no direct match, see K1CFloatingPoint.td */]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FIXEDUWP']
-def FIXEDUWP : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE
+def FIXEDUWP : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE_BINARY32
   <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fixeduwp$a1$a2 $a3 = $a4, $a5",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FIXEDUW']
-def FIXEDUW : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE
+def FIXEDUW : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE_BINARY32
   <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fixeduw$a1$a2 $a3 = $a4, $a5",
-   [/* no direct match, see K1CFloatingPoint.td */]>;
+   [/* no straightforward pattern */]>;
 
-// 4 insns: ['MADDD', 'MADDD', 'MADDD', 'MADDD']
-defm MADDD : MC_1E<"maddd">;
+defm MADDD : MC_20<"maddd">;
 
-// 1 insns: ['MSBFD']
+let Constraints = "$a1 = $a1o" in
 def MSBFD : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
-  <(outs SingleReg:$a1), (ins SingleReg:$a11, SingleReg:$a2, SingleReg:$a3),
+  <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "msbfd $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    MAU_AUXR>;
 
-// 4 insns: ['MADDWP', 'MADDWP', 'MADDWP', 'MADDWP']
-defm MADDWP : MC_1E<"maddwp">;
+defm MADDWP : MC_20<"maddwp">;
 
-// 1 insns: ['MSBFWP']
+let Constraints = "$a1 = $a1o" in
 def MSBFWP : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
-  <(outs SingleReg:$a1), (ins SingleReg:$a11, SingleReg:$a2, SingleReg:$a3),
+  <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "msbfwp $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    MAU_AUXR>;
 
-// 4 insns: ['MADDHQ', 'MADDHQ', 'MADDHQ', 'MADDHQ']
-defm MADDHQ : MC_1E<"maddhq">;
+defm MADDHQ : MC_20<"maddhq">;
 
-// 1 insns: ['MSBFHQ']
+let Constraints = "$a1 = $a1o" in
 def MSBFHQ : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
-  <(outs SingleReg:$a1), (ins SingleReg:$a11, SingleReg:$a2, SingleReg:$a3),
+  <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "msbfhq $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    MAU_AUXR>;
 
-// 1 insns: ['MADDHWQ']
+let Constraints = "$a1 = $a1o" in
 def MADDHWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
-  <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
+  <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "maddhwq $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    MAU_AUXR>;
 
-// 1 insns: ['MSBFHWQ']
+let Constraints = "$a1 = $a1o" in
 def MSBFHWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
-  <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
+  <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "msbfhwq $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    MAU_AUXR>;
 
-// 1 insns: ['MADDUHWQ']
+let Constraints = "$a1 = $a1o" in
 def MADDUHWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
-  <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
+  <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "madduhwq $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    MAU_AUXR>;
 
-// 1 insns: ['MSBFUHWQ']
+let Constraints = "$a1 = $a1o" in
 def MSBFUHWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
-  <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
+  <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "msbfuhwq $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    MAU_AUXR>;
 
-// 1 insns: ['MADDSUHWQ']
+let Constraints = "$a1 = $a1o" in
 def MADDSUHWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
-  <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
+  <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "maddsuhwq $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    MAU_AUXR>;
 
-// 1 insns: ['MSBFSUHWQ']
+let Constraints = "$a1 = $a1o" in
 def MSBFSUHWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
-  <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
+  <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "msbfsuhwq $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    MAU_AUXR>;
 
-// 4 insns: ['MADDDT', 'MADDDT', 'MADDDT', 'MADDDT']
-defm MADDDT : MC_1F<"madddt">;
+defm MADDDT : MC_21<"madddt">;
 
-// 4 insns: ['MADDUDT', 'MADDUDT', 'MADDUDT', 'MADDUDT']
-defm MADDUDT : MC_1F<"maddudt">;
+defm MADDUDT : MC_21<"maddudt">;
 
-// 4 insns: ['MADDSUDT', 'MADDSUDT', 'MADDSUDT', 'MADDSUDT']
-defm MADDSUDT : MC_1F<"maddsudt">;
+defm MADDSUDT : MC_21<"maddsudt">;
 
-// 4 insns: ['MADDUZDT', 'MADDUZDT', 'MADDUZDT', 'MADDUZDT']
-defm MADDUZDT : MC_1F<"madduzdt">;
+defm MADDUZDT : MC_21<"madduzdt">;
 
-// 1 insns: ['MSBFDT']
+let Constraints = "$a1 = $a1o" in
 def MSBFDT : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
-  <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
+  <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "msbfdt $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    MAU_AUXR>;
 
-// 1 insns: ['MSBFUDT']
+let Constraints = "$a1 = $a1o" in
 def MSBFUDT : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
-  <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
+  <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "msbfudt $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    MAU_AUXR>;
 
-// 1 insns: ['MSBFSUDT']
+let Constraints = "$a1 = $a1o" in
 def MSBFSUDT : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
-  <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
+  <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "msbfsudt $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    MAU_AUXR>;
 
-// 1 insns: ['MSBFUZDT']
+let Constraints = "$a1 = $a1o" in
 def MSBFUZDT : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
-  <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
+  <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "msbfuzdt $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    MAU_AUXR>;
 
-// 4 insns: ['MULD', 'MULD', 'MULD', 'MULD']
-defm MULD : MC_20<"muld">;
+defm MULD : MC_22<"muld">;
 
-// 4 insns: ['MULDT', 'MULDT', 'MULDT', 'MULDT']
-defm MULDT : MC_21<"muldt">;
+defm MULDT : MC_23<"muldt">;
 
-// 4 insns: ['MULUDT', 'MULUDT', 'MULUDT', 'MULUDT']
-defm MULUDT : MC_21<"muludt">;
+defm MULUDT : MC_23<"muludt">;
 
-// 4 insns: ['MULSUDT', 'MULSUDT', 'MULSUDT', 'MULSUDT']
-defm MULSUDT : MC_21<"mulsudt">;
+defm MULSUDT : MC_23<"mulsudt">;
 
-// 4 insns: ['CMULDT', 'CMULDT', 'CMULDT', 'CMULDT']
-defm CMULDT : MC_21<"cmuldt">;
+defm CMULDT : MC_23<"cmuldt">;
 
-// 1 insns: ['CMULXDT']
+let Constraints = "$a1 = $a1o" in
 def CMULXDT : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
-  <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
+  <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "cmulxdt $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    MAU_AUXR>;
 
-// 1 insns: ['CMULGLXDT']
+let Constraints = "$a1 = $a1o" in
 def CMULGLXDT : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
-  <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
+  <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "cmulglxdt $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    MAU_AUXR>;
 
-// 1 insns: ['CMULGMXDT']
+let Constraints = "$a1 = $a1o" in
 def CMULGMXDT : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
-  <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
+  <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "cmulgmxdt $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    MAU_AUXR>;
 
-// 1 insns: ['CMULGHXDT']
+let Constraints = "$a1 = $a1o" in
 def CMULGHXDT : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
-  <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
+  <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "cmulghxdt $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    MAU_AUXR>;
 
-// 2 insns: ['CRCBELMW', 'CRCBELMW']
-defm CRCBELMW : MC_22<"crcbelmw">;
+defm CRCBELMW : MC_24<"crcbelmw">;
 
-// 2 insns: ['CRCBELLW', 'CRCBELLW']
-defm CRCBELLW : MC_22<"crcbellw">;
+defm CRCBELLW : MC_24<"crcbellw">;
 
-// 2 insns: ['CRCLELMW', 'CRCLELMW']
-defm CRCLELMW : MC_22<"crclelmw">;
+defm CRCLELMW : MC_24<"crclelmw">;
 
-// 2 insns: ['CRCLELLW', 'CRCLELLW']
-defm CRCLELLW : MC_22<"crclellw">;
+defm CRCLELLW : MC_24<"crclellw">;
 
-// 4 insns: ['DOT2WD', 'DOT2WD', 'DOT2WD', 'DOT2WD']
-defm DOT2WD : MC_20<"dot2wd">;
+defm DOT2WD : MC_22<"dot2wd">;
 
-// 4 insns: ['DOT2UWD', 'DOT2UWD', 'DOT2UWD', 'DOT2UWD']
-defm DOT2UWD : MC_20<"dot2uwd">;
+defm DOT2UWD : MC_22<"dot2uwd">;
 
-// 4 insns: ['DOT2SUWD', 'DOT2SUWD', 'DOT2SUWD', 'DOT2SUWD']
-defm DOT2SUWD : MC_20<"dot2suwd">;
+defm DOT2SUWD : MC_22<"dot2suwd">;
 
-// 4 insns: ['DOT2W', 'DOT2W', 'DOT2W', 'DOT2W']
-defm DOT2W : MC_20<"dot2w">;
+defm DOT2W : MC_22<"dot2w">;
 
-// 1 insns: ['DOT2WDP']
 def DOT2WDP : REGISTERM_REGISTERP_REGISTERO_SIMPLE
   <(outs PairedReg:$a1), (ins PairedReg:$a2, PairedReg:$a3),
    "dot2wdp $a1 = $a2, $a3",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['DOT2UWDP']
 def DOT2UWDP : REGISTERM_REGISTERP_REGISTERO_SIMPLE
   <(outs PairedReg:$a1), (ins PairedReg:$a2, PairedReg:$a3),
    "dot2uwdp $a1 = $a2, $a3",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['DOT2SUWDP']
 def DOT2SUWDP : REGISTERM_REGISTERP_REGISTERO_SIMPLE
   <(outs PairedReg:$a1), (ins PairedReg:$a2, PairedReg:$a3),
    "dot2suwdp $a1 = $a2, $a3",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['MULWQ']
 def MULWQ : REGISTERM_REGISTERP_REGISTERO_SIMPLE
   <(outs PairedReg:$a1), (ins PairedReg:$a2, PairedReg:$a3),
    "mulwq $a1 = $a2, $a3",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['DOT2WZP']
 def DOT2WZP : REGISTERM_REGISTERP_REGISTERO_SIMPLE
   <(outs PairedReg:$a1), (ins PairedReg:$a2, PairedReg:$a3),
    "dot2wzp $a1 = $a2, $a3",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 4 insns: ['MULWP', 'MULWP', 'MULWP', 'MULWP']
-defm MULWP : MC_20<"mulwp">;
+defm MULWP : MC_22<"mulwp">;
 
-// 4 insns: ['MULHQ', 'MULHQ', 'MULHQ', 'MULHQ']
-defm MULHQ : MC_20<"mulhq">;
+defm MULHQ : MC_22<"mulhq">;
 
-// 4 insns: ['MULWC', 'MULWC', 'MULWC', 'MULWC']
-defm MULWC : MC_20<"mulwc">;
+defm MULWC : MC_22<"mulwc">;
 
-// 1 insns: ['MULCWC']
 def MULCWC : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "mulcwc $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    MAU>;
 
-// 1 insns: ['MULWDC']
 def MULWDC : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "mulwdc $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    MAU>;
 
-// 1 insns: ['MULCWDC']
 def MULCWDC : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "mulcwdc $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    MAU>;
 
-// 1 insns: ['MULHWQ']
 def MULHWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "mulhwq $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    MAU>;
 
-// 1 insns: ['MULUHWQ']
 def MULUHWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "muluhwq $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    MAU>;
 
-// 1 insns: ['MULSUHWQ']
 def MULSUHWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "mulsuhwq $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    MAU>;
 
-// 2 insns: ['MADDWD', 'MADDWD']
-defm MADDWD : MC_23<"maddwd">;
+defm MADDWD : MC_24<"maddwd">;
 
-// 2 insns: ['MADDUWD', 'MADDUWD']
-defm MADDUWD : MC_23<"madduwd">;
+defm MADDUWD : MC_24<"madduwd">;
 
-// 2 insns: ['MADDSUWD', 'MADDSUWD']
-defm MADDSUWD : MC_23<"maddsuwd">;
+defm MADDSUWD : MC_24<"maddsuwd">;
 
-// 2 insns: ['MADDW', 'MADDW']
-defm MADDW : MC_23<"maddw">;
+defm MADDW : MC_24<"maddw">;
 
-// 2 insns: ['MSBFWD', 'MSBFWD']
-defm MSBFWD : MC_23<"msbfwd">;
+defm MSBFWD : MC_24<"msbfwd">;
 
-// 2 insns: ['MSBFUWD', 'MSBFUWD']
-defm MSBFUWD : MC_23<"msbfuwd">;
+defm MSBFUWD : MC_24<"msbfuwd">;
 
-// 2 insns: ['MSBFSUWD', 'MSBFSUWD']
-defm MSBFSUWD : MC_23<"msbfsuwd">;
+defm MSBFSUWD : MC_24<"msbfsuwd">;
 
-// 2 insns: ['MSBFW', 'MSBFW']
-defm MSBFW : MC_23<"msbfw">;
+defm MSBFW : MC_24<"msbfw">;
 
-// 2 insns: ['MULWD', 'MULWD']
-defm MULWD : MC_22<"mulwd">;
+defm MULWD : MC_25<"mulwd">;
 
-// 2 insns: ['MULUWD', 'MULUWD']
-defm MULUWD : MC_22<"muluwd">;
+defm MULUWD : MC_25<"muluwd">;
 
-// 2 insns: ['MULSUWD', 'MULSUWD']
-defm MULSUWD : MC_22<"mulsuwd">;
+defm MULSUWD : MC_25<"mulsuwd">;
 
-// 2 insns: ['MULW', 'MULW']
-defm MULW : MC_22<"mulw">;
+defm MULW : MC_25<"mulw">;
 
-// 1 insns: ['MADDWDP']
+let Constraints = "$a1 = $a1o" in
 def MADDWDP : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
-  <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
+  <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "maddwdp $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    MAU_AUXR>;
 
-// 1 insns: ['MADDUWDP']
+let Constraints = "$a1 = $a1o" in
 def MADDUWDP : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
-  <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
+  <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "madduwdp $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    MAU_AUXR>;
 
-// 1 insns: ['MADDSUWDP']
+let Constraints = "$a1 = $a1o" in
 def MADDSUWDP : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
-  <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
+  <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "maddsuwdp $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    MAU_AUXR>;
 
-// 1 insns: ['MM2AWQ']
+let Constraints = "$a1 = $a1o" in
 def MM2AWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
-  <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
+  <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "mm2awq $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    MAU_AUXR>;
 
-// 1 insns: ['MSBFWDP']
+let Constraints = "$a1 = $a1o" in
 def MSBFWDP : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
-  <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
+  <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "msbfwdp $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    MAU_AUXR>;
 
-// 1 insns: ['MSBFUWDP']
+let Constraints = "$a1 = $a1o" in
 def MSBFUWDP : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
-  <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
+  <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "msbfuwdp $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    MAU_AUXR>;
 
-// 1 insns: ['MSBFSUWDP']
+let Constraints = "$a1 = $a1o" in
 def MSBFSUWDP : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
-  <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
+  <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "msbfsuwdp $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    MAU_AUXR>;
 
-// 1 insns: ['MM2SWQ']
+let Constraints = "$a1 = $a1o" in
 def MM2SWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
-  <(outs PairedReg:$a1), (ins PairedReg:$a11, SingleReg:$a2, SingleReg:$a3),
+  <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "mm2swq $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    MAU_AUXR>;
 
-// 1 insns: ['MULWDP']
 def MULWDP : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "mulwdp $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    MAU>;
 
-// 1 insns: ['MULUWDP']
 def MULUWDP : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "muluwdp $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    MAU>;
 
-// 1 insns: ['MULSUWDP']
 def MULSUWDP : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "mulsuwdp $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    MAU>;
 
-// 1 insns: ['MM2WQ']
 def MM2WQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "mm2wq $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    MAU>;
 
-// 4 insns: ['FFMAD', 'FFMAD', 'FFMAD', 'FFMAD']
-defm FFMAD : MC_24<"ffmad">;
+defm FFMAD : MC_26<"ffmad">;
 
-// 4 insns: ['FFMAWP', 'FFMAWP', 'FFMAWP', 'FFMAWP']
-defm FFMAWP : MC_24<"ffmawp">;
+defm FFMAWP : MC_27<"ffmawp">;
 
-// 4 insns: ['FFMAHQ', 'FFMAHQ', 'FFMAHQ', 'FFMAHQ']
-defm FFMAHQ : MC_24<"ffmahq">;
+defm FFMAHQ : MC_28<"ffmahq">;
 
-// 4 insns: ['FFMSD', 'FFMSD', 'FFMSD', 'FFMSD']
-defm FFMSD : MC_24<"ffmsd">;
+defm FFMSD : MC_26<"ffmsd">;
 
-// 4 insns: ['FFMSWP', 'FFMSWP', 'FFMSWP', 'FFMSWP']
-defm FFMSWP : MC_24<"ffmswp">;
+defm FFMSWP : MC_27<"ffmswp">;
 
-// 4 insns: ['FFMSHQ', 'FFMSHQ', 'FFMSHQ', 'FFMSHQ']
-defm FFMSHQ : MC_24<"ffmshq">;
+defm FFMSHQ : MC_28<"ffmshq">;
 
-// 4 insns: ['FMULD', 'FMULD', 'FMULD', 'FMULD']
-defm FMULD : MC_25D<"fmuld", fmul>;
+defm FMULD : MC_29<"fmuld">;
 
-// 4 insns: ['FMULWP', 'FMULWP', 'FMULWP', 'FMULWP']
-defm FMULWP : MC_25<"fmulwp">;
+defm FMULWP : MC_2A<"fmulwp">;
 
-// 4 insns: ['FMULHQ', 'FMULHQ', 'FMULHQ', 'FMULHQ']
-defm FMULHQ : MC_25H<"fmulhq", fmul>;
+defm FMULHQ : MC_2B<"fmulhq">;
 
-// 4 insns: ['FMULWDP', 'FMULWDP', 'FMULWDP', 'FMULWDP']
-defm FMULWDP : MC_26<"fmulwdp">;
+defm FMULWDP : MC_2C<"fmulwdp">;
 
-// 4 insns: ['FMULHWQ', 'FMULHWQ', 'FMULHWQ', 'FMULHWQ']
-defm FMULHWQ : MC_26<"fmulhwq">;
+defm FMULHWQ : MC_2D<"fmulhwq">;
 
-// 1 insns: ['FMULWQ']
-def FMULWQ : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE
+def FMULWQ : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE_BINARYREG
   <(outs PairedReg:$a3), (ins PairedReg:$a4, PairedReg:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fmulwq$a1$a2 $a3 = $a4, $a5",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 4 insns: ['FMULWC', 'FMULWC', 'FMULWC', 'FMULWC']
-defm FMULWC : MC_25<"fmulwc">;
+defm FMULWC : MC_2A<"fmulwc">;
 
-// 4 insns: ['FMULWDC', 'FMULWDC', 'FMULWDC', 'FMULWDC']
-defm FMULWDC : MC_26<"fmulwdc">;
+defm FMULWDC : MC_2C<"fmulwdc">;
 
-// 4 insns: ['FMULCWC', 'FMULCWC', 'FMULCWC', 'FMULCWC']
-defm FMULCWC : MC_25<"fmulcwc">;
+defm FMULCWC : MC_2A<"fmulcwc">;
 
-// 4 insns: ['FMULCWDC', 'FMULCWDC', 'FMULCWDC', 'FMULCWDC']
-defm FMULCWDC : MC_26<"fmulcwdc">;
+defm FMULCWDC : MC_2C<"fmulcwdc">;
 
-// 4 insns: ['FADDD', 'FADDD', 'FADDD', 'FADDD']
-defm FADDD : MC_25D<"faddd", fadd>;
+defm FADDD : MC_29<"faddd">;
 
-// 4 insns: ['FADDWP', 'FADDWP', 'FADDWP', 'FADDWP']
-defm FADDWP : MC_25<"faddwp">;
+defm FADDWP : MC_2A<"faddwp">;
 
-// 4 insns: ['FADDHQ', 'FADDHQ', 'FADDHQ', 'FADDHQ']
-defm FADDHQ : MC_25H<"faddhq">;
+defm FADDHQ : MC_2B<"faddhq">;
 
-// 1 insns: ['FADDDP']
-def FADDDP : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE
+def FADDDP : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE_BINARY64
   <(outs PairedReg:$a3), (ins PairedReg:$a4, PairedReg:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fadddp$a1$a2 $a3 = $a4, $a5",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FADDWQ']
-def FADDWQ : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE
+def FADDWQ : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE_BINARYREG
   <(outs PairedReg:$a3), (ins PairedReg:$a4, PairedReg:$a5, RoundingMod:$a1, SilentMod:$a2),
    "faddwq$a1$a2 $a3 = $a4, $a5",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 4 insns: ['FADDCWC', 'FADDCWC', 'FADDCWC', 'FADDCWC']
-defm FADDCWC : MC_25<"faddcwc">;
+defm FADDCWC : MC_2A<"faddcwc">;
 
-// 1 insns: ['FADDCDC']
-def FADDCDC : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE
+def FADDCDC : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE_BINARY64
   <(outs PairedReg:$a3), (ins PairedReg:$a4, PairedReg:$a5, RoundingMod:$a1, SilentMod:$a2),
    "faddcdc$a1$a2 $a3 = $a4, $a5",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FADDCWCP']
-def FADDCWCP : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE
+def FADDCWCP : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE_BINARY32
   <(outs PairedReg:$a3), (ins PairedReg:$a4, PairedReg:$a5, RoundingMod:$a1, SilentMod:$a2),
    "faddcwcp$a1$a2 $a3 = $a4, $a5",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 4 insns: ['FSBFD', 'FSBFD', 'FSBFD', 'FSBFD']
-defm FSBFD : MC_25D<"fsbfd", fsub>;
+defm FSBFD : MC_29<"fsbfd">;
 
-// 4 insns: ['FSBFWP', 'FSBFWP', 'FSBFWP', 'FSBFWP']
-defm FSBFWP : MC_25<"fsbfwp">;
+defm FSBFWP : MC_2A<"fsbfwp">;
 
-// 4 insns: ['FSBFHQ', 'FSBFHQ', 'FSBFHQ', 'FSBFHQ']
-defm FSBFHQ : MC_25H<"fsbfhq", fsub>;
+defm FSBFHQ : MC_2B<"fsbfhq">;
 
-// 1 insns: ['FSBFDP']
-def FSBFDP : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE
+def FSBFDP : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE_BINARY64
   <(outs PairedReg:$a3), (ins PairedReg:$a4, PairedReg:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fsbfdp$a1$a2 $a3 = $a4, $a5",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FSBFWQ']
-def FSBFWQ : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE
+def FSBFWQ : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE_BINARYREG
   <(outs PairedReg:$a3), (ins PairedReg:$a4, PairedReg:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fsbfwq$a1$a2 $a3 = $a4, $a5",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 4 insns: ['FSBFCWC', 'FSBFCWC', 'FSBFCWC', 'FSBFCWC']
-defm FSBFCWC : MC_25<"fsbfcwc">;
+defm FSBFCWC : MC_2A<"fsbfcwc">;
 
-// 1 insns: ['FSBFCDC']
-def FSBFCDC : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE
+def FSBFCDC : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE_BINARY64
   <(outs PairedReg:$a3), (ins PairedReg:$a4, PairedReg:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fsbfcdc$a1$a2 $a3 = $a4, $a5",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FSBFCWCP']
-def FSBFCWCP : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE
+def FSBFCWCP : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE_BINARY32
   <(outs PairedReg:$a3), (ins PairedReg:$a4, PairedReg:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fsbfcwcp$a1$a2 $a3 = $a4, $a5",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 4 insns: ['FFMAHW', 'FFMAHW', 'FFMAHW', 'FFMAHW']
-defm FFMAHW : MC_24<"ffmahw">;
+defm FFMAHW : MC_27<"ffmahw">;
 
-// 4 insns: ['FFMAW', 'FFMAW', 'FFMAW', 'FFMAW']
-defm FFMAW : MC_24<"ffmaw">;
+defm FFMAW : MC_27<"ffmaw">;
 
-// 4 insns: ['FFMAWD', 'FFMAWD', 'FFMAWD', 'FFMAWD']
-defm FFMAWD : MC_24<"ffmawd">;
+defm FFMAWD : MC_26<"ffmawd">;
 
-// 4 insns: ['FFMAWDP', 'FFMAWDP', 'FFMAWDP', 'FFMAWDP']
-defm FFMAWDP : MC_27<"ffmawdp">;
+defm FFMAWDP : MC_2E<"ffmawdp">;
 
-// 4 insns: ['FFMAHWQ', 'FFMAHWQ', 'FFMAHWQ', 'FFMAHWQ']
-defm FFMAHWQ : MC_27<"ffmahwq">;
+defm FFMAHWQ : MC_2F<"ffmahwq">;
 
-// 4 insns: ['FFMSHW', 'FFMSHW', 'FFMSHW', 'FFMSHW']
-defm FFMSHW : MC_24<"ffmshw">;
+defm FFMSHW : MC_27<"ffmshw">;
 
-// 4 insns: ['FFMSW', 'FFMSW', 'FFMSW', 'FFMSW']
-defm FFMSW : MC_24<"ffmsw">;
+defm FFMSW : MC_27<"ffmsw">;
 
-// 4 insns: ['FFMSWD', 'FFMSWD', 'FFMSWD', 'FFMSWD']
-defm FFMSWD : MC_24<"ffmswd">;
+defm FFMSWD : MC_26<"ffmswd">;
 
-// 4 insns: ['FFMSWDP', 'FFMSWDP', 'FFMSWDP', 'FFMSWDP']
-defm FFMSWDP : MC_27<"ffmswdp">;
+defm FFMSWDP : MC_2E<"ffmswdp">;
 
-// 4 insns: ['FFMSHWQ', 'FFMSHWQ', 'FFMSHWQ', 'FFMSHWQ']
-defm FFMSHWQ : MC_27<"ffmshwq">;
+defm FFMSHWQ : MC_2F<"ffmshwq">;
 
-// 4 insns: ['FADDW', 'FADDW', 'FADDW', 'FADDW']
-defm FADDW : MC_25W<"faddw", fadd>;
+defm FADDW : MC_2A<"faddw">;
 
-// 4 insns: ['FSBFW', 'FSBFW', 'FSBFW', 'FSBFW']
-defm FSBFW : MC_25W<"fsbfw", fsub>;
+defm FSBFW : MC_2A<"fsbfw">;
 
-// 4 insns: ['FMULHW', 'FMULHW', 'FMULHW', 'FMULHW']
-defm FMULHW : MC_25<"fmulhw">;
+defm FMULHW : MC_2A<"fmulhw">;
 
-// 4 insns: ['FMULW', 'FMULW', 'FMULW', 'FMULW']
-defm FMULW : MC_25W<"fmulw", fmul>;
+defm FMULW : MC_2A<"fmulw">;
 
-// 4 insns: ['FMULWD', 'FMULWD', 'FMULWD', 'FMULWD']
-defm FMULWD : MC_25<"fmulwd">;
+defm FMULWD : MC_29<"fmulwd">;
 
-// 4 insns: ['FDOT2W', 'FDOT2W', 'FDOT2W', 'FDOT2W']
-defm FDOT2W : MC_25<"fdot2w">;
+defm FDOT2W : MC_2A<"fdot2w">;
 
-// 4 insns: ['FDOT2WD', 'FDOT2WD', 'FDOT2WD', 'FDOT2WD']
-defm FDOT2WD : MC_25<"fdot2wd">;
+defm FDOT2WD : MC_29<"fdot2wd">;
 
-// 1 insns: ['FDOT2WZP']
-def FDOT2WZP : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE
+def FDOT2WZP : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE_BINARYREG
   <(outs PairedReg:$a3), (ins PairedReg:$a4, PairedReg:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fdot2wzp$a1$a2 $a3 = $a4, $a5",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FDOT2WDP']
-def FDOT2WDP : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE
+def FDOT2WDP : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE_BINARY64
   <(outs PairedReg:$a3), (ins PairedReg:$a4, PairedReg:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fdot2wdp$a1$a2 $a3 = $a4, $a5",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FMM2AWQ']
-let Constraints = "$a3 = $a33" in
-def FMM2AWQ : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE
-  <(outs PairedReg:$a3), (ins PairedReg:$a33, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
+let Constraints = "$a3 = $a3o" in
+def FMM2AWQ : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE_BINARYREG
+  <(outs PairedReg:$a3o), (ins PairedReg:$a3, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fmm2awq$a1$a2 $a3 = $a4, $a5",
-   [ ],
+   [/* no straightforward pattern */],
    MAU_AUXR>;
 
-// 1 insns: ['FMM2SWQ']
-def FMM2SWQ : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE
-  <(outs PairedReg:$a3), (ins PairedReg:$a33, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
+let Constraints = "$a3 = $a3o" in
+def FMM2SWQ : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE_BINARYREG
+  <(outs PairedReg:$a3o), (ins PairedReg:$a3, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fmm2swq$a1$a2 $a3 = $a4, $a5",
-   [ ],
+   [/* no straightforward pattern */],
    MAU_AUXR>;
 
-// 1 insns: ['FMM2WQ']
-def FMM2WQ : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def FMM2WQ : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE_BINARYREG
   <(outs PairedReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fmm2wq$a1$a2 $a3 = $a4, $a5",
-   [ ],
+   [/* no straightforward pattern */],
    MAU>;
 
-// 1 insns: ['COPYQ']
 def COPYQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "copyq $a1 = $a2, $a3",
-   [ ],
+   [/* no straightforward pattern */],
    MAU>;
 
-// 1 insns: ['COPYO']
 def COPYO : REGISTERN_REGISTERQ_SIMPLE
   <(outs QuadReg:$a1), (ins QuadReg:$a2),
    "copyo $a1 = $a2",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 2 insns: ['MOVETQ', 'MOVETQ']
-defm MOVETQ : MC_28<"movetq">;
+defm MOVETQ : MC_30<"movetq">;
 
-// 4 insns: ['ALIGNO', 'ALIGNO', 'ALIGNO', 'ALIGNO']
-defm ALIGNO : MC_29<"aligno">;
+defm ALIGNO : MC_31<"aligno">;
 
-// 4 insns: ['ALIGNV', 'ALIGNV', 'ALIGNV', 'ALIGNV']
-defm ALIGNV : MC_2A<"alignv">;
+defm ALIGNV : MC_32<"alignv">;
 
-// 1 insns: ['MT4X4D']
+let Defs = [CS] in
 def MT4X4D : REGISTERAQ_REGISTERBQ_SIMPLE
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2),
    "mt4x4d $a1 = $a2",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['MM4ABW']
+let Defs = [CS] in
 def MM4ABW : REGISTERAP_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
   <(outs WideReg:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mm4abw $a1 = $a2, $a3, $a4",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['MM4AUBW']
+let Defs = [CS] in
 def MM4AUBW : REGISTERAP_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
   <(outs WideReg:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mm4aubw $a1 = $a2, $a3, $a4",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['MM4ASUBW']
+let Defs = [CS] in
 def MM4ASUBW : REGISTERAP_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
   <(outs WideReg:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mm4asubw $a1 = $a2, $a3, $a4",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['MM4AUSBW']
+let Defs = [CS] in
 def MM4AUSBW : REGISTERAP_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
   <(outs WideReg:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mm4ausbw $a1 = $a2, $a3, $a4",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['MM4AHBD0']
+let Defs = [CS] in
 def MM4AHBD0 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mm4ahbd0 $a1 = $a2, $a3, $a4",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['MM4AUHBD0']
+let Defs = [CS] in
 def MM4AUHBD0 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mm4auhbd0 $a1 = $a2, $a3, $a4",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['MM4ASUHBD0']
+let Defs = [CS] in
 def MM4ASUHBD0 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mm4asuhbd0 $a1 = $a2, $a3, $a4",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['MM4AUSHBD0']
+let Defs = [CS] in
 def MM4AUSHBD0 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mm4aushbd0 $a1 = $a2, $a3, $a4",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['MM4AHBD1']
+let Defs = [CS] in
 def MM4AHBD1 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mm4ahbd1 $a1 = $a2, $a3, $a4",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['MM4AUHBD1']
+let Defs = [CS] in
 def MM4AUHBD1 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mm4auhbd1 $a1 = $a2, $a3, $a4",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['MM4ASUHBD1']
+let Defs = [CS] in
 def MM4ASUHBD1 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mm4asuhbd1 $a1 = $a2, $a3, $a4",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['MM4AUSHBD1']
+let Defs = [CS] in
 def MM4AUSHBD1 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mm4aushbd1 $a1 = $a2, $a3, $a4",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['MM4AHD']
+let Defs = [CS] in
 def MM4AHD : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mm4ahd $a1 = $a2, $a3, $a4",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['MM4AUHD']
+let Defs = [CS] in
 def MM4AUHD : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mm4auhd $a1 = $a2, $a3, $a4",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['MM4ASUHD']
+let Defs = [CS] in
 def MM4ASUHD : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mm4asuhd $a1 = $a2, $a3, $a4",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['MM4AUSHD']
+let Defs = [CS] in
 def MM4AUSHD : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mm4aushd $a1 = $a2, $a3, $a4",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FMM4AHW0']
-let Uses=[CS], Defs=[CS] in
-def FMM4AHW0 : REGISTERA0_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
+let Defs = [CS] in
+def FMM4AHW0 : REGISTERA0_REGISTERBP_REGISTERC_REGISTERD_SIMPLE_BINARYREG
   <(outs BlockReg0M4:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "fmm4ahw0 $a1 = $a2, $a3, $a4",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FMM4AHW1']
-let Uses=[CS], Defs=[CS] in
-def FMM4AHW1 : REGISTERA1_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
+let Defs = [CS] in
+def FMM4AHW1 : REGISTERA1_REGISTERBP_REGISTERC_REGISTERD_SIMPLE_BINARYREG
   <(outs BlockReg1M4:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "fmm4ahw1 $a1 = $a2, $a3, $a4",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FMM4AHW2']
-let Uses=[CS], Defs=[CS] in
-def FMM4AHW2 : REGISTERA2_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
+let Defs = [CS] in
+def FMM4AHW2 : REGISTERA2_REGISTERBP_REGISTERC_REGISTERD_SIMPLE_BINARYREG
   <(outs BlockReg2M4:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "fmm4ahw2 $a1 = $a2, $a3, $a4",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FMM4AHW3']
-let Uses=[CS], Defs=[CS] in
-def FMM4AHW3 : REGISTERA3_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
+let Defs = [CS] in
+def FMM4AHW3 : REGISTERA3_REGISTERBP_REGISTERC_REGISTERD_SIMPLE_BINARYREG
   <(outs BlockReg3M4:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "fmm4ahw3 $a1 = $a2, $a3, $a4",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['CONVDHV0']
-let Uses=[CS] in
+let Defs = [CS] in
 def CONVDHV0 : ROUNDINT_SATURATE_REGISTERAL_REGISTERBQ_SIMPLE
   <(outs BlockRegE:$a3), (ins MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2),
    "convdhv0$a1$a2 $a3 = $a4",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['CONVDHV1']
-let Uses=[CS] in
+let Defs = [CS] in
 def CONVDHV1 : ROUNDINT_SATURATE_REGISTERAH_REGISTERBQ_SIMPLE
   <(outs BlockRegO:$a3), (ins MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2),
    "convdhv1$a1$a2 $a3 = $a4",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['CONVWBV0']
-let Uses=[CS] in
+let Defs = [CS] in
 def CONVWBV0 : ROUNDINT_SATURATE_REGISTERAX_REGISTERBQ_SIMPLE
   <(outs CoproReg0M4:$a3), (ins MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2),
    "convwbv0$a1$a2 $a3 = $a4",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['CONVWBV1']
-let Uses=[CS] in
+let Defs = [CS] in
 def CONVWBV1 : ROUNDINT_SATURATE_REGISTERAY_REGISTERBQ_SIMPLE
   <(outs CoproReg1M4:$a3), (ins MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2),
    "convwbv1$a1$a2 $a3 = $a4",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['CONVWBV2']
-let Uses=[CS] in
+let Defs = [CS] in
 def CONVWBV2 : ROUNDINT_SATURATE_REGISTERAZ_REGISTERBQ_SIMPLE
   <(outs CoproReg2M4:$a3), (ins MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2),
    "convwbv2$a1$a2 $a3 = $a4",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['CONVWBV3']
-let Uses=[CS] in
+let Defs = [CS] in
 def CONVWBV3 : ROUNDINT_SATURATE_REGISTERAT_REGISTERBQ_SIMPLE
   <(outs CoproReg3M4:$a3), (ins MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2),
    "convwbv3$a1$a2 $a3 = $a4",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FSCALEWV']
-let Uses=[CS], Defs=[CS] in
-def FSCALEWV : XROUNDING_SILENT2_RECTIFY_REGISTERA_REGISTERB_SIMPLE
+let Defs = [CS] in
+def FSCALEWV : XROUNDING_SILENT2_RECTIFY_REGISTERA_REGISTERB_SIMPLE_BINARYREG
   <(outs VectorReg:$a4), (ins VectorReg:$a5, RoundingMod:$a1, SilentMod:$a2, RectifyMod:$a3),
    "fscalewv$a1$a2$a3 $a4 = $a5",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['FNARROWWHV']
-let Uses=[CS], Defs=[CS] in
-def FNARROWWHV : XROUNDING_SILENT2_REGISTERA_REGISTERBP_SIMPLE
+let Defs = [CS] in
+def FNARROWWHV : XROUNDING_SILENT2_REGISTERA_REGISTERBP_SIMPLE_BINARYREG
   <(outs VectorReg:$a3), (ins WideReg:$a4, RoundingMod:$a1, SilentMod:$a2),
    "fnarrowwhv$a1$a2 $a3 = $a4",
-   [ ]>;
+   [/* no straightforward pattern */]>;
 
-// 1 insns: ['COPYD']
 def COPYD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "copyd $a1 = $a2",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_TINY>;
 
-// 1 insns: ['NOTD']
 def NOTD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "notd $a1 = $a2",
    [(set i64:$a1, (not i64:$a2))],
    ALU_TINY>;
 
-// 1 insns: ['NEGD']
 def NEGD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "negd $a1 = $a2",
    [(set i64:$a1, (ineg i64:$a2))],
    ALU_TINY>;
 
-// 1 insns: ['ABSD']
 def ABSD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "absd $a1 = $a2",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_LITE>;
 
-// 1 insns: ['ZXBD']
 def ZXBD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "zxbd $a1 = $a2",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_LITE>;
 
-// 1 insns: ['SXBD']
 def SXBD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "sxbd $a1 = $a2",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_LITE>;
 
-// 1 insns: ['ZXHD']
 def ZXHD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "zxhd $a1 = $a2",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_LITE>;
 
-// 1 insns: ['SXHD']
 def SXHD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "sxhd $a1 = $a2",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_LITE>;
 
-// 1 insns: ['ZXWD']
 def ZXWD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "zxwd $a1 = $a2",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_LITE>;
 
-// 1 insns: ['SXWD']
 def SXWD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "sxwd $a1 = $a2",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_LITE>;
 
-// 1 insns: ['SATDH']
 def SATDH : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "satdh $a1 = $a2",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_LITE>;
 
-// 1 insns: ['SATUDH']
 def SATUDH : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "satudh $a1 = $a2",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_LITE>;
 
-// 1 insns: ['SATDW']
 def SATDW : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "satdw $a1 = $a2",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_LITE>;
 
-// 1 insns: ['SATUDW']
 def SATUDW : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "satudw $a1 = $a2",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_LITE>;
 
-// 1 insns: ['COPYW']
 def COPYW : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "copyw $a1 = $a2",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_TINY>;
 
-// 1 insns: ['NOTW']
 def NOTW : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "notw $a1 = $a2",
    [(set i32:$a1, (not i32:$a2))],
    ALU_TINY>;
 
-// 1 insns: ['NEGW']
 def NEGW : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "negw $a1 = $a2",
    [(set i32:$a1, (ineg i32:$a2))],
    ALU_TINY>;
 
-// 1 insns: ['ABSW']
 def ABSW : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "absw $a1 = $a2",
-   [ ],
+   [/* no straightforward pattern */],
    ALU_LITE>;
 
-// 1 insns: ['NEGWP']
 def NEGWP : REGISTERW_REGISTERZ_DOUBLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "negwp $a1 = $a2",
    [(set v2i32:$a1, (vineg v2i32:$a2))],
-   ALU_TINY>;
+   ALU_TINY_X>;
 
-// 1 insns: ['ABSWP']
 def ABSWP : REGISTERW_REGISTERZ_DOUBLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "abswp $a1 = $a2",
-   [ ],
-   ALU_LITE>;
+   [/* no straightforward pattern */],
+   ALU_LITE_X>;
 
-// 1 insns: ['NEGHQ']
 def NEGHQ : REGISTERW_REGISTERZ_DOUBLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "neghq $a1 = $a2",
    [(set v4i16:$a1, (vineg v4i16:$a2))],
-   ALU_TINY>;
+   ALU_TINY_X>;
 
-// 1 insns: ['ABSHQ']
 def ABSHQ : REGISTERW_REGISTERZ_DOUBLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "abshq $a1 = $a2",
-   [ ],
-   ALU_LITE>;
+   [/* no straightforward pattern */],
+   ALU_LITE_X>;
 
-// 2 insns: ['COPYV', 'COPYV']
-defm COPYV : MC_2B<"copyv">;
+defm COPYV : MC_33<"copyv">;
 
-// 2 insns: ['MOVEFO', 'MOVEFO']
-defm MOVEFO : MC_2C<"movefo">;
+defm MOVEFO : MC_34<"movefo">;

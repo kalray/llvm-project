@@ -166,18 +166,14 @@ bool K1CPacketizerList::useFloatingPointIEEE754(unsigned Opcode) {
   case K1C::FADDCDC:
   case K1C::FADDCWCd0:
   case K1C::FADDCWCd1:
-  case K1C::FADDCWCd2:
-  case K1C::FADDCWCd3:
   case K1C::FADDCWCP:
-  case K1C::FADDDri:
-  case K1C::FADDDrr:
+  case K1C::FADDDd0:
+  case K1C::FADDDd1:
   case K1C::FADDDP:
-  case K1C::FADDHQri:
-  case K1C::FADDHQrr:
+  case K1C::FADDHQd0:
+  case K1C::FADDHQd1:
   case K1C::FADDWPd0:
   case K1C::FADDWPd1:
-  case K1C::FADDWPd2:
-  case K1C::FADDWPd3:
   case K1C::FADDWQ:
   case K1C::FCDIVD:
   case K1C::FCDIVW:
@@ -185,66 +181,36 @@ bool K1CPacketizerList::useFloatingPointIEEE754(unsigned Opcode) {
   case K1C::FINVW:
   case K1C::FDOT2Wd0:
   case K1C::FDOT2Wd1:
-  case K1C::FDOT2Wd2:
-  case K1C::FDOT2Wd3:
   case K1C::FDOT2WDd0:
   case K1C::FDOT2WDd1:
-  case K1C::FDOT2WDd2:
-  case K1C::FDOT2WDd3:
   case K1C::FDOT2WDP:
   case K1C::FDOT2WZP:
   case K1C::FFMADd0:
   case K1C::FFMADd1:
-  case K1C::FFMADd2:
-  case K1C::FFMADd3:
   case K1C::FFMAHQd0:
   case K1C::FFMAHQd1:
-  case K1C::FFMAHQd2:
-  case K1C::FFMAHQd3:
   case K1C::FFMAHWd0:
   case K1C::FFMAHWd1:
-  case K1C::FFMAHWd2:
-  case K1C::FFMAHWd3:
   case K1C::FFMAHWQd0:
   case K1C::FFMAHWQd1:
-  case K1C::FFMAHWQd2:
-  case K1C::FFMAHWQd3:
   case K1C::FFMAWd0:
   case K1C::FFMAWd1:
-  case K1C::FFMAWd2:
-  case K1C::FFMAWd3:
   case K1C::FFMAWDd0:
   case K1C::FFMAWDd1:
-  case K1C::FFMAWDd2:
-  case K1C::FFMAWDd3:
   case K1C::FFMAWDPd0:
   case K1C::FFMAWDPd1:
-  case K1C::FFMAWDPd2:
-  case K1C::FFMAWDPd3:
   case K1C::FFMAWPd0:
   case K1C::FFMAWPd1:
-  case K1C::FFMAWPd2:
-  case K1C::FFMAWPd3:
   case K1C::FFMSDd0:
   case K1C::FFMSDd1:
-  case K1C::FFMSDd2:
-  case K1C::FFMSDd3:
   case K1C::FFMSHWQd0:
   case K1C::FFMSHWQd1:
-  case K1C::FFMSHWQd2:
-  case K1C::FFMSHWQd3:
   case K1C::FFMSWd0:
   case K1C::FFMSWd1:
-  case K1C::FFMSWd2:
-  case K1C::FFMSWd3:
   case K1C::FFMSWDd0:
   case K1C::FFMSWDd1:
-  case K1C::FFMSWDd2:
-  case K1C::FFMSWDd3:
   case K1C::FFMSWDPd0:
   case K1C::FFMSWDPd1:
-  case K1C::FFMSWDPd2:
-  case K1C::FFMSWDPd3:
   case K1C::FISRW:
   case K1C::FIXEDD:
   case K1C::FIXEDUD:
@@ -263,46 +229,28 @@ bool K1CPacketizerList::useFloatingPointIEEE754(unsigned Opcode) {
   case K1C::FMM2WQ:
   case K1C::FMULCWCd0:
   case K1C::FMULCWCd1:
-  case K1C::FMULCWCd2:
-  case K1C::FMULCWCd3:
   case K1C::FMULCWDCd0:
   case K1C::FMULCWDCd1:
-  case K1C::FMULCWDCd2:
-  case K1C::FMULCWDCd3:
-  case K1C::FMULDri:
-  case K1C::FMULDrr:
-  case K1C::FMULHQri:
-  case K1C::FMULHQrr:
+  case K1C::FMULDd0:
+  case K1C::FMULDd1:
+  case K1C::FMULHQd0:
+  case K1C::FMULHQd1:
   case K1C::FMULHWd0:
   case K1C::FMULHWd1:
-  case K1C::FMULHWd2:
-  case K1C::FMULHWd3:
   case K1C::FMULHWQd0:
   case K1C::FMULHWQd1:
-  case K1C::FMULHWQd2:
-  case K1C::FMULHWQd3:
-  case K1C::FMULWri:
-  case K1C::FMULWrr:
+  case K1C::FMULWd0:
+  case K1C::FMULWd1:
   case K1C::FMULWCd0:
   case K1C::FMULWCd1:
-  case K1C::FMULWCd2:
-  case K1C::FMULWCd3:
   case K1C::FMULWDd0:
   case K1C::FMULWDd1:
-  case K1C::FMULWDd2:
-  case K1C::FMULWDd3:
   case K1C::FMULWDCd0:
   case K1C::FMULWDCd1:
-  case K1C::FMULWDCd2:
-  case K1C::FMULWDCd3:
   case K1C::FMULWDPd0:
   case K1C::FMULWDPd1:
-  case K1C::FMULWDPd2:
-  case K1C::FMULWDPd3:
   case K1C::FMULWPd0:
   case K1C::FMULWPd1:
-  case K1C::FMULWPd2:
-  case K1C::FMULWPd3:
   case K1C::FMULWQ:
   case K1C::FNARROWDW:
   case K1C::FNARROWDWP:
@@ -311,20 +259,16 @@ bool K1CPacketizerList::useFloatingPointIEEE754(unsigned Opcode) {
   case K1C::FSBFCDC:
   case K1C::FSBFCWCd0:
   case K1C::FSBFCWCd1:
-  case K1C::FSBFCWCd2:
-  case K1C::FSBFCWCd3:
   case K1C::FSBFCWCP:
-  case K1C::FSBFDri:
-  case K1C::FSBFDrr:
+  case K1C::FSBFDd0:
+  case K1C::FSBFDd1:
   case K1C::FSBFDP:
-  case K1C::FSBFHQri:
-  case K1C::FSBFHQrr:
-  case K1C::FSBFWri:
-  case K1C::FSBFWrr:
+  case K1C::FSBFHQd0:
+  case K1C::FSBFHQd1:
+  case K1C::FSBFWd0:
+  case K1C::FSBFWd1:
   case K1C::FSBFWPd0:
   case K1C::FSBFWPd1:
-  case K1C::FSBFWPd2:
-  case K1C::FSBFWPd3:
   case K1C::FSBFWQ:
   case K1C::FSDIVD:
   case K1C::FSDIVW:

@@ -170,8 +170,9 @@ void K1CInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
   }
   if (K1C::OnlyraRegRegClass.hasSubClassEq(RC)) {
     unsigned ScratchReg = findScratchRegister(MBB, false);
-    BuildMI(MBB, I, DL, get(K1C::GET), ScratchReg).addReg(K1C::RA).setMIFlags(
-        MachineInstr::FrameSetup);
+    BuildMI(MBB, I, DL, get(K1C::GETd0), ScratchReg)
+        .addReg(K1C::RA)
+        .setMIFlags(MachineInstr::FrameSetup);
 
     // set flag to mark that $ra is saved with this instruction
     // at frame index elimination cfi instruction will be added
