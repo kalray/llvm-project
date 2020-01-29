@@ -1,18 +1,18 @@
 def: Pat<(int_k1c_dinval), (DINVAL)>;
 def: Pat<(int_k1c_fence), (FENCE)>;
 
-def GET_Instr : K1C_PseudoInstr<(outs SingleReg:$dst), (ins Signed37_32:$param),[]>;
-def SET_Instr : K1C_PseudoInstr<(outs), (ins Signed37_32:$sysreg, SingleReg:$val),[]>;
-def WFXL_Instr : K1C_PseudoInstr<(outs), (ins Signed37_32:$sysreg, SingleReg:$val),[]>;
-def WFXM_Instr : K1C_PseudoInstr<(outs), (ins Signed37_32:$sysreg, SingleReg:$val),[]>;
+def GET_Instr : K1C_PseudoInstr<(outs SingleReg:$dst), (ins Sysnumber:$param),[]>;
+def SET_Instr : K1C_PseudoInstr<(outs), (ins Sysnumber:$sysreg, SingleReg:$val),[]>;
+def WFXL_Instr : K1C_PseudoInstr<(outs), (ins Sysnumber:$sysreg, SingleReg:$val),[]>;
+def WFXM_Instr : K1C_PseudoInstr<(outs), (ins Sysnumber:$sysreg, SingleReg:$val),[]>;
 def SBMM8ri_Instr : K1C_PseudoInstr<(outs SingleReg: $dst), (ins SingleReg:$r, Wrapped64:$r2), []>;
 def SBMM8rr_Instr : K1C_PseudoInstr<(outs SingleReg: $dst), (ins SingleReg:$r, SingleReg:$r2), []>;
 
-def: Pat<(int_k1c_get Signed37_32:$r), (GET_Instr Signed37_32:$r)>;
+def: Pat<(int_k1c_get Sysnumber:$r), (GET_Instr Sysnumber:$r)>;
 def: Pat<(int_k1c_stop), (STOP)>;
-def: Pat<(int_k1c_wfxl Signed37_32:$r, i64:$val), (WFXL_Instr Signed37_32:$r, SingleReg:$val)>;
-def: Pat<(int_k1c_wfxm Signed37_32:$r, i64:$val), (WFXM_Instr Signed37_32:$r, SingleReg:$val)>;
-def: Pat<(int_k1c_set Signed37_32:$r, i64:$val), (SET_Instr Signed37_32:$r, SingleReg:$val)>;
+def: Pat<(int_k1c_wfxl Sysnumber:$r, i64:$val), (WFXL_Instr Sysnumber:$r, SingleReg:$val)>;
+def: Pat<(int_k1c_wfxm Sysnumber:$r, i64:$val), (WFXM_Instr Sysnumber:$r, SingleReg:$val)>;
+def: Pat<(int_k1c_set Sysnumber:$r, i64:$val), (SET_Instr Sysnumber:$r, SingleReg:$val)>;
 def: Pat<(int_k1c_sbmm8 SingleReg:$r, imm:$r2), (SBMM8ri_Instr SingleReg:$r, Wrapped64:$r2)>;
 def: Pat<(int_k1c_sbmm8 SingleReg:$r, SingleReg:$r2), (SBMM8rr_Instr SingleReg:$r, SingleReg:$r2)>;
 
@@ -49,15 +49,15 @@ def: Pat<(int_k1c_fminwp v2f32:$v1, v2f32:$v2), (FMINWP SingleReg:$v1, SingleReg
 def: Pat<(int_k1c_fminwq v4f32:$v1, v4f32:$v2), (FMINWQ_Instr PairedReg:$v1, PairedReg:$v2)>;
 def: Pat<(int_k1c_fmindp v2f64:$v1, v2f64:$v2), (FMINDP_Instr PairedReg:$v1, PairedReg:$v2)>;
 
-def: Pat<(int_k1c_faddwp v2f32:$v1, v2f32:$v2, i32:$mod), (FADDWPd3 SingleReg:$v1, SingleReg:$v2, RoundingMod:$mod, 0)>;
-def: Pat<(int_k1c_faddcwc v2f32:$v1, v2f32:$v2, i32:$mod), (FADDCWCd3 SingleReg:$v1, SingleReg:$v2, RoundingMod:$mod, 0)>;
+def: Pat<(int_k1c_faddwp v2f32:$v1, v2f32:$v2, i32:$mod), (FADDWPd1 SingleReg:$v1, SingleReg:$v2, RoundingMod:$mod, 0)>;
+def: Pat<(int_k1c_faddcwc v2f32:$v1, v2f32:$v2, i32:$mod), (FADDCWCd1 SingleReg:$v1, SingleReg:$v2, RoundingMod:$mod, 0)>;
 def: Pat<(int_k1c_faddwq v4f32:$v1, v4f32:$v2, i32:$mod), (FADDWQ PairedReg:$v1, PairedReg:$v2, RoundingMod:$mod, 0)>;
 def: Pat<(int_k1c_faddcwcp v4f32:$v1, v4f32:$v2, i32:$mod), (FADDCWCP PairedReg:$v1, PairedReg:$v2, RoundingMod:$mod, 0)>;
 def: Pat<(int_k1c_fadddp v2f64:$v1, v2f64:$v2, i32:$mod), (FADDDP PairedReg:$v1, PairedReg:$v2, RoundingMod:$mod, 0)>;
 def: Pat<(int_k1c_faddcdc v2f64:$v1, v2f64:$v2, i32:$mod), (FADDCDC PairedReg:$v1, PairedReg:$v2, RoundingMod:$mod, 0)>;
 
-def: Pat<(int_k1c_fsbfwp v2f32:$v1, v2f32:$v2, i32:$mod), (FSBFWPd3 SingleReg:$v1, SingleReg:$v2, RoundingMod:$mod, 0)>;
-def: Pat<(int_k1c_fsbfcwc v2f32:$v1, v2f32:$v2, i32:$mod), (FSBFCWCd3 SingleReg:$v1, SingleReg:$v2, RoundingMod:$mod, 0)>;
+def: Pat<(int_k1c_fsbfwp v2f32:$v1, v2f32:$v2, i32:$mod), (FSBFWPd1 SingleReg:$v1, SingleReg:$v2, RoundingMod:$mod, 0)>;
+def: Pat<(int_k1c_fsbfcwc v2f32:$v1, v2f32:$v2, i32:$mod), (FSBFCWCd1 SingleReg:$v1, SingleReg:$v2, RoundingMod:$mod, 0)>;
 def: Pat<(int_k1c_fsbfwq v4f32:$v1, v4f32:$v2, i32:$mod), (FSBFWQ PairedReg:$v1, PairedReg:$v2, RoundingMod:$mod, 0)>;
 def: Pat<(int_k1c_fsbfcwcp v4f32:$v1, v4f32:$v2, i32:$mod), (FSBFCWCP PairedReg:$v1, PairedReg:$v2, RoundingMod:$mod, 0)>;
 def: Pat<(int_k1c_fsbfdp v2f64:$v1, v2f64:$v2, i32:$mod), (FSBFDP PairedReg:$v1, PairedReg:$v2, RoundingMod:$mod, 0)>;
@@ -71,9 +71,9 @@ def FMULDC_Instr : K1C_PseudoInstr<(outs PairedReg: $dst), (ins PairedReg:$v1, P
 let Constraints = "@earlyclobber $dst,@earlyclobber $scratch" in
 def FMULCDC_Instr : K1C_PseudoInstr<(outs PairedReg: $dst, SingleReg: $scratch), (ins PairedReg:$v1, PairedReg:$v2, RoundingMod:$mod), []>;
 
-def: Pat<(int_k1c_fmulwp v2f32:$v1, v2f32:$v2, i32:$mod), (FMULWPd3 SingleReg:$v1, SingleReg:$v2, RoundingMod:$mod, 0)>;
-def: Pat<(int_k1c_fmulwc v2f32:$v1, v2f32:$v2, i32:$mod), (FMULWCd3 SingleReg:$v1, SingleReg:$v2, RoundingMod:$mod, 0)>;
-def: Pat<(int_k1c_fmulcwc v2f32:$v1, v2f32:$v2, i32:$mod), (FMULCWCd3 SingleReg:$v1, SingleReg:$v2, RoundingMod:$mod, 0)>;
+def: Pat<(int_k1c_fmulwp v2f32:$v1, v2f32:$v2, i32:$mod), (FMULWPd1 SingleReg:$v1, SingleReg:$v2, RoundingMod:$mod, 0)>;
+def: Pat<(int_k1c_fmulwc v2f32:$v1, v2f32:$v2, i32:$mod), (FMULWCd1 SingleReg:$v1, SingleReg:$v2, RoundingMod:$mod, 0)>;
+def: Pat<(int_k1c_fmulcwc v2f32:$v1, v2f32:$v2, i32:$mod), (FMULCWCd1 SingleReg:$v1, SingleReg:$v2, RoundingMod:$mod, 0)>;
 def: Pat<(int_k1c_fmulwq v4f32:$v1, v4f32:$v2, i32:$mod), (FMULWQ PairedReg:$v1, PairedReg:$v2, RoundingMod:$mod, 0)>;
 def: Pat<(int_k1c_fmulwcp v4f32:$v1, v4f32:$v2, i32:$mod), (FMULWCP_Instr PairedReg:$v1, PairedReg:$v2, RoundingMod:$mod)>;
 def: Pat<(int_k1c_fmulcwcp v4f32:$v1, v4f32:$v2, i32:$mod), (FMULCWCP_Instr PairedReg:$v1, PairedReg:$v2, RoundingMod:$mod)>;

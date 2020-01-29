@@ -8,7 +8,7 @@
 //===----------------------------------------------------------------------===//
 
 // This file was automatically generated, DO NOT EDIT.
-// Last generated: 2020-01-28 15:12:57.725714.
+// Last generated: 2020-01-29 14:01:26.670061.
 
 
 // 16 insn(s):
@@ -656,7 +656,7 @@ class LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
   : K1C_INSTRUCTION <outs, ins, asmstr, pattern, LSU_Y>;
 
-// 209 insn(s):
+// 201 insn(s):
 // STSUD, ADDD, SBFD, ABDD, MIND, MINUD, MAXD, MAXUD, ANDD, NANDD, ORD, NORD,
 // XORD, NXORD, ANDND, ORND, SBMM8, SBMMT8, ADDSD, SBFSD, ADDX2D, ADDX4D,
 // ADDX8D, ADDX16D, SBFX2D, SBFX4D, SBFX8D, SBFX16D, ADDWD, SBFWD, ADDUWD,
@@ -675,52 +675,41 @@ class LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
 // SBFX16UWD, ADDCD, SBFCD, ADDCID, SBFCID, SATD, SATUD, SRSD, SLLD, SRAD,
 // SRLD, SLSD, SRSW, SLLW, SRAW, SRLW, SLSW, ROLW, RORW, SRSWPS, SLLWPS,
 // SRAWPS, SRLWPS, SLSWPS, ROLWPS, RORWPS, SRSHQS, SLLHQS, SRAHQS, SRLHQS,
-// SLSHQS, FMIND, FMAXD, FMINW, FMAXW, FMINWP, FMAXWP, FMINHQ, FMAXHQ, MADDD,
-// MSBFD, MADDWP, MSBFWP, MADDHQ, MSBFHQ, MULD, CRCBELMW, CRCBELLW, CRCLELMW,
-// CRCLELLW, DOT2WD, DOT2UWD, DOT2SUWD, DOT2W, MULWP, MULHQ, MULWC, MULCWC,
-// MADDWD, MADDUWD, MADDSUWD, MADDW, MSBFWD, MSBFUWD, MSBFSUWD, MSBFW, MULWD,
-// MULUWD, MULSUWD, MULW
+// SLSHQS, MADDD, MSBFD, MADDWP, MSBFWP, MADDHQ, MSBFHQ, MULD, CRCBELMW,
+// CRCBELLW, CRCLELMW, CRCLELLW, DOT2WD, DOT2UWD, DOT2SUWD, DOT2W, MULWP,
+// MULHQ, MULWC, MULCWC, MADDWD, MADDUWD, MADDSUWD, MADDW, MSBFWD, MSBFUWD,
+// MSBFSUWD, MSBFW, MULWD, MULUWD, MULSUWD, MULW
 let Size = 4 in
 class REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
   : K1C_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
-// 77 insn(s):
+// 45 insn(s):
 // ADDD, SBFD, ABDD, MIND, MINUD, MAXD, MAXUD, ANDD, NANDD, ORD, NORD, XORD,
 // NXORD, ANDND, ORND, SBMM8, SBMMT8, ADDSD, SBFSD, ADDW, SBFW, ABDW, MINW,
 // MINUW, MAXW, MAXUW, ANDW, NANDW, ORW, NORW, XORW, NXORW, ANDNW, ORNW,
 // MADDD, MADDWP, MADDHQ, MULD, DOT2WD, DOT2UWD, DOT2SUWD, DOT2W, MULWP,
-// MULHQ, MULWC, FFMAD, FFMAWP, FFMAHQ, FFMSD, FFMSWP, FFMSHQ, FMULD, FMULWP,
-// FMULHQ, FMULWC, FMULCWC, FADDD, FADDWP, FADDHQ, FADDCWC, FSBFD, FSBFWP,
-// FSBFHQ, FSBFCWC, FFMAHW, FFMAW, FFMAWD, FFMSHW, FFMSW, FFMSWD, FADDW,
-// FSBFW, FMULHW, FMULW, FMULWD, FDOT2W, FDOT2WD
+// MULHQ, MULWC
 let Size = 4 in
 class REGISTERW_REGISTERZ_SIGNED10_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
   : K1C_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
-// 77 insn(s):
+// 45 insn(s):
 // ADDD, SBFD, ABDD, MIND, MINUD, MAXD, MAXUD, ANDD, NANDD, ORD, NORD, XORD,
 // NXORD, ANDND, ORND, SBMM8, SBMMT8, ADDSD, SBFSD, ADDW, SBFW, ABDW, MINW,
 // MINUW, MAXW, MAXUW, ANDW, NANDW, ORW, NORW, XORW, NXORW, ANDNW, ORNW,
 // MADDD, MADDWP, MADDHQ, MULD, DOT2WD, DOT2UWD, DOT2SUWD, DOT2W, MULWP,
-// MULHQ, MULWC, FFMAD, FFMAWP, FFMAHQ, FFMSD, FFMSWP, FFMSHQ, FMULD, FMULWP,
-// FMULHQ, FMULWC, FMULCWC, FADDD, FADDWP, FADDHQ, FADDCWC, FSBFD, FSBFWP,
-// FSBFHQ, FSBFCWC, FFMAHW, FFMAW, FFMAWD, FFMSHW, FFMSW, FFMSWD, FADDW,
-// FSBFW, FMULHW, FMULW, FMULWD, FDOT2W, FDOT2WD
+// MULHQ, MULWC
 let Size = 8 in
 class REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
   <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
   : K1C_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
-// 62 insn(s):
+// 30 insn(s):
 // ADDD, SBFD, ABDD, MIND, MINUD, MAXD, MAXUD, ANDD, NANDD, ORD, NORD, XORD,
 // NXORD, ANDND, ORND, SBMM8, SBMMT8, ADDSD, SBFSD, MADDD, MADDWP, MADDHQ,
-// MULD, DOT2WD, DOT2UWD, DOT2SUWD, DOT2W, MULWP, MULHQ, MULWC, FFMAD, FFMAWP,
-// FFMAHQ, FFMSD, FFMSWP, FFMSHQ, FMULD, FMULWP, FMULHQ, FMULWC, FMULCWC,
-// FADDD, FADDWP, FADDHQ, FADDCWC, FSBFD, FSBFWP, FSBFHQ, FSBFCWC, FFMAHW,
-// FFMAW, FFMAWD, FFMSHW, FFMSW, FFMSWD, FADDW, FSBFW, FMULHW, FMULW, FMULWD,
-// FDOT2W, FDOT2WD
+// MULD, DOT2WD, DOT2UWD, DOT2SUWD, DOT2W, MULWP, MULHQ, MULWC
 let Size = 12 in
 class REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
@@ -753,38 +742,68 @@ class SPLAT32_REGISTERW_REGISTERZ_UPPER27_LOWER5_DOUBLE
   <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
   : K1C_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
-// 45 insn(s):
-// FNEGD, FABSD, FSISRD, FNEGW, FABSW, FSISRW, FNEGWP, FABSWP, FSISRWP,
-// FNEGHQ, FABSHQ, CLZW, CLSW, CBSW, CTZW, CLZD, CLSD, CBSD, CTZD, CLZWP,
-// CLSWP, CBSWP, CTZWP, SXLHWP, SXMHWP, SXLBHQ, SXMBHQ, COPYD, NOTD, NEGD,
-// ABSD, ZXBD, SXBD, ZXHD, SXHD, ZXWD, SXWD, SATDH, SATUDH, SATDW, SATUDW,
-// COPYW, NOTW, NEGW, ABSW
+// 3 insn(s):
+// FNEGD, FABSD, FSISRD
 let Size = 4 in
-class REGISTERW_REGISTERZ_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
-  : K1C_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
-
-// 9 insn(s):
-// FSINVD, FWIDENLWD, FWIDENMWD, FSINVW, FWIDENLHW, FWIDENMHW, FSINVWP,
-// FWIDENLHWP, FWIDENMHWP
-let Size = 4 in
-class SILENT2_REGISTERW_REGISTERZ_SIMPLE
+class REGISTERW_REGISTERZ_SIMPLE_BINARY64
   <dag outs, dag ins, string asmstr, list<dag> pattern>
   : K1C_INSTRUCTION <outs, ins, asmstr, pattern, ALU_LITE>;
 
-// 4 insn(s):
-// FNARROWDW, FINVW, FISRW, FNARROWWH
+// 1 insn(s):
+// FSINVD
 let Size = 4 in
-class ROUNDING2_SILENT2_REGISTERW_REGISTERZ_SIMPLE
+class SILENT2_REGISTERW_REGISTERZ_SIMPLE_BINARY64
+  <dag outs, dag ins, string asmstr, list<dag> pattern>
+  : K1C_INSTRUCTION <outs, ins, asmstr, pattern, ALU_LITE>;
+
+// 6 insn(s):
+// FWIDENLWD, FWIDENMWD, FWIDENLHW, FWIDENMHW, FWIDENLHWP, FWIDENMHWP
+let Size = 4 in
+class SILENT2_REGISTERW_REGISTERZ_SIMPLE_BINARYREG
+  <dag outs, dag ins, string asmstr, list<dag> pattern>
+  : K1C_INSTRUCTION <outs, ins, asmstr, pattern, ALU_LITE>;
+
+// 2 insn(s):
+// FNARROWDW, FNARROWWH
+let Size = 4 in
+class ROUNDING2_SILENT2_REGISTERW_REGISTERZ_SIMPLE_BINARYREG
   <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
   : K1C_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
+
+// 6 insn(s):
+// FNEGW, FABSW, FSISRW, FNEGWP, FABSWP, FSISRWP
+let Size = 4 in
+class REGISTERW_REGISTERZ_SIMPLE_BINARY32
+  <dag outs, dag ins, string asmstr, list<dag> pattern>
+  : K1C_INSTRUCTION <outs, ins, asmstr, pattern, ALU_LITE>;
+
+// 2 insn(s):
+// FINVW, FISRW
+let Size = 4 in
+class ROUNDING2_SILENT2_REGISTERW_REGISTERZ_SIMPLE_BINARY32
+  <dag outs, dag ins, string asmstr, list<dag> pattern>
+  : K1C_INSTRUCTION <outs, ins, asmstr, pattern, ALU_FULL>;
+
+// 2 insn(s):
+// FSINVW, FSINVWP
+let Size = 4 in
+class SILENT2_REGISTERW_REGISTERZ_SIMPLE_BINARY32
+  <dag outs, dag ins, string asmstr, list<dag> pattern>
+  : K1C_INSTRUCTION <outs, ins, asmstr, pattern, ALU_LITE>;
 
 // 2 insn(s):
 // FNARROWDWP, FNARROWWHQ
 let Size = 4 in
-class ROUNDING2_SILENT2_REGISTERW_REGISTERP_SIMPLE
+class ROUNDING2_SILENT2_REGISTERW_REGISTERP_SIMPLE_BINARYREG
   <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
   : K1C_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
+
+// 2 insn(s):
+// FNEGHQ, FABSHQ
+let Size = 4 in
+class REGISTERW_REGISTERZ_SIMPLE_BINARY16
+  <dag outs, dag ins, string asmstr, list<dag> pattern>
+  : K1C_INSTRUCTION <outs, ins, asmstr, pattern, ALU_LITE>;
 
 // 4 insn(s):
 // INSF, EXTFZ, EXTFS, CLRF
@@ -893,32 +912,89 @@ class REGISTERW_EXTEND27_UPPER27_LOWER10_TRIPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
   : K1C_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
-// 4 insn(s):
-// FCOMPW, FCOMPD, FCOMPNWP, FCOMPNHQ
+// 34 insn(s):
+// CLZW, CLSW, CBSW, CTZW, CLZD, CLSD, CBSD, CTZD, CLZWP, CLSWP, CBSWP, CTZWP,
+// SXLHWP, SXMHWP, SXLBHQ, SXMBHQ, COPYD, NOTD, NEGD, ABSD, ZXBD, SXBD, ZXHD,
+// SXHD, ZXWD, SXWD, SATDH, SATUDH, SATDW, SATUDW, COPYW, NOTW, NEGW, ABSW
 let Size = 4 in
-class FLOATCOMP_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+class REGISTERW_REGISTERZ_SIMPLE
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : K1C_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
+
+// 2 insn(s):
+// FCOMPW, FCOMPNWP
+let Size = 4 in
+class FLOATCOMP_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32
+  <dag outs, dag ins, string asmstr, list<dag> pattern>
+  : K1C_INSTRUCTION <outs, ins, asmstr, pattern, ALU_LITE>;
+
+// 1 insn(s):
+// FCOMPW
+let Size = 8 in
+class FLOATCOMP_REGISTERW_REGISTERZ_UPPER27_LOWER5_DOUBLE_BINARY32
+  <dag outs, dag ins, string asmstr, list<dag> pattern>
+  : K1C_INSTRUCTION <outs, ins, asmstr, pattern, ALU_LITE_X>;
+
+// 1 insn(s):
+// FCOMPD
+let Size = 4 in
+class FLOATCOMP_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY64
+  <dag outs, dag ins, string asmstr, list<dag> pattern>
+  : K1C_INSTRUCTION <outs, ins, asmstr, pattern, ALU_LITE>;
+
+// 1 insn(s):
+// FCOMPNHQ
+let Size = 4 in
+class FLOATCOMP_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY16
   <dag outs, dag ins, string asmstr, list<dag> pattern>
   : K1C_INSTRUCTION <outs, ins, asmstr, pattern, ALU_LITE>;
 
 // 2 insn(s):
-// FCOMPW, FCOMPD
-let Size = 8 in
-class FLOATCOMP_REGISTERW_REGISTERZ_UPPER27_LOWER5_DOUBLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : K1C_INSTRUCTION <outs, ins, asmstr, pattern, ALU_LITE_X>;
-
-// 6 insn(s):
-// FSDIVD, FCDIVD, FSDIVW, FCDIVW, FSDIVWP, FCDIVWP
+// FSDIVD, FCDIVD
 let Size = 4 in
-class SILENT2_REGISTERW_REGISTERP_SIMPLE
+class SILENT2_REGISTERW_REGISTERP_SIMPLE_BINARY64
   <dag outs, dag ins, string asmstr, list<dag> pattern>
   : K1C_INSTRUCTION <outs, ins, asmstr, pattern, ALU_LITE>;
 
-// 12 insn(s):
-// FLOATD, FLOATWP, FLOATW, FLOATUD, FLOATUWP, FLOATUW, FIXEDD, FIXEDWP,
-// FIXEDW, FIXEDUD, FIXEDUWP, FIXEDUW
+// 4 insn(s):
+// FSDIVW, FCDIVW, FSDIVWP, FCDIVWP
 let Size = 4 in
-class ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE
+class SILENT2_REGISTERW_REGISTERP_SIMPLE_BINARY32
+  <dag outs, dag ins, string asmstr, list<dag> pattern>
+  : K1C_INSTRUCTION <outs, ins, asmstr, pattern, ALU_LITE>;
+
+// 2 insn(s):
+// FMIND, FMAXD
+let Size = 4 in
+class REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY64
+  <dag outs, dag ins, string asmstr, list<dag> pattern>
+  : K1C_INSTRUCTION <outs, ins, asmstr, pattern, ALU_LITE>;
+
+// 4 insn(s):
+// FMINW, FMAXW, FMINWP, FMAXWP
+let Size = 4 in
+class REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32
+  <dag outs, dag ins, string asmstr, list<dag> pattern>
+  : K1C_INSTRUCTION <outs, ins, asmstr, pattern, ALU_LITE>;
+
+// 2 insn(s):
+// FMINHQ, FMAXHQ
+let Size = 4 in
+class REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY16
+  <dag outs, dag ins, string asmstr, list<dag> pattern>
+  : K1C_INSTRUCTION <outs, ins, asmstr, pattern, ALU_LITE>;
+
+// 4 insn(s):
+// FLOATD, FLOATUD, FIXEDD, FIXEDUD
+let Size = 4 in
+class ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE_BINARY64
+  <dag outs, dag ins, string asmstr, list<dag> pattern>
+  : K1C_INSTRUCTION <outs, ins, asmstr, pattern, MAU>;
+
+// 8 insn(s):
+// FLOATWP, FLOATW, FLOATUWP, FLOATUW, FIXEDWP, FIXEDW, FIXEDUWP, FIXEDUW
+let Size = 4 in
+class ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE_BINARY32
   <dag outs, dag ins, string asmstr, list<dag> pattern>
   : K1C_INSTRUCTION <outs, ins, asmstr, pattern, MAU>;
 
@@ -934,25 +1010,22 @@ class REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
   : K1C_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
-// 16 insn(s):
-// MADDDT, MADDUDT, MADDSUDT, MADDUZDT, MULDT, MULUDT, MULSUDT, CMULDT,
-// FMULWDP, FMULHWQ, FMULWDC, FMULCWDC, FFMAWDP, FFMAHWQ, FFMSWDP, FFMSHWQ
+// 8 insn(s):
+// MADDDT, MADDUDT, MADDSUDT, MADDUZDT, MULDT, MULUDT, MULSUDT, CMULDT
 let Size = 4 in
 class REGISTERM_REGISTERZ_SIGNED10_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
   : K1C_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
-// 16 insn(s):
-// MADDDT, MADDUDT, MADDSUDT, MADDUZDT, MULDT, MULUDT, MULSUDT, CMULDT,
-// FMULWDP, FMULHWQ, FMULWDC, FMULCWDC, FFMAWDP, FFMAHWQ, FFMSWDP, FFMSHWQ
+// 8 insn(s):
+// MADDDT, MADDUDT, MADDSUDT, MADDUZDT, MULDT, MULUDT, MULSUDT, CMULDT
 let Size = 8 in
 class REGISTERM_REGISTERZ_UPPER27_LOWER10_DOUBLE
   <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
   : K1C_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
-// 16 insn(s):
-// MADDDT, MADDUDT, MADDSUDT, MADDUZDT, MULDT, MULUDT, MULSUDT, CMULDT,
-// FMULWDP, FMULHWQ, FMULWDC, FMULCWDC, FFMAWDP, FFMAHWQ, FFMSWDP, FFMSHWQ
+// 8 insn(s):
+// MADDDT, MADDUDT, MADDSUDT, MADDUZDT, MULDT, MULUDT, MULSUDT, CMULDT
 let Size = 12 in
 class REGISTERM_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
@@ -965,29 +1038,103 @@ class REGISTERM_REGISTERP_REGISTERO_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
   : K1C_INSTRUCTION <outs, ins, asmstr, pattern, MAU_AUXR>;
 
-// 32 insn(s):
-// FFMAD, FFMAWP, FFMAHQ, FFMSD, FFMSWP, FFMSHQ, FMULD, FMULWP, FMULHQ,
-// FMULWC, FMULCWC, FADDD, FADDWP, FADDHQ, FADDCWC, FSBFD, FSBFWP, FSBFHQ,
-// FSBFCWC, FFMAHW, FFMAW, FFMAWD, FFMSHW, FFMSW, FFMSWD, FADDW, FSBFW,
-// FMULHW, FMULW, FMULWD, FDOT2W, FDOT2WD
-let Size = 4 in
-class ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+// 9 insn(s):
+// FFMAD, FFMSD, FMULD, FADDD, FSBFD, FFMAWD, FFMSWD, FMULWD, FDOT2WD
+let Size = 12 in
+class REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARY64
   <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
   : K1C_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
-// 11 insn(s):
-// FMULWDP, FMULHWQ, FMULWDC, FMULCWDC, FFMAWDP, FFMAHWQ, FFMSWDP, FFMSHWQ,
-// FMM2AWQ, FMM2SWQ, FMM2WQ
+// 9 insn(s):
+// FFMAD, FFMSD, FMULD, FADDD, FSBFD, FFMAWD, FFMSWD, FMULWD, FDOT2WD
 let Size = 4 in
-class ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+class ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY64
   <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
   : K1C_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
-// 11 insn(s):
-// FMULWQ, FADDDP, FADDWQ, FADDCDC, FADDCWCP, FSBFDP, FSBFWQ, FSBFCDC,
-// FSBFCWCP, FDOT2WZP, FDOT2WDP
+// 18 insn(s):
+// FFMAWP, FFMSWP, FMULWP, FMULWC, FMULCWC, FADDWP, FADDCWC, FSBFWP, FSBFCWC,
+// FFMAHW, FFMAW, FFMSHW, FFMSW, FADDW, FSBFW, FMULHW, FMULW, FDOT2W
+let Size = 8 in
+class REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE_BINARY32
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : K1C_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
+
+// 18 insn(s):
+// FFMAWP, FFMSWP, FMULWP, FMULWC, FMULCWC, FADDWP, FADDCWC, FSBFWP, FSBFCWC,
+// FFMAHW, FFMAW, FFMSHW, FFMSW, FADDW, FSBFW, FMULHW, FMULW, FDOT2W
 let Size = 4 in
-class ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE
+class ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : K1C_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
+
+// 5 insn(s):
+// FFMAHQ, FFMSHQ, FMULHQ, FADDHQ, FSBFHQ
+let Size = 12 in
+class REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARY16
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : K1C_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
+
+// 5 insn(s):
+// FFMAHQ, FFMSHQ, FMULHQ, FADDHQ, FSBFHQ
+let Size = 4 in
+class ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY16
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : K1C_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
+
+// 5 insn(s):
+// FMULWDP, FMULWDC, FMULCWDC, FFMAWDP, FFMSWDP
+let Size = 12 in
+class REGISTERM_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARY64
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : K1C_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
+
+// 5 insn(s):
+// FMULWDP, FMULWDC, FMULCWDC, FFMAWDP, FFMSWDP
+let Size = 4 in
+class ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE_BINARY64
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : K1C_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
+
+// 3 insn(s):
+// FMULHWQ, FFMAHWQ, FFMSHWQ
+let Size = 8 in
+class REGISTERM_REGISTERZ_UPPER27_LOWER10_DOUBLE_BINARYREG
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : K1C_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
+
+// 3 insn(s):
+// FMULHWQ, FFMAHWQ, FFMSHWQ
+let Size = 12 in
+class REGISTERM_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARYREG
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : K1C_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
+
+// 6 insn(s):
+// FMULHWQ, FFMAHWQ, FFMSHWQ, FMM2AWQ, FMM2SWQ, FMM2WQ
+let Size = 4 in
+class ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE_BINARYREG
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : K1C_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
+
+// 4 insn(s):
+// FMULWQ, FADDWQ, FSBFWQ, FDOT2WZP
+let Size = 4 in
+class ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE_BINARYREG
+  <dag outs, dag ins, string asmstr, list<dag> pattern>
+  : K1C_INSTRUCTION <outs, ins, asmstr, pattern, MAU_AUXR>;
+
+// 5 insn(s):
+// FADDDP, FADDCDC, FSBFDP, FSBFCDC, FDOT2WDP
+let Size = 4 in
+class ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE_BINARY64
+  <dag outs, dag ins, string asmstr, list<dag> pattern>
+  : K1C_INSTRUCTION <outs, ins, asmstr, pattern, MAU_AUXR>;
+
+// 2 insn(s):
+// FADDCWCP, FSBFCWCP
+let Size = 4 in
+class ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE_BINARY32
   <dag outs, dag ins, string asmstr, list<dag> pattern>
   : K1C_INSTRUCTION <outs, ins, asmstr, pattern, MAU_AUXR>;
 
@@ -1093,28 +1240,28 @@ class REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
 // 1 insn(s):
 // FMM4AHW0
 let Size = 4 in
-class REGISTERA0_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
+class REGISTERA0_REGISTERBP_REGISTERC_REGISTERD_SIMPLE_BINARYREG
   <dag outs, dag ins, string asmstr, list<dag> pattern>
   : K1C_INSTRUCTION <outs, ins, asmstr, pattern, TCA>;
 
 // 1 insn(s):
 // FMM4AHW1
 let Size = 4 in
-class REGISTERA1_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
+class REGISTERA1_REGISTERBP_REGISTERC_REGISTERD_SIMPLE_BINARYREG
   <dag outs, dag ins, string asmstr, list<dag> pattern>
   : K1C_INSTRUCTION <outs, ins, asmstr, pattern, TCA>;
 
 // 1 insn(s):
 // FMM4AHW2
 let Size = 4 in
-class REGISTERA2_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
+class REGISTERA2_REGISTERBP_REGISTERC_REGISTERD_SIMPLE_BINARYREG
   <dag outs, dag ins, string asmstr, list<dag> pattern>
   : K1C_INSTRUCTION <outs, ins, asmstr, pattern, TCA>;
 
 // 1 insn(s):
 // FMM4AHW3
 let Size = 4 in
-class REGISTERA3_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
+class REGISTERA3_REGISTERBP_REGISTERC_REGISTERD_SIMPLE_BINARYREG
   <dag outs, dag ins, string asmstr, list<dag> pattern>
   : K1C_INSTRUCTION <outs, ins, asmstr, pattern, TCA>;
 
@@ -1163,14 +1310,14 @@ class ROUNDINT_SATURATE_REGISTERAT_REGISTERBQ_SIMPLE
 // 1 insn(s):
 // FSCALEWV
 let Size = 4 in
-class XROUNDING_SILENT2_RECTIFY_REGISTERA_REGISTERB_SIMPLE
+class XROUNDING_SILENT2_RECTIFY_REGISTERA_REGISTERB_SIMPLE_BINARYREG
   <dag outs, dag ins, string asmstr, list<dag> pattern>
   : K1C_INSTRUCTION <outs, ins, asmstr, pattern, TCA>;
 
 // 1 insn(s):
 // FNARROWWHV
 let Size = 4 in
-class XROUNDING_SILENT2_REGISTERA_REGISTERBP_SIMPLE
+class XROUNDING_SILENT2_REGISTERA_REGISTERBP_SIMPLE_BINARYREG
   <dag outs, dag ins, string asmstr, list<dag> pattern>
   : K1C_INSTRUCTION <outs, ins, asmstr, pattern, TCA>;
 
