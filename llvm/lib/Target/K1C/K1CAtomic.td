@@ -1,4 +1,4 @@
-def FENCE_Instr : K1C_PseudoInstr<(outs),(ins Signed37_32:$a, Signed37_32:$b), []>;
+def FENCE_Instr : K1C_PseudoInstr<(outs),(ins Signed37:$a, Signed37:$b), []>;
 
 let isIndirectBranch = 1 in
 {
@@ -7,7 +7,7 @@ def ASWAP32_Instr : K1C_PseudoInstr<(outs SingleReg:$res, PairedReg:$scratch), (
 def ASWAP64_Instr : K1C_PseudoInstr<(outs SingleReg:$res, PairedReg:$scratch), (ins AddrRI:$ptr, SingleReg:$val), []>;
 }
 
-def : Pat<(atomic_fence imm:$a,imm:$b), (FENCE_Instr Signed37_32:$a,Signed37_32:$b)>;
+def : Pat<(atomic_fence imm:$a,imm:$b), (FENCE_Instr Signed37:$a, Signed37:$b)>;
 
 def atomicloadi8 : PatFrag<(ops node:$ptr), (i8 (atomic_load_8 node:$ptr))>;
 def atomicloadi16 : PatFrag<(ops node:$ptr), (i16 (atomic_load_16 node:$ptr))>;
