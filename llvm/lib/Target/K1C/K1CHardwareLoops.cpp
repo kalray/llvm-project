@@ -428,6 +428,10 @@ bool K1CHardwareLoops::ConvertToHardwareLoop(MachineFunction &MF,
   assert(L->getHeader() && "Loop without a header?");
   bool Changed = false;
 
+  PreheaderMBB = L->getLoopPreheader();
+  HeaderMBB = L->getHeader();
+  ExitMBB = L->getExitBlock();
+
   // Process nested loops first.
   for (MachineLoop::iterator I = L->begin(), E = L->end(); I != E; ++I) {
     Changed |= ConvertToHardwareLoop(MF, *I);
@@ -521,10 +525,6 @@ bool K1CHardwareLoops::runOnMachineFunction(MachineFunction &MF) {
                  << ", loop detected at "
                  << printMBBReference(**L->block_begin())
                  << ", attempt to replace it with a hardware loop.\n");
-
-      PreheaderMBB = L->getLoopPreheader();
-      HeaderMBB = L->getHeader();
-      ExitMBB = L->getExitBlock();
 
       if (ConvertToHardwareLoop(MF, L)) {
         LLVM_DEBUG(llvm::dbgs()
