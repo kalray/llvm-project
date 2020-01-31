@@ -118,22 +118,6 @@ template<> struct DenseMapInfo<unsigned long long> {
   }
 };
 
-// Provide DenseMapInfo for unsigned 128-bit integer.
-template <> struct DenseMapInfo<__uint128_t> {
-  static inline __uint128_t getEmptyKey() { return ~(__uint128_t)0; }
-  static inline __uint128_t getTombstoneKey() {
-    return getEmptyKey() - (__uint128_t)1;
-  }
-
-  static unsigned getHashValue(const __uint128_t &Val) {
-    return (unsigned)(Val * 37ULL);
-  }
-
-  static bool isEqual(const __uint128_t &LHS, const __uint128_t &RHS) {
-    return LHS == RHS;
-  }
-};
-
 // Provide DenseMapInfo for shorts.
 template <> struct DenseMapInfo<short> {
   static inline short getEmptyKey() { return 0x7FFF; }
@@ -181,24 +165,6 @@ template<> struct DenseMapInfo<long long> {
 
   static bool isEqual(const long long& LHS,
                       const long long& RHS) {
-    return LHS == RHS;
-  }
-};
-
-// Provide DenseMapInfo for 128-bit integer.
-template <> struct DenseMapInfo<__int128_t> {
-  static inline __int128_t getEmptyKey() {
-    return ((__uint128_t)1 << (sizeof(__int128_t) * 8 - 1)) - (__uint128_t)1;
-  }
-  static inline __int128_t getTombstoneKey() {
-    return getEmptyKey() - (__int128_t)1;
-  }
-
-  static unsigned getHashValue(const __int128_t &Val) {
-    return (unsigned)(Val * 37ULL);
-  }
-
-  static bool isEqual(const __int128_t &LHS, const __int128_t &RHS) {
     return LHS == RHS;
   }
 };
