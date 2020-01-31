@@ -50,22 +50,16 @@ using namespace llvm;
 //      7 terms x 9  bits = 63 bits
 //      6 terms x 10 bits = 60 bits
 //      5 terms x 12 bits = 60 bits
-//      4 terms x 16 bits = 64 bits
+//      4 terms x 16 bits = 64 bits <--- current
 //      3 terms x 21 bits = 63 bits
 //      2 terms x 32 bits = 64 bits
 //
-//// e.g. terms x resource bit combinations that fit in __uint128_t:
-//      8 terms x 16 bits = 128 bits
-//      4 terms x 32 bits = 128 bits <--- current
-//      3 terms x 42 bits = 126 bits
-//
 #define DFA_MAX_RESTERMS        4   // The max # of AND'ed resource terms.
-#define DFA_MAX_RESOURCES 32        // The max # of resource bits in one term.
+#define DFA_MAX_RESOURCES       16  // The max # of resource bits in one term.
 
-using DFAInput = __uint128_t;
-using DFAStateInput = __int128_t;
-
-#define DFA_TBLTYPE "__int128_t" // For generating DFAStateInputTable.
+typedef uint64_t                DFAInput;
+typedef int64_t                 DFAStateInput;
+#define DFA_TBLTYPE             "int64_t" // For generating DFAStateInputTable.
 
 namespace {
 
@@ -586,11 +580,8 @@ void DFA::writeTableAndAPI(raw_ostream &OS, const std::string &TargetName,
     for (State::TransitionMap::iterator
         II = SI->Transitions.begin(), IE = SI->Transitions.end();
         II != IE; ++II) {
-
-      auto DFAII = getDFAInsnInput(II->first);
-      OS << "{(" << DFA_TBLTYPE << ")0x" << Twine::utohexstr(DFAII >> 64)
-         << " << 64 | (" << DFA_TBLTYPE << ")0x" << Twine::utohexstr(DFAII)
-         << ", " << II->second->stateNum << "},\t";
+      OS << "{0x" << Twine::utohexstr(getDFAInsnInput(II->first)) << ", "
+         << II->second->stateNum << "},\t";
     }
     ValidTransitions += SI->Transitions.size();
 

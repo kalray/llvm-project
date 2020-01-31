@@ -24,6 +24,7 @@ class K1C_PseudoInstr<dag outs, dag ins, list<dag> pattern, string asmstr="">
 {
   let isPseudo = 1;
   let isCodeGenOnly = 1;
+  let hasNoSchedulingInfo = 1;
 }
 
 // Immediates
