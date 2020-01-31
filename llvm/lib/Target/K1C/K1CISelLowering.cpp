@@ -178,6 +178,7 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
         MVT::v2f16, MVT::v4f16, MVT::v2f32, MVT::v4f32, MVT::v2f64}) {
     setOperationAction(ISD::INSERT_VECTOR_ELT, VT, Custom);
     setOperationAction(ISD::EXTRACT_VECTOR_ELT, VT, Custom);
+    setOperationAction(ISD::VSELECT, VT, Expand);
   }
 
   setOperationAction(ISD::EXTRACT_SUBVECTOR, MVT::v2f32, Expand);
