@@ -33,6 +33,10 @@ static cl::opt<bool>
     DisableBundling("disable-k1c-bundling", cl::Hidden,
                     cl::desc("Disable Bundling Pass for K1C target"));
 
+static cl::opt<bool> DisableLoadStorePacking(
+    "disable-k1c-loadstore-packing", cl::Hidden,
+    cl::desc("Disable Load/Store Packing Pass for K1C target"));
+
 extern "C" void LLVMInitializeK1CTarget() {
   RegisterTargetMachine<K1CTargetMachine> X(getTheK1CTarget());
   auto PR = PassRegistry::getPassRegistry();
@@ -132,9 +136,10 @@ bool K1CPassConfig::addInstSelector() {
 
 void K1CPassConfig::addPreRegAlloc() {
   if (getOptLevel() >= CodeGenOpt::Default) {
-    addPass(createK1CLoadStorePackingPass());
     if (!DisableHardwareLoops)
       addPass(createK1CHardwareLoopsPass());
+    if (!DisableLoadStorePacking)
+      addPass(createK1CLoadStorePackingPass());
   }
 }
 
