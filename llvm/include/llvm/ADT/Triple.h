@@ -153,7 +153,8 @@ public:
     Mesa,
     SUSE,
     OpenEmbedded,
-    LastVendorType = OpenEmbedded
+    Kalray,
+    LastVendorType = Kalray
   };
   enum OSType {
     UnknownOS,
