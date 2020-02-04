@@ -179,6 +179,7 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::INSERT_VECTOR_ELT, VT, Custom);
     setOperationAction(ISD::EXTRACT_VECTOR_ELT, VT, Custom);
     setOperationAction(ISD::VSELECT, VT, Expand);
+    setOperationAction(ISD::CONCAT_VECTORS, VT, Custom);
   }
 
   setOperationAction(ISD::EXTRACT_SUBVECTOR, MVT::v2f32, Expand);
@@ -720,6 +721,8 @@ SDValue K1CTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
     return lowerINSERT_VECTOR_ELT(Op, DAG);
   case ISD::EXTRACT_VECTOR_ELT:
     return lowerEXTRACT_VECTOR_ELT(Op, DAG);
+  case ISD::CONCAT_VECTORS:
+    return lowerCONCAT_VECTORS(Op, DAG);
   }
 }
 
@@ -1569,4 +1572,31 @@ SDValue K1CTargetLowering::lowerEXTRACT_VECTOR_ELT(SDValue Op,
   }
 
   return lowerEXTRACT_VECTOR_ELT_REGISTER(Op, DAG);
+}
+
+SDValue K1CTargetLowering::lowerCONCAT_VECTORS(SDValue Op,
+                                               SelectionDAG &DAG) const {
+  auto OperandSize = Op.getOperand(0).getValueSizeInBits();
+  auto ResultSize = Op.getValueSizeInBits();
+
+  if (!((OperandSize == 32 && ResultSize == 64) ||
+        (OperandSize == 64 && ResultSize == 128)))
+    llvm_unreachable("Unsupported concat for these types");
+
+  SDLoc DL(Op);
+  SDValue Out = SDValue(
+      DAG.getMachineNode(TargetOpcode::IMPLICIT_DEF, DL, Op->getValueType(0)),
+      0);
+  EVT VT = Op.getValueType();
+
+  for (unsigned i = 0, e = Op->getNumOperands(); i != e; ++i) {
+    if (Op->getOperand(i).isUndef())
+      continue;
+    if (OperandSize == 32)
+      Out = getINSF(DL, Out, Op->getOperand(i), OperandSize, i, DAG);
+    if (OperandSize == 64)
+      Out = DAG.getTargetInsertSubreg(i + 1, DL, VT, Out, Op.getOperand(i));
+  }
+
+  return Out;
 }
