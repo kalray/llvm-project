@@ -100,17 +100,12 @@ def : Pat<(K1CWrapper tglobaladdr:$dst), (MAKEd2 tglobaladdr:$dst)>;
 def : Pat<(K1CWrapper tglobaltlsaddr:$dst), (MAKETLS tglobaltlsaddr:$dst)>;
 def : Pat<(K1CWrapper tblockaddress:$dst), (MAKEd2 tblockaddress:$dst)>;
 
-def MemRR : Operand<iPTR>, ComplexPattern<iPTR, 2, "SelectAddrRR", [], []> {
-  let PrintMethod = "printMemOperand";
-  let MIOperandInfo = (ops SingleReg:$indexReg, SingleReg:$baseReg);
-}
-
 def AddrFI : ComplexPattern<iPTR, 1, "SelectAddrFI", [frameindex], []>;
 
 // extracts offsset and register (or frameindex)
 def AddrRI : Operand<iPTR>, ComplexPattern<iPTR, 2, "SelectAddrRI", [frameindex], []> {
   let PrintMethod = "printMemOperand";
-  let MIOperandInfo = (ops i64imm:$offset, SingleReg:$baseReg );
+  let MIOperandInfo = (ops SingleReg:$offset, SingleReg:$baseReg );
 }
 
 let mayStore = 1 in
@@ -160,7 +155,6 @@ def : Pat<(truncstorei16 (i32 SingleReg:$val), (i64 SingleReg:$base)), (SHd0 (i6
 def : Pat<(truncstorei8 (i64 SingleReg:$val), (i64 SingleReg:$base)), (SBd0 (i64 0), SingleReg:$base, SingleReg:$val)>;
 def : Pat<(truncstorei16 (i64 SingleReg:$val), (i64 SingleReg:$base)), (SHd0 (i64 0), SingleReg:$base, SingleReg:$val)>;
 def : Pat<(truncstorei32 (i64 SingleReg:$val), (i64 SingleReg:$base)), (SWd0 (i64 0), SingleReg:$base, SingleReg:$val)>;
-
 
 // Load patterns
 def loadi1 : PatFrag<(ops node:$ptr), (i1 (load node:$ptr))>;
