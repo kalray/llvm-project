@@ -38,7 +38,6 @@ public:
 
   bool SelectAddrFI(SDValue Addr, SDValue &Base);
   bool SelectAddrRI(SDValue Addr, SDValue &Index, SDValue &Base);
-  bool SelectAddrRR(SDValue Addr, SDValue &Index, SDValue &Base);
 
   MachineSDNode *buildMake(SDLoc &DL, SDNode *Imm, EVT VT) const;
 #include "K1CGenDAGISel.inc"
@@ -68,46 +67,38 @@ bool K1CDAGToDAGISel::SelectAddrRI(SDValue Addr, SDValue &Index,
     Index = CurDAG->getTargetConstant(0, SDLoc(Addr), MVT::i64);
     return true;
   }
+
   if (Addr.getOpcode() == ISD::ADD || Addr.getOpcode() == ISD::OR) {
-    if (auto CN = dyn_cast<ConstantSDNode>(Addr.getOperand(1))) {
-      Index =
-          CurDAG->getTargetConstant(CN->getZExtValue(), SDLoc(Addr), MVT::i64);
-      if (auto FIN = dyn_cast<FrameIndexSDNode>(Addr.getOperand(0))) {
+
+    auto FIN = dyn_cast<FrameIndexSDNode>(Addr.getOperand(0));
+    auto CN = dyn_cast<ConstantSDNode>(Addr.getOperand(1));
+
+    if (FIN) {
+      if (CN) {
+        Index = CurDAG->getTargetConstant(CN->getZExtValue(), SDLoc(Addr),
+                                          MVT::i64);
         Base = CurDAG->getTargetFrameIndex(
             FIN->getIndex(), TLI->getPointerTy(CurDAG->getDataLayout()));
       } else {
+        Index = Addr.getOperand(1);
         Base = Addr.getOperand(0);
       }
+
       return true;
-    }
-    if (auto FIN = dyn_cast<FrameIndexSDNode>(Addr.getOperand(0))) {
-      Base = SDValue(CurDAG->getMachineNode(K1C::ADDDd3, SDLoc(Addr), MVT::i64,
-                                            Addr.getOperand(0),
-                                            Addr.getOperand(1)),
-                     0);
-      Index = CurDAG->getTargetConstant(0, SDLoc(Addr), MVT::i64);
-      return true;
+    } else {
+      if (CN) {
+        Index = CurDAG->getTargetConstant(CN->getZExtValue(), SDLoc(Addr),
+                                          MVT::i64);
+        Base = Addr.getOperand(0);
+
+        return true;
+      }
     }
   }
 
   Base = Addr;
   Index = CurDAG->getTargetConstant(0, SDLoc(Addr), MVT::i64);
   return true;
-}
-
-bool K1CDAGToDAGISel::SelectAddrRR(SDValue Addr, SDValue &Index,
-                                   SDValue &Base) {
-  if (Addr.getOpcode() == ISD::ADD || Addr.getOpcode() == ISD::OR) {
-    if (RegisterSDNode *IREG = dyn_cast<RegisterSDNode>(Addr.getOperand(0))) {
-      if (RegisterSDNode *BaseREG =
-              dyn_cast<RegisterSDNode>(Addr.getOperand(1))) {
-        Base = CurDAG->getRegister(IREG->getReg(), MVT::i64);
-        Index = CurDAG->getRegister(BaseREG->getReg(), MVT::i64);
-        return true;
-      }
-    }
-  }
-  return false;
 }
 
 void K1CDAGToDAGISel::Select(SDNode *Node) {
