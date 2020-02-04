@@ -1091,38 +1091,67 @@ static bool expandRoundingInOutInstr(unsigned int OpCode,
 
 static bool expandStore(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
                         MachineBasicBlock::iterator MBBI) {
+
   MachineInstr &MI = *MBBI;
   DebugLoc DL = MI.getDebugLoc();
 
-  int64_t offset = MI.getOperand(0).getImm();
+  int64_t offset = 0;
+  unsigned offsetReg = 0;
   unsigned base = MI.getOperand(1).getReg();
   unsigned val = MI.getOperand(2).getReg();
 
   unsigned OpCode;
+
+  bool AddrIsReg = MI.getOperand(0).isReg();
+  bool AddrIsImm = MI.getOperand(0).isImm();
+
+  if (AddrIsReg) {
+    offsetReg = MI.getOperand(0).getReg();
+  } else if (AddrIsImm) {
+    offset = MI.getOperand(0).getImm();
+  } else {
+    llvm_unreachable("Operator type not handled");
+  }
+
   switch (MBBI->getOpcode()) {
   case K1C::SBri:
-    OpCode = GetImmOpCode(offset, K1C::SBd0, K1C::SBd1, K1C::SBd2);
+    OpCode = AddrIsReg ? K1C::SBd3
+                       : GetImmOpCode(offset, K1C::SBd0, K1C::SBd1, K1C::SBd2);
     break;
   case K1C::SHri:
-    OpCode = GetImmOpCode(offset, K1C::SHd0, K1C::SHd1, K1C::SHd2);
+    OpCode = AddrIsReg ? K1C::SHd3
+                       : GetImmOpCode(offset, K1C::SHd0, K1C::SHd1, K1C::SHd2);
     break;
   case K1C::SWri:
-    OpCode = GetImmOpCode(offset, K1C::SWd0, K1C::SWd1, K1C::SWd2);
+    OpCode = AddrIsReg ? K1C::SWd3
+                       : GetImmOpCode(offset, K1C::SWd0, K1C::SWd1, K1C::SWd2);
     break;
   case K1C::SDri:
-    OpCode = GetImmOpCode(offset, K1C::SDd0, K1C::SDd1, K1C::SDd2);
+    OpCode = AddrIsReg ? K1C::SDd3
+                       : GetImmOpCode(offset, K1C::SDd0, K1C::SDd1, K1C::SDd2);
     break;
   case K1C::SQri:
-    OpCode = GetImmOpCode(offset, K1C::SQd0, K1C::SQd1, K1C::SQd2);
+    OpCode = AddrIsReg ? K1C::SQd3
+                       : GetImmOpCode(offset, K1C::SQd0, K1C::SQd1, K1C::SQd2);
     break;
   case K1C::SOri:
-    OpCode = GetImmOpCode(offset, K1C::SOd0, K1C::SOd1, K1C::SOd2);
+    OpCode = AddrIsReg ? K1C::SOd3
+                       : GetImmOpCode(offset, K1C::SOd0, K1C::SOd1, K1C::SOd2);
     break;
   }
-  BuildMI(MBB, MBBI, DL, TII->get(OpCode))
-      .addImm(offset)
-      .addReg(base)
-      .addReg(val);
+
+  if (AddrIsReg) {
+    BuildMI(MBB, MBBI, DL, TII->get(OpCode))
+        .addReg(offsetReg)
+        .addReg(base)
+        .addReg(val)
+        .addImm(0);
+  } else {
+    BuildMI(MBB, MBBI, DL, TII->get(OpCode))
+        .addImm(offset)
+        .addReg(base)
+        .addReg(val);
+  }
 
   MI.eraseFromParent();
   return true;
@@ -1133,45 +1162,81 @@ static bool expandLoad(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
   MachineInstr &MI = *MBBI;
   DebugLoc DL = MI.getDebugLoc();
 
+  int64_t offset = 0;
+  unsigned offsetReg = 0;
+
   unsigned outputReg = MI.getOperand(0).getReg();
-  int64_t offset = MI.getOperand(1).getImm();
   unsigned base = MI.getOperand(2).getReg();
   int64_t variant = MI.getOperand(3).getImm();
+
+  bool AddrIsReg = MI.getOperand(1).isReg();
+  bool AddrIsImm = MI.getOperand(1).isImm();
+
+  if (AddrIsReg) {
+    offsetReg = MI.getOperand(1).getReg();
+  } else if (AddrIsImm) {
+    offset = MI.getOperand(1).getImm();
+  } else {
+    llvm_unreachable("Operator type not handled");
+  }
 
   unsigned OpCode;
   switch (MBBI->getOpcode()) {
   case K1C::LBSri:
-    OpCode = GetImmOpCode(offset, K1C::LBSd0, K1C::LBSd1, K1C::LBSd2);
+    OpCode = AddrIsReg
+                 ? K1C::LBSd6
+                 : GetImmOpCode(offset, K1C::LBSd0, K1C::LBSd1, K1C::LBSd2);
     break;
   case K1C::LBZri:
-    OpCode = GetImmOpCode(offset, K1C::LBZd0, K1C::LBZd1, K1C::LBZd2);
+    OpCode = AddrIsReg
+                 ? K1C::LBZd6
+                 : GetImmOpCode(offset, K1C::LBZd0, K1C::LBZd1, K1C::LBZd2);
     break;
   case K1C::LHSri:
-    OpCode = GetImmOpCode(offset, K1C::LHSd0, K1C::LHSd1, K1C::LHSd2);
+    OpCode = AddrIsReg
+                 ? K1C::LHSd6
+                 : GetImmOpCode(offset, K1C::LHSd0, K1C::LHSd1, K1C::LHSd2);
     break;
   case K1C::LHZri:
-    OpCode = GetImmOpCode(offset, K1C::LHZd0, K1C::LHZd1, K1C::LHZd2);
+    OpCode = AddrIsReg
+                 ? K1C::LHZd6
+                 : GetImmOpCode(offset, K1C::LHZd0, K1C::LHZd1, K1C::LHZd2);
     break;
   case K1C::LWSri:
-    OpCode = GetImmOpCode(offset, K1C::LWSd0, K1C::LWSd1, K1C::LWSd2);
+    OpCode = AddrIsReg
+                 ? K1C::LWSd6
+                 : GetImmOpCode(offset, K1C::LWSd0, K1C::LWSd1, K1C::LWSd2);
     break;
   case K1C::LWZri:
-    OpCode = GetImmOpCode(offset, K1C::LWZd0, K1C::LWZd1, K1C::LWZd2);
+    OpCode = AddrIsReg
+                 ? K1C::LWZd6
+                 : GetImmOpCode(offset, K1C::LWZd0, K1C::LWZd1, K1C::LWZd2);
     break;
   case K1C::LDri:
-    OpCode = GetImmOpCode(offset, K1C::LDd0, K1C::LDd1, K1C::LDd2);
+    OpCode = AddrIsReg ? K1C::LDd6
+                       : GetImmOpCode(offset, K1C::LDd0, K1C::LDd1, K1C::LDd2);
     break;
   case K1C::LQri:
-    OpCode = GetImmOpCode(offset, K1C::LQd0, K1C::LQd1, K1C::LQd2);
+    OpCode = AddrIsReg ? K1C::LQd6
+                       : GetImmOpCode(offset, K1C::LQd0, K1C::LQd1, K1C::LQd2);
     break;
   case K1C::LOri:
-    OpCode = GetImmOpCode(offset, K1C::LOd0, K1C::LOd1, K1C::LOd2);
+    OpCode = AddrIsReg ? K1C::LOd6
+                       : GetImmOpCode(offset, K1C::LOd0, K1C::LOd1, K1C::LOd2);
     break;
   }
-  BuildMI(MBB, MBBI, DL, TII->get(OpCode), outputReg)
-      .addImm(offset)
-      .addReg(base)
-      .addImm(variant);
+  if (AddrIsReg) {
+    BuildMI(MBB, MBBI, DL, TII->get(OpCode), outputReg)
+        .addReg(offsetReg)
+        .addReg(base)
+        .addImm(variant)
+        .addImm(0);
+  } else {
+    BuildMI(MBB, MBBI, DL, TII->get(OpCode), outputReg)
+        .addImm(offset)
+        .addReg(base)
+        .addImm(variant);
+  }
 
   MI.eraseFromParent();
   return true;
