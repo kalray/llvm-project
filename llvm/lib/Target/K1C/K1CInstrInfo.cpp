@@ -86,6 +86,9 @@ unsigned findScratchRegister(MachineBasicBlock &MBB, bool UseAtEnd) {
   // Get all the available registers in the block.
   BitVector BV = RS.getRegsAvailable(&K1C::SingleRegRegClass);
 
+  // We shouldn't use return registers as scratch register as they appear killed
+  BV.reset(K1C::R0, K1C::R4);
+
   // We shouldn't use callee-saved registers as scratch registers as they may be
   // available when looking for a candidate block for shrink wrapping but not
   // available when the actual prologue/epilogue is being emitted because they
