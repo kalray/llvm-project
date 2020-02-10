@@ -375,6 +375,58 @@ const char *K1CTargetLowering::getTargetNodeName(unsigned Opcode) const {
   }
 }
 
+MVT K1CTargetLowering::getRegisterTypeForCallingConv(LLVMContext &Context,
+                                                     CallingConv::ID CC,
+                                                     EVT VT) const {
+  const TargetRegisterInfo *TRI = Subtarget.getRegisterInfo();
+  unsigned RegSize = TRI->getRegSizeInBits(K1C::SingleRegRegClass);
+  unsigned ScalarSize = VT.getScalarSizeInBits();
+
+  if (VT.isVector() && VT.getSizeInBits() > RegSize && ScalarSize <= RegSize) {
+    return ScalarSize == RegSize
+               ? VT.getVectorElementType().getSimpleVT()
+               : MVT::getVectorVT(VT.getVectorElementType().getSimpleVT(),
+                                  RegSize / ScalarSize);
+  }
+
+  return TargetLowering::getRegisterTypeForCallingConv(Context, CC, VT);
+}
+
+unsigned K1CTargetLowering::getNumRegistersForCallingConv(LLVMContext &Context,
+                                                          CallingConv::ID CC,
+                                                          EVT VT) const {
+  const TargetRegisterInfo *TRI = Subtarget.getRegisterInfo();
+  unsigned RegSize = TRI->getRegSizeInBits(K1C::SingleRegRegClass);
+
+  if (VT.isVector() && VT.getSizeInBits() > RegSize &&
+      VT.getScalarSizeInBits() <= RegSize)
+    return (VT.getSizeInBits() + RegSize - 1) / RegSize;
+
+  return TargetLowering::getNumRegistersForCallingConv(Context, CC, VT);
+}
+
+unsigned K1CTargetLowering::getVectorTypeBreakdownForCallingConv(
+    LLVMContext &Context, CallingConv::ID CC, EVT VT, EVT &IntermediateVT,
+    unsigned &NumIntermediates, MVT &RegisterVT) const {
+
+  const TargetRegisterInfo *TRI = Subtarget.getRegisterInfo();
+  unsigned RegSize = TRI->getRegSizeInBits(K1C::SingleRegRegClass);
+
+  if (VT.isVector() && VT.getSizeInBits() > RegSize &&
+      VT.getScalarSizeInBits() <= RegSize) {
+    RegisterVT =
+        K1CTargetLowering::getRegisterTypeForCallingConv(Context, CC, VT);
+    IntermediateVT = RegisterVT;
+    NumIntermediates =
+        K1CTargetLowering::getNumRegistersForCallingConv(Context, CC, VT);
+
+    return NumIntermediates;
+  }
+
+  return TargetLowering::getVectorTypeBreakdownForCallingConv(
+      Context, CC, VT, IntermediateVT, NumIntermediates, RegisterVT);
+}
+
 bool K1CTargetLowering::CanLowerReturn(
     CallingConv::ID CallConv, MachineFunction &MF, bool IsVarArg,
     const SmallVectorImpl<ISD::OutputArg> &Outs, LLVMContext &Context) const {
@@ -464,11 +516,7 @@ SDValue K1CTargetLowering::LowerFormalArguments(
       EVT RegVT = VA.getLocVT();
 
       unsigned VReg;
-      if (VA.getValVT() == MVT::v4f32 || VA.getValVT() == MVT::v2f64 ||
-          VA.getValVT() == MVT::v2i64 || VA.getValVT() == MVT::v4i32)
-        VReg = RegInfo.createVirtualRegister(&K1C::PairedRegRegClass);
-      else
-        VReg = RegInfo.createVirtualRegister(&K1C::SingleRegRegClass);
+      VReg = RegInfo.createVirtualRegister(&K1C::SingleRegRegClass);
 
       if (Ins[InIdx].Flags.isSRet())
         K1CFI->setSRETReg(VReg);
