@@ -17,6 +17,7 @@
 #include "K1CTargetMachine.h"
 
 #include "llvm/Analysis/AliasAnalysis.h"
+#include "llvm/CodeGen/MachineDominators.h"
 #include "llvm/CodeGen/MachineFunctionPass.h"
 #include "llvm/CodeGen/MachineLoopInfo.h"
 #include "llvm/CodeGen/ScheduleDAG.h"
@@ -42,7 +43,10 @@ public:
   void getAnalysisUsage(AnalysisUsage &AU) const override {
     AU.setPreservesCFG();
     AU.addRequired<AAResultsWrapperPass>();
+    AU.addRequired<MachineDominatorTree>();
     AU.addRequired<MachineLoopInfo>();
+    AU.addPreserved<MachineDominatorTree>();
+    AU.addPreserved<MachineLoopInfo>();
     MachineFunctionPass::getAnalysisUsage(AU);
   }
 
@@ -57,8 +61,9 @@ private:
 char K1CPacketizer::ID = 0;
 INITIALIZE_PASS_BEGIN(K1CPacketizer, "k1c-packetizer", "K1C Packetizer", false,
                       false)
-INITIALIZE_PASS_DEPENDENCY(AAResultsWrapperPass)
+INITIALIZE_PASS_DEPENDENCY(MachineDominatorTree)
 INITIALIZE_PASS_DEPENDENCY(MachineLoopInfo)
+INITIALIZE_PASS_DEPENDENCY(AAResultsWrapperPass)
 INITIALIZE_PASS_END(K1CPacketizer, "k1c-packetizer", "K1C Packetizer", false,
                     false)
 
