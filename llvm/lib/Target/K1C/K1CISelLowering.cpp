@@ -408,7 +408,22 @@ K1CTargetLowering::LowerReturn(SDValue Chain, CallingConv::ID CallConv,
     RetOps.push_back(DAG.getRegister(VA.getLocReg(), VA.getLocVT()));
   }
 
+  MachineFunction &MF = DAG.getMachineFunction();
+  K1CMachineFunctionInfo *K1CFI = MF.getInfo<K1CMachineFunctionInfo>();
+
+  if (MF.getFunction().hasStructRetAttr()) {
+    auto PtrVT = getPointerTy(DAG.getDataLayout());
+    SDValue Val = DAG.getCopyFromReg(Chain, DL, K1CFI->getSRETReg(), PtrVT);
+    Chain = DAG.getCopyToReg(Chain, DL, K1C::R0, Val, Flag);
+    Flag = Chain.getValue(1);
+    RetOps.push_back(DAG.getRegister(K1C::R0, PtrVT));
+  }
+
   RetOps[0] = Chain; // Update chain.
+
+  // Add the glue if we have it.
+  if (Flag.getNode())
+    RetOps.push_back(Flag);
 
   return DAG.getNode(K1CISD::RET, DL, MVT::Other, RetOps);
 }
@@ -441,6 +456,8 @@ SDValue K1CTargetLowering::LowerFormalArguments(
   CCInfo.AnalyzeFormalArguments(Ins, CC_SRET_K1C);
 
   unsigned MemArgsSaveSize = 0;
+  unsigned InIdx = 0;
+  K1CMachineFunctionInfo *K1CFI = MF.getInfo<K1CMachineFunctionInfo>();
 
   for (auto &VA : ArgLocs) {
     if (VA.isRegLoc()) {
@@ -452,10 +469,15 @@ SDValue K1CTargetLowering::LowerFormalArguments(
         VReg = RegInfo.createVirtualRegister(&K1C::PairedRegRegClass);
       else
         VReg = RegInfo.createVirtualRegister(&K1C::SingleRegRegClass);
+
+      if (Ins[InIdx].Flags.isSRet())
+        K1CFI->setSRETReg(VReg);
+
       RegInfo.addLiveIn(VA.getLocReg(), VReg);
       SDValue ArgIn = DAG.getCopyFromReg(Chain, DL, VReg, RegVT);
 
       InVals.push_back(ArgIn);
+      ++InIdx;
       continue;
     }
 
@@ -471,8 +493,6 @@ SDValue K1CTargetLowering::LowerFormalArguments(
 
     MemArgsSaveSize += StoreSize;
   }
-
-  K1CMachineFunctionInfo *K1CFI = MF.getInfo<K1CMachineFunctionInfo>();
 
   if (IsVarArg) {
     ArrayRef<MCPhysReg> ArgRegs = makeArrayRef(ArgGPRs);
