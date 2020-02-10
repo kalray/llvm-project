@@ -24,7 +24,7 @@ class K1CFrameLowering : public TargetFrameLowering {
 public:
   explicit K1CFrameLowering(const K1CSubtarget &STI)
       : TargetFrameLowering(StackGrowsUp,
-                            /*StackAlignment=*/16,
+                            /*StackAlignment=*/8,
                             /*LocalAreaOffset=*/0),
         STI(STI) {}
 
