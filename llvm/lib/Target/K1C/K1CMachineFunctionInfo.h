@@ -16,6 +16,7 @@
 
 #include "llvm/CodeGen/MachineFrameInfo.h"
 #include "llvm/CodeGen/MachineFunction.h"
+#include "llvm/CodeGen/SelectionDAGNodes.h"
 
 namespace llvm {
 
@@ -33,6 +34,8 @@ private:
   unsigned MemArgsSaveSize = 0;
   /// Min-max index for CSR
   std::pair<int, int> CSRIndices = { 0, 0 };
+  // SRET register
+  unsigned SRETReg;
 
 public:
   //  K1CMachineFunctionInfo() = default;
@@ -58,6 +61,9 @@ public:
   void setCSRIndices(const std::pair<int, int> &Indices) {
     CSRIndices = Indices;
   }
+
+  unsigned getSRETReg() { return SRETReg; }
+  void setSRETReg(unsigned Reg) { SRETReg = Reg; }
 };
 
 } // end namespace llvm

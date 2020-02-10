@@ -9653,9 +9653,8 @@ private:
   static const unsigned Alignment;
   static const unsigned RegSize;
   static const unsigned NumRegs;
-  ABIArgInfo classifyType(QualType Ty, uint64_t Size) const;
-  ABIArgInfo classifyReturnType(QualType RetTy, uint64_t SizeLimit) const;
-  ABIArgInfo classifyArgumentType(QualType ArgTy) const;
+  ABIArgInfo classifyType(QualType Ty) const;
+  ABIArgInfo classifyBigType(QualType Ty) const;
 
   // Coercion type builder for structs passed in registers. The coercion type
   // serves one purpose:
@@ -9666,7 +9665,7 @@ private:
   struct CoerceBuilder {
     llvm::LLVMContext &Context;
     const llvm::DataLayout &DL;
-    SmallVector<llvm::Type *, 8> Elems;
+    SmallVector<llvm::Type *, 4> Elems;
     uint64_t Size;
 
     CoerceBuilder(llvm::LLVMContext &c, const llvm::DataLayout &dl)
@@ -9741,22 +9740,29 @@ public:
 
 const unsigned K1CABIInfo::Alignment = 64;
 const unsigned K1CABIInfo::RegSize = 64;
-const unsigned K1CABIInfo::NumRegs = 12;
+const unsigned K1CABIInfo::NumRegs = 4;
 
 void K1CABIInfo::computeInfo(CGFunctionInfo &FI) const {
-  FI.getReturnInfo() =
-      classifyReturnType(FI.getReturnType(), RegSize * NumRegs);
+  FI.getReturnInfo() = classifyBigType(FI.getReturnType());
   for (auto &I : FI.arguments())
-    I.info = classifyArgumentType(I.type);
+    I.info = classifyBigType(I.type);
 }
 
 Address K1CABIInfo::EmitVAArg(CodeGenFunction &CGF, Address VAListAddr,
                               QualType Ty) const {
-  ABIArgInfo AI = classifyArgumentType(Ty);
+  CharUnits SlotSize = CharUnits::fromQuantity(8);
+
+  if (getContext().getTypeSize(Ty) > RegSize * NumRegs) {
+    std::pair<CharUnits, CharUnits> SizeAndAlign =
+        getContext().getTypeInfoInChars(Ty);
+    return emitVoidPtrVAArg(CGF, VAListAddr, Ty, /*Indirect=*/true,
+                            SizeAndAlign, SlotSize, /*AllowHigherAlign=*/false);
+  }
+
+  ABIArgInfo AI = classifyType(Ty);
   llvm::Type *ArgTy = CGT.ConvertType(Ty);
   if (AI.canHaveCoerceToType() && !AI.getCoerceToType())
     AI.setCoerceToType(ArgTy);
-  CharUnits SlotSize = CharUnits::fromQuantity(8);
 
   CGBuilderTy &Builder = CGF.Builder;
   Address Addr(Builder.CreateLoad(VAListAddr, "ap.cur"), SlotSize);
@@ -9771,28 +9777,19 @@ Address K1CABIInfo::EmitVAArg(CodeGenFunction &CGF, Address VAListAddr,
   return Builder.CreateBitCast(Addr, ArgPtrTy, "arg.addr");
 }
 
-ABIArgInfo K1CABIInfo::classifyReturnType(QualType RetTy,
-                                          uint64_t SizeLimit) const {
-  if (RetTy->isVoidType())
-    return ABIArgInfo::getIgnore();
-
-  uint64_t Size = getContext().getTypeSize(RetTy);
-
+ABIArgInfo K1CABIInfo::classifyBigType(QualType Ty) const {
   // Anything too big to fit in registers is passed with an explicit indirect
   // pointer / sret pointer.
-  if (Size > SizeLimit)
-    return getNaturalAlignIndirect(RetTy, /*ByVal=*/false);
+  if (getContext().getTypeSize(Ty) > RegSize * NumRegs)
+    return getNaturalAlignIndirect(Ty, /*ByVal=*/false);
 
-  return classifyType(RetTy, Size);
+  return classifyType(Ty);
 }
 
-ABIArgInfo K1CABIInfo::classifyArgumentType(QualType ArgTy) const {
-  uint64_t Size = getContext().getTypeSize(ArgTy);
+ABIArgInfo K1CABIInfo::classifyType(QualType Ty) const {
+  if (Ty->isVoidType())
+    return ABIArgInfo::getIgnore();
 
-  return classifyType(ArgTy, Size);
-}
-
-ABIArgInfo K1CABIInfo::classifyType(QualType Ty, uint64_t Size) const {
   // Treat an enum type as its underlying type.
   if (const EnumType *EnumTy = Ty->getAs<EnumType>())
     Ty = EnumTy->getDecl()->getIntegerType();
