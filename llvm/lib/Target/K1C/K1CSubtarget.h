@@ -31,6 +31,7 @@ class StringRef;
 class K1CSubtarget : public K1CGenSubtargetInfo {
   virtual void anchor();
 
+  CodeGenOpt::Level OptLevel;
   K1CFrameLowering FrameLowering;
   K1CInstrInfo InstrInfo;
   K1CRegisterInfo RegInfo;
@@ -60,6 +61,16 @@ public:
   }
   const InstrItineraryData *getInstrItineraryData() const override {
     return &InstrItins;
+  }
+
+  bool enableMachineSchedDefaultSched() const override { return false; }
+  bool enablePostRAScheduler() const override { return true; }
+  bool enableMachineScheduler() const override { return true; }
+
+  bool useAA() const override {
+    if (OptLevel != CodeGenOpt::None)
+      return true;
+    return false;
   }
 };
 } // namespace llvm
