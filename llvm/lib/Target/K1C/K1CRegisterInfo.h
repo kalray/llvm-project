@@ -35,6 +35,10 @@ struct K1CRegisterInfo : public K1CGenRegisterInfo {
                            RegScavenger *RS = nullptr) const override;
 
   llvm::Register getFrameRegister(const MachineFunction &MF) const override;
+
+  bool trackLivenessAfterRegAlloc(const MachineFunction &MF) const override {
+    return true;
+  }
 };
 
 } // namespace llvm
