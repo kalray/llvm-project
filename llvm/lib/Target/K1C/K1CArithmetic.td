@@ -76,20 +76,12 @@
 // EXTFS
 // EXTFZ
 // INSF
-// LANDD
 // LANDHQ
-// LANDW
 // LANDWP
-// LNANDD
 // LNANDHQ
-// LNANDW
 // LNANDWP
-// LNORD
 // LNORHQ
-// LNORW
-// LORD
 // LORHQ
-// LORW
 // LORWP
 // MAXD
 // MAXHQ
@@ -232,6 +224,36 @@ def : Pat<(and i64:$rs1, Signed37:$rs2), (ANDDd2 SingleReg:$rs1, Signed37:$rs2)>
 def : Pat<(and i64:$rs1, Wrapped64:$rs2), (ANDDd3 SingleReg:$rs1, Wrapped64:$rs2)>;
 def : Pat<(and v2i32:$rs1, v2i32:$rs2), (ANDDd0 SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(and v4i16:$rs1, v4i16:$rs2), (ANDDd0 SingleReg:$rs1, SingleReg:$rs2)>;
+
+// LANDW
+def : Pat<(and (i32 (setne i32:$v1, (i32 0))), (i32 (setne i32:$v2, (i32 0)))),
+      (LANDWd0 SingleReg:$v1, SingleReg:$v2)>;
+
+// LNANDW
+def : Pat<(or (i32 (seteq i32:$v1, (i32 0))), (i32 (seteq i32:$v2, (i32 0)))),
+      (LNANDWd0 SingleReg:$v1, SingleReg:$v2)>;
+
+// LANDD
+def : Pat<(and (i32 (setne i64:$v1, (i64 0))), (i32 (setne i64:$v2, (i64 0)))),
+      (LANDDd0 SingleReg:$v1, SingleReg:$v2)>;
+
+// LNANDD
+def : Pat<(or (i32 (seteq i64:$v1, (i64 0))), (i32 (seteq i64:$v2, (i64 0)))),
+      (LNANDDd0 SingleReg:$v1, SingleReg:$v2)>;
+
+// LORW
+def : Pat<(i32 (setne (or i32:$v1, i32:$v2), (i32 0))),
+      (LORWd0 SingleReg:$v1, SingleReg:$v2)>;
+
+// LNORW
+def : Pat<(i32 (seteq (or i32:$v1, i32:$v2), (i32 0))), (LNORWd0 SingleReg:$v1, SingleReg:$v2)>;
+
+// LORD
+def : Pat<(i32 (setne (or i64:$v1, i64:$v2), (i64 0))),
+      (LORDd0 SingleReg:$v1, SingleReg:$v2)>;
+
+// LNORD
+def : Pat<(i32 (seteq (or i64:$v1, i64:$v2), (i64 0))), (LNORDd0 SingleReg:$v1, SingleReg:$v2)>;
 
 // ANDW
 def : Pat<(and i32:$rs1, i32:$rs2), (ANDWd2 SingleReg:$rs1, SingleReg:$rs2)>;
