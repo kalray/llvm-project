@@ -365,3 +365,16 @@ void K1CInstPrinter::printFPImmOperand(const MCInst *MI, unsigned OpNo,
   }
   return;
 }
+
+void K1CInstPrinter::printSplat32Mod(const MCInst *MI, unsigned OpNo,
+                                     raw_ostream &O) {
+  const MCOperand &MO = MI->getOperand(OpNo);
+  int variant = MO.getImm();
+  switch (variant) {
+  case 0:
+    break;
+  case 1:
+    O << ".@";
+    break;
+  }
+}
