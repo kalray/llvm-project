@@ -136,10 +136,10 @@ bool K1CPassConfig::addInstSelector() {
 
 void K1CPassConfig::addPreRegAlloc() {
   if (getOptLevel() >= CodeGenOpt::Default) {
-    if (!DisableHardwareLoops)
-      addPass(createK1CHardwareLoopsPass());
     if (!DisableLoadStorePacking)
       addPass(createK1CLoadStorePackingPass());
+    if (!DisableHardwareLoops)
+      addPass(createK1CHardwareLoopsPass());
   }
 }
 
