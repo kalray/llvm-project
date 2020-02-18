@@ -214,9 +214,8 @@ bool K1CHardwareLoops::BackTraceRegValue(MachineLoop *L,
   return false;
 }
 
-bool K1CHardwareLoops::ParseLoop(MachineLoop *L, int64_t &EndVal, int &Cond,
-                                 int64_t &StartVal, bool &StopValIsReg,
-                                 int64_t &Bump) {
+bool K1CHardwareLoops::ParseLoop(MachineLoop *L, MachineOperand &EndVal,
+                                 int &Cond, int64_t &StartVal, int64_t &Bump) {
 
   for (instr_iterator I = HeaderMBB->instr_begin(), E = HeaderMBB->instr_end();
        I != E; ++I) {
@@ -242,8 +241,7 @@ bool K1CHardwareLoops::ParseLoop(MachineLoop *L, int64_t &EndVal, int &Cond,
               << "HW Loop - [REG-IMM] The register could not be traced.\n");
           return false;
         }
-        EndVal = I->getOperand(2).getImm();
-        StopValIsReg = false;
+        EndVal = I->getOperand(2);
       } // REG-IMM case
       // REG-REG case
       else if (I->getOperand(1).isReg() && I->getOperand(2).isReg()) {
@@ -271,8 +269,7 @@ bool K1CHardwareLoops::ParseLoop(MachineLoop *L, int64_t &EndVal, int &Cond,
             return false;
           }
 
-          EndVal = I->getOperand(2).getReg();
-          StopValIsReg = true;
+          EndVal = I->getOperand(2);
         } else {
           // If the register's value could not be traced, then the loop can not
           // be parsed
@@ -289,8 +286,7 @@ bool K1CHardwareLoops::ParseLoop(MachineLoop *L, int64_t &EndVal, int &Cond,
               return false;
             }
 
-            EndVal = I->getOperand(1).getReg();
-            StopValIsReg = true;
+            EndVal = I->getOperand(1);
           } else {
             LLVM_DEBUG(llvm::dbgs() << "HW Loop - [REG-REG] Neither of the "
                                        "registers coud be traced.\n");
@@ -304,25 +300,26 @@ bool K1CHardwareLoops::ParseLoop(MachineLoop *L, int64_t &EndVal, int &Cond,
   return true;
 }
 
-bool K1CHardwareLoops::GetLOOPDOArgs(MachineLoop *L, unsigned &steps,
-                                     bool &StepsCountValueIsReg) {
+bool K1CHardwareLoops::GetLOOPDOArgs(MachineLoop *L,
+                                     MachineOperand &StepsCount) {
 
   int64_t StartVal = 0;
-  int64_t EndVal = 0;
   int64_t Bump = 0;
 
   int Cond = -1;
-  bool CanRetrieveEndingCond =
-      ParseLoop(L, EndVal, Cond, StartVal, StepsCountValueIsReg, Bump);
+
+  MachineOperand EndVal = MachineOperand::CreateImm(0);
+
+  bool CanRetrieveEndingCond = ParseLoop(L, EndVal, Cond, StartVal, Bump);
 
   if (!CanRetrieveEndingCond) {
     LLVM_DEBUG(llvm::dbgs() << "HW Loop - Could not retrieve the end "
                                "value/start value/bump/condition type.\n");
     return false;
   }
-
-  if (StepsCountValueIsReg) {
-    steps = EndVal;
+  int64_t steps = 0;
+  if (EndVal.isReg()) {
+    StepsCount = EndVal;
     return true;
   }
 
@@ -336,10 +333,10 @@ bool K1CHardwareLoops::GetLOOPDOArgs(MachineLoop *L, unsigned &steps,
   case 0:
   /* Equal */
   case 1: {
-    if (StartVal == EndVal)
+    if (StartVal == EndVal.getImm())
       return false;
-    steps = ((EndVal - StartVal) / Bump);
-    return true;
+    steps = ((EndVal.getImm() - StartVal) / Bump);
+    break;
   }
   /* Less Than */
   case 2:
@@ -357,12 +354,14 @@ bool K1CHardwareLoops::GetLOOPDOArgs(MachineLoop *L, unsigned &steps,
   case 8:
   /* Greater Than Unsigned */
   case 9: {
-    steps = ((EndVal - StartVal) / Bump) + 1;
-    return true;
+    steps = ((EndVal.getImm() - StartVal) / Bump) + 1;
+    break;
   }
   default:
     return false;
   }
+  StepsCount = MachineOperand::CreateImm(steps);
+  return true;
 }
 
 bool K1CHardwareLoops::RemoveBranchingInstr(MachineLoop *L) {
@@ -455,10 +454,9 @@ bool K1CHardwareLoops::ConvertToHardwareLoop(MachineFunction &MF,
     return false;
 
   // Are we able to determine the trip count for the loop?
-  unsigned TripCount = 0;
-  bool IsReg = false;
+  MachineOperand TripCount = MachineOperand::CreateImm(0);
 
-  bool CanRetrieveTripCount = GetLOOPDOArgs(L, TripCount, IsReg);
+  bool CanRetrieveTripCount = GetLOOPDOArgs(L, TripCount);
 
   if (!CanRetrieveTripCount) {
     LLVM_DEBUG(llvm::dbgs()
@@ -485,21 +483,21 @@ bool K1CHardwareLoops::ConvertToHardwareLoop(MachineFunction &MF,
   DoneMBB->transferSuccessorsAndUpdatePHIs(HeaderMBB);
   HeaderMBB->addSuccessor(DoneMBB);
 
-  if (IsReg) {
+  if (TripCount.isReg()) {
 
     BuildMI(*PreheaderMBB, InsertPos, DL, TII->get(K1C::CB))
-        .addReg(TripCount)
+        .add(TripCount)
         .addMBB(DoneMBB)
         .addImm(1); // DEQZ
 
     BuildMI(*PreheaderMBB, InsertPos, DL, TII->get(K1C::LOOPDO))
-        .addReg(TripCount)
+        .add(TripCount)
         .addMBB(DoneMBB);
   } else {
     unsigned CountReg = MRI->createVirtualRegister(&K1C::SingleRegRegClass);
 
     BuildMI(*PreheaderMBB, InsertPos, DL, TII->get(K1C::MAKEd2), CountReg)
-        .addImm(TripCount);
+        .add(TripCount);
 
     BuildMI(*PreheaderMBB, InsertPos, DL, TII->get(K1C::LOOPDO))
         .addReg(CountReg)
