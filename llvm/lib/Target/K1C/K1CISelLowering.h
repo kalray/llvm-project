@@ -119,6 +119,18 @@ private:
   SDValue lowerEXTRACT_VECTOR_ELT_REGISTER(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerCONCAT_VECTORS(SDValue Op, SelectionDAG &DAG) const;
 
+  bool canLowerToMINMAXWP(SDValue Op) const;
+  SDValue lowerMINMAXWP(SDValue Op, SelectionDAG &DAG) const;
+  bool canLowerToABSWP(SDValue Op) const;
+  SDValue lowerABSWP(SDValue Op, SelectionDAG &DAG) const;
+
+  bool canLowerToMINMAXHQ(SDValue Op) const;
+  bool canLowerToMINMAXUHQ(SDValue Op) const;
+  bool canLowerToABSHQ(SDValue Op) const;
+  SDValue lowerMINMAXHQ(SDValue Op, SelectionDAG &DAG) const;
+  SDValue lowerMINMAXUHQ(SDValue Op, SelectionDAG &DAG) const;
+  SDValue lowerABSHQ(SDValue Op, SelectionDAG &DAG) const;
+
   bool IsEligibleForTailCallOptimization(
       CCState &CCInfo, CallLoweringInfo &CLI, MachineFunction &MF,
       const SmallVector<CCValAssign, 16> &ArgsLocs) const;
