@@ -70,6 +70,8 @@ public:
   void printBinary64ImmOperand(const MCInst *MI, unsigned OpNo, raw_ostream &O);
   void printFPImmOperand(const MCInst *MI, unsigned OpNo, unsigned Size,
                          raw_ostream &O);
+
+  void printSplat32Mod(const MCInst *MI, unsigned OpNo, raw_ostream &O);
 };
 } // namespace llvm
 
