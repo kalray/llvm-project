@@ -131,8 +131,8 @@ private:
   MachineBasicBlock *PreheaderMBB;
   MachineBasicBlock *ExitMBB;
 
-  bool ParseLoop(MachineLoop *L, int64_t &EndVal, int &Cond, int64_t &StartVal,
-                 bool &EndValIsReg, int64_t &Bump);
+  bool ParseLoop(MachineLoop *L, MachineOperand &EndVal, int &Cond,
+                 int64_t &StartVal, int64_t &Bump);
 
   bool IsEligibleForHardwareLoop(MachineLoop *L);
 
@@ -140,7 +140,7 @@ private:
                          unsigned RegToBacktrace, int64_t &CmpVal,
                          int64_t &Bump);
 
-  bool GetLOOPDOArgs(MachineLoop *L, unsigned &steps, bool &reg);
+  bool GetLOOPDOArgs(MachineLoop *L, MachineOperand &StepsCount);
 
   bool ConvertToHardwareLoop(MachineFunction &MF, MachineLoop *L);
 
