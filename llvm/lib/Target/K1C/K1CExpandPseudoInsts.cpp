@@ -80,7 +80,7 @@ static void InsertCMOVEInstr(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
 
   switch (MI.getOperand(Operand).getType()) {
   case MachineOperand::MO_GlobalAddress:
-    BuildMI(MBB, MBBI, DL, TII->get(K1C::CMOVEDd3), DestReg)
+    BuildMI(MBB, MBBI, DL, TII->get(K1C::CMOVEDd2), DestReg)
         .addReg(CmpReg)
         .addGlobalAddress(MI.getOperand(Operand).getGlobal())
         .addImm(Comp); /* DNEZ */
