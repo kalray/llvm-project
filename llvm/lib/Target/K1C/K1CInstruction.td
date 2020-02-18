@@ -65,7 +65,8 @@ def SpeculateMod : Operand<OtherVT> {
 def ColumnMod : Operand<OtherVT> {
 }
 
-def Splat32Mod : Operand<OtherVT> {
+def Splat32Mod : Operand<i8> {
+  let PrintMethod = "printSplat32Mod";
 }
 
 def ComparisonMod : Operand<i8> {

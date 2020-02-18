@@ -306,6 +306,14 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setTruncStoreAction(MVT::v2f64, MVT::v2f32, Expand);
   setTruncStoreAction(MVT::v4f32, MVT::v4f16, Expand);
 
+  for (auto VT : {MVT::i32, MVT::i64}) {
+    setOperationAction(ISD::SMIN, VT, Legal);
+    setOperationAction(ISD::UMIN, VT, Legal);
+    setOperationAction(ISD::SMAX, VT, Legal);
+    setOperationAction(ISD::UMAX, VT, Legal);
+    setOperationAction(ISD::ABS, VT, Legal);
+  }
+
   setOperationAction(ISD::SIGN_EXTEND, MVT::v2i32, Expand);
   setOperationAction(ISD::ZERO_EXTEND, MVT::v2i32, Expand);
   setOperationAction(ISD::ANY_EXTEND, MVT::v2i32, Expand);
@@ -1271,10 +1279,22 @@ SDValue K1CTargetLowering::lowerBUILD_VECTOR(SDValue Op,
   case MVT::v2f16:
     return lowerBUILD_VECTOR_V2_32bit(Op, DAG);
   case MVT::v4i16:
+    if (canLowerToMINMAXHQ(Op))
+      return lowerMINMAXHQ(Op, DAG);
+    if (canLowerToMINMAXUHQ(Op))
+      return lowerMINMAXUHQ(Op, DAG);
+    if (canLowerToABSHQ(Op))
+      return lowerABSHQ(Op, DAG);
+    return lowerBUILD_VECTORGeneric(Op, DAG);
   case MVT::v4f16:
   case MVT::v8i8:
     return lowerBUILD_VECTORGeneric(Op, DAG);
   case MVT::v2i32:
+    if (canLowerToMINMAXWP(Op))
+      return lowerMINMAXWP(Op, DAG);
+    if (canLowerToABSWP(Op))
+      return lowerABSWP(Op, DAG);
+    return lowerBUILD_VECTOR_V2_64bit(Op, DAG);
   case MVT::v2f32:
     return lowerBUILD_VECTOR_V2_64bit(Op, DAG);
   case MVT::v4i32:
@@ -1667,4 +1687,523 @@ SDValue K1CTargetLowering::lowerCONCAT_VECTORS(SDValue Op,
   }
 
   return Out;
+}
+
+bool K1CTargetLowering::canLowerToMINMAXWP(SDValue Op) const {
+  // This function will match the following patterns:
+  // d0 variant
+  //
+  // (build_vector
+  //   (node (extract_vector $v1,0), (extract_vector $v2,0)),
+  //   (node (extract_vector $v1,1), (extract_vector $v2,1))
+  // )
+  //
+  // d1 variant
+  //
+  // (build_vector
+  //   (node (extract_vector $v1,0), $const),
+  //   (node (extract_vector $v1,1), $const)
+  // )
+  //
+  // where node can be smin, smax, umin, umax. Type casts omitted for
+  // simplicity.
+
+  SDValue Op1 = Op.getOperand(0);
+  SDValue Op2 = Op.getOperand(1);
+  if ((Op1.getOpcode() == ISD::SMAX && Op2.getOpcode() == ISD::SMAX) ||
+      (Op1.getOpcode() == ISD::SMIN && Op2.getOpcode() == ISD::SMIN) ||
+      (Op1.getOpcode() == ISD::UMAX && Op2.getOpcode() == ISD::UMAX) ||
+      (Op1.getOpcode() == ISD::UMIN && Op2.getOpcode() == ISD::UMIN)) {
+    // catch d0 pattern
+    if (Op1.getOperand(0).getOpcode() == ISD::EXTRACT_VECTOR_ELT &&
+        Op1.getOperand(1).getOpcode() == ISD::EXTRACT_VECTOR_ELT &&
+        Op2.getOperand(0).getOpcode() == ISD::EXTRACT_VECTOR_ELT &&
+        Op2.getOperand(1).getOpcode() == ISD::EXTRACT_VECTOR_ELT &&
+        Op1.getOperand(0).getOperand(0) == Op2.getOperand(0).getOperand(0) &&
+        dyn_cast<ConstantSDNode>(Op1.getOperand(0).getOperand(1))
+                ->getZExtValue() == 0 &&
+        dyn_cast<ConstantSDNode>(Op2.getOperand(0).getOperand(1))
+                ->getZExtValue() == 1 &&
+        Op1.getOperand(1).getOperand(0) == Op2.getOperand(1).getOperand(0) &&
+        dyn_cast<ConstantSDNode>(Op1.getOperand(1).getOperand(1))
+                ->getZExtValue() == 0 &&
+        dyn_cast<ConstantSDNode>(Op2.getOperand(1).getOperand(1))
+                ->getZExtValue() == 1)
+      return true;
+    // catch d1 pattern
+    if (Op1.getOperand(0).getOpcode() == ISD::EXTRACT_VECTOR_ELT &&
+        Op2.getOperand(0).getOpcode() == ISD::EXTRACT_VECTOR_ELT &&
+        dyn_cast<ConstantSDNode>(Op1.getOperand(1))->getZExtValue() ==
+            dyn_cast<ConstantSDNode>(Op2.getOperand(1))->getZExtValue())
+      return true;
+  }
+  return false;
+}
+
+SDValue K1CTargetLowering::lowerMINMAXWP(SDValue Op, SelectionDAG &DAG) const {
+  SDLoc dl(Op);
+  unsigned OpCode = 0;
+  bool Constant = false;
+  uint64_t ConstantValue;
+  if (isa<ConstantSDNode>(Op.getOperand(0).getOperand(1))) {
+    Constant = true;
+    ConstantValue = dyn_cast<ConstantSDNode>(Op.getOperand(0).getOperand(1))
+                        ->getZExtValue();
+  }
+  switch (Op.getOperand(0).getOpcode()) {
+  case ISD::SMIN:
+    OpCode = Constant ? K1C::MINWPd1 : K1C::MINWPd0;
+    break;
+  case ISD::SMAX:
+    OpCode = Constant ? K1C::MAXWPd1 : K1C::MAXWPd0;
+    break;
+  case ISD::UMIN:
+    OpCode = Constant ? K1C::MINUWPd1 : K1C::MINUWPd0;
+    break;
+  case ISD::UMAX:
+    OpCode = Constant ? K1C::MAXUWPd1 : K1C::MAXUWPd0;
+    break;
+  }
+  SDValue vector1 = Op.getOperand(0).getOperand(0).getOperand(0);
+  if (Constant)
+    return SDValue(
+        DAG.getMachineNode(OpCode, dl, Op.getValueType(),
+                           {vector1,
+                            DAG.getTargetConstant(ConstantValue, dl, MVT::i32),
+                            DAG.getTargetConstant(0, dl, MVT::i8)}),
+        0);
+  else
+    return SDValue(DAG.getMachineNode(
+                       OpCode, dl, Op.getValueType(),
+                       {vector1, Op.getOperand(0).getOperand(1).getOperand(0)}),
+                   0);
+}
+
+bool K1CTargetLowering::canLowerToABSWP(SDValue Op) const {
+  // This function will match the following pattern:
+  //
+  // (build_vector
+  //   (abs (extract_vector $v1,0)),
+  //   (abs (extract_vector $v1,1))
+  // )
+  //
+
+  SDValue Op1 = Op.getOperand(0);
+  SDValue Op2 = Op.getOperand(1);
+  if (Op1.getOpcode() == ISD::ABS && Op2.getOpcode() == ISD::ABS) {
+    // catch d0 pattern
+    if (Op1.getOperand(0).getOpcode() == ISD::EXTRACT_VECTOR_ELT &&
+        Op2.getOperand(0).getOpcode() == ISD::EXTRACT_VECTOR_ELT &&
+        Op1.getOperand(0).getOperand(0) == Op2.getOperand(0).getOperand(0) &&
+        dyn_cast<ConstantSDNode>(Op1.getOperand(0).getOperand(1))
+                ->getZExtValue() == 0 &&
+        dyn_cast<ConstantSDNode>(Op2.getOperand(0).getOperand(1))
+                ->getZExtValue() == 1)
+      return true;
+  }
+  return false;
+}
+
+SDValue K1CTargetLowering::lowerABSWP(SDValue Op, SelectionDAG &DAG) const {
+  SDLoc dl(Op);
+  return SDValue(
+      DAG.getMachineNode(K1C::ABSWP, dl, Op.getValueType(),
+                         {Op.getOperand(0).getOperand(0).getOperand(0)}),
+      0);
+}
+
+bool K1CTargetLowering::canLowerToMINMAXHQ(SDValue Op) const {
+  // This function will match the following patterns:
+  // d0 variant
+  //
+  // (build_vector
+  //   (node
+  //      (sext_inreg (extract_vector $v1, 0)),
+  //      (sext_inreg (extract_vector $v2, 0))
+  //    ),
+  //   (node
+  //      (sext_inreg (extract_vector $v1, 1)),
+  //      (sext_inreg (extract_vector $v2, 1))
+  //    ),
+  //   (node
+  //      (sext_inreg (extract_vector $v1, 2)),
+  //      (sext_inreg (extract_vector $v2, 2))
+  //   ) ,
+  //   (node
+  //      (sext_inreg (extract_vector $v1, 3)),
+  //      (sext_inreg (extract_vector $v2, 3))
+  //   )
+  // )
+  //
+  // d1 variant
+  //
+  // (build_vector
+  //   (node (sext_inreg (extract_vector $v1, 0)), $const),
+  //   (node (sext_inreg (extract_vector $v1, 1)), $const),
+  //   (node (sext_inreg (extract_vector $v1, 2)), $const),
+  //   (node (sext_inreg (extract_vector $v1, 3)), $const)
+  // )
+  //
+  // where node can be smin, smax. Type casts omitted for simplicity.
+
+  unsigned OpCode = Op.getOperand(0).getOpcode();
+  // verify node to be smin or smax
+  if (OpCode != ISD::SMIN && OpCode != ISD::SMAX)
+    return false;
+  // verify the first operand of node(smin/smax) of build vector to be
+  // sext_inreg
+  if (Op.getOperand(0).getOperand(0).getOpcode() != ISD::SIGN_EXTEND_INREG)
+    return false;
+  // verify that the operand of sext_inreg is extract_vector
+  if (Op.getOperand(0).getOperand(0).getOperand(0).getOpcode() !=
+      ISD::EXTRACT_VECTOR_ELT)
+    return false;
+  // extract the vector operand from extract_vector into vector1
+  SDValue vector1 = Op.getOperand(0).getOperand(0).getOperand(0).getOperand(0);
+  if (dyn_cast<ConstantSDNode>(
+          Op.getOperand(0).getOperand(0).getOperand(0).getOperand(1))
+          ->getZExtValue() != 0)
+    return false;
+  bool Constant = false;
+  uint64_t ConstantValue;
+  // variant d1 check
+  if (isa<ConstantSDNode>(Op.getOperand(0).getOperand(1))) {
+    Constant = true;
+    ConstantValue = dyn_cast<ConstantSDNode>(Op.getOperand(0).getOperand(1))
+                        ->getZExtValue();
+  }
+  SDValue vector2;
+  if (!Constant) {
+    // variant d0, verify and extract vector2
+
+    // verify the second operand of node(smin/smax) of build vector to be
+    // sext_inreg
+    if (Op.getOperand(0).getOperand(1).getOpcode() != ISD::SIGN_EXTEND_INREG)
+      return false;
+    // verify that the operand of sext_inreg is extract_vector
+    if (Op.getOperand(0).getOperand(1).getOperand(0).getOpcode() !=
+        ISD::EXTRACT_VECTOR_ELT)
+      return false;
+    // extract the vector operand from extract_vector into vector2
+    vector2 = Op.getOperand(0).getOperand(1).getOperand(0).getOperand(0);
+    if (dyn_cast<ConstantSDNode>(
+            Op.getOperand(0).getOperand(1).getOperand(0).getOperand(1))
+            ->getZExtValue() != 0)
+      return false;
+  }
+  // verify all operands of build vector
+  for (int i = 0; i < 4; i++) {
+    // verify node
+    if (Op.getOperand(i).getOpcode() != OpCode)
+      return false;
+    // verify the first operand of node to be sext_inreg
+    if (Op.getOperand(i).getOperand(0).getOpcode() != ISD::SIGN_EXTEND_INREG)
+      return false;
+    // verify that the operand of sext_inreg is extract_vector
+    if (Op.getOperand(i).getOperand(0).getOperand(0).getOpcode() !=
+        ISD::EXTRACT_VECTOR_ELT)
+      return false;
+    // verify that the first operand of extract vector is vector1
+    if (Op.getOperand(i).getOperand(0).getOperand(0).getOperand(0) != vector1)
+      return false;
+    // verify the extract vector index to be i
+    if (dyn_cast<ConstantSDNode>(
+            Op.getOperand(i).getOperand(0).getOperand(0).getOperand(1))
+            ->getZExtValue() != (uint64_t)i)
+      return false;
+    if (Constant) {
+      // d1 variant, check if constant is present
+      if (!isa<ConstantSDNode>(Op.getOperand(i).getOperand(1)))
+        return false;
+      // check the constant value to be the same for all operands of
+      // build_vector
+      if (dyn_cast<ConstantSDNode>(Op.getOperand(i).getOperand(1))
+              ->getZExtValue() != ConstantValue)
+        return false;
+    } else {
+      // d0 variant
+      // verify the second operand of node to be sext_inreg
+      if (Op.getOperand(i).getOperand(1).getOpcode() != ISD::SIGN_EXTEND_INREG)
+        return false;
+      // verify that the operand of sext_inreg is extract_vector
+      if (Op.getOperand(i).getOperand(1).getOperand(0).getOpcode() !=
+          ISD::EXTRACT_VECTOR_ELT)
+        return false;
+      // verify that the first operand of extract vector is vector2
+      if (Op.getOperand(i).getOperand(1).getOperand(0).getOperand(0) != vector2)
+        return false;
+      // verify the extract vector index to be i
+      if (dyn_cast<ConstantSDNode>(
+              Op.getOperand(i).getOperand(1).getOperand(0).getOperand(1))
+              ->getZExtValue() != (uint64_t)i)
+        return false;
+    }
+  }
+  return true;
+}
+
+bool K1CTargetLowering::canLowerToMINMAXUHQ(SDValue Op) const {
+  // This function will match the following patterns:
+  // d0 variant
+  //
+  // (build_vector
+  //   (node
+  //     (and (extract_vector $v1, 0), 0xffff),
+  //     (and (extract_vector $v2, 0), 0xffff)
+  //   ),
+  //   (node
+  //     (and (extract_vector $v1, 1), 0xffff),
+  //     (and (extract_vector $v2, 1), 0xffff)
+  //    ),
+  //    (node
+  //      (and (extract_vector $v1, 2), 0xffff),
+  //      (and (extract_vector $v2, 2), 0xffff)
+  //    ),
+  //    (node
+  //      (and (extract_vector $v1, 3), 0xffff),
+  //      (and (extract_vector $v2, 3), 0xffff)
+  //    )
+  // )
+  //
+  // d1 variant
+  //
+  // (build_vector
+  //   (node (and (extract_vector $v1, 0), 0xffff), $const),
+  //   (node (and (extract_vector $v1, 1), 0xffff), $const),
+  //   (node (and (extract_vector $v1, 2), 0xffff), $const),
+  //   (node (and (extract_vector $v1, 3), 0xffff), $const)
+  // )
+  //
+  // where node can be umin, umax. Type casts omitted for simplicity.
+
+  unsigned OpCode = Op.getOperand(0).getOpcode();
+  // verify node to be umin or umax
+  if (OpCode != ISD::UMIN && OpCode != ISD::UMAX)
+    return false;
+  // verify the first operand of node(umin/umax) of build_vector to be and
+  if (Op.getOperand(0).getOperand(0).getOpcode() != ISD::AND)
+    return false;
+  // verify the second operand of and to be 0xffff
+  if (dyn_cast<ConstantSDNode>(Op.getOperand(0).getOperand(0).getOperand(1))
+          ->getZExtValue() != 0xffff)
+    return false;
+  // verify that the first operand of and is extract_vector
+  if (Op.getOperand(0).getOperand(0).getOperand(0).getOpcode() !=
+      ISD::EXTRACT_VECTOR_ELT)
+    return false;
+  // extract the vector operand from extract_vector into vector1
+  SDValue vector1 = Op.getOperand(0).getOperand(0).getOperand(0).getOperand(0);
+  // verify extract_vector index to be 0
+  if (dyn_cast<ConstantSDNode>(
+          Op.getOperand(0).getOperand(0).getOperand(0).getOperand(1))
+          ->getZExtValue() != 0)
+    return false;
+  bool Constant = false;
+  uint64_t ConstantValue;
+  // variant d1 check
+  if (isa<ConstantSDNode>(Op.getOperand(0).getOperand(1))) {
+    Constant = true;
+    ConstantValue = dyn_cast<ConstantSDNode>(Op.getOperand(0).getOperand(1))
+                        ->getZExtValue();
+  }
+  SDValue vector2;
+  if (!Constant) {
+    // variant d0, verify and extract vector2
+
+    // verify the second operand of node(umin/umax) of build_vector to be and
+    if (Op.getOperand(0).getOperand(1).getOpcode() != ISD::AND)
+      return false;
+    // verify the second operand of and to be 0xffff
+    if (dyn_cast<ConstantSDNode>(Op.getOperand(0).getOperand(1).getOperand(1))
+            ->getZExtValue() != 0xffff)
+      return false;
+    // verify the first operand of and to be extract_vector
+    if (Op.getOperand(0).getOperand(1).getOperand(0).getOpcode() !=
+        ISD::EXTRACT_VECTOR_ELT)
+      return false;
+    // extract the vector operand from extract_vector into vector2
+    vector2 = Op.getOperand(0).getOperand(1).getOperand(0).getOperand(0);
+    // verify extract_vector index to be 0
+    if (dyn_cast<ConstantSDNode>(
+            Op.getOperand(0).getOperand(1).getOperand(0).getOperand(1))
+            ->getZExtValue() != 0)
+      return false;
+  }
+  // verify all operand of build vector
+  for (int i = 0; i < 4; i++) {
+    // verify node
+    if (Op.getOperand(i).getOpcode() != OpCode)
+      return false;
+    // verify the first operand of node to be and
+    if (Op.getOperand(i).getOperand(0).getOpcode() != ISD::AND)
+      return false;
+    // verify the second operand of and to be 0xffff
+    if (dyn_cast<ConstantSDNode>(Op.getOperand(i).getOperand(0).getOperand(1))
+            ->getZExtValue() != 0xffff)
+      return false;
+    // verify the first operand of and to be extract_vector
+    if (Op.getOperand(i).getOperand(0).getOperand(0).getOpcode() !=
+        ISD::EXTRACT_VECTOR_ELT)
+      return false;
+    // verify that the first operand of extract vector is vector1
+    if (Op.getOperand(i).getOperand(0).getOperand(0).getOperand(0) != vector1)
+      return false;
+    // verify the extract vector index to be i
+    if (dyn_cast<ConstantSDNode>(
+            Op.getOperand(i).getOperand(0).getOperand(0).getOperand(1))
+            ->getZExtValue() != (uint64_t)i)
+      return false;
+    if (Constant) {
+      // d1 variant check if constant is present
+      if (!isa<ConstantSDNode>(Op.getOperand(i).getOperand(1)))
+        return false;
+      // check the constant value to be the same for all operands of
+      // build_vector
+      if (dyn_cast<ConstantSDNode>(Op.getOperand(i).getOperand(1))
+              ->getZExtValue() != ConstantValue)
+        return false;
+    } else {
+      // d0 variant
+      // verify the second operand of node to be and
+      if (Op.getOperand(i).getOperand(1).getOpcode() != ISD::AND)
+        return false;
+      // verify the second operand of and to be 0xffff
+      if (dyn_cast<ConstantSDNode>(Op.getOperand(i).getOperand(1).getOperand(1))
+              ->getZExtValue() != 0xffff)
+        return false;
+      // verify the first operand of and to be extract_vector
+      if (Op.getOperand(i).getOperand(1).getOperand(0).getOpcode() !=
+          ISD::EXTRACT_VECTOR_ELT)
+        return false;
+      // verify that the first operand of extract vector is vector2
+      if (Op.getOperand(i).getOperand(1).getOperand(0).getOperand(0) != vector2)
+        return false;
+      // verify the extract vector index to be i
+      if (dyn_cast<ConstantSDNode>(
+              Op.getOperand(i).getOperand(1).getOperand(0).getOperand(1))
+              ->getZExtValue() != (uint64_t)i)
+        return false;
+    }
+  }
+  return true;
+}
+
+SDValue K1CTargetLowering::lowerMINMAXHQ(SDValue Op, SelectionDAG &DAG) const {
+  SDLoc dl(Op);
+  unsigned OpCode = 0;
+  bool Constant = false;
+  uint64_t ConstantValue;
+  if (isa<ConstantSDNode>(Op.getOperand(0).getOperand(1))) {
+    Constant = true;
+    ConstantValue = dyn_cast<ConstantSDNode>(Op.getOperand(0).getOperand(1))
+                        ->getZExtValue();
+  }
+  switch (Op.getOperand(0).getOpcode()) {
+  case ISD::SMIN:
+    OpCode = Constant ? K1C::MINHQd1 : K1C::MINHQd0;
+    break;
+  case ISD::SMAX:
+    OpCode = Constant ? K1C::MAXHQd1 : K1C::MAXHQd0;
+    break;
+  }
+  SDValue vector1 = Op.getOperand(0).getOperand(0).getOperand(0).getOperand(0);
+  if (Constant)
+    return SDValue(
+        DAG.getMachineNode(OpCode, dl, Op.getValueType(),
+                           {vector1,
+                            DAG.getTargetConstant(ConstantValue, dl, MVT::i32),
+                            DAG.getTargetConstant(0, dl, MVT::i8)}),
+        0);
+  else
+    return SDValue(
+        DAG.getMachineNode(
+            OpCode, dl, Op.getValueType(),
+            {vector1,
+             Op.getOperand(0).getOperand(1).getOperand(0).getOperand(0)}),
+        0);
+}
+
+bool K1CTargetLowering::canLowerToABSHQ(SDValue Op) const {
+  //
+  // (build_vector
+  //   (xor
+  //      (add
+  //        (extract_vector $v,0),
+  //        (sra (extract_vector $v,1), 15)
+  //      ),
+  //      (sra (extract_vector $v,1), 15)))
+  //   )
+  //   ...
+  // )
+  SDValue vector;
+  for (int i = 0; i < 4; i++) {
+    if (Op.getOperand(i).getOpcode() != ISD::XOR)
+      return false;
+    if (Op.getOperand(i).getOperand(0).getOpcode() != ISD::ADD)
+      return false;
+    if (Op.getOperand(i).getOperand(0).getOperand(0).getOpcode() !=
+        ISD::EXTRACT_VECTOR_ELT)
+      return false;
+    if (i == 0)
+      vector = Op.getOperand(i).getOperand(0).getOperand(0).getOperand(0);
+    else if (Op.getOperand(i).getOperand(0).getOperand(0).getOperand(0) !=
+             vector)
+      return false;
+    if (dyn_cast<ConstantSDNode>(
+            Op.getOperand(i).getOperand(0).getOperand(0).getOperand(1))
+            ->getZExtValue() != (uint64_t)i)
+      return false;
+    if (Op.getOperand(i).getOperand(1).getOpcode() != ISD::SRA)
+      return false;
+    if (dyn_cast<ConstantSDNode>(Op.getOperand(i).getOperand(1).getOperand(1))
+            ->getZExtValue() != 15)
+      return false;
+    SDValue sra = Op.getOperand(i).getOperand(1);
+    if (Op.getOperand(i).getOperand(0).getOperand(1) != sra)
+      return false;
+  }
+  return true;
+}
+
+SDValue K1CTargetLowering::lowerABSHQ(SDValue Op, SelectionDAG &DAG) const {
+  SDLoc dl(Op);
+  return SDValue(
+      DAG.getMachineNode(
+          K1C::ABSHQ, dl, Op.getValueType(),
+          {Op.getOperand(0).getOperand(0).getOperand(0).getOperand(0)}),
+      0);
+}
+SDValue K1CTargetLowering::lowerMINMAXUHQ(SDValue Op, SelectionDAG &DAG) const {
+  SDLoc dl(Op);
+  unsigned OpCode = 0;
+  bool Constant = false;
+  uint64_t ConstantValue;
+  if (isa<ConstantSDNode>(Op.getOperand(0).getOperand(1))) {
+    Constant = true;
+    ConstantValue = dyn_cast<ConstantSDNode>(Op.getOperand(0).getOperand(1))
+                        ->getZExtValue();
+  }
+  switch (Op.getOperand(0).getOpcode()) {
+  case ISD::UMIN:
+    OpCode = Constant ? K1C::MINUHQd1 : K1C::MINUHQd0;
+    break;
+  case ISD::UMAX:
+    OpCode = Constant ? K1C::MAXUHQd1 : K1C::MAXUHQd0;
+    break;
+  }
+  SDValue vector1 = Op.getOperand(0).getOperand(0).getOperand(0).getOperand(0);
+  if (Constant)
+    return SDValue(
+        DAG.getMachineNode(OpCode, dl, Op.getValueType(),
+                           {vector1,
+                            DAG.getTargetConstant(ConstantValue, dl, MVT::i32),
+                            DAG.getTargetConstant(0, dl, MVT::i8)}),
+        0);
+  else
+    return SDValue(
+        DAG.getMachineNode(
+            OpCode, dl, Op.getValueType(),
+            {vector1,
+             Op.getOperand(0).getOperand(1).getOperand(0).getOperand(0)}),
+        0);
 }

@@ -83,21 +83,6 @@
 // LNORHQ
 // LORHQ
 // LORWP
-// MAXD
-// MAXHQ
-// MAXUD
-// MAXUHQ
-// MAXUW
-// MAXUWP
-// MAXW
-// MAXWP
-// MIND
-// MINHQ
-// MINUD
-// MINUW
-// MINUWP
-// MINW
-// MINWP
 // MOVETQ
 // NANDD
 // NANDW
@@ -198,6 +183,12 @@ multiclass MC_16_Pat<SDNode Node, Operand OpR1, Operand OpR2,
   def : Pat<(Node OpR1:$rs1, OpR2:$rs2), (RRInstr SingleReg:$rs1, SingleReg:$rs2)>;
   def : Pat<(Node OpR1:$rs, Unsigned6:$is), (RIInstr SingleReg:$rs, Unsigned6:$is)>;
 }
+
+// ABSW
+def : Pat<(abs i32:$v), (ABSW SingleReg:$v)>;
+
+// ABSD
+def : Pat<(abs i64:$v), (ABSD SingleReg:$v)>;
 
 // ADDD
 def : Pat<(add i64:$rs1, i64:$rs2), (ADDDd0 SingleReg:$rs1, SingleReg:$rs2)>;
@@ -365,6 +356,60 @@ def : Pat<(xor i32:$rs1, i32:$rs2), (XORWd2 SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(xor i32:$rs1, Signed10W:$rs2), (XORWd0 SingleReg:$rs1, Signed10W:$rs2)>;
 def : Pat<(xor i32:$rs1, Signed37W:$rs2), (XORWd1 SingleReg:$rs1, Signed37W:$rs2)>;
 def : Pat<(xor v2i16:$rs1, v2i16:$rs2), (XORWd2 SingleReg:$rs1, SingleReg:$rs2)>;
+
+// MINW
+def : Pat<(smin i32:$v1, i32:$v2), (MINWd0 SingleReg:$v1, SingleReg:$v2)>;
+def : Pat<(smin i32:$v1, Signed10W:$v2), (MINWd1 SingleReg:$v1, Signed10W:$v2)>;
+def : Pat<(smin i32:$v1, Signed37W:$v2), (MINWd2 SingleReg:$v1, Signed37W:$v2)>;
+
+// MINUW
+def : Pat<(umin i32:$v1, i32:$v2), (MINUWd0 SingleReg:$v1, SingleReg:$v2)>;
+def : Pat<(umin i32:$v1, Signed10W:$v2), (MINUWd1 SingleReg:$v1, Signed10W:$v2)>;
+def : Pat<(umin i32:$v1, Signed37W:$v2), (MINUWd2 SingleReg:$v1, Signed37W:$v2)>;
+
+// MAXW
+def : Pat<(smax i32:$v1, i32:$v2), (MAXWd0 SingleReg:$v1, SingleReg:$v2)>;
+def : Pat<(smax i32:$v1, Signed10W:$v2), (MAXWd1 SingleReg:$v1, Signed10W:$v2)>;
+def : Pat<(smax i32:$v1, Signed37W:$v2), (MAXWd2 SingleReg:$v1, Signed37W:$v2)>;
+
+// MAXUW
+def : Pat<(umax i32:$v1, i32:$v2), (MAXUWd0 SingleReg:$v1, SingleReg:$v2)>;
+def : Pat<(umax i32:$v1, Signed10W:$v2), (MAXUWd1 SingleReg:$v1, Signed10W:$v2)>;
+def : Pat<(umax i32:$v1, Signed37W:$v2), (MAXUWd2 SingleReg:$v1, Signed37W:$v2)>;
+
+// MIND
+def : Pat<(smin i64:$v1, i64:$v2), (MINDd0 SingleReg:$v1, SingleReg:$v2)>;
+def : Pat<(smin i64:$v1, Signed10:$v2), (MINDd1 SingleReg:$v1, Signed10:$v2)>;
+def : Pat<(smin i64:$v1, Signed37:$v2), (MINDd2 SingleReg:$v1, Signed37:$v2)>;
+def : Pat<(smin i64:$v1, Wrapped64:$v2), (MINDd3 SingleReg:$v1, Wrapped64:$v2)>;
+
+// MINUD
+def : Pat<(umin i64:$v1, i64:$v2), (MINUDd0 SingleReg:$v1, SingleReg:$v2)>;
+def : Pat<(umin i64:$v1, Signed10:$v2), (MINUDd1 SingleReg:$v1, Signed10:$v2)>;
+def : Pat<(umin i64:$v1, Signed37:$v2), (MINUDd2 SingleReg:$v1, Signed37:$v2)>;
+def : Pat<(umin i64:$v1, Wrapped64:$v2), (MINUDd3 SingleReg:$v1, Wrapped64:$v2)>;
+
+// MAXD
+def : Pat<(smax i64:$v1, i64:$v2), (MAXDd0 SingleReg:$v1, SingleReg:$v2)>;
+def : Pat<(smax i64:$v1, Signed10:$v2), (MAXDd1 SingleReg:$v1, Signed10:$v2)>;
+def : Pat<(smax i64:$v1, Signed37:$v2), (MAXDd2 SingleReg:$v1, Signed37:$v2)>;
+def : Pat<(smax i64:$v1, Wrapped64:$v2), (MAXDd3 SingleReg:$v1, Wrapped64:$v2)>;
+
+// MAXUD
+def : Pat<(umax i64:$v1, i64:$v2), (MAXUDd0 SingleReg:$v1, SingleReg:$v2)>;
+def : Pat<(umax i64:$v1, Signed10:$v2), (MAXUDd1 SingleReg:$v1, Signed10:$v2)>;
+def : Pat<(umax i64:$v1, Signed37:$v2), (MAXUDd2 SingleReg:$v1, Signed37:$v2)>;
+def : Pat<(umax i64:$v1, Wrapped64:$v2), (MAXUDd3 SingleReg:$v1, Wrapped64:$v2)>;
+
+// MAXWP
+// MAXUWP
+// MINWP
+// MINUWP
+// MAXHQ
+// MINHQ
+// MAXUHQ
+// MINUHQ
+// Implemented in K1CISelLowering
 
 //===----------------------------------------------------------------------===//
 //  MAU Instructions - Patterns
