@@ -268,6 +268,14 @@ multiclass COMP_Pat<SDNode Node, int Mod> {
         (COMPWd0 SingleReg:$lhs, SingleReg:$rhs, (i8 Mod))>;
   def : Pat<(i32 (Node i32:$lhs, Wrapped32:$rhs)),
         (COMPWd1 SingleReg:$lhs, Wrapped32:$rhs, (i8 Mod))>;
+
+  //COMPNHQ
+  def : Pat<(v4i16 (Node v4i16:$lhs, v4i16:$rhs)),
+        (COMPNHQ SingleReg:$lhs, SingleReg:$rhs, (i8 Mod))>;
+
+  //COMPNWP
+  def : Pat<(v2i32 (Node v2i32:$lhs, v2i32:$rhs)),
+        (COMPNWP SingleReg:$lhs, SingleReg:$rhs, (i8 Mod))>;
 }
 
 defm : COMP_Pat<seteq,   1/*.eq*/>;
