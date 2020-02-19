@@ -346,10 +346,10 @@ def : Pat<(extractelt (v2i32 SingleReg:$v), 1), (SRADd1 SingleReg :$v, (i64 32))
 
 // v2i16
 def : Pat<(i32 (vector_extract v2i16:$v, 0)), (ZXHD SingleReg:$v)>;
-def : Pat<(i32 (vector_extract v2i16:$v, 1)), (SRLDd1 SingleReg:$v, (i64 16))>;
+def : Pat<(i32 (vector_extract v2i16:$v, 1)), (SRLWd1 SingleReg:$v, (i64 16))>;
 
 def : Pat<(i32 (sext_inreg (vector_extract v2i16:$v, 0), i16)), (SXHD SingleReg:$v)>;
-def : Pat<(i32 (sext_inreg (vector_extract v2i16:$v, 1), i16)), (SRADd1 SingleReg:$v, (i64 16))>;
+def : Pat<(i32 (sext_inreg (vector_extract v2i16:$v, 1), i16)), (SRAWd1 SingleReg:$v, (i64 16))>;
 
 def : Pat<(i64 (sext_inreg (i64 (anyext (i32 (vector_extract v2i16:$v, 0)))), i16)), (SXHD SingleReg:$v)>;
 def : Pat<(i64 (sext_inreg (i64 (anyext (i32 (vector_extract v2i16:$v, 1)))), i16)), (EXTFS SingleReg:$v, 31, 16)>;
