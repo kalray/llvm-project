@@ -155,8 +155,6 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::VECTOR_SHUFFLE, VT, Expand);
     setOperationAction(ISD::SCALAR_TO_VECTOR, VT, Expand);
 
-    setOperationAction(ISD::SETCC, VT, Expand);
-
     setOperationAction(ISD::SDIV, VT, Expand);
     setOperationAction(ISD::SDIVREM, VT, Expand);
     setOperationAction(ISD::SREM, VT, Expand);
@@ -167,6 +165,10 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::SRL, VT, Expand);
     setOperationAction(ISD::SRA, VT, Expand);
   }
+
+  for (auto VT :
+       {MVT::v2i16, MVT::v2i64, MVT::v4i32, MVT::v8i8, MVT::v4f32, MVT::v2f64})
+    setOperationAction(ISD::SETCC, VT, Expand);
 
   for (auto VT : {MVT::v2i16, MVT::v4i16, MVT::v2i32, MVT::v4i32, MVT::v8i8,
                   MVT::v2f16, MVT::v4f16, MVT::v2f32, MVT::v4f32}) {
@@ -355,7 +357,9 @@ EVT K1CTargetLowering::getSetCCResultType(const DataLayout &DL, LLVMContext &C,
                                           EVT VT) const {
   if (!VT.isVector())
     return MVT::i32;
-  return EVT::getVectorVT(C, MVT::i32, VT.getVectorNumElements());
+  return EVT::getVectorVT(
+      C, VT.getIntegerVT(C, VT.getVectorElementType().getSizeInBits()),
+      VT.getVectorNumElements());
 }
 
 const char *K1CTargetLowering::getTargetNodeName(unsigned Opcode) const {
