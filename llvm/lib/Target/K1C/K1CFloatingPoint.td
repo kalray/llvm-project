@@ -190,6 +190,35 @@ def : Pat<(i32 (setuge f64:$rz, f64:$ry)), (FCOMPD SingleReg:$rz, SingleReg:$ry,
 def : Pat<(i32 (setult f64:$rz, f64:$ry)), (FCOMPD SingleReg:$rz, SingleReg:$ry, FCOMP_ULT)>;
 def : Pat<(i32 (setule f64:$rz, f64:$ry)), (FCOMPD SingleReg:$ry, SingleReg:$rz, FCOMP_UGE)>;
 def : Pat<(i32 (setune f64:$rz, f64:$ry)), (FCOMPD SingleReg:$rz, SingleReg:$ry, FCOMP_UNE)>;
+
+multiclass COMP_FPat<SDNode Node, int Mod, bit SWAP> {
+
+  def : Pat<(v4i16 (Node v4f16:$rz, v4f16:$ry)),
+    !if(SWAP, (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, (i8 Mod)), (FCOMPNHQ SingleReg:$ry, SingleReg:$rz, (i8 Mod)))>;
+
+  def : Pat<(v2i32 (Node v2f32:$rz, v2f32:$ry)),
+    !if(SWAP, (FCOMPNWP SingleReg:$rz, SingleReg:$ry, (i8 Mod)), (FCOMPNWP SingleReg:$ry, SingleReg:$rz, (i8 Mod)))>;
+}
+
+defm : COMP_FPat<setoeq, FCOMP_OEQ, 0>;
+defm : COMP_FPat<setogt, FCOMP_OLT, 1>;
+defm : COMP_FPat<setoge, FCOMP_OGE, 0>;
+defm : COMP_FPat<setolt, FCOMP_OLT, 0>;
+defm : COMP_FPat<setole, FCOMP_OGE, 1>;
+defm : COMP_FPat<setone, FCOMP_ONE, 0>;
+defm : COMP_FPat<setueq, FCOMP_UEQ, 0>;
+defm : COMP_FPat<setugt, FCOMP_ULT, 1>;
+defm : COMP_FPat<setuge, FCOMP_UGE, 0>;
+defm : COMP_FPat<setult, FCOMP_ULT, 0>;
+defm : COMP_FPat<setule, FCOMP_UGE, 1>;
+defm : COMP_FPat<setune, FCOMP_UNE, 0>;
+
+def : Pat<(v4i16 (seto v4f16:$rz, v4f16:$ry)), (ORDd0 (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, FCOMP_OGE), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, FCOMP_OLT))>;
+def : Pat<(v4i16 (setuo v4f16:$rz, v4f16:$ry)), (ANDDd0 (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, FCOMP_UGE), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, FCOMP_ULT))>;
+
+def : Pat<(v2i32 (seto v2f32:$rz, v2f32:$ry)), (ORDd0 (FCOMPNWP SingleReg:$rz, SingleReg:$ry, FCOMP_OGE), (FCOMPNWP SingleReg:$rz, SingleReg:$ry, FCOMP_OLT))>;
+def : Pat<(v2i32 (setuo v2f32:$rz, v2f32:$ry)), (ANDDd0 (FCOMPNWP SingleReg:$rz, SingleReg:$ry, FCOMP_UGE), (FCOMPNWP SingleReg:$rz, SingleReg:$ry, FCOMP_ULT))>;
+
 // SELECT_CC expanded to SELECT
 def : Pat<(SelectCC i64:$cmp, f32:$truev, f32:$falsev), (Select_Instr SingleReg:$cmp, Binary32:$truev, Binary32:$falsev)>;
 def : Pat<(SelectCC i64:$cmp, f64:$truev, f64:$falsev), (Select_Instr SingleReg:$cmp, Binary64:$truev, Binary64:$falsev)>;
