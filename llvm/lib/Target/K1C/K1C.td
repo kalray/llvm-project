@@ -73,4 +73,4 @@ def K1C : Target {
 //  Processors Supported
 //===----------------------------------------------------------------------===//
 
-def : ProcessorModel<"generic", K1CSchedMachineModel, []>;
+def : ProcessorModel<"k1c", K1CSchedMachineModel, []>;

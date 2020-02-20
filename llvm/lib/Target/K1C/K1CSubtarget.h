@@ -26,8 +26,6 @@
 #include "K1CGenSubtargetInfo.inc"
 
 namespace llvm {
-class StringRef;
-
 class K1CSubtarget : public K1CGenSubtargetInfo {
   virtual void anchor();
 
@@ -41,7 +39,7 @@ class K1CSubtarget : public K1CGenSubtargetInfo {
 
 public:
   // Initializes the data members to match that of the specified triple.
-  K1CSubtarget(const Triple &TT, const std::string &CPU, const std::string &FS,
+  K1CSubtarget(const Triple &TT, StringRef CPU, const std::string &FS,
                const TargetMachine &TM);
 
   // Parses features string setting specified subtarget options. The
