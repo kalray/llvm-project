@@ -72,6 +72,14 @@ static MCTargetStreamer *createK1CTargetStreamer(MCStreamer &S,
   return new K1CTargetStreamer(S);
 }
 
+static StringRef DefaultArch = "k1c";
+static StringRef DefaultSubarch = "v1";
+StringRef K1C_MC::selectK1CCPU(StringRef CPU) {
+  if (CPU.empty() || CPU.equals(DefaultArch.str() + DefaultSubarch.str()))
+    return DefaultArch;
+  return CPU;
+}
+
 extern "C" void LLVMInitializeK1CTargetMC() {
   TargetRegistry::RegisterMCAsmInfo(getTheK1CTarget(), createK1CMCAsmInfo);
   TargetRegistry::RegisterMCInstrInfo(getTheK1CTarget(), createK1CMCInstrInfo);

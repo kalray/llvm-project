@@ -26,6 +26,7 @@ namespace targets {
 class LLVM_LIBRARY_VISIBILITY K1CTargetInfo : public TargetInfo {
   static const Builtin::Info BuiltinInfo[];
   static const TargetInfo::GCCRegAlias GCCRegAliases[];
+  std::string CPU;
 
 public:
   K1CTargetInfo(const llvm::Triple &Triple, const TargetOptions &)
@@ -74,6 +75,11 @@ public:
   }
 
   bool hasProtectedVisibility() const override { return false; }
+
+  bool isValidCPUName(StringRef Name) const override;
+  bool setCPU(const std::string &Name) override;
+
+  void fillValidCPUList(SmallVectorImpl<StringRef> &Values) const override;
 };
 
 } // namespace targets

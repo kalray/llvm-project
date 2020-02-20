@@ -1490,6 +1490,10 @@ void Clang::RenderTargetOptions(const llvm::Triple &EffectiveTriple,
     AddLanaiTargetArgs(Args, CmdArgs);
     break;
 
+  case llvm::Triple::k1c:
+    AddK1CTargetArgs(Args, CmdArgs);
+    break;
+
   case llvm::Triple::hexagon:
     AddHexagonTargetArgs(Args, CmdArgs);
     break;
@@ -1982,6 +1986,16 @@ void Clang::AddLanaiTargetArgs(const ArgList &Args,
             << A->getOption().getName() << Value;
       }
     }
+  }
+}
+
+void Clang::AddK1CTargetArgs(const ArgList &Args,
+                             ArgStringList &CmdArgs) const {
+  if (Arg *A = Args.getLastArg(options::OPT_march_EQ)) {
+    StringRef CPUName = A->getValue();
+
+    CmdArgs.push_back("-target-cpu");
+    CmdArgs.push_back(Args.MakeArgString(CPUName));
   }
 }
 
