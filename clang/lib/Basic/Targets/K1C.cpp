@@ -81,3 +81,23 @@ const Builtin::Info K1CTargetInfo::BuiltinInfo[] = {
   ,
 #include "clang/Basic/BuiltinsK1C.def"
 };
+
+bool K1CTargetInfo::isValidCPUName(StringRef Name) const {
+  if (Name == "k1c" || Name == "k1cv1")
+    return true;
+
+  return false;
+}
+
+bool K1CTargetInfo::setCPU(const std::string &Name) {
+  if (!isValidCPUName(Name))
+    return false;
+
+  CPU = Name;
+  return true;
+}
+
+void K1CTargetInfo::fillValidCPUList(SmallVectorImpl<StringRef> &Values) const {
+  Values.push_back("k1c");
+  Values.push_back("k1cv1");
+}
