@@ -28,6 +28,11 @@ class MCTargetOptions;
 class MCRegisterInfo;
 class MCSubtargetInfo;
 class Target;
+class StringRef;
+
+namespace K1C_MC {
+StringRef selectK1CCPU(StringRef CPU);
+}
 
 Target &getTheK1CTarget();
 
