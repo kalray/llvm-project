@@ -219,9 +219,12 @@ def : Pat<(v4i16 (setuo v4f16:$rz, v4f16:$ry)), (ANDDd0 (FCOMPNHQ SingleReg:$rz,
 def : Pat<(v2i32 (seto v2f32:$rz, v2f32:$ry)), (ORDd0 (FCOMPNWP SingleReg:$rz, SingleReg:$ry, FCOMP_OGE), (FCOMPNWP SingleReg:$rz, SingleReg:$ry, FCOMP_OLT))>;
 def : Pat<(v2i32 (setuo v2f32:$rz, v2f32:$ry)), (ANDDd0 (FCOMPNWP SingleReg:$rz, SingleReg:$ry, FCOMP_UGE), (FCOMPNWP SingleReg:$rz, SingleReg:$ry, FCOMP_ULT))>;
 
-// SELECT_CC expanded to SELECT
-def : Pat<(SelectCC i64:$cmp, f32:$truev, f32:$falsev), (Select_Instr SingleReg:$cmp, Binary32:$truev, Binary32:$falsev)>;
-def : Pat<(SelectCC i64:$cmp, f64:$truev, f64:$falsev), (Select_Instr SingleReg:$cmp, Binary64:$truev, Binary64:$falsev)>;
+defm : Select32PAT<(f32 f32:$truev), (f32 f32:$falsev),(f32 Binary32:$truev), (f32 Binary32:$falsev)>;
+defm : Select32PAT<(f64 f64:$truev), (f64 f64:$falsev),(f64 Binary64:$truev), (f64 Binary64:$falsev)>;
+
+defm : Select64PAT<(f32 f32:$truev), (f32 f32:$falsev),(f32 Binary32:$truev), (f32 Binary32:$falsev)>;
+defm : Select64PAT<(f64 f64:$truev), (f64 f64:$falsev),(f64 Binary64:$truev), (f64 Binary64:$falsev)>;
+
 // FDOT2 -> TODO
 // FFMA  -> TODO
 // FFMS  -> TODO

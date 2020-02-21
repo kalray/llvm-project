@@ -70,20 +70,18 @@ bool K1CExpandPseudo::expandMBB(MachineBasicBlock &MBB) {
 }
 
 static void InsertCMOVEInstr(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
-                             MachineBasicBlock::iterator MBBI, unsigned Operand,
+                             MachineBasicBlock::iterator MBBI, unsigned CmpReg,
+                             unsigned DestReg, unsigned Operand,
                              unsigned Comp) {
   MachineInstr &MI = *MBBI;
   DebugLoc DL = MI.getDebugLoc();
-
-  unsigned DestReg = MI.getOperand(0).getReg();
-  unsigned CmpReg = MI.getOperand(1).getReg();
 
   switch (MI.getOperand(Operand).getType()) {
   case MachineOperand::MO_GlobalAddress:
     BuildMI(MBB, MBBI, DL, TII->get(K1C::CMOVEDd2), DestReg)
         .addReg(CmpReg)
         .addGlobalAddress(MI.getOperand(Operand).getGlobal())
-        .addImm(Comp); /* DNEZ */
+        .addImm(Comp);
     break;
   case MachineOperand::MO_Register: {
     unsigned BranchValue = MI.getOperand(Operand).getReg();
@@ -91,7 +89,7 @@ static void InsertCMOVEInstr(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
     BuildMI(MBB, MBBI, DL, TII->get(K1C::CMOVEDd3), DestReg)
         .addReg(CmpReg)
         .addReg(BranchValue)
-        .addImm(Comp); /* DNEZ */
+        .addImm(Comp);
   } break;
   case MachineOperand::MO_Immediate: {
     int64_t BranchValueImm = MI.getOperand(Operand).getImm();
@@ -102,7 +100,7 @@ static void InsertCMOVEInstr(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
             DestReg)
         .addReg(CmpReg)
         .addImm(BranchValueImm)
-        .addImm(Comp); /* DNEZ */
+        .addImm(Comp);
   } break;
   case MachineOperand::MO_FPImmediate: {
     const ConstantFP *Imm = MI.getOperand(Operand).getFPImm();
@@ -113,7 +111,7 @@ static void InsertCMOVEInstr(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
         DestReg)
         .addReg(CmpReg)
         .addFPImm(Imm)
-        .addImm(Comp); /* DNEZ */
+        .addImm(Comp);
   } break;
   default:
     llvm_unreachable("Operator type not handled");
@@ -122,12 +120,59 @@ static void InsertCMOVEInstr(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
 }
 
 static bool expandSelectInstr(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
-                              MachineBasicBlock::iterator MBBI) {
+                              MachineBasicBlock::iterator MBBI, bool Word) {
   MachineInstr &MI = *MBBI;
   DebugLoc DL = MI.getDebugLoc();
+  unsigned DestReg = MI.getOperand(0).getReg();
+  unsigned ScratchReg = MI.getOperand(1).getReg();
+  unsigned CmpReg = MI.getOperand(2).getReg();
+  unsigned Reg = 0;
+  int64_t Cond = MI.getOperand(5).getImm();
+  int64_t InvCond = Cond % 2 == 0 ? Cond + 1 : Cond - 1;
 
-  InsertCMOVEInstr(TII, MBB, MBBI, 2, 0);
-  InsertCMOVEInstr(TII, MBB, MBBI, 3, 1);
+  if (MI.getOperand(4).isImm() || MI.getOperand(4).isFPImm() ||
+      MI.getOperand(4).isGlobal()) {
+    if (MI.getOperand(3).isReg()) {
+      Reg = MI.getOperand(3).getReg();
+      InsertCMOVEInstr(TII, MBB, MBBI, CmpReg, Reg, 4, InvCond);
+    } else {
+      unsigned opCode;
+      unsigned DestCompReg = Word ? DestReg : ScratchReg;
+      if (Word) // use SXWD as cheap copy
+        BuildMI(MBB, MBBI, DL, TII->get(K1C::SXWD), ScratchReg).addReg(CmpReg);
+      if (MI.getOperand(3).isImm()) {
+        int64_t immVal = MI.getOperand(3).getImm();
+        opCode = GetImmOpCode(immVal, K1C::MAKEd0, K1C::MAKEd1, K1C::MAKEd2);
+        BuildMI(MBB, MBBI, DL, TII->get(opCode), DestCompReg).addImm(immVal);
+      }
+      if (MI.getOperand(3).isFPImm()) {
+        int64_t immVal = MI.getOperand(3)
+                             .getFPImm()
+                             ->getValueAPF()
+                             .bitcastToAPInt()
+                             .getZExtValue();
+        opCode = GetImmOpCode(immVal, K1C::MAKEd0, K1C::MAKEd1, K1C::MAKEd2);
+        BuildMI(MBB, MBBI, DL, TII->get(opCode), DestCompReg).addImm(immVal);
+      }
+      if (MI.getOperand(3).isGlobal()) {
+        BuildMI(MBB, MBBI, DL, TII->get(K1C::MAKEd2), DestCompReg)
+            .addGlobalAddress(MI.getOperand(3).getGlobal());
+      }
+      InsertCMOVEInstr(TII, MBB, MBBI, Word ? ScratchReg : CmpReg, DestCompReg,
+                       4, InvCond);
+      if (!Word)
+        BuildMI(MBB, MBBI, DL, TII->get(K1C::COPYD), DestReg)
+            .addReg(ScratchReg);
+    }
+  } else {
+    if (MI.getOperand(4).isReg()) {
+      Reg = MI.getOperand(4).getReg();
+      InsertCMOVEInstr(TII, MBB, MBBI, CmpReg, Reg, 3, Cond);
+    }
+  }
+
+  if (Reg != 0 && DestReg != Reg)
+    BuildMI(MBB, MBBI, DL, TII->get(K1C::COPYD), DestReg).addReg(Reg);
 
   // Remove the present instruction
   MI.eraseFromParent();
@@ -1246,8 +1291,11 @@ bool K1CExpandPseudo::expandMI(MachineBasicBlock &MBB,
                                MachineBasicBlock::iterator MBBI,
                                MachineBasicBlock::iterator &NextMBBI) {
   switch (MBBI->getOpcode()) {
-  case K1C::Select_Instr:
-    expandSelectInstr(TII, MBB, MBBI);
+  case K1C::Select32p:
+    expandSelectInstr(TII, MBB, MBBI, true);
+    return true;
+  case K1C::Select64p:
+    expandSelectInstr(TII, MBB, MBBI, false);
     return true;
   case K1C::FENCE_Instr:
     expandFENCEInstr(TII, MBB, MBBI);
