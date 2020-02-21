@@ -161,6 +161,15 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::UDIV, VT, Expand);
     setOperationAction(ISD::UDIVREM, VT, Expand);
     setOperationAction(ISD::UREM, VT, Expand);
+  }
+
+  for (auto VT : {MVT::v2i16, MVT::v2i32, MVT::v4i16}) {
+    setOperationAction(ISD::SHL, VT, Custom);
+    setOperationAction(ISD::SRL, VT, Custom);
+    setOperationAction(ISD::SRA, VT, Custom);
+  }
+
+  for (auto VT : {MVT::v2i64, MVT::v4i32, MVT::v8i8}) {
     setOperationAction(ISD::SHL, VT, Expand);
     setOperationAction(ISD::SRL, VT, Expand);
     setOperationAction(ISD::SRA, VT, Expand);
@@ -803,6 +812,10 @@ SDValue K1CTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
     return lowerEXTRACT_VECTOR_ELT(Op, DAG);
   case ISD::CONCAT_VECTORS:
     return lowerCONCAT_VECTORS(Op, DAG);
+  case ISD::SHL:
+  case ISD::SRA:
+  case ISD::SRL:
+    return lowerShiftVectorial(Op, DAG);
   }
 }
 
@@ -1691,6 +1704,75 @@ SDValue K1CTargetLowering::lowerCONCAT_VECTORS(SDValue Op,
   }
 
   return Out;
+}
+
+bool K1CTargetLowering::canLowerShiftVectorial(SDValue Op) const {
+  SDValue ScalarVec = Op.getOperand(1);
+  if (ScalarVec.getOpcode() != ISD::BUILD_VECTOR)
+    return false;
+
+  unsigned NumOperands = Op.getOperand(1).getNumOperands();
+  if (Op.getOperand(1).getOperand(NumOperands - 1).isUndef())
+    NumOperands--;
+
+  for (unsigned i = 0; i < NumOperands - 1; ++i)
+    if (ScalarVec.getOperand(i) != ScalarVec.getOperand(i + 1))
+      return false;
+
+  return true;
+}
+
+SDValue K1CTargetLowering::lowerShiftVectorial(SDValue Op,
+                                               SelectionDAG &DAG) const {
+  SDLoc DL(Op);
+  if (!canLowerShiftVectorial(Op)) {
+    EVT VT = Op.getNode()->getValueType(0);
+    unsigned NumElem = VT.getVectorNumElements();
+
+    SmallVector<SDValue, 8> Scalars;
+    for (unsigned Idx = 0; Idx < NumElem; Idx++) {
+      SDValue OperandToShift = DAG.getNode(
+          ISD::EXTRACT_VECTOR_ELT, DL, VT.getScalarType(), Op.getOperand(0),
+          DAG.getConstant(Idx, DL, getVectorIdxTy(DAG.getDataLayout())));
+      SDValue ShiftCount = DAG.getNode(
+          ISD::EXTRACT_VECTOR_ELT, DL, VT.getScalarType(), Op.getOperand(1),
+          DAG.getConstant(Idx, DL, getVectorIdxTy(DAG.getDataLayout())));
+      Scalars.push_back(DAG.getNode(Op.getOpcode(), DL, VT.getScalarType(),
+                                    OperandToShift, ShiftCount));
+    }
+
+    return DAG.getBuildVector(Op.getValueType(), DL, Scalars);
+  }
+
+  SDValue ScalarValue = Op.getOperand(1);
+  auto *OpConst = dyn_cast<ConstantSDNode>(ScalarValue);
+
+  unsigned ShiftOpcode = Op.getOpcode();
+
+  unsigned MachineOpcode = 0;
+
+  if (Op.getValueType() == MVT::v4i16 || Op.getValueType() == MVT::v2i16) {
+    if (ShiftOpcode == ISD::SHL)
+      MachineOpcode = OpConst ? K1C::SLLHQSd1 : K1C::SLLHQSd0;
+    else if (ShiftOpcode == ISD::SRA)
+      MachineOpcode = OpConst ? K1C::SRAHQSd1 : K1C::SRAHQSd0;
+    else
+      MachineOpcode = OpConst ? K1C::SRLHQSd1 : K1C::SRLHQSd0;
+  } else if (Op.getValueType() == MVT::v2i32) {
+    if (ShiftOpcode == ISD::SHL)
+      MachineOpcode = OpConst ? K1C::SLLWPSd1 : K1C::SLLWPSd0;
+    else if (ShiftOpcode == ISD::SRA)
+      MachineOpcode = OpConst ? K1C::SRAWPSd1 : K1C::SRAWPSd0;
+    else
+      MachineOpcode = OpConst ? K1C::SRLWPSd1 : K1C::SRLWPSd0;
+  }
+
+  if (OpConst)
+    ScalarValue = DAG.getTargetConstant(OpConst->getZExtValue(), DL, MVT::i64);
+
+  return SDValue(DAG.getMachineNode(MachineOpcode, DL, Op.getValueType(),
+                                    {Op.getOperand(0), ScalarValue}),
+                 0);
 }
 
 bool K1CTargetLowering::canLowerToMINMAXWP(SDValue Op) const {
