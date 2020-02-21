@@ -118,11 +118,14 @@ private:
   SDValue lowerEXTRACT_VECTOR_ELT(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerEXTRACT_VECTOR_ELT_REGISTER(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerCONCAT_VECTORS(SDValue Op, SelectionDAG &DAG) const;
+  SDValue lowerShiftVectorial(SDValue Op, SelectionDAG &DAG) const;
 
   bool canLowerToMINMAXWP(SDValue Op) const;
   SDValue lowerMINMAXWP(SDValue Op, SelectionDAG &DAG) const;
   bool canLowerToABSWP(SDValue Op) const;
   SDValue lowerABSWP(SDValue Op, SelectionDAG &DAG) const;
+
+  bool canLowerShiftVectorial(SDValue Op) const;
 
   bool canLowerToMINMAXHQ(SDValue Op) const;
   bool canLowerToMINMAXUHQ(SDValue Op) const;
