@@ -307,18 +307,89 @@ def : Pat<(brind (i32 SingleReg:$r)), (IGOTO SingleReg:$r)>;
 
 def : Pat<(brind (i64 SingleReg:$r)), (IGOTO SingleReg:$r)>;
 
-let Constraints = "@earlyclobber $dst" in
-def Select_Instr : K1C_PseudoInstr<(outs SingleReg:$dst),
-        (ins SingleReg:$cmp, SingleReg:$truev, SingleReg:$falsev),[]>;
+let Constraints = "@earlyclobber $scratch, $dst = $falsev" in
+def Select32p : K1C_PseudoInstr<(outs SingleReg:$dst, SingleReg:$scratch),
+        (ins SingleReg:$cmp, SingleReg:$truev, SingleReg:$falsev, ScalarcondMod:$cond),[]>;
 
-def : Pat<(SelectCC i64:$cmp, i32:$truev, i32:$falsev),
-        (Select_Instr SingleReg:$cmp, i32imm:$truev, i32imm:$falsev)>;
+let Constraints = "@earlyclobber $scratch, $dst = $falsev" in
+def Select64p : K1C_PseudoInstr<(outs SingleReg:$dst, SingleReg:$scratch),
+        (ins SingleReg:$cmp, SingleReg:$truev, SingleReg:$falsev, ScalarcondMod:$cond),[]>;
 
-def : Pat<(SelectCC i64:$cmp, i64:$truev, i64:$falsev),
-        (Select_Instr SingleReg:$cmp, SingleReg:$truev, SingleReg:$falsev)>;
+class LSUCOND<int N> : PatLeaf<(i8 N)>;
 
-def : Pat<(SelectCC i64:$cmp, (K1CWrapper tglobaladdr:$truef), (K1CWrapper tglobaladdr:$falsef)),
-        (Select_Instr SingleReg:$cmp, SingleReg:$truef, SingleReg:$falsef)>;
+def LSUCOND_DNEZ : LSUCOND<0>;
+def LSUCOND_DEQZ : LSUCOND<1>;
+def LSUCOND_DLTZ : LSUCOND<2>;
+def LSUCOND_DGEZ : LSUCOND<3>;
+def LSUCOND_DLEZ : LSUCOND<4>;
+def LSUCOND_DGTZ : LSUCOND<5>;
+def LSUCOND_ODD  : LSUCOND<6>;
+def LSUCOND_EVEN : LSUCOND<7>;
+def LSUCOND_WNEZ : LSUCOND<8>;
+def LSUCOND_WEQZ : LSUCOND<9>;
+def LSUCOND_WLTZ : LSUCOND<10>;
+def LSUCOND_WGEZ : LSUCOND<11>;
+def LSUCOND_WLEZ : LSUCOND<12>;
+def LSUCOND_WGTZ : LSUCOND<13>;
+
+multiclass Select32PAT<SDNode ntrue, SDNode nfalse, SDNode itrue, SDNode ifalse>
+{
+        def : Pat<(SelectCC (seteq i32:$val, (i32 0)), ntrue, nfalse),
+                (Select32p SingleReg:$val, itrue, ifalse, LSUCOND_WEQZ)>;
+
+        def : Pat<(SelectCC (setne i32:$val, (i32 0)), ntrue, nfalse),
+                (Select32p SingleReg:$val, itrue, ifalse, LSUCOND_WNEZ)>;
+
+        def : Pat<(SelectCC (setlt i32:$val, (i32 0)), ntrue, nfalse),
+                (Select32p SingleReg:$val, itrue, ifalse, LSUCOND_WLTZ)>;
+
+        def : Pat<(SelectCC (setgt i32:$val, (i32 -1)), ntrue, nfalse),
+                (Select32p SingleReg:$val, itrue, ifalse, LSUCOND_WGEZ)>;
+
+        def : Pat<(SelectCC (setlt i32:$val, (i32 1)), ntrue, nfalse),
+                (Select32p SingleReg:$val, itrue, ifalse, LSUCOND_WLEZ)>;
+
+        def : Pat<(SelectCC (setgt i32:$val, (i32 0)), ntrue, nfalse),
+                (Select32p SingleReg:$val, itrue, ifalse, LSUCOND_WGTZ)>;
+
+        def : Pat<(SelectCC (seteq (and i32:$val, (i32 1)), (i32 0)), ntrue, nfalse),
+                (Select32p SingleReg:$val, itrue, ifalse, LSUCOND_EVEN)>;
+}
+
+defm : Select32PAT<(i32 i32:$truev), (i32 i32:$falsev), (i32 Wrapped32:$truev), (i32 Wrapped32:$falsev)>;
+defm : Select32PAT<(i64 i64:$truev), (i64 i64:$falsev), (i64 Wrapped64:$truev), (i64 Wrapped64:$falsev)>;
+defm : Select32PAT<(K1CWrapper tglobaladdr:$truev), (K1CWrapper tglobaladdr:$falsev), (i64 SingleReg:$truev), (i64 SingleReg:$falsev)>;
+
+multiclass Select64PAT<SDNode ntrue, SDNode nfalse, SDNode itrue, SDNode ifalse>
+{
+        def : Pat<(SelectCC (seteq i64:$val, (i64 0)), ntrue, nfalse),
+                (Select64p SingleReg:$val, itrue, ifalse, LSUCOND_DEQZ)>;
+
+        def : Pat<(SelectCC (setne i64:$val, (i64 0)), ntrue, nfalse),
+                (Select64p SingleReg:$val, itrue, ifalse, LSUCOND_DNEZ)>;
+
+        def : Pat<(SelectCC (setlt i64:$val, (i64 0)), ntrue, nfalse),
+                (Select64p SingleReg:$val, itrue, ifalse, LSUCOND_DLTZ)>;
+
+        def : Pat<(SelectCC (setgt i64:$val, (i64 -1)), ntrue, nfalse),
+                (Select64p SingleReg:$val, itrue, ifalse, LSUCOND_DGEZ)>;
+
+        def : Pat<(SelectCC (setlt i64:$val, (i64 1)), ntrue, nfalse),
+                (Select64p SingleReg:$val, itrue, ifalse, LSUCOND_DLEZ)>;
+
+        def : Pat<(SelectCC (setgt i64:$val, (i64 0)), ntrue, nfalse),
+                (Select64p SingleReg:$val, itrue, ifalse, LSUCOND_DGTZ)>;
+
+        def : Pat<(SelectCC (seteq (and i64:$val, (i64 1)), (i64 0)), ntrue, nfalse),
+                (Select64p SingleReg:$val, itrue, ifalse, LSUCOND_EVEN)>;
+
+        def : Pat<(SelectCC i64:$cmp, ntrue, nfalse),
+                (Select64p SingleReg:$cmp, itrue, ifalse, LSUCOND_DNEZ)>;
+}
+
+defm : Select64PAT<(i32 i32:$truev), (i32 i32:$falsev), (i32 Wrapped32:$truev), (i32 Wrapped32:$falsev)>;
+defm : Select64PAT<(i64 i64:$truev), (i64 i64:$falsev), (i64 Wrapped64:$truev), (i64 Wrapped64:$falsev)>;
+defm : Select64PAT<(K1CWrapper tglobaladdr:$truev), (K1CWrapper tglobaladdr:$falsev), (i64 SingleReg:$truev), (i64 SingleReg:$falsev)>;
 
 def : Pat<(i1 (trunc i64:$param)), (ANDDd1 SingleReg:$param, (i64 1))>;
 def : Pat<(i8 (trunc i64:$param)), (ZXBD SingleReg:$param)>;
