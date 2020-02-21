@@ -475,13 +475,16 @@ bool K1CHardwareLoops::ConvertToHardwareLoop(MachineFunction &MF,
 
   DebugLoc DL;
 
-  MachineBasicBlock *DoneMBB = MF.CreateMachineBasicBlock(NULL);
-  BuildMI(*DoneMBB, DoneMBB->instr_end(), DL, TII->get(K1C::GOTO))
-      .addMBB(ExitMBB);
-  MF.insert(++HeaderMBB->getIterator(), DoneMBB);
+  MachineBasicBlock *DoneMBB = ExitMBB;
+  if (!HeaderMBB->isLayoutSuccessor(ExitMBB)) {
+    DoneMBB = MF.CreateMachineBasicBlock(NULL);
+    BuildMI(*DoneMBB, DoneMBB->instr_end(), DL, TII->get(K1C::GOTO))
+        .addMBB(ExitMBB);
+    MF.insert(++HeaderMBB->getIterator(), DoneMBB);
 
-  DoneMBB->transferSuccessorsAndUpdatePHIs(HeaderMBB);
-  HeaderMBB->addSuccessor(DoneMBB);
+    DoneMBB->transferSuccessorsAndUpdatePHIs(HeaderMBB);
+    HeaderMBB->addSuccessor(DoneMBB);
+  }
 
   if (TripCount.isReg()) {
 
