@@ -202,11 +202,31 @@ bool K1CInstrInfo::analyzeBranch(MachineBasicBlock &MBB,
   TBB = FBB = nullptr;
   Cond.clear();
 
-  MachineBasicBlock::iterator I = MBB.getLastNonDebugInstr();
-  if (I == MBB.end())
-    return false;
+  MachineBasicBlock::iterator I = MBB.end();
+  while (I != MBB.begin()) {
+    --I;
 
-  return true;
+    // Ignore debug instructions.
+    if (I->isDebugInstr())
+      continue;
+
+    // Handle unconditional branches.
+    if (I->getOpcode() == K1C::GOTO && AllowModify) {
+      while (std::next(I) != MBB.end())
+        std::next(I)->eraseFromParent();
+
+      if (MBB.isLayoutSuccessor(I->getOperand(0).getMBB())) {
+        I->eraseFromParent();
+        I = MBB.end();
+        continue;
+      }
+    }
+
+    // Other cases are not understood.
+    return true;
+  }
+
+  return false;
 }
 
 unsigned K1CInstrInfo::insertBranch(MachineBasicBlock &MBB,
@@ -220,30 +240,20 @@ unsigned K1CInstrInfo::insertBranch(MachineBasicBlock &MBB,
 
 unsigned K1CInstrInfo::removeBranch(MachineBasicBlock &MBB,
                                     int *BytesRemoved) const {
-  if (BytesRemoved)
-    *BytesRemoved = 0;
-  MachineBasicBlock::iterator I = MBB.getLastNonDebugInstr();
-  if (I == MBB.end())
-    return 0;
+  assert(!BytesRemoved && "code size not handled");
 
-  if (!I->getDesc().isUnconditionalBranch() &&
-      !I->getDesc().isConditionalBranch())
-    return 0;
+  MachineBasicBlock::iterator I = MBB.end();
+  unsigned Count = 0;
+  while (I != MBB.begin()) {
+    --I;
+    if (I->isDebugInstr())
+      continue;
+    if (!I->isBranch())
+      return Count;
+    I->eraseFromParent();
+    I = MBB.end();
+    ++Count;
+  }
 
-  I->eraseFromParent();
-  if (BytesRemoved)
-    *BytesRemoved += getInstSizeInBytes(*I);
-
-  I = MBB.end();
-
-  if (I == MBB.begin())
-    return 1;
-  --I;
-  if (!I->getDesc().isConditionalBranch())
-    return 1;
-
-  I->eraseFromParent();
-  if (BytesRemoved)
-    *BytesRemoved += getInstSizeInBytes(*I);
-  return 2;
+  return Count;
 }
