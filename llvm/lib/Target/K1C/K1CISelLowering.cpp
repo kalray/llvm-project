@@ -238,7 +238,7 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::SELECT_CC, VT, Expand);
     setOperationAction(ISD::SELECT, VT, Custom);
 
-    setOperationAction(ISD::BR_CC, VT, Expand);
+    setOperationAction(ISD::BR_CC, VT, Custom);
 
     setOperationAction(ISD::BSWAP, VT, Expand);
   }
@@ -398,6 +398,10 @@ const char *K1CTargetLowering::getTargetNodeName(unsigned Opcode) const {
     return "K1C::TAIL";
   case K1CISD::GetSystemReg:
     return "K1C::GetSystemReg";
+  case K1CISD::COMP:
+    return "K1C::COMP";
+  case K1CISD::BRCOND:
+    return "K1C::BRCOND";
   default:
     return NULL;
   }
@@ -823,6 +827,8 @@ SDValue K1CTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
   case ISD::SRA:
   case ISD::SRL:
     return lowerShiftVectorial(Op, DAG);
+  case ISD::BR_CC:
+    return lowerBR_CC(Op, DAG);
   }
 }
 
@@ -1780,6 +1786,153 @@ SDValue K1CTargetLowering::lowerShiftVectorial(SDValue Op,
   return SDValue(DAG.getMachineNode(MachineOpcode, DL, Op.getValueType(),
                                     {Op.getOperand(0), ScalarValue}),
                  0);
+}
+
+unsigned
+K1CTargetLowering::getComparisonCondition(ISD::CondCode CCOpcode) const {
+  unsigned Condition;
+
+  switch (CCOpcode) {
+  case ISD::SETEQ:
+    Condition = K1CCC::COMPARISON_EQ;
+    break;
+  case ISD::SETNE:
+    Condition = K1CCC::COMPARISON_NE;
+    break;
+  case ISD::SETLT:
+    Condition = K1CCC::COMPARISON_LT;
+    break;
+  case ISD::SETLE:
+    Condition = K1CCC::COMPARISON_LE;
+    break;
+  case ISD::SETGT:
+    Condition = K1CCC::COMPARISON_GT;
+    break;
+  case ISD::SETGE:
+    Condition = K1CCC::COMPARISON_GE;
+    break;
+  case ISD::SETULT:
+    Condition = K1CCC::COMPARISON_LTU;
+    break;
+  case ISD::SETULE:
+    Condition = K1CCC::COMPARISON_LEU;
+    break;
+  case ISD::SETUGT:
+    Condition = K1CCC::COMPARISON_GTU;
+    break;
+  case ISD::SETUGE:
+    Condition = K1CCC::COMPARISON_GEU;
+    break;
+  default:
+    llvm_unreachable("not an integer condition code");
+  }
+
+  return Condition;
+}
+
+unsigned K1CTargetLowering::getBranchCondition(ISD::CondCode CCOpcode,
+                                               bool Word) const {
+  unsigned Condition;
+  unsigned WordAddend = K1CCC::BRANCHCOND_WEQZ - K1CCC::BRANCHCOND_DEQZ;
+
+  switch (CCOpcode) {
+  case ISD::SETEQ:
+    Condition = K1CCC::BRANCHCOND_DEQZ;
+    break;
+  case ISD::SETNE:
+    Condition = K1CCC::BRANCHCOND_DNEZ;
+    break;
+  case ISD::SETLT:
+  case ISD::SETULT:
+    Condition = K1CCC::BRANCHCOND_DLTZ;
+    break;
+  case ISD::SETLE:
+  case ISD::SETULE:
+    Condition = K1CCC::BRANCHCOND_DLEZ;
+    break;
+  case ISD::SETGT:
+  case ISD::SETUGT:
+    Condition = K1CCC::BRANCHCOND_DGTZ;
+    break;
+  case ISD::SETGE:
+  case ISD::SETUGE:
+    Condition = K1CCC::BRANCHCOND_DGEZ;
+    break;
+  default:
+    llvm_unreachable("not an integer condition code");
+  }
+
+  return Word ? Condition + WordAddend : Condition;
+}
+
+SDValue K1CTargetLowering::lowerBR_CC(SDValue Op, SelectionDAG &DAG) const {
+  // BR_CC CC LHS RHS BB (compare LHS and RHS with condition CC,
+  // branch to block BB if true)
+  //
+  // LHS is an AND TMP 1 and CC is NE or EQ:
+  // -> generate one cb insn if RHS is 0: CB.[ODD|EVEN] TMP ? BB
+  //
+  // RHS is a constant equal to 0:
+  // -> generate one cb insn: CB.CC LHS ? BB
+  //
+  // RHS is a constant equal to 1 and CC is LT:
+  // -> generate one cb insn: CB.[W|D]LTE LHS ? BB
+  //
+  // RHS is a constant equal to -1 and CC is GT:
+  // -> generate one cb insn: CB.[W|D]GTE LHS ? BB
+  //
+  // General case:
+  // -> generate two insns: COMP[W|D].CC TMP = LHS, RHS
+  //                        CB.ODD TMP ? BB
+
+  SDLoc DL(Op);
+  SDValue Chain = Op.getOperand(0);
+  SDValue CC = Op.getOperand(1);
+  SDValue LHS = Op.getOperand(2);
+  SDValue RHS = Op.getOperand(3);
+  SDValue BB = Op.getOperand(4);
+  EVT Type = LHS.getSimpleValueType();
+  MVT ModVT = MVT::i32;
+
+  ISD::CondCode CCOpcode = cast<CondCodeSDNode>(CC)->get();
+  SDValue CompCond =
+      DAG.getConstant(getComparisonCondition(CCOpcode), DL, ModVT);
+  SDValue CBCond = DAG.getConstant(
+      getBranchCondition(CCOpcode, Type == MVT::i32), DL, ModVT);
+
+  bool EmitComp = true;
+
+  if (auto *Constant = dyn_cast<ConstantSDNode>(RHS)) {
+    if (Constant->getSExtValue() == 0) {
+      EmitComp = false;
+      if (LHS->getOpcode() == ISD::AND &&
+          isa<ConstantSDNode>(LHS->getOperand(1)) &&
+          dyn_cast<ConstantSDNode>(LHS->getOperand(1))->getSExtValue() == 1 &&
+          (CCOpcode == ISD::SETNE || CCOpcode == ISD::SETEQ)) {
+        EmitComp = false;
+        LHS = LHS->getOperand(0);
+        CBCond = DAG.getConstant(CCOpcode == ISD::SETEQ ? K1CCC::BRANCHCOND_EVEN
+                                                        : K1CCC::BRANCHCOND_ODD,
+                                 DL, ModVT);
+      }
+    } else if (Constant->getSExtValue() == 1 && CCOpcode == ISD::SETLT) {
+      EmitComp = false;
+      CBCond = DAG.getConstant(getBranchCondition(ISD::SETLE, Type == MVT::i32),
+                               DL, ModVT);
+    } else if (Constant->getSExtValue() == -1 && CCOpcode == ISD::SETGT) {
+      EmitComp = false;
+      CBCond = DAG.getConstant(getBranchCondition(ISD::SETGE, Type == MVT::i32),
+                               DL, ModVT);
+    }
+  }
+
+  if (EmitComp) {
+    LHS = DAG.getNode(K1CISD::COMP, DL, Type, LHS, RHS, CompCond);
+    CBCond = DAG.getConstant(K1CCC::BRANCHCOND_ODD, DL, ModVT);
+  }
+
+  return DAG.getNode(K1CISD::BRCOND, DL, Op.getValueType(), Chain, LHS, BB,
+                     CBCond);
 }
 
 bool K1CTargetLowering::canLowerToMINMAXWP(SDValue Op) const {
