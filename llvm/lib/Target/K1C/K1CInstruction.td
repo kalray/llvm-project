@@ -55,7 +55,7 @@ def ScalingMod : Operand<i8> {
   let PrintMethod = "printScalingMod";
 }
 
-def ScalarcondMod : Operand<i8> {
+def ScalarcondMod : Operand<i32>, ImmLeaf<i32, [{return = (0 <= Imm) && (Imm <= 13);}]> {
   let PrintMethod = "printScalarcondMod";
 }
 
@@ -69,7 +69,7 @@ def Splat32Mod : Operand<i8> {
   let PrintMethod = "printSplat32Mod";
 }
 
-def ComparisonMod : Operand<i8> {
+def ComparisonMod : Operand<i32>, ImmLeaf<i32, [{return = (0 <= Imm) && (Imm <= 13);}]> {
   let PrintMethod = "printComparisonMod";
 }
 
