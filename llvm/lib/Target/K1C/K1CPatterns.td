@@ -7,6 +7,49 @@
 //
 //===----------------------------------------------------------------------===//
 
+
+//===----------------------------------------------------------------------===//
+// Custom selection DAG type profile definitions.
+//===----------------------------------------------------------------------===//
+
+def SDTK1CBRCond : SDTypeProfile<0, 3,
+      [SDTCisInt<0>, SDTCisVT<1, iPTR>, SDTCisVT<2, i32>]>;
+def SDTK1CComp : SDTypeProfile<1, 3,
+      [SDTCisInt<0>, SDTCisSameAs<0, 1>, SDTCisSameAs<0, 2>, SDTCisVT<3, i32>]>;
+
+//===----------------------------------------------------------------------===//
+// Custom selection DAG node definitions.
+//===----------------------------------------------------------------------===//
+
+def K1CBRCond : SDNode<"K1CISD::BRCOND", SDTK1CBRCond, [SDNPHasChain]>;
+def K1CComp : SDNode<"K1CISD::COMP", SDTK1CComp, []>;
+
+
+//===----------------------------------------------------------------------===//
+// Selection DAG patterns using custom DAG nodes.
+//===----------------------------------------------------------------------===//
+
+def : Pat<(K1CBRCond i32:$lhs, bb:$dst, i32:$mod),
+            (CB SingleReg:$lhs, Pcrel17:$dst, ScalarcondMod:$mod)>;
+def : Pat<(K1CBRCond i64:$lhs, bb:$dst, i32:$mod),
+            (CB SingleReg:$lhs, Pcrel17:$dst, ScalarcondMod:$mod)>;
+
+
+def : Pat<(K1CComp i32:$lhs, i32:$rhs, i32:$mod),
+            (COMPWd0 SingleReg:$lhs, SingleReg:$rhs, ScalarcondMod:$mod)>;
+def : Pat<(K1CComp i32:$lhs, Wrapped32:$rhs, i32:$mod),
+            (COMPWd1 SingleReg:$lhs, Wrapped32:$rhs, ScalarcondMod:$mod)>;
+def : Pat<(K1CComp i64:$lhs, Signed10:$rhs, i32:$mod),
+            (COMPDd0 SingleReg:$lhs, Signed10:$rhs, ComparisonMod:$mod)>;
+def : Pat<(K1CComp i64:$lhs, Signed37:$rhs, i32:$mod),
+            (COMPDd1 SingleReg:$lhs, Signed37:$rhs, ComparisonMod:$mod)>;
+def : Pat<(K1CComp i64:$lhs, Wrapped64:$rhs, i32:$mod),
+            (COMPDd2 SingleReg:$lhs, Wrapped64:$rhs, ComparisonMod:$mod)>;
+def : Pat<(K1CComp i64:$lhs, i64:$rhs, i32:$mod),
+            (COMPDd3 SingleReg:$lhs, SingleReg:$rhs, ComparisonMod:$mod)>;
+
+// FIXME: clean code below
+
 def : BITCAST<i64, v8i8, SingleReg>;
 def : BITCAST<v8i8, i64, SingleReg>;
 
@@ -288,9 +331,10 @@ def : Pat<(i64 (sext_inreg SingleReg:$val, i32)), (SXWD SingleReg:$val)>;
 
 def : Pat<(v8i8 (sext_inreg SingleReg:$val, v8i1)), (COPY SingleReg:$val)>;
 
-// Conditional branches(setcc)
-def : Pat<(brcond i32:$cond, bb:$dst), (CB SingleReg:$cond, Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
-def : Pat<(brcond i64:$cond, bb:$dst), (CB SingleReg:$cond, Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
+// Conditional branch
+def : Pat<(brcond i32:$cond, bb:$dst), (CB SingleReg:$cond, Pcrel17:$dst, BRANCHCOND_WNEZ)>;
+def : Pat<(brcond i64:$cond, bb:$dst), (CB SingleReg:$cond, Pcrel17:$dst, BRANCHCOND_DNEZ)>;
+
 
 def : Pat<(i64 AddrFI:$fi), (ADDDd3 SingleReg:$fi,(i64 0) )>;
 
@@ -305,45 +349,28 @@ let Constraints = "@earlyclobber $scratch, $dst = $falsev" in
 def Select64p : K1C_PseudoInstr<(outs SingleReg:$dst, SingleReg:$scratch),
         (ins SingleReg:$cmp, SingleReg:$truev, SingleReg:$falsev, ScalarcondMod:$cond),[]>;
 
-class LSUCOND<int N> : PatLeaf<(i8 N)>;
-
-def LSUCOND_DNEZ : LSUCOND<0>;
-def LSUCOND_DEQZ : LSUCOND<1>;
-def LSUCOND_DLTZ : LSUCOND<2>;
-def LSUCOND_DGEZ : LSUCOND<3>;
-def LSUCOND_DLEZ : LSUCOND<4>;
-def LSUCOND_DGTZ : LSUCOND<5>;
-def LSUCOND_ODD  : LSUCOND<6>;
-def LSUCOND_EVEN : LSUCOND<7>;
-def LSUCOND_WNEZ : LSUCOND<8>;
-def LSUCOND_WEQZ : LSUCOND<9>;
-def LSUCOND_WLTZ : LSUCOND<10>;
-def LSUCOND_WGEZ : LSUCOND<11>;
-def LSUCOND_WLEZ : LSUCOND<12>;
-def LSUCOND_WGTZ : LSUCOND<13>;
-
 multiclass Select32PAT<SDNode ntrue, SDNode nfalse, SDNode itrue, SDNode ifalse>
 {
         def : Pat<(SelectCC (seteq i32:$val, (i32 0)), ntrue, nfalse),
-                (Select32p SingleReg:$val, itrue, ifalse, LSUCOND_WEQZ)>;
+                (Select32p SingleReg:$val, itrue, ifalse, BRANCHCOND_WEQZ)>;
 
         def : Pat<(SelectCC (setne i32:$val, (i32 0)), ntrue, nfalse),
-                (Select32p SingleReg:$val, itrue, ifalse, LSUCOND_WNEZ)>;
+                (Select32p SingleReg:$val, itrue, ifalse, BRANCHCOND_WNEZ)>;
 
         def : Pat<(SelectCC (setlt i32:$val, (i32 0)), ntrue, nfalse),
-                (Select32p SingleReg:$val, itrue, ifalse, LSUCOND_WLTZ)>;
+                (Select32p SingleReg:$val, itrue, ifalse, BRANCHCOND_WLTZ)>;
 
         def : Pat<(SelectCC (setgt i32:$val, (i32 -1)), ntrue, nfalse),
-                (Select32p SingleReg:$val, itrue, ifalse, LSUCOND_WGEZ)>;
+                (Select32p SingleReg:$val, itrue, ifalse, BRANCHCOND_WGEZ)>;
 
         def : Pat<(SelectCC (setlt i32:$val, (i32 1)), ntrue, nfalse),
-                (Select32p SingleReg:$val, itrue, ifalse, LSUCOND_WLEZ)>;
+                (Select32p SingleReg:$val, itrue, ifalse, BRANCHCOND_WLEZ)>;
 
         def : Pat<(SelectCC (setgt i32:$val, (i32 0)), ntrue, nfalse),
-                (Select32p SingleReg:$val, itrue, ifalse, LSUCOND_WGTZ)>;
+                (Select32p SingleReg:$val, itrue, ifalse, BRANCHCOND_WGTZ)>;
 
         def : Pat<(SelectCC (seteq (and i32:$val, (i32 1)), (i32 0)), ntrue, nfalse),
-                (Select32p SingleReg:$val, itrue, ifalse, LSUCOND_EVEN)>;
+                (Select32p SingleReg:$val, itrue, ifalse, BRANCHCOND_EVEN)>;
 }
 
 defm : Select32PAT<(i32 i32:$truev), (i32 i32:$falsev), (i32 Wrapped32:$truev), (i32 Wrapped32:$falsev)>;
@@ -353,28 +380,28 @@ defm : Select32PAT<(K1CWrapper tglobaladdr:$truev), (K1CWrapper tglobaladdr:$fal
 multiclass Select64PAT<SDNode ntrue, SDNode nfalse, SDNode itrue, SDNode ifalse>
 {
         def : Pat<(SelectCC (seteq i64:$val, (i64 0)), ntrue, nfalse),
-                (Select64p SingleReg:$val, itrue, ifalse, LSUCOND_DEQZ)>;
+                (Select64p SingleReg:$val, itrue, ifalse, BRANCHCOND_DEQZ)>;
 
         def : Pat<(SelectCC (setne i64:$val, (i64 0)), ntrue, nfalse),
-                (Select64p SingleReg:$val, itrue, ifalse, LSUCOND_DNEZ)>;
+                (Select64p SingleReg:$val, itrue, ifalse, BRANCHCOND_DNEZ)>;
 
         def : Pat<(SelectCC (setlt i64:$val, (i64 0)), ntrue, nfalse),
-                (Select64p SingleReg:$val, itrue, ifalse, LSUCOND_DLTZ)>;
+                (Select64p SingleReg:$val, itrue, ifalse, BRANCHCOND_DLTZ)>;
 
         def : Pat<(SelectCC (setgt i64:$val, (i64 -1)), ntrue, nfalse),
-                (Select64p SingleReg:$val, itrue, ifalse, LSUCOND_DGEZ)>;
+                (Select64p SingleReg:$val, itrue, ifalse, BRANCHCOND_DGEZ)>;
 
         def : Pat<(SelectCC (setlt i64:$val, (i64 1)), ntrue, nfalse),
-                (Select64p SingleReg:$val, itrue, ifalse, LSUCOND_DLEZ)>;
+                (Select64p SingleReg:$val, itrue, ifalse, BRANCHCOND_DLEZ)>;
 
         def : Pat<(SelectCC (setgt i64:$val, (i64 0)), ntrue, nfalse),
-                (Select64p SingleReg:$val, itrue, ifalse, LSUCOND_DGTZ)>;
+                (Select64p SingleReg:$val, itrue, ifalse, BRANCHCOND_DGTZ)>;
 
         def : Pat<(SelectCC (seteq (and i64:$val, (i64 1)), (i64 0)), ntrue, nfalse),
-                (Select64p SingleReg:$val, itrue, ifalse, LSUCOND_EVEN)>;
+                (Select64p SingleReg:$val, itrue, ifalse, BRANCHCOND_EVEN)>;
 
         def : Pat<(SelectCC i64:$cmp, ntrue, nfalse),
-                (Select64p SingleReg:$cmp, itrue, ifalse, LSUCOND_DNEZ)>;
+                (Select64p SingleReg:$cmp, itrue, ifalse, BRANCHCOND_DNEZ)>;
 }
 
 defm : Select64PAT<(i32 i32:$truev), (i32 i32:$falsev), (i32 Wrapped32:$truev), (i32 Wrapped32:$falsev)>;
