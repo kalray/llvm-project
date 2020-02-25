@@ -191,7 +191,7 @@ void K1CLoadStorePackingPass::PackAndReplaceLoad(
               TII->get(Opcode), Reg);
 
   mib.addImm((*ItStart)->getOperand(1).getImm())
-      .addReg((*ItStart)->getOperand(2).getReg())
+      .add((*ItStart)->getOperand(2))
       .addImm(0);
 
   LLVM_DEBUG(dbgs() << "added " << *mib << "\n");
@@ -249,7 +249,7 @@ void K1CLoadStorePackingPass::PackAndReplaceStore(
   BuildMI(*(*ItStart)->getParent(), LocInstr, (*ItStart)->getDebugLoc(),
           TII->get(Opcode))
       .addImm((*ItStart)->getOperand(0).getImm())
-      .addReg((*ItStart)->getOperand(1).getReg())
+      .add((*ItStart)->getOperand(1))
       .addReg(Reg);
 
   while (Count--) {
