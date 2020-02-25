@@ -37,7 +37,9 @@ enum NodeType : unsigned {
   PICInternIndirection,
   PICExternIndirection,
   PICPCRelativeGOTAddr,
-  PICWRAPPER
+  PICWRAPPER,
+  COMP,
+  BRCOND
 };
 } // namespace K1CISD
 
@@ -119,6 +121,7 @@ private:
   SDValue lowerEXTRACT_VECTOR_ELT_REGISTER(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerCONCAT_VECTORS(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerShiftVectorial(SDValue Op, SelectionDAG &DAG) const;
+  SDValue lowerBR_CC(SDValue Op, SelectionDAG &DAG) const;
 
   bool canLowerToMINMAXWP(SDValue Op) const;
   SDValue lowerMINMAXWP(SDValue Op, SelectionDAG &DAG) const;
@@ -141,6 +144,9 @@ private:
   std::pair<unsigned, const TargetRegisterClass *>
   getRegForInlineAsmConstraint(const TargetRegisterInfo *TRI,
                                StringRef Constraint, MVT VT) const override;
+
+  unsigned getComparisonCondition(ISD::CondCode CCOpcode) const;
+  unsigned getBranchCondition(ISD::CondCode CCOpcode, bool Word) const;
 };
 
 } // namespace llvm

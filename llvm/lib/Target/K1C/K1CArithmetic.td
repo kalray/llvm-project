@@ -246,42 +246,42 @@ def : Pat<(and i32:$rs1, Signed10W:$rs2), (ANDWd0 SingleReg:$rs1, Signed10W:$rs2
 def : Pat<(and i32:$rs1, Signed37W:$rs2), (ANDWd1 SingleReg:$rs1, Signed37W:$rs2)>;
 def : Pat<(and v2i16:$rs1, v2i16:$rs2), (ANDWd2 SingleReg:$rs1, SingleReg:$rs2)>;
 
-multiclass COMP_Pat<SDNode Node, int Mod> {
+multiclass COMP_Pat<SDNode Node, COMPARISON Mod> {
   //COMPD
   def : Pat<(i32 (Node i64:$lhs, i64:$rhs)),
-        (COMPDd3 SingleReg:$lhs, SingleReg:$rhs, (i8 Mod))>;
+        (COMPDd3 SingleReg:$lhs, SingleReg:$rhs, Mod)>;
   def : Pat<(i32 (Node i64:$lhs, Signed10:$rhs)),
-        (COMPDd0 SingleReg:$lhs, Signed10:$rhs, (i8 Mod))>;
+        (COMPDd0 SingleReg:$lhs, Signed10:$rhs, Mod)>;
   def : Pat<(i32 (Node i64:$lhs, Signed37:$rhs)),
-        (COMPDd1 SingleReg:$lhs, Signed37:$rhs, (i8 Mod))>;
+        (COMPDd1 SingleReg:$lhs, Signed37:$rhs, Mod)>;
   def : Pat<(i32 (Node i64:$lhs, Wrapped64:$rhs)),
-        (COMPDd2 SingleReg:$lhs, Wrapped64:$rhs, (i8 Mod))>;
+        (COMPDd2 SingleReg:$lhs, Wrapped64:$rhs, Mod)>;
 
   //COMPW
   def : Pat<(i32 (Node i32:$lhs, i32:$rhs)),
-        (COMPWd0 SingleReg:$lhs, SingleReg:$rhs, (i8 Mod))>;
+        (COMPWd0 SingleReg:$lhs, SingleReg:$rhs, Mod)>;
   def : Pat<(i32 (Node i32:$lhs, Wrapped32:$rhs)),
-        (COMPWd1 SingleReg:$lhs, Wrapped32:$rhs, (i8 Mod))>;
+        (COMPWd1 SingleReg:$lhs, Wrapped32:$rhs, Mod)>;
 
   //COMPNHQ
   def : Pat<(v4i16 (Node v4i16:$lhs, v4i16:$rhs)),
-        (COMPNHQ SingleReg:$lhs, SingleReg:$rhs, (i8 Mod))>;
+        (COMPNHQ SingleReg:$lhs, SingleReg:$rhs, Mod)>;
 
   //COMPNWP
   def : Pat<(v2i32 (Node v2i32:$lhs, v2i32:$rhs)),
-        (COMPNWP SingleReg:$lhs, SingleReg:$rhs, (i8 Mod))>;
+        (COMPNWP SingleReg:$lhs, SingleReg:$rhs, Mod)>;
 }
 
-defm : COMP_Pat<seteq,   1/*.eq*/>;
-defm : COMP_Pat<setne,   0/*.ne*/>;
-defm : COMP_Pat<setugt,  9/*.gtu*/>;
-defm : COMP_Pat<setuge,  7/*.geu*/>;
-defm : COMP_Pat<setult,  6/*.ltu*/>;
-defm : COMP_Pat<setule,  8/*.leu*/>;
-defm : COMP_Pat<setgt,   5/*.gt*/>;
-defm : COMP_Pat<setge,   3/*.ge*/>;
-defm : COMP_Pat<setlt,   2/*.lt*/>;
-defm : COMP_Pat<setle,   4/*.le*/>;
+defm : COMP_Pat<seteq,   COMPARISON_EQ>;
+defm : COMP_Pat<setne,   COMPARISON_NE>;
+defm : COMP_Pat<setugt,  COMPARISON_GTU>;
+defm : COMP_Pat<setuge,  COMPARISON_GEU>;
+defm : COMP_Pat<setult,  COMPARISON_LTU>;
+defm : COMP_Pat<setule,  COMPARISON_LEU>;
+defm : COMP_Pat<setgt,   COMPARISON_GT>;
+defm : COMP_Pat<setge,   COMPARISON_GE>;
+defm : COMP_Pat<setlt,   COMPARISON_LT>;
+defm : COMP_Pat<setle,   COMPARISON_LE>;
 
 // ORD
 def : Pat<(or i64:$rs1, i64:$rs2), (ORDd0 SingleReg:$rs1, SingleReg:$rs2)>;
