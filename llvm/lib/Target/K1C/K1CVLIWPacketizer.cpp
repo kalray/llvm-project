@@ -432,6 +432,7 @@ bool K1CPacketizerList::isLegalToPacketizeTogether(SUnit *SUI, SUnit *SUJ) {
   if (J.getNumOperands() > 0 && J.getDesc().getNumDefs() == 1 &&
       J.getOperand(0).isReg() && !J.getOperand(0).isImplicit()) {
 
+    // Rule 1
     // Handle Write after Write case
     // Handle Read after Write case
 
@@ -458,15 +459,6 @@ bool K1CPacketizerList::isLegalToPacketizeTogether(SUnit *SUI, SUnit *SUJ) {
         }
       }
     }
-  }
-
-  // Rule 1
-  // Two instructions with side effects may not be scheduled within a single
-  // bundle
-  if (SUI->getInstr()->hasUnmodeledSideEffects() &&
-      SUJ->getInstr()->hasUnmodeledSideEffects()) {
-    LLVM_DEBUG(dbgs() << "  (k1c)rule 1\n";);
-    return false;
   }
 
   // Rule 2
