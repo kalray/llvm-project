@@ -276,12 +276,6 @@ def : Pat<(i32 (sext i16:$val)), (SXHD SingleReg:$val)>;
 def : Pat<(i64 (anyext i8:$val)), (COPY SingleReg:$val)>;
 def : Pat<(i64 (anyext i16:$val)), (COPY SingleReg:$val)>;
 def : Pat<(i64 (anyext i32:$val)), (COPY SingleReg:$val)>;
-def : Pat<(i64 (zext i8:$val)), (ZXBD SingleReg:$val)>;
-def : Pat<(i64 (sext i8:$val)), (SXBD SingleReg:$val)>;
-def : Pat<(i64 (zext i16:$val)), (ZXHD SingleReg:$val)>;
-def : Pat<(i64 (sext i16:$val)), (SXHD SingleReg:$val)>;
-def : Pat<(i64 (zext i32:$val)), (ZXWD SingleReg:$val)>;
-def : Pat<(i64 (sext i32:$val)), (SXWD SingleReg:$val)>;
 
 def : Pat<(i32 (sext_inreg SingleReg:$val, i1)), (EXTFS SingleReg:$val, 0, 0)>;
 def : Pat<(i32 (sext_inreg SingleReg:$val, i8)), (SXBD SingleReg:$val)>;
@@ -294,9 +288,6 @@ def : Pat<(i64 (sext_inreg SingleReg:$val, i32)), (SXWD SingleReg:$val)>;
 
 def : Pat<(v8i8 (sext_inreg SingleReg:$val, v8i1)), (COPY SingleReg:$val)>;
 
-// Unconditional branch
-def : Pat<(br bb:$addr), (GOTO Pcrel27:$addr)>;
-
 // Conditional branches(setcc)
 def : Pat<(brcond i32:$cond, bb:$dst), (CB SingleReg:$cond, Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
 def : Pat<(brcond i64:$cond, bb:$dst), (CB SingleReg:$cond, Pcrel17:$dst, (i8 8/*CB.wnez*/))>;
@@ -305,7 +296,6 @@ def : Pat<(i64 AddrFI:$fi), (ADDDd3 SingleReg:$fi,(i64 0) )>;
 
 def : Pat<(brind (i32 SingleReg:$r)), (IGOTO SingleReg:$r)>;
 
-def : Pat<(brind (i64 SingleReg:$r)), (IGOTO SingleReg:$r)>;
 
 let Constraints = "@earlyclobber $scratch, $dst = $falsev" in
 def Select32p : K1C_PseudoInstr<(outs SingleReg:$dst, SingleReg:$scratch),
@@ -404,12 +394,6 @@ def : Pat<(i1 (trunc i16:$param)), (ANDWd0 SingleReg:$param, (i32 1))>;
 def : Pat<(i8 (trunc i16:$param)), (ZXBD SingleReg:$param)>;
 
 def : Pat<(i1 (trunc i8:$param)), (ANDWd0 SingleReg:$param, (i32 1))>;
-
-def : Pat<(cttz i32:$src), (CTZW SingleReg:$src)>;
-def : Pat<(cttz i64:$src), (CTZD SingleReg:$src)>;
-
-def : Pat<(ctlz i32:$src), (CLZW SingleReg:$src)>;
-def : Pat<(ctlz i64:$src), (CLZD SingleReg:$src)>;
 
 // v2i32
 def : Pat<(extractelt (v2i32 SingleReg:$v), 0), (COPY SingleReg:$v)>;
