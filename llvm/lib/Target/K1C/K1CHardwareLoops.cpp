@@ -85,7 +85,21 @@ static bool isMakeOperator(unsigned opcode) {
   default:
     return false;
   }
+  return false;
+}
 
+static bool isExtensionOperator(unsigned opcode) {
+  switch (opcode) {
+  case K1C::ZXWD:
+  case K1C::ZXBD:
+  case K1C::ZXHD:
+  case K1C::SXBD:
+  case K1C::SXHD:
+  case K1C::SXWD:
+    return true;
+  default:
+    return false;
+  }
   return false;
 }
 
@@ -161,10 +175,12 @@ bool K1CHardwareLoops::IsEligibleForHardwareLoop(MachineLoop *L) {
 bool K1CHardwareLoops::BackTraceRegValue(MachineLoop *L,
                                          instr_iterator headerIt,
                                          unsigned regToSearchFor,
-                                         int64_t &CmpVal, int64_t &Bump) {
+                                         MachineOperand &CmpVal, int64_t &Bump,
+                                         bool &IsDefinedInBody) {
 
   unsigned regNr = regToSearchFor;
   bool Done = false;
+  IsDefinedInBody = false;
 
   headerIt = std::prev(headerIt);
   // Condition basick block register backtrace
@@ -172,6 +188,7 @@ bool K1CHardwareLoops::BackTraceRegValue(MachineLoop *L,
     if (headerIt->getOpcode() == K1C::PHI &&
         headerIt->getOperand(0).getReg() == regNr) {
       regNr = headerIt->getOperand(1).getReg();
+      CmpVal = headerIt->getOperand(1);
     }
 
     if (isAddOperator(headerIt->getOpcode()) &&
@@ -179,6 +196,7 @@ bool K1CHardwareLoops::BackTraceRegValue(MachineLoop *L,
         headerIt->getOperand(2).isImm()) {
       regNr = headerIt->getOperand(1).getReg();
       Bump = headerIt->getOperand(2).getImm();
+      CmpVal = headerIt->getOperand(1);
     }
 
     if (isSubOperator(headerIt->getOpcode()) &&
@@ -186,6 +204,15 @@ bool K1CHardwareLoops::BackTraceRegValue(MachineLoop *L,
         headerIt->getOperand(2).isImm()) {
       regNr = headerIt->getOperand(1).getReg();
       Bump = headerIt->getOperand(2).getImm();
+      CmpVal = headerIt->getOperand(1);
+    }
+
+    for (auto OutputOp = headerIt->defs().begin();
+         OutputOp != headerIt->defs().end(); ++OutputOp) {
+      if (OutputOp->getReg() == regNr) {
+        IsDefinedInBody = true;
+        break;
+      }
     }
 
     if (headerIt == HeaderMBB->begin())
@@ -201,7 +228,13 @@ bool K1CHardwareLoops::BackTraceRegValue(MachineLoop *L,
   do {
     if (isMakeOperator(I->getOpcode()) &&
         (I->getOperand(0).getReg() == regNr)) {
-      CmpVal = I->getOperand(1).getImm();
+      CmpVal = I->getOperand(1);
+      return true;
+    }
+
+    if (isExtensionOperator(I->getOpcode()) &&
+        (I->getOperand(0).getReg() == regNr)) {
+      CmpVal = I->getOperand(1);
       return true;
     }
 
@@ -216,8 +249,8 @@ bool K1CHardwareLoops::BackTraceRegValue(MachineLoop *L,
 }
 
 bool K1CHardwareLoops::ParseLoop(MachineLoop *L, MachineOperand &EndVal,
-                                 int &Cond, int64_t &StartVal, int64_t &Bump) {
-
+                                 int &Cond, MachineOperand &StartVal,
+                                 int64_t &Bump) {
   for (instr_iterator I = HeaderMBB->instr_begin(), E = HeaderMBB->instr_end();
        I != E; ++I) {
     // The parsing starts when a COMPD instruction is found
@@ -233,54 +266,67 @@ bool K1CHardwareLoops::ParseLoop(MachineLoop *L, MachineOperand &EndVal,
       }
       // REG-IMM case
       if (I->getOperand(1).isReg() && I->getOperand(2).isImm()) {
+        bool IsDefinedInBody;
         // If the register's value could not be traced, then the loop can not
         // be parsed
-        if (!BackTraceRegValue(L, I, I->getOperand(1).getReg(), StartVal,
-                               Bump)) {
+        if (BackTraceRegValue(L, I, I->getOperand(1).getReg(), StartVal, Bump,
+                              IsDefinedInBody)) {
+          if (StartVal.isReg() && Bump == -1)
+            EndVal = StartVal;
+          else
+            EndVal = I->getOperand(2);
+        } else {
           LLVM_DEBUG(
               llvm::dbgs()
               << "HW Loop - [REG-IMM] The register could not be traced.\n");
           return false;
         }
-        EndVal = I->getOperand(2);
       } // REG-IMM case
       // REG-REG case
       else if (I->getOperand(1).isReg() && I->getOperand(2).isReg()) {
 
         int64_t BumpOp1 = 0;
         int64_t BumpOp2 = 0;
-        int64_t StartValOp1 = 0;
-        int64_t StartValOp2 = 0;
-        bool BacktraceOp1 = BackTraceRegValue(L, I, I->getOperand(1).getReg(),
-                                              StartValOp1, BumpOp1);
-        bool BacktraceOp2 = BackTraceRegValue(L, I, I->getOperand(2).getReg(),
-                                              StartValOp2, BumpOp2);
+        MachineOperand StartValOp1 = MachineOperand::CreateImm(0);
+        MachineOperand StartValOp2 = MachineOperand::CreateImm(0);
+        bool IsDefinedInBody1;
+        bool IsDefinedInBody2;
+        bool BacktraceOp1 =
+            BackTraceRegValue(L, I, I->getOperand(1).getReg(), StartValOp1,
+                              BumpOp1, IsDefinedInBody1);
+        bool BacktraceOp2 =
+            BackTraceRegValue(L, I, I->getOperand(2).getReg(), StartValOp2,
+                              BumpOp2, IsDefinedInBody2);
 
         // If the register's value could not be traced, then the loop can not
         // be parsed
-        if (BacktraceOp1 && BumpOp2 == 0) {
+        if (BacktraceOp1 && StartValOp1.isImm() && BumpOp2 == 0) {
+          if (IsDefinedInBody2)
+            return false;
           Bump = BumpOp1;
           StartVal = StartValOp1;
 
           // This line should be removed when cases for Bump != 1 and StartVal
           // != 1 are implemented
-          if (Bump != 1 || StartVal != 0) {
+          if (Bump != 1 || StartVal.getImm() != 0) {
             LLVM_DEBUG(llvm::dbgs() << "HW Loop - [REG-REG] The bump value is "
                                        "not 1 or the start value is not 0.\n");
             return false;
           }
-
           EndVal = I->getOperand(2);
         } else {
           // If the register's value could not be traced, then the loop can not
           // be parsed
-          if (BacktraceOp2 && BumpOp1 == 0) {
+          if (BacktraceOp2 && StartValOp2.isImm() && BumpOp1 == 0) {
+            if (IsDefinedInBody1)
+              return false;
+
             Bump = BumpOp2;
             StartVal = StartValOp2;
 
             // This line should be removed when cases for Bump != 1 and StartVal
             // != 1 are implemented
-            if (Bump != 1 || StartVal != 0) {
+            if (Bump != 1 || StartVal.getImm() != 0) {
               LLVM_DEBUG(llvm::dbgs()
                          << "HW Loop - [REG-REG] The bump value is not 1 or "
                             "the start value is not 0.\n");
@@ -304,7 +350,7 @@ bool K1CHardwareLoops::ParseLoop(MachineLoop *L, MachineOperand &EndVal,
 bool K1CHardwareLoops::GetLOOPDOArgs(MachineLoop *L,
                                      MachineOperand &StepsCount) {
 
-  int64_t StartVal = 0;
+  MachineOperand StartVal = MachineOperand::CreateImm(0);
   int64_t Bump = 0;
 
   int Cond = -1;
@@ -334,9 +380,9 @@ bool K1CHardwareLoops::GetLOOPDOArgs(MachineLoop *L,
   case 0:
   /* Equal */
   case 1: {
-    if (StartVal == EndVal.getImm())
+    if (StartVal.getImm() == EndVal.getImm())
       return false;
-    steps = ((EndVal.getImm() - StartVal) / Bump);
+    steps = ((EndVal.getImm() - StartVal.getImm()) / Bump);
     break;
   }
   /* Less Than */
@@ -355,7 +401,7 @@ bool K1CHardwareLoops::GetLOOPDOArgs(MachineLoop *L,
   case 8:
   /* Greater Than Unsigned */
   case 9: {
-    steps = ((EndVal.getImm() - StartVal) / Bump) + 1;
+    steps = ((EndVal.getImm() - StartVal.getImm()) / Bump) + 1;
     break;
   }
   default:
