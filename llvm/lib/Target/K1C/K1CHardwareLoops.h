@@ -132,13 +132,13 @@ private:
   MachineBasicBlock *ExitMBB;
 
   bool ParseLoop(MachineLoop *L, MachineOperand &EndVal, int &Cond,
-                 int64_t &StartVal, int64_t &Bump);
+                 MachineOperand &StartVal, int64_t &Bump);
 
   bool IsEligibleForHardwareLoop(MachineLoop *L);
 
   bool BackTraceRegValue(MachineLoop *L, instr_iterator MII,
-                         unsigned RegToBacktrace, int64_t &CmpVal,
-                         int64_t &Bump);
+                         unsigned RegToBacktrace, MachineOperand &CmpVal,
+                         int64_t &Bump, bool &IsDefinedInBody);
 
   bool GetLOOPDOArgs(MachineLoop *L, MachineOperand &StepsCount);
 
