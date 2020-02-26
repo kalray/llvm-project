@@ -1588,7 +1588,7 @@ let isBarrier = 1, isBranch = 1, isIndirectBranch = 1, isTerminator = 1 in
 def IGOTO : REGISTERZ_SIMPLE
   <(outs), (ins SingleReg:$a1),
    "igoto $a1",
-   [/* no straightforward pattern */],
+   [(brind i64:$a1)],
    BCU>;
 
 let Defs = [RA], isCall = 1, isIndirectBranch = 1 in
@@ -1641,7 +1641,7 @@ let isBarrier = 1, isBranch = 1, isTerminator = 1 in
 def GOTO : PCREL27_SIMPLE
   <(outs), (ins Pcrel27:$a1),
    "goto $a1",
-   [/* no straightforward pattern */]>;
+   [(br bb:$a1)]>;
 
 let Defs = [RA], isCall = 1 in
 def CALL : PCREL27_SIMPLE
@@ -2316,7 +2316,7 @@ defm PCREL : MC_1E<"pcrel">;
 def CLZW : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "clzw $a1 = $a2",
-   [/* no straightforward pattern */],
+   [(set i32:$a1, (ctlz i32:$a2))],
    ALU_LITE>;
 
 def CLSW : REGISTERW_REGISTERZ_SIMPLE
@@ -2334,13 +2334,13 @@ def CBSW : REGISTERW_REGISTERZ_SIMPLE
 def CTZW : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "ctzw $a1 = $a2",
-   [/* no straightforward pattern */],
+   [(set i32:$a1, (cttz i32:$a2))],
    ALU_LITE>;
 
 def CLZD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "clzd $a1 = $a2",
-   [/* no straightforward pattern */],
+   [(set i64:$a1, (ctlz i64:$a2))],
    ALU_LITE>;
 
 def CLSD : REGISTERW_REGISTERZ_SIMPLE
@@ -2358,7 +2358,7 @@ def CBSD : REGISTERW_REGISTERZ_SIMPLE
 def CTZD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "ctzd $a1 = $a2",
-   [/* no straightforward pattern */],
+   [(set i64:$a1, (cttz i64:$a2))],
    ALU_LITE>;
 
 def CLZWP : REGISTERW_REGISTERZ_SIMPLE
@@ -2745,7 +2745,7 @@ def DOT2SUWDP : REGISTERM_REGISTERP_REGISTERO_SIMPLE
 def MULWQ : REGISTERM_REGISTERP_REGISTERO_SIMPLE
   <(outs PairedReg:$a1), (ins PairedReg:$a2, PairedReg:$a3),
    "mulwq $a1 = $a2, $a3",
-   [/* no straightforward pattern */]>;
+   [(set v4i32:$a1, (mul v4i32:$a2, v4i32:$a3))]>;
 
 def DOT2WZP : REGISTERM_REGISTERP_REGISTERO_SIMPLE
   <(outs PairedReg:$a1), (ins PairedReg:$a2, PairedReg:$a3),
@@ -3265,43 +3265,43 @@ def NEGD : REGISTERW_REGISTERZ_SIMPLE
 def ABSD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "absd $a1 = $a2",
-   [/* no straightforward pattern */],
+   [(set i64:$a1, (abs i64:$a2))],
    ALU_LITE>;
 
 def ZXBD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "zxbd $a1 = $a2",
-   [/* no straightforward pattern */],
+   [(set i64:$a1, (zext i8:$a2))],
    ALU_LITE>;
 
 def SXBD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "sxbd $a1 = $a2",
-   [/* no straightforward pattern */],
+   [(set i64:$a1, (sext i8:$a2))],
    ALU_LITE>;
 
 def ZXHD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "zxhd $a1 = $a2",
-   [/* no straightforward pattern */],
+   [(set i64:$a1, (zext i16:$a2))],
    ALU_LITE>;
 
 def SXHD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "sxhd $a1 = $a2",
-   [/* no straightforward pattern */],
+   [(set i64:$a1, (sext i16:$a2))],
    ALU_LITE>;
 
 def ZXWD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "zxwd $a1 = $a2",
-   [/* no straightforward pattern */],
+   [(set i64:$a1, (zext i32:$a2))],
    ALU_LITE>;
 
 def SXWD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "sxwd $a1 = $a2",
-   [/* no straightforward pattern */],
+   [(set i64:$a1, (sext i32:$a2))],
    ALU_LITE>;
 
 def SATDH : REGISTERW_REGISTERZ_SIMPLE
@@ -3349,7 +3349,7 @@ def NEGW : REGISTERW_REGISTERZ_SIMPLE
 def ABSW : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "absw $a1 = $a2",
-   [/* no straightforward pattern */],
+   [(set i32:$a1, (abs i32:$a2))],
    ALU_LITE>;
 
 def NEGWP : REGISTERW_REGISTERZ_DOUBLE
@@ -3361,7 +3361,7 @@ def NEGWP : REGISTERW_REGISTERZ_DOUBLE
 def ABSWP : REGISTERW_REGISTERZ_DOUBLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "abswp $a1 = $a2",
-   [/* no straightforward pattern */],
+   [(set v2i32:$a1, (abs v2i32:$a2))],
    ALU_LITE_X>;
 
 def NEGHQ : REGISTERW_REGISTERZ_DOUBLE
@@ -3373,7 +3373,7 @@ def NEGHQ : REGISTERW_REGISTERZ_DOUBLE
 def ABSHQ : REGISTERW_REGISTERZ_DOUBLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "abshq $a1 = $a2",
-   [/* no straightforward pattern */],
+   [(set v4i16:$a1, (abs v4i16:$a2))],
    ALU_LITE_X>;
 
 defm COPYV : MC_33<"copyv">;
