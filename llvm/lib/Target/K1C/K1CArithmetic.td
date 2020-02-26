@@ -184,12 +184,6 @@ multiclass MC_16_Pat<SDNode Node, Operand OpR1, Operand OpR2,
   def : Pat<(Node OpR1:$rs, Unsigned6:$is), (RIInstr SingleReg:$rs, Unsigned6:$is)>;
 }
 
-// ABSW
-def : Pat<(abs i32:$v), (ABSW SingleReg:$v)>;
-
-// ABSD
-def : Pat<(abs i64:$v), (ABSD SingleReg:$v)>;
-
 // ADDD
 def : Pat<(add i64:$rs1, i64:$rs2), (ADDDd0 SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(add i64:$rs1, Signed10:$rs2), (ADDDd1 SingleReg:$rs1, Signed10:$rs2)>;
@@ -508,9 +502,6 @@ def : Pat<(mul v4i16:$rs1, v4i16:$rs2), (MULHQd3 SingleReg:$rs1, SingleReg:$rs2)
 
 // MULWP
 def : Pat<(mul v2i32:$rs1, v2i32:$rs2), (MULWPd3 SingleReg:$rs1, SingleReg:$rs2)>;
-
-// MULWQ
-def : Pat<(mul v4i32:$rs1, v4i32:$rs2), (MULWQ PairedReg:$rs1, PairedReg:$rs2)>;
 
 def : Pat<(add v8i8:$v1, v8i8:$v2),
       (XORDd0
