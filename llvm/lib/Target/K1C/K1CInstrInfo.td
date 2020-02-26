@@ -2328,7 +2328,7 @@ def CLSW : REGISTERW_REGISTERZ_SIMPLE
 def CBSW : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "cbsw $a1 = $a2",
-   [/* no straightforward pattern */],
+   [(set i32:$a1, (ctpop i32:$a2))],
    ALU_LITE>;
 
 def CTZW : REGISTERW_REGISTERZ_SIMPLE
@@ -2352,7 +2352,7 @@ def CLSD : REGISTERW_REGISTERZ_SIMPLE
 def CBSD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "cbsd $a1 = $a2",
-   [/* no straightforward pattern */],
+   [(set i64:$a1, (ctpop i64:$a2))],
    ALU_LITE>;
 
 def CTZD : REGISTERW_REGISTERZ_SIMPLE
@@ -2376,7 +2376,7 @@ def CLSWP : REGISTERW_REGISTERZ_SIMPLE
 def CBSWP : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "cbswp $a1 = $a2",
-   [/* no straightforward pattern */],
+   [(set v2i32:$a1, (ctpop v2i32:$a2))],
    ALU_LITE>;
 
 def CTZWP : REGISTERW_REGISTERZ_SIMPLE
@@ -2471,42 +2471,42 @@ def FCDIVWP : SILENT2_REGISTERW_REGISTERP_SIMPLE_BINARY32
 def FMIND : REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY64
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fmind $a1 = $a2, $a3",
-   [/* no straightforward pattern */]>;
+   [(set f64:$a1, (fminnum f64:$a2, f64:$a3))]>;
 
 def FMAXD : REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY64
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fmaxd $a1 = $a2, $a3",
-   [/* no straightforward pattern */]>;
+   [(set f64:$a1, (fmaxnum f64:$a2, f64:$a3))]>;
 
 def FMINW : REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fminw $a1 = $a2, $a3",
-   [/* no straightforward pattern */]>;
+   [(set f32:$a1, (fminnum f32:$a2, f32:$a3))]>;
 
 def FMAXW : REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fmaxw $a1 = $a2, $a3",
-   [/* no straightforward pattern */]>;
+   [(set f32:$a1, (fmaxnum f32:$a2, f32:$a3))]>;
 
 def FMINWP : REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fminwp $a1 = $a2, $a3",
-   [/* no straightforward pattern */]>;
+   [(set v2f32:$a1, (fminnum v2f32:$a2, v2f32:$a3))]>;
 
 def FMAXWP : REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fmaxwp $a1 = $a2, $a3",
-   [/* no straightforward pattern */]>;
+   [(set v2f32:$a1, (fmaxnum v2f32:$a2, v2f32:$a3))]>;
 
 def FMINHQ : REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY16
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fminhq $a1 = $a2, $a3",
-   [/* no straightforward pattern */]>;
+   [(set v4f16:$a1, (fminnum v4f16:$a2, v4f16:$a3))]>;
 
 def FMAXHQ : REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY16
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fmaxhq $a1 = $a2, $a3",
-   [/* no straightforward pattern */]>;
+   [(set v4f16:$a1, (fmaxnum v4f16:$a2, v4f16:$a3))]>;
 
 def FLOATD : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE_BINARY64
   <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),

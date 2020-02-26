@@ -241,8 +241,6 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::BR_CC, VT, Expand);
 
     setOperationAction(ISD::BSWAP, VT, Expand);
-
-    setOperationAction(ISD::CTPOP, VT, Expand);
   }
   setOperationAction(ISD::ROTL, MVT::i64, Expand);
   setOperationAction(ISD::ROTR, MVT::i64, Expand);
@@ -260,6 +258,15 @@ K1CTargetLowering::K1CTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::DYNAMIC_STACKALLOC, MVT::i64, Expand);
 
   setOperationAction(ISD::BR_JT, MVT::Other, Expand);
+
+  for (auto VT : {MVT::i32, MVT::i64}) {
+    setOperationAction(ISD::CTPOP, VT, Legal);
+  }
+
+  for (auto VT : {MVT::f32, MVT::f64}) {
+    setOperationAction(ISD::FMINNUM, VT, Legal);
+    setOperationAction(ISD::FMAXNUM, VT, Legal);
+  }
 
   for (unsigned im = (unsigned)ISD::PRE_INC;
        im != (unsigned)ISD::LAST_INDEXED_MODE; ++im) {
