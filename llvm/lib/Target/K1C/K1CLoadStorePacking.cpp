@@ -94,10 +94,11 @@ private:
 } // end anonymous namespace
 
 char K1CLoadStorePackingPass::ID = 0;
-static const unsigned LoadOpcodes[] = { K1C::LQd0, K1C::LQd1, K1C::LQd2,
-                                        K1C::LOd0, K1C::LOd1, K1C::LOd2 };
-static const unsigned StoreOpcodes[] = { K1C::SQd0, K1C::SQd1, K1C::SQd2,
-                                         K1C::SOd0, K1C::SOd1, K1C::SOd2 };
+// FIXME: support rr insn
+static const unsigned LoadOpcodes[] = {K1C::LQri10, K1C::LQri37, K1C::LQri64,
+                                       K1C::LOri10, K1C::LOri37, K1C::LOri64};
+static const unsigned StoreOpcodes[] = {K1C::SQri10, K1C::SQri37, K1C::SQri64,
+                                        K1C::SOri10, K1C::SOri37, K1C::SOri64};
 
 bool K1CLoadStorePackingPass::runOnMachineFunction(MachineFunction &MF) {
   bool Changed = false;
@@ -137,10 +138,10 @@ bool K1CLoadStorePackingPass::isValidOpcodeLoad(unsigned Opcode) {
   switch (Opcode) {
   default:
     return false;
-  case K1C::LDri:
-  case K1C::LDd0:
-  case K1C::LDd1:
-  case K1C::LDd2:
+  case K1C::LDp:
+  case K1C::LDri10:
+  case K1C::LDri37:
+  case K1C::LDri64:
     return true;
   };
 }
@@ -149,10 +150,10 @@ bool K1CLoadStorePackingPass::isValidOpcodeStore(unsigned Opcode) {
   switch (Opcode) {
   default:
     return false;
-  case K1C::SDri:
-  case K1C::SDd0:
-  case K1C::SDd1:
-  case K1C::SDd2:
+  case K1C::SDp:
+  case K1C::SDri10:
+  case K1C::SDri37:
+  case K1C::SDri64:
     return true;
   }
 }
