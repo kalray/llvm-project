@@ -1766,18 +1766,18 @@ SDValue K1CTargetLowering::lowerShiftVectorial(SDValue Op,
 
   if (Op.getValueType() == MVT::v4i16 || Op.getValueType() == MVT::v2i16) {
     if (ShiftOpcode == ISD::SHL)
-      MachineOpcode = OpConst ? K1C::SLLHQSd1 : K1C::SLLHQSd0;
+      MachineOpcode = OpConst ? K1C::SLLHQSri : K1C::SLLHQSrr;
     else if (ShiftOpcode == ISD::SRA)
-      MachineOpcode = OpConst ? K1C::SRAHQSd1 : K1C::SRAHQSd0;
+      MachineOpcode = OpConst ? K1C::SRAHQSri : K1C::SRAHQSrr;
     else
-      MachineOpcode = OpConst ? K1C::SRLHQSd1 : K1C::SRLHQSd0;
+      MachineOpcode = OpConst ? K1C::SRLHQSri : K1C::SRLHQSrr;
   } else if (Op.getValueType() == MVT::v2i32) {
     if (ShiftOpcode == ISD::SHL)
-      MachineOpcode = OpConst ? K1C::SLLWPSd1 : K1C::SLLWPSd0;
+      MachineOpcode = OpConst ? K1C::SLLWPSri : K1C::SLLWPSrr;
     else if (ShiftOpcode == ISD::SRA)
-      MachineOpcode = OpConst ? K1C::SRAWPSd1 : K1C::SRAWPSd0;
+      MachineOpcode = OpConst ? K1C::SRAWPSri : K1C::SRAWPSrr;
     else
-      MachineOpcode = OpConst ? K1C::SRLWPSd1 : K1C::SRLWPSd0;
+      MachineOpcode = OpConst ? K1C::SRLWPSri : K1C::SRLWPSrr;
   }
 
   if (OpConst)
@@ -1999,16 +1999,16 @@ SDValue K1CTargetLowering::lowerMINMAXWP(SDValue Op, SelectionDAG &DAG) const {
   }
   switch (Op.getOperand(0).getOpcode()) {
   case ISD::SMIN:
-    OpCode = Constant ? K1C::MINWPd1 : K1C::MINWPd0;
+    OpCode = Constant ? K1C::MINWPri : K1C::MINWPrr;
     break;
   case ISD::SMAX:
-    OpCode = Constant ? K1C::MAXWPd1 : K1C::MAXWPd0;
+    OpCode = Constant ? K1C::MAXWPri : K1C::MAXWPrr;
     break;
   case ISD::UMIN:
-    OpCode = Constant ? K1C::MINUWPd1 : K1C::MINUWPd0;
+    OpCode = Constant ? K1C::MINUWPri : K1C::MINUWPrr;
     break;
   case ISD::UMAX:
-    OpCode = Constant ? K1C::MAXUWPd1 : K1C::MAXUWPd0;
+    OpCode = Constant ? K1C::MAXUWPri : K1C::MAXUWPrr;
     break;
   }
   SDValue vector1 = Op.getOperand(0).getOperand(0).getOperand(0);
@@ -2347,10 +2347,10 @@ SDValue K1CTargetLowering::lowerMINMAXHQ(SDValue Op, SelectionDAG &DAG) const {
   }
   switch (Op.getOperand(0).getOpcode()) {
   case ISD::SMIN:
-    OpCode = Constant ? K1C::MINHQd1 : K1C::MINHQd0;
+    OpCode = Constant ? K1C::MINHQri : K1C::MINHQrr;
     break;
   case ISD::SMAX:
-    OpCode = Constant ? K1C::MAXHQd1 : K1C::MAXHQd0;
+    OpCode = Constant ? K1C::MAXHQri : K1C::MAXHQrr;
     break;
   }
   SDValue vector1 = Op.getOperand(0).getOperand(0).getOperand(0).getOperand(0);
@@ -2432,10 +2432,10 @@ SDValue K1CTargetLowering::lowerMINMAXUHQ(SDValue Op, SelectionDAG &DAG) const {
   }
   switch (Op.getOperand(0).getOpcode()) {
   case ISD::UMIN:
-    OpCode = Constant ? K1C::MINUHQd1 : K1C::MINUHQd0;
+    OpCode = Constant ? K1C::MINUHQri : K1C::MINUHQrr;
     break;
   case ISD::UMAX:
-    OpCode = Constant ? K1C::MAXUHQd1 : K1C::MAXUHQd0;
+    OpCode = Constant ? K1C::MAXUHQri : K1C::MAXUHQrr;
     break;
   }
   SDValue vector1 = Op.getOperand(0).getOperand(0).getOperand(0).getOperand(0);

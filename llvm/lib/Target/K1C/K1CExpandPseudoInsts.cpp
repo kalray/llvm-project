@@ -78,7 +78,7 @@ static void InsertCMOVEInstr(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
 
   switch (MI.getOperand(Operand).getType()) {
   case MachineOperand::MO_GlobalAddress:
-    BuildMI(MBB, MBBI, DL, TII->get(K1C::CMOVEDd2), DestReg)
+    BuildMI(MBB, MBBI, DL, TII->get(K1C::CMOVEDri64), DestReg)
         .addReg(CmpReg)
         .addGlobalAddress(MI.getOperand(Operand).getGlobal())
         .addImm(Comp);
@@ -86,7 +86,7 @@ static void InsertCMOVEInstr(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
   case MachineOperand::MO_Register: {
     unsigned BranchValue = MI.getOperand(Operand).getReg();
 
-    BuildMI(MBB, MBBI, DL, TII->get(K1C::CMOVEDd3), DestReg)
+    BuildMI(MBB, MBBI, DL, TII->get(K1C::CMOVEDrr), DestReg)
         .addReg(CmpReg)
         .addReg(BranchValue)
         .addImm(Comp);
@@ -95,8 +95,8 @@ static void InsertCMOVEInstr(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
     int64_t BranchValueImm = MI.getOperand(Operand).getImm();
 
     BuildMI(MBB, MBBI, DL,
-            TII->get(GetImmOpCode(BranchValueImm, K1C::CMOVEDd0, K1C::CMOVEDd1,
-                                  K1C::CMOVEDd2)),
+            TII->get(GetImmOpCode(BranchValueImm, K1C::CMOVEDri10,
+                                  K1C::CMOVEDri37, K1C::CMOVEDri64)),
             DestReg)
         .addReg(CmpReg)
         .addImm(BranchValueImm)
@@ -107,8 +107,9 @@ static void InsertCMOVEInstr(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
 
     BuildMI(
         MBB, MBBI, DL,
-        TII->get(Imm->getType()->isFloatTy() ? K1C::CMOVEDd1 : K1C::CMOVEDd2),
-        DestReg)
+            TII->get(Imm->getType()->isFloatTy() ? K1C::CMOVEDri37
+                                                 : K1C::CMOVEDri64),
+            DestReg)
         .addReg(CmpReg)
         .addFPImm(Imm)
         .addImm(Comp);
@@ -142,7 +143,8 @@ static bool expandSelectInstr(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
         BuildMI(MBB, MBBI, DL, TII->get(K1C::SXWD), ScratchReg).addReg(CmpReg);
       if (MI.getOperand(3).isImm()) {
         int64_t immVal = MI.getOperand(3).getImm();
-        opCode = GetImmOpCode(immVal, K1C::MAKEd0, K1C::MAKEd1, K1C::MAKEd2);
+        // FIXME: GetImmOpCode is not OK with MAKE
+        opCode = GetImmOpCode(immVal, K1C::MAKEi16, K1C::MAKEi43, K1C::MAKEi64);
         BuildMI(MBB, MBBI, DL, TII->get(opCode), DestCompReg).addImm(immVal);
       }
       if (MI.getOperand(3).isFPImm()) {
@@ -151,11 +153,12 @@ static bool expandSelectInstr(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
                              ->getValueAPF()
                              .bitcastToAPInt()
                              .getZExtValue();
-        opCode = GetImmOpCode(immVal, K1C::MAKEd0, K1C::MAKEd1, K1C::MAKEd2);
+        // FIXME: GetImmOpCode is not OK with MAKE
+        opCode = GetImmOpCode(immVal, K1C::MAKEi16, K1C::MAKEi43, K1C::MAKEi64);
         BuildMI(MBB, MBBI, DL, TII->get(opCode), DestCompReg).addImm(immVal);
       }
       if (MI.getOperand(3).isGlobal()) {
-        BuildMI(MBB, MBBI, DL, TII->get(K1C::MAKEd2), DestCompReg)
+        BuildMI(MBB, MBBI, DL, TII->get(K1C::MAKEi64), DestCompReg)
             .addGlobalAddress(MI.getOperand(3).getGlobal());
       }
       InsertCMOVEInstr(TII, MBB, MBBI, Word ? ScratchReg : CmpReg, DestCompReg,
@@ -205,7 +208,7 @@ unsigned int getAtomicLoad(unsigned int opCode) {
   case K1C::ALOADXOR32_Instr:
   case K1C::ALOADOR32_Instr:
   case K1C::ALOADNAND32_Instr:
-    return K1C::LWZri;
+    return K1C::LWZp;
   case K1C::ASWAP64_Instr:
   case K1C::ACMPSWAP64_Instr:
   case K1C::ALOADADD64_Instr:
@@ -214,7 +217,7 @@ unsigned int getAtomicLoad(unsigned int opCode) {
   case K1C::ALOADXOR64_Instr:
   case K1C::ALOADOR64_Instr:
   case K1C::ALOADNAND64_Instr:
-    return K1C::LDri;
+    return K1C::LDp;
   default:
     llvm_unreachable("invalid opCode");
   }
@@ -245,7 +248,7 @@ unsigned int getAtomicCopy(unsigned int opCode) {
   }
 }
 
-unsigned int getAtomicSwap(unsigned int opCode) {
+unsigned int getAtomicSwap(int64_t offset, unsigned int opCode) {
   switch (opCode) {
   case K1C::ASWAP32_Instr:
   case K1C::ACMPSWAP32_Instr:
@@ -255,7 +258,7 @@ unsigned int getAtomicSwap(unsigned int opCode) {
   case K1C::ALOADXOR32_Instr:
   case K1C::ALOADOR32_Instr:
   case K1C::ALOADNAND32_Instr:
-    return K1C::ACSWAPWd1;
+    return isInt<10>(offset) ? K1C::ACSWAPWri10 : K1C::ACSWAPWri37;
   case K1C::ASWAP64_Instr:
   case K1C::ACMPSWAP64_Instr:
   case K1C::ALOADADD64_Instr:
@@ -264,7 +267,7 @@ unsigned int getAtomicSwap(unsigned int opCode) {
   case K1C::ALOADXOR64_Instr:
   case K1C::ALOADOR64_Instr:
   case K1C::ALOADNAND64_Instr:
-    return K1C::ACSWAPDd1;
+    return isInt<10>(offset) ? K1C::ACSWAPDri10 : K1C::ACSWAPDri37;
   default:
     llvm_unreachable("invalid opCode");
   }
@@ -280,7 +283,7 @@ unsigned int getAtomicComp(unsigned int opCode) {
   case K1C::ALOADXOR32_Instr:
   case K1C::ALOADOR32_Instr:
   case K1C::ALOADNAND32_Instr:
-    return K1C::COMPWd1;
+    return K1C::COMPWrr;
   case K1C::ASWAP64_Instr:
   case K1C::ACMPSWAP64_Instr:
   case K1C::ALOADADD64_Instr:
@@ -289,7 +292,7 @@ unsigned int getAtomicComp(unsigned int opCode) {
   case K1C::ALOADXOR64_Instr:
   case K1C::ALOADOR64_Instr:
   case K1C::ALOADNAND64_Instr:
-    return K1C::COMPDd1;
+    return K1C::COMPDrr;
   default:
     llvm_unreachable("invalid opCode");
   }
@@ -298,27 +301,27 @@ unsigned int getAtomicComp(unsigned int opCode) {
 unsigned int getAtomicOp(unsigned int opCode) {
   switch (opCode) {
   case K1C::ALOADADD32_Instr:
-    return K1C::ADDWd0;
+    return K1C::ADDWrr;
   case K1C::ALOADADD64_Instr:
-    return K1C::ADDDd0;
+    return K1C::ADDDrr;
   case K1C::ALOADSUB32_Instr:
-    return K1C::SBFWd0;
+    return K1C::SBFWrr;
   case K1C::ALOADSUB64_Instr:
-    return K1C::SBFDd0;
+    return K1C::SBFDrr;
   case K1C::ALOADAND32_Instr:
   case K1C::ALOADNAND32_Instr:
-    return K1C::ANDWd0;
+    return K1C::ANDWrr;
   case K1C::ALOADAND64_Instr:
   case K1C::ALOADNAND64_Instr:
-    return K1C::ANDDd0;
+    return K1C::ANDDrr;
   case K1C::ALOADXOR32_Instr:
-    return K1C::XORWd0;
+    return K1C::XORWrr;
   case K1C::ALOADXOR64_Instr:
-    return K1C::XORDd0;
+    return K1C::XORDrr;
   case K1C::ALOADOR32_Instr:
-    return K1C::ORWd0;
+    return K1C::ORWrr;
   case K1C::ALOADOR64_Instr:
-    return K1C::ORDd0;
+    return K1C::ORDrr;
   default:
     llvm_unreachable("invalid opCode");
   }
@@ -339,10 +342,10 @@ unsigned int getAtomicCompReg(unsigned int opCode) {
   switch (opCode) {
   case K1C::ASWAP32_Instr:
   case K1C::ACMPSWAP32_Instr:
-    return K1C::COMPWd0;
+    return K1C::COMPWrr;
   case K1C::ASWAP64_Instr:
   case K1C::ACMPSWAP64_Instr:
-    return K1C::COMPDd0;
+    return K1C::COMPDrr;
   default:
     llvm_unreachable("invalid opCode");
   }
@@ -424,16 +427,17 @@ static bool expandAtomicSwap8(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
   if (offset != 0) {
     BuildMI(
         MBB, MBBI, DL,
-        TII->get(GetImmOpCode(offset, K1C::ADDDd1, K1C::ADDDd2, K1C::ADDDd3)),
-        scratchBase)
+            TII->get(GetImmOpCode(offset, K1C::ADDDri10, K1C::ADDDri37,
+                                  K1C::ADDDri64)),
+            scratchBase)
         .addReg(baseReg)
         .addImm(offset);
-    BuildMI(MBB, MBBI, DL, TII->get(K1C::ANDDd1),
+    BuildMI(MBB, MBBI, DL, TII->get(K1C::ANDDri10),
             TRI->getSubReg(scratchPairedReg, 2))
         .addReg(scratchBase)
         .addImm(3);
   } else {
-    BuildMI(MBB, MBBI, DL, TII->get(K1C::ANDDd1),
+    BuildMI(MBB, MBBI, DL, TII->get(K1C::ANDDri10),
             TRI->getSubReg(scratchPairedReg, 2))
         .addReg(baseReg)
         .addImm(3);
@@ -441,14 +445,14 @@ static bool expandAtomicSwap8(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
   BuildMI(MBB, MBBI, DL, TII->get(K1C::NOTW),
           TRI->getSubReg(scratchPairedReg, 1))
       .addReg(TRI->getSubReg(scratchPairedReg, 2));
-  BuildMI(MBB, MBBI, DL, TII->get(K1C::ANDDd0), scratchBase)
+  BuildMI(MBB, MBBI, DL, TII->get(K1C::ANDDrr), scratchBase)
       .addReg(offset == 0 ? baseReg : scratchBase)
       .addReg(TRI->getSubReg(scratchPairedReg, 1));
-  BuildMI(MBB, MBBI, DL, TII->get(K1C::MULDd1), shiftCount)
+  BuildMI(MBB, MBBI, DL, TII->get(K1C::MULDri10), shiftCount)
       .addReg(TRI->getSubReg(scratchPairedReg, 2))
       .addImm(8);
 
-  BuildMI(MBB, MBBI, DL, TII->get(K1C::SLLWd0), scratchVal)
+  BuildMI(MBB, MBBI, DL, TII->get(K1C::SLLWrr), scratchVal)
       .addReg(scratchVal)
       .addReg(shiftCount);
 
@@ -466,7 +470,7 @@ static bool expandAtomicSwap8(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
   BuildMI(DoneMBB, DL, TII->get(K1C::COPYW), outputReg)
       .addReg(TRI->getSubReg(scratchPairedReg, 2));
 
-  BuildMI(DoneMBB, DL, TII->get(K1C::SRLWd0), outputReg)
+  BuildMI(DoneMBB, DL, TII->get(K1C::SRLWrr), outputReg)
       .addReg(outputReg)
       .addReg(shiftCount);
 
@@ -477,8 +481,7 @@ static bool expandAtomicSwap8(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
   MBB.addSuccessor(LoopMBB);
   MBB.addSuccessor(DoneMBB);
 
-  BuildMI(LoopMBB, DL, TII->get(K1C::LWZri),
-          TRI->getSubReg(scratchPairedReg, 2))
+  BuildMI(LoopMBB, DL, TII->get(K1C::LWZp), TRI->getSubReg(scratchPairedReg, 2))
       .addImm(0)
       .addReg(scratchBase)
       .addImm(2 /*uncached*/);
@@ -486,16 +489,16 @@ static bool expandAtomicSwap8(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
   BuildMI(LoopMBB, DL, TII->get(K1C::COPYW), compReg)
       .addReg(TRI->getSubReg(scratchPairedReg, 2));
 
-  BuildMI(LoopMBB, DL, TII->get(K1C::ORWd0), compReg)
+  BuildMI(LoopMBB, DL, TII->get(K1C::ORWrr), compReg)
       .addReg(compReg)
       .addReg(scratchVal);
 
-  BuildMI(LoopMBB, DL, TII->get(K1C::ACSWAPWd1), scratchPairedReg)
+  BuildMI(LoopMBB, DL, TII->get(K1C::ACSWAPWri10), scratchPairedReg)
       .addImm(0)
       .addReg(scratchBase)
       .addReg(scratchPairedReg);
 
-  BuildMI(LoopMBB, DL, TII->get(K1C::COMPWd1), compReg)
+  BuildMI(LoopMBB, DL, TII->get(K1C::COMPWri), compReg)
       .addReg(compReg)
       .addImm(1)
       .addImm(0 /*ne*/);
@@ -535,7 +538,7 @@ static bool expandASWAPInstr(unsigned int opCode, const K1CInstrInfo *TII,
 
   unsigned outputReg = MI.getOperand(0).getReg();
   unsigned scratchPairedReg = MI.getOperand(1).getReg();
-  unsigned offset = MI.getOperand(2).getImm();
+  int64_t offset = MI.getOperand(2).getImm();
   unsigned baseReg = MI.getOperand(3).getReg();
   unsigned valReg = MI.getOperand(4).getReg();
 
@@ -569,7 +572,8 @@ static bool expandASWAPInstr(unsigned int opCode, const K1CInstrInfo *TII,
 
   BuildMI(LoopMBB, DL, TII->get(getAtomicCopy(opCode)), compReg).addReg(valReg);
 
-  BuildMI(LoopMBB, DL, TII->get(getAtomicSwap(opCode)), scratchPairedReg)
+  BuildMI(LoopMBB, DL, TII->get(getAtomicSwap(offset, opCode)),
+          scratchPairedReg)
       .addImm(offset)
       .addReg(baseReg)
       .addReg(scratchPairedReg);
@@ -609,8 +613,8 @@ static bool expandALOADADD32Instr(const K1CInstrInfo *TII,
   if (outputReg != valReg)
     BuildMI(MBB, MBBI, DL, TII->get(K1C::COPYW), outputReg).addReg(valReg);
   BuildMI(MBB, MBBI, DL,
-          TII->get(GetImmOpCode(offset, K1C::ALADDWd0, K1C::ALADDWd1,
-                                K1C::ALADDWd2)),
+          TII->get(GetImmOpCode(offset, K1C::ALADDWri10, K1C::ALADDWri37,
+                                K1C::ALADDWri64)),
           outputReg)
       .addImm(offset)
       .addReg(baseReg)
@@ -637,8 +641,8 @@ static bool expandALOADADD64Instr(const K1CInstrInfo *TII,
   if (outputReg != valReg)
     BuildMI(MBB, MBBI, DL, TII->get(K1C::COPYD), outputReg).addReg(valReg);
   BuildMI(MBB, MBBI, DL,
-          TII->get(GetImmOpCode(offset, K1C::ALADDDd0, K1C::ALADDDd1,
-                                K1C::ALADDDd2)),
+          TII->get(GetImmOpCode(offset, K1C::ALADDDri10, K1C::ALADDDri37,
+                                K1C::ALADDDri64)),
           outputReg)
       .addImm(offset)
       .addReg(baseReg)
@@ -675,7 +679,7 @@ static bool expandALOADOPInstr(unsigned int opCode, const K1CInstrInfo *TII,
 
   unsigned outputReg = MI.getOperand(0).getReg();
   unsigned scratchPairedReg = MI.getOperand(1).getReg();
-  unsigned offset = MI.getOperand(2).getImm();
+  int64_t offset = MI.getOperand(2).getImm();
   unsigned baseReg = MI.getOperand(3).getReg();
   unsigned valReg = MI.getOperand(4).getReg();
 
@@ -721,7 +725,8 @@ static bool expandALOADOPInstr(unsigned int opCode, const K1CInstrInfo *TII,
         .addReg(compReg);
   }
 
-  BuildMI(LoopMBB, DL, TII->get(getAtomicSwap(opCode)), scratchPairedReg)
+  BuildMI(LoopMBB, DL, TII->get(getAtomicSwap(offset, opCode)),
+          scratchPairedReg)
       .addImm(offset)
       .addReg(baseReg)
       .addReg(scratchPairedReg);
@@ -756,7 +761,7 @@ static bool expandACMPSWAPInstr(unsigned int opCode, const K1CInstrInfo *TII,
   unsigned outputReg = MI.getOperand(0).getReg();
   unsigned scratchPairedReg = MI.getOperand(1).getReg();
 
-  unsigned offset = MI.getOperand(2).getImm();  // addr
+  int64_t offset = MI.getOperand(2).getImm();   // addr
   unsigned baseReg = MI.getOperand(3).getReg(); // addr
   unsigned expectedReg = MI.getOperand(4).getReg();
   unsigned desiredReg = MI.getOperand(5).getReg();
@@ -806,7 +811,8 @@ static bool expandACMPSWAPInstr(unsigned int opCode, const K1CInstrInfo *TII,
   BuildMI(LoopMBB, DL, TII->get(getAtomicCopy(opCode)), compReg)
       .addReg(desiredReg);
 
-  BuildMI(LoopMBB, DL, TII->get(getAtomicSwap(opCode)), scratchPairedReg)
+  BuildMI(LoopMBB, DL, TII->get(getAtomicSwap(offset, opCode)),
+          scratchPairedReg)
       .addImm(offset)
       .addReg(baseReg)
       .addReg(scratchPairedReg);
@@ -856,7 +862,7 @@ static bool expandGetInstr(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
   unsigned DestReg = MI.getOperand(0).getReg();
   int64_t regNo = MI.getOperand(1).getImm();
 
-  BuildMI(MBB, MBBI, DL, TII->get(K1C::GETd1), DestReg)
+  BuildMI(MBB, MBBI, DL, TII->get(K1C::GETss3), DestReg)
       .addReg(K1C::SystemRegRegClass.getRegister(regNo));
 
   MI.eraseFromParent();
@@ -891,7 +897,7 @@ static bool expandSBMM8Instr(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
   if (MI.getOperand(2).isReg()) {
     unsigned valReg = MI.getOperand(2).getReg();
 
-    BuildMI(MBB, MBBI, DL, TII->get(K1C::SBMM8d0), outReg)
+    BuildMI(MBB, MBBI, DL, TII->get(K1C::SBMM8rr), outReg)
         .addReg(inReg)
         .addReg(valReg);
   } else {
@@ -899,8 +905,9 @@ static bool expandSBMM8Instr(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
 
     BuildMI(
         MBB, MBBI, DL,
-        TII->get(GetImmOpCode(imm, K1C::SBMM8d1, K1C::SBMM8d2, K1C::SBMM8d3)),
-        outReg)
+            TII->get(GetImmOpCode(imm, K1C::SBMM8ri10, K1C::SBMM8ri37,
+                                  K1C::SBMM8ri64)),
+            outReg)
         .addReg(inReg)
         .addImm(imm);
   }
@@ -1004,23 +1011,23 @@ static bool expandFMULDCInstr(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
   unsigned v2Reg = MI.getOperand(2).getReg();
   int64_t rounding = MI.getOperand(3).getImm();
 
-  BuildMI(MBB, MBBI, DL, TII->get(K1C::FMULDd1), TRI->getSubReg(outReg, 1))
+  BuildMI(MBB, MBBI, DL, TII->get(K1C::FMULDrr), TRI->getSubReg(outReg, 1))
       .addReg(TRI->getSubReg(v1Reg, 1))
       .addReg(TRI->getSubReg(v2Reg, 1))
       .addImm(rounding)
       .addImm(0);
-  BuildMI(MBB, MBBI, DL, TII->get(K1C::FFMSDd1), TRI->getSubReg(outReg, 1))
+  BuildMI(MBB, MBBI, DL, TII->get(K1C::FFMSDrr), TRI->getSubReg(outReg, 1))
       .addReg(TRI->getSubReg(outReg, 1))
       .addReg(TRI->getSubReg(v1Reg, 2))
       .addReg(TRI->getSubReg(v2Reg, 2))
       .addImm(rounding)
       .addImm(0);
-  BuildMI(MBB, MBBI, DL, TII->get(K1C::FMULDd1), TRI->getSubReg(outReg, 2))
+  BuildMI(MBB, MBBI, DL, TII->get(K1C::FMULDrr), TRI->getSubReg(outReg, 2))
       .addReg(TRI->getSubReg(v1Reg, 1))
       .addReg(TRI->getSubReg(v2Reg, 2))
       .addImm(rounding)
       .addImm(0);
-  BuildMI(MBB, MBBI, DL, TII->get(K1C::FFMADd1), TRI->getSubReg(outReg, 2))
+  BuildMI(MBB, MBBI, DL, TII->get(K1C::FFMADrr), TRI->getSubReg(outReg, 2))
       .addReg(TRI->getSubReg(outReg, 2))
       .addReg(TRI->getSubReg(v2Reg, 1))
       .addReg(TRI->getSubReg(v1Reg, 2))
@@ -1046,27 +1053,27 @@ static bool expandFMULCDCInstr(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
   unsigned v2Reg = MI.getOperand(3).getReg();
   int64_t rounding = MI.getOperand(4).getImm();
 
-  BuildMI(MBB, MBBI, DL, TII->get(K1C::FMULDd1), Scratch)
+  BuildMI(MBB, MBBI, DL, TII->get(K1C::FMULDrr), Scratch)
       .addReg(TRI->getSubReg(v1Reg, 1))
       .addReg(TRI->getSubReg(v2Reg, 1))
       .addImm(rounding)
       .addImm(0);
   BuildMI(MBB, MBBI, DL, TII->get(K1C::COPYD), TRI->getSubReg(outReg, 1))
       .addReg(TRI->getSubReg(v2Reg, 2));
-  BuildMI(MBB, MBBI, DL, TII->get(K1C::FFMADd1), TRI->getSubReg(outReg, 1))
+  BuildMI(MBB, MBBI, DL, TII->get(K1C::FFMADrr), TRI->getSubReg(outReg, 1))
       .addReg(TRI->getSubReg(outReg, 1))
       .addReg(Scratch)
       .addReg(TRI->getSubReg(v1Reg, 2))
       .addImm(rounding)
       .addImm(0);
-  BuildMI(MBB, MBBI, DL, TII->get(K1C::FMULDd1), Scratch)
+  BuildMI(MBB, MBBI, DL, TII->get(K1C::FMULDrr), Scratch)
       .addReg(TRI->getSubReg(v2Reg, 1))
       .addReg(TRI->getSubReg(v1Reg, 2))
       .addImm(rounding)
       .addImm(0);
   BuildMI(MBB, MBBI, DL, TII->get(K1C::COPYD), TRI->getSubReg(outReg, 2))
       .addReg(TRI->getSubReg(v2Reg, 2));
-  BuildMI(MBB, MBBI, DL, TII->get(K1C::FFMSDd1), TRI->getSubReg(outReg, 2))
+  BuildMI(MBB, MBBI, DL, TII->get(K1C::FFMSDrr), TRI->getSubReg(outReg, 2))
       .addReg(TRI->getSubReg(outReg, 2))
       .addReg(Scratch)
       .addReg(TRI->getSubReg(v1Reg, 1))
@@ -1159,29 +1166,35 @@ static bool expandStore(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
   }
 
   switch (MBBI->getOpcode()) {
-  case K1C::SBri:
-    OpCode = AddrIsReg ? K1C::SBd3
-                       : GetImmOpCode(offset, K1C::SBd0, K1C::SBd1, K1C::SBd2);
+  case K1C::SBp:
+    OpCode = AddrIsReg
+                 ? K1C::SBrr
+                 : GetImmOpCode(offset, K1C::SBri10, K1C::SBri37, K1C::SBri64);
     break;
-  case K1C::SHri:
-    OpCode = AddrIsReg ? K1C::SHd3
-                       : GetImmOpCode(offset, K1C::SHd0, K1C::SHd1, K1C::SHd2);
+  case K1C::SHp:
+    OpCode = AddrIsReg
+                 ? K1C::SHrr
+                 : GetImmOpCode(offset, K1C::SHri10, K1C::SHri37, K1C::SHri64);
     break;
-  case K1C::SWri:
-    OpCode = AddrIsReg ? K1C::SWd3
-                       : GetImmOpCode(offset, K1C::SWd0, K1C::SWd1, K1C::SWd2);
+  case K1C::SWp:
+    OpCode = AddrIsReg
+                 ? K1C::SWrr
+                 : GetImmOpCode(offset, K1C::SWri10, K1C::SWri37, K1C::SWri64);
     break;
-  case K1C::SDri:
-    OpCode = AddrIsReg ? K1C::SDd3
-                       : GetImmOpCode(offset, K1C::SDd0, K1C::SDd1, K1C::SDd2);
+  case K1C::SDp:
+    OpCode = AddrIsReg
+                 ? K1C::SDrr
+                 : GetImmOpCode(offset, K1C::SDri10, K1C::SDri37, K1C::SDri64);
     break;
-  case K1C::SQri:
-    OpCode = AddrIsReg ? K1C::SQd3
-                       : GetImmOpCode(offset, K1C::SQd0, K1C::SQd1, K1C::SQd2);
+  case K1C::SQp:
+    OpCode = AddrIsReg
+                 ? K1C::SQrr
+                 : GetImmOpCode(offset, K1C::SQri10, K1C::SQri37, K1C::SQri64);
     break;
-  case K1C::SOri:
-    OpCode = AddrIsReg ? K1C::SOd3
-                       : GetImmOpCode(offset, K1C::SOd0, K1C::SOd1, K1C::SOd2);
+  case K1C::SOp:
+    OpCode = AddrIsReg
+                 ? K1C::SOrr
+                 : GetImmOpCode(offset, K1C::SOri10, K1C::SOri37, K1C::SOri64);
     break;
   }
 
@@ -1227,47 +1240,50 @@ static bool expandLoad(const K1CInstrInfo *TII, MachineBasicBlock &MBB,
 
   unsigned OpCode;
   switch (MBBI->getOpcode()) {
-  case K1C::LBSri:
+  case K1C::LBSp:
+    OpCode = AddrIsReg ? K1C::LBSrr
+                       : GetImmOpCode(offset, K1C::LBSri10, K1C::LBSri37,
+                                      K1C::LBSri64);
+    break;
+  case K1C::LBZp:
+    OpCode = AddrIsReg ? K1C::LBZrr
+                       : GetImmOpCode(offset, K1C::LBZri10, K1C::LBZri37,
+                                      K1C::LBZri64);
+    break;
+  case K1C::LHSp:
+    OpCode = AddrIsReg ? K1C::LHSrr
+                       : GetImmOpCode(offset, K1C::LHSri10, K1C::LHSri37,
+                                      K1C::LHSri64);
+    break;
+  case K1C::LHZp:
+    OpCode = AddrIsReg ? K1C::LHZrr
+                       : GetImmOpCode(offset, K1C::LHZri10, K1C::LHZri37,
+                                      K1C::LHZri64);
+    break;
+  case K1C::LWSp:
+    OpCode = AddrIsReg ? K1C::LWSrr
+                       : GetImmOpCode(offset, K1C::LWSri10, K1C::LWSri37,
+                                      K1C::LWSri64);
+    break;
+  case K1C::LWZp:
+    OpCode = AddrIsReg ? K1C::LWZrr
+                       : GetImmOpCode(offset, K1C::LWZri10, K1C::LWZri37,
+                                      K1C::LWZri64);
+    break;
+  case K1C::LDp:
     OpCode = AddrIsReg
-                 ? K1C::LBSd6
-                 : GetImmOpCode(offset, K1C::LBSd0, K1C::LBSd1, K1C::LBSd2);
+                 ? K1C::LDrr
+                 : GetImmOpCode(offset, K1C::LDri10, K1C::LDri37, K1C::LDri64);
     break;
-  case K1C::LBZri:
+  case K1C::LQp:
     OpCode = AddrIsReg
-                 ? K1C::LBZd6
-                 : GetImmOpCode(offset, K1C::LBZd0, K1C::LBZd1, K1C::LBZd2);
+                 ? K1C::LQrr
+                 : GetImmOpCode(offset, K1C::LQri10, K1C::LQri37, K1C::LQri64);
     break;
-  case K1C::LHSri:
+  case K1C::LOp:
     OpCode = AddrIsReg
-                 ? K1C::LHSd6
-                 : GetImmOpCode(offset, K1C::LHSd0, K1C::LHSd1, K1C::LHSd2);
-    break;
-  case K1C::LHZri:
-    OpCode = AddrIsReg
-                 ? K1C::LHZd6
-                 : GetImmOpCode(offset, K1C::LHZd0, K1C::LHZd1, K1C::LHZd2);
-    break;
-  case K1C::LWSri:
-    OpCode = AddrIsReg
-                 ? K1C::LWSd6
-                 : GetImmOpCode(offset, K1C::LWSd0, K1C::LWSd1, K1C::LWSd2);
-    break;
-  case K1C::LWZri:
-    OpCode = AddrIsReg
-                 ? K1C::LWZd6
-                 : GetImmOpCode(offset, K1C::LWZd0, K1C::LWZd1, K1C::LWZd2);
-    break;
-  case K1C::LDri:
-    OpCode = AddrIsReg ? K1C::LDd6
-                       : GetImmOpCode(offset, K1C::LDd0, K1C::LDd1, K1C::LDd2);
-    break;
-  case K1C::LQri:
-    OpCode = AddrIsReg ? K1C::LQd6
-                       : GetImmOpCode(offset, K1C::LQd0, K1C::LQd1, K1C::LQd2);
-    break;
-  case K1C::LOri:
-    OpCode = AddrIsReg ? K1C::LOd6
-                       : GetImmOpCode(offset, K1C::LOd0, K1C::LOd1, K1C::LOd2);
+                 ? K1C::LOrr
+                 : GetImmOpCode(offset, K1C::LOri10, K1C::LOri37, K1C::LOri64);
     break;
   }
   if (AddrIsReg) {
@@ -1333,13 +1349,13 @@ bool K1CExpandPseudo::expandMI(MachineBasicBlock &MBB,
     expandGetInstr(TII, MBB, MBBI);
     return true;
   case K1C::WFXL_Instr:
-    expandSystemRegValueInstr(K1C::WFXLd0, TII, MBB, MBBI);
+    expandSystemRegValueInstr(K1C::WFXLrst4, TII, MBB, MBBI);
     return true;
   case K1C::WFXM_Instr:
-    expandSystemRegValueInstr(K1C::WFXMd0, TII, MBB, MBBI);
+    expandSystemRegValueInstr(K1C::WFXMrst4, TII, MBB, MBBI);
     return true;
   case K1C::SET_Instr:
-    expandSystemRegValueInstr(K1C::SETd0, TII, MBB, MBBI);
+    expandSystemRegValueInstr(K1C::SETrst4, TII, MBB, MBBI);
     return true;
   case K1C::SBMM8rr_Instr:
   case K1C::SBMM8ri_Instr:
@@ -1370,15 +1386,15 @@ bool K1CExpandPseudo::expandMI(MachineBasicBlock &MBB,
     expandBinaryPairedRegInstrOpcode(K1C::FMIND, TII, MBB, MBBI);
     return true;
   case K1C::FMULWCP_Instr:
-    expandRoundingPairInstrOpcodes(K1C::FMULWCd1, K1C::FMULWCd1, TII, MBB,
+    expandRoundingPairInstrOpcodes(K1C::FMULWCrr, K1C::FMULWCrr, TII, MBB,
                                    MBBI);
     return true;
   case K1C::FMULCWCP_Instr:
-    expandRoundingPairInstrOpcodes(K1C::FMULCWCd1, K1C::FMULCWCd1, TII, MBB,
+    expandRoundingPairInstrOpcodes(K1C::FMULCWCrr, K1C::FMULCWCrr, TII, MBB,
                                    MBBI);
     return true;
   case K1C::FMULDP_Instr:
-    expandRoundingPairInstrOpcodes(K1C::FMULDd1, K1C::FMULDd1, TII, MBB, MBBI);
+    expandRoundingPairInstrOpcodes(K1C::FMULDrr, K1C::FMULDrr, TII, MBB, MBBI);
     return true;
   case K1C::FMULDC_Instr:
     expandFMULDCInstr(TII, MBB, MBBI);
@@ -1387,46 +1403,46 @@ bool K1CExpandPseudo::expandMI(MachineBasicBlock &MBB,
     expandFMULCDCInstr(TII, MBB, MBBI);
     return true;
   case K1C::FFMAWP_Instr:
-    expandRoundingInOutInstr(K1C::FFMAWPd1, TII, MBB, MBBI);
+    expandRoundingInOutInstr(K1C::FFMAWPrr, TII, MBB, MBBI);
     return true;
   case K1C::FFMAWQ_Instr:
-    expandRoundingPairedRegInOutInstr(K1C::FFMAWPd1, TII, MBB, MBBI);
+    expandRoundingPairedRegInOutInstr(K1C::FFMAWPrr, TII, MBB, MBBI);
     return true;
   case K1C::FFMADP_Instr:
-    expandRoundingPairedRegInOutInstr(K1C::FFMADd1, TII, MBB, MBBI);
+    expandRoundingPairedRegInOutInstr(K1C::FFMADrr, TII, MBB, MBBI);
     return true;
   case K1C::FMM2AWQ_Instr:
     expandRoundingInOutInstr(K1C::FMM2AWQ, TII, MBB, MBBI);
     return true;
   case K1C::FFMSWP_Instr:
-    expandRoundingInOutInstr(K1C::FFMSWPd1, TII, MBB, MBBI);
+    expandRoundingInOutInstr(K1C::FFMSWPrr, TII, MBB, MBBI);
     return true;
   case K1C::FFMSWQ_Instr:
-    expandRoundingPairedRegInOutInstr(K1C::FFMSWPd1, TII, MBB, MBBI);
+    expandRoundingPairedRegInOutInstr(K1C::FFMSWPrr, TII, MBB, MBBI);
     return true;
   case K1C::FFMSDP_Instr:
-    expandRoundingPairedRegInOutInstr(K1C::FFMSDd1, TII, MBB, MBBI);
+    expandRoundingPairedRegInOutInstr(K1C::FFMSDrr, TII, MBB, MBBI);
     return true;
   case K1C::FMM2SWQ_Instr:
     expandRoundingInOutInstr(K1C::FMM2SWQ, TII, MBB, MBBI);
     return true;
-  case K1C::SBri:
-  case K1C::SHri:
-  case K1C::SWri:
-  case K1C::SDri:
-  case K1C::SQri:
-  case K1C::SOri:
+  case K1C::SBp:
+  case K1C::SHp:
+  case K1C::SWp:
+  case K1C::SDp:
+  case K1C::SQp:
+  case K1C::SOp:
     expandStore(TII, MBB, MBBI);
     return true;
-  case K1C::LBSri:
-  case K1C::LBZri:
-  case K1C::LHSri:
-  case K1C::LHZri:
-  case K1C::LWSri:
-  case K1C::LWZri:
-  case K1C::LDri:
-  case K1C::LQri:
-  case K1C::LOri:
+  case K1C::LBSp:
+  case K1C::LBZp:
+  case K1C::LHSp:
+  case K1C::LHZp:
+  case K1C::LWSp:
+  case K1C::LWZp:
+  case K1C::LDp:
+  case K1C::LQp:
+  case K1C::LOp:
     expandLoad(TII, MBB, MBBI);
     return true;
 

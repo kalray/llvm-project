@@ -36,17 +36,17 @@ def : Pat<(K1CBRCond i64:$lhs, bb:$dst, i32:$mod),
 
 
 def : Pat<(K1CComp i32:$lhs, i32:$rhs, i32:$mod),
-            (COMPWd0 SingleReg:$lhs, SingleReg:$rhs, ScalarcondMod:$mod)>;
+            (COMPWrr SingleReg:$lhs, SingleReg:$rhs, ScalarcondMod:$mod)>;
 def : Pat<(K1CComp i32:$lhs, Wrapped32:$rhs, i32:$mod),
-            (COMPWd1 SingleReg:$lhs, Wrapped32:$rhs, ScalarcondMod:$mod)>;
+            (COMPWri SingleReg:$lhs, Wrapped32:$rhs, ScalarcondMod:$mod)>;
 def : Pat<(K1CComp i64:$lhs, Signed10:$rhs, i32:$mod),
-            (COMPDd0 SingleReg:$lhs, Signed10:$rhs, ComparisonMod:$mod)>;
+            (COMPDri10 SingleReg:$lhs, Signed10:$rhs, ComparisonMod:$mod)>;
 def : Pat<(K1CComp i64:$lhs, Signed37:$rhs, i32:$mod),
-            (COMPDd1 SingleReg:$lhs, Signed37:$rhs, ComparisonMod:$mod)>;
+            (COMPDri37 SingleReg:$lhs, Signed37:$rhs, ComparisonMod:$mod)>;
 def : Pat<(K1CComp i64:$lhs, Wrapped64:$rhs, i32:$mod),
-            (COMPDd2 SingleReg:$lhs, Wrapped64:$rhs, ComparisonMod:$mod)>;
+            (COMPDri64 SingleReg:$lhs, Wrapped64:$rhs, ComparisonMod:$mod)>;
 def : Pat<(K1CComp i64:$lhs, i64:$rhs, i32:$mod),
-            (COMPDd3 SingleReg:$lhs, SingleReg:$rhs, ComparisonMod:$mod)>;
+            (COMPDrr SingleReg:$lhs, SingleReg:$rhs, ComparisonMod:$mod)>;
 
 // FIXME: clean code below
 
@@ -135,13 +135,13 @@ def MAKETLS : REGISTERW_EXTEND27_UPPER27_LOWER10_TRIPLE
 
 // MAKE patterns disabled - selection is done in code
 /*
-def : Pat<(Signed16:$imm), (MAKEd0 Signed16:$imm)>;
-def : Pat<(Signed43:$imm), (MAKEd1 Signed43:$imm)>;
-def : Pat<(Wrapped64:$imm), (MAKEd2 Wrapped64:$imm)>;
+def : Pat<(Signed16:$imm), (MAKEi16 Signed16:$imm)>;
+def : Pat<(Signed43:$imm), (MAKEi43 Signed43:$imm)>;
+def : Pat<(Wrapped64:$imm), (MAKEi64 Wrapped64:$imm)>;
 */
-def : Pat<(K1CWrapper tglobaladdr:$dst), (MAKEd2 tglobaladdr:$dst)>;
+def : Pat<(K1CWrapper tglobaladdr:$dst), (MAKEi64 tglobaladdr:$dst)>;
 def : Pat<(K1CWrapper tglobaltlsaddr:$dst), (MAKETLS tglobaltlsaddr:$dst)>;
-def : Pat<(K1CWrapper tblockaddress:$dst), (MAKEd2 tblockaddress:$dst)>;
+def : Pat<(K1CWrapper tblockaddress:$dst), (MAKEi64 tblockaddress:$dst)>;
 
 def AddrFI : ComplexPattern<iPTR, 1, "SelectAddrFI", [frameindex], []>;
 
@@ -153,51 +153,51 @@ def AddrRI : Operand<iPTR>, ComplexPattern<iPTR, 2, "SelectAddrRI", [frameindex]
 
 let mayStore = 1 in
 {
-def SBri : K1C_PSEUDO<(outs), (ins AddrRI:$addr, SingleReg:$val), []>;
-def SHri : K1C_PSEUDO<(outs), (ins AddrRI:$addr, SingleReg:$val), []>;
-def SWri : K1C_PSEUDO<(outs), (ins AddrRI:$addr, SingleReg:$val), []>;
-def SDri : K1C_PSEUDO<(outs), (ins AddrRI:$addr, SingleReg:$val), []>;
-def SQri : K1C_PSEUDO<(outs), (ins AddrRI:$addr, PairedReg:$val), []>;
-def SOri : K1C_PSEUDO<(outs), (ins AddrRI:$addr, PairedReg:$val), []>;
+def SBp : K1C_PSEUDO<(outs), (ins AddrRI:$addr, SingleReg:$val), []>;
+def SHp : K1C_PSEUDO<(outs), (ins AddrRI:$addr, SingleReg:$val), []>;
+def SWp : K1C_PSEUDO<(outs), (ins AddrRI:$addr, SingleReg:$val), []>;
+def SDp : K1C_PSEUDO<(outs), (ins AddrRI:$addr, SingleReg:$val), []>;
+def SQp : K1C_PSEUDO<(outs), (ins AddrRI:$addr, PairedReg:$val), []>;
+def SOp : K1C_PSEUDO<(outs), (ins AddrRI:$addr, PairedReg:$val), []>;
 }
 
 let mayLoad = 1 in
 {
-def LBSri : K1C_PSEUDO<(outs SingleReg:$out), (ins AddrRI:$addr, VariantMod:$var), []>;
-def LBZri : K1C_PSEUDO<(outs SingleReg:$out), (ins AddrRI:$addr, VariantMod:$var), []>;
-def LHSri : K1C_PSEUDO<(outs SingleReg:$out), (ins AddrRI:$addr, VariantMod:$var), []>;
-def LHZri : K1C_PSEUDO<(outs SingleReg:$out), (ins AddrRI:$addr, VariantMod:$var), []>;
-def LWSri : K1C_PSEUDO<(outs SingleReg:$out), (ins AddrRI:$addr, VariantMod:$var), []>;
-def LWZri : K1C_PSEUDO<(outs SingleReg:$out), (ins AddrRI:$addr, VariantMod:$var), []>;
-def LDri : K1C_PSEUDO<(outs SingleReg:$out), (ins AddrRI:$addr, VariantMod:$var), []>;
-def LQri : K1C_PSEUDO<(outs PairedReg:$out), (ins AddrRI:$addr, VariantMod:$var), []>;
-def LOri : K1C_PSEUDO<(outs PairedReg:$out), (ins AddrRI:$addr, VariantMod:$var), []>;
+def LBSp : K1C_PSEUDO<(outs SingleReg:$out), (ins AddrRI:$addr, VariantMod:$var), []>;
+def LBZp : K1C_PSEUDO<(outs SingleReg:$out), (ins AddrRI:$addr, VariantMod:$var), []>;
+def LHSp : K1C_PSEUDO<(outs SingleReg:$out), (ins AddrRI:$addr, VariantMod:$var), []>;
+def LHZp : K1C_PSEUDO<(outs SingleReg:$out), (ins AddrRI:$addr, VariantMod:$var), []>;
+def LWSp : K1C_PSEUDO<(outs SingleReg:$out), (ins AddrRI:$addr, VariantMod:$var), []>;
+def LWZp : K1C_PSEUDO<(outs SingleReg:$out), (ins AddrRI:$addr, VariantMod:$var), []>;
+def LDp : K1C_PSEUDO<(outs SingleReg:$out), (ins AddrRI:$addr, VariantMod:$var), []>;
+def LQp : K1C_PSEUDO<(outs PairedReg:$out), (ins AddrRI:$addr, VariantMod:$var), []>;
+def LOp : K1C_PSEUDO<(outs PairedReg:$out), (ins AddrRI:$addr, VariantMod:$var), []>;
 }
 
 // Store patterns
-def : Pat<(store (i8 SingleReg:$val), AddrRI:$addr), (SBri AddrRI:$addr,SingleReg:$val)>;
-def : Pat<(store (i16 SingleReg:$val), AddrRI:$addr), (SHri AddrRI:$addr,SingleReg:$val)>;
-def : Pat<(store (i32 SingleReg:$val), AddrRI:$addr), (SWri AddrRI:$addr,SingleReg:$val)>;
-def : Pat<(store (v2i16 SingleReg:$val), AddrRI:$addr), (SWri AddrRI:$addr,SingleReg:$val)>;
-def : Pat<(store (v2f16 SingleReg:$val), AddrRI:$addr), (SWri AddrRI:$addr,SingleReg:$val)>;
-def : Pat<(store (i64 SingleReg:$val), AddrRI:$addr), (SDri AddrRI:$addr,SingleReg:$val)>;
-def : Pat<(store (v8i8 SingleReg:$val), AddrRI:$addr), (SDri AddrRI:$addr,SingleReg:$val)>;
-def : Pat<(store (v2i32 SingleReg:$val), AddrRI:$addr), (SDri AddrRI:$addr,SingleReg:$val)>;
-def : Pat<(store (v4i16 SingleReg:$val), AddrRI:$addr), (SDri AddrRI:$addr,SingleReg:$val)>;
-def : Pat<(store (v2i64 PairedReg:$val), AddrRI:$addr), (SQri AddrRI:$addr,PairedReg:$val)>;
-def : Pat<(store (v4i32 PairedReg:$val), AddrRI:$addr), (SQri AddrRI:$addr,PairedReg:$val)>;
+def : Pat<(store (i8 SingleReg:$val), AddrRI:$addr), (SBp AddrRI:$addr,SingleReg:$val)>;
+def : Pat<(store (i16 SingleReg:$val), AddrRI:$addr), (SHp AddrRI:$addr,SingleReg:$val)>;
+def : Pat<(store (i32 SingleReg:$val), AddrRI:$addr), (SWp AddrRI:$addr,SingleReg:$val)>;
+def : Pat<(store (v2i16 SingleReg:$val), AddrRI:$addr), (SWp AddrRI:$addr,SingleReg:$val)>;
+def : Pat<(store (v2f16 SingleReg:$val), AddrRI:$addr), (SWp AddrRI:$addr,SingleReg:$val)>;
+def : Pat<(store (i64 SingleReg:$val), AddrRI:$addr), (SDp AddrRI:$addr,SingleReg:$val)>;
+def : Pat<(store (v8i8 SingleReg:$val), AddrRI:$addr), (SDp AddrRI:$addr,SingleReg:$val)>;
+def : Pat<(store (v2i32 SingleReg:$val), AddrRI:$addr), (SDp AddrRI:$addr,SingleReg:$val)>;
+def : Pat<(store (v4i16 SingleReg:$val), AddrRI:$addr), (SDp AddrRI:$addr,SingleReg:$val)>;
+def : Pat<(store (v2i64 PairedReg:$val), AddrRI:$addr), (SQp AddrRI:$addr,PairedReg:$val)>;
+def : Pat<(store (v4i32 PairedReg:$val), AddrRI:$addr), (SQp AddrRI:$addr,PairedReg:$val)>;
 
-def : Pat<(truncstorei8 i64:$val, AddrRI:$addr), (SBri AddrRI:$addr, SingleReg:$val)>;
-def : Pat<(truncstorei8 i32:$val, AddrRI:$addr), (SBri AddrRI:$addr, SingleReg:$val)>;
-def : Pat<(truncstorei16 i64:$val, AddrRI:$addr), (SHri AddrRI:$addr, SingleReg:$val)>;
-def : Pat<(truncstorei16 i32:$val, AddrRI:$addr), (SHri AddrRI:$addr, SingleReg:$val)>;
-def : Pat<(truncstorei32 i64:$val, AddrRI:$addr), (SWri AddrRI:$addr, SingleReg:$val)>;
+def : Pat<(truncstorei8 i64:$val, AddrRI:$addr), (SBp AddrRI:$addr, SingleReg:$val)>;
+def : Pat<(truncstorei8 i32:$val, AddrRI:$addr), (SBp AddrRI:$addr, SingleReg:$val)>;
+def : Pat<(truncstorei16 i64:$val, AddrRI:$addr), (SHp AddrRI:$addr, SingleReg:$val)>;
+def : Pat<(truncstorei16 i32:$val, AddrRI:$addr), (SHp AddrRI:$addr, SingleReg:$val)>;
+def : Pat<(truncstorei32 i64:$val, AddrRI:$addr), (SWp AddrRI:$addr, SingleReg:$val)>;
 
-def : Pat<(truncstorei8 (i32 SingleReg:$val), (i64 SingleReg:$base)), (SBd0 (i64 0), SingleReg:$base, SingleReg:$val)>;
-def : Pat<(truncstorei16 (i32 SingleReg:$val), (i64 SingleReg:$base)), (SHd0 (i64 0), SingleReg:$base, SingleReg:$val)>;
-def : Pat<(truncstorei8 (i64 SingleReg:$val), (i64 SingleReg:$base)), (SBd0 (i64 0), SingleReg:$base, SingleReg:$val)>;
-def : Pat<(truncstorei16 (i64 SingleReg:$val), (i64 SingleReg:$base)), (SHd0 (i64 0), SingleReg:$base, SingleReg:$val)>;
-def : Pat<(truncstorei32 (i64 SingleReg:$val), (i64 SingleReg:$base)), (SWd0 (i64 0), SingleReg:$base, SingleReg:$val)>;
+def : Pat<(truncstorei8 (i32 SingleReg:$val), (i64 SingleReg:$base)), (SBri10 (i64 0), SingleReg:$base, SingleReg:$val)>;
+def : Pat<(truncstorei16 (i32 SingleReg:$val), (i64 SingleReg:$base)), (SHri10 (i64 0), SingleReg:$base, SingleReg:$val)>;
+def : Pat<(truncstorei8 (i64 SingleReg:$val), (i64 SingleReg:$base)), (SBri10 (i64 0), SingleReg:$base, SingleReg:$val)>;
+def : Pat<(truncstorei16 (i64 SingleReg:$val), (i64 SingleReg:$base)), (SHri10 (i64 0), SingleReg:$base, SingleReg:$val)>;
+def : Pat<(truncstorei32 (i64 SingleReg:$val), (i64 SingleReg:$base)), (SWri10 (i64 0), SingleReg:$base, SingleReg:$val)>;
 
 // Load patterns
 def loadi1 : PatFrag<(ops node:$ptr), (i1 (load node:$ptr))>;
@@ -214,61 +214,61 @@ def loadv2i64 : PatFrag<(ops node:$ptr), (v2i64 (load node:$ptr))>;
 def loadv4i32 : PatFrag<(ops node:$ptr), (v4i32 (load node:$ptr))>;
 
 // load i1 in i32
-def : Pat<(i32 (sextloadi1 AddrRI:$addr)), (LBSri AddrRI:$addr, variant_)>;
-def : Pat<(i32 (zextloadi1 AddrRI:$addr)), (LBZri AddrRI:$addr, variant_)>;
-def : Pat<(i32 (extloadi1 AddrRI:$addr)), (LBZri AddrRI:$addr, variant_)>;
-def : Pat<(i32 (extloadi1 (iPTR SingleReg:$rs2))), (LBZd0 (i64 0), SingleReg:$rs2, variant_)>;
+def : Pat<(i32 (sextloadi1 AddrRI:$addr)), (LBSp AddrRI:$addr, variant_)>;
+def : Pat<(i32 (zextloadi1 AddrRI:$addr)), (LBZp AddrRI:$addr, variant_)>;
+def : Pat<(i32 (extloadi1 AddrRI:$addr)), (LBZp AddrRI:$addr, variant_)>;
+def : Pat<(i32 (extloadi1 (iPTR SingleReg:$rs2))), (LBZri10 (i64 0), SingleReg:$rs2, variant_)>;
 
 // load i8 in i32
-def : Pat<(i32 (sextloadi8 AddrRI:$addr)), (LBSri AddrRI:$addr, variant_)>;
-def : Pat<(i32 (zextloadi8 AddrRI:$addr)), (LBZri AddrRI:$addr, variant_)>;
-def : Pat<(i32 (extloadi8 AddrRI:$addr)), (LBZri AddrRI:$addr, variant_)>;
-def : Pat<(i32 (extloadi8 (iPTR SingleReg:$rs2))), (LBZd0 (i64 0), SingleReg:$rs2, variant_)>;
+def : Pat<(i32 (sextloadi8 AddrRI:$addr)), (LBSp AddrRI:$addr, variant_)>;
+def : Pat<(i32 (zextloadi8 AddrRI:$addr)), (LBZp AddrRI:$addr, variant_)>;
+def : Pat<(i32 (extloadi8 AddrRI:$addr)), (LBZp AddrRI:$addr, variant_)>;
+def : Pat<(i32 (extloadi8 (iPTR SingleReg:$rs2))), (LBZri10 (i64 0), SingleReg:$rs2, variant_)>;
 
 // load i16 in i32
-def : Pat<(i32 (sextloadi16 AddrRI:$addr)), (LHSri AddrRI:$addr, variant_)>;
-def : Pat<(i32 (zextloadi16 AddrRI:$addr)), (LHZri AddrRI:$addr, variant_)>;
-def : Pat<(i32 (extloadi16 AddrRI:$addr)), (LHZri AddrRI:$addr, variant_)>;
-def : Pat<(i32 (extloadi16 (iPTR SingleReg:$rs2))), (LHZd0 (i64 0), SingleReg:$rs2, variant_)>;
+def : Pat<(i32 (sextloadi16 AddrRI:$addr)), (LHSp AddrRI:$addr, variant_)>;
+def : Pat<(i32 (zextloadi16 AddrRI:$addr)), (LHZp AddrRI:$addr, variant_)>;
+def : Pat<(i32 (extloadi16 AddrRI:$addr)), (LHZp AddrRI:$addr, variant_)>;
+def : Pat<(i32 (extloadi16 (iPTR SingleReg:$rs2))), (LHZri10 (i64 0), SingleReg:$rs2, variant_)>;
 
 // load i1 in i64
-def : Pat<(i64 (sextloadi1 AddrRI:$addr)), (LBSri AddrRI:$addr, variant_)>;
-def : Pat<(i64 (zextloadi1 AddrRI:$addr)), (LBZri AddrRI:$addr, variant_)>;
-def : Pat<(i64 (extloadi1 AddrRI:$addr)), (LBZri AddrRI:$addr, variant_)>;
-def : Pat<(i64 (extloadi1 (iPTR SingleReg:$rs2))), (LBZd0 (i64 0), SingleReg:$rs2, variant_)>;
+def : Pat<(i64 (sextloadi1 AddrRI:$addr)), (LBSp AddrRI:$addr, variant_)>;
+def : Pat<(i64 (zextloadi1 AddrRI:$addr)), (LBZp AddrRI:$addr, variant_)>;
+def : Pat<(i64 (extloadi1 AddrRI:$addr)), (LBZp AddrRI:$addr, variant_)>;
+def : Pat<(i64 (extloadi1 (iPTR SingleReg:$rs2))), (LBZri10 (i64 0), SingleReg:$rs2, variant_)>;
 
 // load i8 in i64
-def : Pat<(i64 (sextloadi8 AddrRI:$addr)), (LBSri AddrRI:$addr, variant_)>;
-def : Pat<(i64 (zextloadi8 AddrRI:$addr)), (LBZri AddrRI:$addr, variant_)>;
-def : Pat<(i64 (extloadi8 AddrRI:$addr)), (LBZri AddrRI:$addr, variant_)>;
-def : Pat<(i64 (extloadi8 (iPTR SingleReg:$rs2))), (LBZd0 (i64 0), SingleReg:$rs2, variant_)>;
+def : Pat<(i64 (sextloadi8 AddrRI:$addr)), (LBSp AddrRI:$addr, variant_)>;
+def : Pat<(i64 (zextloadi8 AddrRI:$addr)), (LBZp AddrRI:$addr, variant_)>;
+def : Pat<(i64 (extloadi8 AddrRI:$addr)), (LBZp AddrRI:$addr, variant_)>;
+def : Pat<(i64 (extloadi8 (iPTR SingleReg:$rs2))), (LBZri10 (i64 0), SingleReg:$rs2, variant_)>;
 
 // load i16 in i64
-def : Pat<(i64 (sextloadi16 AddrRI:$addr)), (LHSri AddrRI:$addr, variant_)>;
-def : Pat<(i64 (zextloadi16 AddrRI:$addr)), (LHZri AddrRI:$addr, variant_)>;
-def : Pat<(i64 (extloadi16 AddrRI:$addr)), (LHZri AddrRI:$addr, variant_)>;
-def : Pat<(i64 (extloadi16 (iPTR SingleReg:$rs2))), (LHZd0 (i64 0), SingleReg:$rs2, variant_)>;
+def : Pat<(i64 (sextloadi16 AddrRI:$addr)), (LHSp AddrRI:$addr, variant_)>;
+def : Pat<(i64 (zextloadi16 AddrRI:$addr)), (LHZp AddrRI:$addr, variant_)>;
+def : Pat<(i64 (extloadi16 AddrRI:$addr)), (LHZp AddrRI:$addr, variant_)>;
+def : Pat<(i64 (extloadi16 (iPTR SingleReg:$rs2))), (LHZri10 (i64 0), SingleReg:$rs2, variant_)>;
 
 // load i32 in i64
-def : Pat<(i64 (sextloadi32 AddrRI:$addr)), (LWSri AddrRI:$addr, variant_)>;
-def : Pat<(i64 (zextloadi32 AddrRI:$addr)), (LWZri AddrRI:$addr, variant_)>;
-def : Pat<(i64 (extloadi32 AddrRI:$addr)), (LWZri AddrRI:$addr, variant_)>;
-def : Pat<(i64 (extloadi32 (iPTR SingleReg:$rs2))), (LWZd0 (i64 0), SingleReg:$rs2, variant_)>;
-def : Pat<(loadi32 (iPTR SingleReg:$rs2)), (LWZd0 (i64 0), SingleReg:$rs2, variant_)>;
+def : Pat<(i64 (sextloadi32 AddrRI:$addr)), (LWSp AddrRI:$addr, variant_)>;
+def : Pat<(i64 (zextloadi32 AddrRI:$addr)), (LWZp AddrRI:$addr, variant_)>;
+def : Pat<(i64 (extloadi32 AddrRI:$addr)), (LWZp AddrRI:$addr, variant_)>;
+def : Pat<(i64 (extloadi32 (iPTR SingleReg:$rs2))), (LWZri10 (i64 0), SingleReg:$rs2, variant_)>;
+def : Pat<(loadi32 (iPTR SingleReg:$rs2)), (LWZri10 (i64 0), SingleReg:$rs2, variant_)>;
 
-def : Pat<(loadi1 AddrRI:$addr), (LBZri AddrRI:$addr, variant_)>;
-def : Pat<(loadi8 AddrRI:$addr), (LBZri AddrRI:$addr, variant_)>;
-def : Pat<(loadi16 AddrRI:$addr), (LHZri AddrRI:$addr, variant_)>;
-def : Pat<(loadi32 AddrRI:$addr), (LWZri AddrRI:$addr, variant_)>;
-def : Pat<(loadv2i16 AddrRI:$addr), (LWZri AddrRI:$addr, variant_)>;
-def : Pat<(loadv2f16 AddrRI:$addr), (LWZri AddrRI:$addr, variant_)>;
-def : Pat<(loadi64 AddrRI:$addr), (LDri AddrRI:$addr, variant_)>;
-def : Pat<(loadv8i8 AddrRI:$addr), (LDri AddrRI:$addr, variant_)>;
-def : Pat<(loadv2i32 AddrRI:$addr), (LDri AddrRI:$addr, variant_)>;
-def : Pat<(loadv4i16 AddrRI:$addr), (LDri AddrRI:$addr, variant_)>;
-def : Pat<(loadv2i64 AddrRI:$addr), (LQri AddrRI:$addr, variant_)>;
-def : Pat<(loadv4i32 AddrRI:$addr), (LQri AddrRI:$addr, variant_)>;
-def : Pat<(loadi64 (iPTR SingleReg:$rs2)), (LDd0 (i64 0), SingleReg:$rs2, variant_)>;
+def : Pat<(loadi1 AddrRI:$addr), (LBZp AddrRI:$addr, variant_)>;
+def : Pat<(loadi8 AddrRI:$addr), (LBZp AddrRI:$addr, variant_)>;
+def : Pat<(loadi16 AddrRI:$addr), (LHZp AddrRI:$addr, variant_)>;
+def : Pat<(loadi32 AddrRI:$addr), (LWZp AddrRI:$addr, variant_)>;
+def : Pat<(loadv2i16 AddrRI:$addr), (LWZp AddrRI:$addr, variant_)>;
+def : Pat<(loadv2f16 AddrRI:$addr), (LWZp AddrRI:$addr, variant_)>;
+def : Pat<(loadi64 AddrRI:$addr), (LDp AddrRI:$addr, variant_)>;
+def : Pat<(loadv8i8 AddrRI:$addr), (LDp AddrRI:$addr, variant_)>;
+def : Pat<(loadv2i32 AddrRI:$addr), (LDp AddrRI:$addr, variant_)>;
+def : Pat<(loadv4i16 AddrRI:$addr), (LDp AddrRI:$addr, variant_)>;
+def : Pat<(loadv2i64 AddrRI:$addr), (LQp AddrRI:$addr, variant_)>;
+def : Pat<(loadv4i32 AddrRI:$addr), (LQp AddrRI:$addr, variant_)>;
+def : Pat<(loadi64 (iPTR SingleReg:$rs2)), (LDri10 (i64 0), SingleReg:$rs2, variant_)>;
 
 // sign extend optimizations
 def : Pat<(and SingleReg:$val,(i64 0xffffffff)), (ZXWD SingleReg:$val)>;
@@ -300,12 +300,12 @@ multiclass SHIFT_PAT64<SDNode n, SDNode instr>
                 (i64 (zext i32:$val))),(instr SingleReg:$r1, SingleReg:$val)>;
 }
 
-defm : SHIFT_PAT32<shl, SLLWd1>;
-defm : SHIFT_PAT32<sra, SRAWd1>;
-defm : SHIFT_PAT32<srl, SRLWd1>;
-defm : SHIFT_PAT64<shl, SLLDd1>;
-defm : SHIFT_PAT64<sra, SRADd1>;
-defm : SHIFT_PAT64<srl, SRLDd1>;
+defm : SHIFT_PAT32<shl, SLLWrr>;
+defm : SHIFT_PAT32<sra, SRAWrr>;
+defm : SHIFT_PAT32<srl, SRLWrr>;
+defm : SHIFT_PAT64<shl, SLLDrr>;
+defm : SHIFT_PAT64<sra, SRADrr>;
+defm : SHIFT_PAT64<srl, SRLDrr>;
 
 // Zero/sign extend patterns to i32
 def : Pat<(i32 (anyext i8:$val)), (COPY SingleReg:$val)>;
@@ -336,7 +336,7 @@ def : Pat<(brcond i32:$cond, bb:$dst), (CB SingleReg:$cond, Pcrel17:$dst, scalar
 def : Pat<(brcond i64:$cond, bb:$dst), (CB SingleReg:$cond, Pcrel17:$dst, scalarcond_dnez)>;
 
 
-def : Pat<(i64 AddrFI:$fi), (ADDDd3 SingleReg:$fi,(i64 0) )>;
+def : Pat<(i64 AddrFI:$fi), (ADDDri64 SingleReg:$fi,(i64 0) )>;
 
 def : Pat<(brind (i32 SingleReg:$r)), (IGOTO SingleReg:$r)>;
 
@@ -408,30 +408,30 @@ defm : Select64PAT<(i32 i32:$truev), (i32 i32:$falsev), (i32 Wrapped32:$truev), 
 defm : Select64PAT<(i64 i64:$truev), (i64 i64:$falsev), (i64 Wrapped64:$truev), (i64 Wrapped64:$falsev)>;
 defm : Select64PAT<(K1CWrapper tglobaladdr:$truev), (K1CWrapper tglobaladdr:$falsev), (i64 SingleReg:$truev), (i64 SingleReg:$falsev)>;
 
-def : Pat<(i1 (trunc i64:$param)), (ANDDd1 SingleReg:$param, (i64 1))>;
+def : Pat<(i1 (trunc i64:$param)), (ANDDri10 SingleReg:$param, (i64 1))>;
 def : Pat<(i8 (trunc i64:$param)), (ZXBD SingleReg:$param)>;
 def : Pat<(i16 (trunc i64:$param)), (ZXHD SingleReg:$param)>;
 def : Pat<(i32 (trunc i64:$param)), (ZXWD SingleReg:$param)>;
 
-def : Pat<(i1 (trunc i32:$param)), (ANDWd0 SingleReg:$param, (i32 1))>;
+def : Pat<(i1 (trunc i32:$param)), (ANDWri10 SingleReg:$param, (i32 1))>;
 def : Pat<(i8 (trunc i32:$param)), (ZXBD SingleReg:$param)>;
 def : Pat<(i16 (trunc i32:$param)), (ZXHD SingleReg:$param)>;
 
-def : Pat<(i1 (trunc i16:$param)), (ANDWd0 SingleReg:$param, (i32 1))>;
+def : Pat<(i1 (trunc i16:$param)), (ANDWri10 SingleReg:$param, (i32 1))>;
 def : Pat<(i8 (trunc i16:$param)), (ZXBD SingleReg:$param)>;
 
-def : Pat<(i1 (trunc i8:$param)), (ANDWd0 SingleReg:$param, (i32 1))>;
+def : Pat<(i1 (trunc i8:$param)), (ANDWri10 SingleReg:$param, (i32 1))>;
 
 // v2i32
 def : Pat<(extractelt (v2i32 SingleReg:$v), 0), (COPY SingleReg:$v)>;
-def : Pat<(extractelt (v2i32 SingleReg:$v), 1), (SRADd1 SingleReg :$v, (i64 32))>;
+def : Pat<(extractelt (v2i32 SingleReg:$v), 1), (SRADri SingleReg :$v, (i64 32))>;
 
 // v2i16
 def : Pat<(i32 (vector_extract v2i16:$v, 0)), (ZXHD SingleReg:$v)>;
-def : Pat<(i32 (vector_extract v2i16:$v, 1)), (SRLWd1 SingleReg:$v, (i64 16))>;
+def : Pat<(i32 (vector_extract v2i16:$v, 1)), (SRLWri SingleReg:$v, (i64 16))>;
 
 def : Pat<(i32 (sext_inreg (vector_extract v2i16:$v, 0), i16)), (SXHD SingleReg:$v)>;
-def : Pat<(i32 (sext_inreg (vector_extract v2i16:$v, 1), i16)), (SRAWd1 SingleReg:$v, (i64 16))>;
+def : Pat<(i32 (sext_inreg (vector_extract v2i16:$v, 1), i16)), (SRAWri SingleReg:$v, (i64 16))>;
 
 def : Pat<(i64 (sext_inreg (i64 (anyext (i32 (vector_extract v2i16:$v, 0)))), i16)), (SXHD SingleReg:$v)>;
 def : Pat<(i64 (sext_inreg (i64 (anyext (i32 (vector_extract v2i16:$v, 1)))), i16)), (EXTFS SingleReg:$v, 31, 16)>;
@@ -440,12 +440,12 @@ def : Pat<(i64 (sext_inreg (i64 (anyext (i32 (vector_extract v2i16:$v, 1)))), i1
 def : Pat<(i32 (vector_extract (v4i16 SingleReg:$v), 0)), (EXTFZ SingleReg:$v, 15, 0)>;
 def : Pat<(i32 (vector_extract (v4i16 SingleReg:$v), 1)), (EXTFZ SingleReg:$v, 31, 16)>;
 def : Pat<(i32 (vector_extract (v4i16 SingleReg:$v), 2)), (EXTFZ SingleReg:$v, 47, 32)>;
-def : Pat<(i32 (vector_extract (v4i16 SingleReg:$v), 3)), (SRLDd1 SingleReg:$v, (i64 48))>;
+def : Pat<(i32 (vector_extract (v4i16 SingleReg:$v), 3)), (SRLDri SingleReg:$v, (i64 48))>;
 
 def : Pat<(i32 (sext_inreg (vector_extract (v4i16 SingleReg:$v), 0), i16)), (EXTFS SingleReg:$v, 15, 0)>;
 def : Pat<(i32 (sext_inreg (vector_extract (v4i16 SingleReg:$v), 1), i16)), (EXTFS SingleReg:$v, 31, 16)>;
 def : Pat<(i32 (sext_inreg (vector_extract (v4i16 SingleReg:$v), 2), i16)), (EXTFS SingleReg:$v, 47, 32)>;
-def : Pat<(i32 (sext_inreg (vector_extract (v4i16 SingleReg:$v), 3), i16)), (SRADd1 SingleReg:$v, (i64 48))>;
+def : Pat<(i32 (sext_inreg (vector_extract (v4i16 SingleReg:$v), 3), i16)), (SRADri SingleReg:$v, (i64 48))>;
 
 // v2i64
 def : Pat<(v2i64 (build_vector i64:$v1, i64:$v2)),
@@ -459,9 +459,9 @@ def : Pat<(extractelt (v2i64 PairedReg:$v), 1), (i64 (EXTRACT_SUBREG $v, 2))>;
 
 // v4i32
 def : Pat<(extractelt (v4i32 PairedReg:$v), 0), (i32 (EXTRACT_SUBREG $v, 1))>;
-def : Pat<(extractelt (v4i32 PairedReg:$v), 1), (SRADd1 (i32 (EXTRACT_SUBREG $v, 1)), (i64 32))>;
+def : Pat<(extractelt (v4i32 PairedReg:$v), 1), (SRADri (i32 (EXTRACT_SUBREG $v, 1)), (i64 32))>;
 def : Pat<(extractelt (v4i32 PairedReg:$v), 2), (i32 (EXTRACT_SUBREG $v, 2))>;
-def : Pat<(extractelt (v4i32 PairedReg:$v), 3), (SRADd1 (i32 (EXTRACT_SUBREG $v, 2)), (i64 32))>;
+def : Pat<(extractelt (v4i32 PairedReg:$v), 3), (SRADri (i32 (EXTRACT_SUBREG $v, 2)), (i64 32))>;
 
 // v8i8
 def : Pat<(i32 (vector_extract (v8i8 SingleReg:$v), 0)), (EXTFZ SingleReg:$v, 7, 0)>;
@@ -471,7 +471,7 @@ def : Pat<(i32 (vector_extract (v8i8 SingleReg:$v), 3)), (EXTFZ SingleReg:$v, 31
 def : Pat<(i32 (vector_extract (v8i8 SingleReg:$v), 4)), (EXTFZ SingleReg:$v, 39, 32)>;
 def : Pat<(i32 (vector_extract (v8i8 SingleReg:$v), 5)), (EXTFZ SingleReg:$v, 47, 40)>;
 def : Pat<(i32 (vector_extract (v8i8 SingleReg:$v), 6)), (EXTFZ SingleReg:$v, 55, 48)>;
-def : Pat<(i32 (vector_extract (v8i8 SingleReg:$v), 7)), (SRLDd1 SingleReg:$v, (i64 56))>;
+def : Pat<(i32 (vector_extract (v8i8 SingleReg:$v), 7)), (SRLDri SingleReg:$v, (i64 56))>;
 
 //===----------------------------------------------------------------------===//
 //  Synthetic Instructions - Patterns
