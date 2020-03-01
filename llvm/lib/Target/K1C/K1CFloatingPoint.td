@@ -7,37 +7,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-class SILENT<int N> : PatLeaf<(i8 N)>;
-def SILENT_OFF : SILENT<0>;
-def SILENT_ON  : SILENT<1>;
-
-class ROUNDING<int N> : PatLeaf<(i32 N)>;
-def ROUND_NE : ROUNDING<0>;
-def ROUND_U  : ROUNDING<1>;
-def ROUND_D  : ROUNDING<2>;
-def ROUND_Z  : ROUNDING<3>;
-def ROUND_NA : ROUNDING<4>;
-def ROUND_NZ : ROUNDING<5>;
-def ROUND_O  : ROUNDING<6>;
-def ROUND_CS : ROUNDING<7>;
-
-class FCOMP<int N> : PatLeaf<(i8 N)>;
-def FCOMP_ONE : FCOMP<0>;
-def FCOMP_UEQ : FCOMP<1>;
-def FCOMP_OEQ : FCOMP<2>;
-def FCOMP_UNE : FCOMP<3>;
-def FCOMP_OLT : FCOMP<4>;
-def FCOMP_UGE : FCOMP<5>;
-def FCOMP_OGE : FCOMP<6>;
-def FCOMP_ULT : FCOMP<7>;
-
-def DEFAULT_FPCONV_SHIFT : PatLeaf<(i64 0)>;
-
-class VARIANT<int N> : PatLeaf<(i8 N)>;
-def VARIANT_CACHED               : VARIANT<0>;
-def VARIANT_SPECULATIVE          : VARIANT<1>;
-def VARIANT_UNCACHED             : VARIANT<2>;
-def VARIANT_UNCACHED_SPECULATIVE : VARIANT<3>;
+def DefaultShift : PatLeaf<(i64 0)>;
 
 // Store
 def : Pat<(store (f16 SingleReg:$val), AddrRI:$addr), (SHri AddrRI:$addr, SingleReg:$val)>;
@@ -54,10 +24,10 @@ def truncstoref16 : PatFrag<(ops node:$val, node:$ptr),
   let MemoryVT = f16;
 }
 
-def : Pat<(truncstoref32 f64:$val, AddrRI:$addr), (SWri AddrRI:$addr, (FNARROWDW SingleReg:$val, ROUND_CS, SILENT_OFF))>;
+def : Pat<(truncstoref32 f64:$val, AddrRI:$addr), (SWri AddrRI:$addr, (FNARROWDW SingleReg:$val, rounding_, silent_))>;
 
-def : Pat<(truncstoref16 f64:$val, AddrRI:$addr), (SHri AddrRI:$addr, (FNARROWWH (FNARROWDW SingleReg:$val, ROUND_CS, SILENT_OFF), ROUND_CS, SILENT_OFF))>;
-def : Pat<(truncstoref16 f32:$val, AddrRI:$addr), (SHri AddrRI:$addr, (FNARROWWH SingleReg:$val, ROUND_CS, SILENT_OFF))>;
+def : Pat<(truncstoref16 f64:$val, AddrRI:$addr), (SHri AddrRI:$addr, (FNARROWWH (FNARROWDW SingleReg:$val, rounding_, silent_), rounding_, silent_))>;
+def : Pat<(truncstoref16 f32:$val, AddrRI:$addr), (SHri AddrRI:$addr, (FNARROWWH SingleReg:$val, rounding_, silent_))>;
 
 // Load
 def loadf16 : PatFrag<(ops node:$ptr), (f16 (load node:$ptr))>;
@@ -68,13 +38,13 @@ def loadv2f32 : PatFrag<(ops node:$ptr), (v2f32 (load node:$ptr))>;
 def loadv4f32 : PatFrag<(ops node:$ptr), (v4f32 (load node:$ptr))>;
 def loadv2f64 : PatFrag<(ops node:$ptr), (v2f64 (load node:$ptr))>;
 
-def : Pat<(loadf16 AddrRI:$addr), (LHZri AddrRI:$addr, VARIANT_CACHED)>;
-def : Pat<(loadf32 AddrRI:$addr), (LWZri AddrRI:$addr, VARIANT_CACHED)>;
-def : Pat<(loadf64 AddrRI:$addr), (LDri AddrRI:$addr, VARIANT_CACHED)>;
-def : Pat<(loadv2f32 AddrRI:$addr), (LDri AddrRI:$addr, VARIANT_CACHED)>;
-def : Pat<(loadv4f16 AddrRI:$addr), (LDri AddrRI:$addr, VARIANT_CACHED)>;
-def : Pat<(loadv4f32 AddrRI:$addr), (LQri AddrRI:$addr, VARIANT_CACHED)>;
-def : Pat<(loadv2f64 AddrRI:$addr), (LQri AddrRI:$addr, VARIANT_CACHED)>;
+def : Pat<(loadf16 AddrRI:$addr), (LHZri AddrRI:$addr, variant_)>;
+def : Pat<(loadf32 AddrRI:$addr), (LWZri AddrRI:$addr, variant_)>;
+def : Pat<(loadf64 AddrRI:$addr), (LDri AddrRI:$addr, variant_)>;
+def : Pat<(loadv2f32 AddrRI:$addr), (LDri AddrRI:$addr, variant_)>;
+def : Pat<(loadv4f16 AddrRI:$addr), (LDri AddrRI:$addr, variant_)>;
+def : Pat<(loadv4f32 AddrRI:$addr), (LQri AddrRI:$addr, variant_)>;
+def : Pat<(loadv2f64 AddrRI:$addr), (LQri AddrRI:$addr, variant_)>;
 
 // 16 bits
 def : BITCAST<f16, i16, SingleReg>;
@@ -124,100 +94,100 @@ def : BITCAST<v4i32, v4f32, PairedReg>;
 def : Pat<(fadd f16:$rs1, Binary16:$rs2), (FADDHQd0 SingleReg:$rs1, Binary16:$rs2)>;
 def : Pat<(fadd f32:$rs1, Binary32:$rs2), (FADDWd0 SingleReg:$rs1, Binary32:$rs2)>;
 def : Pat<(fadd f64:$rs1, Binary64:$rs2), (FADDDd0 SingleReg:$rs1, Binary64:$rs2)>;
-def : Pat<(fadd f16:$rs1, f16:$rs2), (FADDHQd1 SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
-def : Pat<(fadd f32:$rs1, f32:$rs2), (FADDWd1 SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
-def : Pat<(fadd f64:$rs1, f64:$rs2), (FADDDd1 SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
-def : Pat<(fadd v2f16:$rs1, v2f16:$rs2), (FADDHQd1 SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
-def : Pat<(fadd v4f16:$rs1, v4f16:$rs2), (FADDHQd1 SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
-def : Pat<(fadd v2f32:$rs1, v2f32:$rs2), (FADDWPd1 SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
-def : Pat<(fadd v4f32:$rs1, v4f32:$rs2), (FADDWQ PairedReg:$rs1, PairedReg:$rs2, ROUND_CS, SILENT_OFF)>;
-def : Pat<(fadd v2f64:$rs1, v2f64:$rs2), (FADDDP PairedReg:$rs1, PairedReg:$rs2, ROUND_CS, SILENT_OFF)>;
+def : Pat<(fadd f16:$rs1, f16:$rs2), (FADDHQd1 SingleReg:$rs1, SingleReg:$rs2, rounding_, silent_)>;
+def : Pat<(fadd f32:$rs1, f32:$rs2), (FADDWd1 SingleReg:$rs1, SingleReg:$rs2, rounding_, silent_)>;
+def : Pat<(fadd f64:$rs1, f64:$rs2), (FADDDd1 SingleReg:$rs1, SingleReg:$rs2, rounding_, silent_)>;
+def : Pat<(fadd v2f16:$rs1, v2f16:$rs2), (FADDHQd1 SingleReg:$rs1, SingleReg:$rs2, rounding_, silent_)>;
+def : Pat<(fadd v4f16:$rs1, v4f16:$rs2), (FADDHQd1 SingleReg:$rs1, SingleReg:$rs2, rounding_, silent_)>;
+def : Pat<(fadd v2f32:$rs1, v2f32:$rs2), (FADDWPd1 SingleReg:$rs1, SingleReg:$rs2, rounding_, silent_)>;
+def : Pat<(fadd v4f32:$rs1, v4f32:$rs2), (FADDWQ PairedReg:$rs1, PairedReg:$rs2, rounding_, silent_)>;
+def : Pat<(fadd v2f64:$rs1, v2f64:$rs2), (FADDDP PairedReg:$rs1, PairedReg:$rs2, rounding_, silent_)>;
 // FCDIV -> TODO
 // FCOMP (TODO: factorize these patterns in ISelLowering pass)
-def : Pat<(i32 (setoeq f16:$rz, f16:$ry)), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, FCOMP_OEQ)>;
-def : Pat<(i32 (setogt f16:$rz, f16:$ry)), (FCOMPNHQ SingleReg:$ry, SingleReg:$rz, FCOMP_OLT)>;
-def : Pat<(i32 (setoge f16:$rz, f16:$ry)), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, FCOMP_OGE)>;
-def : Pat<(i32 (setolt f16:$rz, f16:$ry)), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, FCOMP_OLT)>;
-def : Pat<(i32 (setole f16:$rz, f16:$ry)), (FCOMPNHQ SingleReg:$ry, SingleReg:$rz, FCOMP_OGE)>;
-def : Pat<(i32 (setone f16:$rz, f16:$ry)), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, FCOMP_ONE)>;
-def : Pat<(i32 (seto f16:$rz, f16:$ry)), (ORDd0 (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, FCOMP_OGE), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, FCOMP_OLT))>;
-def : Pat<(i32 (setuo f16:$rz, f16:$ry)), (ANDDd0 (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, FCOMP_UGE), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, FCOMP_ULT))>;
-def : Pat<(i32 (setueq f16:$rz, f16:$ry)), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, FCOMP_UEQ)>;
-def : Pat<(i32 (setugt f16:$rz, f16:$ry)), (FCOMPNHQ SingleReg:$ry, SingleReg:$rz, FCOMP_ULT)>;
-def : Pat<(i32 (setuge f16:$rz, f16:$ry)), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, FCOMP_UGE)>;
-def : Pat<(i32 (setult f16:$rz, f16:$ry)), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, FCOMP_ULT)>;
-def : Pat<(i32 (setule f16:$rz, f16:$ry)), (FCOMPNHQ SingleReg:$ry, SingleReg:$rz, FCOMP_UGE)>;
-def : Pat<(i32 (setune f16:$rz, f16:$ry)), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, FCOMP_UNE)>;
-def : Pat<(i32 (setoeq f32:$rz, Binary32:$imm)), (FCOMPWd1 SingleReg:$rz, Binary32:$imm, FCOMP_OEQ)>;
-def : Pat<(i32 (setogt Binary32:$imm, f32:$ry)), (FCOMPWd1 SingleReg:$ry, Binary32:$imm, FCOMP_OLT)>;
-def : Pat<(i32 (setoge f32:$rz, Binary32:$imm)), (FCOMPWd1 SingleReg:$rz, Binary32:$imm, FCOMP_OGE)>;
-def : Pat<(i32 (setolt f32:$rz, Binary32:$imm)), (FCOMPWd1 SingleReg:$rz, Binary32:$imm, FCOMP_OLT)>;
-def : Pat<(i32 (setole Binary32:$imm, f32:$ry)), (FCOMPWd1 SingleReg:$ry, Binary32:$imm, FCOMP_OGE)>;
-def : Pat<(i32 (setone f32:$rz, Binary32:$imm)), (FCOMPWd1 SingleReg:$rz, Binary32:$imm, FCOMP_ONE)>;
-def : Pat<(i32 (seto f32:$rz, Binary32:$imm)), (ORDd0 (FCOMPWd0 SingleReg:$rz, Binary32:$imm, FCOMP_OGE), (FCOMPWd0 SingleReg:$rz, Binary32:$imm, FCOMP_OLT))>;
-def : Pat<(i32 (setuo f32:$rz, Binary32:$imm)), (ANDDd0 (FCOMPWd0 SingleReg:$rz, Binary32:$imm, FCOMP_UGE), (FCOMPWd0 SingleReg:$rz, Binary32:$imm, FCOMP_ULT))>;
-def : Pat<(i32 (setueq f32:$rz, Binary32:$imm)), (FCOMPWd1 SingleReg:$rz, Binary32:$imm, FCOMP_UEQ)>;
-def : Pat<(i32 (setugt Binary32:$imm, f32:$ry)), (FCOMPWd1 SingleReg:$ry, Binary32:$imm, FCOMP_ULT)>;
-def : Pat<(i32 (setuge f32:$rz, Binary32:$imm)), (FCOMPWd1 SingleReg:$rz, Binary32:$imm, FCOMP_UGE)>;
-def : Pat<(i32 (setult f32:$rz, Binary32:$imm)), (FCOMPWd1 SingleReg:$rz, Binary32:$imm, FCOMP_ULT)>;
-def : Pat<(i32 (setule Binary32:$imm, f32:$ry)), (FCOMPWd1 SingleReg:$ry, Binary32:$imm, FCOMP_UGE)>;
-def : Pat<(i32 (setune f32:$rz, Binary32:$imm)), (FCOMPWd1 SingleReg:$rz, Binary32:$imm, FCOMP_UNE)>;
-def : Pat<(i32 (setoeq f32:$rz, f32:$ry)), (FCOMPWd0 SingleReg:$rz, SingleReg:$ry, FCOMP_OEQ)>;
-def : Pat<(i32 (setogt f32:$rz, f32:$ry)), (FCOMPWd0 SingleReg:$ry, SingleReg:$rz, FCOMP_OLT)>;
-def : Pat<(i32 (setoge f32:$rz, f32:$ry)), (FCOMPWd0 SingleReg:$rz, SingleReg:$ry, FCOMP_OGE)>;
-def : Pat<(i32 (setolt f32:$rz, f32:$ry)), (FCOMPWd0 SingleReg:$rz, SingleReg:$ry, FCOMP_OLT)>;
-def : Pat<(i32 (setole f32:$rz, f32:$ry)), (FCOMPWd0 SingleReg:$ry, SingleReg:$rz, FCOMP_OGE)>;
-def : Pat<(i32 (setone f32:$rz, f32:$ry)), (FCOMPWd0 SingleReg:$rz, SingleReg:$ry, FCOMP_ONE)>;
-def : Pat<(i32 (seto f32:$rz, f32:$ry)), (ORDd0 (FCOMPWd0 SingleReg:$rz, SingleReg:$ry, FCOMP_OGE), (FCOMPWd0 SingleReg:$rz, SingleReg:$ry, FCOMP_OLT))>;
-def : Pat<(i32 (setuo f32:$rz, f32:$ry)), (ANDDd0 (FCOMPWd0 SingleReg:$rz, SingleReg:$ry, FCOMP_UGE), (FCOMPWd0 SingleReg:$rz, SingleReg:$ry, FCOMP_ULT))>;
-def : Pat<(i32 (setueq f32:$rz, f32:$ry)), (FCOMPWd0 SingleReg:$rz, SingleReg:$ry, FCOMP_UEQ)>;
-def : Pat<(i32 (setugt f32:$rz, f32:$ry)), (FCOMPWd0 SingleReg:$ry, SingleReg:$rz, FCOMP_ULT)>;
-def : Pat<(i32 (setuge f32:$rz, f32:$ry)), (FCOMPWd0 SingleReg:$rz, SingleReg:$ry, FCOMP_UGE)>;
-def : Pat<(i32 (setult f32:$rz, f32:$ry)), (FCOMPWd0 SingleReg:$rz, SingleReg:$ry, FCOMP_ULT)>;
-def : Pat<(i32 (setule f32:$rz, f32:$ry)), (FCOMPWd0 SingleReg:$ry, SingleReg:$rz, FCOMP_UGE)>;
-def : Pat<(i32 (setune f32:$rz, f32:$ry)), (FCOMPWd0 SingleReg:$rz, SingleReg:$ry, FCOMP_UNE)>;
-def : Pat<(i32 (setoeq f64:$rz, f64:$ry)), (FCOMPD SingleReg:$rz, SingleReg:$ry, FCOMP_OEQ)>;
-def : Pat<(i32 (setogt f64:$rz, f64:$ry)), (FCOMPD SingleReg:$ry, SingleReg:$rz, FCOMP_OLT)>;
-def : Pat<(i32 (setoge f64:$rz, f64:$ry)), (FCOMPD SingleReg:$rz, SingleReg:$ry, FCOMP_OGE)>;
-def : Pat<(i32 (setolt f64:$rz, f64:$ry)), (FCOMPD SingleReg:$rz, SingleReg:$ry, FCOMP_OLT)>;
-def : Pat<(i32 (setole f64:$rz, f64:$ry)), (FCOMPD SingleReg:$ry, SingleReg:$rz, FCOMP_OGE)>;
-def : Pat<(i32 (setone f64:$rz, f64:$ry)), (FCOMPD SingleReg:$rz, SingleReg:$ry, FCOMP_ONE)>;
-def : Pat<(i32 (seto f64:$rz, f64:$ry)), (ORDd0 (FCOMPD SingleReg:$rz, SingleReg:$ry, FCOMP_OGE), (FCOMPD SingleReg:$rz, SingleReg:$ry, FCOMP_OLT))>;
-def : Pat<(i32 (setuo f64:$rz, f64:$ry)), (ANDDd0 (FCOMPD SingleReg:$rz, SingleReg:$ry, FCOMP_UGE), (FCOMPD SingleReg:$rz, SingleReg:$ry, FCOMP_ULT))>;
-def : Pat<(i32 (setueq f64:$rz, f64:$ry)), (FCOMPD SingleReg:$rz, SingleReg:$ry, FCOMP_UEQ)>;
-def : Pat<(i32 (setugt f64:$rz, f64:$ry)), (FCOMPD SingleReg:$ry, SingleReg:$rz, FCOMP_ULT)>;
-def : Pat<(i32 (setuge f64:$rz, f64:$ry)), (FCOMPD SingleReg:$rz, SingleReg:$ry, FCOMP_UGE)>;
-def : Pat<(i32 (setult f64:$rz, f64:$ry)), (FCOMPD SingleReg:$rz, SingleReg:$ry, FCOMP_ULT)>;
-def : Pat<(i32 (setule f64:$rz, f64:$ry)), (FCOMPD SingleReg:$ry, SingleReg:$rz, FCOMP_UGE)>;
-def : Pat<(i32 (setune f64:$rz, f64:$ry)), (FCOMPD SingleReg:$rz, SingleReg:$ry, FCOMP_UNE)>;
+def : Pat<(i32 (setoeq f16:$rz, f16:$ry)), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, floatcomp_oeq)>;
+def : Pat<(i32 (setogt f16:$rz, f16:$ry)), (FCOMPNHQ SingleReg:$ry, SingleReg:$rz, floatcomp_olt)>;
+def : Pat<(i32 (setoge f16:$rz, f16:$ry)), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, floatcomp_oge)>;
+def : Pat<(i32 (setolt f16:$rz, f16:$ry)), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, floatcomp_olt)>;
+def : Pat<(i32 (setole f16:$rz, f16:$ry)), (FCOMPNHQ SingleReg:$ry, SingleReg:$rz, floatcomp_oge)>;
+def : Pat<(i32 (setone f16:$rz, f16:$ry)), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, floatcomp_one)>;
+def : Pat<(i32 (seto f16:$rz, f16:$ry)), (ORDd0 (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, floatcomp_oge), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, floatcomp_olt))>;
+def : Pat<(i32 (setuo f16:$rz, f16:$ry)), (ANDDd0 (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, floatcomp_uge), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, floatcomp_ult))>;
+def : Pat<(i32 (setueq f16:$rz, f16:$ry)), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, floatcomp_ueq)>;
+def : Pat<(i32 (setugt f16:$rz, f16:$ry)), (FCOMPNHQ SingleReg:$ry, SingleReg:$rz, floatcomp_ult)>;
+def : Pat<(i32 (setuge f16:$rz, f16:$ry)), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, floatcomp_uge)>;
+def : Pat<(i32 (setult f16:$rz, f16:$ry)), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, floatcomp_ult)>;
+def : Pat<(i32 (setule f16:$rz, f16:$ry)), (FCOMPNHQ SingleReg:$ry, SingleReg:$rz, floatcomp_uge)>;
+def : Pat<(i32 (setune f16:$rz, f16:$ry)), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, floatcomp_une)>;
+def : Pat<(i32 (setoeq f32:$rz, Binary32:$imm)), (FCOMPWd1 SingleReg:$rz, Binary32:$imm, floatcomp_oeq)>;
+def : Pat<(i32 (setogt Binary32:$imm, f32:$ry)), (FCOMPWd1 SingleReg:$ry, Binary32:$imm, floatcomp_olt)>;
+def : Pat<(i32 (setoge f32:$rz, Binary32:$imm)), (FCOMPWd1 SingleReg:$rz, Binary32:$imm, floatcomp_oge)>;
+def : Pat<(i32 (setolt f32:$rz, Binary32:$imm)), (FCOMPWd1 SingleReg:$rz, Binary32:$imm, floatcomp_olt)>;
+def : Pat<(i32 (setole Binary32:$imm, f32:$ry)), (FCOMPWd1 SingleReg:$ry, Binary32:$imm, floatcomp_oge)>;
+def : Pat<(i32 (setone f32:$rz, Binary32:$imm)), (FCOMPWd1 SingleReg:$rz, Binary32:$imm, floatcomp_one)>;
+def : Pat<(i32 (seto f32:$rz, Binary32:$imm)), (ORDd0 (FCOMPWd0 SingleReg:$rz, Binary32:$imm, floatcomp_oge), (FCOMPWd0 SingleReg:$rz, Binary32:$imm, floatcomp_olt))>;
+def : Pat<(i32 (setuo f32:$rz, Binary32:$imm)), (ANDDd0 (FCOMPWd0 SingleReg:$rz, Binary32:$imm, floatcomp_uge), (FCOMPWd0 SingleReg:$rz, Binary32:$imm, floatcomp_ult))>;
+def : Pat<(i32 (setueq f32:$rz, Binary32:$imm)), (FCOMPWd1 SingleReg:$rz, Binary32:$imm, floatcomp_ueq)>;
+def : Pat<(i32 (setugt Binary32:$imm, f32:$ry)), (FCOMPWd1 SingleReg:$ry, Binary32:$imm, floatcomp_ult)>;
+def : Pat<(i32 (setuge f32:$rz, Binary32:$imm)), (FCOMPWd1 SingleReg:$rz, Binary32:$imm, floatcomp_uge)>;
+def : Pat<(i32 (setult f32:$rz, Binary32:$imm)), (FCOMPWd1 SingleReg:$rz, Binary32:$imm, floatcomp_ult)>;
+def : Pat<(i32 (setule Binary32:$imm, f32:$ry)), (FCOMPWd1 SingleReg:$ry, Binary32:$imm, floatcomp_uge)>;
+def : Pat<(i32 (setune f32:$rz, Binary32:$imm)), (FCOMPWd1 SingleReg:$rz, Binary32:$imm, floatcomp_une)>;
+def : Pat<(i32 (setoeq f32:$rz, f32:$ry)), (FCOMPWd0 SingleReg:$rz, SingleReg:$ry, floatcomp_oeq)>;
+def : Pat<(i32 (setogt f32:$rz, f32:$ry)), (FCOMPWd0 SingleReg:$ry, SingleReg:$rz, floatcomp_olt)>;
+def : Pat<(i32 (setoge f32:$rz, f32:$ry)), (FCOMPWd0 SingleReg:$rz, SingleReg:$ry, floatcomp_oge)>;
+def : Pat<(i32 (setolt f32:$rz, f32:$ry)), (FCOMPWd0 SingleReg:$rz, SingleReg:$ry, floatcomp_olt)>;
+def : Pat<(i32 (setole f32:$rz, f32:$ry)), (FCOMPWd0 SingleReg:$ry, SingleReg:$rz, floatcomp_oge)>;
+def : Pat<(i32 (setone f32:$rz, f32:$ry)), (FCOMPWd0 SingleReg:$rz, SingleReg:$ry, floatcomp_one)>;
+def : Pat<(i32 (seto f32:$rz, f32:$ry)), (ORDd0 (FCOMPWd0 SingleReg:$rz, SingleReg:$ry, floatcomp_oge), (FCOMPWd0 SingleReg:$rz, SingleReg:$ry, floatcomp_olt))>;
+def : Pat<(i32 (setuo f32:$rz, f32:$ry)), (ANDDd0 (FCOMPWd0 SingleReg:$rz, SingleReg:$ry, floatcomp_uge), (FCOMPWd0 SingleReg:$rz, SingleReg:$ry, floatcomp_ult))>;
+def : Pat<(i32 (setueq f32:$rz, f32:$ry)), (FCOMPWd0 SingleReg:$rz, SingleReg:$ry, floatcomp_ueq)>;
+def : Pat<(i32 (setugt f32:$rz, f32:$ry)), (FCOMPWd0 SingleReg:$ry, SingleReg:$rz, floatcomp_ult)>;
+def : Pat<(i32 (setuge f32:$rz, f32:$ry)), (FCOMPWd0 SingleReg:$rz, SingleReg:$ry, floatcomp_uge)>;
+def : Pat<(i32 (setult f32:$rz, f32:$ry)), (FCOMPWd0 SingleReg:$rz, SingleReg:$ry, floatcomp_ult)>;
+def : Pat<(i32 (setule f32:$rz, f32:$ry)), (FCOMPWd0 SingleReg:$ry, SingleReg:$rz, floatcomp_uge)>;
+def : Pat<(i32 (setune f32:$rz, f32:$ry)), (FCOMPWd0 SingleReg:$rz, SingleReg:$ry, floatcomp_une)>;
+def : Pat<(i32 (setoeq f64:$rz, f64:$ry)), (FCOMPD SingleReg:$rz, SingleReg:$ry, floatcomp_oeq)>;
+def : Pat<(i32 (setogt f64:$rz, f64:$ry)), (FCOMPD SingleReg:$ry, SingleReg:$rz, floatcomp_olt)>;
+def : Pat<(i32 (setoge f64:$rz, f64:$ry)), (FCOMPD SingleReg:$rz, SingleReg:$ry, floatcomp_oge)>;
+def : Pat<(i32 (setolt f64:$rz, f64:$ry)), (FCOMPD SingleReg:$rz, SingleReg:$ry, floatcomp_olt)>;
+def : Pat<(i32 (setole f64:$rz, f64:$ry)), (FCOMPD SingleReg:$ry, SingleReg:$rz, floatcomp_oge)>;
+def : Pat<(i32 (setone f64:$rz, f64:$ry)), (FCOMPD SingleReg:$rz, SingleReg:$ry, floatcomp_one)>;
+def : Pat<(i32 (seto f64:$rz, f64:$ry)), (ORDd0 (FCOMPD SingleReg:$rz, SingleReg:$ry, floatcomp_oge), (FCOMPD SingleReg:$rz, SingleReg:$ry, floatcomp_olt))>;
+def : Pat<(i32 (setuo f64:$rz, f64:$ry)), (ANDDd0 (FCOMPD SingleReg:$rz, SingleReg:$ry, floatcomp_uge), (FCOMPD SingleReg:$rz, SingleReg:$ry, floatcomp_ult))>;
+def : Pat<(i32 (setueq f64:$rz, f64:$ry)), (FCOMPD SingleReg:$rz, SingleReg:$ry, floatcomp_ueq)>;
+def : Pat<(i32 (setugt f64:$rz, f64:$ry)), (FCOMPD SingleReg:$ry, SingleReg:$rz, floatcomp_ult)>;
+def : Pat<(i32 (setuge f64:$rz, f64:$ry)), (FCOMPD SingleReg:$rz, SingleReg:$ry, floatcomp_uge)>;
+def : Pat<(i32 (setult f64:$rz, f64:$ry)), (FCOMPD SingleReg:$rz, SingleReg:$ry, floatcomp_ult)>;
+def : Pat<(i32 (setule f64:$rz, f64:$ry)), (FCOMPD SingleReg:$ry, SingleReg:$rz, floatcomp_uge)>;
+def : Pat<(i32 (setune f64:$rz, f64:$ry)), (FCOMPD SingleReg:$rz, SingleReg:$ry, floatcomp_une)>;
 
-multiclass COMP_FPat<SDNode Node, int Mod, bit SWAP> {
+multiclass COMP_FPat<SDNode Node, Floatcomp Cmp, bit SWAP> {
 
   def : Pat<(v4i16 (Node v4f16:$rz, v4f16:$ry)),
-    !if(SWAP, (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, (i8 Mod)), (FCOMPNHQ SingleReg:$ry, SingleReg:$rz, (i8 Mod)))>;
+    !if(SWAP, (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, Cmp), (FCOMPNHQ SingleReg:$ry, SingleReg:$rz, Cmp))>;
 
   def : Pat<(v2i32 (Node v2f32:$rz, v2f32:$ry)),
-    !if(SWAP, (FCOMPNWP SingleReg:$rz, SingleReg:$ry, (i8 Mod)), (FCOMPNWP SingleReg:$ry, SingleReg:$rz, (i8 Mod)))>;
+    !if(SWAP, (FCOMPNWP SingleReg:$rz, SingleReg:$ry, Cmp), (FCOMPNWP SingleReg:$ry, SingleReg:$rz, Cmp))>;
 }
 
-defm : COMP_FPat<setoeq, FCOMP_OEQ, 0>;
-defm : COMP_FPat<setogt, FCOMP_OLT, 1>;
-defm : COMP_FPat<setoge, FCOMP_OGE, 0>;
-defm : COMP_FPat<setolt, FCOMP_OLT, 0>;
-defm : COMP_FPat<setole, FCOMP_OGE, 1>;
-defm : COMP_FPat<setone, FCOMP_ONE, 0>;
-defm : COMP_FPat<setueq, FCOMP_UEQ, 0>;
-defm : COMP_FPat<setugt, FCOMP_ULT, 1>;
-defm : COMP_FPat<setuge, FCOMP_UGE, 0>;
-defm : COMP_FPat<setult, FCOMP_ULT, 0>;
-defm : COMP_FPat<setule, FCOMP_UGE, 1>;
-defm : COMP_FPat<setune, FCOMP_UNE, 0>;
+defm : COMP_FPat<setoeq, floatcomp_oeq, 0>;
+defm : COMP_FPat<setogt, floatcomp_olt, 1>;
+defm : COMP_FPat<setoge, floatcomp_oge, 0>;
+defm : COMP_FPat<setolt, floatcomp_olt, 0>;
+defm : COMP_FPat<setole, floatcomp_oge, 1>;
+defm : COMP_FPat<setone, floatcomp_one, 0>;
+defm : COMP_FPat<setueq, floatcomp_ueq, 0>;
+defm : COMP_FPat<setugt, floatcomp_ult, 1>;
+defm : COMP_FPat<setuge, floatcomp_uge, 0>;
+defm : COMP_FPat<setult, floatcomp_ult, 0>;
+defm : COMP_FPat<setule, floatcomp_uge, 1>;
+defm : COMP_FPat<setune, floatcomp_une, 0>;
 
-def : Pat<(v4i16 (seto v4f16:$rz, v4f16:$ry)), (ORDd0 (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, FCOMP_OGE), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, FCOMP_OLT))>;
-def : Pat<(v4i16 (setuo v4f16:$rz, v4f16:$ry)), (ANDDd0 (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, FCOMP_UGE), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, FCOMP_ULT))>;
+def : Pat<(v4i16 (seto v4f16:$rz, v4f16:$ry)), (ORDd0 (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, floatcomp_oge), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, floatcomp_olt))>;
+def : Pat<(v4i16 (setuo v4f16:$rz, v4f16:$ry)), (ANDDd0 (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, floatcomp_uge), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, floatcomp_ult))>;
 
-def : Pat<(v2i32 (seto v2f32:$rz, v2f32:$ry)), (ORDd0 (FCOMPNWP SingleReg:$rz, SingleReg:$ry, FCOMP_OGE), (FCOMPNWP SingleReg:$rz, SingleReg:$ry, FCOMP_OLT))>;
-def : Pat<(v2i32 (setuo v2f32:$rz, v2f32:$ry)), (ANDDd0 (FCOMPNWP SingleReg:$rz, SingleReg:$ry, FCOMP_UGE), (FCOMPNWP SingleReg:$rz, SingleReg:$ry, FCOMP_ULT))>;
+def : Pat<(v2i32 (seto v2f32:$rz, v2f32:$ry)), (ORDd0 (FCOMPNWP SingleReg:$rz, SingleReg:$ry, floatcomp_oge), (FCOMPNWP SingleReg:$rz, SingleReg:$ry, floatcomp_olt))>;
+def : Pat<(v2i32 (setuo v2f32:$rz, v2f32:$ry)), (ANDDd0 (FCOMPNWP SingleReg:$rz, SingleReg:$ry, floatcomp_uge), (FCOMPNWP SingleReg:$rz, SingleReg:$ry, floatcomp_ult))>;
 
 defm : Select32PAT<(f32 f32:$truev), (f32 f32:$falsev),(f32 Binary32:$truev), (f32 Binary32:$falsev)>;
 defm : Select32PAT<(f64 f64:$truev), (f64 f64:$falsev),(f64 Binary64:$truev), (f64 Binary64:$falsev)>;
@@ -231,31 +201,31 @@ defm : Select64PAT<(f64 f64:$truev), (f64 f64:$falsev),(f64 Binary64:$truev), (f
 // FINV  -> TODO
 // FISR  -> TODO
 // FIXED
-def : Pat<(i32 (fp_to_uint f16:$val)), (FIXEDUW (FWIDENLHW SingleReg:$val, SILENT_OFF), DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF)>;
-def : Pat<(i64 (fp_to_uint f16:$val)), (FIXEDUD (FWIDENLWD (FWIDENLHW SingleReg:$val, SILENT_OFF), SILENT_OFF), DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF)>;
-def : Pat<(i32 (fp_to_uint f32:$val)), (FIXEDUW SingleReg:$val, DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF)>;
-def : Pat<(i64 (fp_to_uint f32:$val)), (FIXEDUD (FWIDENLWD SingleReg:$val, SILENT_OFF), DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF)>;
-def : Pat<(i32 (fp_to_uint f64:$val)), (FIXEDUD SingleReg:$val, DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF)>;
-def : Pat<(i64 (fp_to_uint f64:$val)), (FIXEDUD SingleReg:$val, DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF)>;
-def : Pat<(i32 (fp_to_sint f16:$val)), (FIXEDW (FWIDENLHW SingleReg:$val, SILENT_OFF), DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF)>;
-def : Pat<(i64 (fp_to_sint f16:$val)), (FIXEDD (FWIDENLWD (FWIDENLHW SingleReg:$val, SILENT_OFF), SILENT_OFF), DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF)>;
-def : Pat<(i32 (fp_to_sint f32:$val)), (FIXEDW SingleReg:$val, DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF)>;
-def : Pat<(i64 (fp_to_sint f32:$val)), (FIXEDD (FWIDENLWD SingleReg:$val, SILENT_OFF), DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF)>;
-def : Pat<(i32 (fp_to_sint f64:$val)), (FIXEDD SingleReg:$val, DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF)>;
-def : Pat<(i64 (fp_to_sint f64:$val)), (FIXEDD SingleReg:$val, DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF)>;
+def : Pat<(i32 (fp_to_uint f16:$val)), (FIXEDUW (FWIDENLHW SingleReg:$val, silent_), DefaultShift, rounding_, silent_)>;
+def : Pat<(i64 (fp_to_uint f16:$val)), (FIXEDUD (FWIDENLWD (FWIDENLHW SingleReg:$val, silent_), silent_), DefaultShift, rounding_, silent_)>;
+def : Pat<(i32 (fp_to_uint f32:$val)), (FIXEDUW SingleReg:$val, DefaultShift, rounding_, silent_)>;
+def : Pat<(i64 (fp_to_uint f32:$val)), (FIXEDUD (FWIDENLWD SingleReg:$val, silent_), DefaultShift, rounding_, silent_)>;
+def : Pat<(i32 (fp_to_uint f64:$val)), (FIXEDUD SingleReg:$val, DefaultShift, rounding_, silent_)>;
+def : Pat<(i64 (fp_to_uint f64:$val)), (FIXEDUD SingleReg:$val, DefaultShift, rounding_, silent_)>;
+def : Pat<(i32 (fp_to_sint f16:$val)), (FIXEDW (FWIDENLHW SingleReg:$val, silent_), DefaultShift, rounding_, silent_)>;
+def : Pat<(i64 (fp_to_sint f16:$val)), (FIXEDD (FWIDENLWD (FWIDENLHW SingleReg:$val, silent_), silent_), DefaultShift, rounding_, silent_)>;
+def : Pat<(i32 (fp_to_sint f32:$val)), (FIXEDW SingleReg:$val, DefaultShift, rounding_, silent_)>;
+def : Pat<(i64 (fp_to_sint f32:$val)), (FIXEDD (FWIDENLWD SingleReg:$val, silent_), DefaultShift, rounding_, silent_)>;
+def : Pat<(i32 (fp_to_sint f64:$val)), (FIXEDD SingleReg:$val, DefaultShift, rounding_, silent_)>;
+def : Pat<(i64 (fp_to_sint f64:$val)), (FIXEDD SingleReg:$val, DefaultShift, rounding_, silent_)>;
 // FLOAT
-def : Pat<(f16 (uint_to_fp i32:$val)), (FNARROWWH (FLOATUW SingleReg:$val, DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF), ROUND_CS, SILENT_OFF)>;
-def : Pat<(f16 (uint_to_fp i64:$val)), (FNARROWWH (FNARROWDW (FLOATUD SingleReg:$val, DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF), ROUND_CS, SILENT_OFF), ROUND_CS, SILENT_OFF)>;
-def : Pat<(f32 (uint_to_fp i32:$val)), (FLOATUW SingleReg:$val, DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF)>;
-def : Pat<(f32 (uint_to_fp i64:$val)), (FLOATUW (SATUDd0 SingleReg:$val, (i32 32)), DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF)>;
-def : Pat<(f64 (uint_to_fp i32:$val)), (FLOATUD (ZXWD SingleReg:$val), DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF)>;
-def : Pat<(f64 (uint_to_fp i64:$val)), (FLOATUD SingleReg:$val, DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF)>;
-def : Pat<(f16 (sint_to_fp i32:$val)), (FNARROWWH (FLOATW SingleReg:$val, DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF), ROUND_CS, SILENT_OFF)>;
-def : Pat<(f16 (sint_to_fp i64:$val)), (FNARROWWH (FNARROWDW (FLOATD SingleReg:$val, DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF), ROUND_CS, SILENT_OFF), ROUND_CS, SILENT_OFF)>;
-def : Pat<(f32 (sint_to_fp i32:$val)), (FLOATW SingleReg:$val, DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF)>;
-def : Pat<(f32 (sint_to_fp i64:$val)), (FLOATW (SATDd0 SingleReg:$val, (i32 32)), DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF)>;
-def : Pat<(f64 (sint_to_fp i32:$val)), (FLOATD (SXWD SingleReg:$val), DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF)>;
-def : Pat<(f64 (sint_to_fp i64:$val)), (FLOATD SingleReg:$val, DEFAULT_FPCONV_SHIFT, ROUND_CS, SILENT_OFF)>;
+def : Pat<(f16 (uint_to_fp i32:$val)), (FNARROWWH (FLOATUW SingleReg:$val, DefaultShift, rounding_, silent_), rounding_, silent_)>;
+def : Pat<(f16 (uint_to_fp i64:$val)), (FNARROWWH (FNARROWDW (FLOATUD SingleReg:$val, DefaultShift, rounding_, silent_), rounding_, silent_), rounding_, silent_)>;
+def : Pat<(f32 (uint_to_fp i32:$val)), (FLOATUW SingleReg:$val, DefaultShift, rounding_, silent_)>;
+def : Pat<(f32 (uint_to_fp i64:$val)), (FLOATUW (SATUDd0 SingleReg:$val, (i32 32)), DefaultShift, rounding_, silent_)>;
+def : Pat<(f64 (uint_to_fp i32:$val)), (FLOATUD (ZXWD SingleReg:$val), DefaultShift, rounding_, silent_)>;
+def : Pat<(f64 (uint_to_fp i64:$val)), (FLOATUD SingleReg:$val, DefaultShift, rounding_, silent_)>;
+def : Pat<(f16 (sint_to_fp i32:$val)), (FNARROWWH (FLOATW SingleReg:$val, DefaultShift, rounding_, silent_), rounding_, silent_)>;
+def : Pat<(f16 (sint_to_fp i64:$val)), (FNARROWWH (FNARROWDW (FLOATD SingleReg:$val, DefaultShift, rounding_, silent_), rounding_, silent_), rounding_, silent_)>;
+def : Pat<(f32 (sint_to_fp i32:$val)), (FLOATW SingleReg:$val, DefaultShift, rounding_, silent_)>;
+def : Pat<(f32 (sint_to_fp i64:$val)), (FLOATW (SATDd0 SingleReg:$val, (i32 32)), DefaultShift, rounding_, silent_)>;
+def : Pat<(f64 (sint_to_fp i32:$val)), (FLOATD (SXWD SingleReg:$val), DefaultShift, rounding_, silent_)>;
+def : Pat<(f64 (sint_to_fp i64:$val)), (FLOATD SingleReg:$val, DefaultShift, rounding_, silent_)>;
 // FMAX  -> TODO
 // FMIN  -> TODO
 // FMM2A -> TODO
@@ -266,18 +236,18 @@ def : Pat<(f64 (sint_to_fp i64:$val)), (FLOATD SingleReg:$val, DEFAULT_FPCONV_SH
 def : Pat<(fmul f16:$rs1, Binary16:$rs2), (FMULHQd0 SingleReg:$rs1, Binary16:$rs2)>;
 def : Pat<(fmul f32:$rs1, Binary32:$rs2), (FMULWd0 SingleReg:$rs1, Binary32:$rs2)>;
 def : Pat<(fmul f64:$rs1, Binary64:$rs2), (FMULDd0 SingleReg:$rs1, Binary64:$rs2)>;
-def : Pat<(fmul f16:$rs1, f16:$rs2), (FMULHQd1 SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
-def : Pat<(fmul f32:$rs1, f32:$rs2), (FMULWd1 SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
-def : Pat<(fmul f64:$rs1, f64:$rs2), (FMULDd1 SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
-def : Pat<(fmul v2f16:$rs1, v2f16:$rs2), (FMULHQd1 SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
-def : Pat<(fmul v4f16:$rs1, v4f16:$rs2), (FMULHQd1 SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
-def : Pat<(fmul v2f32:$rs1, v2f32:$rs2), (FMULWPd1 SingleReg:$rs1, SingleReg:$rs2, ROUND_CS, SILENT_OFF)>;
-def : Pat<(fmul v4f32:$rs1, v4f32:$rs2), (FMULWQ PairedReg:$rs1, PairedReg:$rs2, ROUND_CS, SILENT_OFF)>;
+def : Pat<(fmul f16:$rs1, f16:$rs2), (FMULHQd1 SingleReg:$rs1, SingleReg:$rs2, rounding_, silent_)>;
+def : Pat<(fmul f32:$rs1, f32:$rs2), (FMULWd1 SingleReg:$rs1, SingleReg:$rs2, rounding_, silent_)>;
+def : Pat<(fmul f64:$rs1, f64:$rs2), (FMULDd1 SingleReg:$rs1, SingleReg:$rs2, rounding_, silent_)>;
+def : Pat<(fmul v2f16:$rs1, v2f16:$rs2), (FMULHQd1 SingleReg:$rs1, SingleReg:$rs2, rounding_, silent_)>;
+def : Pat<(fmul v4f16:$rs1, v4f16:$rs2), (FMULHQd1 SingleReg:$rs1, SingleReg:$rs2, rounding_, silent_)>;
+def : Pat<(fmul v2f32:$rs1, v2f32:$rs2), (FMULWPd1 SingleReg:$rs1, SingleReg:$rs2, rounding_, silent_)>;
+def : Pat<(fmul v4f32:$rs1, v4f32:$rs2), (FMULWQ PairedReg:$rs1, PairedReg:$rs2, rounding_, silent_)>;
 // FMUL*C -> TODO
 // FNARROW
-def : Pat<(f16 (fpround f32:$val)), (FNARROWWH SingleReg:$val, ROUND_CS, SILENT_OFF)>;
-def : Pat<(f16 (fpround f64:$val)), (FNARROWWH (FNARROWDW SingleReg:$val, ROUND_CS, SILENT_OFF), ROUND_CS, SILENT_OFF)>;
-def : Pat<(f32 (fpround f64:$val)), (FNARROWDW SingleReg:$val, ROUND_CS, SILENT_OFF)>;
+def : Pat<(f16 (fpround f32:$val)), (FNARROWWH SingleReg:$val, rounding_, silent_)>;
+def : Pat<(f16 (fpround f64:$val)), (FNARROWWH (FNARROWDW SingleReg:$val, rounding_, silent_), rounding_, silent_)>;
+def : Pat<(f32 (fpround f64:$val)), (FNARROWDW SingleReg:$val, rounding_, silent_)>;
 // FNEG, see K1CInstrInfo.td for f32, f64, v2f32, v4f16
 def : Pat<(fneg f16:$rs), (FNEGHQ SingleReg:$rs)>;
 def : Pat<(fneg v2f16:$rs), (FNEGHQ SingleReg:$rs)>;
@@ -289,21 +259,21 @@ def : Pat<(vfneg v2f32:$rs), (FNEGWP SingleReg:$rs)>;
 def : Pat<(fsub Binary16:$rs1, f16:$rs2), (FSBFHQd0 SingleReg:$rs2, Binary16:$rs1)>;
 def : Pat<(fsub Binary32:$rs1, f32:$rs2), (FSBFWd0 SingleReg:$rs2, Binary32:$rs1)>;
 def : Pat<(fsub Binary64:$rs1, f64:$rs2), (FSBFDd0 SingleReg:$rs2, Binary64:$rs1)>;
-def : Pat<(fsub f16:$rs1, f16:$rs2), (FSBFHQd1 SingleReg:$rs2, SingleReg:$rs1, ROUND_CS, SILENT_OFF)>;
-def : Pat<(fsub f32:$rs1, f32:$rs2), (FSBFWd1 SingleReg:$rs2, SingleReg:$rs1, ROUND_CS, SILENT_OFF)>;
-def : Pat<(fsub f64:$rs1, f64:$rs2), (FSBFDd1 SingleReg:$rs2, SingleReg:$rs1, ROUND_CS, SILENT_OFF)>;
-def : Pat<(fsub v2f16:$rs1, v2f16:$rs2), (FSBFHQd1 SingleReg:$rs2, SingleReg:$rs1, ROUND_CS, SILENT_OFF)>;
-def : Pat<(fsub v4f16:$rs1, v4f16:$rs2), (FSBFHQd1 SingleReg:$rs2, SingleReg:$rs1, ROUND_CS, SILENT_OFF)>;
-def : Pat<(fsub v2f32:$rs1, v2f32:$rs2), (FSBFWPd1 SingleReg:$rs2, SingleReg:$rs1, ROUND_CS, SILENT_OFF)>;
-def : Pat<(fsub v4f32:$rs1, v4f32:$rs2), (FSBFWQ PairedReg:$rs2, PairedReg:$rs1, ROUND_CS, SILENT_OFF)>;
-def : Pat<(fsub v2f64:$rs1, v2f64:$rs2), (FSBFDP PairedReg:$rs2, PairedReg:$rs1, ROUND_CS, SILENT_OFF)>;
+def : Pat<(fsub f16:$rs1, f16:$rs2), (FSBFHQd1 SingleReg:$rs2, SingleReg:$rs1, rounding_, silent_)>;
+def : Pat<(fsub f32:$rs1, f32:$rs2), (FSBFWd1 SingleReg:$rs2, SingleReg:$rs1, rounding_, silent_)>;
+def : Pat<(fsub f64:$rs1, f64:$rs2), (FSBFDd1 SingleReg:$rs2, SingleReg:$rs1, rounding_, silent_)>;
+def : Pat<(fsub v2f16:$rs1, v2f16:$rs2), (FSBFHQd1 SingleReg:$rs2, SingleReg:$rs1, rounding_, silent_)>;
+def : Pat<(fsub v4f16:$rs1, v4f16:$rs2), (FSBFHQd1 SingleReg:$rs2, SingleReg:$rs1, rounding_, silent_)>;
+def : Pat<(fsub v2f32:$rs1, v2f32:$rs2), (FSBFWPd1 SingleReg:$rs2, SingleReg:$rs1, rounding_, silent_)>;
+def : Pat<(fsub v4f32:$rs1, v4f32:$rs2), (FSBFWQ PairedReg:$rs2, PairedReg:$rs1, rounding_, silent_)>;
+def : Pat<(fsub v2f64:$rs1, v2f64:$rs2), (FSBFDP PairedReg:$rs2, PairedReg:$rs1, rounding_, silent_)>;
 // FSDIV -> TODO
 // FSINV -> TODO
 // FSISR -> TODO
 // FWIDEN
-def : Pat<(f64 (fpextend f32:$val)), (FWIDENLWD SingleReg:$val, SILENT_OFF)>;
-def : Pat<(f64 (fpextend f16:$val)), (FWIDENLWD (FWIDENLHW SingleReg:$val, SILENT_OFF), SILENT_OFF)>;
-def : Pat<(f32 (fpextend f16:$val)), (FWIDENLHW SingleReg:$val, SILENT_OFF)>;
+def : Pat<(f64 (fpextend f32:$val)), (FWIDENLWD SingleReg:$val, silent_)>;
+def : Pat<(f64 (fpextend f16:$val)), (FWIDENLWD (FWIDENLHW SingleReg:$val, silent_), silent_)>;
+def : Pat<(f32 (fpextend f16:$val)), (FWIDENLHW SingleReg:$val, silent_)>;
 
 // v2f32
 def : Pat<(extractelt (v2f32 SingleReg:$v), 0), (COPY SingleReg:$v)>;
