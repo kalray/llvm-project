@@ -7,25 +7,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-class K1C_INSTRUCTION<dag outs, dag ins, string asmstr, list<dag> pattern,
-    InstrItinClass itin>
-    : Instruction {
-
-  dag OutOperandList = outs;
-  dag InOperandList = ins;
-  let AsmString = asmstr;
-  let Pattern = pattern;
-  let Namespace = "K1C";
-  let Itinerary = itin;
-}
-
-class K1C_PseudoInstr<dag outs, dag ins, list<dag> pattern, string asmstr="">
-   : K1C_INSTRUCTION<outs, ins, asmstr, pattern, NoItinerary>
-{
-  let isPseudo = 1;
-  let isCodeGenOnly = 1;
-  let hasNoSchedulingInfo = 1;
-}
+//FIXME: generate this
 
 // Immediates
 def Signed10W : Operand<i32>, ImmLeaf<i32, [{return isInt<10>(Imm);}]>;
@@ -47,11 +29,11 @@ def Pcrel27 : Operand<iPTR> {}
 
 
 
-def VariantMod : Operand<i8> {
+def VariantMod : Operand<i32>, ImmLeaf<i32, [{return = (0 <= Imm) && (Imm <= 3);}]> {
   let PrintMethod = "printVariantMod";
 }
 
-def ScalingMod : Operand<i8> {
+def ScalingMod : Operand<i32>, ImmLeaf<i32, [{return = (0 <= Imm) && (Imm <= 1);}]> {
   let PrintMethod = "printScalingMod";
 }
 
@@ -65,7 +47,7 @@ def SpeculateMod : Operand<OtherVT> {
 def ColumnMod : Operand<OtherVT> {
 }
 
-def Splat32Mod : Operand<i8> {
+def Splat32Mod : Operand<i32>, ImmLeaf<i32, [{return = (0 <= Imm) && (Imm <= 1);}]> {
   let PrintMethod = "printSplat32Mod";
 }
 
@@ -73,7 +55,7 @@ def ComparisonMod : Operand<i32>, ImmLeaf<i32, [{return = (0 <= Imm) && (Imm <= 
   let PrintMethod = "printComparisonMod";
 }
 
-def FloatcompMod : Operand<i8> {
+def FloatcompMod : Operand<i32>, ImmLeaf<i32, [{return = (0 <= Imm) && (Imm <= 7);}]> {
   let PrintMethod = "printFloatcompMod";
 }
 
@@ -81,7 +63,7 @@ def RoundingMod : Operand<i32>, ImmLeaf<i32, [{return = (0 <= Imm) && (Imm <= 7)
   let PrintMethod = "printRoundingMod";
 }
 
-def SilentMod : Operand<i8> {
+def SilentMod : Operand<i32>, ImmLeaf<i32, [{return = (0 <= Imm) && (Imm <= 1);}]> {
   let PrintMethod = "printSilentMod";
 }
 

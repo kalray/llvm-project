@@ -7,8 +7,30 @@
 //
 //===----------------------------------------------------------------------===//
 
-// This file was automatically generated, DO NOT EDIT.
-// Last generated: 2020-01-29 14:01:26.670061.
+// This file was automatically generated,
+//   *DO NOT EDIT*,
+//   please contact code owner.
+// Last generated: 2020-03-01 12:12:32.883297.
+
+
+class K1C_INSTRUCTION
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : Instruction {
+    dag OutOperandList = outs;
+    dag InOperandList = ins;
+    let AsmString = asmstr;
+    let Pattern = pattern;
+    let Itinerary = itin;
+    let Namespace = "K1C";
+  }
+
+class K1C_PSEUDO
+  <dag outs, dag ins, list<dag> pattern, string asmstr = "pseudo">
+  : K1C_INSTRUCTION <outs, ins, asmstr, pattern, NoItinerary> {
+    let isPseudo = 1;
+    let isCodeGenOnly = 1;
+    let hasNoSchedulingInfo = 1;
+  }
 
 
 // 16 insn(s):
