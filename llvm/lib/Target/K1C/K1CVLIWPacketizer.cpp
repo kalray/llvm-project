@@ -169,53 +169,53 @@ bool K1CPacketizerList::useFloatingPointIEEE754(unsigned Opcode) {
   default:
     return false;
   case K1C::FADDCDC:
-  case K1C::FADDCWCd0:
-  case K1C::FADDCWCd1:
+  case K1C::FADDCWCri:
+  case K1C::FADDCWCrr:
   case K1C::FADDCWCP:
-  case K1C::FADDDd0:
-  case K1C::FADDDd1:
+  case K1C::FADDDrr:
+  case K1C::FADDDri:
   case K1C::FADDDP:
-  case K1C::FADDHQd0:
-  case K1C::FADDHQd1:
-  case K1C::FADDWPd0:
-  case K1C::FADDWPd1:
+  case K1C::FADDHQrr:
+  case K1C::FADDHQri:
+  case K1C::FADDWPri:
+  case K1C::FADDWPrr:
   case K1C::FADDWQ:
   case K1C::FCDIVD:
   case K1C::FCDIVW:
   case K1C::FCDIVWP:
   case K1C::FINVW:
-  case K1C::FDOT2Wd0:
-  case K1C::FDOT2Wd1:
-  case K1C::FDOT2WDd0:
-  case K1C::FDOT2WDd1:
+  case K1C::FDOT2Wri:
+  case K1C::FDOT2Wrr:
+  case K1C::FDOT2WDri:
+  case K1C::FDOT2WDrr:
   case K1C::FDOT2WDP:
   case K1C::FDOT2WZP:
-  case K1C::FFMADd0:
-  case K1C::FFMADd1:
-  case K1C::FFMAHQd0:
-  case K1C::FFMAHQd1:
-  case K1C::FFMAHWd0:
-  case K1C::FFMAHWd1:
-  case K1C::FFMAHWQd0:
-  case K1C::FFMAHWQd1:
-  case K1C::FFMAWd0:
-  case K1C::FFMAWd1:
-  case K1C::FFMAWDd0:
-  case K1C::FFMAWDd1:
-  case K1C::FFMAWDPd0:
-  case K1C::FFMAWDPd1:
-  case K1C::FFMAWPd0:
-  case K1C::FFMAWPd1:
-  case K1C::FFMSDd0:
-  case K1C::FFMSDd1:
-  case K1C::FFMSHWQd0:
-  case K1C::FFMSHWQd1:
-  case K1C::FFMSWd0:
-  case K1C::FFMSWd1:
-  case K1C::FFMSWDd0:
-  case K1C::FFMSWDd1:
-  case K1C::FFMSWDPd0:
-  case K1C::FFMSWDPd1:
+  case K1C::FFMADri:
+  case K1C::FFMADrr:
+  case K1C::FFMAHQri:
+  case K1C::FFMAHQrr:
+  case K1C::FFMAHWri:
+  case K1C::FFMAHWrr:
+  case K1C::FFMAHWQri:
+  case K1C::FFMAHWQrr:
+  case K1C::FFMAWri:
+  case K1C::FFMAWrr:
+  case K1C::FFMAWDri:
+  case K1C::FFMAWDrr:
+  case K1C::FFMAWDPri:
+  case K1C::FFMAWDPrr:
+  case K1C::FFMAWPri:
+  case K1C::FFMAWPrr:
+  case K1C::FFMSDri:
+  case K1C::FFMSDrr:
+  case K1C::FFMSHWQri:
+  case K1C::FFMSHWQrr:
+  case K1C::FFMSWri:
+  case K1C::FFMSWrr:
+  case K1C::FFMSWDri:
+  case K1C::FFMSWDrr:
+  case K1C::FFMSWDPri:
+  case K1C::FFMSWDPrr:
   case K1C::FISRW:
   case K1C::FIXEDD:
   case K1C::FIXEDUD:
@@ -232,48 +232,48 @@ bool K1CPacketizerList::useFloatingPointIEEE754(unsigned Opcode) {
   case K1C::FMM2AWQ:
   case K1C::FMM2SWQ:
   case K1C::FMM2WQ:
-  case K1C::FMULCWCd0:
-  case K1C::FMULCWCd1:
-  case K1C::FMULCWDCd0:
-  case K1C::FMULCWDCd1:
-  case K1C::FMULDd0:
-  case K1C::FMULDd1:
-  case K1C::FMULHQd0:
-  case K1C::FMULHQd1:
-  case K1C::FMULHWd0:
-  case K1C::FMULHWd1:
-  case K1C::FMULHWQd0:
-  case K1C::FMULHWQd1:
-  case K1C::FMULWd0:
-  case K1C::FMULWd1:
-  case K1C::FMULWCd0:
-  case K1C::FMULWCd1:
-  case K1C::FMULWDd0:
-  case K1C::FMULWDd1:
-  case K1C::FMULWDCd0:
-  case K1C::FMULWDCd1:
-  case K1C::FMULWDPd0:
-  case K1C::FMULWDPd1:
-  case K1C::FMULWPd0:
-  case K1C::FMULWPd1:
+  case K1C::FMULCWCri:
+  case K1C::FMULCWCrr:
+  case K1C::FMULCWDCri:
+  case K1C::FMULCWDCrr:
+  case K1C::FMULDri:
+  case K1C::FMULDrr:
+  case K1C::FMULHQri:
+  case K1C::FMULHQrr:
+  case K1C::FMULHWri:
+  case K1C::FMULHWrr:
+  case K1C::FMULHWQri:
+  case K1C::FMULHWQrr:
+  case K1C::FMULWri:
+  case K1C::FMULWrr:
+  case K1C::FMULWCri:
+  case K1C::FMULWCrr:
+  case K1C::FMULWDri:
+  case K1C::FMULWDrr:
+  case K1C::FMULWDCri:
+  case K1C::FMULWDCrr:
+  case K1C::FMULWDPri:
+  case K1C::FMULWDPrr:
+  case K1C::FMULWPri:
+  case K1C::FMULWPrr:
   case K1C::FMULWQ:
   case K1C::FNARROWDW:
   case K1C::FNARROWDWP:
   case K1C::FNARROWWH:
   case K1C::FNARROWWHQ:
   case K1C::FSBFCDC:
-  case K1C::FSBFCWCd0:
-  case K1C::FSBFCWCd1:
+  case K1C::FSBFCWCrr:
+  case K1C::FSBFCWCri:
   case K1C::FSBFCWCP:
-  case K1C::FSBFDd0:
-  case K1C::FSBFDd1:
+  case K1C::FSBFDri:
+  case K1C::FSBFDrr:
   case K1C::FSBFDP:
-  case K1C::FSBFHQd0:
-  case K1C::FSBFHQd1:
-  case K1C::FSBFWd0:
-  case K1C::FSBFWd1:
-  case K1C::FSBFWPd0:
-  case K1C::FSBFWPd1:
+  case K1C::FSBFHQri:
+  case K1C::FSBFHQrr:
+  case K1C::FSBFWri:
+  case K1C::FSBFWrr:
+  case K1C::FSBFWPri:
+  case K1C::FSBFWPrr:
   case K1C::FSBFWQ:
   case K1C::FSDIVD:
   case K1C::FSDIVW:
@@ -297,8 +297,8 @@ bool K1CPacketizerList::shouldBeLastInBundle(unsigned opcode) {
     return false;
   case K1C::ICALL:
   case K1C::CALL:
-  case K1C::SCALLd0:
-  case K1C::SCALLd1:
+  case K1C::SCALLr:
+  case K1C::SCALLs:
   case K1C::IGOTO:
   case K1C::BARRIER:
   case K1C::STOP:
@@ -388,17 +388,20 @@ bool K1CPacketizerList::isSetOrWFXL(unsigned Opcode) {
   switch (Opcode) {
   default:
     return false;
-  case K1C::SETd0:
-    // case K1C::SETd1: Not defined yet
-  case K1C::SETd2:
-  case K1C::WFXLd0:
-    // case K1C::WFXLd1: Not defined yet
+  case K1C::SETrst3:
+  case K1C::SETrsa:
+  case K1C::SETrsra:
+  case K1C::SETrst4:
+  case K1C::WFXLrst2:
+  case K1C::WFXLrsa:
+  case K1C::WFXLrst4:
     return true;
   }
 }
 
 bool K1CPacketizerList::isSetOrWFXLOrWFXM(unsigned Opcode) {
-  return isSetOrWFXL(Opcode) || Opcode == K1C::WFXMd0;
+  return isSetOrWFXL(Opcode) || Opcode == K1C::WFXMrst2 ||
+         Opcode == K1C::WFXMrsa || Opcode == K1C::WFXMrst4;
 }
 
 bool K1CPacketizerList::isALUCarryWithSetOrWFXL(unsigned ISchedClass,

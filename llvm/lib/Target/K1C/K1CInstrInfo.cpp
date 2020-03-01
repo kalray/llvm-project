@@ -113,30 +113,30 @@ void K1CInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
     DL = I->getDebugLoc();
 
   if (K1C::SingleRegRegClass.hasSubClassEq(RC)) {
-    BuildMI(MBB, I, DL, get(K1C::LDri), DstReg)
+    BuildMI(MBB, I, DL, get(K1C::LDp), DstReg)
         .addImm(0)
         .addFrameIndex(FI)
         .addImm(0); // variantMod
   }
   if (K1C::PairedRegRegClass.hasSubClassEq(RC)) {
-    BuildMI(MBB, I, DL, get(K1C::LQri), DstReg)
+    BuildMI(MBB, I, DL, get(K1C::LQp), DstReg)
         .addImm(0)
         .addFrameIndex(FI)
         .addImm(0); // variantMod
   }
   if (K1C::QuadRegRegClass.hasSubClassEq(RC)) {
-    BuildMI(MBB, I, DL, get(K1C::LOri), DstReg)
+    BuildMI(MBB, I, DL, get(K1C::LOp), DstReg)
         .addImm(0)
         .addFrameIndex(FI)
         .addImm(0); // variantMod
   }
   if (K1C::OnlyraRegRegClass.hasSubClassEq(RC)) {
     unsigned ScratchReg = findScratchRegister(MBB, true);
-    BuildMI(MBB, I, DL, get(K1C::LDri), ScratchReg)
+    BuildMI(MBB, I, DL, get(K1C::LDp), ScratchReg)
         .addImm(0)
         .addFrameIndex(FI)
         .addImm(0); // variantMod
-    BuildMI(MBB, I, DL, get(K1C::SETd2), K1C::RA)
+    BuildMI(MBB, I, DL, get(K1C::SETrsra), K1C::RA)
         .addReg(ScratchReg, RegState::Kill);
   }
 }
@@ -151,35 +151,36 @@ void K1CInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
     DL = I->getDebugLoc();
 
   if (K1C::SingleRegRegClass.hasSubClassEq(RC)) {
-    BuildMI(MBB, I, DL, get(K1C::SDri))
+    BuildMI(MBB, I, DL, get(K1C::SDp))
         .addImm(0)
         .addFrameIndex(FI)
         .addReg(SrcReg, getKillRegState(IsKill))
         .setMIFlags(MachineInstr::FrameSetup);
   }
   if (K1C::PairedRegRegClass.hasSubClassEq(RC)) {
-    BuildMI(MBB, I, DL, get(K1C::SQri))
+    BuildMI(MBB, I, DL, get(K1C::SQp))
         .addImm(0)
         .addFrameIndex(FI)
         .addReg(SrcReg, getKillRegState(IsKill))
         .setMIFlags(MachineInstr::FrameSetup);
   }
   if (K1C::QuadRegRegClass.hasSubClassEq(RC)) {
-    BuildMI(MBB, I, DL, get(K1C::SOri))
+    BuildMI(MBB, I, DL, get(K1C::SOp))
         .addImm(0)
         .addFrameIndex(FI)
         .addReg(SrcReg, getKillRegState(IsKill))
         .setMIFlags(MachineInstr::FrameSetup);
   }
+  // FIXME: Onlyra? GETss2 takes a Onlyreg
   if (K1C::OnlyraRegRegClass.hasSubClassEq(RC)) {
     unsigned ScratchReg = findScratchRegister(MBB, false);
-    BuildMI(MBB, I, DL, get(K1C::GETd0), ScratchReg)
+    BuildMI(MBB, I, DL, get(K1C::GETss2), ScratchReg)
         .addReg(K1C::RA)
         .setMIFlags(MachineInstr::FrameSetup);
 
     // set flag to mark that $ra is saved with this instruction
     // at frame index elimination cfi instruction will be added
-    BuildMI(MBB, I, DL, get(K1C::SDri))
+    BuildMI(MBB, I, DL, get(K1C::SDp))
         .addImm(0)
         .addFrameIndex(FI)
         .addReg(ScratchReg, RegState::Kill)
