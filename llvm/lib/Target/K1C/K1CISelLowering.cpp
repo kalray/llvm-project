@@ -1794,34 +1794,34 @@ K1CTargetLowering::getComparisonCondition(ISD::CondCode CCOpcode) const {
 
   switch (CCOpcode) {
   case ISD::SETEQ:
-    Condition = K1CCC::COMPARISON_EQ;
+    Condition = K1CMOD::COMPARISON_EQ;
     break;
   case ISD::SETNE:
-    Condition = K1CCC::COMPARISON_NE;
+    Condition = K1CMOD::COMPARISON_NE;
     break;
   case ISD::SETLT:
-    Condition = K1CCC::COMPARISON_LT;
+    Condition = K1CMOD::COMPARISON_LT;
     break;
   case ISD::SETLE:
-    Condition = K1CCC::COMPARISON_LE;
+    Condition = K1CMOD::COMPARISON_LE;
     break;
   case ISD::SETGT:
-    Condition = K1CCC::COMPARISON_GT;
+    Condition = K1CMOD::COMPARISON_GT;
     break;
   case ISD::SETGE:
-    Condition = K1CCC::COMPARISON_GE;
+    Condition = K1CMOD::COMPARISON_GE;
     break;
   case ISD::SETULT:
-    Condition = K1CCC::COMPARISON_LTU;
+    Condition = K1CMOD::COMPARISON_LTU;
     break;
   case ISD::SETULE:
-    Condition = K1CCC::COMPARISON_LEU;
+    Condition = K1CMOD::COMPARISON_LEU;
     break;
   case ISD::SETUGT:
-    Condition = K1CCC::COMPARISON_GTU;
+    Condition = K1CMOD::COMPARISON_GTU;
     break;
   case ISD::SETUGE:
-    Condition = K1CCC::COMPARISON_GEU;
+    Condition = K1CMOD::COMPARISON_GEU;
     break;
   default:
     llvm_unreachable("not an integer condition code");
@@ -1833,30 +1833,30 @@ K1CTargetLowering::getComparisonCondition(ISD::CondCode CCOpcode) const {
 unsigned K1CTargetLowering::getBranchCondition(ISD::CondCode CCOpcode,
                                                bool Word) const {
   unsigned Condition;
-  unsigned WordAddend = K1CCC::BRANCHCOND_WEQZ - K1CCC::BRANCHCOND_DEQZ;
+  unsigned WordAddend = K1CMOD::SCALARCOND_WEQZ - K1CMOD::SCALARCOND_DEQZ;
 
   switch (CCOpcode) {
   case ISD::SETEQ:
-    Condition = K1CCC::BRANCHCOND_DEQZ;
+    Condition = K1CMOD::SCALARCOND_DEQZ;
     break;
   case ISD::SETNE:
-    Condition = K1CCC::BRANCHCOND_DNEZ;
+    Condition = K1CMOD::SCALARCOND_DNEZ;
     break;
   case ISD::SETLT:
   case ISD::SETULT:
-    Condition = K1CCC::BRANCHCOND_DLTZ;
+    Condition = K1CMOD::SCALARCOND_DLTZ;
     break;
   case ISD::SETLE:
   case ISD::SETULE:
-    Condition = K1CCC::BRANCHCOND_DLEZ;
+    Condition = K1CMOD::SCALARCOND_DLEZ;
     break;
   case ISD::SETGT:
   case ISD::SETUGT:
-    Condition = K1CCC::BRANCHCOND_DGTZ;
+    Condition = K1CMOD::SCALARCOND_DGTZ;
     break;
   case ISD::SETGE:
   case ISD::SETUGE:
-    Condition = K1CCC::BRANCHCOND_DGEZ;
+    Condition = K1CMOD::SCALARCOND_DGEZ;
     break;
   default:
     llvm_unreachable("not an integer condition code");
@@ -1911,9 +1911,10 @@ SDValue K1CTargetLowering::lowerBR_CC(SDValue Op, SelectionDAG &DAG) const {
           (CCOpcode == ISD::SETNE || CCOpcode == ISD::SETEQ)) {
         EmitComp = false;
         LHS = LHS->getOperand(0);
-        CBCond = DAG.getConstant(CCOpcode == ISD::SETEQ ? K1CCC::BRANCHCOND_EVEN
-                                                        : K1CCC::BRANCHCOND_ODD,
-                                 DL, ModVT);
+        CBCond =
+            DAG.getConstant(CCOpcode == ISD::SETEQ ? K1CMOD::SCALARCOND_EVEN
+                                                   : K1CMOD::SCALARCOND_ODD,
+                            DL, ModVT);
       }
     } else if (Constant->getSExtValue() == 1 && CCOpcode == ISD::SETLT) {
       EmitComp = false;
@@ -1928,7 +1929,7 @@ SDValue K1CTargetLowering::lowerBR_CC(SDValue Op, SelectionDAG &DAG) const {
 
   if (EmitComp) {
     LHS = DAG.getNode(K1CISD::COMP, DL, Type, LHS, RHS, CompCond);
-    CBCond = DAG.getConstant(K1CCC::BRANCHCOND_ODD, DL, ModVT);
+    CBCond = DAG.getConstant(K1CMOD::SCALARCOND_ODD, DL, ModVT);
   }
 
   return DAG.getNode(K1CISD::BRCOND, DL, Op.getValueType(), Chain, LHS, BB,

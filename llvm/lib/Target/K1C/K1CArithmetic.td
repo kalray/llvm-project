@@ -246,7 +246,7 @@ def : Pat<(and i32:$rs1, Signed10W:$rs2), (ANDWd0 SingleReg:$rs1, Signed10W:$rs2
 def : Pat<(and i32:$rs1, Signed37W:$rs2), (ANDWd1 SingleReg:$rs1, Signed37W:$rs2)>;
 def : Pat<(and v2i16:$rs1, v2i16:$rs2), (ANDWd2 SingleReg:$rs1, SingleReg:$rs2)>;
 
-multiclass COMP_Pat<SDNode Node, COMPARISON Mod> {
+multiclass COMP_Pat<SDNode Node, Comparison Mod> {
   //COMPD
   def : Pat<(i32 (Node i64:$lhs, i64:$rhs)),
         (COMPDd3 SingleReg:$lhs, SingleReg:$rhs, Mod)>;
@@ -272,16 +272,16 @@ multiclass COMP_Pat<SDNode Node, COMPARISON Mod> {
         (COMPNWP SingleReg:$lhs, SingleReg:$rhs, Mod)>;
 }
 
-defm : COMP_Pat<seteq,   COMPARISON_EQ>;
-defm : COMP_Pat<setne,   COMPARISON_NE>;
-defm : COMP_Pat<setugt,  COMPARISON_GTU>;
-defm : COMP_Pat<setuge,  COMPARISON_GEU>;
-defm : COMP_Pat<setult,  COMPARISON_LTU>;
-defm : COMP_Pat<setule,  COMPARISON_LEU>;
-defm : COMP_Pat<setgt,   COMPARISON_GT>;
-defm : COMP_Pat<setge,   COMPARISON_GE>;
-defm : COMP_Pat<setlt,   COMPARISON_LT>;
-defm : COMP_Pat<setle,   COMPARISON_LE>;
+defm : COMP_Pat<seteq,   comparison_eq>;
+defm : COMP_Pat<setne,   comparison_ne>;
+defm : COMP_Pat<setugt,  comparison_gtu>;
+defm : COMP_Pat<setuge,  comparison_geu>;
+defm : COMP_Pat<setult,  comparison_ltu>;
+defm : COMP_Pat<setule,  comparison_leu>;
+defm : COMP_Pat<setgt,   comparison_gt>;
+defm : COMP_Pat<setge,   comparison_ge>;
+defm : COMP_Pat<setlt,   comparison_lt>;
+defm : COMP_Pat<setle,   comparison_le>;
 
 // ORD
 def : Pat<(or i64:$rs1, i64:$rs2), (ORDd0 SingleReg:$rs1, SingleReg:$rs2)>;
