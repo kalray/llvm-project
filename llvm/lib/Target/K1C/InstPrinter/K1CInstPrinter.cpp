@@ -56,17 +56,17 @@ K1CInstPrinter::printOperand(const MCInst *MI, unsigned OpNo,
     unsigned Opcode = MI->getOpcode();
     switch (Opcode) {
     // FP is a half
-    case K1C::MAKEd0:
+    case K1C::MAKEi16:
       printBinary16ImmOperand(MI, OpNo, O);
       break;
     // FP is a float
-    case K1C::MAKEd1:
-    case K1C::CMOVEDd1:
+    case K1C::MAKEi43:
+    case K1C::CMOVEDri37:
       printBinary32ImmOperand(MI, OpNo, O);
       break;
     // FP is a double
-    case K1C::MAKEd2:
-    case K1C::CMOVEDd2:
+    case K1C::MAKEi64:
+    case K1C::CMOVEDri64:
       printBinary64ImmOperand(MI, OpNo, O);
       break;
     default:

@@ -63,13 +63,14 @@ protected:
   const K1CSubtarget &STI;
 
 private:
+  // FIXME: can be replaced by GetImmOpCode?
   unsigned GetStackOpCode(uint64_t StackSize) const {
     if (isInt<10>(StackSize))
-      return K1C::ADDDd1;
+      return K1C::ADDDri10;
     else if (isInt<37>(StackSize))
-      return K1C::ADDDd2;
+      return K1C::ADDDri37;
     else
-      return K1C::ADDDd3;
+      return K1C::ADDDri64;
   }
 
   void adjustStack(MachineFunction &MF) const;
