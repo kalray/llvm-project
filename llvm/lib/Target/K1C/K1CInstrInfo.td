@@ -15,10 +15,12 @@
 // Instruction format superclass
 //===----------------------------------------------------------------------===//
 
-// This file was automatically generated, DO NOT EDIT.
-// Last generated: 2020-01-30 23:46:59.701573.
+// This file was automatically generated,
+//   *DO NOT EDIT*,
+//   please contact code owner.
+// Last generated: 2020-03-01 12:01:34.356403.
 
-include "K1CInstruction.td"
+include "K1COperandInfo.td"
 include "K1CInstrFormats.td"
 
 
