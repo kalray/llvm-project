@@ -44,13 +44,13 @@ INITIALIZE_PASS_END(K1CHardwareLoops, K1CHARDWARELOOPS_NAME,
 
 static bool isAddOperator(unsigned opcode) {
   switch (opcode) {
-  case K1C::ADDWd0:
-  case K1C::ADDWd1:
-  case K1C::ADDWd2:
-  case K1C::ADDDd0:
-  case K1C::ADDDd1:
-  case K1C::ADDDd2:
-  case K1C::ADDDd3:
+  case K1C::ADDWri10:
+  case K1C::ADDWri37:
+  case K1C::ADDWrr:
+  case K1C::ADDDri10:
+  case K1C::ADDDri37:
+  case K1C::ADDDri64:
+  case K1C::ADDDrr:
     return true;
   default:
     return false;
@@ -61,13 +61,13 @@ static bool isAddOperator(unsigned opcode) {
 
 static bool isSubOperator(unsigned opcode) {
   switch (opcode) {
-  case K1C::SBFDd0:
-  case K1C::SBFDd1:
-  case K1C::SBFDd2:
-  case K1C::SBFDd3:
-  case K1C::SBFWd0:
-  case K1C::SBFWd1:
-  case K1C::SBFWd2:
+  case K1C::SBFDri10:
+  case K1C::SBFDri37:
+  case K1C::SBFDri64:
+  case K1C::SBFDrr:
+  case K1C::SBFWri10:
+  case K1C::SBFWri37:
+  case K1C::SBFWrr:
     return true;
   default:
     return false;
@@ -78,8 +78,9 @@ static bool isSubOperator(unsigned opcode) {
 
 static bool isMakeOperator(unsigned opcode) {
   switch (opcode) {
-  case K1C::MAKEd0:
-  case K1C::MAKEd1:
+  case K1C::MAKEi16:
+  case K1C::MAKEi43:
+  case K1C::MAKEi64:
     return true;
   default:
     return false;
@@ -90,12 +91,12 @@ static bool isMakeOperator(unsigned opcode) {
 
 static bool isCompOperator(unsigned opcode) {
   switch (opcode) {
-  case K1C::COMPWd0:
-  case K1C::COMPWd1:
-  case K1C::COMPDd0:
-  case K1C::COMPDd1:
-  case K1C::COMPDd2:
-  case K1C::COMPDd3:
+  case K1C::COMPWri:
+  case K1C::COMPWrr:
+  case K1C::COMPDri10:
+  case K1C::COMPDri37:
+  case K1C::COMPDri64:
+  case K1C::COMPDrr:
     return true;
   default:
     return false;
@@ -499,7 +500,7 @@ bool K1CHardwareLoops::ConvertToHardwareLoop(MachineFunction &MF,
   } else {
     unsigned CountReg = MRI->createVirtualRegister(&K1C::SingleRegRegClass);
 
-    BuildMI(*PreheaderMBB, InsertPos, DL, TII->get(K1C::MAKEd2), CountReg)
+    BuildMI(*PreheaderMBB, InsertPos, DL, TII->get(K1C::MAKEi64), CountReg)
         .add(TripCount);
 
     BuildMI(*PreheaderMBB, InsertPos, DL, TII->get(K1C::LOOPDO))

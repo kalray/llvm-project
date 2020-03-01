@@ -123,7 +123,7 @@ MachineSDNode *K1CDAGToDAGISel::buildMake(SDLoc &DL, SDNode *Imm,
                                           EVT VT) const {
 
   unsigned ImmCode = Imm->getOpcode();
-  unsigned MakeCode = K1C::MAKEd2;
+  unsigned MakeCode = K1C::MAKEi64;
   MachineSDNode *MakeInsn;
 
   switch (ImmCode) {
@@ -135,10 +135,10 @@ MachineSDNode *K1CDAGToDAGISel::buildMake(SDLoc &DL, SDNode *Imm,
     unsigned BitWidth;
 
     if (CST->getConstantFPValue()->getType()->isHalfTy()) {
-      MakeCode = K1C::MAKEd0;
+      MakeCode = K1C::MAKEi16;
       BitWidth = 16;
     } else if (CST->getConstantFPValue()->getType()->isFloatTy()) {
-      MakeCode = K1C::MAKEd1;
+      MakeCode = K1C::MAKEi43;
       BitWidth = 32;
     } else if (CST->getConstantFPValue()->getType()->isDoubleTy()) {
       BitWidth = 64;
@@ -156,9 +156,9 @@ MachineSDNode *K1CDAGToDAGISel::buildMake(SDLoc &DL, SDNode *Imm,
     uint64_t Imm = CST->getZExtValue();
 
     if (isInt<16>(Imm))
-      MakeCode = K1C::MAKEd0;
+      MakeCode = K1C::MAKEi16;
     else if (isInt<43>(Imm))
-      MakeCode = K1C::MAKEd1;
+      MakeCode = K1C::MAKEi43;
 
     MakeInsn = CurDAG->getMachineNode(
         MakeCode, DL, VT, CurDAG->getTargetConstant(Imm, DL, MVT::i64));

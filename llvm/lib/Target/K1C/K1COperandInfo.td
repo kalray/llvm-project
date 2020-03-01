@@ -97,3 +97,17 @@ def Binary64 : Operand<f64>, FPImmLeaf<f64, [{
     }]> {
   let PrintMethod = "printBinary64ImmOperand";
 }
+
+
+def Binary32x2 : Operand<v2f32>, FPImmLeaf<v2f32, [{
+      return isInt<64>(Imm.bitcastToAPInt().getZExtValue());
+    }]> {
+  // FIXME: implement PrintMethod
+  // let PrintMethod = "printBinary32x2ImmOperand";
+}
+def Binary16x4 : Operand<v4f16>, FPImmLeaf<v4f16, [{
+      return isInt<64>(Imm.bitcastToAPInt().getZExtValue());
+    }]> {
+  // FIXME: implement PrintMethod
+  // let PrintMethod = "printBinary16x4ImmOperand";
+}
