@@ -96,8 +96,8 @@ public:
     renderscript32, // 32-bit RenderScript
     renderscript64, // 64-bit RenderScript
     ve,             // NEC SX-Aurora Vector Engine
-    k1c,            // Kalray MPPA-3
-    LastArchType = k1c
+    kvx,            // Kalray MPPA-3
+    LastArchType = kvx
   };
   enum SubArchType {
     NoSubArch,
@@ -195,8 +195,8 @@ public:
     WASI,       // Experimental WebAssembly OS
     Emscripten,
     ClusterOS,  // Kalray ClusterOS
-    K1ELF,      // Kalray ELF
-    LastOSType = K1ELF
+    KVXOSPorting, // Kalray OSPorting
+    LastOSType = KVXOSPorting
   };
   enum EnvironmentType {
     UnknownEnvironment,
@@ -499,7 +499,7 @@ public:
     return getOS() == Triple::ClusterOS;
   }
 
-  bool isOSK1ELF() const { return getOS() == Triple::K1ELF; }
+  bool isOSKVXOSPorting() const { return getOS() == Triple::KVXOSPorting; }
 
   bool isOSNetBSD() const {
     return getOS() == Triple::NetBSD;
@@ -701,7 +701,7 @@ public:
     return getArch() == Triple::nvptx || getArch() == Triple::nvptx64;
   }
 
-  bool isK1C() const { return getArch() == Triple::k1c; }
+  bool isKVX() const { return getArch() == Triple::kvx; }
 
   /// Tests whether the target is Thumb (little and big endian).
   bool isThumb() const {

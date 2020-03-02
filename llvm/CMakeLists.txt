@@ -303,7 +303,7 @@ set(LLVM_ALL_TARGETS
   X86
   XCore
   RISCV
-  K1C
+  KVX
   )
 
 # List of targets with JIT support:

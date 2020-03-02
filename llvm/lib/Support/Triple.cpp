@@ -71,7 +71,7 @@ StringRef Triple::getArchTypeName(ArchType Kind) {
   case x86:            return "i386";
   case x86_64:         return "x86_64";
   case xcore:          return "xcore";
-  case k1c:            return "k1c";
+  case kvx:            return "kvx";
   }
 
   llvm_unreachable("Invalid ArchType!");
@@ -149,7 +149,7 @@ StringRef Triple::getArchTypePrefix(ArchType Kind) {
 
   case ve:          return "ve";
 
-  case k1c:         return "k1c";
+  case kvx:         return "kvx";
   }
 }
 
@@ -219,7 +219,7 @@ StringRef Triple::getOSTypeName(OSType Kind) {
   case WatchOS: return "watchos";
   case Win32: return "windows";
   case ClusterOS: return "cos";
-  case K1ELF: return "elfmppa";
+  case KVXOSPorting: return "osp";
   }
 
   llvm_unreachable("Invalid OSType");
@@ -323,7 +323,8 @@ Triple::ArchType Triple::getArchTypeForLLVMName(StringRef Name) {
     .Case("renderscript32", renderscript32)
     .Case("renderscript64", renderscript64)
     .Case("ve", ve)
-    .Case("k1c", k1c)
+    .Case("kvx", kvx)
+    .Case("k1c", kvx)
     .Default(UnknownArch);
 }
 
@@ -453,7 +454,8 @@ static Triple::ArchType parseArch(StringRef ArchName) {
     .Case("ve", Triple::ve)
     .Case("wasm32", Triple::wasm32)
     .Case("wasm64", Triple::wasm64)
-    .Case("k1c", Triple::k1c)
+    .Case("kvx", Triple::kvx)
+    .Case("k1c", Triple::kvx)
     .Default(Triple::UnknownArch);
 
   // Some architectures require special parsing logic just to compute the
@@ -530,7 +532,7 @@ static Triple::OSType parseOS(StringRef OSName) {
     .StartsWith("wasi", Triple::WASI)
     .StartsWith("emscripten", Triple::Emscripten)
     .StartsWith("cos", Triple::ClusterOS)
-    .StartsWith("elfmppa", Triple::K1ELF)
+    .StartsWith("osp", Triple::KVXOSPorting)
     .Default(Triple::UnknownOS);
 }
 
@@ -717,7 +719,7 @@ static Triple::ObjectFormatType getDefaultFormat(const Triple &T) {
   case Triple::thumbeb:
   case Triple::ve:
   case Triple::xcore:
-  case Triple::k1c:
+  case Triple::kvx:
     return Triple::ELF;
 
   case Triple::ppc64:
@@ -1302,7 +1304,7 @@ static unsigned getArchPointerBitWidth(llvm::Triple::ArchType Arch) {
   case llvm::Triple::ve:
   case llvm::Triple::wasm64:
   case llvm::Triple::x86_64:
-  case llvm::Triple::k1c:
+  case llvm::Triple::kvx:
     return 64;
   }
   llvm_unreachable("Invalid architecture value");
@@ -1332,7 +1334,7 @@ Triple Triple::get32BitArchVariant() const {
   case Triple::ppc64le:
   case Triple::systemz:
   case Triple::ve:
-  case Triple::k1c:
+  case Triple::kvx:
     T.setArch(UnknownArch);
     break;
 
@@ -1426,7 +1428,7 @@ Triple Triple::get64BitArchVariant() const {
   case Triple::ve:
   case Triple::wasm64:
   case Triple::x86_64:
-  case Triple::k1c:
+  case Triple::kvx:
     // Already 64-bit.
     break;
 
@@ -1486,7 +1488,7 @@ Triple Triple::getBigEndianArchVariant() const {
   case Triple::x86_64:
   case Triple::xcore:
   case Triple::ve:
-  case Triple::k1c:
+  case Triple::kvx:
 
   // ARM is intentionally unsupported here, changing the architecture would
   // drop any arch suffixes.
@@ -1579,7 +1581,7 @@ bool Triple::isLittleEndian() const {
   case Triple::x86:
   case Triple::x86_64:
   case Triple::xcore:
-  case Triple::k1c:
+  case Triple::kvx:
     return true;
   default:
     return false;
