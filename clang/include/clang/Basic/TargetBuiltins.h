@@ -199,12 +199,12 @@ namespace clang {
     };
   }
 
-  /// K1C builtins
-  namespace K1C {
+  /// KVX builtins
+  namespace KVX {
   enum {
     LastTIBuiltin = clang::Builtin::FirstTSBuiltin - 1,
   #define BUILTIN(ID, TYPE, ATTRS) BI##ID,
-  #include "clang/Basic/BuiltinsK1C.def"
+  #include "clang/Basic/BuiltinsKVX.def"
     LastTSBuiltin
   };
   }

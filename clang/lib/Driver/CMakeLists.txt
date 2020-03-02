@@ -67,7 +67,7 @@ add_clang_library(clangDriver
   ToolChains/XCore.cpp
   ToolChains/PPCLinux.cpp
   ToolChains/ClusterOS.cpp
-  ToolChains/K1ELF.cpp
+  ToolChains/KVXOSPorting.cpp
   Types.cpp
   XRayArgs.cpp
 

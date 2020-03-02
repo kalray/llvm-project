@@ -23,7 +23,7 @@ using namespace clang::driver::toolchains;
 using namespace clang;
 using namespace llvm::opt;
 
-#define K1C_CLUSTEROS_GCC_VERSION "7.5.0"
+#define KVX_CLUSTEROS_GCC_VERSION "7.5.0"
 
 void clusteros::Assembler::ConstructJob(Compilation &C, const JobAction &JA,
                                         const InputInfo &Output,
@@ -141,13 +141,13 @@ void ClusterOS::AddClangCXXStdlibIncludeArgs(const ArgList &DriverArgs,
     return;
 
   addSystemInclude(DriverArgs, CC1Args,
-                   getIncludeDirRoot() + "/c++/" K1C_CLUSTEROS_GCC_VERSION);
-  addSystemInclude(DriverArgs, CC1Args,
-                   getIncludeDirRoot() + "/c++/" K1C_CLUSTEROS_GCC_VERSION
-                                         "/k1-cos");
-  addSystemInclude(DriverArgs, CC1Args,
-                   getIncludeDirRoot() + "/c++/" K1C_CLUSTEROS_GCC_VERSION
-                                         "/backward");
+                   getIncludeDirRoot() + "/c++/" KVX_CLUSTEROS_GCC_VERSION);
+  addSystemInclude(DriverArgs, CC1Args, getIncludeDirRoot() +
+                                            "/c++/" KVX_CLUSTEROS_GCC_VERSION
+                                            "/k1-cos");
+  addSystemInclude(DriverArgs, CC1Args, getIncludeDirRoot() +
+                                            "/c++/" KVX_CLUSTEROS_GCC_VERSION
+                                            "/backward");
 }
 
 void

@@ -1490,8 +1490,8 @@ void Clang::RenderTargetOptions(const llvm::Triple &EffectiveTriple,
     AddLanaiTargetArgs(Args, CmdArgs);
     break;
 
-  case llvm::Triple::k1c:
-    AddK1CTargetArgs(Args, CmdArgs);
+  case llvm::Triple::kvx:
+    AddKVXTargetArgs(Args, CmdArgs);
     break;
 
   case llvm::Triple::hexagon:
@@ -1989,7 +1989,7 @@ void Clang::AddLanaiTargetArgs(const ArgList &Args,
   }
 }
 
-void Clang::AddK1CTargetArgs(const ArgList &Args,
+void Clang::AddKVXTargetArgs(const ArgList &Args,
                              ArgStringList &CmdArgs) const {
   if (Arg *A = Args.getLastArg(options::OPT_march_EQ)) {
     StringRef CPUName = A->getValue();

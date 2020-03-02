@@ -394,7 +394,7 @@ DIE &DwarfCompileUnit::updateSubprogramScopeDIE(const DISubprogram *SP) {
   // Only include DW_AT_frame_base in full debug info
   if (!includeMinimalInlineScopes()) {
     if (Asm->MF->getTarget().getTargetTriple().isNVPTX() ||
-        Asm->MF->getTarget().getTargetTriple().isK1C()) {
+        Asm->MF->getTarget().getTargetTriple().isKVX()) {
       DIELoc *Loc = new (DIEValueAllocator) DIELoc;
       addUInt(*Loc, dwarf::DW_FORM_data1, dwarf::DW_OP_call_frame_cfa);
       addBlock(*SPDie, dwarf::DW_AT_frame_base, Loc);
@@ -643,7 +643,7 @@ DIE *DwarfCompileUnit::constructVariableDIEImpl(const DbgVariable &DV,
   DIELoc *Loc = new (DIEValueAllocator) DIELoc;
   DIEDwarfExpression DwarfExpr(*Asm, *this, *Loc);
   int delta = 0;
-  if (Asm->MF->getSubtarget().getTargetTriple().isK1C()) {
+  if (Asm->MF->getSubtarget().getTargetTriple().isKVX()) {
     MachineFrameInfo &MFI = Asm->MF->getFrameInfo();
     delta = MFI.getStackSize();
   }

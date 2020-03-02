@@ -1,0 +1,44 @@
+;===- ./lib/Target/KVX/LLVMBuild.txt ---------------------------*- Conf -*--===;
+;
+;                     The LLVM Compiler Infrastructure
+;
+; This file is distributed under the University of Illinois Open Source
+; License. See LICENSE.TXT for details.
+;
+;===------------------------------------------------------------------------===;
+;
+; This is an LLVMBuild description file for the components in this subdirectory.
+;
+; For more information on the LLVMBuild system, please see:
+;
+;   http://llvm.org/docs/LLVMBuild.html
+;
+;===------------------------------------------------------------------------===;
+
+[common]
+subdirectories = TargetInfo MCTargetDesc InstPrinter
+
+[component_0]
+type = TargetGroup
+name = KVX
+parent = Target
+has_asmprinter = 1
+
+[component_1]
+type = Library
+name = KVXCodeGen
+parent = KVX
+required_libraries =
+  Analysis
+  AsmPrinter
+  Core
+  CodeGen
+  MC
+  KVXAsmPrinter
+  SelectionDAG
+  Target
+  KVXInfo
+  KVXDesc
+  Support
+
+add_to_library_groups = KVX

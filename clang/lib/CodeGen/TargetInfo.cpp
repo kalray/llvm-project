@@ -9636,13 +9636,13 @@ public:
 } // namespace
 
 //===----------------------------------------------------------------------===//
-// K1C ABI Implementation
+// KVX ABI Implementation
 //===----------------------------------------------------------------------===//
 
 namespace {
-class K1CABIInfo : public ABIInfo {
+class KVXABIInfo : public ABIInfo {
 public:
-  K1CABIInfo(CodeGenTypes &CGT) : ABIInfo(CGT) {}
+  KVXABIInfo(CodeGenTypes &CGT) : ABIInfo(CGT) {}
 
   void computeInfo(CGFunctionInfo &FI) const override;
 
@@ -9731,24 +9731,24 @@ private:
 } // end anonymous namespace
 
 namespace {
-class K1CTargetCodeGenInfo : public TargetCodeGenInfo {
+class KVXTargetCodeGenInfo : public TargetCodeGenInfo {
 public:
-  K1CTargetCodeGenInfo(CodeGenTypes &CGT)
-      : TargetCodeGenInfo(new K1CABIInfo(CGT)) {}
+  KVXTargetCodeGenInfo(CodeGenTypes &CGT)
+      : TargetCodeGenInfo(new KVXABIInfo(CGT)) {}
 };
 } // end anonymous namespace
 
-const unsigned K1CABIInfo::Alignment = 64;
-const unsigned K1CABIInfo::RegSize = 64;
-const unsigned K1CABIInfo::NumRegs = 4;
+const unsigned KVXABIInfo::Alignment = 64;
+const unsigned KVXABIInfo::RegSize = 64;
+const unsigned KVXABIInfo::NumRegs = 4;
 
-void K1CABIInfo::computeInfo(CGFunctionInfo &FI) const {
+void KVXABIInfo::computeInfo(CGFunctionInfo &FI) const {
   FI.getReturnInfo() = classifyBigType(FI.getReturnType());
   for (auto &I : FI.arguments())
     I.info = classifyBigType(I.type);
 }
 
-Address K1CABIInfo::EmitVAArg(CodeGenFunction &CGF, Address VAListAddr,
+Address KVXABIInfo::EmitVAArg(CodeGenFunction &CGF, Address VAListAddr,
                               QualType Ty) const {
   CharUnits SlotSize = CharUnits::fromQuantity(8);
 
@@ -9777,7 +9777,7 @@ Address K1CABIInfo::EmitVAArg(CodeGenFunction &CGF, Address VAListAddr,
   return Builder.CreateBitCast(Addr, ArgPtrTy, "arg.addr");
 }
 
-ABIArgInfo K1CABIInfo::classifyBigType(QualType Ty) const {
+ABIArgInfo KVXABIInfo::classifyBigType(QualType Ty) const {
   // Anything too big to fit in registers is passed with an explicit indirect
   // pointer / sret pointer.
   if (getContext().getTypeSize(Ty) > RegSize * NumRegs)
@@ -9786,7 +9786,7 @@ ABIArgInfo K1CABIInfo::classifyBigType(QualType Ty) const {
   return classifyType(Ty);
 }
 
-ABIArgInfo K1CABIInfo::classifyType(QualType Ty) const {
+ABIArgInfo KVXABIInfo::classifyType(QualType Ty) const {
   if (Ty->isVoidType())
     return ABIArgInfo::getIgnore();
 
@@ -9999,8 +9999,8 @@ const TargetCodeGenInfo &CodeGenModule::getTargetCodeGenInfo() {
   case llvm::Triple::spir:
   case llvm::Triple::spir64:
     return SetCGInfo(new SPIRTargetCodeGenInfo(Types));
-  case llvm::Triple::k1c:
-    return SetCGInfo(new K1CTargetCodeGenInfo(Types));
+  case llvm::Triple::kvx:
+    return SetCGInfo(new KVXTargetCodeGenInfo(Types));
   }
 }
 

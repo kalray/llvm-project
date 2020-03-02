@@ -304,7 +304,7 @@ public:
     VK_AMDGPU_ABS32_LO,      // symbol@abs32@lo
     VK_AMDGPU_ABS32_HI,      // symbol@abs32@hi
 
-    VK_K1C_TLSLE,
+    VK_KVX_TLSLE,
 
     VK_TPREL,
     VK_DTPREL
