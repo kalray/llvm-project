@@ -496,7 +496,7 @@ D: z/OS support
 
 N: Laurent Thevenoux
 E: lthevenoux@kalray.eu
-D: Maintaining the K1C Backend
+D: Maintaining the KVX Backend
 
 N: Alp Toker
 E: alp@nuanti.com

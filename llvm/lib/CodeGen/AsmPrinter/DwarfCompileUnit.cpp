@@ -848,6 +848,13 @@ DIE *DwarfCompileUnit::constructVariableDIEImpl(const DbgVariable &DV,
   Optional<unsigned> NVPTXAddressSpace;
   DIELoc *Loc = new (DIEValueAllocator) DIELoc;
   DIEDwarfExpression DwarfExpr(*Asm, *this, *Loc);
+
+  int delta = 0;
+  if (Asm->MF->getSubtarget().getTargetTriple().isKVX()) {
+    MachineFrameInfo &MFI = Asm->MF->getFrameInfo();
+    delta = MFI.getStackSize();
+  }
+
   for (const auto &Fragment : DV.getFrameIndexExprs()) {
     Register FrameReg;
     const DIExpression *Expr = Fragment.Expr;
