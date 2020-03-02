@@ -28,7 +28,7 @@
 #include "ToolChains/Haiku.h"
 #include "ToolChains/Hexagon.h"
 #include "ToolChains/Hurd.h"
-#include "ToolChains/K1ELF.h"
+#include "ToolChains/KVXOSPorting.h"
 #include "ToolChains/Lanai.h"
 #include "ToolChains/Linux.h"
 #include "ToolChains/MSP430.h"
@@ -4529,8 +4529,8 @@ const ToolChain &Driver::getToolChain(const ArgList &Args,
     case llvm::Triple::ClusterOS:
       TC = llvm::make_unique<toolchains::ClusterOS>(*this, Target, Args);
       break;
-    case llvm::Triple::K1ELF:
-      TC = llvm::make_unique<toolchains::K1ELF>(*this, Target, Args);
+    case llvm::Triple::KVXOSPorting:
+      TC = llvm::make_unique<toolchains::KVXOSPorting>(*this, Target, Args);
       break;
     case llvm::Triple::CloudABI:
       TC = llvm::make_unique<toolchains::CloudABI>(*this, Target, Args);

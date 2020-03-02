@@ -21,7 +21,7 @@
 #include "Targets/AVR.h"
 #include "Targets/BPF.h"
 #include "Targets/Hexagon.h"
-#include "Targets/K1C.h"
+#include "Targets/KVX.h"
 #include "Targets/Lanai.h"
 #include "Targets/Le64.h"
 #include "Targets/MSP430.h"
@@ -445,14 +445,14 @@ TargetInfo *AllocateTarget(const llvm::Triple &Triple,
   case llvm::Triple::tcele:
     return new TCELETargetInfo(Triple, Opts);
 
-  case llvm::Triple::k1c:
+  case llvm::Triple::kvx:
     switch (os) {
     case llvm::Triple::ClusterOS:
-      return new ClusterOSTargetInfo<K1CTargetInfo>(Triple, Opts);
-    case llvm::Triple::K1ELF:
-      return new K1ELFTargetInfo<K1CTargetInfo>(Triple, Opts);
+      return new ClusterOSTargetInfo<KVXTargetInfo>(Triple, Opts);
+    case llvm::Triple::KVXOSPorting:
+      return new KVXOSPortingTargetInfo<KVXTargetInfo>(Triple, Opts);
     default:
-      return new ClusterOSTargetInfo<K1CTargetInfo>(Triple, Opts);
+      return new ClusterOSTargetInfo<KVXTargetInfo>(Triple, Opts);
     }
 
   case llvm::Triple::x86:

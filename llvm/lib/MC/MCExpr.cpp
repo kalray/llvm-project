@@ -312,7 +312,7 @@ StringRef MCSymbolRefExpr::getVariantKindName(VariantKind Kind) {
   case VK_AMDGPU_REL32_LO: return "rel32@lo";
   case VK_AMDGPU_REL32_HI: return "rel32@hi";
   case VK_AMDGPU_REL64: return "rel64";
-  case VK_K1C_TLSLE: return "tlsle";
+  case VK_KVX_TLSLE: return "tlsle";
   }
   llvm_unreachable("Invalid variant kind");
 }
@@ -429,7 +429,7 @@ MCSymbolRefExpr::getVariantKindForName(StringRef Name) {
     .Case("rel32@lo", VK_AMDGPU_REL32_LO)
     .Case("rel32@hi", VK_AMDGPU_REL32_HI)
     .Case("rel64", VK_AMDGPU_REL64)
-    .Case("tlsle", VK_K1C_TLSLE)
+    .Case("tlsle", VK_KVX_TLSLE)
     .Default(VK_Invalid);
 }
 

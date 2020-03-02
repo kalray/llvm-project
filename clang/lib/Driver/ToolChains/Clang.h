@@ -70,7 +70,7 @@ private:
                         llvm::opt::ArgStringList &CmdArgs) const;
   void AddHexagonTargetArgs(const llvm::opt::ArgList &Args,
                             llvm::opt::ArgStringList &CmdArgs) const;
-  void AddK1CTargetArgs(const llvm::opt::ArgList &Args,
+  void AddKVXTargetArgs(const llvm::opt::ArgList &Args,
                         llvm::opt::ArgStringList &CmdArgs) const;
   void AddLanaiTargetArgs(const llvm::opt::ArgList &Args,
                           llvm::opt::ArgStringList &CmdArgs) const;

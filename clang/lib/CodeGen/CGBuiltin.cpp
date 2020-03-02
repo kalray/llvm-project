@@ -4064,8 +4064,8 @@ static Value *EmitTargetArchBuiltinExpr(CodeGenFunction *CGF,
     return CGF->EmitWebAssemblyBuiltinExpr(BuiltinID, E);
   case llvm::Triple::hexagon:
     return CGF->EmitHexagonBuiltinExpr(BuiltinID, E);
-  case llvm::Triple::k1c:
-    return CGF->EmitK1CBuiltinExpr(BuiltinID, E);
+  case llvm::Triple::kvx:
+    return CGF->EmitKVXBuiltinExpr(BuiltinID, E);
   default:
     return nullptr;
   }
@@ -13509,7 +13509,7 @@ Value *CodeGenFunction::EmitHexagonBuiltinExpr(unsigned BuiltinID,
   return nullptr;
 }
 
-static int K1C_getRoundingModifier(clang::ASTContext &Ctx,
+static int KVX_getRoundingModifier(clang::ASTContext &Ctx,
                                    const clang::Expr *E) {
   if (E->isNullPointerConstant(Ctx, Expr::NPC_NeverValueDependent)) {
     return 7;
@@ -13540,13 +13540,13 @@ static int K1C_getRoundingModifier(clang::ASTContext &Ctx,
   return -1;
 }
 
-static Value *K1C_emitBinaryRoundingBuiltin(CodeGenFunction &CGF,
+static Value *KVX_emitBinaryRoundingBuiltin(CodeGenFunction &CGF,
                                             const CallExpr *E,
                                             unsigned IntrinsicID) {
   Value *Arg1 = CGF.EmitScalarExpr(E->getArg(0));
   Value *Arg2 = CGF.EmitScalarExpr(E->getArg(1));
 
-  int Modifier = K1C_getRoundingModifier(CGF.getContext(),
+  int Modifier = KVX_getRoundingModifier(CGF.getContext(),
                                          E->getArg(2)->IgnoreParenImpCasts());
 
   if (Modifier == -1)
@@ -13558,14 +13558,14 @@ static Value *K1C_emitBinaryRoundingBuiltin(CodeGenFunction &CGF,
   return CGF.Builder.CreateCall(Callee, {Arg1, Arg2, Arg3});
 }
 
-static Value *K1C_emitTernaryRoundingBuiltin(CodeGenFunction &CGF,
+static Value *KVX_emitTernaryRoundingBuiltin(CodeGenFunction &CGF,
                                              const CallExpr *E,
                                              unsigned IntrinsicID) {
   Value *Arg1 = CGF.EmitScalarExpr(E->getArg(0));
   Value *Arg2 = CGF.EmitScalarExpr(E->getArg(1));
   Value *Arg3 = CGF.EmitScalarExpr(E->getArg(2));
 
-  int Modifier = K1C_getRoundingModifier(CGF.getContext(),
+  int Modifier = KVX_getRoundingModifier(CGF.getContext(),
                                          E->getArg(3)->IgnoreParenImpCasts());
 
   if (Modifier == -1)
@@ -13577,44 +13577,44 @@ static Value *K1C_emitTernaryRoundingBuiltin(CodeGenFunction &CGF,
   return CGF.Builder.CreateCall(Callee, {Arg1, Arg2, Arg3, Arg4});
 }
 
-Value *CodeGenFunction::EmitK1CBuiltinExpr(unsigned BuiltinID,
+Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
                                            const CallExpr *E) {
   switch (BuiltinID) {
-  case K1C::BI__builtin_k1_get: {
+  case KVX::BI__builtin_k1_get: {
     SourceLocation Loc = E->getExprLoc();
     Value *Reg =
         EmitScalarConversion(EmitScalarExpr(E->getArg(0)),
                              E->getArg(0)->getType(), getContext().IntTy, Loc);
 
-    Value *Callee = CGM.getIntrinsic(Intrinsic::k1c_get);
+    Value *Callee = CGM.getIntrinsic(Intrinsic::kvx_get);
     return Builder.CreateCall(Callee, {Reg});
   }
-  case K1C::BI__builtin_k1_dinval:
-  case K1C::BI__builtin_k1_fence:
-  case K1C::BI__builtin_k1_stop: {
+  case KVX::BI__builtin_k1_dinval:
+  case KVX::BI__builtin_k1_fence:
+  case KVX::BI__builtin_k1_stop: {
     unsigned IDD;
 
     switch (BuiltinID) {
-    case K1C::BI__builtin_k1_dinval:
-      IDD = Intrinsic::k1c_dinval;
+    case KVX::BI__builtin_k1_dinval:
+      IDD = Intrinsic::kvx_dinval;
       break;
-    case K1C::BI__builtin_k1_fence:
-      IDD = Intrinsic::k1c_fence;
+    case KVX::BI__builtin_k1_fence:
+      IDD = Intrinsic::kvx_fence;
       break;
-    case K1C::BI__builtin_k1_stop:
-      IDD = Intrinsic::k1c_stop;
+    case KVX::BI__builtin_k1_stop:
+      IDD = Intrinsic::kvx_stop;
       break;
     default:
-      llvm_unreachable("missing K1C intrinsics");
+      llvm_unreachable("missing KVX intrinsics");
     }
 
     Value *Callee = CGM.getIntrinsic(IDD);
     return Builder.CreateCall(Callee, {});
   }
 
-  case K1C::BI__builtin_k1_wfxl:
-  case K1C::BI__builtin_k1_wfxm:
-  case K1C::BI__builtin_k1_set: {
+  case KVX::BI__builtin_k1_wfxl:
+  case KVX::BI__builtin_k1_wfxm:
+  case KVX::BI__builtin_k1_set: {
     SourceLocation Loc = E->getExprLoc();
     Value *A1 = EmitScalarConversion(EmitScalarExpr(E->getArg(0)),
                                      E->getArg(0)->getType(),
@@ -13625,24 +13625,24 @@ Value *CodeGenFunction::EmitK1CBuiltinExpr(unsigned BuiltinID,
 
     unsigned IDD;
     switch (BuiltinID) {
-      case K1C::BI__builtin_k1_wfxl:
-        IDD = Intrinsic::k1c_wfxl;
+      case KVX::BI__builtin_k1_wfxl:
+        IDD = Intrinsic::kvx_wfxl;
         break;
-      case K1C::BI__builtin_k1_wfxm:
-        IDD = Intrinsic::k1c_wfxm;
+      case KVX::BI__builtin_k1_wfxm:
+        IDD = Intrinsic::kvx_wfxm;
         break;
-      case K1C::BI__builtin_k1_set:
-        IDD = Intrinsic::k1c_set;
+      case KVX::BI__builtin_k1_set:
+        IDD = Intrinsic::kvx_set;
         break;
     default:
-      llvm_unreachable("missing K1C intrinsics");
+      llvm_unreachable("missing KVX intrinsics");
     }
 
     Value *Callee = CGM.getIntrinsic(IDD);
     return Builder.CreateCall(Callee, {A1, A2});
   }
 
-  case K1C::BI__builtin_k1_acswapw: {
+  case KVX::BI__builtin_k1_acswapw: {
     SourceLocation Loc = E->getExprLoc();
     Value *Addr = Builder.CreateBitCast(EmitScalarExpr(E->getArg(0)), Int8PtrTy);
     Value *Expect = EmitScalarConversion(EmitScalarExpr(E->getArg(1)),
@@ -13650,18 +13650,18 @@ Value *CodeGenFunction::EmitK1CBuiltinExpr(unsigned BuiltinID,
     Value *Update =
       EmitScalarConversion(EmitScalarExpr(E->getArg(2)),
                            E->getArg(2)->getType(), getContext().IntTy, Loc);
-    Value *Callee = CGM.getIntrinsic(Intrinsic::k1c_acswapw);
+    Value *Callee = CGM.getIntrinsic(Intrinsic::kvx_acswapw);
     return Builder.CreateCall(Callee, {Addr, Expect, Update});
   }
 
-  case K1C::BI__builtin_k1_lwzu: {
+  case KVX::BI__builtin_k1_lwzu: {
     Value* Addr = EmitScalarExpr(E->getArg(0));
     Value* Bitcast = Builder.CreateBitCast(Addr, Int8PtrTy);
-    Value *Callee = CGM.getIntrinsic(Intrinsic::k1c_lwzu);
+    Value *Callee = CGM.getIntrinsic(Intrinsic::kvx_lwzu);
     return Builder.CreateZExtOrBitCast(Builder.CreateCall(Callee, {Bitcast}), ConvertType(E->getType()));
   }
 
-  case K1C::BI__builtin_k1_sbmm8: {
+  case KVX::BI__builtin_k1_sbmm8: {
     SourceLocation Loc = E->getExprLoc();
     Value *A1 =
         EmitScalarConversion(EmitScalarExpr(E->getArg(0)),
@@ -13670,135 +13670,135 @@ Value *CodeGenFunction::EmitK1CBuiltinExpr(unsigned BuiltinID,
                                      E->getArg(1)->getType(),
                                      getContext().UnsignedLongLongTy, Loc);
 
-    Value *Callee = CGM.getIntrinsic(Intrinsic::k1c_sbmm8);
+    Value *Callee = CGM.getIntrinsic(Intrinsic::kvx_sbmm8);
     return Builder.CreateCall(Callee, {A1, A2});
   }
 
-  case K1C::BI__builtin_k1_fabswp:
-    return emitUnaryBuiltin(*this, E, Intrinsic::k1c_fabswp);
+  case KVX::BI__builtin_k1_fabswp:
+    return emitUnaryBuiltin(*this, E, Intrinsic::kvx_fabswp);
 
-  case K1C::BI__builtin_k1_fabswq:
-    return emitUnaryBuiltin(*this, E, Intrinsic::k1c_fabswq);
+  case KVX::BI__builtin_k1_fabswq:
+    return emitUnaryBuiltin(*this, E, Intrinsic::kvx_fabswq);
 
-  case K1C::BI__builtin_k1_fabsdp:
-    return emitUnaryBuiltin(*this, E, Intrinsic::k1c_fabsdp);
+  case KVX::BI__builtin_k1_fabsdp:
+    return emitUnaryBuiltin(*this, E, Intrinsic::kvx_fabsdp);
 
-  case K1C::BI__builtin_k1_fnegwp:
-    return emitUnaryBuiltin(*this, E, Intrinsic::k1c_fnegwp);
+  case KVX::BI__builtin_k1_fnegwp:
+    return emitUnaryBuiltin(*this, E, Intrinsic::kvx_fnegwp);
 
-  case K1C::BI__builtin_k1_fnegwq:
-    return emitUnaryBuiltin(*this, E, Intrinsic::k1c_fnegwq);
+  case KVX::BI__builtin_k1_fnegwq:
+    return emitUnaryBuiltin(*this, E, Intrinsic::kvx_fnegwq);
 
-  case K1C::BI__builtin_k1_fnegdp:
-    return emitUnaryBuiltin(*this, E, Intrinsic::k1c_fnegdp);
+  case KVX::BI__builtin_k1_fnegdp:
+    return emitUnaryBuiltin(*this, E, Intrinsic::kvx_fnegdp);
 
-  case K1C::BI__builtin_k1_fmaxwp:
-    return emitBinaryBuiltin(*this, E, Intrinsic::k1c_fmaxwp);
+  case KVX::BI__builtin_k1_fmaxwp:
+    return emitBinaryBuiltin(*this, E, Intrinsic::kvx_fmaxwp);
 
-  case K1C::BI__builtin_k1_fmaxwq:
-    return emitBinaryBuiltin(*this, E, Intrinsic::k1c_fmaxwq);
+  case KVX::BI__builtin_k1_fmaxwq:
+    return emitBinaryBuiltin(*this, E, Intrinsic::kvx_fmaxwq);
 
-  case K1C::BI__builtin_k1_fmaxdp:
-    return emitBinaryBuiltin(*this, E, Intrinsic::k1c_fmaxdp);
+  case KVX::BI__builtin_k1_fmaxdp:
+    return emitBinaryBuiltin(*this, E, Intrinsic::kvx_fmaxdp);
 
-  case K1C::BI__builtin_k1_fminwp:
-    return emitBinaryBuiltin(*this, E, Intrinsic::k1c_fminwp);
+  case KVX::BI__builtin_k1_fminwp:
+    return emitBinaryBuiltin(*this, E, Intrinsic::kvx_fminwp);
 
-  case K1C::BI__builtin_k1_fminwq:
-    return emitBinaryBuiltin(*this, E, Intrinsic::k1c_fminwq);
+  case KVX::BI__builtin_k1_fminwq:
+    return emitBinaryBuiltin(*this, E, Intrinsic::kvx_fminwq);
 
-  case K1C::BI__builtin_k1_fmindp:
-    return emitBinaryBuiltin(*this, E, Intrinsic::k1c_fmindp);
+  case KVX::BI__builtin_k1_fmindp:
+    return emitBinaryBuiltin(*this, E, Intrinsic::kvx_fmindp);
 
-  case K1C::BI__builtin_k1_faddwp:
-    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_faddwp);
+  case KVX::BI__builtin_k1_faddwp:
+    return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_faddwp);
 
-  case K1C::BI__builtin_k1_faddcwc:
-    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_faddcwc);
+  case KVX::BI__builtin_k1_faddcwc:
+    return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_faddcwc);
 
-  case K1C::BI__builtin_k1_faddwq:
-    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_faddwq);
+  case KVX::BI__builtin_k1_faddwq:
+    return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_faddwq);
 
-  case K1C::BI__builtin_k1_faddcwcp:
-    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_faddcwcp);
+  case KVX::BI__builtin_k1_faddcwcp:
+    return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_faddcwcp);
 
-  case K1C::BI__builtin_k1_fadddp:
-    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_fadddp);
+  case KVX::BI__builtin_k1_fadddp:
+    return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_fadddp);
 
-  case K1C::BI__builtin_k1_faddcdc:
-    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_faddcdc);
+  case KVX::BI__builtin_k1_faddcdc:
+    return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_faddcdc);
 
-  case K1C::BI__builtin_k1_fsbfwp:
-    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_fsbfwp);
+  case KVX::BI__builtin_k1_fsbfwp:
+    return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_fsbfwp);
 
-  case K1C::BI__builtin_k1_fsbfcwc:
-    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_fsbfcwc);
+  case KVX::BI__builtin_k1_fsbfcwc:
+    return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_fsbfcwc);
 
-  case K1C::BI__builtin_k1_fsbfwq:
-    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_fsbfwq);
+  case KVX::BI__builtin_k1_fsbfwq:
+    return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_fsbfwq);
 
-  case K1C::BI__builtin_k1_fsbfcwcp:
-    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_fsbfcwcp);
+  case KVX::BI__builtin_k1_fsbfcwcp:
+    return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_fsbfcwcp);
 
-  case K1C::BI__builtin_k1_fsbfdp:
-    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_fsbfdp);
+  case KVX::BI__builtin_k1_fsbfdp:
+    return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_fsbfdp);
 
-  case K1C::BI__builtin_k1_fsbfcdc:
-    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_fsbfcdc);
+  case KVX::BI__builtin_k1_fsbfcdc:
+    return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_fsbfcdc);
 
-  case K1C::BI__builtin_k1_fmulwp:
-    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_fmulwp);
+  case KVX::BI__builtin_k1_fmulwp:
+    return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_fmulwp);
 
-  case K1C::BI__builtin_k1_fmulwc:
-    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_fmulwc);
+  case KVX::BI__builtin_k1_fmulwc:
+    return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_fmulwc);
 
-  case K1C::BI__builtin_k1_fmulcwc:
-    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_fmulcwc);
+  case KVX::BI__builtin_k1_fmulcwc:
+    return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_fmulcwc);
 
-  case K1C::BI__builtin_k1_fmulwq:
-    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_fmulwq);
+  case KVX::BI__builtin_k1_fmulwq:
+    return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_fmulwq);
 
-  case K1C::BI__builtin_k1_fmulwcp:
-    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_fmulwcp);
+  case KVX::BI__builtin_k1_fmulwcp:
+    return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_fmulwcp);
 
-  case K1C::BI__builtin_k1_fmulcwcp:
-    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_fmulcwcp);
+  case KVX::BI__builtin_k1_fmulcwcp:
+    return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_fmulcwcp);
 
-  case K1C::BI__builtin_k1_fmuldp:
-    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_fmuldp);
+  case KVX::BI__builtin_k1_fmuldp:
+    return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_fmuldp);
 
-  case K1C::BI__builtin_k1_fmuldc:
-    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_fmuldc);
+  case KVX::BI__builtin_k1_fmuldc:
+    return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_fmuldc);
 
-  case K1C::BI__builtin_k1_fmulcdc:
-    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_fmulcdc);
+  case KVX::BI__builtin_k1_fmulcdc:
+    return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_fmulcdc);
 
-  case K1C::BI__builtin_k1_fmm2wq:
-    return K1C_emitBinaryRoundingBuiltin(*this, E, Intrinsic::k1c_fmm2wq);
+  case KVX::BI__builtin_k1_fmm2wq:
+    return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_fmm2wq);
 
-  case K1C::BI__builtin_k1_ffmawp:
-    return K1C_emitTernaryRoundingBuiltin(*this, E, Intrinsic::k1c_ffmawp);
+  case KVX::BI__builtin_k1_ffmawp:
+    return KVX_emitTernaryRoundingBuiltin(*this, E, Intrinsic::kvx_ffmawp);
 
-  case K1C::BI__builtin_k1_ffmawq:
-    return K1C_emitTernaryRoundingBuiltin(*this, E, Intrinsic::k1c_ffmawq);
+  case KVX::BI__builtin_k1_ffmawq:
+    return KVX_emitTernaryRoundingBuiltin(*this, E, Intrinsic::kvx_ffmawq);
 
-  case K1C::BI__builtin_k1_ffmadp:
-    return K1C_emitTernaryRoundingBuiltin(*this, E, Intrinsic::k1c_ffmadp);
+  case KVX::BI__builtin_k1_ffmadp:
+    return KVX_emitTernaryRoundingBuiltin(*this, E, Intrinsic::kvx_ffmadp);
 
-  case K1C::BI__builtin_k1_fmm2awq:
-    return K1C_emitTernaryRoundingBuiltin(*this, E, Intrinsic::k1c_fmm2awq);
+  case KVX::BI__builtin_k1_fmm2awq:
+    return KVX_emitTernaryRoundingBuiltin(*this, E, Intrinsic::kvx_fmm2awq);
 
-  case K1C::BI__builtin_k1_ffmswp:
-    return K1C_emitTernaryRoundingBuiltin(*this, E, Intrinsic::k1c_ffmswp);
+  case KVX::BI__builtin_k1_ffmswp:
+    return KVX_emitTernaryRoundingBuiltin(*this, E, Intrinsic::kvx_ffmswp);
 
-  case K1C::BI__builtin_k1_ffmswq:
-    return K1C_emitTernaryRoundingBuiltin(*this, E, Intrinsic::k1c_ffmswq);
+  case KVX::BI__builtin_k1_ffmswq:
+    return KVX_emitTernaryRoundingBuiltin(*this, E, Intrinsic::kvx_ffmswq);
 
-  case K1C::BI__builtin_k1_ffmsdp:
-    return K1C_emitTernaryRoundingBuiltin(*this, E, Intrinsic::k1c_ffmsdp);
+  case KVX::BI__builtin_k1_ffmsdp:
+    return KVX_emitTernaryRoundingBuiltin(*this, E, Intrinsic::kvx_ffmsdp);
 
-  case K1C::BI__builtin_k1_fmm2swq:
-    return K1C_emitTernaryRoundingBuiltin(*this, E, Intrinsic::k1c_fmm2swq);
+  case KVX::BI__builtin_k1_fmm2swq:
+    return KVX_emitTernaryRoundingBuiltin(*this, E, Intrinsic::kvx_fmm2swq);
   }
   return nullptr;
 }

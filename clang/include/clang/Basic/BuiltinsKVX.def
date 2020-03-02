@@ -1,0 +1,107 @@
+//===-- BuiltinsKVX.def - KVX Builtin function database ----------*- C++ -*-==//
+//
+//                     The LLVM Compiler Infrastructure
+//
+// This file is distributed under the University of Illinois Open Source
+// License. See LICENSE.TXT for details.
+//
+//===----------------------------------------------------------------------===//
+//
+// This file defines the KVX-specific builtin function database. Users of
+// this file must define the BUILTIN macro to make use of this information.
+//
+//===----------------------------------------------------------------------===//
+
+// The format of this database matches clang/Basic/Builtins.def.
+
+// This file was automatically generated, DO NOT EDIT.
+// Last generated: 2018-10-17 13:24:46.083693.
+
+BUILTIN(__builtin_k1_set_ps, "vii", "")
+BUILTIN(__builtin_k1_syncgroup, "vUi", "")
+BUILTIN(__builtin_k1_insf, "ULiULiUiUi", "")
+BUILTIN(__builtin_k1_extfz, "ULiULiUiUi", "")
+BUILTIN(__builtin_k1_extfs, "LiULiUiUi", "")
+BUILTIN(__builtin_k1_stsuw, "iii", "")
+BUILTIN(__builtin_k1_abdw, "iii", "")
+BUILTIN(__builtin_k1_minw, "iii", "")
+BUILTIN(__builtin_k1_minuw, "UiUiUi", "")
+BUILTIN(__builtin_k1_maxw, "iii", "")
+BUILTIN(__builtin_k1_maxuw, "UiUiUi", "")
+BUILTIN(__builtin_k1_absw, "ii", "")
+BUILTIN(__builtin_k1_sath, "ii", "")
+BUILTIN(__builtin_k1_addsw, "iii", "")
+BUILTIN(__builtin_k1_sbfsw, "iii", "")
+BUILTIN(__builtin_k1_clzw, "UiUi", "")
+BUILTIN(__builtin_k1_clsw, "UiUi", "")
+BUILTIN(__builtin_k1_cbsw, "UiUi", "")
+BUILTIN(__builtin_k1_ctzw, "UiUi", "")
+
+BUILTIN(__builtin_k1_acswapd, "ULLLiv*UWiUWi", "")
+BUILTIN(__builtin_k1_acswapw, "ULiCv*LiLi", "")
+BUILTIN(__builtin_k1_afaddd, "ULLiv*LLi", "")
+BUILTIN(__builtin_k1_afaddw, "ULiv*Li", "")
+BUILTIN(__builtin_k1_alclrd, "ULLiv*", "")
+BUILTIN(__builtin_k1_alclrw, "ULiv*", "")
+BUILTIN(__builtin_k1_fence, "v", "")
+BUILTIN(__builtin_k1_dinval, "v", "")
+BUILTIN(__builtin_k1_stop, "v", "")
+BUILTIN(__builtin_k1_get, "ULLiLi", "")
+BUILTIN(__builtin_k1_set, "vUcULLi", "")
+BUILTIN(__builtin_k1_ldu, "ULLiCv*", "")
+BUILTIN(__builtin_k1_lwzu, "ULiCv*", "")
+BUILTIN(__builtin_k1_wfxl, "vUcULLi", "")
+BUILTIN(__builtin_k1_wfxm, "vUcULLi", "")
+BUILTIN(__builtin_k1_sbmm8, "ULLiiULLi", "")
+
+BUILTIN(__builtin_k1_fabswp, "V2fV2f", "")
+BUILTIN(__builtin_k1_fabswq, "V4fV4f", "")
+BUILTIN(__builtin_k1_fabsdp, "V2dV2d", "")
+
+BUILTIN(__builtin_k1_fnegwp, "V2fV2f", "")
+BUILTIN(__builtin_k1_fnegwq, "V4fV4f", "")
+BUILTIN(__builtin_k1_fnegdp, "V2dV2d", "")
+
+BUILTIN(__builtin_k1_fmaxwp, "V2fV2fV2f", "")
+BUILTIN(__builtin_k1_fmaxwq, "V4fV4fV4f", "")
+BUILTIN(__builtin_k1_fmaxdp, "V2dV2dV2d", "")
+
+BUILTIN(__builtin_k1_fminwp, "V2fV2fV2f", "")
+BUILTIN(__builtin_k1_fminwq, "V4fV4fV4f", "")
+BUILTIN(__builtin_k1_fmindp, "V2dV2dV2d", "")
+
+BUILTIN(__builtin_k1_faddwp, "V2fV2fV2fCc*", "")
+BUILTIN(__builtin_k1_faddcwc, "V2fV2fV2fCc*", "")
+BUILTIN(__builtin_k1_faddwq, "V4fV4fV4fCc*", "")
+BUILTIN(__builtin_k1_faddcwcp, "V4fV4fV4fCc*", "")
+BUILTIN(__builtin_k1_fadddp, "V2dV2dV2dCc*", "")
+BUILTIN(__builtin_k1_faddcdc, "V2dV2dV2dCc*", "")
+
+BUILTIN(__builtin_k1_fsbfwp, "V2fV2fV2fCc*", "")
+BUILTIN(__builtin_k1_fsbfcwc, "V2fV2fV2fCc*", "")
+BUILTIN(__builtin_k1_fsbfwq, "V4fV4fV4fCc*", "")
+BUILTIN(__builtin_k1_fsbfcwcp, "V4fV4fV4fCc*", "")
+BUILTIN(__builtin_k1_fsbfdp, "V2dV2dV2dCc*", "")
+BUILTIN(__builtin_k1_fsbfcdc, "V2dV2dV2dCc*", "")
+
+BUILTIN(__builtin_k1_fmulwp, "V2fV2fV2fCc*", "")
+BUILTIN(__builtin_k1_fmulwc, "V2fV2fV2fCc*", "")
+BUILTIN(__builtin_k1_fmulcwc, "V2fV2fV2fCc*", "")
+BUILTIN(__builtin_k1_fmulwq, "V4fV4fV4fCc*", "")
+BUILTIN(__builtin_k1_fmulwcp, "V4fV4fV4fCc*", "")
+BUILTIN(__builtin_k1_fmulcwcp, "V4fV4fV4fCc*", "")
+BUILTIN(__builtin_k1_fmuldp, "V2dV2dV2dCc*", "")
+BUILTIN(__builtin_k1_fmuldc, "V2dV2dV2dCc*", "")
+BUILTIN(__builtin_k1_fmulcdc, "V2dV2dV2dCc*", "")
+
+BUILTIN(__builtin_k1_fmm2wq, "V4fV2fV2fCc*", "")
+BUILTIN(__builtin_k1_ffmawp, "V2fV2fV2fV2fCc*", "")
+BUILTIN(__builtin_k1_ffmawq, "V4fV4fV4fV4fCc*", "")
+BUILTIN(__builtin_k1_ffmadp, "V2dV2dV2dV2dCc*", "")
+BUILTIN(__builtin_k1_fmm2awq, "V4fV2fV2fV4fCc*", "")
+BUILTIN(__builtin_k1_ffmswp, "V2fV2fV2fV2fCc*", "")
+BUILTIN(__builtin_k1_ffmswq, "V4fV4fV4fV4fCc*", "")
+BUILTIN(__builtin_k1_ffmsdp, "V2dV2dV2dV2dCc*", "")
+BUILTIN(__builtin_k1_fmm2swq, "V4fV2fV2fV4fCc*", "")
+
+#undef BUILTIN

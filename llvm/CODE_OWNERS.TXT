@@ -204,7 +204,7 @@ D: MemorySanitizer (LLVM part)
 
 N: Laurent Thevenoux
 E: lthevenoux@kalray.eu
-D: K1C Backend
+D: KVX Backend
 
 N: Craig Topper
 E: craig.topper@gmail.com
