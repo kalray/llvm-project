@@ -320,12 +320,12 @@ namespace clang {
     };
   }
 
-  /// K1C builtins
-  namespace K1C {
+  /// KVX builtins
+  namespace KVX {
     enum {
       LastTIBuiltin = clang::Builtin::FirstTSBuiltin - 1,
 #define BUILTIN(ID, TYPE, ATTRS) BI##ID,
-#include "clang/Basic/BuiltinsK1C.def"
+#include "clang/Basic/BuiltinsKVX.def"
       LastTSBuiltin
     };
   }
@@ -336,7 +336,7 @@ namespace clang {
        NVPTX::LastTSBuiltin, AMDGPU::LastTSBuiltin, X86::LastTSBuiltin,
        Hexagon::LastTSBuiltin, Mips::LastTSBuiltin, XCore::LastTSBuiltin,
        Le64::LastTSBuiltin, SystemZ::LastTSBuiltin,
-       WebAssembly::LastTSBuiltin, K1C::LastTSBuiltin});
+       WebAssembly::LastTSBuiltin, KVX::LastTSBuiltin});
 
 
 } // end namespace clang.
