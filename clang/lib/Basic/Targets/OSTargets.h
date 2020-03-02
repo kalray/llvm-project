@@ -87,9 +87,10 @@ public:
       : OSTargetInfo<Target>(Triple, Opts) {}
 };
 
-// K1ELF target
+// KVXOSPorting target
 template <typename Target>
-class LLVM_LIBRARY_VISIBILITY K1ELFTargetInfo : public OSTargetInfo<Target> {
+class LLVM_LIBRARY_VISIBILITY KVXOSPortingTargetInfo
+    : public OSTargetInfo<Target> {
 protected:
   void getOSDefines(const LangOptions &Opts, const llvm::Triple &Triple,
                     MacroBuilder &Builder) const override {
@@ -98,7 +99,7 @@ protected:
   }
 
 public:
-  K1ELFTargetInfo(const llvm::Triple &Triple, const TargetOptions &Opts)
+  KVXOSPortingTargetInfo(const llvm::Triple &Triple, const TargetOptions &Opts)
       : OSTargetInfo<Target>(Triple, Opts) {}
 };
 
