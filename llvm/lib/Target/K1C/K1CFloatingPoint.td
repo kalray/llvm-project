@@ -77,6 +77,8 @@ def : BITCAST<i64, v4f16, SingleReg>;
 def : BITCAST<v4f16, i64, SingleReg>;
 def : BITCAST<v2i32, v4f16, SingleReg>;
 def : BITCAST<v4f16, v2i32, SingleReg>;
+def : BITCAST<v4i16, v4f16, SingleReg>;
+def : BITCAST<v4f16, v4i16, SingleReg>;
 
 // 128 bits
 def : BITCAST<v2i64, v4f32, PairedReg>;
