@@ -137,6 +137,8 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::AND, MVT::v8i8, Expand);
   setOperationAction(ISD::OR, MVT::v8i8, Expand);
   setOperationAction(ISD::XOR, MVT::v8i8, Expand);
+  setOperationAction(ISD::ROTL, MVT::v8i8, Expand);
+  setOperationAction(ISD::ROTR, MVT::v8i8, Expand);
 
   setOperationAction(ISD::SIGN_EXTEND, MVT::v2i64, Expand);
   setOperationAction(ISD::ANY_EXTEND, MVT::v2i64, Expand);
