@@ -33,7 +33,7 @@ double foo(int n, int th)
 
 int main(int argc, char *argv[])
 {
-#if defined(_WIN32)
+#if defined(_WIN32) || defined(__kvx__)
   // don't test Windows
   printf("stack propagation not implemented, skipping test...\n");
   return 0;
