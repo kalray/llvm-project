@@ -1275,6 +1275,51 @@ static bool expandLoad(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   return true;
 }
 
+static bool expandMADDW(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
+                        MachineBasicBlock::iterator MBBI) {
+  MachineInstr &MI = *MBBI;
+  DebugLoc DL = MI.getDebugLoc();
+
+  unsigned outputReg = MI.getOperand(0).getReg();
+  unsigned aReg = MI.getOperand(1).getReg();
+  unsigned bReg = MI.getOperand(2).getReg();
+  unsigned cReg = 0;
+  int64_t cVal;
+  if (MI.getOperand(3).isReg())
+    cReg = MI.getOperand(3).getReg();
+  else
+    cVal = MI.getOperand(3).getImm();
+
+  if (outputReg == aReg) {
+    if (cReg != 0)
+      BuildMI(MBB, MBBI, DL, TII->get(KVX::MADDWrr), outputReg)
+          .addReg(outputReg)
+          .addReg(bReg)
+          .addReg(cReg);
+    else
+      BuildMI(MBB, MBBI, DL, TII->get(KVX::MADDWri), outputReg)
+          .addReg(outputReg)
+          .addReg(bReg)
+          .addImm(cVal);
+  } else {
+    if (cReg != 0)
+      BuildMI(MBB, MBBI, DL, TII->get(KVX::MULWrr), outputReg)
+          .addReg(bReg)
+          .addReg(cReg);
+    else
+      BuildMI(MBB, MBBI, DL, TII->get(KVX::MULWri), outputReg)
+          .addReg(bReg)
+          .addImm(cVal);
+
+    BuildMI(MBB, MBBI, DL, TII->get(KVX::ADDWrr), outputReg)
+        .addReg(aReg)
+        .addReg(outputReg);
+  }
+
+  MI.eraseFromParent();
+  return true;
+}
+
 bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
                                MachineBasicBlock::iterator MBBI,
                                MachineBasicBlock::iterator &NextMBBI) {
@@ -1416,6 +1461,9 @@ bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
   case KVX::LQp:
   case KVX::LOp:
     expandLoad(TII, MBB, MBBI);
+    return true;
+  case KVX::MADDWp:
+    expandMADDW(TII, MBB, MBBI);
     return true;
 
   default:
