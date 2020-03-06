@@ -195,6 +195,14 @@ def : Pat<(add i64:$rs1, Wrapped64:$rs2), (ADDDri64 SingleReg:$rs1, Wrapped64:$r
 def : Pat<(add v2i16:$rs1, v2i16:$rs2), (ADDHQrr SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(add v4i16:$rs1, v4i16:$rs2), (ADDHQrr SingleReg:$rs1, SingleReg:$rs2)>;
 
+def MADDWp : KVX_PSEUDO<(outs SingleReg:$out), (ins SingleReg:$a, SingleReg:$b, SingleReg:$c), []>;
+
+def : Pat<(add i32:$a, (mul i32:$b, i32:$c)), (MADDWp SingleReg:$a, SingleReg:$b, SingleReg:$c)>;
+def : Pat<(add (mul i32:$a, i32:$b), i32:$c), (MADDWp SingleReg:$c, SingleReg:$a, SingleReg:$b)>;
+
+def : Pat<(add i32:$a, (mul i32:$b, Wrapped32:$c)), (MADDWp SingleReg:$a, SingleReg:$b, Wrapped32:$c)>;
+def : Pat<(add (mul i32:$a, Wrapped32:$b), i32:$c), (MADDWp SingleReg:$c, SingleReg:$a, Wrapped32:$b)>;
+
 // ADDW
 def : Pat<(add i32:$rs1, i32:$rs2), (ADDWrr SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(add i32:$rs1, Signed10W:$rs2), (ADDWri10 SingleReg:$rs1, Signed10W:$rs2)>;
