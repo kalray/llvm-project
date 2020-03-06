@@ -877,34 +877,6 @@ static bool expandSystemRegValueInstr(unsigned int Opcode,
   return true;
 }
 
-static bool expandSBMM8Instr(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
-                             MachineBasicBlock::iterator MBBI) {
-  MachineInstr &MI = *MBBI;
-  DebugLoc DL = MI.getDebugLoc();
-
-  unsigned outReg = MI.getOperand(0).getReg();
-  unsigned inReg = MI.getOperand(1).getReg();
-
-  if (MI.getOperand(2).isReg()) {
-    unsigned valReg = MI.getOperand(2).getReg();
-
-    BuildMI(MBB, MBBI, DL, TII->get(KVX::SBMM8rr), outReg).addReg(inReg).addReg(
-        valReg);
-  } else {
-    int64_t imm = MI.getOperand(2).getImm();
-
-    BuildMI(MBB, MBBI, DL,
-            TII->get(GetImmOpCode(imm, KVX::SBMM8ri10, KVX::SBMM8ri37,
-                                  KVX::SBMM8ri64)),
-            outReg)
-        .addReg(inReg)
-        .addImm(imm);
-  }
-
-  MI.eraseFromParent();
-  return true;
-}
-
 static bool expandUnaryPairedRegInstrOpcode(unsigned int OpCode,
                                             const KVXInstrInfo *TII,
                                             MachineBasicBlock &MBB,
@@ -1373,10 +1345,6 @@ bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
     return true;
   case KVX::SET_Instr:
     expandSystemRegValueInstr(KVX::SETrst4, TII, MBB, MBBI);
-    return true;
-  case KVX::SBMM8rr_Instr:
-  case KVX::SBMM8ri_Instr:
-    expandSBMM8Instr(TII, MBB, MBBI);
     return true;
   case KVX::FABSWQ_Instr:
     expandUnaryPairedRegInstrOpcode(KVX::FABSWP, TII, MBB, MBBI);
