@@ -74,7 +74,7 @@ def SDTKVXTail : SDTypeProfile<0, -1, [SDTCisVT<0, i64>]>;
 
 def KVXWrapper : SDNode<"KVXISD::WRAPPER", SDTKVXWrapper>;
 
-def SDT_KVXSelectCC : SDTypeProfile<1, 3, [SDTCisVT<0, i32>, SDTCisVT<1, i64>]>;
+def SDT_KVXSelectCC : SDTypeProfile<1, 3, [SDTCisVT<0, i32>]>;
 
 def SelectCC : SDNode<"KVXISD::SELECT_CC", SDT_KVXSelectCC, []>;
 
@@ -351,26 +351,29 @@ def Select64p : KVX_PSEUDO<(outs SingleReg:$dst, SingleReg:$scratch),
 
 multiclass Select32PAT<SDNode ntrue, SDNode nfalse, SDNode itrue, SDNode ifalse>
 {
-        def : Pat<(SelectCC (seteq i32:$val, (i32 0)), ntrue, nfalse),
+        def : Pat<(SelectCC (i32 (seteq i32:$val, (i32 0))), ntrue, nfalse),
                 (Select32p SingleReg:$val, itrue, ifalse, scalarcond_weqz)>;
 
-        def : Pat<(SelectCC (setne i32:$val, (i32 0)), ntrue, nfalse),
+        def : Pat<(SelectCC (i32 (setne i32:$val, (i32 0))), ntrue, nfalse),
                 (Select32p SingleReg:$val, itrue, ifalse, scalarcond_wnez)>;
 
-        def : Pat<(SelectCC (setlt i32:$val, (i32 0)), ntrue, nfalse),
+        def : Pat<(SelectCC (i32 (setlt i32:$val, (i32 0))), ntrue, nfalse),
                 (Select32p SingleReg:$val, itrue, ifalse, scalarcond_wltz)>;
 
-        def : Pat<(SelectCC (setgt i32:$val, (i32 -1)), ntrue, nfalse),
+        def : Pat<(SelectCC (i32 (setgt i32:$val, (i32 -1))), ntrue, nfalse),
                 (Select32p SingleReg:$val, itrue, ifalse, scalarcond_wgez)>;
 
-        def : Pat<(SelectCC (setlt i32:$val, (i32 1)), ntrue, nfalse),
+        def : Pat<(SelectCC (i32 (setlt i32:$val, (i32 1))), ntrue, nfalse),
                 (Select32p SingleReg:$val, itrue, ifalse, scalarcond_wlez)>;
 
-        def : Pat<(SelectCC (setgt i32:$val, (i32 0)), ntrue, nfalse),
+        def : Pat<(SelectCC (i32 (setgt i32:$val, (i32 0))), ntrue, nfalse),
                 (Select32p SingleReg:$val, itrue, ifalse, scalarcond_wgtz)>;
 
-        def : Pat<(SelectCC (seteq (and i32:$val, (i32 1)), (i32 0)), ntrue, nfalse),
+        def : Pat<(SelectCC (i32 (seteq (and i32:$val, (i32 1)), (i32 0))), ntrue, nfalse),
                 (Select32p SingleReg:$val, itrue, ifalse, scalarcond_even)>;
+
+        def : Pat<(SelectCC i32:$cmp, ntrue, nfalse),
+                (Select32p SingleReg:$cmp, itrue, ifalse, scalarcond_wnez)>;
 }
 
 defm : Select32PAT<(i32 i32:$truev), (i32 i32:$falsev), (i32 Wrapped32:$truev), (i32 Wrapped32:$falsev)>;
@@ -379,25 +382,25 @@ defm : Select32PAT<(KVXWrapper tglobaladdr:$truev), (KVXWrapper tglobaladdr:$fal
 
 multiclass Select64PAT<SDNode ntrue, SDNode nfalse, SDNode itrue, SDNode ifalse>
 {
-        def : Pat<(SelectCC (seteq i64:$val, (i64 0)), ntrue, nfalse),
+        def : Pat<(SelectCC (i32 (seteq i64:$val, (i64 0))), ntrue, nfalse),
                 (Select64p SingleReg:$val, itrue, ifalse, scalarcond_deqz)>;
 
-        def : Pat<(SelectCC (setne i64:$val, (i64 0)), ntrue, nfalse),
+        def : Pat<(SelectCC (i32 (setne i64:$val, (i64 0))), ntrue, nfalse),
                 (Select64p SingleReg:$val, itrue, ifalse, scalarcond_dnez)>;
 
-        def : Pat<(SelectCC (setlt i64:$val, (i64 0)), ntrue, nfalse),
+        def : Pat<(SelectCC (i32 (setlt i64:$val, (i64 0))), ntrue, nfalse),
                 (Select64p SingleReg:$val, itrue, ifalse, scalarcond_dltz)>;
 
-        def : Pat<(SelectCC (setgt i64:$val, (i64 -1)), ntrue, nfalse),
+        def : Pat<(SelectCC (i32 (setgt i64:$val, (i64 -1))), ntrue, nfalse),
                 (Select64p SingleReg:$val, itrue, ifalse, scalarcond_dgez)>;
 
-        def : Pat<(SelectCC (setlt i64:$val, (i64 1)), ntrue, nfalse),
+        def : Pat<(SelectCC (i32 (setlt i64:$val, (i64 1))), ntrue, nfalse),
                 (Select64p SingleReg:$val, itrue, ifalse, scalarcond_dlez)>;
 
-        def : Pat<(SelectCC (setgt i64:$val, (i64 0)), ntrue, nfalse),
+        def : Pat<(SelectCC (i32 (setgt i64:$val, (i64 0))), ntrue, nfalse),
                 (Select64p SingleReg:$val, itrue, ifalse, scalarcond_dgtz)>;
 
-        def : Pat<(SelectCC (seteq (and i64:$val, (i64 1)), (i64 0)), ntrue, nfalse),
+        def : Pat<(SelectCC (i32 (seteq (and i64:$val, (i64 1)), (i64 0))), ntrue, nfalse),
                 (Select64p SingleReg:$val, itrue, ifalse, scalarcond_even)>;
 
         def : Pat<(SelectCC i64:$cmp, ntrue, nfalse),

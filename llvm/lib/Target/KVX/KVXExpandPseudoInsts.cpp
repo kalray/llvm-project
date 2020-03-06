@@ -136,15 +136,13 @@ static bool expandSelectInstr(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
       Reg = MI.getOperand(3).getReg();
       InsertCMOVEInstr(TII, MBB, MBBI, CmpReg, Reg, 4, InvCond);
     } else {
-      unsigned opCode;
       unsigned DestCompReg = Word ? DestReg : ScratchReg;
       if (Word) // use SXWD as cheap copy
         BuildMI(MBB, MBBI, DL, TII->get(KVX::SXWD), ScratchReg).addReg(CmpReg);
       if (MI.getOperand(3).isImm()) {
         int64_t immVal = MI.getOperand(3).getImm();
-        // FIXME: GetImmOpCode is not OK with MAKE
-        opCode = GetImmOpCode(immVal, KVX::MAKEi16, KVX::MAKEi43, KVX::MAKEi64);
-        BuildMI(MBB, MBBI, DL, TII->get(opCode), DestCompReg).addImm(immVal);
+        BuildMI(MBB, MBBI, DL, TII->get(GetImmMakeOpCode(immVal)), DestCompReg)
+            .addImm(immVal);
       }
       if (MI.getOperand(3).isFPImm()) {
         int64_t immVal = MI.getOperand(3)
@@ -152,9 +150,8 @@ static bool expandSelectInstr(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
                              ->getValueAPF()
                              .bitcastToAPInt()
                              .getZExtValue();
-        // FIXME: GetImmOpCode is not OK with MAKE
-        opCode = GetImmOpCode(immVal, KVX::MAKEi16, KVX::MAKEi43, KVX::MAKEi64);
-        BuildMI(MBB, MBBI, DL, TII->get(opCode), DestCompReg).addImm(immVal);
+        BuildMI(MBB, MBBI, DL, TII->get(GetImmMakeOpCode(immVal)), DestCompReg)
+            .addImm(immVal);
       }
       if (MI.getOperand(3).isGlobal()) {
         BuildMI(MBB, MBBI, DL, TII->get(KVX::MAKEi64), DestCompReg)
