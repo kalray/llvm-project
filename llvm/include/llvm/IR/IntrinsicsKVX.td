@@ -2,6 +2,7 @@ let TargetPrefix = "kvx" in {
 
 def int_kvx_dinval : Intrinsic<[], [],[]>;
 def int_kvx_fence : Intrinsic<[], [],[]>;
+def int_kvx_await : Intrinsic<[], [],[]>;
 def int_kvx_stop : GCCBuiltin<"__builtin_k1_stop">, Intrinsic<[], [],[]>;
 def int_kvx_get : Intrinsic<[llvm_i64_ty], [llvm_i32_ty],[IntrReadMem]>;
 def int_kvx_set : Intrinsic<[], [llvm_i32_ty, llvm_i64_ty], []>;
@@ -9,6 +10,8 @@ def int_kvx_wfxl : Intrinsic<[], [llvm_i32_ty, llvm_i64_ty], []>;
 def int_kvx_wfxm : Intrinsic<[], [llvm_i32_ty, llvm_i64_ty], []>;
 def int_kvx_sbmm8 : Intrinsic<[llvm_i64_ty], [llvm_i32_ty, llvm_i64_ty], []>;
 
+def int_kvx_lbzu: Intrinsic<[llvm_i32_ty], [llvm_ptr_ty], [IntrReadMem]>;
+def int_kvx_lhzu: Intrinsic<[llvm_i32_ty], [llvm_ptr_ty], [IntrReadMem]>;
 def int_kvx_lwzu: Intrinsic<[llvm_i32_ty], [llvm_ptr_ty], [IntrReadMem]>;
 def int_kvx_acswapw: Intrinsic<[llvm_i32_ty], [llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty], []>;
 

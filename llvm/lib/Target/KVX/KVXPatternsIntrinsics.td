@@ -1,3 +1,4 @@
+def: Pat<(int_kvx_await), (AWAIT)>;
 def: Pat<(int_kvx_dinval), (DINVAL)>;
 def: Pat<(int_kvx_fence), (FENCE)>;
 
@@ -16,6 +17,8 @@ def: Pat<(int_kvx_set Sysnumber:$r, i64:$val), (SET_Instr Sysnumber:$r, SingleRe
 def: Pat<(int_kvx_sbmm8 SingleReg:$r, imm:$r2), (SBMM8ri_Instr SingleReg:$r, Wrapped64:$r2)>;
 def: Pat<(int_kvx_sbmm8 SingleReg:$r, SingleReg:$r2), (SBMM8rr_Instr SingleReg:$r, SingleReg:$r2)>;
 
+def: Pat<(int_kvx_lbzu AddrRI:$addr), (LBZp AddrRI:$addr, variant_u)>;
+def: Pat<(int_kvx_lhzu AddrRI:$addr), (LHZp AddrRI:$addr, variant_u)>;
 def: Pat<(int_kvx_lwzu AddrRI:$addr), (LWZp AddrRI:$addr, variant_u)>;
 def: Pat<(int_kvx_acswapw i64:$addr, i32:$expect, i32:$update), (i32 (EXTRACT_SUBREG
   (v2i64 (ACSWAPWri10 (i64 0), SingleReg:$addr, (INSERT_SUBREG (INSERT_SUBREG (v2i64 (IMPLICIT_DEF)),
