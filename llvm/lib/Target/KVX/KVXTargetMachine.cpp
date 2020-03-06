@@ -56,6 +56,15 @@ unsigned llvm::GetImmOpCode(int64_t imm, unsigned i10code, unsigned i37code,
     return i64code;
 }
 
+unsigned llvm::GetImmMakeOpCode(int64_t imm) {
+  if (isInt<16>(imm))
+    return KVX::MAKEi16;
+  else if (isInt<43>(imm))
+    return KVX::MAKEi43;
+  else
+    return KVX::MAKEi64;
+}
+
 static Reloc::Model getEffectiveRelocModel(const Triple &TT,
                                            Optional<Reloc::Model> RM) {
   if (!RM.hasValue())
