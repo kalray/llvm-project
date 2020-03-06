@@ -23,6 +23,7 @@
 #define KMP_OS_DARWIN 0
 #define KMP_OS_WINDOWS 0
 #define KMP_OS_HURD 0
+#define KMP_OS_CLUSTER_OS 0
 #define KMP_OS_UNIX 0 /* disjunction of KMP_OS_LINUX, KMP_OS_DARWIN etc. */
 
 #ifdef _WIN32
@@ -70,8 +71,14 @@
 #define KMP_OS_HURD 1
 #endif
 
+#if (defined __CLUSTER_OS__)
+#undef KMP_OS_CLUSTER_OS
+#define KMP_OS_CLUSTER_OS 1
+#endif
+
 #if (1 != KMP_OS_LINUX + KMP_OS_DRAGONFLY + KMP_OS_FREEBSD + KMP_OS_NETBSD +   \
-              KMP_OS_OPENBSD + KMP_OS_DARWIN + KMP_OS_WINDOWS + KMP_OS_HURD)
+              KMP_OS_OPENBSD + KMP_OS_DARWIN + KMP_OS_WINDOWS + KMP_OS_HURD +   \
+              KMP_OS_CLUSTER_OS)
 #error Unknown OS
 #endif
 
@@ -92,6 +99,14 @@
 #define KMP_ARCH_MIPS 0
 #define KMP_ARCH_MIPS64 0
 #define KMP_ARCH_RISCV64 0
+#define KMP_ARCH_KVX 0
+
+#if KMP_OS_CLUSTER_OS
+#if defined(__KVX__) || defined(__kvx__)
+#undef KMP_ARCH_KVX
+#define KMP_ARCH_KVX 1
+#endif
+#endif
 
 #if KMP_OS_WINDOWS
 #if defined(_M_AMD64) || defined(__x86_64)
@@ -199,7 +214,7 @@
 // TODO: Fixme - This is clever, but really fugly
 #if (1 != KMP_ARCH_X86 + KMP_ARCH_X86_64 + KMP_ARCH_ARM + KMP_ARCH_PPC64 +     \
               KMP_ARCH_AARCH64 + KMP_ARCH_MIPS + KMP_ARCH_MIPS64 +             \
-              KMP_ARCH_RISCV64)
+              KMP_ARCH_RISCV64 + KMP_ARCH_KVX)
 #error Unknown or unsupported architecture
 #endif
 

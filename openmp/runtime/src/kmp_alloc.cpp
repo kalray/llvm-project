@@ -2072,6 +2072,7 @@ alloc_call:
                 "alloc_size %d\n",
                 __kmp_gtid_from_thread(this_thr), alloc_size));
   alloc_ptr = bget(this_thr, (bufsize)alloc_size);
+  KMP_ASSERT(alloc_ptr != NULL);
 
   // align ptr to DCACHE_LINE
   ptr = (void *)((((kmp_uintptr_t)alloc_ptr) + sizeof(kmp_mem_descr_t) +

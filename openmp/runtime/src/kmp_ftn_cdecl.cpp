@@ -17,7 +17,7 @@
 #if defined KMP_WIN_CDECL || !KMP_DYNAMIC_LIB
 #define KMP_FTN_ENTRIES KMP_FTN_UPPER
 #endif
-#elif KMP_OS_UNIX
+#elif KMP_OS_UNIX || KMP_OS_CLUSTER_OS
 #define KMP_FTN_ENTRIES KMP_FTN_PLAIN
 #endif
 

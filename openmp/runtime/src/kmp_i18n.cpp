@@ -69,6 +69,35 @@ void __kmp_i18n_catopen() {
   }
 } // func __kmp_i18n_catopen
 
+#if KMP_OS_CLUSTER_OS
+#define KMP_I18N_OK
+
+// These two functions are currently not used in ClusterOS. Only
+// english language is supported.
+void __kmp_i18n_do_catopen() {}
+
+void __kmp_i18n_catclose() {}
+
+char const *__kmp_i18n_catgets(kmp_i18n_id_t id) {
+  // Comes from part of __kmp_i18n_catgets for UNIX.
+  // Doesn't open any catalog.
+  int section = get_section(id);
+  int number = get_number(id);
+  char const *message = NULL;
+
+  if (1 <= section && section <= __kmp_i18n_default_table.size) {
+    if (1 <= number && number <= __kmp_i18n_default_table.sect[section].size) {
+      message = __kmp_i18n_default_table.sect[section].str[number];
+    }
+  }
+  if (message == NULL) {
+    message = no_message_available;
+  }
+  return message;
+}
+
+#endif
+
 /* Linux* OS and OS X* part */
 #if KMP_OS_UNIX
 #define KMP_I18N_OK
@@ -621,6 +650,45 @@ void __kmp_i18n_dump_catalog(kmp_str_buf_t *buffer) {
 } // __kmp_i18n_dump_catalog
 
 // -----------------------------------------------------------------------------
+
+// Removes the number and the "$" from patterns like: "%1$d", so it will return
+// "%d". Only number from 1 to 9 are treated. So, arguments are always displayed
+// in order of occurences. For example, if the vsnprintf was like :
+// vsnprintf("B: %2$d, A: %1$d", ...), then the
+// first argument displayed will be the value of A instead of B.
+// In our case, this is not a problem, because every arguments are always
+// used in natural order.
+static char *__kmp_COS_format_before_vsnprintf(const char *str_to_format) {
+
+  int idx_str, idx_res;
+  idx_str = idx_res = 0;
+
+  char *result = (char *)calloc((strlen(str_to_format) + 1), sizeof(char));
+
+  // We will search an expression like "%1$d", and replace it by "%d", so we can
+  // stop our research at buffer.size - 1.
+  while (str_to_format[idx_str] != '\0' &&
+         idx_str < (int)(strlen(str_to_format) - 1)) {
+    char current = str_to_format[idx_str];
+    char next = str_to_format[idx_str + 1];
+
+    // Number of arguments used in vsnprintf is not more than 5. We check up to
+    // 9 for future modifications.
+    if ((current >= '1' && current <= '9') && next == '$') {
+      // We skip the number and the $.
+      idx_str += 2;
+    } else {
+      result[idx_res] = str_to_format[idx_str];
+      ++idx_res;
+      ++idx_str;
+    }
+  }
+  // Copying last character.
+  result[idx_res] = str_to_format[idx_str];
+  return result;
+}
+
+// -----------------------------------------------------------------------------
 kmp_msg_t __kmp_msg_format(unsigned id_arg, ...) {
 
   kmp_msg_t msg;
@@ -639,6 +707,12 @@ kmp_msg_t __kmp_msg_format(unsigned id_arg, ...) {
   // On Linux* OS and OS X*, printf() family functions process parameter
   // numbers, for example:  "%2$s %1$s".
   __kmp_str_buf_vprint(&buffer, __kmp_i18n_catgets(id), args);
+#elif KMP_OS_CLUSTER_OS
+  // COS doesn't support printf format like : "%2$s". We need to format it like
+  // this: "%s"
+  char *pre_formatted_msg =
+      __kmp_COS_format_before_vsnprintf(__kmp_i18n_catgets(id));
+  __kmp_str_buf_vprint(&buffer, pre_formatted_msg, args);
 #elif KMP_OS_WINDOWS
   // On Windows, printf() family functions does not recognize GNU style
   // parameter numbers, so we have to use FormatMessage() instead. It recognizes
@@ -708,9 +782,11 @@ static char *sys_error(int err) {
      int    strerror_r( int, char *, size_t );  // XSI version
   */
 
+// KVX newlib, which contains strerror_r, is currently compiled for GNU.
 #if (defined(__GLIBC__) && defined(_GNU_SOURCE)) ||                            \
     (defined(__BIONIC__) && defined(_GNU_SOURCE) &&                            \
-     __ANDROID_API__ >= __ANDROID_API_M__)
+     __ANDROID_API__ >= __ANDROID_API_M__) ||                                  \
+    KMP_OS_CLUSTER_OS
   // GNU version of strerror_r.
 
   char buffer[2048];

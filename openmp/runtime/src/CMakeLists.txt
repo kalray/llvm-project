@@ -95,6 +95,9 @@ else()
     if(${LIBOMP_ARCH} STREQUAL "i386" OR ${LIBOMP_ARCH} STREQUAL "x86_64")
       libomp_append(LIBOMP_ASMFILES z_Windows_NT-586_asm.asm) # Windows assembly file
     endif()
+  elseif(KVX)
+    libomp_append(LIBOMP_CXXFILES z_ClusterOS_util.cpp)
+    libomp_append(LIBOMP_CXXFILES kmp_gsupport.cpp)
   else()
     # Unix specific files
     libomp_append(LIBOMP_CXXFILES z_Linux_util.cpp)

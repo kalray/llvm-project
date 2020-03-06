@@ -88,6 +88,10 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
       }
     }
 
+    // -fopenmp option management
+    if (Args.hasArg(options::OPT_fopenmp))
+      CmdArgs.push_back("-lomp");
+
     // -nostdlib option management
     if (Args.hasArg(options::OPT_nostdlib))
       CmdArgs.push_back(Args.MakeArgString("-nostdlib"));
@@ -179,6 +183,9 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
     } else {
       CmdArgs.push_back("-Tmppacos.ld");
     }
+
+    if (Args.hasArg(options::OPT_fopenmp))
+      CmdArgs.push_back("-lomp");
 
     if (Args.hasArg(options::OPT_v))
       CmdArgs.push_back("-v");
