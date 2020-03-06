@@ -94,6 +94,9 @@ else()
     libomp_append(LIBOMP_CXXFILES z_Windows_NT_util.cpp)
     libomp_append(LIBOMP_CXXFILES z_Windows_NT-586_util.cpp)
     libomp_append(LIBOMP_ASMFILES z_Windows_NT-586_asm.asm) # Windows assembly file
+  elseif(KVX)
+    libomp_append(LIBOMP_CXXFILES z_ClusterOS_util.cpp)
+    libomp_append(LIBOMP_CXXFILES kmp_gsupport.cpp)
   else()
     # Unix specific files
     libomp_append(LIBOMP_CXXFILES z_Linux_util.cpp)

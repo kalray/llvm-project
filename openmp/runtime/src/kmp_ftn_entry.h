@@ -542,7 +542,7 @@ int FTN_STDCALL KMP_EXPAND_NAME(FTN_GET_THREAD_NUM)(void) {
     return 0;
   }
   --gtid; // We keep (gtid+1) in TLS
-#elif KMP_OS_LINUX
+#elif KMP_OS_LINUX || KMP_OS_CLUSTER_OS
 #ifdef KMP_TDATA_GTID
   if (__kmp_gtid_mode >= 3) {
     if ((gtid = __kmp_gtid) == KMP_GTID_DNE) {
@@ -941,7 +941,8 @@ void FTN_STDCALL KMP_EXPAND_NAME(FTN_SET_DEFAULT_DEVICE)(int KMP_DEREF arg) {
 // libomptarget, if loaded, provides this function in api.cpp.
 int FTN_STDCALL KMP_EXPAND_NAME(FTN_GET_NUM_DEVICES)(void) KMP_WEAK_ATTRIBUTE_EXTERNAL;
 int FTN_STDCALL KMP_EXPAND_NAME(FTN_GET_NUM_DEVICES)(void) {
-#if KMP_MIC || KMP_OS_DARWIN || KMP_OS_WINDOWS || defined(KMP_STUB)
+#if KMP_MIC || KMP_OS_DARWIN || KMP_OS_WINDOWS || defined(KMP_STUB) ||         \
+    KMP_OS_CLUSTER_OS
   return 0;
 #else
   int (*fptr)();
@@ -965,7 +966,7 @@ int FTN_STDCALL KMP_EXPAND_NAME(FTN_IS_INITIAL_DEVICE)(void) {
 // libomptarget, if loaded, provides this function
 int FTN_STDCALL FTN_GET_INITIAL_DEVICE(void) KMP_WEAK_ATTRIBUTE_EXTERNAL;
 int FTN_STDCALL FTN_GET_INITIAL_DEVICE(void) {
-#if KMP_MIC || KMP_OS_DARWIN || KMP_OS_WINDOWS || defined(KMP_STUB)
+#if KMP_MIC || KMP_OS_DARWIN || KMP_OS_WINDOWS || defined(KMP_STUB) || KMP_OS_CLUSTER_OS
   // same as omp_get_num_devices()
   return 0;
 #else
@@ -1331,7 +1332,7 @@ int FTN_STDCALL FTN_PAUSE_RESOURCE(kmp_pause_status_t kind, int device_num) {
   if (device_num == FTN_GET_INITIAL_DEVICE())
     return __kmpc_pause_resource(kind);
   else {
-#if !KMP_OS_WINDOWS
+#if !KMP_OS_WINDOWS && !KMP_OS_CLUSTER_OS
     int (*fptr)(kmp_pause_status_t, int);
     if ((*(void **)(&fptr) = dlsym(RTLD_DEFAULT, "tgt_pause_resource")))
       return (*fptr)(kind, device_num);
@@ -1348,7 +1349,7 @@ int FTN_STDCALL FTN_PAUSE_RESOURCE_ALL(kmp_pause_status_t kind) {
   return 1; // just fail
 #else
   int fails = 0;
-#if !KMP_OS_WINDOWS
+#if !KMP_OS_WINDOWS && !KMP_OS_CLUSTER_OS
   int (*fptr)(kmp_pause_status_t, int);
   if ((*(void **)(&fptr) = dlsym(RTLD_DEFAULT, "tgt_pause_resource")))
     fails = (*fptr)(kind, KMP_DEVICE_ALL); // pause devices

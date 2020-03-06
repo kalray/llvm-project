@@ -59,7 +59,7 @@ set(ENABLE_LIBOMPTARGET ON)
 # Currently libomptarget cannot be compiled on Windows or MacOS X.
 # Since the device plugins are only supported on Linux anyway,
 # there is no point in trying to compile libomptarget on other OSes.
-if (APPLE OR WIN32 OR NOT OPENMP_HAVE_STD_CPP14_FLAG)
+if (APPLE OR WIN32 OR KVX OR NOT OPENMP_HAVE_STD_CPP14_FLAG)
   set(ENABLE_LIBOMPTARGET OFF)
 endif()
 
@@ -88,8 +88,8 @@ option(OPENMP_ENABLE_LIBOMP_PROFILING "Enable time profiling for libomp." OFF)
 add_subdirectory(runtime)
 
 if (OPENMP_ENABLE_LIBOMPTARGET)
-  # Check that the library can actually be built.
-  if (APPLE OR WIN32)
+  # Check that the library can acutally be built.
+  if (APPLE OR WIN32 OR KVX)
     message(FATAL_ERROR "libomptarget cannot be built on Windows and MacOS X!")
   elseif (NOT OPENMP_HAVE_STD_CPP14_FLAG)
     message(FATAL_ERROR "Host compiler must support C++14 to build libomptarget!")
