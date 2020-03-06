@@ -149,6 +149,7 @@ enum SPLAT32 {
 
 unsigned GetImmOpCode(int64_t imm, unsigned i10code, unsigned i37code,
                       unsigned i64code);
+unsigned GetImmMakeOpCode(int64_t imm);
 
 FunctionPass *createKVXISelDag(KVXTargetMachine &TM);
 
