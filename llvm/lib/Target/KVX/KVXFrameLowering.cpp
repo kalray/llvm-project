@@ -203,12 +203,49 @@ bool KVXFrameLowering::spillCalleeSavedRegisters(
   }
 
   MI = MBB.begin();
+
+  SmallVector<unsigned, 8> RegSaved;
+  SmallVector<const TargetRegisterClass *, 8> RCSaved;
+  SmallVector<int, 8> FrameIdxSaved;
   for (const CalleeSavedInfo &CS : CSI) {
-    // Insert the spill to the stack frame.
     unsigned Reg = CS.getReg();
     const TargetRegisterClass *RC = TRI->getMinimalPhysRegClass(Reg);
-    TII->storeRegToStackSlot(MBB, MI, Reg, true, CS.getFrameIdx(), RC, TRI);
+
+    // Try to merge single regs into paired regs
+    unsigned PairedReg =
+        TRI->getMatchingSuperReg(Reg, 1, &KVX::PairedRegRegClass);
+    if (!RegSaved.empty() && PairedReg && RegSaved.back() - 1 == Reg &&
+        FrameIdxSaved.back() + 1 == CS.getFrameIdx()) {
+      if (RCSaved.back() == &KVX::SingleRegRegClass) {
+        RegSaved.pop_back();
+        RCSaved.pop_back();
+        FrameIdxSaved.pop_back();
+
+        // Try to merge paired regs into quad regs
+        unsigned QuadReg =
+            TRI->getMatchingSuperReg(Reg, 1, &KVX::QuadRegRegClass);
+        if (!RegSaved.empty() && RCSaved.back() == &KVX::PairedRegRegClass &&
+            QuadReg && RegSaved.back() - 1 == PairedReg) {
+          Reg = QuadReg;
+          RC = &KVX::QuadRegRegClass;
+          RegSaved.pop_back();
+          RCSaved.pop_back();
+          FrameIdxSaved.pop_back();
+        } else {
+          Reg = PairedReg;
+          RC = &KVX::PairedRegRegClass;
+        }
+      }
+    }
+
+    RegSaved.push_back(Reg);
+    RCSaved.push_back(RC);
+    FrameIdxSaved.push_back(CS.getFrameIdx());
   }
+
+  for (unsigned i = 0; i < RegSaved.size(); ++i)
+    TII->storeRegToStackSlot(MBB, MI, RegSaved[i], true, FrameIdxSaved[i],
+                             RCSaved[i], TRI);
 
   auto *KVXFI = MF->getInfo<KVXMachineFunctionInfo>();
   KVXFI->setCSRIndices({ CSI.front().getFrameIdx(), CSI.back().getFrameIdx() });
@@ -226,7 +263,52 @@ bool KVXFrameLowering::restoreCalleeSavedRegisters(
     BuildMI(MBB, MI, DL, TII->get(KVX::COPYD), getSPReg()).addReg(getFPReg());
   }
 
-  return false;
+  MI = MBB.getFirstTerminator();
+
+  SmallVector<unsigned, 8> RegSaved;
+  SmallVector<const TargetRegisterClass *, 8> RCSaved;
+  SmallVector<int, 8> FrameIdxSaved;
+  for (const CalleeSavedInfo &CS : reverse(CSI)) {
+    unsigned Reg = CS.getReg();
+    const TargetRegisterClass *RC = TRI->getMinimalPhysRegClass(Reg);
+
+    // Try to merge single regs into paired regs
+    unsigned PairedReg =
+        TRI->getMatchingSuperReg(Reg, 2, &KVX::PairedRegRegClass);
+    if (!RegSaved.empty() && PairedReg && RegSaved.back() + 1 == Reg &&
+        FrameIdxSaved.back() - 1 == CS.getFrameIdx()) {
+      if (RCSaved.back() == &KVX::SingleRegRegClass) {
+        RegSaved.pop_back();
+        RCSaved.pop_back();
+
+        // Try to merge paired regs into quad regs
+        unsigned QuadReg =
+            TRI->getMatchingSuperReg(Reg, 4, &KVX::QuadRegRegClass);
+        if (!RegSaved.empty() && RCSaved.back() == &KVX::PairedRegRegClass &&
+            QuadReg && RegSaved.back() + 1 == PairedReg) {
+          Reg = QuadReg;
+          RC = &KVX::QuadRegRegClass;
+          RegSaved.pop_back();
+          RCSaved.pop_back();
+          FrameIdxSaved.pop_back();
+        } else {
+          Reg = PairedReg;
+          RC = &KVX::PairedRegRegClass;
+        }
+      }
+    } else {
+      FrameIdxSaved.push_back(CS.getFrameIdx());
+    }
+
+    RegSaved.push_back(Reg);
+    RCSaved.push_back(RC);
+  }
+
+  for (unsigned i = 0; i < RegSaved.size(); ++i)
+    TII->loadRegFromStackSlot(MBB, MI, RegSaved[i], FrameIdxSaved[i],
+                              RCSaved[i], TRI);
+
+  return true;
 }
 
 bool KVXFrameLowering::hasFP(const MachineFunction &MF) const {
