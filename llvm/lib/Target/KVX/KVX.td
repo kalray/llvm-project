@@ -40,6 +40,7 @@ class BITCAST
 def KVXInstrInfo : InstrInfo;
 
 include "KVXInstrInfo.td"
+include "KVXInstrInfoMan.td"
 include "KVXPatterns.td"
 include "KVXPatternsIntegerArithmetic.td"
 include "KVXPatternsFloatingPoint.td"
