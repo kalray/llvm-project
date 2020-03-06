@@ -6,16 +6,17 @@ def GET_Instr : KVX_PSEUDO<(outs SingleReg:$dst), (ins Sysnumber:$param),[]>;
 def SET_Instr : KVX_PSEUDO<(outs), (ins Sysnumber:$sysreg, SingleReg:$val),[]>;
 def WFXL_Instr : KVX_PSEUDO<(outs), (ins Sysnumber:$sysreg, SingleReg:$val),[]>;
 def WFXM_Instr : KVX_PSEUDO<(outs), (ins Sysnumber:$sysreg, SingleReg:$val),[]>;
-def SBMM8ri_Instr : KVX_PSEUDO<(outs SingleReg: $dst), (ins SingleReg:$r, Wrapped64:$r2), []>;
-def SBMM8rr_Instr : KVX_PSEUDO<(outs SingleReg: $dst), (ins SingleReg:$r, SingleReg:$r2), []>;
 
 def: Pat<(int_kvx_get Sysnumber:$r), (GET_Instr Sysnumber:$r)>;
 def: Pat<(int_kvx_stop), (STOP)>;
 def: Pat<(int_kvx_wfxl Sysnumber:$r, i64:$val), (WFXL_Instr Sysnumber:$r, SingleReg:$val)>;
 def: Pat<(int_kvx_wfxm Sysnumber:$r, i64:$val), (WFXM_Instr Sysnumber:$r, SingleReg:$val)>;
 def: Pat<(int_kvx_set Sysnumber:$r, i64:$val), (SET_Instr Sysnumber:$r, SingleReg:$val)>;
-def: Pat<(int_kvx_sbmm8 SingleReg:$r, imm:$r2), (SBMM8ri_Instr SingleReg:$r, Wrapped64:$r2)>;
-def: Pat<(int_kvx_sbmm8 SingleReg:$r, SingleReg:$r2), (SBMM8rr_Instr SingleReg:$r, SingleReg:$r2)>;
+
+def: Pat<(int_kvx_sbmm8 SingleReg:$r, Signed10:$r2), (SBMM8ri10 SingleReg:$r, Signed10:$r2)>;
+def: Pat<(int_kvx_sbmm8 SingleReg:$r, Signed37:$r2), (SBMM8ri37 SingleReg:$r, Signed37:$r2)>;
+def: Pat<(int_kvx_sbmm8 SingleReg:$r, Wrapped64:$r2), (SBMM8ri64 SingleReg:$r, Wrapped64:$r2)>;
+def: Pat<(int_kvx_sbmm8 SingleReg:$r, SingleReg:$r2), (SBMM8rr SingleReg:$r, SingleReg:$r2)>;
 
 def: Pat<(int_kvx_lbzu AddrRI:$addr), (LBZp AddrRI:$addr, variant_u)>;
 def: Pat<(int_kvx_lhzu AddrRI:$addr), (LHZp AddrRI:$addr, variant_u)>;
