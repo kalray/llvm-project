@@ -376,32 +376,23 @@ bool KVXHardwareLoops::GetLOOPDOArgs(MachineLoop *L,
   }
 
   switch (Cond) {
-  /* Not Equal */
-  case 0:
-  /* Equal */
-  case 1: {
+  case KVXMOD::COMPARISON_NE:
+  case KVXMOD::COMPARISON_GE:
+  case KVXMOD::COMPARISON_LE:
+  case KVXMOD::COMPARISON_GEU:
+  case KVXMOD::COMPARISON_LEU: {
     if (StartVal.getImm() == EndVal.getImm())
       return false;
     steps = ((EndVal.getImm() - StartVal.getImm()) / Bump);
     break;
   }
-  /* Less Than */
-  case 2:
-  /* Greater Than or Equal */
-  case 3:
-  /* Less Than or Equal */
-  case 4:
-  /* Greater Than */
-  case 5:
-  /* Less Than Unsigned */
-  case 6:
-  /* Greater Than or Equal Unsigned */
-  case 7:
-  /* Less Than or Equal Unsigned */
-  case 8:
-  /* Greater Than Unsigned */
-  case 9: {
-    steps = ((EndVal.getImm() - StartVal.getImm()) / Bump) + 1;
+  case KVXMOD::COMPARISON_LT:
+  case KVXMOD::COMPARISON_GT:
+  case KVXMOD::COMPARISON_LTU:
+  case KVXMOD::COMPARISON_GTU: {
+    steps = ((EndVal.getImm() - StartVal.getImm() + Bump + (Bump < 0) -
+              (Bump > 0)) /
+             Bump);
     break;
   }
   default:
