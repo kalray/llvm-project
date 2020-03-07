@@ -160,4 +160,7 @@ ClusterOS::addClangTargetOptions(const llvm::opt::ArgList &DriverArgs,
   if (!DriverArgs.hasFlag(options::OPT_fuse_init_array,
                           options::OPT_fno_use_init_array, false))
     CC1Args.push_back("-fno-use-init-array");
+
+  if (DriverArgs.hasArg(options::OPT_fPIC))
+    CC1Args.push_back("-ftls-model=local-exec");
 }
