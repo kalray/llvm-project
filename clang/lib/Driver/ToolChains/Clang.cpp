@@ -447,7 +447,9 @@ static void addExceptionArgs(const ArgList &Args, types::ID InputType,
   if (types::isCXX(InputType)) {
     // Disable C++ EH by default on XCore and PS4.
     bool CXXExceptionsEnabled =
-        Triple.getArch() != llvm::Triple::xcore && !Triple.isPS4CPU();
+        Triple.getArch() != llvm::Triple::xcore && !Triple.isPS4CPU() &&
+        // Disable C++ EH by default on KVX.
+        Triple.getArch() != llvm::Triple::kvx;
     Arg *ExceptionArg = Args.getLastArg(
         options::OPT_fcxx_exceptions, options::OPT_fno_cxx_exceptions,
         options::OPT_fexceptions, options::OPT_fno_exceptions);
