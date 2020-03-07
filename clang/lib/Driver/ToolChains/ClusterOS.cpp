@@ -155,4 +155,7 @@ ClusterOS::addClangTargetOptions(const llvm::opt::ArgList &DriverArgs,
                                  llvm::opt::ArgStringList &CC1Args,
                                  Action::OffloadKind DeviceOffloadKind) const {
   CC1Args.push_back("-nostdsysteminc");
+
+  if (DriverArgs.hasArg(options::OPT_fPIC))
+    CC1Args.push_back("-ftls-model=local-exec");
 }
