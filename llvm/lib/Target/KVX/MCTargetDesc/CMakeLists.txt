@@ -1,4 +1,4 @@
-add_llvm_library(LLVMKVXDesc
+add_llvm_component_library(LLVMKVXDesc
   KVXAsmBackend.cpp
   KVXMCCodeEmitter.cpp
   KVXELFObjectWriter.cpp

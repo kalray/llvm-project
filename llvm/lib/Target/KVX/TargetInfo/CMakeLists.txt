@@ -1,3 +1,3 @@
-add_llvm_library(LLVMKVXInfo
+add_llvm_component_library(LLVMKVXInfo
   KVXTargetInfo.cpp
   )
