@@ -42,7 +42,7 @@ void clusteros::Assembler::ConstructJob(Compilation &C, const JobAction &JA,
     CmdArgs.push_back(II.getFilename());
 
   const char *Exec =
-      Args.MakeArgString(getToolChain().GetProgramPath("k1-cos-as"));
+      Args.MakeArgString(getToolChain().GetProgramPath("kvx-cos-as"));
   C.addCommand(std::make_unique<Command>(JA, *this, Exec, CmdArgs, Inputs));
 }
 
@@ -99,7 +99,7 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
     CmdArgs.push_back("-Wl,-v");
 
   const char *Exec = Args.MakeArgString(getToolChain().GetProgramPath(
-      C.getDriver().CCCIsCXX() ? "k1-cos-g++" : "k1-cos-gcc"));
+      C.getDriver().CCCIsCXX() ? "kvx-cos-g++" : "kvx-cos-gcc"));
   C.addCommand(std::make_unique<Command>(JA, *this, Exec, CmdArgs, Inputs));
 }
 
@@ -112,9 +112,9 @@ ClusterOS::ClusterOS(const Driver &D, const llvm::Triple &Triple,
 }
 
 std::string ClusterOS::getIncludeDirRoot() const {
-  std::string GCCPath = GetProgramPath("k1-cos-gcc");
+  std::string GCCPath = GetProgramPath("kvx-cos-gcc");
   StringRef GCCPrefix = llvm::sys::path::parent_path(GCCPath);
-  return llvm::sys::path::parent_path(GCCPrefix).str() + "/k1-cos/include";
+  return llvm::sys::path::parent_path(GCCPrefix).str() + "/kvx-cos/include";
 }
 
 Tool *ClusterOS::buildAssembler() const {
@@ -144,7 +144,7 @@ void ClusterOS::AddClangCXXStdlibIncludeArgs(const ArgList &DriverArgs,
                    getIncludeDirRoot() + "/c++/" KVX_CLUSTEROS_GCC_VERSION);
   addSystemInclude(DriverArgs, CC1Args, getIncludeDirRoot() +
                                             "/c++/" KVX_CLUSTEROS_GCC_VERSION
-                                            "/k1-cos");
+                                            "/kvx-cos");
   addSystemInclude(DriverArgs, CC1Args, getIncludeDirRoot() +
                                             "/c++/" KVX_CLUSTEROS_GCC_VERSION
                                             "/backward");

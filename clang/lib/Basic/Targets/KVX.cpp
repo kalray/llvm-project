@@ -65,14 +65,10 @@ ArrayRef<TargetInfo::GCCRegAlias> KVXTargetInfo::getGCCRegAliases() const {
 
 void KVXTargetInfo::getTargetDefines(const LangOptions &Opts,
                                      MacroBuilder &Builder) const {
-  DefineStd(Builder, "unix", Opts);
-  defineCPUMacros(Builder, "kvx", /*Tuning=*/false);
-  Builder.defineMacro("__ELF__");
-  Builder.defineMacro("__k1__");
-  Builder.defineMacro("__K1__");
-  Builder.defineMacro("__K1_64__");
-  Builder.defineMacro("__k1c__");
-  Builder.defineMacro("__K1C__");
+  Builder.defineMacro("__KVX__", "3");
+  Builder.defineMacro("__KV3__", "1");
+  Builder.defineMacro("__kvx__", "3");
+  Builder.defineMacro("__kv3__", "1");
 }
 
 const Builtin::Info KVXTargetInfo::BuiltinInfo[] = {

@@ -1,4 +1,4 @@
-// RUN: clang -target k1c-cos -S -O2 %s -o - | FileCheck %s
+// RUN: clang -target kvx-cos -S -O2 %s -o - | FileCheck %s
 #include <math.h>
 
 float fmaxw(float a, float b) {
