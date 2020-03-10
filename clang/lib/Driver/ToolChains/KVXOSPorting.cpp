@@ -40,7 +40,7 @@ void kvxosporting::Assembler::ConstructJob(Compilation &C, const JobAction &JA,
     CmdArgs.push_back(II.getFilename());
 
   const char *Exec =
-      Args.MakeArgString(getToolChain().GetProgramPath("k1-elf-as"));
+      Args.MakeArgString(getToolChain().GetProgramPath("kvx-elf-as"));
   C.addCommand(std::make_unique<Command>(JA, *this, Exec, CmdArgs, Inputs));
 }
 
@@ -55,14 +55,14 @@ void kvxosporting::Linker::ConstructJob(Compilation &C, const JobAction &JA,
   CmdArgs.push_back("-o");
   CmdArgs.push_back(Output.getFilename());
 
-  std::string LDPath = getToolChain().GetProgramPath("k1-elf-ld");
+  std::string LDPath = getToolChain().GetProgramPath("kvx-elf-ld");
   std::string LDPrefix = llvm::sys::path::parent_path(LDPath);
 
   if (!Args.hasArg(options::OPT_nostdlib)) {
     // crti.o
     // crtbegin.o
     CmdArgs.push_back(
-        Args.MakeArgString(LDPrefix + "/../k1-llvm/elf/lib/crt0.o"));
+        Args.MakeArgString(LDPrefix + "/../kvx-llvm/elf/lib/crt0.o"));
   }
 
   for (const auto &II : Inputs)
@@ -71,7 +71,7 @@ void kvxosporting::Linker::ConstructJob(Compilation &C, const JobAction &JA,
 
   if (!Args.hasArg(options::OPT_nostdlib)) {
     CmdArgs.push_back(
-        Args.MakeArgString("-L" + LDPrefix + "/../k1-llvm/elf/lib"));
+        Args.MakeArgString("-L" + LDPrefix + "/../kvx-llvm/elf/lib"));
 
     CmdArgs.push_back("-melf64k1");
     CmdArgs.push_back("-Tbare.ld");
@@ -94,7 +94,7 @@ void kvxosporting::Linker::ConstructJob(Compilation &C, const JobAction &JA,
     CmdArgs.push_back("-shared");
 
   const char *Exec =
-      Args.MakeArgString(getToolChain().GetProgramPath("k1-elf-ld"));
+      Args.MakeArgString(getToolChain().GetProgramPath("kvx-elf-ld"));
   C.addCommand(std::make_unique<Command>(JA, *this, Exec, CmdArgs, Inputs));
 }
 
@@ -118,10 +118,10 @@ void KVXOSPorting::AddClangSystemIncludeArgs(const ArgList &DriverArgs,
       DriverArgs.hasArg(options::OPT_nostdlibinc))
     return;
 
-  std::string LDPath = GetProgramPath("k1-elf-ld");
+  std::string LDPath = GetProgramPath("kvx-elf-ld");
   StringRef LDPrefix = llvm::sys::path::parent_path(LDPath);
 
   addSystemInclude(DriverArgs, CC1Args,
                    llvm::sys::path::parent_path(LDPrefix).str() +
-                       "/k1-llvm/elf/include");
+                       "/kvx-llvm/elf/include");
 }

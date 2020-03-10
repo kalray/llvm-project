@@ -15041,7 +15041,7 @@ static Value *KVX_emitTernaryRoundingBuiltin(CodeGenFunction &CGF,
 Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
                                            const CallExpr *E) {
   switch (BuiltinID) {
-  case KVX::BI__builtin_k1_get: {
+  case KVX::BI__builtin_kvx_get: {
     SourceLocation Loc = E->getExprLoc();
     Value *Reg =
         EmitScalarConversion(EmitScalarExpr(E->getArg(0)),
@@ -15050,23 +15050,23 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     Value *Callee = CGM.getIntrinsic(Intrinsic::kvx_get);
     return Builder.CreateCall(Callee, {Reg});
   }
-  case KVX::BI__builtin_k1_await:
-  case KVX::BI__builtin_k1_dinval:
-  case KVX::BI__builtin_k1_fence:
-  case KVX::BI__builtin_k1_stop: {
+  case KVX::BI__builtin_kvx_await:
+  case KVX::BI__builtin_kvx_dinval:
+  case KVX::BI__builtin_kvx_fence:
+  case KVX::BI__builtin_kvx_stop: {
     unsigned IDD;
 
     switch (BuiltinID) {
-    case KVX::BI__builtin_k1_await:
+    case KVX::BI__builtin_kvx_await:
       IDD = Intrinsic::kvx_await;
       break;
-    case KVX::BI__builtin_k1_dinval:
+    case KVX::BI__builtin_kvx_dinval:
       IDD = Intrinsic::kvx_dinval;
       break;
-    case KVX::BI__builtin_k1_fence:
+    case KVX::BI__builtin_kvx_fence:
       IDD = Intrinsic::kvx_fence;
       break;
-    case KVX::BI__builtin_k1_stop:
+    case KVX::BI__builtin_kvx_stop:
       IDD = Intrinsic::kvx_stop;
       break;
     default:
@@ -15077,9 +15077,9 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     return Builder.CreateCall(Callee, {});
   }
 
-  case KVX::BI__builtin_k1_wfxl:
-  case KVX::BI__builtin_k1_wfxm:
-  case KVX::BI__builtin_k1_set: {
+  case KVX::BI__builtin_kvx_wfxl:
+  case KVX::BI__builtin_kvx_wfxm:
+  case KVX::BI__builtin_kvx_set: {
     SourceLocation Loc = E->getExprLoc();
     Value *A1 = EmitScalarConversion(EmitScalarExpr(E->getArg(0)),
                                      E->getArg(0)->getType(),
@@ -15090,13 +15090,13 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
 
     unsigned IDD;
     switch (BuiltinID) {
-      case KVX::BI__builtin_k1_wfxl:
+      case KVX::BI__builtin_kvx_wfxl:
         IDD = Intrinsic::kvx_wfxl;
         break;
-      case KVX::BI__builtin_k1_wfxm:
+      case KVX::BI__builtin_kvx_wfxm:
         IDD = Intrinsic::kvx_wfxm;
         break;
-      case KVX::BI__builtin_k1_set:
+      case KVX::BI__builtin_kvx_set:
         IDD = Intrinsic::kvx_set;
         break;
     default:
@@ -15107,7 +15107,7 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     return Builder.CreateCall(Callee, {A1, A2});
   }
 
-  case KVX::BI__builtin_k1_acswapw: {
+  case KVX::BI__builtin_kvx_acswapw: {
     SourceLocation Loc = E->getExprLoc();
     Value *Addr = Builder.CreateBitCast(EmitScalarExpr(E->getArg(0)), Int8PtrTy);
     Value *Expect = EmitScalarConversion(EmitScalarExpr(E->getArg(1)),
@@ -15119,20 +15119,20 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     return Builder.CreateCall(Callee, {Addr, Expect, Update});
   }
 
-  case KVX::BI__builtin_k1_lbzu:
-  case KVX::BI__builtin_k1_lhzu:
-  case KVX::BI__builtin_k1_lwzu: {
+  case KVX::BI__builtin_kvx_lbzu:
+  case KVX::BI__builtin_kvx_lhzu:
+  case KVX::BI__builtin_kvx_lwzu: {
     Value* Addr = EmitScalarExpr(E->getArg(0));
 
     unsigned IDD;
     switch (BuiltinID) {
-    case KVX::BI__builtin_k1_lbzu:
+    case KVX::BI__builtin_kvx_lbzu:
       IDD = Intrinsic::kvx_lbzu;
       break;
-    case KVX::BI__builtin_k1_lhzu:
+    case KVX::BI__builtin_kvx_lhzu:
       IDD = Intrinsic::kvx_lhzu;
       break;
-    case KVX::BI__builtin_k1_lwzu:
+    case KVX::BI__builtin_kvx_lwzu:
       IDD = Intrinsic::kvx_lwzu;
       break;
     default:
@@ -15143,7 +15143,7 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     return Builder.CreateCall(Callee, Addr);
   }
 
-  case KVX::BI__builtin_k1_sbmm8: {
+  case KVX::BI__builtin_kvx_sbmm8: {
     SourceLocation Loc = E->getExprLoc();
     Value *A1 =
         EmitScalarConversion(EmitScalarExpr(E->getArg(0)),
@@ -15156,130 +15156,130 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     return Builder.CreateCall(Callee, {A1, A2});
   }
 
-  case KVX::BI__builtin_k1_fabswp:
+  case KVX::BI__builtin_kvx_fabswp:
     return KVX_emitUnaryBuiltin(*this, E, Intrinsic::kvx_fabswp);
 
-  case KVX::BI__builtin_k1_fabswq:
+  case KVX::BI__builtin_kvx_fabswq:
     return KVX_emitUnaryBuiltin(*this, E, Intrinsic::kvx_fabswq);
 
-  case KVX::BI__builtin_k1_fabsdp:
+  case KVX::BI__builtin_kvx_fabsdp:
     return KVX_emitUnaryBuiltin(*this, E, Intrinsic::kvx_fabsdp);
 
-  case KVX::BI__builtin_k1_fnegwp:
+  case KVX::BI__builtin_kvx_fnegwp:
     return KVX_emitUnaryBuiltin(*this, E, Intrinsic::kvx_fnegwp);
 
-  case KVX::BI__builtin_k1_fnegwq:
+  case KVX::BI__builtin_kvx_fnegwq:
     return KVX_emitUnaryBuiltin(*this, E, Intrinsic::kvx_fnegwq);
 
-  case KVX::BI__builtin_k1_fnegdp:
+  case KVX::BI__builtin_kvx_fnegdp:
     return KVX_emitUnaryBuiltin(*this, E, Intrinsic::kvx_fnegdp);
 
-  case KVX::BI__builtin_k1_fmaxwp:
+  case KVX::BI__builtin_kvx_fmaxwp:
     return KVX_emitBinaryBuiltin(*this, E, Intrinsic::kvx_fmaxwp);
 
-  case KVX::BI__builtin_k1_fmaxwq:
+  case KVX::BI__builtin_kvx_fmaxwq:
     return KVX_emitBinaryBuiltin(*this, E, Intrinsic::kvx_fmaxwq);
 
-  case KVX::BI__builtin_k1_fmaxdp:
+  case KVX::BI__builtin_kvx_fmaxdp:
     return KVX_emitBinaryBuiltin(*this, E, Intrinsic::kvx_fmaxdp);
 
-  case KVX::BI__builtin_k1_fminwp:
+  case KVX::BI__builtin_kvx_fminwp:
     return KVX_emitBinaryBuiltin(*this, E, Intrinsic::kvx_fminwp);
 
-  case KVX::BI__builtin_k1_fminwq:
+  case KVX::BI__builtin_kvx_fminwq:
     return KVX_emitBinaryBuiltin(*this, E, Intrinsic::kvx_fminwq);
 
-  case KVX::BI__builtin_k1_fmindp:
+  case KVX::BI__builtin_kvx_fmindp:
     return KVX_emitBinaryBuiltin(*this, E, Intrinsic::kvx_fmindp);
 
-  case KVX::BI__builtin_k1_faddwp:
+  case KVX::BI__builtin_kvx_faddwp:
     return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_faddwp);
 
-  case KVX::BI__builtin_k1_faddcwc:
+  case KVX::BI__builtin_kvx_faddcwc:
     return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_faddcwc);
 
-  case KVX::BI__builtin_k1_faddwq:
+  case KVX::BI__builtin_kvx_faddwq:
     return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_faddwq);
 
-  case KVX::BI__builtin_k1_faddcwcp:
+  case KVX::BI__builtin_kvx_faddcwcp:
     return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_faddcwcp);
 
-  case KVX::BI__builtin_k1_fadddp:
+  case KVX::BI__builtin_kvx_fadddp:
     return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_fadddp);
 
-  case KVX::BI__builtin_k1_faddcdc:
+  case KVX::BI__builtin_kvx_faddcdc:
     return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_faddcdc);
 
-  case KVX::BI__builtin_k1_fsbfwp:
+  case KVX::BI__builtin_kvx_fsbfwp:
     return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_fsbfwp);
 
-  case KVX::BI__builtin_k1_fsbfcwc:
+  case KVX::BI__builtin_kvx_fsbfcwc:
     return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_fsbfcwc);
 
-  case KVX::BI__builtin_k1_fsbfwq:
+  case KVX::BI__builtin_kvx_fsbfwq:
     return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_fsbfwq);
 
-  case KVX::BI__builtin_k1_fsbfcwcp:
+  case KVX::BI__builtin_kvx_fsbfcwcp:
     return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_fsbfcwcp);
 
-  case KVX::BI__builtin_k1_fsbfdp:
+  case KVX::BI__builtin_kvx_fsbfdp:
     return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_fsbfdp);
 
-  case KVX::BI__builtin_k1_fsbfcdc:
+  case KVX::BI__builtin_kvx_fsbfcdc:
     return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_fsbfcdc);
 
-  case KVX::BI__builtin_k1_fmulwp:
+  case KVX::BI__builtin_kvx_fmulwp:
     return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_fmulwp);
 
-  case KVX::BI__builtin_k1_fmulwc:
+  case KVX::BI__builtin_kvx_fmulwc:
     return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_fmulwc);
 
-  case KVX::BI__builtin_k1_fmulcwc:
+  case KVX::BI__builtin_kvx_fmulcwc:
     return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_fmulcwc);
 
-  case KVX::BI__builtin_k1_fmulwq:
+  case KVX::BI__builtin_kvx_fmulwq:
     return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_fmulwq);
 
-  case KVX::BI__builtin_k1_fmulwcp:
+  case KVX::BI__builtin_kvx_fmulwcp:
     return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_fmulwcp);
 
-  case KVX::BI__builtin_k1_fmulcwcp:
+  case KVX::BI__builtin_kvx_fmulcwcp:
     return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_fmulcwcp);
 
-  case KVX::BI__builtin_k1_fmuldp:
+  case KVX::BI__builtin_kvx_fmuldp:
     return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_fmuldp);
 
-  case KVX::BI__builtin_k1_fmuldc:
+  case KVX::BI__builtin_kvx_fmuldc:
     return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_fmuldc);
 
-  case KVX::BI__builtin_k1_fmulcdc:
+  case KVX::BI__builtin_kvx_fmulcdc:
     return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_fmulcdc);
 
-  case KVX::BI__builtin_k1_fmm2wq:
+  case KVX::BI__builtin_kvx_fmm2wq:
     return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_fmm2wq);
 
-  case KVX::BI__builtin_k1_ffmawp:
+  case KVX::BI__builtin_kvx_ffmawp:
     return KVX_emitTernaryRoundingBuiltin(*this, E, Intrinsic::kvx_ffmawp);
 
-  case KVX::BI__builtin_k1_ffmawq:
+  case KVX::BI__builtin_kvx_ffmawq:
     return KVX_emitTernaryRoundingBuiltin(*this, E, Intrinsic::kvx_ffmawq);
 
-  case KVX::BI__builtin_k1_ffmadp:
+  case KVX::BI__builtin_kvx_ffmadp:
     return KVX_emitTernaryRoundingBuiltin(*this, E, Intrinsic::kvx_ffmadp);
 
-  case KVX::BI__builtin_k1_fmm2awq:
+  case KVX::BI__builtin_kvx_fmm2awq:
     return KVX_emitTernaryRoundingBuiltin(*this, E, Intrinsic::kvx_fmm2awq);
 
-  case KVX::BI__builtin_k1_ffmswp:
+  case KVX::BI__builtin_kvx_ffmswp:
     return KVX_emitTernaryRoundingBuiltin(*this, E, Intrinsic::kvx_ffmswp);
 
-  case KVX::BI__builtin_k1_ffmswq:
+  case KVX::BI__builtin_kvx_ffmswq:
     return KVX_emitTernaryRoundingBuiltin(*this, E, Intrinsic::kvx_ffmswq);
 
-  case KVX::BI__builtin_k1_ffmsdp:
+  case KVX::BI__builtin_kvx_ffmsdp:
     return KVX_emitTernaryRoundingBuiltin(*this, E, Intrinsic::kvx_ffmsdp);
 
-  case KVX::BI__builtin_k1_fmm2swq:
+  case KVX::BI__builtin_kvx_fmm2swq:
     return KVX_emitTernaryRoundingBuiltin(*this, E, Intrinsic::kvx_fmm2swq);
   }
   return nullptr;

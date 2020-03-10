@@ -324,7 +324,6 @@ Triple::ArchType Triple::getArchTypeForLLVMName(StringRef Name) {
     .Case("renderscript64", renderscript64)
     .Case("ve", ve)
     .Case("kvx", kvx)
-    .Case("k1c", kvx)
     .Default(UnknownArch);
 }
 
@@ -455,7 +454,6 @@ static Triple::ArchType parseArch(StringRef ArchName) {
     .Case("wasm32", Triple::wasm32)
     .Case("wasm64", Triple::wasm64)
     .Case("kvx", Triple::kvx)
-    .Case("k1c", Triple::kvx)
     .Default(Triple::UnknownArch);
 
   // Some architectures require special parsing logic just to compute the
