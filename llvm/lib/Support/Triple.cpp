@@ -377,7 +377,6 @@ Triple::ArchType Triple::getArchTypeForLLVMName(StringRef Name) {
     .Case("loongarch64", loongarch64)
     .Case("dxil", dxil)
     .Case("kvx", kvx)
-    .Case("k1c", kvx)
     .Default(UnknownArch);
 }
 
@@ -519,7 +518,6 @@ static Triple::ArchType parseArch(StringRef ArchName) {
     .Case("loongarch64", Triple::loongarch64)
     .Case("dxil", Triple::dxil)
     .Case("kvx", Triple::kvx)
-    .Case("k1c", Triple::kvx)
     .Default(Triple::UnknownArch);
 
   // Some architectures require special parsing logic just to compute the
