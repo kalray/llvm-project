@@ -1,4 +1,4 @@
-// RUN: clang -target k1c-cos -fPIC -S -O2 -v %s -o - |& FileCheck %s
+// RUN: clang -target kvx-cos -fPIC -S -O2 -v %s -o - |& FileCheck %s
 
 // CHECK: -ftls-model=local-exec
 

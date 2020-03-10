@@ -1,4 +1,4 @@
-// RUN: clang -target k1c-cos -S -O2 %s -o - | FileCheck %s
+// RUN: clang -target kvx-cos -S -O2 %s -o - | FileCheck %s
 
 int cbsw(int a) {
   return __builtin_popcount(a);
