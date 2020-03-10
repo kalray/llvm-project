@@ -1,4 +1,4 @@
-// RUN: clang -target k1c-cos -S -O2 %s -o - | FileCheck %s
+// RUN: clang -target kvx-cos -S -O2 %s -o - | FileCheck %s
 
 typedef _Float16 __attribute__((__vector_size__(4 * sizeof(_Float16)))) v4f16;
 typedef short __attribute__((__vector_size__(4 * sizeof(short)))) v4i16;
