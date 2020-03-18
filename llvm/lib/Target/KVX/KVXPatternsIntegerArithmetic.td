@@ -597,3 +597,13 @@ def : Pat<(sub v8i8:$v1, v8i8:$v2),
 def : Pat<(and v8i8:$v1, v8i8:$v2), (ANDDrr SingleReg:$v1, SingleReg:$v2)>;
 def : Pat<(or v8i8:$v1, v8i8:$v2), (ORDrr SingleReg:$v1, SingleReg:$v2)>;
 def : Pat<(xor v8i8:$v1, v8i8:$v2), (XORDrr SingleReg:$v1, SingleReg:$v2)>;
+
+def EXTFZWp : KVX_PSEUDO<(outs SingleReg:$out), (ins SingleReg:$a, Wrapped32:$andm, Wrapped64:$shifc), []>;
+def EXTFSWp : KVX_PSEUDO<(outs SingleReg:$out), (ins SingleReg:$a, Wrapped32:$andm, Wrapped64:$shifc), []>;
+def EXTFZDp : KVX_PSEUDO<(outs SingleReg:$out), (ins SingleReg:$a, Wrapped64:$andm, Wrapped64:$shifc), []>;
+def EXTFSDp : KVX_PSEUDO<(outs SingleReg:$out), (ins SingleReg:$a, Wrapped64:$andm, Wrapped64:$shifc), []>;
+
+def : Pat<(and (srl i32:$v, Wrapped64:$shiftc), Wrapped32:$andm), (EXTFZWp SingleReg:$v, Wrapped32:$andm, Wrapped64:$shiftc)>;
+def : Pat<(and (sra i32:$v, Wrapped64:$shiftc), Wrapped32:$andm), (EXTFSWp SingleReg:$v, Wrapped32:$andm, Wrapped64:$shiftc)>;
+def : Pat<(and (srl i64:$v, Wrapped64:$shiftc), Wrapped64:$andm), (EXTFZDp SingleReg:$v, Wrapped64:$andm, Wrapped64:$shiftc)>;
+def : Pat<(and (sra i64:$v, Wrapped64:$shiftc), Wrapped64:$andm), (EXTFSDp SingleReg:$v, Wrapped64:$andm, Wrapped64:$shiftc)>;
