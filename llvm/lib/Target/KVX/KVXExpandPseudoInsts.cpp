@@ -24,6 +24,7 @@
 using namespace llvm;
 
 #define KVX_EXPAND_PSEUDO_NAME "KVX pseudo instruction expansion pass"
+#define DEBUG_TYPE "expand-pseudo"
 
 namespace {
 
@@ -1292,6 +1293,71 @@ static bool expandMADDW(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   return true;
 }
 
+static bool expandEXTFZ(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
+                        MachineBasicBlock::iterator MBBI, bool Word,
+                        bool Signed) {
+  MachineInstr &MI = *MBBI;
+  DebugLoc DL = MI.getDebugLoc();
+
+  unsigned outputReg = MI.getOperand(0).getReg();
+  unsigned valReg = MI.getOperand(1).getReg();
+  int64_t andmask = MI.getOperand(2).getImm();
+  int64_t shiftcount = MI.getOperand(3).getImm();
+
+  int count = 0, maxcount = 0;
+  int64_t mask = 1;
+  int MaxBit = (Word ? 32 : 64) - shiftcount;
+  for (int i = 0; i < MaxBit; i++) {
+    if ((andmask & mask) != 0) {
+      if (maxcount != 0) {
+        maxcount = 0;
+        count = 0;
+        break;
+      }
+      count++;
+    } else {
+      if (i == 0)
+        break;
+      maxcount = count;
+    }
+    mask <<= 1;
+  }
+  if (maxcount == 0 && count > 0)
+    maxcount = count;
+  LLVM_DEBUG(dbgs() << "EXTFZ word: " << Word << " signed: " << Signed
+                    << " andmask: " << andmask << " shiftcount: " << shiftcount
+                    << " maxcount: " << maxcount << "\n");
+  if (maxcount > 0) {
+    BuildMI(MBB, MBBI, DL, TII->get(Signed ? KVX::EXTFS : KVX::EXTFZ),
+            outputReg)
+        .addReg(valReg)
+        .addImm(shiftcount + maxcount - 1)
+        .addImm(shiftcount);
+  } else {
+    unsigned OpCode;
+    if (Word)
+      OpCode = Signed ? KVX::SRAWri : KVX::SRLWri;
+    else
+      OpCode = Signed ? KVX::SRADri : KVX::SRLDri;
+    BuildMI(MBB, MBBI, DL, TII->get(OpCode), outputReg)
+        .addReg(valReg)
+        .addImm(shiftcount);
+
+    if (Word)
+      OpCode = GetImmOpCode(andmask, KVX::ANDWri10, KVX::ANDWri37, KVX::NOP);
+    else
+      OpCode =
+          GetImmOpCode(andmask, KVX::ANDDri10, KVX::ANDDri37, KVX::ANDDri64);
+
+    BuildMI(MBB, MBBI, DL, TII->get(OpCode), outputReg)
+        .addReg(outputReg)
+        .addImm(andmask);
+  }
+
+  MI.eraseFromParent();
+  return true;
+}
+
 bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
                                MachineBasicBlock::iterator MBBI,
                                MachineBasicBlock::iterator &NextMBBI) {
@@ -1433,7 +1499,18 @@ bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
   case KVX::MADDWp:
     expandMADDW(TII, MBB, MBBI);
     return true;
-
+  case KVX::EXTFZWp:
+    expandEXTFZ(TII, MBB, MBBI, true, false);
+    return true;
+  case KVX::EXTFSWp:
+    expandEXTFZ(TII, MBB, MBBI, true, true);
+    return true;
+  case KVX::EXTFZDp:
+    expandEXTFZ(TII, MBB, MBBI, false, false);
+    return true;
+  case KVX::EXTFSDp:
+    expandEXTFZ(TII, MBB, MBBI, false, true);
+    return true;
   default:
     break;
   }
