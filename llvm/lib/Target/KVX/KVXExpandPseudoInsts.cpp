@@ -604,16 +604,15 @@ static bool expandALOADADD32Instr(const KVXInstrInfo *TII,
   unsigned valReg = MI.getOperand(3).getReg();
 
   BuildMI(MBB, MBBI, DL, TII->get(KVX::FENCE));
-  if (outputReg != valReg)
-    BuildMI(MBB, MBBI, DL, TII->get(KVX::COPYW), outputReg).addReg(valReg);
   BuildMI(MBB, MBBI, DL,
           TII->get(GetImmOpCode(offset, KVX::ALADDWri10, KVX::ALADDWri37,
                                 KVX::ALADDWri64)),
-          outputReg)
+          valReg)
       .addImm(offset)
       .addReg(baseReg)
-      .addReg(outputReg);
-
+      .addReg(valReg);
+  if (outputReg != valReg)
+    BuildMI(MBB, MBBI, DL, TII->get(KVX::COPYW), outputReg).addReg(valReg);
   BuildMI(MBB, MBBI, DL, TII->get(KVX::FENCE));
 
   MI.eraseFromParent();
@@ -632,15 +631,15 @@ static bool expandALOADADD64Instr(const KVXInstrInfo *TII,
   unsigned valReg = MI.getOperand(3).getReg();
 
   BuildMI(MBB, MBBI, DL, TII->get(KVX::FENCE));
-  if (outputReg != valReg)
-    BuildMI(MBB, MBBI, DL, TII->get(KVX::COPYD), outputReg).addReg(valReg);
   BuildMI(MBB, MBBI, DL,
           TII->get(GetImmOpCode(offset, KVX::ALADDDri10, KVX::ALADDDri37,
                                 KVX::ALADDDri64)),
-          outputReg)
+          valReg)
       .addImm(offset)
       .addReg(baseReg)
-      .addReg(outputReg);
+      .addReg(valReg);
+  if (outputReg != valReg)
+    BuildMI(MBB, MBBI, DL, TII->get(KVX::COPYD), outputReg).addReg(valReg);
   BuildMI(MBB, MBBI, DL, TII->get(KVX::FENCE));
 
   MI.eraseFromParent();
