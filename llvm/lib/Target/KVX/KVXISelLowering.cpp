@@ -134,11 +134,6 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::EXTRACT_SUBVECTOR, MVT::v2i16, Expand);
   setOperationAction(ISD::EXTRACT_SUBVECTOR, MVT::v2f16, Expand);
 
-  setOperationAction(ISD::ROTL, MVT::v8i8, Expand);
-  setOperationAction(ISD::ROTR, MVT::v8i8, Expand);
-  setOperationAction(ISD::ROTL, MVT::v2i16, Expand);
-  setOperationAction(ISD::ROTR, MVT::v2i16, Expand);
-
   setOperationAction(ISD::SIGN_EXTEND, MVT::v2i64, Expand);
   setOperationAction(ISD::ANY_EXTEND, MVT::v2i64, Expand);
 
@@ -162,6 +157,9 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::UDIV, VT, Expand);
     setOperationAction(ISD::UDIVREM, VT, Expand);
     setOperationAction(ISD::UREM, VT, Expand);
+
+    setOperationAction(ISD::ROTL, VT, Expand);
+    setOperationAction(ISD::ROTR, VT, Expand);
   }
 
   for (auto VT : { MVT::v2i16, MVT::v2i32, MVT::v4i16 }) {
