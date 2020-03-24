@@ -610,7 +610,7 @@ static bool expandALOADADD32Instr(const KVXInstrInfo *TII,
           valReg)
       .addImm(offset)
       .addReg(baseReg)
-      .addReg(outputReg);
+      .addReg(valReg);
   if (outputReg != valReg)
     BuildMI(MBB, MBBI, DL, TII->get(KVX::COPYW), outputReg).addReg(valReg);
   BuildMI(MBB, MBBI, DL, TII->get(KVX::FENCE));
