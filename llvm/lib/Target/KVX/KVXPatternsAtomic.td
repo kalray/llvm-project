@@ -10,11 +10,13 @@ def ASWAP64_Instr : KVX_PSEUDO<(outs SingleReg:$res, PairedReg:$scratch), (ins A
 def : Pat<(atomic_fence i64:$a, i64:$b), (FENCE_Instr Wrapped64:$a, Wrapped64:$b)>;
 
 def atomicloadi8 : PatFrag<(ops node:$ptr), (i8 (atomic_load_8 node:$ptr))>;
+def extatomicloadi8 : PatFrag<(ops node:$ptr), (i32 (atomic_load_8 node:$ptr))>;
 def atomicloadi16 : PatFrag<(ops node:$ptr), (i16 (atomic_load_16 node:$ptr))>;
 def atomicloadi32 : PatFrag<(ops node:$ptr), (i32 (atomic_load_32 node:$ptr))>;
 def atomicloadi64 : PatFrag<(ops node:$ptr), (i64 (atomic_load_64 node:$ptr))>;
 
 def : Pat<(atomicloadi8 AddrRI:$addr), (LBZp AddrRI:$addr, variant_u)>;
+def : Pat<(extatomicloadi8 AddrRI:$addr), (LBZp AddrRI:$addr, variant_u)>;
 def : Pat<(atomicloadi16 AddrRI:$addr), (LHZp AddrRI:$addr, variant_u)>;
 def : Pat<(atomicloadi32 AddrRI:$addr), (LWZp AddrRI:$addr, variant_u)>;
 def : Pat<(atomicloadi64 AddrRI:$addr), (LDp AddrRI:$addr, variant_u)>;
