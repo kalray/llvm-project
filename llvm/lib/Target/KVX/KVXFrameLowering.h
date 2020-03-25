@@ -24,7 +24,7 @@ class KVXFrameLowering : public TargetFrameLowering {
 public:
   explicit KVXFrameLowering(const KVXSubtarget &STI)
       : TargetFrameLowering(StackGrowsUp,
-                            /*StackAlignment=*/Align(8),
+                            /*StackAlignment=*/Align(32),
                             /*LocalAreaOffset=*/0),
         STI(STI) {}
 
