@@ -33,8 +33,17 @@ public:
       : TargetInfo(Triple) {
     NoAsmVariants = true;
 
+    BigEndian = false;
+
+    PointerWidth = PointerAlign = 64;
+    BoolWidth = BoolAlign = 8;
+    IntWidth = IntAlign = 32;
+    LongWidth = LongAlign = 64;
+    LongLongWidth = LongLongAlign = 64;
+
     HasLegalHalfType = true;
     HasFloat16 = true;
+    HasFloat128 = false;
     HalfWidth = HalfAlign = 16;
     FloatWidth = FloatAlign = 32;
     DoubleWidth = DoubleAlign = 64;
@@ -45,10 +54,10 @@ public:
     DoubleFormat = &llvm::APFloat::IEEEdouble();
     LongDoubleFormat = &llvm::APFloat::IEEEdouble();
 
-    LongWidth = LongAlign = PointerWidth = PointerAlign = 64;
     MaxAtomicPromoteWidth = MaxAtomicInlineWidth = 64;
-    resetDataLayout(
-        "e-m:e-p:64:64-i64:64-i128:128-f16:16-f32:32-f64:64-n64-S128");
+    resetDataLayout("e-S256-p:64:64-i1:8-i8:8-i16:16-i32:32-i64:64-"
+                    "v64:64-v128:128-v256:256-v512:512-v1024:1024-"
+                    "f16:16-f32:32-f64:64-a:0:64-m:e-n32:64");
   }
 
   void getTargetDefines(const LangOptions &Opts, MacroBuilder &Builder) const
