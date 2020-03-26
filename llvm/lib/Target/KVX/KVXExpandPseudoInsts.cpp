@@ -592,60 +592,6 @@ static bool isNandOp(unsigned int opCode) {
   return opCode == KVX::ALOADNAND32_Instr || opCode == KVX::ALOADNAND64_Instr;
 }
 
-static bool expandALOADADD32Instr(const KVXInstrInfo *TII,
-                                  MachineBasicBlock &MBB,
-                                  MachineBasicBlock::iterator MBBI) {
-  MachineInstr &MI = *MBBI;
-  DebugLoc DL = MI.getDebugLoc();
-
-  unsigned outputReg = MI.getOperand(0).getReg();
-  unsigned offset = MI.getOperand(1).getImm();
-  unsigned baseReg = MI.getOperand(2).getReg();
-  unsigned valReg = MI.getOperand(3).getReg();
-
-  BuildMI(MBB, MBBI, DL, TII->get(KVX::FENCE));
-  BuildMI(MBB, MBBI, DL,
-          TII->get(GetImmOpCode(offset, KVX::ALADDWri10, KVX::ALADDWri37,
-                                KVX::ALADDWri64)),
-          valReg)
-      .addImm(offset)
-      .addReg(baseReg)
-      .addReg(valReg);
-  if (outputReg != valReg)
-    BuildMI(MBB, MBBI, DL, TII->get(KVX::COPYW), outputReg).addReg(valReg);
-  BuildMI(MBB, MBBI, DL, TII->get(KVX::FENCE));
-
-  MI.eraseFromParent();
-  return true;
-}
-
-static bool expandALOADADD64Instr(const KVXInstrInfo *TII,
-                                  MachineBasicBlock &MBB,
-                                  MachineBasicBlock::iterator MBBI) {
-  MachineInstr &MI = *MBBI;
-  DebugLoc DL = MI.getDebugLoc();
-
-  unsigned outputReg = MI.getOperand(0).getReg();
-  unsigned offset = MI.getOperand(1).getImm();
-  unsigned baseReg = MI.getOperand(2).getReg();
-  unsigned valReg = MI.getOperand(3).getReg();
-
-  BuildMI(MBB, MBBI, DL, TII->get(KVX::FENCE));
-  BuildMI(MBB, MBBI, DL,
-          TII->get(GetImmOpCode(offset, KVX::ALADDDri10, KVX::ALADDDri37,
-                                KVX::ALADDDri64)),
-          valReg)
-      .addImm(offset)
-      .addReg(baseReg)
-      .addReg(valReg);
-  if (outputReg != valReg)
-    BuildMI(MBB, MBBI, DL, TII->get(KVX::COPYD), outputReg).addReg(valReg);
-  BuildMI(MBB, MBBI, DL, TII->get(KVX::FENCE));
-
-  MI.eraseFromParent();
-  return true;
-}
-
 static bool expandALOADOPInstr(unsigned int opCode, const KVXInstrInfo *TII,
                                MachineBasicBlock &MBB,
                                MachineBasicBlock::iterator MBBI,
@@ -1382,11 +1328,7 @@ bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
     expandACMPSWAPInstr(MBBI->getOpcode(), TII, MBB, MBBI, NextMBBI);
     return true;
   case KVX::ALOADADD32_Instr:
-    expandALOADADD32Instr(TII, MBB, MBBI);
-    return true;
   case KVX::ALOADADD64_Instr:
-    expandALOADADD64Instr(TII, MBB, MBBI);
-    return true;
   case KVX::ALOADSUB32_Instr:
   case KVX::ALOADSUB64_Instr:
   case KVX::ALOADAND32_Instr:
