@@ -358,7 +358,7 @@ int64_t getAtomicCBVar(unsigned int opCode) {
   case KVX::ALOADXOR32_Instr:
   case KVX::ALOADOR32_Instr:
   case KVX::ALOADNAND32_Instr:
-    return 8; // wnez
+    return KVXMOD::SCALARCOND_WNEZ;
   case KVX::ASWAP64_Instr:
   case KVX::ACMPSWAP64_Instr:
   case KVX::ALOADADD64_Instr:
@@ -367,7 +367,7 @@ int64_t getAtomicCBVar(unsigned int opCode) {
   case KVX::ALOADXOR64_Instr:
   case KVX::ALOADOR64_Instr:
   case KVX::ALOADNAND64_Instr:
-    return 0; // dnez
+    return KVXMOD::SCALARCOND_DNEZ;
   default:
     llvm_unreachable("invalid opCode");
   }
@@ -479,7 +479,7 @@ static bool expandAtomicSwap8(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   BuildMI(LoopMBB, DL, TII->get(KVX::LWZp), TRI->getSubReg(scratchPairedReg, 2))
       .addImm(0)
       .addReg(scratchBase)
-      .addImm(2 /*uncached*/);
+      .addImm(KVXMOD::VARIANT_U);
 
   BuildMI(LoopMBB, DL, TII->get(KVX::COPYW), compReg)
       .addReg(TRI->getSubReg(scratchPairedReg, 2));
@@ -495,12 +495,12 @@ static bool expandAtomicSwap8(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   BuildMI(LoopMBB, DL, TII->get(KVX::COMPWri), compReg)
       .addReg(compReg)
       .addImm(1)
-      .addImm(0 /*ne*/);
+      .addImm(KVXMOD::COMPARISON_NE);
 
   BuildMI(LoopMBB, DL, TII->get(KVX::CB))
       .addReg(compReg)
       .addMBB(LoopMBB)
-      .addImm(8 /*wnez*/);
+      .addImm(KVXMOD::SCALARCOND_WNEZ);
 
   NextMBBI = MBB.end();
   MI.eraseFromParent();
@@ -562,7 +562,7 @@ static bool expandASWAPInstr(unsigned int opCode, const KVXInstrInfo *TII,
           TRI->getSubReg(scratchPairedReg, 2))
       .addImm(offset)
       .addReg(baseReg)
-      .addImm(2); // uncached
+      .addImm(KVXMOD::VARIANT_U);
 
   BuildMI(LoopMBB, DL, TII->get(getAtomicCopy(opCode)), compReg).addReg(valReg);
 
@@ -575,7 +575,7 @@ static bool expandASWAPInstr(unsigned int opCode, const KVXInstrInfo *TII,
   BuildMI(LoopMBB, DL, TII->get(getAtomicComp(opCode)), compReg)
       .addReg(compReg)
       .addImm(1)
-      .addImm(0); // ne
+      .addImm(KVXMOD::COMPARISON_NE);
 
   BuildMI(LoopMBB, DL, TII->get(KVX::CB))
       .addReg(compReg)
@@ -704,7 +704,7 @@ static bool expandALOADOPInstr(unsigned int opCode, const KVXInstrInfo *TII,
           TRI->getSubReg(scratchPairedReg, 2))
       .addImm(offset)
       .addReg(baseReg)
-      .addImm(2); // uncached
+      .addImm(KVXMOD::VARIANT_U);
 
   BuildMI(LoopMBB, DL, TII->get(getAtomicCopy(opCode)), compReg)
       .addReg(TRI->getSubReg(scratchPairedReg, 2));
@@ -727,7 +727,7 @@ static bool expandALOADOPInstr(unsigned int opCode, const KVXInstrInfo *TII,
   BuildMI(LoopMBB, DL, TII->get(getAtomicComp(opCode)), compReg)
       .addReg(compReg)
       .addImm(1)
-      .addImm(0); // ne
+      .addImm(KVXMOD::COMPARISON_NE);
 
   BuildMI(LoopMBB, DL, TII->get(KVX::CB))
       .addReg(compReg)
@@ -812,27 +812,27 @@ static bool expandACMPSWAPInstr(unsigned int opCode, const KVXInstrInfo *TII,
   BuildMI(LoopMBB, DL, TII->get(getAtomicComp(opCode)), compReg)
       .addReg(compReg)
       .addImm(1)
-      .addImm(1); // eq
+      .addImm(KVXMOD::COMPARISON_EQ);
 
   BuildMI(LoopMBB, DL, TII->get(KVX::CB))
       .addReg(compReg)
       .addMBB(SuccessMBB)
-      .addImm(getAtomicCBVar(opCode) /*wnez*/);
+      .addImm(getAtomicCBVar(opCode));
 
   BuildMI(LoopMBB, DL, TII->get(getAtomicLoad(opCode)), outputReg)
       .addImm(offset)
       .addReg(baseReg)
-      .addImm(2); // uncached
+      .addImm(KVXMOD::VARIANT_U);
 
   BuildMI(LoopMBB, DL, TII->get(getAtomicCompReg(opCode)), compReg)
       .addReg(outputReg)
       .addReg(TRI->getSubReg(scratchPairedReg, 2))
-      .addImm(1); // eq
+      .addImm(KVXMOD::COMPARISON_EQ);
 
   BuildMI(LoopMBB, DL, TII->get(KVX::CB))
       .addReg(compReg)
       .addMBB(LoopMBB)
-      .addImm(getAtomicCBVar(opCode) /*wnez*/);
+      .addImm(getAtomicCBVar(opCode));
 
   BuildMI(LoopMBB, DL, TII->get(KVX::GOTO)).addMBB(DoneMBB);
 
@@ -947,12 +947,12 @@ static bool expandRoundingPairInstrOpcodes(unsigned int OpCode1,
       .addReg(TRI->getSubReg(v1Reg, 1))
       .addReg(TRI->getSubReg(v2Reg, 1))
       .addImm(rounding)
-      .addImm(0);
+      .addImm(KVXMOD::SILENT_);
   BuildMI(MBB, MBBI, DL, TII->get(OpCode2), TRI->getSubReg(outReg, 2))
       .addReg(TRI->getSubReg(v1Reg, 2))
       .addReg(TRI->getSubReg(v2Reg, 2))
       .addImm(rounding)
-      .addImm(0);
+      .addImm(KVXMOD::SILENT_);
 
   MI.eraseFromParent();
   return true;
@@ -976,24 +976,24 @@ static bool expandFMULDCInstr(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
       .addReg(TRI->getSubReg(v1Reg, 1))
       .addReg(TRI->getSubReg(v2Reg, 1))
       .addImm(rounding)
-      .addImm(0);
+      .addImm(KVXMOD::SILENT_);
   BuildMI(MBB, MBBI, DL, TII->get(KVX::FFMSDrr), TRI->getSubReg(outReg, 1))
       .addReg(TRI->getSubReg(outReg, 1))
       .addReg(TRI->getSubReg(v1Reg, 2))
       .addReg(TRI->getSubReg(v2Reg, 2))
       .addImm(rounding)
-      .addImm(0);
+      .addImm(KVXMOD::SILENT_);
   BuildMI(MBB, MBBI, DL, TII->get(KVX::FMULDrr), TRI->getSubReg(outReg, 2))
       .addReg(TRI->getSubReg(v1Reg, 1))
       .addReg(TRI->getSubReg(v2Reg, 2))
       .addImm(rounding)
-      .addImm(0);
+      .addImm(KVXMOD::SILENT_);
   BuildMI(MBB, MBBI, DL, TII->get(KVX::FFMADrr), TRI->getSubReg(outReg, 2))
       .addReg(TRI->getSubReg(outReg, 2))
       .addReg(TRI->getSubReg(v2Reg, 1))
       .addReg(TRI->getSubReg(v1Reg, 2))
       .addImm(rounding)
-      .addImm(0);
+      .addImm(KVXMOD::SILENT_);
 
   MI.eraseFromParent();
   return true;
@@ -1018,7 +1018,7 @@ static bool expandFMULCDCInstr(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
       .addReg(TRI->getSubReg(v1Reg, 1))
       .addReg(TRI->getSubReg(v2Reg, 1))
       .addImm(rounding)
-      .addImm(0);
+      .addImm(KVXMOD::SILENT_);
   BuildMI(MBB, MBBI, DL, TII->get(KVX::COPYD), TRI->getSubReg(outReg, 1))
       .addReg(TRI->getSubReg(v2Reg, 2));
   BuildMI(MBB, MBBI, DL, TII->get(KVX::FFMADrr), TRI->getSubReg(outReg, 1))
@@ -1026,12 +1026,12 @@ static bool expandFMULCDCInstr(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
       .addReg(Scratch)
       .addReg(TRI->getSubReg(v1Reg, 2))
       .addImm(rounding)
-      .addImm(0);
+      .addImm(KVXMOD::SILENT_);
   BuildMI(MBB, MBBI, DL, TII->get(KVX::FMULDrr), Scratch)
       .addReg(TRI->getSubReg(v2Reg, 1))
       .addReg(TRI->getSubReg(v1Reg, 2))
       .addImm(rounding)
-      .addImm(0);
+      .addImm(KVXMOD::SILENT_);
   BuildMI(MBB, MBBI, DL, TII->get(KVX::COPYD), TRI->getSubReg(outReg, 2))
       .addReg(TRI->getSubReg(v2Reg, 2));
   BuildMI(MBB, MBBI, DL, TII->get(KVX::FFMSDrr), TRI->getSubReg(outReg, 2))
@@ -1039,7 +1039,7 @@ static bool expandFMULCDCInstr(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
       .addReg(Scratch)
       .addReg(TRI->getSubReg(v1Reg, 1))
       .addImm(rounding)
-      .addImm(0);
+      .addImm(KVXMOD::SILENT_);
 
   MI.eraseFromParent();
   return true;
@@ -1066,14 +1066,14 @@ expandRoundingPairedRegInOutInstr(unsigned int OpCode, const KVXInstrInfo *TII,
       .addReg(TRI->getSubReg(v1Reg, 1))
       .addReg(TRI->getSubReg(v2Reg, 1))
       .addImm(rounding)
-      .addImm(0);
+      .addImm(KVXMOD::SILENT_);
 
   BuildMI(MBB, MBBI, DL, TII->get(OpCode), TRI->getSubReg(outReg, 2))
       .addReg(TRI->getSubReg(outReg, 2))
       .addReg(TRI->getSubReg(v1Reg, 2))
       .addReg(TRI->getSubReg(v2Reg, 2))
       .addImm(rounding)
-      .addImm(0);
+      .addImm(KVXMOD::SILENT_);
 
   MI.eraseFromParent();
   return true;
@@ -1096,7 +1096,7 @@ static bool expandRoundingInOutInstr(unsigned int OpCode,
       .addReg(v1Reg)
       .addReg(v2Reg)
       .addImm(rounding)
-      .addImm(0);
+      .addImm(KVXMOD::SILENT_);
 
   MI.eraseFromParent();
   return true;
@@ -1158,7 +1158,7 @@ static bool expandStore(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
         .addReg(offsetReg)
         .addReg(base)
         .addReg(val)
-        .addImm(0);
+        .addImm(KVXMOD::SCALING_);
   } else {
     BuildMI(MBB, MBBI, DL, TII->get(OpCode)).addImm(offset).addReg(base).addReg(
         val);
@@ -1235,7 +1235,7 @@ static bool expandLoad(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
         .addReg(offsetReg)
         .addReg(base)
         .addImm(variant)
-        .addImm(0);
+        .addImm(KVXMOD::SCALING_);
   } else {
     BuildMI(MBB, MBBI, DL, TII->get(OpCode), outputReg)
         .addImm(offset)
