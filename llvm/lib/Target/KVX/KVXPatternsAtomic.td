@@ -30,11 +30,10 @@ def : Pat<(atomic_swap_8 AddrRI:$addr, i32:$val), (ASWAP8_Instr AddrRI:$addr, Si
 def : Pat<(atomic_swap_32 AddrRI:$addr, i32:$val), (ASWAP32_Instr AddrRI:$addr, SingleReg:$val)>;
 def : Pat<(atomic_swap_64 AddrRI:$addr, i64:$val), (ASWAP64_Instr AddrRI:$addr, SingleReg:$val)>;
 
-def ALOADADD32_Instr : KVX_PSEUDO<(outs SingleReg:$res), (ins AddrRI:$ptr, SingleReg:$val), []>;
-def ALOADADD64_Instr : KVX_PSEUDO<(outs SingleReg:$res), (ins AddrRI:$ptr, SingleReg:$val), []>;
-
 let isIndirectBranch = 1 in
 {
+def ALOADADD32_Instr : KVX_PSEUDO<(outs SingleReg:$res, PairedReg:$scratch), (ins AddrRI:$ptr, SingleReg:$val), []>;
+def ALOADADD64_Instr : KVX_PSEUDO<(outs SingleReg:$res, PairedReg:$scratch), (ins AddrRI:$ptr, SingleReg:$val), []>;
 def ALOADSUB32_Instr : KVX_PSEUDO<(outs SingleReg:$res, PairedReg:$scratch), (ins AddrRI:$ptr, SingleReg:$val), []>;
 def ALOADSUB64_Instr : KVX_PSEUDO<(outs SingleReg:$res, PairedReg:$scratch), (ins AddrRI:$ptr, SingleReg:$val), []>;
 def ALOADAND32_Instr : KVX_PSEUDO<(outs SingleReg:$res, PairedReg:$scratch), (ins AddrRI:$ptr, SingleReg:$val), []>;
