@@ -1239,8 +1239,7 @@ static bool expandMADDW(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
 }
 
 static bool expandEXTFZ(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
-                        MachineBasicBlock::iterator MBBI, bool Word,
-                        bool Signed) {
+                        MachineBasicBlock::iterator MBBI, bool Word) {
   MachineInstr &MI = *MBBI;
   DebugLoc DL = MI.getDebugLoc();
 
@@ -1269,22 +1268,17 @@ static bool expandEXTFZ(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   }
   if (maxcount == 0 && count > 0)
     maxcount = count;
-  LLVM_DEBUG(dbgs() << "EXTFZ word: " << Word << " signed: " << Signed
-                    << " andmask: " << andmask << " shiftcount: " << shiftcount
+  LLVM_DEBUG(dbgs() << "EXTFZ word: " << Word << " andmask: " << andmask << " shiftcount: " << shiftcount
                     << " maxcount: " << maxcount << "\n");
   if (maxcount > 0) {
-    BuildMI(MBB, MBBI, DL, TII->get(Signed ? KVX::EXTFS : KVX::EXTFZ),
-            outputReg)
+    BuildMI(MBB, MBBI, DL, TII->get(KVX::EXTFZ), outputReg)
         .addReg(valReg)
         .addImm(shiftcount + maxcount - 1)
         .addImm(shiftcount);
   } else {
     unsigned OpCode;
-    if (Word)
-      OpCode = Signed ? KVX::SRAWri : KVX::SRLWri;
-    else
-      OpCode = Signed ? KVX::SRADri : KVX::SRLDri;
-    BuildMI(MBB, MBBI, DL, TII->get(OpCode), outputReg)
+    BuildMI(MBB, MBBI, DL, TII->get(Word ? KVX::SRLWri : KVX::SRLDri),
+            outputReg)
         .addReg(valReg)
         .addImm(shiftcount);
 
@@ -1441,16 +1435,10 @@ bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
     expandMADDW(TII, MBB, MBBI);
     return true;
   case KVX::EXTFZWp:
-    expandEXTFZ(TII, MBB, MBBI, true, false);
-    return true;
-  case KVX::EXTFSWp:
-    expandEXTFZ(TII, MBB, MBBI, true, true);
+    expandEXTFZ(TII, MBB, MBBI, true);
     return true;
   case KVX::EXTFZDp:
-    expandEXTFZ(TII, MBB, MBBI, false, false);
-    return true;
-  case KVX::EXTFSDp:
-    expandEXTFZ(TII, MBB, MBBI, false, true);
+    expandEXTFZ(TII, MBB, MBBI, false);
     return true;
   default:
     break;
