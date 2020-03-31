@@ -147,6 +147,8 @@ private:
 
   unsigned getComparisonCondition(ISD::CondCode CCOpcode) const;
   unsigned getBranchCondition(ISD::CondCode CCOpcode, bool Word) const;
+
+  SDValue PerformDAGCombine(SDNode *N, DAGCombinerInfo &DCI) const override;
 };
 
 } // namespace llvm
