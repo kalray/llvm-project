@@ -14,6 +14,7 @@
 #ifndef LLVM_LIB_TARGET_KVX_KVXFRAMELOWERING_H
 #define LLVM_LIB_TARGET_KVX_KVXFRAMELOWERING_H
 
+#include "KVX.h"
 #include "MCTargetDesc/KVXMCTargetDesc.h"
 #include "llvm/CodeGen/TargetFrameLowering.h"
 
@@ -63,14 +64,8 @@ protected:
   const KVXSubtarget &STI;
 
 private:
-  // FIXME: can be replaced by GetImmOpCode?
   unsigned GetStackOpCode(uint64_t StackSize) const {
-    if (isInt<10>(StackSize))
-      return KVX::ADDDri10;
-    else if (isInt<37>(StackSize))
-      return KVX::ADDDri37;
-    else
-      return KVX::ADDDri64;
+    return GetImmOpCode(StackSize, KVX::ADDDri10, KVX::ADDDri37, KVX::ADDDri64);
   }
 
   void adjustStack(MachineFunction &MF) const;
