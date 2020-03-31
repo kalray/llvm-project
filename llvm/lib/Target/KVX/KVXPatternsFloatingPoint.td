@@ -166,6 +166,48 @@ def : Pat<(i32 (setuge f64:$rz, f64:$ry)), (FCOMPD SingleReg:$rz, SingleReg:$ry,
 def : Pat<(i32 (setult f64:$rz, f64:$ry)), (FCOMPD SingleReg:$rz, SingleReg:$ry, floatcomp_ult)>;
 def : Pat<(i32 (setule f64:$rz, f64:$ry)), (FCOMPD SingleReg:$ry, SingleReg:$rz, floatcomp_uge)>;
 def : Pat<(i32 (setune f64:$rz, f64:$ry)), (FCOMPD SingleReg:$rz, SingleReg:$ry, floatcomp_une)>;
+def : Pat<(i64 (setoeq f32:$rz, Binary32:$imm)), (FCOMPWri SingleReg:$rz, Binary32:$imm, floatcomp_oeq)>;
+def : Pat<(i64 (setogt Binary32:$imm, f32:$ry)), (FCOMPWri SingleReg:$ry, Binary32:$imm, floatcomp_olt)>;
+def : Pat<(i64 (setoge f32:$rz, Binary32:$imm)), (FCOMPWri SingleReg:$rz, Binary32:$imm, floatcomp_oge)>;
+def : Pat<(i64 (setolt f32:$rz, Binary32:$imm)), (FCOMPWri SingleReg:$rz, Binary32:$imm, floatcomp_olt)>;
+def : Pat<(i64 (setole Binary32:$imm, f32:$ry)), (FCOMPWri SingleReg:$ry, Binary32:$imm, floatcomp_oge)>;
+def : Pat<(i64 (setone f32:$rz, Binary32:$imm)), (FCOMPWri SingleReg:$rz, Binary32:$imm, floatcomp_one)>;
+def : Pat<(i64 (seto f32:$rz, Binary32:$imm)), (ORDrr (FCOMPWri SingleReg:$rz, Binary32:$imm, floatcomp_oge), (FCOMPWri SingleReg:$rz, Binary32:$imm, floatcomp_olt))>;
+def : Pat<(i64 (setuo f32:$rz, Binary32:$imm)), (ANDDrr (FCOMPWri SingleReg:$rz, Binary32:$imm, floatcomp_uge), (FCOMPWri SingleReg:$rz, Binary32:$imm, floatcomp_ult))>;
+def : Pat<(i64 (setueq f32:$rz, Binary32:$imm)), (FCOMPWri SingleReg:$rz, Binary32:$imm, floatcomp_ueq)>;
+def : Pat<(i64 (setugt Binary32:$imm, f32:$ry)), (FCOMPWri SingleReg:$ry, Binary32:$imm, floatcomp_ult)>;
+def : Pat<(i64 (setuge f32:$rz, Binary32:$imm)), (FCOMPWri SingleReg:$rz, Binary32:$imm, floatcomp_uge)>;
+def : Pat<(i64 (setult f32:$rz, Binary32:$imm)), (FCOMPWri SingleReg:$rz, Binary32:$imm, floatcomp_ult)>;
+def : Pat<(i64 (setule Binary32:$imm, f32:$ry)), (FCOMPWri SingleReg:$ry, Binary32:$imm, floatcomp_uge)>;
+def : Pat<(i64 (setune f32:$rz, Binary32:$imm)), (FCOMPWri SingleReg:$rz, Binary32:$imm, floatcomp_une)>;
+def : Pat<(i64 (setoeq f32:$rz, f32:$ry)), (FCOMPWrr SingleReg:$rz, SingleReg:$ry, floatcomp_oeq)>;
+def : Pat<(i64 (setogt f32:$rz, f32:$ry)), (FCOMPWrr SingleReg:$ry, SingleReg:$rz, floatcomp_olt)>;
+def : Pat<(i64 (setoge f32:$rz, f32:$ry)), (FCOMPWrr SingleReg:$rz, SingleReg:$ry, floatcomp_oge)>;
+def : Pat<(i64 (setolt f32:$rz, f32:$ry)), (FCOMPWrr SingleReg:$rz, SingleReg:$ry, floatcomp_olt)>;
+def : Pat<(i64 (setole f32:$rz, f32:$ry)), (FCOMPWrr SingleReg:$ry, SingleReg:$rz, floatcomp_oge)>;
+def : Pat<(i64 (setone f32:$rz, f32:$ry)), (FCOMPWrr SingleReg:$rz, SingleReg:$ry, floatcomp_one)>;
+def : Pat<(i64 (seto f32:$rz, f32:$ry)), (ORDrr (FCOMPWrr SingleReg:$rz, SingleReg:$ry, floatcomp_oge), (FCOMPWrr SingleReg:$rz, SingleReg:$ry, floatcomp_olt))>;
+def : Pat<(i64 (setuo f32:$rz, f32:$ry)), (ANDDrr (FCOMPWrr SingleReg:$rz, SingleReg:$ry, floatcomp_uge), (FCOMPWrr SingleReg:$rz, SingleReg:$ry, floatcomp_ult))>;
+def : Pat<(i64 (setueq f32:$rz, f32:$ry)), (FCOMPWrr SingleReg:$rz, SingleReg:$ry, floatcomp_ueq)>;
+def : Pat<(i64 (setugt f32:$rz, f32:$ry)), (FCOMPWrr SingleReg:$ry, SingleReg:$rz, floatcomp_ult)>;
+def : Pat<(i64 (setuge f32:$rz, f32:$ry)), (FCOMPWrr SingleReg:$rz, SingleReg:$ry, floatcomp_uge)>;
+def : Pat<(i64 (setult f32:$rz, f32:$ry)), (FCOMPWrr SingleReg:$rz, SingleReg:$ry, floatcomp_ult)>;
+def : Pat<(i64 (setule f32:$rz, f32:$ry)), (FCOMPWrr SingleReg:$ry, SingleReg:$rz, floatcomp_uge)>;
+def : Pat<(i64 (setune f32:$rz, f32:$ry)), (FCOMPWrr SingleReg:$rz, SingleReg:$ry, floatcomp_une)>;
+def : Pat<(i64 (setoeq f64:$rz, f64:$ry)), (FCOMPD SingleReg:$rz, SingleReg:$ry, floatcomp_oeq)>;
+def : Pat<(i64 (setogt f64:$rz, f64:$ry)), (FCOMPD SingleReg:$ry, SingleReg:$rz, floatcomp_olt)>;
+def : Pat<(i64 (setoge f64:$rz, f64:$ry)), (FCOMPD SingleReg:$rz, SingleReg:$ry, floatcomp_oge)>;
+def : Pat<(i64 (setolt f64:$rz, f64:$ry)), (FCOMPD SingleReg:$rz, SingleReg:$ry, floatcomp_olt)>;
+def : Pat<(i64 (setole f64:$rz, f64:$ry)), (FCOMPD SingleReg:$ry, SingleReg:$rz, floatcomp_oge)>;
+def : Pat<(i64 (setone f64:$rz, f64:$ry)), (FCOMPD SingleReg:$rz, SingleReg:$ry, floatcomp_one)>;
+def : Pat<(i64 (seto f64:$rz, f64:$ry)), (ORDrr (FCOMPD SingleReg:$rz, SingleReg:$ry, floatcomp_oge), (FCOMPD SingleReg:$rz, SingleReg:$ry, floatcomp_olt))>;
+def : Pat<(i64 (setuo f64:$rz, f64:$ry)), (ANDDrr (FCOMPD SingleReg:$rz, SingleReg:$ry, floatcomp_uge), (FCOMPD SingleReg:$rz, SingleReg:$ry, floatcomp_ult))>;
+def : Pat<(i64 (setueq f64:$rz, f64:$ry)), (FCOMPD SingleReg:$rz, SingleReg:$ry, floatcomp_ueq)>;
+def : Pat<(i64 (setugt f64:$rz, f64:$ry)), (FCOMPD SingleReg:$ry, SingleReg:$rz, floatcomp_ult)>;
+def : Pat<(i64 (setuge f64:$rz, f64:$ry)), (FCOMPD SingleReg:$rz, SingleReg:$ry, floatcomp_uge)>;
+def : Pat<(i64 (setult f64:$rz, f64:$ry)), (FCOMPD SingleReg:$rz, SingleReg:$ry, floatcomp_ult)>;
+def : Pat<(i64 (setule f64:$rz, f64:$ry)), (FCOMPD SingleReg:$ry, SingleReg:$rz, floatcomp_uge)>;
+def : Pat<(i64 (setune f64:$rz, f64:$ry)), (FCOMPD SingleReg:$rz, SingleReg:$ry, floatcomp_une)>;
 
 multiclass COMP_FPat<SDNode Node, Floatcomp Cmp, bit SWAP> {
 
