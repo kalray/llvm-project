@@ -362,6 +362,8 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     setLoadExtAction(ISD::EXTLOAD, VT, MVT::f64, Expand);
   }
 
+  setTargetDAGCombine(ISD::ZERO_EXTEND);
+
   setMaxAtomicSizeInBitsSupported(64);
   setMinCmpXchgSizeInBits(32);
 
@@ -2461,4 +2463,32 @@ SDValue KVXTargetLowering::lowerMINMAXUHQ(SDValue Op, SelectionDAG &DAG) const {
             { vector1,
               Op.getOperand(0).getOperand(1).getOperand(0).getOperand(0) }),
         0);
+}
+
+static SDValue combineZext(SDNode *N, SelectionDAG &DAG) {
+  SDValue N0 = N->getOperand(0);
+  SDValue N00 = N0->getOperand(0);
+
+  // Combine SETCC with ZEXT, except for f16, because it uses FCOMPNHQ
+  // which negates the result, therefore zext is mandatory
+  if (N0->getOpcode() == ISD::SETCC && N00.getValueType() != MVT::f16) {
+    return DAG.getSetCC(SDLoc(N), N->getValueType(0), N00, N0->getOperand(1),
+                        cast<CondCodeSDNode>(N0->getOperand(2))->get());
+  }
+
+  return SDValue();
+}
+
+SDValue KVXTargetLowering::PerformDAGCombine(SDNode *N,
+                                             DAGCombinerInfo &DCI) const {
+  SelectionDAG &DAG = DCI.DAG;
+
+  switch (N->getOpcode()) {
+  default:
+    break;
+  case ISD::ZERO_EXTEND:
+    return combineZext(N, DAG);
+  }
+
+  return SDValue();
 }
