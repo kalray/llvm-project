@@ -172,7 +172,6 @@ void KVXInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
         .addReg(SrcReg, getKillRegState(IsKill))
         .setMIFlags(MachineInstr::FrameSetup);
   }
-  // FIXME: Onlyra? GETss2 takes a Onlyreg
   if (KVX::OnlyraRegRegClass.hasSubClassEq(RC)) {
     unsigned ScratchReg = findScratchRegister(MBB, false);
     BuildMI(MBB, I, DL, get(KVX::GETss2), ScratchReg)
