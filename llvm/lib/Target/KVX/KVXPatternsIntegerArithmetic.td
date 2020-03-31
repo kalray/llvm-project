@@ -145,15 +145,6 @@ def : BITCAST<v2i32, i64, SingleReg>;
 def : BITCAST<v2i16, i32, SingleReg>;
 def : BITCAST<i32, v2i16, SingleReg>;
 
-// FIXME: already defined in KVXInstrInfo
-// defm ROLW
-// defm RORW
-multiclass MC_16_Pat<SDNode Node, Operand OpR1, Operand OpR2,
-                    KVX_INSTRUCTION RRInstr, KVX_INSTRUCTION RIInstr> {
-  def : Pat<(Node OpR1:$rs1, OpR2:$rs2), (RRInstr SingleReg:$rs1, SingleReg:$rs2)>;
-  def : Pat<(Node OpR1:$rs, Unsigned6:$is), (RIInstr SingleReg:$rs, Unsigned6:$is)>;
-}
-
 // ADDD
 def : Pat<(add i64:$rs1, i64:$rs2), (ADDDrr SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(add i64:$rs1, Signed10:$rs2), (ADDDri10 SingleReg:$rs1, Signed10:$rs2)>;
@@ -417,10 +408,12 @@ def : Pat<(srl i32:$rs1, i64:$rs2), (SRLWrr SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(srl i32:$rs1, Unsigned6:$rs2), (SRLWri SingleReg:$rs1, Unsigned6:$rs2)>;
 
 // ROLW
-defm : MC_16_Pat<rotl, i32, i64, ROLWrr, ROLWri>;
+def : Pat<(rotl i32:$rs1, i64:$rs2), (ROLWrr SingleReg:$rs1, SingleReg:$rs2)>;
+def : Pat<(rotl i32:$rs, Unsigned6:$is), (ROLWri SingleReg:$rs, Unsigned6:$is)>;
 
 // RORW
-defm : MC_16_Pat<rotr, i32, i64, RORWrr, RORWri>;
+def : Pat<(rotr i32:$rs1, i64:$rs2), (RORWrr SingleReg:$rs1, SingleReg:$rs2)>;
+def : Pat<(rotr i32:$rs, Unsigned6:$is), (RORWri SingleReg:$rs, Unsigned6:$is)>;
 
 // XORD
 def : Pat<(xor i64:$rs1, i64:$rs2), (XORDrr SingleReg:$rs1, SingleReg:$rs2)>;
