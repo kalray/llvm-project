@@ -240,6 +240,11 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::BR_CC, VT, Custom);
 
     setOperationAction(ISD::BSWAP, VT, Expand);
+
+    setOperationAction(ISD::ATOMIC_LOAD_MIN, VT, Expand);
+    setOperationAction(ISD::ATOMIC_LOAD_MAX, VT, Expand);
+    setOperationAction(ISD::ATOMIC_LOAD_UMIN, VT, Expand);
+    setOperationAction(ISD::ATOMIC_LOAD_UMAX, VT, Expand);
   }
   setOperationAction(ISD::ROTL, MVT::i64, Expand);
   setOperationAction(ISD::ROTR, MVT::i64, Expand);
