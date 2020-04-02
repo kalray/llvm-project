@@ -249,6 +249,10 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::ROTL, MVT::i64, Expand);
   setOperationAction(ISD::ROTR, MVT::i64, Expand);
 
+  setOperationAction(ISD::SHL_PARTS, MVT::i64, Expand);
+  setOperationAction(ISD::SRL_PARTS, MVT::i64, Expand);
+  setOperationAction(ISD::SRA_PARTS, MVT::i64, Expand);
+
   setOperationAction(ISD::BlockAddress, MVT::i64, Custom);
   setOperationAction(ISD::GlobalAddress, MVT::i64, Custom);
   setOperationAction(ISD::GlobalTLSAddress, MVT::i64, Custom);
