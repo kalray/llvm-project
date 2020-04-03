@@ -18,7 +18,7 @@
 // This file was automatically generated,
 //   *DO NOT EDIT*,
 //   please contact code owner.
-// Last generated: 2020-03-01 22:26:51.276939.
+// Last generated: 2020-04-04 01:14:56.318753.
 
 include "KVXOperandInfo.td"
 include "KVXInstrFormats.td"
@@ -1762,6 +1762,7 @@ def STSUD : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
    [/* no straightforward pattern */],
    ALU_LITE>;
 
+let isAdd = 1 in
 defm ADDD : MC_11<"addd">;
 
 defm SBFD : MC_11<"sbfd">;
@@ -1838,6 +1839,7 @@ def STSUW : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
    [/* no straightforward pattern */],
    ALU_LITE>;
 
+let isAdd = 1 in
 defm ADDW : MC_14<"addw">;
 
 defm SBFW : MC_14<"sbfw">;
