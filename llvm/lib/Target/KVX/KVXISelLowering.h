@@ -30,14 +30,14 @@ enum NodeType : unsigned {
   FIRST_NUMBER = ISD::BUILTIN_OP_END,
   RET,
   CALL,
-  WRAPPER,
+  AddrWrapper,
   SELECT_CC,
   TAIL,
   GetSystemReg,
   PICInternIndirection,
   PICExternIndirection,
   PICPCRelativeGOTAddr,
-  PICWRAPPER,
+  PICAddrWrapper,
   COMP,
   BRCOND
 };
