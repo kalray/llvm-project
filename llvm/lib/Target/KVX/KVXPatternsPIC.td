@@ -10,7 +10,7 @@
 def PICInternIndirection : SDNode<"KVXISD::PICInternIndirection", SDTIntBinOp>;
 def PICExternIndirection : SDNode<"KVXISD::PICExternIndirection", SDTIntBinOp>;
 def PICPCRelativeGOTAddr : SDNode<"KVXISD::PICPCRelativeGOTAddr", SDTUNDEF>;
-def PICKVXWrapper : SDNode<"KVXISD::PICWRAPPER", SDTKVXWrapper>;
+def PICKVXWrapper : SDNode<"KVXISD::PICAddrWrapper", SDTKVXWrapper>;
 
 
 def PICPCRELGOTADDR : REGISTERW_EXTEND27_UPPER27_LOWER10_TRIPLE

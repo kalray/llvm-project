@@ -395,8 +395,8 @@ const char *KVXTargetLowering::getTargetNodeName(unsigned Opcode) const {
     return "KVX::RET";
   case KVXISD::CALL:
     return "KVX::CALL";
-  case KVXISD::WRAPPER:
-    return "KVX::WRAPPER";
+  case KVXISD::AddrWrapper:
+    return "KVX::AddrWrapper";
   case KVXISD::SELECT_CC:
     return "KVX::SELECT_CC";
   case KVXISD::PICInternIndirection:
@@ -949,7 +949,7 @@ SDValue KVXTargetLowering::lowerGlobalAddress(SDValue Op,
     }
   } else {
     Result = DAG.getTargetGlobalAddress(GV, DL, PtrVT, 0);
-    Result = DAG.getNode(KVXISD::WRAPPER, DL, PtrVT, Result);
+    Result = DAG.getNode(KVXISD::AddrWrapper, DL, PtrVT, Result);
 
     if (Offset != 0) {
       SDValue PtrOff = DAG.getIntPtrConstant(Offset, DL);
@@ -983,7 +983,7 @@ SDValue KVXTargetLowering::lowerGlobalTLSAddress(SDValue Op,
     EVT PtrVT = getPointerTy(DAG.getDataLayout());
 
     SDValue Result = DAG.getTargetGlobalAddress(GV, DL, PtrVT, Offset);
-    Result = DAG.getNode(KVXISD::WRAPPER, DL, PtrVT, Result);
+    Result = DAG.getNode(KVXISD::AddrWrapper, DL, PtrVT, Result);
     Result = DAG.getNode(ISD::ADD, DL, PtrVT,
                          DAG.getRegister(KVX::R13, MVT::i64), Result);
     return Result;
@@ -1152,9 +1152,9 @@ SDValue KVXTargetLowering::lowerBlockAddress(SDValue Op,
 
   // -fPIC
   if (isPositionIndependent())
-    Result = DAG.getNode(KVXISD::PICWRAPPER, DL, PtrVT, Result);
+    Result = DAG.getNode(KVXISD::PICAddrWrapper, DL, PtrVT, Result);
   else
-    Result = DAG.getNode(KVXISD::WRAPPER, DL, PtrVT, Result);
+    Result = DAG.getNode(KVXISD::AddrWrapper, DL, PtrVT, Result);
 
   return Result;
 }
