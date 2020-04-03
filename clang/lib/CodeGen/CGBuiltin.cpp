@@ -14983,8 +14983,8 @@ static int KVX_getRoundingModifier(clang::ASTContext &Ctx,
 }
 
 static Value *KVX_emitUnaryBuiltin(CodeGenFunction &CGF,
-                               const CallExpr *E,
-                               unsigned IntrinsicID) {
+                                   const CallExpr *E,
+                                   unsigned IntrinsicID) {
   llvm::Value *Src0 = CGF.EmitScalarExpr(E->getArg(0));
 
   Function *F = CGF.CGM.getIntrinsic(IntrinsicID);
@@ -14992,8 +14992,8 @@ static Value *KVX_emitUnaryBuiltin(CodeGenFunction &CGF,
 }
 
 static Value *KVX_emitBinaryBuiltin(CodeGenFunction &CGF,
-                                const CallExpr *E,
-                                unsigned IntrinsicID) {
+                                    const CallExpr *E,
+                                    unsigned IntrinsicID) {
   llvm::Value *Src0 = CGF.EmitScalarExpr(E->getArg(0));
   llvm::Value *Src1 = CGF.EmitScalarExpr(E->getArg(1));
 
@@ -15173,6 +15173,42 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
 
   case KVX::BI__builtin_kvx_fnegdp:
     return KVX_emitUnaryBuiltin(*this, E, Intrinsic::kvx_fnegdp);
+
+  case KVX::BI__builtin_kvx_ctzd:
+    return KVX_emitUnaryBuiltin(*this, E, Intrinsic::kvx_ctzd);
+
+  case KVX::BI__builtin_kvx_ctzw:
+    return KVX_emitUnaryBuiltin(*this, E, Intrinsic::kvx_ctzw);
+
+  case KVX::BI__builtin_kvx_ctzwp:
+    return KVX_emitUnaryBuiltin(*this, E, Intrinsic::kvx_ctzwp);
+
+  case KVX::BI__builtin_kvx_clzd:
+    return KVX_emitUnaryBuiltin(*this, E, Intrinsic::kvx_clzd);
+
+  case KVX::BI__builtin_kvx_clzw:
+    return KVX_emitUnaryBuiltin(*this, E, Intrinsic::kvx_clzw);
+
+  case KVX::BI__builtin_kvx_clzwp:
+    return KVX_emitUnaryBuiltin(*this, E, Intrinsic::kvx_clzwp);
+
+  case KVX::BI__builtin_kvx_clsd:
+    return KVX_emitUnaryBuiltin(*this, E, Intrinsic::kvx_clsd);
+
+  case KVX::BI__builtin_kvx_clsw:
+    return KVX_emitUnaryBuiltin(*this, E, Intrinsic::kvx_clsw);
+
+  case KVX::BI__builtin_kvx_clswp:
+    return KVX_emitUnaryBuiltin(*this, E, Intrinsic::kvx_clswp);
+
+  case KVX::BI__builtin_kvx_cbsd:
+    return KVX_emitUnaryBuiltin(*this, E, Intrinsic::kvx_cbsd);
+
+  case KVX::BI__builtin_kvx_cbsw:
+    return KVX_emitUnaryBuiltin(*this, E, Intrinsic::kvx_cbsw);
+
+  case KVX::BI__builtin_kvx_cbswp:
+    return KVX_emitUnaryBuiltin(*this, E, Intrinsic::kvx_cbswp);
 
   case KVX::BI__builtin_kvx_fmaxwp:
     return KVX_emitBinaryBuiltin(*this, E, Intrinsic::kvx_fmaxwp);
