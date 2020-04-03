@@ -72,7 +72,7 @@ def ENDLOOP : REGISTERZ_SIMPLE <(outs), (ins), "ENDLOOP", [ ], ALL>;
 def SDTKVXWrapper : SDTypeProfile<1, 1, [SDTCisSameAs<0, 1>, SDTCisPtrTy<0>]>;
 def SDTKVXTail : SDTypeProfile<0, -1, [SDTCisVT<0, i64>]>;
 
-def KVXWrapper : SDNode<"KVXISD::WRAPPER", SDTKVXWrapper>;
+def KVXWrapper : SDNode<"KVXISD::AddrWrapper", SDTKVXWrapper>;
 
 def SDT_KVXSelectCC : SDTypeProfile<1, 3, [SDTCisVT<0, i32>]>;
 
