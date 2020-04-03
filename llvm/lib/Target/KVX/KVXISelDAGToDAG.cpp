@@ -68,7 +68,9 @@ bool KVXDAGToDAGISel::SelectAddrRI(SDValue Addr, SDValue &Index,
     return true;
   }
 
-  if (Addr.getOpcode() == ISD::ADD || Addr.getOpcode() == ISD::OR) {
+  if (Addr.getOpcode() == ISD::ADD ||
+      (Addr.getOpcode() == ISD::OR &&
+       CurDAG->haveNoCommonBitsSet(Addr.getOperand(0), Addr.getOperand(1)))) {
 
     auto FIN = dyn_cast<FrameIndexSDNode>(Addr.getOperand(0));
     auto CN = dyn_cast<ConstantSDNode>(Addr.getOperand(1));
