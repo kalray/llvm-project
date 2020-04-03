@@ -111,3 +111,16 @@ def: Pat<(int_kvx_ffmswp v2f32:$v1, v2f32:$v2, v2f32:$v3, i32:$mod), (FFMSWP_Ins
 def: Pat<(int_kvx_ffmswq v4f32:$v1, v4f32:$v2, v4f32:$v3, i32:$mod), (FFMSWQ_Instr PairedReg:$v1, PairedReg:$v2, PairedReg:$v3, RoundingMod:$mod)>;
 def: Pat<(int_kvx_ffmsdp v2f64:$v1, v2f64:$v2, v2f64:$v3, i32:$mod), (FFMSDP_Instr PairedReg:$v1, PairedReg:$v2, PairedReg:$v3, RoundingMod:$mod)>;
 def: Pat<(int_kvx_fmm2swq v2f32:$v1, v2f32:$v2, v4f32:$v3, i32:$mod), (FMM2SWQ_Instr SingleReg:$v1, SingleReg:$v2, PairedReg:$v3, RoundingMod:$mod)>;
+
+def: Pat<(int_kvx_ctzd i64:$r), (CTZD SingleReg:$r)>;
+def: Pat<(int_kvx_ctzw i32:$r), (CTZW SingleReg:$r)>;
+def: Pat<(int_kvx_ctzwp v2i32:$r), (CTZWP SingleReg:$r)>;
+def: Pat<(int_kvx_clzd i64:$r), (CLZD SingleReg:$r)>;
+def: Pat<(int_kvx_clzw i32:$r), (CLZW SingleReg:$r)>;
+def: Pat<(int_kvx_clzwp v2i32:$r), (CLZWP SingleReg:$r)>;
+def: Pat<(int_kvx_clsd i64:$r), (CLSD SingleReg:$r)>;
+def: Pat<(int_kvx_clsw i32:$r), (CLSW SingleReg:$r)>;
+def: Pat<(int_kvx_clswp v2i32:$r), (CLSWP SingleReg:$r)>;
+def: Pat<(int_kvx_cbsd i64:$r), (CBSD SingleReg:$r)>;
+def: Pat<(int_kvx_cbsw i32:$r), (CBSW SingleReg:$r)>;
+def: Pat<(int_kvx_cbswp v2i32:$r), (CBSWP SingleReg:$r)>;
