@@ -117,26 +117,26 @@ void KVXInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
     BuildMI(MBB, I, DL, get(KVX::LDp), DstReg)
         .addImm(0)
         .addFrameIndex(FI)
-        .addImm(0); // variantMod
+        .addImm(KVXMOD::VARIANT_);
   }
   if (KVX::PairedRegRegClass.hasSubClassEq(RC)) {
     BuildMI(MBB, I, DL, get(KVX::LQp), DstReg)
         .addImm(0)
         .addFrameIndex(FI)
-        .addImm(0); // variantMod
+        .addImm(KVXMOD::VARIANT_);
   }
   if (KVX::QuadRegRegClass.hasSubClassEq(RC)) {
     BuildMI(MBB, I, DL, get(KVX::LOp), DstReg)
         .addImm(0)
         .addFrameIndex(FI)
-        .addImm(0); // variantMod
+        .addImm(KVXMOD::VARIANT_);
   }
   if (KVX::OnlyraRegRegClass.hasSubClassEq(RC)) {
     unsigned ScratchReg = findScratchRegister(MBB, true);
     BuildMI(MBB, I, DL, get(KVX::LDp), ScratchReg)
         .addImm(0)
         .addFrameIndex(FI)
-        .addImm(0); // variantMod
+        .addImm(KVXMOD::VARIANT_);
     BuildMI(MBB, I, DL, get(KVX::SETrsra), KVX::RA)
         .addReg(ScratchReg, RegState::Kill);
   }
