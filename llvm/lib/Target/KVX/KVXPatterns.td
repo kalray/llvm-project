@@ -50,6 +50,9 @@ def : Pat<(KVXComp i64:$lhs, i64:$rhs, i32:$mod),
 
 // FIXME: clean code below
 
+def SDT_KVXCall : SDTypeProfile<0, -1, [SDTCisVT<0, i64>]>;
+def Call : SDNode<"KVXISD::CALL", SDT_KVXCall, [SDNPHasChain, SDNPOptInGlue, SDNPOutGlue, SDNPVariadic]>;
+
 def : BITCAST<i64, v8i8, SingleReg>;
 def : BITCAST<v8i8, i64, SingleReg>;
 
