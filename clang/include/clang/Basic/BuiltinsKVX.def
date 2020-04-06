@@ -7,113 +7,109 @@
 //
 //===----------------------------------------------------------------------===//
 //
-// This file defines the KVX-specific builtin function database. Users of
+// This file defines the KVX-specific builtin functions database. Users of
 // this file must define the BUILTIN macro to make use of this information.
 //
 //===----------------------------------------------------------------------===//
 
 // The format of this database matches clang/Basic/Builtins.def.
 
-// This file was automatically generated, DO NOT EDIT.
-// Last generated: 2018-10-17 13:24:46.083693.
+// This file was automatically generated,
+//   *DO NOT EDIT*,
+//   please contact code owner.
+// Last generated: 2020-04-06 22:47:17.124173.
 
-BUILTIN(__builtin_kvx_set_ps, "vii", "")
-BUILTIN(__builtin_kvx_syncgroup, "vUi", "")
-BUILTIN(__builtin_kvx_insf, "ULiULiUiUi", "")
-BUILTIN(__builtin_kvx_extfz, "ULiULiUiUi", "")
-BUILTIN(__builtin_kvx_extfs, "LiULiUiUi", "")
-BUILTIN(__builtin_kvx_stsuw, "iii", "")
-BUILTIN(__builtin_kvx_abdw, "iii", "")
-BUILTIN(__builtin_kvx_minw, "iii", "")
-BUILTIN(__builtin_kvx_minuw, "UiUiUi", "")
-BUILTIN(__builtin_kvx_maxw, "iii", "")
-BUILTIN(__builtin_kvx_maxuw, "UiUiUi", "")
-BUILTIN(__builtin_kvx_absw, "ii", "")
-BUILTIN(__builtin_kvx_sath, "ii", "")
-BUILTIN(__builtin_kvx_addsw, "iii", "")
-BUILTIN(__builtin_kvx_sbfsw, "iii", "")
+//===----------------------------------------------------------------------===//
+// BCU
+//===----------------------------------------------------------------------===//
 
-BUILTIN(__builtin_kvx_acswapd, "ULLLiv*UWiUWi", "")
-BUILTIN(__builtin_kvx_acswapw, "ULiCv*LiLi", "")
-BUILTIN(__builtin_kvx_afaddd, "ULLiv*LLi", "")
-BUILTIN(__builtin_kvx_afaddw, "ULiv*Li", "")
-BUILTIN(__builtin_kvx_alclrd, "ULLiv*", "")
-BUILTIN(__builtin_kvx_alclrw, "ULiv*", "")
 BUILTIN(__builtin_kvx_await, "v", "")
-BUILTIN(__builtin_kvx_fence, "v", "")
-BUILTIN(__builtin_kvx_dinval, "v", "")
+BUILTIN(__builtin_kvx_get, "LiUi", "")
+BUILTIN(__builtin_kvx_set, "vUiLi", "")
 BUILTIN(__builtin_kvx_stop, "v", "")
-BUILTIN(__builtin_kvx_get, "ULLiLi", "")
-BUILTIN(__builtin_kvx_set, "vUcULLi", "")
+BUILTIN(__builtin_kvx_wfxl, "vUiULi", "")
+BUILTIN(__builtin_kvx_wfxm, "vUiULi", "")
+
+//===----------------------------------------------------------------------===//
+// LSU
+//===----------------------------------------------------------------------===//
+
+BUILTIN(__builtin_kvx_acswapd, "LiCv*LiLi", "")
+BUILTIN(__builtin_kvx_acswapw, "iCv*ii", "")
+BUILTIN(__builtin_kvx_afaddd, "LiCv*Li", "")
+BUILTIN(__builtin_kvx_afaddw, "iCv*i", "")
+BUILTIN(__builtin_kvx_alclrd, "LiCv*", "")
+BUILTIN(__builtin_kvx_alclrw, "iCv*", "")
+BUILTIN(__builtin_kvx_dinval, "v", "")
+BUILTIN(__builtin_kvx_fence, "v", "")
 BUILTIN(__builtin_kvx_lbzu, "UcCv*", "")
 BUILTIN(__builtin_kvx_lhzu, "UsCv*", "")
 BUILTIN(__builtin_kvx_lwzu, "UiCv*", "")
 BUILTIN(__builtin_kvx_ldu, "ULiCv*", "")
-BUILTIN(__builtin_kvx_wfxl, "vUcULLi", "")
-BUILTIN(__builtin_kvx_wfxm, "vUcULLi", "")
-BUILTIN(__builtin_kvx_sbmm8, "ULLiiULLi", "")
 
+//===----------------------------------------------------------------------===//
+// FPU
+//===----------------------------------------------------------------------===//
+
+BUILTIN(__builtin_kvx_fabsdp, "V2dV2d", "")
 BUILTIN(__builtin_kvx_fabswp, "V2fV2f", "")
 BUILTIN(__builtin_kvx_fabswq, "V4fV4f", "")
-BUILTIN(__builtin_kvx_fabsdp, "V2dV2d", "")
-
-BUILTIN(__builtin_kvx_fnegwp, "V2fV2f", "")
-BUILTIN(__builtin_kvx_fnegwq, "V4fV4f", "")
-BUILTIN(__builtin_kvx_fnegdp, "V2dV2d", "")
-
-BUILTIN(__builtin_kvx_fmaxwp, "V2fV2fV2f", "")
-BUILTIN(__builtin_kvx_fmaxwq, "V4fV4fV4f", "")
-BUILTIN(__builtin_kvx_fmaxdp, "V2dV2dV2d", "")
-
-BUILTIN(__builtin_kvx_fminwp, "V2fV2fV2f", "")
-BUILTIN(__builtin_kvx_fminwq, "V4fV4fV4f", "")
-BUILTIN(__builtin_kvx_fmindp, "V2dV2dV2d", "")
-
-BUILTIN(__builtin_kvx_faddwp, "V2fV2fV2fCc*", "")
+BUILTIN(__builtin_kvx_faddcdc, "V2dV2dV2dCc*", "")
 BUILTIN(__builtin_kvx_faddcwc, "V2fV2fV2fCc*", "")
-BUILTIN(__builtin_kvx_faddwq, "V4fV4fV4fCc*", "")
 BUILTIN(__builtin_kvx_faddcwcp, "V4fV4fV4fCc*", "")
 BUILTIN(__builtin_kvx_fadddp, "V2dV2dV2dCc*", "")
-BUILTIN(__builtin_kvx_faddcdc, "V2dV2dV2dCc*", "")
-
-BUILTIN(__builtin_kvx_fsbfwp, "V2fV2fV2fCc*", "")
-BUILTIN(__builtin_kvx_fsbfcwc, "V2fV2fV2fCc*", "")
-BUILTIN(__builtin_kvx_fsbfwq, "V4fV4fV4fCc*", "")
-BUILTIN(__builtin_kvx_fsbfcwcp, "V4fV4fV4fCc*", "")
-BUILTIN(__builtin_kvx_fsbfdp, "V2dV2dV2dCc*", "")
-BUILTIN(__builtin_kvx_fsbfcdc, "V2dV2dV2dCc*", "")
-
-BUILTIN(__builtin_kvx_fmulwp, "V2fV2fV2fCc*", "")
-BUILTIN(__builtin_kvx_fmulwc, "V2fV2fV2fCc*", "")
-BUILTIN(__builtin_kvx_fmulcwc, "V2fV2fV2fCc*", "")
-BUILTIN(__builtin_kvx_fmulwq, "V4fV4fV4fCc*", "")
-BUILTIN(__builtin_kvx_fmulwcp, "V4fV4fV4fCc*", "")
-BUILTIN(__builtin_kvx_fmulcwcp, "V4fV4fV4fCc*", "")
-BUILTIN(__builtin_kvx_fmuldp, "V2dV2dV2dCc*", "")
-BUILTIN(__builtin_kvx_fmuldc, "V2dV2dV2dCc*", "")
-BUILTIN(__builtin_kvx_fmulcdc, "V2dV2dV2dCc*", "")
-
-BUILTIN(__builtin_kvx_fmm2wq, "V4fV2fV2fCc*", "")
+BUILTIN(__builtin_kvx_faddwp, "V2fV2fV2fCc*", "")
+BUILTIN(__builtin_kvx_faddwq, "V4fV4fV4fCc*", "")
+BUILTIN(__builtin_kvx_ffmadp, "V2dV2dV2dV2dCc*", "")
 BUILTIN(__builtin_kvx_ffmawp, "V2fV2fV2fV2fCc*", "")
 BUILTIN(__builtin_kvx_ffmawq, "V4fV4fV4fV4fCc*", "")
-BUILTIN(__builtin_kvx_ffmadp, "V2dV2dV2dV2dCc*", "")
-BUILTIN(__builtin_kvx_fmm2awq, "V4fV2fV2fV4fCc*", "")
+BUILTIN(__builtin_kvx_ffmsdp, "V2dV2dV2dV2dCc*", "")
 BUILTIN(__builtin_kvx_ffmswp, "V2fV2fV2fV2fCc*", "")
 BUILTIN(__builtin_kvx_ffmswq, "V4fV4fV4fV4fCc*", "")
-BUILTIN(__builtin_kvx_ffmsdp, "V2dV2dV2dV2dCc*", "")
+BUILTIN(__builtin_kvx_fmaxdp, "V2dV2dV2d", "")
+BUILTIN(__builtin_kvx_fmaxwp, "V2fV2fV2f", "")
+BUILTIN(__builtin_kvx_fmaxwq, "V4fV4fV4f", "")
+BUILTIN(__builtin_kvx_fmindp, "V2dV2dV2d", "")
+BUILTIN(__builtin_kvx_fminwp, "V2fV2fV2f", "")
+BUILTIN(__builtin_kvx_fminwq, "V4fV4fV4f", "")
+BUILTIN(__builtin_kvx_fmm2awq, "V4fV2fV2fV4fCc*", "")
 BUILTIN(__builtin_kvx_fmm2swq, "V4fV2fV2fV4fCc*", "")
+BUILTIN(__builtin_kvx_fmm2wq, "V4fV2fV2fCc*", "")
+BUILTIN(__builtin_kvx_fmulcdc, "V2dV2dV2dCc*", "")
+BUILTIN(__builtin_kvx_fmulcwc, "V2fV2fV2fCc*", "")
+BUILTIN(__builtin_kvx_fmulcwcp, "V4fV4fV4fCc*", "")
+BUILTIN(__builtin_kvx_fmuldc, "V2dV2dV2dCc*", "")
+BUILTIN(__builtin_kvx_fmuldp, "V2dV2dV2dCc*", "")
+BUILTIN(__builtin_kvx_fmulwc, "V2fV2fV2fCc*", "")
+BUILTIN(__builtin_kvx_fmulwcp, "V4fV4fV4fCc*", "")
+BUILTIN(__builtin_kvx_fmulwp, "V2fV2fV2fCc*", "")
+BUILTIN(__builtin_kvx_fmulwq, "V4fV4fV4fCc*", "")
+BUILTIN(__builtin_kvx_fnegdp, "V2dV2d", "")
+BUILTIN(__builtin_kvx_fnegwp, "V2fV2f", "")
+BUILTIN(__builtin_kvx_fnegwq, "V4fV4f", "")
+BUILTIN(__builtin_kvx_fsbfcdc, "V2dV2dV2dCc*", "")
+BUILTIN(__builtin_kvx_fsbfcwc, "V2fV2fV2fCc*", "")
+BUILTIN(__builtin_kvx_fsbfcwcp, "V4fV4fV4fCc*", "")
+BUILTIN(__builtin_kvx_fsbfdp, "V2dV2dV2dCc*", "")
+BUILTIN(__builtin_kvx_fsbfwp, "V2fV2fV2fCc*", "")
+BUILTIN(__builtin_kvx_fsbfwq, "V4fV4fV4fCc*", "")
 
-BUILTIN(__builtin_kvx_ctzd, "LiLi", "")
-BUILTIN(__builtin_kvx_ctzw, "ii", "")
-BUILTIN(__builtin_kvx_ctzwp, "V2iV2i", "")
-BUILTIN(__builtin_kvx_clzd, "LiLi", "")
-BUILTIN(__builtin_kvx_clzw, "ii", "")
-BUILTIN(__builtin_kvx_clzwp, "V2iV2i", "")
-BUILTIN(__builtin_kvx_clsd, "LiLi", "")
-BUILTIN(__builtin_kvx_clsw, "ii", "")
-BUILTIN(__builtin_kvx_clswp, "V2iV2i", "")
-BUILTIN(__builtin_kvx_cbsd, "LiLi", "")
-BUILTIN(__builtin_kvx_cbsw, "ii", "")
-BUILTIN(__builtin_kvx_cbswp, "V2iV2i", "")
+//===----------------------------------------------------------------------===//
+// ALU
+//===----------------------------------------------------------------------===//
+
+BUILTIN(__builtin_kvx_cbsd, "ULiLi", "")
+BUILTIN(__builtin_kvx_cbsw, "Uii", "")
+BUILTIN(__builtin_kvx_cbswp, "V2UiV2i", "")
+BUILTIN(__builtin_kvx_clsd, "ULiLi", "")
+BUILTIN(__builtin_kvx_clsw, "Uii", "")
+BUILTIN(__builtin_kvx_clswp, "V2UiV2i", "")
+BUILTIN(__builtin_kvx_clzd, "ULiLi", "")
+BUILTIN(__builtin_kvx_clzw, "Uii", "")
+BUILTIN(__builtin_kvx_clzwp, "V2UiV2i", "")
+BUILTIN(__builtin_kvx_ctzd, "ULiLi", "")
+BUILTIN(__builtin_kvx_ctzw, "Uii", "")
+BUILTIN(__builtin_kvx_ctzwp, "V2UiV2i", "")
+BUILTIN(__builtin_kvx_sbmm8, "ULiULiULi", "")
 
 #undef BUILTIN
