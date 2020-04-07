@@ -1,9 +1,26 @@
 let TargetPrefix = "kvx" in {
 
-def int_kvx_dinval : Intrinsic<[], [],[]>;
-def int_kvx_fence : Intrinsic<[], [],[]>;
-def int_kvx_stop : Intrinsic<[], [],[]>;
 def int_kvx_await : Intrinsic<[], [],[]>;
+def int_kvx_barrier : Intrinsic<[], [],[]>;
+def int_kvx_dinval : Intrinsic<[], [],[]>;
+def int_kvx_errop : Intrinsic<[], [],[]>;
+def int_kvx_fence : Intrinsic<[], [],[]>;
+def int_kvx_iinval : Intrinsic<[], [],[]>;
+def int_kvx_sleep : Intrinsic<[], [],[]>;
+def int_kvx_stop : Intrinsic<[], [],[]>;
+def int_kvx_tlbdinval : Intrinsic<[], [],[]>;
+def int_kvx_tlbiinval : Intrinsic<[], [],[]>;
+def int_kvx_tlbprobe : Intrinsic<[], [],[]>;
+def int_kvx_tlbread : Intrinsic<[], [],[]>;
+def int_kvx_tlbwrite : Intrinsic<[], [],[]>;
+
+def int_kvx_syncgroup: Intrinsic<[], [llvm_i64_ty], []>;
+def int_kvx_waitit: Intrinsic<[], [llvm_i64_ty], []>;
+
+def int_kvx_dinvall: Intrinsic<[], [llvm_ptr_ty], []>;
+def int_kvx_dtouchl: Intrinsic<[], [llvm_ptr_ty], []>;
+def int_kvx_dzerol: Intrinsic<[], [llvm_ptr_ty], []>;
+def int_kvx_iinvals: Intrinsic<[], [llvm_ptr_ty], []>;
 
 def int_kvx_get : Intrinsic<[llvm_i64_ty], [llvm_i32_ty],[IntrReadMem]>;
 def int_kvx_set : Intrinsic<[], [llvm_i32_ty, llvm_i64_ty], []>;
