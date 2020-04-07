@@ -17,16 +17,26 @@
 // This file was automatically generated,
 //   *DO NOT EDIT*,
 //   please contact code owner.
-// Last generated: 2020-04-06 22:47:17.124173.
+// Last generated: 2020-04-07 11:04:11.871900.
 
 //===----------------------------------------------------------------------===//
 // BCU
 //===----------------------------------------------------------------------===//
 
 BUILTIN(__builtin_kvx_await, "v", "")
+BUILTIN(__builtin_kvx_barrier, "v", "")
+BUILTIN(__builtin_kvx_errop, "v", "")
 BUILTIN(__builtin_kvx_get, "LiUi", "")
 BUILTIN(__builtin_kvx_set, "vUiLi", "")
+BUILTIN(__builtin_kvx_sleep, "v", "")
 BUILTIN(__builtin_kvx_stop, "v", "")
+BUILTIN(__builtin_kvx_syncgroup, "vULi", "")
+BUILTIN(__builtin_kvx_tlbdinval, "v", "")
+BUILTIN(__builtin_kvx_tlbiinval, "v", "")
+BUILTIN(__builtin_kvx_tlbprobe, "v", "")
+BUILTIN(__builtin_kvx_tlbread, "v", "")
+BUILTIN(__builtin_kvx_tlbwrite, "v", "")
+BUILTIN(__builtin_kvx_waitit, "vULi", "")
 BUILTIN(__builtin_kvx_wfxl, "vUiULi", "")
 BUILTIN(__builtin_kvx_wfxm, "vUiULi", "")
 
@@ -41,7 +51,12 @@ BUILTIN(__builtin_kvx_afaddw, "iCv*i", "")
 BUILTIN(__builtin_kvx_alclrd, "LiCv*", "")
 BUILTIN(__builtin_kvx_alclrw, "iCv*", "")
 BUILTIN(__builtin_kvx_dinval, "v", "")
+BUILTIN(__builtin_kvx_dinvall, "vCv*", "")
+BUILTIN(__builtin_kvx_dtouchl, "vCv*", "")
+BUILTIN(__builtin_kvx_dzerol, "vCv*", "")
 BUILTIN(__builtin_kvx_fence, "v", "")
+BUILTIN(__builtin_kvx_iinval, "v", "")
+BUILTIN(__builtin_kvx_iinvals, "vCv*", "")
 BUILTIN(__builtin_kvx_lbzu, "UcCv*", "")
 BUILTIN(__builtin_kvx_lhzu, "UsCv*", "")
 BUILTIN(__builtin_kvx_lwzu, "UiCv*", "")

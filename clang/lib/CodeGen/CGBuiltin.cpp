@@ -15050,24 +15050,61 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     Value *Callee = CGM.getIntrinsic(Intrinsic::kvx_get);
     return Builder.CreateCall(Callee, {Reg});
   }
+
   case KVX::BI__builtin_kvx_await:
+  case KVX::BI__builtin_kvx_barrier:
   case KVX::BI__builtin_kvx_dinval:
+  case KVX::BI__builtin_kvx_errop:
   case KVX::BI__builtin_kvx_fence:
-  case KVX::BI__builtin_kvx_stop: {
+  case KVX::BI__builtin_kvx_iinval:
+  case KVX::BI__builtin_kvx_sleep:
+  case KVX::BI__builtin_kvx_stop:
+  case KVX::BI__builtin_kvx_tlbdinval:
+  case KVX::BI__builtin_kvx_tlbiinval:
+  case KVX::BI__builtin_kvx_tlbprobe:
+  case KVX::BI__builtin_kvx_tlbread:
+  case KVX::BI__builtin_kvx_tlbwrite: {
     unsigned IDD;
 
     switch (BuiltinID) {
     case KVX::BI__builtin_kvx_await:
       IDD = Intrinsic::kvx_await;
       break;
+    case KVX::BI__builtin_kvx_barrier:
+      IDD = Intrinsic::kvx_barrier;
+      break;
     case KVX::BI__builtin_kvx_dinval:
       IDD = Intrinsic::kvx_dinval;
+      break;
+    case KVX::BI__builtin_kvx_errop:
+      IDD = Intrinsic::kvx_errop;
       break;
     case KVX::BI__builtin_kvx_fence:
       IDD = Intrinsic::kvx_fence;
       break;
+    case KVX::BI__builtin_kvx_iinval:
+      IDD = Intrinsic::kvx_iinval;
+      break;
+    case KVX::BI__builtin_kvx_sleep:
+      IDD = Intrinsic::kvx_sleep;
+      break;
     case KVX::BI__builtin_kvx_stop:
       IDD = Intrinsic::kvx_stop;
+      break;
+    case KVX::BI__builtin_kvx_tlbdinval:
+      IDD = Intrinsic::kvx_tlbdinval;
+      break;
+    case KVX::BI__builtin_kvx_tlbiinval:
+      IDD = Intrinsic::kvx_tlbiinval;
+      break;
+    case KVX::BI__builtin_kvx_tlbprobe:
+      IDD = Intrinsic::kvx_tlbprobe;
+      break;
+    case KVX::BI__builtin_kvx_tlbread:
+      IDD = Intrinsic::kvx_tlbread;
+      break;
+    case KVX::BI__builtin_kvx_tlbwrite:
+      IDD = Intrinsic::kvx_tlbwrite;
       break;
     default:
       llvm_unreachable("missing KVX intrinsics");
@@ -15075,6 +15112,29 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
 
     Value *Callee = CGM.getIntrinsic(IDD);
     return Builder.CreateCall(Callee, {});
+  }
+
+  case KVX::BI__builtin_kvx_syncgroup:
+  case KVX::BI__builtin_kvx_waitit: {
+    SourceLocation Loc = E->getExprLoc();
+    Value *A1 = EmitScalarConversion(EmitScalarExpr(E->getArg(0)),
+                                     E->getArg(0)->getType(),
+                                     getContext().UnsignedLongTy, Loc);
+
+    unsigned IDD;
+    switch (BuiltinID) {
+    case KVX::BI__builtin_kvx_syncgroup:
+      IDD = Intrinsic::kvx_syncgroup;
+      break;
+    case KVX::BI__builtin_kvx_waitit:
+      IDD = Intrinsic::kvx_waitit;
+      break;
+    default:
+      llvm_unreachable("missing KVX intrinsics");
+    }
+
+    Value *Callee = CGM.getIntrinsic(IDD);
+    return Builder.CreateCall(Callee, {A1});
   }
 
   case KVX::BI__builtin_kvx_wfxl:
@@ -15119,6 +15179,10 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     return Builder.CreateCall(Callee, {Addr, Expect, Update});
   }
 
+  case KVX::BI__builtin_kvx_dinvall:
+  case KVX::BI__builtin_kvx_dtouchl:
+  case KVX::BI__builtin_kvx_dzerol:
+  case KVX::BI__builtin_kvx_iinvals:
   case KVX::BI__builtin_kvx_lbzu:
   case KVX::BI__builtin_kvx_lhzu:
   case KVX::BI__builtin_kvx_lwzu: {
@@ -15126,6 +15190,18 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
 
     unsigned IDD;
     switch (BuiltinID) {
+    case KVX::BI__builtin_kvx_dinvall:
+      IDD = Intrinsic::kvx_dinvall;
+      break;
+    case KVX::BI__builtin_kvx_dtouchl:
+      IDD = Intrinsic::kvx_dtouchl;
+      break;
+    case KVX::BI__builtin_kvx_dzerol:
+      IDD = Intrinsic::kvx_dzerol;
+      break;
+    case KVX::BI__builtin_kvx_iinvals:
+      IDD = Intrinsic::kvx_iinvals;
+      break;
     case KVX::BI__builtin_kvx_lbzu:
       IDD = Intrinsic::kvx_lbzu;
       break;
