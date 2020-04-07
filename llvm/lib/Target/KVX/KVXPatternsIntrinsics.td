@@ -1,6 +1,16 @@
 def: Pat<(int_kvx_await), (AWAIT)>;
+def: Pat<(int_kvx_barrier), (BARRIER)>;
 def: Pat<(int_kvx_dinval), (DINVAL)>;
+def: Pat<(int_kvx_errop), (ERROP)>;
 def: Pat<(int_kvx_fence), (FENCE)>;
+def: Pat<(int_kvx_iinval), (IINVAL)>;
+def: Pat<(int_kvx_sleep), (SLEEP)>;
+def: Pat<(int_kvx_stop), (STOP)>;
+def: Pat<(int_kvx_tlbdinval), (TLBDINVAL)>;
+def: Pat<(int_kvx_tlbiinval), (TLBIINVAL)>;
+def: Pat<(int_kvx_tlbprobe), (TLBPROBE)>;
+def: Pat<(int_kvx_tlbread), (TLBREAD)>;
+def: Pat<(int_kvx_tlbwrite), (TLBWRITE)>;
 
 def GET_Instr : KVX_PSEUDO<(outs SingleReg:$dst), (ins Sysnumber:$param),[]>;
 def SET_Instr : KVX_PSEUDO<(outs), (ins Sysnumber:$sysreg, SingleReg:$val),[]>;
@@ -8,10 +18,17 @@ def WFXL_Instr : KVX_PSEUDO<(outs), (ins Sysnumber:$sysreg, SingleReg:$val),[]>;
 def WFXM_Instr : KVX_PSEUDO<(outs), (ins Sysnumber:$sysreg, SingleReg:$val),[]>;
 
 def: Pat<(int_kvx_get Sysnumber:$r), (GET_Instr Sysnumber:$r)>;
-def: Pat<(int_kvx_stop), (STOP)>;
 def: Pat<(int_kvx_wfxl Sysnumber:$r, i64:$val), (WFXL_Instr Sysnumber:$r, SingleReg:$val)>;
 def: Pat<(int_kvx_wfxm Sysnumber:$r, i64:$val), (WFXM_Instr Sysnumber:$r, SingleReg:$val)>;
 def: Pat<(int_kvx_set Sysnumber:$r, i64:$val), (SET_Instr Sysnumber:$r, SingleReg:$val)>;
+
+def: Pat<(int_kvx_syncgroup SingleReg:$r), (SYNCGROUP SingleReg:$r)>;
+def: Pat<(int_kvx_waitit SingleReg:$r), (WAITIT SingleReg:$r)>;
+
+def: Pat<(int_kvx_dinvall AddrRI:$addr), (DINVALLp AddrRI:$addr)>;
+def: Pat<(int_kvx_dtouchl AddrRI:$addr), (DTOUCHLp AddrRI:$addr)>;
+def: Pat<(int_kvx_dzerol AddrRI:$addr), (DZEROLp AddrRI:$addr)>;
+def: Pat<(int_kvx_iinvals AddrRI:$addr), (IINVALSp AddrRI:$addr)>;
 
 def: Pat<(int_kvx_sbmm8 SingleReg:$r, Signed10:$r2), (SBMM8ri10 SingleReg:$r, Signed10:$r2)>;
 def: Pat<(int_kvx_sbmm8 SingleReg:$r, Signed37:$r2), (SBMM8ri37 SingleReg:$r, Signed37:$r2)>;

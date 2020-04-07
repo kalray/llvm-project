@@ -24,7 +24,6 @@ def SDTKVXComp : SDTypeProfile<1, 3,
 def KVXBRCond : SDNode<"KVXISD::BRCOND", SDTKVXBRCond, [SDNPHasChain]>;
 def KVXComp : SDNode<"KVXISD::COMP", SDTKVXComp, []>;
 
-
 //===----------------------------------------------------------------------===//
 // Selection DAG patterns using custom DAG nodes.
 //===----------------------------------------------------------------------===//
@@ -47,6 +46,28 @@ def : Pat<(KVXComp i64:$lhs, Wrapped64:$rhs, i32:$mod),
             (COMPDri64 SingleReg:$lhs, Wrapped64:$rhs, ComparisonMod:$mod)>;
 def : Pat<(KVXComp i64:$lhs, i64:$rhs, i32:$mod),
             (COMPDrr SingleReg:$lhs, SingleReg:$rhs, ComparisonMod:$mod)>;
+
+//===----------------------------------------------------------------------===//
+// ComplexPatterns definitions.
+//===----------------------------------------------------------------------===//
+
+def AddrFI : ComplexPattern<iPTR, 1, "SelectAddrFI", [frameindex], []>;
+
+// FIXME: rename AddrRI to Addr
+def AddrRI : Operand<iPTR>, ComplexPattern<iPTR, 2, "SelectAddrRI", [], []> {
+  let PrintMethod = "printMemOperand";
+  let MIOperandInfo = (ops SingleReg:$offset, SingleReg:$baseReg );
+}
+
+//===----------------------------------------------------------------------===//
+// Pseudo instructions patterns.
+//===----------------------------------------------------------------------===//
+
+def DINVALLp : KVX_PSEUDO<(outs), (ins AddrRI:$addr), []>;
+def DTOUCHLp : KVX_PSEUDO<(outs), (ins AddrRI:$addr), []>;
+def DZEROLp : KVX_PSEUDO<(outs), (ins AddrRI:$addr), []>;
+def IINVALSp : KVX_PSEUDO<(outs), (ins AddrRI:$addr), []>;
+
 
 // FIXME: clean code below
 
@@ -145,14 +166,6 @@ def : Pat<(Wrapped64:$imm), (MAKEi64 Wrapped64:$imm)>;
 def : Pat<(KVXWrapper tglobaladdr:$dst), (MAKEi64 tglobaladdr:$dst)>;
 def : Pat<(KVXWrapper tglobaltlsaddr:$dst), (MAKETLS tglobaltlsaddr:$dst)>;
 def : Pat<(KVXWrapper tblockaddress:$dst), (MAKEi64 tblockaddress:$dst)>;
-
-def AddrFI : ComplexPattern<iPTR, 1, "SelectAddrFI", [frameindex], []>;
-
-// extracts offsset and register (or frameindex)
-def AddrRI : Operand<iPTR>, ComplexPattern<iPTR, 2, "SelectAddrRI", [frameindex], []> {
-  let PrintMethod = "printMemOperand";
-  let MIOperandInfo = (ops SingleReg:$offset, SingleReg:$baseReg );
-}
 
 let mayStore = 1 in
 {
