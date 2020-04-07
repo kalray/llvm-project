@@ -8,5 +8,5 @@ int test(void) {
   return tls;
   // CHECK: test:
   // CHECK-NEXT: make $r0 = @tlsle( tls )
-  // CHECK: addd $r0 = $r13, $r0
+  // CHECK: lwz $r0 = $r0[$r13]
 }
