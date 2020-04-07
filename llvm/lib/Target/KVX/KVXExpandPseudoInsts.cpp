@@ -1297,6 +1297,60 @@ static bool expandEXTFZ(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   return true;
 }
 
+static bool expandCacheInstruction(const KVXInstrInfo *TII,
+                                   MachineBasicBlock &MBB,
+                                   MachineBasicBlock::iterator MBBI) {
+  MachineInstr &MI = *MBBI;
+  DebugLoc DL = MI.getDebugLoc();
+  unsigned Base = MI.getOperand(1).getReg();
+
+  bool OffsetIsReg = MI.getOperand(0).isReg();
+  if (!OffsetIsReg)
+    assert(MI.getOperand(0).isImm() && "Cache instruction operand unsupported");
+
+  unsigned OpCode;
+  switch (MBBI->getOpcode()) {
+  case KVX::DINVALLp:
+    OpCode = OffsetIsReg
+                 ? KVX::DINVALLrr
+                 : GetImmOpCode(MI.getOperand(0).getImm(), KVX::DINVALLri10,
+                                KVX::DINVALLri37, KVX::DINVALLri64);
+    break;
+  case KVX::DTOUCHLp:
+    OpCode = OffsetIsReg
+                 ? KVX::DTOUCHLrr
+                 : GetImmOpCode(MI.getOperand(0).getImm(), KVX::DTOUCHLri10,
+                                KVX::DTOUCHLri37, KVX::DTOUCHLri64);
+    break;
+  case KVX::DZEROLp:
+    OpCode = OffsetIsReg
+                 ? KVX::DZEROLrr
+                 : GetImmOpCode(MI.getOperand(0).getImm(), KVX::DZEROLri10,
+                                KVX::DZEROLri37, KVX::DZEROLri64);
+    break;
+  case KVX::IINVALSp:
+    OpCode = OffsetIsReg
+                 ? KVX::IINVALSrr
+                 : GetImmOpCode(MI.getOperand(0).getImm(), KVX::IINVALSri10,
+                                KVX::IINVALSri37, KVX::IINVALSri64);
+    break;
+  default:
+    llvm_unreachable("Cache instruction not supported");
+  }
+
+  if (OffsetIsReg)
+    BuildMI(MBB, MBBI, DL, TII->get(OpCode))
+        .addReg(MI.getOperand(0).getReg())
+        .addReg(Base);
+  else
+    BuildMI(MBB, MBBI, DL, TII->get(OpCode))
+        .addImm(MI.getOperand(0).getImm())
+        .addReg(Base);
+
+  MI.eraseFromParent();
+  return true;
+}
+
 bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
                                MachineBasicBlock::iterator MBBI,
                                MachineBasicBlock::iterator &NextMBBI) {
@@ -1440,6 +1494,11 @@ bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
   case KVX::EXTFZDp:
     expandEXTFZ(TII, MBB, MBBI, false);
     return true;
+  case KVX::DINVALLp:
+  case KVX::DTOUCHLp:
+  case KVX::DZEROLp:
+  case KVX::IINVALSp:
+    return expandCacheInstruction(TII, MBB, MBBI);
   default:
     break;
   }
