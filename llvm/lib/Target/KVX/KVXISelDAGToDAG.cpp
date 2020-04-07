@@ -96,6 +96,10 @@ bool KVXDAGToDAGISel::SelectAddrRI(SDValue Addr, SDValue &Index,
         return true;
       }
     }
+
+    Index = Addr.getOperand(1);
+    Base = Addr.getOperand(0);
+    return true;
   }
 
   Base = Addr;
