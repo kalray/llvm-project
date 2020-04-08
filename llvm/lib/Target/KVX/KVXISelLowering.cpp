@@ -908,15 +908,14 @@ SDValue KVXTargetLowering::lowerGlobalAddress(SDValue Op,
       LLVM_DEBUG(dbgs() << "@got(sym)[gaddr]" << '\n');
 
       SDValue GlobalSymbol = DAG.getTargetGlobalAddress(GV, DL, PtrVT);
-      SDValue GOTAddr = DAG.getNode(KVXISD::PICPCRelativeGOTAddr, DL, PtrVT);
 
       // Indirect global symbol using GOT with
       // @got(GLOBALSYMBOL)[GOTADDR] asm macro.  Note: function
       // symbols don't need indirection since everything is handled by
       // the loader. Consequently, call indirections are ignored at
       // insn selection.
-      SDValue DataPtr = DAG.getNode(KVXISD::PICExternIndirection, DL, PtrVT,
-                                    GOTAddr, GlobalSymbol);
+      SDValue DataPtr =
+          DAG.getNode(KVXISD::PICExternIndirection, DL, PtrVT, GlobalSymbol);
 
       if (Offset != 0)
         Result = DAG.getNode(ISD::ADD, DL, PtrVT, DataPtr,
