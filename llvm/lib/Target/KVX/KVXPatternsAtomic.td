@@ -10,23 +10,34 @@ def ASWAP64_Instr : KVX_PSEUDO<(outs SingleReg:$res, PairedReg:$scratch), (ins A
 def : Pat<(atomic_fence i64:$a, i64:$b), (FENCE_Instr Wrapped64:$a, Wrapped64:$b)>;
 
 def atomicloadi8 : PatFrag<(ops node:$ptr), (i8 (atomic_load_8 node:$ptr))>;
-def i32atomicloadi8 : PatFrag<(ops node:$ptr), (i32 (atomic_load_8 node:$ptr))>;
+def atomicloadi8toi32 : PatFrag<(ops node:$ptr),
+                                (i32 (atomic_load_8 node:$ptr))>;
 def atomicloadi16 : PatFrag<(ops node:$ptr), (i16 (atomic_load_16 node:$ptr))>;
-def i32atomicloadi16 : PatFrag<(ops node:$ptr), (i32 (atomic_load_16 node:$ptr))>;
+def atomicloadi16toi32 : PatFrag<(ops node:$ptr),
+                                 (i32 (atomic_load_16 node:$ptr))>;
 def atomicloadi32 : PatFrag<(ops node:$ptr), (i32 (atomic_load_32 node:$ptr))>;
 def atomicloadi64 : PatFrag<(ops node:$ptr), (i64 (atomic_load_64 node:$ptr))>;
 
-def : Pat<(atomicloadi8 AddrRI:$addr), (LBZp AddrRI:$addr, variant_u)>;
-def : Pat<(i32atomicloadi8 AddrRI:$addr), (LBZp AddrRI:$addr, variant_u)>;
-def : Pat<(atomicloadi16 AddrRI:$addr), (LHZp AddrRI:$addr, variant_u)>;
-def : Pat<(i32atomicloadi16 AddrRI:$addr), (LHZp AddrRI:$addr, variant_u)>;
-def : Pat<(atomicloadi32 AddrRI:$addr), (LWZp AddrRI:$addr, variant_u)>;
-def : Pat<(atomicloadi64 AddrRI:$addr), (LDp AddrRI:$addr, variant_u)>;
+defm : SimpleLoadPat<atomicloadi8, i8, LBZp, LBZri10, LBZrr, variant_u>;
+defm : SimpleLoadPat<atomicloadi8toi32, i32, LBZp, LBZri10, LBZrr, variant_u>;
+defm : LoadPat<atomicloadi16, i16, 1, LHZp, LHZri10, LHZrr, variant_u>;
+defm : LoadPat<atomicloadi16toi32, i32, 1, LHZp, LHZri10, LHZrr, variant_u>;
+defm : LoadPat<atomicloadi32, i32, 2, LWZp, LWZri10, LWZrr, variant_u>;
+defm : LoadPat<atomicloadi64, i64, 3, LDp, LDri10, LDrr, variant_u>;
 
-def : Pat<(atomic_store_8 AddrRI:$addr, i32:$val), (SBp AddrRI:$addr,SingleReg:$val)>;
-def : Pat<(atomic_store_16 AddrRI:$addr, i32:$val), (SHp AddrRI:$addr,SingleReg:$val)>;
-def : Pat<(atomic_store_32 AddrRI:$addr, i32:$val), (SWp AddrRI:$addr,SingleReg:$val)>;
-def : Pat<(atomic_store_64 AddrRI:$addr, i64:$val), (SDp AddrRI:$addr,SingleReg:$val)>;
+def atomicstore8 : PatFrag<(ops node:$val, node:$ptr),
+                           (atomic_store_8 node:$ptr, node:$val)>;
+def atomicstore16 : PatFrag<(ops node:$val, node:$ptr),
+                            (atomic_store_16 node:$ptr, node:$val)>;
+def atomicstore32 : PatFrag<(ops node:$val, node:$ptr),
+                            (atomic_store_32 node:$ptr, node:$val)>;
+def atomicstore64 : PatFrag<(ops node:$val, node:$ptr),
+                            (atomic_store_64 node:$ptr, node:$val)>;
+
+defm : SimpleStorePat<atomicstore8, i32, SingleReg, SBp, SBri10, SBrr>;
+defm : StorePat<atomicstore16, i32, SingleReg, 1, SHp, SHri10, SHrr>;
+defm : StorePat<atomicstore32, i32, SingleReg, 2, SWp, SWri10, SWrr>;
+defm : StorePat<atomicstore64, i64, SingleReg, 3, SDp, SDri10, SDrr>;
 
 def : Pat<(atomic_swap_8 AddrRI:$addr, i32:$val), (ASWAP8_Instr AddrRI:$addr, SingleReg:$val)>;
 def : Pat<(atomic_swap_32 AddrRI:$addr, i32:$val), (ASWAP32_Instr AddrRI:$addr, SingleReg:$val)>;
