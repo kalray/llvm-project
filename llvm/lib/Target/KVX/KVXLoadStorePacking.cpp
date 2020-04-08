@@ -227,6 +227,11 @@ void KVXLoadStorePackingPass::PackAndReplaceStore(
     MachineBasicBlock::iterator LocInstr,
     std::vector<MachineBasicBlock::iterator>::iterator ItStart,
     unsigned Count) {
+  if ((*LocInstr).getParent() == nullptr) {
+    LLVM_DEBUG(dbgs() << "invalid instruction without valid MBB " << *LocInstr
+                      << "\n");
+    return;
+  }
   const bool isPair = Count == 2;
   const unsigned Opcode =
       getPackOpcode(isPair, (*ItStart)->getOperand(0).getImm(), StoreOpcodes);
