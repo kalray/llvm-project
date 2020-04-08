@@ -8,7 +8,8 @@
 //===----------------------------------------------------------------------===//
 
 def PICInternIndirection : SDNode<"KVXISD::PICInternIndirection", SDTIntBinOp>;
-def PICExternIndirection : SDNode<"KVXISD::PICExternIndirection", SDTIntBinOp>;
+def PICExternIndirection : SDNode<"KVXISD::PICExternIndirection",
+  SDTypeProfile<1, 1, [SDTCisSameAs<0, 1>, SDTCisInt<0>]>>;
 def PICPCRelativeGOTAddr : SDNode<"KVXISD::PICPCRelativeGOTAddr", SDTUNDEF>;
 def PICKVXWrapper : SDNode<"KVXISD::PICAddrWrapper", SDTKVXWrapper>;
 
@@ -27,26 +28,27 @@ def PICINTERNINDIRECTION : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
                                (i64 tglobaladdr:$gotoff)))],
    ALU_TINY_Y>;
 
+def PCRELGOTADDR : REGISTERW_EXTEND27_UPPER27_LOWER10_TRIPLE
+    <(outs SingleReg:$addr), (ins), "pcrel $addr = @gotaddr()", [], ALU_FULL_Y>;
+
 def PICEXTERNINDIRECTION : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
-  <(outs SingleReg:$symaddr), (ins SingleReg:$gotaddr, Wrapped64:$gotoff),
-   "ld $symaddr = @got( $gotoff )[$gotaddr]",
-   [(set (i64 SingleReg:$symaddr),
-         (PICExternIndirection (i64 SingleReg:$gotaddr),
-                               (i64 tglobaladdr:$gotoff)))],
-   LSU_AUXW_Y>;
+    <(outs SingleReg:$addr), (ins SingleReg:$gotaddr, Wrapped64:$gotoff),
+    "ld $addr = @got( $gotoff )[$gotaddr]", [], LSU_AUXW_Y>;
+
+def : Pat<(i64 (PICExternIndirection (i64 tglobaladdr:$gotoff))),
+  (PICEXTERNINDIRECTION (PCRELGOTADDR), Pcrel27:$gotoff)>;
 
 let Defs=[RA], isCall=1 in
 def CALLPLT : PCREL27_SIMPLE
-  <(outs), (ins Pcrel27:$pcreladdr, SingleReg:$deadreg),
+  <(outs), (ins Pcrel27:$pcreladdr),
    "call $pcreladdr",
    [/* no direct match, see Call pattern below */]>;
 
 
 // Do not indirect symbols for function calls (loader will)
 // NOTE: SingleReg:$gotaddr operand is unused here
-def : Pat<(Call (PICExternIndirection (i64 SingleReg:$gotaddr),
-                                      (i64 tglobaladdr:$gotoff))),
-          (CALLPLT Pcrel27:$gotoff, SingleReg:$gotaddr)>;
+def : Pat<(Call (PICExternIndirection (i64 tglobaladdr:$gotoff))),
+          (CALLPLT Pcrel27:$gotoff)>;
 
 def PICPCREL : REGISTERW_EXTEND27_UPPER27_LOWER10_TRIPLE
   <(outs SingleReg:$SingleReg), (ins Wrapped64:$Wrapped64),
