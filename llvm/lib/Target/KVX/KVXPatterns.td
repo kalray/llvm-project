@@ -167,55 +167,43 @@ def : Pat<(KVXWrapper tglobaladdr:$dst), (MAKEi64 tglobaladdr:$dst)>;
 def : Pat<(KVXWrapper tglobaltlsaddr:$dst), (MAKETLS tglobaltlsaddr:$dst)>;
 def : Pat<(KVXWrapper tblockaddress:$dst), (MAKEi64 tblockaddress:$dst)>;
 
-let mayStore = 1 in
-{
-def SBp : KVX_PSEUDO<(outs), (ins AddrRI:$addr, SingleReg:$val), []>;
-def SHp : KVX_PSEUDO<(outs), (ins AddrRI:$addr, SingleReg:$val), []>;
-def SWp : KVX_PSEUDO<(outs), (ins AddrRI:$addr, SingleReg:$val), []>;
-def SDp : KVX_PSEUDO<(outs), (ins AddrRI:$addr, SingleReg:$val), []>;
-def SQp : KVX_PSEUDO<(outs), (ins AddrRI:$addr, PairedReg:$val), []>;
-def SOp : KVX_PSEUDO<(outs), (ins AddrRI:$addr, PairedReg:$val), []>;
-}
+//===----------------------------------------------------------------------===//
+// Load Patterns
+//===----------------------------------------------------------------------===//
 
+// Pseudo instructions that select the right load instruction variant based on
+// the offset value.
 let mayLoad = 1 in
 {
-def LBSp : KVX_PSEUDO<(outs SingleReg:$out), (ins AddrRI:$addr, VariantMod:$var), []>;
-def LBZp : KVX_PSEUDO<(outs SingleReg:$out), (ins AddrRI:$addr, VariantMod:$var), []>;
-def LHSp : KVX_PSEUDO<(outs SingleReg:$out), (ins AddrRI:$addr, VariantMod:$var), []>;
-def LHZp : KVX_PSEUDO<(outs SingleReg:$out), (ins AddrRI:$addr, VariantMod:$var), []>;
-def LWSp : KVX_PSEUDO<(outs SingleReg:$out), (ins AddrRI:$addr, VariantMod:$var), []>;
-def LWZp : KVX_PSEUDO<(outs SingleReg:$out), (ins AddrRI:$addr, VariantMod:$var), []>;
-def LDp : KVX_PSEUDO<(outs SingleReg:$out), (ins AddrRI:$addr, VariantMod:$var), []>;
-def LQp : KVX_PSEUDO<(outs PairedReg:$out), (ins AddrRI:$addr, VariantMod:$var), []>;
-def LOp : KVX_PSEUDO<(outs PairedReg:$out), (ins AddrRI:$addr, VariantMod:$var), []>;
+def LBSp : KVX_PSEUDO
+        <(outs SingleReg:$out),
+        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), []>;
+def LBZp : KVX_PSEUDO
+        <(outs SingleReg:$out),
+        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), []>;
+def LHSp : KVX_PSEUDO<
+        (outs SingleReg:$out),
+        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), []>;
+def LHZp : KVX_PSEUDO<
+        (outs SingleReg:$out),
+        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), []>;
+def LWSp : KVX_PSEUDO<
+        (outs SingleReg:$out),
+        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), []>;
+def LWZp : KVX_PSEUDO<
+        (outs SingleReg:$out),
+        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), []>;
+def LDp : KVX_PSEUDO<
+        (outs SingleReg:$out),
+        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), []>;
+def LQp : KVX_PSEUDO<
+        (outs PairedReg:$out),
+        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), []>;
+def LOp : KVX_PSEUDO<
+        (outs QuadReg:$out),
+        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), []>;
 }
 
-// Store patterns
-def : Pat<(store (i8 SingleReg:$val), AddrRI:$addr), (SBp AddrRI:$addr,SingleReg:$val)>;
-def : Pat<(store (i16 SingleReg:$val), AddrRI:$addr), (SHp AddrRI:$addr,SingleReg:$val)>;
-def : Pat<(store (i32 SingleReg:$val), AddrRI:$addr), (SWp AddrRI:$addr,SingleReg:$val)>;
-def : Pat<(store (v2i16 SingleReg:$val), AddrRI:$addr), (SWp AddrRI:$addr,SingleReg:$val)>;
-def : Pat<(store (v2f16 SingleReg:$val), AddrRI:$addr), (SWp AddrRI:$addr,SingleReg:$val)>;
-def : Pat<(store (i64 SingleReg:$val), AddrRI:$addr), (SDp AddrRI:$addr,SingleReg:$val)>;
-def : Pat<(store (v8i8 SingleReg:$val), AddrRI:$addr), (SDp AddrRI:$addr,SingleReg:$val)>;
-def : Pat<(store (v2i32 SingleReg:$val), AddrRI:$addr), (SDp AddrRI:$addr,SingleReg:$val)>;
-def : Pat<(store (v4i16 SingleReg:$val), AddrRI:$addr), (SDp AddrRI:$addr,SingleReg:$val)>;
-def : Pat<(store (v2i64 PairedReg:$val), AddrRI:$addr), (SQp AddrRI:$addr,PairedReg:$val)>;
-def : Pat<(store (v4i32 PairedReg:$val), AddrRI:$addr), (SQp AddrRI:$addr,PairedReg:$val)>;
-
-def : Pat<(truncstorei8 i64:$val, AddrRI:$addr), (SBp AddrRI:$addr, SingleReg:$val)>;
-def : Pat<(truncstorei8 i32:$val, AddrRI:$addr), (SBp AddrRI:$addr, SingleReg:$val)>;
-def : Pat<(truncstorei16 i64:$val, AddrRI:$addr), (SHp AddrRI:$addr, SingleReg:$val)>;
-def : Pat<(truncstorei16 i32:$val, AddrRI:$addr), (SHp AddrRI:$addr, SingleReg:$val)>;
-def : Pat<(truncstorei32 i64:$val, AddrRI:$addr), (SWp AddrRI:$addr, SingleReg:$val)>;
-
-def : Pat<(truncstorei8 (i32 SingleReg:$val), (i64 SingleReg:$base)), (SBri10 (i64 0), SingleReg:$base, SingleReg:$val)>;
-def : Pat<(truncstorei16 (i32 SingleReg:$val), (i64 SingleReg:$base)), (SHri10 (i64 0), SingleReg:$base, SingleReg:$val)>;
-def : Pat<(truncstorei8 (i64 SingleReg:$val), (i64 SingleReg:$base)), (SBri10 (i64 0), SingleReg:$base, SingleReg:$val)>;
-def : Pat<(truncstorei16 (i64 SingleReg:$val), (i64 SingleReg:$base)), (SHri10 (i64 0), SingleReg:$base, SingleReg:$val)>;
-def : Pat<(truncstorei32 (i64 SingleReg:$val), (i64 SingleReg:$base)), (SWri10 (i64 0), SingleReg:$base, SingleReg:$val)>;
-
-// Load patterns
 def loadi1 : PatFrag<(ops node:$ptr), (i1 (load node:$ptr))>;
 def loadi8 : PatFrag<(ops node:$ptr), (i8 (load node:$ptr))>;
 def loadi16 : PatFrag<(ops node:$ptr), (i16 (load node:$ptr))>;
@@ -229,62 +217,207 @@ def loadv2f16 : PatFrag<(ops node:$ptr), (v2f16 (load node:$ptr))>;
 def loadv2i64 : PatFrag<(ops node:$ptr), (v2i64 (load node:$ptr))>;
 def loadv4i32 : PatFrag<(ops node:$ptr), (v4i32 (load node:$ptr))>;
 
-// load i1 in i32
-def : Pat<(i32 (sextloadi1 AddrRI:$addr)), (LBSp AddrRI:$addr, variant_)>;
-def : Pat<(i32 (zextloadi1 AddrRI:$addr)), (LBZp AddrRI:$addr, variant_)>;
-def : Pat<(i32 (extloadi1 AddrRI:$addr)), (LBZp AddrRI:$addr, variant_)>;
-def : Pat<(i32 (extloadi1 (iPTR SingleReg:$rs2))), (LBZri10 (i64 0), SingleReg:$rs2, variant_)>;
+def IsOrAdd: PatFrag<(ops node:$A, node:$B), (or node:$A, node:$B), [{
+  return isOrEquivalentToAdd(N);
+}]>;
 
-// load i8 in i32
-def : Pat<(i32 (sextloadi8 AddrRI:$addr)), (LBSp AddrRI:$addr, variant_)>;
-def : Pat<(i32 (zextloadi8 AddrRI:$addr)), (LBZp AddrRI:$addr, variant_)>;
-def : Pat<(i32 (extloadi8 AddrRI:$addr)), (LBZp AddrRI:$addr, variant_)>;
-def : Pat<(i32 (extloadi8 (iPTR SingleReg:$rs2))), (LBZri10 (i64 0), SingleReg:$rs2, variant_)>;
+multiclass LoadPatRI<PatFrag LoadOp, ValueType vt, KVX_PSEUDO pinst,
+                     int mod> {
+  def : Pat<(vt (LoadOp AddrFI:$base)), (pinst (i64 0), SingleReg:$base, mod)>;
+  def : Pat<(vt (LoadOp (add AddrFI:$base, Wrapped64:$offset))),
+            (pinst Wrapped64:$offset, SingleReg:$base, mod)>;
+  def : Pat<(vt (LoadOp (IsOrAdd AddrFI:$base, Wrapped64:$offset))),
+            (pinst Wrapped64:$offset, SingleReg:$base, mod)>;
+  def : Pat<(vt (LoadOp (add SingleReg:$base, Wrapped64:$offset))),
+            (pinst Wrapped64:$offset, SingleReg:$base, mod)>;
+}
 
-// load i16 in i32
-def : Pat<(i32 (sextloadi16 AddrRI:$addr)), (LHSp AddrRI:$addr, variant_)>;
-def : Pat<(i32 (zextloadi16 AddrRI:$addr)), (LHZp AddrRI:$addr, variant_)>;
-def : Pat<(i32 (extloadi16 AddrRI:$addr)), (LHZp AddrRI:$addr, variant_)>;
-def : Pat<(i32 (extloadi16 (iPTR SingleReg:$rs2))), (LHZri10 (i64 0), SingleReg:$rs2, variant_)>;
+multiclass LoadPatRR<PatFrag LoadOp, ValueType vt, KVX_INSTRUCTION rr,
+                     int mod> {
+  def : Pat<(vt (LoadOp (add SingleReg:$base, SingleReg:$offset))),
+            (rr SingleReg:$offset, SingleReg:$base, mod, scaling_)>;
+  def : Pat<(vt (LoadOp (or SingleReg:$base, SingleReg:$offset))),
+            (rr SingleReg:$offset, SingleReg:$base, mod, scaling_)>;
+}
 
-// load i1 in i64
-def : Pat<(i64 (sextloadi1 AddrRI:$addr)), (LBSp AddrRI:$addr, variant_)>;
-def : Pat<(i64 (zextloadi1 AddrRI:$addr)), (LBZp AddrRI:$addr, variant_)>;
-def : Pat<(i64 (extloadi1 AddrRI:$addr)), (LBZp AddrRI:$addr, variant_)>;
-def : Pat<(i64 (extloadi1 (iPTR SingleReg:$rs2))), (LBZri10 (i64 0), SingleReg:$rs2, variant_)>;
+multiclass LoadPatXS<PatFrag LoadOp, ValueType vt, int sc, KVX_INSTRUCTION rr,
+                     int mod> {
+  def : Pat<(vt (LoadOp
+                  (add SingleReg:$base, (shl SingleReg:$offset, (i64 sc))))),
+            (rr SingleReg:$offset, SingleReg:$base, mod, scaling_xs)>;
+  def : Pat<(vt (LoadOp
+                  (add (shl SingleReg:$offset, (i64 sc)), SingleReg:$base))),
+            (rr SingleReg:$offset, SingleReg:$base, mod, scaling_xs)>;
+  def : Pat<(vt (LoadOp
+                  (or SingleReg:$base, (shl SingleReg:$offset, (i64 sc))))),
+            (rr SingleReg:$offset, SingleReg:$base, mod, scaling_xs)>;
+  def : Pat<(vt (LoadOp
+                  (or (shl SingleReg:$offset, (i64 sc)), SingleReg:$base))),
+            (rr SingleReg:$offset, SingleReg:$base, mod, scaling_xs)>;
+}
 
-// load i8 in i64
-def : Pat<(i64 (sextloadi8 AddrRI:$addr)), (LBSp AddrRI:$addr, variant_)>;
-def : Pat<(i64 (zextloadi8 AddrRI:$addr)), (LBZp AddrRI:$addr, variant_)>;
-def : Pat<(i64 (extloadi8 AddrRI:$addr)), (LBZp AddrRI:$addr, variant_)>;
-def : Pat<(i64 (extloadi8 (iPTR SingleReg:$rs2))), (LBZri10 (i64 0), SingleReg:$rs2, variant_)>;
+multiclass SimpleLoadPat<PatFrag LoadOp, ValueType vt, KVX_PSEUDO pinst,
+                         KVX_INSTRUCTION ri10, KVX_INSTRUCTION rr, int mod> {
+  def : Pat<(vt (LoadOp SingleReg:$base)),
+            (ri10 (i64 0), SingleReg:$base, mod)>;
+  defm : LoadPatRI<LoadOp, vt, pinst, mod>;
+  defm : LoadPatRR<LoadOp, vt, rr, mod>;
+}
 
-// load i16 in i64
-def : Pat<(i64 (sextloadi16 AddrRI:$addr)), (LHSp AddrRI:$addr, variant_)>;
-def : Pat<(i64 (zextloadi16 AddrRI:$addr)), (LHZp AddrRI:$addr, variant_)>;
-def : Pat<(i64 (extloadi16 AddrRI:$addr)), (LHZp AddrRI:$addr, variant_)>;
-def : Pat<(i64 (extloadi16 (iPTR SingleReg:$rs2))), (LHZri10 (i64 0), SingleReg:$rs2, variant_)>;
+multiclass LoadPat<PatFrag LoadOp, ValueType vt, int sc, KVX_PSEUDO pinst,
+                   KVX_INSTRUCTION ri10, KVX_INSTRUCTION rr, int mod> {
+  def : Pat<(vt (LoadOp SingleReg:$base)),
+            (ri10 (i64 0), SingleReg:$base, mod)>;
+  defm : LoadPatRI<LoadOp, vt, pinst, mod>;
+  defm : LoadPatRR<LoadOp, vt, rr, mod>;
+  defm : LoadPatXS<LoadOp, vt, sc, rr, mod>;
+}
 
-// load i32 in i64
-def : Pat<(i64 (sextloadi32 AddrRI:$addr)), (LWSp AddrRI:$addr, variant_)>;
-def : Pat<(i64 (zextloadi32 AddrRI:$addr)), (LWZp AddrRI:$addr, variant_)>;
-def : Pat<(i64 (extloadi32 AddrRI:$addr)), (LWZp AddrRI:$addr, variant_)>;
-def : Pat<(i64 (extloadi32 (iPTR SingleReg:$rs2))), (LWZri10 (i64 0), SingleReg:$rs2, variant_)>;
-def : Pat<(loadi32 (iPTR SingleReg:$rs2)), (LWZri10 (i64 0), SingleReg:$rs2, variant_)>;
+defm : SimpleLoadPat<sextloadi1, i32, LBSp, LBSri10, LBSrr, variant_>;
+defm : SimpleLoadPat<zextloadi1, i32, LBZp, LBZri10, LBZrr, variant_>;
+defm : SimpleLoadPat<extloadi1, i32, LBZp, LBZri10, LBZrr, variant_>;
+defm : SimpleLoadPat<sextloadi1, i64, LBSp, LBSri10, LBSrr, variant_>;
+defm : SimpleLoadPat<zextloadi1, i64, LBZp, LBZri10, LBZrr, variant_>;
+defm : SimpleLoadPat<extloadi1, i64, LBZp, LBZri10, LBZrr, variant_>;
+defm : SimpleLoadPat<loadi1, i1, LBSp, LBSri10, LBSrr, variant_>;
 
-def : Pat<(loadi1 AddrRI:$addr), (LBZp AddrRI:$addr, variant_)>;
-def : Pat<(loadi8 AddrRI:$addr), (LBZp AddrRI:$addr, variant_)>;
-def : Pat<(loadi16 AddrRI:$addr), (LHZp AddrRI:$addr, variant_)>;
-def : Pat<(loadi32 AddrRI:$addr), (LWZp AddrRI:$addr, variant_)>;
-def : Pat<(loadv2i16 AddrRI:$addr), (LWZp AddrRI:$addr, variant_)>;
-def : Pat<(loadv2f16 AddrRI:$addr), (LWZp AddrRI:$addr, variant_)>;
-def : Pat<(loadi64 AddrRI:$addr), (LDp AddrRI:$addr, variant_)>;
-def : Pat<(loadv8i8 AddrRI:$addr), (LDp AddrRI:$addr, variant_)>;
-def : Pat<(loadv2i32 AddrRI:$addr), (LDp AddrRI:$addr, variant_)>;
-def : Pat<(loadv4i16 AddrRI:$addr), (LDp AddrRI:$addr, variant_)>;
-def : Pat<(loadv2i64 AddrRI:$addr), (LQp AddrRI:$addr, variant_)>;
-def : Pat<(loadv4i32 AddrRI:$addr), (LQp AddrRI:$addr, variant_)>;
-def : Pat<(loadi64 (iPTR SingleReg:$rs2)), (LDri10 (i64 0), SingleReg:$rs2, variant_)>;
+defm : SimpleLoadPat<sextloadi8, i32, LBSp, LBSri10, LBSrr, variant_>;
+defm : SimpleLoadPat<zextloadi8, i32, LBZp, LBZri10, LBZrr, variant_>;
+defm : SimpleLoadPat<extloadi8, i32, LBZp, LBZri10, LBZrr, variant_>;
+defm : SimpleLoadPat<sextloadi8, i64, LBSp, LBSri10, LBSrr, variant_>;
+defm : SimpleLoadPat<zextloadi8, i64, LBZp, LBZri10, LBZrr, variant_>;
+defm : SimpleLoadPat<extloadi8, i64, LBZp, LBZri10, LBZrr, variant_>;
+defm : SimpleLoadPat<loadi8, i8, LBSp, LBSri10, LBSrr, variant_>;
+
+defm : LoadPat<sextloadi16, i32, 1, LHSp, LHSri10, LHSrr, variant_>;
+defm : LoadPat<zextloadi16, i32, 1, LHZp, LHZri10, LHZrr, variant_>;
+defm : LoadPat<extloadi16, i32, 1, LHZp, LHZri10, LHZrr, variant_>;
+defm : LoadPat<sextloadi16, i64, 1, LHSp, LHSri10, LHSrr, variant_>;
+defm : LoadPat<zextloadi16, i64, 1, LHZp, LHZri10, LHZrr, variant_>;
+defm : LoadPat<extloadi16, i64, 1, LHZp, LHZri10, LHZrr, variant_>;
+defm : LoadPat<loadi16, i16, 1, LHSp, LHSri10, LHSrr, variant_>;
+
+defm : LoadPat<sextloadi32, i64, 2, LWSp, LWSri10, LWSrr, variant_>;
+defm : LoadPat<zextloadi32, i64, 2, LWZp, LWZri10, LWZrr, variant_>;
+defm : LoadPat<extloadi32, i64, 2, LWZp, LWZri10, LWZrr, variant_>;
+defm : LoadPat<loadi32, i32, 2, LWZp, LWZri10, LWZrr, variant_>;
+defm : LoadPat<loadv2i16, v2i16, 2, LWZp, LWZri10, LWZrr, variant_>;
+
+defm : LoadPat<loadi64, i64, 3, LDp, LDri10, LDrr, variant_>;
+defm : LoadPat<loadv8i8, v8i8, 3, LDp, LDri10, LDrr, variant_>;
+defm : LoadPat<loadv2i32, v2i32, 3, LDp, LDri10, LDrr, variant_>;
+defm : LoadPat<loadv4i16, v4i16, 3, LDp, LDri10, LDrr, variant_>;
+
+defm : LoadPat<loadv2i64, v2i64, 4, LQp, LQri10, LQrr, variant_>;
+defm : LoadPat<loadv4i32, v4i32, 4, LQp, LQri10, LQrr, variant_>;
+
+//===----------------------------------------------------------------------===//
+// Store Patterns
+//===----------------------------------------------------------------------===//
+
+// Pseudo instructions that select the right store instruction variant based on
+// the offset value.
+let mayStore = 1 in
+{
+def SBp : KVX_PSEUDO<
+        (outs), (ins Wrapped64:$offset, SingleReg:$base, SingleReg:$val), []>;
+def SHp : KVX_PSEUDO<
+        (outs), (ins Wrapped64:$offset, SingleReg:$base, SingleReg:$val), []>;
+def SWp : KVX_PSEUDO<
+        (outs), (ins Wrapped64:$offset, SingleReg:$base, SingleReg:$val), []>;
+def SDp : KVX_PSEUDO<
+        (outs), (ins Wrapped64:$offset, SingleReg:$base, SingleReg:$val), []>;
+def SQp : KVX_PSEUDO<
+        (outs), (ins Wrapped64:$offset, SingleReg:$base, PairedReg:$val), []>;
+def SOp : KVX_PSEUDO<
+        (outs), (ins Wrapped64:$offset, SingleReg:$base, QuadReg:$val), []>;
+}
+
+multiclass StorePatRI<PatFrag StoreOp, ValueType vt, RegisterClass rc,
+                      KVX_PSEUDO pinst, SDNode nval > {
+  def : Pat<(StoreOp vt:$val, AddrFI:$base),
+            (pinst (i64 0), SingleReg:$base, nval)>;
+  def : Pat<(StoreOp vt:$val, (add AddrFI:$base, Wrapped64:$offset)),
+            (pinst Wrapped64:$offset, SingleReg:$base, nval)>;
+  def : Pat<(StoreOp vt:$val, (IsOrAdd AddrFI:$base, Wrapped64:$offset)),
+            (pinst Wrapped64:$offset, SingleReg:$base, nval)>;
+  def : Pat<(StoreOp vt:$val, (add SingleReg:$base, Wrapped64:$offset)),
+            (pinst Wrapped64:$offset, SingleReg:$base, nval)>;
+}
+
+multiclass StorePatRR<PatFrag StoreOp, ValueType vt, RegisterClass rc,
+                      KVX_INSTRUCTION rr, SDNode nval > {
+  def : Pat<(StoreOp vt:$val, (add SingleReg:$base, SingleReg:$offset)),
+            (rr SingleReg:$offset, SingleReg:$base, nval, scaling_)>;
+  def : Pat<(StoreOp vt:$val, (or SingleReg:$base, SingleReg:$offset)),
+            (rr SingleReg:$offset, SingleReg:$base, nval, scaling_)>;
+}
+
+multiclass StorePatXS<PatFrag StoreOp, ValueType vt, RegisterClass rc, int sc,
+                      KVX_INSTRUCTION rr, SDNode nval > {
+  def : Pat<(StoreOp vt:$val,
+              (add SingleReg:$base, (shl SingleReg:$offset, (i64 sc)))),
+            (rr SingleReg:$offset, SingleReg:$base, nval, scaling_xs)>;
+  def : Pat<(StoreOp vt:$val,
+              (add (shl SingleReg:$offset, (i64 sc)), SingleReg:$base)),
+            (rr SingleReg:$offset, SingleReg:$base, nval, scaling_xs)>;
+  def : Pat<(StoreOp vt:$val,
+              (or SingleReg:$base, (shl SingleReg:$offset, (i64 sc)))),
+            (rr SingleReg:$offset, SingleReg:$base, nval, scaling_xs)>;
+  def : Pat<(StoreOp vt:$val,
+              (or (shl SingleReg:$offset, (i64 sc)), SingleReg:$base)),
+            (rr SingleReg:$offset, SingleReg:$base, nval, scaling_xs)>;
+}
+
+multiclass SimpleStorePat<PatFrag StoreOp, ValueType vt, RegisterClass rc,
+                          KVX_PSEUDO pinst, KVX_INSTRUCTION ri10,
+                          KVX_INSTRUCTION rr> {
+  def : Pat<(StoreOp vt:$val, SingleReg:$base),
+            (ri10 (i64 0), SingleReg:$base, (vt rc:$val))>;
+  defm : StorePatRI<StoreOp, vt, rc, pinst, (vt rc:$val)>;
+  defm : StorePatRR<StoreOp, vt, rc, rr, (vt rc:$val)>;
+}
+
+multiclass StorePat<PatFrag StoreOp, ValueType vt, RegisterClass rc, int sc,
+                    KVX_PSEUDO pinst, KVX_INSTRUCTION ri10,
+                    KVX_INSTRUCTION rr> {
+  def : Pat<(StoreOp vt:$val, SingleReg:$base),
+            (ri10 (i64 0), SingleReg:$base, (vt rc:$val))>;
+  defm : StorePatRI<StoreOp, vt, rc, pinst, (vt rc:$val)>;
+  defm : StorePatRR<StoreOp, vt, rc, rr, (vt rc:$val)>;
+  defm : StorePatXS<StoreOp, vt, rc, sc, rr, (vt rc:$val)>;
+}
+
+multiclass StorePatNode<PatFrag StoreOp, ValueType vt, RegisterClass rc, int sc,
+                        KVX_PSEUDO pinst, KVX_INSTRUCTION ri10,
+                        KVX_INSTRUCTION rr, SDNode nval> {
+  def : Pat<(StoreOp vt:$val, SingleReg:$base),
+            (ri10 (i64 0), SingleReg:$base, nval)>;
+  defm : StorePatRI<StoreOp, vt, rc, pinst, nval>;
+  defm : StorePatRR<StoreOp, vt, rc, rr, nval>;
+  defm : StorePatXS<StoreOp, vt, rc, sc, rr, nval>;
+}
+
+defm : SimpleStorePat<store, i8, SingleReg, SBp, SBri10, SBrr>;
+defm : SimpleStorePat<truncstorei8, i32, SingleReg, SBp, SBri10, SBrr>;
+defm : SimpleStorePat<truncstorei8, i64, SingleReg, SBp, SBri10, SBrr>;
+
+defm : StorePat<store, i16, SingleReg, 1, SHp, SHri10, SHrr>;
+defm : StorePat<truncstorei16, i32, SingleReg, 1, SHp, SHri10, SHrr>;
+defm : StorePat<truncstorei16, i64, SingleReg, 1, SHp, SHri10, SHrr>;
+
+defm : StorePat<store, i32, SingleReg, 2, SWp, SWri10, SWrr>;
+defm : StorePat<truncstorei32, i64, SingleReg, 2, SWp, SWri10, SWrr>;
+defm : StorePat<store, v2i16, SingleReg, 2, SWp, SWri10, SWrr>;
+
+defm : StorePat<store, i64, SingleReg, 3, SDp, SDri10, SDrr>;
+defm : StorePat<store, v8i8, SingleReg, 3, SDp, SDri10, SDrr>;
+defm : StorePat<store, v2i32, SingleReg, 3, SDp, SDri10, SDrr>;
+defm : StorePat<store, v4i16, SingleReg, 3 , SDp, SDri10, SDrr>;
+
+defm : StorePat<store, v2i64, PairedReg, 4, SQp, SQri10, SQrr>;
+defm : StorePat<store, v4i32, PairedReg, 4, SQp, SQri10, SQrr>;
+
 
 // sign extend optimizations
 def : Pat<(and SingleReg:$val,(i64 0xffffffff)), (ZXWD SingleReg:$val)>;
