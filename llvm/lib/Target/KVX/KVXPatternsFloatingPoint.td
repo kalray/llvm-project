@@ -9,25 +9,31 @@
 
 def DefaultShift : PatLeaf<(i64 0)>;
 
-// Store
-def : Pat<(store (f16 SingleReg:$val), AddrRI:$addr), (SHp AddrRI:$addr, SingleReg:$val)>;
-def : Pat<(store (f32 SingleReg:$val), AddrRI:$addr), (SWp AddrRI:$addr, SingleReg:$val)>;
-def : Pat<(store (f64 SingleReg:$val), AddrRI:$addr), (SDp AddrRI:$addr, SingleReg:$val)>;
-def : Pat<(store (v2f32 SingleReg:$val), AddrRI:$addr), (SDp AddrRI:$addr, SingleReg:$val)>;
-def : Pat<(store (v4f16 SingleReg:$val), AddrRI:$addr), (SDp AddrRI:$addr, SingleReg:$val)>;
-def : Pat<(store (v4f32 PairedReg:$val), AddrRI: $addr), (SQp AddrRI:$addr, PairedReg:$val)>;
-def : Pat<(store (v2f64 PairedReg:$val), AddrRI: $addr), (SQp AddrRI:$addr, PairedReg:$val)>;
-
 def truncstoref16 : PatFrag<(ops node:$val, node:$ptr),
                             (truncstore node:$val, node:$ptr)> {
   let IsStore = 1;
   let MemoryVT = f16;
 }
 
-def : Pat<(truncstoref32 f64:$val, AddrRI:$addr), (SWp AddrRI:$addr, (FNARROWDW SingleReg:$val, rounding_, silent_))>;
+// Store
+defm : StorePat<store, f16, SingleReg, 1, SHp, SHri10, SHrr>;
+defm : StorePatNode<truncstoref16, f32, SingleReg, 1, SHp, SHri10, SHrr,
+                    (FNARROWWH SingleReg:$val, rounding_, silent_)>;
+defm : StorePatNode<truncstoref16, f64, SingleReg, 1, SHp, SHri10, SHrr,
+                    (FNARROWWH (FNARROWDW SingleReg:$val, rounding_, silent_),
+                      rounding_, silent_)>;
 
-def : Pat<(truncstoref16 f64:$val, AddrRI:$addr), (SHp AddrRI:$addr, (FNARROWWH (FNARROWDW SingleReg:$val, rounding_, silent_), rounding_, silent_))>;
-def : Pat<(truncstoref16 f32:$val, AddrRI:$addr), (SHp AddrRI:$addr, (FNARROWWH SingleReg:$val, rounding_, silent_))>;
+defm : StorePat<store, f32, SingleReg, 2, SWp, SWri10, SWrr>;
+defm : StorePatNode<truncstoref32, f64, SingleReg, 2, SWp, SWri10, SWrr,
+                    (FNARROWDW SingleReg:$val, rounding_, silent_)>;
+defm : StorePat<store, v2f16, SingleReg, 2, SWp, SWri10, SWrr>;
+
+defm : StorePat<store, f64, SingleReg, 3, SDp, SDri10, SDrr>;
+defm : StorePat<store, v2f32, SingleReg, 3, SDp, SDri10, SDrr>;
+defm : StorePat<store, v4f16, SingleReg, 3, SDp, SDri10, SDrr>;
+
+defm : StorePat<store, v4f32, PairedReg, 4, SQp, SQri10, SQrr>;
+defm : StorePat<store, v2f64, PairedReg, 4, SQp, SQri10, SQrr>;
 
 // Load
 def loadf16 : PatFrag<(ops node:$ptr), (f16 (load node:$ptr))>;
@@ -38,13 +44,14 @@ def loadv2f32 : PatFrag<(ops node:$ptr), (v2f32 (load node:$ptr))>;
 def loadv4f32 : PatFrag<(ops node:$ptr), (v4f32 (load node:$ptr))>;
 def loadv2f64 : PatFrag<(ops node:$ptr), (v2f64 (load node:$ptr))>;
 
-def : Pat<(loadf16 AddrRI:$addr), (LHZp AddrRI:$addr, variant_)>;
-def : Pat<(loadf32 AddrRI:$addr), (LWZp AddrRI:$addr, variant_)>;
-def : Pat<(loadf64 AddrRI:$addr), (LDp AddrRI:$addr, variant_)>;
-def : Pat<(loadv2f32 AddrRI:$addr), (LDp AddrRI:$addr, variant_)>;
-def : Pat<(loadv4f16 AddrRI:$addr), (LDp AddrRI:$addr, variant_)>;
-def : Pat<(loadv4f32 AddrRI:$addr), (LQp AddrRI:$addr, variant_)>;
-def : Pat<(loadv2f64 AddrRI:$addr), (LQp AddrRI:$addr, variant_)>;
+defm : LoadPat<loadf16, f16, 1, LHZp, LHZri10, LHZrr, variant_>;
+defm : LoadPat<loadf32, f32, 2, LWZp, LWZri10, LWZrr, variant_>;
+defm : LoadPat<loadv2f16, v2f16, 2, LWZp, LWZri10, LWZrr, variant_>;
+defm : LoadPat<loadf64, f64, 3, LDp, LDri10, LDrr, variant_>;
+defm : LoadPat<loadv2f32, v2f32, 3, LDp, LDri10, LDrr, variant_>;
+defm : LoadPat<loadv4f16, v4f16, 3, LDp, LDri10, LDrr, variant_>;
+defm : LoadPat<loadv4f32, v4f32, 4, LQp, LQri10, LQrr, variant_>;
+defm : LoadPat<loadv2f64, v2f64, 4, LQp, LQri10, LQrr, variant_>;
 
 // 16 bits
 def : BITCAST<f16, i16, SingleReg>;

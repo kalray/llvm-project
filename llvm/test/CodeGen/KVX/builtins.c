@@ -29,6 +29,14 @@ int lwzu(int *p) {
   // CHECK-NEXT: ret
 }
 
+int lwzu2(int **p, int a) {
+  return __builtin_kvx_lwzu(p[a]);
+  // CHECK: lwzu2:
+  // CHECK: ld.xs $r0 = $r1[$r0]
+  // CHECK: lwz.u $r0 = 0[$r0]
+  // CHECK-NEXT: ret
+}
+
 long ctzd(long l) {
   // CHECK-LABEL: ctzd:
   // CHECK-NEXT: ctzd $r0 = $r0

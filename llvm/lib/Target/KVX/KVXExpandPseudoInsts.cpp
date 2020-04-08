@@ -1049,145 +1049,41 @@ static bool expandRoundingInOutInstr(unsigned int OpCode,
 }
 
 static bool expandStore(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
-                        MachineBasicBlock::iterator MBBI) {
+                        MachineBasicBlock::iterator MBBI, unsigned ri10,
+                        unsigned ri37, unsigned ri64) {
 
   MachineInstr &MI = *MBBI;
   DebugLoc DL = MI.getDebugLoc();
 
-  int64_t offset = 0;
-  unsigned offsetReg = 0;
+  int64_t offset = MI.getOperand(0).getImm();
   unsigned base = MI.getOperand(1).getReg();
   unsigned val = MI.getOperand(2).getReg();
 
-  unsigned OpCode;
-
-  bool AddrIsReg = MI.getOperand(0).isReg();
-  bool AddrIsImm = MI.getOperand(0).isImm();
-
-  if (AddrIsReg) {
-    offsetReg = MI.getOperand(0).getReg();
-  } else if (AddrIsImm) {
-    offset = MI.getOperand(0).getImm();
-  } else {
-    llvm_unreachable("Operator type not handled");
-  }
-
-  switch (MBBI->getOpcode()) {
-  case KVX::SBp:
-    OpCode = AddrIsReg ? KVX::SBrr : GetImmOpCode(offset, KVX::SBri10,
-                                                  KVX::SBri37, KVX::SBri64);
-    break;
-  case KVX::SHp:
-    OpCode = AddrIsReg ? KVX::SHrr : GetImmOpCode(offset, KVX::SHri10,
-                                                  KVX::SHri37, KVX::SHri64);
-    break;
-  case KVX::SWp:
-    OpCode = AddrIsReg ? KVX::SWrr : GetImmOpCode(offset, KVX::SWri10,
-                                                  KVX::SWri37, KVX::SWri64);
-    break;
-  case KVX::SDp:
-    OpCode = AddrIsReg ? KVX::SDrr : GetImmOpCode(offset, KVX::SDri10,
-                                                  KVX::SDri37, KVX::SDri64);
-    break;
-  case KVX::SQp:
-    OpCode = AddrIsReg ? KVX::SQrr : GetImmOpCode(offset, KVX::SQri10,
-                                                  KVX::SQri37, KVX::SQri64);
-    break;
-  case KVX::SOp:
-    OpCode = AddrIsReg ? KVX::SOrr : GetImmOpCode(offset, KVX::SOri10,
-                                                  KVX::SOri37, KVX::SOri64);
-    break;
-  }
-
-  if (AddrIsReg) {
-    BuildMI(MBB, MBBI, DL, TII->get(OpCode))
-        .addReg(offsetReg)
-        .addReg(base)
-        .addReg(val)
-        .addImm(KVXMOD::SCALING_);
-  } else {
-    BuildMI(MBB, MBBI, DL, TII->get(OpCode)).addImm(offset).addReg(base).addReg(
-        val);
-  }
+  BuildMI(MBB, MBBI, DL, TII->get(GetImmOpCode(offset, ri10, ri37, ri64)))
+      .addImm(offset)
+      .addReg(base)
+      .addReg(val);
 
   MI.eraseFromParent();
   return true;
 }
 
 static bool expandLoad(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
-                       MachineBasicBlock::iterator MBBI) {
+                       MachineBasicBlock::iterator MBBI, unsigned ri10,
+                       unsigned ri37, unsigned ri64) {
   MachineInstr &MI = *MBBI;
   DebugLoc DL = MI.getDebugLoc();
 
-  int64_t offset = 0;
-  unsigned offsetReg = 0;
-
   unsigned outputReg = MI.getOperand(0).getReg();
+  int64_t offset = MI.getOperand(1).getImm();
   unsigned base = MI.getOperand(2).getReg();
   int64_t variant = MI.getOperand(3).getImm();
 
-  bool AddrIsReg = MI.getOperand(1).isReg();
-  bool AddrIsImm = MI.getOperand(1).isImm();
-
-  if (AddrIsReg) {
-    offsetReg = MI.getOperand(1).getReg();
-  } else if (AddrIsImm) {
-    offset = MI.getOperand(1).getImm();
-  } else {
-    llvm_unreachable("Operator type not handled");
-  }
-
-  unsigned OpCode;
-  switch (MBBI->getOpcode()) {
-  case KVX::LBSp:
-    OpCode = AddrIsReg ? KVX::LBSrr : GetImmOpCode(offset, KVX::LBSri10,
-                                                   KVX::LBSri37, KVX::LBSri64);
-    break;
-  case KVX::LBZp:
-    OpCode = AddrIsReg ? KVX::LBZrr : GetImmOpCode(offset, KVX::LBZri10,
-                                                   KVX::LBZri37, KVX::LBZri64);
-    break;
-  case KVX::LHSp:
-    OpCode = AddrIsReg ? KVX::LHSrr : GetImmOpCode(offset, KVX::LHSri10,
-                                                   KVX::LHSri37, KVX::LHSri64);
-    break;
-  case KVX::LHZp:
-    OpCode = AddrIsReg ? KVX::LHZrr : GetImmOpCode(offset, KVX::LHZri10,
-                                                   KVX::LHZri37, KVX::LHZri64);
-    break;
-  case KVX::LWSp:
-    OpCode = AddrIsReg ? KVX::LWSrr : GetImmOpCode(offset, KVX::LWSri10,
-                                                   KVX::LWSri37, KVX::LWSri64);
-    break;
-  case KVX::LWZp:
-    OpCode = AddrIsReg ? KVX::LWZrr : GetImmOpCode(offset, KVX::LWZri10,
-                                                   KVX::LWZri37, KVX::LWZri64);
-    break;
-  case KVX::LDp:
-    OpCode = AddrIsReg ? KVX::LDrr : GetImmOpCode(offset, KVX::LDri10,
-                                                  KVX::LDri37, KVX::LDri64);
-    break;
-  case KVX::LQp:
-    OpCode = AddrIsReg ? KVX::LQrr : GetImmOpCode(offset, KVX::LQri10,
-                                                  KVX::LQri37, KVX::LQri64);
-    break;
-  case KVX::LOp:
-    OpCode = AddrIsReg ? KVX::LOrr : GetImmOpCode(offset, KVX::LOri10,
-                                                  KVX::LOri37, KVX::LOri64);
-    break;
-  }
-  if (AddrIsReg) {
-    BuildMI(MBB, MBBI, DL, TII->get(OpCode), outputReg)
-        .addReg(offsetReg)
-        .addReg(base)
-        .addImm(variant)
-        .addImm(KVXMOD::SCALING_);
-  } else {
-    BuildMI(MBB, MBBI, DL, TII->get(OpCode), outputReg)
-        .addImm(offset)
-        .addReg(base)
-        .addImm(variant);
-  }
+  BuildMI(MBB, MBBI, DL, TII->get(GetImmOpCode(offset, ri10, ri37, ri64)),
+          outputReg)
+      .addImm(offset)
+      .addReg(base)
+      .addImm(variant);
 
   MI.eraseFromParent();
   return true;
@@ -1467,23 +1363,49 @@ bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
     expandRoundingInOutInstr(KVX::FMM2SWQ, TII, MBB, MBBI);
     return true;
   case KVX::SBp:
+    expandStore(TII, MBB, MBBI, KVX::SBri10, KVX::SBri37, KVX::SBri64);
+    return true;
   case KVX::SHp:
+    expandStore(TII, MBB, MBBI, KVX::SHri10, KVX::SHri37, KVX::SHri64);
+    return true;
   case KVX::SWp:
+    expandStore(TII, MBB, MBBI, KVX::SWri10, KVX::SWri37, KVX::SWri64);
+    return true;
   case KVX::SDp:
+    expandStore(TII, MBB, MBBI, KVX::SDri10, KVX::SDri37, KVX::SDri64);
+    return true;
   case KVX::SQp:
+    expandStore(TII, MBB, MBBI, KVX::SQri10, KVX::SQri37, KVX::SQri64);
+    return true;
   case KVX::SOp:
-    expandStore(TII, MBB, MBBI);
+    expandStore(TII, MBB, MBBI, KVX::SOri10, KVX::SOri37, KVX::SOri64);
     return true;
   case KVX::LBSp:
+    expandLoad(TII, MBB, MBBI, KVX::LBSri10, KVX::LBSri37, KVX::LBSri64);
+    return true;
   case KVX::LBZp:
+    expandLoad(TII, MBB, MBBI, KVX::LBZri10, KVX::LBZri37, KVX::LBZri64);
+    return true;
   case KVX::LHSp:
+    expandLoad(TII, MBB, MBBI, KVX::LHSri10, KVX::LHSri37, KVX::LHSri64);
+    return true;
   case KVX::LHZp:
+    expandLoad(TII, MBB, MBBI, KVX::LHZri10, KVX::LHZri37, KVX::LHZri64);
+    return true;
   case KVX::LWSp:
+    expandLoad(TII, MBB, MBBI, KVX::LWSri10, KVX::LWSri37, KVX::LWSri64);
+    return true;
   case KVX::LWZp:
+    expandLoad(TII, MBB, MBBI, KVX::LWZri10, KVX::LWZri37, KVX::LWZri64);
+    return true;
   case KVX::LDp:
+    expandLoad(TII, MBB, MBBI, KVX::LDri10, KVX::LDri37, KVX::LDri64);
+    return true;
   case KVX::LQp:
+    expandLoad(TII, MBB, MBBI, KVX::LQri10, KVX::LQri37, KVX::LQri64);
+    return true;
   case KVX::LOp:
-    expandLoad(TII, MBB, MBBI);
+    expandLoad(TII, MBB, MBBI, KVX::LOri10, KVX::LOri37, KVX::LOri64);
     return true;
   case KVX::MADDWp:
     expandMADDW(TII, MBB, MBBI);

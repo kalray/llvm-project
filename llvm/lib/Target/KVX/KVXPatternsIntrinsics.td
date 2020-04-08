@@ -35,9 +35,14 @@ def: Pat<(int_kvx_sbmm8 SingleReg:$r, Signed37:$r2), (SBMM8ri37 SingleReg:$r, Si
 def: Pat<(int_kvx_sbmm8 SingleReg:$r, Wrapped64:$r2), (SBMM8ri64 SingleReg:$r, Wrapped64:$r2)>;
 def: Pat<(int_kvx_sbmm8 SingleReg:$r, SingleReg:$r2), (SBMM8rr SingleReg:$r, SingleReg:$r2)>;
 
-def: Pat<(int_kvx_lbzu AddrRI:$addr), (LBZp AddrRI:$addr, variant_u)>;
-def: Pat<(int_kvx_lhzu AddrRI:$addr), (LHZp AddrRI:$addr, variant_u)>;
-def: Pat<(int_kvx_lwzu AddrRI:$addr), (LWZp AddrRI:$addr, variant_u)>;
+def kvx_lbzu : PatFrag<(ops node:$ptr), (int_kvx_lbzu node:$ptr)>;
+def kvx_lhzu : PatFrag<(ops node:$ptr), (int_kvx_lhzu node:$ptr)>;
+def kvx_lwzu : PatFrag<(ops node:$ptr), (int_kvx_lwzu node:$ptr)>;
+
+defm : SimpleLoadPat<kvx_lbzu, i32, LBZp, LBZri10, LBZrr, variant_u>;
+defm : LoadPat<kvx_lhzu, i32, 1, LHZp, LHZri10, LHZrr, variant_u>;
+defm : LoadPat<kvx_lwzu, i32, 2, LWZp, LWZri10, LWZrr, variant_u>;
+
 def: Pat<(int_kvx_acswapw i64:$addr, i32:$expect, i32:$update), (i32 (EXTRACT_SUBREG
   (v2i64 (ACSWAPWri10 (i64 0), SingleReg:$addr, (INSERT_SUBREG (INSERT_SUBREG (v2i64 (IMPLICIT_DEF)),
     SingleReg:$expect, 1), SingleReg:$update, 2))), 2))>;
