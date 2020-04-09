@@ -17,15 +17,15 @@
 // extracted.(Using LLVM functions) From LLVM terminology, the preheader is the
 // basic block preceeding the loop (where initializations are done). The header
 // is (in our case, O2, O3 compilation) the basic block containing the ending
-// condition and the content of the loop The exit block is the block coming
+// condition and/or the content of the loop. The exit block is the block coming
 // after the loop ends.
 //
-// 3. The loop is done recursively, meaning that in the case of nested loops,
-// only the ones that do NOT contain other loops will be replaced with hardware
-// loops.
+// 3. The parsing is performed recursively, meaning that in the case of nested
+// loops, only the ones that do NOT contain other loops will be replaced with
+// hardware loops(the leafs of the loop tree).
 //
 // 4. Eligibility check: A loop can be optimized if:
-// - The preheader and the header are not empty
+// - The preheader, the header and the exit basic block exist and are not empty
 // - There is no function call under the loop
 // - There is no indirect branching (multiple exit points loop) in the loop
 //
@@ -33,53 +33,57 @@
 //   - The number of iterations
 //   - The exit basic block which MUST succeed the header
 // In order to find the number of iterations, GetLOOPDOArgs is called, under
-// this function the parsing of the machine instruction is done.
+// this function the parsing of the machine instructions is done.
 //
 // 6. The parsing:
-// The comparison instruction is searched for and the type (less than, greather
-// than etc) is extracted. From here there two cases: reg-reg comparison and
-// reg-imm comparison.
-// - reg-imm case: The imm is the loop end value, it will be stored for later
-// user.
-// - reg-reg case: This case is split into two:
-//   - The value in one of the two registers can be found by tracing the
-//   register usage, in this case, the found value is the starting index.
-//   - Neither of the two values can be tracked, in this case, hardware loop
-//   does not take place.
-// Thus after the parsing we have the comparison type, the starting/ending
-// value, the ending register (for the reg-reg case) Observation: The reg-reg
-// case handles only the case where the bump is 1 and the starting value is 0.
+// A seach inside the header is performed to find a CB instr that points
+// to the header or to the exit basic block.
+// Based on CB instruction there are two cases:
+// a. The CB argument is computed in a COMPD instruction above.
+// b. The CB argument is NOT computed in a COMPD instruction above.(
+// in this case ususally is not profitable to replace with loopdo due to
+// bundling)
+// In order to enable/disable hwloop replace when CB only case, the CBOnlyHwLoop
+// is used.
 //
-// 7. The backtracking of a register starts in the header from the COMPD
-// instruction and ends in the preheader. During the backtracking, upon the
-// register can be applied the following operations: load, store, add, subtract
-// and make. The MAKE instruction is the stopping condition.
+// Based on the CB/COMPD case, a backtrace of the register is done in order to
+// detect the induction register.
+// The BackTraceRegValue is used in this matter. It searches for the register
+// to be part into an add operation(here the bump is extracted), to be part
+// of a PHI instruction and to be defined outside of the header.
+// As an optimization it also searches if the register is defined in a MAKE or
+// sign extend operation.
+// Based on this parsing the followig values are extracted:
+// - The start value of the loop
+// - The end value of the loop
+// - The Bump value
+// If the bump value is a register, no hwloop is inserted.
+// If the bump value is 0, no hwloop is inserted.
+// If the bump value is not incremental or decremental and the start value
+// and the end value are not both IMM, no hwloop is inserted.
 //
-// 8. After the parsing(Under GetLOOPDOArgs) there are two cases:
-//   - Both the starting value and the ending value of the iteration are know.
-//   In this case, a difference
-// is computed based on the COMPD sign and the number of steps are returned.
-//   - Only the Starting value is known. In this case, the ending value is
-//   returned as a register.
+// Based on these values (the start and end value can be IMM/REG), there are
+// the following cases:
+// * IMM-IMM
+// * IMM(zero) - REG
+// * IMM(not zero)
+// * REG-IMM(zero)
+// * REG-IMM(not zero)
+// * REG-REG
+// Based on the above cases, the iteration count is computed. Either by
+// inserting a NEGD, SBFD or MAKE instructions.
 //
-// 9. The loop comparison is removed(RemoveBranchingInstr) meaning the COMP and
-// GOTO instruction.
+// 7. The loop comparison is removed(RemoveBranchingInstr) meaning the COMPD,
+// CB, and GOTO instruction.
 //
-// 10. There are cases(fp1.c test) when the exit block is not immediately after
+// 8. There are cases(fp1.c test) when the exit block is not immediately after
 // the header which leads to an undefined behaviour. To avoid this, a new basic
 // block is created and inserted immediately after the header. This new basic
 // block will contain a GOTO instruction to the exit block.
 //
-// 11. In the reg-imm case, a make and a loopdo instruction will be inserted at
-// the end of the preheader. In the reg-reg case, a CB and a LOOPDO instruction
-// will be inserted at the end of the preheader. The purpose of the CB
-// instruction is to check that the register is not 0, in which case it jumps
-// directly to the exit block.
-//
 // Further work:
 // - In the reg-reg case, add instructions for handling the cases where the
 // bumping value is different than 1 and the starting value is different than 0.
-// - Add reg-reg memory addressing
 // - Add the cases in which the step of the loop is a multiplication or a
 // division.
 //
@@ -131,18 +135,20 @@ private:
   MachineBasicBlock *PreheaderMBB;
   MachineBasicBlock *ExitMBB;
 
-  bool ParseLoop(MachineLoop *L, MachineOperand &EndVal, int &Cond,
+  bool ParseLoop(MachineLoop *L, MachineOperand &EndVal, unsigned &Cond,
                  MachineOperand &StartVal, int64_t &Bump);
 
   bool IsEligibleForHardwareLoop(MachineLoop *L);
 
-  bool BackTraceRegValue(MachineLoop *L, instr_iterator MII,
-                         unsigned RegToBacktrace, MachineOperand &CmpVal,
-                         int64_t &Bump, bool &IsDefinedInBody);
+  bool BackTraceRegValue(MachineLoop *L, unsigned RegToBacktrace,
+                         MachineOperand &CmpVal, int64_t &Bump,
+                         bool &IsModified);
 
-  bool GetLOOPDOArgs(MachineLoop *L, MachineOperand &StepsCount);
+  bool GetLOOPDOArgs(MachineLoop *L, MachineOperand &StartVal,
+                     MachineOperand &EndVal, int64_t &Bump);
 
-  bool ConvertToHardwareLoop(MachineFunction &MF, MachineLoop *L);
+  bool ConvertToHardwareLoop(MachineFunction &MF, MachineLoop *L,
+                             unsigned Level);
 
   bool RemoveBranchingInstr(MachineLoop *L);
 
