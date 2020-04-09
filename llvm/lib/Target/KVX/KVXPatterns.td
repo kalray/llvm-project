@@ -17,6 +17,7 @@ def SDTKVXBRCond : SDTypeProfile<0, 3,
 def SDTKVXComp : SDTypeProfile<1, 3,
       [SDTCisInt<0>, SDTCisSameAs<0, 1>, SDTCisSameAs<0, 2>, SDTCisVT<3, i32>]>;
 
+
 //===----------------------------------------------------------------------===//
 // Custom selection DAG node definitions.
 //===----------------------------------------------------------------------===//
@@ -68,6 +69,15 @@ def DTOUCHLp : KVX_PSEUDO<(outs), (ins AddrRI:$addr), []>;
 def DZEROLp : KVX_PSEUDO<(outs), (ins AddrRI:$addr), []>;
 def IINVALSp : KVX_PSEUDO<(outs), (ins AddrRI:$addr), []>;
 
+//===----------------------------------------------------------------------===//
+// Peephole patterns.
+//===----------------------------------------------------------------------===//
+
+// Remove zero/any extend from i32 to i64 (instructions embed it)
+multiclass ZEFPat<dag pattern, dag result> {
+  def : Pat<(i32 pattern), result>;
+  def : Pat<(i64 (zext pattern)), result>;
+}
 
 // FIXME: clean code below
 
@@ -427,12 +437,13 @@ def : Pat<(and SingleReg:$val,(i32 0xff)), (ZXBD SingleReg:$val)>;
 // eliminate zero extend for shift ops second operand
 multiclass SHIFT_PAT32<SDNode n, SDNode instr>
 {
-        def : Pat<(n i32:$r1, (and SingleReg:$val,(i64 0xff))), (instr SingleReg:$r1, SingleReg:$val)>;
-        def : Pat<(n i32:$r1, (and SingleReg:$val,(i64 0xffff))), (instr SingleReg:$r1, SingleReg:$val)>;
+  defm : ZEFPat<(n i32:$r1, (and SingleReg:$val,(i64 0xff))), (instr SingleReg:$r1, SingleReg:$val)>;
+  defm : ZEFPat<(n i32:$r1, (and SingleReg:$val,(i64 0xffff))), (instr SingleReg:$r1, SingleReg:$val)>;
+  defm : ZEFPat<(n i32:$r1, (and SingleReg:$val,(i64 0xffffffff))), (instr SingleReg:$r1, SingleReg:$val)>;
 
-        def : Pat<(n i32:$r1, (i64 (zext (i32 (sext_inreg i32:$val,i8))))), (instr SingleReg:$r1, SingleReg:$val)>;
-        def : Pat<(n i32:$r1, (i64 (zext (i32 (sext_inreg i32:$val,i16))))), (instr SingleReg:$r1, SingleReg:$val)>;
-        def : Pat<(n i32:$r1, (i64 (zext i32:$val))), (instr SingleReg:$r1, SingleReg:$val)>;
+  defm : ZEFPat<(n i32:$r1, (i64 (zext (i32 (sext_inreg i32:$val,i8))))), (instr SingleReg:$r1, SingleReg:$val)>;
+  defm : ZEFPat<(n i32:$r1, (i64 (zext (i32 (sext_inreg i32:$val,i16))))), (instr SingleReg:$r1, SingleReg:$val)>;
+  defm : ZEFPat<(n i32:$r1, (i64 (zext i32:$val))), (instr SingleReg:$r1, SingleReg:$val)>;
 }
 multiclass SHIFT_PAT64<SDNode n, SDNode instr>
 { 
