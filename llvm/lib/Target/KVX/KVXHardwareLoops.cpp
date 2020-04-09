@@ -42,40 +42,6 @@ INITIALIZE_PASS_DEPENDENCY(MachineLoopInfo)
 INITIALIZE_PASS_END(KVXHardwareLoops, KVXHARDWARELOOPS_NAME,
                     KVXHARDWARELOOPS_DESC, false, false)
 
-static bool isAddOperator(unsigned opcode) {
-  switch (opcode) {
-  case KVX::ADDWri10:
-  case KVX::ADDWri37:
-  case KVX::ADDWrr:
-  case KVX::ADDDri10:
-  case KVX::ADDDri37:
-  case KVX::ADDDri64:
-  case KVX::ADDDrr:
-    return true;
-  default:
-    return false;
-  }
-
-  return false;
-}
-
-static bool isSubOperator(unsigned opcode) {
-  switch (opcode) {
-  case KVX::SBFDri10:
-  case KVX::SBFDri37:
-  case KVX::SBFDri64:
-  case KVX::SBFDrr:
-  case KVX::SBFWri10:
-  case KVX::SBFWri37:
-  case KVX::SBFWrr:
-    return true;
-  default:
-    return false;
-  }
-
-  return false;
-}
-
 static bool isMakeOperator(unsigned opcode) {
   switch (opcode) {
   case KVX::MAKEi16:
@@ -119,16 +85,55 @@ static bool isCompOperator(unsigned opcode) {
   return false;
 }
 
+static unsigned GetOppositeCondition(unsigned Cond) {
+  switch (Cond) {
+  case KVXMOD::COMPARISON_EQ:
+    return KVXMOD::COMPARISON_NE;
+  case KVXMOD::COMPARISON_NE:
+    return KVXMOD::COMPARISON_EQ;
+  case KVXMOD::COMPARISON_GE:
+    return KVXMOD::COMPARISON_LT;
+  case KVXMOD::COMPARISON_LE:
+    return KVXMOD::COMPARISON_GT;
+  case KVXMOD::COMPARISON_GEU:
+    return KVXMOD::COMPARISON_LTU;
+  case KVXMOD::COMPARISON_LEU:
+    return KVXMOD::COMPARISON_GTU;
+  case KVXMOD::COMPARISON_LT:
+    return KVXMOD::COMPARISON_GE;
+  case KVXMOD::COMPARISON_GT:
+    return KVXMOD::COMPARISON_LE;
+  case KVXMOD::COMPARISON_LTU:
+    return KVXMOD::COMPARISON_GEU;
+  case KVXMOD::COMPARISON_GTU:
+    return KVXMOD::COMPARISON_LEU;
+  }
+  llvm_unreachable("Comparison mode not recognized");
+}
+
 bool KVXHardwareLoops::IsEligibleForHardwareLoop(MachineLoop *L) {
 
   // Eligibility check: A loop can be optimized if:
   // - The preheader and the header are not empty
   // - There is no function call under the loop
   // - There is no indirect branching (multiple exit points loop) in the loop
+  if (!PreheaderMBB)
+    LLVM_DEBUG(llvm::dbgs()
+               << "HW Loop - The loop does not have a PreheaderMBB\n");
+  if (!HeaderMBB)
+    LLVM_DEBUG(llvm::dbgs()
+               << "HW Loop - The loop does not have a HeaderMBB\n");
+  if (!ExitMBB)
+    LLVM_DEBUG(llvm::dbgs() << "HW Loop - The loop does not have a ExitMBB\n");
 
   if (!HeaderMBB || !PreheaderMBB || !ExitMBB) {
     LLVM_DEBUG(llvm::dbgs() << "HW Loop - The loop does not have a "
                                "header/preheader/exit basic block.\n");
+    return false;
+  }
+
+  if (ExitMBB->empty()) {
+    LLVM_DEBUG(llvm::dbgs() << "HW Loop - The exit basic block is empty\n");
     return false;
   }
 
@@ -173,189 +178,178 @@ bool KVXHardwareLoops::IsEligibleForHardwareLoop(MachineLoop *L) {
  * @return Returns true if the value was traced, false otherwise.
  */
 bool KVXHardwareLoops::BackTraceRegValue(MachineLoop *L,
-                                         instr_iterator headerIt,
                                          unsigned regToSearchFor,
-                                         MachineOperand &CmpVal, int64_t &Bump,
-                                         bool &IsDefinedInBody) {
+                                         MachineOperand &IVar, int64_t &Bump,
+                                         bool &IsModified) {
 
-  unsigned regNr = regToSearchFor;
-  bool Done = false;
-  IsDefinedInBody = false;
+  MachineInstr *AddInstr = MRI->getVRegDef(regToSearchFor);
 
-  headerIt = std::prev(headerIt);
-  // Condition basick block register backtrace
-  do {
-    if (headerIt->getOpcode() == KVX::PHI &&
-        headerIt->getOperand(0).getReg() == regNr) {
-      regNr = headerIt->getOperand(1).getReg();
-      CmpVal = headerIt->getOperand(1);
-    }
-
-    if (isAddOperator(headerIt->getOpcode()) &&
-        headerIt->getOperand(0).getReg() == regNr &&
-        headerIt->getOperand(2).isImm()) {
-      regNr = headerIt->getOperand(1).getReg();
-      Bump = headerIt->getOperand(2).getImm();
-      CmpVal = headerIt->getOperand(1);
-    }
-
-    if (isSubOperator(headerIt->getOpcode()) &&
-        headerIt->getOperand(0).getReg() == regNr &&
-        headerIt->getOperand(2).isImm()) {
-      regNr = headerIt->getOperand(1).getReg();
-      Bump = headerIt->getOperand(2).getImm();
-      CmpVal = headerIt->getOperand(1);
-    }
-
-    for (auto OutputOp = headerIt->defs().begin();
-         OutputOp != headerIt->defs().end(); ++OutputOp) {
-      if (OutputOp->getReg() == regNr) {
-        IsDefinedInBody = true;
-        break;
-      }
-    }
-
-    if (headerIt == HeaderMBB->begin())
-      Done = true;
-    else
-      headerIt = std::prev(headerIt);
-  } while (!Done);
-
-  Done = false;
-  // Iterate through the preheader
-  instr_iterator I = PreheaderMBB->instr_end();
-  I = std::prev(I);
-  do {
-    if (isMakeOperator(I->getOpcode()) &&
-        (I->getOperand(0).getReg() == regNr)) {
-      CmpVal = I->getOperand(1);
-      return true;
-    }
-
-    if (isExtensionOperator(I->getOpcode()) &&
-        (I->getOperand(0).getReg() == regNr)) {
-      CmpVal = I->getOperand(1);
-      return true;
-    }
-
-    if (I == PreheaderMBB->instr_begin()) {
-      Done = true;
-    } else {
-      I = std::prev(I);
-    }
-  } while (!Done);
-
-  return false;
-}
-
-bool KVXHardwareLoops::ParseLoop(MachineLoop *L, MachineOperand &EndVal,
-                                 int &Cond, MachineOperand &StartVal,
-                                 int64_t &Bump) {
-  for (instr_iterator I = HeaderMBB->instr_begin(), E = HeaderMBB->instr_end();
-       I != E; ++I) {
-    // The parsing starts when a COMPD instruction is found
-    if (isCompOperator(I->getOpcode())) {
-
-      // Sanity check for the comparison type (LT, GT etc)/
-      if (I->getOperand(3).isImm()) {
-        Cond = I->getOperand(3).getImm();
-      } else {
-        LLVM_DEBUG(llvm::dbgs() << "HW Loop - The loop comparison type(LT, GT "
-                                   "etc) is not an immediate.\n");
-        return false;
-      }
-      // REG-IMM case
-      if (I->getOperand(1).isReg() && I->getOperand(2).isImm()) {
-        bool IsDefinedInBody;
-        // If the register's value could not be traced, then the loop can not
-        // be parsed
-        if (BackTraceRegValue(L, I, I->getOperand(1).getReg(), StartVal, Bump,
-                              IsDefinedInBody)) {
-          if (StartVal.isReg() && Bump == -1)
-            EndVal = StartVal;
-          else
-            EndVal = I->getOperand(2);
-        } else {
-          LLVM_DEBUG(
-              llvm::dbgs()
-              << "HW Loop - [REG-IMM] The register could not be traced.\n");
-          return false;
-        }
-      } // REG-IMM case
-      // REG-REG case
-      else if (I->getOperand(1).isReg() && I->getOperand(2).isReg()) {
-
-        int64_t BumpOp1 = 0;
-        int64_t BumpOp2 = 0;
-        MachineOperand StartValOp1 = MachineOperand::CreateImm(0);
-        MachineOperand StartValOp2 = MachineOperand::CreateImm(0);
-        bool IsDefinedInBody1;
-        bool IsDefinedInBody2;
-        bool BacktraceOp1 =
-            BackTraceRegValue(L, I, I->getOperand(1).getReg(), StartValOp1,
-                              BumpOp1, IsDefinedInBody1);
-        bool BacktraceOp2 =
-            BackTraceRegValue(L, I, I->getOperand(2).getReg(), StartValOp2,
-                              BumpOp2, IsDefinedInBody2);
-
-        // If the register's value could not be traced, then the loop can not
-        // be parsed
-        if (BacktraceOp1 && StartValOp1.isImm() && BumpOp2 == 0) {
-          if (IsDefinedInBody2)
-            return false;
-          Bump = BumpOp1;
-          StartVal = StartValOp1;
-
-          // This line should be removed when cases for Bump != 1 and StartVal
-          // != 1 are implemented
-          if (Bump != 1 || StartVal.getImm() != 0) {
-            LLVM_DEBUG(llvm::dbgs() << "HW Loop - [REG-REG] The bump value is "
-                                       "not 1 or the start value is not 0.\n");
-            return false;
-          }
-          EndVal = I->getOperand(2);
-        } else {
-          // If the register's value could not be traced, then the loop can not
-          // be parsed
-          if (BacktraceOp2 && StartValOp2.isImm() && BumpOp1 == 0) {
-            if (IsDefinedInBody1)
-              return false;
-
-            Bump = BumpOp2;
-            StartVal = StartValOp2;
-
-            // This line should be removed when cases for Bump != 1 and StartVal
-            // != 1 are implemented
-            if (Bump != 1 || StartVal.getImm() != 0) {
-              LLVM_DEBUG(llvm::dbgs()
-                         << "HW Loop - [REG-REG] The bump value is not 1 or "
-                            "the start value is not 0.\n");
-              return false;
-            }
-
-            EndVal = I->getOperand(1);
-          } else {
-            LLVM_DEBUG(llvm::dbgs() << "HW Loop - [REG-REG] Neither of the "
-                                       "registers coud be traced.\n");
-            return false;
-          }
-        }
-      } // REG-REG case
-    }   // isCompOperator check
+  if (!AddInstr) {
+    LLVM_DEBUG(
+        llvm::dbgs()
+        << "HW Loop - The traced register definition could not be found.\n");
+    return false;
   }
 
+  if (!AddInstr->getDesc().isAdd()) {
+    LLVM_DEBUG(llvm::dbgs()
+               << "HW Loop - The traced register is not an addition.\n");
+    return false;
+  }
+
+  // The traced register is modified
+  IsModified = true;
+
+  if (!AddInstr->getOperand(2).isImm()) {
+    LLVM_DEBUG(llvm::dbgs() << "HW Loop - The traced register is incremented "
+                               "by a register, not by an IMM.\n");
+    return false;
+  }
+
+  Bump = AddInstr->getOperand(2).getImm();
+
+  MachineInstr *PhiInstr = MRI->getVRegDef(AddInstr->getOperand(1).getReg());
+
+  if (!PhiInstr) {
+    LLVM_DEBUG(
+        llvm::dbgs()
+        << "HW Loop - The traced register definition could not be found.\n");
+    return false;
+  }
+
+  if (!PhiInstr->isPHI()) {
+    LLVM_DEBUG(llvm::dbgs() << "HW Loop - The traced register is modified with "
+                               "an additional operation.\n");
+    return false;
+  }
+
+  MachineInstr *DefReg = MRI->getVRegDef(PhiInstr->getOperand(1).getReg());
+
+  if (!DefReg) {
+    LLVM_DEBUG(
+        llvm::dbgs()
+        << "HW Loop - The traced register definition could not be found.\n");
+    return false;
+  }
+
+  if (DefReg->getParent() == HeaderMBB) {
+    LLVM_DEBUG(
+        llvm::dbgs()
+        << "HW Loop - The traced register is initialized in the header\n");
+    return false;
+  }
+
+  if (isMakeOperator(DefReg->getOpcode()) ||
+      isExtensionOperator(DefReg->getOpcode())) {
+
+    IVar = DefReg->getOperand(1);
+    return true;
+  }
+
+  IVar = PhiInstr->getOperand(1);
   return true;
 }
 
-bool KVXHardwareLoops::GetLOOPDOArgs(MachineLoop *L,
-                                     MachineOperand &StepsCount) {
+bool KVXHardwareLoops::ParseLoop(MachineLoop *L, MachineOperand &EndVal,
+                                 unsigned &Cond, MachineOperand &StartVal,
+                                 int64_t &Bump) {
 
-  MachineOperand StartVal = MachineOperand::CreateImm(0);
-  int64_t Bump = 0;
+  bool CBToHeader = false;
 
-  int Cond = -1;
+  for (instr_iterator I = HeaderMBB->instr_begin(), E = HeaderMBB->instr_end();
+       I != E; ++I) {
+    if (I->getOpcode() != KVX::CB)
+      continue;
+    if (I->getOperand(1).getMBB() != HeaderMBB &&
+        I->getOperand(1).getMBB() != ExitMBB)
+      continue;
+    if (I->getOperand(1).getMBB() == HeaderMBB)
+      CBToHeader = true;
 
-  MachineOperand EndVal = MachineOperand::CreateImm(0);
+    MachineInstr *PrevInstr = MRI->getVRegDef(I->getOperand(0).getReg());
+
+    if (isCompOperator(PrevInstr->getOpcode())) {
+      Cond = PrevInstr->getOperand(3).getImm();
+
+      bool Op1RegIsModified = false;
+      MachineOperand IVar = MachineOperand::CreateImm(0);
+      int64_t BumpOp1 = 0, BumpOp2 = 0;
+      bool BTResultOp1 = BackTraceRegValue(L, PrevInstr->getOperand(1).getReg(),
+                                           IVar, BumpOp1, Op1RegIsModified);
+      bool Op2RegIsModified = false;
+      bool BTResultOp2 = false;
+      if (PrevInstr->getOperand(2).isReg()) {
+        BTResultOp2 = BackTraceRegValue(L, PrevInstr->getOperand(2).getReg(),
+                                        IVar, BumpOp2, Op2RegIsModified);
+      }
+
+      if (BTResultOp1 && !Op2RegIsModified) {
+        StartVal = IVar;
+        EndVal = PrevInstr->getOperand(2);
+        Bump = BumpOp1;
+      } else if (BTResultOp2 && !Op1RegIsModified) {
+        StartVal = IVar;
+        EndVal = PrevInstr->getOperand(1);
+        Bump = BumpOp2;
+      } else {
+        LLVM_DEBUG(llvm::dbgs()
+                   << "HW Loop - Could not find the induction variable\n");
+        return false;
+      }
+      if (EndVal.isReg() &&
+          MRI->getVRegDef(EndVal.getReg())->getParent() == HeaderMBB) {
+        LLVM_DEBUG(
+            llvm::dbgs()
+            << "HW Loop - Target comaprison value could not be traced. \n");
+        return false;
+      }
+
+      if (Bump == 0) {
+        LLVM_DEBUG(llvm::dbgs() << "HW Loop - The bump value is 0\n");
+        return false;
+      }
+
+      return true;
+    } else {
+      if (I->getOperand(2).getImm() > KVXMOD::COMPARISON_GTU) {
+        LLVM_DEBUG(llvm::dbgs()
+                   << "HW Loop - Condition number is not valid.\n");
+        return false;
+      }
+      Cond = GetOppositeCondition(I->getOperand(2).getImm());
+      MachineOperand IVar = MachineOperand::CreateImm(0);
+      bool RegIsModified;
+      bool BTResult = BackTraceRegValue(L, I->getOperand(0).getReg(), IVar,
+                                        Bump, RegIsModified);
+      if (BTResult) {
+        StartVal = IVar;
+        EndVal = MachineOperand::CreateImm(0);
+      } else {
+        LLVM_DEBUG(llvm::dbgs()
+                   << "HW Loop - Could not find the induction variable\n");
+      }
+
+      if (Bump == 0) {
+        LLVM_DEBUG(llvm::dbgs() << "HW Loop - The bump value is 0\n");
+        return false;
+      }
+
+      return true;
+    }
+
+    break;
+  }
+
+  LLVM_DEBUG(llvm::dbgs() << "HW Loop - No CB or COMP instruction found.\n");
+  return false;
+}
+
+bool KVXHardwareLoops::GetLOOPDOArgs(MachineLoop *L, MachineOperand &StartVal,
+                                     MachineOperand &EndVal, int64_t &Bump) {
+
+  StartVal = MachineOperand::CreateImm(0);
+  EndVal = MachineOperand::CreateImm(0);
+  unsigned Cond = KVXMOD::COMPARISON_NONE;
 
   bool CanRetrieveEndingCond = ParseLoop(L, EndVal, Cond, StartVal, Bump);
 
@@ -364,18 +358,30 @@ bool KVXHardwareLoops::GetLOOPDOArgs(MachineLoop *L,
                                "value/start value/bump/condition type.\n");
     return false;
   }
+
   int64_t steps = 0;
   if (EndVal.isReg()) {
-    StepsCount = EndVal;
+    if (std::abs(Bump) != 1) {
+      LLVM_DEBUG(llvm::dbgs()
+                 << "HW Loop - The bump must be incremented or "
+                    "decremented by one for the EndValue-reg case.\n");
+      return false;
+    }
+
+    return true;
+  }
+  if (StartVal.isReg()) {
+    if (std::abs(Bump) != 1) {
+      LLVM_DEBUG(llvm::dbgs()
+                 << "HW Loop - The bump must be incremented or "
+                    "decremented by one for the StartValue-reg case.\n");
+      return false;
+    }
     return true;
   }
 
-  if (Bump == 0) {
-    LLVM_DEBUG(llvm::dbgs() << "HW Loop - The found bump value is 0.\n");
-    return false;
-  }
-
   switch (Cond) {
+  case KVXMOD::COMPARISON_EQ:
   case KVXMOD::COMPARISON_NE:
   case KVXMOD::COMPARISON_GE:
   case KVXMOD::COMPARISON_LE:
@@ -398,12 +404,11 @@ bool KVXHardwareLoops::GetLOOPDOArgs(MachineLoop *L,
   default:
     return false;
   }
-  StepsCount = MachineOperand::CreateImm(steps);
+  EndVal = MachineOperand::CreateImm(steps);
   return true;
 }
 
 bool KVXHardwareLoops::RemoveBranchingInstr(MachineLoop *L) {
-
   instr_iterator PreheaderGoto = PreheaderMBB->instr_end();
 
   for (instr_iterator I = PreheaderMBB->instr_begin(),
@@ -416,32 +421,29 @@ bool KVXHardwareLoops::RemoveBranchingInstr(MachineLoop *L) {
   }
 
   instr_iterator HeaderGoto = HeaderMBB->instr_end();
-  instr_iterator HeaderComp = HeaderMBB->instr_end();
+  MachineInstr *HeaderComp = NULL;
   instr_iterator HeaderCB = HeaderMBB->instr_end();
+
+  unsigned HeaderInstrCount = 0;
 
   for (instr_iterator I = HeaderMBB->instr_begin(); I != HeaderMBB->instr_end();
        ++I) {
-    if (isCompOperator(I->getOpcode())) {
-      HeaderComp = I;
-      I++;
-      // There are cases (in the Hexagon CodeGen tests) where add instructions
-      // are between the COMPD and CB, this case is not supported now.
-      if (I == HeaderMBB->instr_end() || I->getOpcode() != KVX::CB) {
-        LLVM_DEBUG(llvm::dbgs() << "HW Loop - The comparison instruction is "
-                                   "not followed by a CB instruction.\n");
-        return false;
-      } else {
-        HeaderCB = I;
-        I++;
-        if (I == HeaderMBB->instr_end() || I->getOpcode() != KVX::GOTO) {
-          LLVM_DEBUG(llvm::dbgs() << "HW Loop - The comparison instruction is "
-                                     "not followed by a GOTO instruction.\n");
-          return false;
-        } else {
-          HeaderGoto = I;
-        }
-      }
+
+    if (I->getOpcode() == KVX::CB && (I->getOperand(1).getMBB() == HeaderMBB ||
+                                      I->getOperand(1).getMBB() == ExitMBB)) {
+      HeaderCB = I;
+
+      MachineInstr *CompInstr = MRI->getVRegDef(I->getOperand(0).getReg());
+      if (isCompOperator(CompInstr->getOpcode()))
+        HeaderComp = CompInstr;
     }
+
+    if (I->getOpcode() == KVX::GOTO &&
+        (I->getOperand(0).getMBB() == ExitMBB ||
+         I->getOperand(0).getMBB() == HeaderMBB)) {
+      HeaderGoto = I;
+    }
+    HeaderInstrCount++;
   }
 
   // The goto instruction in the preheader will be replaced with loopdo
@@ -449,7 +451,7 @@ bool KVXHardwareLoops::RemoveBranchingInstr(MachineLoop *L) {
     PreheaderGoto->eraseFromParent();
 
   // The comparison is removed as is not necessary anymore
-  if (HeaderComp != HeaderMBB->instr_end())
+  if (HeaderComp)
     HeaderComp->eraseFromParent();
   if (HeaderCB != HeaderMBB->instr_end())
     HeaderCB->eraseFromParent();
@@ -460,7 +462,7 @@ bool KVXHardwareLoops::RemoveBranchingInstr(MachineLoop *L) {
 }
 
 bool KVXHardwareLoops::ConvertToHardwareLoop(MachineFunction &MF,
-                                             MachineLoop *L) {
+                                             MachineLoop *L, unsigned Level) {
   // This is just for sanity.
   assert(L->getHeader() && "Loop without a header?");
   bool Changed = false;
@@ -471,7 +473,7 @@ bool KVXHardwareLoops::ConvertToHardwareLoop(MachineFunction &MF,
 
   // Process nested loops first.
   for (MachineLoop::iterator I = L->begin(), E = L->end(); I != E; ++I) {
-    Changed |= ConvertToHardwareLoop(MF, *I);
+    Changed |= ConvertToHardwareLoop(MF, *I, Level + 1);
   }
 
   // If a nested loop has been converted, then we can't convert this loop.
@@ -492,9 +494,10 @@ bool KVXHardwareLoops::ConvertToHardwareLoop(MachineFunction &MF,
     return false;
 
   // Are we able to determine the trip count for the loop?
-  MachineOperand TripCount = MachineOperand::CreateImm(0);
-
-  bool CanRetrieveTripCount = GetLOOPDOArgs(L, TripCount);
+  MachineOperand StartVal = MachineOperand::CreateImm(0);
+  MachineOperand EndVal = MachineOperand::CreateImm(0);
+  int64_t Bump;
+  bool CanRetrieveTripCount = GetLOOPDOArgs(L, StartVal, EndVal, Bump);
 
   if (!CanRetrieveTripCount) {
     LLVM_DEBUG(
@@ -502,19 +505,27 @@ bool KVXHardwareLoops::ConvertToHardwareLoop(MachineFunction &MF,
     return false;
   }
 
-  bool CanRemoveBranchingInstr = RemoveBranchingInstr(L);
-  if (!CanRemoveBranchingInstr) {
-    LLVM_DEBUG(llvm::dbgs()
-               << "HW Loop - Could not remove the branching instruction.\n");
-    return false;
+  const bool StartValIsImm = StartVal.isImm();
+  const bool EndValIsImm = EndVal.isImm();
+  const bool StartValIsZero = (StartVal.isImm() && StartVal.getImm() == 0);
+  const bool EndValIsZero = (EndVal.isImm() && EndVal.getImm() == 0);
+
+  if (StartValIsImm && EndValIsImm) {
+    if (Level > 0)
+      return false;
   }
 
-  MachineBasicBlock::iterator InsertPos = PreheaderMBB->instr_end();
+  if (!RemoveBranchingInstr(L))
+    return false;
 
   DebugLoc DL;
 
   MachineBasicBlock *DoneMBB = ExitMBB;
-  if (!HeaderMBB->isLayoutSuccessor(ExitMBB)) {
+  if (std::next(HeaderMBB)->getParent() &&
+      !HeaderMBB->isLayoutSuccessor(ExitMBB)) {
+    LLVM_DEBUG(llvm::dbgs()
+               << "HW Loop - Exit block is not succeeding header.\n");
+
     DoneMBB = MF.CreateMachineBasicBlock(NULL);
     BuildMI(*DoneMBB, DoneMBB->instr_end(), DL, TII->get(KVX::GOTO))
         .addMBB(ExitMBB);
@@ -524,26 +535,128 @@ bool KVXHardwareLoops::ConvertToHardwareLoop(MachineFunction &MF,
     HeaderMBB->addSuccessor(DoneMBB);
   }
 
-  if (TripCount.isReg()) {
+  MachineBasicBlock *LoppdoMBB = PreheaderMBB;
 
-    BuildMI(*PreheaderMBB, InsertPos, DL, TII->get(KVX::CB))
-        .add(TripCount)
-        .addMBB(DoneMBB)
-        .addImm(1); // DEQZ
+  MachineBasicBlock::iterator InsertPos = LoppdoMBB->instr_end();
 
-    BuildMI(*PreheaderMBB, InsertPos, DL, TII->get(KVX::LOOPDO))
-        .add(TripCount)
-        .addMBB(DoneMBB);
-  } else {
-    unsigned CountReg = MRI->createVirtualRegister(&KVX::SingleRegRegClass);
+  MachineOperand CountTrip = MachineOperand::CreateImm(0);
 
-    BuildMI(*PreheaderMBB, InsertPos, DL, TII->get(KVX::MAKEi64), CountReg)
-        .add(TripCount);
+  unsigned CountReg;
 
-    BuildMI(*PreheaderMBB, InsertPos, DL, TII->get(KVX::LOOPDO))
-        .addReg(CountReg)
-        .addMBB(DoneMBB);
+  if (StartValIsImm && EndValIsImm) {
+    LLVM_DEBUG(llvm::dbgs() << "HW Loop - StartVal-EndVal IMM-IMM.\n");
+    CountReg = MRI->createVirtualRegister(&KVX::SingleRegRegClass);
+    BuildMI(*LoppdoMBB, InsertPos, DL,
+            TII->get(GetImmMakeOpCode(EndVal.getImm())), CountReg)
+        .add(EndVal);
+    CountTrip = MachineOperand::CreateReg(CountReg, false);
   }
+
+  if (StartValIsImm && !EndValIsImm && StartValIsZero) {
+    LLVM_DEBUG(llvm::dbgs() << "HW Loop - StartVal-EndVal IMM-REG.\n");
+    LLVM_DEBUG(llvm::dbgs() << "HW Loop - StartVal is zero.\n");
+
+    if (Bump < 0) {
+      LLVM_DEBUG(llvm::dbgs() << "HW Loop - Bump > 0.\n");
+      CountReg = MRI->createVirtualRegister(&KVX::SingleRegRegClass);
+      BuildMI(*LoppdoMBB, InsertPos, DL, TII->get(KVX::NEGD), CountReg)
+          .add(EndVal);
+      CountTrip = MachineOperand::CreateReg(CountReg, false);
+    } else {
+      LLVM_DEBUG(llvm::dbgs() << "HW Loop - Bump < 0.\n");
+      CountTrip = EndVal;
+    }
+  }
+
+  if (StartValIsImm && !EndValIsImm && !StartValIsZero) {
+    LLVM_DEBUG(llvm::dbgs() << "HW Loop - StartVal-EndVal IMM-REG.\n");
+    LLVM_DEBUG(llvm::dbgs() << "HW Loop - StartVal is not zero.\n");
+
+    CountReg = MRI->createVirtualRegister(&KVX::SingleRegRegClass);
+    if (Bump < 0) {
+      LLVM_DEBUG(llvm::dbgs() << "HW Loop - Bump < 0.\n");
+      BuildMI(*LoppdoMBB, InsertPos, DL,
+              TII->get(GetImmOpCode(StartVal.getImm(), KVX::SBFDri10,
+                                    KVX::SBFDri37, KVX::SBFDri64)),
+              CountReg)
+          .add(EndVal)
+          .add(StartVal);
+    } else {
+      LLVM_DEBUG(llvm::dbgs() << "HW Loop - Bump > 0.\n");
+      unsigned StartValReg =
+          MRI->createVirtualRegister(&KVX::SingleRegRegClass);
+      BuildMI(*LoppdoMBB, InsertPos, DL,
+              TII->get(GetImmMakeOpCode(StartVal.getImm())), StartValReg)
+          .add(StartVal);
+
+      BuildMI(*LoppdoMBB, InsertPos, DL, TII->get(KVX::SBFDrr), CountReg)
+          .addReg(StartValReg)
+          .add(EndVal);
+    }
+    CountTrip = MachineOperand::CreateReg(CountReg, false);
+  }
+
+  if (!StartValIsImm && EndValIsImm && EndValIsZero) {
+    LLVM_DEBUG(llvm::dbgs() << "HW Loop - StartVal-EndVal REG-IMM.\n");
+    LLVM_DEBUG(llvm::dbgs() << "HW Loop - EndVal is zero.\n");
+    if (Bump < 0) {
+      LLVM_DEBUG(llvm::dbgs() << "HW Loop - Bump < 0.\n");
+      CountTrip = StartVal;
+    } else {
+      LLVM_DEBUG(llvm::dbgs() << "HW Loop - Bump > 0.\n");
+      CountReg = MRI->createVirtualRegister(&KVX::SingleRegRegClass);
+      BuildMI(*LoppdoMBB, InsertPos, DL, TII->get(KVX::NEGD), CountReg)
+          .add(StartVal);
+      CountTrip = MachineOperand::CreateReg(CountReg, false);
+    }
+  }
+
+  if (!StartValIsImm && EndValIsImm && !EndValIsZero) {
+    LLVM_DEBUG(llvm::dbgs() << "HW Loop - StartVal-EndVal REG-IMM.\n");
+    LLVM_DEBUG(llvm::dbgs() << "HW Loop - EndVal is NOT zero.\n");
+
+    CountReg = MRI->createVirtualRegister(&KVX::SingleRegRegClass);
+    if (Bump < 0) {
+      unsigned EndValReg = MRI->createVirtualRegister(&KVX::SingleRegRegClass);
+      BuildMI(*LoppdoMBB, InsertPos, DL,
+              TII->get(GetImmMakeOpCode(EndVal.getImm())), EndValReg)
+          .add(EndVal);
+      LLVM_DEBUG(llvm::dbgs() << "HW Loop - Bump < 0.\n");
+      BuildMI(*LoppdoMBB, InsertPos, DL, TII->get(KVX::SBFDrr), CountReg)
+          .addReg(EndValReg)
+          .add(StartVal);
+    } else {
+      LLVM_DEBUG(llvm::dbgs() << "HW Loop - Bump > 0.\n");
+      BuildMI(*LoppdoMBB, InsertPos, DL,
+              TII->get(GetImmOpCode(EndVal.getImm(), KVX::SBFDri10,
+                                    KVX::SBFDri37, KVX::SBFDri64)),
+              CountReg)
+          .add(StartVal)
+          .add(EndVal);
+    }
+    CountTrip = MachineOperand::CreateReg(CountReg, false);
+  }
+
+  if (!StartValIsImm && !EndValIsImm) {
+    LLVM_DEBUG(llvm::dbgs() << "HW Loop - StartVal-EndVal REG-REG.\n");
+    CountReg = MRI->createVirtualRegister(&KVX::SingleRegRegClass);
+    if (Bump < 0) {
+      LLVM_DEBUG(llvm::dbgs() << "HW Loop - Bump < 0.\n");
+      BuildMI(*LoppdoMBB, InsertPos, DL, TII->get(KVX::SBFDrr), CountReg)
+          .add(EndVal)
+          .add(StartVal);
+    } else {
+      LLVM_DEBUG(llvm::dbgs() << "HW Loop - Bump > 0.\n");
+      BuildMI(*LoppdoMBB, InsertPos, DL, TII->get(KVX::SBFDrr), CountReg)
+          .add(StartVal)
+          .add(EndVal);
+    }
+    CountTrip = MachineOperand::CreateReg(CountReg, false);
+  }
+
+  BuildMI(*LoppdoMBB, InsertPos, DL, TII->get(KVX::LOOPDO))
+      .add(CountTrip)
+      .addMBB(DoneMBB);
 
   BuildMI(*HeaderMBB, HeaderMBB->instr_end(), DL, TII->get(KVX::ENDLOOP));
   return true;
@@ -565,7 +678,7 @@ bool KVXHardwareLoops::runOnMachineFunction(MachineFunction &MF) {
                        << printMBBReference(**L->block_begin())
                        << ", attempt to replace it with a hardware loop.\n");
 
-      if (ConvertToHardwareLoop(MF, L)) {
+      if (ConvertToHardwareLoop(MF, L, 0)) {
         LLVM_DEBUG(
             llvm::dbgs() << "HW Loop - Hardware Loop successfully inserted.\n");
         Changed = true;
@@ -578,7 +691,7 @@ bool KVXHardwareLoops::runOnMachineFunction(MachineFunction &MF) {
 
   if (!Changed) {
     LLVM_DEBUG(llvm::dbgs() << "HW Loop - For function " << MF.getName()
-                            << ", no loop found.\n");
+                            << ", no loop inserted.\n");
   }
 
   return Changed;
