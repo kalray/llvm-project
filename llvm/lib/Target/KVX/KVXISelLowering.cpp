@@ -2476,13 +2476,17 @@ SDValue KVXTargetLowering::lowerMINMAXUHQ(SDValue Op, SelectionDAG &DAG) const {
 static SDValue combineZext(SDNode *N, SelectionDAG &DAG) {
   SDValue N0 = N->getOperand(0);
   SDValue N00 = N0->getOperand(0);
+  unsigned Opcode = N0->getOpcode();
 
   // Combine SETCC with ZEXT, except for f16, because it uses FCOMPNHQ
   // which negates the result, therefore zext is mandatory
-  if (N0->getOpcode() == ISD::SETCC && N00.getValueType() != MVT::f16) {
-    return DAG.getSetCC(SDLoc(N), N->getValueType(0), N00, N0->getOperand(1),
-                        cast<CondCodeSDNode>(N0->getOperand(2))->get());
-  }
+  if (Opcode == ISD::SETCC && N00.getValueType() != MVT::f16)
+    return DAG.getNode(ISD::ANY_EXTEND, SDLoc(N), N->getValueType(0), N0);
+
+  if ((Opcode == ISD::AND || Opcode == ISD::OR) &&
+      N0.getValueType() == MVT::i1 && N00->getOpcode() == ISD::SETCC &&
+      N00->getOperand(0).getValueType() != MVT::f16)
+    return DAG.getNode(ISD::ANY_EXTEND, SDLoc(N), N->getValueType(0), N0);
 
   return SDValue();
 }
