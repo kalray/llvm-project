@@ -14,6 +14,7 @@
 #include "KVXTargetMachine.h"
 #include "KVX.h"
 #include "KVXTargetObjectFile.h"
+#include "KVXTargetTransformInfo.h"
 #include "llvm/ADT/STLExtras.h"
 #include "llvm/CodeGen/Passes.h"
 #include "llvm/CodeGen/TargetLoweringObjectFileImpl.h"
@@ -158,4 +159,12 @@ void KVXPassConfig::addPreEmitPass() {
   addPass(createKVXPacketizerPass(getOptLevel() >= CodeGenOpt::Default &&
                                   !DisableBundling),
           false);
+}
+
+TargetTransformInfo
+KVXTargetMachine::getTargetTransformInfo(const Function &F) {
+  if (getOptLevel() == CodeGenOpt::Aggressive)
+    return TargetTransformInfo(KVXTTIImpl(this, F));
+  else
+    return LLVMTargetMachine::getTargetTransformInfo(F);
 }
