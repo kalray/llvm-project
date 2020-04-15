@@ -85,6 +85,21 @@ static bool isCompOperator(unsigned opcode) {
   return false;
 }
 
+static bool isFloatCompOperator(unsigned opcode) {
+  switch (opcode) {
+  case KVX::FCOMPD:
+  case KVX::FCOMPWri:
+  case KVX::FCOMPWrr:
+  case KVX::FCOMPNHQ:
+  case KVX::FCOMPNWP:
+    return true;
+  default:
+    return false;
+  }
+
+  return false;
+}
+
 static unsigned GetOppositeCondition(unsigned Cond) {
   switch (Cond) {
   case KVXMOD::COMPARISON_EQ:
@@ -267,6 +282,11 @@ bool KVXHardwareLoops::ParseLoop(MachineLoop *L, MachineOperand &EndVal,
       CBToHeader = true;
 
     MachineInstr *PrevInstr = MRI->getVRegDef(I->getOperand(0).getReg());
+
+    if (isFloatCompOperator(PrevInstr->getOpcode())) {
+      LLVM_DEBUG(llvm::dbgs() << "HW Loop - Cannot handle float comparison.\n");
+      return false;
+    }
 
     if (isCompOperator(PrevInstr->getOpcode())) {
       Cond = PrevInstr->getOperand(3).getImm();
