@@ -27,6 +27,7 @@ add_llvm_target(KVXCodeGen
     KVXLoadStorePacking.cpp
     KVXVLIWPacketizer.cpp
     KVXHardwareLoops.cpp
+    KVXTargetTransformInfo.cpp
     )
 
 add_subdirectory(TargetInfo)
