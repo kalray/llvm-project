@@ -1,4 +1,4 @@
-// RUN: clang -target kvx-cos -S %s -O3 -o - | FileCheck %s
+// RUN: clang -target kvx-cos -S %s -O2 -o - | FileCheck %s
 int *x;
 int *f(int s, int c) {
 
