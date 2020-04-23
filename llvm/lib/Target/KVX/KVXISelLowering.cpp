@@ -36,6 +36,10 @@ using namespace llvm;
 
 STATISTIC(NumTailCalls, "Number of tail calls");
 
+static cl::opt<int> MinimumJumpTablesEntries(
+    "kvx-minimum-jump-tables-entries", cl::Hidden, cl::ZeroOrMore, cl::init(5),
+    cl::desc("Set minimum jump tables entries count."));
+
 #include "KVXGenCallingConv.inc"
 
 static bool CC_SRET_KVX(unsigned ValNo, MVT ValVT, MVT LocVT,
@@ -365,6 +369,8 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setLoadExtAction(ISD::EXTLOAD, MVT::v4f32, MVT::v4f16, Expand);
   setLoadExtAction(ISD::EXTLOAD, MVT::v2f64, MVT::v2f32, Expand);
 
+  setOperationAction(ISD::JumpTable, MVT::i64, Custom);
+
   for (MVT VT : MVT::fp_valuetypes()) {
     setLoadExtAction(ISD::EXTLOAD, VT, MVT::f16, Expand);
     setLoadExtAction(ISD::EXTLOAD, VT, MVT::f32, Expand);
@@ -376,8 +382,7 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setMaxAtomicSizeInBitsSupported(64);
   setMinCmpXchgSizeInBits(32);
 
-  // Effectively disable jump table generation.
-  setMinimumJumpTableEntries(INT_MAX);
+  setMinimumJumpTableEntries(MinimumJumpTablesEntries);
 }
 
 EVT KVXTargetLowering::getSetCCResultType(const DataLayout &DL, LLVMContext &C,
@@ -840,6 +845,8 @@ SDValue KVXTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
     return lowerShiftVectorial(Op, DAG);
   case ISD::BR_CC:
     return lowerBR_CC(Op, DAG);
+  case ISD::JumpTable:
+    return lowerJumpTable(Op, DAG);
   }
 }
 
@@ -1951,6 +1958,17 @@ SDValue KVXTargetLowering::lowerBR_CC(SDValue Op, SelectionDAG &DAG) const {
 
   return DAG.getNode(KVXISD::BRCOND, DL, Op.getValueType(), Chain, LHS, BB,
                      CBCond);
+}
+
+SDValue KVXTargetLowering::lowerJumpTable(SDValue Op, SelectionDAG &DAG) const {
+  EVT VT = Op.getValueType();
+  int Idx = cast<JumpTableSDNode>(Op)->getIndex();
+  SDValue T = DAG.getTargetJumpTable(Idx, VT);
+
+  if (isPositionIndependent()) {
+    return DAG.getNode(KVXISD::JT_PCREL, SDLoc(Op), VT, T);
+  }
+  return DAG.getNode(KVXISD::JT, SDLoc(Op), VT, T);
 }
 
 bool KVXTargetLowering::canLowerToMINMAXWP(SDValue Op) const {
