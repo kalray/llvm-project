@@ -68,6 +68,10 @@ static bool LowerKVXMachineOperandToMCOperand(const MachineOperand &MO,
     MCOp = MCOperand::createExpr(MCSymbolRefExpr::create(
         AP.GetBlockAddressSymbol(MO.getBlockAddress()), AP.OutContext));
     break;
+  case MachineOperand::MO_JumpTableIndex:
+    MCOp = MCOperand::createExpr(
+        MCSymbolRefExpr::create(AP.GetJTISymbol(MO.getIndex()), AP.OutContext));
+    break;
   }
 
   return true;

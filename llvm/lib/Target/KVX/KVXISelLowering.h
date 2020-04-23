@@ -39,7 +39,9 @@ enum NodeType : unsigned {
   PICPCRelativeGOTAddr,
   PICAddrWrapper,
   COMP,
-  BRCOND
+  BRCOND,
+  JT,
+  JT_PCREL
 };
 } // namespace KVXISD
 
@@ -122,6 +124,7 @@ private:
   SDValue lowerCONCAT_VECTORS(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerShiftVectorial(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerBR_CC(SDValue Op, SelectionDAG &DAG) const;
+  SDValue lowerJumpTable(SDValue Op, SelectionDAG &DAG) const;
 
   bool canLowerToMINMAXWP(SDValue Op) const;
   SDValue lowerMINMAXWP(SDValue Op, SelectionDAG &DAG) const;
