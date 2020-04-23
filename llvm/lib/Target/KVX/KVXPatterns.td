@@ -16,6 +16,8 @@ def SDTKVXBRCond : SDTypeProfile<0, 3,
       [SDTCisInt<0>, SDTCisVT<1, iPTR>, SDTCisVT<2, i32>]>;
 def SDTKVXComp : SDTypeProfile<1, 3,
       [SDTCisInt<0>, SDTCisSameAs<0, 1>, SDTCisSameAs<0, 2>, SDTCisVT<3, i32>]>;
+def SDTKVXJTPcrel
+  : SDTypeProfile<1, 1, [SDTCisVT<0, i64>, SDTCisVT<1, i64>]>;
 
 
 //===----------------------------------------------------------------------===//
@@ -24,6 +26,9 @@ def SDTKVXComp : SDTypeProfile<1, 3,
 
 def KVXBRCond : SDNode<"KVXISD::BRCOND", SDTKVXBRCond, [SDNPHasChain]>;
 def KVXComp : SDNode<"KVXISD::COMP", SDTKVXComp, []>;
+
+def KVXJT: SDNode<"KVXISD::JT", SDTIntUnaryOp>;
+def KVXJT_PCREL: SDNode<"KVXISD::JT_PCREL", SDTKVXJTPcrel>;
 
 //===----------------------------------------------------------------------===//
 // Selection DAG patterns using custom DAG nodes.
@@ -653,3 +658,6 @@ def : Pat<(vinot v2i16:$v), (NOTW SingleReg:$v)>;
 // NOTD, see KVXInstrInfo.td for i64
 def : Pat<(vinot v4i16:$v), (NOTD SingleReg:$v)>;
 def : Pat<(vinot v2i32:$v), (NOTD SingleReg:$v)>;
+
+def: Pat<(KVXJT tjumptable:$a), (MAKEi64 Wrapped64:$a)>;
+def: Pat<(KVXJT_PCREL i64:$a), (PCRELmi64 SingleReg:$a)>;
