@@ -299,6 +299,7 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::FSQRT, VT, VT == MVT::f16 ? Promote : Expand);
     setOperationAction(ISD::FSIN, VT, VT == MVT::f16 ? Promote : Expand);
     setOperationAction(ISD::FCOS, VT, VT == MVT::f16 ? Promote : Expand);
+    setOperationAction(ISD::FSINCOS, VT, VT == MVT::f16 ? Promote : Expand);
 
     setOperationAction(ISD::SELECT_CC, VT, Expand);
     setOperationAction(ISD::SELECT, VT, Custom);
