@@ -555,9 +555,9 @@ bool KVXHardwareLoops::ConvertToHardwareLoop(MachineFunction &MF,
     HeaderMBB->addSuccessor(DoneMBB);
   }
 
-  MachineBasicBlock *LoppdoMBB = PreheaderMBB;
+  MachineBasicBlock *LoopdoMBB = PreheaderMBB;
 
-  MachineBasicBlock::iterator InsertPos = LoppdoMBB->instr_end();
+  MachineBasicBlock::iterator InsertPos = LoopdoMBB->instr_end();
 
   MachineOperand CountTrip = MachineOperand::CreateImm(0);
 
@@ -566,7 +566,7 @@ bool KVXHardwareLoops::ConvertToHardwareLoop(MachineFunction &MF,
   if (StartValIsImm && EndValIsImm) {
     LLVM_DEBUG(llvm::dbgs() << "HW Loop - StartVal-EndVal IMM-IMM.\n");
     CountReg = MRI->createVirtualRegister(&KVX::SingleRegRegClass);
-    BuildMI(*LoppdoMBB, InsertPos, DL,
+    BuildMI(*LoopdoMBB, InsertPos, DL,
             TII->get(GetImmMakeOpCode(EndVal.getImm())), CountReg)
         .add(EndVal);
     CountTrip = MachineOperand::CreateReg(CountReg, false);
@@ -579,7 +579,7 @@ bool KVXHardwareLoops::ConvertToHardwareLoop(MachineFunction &MF,
     if (Bump < 0) {
       LLVM_DEBUG(llvm::dbgs() << "HW Loop - Bump > 0.\n");
       CountReg = MRI->createVirtualRegister(&KVX::SingleRegRegClass);
-      BuildMI(*LoppdoMBB, InsertPos, DL, TII->get(KVX::NEGD), CountReg)
+      BuildMI(*LoopdoMBB, InsertPos, DL, TII->get(KVX::NEGD), CountReg)
           .add(EndVal);
       CountTrip = MachineOperand::CreateReg(CountReg, false);
     } else {
@@ -595,7 +595,7 @@ bool KVXHardwareLoops::ConvertToHardwareLoop(MachineFunction &MF,
     CountReg = MRI->createVirtualRegister(&KVX::SingleRegRegClass);
     if (Bump < 0) {
       LLVM_DEBUG(llvm::dbgs() << "HW Loop - Bump < 0.\n");
-      BuildMI(*LoppdoMBB, InsertPos, DL,
+      BuildMI(*LoopdoMBB, InsertPos, DL,
               TII->get(GetImmOpCode(StartVal.getImm(), KVX::SBFDri10,
                                     KVX::SBFDri37, KVX::SBFDri64)),
               CountReg)
@@ -605,11 +605,11 @@ bool KVXHardwareLoops::ConvertToHardwareLoop(MachineFunction &MF,
       LLVM_DEBUG(llvm::dbgs() << "HW Loop - Bump > 0.\n");
       unsigned StartValReg =
           MRI->createVirtualRegister(&KVX::SingleRegRegClass);
-      BuildMI(*LoppdoMBB, InsertPos, DL,
+      BuildMI(*LoopdoMBB, InsertPos, DL,
               TII->get(GetImmMakeOpCode(StartVal.getImm())), StartValReg)
           .add(StartVal);
 
-      BuildMI(*LoppdoMBB, InsertPos, DL, TII->get(KVX::SBFDrr), CountReg)
+      BuildMI(*LoopdoMBB, InsertPos, DL, TII->get(KVX::SBFDrr), CountReg)
           .addReg(StartValReg)
           .add(EndVal);
     }
@@ -625,7 +625,7 @@ bool KVXHardwareLoops::ConvertToHardwareLoop(MachineFunction &MF,
     } else {
       LLVM_DEBUG(llvm::dbgs() << "HW Loop - Bump > 0.\n");
       CountReg = MRI->createVirtualRegister(&KVX::SingleRegRegClass);
-      BuildMI(*LoppdoMBB, InsertPos, DL, TII->get(KVX::NEGD), CountReg)
+      BuildMI(*LoopdoMBB, InsertPos, DL, TII->get(KVX::NEGD), CountReg)
           .add(StartVal);
       CountTrip = MachineOperand::CreateReg(CountReg, false);
     }
@@ -638,16 +638,16 @@ bool KVXHardwareLoops::ConvertToHardwareLoop(MachineFunction &MF,
     CountReg = MRI->createVirtualRegister(&KVX::SingleRegRegClass);
     if (Bump < 0) {
       unsigned EndValReg = MRI->createVirtualRegister(&KVX::SingleRegRegClass);
-      BuildMI(*LoppdoMBB, InsertPos, DL,
+      BuildMI(*LoopdoMBB, InsertPos, DL,
               TII->get(GetImmMakeOpCode(EndVal.getImm())), EndValReg)
           .add(EndVal);
       LLVM_DEBUG(llvm::dbgs() << "HW Loop - Bump < 0.\n");
-      BuildMI(*LoppdoMBB, InsertPos, DL, TII->get(KVX::SBFDrr), CountReg)
+      BuildMI(*LoopdoMBB, InsertPos, DL, TII->get(KVX::SBFDrr), CountReg)
           .addReg(EndValReg)
           .add(StartVal);
     } else {
       LLVM_DEBUG(llvm::dbgs() << "HW Loop - Bump > 0.\n");
-      BuildMI(*LoppdoMBB, InsertPos, DL,
+      BuildMI(*LoopdoMBB, InsertPos, DL,
               TII->get(GetImmOpCode(EndVal.getImm(), KVX::SBFDri10,
                                     KVX::SBFDri37, KVX::SBFDri64)),
               CountReg)
@@ -662,28 +662,32 @@ bool KVXHardwareLoops::ConvertToHardwareLoop(MachineFunction &MF,
     CountReg = MRI->createVirtualRegister(&KVX::SingleRegRegClass);
     if (Bump < 0) {
       LLVM_DEBUG(llvm::dbgs() << "HW Loop - Bump < 0.\n");
-      BuildMI(*LoppdoMBB, InsertPos, DL, TII->get(KVX::SBFDrr), CountReg)
+      BuildMI(*LoopdoMBB, InsertPos, DL, TII->get(KVX::SBFDrr), CountReg)
           .add(EndVal)
           .add(StartVal);
     } else {
       LLVM_DEBUG(llvm::dbgs() << "HW Loop - Bump > 0.\n");
-      BuildMI(*LoppdoMBB, InsertPos, DL, TII->get(KVX::SBFDrr), CountReg)
+      BuildMI(*LoopdoMBB, InsertPos, DL, TII->get(KVX::SBFDrr), CountReg)
           .add(StartVal)
           .add(EndVal);
     }
     CountTrip = MachineOperand::CreateReg(CountReg, false);
   }
   if (!StartValIsImm || !EndValIsImm)
-    BuildMI(*LoppdoMBB, InsertPos, DL, TII->get(KVX::CB))
+    BuildMI(*LoopdoMBB, InsertPos, DL, TII->get(KVX::CB))
         .add(CountTrip)
         .addMBB(HeaderMBB)
         .addImm(KVXMOD::COMPARISON_LE);
 
-  BuildMI(*LoppdoMBB, InsertPos, DL, TII->get(KVX::LOOPDO))
+  BuildMI(*LoopdoMBB, InsertPos, DL, TII->get(KVX::LOOPDO))
       .add(CountTrip)
       .addMBB(DoneMBB);
 
   BuildMI(*HeaderMBB, HeaderMBB->instr_end(), DL, TII->get(KVX::ENDLOOP));
+
+  // Marker for not optimizing during BranchFolderPass
+  ExitMBB->setHasAddressTaken();
+
   return true;
 }
 
