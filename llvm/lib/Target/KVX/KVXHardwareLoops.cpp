@@ -673,6 +673,11 @@ bool KVXHardwareLoops::ConvertToHardwareLoop(MachineFunction &MF,
     }
     CountTrip = MachineOperand::CreateReg(CountReg, false);
   }
+  if (!StartValIsImm || !EndValIsImm)
+    BuildMI(*LoppdoMBB, InsertPos, DL, TII->get(KVX::CB))
+        .add(CountTrip)
+        .addMBB(HeaderMBB)
+        .addImm(KVXMOD::COMPARISON_LE);
 
   BuildMI(*LoppdoMBB, InsertPos, DL, TII->get(KVX::LOOPDO))
       .add(CountTrip)
