@@ -1,4 +1,4 @@
-// RUN: clang -target kvx-cos -S %s -O2 -o - | FileCheck %s
+// RUN: clang -mllvm --disable-kvx-hwloops=false -target kvx-cos -S %s -O2 -o - | FileCheck %s
 int *x;
 int *f(int s, int c) {
 

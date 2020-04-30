@@ -27,16 +27,16 @@
 using namespace llvm;
 
 static cl::opt<bool>
-DisableHardwareLoops("disable-kvx-hwloops", cl::Hidden,
-                     cl::desc("Disable Hardware Loops for KVX target"));
+    DisableHardwareLoops("disable-kvx-hwloops", cl::Hidden, cl::init(true),
+                         cl::desc("Disable Hardware Loops for KVX target"));
 
 static cl::opt<bool>
 DisableBundling("disable-kvx-bundling", cl::Hidden,
                 cl::desc("Disable Bundling Pass for KVX target"));
 
-static cl::opt<bool>
-DisableLoadStorePacking("disable-kvx-loadstore-packing", cl::Hidden,
-                        cl::desc("Disable Load/Store Packing Pass for KVX target"));
+static cl::opt<bool> DisableLoadStorePacking(
+    "disable-kvx-loadstore-packing", cl::Hidden, cl::init(true),
+    cl::desc("Disable Load/Store Packing Pass for KVX target"));
 
 extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeKVXTarget() {
   RegisterTargetMachine<KVXTargetMachine> X(getTheKVXTarget());
