@@ -1,4 +1,4 @@
-// RUN: clang -S -O3 %s -o -
+// RUN: clang -mllvm --disable-kvx-loadstore-packing=false -S -O3 %s -o -
 
 long *x;
 
