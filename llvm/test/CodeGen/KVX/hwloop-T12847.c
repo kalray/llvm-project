@@ -1,4 +1,4 @@
-// RUN: clang -target kvx-cos -S %s -O2 -o - | FileCheck %s
+// RUN: clang -target kvx-cos -mllvm -disable-kvx-hwloops=false -S %s -O2 -o - | FileCheck %s
 
 // The test ensures no regressions after T12847 bugfix:
 //   from llvm-test-suite/SingleSource/UnitTests/2008-04-20-LoopBug2.c
