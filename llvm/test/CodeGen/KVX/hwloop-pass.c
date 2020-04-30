@@ -1,4 +1,4 @@
-// RUN: clang -target kvx-cos -S %s -O2 -o - | FileCheck %s
+// RUN: clang -mllvm --disable-kvx-hwloops=false -target kvx-cos -S %s -O2 -o - | FileCheck %s
 
 void imm_imm_positive_bump(int *x) {
   for (int i = 0; i < 100; ++i)
