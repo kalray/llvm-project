@@ -222,7 +222,10 @@ bool KVXHardwareLoops::BackTraceRegValue(MachineLoop *L,
   }
 
   Bump = AddInstr->getOperand(2).getImm();
-
+  if (!AddInstr->getOperand(1).isReg()) {
+    LLVM_DEBUG(llvm::dbgs() << "HW Loop - The ADD operand is not a register\n");
+    return false;
+  }
   MachineInstr *PhiInstr = MRI->getVRegDef(AddInstr->getOperand(1).getReg());
 
   if (!PhiInstr) {
@@ -237,6 +240,9 @@ bool KVXHardwareLoops::BackTraceRegValue(MachineLoop *L,
                                "an additional operation.\n");
     return false;
   }
+
+  assert(PhiInstr->getOperand(1).isReg() &&
+         "The PHI operand is not a register.");
 
   MachineInstr *DefReg = MRI->getVRegDef(PhiInstr->getOperand(1).getReg());
 
@@ -281,6 +287,9 @@ bool KVXHardwareLoops::ParseLoop(MachineLoop *L, MachineOperand &EndVal,
     if (I->getOperand(1).getMBB() == HeaderMBB)
       CBToHeader = true;
 
+    assert(I->getOperand(0).isReg() && "The COMPD previous insruction first\
+      operand is not a register.");
+
     MachineInstr *PrevInstr = MRI->getVRegDef(I->getOperand(0).getReg());
 
     if (isFloatCompOperator(PrevInstr->getOpcode())) {
@@ -294,6 +303,10 @@ bool KVXHardwareLoops::ParseLoop(MachineLoop *L, MachineOperand &EndVal,
       bool Op1RegIsModified = false;
       MachineOperand IVar = MachineOperand::CreateImm(0);
       int64_t BumpOp1 = 0, BumpOp2 = 0;
+
+      assert(PrevInstr->getOperand(1).isReg() && "COMPD previous instruction \
+        second operand is not a register.");
+
       bool BTResultOp1 = BackTraceRegValue(L, PrevInstr->getOperand(1).getReg(),
                                            IVar, BumpOp1, Op1RegIsModified);
       bool Op2RegIsModified = false;
@@ -339,6 +352,8 @@ bool KVXHardwareLoops::ParseLoop(MachineLoop *L, MachineOperand &EndVal,
       Cond = GetOppositeCondition(I->getOperand(2).getImm());
       MachineOperand IVar = MachineOperand::CreateImm(0);
       bool RegIsModified;
+      assert(I->getOperand(0).isReg() &&
+             "The CB first operand is not a register.");
       bool BTResult = BackTraceRegValue(L, I->getOperand(0).getReg(), IVar,
                                         Bump, RegIsModified);
       if (BTResult) {
@@ -452,7 +467,8 @@ bool KVXHardwareLoops::RemoveBranchingInstr(MachineLoop *L) {
     if (I->getOpcode() == KVX::CB && (I->getOperand(1).getMBB() == HeaderMBB ||
                                       I->getOperand(1).getMBB() == ExitMBB)) {
       HeaderCB = I;
-
+      assert(I->getOperand(0).isReg() &&
+             "The CB first operand is not a register.");
       MachineInstr *CompInstr = MRI->getVRegDef(I->getOperand(0).getReg());
       if (isCompOperator(CompInstr->getOpcode()))
         HeaderComp = CompInstr;
