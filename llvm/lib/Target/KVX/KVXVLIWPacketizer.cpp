@@ -299,6 +299,7 @@ bool KVXPacketizerList::shouldBeLastInBundle(unsigned opcode) {
     return false;
   case KVX::ICALL:
   case KVX::CALL:
+  case KVX::CALLPLT:
   case KVX::SCALLr:
   case KVX::SCALLs:
   case KVX::IGOTO:
