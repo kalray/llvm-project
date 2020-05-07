@@ -135,11 +135,20 @@ static bool expandSelectInstr(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
       MI.getOperand(4).isGlobal()) {
     if (MI.getOperand(3).isReg()) {
       Reg = MI.getOperand(3).getReg();
-      InsertCMOVEInstr(TII, MBB, MBBI, CmpReg, Reg, 4, InvCond);
+      if (Reg == DestReg) {
+        InsertCMOVEInstr(TII, MBB, MBBI, CmpReg, Reg, 4, InvCond);
+        Reg = 0;
+      } else {
+        BuildMI(MBB, MBBI, DL, TII->get(KVX::COPYD), ScratchReg).addReg(Reg);
+        InsertCMOVEInstr(TII, MBB, MBBI, CmpReg, ScratchReg, 4, InvCond);
+      }
+
     } else {
       unsigned DestCompReg = Word ? DestReg : ScratchReg;
       if (Word) // use SXWD as cheap copy
+      {
         BuildMI(MBB, MBBI, DL, TII->get(KVX::SXWD), ScratchReg).addReg(CmpReg);
+      }
       if (MI.getOperand(3).isImm()) {
         int64_t immVal = MI.getOperand(3).getImm();
         BuildMI(MBB, MBBI, DL, TII->get(GetImmMakeOpCode(immVal)), DestCompReg)
@@ -167,12 +176,18 @@ static bool expandSelectInstr(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   } else {
     if (MI.getOperand(4).isReg()) {
       Reg = MI.getOperand(4).getReg();
-      InsertCMOVEInstr(TII, MBB, MBBI, CmpReg, Reg, 3, Cond);
+      if (Reg == DestReg) {
+        InsertCMOVEInstr(TII, MBB, MBBI, CmpReg, Reg, 3, Cond);
+        Reg = 0;
+      } else {
+        BuildMI(MBB, MBBI, DL, TII->get(KVX::COPYD), ScratchReg).addReg(Reg);
+        InsertCMOVEInstr(TII, MBB, MBBI, CmpReg, ScratchReg, 3, Cond);
+      }
     }
   }
 
-  if (Reg != 0 && DestReg != Reg)
-    BuildMI(MBB, MBBI, DL, TII->get(KVX::COPYD), DestReg).addReg(Reg);
+  if (Reg != 0)
+    BuildMI(MBB, MBBI, DL, TII->get(KVX::COPYD), DestReg).addReg(ScratchReg);
 
   // Remove the present instruction
   MI.eraseFromParent();
