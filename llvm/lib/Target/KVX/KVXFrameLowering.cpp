@@ -65,7 +65,12 @@ void KVXFrameLowering::adjustStack(MachineFunction &MF) const {
   uint64_t StackAlign = getStackAlignment();
   if (RI->needsStackRealignment(MF)) {
     const uint64_t MaxAlign = MFI.getMaxAlignment();
-    StackAlign = MaxAlign ? MaxAlign : StackAlign;
+    uint64_t MaxStackAlign = MaxAlign > StackAlign ? MaxAlign : StackAlign;
+
+    // Reserve space for stack realignment
+    StackSize += (MaxStackAlign - StackAlign);
+
+    StackAlign = MaxStackAlign;
   }
 
   // Align the stack.
@@ -73,6 +78,37 @@ void KVXFrameLowering::adjustStack(MachineFunction &MF) const {
 
   // Update with the aligned stack.
   MFI.setStackSize(StackSize);
+}
+
+void KVXFrameLowering::realignStack(MachineFunction &MF, MachineBasicBlock &MBB,
+                                    MachineBasicBlock::iterator MBBI,
+                                    const DebugLoc &DL,
+                                    unsigned ScratchReg) const {
+  const KVXRegisterInfo *TRI =
+      (const KVXRegisterInfo *)MF.getSubtarget().getRegisterInfo();
+
+  if (TRI->needsStackRealignment(MF)) {
+    MachineFrameInfo &MFI = MF.getFrameInfo();
+    const KVXInstrInfo *TII = STI.getInstrInfo();
+
+    // save the value of SPReg to a ScratchReg
+    // ScratchReg will be copied to FPReg after CSR
+    BuildMI(MBB, MBBI, DL, TII->get(KVX::COPYD), ScratchReg)
+        .addReg(getSPReg())
+        .setMIFlag(MachineInstr::FrameSetup);
+
+    if (MFI.getMaxAlignment() > getStackAlignment()) {
+      // realign the stack
+      BuildMI(MBB, MBBI, DL, TII->get(KVX::ADDDri64), getSPReg())
+          .addReg(getSPReg())
+          .addImm(MFI.getMaxAlignment() - getStackAlignment())
+          .setMIFlag(MachineInstr::FrameSetup);
+      BuildMI(MBB, MBBI, DL, TII->get(KVX::ANDDri64), getSPReg())
+          .addReg(getSPReg())
+          .addImm(-(int)MFI.getMaxAlignment())
+          .setMIFlag(MachineInstr::FrameSetup);
+    }
+  }
 }
 
 void KVXFrameLowering::adjustReg(MachineBasicBlock &MBB,
@@ -87,6 +123,9 @@ void KVXFrameLowering::adjustReg(MachineBasicBlock &MBB,
       .addImm(Val)
       .setMIFlag(Flag);
 }
+
+unsigned findScratchRegister(MachineBasicBlock &MBB, bool UseAtEnd,
+                             unsigned DefaultReg);
 
 void KVXFrameLowering::emitPrologue(MachineFunction &MF,
                                     MachineBasicBlock &MBB) const {
@@ -109,6 +148,10 @@ void KVXFrameLowering::emitPrologue(MachineFunction &MF,
   adjustReg(MBB, MBBI, DL, GetStackOpCode((uint64_t)StackSize), SPReg, SPReg,
             -StackSize, MachineInstr::FrameSetup);
 
+  unsigned ScratchReg = findScratchRegister(MBB, false, KVX::R32);
+
+  realignStack(MF, MBB, MBBI, DL, ScratchReg);
+
   int CFAOffset = -StackSize + KVXFI->getVarArgsSaveSize();
   unsigned CFIIndex =
       MF.addFrameInst(MCCFIInstruction::createDefCfaOffset(nullptr, CFAOffset));
@@ -118,6 +161,20 @@ void KVXFrameLowering::emitPrologue(MachineFunction &MF,
   BuildMI(MBB, MBBI, DL, TII->get(TargetOpcode::CFI_INSTRUCTION))
       .addCFIIndex(CFIIndex)
       .setMIFlags(MachineInstr::FrameSetup);
+
+  const KVXRegisterInfo *TRI =
+      (const KVXRegisterInfo *)MF.getSubtarget().getRegisterInfo();
+
+  if (TRI->needsStackRealignment(MF)) {
+    // Skip CSR save instructions
+    std::advance(MBBI, KVXFI->getCSRInstrCount());
+
+    // ScrachReg contains the SPReg value before realignment
+    BuildMI(MBB, MBBI, DL, TII->get(KVX::COPYD),
+            hasFP(MF) ? KVX::R31 : getFPReg())
+        .addReg(ScratchReg, RegState::Kill)
+        .setMIFlag(MachineInstr::FrameSetup);
+  }
 }
 
 bool KVXFrameLowering::isLeafProc(MachineFunction &MF) const {
@@ -137,14 +194,26 @@ void KVXFrameLowering::emitEpilogue(MachineFunction &MF,
 
   DebugLoc DL = MBBI->getDebugLoc();
 
+  const KVXInstrInfo *TII = STI.getInstrInfo();
+
+  const KVXRegisterInfo *TRI =
+      (const KVXRegisterInfo *)MF.getSubtarget().getRegisterInfo();
+
+  if (TRI->needsStackRealignment(MF)) {
+    auto *KVXFI = MF.getInfo<KVXMachineFunctionInfo>();
+    // Restore SPReg from ScrachReg which is copied from FPReg before
+    // CSR restore
+    BuildMI(MBB, MBBI, DL, TII->get(KVX::COPYD), getSPReg())
+        .addReg(KVXFI->getScratchReg(), RegState::Kill)
+        .setMIFlag(MachineInstr::FrameSetup);
+  }
+
   // Deallocate stack
   adjustReg(MBB, MBBI, DL, GetStackOpCode(StackSize), getSPReg(), getSPReg(),
             StackSize, MachineInstr::FrameDestroy);
 
   unsigned CFIIndex =
       MF.addFrameInst(MCCFIInstruction::createDefCfaOffset(nullptr, 0));
-
-  const KVXInstrInfo *TII = STI.getInstrInfo();
 
   BuildMI(MBB, MBBI, DL, TII->get(TargetOpcode::CFI_INSTRUCTION))
       .addCFIIndex(CFIIndex)
@@ -177,6 +246,19 @@ void KVXFrameLowering::determineCalleeSaves(MachineFunction &MF,
                                             BitVector &SavedRegs,
                                             RegScavenger *RS) const {
   TargetFrameLowering::determineCalleeSaves(MF, SavedRegs, RS);
+
+  const KVXRegisterInfo *TRI =
+      (const KVXRegisterInfo *)MF.getSubtarget().getRegisterInfo();
+
+  // if stack needs realignment, the FPReg will be used to keep the
+  // unaligned value of SPReg
+  // R31 will be used in the case FPReg is needed for varsized objects on the
+  // stack
+  if (TRI->needsStackRealignment(MF)) {
+    SavedRegs.set(getFPReg());
+    if (hasFP(MF))
+      SavedRegs.set(KVX::R31);
+  }
 
   // Unconditionally spill RA and FP only if the function uses a frame
   // pointer.
@@ -243,12 +325,18 @@ bool KVXFrameLowering::spillCalleeSavedRegisters(
     FrameIdxSaved.push_back(CS.getFrameIdx());
   }
 
-  for (unsigned i = 0; i < RegSaved.size(); ++i)
+  unsigned InstrCount = (unsigned)RegSaved.size();
+  for (unsigned i = 0; i < RegSaved.size(); ++i) {
     TII->storeRegToStackSlot(MBB, MI, RegSaved[i], true, FrameIdxSaved[i],
                              RCSaved[i], TRI);
+    if (RegSaved[i] == KVX::RA)
+      InstrCount++;
+  }
 
   auto *KVXFI = MF->getInfo<KVXMachineFunctionInfo>();
   KVXFI->setCSRIndices({ CSI.front().getFrameIdx(), CSI.back().getFrameIdx() });
+
+  KVXFI->setCSRInstrCount(InstrCount);
 
   return true;
 }
@@ -257,6 +345,16 @@ bool KVXFrameLowering::restoreCalleeSavedRegisters(
     MachineBasicBlock &MBB, MachineBasicBlock::iterator MI,
     std::vector<CalleeSavedInfo> &CSI, const TargetRegisterInfo *TRI) const {
   const KVXInstrInfo *TII = STI.getInstrInfo();
+
+  if (TRI->needsStackRealignment(*MBB.getParent())) {
+    MachineFunction *MF = MBB.getParent();
+    auto *KVXFI = MF->getInfo<KVXMachineFunctionInfo>();
+    KVXFI->setScratchReg(findScratchRegister(MBB, true, KVX::R32));
+    DebugLoc DL = MI->getDebugLoc();
+    BuildMI(MBB, MI, DL, TII->get(KVX::COPYD), KVXFI->getScratchReg())
+        .addReg(hasFP(*MF) ? KVX::R31 : getFPReg(), RegState::Kill)
+        .setMIFlag(MachineInstr::FrameSetup);
+  }
 
   if (hasFP(*MBB.getParent())) {
     DebugLoc DL = MI->getDebugLoc();
