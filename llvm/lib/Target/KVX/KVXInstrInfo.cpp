@@ -234,7 +234,13 @@ unsigned KVXInstrInfo::insertBranch(MachineBasicBlock &MBB,
                                     MachineBasicBlock *FBB,
                                     ArrayRef<MachineOperand> Cond,
                                     const DebugLoc &DL, int *BytesAdded) const {
-
+  if (!FBB) {
+    if (Cond.empty()) // Unconditional branch
+    {
+      BuildMI(&MBB, DL, get(KVX::GOTO)).addMBB(TBB);
+      return 1;
+    }
+  }
   return 0;
 }
 
