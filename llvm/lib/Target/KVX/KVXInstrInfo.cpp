@@ -55,10 +55,11 @@ void KVXInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
   }
 }
 
-unsigned findScratchRegister(MachineBasicBlock &MBB, bool UseAtEnd) {
+unsigned findScratchRegister(MachineBasicBlock &MBB, bool UseAtEnd,
+                             unsigned DefaultReg = KVX::R16) {
   RegScavenger RS;
 
-  unsigned ScratchRegister = KVX::R16;
+  unsigned ScratchRegister = DefaultReg;
 
   RS.enterBasicBlock(MBB);
 
