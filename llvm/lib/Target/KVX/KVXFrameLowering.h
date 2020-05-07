@@ -72,6 +72,10 @@ private:
   void adjustReg(MachineBasicBlock &MBB, MachineBasicBlock::iterator MBBI,
                  const DebugLoc &DL, unsigned OpCode, unsigned DestReg,
                  unsigned SrcReg, int64_t Val, MachineInstr::MIFlag) const;
+
+  void realignStack(MachineFunction &MF, MachineBasicBlock &MBB,
+                    MachineBasicBlock::iterator MBBI, const DebugLoc &DL,
+                    unsigned ScratchReg) const;
 };
 
 } // namespace llvm
