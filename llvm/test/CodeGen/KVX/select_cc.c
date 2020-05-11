@@ -36,3 +36,11 @@ _Float16 f_Select64PAT(long c, _Float16 a, _Float16 b) {
   // CHECK: cmoved.deqz
   // CHECK: ret
 }
+
+typedef float __attribute__((__vector_size__(8))) v2f32;
+v2f32 f_select_cc_v2f32(int c, int c2, v2f32 a, v2f32 b) {
+  return c > c2 ? a : b;
+  // CHECK: f_select_cc_v2f32
+  // CHECK: cmoved.weqz
+  // CHECK: ret
+}
