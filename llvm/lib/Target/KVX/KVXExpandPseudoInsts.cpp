@@ -210,7 +210,7 @@ static bool expandFENCEInstr(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   return true;
 }
 
-unsigned int getAtomicLoad(unsigned int opCode) {
+unsigned int getAtomicLoad(unsigned int opCode, bool imm = true) {
   switch (opCode) {
   case KVX::ASWAP32_Instr:
   case KVX::ACMPSWAP32_Instr:
@@ -220,7 +220,7 @@ unsigned int getAtomicLoad(unsigned int opCode) {
   case KVX::ALOADXOR32_Instr:
   case KVX::ALOADOR32_Instr:
   case KVX::ALOADNAND32_Instr:
-    return KVX::LWZp;
+    return imm ? KVX::LWZp : KVX::LWZrr;
   case KVX::ASWAP64_Instr:
   case KVX::ACMPSWAP64_Instr:
   case KVX::ALOADADD64_Instr:
@@ -229,7 +229,7 @@ unsigned int getAtomicLoad(unsigned int opCode) {
   case KVX::ALOADXOR64_Instr:
   case KVX::ALOADOR64_Instr:
   case KVX::ALOADNAND64_Instr:
-    return KVX::LDp;
+    return imm ? KVX::LDp : KVX::LDrr;
   default:
     llvm_unreachable("invalid opCode");
   }
@@ -260,7 +260,8 @@ unsigned int getAtomicCopy(unsigned int opCode) {
   }
 }
 
-unsigned int getAtomicSwap(int64_t offset, unsigned int opCode) {
+unsigned int getAtomicSwap(int64_t offset, unsigned int opCode,
+                           bool imm = true) {
   switch (opCode) {
   case KVX::ASWAP32_Instr:
   case KVX::ACMPSWAP32_Instr:
@@ -270,7 +271,10 @@ unsigned int getAtomicSwap(int64_t offset, unsigned int opCode) {
   case KVX::ALOADXOR32_Instr:
   case KVX::ALOADOR32_Instr:
   case KVX::ALOADNAND32_Instr:
-    return isInt<10>(offset) ? KVX::ACSWAPWri10 : KVX::ACSWAPWri37;
+    if (imm)
+      return isInt<10>(offset) ? KVX::ACSWAPWri10 : KVX::ACSWAPWri37;
+    else
+      return KVX::ACSWAPWrr;
   case KVX::ASWAP64_Instr:
   case KVX::ACMPSWAP64_Instr:
   case KVX::ALOADADD64_Instr:
@@ -279,7 +283,10 @@ unsigned int getAtomicSwap(int64_t offset, unsigned int opCode) {
   case KVX::ALOADXOR64_Instr:
   case KVX::ALOADOR64_Instr:
   case KVX::ALOADNAND64_Instr:
-    return isInt<10>(offset) ? KVX::ACSWAPDri10 : KVX::ACSWAPDri37;
+    if (imm)
+      return isInt<10>(offset) ? KVX::ACSWAPDri10 : KVX::ACSWAPDri37;
+    else
+      return KVX::ACSWAPDrr;
   default:
     llvm_unreachable("invalid opCode");
   }
@@ -631,9 +638,17 @@ static bool expandALOADOPInstr(unsigned int opCode, const KVXInstrInfo *TII,
   const KVXRegisterInfo *TRI =
       (const KVXRegisterInfo *)MF->getSubtarget().getRegisterInfo();
 
+  bool offsetIsImm = MI.getOperand(2).isImm();
+  int64_t offsetImm;
+  unsigned offsetReg;
+
+  if (offsetIsImm)
+    offsetImm = MI.getOperand(2).getImm();
+  else
+    offsetReg = MI.getOperand(2).getReg();
+
   unsigned outputReg = MI.getOperand(0).getReg();
   unsigned scratchPairedReg = MI.getOperand(1).getReg();
-  int64_t offset = MI.getOperand(2).getImm();
   unsigned baseReg = MI.getOperand(3).getReg();
   unsigned valReg = MI.getOperand(4).getReg();
 
@@ -661,11 +676,20 @@ static bool expandALOADOPInstr(unsigned int opCode, const KVXInstrInfo *TII,
   DoneMBB->transferSuccessors(&MBB);
   MBB.addSuccessor(LoopMBB);
 
-  BuildMI(LoopMBB, DL, TII->get(getAtomicLoad(opCode)),
-          TRI->getSubReg(scratchPairedReg, 2))
-      .addImm(offset)
-      .addReg(baseReg)
+  if (offsetIsImm)
+    BuildMI(LoopMBB, DL, TII->get(getAtomicLoad(opCode)),
+            TRI->getSubReg(scratchPairedReg, 2))
+        .addImm(offsetImm)
+        .addReg(baseReg)
       .addImm(KVXMOD::VARIANT_U);
+  else
+    BuildMI(LoopMBB, DL,
+            TII->get(getAtomicLoad(opCode, false /* register offet */)),
+            TRI->getSubReg(scratchPairedReg, 2))
+        .addReg(offsetReg)
+        .addReg(baseReg)
+        .addImm(KVXMOD::VARIANT_U)
+        .addImm(KVXMOD::SCALING_);
 
   BuildMI(LoopMBB, DL, TII->get(getAtomicCopy(opCode)), compReg)
       .addReg(TRI->getSubReg(scratchPairedReg, 2));
@@ -679,11 +703,20 @@ static bool expandALOADOPInstr(unsigned int opCode, const KVXInstrInfo *TII,
         .addReg(compReg);
   }
 
-  BuildMI(LoopMBB, DL, TII->get(getAtomicSwap(offset, opCode)),
-          scratchPairedReg)
-      .addImm(offset)
-      .addReg(baseReg)
+  if (offsetIsImm)
+    BuildMI(LoopMBB, DL, TII->get(getAtomicSwap(offsetImm, opCode)),
+            scratchPairedReg)
+        .addImm(offsetImm)
+        .addReg(baseReg)
       .addReg(scratchPairedReg);
+  else
+    BuildMI(LoopMBB, DL,
+            TII->get(getAtomicSwap(0, opCode, false /* register offset */)),
+            scratchPairedReg)
+        .addReg(offsetReg)
+        .addReg(baseReg)
+        .addReg(scratchPairedReg)
+        .addImm(KVXMOD::SCALING_);
 
   BuildMI(LoopMBB, DL, TII->get(getAtomicComp(opCode)), compReg)
       .addReg(compReg)
