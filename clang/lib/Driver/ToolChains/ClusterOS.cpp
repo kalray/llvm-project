@@ -23,6 +23,9 @@ using namespace clang::driver::toolchains;
 using namespace clang;
 using namespace llvm::opt;
 
+// TODO: Obtain GCC internal paths dynamically by invoking gcc directly.
+#define KVX_CLUSTEROS_GCC_VERSION "9.4.1"
+
 void clusteros::Assembler::ConstructJob(Compilation &C, const JobAction &JA,
                                         const InputInfo &Output,
                                         const InputInfoList &Inputs,
@@ -291,7 +294,7 @@ bool ClusterOS::GCCInstallationIsValid() const {
 StringRef ClusterOS::getGCCVersion() const {
   return GCCInstallation.isValid()
              ? StringRef(GCCInstallation.getVersion().Text)
-             : StringRef("7.5.0");
+             : StringRef(KVX_CLUSTEROS_GCC_VERSION);
 }
 
 StringRef ClusterOS::getGCCInstallPath() const {
