@@ -345,10 +345,11 @@ bool KVXFrameLowering::restoreCalleeSavedRegisters(
     MachineBasicBlock &MBB, MachineBasicBlock::iterator MI,
     std::vector<CalleeSavedInfo> &CSI, const TargetRegisterInfo *TRI) const {
   const KVXInstrInfo *TII = STI.getInstrInfo();
+  DebugLoc DL = MI->getDebugLoc();
+  MachineFunction *MF = MBB.getParent();
+  auto *KVXFI = MF->getInfo<KVXMachineFunctionInfo>();
 
   if (TRI->needsStackRealignment(*MBB.getParent())) {
-    MachineFunction *MF = MBB.getParent();
-    auto *KVXFI = MF->getInfo<KVXMachineFunctionInfo>();
     KVXFI->setScratchReg(findScratchRegister(MBB, true, KVX::R32));
     DebugLoc DL = MI->getDebugLoc();
     BuildMI(MBB, MI, DL, TII->get(KVX::COPYD), KVXFI->getScratchReg())
@@ -357,7 +358,6 @@ bool KVXFrameLowering::restoreCalleeSavedRegisters(
   }
 
   if (hasFP(*MBB.getParent())) {
-    DebugLoc DL = MI->getDebugLoc();
     BuildMI(MBB, MI, DL, TII->get(KVX::COPYD), getSPReg()).addReg(getFPReg());
   }
 
@@ -369,6 +369,13 @@ bool KVXFrameLowering::restoreCalleeSavedRegisters(
   for (const CalleeSavedInfo &CS : reverse(CSI)) {
     unsigned Reg = CS.getReg();
     const TargetRegisterClass *RC = TRI->getMinimalPhysRegClass(Reg);
+
+    if (MI->getOpcode() == KVX::ITAIL && MI->getOperand(0).getReg() == Reg) {
+      unsigned ScratchReg = findScratchRegister(MBB, true, KVX::R0);
+      BuildMI(MBB, MI, DL, TII->get(KVX::COPY), ScratchReg).addReg(Reg);
+      MI->getOperand(0).setReg(ScratchReg);
+      MBB.addLiveIn(ScratchReg);
+    }
 
     // Try to merge single regs into paired regs
     unsigned PairedReg =
