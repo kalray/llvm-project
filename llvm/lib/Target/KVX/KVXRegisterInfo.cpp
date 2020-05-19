@@ -52,6 +52,9 @@ BitVector KVXRegisterInfo::getReservedRegs(const MachineFunction &MF) const {
   markSuperRegs(Reserved, KVX::R13);
   markSuperRegs(Reserved, getFPReg());
   markSuperRegs(Reserved, KVX::RA);
+  if (MF.getFrameInfo().hasVarSizedObjects() &&
+      MF.getSubtarget().getRegisterInfo()->needsStackRealignment(MF))
+    markSuperRegs(Reserved, KVX::R31);
   return Reserved;
 }
 
