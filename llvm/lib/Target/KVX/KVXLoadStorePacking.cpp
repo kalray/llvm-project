@@ -334,7 +334,9 @@ bool KVXLoadStorePackingPass::PackBlock(MachineBasicBlock &MBB,
             ++Count;
           }
 
-          if (Count > 1) {
+          if (Count > 1 &&
+              FirstInstr.find((*ItStart)->getOperand(OperandReg).getReg()) !=
+                  FirstInstr.end()) {
             PackAndReplaceInstr(
                 FirstInstr[(*ItStart)->getOperand(OperandReg).getReg()],
                 ItStart, Count == 4 ? Count : 2);
