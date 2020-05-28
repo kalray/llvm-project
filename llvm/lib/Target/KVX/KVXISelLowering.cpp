@@ -1251,18 +1251,16 @@ static uint64_t selectMask(unsigned Size) {
 }
 
 static SDValue getINSF(const SDLoc &DL, const SDValue &Vec, const SDValue &Val,
-                       unsigned ElementBitSize, unsigned Pos,
-                       SelectionDAG &DAG) {
+                       unsigned ElementBitSize, unsigned Pos, SelectionDAG &DAG,
+                       EVT nodeType = MVT::i64) {
   const uint64_t StartBit = Pos * ElementBitSize;
   const uint64_t StopBit = StartBit + ElementBitSize - 1;
 
-  return SDValue(
-      DAG.getMachineNode(KVX::INSF, DL, MVT::i64,
-                         { Vec,
-                           Val,
-                           DAG.getTargetConstant(StopBit, DL, MVT::i64),
-                           DAG.getTargetConstant(StartBit, DL, MVT::i64) }),
-      0);
+  return SDValue(DAG.getMachineNode(
+                     KVX::INSF, DL, nodeType,
+                     {Vec, Val, DAG.getTargetConstant(StopBit, DL, MVT::i64),
+                      DAG.getTargetConstant(StartBit, DL, MVT::i64)}),
+                 0);
 }
 
 static SDValue lowerBUILD_VECTORGeneric(const SDValue &Op, SelectionDAG &DAG) {
@@ -1315,7 +1313,8 @@ static SDValue lowerBUILD_VECTORGeneric(const SDValue &Op, SelectionDAG &DAG) {
 
   for (unsigned i = 0; i < NumOperands; ++i) {
     if (RegMap & (1 << i))
-      PartSDVal = getINSF(DL, PartSDVal, Op.getOperand(i), BitSize, i, DAG);
+      PartSDVal = getINSF(DL, PartSDVal, Op.getOperand(i), BitSize, i, DAG,
+                          Op.getValueType());
   }
 
   return DAG.getBitcast(Op.getValueType(), PartSDVal);
@@ -1602,7 +1601,7 @@ SDValue KVXTargetLowering::lowerINSERT_VECTOR_ELT(SDValue Op,
       ImmVal = OpConst->getValueAPF().bitcastToAPInt().getZExtValue();
     else
       return getINSF(DL, Vec, Val, ElementBitSize, InsertPos->getZExtValue(),
-                     DAG);
+                     DAG, Op.getValueType());
 
     const unsigned StartBit = ElementBitSize * InsertPos->getZExtValue();
     return DAG.getBitcast(
