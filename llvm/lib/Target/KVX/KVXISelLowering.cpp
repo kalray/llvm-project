@@ -385,6 +385,9 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setMinCmpXchgSizeInBits(32);
 
   setMinimumJumpTableEntries(MinimumJumpTablesEntries);
+
+  setOperationAction(ISD::UINT_TO_FP, MVT::i64, Custom);
+  setOperationAction(ISD::SINT_TO_FP, MVT::i64, Custom);
 }
 
 EVT KVXTargetLowering::getSetCCResultType(const DataLayout &DL, LLVMContext &C,
@@ -849,6 +852,9 @@ SDValue KVXTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
     return lowerBR_CC(Op, DAG);
   case ISD::JumpTable:
     return lowerJumpTable(Op, DAG);
+  case ISD::UINT_TO_FP:
+  case ISD::SINT_TO_FP:
+    return lowerIntToFP(Op, DAG);
   }
 }
 
@@ -2490,6 +2496,20 @@ SDValue KVXTargetLowering::lowerMINMAXUHQ(SDValue Op, SelectionDAG &DAG) const {
             { vector1,
               Op.getOperand(0).getOperand(1).getOperand(0).getOperand(0) }),
         0);
+}
+
+SDValue KVXTargetLowering::lowerIntToFP(SDValue Op, SelectionDAG &DAG) const {
+  if (Op.getValueType() != MVT::f32)
+    return Op;
+
+  RTLIB::Libcall LC;
+  if (Op.getOpcode() == ISD::SINT_TO_FP)
+    LC = RTLIB::getSINTTOFP(Op.getOperand(0).getValueType(), Op.getValueType());
+  else
+    LC = RTLIB::getUINTTOFP(Op.getOperand(0).getValueType(), Op.getValueType());
+
+  SmallVector<SDValue, 2> Ops(Op->op_begin(), Op->op_end());
+  return makeLibCall(DAG, LC, MVT::f32, Ops, false, SDLoc(Op)).first;
 }
 
 static SDValue combineZext(SDNode *N, SelectionDAG &DAG) {
