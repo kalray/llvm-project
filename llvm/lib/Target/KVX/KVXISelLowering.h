@@ -139,6 +139,7 @@ private:
   SDValue lowerMINMAXHQ(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerMINMAXUHQ(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerABSHQ(SDValue Op, SelectionDAG &DAG) const;
+  SDValue lowerIntToFP(SDValue Op, SelectionDAG &DAG) const;
 
   bool IsEligibleForTailCallOptimization(
       CCState &CCInfo, CallLoweringInfo &CLI, MachineFunction &MF,
