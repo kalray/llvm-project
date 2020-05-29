@@ -272,16 +272,15 @@ def : Pat<(i64 (fp_to_sint f32:$val)), (FIXEDD (FWIDENLWD SingleReg:$val, silent
 def : Pat<(i32 (fp_to_sint f64:$val)), (FIXEDD SingleReg:$val, DefaultShift, rounding_rz, silent_)>;
 def : Pat<(i64 (fp_to_sint f64:$val)), (FIXEDD SingleReg:$val, DefaultShift, rounding_rz, silent_)>;
 // FLOAT
+// FIXME f16 patterns have issues with double rounding / implement RTcalls ?
 def : Pat<(f16 (uint_to_fp i32:$val)), (FNARROWWH (FLOATUW SingleReg:$val, DefaultShift, rounding_rn, silent_), rounding_rn, silent_)>;
 def : Pat<(f16 (uint_to_fp i64:$val)), (FNARROWWH (FNARROWDW (FLOATUD SingleReg:$val, DefaultShift, rounding_rn, silent_), rounding_rn, silent_), rounding_rn, silent_)>;
 def : Pat<(f32 (uint_to_fp i32:$val)), (FLOATUW SingleReg:$val, DefaultShift, rounding_rn, silent_)>;
-def : Pat<(f32 (uint_to_fp i64:$val)), (FLOATUW (SATUDri SingleReg:$val, (i64 32)), DefaultShift, rounding_rn, silent_)>;
 def : Pat<(f64 (uint_to_fp i32:$val)), (FLOATUD (ZXWD SingleReg:$val), DefaultShift, rounding_rn, silent_)>;
 def : Pat<(f64 (uint_to_fp i64:$val)), (FLOATUD SingleReg:$val, DefaultShift, rounding_rn, silent_)>;
 def : Pat<(f16 (sint_to_fp i32:$val)), (FNARROWWH (FLOATW SingleReg:$val, DefaultShift, rounding_rn, silent_), rounding_rn, silent_)>;
 def : Pat<(f16 (sint_to_fp i64:$val)), (FNARROWWH (FNARROWDW (FLOATD SingleReg:$val, DefaultShift, rounding_rn, silent_), rounding_rn, silent_), rounding_rn, silent_)>;
 def : Pat<(f32 (sint_to_fp i32:$val)), (FLOATW SingleReg:$val, DefaultShift, rounding_rn, silent_)>;
-def : Pat<(f32 (sint_to_fp i64:$val)), (FLOATW (SATDri SingleReg:$val, (i64 32)), DefaultShift, rounding_rn, silent_)>;
 def : Pat<(f64 (sint_to_fp i32:$val)), (FLOATD (SXWD SingleReg:$val), DefaultShift, rounding_rn, silent_)>;
 def : Pat<(f64 (sint_to_fp i64:$val)), (FLOATD SingleReg:$val, DefaultShift, rounding_rn, silent_)>;
 // FMAX  -> TODO
