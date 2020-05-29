@@ -13737,13 +13737,26 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     return Builder.CreateCall(Callee, {Addr, Expect, Update});
   }
 
+  case KVX::BI__builtin_kvx_acswapd: {
+    SourceLocation Loc = E->getExprLoc();
+    Value *Addr = Builder.CreateBitCast(EmitScalarExpr(E->getArg(0)), Int8PtrTy);
+    Value *Expect = EmitScalarConversion(EmitScalarExpr(E->getArg(1)),
+                                         E->getArg(1)->getType(), getContext().LongTy, Loc);
+    Value *Update =
+      EmitScalarConversion(EmitScalarExpr(E->getArg(2)),
+                           E->getArg(2)->getType(), getContext().LongTy, Loc);
+    Value *Callee = CGM.getIntrinsic(Intrinsic::kvx_acswapd);
+    return Builder.CreateCall(Callee, {Addr, Expect, Update});
+  }
+
   case KVX::BI__builtin_kvx_dinvall:
   case KVX::BI__builtin_kvx_dtouchl:
   case KVX::BI__builtin_kvx_dzerol:
   case KVX::BI__builtin_kvx_iinvals:
   case KVX::BI__builtin_kvx_lbzu:
   case KVX::BI__builtin_kvx_lhzu:
-  case KVX::BI__builtin_kvx_lwzu: {
+  case KVX::BI__builtin_kvx_lwzu:
+  case KVX::BI__builtin_kvx_ldu: {
     Value* Addr = EmitScalarExpr(E->getArg(0));
 
     unsigned IDD;
@@ -13768,6 +13781,9 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
       break;
     case KVX::BI__builtin_kvx_lwzu:
       IDD = Intrinsic::kvx_lwzu;
+      break;
+    case KVX::BI__builtin_kvx_ldu:
+      IDD = Intrinsic::kvx_ldu;
       break;
     default:
       llvm_unreachable("missing KVX load intrinsics");
