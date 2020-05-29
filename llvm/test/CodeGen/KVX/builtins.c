@@ -37,6 +37,13 @@ int lwzu2(int **p, int a) {
   // CHECK-NEXT: ret
 }
 
+long ldu(int *p) {
+  return __builtin_kvx_ldu(p);
+  // CHECK-LABEL: ldu:
+  // CHECK-NEXT: ld.u $r0 = 0[$r0]
+  // CHECK-NEXT: ret
+}
+
 long ctzd(long l) {
   // CHECK-LABEL: ctzd:
   // CHECK-NEXT: ctzd $r0 = $r0
@@ -224,4 +231,28 @@ void iinvals(char *p) {
   // CHECK-NEXT: iinvals 0[$r0]
   // CHECK-NEXT: ret
   __builtin_kvx_iinvals(p);
+}
+
+int acswapw(int *p, int a, int b) {
+  // CHECK-LABEL: acswapw:
+  // CHECK-NEXT: copyd $r3 = $r2
+  // CHECK-NEXT: copyd $r2 = $r1
+  // CHECK-NEXT: ;;
+  // CHECK-NEXT: acswapw 0[$r0] = $r2r3
+  // CHECK-NEXT: ;;
+  // CHECK-NEXT: copyd $r0 = $r3
+  // CHECK-NEXT: ret
+  return __builtin_kvx_acswapw(p, a, b);
+}
+
+long acswapd(int *p, long a, long b) {
+  // CHECK-LABEL: acswapd:
+  // CHECK-NEXT: copyd $r3 = $r2
+  // CHECK-NEXT: copyd $r2 = $r1
+  // CHECK-NEXT: ;;
+  // CHECK-NEXT: acswapd 0[$r0] = $r2r3
+  // CHECK-NEXT: ;;
+  // CHECK-NEXT: copyd $r0 = $r3
+  // CHECK-NEXT: ret
+  return __builtin_kvx_acswapd(p, a, b);
 }
