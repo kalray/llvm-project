@@ -90,6 +90,12 @@ void KVXRegisterInfo::eliminateFrameIndex(MachineBasicBlock::iterator II,
       MI.getOperand(FIOperandNum)
           .ChangeToRegister(FrameReg, false, false, false);
       MI.getOperand(FIOperandNum + 1).ChangeToImmediate(Offset);
+      if (MI.getOpcode() == KVX::ADDDri64) {
+        const KVXInstrInfo *TII =
+            static_cast<const KVXInstrInfo *>(MF.getSubtarget().getInstrInfo());
+        MI.setDesc(TII->get(
+            GetImmOpCode(Offset, KVX::ADDDri10, KVX::ADDDri37, KVX::ADDDri64)));
+      }
     } else {
       llvm_unreachable("could not eliminate frame index");
     }
