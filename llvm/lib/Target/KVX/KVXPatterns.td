@@ -501,7 +501,7 @@ def : Pat<(brcond i32:$cond, bb:$dst), (CB SingleReg:$cond, Pcrel17:$dst, scalar
 def : Pat<(brcond i64:$cond, bb:$dst), (CB SingleReg:$cond, Pcrel17:$dst, scalarcond_dnez)>;
 
 
-def : Pat<(i64 AddrFI:$fi), (ADDDri64 SingleReg:$fi,(i64 0) )>;
+def : Pat<(i64 AddrFI:$fi), (ADDDri64 SingleReg:$fi, (i64 0))>;
 
 def : Pat<(brind (i32 SingleReg:$r)), (IGOTO SingleReg:$r)>;
 
