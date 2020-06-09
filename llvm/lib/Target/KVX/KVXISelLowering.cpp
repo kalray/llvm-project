@@ -680,28 +680,6 @@ SDValue KVXTargetLowering::LowerCall(CallLoweringInfo &CLI,
   // Keep stack frames 8-byte aligned.
   ArgsSize = (ArgsSize + 7) & ~7;
 
-  // Create local copies for byval args
-  SmallVector<SDValue, 8> ByValArgs;
-  for (unsigned i = 0, e = Outs.size(); i != e; ++i) {
-    ISD::ArgFlagsTy Flags = Outs[i].Flags;
-    if (!Flags.isByVal())
-      continue;
-
-    SDValue Arg = OutVals[i];
-    unsigned Size = Flags.getByValSize();
-    unsigned Align = Flags.getByValAlign();
-
-    int FI = MF.getFrameInfo().CreateStackObject(Size, Align, /*isSS=*/false);
-    SDValue FIPtr = DAG.getFrameIndex(FI, getPointerTy(DAG.getDataLayout()));
-    SDValue SizeNode = DAG.getConstant(Size, DL, MVT::i64);
-
-    Chain = DAG.getMemcpy(Chain, DL, FIPtr, Arg, SizeNode, Align,
-                          /*IsVolatile=*/false,
-                          /*AlwaysInline=*/false, false /*IsTailCall*/,
-                          MachinePointerInfo(), MachinePointerInfo());
-    ByValArgs.push_back(FIPtr);
-  }
-
   if (!IsTailCall)
     Chain = DAG.getCALLSEQ_START(Chain, ArgsSize, 0, DL);
 
@@ -709,13 +687,9 @@ SDValue KVXTargetLowering::LowerCall(CallLoweringInfo &CLI,
   SmallVector<SDValue, 8> MemOpChains;
   SDValue StackPtr;
 
-  for (unsigned i = 0, j = 0, e = ArgLocs.size(); i != e; ++i) {
+  for (unsigned i = 0, e = ArgLocs.size(); i != e; ++i) {
     CCValAssign &VA = ArgLocs[i];
     SDValue ArgValue = OutVals[i];
-    ISD::ArgFlagsTy Flags = Outs[i].Flags;
-
-    if (Flags.isByVal())
-      ArgValue = ByValArgs[j++];
 
     if (VA.isRegLoc()) {
       // Queue up the argument copies and emit them at the end.
