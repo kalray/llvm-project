@@ -179,13 +179,10 @@ void KVXInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
         .addReg(KVX::RA)
         .setMIFlags(MachineInstr::FrameSetup);
 
-    // set flag to mark that $ra is saved with this instruction
-    // at frame index elimination cfi instruction will be added
     BuildMI(MBB, I, DL, get(KVX::SDp))
         .addImm(0)
         .addFrameIndex(FI)
-        .addReg(ScratchReg, RegState::Kill)
-        .setMIFlags(1 << 14);
+        .addReg(ScratchReg, RegState::Kill);
   }
 }
 

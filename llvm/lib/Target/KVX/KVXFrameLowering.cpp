@@ -46,11 +46,25 @@
 #include "llvm/CodeGen/MachineFrameInfo.h"
 #include "llvm/CodeGen/MachineFunction.h"
 #include "llvm/CodeGen/MachineInstrBuilder.h"
+#include "llvm/CodeGen/MachineModuleInfo.h"
 #include "llvm/CodeGen/MachineRegisterInfo.h"
 #include "llvm/CodeGen/RegisterScavenging.h"
 #include "llvm/MC/MCDwarf.h"
 
 using namespace llvm;
+
+static unsigned getNumOfSingleRegsPacked(unsigned Opcode) {
+  switch (Opcode) {
+  default:
+    llvm_unreachable("Unknown Opcode");
+  case KVX::SDp:
+    return 1;
+  case KVX::SQp:
+    return 2;
+  case KVX::SOp:
+    return 4;
+  }
+}
 
 void KVXFrameLowering::adjustStack(MachineFunction &MF) const {
   MachineFrameInfo &MFI = MF.getFrameInfo();
@@ -134,7 +148,6 @@ void KVXFrameLowering::emitPrologue(MachineFunction &MF,
 
   MachineBasicBlock::iterator MBBI = MBB.begin();
   MachineFrameInfo &MFI = MF.getFrameInfo();
-  auto *KVXFI = MF.getInfo<KVXMachineFunctionInfo>();
 
   adjustStack(MF);
 
@@ -153,9 +166,8 @@ void KVXFrameLowering::emitPrologue(MachineFunction &MF,
 
   realignStack(MF, MBB, MBBI, DL, ScratchReg);
 
-  int CFAOffset = -StackSize + KVXFI->getVarArgsSaveSize();
-  unsigned CFIIndex =
-      MF.addFrameInst(MCCFIInstruction::createDefCfaOffset(nullptr, CFAOffset));
+  unsigned CFIIndex = MF.addFrameInst(
+      MCCFIInstruction::createDefCfaOffset(nullptr, -StackSize));
 
   const KVXInstrInfo *TII = STI.getInstrInfo();
 
@@ -163,13 +175,51 @@ void KVXFrameLowering::emitPrologue(MachineFunction &MF,
       .addCFIIndex(CFIIndex)
       .setMIFlags(MachineInstr::FrameSetup);
 
+  const std::vector<CalleeSavedInfo> &CSI = MFI.getCalleeSavedInfo();
+  if (!CSI.empty()) {
+    const MCRegisterInfo *MRI = MF.getMMI().getContext().getRegisterInfo();
+
+    // Assumes the stores preserve the CSR order.
+    // Add CFI alias between RA and R16 registers.
+    if (MBBI->getOpcode() == KVX::GETss2) {
+      unsigned R16Dwarf =
+          MRI->getDwarfRegNum(MBBI->getOperand(0).getReg(), true);
+      unsigned RADwarf =
+          MRI->getDwarfRegNum(MBBI->getOperand(1).getReg(), true);
+
+      BuildMI(MBB, MBBI, DL, TII->get(TargetOpcode::CFI_INSTRUCTION))
+          .addCFIIndex(MF.addFrameInst(
+              MCCFIInstruction::createRegister(nullptr, RADwarf, R16Dwarf)))
+          .setMIFlags(MachineInstr::FrameSetup);
+      ++MBBI;
+    }
+
+    std::vector<CalleeSavedInfo>::const_iterator I = CSI.begin();
+    std::vector<CalleeSavedInfo>::const_iterator E = CSI.end();
+    while (I != E) {
+      // Get the number of CSR packed
+      unsigned numSingleRegs = getNumOfSingleRegsPacked(MBBI->getOpcode());
+      ++MBBI;
+
+      // Build CFI instrunction for each single register after the  store
+      while (numSingleRegs--) {
+        int64_t Offset = MFI.getObjectOffset(I->getFrameIdx()) - StackSize;
+        unsigned DwarfReg = MRI->getDwarfRegNum(I->getReg(), true);
+
+        BuildMI(MBB, MBBI, DL, TII->get(TargetOpcode::CFI_INSTRUCTION))
+            .addCFIIndex(MF.addFrameInst(
+                MCCFIInstruction::createOffset(nullptr, DwarfReg, Offset)))
+            .setMIFlags(MachineInstr::FrameSetup);
+
+        ++I;
+      }
+    }
+  }
+
   const KVXRegisterInfo *TRI =
       (const KVXRegisterInfo *)MF.getSubtarget().getRegisterInfo();
 
   if (TRI->needsStackRealignment(MF)) {
-    // Skip CSR save instructions
-    std::advance(MBBI, KVXFI->getCSRInstrCount());
-
     // ScrachReg contains the SPReg value before realignment
     BuildMI(MBB, MBBI, DL, TII->get(KVX::COPYD),
             hasFP(MF) ? KVX::R31 : getFPReg())
@@ -278,7 +328,6 @@ bool KVXFrameLowering::spillCalleeSavedRegisters(
     const std::vector<CalleeSavedInfo> &CSI,
     const TargetRegisterInfo *TRI) const {
   const KVXInstrInfo *TII = STI.getInstrInfo();
-  MachineFunction *MF = MBB.getParent();
 
   if (hasFP(*MBB.getParent())) {
     DebugLoc DL = MI->getDebugLoc();
@@ -326,18 +375,13 @@ bool KVXFrameLowering::spillCalleeSavedRegisters(
     FrameIdxSaved.push_back(CS.getFrameIdx());
   }
 
-  unsigned InstrCount = (unsigned)RegSaved.size();
   for (unsigned i = 0; i < RegSaved.size(); ++i) {
     TII->storeRegToStackSlot(MBB, MI, RegSaved[i], true, FrameIdxSaved[i],
                              RCSaved[i], TRI);
-    if (RegSaved[i] == KVX::RA)
-      InstrCount++;
   }
 
-  auto *KVXFI = MF->getInfo<KVXMachineFunctionInfo>();
+  auto *KVXFI = MBB.getParent()->getInfo<KVXMachineFunctionInfo>();
   KVXFI->setCSRIndices({ CSI.front().getFrameIdx(), CSI.back().getFrameIdx() });
-
-  KVXFI->setCSRInstrCount(InstrCount);
 
   return true;
 }
