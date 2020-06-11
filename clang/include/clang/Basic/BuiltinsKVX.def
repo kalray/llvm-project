@@ -127,4 +127,13 @@ BUILTIN(__builtin_kvx_ctzw, "Uii", "")
 BUILTIN(__builtin_kvx_ctzwp, "V2UiV2i", "")
 BUILTIN(__builtin_kvx_sbmm8, "ULiULiULi", "")
 
+BUILTIN(__builtin_kvx_fixedw, "ifCc*", "")
+BUILTIN(__builtin_kvx_fixeduw, "UifCc*", "")
+BUILTIN(__builtin_kvx_fixedd, "LidCc*", "")
+BUILTIN(__builtin_kvx_fixedud, "ULidCc*", "")
+BUILTIN(__builtin_kvx_floatw, "fiCc*", "")
+BUILTIN(__builtin_kvx_floatuw, "fUiCc*", "")
+BUILTIN(__builtin_kvx_floatd, "dLiCc*", "")
+BUILTIN(__builtin_kvx_floatud, "dULiCc*", "")
+
 #undef BUILTIN
