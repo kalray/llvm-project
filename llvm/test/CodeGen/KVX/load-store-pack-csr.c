@@ -1,6 +1,6 @@
 // RUN: clang -mllvm --disable-kvx-loadstore-packing=false --target=kvx-cos -S %s -O2 -o - | FileCheck %s
 
-long volatile v[50];
+long v[50];
 
 void foo();
 

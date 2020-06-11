@@ -34,6 +34,7 @@
 #include "KVX.h"
 #include "KVXInstrInfo.h"
 
+#include "llvm/Analysis/AliasAnalysis.h"
 #include "llvm/CodeGen/MachineFunctionPass.h"
 #include "llvm/CodeGen/MachineInstrBuilder.h"
 
@@ -50,6 +51,9 @@ namespace {
 
 class KVXLoadStorePackingPass : public MachineFunctionPass {
 
+  using PairM = std::pair<MachineInstr *, unsigned>;
+  using Vec = SmallVector<PairM, 8>;
+
 public:
   static char ID;
 
@@ -62,33 +66,25 @@ public:
 
   bool runOnMachineFunction(MachineFunction &MF) override;
 
+  void getAnalysisUsage(AnalysisUsage &AU) const override {
+    AU.addRequired<AAResultsWrapperPass>();
+    MachineFunctionPass::getAnalysisUsage(AU);
+  }
+
 private:
   MachineRegisterInfo *MRI;
   const KVXInstrInfo *TII;
   const TargetRegisterInfo *TRI;
-  std::unordered_map<unsigned, unsigned> ChangedRegs;
-
-  bool isValidOpcodeLoad(unsigned Opcode);
-  bool isValidOpcodeStore(unsigned Opcode);
+  AliasAnalysis *AA;
 
   unsigned getPackOpcode(const bool isPair, const int64_t Index,
                          const unsigned *Opcode);
 
-  void
-  PackAndReplaceLoad(MachineBasicBlock::iterator LocInstr,
-                     std::vector<MachineBasicBlock::iterator>::iterator ItStart,
-                     unsigned Count);
-  void PackAndReplaceStore(
-      MachineBasicBlock::iterator LocInstr,
-      std::vector<MachineBasicBlock::iterator>::iterator ItStart,
-      unsigned Count);
+  void packAndReplaceLoad(Vec::iterator ItStart, unsigned Count);
+  void packAndReplaceStore(Vec::iterator ItStart, unsigned Count);
 
-  bool areEnoughRegisters(unsigned ExtraRegistersNeeded);
-
-  template <typename FuncOpcode, typename FuncReplace>
-  bool PackBlock(MachineBasicBlock &MBB, FuncOpcode isValidOpcode,
-                 FuncReplace getClasses, unsigned OperandInd,
-                 unsigned OperandReg);
+  bool packBlock(MachineBasicBlock &MBB);
+  bool reorderInstr(llvm::DenseMap<MachineOperand, Vec> &, unsigned, unsigned);
 };
 
 } // end anonymous namespace
@@ -106,57 +102,13 @@ bool KVXLoadStorePackingPass::runOnMachineFunction(MachineFunction &MF) {
   MRI = std::addressof(MF.getRegInfo());
   TII = static_cast<const KVXInstrInfo *>(MF.getSubtarget().getInstrInfo());
   TRI = MF.getSubtarget().getRegisterInfo();
+  AA = &getAnalysis<AAResultsWrapperPass>().getAAResults();
 
   for (MachineBasicBlock &MBB : MF) {
-    Changed |= PackBlock(
-        MBB, [this](unsigned Opcode)
-                 ->unsigned { return this->isValidOpcodeLoad(Opcode); },
-        [this](MachineBasicBlock::iterator LocInstr,
-               std::vector<MachineBasicBlock::iterator>::iterator ItStart,
-               unsigned Count) {
-          LLVM_DEBUG(dbgs() << "PackAndReplaceLoad " << *LocInstr);
-          LLVM_DEBUG(dbgs() << "\nPackAndReplaceLoad Count=" << Count << "\n");
-          this->PackAndReplaceLoad(LocInstr, ItStart, Count);
-        },
-        1, 2);
-
-    Changed |= PackBlock(
-        MBB, [this](unsigned Opcode)
-                 ->unsigned { return this->isValidOpcodeStore(Opcode); },
-        [this](MachineBasicBlock::iterator LocInstr,
-               std::vector<MachineBasicBlock::iterator>::iterator ItStart,
-               unsigned Count)
-            ->void { this->PackAndReplaceStore(LocInstr, ItStart, Count); },
-        0, 1);
-
-    ChangedRegs.clear();
+    Changed |= packBlock(MBB);
   }
 
   return Changed;
-}
-
-bool KVXLoadStorePackingPass::isValidOpcodeLoad(unsigned Opcode) {
-  switch (Opcode) {
-  default:
-    return false;
-  case KVX::LDp:
-  case KVX::LDri10:
-  case KVX::LDri37:
-  case KVX::LDri64:
-    return true;
-  };
-}
-
-bool KVXLoadStorePackingPass::isValidOpcodeStore(unsigned Opcode) {
-  switch (Opcode) {
-  default:
-    return false;
-  case KVX::SDp:
-  case KVX::SDri10:
-  case KVX::SDri37:
-  case KVX::SDri64:
-    return true;
-  }
 }
 
 unsigned KVXLoadStorePackingPass::getPackOpcode(const bool isPair,
@@ -172,39 +124,38 @@ unsigned KVXLoadStorePackingPass::getPackOpcode(const bool isPair,
   return Opcode;
 }
 
-void KVXLoadStorePackingPass::PackAndReplaceLoad(
-    MachineBasicBlock::iterator LocInstr,
-    std::vector<MachineBasicBlock::iterator>::iterator ItStart,
-    unsigned Count) {
-  if ((*LocInstr).getParent() == nullptr) {
-    LLVM_DEBUG(dbgs() << "invalid instruction without valid MBB " << *LocInstr
-                      << "\n");
-    return;
-  }
+void KVXLoadStorePackingPass::packAndReplaceLoad(Vec::iterator ItStart,
+                                                 unsigned Count) {
   const bool isPair = Count == 2;
-  const unsigned Opcode =
-      getPackOpcode(isPair, (*ItStart)->getOperand(1).getImm(), LoadOpcodes);
+  const unsigned Opcode = getPackOpcode(
+      isPair, (*ItStart).first->getOperand(1).getImm(), LoadOpcodes);
   const TargetRegisterClass *TRC =
       isPair ? &KVX::PairedRegRegClass : &KVX::QuadRegRegClass;
 
+  auto LocMII = ItStart;
+  for (auto CurrentMII = ItStart; CurrentMII != ItStart + Count; ++CurrentMII) {
+    if (CurrentMII->second < LocMII->second)
+      LocMII = CurrentMII;
+  }
+
   unsigned Reg = MRI->createVirtualRegister(TRC);
   MachineInstrBuilder mib =
-      BuildMI(*(*ItStart)->getParent(), LocInstr, (*ItStart)->getDebugLoc(),
-              TII->get(Opcode), Reg);
+      BuildMI(*LocMII->first->getParent(), LocMII->first,
+              LocMII->first->getDebugLoc(), TII->get(Opcode), Reg);
 
-  mib.addImm((*ItStart)->getOperand(1).getImm())
-      .add((*ItStart)->getOperand(2))
-      .addImm(0);
+  mib.add(ItStart->first->getOperand(1))
+      .add(ItStart->first->getOperand(2))
+      .add(ItStart->first->getOperand(3));
 
   LLVM_DEBUG(dbgs() << "added " << *mib << "\n");
 
-  ChangedRegs[Reg] = Count;
-
   unsigned Ind = 1;
   while (Count--) {
-    for (MachineRegisterInfo::reg_iterator
-             RI = MRI->reg_begin((*ItStart)->getOperand(0).getReg()),
-             RE = MRI->reg_end();
+    unsigned re = ItStart->first->getOperand(0).getReg();
+    ItStart->first->eraseFromParent();
+
+    for (MachineRegisterInfo::reg_iterator RI = MRI->reg_begin(re),
+                                           RE = MRI->reg_end();
          RI != RE;) {
       MachineOperand &O = *RI;
       LLVM_DEBUG(dbgs() << "substVirtReg " << O.getReg() << " with " << Reg
@@ -213,149 +164,212 @@ void KVXLoadStorePackingPass::PackAndReplaceLoad(
       O.substVirtReg(Reg, Ind, *TRI);
     }
     ++Ind;
-    LLVM_DEBUG(dbgs() << "removed " << *(*ItStart) << "\n");
+    LLVM_DEBUG(dbgs() << "removed " << *(ItStart->first) << "\n");
 
-    (*ItStart)->eraseFromParent();
     ++ItStart;
   }
 
   LLVM_DEBUG(dbgs() << "added(2) " << *mib << "\n");
 }
 
-// FIXME: improve store packing, do not depends on loads
-void KVXLoadStorePackingPass::PackAndReplaceStore(
-    MachineBasicBlock::iterator LocInstr,
-    std::vector<MachineBasicBlock::iterator>::iterator ItStart,
-    unsigned Count) {
-  if ((*LocInstr).getParent() == nullptr) {
-    LLVM_DEBUG(dbgs() << "invalid instruction without valid MBB " << *LocInstr
-                      << "\n");
-    return;
-  }
+void KVXLoadStorePackingPass::packAndReplaceStore(Vec::iterator ItStart,
+                                                  unsigned Count) {
+
   const bool isPair = Count == 2;
-  const unsigned Opcode =
-      getPackOpcode(isPair, (*ItStart)->getOperand(0).getImm(), StoreOpcodes);
-  unsigned Reg;
-  if (ChangedRegs.find((*ItStart)->getOperand(2).getReg()) !=
-          ChangedRegs.end() &&
-      ChangedRegs[(*ItStart)->getOperand(2).getReg()] == Count) {
-    auto ItCurr = ItStart;
-    unsigned Ind = 1;
-    Reg = (*ItCurr)->getOperand(2).getReg();
-    while (Ind <= Count) {
-      if ((*ItCurr)->getOperand(2).getSubReg() != Ind)
-        return;
+  const unsigned Opcode = getPackOpcode(
+      isPair, ItStart->first->getOperand(0).getImm(), StoreOpcodes);
+  const TargetRegisterClass *TRC =
+      isPair ? &KVX::PairedRegRegClass : &KVX::QuadRegRegClass;
 
-      ++Ind;
-      ++ItCurr;
-    }
-  } else {
-    return;
+  auto LocMII = ItStart;
+  for (auto CurrentMII = ItStart; CurrentMII != ItStart + Count; ++CurrentMII) {
+    if (CurrentMII->second > LocMII->second)
+      LocMII = CurrentMII;
   }
 
-  BuildMI(*(*ItStart)->getParent(), LocInstr, (*ItStart)->getDebugLoc(),
-          TII->get(Opcode))
-      .addImm((*ItStart)->getOperand(0).getImm())
-      .add((*ItStart)->getOperand(1))
-      .addReg(Reg);
+  unsigned Reg = MRI->createVirtualRegister(TRC);
 
+  unsigned SingleRegs[4];
+  auto SeqMI = BuildMI(*ItStart->first->getParent(), LocMII->first,
+                       ItStart->first->getDebugLoc(),
+                       TII->get(TargetOpcode::REG_SEQUENCE), Reg);
+
+  for (unsigned i = 0; i < Count; ++i) {
+    SingleRegs[i] = MRI->createVirtualRegister(&KVX::SingleRegRegClass);
+    SeqMI.addReg(SingleRegs[i]).addImm(i + 1);
+  }
+
+  auto NewSt = BuildMI(*ItStart->first->getParent(), LocMII->first,
+                       ItStart->first->getDebugLoc(), TII->get(Opcode))
+                   .addImm(ItStart->first->getOperand(0).getImm())
+                   .add(ItStart->first->getOperand(1))
+                   .addReg(Reg);
+
+  unsigned Ind = 0;
   while (Count--) {
-    (*ItStart)->eraseFromParent();
+    BuildMI(*NewSt->getParent(), *SeqMI, NewSt->getDebugLoc(),
+            TII->get(TargetOpcode::COPY), SingleRegs[Ind])
+        .add(ItStart->first->getOperand(2));
+
+    ItStart->first->eraseFromParent();
     ++ItStart;
+    ++Ind;
+    LLVM_DEBUG(dbgs() << "removed " << *ItStart->first << "\n");
   }
 }
 
-// FIXME: Test if there are enough physical register to move instructions
-bool
-KVXLoadStorePackingPass::areEnoughRegisters(unsigned ExtraRegistersNeeded) {
-  return ExtraRegistersNeeded < 1;
+static int getOpType(MachineBasicBlock::iterator MBBI) {
+  switch (MBBI->getOpcode()) {
+  default:
+    return 0;
+  case KVX::LDp:
+  case KVX::LDri10:
+  case KVX::LDri37:
+  case KVX::LDri64:
+    return 1;
+  case KVX::SDp:
+  case KVX::SDri10:
+  case KVX::SDri37:
+  case KVX::SDri64:
+    return 2;
+  };
 }
 
-template <typename FuncOpcode, typename FuncReplace>
-bool KVXLoadStorePackingPass::PackBlock(MachineBasicBlock &MBB,
-                                        FuncOpcode isValidOpcode,
-                                        FuncReplace PackAndReplaceInstr,
-                                        unsigned OperandInd,
-                                        unsigned OperandReg) {
-  auto MI = MBB.begin();
-  auto E = MBB.end();
-  int ExtraRegisters = 0;
-  bool addExtraRegisters = false;
-
-  std::vector<MachineBasicBlock::iterator> VInstr;
-  std::unordered_map<unsigned, MachineBasicBlock::iterator> FirstInstr;
-
-  while (MI != E) {
-    auto NMI = std::next(MI);
-
-    if (NMI != E && areEnoughRegisters(ExtraRegisters)) {
-      // FIXME: add support for frame index
-      if (isValidOpcode(MI->getOpcode()) &&
-          MI->getOperand(OperandReg).isReg()) {
-        VInstr.push_back(MI);
-        if (FirstInstr.find(MI->getOperand(OperandReg).getReg()) ==
-            FirstInstr.end())
-          FirstInstr[MI->getOperand(OperandReg).getReg()] = MI;
-
-        if (addExtraRegisters)
-          ++ExtraRegisters;
-      } else if (!VInstr.empty()) {
-        addExtraRegisters = true;
-        ++ExtraRegisters;
-      }
-    } else {
-      if (1 < VInstr.size()) {
-        std::sort(
-            VInstr.begin(), VInstr.end(),
-            [ OperandInd, OperandReg ](MachineBasicBlock::iterator const & a,
-                                       MachineBasicBlock::iterator const & b)
-                                          ->bool {
-              return a->getOperand(OperandReg).getReg() <
-                         b->getOperand(OperandReg).getReg() ||
-                     (a->getOperand(OperandReg).getReg() ==
-                          b->getOperand(OperandReg).getReg() &&
-                      a->getOperand(OperandInd).getImm() <
-                          b->getOperand(OperandInd).getImm());
-            });
-
-        auto It = VInstr.begin();
-        auto ItE = VInstr.end();
-        while (It != ItE) {
-          auto ItStart = It;
-          auto NIt = std::next(It);
-          unsigned Count = 1;
-          while (*NIt != *ItE && Count < 4 &&
-                 (*It)->getOperand(OperandReg).getReg() ==
-                     (*NIt)->getOperand(OperandReg).getReg() &&
-                 (*It)->getOperand(OperandInd).getImm() + 8 ==
-                     (*NIt)->getOperand(OperandInd).getImm()) {
-            It = NIt;
-            ++NIt;
-            ++Count;
-          }
-
-          if (Count > 1 &&
-              FirstInstr.find((*ItStart)->getOperand(OperandReg).getReg()) !=
-                  FirstInstr.end()) {
-            PackAndReplaceInstr(
-                FirstInstr[(*ItStart)->getOperand(OperandReg).getReg()],
-                ItStart, Count == 4 ? Count : 2);
-          }
-
-          ++It;
-        }
-      }
-
-      FirstInstr.clear();
-      VInstr.clear();
-      ExtraRegisters = 0;
-      addExtraRegisters = false;
-    }
-
-    MI = NMI;
-  }
+static int isValidMemoryOp(MachineBasicBlock::iterator MBBI) {
+  const MachineMemOperand &MMO = **(MBBI->memoperands_begin());
+  if (MMO.isVolatile() || MMO.isAtomic())
+    return false;
 
   return true;
+}
+
+bool KVXLoadStorePackingPass::reorderInstr(
+    llvm::DenseMap<MachineOperand, Vec> &Map, unsigned Type,
+    unsigned OffsetInd) {
+  bool Changed = false;
+  for (auto DM : Map) {
+    if (DM.getSecond().size() < 2)
+      continue;
+
+    llvm::sort(DM.getSecond().begin(), DM.getSecond().end(),
+               [OffsetInd](PairM const &a, PairM const &b) -> bool {
+                 return a.first->getOperand(OffsetInd).getImm() <
+                        b.first->getOperand(OffsetInd).getImm();
+               });
+
+    auto It = DM.getSecond().begin();
+    auto ItE = DM.getSecond().end();
+    while (It != ItE) {
+      auto ItStart = It;
+      auto NIt = std::next(It);
+      unsigned Count = 1;
+      unsigned LocC = ItStart->second;
+      auto FirstInstr = *ItStart;
+      while (NIt != ItE && Count < 4 &&
+             (*It).first->getOperand(OffsetInd).getImm() + 8 ==
+                 (*NIt).first->getOperand(OffsetInd).getImm()) {
+        if (LocC > NIt->second) {
+          FirstInstr = *NIt;
+          LocC = NIt->second;
+        }
+        It = NIt;
+        ++NIt;
+        ++Count;
+      }
+
+      if (Count > 1) {
+        if (Type == 1)
+          packAndReplaceLoad(ItStart, Count == 4 ? Count : 2);
+        else if (Type == 2)
+          packAndReplaceStore(ItStart, Count == 4 ? Count : 2);
+
+        Changed = true;
+      }
+
+      ++It;
+    }
+  }
+
+  return Changed;
+}
+
+bool KVXLoadStorePackingPass::packBlock(MachineBasicBlock &MBB) {
+  auto MBBI = MBB.begin();
+  auto E = MBB.end();
+  bool Changed = false;
+
+  llvm::DenseMap<MachineOperand, Vec> LdMap;
+  llvm::DenseMap<MachineOperand, Vec> StMap;
+
+  unsigned MIInd = 0;
+  int const MaxJumps = 4;
+  while (MBBI != E) {
+    int Jumps = MaxJumps;
+
+    for (; MBBI != E; ++MBBI, ++MIInd) {
+      if (MBBI->isDebugInstr())
+        continue;
+
+      if (--Jumps == 0)
+        break;
+
+      auto Type = getOpType(MBBI);
+
+      if (!Type) {
+        // FIXME: hasUnmodeledSideEffects unusable now, should be added here
+        if (MBBI->isCall() || MBBI->isTerminator()) {
+          ++MBBI;
+          ++MIInd;
+          break;
+        }
+
+        continue;
+      }
+
+      if (!isValidMemoryOp(MBBI))
+        continue;
+
+      if (Type == 1) {
+        bool isalias = false;
+        for (auto &v : StMap)
+          for (auto &i : v.second)
+            if (!isalias && MBBI->mayAlias(AA, *(i.first), /*UseTBAA*/ false)) {
+              ++MBBI;
+              ++MIInd;
+              isalias = true;
+            }
+
+        if (isalias)
+          break;
+
+        Jumps = MaxJumps;
+        LdMap[MBBI->getOperand(2)].push_back(std::make_pair(&*MBBI, MIInd));
+      } else if (Type == 2) {
+        bool isalias = false;
+        for (auto &v : StMap)
+          for (auto &i : v.second)
+            if (!isalias && MBBI->mayAlias(AA, *(i.first), /*UseTBAA*/ false)) {
+              ++MBBI;
+              ++MIInd;
+              isalias = true;
+            }
+
+        if (isalias)
+          break;
+
+        Jumps = MaxJumps;
+        StMap[MBBI->getOperand(1)].push_back(std::make_pair(&*MBBI, MIInd));
+      }
+    }
+
+    Changed |= reorderInstr(LdMap, 1, 1);
+    Changed |= reorderInstr(StMap, 2, 0);
+
+    LdMap.clear();
+    StMap.clear();
+  }
+
+  return Changed;
 }
 
 INITIALIZE_PASS(KVXLoadStorePackingPass, KVXLOADSTOREPACKING_NAME,
