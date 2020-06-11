@@ -15001,6 +15001,23 @@ static Value *KVX_emitBinaryBuiltin(CodeGenFunction &CGF,
   return CGF.Builder.CreateCall(F, { Src0, Src1 });
 }
 
+static Value *KVX_emitUnaryRoundingBuiltin(CodeGenFunction &CGF,
+                                           const CallExpr *E,
+                                           unsigned IntrinsicID) {
+  Value *Arg = CGF.EmitScalarExpr(E->getArg(0));
+
+  int Modifier = KVX_getRoundingModifier(CGF.getContext(),
+                                         E->getArg(1)->IgnoreParenImpCasts());
+
+  if (Modifier == -1)
+    CGF.CGM.Error(E->getArg(1)->getBeginLoc(), "invalid rounding modifier");
+
+  Value *RoundingArg = ConstantInt::get(CGF.IntTy, Modifier);
+
+  Value *Callee = CGF.CGM.getIntrinsic(IntrinsicID);
+  return CGF.Builder.CreateCall(Callee, {Arg, RoundingArg});
+}
+
 static Value *KVX_emitBinaryRoundingBuiltin(CodeGenFunction &CGF,
                                             const CallExpr *E,
                                             unsigned IntrinsicID) {
@@ -15409,6 +15426,30 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
 
   case KVX::BI__builtin_kvx_fmm2swq:
     return KVX_emitTernaryRoundingBuiltin(*this, E, Intrinsic::kvx_fmm2swq);
+
+  case KVX::BI__builtin_kvx_fixedw:
+    return KVX_emitUnaryRoundingBuiltin(*this, E, Intrinsic::kvx_fixedw);
+
+  case KVX::BI__builtin_kvx_fixeduw:
+    return KVX_emitUnaryRoundingBuiltin(*this, E, Intrinsic::kvx_fixeduw);
+
+  case KVX::BI__builtin_kvx_fixedd:
+    return KVX_emitUnaryRoundingBuiltin(*this, E, Intrinsic::kvx_fixedd);
+
+  case KVX::BI__builtin_kvx_fixedud:
+    return KVX_emitUnaryRoundingBuiltin(*this, E, Intrinsic::kvx_fixedud);
+
+  case KVX::BI__builtin_kvx_floatw:
+    return KVX_emitUnaryRoundingBuiltin(*this, E, Intrinsic::kvx_floatw);
+
+  case KVX::BI__builtin_kvx_floatuw:
+    return KVX_emitUnaryRoundingBuiltin(*this, E, Intrinsic::kvx_floatuw);
+
+  case KVX::BI__builtin_kvx_floatd:
+    return KVX_emitUnaryRoundingBuiltin(*this, E, Intrinsic::kvx_floatd);
+
+  case KVX::BI__builtin_kvx_floatud:
+    return KVX_emitUnaryRoundingBuiltin(*this, E, Intrinsic::kvx_floatud);
   }
   return nullptr;
 }
