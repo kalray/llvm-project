@@ -39,8 +39,6 @@ private:
 
   unsigned ScratchReg;
 
-  unsigned CSRInstrCount;
-
 public:
   //  KVXMachineFunctionInfo() = default;
 
@@ -71,9 +69,6 @@ public:
 
   unsigned getScratchReg() { return ScratchReg; }
   void setScratchReg(unsigned Reg) { ScratchReg = Reg; }
-
-  unsigned getCSRInstrCount() { return CSRInstrCount; }
-  void setCSRInstrCount(unsigned Count) { CSRInstrCount = Count; }
 };
 
 } // end namespace llvm
