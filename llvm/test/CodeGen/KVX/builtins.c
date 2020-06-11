@@ -256,3 +256,59 @@ long acswapd(int *p, long a, long b) {
   // CHECK-NEXT: ret
   return __builtin_kvx_acswapd(p, a, b);
 }
+
+int fixedw(float x) {
+  // CHECK-LABEL: fixedw:
+  // CHECK-NEXT: fixedw.rn
+  // CHECK-NEXT: ret
+  return __builtin_kvx_fixedw(x, ".rn");
+}
+
+unsigned int fixeduw(float x) {
+  // CHECK-LABEL: fixeduw:
+  // CHECK-NEXT: fixeduw.rz
+  // CHECK-NEXT: ret
+  return __builtin_kvx_fixeduw(x, ".rz");
+}
+
+long fixedd(double x) {
+  // CHECK-LABEL: fixedd:
+  // CHECK-NEXT: fixedd.rn
+  // CHECK-NEXT: ret
+  return __builtin_kvx_fixedd(x, ".rn");
+}
+
+unsigned long fixedud(double x) {
+  // CHECK-LABEL: fixedud:
+  // CHECK-NEXT: fixedud.rz
+  // CHECK-NEXT: ret
+  return __builtin_kvx_fixedud(x, ".rz");
+}
+
+float floatw(int x) {
+  // CHECK-LABEL: floatw:
+  // CHECK-NEXT: floatw.rn
+  // CHECK-NEXT: ret
+  return __builtin_kvx_floatw(x, ".rn");
+}
+
+float floatuw(unsigned int x) {
+  // CHECK-LABEL: floatuw:
+  // CHECK-NEXT: floatuw.rz
+  // CHECK-NEXT: ret
+  return __builtin_kvx_floatuw(x, ".rz");
+}
+
+double floatd(long x) {
+  // CHECK-LABEL: floatd:
+  // CHECK-NEXT: floatd.rn
+  // CHECK-NEXT: ret
+  return __builtin_kvx_floatd(x, ".rn");
+}
+
+double floatud(unsigned long x) {
+  // CHECK-LABEL: floatud:
+  // CHECK-NEXT: floatud.rz
+  // CHECK-NEXT: ret
+  return __builtin_kvx_floatud(x, ".rz");
+}
