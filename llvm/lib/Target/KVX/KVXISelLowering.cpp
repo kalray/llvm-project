@@ -677,9 +677,6 @@ SDValue KVXTargetLowering::LowerCall(CallLoweringInfo &CLI,
   // Get the size of the outgoing arguments stack space requirement.
   unsigned ArgsSize = CCInfo.getNextStackOffset();
 
-  // Keep stack frames 8-byte aligned.
-  ArgsSize = (ArgsSize + 7) & ~7;
-
   if (!IsTailCall)
     Chain = DAG.getCALLSEQ_START(Chain, ArgsSize, 0, DL);
 
