@@ -152,3 +152,12 @@ def: Pat<(int_kvx_clswp v2i32:$r), (CLSWP SingleReg:$r)>;
 def: Pat<(int_kvx_cbsd i64:$r), (CBSD SingleReg:$r)>;
 def: Pat<(int_kvx_cbsw i32:$r), (CBSW SingleReg:$r)>;
 def: Pat<(int_kvx_cbswp v2i32:$r), (CBSWP SingleReg:$r)>;
+
+def: Pat<(int_kvx_fixedw f32:$f, i32:$rounding), (FIXEDW SingleReg:$f, DefaultShift, RoundingMod:$rounding, silent_)>;
+def: Pat<(int_kvx_fixeduw f32:$f, i32:$rounding), (FIXEDUW SingleReg:$f, DefaultShift, RoundingMod:$rounding, silent_)>;
+def: Pat<(int_kvx_fixedd f64:$f, i32:$rounding), (FIXEDD SingleReg:$f, DefaultShift, RoundingMod:$rounding, silent_)>;
+def: Pat<(int_kvx_fixedud f64:$f, i32:$rounding), (FIXEDUD SingleReg:$f, DefaultShift, RoundingMod:$rounding, silent_)>;
+def: Pat<(int_kvx_floatw i32:$i, i32:$rounding), (FLOATW SingleReg:$i, DefaultShift, RoundingMod:$rounding, silent_)>;
+def: Pat<(int_kvx_floatuw i32:$i, i32:$rounding), (FLOATUW SingleReg:$i, DefaultShift, RoundingMod:$rounding, silent_)>;
+def: Pat<(int_kvx_floatd i64:$i, i32:$rounding), (FLOATD SingleReg:$i, DefaultShift, RoundingMod:$rounding, silent_)>;
+def: Pat<(int_kvx_floatud i64:$i, i32:$rounding), (FLOATUD SingleReg:$i, DefaultShift, RoundingMod:$rounding, silent_)>;
