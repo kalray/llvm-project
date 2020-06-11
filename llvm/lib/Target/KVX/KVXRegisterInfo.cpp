@@ -100,23 +100,6 @@ void KVXRegisterInfo::eliminateFrameIndex(MachineBasicBlock::iterator II,
       llvm_unreachable("could not eliminate frame index");
     }
   }
-  // if the instruction is used to save $ra on the stack
-  // cfi offset instruction is added
-  if (MI.getFlags() & (1 << 14)) {
-    MachineBasicBlock &MBB = *MI.getParent();
-    const KVXSubtarget &Subtarget = MF.getSubtarget<KVXSubtarget>();
-    const KVXRegisterInfo &RegInfo = *Subtarget.getRegisterInfo();
-    const KVXInstrInfo &TII = *Subtarget.getInstrInfo();
-
-    MachineFrameInfo &MFI = MF.getFrameInfo();
-    int64_t StackSize = (int64_t)MFI.getStackSize();
-
-    unsigned CFIOffset = MF.addFrameInst(MCCFIInstruction::createOffset(
-        nullptr, RegInfo.getDwarfRegNum(KVX::RA, true), Offset - StackSize));
-    BuildMI(MBB, MI, DL, TII.get(TargetOpcode::CFI_INSTRUCTION))
-        .addCFIIndex(CFIOffset)
-        .setMIFlags(MachineInstr::FrameSetup);
-  }
 }
 
 llvm::Register
