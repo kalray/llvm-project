@@ -254,7 +254,11 @@ defm : Select64PAT<(f32 f32:$truev), (f32 f32:$falsev),(f32 Binary32:$truev), (f
 defm : Select64PAT<(f64 f64:$truev), (f64 f64:$falsev),(f64 Binary64:$truev), (f64 Binary64:$falsev)>;
 
 // FDOT2 -> TODO
-// FFMA  -> TODO
+// FFMA
+def : Pat<(f32 (fma f32:$rx, f32:$ry, f32:$rz)), (FFMAWrr SingleReg:$rz, SingleReg:$rx, SingleReg:$ry, rounding_, silent_)>;
+def : Pat<(f32 (fma f32:$rx, f32:$ry, Binary32:$rz)), (FFMAWri SingleReg:$rx, SingleReg:$ry, Binary32:$rz)>;
+def : Pat<(f64 (fma f64:$rx, f64:$ry, f64:$rz)), (FFMADrr SingleReg:$rz, SingleReg:$rx, SingleReg:$ry, rounding_, silent_)>;
+def : Pat<(f64 (fma f64:$rx, f64:$ry, Binary64:$rz)), (FFMADri SingleReg:$rx, SingleReg:$ry, Binary64:$rz)>;
 // FFMS  -> TODO
 // FINV  -> TODO
 // FISR  -> TODO
