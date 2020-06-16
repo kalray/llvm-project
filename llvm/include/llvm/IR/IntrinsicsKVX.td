@@ -107,4 +107,7 @@ def int_kvx_floatuw: Intrinsic<[llvm_float_ty], [llvm_i32_ty, llvm_i32_ty], [Int
 def int_kvx_floatd: Intrinsic<[llvm_double_ty], [llvm_i64_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_floatud: Intrinsic<[llvm_double_ty], [llvm_i64_ty, llvm_i32_ty], [IntrNoMem]>;
 
+def int_kvx_stsuw: Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_stsud: Intrinsic<[llvm_i64_ty], [llvm_i64_ty, llvm_i64_ty], [IntrNoMem]>;
+
 }  // TargetPrefix = "kvx"
