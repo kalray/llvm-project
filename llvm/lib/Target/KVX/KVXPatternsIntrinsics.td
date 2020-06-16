@@ -161,3 +161,6 @@ def: Pat<(int_kvx_floatw i32:$i, i32:$rounding), (FLOATW SingleReg:$i, DefaultSh
 def: Pat<(int_kvx_floatuw i32:$i, i32:$rounding), (FLOATUW SingleReg:$i, DefaultShift, RoundingMod:$rounding, silent_)>;
 def: Pat<(int_kvx_floatd i64:$i, i32:$rounding), (FLOATD SingleReg:$i, DefaultShift, RoundingMod:$rounding, silent_)>;
 def: Pat<(int_kvx_floatud i64:$i, i32:$rounding), (FLOATUD SingleReg:$i, DefaultShift, RoundingMod:$rounding, silent_)>;
+
+def: Pat<(int_kvx_stsuw i32:$x, i32:$y), (STSUW SingleReg:$x, SingleReg:$y)>;
+def: Pat<(int_kvx_stsud i64:$x, i64:$y), (STSUD SingleReg:$x, SingleReg:$y)>;

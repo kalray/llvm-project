@@ -15319,6 +15319,12 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_cbswp:
     return KVX_emitUnaryBuiltin(*this, E, Intrinsic::kvx_cbswp);
 
+  case KVX::BI__builtin_kvx_stsud:
+    return KVX_emitBinaryBuiltin(*this, E, Intrinsic::kvx_stsud);
+
+  case KVX::BI__builtin_kvx_stsuw:
+    return KVX_emitBinaryBuiltin(*this, E, Intrinsic::kvx_stsuw);
+
   case KVX::BI__builtin_kvx_fmaxwp:
     return KVX_emitBinaryBuiltin(*this, E, Intrinsic::kvx_fmaxwp);
 
