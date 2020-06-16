@@ -312,3 +312,17 @@ double floatud(unsigned long x) {
   // CHECK-NEXT: ret
   return __builtin_kvx_floatud(x, ".rz");
 }
+
+unsigned int stsuw(unsigned int x, unsigned int y) {
+  // CHECK-LABEL: stsuw:
+  // CHECK-NEXT: stsuw $r0 = $r0, $r1
+  // CHECK-NEXT: ret
+  return __builtin_kvx_stsuw(x, y);
+}
+
+unsigned long stsud(unsigned long x, unsigned long y) {
+  // CHECK-LABEL: stsud:
+  // CHECK-NEXT: stsud $r0 = $r0, $r1
+  // CHECK-NEXT: ret
+  return __builtin_kvx_stsud(x, y);
+}
