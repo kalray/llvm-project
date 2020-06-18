@@ -136,21 +136,27 @@ private:
   MachineBasicBlock *ExitMBB;
 
   bool ParseLoop(MachineLoop *L, MachineOperand &EndVal, unsigned &Cond,
-                 MachineOperand &StartVal, int64_t &Bump);
+                 MachineOperand &StartVal, MachineOperand &IVBump);
 
   bool IsEligibleForHardwareLoop(MachineLoop *L);
 
   bool BackTraceRegValue(MachineLoop *L, unsigned RegToBacktrace,
-                         MachineOperand &CmpVal, int64_t &Bump,
+                         MachineOperand &CmpVal, MachineOperand &IVBump,
                          bool &IsModified);
 
   bool GetLOOPDOArgs(MachineLoop *L, MachineOperand &StartVal,
-                     MachineOperand &EndVal, int64_t &Bump);
+                     MachineOperand &EndVal, MachineOperand &IVBump);
 
   bool ConvertToHardwareLoop(MachineFunction &MF, MachineLoop *L,
                              unsigned Level);
 
   bool RemoveBranchingInstr(MachineLoop *L);
+
+  int64_t ComputeStepsInteger(unsigned Cond, MachineOperand &StartVal,
+                              MachineOperand &EndVal, MachineOperand &Bump);
+  int64_t ComputeStepsFP(unsigned Cond, MachineOperand &StartVal,
+                         MachineOperand &EndVal, MachineOperand &Bump);
+  bool GetRoundValue(MachineOperand Op, unsigned &Val);
 
   StringRef getPassName() const override { return "KVX Hardware Loops"; }
 };

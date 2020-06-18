@@ -2977,10 +2977,12 @@ defm FMULCWC : MC_2A<"fmulcwc">;
 
 defm FMULCWDC : MC_2C<"fmulcwdc">;
 
+let isAdd = 1 in
 defm FADDD : MC_29<"faddd">;
 
 defm FADDWP : MC_2A<"faddwp">;
 
+let isAdd = 1 in
 defm FADDHQ : MC_2B<"faddhq">;
 
 def FADDDP : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE
@@ -3053,6 +3055,7 @@ defm FFMSWDP : MC_2F<"ffmswdp">;
 
 defm FFMSHWQ : MC_30<"ffmshwq">;
 
+let isAdd = 1 in
 defm FADDW : MC_31<"faddw">;
 
 defm FSBFW : MC_31<"fsbfw">;
