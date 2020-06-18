@@ -56,7 +56,6 @@ void reg_imm_nonzero_negative_bump(int *x, int start) {
   for (int i = start; i >= 3; --i)
     x[i] = i;
   // CHECK: reg_imm_nonzero_negative_bump
-  // CHECK: make
   // CHECK: sbfd
   // CHECK: loopdo
   // CHECK: ret
