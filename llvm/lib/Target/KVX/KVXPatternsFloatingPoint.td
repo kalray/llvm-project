@@ -50,6 +50,8 @@ defm : LoadPat<loadv2f64, v2f64, 4, LQp, LQri10, LQrr, variant_>;
 // 16 bits
 def : BITCAST<f16, i16, SingleReg>;
 def : BITCAST<i16, f16, SingleReg>;
+def : BITCAST<f16, v2i8, SingleReg>;
+def : BITCAST<v2i8, f16, SingleReg>;
 
 // 32 bits
 def : BITCAST<f32, i32, SingleReg>;
@@ -60,6 +62,8 @@ def : BITCAST<v2f16, i32, SingleReg>;
 def : BITCAST<i32, v2f16, SingleReg>;
 def : BITCAST<v2f16, v2i16, SingleReg>;
 def : BITCAST<v2i16, v2f16, SingleReg>;
+def : BITCAST<f32, v4i8, SingleReg>;
+def : BITCAST<v4i8, f32, SingleReg>;
 
 // 64 bits
 def : BITCAST<f64, i64, SingleReg>;
