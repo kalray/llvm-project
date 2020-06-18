@@ -1155,6 +1155,16 @@ SDValue KVXTargetLowering::lowerBlockAddress(SDValue Op,
 #define GET_REGISTER_MATCHER
 #include "KVXGenAsmMatcher.inc"
 
+Register KVXTargetLowering::getRegisterByName(const char *RegName, LLT Ty,
+                                              const MachineFunction &MF) const {
+  unsigned RegNo = MatchRegisterName(RegName);
+  if (RegNo == 0) {
+    static StringRef Dollar = "$";
+    RegNo = MatchRegisterName(Dollar.str() + StringRef(RegName).str());
+  }
+  return RegNo;
+}
+
 std::pair<unsigned, const TargetRegisterClass *>
 KVXTargetLowering::getRegForInlineAsmConstraint(const TargetRegisterInfo *TRI,
                                                 StringRef Constraint,
