@@ -91,6 +91,10 @@ def Call : SDNode<"KVXISD::CALL", SDT_KVXCall, [SDNPHasChain, SDNPOptInGlue, SDN
 
 def : BITCAST<i64, v8i8, SingleReg>;
 def : BITCAST<v8i8, i64, SingleReg>;
+def : BITCAST<i32, v4i8, SingleReg>;
+def : BITCAST<v4i8, i32, SingleReg>;
+def : BITCAST<v2i16, v4i8, SingleReg>;
+def : BITCAST<v4i8, v2i16, SingleReg>;
 
 let isCall = 1, isBarrier = 1, isBranch = 1, isTerminator = 1, isReturn = 1, Uses = [R12] in
 def TAIL : PCREL27_SIMPLE
@@ -224,6 +228,8 @@ def loadi8 : PatFrag<(ops node:$ptr), (i8 (load node:$ptr))>;
 def loadi16 : PatFrag<(ops node:$ptr), (i16 (load node:$ptr))>;
 def loadi32 : PatFrag<(ops node:$ptr), (i32 (load node:$ptr))>;
 def loadi64 : PatFrag<(ops node:$ptr), (i64 (load node:$ptr))>;
+def loadv2i8 : PatFrag<(ops node:$ptr), (v2i8 (load node:$ptr))>;
+def loadv4i8 : PatFrag<(ops node:$ptr), (v4i8 (load node:$ptr))>;
 def loadv8i8 : PatFrag<(ops node:$ptr), (v8i8 (load node:$ptr))>;
 def loadv2i32 : PatFrag<(ops node:$ptr), (v2i32 (load node:$ptr))>;
 def loadv4i16 : PatFrag<(ops node:$ptr), (v4i16 (load node:$ptr))>;
@@ -311,12 +317,14 @@ defm : LoadPat<sextloadi16, i64, 1, LHSp, LHSri10, LHSrr, variant_>;
 defm : LoadPat<zextloadi16, i64, 1, LHZp, LHZri10, LHZrr, variant_>;
 defm : LoadPat<extloadi16, i64, 1, LHZp, LHZri10, LHZrr, variant_>;
 defm : LoadPat<loadi16, i16, 1, LHSp, LHSri10, LHSrr, variant_>;
+defm : LoadPat<loadv2i8, v2i8, 1, LHZp, LHZri10, LHZrr, variant_>;
 
 defm : LoadPat<sextloadi32, i64, 2, LWSp, LWSri10, LWSrr, variant_>;
 defm : LoadPat<zextloadi32, i64, 2, LWZp, LWZri10, LWZrr, variant_>;
 defm : LoadPat<extloadi32, i64, 2, LWZp, LWZri10, LWZrr, variant_>;
 defm : LoadPat<loadi32, i32, 2, LWZp, LWZri10, LWZrr, variant_>;
 defm : LoadPat<loadv2i16, v2i16, 2, LWZp, LWZri10, LWZrr, variant_>;
+defm : LoadPat<loadv4i8, v4i8, 2, LWZp, LWZri10, LWZrr, variant_>;
 
 defm : LoadPat<loadi64, i64, 3, LDp, LDri10, LDrr, variant_>;
 defm : LoadPat<loadv8i8, v8i8, 3, LDp, LDri10, LDrr, variant_>;
@@ -420,10 +428,12 @@ defm : SimpleStorePat<truncstorei8, i64, SingleReg, SBp, SBri10, SBrr>;
 defm : StorePat<store, i16, SingleReg, 1, SHp, SHri10, SHrr>;
 defm : StorePat<truncstorei16, i32, SingleReg, 1, SHp, SHri10, SHrr>;
 defm : StorePat<truncstorei16, i64, SingleReg, 1, SHp, SHri10, SHrr>;
+defm : StorePat<store, v2i8, SingleReg, 1 , SHp, SHri10, SHrr>;
 
 defm : StorePat<store, i32, SingleReg, 2, SWp, SWri10, SWrr>;
 defm : StorePat<truncstorei32, i64, SingleReg, 2, SWp, SWri10, SWrr>;
 defm : StorePat<store, v2i16, SingleReg, 2, SWp, SWri10, SWrr>;
+defm : StorePat<store, v4i8, SingleReg, 2, SWp, SWri10, SWrr>;
 
 defm : StorePat<store, i64, SingleReg, 3, SDp, SDri10, SDrr>;
 defm : StorePat<store, v8i8, SingleReg, 3, SDp, SDri10, SDrr>;
@@ -631,6 +641,19 @@ def : Pat<(extractelt (v4i32 PairedReg:$v), 1), (SRADri (i32 (EXTRACT_SUBREG $v,
 def : Pat<(extractelt (v4i32 PairedReg:$v), 2), (i32 (EXTRACT_SUBREG $v, 2))>;
 def : Pat<(extractelt (v4i32 PairedReg:$v), 3), (SRADri (i32 (EXTRACT_SUBREG $v, 2)), (i64 32))>;
 
+// v2i8
+def : Pat<(i32 (vector_extract (v2i8 SingleReg:$v), 0)), (EXTFZ SingleReg:$v, 7, 0)>;
+def : Pat<(i32 (vector_extract (v2i8 SingleReg:$v), 1)), (EXTFZ SingleReg:$v, 15, 8)>;
+
+// v4i8
+def : Pat<(i32 (vector_extract (v4i8 SingleReg:$v), 0)), (EXTFZ SingleReg:$v, 7, 0)>;
+def : Pat<(i32 (vector_extract (v4i8 SingleReg:$v), 1)), (EXTFZ SingleReg:$v, 15, 8)>;
+def : Pat<(i32 (vector_extract (v4i8 SingleReg:$v), 2)), (EXTFZ SingleReg:$v, 23, 16)>;
+def : Pat<(i32 (vector_extract (v4i8 SingleReg:$v), 3)), (EXTFZ SingleReg:$v, 31, 24)>;
+
+def : Pat<(v2i8 (extract_subvector (v4i8 SingleReg:$v), (i64 0))),(v2i8 (EXTFZ SingleReg:$v, 15,0))>;
+def : Pat<(v2i8 (extract_subvector (v4i8 SingleReg:$v), (i64 2))),(v2i8 (EXTFZ SingleReg:$v, 31,16))>;
+
 // v8i8
 def : Pat<(i32 (vector_extract (v8i8 SingleReg:$v), 0)), (EXTFZ SingleReg:$v, 7, 0)>;
 def : Pat<(i32 (vector_extract (v8i8 SingleReg:$v), 1)), (EXTFZ SingleReg:$v, 15, 8)>;
@@ -640,6 +663,14 @@ def : Pat<(i32 (vector_extract (v8i8 SingleReg:$v), 4)), (EXTFZ SingleReg:$v, 39
 def : Pat<(i32 (vector_extract (v8i8 SingleReg:$v), 5)), (EXTFZ SingleReg:$v, 47, 40)>;
 def : Pat<(i32 (vector_extract (v8i8 SingleReg:$v), 6)), (EXTFZ SingleReg:$v, 55, 48)>;
 def : Pat<(i32 (vector_extract (v8i8 SingleReg:$v), 7)), (SRLDri SingleReg:$v, (i64 56))>;
+
+def : Pat<(v2i8 (extract_subvector (v8i8 SingleReg:$v), (i64 0))),(v2i8 (EXTFZ SingleReg:$v, 15,0))>;
+def : Pat<(v2i8 (extract_subvector (v8i8 SingleReg:$v), (i64 2))),(v2i8 (EXTFZ SingleReg:$v, 31,16))>;
+def : Pat<(v2i8 (extract_subvector (v8i8 SingleReg:$v), (i64 4))),(v2i8 (EXTFZ SingleReg:$v, 47,32))>;
+def : Pat<(v2i8 (extract_subvector (v8i8 SingleReg:$v), (i64 6))),(v2i8 (EXTFZ SingleReg:$v, 63,48))>;
+
+def : Pat<(v4i8 (extract_subvector (v8i8 SingleReg:$v), (i64 0))),(v4i8 (EXTFZ SingleReg:$v, 31,0))>;
+def : Pat<(v4i8 (extract_subvector (v8i8 SingleReg:$v), (i64 4))),(v4i8 (EXTFZ SingleReg:$v, 63,32))>;
 
 //===----------------------------------------------------------------------===//
 //  Synthetic Instructions - Patterns
