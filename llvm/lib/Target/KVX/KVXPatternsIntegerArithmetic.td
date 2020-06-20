@@ -462,14 +462,28 @@ def : Pat<(umax i64:$v1, Signed37:$v2), (MAXUDri37 SingleReg:$v1, Signed37:$v2)>
 def : Pat<(umax i64:$v1, Wrapped64:$v2), (MAXUDri64 SingleReg:$v1, Wrapped64:$v2)>;
 
 // MAXWP
+def : Pat<(smax v2i32:$v1, v2i32:$v2), (MAXWPrr SingleReg:$v1, SingleReg:$v2)>;
+
 // MAXUWP
+def : Pat<(umax v2i32:$v1, v2i32:$v2), (MAXUWPrr SingleReg:$v1, SingleReg:$v2)>;
+
 // MINWP
+def : Pat<(smin v2i32:$v1, v2i32:$v2), (MINWPrr SingleReg:$v1, SingleReg:$v2)>;
+
 // MINUWP
+def : Pat<(umin v2i32:$v1, v2i32:$v2), (MINUWPrr SingleReg:$v1, SingleReg:$v2)>;
+
 // MAXHQ
+def : Pat<(smax v4i16:$v1, v4i16:$v2), (MAXHQrr SingleReg:$v1, SingleReg:$v2)>;
+
 // MINHQ
+def : Pat<(smin v4i16:$v1, v4i16:$v2), (MINHQrr SingleReg:$v1, SingleReg:$v2)>;
+
 // MAXUHQ
+def : Pat<(umax v4i16:$v1, v4i16:$v2), (MAXUHQrr SingleReg:$v1, SingleReg:$v2)>;
+
 // MINUHQ
-// Implemented in KVXISelLowering
+def : Pat<(umin v4i16:$v1, v4i16:$v2), (MINUHQrr SingleReg:$v1, SingleReg:$v2)>;
 
 //===----------------------------------------------------------------------===//
 //  MAU Instructions - Patterns

@@ -126,19 +126,8 @@ private:
   SDValue lowerBR_CC(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerJumpTable(SDValue Op, SelectionDAG &DAG) const;
 
-  bool canLowerToMINMAXWP(SDValue Op) const;
-  SDValue lowerMINMAXWP(SDValue Op, SelectionDAG &DAG) const;
-  bool canLowerToABSWP(SDValue Op) const;
-  SDValue lowerABSWP(SDValue Op, SelectionDAG &DAG) const;
-
   bool canLowerShiftVectorial(SDValue Op) const;
 
-  bool canLowerToMINMAXHQ(SDValue Op) const;
-  bool canLowerToMINMAXUHQ(SDValue Op) const;
-  bool canLowerToABSHQ(SDValue Op) const;
-  SDValue lowerMINMAXHQ(SDValue Op, SelectionDAG &DAG) const;
-  SDValue lowerMINMAXUHQ(SDValue Op, SelectionDAG &DAG) const;
-  SDValue lowerABSHQ(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerIntToFP(SDValue Op, SelectionDAG &DAG) const;
 
   bool IsEligibleForTailCallOptimization(
