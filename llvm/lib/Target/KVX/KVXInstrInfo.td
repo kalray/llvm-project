@@ -2400,7 +2400,7 @@ def CTZD : REGISTERW_REGISTERZ_SIMPLE
 def CLZWP : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "clzwp $a1 = $a2",
-   [/* no straightforward pattern */],
+   [(set v2i32:$a1, (ctlz v2i32:$a2))],
    ALU_LITE>;
 
 def CLSWP : REGISTERW_REGISTERZ_SIMPLE
@@ -2418,7 +2418,7 @@ def CBSWP : REGISTERW_REGISTERZ_SIMPLE
 def CTZWP : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "ctzwp $a1 = $a2",
-   [/* no straightforward pattern */],
+   [(set v2i32:$a1, (cttz v2i32:$a2))],
    ALU_LITE>;
 
 def SXLHWP : REGISTERW_REGISTERZ_SIMPLE

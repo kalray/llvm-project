@@ -54,9 +54,6 @@
 // COMPNWP
 // COMPUWD
 // COMPWD
-// CTZD
-// CTZW
-// CTZWP
 // EXTFS
 // EXTFZ
 // INSF
