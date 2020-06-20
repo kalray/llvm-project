@@ -213,6 +213,7 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::SCALAR_TO_VECTOR, VT, Expand);
   }
   setOperationAction(ISD::FMUL, MVT::v2f64, Expand);
+  setOperationAction(ISD::FMA, MVT::v2f64, Expand);
 
   setOperationAction(ISD::AND, MVT::v2i64, Expand);
   setOperationAction(ISD::ADD, MVT::v2i64, Expand);
