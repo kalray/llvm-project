@@ -326,3 +326,17 @@ unsigned long stsud(unsigned long x, unsigned long y) {
   // CHECK-NEXT: ret
   return __builtin_kvx_stsud(x, y);
 }
+
+void dinval(void) {
+  // CHECK-LABEL: dinval:
+  // CHECK-NEXT: dinval
+  // CHECK-NEXT: ret
+  __builtin_kvx_dinval();
+}
+
+void fence(void) {
+  // CHECK-LABEL: fence:
+  // CHECK-NEXT: fence
+  // CHECK-NEXT: ret
+  __builtin_kvx_fence();
+}

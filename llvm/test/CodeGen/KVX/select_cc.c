@@ -1,5 +1,15 @@
 // RUN: clang -target kvx-cos -O3 -S %s -o - | FileCheck %s
 
+int f(int a) {
+  int r = a > 0 ? 5 : 7;
+  return r;
+  // CHECK: f
+  // CHECK: sxwd
+  // CHECK: cmoved.wlez
+  // CHECK-NOT: copyd
+  // CHECK: ret
+}
+
 int f_select_cc_i32(int c, int c2, int a, int b) {
   return c > c2 ? a : b;
   // CHECK: f_select_cc_i32
