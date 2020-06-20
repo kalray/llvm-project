@@ -68,6 +68,9 @@ public:
                              Action::OffloadKind DeviceOffloadKind) const
       override;
 
+  bool useIntegratedAs() const override { return false; }
+  bool isCrossCompiling() const override { return true; }
+  bool SupportsProfiling() const override { return false; }
   unsigned GetDefaultDwarfVersion() const override { return 2; }
 
 protected:
