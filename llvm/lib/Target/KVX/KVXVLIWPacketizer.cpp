@@ -108,10 +108,10 @@ bool KVXPacketizerList::usesCarry(unsigned Opcode) {
   switch (Opcode) {
   default:
     return false;
-  case KVX::ADDCD:
-  case KVX::ADDCID:
-  case KVX::SBFCD:
-  case KVX::SBFCID:
+  case KVX::ADDDC:
+  case KVX::ADDDCI:
+  case KVX::SBFDC:
+  case KVX::SBFDCI:
     return true;
   }
 }
@@ -231,9 +231,9 @@ bool KVXPacketizerList::useFloatingPointIEEE754(unsigned Opcode) {
   case KVX::FLOATUWP:
   case KVX::FLOATW:
   case KVX::FLOATWP:
-  case KVX::FMM2AWQ:
-  case KVX::FMM2SWQ:
-  case KVX::FMM2WQ:
+  case KVX::FMMA212W:
+  case KVX::FMMS212W:
+  case KVX::FMM212W:
   case KVX::FMULCWCri:
   case KVX::FMULCWCrr:
   case KVX::FMULCWDCri:
