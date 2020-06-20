@@ -18,7 +18,7 @@
 // This file was automatically generated,
 //   *DO NOT EDIT*,
 //   please contact code owner.
-// Last generated: 2020-04-04 01:14:56.318753.
+// Last generated: 2020-06-20 21:47:17.941624.
 
 include "KVXOperandInfo.td"
 include "KVXInstrFormats.td"
@@ -2047,30 +2047,30 @@ defm SBFX8UWD : MC_13<"sbfx8uwd">;
 defm SBFX16UWD : MC_13<"sbfx16uwd">;
 
 let Defs = [CS] in
-def ADDCD : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+def ADDDC : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
-   "addcd $a1 = $a2, $a3",
+   "addd.c $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    ALU_FULL>;
 
 let Defs = [CS] in
-def SBFCD : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+def SBFDC : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
-   "sbfcd $a1 = $a2, $a3",
+   "sbfd.c $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    ALU_FULL>;
 
 let Defs = [CS] in
-def ADDCID : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+def ADDDCI : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
-   "addcid $a1 = $a2, $a3",
+   "addd.ci $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    ALU_FULL>;
 
 let Defs = [CS] in
-def SBFCID : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+def SBFDCI : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
-   "sbfcid $a1 = $a2, $a3",
+   "sbfd.ci $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    ALU_FULL>;
 
@@ -2884,9 +2884,9 @@ def MADDSUWDP : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
    MAU_AUXR>;
 
 let Constraints = "$a1 = $a1o" in
-def MM2AWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def MMA212W : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
-   "mm2awq $a1 = $a2, $a3",
+   "mma212w $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    MAU_AUXR>;
 
@@ -2912,9 +2912,9 @@ def MSBFSUWDP : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
    MAU_AUXR>;
 
 let Constraints = "$a1 = $a1o" in
-def MM2SWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def MMS212W : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
-   "mm2swq $a1 = $a2, $a3",
+   "mms212w $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    MAU_AUXR>;
 
@@ -2936,9 +2936,9 @@ def MULSUWDP : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
    [/* no straightforward pattern */],
    MAU>;
 
-def MM2WQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def MM212W : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
-   "mm2wq $a1 = $a2, $a3",
+   "mm212w $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    MAU>;
 
@@ -3081,22 +3081,22 @@ def FDOT2WDP : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE
    [/* no straightforward pattern */]>;
 
 let Constraints = "$a3 = $a3o" in
-def FMM2AWQ : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def FMMA212W : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE_BINARY32
   <(outs PairedReg:$a3o), (ins PairedReg:$a3, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
-   "fmm2awq$a1$a2 $a3 = $a4, $a5",
+   "fmma212w$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */],
    MAU_AUXR>;
 
 let Constraints = "$a3 = $a3o" in
-def FMM2SWQ : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def FMMS212W : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE_BINARY32
   <(outs PairedReg:$a3o), (ins PairedReg:$a3, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
-   "fmm2swq$a1$a2 $a3 = $a4, $a5",
+   "fmms212w$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */],
    MAU_AUXR>;
 
-def FMM2WQ : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def FMM212W : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE_BINARY32
   <(outs PairedReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
-   "fmm2wq$a1$a2 $a3 = $a4, $a5",
+   "fmm212w$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */],
    MAU>;
 
@@ -3118,129 +3118,105 @@ defm ALIGNO : MC_33<"aligno">;
 defm ALIGNV : MC_34<"alignv">;
 
 let Defs = [CS] in
-def MT4X4D : REGISTERAQ_REGISTERBQ_SIMPLE
+def MT44D : REGISTERAQ_REGISTERBQ_SIMPLE
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2),
-   "mt4x4d $a1 = $a2",
+   "mt44d $a1 = $a2",
    [/* no straightforward pattern */]>;
 
 let Defs = [CS] in
-def MM4ABW : REGISTERAP_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
+def MMA484BW : REGISTERAP_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
   <(outs WideReg:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
-   "mm4abw $a1 = $a2, $a3, $a4",
+   "mma484bw $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */]>;
 
 let Defs = [CS] in
-def MM4AUBW : REGISTERAP_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
+def MMA484UBW : REGISTERAP_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
   <(outs WideReg:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
-   "mm4aubw $a1 = $a2, $a3, $a4",
+   "mma484ubw $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */]>;
 
 let Defs = [CS] in
-def MM4ASUBW : REGISTERAP_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
+def MMA484SUBW : REGISTERAP_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
   <(outs WideReg:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
-   "mm4asubw $a1 = $a2, $a3, $a4",
+   "mma484subw $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */]>;
 
 let Defs = [CS] in
-def MM4AUSBW : REGISTERAP_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
+def MMA484USBW : REGISTERAP_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
   <(outs WideReg:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
-   "mm4ausbw $a1 = $a2, $a3, $a4",
+   "mma484usbw $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */]>;
 
 let Defs = [CS] in
-def MM4AHBD0 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
+def MMA444HBD0 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
-   "mm4ahbd0 $a1 = $a2, $a3, $a4",
+   "mma444hbd0 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */]>;
 
 let Defs = [CS] in
-def MM4AUHBD0 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
+def MMA444UHBD0 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
-   "mm4auhbd0 $a1 = $a2, $a3, $a4",
+   "mma444uhbd0 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */]>;
 
 let Defs = [CS] in
-def MM4ASUHBD0 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
+def MMA444SUHBD0 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
-   "mm4asuhbd0 $a1 = $a2, $a3, $a4",
+   "mma444suhbd0 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */]>;
 
 let Defs = [CS] in
-def MM4AUSHBD0 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
+def MMA444USHBD0 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
-   "mm4aushbd0 $a1 = $a2, $a3, $a4",
+   "mma444ushbd0 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */]>;
 
 let Defs = [CS] in
-def MM4AHBD1 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
+def MMA444HBD1 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
-   "mm4ahbd1 $a1 = $a2, $a3, $a4",
+   "mma444hbd1 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */]>;
 
 let Defs = [CS] in
-def MM4AUHBD1 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
+def MMA444UHBD1 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
-   "mm4auhbd1 $a1 = $a2, $a3, $a4",
+   "mma444uhbd1 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */]>;
 
 let Defs = [CS] in
-def MM4ASUHBD1 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
+def MMA444SUHBD1 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
-   "mm4asuhbd1 $a1 = $a2, $a3, $a4",
+   "mma444suhbd1 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */]>;
 
 let Defs = [CS] in
-def MM4AUSHBD1 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
+def MMA444USHBD1 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
-   "mm4aushbd1 $a1 = $a2, $a3, $a4",
+   "mma444ushbd1 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */]>;
 
 let Defs = [CS] in
-def MM4AHD : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
+def MMA444HD : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
-   "mm4ahd $a1 = $a2, $a3, $a4",
+   "mma444hd $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */]>;
 
 let Defs = [CS] in
-def MM4AUHD : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
+def MMA444UHD : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
-   "mm4auhd $a1 = $a2, $a3, $a4",
+   "mma444uhd $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */]>;
 
 let Defs = [CS] in
-def MM4ASUHD : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
+def MMA444SUHD : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
-   "mm4asuhd $a1 = $a2, $a3, $a4",
+   "mma444suhd $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */]>;
 
 let Defs = [CS] in
-def MM4AUSHD : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
+def MMA444USHD : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
-   "mm4aushd $a1 = $a2, $a3, $a4",
-   [/* no straightforward pattern */]>;
-
-let Defs = [CS] in
-def FMM4AHW0 : REGISTERA0_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
-  <(outs BlockReg0M4:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
-   "fmm4ahw0 $a1 = $a2, $a3, $a4",
-   [/* no straightforward pattern */]>;
-
-let Defs = [CS] in
-def FMM4AHW1 : REGISTERA1_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
-  <(outs BlockReg1M4:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
-   "fmm4ahw1 $a1 = $a2, $a3, $a4",
-   [/* no straightforward pattern */]>;
-
-let Defs = [CS] in
-def FMM4AHW2 : REGISTERA2_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
-  <(outs BlockReg2M4:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
-   "fmm4ahw2 $a1 = $a2, $a3, $a4",
-   [/* no straightforward pattern */]>;
-
-let Defs = [CS] in
-def FMM4AHW3 : REGISTERA3_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
-  <(outs BlockReg3M4:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
-   "fmm4ahw3 $a1 = $a2, $a3, $a4",
+   "mma444ushd $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */]>;
 
 let Defs = [CS] in

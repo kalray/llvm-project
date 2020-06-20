@@ -8,13 +8,13 @@
 //===----------------------------------------------------------------------===//
 
 //===----------------------------------------------------------------------===//
-//  Declarations that describe the KVX register file
+//  Declarations that describe the KVX register files
 //===----------------------------------------------------------------------===//
 
 // This file was automatically generated,
 //   *DO NOT EDIT*,
 //   please contact code owner.
-// Last generated: 2020-01-28 17:49:54.224406.
+// Last generated: 2020-06-20 21:47:17.940594.
 
 
 let Namespace = "KVX" in {
