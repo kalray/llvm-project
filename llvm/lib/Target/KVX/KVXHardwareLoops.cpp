@@ -719,7 +719,7 @@ bool KVXHardwareLoops::ConvertToHardwareLoop(MachineFunction &MF,
   }
 
   if (Bump.isImm()) {
-    uint64_t BumpVal = Bump.getImm();
+    int64_t BumpVal = Bump.getImm();
     if (StartValIsImm && EndValIsImm) {
       LLVM_DEBUG(llvm::dbgs() << "HW Loop - StartVal-EndVal IMM-IMM.\n");
       CountReg = MRI->createVirtualRegister(&KVX::SingleRegRegClass);
