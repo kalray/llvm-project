@@ -68,6 +68,8 @@ public:
                              Action::OffloadKind DeviceOffloadKind) const
       override;
 
+  unsigned GetDefaultDwarfVersion() const override { return 2; }
+
 protected:
   Tool *buildAssembler() const override;
   Tool *buildLinker() const override;
