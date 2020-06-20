@@ -15406,8 +15406,8 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_fmulcdc:
     return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_fmulcdc);
 
-  case KVX::BI__builtin_kvx_fmm2wq:
-    return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_fmm2wq);
+  case KVX::BI__builtin_kvx_fmm212w:
+    return KVX_emitBinaryRoundingBuiltin(*this, E, Intrinsic::kvx_fmm212w);
 
   case KVX::BI__builtin_kvx_ffmawp:
     return KVX_emitTernaryRoundingBuiltin(*this, E, Intrinsic::kvx_ffmawp);
@@ -15418,8 +15418,8 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_ffmadp:
     return KVX_emitTernaryRoundingBuiltin(*this, E, Intrinsic::kvx_ffmadp);
 
-  case KVX::BI__builtin_kvx_fmm2awq:
-    return KVX_emitTernaryRoundingBuiltin(*this, E, Intrinsic::kvx_fmm2awq);
+  case KVX::BI__builtin_kvx_fmma212w:
+    return KVX_emitTernaryRoundingBuiltin(*this, E, Intrinsic::kvx_fmma212w);
 
   case KVX::BI__builtin_kvx_ffmswp:
     return KVX_emitTernaryRoundingBuiltin(*this, E, Intrinsic::kvx_ffmswp);
@@ -15430,8 +15430,8 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_ffmsdp:
     return KVX_emitTernaryRoundingBuiltin(*this, E, Intrinsic::kvx_ffmsdp);
 
-  case KVX::BI__builtin_kvx_fmm2swq:
-    return KVX_emitTernaryRoundingBuiltin(*this, E, Intrinsic::kvx_fmm2swq);
+  case KVX::BI__builtin_kvx_fmms212w:
+    return KVX_emitTernaryRoundingBuiltin(*this, E, Intrinsic::kvx_fmms212w);
 
   case KVX::BI__builtin_kvx_fixedw:
     return KVX_emitUnaryRoundingBuiltin(*this, E, Intrinsic::kvx_fixedw);
