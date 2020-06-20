@@ -1154,7 +1154,7 @@ KVXTargetLowering::getRegForInlineAsmConstraint(const TargetRegisterInfo *TRI,
   if (Constraint.size() == 1) {
     switch (Constraint[0]) {
     case 'r':
-      if (VT == MVT::i32 || VT == MVT::i64)
+      if (VT == MVT::i16 || VT == MVT::i32 || VT == MVT::i64)
         return std::make_pair(0U, &KVX::SingleRegRegClass);
       llvm_unreachable("unsuported register type");
     default:
