@@ -17,7 +17,7 @@
 // This file was automatically generated,
 //   *DO NOT EDIT*,
 //   please contact code owner.
-// Last generated: 2020-04-07 11:04:11.871900.
+// Last generated: 2020-06-20 21:47:17.938548.
 
 //===----------------------------------------------------------------------===//
 // BCU
@@ -95,9 +95,9 @@ BUILTIN(__builtin_kvx_fmaxwq, "V4fV4fV4f", "")
 BUILTIN(__builtin_kvx_fmindp, "V2dV2dV2d", "")
 BUILTIN(__builtin_kvx_fminwp, "V2fV2fV2f", "")
 BUILTIN(__builtin_kvx_fminwq, "V4fV4fV4f", "")
-BUILTIN(__builtin_kvx_fmm2awq, "V4fV2fV2fV4fCc*", "")
-BUILTIN(__builtin_kvx_fmm2swq, "V4fV2fV2fV4fCc*", "")
-BUILTIN(__builtin_kvx_fmm2wq, "V4fV2fV2fCc*", "")
+BUILTIN(__builtin_kvx_fmma212w, "V4fV2fV2fV4fCc*", "")
+BUILTIN(__builtin_kvx_fmms212w, "V4fV2fV2fV4fCc*", "")
+BUILTIN(__builtin_kvx_fmm212w, "V4fV2fV2fCc*", "")
 BUILTIN(__builtin_kvx_fmulcdc, "V2dV2dV2dCc*", "")
 BUILTIN(__builtin_kvx_fmulcwc, "V2fV2fV2fCc*", "")
 BUILTIN(__builtin_kvx_fmulcwcp, "V4fV4fV4fCc*", "")
