@@ -255,10 +255,16 @@ defm : Select64PAT<(f64 f64:$truev), (f64 f64:$falsev),(f64 Binary64:$truev), (f
 
 // FDOT2 -> TODO
 // FFMA
+def : Pat<(f16 (fma f16:$rx, f16:$ry, f16:$rz)), (FFMAHQrr SingleReg:$rz, SingleReg:$rx, SingleReg:$ry, rounding_, silent_)>;
 def : Pat<(f32 (fma f32:$rx, f32:$ry, f32:$rz)), (FFMAWrr SingleReg:$rz, SingleReg:$rx, SingleReg:$ry, rounding_, silent_)>;
 def : Pat<(f32 (fma f32:$rx, f32:$ry, Binary32:$rz)), (FFMAWri SingleReg:$rx, SingleReg:$ry, Binary32:$rz)>;
 def : Pat<(f64 (fma f64:$rx, f64:$ry, f64:$rz)), (FFMADrr SingleReg:$rz, SingleReg:$rx, SingleReg:$ry, rounding_, silent_)>;
 def : Pat<(f64 (fma f64:$rx, f64:$ry, Binary64:$rz)), (FFMADri SingleReg:$rx, SingleReg:$ry, Binary64:$rz)>;
+
+def : Pat<(v2f32 (fma v2f32:$rx, v2f32:$ry, v2f32:$rz)), (FFMAWPrr SingleReg:$rz, SingleReg:$rx, SingleReg:$ry, rounding_, silent_)>;
+def : Pat<(v2f16 (fma v2f16:$rx, v2f16:$ry, v2f16:$rz)), (FFMAHQrr SingleReg:$rz, SingleReg:$rx, SingleReg:$ry, rounding_, silent_)>;
+def : Pat<(v4f16 (fma v4f16:$rx, v4f16:$ry, v4f16:$rz)), (FFMAHQrr SingleReg:$rz, SingleReg:$rx, SingleReg:$ry, rounding_, silent_)>;
+
 // FFMS  -> TODO
 // FINV  -> TODO
 // FISR  -> TODO
