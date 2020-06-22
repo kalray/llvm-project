@@ -10,7 +10,7 @@
 // This file was automatically generated,
 //   *DO NOT EDIT*,
 //   please contact code owner.
-// Last generated: 2020-06-20 21:47:17.941616.
+// Last generated: 2020-06-22 14:27:34.582977.
 
 
 class KVX_INSTRUCTION
@@ -1204,6 +1204,34 @@ class REGISTERAP_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
 // MMA444USHD
 let Size = 4 in
 class REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
+  <dag outs, dag ins, string asmstr, list<dag> pattern>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, TCA>;
+
+// 1 insn(s):
+// FMMA242HW0
+let Size = 4 in
+class REGISTERA0_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
+  <dag outs, dag ins, string asmstr, list<dag> pattern>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, TCA>;
+
+// 1 insn(s):
+// FMMA242HW1
+let Size = 4 in
+class REGISTERA1_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
+  <dag outs, dag ins, string asmstr, list<dag> pattern>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, TCA>;
+
+// 1 insn(s):
+// FMMA242HW2
+let Size = 4 in
+class REGISTERA2_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
+  <dag outs, dag ins, string asmstr, list<dag> pattern>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, TCA>;
+
+// 1 insn(s):
+// FMMA242HW3
+let Size = 4 in
+class REGISTERA3_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
   : KVX_INSTRUCTION <outs, ins, asmstr, pattern, TCA>;
 
