@@ -18,7 +18,7 @@
 // This file was automatically generated,
 //   *DO NOT EDIT*,
 //   please contact code owner.
-// Last generated: 2020-06-20 21:47:17.941624.
+// Last generated: 2020-06-22 14:27:34.582999.
 
 include "KVXOperandInfo.td"
 include "KVXInstrFormats.td"
@@ -3217,6 +3217,30 @@ let Defs = [CS] in
 def MMA444USHD : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma444ushd $a1 = $a2, $a3, $a4",
+   [/* no straightforward pattern */]>;
+
+let Defs = [CS] in
+def FMMA242HW0 : REGISTERA0_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
+  <(outs BlockReg0M4:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
+   "fmma242hw0 $a1 = $a2, $a3, $a4",
+   [/* no straightforward pattern */]>;
+
+let Defs = [CS] in
+def FMMA242HW1 : REGISTERA1_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
+  <(outs BlockReg1M4:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
+   "fmma242hw1 $a1 = $a2, $a3, $a4",
+   [/* no straightforward pattern */]>;
+
+let Defs = [CS] in
+def FMMA242HW2 : REGISTERA2_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
+  <(outs BlockReg2M4:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
+   "fmma242hw2 $a1 = $a2, $a3, $a4",
+   [/* no straightforward pattern */]>;
+
+let Defs = [CS] in
+def FMMA242HW3 : REGISTERA3_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
+  <(outs BlockReg3M4:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
+   "fmma242hw3 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */]>;
 
 let Defs = [CS] in
