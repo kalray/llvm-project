@@ -37,6 +37,10 @@ int main() {
   // Do not the run the compiler-rt logb test case if using GLIBC version
   // < 2.23. Older versions might not compute to the same value as the
   // compiler-rt value.
+#if defined(__KVX__)
+  // KVX doesn't use glibc but the test is passing with newlib.
+#define __GLIBC_PREREQ(maj, min) 1
+#endif
 #if __GLIBC_PREREQ(2, 23)
   const unsigned N = sizeof(cases) / sizeof(cases[0]);
   unsigned i;
