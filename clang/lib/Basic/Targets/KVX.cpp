@@ -65,6 +65,7 @@ ArrayRef<TargetInfo::GCCRegAlias> KVXTargetInfo::getGCCRegAliases() const {
 
 void KVXTargetInfo::getTargetDefines(const LangOptions &Opts,
                                      MacroBuilder &Builder) const {
+  Builder.defineMacro("__ELF__", "1");
   Builder.defineMacro("__KVX__", "3");
   Builder.defineMacro("__KV3__", "1");
   Builder.defineMacro("__kvx__", "3");
