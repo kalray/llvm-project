@@ -561,6 +561,15 @@ set(wasm64_SOURCES
   ${GENERIC_SOURCES}
 )
 
+set(kvx_SOURCES
+  kvx/udivmoddi4.c
+  ${GENERIC_SOURCES}
+  ${GENERIC_TF_SOURCES}
+)
+list(REMOVE_ITEM kvx_SOURCES
+  enable_execute_stack.c  # sys/mman.h file not found
+)
+
 add_custom_target(builtins)
 set_target_properties(builtins PROPERTIES FOLDER "Compiler-RT Misc")
 
