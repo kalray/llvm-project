@@ -51,56 +51,143 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
                                      const InputInfoList &Inputs,
                                      const ArgList &Args,
                                      const char *LinkingOutput) const {
-  claimNoWarnArgs(Args);
-  ArgStringList CmdArgs;
 
-  Args.AddAllArgValues(CmdArgs, options::OPT_Wa_COMMA, options::OPT_Xassembler);
+  const Arg *A = Args.getLastArg(options::OPT_rtlib_EQ);
+  StringRef LibName = A ? A->getValue() : "libgcc";
 
-  CmdArgs.push_back("-o");
-  CmdArgs.push_back(Output.getFilename());
+  // Keep old behavior when using libgcc or using clang++ (libstdc++-v3)
+  if (LibName == "libgcc" || C.getDriver().CCCIsCXX()) {
+    claimNoWarnArgs(Args);
+    ArgStringList CmdArgs;
 
-  // Group all input files
-  for (const auto &II : Inputs)
-    if (II.isFilename())
-      CmdArgs.push_back(II.getFilename());
+    Args.AddAllArgValues(CmdArgs, options::OPT_Wa_COMMA,
+                         options::OPT_Xassembler);
 
-  // Ensure that -l args are at the end of the cmd line
-  for (const auto &II : Inputs) {
-    if (II.isInputArg()) {
-      const Arg &A = II.getInputArg();
-      if (A.getOption().matches(options::OPT_l)) {
-        std::string larg = std::string("-l") + std::string(A.getValue());
-        CmdArgs.push_back(Args.MakeArgString(larg.c_str()));
-      } else if (A.getOption().matches(options::OPT_Wl_COMMA)) {
-        std::string Wlarg = std::string("-Wl,") + std::string(A.getValue());
-        CmdArgs.push_back(Args.MakeArgString(Wlarg));
-      } else if (A.getOption().matches(options::OPT_Z_reserved_lib_stdcxx)) {
-        CmdArgs.push_back("-lstdc++");
-      } else
-        llvm_unreachable("unsupported input arg kind");
+    CmdArgs.push_back("-o");
+    CmdArgs.push_back(Output.getFilename());
+
+    // Group all input files
+    for (const auto &II : Inputs)
+      if (II.isFilename())
+        CmdArgs.push_back(II.getFilename());
+
+    // Ensure that -l args are at the end of the cmd line
+    for (const auto &II : Inputs) {
+      if (II.isInputArg()) {
+        const Arg &A = II.getInputArg();
+        if (A.getOption().matches(options::OPT_l)) {
+          std::string larg = std::string("-l") + std::string(A.getValue());
+          CmdArgs.push_back(Args.MakeArgString(larg.c_str()));
+        } else if (A.getOption().matches(options::OPT_Wl_COMMA)) {
+          std::string Wlarg = std::string("-Wl,") + std::string(A.getValue());
+          CmdArgs.push_back(Args.MakeArgString(Wlarg));
+        } else if (A.getOption().matches(options::OPT_Z_reserved_lib_stdcxx)) {
+          CmdArgs.push_back("-lstdc++");
+        } else
+          llvm_unreachable("unsupported input arg kind");
+      }
     }
+
+    // -nostdlib option management
+    if (Args.hasArg(options::OPT_nostdlib))
+      CmdArgs.push_back(Args.MakeArgString("-nostdlib"));
+
+    // -shared option management
+    if (Args.getLastArg(options::OPT_shared))
+      CmdArgs.push_back(Args.MakeArgString("-shared"));
+
+    if (Args.getLastArg(options::OPT_T)) {
+      std::string Targ =
+          std::string("-T") +
+          std::string(Args.getLastArg(options::OPT_T)->getValue());
+      CmdArgs.push_back(Args.MakeArgString(Targ));
+    }
+
+    if (Args.hasArg(options::OPT_v))
+      CmdArgs.push_back("-Wl,-v");
+
+    const char *Exec = Args.MakeArgString(getToolChain().GetProgramPath(
+        C.getDriver().CCCIsCXX() ? "kvx-cos-g++" : "kvx-cos-gcc"));
+    C.addCommand(std::make_unique<Command>(JA, *this, Exec, CmdArgs, Inputs));
+  } else {
+    assert(LibName == "compiler-rt" && "unsupported runtime library");
+
+    claimNoWarnArgs(Args);
+    ArgStringList CmdArgs;
+
+    CmdArgs.push_back("-o");
+    CmdArgs.push_back(Output.getFilename());
+
+    std::string LDPath = getToolChain().GetProgramPath("kvx-cos-ld");
+    std::string LDPrefix = llvm::sys::path::parent_path(LDPath);
+
+    if (!Args.hasArg(options::OPT_nostdlib)) {
+      // TODO: crti.o, crtbegin.o, crtend.o, and crtn.o are currently provided
+      // by GCC. Implement those files on newlib's libgloss side to finally be
+      // GCC agnostic when using compiler-rt!
+      CmdArgs.push_back(Args.MakeArgString(
+          LDPrefix + "/../lib/gcc/kvx-cos/" KVX_CLUSTEROS_GCC_VERSION
+                     "/crti.o")); // GCC's crti.o, see TODO
+                                  // comment above.
+      CmdArgs.push_back(Args.MakeArgString(
+          LDPrefix + "/../lib/gcc/kvx-cos/" KVX_CLUSTEROS_GCC_VERSION
+                     "/crtbegin.o")); // GCC's crtbegin.o, see
+                                      // TODO comment above.
+      CmdArgs.push_back(
+          Args.MakeArgString(LDPrefix + "/../kvx-cos/lib/crt0.o"));
+    }
+
+    for (const auto &II : Inputs)
+      if (II.isFilename())
+        CmdArgs.push_back(II.getFilename());
+
+    if (!Args.hasArg(options::OPT_nostdlib)) {
+      CmdArgs.push_back(
+          Args.MakeArgString("-L" + LDPrefix + "/../kvx-cos/lib"));
+
+      CmdArgs.push_back("-melf64kvx");
+      if (Args.getLastArg(options::OPT_T)) {
+        std::string Targ =
+            std::string("-T") +
+            std::string(Args.getLastArg(options::OPT_T)->getValue());
+        CmdArgs.push_back(Args.MakeArgString(Targ));
+      } else {
+        CmdArgs.push_back("-Tmppacos.ld");
+      }
+      CmdArgs.push_back("--start-group");
+      CmdArgs.push_back("-lmppacos");
+      CmdArgs.push_back("-lmppa_rsrc");
+      CmdArgs.push_back("-lc");
+      CmdArgs.push_back("-lgloss");
+      CmdArgs.push_back("-lmppa_fdt");
+      CmdArgs.push_back("--end-group");
+
+      CmdArgs.push_back(Args.MakeArgString(
+          LDPrefix + "/../lib/llvm/cos/libclang_rt.builtins-kvx.a"));
+
+      CmdArgs.push_back(Args.MakeArgString(
+          LDPrefix + "/../lib/gcc/kvx-cos/" KVX_CLUSTEROS_GCC_VERSION
+                     "/crtend.o")); // GCC's crtend.o, see TODO
+                                    // comment above.
+      CmdArgs.push_back(Args.MakeArgString(
+          LDPrefix + "/../lib/gcc/kvx-cos/" KVX_CLUSTEROS_GCC_VERSION
+                     "/crtn.o")); // GCC's crtn.o, see TODO
+                                  // comment above.
+    }
+
+    Args.AddAllArgs(CmdArgs, options::OPT_L, options::OPT_l);
+    Args.AddAllArgValues(CmdArgs, options::OPT_Wl_COMMA);
+
+    if (Args.hasArg(options::OPT_v))
+      CmdArgs.push_back("-v");
+
+    if (Args.getLastArg(options::OPT_shared))
+      CmdArgs.push_back("-shared");
+
+    const char *Exec =
+        Args.MakeArgString(getToolChain().GetProgramPath("kvx-cos-ld"));
+    C.addCommand(std::make_unique<Command>(JA, *this, Exec, CmdArgs, Inputs));
   }
-
-  // -nostdlib option management
-  if (Args.hasArg(options::OPT_nostdlib))
-    CmdArgs.push_back(Args.MakeArgString("-nostdlib"));
-
-  // -shared option management
-  if (Args.getLastArg(options::OPT_shared))
-    CmdArgs.push_back(Args.MakeArgString("-shared"));
-
-  if (Args.getLastArg(options::OPT_T)) {
-    std::string Targ = std::string("-T") +
-                       std::string(Args.getLastArg(options::OPT_T)->getValue());
-    CmdArgs.push_back(Args.MakeArgString(Targ));
-  }
-
-  if (Args.hasArg(options::OPT_v))
-    CmdArgs.push_back("-Wl,-v");
-
-  const char *Exec = Args.MakeArgString(getToolChain().GetProgramPath(
-      C.getDriver().CCCIsCXX() ? "kvx-cos-g++" : "kvx-cos-gcc"));
-  C.addCommand(std::make_unique<Command>(JA, *this, Exec, CmdArgs, Inputs));
 }
 
 // ClusterOS - ClusterOS tool chain which can call as(1) and ld(1) directly.
