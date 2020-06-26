@@ -73,7 +73,7 @@ void kvxosporting::Linker::ConstructJob(Compilation &C, const JobAction &JA,
     CmdArgs.push_back(
         Args.MakeArgString("-L" + LDPrefix + "/../kvx-llvm/elf/lib"));
 
-    CmdArgs.push_back("-melf64k1");
+    CmdArgs.push_back("-melf64kvx");
     CmdArgs.push_back("-Tbare.ld");
     CmdArgs.push_back("--start-group");
     CmdArgs.push_back("-lc");
