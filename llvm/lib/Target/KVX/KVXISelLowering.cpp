@@ -233,6 +233,10 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::FMUL, MVT::v2f64, Expand);
   setOperationAction(ISD::FMA, MVT::v2f64, Expand);
 
+  for (auto VT : {MVT::v2f16, MVT::v4f16, MVT::v2f32, MVT::v4f32, MVT::v2f64}) {
+    setOperationAction(ISD::FCEIL, VT, Expand);
+  }
+
   setOperationAction(ISD::AND, MVT::v2i64, Expand);
   setOperationAction(ISD::ADD, MVT::v2i64, Expand);
   setOperationAction(ISD::SUB, MVT::v2i64, Expand);
