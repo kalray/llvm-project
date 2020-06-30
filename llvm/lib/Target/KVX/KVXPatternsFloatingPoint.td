@@ -9,12 +9,6 @@
 
 def DefaultShift : PatLeaf<(i64 0)>;
 
-def truncstoref16 : PatFrag<(ops node:$val, node:$ptr),
-                            (truncstore node:$val, node:$ptr)> {
-  let IsStore = 1;
-  let MemoryVT = f16;
-}
-
 // Store
 defm : StorePat<store, f16, SingleReg, 1, SHp, SHri10, SHrr>;
 defm : StorePatNode<truncstoref16, f32, SingleReg, 1, SHp, SHri10, SHrr,
