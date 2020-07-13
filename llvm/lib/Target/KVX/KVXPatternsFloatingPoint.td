@@ -30,14 +30,24 @@ defm : StorePat<store, v4f32, PairedReg, 4, SQp, SQri10, SQrr>;
 defm : StorePat<store, v2f64, PairedReg, 4, SQp, SQri10, SQrr>;
 
 // Load
-def loadf16 : PatFrag<(ops node:$ptr), (f16 (load node:$ptr))>;
-def loadf32 : PatFrag<(ops node:$ptr), (f32 (load node:$ptr))>;
-def loadf64 : PatFrag<(ops node:$ptr), (f64 (load node:$ptr))>;
-def loadv4f16 : PatFrag<(ops node:$ptr), (v4f16 (load node:$ptr))>;
-def loadv2f32 : PatFrag<(ops node:$ptr), (v2f32 (load node:$ptr))>;
-def loadv4f32 : PatFrag<(ops node:$ptr), (v4f32 (load node:$ptr))>;
-def loadv2f64 : PatFrag<(ops node:$ptr), (v2f64 (load node:$ptr))>;
 
+foreach type = [ f16, f32, f64, v2f16, v4f16, v2f32, v4f32, v2f64 ] in {
+def load#type : PatFrag<(ops node:$ptr), (type (default_as<load> node:$ptr))>;
+
+def loaduncached#type : PatFrag<(ops node:$ptr), (type (uncached_as<load> node:$ptr))>;
+}
+
+// uncached loads
+defm : LoadPat<loaduncachedf16, f16, 1, LHZp, LHZri10, LHZrr, variant_u>;
+defm : LoadPat<loaduncachedf32, f32, 2, LWZp, LWZri10, LWZrr, variant_u>;
+defm : LoadPat<loaduncachedv2f16, v2f16, 2, LWZp, LWZri10, LWZrr, variant_u>;
+defm : LoadPat<loaduncachedf64, f64, 3, LDp, LDri10, LDrr, variant_u>;
+defm : LoadPat<loaduncachedv2f32, v2f32, 3, LDp, LDri10, LDrr, variant_u>;
+defm : LoadPat<loaduncachedv4f16, v4f16, 3, LDp, LDri10, LDrr, variant_u>;
+defm : LoadPat<loaduncachedv4f32, v4f32, 4, LQp, LQri10, LQrr, variant_u>;
+defm : LoadPat<loaduncachedv2f64, v2f64, 4, LQp, LQri10, LQrr, variant_u>;
+
+// normal loads
 defm : LoadPat<loadf16, f16, 1, LHZp, LHZri10, LHZrr, variant_>;
 defm : LoadPat<loadf32, f32, 2, LWZp, LWZri10, LWZrr, variant_>;
 defm : LoadPat<loadv2f16, v2f16, 2, LWZp, LWZri10, LWZrr, variant_>;
