@@ -223,20 +223,38 @@ def LOp : KVX_PSEUDO<
         (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), []>;
 }
 
-def loadi1 : PatFrag<(ops node:$ptr), (i1 (load node:$ptr))>;
-def loadi8 : PatFrag<(ops node:$ptr), (i8 (load node:$ptr))>;
-def loadi16 : PatFrag<(ops node:$ptr), (i16 (load node:$ptr))>;
-def loadi32 : PatFrag<(ops node:$ptr), (i32 (load node:$ptr))>;
-def loadi64 : PatFrag<(ops node:$ptr), (i64 (load node:$ptr))>;
-def loadv2i8 : PatFrag<(ops node:$ptr), (v2i8 (load node:$ptr))>;
-def loadv4i8 : PatFrag<(ops node:$ptr), (v4i8 (load node:$ptr))>;
-def loadv8i8 : PatFrag<(ops node:$ptr), (v8i8 (load node:$ptr))>;
-def loadv2i32 : PatFrag<(ops node:$ptr), (v2i32 (load node:$ptr))>;
-def loadv4i16 : PatFrag<(ops node:$ptr), (v4i16 (load node:$ptr))>;
-def loadv2i16 : PatFrag<(ops node:$ptr), (v2i16 (load node:$ptr))>;
-def loadv2f16 : PatFrag<(ops node:$ptr), (v2f16 (load node:$ptr))>;
-def loadv2i64 : PatFrag<(ops node:$ptr), (v2i64 (load node:$ptr))>;
-def loadv4i32 : PatFrag<(ops node:$ptr), (v4i32 (load node:$ptr))>;
+class default_as<PatFrag F>
+  : PatFrag<(ops node:$ptr), !head(F.Fragments), [{
+    const MemSDNode *LD = cast<MemSDNode>(N);
+    return LD->getAddressSpace() != 9;
+  }], F.OperandTransform>;
+
+class uncached_as<PatFrag F>
+  : PatFrag<(ops node:$ptr), !head(F.Fragments), [{
+    const MemSDNode *LD = cast<MemSDNode>(N);
+    return LD->getAddressSpace() == 9;
+  }], F.OperandTransform>;
+
+class typed_uncached_as<PatFrag F, ValueType vt>
+  : PatFrag<(ops node:$ptr), !head(F.Fragments), [{
+    const MemSDNode *LD = cast<MemSDNode>(N);
+    return LD->getAddressSpace() == 9;
+  }], F.OperandTransform> {
+  let IsLoad = 1;
+  let MemoryVT = vt;
+}
+
+foreach type = [ i1, i8, i16, i32, i64, v2i8, v4i8, v8i8, v2i32, v4i16, v2i16, v2i64, v4i32] in {
+def load#type : PatFrag<(ops node:$ptr), (type (default_as<load> node:$ptr))>;
+
+def loaduncached#type : PatFrag<(ops node:$ptr), (type (uncached_as<load> node:$ptr))>;
+
+def extloaduncached#type : PatFrag<(ops node:$ptr), (typed_uncached_as<extload,type> node:$ptr)>;
+
+def zextloaduncached#type : PatFrag<(ops node:$ptr), (typed_uncached_as<zextload,type> node:$ptr)>;
+
+def sextloaduncached#type : PatFrag<(ops node:$ptr), (typed_uncached_as<sextload,type> node:$ptr)>;
+}
 
 def IsOrAdd: PatFrag<(ops node:$A, node:$B), (or node:$A, node:$B), [{
   return isOrEquivalentToAdd(N);
@@ -294,6 +312,48 @@ multiclass LoadPat<PatFrag LoadOp, ValueType vt, int sc, KVX_PSEUDO pinst,
   defm : LoadPatXS<LoadOp, vt, sc, rr, mod>;
 }
 
+// uncached loads
+defm : SimpleLoadPat<extloaduncachedi1, i32, LBZp, LBZri10, LBZrr, variant_u>;
+defm : SimpleLoadPat<sextloaduncachedi1, i32, LBSp, LBSri10, LBSrr, variant_u>;
+defm : SimpleLoadPat<zextloaduncachedi1, i32, LBZp, LBZri10, LBZrr, variant_u>;
+defm : SimpleLoadPat<extloaduncachedi1, i64, LBZp, LBZri10, LBZrr, variant_u>;
+defm : SimpleLoadPat<sextloaduncachedi1, i64, LBSp, LBSri10, LBSrr, variant_u>;
+defm : SimpleLoadPat<zextloaduncachedi1, i64, LBZp, LBZri10, LBZrr, variant_u>;
+defm : SimpleLoadPat<loaduncachedi1, i1, LBSp, LBSri10, LBSrr, variant_u>;
+
+defm : SimpleLoadPat<extloaduncachedi8, i32, LBZp, LBZri10, LBZrr, variant_u>;
+defm : SimpleLoadPat<sextloaduncachedi8, i32, LBSp, LBSri10, LBSrr, variant_u>;
+defm : SimpleLoadPat<zextloaduncachedi8, i32, LBZp, LBZri10, LBZrr, variant_u>;
+defm : SimpleLoadPat<extloaduncachedi8, i64, LBZp, LBZri10, LBZrr, variant_u>;
+defm : SimpleLoadPat<sextloaduncachedi8, i64, LBSp, LBSri10, LBSrr, variant_u>;
+defm : SimpleLoadPat<zextloaduncachedi8, i64, LBZp, LBZri10, LBZrr, variant_u>;
+defm : SimpleLoadPat<loaduncachedi8, i8, LBSp, LBSri10, LBSrr, variant_u>;
+
+defm : LoadPat<extloaduncachedi16, i32, 1, LHZp, LHZri10, LHZrr, variant_u>;
+defm : LoadPat<sextloaduncachedi16, i32, 1, LHSp, LHSri10, LHSrr, variant_u>;
+defm : LoadPat<zextloaduncachedi16, i32, 1, LHZp, LHZri10, LHZrr, variant_u>;
+defm : LoadPat<extloaduncachedi16, i64, 1, LHZp, LHZri10, LHZrr, variant_u>;
+defm : LoadPat<sextloaduncachedi16, i64, 1, LHSp, LHSri10, LHSrr, variant_u>;
+defm : LoadPat<zextloaduncachedi16, i64, 1, LHZp, LHZri10, LHZrr, variant_u>;
+defm : LoadPat<loaduncachedi16, i16, 1, LHSp, LHSri10, LHSrr, variant_u>;
+defm : LoadPat<loaduncachedv2i8, v2i8, 1, LHZp, LHZri10, LHZrr, variant_u>;
+
+defm : LoadPat<extloaduncachedi32, i64, 2, LWZp, LWZri10, LWZrr, variant_u>;
+defm : LoadPat<sextloaduncachedi32, i64, 2, LWSp, LWSri10, LWSrr, variant_u>;
+defm : LoadPat<zextloaduncachedi32, i64, 2, LWZp, LWZri10, LWZrr, variant_u>;
+defm : LoadPat<loaduncachedi32, i32, 2, LWZp, LWZri10, LWZrr, variant_u>;
+defm : LoadPat<loaduncachedv2i16, v2i16, 2, LWZp, LWZri10, LWZrr, variant_u>;
+defm : LoadPat<loaduncachedv4i8, v4i8, 2, LWZp, LWZri10, LWZrr, variant_u>;
+
+defm : LoadPat<loaduncachedi64, i64, 3, LDp, LDri10, LDrr, variant_u>;
+defm : LoadPat<loaduncachedv8i8, v8i8, 3, LDp, LDri10, LDrr, variant_u>;
+defm : LoadPat<loaduncachedv2i32, v2i32, 3, LDp, LDri10, LDrr, variant_u>;
+defm : LoadPat<loaduncachedv4i16, v4i16, 3, LDp, LDri10, LDrr, variant_u>;
+
+defm : LoadPat<loaduncachedv2i64, v2i64, 4, LQp, LQri10, LQrr, variant_u>;
+defm : LoadPat<loaduncachedv4i32, v4i32, 4, LQp, LQri10, LQrr, variant_u>;
+
+// normal loads
 defm : SimpleLoadPat<sextloadi1, i32, LBSp, LBSri10, LBSrr, variant_>;
 defm : SimpleLoadPat<zextloadi1, i32, LBZp, LBZri10, LBZrr, variant_>;
 defm : SimpleLoadPat<extloadi1, i32, LBZp, LBZri10, LBZrr, variant_>;
