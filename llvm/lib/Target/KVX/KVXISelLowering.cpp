@@ -878,6 +878,13 @@ Instruction *KVXTargetLowering::emitTrailingFence(IRBuilder<> &Builder,
   return nullptr;
 }
 
+bool KVXTargetLowering::isZExtFree(SDValue Val, EVT VT2) const {
+  if (Val.getOpcode() == ISD::LOAD)
+    return true; // KVX have a zero extended load for each data type.
+
+  return false;
+}
+
 SDValue KVXTargetLowering::lowerRETURNADDR(SDValue Op,
                                            SelectionDAG &DAG) const {
   auto VT = getPointerTy(DAG.getDataLayout());
