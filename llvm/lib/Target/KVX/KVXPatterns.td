@@ -229,13 +229,13 @@ class default_as<PatFrag F>
     return LD->getAddressSpace() != 9;
   }], F.OperandTransform>;
 
-class uncached_as<PatFrag F>
+class bypass_as<PatFrag F>
   : PatFrag<(ops node:$ptr), !head(F.Fragments), [{
     const MemSDNode *LD = cast<MemSDNode>(N);
     return LD->getAddressSpace() == 9;
   }], F.OperandTransform>;
 
-class typed_uncached_as<PatFrag F, ValueType vt>
+class typed_bypass_as<PatFrag F, ValueType vt>
   : PatFrag<(ops node:$ptr), !head(F.Fragments), [{
     const MemSDNode *LD = cast<MemSDNode>(N);
     return LD->getAddressSpace() == 9;
@@ -247,13 +247,13 @@ class typed_uncached_as<PatFrag F, ValueType vt>
 foreach type = [ i1, i8, i16, i32, i64, v2i8, v4i8, v8i8, v2i32, v4i16, v2i16, v2i64, v4i32] in {
 def load#type : PatFrag<(ops node:$ptr), (type (default_as<load> node:$ptr))>;
 
-def loaduncached#type : PatFrag<(ops node:$ptr), (type (uncached_as<load> node:$ptr))>;
+def loadbypass#type : PatFrag<(ops node:$ptr), (type (bypass_as<load> node:$ptr))>;
 
-def extloaduncached#type : PatFrag<(ops node:$ptr), (typed_uncached_as<extload,type> node:$ptr)>;
+def extloadbypass#type : PatFrag<(ops node:$ptr), (typed_bypass_as<extload,type> node:$ptr)>;
 
-def zextloaduncached#type : PatFrag<(ops node:$ptr), (typed_uncached_as<zextload,type> node:$ptr)>;
+def zextloadbypass#type : PatFrag<(ops node:$ptr), (typed_bypass_as<zextload,type> node:$ptr)>;
 
-def sextloaduncached#type : PatFrag<(ops node:$ptr), (typed_uncached_as<sextload,type> node:$ptr)>;
+def sextloadbypass#type : PatFrag<(ops node:$ptr), (typed_bypass_as<sextload,type> node:$ptr)>;
 }
 
 def IsOrAdd: PatFrag<(ops node:$A, node:$B), (or node:$A, node:$B), [{
@@ -312,46 +312,46 @@ multiclass LoadPat<PatFrag LoadOp, ValueType vt, int sc, KVX_PSEUDO pinst,
   defm : LoadPatXS<LoadOp, vt, sc, rr, mod>;
 }
 
-// uncached loads
-defm : SimpleLoadPat<extloaduncachedi1, i32, LBZp, LBZri10, LBZrr, variant_u>;
-defm : SimpleLoadPat<sextloaduncachedi1, i32, LBSp, LBSri10, LBSrr, variant_u>;
-defm : SimpleLoadPat<zextloaduncachedi1, i32, LBZp, LBZri10, LBZrr, variant_u>;
-defm : SimpleLoadPat<extloaduncachedi1, i64, LBZp, LBZri10, LBZrr, variant_u>;
-defm : SimpleLoadPat<sextloaduncachedi1, i64, LBSp, LBSri10, LBSrr, variant_u>;
-defm : SimpleLoadPat<zextloaduncachedi1, i64, LBZp, LBZri10, LBZrr, variant_u>;
-defm : SimpleLoadPat<loaduncachedi1, i1, LBSp, LBSri10, LBSrr, variant_u>;
+// bypass loads
+defm : SimpleLoadPat<extloadbypassi1, i32, LBZp, LBZri10, LBZrr, variant_u>;
+defm : SimpleLoadPat<sextloadbypassi1, i32, LBSp, LBSri10, LBSrr, variant_u>;
+defm : SimpleLoadPat<zextloadbypassi1, i32, LBZp, LBZri10, LBZrr, variant_u>;
+defm : SimpleLoadPat<extloadbypassi1, i64, LBZp, LBZri10, LBZrr, variant_u>;
+defm : SimpleLoadPat<sextloadbypassi1, i64, LBSp, LBSri10, LBSrr, variant_u>;
+defm : SimpleLoadPat<zextloadbypassi1, i64, LBZp, LBZri10, LBZrr, variant_u>;
+defm : SimpleLoadPat<loadbypassi1, i1, LBSp, LBSri10, LBSrr, variant_u>;
 
-defm : SimpleLoadPat<extloaduncachedi8, i32, LBZp, LBZri10, LBZrr, variant_u>;
-defm : SimpleLoadPat<sextloaduncachedi8, i32, LBSp, LBSri10, LBSrr, variant_u>;
-defm : SimpleLoadPat<zextloaduncachedi8, i32, LBZp, LBZri10, LBZrr, variant_u>;
-defm : SimpleLoadPat<extloaduncachedi8, i64, LBZp, LBZri10, LBZrr, variant_u>;
-defm : SimpleLoadPat<sextloaduncachedi8, i64, LBSp, LBSri10, LBSrr, variant_u>;
-defm : SimpleLoadPat<zextloaduncachedi8, i64, LBZp, LBZri10, LBZrr, variant_u>;
-defm : SimpleLoadPat<loaduncachedi8, i8, LBSp, LBSri10, LBSrr, variant_u>;
+defm : SimpleLoadPat<extloadbypassi8, i32, LBZp, LBZri10, LBZrr, variant_u>;
+defm : SimpleLoadPat<sextloadbypassi8, i32, LBSp, LBSri10, LBSrr, variant_u>;
+defm : SimpleLoadPat<zextloadbypassi8, i32, LBZp, LBZri10, LBZrr, variant_u>;
+defm : SimpleLoadPat<extloadbypassi8, i64, LBZp, LBZri10, LBZrr, variant_u>;
+defm : SimpleLoadPat<sextloadbypassi8, i64, LBSp, LBSri10, LBSrr, variant_u>;
+defm : SimpleLoadPat<zextloadbypassi8, i64, LBZp, LBZri10, LBZrr, variant_u>;
+defm : SimpleLoadPat<loadbypassi8, i8, LBSp, LBSri10, LBSrr, variant_u>;
 
-defm : LoadPat<extloaduncachedi16, i32, 1, LHZp, LHZri10, LHZrr, variant_u>;
-defm : LoadPat<sextloaduncachedi16, i32, 1, LHSp, LHSri10, LHSrr, variant_u>;
-defm : LoadPat<zextloaduncachedi16, i32, 1, LHZp, LHZri10, LHZrr, variant_u>;
-defm : LoadPat<extloaduncachedi16, i64, 1, LHZp, LHZri10, LHZrr, variant_u>;
-defm : LoadPat<sextloaduncachedi16, i64, 1, LHSp, LHSri10, LHSrr, variant_u>;
-defm : LoadPat<zextloaduncachedi16, i64, 1, LHZp, LHZri10, LHZrr, variant_u>;
-defm : LoadPat<loaduncachedi16, i16, 1, LHSp, LHSri10, LHSrr, variant_u>;
-defm : LoadPat<loaduncachedv2i8, v2i8, 1, LHZp, LHZri10, LHZrr, variant_u>;
+defm : LoadPat<extloadbypassi16, i32, 1, LHZp, LHZri10, LHZrr, variant_u>;
+defm : LoadPat<sextloadbypassi16, i32, 1, LHSp, LHSri10, LHSrr, variant_u>;
+defm : LoadPat<zextloadbypassi16, i32, 1, LHZp, LHZri10, LHZrr, variant_u>;
+defm : LoadPat<extloadbypassi16, i64, 1, LHZp, LHZri10, LHZrr, variant_u>;
+defm : LoadPat<sextloadbypassi16, i64, 1, LHSp, LHSri10, LHSrr, variant_u>;
+defm : LoadPat<zextloadbypassi16, i64, 1, LHZp, LHZri10, LHZrr, variant_u>;
+defm : LoadPat<loadbypassi16, i16, 1, LHSp, LHSri10, LHSrr, variant_u>;
+defm : LoadPat<loadbypassv2i8, v2i8, 1, LHZp, LHZri10, LHZrr, variant_u>;
 
-defm : LoadPat<extloaduncachedi32, i64, 2, LWZp, LWZri10, LWZrr, variant_u>;
-defm : LoadPat<sextloaduncachedi32, i64, 2, LWSp, LWSri10, LWSrr, variant_u>;
-defm : LoadPat<zextloaduncachedi32, i64, 2, LWZp, LWZri10, LWZrr, variant_u>;
-defm : LoadPat<loaduncachedi32, i32, 2, LWZp, LWZri10, LWZrr, variant_u>;
-defm : LoadPat<loaduncachedv2i16, v2i16, 2, LWZp, LWZri10, LWZrr, variant_u>;
-defm : LoadPat<loaduncachedv4i8, v4i8, 2, LWZp, LWZri10, LWZrr, variant_u>;
+defm : LoadPat<extloadbypassi32, i64, 2, LWZp, LWZri10, LWZrr, variant_u>;
+defm : LoadPat<sextloadbypassi32, i64, 2, LWSp, LWSri10, LWSrr, variant_u>;
+defm : LoadPat<zextloadbypassi32, i64, 2, LWZp, LWZri10, LWZrr, variant_u>;
+defm : LoadPat<loadbypassi32, i32, 2, LWZp, LWZri10, LWZrr, variant_u>;
+defm : LoadPat<loadbypassv2i16, v2i16, 2, LWZp, LWZri10, LWZrr, variant_u>;
+defm : LoadPat<loadbypassv4i8, v4i8, 2, LWZp, LWZri10, LWZrr, variant_u>;
 
-defm : LoadPat<loaduncachedi64, i64, 3, LDp, LDri10, LDrr, variant_u>;
-defm : LoadPat<loaduncachedv8i8, v8i8, 3, LDp, LDri10, LDrr, variant_u>;
-defm : LoadPat<loaduncachedv2i32, v2i32, 3, LDp, LDri10, LDrr, variant_u>;
-defm : LoadPat<loaduncachedv4i16, v4i16, 3, LDp, LDri10, LDrr, variant_u>;
+defm : LoadPat<loadbypassi64, i64, 3, LDp, LDri10, LDrr, variant_u>;
+defm : LoadPat<loadbypassv8i8, v8i8, 3, LDp, LDri10, LDrr, variant_u>;
+defm : LoadPat<loadbypassv2i32, v2i32, 3, LDp, LDri10, LDrr, variant_u>;
+defm : LoadPat<loadbypassv4i16, v4i16, 3, LDp, LDri10, LDrr, variant_u>;
 
-defm : LoadPat<loaduncachedv2i64, v2i64, 4, LQp, LQri10, LQrr, variant_u>;
-defm : LoadPat<loaduncachedv4i32, v4i32, 4, LQp, LQri10, LQrr, variant_u>;
+defm : LoadPat<loadbypassv2i64, v2i64, 4, LQp, LQri10, LQrr, variant_u>;
+defm : LoadPat<loadbypassv4i32, v4i32, 4, LQp, LQri10, LQrr, variant_u>;
 
 // normal loads
 defm : SimpleLoadPat<sextloadi1, i32, LBSp, LBSri10, LBSrr, variant_>;

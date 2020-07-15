@@ -11,100 +11,100 @@ struct S {
   int d;
 };
 
-char uncached_i8(__uncached char *i) {
+char bypass_i8(__bypass char *i) {
   return *i;
-  // CHECK-LABEL: uncached_i8:
+  // CHECK-LABEL: bypass_i8:
   // CHECK: lbz.u
   // CHECK: ret
 }
 
-short uncached_i16(__uncached short *i) {
+short bypass_i16(__bypass short *i) {
   return *i;
-  // CHECK-LABEL: uncached_i16:
+  // CHECK-LABEL: bypass_i16:
   // CHECK: lhz.u
   // CHECK: ret
 }
 
-int uncached_i32(__uncached int *i) {
+int bypass_i32(__bypass int *i) {
   return *i;
-  // CHECK-LABEL: uncached_i32:
+  // CHECK-LABEL: bypass_i32:
   // CHECK: lwz.u
   // CHECK: ret
 }
 
-long uncached_i64(__uncached long *i) {
+long bypass_i64(__bypass long *i) {
   return *i;
-  // CHECK-LABEL: uncached_i64:
+  // CHECK-LABEL: bypass_i64:
   // CHECK: ld.u
   // CHECK: ret
 }
 
-float funcached_f32(__uncached float *f) {
-  // CHECK-LABEL: funcached_f32:
+float fbypass_f32(__bypass float *f) {
+  // CHECK-LABEL: fbypass_f32:
   // CHECK: lwz.u
   // CHECK: ret
   return *f;
 }
 
-double funcached_f64(__uncached double *d) {
-  // CHECK-LABEL: funcached_f64:
+double fbypass_f64(__bypass double *d) {
+  // CHECK-LABEL: fbypass_f64:
   // CHECK: ld.u
   // CHECK: ret
   return *d;
 }
 
-v2f32 funcached_v2f32(__uncached v2f32 *v) {
-  // CHECK-LABEL: funcached_v2f32:
+v2f32 fbypass_v2f32(__bypass v2f32 *v) {
+  // CHECK-LABEL: fbypass_v2f32:
   // CHECK: ld.u
   // CHECK: ret
   return *v;
 }
 
-v4f32 funcached_v4f32(__uncached v4f32 *v) {
-  // CHECK-LABEL: funcached_v4f32:
+v4f32 fbypass_v4f32(__bypass v4f32 *v) {
+  // CHECK-LABEL: fbypass_v4f32:
   // CHECK: lq.u
   // CHECK: ret
   return *v;
 }
 
-int foo_uncached_a(__uncached struct S *s) {
+int foo_bypass_a(__bypass struct S *s) {
   return s->a;
-  // CHECK-LABEL: foo_uncached_a:
+  // CHECK-LABEL: foo_bypass_a:
   // CHECK: lwz.u $r0 = 0[$r0]
   // CHECK: ret
 }
 
-int foo_uncached_b(__uncached struct S *s) {
+int foo_bypass_b(__bypass struct S *s) {
   return s->b;
-  // CHECK-LABEL: foo_uncached_b:
+  // CHECK-LABEL: foo_bypass_b:
   // CHECK: lwz.u $r0 = 4[$r0]
   // CHECK: ret
 }
 
-int foo_uncached_c(__uncached struct S *s) {
+int foo_bypass_c(__bypass struct S *s) {
   return s->c;
-  // CHECK-LABEL: foo_uncached_c:
+  // CHECK-LABEL: foo_bypass_c:
   // CHECK: lwz.u $r0 = 8[$r0]
   // CHECK: ret
 }
 
-int foo_uncached_d(__uncached struct S *s) {
+int foo_bypass_d(__bypass struct S *s) {
   return s->d;
-  // CHECK-LABEL: foo_uncached_d:
+  // CHECK-LABEL: foo_bypass_d:
   // CHECK: lwz.u $r0 = 12[$r0]
   // CHECK: ret
 }
 
-int foo_uncached_3(__uncached v4i32 *v) {
+int foo_bypass_3(__bypass v4i32 *v) {
   return (*v)[3];
-  // CHECK-LABEL: foo_uncached_3:
+  // CHECK-LABEL: foo_bypass_3:
   // CHECK: lwz.u $r0 = 12[$r0]
   // CHECK: ret
 }
 
-int foo_uncached_x(__uncached v4i32 *v, int x) {
+int foo_bypass_x(__bypass v4i32 *v, int x) {
   return (*v)[x];
-  // CHECK-LABEL: foo_uncached_x:
+  // CHECK-LABEL: foo_bypass_x:
   // CHECK: lwz.u.xs $r0 = $r1[$r0]
   // CHECK: ret
 }
