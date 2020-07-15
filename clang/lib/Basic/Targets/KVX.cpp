@@ -70,7 +70,9 @@ void KVXTargetInfo::getTargetDefines(const LangOptions &Opts,
   Builder.defineMacro("__KV3__", "1");
   Builder.defineMacro("__kvx__", "3");
   Builder.defineMacro("__kv3__", "1");
+  // __uncached is deprecated, use __bypass instead
   Builder.defineMacro("__uncached", "__attribute__((address_space(9)))");
+  Builder.defineMacro("__bypass", "__attribute__((address_space(9)))");
 }
 
 const Builtin::Info KVXTargetInfo::BuiltinInfo[] = {
