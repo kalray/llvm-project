@@ -8,5 +8,5 @@ void set(int *x, int num) {
     __atomic_sub_fetch(&a, b, __ATOMIC_RELAXED);
     x[i] = b * b;
   }
-  // CHECK-NOT: loopdo
+  // CHECK: loopdo
 }
