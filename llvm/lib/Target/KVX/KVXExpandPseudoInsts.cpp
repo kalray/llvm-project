@@ -205,648 +205,489 @@ static bool expandSelectInstr(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   return true;
 }
 
-static bool expandFENCEInstr(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
-                             MachineBasicBlock::iterator MBBI) {
+// Return load opcode used by atomic operations.
+unsigned getLOADOpcode(uint64_t Size, const MachineOperand MO) {
+  switch (Size) {
+  case 4:
+    return MO.isReg() ? KVX::LWZrr : KVX::LWZp;
+  case 8:
+    return MO.isReg() ? KVX::LDrr : KVX::LDp;
+  default:
+    llvm_unreachable("No LOAD Opcode for this Size");
+  }
+}
+
+// Return acswap opcode used by atomic operations.
+signed getACSWAPOpcode(uint64_t Size, const MachineOperand MO) {
+  // Return -1 if MO is an immediate that doesn't fit in a 37-bit integer.
+  switch (Size) {
+  case 4:
+    return MO.isReg() ? KVX::ACSWAPWrr
+                      : isInt<10>(MO.getImm())
+                            ? KVX::ACSWAPWri10
+                            : isInt<37>(MO.getImm()) ? KVX::ACSWAPWri37 : -1;
+  case 8:
+    return MO.isReg() ? KVX::ACSWAPDrr
+                      : isInt<10>(MO.getImm())
+                            ? KVX::ACSWAPDri10
+                            : isInt<37>(MO.getImm()) ? KVX::ACSWAPDri37 : -1;
+  default:
+    llvm_unreachable("No ACSWAP Opcode for this Size");
+  }
+}
+
+// Return acswap opcode used by atomic operations. Modify memory addressing
+// mode if it uses an immediate value that doesn't fix in a 37-bit integer.
+signed getACSWAPOpcodeModifyAddr(const KVXInstrInfo *TII,
+                                 MachineBasicBlock &MBB,
+                                 MachineBasicBlock::iterator MBBI, DebugLoc DL,
+                                 MachineOperand &Offset, Register Base,
+                                 uint64_t Size, const MachineOperand MO) {
+  signed ACSWAP = getACSWAPOpcode(Size, Offset);
+
+  if (ACSWAP == -1) {
+    // Offset is an immediate that doesn't fit in a 37-bit integer. Simply
+    // generates an add instruction: `add $base = $base, $offset` and set
+    // Offset to 0.
+    // FIXME: Is modifying the Base register safe?
+    // NOTE: Assume 64-bit mode.
+    BuildMI(MBB, MBBI, DL, TII->get(KVX::ADDDri64), Base)
+        .addReg(Base)
+        .addImm(Offset.getImm());
+    Offset.setImm(0);
+    ACSWAP = getACSWAPOpcode(Size, Offset);
+  }
+
+  return ACSWAP;
+}
+
+// Return operation opcode used by the atomic_load_operation operations.
+unsigned getAtomicOPOpcode(uint64_t Size, unsigned Pseudo) {
+  assert((Size == 4 || Size == 8) && "Size isn't supported for AtomicOPOpcode");
+
+  switch (Pseudo) {
+  case KVX::ALOADADDp:
+    return Size == 4 ? KVX::ADDWrr : KVX::ADDDrr;
+  case KVX::ALOADSUBp:
+    return Size == 4 ? KVX::SBFWrr : KVX::SBFDrr;
+  case KVX::ALOADANDp:
+    return Size == 4 ? KVX::ANDWrr : KVX::ANDDrr;
+  case KVX::ALOADORp:
+    return Size == 4 ? KVX::ORWrr : KVX::ORDrr;
+  case KVX::ALOADXORp:
+    return Size == 4 ? KVX::XORWrr : KVX::XORDrr;
+  case KVX::ALOADNANDp:
+    return Size == 4 ? KVX::NANDWrr : KVX::NANDDrr;
+  case KVX::ALOADMINp:
+    return Size == 4 ? KVX::MINWrr : KVX::MINDrr;
+  case KVX::ALOADMAXp:
+    return Size == 4 ? KVX::MAXWrr : KVX::MAXDrr;
+  case KVX::ALOADUMINp:
+    return Size == 4 ? KVX::MINUWrr : KVX::MINUDrr;
+  case KVX::ALOADUMAXp:
+    return Size == 4 ? KVX::MAXUWrr : KVX::MAXUDrr;
+  case KVX::ASWAPp:
+    return Size == 4 ? KVX::COPYW : KVX::COPYD;
+  default:
+    llvm_unreachable("Invalid ALOADOP Pseudo opcode");
+  }
+}
+
+// Expand an atomic_load_operation operation.
+static bool expandALOAD(unsigned int Opcode, const KVXInstrInfo *TII,
+                        MachineBasicBlock &MBB,
+                        MachineBasicBlock::iterator MBBI,
+                        MachineBasicBlock::iterator &NextMBBI) {
+
   MachineInstr &MI = *MBBI;
   DebugLoc DL = MI.getDebugLoc();
-
-  unsigned syncScope = MI.getOperand(1).getImm();
-
-  // for __atomic_thread_fence, insert fence instruction
-  // for __atomic_signal_fence don't insert anything
-  if (syncScope == SyncScope::System)
-    BuildMI(MBB, MBBI, DL, TII->get(KVX::FENCE));
-
-  MI.eraseFromParent();
-  return true;
-}
-
-unsigned int getAtomicLoad(unsigned int opCode, bool imm = true) {
-  switch (opCode) {
-  case KVX::ASWAP32_Instr:
-  case KVX::ACMPSWAP32_Instr:
-  case KVX::ALOADADD32_Instr:
-  case KVX::ALOADSUB32_Instr:
-  case KVX::ALOADAND32_Instr:
-  case KVX::ALOADXOR32_Instr:
-  case KVX::ALOADOR32_Instr:
-  case KVX::ALOADNAND32_Instr:
-    return imm ? KVX::LWZp : KVX::LWZrr;
-  case KVX::ASWAP64_Instr:
-  case KVX::ACMPSWAP64_Instr:
-  case KVX::ALOADADD64_Instr:
-  case KVX::ALOADSUB64_Instr:
-  case KVX::ALOADAND64_Instr:
-  case KVX::ALOADXOR64_Instr:
-  case KVX::ALOADOR64_Instr:
-  case KVX::ALOADNAND64_Instr:
-    return imm ? KVX::LDp : KVX::LDrr;
-  default:
-    llvm_unreachable("invalid opCode");
-  }
-}
-
-unsigned int getAtomicCopy(unsigned int opCode) {
-  switch (opCode) {
-  case KVX::ASWAP32_Instr:
-  case KVX::ACMPSWAP32_Instr:
-  case KVX::ALOADADD32_Instr:
-  case KVX::ALOADSUB32_Instr:
-  case KVX::ALOADAND32_Instr:
-  case KVX::ALOADXOR32_Instr:
-  case KVX::ALOADOR32_Instr:
-  case KVX::ALOADNAND32_Instr:
-    return KVX::COPYW;
-  case KVX::ASWAP64_Instr:
-  case KVX::ACMPSWAP64_Instr:
-  case KVX::ALOADADD64_Instr:
-  case KVX::ALOADSUB64_Instr:
-  case KVX::ALOADAND64_Instr:
-  case KVX::ALOADXOR64_Instr:
-  case KVX::ALOADOR64_Instr:
-  case KVX::ALOADNAND64_Instr:
-    return KVX::COPYD;
-  default:
-    llvm_unreachable("invalid opCode");
-  }
-}
-
-unsigned int getAtomicSwap(int64_t offset, unsigned int opCode,
-                           bool imm = true) {
-  switch (opCode) {
-  case KVX::ASWAP32_Instr:
-  case KVX::ACMPSWAP32_Instr:
-  case KVX::ALOADADD32_Instr:
-  case KVX::ALOADSUB32_Instr:
-  case KVX::ALOADAND32_Instr:
-  case KVX::ALOADXOR32_Instr:
-  case KVX::ALOADOR32_Instr:
-  case KVX::ALOADNAND32_Instr:
-    if (imm)
-      return isInt<10>(offset) ? KVX::ACSWAPWri10 : KVX::ACSWAPWri37;
-    else
-      return KVX::ACSWAPWrr;
-  case KVX::ASWAP64_Instr:
-  case KVX::ACMPSWAP64_Instr:
-  case KVX::ALOADADD64_Instr:
-  case KVX::ALOADSUB64_Instr:
-  case KVX::ALOADAND64_Instr:
-  case KVX::ALOADXOR64_Instr:
-  case KVX::ALOADOR64_Instr:
-  case KVX::ALOADNAND64_Instr:
-    if (imm)
-      return isInt<10>(offset) ? KVX::ACSWAPDri10 : KVX::ACSWAPDri37;
-    else
-      return KVX::ACSWAPDrr;
-  default:
-    llvm_unreachable("invalid opCode");
-  }
-}
-
-unsigned int getAtomicComp(unsigned int opCode) {
-  switch (opCode) {
-  case KVX::ASWAP32_Instr:
-  case KVX::ACMPSWAP32_Instr:
-  case KVX::ALOADADD32_Instr:
-  case KVX::ALOADSUB32_Instr:
-  case KVX::ALOADAND32_Instr:
-  case KVX::ALOADXOR32_Instr:
-  case KVX::ALOADOR32_Instr:
-  case KVX::ALOADNAND32_Instr:
-    return KVX::COMPWrr;
-  case KVX::ASWAP64_Instr:
-  case KVX::ACMPSWAP64_Instr:
-  case KVX::ALOADADD64_Instr:
-  case KVX::ALOADSUB64_Instr:
-  case KVX::ALOADAND64_Instr:
-  case KVX::ALOADXOR64_Instr:
-  case KVX::ALOADOR64_Instr:
-  case KVX::ALOADNAND64_Instr:
-    return KVX::COMPDrr;
-  default:
-    llvm_unreachable("invalid opCode");
-  }
-}
-
-unsigned int getAtomicOp(unsigned int opCode) {
-  switch (opCode) {
-  case KVX::ALOADADD32_Instr:
-    return KVX::ADDWrr;
-  case KVX::ALOADADD64_Instr:
-    return KVX::ADDDrr;
-  case KVX::ALOADSUB32_Instr:
-    return KVX::SBFWrr;
-  case KVX::ALOADSUB64_Instr:
-    return KVX::SBFDrr;
-  case KVX::ALOADAND32_Instr:
-  case KVX::ALOADNAND32_Instr:
-    return KVX::ANDWrr;
-  case KVX::ALOADAND64_Instr:
-  case KVX::ALOADNAND64_Instr:
-    return KVX::ANDDrr;
-  case KVX::ALOADXOR32_Instr:
-    return KVX::XORWrr;
-  case KVX::ALOADXOR64_Instr:
-    return KVX::XORDrr;
-  case KVX::ALOADOR32_Instr:
-    return KVX::ORWrr;
-  case KVX::ALOADOR64_Instr:
-    return KVX::ORDrr;
-  default:
-    llvm_unreachable("invalid opCode");
-  }
-}
-
-unsigned int getAtomicNand(unsigned int opCode) {
-  switch (opCode) {
-  case KVX::ALOADNAND32_Instr:
-    return KVX::NOTW;
-  case KVX::ALOADNAND64_Instr:
-    return KVX::NOTD;
-  default:
-    llvm_unreachable("invalid opCode");
-  }
-}
-
-unsigned int getAtomicCompReg(unsigned int opCode) {
-  switch (opCode) {
-  case KVX::ASWAP32_Instr:
-  case KVX::ACMPSWAP32_Instr:
-    return KVX::COMPWrr;
-  case KVX::ASWAP64_Instr:
-  case KVX::ACMPSWAP64_Instr:
-    return KVX::COMPDrr;
-  default:
-    llvm_unreachable("invalid opCode");
-  }
-}
-
-int64_t getAtomicCBVar(unsigned int opCode) {
-  switch (opCode) {
-  case KVX::ASWAP32_Instr:
-  case KVX::ACMPSWAP32_Instr:
-  case KVX::ALOADADD32_Instr:
-  case KVX::ALOADSUB32_Instr:
-  case KVX::ALOADAND32_Instr:
-  case KVX::ALOADXOR32_Instr:
-  case KVX::ALOADOR32_Instr:
-  case KVX::ALOADNAND32_Instr:
-    return KVXMOD::SCALARCOND_WNEZ;
-  case KVX::ASWAP64_Instr:
-  case KVX::ACMPSWAP64_Instr:
-  case KVX::ALOADADD64_Instr:
-  case KVX::ALOADSUB64_Instr:
-  case KVX::ALOADAND64_Instr:
-  case KVX::ALOADXOR64_Instr:
-  case KVX::ALOADOR64_Instr:
-  case KVX::ALOADNAND64_Instr:
-    return KVXMOD::SCALARCOND_DNEZ;
-  default:
-    llvm_unreachable("invalid opCode");
-  }
-}
-
-static bool expandAtomicSwap8(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
-                              MachineBasicBlock::iterator MBBI,
-                              MachineBasicBlock::iterator &NextMBBI) {
-  MachineInstr &MI = *MBBI;
-  DebugLoc DL = MI.getDebugLoc();
-
-  //    fence
-  //    copyw scratchVal = valreg
-  //    if(offset!=0) addd (scratchBase), (baseReg), (offset)
-  //    if(offset!=0) andd (scratchPairedReg,2) = scratchBase, 3
-  //    if(offset==0) andd (scratchPairedReg,2) = basereg, 3
-  //    notw (scratchPairedReg,1) = (scratchPairedReg,2)
-  //    andd scratchBase =
-  //       baseReg (offset=0)/scatch_base(offset!=0),
-  //       (scratchPairedReg,1)
-  //    muld (shiftCount) = (scratchPairedReg,2), 8
-  //    sllw scratch_value = scratchVal, (shiftCount)
-  // .loop:
-  //    lwz.u (scratchPairedReg,2), (0)[scratchBase]
-  //    copyw (scratchPairedReg,1), (scratchPairedReg,2)
-  //    orwd (scratchPairedReg,1), (scratchPairedReg,1) , scratchVal
-  //    acswapw (0)[scratchBase], (scratchPairedReg)
-  //    compw.ne (scratchPairedReg,1) = (scratchPairedReg,1),1
-  //    cb.wnez (scratchPairedReg,1),(loop)
-  // .done:
-  //    copyw (outputReg), (scratchPairedReg,2)
-  //    sraw (outputReg) = (outputReg), (shiftCount)
-  //    fence
-
   MachineFunction *MF = MBB.getParent();
   const KVXRegisterInfo *TRI =
       (const KVXRegisterInfo *)MF->getSubtarget().getRegisterInfo();
 
-  unsigned outputReg = MI.getOperand(0).getReg();
-  unsigned scratchPairedReg = MI.getOperand(1).getReg();
-  unsigned scratchBase = MI.getOperand(2).getReg();
-  unsigned scratchVal = MI.getOperand(3).getReg();
-  unsigned shiftCount = MI.getOperand(4).getReg();
-  unsigned offset = MI.getOperand(5).getImm();
-  unsigned baseReg = MI.getOperand(6).getReg();
-  unsigned valReg = MI.getOperand(7).getReg();
+  LLVM_DEBUG(dbgs() << "expandALOAD: " << MI);
+  LLVM_DEBUG(dbgs() << "  " << MI.getNumOperands() << " operands ("
+                    << MI.getNumMemOperands() << " memoperands)" << '\n');
 
-  unsigned compReg = TRI->getSubReg(scratchPairedReg, 1);
+  assert(MI.getNumMemOperands() >= 1 &&
+         "expandALOAD pseudo-instr expects MemOperands");
 
-  BuildMI(MBB, MBBI, DL, TII->get(KVX::FENCE));
+  // FIXME: Some instructions can have more than 1 MemOperand. We assume that
+  // the first one is the right one.
+  MachineMemOperand &MO = *MI.memoperands()[0];
+  uint64_t MOSize = MO.getSize();
 
-  BuildMI(MBB, MBBI, DL, TII->get(KVX::COPYW), scratchVal).addReg(valReg);
+  assert(MO.isAtomic() && "MemOperand is not atomic");
+  assert((MOSize == 4 || MOSize == 8) && "MemOperand size isn't supported");
 
-  if (offset != 0) {
-    BuildMI(MBB, MBBI, DL, TII->get(GetImmOpCode(offset, KVX::ADDDri10,
-                                                 KVX::ADDDri37, KVX::ADDDri64)),
-            scratchBase)
-        .addReg(baseReg)
-        .addImm(offset);
-    BuildMI(MBB, MBBI, DL, TII->get(KVX::ANDDri10),
-            TRI->getSubReg(scratchPairedReg, 2))
-        .addReg(scratchBase)
-        .addImm(3);
-  } else {
-    BuildMI(MBB, MBBI, DL, TII->get(KVX::ANDDri10),
-            TRI->getSubReg(scratchPairedReg, 2))
-        .addReg(baseReg)
-        .addImm(3);
-  }
-  BuildMI(MBB, MBBI, DL, TII->get(KVX::NOTW),
-          TRI->getSubReg(scratchPairedReg, 1))
-      .addReg(TRI->getSubReg(scratchPairedReg, 2));
-  BuildMI(MBB, MBBI, DL, TII->get(KVX::ANDDrr), scratchBase)
-      .addReg(offset == 0 ? baseReg : scratchBase)
-      .addReg(TRI->getSubReg(scratchPairedReg, 1));
-  BuildMI(MBB, MBBI, DL, TII->get(KVX::MULDri10), shiftCount)
-      .addReg(TRI->getSubReg(scratchPairedReg, 2))
-      .addImm(8);
+  LLVM_DEBUG(dbgs() << "  memoperand size: " << MOSize << '\n');
 
-  BuildMI(MBB, MBBI, DL, TII->get(KVX::SLLWrr), scratchVal)
-      .addReg(scratchVal)
-      .addReg(shiftCount);
+  Register Output = MI.getOperand(0).getReg();
+  MachineOperand Offset = MI.getOperand(2);
+  Register Base = MI.getOperand(3).getReg();
+  Register Value = MI.getOperand(4).getReg();
 
-  auto LoopMBB = MF->CreateMachineBasicBlock(MBB.getBasicBlock());
+  // .csloop
+  //   load.u $fetch = $offset[$base]
+  //   op $update = $value, $fetch            # value first for sbf instr
+  //   acswap $offset[$base] = $update$fetch
+  //   cb.even $update ? .csloop              # acswap boolean status is
+  // .done                                    #   stored in $update
+  //   copy $output = $fetch
+
+  Register UpdateFetch = MI.getOperand(1).getReg();
+  Register Update = TRI->getSubReg(UpdateFetch, 1);
+  Register Fetch = TRI->getSubReg(UpdateFetch, 2);
+
+  unsigned COPY = MOSize == 4 ? KVX::COPYW : KVX::COPYD;
+  unsigned LOAD = getLOADOpcode(MOSize, Offset);
+  unsigned OP = getAtomicOPOpcode(MOSize, Opcode);
+  signed ACSWAP = getACSWAPOpcodeModifyAddr(TII, MBB, MBBI, DL, Offset, Base,
+                                            MOSize, Offset);
+
+  // Create and link new MBBs.
+  auto CSLoopMBB = MF->CreateMachineBasicBlock(MBB.getBasicBlock());
   auto DoneMBB = MF->CreateMachineBasicBlock(MBB.getBasicBlock());
 
-  // Insert new MBBs.
-  MF->insert(++MBB.getIterator(), LoopMBB);
-  MF->insert(++LoopMBB->getIterator(), DoneMBB);
+  MF->insert(++MBB.getIterator(), CSLoopMBB);
+  MF->insert(++CSLoopMBB->getIterator(), DoneMBB);
 
-  // Set up successors and transfer remaining instructions to DoneMBB.
-  LoopMBB->addSuccessor(LoopMBB);
-  LoopMBB->addSuccessor(DoneMBB);
+  CSLoopMBB->addSuccessor(CSLoopMBB);
+  CSLoopMBB->addSuccessor(DoneMBB);
 
-  BuildMI(DoneMBB, DL, TII->get(KVX::COPYW), outputReg)
-      .addReg(TRI->getSubReg(scratchPairedReg, 2));
-
-  BuildMI(DoneMBB, DL, TII->get(KVX::SRLWrr), outputReg)
-      .addReg(outputReg)
-      .addReg(shiftCount);
-
-  BuildMI(DoneMBB, DL, TII->get(KVX::FENCE));
-
-  DoneMBB->splice(DoneMBB->end(), &MBB, MI, MBB.end());
   DoneMBB->transferSuccessors(&MBB);
-  MBB.addSuccessor(LoopMBB);
-  MBB.addSuccessor(DoneMBB);
+  MBB.addSuccessor(CSLoopMBB);
 
-  BuildMI(LoopMBB, DL, TII->get(KVX::LWZp), TRI->getSubReg(scratchPairedReg, 2))
-      .addImm(0)
-      .addReg(scratchBase)
-      .addImm(KVXMOD::VARIANT_U);
-
-  BuildMI(LoopMBB, DL, TII->get(KVX::COPYW), compReg)
-      .addReg(TRI->getSubReg(scratchPairedReg, 2));
-
-  BuildMI(LoopMBB, DL, TII->get(KVX::ORWrr), compReg).addReg(compReg).addReg(
-      scratchVal);
-
-  BuildMI(LoopMBB, DL, TII->get(KVX::ACSWAPWri10), scratchPairedReg)
-      .addImm(0)
-      .addReg(scratchBase)
-      .addReg(scratchPairedReg);
-
-  BuildMI(LoopMBB, DL, TII->get(KVX::COMPWri), compReg)
-      .addReg(compReg)
-      .addImm(1)
-      .addImm(KVXMOD::COMPARISON_NE);
-
-  BuildMI(LoopMBB, DL, TII->get(KVX::CB))
-      .addReg(compReg)
-      .addMBB(LoopMBB)
-      .addImm(KVXMOD::SCALARCOND_WNEZ);
-
-  NextMBBI = MBB.end();
-  MI.eraseFromParent();
-
-  return true;
-}
-
-static bool expandASWAPInstr(unsigned int opCode, const KVXInstrInfo *TII,
-                             MachineBasicBlock &MBB,
-                             MachineBasicBlock::iterator MBBI,
-                             MachineBasicBlock::iterator &NextMBBI) {
-  MachineInstr &MI = *MBBI;
-  DebugLoc DL = MI.getDebugLoc();
-
-  //    fence
-  // .loop:
-  //    lwz.u (scratchPairedReg,2), (addr)
-  //    copyw  (scratchPairedReg,1),(valReg)
-  //    acswapw (addr), (scratchPairedReg)
-  //    compw.ne (scratchPairedReg,1) = (scratchPairedReg,1),1
-  //    cb.wnez (scratchPairedReg,1),(loop)
-  // .done:
-  //    copyw (outputReg), (scratchPairedReg,2)
-  //    fence
-
-  MachineFunction *MF = MBB.getParent();
-  const KVXRegisterInfo *TRI =
-      (const KVXRegisterInfo *)MF->getSubtarget().getRegisterInfo();
-
-  unsigned outputReg = MI.getOperand(0).getReg();
-  unsigned scratchPairedReg = MI.getOperand(1).getReg();
-  int64_t offset = MI.getOperand(2).getImm();
-  unsigned baseReg = MI.getOperand(3).getReg();
-  unsigned valReg = MI.getOperand(4).getReg();
-
-  unsigned compReg = TRI->getSubReg(scratchPairedReg, 1);
-
-  BuildMI(MBB, MBBI, DL, TII->get(KVX::FENCE));
-
-  auto LoopMBB = MF->CreateMachineBasicBlock(MBB.getBasicBlock());
-  auto DoneMBB = MF->CreateMachineBasicBlock(MBB.getBasicBlock());
-
-  // Insert new MBBs.
-  MF->insert(++MBB.getIterator(), LoopMBB);
-  MF->insert(++LoopMBB->getIterator(), DoneMBB);
-
-  // Set up successors and transfer remaining instructions to DoneMBB.
-  LoopMBB->addSuccessor(LoopMBB);
-  LoopMBB->addSuccessor(DoneMBB);
-  //    copyw  (outputReg, (scratchPairedReg,2)
-  BuildMI(DoneMBB, DL, TII->get(getAtomicCopy(opCode)), outputReg)
-      .addReg(TRI->getSubReg(scratchPairedReg, 2));
-  BuildMI(DoneMBB, DL, TII->get(KVX::FENCE));
+  // Populate DoneMBB.
+  //   copy $output = $fetch
+  BuildMI(DoneMBB, DL, TII->get(COPY), Output).addReg(Fetch);
   DoneMBB->splice(DoneMBB->end(), &MBB, MI, MBB.end());
-  DoneMBB->transferSuccessors(&MBB);
-  MBB.addSuccessor(LoopMBB);
 
-  BuildMI(LoopMBB, DL, TII->get(getAtomicLoad(opCode)),
-          TRI->getSubReg(scratchPairedReg, 2))
-      .addImm(offset)
-      .addReg(baseReg)
-      .addImm(KVXMOD::VARIANT_U);
-
-  BuildMI(LoopMBB, DL, TII->get(getAtomicCopy(opCode)), compReg).addReg(valReg);
-
-  BuildMI(LoopMBB, DL, TII->get(getAtomicSwap(offset, opCode)),
-          scratchPairedReg)
-      .addImm(offset)
-      .addReg(baseReg)
-      .addReg(scratchPairedReg);
-
-  BuildMI(LoopMBB, DL, TII->get(getAtomicComp(opCode)), compReg)
-      .addReg(compReg)
-      .addImm(1)
-      .addImm(KVXMOD::COMPARISON_NE);
-
-  BuildMI(LoopMBB, DL, TII->get(KVX::CB))
-      .addReg(compReg)
-      .addMBB(LoopMBB)
-      .addImm(getAtomicCBVar(opCode));
-
-  NextMBBI = MBB.end();
-  MI.eraseFromParent();
-
-  return true;
-}
-
-static bool isNandOp(unsigned int opCode) {
-  return opCode == KVX::ALOADNAND32_Instr || opCode == KVX::ALOADNAND64_Instr;
-}
-
-static bool expandALOADOPInstr(unsigned int opCode, const KVXInstrInfo *TII,
-                               MachineBasicBlock &MBB,
-                               MachineBasicBlock::iterator MBBI,
-                               MachineBasicBlock::iterator &NextMBBI) {
-  MachineInstr &MI = *MBBI;
-  DebugLoc DL = MI.getDebugLoc();
-
-  // fence
-  // .loop:
-  //    lwz.u (scratchPairedReg,2), (addr)
-  //    copyw (scratchPairedReg,1), (scratchPairedReg,2)
-  //    (op)  (scratchPairedReg,1) = (valReg), (scratchPairedReg,1)
-  //    (notw/d) (scratchPairedReg,1), (scratchPairedReg,1) for NAND only
-  //    acswapw (addr), (scratchPairedReg)
-  //    compw.ne (scratchPairedReg,1) = (scratchPairedReg,1),1
-  //    cb.wnez (scratchPairedReg,1),(loop)
-  // .done:
-  //    copyw (outputreg), (scratchPairedReg,2)
-  //    fence
-
-  MachineFunction *MF = MBB.getParent();
-  const KVXRegisterInfo *TRI =
-      (const KVXRegisterInfo *)MF->getSubtarget().getRegisterInfo();
-
-  bool offsetIsImm = MI.getOperand(2).isImm();
-  int64_t offsetImm;
-  unsigned offsetReg;
-
-  if (offsetIsImm)
-    offsetImm = MI.getOperand(2).getImm();
-  else
-    offsetReg = MI.getOperand(2).getReg();
-
-  unsigned outputReg = MI.getOperand(0).getReg();
-  unsigned scratchPairedReg = MI.getOperand(1).getReg();
-  unsigned baseReg = MI.getOperand(3).getReg();
-  unsigned valReg = MI.getOperand(4).getReg();
-
-  unsigned compReg = TRI->getSubReg(scratchPairedReg, 1);
-
-  BuildMI(MBB, MBBI, DL, TII->get(KVX::FENCE));
-
-  auto LoopMBB = MF->CreateMachineBasicBlock(MBB.getBasicBlock());
-  auto DoneMBB = MF->CreateMachineBasicBlock(MBB.getBasicBlock());
-
-  // Insert new MBBs.
-  MF->insert(++MBB.getIterator(), LoopMBB);
-  MF->insert(++LoopMBB->getIterator(), DoneMBB);
-
-  // Set up successors and transfer remaining instructions to DoneMBB.
-  LoopMBB->addSuccessor(LoopMBB);
-  LoopMBB->addSuccessor(DoneMBB);
-
-  BuildMI(DoneMBB, DL, TII->get(getAtomicCopy(opCode)), outputReg)
-      .addReg(TRI->getSubReg(scratchPairedReg, 2));
-
-  BuildMI(DoneMBB, DL, TII->get(KVX::FENCE));
-
-  DoneMBB->splice(DoneMBB->end(), &MBB, MI, MBB.end());
-  DoneMBB->transferSuccessors(&MBB);
-  MBB.addSuccessor(LoopMBB);
-
-  if (offsetIsImm)
-    BuildMI(LoopMBB, DL, TII->get(getAtomicLoad(opCode)),
-            TRI->getSubReg(scratchPairedReg, 2))
-        .addImm(offsetImm)
-        .addReg(baseReg)
-      .addImm(KVXMOD::VARIANT_U);
-  else
-    BuildMI(LoopMBB, DL,
-            TII->get(getAtomicLoad(opCode, false /* register offet */)),
-            TRI->getSubReg(scratchPairedReg, 2))
-        .addReg(offsetReg)
-        .addReg(baseReg)
+  // Populate CSLoopMBB.
+  //   load.u $fetch = $offset[$base]
+  if (Offset.isReg())
+    BuildMI(CSLoopMBB, DL, TII->get(LOAD), Fetch)
+        .addReg(Offset.getReg())
+        .addReg(Base)
         .addImm(KVXMOD::VARIANT_U)
         .addImm(KVXMOD::SCALING_);
-
-  BuildMI(LoopMBB, DL, TII->get(getAtomicCopy(opCode)), compReg)
-      .addReg(TRI->getSubReg(scratchPairedReg, 2));
-
-  BuildMI(LoopMBB, DL, TII->get(getAtomicOp(opCode)), compReg)
-      .addReg(valReg)
-      .addReg(compReg);
-
-  if (isNandOp(opCode)) {
-    BuildMI(LoopMBB, DL, TII->get(getAtomicNand(opCode)), compReg)
-        .addReg(compReg);
-  }
-
-  if (offsetIsImm)
-    BuildMI(LoopMBB, DL, TII->get(getAtomicSwap(offsetImm, opCode)),
-            scratchPairedReg)
-        .addImm(offsetImm)
-        .addReg(baseReg)
-      .addReg(scratchPairedReg);
   else
-    BuildMI(LoopMBB, DL,
-            TII->get(getAtomicSwap(0, opCode, false /* register offset */)),
-            scratchPairedReg)
-        .addReg(offsetReg)
-        .addReg(baseReg)
-        .addReg(scratchPairedReg)
+    BuildMI(CSLoopMBB, DL, TII->get(LOAD), Fetch)
+        .addImm(Offset.getImm())
+        .addReg(Base)
+        .addImm(KVXMOD::VARIANT_U);
+  //   op $update = $value, $fetch (or just equal to $value for KVX::ASWAPp)
+  if (Opcode != KVX::ASWAPp)
+    BuildMI(CSLoopMBB, DL, TII->get(OP), Update).addReg(Value).addReg(Fetch);
+  else
+    BuildMI(CSLoopMBB, DL, TII->get(OP), Update).addReg(Value);
+  //   acswap $offset[$base] = $update$fetch
+  if (Offset.isReg())
+    BuildMI(CSLoopMBB, DL, TII->get(ACSWAP), UpdateFetch)
+        .addReg(Offset.getReg())
+        .addReg(Base)
+        .addReg(UpdateFetch)
         .addImm(KVXMOD::SCALING_);
-
-  BuildMI(LoopMBB, DL, TII->get(getAtomicComp(opCode)), compReg)
-      .addReg(compReg)
-      .addImm(1)
-      .addImm(KVXMOD::COMPARISON_NE);
-
-  BuildMI(LoopMBB, DL, TII->get(KVX::CB))
-      .addReg(compReg)
-      .addMBB(LoopMBB)
-      .addImm(getAtomicCBVar(opCode));
+  else
+    BuildMI(CSLoopMBB, DL, TII->get(ACSWAP), UpdateFetch)
+        .addImm(Offset.getImm())
+        .addReg(Base)
+        .addReg(UpdateFetch);
+  //   cb.even $update ? .csloop
+  BuildMI(CSLoopMBB, DL, TII->get(KVX::CB))
+      .addReg(Update)
+      .addMBB(CSLoopMBB)
+      .addImm(KVXMOD::SCALARCOND_EVEN);
 
   NextMBBI = MBB.end();
   MI.eraseFromParent();
-
   return true;
 }
 
-static bool expandACMPSWAPInstr(unsigned int opCode, const KVXInstrInfo *TII,
-                                MachineBasicBlock &MBB,
-                                MachineBasicBlock::iterator MBBI,
-                                MachineBasicBlock::iterator &NextMBBI) {
-  MachineInstr &MI = *MBBI;
-  DebugLoc DL = MI.getDebugLoc();
+// Expand an atomic_swap operation (same codegen as for expandALOAD
+// except that the operation is just a copy instruction).
+static bool expandASWAP(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
+                        MachineBasicBlock::iterator MBBI,
+                        MachineBasicBlock::iterator &NextMBBI) {
+  return expandALOAD(KVX::ASWAPp, TII, MBB, MBBI, NextMBBI);
+}
 
+// Expand an atomic_swap operation for the special case of
+// __atomic_test_and_set, i.e. atomicrmw xchg i8 *ptr, 1.
+static bool expandATAS(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
+                       MachineBasicBlock::iterator MBBI,
+                       MachineBasicBlock::iterator &NextMBBI) {
+
+  MachineInstr &MI = *MBBI;
+
+  assert(MI.hasOneMemOperand() &&
+         "expandATAS pseudo-instr expects one MemOperand");
+
+  assert(
+      MI.memoperands()[0]->getSize() == 1 &&
+      "expandATAS only support atomicrmw xchg i8*, 1 operation (test_and_set)");
+
+  DebugLoc DL = MI.getDebugLoc();
   MachineFunction *MF = MBB.getParent();
   const KVXRegisterInfo *TRI =
       (const KVXRegisterInfo *)MF->getSubtarget().getRegisterInfo();
 
-  unsigned outputReg = MI.getOperand(0).getReg();
-  unsigned scratchPairedReg = MI.getOperand(1).getReg();
+  Register Output = MI.getOperand(0).getReg();
+  Register Base = MI.getOperand(6).getReg();
+  Register Value = MI.getOperand(7).getReg();
 
-  int64_t offset = MI.getOperand(2).getImm();   // addr
-  unsigned baseReg = MI.getOperand(3).getReg(); // addr
-  unsigned expectedReg = MI.getOperand(4).getReg();
-  unsigned desiredReg = MI.getOperand(5).getReg();
+  Register UpdateFetch = MI.getOperand(1).getReg();
+  Register Update = TRI->getSubReg(UpdateFetch, 1);
+  Register Fetch = TRI->getSubReg(UpdateFetch, 2);
 
-  unsigned compReg = TRI->getSubReg(scratchPairedReg, 1);
+  Register Pos = MI.getOperand(2).getReg();
+  Register Mask = MI.getOperand(3).getReg();
+  Register Offset = MI.getOperand(5).isReg() ? MI.getOperand(5).getReg()
+                                             : MI.getOperand(4).getReg();
 
-  //    fence
-  //    copyw  (scratchPairedReg,2),(expectedReg)
-  // .loop:
-  //    copyw  (scratchPairedReg,1),(desiredReg)
-  //    acswapw (addr), (scratchPairedReg)
-  //    compw.eq (scratchPairedReg,1) = (scratchPairedReg,1),1
-  //    cb.wnez (scratchPairedReg,1),(success)
-  //    lwz.u (outputReg) (addr)
-  //    compw.eq (scratchPairedReg,1) = (scratchReg), (scratchPairedReg,2)
-  //    cb.wnez (scratchPairedReg),(loop)
-  //    goto (done)
-  // .success:
-  //    copyw (outputReg),(scratchPairedReg,2)
-  // .done:
+  //   addd $base = $base, $offset   # iff $offset != 0
+  //   andd $pos = $base, 3          # find the place of the byte to
+  //                                 #   test_and_set in the memory word
+  //                                 #   ($pos is 0, 1, 2, or 3)
+  //   negd $offset = $pos           # the address of the memory word
+  //                                 #   containing the byte is
+  //                                 #   ($base + $offset - $pos)
+  //   slld $pos = $pos, 3           # $pos in bits: $pos * 8
+  // .csloop
+  //   lwz.u $fetch = $offset[$base]
+  //   srlw $output = $fetch, $pos   # keep only the byte to test_and_set:
+  //   andw $output = $output, 0xFF  #   ($fetch >> $pos) & 0xFF
+  //   cb.wnez $output ? .done       # the byte is already set
+  //   sllw $mask = $value, $pos     # new value to set:
+  //   orw $update = $fetch, $mask   #   $fetch | ($value << $pos)
+  //   acswapw $offset[$base] = $update$fetch
+  //   cb.even $update ? .csloop
+  // .done
 
-  BuildMI(MBB, MBBI, DL, TII->get(KVX::FENCE));
-  BuildMI(MBB, MBBI, DL, TII->get(getAtomicCopy(opCode)),
-          TRI->getSubReg(scratchPairedReg, 2)).addReg(expectedReg);
-
-  auto LoopMBB = MF->CreateMachineBasicBlock(MBB.getBasicBlock());
-  auto SuccessMBB = MF->CreateMachineBasicBlock(MBB.getBasicBlock());
+  // Create and link new MBBs.
+  auto CSLoopMBB = MF->CreateMachineBasicBlock(MBB.getBasicBlock());
   auto DoneMBB = MF->CreateMachineBasicBlock(MBB.getBasicBlock());
 
-  // Insert new MBBs.
-  MF->insert(++MBB.getIterator(), LoopMBB);
-  MF->insert(++LoopMBB->getIterator(), SuccessMBB);
-  MF->insert(++SuccessMBB->getIterator(), DoneMBB);
+  MF->insert(++MBB.getIterator(), CSLoopMBB);
+  MF->insert(++CSLoopMBB->getIterator(), DoneMBB);
 
-  // Set up successors and transfer remaining instructions to DoneMBB.
-  LoopMBB->addSuccessor(LoopMBB);
-  LoopMBB->addSuccessor(SuccessMBB);
-  LoopMBB->addSuccessor(DoneMBB);
+  CSLoopMBB->addSuccessor(CSLoopMBB);
+  CSLoopMBB->addSuccessor(DoneMBB);
 
-  DoneMBB->splice(DoneMBB->end(), &MBB, MI, MBB.end());
   DoneMBB->transferSuccessors(&MBB);
-  MBB.addSuccessor(LoopMBB);
-  MBB.addSuccessor(SuccessMBB);
-  MBB.addSuccessor(DoneMBB);
+  MBB.addSuccessor(CSLoopMBB);
 
-  BuildMI(LoopMBB, DL, TII->get(getAtomicCopy(opCode)), compReg)
-      .addReg(desiredReg);
+  // Populate DoneMBB.
+  DoneMBB->splice(DoneMBB->end(), &MBB, MI, MBB.end());
+  DoneMBB->setLabelMustBeEmitted();
 
-  BuildMI(LoopMBB, DL, TII->get(getAtomicSwap(offset, opCode)),
-          scratchPairedReg)
-      .addImm(offset)
-      .addReg(baseReg)
-      .addReg(scratchPairedReg);
+  // Populate MBB.
+  //   addd $base = $base, $offset   # iff $offset != 0
+  if (MI.getOperand(5).isImm()) {
+    uint64_t Imm = MI.getOperand(5).getImm();
+    if (Imm != 0)
+      BuildMI(&MBB, DL, TII->get(KVX::ADDDri64), Base).addReg(Base).addImm(Imm);
+  } else {
+    BuildMI(&MBB, DL, TII->get(KVX::ADDDrr), Base).addReg(Base).addReg(Offset);
+  }
+  //   andd $pos = $base, 3          # find the place of the byte to
+  //                                 #   test_and_set in the memory word
+  //                                 #   ($pos is 0, 1, 2, or 3)
+  BuildMI(&MBB, DL, TII->get(KVX::ANDDri10), Pos).addReg(Base).addImm(3);
+  //   negd $offset = $pos           # the address of the memory word
+  //                                 #   containing the byte is
+  //                                 #   ($base + $offset - $pos)
+  BuildMI(&MBB, DL, TII->get(KVX::NEGD), Offset).addReg(Pos);
+  //   slld $pos = $pos, 3           # $pos in bits: $pos * 8
+  BuildMI(&MBB, DL, TII->get(KVX::SLLDri), Pos).addReg(Pos).addImm(3);
 
-  BuildMI(LoopMBB, DL, TII->get(getAtomicComp(opCode)), compReg)
-      .addReg(compReg)
-      .addImm(1)
-      .addImm(KVXMOD::COMPARISON_EQ);
-
-  BuildMI(LoopMBB, DL, TII->get(KVX::CB))
-      .addReg(compReg)
-      .addMBB(SuccessMBB)
-      .addImm(getAtomicCBVar(opCode));
-
-  BuildMI(LoopMBB, DL, TII->get(getAtomicLoad(opCode)), outputReg)
-      .addImm(offset)
-      .addReg(baseReg)
-      .addImm(KVXMOD::VARIANT_U);
-
-  BuildMI(LoopMBB, DL, TII->get(getAtomicCompReg(opCode)), compReg)
-      .addReg(outputReg)
-      .addReg(TRI->getSubReg(scratchPairedReg, 2))
-      .addImm(KVXMOD::COMPARISON_EQ);
-
-  BuildMI(LoopMBB, DL, TII->get(KVX::CB))
-      .addReg(compReg)
-      .addMBB(LoopMBB)
-      .addImm(getAtomicCBVar(opCode));
-
-  BuildMI(LoopMBB, DL, TII->get(KVX::GOTO)).addMBB(DoneMBB);
-
-  BuildMI(SuccessMBB, DL, TII->get(getAtomicCopy(opCode)), outputReg)
-      .addReg(TRI->getSubReg(scratchPairedReg, 2));
+  // Populate CSLoopMBB (insns have been manually scheduled).
+  //   lwz.u $fetch = $offset[$base]
+  BuildMI(CSLoopMBB, DL, TII->get(KVX::LWZrr), Fetch)
+      .addReg(Offset)
+      .addReg(Base)
+      .addImm(KVXMOD::VARIANT_U)
+      .addImm(KVXMOD::SCALING_);
+  //   srlw $output = $fetch, $pos   # keep only the byte to test_and_set:
+  BuildMI(CSLoopMBB, DL, TII->get(KVX::SRLWrr), Output)
+      .addReg(Fetch)
+      .addReg(Pos);
+  //   sllw $mask = $value, $pos     # new value to set:
+  BuildMI(CSLoopMBB, DL, TII->get(KVX::SLLWrr), Mask).addReg(Value).addReg(Pos);
+  //   andw $output = $output, 0xFF  #   ($fetch >> $pos) & 0xFF
+  BuildMI(CSLoopMBB, DL, TII->get(KVX::ANDWri10), Output)
+      .addReg(Output)
+      .addImm(0xFF);
+  //   orw $update = $fetch, $mask   #   $fetch | ($value << $pos)
+  BuildMI(CSLoopMBB, DL, TII->get(KVX::ORWrr), Update)
+      .addReg(Fetch)
+      .addReg(Mask);
+  //   cb.wnez $output ? .done       # the byte is already set
+  BuildMI(CSLoopMBB, DL, TII->get(KVX::CB))
+      .addReg(Output)
+      .addMBB(DoneMBB)
+      .addImm(KVXMOD::SCALARCOND_WNEZ);
+  //   acswapw $offset[$base] = $update$fetch
+  BuildMI(CSLoopMBB, DL, TII->get(KVX::ACSWAPWrr), UpdateFetch)
+      .addReg(Offset)
+      .addReg(Base)
+      .addReg(UpdateFetch)
+      .addImm(KVXMOD::SCALING_);
+  //   cb.even $update ? .csloop
+  BuildMI(CSLoopMBB, DL, TII->get(KVX::CB))
+      .addReg(Update)
+      .addMBB(CSLoopMBB)
+      .addImm(KVXMOD::SCALARCOND_EVEN);
 
   NextMBBI = MBB.end();
   MI.eraseFromParent();
+  return true;
+}
 
+// Expand an atomic_cmp_swap operation.
+static bool expandACMPSWAP(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
+                           MachineBasicBlock::iterator MBBI,
+                           MachineBasicBlock::iterator &NextMBBI) {
+
+  MachineInstr &MI = *MBBI;
+  DebugLoc DL = MI.getDebugLoc();
+  MachineFunction *MF = MBB.getParent();
+  const KVXRegisterInfo *TRI =
+      (const KVXRegisterInfo *)MF->getSubtarget().getRegisterInfo();
+
+  assert(MI.getNumMemOperands() >= 1 &&
+         "expandACMPSWAP pseudo-instr expects MemOperands");
+
+  // FIXME: Some instructions can have more than 1 MemOperand. We assume that
+  // the first one is the right one.
+  MachineMemOperand &MO = *MI.memoperands()[0];
+  uint64_t MOSize = MO.getSize();
+
+  Register Output = MI.getOperand(0).getReg();
+  MachineOperand Offset = MI.getOperand(2);
+  Register Base = MI.getOperand(3).getReg();
+  Register Compare = MI.getOperand(4).getReg();
+  Register Swap = MI.getOperand(5).getReg();
+
+  Register DesiredExpected = MI.getOperand(1).getReg();
+  Register Desired = TRI->getSubReg(DesiredExpected, 1);
+  Register Expected = TRI->getSubReg(DesiredExpected, 2);
+
+  //   copy $expected = $compare                  # iff $compare isn't a valid
+  //                                              #   PairedReg subreg
+  // .csloop
+  //   copy $desired = $swap                      # restore $desired in case
+  //                                              #   of loop
+  //   acswap $offset[$base] = $desired$expected  # try the compare and swap
+  //   cb.odd $desired ? .pass                    # return $expected
+  //                                              #   on success
+  //   load.u $output = $offset[$base]            # reload $expected value
+  //                                              #   from memory on failure
+  //                                              #   and retry if equal to
+  //                                              #   expected input
+  //   comp.eq $desired = $output, $expected      # desired use as temp reg
+  //                                              #   for comp
+  //   cb.odd $desired ? .csloop
+  //   goto .done
+  // .pass
+  //   copy $output = $expected                   # output contains expected
+  //                                              #   on success, loaded value
+  //                                              #   on failure
+  // .done
+
+  unsigned COPY = MOSize == 4 ? KVX::COPYW : KVX::COPYD;
+  unsigned COMP = MOSize == 4 ? KVX::COMPWrr : KVX::COMPDrr;
+  signed ACSWAP = getACSWAPOpcodeModifyAddr(TII, MBB, MBBI, DL, Offset, Base,
+                                            MOSize, Offset);
+  unsigned LOAD = getLOADOpcode(MOSize, Offset);
+
+  // Create and link new MBBs.
+  auto CSLoopMBB = MF->CreateMachineBasicBlock(MBB.getBasicBlock());
+  auto PassMBB = MF->CreateMachineBasicBlock(MBB.getBasicBlock());
+  auto DoneMBB = MF->CreateMachineBasicBlock(MBB.getBasicBlock());
+
+  MF->insert(++MBB.getIterator(), CSLoopMBB);
+  MF->insert(++CSLoopMBB->getIterator(), PassMBB);
+  MF->insert(++PassMBB->getIterator(), DoneMBB);
+
+  CSLoopMBB->addSuccessor(CSLoopMBB);
+  CSLoopMBB->addSuccessor(PassMBB);
+  CSLoopMBB->addSuccessor(DoneMBB);
+
+  DoneMBB->transferSuccessors(&MBB);
+  MBB.addSuccessor(CSLoopMBB);
+
+  // Populate DoneMBB.
+  DoneMBB->splice(DoneMBB->end(), &MBB, MI, MBB.end());
+  DoneMBB->setLabelMustBeEmitted();
+
+  // Populate MBB.
+  //   copy $expected = $compare                  # iff $compare isn't a valid
+  //                                              #   PairedReg subreg
+  if (Desired != Swap || Expected != Compare) {
+    BuildMI(&MBB, DL, TII->get(COPY), Expected).addReg(Compare);
+  }
+
+  // Populate CSLoopMBB.
+  //   copy $desired = $swap                      # restore $desired in case
+  //                                              #   of loop
+  BuildMI(CSLoopMBB, DL, TII->get(COPY), Desired).addReg(Swap);
+  //   acswap $offset[$base] = $desired$expected  # try the compare and swap
+  if (Offset.isReg())
+    BuildMI(CSLoopMBB, DL, TII->get(ACSWAP), DesiredExpected)
+        .addReg(Offset.getReg())
+        .addReg(Base)
+        .addReg(DesiredExpected)
+        .addImm(KVXMOD::SCALING_);
+  else
+    BuildMI(CSLoopMBB, DL, TII->get(ACSWAP), DesiredExpected)
+        .addImm(Offset.getImm())
+        .addReg(Base)
+        .addReg(DesiredExpected);
+  //   cb.odd $desired ? .pass                    # return $expected on
+  //                                              #   success
+  BuildMI(CSLoopMBB, DL, TII->get(KVX::CB))
+      .addReg(Desired)
+      .addMBB(PassMBB)
+      .addImm(KVXMOD::SCALARCOND_ODD);
+  //   load.u $output = $offset[$base]            # reload $expected value
+  //                                              #   from memory on failure
+  //                                              #   and retry if equal to
+  //                                              #   expected input
+  if (Offset.isReg())
+    BuildMI(CSLoopMBB, DL, TII->get(LOAD), Output)
+        .addReg(Offset.getReg())
+        .addReg(Base)
+        .addImm(KVXMOD::VARIANT_U)
+        .addImm(KVXMOD::SCALING_);
+  else
+    BuildMI(CSLoopMBB, DL, TII->get(LOAD), Output)
+        .addImm(Offset.getImm())
+        .addReg(Base)
+        .addImm(KVXMOD::VARIANT_U);
+  //   comp.eq $desired = $output, $expected      # desired use as temp reg
+  //                                              #   for comp
+  BuildMI(CSLoopMBB, DL, TII->get(COMP), Desired)
+      .addReg(Output)
+      .addReg(Expected)
+      .addImm(KVXMOD::COMPARISON_EQ);
+  //   cb.odd $desired ? .csloop
+  BuildMI(CSLoopMBB, DL, TII->get(KVX::CB))
+      .addReg(Desired)
+      .addMBB(CSLoopMBB)
+      .addImm(KVXMOD::SCALARCOND_ODD);
+  //   goto .done
+  BuildMI(CSLoopMBB, DL, TII->get(KVX::GOTO)).addMBB(DoneMBB);
+
+  // Populate PassMBB.
+  //   copy $output = $expected                   # output contains expected
+  //                                              #   on success, loaded value
+  //                                              #   on failure
+  PassMBB->setLabelMustBeEmitted();
+  BuildMI(PassMBB, DL, TII->get(COPY), Output).addReg(Expected);
+
+  NextMBBI = MBB.end();
+  MI.eraseFromParent();
   return true;
 }
 
@@ -1293,34 +1134,23 @@ bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
   case KVX::Select64p:
     expandSelectInstr(TII, MBB, MBBI, false);
     return true;
-  case KVX::FENCE_Instr:
-    expandFENCEInstr(TII, MBB, MBBI);
-    return true;
-  case KVX::ASWAP8_Instr:
-    expandAtomicSwap8(TII, MBB, MBBI, NextMBBI);
-    return true;
-  case KVX::ASWAP32_Instr:
-  case KVX::ASWAP64_Instr:
-    expandASWAPInstr(MBBI->getOpcode(), TII, MBB, MBBI, NextMBBI);
-    return true;
-  case KVX::ACMPSWAP32_Instr:
-  case KVX::ACMPSWAP64_Instr:
-    expandACMPSWAPInstr(MBBI->getOpcode(), TII, MBB, MBBI, NextMBBI);
-    return true;
-  case KVX::ALOADADD32_Instr:
-  case KVX::ALOADADD64_Instr:
-  case KVX::ALOADSUB32_Instr:
-  case KVX::ALOADSUB64_Instr:
-  case KVX::ALOADAND32_Instr:
-  case KVX::ALOADAND64_Instr:
-  case KVX::ALOADXOR32_Instr:
-  case KVX::ALOADXOR64_Instr:
-  case KVX::ALOADOR32_Instr:
-  case KVX::ALOADOR64_Instr:
-  case KVX::ALOADNAND32_Instr:
-  case KVX::ALOADNAND64_Instr:
-    expandALOADOPInstr(MBBI->getOpcode(), TII, MBB, MBBI, NextMBBI);
-    return true;
+  case KVX::ALOADADDp:
+  case KVX::ALOADSUBp:
+  case KVX::ALOADANDp:
+  case KVX::ALOADORp:
+  case KVX::ALOADXORp:
+  case KVX::ALOADNANDp:
+  case KVX::ALOADMINp:
+  case KVX::ALOADMAXp:
+  case KVX::ALOADUMINp:
+  case KVX::ALOADUMAXp:
+    return expandALOAD(MBBI->getOpcode(), TII, MBB, MBBI, NextMBBI);
+  case KVX::ACMPSWAPp:
+    return expandACMPSWAP(TII, MBB, MBBI, NextMBBI);
+  case KVX::ASWAPp:
+    return expandASWAP(TII, MBB, MBBI, NextMBBI);
+  case KVX::ATASp:
+    return expandATAS(TII, MBB, MBBI, NextMBBI);
   case KVX::GET_Instr:
     expandGetInstr(TII, MBB, MBBI);
     return true;

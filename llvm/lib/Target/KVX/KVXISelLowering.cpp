@@ -287,11 +287,6 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::BR_CC, VT, Custom);
 
     setOperationAction(ISD::BSWAP, VT, Expand);
-
-    setOperationAction(ISD::ATOMIC_LOAD_MIN, VT, Expand);
-    setOperationAction(ISD::ATOMIC_LOAD_MAX, VT, Expand);
-    setOperationAction(ISD::ATOMIC_LOAD_UMIN, VT, Expand);
-    setOperationAction(ISD::ATOMIC_LOAD_UMAX, VT, Expand);
   }
   setOperationAction(ISD::ROTL, MVT::i64, Expand);
   setOperationAction(ISD::ROTR, MVT::i64, Expand);
@@ -429,6 +424,25 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
 
   setTargetDAGCombine(ISD::ZERO_EXTEND);
 
+  setOperationAction(ISD::ATOMIC_FENCE, MVT::Other, Custom);
+  // NOTE: We could use ACSWAPW instruction with some shifts and masks to
+  // support custom lowering of i8 and i16 operations. See ASWAPp for i8.
+  for (auto VT : {MVT::i32, MVT::i64}) {
+    setOperationAction(ISD::ATOMIC_LOAD_ADD, VT, Custom);
+    setOperationAction(ISD::ATOMIC_LOAD_SUB, VT, Custom);
+    setOperationAction(ISD::ATOMIC_LOAD_AND, VT, Custom);
+    setOperationAction(ISD::ATOMIC_LOAD_CLR, VT, Custom);
+    setOperationAction(ISD::ATOMIC_LOAD_OR, VT, Custom);
+    setOperationAction(ISD::ATOMIC_LOAD_XOR, VT, Custom);
+    setOperationAction(ISD::ATOMIC_LOAD_NAND, VT, Custom);
+    setOperationAction(ISD::ATOMIC_LOAD_MIN, VT, Custom);
+    setOperationAction(ISD::ATOMIC_LOAD_MAX, VT, Custom);
+    setOperationAction(ISD::ATOMIC_LOAD_UMIN, VT, Custom);
+    setOperationAction(ISD::ATOMIC_LOAD_UMAX, VT, Custom);
+    // ATOMIC_SWAP is and AtomicRMW operation with XCHG operator.
+    setOperationAction(ISD::ATOMIC_SWAP, VT, Custom);
+  }
+
   setMaxAtomicSizeInBitsSupported(64);
   setMinCmpXchgSizeInBits(32);
 
@@ -471,6 +485,8 @@ const char *KVXTargetLowering::getTargetNodeName(unsigned Opcode) const {
     return "KVX::COMP";
   case KVXISD::BRCOND:
     return "KVX::BRCOND";
+  case KVXISD::FENCE:
+    return "KVX::FENCE";
   default:
     return NULL;
   }
@@ -874,28 +890,121 @@ SDValue KVXTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
   case ISD::UINT_TO_FP:
   case ISD::SINT_TO_FP:
     return lowerIntToFP(Op, DAG);
+  case ISD::ATOMIC_FENCE:
+    return lowerATOMIC_FENCE(Op, DAG);
+  case ISD::ATOMIC_LOAD_ADD:
+  case ISD::ATOMIC_LOAD_SUB:
+  case ISD::ATOMIC_LOAD_AND:
+  case ISD::ATOMIC_LOAD_CLR:
+  case ISD::ATOMIC_LOAD_OR:
+  case ISD::ATOMIC_LOAD_XOR:
+  case ISD::ATOMIC_LOAD_NAND:
+  case ISD::ATOMIC_LOAD_MIN:
+  case ISD::ATOMIC_LOAD_MAX:
+  case ISD::ATOMIC_LOAD_UMIN:
+  case ISD::ATOMIC_LOAD_UMAX:
+    // ATOMIC_SWAP can be seen as an ATOMIC_LOAD_XCHG.
+  case ISD::ATOMIC_SWAP:
+    return lowerATOMIC_LOAD_OP(Op, DAG);
   }
+}
+
+bool KVXTargetLowering::shouldInsertFencesForAtomic(
+    const Instruction *I) const {
+  return isa<LoadInst>(I) || isa<StoreInst>(I) || isa<AtomicRMWInst>(I) ||
+         isa<AtomicCmpXchgInst>(I);
 }
 
 Instruction *KVXTargetLowering::emitLeadingFence(IRBuilder<> &Builder,
                                                  Instruction *Inst,
                                                  AtomicOrdering Ord) const {
-  if (isa<LoadInst>(Inst) && Ord == AtomicOrdering::SequentiallyConsistent)
-    return Builder.CreateFence(Ord);
-  if (isa<StoreInst>(Inst) && Ord != AtomicOrdering::Monotonic)
-    return Builder.CreateFence(Ord);
-  return nullptr;
+  unsigned AS;
+
+  if (isa<LoadInst>(Inst))
+    AS = static_cast<LoadInst *>(Inst)->getPointerAddressSpace();
+  else if (isa<StoreInst>(Inst))
+    AS = static_cast<StoreInst *>(Inst)->getPointerAddressSpace();
+  else if (isa<AtomicRMWInst>(Inst))
+    AS = static_cast<AtomicRMWInst *>(Inst)->getPointerAddressSpace();
+  else if (isa<AtomicCmpXchgInst>(Inst))
+    AS = static_cast<AtomicCmpXchgInst *>(Inst)->getPointerAddressSpace();
+  else
+    llvm_unreachable("Unsupported atomic instruction");
+
+  if (AS == 1) { // __global AS (opencl_global): emit a call to OS intrinsic.
+    Module *M = Builder.GetInsertBlock()->getParent()->getParent();
+
+    assert(M->getTargetTriple().find("cos") &&
+           "This codegen is for ClusterOS only");
+
+    FunctionCallee Fn = M->getOrInsertFunction(
+        "__kvx_atomic_global_in", Type::getVoidTy(M->getContext()),
+        Type::getInt32Ty(M->getContext()));
+
+    CallInst *L2Bypass =
+        Builder.CreateCall(Fn, Builder.getInt32((int)toCABI(Ord)));
+    L2Bypass->setDebugLoc(Inst->getDebugLoc());
+
+    return L2Bypass;
+  } else { // Emit a fence.
+    switch (toCABI(Ord)) {
+    case AtomicOrderingCABI::relaxed:
+    case AtomicOrderingCABI::release:
+      return nullptr;
+    case AtomicOrderingCABI::consume:
+    case AtomicOrderingCABI::acquire:
+    case AtomicOrderingCABI::acq_rel:
+    case AtomicOrderingCABI::seq_cst:
+      return Builder.CreateFence(Ord);
+    }
+  }
 }
 
 Instruction *KVXTargetLowering::emitTrailingFence(IRBuilder<> &Builder,
                                                   Instruction *Inst,
                                                   AtomicOrdering Ord) const {
-  if (isa<LoadInst>(Inst) && isAcquireOrStronger(Ord))
-    return Builder.CreateFence(AtomicOrdering::Acquire);
-  if (isa<StoreInst>(Inst) && Ord == AtomicOrdering::SequentiallyConsistent)
-    return Builder.CreateFence(Ord);
+  unsigned AS;
 
-  return nullptr;
+  if (isa<LoadInst>(Inst))
+    AS = static_cast<LoadInst *>(Inst)->getPointerAddressSpace();
+  else if (isa<StoreInst>(Inst))
+    AS = static_cast<StoreInst *>(Inst)->getPointerAddressSpace();
+  else if (isa<AtomicRMWInst>(Inst))
+    AS = static_cast<AtomicRMWInst *>(Inst)->getPointerAddressSpace();
+  else if (isa<AtomicCmpXchgInst>(Inst)) {
+    AS = static_cast<AtomicCmpXchgInst *>(Inst)->getPointerAddressSpace();
+    // Ensure to use stronger ordering.
+    Ord = static_cast<AtomicCmpXchgInst *>(Inst)->getSuccessOrdering();
+  } else
+    llvm_unreachable("Unsupported atomic instruction");
+
+  if (AS == 1) { // __global AS (opencl_global): emit a call to OS intrinsic.
+    Module *M = Builder.GetInsertBlock()->getParent()->getParent();
+
+    assert(M->getTargetTriple().find("cos") &&
+           "This codegen is for ClusterOS only");
+
+    FunctionCallee Fn = M->getOrInsertFunction(
+        "__kvx_atomic_global_out", Type::getVoidTy(M->getContext()),
+        Type::getInt32Ty(M->getContext()));
+
+    CallInst *L2Bypass =
+        Builder.CreateCall(Fn, Builder.getInt32((int)toCABI(Ord)));
+    L2Bypass->setDebugLoc(Inst->getDebugLoc());
+
+    return L2Bypass;
+  } else { // Emit a fence.
+    switch (toCABI(Ord)) {
+    case AtomicOrderingCABI::relaxed:
+    case AtomicOrderingCABI::acquire:
+      return nullptr;
+    case AtomicOrderingCABI::release:
+    case AtomicOrderingCABI::acq_rel:
+    case AtomicOrderingCABI::consume:
+    case AtomicOrderingCABI::seq_cst:
+      return Builder.CreateFence(Ord);
+    }
+  }
 }
 
 bool KVXTargetLowering::isZExtFree(SDValue Val, EVT VT2) const {
@@ -903,6 +1012,12 @@ bool KVXTargetLowering::isZExtFree(SDValue Val, EVT VT2) const {
     return true; // KVX have a zero extended load for each data type.
 
   return false;
+}
+
+bool KVXTargetLowering::isNoopAddrSpaceCast(unsigned SrcAS,
+                                            unsigned DestAS) const {
+  // Addrspacecasts are always noops.
+  return true;
 }
 
 SDValue KVXTargetLowering::lowerRETURNADDR(SDValue Op,
@@ -2040,6 +2155,51 @@ SDValue KVXTargetLowering::lowerIntToFP(SDValue Op, SelectionDAG &DAG) const {
   SmallVector<SDValue, 2> Ops(Op->op_begin(), Op->op_end());
   MakeLibCallOptions CallOptions;
   return makeLibCall(DAG, LC, MVT::f32, Ops, CallOptions, SDLoc(Op)).first;
+}
+
+SDValue KVXTargetLowering::lowerATOMIC_FENCE(SDValue Op,
+                                             SelectionDAG &DAG) const {
+  ConstantSDNode *SyncScopeIDNode = cast<ConstantSDNode>(Op.getOperand(2));
+  auto SyncScopeID =
+      static_cast<SyncScope::ID>(SyncScopeIDNode->getZExtValue());
+
+  // KVX memory model is strong enough not to require any barrier in order to
+  // synchronize a thread with itself. Do not emit anything for
+  // SyncScope::SingleThread. Example of IR (generated by
+  // __atomic_signal_fence(memory_order_acquire) for example):
+  // fence syncscope("singlethread") acquire
+  if (SyncScopeID != SyncScope::SingleThread) {
+    // Always emit a fence for SyncScope::System (generated by
+    // __atomic_thread_fence(memory_order_acquire) for example).
+    return DAG.getNode(KVXISD::FENCE, SDLoc(Op), MVT::Other, Op.getOperand(0));
+  }
+
+  // Fallback: do not emit anything.
+  return DAG.getUNDEF(MVT::Other);
+}
+
+SDValue KVXTargetLowering::lowerATOMIC_LOAD_OP(SDValue Op,
+                                               SelectionDAG &DAG) const {
+  EVT MemVT = cast<AtomicSDNode>(Op)->getMemoryVT();
+  MVT LoadVT = MemVT.getSimpleVT();
+
+  switch (LoadVT.SimpleTy) {
+  default:
+    break;
+    // Expand all atomic_load operations to libcall for i8 and i16.
+  case MVT::i8:
+    // Except for ATOMIC_SWAP in order to support __atomic_test_and_set.
+    if (Op.getOpcode() == ISD::ATOMIC_SWAP && Op.getConstantOperandVal(2) == 1)
+      return Op;
+    LLVM_FALLTHROUGH;
+  case MVT::i16:
+    RTLIB::Libcall LC = RTLIB::getSYNC(Op.getOpcode(), LoadVT);
+    SmallVector<SDValue, 2> Ops(Op->op_begin() + 1, Op->op_end());
+    MakeLibCallOptions CallOptions;
+    return makeLibCall(DAG, LC, MVT::i32, Ops, CallOptions, SDLoc(Op)).first;
+  }
+
+  return Op;
 }
 
 static SDValue combineZext(SDNode *N, SelectionDAG &DAG) {

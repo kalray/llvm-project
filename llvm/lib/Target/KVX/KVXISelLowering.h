@@ -41,7 +41,8 @@ enum NodeType : unsigned {
   COMP,
   BRCOND,
   JT,
-  JT_PCREL
+  JT_PCREL,
+  FENCE
 };
 } // namespace KVXISD
 
@@ -55,9 +56,7 @@ public:
 
   SDValue LowerOperation(SDValue Op, SelectionDAG &DAG) const override;
 
-  bool shouldInsertFencesForAtomic(const Instruction *I) const override {
-    return isa<LoadInst>(I) || isa<StoreInst>(I);
-  }
+  bool shouldInsertFencesForAtomic(const Instruction *I) const override;
 
   Instruction *emitLeadingFence(IRBuilder<> &Builder, Instruction *Inst,
                                 AtomicOrdering Ord) const override;
@@ -65,6 +64,7 @@ public:
                                  AtomicOrdering Ord) const override;
 
   bool isZExtFree(SDValue Val, EVT VT2) const override;
+  bool isNoopAddrSpaceCast(unsigned SrcAS, unsigned DestAS) const override;
 
 private:
   SDValue LowerFormalArguments(SDValue Chain, CallingConv::ID CallConv,
@@ -131,6 +131,8 @@ private:
   bool canLowerShiftVectorial(SDValue Op) const;
 
   SDValue lowerIntToFP(SDValue Op, SelectionDAG &DAG) const;
+  SDValue lowerATOMIC_FENCE(SDValue Op, SelectionDAG &DAG) const;
+  SDValue lowerATOMIC_LOAD_OP(SDValue Op, SelectionDAG &DAG) const;
 
   bool IsEligibleForTailCallOptimization(
       CCState &CCInfo, CallLoweringInfo &CLI, MachineFunction &MF,
