@@ -19,7 +19,6 @@ def SDTKVXComp : SDTypeProfile<1, 3,
 def SDTKVXJTPcrel
   : SDTypeProfile<1, 1, [SDTCisVT<0, i64>, SDTCisVT<1, i64>]>;
 
-
 //===----------------------------------------------------------------------===//
 // Custom selection DAG node definitions.
 //===----------------------------------------------------------------------===//
@@ -29,6 +28,8 @@ def KVXComp : SDNode<"KVXISD::COMP", SDTKVXComp, []>;
 
 def KVXJT: SDNode<"KVXISD::JT", SDTIntUnaryOp>;
 def KVXJT_PCREL: SDNode<"KVXISD::JT_PCREL", SDTKVXJTPcrel>;
+
+def KVXFence: SDNode<"KVXISD::FENCE", SDTNone, [SDNPHasChain, SDNPSideEffect]>;
 
 //===----------------------------------------------------------------------===//
 // Selection DAG patterns using custom DAG nodes.
@@ -52,6 +53,9 @@ def : Pat<(KVXComp i64:$lhs, Wrapped64:$rhs, i32:$mod),
             (COMPDri64 SingleReg:$lhs, Wrapped64:$rhs, ComparisonMod:$mod)>;
 def : Pat<(KVXComp i64:$lhs, i64:$rhs, i32:$mod),
             (COMPDrr SingleReg:$lhs, SingleReg:$rhs, ComparisonMod:$mod)>;
+
+
+def : Pat<(KVXFence), (FENCE)>;
 
 //===----------------------------------------------------------------------===//
 // ComplexPatterns definitions.
