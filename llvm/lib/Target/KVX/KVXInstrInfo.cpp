@@ -30,7 +30,6 @@ using namespace llvm;
 #include "KVXGenDFAPacketizer.inc"
 #include "KVXGenInstrInfo.inc"
 
-
 KVXInstrInfo::KVXInstrInfo()
     : KVXGenInstrInfo(KVX::ADJCALLSTACKDOWN, KVX::ADJCALLSTACKUP) {}
 
@@ -192,6 +191,51 @@ KVXInstrInfo::CreateTargetScheduleState(const TargetSubtargetInfo &STI) const {
   return static_cast<const KVXSubtarget &>(STI).createDFAPacketizer(II);
 }
 
+static void parseCondBranch(MachineInstr &LastInst, MachineBasicBlock *&Target,
+                            SmallVectorImpl<MachineOperand> &Cond) {
+  // Block ends with fall-through condbranch.
+  assert(LastInst.getDesc().isConditionalBranch() &&
+         "Unknown conditional branch");
+  Target = LastInst.getOperand(1).getMBB();
+  Cond.push_back(MachineOperand::CreateImm(LastInst.getOpcode()));
+  Cond.push_back(LastInst.getOperand(0));
+  Cond.push_back(LastInst.getOperand(2));
+}
+
+static unsigned getOppositeBranchOpcode(int Opc) {
+  switch (Opc) {
+  case KVXMOD::SCALARCOND_DNEZ:
+    return KVXMOD::SCALARCOND_DEQZ;
+  case KVXMOD::SCALARCOND_DEQZ:
+    return KVXMOD::SCALARCOND_DNEZ;
+  case KVXMOD::SCALARCOND_DLTZ:
+    return KVXMOD::SCALARCOND_DGEZ;
+  case KVXMOD::SCALARCOND_DGEZ:
+    return KVXMOD::SCALARCOND_DLTZ;
+  case KVXMOD::SCALARCOND_DLEZ:
+    return KVXMOD::SCALARCOND_DGTZ;
+  case KVXMOD::SCALARCOND_DGTZ:
+    return KVXMOD::SCALARCOND_DLEZ;
+  case KVXMOD::SCALARCOND_ODD:
+    return KVXMOD::SCALARCOND_EVEN;
+  case KVXMOD::SCALARCOND_EVEN:
+    return KVXMOD::SCALARCOND_ODD;
+  case KVXMOD::SCALARCOND_WNEZ:
+    return KVXMOD::SCALARCOND_WEQZ;
+  case KVXMOD::SCALARCOND_WEQZ:
+    return KVXMOD::SCALARCOND_WNEZ;
+  case KVXMOD::SCALARCOND_WLTZ:
+    return KVXMOD::SCALARCOND_WGEZ;
+  case KVXMOD::SCALARCOND_WGEZ:
+    return KVXMOD::SCALARCOND_WLTZ;
+  case KVXMOD::SCALARCOND_WLEZ:
+    return KVXMOD::SCALARCOND_WGTZ;
+  case KVXMOD::SCALARCOND_WGTZ:
+    return KVXMOD::SCALARCOND_WLEZ;
+  }
+  llvm_unreachable("invalid branch opcode condition");
+}
+
 bool KVXInstrInfo::analyzeBranch(MachineBasicBlock &MBB,
                                  MachineBasicBlock *&TBB,
                                  MachineBasicBlock *&FBB,
@@ -201,31 +245,75 @@ bool KVXInstrInfo::analyzeBranch(MachineBasicBlock &MBB,
   TBB = FBB = nullptr;
   Cond.clear();
 
-  MachineBasicBlock::iterator I = MBB.end();
-  while (I != MBB.begin()) {
-    --I;
+  // If the block has no terminators, it just falls into the block after it.
+  MachineBasicBlock::iterator I = MBB.getLastNonDebugInstr();
+  if (I == MBB.end() || !isUnpredicatedTerminator(*I))
+    return false;
 
-    // Ignore debug instructions.
-    if (I->isDebugInstr())
-      continue;
-
-    // Handle unconditional branches.
-    if (I->getOpcode() == KVX::GOTO && AllowModify) {
-      while (std::next(I) != MBB.end())
-        std::next(I)->eraseFromParent();
-
-      if (MBB.isLayoutSuccessor(I->getOperand(0).getMBB())) {
-        I->eraseFromParent();
-        I = MBB.end();
-        continue;
-      }
+  // Count the number of terminators and find the first unconditional or
+  // indirect branch.
+  MachineBasicBlock::iterator FirstUncondOrIndirectBr = MBB.end();
+  int NumTerminators = 0;
+  for (auto J = I.getReverse(); J != MBB.rend() && isUnpredicatedTerminator(*J);
+       J++) {
+    NumTerminators++;
+    if (J->getDesc().isUnconditionalBranch() ||
+        J->getDesc().isIndirectBranch()) {
+      FirstUncondOrIndirectBr = J.getReverse();
     }
-
-    // Other cases are not understood.
-    return true;
   }
 
-  return false;
+  // If AllowModify is true, we can erase any terminators after
+  // FirstUncondOrIndirectBR.
+  if (AllowModify && FirstUncondOrIndirectBr != MBB.end()) {
+    while (std::next(FirstUncondOrIndirectBr) != MBB.end()) {
+      std::next(FirstUncondOrIndirectBr)->eraseFromParent();
+      NumTerminators--;
+    }
+    I = FirstUncondOrIndirectBr;
+  }
+
+  // We can't handle blocks that end in an indirect branch.
+  if (I->getDesc().isIndirectBranch())
+    return true;
+
+  // We can't handle blocks with more than 2 terminators.
+  if (NumTerminators > 2)
+    return true;
+
+  // Handle a single unconditional branch.
+  if (NumTerminators == 1 && I->getDesc().isUnconditionalBranch()) {
+    if (I->getOpcode() == KVX::TAIL) {
+      TBB = &MBB; // not used
+      Cond.push_back(I->getOperand(0));
+      return false;
+    }
+    TBB = I->getOperand(0).getMBB();
+    return false;
+  }
+
+  // Handle a single conditional branch.
+  if (NumTerminators == 1 && I->getDesc().isConditionalBranch()) {
+
+    parseCondBranch(*I, TBB, Cond);
+    return false;
+  }
+
+  // Handle a conditional branch followed by an unconditional branch.
+  if (NumTerminators == 2 && std::prev(I)->getDesc().isConditionalBranch() &&
+      I->getDesc().isUnconditionalBranch() && I->getOpcode() == KVX::GOTO) {
+    parseCondBranch(*std::prev(I), TBB, Cond);
+    FBB = I->getOperand(0).getMBB();
+    // fix for hardware loops to pin ExitMBB (not optimize it)
+    if (I->getParent()->hasAddressTaken()) {
+      I->getParent()->removeSuccessor(FBB);
+      I->getParent()->addSuccessor(FBB, BranchProbability::getOne());
+    }
+    return false;
+  }
+
+  // Otherwise, we can't handle this.
+  return true;
 }
 
 unsigned KVXInstrInfo::insertBranch(MachineBasicBlock &MBB,
@@ -233,32 +321,82 @@ unsigned KVXInstrInfo::insertBranch(MachineBasicBlock &MBB,
                                     MachineBasicBlock *FBB,
                                     ArrayRef<MachineOperand> Cond,
                                     const DebugLoc &DL, int *BytesAdded) const {
-  if (!FBB) {
-    if (Cond.empty()) // Unconditional branch
-    {
-      BuildMI(&MBB, DL, get(KVX::GOTO)).addMBB(TBB);
-      return 1;
-    }
+  if (BytesAdded)
+    *BytesAdded = 0;
+
+  // Shouldn't be a fall through.
+  assert(TBB && "InsertBranch must not be told to insert a fallthrough");
+  assert((Cond.size() == 3 || Cond.size() == 0 || Cond.size() == 1) &&
+         "KVX branch conditions have two components!");
+
+  // Unconditional branch / GOTO.
+  if (Cond.empty()) {
+    MachineInstr &MI = *BuildMI(&MBB, DL, get(KVX::GOTO)).addMBB(TBB);
+    if (BytesAdded)
+      *BytesAdded += MI.getDesc().Size;
+    return 1;
   }
-  return 0;
+
+  // Unconditional branch / TAIL.
+  if (Cond.size() == 1) {
+    MachineInstr &MI = *BuildMI(&MBB, DL, get(KVX::TAIL))
+                            .addGlobalAddress(Cond[0].getGlobal());
+    if (BytesAdded)
+      *BytesAdded += MI.getDesc().Size;
+    return 1;
+  }
+
+  // Either a one or two-way conditional branch.
+  unsigned Opc = Cond[0].getImm();
+  MachineInstr &CondMI =
+      *BuildMI(&MBB, DL, get(Opc)).add(Cond[1]).addMBB(TBB).add(Cond[2]);
+  if (BytesAdded)
+    *BytesAdded += CondMI.getDesc().Size;
+
+  // One-way conditional branch.
+  if (!FBB)
+    return 1;
+
+  // Two-way conditional branch.
+  MachineInstr &MI = *BuildMI(&MBB, DL, get(KVX::GOTO)).addMBB(FBB);
+  if (BytesAdded)
+    *BytesAdded += MI.getDesc().Size;
+  return 2;
 }
 
 unsigned KVXInstrInfo::removeBranch(MachineBasicBlock &MBB,
                                     int *BytesRemoved) const {
-  assert(!BytesRemoved && "code size not handled");
+  if (BytesRemoved)
+    *BytesRemoved = 0;
 
-  MachineBasicBlock::iterator I = MBB.end();
-  unsigned Count = 0;
-  while (I != MBB.begin()) {
-    --I;
-    if (I->isDebugInstr())
-      continue;
-    if (!I->isBranch())
-      return Count;
-    I->eraseFromParent();
-    I = MBB.end();
-    ++Count;
-  }
+  MachineBasicBlock::iterator I = MBB.getLastNonDebugInstr();
+  if (I == MBB.end())
+    return 0;
 
-  return Count;
+  if (!I->getDesc().isUnconditionalBranch() &&
+      !I->getDesc().isConditionalBranch())
+    return 0;
+  // Remove the branch.
+  I->eraseFromParent();
+
+  I = MBB.end();
+
+  if (I == MBB.begin())
+    return 1;
+  --I;
+  if (!I->getDesc().isConditionalBranch())
+    return 1;
+
+  // Remove the branch.
+  if (BytesRemoved)
+    *BytesRemoved += I->getDesc().Size;
+  I->eraseFromParent();
+  return 2;
+}
+
+bool KVXInstrInfo::reverseBranchCondition(
+    SmallVectorImpl<MachineOperand> &Cond) const {
+  assert((Cond.size() == 3) && "Invalid branch condition!");
+  Cond[2].setImm(getOppositeBranchOpcode(Cond[2].getImm()));
+  return false;
 }
