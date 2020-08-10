@@ -11,7 +11,9 @@ int foo(int a) {
     return foo(a - 1) - 1;
   }
   // CHECK: foo
+  // CHECK: cb.weqz $r0 ? .LBB0_2
   // CHECK: call foo
-  // CHECK: goto .LBB0_3
+  // CHECK: ret
+  // CHECK-LABEL: .LBB0_2:
   // CHECK: ret
 }
