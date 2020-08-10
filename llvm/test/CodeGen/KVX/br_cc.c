@@ -13,7 +13,7 @@ void test1(int a, int *p) {
   if (a == 0) {
     *p = a;
   }
-  // CHECK: cb.wnez
+  // CHECK: cb.weqz
   // CHECK: make
   // CHECK: sw
   // CHECK: ret
@@ -41,7 +41,7 @@ void test4(int a, int *p) {
   if (a < 0) {
     *p = a;
   }
-  // CHECK: cb.wgez
+  // CHECK: cb.wltz
   // CHECK: sw
   // CHECK: ret
 }
@@ -50,7 +50,7 @@ void test5(int a, int *p) {
   if (a <= 0) {
     *p = a;
   }
-  // CHECK: cb.wgtz
+  // CHECK: cb.wlez
   // CHECK: sw
   // CHECK: ret
 }
@@ -78,7 +78,7 @@ void test8(int a, int *p) {
   if (a < 1) {
     *p = a;
   }
-  // CHECK: cb.wgtz
+  // CHECK: cb.wlez
   // CHECK: sw
   // CHECK: ret
 }
@@ -106,7 +106,7 @@ void test11(long a, long *p) {
   if (a == 0) {
     *p = a;
   }
-  // CHECK: cb.dnez
+  // CHECK: cb.deqz
   // CHECK: make
   // CHECK: sd
   // CHECK: ret
@@ -134,7 +134,7 @@ void test14(long a, long *p) {
   if (a < 0) {
     *p = a;
   }
-  // CHECK: cb.dgez
+  // CHECK: cb.dltz
   // CHECK: sd
   // CHECK: ret
 }
@@ -143,7 +143,7 @@ void test15(long a, long *p) {
   if (a <= 0) {
     *p = a;
   }
-  // CHECK: cb.dgtz
+  // CHECK: cb.dlez
   // CHECK: sd
   // CHECK: ret
 }
@@ -171,7 +171,7 @@ void test18(long a, long *p) {
   if (a < 1) {
     *p = a;
   }
-  // CHECK: cb.dgtz
+  // CHECK: cb.dlez
   // CHECK: sd
   // CHECK: ret
 }
