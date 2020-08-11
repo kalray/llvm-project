@@ -159,6 +159,10 @@ private:
   bool GetRoundValue(MachineOperand Op, unsigned &Val);
 
   StringRef getPassName() const override { return "KVX Hardware Loops"; }
+
+  bool isDead(const MachineInstr *MI,
+              SmallVectorImpl<MachineInstr *> &DeadPhis) const;
+  void removeIfDead(MachineInstr *MI);
 };
 
 #endif // LLVM_LIB_TARGET_KVX_KVXHARDWARELOOPS_H
