@@ -678,6 +678,16 @@ bool KVXHardwareLoops::ConvertToHardwareLoop(MachineFunction &MF,
   if (!RemoveBranchingInstr(L))
     return false;
 
+  SmallVector<MachineInstr *, 2> OldInsts;
+  MachineBasicBlock::iterator It = HeaderMBB->instr_begin();
+  while (It != HeaderMBB->instr_end()) {
+    OldInsts.push_back(&*It);
+    It = std::next(It);
+  }
+
+  for (unsigned i = 0; i < OldInsts.size(); ++i)
+    removeIfDead(OldInsts[i]);
+
   DebugLoc DL;
 
   MachineBasicBlock *DoneMBB = ExitMBB;
@@ -842,7 +852,8 @@ bool KVXHardwareLoops::ConvertToHardwareLoop(MachineFunction &MF,
       .add(CountTrip)
       .addMBB(DoneMBB);
 
-  BuildMI(*HeaderMBB, HeaderMBB->instr_end(), DL, TII->get(KVX::ENDLOOP));
+  BuildMI(*HeaderMBB, HeaderMBB->instr_end(), DL, TII->get(KVX::ENDLOOP))
+      .addMBB(ExitMBB);
 
   // Marker for not optimizing during BranchFolderPass
   ExitMBB->setHasAddressTaken();
@@ -887,4 +898,92 @@ bool KVXHardwareLoops::runOnMachineFunction(MachineFunction &MF) {
 
 FunctionPass *llvm::createKVXHardwareLoopsPass() {
   return new KVXHardwareLoops();
+}
+
+/// Returns true if the instruction is dead. This function was copied and
+/// adapted from the Hexagon backend. It will only remove add instructions.
+bool KVXHardwareLoops::isDead(const MachineInstr *MI,
+                              SmallVectorImpl<MachineInstr *> &DeadPhis) const {
+  if (!MI->getDesc().isAdd())
+    return false;
+
+  // Examine each operand.
+  for (unsigned i = 0, e = MI->getNumOperands(); i != e; ++i) {
+    const MachineOperand &MO = MI->getOperand(i);
+    if (!MO.isReg() || !MO.isDef())
+      continue;
+
+    Register Reg = MO.getReg();
+    if (MRI->use_nodbg_empty(Reg))
+      continue;
+
+    using use_nodbg_iterator = MachineRegisterInfo::use_nodbg_iterator;
+
+    // This instruction has users, but if the only user is the phi node for the
+    // parent block, and the only use of that phi node is this instruction, then
+    // this instruction is dead: both it (and the phi node) can be removed.
+    use_nodbg_iterator I = MRI->use_nodbg_begin(Reg);
+    use_nodbg_iterator End = MRI->use_nodbg_end();
+    if (std::next(I) != End || !I->getParent()->isPHI())
+      return false;
+
+    MachineInstr *OnePhi = I->getParent();
+    for (unsigned j = 0, f = OnePhi->getNumOperands(); j != f; ++j) {
+      const MachineOperand &OPO = OnePhi->getOperand(j);
+      if (!OPO.isReg() || !OPO.isDef())
+        continue;
+
+      Register OPReg = OPO.getReg();
+      use_nodbg_iterator nextJ;
+      for (use_nodbg_iterator J = MRI->use_nodbg_begin(OPReg); J != End;
+           J = nextJ) {
+        nextJ = std::next(J);
+        MachineOperand &Use = *J;
+        MachineInstr *UseMI = Use.getParent();
+
+        // If the phi node has a user that is not MI, bail.
+        if (MI != UseMI)
+          return false;
+      }
+    }
+    DeadPhis.push_back(OnePhi);
+  }
+
+  // If there are no defs with uses, the instruction is dead.
+  return true;
+}
+
+void KVXHardwareLoops::removeIfDead(MachineInstr *MI) {
+  // This procedure was essentially copied from DeadMachineInstructionElim.
+
+  SmallVector<MachineInstr *, 1> DeadPhis;
+  if (isDead(MI, DeadPhis)) {
+    LLVM_DEBUG(dbgs() << "HW looping will remove: " << *MI);
+
+    // It is possible that some DBG_VALUE instructions refer to this
+    // instruction.  Examine each def operand for such references;
+    // if found, mark the DBG_VALUE as undef (but don't delete it).
+    for (unsigned i = 0, e = MI->getNumOperands(); i != e; ++i) {
+      const MachineOperand &MO = MI->getOperand(i);
+      if (!MO.isReg() || !MO.isDef())
+        continue;
+      Register Reg = MO.getReg();
+      MachineRegisterInfo::use_iterator nextI;
+      for (MachineRegisterInfo::use_iterator I = MRI->use_begin(Reg),
+                                             E = MRI->use_end();
+           I != E; I = nextI) {
+        nextI = std::next(I); // I is invalidated by the setReg
+        MachineOperand &Use = *I;
+        MachineInstr *UseMI = I->getParent();
+        if (UseMI == MI)
+          continue;
+        if (Use.isDebug())
+          UseMI->getOperand(0).setReg(0U);
+      }
+    }
+
+    MI->eraseFromParent();
+    for (unsigned i = 0; i < DeadPhis.size(); ++i)
+      DeadPhis[i]->eraseFromParent();
+  }
 }
