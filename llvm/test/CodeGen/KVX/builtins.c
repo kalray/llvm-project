@@ -340,3 +340,26 @@ void fence(void) {
   // CHECK-NEXT: ret
   __builtin_kvx_fence();
 }
+
+float ffmaw(float a, float b, float c) {
+  // CHECK-LABEL: ffmaw:
+  // CHECK: ffmaw.rz $r2 = $r0, $r1
+  // CHECK: copyd $r0 = $r2
+  // CHECK: ret
+  return __builtin_kvx_ffmaw(a, b, c, ".rz");
+}
+
+float ffmsw(float a, float b, float c) {
+  // CHECK-LABEL: ffmsw:
+  // CHECK: ffmsw.rz $r2 = $r0, $r1
+  // CHECK: copyd $r0 = $r2
+  // CHECK: ret
+  return __builtin_kvx_ffmsw(a, b, c, ".rz");
+}
+
+float finvw(float a) {
+  // CHECK-LABEL: finvw:
+  // CHECK: finvw.rz $r0 = $r0
+  // CHECK: ret
+  return __builtin_kvx_finvw(a, ".rz");
+}

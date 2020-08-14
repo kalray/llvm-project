@@ -1386,6 +1386,9 @@ bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
   case KVX::FMULCDC_Instr:
     expandFMULCDCInstr(TII, MBB, MBBI);
     return true;
+  case KVX::FFMAW_Instr:
+    expandRoundingInOutInstr(KVX::FFMAWrr, TII, MBB, MBBI);
+    return true;
   case KVX::FFMAWP_Instr:
     expandRoundingInOutInstr(KVX::FFMAWPrr, TII, MBB, MBBI);
     return true;
@@ -1397,6 +1400,9 @@ bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
     return true;
   case KVX::FMMA212W_Instr:
     expandRoundingInOutInstr(KVX::FMMA212W, TII, MBB, MBBI);
+    return true;
+  case KVX::FFMSW_Instr:
+    expandRoundingInOutInstr(KVX::FFMSWrr, TII, MBB, MBBI);
     return true;
   case KVX::FFMSWP_Instr:
     expandRoundingInOutInstr(KVX::FFMSWPrr, TII, MBB, MBBI);
