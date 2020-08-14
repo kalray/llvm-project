@@ -35,6 +35,8 @@ foreach type = [ f16, f32, f64, v2f16, v4f16, v2f32, v4f32, v2f64 ] in {
 def load#type : PatFrag<(ops node:$ptr), (type (default_as<load> node:$ptr))>;
 
 def loadbypass#type : PatFrag<(ops node:$ptr), (type (bypass_as<load> node:$ptr))>;
+
+def loadpreload#type : PatFrag<(ops node:$ptr), (type (preload_as<load> node:$ptr))>;
 }
 
 // bypass loads
@@ -46,6 +48,16 @@ defm : LoadPat<loadbypassv2f32, v2f32, 3, LDp, LDri10, LDrr, variant_u>;
 defm : LoadPat<loadbypassv4f16, v4f16, 3, LDp, LDri10, LDrr, variant_u>;
 defm : LoadPat<loadbypassv4f32, v4f32, 4, LQp, LQri10, LQrr, variant_u>;
 defm : LoadPat<loadbypassv2f64, v2f64, 4, LQp, LQri10, LQrr, variant_u>;
+
+// preload loads
+defm : LoadPat<loadpreloadf16, f16, 1, LHZp, LHZri10, LHZrr, variant_us>;
+defm : LoadPat<loadpreloadf32, f32, 2, LWZp, LWZri10, LWZrr, variant_us>;
+defm : LoadPat<loadpreloadv2f16, v2f16, 2, LWZp, LWZri10, LWZrr, variant_us>;
+defm : LoadPat<loadpreloadf64, f64, 3, LDp, LDri10, LDrr, variant_us>;
+defm : LoadPat<loadpreloadv2f32, v2f32, 3, LDp, LDri10, LDrr, variant_us>;
+defm : LoadPat<loadpreloadv4f16, v4f16, 3, LDp, LDri10, LDrr, variant_us>;
+defm : LoadPat<loadpreloadv4f32, v4f32, 4, LQp, LQri10, LQrr, variant_us>;
+defm : LoadPat<loadpreloadv2f64, v2f64, 4, LQp, LQri10, LQrr, variant_us>;
 
 // normal loads
 defm : LoadPat<loadf16, f16, 1, LHZp, LHZri10, LHZrr, variant_>;
