@@ -1073,29 +1073,6 @@ expandRoundingPairedRegInOutInstr(unsigned int OpCode, const KVXInstrInfo *TII,
   return true;
 }
 
-static bool expandRoundingInOutInstr(unsigned int OpCode,
-                                     const KVXInstrInfo *TII,
-                                     MachineBasicBlock &MBB,
-                                     MachineBasicBlock::iterator MBBI) {
-  MachineInstr &MI = *MBBI;
-  DebugLoc DL = MI.getDebugLoc();
-
-  unsigned outReg = MI.getOperand(0).getReg();
-  unsigned v1Reg = MI.getOperand(1).getReg();
-  unsigned v2Reg = MI.getOperand(2).getReg();
-  int64_t rounding = MI.getOperand(4).getImm();
-
-  BuildMI(MBB, MBBI, DL, TII->get(OpCode), outReg)
-      .addReg(outReg)
-      .addReg(v1Reg)
-      .addReg(v2Reg)
-      .addImm(rounding)
-      .addImm(KVXMOD::SILENT_);
-
-  MI.eraseFromParent();
-  return true;
-}
-
 static bool expandStore(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
                         MachineBasicBlock::iterator MBBI, unsigned ri10,
                         unsigned ri37, unsigned ri64) {
@@ -1386,35 +1363,17 @@ bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
   case KVX::FMULCDC_Instr:
     expandFMULCDCInstr(TII, MBB, MBBI);
     return true;
-  case KVX::FFMAW_Instr:
-    expandRoundingInOutInstr(KVX::FFMAWrr, TII, MBB, MBBI);
-    return true;
-  case KVX::FFMAWP_Instr:
-    expandRoundingInOutInstr(KVX::FFMAWPrr, TII, MBB, MBBI);
-    return true;
   case KVX::FFMAWQ_Instr:
     expandRoundingPairedRegInOutInstr(KVX::FFMAWPrr, TII, MBB, MBBI);
     return true;
   case KVX::FFMADP_Instr:
     expandRoundingPairedRegInOutInstr(KVX::FFMADrr, TII, MBB, MBBI);
     return true;
-  case KVX::FMMA212W_Instr:
-    expandRoundingInOutInstr(KVX::FMMA212W, TII, MBB, MBBI);
-    return true;
-  case KVX::FFMSW_Instr:
-    expandRoundingInOutInstr(KVX::FFMSWrr, TII, MBB, MBBI);
-    return true;
-  case KVX::FFMSWP_Instr:
-    expandRoundingInOutInstr(KVX::FFMSWPrr, TII, MBB, MBBI);
-    return true;
   case KVX::FFMSWQ_Instr:
     expandRoundingPairedRegInOutInstr(KVX::FFMSWPrr, TII, MBB, MBBI);
     return true;
   case KVX::FFMSDP_Instr:
     expandRoundingPairedRegInOutInstr(KVX::FFMSDrr, TII, MBB, MBBI);
-    return true;
-  case KVX::FMMS212W_Instr:
-    expandRoundingInOutInstr(KVX::FMMS212W, TII, MBB, MBBI);
     return true;
   case KVX::SBp:
     expandStore(TII, MBB, MBBI, KVX::SBri10, KVX::SBri37, KVX::SBri64);
