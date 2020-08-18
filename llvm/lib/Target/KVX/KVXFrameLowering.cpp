@@ -78,13 +78,13 @@ void KVXFrameLowering::adjustStack(MachineFunction &MF) const {
   StackSize -= KVXFI->getMemArgsSaveSize();
 
   // Get the alignment.
-  uint64_t StackAlign = getStackAlignment();
+  Align StackAlign = getStackAlign();
   if (RI->needsStackRealignment(MF)) {
-    const uint64_t MaxAlign = MFI.getMaxAlignment();
-    uint64_t MaxStackAlign = MaxAlign > StackAlign ? MaxAlign : StackAlign;
+    Align MaxAlign = MFI.getMaxAlign();
+    Align MaxStackAlign = MaxAlign > StackAlign ? MaxAlign : StackAlign;
 
     // Reserve space for stack realignment
-    StackSize += (MaxStackAlign - StackAlign);
+    StackSize += (MaxStackAlign.value() - StackAlign.value());
 
     StackAlign = MaxStackAlign;
   }
@@ -122,15 +122,15 @@ void KVXFrameLowering::realignStack(MachineFunction &MF, MachineBasicBlock &MBB,
             nullptr, MRI->getDwarfRegNum(ScratchReg, true))))
         .setMIFlags(MachineInstr::FrameSetup);
 
-    if (MFI.getMaxAlignment() > getStackAlignment()) {
+    if (MFI.getMaxAlign().value() > getStackAlign().value()) {
       // realign the stack
       BuildMI(MBB, MBBI, DL, TII->get(KVX::ADDDri64), getSPReg())
           .addReg(getSPReg())
-          .addImm(MFI.getMaxAlignment() - getStackAlignment())
+          .addImm(MFI.getMaxAlign().value() - getStackAlign().value())
           .setMIFlag(MachineInstr::FrameSetup);
       BuildMI(MBB, MBBI, DL, TII->get(KVX::ANDDri64), getSPReg())
           .addReg(getSPReg())
-          .addImm(-(int)MFI.getMaxAlignment())
+          .addImm(-(int)MFI.getMaxAlign().value())
           .setMIFlag(MachineInstr::FrameSetup);
     }
   }
@@ -172,8 +172,7 @@ void KVXFrameLowering::emitPrologue(MachineFunction &MF,
   adjustReg(MBB, MBBI, DL, GetStackOpCode((uint64_t)StackSize), SPReg, SPReg,
             -StackSize, MachineInstr::FrameSetup);
 
-  unsigned CFIIndex = MF.addFrameInst(
-      MCCFIInstruction::createDefCfaOffset(nullptr, -StackSize));
+  unsigned CFIIndex = MF.addFrameInst(MCCFIInstruction::cfiDefCfaOffset(nullptr, StackSize));
 
   const KVXInstrInfo *TII = STI.getInstrInfo();
 
@@ -322,7 +321,7 @@ void KVXFrameLowering::emitEpilogue(MachineFunction &MF,
             StackSize, MachineInstr::FrameDestroy);
 
   unsigned CFIIndex =
-      MF.addFrameInst(MCCFIInstruction::createDefCfaOffset(nullptr, 0));
+      MF.addFrameInst(MCCFIInstruction::cfiDefCfaOffset(nullptr, 0));
 
   BuildMI(MBB, MBBI, DL, TII->get(TargetOpcode::CFI_INSTRUCTION))
       .addCFIIndex(CFIIndex)
@@ -330,7 +329,7 @@ void KVXFrameLowering::emitEpilogue(MachineFunction &MF,
 }
 
 int KVXFrameLowering::getFrameIndexReference(const MachineFunction &MF, int FI,
-                                             unsigned &FrameReg) const {
+                                             Register &FrameReg) const {
   const MachineFrameInfo &MFI = MF.getFrameInfo();
   auto *KVXFI = MF.getInfo<KVXMachineFunctionInfo>();
   FrameReg = getSPReg();
@@ -388,8 +387,7 @@ KVXFrameLowering::processFunctionBeforeFrameFinalized(MachineFunction &MF,
 
 bool KVXFrameLowering::spillCalleeSavedRegisters(
     MachineBasicBlock &MBB, MachineBasicBlock::iterator MI,
-    const std::vector<CalleeSavedInfo> &CSI,
-    const TargetRegisterInfo *TRI) const {
+    ArrayRef<CalleeSavedInfo> CSI, const TargetRegisterInfo *TRI) const {
   const KVXInstrInfo *TII = STI.getInstrInfo();
 
   MachineFunction &MF = *MBB.getParent();
@@ -482,7 +480,7 @@ bool KVXFrameLowering::spillCalleeSavedRegisters(
 
 bool KVXFrameLowering::restoreCalleeSavedRegisters(
     MachineBasicBlock &MBB, MachineBasicBlock::iterator MI,
-    std::vector<CalleeSavedInfo> &CSI, const TargetRegisterInfo *TRI) const {
+    MutableArrayRef<CalleeSavedInfo> CSI, const TargetRegisterInfo *TRI) const {
   const KVXInstrInfo *TII = STI.getInstrInfo();
   DebugLoc DL = MI->getDebugLoc();
   MachineFunction *MF = MBB.getParent();
