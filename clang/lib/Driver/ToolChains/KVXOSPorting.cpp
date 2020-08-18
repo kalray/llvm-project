@@ -41,7 +41,8 @@ void kvxosporting::Assembler::ConstructJob(Compilation &C, const JobAction &JA,
 
   const char *Exec =
       Args.MakeArgString(getToolChain().GetProgramPath("kvx-elf-as"));
-  C.addCommand(std::make_unique<Command>(JA, *this, Exec, CmdArgs, Inputs));
+  C.addCommand(std::make_unique<Command>(
+      JA, *this, ResponseFileSupport::AtFileCurCP(), Exec, CmdArgs, Inputs));
 }
 
 void kvxosporting::Linker::ConstructJob(Compilation &C, const JobAction &JA,
@@ -56,7 +57,7 @@ void kvxosporting::Linker::ConstructJob(Compilation &C, const JobAction &JA,
   CmdArgs.push_back(Output.getFilename());
 
   std::string LDPath = getToolChain().GetProgramPath("kvx-elf-ld");
-  std::string LDPrefix = llvm::sys::path::parent_path(LDPath);
+  std::string LDPrefix = llvm::sys::path::parent_path(LDPath).str();
 
   if (!Args.hasArg(options::OPT_nostdlib)) {
     // crti.o
@@ -95,7 +96,8 @@ void kvxosporting::Linker::ConstructJob(Compilation &C, const JobAction &JA,
 
   const char *Exec =
       Args.MakeArgString(getToolChain().GetProgramPath("kvx-elf-ld"));
-  C.addCommand(std::make_unique<Command>(JA, *this, Exec, CmdArgs, Inputs));
+  C.addCommand(std::make_unique<Command>(
+      JA, *this, ResponseFileSupport::AtFileCurCP(), Exec, CmdArgs, Inputs));
 }
 
 KVXOSPorting::KVXOSPorting(const Driver &D, const llvm::Triple &Triple,

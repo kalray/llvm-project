@@ -19474,7 +19474,7 @@ static Value *KVX_emitUnaryRoundingBuiltin(CodeGenFunction &CGF,
 
   Value *RoundingArg = ConstantInt::get(CGF.IntTy, Modifier);
 
-  Value *Callee = CGF.CGM.getIntrinsic(IntrinsicID);
+  Function *Callee = CGF.CGM.getIntrinsic(IntrinsicID);
   return CGF.Builder.CreateCall(Callee, {Arg, RoundingArg});
 }
 
@@ -19492,7 +19492,7 @@ static Value *KVX_emitBinaryRoundingBuiltin(CodeGenFunction &CGF,
 
   Value *Arg3 = ConstantInt::get(CGF.IntTy, Modifier);
 
-  Value *Callee = CGF.CGM.getIntrinsic(IntrinsicID);
+  Function *Callee = CGF.CGM.getIntrinsic(IntrinsicID);
   return CGF.Builder.CreateCall(Callee, {Arg1, Arg2, Arg3});
 }
 
@@ -19511,7 +19511,7 @@ static Value *KVX_emitTernaryRoundingBuiltin(CodeGenFunction &CGF,
 
   Value *Arg4 = ConstantInt::get(CGF.IntTy, Modifier);
 
-  Value *Callee = CGF.CGM.getIntrinsic(IntrinsicID);
+  Function *Callee = CGF.CGM.getIntrinsic(IntrinsicID);
   return CGF.Builder.CreateCall(Callee, {Arg1, Arg2, Arg3, Arg4});
 }
 
@@ -19524,7 +19524,7 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
         EmitScalarConversion(EmitScalarExpr(E->getArg(0)),
                              E->getArg(0)->getType(), getContext().IntTy, Loc);
 
-    Value *Callee = CGM.getIntrinsic(Intrinsic::kvx_get);
+    Function *Callee = CGM.getIntrinsic(Intrinsic::kvx_get);
     return Builder.CreateCall(Callee, {Reg});
   }
 
@@ -19587,7 +19587,7 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
       llvm_unreachable("missing KVX intrinsics");
     }
 
-    Value *Callee = CGM.getIntrinsic(IDD);
+    Function *Callee = CGM.getIntrinsic(IDD);
     return Builder.CreateCall(Callee, {});
   }
 
@@ -19610,7 +19610,7 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
       llvm_unreachable("missing KVX intrinsics");
     }
 
-    Value *Callee = CGM.getIntrinsic(IDD);
+    Function *Callee = CGM.getIntrinsic(IDD);
     return Builder.CreateCall(Callee, {A1});
   }
 
@@ -19640,7 +19640,7 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
       llvm_unreachable("missing KVX intrinsics");
     }
 
-    Value *Callee = CGM.getIntrinsic(IDD);
+    Function *Callee = CGM.getIntrinsic(IDD);
     return Builder.CreateCall(Callee, {A1, A2});
   }
 
@@ -19652,7 +19652,7 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     Value *Update =
       EmitScalarConversion(EmitScalarExpr(E->getArg(2)),
                            E->getArg(2)->getType(), getContext().IntTy, Loc);
-    Value *Callee = CGM.getIntrinsic(Intrinsic::kvx_acswapw);
+    Function *Callee = CGM.getIntrinsic(Intrinsic::kvx_acswapw);
     return Builder.CreateCall(Callee, {Addr, Expect, Update});
   }
 
@@ -19664,7 +19664,7 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     Value *Update =
       EmitScalarConversion(EmitScalarExpr(E->getArg(2)),
                            E->getArg(2)->getType(), getContext().LongTy, Loc);
-    Value *Callee = CGM.getIntrinsic(Intrinsic::kvx_acswapd);
+    Function *Callee = CGM.getIntrinsic(Intrinsic::kvx_acswapd);
     return Builder.CreateCall(Callee, {Addr, Expect, Update});
   }
 
@@ -19708,7 +19708,7 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
       llvm_unreachable("missing KVX load intrinsics");
     }
 
-    Value *Callee = CGM.getIntrinsic(IDD);
+    Function *Callee = CGM.getIntrinsic(IDD);
     return Builder.CreateCall(Callee, Addr);
   }
 
@@ -19721,7 +19721,7 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
                                      E->getArg(1)->getType(),
                                      getContext().UnsignedLongLongTy, Loc);
 
-    Value *Callee = CGM.getIntrinsic(Intrinsic::kvx_sbmm8);
+    Function *Callee = CGM.getIntrinsic(Intrinsic::kvx_sbmm8);
     return Builder.CreateCall(Callee, {A1, A2});
   }
 

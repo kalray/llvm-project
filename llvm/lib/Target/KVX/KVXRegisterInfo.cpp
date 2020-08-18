@@ -67,7 +67,7 @@ void KVXRegisterInfo::eliminateFrameIndex(MachineBasicBlock::iterator II,
   DebugLoc DL = MI.getDebugLoc();
 
   int FrameIndex = MI.getOperand(FIOperandNum).getIndex();
-  unsigned FrameReg;
+  Register FrameReg;
   int Offset;
 
   const KVXRegisterInfo *TRI =

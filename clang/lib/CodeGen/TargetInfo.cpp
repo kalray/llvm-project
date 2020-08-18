@@ -11474,8 +11474,8 @@ private:
 namespace {
 class KVXTargetCodeGenInfo : public TargetCodeGenInfo {
 public:
-  KVXTargetCodeGenInfo(CodeGenTypes &CGT)
-      : TargetCodeGenInfo(new KVXABIInfo(CGT)) {}
+  KVXTargetCodeGenInfo(CodeGen::CodeGenTypes &CGT)
+      : TargetCodeGenInfo(std::make_unique<KVXABIInfo>(CGT)) {}
 };
 } // end anonymous namespace
 

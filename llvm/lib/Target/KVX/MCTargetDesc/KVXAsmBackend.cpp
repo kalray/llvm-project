@@ -67,8 +67,8 @@ public:
     return false;
   }
 
-  void relaxInstruction(const MCInst &Inst, const MCSubtargetInfo &STI,
-                        MCInst &Res) const override {
+  void relaxInstruction(MCInst &Inst,
+                        const MCSubtargetInfo &STI) const override {
     // FIXME relaxInstruction() unimplemented
   }
 

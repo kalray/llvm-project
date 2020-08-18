@@ -22,7 +22,7 @@
 #include "KVXAsmPrinter.h"
 #include "KVXGenMCPseudoLowering.inc"
 
-void KVXAsmPrinter::EmitInstruction(const MachineInstr *MI) {
+void KVXAsmPrinter::emitInstruction(const MachineInstr *MI) {
   // Do any auto-generated pseudo lowerings.
   if (emitPseudoExpansionLowering(*OutStreamer, MI))
     return;
@@ -43,7 +43,7 @@ void KVXAsmPrinter::EmitInstruction(const MachineInstr *MI) {
     EmitToStreamer(*OutStreamer, TmpInst);
   }
 
-  OutStreamer->EmitRawText(StringRef("\t;;\n"));
+  OutStreamer->emitRawText(StringRef("\t;;\n"));
 }
 
 bool KVXAsmPrinter::PrintAsmOperand(const MachineInstr *MI, unsigned OpNo,
@@ -88,7 +88,7 @@ bool KVXAsmPrinter::PrintAsmMemoryOperand(const MachineInstr *MI, unsigned OpNo,
   return AsmPrinter::PrintAsmMemoryOperand(MI, OpNo, ExtraCode, OS);
 }
 
-void KVXAsmPrinter::EmitDebugValue(const MCExpr *Value, unsigned Size) const {
+void KVXAsmPrinter::emitDebugValue(const MCExpr *Value, unsigned Size) const {
   if (Value->getKind() == llvm::MCBinaryExpr::ExprKind::SymbolRef) {
     switch (dyn_cast<MCSymbolRefExpr>(Value)->getKind()) {
     // Do not emit debug value for TLS data
@@ -99,12 +99,12 @@ void KVXAsmPrinter::EmitDebugValue(const MCExpr *Value, unsigned Size) const {
     }
   }
 
-  AsmPrinter::EmitDebugValue(Value, Size);
+  AsmPrinter::emitDebugValue(Value, Size);
 }
 
 void KVXAsmPrinter::emitInlineAsmEnd(const MCSubtargetInfo &StartInfo,
                                      const MCSubtargetInfo *EndInfo) const {
-  OutStreamer->EmitRawText(StringRef("\t;;\n"));
+  OutStreamer->emitRawText(StringRef("\t;;\n"));
 }
 
 extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeKVXAsmPrinter() {
