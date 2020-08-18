@@ -246,6 +246,7 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::FEXP2, VT, Expand);
     setOperationAction(ISD::FEXP, VT, Expand);
     setOperationAction(ISD::FCOS, VT, Expand);
+    setOperationAction(ISD::FREM, VT, Expand);
   }
   for (auto VT : {MVT::v2f16, MVT::v4f16, MVT::v4f32, MVT::v2f64}) {
     setOperationAction(ISD::FABS, VT, Expand);
