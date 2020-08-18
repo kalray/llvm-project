@@ -34,7 +34,7 @@ public:
 
   StringRef getPassName() const override { return "KVX Assembly Printer"; }
 
-  void EmitInstruction(const MachineInstr *MI) override;
+  void emitInstruction(const MachineInstr *MI) override;
 
   bool emitPseudoExpansionLowering(MCStreamer &OutStreamer,
                                    const MachineInstr *MI);
@@ -44,7 +44,7 @@ public:
   bool PrintAsmMemoryOperand(const MachineInstr *MI, unsigned OpNo,
                              const char *ExtraCode, raw_ostream &OS) override;
 
-  void EmitDebugValue(const MCExpr *Value, unsigned Size) const override;
+  void emitDebugValue(const MCExpr *Value, unsigned Size) const override;
 
   void emitInlineAsmEnd(const MCSubtargetInfo &StartInfo,
                         const MCSubtargetInfo *EndInfo) const override;

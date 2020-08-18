@@ -43,7 +43,8 @@ void clusteros::Assembler::ConstructJob(Compilation &C, const JobAction &JA,
 
   const char *Exec =
       Args.MakeArgString(getToolChain().GetProgramPath("kvx-cos-as"));
-  C.addCommand(std::make_unique<Command>(JA, *this, Exec, CmdArgs, Inputs));
+  C.addCommand(std::make_unique<Command>(
+      JA, *this, ResponseFileSupport::AtFileCurCP(), Exec, CmdArgs, Inputs));
 }
 
 void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
@@ -112,7 +113,8 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
 
     const char *Exec = Args.MakeArgString(getToolChain().GetProgramPath(
         C.getDriver().CCCIsCXX() ? "kvx-cos-g++" : "kvx-cos-gcc"));
-    C.addCommand(std::make_unique<Command>(JA, *this, Exec, CmdArgs, Inputs));
+    C.addCommand(std::make_unique<Command>(
+        JA, *this, ResponseFileSupport::AtFileCurCP(), Exec, CmdArgs, Inputs));
   } else {
     assert(LibName == "compiler-rt" && "unsupported runtime library");
 
@@ -123,7 +125,7 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
     CmdArgs.push_back(Output.getFilename());
 
     std::string LDPath = getToolChain().GetProgramPath("kvx-cos-ld");
-    std::string LDPrefix = llvm::sys::path::parent_path(LDPath);
+    std::string LDPrefix = llvm::sys::path::parent_path(LDPath).str();
 
     if (!Args.hasArg(options::OPT_nostdlib)) {
       // TODO: crti.o, crtbegin.o, crtend.o, and crtn.o are currently provided
@@ -195,7 +197,8 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
 
     const char *Exec =
         Args.MakeArgString(getToolChain().GetProgramPath("kvx-cos-ld"));
-    C.addCommand(std::make_unique<Command>(JA, *this, Exec, CmdArgs, Inputs));
+    C.addCommand(std::make_unique<Command>(
+        JA, *this, ResponseFileSupport::AtFileCurCP(), Exec, CmdArgs, Inputs));
   }
 }
 

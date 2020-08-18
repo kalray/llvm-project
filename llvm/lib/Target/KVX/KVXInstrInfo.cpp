@@ -106,7 +106,7 @@ unsigned findScratchRegister(MachineBasicBlock &MBB, bool UseAtEnd,
 
 void KVXInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
                                         MachineBasicBlock::iterator I,
-                                        unsigned DstReg, int FI,
+                                        Register DstReg, int FI,
                                         const TargetRegisterClass *RC,
                                         const TargetRegisterInfo *TRI) const {
   DebugLoc DL;
@@ -144,7 +144,7 @@ void KVXInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
 
 void KVXInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
                                        MachineBasicBlock::iterator I,
-                                       unsigned SrcReg, bool IsKill, int FI,
+                                       Register SrcReg, bool IsKill, int FI,
                                        const TargetRegisterClass *RC,
                                        const TargetRegisterInfo *TRI) const {
   DebugLoc DL;
