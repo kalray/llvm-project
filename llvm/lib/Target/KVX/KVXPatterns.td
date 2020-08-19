@@ -95,6 +95,8 @@ def : BITCAST<i32, v4i8, SingleReg>;
 def : BITCAST<v4i8, i32, SingleReg>;
 def : BITCAST<v2i16, v4i8, SingleReg>;
 def : BITCAST<v4i8, v2i16, SingleReg>;
+def : BITCAST<v8i8, v2i32, SingleReg>;
+def : BITCAST<v2i32, v8i8, SingleReg>;
 
 let isCall = 1, isBarrier = 1, isBranch = 1, isTerminator = 1, isReturn = 1, Uses = [R12] in
 def TAIL : PCREL27_SIMPLE
