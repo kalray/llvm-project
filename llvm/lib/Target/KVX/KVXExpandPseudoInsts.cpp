@@ -67,6 +67,17 @@ bool KVXExpandPseudo::expandMBB(MachineBasicBlock &MBB) {
     MBBI = NMBBI;
   }
 
+  if (!MBB.empty()) {
+    MBBI = MBB.end();
+    --MBBI;
+
+    if (MBBI->getOpcode() == KVX::GOTO &&
+        MBB.isLayoutSuccessor(MBBI->getOperand(0).getMBB())) {
+      MBBI->eraseFromParent();
+      Modified = true;
+    }
+  }
+
   return Modified;
 }
 
