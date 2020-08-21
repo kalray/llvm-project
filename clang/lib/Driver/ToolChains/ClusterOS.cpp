@@ -146,14 +146,6 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
           Args.MakeArgString("-L" + LDPrefix + "/../kvx-cos/lib"));
 
       CmdArgs.push_back("-melf64kvx");
-      if (Args.getLastArg(options::OPT_T)) {
-        std::string Targ =
-            std::string("-T") +
-            std::string(Args.getLastArg(options::OPT_T)->getValue());
-        CmdArgs.push_back(Args.MakeArgString(Targ));
-      } else {
-        CmdArgs.push_back("-Tmppacos.ld");
-      }
       CmdArgs.push_back("--start-group");
       CmdArgs.push_back("-lmppacos");
       CmdArgs.push_back("-lmppa_rsrc");
@@ -177,6 +169,15 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
 
     Args.AddAllArgs(CmdArgs, options::OPT_L, options::OPT_l);
     Args.AddAllArgValues(CmdArgs, options::OPT_Wl_COMMA);
+
+    if (Args.getLastArg(options::OPT_T)) {
+      std::string Targ =
+          std::string("-T") +
+          std::string(Args.getLastArg(options::OPT_T)->getValue());
+      CmdArgs.push_back(Args.MakeArgString(Targ));
+    } else {
+      CmdArgs.push_back("-Tmppacos.ld");
+    }
 
     if (Args.hasArg(options::OPT_v))
       CmdArgs.push_back("-v");
