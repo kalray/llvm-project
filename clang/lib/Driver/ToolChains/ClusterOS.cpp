@@ -53,7 +53,7 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
                                      const char *LinkingOutput) const {
 
   const Arg *A = Args.getLastArg(options::OPT_rtlib_EQ);
-  StringRef LibName = A ? A->getValue() : "libgcc";
+  StringRef LibName = A ? A->getValue() : "compiler-rt";
 
   // Keep old behavior when using libgcc or using clang++ (libstdc++-v3)
   if (LibName == "libgcc" || C.getDriver().CCCIsCXX()) {
@@ -141,11 +141,12 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
       if (II.isFilename())
         CmdArgs.push_back(II.getFilename());
 
-    if (!Args.hasArg(options::OPT_nostdlib)) {
-      CmdArgs.push_back(
-          Args.MakeArgString("-L" + LDPrefix + "/../kvx-cos/lib"));
+    CmdArgs.push_back(
+        Args.MakeArgString("-L" + LDPrefix + "/../kvx-cos/lib"));
 
-      CmdArgs.push_back("-melf64kvx");
+    CmdArgs.push_back("-melf64kvx");
+
+    if (!Args.hasArg(options::OPT_nostdlib)) {
       CmdArgs.push_back("--start-group");
       CmdArgs.push_back("-lmppacos");
       CmdArgs.push_back("-lmppa_rsrc");
