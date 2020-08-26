@@ -445,11 +445,11 @@ static bool expandATAS(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   Register Offset = MI.getOperand(5).isReg() ? MI.getOperand(5).getReg()
                                              : MI.getOperand(4).getReg();
 
-  //   addd $base = $base, $offset   # iff $offset != 0
-  //   andd $pos = $base, 3          # find the place of the byte to
+  //   addd $pos = $base, $offset    # iff $offset != 0
+  //   andd $pos = $pos, 3           # find the place of the byte to
   //                                 #   test_and_set in the memory word
   //                                 #   ($pos is 0, 1, 2, or 3)
-  //   negd $offset = $pos           # the address of the memory word
+  //   sbfd $offset = $pos, $offset  # the address of the memory word
   //                                 #   containing the byte is
   //                                 #   ($base + $offset - $pos)
   //   slld $pos = $pos, 3           # $pos in bits: $pos * 8
@@ -482,22 +482,34 @@ static bool expandATAS(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   DoneMBB->setLabelMustBeEmitted();
 
   // Populate MBB.
-  //   addd $base = $base, $offset   # iff $offset != 0
   if (MI.getOperand(5).isImm()) {
     uint64_t Imm = MI.getOperand(5).getImm();
+    //   addd $pos = $base, $offset
     if (Imm != 0)
-      BuildMI(&MBB, DL, TII->get(KVX::ADDDri64), Base).addReg(Base).addImm(Imm);
+      BuildMI(&MBB, DL, TII->get(KVX::ADDDri64), Pos).addReg(Base).addImm(Imm);
+    //   andd $pos = $pos/$base, 3     # find the place of the byte to
+    //                                 #   test_and_set in the memory word
+    //                                 #   ($pos is 0, 1, 2, or 3)
+    BuildMI(&MBB, DL, TII->get(KVX::ANDDri10), Pos)
+        .addReg(Imm != 0 ? Pos : Base)
+        .addImm(3);
   } else {
-    BuildMI(&MBB, DL, TII->get(KVX::ADDDrr), Base).addReg(Base).addReg(Offset);
+    //   addd $pos = $base, $offset
+    BuildMI(&MBB, DL, TII->get(KVX::ADDDrr), Pos).addReg(Base).addReg(Offset);
+    //   andd $pos = $pos, 3           # find the place of the byte to
+    //                                 #   test_and_set in the memory word
+    //                                 #   ($pos is 0, 1, 2, or 3)
+    BuildMI(&MBB, DL, TII->get(KVX::ANDDri10), Pos).addReg(Pos).addImm(3);
   }
-  //   andd $pos = $base, 3          # find the place of the byte to
-  //                                 #   test_and_set in the memory word
-  //                                 #   ($pos is 0, 1, 2, or 3)
-  BuildMI(&MBB, DL, TII->get(KVX::ANDDri10), Pos).addReg(Base).addImm(3);
-  //   negd $offset = $pos           # the address of the memory word
+  //   sbfd $offset = $pos, $offset  # the address of the memory word
   //                                 #   containing the byte is
   //                                 #   ($base + $offset - $pos)
-  BuildMI(&MBB, DL, TII->get(KVX::NEGD), Offset).addReg(Pos);
+  if (MI.getOperand(5).isImm()) {
+    uint64_t Imm = MI.getOperand(5).getImm();
+    BuildMI(&MBB, DL, TII->get(KVX::SBFDri64), Offset).addReg(Pos).addImm(Imm);
+  } else {
+    BuildMI(&MBB, DL, TII->get(KVX::SBFDrr), Offset).addReg(Pos).addReg(Offset);
+  }
   //   slld $pos = $pos, 3           # $pos in bits: $pos * 8
   BuildMI(&MBB, DL, TII->get(KVX::SLLDri), Pos).addReg(Pos).addImm(3);
 

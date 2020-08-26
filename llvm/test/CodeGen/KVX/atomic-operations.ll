@@ -70,7 +70,7 @@ define i8 @atomic_test_and_set(i8* %ptr) {
   ; CHECK: fence
   ; CHECK-NEXT: make [[ONE:\$r[0-9]+]] = 1
   ; CHECK-NEXT: andd [[POS:\$r[0-9]+]] = $r0, 3
-  ; CHECK: negd [[OFFSET:\$r[0-9]+]] = [[POS]]
+  ; CHECK: sbfd [[OFFSET:\$r[0-9]+]] = [[POS]], 0
   ; CHECK-NEXT: slld [[POS]] = [[POS]], 3
   ; CHECK: [[CSLOOP:.LBB[0-9_]+]]
   ; CHECK-NEXT: lwz.u $[[EXPECTED:r[0-9]+]] = [[OFFSET]][$r0]
