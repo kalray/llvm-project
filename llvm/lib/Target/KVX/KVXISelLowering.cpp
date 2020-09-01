@@ -314,8 +314,10 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   }
 
   for (auto VT : { MVT::f32, MVT::f64 }) {
-    setOperationAction(ISD::FMINNUM, VT, Legal);
-    setOperationAction(ISD::FMAXNUM, VT, Legal);
+    // Do not use hardware instructions f[min|max] for f[min|max]num.
+    // See: T14224.
+    setOperationAction(ISD::FMINNUM, VT, Expand);
+    setOperationAction(ISD::FMAXNUM, VT, Expand);
   }
 
   for (unsigned im = (unsigned)ISD::PRE_INC;
