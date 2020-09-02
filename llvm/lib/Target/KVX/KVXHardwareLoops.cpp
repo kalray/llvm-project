@@ -598,10 +598,14 @@ bool KVXHardwareLoops::RemoveBranchingInstr(MachineLoop *L) {
         HeaderComp = CompInstr;
     }
 
-    if (I->getOpcode() == KVX::GOTO &&
-        (I->getOperand(0).getMBB() == ExitMBB ||
-         I->getOperand(0).getMBB() == HeaderMBB)) {
-      HeaderGoto = I;
+    if (I->getOpcode() == KVX::GOTO) {
+      if (I->getOperand(0).getMBB() == ExitMBB ||
+          I->getOperand(0).getMBB() == HeaderMBB)
+        HeaderGoto = I;
+      else {
+        LLVM_DEBUG(llvm::dbgs() << "HW Loop - unsupported goto case\n");
+        return false;
+      }
     }
     HeaderInstrCount++;
   }
