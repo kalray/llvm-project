@@ -236,6 +236,8 @@ static int getOpType(MachineBasicBlock::iterator MBBI) {
 }
 
 static int isValidMemoryOp(MachineBasicBlock::iterator MBBI) {
+  if (MBBI->memoperands_empty())
+    return false;
   const MachineMemOperand &MMO = **(MBBI->memoperands_begin());
   if (MMO.isVolatile() || MMO.isAtomic())
     return false;
