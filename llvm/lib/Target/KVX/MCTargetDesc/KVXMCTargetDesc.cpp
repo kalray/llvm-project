@@ -73,10 +73,9 @@ static MCTargetStreamer *createKVXTargetStreamer(MCStreamer &S,
   return new KVXTargetStreamer(S);
 }
 
-static StringRef DefaultArch = "kv3";
-static StringRef DefaultSubarch = "v1";
+static StringRef DefaultArch = "kv3-1";
 StringRef KVX_MC::selectKVXCPU(StringRef CPU) {
-  if (CPU.empty() || CPU.equals(DefaultArch.str() + DefaultSubarch.str()))
+  if (CPU.empty())
     return DefaultArch;
   return CPU;
 }

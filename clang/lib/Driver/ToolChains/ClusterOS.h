@@ -73,6 +73,12 @@ public:
   bool SupportsProfiling() const override { return false; }
   unsigned GetDefaultDwarfVersion() const override { return 2; }
 
+  bool GCCInstallationIsValid() const;
+  StringRef getGCCMultilibArch() const;
+  StringRef getGCCVersion() const;
+  StringRef getGCCInstallPath() const;
+  StringRef getGCCMultilibGCCSuffix() const;
+
 protected:
   Tool *buildAssembler() const override;
   Tool *buildLinker() const override;

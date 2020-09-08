@@ -67,10 +67,18 @@ void KVXTargetInfo::getTargetDefines(const LangOptions &Opts,
                                      MacroBuilder &Builder) const {
   Builder.defineMacro("__ELF__", "1");
   Builder.defineMacro("__KVX__", "3");
-  Builder.defineMacro("__KV3__", "1");
   Builder.defineMacro("__kvx__", "3");
-  Builder.defineMacro("__kv3__", "1");
-  Builder.defineMacro("__kvxarch_kv3_1", "1");
+
+  if (CPU == "kv3-2") {
+    Builder.defineMacro("__KV3__", "2");
+    Builder.defineMacro("__kv3__", "2");
+    Builder.defineMacro("__kvxarch_kv3_2", "1");
+  } else { // kv3-1
+    Builder.defineMacro("__KV3__", "1");
+    Builder.defineMacro("__kv3__", "1");
+    Builder.defineMacro("__kvxarch_kv3_1", "1");
+  }
+
   Builder.defineMacro("__bypass", "__attribute__((address_space(9)))");
   Builder.defineMacro("__preload", "__attribute__((address_space(10)))");
   Builder.defineMacro("__speculative", "__attribute__((address_space(11)))");
@@ -84,7 +92,7 @@ const Builtin::Info KVXTargetInfo::BuiltinInfo[] = {
 };
 
 bool KVXTargetInfo::isValidCPUName(StringRef Name) const {
-  if (Name == "kv3" || Name == "kv3v1")
+  if (Name == "kv3-1" || Name == "kv3-2")
     return true;
 
   return false;
@@ -99,6 +107,6 @@ bool KVXTargetInfo::setCPU(const std::string &Name) {
 }
 
 void KVXTargetInfo::fillValidCPUList(SmallVectorImpl<StringRef> &Values) const {
-  Values.push_back("kv3");
-  Values.push_back("kv3v1");
+  Values.push_back("kv3-1");
+  Values.push_back("kv3-2");
 }

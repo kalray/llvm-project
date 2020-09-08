@@ -23,8 +23,6 @@ using namespace clang::driver::toolchains;
 using namespace clang;
 using namespace llvm::opt;
 
-#define KVX_CLUSTEROS_GCC_VERSION "7.5.0"
-
 void clusteros::Assembler::ConstructJob(Compilation &C, const JobAction &JA,
                                         const InputInfo &Output,
                                         const InputInfoList &Inputs,
@@ -32,6 +30,21 @@ void clusteros::Assembler::ConstructJob(Compilation &C, const JobAction &JA,
                                         const char *LinkingOutput) const {
   claimNoWarnArgs(Args);
   ArgStringList CmdArgs;
+
+  auto &CTC = static_cast<const toolchains::ClusterOS &>(getToolChain());
+
+  if (CTC.GCCInstallationIsValid()) {
+    CmdArgs.push_back(
+        Args.MakeArgString("-march=" + CTC.getGCCMultilibArch().str()));
+  } else {
+    // GCCInstallation isn't valid, which means that the toolchain isn't
+    // installed in /opt/kalray/accesscore nor the user didn't provided
+    // --gcc-toolchain installation prefix. We guess here which march to use.
+    const Arg *A = Args.getLastArg(options::OPT_march_EQ);
+    if (A)
+      CmdArgs.push_back(
+          Args.MakeArgString("-march=" + std::string(A->getValue())));
+  }
 
   Args.AddAllArgValues(CmdArgs, options::OPT_Wa_COMMA, options::OPT_Xassembler);
 
@@ -41,8 +54,7 @@ void clusteros::Assembler::ConstructJob(Compilation &C, const JobAction &JA,
   for (const auto &II : Inputs)
     CmdArgs.push_back(II.getFilename());
 
-  const char *Exec =
-      Args.MakeArgString(getToolChain().GetProgramPath("kvx-cos-as"));
+  const char *Exec = Args.MakeArgString(CTC.GetProgramPath("kvx-cos-as"));
   C.addCommand(std::make_unique<Command>(
       JA, *this, ResponseFileSupport::AtFileCurCP(), Exec, CmdArgs, Inputs));
 }
@@ -52,6 +64,36 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
                                      const InputInfoList &Inputs,
                                      const ArgList &Args,
                                      const char *LinkingOutput) const {
+
+  auto &CTC = static_cast<const toolchains::ClusterOS &>(getToolChain());
+
+  std::string LibDir, GCCLibDir, LLVMLibDir;
+  if (CTC.GCCInstallationIsValid()) {
+    LibDir = CTC.getGCCInstallPath().str() + "/../../../../kvx-cos/lib" +
+             CTC.getGCCMultilibGCCSuffix().str();
+    GCCLibDir =
+        CTC.getGCCInstallPath().str() + CTC.getGCCMultilibGCCSuffix().str();
+    LLVMLibDir = CTC.getGCCInstallPath().str() + "/../../../../lib/llvm/cos" +
+                 CTC.getGCCMultilibGCCSuffix().str();
+  } else {
+    // GCCInstallation isn't valid, which means that the toolchain isn't
+    // installed in /opt/kalray/accesscore nor the user didn't provided
+    // --gcc-toolchain installation prefix. We guess default paths from
+    // kvx-cos-ld program path.
+    std::string LDPath = getToolChain().GetProgramPath("kvx-cos-ld");
+    std::string LDPrefix = llvm::sys::path::parent_path(LDPath);
+
+    const Arg *A = Args.getLastArg(options::OPT_march_EQ);
+    if (A && strcmp(A->getValue(), "kv3-2") == 0) {
+      LibDir = LDPrefix + "/../kvx-cos/lib/kv3-2";
+      GCCLibDir = LDPrefix + "/../lib/gcc/kvx-cos/7.5.0/kv3-2";
+      LLVMLibDir = LDPrefix + "/../lib/llvm/cos/kv3-2";
+    } else {
+      LibDir = LDPrefix + "/../kvx-cos/lib";
+      GCCLibDir = LDPrefix + "/../lib/gcc/kvx-cos/7.5.0";
+      LLVMLibDir = LDPrefix + "/../lib/llvm/cos";
+    }
+  }
 
   const Arg *A = Args.getLastArg(options::OPT_rtlib_EQ);
   StringRef LibName = A ? A->getValue() : "compiler-rt";
@@ -120,9 +162,6 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
   } else {
     assert(LibName == "compiler-rt" && "unsupported runtime library");
 
-    std::string LDPath = getToolChain().GetProgramPath("kvx-cos-ld");
-    std::string LDPrefix = llvm::sys::path::parent_path(LDPath).str();
-
     claimNoWarnArgs(Args);
     ArgStringList CmdArgs;
 
@@ -135,16 +174,12 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
       // TODO: crti.o, crtbegin.o, crtend.o, and crtn.o are currently provided
       // by GCC. Implement those files on newlib's libgloss side to finally be
       // GCC agnostic when using compiler-rt!
-      CmdArgs.push_back(Args.MakeArgString(
-          LDPrefix + "/../lib/gcc/kvx-cos/" KVX_CLUSTEROS_GCC_VERSION
-                     "/crti.o")); // GCC's crti.o, see TODO
-                                  // comment above.
-      CmdArgs.push_back(Args.MakeArgString(
-          LDPrefix + "/../lib/gcc/kvx-cos/" KVX_CLUSTEROS_GCC_VERSION
-                     "/crtbegin.o")); // GCC's crtbegin.o, see
-                                      // TODO comment above.
-      CmdArgs.push_back(
-          Args.MakeArgString(LDPrefix + "/../kvx-cos/lib/crt0.o"));
+      // GCC's crti.o, see TODO comment above.
+      CmdArgs.push_back(Args.MakeArgString(GCCLibDir + "/crti.o"));
+      // GCC's crtbegin.o, see TODO comment above.
+      CmdArgs.push_back(Args.MakeArgString(GCCLibDir + "/crtbegin.o"));
+      // TODO: to remove after binutils update.
+      CmdArgs.push_back(Args.MakeArgString(LibDir + "/crt0.o"));
     }
 
     // Keep same order as clang command line for all OPT_Wl_COMMA, OPT_l, OPT_L
@@ -165,8 +200,8 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
       }
     }
 
-    CmdArgs.push_back(Args.MakeArgString("-L" + LDPrefix + "/../kvx-cos/lib"));
-    CmdArgs.push_back(Args.MakeArgString("-L" + LDPrefix + "/../lib/llvm/cos"));
+    CmdArgs.push_back(Args.MakeArgString("-L" + LibDir));
+    CmdArgs.push_back(Args.MakeArgString("-L" + LLVMLibDir));
 
     CmdArgs.push_back("-melf64kvx");
 
@@ -177,9 +212,7 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
         !Args.hasArg(options::OPT_nodefaultlibs)) {
       if (C.getDriver().CCCIsCXX()) {
         CmdArgs.push_back("-lstdc++");
-        CmdArgs.push_back(Args.MakeArgString(
-            "-L" + LDPrefix +
-            "/../lib/gcc/kvx-cos/" KVX_CLUSTEROS_GCC_VERSION));
+        CmdArgs.push_back(Args.MakeArgString("-L" + GCCLibDir));
         CmdArgs.push_back("-lgcc");
       }
 
@@ -200,14 +233,10 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
     }
 
     if (!Args.hasArg(options::OPT_nostdlib)) {
-      CmdArgs.push_back(Args.MakeArgString(
-          LDPrefix + "/../lib/gcc/kvx-cos/" KVX_CLUSTEROS_GCC_VERSION
-                     "/crtend.o")); // GCC's crtend.o, see TODO
-                                    // comment above.
-      CmdArgs.push_back(Args.MakeArgString(
-          LDPrefix + "/../lib/gcc/kvx-cos/" KVX_CLUSTEROS_GCC_VERSION
-                     "/crtn.o")); // GCC's crtn.o, see TODO
-                                  // comment above.
+      // GCC's crtend.o, see TODO comment above.
+      CmdArgs.push_back(Args.MakeArgString(GCCLibDir + "/crtend.o"));
+      // GCC's crtn.o, see TODO comment above.
+      CmdArgs.push_back(Args.MakeArgString(GCCLibDir + "/crtn.o"));
     }
 
     if (Args.getLastArg(options::OPT_T)) {
@@ -238,12 +267,40 @@ ClusterOS::ClusterOS(const Driver &D, const llvm::Triple &Triple,
                      const ArgList &Args)
     : Generic_ELF(D, Triple, Args) {
   getFilePaths().push_back(getDriver().SysRoot + "/usr/lib");
+
+  GCCInstallation.init(Triple, Args, {"kvx-cos"});
 }
 
 std::string ClusterOS::getIncludeDirRoot() const {
   std::string GCCPath = GetProgramPath("kvx-cos-gcc");
   StringRef GCCPrefix = llvm::sys::path::parent_path(GCCPath);
   return llvm::sys::path::parent_path(GCCPrefix).str() + "/kvx-cos/include";
+}
+
+StringRef ClusterOS::getGCCMultilibArch() const {
+  for (StringRef Flag : GCCInstallation.getMultilib().flags()) {
+    if (Flag.startswith("+march="))
+      return Flag.substr(7);
+  }
+
+  llvm_unreachable("Default multilib misses +march flag");
+}
+
+bool ClusterOS::GCCInstallationIsValid() const {
+  return GCCInstallation.isValid();
+}
+
+StringRef ClusterOS::getGCCVersion() const {
+  return GCCInstallation.isValid() ? GCCInstallation.getVersion().Text
+                                   : "7.5.0";
+}
+
+StringRef ClusterOS::getGCCInstallPath() const {
+  return GCCInstallation.getInstallPath();
+}
+
+StringRef ClusterOS::getGCCMultilibGCCSuffix() const {
+  return GCCInstallation.getMultilib().gccSuffix();
 }
 
 Tool *ClusterOS::buildAssembler() const {
@@ -270,13 +327,13 @@ void ClusterOS::AddClangCXXStdlibIncludeArgs(const ArgList &DriverArgs,
     return;
 
   addSystemInclude(DriverArgs, CC1Args,
-                   getIncludeDirRoot() + "/c++/" KVX_CLUSTEROS_GCC_VERSION);
-  addSystemInclude(DriverArgs, CC1Args, getIncludeDirRoot() +
-                                            "/c++/" KVX_CLUSTEROS_GCC_VERSION
-                                            "/kvx-cos");
-  addSystemInclude(DriverArgs, CC1Args, getIncludeDirRoot() +
-                                            "/c++/" KVX_CLUSTEROS_GCC_VERSION
-                                            "/backward");
+                   getIncludeDirRoot() + "/c++/" + getGCCVersion().data());
+  addSystemInclude(DriverArgs, CC1Args,
+                   getIncludeDirRoot() + "/c++/" + getGCCVersion().data() +
+                       "/kvx-cos");
+  addSystemInclude(DriverArgs, CC1Args,
+                   getIncludeDirRoot() + "/c++/" + +getGCCVersion().data() +
+                       "/backward");
 }
 
 void
