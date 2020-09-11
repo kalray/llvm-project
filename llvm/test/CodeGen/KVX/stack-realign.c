@@ -33,8 +33,9 @@ int stackrealign2(int n) {
   // CHECK: copyd $r32 = $r12
   // CHECK: addd $r12 = $r12, 96
   // CHECK: andd $r12 = $r12, -128
-  // CHECK: copyd $r31 = $r32
+  // CHECK: copyd $r33 = $r14
   // CHECK: copyd $r14 = $r12
+  // CHECK: copyd $r31 = $r32
   // CHECK: copyd $r32 = $r31
   // CHECK: copyd $r12 = $r14
   // CHECK: copyd $r12 = $r32
@@ -92,8 +93,9 @@ int stackrealign4(int n) {
   // CHECK: copyd $r32 = $r12
   // CHECK: addd $r12 = $r12, 96
   // CHECK: andd $r12 = $r12, -128
-  // CHECK: copyd $r31 = $r32
+  // CHECK: copyd $r33 = $r14
   // CHECK: copyd $r14 = $r12
+  // CHECK: copyd $r31 = $r32
   // CHECK-NOT: make $r31
   // CHECK: copyd $r32 = $r31
   // CHECK: copyd $r12 = $r14
