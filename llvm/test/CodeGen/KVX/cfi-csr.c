@@ -14,7 +14,6 @@ long f_1_nopack() {
   // CHECK: get $r16 = $ra
   // CHECK: ;;
   // CHECK-NEXT: .cfi_def_cfa_offset 32
-  // CHECK-NEXT: .cfi_register 67, 16
   // CHECK: sd 8[$r12] = $r16
   // CHECK: ;;
   // CHECK-NEXT: .cfi_offset 67, -24
@@ -37,7 +36,6 @@ long f_2_pairpack() {
   // CHECK: get $r16 = $ra
   // CHECK: ;;
   // CHECK-NEXT: .cfi_def_cfa_offset 32
-  // CHECK-NEXT: .cfi_register 67, 16
   // CHECK: sd 16[$r12] = $r16
   // CHECK: ;;
   // CHECK-NEXT: .cfi_offset 67, -16
@@ -62,7 +60,6 @@ long f_3_pairpack() {
   // CHECK: get $r16 = $ra
   // CHECK: ;;
   // CHECK-NEXT: .cfi_def_cfa_offset 32
-  // CHECK-NEXT: .cfi_register 67, 16
   // CHECK: sd 24[$r12] = $r16
   // CHECK: ;;
   // CHECK-NEXT: .cfi_offset 67, -8
@@ -93,7 +90,6 @@ long f_4_quadpack() {
   // CHECK: get $r16 = $ra
   // CHECK: ;;
   // CHECK-NEXT: .cfi_def_cfa_offset 64
-  // CHECK-NEXT: .cfi_register 67, 16
   // CHECK: sd 32[$r12] = $r16
   // CHECK: ;;
   // CHECK-NEXT .cfi_offset 67, -32
@@ -123,7 +119,6 @@ long f_5_quadpack() {
   // CHECK: get $r16 = $ra
   // CHECK: ;;
   // CHECK-NEXT: .cfi_def_cfa_offset 64
-  // CHECK-NEXT: .cfi_register 67, 16
   // CHECK: sd 40[$r12] = $r16
   // CHECK: ;;
   // CHECK-NEXT: .cfi_offset 67, -24
@@ -157,7 +152,6 @@ long f_6_1quad1pairpack() {
   // CHECK: get $r16 = $ra
   // CHECK: ;;
   // CHECK-NEXT: .cfi_def_cfa_offset 64
-  // CHECK-NEXT: .cfi_register 67, 16
   // CHECK: sd 48[$r12] = $r16
   // CHECK: ;;
   // CHECK-NEXT: .cfi_offset 67, -16
@@ -200,7 +194,6 @@ long f_14_3quad1pairpack() {
   // CHECK: get $r16 = $ra
   // CHECK: ;;
   // CHECK-NEXT: .cfi_def_cfa_offset 128
-  // CHECK-NEXT: .cfi_register 67, 16
   // CHECK: sd 112[$r12] = $r16
   // CHECK: ;;
   // CHECK-NEXT: .cfi_offset 67, -16
@@ -258,7 +251,6 @@ long f_15_3quad1pairpack() {
   // CHECK: get $r16 = $ra
   // CHECK: ;;
   // CHECK-NEXT: .cfi_def_cfa_offset 128
-  // CHECK-NEXT: .cfi_register 67, 16
   // CHECK: sd 112[$r12] = $r16
   // CHECK: ;;
   // CHECK-NEXT: .cfi_offset 67, -16
@@ -319,7 +311,6 @@ int fsum6_sum(int first, int second, ...) {
   // CHECK: get $r16 = $ra
   // CHECK: ;;
   // CHECK-NEXT: .cfi_def_cfa_offset 128
-  // CHECK-NEXT: .cfi_register 67, 16
   // CHECK: sd 8[$r12] = $r16
   // CHECK: ;;
   // CHECK-NEXT: .cfi_offset 67, -120

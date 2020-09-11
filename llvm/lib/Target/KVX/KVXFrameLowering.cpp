@@ -50,6 +50,7 @@
 #include "llvm/CodeGen/MachineRegisterInfo.h"
 #include "llvm/CodeGen/RegisterScavenging.h"
 #include "llvm/MC/MCDwarf.h"
+#include "llvm/Support/LEB128.h"
 
 using namespace llvm;
 
@@ -112,6 +113,15 @@ void KVXFrameLowering::realignStack(MachineFunction &MF, MachineBasicBlock &MBB,
         .addReg(getSPReg())
         .setMIFlag(MachineInstr::FrameSetup);
 
+    const MCRegisterInfo *MRI = MF.getMMI().getContext().getRegisterInfo();
+
+    // emit cfi instruction to set CFA to ScratchReg
+    // .cfi_def_cfa_register ScratchReg
+    BuildMI(MBB, MBBI, DL, TII->get(TargetOpcode::CFI_INSTRUCTION))
+        .addCFIIndex(MF.addFrameInst(MCCFIInstruction::createDefCfaRegister(
+            nullptr, MRI->getDwarfRegNum(ScratchReg, true))))
+        .setMIFlags(MachineInstr::FrameSetup);
+
     if (MFI.getMaxAlignment() > getStackAlignment()) {
       // realign the stack
       BuildMI(MBB, MBBI, DL, TII->get(KVX::ADDDri64), getSPReg())
@@ -162,10 +172,6 @@ void KVXFrameLowering::emitPrologue(MachineFunction &MF,
   adjustReg(MBB, MBBI, DL, GetStackOpCode((uint64_t)StackSize), SPReg, SPReg,
             -StackSize, MachineInstr::FrameSetup);
 
-  unsigned ScratchReg = findScratchRegister(MBB, false, KVX::R32);
-
-  realignStack(MF, MBB, MBBI, DL, ScratchReg);
-
   unsigned CFIIndex = MF.addFrameInst(
       MCCFIInstruction::createDefCfaOffset(nullptr, -StackSize));
 
@@ -175,23 +181,24 @@ void KVXFrameLowering::emitPrologue(MachineFunction &MF,
       .addCFIIndex(CFIIndex)
       .setMIFlags(MachineInstr::FrameSetup);
 
+  unsigned ScratchReg = findScratchRegister(MBB, false, KVX::R32);
+
+  realignStack(MF, MBB, MBBI, DL, ScratchReg);
+
+  const KVXRegisterInfo *TRI =
+      (const KVXRegisterInfo *)MF.getSubtarget().getRegisterInfo();
+
   const std::vector<CalleeSavedInfo> &CSI = MFI.getCalleeSavedInfo();
   if (!CSI.empty()) {
     const MCRegisterInfo *MRI = MF.getMMI().getContext().getRegisterInfo();
 
-    // Assumes the stores preserve the CSR order.
-    // Add CFI alias between RA and R16 registers.
-    if (MBBI->getOpcode() == KVX::GETss2) {
-      unsigned R16Dwarf =
-          MRI->getDwarfRegNum(MBBI->getOperand(0).getReg(), true);
-      unsigned RADwarf =
-          MRI->getDwarfRegNum(MBBI->getOperand(1).getReg(), true);
+    if (TRI->needsStackRealignment(MF) && hasFP(MF)) {
+      ++MBBI; // skip copyd $r14 = scratch
+      ++MBBI; // skip copyd $r14 = $r12
+    }
 
-      BuildMI(MBB, MBBI, DL, TII->get(TargetOpcode::CFI_INSTRUCTION))
-          .addCFIIndex(MF.addFrameInst(
-              MCCFIInstruction::createRegister(nullptr, RADwarf, R16Dwarf)))
-          .setMIFlags(MachineInstr::FrameSetup);
-      ++MBBI;
+    if (MBBI->getOpcode() == KVX::GETss2) {
+      ++MBBI; // skip get
     }
 
     std::vector<CalleeSavedInfo>::const_iterator I = CSI.begin();
@@ -201,23 +208,58 @@ void KVXFrameLowering::emitPrologue(MachineFunction &MF,
       unsigned numSingleRegs = getNumOfSingleRegsPacked(MBBI->getOpcode());
       ++MBBI;
 
-      // Build CFI instrunction for each single register after the  store
+      // Build CFI instrunction for each single register after the store
       while (numSingleRegs--) {
-        int64_t Offset = MFI.getObjectOffset(I->getFrameIdx()) - StackSize;
         unsigned DwarfReg = MRI->getDwarfRegNum(I->getReg(), true);
 
-        BuildMI(MBB, MBBI, DL, TII->get(TargetOpcode::CFI_INSTRUCTION))
-            .addCFIIndex(MF.addFrameInst(
-                MCCFIInstruction::createOffset(nullptr, DwarfReg, Offset)))
-            .setMIFlags(MachineInstr::FrameSetup);
+        if (TRI->needsStackRealignment(MF)) {
+          // If stack realignment is needed then cfa cannot be used for dwarf
+          // locations, as stack realignment is performed at runtime. In such
+          // case the cfi escape instruction is used.
+
+          // The cfi escape instruction syntax is:
+          // .cfi_escape DW_CFA_EXPRESSION <reg> <1 + length of SLEB128 offset>
+          //   <0x70 + regSP> <offset in SLEB128>
+
+          // This will tell that the value of register <reg> can be found at the
+          // an offset from the stack, given as offset + regSP.
+
+          unsigned DwarfSPReg = 0x70;
+          if (TRI->needsStackRealignment(MF) && hasFP(MF))
+            DwarfSPReg += MRI->getDwarfRegNum(getFPReg(), true);
+          else
+            DwarfSPReg += MRI->getDwarfRegNum(getSPReg(), true);
+
+          int64_t Offset = MFI.getObjectOffset(I->getFrameIdx());
+          SmallString<128> Tmp;
+          raw_svector_ostream OSE(Tmp);
+          unsigned int slebsize = encodeSLEB128(Offset, OSE);
+          const char *sleb128 = Tmp.c_str();
+          char CFIInst[8];
+          CFIInst[0] = dwarf::DW_CFA_expression;
+          CFIInst[1] = static_cast<char>(DwarfReg);
+          CFIInst[2] = 1 + slebsize;
+          CFIInst[3] = static_cast<char>(DwarfSPReg);
+          strncpy(&CFIInst[4], sleb128, slebsize);
+          unsigned CFIIndex = MF.addFrameInst(MCCFIInstruction::createEscape(
+              nullptr, StringRef(CFIInst, 4 + slebsize)));
+          BuildMI(MBB, MBBI, DL, TII->get(TargetOpcode::CFI_INSTRUCTION))
+              .addCFIIndex(CFIIndex)
+              .setMIFlag(MachineInstr::FrameSetup);
+        } else {
+          // emit .cfi_offset <DwarfReg> <Offset> telling the debugger that
+          // the value of reg can be found at cfa + Offset
+          int64_t Offset = MFI.getObjectOffset(I->getFrameIdx()) - StackSize;
+          BuildMI(MBB, MBBI, DL, TII->get(TargetOpcode::CFI_INSTRUCTION))
+              .addCFIIndex(MF.addFrameInst(
+                  MCCFIInstruction::createOffset(nullptr, DwarfReg, Offset)))
+              .setMIFlags(MachineInstr::FrameSetup);
+        }
 
         ++I;
       }
     }
   }
-
-  const KVXRegisterInfo *TRI =
-      (const KVXRegisterInfo *)MF.getSubtarget().getRegisterInfo();
 
   if (TRI->needsStackRealignment(MF)) {
     // ScrachReg contains the SPReg value before realignment
@@ -225,6 +267,15 @@ void KVXFrameLowering::emitPrologue(MachineFunction &MF,
             hasFP(MF) ? KVX::R31 : getFPReg())
         .addReg(ScratchReg, RegState::Kill)
         .setMIFlag(MachineInstr::FrameSetup);
+
+    const MCRegisterInfo *MRI = MF.getMMI().getContext().getRegisterInfo();
+
+    // emit .cfi_def_cfa_register $r31 (alloca case) or $r14
+    BuildMI(MBB, MBBI, DL, TII->get(TargetOpcode::CFI_INSTRUCTION))
+        .addCFIIndex(MF.addFrameInst(MCCFIInstruction::createDefCfaRegister(
+            nullptr,
+            MRI->getDwarfRegNum(hasFP(MF) ? KVX::R31 : getFPReg(), true))))
+        .setMIFlags(MachineInstr::FrameSetup);
   }
 }
 
@@ -257,6 +308,13 @@ void KVXFrameLowering::emitEpilogue(MachineFunction &MF,
     BuildMI(MBB, MBBI, DL, TII->get(KVX::COPYD), getSPReg())
         .addReg(KVXFI->getScratchReg(), RegState::Kill)
         .setMIFlag(MachineInstr::FrameSetup);
+
+    const MCRegisterInfo *MRI = MF.getMMI().getContext().getRegisterInfo();
+
+    BuildMI(MBB, MBBI, DL, TII->get(TargetOpcode::CFI_INSTRUCTION))
+        .addCFIIndex(MF.addFrameInst(MCCFIInstruction::createDefCfaRegister(
+            nullptr, MRI->getDwarfRegNum(getSPReg(), true))))
+        .setMIFlags(MachineInstr::FrameDestroy);
   }
 
   // Deallocate stack
@@ -289,6 +347,11 @@ int KVXFrameLowering::getFrameIndexReference(const MachineFunction &MF, int FI,
     OffsetAdjust = MFI.getStackSize();
   else if (!hasFP(MF))
     OffsetAdjust += KVXFI->getOutgoingArgsMaxSize();
+
+  const KVXRegisterInfo *TRI =
+      (const KVXRegisterInfo *)MF.getSubtarget().getRegisterInfo();
+  if (!TRI->needsStackRealignment(MF))
+    Offset -= MFI.getStackSize();
 
   return Offset + OffsetAdjust;
 }
@@ -329,9 +392,31 @@ bool KVXFrameLowering::spillCalleeSavedRegisters(
     const TargetRegisterInfo *TRI) const {
   const KVXInstrInfo *TII = STI.getInstrInfo();
 
+  MachineFunction &MF = *MBB.getParent();
+  const MCRegisterInfo *MRI = MF.getMMI().getContext().getRegisterInfo();
+
+  unsigned FPScratch = 0;
+
+  DebugLoc DL = MI->getDebugLoc();
+
   if (hasFP(*MBB.getParent())) {
-    DebugLoc DL = MI->getDebugLoc();
-    BuildMI(MBB, MI, DL, TII->get(KVX::COPYD), getFPReg()).addReg(getSPReg());
+    if (!TRI->needsStackRealignment(MF)) {
+      BuildMI(MBB, MI, DL, TII->get(KVX::COPYD), getFPReg()).addReg(getSPReg());
+
+      // $r14 is fixed, $r12 is modified by alloca
+      // tell the debugger to use cfa $r14
+
+      // emit .cfi_def_cfa_register $r14
+      BuildMI(MBB, MI, DL, TII->get(TargetOpcode::CFI_INSTRUCTION))
+          .addCFIIndex(MF.addFrameInst(MCCFIInstruction::createDefCfaRegister(
+              nullptr, MRI->getDwarfRegNum(getFPReg(), true))))
+          .setMIFlags(MachineInstr::FrameSetup);
+    } else {
+      // a scratch register is used to save FPreg value and store FPreg value
+      // from the scratch register in order to have correct backtrack info
+      // for all prologue instructions
+      FPScratch = findScratchRegister(MBB, false, KVX::R33);
+    }
   }
 
   MI = MBB.begin();
@@ -339,6 +424,7 @@ bool KVXFrameLowering::spillCalleeSavedRegisters(
   SmallVector<unsigned, 8> RegSaved;
   SmallVector<const TargetRegisterClass *, 8> RCSaved;
   SmallVector<int, 8> FrameIdxSaved;
+
   for (const CalleeSavedInfo &CS : CSI) {
     unsigned Reg = CS.getReg();
     const TargetRegisterClass *RC = TRI->getMinimalPhysRegClass(Reg);
@@ -370,11 +456,19 @@ bool KVXFrameLowering::spillCalleeSavedRegisters(
       }
     }
 
-    RegSaved.push_back(Reg);
+    if (Reg == getFPReg() && FPScratch != 0)
+      RegSaved.push_back(FPScratch); // FP is stored from scratch register copy
+    else
+      RegSaved.push_back(Reg);
     RCSaved.push_back(RC);
     FrameIdxSaved.push_back(CS.getFrameIdx());
   }
 
+  if (FPScratch != 0) {
+    // make a copy of FPreg into a scratch reg and set FP to SP
+    BuildMI(MBB, MI, DL, TII->get(KVX::COPYD), FPScratch).addReg(getFPReg());
+    BuildMI(MBB, MI, DL, TII->get(KVX::COPYD), getFPReg()).addReg(getSPReg());
+  }
   for (unsigned i = 0; i < RegSaved.size(); ++i) {
     TII->storeRegToStackSlot(MBB, MI, RegSaved[i], true, FrameIdxSaved[i],
                              RCSaved[i], TRI);
@@ -393,17 +487,37 @@ bool KVXFrameLowering::restoreCalleeSavedRegisters(
   DebugLoc DL = MI->getDebugLoc();
   MachineFunction *MF = MBB.getParent();
   auto *KVXFI = MF->getInfo<KVXMachineFunctionInfo>();
+  const MCRegisterInfo *MRI = MF->getMMI().getContext().getRegisterInfo();
 
   if (TRI->needsStackRealignment(*MBB.getParent())) {
     KVXFI->setScratchReg(findScratchRegister(MBB, true, KVX::R32));
     DebugLoc DL = MI->getDebugLoc();
     BuildMI(MBB, MI, DL, TII->get(KVX::COPYD), KVXFI->getScratchReg())
         .addReg(hasFP(*MF) ? KVX::R31 : getFPReg(), RegState::Kill)
-        .setMIFlag(MachineInstr::FrameSetup);
+        .setMIFlag(MachineInstr::FrameDestroy);
+
+    MachineFunction *MF = MBB.getParent();
+    const MCRegisterInfo *MRI = MF->getMMI().getContext().getRegisterInfo();
+
+    // .cfi_def_cfa_register ScratchReg
+    BuildMI(MBB, MI, DL, TII->get(TargetOpcode::CFI_INSTRUCTION))
+        .addCFIIndex(MF->addFrameInst(MCCFIInstruction::createDefCfaRegister(
+            nullptr, MRI->getDwarfRegNum(KVXFI->getScratchReg(), true))))
+        .setMIFlags(MachineInstr::FrameDestroy);
   }
 
   if (hasFP(*MBB.getParent())) {
     BuildMI(MBB, MI, DL, TII->get(KVX::COPYD), getSPReg()).addReg(getFPReg());
+
+    if (!TRI->needsStackRealignment(*MF)) {
+      // $r12 is restored from $r14, tell the debugger to use $r12 as cfa
+
+      // .cfi_def_cfa_register $r12
+      BuildMI(MBB, MI, DL, TII->get(TargetOpcode::CFI_INSTRUCTION))
+          .addCFIIndex(MF->addFrameInst(MCCFIInstruction::createDefCfaRegister(
+              nullptr, MRI->getDwarfRegNum(getSPReg(), true))))
+          .setMIFlags(MachineInstr::FrameDestroy);
+    }
   }
 
   MI = MBB.getFirstTerminator();
@@ -454,9 +568,29 @@ bool KVXFrameLowering::restoreCalleeSavedRegisters(
     RCSaved.push_back(RC);
   }
 
-  for (unsigned i = 0; i < RegSaved.size(); ++i)
+  // restore all CSR but FP in order to have correct backtrack info for all
+  // bundles in the generated code
+  int FPIndex = -1;
+  for (unsigned i = 0; i < RegSaved.size(); ++i) {
+    if (RegSaved[i] == getFPReg()) {
+      FPIndex = i;
+      continue;
+    }
     TII->loadRegFromStackSlot(MBB, MI, RegSaved[i], FrameIdxSaved[i],
                               RCSaved[i], TRI);
+    if (TRI->needsStackRealignment(*MBB.getParent()) &&
+        RegSaved[i] == KVX::RA) {
+      BuildMI(MBB, MI, DL, TII->get(TargetOpcode::CFI_INSTRUCTION))
+          .addCFIIndex(MF->addFrameInst(MCCFIInstruction::createRestore(
+              nullptr, MRI->getDwarfRegNum(RegSaved[i], true))))
+          .setMIFlags(MachineInstr::FrameDestroy);
+    }
+  }
+
+  // restore FP
+  if (FPIndex != -1)
+    TII->loadRegFromStackSlot(MBB, MI, RegSaved[FPIndex],
+                              FrameIdxSaved[FPIndex], RCSaved[FPIndex], TRI);
 
   return true;
 }

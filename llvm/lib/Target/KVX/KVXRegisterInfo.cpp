@@ -69,12 +69,21 @@ void KVXRegisterInfo::eliminateFrameIndex(MachineBasicBlock::iterator II,
   int FrameIndex = MI.getOperand(FIOperandNum).getIndex();
   unsigned FrameReg;
   int Offset;
+
+  const KVXRegisterInfo *TRI =
+      (const KVXRegisterInfo *)MF.getSubtarget().getRegisterInfo();
+
+  const MachineFrameInfo &MFI = MF.getFrameInfo();
+
   // Check if the previous operand is immediate, if true replace it with the
   // computed value
   if (FIOperandNum > 0 && MI.getOperand(FIOperandNum - 1).isImm()) {
     Offset =
         getFrameLowering(MF)->getFrameIndexReference(MF, FrameIndex, FrameReg) +
-        MI.getOperand(FIOperandNum - 1).getImm();
+        MI.getOperand(FIOperandNum - 1).getImm() +
+        MF.getFrameInfo().getStackSize();
+    if (TRI->needsStackRealignment(MF))
+      Offset -= MFI.getStackSize();
 
     MI.getOperand(FIOperandNum).ChangeToRegister(FrameReg, false, false, false);
     MI.getOperand(FIOperandNum - 1).ChangeToImmediate(Offset);
@@ -83,9 +92,13 @@ void KVXRegisterInfo::eliminateFrameIndex(MachineBasicBlock::iterator II,
     // computed value
     if (FIOperandNum + 1 < MI.getNumOperands() &&
         MI.getOperand(FIOperandNum + 1).isImm()) {
-      Offset = getFrameLowering(MF)
-                   ->getFrameIndexReference(MF, FrameIndex, FrameReg) +
-               MI.getOperand(FIOperandNum + 1).getImm();
+      Offset = getFrameLowering(MF)->getFrameIndexReference(MF, FrameIndex,
+                                                            FrameReg) +
+               MI.getOperand(FIOperandNum + 1).getImm() +
+               MF.getFrameInfo().getStackSize();
+
+      if (TRI->needsStackRealignment(MF))
+        Offset -= MFI.getStackSize();
 
       MI.getOperand(FIOperandNum)
           .ChangeToRegister(FrameReg, false, false, false);
@@ -105,5 +118,11 @@ void KVXRegisterInfo::eliminateFrameIndex(MachineBasicBlock::iterator II,
 llvm::Register
 KVXRegisterInfo::getFrameRegister(const MachineFunction &MF) const {
   const TargetFrameLowering *TFI = getFrameLowering(MF);
+  const KVXRegisterInfo *TRI =
+      (const KVXRegisterInfo *)MF.getSubtarget().getRegisterInfo();
+  // if stack realignment is needed then return RA in order to generate
+  // register,offset dwarf location information instead of framebase ones
+  if (TRI->needsStackRealignment(MF))
+    return KVX::RA;
   return TFI->hasFP(MF) ? getFPReg() : getSPReg();
 }
