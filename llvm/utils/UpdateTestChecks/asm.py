@@ -149,6 +149,16 @@ ASM_FUNCTION_WASM32_RE = re.compile(
     r'^\s*(\.Lfunc_end[0-9]+:\n|end_function)',
     flags=(re.M | re.S))
 
+ASM_FUNCTION_KVX_RE = re.compile(
+   r'^[ \t]*(?P<func>[A-z0-9][^:]*):[^\n]*\n' # Obtain function name
+   r'([ \t]+.cfi_startproc\n)?'  # drop cfi noise
+   r'(?P<body>.*?)\n' # Body of the function
+   r'.Lfunc_end[0-9]+:', # .Lfunc_end0: or # -- End function
+   flags=(re.M | re.S))
+
+SCRUB_LOOP_COMMENT_RE = re.compile(
+    r'# =>This Inner Loop Header:.*|# in Loop:.*', flags=re.M)
+
 SCRUB_X86_SHUFFLES_RE = (
     re.compile(
         r'^(\s*\w+) [^#\n]+#+ ((?:[xyz]mm\d+|mem)( \{%k\d+\}( \{z\})?)? = .*)$',
@@ -327,6 +337,16 @@ def scrub_asm_wasm32(asm, args):
   asm = common.SCRUB_TRAILING_WHITESPACE_RE.sub(r'', asm)
   return asm
 
+def scrub_asm_kvx(asm, args):
+  # Scrub runs of whitespace out of the assembly, but leave the leading
+  # whitespace in place.
+  asm = common.SCRUB_WHITESPACE_RE.sub(r' ', asm)
+  # Expand the tabs used for indentation.
+  asm = string.expandtabs(asm, 2)
+  # Strip trailing whitespace.
+  asm = common.SCRUB_TRAILING_WHITESPACE_RE.sub(r'', asm)
+  return asm
+
 def get_triple_from_march(march):
   triples = {
       'amdgcn': 'amdgcn',
@@ -372,6 +392,7 @@ def get_run_handler(triple):
       'sparc': (scrub_asm_sparc, ASM_FUNCTION_SPARC_RE),
       's390x': (scrub_asm_systemz, ASM_FUNCTION_SYSTEMZ_RE),
       'wasm32': (scrub_asm_wasm32, ASM_FUNCTION_WASM32_RE),
+      'kvx'  : (scrub_asm_kvx, ASM_FUNCTION_KVX_RE),
   }
   handler = None
   best_prefix = ''
