@@ -32,11 +32,20 @@ defm : StorePat<store, v2f64, PairedReg, 4, SQp, SQri10, SQrr>;
 // Load
 
 foreach type = [ f16, f32, f64, v2f16, v4f16, v2f32, v4f32, v2f64 ] in {
-def load#type : PatFrag<(ops node:$ptr), (type (default_as<load> node:$ptr))>;
+def load#type : PatFrag<(ops node:$ptr), (type (load node:$ptr)), [{
+    const MemSDNode *LD = cast<MemSDNode>(N);
+    return LD->getAddressSpace() < 9;
+  }]>;
 
-def loadbypass#type : PatFrag<(ops node:$ptr), (type (bypass_as<load> node:$ptr))>;
+def loadbypass#type : PatFrag<(ops node:$ptr), (type (load node:$ptr)), [{
+    const MemSDNode *LD = cast<MemSDNode>(N);
+    return LD->getAddressSpace() == 9;
+  }]>;
 
-def loadpreload#type : PatFrag<(ops node:$ptr), (type (preload_as<load> node:$ptr))>;
+def loadpreload#type : PatFrag<(ops node:$ptr), (type (load node:$ptr)), [{
+    const MemSDNode *LD = cast<MemSDNode>(N);
+    return LD->getAddressSpace() == 10;
+  }]>;
 }
 
 // bypass loads
