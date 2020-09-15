@@ -46,6 +46,11 @@ def loadpreload#type : PatFrag<(ops node:$ptr), (type (load node:$ptr)), [{
     const MemSDNode *LD = cast<MemSDNode>(N);
     return LD->getAddressSpace() == 10;
   }]>;
+
+def loadspec#type : PatFrag<(ops node:$ptr), (type (load node:$ptr)), [{
+    const MemSDNode *LD = cast<MemSDNode>(N);
+    return LD->getAddressSpace() == 11;
+  }]>;
 }
 
 // bypass loads
@@ -67,6 +72,16 @@ defm : LoadPat<loadpreloadv2f32, v2f32, 3, LDp, LDri10, LDrr, variant_us>;
 defm : LoadPat<loadpreloadv4f16, v4f16, 3, LDp, LDri10, LDrr, variant_us>;
 defm : LoadPat<loadpreloadv4f32, v4f32, 4, LQp, LQri10, LQrr, variant_us>;
 defm : LoadPat<loadpreloadv2f64, v2f64, 4, LQp, LQri10, LQrr, variant_us>;
+
+// spec loads
+defm : LoadPat<loadspecf16, f16, 1, LHZp, LHZri10, LHZrr, variant_s>;
+defm : LoadPat<loadspecf32, f32, 2, LWZp, LWZri10, LWZrr, variant_s>;
+defm : LoadPat<loadspecv2f16, v2f16, 2, LWZp, LWZri10, LWZrr, variant_s>;
+defm : LoadPat<loadspecf64, f64, 3, LDp, LDri10, LDrr, variant_s>;
+defm : LoadPat<loadspecv2f32, v2f32, 3, LDp, LDri10, LDrr, variant_s>;
+defm : LoadPat<loadspecv4f16, v4f16, 3, LDp, LDri10, LDrr, variant_s>;
+defm : LoadPat<loadspecv4f32, v4f32, 4, LQp, LQri10, LQrr, variant_s>;
+defm : LoadPat<loadspecv2f64, v2f64, 4, LQp, LQri10, LQrr, variant_s>;
 
 // normal loads
 defm : LoadPat<loadf16, f16, 1, LHZp, LHZri10, LHZrr, variant_>;

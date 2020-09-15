@@ -73,6 +73,7 @@ void KVXTargetInfo::getTargetDefines(const LangOptions &Opts,
   Builder.defineMacro("__kvxarch_kv3_1", "1");
   Builder.defineMacro("__bypass", "__attribute__((address_space(9)))");
   Builder.defineMacro("__preload", "__attribute__((address_space(10)))");
+  Builder.defineMacro("__speculative", "__attribute__((address_space(11)))");
 }
 
 const Builtin::Info KVXTargetInfo::BuiltinInfo[] = {
