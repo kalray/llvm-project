@@ -135,9 +135,9 @@ enum COLUMN {
   COLUMN_C3
 };
 
-enum SCALING {
-  SCALING_,
-  SCALING_XS
+enum DOSCALE {
+  DOSCALE_,
+  DOSCALE_XS
 };
 
 enum SPLAT32 {

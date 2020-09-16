@@ -357,9 +357,9 @@ float ffmsw(float a, float b, float c) {
   return __builtin_kvx_ffmsw(a, b, c, ".rz");
 }
 
-float finvw(float a) {
-  // CHECK-LABEL: finvw:
-  // CHECK: finvw.rz $r0 = $r0
+float frecw(float a) {
+  // CHECK-LABEL: frecw:
+  // CHECK: frecw.rz $r0 = $r0
   // CHECK: ret
   return __builtin_kvx_finvw(a, ".rz");
 }

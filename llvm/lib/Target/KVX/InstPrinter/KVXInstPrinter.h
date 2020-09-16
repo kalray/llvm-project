@@ -44,7 +44,7 @@ public:
   void printVariantMod(const MCInst *MI, unsigned OpNo,
                        /*const MCSubtargetInfo &STI,*/ raw_ostream &O);
 
-  void printScalingMod(const MCInst *MI, unsigned OpNo,
+  void printDoscaleMod(const MCInst *MI, unsigned OpNo,
                        /*const MCSubtargetInfo &STI,*/ raw_ostream &O);
 
   void printScalarcondMod(const MCInst *MI, unsigned OpNo,
