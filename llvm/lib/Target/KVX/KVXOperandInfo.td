@@ -10,7 +10,7 @@
 // This file was automatically generated,
 //   *DO NOT EDIT*,
 //   please contact code owner.
-// Last generated: 2020-06-20 21:47:17.941718.
+// Last generated: 2020-09-16 15:58:51.230374.
 
 
 def Pcrel27 : Operand<iPTR> {}
@@ -87,8 +87,8 @@ def ColumnMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 3);}]>
   // let PrintMethod = "printColumnMod";
 }
 
-def ScalingMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 1);}]> {
-  let PrintMethod = "printScalingMod";
+def DoscaleMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 1);}]> {
+  let PrintMethod = "printDoscaleMod";
 }
 
 def Splat32Mod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 1);}]> {

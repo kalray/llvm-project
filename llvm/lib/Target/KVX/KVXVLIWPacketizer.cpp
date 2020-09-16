@@ -185,7 +185,7 @@ bool KVXPacketizerList::useFloatingPointIEEE754(unsigned Opcode) {
   case KVX::FCDIVD:
   case KVX::FCDIVW:
   case KVX::FCDIVWP:
-  case KVX::FINVW:
+  case KVX::FRECW:
   case KVX::FDOT2Wri:
   case KVX::FDOT2Wrr:
   case KVX::FDOT2WDri:
@@ -218,7 +218,7 @@ bool KVXPacketizerList::useFloatingPointIEEE754(unsigned Opcode) {
   case KVX::FFMSWDrr:
   case KVX::FFMSWDPri:
   case KVX::FFMSWDPrr:
-  case KVX::FISRW:
+  case KVX::FRSRW:
   case KVX::FIXEDD:
   case KVX::FIXEDUD:
   case KVX::FIXEDUW:
@@ -280,9 +280,9 @@ bool KVXPacketizerList::useFloatingPointIEEE754(unsigned Opcode) {
   case KVX::FSDIVD:
   case KVX::FSDIVW:
   case KVX::FSDIVWP:
-  case KVX::FSINVD:
-  case KVX::FSINVW:
-  case KVX::FSINVWP:
+  case KVX::FSRECD:
+  case KVX::FSRECW:
+  case KVX::FSRECWP:
   case KVX::FWIDENLHW:
   case KVX::FWIDENLHWP:
   case KVX::FWIDENLWD:

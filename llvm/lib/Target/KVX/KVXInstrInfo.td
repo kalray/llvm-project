@@ -18,7 +18,7 @@
 // This file was automatically generated,
 //   *DO NOT EDIT*,
 //   please contact code owner.
-// Last generated: 2020-06-22 14:27:34.582999.
+// Last generated: 2020-09-16 15:58:51.230203.
 
 include "KVXOperandInfo.td"
 include "KVXInstrFormats.td"
@@ -146,8 +146,8 @@ multiclass MC_05<string OpcStr> {
     <(outs SingleReg:$a4o), (ins SingleReg:$a3, Signed54:$a5, SingleReg:$a6, SingleReg:$a4, VariantMod:$a1, ScalarcondMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = $a5[$a6]"),
      [/* no straightforward pattern */]>;
-  def rr : VARIANT_SCALING_REGISTERW_REGISTERY_REGISTERZ_SIMPLE
-    <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, VariantMod:$a1, ScalingMod:$a2),
+  def rr : VARIANT_DOSCALE_REGISTERW_REGISTERY_REGISTERZ_SIMPLE
+    <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, VariantMod:$a1, DoscaleMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4[$a5]"),
      [/* no straightforward pattern */]>;
 }
@@ -182,8 +182,8 @@ multiclass MC_06<string OpcStr> {
     <(outs PairedReg:$a4o), (ins SingleReg:$a3, Signed54:$a5, SingleReg:$a6, PairedReg:$a4, VariantMod:$a1, ScalarcondMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = $a5[$a6]"),
      [/* no straightforward pattern */]>;
-  def rr : VARIANT_SCALING_REGISTERM_REGISTERY_REGISTERZ_SIMPLE
-    <(outs PairedReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, VariantMod:$a1, ScalingMod:$a2),
+  def rr : VARIANT_DOSCALE_REGISTERM_REGISTERY_REGISTERZ_SIMPLE
+    <(outs PairedReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, VariantMod:$a1, DoscaleMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4[$a5]"),
      [/* no straightforward pattern */]>;
 }
@@ -218,8 +218,8 @@ multiclass MC_07<string OpcStr> {
     <(outs QuadReg:$a4o), (ins SingleReg:$a3, Signed54:$a5, SingleReg:$a6, QuadReg:$a4, VariantMod:$a1, ScalarcondMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = $a5[$a6]"),
      [/* no straightforward pattern */]>;
-  def rr : VARIANT_SCALING_REGISTERN_REGISTERY_REGISTERZ_SIMPLE
-    <(outs QuadReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, VariantMod:$a1, ScalingMod:$a2),
+  def rr : VARIANT_DOSCALE_REGISTERN_REGISTERY_REGISTERZ_SIMPLE
+    <(outs QuadReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, VariantMod:$a1, DoscaleMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4[$a5]"),
      [/* no straightforward pattern */]>;
 }
@@ -227,74 +227,63 @@ multiclass MC_07<string OpcStr> {
 // multiclass MC_08 is used by:
 //   defm LV
 multiclass MC_08<string OpcStr> {
-  let Defs = [CS] in
   def ri10 : SPECULATE_REGISTERA_SIGNED10_REGISTERZ_SIMPLE
     <(outs VectorReg:$a2), (ins Signed10:$a3, SingleReg:$a4, SpeculateMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
      [/* no straightforward pattern */]>;
-  let Defs = [CS] in
   def ri37 : SPECULATE_REGISTERA_UPPER27_LOWER10_REGISTERZ_DOUBLE
     <(outs VectorReg:$a2), (ins Signed37:$a3, SingleReg:$a4, SpeculateMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
      [/* no straightforward pattern */]>;
-  let Defs = [CS] in
   def ri64 : SPECULATE_REGISTERA_EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
     <(outs VectorReg:$a2), (ins Wrapped64:$a3, SingleReg:$a4, SpeculateMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
      [/* no straightforward pattern */]>;
-  let Defs = [CS], Constraints = "$a4 = $a4o" in
+  let Constraints = "$a4 = $a4o" in
   def rrc : SPECULATE_LSUCOND_REGISTERY_REGISTERA_REGISTERZ_SIMPLE
     <(outs VectorReg:$a4o), (ins SingleReg:$a3, SingleReg:$a5, VectorReg:$a4, SpeculateMod:$a1, ScalarcondMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = [$a5]"),
      [/* no straightforward pattern */]>;
-  let Defs = [CS], Constraints = "$a4 = $a4o" in
+  let Constraints = "$a4 = $a4o" in
   def ri27c : SPECULATE_LSUCOND_REGISTERY_REGISTERA_OFFSET27_REGISTERZ_DOUBLE
     <(outs VectorReg:$a4o), (ins SingleReg:$a3, Signed27:$a5, SingleReg:$a6, VectorReg:$a4, SpeculateMod:$a1, ScalarcondMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = $a5[$a6]"),
      [/* no straightforward pattern */]>;
-  let Defs = [CS], Constraints = "$a4 = $a4o" in
+  let Constraints = "$a4 = $a4o" in
   def ri54c : SPECULATE_LSUCOND_REGISTERY_REGISTERA_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
     <(outs VectorReg:$a4o), (ins SingleReg:$a3, Signed54:$a5, SingleReg:$a6, VectorReg:$a4, SpeculateMod:$a1, ScalarcondMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = $a5[$a6]"),
      [/* no straightforward pattern */]>;
-  let Defs = [CS] in
-  def rr : SPECULATE_SCALING_REGISTERA_REGISTERY_REGISTERZ_SIMPLE
-    <(outs VectorReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, SpeculateMod:$a1, ScalingMod:$a2),
+  def rr : SPECULATE_DOSCALE_REGISTERA_REGISTERY_REGISTERZ_SIMPLE
+    <(outs VectorReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, SpeculateMod:$a1, DoscaleMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4[$a5]"),
      [/* no straightforward pattern */]>;
-  let Defs = [CS] in
   def ri10cs : COLUMN_SPECULATE_REGISTERAQ_SIGNED10_REGISTERZ_SIMPLE
     <(outs MatrixReg:$a3), (ins Signed10:$a4, SingleReg:$a5, ColumnMod:$a1, SpeculateMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4[$a5]"),
      [/* no straightforward pattern */]>;
-  let Defs = [CS] in
   def ri37cs : COLUMN_SPECULATE_REGISTERAQ_UPPER27_LOWER10_REGISTERZ_DOUBLE
     <(outs MatrixReg:$a3), (ins Signed37:$a4, SingleReg:$a5, ColumnMod:$a1, SpeculateMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4[$a5]"),
      [/* no straightforward pattern */]>;
-  let Defs = [CS] in
   def ri64cs : COLUMN_SPECULATE_REGISTERAQ_EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
     <(outs MatrixReg:$a3), (ins Wrapped64:$a4, SingleReg:$a5, ColumnMod:$a1, SpeculateMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4[$a5]"),
      [/* no straightforward pattern */]>;
-  let Defs = [CS] in
   def rrccs : COLUMN_SPECULATE_LSUCOND_REGISTERY_REGISTERAQ_REGISTERZ_SIMPLE
     <(outs MatrixReg:$a5), (ins SingleReg:$a4, SingleReg:$a6, ColumnMod:$a1, SpeculateMod:$a2, ScalarcondMod:$a3),
      !strconcat (OpcStr, "$a1$a2$a3 $a4 ? $a5 = [$a6]"),
      [/* no straightforward pattern */]>;
-  let Defs = [CS] in
   def ri27ccs : COLUMN_SPECULATE_LSUCOND_REGISTERY_REGISTERAQ_OFFSET27_REGISTERZ_DOUBLE
     <(outs MatrixReg:$a5), (ins SingleReg:$a4, Signed27:$a6, SingleReg:$a7, ColumnMod:$a1, SpeculateMod:$a2, ScalarcondMod:$a3),
      !strconcat (OpcStr, "$a1$a2$a3 $a4 ? $a5 = $a6[$a7]"),
      [/* no straightforward pattern */]>;
-  let Defs = [CS] in
   def ri54ccs : COLUMN_SPECULATE_LSUCOND_REGISTERY_REGISTERAQ_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
     <(outs MatrixReg:$a5), (ins SingleReg:$a4, Signed54:$a6, SingleReg:$a7, ColumnMod:$a1, SpeculateMod:$a2, ScalarcondMod:$a3),
      !strconcat (OpcStr, "$a1$a2$a3 $a4 ? $a5 = $a6[$a7]"),
      [/* no straightforward pattern */]>;
-  let Defs = [CS] in
-  def rrcs : COLUMN_SPECULATE_SCALING_REGISTERAQ_REGISTERY_REGISTERZ_SIMPLE
-    <(outs MatrixReg:$a4), (ins SingleReg:$a5, SingleReg:$a6, ColumnMod:$a1, SpeculateMod:$a2, ScalingMod:$a3),
+  def rrcs : COLUMN_SPECULATE_DOSCALE_REGISTERAQ_REGISTERY_REGISTERZ_SIMPLE
+    <(outs MatrixReg:$a4), (ins SingleReg:$a5, SingleReg:$a6, ColumnMod:$a1, SpeculateMod:$a2, DoscaleMod:$a3),
      !strconcat (OpcStr, "$a1$a2$a3 $a4 = $a5[$a6]"),
      [/* no straightforward pattern */]>;
 }
@@ -320,8 +309,8 @@ multiclass MC_09<string OpcStr> {
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [/* no straightforward pattern */],
      LSU_AUXR_Y>;
-  def rr : SCALING_REGISTERY_REGISTERZ_REGISTERT_SIMPLE
-    <(outs), (ins SingleReg:$a2, SingleReg:$a3, SingleReg:$a4, ScalingMod:$a1),
+  def rr : DOSCALE_REGISTERY_REGISTERZ_REGISTERT_SIMPLE
+    <(outs), (ins SingleReg:$a2, SingleReg:$a3, SingleReg:$a4, DoscaleMod:$a1),
      !strconcat (OpcStr, "$a1 $a2[$a3] = $a4"),
      [/* no straightforward pattern */],
      LSU_AUXR>;
@@ -358,9 +347,10 @@ multiclass MC_0A<string OpcStr> {
   def ri64 : EXTEND27_UPPER27_LOWER10_REGISTERZ_REGISTERU_TRIPLE
     <(outs), (ins Wrapped64:$a1, SingleReg:$a2, PairedReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
-     [/* no straightforward pattern */]>;
-  def rr : SCALING_REGISTERY_REGISTERZ_REGISTERU_SIMPLE
-    <(outs), (ins SingleReg:$a2, SingleReg:$a3, PairedReg:$a4, ScalingMod:$a1),
+     [/* no straightforward pattern */],
+     LSU_AUXR_Y>;
+  def rr : DOSCALE_REGISTERY_REGISTERZ_REGISTERU_SIMPLE
+    <(outs), (ins SingleReg:$a2, SingleReg:$a3, PairedReg:$a4, DoscaleMod:$a1),
      !strconcat (OpcStr, "$a1 $a2[$a3] = $a4"),
      [/* no straightforward pattern */],
      LSU_AUXR>;
@@ -396,8 +386,8 @@ multiclass MC_0B<string OpcStr> {
     <(outs), (ins Wrapped64:$a1, SingleReg:$a2, QuadReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [/* no straightforward pattern */]>;
-  def rr : SCALING_REGISTERY_REGISTERZ_REGISTERV_SIMPLE
-    <(outs), (ins SingleReg:$a2, SingleReg:$a3, QuadReg:$a4, ScalingMod:$a1),
+  def rr : DOSCALE_REGISTERY_REGISTERZ_REGISTERV_SIMPLE
+    <(outs), (ins SingleReg:$a2, SingleReg:$a3, QuadReg:$a4, DoscaleMod:$a1),
      !strconcat (OpcStr, "$a1 $a2[$a3] = $a4"),
      [/* no straightforward pattern */]>;
   def rrc : LSUCOND_REGISTERY_REGISTERZ_REGISTERV_SIMPLE
@@ -417,37 +407,30 @@ multiclass MC_0B<string OpcStr> {
 // multiclass MC_0C is used by:
 //   defm SV
 multiclass MC_0C<string OpcStr> {
-  let Defs = [CS] in
   def ri10 : SIGNED10_REGISTERZ_REGISTERE_SIMPLE
     <(outs), (ins Signed10:$a1, SingleReg:$a2, VectorReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [/* no straightforward pattern */]>;
-  let Defs = [CS] in
   def ri37 : UPPER27_LOWER10_REGISTERZ_REGISTERE_DOUBLE
     <(outs), (ins Signed37:$a1, SingleReg:$a2, VectorReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [/* no straightforward pattern */]>;
-  let Defs = [CS] in
   def ri64 : EXTEND27_UPPER27_LOWER10_REGISTERZ_REGISTERE_TRIPLE
     <(outs), (ins Wrapped64:$a1, SingleReg:$a2, VectorReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [/* no straightforward pattern */]>;
-  let Defs = [CS] in
-  def rr : SCALING_REGISTERY_REGISTERZ_REGISTERE_SIMPLE
-    <(outs), (ins SingleReg:$a2, SingleReg:$a3, VectorReg:$a4, ScalingMod:$a1),
+  def rr : DOSCALE_REGISTERY_REGISTERZ_REGISTERE_SIMPLE
+    <(outs), (ins SingleReg:$a2, SingleReg:$a3, VectorReg:$a4, DoscaleMod:$a1),
      !strconcat (OpcStr, "$a1 $a2[$a3] = $a4"),
      [/* no straightforward pattern */]>;
-  let Defs = [CS] in
   def rrc : LSUCOND_REGISTERY_REGISTERZ_REGISTERE_SIMPLE
     <(outs), (ins SingleReg:$a2, SingleReg:$a3, VectorReg:$a4, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? [$a3] = $a4"),
      [/* no straightforward pattern */]>;
-  let Defs = [CS] in
   def ri27c : LSUCOND_REGISTERY_OFFSET27_REGISTERZ_REGISTERE_DOUBLE
     <(outs), (ins SingleReg:$a2, Signed27:$a3, SingleReg:$a4, VectorReg:$a5, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
      [/* no straightforward pattern */]>;
-  let Defs = [CS] in
   def ri54c : LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_REGISTERE_TRIPLE
     <(outs), (ins SingleReg:$a2, Signed54:$a3, SingleReg:$a4, VectorReg:$a5, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
@@ -470,9 +453,15 @@ multiclass MC_0D<string OpcStr> {
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [/* no straightforward pattern */],
      LSU_AUXR_AUXW_X>;
+  let Constraints = "$a3 = $a3o" in
+  def ri64 : EXTEND27_UPPER27_LOWER10_REGISTERZ_REGISTERU_TRIPLE
+    <(outs PairedReg:$a3o), (ins Wrapped64:$a1, SingleReg:$a2, PairedReg:$a3),
+     !strconcat (OpcStr, " $a1[$a2] = $a3"),
+     [/* no straightforward pattern */],
+     LSU_AUXR_AUXW_Y>;
   let Constraints = "$a4 = $a4o" in
-  def rr : SCALING_REGISTERY_REGISTERZ_REGISTERU_SIMPLE
-    <(outs PairedReg:$a4o), (ins SingleReg:$a2, SingleReg:$a3, PairedReg:$a4, ScalingMod:$a1),
+  def rr : DOSCALE_REGISTERY_REGISTERZ_REGISTERU_SIMPLE
+    <(outs PairedReg:$a4o), (ins SingleReg:$a2, SingleReg:$a3, PairedReg:$a4, DoscaleMod:$a1),
      !strconcat (OpcStr, "$a1 $a2[$a3] = $a4"),
      [/* no straightforward pattern */],
      LSU_AUXR_AUXW>;
@@ -512,8 +501,8 @@ multiclass MC_0E<string OpcStr> {
     <(outs SingleReg:$a1), (ins Wrapped64:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2[$a3]"),
      [/* no straightforward pattern */]>;
-  def rr : SCALING_REGISTERW_REGISTERY_REGISTERZ_SIMPLE
-    <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, ScalingMod:$a1),
+  def rr : DOSCALE_REGISTERW_REGISTERY_REGISTERZ_SIMPLE
+    <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, DoscaleMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
      [/* no straightforward pattern */]>;
   let Constraints = "$a3 = $a3o" in
@@ -556,8 +545,8 @@ multiclass MC_0F<string OpcStr> {
      [/* no straightforward pattern */],
      LSU_AUXR_AUXW_Y>;
   let Constraints = "$a4 = $a4o" in
-  def rr : SCALING_REGISTERY_REGISTERZ_REGISTERT_SIMPLE
-    <(outs SingleReg:$a4o), (ins SingleReg:$a2, SingleReg:$a3, SingleReg:$a4, ScalingMod:$a1),
+  def rr : DOSCALE_REGISTERY_REGISTERZ_REGISTERT_SIMPLE
+    <(outs SingleReg:$a4o), (ins SingleReg:$a2, SingleReg:$a3, SingleReg:$a4, DoscaleMod:$a1),
      !strconcat (OpcStr, "$a1 $a2[$a3] = $a4"),
      [/* no straightforward pattern */],
      LSU_AUXR_AUXW>;
@@ -885,7 +874,6 @@ multiclass MC_17<string OpcStr> {
 
 // multiclass MC_18 is used by:
 //   defm SATD
-//   defm SATUD
 //   defm SRSD
 //   defm SLSD
 //   defm SRSW
@@ -976,20 +964,24 @@ multiclass MC_1B<string OpcStr> {
 // multiclass MC_1C is used by:
 //   defm CMOVED
 multiclass MC_1C<string OpcStr> {
+  let Constraints = "$a3 = $a3o" in
   def ri10 : SCALARCOND_REGISTERZ_REGISTERW_SIGNED10_SIMPLE
-    <(outs SingleReg:$a3), (ins SingleReg:$a2, Signed10:$a4, ScalarcondMod:$a1),
+    <(outs SingleReg:$a3o), (ins SingleReg:$a2, SingleReg:$a3, Signed10:$a4, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? $a3 = $a4"),
      [/* no straightforward pattern */]>;
+  let Constraints = "$a3 = $a3o" in
   def ri37 : SCALARCOND_REGISTERZ_REGISTERW_UPPER27_LOWER10_DOUBLE
-    <(outs SingleReg:$a3), (ins SingleReg:$a2, Signed37:$a4, ScalarcondMod:$a1),
+    <(outs SingleReg:$a3o), (ins SingleReg:$a2, SingleReg:$a3, Signed37:$a4, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? $a3 = $a4"),
      [/* no straightforward pattern */]>;
+  let Constraints = "$a3 = $a3o" in
   def ri64 : SCALARCOND_REGISTERZ_REGISTERW_EXTEND27_UPPER27_LOWER10_TRIPLE
-    <(outs SingleReg:$a3), (ins SingleReg:$a2, Wrapped64:$a4, ScalarcondMod:$a1),
+    <(outs SingleReg:$a3o), (ins SingleReg:$a2, SingleReg:$a3, Wrapped64:$a4, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? $a3 = $a4"),
      [/* no straightforward pattern */]>;
+  let Constraints = "$a3 = $a3o" in
   def rr : SCALARCOND_REGISTERZ_REGISTERW_REGISTERY_SIMPLE
-    <(outs SingleReg:$a3), (ins SingleReg:$a2, SingleReg:$a4, ScalarcondMod:$a1),
+    <(outs SingleReg:$a3o), (ins SingleReg:$a2, SingleReg:$a3, SingleReg:$a4, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? $a3 = $a4"),
      [/* no straightforward pattern */]>;
 }
@@ -1454,22 +1446,18 @@ multiclass MC_32<string OpcStr> {
 // multiclass MC_33 is used by:
 //   defm ALIGNO
 multiclass MC_33<string OpcStr> {
-  let Defs = [CS] in
   def reroi : REGISTERN_REGISTERBE_REGISTERCO_BYTESHIFT_SIMPLE
     <(outs QuadReg:$a1), (ins VectorRegE:$a2, VectorRegO:$a3, Unsigned6:$a4),
      !strconcat (OpcStr, " $a1 = $a2, $a3, $a4"),
      [/* no straightforward pattern */]>;
-  let Defs = [CS] in
   def rorei : REGISTERN_REGISTERBO_REGISTERCE_BYTESHIFT_SIMPLE
     <(outs QuadReg:$a1), (ins VectorRegO:$a2, VectorRegE:$a3, Unsigned6:$a4),
      !strconcat (OpcStr, " $a1 = $a2, $a3, $a4"),
      [/* no straightforward pattern */]>;
-  let Defs = [CS] in
   def reror : REGISTERN_REGISTERBE_REGISTERCO_REGISTERZ_SIMPLE
     <(outs QuadReg:$a1), (ins VectorRegE:$a2, VectorRegO:$a3, SingleReg:$a4),
      !strconcat (OpcStr, " $a1 = $a2, $a3, $a4"),
      [/* no straightforward pattern */]>;
-  let Defs = [CS] in
   def rorer : REGISTERN_REGISTERBO_REGISTERCE_REGISTERZ_SIMPLE
     <(outs QuadReg:$a1), (ins VectorRegO:$a2, VectorRegE:$a3, SingleReg:$a4),
      !strconcat (OpcStr, " $a1 = $a2, $a3, $a4"),
@@ -1479,22 +1467,18 @@ multiclass MC_33<string OpcStr> {
 // multiclass MC_34 is used by:
 //   defm ALIGNV
 multiclass MC_34<string OpcStr> {
-  let Defs = [CS] in
   def reroi : REGISTERA_REGISTERBE_REGISTERCO_BYTESHIFT_SIMPLE
     <(outs VectorReg:$a1), (ins VectorRegE:$a2, VectorRegO:$a3, Unsigned6:$a4),
      !strconcat (OpcStr, " $a1 = $a2, $a3, $a4"),
      [/* no straightforward pattern */]>;
-  let Defs = [CS] in
   def rorei : REGISTERA_REGISTERBO_REGISTERCE_BYTESHIFT_SIMPLE
     <(outs VectorReg:$a1), (ins VectorRegO:$a2, VectorRegE:$a3, Unsigned6:$a4),
      !strconcat (OpcStr, " $a1 = $a2, $a3, $a4"),
      [/* no straightforward pattern */]>;
-  let Defs = [CS] in
   def reror : REGISTERA_REGISTERBE_REGISTERCO_REGISTERZ_SIMPLE
     <(outs VectorReg:$a1), (ins VectorRegE:$a2, VectorRegO:$a3, SingleReg:$a4),
      !strconcat (OpcStr, " $a1 = $a2, $a3, $a4"),
      [/* no straightforward pattern */]>;
-  let Defs = [CS] in
   def rorer : REGISTERA_REGISTERBO_REGISTERCE_REGISTERZ_SIMPLE
     <(outs VectorReg:$a1), (ins VectorRegO:$a2, VectorRegE:$a3, SingleReg:$a4),
      !strconcat (OpcStr, " $a1 = $a2, $a3, $a4"),
@@ -1504,12 +1488,10 @@ multiclass MC_34<string OpcStr> {
 // multiclass MC_35 is used by:
 //   defm COPYV
 multiclass MC_35<string OpcStr> {
-  let Defs = [CS] in
   def re : REGISTERA_REGISTERBE_SIMPLE
     <(outs VectorReg:$a1), (ins VectorRegE:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
      [/* no straightforward pattern */]>;
-  let Defs = [CS] in
   def ro : REGISTERA_REGISTERBO_SIMPLE
     <(outs VectorReg:$a1), (ins VectorRegO:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
@@ -1519,12 +1501,10 @@ multiclass MC_35<string OpcStr> {
 // multiclass MC_36 is used by:
 //   defm MOVEFO
 multiclass MC_36<string OpcStr> {
-  let Defs = [CS] in
   def re : REGISTERN_REGISTERBE_SIMPLE
     <(outs QuadReg:$a1), (ins VectorRegE:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
      [/* no straightforward pattern */]>;
-  let Defs = [CS] in
   def ro : REGISTERN_REGISTERBO_SIMPLE
     <(outs QuadReg:$a1), (ins VectorRegO:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
@@ -2087,14 +2067,14 @@ def FABSD : REGISTERW_REGISTERZ_SIMPLE
    ALU_LITE>;
 
 let Defs = [CS] in
-def FSINVD : SILENT2_REGISTERW_REGISTERZ_SIMPLE
+def FSRECD : SILENT2_REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
-   "fsinvd$a1 $a2 = $a3",
+   "fsrecd$a1 $a2 = $a3",
    [/* no straightforward pattern */]>;
 
-def FSISRD : REGISTERW_REGISTERZ_SIMPLE
+def FSRSRD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
-   "fsisrd $a1 = $a2",
+   "fsrsrd $a1 = $a2",
    [/* no straightforward pattern */],
    ALU_LITE>;
 
@@ -2130,28 +2110,28 @@ def FABSW : REGISTERW_REGISTERZ_SIMPLE
    ALU_LITE>;
 
 let Defs = [CS] in
-def FINVW : ROUNDING2_SILENT2_REGISTERW_REGISTERZ_SIMPLE
+def FRECW : ROUNDING2_SILENT2_REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a3), (ins SingleReg:$a4, RoundingMod:$a1, SilentMod:$a2),
-   "finvw$a1$a2 $a3 = $a4",
+   "frecw$a1$a2 $a3 = $a4",
    [/* no straightforward pattern */],
    ALU_FULL>;
 
 let Defs = [CS] in
-def FISRW : ROUNDING2_SILENT2_REGISTERW_REGISTERZ_SIMPLE
+def FRSRW : ROUNDING2_SILENT2_REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a3), (ins SingleReg:$a4, RoundingMod:$a1, SilentMod:$a2),
-   "fisrw$a1$a2 $a3 = $a4",
+   "frsrw$a1$a2 $a3 = $a4",
    [/* no straightforward pattern */],
    ALU_FULL>;
 
 let Defs = [CS] in
-def FSINVW : SILENT2_REGISTERW_REGISTERZ_SIMPLE
+def FSRECW : SILENT2_REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
-   "fsinvw$a1 $a2 = $a3",
+   "fsrecw$a1 $a2 = $a3",
    [/* no straightforward pattern */]>;
 
-def FSISRW : REGISTERW_REGISTERZ_SIMPLE
+def FSRSRW : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
-   "fsisrw $a1 = $a2",
+   "fsrsrw $a1 = $a2",
    [/* no straightforward pattern */],
    ALU_LITE>;
 
@@ -2187,14 +2167,14 @@ def FABSWP : REGISTERW_REGISTERZ_SIMPLE
    ALU_LITE>;
 
 let Defs = [CS] in
-def FSINVWP : SILENT2_REGISTERW_REGISTERZ_SIMPLE
+def FSRECWP : SILENT2_REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
-   "fsinvwp$a1 $a2 = $a3",
+   "fsrecwp$a1 $a2 = $a3",
    [/* no straightforward pattern */]>;
 
-def FSISRWP : REGISTERW_REGISTERZ_SIMPLE
+def FSRSRWP : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
-   "fsisrwp $a1 = $a2",
+   "fsrsrwp $a1 = $a2",
    [/* no straightforward pattern */],
    ALU_LITE>;
 
@@ -2258,8 +2238,6 @@ def CLRF : REGISTERW_REGISTERZ_STOPBIT2_STOPBIT4_STARTBIT_SIMPLE
    [/* no straightforward pattern */]>;
 
 defm SATD : MC_18<"satd">;
-
-defm SATUD : MC_18<"satud">;
 
 defm SRSD : MC_18<"srsd">;
 
@@ -3081,20 +3059,20 @@ def FDOT2WDP : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE
    [/* no straightforward pattern */]>;
 
 let Constraints = "$a3 = $a3o" in
-def FMMA212W : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE_BINARY32
+def FMMA212W : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a3o), (ins PairedReg:$a3, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fmma212w$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */],
    MAU_AUXR>;
 
 let Constraints = "$a3 = $a3o" in
-def FMMS212W : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE_BINARY32
+def FMMS212W : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a3o), (ins PairedReg:$a3, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fmms212w$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */],
    MAU_AUXR>;
 
-def FMM212W : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE_BINARY32
+def FMM212W : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fmm212w$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */],
@@ -3117,175 +3095,146 @@ defm ALIGNO : MC_33<"aligno">;
 
 defm ALIGNV : MC_34<"alignv">;
 
-let Defs = [CS] in
 def MT44D : REGISTERAQ_REGISTERBQ_SIMPLE
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2),
    "mt44d $a1 = $a2",
    [/* no straightforward pattern */]>;
 
-let Defs = [CS] in
 def MMA484BW : REGISTERAP_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
   <(outs WideReg:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma484bw $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */]>;
 
-let Defs = [CS] in
 def MMA484UBW : REGISTERAP_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
   <(outs WideReg:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma484ubw $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */]>;
 
-let Defs = [CS] in
 def MMA484SUBW : REGISTERAP_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
   <(outs WideReg:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma484subw $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */]>;
 
-let Defs = [CS] in
 def MMA484USBW : REGISTERAP_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
   <(outs WideReg:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma484usbw $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */]>;
 
-let Defs = [CS] in
 def MMA444HBD0 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma444hbd0 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */]>;
 
-let Defs = [CS] in
 def MMA444UHBD0 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma444uhbd0 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */]>;
 
-let Defs = [CS] in
 def MMA444SUHBD0 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma444suhbd0 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */]>;
 
-let Defs = [CS] in
 def MMA444USHBD0 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma444ushbd0 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */]>;
 
-let Defs = [CS] in
 def MMA444HBD1 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma444hbd1 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */]>;
 
-let Defs = [CS] in
 def MMA444UHBD1 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma444uhbd1 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */]>;
 
-let Defs = [CS] in
 def MMA444SUHBD1 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma444suhbd1 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */]>;
 
-let Defs = [CS] in
 def MMA444USHBD1 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma444ushbd1 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */]>;
 
-let Defs = [CS] in
 def MMA444HD : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma444hd $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */]>;
 
-let Defs = [CS] in
 def MMA444UHD : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma444uhd $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */]>;
 
-let Defs = [CS] in
 def MMA444SUHD : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma444suhd $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */]>;
 
-let Defs = [CS] in
 def MMA444USHD : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma444ushd $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */]>;
 
-let Defs = [CS] in
 def FMMA242HW0 : REGISTERA0_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
   <(outs BlockReg0M4:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "fmma242hw0 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */]>;
 
-let Defs = [CS] in
 def FMMA242HW1 : REGISTERA1_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
   <(outs BlockReg1M4:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "fmma242hw1 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */]>;
 
-let Defs = [CS] in
 def FMMA242HW2 : REGISTERA2_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
   <(outs BlockReg2M4:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "fmma242hw2 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */]>;
 
-let Defs = [CS] in
 def FMMA242HW3 : REGISTERA3_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
   <(outs BlockReg3M4:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "fmma242hw3 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */]>;
 
-let Defs = [CS] in
 def CONVDHV0 : ROUNDINT_SATURATE_REGISTERAL_REGISTERBQ_SIMPLE
   <(outs BlockRegE:$a3), (ins MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2),
    "convdhv0$a1$a2 $a3 = $a4",
    [/* no straightforward pattern */]>;
 
-let Defs = [CS] in
 def CONVDHV1 : ROUNDINT_SATURATE_REGISTERAH_REGISTERBQ_SIMPLE
   <(outs BlockRegO:$a3), (ins MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2),
    "convdhv1$a1$a2 $a3 = $a4",
    [/* no straightforward pattern */]>;
 
-let Defs = [CS] in
 def CONVWBV0 : ROUNDINT_SATURATE_REGISTERAX_REGISTERBQ_SIMPLE
   <(outs CoproReg0M4:$a3), (ins MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2),
    "convwbv0$a1$a2 $a3 = $a4",
    [/* no straightforward pattern */]>;
 
-let Defs = [CS] in
 def CONVWBV1 : ROUNDINT_SATURATE_REGISTERAY_REGISTERBQ_SIMPLE
   <(outs CoproReg1M4:$a3), (ins MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2),
    "convwbv1$a1$a2 $a3 = $a4",
    [/* no straightforward pattern */]>;
 
-let Defs = [CS] in
 def CONVWBV2 : ROUNDINT_SATURATE_REGISTERAZ_REGISTERBQ_SIMPLE
   <(outs CoproReg2M4:$a3), (ins MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2),
    "convwbv2$a1$a2 $a3 = $a4",
    [/* no straightforward pattern */]>;
 
-let Defs = [CS] in
 def CONVWBV3 : ROUNDINT_SATURATE_REGISTERAT_REGISTERBQ_SIMPLE
   <(outs CoproReg3M4:$a3), (ins MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2),
    "convwbv3$a1$a2 $a3 = $a4",
    [/* no straightforward pattern */]>;
 
-let Defs = [CS] in
 def FSCALEWV : XROUNDING_SILENT2_RECTIFY_REGISTERA_REGISTERB_SIMPLE
   <(outs VectorReg:$a4), (ins VectorReg:$a5, RoundingMod:$a1, SilentMod:$a2, RectifyMod:$a3),
    "fscalewv$a1$a2$a3 $a4 = $a5",
    [/* no straightforward pattern */]>;
 
-let Defs = [CS] in
 def FNARROWWHV : XROUNDING_SILENT2_REGISTERA_REGISTERBP_SIMPLE
   <(outs VectorReg:$a3), (ins WideReg:$a4, RoundingMod:$a1, SilentMod:$a2),
    "fnarrowwhv$a1$a2 $a3 = $a4",
@@ -3319,7 +3268,7 @@ def ZXBD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "zxbd $a1 = $a2",
    [(set i64:$a1, (zext i8:$a2))],
-   ALU_LITE>;
+   ALU_TINY>;
 
 def SXBD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
@@ -3343,7 +3292,7 @@ def ZXWD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "zxwd $a1 = $a2",
    [(set i64:$a1, (zext i32:$a2))],
-   ALU_LITE>;
+   ALU_TINY>;
 
 def SXWD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
@@ -3357,21 +3306,9 @@ def SATDH : REGISTERW_REGISTERZ_SIMPLE
    [/* no straightforward pattern */],
    ALU_LITE>;
 
-def SATUDH : REGISTERW_REGISTERZ_SIMPLE
-  <(outs SingleReg:$a1), (ins SingleReg:$a2),
-   "satudh $a1 = $a2",
-   [/* no straightforward pattern */],
-   ALU_LITE>;
-
 def SATDW : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "satdw $a1 = $a2",
-   [/* no straightforward pattern */],
-   ALU_LITE>;
-
-def SATUDW : REGISTERW_REGISTERZ_SIMPLE
-  <(outs SingleReg:$a1), (ins SingleReg:$a2),
-   "satudw $a1 = $a2",
    [/* no straightforward pattern */],
    ALU_LITE>;
 

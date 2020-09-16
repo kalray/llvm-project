@@ -92,6 +92,7 @@ static void InsertCMOVEInstr(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   case MachineOperand::MO_GlobalAddress:
     BuildMI(MBB, MBBI, DL, TII->get(KVX::CMOVEDri64), DestReg)
         .addReg(CmpReg)
+        .addReg(DestReg)
         .addGlobalAddress(MI.getOperand(Operand).getGlobal())
         .addImm(Comp);
     break;
@@ -100,6 +101,7 @@ static void InsertCMOVEInstr(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
 
     BuildMI(MBB, MBBI, DL, TII->get(KVX::CMOVEDrr), DestReg)
         .addReg(CmpReg)
+        .addReg(DestReg)
         .addReg(BranchValue)
         .addImm(Comp);
   } break;
@@ -111,6 +113,7 @@ static void InsertCMOVEInstr(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
                                   KVX::CMOVEDri37, KVX::CMOVEDri64)),
             DestReg)
         .addReg(CmpReg)
+        .addReg(DestReg)
         .addImm(BranchValueImm)
         .addImm(Comp);
   } break;
@@ -122,6 +125,7 @@ static void InsertCMOVEInstr(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
                                                  : KVX::CMOVEDri64),
             DestReg)
         .addReg(CmpReg)
+        .addReg(DestReg)
         .addFPImm(Imm)
         .addImm(Comp);
   } break;
@@ -370,7 +374,7 @@ static bool expandALOAD(unsigned int Opcode, const KVXInstrInfo *TII,
         .addReg(Offset.getReg())
         .addReg(Base)
         .addImm(KVXMOD::VARIANT_U)
-        .addImm(KVXMOD::SCALING_);
+        .addImm(KVXMOD::DOSCALE_);
   else
     BuildMI(CSLoopMBB, DL, TII->get(LOAD), Fetch)
         .addImm(Offset.getImm())
@@ -387,7 +391,7 @@ static bool expandALOAD(unsigned int Opcode, const KVXInstrInfo *TII,
         .addReg(Offset.getReg())
         .addReg(Base)
         .addReg(UpdateFetch)
-        .addImm(KVXMOD::SCALING_);
+        .addImm(KVXMOD::DOSCALE_);
   else
     BuildMI(CSLoopMBB, DL, TII->get(ACSWAP), UpdateFetch)
         .addImm(Offset.getImm())
@@ -519,7 +523,7 @@ static bool expandATAS(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
       .addReg(Offset)
       .addReg(Base)
       .addImm(KVXMOD::VARIANT_U)
-      .addImm(KVXMOD::SCALING_);
+      .addImm(KVXMOD::DOSCALE_);
   //   srlw $output = $fetch, $pos   # keep only the byte to test_and_set:
   BuildMI(CSLoopMBB, DL, TII->get(KVX::SRLWrr), Output)
       .addReg(Fetch)
@@ -544,7 +548,7 @@ static bool expandATAS(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
       .addReg(Offset)
       .addReg(Base)
       .addReg(UpdateFetch)
-      .addImm(KVXMOD::SCALING_);
+      .addImm(KVXMOD::DOSCALE_);
   //   cb.even $update ? .csloop
   BuildMI(CSLoopMBB, DL, TII->get(KVX::CB))
       .addReg(Update)
@@ -650,7 +654,7 @@ static bool expandACMPSWAP(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
         .addReg(Offset.getReg())
         .addReg(Base)
         .addReg(DesiredExpected)
-        .addImm(KVXMOD::SCALING_);
+        .addImm(KVXMOD::DOSCALE_);
   else
     BuildMI(CSLoopMBB, DL, TII->get(ACSWAP), DesiredExpected)
         .addImm(Offset.getImm())
@@ -671,7 +675,7 @@ static bool expandACMPSWAP(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
         .addReg(Offset.getReg())
         .addReg(Base)
         .addImm(KVXMOD::VARIANT_U)
-        .addImm(KVXMOD::SCALING_);
+        .addImm(KVXMOD::DOSCALE_);
   else
     BuildMI(CSLoopMBB, DL, TII->get(LOAD), Output)
         .addImm(Offset.getImm())
