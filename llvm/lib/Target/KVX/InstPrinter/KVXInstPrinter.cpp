@@ -104,7 +104,7 @@ void KVXInstPrinter::printVariantMod(
   }
 }
 
-void KVXInstPrinter::printScalingMod(
+void KVXInstPrinter::printDoscaleMod(
     const MCInst *MI, unsigned OpNo,
     /*const MCSubtargetInfo &STI,*/ raw_ostream &O) {
   const MCOperand &MO = MI->getOperand(OpNo);
