@@ -72,6 +72,8 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
       if (II.isFilename())
         CmdArgs.push_back(II.getFilename());
 
+    Args.AddAllArgs(CmdArgs, options::OPT_L, options::OPT_u);
+
     // Ensure that -l args are at the end of the cmd line
     for (const auto &II : Inputs) {
       if (II.isInputArg()) {
@@ -174,7 +176,7 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
                                   // comment above.
     }
 
-    Args.AddAllArgs(CmdArgs, options::OPT_L, options::OPT_l);
+    Args.AddAllArgs(CmdArgs, options::OPT_L, options::OPT_l, options::OPT_u);
     Args.AddAllArgValues(CmdArgs, options::OPT_Wl_COMMA);
 
     if (Args.getLastArg(options::OPT_T)) {
