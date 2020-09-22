@@ -453,6 +453,8 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
 
   setOperationAction(ISD::UINT_TO_FP, MVT::i64, Custom);
   setOperationAction(ISD::SINT_TO_FP, MVT::i64, Custom);
+
+  setOperationAction(ISD::ADDRSPACECAST, MVT::i64, Custom);
 }
 
 EVT KVXTargetLowering::getSetCCResultType(const DataLayout &DL, LLVMContext &C,
@@ -909,6 +911,8 @@ SDValue KVXTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
     // ATOMIC_SWAP can be seen as an ATOMIC_LOAD_XCHG.
   case ISD::ATOMIC_SWAP:
     return lowerATOMIC_LOAD_OP(Op, DAG);
+  case ISD::ADDRSPACECAST:
+    return lowerADDRSPACECAST(Op, DAG);
   }
 }
 
@@ -2143,6 +2147,13 @@ SDValue KVXTargetLowering::lowerJumpTable(SDValue Op, SelectionDAG &DAG) const {
     return DAG.getNode(KVXISD::JT_PCREL, SDLoc(Op), VT, T);
   }
   return DAG.getNode(KVXISD::JT, SDLoc(Op), VT, T);
+}
+
+SDValue KVXTargetLowering::lowerADDRSPACECAST(SDValue Op,
+                                              SelectionDAG &DAG) const {
+  SDLoc SL(Op);
+  const AddrSpaceCastSDNode *ASC = cast<AddrSpaceCastSDNode>(Op);
+  return DAG.getUNDEF(ASC->getValueType(0));
 }
 
 SDValue KVXTargetLowering::lowerIntToFP(SDValue Op, SelectionDAG &DAG) const {
