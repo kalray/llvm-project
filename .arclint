@@ -4,7 +4,11 @@
             "type": "text",
             "severity": {
                 "2": "warning"
-            }
+            },
+            "exclude" : [
+                "(/test/)",
+                "(\\.td$)"
+            ]
         },
         "Merge Conflicts": {
             "type": "merge-conflict"
@@ -16,7 +20,8 @@
             "include": [
                 "(\\.(c|h)$)",
                 "(\\.(cpp|hpp)$)"
-            ]
+            ],
+            "exclude" : "(/test/)"
         }
     }
 }
