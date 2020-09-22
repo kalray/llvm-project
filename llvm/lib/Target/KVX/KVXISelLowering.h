@@ -127,6 +127,7 @@ private:
   SDValue lowerShiftVectorial(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerBR_CC(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerJumpTable(SDValue Op, SelectionDAG &DAG) const;
+  SDValue lowerADDRSPACECAST(SDValue Op, SelectionDAG &DAG) const;
 
   bool canLowerShiftVectorial(SDValue Op) const;
 
