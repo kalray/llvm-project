@@ -56,8 +56,8 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
   const Arg *A = Args.getLastArg(options::OPT_rtlib_EQ);
   StringRef LibName = A ? A->getValue() : "compiler-rt";
 
-  // Keep old behavior when using libgcc or using clang++ (libstdc++-v3)
-  if (LibName == "libgcc" || C.getDriver().CCCIsCXX()) {
+  // Keep old behavior when using libgcc.
+  if (LibName == "libgcc") {
     claimNoWarnArgs(Args);
     ArgStringList CmdArgs;
 
@@ -120,14 +120,16 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
   } else {
     assert(LibName == "compiler-rt" && "unsupported runtime library");
 
+    std::string LDPath = getToolChain().GetProgramPath("kvx-cos-ld");
+    std::string LDPrefix = llvm::sys::path::parent_path(LDPath).str();
+
     claimNoWarnArgs(Args);
     ArgStringList CmdArgs;
 
     CmdArgs.push_back("-o");
     CmdArgs.push_back(Output.getFilename());
 
-    std::string LDPath = getToolChain().GetProgramPath("kvx-cos-ld");
-    std::string LDPrefix = llvm::sys::path::parent_path(LDPath).str();
+    Args.AddAllArgs(CmdArgs, options::OPT_u);
 
     if (!Args.hasArg(options::OPT_nostdlib)) {
       // TODO: crti.o, crtbegin.o, crtend.o, and crtn.o are currently provided
@@ -145,27 +147,59 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
           Args.MakeArgString(LDPrefix + "/../kvx-cos/lib/crt0.o"));
     }
 
-    for (const auto &II : Inputs)
-      if (II.isFilename())
+    // Keep same order as clang command line for all OPT_Wl_COMMA, OPT_l, OPT_L
+    // arguments and input files.
+    for (const auto &II : Inputs) {
+      if (II.isInputArg()) {
+        const Arg &A = II.getInputArg();
+        if (A.getOption().matches(options::OPT_Wl_COMMA)) {
+          for (unsigned i = 0; i < A.getNumValues(); i++)
+	    CmdArgs.push_back(A.getValue(i));
+        } else if (A.getOption().matches(options::OPT_l) ||
+                   (A.getOption().matches(options::OPT_L))) {
+          CmdArgs.push_back(
+              Args.MakeArgString(A.getSpelling() + std::string(A.getValue())));
+        }
+      } else if (II.isFilename()) {
         CmdArgs.push_back(II.getFilename());
+      }
+    }
 
-    CmdArgs.push_back(
-        Args.MakeArgString("-L" + LDPrefix + "/../kvx-cos/lib"));
+    CmdArgs.push_back(Args.MakeArgString("-L" + LDPrefix + "/../kvx-cos/lib"));
+    CmdArgs.push_back(Args.MakeArgString("-L" + LDPrefix + "/../lib/llvm/cos"));
 
     CmdArgs.push_back("-melf64kvx");
 
+    if (Args.hasArg(options::OPT_fopenmp))
+      CmdArgs.push_back("-lomp");
+
+    if (!Args.hasArg(options::OPT_nostdlib) &&
+        !Args.hasArg(options::OPT_nodefaultlibs)) {
+      if (C.getDriver().CCCIsCXX()) {
+        CmdArgs.push_back("-lstdc++");
+        CmdArgs.push_back(Args.MakeArgString(
+            "-L" + LDPrefix +
+            "/../lib/gcc/kvx-cos/" KVX_CLUSTEROS_GCC_VERSION));
+        CmdArgs.push_back("-lgcc");
+      }
+
+      CmdArgs.push_back("-lclang_rt.builtins-kvx");
+      CmdArgs.push_back("-lm");
+
+      if (!Args.hasArg(options::OPT_nostdlib)) {
+        CmdArgs.push_back("--start-group");
+        CmdArgs.push_back("-lc");
+        CmdArgs.push_back("-lmppacos");
+        CmdArgs.push_back("-lmppa_rsrc");
+        CmdArgs.push_back("-lgloss");
+        CmdArgs.push_back("-lmppa_fdt");
+        CmdArgs.push_back("--end-group");
+      }
+
+      CmdArgs.push_back("-lclang_rt.builtins-kvx");
+    }
+
     if (!Args.hasArg(options::OPT_nostdlib)) {
-      CmdArgs.push_back("--start-group");
-      CmdArgs.push_back("-lmppacos");
-      CmdArgs.push_back("-lmppa_rsrc");
-      CmdArgs.push_back("-lc");
-      CmdArgs.push_back("-lgloss");
-      CmdArgs.push_back("-lmppa_fdt");
-      CmdArgs.push_back("--end-group");
-
-      CmdArgs.push_back(Args.MakeArgString(
-          LDPrefix + "/../lib/llvm/cos/libclang_rt.builtins-kvx.a"));
-
       CmdArgs.push_back(Args.MakeArgString(
           LDPrefix + "/../lib/gcc/kvx-cos/" KVX_CLUSTEROS_GCC_VERSION
                      "/crtend.o")); // GCC's crtend.o, see TODO
@@ -176,9 +210,6 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
                                   // comment above.
     }
 
-    Args.AddAllArgs(CmdArgs, options::OPT_L, options::OPT_l, options::OPT_u);
-    Args.AddAllArgValues(CmdArgs, options::OPT_Wl_COMMA);
-
     if (Args.getLastArg(options::OPT_T)) {
       std::string Targ =
           std::string("-T") +
@@ -187,9 +218,6 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
     } else {
       CmdArgs.push_back("-Tmppacos.ld");
     }
-
-    if (Args.hasArg(options::OPT_fopenmp))
-      CmdArgs.push_back("-lomp");
 
     if (Args.hasArg(options::OPT_v))
       CmdArgs.push_back("-v");
