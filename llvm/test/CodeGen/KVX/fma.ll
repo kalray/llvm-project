@@ -16,10 +16,12 @@ define float @ffmaw(float %a, float %b, float %c) {
 define float @ffmaw_i(float %a, float %b) {
 ; CHECK-LABEL: ffmaw_i:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ffmaw $r0 = $r1, 0x3f800000
+; CHECK-NEXT:    ffmaw $r1 = $r0, 0x3dcccccd
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %res = call float @llvm.fma.f32(float %a, float %b, float 1.0)
+  %res = call float @llvm.fma.f32(float %a, float 0x3FB99999A0000000, float %b)
   ret float %res
 }
 
@@ -38,10 +40,12 @@ define double @ffmad(double %a, double %b, double %c) {
 define double @ffmad_i(double %a, double %b) {
 ; CHECK-LABEL: ffmad_i:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ffmad $r0 = $r1, 0x3ff0000000000000
+; CHECK-NEXT:    ffmad $r1 = $r0, 0x3fb99999a0000000
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %res = call double @llvm.fma.f64(double %a, double %b, double 1.0)
+  %res = call double @llvm.fma.f64(double %a, double 0x3FB99999A0000000, double %b)
   ret double %res
 }
 
