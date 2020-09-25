@@ -50,6 +50,9 @@ public:
   void printScalarcondMod(const MCInst *MI, unsigned OpNo,
                           /*const MCSubtargetInfo &STI,*/ raw_ostream &O);
 
+  void printSimplecondMod(const MCInst *MI, unsigned OpNo,
+                          /*const MCSubtargetInfo &STI,*/ raw_ostream &O);
+
   void printMemOperand(const MCInst *MI, unsigned OpNo,
                        /*const MCSubtargetInfo &STI,*/ raw_ostream &O);
 
