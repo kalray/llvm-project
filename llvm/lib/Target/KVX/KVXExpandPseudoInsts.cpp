@@ -739,55 +739,6 @@ static bool expandSystemRegValueInstr(unsigned int Opcode,
   return true;
 }
 
-static bool expandUnaryPairedRegInstrOpcode(unsigned int OpCode,
-                                            const KVXInstrInfo *TII,
-                                            MachineBasicBlock &MBB,
-                                            MachineBasicBlock::iterator MBBI) {
-  MachineInstr &MI = *MBBI;
-  DebugLoc DL = MI.getDebugLoc();
-
-  MachineFunction *MF = MBB.getParent();
-  const KVXRegisterInfo *TRI =
-      (const KVXRegisterInfo *)MF->getSubtarget().getRegisterInfo();
-
-  unsigned outReg = MI.getOperand(0).getReg();
-  unsigned inReg = MI.getOperand(1).getReg();
-
-  BuildMI(MBB, MBBI, DL, TII->get(OpCode), TRI->getSubReg(outReg, 1))
-      .addReg(TRI->getSubReg(inReg, 1));
-  BuildMI(MBB, MBBI, DL, TII->get(OpCode), TRI->getSubReg(outReg, 2))
-      .addReg(TRI->getSubReg(inReg, 2));
-
-  MI.eraseFromParent();
-  return true;
-}
-
-static bool expandBinaryPairedRegInstrOpcode(unsigned int OpCode,
-                                             const KVXInstrInfo *TII,
-                                             MachineBasicBlock &MBB,
-                                             MachineBasicBlock::iterator MBBI) {
-  MachineInstr &MI = *MBBI;
-  DebugLoc DL = MI.getDebugLoc();
-
-  MachineFunction *MF = MBB.getParent();
-  const KVXRegisterInfo *TRI =
-      (const KVXRegisterInfo *)MF->getSubtarget().getRegisterInfo();
-
-  unsigned outReg = MI.getOperand(0).getReg();
-  unsigned v1Reg = MI.getOperand(1).getReg();
-  unsigned v2Reg = MI.getOperand(2).getReg();
-
-  BuildMI(MBB, MBBI, DL, TII->get(OpCode), TRI->getSubReg(outReg, 1))
-      .addReg(TRI->getSubReg(v1Reg, 1))
-      .addReg(TRI->getSubReg(v2Reg, 1));
-  BuildMI(MBB, MBBI, DL, TII->get(OpCode), TRI->getSubReg(outReg, 2))
-      .addReg(TRI->getSubReg(v1Reg, 2))
-      .addReg(TRI->getSubReg(v2Reg, 2));
-
-  MI.eraseFromParent();
-  return true;
-}
-
 static bool expandRoundingPairInstrOpcodes(unsigned int OpCode1,
                                            unsigned int OpCode2,
                                            const KVXInstrInfo *TII,
@@ -1178,30 +1129,6 @@ bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
     return true;
   case KVX::SET_Instr:
     expandSystemRegValueInstr(KVX::SETrst4, TII, MBB, MBBI);
-    return true;
-  case KVX::FABSWQ_Instr:
-    expandUnaryPairedRegInstrOpcode(KVX::FABSWP, TII, MBB, MBBI);
-    return true;
-  case KVX::FABSDP_Instr:
-    expandUnaryPairedRegInstrOpcode(KVX::FABSD, TII, MBB, MBBI);
-    return true;
-  case KVX::FNEGWQ_Instr:
-    expandUnaryPairedRegInstrOpcode(KVX::FNEGWP, TII, MBB, MBBI);
-    return true;
-  case KVX::FNEGDP_Instr:
-    expandUnaryPairedRegInstrOpcode(KVX::FNEGD, TII, MBB, MBBI);
-    return true;
-  case KVX::FMAXWQ_Instr:
-    expandBinaryPairedRegInstrOpcode(KVX::FMAXWP, TII, MBB, MBBI);
-    return true;
-  case KVX::FMAXDP_Instr:
-    expandBinaryPairedRegInstrOpcode(KVX::FMAXD, TII, MBB, MBBI);
-    return true;
-  case KVX::FMINWQ_Instr:
-    expandBinaryPairedRegInstrOpcode(KVX::FMINWP, TII, MBB, MBBI);
-    return true;
-  case KVX::FMINDP_Instr:
-    expandBinaryPairedRegInstrOpcode(KVX::FMIND, TII, MBB, MBBI);
     return true;
   case KVX::FMULWCP_Instr:
     expandRoundingPairInstrOpcodes(KVX::FMULWCrr, KVX::FMULWCrr, TII, MBB,

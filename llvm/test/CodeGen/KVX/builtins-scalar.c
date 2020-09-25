@@ -360,63 +360,63 @@ unsigned long fixedud(double x) {
 float fcdivw(float v1, float v2) {
   return __builtin_kvx_fcdivw(v1, v2);
   // CHECK-LABEL: fcdivw:
-  // CHECK: fcdivw
+  // CHECK: fcdivw $r0 = $r0r1
   // CHECK: ret
 }
 
 double fcdivd(double v1, double v2) {
   return __builtin_kvx_fcdivd(v1, v2);
   // CHECK-LABEL: fcdivd:
-  // CHECK: fcdivd
+  // CHECK: fcdivd $r0 = $r0r1
   // CHECK: ret
 }
 
 float fsdivw(float v1, float v2) {
   return __builtin_kvx_fsdivw(v1, v2);
   // CHECK-LABEL: fsdivw:
-  // CHECK: fsdivw
+  // CHECK: fsdivw $r0 = $r0r1
   // CHECK: ret
 }
 
 double fsdivd(double v1, double v2) {
   return __builtin_kvx_fsdivd(v1, v2);
   // CHECK-LABEL: fsdivd:
-  // CHECK: fsdivd
+  // CHECK: fsdivd $r0 = $r0r1
   // CHECK: ret
 }
 
-float fsrecw(double v) {
+float fsrecw(float v) {
   return __builtin_kvx_fsrecw(v);
   // CHECK-LABEL: fsrecw:
-  // CHECK: fsrecw
+  // CHECK: fsrecw $r0 = $r0
   // CHECK: ret
 }
 
 double fsrecd(double v) {
   return __builtin_kvx_fsrecd(v);
   // CHECK-LABEL: fsrecd:
-  // CHECK: fsrecd
+  // CHECK: fsrecd $r0 = $r0
   // CHECK: ret
 }
 
 long sbmm8(long a, long b) {
   return __builtin_kvx_sbmm8(a, b);
   // CHECK-LABEL: sbmm8:
-  // CHECK: sbmm8
+  // CHECK: sbmm8 $r0 = $r0, $r1
   // CHECK: ret
 }
 
 long sbmmt8(long a, long b) {
   return __builtin_kvx_sbmmt8(a, b);
   // CHECK-LABEL: sbmmt8:
-  // CHECK: sbmmt8
+  // CHECK: sbmmt8 $r0 = $r0, $r1
   // CHECK: ret
 }
 
 long satd(long v, unsigned char b) {
   return __builtin_kvx_satd(v, b);
   // CHECK-LABEL: satd:
-  // CHECK: satd
+  // CHECK: satd $r0 = $r0, $r1
   // CHECK: ret
 }
 

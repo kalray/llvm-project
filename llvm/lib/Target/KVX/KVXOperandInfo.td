@@ -38,8 +38,7 @@ def ScalarcondMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 13
 }
 
 def SimplecondMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 7);}]> {
-  // FIXME: PrintMethod is not implemented yet
-  // let PrintMethod = "printSimplecondMod";
+  let PrintMethod = "printSimplecondMod";
 }
 
 def ComparisonMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 13);}]> {

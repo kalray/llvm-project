@@ -169,6 +169,16 @@ void KVXInstPrinter::printScalarcondMod(
   }
 }
 
+void KVXInstPrinter::printSimplecondMod(
+    const MCInst *MI, unsigned OpNo,
+    /*const MCSubtargetInfo &STI,*/ raw_ostream &O) {
+  int Variant = MI->getOperand(OpNo).getImm();
+  const char *VariantList[] = {".nez", ".eqz", ".ltz", ".gez",
+                               ".lez", ",gtz", ".odd", ".even"};
+  if (Variant < 8)
+    O << VariantList[Variant];
+}
+
 void KVXInstPrinter::printComparisonMod(
     const MCInst *MI, unsigned OpNo,
     /*const MCSubtargetInfo &STI,*/ raw_ostream &O) {
