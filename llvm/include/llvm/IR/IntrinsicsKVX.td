@@ -31,20 +31,10 @@ def int_kvx_acswapw: Intrinsic<[llvm_i32_ty], [llvm_ptr_ty, llvm_i32_ty, llvm_i3
 def int_kvx_acswapd: Intrinsic<[llvm_i64_ty], [llvm_ptr_ty, llvm_i64_ty, llvm_i64_ty], []>;
 
 def int_kvx_fabswp: Intrinsic<[llvm_v2f32_ty], [llvm_v2f32_ty], [IntrNoMem]>;
-def int_kvx_fabswq: Intrinsic<[llvm_v4f32_ty], [llvm_v4f32_ty], [IntrNoMem]>;
-def int_kvx_fabsdp: Intrinsic<[llvm_v2f64_ty], [llvm_v2f64_ty], [IntrNoMem]>;
-
 def int_kvx_fnegwp: Intrinsic<[llvm_v2f32_ty], [llvm_v2f32_ty], [IntrNoMem]>;
-def int_kvx_fnegwq: Intrinsic<[llvm_v4f32_ty], [llvm_v4f32_ty], [IntrNoMem]>;
-def int_kvx_fnegdp: Intrinsic<[llvm_v2f64_ty], [llvm_v2f64_ty], [IntrNoMem]>;
 
 def int_kvx_fmaxwp: Intrinsic<[llvm_v2f32_ty], [llvm_v2f32_ty, llvm_v2f32_ty], [IntrNoMem]>;
-def int_kvx_fmaxwq: Intrinsic<[llvm_v4f32_ty], [llvm_v4f32_ty, llvm_v4f32_ty], [IntrNoMem]>;
-def int_kvx_fmaxdp: Intrinsic<[llvm_v2f64_ty], [llvm_v2f64_ty, llvm_v2f64_ty], [IntrNoMem]>;
-
 def int_kvx_fminwp: Intrinsic<[llvm_v2f32_ty], [llvm_v2f32_ty, llvm_v2f32_ty], [IntrNoMem]>;
-def int_kvx_fminwq: Intrinsic<[llvm_v4f32_ty], [llvm_v4f32_ty, llvm_v4f32_ty], [IntrNoMem]>;
-def int_kvx_fmindp: Intrinsic<[llvm_v2f64_ty], [llvm_v2f64_ty, llvm_v2f64_ty], [IntrNoMem]>;
 
 def int_kvx_faddwp : Intrinsic<[llvm_v2f32_ty], [llvm_v2f32_ty, llvm_v2f32_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_faddcwc : Intrinsic<[llvm_v2f32_ty], [llvm_v2f32_ty, llvm_v2f32_ty, llvm_i32_ty], [IntrNoMem]>;
@@ -95,10 +85,14 @@ def int_kvx_cbswp: Intrinsic<[llvm_v2i32_ty], [llvm_v2i32_ty], [IntrNoMem]>;
 
 def int_kvx_fixedw: Intrinsic<[llvm_i32_ty], [llvm_float_ty, llvm_i64_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_fixeduw: Intrinsic<[llvm_i32_ty], [llvm_float_ty, llvm_i64_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_fixedwp: Intrinsic<[llvm_v2i32_ty], [llvm_v2f32_ty, llvm_i64_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_fixeduwp: Intrinsic<[llvm_v2i32_ty], [llvm_v2f32_ty, llvm_i64_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_fixedd: Intrinsic<[llvm_i64_ty], [llvm_double_ty, llvm_i64_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_fixedud: Intrinsic<[llvm_i64_ty], [llvm_double_ty, llvm_i64_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_floatw: Intrinsic<[llvm_float_ty], [llvm_i32_ty, llvm_i64_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_floatwp: Intrinsic<[llvm_v2f32_ty], [llvm_v2i32_ty, llvm_i64_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_floatuw: Intrinsic<[llvm_float_ty], [llvm_i32_ty, llvm_i64_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_floatuwp: Intrinsic<[llvm_v2f32_ty], [llvm_v2i32_ty, llvm_i64_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_floatd: Intrinsic<[llvm_double_ty], [llvm_i64_ty, llvm_i64_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_floatud: Intrinsic<[llvm_double_ty], [llvm_i64_ty, llvm_i64_ty, llvm_i32_ty], [IntrNoMem]>;
 
@@ -158,5 +152,8 @@ def int_kvx_fwidenlhw: Intrinsic<[llvm_float_ty], [llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_fwidenmhw: Intrinsic<[llvm_float_ty], [llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_fnarrowwh: Intrinsic<[llvm_i32_ty], [llvm_float_ty], [IntrNoMem]>;
 
+def int_kvx_cmovehq : Intrinsic<[llvm_v4i16_ty], [llvm_v4i16_ty, llvm_v4i16_ty, llvm_v4i16_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_cmovewp : Intrinsic<[llvm_v2i32_ty], [llvm_v2i32_ty, llvm_v2i32_ty, llvm_v2i32_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_cmoved : Intrinsic<[llvm_i64_ty], [llvm_i64_ty, llvm_i64_ty, llvm_i64_ty, llvm_i32_ty], [IntrNoMem]>;
 
 }  // TargetPrefix = "kvx"
