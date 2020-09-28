@@ -43,6 +43,10 @@ if is_msvc:
 elif config.host_os  == 'Darwin':
   base_lib = os.path.join(config.compiler_rt_libdir, "libclang_rt.osx.a ")
   config.substitutions.append( ("%librt ", base_lib + ' -lSystem ') )
+elif config.target_arch == 'kvx':
+  base_lib = os.path.join(config.compiler_rt_libdir, "libclang_rt.builtins%s.a"
+                          % config.target_suffix)
+  config.substitutions.append( ("%librt ", '-lm ' + base_lib + ' -lc -lm ') )
 else:
   base_lib = os.path.join(config.compiler_rt_libdir, "libclang_rt.builtins%s.a"
                           % config.target_suffix)
