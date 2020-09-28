@@ -172,17 +172,11 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
 
     Args.AddAllArgs(CmdArgs, options::OPT_u);
 
-    if (!Args.hasArg(options::OPT_nostdlib) &&
-        !Args.hasArg(options::OPT_nostartfiles)) {
-      // TODO: crti.o, crtbegin.o, crtend.o, and crtn.o are currently provided
-      // by GCC. Implement those files on newlib's libgloss side to finally be
-      // GCC agnostic when using compiler-rt!
-      // GCC's crti.o, see TODO comment above.
-      CmdArgs.push_back(Args.MakeArgString(GCCLibDir + "/crti.o"));
-      // GCC's crtbegin.o, see TODO comment above.
-      CmdArgs.push_back(Args.MakeArgString(GCCLibDir + "/crtbegin.o"));
-      // TODO: to remove after binutils update.
-      CmdArgs.push_back(Args.MakeArgString(LibDir + "/crt0.o"));
+    if (!Args.hasArg(options::OPT_nostdlib)) {
+      // TODO: crtcxa.o is currently provided by GCC. Implement it on
+      // newlib's libgloss side to finally be GCC agnostic when using
+      // compiler-rt!
+      CmdArgs.push_back(Args.MakeArgString(GCCLibDir + "/crtcxa.o"));
     }
 
     // Keep same order as clang command line for all OPT_Wl_COMMA, OPT_l, OPT_L
@@ -233,14 +227,6 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
       }
 
       CmdArgs.push_back("-lclang_rt.builtins-kvx");
-    }
-
-    if (!Args.hasArg(options::OPT_nostdlib) &&
-        !Args.hasArg(options::OPT_nostartfiles)) {
-      // GCC's crtend.o, see TODO comment above.
-      CmdArgs.push_back(Args.MakeArgString(GCCLibDir + "/crtend.o"));
-      // GCC's crtn.o, see TODO comment above.
-      CmdArgs.push_back(Args.MakeArgString(GCCLibDir + "/crtn.o"));
     }
 
     if (Args.getLastArg(options::OPT_T)) {
@@ -347,11 +333,6 @@ ClusterOS::addClangTargetOptions(const llvm::opt::ArgList &DriverArgs,
                                  llvm::opt::ArgStringList &CC1Args,
                                  Action::OffloadKind DeviceOffloadKind) const {
   CC1Args.push_back("-nostdsysteminc");
-
-  // ClusterOS linker doesn't support init_array but old behavior with ctors/dtors
-  if (!DriverArgs.hasFlag(options::OPT_fuse_init_array,
-                          options::OPT_fno_use_init_array, false))
-    CC1Args.push_back("-fno-use-init-array");
 
   if (DriverArgs.hasArg(options::OPT_fPIC))
     CC1Args.push_back("-ftls-model=local-exec");
