@@ -19550,9 +19550,9 @@ static int KVX_getLoadAS(clang::ASTContext &Ctx, const clang::Expr *E) {
       AS = 0;
     else
       AS = llvm::StringSwitch<int>(Str)
-               .CaseLower(".s", 11)
-               .CaseLower(".u", 9)
-               .CaseLower(".us", 10)
+               .CaseLower(".u", 256)
+               .CaseLower(".us", 257)
+               .CaseLower(".s", 258)
                .Default(-1);
   }
   return AS;

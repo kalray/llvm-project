@@ -233,17 +233,17 @@ foreach type = [ i1, i8, i16, i32, i64, v2i8, v4i8, v8i8, v2i32, v4i16, v2i16, v
 
 def load#type : PatFrag<(ops node:$ptr), (type (load node:$ptr)), [{
     const MemSDNode *LD = cast<MemSDNode>(N);
-    return LD->getAddressSpace() < 9;
+    return LD->getAddressSpace() < 256;
   }]>;
 
 def loadbypass#type : PatFrag<(ops node:$ptr), (type (load node:$ptr)), [{
     const MemSDNode *LD = cast<MemSDNode>(N);
-    return LD->getAddressSpace() == 9;
+    return LD->getAddressSpace() == 256;
   }]>;
 
 def extloadbypass#type : PatFrag<(ops node:$ptr), (extload node:$ptr), [{
     const MemSDNode *LD = cast<MemSDNode>(N);
-    return LD->getAddressSpace() == 9;
+    return LD->getAddressSpace() == 256;
   }]>
 {
   let IsLoad = 1;
@@ -252,7 +252,7 @@ def extloadbypass#type : PatFrag<(ops node:$ptr), (extload node:$ptr), [{
 
 def zextloadbypass#type : PatFrag<(ops node:$ptr), (zextload node:$ptr), [{
     const MemSDNode *LD = cast<MemSDNode>(N);
-    return LD->getAddressSpace() == 9;
+    return LD->getAddressSpace() == 256;
   }]>
 {
   let IsLoad = 1;
@@ -261,7 +261,7 @@ def zextloadbypass#type : PatFrag<(ops node:$ptr), (zextload node:$ptr), [{
 
 def sextloadbypass#type : PatFrag<(ops node:$ptr), (sextload node:$ptr), [{
     const MemSDNode *LD = cast<MemSDNode>(N);
-    return LD->getAddressSpace() == 9;
+    return LD->getAddressSpace() == 256;
   }]>
 {
   let IsLoad = 1;
@@ -270,12 +270,12 @@ def sextloadbypass#type : PatFrag<(ops node:$ptr), (sextload node:$ptr), [{
 
 def loadpreload#type : PatFrag<(ops node:$ptr), (type (load node:$ptr)), [{
     const MemSDNode *LD = cast<MemSDNode>(N);
-    return LD->getAddressSpace() == 10;
+    return LD->getAddressSpace() == 257;
   }]>;
 
 def extloadpreload#type : PatFrag<(ops node:$ptr), (extload node:$ptr), [{
     const MemSDNode *LD = cast<MemSDNode>(N);
-    return LD->getAddressSpace() == 10;
+    return LD->getAddressSpace() == 257;
   }]>
 {
   let IsLoad = 1;
@@ -284,7 +284,7 @@ def extloadpreload#type : PatFrag<(ops node:$ptr), (extload node:$ptr), [{
 
 def zextloadpreload#type : PatFrag<(ops node:$ptr), (zextload node:$ptr), [{
     const MemSDNode *LD = cast<MemSDNode>(N);
-    return LD->getAddressSpace() == 10;
+    return LD->getAddressSpace() == 257;
   }]>
 {
   let IsLoad = 1;
@@ -293,7 +293,7 @@ def zextloadpreload#type : PatFrag<(ops node:$ptr), (zextload node:$ptr), [{
 
 def sextloadpreload#type : PatFrag<(ops node:$ptr), (sextload node:$ptr), [{
     const MemSDNode *LD = cast<MemSDNode>(N);
-    return LD->getAddressSpace() == 10;
+    return LD->getAddressSpace() == 257;
   }] >
 {
   let IsLoad = 1;
@@ -302,12 +302,12 @@ def sextloadpreload#type : PatFrag<(ops node:$ptr), (sextload node:$ptr), [{
 
 def loadspec#type : PatFrag<(ops node:$ptr), (type (load node:$ptr)), [{
     const MemSDNode *LD = cast<MemSDNode>(N);
-    return LD->getAddressSpace() == 11;
+    return LD->getAddressSpace() == 258;
   }]>;
 
 def extloadspec#type : PatFrag<(ops node:$ptr), (extload node:$ptr), [{
     const MemSDNode *LD = cast<MemSDNode>(N);
-    return LD->getAddressSpace() == 11;
+    return LD->getAddressSpace() == 258;
   }]>
 {
   let IsLoad = 1;
@@ -316,7 +316,7 @@ def extloadspec#type : PatFrag<(ops node:$ptr), (extload node:$ptr), [{
 
 def zextloadspec#type : PatFrag<(ops node:$ptr), (zextload node:$ptr), [{
     const MemSDNode *LD = cast<MemSDNode>(N);
-    return LD->getAddressSpace() == 11;
+    return LD->getAddressSpace() == 258;
   }]>
 {
   let IsLoad = 1;
@@ -325,7 +325,7 @@ def zextloadspec#type : PatFrag<(ops node:$ptr), (zextload node:$ptr), [{
 
 def sextloadspec#type : PatFrag<(ops node:$ptr), (sextload node:$ptr), [{
     const MemSDNode *LD = cast<MemSDNode>(N);
-    return LD->getAddressSpace() == 11;
+    return LD->getAddressSpace() == 258;
   }]>
 {
   let IsLoad = 1;
