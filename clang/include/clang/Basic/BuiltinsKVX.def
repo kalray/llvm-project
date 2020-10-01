@@ -282,5 +282,10 @@ BUILTIN(__builtin_kvx_sbmmt8, "ULiULiULi", "")
 BUILTIN(__builtin_kvx_stsud, "ULiULiULi", "")
 BUILTIN(__builtin_kvx_stsuw, "UiUiUi", "")
 
+//===----------------------------------------------------------------------===//
+// TCA
+//===----------------------------------------------------------------------===//
+BUILTIN(__builtin_kvx_movetolo,  "V2LiLiLi", "n")
+BUILTIN(__builtin_kvx_movetohi,  "V2LiLiLi", "n")
 
 #undef BUILTIN

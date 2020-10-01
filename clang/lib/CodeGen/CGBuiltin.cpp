@@ -20693,6 +20693,11 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_fixedudq:
     return KVX_emitVectorShiftingBuiltin(*this, E, Intrinsic::kvx_fixedud,
                                          DoubleTy, Int64Ty, 4, 1);
+  /// TCA - GPR to TCA copy
+  case KVX::BI__builtin_kvx_movetohi:
+    return KVX_emitBinaryBuiltin(*this, E, Intrinsic::kvx_movetohi);
+  case KVX::BI__builtin_kvx_movetolo:
+    return KVX_emitBinaryBuiltin(*this, E, Intrinsic::kvx_movetolo);
   }
   return nullptr;
 }
