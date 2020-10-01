@@ -199,3 +199,10 @@ def: Pat<(int_kvx_cmoved i64:$v1, Signed10:$v2, i64:$c, i32:$sc), (CMOVEDri10 Si
 def: Pat<(int_kvx_cmoved i64:$v1, Signed37:$v2, i64:$c, i32:$sc), (CMOVEDri37 SingleReg:$c, SingleReg:$v1, Signed37:$v2, ScalarcondMod: $sc)>;
 def: Pat<(int_kvx_cmoved i64:$v1, Wrapped64:$v2, i64:$c, i32:$sc), (CMOVEDri37 SingleReg:$c, SingleReg:$v1, Wrapped64:$v2, ScalarcondMod: $sc)>;
 def: Pat<(int_kvx_cmoved i64:$v1, i64:$v2, i64:$c, i32:$sc), (CMOVEDrr SingleReg:$c, SingleReg:$v1, SingleReg:$v2, ScalarcondMod: $sc)>;
+
+//===----------------------------------------------------------------------===//
+// TCA - tightly-coupled accelerator
+//===----------------------------------------------------------------------===//
+// Move from GRP to TCA registers
+def: Pat<(int_kvx_movetolo i64:$z, i64:$y), (MOVETQrrbe SingleReg:$z, SingleReg:$y)>;
+def: Pat<(int_kvx_movetohi i64:$z, i64:$y), (MOVETQrrbo SingleReg:$z, SingleReg:$y)>;
