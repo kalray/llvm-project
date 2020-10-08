@@ -170,7 +170,8 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
 
     Args.AddAllArgs(CmdArgs, options::OPT_u);
 
-    if (!Args.hasArg(options::OPT_nostdlib)) {
+    if (!Args.hasArg(options::OPT_nostdlib) &&
+        !Args.hasArg(options::OPT_nostartfiles)) {
       // TODO: crti.o, crtbegin.o, crtend.o, and crtn.o are currently provided
       // by GCC. Implement those files on newlib's libgloss side to finally be
       // GCC agnostic when using compiler-rt!
@@ -232,7 +233,8 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
       CmdArgs.push_back("-lclang_rt.builtins-kvx");
     }
 
-    if (!Args.hasArg(options::OPT_nostdlib)) {
+    if (!Args.hasArg(options::OPT_nostdlib) &&
+        !Args.hasArg(options::OPT_nostartfiles)) {
       // GCC's crtend.o, see TODO comment above.
       CmdArgs.push_back(Args.MakeArgString(GCCLibDir + "/crtend.o"));
       // GCC's crtn.o, see TODO comment above.
@@ -245,7 +247,8 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
           std::string(Args.getLastArg(options::OPT_T)->getValue());
       CmdArgs.push_back(Args.MakeArgString(Targ));
     } else {
-      CmdArgs.push_back("-Tmppacos.ld");
+      if (!Args.hasArg(options::OPT_nostartfiles))
+        CmdArgs.push_back("-Tmppacos.ld");
     }
 
     if (Args.hasArg(options::OPT_v))
