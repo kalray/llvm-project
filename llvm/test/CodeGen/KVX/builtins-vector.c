@@ -350,15 +350,15 @@ v2f32 faddwp(v2f32 v1, v2f32 v2) {
 v4f32 faddwq(v4f32 v1, v4f32 v2) {
   return __builtin_kvx_faddwq(v1, v2, ".rn");
   // CHECK-LABEL: faddwq:
-  // CHECK: faddwq.rn $r0r1 = $r0r1, $r2r3
+  // CHECK: faddwq.rn $r2r3 = $r0r1, $r2r3
   // CHECK: ret
 }
 
 v8f32 faddwo(v8f32 v1, v8f32 v2) {
   return __builtin_kvx_faddwo(v1, v2, ".rn");
   // CHECK-LABEL: faddwo:
-  // CHECK: faddwq.rn $r0r1 = $r0r1, $r4r5
-  // CHECK: faddwq.rn $r2r3 = $r2r3, $r6r7
+  // CHECK: faddwq.rn $r4r5 = $r0r1, $r4r5
+  // CHECK: faddwq.rn $r6r7 = $r2r3, $r6r7
   // CHECK: ret
 }
 
@@ -387,15 +387,15 @@ v2f32 faddcwc(v2f32 v1, v2f32 v2) {
 v4f32 faddcwcp(v4f32 v1, v4f32 v2) {
   return __builtin_kvx_faddcwcp(v1, v2, ".rn");
   // CHECK-LABEL: faddcwcp:
-  // CHECK: faddcwcp.rn $r0r1 = $r0r1, $r2r3
+  // CHECK: faddcwcp.rn $r2r3 = $r0r1, $r2r3
   // CHECK: ret
 }
 
 v8f32 faddcwcq(v8f32 v1, v8f32 v2) {
   return __builtin_kvx_faddcwcq(v1, v2, ".rn");
   // CHECK-LABEL: faddcwcq:
-  // CHECK: faddcwcp.rn $r0r1 = $r0r1, $r4r5
-  // CHECK: faddcwcp.rn $r2r3 = $r2r3, $r6r7
+  // CHECK: faddcwcp.rn $r4r5 = $r0r1, $r4r5
+  // CHECK: faddcwcp.rn $r6r7 = $r2r3, $r6r7
   // CHECK: ret
 }
 
@@ -424,15 +424,15 @@ v2f32 fsbfwp(v2f32 v1, v2f32 v2) {
 v4f32 fsbfwq(v4f32 v1, v4f32 v2) {
   return __builtin_kvx_fsbfwq(v1, v2, ".rn");
   // CHECK-LABEL: fsbfwq:
-  // CHECK: fsbfwq.rn $r0r1 = $r0r1, $r2r3
+  // CHECK: fsbfwq.rn $r2r3 = $r0r1, $r2r3
   // CHECK: ret
 }
 
 v8f32 fsbfwo(v8f32 v1, v8f32 v2) {
   return __builtin_kvx_fsbfwo(v1, v2, ".rn");
   // CHECK-LABEL: fsbfwo:
-  // CHECK: fsbfwq.rn $r0r1 = $r0r1, $r4r5
-  // CHECK: fsbfwq.rn $r2r3 = $r2r3, $r6r7
+  // CHECK: fsbfwq.rn $r4r5 = $r0r1, $r4r5
+  // CHECK: fsbfwq.rn $r6r7 = $r2r3, $r6r7
   // CHECK: ret
 }
 
@@ -461,15 +461,15 @@ v2f32 fsbfcwc(v2f32 v1, v2f32 v2) {
 v4f32 fsbfcwcp(v4f32 v1, v4f32 v2) {
   return __builtin_kvx_fsbfcwcp(v1, v2, ".rn");
   // CHECK-LABEL: fsbfcwcp:
-  // CHECK: fsbfcwcp.rn $r0r1 = $r0r1, $r2r3
+  // CHECK: fsbfcwcp.rn $r2r3 = $r0r1, $r2r3
   // CHECK: ret
 }
 
 v8f32 fsbfcwcq(v8f32 v1, v8f32 v2) {
   return __builtin_kvx_fsbfcwcq(v1, v2, ".rn");
   // CHECK-LABEL: fsbfcwcq:
-  // CHECK: fsbfcwcp.rn $r0r1 = $r0r1, $r4r5
-  // CHECK: fsbfcwcp.rn $r2r3 = $r2r3, $r6r7
+  // CHECK: fsbfcwcp.rn $r4r5 = $r0r1, $r4r5
+  // CHECK: fsbfcwcp.rn $r6r7 = $r2r3, $r6r7
   // CHECK: ret
 }
 
@@ -498,15 +498,15 @@ v2f32 fmulwp(v2f32 v1, v2f32 v2) {
 v4f32 fmulwq(v4f32 v1, v4f32 v2) {
   return __builtin_kvx_fmulwq(v1, v2, ".rn");
   // CHECK-LABEL: fmulwq:
-  // CHECK: fmulwq.rn $r0r1 = $r0r1, $r2r3
+  // CHECK: fmulwq.rn $r2r3 = $r0r1, $r2r3
   // CHECK: ret
 }
 
 v8f32 fmulwo(v8f32 v1, v8f32 v2) {
   return __builtin_kvx_fmulwo(v1, v2, ".rn");
   // CHECK-LABEL: fmulwo:
-  // CHECK: fmulwq.rn $r0r1 = $r0r1, $r4r5
-  // CHECK: fmulwq.rn $r2r3 = $r2r3, $r6r7
+  // CHECK: fmulwq.rn $r4r5 = $r0r1, $r4r5
+  // CHECK: fmulwq.rn $r6r7 = $r2r3, $r6r7
   // CHECK: ret
 }
 
@@ -538,18 +538,18 @@ v2f32 fmulwc(v2f32 v1, v2f32 v2) {
 v4f32 fmulwcp(v4f32 v1, v4f32 v2) {
   return __builtin_kvx_fmulwcp(v1, v2, ".rn");
   // CHECK-LABEL: fmulwcp:
-  // CHECK: fmulwc.rn $r0 = $r0, $r2
-  // CHECK: fmulwc.rn $r1 = $r1, $r3
+  // CHECK: fmulwc.rn $r2 = $r0, $r2
+  // CHECK: fmulwc.rn $r3 = $r1, $r3
   // CHECK: ret
 }
 
 v8f32 fmulwcq(v8f32 v1, v8f32 v2) {
   return __builtin_kvx_fmulwcq(v1, v2, ".rn");
   // CHECK-LABEL: fmulwcq:
-  // CHECK: fmulwc.rn $r0 = $r0, $r4
-  // CHECK: fmulwc.rn $r1 = $r1, $r5
-  // CHECK: fmulwc.rn $r2 = $r2, $r6
-  // CHECK: fmulwc.rn $r3 = $r3, $r7
+  // CHECK: fmulwc.rn $r4 = $r0, $r4
+  // CHECK: fmulwc.rn $r5 = $r1, $r5
+  // CHECK: fmulwc.rn $r6 = $r2, $r6
+  // CHECK: fmulwc.rn $r7 = $r3, $r7
   // CHECK: ret
 }
 
@@ -563,18 +563,18 @@ v2f32 fmulcwc(v2f32 v1, v2f32 v2) {
 v4f32 fmulcwcp(v4f32 v1, v4f32 v2) {
   return __builtin_kvx_fmulcwcp(v1, v2, ".rn");
   // CHECK-LABEL: fmulcwcp:
-  // CHECK: fmulcwc.rn $r0 = $r0, $r2
-  // CHECK: fmulcwc.rn $r1 = $r1, $r3
+  // CHECK: fmulcwc.rn $r2 = $r0, $r2
+  // CHECK: fmulcwc.rn $r3 = $r1, $r3
   // CHECK: ret
 }
 
 v8f32 fmulcwcq(v8f32 v1, v8f32 v2) {
   return __builtin_kvx_fmulcwcq(v1, v2, ".rn");
   // CHECK-LABEL: fmulcwcq:
-  // CHECK: fmulcwc.rn $r0 = $r0, $r4
-  // CHECK: fmulcwc.rn $r1 = $r1, $r5
-  // CHECK: fmulcwc.rn $r2 = $r2, $r6
-  // CHECK: fmulcwc.rn $r3 = $r3, $r7
+  // CHECK: fmulcwc.rn $r4 = $r0, $r4
+  // CHECK: fmulcwc.rn $r5 = $r1, $r5
+  // CHECK: fmulcwc.rn $r6 = $r2, $r6
+  // CHECK: fmulcwc.rn $r7 = $r3, $r7
   // CHECK: ret
 }
 
@@ -629,7 +629,7 @@ v4f64 fmulcdcp(v4f64 v1, v4f64 v2) {
 v4f32 fmm212w(v2f32 v1, v2f32 v2) {
   return __builtin_kvx_fmm212w(v1, v2, ".rn");
   // CHECK-LABEL: fmm212w:
-  // CHECK: fmm212w.rn $r0r1 = $r0, $r1
+  // CHECK: fmm212w.rn $r2r3 = $r0, $r1
   // CHECK: ret
 }
 
@@ -834,13 +834,13 @@ v4i32 fixedwq(v4f32 v) {
   // CHECK: ret
 }
 
-v8f32 fixedwo(v8i32 v) {
+v8i32 fixedwo(v8f32 v) {
   return __builtin_kvx_fixedwo(v, 3, ".rn");
   // CHECK-LABEL: fixedwo:
-  // CHECK: fixedwp.rn $r4 = $r0, 3
-  // CHECK: fixedwp.rn $r5 = $r1, 3
-  // CHECK: fixedwp.rn $r0 = $r2, 3
-  // CHECK: fixedwp.rn $r1 = $r3, 3
+  // CHECK: fixedwp.rn $r0 = $r0, 3
+  // CHECK: fixedwp.rn $r1 = $r1, 3
+  // CHECK: fixedwp.rn $r2 = $r2, 3
+  // CHECK: fixedwp.rn $r3 = $r3, 3
   // CHECK: ret
 }
 
@@ -877,13 +877,13 @@ v4u32 fixeduwq(v4f32 v) {
   // CHECK: ret
 }
 
-v8f32 fixeduwo(v8i32 v) {
+v8u32 fixeduwo(v8f32 v) {
   return __builtin_kvx_fixeduwo(v, 3, ".rn");
   // CHECK-LABEL: fixeduwo:
-  // CHECK: fixeduwp.rn $r4 = $r0, 3
-  // CHECK: fixeduwp.rn $r5 = $r1, 3
-  // CHECK: fixeduwp.rn $r0 = $r2, 3
-  // CHECK: fixeduwp.rn $r1 = $r3, 3
+  // CHECK: fixeduwp.rn $r0 = $r0, 3
+  // CHECK: fixeduwp.rn $r1 = $r1, 3
+  // CHECK: fixeduwp.rn $r2 = $r2, 3
+  // CHECK: fixeduwp.rn $r3 = $r3, 3
   // CHECK: ret
 }
 
