@@ -10,14 +10,14 @@ unsigned long f_i10(int c) {
 unsigned long f_i37(int c) {
   return __builtin_kvx_sbmm8(c, 1LL << 40);
   // CHECK: f_i37
-  // CHECK: sbmm8 $r0 = $r0, 1099511627776
+  // CHECK: sbmm8 $r0 = $r0, 0x10000000000
   // CHECK: ret
 }
 
 unsigned long f_i64(int c) {
   return __builtin_kvx_sbmm8(c, 0x0101010101010101ULL);
   // CHECK: f_i64
-  // CHECK: sbmm8 $r0 = $r0, 72340172838076673
+  // CHECK: sbmm8 $r0 = $r0, 0x101010101010101
   // CHECK: ret
 }
 

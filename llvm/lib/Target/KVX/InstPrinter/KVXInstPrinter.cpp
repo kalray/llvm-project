@@ -76,7 +76,13 @@ KVXInstPrinter::printOperand(const MCInst *MI, unsigned OpNo,
   }
 
   if (MO.isImm()) {
-    O << MO.getImm();
+    std::stringstream s;
+    if (std::abs(MO.getImm()) > 1024)
+      s << "0x" << std::hex << MO.getImm();
+    else
+      s << MO.getImm();
+
+    O << s.str();
     return;
   }
 

@@ -477,7 +477,7 @@ define i64 @atomicrmw_i64_sub_global_as(i64 addrspace(1)*%src, i64 %b) {
 define i64 @bigimm(i64* %0, i64 %1) {
 ; CHECK-LABEL: bigimm:
 ; CHECK:         fence
-; CHECK-NEXT:    addd $r0 = $r0, 4398046511104
+; CHECK-NEXT:    addd $r0 = $r0, 0x40000000000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB19_1:
 ; CHECK-NEXT:    ld.u $r3 = 0[$r0]

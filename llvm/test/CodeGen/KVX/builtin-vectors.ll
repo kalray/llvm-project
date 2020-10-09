@@ -195,7 +195,7 @@ entry:
 define dso_local <4 x i16> @abdhqs(<4 x i16> %a, i16 %b) local_unnamed_addr #0 {
 ; CHECK-LABEL: abdhqs:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r1 = $r1, 144398866404409857
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x201020102010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    abdhq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -215,7 +215,7 @@ declare i64 @llvm.kvx.sbmm8(i64, i64) #1
 define dso_local <8 x i16> @abdhos(<8 x i16> %a, i16 %b) local_unnamed_addr #2 {
 ; CHECK-LABEL: abdhos:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r2 = $r2, 144398866404409857
+; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x201020102010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    abdhq $r0 = $r0, $r2
 ; CHECK-NEXT:    abdhq $r1 = $r1, $r2
@@ -237,7 +237,7 @@ entry:
 define dso_local <16 x i16> @abdhxs(<16 x i16> %a, i16 %b) local_unnamed_addr #3 {
 ; CHECK-LABEL: abdhxs:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r4 = $r4, 144398866404409857
+; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x201020102010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    abdhq $r0 = $r0, $r4
 ; CHECK-NEXT:    abdhq $r1 = $r1, $r4
@@ -270,7 +270,7 @@ entry:
 define dso_local <2 x i32> @abdwps(<2 x i32> %a, i32 %b) local_unnamed_addr #0 {
 ; CHECK-LABEL: abdwps:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r1 = $r1, 577588855662969345
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x804020108040201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    abdwp $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -287,7 +287,7 @@ entry:
 define dso_local <4 x i32> @abdwqs(<4 x i32> %a, i32 %b) local_unnamed_addr #2 {
 ; CHECK-LABEL: abdwqs:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r2 = $r2, 577588855662969345
+; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x804020108040201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    abdwp $r0 = $r0, $r2
 ; CHECK-NEXT:    abdwp $r1 = $r1, $r2
@@ -309,7 +309,7 @@ entry:
 define dso_local <8 x i32> @abdwos(<8 x i32> %a, i32 %b) local_unnamed_addr #3 {
 ; CHECK-LABEL: abdwos:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r4 = $r4, 577588855662969345
+; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x804020108040201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    abdwp $r0 = $r0, $r4
 ; CHECK-NEXT:    abdwp $r1 = $r1, $r4
@@ -1101,7 +1101,7 @@ entry:
 define dso_local <4 x i16> @addshqs(<4 x i16> %a, i16 %b) local_unnamed_addr #0 {
 ; CHECK-LABEL: addshqs:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r1 = $r1, 144398866404409857
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x201020102010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addshq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -1118,7 +1118,7 @@ entry:
 define dso_local <8 x i16> @addshos(<8 x i16> %a, i16 %b) local_unnamed_addr #2 {
 ; CHECK-LABEL: addshos:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r2 = $r2, 144398866404409857
+; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x201020102010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addshq $r0 = $r0, $r2
 ; CHECK-NEXT:    addshq $r1 = $r1, $r2
@@ -1140,7 +1140,7 @@ entry:
 define dso_local <16 x i16> @addshxs(<16 x i16> %a, i16 %b) local_unnamed_addr #3 {
 ; CHECK-LABEL: addshxs:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r4 = $r4, 144398866404409857
+; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x201020102010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addshq $r0 = $r0, $r4
 ; CHECK-NEXT:    addshq $r1 = $r1, $r4
@@ -1173,7 +1173,7 @@ entry:
 define dso_local <2 x i32> @addswps(<2 x i32> %a, i32 %b) local_unnamed_addr #0 {
 ; CHECK-LABEL: addswps:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r1 = $r1, 577588855662969345
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x804020108040201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addswp $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -1190,7 +1190,7 @@ entry:
 define dso_local <4 x i32> @addswqs(<4 x i32> %a, i32 %b) local_unnamed_addr #2 {
 ; CHECK-LABEL: addswqs:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r2 = $r2, 577588855662969345
+; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x804020108040201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addswp $r0 = $r0, $r2
 ; CHECK-NEXT:    addswp $r1 = $r1, $r2
@@ -1212,7 +1212,7 @@ entry:
 define dso_local <8 x i32> @addswos(<8 x i32> %a, i32 %b) local_unnamed_addr #3 {
 ; CHECK-LABEL: addswos:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r4 = $r4, 577588855662969345
+; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x804020108040201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addswp $r0 = $r0, $r4
 ; CHECK-NEXT:    addswp $r1 = $r1, $r4
@@ -1476,7 +1476,7 @@ entry:
 define dso_local <4 x i16> @sbfshqs(<4 x i16> %a, i16 %b) local_unnamed_addr #0 {
 ; CHECK-LABEL: sbfshqs:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r1 = $r1, 144398866404409857
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x201020102010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfshq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -1493,7 +1493,7 @@ entry:
 define dso_local <8 x i16> @sbfshos(<8 x i16> %a, i16 %b) local_unnamed_addr #2 {
 ; CHECK-LABEL: sbfshos:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r2 = $r2, 144398866404409857
+; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x201020102010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfshq $r0 = $r0, $r2
 ; CHECK-NEXT:    sbfshq $r1 = $r1, $r2
@@ -1515,7 +1515,7 @@ entry:
 define dso_local <16 x i16> @sbfshxs(<16 x i16> %a, i16 %b) local_unnamed_addr #3 {
 ; CHECK-LABEL: sbfshxs:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r4 = $r4, 144398866404409857
+; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x201020102010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfshq $r0 = $r0, $r4
 ; CHECK-NEXT:    sbfshq $r1 = $r1, $r4
@@ -1548,7 +1548,7 @@ entry:
 define dso_local <2 x i32> @sbfswps(<2 x i32> %a, i32 %b) local_unnamed_addr #0 {
 ; CHECK-LABEL: sbfswps:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r1 = $r1, 577588855662969345
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x804020108040201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfswp $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -1565,7 +1565,7 @@ entry:
 define dso_local <4 x i32> @sbfswqs(<4 x i32> %a, i32 %b) local_unnamed_addr #2 {
 ; CHECK-LABEL: sbfswqs:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r2 = $r2, 577588855662969345
+; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x804020108040201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfswp $r0 = $r0, $r2
 ; CHECK-NEXT:    sbfswp $r1 = $r1, $r2
@@ -1587,7 +1587,7 @@ entry:
 define dso_local <8 x i32> @sbfswos(<8 x i32> %a, i32 %b) local_unnamed_addr #3 {
 ; CHECK-LABEL: sbfswos:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r4 = $r4, 577588855662969345
+; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x804020108040201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfswp $r0 = $r0, $r4
 ; CHECK-NEXT:    sbfswp $r1 = $r1, $r4
@@ -1875,7 +1875,7 @@ entry:
 define dso_local <4 x i16> @minhqs(<4 x i16> %a, i16 %b) local_unnamed_addr #0 {
 ; CHECK-LABEL: minhqs:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r1 = $r1, 144398866404409857
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x201020102010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    minhq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -1892,7 +1892,7 @@ entry:
 define dso_local <8 x i16> @minhos(<8 x i16> %a, i16 %b) local_unnamed_addr #2 {
 ; CHECK-LABEL: minhos:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r2 = $r2, 144398866404409857
+; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x201020102010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    minhq $r0 = $r0, $r2
 ; CHECK-NEXT:    minhq $r1 = $r1, $r2
@@ -1914,7 +1914,7 @@ entry:
 define dso_local <16 x i16> @minhxs(<16 x i16> %a, i16 %b) local_unnamed_addr #3 {
 ; CHECK-LABEL: minhxs:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r4 = $r4, 144398866404409857
+; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x201020102010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    minhq $r0 = $r0, $r4
 ; CHECK-NEXT:    minhq $r1 = $r1, $r4
@@ -1946,7 +1946,7 @@ entry:
 define dso_local <2 x i32> @minwps(<2 x i32> %a, i32 %b) local_unnamed_addr #0 {
 ; CHECK-LABEL: minwps:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r1 = $r1, 577588855662969345
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x804020108040201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    minwp $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -1963,7 +1963,7 @@ entry:
 define dso_local <4 x i32> @minwqs(<4 x i32> %a, i32 %b) local_unnamed_addr #2 {
 ; CHECK-LABEL: minwqs:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r2 = $r2, 577588855662969345
+; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x804020108040201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    minwp $r0 = $r0, $r2
 ; CHECK-NEXT:    minwp $r1 = $r1, $r2
@@ -1985,7 +1985,7 @@ entry:
 define dso_local <8 x i32> @minwos(<8 x i32> %a, i32 %b) local_unnamed_addr #3 {
 ; CHECK-LABEL: minwos:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r4 = $r4, 577588855662969345
+; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x804020108040201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    minwp $r0 = $r0, $r4
 ; CHECK-NEXT:    minwp $r1 = $r1, $r4
@@ -2271,7 +2271,7 @@ entry:
 define dso_local <4 x i16> @maxhqs(<4 x i16> %a, i16 %b) local_unnamed_addr #0 {
 ; CHECK-LABEL: maxhqs:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r1 = $r1, 144398866404409857
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x201020102010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    maxhq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -2288,7 +2288,7 @@ entry:
 define dso_local <8 x i16> @maxhos(<8 x i16> %a, i16 %b) local_unnamed_addr #2 {
 ; CHECK-LABEL: maxhos:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r2 = $r2, 144398866404409857
+; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x201020102010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    maxhq $r0 = $r0, $r2
 ; CHECK-NEXT:    maxhq $r1 = $r1, $r2
@@ -2310,7 +2310,7 @@ entry:
 define dso_local <16 x i16> @maxhxs(<16 x i16> %a, i16 %b) local_unnamed_addr #3 {
 ; CHECK-LABEL: maxhxs:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r4 = $r4, 144398866404409857
+; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x201020102010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    maxhq $r0 = $r0, $r4
 ; CHECK-NEXT:    maxhq $r1 = $r1, $r4
@@ -2342,7 +2342,7 @@ entry:
 define dso_local <2 x i32> @maxwps(<2 x i32> %a, i32 %b) local_unnamed_addr #0 {
 ; CHECK-LABEL: maxwps:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r1 = $r1, 577588855662969345
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x804020108040201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    maxwp $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -2359,7 +2359,7 @@ entry:
 define dso_local <4 x i32> @maxwqs(<4 x i32> %a, i32 %b) local_unnamed_addr #2 {
 ; CHECK-LABEL: maxwqs:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r2 = $r2, 577588855662969345
+; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x804020108040201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    maxwp $r0 = $r0, $r2
 ; CHECK-NEXT:    maxwp $r1 = $r1, $r2
@@ -2381,7 +2381,7 @@ entry:
 define dso_local <8 x i32> @maxwos(<8 x i32> %a, i32 %b) local_unnamed_addr #3 {
 ; CHECK-LABEL: maxwos:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r4 = $r4, 577588855662969345
+; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x804020108040201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    maxwp $r0 = $r0, $r4
 ; CHECK-NEXT:    maxwp $r1 = $r1, $r4
@@ -2691,7 +2691,7 @@ entry:
 define dso_local <4 x i16> @minuhqs(<4 x i16> %a, i16 %b) local_unnamed_addr #0 {
 ; CHECK-LABEL: minuhqs:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r1 = $r1, 144398866404409857
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x201020102010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    minuhq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -2708,7 +2708,7 @@ entry:
 define dso_local <8 x i16> @minuhos(<8 x i16> %a, i16 %b) local_unnamed_addr #2 {
 ; CHECK-LABEL: minuhos:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r2 = $r2, 144398866404409857
+; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x201020102010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    minuhq $r0 = $r0, $r2
 ; CHECK-NEXT:    minuhq $r1 = $r1, $r2
@@ -2730,7 +2730,7 @@ entry:
 define dso_local <16 x i16> @minuhxs(<16 x i16> %a, i16 %b) local_unnamed_addr #3 {
 ; CHECK-LABEL: minuhxs:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r4 = $r4, 144398866404409857
+; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x201020102010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    minuhq $r0 = $r0, $r4
 ; CHECK-NEXT:    minuhq $r1 = $r1, $r4
@@ -2762,7 +2762,7 @@ entry:
 define dso_local <2 x i32> @minuwps(<2 x i32> %a, i32 %b) local_unnamed_addr #0 {
 ; CHECK-LABEL: minuwps:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r1 = $r1, 577588855662969345
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x804020108040201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    minuwp $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -2779,7 +2779,7 @@ entry:
 define dso_local <4 x i32> @minuwqs(<4 x i32> %a, i32 %b) local_unnamed_addr #2 {
 ; CHECK-LABEL: minuwqs:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r2 = $r2, 577588855662969345
+; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x804020108040201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    minuwp $r0 = $r0, $r2
 ; CHECK-NEXT:    minuwp $r1 = $r1, $r2
@@ -2801,7 +2801,7 @@ entry:
 define dso_local <8 x i32> @minuwos(<8 x i32> %a, i32 %b) local_unnamed_addr #3 {
 ; CHECK-LABEL: minuwos:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r4 = $r4, 577588855662969345
+; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x804020108040201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    minuwp $r0 = $r0, $r4
 ; CHECK-NEXT:    minuwp $r1 = $r1, $r4
@@ -3087,7 +3087,7 @@ entry:
 define dso_local <4 x i16> @maxuhqs(<4 x i16> %a, i16 %b) local_unnamed_addr #0 {
 ; CHECK-LABEL: maxuhqs:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r1 = $r1, 144398866404409857
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x201020102010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    maxuhq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -3104,7 +3104,7 @@ entry:
 define dso_local <8 x i16> @maxuhos(<8 x i16> %a, i16 %b) local_unnamed_addr #2 {
 ; CHECK-LABEL: maxuhos:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r2 = $r2, 144398866404409857
+; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x201020102010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    maxuhq $r0 = $r0, $r2
 ; CHECK-NEXT:    maxuhq $r1 = $r1, $r2
@@ -3126,7 +3126,7 @@ entry:
 define dso_local <16 x i16> @maxuhxs(<16 x i16> %a, i16 %b) local_unnamed_addr #3 {
 ; CHECK-LABEL: maxuhxs:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r4 = $r4, 144398866404409857
+; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x201020102010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    maxuhq $r0 = $r0, $r4
 ; CHECK-NEXT:    maxuhq $r1 = $r1, $r4
@@ -3158,7 +3158,7 @@ entry:
 define dso_local <2 x i32> @maxuwps(<2 x i32> %a, i32 %b) local_unnamed_addr #0 {
 ; CHECK-LABEL: maxuwps:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r1 = $r1, 577588855662969345
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x804020108040201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    maxuwp $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -3175,7 +3175,7 @@ entry:
 define dso_local <4 x i32> @maxuwqs(<4 x i32> %a, i32 %b) local_unnamed_addr #2 {
 ; CHECK-LABEL: maxuwqs:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r2 = $r2, 577588855662969345
+; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x804020108040201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    maxuwp $r0 = $r0, $r2
 ; CHECK-NEXT:    maxuwp $r1 = $r1, $r2
@@ -3197,7 +3197,7 @@ entry:
 define dso_local <8 x i32> @maxuwos(<8 x i32> %a, i32 %b) local_unnamed_addr #3 {
 ; CHECK-LABEL: maxuwos:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r4 = $r4, 577588855662969345
+; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x804020108040201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    maxuwp $r0 = $r0, $r4
 ; CHECK-NEXT:    maxuwp $r1 = $r1, $r4
@@ -5538,7 +5538,7 @@ define dso_local <2 x float> @fminwps(<2 x float> %v1, float %v2) local_unnamed_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedd.rz $r1 = $r1, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r1 = $r1, 577588855662969345
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x804020108040201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fminwp $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -5562,7 +5562,7 @@ define dso_local <4 x float> @fminwqs(<4 x float> %v1, float %v2) local_unnamed_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedd.rz $r2 = $r2, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r2 = $r2, 577588855662969345
+; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x804020108040201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fminwp $r0 = $r0, $r2
 ; CHECK-NEXT:    fminwp $r1 = $r1, $r2
@@ -5588,7 +5588,7 @@ define dso_local <8 x float> @fminwos(<8 x float> %v1, float %v2) local_unnamed_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedd.rz $r4 = $r4, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r4 = $r4, 577588855662969345
+; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x804020108040201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fminwp $r0 = $r0, $r4
 ; CHECK-NEXT:    fminwp $r1 = $r1, $r4
@@ -5673,7 +5673,7 @@ define dso_local <2 x float> @fmaxwps(<2 x float> %v1, float %v2) local_unnamed_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedd.rz $r1 = $r1, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r1 = $r1, 577588855662969345
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x804020108040201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmaxwp $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -5697,7 +5697,7 @@ define dso_local <4 x float> @fmaxwqs(<4 x float> %v1, float %v2) local_unnamed_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedd.rz $r2 = $r2, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r2 = $r2, 577588855662969345
+; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x804020108040201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmaxwp $r0 = $r0, $r2
 ; CHECK-NEXT:    fmaxwp $r1 = $r1, $r2
@@ -5723,7 +5723,7 @@ define dso_local <8 x float> @fmaxwos(<8 x float> %v1, float %v2) local_unnamed_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedd.rz $r4 = $r4, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r4 = $r4, 577588855662969345
+; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x804020108040201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmaxwp $r0 = $r0, $r4
 ; CHECK-NEXT:    fmaxwp $r1 = $r1, $r4
