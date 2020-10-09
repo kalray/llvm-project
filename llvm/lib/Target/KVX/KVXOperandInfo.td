@@ -16,7 +16,7 @@
 def Pcrel27 : Operand<iPTR> {}
 def Pcrel17 : Operand<iPTR> {}
 def Sysnumber : Operand<i32>, ImmLeaf<i32, [{return isInt<12>(Imm);}]>;
-def Unsigned6 : Operand<i64>, ImmLeaf<i64, [{return isInt<6>(Imm);}]>;
+def Unsigned6 : Operand<i64>, ImmLeaf<i64, [{return isUInt<6>(Imm);}]>;
 def Signed6 : Operand<i64>, ImmLeaf<i64, [{return isInt<6>(Imm);}]>;
 def Signed10 : Operand<i64>, ImmLeaf<i64, [{return isInt<10>(Imm);}]>;
 def Signed12 : Operand<i64>, ImmLeaf<i64, [{return isInt<12>(Imm);}]>;
