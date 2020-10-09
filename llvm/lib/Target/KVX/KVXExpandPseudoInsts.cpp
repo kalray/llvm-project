@@ -170,13 +170,13 @@ static bool expandSelectInstr(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
             .addImm(immVal);
       }
       if (MI.getOperand(3).isFPImm()) {
-        int64_t immVal = MI.getOperand(3)
-                             .getFPImm()
-                             ->getValueAPF()
-                             .bitcastToAPInt()
-                             .getZExtValue();
-        BuildMI(MBB, MBBI, DL, TII->get(GetImmMakeOpCode(immVal)), DestCompReg)
-            .addImm(immVal);
+        unsigned MAKEi;
+        if (MI.getOperand(3).getFPImm()->getType()->isDoubleTy())
+          MAKEi = KVX::MAKEi64;
+        else
+          MAKEi = KVX::MAKEi43;
+        BuildMI(MBB, MBBI, DL, TII->get(MAKEi), DestCompReg)
+            .addFPImm(MI.getOperand(3).getFPImm());
       }
       if (MI.getOperand(3).isGlobal()) {
         BuildMI(MBB, MBBI, DL, TII->get(KVX::MAKEi64), DestCompReg)
