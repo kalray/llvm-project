@@ -1,10 +1,6 @@
 // RUN: clang -target kvx-cos -S %s -O2 -o - | FileCheck %s
 
-#ifndef __cplusplus
-#define bool _Bool
-#define true 1
-#define false 0
-#endif
+typedef _Bool bool;
 
 long g1;
 long g2;
@@ -87,7 +83,7 @@ double gf1;
 double gf2;
 
 double FloatTernaryRegImm(bool value, double v1) {
-  return value ? v1 : 4.0f;
+  return value ? v1 : 4.0;
   // CHECK: FloatTernaryRegImm
   // CHECK: copyd $r2 = $r1
   // CHECK: cmoved.weqz $r0 ? $r2 = 0x4010000000000000
@@ -109,9 +105,9 @@ double FloatTernaryRegReg(bool value, double v1, double v2) {
 }
 
 double FloatTernaryImmImm(bool value) {
-  return value ? 3.0f : 7.0f;
+  return value ? 3.0 : 7.0;
   // CHECK: FloatTernaryImmImm
-  // CHECK: make $r0 = 4613937818241073152
+  // CHECK: make $r0 = 0x4008000000000000
   // CHECK: cmoved.weqz $r1 ? $r0 = 0x401c000000000000
   // CHECK: ret
 }
@@ -125,7 +121,7 @@ double FloatTernaryGlobalGlobal(bool value) {
 }
 
 double FloatTernaryGlobalImm(bool value) {
-  return value ? gf1 : 3.0f;
+  return value ? gf1 : 3.0;
   // CHECK: FloatTernaryGlobalImm
   // CHECK: make $r1 = gf1
   // CHECK: ld $r1 = 0[$r1]
@@ -369,7 +365,7 @@ long Int64TernaryCond8(long v) {
 float FloatTernaryCond1(int v) {
   return v == 0 ? 5.0f : 7.0f;
   // CHECK: FloatTernaryCond1
-  // CHECK: make $r0 = 1084227584
+  // CHECK: make $r0 = 0x40a00000
   // CHECK: cmoved.wnez $r1 ? $r0 = 0x40e00000
   // CHECK: ret
 }
@@ -377,7 +373,7 @@ float FloatTernaryCond1(int v) {
 float FloatTernaryCond2(int v) {
   return v != 0 ? 5.0f : 7.0f;
   // CHECK: FloatTernaryCond2
-  // CHECK: make $r0 = 1088421888
+  // CHECK: make $r0 = 0x40e00000
   // CHECK: cmoved.wnez $r1 ? $r0 = 0x40a00000
   // CHECK: ret
 }
@@ -385,7 +381,7 @@ float FloatTernaryCond2(int v) {
 float FloatTernaryCond3(int v) {
   return v < 0 ? 5.0f : 7.0f;
   // CHECK: FloatTernaryCond3
-  // CHECK: make $r0 = 1084227584
+  // CHECK: make $r0 = 0x40a00000
   // CHECK: cmoved.wgez $r1 ? $r0 = 0x40e00000
   // CHECK: ret
 }
@@ -393,7 +389,7 @@ float FloatTernaryCond3(int v) {
 float FloatTernaryCond4(int v) {
   return v >= 0 ? 5.0f : 7.0f;
   // CHECK: FloatTernaryCond4
-  // CHECK: make $r0 = 1084227584
+  // CHECK: make $r0 = 0x40a00000
   // CHECK: cmoved.wltz $r1 ? $r0 = 0x40e00000
   // CHECK: ret
 }
@@ -401,7 +397,7 @@ float FloatTernaryCond4(int v) {
 float FloatTernaryCond5(int v) {
   return v <= 0 ? 5.0f : 7.0f;
   // CHECK: FloatTernaryCond5
-  // CHECK: make $r0 = 1084227584
+  // CHECK: make $r0 = 0x40a00000
   // CHECK: cmoved.wgtz $r1 ? $r0 = 0x40e00000
   // CHECK: ret
 }
@@ -409,7 +405,7 @@ float FloatTernaryCond5(int v) {
 float FloatTernaryCond6(int v) {
   return v > 0 ? 5.0f : 7.0f;
   // CHECK: FloatTernaryCond6
-  // CHECK: make $r0 = 1084227584
+  // CHECK: make $r0 = 0x40a00000
   // CHECK: cmoved.wlez $r1 ? $r0 = 0x40e00000
   // CHECK: ret
 }
@@ -417,7 +413,7 @@ float FloatTernaryCond6(int v) {
 float FloatTernaryCond7(int v) {
   return (v & 1) == 0 ? 5.0f : 7.0f;
   // CHECK: FloatTernaryCond7
-  // CHECK: make $r0 = 1084227584
+  // CHECK: make $r0 = 0x40a00000
   // CHECK: cmoved.odd $r1 ? $r0 = 0x40e00000
   // CHECK: ret
 }
@@ -425,7 +421,7 @@ float FloatTernaryCond7(int v) {
 float FloatTernaryCond8(int v) {
   return (v & 1) == 1 ? 5.0f : 7.0f;
   // CHECK: FloatTernaryCond8
-  // CHECK: make $r0 = 1088421888
+  // CHECK: make $r0 = 0x40e00000
   // CHECK: cmoved.odd $r1 ? $r0 = 0x40a00000
   // CHECK: ret
 }
@@ -433,7 +429,7 @@ float FloatTernaryCond8(int v) {
 double DoubleTernaryCond1(int v) {
   return v == 0 ? 5.0 : 7.0;
   // CHECK: DoubleTernaryCond1
-  // CHECK: make $r0 = 4617315517961601024
+  // CHECK: make $r0 = 0x4014000000000000
   // CHECK: cmoved.wnez $r1 ? $r0 = 0x401c000000000000
   // CHECK: ret
 }
@@ -441,7 +437,7 @@ double DoubleTernaryCond1(int v) {
 double DoubleTernaryCond2(int v) {
   return v != 0 ? 5.0 : 7.0;
   // CHECK: DoubleTernaryCond2
-  // CHECK: make $r0 = 4619567317775286272
+  // CHECK: make $r0 = 0x401c000000000000
   // CHECK: cmoved.wnez $r1 ? $r0 = 0x4014000000000000
   // CHECK: ret
 }
@@ -449,7 +445,7 @@ double DoubleTernaryCond2(int v) {
 double DoubleTernaryCond3(int v) {
   return v < 0 ? 5.0 : 7.0;
   // CHECK: DoubleTernaryCond3
-  // CHECK: make $r0 = 4617315517961601024
+  // CHECK: make $r0 = 0x4014000000000000
   // CHECK: cmoved.wgez $r1 ? $r0 = 0x401c000000000000
   // CHECK: ret
 }
@@ -457,7 +453,7 @@ double DoubleTernaryCond3(int v) {
 double DoubleTernaryCond4(int v) {
   return v >= 0 ? 5.0 : 7.0;
   // CHECK: DoubleTernaryCond4
-  // CHECK: make $r0 = 4617315517961601024
+  // CHECK: make $r0 = 0x4014000000000000
   // CHECK: cmoved.wltz $r1 ? $r0 = 0x401c000000000000
   // CHECK: ret
 }
@@ -465,7 +461,7 @@ double DoubleTernaryCond4(int v) {
 double DoubleTernaryCond5(int v) {
   return v <= 0 ? 5.0 : 7.0;
   // CHECK: DoubleTernaryCond5
-  // CHECK: make $r0 = 4617315517961601024
+  // CHECK: make $r0 = 0x4014000000000000
   // CHECK: cmoved.wgtz $r1 ? $r0 = 0x401c000000000000
   // CHECK: ret
 }
@@ -473,7 +469,7 @@ double DoubleTernaryCond5(int v) {
 double DoubleTernaryCond6(int v) {
   return v > 0 ? 5.0 : 7.0;
   // CHECK: DoubleTernaryCond6
-  // CHECK: make $r0 = 4617315517961601024
+  // CHECK: make $r0 = 0x4014000000000000
   // CHECK: cmoved.wlez $r1 ? $r0 = 0x401c000000000000
   // CHECK: ret
 }
@@ -481,7 +477,7 @@ double DoubleTernaryCond6(int v) {
 double DoubleTernaryCond7(int v) {
   return (v & 1) == 0 ? 5.0 : 7.0;
   // CHECK: DoubleTernaryCond7
-  // CHECK: make $r0 = 4617315517961601024
+  // CHECK: make $r0 = 0x4014000000000000
   // CHECK: cmoved.odd $r1 ? $r0 = 0x401c000000000000
   // CHECK: ret
 }
@@ -489,7 +485,7 @@ double DoubleTernaryCond7(int v) {
 double DoubleTernaryCond8(int v) {
   return (v & 1) == 1 ? 5.0 : 7.0;
   // CHECK: DoubleTernaryCond8
-  // CHECK: make $r0 = 4619567317775286272
+  // CHECK: make $r0 = 0x401c000000000000
   // CHECK: cmoved.odd $r1 ? $r0 = 0x4014000000000000
   // CHECK: ret
 }
