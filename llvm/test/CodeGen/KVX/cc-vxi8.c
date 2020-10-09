@@ -20,12 +20,12 @@ void foo() {
   bar4(v4);
   bar8(v8);
   // CHECK-LABEL: foo:
-  // CHECK: make $r0 = 64251
+  // CHECK: make $r0 = 0xfafb
   // CHECK: call bar2
-  // CHECK: orw $r0 = $r0, 16382715
+  // CHECK: orw $r0 = $r0, 0xf9fafb
   // CHECK: call bar3
-  // CHECK: make $r0 = 4177132283
+  // CHECK: make $r0 = 0xf8f9fafb
   // CHECK: call bar4
-  // CHECK: make $r0 = -795458214266537221
+  // CHECK: make $r0 = 0xf4f5f6f7f8f9fafb
   // CHECK: goto bar8
 }

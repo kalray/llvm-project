@@ -6,7 +6,7 @@ v2i16 sri_v2i16(v2i16 a) {
   v2i16 s = a >> 3;
   return s;
   // CHECK-LABEL: sri_v2i16:
-  // CHECK: make $r1 = 196611
+  // CHECK: make $r1 = 0x30003
   // CHECK: srahqs $r0 = $r0, $r1
   // CHECK: ret
 }
@@ -15,7 +15,7 @@ v2i16 sli_v2i16(v2i16 a) {
   v2i16 s = a << 3;
   return s;
   // CHECK-LABEL: sli_v2i16:
-  // CHECK: make $r1 = 196611
+  // CHECK: make $r1 = 0x30003
   // CHECK: sllhqs $r0 = $r0, $r1
   // CHECK: ret
 }

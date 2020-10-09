@@ -36,35 +36,35 @@ define i64 @cbsd(i64 %a) {
 define <2 x i16> @ctpopv2i16(<2 x i16> %a) {
 ; CHECK-LABEL: ctpopv2i16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r1 = 65537
-; CHECK-NEXT:    make $r2 = 1431655765
+; CHECK-NEXT:    make $r1 = 0x10001
+; CHECK-NEXT:    make $r2 = 0x55555555
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srlhqs $r1 = $r0, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    andw $r1 = $r1, $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfhq $r0 = $r1, $r0
-; CHECK-NEXT:    make $r1 = 858993459
-; CHECK-NEXT:    make $r3 = 131074
+; CHECK-NEXT:    make $r1 = 0x33333333
+; CHECK-NEXT:    make $r3 = 0x20002
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    andw $r2 = $r0, $r1
 ; CHECK-NEXT:    srlhqs $r0 = $r0, $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    andw $r0 = $r0, $r1
-; CHECK-NEXT:    make $r1 = 262148
+; CHECK-NEXT:    make $r1 = 0x40004
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addhq $r0 = $r2, $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srlhqs $r1 = $r0, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addhq $r0 = $r0, $r1
-; CHECK-NEXT:    make $r1 = 252645135
+; CHECK-NEXT:    make $r1 = 0xf0f0f0f
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    andw $r0 = $r0, $r1
-; CHECK-NEXT:    make $r1 = 16843009
+; CHECK-NEXT:    make $r1 = 0x1010101
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mulhq $r0 = $r0, $r1
-; CHECK-NEXT:    make $r1 = 524296
+; CHECK-NEXT:    make $r1 = 0x80008
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srlhqs $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
