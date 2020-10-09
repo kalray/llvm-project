@@ -37,9 +37,9 @@ define <2 x i16> @ctpopv2i16(<2 x i16> %a) {
 ; CHECK-LABEL: ctpopv2i16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r1 = 65537
+; CHECK-NEXT:    make $r2 = 1431655765
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srlhqs $r1 = $r0, $r1
-; CHECK-NEXT:    make $r2 = 1431655765
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    andw $r1 = $r1, $r2
 ; CHECK-NEXT:    ;;
