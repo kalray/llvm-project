@@ -215,7 +215,6 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::CONCAT_VECTORS, VT, Custom);
   }
 
-  setOperationAction(ISD::EXTRACT_SUBVECTOR, MVT::v2f32, Expand);
   setOperationAction(ISD::EXTRACT_SUBVECTOR, MVT::v2i32, Expand);
 
   setOperationAction(ISD::MULHU, MVT::v2i32, Expand);
@@ -351,12 +350,8 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::UINT_TO_FP, VT, Expand);
   }
 
-  setOperationAction(ISD::FP_ROUND, MVT::v4f16, Expand);
-  setOperationAction(ISD::FP_ROUND, MVT::v2f16, Expand);
   setOperationAction(ISD::FP_ROUND, MVT::v2f32, Expand);
   setOperationAction(ISD::FP_ROUND, MVT::v4f32, Expand);
-  setOperationAction(ISD::FP_EXTEND, MVT::v2f32, Expand);
-  setOperationAction(ISD::FP_EXTEND, MVT::v4f32, Expand);
   setOperationAction(ISD::FP_EXTEND, MVT::v2f64, Expand);
   setOperationAction(ISD::FP_EXTEND, MVT::v4f64, Expand);
 
