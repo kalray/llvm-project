@@ -10,14 +10,14 @@ int imm10(int *p) {
 int imm37(int *p) {
   return *(p + 0xffffffff);
   // CHECK-LABEL: imm37:
-  // CHECK-NEXT: lwz $r0 = 17179869180[$r0]
+  // CHECK-NEXT: lwz $r0 = 0x3fffffffc[$r0]
   // CHECK-NEXT: ret
 }
 
 int imm64(int *p) {
   return *(p + 0xffffffffffff);
   // CHECK-LABEL: imm64:
-  // CHECK-NEXT: lwz $r0 = 1125899906842620[$r0]
+  // CHECK-NEXT: lwz $r0 = 0x3fffffffffffc[$r0]
   // CHECK-NEXT: ret
 }
 

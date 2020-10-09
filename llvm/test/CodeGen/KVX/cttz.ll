@@ -63,8 +63,8 @@ define <2 x i16> @cttzv2i16(<2 x i16> %a) {
 ; CHECK-NEXT:    srlw $r1 = $r0, 16
 ; CHECK-NEXT:    zxhd $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    orw $r1 = $r1, 65536
-; CHECK-NEXT:    orw $r0 = $r0, 65536
+; CHECK-NEXT:    orw $r1 = $r1, 0x10000
+; CHECK-NEXT:    orw $r0 = $r0, 0x10000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ctzw $r1 = $r1
 ; CHECK-NEXT:    ctzw $r0 = $r0

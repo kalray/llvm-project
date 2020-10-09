@@ -10,14 +10,14 @@ void imm10(int *p, int a) {
 void imm37(int *p, int a) {
   *(p + 0xffffffff) = a;
   // CHECK-LABEL: imm37:
-  // CHECK-NEXT: sw 17179869180[$r0] = $r1
+  // CHECK-NEXT: sw 0x3fffffffc[$r0] = $r1
   // CHECK-NEXT: ret
 }
 
 void imm64(int *p, int a) {
   *(p + 0xffffffffffff) = a;
   // CHECK-LABEL: imm64:
-  // CHECK-NEXT: sw 1125899906842620[$r0] = $r1
+  // CHECK-NEXT: sw 0x3fffffffffffc[$r0] = $r1
   // CHECK-NEXT: ret
 }
 
@@ -34,7 +34,7 @@ v4i test0(v4i v, unsigned char i) {
   return v;
   // CHECK-LABEL: test0
   // CHECK: andd $r0 = $r2, 3
-  // CHECK: make $r1 = 4294967291
+  // CHECK: make $r1 = 0xfffffffb
   // CHECK: addd $r2 = $r12, 16
 
   // CHECK: sw.xs $r0[$r2] = $r1

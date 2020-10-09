@@ -7,7 +7,7 @@ define i16 @bswapi16(i16 %a) {
 ; CHECK-NEXT:    sllw $r1 = $r0, 24
 ; CHECK-NEXT:    sllw $r0 = $r0, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r0 = $r0, 16711680
+; CHECK-NEXT:    andw $r0 = $r0, 0xff0000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    orw $r0 = $r1, $r0
 ; CHECK-NEXT:    ;;
@@ -24,13 +24,13 @@ define i32 @bswapi32(i32 %a) {
 ; CHECK-NEXT:    srlw $r1 = $r0, 24
 ; CHECK-NEXT:    srlw $r2 = $r0, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r2 = $r2, 65280
+; CHECK-NEXT:    andw $r2 = $r2, 0xff00
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    orw $r1 = $r2, $r1
 ; CHECK-NEXT:    sllw $r2 = $r0, 24
 ; CHECK-NEXT:    sllw $r0 = $r0, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r0 = $r0, 16711680
+; CHECK-NEXT:    andw $r0 = $r0, 0xff0000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    orw $r0 = $r2, $r0
 ; CHECK-NEXT:    ;;
@@ -47,29 +47,29 @@ define i64 @bswapi64(i64 %a) {
 ; CHECK-NEXT:    srld $r1 = $r0, 56
 ; CHECK-NEXT:    srld $r2 = $r0, 40
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r2 = $r2, 65280
+; CHECK-NEXT:    andd $r2 = $r2, 0xff00
 ; CHECK-NEXT:    srld $r3 = $r0, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r3 = $r3, 4278190080
+; CHECK-NEXT:    andd $r3 = $r3, 0xff000000
 ; CHECK-NEXT:    ord $r1 = $r2, $r1
 ; CHECK-NEXT:    srld $r2 = $r0, 24
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r2 = $r2, 16711680
+; CHECK-NEXT:    andd $r2 = $r2, 0xff0000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r2 = $r3, $r2
 ; CHECK-NEXT:    slld $r3 = $r0, 24
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r1 = $r2, $r1
 ; CHECK-NEXT:    slld $r2 = $r0, 8
-; CHECK-NEXT:    andd $r3 = $r3, 280375465082880
+; CHECK-NEXT:    andd $r3 = $r3, 0xff0000000000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r2 = $r2, 1095216660480
+; CHECK-NEXT:    andd $r2 = $r2, 0xff00000000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r2 = $r3, $r2
 ; CHECK-NEXT:    slld $r3 = $r0, 56
 ; CHECK-NEXT:    slld $r0 = $r0, 40
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 71776119061217280
+; CHECK-NEXT:    andd $r0 = $r0, 0xff000000000000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r0 = $r3, $r0
 ; CHECK-NEXT:    ;;
