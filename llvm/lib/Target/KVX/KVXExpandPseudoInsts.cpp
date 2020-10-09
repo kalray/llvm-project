@@ -1118,45 +1118,45 @@ bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
     return expandASWAP(TII, MBB, MBBI, NextMBBI);
   case KVX::ATASp:
     return expandATAS(TII, MBB, MBBI, NextMBBI);
-  case KVX::GET_Instr:
+  case KVX::GETp:
     expandGetInstr(TII, MBB, MBBI);
     return true;
-  case KVX::WFXL_Instr:
+  case KVX::WFXLp:
     expandSystemRegValueInstr(KVX::WFXLrst4, TII, MBB, MBBI);
     return true;
-  case KVX::WFXM_Instr:
+  case KVX::WFXMp:
     expandSystemRegValueInstr(KVX::WFXMrst4, TII, MBB, MBBI);
     return true;
-  case KVX::SET_Instr:
+  case KVX::SETp:
     expandSystemRegValueInstr(KVX::SETrst4, TII, MBB, MBBI);
     return true;
-  case KVX::FMULWCP_Instr:
+  case KVX::FMULWCPp:
     expandRoundingPairInstrOpcodes(KVX::FMULWCrr, KVX::FMULWCrr, TII, MBB,
                                    MBBI);
     return true;
-  case KVX::FMULCWCP_Instr:
+  case KVX::FMULCWCPp:
     expandRoundingPairInstrOpcodes(KVX::FMULCWCrr, KVX::FMULCWCrr, TII, MBB,
                                    MBBI);
     return true;
-  case KVX::FMULDP_Instr:
+  case KVX::FMULDPp:
     expandRoundingPairInstrOpcodes(KVX::FMULDrr, KVX::FMULDrr, TII, MBB, MBBI);
     return true;
-  case KVX::FMULDC_Instr:
+  case KVX::FMULDCp:
     expandFMULDCInstr(TII, MBB, MBBI);
     return true;
-  case KVX::FMULCDC_Instr:
+  case KVX::FMULCDCp:
     expandFMULCDCInstr(TII, MBB, MBBI);
     return true;
-  case KVX::FFMAWQ_Instr:
+  case KVX::FFMAWQp:
     expandRoundingPairedRegInOutInstr(KVX::FFMAWPrr, TII, MBB, MBBI);
     return true;
-  case KVX::FFMADP_Instr:
+  case KVX::FFMADPp:
     expandRoundingPairedRegInOutInstr(KVX::FFMADrr, TII, MBB, MBBI);
     return true;
-  case KVX::FFMSWQ_Instr:
+  case KVX::FFMSWQp:
     expandRoundingPairedRegInOutInstr(KVX::FFMSWPrr, TII, MBB, MBBI);
     return true;
-  case KVX::FFMSDP_Instr:
+  case KVX::FFMSDPp:
     expandRoundingPairedRegInOutInstr(KVX::FFMSDrr, TII, MBB, MBBI);
     return true;
   case KVX::SBp:
