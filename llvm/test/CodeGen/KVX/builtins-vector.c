@@ -57,24 +57,24 @@ v2i32 cbswp(v2i32 v) {
   return __builtin_kvx_cbswp(v);
 }
 
-v4i16 cmovehq(v4i16 v1, v4i16 v2, v4i16 c) {
-  return __builtin_kvx_cmovehq(v1, v2, c, ".nez");
-  // CHECK-LABEL: cmovehq:
+v4i16 selecthq(v4i16 v1, v4i16 v2, v4i16 c) {
+  return __builtin_kvx_selecthq(v1, v2, c, ".nez");
+  // CHECK-LABEL: selecthq:
   // CHECK: cmovehq.nez $r2 ? $r0 = $r1
   // CHECK: ret
 }
 
-v8i16 cmoveho(v8i16 v1, v8i16 v2, v8i16 c) {
-  return __builtin_kvx_cmoveho(v1, v2, c, ".nez");
-  // CHECK-LABEL: cmoveho:
+v8i16 selectho(v8i16 v1, v8i16 v2, v8i16 c) {
+  return __builtin_kvx_selectho(v1, v2, c, ".nez");
+  // CHECK-LABEL: selectho:
   // CHECK: cmovehq.nez $r4 ? $r0 = $r2
   // CHECK: cmovehq.nez $r5 ? $r1 = $r3
   // CHECK: ret
 }
 
-v16i16 cmovehx(v16i16 v1, v16i16 v2, v16i16 c) {
-  return __builtin_kvx_cmovehx(v1, v2, c, ".nez");
-  // CHECK-LABEL: cmovehx:
+v16i16 selecthx(v16i16 v1, v16i16 v2, v16i16 c) {
+  return __builtin_kvx_selecthx(v1, v2, c, ".nez");
+  // CHECK-LABEL: selecthx:
   // CHECK: cmovehq.nez $r8 ? $r0 = $r4
   // CHECK: cmovehq.nez $r9 ? $r1 = $r5
   // CHECK: cmovehq.nez $r10 ? $r2 = $r6
@@ -82,24 +82,24 @@ v16i16 cmovehx(v16i16 v1, v16i16 v2, v16i16 c) {
   // CHECK: ret
 }
 
-v2i32 cmovewp(v2i32 v1, v2i32 v2, v2i32 c) {
-  return __builtin_kvx_cmovewp(v1, v2, c, ".nez");
-  // CHECK-LABEL: cmovewp:
+v2i32 selectwp(v2i32 v1, v2i32 v2, v2i32 c) {
+  return __builtin_kvx_selectwp(v1, v2, c, ".nez");
+  // CHECK-LABEL: selectwp:
   // CHECK: cmovewp.nez $r2 ? $r0 = $r1
   // CHECK: ret
 }
 
-v4i32 cmovewq(v4i32 v1, v4i32 v2, v4i32 c) {
-  return __builtin_kvx_cmovewq(v1, v2, c, ".nez");
-  // CHECK-LABEL: cmovewq:
+v4i32 selectwq(v4i32 v1, v4i32 v2, v4i32 c) {
+  return __builtin_kvx_selectwq(v1, v2, c, ".nez");
+  // CHECK-LABEL: selectwq:
   // CHECK: cmovewp.nez $r4 ? $r0 = $r2
   // CHECK: cmovewp.nez $r5 ? $r1 = $r3
   // CHECK: ret
 }
 
-v8i32 cmovewo(v8i32 v1, v8i32 v2, v8i32 c) {
-  return __builtin_kvx_cmovewo(v1, v2, c, ".nez");
-  // CHECK-LABEL: cmovewo:
+v8i32 selectwo(v8i32 v1, v8i32 v2, v8i32 c) {
+  return __builtin_kvx_selectwo(v1, v2, c, ".nez");
+  // CHECK-LABEL: selectwo:
   // CHECK: cmovewp.nez $r8 ? $r0 = $r4
   // CHECK: cmovewp.nez $r9 ? $r1 = $r5
   // CHECK: cmovewp.nez $r10 ? $r2 = $r6
@@ -107,17 +107,17 @@ v8i32 cmovewo(v8i32 v1, v8i32 v2, v8i32 c) {
   // CHECK: ret
 }
 
-v2i64 cmovedp(v2i64 v1, v2i64 v2, v2i64 c) {
-  return __builtin_kvx_cmovedp(v1, v2, c, ".nez");
-  // CHECK-LABEL: cmovedp:
+v2i64 selectdp(v2i64 v1, v2i64 v2, v2i64 c) {
+  return __builtin_kvx_selectdp(v1, v2, c, ".nez");
+  // CHECK-LABEL: selectdp:
   // CHECK: cmoved.dnez $r4 ? $r0 = $r2
   // CHECK: cmoved.dnez $r5 ? $r1 = $r3
   // CHECK: ret
 }
 
-v4i64 cmovedq(v4i64 v1, v4i64 v2, v4i64 c) {
-  return __builtin_kvx_cmovedq(v1, v2, c, ".nez");
-  // CHECK-LABEL: cmovedq:
+v4i64 selectdq(v4i64 v1, v4i64 v2, v4i64 c) {
+  return __builtin_kvx_selectdq(v1, v2, c, ".nez");
+  // CHECK-LABEL: selectdq:
   // CHECK: cmoved.dnez $r8 ? $r0 = $r4
   // CHECK: cmoved.dnez $r9 ? $r1 = $r5
   // CHECK: cmoved.dnez $r10 ? $r2 = $r6
@@ -125,24 +125,24 @@ v4i64 cmovedq(v4i64 v1, v4i64 v2, v4i64 c) {
   // CHECK: ret
 }
 
-v2f32 cmovefwp(v2f32 v1, v2f32 v2, v2i32 c) {
-  return __builtin_kvx_cmovefwp(v1, v2, c, ".nez");
-  // CHECK-LABEL: cmovefwp:
+v2f32 selectfwp(v2f32 v1, v2f32 v2, v2i32 c) {
+  return __builtin_kvx_selectfwp(v1, v2, c, ".nez");
+  // CHECK-LABEL: selectfwp:
   // CHECK: cmovewp.nez $r2 ? $r0 = $r1
   // CHECK: ret
 }
 
-v4f32 cmovefwq(v4f32 v1, v4f32 v2, v4i32 c) {
-  return __builtin_kvx_cmovefwq(v1, v2, c, ".nez");
-  // CHECK-LABEL: cmovefwq:
+v4f32 selectfwq(v4f32 v1, v4f32 v2, v4i32 c) {
+  return __builtin_kvx_selectfwq(v1, v2, c, ".nez");
+  // CHECK-LABEL: selectfwq:
   // CHECK: cmovewp.nez $r4 ? $r0 = $r2
   // CHECK: cmovewp.nez $r5 ? $r1 = $r3
   // CHECK: ret
 }
 
-v8f32 cmovefwo(v8f32 v1, v8f32 v2, v8i32 c) {
-  return __builtin_kvx_cmovefwo(v1, v2, c, ".nez");
-  // CHECK-LABEL: cmovefwo:
+v8f32 selectfwo(v8f32 v1, v8f32 v2, v8i32 c) {
+  return __builtin_kvx_selectfwo(v1, v2, c, ".nez");
+  // CHECK-LABEL: selectfwo:
   // CHECK: cmovewp.nez $r8 ? $r0 = $r4
   // CHECK: cmovewp.nez $r9 ? $r1 = $r5
   // CHECK: cmovewp.nez $r10 ? $r2 = $r6
@@ -150,17 +150,17 @@ v8f32 cmovefwo(v8f32 v1, v8f32 v2, v8i32 c) {
   // CHECK: ret
 }
 
-v2f64 cmovefdp(v2f64 v1, v2f64 v2, v2i64 c) {
-  return __builtin_kvx_cmovefdp(v1, v2, c, ".nez");
-  // CHECK-LABEL: cmovefdp:
+v2f64 selectfdp(v2f64 v1, v2f64 v2, v2i64 c) {
+  return __builtin_kvx_selectfdp(v1, v2, c, ".nez");
+  // CHECK-LABEL: selectfdp:
   // CHECK: cmoved.dnez $r4 ? $r0 = $r2
   // CHECK: cmoved.dnez $r5 ? $r1 = $r3
   // CHECK: ret
 }
 
-v4f64 cmovefdq(v4f64 v1, v4f64 v2, v4i64 c) {
-  return __builtin_kvx_cmovefdq(v1, v2, c, ".nez");
-  // CHECK-LABEL: cmovefdq:
+v4f64 selectfdq(v4f64 v1, v4f64 v2, v4i64 c) {
+  return __builtin_kvx_selectfdq(v1, v2, c, ".nez");
+  // CHECK-LABEL: selectfdq:
   // CHECK-DAG: cmoved.dnez $r8 ? $r0 = $r4
   // CHECK-DAG: cmoved.dnez $r10 ? $r2 = $r6
   // CHECK-DAG: cmoved.dnez $r9 ? $r1 = $r5
