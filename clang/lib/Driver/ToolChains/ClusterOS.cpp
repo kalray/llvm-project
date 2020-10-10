@@ -86,11 +86,13 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
     const Arg *A = Args.getLastArg(options::OPT_march_EQ);
     if (A && strcmp(A->getValue(), "kv3-2") == 0) {
       LibDir = LDPrefix + "/../kvx-cos/lib/kv3-2";
-      GCCLibDir = LDPrefix + "/../lib/gcc/kvx-cos/7.5.0/kv3-2";
+      GCCLibDir = LDPrefix + "/../lib/gcc/kvx-cos/" +
+                  CTC.getGCCVersion().data() + "/kv3-2";
       LLVMLibDir = LDPrefix + "/../lib/llvm/cos/kv3-2";
     } else {
       LibDir = LDPrefix + "/../kvx-cos/lib";
-      GCCLibDir = LDPrefix + "/../lib/gcc/kvx-cos/7.5.0";
+      GCCLibDir =
+          LDPrefix + "/../lib/gcc/kvx-cos/" + CTC.getGCCVersion().data();
       LLVMLibDir = LDPrefix + "/../lib/llvm/cos";
     }
   }
@@ -294,8 +296,9 @@ bool ClusterOS::GCCInstallationIsValid() const {
 }
 
 StringRef ClusterOS::getGCCVersion() const {
-  return GCCInstallation.isValid() ? GCCInstallation.getVersion().Text
-                                   : "7.5.0";
+  return GCCInstallation.isValid()
+             ? StringRef(GCCInstallation.getVersion().Text)
+             : StringRef("7.5.0");
 }
 
 StringRef ClusterOS::getGCCInstallPath() const {
