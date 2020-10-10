@@ -229,7 +229,7 @@ def LOp : KVX_PSEUDO<
         (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), []>;
 }
 
-foreach type = [ i1, i8, i16, i32, i64, v2i8, v4i8, v8i8, v2i32, v4i16, v2i16, v2i64, v4i32] in {
+foreach type = [ i1, i8, i16, i32, i64, v2i8, v4i8, v8i8, v2i32, v4i16, v2i16, v2i64, v4i32, v4i64] in {
 
 def load#type : PatFrag<(ops node:$ptr), (type (load node:$ptr)), [{
     const MemSDNode *LD = cast<MemSDNode>(N);
@@ -431,6 +431,8 @@ defm : LoadPat<loadbypassv4i16, v4i16, 3, LDp, LDri10, LDrr, variant_u>;
 defm : LoadPat<loadbypassv2i64, v2i64, 4, LQp, LQri10, LQrr, variant_u>;
 defm : LoadPat<loadbypassv4i32, v4i32, 4, LQp, LQri10, LQrr, variant_u>;
 
+defm : LoadPat<loadbypassv4i64, v4i64, 5, LOp, LOri10, LOrr, variant_u>;
+
 // preload loads
 defm : SimpleLoadPat<sextloadpreloadi1, i32, LBSp, LBSri10, LBSrr, variant_us>;
 defm : SimpleLoadPat<zextloadpreloadi1, i32, LBZp, LBZri10, LBZrr, variant_us>;
@@ -472,6 +474,7 @@ defm : LoadPat<loadpreloadv4i16, v4i16, 3, LDp, LDri10, LDrr, variant_us>;
 defm : LoadPat<loadpreloadv2i64, v2i64, 4, LQp, LQri10, LQrr, variant_us>;
 defm : LoadPat<loadpreloadv4i32, v4i32, 4, LQp, LQri10, LQrr, variant_us>;
 
+defm : LoadPat<loadpreloadv4i64, v4i64, 5, LOp, LOri10, LOrr, variant_us>;
 
 // speculative loads
 defm : SimpleLoadPat<sextloadspeci1, i32, LBSp, LBSri10, LBSrr, variant_s>;
@@ -514,6 +517,8 @@ defm : LoadPat<loadspecv4i16, v4i16, 3, LDp, LDri10, LDrr, variant_s>;
 defm : LoadPat<loadspecv2i64, v2i64, 4, LQp, LQri10, LQrr, variant_s>;
 defm : LoadPat<loadspecv4i32, v4i32, 4, LQp, LQri10, LQrr, variant_s>;
 
+defm : LoadPat<loadspecv4i64, v4i64, 5, LOp, LOri10, LOrr, variant_s>;
+
 // normal loads
 defm : SimpleLoadPat<sextloadi1, i32, LBSp, LBSri10, LBSrr, variant_>;
 defm : SimpleLoadPat<zextloadi1, i32, LBZp, LBZri10, LBZrr, variant_>;
@@ -554,6 +559,8 @@ defm : LoadPat<loadv4i16, v4i16, 3, LDp, LDri10, LDrr, variant_>;
 
 defm : LoadPat<loadv2i64, v2i64, 4, LQp, LQri10, LQrr, variant_>;
 defm : LoadPat<loadv4i32, v4i32, 4, LQp, LQri10, LQrr, variant_>;
+
+defm : LoadPat<loadv4i64, v4i64, 5, LOp, LOri10, LOrr, variant_>;
 
 //===----------------------------------------------------------------------===//
 // Store Patterns
@@ -664,6 +671,7 @@ defm : StorePat<store, v4i16, SingleReg, 3 , SDp, SDri10, SDrr>;
 defm : StorePat<store, v2i64, PairedReg, 4, SQp, SQri10, SQrr>;
 defm : StorePat<store, v4i32, PairedReg, 4, SQp, SQri10, SQrr>;
 
+defm : StorePat<store, v4i64, QuadReg, 5, SOp, SOri10, SOrr>;
 
 // sign extend optimizations
 def : Pat<(and SingleReg:$val,(i64 0xffffffff)), (ZXWD SingleReg:$val)>;
@@ -855,6 +863,23 @@ def : Pat<(v2i64 (build_vector i64:$v1, i64:$v2)),
 
 def : Pat<(extractelt (v2i64 PairedReg:$v), 0), (i64 (EXTRACT_SUBREG $v, 1))>;
 def : Pat<(extractelt (v2i64 PairedReg:$v), 1), (i64 (EXTRACT_SUBREG $v, 2))>;
+
+// v4i64
+def : Pat<(extractelt (v4i64 QuadReg:$v), 0), (i64 (EXTRACT_SUBREG $v, 1))>;
+def : Pat<(extractelt (v4i64 QuadReg:$v), 1), (i64 (EXTRACT_SUBREG $v, 2))>;
+def : Pat<(extractelt (v4i64 QuadReg:$v), 2), (i64 (EXTRACT_SUBREG $v, 3))>;
+def : Pat<(extractelt (v4i64 QuadReg:$v), 3), (i64 (EXTRACT_SUBREG $v, 4))>;
+
+def : Pat<(v4i64 (build_vector i64:$v1, i64:$v2, i64:$v3, i64:$v4)),
+  (INSERT_SUBREG (INSERT_SUBREG (INSERT_SUBREG
+    (INSERT_SUBREG (v4i64 (IMPLICIT_DEF)), $v1, 1), $v2, 2), $v3, 3), $v4, 4)>;
+
+//TODO: Improve these as sequence of sub-registers
+def : Pat<(v2i64 (extract_subvector (v4i64 QuadReg:$v), (i64 0))),
+          (v2i64 (COPYQ (i64 (EXTRACT_SUBREG $v, 1)), (i64 (EXTRACT_SUBREG $v, 2))))>;
+
+def : Pat<(v2i64 (extract_subvector (v4i64 QuadReg:$v), (i64 2))),
+          (v2i64 (COPYQ (i64 (EXTRACT_SUBREG $v, 3)), (i64 (EXTRACT_SUBREG $v, 4))))>;
 
 // v4i32
 def : Pat<(extractelt (v4i32 PairedReg:$v), 0), (i32 (EXTRACT_SUBREG $v, 1))>;
