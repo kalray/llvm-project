@@ -73,6 +73,7 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   addRegisterClass(MVT::v2i16, &KVX::SingleRegRegClass);
   addRegisterClass(MVT::v2i64, &KVX::PairedRegRegClass);
   addRegisterClass(MVT::v4i32, &KVX::PairedRegRegClass);
+  addRegisterClass(MVT::v4i64, &KVX::QuadRegRegClass);
 
   addRegisterClass(MVT::f16, &KVX::SingleRegRegClass);
   addRegisterClass(MVT::f32, &KVX::SingleRegRegClass);
@@ -82,6 +83,7 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   addRegisterClass(MVT::v2f32, &KVX::SingleRegRegClass);
   addRegisterClass(MVT::v4f32, &KVX::PairedRegRegClass);
   addRegisterClass(MVT::v2f64, &KVX::PairedRegRegClass);
+  addRegisterClass(MVT::v4f64, &KVX::QuadRegRegClass);
 
   // Compute derived properties from the register classes
   computeRegisterProperties(STI.getRegisterInfo());
@@ -137,38 +139,32 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setTruncStoreAction(MVT::v4i32, MVT::v4i16, Expand);
   setTruncStoreAction(MVT::v4i32, MVT::v4i8, Expand);
 
-  setOperationAction(ISD::TRUNCATE, MVT::v2i8, Expand);
-  setOperationAction(ISD::TRUNCATE, MVT::v4i8, Expand);
-  setOperationAction(ISD::TRUNCATE, MVT::v2i16, Expand);
-  setOperationAction(ISD::TRUNCATE, MVT::v2i32, Expand);
-  setOperationAction(ISD::TRUNCATE, MVT::v4i16, Expand);
-  setOperationAction(ISD::TRUNCATE, MVT::v4i32, Expand);
+  for (auto VT : {MVT::v2i8, MVT::v2i16, MVT::v2i32, MVT::v4i8, MVT::v4i16,
+                  MVT::v4i32, MVT::v4i64})
+    setOperationAction(ISD::TRUNCATE, VT, Expand);
+
   setOperationAction(ISD::EXTRACT_SUBVECTOR, MVT::v2i16, Expand);
   setOperationAction(ISD::EXTRACT_SUBVECTOR, MVT::v2f16, Expand);
 
   setOperationAction(ISD::SIGN_EXTEND, MVT::v2i64, Expand);
   setOperationAction(ISD::ANY_EXTEND, MVT::v2i64, Expand);
+  setOperationAction(ISD::SIGN_EXTEND, MVT::v4i64, Expand);
+  setOperationAction(ISD::ANY_EXTEND, MVT::v4i64, Expand);
 
-  setOperationAction(ISD::SIGN_EXTEND_INREG, MVT::v4i32, Expand);
-  setOperationAction(ISD::SIGN_EXTEND_INREG, MVT::v4i16, Expand);
-  setOperationAction(ISD::SIGN_EXTEND_INREG, MVT::v2i16, Expand);
-  setOperationAction(ISD::SIGN_EXTEND_INREG, MVT::v2i32, Expand);
-  setOperationAction(ISD::SIGN_EXTEND_INREG, MVT::v2i64, Expand);
-  setOperationAction(ISD::SIGN_EXTEND_INREG, MVT::v4i16, Expand);
-  setOperationAction(ISD::SIGN_EXTEND_INREG, MVT::v2i8, Expand);
-  setOperationAction(ISD::SIGN_EXTEND_INREG, MVT::v4i8, Expand);
+  for (auto VT : {MVT::v4i32, MVT::v4i16, MVT::v2i16, MVT::v2i32, MVT::v2i64,
+                  MVT::v4i64, MVT::v2i8, MVT::v4i8})
+    setOperationAction(ISD::SIGN_EXTEND_INREG, VT, Expand);
 
-  for (auto VT : {MVT::v2i32, MVT::v4i16, MVT::v2i16, MVT::v2i64, MVT::v4i32,
-                  MVT::v8i8, MVT::v4f32, MVT::v2f16, MVT::v2i8, MVT::v4i8}) {
+  for (auto VT :
+       {MVT::v2i8, MVT::v2f16, MVT::v2i16, MVT::v2i32, MVT::v2i64, MVT::v4i8,
+        MVT::v4i16, MVT::v4f32, MVT::v4i32, MVT::v4i64, MVT::v8i8}) {
     setOperationAction(ISD::UDIV, VT, Expand);
     setOperationAction(ISD::SDIV, VT, Expand);
     setOperationAction(ISD::VECTOR_SHUFFLE, VT, Expand);
     setOperationAction(ISD::SCALAR_TO_VECTOR, VT, Expand);
 
-    setOperationAction(ISD::SDIV, VT, Expand);
     setOperationAction(ISD::SDIVREM, VT, Expand);
     setOperationAction(ISD::SREM, VT, Expand);
-    setOperationAction(ISD::UDIV, VT, Expand);
     setOperationAction(ISD::UDIVREM, VT, Expand);
     setOperationAction(ISD::UREM, VT, Expand);
 
@@ -177,11 +173,11 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   }
 
   for (auto VT : {MVT::v2i8, MVT::v4i8, MVT::v8i8, MVT::v2i16, MVT::v4i16,
-                  MVT::v2i32, MVT::v4i32, MVT::v2i64})
+                  MVT::v2i32, MVT::v4i32, MVT::v2i64, MVT::v4i64})
     setOperationAction(ISD::BSWAP, VT, Expand);
 
   for (auto VT : {MVT::v2i8, MVT::v4i8, MVT::v8i8, MVT::v2i16, MVT::v4i16,
-                  MVT::v4i32, MVT::v2i64}) {
+                  MVT::v4i32, MVT::v2i64, MVT::v4i64}) {
     setOperationAction(ISD::CTTZ, VT, Expand);
     setOperationAction(ISD::CTLZ, VT, Expand);
     setOperationAction(ISD::CTPOP, VT, Expand);
@@ -193,14 +189,15 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::SRA, VT, Custom);
   }
 
-  for (auto VT : {MVT::v2i64, MVT::v4i32, MVT::v8i8, MVT::v2i8, MVT::v4i8}) {
+  for (auto VT :
+       {MVT::v4i64, MVT::v2i64, MVT::v4i32, MVT::v8i8, MVT::v2i8, MVT::v4i8}) {
     setOperationAction(ISD::SHL, VT, Expand);
     setOperationAction(ISD::SRL, VT, Expand);
     setOperationAction(ISD::SRA, VT, Expand);
   }
 
-  for (auto VT : {MVT::v2i16, MVT::v2i64, MVT::v4i32, MVT::v2i8, MVT::v4i8,
-                  MVT::v8i8, MVT::v4f32, MVT::v2f64})
+  for (auto VT : {MVT::v2i16, MVT::v2i64, MVT::v4i64, MVT::v4i32, MVT::v2i8,
+                  MVT::v4i8, MVT::v8i8, MVT::v4f32, MVT::v2f64, MVT::v4f64})
     setOperationAction(ISD::SETCC, VT, Expand);
 
   for (auto VT :
@@ -211,7 +208,7 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
 
   for (auto VT : {MVT::v2i16, MVT::v4i16, MVT::v2i32, MVT::v2i64, MVT::v4i32,
                   MVT::v2i8, MVT::v4i8, MVT::v8i8, MVT::v2f16, MVT::v4f16,
-                  MVT::v2f32, MVT::v4f32, MVT::v2f64}) {
+                  MVT::v2f32, MVT::v4f32, MVT::v2f64, MVT::v4f64, MVT::v4i64}) {
     setOperationAction(ISD::INSERT_VECTOR_ELT, VT, Custom);
     setOperationAction(ISD::EXTRACT_VECTOR_ELT, VT, Custom);
     setOperationAction(ISD::VSELECT, VT, Expand);
@@ -223,13 +220,15 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
 
   setOperationAction(ISD::MULHU, MVT::v2i32, Expand);
   setOperationAction(ISD::MULHU, MVT::v2i64, Expand);
+  setOperationAction(ISD::MULHU, MVT::v4i64, Expand);
   setOperationAction(ISD::MULHS, MVT::v2i32, Expand);
   setOperationAction(ISD::MULHS, MVT::v2i64, Expand);
+  setOperationAction(ISD::MULHS, MVT::v4i64, Expand);
   setOperationAction(ISD::MULHU, MVT::v4i32, Expand);
   setOperationAction(ISD::MULHS, MVT::v4i32, Expand);
 
-  for (auto VT : { MVT::v2f16, MVT::v2f32, MVT::v4f16,
-                   MVT::v4f32, MVT::v2f64, MVT::v2i64 }) {
+  for (auto VT : {MVT::v2f16, MVT::v2f32, MVT::v4f16, MVT::v4f32, MVT::v2f64,
+                  MVT::v2i64, MVT::v4f64, MVT::v4i64}) {
     setOperationAction(ISD::FDIV, VT, Expand);
     setOperationAction(ISD::VECTOR_SHUFFLE, VT, Expand);
     setOperationAction(ISD::SCALAR_TO_VECTOR, VT, Expand);
@@ -237,7 +236,11 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::FMUL, MVT::v2f64, Expand);
   setOperationAction(ISD::FMA, MVT::v2f64, Expand);
 
-  for (auto VT : {MVT::v2f16, MVT::v4f16, MVT::v2f32, MVT::v4f32, MVT::v2f64}) {
+  setOperationAction(ISD::FMUL, MVT::v4f64, Expand);
+  setOperationAction(ISD::FMA, MVT::v4f64, Expand);
+
+  for (auto VT : {MVT::v2f16, MVT::v4f16, MVT::v2f32, MVT::v4f32, MVT::v2f64,
+                  MVT::v4f64}) {
     setOperationAction(ISD::FCEIL, VT, Expand);
     setOperationAction(ISD::FFLOOR, VT, Expand);
     setOperationAction(ISD::FRINT, VT, Expand);
@@ -253,29 +256,14 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::FREM, VT, Expand);
     setOperationAction(ISD::FSQRT, VT, Expand);
   }
-  for (auto VT : {MVT::v2f16, MVT::v4f16, MVT::v4f32, MVT::v2f64}) {
+  for (auto VT : {MVT::v2f16, MVT::v4f16, MVT::v4f32, MVT::v2f64, MVT::v4f64}) {
     setOperationAction(ISD::FABS, VT, Expand);
   }
 
-  setOperationAction(ISD::AND, MVT::v2i64, Expand);
-  setOperationAction(ISD::ADD, MVT::v2i64, Expand);
-  setOperationAction(ISD::SUB, MVT::v2i64, Expand);
-  setOperationAction(ISD::MUL, MVT::v2i64, Expand);
-  setOperationAction(ISD::OR, MVT::v2i64, Expand);
-  setOperationAction(ISD::AND, MVT::v2i64, Expand);
-  setOperationAction(ISD::XOR, MVT::v2i64, Expand);
-
-  setOperationAction(ISD::ADD, MVT::v4i32, Expand);
-  setOperationAction(ISD::SUB, MVT::v4i32, Expand);
-  setOperationAction(ISD::AND, MVT::v4i32, Expand);
-  setOperationAction(ISD::OR, MVT::v4i32, Expand);
-  setOperationAction(ISD::XOR, MVT::v4i32, Expand);
-
   setOperationAction(ISD::SMUL_LOHI, MVT::v2i64, Expand);
   setOperationAction(ISD::UMUL_LOHI, MVT::v2i64, Expand);
-  setOperationAction(ISD::MUL, MVT::v8i8, Expand);
 
-  for (auto VT : { MVT::i32, MVT::i64 }) {
+  for (auto VT : {MVT::i32, MVT::i64}) {
     setOperationAction(ISD::SMUL_LOHI, VT, Expand);
     setOperationAction(ISD::UMUL_LOHI, VT, Expand);
     setOperationAction(ISD::MULHS, VT, Expand);
@@ -346,15 +334,15 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::SELECT, VT, Custom);
   }
 
-  for (auto VT :
-       {MVT::v2f64, MVT::v2f32, MVT::v4f32, MVT::v2i64, MVT::v4i32, MVT::v2i32,
-        MVT::v2i16, MVT::v4i16, MVT::v8i8, MVT::v2i8, MVT::v4i8}) {
+  for (auto VT : {MVT::v2f64, MVT::v2f32, MVT::v4f32, MVT::v2i64, MVT::v4i32,
+                  MVT::v2i32, MVT::v2i16, MVT::v4i16, MVT::v8i8, MVT::v2i8,
+                  MVT::v4i8, MVT::v4f64, MVT::v4i64}) {
     setOperationAction(ISD::SELECT_CC, VT, Expand);
     setOperationAction(ISD::SELECT, VT, Expand);
   }
 
   for (auto VT : {MVT::v2i16, MVT::v2i32, MVT::v2i64, MVT::v4i16, MVT::v4i32,
-                  MVT::v2i8, MVT::v4i8}) {
+                  MVT::v2i8, MVT::v4i8, MVT::v4f64, MVT::v4i64}) {
     setOperationAction(ISD::FP_TO_SINT, VT, Expand);
     setOperationAction(ISD::FP_TO_UINT, VT, Expand);
     setOperationAction(ISD::SINT_TO_FP, VT, Expand);
@@ -364,11 +352,17 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::FP_ROUND, MVT::v4f16, Expand);
   setOperationAction(ISD::FP_ROUND, MVT::v2f16, Expand);
   setOperationAction(ISD::FP_ROUND, MVT::v2f32, Expand);
+  setOperationAction(ISD::FP_ROUND, MVT::v4f32, Expand);
   setOperationAction(ISD::FP_EXTEND, MVT::v2f32, Expand);
   setOperationAction(ISD::FP_EXTEND, MVT::v4f32, Expand);
   setOperationAction(ISD::FP_EXTEND, MVT::v2f64, Expand);
+  setOperationAction(ISD::FP_EXTEND, MVT::v4f64, Expand);
+
+  setOperationAction(ISD::FADD, MVT::v4f64, Expand);
+  setOperationAction(ISD::FSUB, MVT::v4f64, Expand);
 
   setOperationAction(ISD::FNEG, MVT::v2f64, Expand);
+  setOperationAction(ISD::FNEG, MVT::v4f64, Expand);
   setOperationAction(ISD::FNEG, MVT::v4f32, Expand);
 
   setTruncStoreAction(MVT::v2i16, MVT::v2i8, Expand);
@@ -376,9 +370,16 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setTruncStoreAction(MVT::v2i64, MVT::v2i16, Expand);
   setTruncStoreAction(MVT::v2f32, MVT::v2f16, Expand);
   setTruncStoreAction(MVT::v2i64, MVT::v2i32, Expand);
+
+  setTruncStoreAction(MVT::v4i64, MVT::v4i8, Expand);
+  setTruncStoreAction(MVT::v4i64, MVT::v4i16, Expand);
+  setTruncStoreAction(MVT::v4i64, MVT::v4i32, Expand);
+
   setTruncStoreAction(MVT::v2f64, MVT::v2f16, Expand);
   setTruncStoreAction(MVT::v2f64, MVT::v2f32, Expand);
   setTruncStoreAction(MVT::v4f32, MVT::v4f16, Expand);
+  setTruncStoreAction(MVT::v4f64, MVT::v4f16, Expand);
+  setTruncStoreAction(MVT::v4f64, MVT::v4f32, Expand);
 
   for (auto VT : {MVT::i32, MVT::i64, MVT::v2i32, MVT::v4i16}) {
     setOperationAction(ISD::SMIN, VT, Legal);
@@ -389,7 +390,7 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   }
 
   for (auto VT : {MVT::v2i16, MVT::v2i32, MVT::v2i64, MVT::v4i32, MVT::v2i8,
-                  MVT::v4i8, MVT::v4i16}) {
+                  MVT::v4i8, MVT::v4i16, MVT::v4i64}) {
     setOperationAction(ISD::SIGN_EXTEND, VT, Expand);
     setOperationAction(ISD::ZERO_EXTEND, VT, Expand);
     setOperationAction(ISD::ANY_EXTEND, VT, Expand);
@@ -398,14 +399,21 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setLoadExtAction(ISD::SEXTLOAD, MVT::v2i64, MVT::v2i8, Expand);
   setLoadExtAction(ISD::ZEXTLOAD, MVT::v2i64, MVT::v2i8, Expand);
 
+  for (auto VT : {MVT::v4i8, MVT::v4i16, MVT::v4i32}) {
+    setLoadExtAction(ISD::SEXTLOAD, MVT::v4i64, VT, Expand);
+    setLoadExtAction(ISD::ZEXTLOAD, MVT::v4i64, VT, Expand);
+  }
+
   setLoadExtAction(ISD::SEXTLOAD, MVT::v4i32, MVT::v4i8, Expand);
   setLoadExtAction(ISD::ZEXTLOAD, MVT::v4i32, MVT::v4i8, Expand);
 
   setLoadExtAction(ISD::EXTLOAD, MVT::v2f32, MVT::v2f16, Expand);
   setLoadExtAction(ISD::EXTLOAD, MVT::v2f64, MVT::v2f16, Expand);
+  setLoadExtAction(ISD::EXTLOAD, MVT::v4f64, MVT::v4f16, Expand);
 
   setLoadExtAction(ISD::EXTLOAD, MVT::v4f32, MVT::v4f16, Expand);
   setLoadExtAction(ISD::EXTLOAD, MVT::v2f64, MVT::v2f32, Expand);
+  setLoadExtAction(ISD::EXTLOAD, MVT::v4f64, MVT::v4f32, Expand);
 
   setOperationAction(ISD::JumpTable, MVT::i64, Custom);
 
@@ -416,14 +424,10 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   }
 
   // there are no instructions for operations on v2i8, v4i8
-  for (auto VT : {MVT::v2i8, MVT::v4i8}) {
-    setOperationAction(ISD::ADD, VT, Expand);
-    setOperationAction(ISD::SUB, VT, Expand);
-    setOperationAction(ISD::MUL, VT, Expand);
-    setOperationAction(ISD::XOR, VT, Expand);
-    setOperationAction(ISD::OR, VT, Expand);
-    setOperationAction(ISD::AND, VT, Expand);
-  }
+  setOperationAction(ISD::MUL, MVT::v8i8, Expand);
+  for (auto VT : {MVT::v2i8, MVT::v4i8, MVT::v2i64, MVT::v4i32, MVT::v4i64})
+    for (auto I : {ISD::AND, ISD::OR, ISD::XOR, ISD::ADD, ISD::SUB, ISD::MUL})
+      setOperationAction(I, VT, Expand);
 
   setTargetDAGCombine(ISD::ZERO_EXTEND);
 
@@ -1743,6 +1747,7 @@ static MVT selectType(unsigned Size) {
     return MVT::i32;
   case 64:
   case 128:
+  case 256:
     return MVT::i64;
   }
 }
@@ -1756,17 +1761,16 @@ SDValue KVXTargetLowering::lowerINSERT_VECTOR_ELT(SDValue Op,
   EVT VecVT = Op.getValueType();
 
   if (ConstantSDNode *InsertPos = dyn_cast<ConstantSDNode>(Idx)) {
-    unsigned ElementBitSize = VecVT.getScalarSizeInBits();
-    uint64_t Mask = selectMask(ElementBitSize);
-    auto SizeType = selectType(VecVT.getSizeInBits());
 
     if (Vec.getValueType() == MVT::v4f32 || Vec.getValueType() == MVT::v4i32)
       return lowerINSERT_VECTOR_ELT_V4_128bit(DL, DAG, Vec, Val,
                                               InsertPos->getZExtValue());
-    if (Vec.getValueType() == MVT::v2f64 || Vec.getValueType() == MVT::v2i64)
-      return lowerINSERT_VECTOR_ELT_V2_128bit(DL, DAG, Vec, Val,
+    if (Vec.getValueType() == MVT::v2f64 || Vec.getValueType() == MVT::v2i64 ||
+        Vec.getValueType() == MVT::v4f64 || Vec.getValueType() == MVT::v4i64)
+      return lowerINSERT_VECTOR_ELT_64bit_elt(DL, DAG, Vec, Val,
                                               InsertPos->getZExtValue());
 
+    unsigned ElementBitSize = VecVT.getScalarSizeInBits();
     uint64_t ImmVal;
     if (auto *OpConst = dyn_cast<ConstantSDNode>(Val))
       ImmVal = OpConst->getZExtValue();
@@ -1776,6 +1780,8 @@ SDValue KVXTargetLowering::lowerINSERT_VECTOR_ELT(SDValue Op,
       return getINSF(DL, Vec, Val, ElementBitSize, InsertPos->getZExtValue(),
                      DAG, Op.getValueType());
 
+    uint64_t Mask = selectMask(ElementBitSize);
+    auto SizeType = selectType(VecVT.getSizeInBits());
     const unsigned StartBit = ElementBitSize * InsertPos->getZExtValue();
     // COPY is used here because bitcast is not possible for v2i8
     return SDValue(DAG.getMachineNode(TargetOpcode::COPY, DL, Op.getValueType(),
@@ -1836,7 +1842,7 @@ SDValue KVXTargetLowering::lowerINSERT_VECTOR_ELT_V4_128bit(
                  0);
 }
 
-SDValue KVXTargetLowering::lowerINSERT_VECTOR_ELT_V2_128bit(
+SDValue KVXTargetLowering::lowerINSERT_VECTOR_ELT_64bit_elt(
     SDLoc &dl, SelectionDAG &DAG, SDValue Vec, SDValue Val,
     uint64_t index) const {
   SDValue subRegIdx = DAG.getTargetConstant(index + 1, dl, MVT::i32);
@@ -1900,8 +1906,9 @@ SDValue KVXTargetLowering::lowerCONCAT_VECTORS(SDValue Op,
   if (!((OperandSize == 16 && ResultSize == 32) ||
         (OperandSize == 16 && ResultSize == 64) ||
         (OperandSize == 32 && ResultSize == 64) ||
-        (OperandSize == 64 && ResultSize == 128)))
-    llvm_unreachable("Unsupported concat for these types");
+        (OperandSize == 64 && ResultSize == 128) ||
+        (OperandSize == 128 && ResultSize == 256)))
+    report_fatal_error("Unsupported concat for these types");
 
   SDLoc DL(Op);
   SDValue Out = SDValue(
@@ -1916,6 +1923,16 @@ SDValue KVXTargetLowering::lowerCONCAT_VECTORS(SDValue Op,
       Out = getINSF(DL, Out, Op->getOperand(i), OperandSize, i, DAG, VT);
     if (OperandSize == 64)
       Out = DAG.getTargetInsertSubreg(i + 1, DL, VT, Out, Op.getOperand(i));
+    if (OperandSize == 128) {
+      auto SubV = Op.getOperand(i);
+      SDLoc SubDL(SubV);
+      auto First =
+          DAG.getTargetExtractSubreg(1, SubDL, SubV->getValueType(0), SubV);
+      auto Second =
+          DAG.getTargetExtractSubreg(2, SubDL, SubV->getValueType(0), SubV);
+      Out = DAG.getTargetInsertSubreg(2 * i + 1, DL, VT, Out, First);
+      Out = DAG.getTargetInsertSubreg(2 * i + 2, DL, VT, Out, Second);
+  }
   }
 
   return Out;
