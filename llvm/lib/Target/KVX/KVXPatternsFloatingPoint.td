@@ -29,9 +29,11 @@ defm : StorePat<store, v4f16, SingleReg, 3, SDp, SDri10, SDrr>;
 defm : StorePat<store, v4f32, PairedReg, 4, SQp, SQri10, SQrr>;
 defm : StorePat<store, v2f64, PairedReg, 4, SQp, SQri10, SQrr>;
 
+defm : StorePat<store, v4f64, QuadReg, 5, SOp, SOri10, SOrr>;
+
 // Load
 
-foreach type = [ f16, f32, f64, v2f16, v4f16, v2f32, v4f32, v2f64 ] in {
+foreach type = [ f16, f32, f64, v2f16, v4f16, v2f32, v4f32, v2f64, v4f64 ] in {
 def load#type : PatFrag<(ops node:$ptr), (type (load node:$ptr)), [{
     const MemSDNode *LD = cast<MemSDNode>(N);
     return LD->getAddressSpace() < 256;
@@ -55,43 +57,63 @@ def loadspec#type : PatFrag<(ops node:$ptr), (type (load node:$ptr)), [{
 
 // bypass loads
 defm : LoadPat<loadbypassf16, f16, 1, LHZp, LHZri10, LHZrr, variant_u>;
+
 defm : LoadPat<loadbypassf32, f32, 2, LWZp, LWZri10, LWZrr, variant_u>;
 defm : LoadPat<loadbypassv2f16, v2f16, 2, LWZp, LWZri10, LWZrr, variant_u>;
+
 defm : LoadPat<loadbypassf64, f64, 3, LDp, LDri10, LDrr, variant_u>;
 defm : LoadPat<loadbypassv2f32, v2f32, 3, LDp, LDri10, LDrr, variant_u>;
 defm : LoadPat<loadbypassv4f16, v4f16, 3, LDp, LDri10, LDrr, variant_u>;
+
 defm : LoadPat<loadbypassv4f32, v4f32, 4, LQp, LQri10, LQrr, variant_u>;
 defm : LoadPat<loadbypassv2f64, v2f64, 4, LQp, LQri10, LQrr, variant_u>;
 
+defm : LoadPat<loadbypassv4f64, v4f64, 5, LOp, LOri10, LOrr, variant_u>;
+
 // preload loads
 defm : LoadPat<loadpreloadf16, f16, 1, LHZp, LHZri10, LHZrr, variant_us>;
+
 defm : LoadPat<loadpreloadf32, f32, 2, LWZp, LWZri10, LWZrr, variant_us>;
 defm : LoadPat<loadpreloadv2f16, v2f16, 2, LWZp, LWZri10, LWZrr, variant_us>;
+
 defm : LoadPat<loadpreloadf64, f64, 3, LDp, LDri10, LDrr, variant_us>;
 defm : LoadPat<loadpreloadv2f32, v2f32, 3, LDp, LDri10, LDrr, variant_us>;
 defm : LoadPat<loadpreloadv4f16, v4f16, 3, LDp, LDri10, LDrr, variant_us>;
+
 defm : LoadPat<loadpreloadv4f32, v4f32, 4, LQp, LQri10, LQrr, variant_us>;
 defm : LoadPat<loadpreloadv2f64, v2f64, 4, LQp, LQri10, LQrr, variant_us>;
 
+defm : LoadPat<loadpreloadv4f64, v4f64, 5, LOp, LOri10, LOrr, variant_us>;
+
 // spec loads
 defm : LoadPat<loadspecf16, f16, 1, LHZp, LHZri10, LHZrr, variant_s>;
+
 defm : LoadPat<loadspecf32, f32, 2, LWZp, LWZri10, LWZrr, variant_s>;
 defm : LoadPat<loadspecv2f16, v2f16, 2, LWZp, LWZri10, LWZrr, variant_s>;
+
 defm : LoadPat<loadspecf64, f64, 3, LDp, LDri10, LDrr, variant_s>;
 defm : LoadPat<loadspecv2f32, v2f32, 3, LDp, LDri10, LDrr, variant_s>;
 defm : LoadPat<loadspecv4f16, v4f16, 3, LDp, LDri10, LDrr, variant_s>;
+
 defm : LoadPat<loadspecv4f32, v4f32, 4, LQp, LQri10, LQrr, variant_s>;
 defm : LoadPat<loadspecv2f64, v2f64, 4, LQp, LQri10, LQrr, variant_s>;
 
+defm : LoadPat<loadspecv4f64, v4f64, 5, LOp, LOri10, LOrr, variant_s>;
+
 // normal loads
 defm : LoadPat<loadf16, f16, 1, LHZp, LHZri10, LHZrr, variant_>;
+
 defm : LoadPat<loadf32, f32, 2, LWZp, LWZri10, LWZrr, variant_>;
 defm : LoadPat<loadv2f16, v2f16, 2, LWZp, LWZri10, LWZrr, variant_>;
+
 defm : LoadPat<loadf64, f64, 3, LDp, LDri10, LDrr, variant_>;
 defm : LoadPat<loadv2f32, v2f32, 3, LDp, LDri10, LDrr, variant_>;
 defm : LoadPat<loadv4f16, v4f16, 3, LDp, LDri10, LDrr, variant_>;
+
 defm : LoadPat<loadv4f32, v4f32, 4, LQp, LQri10, LQrr, variant_>;
 defm : LoadPat<loadv2f64, v2f64, 4, LQp, LQri10, LQrr, variant_>;
+
+defm : LoadPat<loadv4f64, v4f64, 5, LOp, LOri10, LOrr, variant_>;
 
 // 16 bits
 def : BITCAST<f16, i16, SingleReg>;
@@ -138,6 +160,10 @@ def : BITCAST<v2f64, v2i64, PairedReg>;
 def : BITCAST<v2i64, v2f64, PairedReg>;
 def : BITCAST<v4f32, v4i32, PairedReg>;
 def : BITCAST<v4i32, v4f32, PairedReg>;
+
+// 256 bits
+def : BITCAST<v4i64, v4f64, QuadReg>;
+def : BITCAST<v4f64, v4i64, QuadReg>;
 
 // FPU Insns
 
@@ -433,3 +459,21 @@ def : Pat<(fcopysign f32:$v1, f16:$v2), (INSF SingleReg:$v1, (f64 (SRAWri Single
 def : Pat<(fcopysign f16:$v1, f64:$v2), (INSF SingleReg:$v1, (f64 (SRADri SingleReg:$v2, 63)), 15, 15)>;
 def : Pat<(fcopysign f16:$v1, f32:$v2), (INSF SingleReg:$v1, (f64 (SRAWri SingleReg:$v2, 31)), 15, 15)>;
 def : Pat<(fcopysign f16:$v1, f16:$v2), (INSF SingleReg:$v1, (f64 (SRAWri SingleReg:$v2, 15)), 15, 15)>;
+
+// v4f64
+def : Pat<(extractelt (v4f64 QuadReg:$v), 0), (f64 (EXTRACT_SUBREG $v, 1))>;
+def : Pat<(extractelt (v4f64 QuadReg:$v), 1), (f64 (EXTRACT_SUBREG $v, 2))>;
+def : Pat<(extractelt (v4f64 QuadReg:$v), 2), (f64 (EXTRACT_SUBREG $v, 3))>;
+def : Pat<(extractelt (v4f64 QuadReg:$v), 3), (f64 (EXTRACT_SUBREG $v, 4))>;
+
+
+def : Pat<(v4f64 (build_vector f64:$v1, f64:$v2, f64:$v3, f64:$v4)),
+  (INSERT_SUBREG (INSERT_SUBREG (INSERT_SUBREG
+    (INSERT_SUBREG (v4f64 (IMPLICIT_DEF)), $v1, 1), $v2, 2), $v3, 3), $v4, 4)>;
+
+def : Pat<(v2f64 (extract_subvector (v4f64 QuadReg:$v), (i64 0))),
+          (v2f64 (COPYQ (f64 (EXTRACT_SUBREG $v, 1)), (f64 (EXTRACT_SUBREG $v, 2))))>;
+
+def : Pat<(v2f64 (extract_subvector (v4f64 QuadReg:$v), (i64 2))),
+          (v2f64 (COPYQ (f64 (EXTRACT_SUBREG $v, 3)), (f64 (EXTRACT_SUBREG $v, 4))))>;
+

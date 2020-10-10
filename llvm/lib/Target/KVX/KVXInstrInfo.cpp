@@ -21,10 +21,12 @@
 #include "llvm/CodeGen/MachineInstrBuilder.h"
 #include "llvm/CodeGen/MachineRegisterInfo.h"
 #include "llvm/CodeGen/RegisterScavenging.h"
+#include "llvm/Support/Debug.h"
 #include "llvm/Support/ErrorHandling.h"
 #include "llvm/Support/TargetRegistry.h"
 
 using namespace llvm;
+#define DEBUG_TYPE "KVX-isel"
 
 #define GET_INSTRINFO_CTOR_DTOR
 #include "KVXGenDFAPacketizer.inc"
@@ -37,19 +39,29 @@ void KVXInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
                                MachineBasicBlock::iterator MBBI,
                                const DebugLoc &DL, MCRegister DstReg,
                                MCRegister SrcReg, bool KillSrc) const {
-  if (KVX::SingleRegRegClass.contains(DstReg, SrcReg)) {
-    BuildMI(MBB, MBBI, DL, get(KVX::COPYD), DstReg)
+  LLVM_DEBUG(llvm::dbgs() << "Performing copy of physical register. ");
+  // GPR to GPR
+  if (KVX::QuadRegRegClass.contains(DstReg, SrcReg)) {
+    LLVM_DEBUG(llvm::dbgs() << "It is a QuadReg copyo.\n");
+    BuildMI(MBB, MBBI, DL, get(KVX::COPYO), DstReg)
         .addReg(SrcReg, getKillRegState(KillSrc));
     return;
   }
-  if (KVX::PairedRegRegClass.contains(DstReg, SrcReg)) {
     MachineFunction *MF = MBB.getParent();
     const KVXRegisterInfo *TRI =
         (const KVXRegisterInfo *)MF->getSubtarget().getRegisterInfo();
 
+  if (KVX::PairedRegRegClass.contains(DstReg, SrcReg)) {
+    LLVM_DEBUG(llvm::dbgs() << "It is a PairedReg copyq.\n");
     BuildMI(MBB, MBBI, DL, get(KVX::COPYQ), DstReg)
         .addReg(TRI->getSubReg(SrcReg, 1), getKillRegState(KillSrc))
         .addReg(TRI->getSubReg(SrcReg, 2), getKillRegState(KillSrc));
+    return;
+  }
+  if (KVX::SingleRegRegClass.contains(DstReg, SrcReg)) {
+    LLVM_DEBUG(llvm::dbgs() << "It is a SingleReg copyd.\n");
+    BuildMI(MBB, MBBI, DL, get(KVX::COPYD), DstReg)
+        .addReg(SrcReg, getKillRegState(KillSrc));
     return;
   }
 }

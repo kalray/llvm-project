@@ -161,10 +161,10 @@ v2f64 cmovefdp(v2f64 v1, v2f64 v2, v2i64 c) {
 v4f64 cmovefdq(v4f64 v1, v4f64 v2, v4i64 c) {
   return __builtin_kvx_cmovefdq(v1, v2, c, ".nez");
   // CHECK-LABEL: cmovefdq:
-  // CHECK: cmoved.dnez $r8 ? $r0 = $r4
-  // CHECK: cmoved.dnez $r10 ? $r2 = $r6
-  // CHECK: cmoved.dnez $r9 ? $r1 = $r5
-  // CHECK: cmoved.dnez $r11 ? $r3 = $r7
+  // CHECK-DAG: cmoved.dnez $r8 ? $r0 = $r4
+  // CHECK-DAG: cmoved.dnez $r10 ? $r2 = $r6
+  // CHECK-DAG: cmoved.dnez $r9 ? $r1 = $r5
+  // CHECK-DAG: cmoved.dnez $r11 ? $r3 = $r7
   // CHECK: ret
 }
 
@@ -855,10 +855,10 @@ v2f64 fixeddp(v2i64 v) {
 v4f64 fixeddq(v4i64 v) {
   return __builtin_kvx_fixeddq(v, 3, ".rn");
   // CHECK-LABEL: fixeddq:
-  // CHECK: fixedd.rn $r4 = $r0, 3
-  // CHECK: fixedd.rn $r6 = $r2, 3
-  // CHECK: fixedd.rn $r5 = $r1, 3
-  // CHECK: fixedd.rn $r7 = $r3, 3
+  // CHECK-DAG: fixedd.rn $r4 = $r0, 3
+  // CHECK-DAG: fixedd.rn $r6 = $r2, 3
+  // CHECK-DAG: fixedd.rn $r5 = $r1, 3
+  // CHECK-DAG: fixedd.rn $r7 = $r3, 3
   // CHECK: ret
 }
 
@@ -898,9 +898,9 @@ v2f64 fixedudp(v2u64 v) {
 v4f64 fixedudq(v4u64 v) {
   return __builtin_kvx_fixedudq(v, 3, ".rn");
   // CHECK-LABEL: fixedudq:
-  // CHECK: fixedud.rn $r4 = $r0, 3
-  // CHECK: fixedud.rn $r6 = $r2, 3
-  // CHECK: fixedud.rn $r5 = $r1, 3
-  // CHECK: fixedud.rn $r7 = $r3, 3
+  // CHECK-DAG: fixedud.rn $r4 = $r0, 3
+  // CHECK-DAG: fixedud.rn $r6 = $r2, 3
+  // CHECK-DAG: fixedud.rn $r5 = $r1, 3
+  // CHECK-DAG: fixedud.rn $r7 = $r3, 3
   // CHECK: ret
 }
