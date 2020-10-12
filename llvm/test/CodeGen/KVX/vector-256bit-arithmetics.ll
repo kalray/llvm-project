@@ -8471,3 +8471,88 @@ define <32 x i8> @p_mul_add_v32i8_v32i8(<32 x i8>* nocapture readonly %0, <32 x 
   store <32 x i8> %8, <32 x i8>* %2, align 32
   ret <32 x i8> %8
 }
+
+define <4 x i64> @fbnsigned_long_4__division_imm(<4 x i64> %a) {
+; CHECK-LABEL: fbnsigned_long_4__division_imm:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addd $r12 = $r12, -160
+; CHECK-NEXT:    get $r16 = $ra
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_def_cfa_offset 160
+; CHECK-NEXT:    sd 72[$r12] = $r16
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_offset 67, -88
+; CHECK-NEXT:    so 40[$r12] = $r24r25r26r27
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_offset 27, -96
+; CHECK-NEXT:    .cfi_offset 26, -104
+; CHECK-NEXT:    .cfi_offset 25, -112
+; CHECK-NEXT:    .cfi_offset 24, -120
+; CHECK-NEXT:    so 8[$r12] = $r20r21r22r23
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_offset 23, -128
+; CHECK-NEXT:    .cfi_offset 22, -136
+; CHECK-NEXT:    .cfi_offset 21, -144
+; CHECK-NEXT:    .cfi_offset 20, -152
+; CHECK-NEXT:    sd 0[$r12] = $r18
+; CHECK-NEXT:    copyd $r23 = $r3
+; CHECK-NEXT:    copyd $r22 = $r2
+; CHECK-NEXT:    copyd $r21 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_offset 18, -160
+; CHECK-NEXT:    copyd $r20 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    so 96[$r12] = $r20r21r22r23
+; CHECK-NEXT:    make $r18 = 3
+; CHECK-NEXT:    copyd $r0 = $r21
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    call __divdi3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r25 = $r0
+; CHECK-NEXT:    copyd $r0 = $r20
+; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    call __divdi3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r24 = $r0
+; CHECK-NEXT:    copyd $r0 = $r22
+; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    call __divdi3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r26 = $r0
+; CHECK-NEXT:    copyd $r0 = $r23
+; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    call __divdi3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r27 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    so 128[$r12] = $r24r25r26r27
+; CHECK-NEXT:    copyd $r0 = $r24
+; CHECK-NEXT:    copyd $r1 = $r25
+; CHECK-NEXT:    copyd $r2 = $r26
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r3 = $r27
+; CHECK-NEXT:    ld $r18 = 0[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lo $r20r21r22r23 = 8[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lo $r24r25r26r27 = 40[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r16 = 72[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    set $ra = $r16
+; CHECK-NEXT:    addd $r12 = $r12, 160
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_def_cfa_offset 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %a.addr = alloca <4 x i64>, align 32
+  %s = alloca <4 x i64>, align 32
+  store <4 x i64> %a, <4 x i64>* %a.addr, align 32
+  %0 = load <4 x i64>, <4 x i64>* %a.addr, align 32
+  %div = sdiv <4 x i64> %0, <i64 3, i64 3, i64 3, i64 3>
+  store <4 x i64> %div, <4 x i64>* %s, align 32
+  %1 = load <4 x i64>, <4 x i64>* %s, align 32
+  ret <4 x i64> %1
+}
