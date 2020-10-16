@@ -123,10 +123,6 @@ def SDTKVXTail : SDTypeProfile<0, -1, [SDTCisVT<0, i64>]>;
 
 def KVXWrapper : SDNode<"KVXISD::AddrWrapper", SDTKVXWrapper>;
 
-def SDT_KVXSelectCC : SDTypeProfile<1, 3, [SDTCisVT<0, i32>]>;
-
-def SelectCC : SDNode<"KVXISD::SELECT_CC", SDT_KVXSelectCC, []>;
-
 def Tail : SDNode <"KVXISD::TAIL", SDTKVXTail, [SDNPHasChain, SDNPOptInGlue, SDNPOutGlue, SDNPVariadic]>;
 
 def GetSystemReg : SDNode <"KVXISD::GetSystemReg", SDTypeProfile<1, 1, [SDTCisSameAs<0, 1>]>>;
@@ -744,76 +740,73 @@ def : Pat<(i64 AddrFI:$fi), (ADDDri64 SingleReg:$fi, (i64 0))>;
 
 def : Pat<(brind (i32 SingleReg:$r)), (IGOTO SingleReg:$r)>;
 
-
+// TODO: clean the patterns for SELECTCONDW and SELECTCONDD. The
+// Wrapped/Wrapped cases are catching Register Operands, why?
 let Constraints = "@earlyclobber $scratch, $dst = $falsev" in
-def Select32p : KVX_PSEUDO<(outs SingleReg:$dst, SingleReg:$scratch),
-        (ins SingleReg:$cmp, SingleReg:$truev, SingleReg:$falsev, ScalarcondMod:$cond),[]>;
+def SELECTp : KVX_PSEUDO<(outs SingleReg:$dst, SingleReg:$scratch),
+                         (ins SingleReg:$cmp, SingleReg:$truev, SingleReg:$falsev, ScalarcondMod:$cond),[]>;
 
-let Constraints = "@earlyclobber $scratch, $dst = $falsev" in
-def Select64p : KVX_PSEUDO<(outs SingleReg:$dst, SingleReg:$scratch),
-        (ins SingleReg:$cmp, SingleReg:$truev, SingleReg:$falsev, ScalarcondMod:$cond),[]>;
-
-multiclass Select32PAT<SDNode ntrue, SDNode nfalse, SDNode itrue, SDNode ifalse>
+multiclass SELECTCONDW<SDNode ntrue, SDNode nfalse, SDNode itrue, SDNode ifalse>
 {
-        def : Pat<(SelectCC (i32 (seteq i32:$val, (i32 0))), ntrue, nfalse),
-                (Select32p SingleReg:$val, itrue, ifalse, scalarcond_weqz)>;
+        def : Pat<(select (i32 (seteq i32:$val, (i32 0))), ntrue, nfalse),
+                (SELECTp SingleReg:$val, itrue, ifalse, scalarcond_weqz)>;
 
-        def : Pat<(SelectCC (i32 (setne i32:$val, (i32 0))), ntrue, nfalse),
-                (Select32p SingleReg:$val, itrue, ifalse, scalarcond_wnez)>;
+        def : Pat<(select (i32 (setne i32:$val, (i32 0))), ntrue, nfalse),
+                (SELECTp SingleReg:$val, itrue, ifalse, scalarcond_wnez)>;
 
-        def : Pat<(SelectCC (i32 (setlt i32:$val, (i32 0))), ntrue, nfalse),
-                (Select32p SingleReg:$val, itrue, ifalse, scalarcond_wltz)>;
+        def : Pat<(select (i32 (setlt i32:$val, (i32 0))), ntrue, nfalse),
+                (SELECTp SingleReg:$val, itrue, ifalse, scalarcond_wltz)>;
 
-        def : Pat<(SelectCC (i32 (setgt i32:$val, (i32 -1))), ntrue, nfalse),
-                (Select32p SingleReg:$val, itrue, ifalse, scalarcond_wgez)>;
+        def : Pat<(select (i32 (setgt i32:$val, (i32 -1))), ntrue, nfalse),
+                (SELECTp SingleReg:$val, itrue, ifalse, scalarcond_wgez)>;
 
-        def : Pat<(SelectCC (i32 (setlt i32:$val, (i32 1))), ntrue, nfalse),
-                (Select32p SingleReg:$val, itrue, ifalse, scalarcond_wlez)>;
+        def : Pat<(select (i32 (setlt i32:$val, (i32 1))), ntrue, nfalse),
+                (SELECTp SingleReg:$val, itrue, ifalse, scalarcond_wlez)>;
 
-        def : Pat<(SelectCC (i32 (setgt i32:$val, (i32 0))), ntrue, nfalse),
-                (Select32p SingleReg:$val, itrue, ifalse, scalarcond_wgtz)>;
+        def : Pat<(select (i32 (setgt i32:$val, (i32 0))), ntrue, nfalse),
+                (SELECTp SingleReg:$val, itrue, ifalse, scalarcond_wgtz)>;
 
-        def : Pat<(SelectCC (i32 (seteq (and i32:$val, (i32 1)), (i32 0))), ntrue, nfalse),
-                (Select32p SingleReg:$val, itrue, ifalse, scalarcond_even)>;
+        def : Pat<(select (i32 (seteq (and i32:$val, (i32 1)), (i32 0))), ntrue, nfalse),
+                (SELECTp SingleReg:$val, itrue, ifalse, scalarcond_even)>;
 
-        def : Pat<(SelectCC i32:$cmp, ntrue, nfalse),
-                (Select32p SingleReg:$cmp, itrue, ifalse, scalarcond_wnez)>;
+        def : Pat<(select i32:$cmp, ntrue, nfalse),
+                (SELECTp SingleReg:$cmp, itrue, ifalse, scalarcond_wnez)>;
 }
 
-defm : Select32PAT<(i32 i32:$truev), (i32 i32:$falsev), (i32 Wrapped32:$truev), (i32 Wrapped32:$falsev)>;
-defm : Select32PAT<(i64 i64:$truev), (i64 i64:$falsev), (i64 Wrapped64:$truev), (i64 Wrapped64:$falsev)>;
-defm : Select32PAT<(KVXWrapper tglobaladdr:$truev), (KVXWrapper tglobaladdr:$falsev), (i64 SingleReg:$truev), (i64 SingleReg:$falsev)>;
+defm : SELECTCONDW<(i32 i32:$truev), (i32 i32:$falsev), (i32 Wrapped32:$truev), (i32 Wrapped32:$falsev)>;
+defm : SELECTCONDW<(i64 i64:$truev), (i64 i64:$falsev), (i64 Wrapped64:$truev), (i64 Wrapped64:$falsev)>;
+defm : SELECTCONDW<(KVXWrapper tglobaladdr:$truev), (KVXWrapper tglobaladdr:$falsev), (i64 SingleReg:$truev), (i64 SingleReg:$falsev)>;
 
-multiclass Select64PAT<SDNode ntrue, SDNode nfalse, SDNode itrue, SDNode ifalse>
+multiclass SELECTCONDD<SDNode ntrue, SDNode nfalse, SDNode itrue, SDNode ifalse>
 {
-        def : Pat<(SelectCC (i32 (seteq i64:$val, (i64 0))), ntrue, nfalse),
-                (Select64p SingleReg:$val, itrue, ifalse, scalarcond_deqz)>;
+        def : Pat<(select (i32 (seteq i64:$val, (i64 0))), ntrue, nfalse),
+                (SELECTp SingleReg:$val, itrue, ifalse, scalarcond_deqz)>;
 
-        def : Pat<(SelectCC (i32 (setne i64:$val, (i64 0))), ntrue, nfalse),
-                (Select64p SingleReg:$val, itrue, ifalse, scalarcond_dnez)>;
+        def : Pat<(select (i32 (setne i64:$val, (i64 0))), ntrue, nfalse),
+                (SELECTp SingleReg:$val, itrue, ifalse, scalarcond_dnez)>;
 
-        def : Pat<(SelectCC (i32 (setlt i64:$val, (i64 0))), ntrue, nfalse),
-                (Select64p SingleReg:$val, itrue, ifalse, scalarcond_dltz)>;
+        def : Pat<(select (i32 (setlt i64:$val, (i64 0))), ntrue, nfalse),
+                (SELECTp SingleReg:$val, itrue, ifalse, scalarcond_dltz)>;
 
-        def : Pat<(SelectCC (i32 (setgt i64:$val, (i64 -1))), ntrue, nfalse),
-                (Select64p SingleReg:$val, itrue, ifalse, scalarcond_dgez)>;
+        def : Pat<(select (i32 (setgt i64:$val, (i64 -1))), ntrue, nfalse),
+                (SELECTp SingleReg:$val, itrue, ifalse, scalarcond_dgez)>;
 
-        def : Pat<(SelectCC (i32 (setlt i64:$val, (i64 1))), ntrue, nfalse),
-                (Select64p SingleReg:$val, itrue, ifalse, scalarcond_dlez)>;
+        def : Pat<(select (i32 (setlt i64:$val, (i64 1))), ntrue, nfalse),
+                (SELECTp SingleReg:$val, itrue, ifalse, scalarcond_dlez)>;
 
-        def : Pat<(SelectCC (i32 (setgt i64:$val, (i64 0))), ntrue, nfalse),
-                (Select64p SingleReg:$val, itrue, ifalse, scalarcond_dgtz)>;
+        def : Pat<(select (i32 (setgt i64:$val, (i64 0))), ntrue, nfalse),
+                (SELECTp SingleReg:$val, itrue, ifalse, scalarcond_dgtz)>;
 
-        def : Pat<(SelectCC (i32 (seteq (and i64:$val, (i64 1)), (i64 0))), ntrue, nfalse),
-                (Select64p SingleReg:$val, itrue, ifalse, scalarcond_even)>;
+        def : Pat<(select (i32 (seteq (and i64:$val, (i64 1)), (i64 0))), ntrue, nfalse),
+                (SELECTp SingleReg:$val, itrue, ifalse, scalarcond_even)>;
 
-        def : Pat<(SelectCC i64:$cmp, ntrue, nfalse),
-                (Select64p SingleReg:$cmp, itrue, ifalse, scalarcond_dnez)>;
+        def : Pat<(select i64:$cmp, ntrue, nfalse),
+                (SELECTp SingleReg:$cmp, itrue, ifalse, scalarcond_dnez)>;
 }
 
-defm : Select64PAT<(i32 i32:$truev), (i32 i32:$falsev), (i32 Wrapped32:$truev), (i32 Wrapped32:$falsev)>;
-defm : Select64PAT<(i64 i64:$truev), (i64 i64:$falsev), (i64 Wrapped64:$truev), (i64 Wrapped64:$falsev)>;
-defm : Select64PAT<(KVXWrapper tglobaladdr:$truev), (KVXWrapper tglobaladdr:$falsev), (i64 SingleReg:$truev), (i64 SingleReg:$falsev)>;
+defm : SELECTCONDD<(i32 i32:$truev), (i32 i32:$falsev), (i32 Wrapped32:$truev), (i32 Wrapped32:$falsev)>;
+defm : SELECTCONDD<(i64 i64:$truev), (i64 i64:$falsev), (i64 Wrapped64:$truev), (i64 Wrapped64:$falsev)>;
+defm : SELECTCONDD<(KVXWrapper tglobaladdr:$truev), (KVXWrapper tglobaladdr:$falsev), (i64 SingleReg:$truev), (i64 SingleReg:$falsev)>;
 
 def : Pat<(i1 (trunc i64:$param)), (ANDDri10 SingleReg:$param, (i64 1))>;
 def : Pat<(i8 (trunc i64:$param)), (ZXBD SingleReg:$param)>;

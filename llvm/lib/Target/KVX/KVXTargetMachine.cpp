@@ -47,6 +47,22 @@ extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeKVXTarget() {
   initializeKVXHardwareLoopsPass(*PR);
 }
 
+bool llvm::isScalarcondWord(unsigned Cond) {
+  switch (Cond) {
+  case KVXMOD::SCALARCOND_ODD:
+  case KVXMOD::SCALARCOND_EVEN:
+  case KVXMOD::SCALARCOND_WNEZ:
+  case KVXMOD::SCALARCOND_WEQZ:
+  case KVXMOD::SCALARCOND_WLTZ:
+  case KVXMOD::SCALARCOND_WGEZ:
+  case KVXMOD::SCALARCOND_WLEZ:
+  case KVXMOD::SCALARCOND_WGTZ:
+    return true;
+  default:
+    return false;
+  }
+}
+
 unsigned llvm::GetImmOpCode(int64_t imm, unsigned i10code, unsigned i37code,
                             unsigned i64code) {
   if (isInt<10>(imm))

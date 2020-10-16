@@ -81,53 +81,50 @@ bool KVXExpandPseudo::expandMBB(MachineBasicBlock &MBB) {
   return Modified;
 }
 
-static void InsertCMOVEInstr(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
-                             MachineBasicBlock::iterator MBBI, unsigned CmpReg,
-                             unsigned DestReg, unsigned Operand,
-                             unsigned Comp) {
+// Build a KVX::CMOVED MachineInstr from SELECT.
+static void BuildCMOVED(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
+                        MachineBasicBlock::iterator MBBI, Register DestReg,
+                        Register ValReg, Register CondReg,
+                        unsigned CondMod /*KVXMOD::SCALARCOND*/) {
   MachineInstr &MI = *MBBI;
   DebugLoc DL = MI.getDebugLoc();
 
-  switch (MI.getOperand(Operand).getType()) {
+  switch (MI.getOperand(ValReg).getType()) {
   case MachineOperand::MO_GlobalAddress:
     BuildMI(MBB, MBBI, DL, TII->get(KVX::CMOVEDri64), DestReg)
-        .addReg(CmpReg)
+        .addReg(CondReg)
         .addReg(DestReg)
-        .addGlobalAddress(MI.getOperand(Operand).getGlobal())
-        .addImm(Comp);
+        .addGlobalAddress(MI.getOperand(ValReg).getGlobal())
+        .addImm(CondMod);
     break;
   case MachineOperand::MO_Register: {
-    unsigned BranchValue = MI.getOperand(Operand).getReg();
-
     BuildMI(MBB, MBBI, DL, TII->get(KVX::CMOVEDrr), DestReg)
-        .addReg(CmpReg)
+        .addReg(CondReg)
         .addReg(DestReg)
-        .addReg(BranchValue)
-        .addImm(Comp);
+        .addReg(MI.getOperand(ValReg).getReg())
+        .addImm(CondMod);
   } break;
   case MachineOperand::MO_Immediate: {
-    int64_t BranchValueImm = MI.getOperand(Operand).getImm();
-
+    int64_t ValImm = MI.getOperand(ValReg).getImm();
     BuildMI(MBB, MBBI, DL,
-            TII->get(GetImmOpCode(BranchValueImm, KVX::CMOVEDri10,
-                                  KVX::CMOVEDri37, KVX::CMOVEDri64)),
+            TII->get(GetImmOpCode(ValImm, KVX::CMOVEDri10, KVX::CMOVEDri37,
+                                  KVX::CMOVEDri64)),
             DestReg)
-        .addReg(CmpReg)
+        .addReg(CondReg)
         .addReg(DestReg)
-        .addImm(BranchValueImm)
-        .addImm(Comp);
+        .addImm(ValImm)
+        .addImm(CondMod);
   } break;
   case MachineOperand::MO_FPImmediate: {
-    const ConstantFP *Imm = MI.getOperand(Operand).getFPImm();
-
+    const ConstantFP *ValImm = MI.getOperand(ValReg).getFPImm();
     BuildMI(MBB, MBBI, DL,
-            TII->get(Imm->getType()->isFloatTy() ? KVX::CMOVEDri37
-                                                 : KVX::CMOVEDri64),
+            TII->get(ValImm->getType()->isFloatTy() ? KVX::CMOVEDri37
+                                                    : KVX::CMOVEDri64),
             DestReg)
-        .addReg(CmpReg)
+        .addReg(CondReg)
         .addReg(DestReg)
-        .addFPImm(Imm)
-        .addImm(Comp);
+        .addFPImm(ValImm)
+        .addImm(CondMod);
   } break;
   default:
     llvm_unreachable("Operator type not handled");
@@ -135,76 +132,77 @@ static void InsertCMOVEInstr(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   }
 }
 
-static bool expandSelectInstr(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
-                              MachineBasicBlock::iterator MBBI, bool Word) {
+static bool expandSELECT(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
+                         MachineBasicBlock::iterator MBBI) {
   MachineInstr &MI = *MBBI;
   DebugLoc DL = MI.getDebugLoc();
-  unsigned DestReg = MI.getOperand(0).getReg();
-  unsigned ScratchReg = MI.getOperand(1).getReg();
-  unsigned CmpReg = MI.getOperand(2).getReg();
-  unsigned Reg = 0;
-  int64_t Cond = MI.getOperand(5).getImm();
-  int64_t InvCond = Cond % 2 == 0 ? Cond + 1 : Cond - 1;
 
-  if (MI.getOperand(4).isImm() || MI.getOperand(4).isFPImm() ||
-      MI.getOperand(4).isGlobal()) {
-    if (MI.getOperand(3).isReg()) {
-      Reg = MI.getOperand(3).getReg();
-      if (Reg == DestReg) {
-        InsertCMOVEInstr(TII, MBB, MBBI, CmpReg, Reg, 4, InvCond);
-        Reg = 0;
-      } else {
+  Register DestReg = MI.getOperand(0).getReg();
+  Register ScratchReg = MI.getOperand(1).getReg();
+  Register CondReg = MI.getOperand(2).getReg();
+  unsigned TrueReg = 3;
+  MachineOperand TrueVal = MI.getOperand(TrueReg);
+  unsigned FalseReg = 4;
+  MachineOperand FalseVal = MI.getOperand(FalseReg);
+  unsigned CondMod = MI.getOperand(5).getImm();
+
+  if (FalseVal.isImm() || FalseVal.isFPImm() || FalseVal.isGlobal()) {
+    // FalseVal is an immediate, inverse the condition to select
+    // FalseVal using faster CMOVED with immediate.
+    // TODO: Use a method based on KVXMOD::SCALARCOND enum.
+    CondMod = CondMod % 2 == 0 ? CondMod + 1 : CondMod - 1;
+
+    if (TrueVal.isReg()) {
+      Register Reg = TrueVal.getReg();
+
+      if (Reg != DestReg) {
         BuildMI(MBB, MBBI, DL, TII->get(KVX::COPYD), ScratchReg).addReg(Reg);
-        InsertCMOVEInstr(TII, MBB, MBBI, CmpReg, ScratchReg, 4, InvCond);
+        BuildCMOVED(TII, MBB, MBBI, ScratchReg, FalseReg, CondReg, CondMod);
+        BuildMI(MBB, MBBI, DL, TII->get(KVX::COPYD), DestReg)
+            .addReg(ScratchReg);
+      } else {
+        BuildCMOVED(TII, MBB, MBBI, Reg, FalseReg, CondReg, CondMod);
       }
 
     } else {
-      unsigned DestCompReg = Word ? DestReg : ScratchReg;
-      if (Word) // use SXWD as cheap copy
-      {
-        BuildMI(MBB, MBBI, DL, TII->get(KVX::SXWD), ScratchReg).addReg(CmpReg);
-      }
-      if (MI.getOperand(3).isImm()) {
-        int64_t immVal = MI.getOperand(3).getImm();
-        BuildMI(MBB, MBBI, DL, TII->get(GetImmMakeOpCode(immVal)), DestCompReg)
-            .addImm(immVal);
-      }
-      if (MI.getOperand(3).isFPImm()) {
-        unsigned MAKEi;
-        if (MI.getOperand(3).getFPImm()->getType()->isDoubleTy())
-          MAKEi = KVX::MAKEi64;
-        else
-          MAKEi = KVX::MAKEi43;
-        BuildMI(MBB, MBBI, DL, TII->get(MAKEi), DestCompReg)
-            .addFPImm(MI.getOperand(3).getFPImm());
-      }
-      if (MI.getOperand(3).isGlobal()) {
-        BuildMI(MBB, MBBI, DL, TII->get(KVX::MAKEi64), DestCompReg)
-            .addGlobalAddress(MI.getOperand(3).getGlobal());
-      }
-      InsertCMOVEInstr(TII, MBB, MBBI, Word ? ScratchReg : CmpReg, DestCompReg,
-                       4, InvCond);
-      if (!Word)
-        BuildMI(MBB, MBBI, DL, TII->get(KVX::COPYD), DestReg)
-            .addReg(ScratchReg);
-    }
-  } else {
-    if (MI.getOperand(4).isReg()) {
-      Reg = MI.getOperand(4).getReg();
-      if (Reg == DestReg) {
-        InsertCMOVEInstr(TII, MBB, MBBI, CmpReg, Reg, 3, Cond);
-        Reg = 0;
+
+      if (DestReg == CondReg) {
+        // Use ScartchReg to hold CondReg and optimize scheduling with
+        // immediate materialization.
+        unsigned COPY = isScalarcondWord(CondMod) ? KVX::COPYW : KVX::COPYD;
+        BuildMI(MBB, MBBI, DL, TII->get(COPY), ScratchReg).addReg(CondReg);
+        DestReg = CondReg;
       } else {
-        BuildMI(MBB, MBBI, DL, TII->get(KVX::COPYD), ScratchReg).addReg(Reg);
-        InsertCMOVEInstr(TII, MBB, MBBI, CmpReg, ScratchReg, 3, Cond);
+        ScratchReg = CondReg;
       }
+
+      if (TrueVal.isImm()) {
+        int64_t TrueImm = TrueVal.getImm();
+        unsigned MAKEi = GetImmMakeOpCode(TrueImm);
+        BuildMI(MBB, MBBI, DL, TII->get(MAKEi), DestReg).addImm(TrueImm);
+      } else if (TrueVal.isFPImm()) {
+        unsigned MAKEi;
+        if (TrueVal.getFPImm()->getType()->isDoubleTy())
+          MAKEi = KVX::MAKEi64;
+        else if (TrueVal.getFPImm()->getType()->isFloatTy())
+          MAKEi = KVX::MAKEi43;
+        else
+          MAKEi = KVX::MAKEi16;
+        BuildMI(MBB, MBBI, DL, TII->get(MAKEi), DestReg)
+            .addFPImm(TrueVal.getFPImm());
+      } else if (TrueVal.isGlobal()) {
+        BuildMI(MBB, MBBI, DL, TII->get(KVX::MAKEi64), DestReg)
+            .addGlobalAddress(TrueVal.getGlobal());
+      }
+
+      BuildCMOVED(TII, MBB, MBBI, DestReg, FalseReg, ScratchReg, CondMod);
     }
+
+  } else {
+    assert(FalseVal.isReg());
+    BuildCMOVED(TII, MBB, MBBI, FalseVal.getReg(), TrueReg, CondReg, CondMod);
   }
 
-  if (Reg != 0)
-    BuildMI(MBB, MBBI, DL, TII->get(KVX::COPYD), DestReg).addReg(ScratchReg);
-
-  // Remove the present instruction
   MI.eraseFromParent();
   return true;
 }
@@ -1095,11 +1093,8 @@ bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
                                MachineBasicBlock::iterator MBBI,
                                MachineBasicBlock::iterator &NextMBBI) {
   switch (MBBI->getOpcode()) {
-  case KVX::Select32p:
-    expandSelectInstr(TII, MBB, MBBI, true);
-    return true;
-  case KVX::Select64p:
-    expandSelectInstr(TII, MBB, MBBI, false);
+  case KVX::SELECTp:
+    expandSELECT(TII, MBB, MBBI);
     return true;
   case KVX::ALOADADDp:
   case KVX::ALOADSUBp:

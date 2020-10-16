@@ -147,6 +147,8 @@ enum SPLAT32 {
 
 } // namespace KVXMOD
 
+bool isScalarcondWord(unsigned Cond);
+
 unsigned GetImmOpCode(int64_t imm, unsigned i10code, unsigned i37code,
                       unsigned i64code);
 unsigned GetImmMakeOpCode(int64_t imm);
