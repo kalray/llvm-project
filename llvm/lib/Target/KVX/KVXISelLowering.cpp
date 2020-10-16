@@ -271,8 +271,6 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::MULHU, VT, Expand);
 
     setOperationAction(ISD::SELECT_CC, VT, Expand);
-    setOperationAction(ISD::SELECT, VT, Custom);
-
     setOperationAction(ISD::BR_CC, VT, Custom);
 
     setOperationAction(ISD::BSWAP, VT, Expand);
@@ -332,7 +330,6 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::FPOW, VT, VT == MVT::f16 ? Promote : Expand);
 
     setOperationAction(ISD::SELECT_CC, VT, Expand);
-    setOperationAction(ISD::SELECT, VT, Custom);
   }
 
   for (auto VT : {MVT::v2f64, MVT::v2f32, MVT::v4f32, MVT::v2i64, MVT::v4i32,
@@ -475,8 +472,6 @@ const char *KVXTargetLowering::getTargetNodeName(unsigned Opcode) const {
     return "KVX::CALL";
   case KVXISD::AddrWrapper:
     return "KVX::AddrWrapper";
-  case KVXISD::SELECT_CC:
-    return "KVX::SELECT_CC";
   case KVXISD::PICInternIndirection:
     return "KVX::PICInternIndirection";
   case KVXISD::PICExternIndirection:
@@ -869,8 +864,6 @@ SDValue KVXTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
     return lowerFRAMEADDR(Op, DAG);
   case ISD::FSUB:
     return lowerFSUB(Op, DAG);
-  case ISD::SELECT:
-    return lowerSELECT(Op, DAG);
   case ISD::MULHS:
     return lowerMULHVectorGeneric(Op, DAG, true);
   case ISD::MULHU:
@@ -1231,21 +1224,6 @@ SDValue KVXTargetLowering::lowerFSUB(SDValue Op, SelectionDAG &DAG) const {
 
     return Op;
   }
-}
-
-SDValue KVXTargetLowering::lowerSELECT(SDValue Op, SelectionDAG &DAG) const {
-
-  SDValue CondV = Op.getOperand(0);
-  SDValue TrueV = Op.getOperand(1);
-  SDValue FalseV = Op.getOperand(2);
-  SDLoc DL(Op);
-
-  SDVTList VTs = DAG.getVTList(Op.getValueType());
-  SDValue Ops[] = { CondV, TrueV, FalseV };
-
-  SDValue result = DAG.getNode(KVXISD::SELECT_CC, DL, VTs, Ops);
-
-  return result;
 }
 
 bool KVXTargetLowering::IsEligibleForTailCallOptimization(

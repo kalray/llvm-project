@@ -31,7 +31,6 @@ enum NodeType : unsigned {
   RET,
   CALL,
   AddrWrapper,
-  SELECT_CC,
   TAIL,
   GetSystemReg,
   PICInternIndirection,
@@ -105,7 +104,6 @@ private:
   SDValue lowerVAARG(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerFRAMEADDR(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerFSUB(SDValue Op, SelectionDAG &DAG) const;
-  SDValue lowerSELECT(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerMULHVectorGeneric(SDValue Op, SelectionDAG &DAG,
                                  bool Signed) const;
   SDValue lowerBlockAddress(SDValue Op, SelectionDAG &DAG) const;

@@ -4,9 +4,10 @@ int f(int a) {
   int r = a > 0 ? 5 : 7;
   return r;
   // CHECK: f
-  // CHECK: sxwd
-  // CHECK: cmoved.wlez
-  // CHECK-NOT: copyd
+  // CHECK: copyw $r1 = $r0
+  // CHECK: make $r0 = 5
+  // CHECK: ;;
+  // CHECK: cmoved.wlez $r1 ? $r0 = 7
   // CHECK: ret
 }
 
