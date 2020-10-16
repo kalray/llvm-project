@@ -19419,6 +19419,7 @@ static int KVX_getRoundingModifier(clang::ASTContext &Ctx,
   if (E->getStmtClass() == Stmt::StringLiteralClass) {
     StringRef Str = cast<clang::StringLiteral>(E)->getString();
     return llvm::StringSwitch<int>(Str)
+        .Case("", 7)
         .CaseLower(".rn", 0)
         .CaseLower(".ru", 1)
         .CaseLower(".rd", 2)
