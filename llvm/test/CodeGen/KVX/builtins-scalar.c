@@ -287,6 +287,13 @@ float ffmsw(float a, float b, float c) {
   return __builtin_kvx_ffmsw(a, b, c, ".rz");
 }
 
+float ffmsw_(float a, float b, float c) {
+  // CHECK-LABEL: ffmsw_:
+  // CHECK: ffmsw $r2 = $r0, $r1
+  // CHECK: ret
+  return __builtin_kvx_ffmsw(a, b, c, "");
+}
+
 double ffmsd(double a, double b, double c) {
   // CHECK-LABEL: ffmsd:
   // CHECK: ffmsd.rz
