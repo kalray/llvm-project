@@ -17,10 +17,9 @@ define <4 x float> @select_cc(i32 %0, <4 x float> %1, <4 x float> %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    copyd $r5 = $r4
 ; CHECK-NEXT:    copyd $r7 = $r2
-; CHECK-NEXT:    sxwd $r8 = $r0
 ; CHECK-NEXT:    make $r2 = -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wlez $r8 ? $r2 = 0
+; CHECK-NEXT:    cmoved.wlez $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    notw $r8 = $r2
 ; CHECK-NEXT:    copyd $r4 = $r3
