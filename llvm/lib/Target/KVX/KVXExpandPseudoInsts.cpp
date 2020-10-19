@@ -904,7 +904,7 @@ static bool expandStore(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   BuildMI(MBB, MBBI, DL, TII->get(GetImmOpCode(offset, ri10, ri37, ri64)))
       .addImm(offset)
       .addReg(base)
-      .addReg(val);
+      .addReg(val, MI.getOperand(2).isKill() ? RegState::Kill : 0);
 
   MI.eraseFromParent();
   return true;
