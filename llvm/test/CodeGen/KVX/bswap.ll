@@ -4,14 +4,7 @@
 define i16 @bswapi16(i16 %a) {
 ; CHECK-LABEL: bswapi16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    sllw $r1 = $r0, 24
-; CHECK-NEXT:    sllw $r0 = $r0, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r0 = $r0, 0xff0000
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    orw $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlw $r0 = $r0, 16
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 258
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %res = call i16 @llvm.bswap.i16(i16 %a)
@@ -21,20 +14,7 @@ define i16 @bswapi16(i16 %a) {
 define i32 @bswapi32(i32 %a) {
 ; CHECK-LABEL: bswapi32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srlw $r1 = $r0, 24
-; CHECK-NEXT:    srlw $r2 = $r0, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r2 = $r2, 0xff00
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    orw $r1 = $r2, $r1
-; CHECK-NEXT:    sllw $r2 = $r0, 24
-; CHECK-NEXT:    sllw $r0 = $r0, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r0 = $r0, 0xff0000
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    orw $r0 = $r2, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    orw $r0 = $r0, $r1
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1020408
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %res = call i32 @llvm.bswap.i32(i32 %a)
@@ -44,38 +24,7 @@ define i32 @bswapi32(i32 %a) {
 define i64 @bswapi64(i64 %a) {
 ; CHECK-LABEL: bswapi64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srld $r1 = $r0, 56
-; CHECK-NEXT:    srld $r2 = $r0, 40
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r2 = $r2, 0xff00
-; CHECK-NEXT:    srld $r3 = $r0, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r3 = $r3, 0xff000000
-; CHECK-NEXT:    ord $r1 = $r2, $r1
-; CHECK-NEXT:    srld $r2 = $r0, 24
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r2 = $r2, 0xff0000
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ord $r2 = $r3, $r2
-; CHECK-NEXT:    slld $r3 = $r0, 24
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ord $r1 = $r2, $r1
-; CHECK-NEXT:    slld $r2 = $r0, 8
-; CHECK-NEXT:    andd $r3 = $r3, 0xff0000000000
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r2 = $r2, 0xff00000000
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ord $r2 = $r3, $r2
-; CHECK-NEXT:    slld $r3 = $r0, 56
-; CHECK-NEXT:    slld $r0 = $r0, 40
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0xff000000000000
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ord $r0 = $r3, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ord $r0 = $r0, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ord $r0 = $r0, $r1
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x102040810204080
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %res = call i64 @llvm.bswap.i64(i64 %a)
