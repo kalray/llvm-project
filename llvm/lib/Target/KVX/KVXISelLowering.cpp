@@ -272,8 +272,6 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
 
     setOperationAction(ISD::SELECT_CC, VT, Expand);
     setOperationAction(ISD::BR_CC, VT, Custom);
-
-    setOperationAction(ISD::BSWAP, VT, Expand);
   }
   setOperationAction(ISD::ROTL, MVT::i64, Expand);
   setOperationAction(ISD::ROTR, MVT::i64, Expand);

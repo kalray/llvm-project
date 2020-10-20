@@ -931,3 +931,7 @@ def : Pat<(vinot v2i32:$v), (NOTD SingleReg:$v)>;
 
 def: Pat<(KVXJT tjumptable:$a), (MAKEi64 Wrapped64:$a)>;
 def: Pat<(KVXJT_PCREL i64:$a), (PCRELmi64 SingleReg:$a)>;
+
+def: Pat<(srl (i32 (bswap i32:$v)), (i64 16)), (SBMM8ri64 SingleReg:$v, 0x0102)>;
+def: Pat<(i32 (bswap i32:$v)), (SBMM8ri64 SingleReg:$v, 0x01020408)>;
+def: Pat<(i64 (bswap i64:$v)), (SBMM8ri64 SingleReg:$v, 0x0102040810204080)>;
