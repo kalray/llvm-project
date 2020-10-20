@@ -1724,8 +1724,14 @@ static uint64_t getRawAttributeMask(Attribute::AttrKind Val) {
   case Attribute::WillReturn:
     return 1ULL << 62;
   case Attribute::NoFree:
-    // return 1ULL << 63; // Temp fix, hope to be fixed in future llvm releases
-    llvm_unreachable("nofree attribute temporarily disabled by Kalray");
+    // return 1ULL << 63; // Temporary fix, should be fixed in next LLVM version
+    llvm::errs() << "Kalray temporarily disabled the raw attribute"
+                    " 'nofree', ignoring it.\n";
+    return 0; // TODO: NoFree is used in optimization passes.
+    // Use something useless for us, such as SwiftSelf.
+  case Attribute::NoSync:
+    llvm_unreachable("nosync attribute not supported in raw format");
+    break;
   case Attribute::MPPANative:
     return 1ULL << 63;
   default:
