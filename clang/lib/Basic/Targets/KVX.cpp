@@ -16,27 +16,43 @@
 #include "clang/Basic/Builtins.h"
 #include "clang/Basic/MacroBuilder.h"
 #include "clang/Basic/TargetBuiltins.h"
+#include "llvm/Support/Debug.h"
+
+#define DEBUG_TYPE "KVX-target"
 
 using namespace clang;
 using namespace clang::targets;
 
 ArrayRef<const char *> KVXTargetInfo::getGCCRegNames() const {
   static const char *const GCCRegNames[] = {
-      "$r0",   "$r1",   "$r2",   "$r3",   "$r4",   "$r5",   "$r6",   "$r7",
-      "$r8",   "$r9",   "$r10",  "$r11",  "$r12",  "$r13",  "$r14",  "$r15",
-      "$r16",  "$r17",  "$r18",  "$r19",  "$r20",  "$r21",  "$r22",  "$r23",
-      "$r24",  "$r25",  "$r26",  "$r27",  "$r28",  "$r29",  "$r30",  "$r31",
-      "$r32",  "$r33",  "$r34",  "$r35",  "$r36",  "$r37",  "$r38",  "$r39",
-      "$r40",  "$r41",  "$r42",  "$r43",  "$r44",  "$r45",  "$r46",  "$r47",
-      "$r48",  "$r49",  "$r50",  "$r51",  "$r52",  "$r53",  "$r54",  "$r55",
-      "$r56",  "$r57",  "$r58",  "$r59",  "$r60",  "$r61",  "$r62",  "$r63",
-      "$pc",   "$ps",   "$spc",  "$sps",  "$sspc", "$ssps", "$sr3",  "$sr4",
-      "$cs",   "$ra",   "$pcr",  "$ls",   "$le",   "$lc",   "$ea",   "$ev",
-      "$res0", "$res1", "$res2", "$res3", "$ev4",  "$men",  "$pmsa", "$aepc",
-      "$pm0",  "$pm1",  "$pm2",  "$pm3",  "$pmc",  "$sr0",  "$sr1",  "$sr2",
-      "$t0v",  "$t1v",  "$tcr",  "$wdc",  "$wdr",  "$ill",  "$ile",  "$ilh",
-      "$mmc",  "$tel",  "$teh",  "$dv",   "$oce0", "$oce1", "$ocec", "$ocea",
-      "$es",   "$ilr",  "$ws",   "$mes"};
+      /* GPR registers */
+      "$r0", "$r1", "$r2", "$r3", "$r4", "$r5", "$r6", "$r7", "$r8", "$r9",
+      "$r10", "$r11", "$r12", "$r13", "$r14", "$r15", "$r16", "$r17", "$r18",
+      "$r19", "$r20", "$r21", "$r22", "$r23", "$r24", "$r25", "$r26", "$r27",
+      "$r28", "$r29", "$r30", "$r31", "$r32", "$r33", "$r34", "$r35", "$r36",
+      "$r37", "$r38", "$r39", "$r40", "$r41", "$r42", "$r43", "$r44", "$r45",
+      "$r46", "$r47", "$r48", "$r49", "$r50", "$r51", "$r52", "$r53", "$r54",
+      "$r55", "$r56", "$r57", "$r58", "$r59", "$r60", "$r61", "$r62", "$r63",
+      /* Pair registers */
+      "$r0r1", "$r2r3", "$r4r5", "$r6r7", "$r8r9", "$r10r11", "$r12r13",
+      "$r14r15", "$r16r17", "$r18r19", "$r20r21", "$r22r23", "$r24r25",
+      "$r26r27", "$r28r29", "$r30r31", "$r32r33", "$r34r35", "$r36r37",
+      "$r38r39", "$r40r41", "$r42r43", "$r44r45", "$r46r47", "$r48r49",
+      "$r50r51", "$r52r53", "$r54r55", "$r56r57", "$r58r59", "$r60r61",
+      "$r62r63",
+      /* Quad registers */
+      "$r0r1r2r3", "$r4r5r6r7", "$r8r9r10r11", "$r12r13r14r15", "$r16r17r18r19",
+      "$r20r21r22r23", "$r24r25r26r27", "$r28r29r30r31", "$r32r33r34r35",
+      "$r36r37r38r39", "$r40r41r42r43", "$r44r45r46r47", "$r48r49r50r51",
+      "$r52r53r54r55", "$r56r57r58r59", "$r60r61r62r63",
+      /* System registers */
+      "$pc", "$ps", "$spc", "$sps", "$sspc", "$ssps", "$sr3", "$sr4", "$cs",
+      "$ra", "$pcr", "$ls", "$le", "$lc", "$ea", "$ev", "$res0", "$res1",
+      "$res2", "$res3", "$ev4", "$men", "$pmsa", "$aepc", "$pm0", "$pm1",
+      "$pm2", "$pm3", "$pmc", "$sr0", "$sr1", "$sr2", "$t0v", "$t1v", "$tcr",
+      "$wdc", "$wdr", "$ill", "$ile", "$ilh", "$mmc", "$tel", "$teh", "$dv",
+      "$oce0", "$oce1", "$ocec", "$ocea", "$es", "$ilr", "$ws", "$mes"};
+
   return llvm::makeArrayRef(GCCRegNames);
 }
 

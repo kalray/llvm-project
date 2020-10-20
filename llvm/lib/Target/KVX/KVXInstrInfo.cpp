@@ -39,33 +39,42 @@ void KVXInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
                                MachineBasicBlock::iterator MBBI,
                                const DebugLoc &DL, MCRegister DstReg,
                                MCRegister SrcReg, bool KillSrc) const {
-  LLVM_DEBUG(llvm::dbgs() << "Performing copy of physical register. ");
+  MachineFunction *MF = MBB.getParent();
+  const KVXRegisterInfo *TRI =
+      (const KVXRegisterInfo *)MF->getSubtarget().getRegisterInfo();
+
+  LLVM_DEBUG(dbgs() << "Copy register (" + TRI->getRegAsmName(SrcReg.id()) +
+                           ") to register (" + TRI->getRegAsmName(DstReg.id()) +
+                           ").\n");
+
   // GPR to GPR
   if (KVX::QuadRegRegClass.contains(DstReg, SrcReg)) {
-    LLVM_DEBUG(llvm::dbgs() << "It is a QuadReg copyo.\n");
+    LLVM_DEBUG(dbgs() << "It is a QuadReg copyo.\n");
     BuildMI(MBB, MBBI, DL, get(KVX::COPYO), DstReg)
         .addReg(SrcReg, getKillRegState(KillSrc));
     return;
   }
-    MachineFunction *MF = MBB.getParent();
-    const KVXRegisterInfo *TRI =
-        (const KVXRegisterInfo *)MF->getSubtarget().getRegisterInfo();
-
   if (KVX::PairedRegRegClass.contains(DstReg, SrcReg)) {
-    LLVM_DEBUG(llvm::dbgs() << "It is a PairedReg copyq.\n");
+    LLVM_DEBUG(dbgs() << "It is a PairedReg copyq.\n");
     BuildMI(MBB, MBBI, DL, get(KVX::COPYQ), DstReg)
         .addReg(TRI->getSubReg(SrcReg, 1), getKillRegState(KillSrc))
         .addReg(TRI->getSubReg(SrcReg, 2), getKillRegState(KillSrc));
     return;
   }
   if (KVX::SingleRegRegClass.contains(DstReg, SrcReg)) {
-    LLVM_DEBUG(llvm::dbgs() << "It is a SingleReg copyd.\n");
+    LLVM_DEBUG(dbgs() << "It is a SingleReg copyd.\n");
     BuildMI(MBB, MBBI, DL, get(KVX::COPYD), DstReg)
         .addReg(SrcReg, getKillRegState(KillSrc));
     return;
   }
-}
 
+  // TODO: Is there a way to have a pritty print, pointing to the source code
+  // position of the error? We do have the DebLoc.
+  report_fatal_error(
+      "Don't know how to handle register copy from source register (" +
+      TRI->getRegAsmName(SrcReg.id()) + ") to destination register (" +
+      TRI->getRegAsmName(DstReg.id()) + ").\n");
+}
 unsigned findScratchRegister(MachineBasicBlock &MBB, bool UseAtEnd,
                              unsigned DefaultReg = KVX::R16) {
   RegScavenger RS;
@@ -121,29 +130,37 @@ void KVXInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
                                         Register DstReg, int FI,
                                         const TargetRegisterClass *RC,
                                         const TargetRegisterInfo *TRI) const {
+  LLVM_DEBUG(dbgs() << "Loading from stack to register (" << DstReg << ").\n");
   DebugLoc DL;
   if (I != MBB.end())
     DL = I->getDebugLoc();
 
   if (KVX::SingleRegRegClass.hasSubClassEq(RC)) {
+    LLVM_DEBUG(dbgs() << "It is a single GPR, loading using LDp.\n");
     BuildMI(MBB, I, DL, get(KVX::LDp), DstReg)
         .addImm(0)
         .addFrameIndex(FI)
         .addImm(KVXMOD::VARIANT_);
+    return;
   }
   if (KVX::PairedRegRegClass.hasSubClassEq(RC)) {
+    LLVM_DEBUG(dbgs() << "It is a paired GPR, loading using LQp.\n");
     BuildMI(MBB, I, DL, get(KVX::LQp), DstReg)
         .addImm(0)
         .addFrameIndex(FI)
         .addImm(KVXMOD::VARIANT_);
+    return;
   }
   if (KVX::QuadRegRegClass.hasSubClassEq(RC)) {
+    LLVM_DEBUG(dbgs() << "It is a quad GPR, loading using LOp.\n");
     BuildMI(MBB, I, DL, get(KVX::LOp), DstReg)
         .addImm(0)
         .addFrameIndex(FI)
         .addImm(KVXMOD::VARIANT_);
+    return;
   }
   if (KVX::OnlyraRegRegClass.hasSubClassEq(RC)) {
+    LLVM_DEBUG(dbgs() << "It is a RA register, using LDp and SETrsta.\n");
     unsigned ScratchReg = findScratchRegister(MBB, true);
     BuildMI(MBB, I, DL, get(KVX::LDp), ScratchReg)
         .addImm(0)
@@ -151,7 +168,9 @@ void KVXInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
         .addImm(KVXMOD::VARIANT_);
     BuildMI(MBB, I, DL, get(KVX::SETrsra), KVX::RA)
         .addReg(ScratchReg, RegState::Kill);
+    return;
   }
+  report_fatal_error("Don't know how to load register from the stack.");
 }
 
 void KVXInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
@@ -159,32 +178,41 @@ void KVXInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
                                        Register SrcReg, bool IsKill, int FI,
                                        const TargetRegisterClass *RC,
                                        const TargetRegisterInfo *TRI) const {
+  LLVM_DEBUG(dbgs() << "Storing register (" << SrcReg << ") to stack.\n");
+
   DebugLoc DL;
   if (I != MBB.end())
     DL = I->getDebugLoc();
 
   if (KVX::SingleRegRegClass.hasSubClassEq(RC)) {
+    LLVM_DEBUG(dbgs() << "It is a single GPR, storing using SDp.\n");
     BuildMI(MBB, I, DL, get(KVX::SDp))
         .addImm(0)
         .addFrameIndex(FI)
         .addReg(SrcReg, getKillRegState(IsKill))
         .setMIFlags(MachineInstr::FrameSetup);
+    return;
   }
   if (KVX::PairedRegRegClass.hasSubClassEq(RC)) {
+    LLVM_DEBUG(dbgs() << "It is a paired GPR, storing using SQp.\n");
     BuildMI(MBB, I, DL, get(KVX::SQp))
         .addImm(0)
         .addFrameIndex(FI)
         .addReg(SrcReg, getKillRegState(IsKill))
         .setMIFlags(MachineInstr::FrameSetup);
+    return;
   }
   if (KVX::QuadRegRegClass.hasSubClassEq(RC)) {
+    LLVM_DEBUG(dbgs() << "It is a quad GPR, storing using SOp.\n");
     BuildMI(MBB, I, DL, get(KVX::SOp))
         .addImm(0)
         .addFrameIndex(FI)
         .addReg(SrcReg, getKillRegState(IsKill))
         .setMIFlags(MachineInstr::FrameSetup);
+    return;
   }
   if (KVX::OnlyraRegRegClass.hasSubClassEq(RC)) {
+    LLVM_DEBUG(dbgs() << "It is a RA register, using GETss2 and SDp.\n");
     unsigned ScratchReg = findScratchRegister(MBB, false);
     BuildMI(MBB, I, DL, get(KVX::GETss2), ScratchReg)
         .addReg(KVX::RA)
@@ -194,7 +222,9 @@ void KVXInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
         .addImm(0)
         .addFrameIndex(FI)
         .addReg(ScratchReg, RegState::Kill);
+    return;
   }
+  report_fatal_error("Don't know how to store register to the stack.");
 }
 
 DFAPacketizer *
