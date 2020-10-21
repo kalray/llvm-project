@@ -1454,6 +1454,12 @@ void ASTContext::InitBuiltinTypes(const TargetInfo &Target,
 #include "clang/Basic/PPCTypes.def"
   }
 
+  if (Target.getTriple().isKVX()) {
+#define KVX_TCA_VECTOR_TYPE(Name, Id, Size) \
+    InitBuiltinType(Id##Ty, BuiltinType::Id);
+#include "clang/Basic/KVXTypes.def"
+  }
+
   if (Target.hasRISCVVTypes()) {
 #define RVV_TYPE(Name, Id, SingletonId)                                        \
   InitBuiltinType(SingletonId, BuiltinType::Id);
@@ -2232,6 +2238,12 @@ TypeInfo ASTContext::getTypeInfoImpl(const Type *T) const {
     Align = Size;                                                              \
     break;
 #include "clang/Basic/PPCTypes.def"
+#define KVX_TCA_VECTOR_TYPE(Name, Id, Size)                                    \
+  case BuiltinType::Id:                                                        \
+    Width = Size;                                                              \
+    Align = Size;                                                              \
+      break;
+#include "clang/Basic/KVXTypes.def"
 #define RVV_VECTOR_TYPE(Name, Id, SingletonId, ElKind, ElBits, NF, IsSigned,   \
                         IsFP)                                                  \
   case BuiltinType::Id:                                                        \
@@ -7954,6 +7966,9 @@ static char getObjCEncodingForPrimitiveType(const ASTContext *C,
 #define PPC_VECTOR_TYPE(Name, Id, Size) \
     case BuiltinType::Id:
 #include "clang/Basic/PPCTypes.def"
+#define KVX_TCA_VECTOR_TYPE(Name, Id, Size) \
+    case BuiltinType::Id:
+#include "clang/Basic/KVXTypes.def"
 #define BUILTIN_TYPE(KIND, ID)
 #define PLACEHOLDER_TYPE(KIND, ID) \
     case BuiltinType::KIND:
