@@ -768,6 +768,9 @@ let Class = BuiltinType in {
 #define PPC_VECTOR_TYPE(NAME, ID, SIZE) \
       case BuiltinType::ID: return ctx.ID##Ty;
 #include "clang/Basic/PPCTypes.def"
+#define KVX_TCA_VECTOR_TYPE(NAME, ID, SIZE) \
+      case BuiltinType::ID: return ctx.ID##Ty;
+#include "clang/Basic/KVXTypes.def"
 
 #define BUILTIN_TYPE(ID, SINGLETON_ID) \
       case BuiltinType::ID: return ctx.SINGLETON_ID;

@@ -242,6 +242,11 @@ serialization::TypeIdxFromBuiltin(const BuiltinType *BT) {
     ID = PREDEF_TYPE_##Id##_ID; \
     break;
 #include "clang/Basic/PPCTypes.def"
+#define KVX_TCA_VECTOR_TYPE(Name, Id, Size) \
+  case BuiltinType::Id: \
+    ID = PREDEF_TYPE_##Id##_ID; \
+    break;
+#include "clang/Basic/KVXTypes.def"
   case BuiltinType::BuiltinFn:
     ID = PREDEF_TYPE_BUILTIN_FN;
     break;
