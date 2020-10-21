@@ -77,8 +77,7 @@ def VariantMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 3);}]
 }
 
 def SpeculateMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 1);}]> {
-  // FIXME: PrintMethod is not implemented yet
-  // let PrintMethod = "printSpeculateMod";
+  let PrintMethod = "printSpeculateMod";
 }
 
 def ColumnMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 3);}]> {

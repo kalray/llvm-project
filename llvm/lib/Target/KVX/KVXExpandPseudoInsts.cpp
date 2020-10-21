@@ -1172,6 +1172,9 @@ bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
   case KVX::SOp:
     expandStore(TII, MBB, MBBI, KVX::SOri10, KVX::SOri37, KVX::SOri64);
     return true;
+  case KVX::SVp:
+    expandStore(TII, MBB, MBBI, KVX::SVri10, KVX::SVri37, KVX::SVri64);
+    return true;
   case KVX::LBSp:
     expandLoad(TII, MBB, MBBI, KVX::LBSri10, KVX::LBSri37, KVX::LBSri64);
     return true;
@@ -1198,6 +1201,9 @@ bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
     return true;
   case KVX::LOp:
     expandLoad(TII, MBB, MBBI, KVX::LOri10, KVX::LOri37, KVX::LOri64);
+    return true;
+  case KVX::LVp:
+    expandLoad(TII, MBB, MBBI, KVX::LVri10, KVX::LVri37, KVX::LVri64);
     return true;
   case KVX::MADDWp:
     expandMADDW(TII, MBB, MBBI);
