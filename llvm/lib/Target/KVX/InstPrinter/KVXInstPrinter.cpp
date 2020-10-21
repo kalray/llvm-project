@@ -281,8 +281,8 @@ void KVXInstPrinter::printRoundingMod(const MCInst *MI, unsigned OpNo,
 void KVXInstPrinter::printSilentMod(const MCInst *MI, unsigned OpNo,
                                     raw_ostream &O) {
   const MCOperand &MO = MI->getOperand(OpNo);
-  int silent = MO.getImm();
-  switch (silent) {
+  int Silent = MO.getImm();
+  switch (Silent) {
   case 0: // Effects on CS
     break;
   case 1: // Silent on CS
@@ -291,6 +291,12 @@ void KVXInstPrinter::printSilentMod(const MCInst *MI, unsigned OpNo,
   default:
     llvm_unreachable("illegal silent mode");
   }
+}
+
+void KVXInstPrinter::printSpeculateMod(const MCInst *MI, unsigned OpNo,
+                                       raw_ostream &O) {
+  // Can use silent mode: 0 = normal = "" / 1 = speculative = ".s"
+  printSilentMod(MI, OpNo, O);
 }
 
 void KVXInstPrinter::printFloatcompMod(const MCInst *MI, unsigned OpNo,

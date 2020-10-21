@@ -15,6 +15,7 @@ add_public_tablegen_target(KVXCommonTableGen)
 add_llvm_target(KVXCodeGen
     KVXISelDAGToDAG.cpp
     KVXISelLowering.cpp
+    KVXTCAIselLowering.cpp
     KVXAsmPrinter.cpp
     KVXExpandPseudoInsts.cpp
     KVXInstrInfo.cpp

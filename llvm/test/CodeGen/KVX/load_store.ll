@@ -251,3 +251,33 @@ define void @lo_4xi64_rr_s(<4 x i64> addrspace(258)* %0, i32 %1) {
   %5 = load volatile <4 x i64>, <4 x i64> addrspace(258)* %4, align 32
   ret void
 }
+
+define void @lv_s_sv(<256 x i1> addrspace(258)* %0, i64 %1) {
+; CHECK-LABEL: lv_s_sv:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    lv.s.xs $a0 = $r1[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 0[$r0] = $a0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %2 = getelementptr inbounds <256 x i1>, <256 x i1> addrspace(258)* %0, i64 %1
+  %3 = load volatile <256 x i1>, <256 x i1> addrspace(258)* %2, align 32
+  store volatile <256 x i1> %3, <256 x i1>addrspace(258)* %0, align 32
+  ret void
+}
+
+define void @lv_sv(<256 x i1> * %0, i64 %1) {
+; CHECK-LABEL: lv_sv:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    lv.xs $a0 = $r1[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 0[$r0] = $a0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %2 = getelementptr inbounds <256 x i1>, <256 x i1> * %0, i64 %1
+  %3 = load volatile <256 x i1>, <256 x i1>* %2, align 32
+  store volatile <256 x i1> %3, <256 x i1>* %0, align 32
+  ret void
+}
