@@ -47,6 +47,8 @@ enum NodeType : unsigned {
 
 class KVXTargetLowering : public TargetLowering {
   const KVXSubtarget &Subtarget;
+  void initializeTCARegisters();
+  void initializeTCALowering();
 
 public:
   explicit KVXTargetLowering(const TargetMachine &TM, const KVXSubtarget &STI);

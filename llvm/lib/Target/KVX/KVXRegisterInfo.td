@@ -1350,7 +1350,7 @@ def QuadReg : RegisterClass<"KVX",
 // XCR - Extension Coprocessor Registers
 let Size = 64 in
 def CoproReg : RegisterClass<"KVX",
-  [i64],
+  [v64i1],
   64, (add
      C0,   C1,   C2,   C3,   C4,   C5,   C6,   C7,   C8,   C9,  C10,  C11,
     C12,  C13,  C14,  C15,  C16,  C17,  C18,  C19,  C20,  C21,  C22,  C23,
@@ -1378,7 +1378,7 @@ def CoproReg : RegisterClass<"KVX",
 // XBR - Extension Block Registers
 let Size = 128 in
 def BlockReg : RegisterClass<"KVX",
-  [v2i64],
+  [v128i1],
   128, (add
      B0,   B1,   B2,   B3,   B4,   B5,   B6,   B7,   B8,   B9,  B10,  B11,
     B12,  B13,  B14,  B15,  B16,  B17,  B18,  B19,  B20,  B21,  B22,  B23,
@@ -1395,7 +1395,7 @@ def BlockReg : RegisterClass<"KVX",
 // XVR - Extension Vector Registers
 let Size = 256 in
 def VectorReg : RegisterClass<"KVX",
-  [v4i64],
+  [v256i1],
   256, (add
     A0,  A1,  A2,  A3,  A4,  A5,  A6,  A7,  A8,  A9, A10, A11, A12, A13, A14,
    A15, A16, A17, A18, A19, A20, A21, A22, A23, A24, A25, A26, A27, A28, A29,
@@ -1406,7 +1406,7 @@ def VectorReg : RegisterClass<"KVX",
 // XWR - Extension Wide Registers
 let Size = 512 in
 def WideReg : RegisterClass<"KVX",
-  [v8i64],
+  [v512i1],
   512, (add
     W0,  W1,  W2,  W3,  W4,  W5,  W6,  W7,  W8,  W9, W10, W11, W12, W13, W14,
    W15, W16, W17, W18, W19, W20, W21, W22, W23, W24, W25, W26, W27, W28, W29,
@@ -1415,7 +1415,7 @@ def WideReg : RegisterClass<"KVX",
 // XMR - Extension Matrix Registers
 let Size = 1024 in
 def MatrixReg : RegisterClass<"KVX",
-  [v16i64],
+  [v1024i1],
   1024, (add
     X0,  X1,  X2,  X3,  X4,  X5,  X6,  X7,  X8,  X9, X10, X11, X12, X13, X14,
    X15)>;
@@ -1613,7 +1613,7 @@ def OnlyswapReg : RegisterClass<"KVX",
 // XVR - Accelerator Registers Even Numbered
 let Size = 256 in
 def VectorRegE : RegisterClass<"KVX",
-  [v4i64],
+  [v256i1],
   256, (add
     A0,  A2,  A4,  A6,  A8, A10, A12, A14, A16, A18, A20, A22, A24, A26, A28,
    A30, A32, A34, A36, A38, A40, A42, A44, A46, A48, A50, A52, A54, A56, A58,
@@ -1622,7 +1622,7 @@ def VectorRegE : RegisterClass<"KVX",
 // XVR - Accelerator Registers Odd Numbered
 let Size = 256 in
 def VectorRegO : RegisterClass<"KVX",
-  [v4i64],
+  [v256i1],
   256, (add
     A1,  A3,  A5,  A7,  A9, A11, A13, A15, A17, A19, A21, A23, A25, A27, A29,
    A31, A33, A35, A37, A39, A41, A43, A45, A47, A49, A51, A53, A55, A57, A59,
@@ -1631,7 +1631,7 @@ def VectorRegO : RegisterClass<"KVX",
 // XBR - Block Registers Even Numbered
 let Size = 128 in
 def BlockRegE : RegisterClass<"KVX",
-  [v2i64],
+  [v128i1],
   128, (add
      B0,   B2,   B4,   B6,   B8,  B10,  B12,  B14,  B16,  B18,  B20,  B22,
     B24,  B26,  B28,  B30,  B32,  B34,  B36,  B38,  B40,  B42,  B44,  B46,
@@ -1643,7 +1643,7 @@ def BlockRegE : RegisterClass<"KVX",
 // XBR - Block Registers Odd Numbered
 let Size = 128 in
 def BlockRegO : RegisterClass<"KVX",
-  [v2i64],
+  [v128i1],
   128, (add
      B1,   B3,   B5,   B7,   B9,  B11,  B13,  B15,  B17,  B19,  B21,  B23,
     B25,  B27,  B29,  B31,  B33,  B35,  B37,  B39,  B41,  B43,  B45,  B47,
@@ -1655,7 +1655,7 @@ def BlockRegO : RegisterClass<"KVX",
 // XBR - Block Registers 0 Modulo 4
 let Size = 128 in
 def BlockReg0M4 : RegisterClass<"KVX",
-  [v2i64],
+  [v128i1],
   128, (add
      B0,   B4,   B8,  B12,  B16,  B20,  B24,  B28,  B32,  B36,  B40,  B44,
     B48,  B52,  B56,  B60,  B64,  B68,  B72,  B76,  B80,  B84,  B88,  B92,
@@ -1664,7 +1664,7 @@ def BlockReg0M4 : RegisterClass<"KVX",
 // XBR - Block Registers 1 Modulo 4
 let Size = 128 in
 def BlockReg1M4 : RegisterClass<"KVX",
-  [v2i64],
+  [v128i1],
   128, (add
      B1,   B5,   B9,  B13,  B17,  B21,  B25,  B29,  B33,  B37,  B41,  B45,
     B49,  B53,  B57,  B61,  B65,  B69,  B73,  B77,  B81,  B85,  B89,  B93,
@@ -1673,7 +1673,7 @@ def BlockReg1M4 : RegisterClass<"KVX",
 // XBR - Block Registers 2 Modulo 4
 let Size = 128 in
 def BlockReg2M4 : RegisterClass<"KVX",
-  [v2i64],
+  [v128i1],
   128, (add
      B2,   B6,  B10,  B14,  B18,  B22,  B26,  B30,  B34,  B38,  B42,  B46,
     B50,  B54,  B58,  B62,  B66,  B70,  B74,  B78,  B82,  B86,  B90,  B94,
@@ -1682,7 +1682,7 @@ def BlockReg2M4 : RegisterClass<"KVX",
 // XBR - Block Registers 3 Modulo 4
 let Size = 128 in
 def BlockReg3M4 : RegisterClass<"KVX",
-  [v2i64],
+  [v128i1],
   128, (add
      B3,   B7,  B11,  B15,  B19,  B23,  B27,  B31,  B35,  B39,  B43,  B47,
     B51,  B55,  B59,  B63,  B67,  B71,  B75,  B79,  B83,  B87,  B91,  B95,
@@ -1691,7 +1691,7 @@ def BlockReg3M4 : RegisterClass<"KVX",
 // XCR - Coprocessor Registers 0 Modulo 4
 let Size = 64 in
 def CoproReg0M4 : RegisterClass<"KVX",
-  [i64],
+  [v64i1],
   64, (add
      C0,   C4,   C8,  C12,  C16,  C20,  C24,  C28,  C32,  C36,  C40,  C44,
     C48,  C52,  C56,  C60,  C64,  C68,  C72,  C76,  C80,  C84,  C88,  C92,
@@ -1703,7 +1703,7 @@ def CoproReg0M4 : RegisterClass<"KVX",
 // XCR - Coprocessor Registers 1 Modulo 4
 let Size = 64 in
 def CoproReg1M4 : RegisterClass<"KVX",
-  [i64],
+  [v64i1],
   64, (add
      C1,   C5,   C9,  C13,  C17,  C21,  C25,  C29,  C33,  C37,  C41,  C45,
     C49,  C53,  C57,  C61,  C65,  C69,  C73,  C77,  C81,  C85,  C89,  C93,
@@ -1715,7 +1715,7 @@ def CoproReg1M4 : RegisterClass<"KVX",
 // XCR - Coprocessor Registers 2 Modulo 4
 let Size = 64 in
 def CoproReg2M4 : RegisterClass<"KVX",
-  [i64],
+  [v64i1],
   64, (add
      C2,   C6,  C10,  C14,  C18,  C22,  C26,  C30,  C34,  C38,  C42,  C46,
     C50,  C54,  C58,  C62,  C66,  C70,  C74,  C78,  C82,  C86,  C90,  C94,
@@ -1727,7 +1727,7 @@ def CoproReg2M4 : RegisterClass<"KVX",
 // XCR - Coprocessor Registers 3 Modulo 4
 let Size = 64 in
 def CoproReg3M4 : RegisterClass<"KVX",
-  [i64],
+  [v64i1],
   64, (add
      C3,   C7,  C11,  C15,  C19,  C23,  C27,  C31,  C35,  C39,  C43,  C47,
     C51,  C55,  C59,  C63,  C67,  C71,  C75,  C79,  C83,  C87,  C91,  C95,

@@ -84,6 +84,7 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   addRegisterClass(MVT::v4f32, &KVX::PairedRegRegClass);
   addRegisterClass(MVT::v2f64, &KVX::PairedRegRegClass);
   addRegisterClass(MVT::v4f64, &KVX::QuadRegRegClass);
+  initializeTCARegisters();
 
   // Compute derived properties from the register classes
   computeRegisterProperties(STI.getRegisterInfo());
@@ -91,6 +92,8 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setStackPointerRegisterToSaveRestore(getSPReg());
 
   setSchedulingPreference(Sched::Source);
+
+  initializeTCALowering();
 
   setOperationAction(ISD::SDIV, MVT::i32, Promote);
   setOperationAction(ISD::SDIVREM, MVT::i32, Promote);
