@@ -1318,66 +1318,89 @@ std::pair<unsigned, const TargetRegisterClass *>
 KVXTargetLowering::getRegForInlineAsmConstraint(const TargetRegisterInfo *TRI,
                                                 StringRef Constraint,
                                                 MVT VT) const {
-  if (Constraint.size() == 1) {
-    switch (Constraint[0]) {
-    case 'r': {
-      switch (VT.SimpleTy) {
-      case MVT::i1:  // i1 is not a valid type though
-      case MVT::i8:  // i8 is not a valid type though
-      case MVT::i16: // i16 is not a valid type though
-      case MVT::i32:
-      case MVT::i64:
-      case MVT::v2i8:
-      case MVT::v4i8:
-      case MVT::v8i8:
-      case MVT::v2i16:
-      case MVT::v2i32:
-      case MVT::v4i16:
-      case MVT::f16:
-      case MVT::f32:
-      case MVT::f64:
-      case MVT::v4f16:
-      case MVT::v2f16:
-      case MVT::v2f32:
-        return std::make_pair(0U, &KVX::SingleRegRegClass);
-      case MVT::v2i64:
-      case MVT::v4i32:
-      case MVT::v4f32:
-      case MVT::v2f64:
-        return std::make_pair(0U, &KVX::PairedRegRegClass);
-      case MVT::v4i64:
-      case MVT::v4f64:
-        return std::make_pair(0U, &KVX::QuadRegRegClass);
-      default:
-        break;
-      }
-      break;
-    }
+  if (Constraint == "r") {
+    switch (VT.SimpleTy) {
+    case MVT::i1:  // i1 is not a valid type though
+    case MVT::i8:  // i8 is not a valid type though
+    case MVT::i16: // i16 is not a valid type though
+    case MVT::i32:
+    case MVT::i64:
+    case MVT::v2i8:
+    case MVT::v4i8:
+    case MVT::v8i8:
+    case MVT::v2i16:
+    case MVT::v2i32:
+    case MVT::v4i16:
+    case MVT::f16:
+    case MVT::f32:
+    case MVT::f64:
+    case MVT::v4f16:
+    case MVT::v2f16:
+    case MVT::v2f32:
+      return std::make_pair(0U, &KVX::SingleRegRegClass);
+    case MVT::v2i64:
+    case MVT::v4i32:
+    case MVT::v4f32:
+    case MVT::v2f64:
+      return std::make_pair(0U, &KVX::PairedRegRegClass);
+    case MVT::v4i64:
+    case MVT::v4f64:
+      return std::make_pair(0U, &KVX::QuadRegRegClass);
     default:
-      break;
+      return TargetLowering::getRegForInlineAsmConstraint(TRI, Constraint, VT);
     }
-    return TargetLowering::getRegForInlineAsmConstraint(TRI, Constraint, VT);
+  } else if (Constraint == "w") {
+    switch (VT.SimpleTy) {
+    case MVT::v64i1:
+    case MVT::v128i1:
+    case MVT::v256i1:
+      return std::make_pair(0U, &KVX::VectorRegRegClass);
+    case MVT::v512i1:
+      return std::make_pair(0U, &KVX::WideRegRegClass);
+    case MVT::v1024i1:
+      return std::make_pair(0U, &KVX::MatrixRegRegClass);
+    default:
+      return TargetLowering::getRegForInlineAsmConstraint(TRI, Constraint, VT);
+    }
   }
 
-  if (Constraint.size() >= 4 && Constraint.front() == '{' &&
-      Constraint.back() == '}') {
-    StringRef RegName = Constraint.substr(1, Constraint.size() - 2);
-    unsigned RegNo = MatchRegisterName(RegName);
-    if (RegNo == 0) {
-      RegNo = MatchRegisterAltName(RegName);
-      if (RegNo == 0)
-        return TargetLowering::getRegForInlineAsmConstraint(TRI, Constraint,
-                                                            VT);
-    }
-    if (KVX::SingleRegRegClass.contains(RegNo))
-      return std::make_pair(RegNo, &KVX::SingleRegRegClass);
-    if (KVX::PairedRegRegClass.contains(RegNo))
-      return std::make_pair(RegNo, &KVX::PairedRegRegClass);
-    if (KVX::QuadRegRegClass.contains(RegNo))
-      return std::make_pair(RegNo, &KVX::QuadRegRegClass);
+  if (!(Constraint.size() >= 4 && Constraint.front() == '{' &&
+        Constraint.back() == '}'))
+    return TargetLowering::getRegForInlineAsmConstraint(TRI, Constraint, VT);
+
+  StringRef RegName = Constraint.substr(1, Constraint.size() - 2);
+  unsigned RegNo = MatchRegisterName(RegName);
+  if (RegNo == 0) {
+    RegNo = MatchRegisterAltName(RegName);
+    if (RegNo == 0)
+      return TargetLowering::getRegForInlineAsmConstraint(TRI, Constraint, VT);
   }
+  if (KVX::SingleRegRegClass.contains(RegNo))
+    return std::make_pair(RegNo, &KVX::SingleRegRegClass);
+  if (KVX::PairedRegRegClass.contains(RegNo))
+    return std::make_pair(RegNo, &KVX::PairedRegRegClass);
+  if (KVX::QuadRegRegClass.contains(RegNo))
+    return std::make_pair(RegNo, &KVX::QuadRegRegClass);
+  if (KVX::CoproRegRegClass.contains(RegNo))
+    return std::make_pair(RegNo, &KVX::CoproRegRegClass);
+  if (KVX::BlockRegRegClass.contains(RegNo))
+    return std::make_pair(RegNo, &KVX::BlockRegRegClass);
+  if (KVX::VectorRegRegClass.contains(RegNo))
+    return std::make_pair(RegNo, &KVX::VectorRegRegClass);
+  if (KVX::WideRegRegClass.contains(RegNo))
+    return std::make_pair(RegNo, &KVX::WideRegRegClass);
+  if (KVX::MatrixRegRegClass.contains(RegNo))
+    return std::make_pair(RegNo, &KVX::MatrixRegRegClass);
 
   return TargetLowering::getRegForInlineAsmConstraint(TRI, Constraint, VT);
+}
+
+TargetLowering::ConstraintType
+KVXTargetLowering::getConstraintType(StringRef Constraint) const {
+  if (Constraint == "w")
+    return C_RegisterClass;
+
+  return TargetLowering::getConstraintType(Constraint);
 }
 
 SDValue KVXTargetLowering::lowerMULHVectorGeneric(SDValue Op, SelectionDAG &DAG,

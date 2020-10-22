@@ -144,6 +144,7 @@ private:
   std::pair<unsigned, const TargetRegisterClass *>
   getRegForInlineAsmConstraint(const TargetRegisterInfo *TRI,
                                StringRef Constraint, MVT VT) const override;
+  ConstraintType getConstraintType(StringRef Constraint) const override;
 
   unsigned getComparisonCondition(ISD::CondCode CCOpcode) const;
   unsigned getBranchCondition(ISD::CondCode CCOpcode, bool Word) const;

@@ -20,6 +20,7 @@
 #include "llvm/CodeGen/LivePhysRegs.h"
 #include "llvm/CodeGen/MachineFunctionPass.h"
 #include "llvm/CodeGen/MachineInstrBuilder.h"
+#include "llvm/Support/Debug.h"
 
 using namespace llvm;
 
@@ -931,6 +932,81 @@ static bool expandLoad(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   return true;
 }
 
+static bool expandWideMatrixLoadsStores(const KVXInstrInfo *TII,
+                                        MachineBasicBlock &MBB,
+                                        MachineBasicBlock::iterator MBBI,
+                                        unsigned ri10, unsigned ri37,
+                                        unsigned ri64, bool IsStore = false) {
+  MachineInstr &MI = *MBBI;
+  DebugLoc DL = MI.getDebugLoc();
+
+  Register InOutReg, Base;
+  int64_t Offset, VariantKill;
+  if (IsStore) {
+    Offset = MI.getOperand(0).getImm();
+    Base = MI.getOperand(1).getReg();
+    InOutReg = MI.getOperand(2).getReg();
+    VariantKill = MI.getOperand(2).isKill() ? RegState::Kill : 0;
+  } else {
+    InOutReg = MI.getOperand(0).getReg();
+    Offset = MI.getOperand(1).getImm();
+    Base = MI.getOperand(2).getReg();
+    VariantKill = MI.getOperand(3).getImm();
+  }
+
+  MachineFunction *MF = MBB.getParent();
+  const KVXRegisterInfo *TRI =
+      (const KVXRegisterInfo *)MF->getSubtarget().getRegisterInfo();
+
+  LLVM_DEBUG(dbgs() << "Creating a " << (IsStore ? "store from" : "load to")
+                    << " register: " << TRI->getRegAsmName(InOutReg) << '\n');
+  Register SubReg = TRI->getSubReg(InOutReg, 1);
+  LLVM_DEBUG(dbgs() << "The sub-register at index 1 is #:" << SubReg << '('
+                    << TRI->getRegAsmName(SubReg) << ").\n");
+  int End;
+  if (KVX::MatrixRegRegClass.contains(InOutReg))
+    End = 4;
+  else if (KVX::WideRegRegClass.contains(InOutReg))
+    End = 2;
+  else
+    report_fatal_error("Expanding a vector load that is not for wide or matrix "
+                       "registers output.\n");
+
+  LLVM_DEBUG(dbgs() << "It will require " << End << " lv operations\n");
+
+  Register VectorReg = (SubReg - KVX::C0) / 4 + KVX::A0;
+  LLVM_DEBUG(dbgs() << "The first vector sub-register is: "
+                    << TRI->getRegAsmName(VectorReg) << '\n');
+  for (int C = 0; C < End; C++) {
+    LLVM_DEBUG(dbgs() << "Acting in register #:" << VectorReg << '('
+                      << TRI->getRegAsmName(VectorReg) << ").\n");
+
+    // TODO: Investigate why this tests fails, might be related
+    // in how we declare our sub-registers.
+    // if (!TRI->isSubRegister(VectorReg, InOutReg))
+    //   report_fatal_error(
+    //       "Vector register " + TRI->getRegAsmName(VectorReg.id()) +
+    //       " is not a sub-register of " + TRI->getRegAsmName(InOutReg.id()));
+
+    if (IsStore)
+      BuildMI(MBB, MBBI, DL, TII->get(GetImmOpCode(Offset, ri10, ri37, ri64)))
+          .addImm(Offset)
+          .addReg(Base)
+          .addReg(VectorReg, VariantKill);
+
+    else
+      BuildMI(MBB, MBBI, DL, TII->get(GetImmOpCode(Offset, ri10, ri37, ri64)),
+              VectorReg)
+          .addImm(Offset)
+          .addReg(Base)
+          .addImm(VariantKill);
+    Offset += 32;
+    VectorReg = VectorReg + 1;
+  }
+  MI.eraseFromParent();
+  return true;
+}
+
 static bool expandMADDW(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
                         MachineBasicBlock::iterator MBBI) {
   MachineInstr &MI = *MBBI;
@@ -1175,6 +1251,11 @@ bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
   case KVX::SVp:
     expandStore(TII, MBB, MBBI, KVX::SVri10, KVX::SVri37, KVX::SVri64);
     return true;
+  case KVX::SWIDEp:
+  case KVX::SMATRIXp:
+    expandWideMatrixLoadsStores(TII, MBB, MBBI, KVX::SVri10, KVX::SVri37,
+                                KVX::SVri64, true);
+    return true;
   case KVX::LBSp:
     expandLoad(TII, MBB, MBBI, KVX::LBSri10, KVX::LBSri37, KVX::LBSri64);
     return true;
@@ -1204,6 +1285,11 @@ bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
     return true;
   case KVX::LVp:
     expandLoad(TII, MBB, MBBI, KVX::LVri10, KVX::LVri37, KVX::LVri64);
+    return true;
+  case KVX::LWIDEp:
+  case KVX::LMATRIXp:
+    expandWideMatrixLoadsStores(TII, MBB, MBBI, KVX::LVri10, KVX::LVri37,
+                                KVX::LVri64);
     return true;
   case KVX::MADDWp:
     expandMADDW(TII, MBB, MBBI);
