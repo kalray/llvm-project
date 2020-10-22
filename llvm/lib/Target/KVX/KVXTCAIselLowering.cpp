@@ -37,17 +37,10 @@ void KVXTargetLowering::initializeTCALowering() {
          NodeType++)
       setOperationAction(NodeType, VT, Expand);
 
-    for (auto NodeType : {
-             ISD::READ_REGISTER,
-             ISD::WRITE_REGISTER,
-             ISD::INTRINSIC_WO_CHAIN,
-             ISD::INTRINSIC_W_CHAIN,
-             ISD::INTRINSIC_VOID,
-             ISD::INLINEASM,
-             ISD::INLINEASM_BR,
-             ISD::SRCVALUE,
-             ISD::HANDLENODE,
-         })
+    for (auto NodeType :
+         {ISD::READ_REGISTER, ISD::WRITE_REGISTER, ISD::INTRINSIC_WO_CHAIN,
+          ISD::INTRINSIC_W_CHAIN, ISD::INTRINSIC_VOID, ISD::INLINEASM,
+          ISD::INLINEASM_BR, ISD::SRCVALUE, ISD::HANDLENODE, ISD::UNDEF})
       setOperationAction(NodeType, VT, Legal);
   }
 
@@ -56,4 +49,7 @@ void KVXTargetLowering::initializeTCALowering() {
                         ISD::LOAD, ISD::STORE, ISD::PREFETCH, ISD::ATOMIC_LOAD,
                         ISD::ATOMIC_STORE, ISD::ATOMIC_SWAP})
     setOperationAction(NodeType, MVT::v256i1, Legal);
+  for (auto VT : {MVT::v512i1, MVT::v1024i1})
+    for (auto NodeType : {ISD::LOAD, ISD::STORE})
+      setOperationAction(NodeType, VT, Legal);
 }
