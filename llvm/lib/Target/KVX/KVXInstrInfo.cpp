@@ -44,8 +44,7 @@ void KVXInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
       (const KVXRegisterInfo *)MF->getSubtarget().getRegisterInfo();
 
   LLVM_DEBUG(dbgs() << "Copy register (" + TRI->getRegAsmName(SrcReg.id()) +
-                           ") to register (" + TRI->getRegAsmName(DstReg.id()) +
-                           ").\n");
+                           ") to (" + TRI->getRegAsmName(DstReg.id()) + ").\n");
 
   // GPR to GPR
   if (KVX::QuadRegRegClass.contains(DstReg, SrcReg)) {
@@ -67,13 +66,93 @@ void KVXInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
         .addReg(SrcReg, getKillRegState(KillSrc));
     return;
   }
+  // TCA registers to GPR
+  if (KVX::QuadRegRegClass.contains(DstReg)) {
+    if (KVX::VectorRegERegClass.contains(SrcReg)) {
+      LLVM_DEBUG(dbgs() << "It is a TCA VectorRegE to GPR QuadReg movefore.\n");
+      BuildMI(MBB, MBBI, DL, get(KVX::MOVEFOre), DstReg)
+          .addReg(SrcReg, getKillRegState(KillSrc));
+      return;
+    }
+    if (KVX::VectorRegORegClass.contains(SrcReg)) {
+      LLVM_DEBUG(dbgs() << "It is a TCA VectorRegE to GPR QuadReg moveforo.\n");
+      BuildMI(MBB, MBBI, DL, get(KVX::MOVEFOro), DstReg)
+          .addReg(SrcReg, getKillRegState(KillSrc));
+      return;
+    }
+  }
 
-  // TODO: Is there a way to have a pritty print, pointing to the source code
-  // position of the error? We do have the DebLoc.
-  report_fatal_error(
-      "Don't know how to handle register copy from source register (" +
-      TRI->getRegAsmName(SrcReg.id()) + ") to destination register (" +
-      TRI->getRegAsmName(DstReg.id()) + ").\n");
+  // GPR registers to TCA
+  if (KVX::PairedRegRegClass.contains(SrcReg)) {
+    if (KVX::BlockRegERegClass.contains(DstReg)) {
+      LLVM_DEBUG(
+          dbgs() << "It is a GPR PairedReg to TCA BlockRegE movetqrrbe.\n");
+      BuildMI(MBB, MBBI, DL, get(KVX::MOVETQrrbe), DstReg)
+          .addReg(TRI->getSubReg(SrcReg, 1), getKillRegState(KillSrc))
+          .addReg(TRI->getSubReg(SrcReg, 2), getKillRegState(KillSrc));
+
+      return;
+    }
+    if (KVX::BlockRegORegClass.contains(SrcReg)) {
+      LLVM_DEBUG(
+          dbgs() << "It is a GPR PairedReg to TCA BlockRegO movetqrrbo.\n");
+      BuildMI(MBB, MBBI, DL, get(KVX::MOVETQrrbo), DstReg)
+          .addReg(TRI->getSubReg(SrcReg, 1), getKillRegState(KillSrc))
+          .addReg(TRI->getSubReg(SrcReg, 2), getKillRegState(KillSrc));
+      return;
+    }
+  }
+  if (KVX::QuadRegRegClass.contains(SrcReg) &&
+      KVX::VectorRegRegClass.contains(DstReg)) {
+    // There is no straight way to copy 256 bits from GPR to TCAR
+    // However, we can easely break the QuadReg in 4
+    // The tricky part is to break the VectorReg in 2 BlockReg
+    LLVM_DEBUG(
+        dbgs() << "It is a GPR QuadReg to TCA VectorReg, it requires two "
+                  "instructions, a movetqrrbo and a movetqrrbe.\n");
+    auto SubSubReg1 = TRI->getSubReg(DstReg, 1);
+    auto SubSubReg2 = TRI->getSubReg(DstReg, 3);
+    if (!KVX::CoproRegRegClass.contains(SubSubReg1, SubSubReg2))
+      report_fatal_error(
+          "One of these VectorReg sub-register is not a CoproReg: (" +
+          TRI->getRegAsmName(SubSubReg1.id()) + ", " +
+          TRI->getRegAsmName(SubSubReg2.id()) + ").\n");
+
+    MCRegister SubReg1((SubSubReg1.id() - KVX::C0) / 2 + KVX::B0);
+    MCRegister SubReg2((SubSubReg2.id() - KVX::C0) / 2 + KVX::B0);
+    if (!KVX::BlockRegRegClass.contains(SubReg1, SubReg2))
+      report_fatal_error("One of these are not a BlockReg: (" +
+                         TRI->getRegAsmName(SubReg1.id()) + ", " +
+                         TRI->getRegAsmName(SubReg2.id()) + ").\n");
+    BuildMI(MBB, MBBI, DL, get(KVX::MOVETQrrbe), SubReg1)
+        .addReg(TRI->getSubReg(SrcReg, 1), getKillRegState(KillSrc))
+        .addReg(TRI->getSubReg(SrcReg, 2), getKillRegState(KillSrc));
+    BuildMI(MBB, MBBI, DL, get(KVX::MOVETQrrbo), SubReg2)
+        .addReg(TRI->getSubReg(SrcReg, 3), getKillRegState(KillSrc))
+        .addReg(TRI->getSubReg(SrcReg, 4), getKillRegState(KillSrc));
+
+    return;
+  }
+
+  // Between TCA registers
+  if (KVX::VectorRegRegClass.contains(DstReg)) {
+    if (KVX::VectorRegERegClass.contains(SrcReg)) {
+      LLVM_DEBUG(dbgs() << "It is a TCA VectorRegE copyvre.\n");
+      BuildMI(MBB, MBBI, DL, get(KVX::COPYVre), DstReg)
+          .addReg(SrcReg, getKillRegState(KillSrc));
+      return;
+    }
+    if (KVX::VectorRegORegClass.contains(SrcReg)) {
+      LLVM_DEBUG(dbgs() << "It is a TCA VectorRegO copyvro.\n");
+      BuildMI(MBB, MBBI, DL, get(KVX::COPYVro), DstReg)
+          .addReg(SrcReg, getKillRegState(KillSrc));
+      return;
+    }
+  }
+
+  report_fatal_error("Don't know how to handle register copy from (" +
+                     TRI->getRegAsmName(SrcReg.id()) + ") to (" +
+                     TRI->getRegAsmName(DstReg.id()) + ").\n");
 }
 unsigned findScratchRegister(MachineBasicBlock &MBB, bool UseAtEnd,
                              unsigned DefaultReg = KVX::R16) {
@@ -135,31 +214,30 @@ void KVXInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
   if (I != MBB.end())
     DL = I->getDebugLoc();
 
+  int Pseudo = 0;
   if (KVX::SingleRegRegClass.hasSubClassEq(RC)) {
     LLVM_DEBUG(dbgs() << "It is a single GPR, loading using LDp.\n");
-    BuildMI(MBB, I, DL, get(KVX::LDp), DstReg)
-        .addImm(0)
-        .addFrameIndex(FI)
-        .addImm(KVXMOD::VARIANT_);
-    return;
-  }
-  if (KVX::PairedRegRegClass.hasSubClassEq(RC)) {
+    Pseudo = KVX::LDp;
+  } else if (KVX::PairedRegRegClass.hasSubClassEq(RC)) {
     LLVM_DEBUG(dbgs() << "It is a paired GPR, loading using LQp.\n");
-    BuildMI(MBB, I, DL, get(KVX::LQp), DstReg)
-        .addImm(0)
-        .addFrameIndex(FI)
-        .addImm(KVXMOD::VARIANT_);
-    return;
-  }
-  if (KVX::QuadRegRegClass.hasSubClassEq(RC)) {
+    Pseudo = KVX::LQp;
+  } else if (KVX::QuadRegRegClass.hasSubClassEq(RC)) {
     LLVM_DEBUG(dbgs() << "It is a quad GPR, loading using LOp.\n");
-    BuildMI(MBB, I, DL, get(KVX::LOp), DstReg)
-        .addImm(0)
-        .addFrameIndex(FI)
-        .addImm(KVXMOD::VARIANT_);
-    return;
-  }
-  if (KVX::OnlyraRegRegClass.hasSubClassEq(RC)) {
+    Pseudo = KVX::LOp;
+  } else if (KVX::BlockRegRegClass.hasSubClassEq(RC)) {
+    report_fatal_error(
+        "Do not know how to load TCA sub-register from the stack.");
+  } else if (KVX::VectorRegRegClass.hasSubClassEq(RC)) {
+    LLVM_DEBUG(dbgs() << "It is a vector TCA register, loading using LVp.\n");
+    Pseudo = KVX::LVp;
+  } else if (KVX::WideRegRegClass.hasSubClassEq(RC)) {
+    LLVM_DEBUG(dbgs() << "It is a wide TCA register, loading using LWIDEp.\n");
+    Pseudo = KVX::LWIDEp;
+  } else if (KVX::MatrixRegRegClass.hasSubClassEq(RC)) {
+    Pseudo = KVX::LMATRIXp;
+    LLVM_DEBUG(
+        dbgs() << "It is a matrix TCA register, loading using LMATRIXp.\n");
+  } else if (KVX::OnlyraRegRegClass.hasSubClassEq(RC)) {
     LLVM_DEBUG(dbgs() << "It is a RA register, using LDp and SETrsta.\n");
     unsigned ScratchReg = findScratchRegister(MBB, true);
     BuildMI(MBB, I, DL, get(KVX::LDp), ScratchReg)
@@ -169,8 +247,14 @@ void KVXInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
     BuildMI(MBB, I, DL, get(KVX::SETrsra), KVX::RA)
         .addReg(ScratchReg, RegState::Kill);
     return;
-  }
-  report_fatal_error("Don't know how to load register from the stack.");
+  } else
+    report_fatal_error("Don't know how to load register from the stack.");
+
+  BuildMI(MBB, I, DL, get(Pseudo), DstReg)
+      .addImm(0)
+      .addFrameIndex(FI)
+      .addImm(KVXMOD::VARIANT_);
+  return;
 }
 
 void KVXInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
@@ -178,40 +262,36 @@ void KVXInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
                                        Register SrcReg, bool IsKill, int FI,
                                        const TargetRegisterClass *RC,
                                        const TargetRegisterInfo *TRI) const {
-  LLVM_DEBUG(dbgs() << "Storing register (" << SrcReg << ") to stack.\n");
+  LLVM_DEBUG(dbgs() << "Storing register (" << SrcReg << ") to the stack.\n");
 
   DebugLoc DL;
   if (I != MBB.end())
     DL = I->getDebugLoc();
-
+  int Pseudo = 0;
   if (KVX::SingleRegRegClass.hasSubClassEq(RC)) {
     LLVM_DEBUG(dbgs() << "It is a single GPR, storing using SDp.\n");
-    BuildMI(MBB, I, DL, get(KVX::SDp))
-        .addImm(0)
-        .addFrameIndex(FI)
-        .addReg(SrcReg, getKillRegState(IsKill))
-        .setMIFlags(MachineInstr::FrameSetup);
-    return;
-  }
-  if (KVX::PairedRegRegClass.hasSubClassEq(RC)) {
+    Pseudo = KVX::SDp;
+  } else if (KVX::PairedRegRegClass.hasSubClassEq(RC)) {
     LLVM_DEBUG(dbgs() << "It is a paired GPR, storing using SQp.\n");
-    BuildMI(MBB, I, DL, get(KVX::SQp))
-        .addImm(0)
-        .addFrameIndex(FI)
-        .addReg(SrcReg, getKillRegState(IsKill))
-        .setMIFlags(MachineInstr::FrameSetup);
-    return;
-  }
-  if (KVX::QuadRegRegClass.hasSubClassEq(RC)) {
+    Pseudo = KVX::SQp;
+  } else if (KVX::QuadRegRegClass.hasSubClassEq(RC)) {
     LLVM_DEBUG(dbgs() << "It is a quad GPR, storing using SOp.\n");
-    BuildMI(MBB, I, DL, get(KVX::SOp))
-        .addImm(0)
-        .addFrameIndex(FI)
-        .addReg(SrcReg, getKillRegState(IsKill))
-        .setMIFlags(MachineInstr::FrameSetup);
-    return;
-  }
-  if (KVX::OnlyraRegRegClass.hasSubClassEq(RC)) {
+    Pseudo = KVX::SOp;
+  } else if (KVX::BlockRegRegClass.hasSubClassEq(RC)) {
+    report_fatal_error(
+        "Do not know how to store TCA sub-register to the stack.");
+  } else if (KVX::VectorRegRegClass.hasSubClassEq(RC)) {
+    LLVM_DEBUG(dbgs() << "It is a vector TCA register, storing using SVp.\n");
+    Pseudo = KVX::SVp;
+  } else if (KVX::WideRegRegClass.hasSubClassEq(RC)) {
+    LLVM_DEBUG(
+        dbgs() << "It is a vector TCA register, storing using SWIDEp.\n");
+    Pseudo = KVX::SWIDEp;
+  } else if (KVX::MatrixRegRegClass.hasSubClassEq(RC)) {
+    Pseudo = KVX::SMATRIXp;
+    LLVM_DEBUG(
+        dbgs() << "It is a vector TCA register, storing using SMATRIXp.\n");
+  } else if (KVX::OnlyraRegRegClass.hasSubClassEq(RC)) {
     LLVM_DEBUG(dbgs() << "It is a RA register, using GETss2 and SDp.\n");
     unsigned ScratchReg = findScratchRegister(MBB, false);
     BuildMI(MBB, I, DL, get(KVX::GETss2), ScratchReg)
@@ -223,8 +303,14 @@ void KVXInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
         .addFrameIndex(FI)
         .addReg(ScratchReg, RegState::Kill);
     return;
-  }
-  report_fatal_error("Don't know how to store register to the stack.");
+  } else
+    report_fatal_error("Don't know how to store register to the stack.");
+
+  BuildMI(MBB, I, DL, get(Pseudo))
+      .addImm(0)
+      .addFrameIndex(FI)
+      .addReg(SrcReg, getKillRegState(IsKill))
+      .setMIFlags(MachineInstr::FrameSetup);
 }
 
 DFAPacketizer *

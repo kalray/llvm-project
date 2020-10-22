@@ -79,9 +79,7 @@ public:
   ArrayRef<TargetInfo::GCCRegAlias> getGCCRegAliases() const override;
 
   bool validateAsmConstraint(const char *&Name,
-                             TargetInfo::ConstraintInfo &Info) const override {
-    return false;
-  }
+                             TargetInfo::ConstraintInfo &Info) const override;
 
   bool hasProtectedVisibility() const override { return false; }
 
