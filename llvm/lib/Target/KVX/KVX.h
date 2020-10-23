@@ -158,12 +158,14 @@ FunctionPass *createKVXISelDag(KVXTargetMachine &TM);
 void LowerKVXMachineInstrToMCInst(const MachineInstr *MI, MCInst &OutMI,
                                   AsmPrinter &AP);
 
-FunctionPass *createKVXExpandPseudoPass();
+FunctionPass *createKVXPreRAExpandPseudoPass();
+FunctionPass *createKVXPreEmitExpandPseudoPass();
 FunctionPass *createKVXLoadStorePackingPass();
 FunctionPass *createKVXHardwareLoopsPass();
 FunctionPass *createKVXPacketizerPass(bool ValidOptLevel);
 
-void initializeKVXExpandPseudoPass(PassRegistry &);
+void initializeKVXPreRAExpandPseudoPass(PassRegistry &);
+void initializeKVXPreEmitExpandPseudoPass(PassRegistry &);
 void initializeKVXLoadStorePackingPassPass(PassRegistry &);
 void initializeKVXPacketizerPass(PassRegistry &);
 void initializeKVXHardwareLoopsPass(PassRegistry &);

@@ -41,7 +41,8 @@ static cl::opt<bool> DisableLoadStorePacking(
 extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeKVXTarget() {
   RegisterTargetMachine<KVXTargetMachine> X(getTheKVXTarget());
   auto PR = PassRegistry::getPassRegistry();
-  initializeKVXExpandPseudoPass(*PR);
+  initializeKVXPreRAExpandPseudoPass(*PR);
+  initializeKVXPreEmitExpandPseudoPass(*PR);
   initializeKVXLoadStorePackingPassPass(*PR);
   initializeKVXPacketizerPass(*PR);
   initializeKVXHardwareLoopsPass(*PR);
@@ -162,6 +163,7 @@ bool KVXPassConfig::addInstSelector() {
 }
 
 void KVXPassConfig::addPreRegAlloc() {
+  addPass(createKVXPreRAExpandPseudoPass());
   if (getOptLevel() >= CodeGenOpt::Default) {
     if (!DisableLoadStorePacking)
       addPass(createKVXLoadStorePackingPass());
@@ -171,7 +173,7 @@ void KVXPassConfig::addPreRegAlloc() {
 }
 
 void KVXPassConfig::addPreEmitPass() {
-  addPass(createKVXExpandPseudoPass());
+  addPass(createKVXPreEmitExpandPseudoPass());
   addPass(createKVXPacketizerPass(getOptLevel() >= CodeGenOpt::Default &&
                                   !DisableBundling),
           false);
