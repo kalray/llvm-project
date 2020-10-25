@@ -17,6 +17,7 @@
 // Last generated: 2020-06-20 21:47:17.940594.
 
 
+include "KVXSubRegisterInfo.td"
 let Namespace = "KVX" in {
 
 // KVX Register base class:
@@ -67,36 +68,25 @@ class XCR<bits<9> num, string n, list<string> alt = []>
 // XBR - Extension Block Registers
 class XBR<bits<9> num, string n, list<Register> subregs, list<string> alt = []>
       : KVXRegisterWithSubRegs<num, n, subregs, alt> {
-  let SubRegIndices = [SubRegIndex<64,   0>, SubRegIndex<64,  64>];
+  let SubRegIndices = [sub_c0, sub_c1];
 }
 
 // XVR - Extension Vector Registers
 class XVR<bits<9> num, string n, list<Register> subregs>
       : KVXRegisterWithSubRegs<num, n, subregs> {
-  let SubRegIndices = [SubRegIndex<64,   0>, SubRegIndex<64,  64>,
-                       SubRegIndex<64, 128>, SubRegIndex<64, 192>];
+  let SubRegIndices = [sub_b0, sub_b1];
 }
 
 // XWR - Extension Wide Registers
 class XWR<bits<9> num, string n, list<Register> subregs>
       : KVXRegisterWithSubRegs<num, n, subregs> {
-  let SubRegIndices = [SubRegIndex<64,   0>, SubRegIndex<64,  64>,
-                       SubRegIndex<64, 128>, SubRegIndex<64, 192>,
-                       SubRegIndex<64, 256>, SubRegIndex<64, 320>,
-                       SubRegIndex<64, 384>, SubRegIndex<64, 448>];
+  let SubRegIndices = [sub_v0, sub_v1];
 }
 
 // XMR - Extension Matrix Registers
 class XMR<bits<9> num, string n, list<Register> subregs>
       : KVXRegisterWithSubRegs<num, n, subregs> {
-  let SubRegIndices = [SubRegIndex<64,   0>, SubRegIndex<64,  64>,
-                       SubRegIndex<64, 128>, SubRegIndex<64, 192>,
-                       SubRegIndex<64, 256>, SubRegIndex<64, 320>,
-                       SubRegIndex<64, 384>, SubRegIndex<64, 448>,
-                       SubRegIndex<64, 512>, SubRegIndex<64, 576>,
-                       SubRegIndex<64, 640>, SubRegIndex<64, 704>,
-                       SubRegIndex<64, 768>, SubRegIndex<64, 832>,
-                       SubRegIndex<64, 896>, SubRegIndex<64, 960>];
+  let SubRegIndices = [sub_w0, sub_w1];
 }
 
 // System Function Registers
@@ -1126,124 +1116,124 @@ def B127 : XBR<127, "$a63_hi", [C254, C255], ["$a63.hi"]>;
 
 
 // Extension Vector Registers
-def A0  : XVR< 0,  "$a0", [  C0,   C1,   C2,   C3]>;
-def A1  : XVR< 1,  "$a1", [  C4,   C5,   C6,   C7]>;
-def A2  : XVR< 2,  "$a2", [  C8,   C9,  C10,  C11]>;
-def A3  : XVR< 3,  "$a3", [ C12,  C13,  C14,  C15]>;
-def A4  : XVR< 4,  "$a4", [ C16,  C17,  C18,  C19]>;
-def A5  : XVR< 5,  "$a5", [ C20,  C21,  C22,  C23]>;
-def A6  : XVR< 6,  "$a6", [ C24,  C25,  C26,  C27]>;
-def A7  : XVR< 7,  "$a7", [ C28,  C29,  C30,  C31]>;
-def A8  : XVR< 8,  "$a8", [ C32,  C33,  C34,  C35]>;
-def A9  : XVR< 9,  "$a9", [ C36,  C37,  C38,  C39]>;
-def A10 : XVR<10, "$a10", [ C40,  C41,  C42,  C43]>;
-def A11 : XVR<11, "$a11", [ C44,  C45,  C46,  C47]>;
-def A12 : XVR<12, "$a12", [ C48,  C49,  C50,  C51]>;
-def A13 : XVR<13, "$a13", [ C52,  C53,  C54,  C55]>;
-def A14 : XVR<14, "$a14", [ C56,  C57,  C58,  C59]>;
-def A15 : XVR<15, "$a15", [ C60,  C61,  C62,  C63]>;
-def A16 : XVR<16, "$a16", [ C64,  C65,  C66,  C67]>;
-def A17 : XVR<17, "$a17", [ C68,  C69,  C70,  C71]>;
-def A18 : XVR<18, "$a18", [ C72,  C73,  C74,  C75]>;
-def A19 : XVR<19, "$a19", [ C76,  C77,  C78,  C79]>;
-def A20 : XVR<20, "$a20", [ C80,  C81,  C82,  C83]>;
-def A21 : XVR<21, "$a21", [ C84,  C85,  C86,  C87]>;
-def A22 : XVR<22, "$a22", [ C88,  C89,  C90,  C91]>;
-def A23 : XVR<23, "$a23", [ C92,  C93,  C94,  C95]>;
-def A24 : XVR<24, "$a24", [ C96,  C97,  C98,  C99]>;
-def A25 : XVR<25, "$a25", [C100, C101, C102, C103]>;
-def A26 : XVR<26, "$a26", [C104, C105, C106, C107]>;
-def A27 : XVR<27, "$a27", [C108, C109, C110, C111]>;
-def A28 : XVR<28, "$a28", [C112, C113, C114, C115]>;
-def A29 : XVR<29, "$a29", [C116, C117, C118, C119]>;
-def A30 : XVR<30, "$a30", [C120, C121, C122, C123]>;
-def A31 : XVR<31, "$a31", [C124, C125, C126, C127]>;
-def A32 : XVR<32, "$a32", [C128, C129, C130, C131]>;
-def A33 : XVR<33, "$a33", [C132, C133, C134, C135]>;
-def A34 : XVR<34, "$a34", [C136, C137, C138, C139]>;
-def A35 : XVR<35, "$a35", [C140, C141, C142, C143]>;
-def A36 : XVR<36, "$a36", [C144, C145, C146, C147]>;
-def A37 : XVR<37, "$a37", [C148, C149, C150, C151]>;
-def A38 : XVR<38, "$a38", [C152, C153, C154, C155]>;
-def A39 : XVR<39, "$a39", [C156, C157, C158, C159]>;
-def A40 : XVR<40, "$a40", [C160, C161, C162, C163]>;
-def A41 : XVR<41, "$a41", [C164, C165, C166, C167]>;
-def A42 : XVR<42, "$a42", [C168, C169, C170, C171]>;
-def A43 : XVR<43, "$a43", [C172, C173, C174, C175]>;
-def A44 : XVR<44, "$a44", [C176, C177, C178, C179]>;
-def A45 : XVR<45, "$a45", [C180, C181, C182, C183]>;
-def A46 : XVR<46, "$a46", [C184, C185, C186, C187]>;
-def A47 : XVR<47, "$a47", [C188, C189, C190, C191]>;
-def A48 : XVR<48, "$a48", [C192, C193, C194, C195]>;
-def A49 : XVR<49, "$a49", [C196, C197, C198, C199]>;
-def A50 : XVR<50, "$a50", [C200, C201, C202, C203]>;
-def A51 : XVR<51, "$a51", [C204, C205, C206, C207]>;
-def A52 : XVR<52, "$a52", [C208, C209, C210, C211]>;
-def A53 : XVR<53, "$a53", [C212, C213, C214, C215]>;
-def A54 : XVR<54, "$a54", [C216, C217, C218, C219]>;
-def A55 : XVR<55, "$a55", [C220, C221, C222, C223]>;
-def A56 : XVR<56, "$a56", [C224, C225, C226, C227]>;
-def A57 : XVR<57, "$a57", [C228, C229, C230, C231]>;
-def A58 : XVR<58, "$a58", [C232, C233, C234, C235]>;
-def A59 : XVR<59, "$a59", [C236, C237, C238, C239]>;
-def A60 : XVR<60, "$a60", [C240, C241, C242, C243]>;
-def A61 : XVR<61, "$a61", [C244, C245, C246, C247]>;
-def A62 : XVR<62, "$a62", [C248, C249, C250, C251]>;
-def A63 : XVR<63, "$a63", [C252, C253, C254, C255]>;
+def A0  : XVR< 0,  "$a0", [B0,	B1]  >;
+def A1  : XVR< 1,  "$a1", [B2,	B3]  >;
+def A2  : XVR< 2,  "$a2", [B4,	B5]  >;
+def A3  : XVR< 3,  "$a3", [B6,	B7]  >;
+def A4  : XVR< 4,  "$a4", [B8,	B9]  >;
+def A5  : XVR< 5,  "$a5", [B10,	B11] >;
+def A6  : XVR< 6,  "$a6", [B12,	B13] >;
+def A7  : XVR< 7,  "$a7", [B14,	B15] >;
+def A8  : XVR< 8,  "$a8", [B16,	B17] >;
+def A9  : XVR< 9,  "$a9", [B18,	B19] >;
+def A10 : XVR<10, "$a10", [B20,	B21] >;
+def A11 : XVR<11, "$a11", [B22,	B23] >;
+def A12 : XVR<12, "$a12", [B24,	B25] >;
+def A13 : XVR<13, "$a13", [B26,	B27] >;
+def A14 : XVR<14, "$a14", [B28,	B29] >;
+def A15 : XVR<15, "$a15", [B30,	B31] >;
+def A16 : XVR<16, "$a16", [B32,	B33] >;
+def A17 : XVR<17, "$a17", [B34,	B35] >;
+def A18 : XVR<18, "$a18", [B36,	B37] >;
+def A19 : XVR<19, "$a19", [B38,	B39] >;
+def A20 : XVR<20, "$a20", [B40,	B41] >;
+def A21 : XVR<21, "$a21", [B42,	B43] >;
+def A22 : XVR<22, "$a22", [B44,	B45] >;
+def A23 : XVR<23, "$a23", [B46,	B47] >;
+def A24 : XVR<24, "$a24", [B48,	B49] >;
+def A25 : XVR<25, "$a25", [B50,	B51] >;
+def A26 : XVR<26, "$a26", [B52,	B53] >;
+def A27 : XVR<27, "$a27", [B54,	B55] >;
+def A28 : XVR<28, "$a28", [B56,	B57] >;
+def A29 : XVR<29, "$a29", [B58,	B59] >;
+def A30 : XVR<30, "$a30", [B60,	B61] >;
+def A31 : XVR<31, "$a31", [B62,	B63] >;
+def A32 : XVR<32, "$a32", [B64,	B65] >;
+def A33 : XVR<33, "$a33", [B66,	B67] >;
+def A34 : XVR<34, "$a34", [B68,	B69] >;
+def A35 : XVR<35, "$a35", [B70,	B71] >;
+def A36 : XVR<36, "$a36", [B72,	B73] >;
+def A37 : XVR<37, "$a37", [B74,	B75] >;
+def A38 : XVR<38, "$a38", [B76,	B77] >;
+def A39 : XVR<39, "$a39", [B78,	B79] >;
+def A40 : XVR<40, "$a40", [B80,	B81] >;
+def A41 : XVR<41, "$a41", [B82,	B83] >;
+def A42 : XVR<42, "$a42", [B84,	B85] >;
+def A43 : XVR<43, "$a43", [B86,	B87] >;
+def A44 : XVR<44, "$a44", [B88,	B89] >;
+def A45 : XVR<45, "$a45", [B90,	B91] >;
+def A46 : XVR<46, "$a46", [B92,	B93] >;
+def A47 : XVR<47, "$a47", [B94,	B95] >;
+def A48 : XVR<48, "$a48", [B96,	B97] >;
+def A49 : XVR<49, "$a49", [B98,	B99] >;
+def A50 : XVR<50, "$a50", [B100,B101]>;
+def A51 : XVR<51, "$a51", [B102,B103]>;
+def A52 : XVR<52, "$a52", [B104,B105]>;
+def A53 : XVR<53, "$a53", [B106,B107]>;
+def A54 : XVR<54, "$a54", [B108,B109]>;
+def A55 : XVR<55, "$a55", [B110,B111]>;
+def A56 : XVR<56, "$a56", [B112,B113]>;
+def A57 : XVR<57, "$a57", [B114,B115]>;
+def A58 : XVR<58, "$a58", [B116,B117]>;
+def A59 : XVR<59, "$a59", [B118,B119]>;
+def A60 : XVR<60, "$a60", [B120,B121]>;
+def A61 : XVR<61, "$a61", [B122,B123]>;
+def A62 : XVR<62, "$a62", [B124,B125]>;
+def A63 : XVR<63, "$a63", [B126,B127]>;
 
 
 // Extension Wide Registers
-def W0  : XWR< 0,   "$a0a1", [  C0,   C1,   C2,   C3,   C4,   C5,   C6,   C7]>;
-def W1  : XWR< 1,   "$a2a3", [  C8,   C9,  C10,  C11,  C12,  C13,  C14,  C15]>;
-def W2  : XWR< 2,   "$a4a5", [ C16,  C17,  C18,  C19,  C20,  C21,  C22,  C23]>;
-def W3  : XWR< 3,   "$a6a7", [ C24,  C25,  C26,  C27,  C28,  C29,  C30,  C31]>;
-def W4  : XWR< 4,   "$a8a9", [ C32,  C33,  C34,  C35,  C36,  C37,  C38,  C39]>;
-def W5  : XWR< 5, "$a10a11", [ C40,  C41,  C42,  C43,  C44,  C45,  C46,  C47]>;
-def W6  : XWR< 6, "$a12a13", [ C48,  C49,  C50,  C51,  C52,  C53,  C54,  C55]>;
-def W7  : XWR< 7, "$a14a15", [ C56,  C57,  C58,  C59,  C60,  C61,  C62,  C63]>;
-def W8  : XWR< 8, "$a16a17", [ C64,  C65,  C66,  C67,  C68,  C69,  C70,  C71]>;
-def W9  : XWR< 9, "$a18a19", [ C72,  C73,  C74,  C75,  C76,  C77,  C78,  C79]>;
-def W10 : XWR<10, "$a20a21", [ C80,  C81,  C82,  C83,  C84,  C85,  C86,  C87]>;
-def W11 : XWR<11, "$a22a23", [ C88,  C89,  C90,  C91,  C92,  C93,  C94,  C95]>;
-def W12 : XWR<12, "$a24a25", [ C96,  C97,  C98,  C99, C100, C101, C102, C103]>;
-def W13 : XWR<13, "$a26a27", [C104, C105, C106, C107, C108, C109, C110, C111]>;
-def W14 : XWR<14, "$a28a29", [C112, C113, C114, C115, C116, C117, C118, C119]>;
-def W15 : XWR<15, "$a30a31", [C120, C121, C122, C123, C124, C125, C126, C127]>;
-def W16 : XWR<16, "$a32a33", [C128, C129, C130, C131, C132, C133, C134, C135]>;
-def W17 : XWR<17, "$a34a35", [C136, C137, C138, C139, C140, C141, C142, C143]>;
-def W18 : XWR<18, "$a36a37", [C144, C145, C146, C147, C148, C149, C150, C151]>;
-def W19 : XWR<19, "$a38a39", [C152, C153, C154, C155, C156, C157, C158, C159]>;
-def W20 : XWR<20, "$a40a41", [C160, C161, C162, C163, C164, C165, C166, C167]>;
-def W21 : XWR<21, "$a42a43", [C168, C169, C170, C171, C172, C173, C174, C175]>;
-def W22 : XWR<22, "$a44a45", [C176, C177, C178, C179, C180, C181, C182, C183]>;
-def W23 : XWR<23, "$a46a47", [C184, C185, C186, C187, C188, C189, C190, C191]>;
-def W24 : XWR<24, "$a48a49", [C192, C193, C194, C195, C196, C197, C198, C199]>;
-def W25 : XWR<25, "$a50a51", [C200, C201, C202, C203, C204, C205, C206, C207]>;
-def W26 : XWR<26, "$a52a53", [C208, C209, C210, C211, C212, C213, C214, C215]>;
-def W27 : XWR<27, "$a54a55", [C216, C217, C218, C219, C220, C221, C222, C223]>;
-def W28 : XWR<28, "$a56a57", [C224, C225, C226, C227, C228, C229, C230, C231]>;
-def W29 : XWR<29, "$a58a59", [C232, C233, C234, C235, C236, C237, C238, C239]>;
-def W30 : XWR<30, "$a60a61", [C240, C241, C242, C243, C244, C245, C246, C247]>;
-def W31 : XWR<31, "$a62a63", [C248, C249, C250, C251, C252, C253, C254, C255]>;
+def W0  : XWR< 0,   "$a0a1", [A0,	A1] >;
+def W1  : XWR< 1,   "$a2a3", [A2,	A3] >;
+def W2  : XWR< 2,   "$a4a5", [A4,	A5] >;
+def W3  : XWR< 3,   "$a6a7", [A6,	A7] >;
+def W4  : XWR< 4,   "$a8a9", [A8,	A9] >;
+def W5  : XWR< 5, "$a10a11", [A10,A11]>;
+def W6  : XWR< 6, "$a12a13", [A12,A13]>;
+def W7  : XWR< 7, "$a14a15", [A14,A15]>;
+def W8  : XWR< 8, "$a16a17", [A16,A17]>;
+def W9  : XWR< 9, "$a18a19", [A18,A19]>;
+def W10 : XWR<10, "$a20a21", [A20,A21]>;
+def W11 : XWR<11, "$a22a23", [A22,A23]>;
+def W12 : XWR<12, "$a24a25", [A24,A25]>;
+def W13 : XWR<13, "$a26a27", [A26,A27]>;
+def W14 : XWR<14, "$a28a29", [A28,A29]>;
+def W15 : XWR<15, "$a30a31", [A30,A31]>;
+def W16 : XWR<16, "$a32a33", [A32,A33]>;
+def W17 : XWR<17, "$a34a35", [A34,A35]>;
+def W18 : XWR<18, "$a36a37", [A36,A37]>;
+def W19 : XWR<19, "$a38a39", [A38,A39]>;
+def W20 : XWR<20, "$a40a41", [A40,A41]>;
+def W21 : XWR<21, "$a42a43", [A42,A43]>;
+def W22 : XWR<22, "$a44a45", [A44,A45]>;
+def W23 : XWR<23, "$a46a47", [A46,A47]>;
+def W24 : XWR<24, "$a48a49", [A48,A49]>;
+def W25 : XWR<25, "$a50a51", [A50,A51]>;
+def W26 : XWR<26, "$a52a53", [A52,A53]>;
+def W27 : XWR<27, "$a54a55", [A54,A55]>;
+def W28 : XWR<28, "$a56a57", [A56,A57]>;
+def W29 : XWR<29, "$a58a59", [A58,A59]>;
+def W30 : XWR<30, "$a60a61", [A60,A61]>;
+def W31 : XWR<31, "$a62a63", [A62,A63]>;
 
 
 // Extension Matrix Registers
-def X0  : XMR< 0,     "$a0a1a2a3", [  C0,   C1,   C2,   C3,   C4,   C5,   C6,   C7,   C8,   C9,  C10,  C11,  C12,  C13,  C14,  C15]>;
-def X1  : XMR< 1,     "$a4a5a6a7", [ C16,  C17,  C18,  C19,  C20,  C21,  C22,  C23,  C24,  C25,  C26,  C27,  C28,  C29,  C30,  C31]>;
-def X2  : XMR< 2,   "$a8a9a10a11", [ C32,  C33,  C34,  C35,  C36,  C37,  C38,  C39,  C40,  C41,  C42,  C43,  C44,  C45,  C46,  C47]>;
-def X3  : XMR< 3, "$a12a13a14a15", [ C48,  C49,  C50,  C51,  C52,  C53,  C54,  C55,  C56,  C57,  C58,  C59,  C60,  C61,  C62,  C63]>;
-def X4  : XMR< 4, "$a16a17a18a19", [ C64,  C65,  C66,  C67,  C68,  C69,  C70,  C71,  C72,  C73,  C74,  C75,  C76,  C77,  C78,  C79]>;
-def X5  : XMR< 5, "$a20a21a22a23", [ C80,  C81,  C82,  C83,  C84,  C85,  C86,  C87,  C88,  C89,  C90,  C91,  C92,  C93,  C94,  C95]>;
-def X6  : XMR< 6, "$a24a25a26a27", [ C96,  C97,  C98,  C99, C100, C101, C102, C103, C104, C105, C106, C107, C108, C109, C110, C111]>;
-def X7  : XMR< 7, "$a28a29a30a31", [C112, C113, C114, C115, C116, C117, C118, C119, C120, C121, C122, C123, C124, C125, C126, C127]>;
-def X8  : XMR< 8, "$a32a33a34a35", [C128, C129, C130, C131, C132, C133, C134, C135, C136, C137, C138, C139, C140, C141, C142, C143]>;
-def X9  : XMR< 9, "$a36a37a38a39", [C144, C145, C146, C147, C148, C149, C150, C151, C152, C153, C154, C155, C156, C157, C158, C159]>;
-def X10 : XMR<10, "$a40a41a42a43", [C160, C161, C162, C163, C164, C165, C166, C167, C168, C169, C170, C171, C172, C173, C174, C175]>;
-def X11 : XMR<11, "$a44a45a46a47", [C176, C177, C178, C179, C180, C181, C182, C183, C184, C185, C186, C187, C188, C189, C190, C191]>;
-def X12 : XMR<12, "$a48a49a50a51", [C192, C193, C194, C195, C196, C197, C198, C199, C200, C201, C202, C203, C204, C205, C206, C207]>;
-def X13 : XMR<13, "$a52a53a54a55", [C208, C209, C210, C211, C212, C213, C214, C215, C216, C217, C218, C219, C220, C221, C222, C223]>;
-def X14 : XMR<14, "$a56a57a58a59", [C224, C225, C226, C227, C228, C229, C230, C231, C232, C233, C234, C235, C236, C237, C238, C239]>;
-def X15 : XMR<15, "$a60a61a62a63", [C240, C241, C242, C243, C244, C245, C246, C247, C248, C249, C250, C251, C252, C253, C254, C255]>;
+def X0  : XMR< 0,     "$a0a1a2a3", [W0,	 W1]>;
+def X1  : XMR< 1,     "$a4a5a6a7", [W2,	 W3]>;
+def X2  : XMR< 2,   "$a8a9a10a11", [W4,	 W5]>;
+def X3  : XMR< 3, "$a12a13a14a15", [W6,	 W7]>;
+def X4  : XMR< 4, "$a16a17a18a19", [W8,	 W9]>;
+def X5  : XMR< 5, "$a20a21a22a23", [W10,W11]>;
+def X6  : XMR< 6, "$a24a25a26a27", [W12,W13]>;
+def X7  : XMR< 7, "$a28a29a30a31", [W14,W15]>;
+def X8  : XMR< 8, "$a32a33a34a35", [W16,W17]>;
+def X9  : XMR< 9, "$a36a37a38a39", [W18,W19]>;
+def X10 : XMR<10, "$a40a41a42a43", [W20,W21]>;
+def X11 : XMR<11, "$a44a45a46a47", [W22,W23]>;
+def X12 : XMR<12, "$a48a49a50a51", [W24,W25]>;
+def X13 : XMR<13, "$a52a53a54a55", [W26,W27]>;
+def X14 : XMR<14, "$a56a57a58a59", [W28,W29]>;
+def X15 : XMR<15, "$a60a61a62a63", [W30,W31]>;
 
 
 } // let Namespace = "KVX"

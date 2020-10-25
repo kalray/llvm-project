@@ -932,9 +932,10 @@ static bool expandWideMatrixLoadsStores(const KVXInstrInfo *TII,
 
   LLVM_DEBUG(dbgs() << "Creating a " << (IsStore ? "store from" : "load to")
                     << " register: " << TRI->getRegAsmName(InOutReg) << '\n');
-  Register SubReg = TRI->getSubReg(InOutReg, 1);
-  LLVM_DEBUG(dbgs() << "The sub-register at index 1 is #:" << SubReg << '('
-                    << TRI->getRegAsmName(SubReg) << ").\n");
+
+  Register VectorReg = TRI->getSubReg(InOutReg, sub_v0);
+  LLVM_DEBUG(dbgs() << "The sub-register at index 1 is #:" << VectorReg << '('
+                    << TRI->getRegAsmName(VectorReg) << ").\n");
   int End;
   if (KVX::MatrixRegRegClass.contains(InOutReg))
     End = 4;
@@ -946,7 +947,6 @@ static bool expandWideMatrixLoadsStores(const KVXInstrInfo *TII,
 
   LLVM_DEBUG(dbgs() << "It will require " << End << " lv operations\n");
 
-  Register VectorReg = (SubReg - KVX::C0) / 4 + KVX::A0;
   LLVM_DEBUG(dbgs() << "The first vector sub-register is: "
                     << TRI->getRegAsmName(VectorReg) << '\n');
   for (int C = 0; C < End; C++) {
@@ -955,10 +955,10 @@ static bool expandWideMatrixLoadsStores(const KVXInstrInfo *TII,
 
     // TODO: Investigate why this tests fails, might be related
     // in how we declare our sub-registers.
-    // if (!TRI->isSubRegister(VectorReg, InOutReg))
-    //   report_fatal_error(
-    //       "Vector register " + TRI->getRegAsmName(VectorReg.id()) +
-    //       " is not a sub-register of " + TRI->getRegAsmName(InOutReg.id()));
+    if (!TRI->isSubRegister(InOutReg, VectorReg))
+      report_fatal_error(
+          "Vector register " + TRI->getRegAsmName(VectorReg.id()) +
+          " is not a sub-register of " + TRI->getRegAsmName(InOutReg.id()));
 
     if (IsStore)
       BuildMI(MBB, MBBI, DL, TII->get(GetImmOpCode(Offset, ri10, ri37, ri64)))
