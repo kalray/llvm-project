@@ -110,16 +110,10 @@ void KVXInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
     LLVM_DEBUG(
         dbgs() << "It is a GPR QuadReg to TCA VectorReg, it requires two "
                   "instructions, a movetqrrbo and a movetqrrbe.\n");
-    auto SubSubReg1 = TRI->getSubReg(DstReg, 1);
-    auto SubSubReg2 = TRI->getSubReg(DstReg, 3);
-    if (!KVX::CoproRegRegClass.contains(SubSubReg1, SubSubReg2))
-      report_fatal_error(
-          "One of these VectorReg sub-register is not a CoproReg: (" +
-          TRI->getRegAsmName(SubSubReg1.id()) + ", " +
-          TRI->getRegAsmName(SubSubReg2.id()) + ").\n");
 
-    MCRegister SubReg1((SubSubReg1.id() - KVX::C0) / 2 + KVX::B0);
-    MCRegister SubReg2((SubSubReg2.id() - KVX::C0) / 2 + KVX::B0);
+    MCRegister SubReg1 = TRI->getSubReg(DstReg, sub_b0);
+    MCRegister SubReg2 = TRI->getSubReg(DstReg, sub_b1);
+
     if (!KVX::BlockRegRegClass.contains(SubReg1, SubReg2))
       report_fatal_error("One of these are not a BlockReg: (" +
                          TRI->getRegAsmName(SubReg1.id()) + ", " +
