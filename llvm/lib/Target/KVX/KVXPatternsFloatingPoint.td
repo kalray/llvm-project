@@ -390,17 +390,17 @@ def : Pat<(f16 (fpround f32:$val)), (FNARROWWH SingleReg:$val, rounding_, silent
 def : Pat<(f16 (fpround f64:$val)), (FNARROWWH (FNARROWDW SingleReg:$val, rounding_, silent_), rounding_, silent_)>;
 def : Pat<(f32 (fpround f64:$val)), (FNARROWDW SingleReg:$val, rounding_, silent_)>;
 def : Pat<(v2f16 (fpround v2f32:$val)), (FNARROWWHQ (INSERT_SUBREG
-                                                      (INSERT_SUBREG (v4f32 (IMPLICIT_DEF)), SingleReg:$val, 1),
-                                                      (v2f32 (IMPLICIT_DEF)), 2), rounding_, silent_)>;
+                                                      (INSERT_SUBREG (v4f32 (IMPLICIT_DEF)), SingleReg:$val, sub_s0),
+                                                      (v2f32 (IMPLICIT_DEF)), sub_s1), rounding_, silent_)>;
 def : Pat<(v4f16 (fpround v4f32:$val)), (FNARROWWHQ PairedReg:$val, rounding_, silent_)>;
 
-def : Pat<(v2f16 (fpround v2f64:$val)), (INSF (FNARROWWH (FNARROWDW (f64 (EXTRACT_SUBREG PairedReg:$val, 1)), rounding_, silent_), rounding_, silent_),
-                                              (FNARROWWH (FNARROWDW (f64 (EXTRACT_SUBREG PairedReg:$val, 2)), rounding_, silent_), rounding_, silent_), 31, 16)>;
+def : Pat<(v2f16 (fpround v2f64:$val)), (INSF (FNARROWWH (FNARROWDW (f64 (EXTRACT_SUBREG PairedReg:$val, sub_s0)), rounding_, silent_), rounding_, silent_),
+                                              (FNARROWWH (FNARROWDW (f64 (EXTRACT_SUBREG PairedReg:$val, sub_s1)), rounding_, silent_), rounding_, silent_), 31, 16)>;
 def : Pat<(v4f16 (fpround v4f64:$val)), (INSF
-                                          (INSF (FNARROWWH (FNARROWDW (f64 (EXTRACT_SUBREG QuadReg:$val, 1)), rounding_, silent_), rounding_, silent_),
-                                                (FNARROWWH (FNARROWDW (f64 (EXTRACT_SUBREG QuadReg:$val, 2)), rounding_, silent_), rounding_, silent_), 31, 16),
-                                          (INSF (FNARROWWH (FNARROWDW (f64 (EXTRACT_SUBREG QuadReg:$val, 3)), rounding_, silent_), rounding_, silent_),
-                                                (FNARROWWH (FNARROWDW (f64 (EXTRACT_SUBREG QuadReg:$val, 4)), rounding_, silent_), rounding_, silent_), 31, 16),
+                                          (INSF (FNARROWWH (FNARROWDW (f64 (EXTRACT_SUBREG QuadReg:$val, sub_s0)), rounding_, silent_), rounding_, silent_),
+                                                (FNARROWWH (FNARROWDW (f64 (EXTRACT_SUBREG QuadReg:$val, sub_s1)), rounding_, silent_), rounding_, silent_), 31, 16),
+                                          (INSF (FNARROWWH (FNARROWDW (f64 (EXTRACT_SUBREG QuadReg:$val, sub_s2)), rounding_, silent_), rounding_, silent_),
+                                                (FNARROWWH (FNARROWDW (f64 (EXTRACT_SUBREG QuadReg:$val, sub_s3)), rounding_, silent_), rounding_, silent_), 31, 16),
                                         63, 32)>;
 
 // FNEG, see KVXInstrInfo.td for f32, f64, v2f32, v4f16
@@ -435,33 +435,39 @@ def : Pat<(f64 (fpextend f16:$val)), (FWIDENLWD (FWIDENLHW SingleReg:$val, silen
 def : Pat<(f32 (fpextend f16:$val)), (FWIDENLHW SingleReg:$val, silent_)>;
 def : Pat<(v2f32 (fpextend v2f16:$val)), (FWIDENLHWP SingleReg:$val, silent_)>;
 def : Pat<(v4f32 (fpextend v4f16:$val)), (INSERT_SUBREG
-                                           (INSERT_SUBREG (v4f32 (IMPLICIT_DEF)), (v2f32 (FWIDENLHWP SingleReg:$val, silent_)), 1),
-                                           (v2f32 (FWIDENMHWP SingleReg:$val, silent_)), 2)>;
+                                           (INSERT_SUBREG (v4f32 (IMPLICIT_DEF)), (v2f32 (FWIDENLHWP SingleReg:$val, silent_)), sub_s0),
+                                           (v2f32 (FWIDENMHWP SingleReg:$val, silent_)), sub_s1)>;
 
 // v2f32
 def : Pat<(extractelt (v2f32 SingleReg:$v), 0), (COPY SingleReg:$v)>;
 def : Pat<(extractelt (v2f32 SingleReg:$v), 1), (SRADri SingleReg :$v, (i64 32))>;
 
 // v4f32
-def : Pat<(extractelt (v4f32 PairedReg:$v), 0), (f32 (EXTRACT_SUBREG $v, 1))>;
-def : Pat<(extractelt (v4f32 PairedReg:$v), 1), (SRADri (f32 (EXTRACT_SUBREG $v, 1)), (i64 32))>;
-def : Pat<(extractelt (v4f32 PairedReg:$v), 2), (f32 (EXTRACT_SUBREG $v, 2))>;
-def : Pat<(extractelt (v4f32 PairedReg:$v), 3), (SRADri (f32 (EXTRACT_SUBREG $v, 2)), (i64 32))>;
+def : Pat<(extractelt (v4f32 PairedReg:$v), 0), (f32 (EXTRACT_SUBREG $v, sub_s0))>;
+def : Pat<(extractelt (v4f32 PairedReg:$v), 1), (SRADri (f32 (EXTRACT_SUBREG $v, sub_s0)), (i64 32))>;
+def : Pat<(extractelt (v4f32 PairedReg:$v), 2), (f32 (EXTRACT_SUBREG $v, sub_s1))>;
+def : Pat<(extractelt (v4f32 PairedReg:$v), 3), (SRADri (f32 (EXTRACT_SUBREG $v, sub_s1)), (i64 32))>;
 
 def : Pat<(v2f32 (extract_subvector (v4f32 PairedReg:$v), (i64 0))),
-          (v2f32 (COPYD (v2f32 (EXTRACT_SUBREG $v, 1))))>;
+          (v2f32 (EXTRACT_SUBREG $v, sub_s0))>;
 def : Pat<(v2f32 (extract_subvector (v4f32 PairedReg:$v), (i64 2))),
-          (v2f32 (COPYD (v2f32 (EXTRACT_SUBREG $v, 2))))>;
+          (v2f32 (EXTRACT_SUBREG $v, sub_s1))>;
 
 // v2f64
 def : Pat<(v2f64 (build_vector f64:$v1, f64:$v2)),
   (INSERT_SUBREG
-    (INSERT_SUBREG (v2f64 (IMPLICIT_DEF)), SingleReg:$v1, 1),
-    SingleReg:$v2, 2
+    (INSERT_SUBREG (v2f64 (IMPLICIT_DEF)), SingleReg:$v1, sub_s0),
+    SingleReg:$v2, sub_s1
   )>;
 
-def : Pat<(extractelt (v2f64 PairedReg:$v), 0), (f64 (EXTRACT_SUBREG $v, 1))>;
-def : Pat<(extractelt (v2f64 PairedReg:$v), 1), (f64 (EXTRACT_SUBREG $v, 2))>;
+def : Pat<(v4f32 (concat_vectors v2f32:$v1, v2f32:$v2)),
+  (INSERT_SUBREG
+    (INSERT_SUBREG (v4f32 (IMPLICIT_DEF)), SingleReg:$v1, sub_s0),
+    SingleReg:$v2, sub_s1
+  )>;
+
+def : Pat<(extractelt (v2f64 PairedReg:$v), 0), (f64 (EXTRACT_SUBREG $v, sub_s0))>;
+def : Pat<(extractelt (v2f64 PairedReg:$v), 1), (f64 (EXTRACT_SUBREG $v, sub_s1))>;
 
 // v2f16
 def : Pat<(extractelt v2f16:$v, 0), (ZXHD SingleReg:$v)>;
@@ -484,19 +490,21 @@ def : Pat<(fcopysign f16:$v1, f32:$v2), (INSF SingleReg:$v1, (f64 (SRAWri Single
 def : Pat<(fcopysign f16:$v1, f16:$v2), (INSF SingleReg:$v1, (f64 (SRAWri SingleReg:$v2, 15)), 15, 15)>;
 
 // v4f64
-def : Pat<(extractelt (v4f64 QuadReg:$v), 0), (f64 (EXTRACT_SUBREG $v, 1))>;
-def : Pat<(extractelt (v4f64 QuadReg:$v), 1), (f64 (EXTRACT_SUBREG $v, 2))>;
-def : Pat<(extractelt (v4f64 QuadReg:$v), 2), (f64 (EXTRACT_SUBREG $v, 3))>;
-def : Pat<(extractelt (v4f64 QuadReg:$v), 3), (f64 (EXTRACT_SUBREG $v, 4))>;
+def : Pat<(extractelt (v4f64 QuadReg:$v), 0), (f64 (EXTRACT_SUBREG $v, sub_s0))>;
+def : Pat<(extractelt (v4f64 QuadReg:$v), 1), (f64 (EXTRACT_SUBREG $v, sub_s1))>;
+def : Pat<(extractelt (v4f64 QuadReg:$v), 2), (f64 (EXTRACT_SUBREG $v, sub_s2))>;
+def : Pat<(extractelt (v4f64 QuadReg:$v), 3), (f64 (EXTRACT_SUBREG $v, sub_s3))>;
 
 
 def : Pat<(v4f64 (build_vector f64:$v1, f64:$v2, f64:$v3, f64:$v4)),
-  (INSERT_SUBREG (INSERT_SUBREG (INSERT_SUBREG
-    (INSERT_SUBREG (v4f64 (IMPLICIT_DEF)), $v1, 1), $v2, 2), $v3, 3), $v4, 4)>;
+          (INSERT_SUBREG (INSERT_SUBREG (INSERT_SUBREG
+    (INSERT_SUBREG (v4f64 (IMPLICIT_DEF)), $v1, sub_s0), $v2, sub_s1), $v3, sub_s2), $v4, sub_s3)>;
+
+def : Pat<(v4f64 (concat_vectors v2f64:$v0, v2f64:$v1)),
+  (INSERT_SUBREG (INSERT_SUBREG (v4f64 (IMPLICIT_DEF)), $v0, sub_p0), $v1, sub_p1)>;
 
 def : Pat<(v2f64 (extract_subvector (v4f64 QuadReg:$v), (i64 0))),
-          (v2f64 (COPYQ (f64 (EXTRACT_SUBREG $v, 1)), (f64 (EXTRACT_SUBREG $v, 2))))>;
+          (EXTRACT_SUBREG $v, sub_p0)>;
 
 def : Pat<(v2f64 (extract_subvector (v4f64 QuadReg:$v), (i64 2))),
-          (v2f64 (COPYQ (f64 (EXTRACT_SUBREG $v, 3)), (f64 (EXTRACT_SUBREG $v, 4))))>;
-
+          (EXTRACT_SUBREG $v, sub_p1)>;

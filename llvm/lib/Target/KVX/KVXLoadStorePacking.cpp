@@ -15,9 +15,9 @@
 //    Also works for lo and stores operations (sd -> sq/so).
 //
 //  How it works:
-//    - It makes a vector of consecutives loads(stores) and sorts them by
+//    - It makes a vector of consecutive loads(stores) and sorts them by
 //    the registers used for loading(storing) data and the offset. Then
-//    consecutives loads(stores) of 2 or 4 (if possible) are merged together.
+//    consecutive loads(stores) of 2 or 4 (if possible) are merged together.
 //
 //  Future improvements:
 //    - This currently relies that loads and store are already placed
@@ -149,7 +149,7 @@ void KVXLoadStorePackingPass::packAndReplaceLoad(Vec::iterator ItStart,
 
   LLVM_DEBUG(dbgs() << "added " << *mib << "\n");
 
-  unsigned Ind = 1;
+  unsigned Ind = KVX::sub_s0;
   while (Count--) {
     unsigned re = ItStart->first->getOperand(0).getReg();
     ItStart->first->eraseFromParent();
@@ -196,7 +196,7 @@ void KVXLoadStorePackingPass::packAndReplaceStore(Vec::iterator ItStart,
 
   for (unsigned i = 0; i < Count; ++i) {
     SingleRegs[i] = MRI->createVirtualRegister(&KVX::SingleRegRegClass);
-    SeqMI.addReg(SingleRegs[i]).addImm(i + 1);
+    SeqMI.addReg(SingleRegs[i]).addImm(KVX::sub_s0 + i);
   }
 
   auto NewSt = BuildMI(*ItStart->first->getParent(), LocMII->first,
@@ -218,6 +218,7 @@ void KVXLoadStorePackingPass::packAndReplaceStore(Vec::iterator ItStart,
   }
 }
 
+// This should be a enum: NONE, LOAD, STORE
 static int getOpType(MachineBasicBlock::iterator MBBI) {
   switch (MBBI->getOpcode()) {
   default:
@@ -244,7 +245,7 @@ static int isValidMemoryOp(MachineBasicBlock::iterator MBBI) {
 
   return true;
 }
-
+// Really bad name, it ain't reorder only, but sort and pack
 bool KVXLoadStorePackingPass::reorderInstr(
     llvm::DenseMap<MachineOperand, Vec> &Map, unsigned Type,
     unsigned OffsetInd) {
@@ -264,6 +265,9 @@ bool KVXLoadStorePackingPass::reorderInstr(
     while (It != ItE) {
       auto ItStart = It;
       auto NIt = std::next(It);
+      if (NIt == ItE)
+        break;
+
       unsigned Count = 1;
       unsigned LocC = ItStart->second;
       auto FirstInstr = *ItStart;
@@ -280,6 +284,7 @@ bool KVXLoadStorePackingPass::reorderInstr(
       }
 
       if (Count > 1) {
+        // What happens if count == 3?
         if (Type == 1)
           packAndReplaceLoad(ItStart, Count == 4 ? Count : 2);
         else if (Type == 2)
@@ -331,8 +336,11 @@ bool KVXLoadStorePackingPass::packBlock(MachineBasicBlock &MBB) {
       if (!isValidMemoryOp(MBBI))
         continue;
 
-      if (Type == 1) {
+      if (Type == 1) { // If it is a load, check alias against stores
         bool isalias = false;
+        // Way over-conservative check below. We only need to check against
+        // operations that are inside the window of operations which we can
+        // merge to, not against all mem operations we've seen so far.
         for (auto &v : StMap)
           for (auto &i : v.second)
             if (!isalias && MBBI->mayAlias(AA, *(i.first), /*UseTBAA*/ false)) {
@@ -346,7 +354,8 @@ bool KVXLoadStorePackingPass::packBlock(MachineBasicBlock &MBB) {
 
         Jumps = MaxJumps;
         LdMap[MBBI->getOperand(2)].push_back(std::make_pair(&*MBBI, MIInd));
-      } else if (Type == 2) {
+      } else if (Type == 2) { // If it is a store, check alias against stores
+        // BUG?? Stores must check against loads as well???
         bool isalias = false;
         for (auto &v : StMap)
           for (auto &i : v.second)

@@ -17,8 +17,8 @@
 // Last generated: 2020-06-20 21:47:17.940594.
 
 
-include "KVXSubRegisterInfo.td"
 let Namespace = "KVX" in {
+include "KVXSubRegisterInfo.td"
 
 // KVX Register base class:
 //   - KVXRegister
@@ -51,14 +51,13 @@ class GPR<bits<9> num, string n, list<string> alt = []>
 // PGR - Paired General Registers
 class PGR<bits<9> num, string n, list<Register> subregs>
       : KVXRegisterWithSubRegs<num, n, subregs> {
-  let SubRegIndices = [SubRegIndex<64,   0>, SubRegIndex<64,  64>];
+  let SubRegIndices = [sub_s0, sub_s1];
 }
 
 // QGR - Quadruple General Registers
 class QGR<bits<9> num, string n, list<Register> subregs>
       : KVXRegisterWithSubRegs<num, n, subregs> {
-  let SubRegIndices = [SubRegIndex<64,   0>, SubRegIndex<64,  64>,
-                       SubRegIndex<64, 128>, SubRegIndex<64, 192>];
+  let SubRegIndices = [sub_p0, sub_p1];
 }
 
 // XCR - Extension Coprocessor Registers
@@ -707,22 +706,22 @@ def P62 : PGR<62, "$r62r63", [R62, R63]>;
 
 
 // Quadruple General Registers
-def Q0  : QGR< 0,     "$r0r1r2r3", [ R0,  R1,  R2,  R3]>;
-def Q4  : QGR< 4,     "$r4r5r6r7", [ R4,  R5,  R6,  R7]>;
-def Q8  : QGR< 8,   "$r8r9r10r11", [ R8,  R9, R10, R11]>;
-def Q12 : QGR<12, "$r12r13r14r15", [R12, R13, R14, R15]>;
-def Q16 : QGR<16, "$r16r17r18r19", [R16, R17, R18, R19]>;
-def Q20 : QGR<20, "$r20r21r22r23", [R20, R21, R22, R23]>;
-def Q24 : QGR<24, "$r24r25r26r27", [R24, R25, R26, R27]>;
-def Q28 : QGR<28, "$r28r29r30r31", [R28, R29, R30, R31]>;
-def Q32 : QGR<32, "$r32r33r34r35", [R32, R33, R34, R35]>;
-def Q36 : QGR<36, "$r36r37r38r39", [R36, R37, R38, R39]>;
-def Q40 : QGR<40, "$r40r41r42r43", [R40, R41, R42, R43]>;
-def Q44 : QGR<44, "$r44r45r46r47", [R44, R45, R46, R47]>;
-def Q48 : QGR<48, "$r48r49r50r51", [R48, R49, R50, R51]>;
-def Q52 : QGR<52, "$r52r53r54r55", [R52, R53, R54, R55]>;
-def Q56 : QGR<56, "$r56r57r58r59", [R56, R57, R58, R59]>;
-def Q60 : QGR<60, "$r60r61r62r63", [R60, R61, R62, R63]>;
+def Q0  : QGR< 0,     "$r0r1r2r3", [ P0,  P2]>;
+def Q4  : QGR< 4,     "$r4r5r6r7", [ P4,  P6]>;
+def Q8  : QGR< 8,   "$r8r9r10r11", [ P8, P10]>;
+def Q12 : QGR<12, "$r12r13r14r15", [P12, P14]>;
+def Q16 : QGR<16, "$r16r17r18r19", [P16, P18]>;
+def Q20 : QGR<20, "$r20r21r22r23", [P20, P22]>;
+def Q24 : QGR<24, "$r24r25r26r27", [P24, P26]>;
+def Q28 : QGR<28, "$r28r29r30r31", [P28, P30]>;
+def Q32 : QGR<32, "$r32r33r34r35", [P32, P34]>;
+def Q36 : QGR<36, "$r36r37r38r39", [P36, P38]>;
+def Q40 : QGR<40, "$r40r41r42r43", [P40, P42]>;
+def Q44 : QGR<44, "$r44r45r46r47", [P44, P46]>;
+def Q48 : QGR<48, "$r48r49r50r51", [P48, P50]>;
+def Q52 : QGR<52, "$r52r53r54r55", [P52, P54]>;
+def Q56 : QGR<56, "$r56r57r58r59", [P56, P58]>;
+def Q60 : QGR<60, "$r60r61r62r63", [P60, P62]>;
 
 
 // Extension Coprocessor Registers

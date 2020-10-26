@@ -841,10 +841,7 @@ declare <2 x float> @llvm.kvx.faddwp(<2 x float>, <2 x float>, i32) #1
 define <4 x float> @faddwq(<4 x float> %v1, <4 x float> %v2){
 ; CHECK-LABEL: faddwq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    faddwq.rn $r2r3 = $r0r1, $r2r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r2
-; CHECK-NEXT:    copyd $r1 = $r3
+; CHECK-NEXT:    faddwq.rn $r0r1 = $r0r1, $r2r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -857,14 +854,9 @@ declare <4 x float> @llvm.kvx.faddwq(<4 x float>, <4 x float>, i32) #1
 define <8 x float> @faddwo(<8 x float> %v1, <8 x float> %v2){
 ; CHECK-LABEL: faddwo:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    faddwq.rn $r4r5 = $r0r1, $r4r5
+; CHECK-NEXT:    faddwq.rn $r0r1 = $r0r1, $r4r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddwq.rn $r6r7 = $r2r3, $r6r7
-; CHECK-NEXT:    copyd $r0 = $r4
-; CHECK-NEXT:    copyd $r1 = $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r2 = $r6
-; CHECK-NEXT:    copyd $r3 = $r7
+; CHECK-NEXT:    faddwq.rn $r2r3 = $r2r3, $r6r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -926,10 +918,7 @@ declare <2 x float> @llvm.kvx.faddcwc(<2 x float>, <2 x float>, i32) #1
 define <4 x float> @faddcwcp(<4 x float> %v1, <4 x float> %v2){
 ; CHECK-LABEL: faddcwcp:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    faddcwcp.rn $r2r3 = $r0r1, $r2r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r2
-; CHECK-NEXT:    copyd $r1 = $r3
+; CHECK-NEXT:    faddcwcp.rn $r0r1 = $r0r1, $r2r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -942,14 +931,9 @@ declare <4 x float> @llvm.kvx.faddcwcp(<4 x float>, <4 x float>, i32) #1
 define <8 x float> @faddcwcq(<8 x float> %v1, <8 x float> %v2){
 ; CHECK-LABEL: faddcwcq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    faddcwcp.rn $r4r5 = $r0r1, $r4r5
+; CHECK-NEXT:    faddcwcp.rn $r0r1 = $r0r1, $r4r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddcwcp.rn $r6r7 = $r2r3, $r6r7
-; CHECK-NEXT:    copyd $r0 = $r4
-; CHECK-NEXT:    copyd $r1 = $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r2 = $r6
-; CHECK-NEXT:    copyd $r3 = $r7
+; CHECK-NEXT:    faddcwcp.rn $r2r3 = $r2r3, $r6r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1011,10 +995,7 @@ declare <2 x float> @llvm.kvx.fsbfwp(<2 x float>, <2 x float>, i32) #1
 define <4 x float> @fsbfwq(<4 x float> %v1, <4 x float> %v2){
 ; CHECK-LABEL: fsbfwq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fsbfwq.rn $r2r3 = $r0r1, $r2r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r2
-; CHECK-NEXT:    copyd $r1 = $r3
+; CHECK-NEXT:    fsbfwq.rn $r0r1 = $r0r1, $r2r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1027,14 +1008,9 @@ declare <4 x float> @llvm.kvx.fsbfwq(<4 x float>, <4 x float>, i32) #1
 define <8 x float> @fsbfwo(<8 x float> %v1, <8 x float> %v2){
 ; CHECK-LABEL: fsbfwo:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fsbfwq.rn $r4r5 = $r0r1, $r4r5
+; CHECK-NEXT:    fsbfwq.rn $r0r1 = $r0r1, $r4r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfwq.rn $r6r7 = $r2r3, $r6r7
-; CHECK-NEXT:    copyd $r0 = $r4
-; CHECK-NEXT:    copyd $r1 = $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r2 = $r6
-; CHECK-NEXT:    copyd $r3 = $r7
+; CHECK-NEXT:    fsbfwq.rn $r2r3 = $r2r3, $r6r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1096,10 +1072,7 @@ declare <2 x float> @llvm.kvx.fsbfcwc(<2 x float>, <2 x float>, i32) #1
 define <4 x float> @fsbfcwcp(<4 x float> %v1, <4 x float> %v2){
 ; CHECK-LABEL: fsbfcwcp:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fsbfcwcp.rn $r2r3 = $r0r1, $r2r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r2
-; CHECK-NEXT:    copyd $r1 = $r3
+; CHECK-NEXT:    fsbfcwcp.rn $r0r1 = $r0r1, $r2r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1112,14 +1085,9 @@ declare <4 x float> @llvm.kvx.fsbfcwcp(<4 x float>, <4 x float>, i32) #1
 define <8 x float> @fsbfcwcq(<8 x float> %v1, <8 x float> %v2){
 ; CHECK-LABEL: fsbfcwcq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fsbfcwcp.rn $r4r5 = $r0r1, $r4r5
+; CHECK-NEXT:    fsbfcwcp.rn $r0r1 = $r0r1, $r4r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfcwcp.rn $r6r7 = $r2r3, $r6r7
-; CHECK-NEXT:    copyd $r0 = $r4
-; CHECK-NEXT:    copyd $r1 = $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r2 = $r6
-; CHECK-NEXT:    copyd $r3 = $r7
+; CHECK-NEXT:    fsbfcwcp.rn $r2r3 = $r2r3, $r6r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1181,10 +1149,7 @@ declare <2 x float> @llvm.kvx.fmulwp(<2 x float>, <2 x float>, i32) #1
 define <4 x float> @fmulwq(<4 x float> %v1, <4 x float> %v2){
 ; CHECK-LABEL: fmulwq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmulwq.rn $r2r3 = $r0r1, $r2r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r2
-; CHECK-NEXT:    copyd $r1 = $r3
+; CHECK-NEXT:    fmulwq.rn $r0r1 = $r0r1, $r2r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1197,14 +1162,9 @@ declare <4 x float> @llvm.kvx.fmulwq(<4 x float>, <4 x float>, i32) #1
 define <8 x float> @fmulwo(<8 x float> %v1, <8 x float> %v2){
 ; CHECK-LABEL: fmulwo:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmulwq.rn $r4r5 = $r0r1, $r4r5
+; CHECK-NEXT:    fmulwq.rn $r0r1 = $r0r1, $r4r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulwq.rn $r6r7 = $r2r3, $r6r7
-; CHECK-NEXT:    copyd $r0 = $r4
-; CHECK-NEXT:    copyd $r1 = $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r2 = $r6
-; CHECK-NEXT:    copyd $r3 = $r7
+; CHECK-NEXT:    fmulwq.rn $r2r3 = $r2r3, $r6r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1272,12 +1232,9 @@ declare <2 x float> @llvm.kvx.fmulwc(<2 x float>, <2 x float>, i32) #1
 define <4 x float> @fmulwcp(<4 x float> %v1, <4 x float> %v2){
 ; CHECK-LABEL: fmulwcp:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmulwc.rn $r2 = $r0, $r2
+; CHECK-NEXT:    fmulwc.rn $r0 = $r0, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulwc.rn $r3 = $r1, $r3
-; CHECK-NEXT:    copyd $r0 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r3
+; CHECK-NEXT:    fmulwc.rn $r1 = $r1, $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1290,18 +1247,13 @@ declare <4 x float> @llvm.kvx.fmulwcp(<4 x float>, <4 x float>, i32) #1
 define <8 x float> @fmulwcq(<8 x float> %v1, <8 x float> %v2){
 ; CHECK-LABEL: fmulwcq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmulwc.rn $r4 = $r0, $r4
+; CHECK-NEXT:    fmulwc.rn $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulwc.rn $r5 = $r1, $r5
+; CHECK-NEXT:    fmulwc.rn $r1 = $r1, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulwc.rn $r6 = $r2, $r6
+; CHECK-NEXT:    fmulwc.rn $r2 = $r2, $r6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulwc.rn $r7 = $r3, $r7
-; CHECK-NEXT:    copyd $r0 = $r4
-; CHECK-NEXT:    copyd $r1 = $r5
-; CHECK-NEXT:    copyd $r2 = $r6
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r3 = $r7
+; CHECK-NEXT:    fmulwc.rn $r3 = $r3, $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1331,12 +1283,9 @@ declare <2 x float> @llvm.kvx.fmulcwc(<2 x float>, <2 x float>, i32) #1
 define <4 x float> @fmulcwcp(<4 x float> %v1, <4 x float> %v2){
 ; CHECK-LABEL: fmulcwcp:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmulcwc.rn $r2 = $r0, $r2
+; CHECK-NEXT:    fmulcwc.rn $r0 = $r0, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulcwc.rn $r3 = $r1, $r3
-; CHECK-NEXT:    copyd $r0 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r3
+; CHECK-NEXT:    fmulcwc.rn $r1 = $r1, $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1349,18 +1298,13 @@ declare <4 x float> @llvm.kvx.fmulcwcp(<4 x float>, <4 x float>, i32) #1
 define <8 x float> @fmulcwcq(<8 x float> %v1, <8 x float> %v2){
 ; CHECK-LABEL: fmulcwcq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmulcwc.rn $r4 = $r0, $r4
+; CHECK-NEXT:    fmulcwc.rn $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulcwc.rn $r5 = $r1, $r5
+; CHECK-NEXT:    fmulcwc.rn $r1 = $r1, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulcwc.rn $r6 = $r2, $r6
+; CHECK-NEXT:    fmulcwc.rn $r2 = $r2, $r6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulcwc.rn $r7 = $r3, $r7
-; CHECK-NEXT:    copyd $r0 = $r4
-; CHECK-NEXT:    copyd $r1 = $r5
-; CHECK-NEXT:    copyd $r2 = $r6
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r3 = $r7
+; CHECK-NEXT:    fmulcwc.rn $r3 = $r3, $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1499,10 +1443,7 @@ entry:
 define <4 x float> @fmm212w(<2 x float> %v1, <2 x float> %v2){
 ; CHECK-LABEL: fmm212w:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmm212w.rn $r2r3 = $r0, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r2
-; CHECK-NEXT:    copyd $r1 = $r3
+; CHECK-NEXT:    fmm212w.rn $r0r1 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
