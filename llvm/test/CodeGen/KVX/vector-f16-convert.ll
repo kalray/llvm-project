@@ -37,16 +37,14 @@ entry:
 define <8 x float> @expand8(<8 x half> %a) {
 ; CHECK-LABEL: expand8:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fwidenlhwp $r4 = $r1
-; CHECK-NEXT:    fwidenlhwp $r2 = $r0
+; CHECK-NEXT:    fwidenlhwp $r2 = $r1
+; CHECK-NEXT:    fwidenlhwp $r4 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenmhwp $r5 = $r1
-; CHECK-NEXT:    fwidenmhwp $r3 = $r0
-; CHECK-NEXT:    copyd $r0 = $r2
+; CHECK-NEXT:    fwidenmhwp $r3 = $r1
+; CHECK-NEXT:    fwidenmhwp $r5 = $r0
+; CHECK-NEXT:    copyd $r0 = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r3
-; CHECK-NEXT:    copyd $r2 = $r4
-; CHECK-NEXT:    copyd $r3 = $r5
+; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

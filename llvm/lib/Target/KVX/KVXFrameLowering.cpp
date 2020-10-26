@@ -429,7 +429,7 @@ bool KVXFrameLowering::spillCalleeSavedRegisters(
 
     // Try to merge single regs into paired regs
     unsigned PairedReg =
-        TRI->getMatchingSuperReg(Reg, 1, &KVX::PairedRegRegClass);
+        TRI->getMatchingSuperReg(Reg, KVX::sub_s0, &KVX::PairedRegRegClass);
     if (!RegSaved.empty() && PairedReg && RegSaved.back() - 1 == Reg &&
         FrameIdxSaved.back() + 1 == CS.getFrameIdx()) {
       if (RCSaved.back() == &KVX::SingleRegRegClass) {
@@ -439,7 +439,7 @@ bool KVXFrameLowering::spillCalleeSavedRegisters(
 
         // Try to merge paired regs into quad regs
         unsigned QuadReg =
-            TRI->getMatchingSuperReg(Reg, 1, &KVX::QuadRegRegClass);
+            TRI->getMatchingSuperReg(Reg, KVX::sub_s0, &KVX::QuadRegRegClass);
         if (!RegSaved.empty() && RCSaved.back() == &KVX::PairedRegRegClass &&
             QuadReg && RegSaved.back() - 1 == PairedReg) {
           Reg = QuadReg;
@@ -537,7 +537,7 @@ bool KVXFrameLowering::restoreCalleeSavedRegisters(
 
     // Try to merge single regs into paired regs
     unsigned PairedReg =
-        TRI->getMatchingSuperReg(Reg, 2, &KVX::PairedRegRegClass);
+        TRI->getMatchingSuperReg(Reg, KVX::sub_s1, &KVX::PairedRegRegClass);
     if (!RegSaved.empty() && PairedReg && RegSaved.back() + 1 == Reg &&
         FrameIdxSaved.back() - 1 == CS.getFrameIdx()) {
       if (RCSaved.back() == &KVX::SingleRegRegClass) {
@@ -546,7 +546,7 @@ bool KVXFrameLowering::restoreCalleeSavedRegisters(
 
         // Try to merge paired regs into quad regs
         unsigned QuadReg =
-            TRI->getMatchingSuperReg(Reg, 4, &KVX::QuadRegRegClass);
+            TRI->getMatchingSuperReg(Reg, KVX::sub_s3, &KVX::QuadRegRegClass);
         if (!RegSaved.empty() && RCSaved.back() == &KVX::PairedRegRegClass &&
             QuadReg && RegSaved.back() + 1 == PairedReg) {
           Reg = QuadReg;

@@ -906,35 +906,50 @@ def : Pat<(i32 (sext_inreg (vector_extract (v4i16 SingleReg:$v), 3), i16)), (SRA
 // v2i64
 def : Pat<(v2i64 (build_vector i64:$v1, i64:$v2)),
   (INSERT_SUBREG
-    (INSERT_SUBREG (v2i64 (IMPLICIT_DEF)), SingleReg:$v1, 1),
-    SingleReg:$v2, 2
+    (INSERT_SUBREG (v2i64 (IMPLICIT_DEF)), SingleReg:$v1, sub_s0),
+    SingleReg:$v2, sub_s1
   )>;
 
-def : Pat<(extractelt (v2i64 PairedReg:$v), 0), (i64 (EXTRACT_SUBREG $v, 1))>;
-def : Pat<(extractelt (v2i64 PairedReg:$v), 1), (i64 (EXTRACT_SUBREG $v, 2))>;
+def : Pat<(v4i32 (concat_vectors v2i32:$v0, v2i32:$v1)),
+  (INSERT_SUBREG
+    (INSERT_SUBREG (v4i32 (IMPLICIT_DEF)), SingleReg:$v0, sub_s0),
+    SingleReg:$v1, sub_s1
+  )>;
+
+def : Pat<(extractelt (v2i64 PairedReg:$v), 0), (i64 (EXTRACT_SUBREG $v, sub_s0))>;
+def : Pat<(extractelt (v2i64 PairedReg:$v), 1), (i64 (EXTRACT_SUBREG $v, sub_s1))>;
 
 // v4i64
-def : Pat<(extractelt (v4i64 QuadReg:$v), 0), (i64 (EXTRACT_SUBREG $v, 1))>;
-def : Pat<(extractelt (v4i64 QuadReg:$v), 1), (i64 (EXTRACT_SUBREG $v, 2))>;
-def : Pat<(extractelt (v4i64 QuadReg:$v), 2), (i64 (EXTRACT_SUBREG $v, 3))>;
-def : Pat<(extractelt (v4i64 QuadReg:$v), 3), (i64 (EXTRACT_SUBREG $v, 4))>;
+def : Pat<(extractelt (v4i64 QuadReg:$v), 0), (i64 (EXTRACT_SUBREG $v, sub_s0))>;
+def : Pat<(extractelt (v4i64 QuadReg:$v), 1), (i64 (EXTRACT_SUBREG $v, sub_s1))>;
+def : Pat<(extractelt (v4i64 QuadReg:$v), 2), (i64 (EXTRACT_SUBREG $v, sub_s2))>;
+def : Pat<(extractelt (v4i64 QuadReg:$v), 3), (i64 (EXTRACT_SUBREG $v, sub_s3))>;
 
 def : Pat<(v4i64 (build_vector i64:$v1, i64:$v2, i64:$v3, i64:$v4)),
   (INSERT_SUBREG (INSERT_SUBREG (INSERT_SUBREG
-    (INSERT_SUBREG (v4i64 (IMPLICIT_DEF)), $v1, 1), $v2, 2), $v3, 3), $v4, 4)>;
+    (INSERT_SUBREG (v4i64 (IMPLICIT_DEF)), $v1, sub_s0), $v2, sub_s1), $v3, sub_s2), $v4, sub_s3)>;
 
-//TODO: Improve these as sequence of sub-registers
+def : Pat<(v4i64 (concat_vectors v2i64:$v0, v2i64:$v1)),
+  (INSERT_SUBREG (INSERT_SUBREG (v4i64 (IMPLICIT_DEF)), $v0, sub_p0), $v1, sub_p1)>;
+
+
+def : Pat<(v2i32 (extract_subvector (v4i32 PairedReg:$v), (i64 0))),
+          (v2i32 (EXTRACT_SUBREG $v, sub_s0))>;
+
+def : Pat<(v2i32 (extract_subvector (v4i32 PairedReg:$v), (i64 2))),
+          (v2i32 (EXTRACT_SUBREG $v, sub_s1))>;
+
 def : Pat<(v2i64 (extract_subvector (v4i64 QuadReg:$v), (i64 0))),
-          (v2i64 (COPYQ (i64 (EXTRACT_SUBREG $v, 1)), (i64 (EXTRACT_SUBREG $v, 2))))>;
+          (v2i64 (EXTRACT_SUBREG $v, sub_p0))>;
 
 def : Pat<(v2i64 (extract_subvector (v4i64 QuadReg:$v), (i64 2))),
-          (v2i64 (COPYQ (i64 (EXTRACT_SUBREG $v, 3)), (i64 (EXTRACT_SUBREG $v, 4))))>;
+          (v2i64 (EXTRACT_SUBREG $v, sub_p1))>;
 
 // v4i32
-def : Pat<(extractelt (v4i32 PairedReg:$v), 0), (i32 (EXTRACT_SUBREG $v, 1))>;
-def : Pat<(extractelt (v4i32 PairedReg:$v), 1), (SRADri (i32 (EXTRACT_SUBREG $v, 1)), (i64 32))>;
-def : Pat<(extractelt (v4i32 PairedReg:$v), 2), (i32 (EXTRACT_SUBREG $v, 2))>;
-def : Pat<(extractelt (v4i32 PairedReg:$v), 3), (SRADri (i32 (EXTRACT_SUBREG $v, 2)), (i64 32))>;
+def : Pat<(extractelt (v4i32 PairedReg:$v), 0), (i32 (EXTRACT_SUBREG $v, sub_s0))>;
+def : Pat<(extractelt (v4i32 PairedReg:$v), 1), (SRADri (i32 (EXTRACT_SUBREG $v, sub_s0)), (i64 32))>;
+def : Pat<(extractelt (v4i32 PairedReg:$v), 2), (i32 (EXTRACT_SUBREG $v, sub_s1))>;
+def : Pat<(extractelt (v4i32 PairedReg:$v), 3), (SRADri (i32 (EXTRACT_SUBREG $v, sub_s1)), (i64 32))>;
 
 // v2i8
 def : Pat<(i32 (vector_extract (v2i8 SingleReg:$v), 0)), (EXTFZ SingleReg:$v, 7, 0)>;

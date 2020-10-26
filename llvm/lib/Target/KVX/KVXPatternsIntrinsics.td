@@ -48,11 +48,11 @@ def: Pat<(int_kvx_sbmmt8 SingleReg:$r, SingleReg:$r2), (SBMMT8rr SingleReg:$r, S
 
 def: Pat<(int_kvx_acswapw i64:$addr, i32:$expect, i32:$update), (i32 (EXTRACT_SUBREG
   (v2i64 (ACSWAPWri10 (i64 0), SingleReg:$addr, (INSERT_SUBREG (INSERT_SUBREG (v2i64 (IMPLICIT_DEF)),
-    SingleReg:$expect, 1), SingleReg:$update, 2))), 2))>;
+    SingleReg:$expect, sub_s0), SingleReg:$update, sub_s1))), sub_s1))>;
 
 def: Pat<(int_kvx_acswapd i64:$addr, i64:$expect, i64:$update), (i64 (EXTRACT_SUBREG
   (v2i64 (ACSWAPDri10 (i64 0), SingleReg:$addr, (INSERT_SUBREG (INSERT_SUBREG (v2i64 (IMPLICIT_DEF)),
-    SingleReg:$expect, 1), SingleReg:$update, 2))), 2))>;
+    SingleReg:$expect, sub_s0), SingleReg:$update, sub_s1))), sub_s1))>;
 
 def: Pat<(int_kvx_fabswp v2f32:$r), (FABSWP SingleReg:$r)>;
 def: Pat<(int_kvx_fnegwp v2f32:$r), (FNEGWP SingleReg:$r)>;
@@ -207,13 +207,13 @@ def: Pat<(int_kvx_ffmsw f32:$v1, f32:$v2, f32:$v3, i32:$mod), (FFMSWrr SingleReg
 def: Pat<(int_kvx_ffmsd f64:$v1, f64:$v2, f64:$v3, i32:$mod), (FFMSDrr SingleReg:$v3, SingleReg:$v1, SingleReg:$v2, RoundingMod:$mod, silent_)>;
 def: Pat<(int_kvx_ffmswd f32:$v1, f32:$v2, f64:$v3, i32:$mod), (FFMSWDrr SingleReg:$v3, SingleReg:$v1, SingleReg:$v2, RoundingMod:$mod, silent_)>;
 def: Pat<(int_kvx_fcdivw f32:$v1, f32:$v2), (FCDIVW (INSERT_SUBREG (INSERT_SUBREG (v2i64 (IMPLICIT_DEF)),
-    SingleReg:$v1, 1), SingleReg:$v2, 2), silent_)>;
+    SingleReg:$v1, sub_s0), SingleReg:$v2, sub_s1), silent_)>;
 def: Pat<(int_kvx_fcdivd f64:$v1, f64:$v2), (FCDIVD (INSERT_SUBREG (INSERT_SUBREG (v2i64 (IMPLICIT_DEF)),
-    SingleReg:$v1, 1), SingleReg:$v2, 2), silent_)>;
+    SingleReg:$v1, sub_s0), SingleReg:$v2, sub_s1), silent_)>;
 def: Pat<(int_kvx_fsdivw f32:$v1, f32:$v2), (FSDIVW (INSERT_SUBREG (INSERT_SUBREG (v2i64 (IMPLICIT_DEF)),
-    SingleReg:$v1, 1), SingleReg:$v2, 2), silent_)>;
+    SingleReg:$v1, sub_s0), SingleReg:$v2, sub_s1), silent_)>;
 def: Pat<(int_kvx_fsdivd f64:$v1, f64:$v2), (FSDIVD (INSERT_SUBREG (INSERT_SUBREG (v2i64 (IMPLICIT_DEF)),
-    SingleReg:$v1, 1), SingleReg:$v2, 2), silent_)>;
+    SingleReg:$v1, sub_s0), SingleReg:$v2, sub_s1), silent_)>;
 def: Pat<(int_kvx_fsrecw f32:$v), (FSRECW SingleReg:$v, silent_)>;
 def: Pat<(int_kvx_fsrecd f64:$v), (FSRECD SingleReg:$v, silent_)>;
 def: Pat<(int_kvx_fsrsrw f32:$v), (FSRSRW SingleReg:$v)>;
