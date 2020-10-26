@@ -2301,3 +2301,20 @@ SDValue KVXTargetLowering::PerformDAGCombine(SDNode *N,
 
   return SDValue();
 }
+
+TargetLoweringBase::LegalizeTypeAction
+KVXTargetLowering::getPreferredVectorAction(MVT VT) const {
+  if (VT.SimpleTy == MVT::Other)
+    return TargetLowering::getPreferredVectorAction(VT);
+
+  switch (VT.SimpleTy) {
+  case MVT::v8i1:
+  case MVT::v16i1:
+  case MVT::v32i1:
+    return LegalizeTypeAction::TypeSplitVector;
+  default:
+    break;
+  }
+
+  return TargetLowering::getPreferredVectorAction(VT);
+}

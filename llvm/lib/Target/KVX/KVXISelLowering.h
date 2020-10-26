@@ -64,6 +64,9 @@ public:
   Instruction *emitTrailingFence(IRBuilder<> &Builder, Instruction *Inst,
                                  AtomicOrdering Ord) const override;
 
+  TargetLoweringBase::LegalizeTypeAction
+  getPreferredVectorAction(MVT VT) const override;
+
   bool isZExtFree(SDValue Val, EVT VT2) const override;
   bool isNoopAddrSpaceCast(unsigned SrcAS, unsigned DestAS) const override;
 
