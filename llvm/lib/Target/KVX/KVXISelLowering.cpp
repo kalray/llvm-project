@@ -218,7 +218,7 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::CONCAT_VECTORS, VT, Custom);
   }
 
-  setOperationAction(ISD::EXTRACT_SUBVECTOR, MVT::v2i32, Expand);
+  setOperationAction(ISD::EXTRACT_SUBVECTOR, MVT::v2i32, Legal);
 
   setOperationAction(ISD::MULHU, MVT::v2i32, Expand);
   setOperationAction(ISD::MULHU, MVT::v2i64, Expand);
@@ -1748,17 +1748,18 @@ KVXTargetLowering::lowerBUILD_VECTOR_V4_128bit(SDValue Op,
 
   SDValue ImpV =
       SDValue(DAG.getMachineNode(TargetOpcode::IMPLICIT_DEF, DL, VT), 0);
-  SDValue InsLow =
-      SDValue(DAG.getMachineNode(
-                  TargetOpcode::INSERT_SUBREG, DL, VT,
-                  { ImpV, VecLow, DAG.getTargetConstant(1, DL, MVT::i64) }),
-              0);
+  SDValue InsLow = SDValue(
+      DAG.getMachineNode(
+          TargetOpcode::INSERT_SUBREG, DL, VT,
+          {ImpV, VecLow, DAG.getTargetConstant(KVX::sub_s0, DL, MVT::i64)}),
+      0);
   if (VecHi.isUndef())
     return InsLow;
-  return SDValue(DAG.getMachineNode(
-                     TargetOpcode::INSERT_SUBREG, DL, VT,
-                     { InsLow, VecHi, DAG.getTargetConstant(2, DL, MVT::i64) }),
-                 0);
+  return SDValue(
+      DAG.getMachineNode(
+          TargetOpcode::INSERT_SUBREG, DL, VT,
+          {InsLow, VecHi, DAG.getTargetConstant(KVX::sub_s1, DL, MVT::i64)}),
+      0);
 }
 
 static SDValue makeInsertConst(const SDLoc &DL, SDValue Vec, MVT Type,
@@ -1854,12 +1855,14 @@ SDValue KVXTargetLowering::lowerINSERT_VECTOR_ELT_V4_128bit(
     uint64_t index) const {
   SDValue v1, subRegIdx, mask;
   if (index % 2 == 0) {
-    subRegIdx = DAG.getTargetConstant(index == 0 ? 1 : 2, dl, MVT::i32);
+    subRegIdx = DAG.getTargetConstant(index == 0 ? KVX::sub_s0 : KVX::sub_s1,
+                                      dl, MVT::i32);
     v1 = DAG.getNode(ISD::ZERO_EXTEND, dl, MVT::i64,
                      DAG.getBitcast(MVT::i32, Val));
     mask = DAG.getConstant(0xffffffff00000000, dl, MVT::i64);
   } else {
-    subRegIdx = DAG.getTargetConstant(index == 1 ? 1 : 2, dl, MVT::i32);
+    subRegIdx = DAG.getTargetConstant(index == 1 ? KVX::sub_s0 : KVX::sub_s1,
+                                      dl, MVT::i32);
     SDValue val32 = SDValue(DAG.getMachineNode(TargetOpcode::COPY, dl, MVT::i64,
                                                DAG.getBitcast(MVT::i32, Val)),
                             0);
@@ -1882,10 +1885,9 @@ SDValue KVXTargetLowering::lowerINSERT_VECTOR_ELT_V4_128bit(
 SDValue KVXTargetLowering::lowerINSERT_VECTOR_ELT_64bit_elt(
     SDLoc &dl, SelectionDAG &DAG, SDValue Vec, SDValue Val,
     uint64_t index) const {
-  SDValue subRegIdx = DAG.getTargetConstant(index + 1, dl, MVT::i32);
+  SDValue subRegIdx = DAG.getTargetConstant(index + KVX::sub_s0, dl, MVT::i32);
   return SDValue(DAG.getMachineNode(TargetOpcode::INSERT_SUBREG, dl,
-                                    Vec.getValueType(),
-                                    { Vec, Val, subRegIdx }),
+                                    Vec.getValueType(), {Vec, Val, subRegIdx}),
                  0);
 }
 
@@ -1940,11 +1942,13 @@ SDValue KVXTargetLowering::lowerCONCAT_VECTORS(SDValue Op,
   auto OperandSize = Op.getOperand(0).getValueSizeInBits();
   auto ResultSize = Op.getValueSizeInBits();
 
+  if ((OperandSize == 64 && ResultSize == 128) ||
+      (OperandSize == 128 && ResultSize == 256))
+    return Op;
+
   if (!((OperandSize == 16 && ResultSize == 32) ||
         (OperandSize == 16 && ResultSize == 64) ||
-        (OperandSize == 32 && ResultSize == 64) ||
-        (OperandSize == 64 && ResultSize == 128) ||
-        (OperandSize == 128 && ResultSize == 256)))
+        (OperandSize == 32 && ResultSize == 64)))
     report_fatal_error("Unsupported concat for these types");
 
   SDLoc DL(Op);
@@ -1958,18 +1962,6 @@ SDValue KVXTargetLowering::lowerCONCAT_VECTORS(SDValue Op,
       continue;
     if (OperandSize == 16 || OperandSize == 32)
       Out = getINSF(DL, Out, Op->getOperand(i), OperandSize, i, DAG, VT);
-    if (OperandSize == 64)
-      Out = DAG.getTargetInsertSubreg(i + 1, DL, VT, Out, Op.getOperand(i));
-    if (OperandSize == 128) {
-      auto SubV = Op.getOperand(i);
-      SDLoc SubDL(SubV);
-      auto First =
-          DAG.getTargetExtractSubreg(1, SubDL, SubV->getValueType(0), SubV);
-      auto Second =
-          DAG.getTargetExtractSubreg(2, SubDL, SubV->getValueType(0), SubV);
-      Out = DAG.getTargetInsertSubreg(2 * i + 1, DL, VT, Out, First);
-      Out = DAG.getTargetInsertSubreg(2 * i + 2, DL, VT, Out, Second);
-  }
   }
 
   return Out;

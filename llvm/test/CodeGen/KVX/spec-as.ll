@@ -84,10 +84,7 @@ entry:
 define <4 x float> @fspeculative_v4f32(<4 x float> addrspace(258)* nocapture readonly %v){
 ; CHECK-LABEL: fspeculative_v4f32:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    lq.s $r2r3 = 0[$r0]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r2
-; CHECK-NEXT:    copyd $r1 = $r3
+; CHECK-NEXT:    lq.s $r0r1 = 0[$r0]
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

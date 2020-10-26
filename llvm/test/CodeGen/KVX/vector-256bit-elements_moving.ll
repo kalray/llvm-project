@@ -526,9 +526,7 @@ define void @v4i64_upper_half_extract(<4 x i64> *%0,  <2 x i64> * %1){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyq $r2r3 = $r6, $r7
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sq 0[$r1] = $r2r3
+; CHECK-NEXT:    sq 0[$r1] = $r6r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -559,9 +557,7 @@ define void @v4i64_lower_half_extract(<4 x i64> * %0,  <2 x i64> * %1){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyq $r2r3 = $r4, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sq 0[$r1] = $r2r3
+; CHECK-NEXT:    sq 0[$r1] = $r4r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -613,9 +609,7 @@ define void @v4double_upper_half_extract(<4 x double> *%0,  <2 x double> * %1){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyq $r2r3 = $r6, $r7
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sq 0[$r1] = $r2r3
+; CHECK-NEXT:    sq 0[$r1] = $r6r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -630,9 +624,7 @@ define void @v4double_lower_half_extract(<4 x double> *%0,  <2 x double> * %1){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyq $r2r3 = $r4, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sq 0[$r1] = $r2r3
+; CHECK-NEXT:    sq 0[$r1] = $r4r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
