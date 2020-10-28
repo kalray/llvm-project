@@ -174,6 +174,12 @@ private:
   unsigned getBranchCondition(ISD::CondCode CCOpcode, bool Word) const;
 
   SDValue PerformDAGCombine(SDNode *N, DAGCombinerInfo &DCI) const override;
+
+  // Return true if the addressing mode represented by AM is legal for this
+  // target, for a load/store of the specified type.
+  bool isLegalAddressingMode(const DataLayout &DL, const AddrMode &AM, Type *Ty,
+                             unsigned AS,
+                             Instruction *I = nullptr) const override;
 };
 
 } // namespace llvm
