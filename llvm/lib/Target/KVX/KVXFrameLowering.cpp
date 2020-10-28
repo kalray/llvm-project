@@ -395,10 +395,10 @@ bool KVXFrameLowering::spillCalleeSavedRegisters(
 
   unsigned FPScratch = 0;
 
-  DebugLoc DL = MI->getDebugLoc();
-
   if (hasFP(*MBB.getParent())) {
     if (!TRI->needsStackRealignment(MF)) {
+      DebugLoc DL = MI->getDebugLoc();
+
       BuildMI(MBB, MI, DL, TII->get(KVX::COPYD), getFPReg()).addReg(getSPReg());
 
       // $r14 is fixed, $r12 is modified by alloca
@@ -464,6 +464,7 @@ bool KVXFrameLowering::spillCalleeSavedRegisters(
 
   if (FPScratch != 0) {
     // make a copy of FPreg into a scratch reg and set FP to SP
+    DebugLoc DL = MI->getDebugLoc();
     BuildMI(MBB, MI, DL, TII->get(KVX::COPYD), FPScratch).addReg(getFPReg());
     BuildMI(MBB, MI, DL, TII->get(KVX::COPYD), getFPReg()).addReg(getSPReg());
   }
