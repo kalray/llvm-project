@@ -2310,3 +2310,37 @@ KVXTargetLowering::getPreferredVectorAction(MVT VT) const {
 
   return TargetLowering::getPreferredVectorAction(VT);
 }
+
+// isLegalAddressingMode - Return true if the addressing mode represented
+// by AM is legal for this target, for a load/store of the specified type.
+bool KVXTargetLowering::isLegalAddressingMode(const DataLayout &DL,
+                                              const AddrMode &AM, Type *Ty,
+                                              unsigned AS,
+                                              Instruction *I) const {
+  uint64_t NumBytes = 0;
+
+  // KVX has 3 addressing modes:
+  // reg + 64-bit signed offset
+  // reg + reg
+  // reg + reg * scale where scale is the size of the access
+
+  // No global is ever allowed as a base.
+  if (AM.BaseGV)
+    return false;
+
+  // No reg+reg+imm addressing.
+  if (AM.HasBaseReg && AM.BaseOffs && AM.Scale)
+    return false;
+
+  if (Ty->isSized()) {
+    uint64_t NumBits = DL.getTypeSizeInBits(Ty);
+    NumBytes = NumBits / 8;
+  }
+
+  // All reg + imm are supported
+  if (!AM.Scale)
+    return true;
+
+  // Check reg1 + scale*reg2 and reg1 + reg2
+  return AM.Scale == 1 || (AM.Scale > 0 && (uint64_t)AM.Scale == NumBytes);
+}
