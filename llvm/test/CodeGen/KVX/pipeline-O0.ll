@@ -42,6 +42,7 @@
 ; CHECK-NEXT: KVX DAG->DAG Pattern Instruction Selection
 ; CHECK-NEXT: Finalize ISel and expand pseudo-instructions
 ; CHECK-NEXT: Local Stack Slot Allocation
+; CHECK-NEXT: KVX pre regalloc pseudo instruction expansion pass
 ; CHECK-NEXT: Eliminate PHI nodes for register allocation
 ; CHECK-NEXT: Two-Address instruction pass
 ; CHECK-NEXT: Fast Register Allocator
@@ -53,7 +54,7 @@
 ; CHECK-NEXT: Insert fentry calls
 ; CHECK-NEXT: Insert XRay ops
 ; CHECK-NEXT: Implement the 'patchable-function' attribute
-; CHECK-NEXT: KVX pseudo instruction expansion pass
+; CHECK-NEXT: KVX pre emit pseudo instruction expansion pass
 ; CHECK-NEXT: MachineDominator Tree Construction
 ; CHECK-NEXT: Machine Natural Loop Construction
 ; CHECK-NEXT: KVX Packetizer
