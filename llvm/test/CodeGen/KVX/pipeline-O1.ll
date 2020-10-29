@@ -82,13 +82,15 @@
 ; CHECK-NEXT: Machine code sinking
 ; CHECK-NEXT: Peephole Optimizations
 ; CHECK-NEXT: Remove dead machine instructions
+; CHECK-NEXT: KVX pre regalloc pseudo instruction expansion pass
 ; CHECK-NEXT: Detect Dead Lanes
 ; CHECK-NEXT: Process Implicit Definitions
 ; CHECK-NEXT: Remove unreachable machine basic blocks
 ; CHECK-NEXT: Live Variable Analysis
+; CHECK-NEXT: MachineDominator Tree Construction
+; CHECK-NEXT: Machine Natural Loop Construction
 ; CHECK-NEXT: Eliminate PHI nodes for register allocation
 ; CHECK-NEXT: Two-Address instruction pass
-; CHECK-NEXT: MachineDominator Tree Construction
 ; CHECK-NEXT: Slot index numbering
 ; CHECK-NEXT: Live Interval Analysis
 ; CHECK-NEXT: Simple Register Coalescing
@@ -131,7 +133,7 @@
 ; CHECK-NEXT: Insert fentry calls
 ; CHECK-NEXT: Insert XRay ops
 ; CHECK-NEXT: Implement the 'patchable-function' attribute
-; CHECK-NEXT: KVX pseudo instruction expansion pass
+; CHECK-NEXT: KVX pre emit pseudo instruction expansion pass
 ; CHECK-NEXT: MachineDominator Tree Construction
 ; CHECK-NEXT: Machine Natural Loop Construction
 ; CHECK-NEXT: KVX Packetizer
