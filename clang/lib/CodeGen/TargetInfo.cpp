@@ -11484,7 +11484,9 @@ const unsigned KVXABIInfo::RegSize = 64;
 const unsigned KVXABIInfo::NumRegs = 4;
 
 void KVXABIInfo::computeInfo(CGFunctionInfo &FI) const {
-  FI.getReturnInfo() = classifyBigType(FI.getReturnType());
+  if (!getCXXABI().classifyReturnType(FI))
+    FI.getReturnInfo() = classifyBigType(FI.getReturnType());
+
   for (auto &I : FI.arguments())
     I.info = classifyBigType(I.type);
 }
