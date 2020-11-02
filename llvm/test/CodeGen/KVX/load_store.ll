@@ -281,3 +281,79 @@ entry:
   store volatile <256 x i1> %3, <256 x i1>* %0, align 32
   ret void
 }
+
+define void @lw_sw(<512 x i1> * %0, i64 %1) {
+; CHECK-LABEL: lw_sw:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    slld $r1 = $r1, 6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r1 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv $a0 = 0[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv $a1 = 32[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 0[$r0] = $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 32[$r0] = $a1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %2 = getelementptr inbounds <512 x i1>, <512 x i1> * %0, i64 %1
+  %3 = load <512 x i1>, <512 x i1>* %2, align 32
+  store <512 x i1> %3, <512 x i1>* %0, align 32
+  ret void
+}
+
+define void @lm_sm(<1024 x i1> * %0, i64 %1) {
+; CHECK-LABEL: lm_sm:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    slld $r1 = $r1, 7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r1 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv $a0 = 0[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv $a1 = 32[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv $a2 = 64[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv $a3 = 96[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 0[$r0] = $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 32[$r0] = $a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 64[$r0] = $a2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 96[$r0] = $a3
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %2 = getelementptr inbounds <1024 x i1>, <1024 x i1> * %0, i64 %1
+  %3 = load <1024 x i1>, <1024 x i1>* %2, align 32
+  store <1024 x i1> %3, <1024 x i1>* %0, align 32
+  ret void
+}
+
+define void @lo_4xi64_ri_unaligned(<4 x i64>* %0) {
+; CHECK-LABEL: lo_4xi64_ri_unaligned:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    lo $r0r1r2r3 = -32[$r0]
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = getelementptr inbounds <4 x i64>, <4 x i64>* %0, i64 -1
+  %3 = load volatile <4 x i64>, <4 x i64>* %2, align 1
+  ret void
+}
+
+define void @so_4xdouble_ri_unaligned(<4 x double> %0, <4 x double>* %1) {
+; CHECK-LABEL: so_4xdouble_ri_unaligned:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    so 32[$r4] = $r0r1r2r3
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = getelementptr inbounds <4 x double>, <4 x double>* %1, i64 1
+  store volatile <4 x double> %0, <4 x double>* %3, align 1
+  ret void
+}

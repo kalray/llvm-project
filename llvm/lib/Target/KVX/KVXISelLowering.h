@@ -70,6 +70,27 @@ public:
   bool isZExtFree(SDValue Val, EVT VT2) const override;
   bool isNoopAddrSpaceCast(unsigned SrcAS, unsigned DestAS) const override;
 
+  // FIXME: These should be thought through
+  // Returns true if the target allows unaligned memory accesses of the
+  // specified type.
+  bool allowsMisalignedMemoryAccesses(
+      EVT VT, unsigned AddrSpace = 0, unsigned Align = 1,
+      MachineMemOperand::Flags Flags = MachineMemOperand::MONone,
+      bool *Fast = nullptr) const override {
+    if (Fast)
+      *Fast = (Align >= 32);
+    return true;
+  }
+  // LLT variant.
+  bool allowsMisalignedMemoryAccesses(LLT Ty, unsigned AddrSpace,
+                                      unsigned Align,
+                                      MachineMemOperand::Flags Flags,
+                                      bool *Fast = nullptr) const override {
+    if (Fast)
+      *Fast = (Align >= 32);
+    return true;
+  }
+
 private:
   SDValue LowerFormalArguments(SDValue Chain, CallingConv::ID CallConv,
                                bool IsVarArg,
