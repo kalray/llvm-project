@@ -710,34 +710,17 @@ entry:
   ret void
 }
 
-; The code below should be just as the code just above in v2i64_concat_v4i64_unaligned
 define void @v2i64_concat_v4i64_unaligned2(i64* nocapture readonly %0){
 ; CHECK-LABEL: v2i64_concat_v4i64_unaligned2:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -64
-; CHECK-NEXT:    ld $r1 = 8[$r0]
+; CHECK-NEXT:    addd $r12 = $r12, -32
+; CHECK-NEXT:    lq $r4r5 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 64
-; CHECK-NEXT:    sd 56[$r12] = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r1 = 0[$r0]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 48[$r12] = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r1 = 72[$r0]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lq $r4r5 = 48[$r12]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 40[$r12] = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r0 = 64[$r0]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 32[$r12] = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lq $r6r7 = 32[$r12]
+; CHECK-NEXT:    .cfi_def_cfa_offset 32
+; CHECK-NEXT:    lq $r6r7 = 64[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    so 0[$r12] = $r4r5r6r7
-; CHECK-NEXT:    addd $r12 = $r12, 64
+; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca <4 x i64>, align 32
