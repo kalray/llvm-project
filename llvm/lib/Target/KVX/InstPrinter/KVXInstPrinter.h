@@ -47,6 +47,10 @@ public:
   void printDoscaleMod(const MCInst *MI, unsigned OpNo,
                        /*const MCSubtargetInfo &STI,*/ raw_ostream &O);
 
+  void printRoundintMod(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printSaturateMod(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printRectifyMod(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+
   void printScalarcondMod(const MCInst *MI, unsigned OpNo,
                           /*const MCSubtargetInfo &STI,*/ raw_ostream &O);
 

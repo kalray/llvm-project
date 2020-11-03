@@ -58,18 +58,15 @@ def SilentMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 1);}]>
 }
 
 def RoundintMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 4);}]> {
-  // FIXME: PrintMethod is not implemented yet
-  // let PrintMethod = "printRoundintMod";
+  let PrintMethod = "printRoundintMod";
 }
 
 def SaturateMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 1);}]> {
-  // FIXME: PrintMethod is not implemented yet
-  // let PrintMethod = "printSaturateMod";
+  let PrintMethod = "printSaturateMod";
 }
 
 def RectifyMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 1);}]> {
-  // FIXME: PrintMethod is not implemented yet
-  // let PrintMethod = "printRectifyMod";
+   let PrintMethod = "printRectifyMod";
 }
 
 def VariantMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 3);}]> {
