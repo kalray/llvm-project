@@ -205,7 +205,64 @@ def int_kvx_cmoved : Intrinsic<[llvm_i64_ty], [llvm_i64_ty, llvm_i64_ty, llvm_i6
 // TCA - tightly-coupled accelerator
 //===----------------------------------------------------------------------===//
 // Move from GRP to TCA registers
-def int_kvx_movetolo: Intrinsic<[llvm_v128i1_ty], [llvm_i64_ty, llvm_i64_ty], [IntrNoMem]>;
-def int_kvx_movetohi: Intrinsic<[llvm_v128i1_ty], [llvm_i64_ty, llvm_i64_ty], [IntrNoMem]>;
+def int_kvx_movetolo: Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_i64_ty, llvm_i64_ty], [IntrHasSideEffects]>;
+def int_kvx_movetohi: Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_i64_ty, llvm_i64_ty], [IntrHasSideEffects]>;
+def int_kvx_moveto: Intrinsic<[llvm_v256i1_ty], [llvm_i64_ty, llvm_i64_ty, llvm_i64_ty, llvm_i64_ty], [IntrNoMem]>;
+def int_kvx_moveoto: Intrinsic<[llvm_v256i1_ty], [llvm_v4i64_ty], [IntrNoMem]>;
 
+// Move from TCA registers to GPR
+def int_kvx_movefo: Intrinsic<[llvm_v4i64_ty], [llvm_v256i1_ty], [IntrNoMem]>;
+
+// atomic register copy/shift operations
+def int_kvx_swapvfwo : Intrinsic<[llvm_v256i1_ty, llvm_v4i64_ty], [llvm_v4i64_ty, llvm_v256i1_ty], [IntrNoMem]>;
+def int_kvx_alignov : Intrinsic<[llvm_v4i64_ty], [llvm_v256i1_ty, llvm_v256i1_ty, llvm_i64_ty], [IntrNoMem]>;
+def int_kvx_alignv : Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_v256i1_ty, llvm_i64_ty], [IntrNoMem]>;
+
+// TCA arithmetic intrinsics
+class KVX_TCA_Inplace<list<LLVMType> args>
+    : Intrinsic<[llvm_v256i1_ty], !listconcat([llvm_v256i1_ty], args), [IntrHasSideEffects]>;
+
+class KVX_TCA_convd : KVX_TCA_Inplace<[llvm_v1024i1_ty, llvm_i32_ty, llvm_i32_ty]>;
+def int_kvx_convdhv0 : KVX_TCA_convd;
+def int_kvx_convdhv1 : KVX_TCA_convd;
+def int_kvx_convdhv : Intrinsic<[llvm_v256i1_ty], [llvm_v1024i1_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
+
+def int_kvx_convwbv0 : KVX_TCA_convd;
+def int_kvx_convwbv1 : KVX_TCA_convd;
+def int_kvx_convwbv2 : KVX_TCA_convd;
+def int_kvx_convwbv3 : KVX_TCA_convd;
+def int_kvx_convwbv : Intrinsic<[llvm_v256i1_ty], [llvm_v1024i1_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
+
+class KVX_TCA_fmma : KVX_TCA_Inplace<[llvm_v512i1_ty, llvm_v256i1_ty, llvm_v256i1_ty]>;
+def int_kvx_fmma242hw0 : KVX_TCA_fmma;
+def int_kvx_fmma242hw1 : KVX_TCA_fmma;
+def int_kvx_fmma242hw2 : KVX_TCA_fmma;
+def int_kvx_fmma242hw3 : KVX_TCA_fmma;
+def int_kvx_fmma242hw : Intrinsic<[llvm_v512i1_ty], [llvm_v512i1_ty, llvm_v256i1_ty, llvm_v256i1_ty], [IntrNoMem]>;
+
+class KVX_TCA_Ternary<list<LLVMType> args>
+    : Intrinsic<args, !listconcat(args, [llvm_v256i1_ty], [llvm_v256i1_ty]), [IntrNoMem]>;
+def int_kvx_mma444hbd0 : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
+def int_kvx_mma444hbd1 : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
+def int_kvx_mma444hd : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
+def int_kvx_mma444suhbd0 : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
+def int_kvx_mma444suhbd1 : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
+def int_kvx_mma444suhd : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
+def int_kvx_mma444uhbd0 : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
+def int_kvx_mma444uhbd1 : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
+def int_kvx_mma444uhd : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
+def int_kvx_mma444ushbd0 : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
+def int_kvx_mma444ushbd1 : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
+def int_kvx_mma444ushd : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
+def int_kvx_mma484bw : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
+def int_kvx_mma484subw : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
+def int_kvx_mma484ubw : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
+def int_kvx_mma484usbw : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
+
+def int_kvx_mt44d : Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty], [IntrNoMem]>;
+// fscalewv is not inplace, but has same args pattern
+def int_kvx_fscalewv : Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrHasSideEffects]>;
+def int_kvx_fnarrowwhv : Intrinsic<[llvm_v256i1_ty], [llvm_v512i1_ty, llvm_i32_ty, llvm_i32_ty], [IntrHasSideEffects]>;
+// Matrix load operaion
+//  def int_kvx_lvc : Intrinsic<[llvm_v1024i1_ty], [llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
 }  // TargetPrefix = "kvx"
