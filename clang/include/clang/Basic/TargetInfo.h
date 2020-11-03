@@ -50,8 +50,11 @@ class MacroBuilder;
 class QualType;
 class SourceLocation;
 class SourceManager;
+class ASTContext;
 
-namespace Builtin { struct Info; }
+namespace Builtin {
+struct Info;
+}
 
 /// Fields controlling how types are laid out in memory; these may need to
 /// be copied for targets like AMDGPU that base their ABIs on an auxiliary
@@ -837,6 +840,14 @@ public:
   /// across the current set of primary and secondary targets.
   virtual ArrayRef<Builtin::Info> getTargetBuiltins() const = 0;
 
+  /// Decode a target-specific builtins type to the current primary target.
+  /// Returns true if there was an type decoding error.
+  virtual bool DecodeTargetTypeFromStr(const char *&Str,
+                                       const ASTContext &Context,
+                                       bool &AllowTypeModifiers,
+                                       QualType &Type) const {
+    return true;
+  };
   /// The __builtin_clz* and __builtin_ctz* built-in
   /// functions are specified to have undefined results for zero inputs, but
   /// on targets that support these operations in a way that provides

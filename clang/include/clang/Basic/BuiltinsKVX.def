@@ -22,6 +22,11 @@
 //===----------------------------------------------------------------------===//
 // BCU
 //===----------------------------------------------------------------------===//
+#if defined(BUILTIN) && !defined(NARY_BUILTIN)
+#   define NARY_BUILTIN(ID, TYPES, MODE, NARGS) BUILTIN(__builtin_kvx_##ID, TYPES, MODE)
+#elif defined(NARY_BUILTIN) && !defined(BUILTIN)
+#   define BUILTIN(ID, TYPES, ATTRS)
+#endif
 
 BUILTIN(__builtin_kvx_await, "v", "")
 BUILTIN(__builtin_kvx_barrier, "v", "")
@@ -495,7 +500,60 @@ BUILTIN(__builtin_kvx_stsuw, "UiUiUi", "")
 //===----------------------------------------------------------------------===//
 // TCA
 //===----------------------------------------------------------------------===//
-BUILTIN(__builtin_kvx_movetolo,  "V2LiLiLi", "n")
-BUILTIN(__builtin_kvx_movetohi,  "V2LiLiLi", "n")
+NARY_BUILTIN(movetohi, "vTt256LiLi", "", 3)
+NARY_BUILTIN(movetolo, "vTt256LiLi", "", 3)
+NARY_BUILTIN(moveto, "Tt256LiLiLiLi", "", 4)
+NARY_BUILTIN(moveoto, "Tt256V4Li", "", 1)
 
+NARY_BUILTIN(movefo, "V4LiTt256", "", 1)
+
+NARY_BUILTIN(alignov, "V4LiTt256Tt256Li", "", 3)
+NARY_BUILTIN(alignv, "Tt256Tt256Tt256Li", "", 3)
+
+BUILTIN(__builtin_kvx_convdhv0, "vTt256Tt1024Cc*", "")
+BUILTIN(__builtin_kvx_convdhv1, "vTt256Tt1024Cc*", "")
+BUILTIN(__builtin_kvx_convdhv,  "Tt256Tt1024Cc*", "")
+
+BUILTIN(__builtin_kvx_convwbv0, "vTt256Tt1024Cc*", "")
+BUILTIN(__builtin_kvx_convwbv1, "vTt256Tt1024Cc*", "")
+BUILTIN(__builtin_kvx_convwbv2, "vTt256Tt1024Cc*", "")
+BUILTIN(__builtin_kvx_convwbv3, "vTt256Tt1024Cc*", "")
+BUILTIN(__builtin_kvx_convwbv,  "Tt256Tt1024Cc*", "")
+
+NARY_BUILTIN(fmma242hw0, "vTt256Tt512Tt256Tt256", "", 4)
+NARY_BUILTIN(fmma242hw1, "vTt256Tt512Tt256Tt256", "", 4)
+NARY_BUILTIN(fmma242hw2, "vTt256Tt512Tt256Tt256", "", 4)
+NARY_BUILTIN(fmma242hw3, "vTt256Tt512Tt256Tt256", "", 4)
+NARY_BUILTIN(fmma242hw,  "Tt512Tt512Tt256Tt256", "", 3)
+
+NARY_BUILTIN(mma444hbd0, "Tt1024Tt1024Tt256Tt256", "", 3)
+NARY_BUILTIN(mma444hbd1, "Tt1024Tt1024Tt256Tt256", "", 3)
+
+NARY_BUILTIN(mma444hd, "Tt1024Tt1024Tt256Tt256", "", 3)
+
+NARY_BUILTIN(mma444suhbd0, "Tt1024Tt1024Tt256Tt256", "", 3)
+NARY_BUILTIN(mma444suhbd1, "Tt1024Tt1024Tt256Tt256", "", 3)
+
+NARY_BUILTIN(mma444suhd, "Tt1024Tt1024Tt256Tt256", "", 3)
+
+NARY_BUILTIN(mma444uhbd0, "Tt1024Tt1024Tt256Tt256", "", 3)
+NARY_BUILTIN(mma444uhbd1, "Tt1024Tt1024Tt256Tt256", "", 3)
+
+NARY_BUILTIN(mma444uhd, "Tt1024Tt1024Tt256Tt256", "", 3)
+
+NARY_BUILTIN(mma444ushbd0, "Tt1024Tt1024Tt256Tt256", "", 3)
+NARY_BUILTIN(mma444ushbd1, "Tt1024Tt1024Tt256Tt256", "", 3)
+
+NARY_BUILTIN(mma444ushd, "Tt1024Tt1024Tt256Tt256", "", 3)
+
+NARY_BUILTIN(mma484bw, "Tt512Tt512Tt256Tt256", "", 3)
+NARY_BUILTIN(mma484subw, "Tt512Tt512Tt256Tt256", "", 3)
+NARY_BUILTIN(mma484ubw, "Tt512Tt512Tt256Tt256", "", 3)
+NARY_BUILTIN(mma484usbw, "Tt512Tt512Tt256Tt256", "", 3)
+
+NARY_BUILTIN(mt44d, "Tt1024Tt1024", "", 1)
+
+BUILTIN(__builtin_kvx_fscalewv, "Tt256Tt256Cc*", "")
+BUILTIN(__builtin_kvx_fnarrowwhv, "Tt256Tt512Cc*", "")
 #undef BUILTIN
+#undef NARY_BUILTIN
