@@ -10953,6 +10953,7 @@ static QualType DecodeTypeFromStr(const char *&Str, const ASTContext &Context,
   bool Signed = false, Unsigned = false;
   RequiresICE = false;
 
+  bool IsTargetType = false;
   // Read the prefixed modifiers first.
   bool Done = false;
   #ifndef NDEBUG
@@ -10961,6 +10962,9 @@ static QualType DecodeTypeFromStr(const char *&Str, const ASTContext &Context,
   while (!Done) {
     switch (*Str++) {
     default: Done = true; --Str; break;
+    case 'T':
+      IsTargetType = true;
+      break;
     case 'I':
       RequiresICE = true;
       break;
@@ -11044,6 +11048,13 @@ static QualType DecodeTypeFromStr(const char *&Str, const ASTContext &Context,
 
   QualType Type;
 
+  if (IsTargetType) {
+    bool Fail = Context.getTargetInfo().DecodeTargetTypeFromStr(
+        Str, Context, AllowTypeModifiers, Type);
+    if (Fail)
+      Error = ASTContext::GE_Missing_type;
+  } else {
+  // KVX: Do ne reindent this to avoid rebase issues.
   // Read the base type.
   switch (*Str++) {
   default: llvm_unreachable("Unknown builtin type letter!");
@@ -11233,6 +11244,7 @@ static QualType DecodeTypeFromStr(const char *&Str, const ASTContext &Context,
   case 'p':
     Type = Context.getProcessIDType();
     break;
+  }
   }
 
   // If there are modifiers and if we're allowed to parse them, go for it.

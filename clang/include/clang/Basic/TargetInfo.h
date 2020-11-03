@@ -49,6 +49,7 @@ class DiagnosticsEngine;
 class LangOptions;
 class CodeGenOptions;
 class MacroBuilder;
+class ASTContext;
 
 namespace Builtin { struct Info; }
 
@@ -932,6 +933,14 @@ public:
   getVScaleRange(const LangOptions &LangOpts) const {
     return None;
   }
+  /// Decode a target-specific builtins type to the current primary target.
+  /// Returns true if there was an type decoding error.
+  virtual bool DecodeTargetTypeFromStr(const char *&Str,
+                                       const ASTContext &Context,
+                                       bool &AllowTypeModifiers,
+                                       QualType &Type) const {
+    return true;
+  };
   /// The __builtin_clz* and __builtin_ctz* built-in
   /// functions are specified to have undefined results for zero inputs, but
   /// on targets that support these operations in a way that provides

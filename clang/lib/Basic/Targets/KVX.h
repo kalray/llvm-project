@@ -87,6 +87,9 @@ public:
   bool setCPU(const std::string &Name) override;
 
   void fillValidCPUList(SmallVectorImpl<StringRef> &Values) const override;
+  bool DecodeTargetTypeFromStr(const char *&Str, const ASTContext &Context,
+                               bool &AllowTypeModifiers,
+                               QualType &Type) const override;
 };
 
 } // namespace targets

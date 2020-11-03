@@ -19433,11 +19433,155 @@ static int KVX_getRoundingModifier(clang::ASTContext &Ctx,
   return -1;
 }
 
-static Value *KVX_emitNaryBuiltin(int N, CodeGenFunction &CGF,
+static Value *KVX_emitScaleNarrowBuiltin(unsigned NumMods, unsigned IntrinsicID,
+                                         CodeGenFunction &CGF,
+                                         const CallExpr *E) {
+  if (E->getNumArgs() != 2) {
+    CGF.CGM.Error(E->getBeginLoc(), "Incorrect number of arguments to builtin");
+    return nullptr;
+  }
+  SmallVector<Value *, 8> Args;
+  Args.push_back(CGF.EmitScalarExpr(E->getArg(0)));
+
+  const clang::Expr *ModifierString = E->getArg(1)->IgnoreParenImpCasts();
+  if (ModifierString->isNullPointerConstant(CGF.getContext(),
+                                            Expr::NPC_NeverValueDependent)) {
+    CGF.CGM.Error(
+        E->getArg(1)->getBeginLoc(),
+        ((NumMods == 2)
+             ? "Must define rounding and silent modifiers."
+             : "Must define rounding, silent and rectify modifiers."));
+    return nullptr;
+  }
+  const auto *SL = dyn_cast<clang::StringLiteral>(ModifierString);
+  if (!SL) {
+    CGF.CGM.Error(E->getArg(1)->getBeginLoc(),
+                  "Modifiers must be a string. e.g. \".rn.sat\".");
+    return nullptr;
+  }
+  auto Mods = SL->getString().split(".").second.split(".");
+  auto First = Mods.first;
+  if (NumMods == 3)
+    Mods = Mods.second.split(".");
+  else
+    Mods.first = Mods.second;
+
+  int Round = llvm::StringSwitch<int>(First)
+                  .Case("", 7)
+                  .CaseLower("rn", 0)
+                  .CaseLower("ru", 1)
+                  .CaseLower("rd", 2)
+                  .CaseLower("rz", 3)
+                  .CaseLower("rna", 4)
+                  .CaseLower("rnz", 5)
+                  .CaseLower("ro", 6)
+                  .Default(-1);
+
+  int Silent = llvm::StringSwitch<int>(Mods.first)
+                   .CaseLower("", 0)
+                   .CaseLower("s", 1)
+                   .Default(-1);
+
+  int Rectify = 0;
+  if (NumMods == 3) {
+    Rectify = llvm::StringSwitch<int>(Mods.second)
+                  .CaseLower("", 0)
+                  .CaseLower("relu", 1)
+                  .Default(-1);
+  }
+  if (Round < 0 || Silent < 0 || Rectify < 0) {
+    if (Round < 0)
+      CGF.CGM.Error(E->getArg(1)->getBeginLoc(),
+                    "Invalid rounding modifer, should be one of: '. "
+                    ".rn .ru .rd .rz .rna .rnz .ro'.");
+
+    if (Silent < 0)
+      CGF.CGM.Error(E->getArg(1)->getBeginLoc(),
+                    "Invalid silent modifer, should be one '.' or '.s'.");
+
+    if (Rectify < 0)
+      CGF.CGM.Error(E->getArg(1)->getBeginLoc(),
+                    "Invalid silent modifer, should be one '.' or '.relu'.");
+
+    return nullptr;
+  }
+
+  Args.push_back(ConstantInt::get(CGF.IntTy, Round));
+  Args.push_back(ConstantInt::get(CGF.IntTy, Silent));
+  if (NumMods == 3)
+    Args.push_back(ConstantInt::get(CGF.IntTy, Rectify));
+
+  return CGF.Builder.CreateCall(CGF.CGM.getIntrinsic(IntrinsicID), Args);
+}
+
+static Value *KVX_emitRndintSatBuiltin(unsigned NumArgs, unsigned IntrinsicID,
+                                       CodeGenFunction &CGF,
+                                       const CallExpr *E) {
+  if (E->getNumArgs() != (NumArgs + 1)) {
+    CGF.CGM.Error(E->getBeginLoc(), "Incorrect number of arguments to builtin");
+    return nullptr;
+  }
+  SmallVector<Value *, 8> Args;
+  unsigned I = 0;
+  while (I < NumArgs)
+    Args.push_back(CGF.EmitScalarExpr(E->getArg(I++)));
+
+  const clang::Expr *ModifierString = E->getArg(I)->IgnoreParenImpCasts();
+  if (ModifierString->isNullPointerConstant(CGF.getContext(),
+                                            Expr::NPC_NeverValueDependent)) {
+    CGF.CGM.Error(E->getArg(I)->getBeginLoc(),
+                  "Must define integer rounding and saturation modifiers.");
+    return nullptr;
+  }
+  const auto *SL = dyn_cast<clang::StringLiteral>(ModifierString);
+  if (!SL) {
+    CGF.CGM.Error(E->getArg(I)->getBeginLoc(),
+                  "Modifiers must be a string. e.g. \".rn.sat\".");
+    return nullptr;
+  }
+  auto Mods = SL->getString().split(".").second.split(".");
+  int RoundInt = llvm::StringSwitch<int>(Mods.first)
+                     .CaseLower("rn", 0)
+                     .CaseLower("ru", 1)
+                     .CaseLower("rd", 2)
+                     .CaseLower("rz", 3)
+                     .CaseLower("rhu", 4)
+                     .Default(-1);
+  int Saturation = llvm::StringSwitch<int>(Mods.second)
+                       .CaseLower("sat", 0)
+                       .CaseLower("satu", 1)
+                       .Default(-1);
+
+  if (RoundInt < 0 || Saturation < 0) {
+    if (RoundInt < 0)
+      CGF.CGM.Error(E->getArg(I)->getBeginLoc(),
+                    "Invalid integer-rounding modifer, should be one of: '.rn "
+                    ".ru .rd .rz .rhu'.");
+
+    if (Saturation < 0)
+      CGF.CGM.Error(
+          E->getArg(I)->getBeginLoc(),
+          "Invalid saturate modifer, should be one '.sat' or '.satu'.");
+
+    return nullptr;
+  }
+
+  Args.push_back(ConstantInt::get(CGF.IntTy, RoundInt));
+  Args.push_back(ConstantInt::get(CGF.IntTy, Saturation));
+
+  return CGF.Builder.CreateCall(CGF.CGM.getIntrinsic(IntrinsicID), Args);
+}
+
+static Value *KVX_emitNaryBuiltin(unsigned N, CodeGenFunction &CGF,
                                   const CallExpr *E, unsigned IntrinsicID,
                                   bool HasRounding = false) {
+  if (E->getNumArgs() != ((HasRounding ? 1 : 0) + N)) {
+    CGF.CGM.Error(E->getBeginLoc(), "Incorrect number of arguments to builtin");
+    return nullptr;
+  }
+
   SmallVector<Value *, 4> Args;
-  int I = 0;
+  unsigned I = 0;
   while (I < N)
     Args.push_back(CGF.EmitScalarExpr(E->getArg(I++)));
 
@@ -19445,8 +19589,10 @@ static Value *KVX_emitNaryBuiltin(int N, CodeGenFunction &CGF,
     int Modifier = KVX_getRoundingModifier(CGF.getContext(),
                                            E->getArg(I)->IgnoreParenImpCasts());
 
-    if (Modifier == -1)
+    if (Modifier == -1) {
       CGF.CGM.Error(E->getArg(I)->getBeginLoc(), "invalid rounding modifier");
+      return nullptr;
+    }
 
     Args.push_back(ConstantInt::get(CGF.IntTy, Modifier));
   }
@@ -21426,12 +21572,32 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_srsdqs:
     return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_srsd, 1, Int64Ty, 4,
                                  1, false, EmitScalarExpr(E->getArg(1)));
-  /// TCA - GPR to TCA copy
-  case KVX::BI__builtin_kvx_movetohi:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_movetohi);
-  case KVX::BI__builtin_kvx_movetolo:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_movetolo);
-  }
+/// TCA - GPR to TCA copy
+#define NARY_BUILTIN(ID, TYPES, MODE, ARGS)                                    \
+  case KVX::BI__builtin_kvx_##ID:                                              \
+    return KVX_emitNaryBuiltin(ARGS, *this, E, Intrinsic::kvx_##ID);
+#include "clang/Basic/BuiltinsKVX.def"
 
+  case KVX::BI__builtin_kvx_convdhv0:
+    return KVX_emitRndintSatBuiltin(2, Intrinsic::kvx_convdhv0, *this, E);
+  case KVX::BI__builtin_kvx_convdhv1:
+    return KVX_emitRndintSatBuiltin(2, Intrinsic::kvx_convdhv1, *this, E);
+  case KVX::BI__builtin_kvx_convwbv0:
+    return KVX_emitRndintSatBuiltin(2, Intrinsic::kvx_convwbv0, *this, E);
+  case KVX::BI__builtin_kvx_convwbv1:
+    return KVX_emitRndintSatBuiltin(2, Intrinsic::kvx_convwbv1, *this, E);
+  case KVX::BI__builtin_kvx_convwbv2:
+    return KVX_emitRndintSatBuiltin(2, Intrinsic::kvx_convwbv2, *this, E);
+  case KVX::BI__builtin_kvx_convwbv3:
+    return KVX_emitRndintSatBuiltin(2, Intrinsic::kvx_convwbv3, *this, E);
+  case KVX::BI__builtin_kvx_convdhv:
+    return KVX_emitRndintSatBuiltin(1, Intrinsic::kvx_convdhv, *this, E);
+  case KVX::BI__builtin_kvx_convwbv:
+    return KVX_emitRndintSatBuiltin(1, Intrinsic::kvx_convwbv, *this, E);
+  case KVX::BI__builtin_kvx_fscalewv:
+    return KVX_emitScaleNarrowBuiltin(3, Intrinsic::kvx_fscalewv, *this, E);
+  case KVX::BI__builtin_kvx_fnarrowwhv:
+    return KVX_emitScaleNarrowBuiltin(2, Intrinsic::kvx_fnarrowwhv, *this, E);
+  }
   return nullptr;
 }

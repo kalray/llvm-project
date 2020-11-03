@@ -13,6 +13,7 @@
 
 #include "KVX.h"
 #include "Targets.h"
+#include "clang/AST/ASTContext.h"
 #include "clang/Basic/Builtins.h"
 #include "clang/Basic/MacroBuilder.h"
 #include "clang/Basic/TargetBuiltins.h"
@@ -215,3 +216,37 @@ void KVXTargetInfo::fillValidCPUList(SmallVectorImpl<StringRef> &Values) const {
   Values.push_back("kv3-1");
   Values.push_back("kv3-2");
 }
+
+bool KVXTargetInfo::DecodeTargetTypeFromStr(const char *&Str,
+                                            const ASTContext &Context,
+                                            bool &AllowTypeModifiers,
+                                            QualType &Type) const {
+  switch (*Str++) {
+  case 't': { // TCA vector type, should be of size 256, 512 or 1024
+    AllowTypeModifiers = true;
+    char *End;
+    unsigned Size = strtoul(Str, &End, 10);
+    assert(End != Str && "Missing tca vector size");
+    Str = End;
+    switch (Size) {
+    case 256:
+      Type = Context.KVXTCAVectorTy;
+      return false;
+    case 512:
+      Type = Context.KVXTCAWideTy;
+      return false;
+    case 1024:
+      Type = Context.KVXTCAMatrixTy;
+      return false;
+    default:
+      llvm::errs() << "TCA vector size: " << Size << '\n';
+      llvm_unreachable("Got unknow tca size");
+      return true;
+    }
+  }
+  default:
+    llvm_unreachable("Got unknow target type");
+    break;
+  }
+  return true;
+};
