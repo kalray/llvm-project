@@ -21,6 +21,8 @@ def sub_v3 : ComposedSubRegIndex<sub_w1, sub_v1>;
 
 def sub_b0 : SubRegIndex<128,  0>;
 def sub_b1 : SubRegIndex<128,128>;
+def sub_b2 : ComposedSubRegIndex<sub_v1, sub_b0>;
+def sub_b3 : ComposedSubRegIndex<sub_v1, sub_b1>;
 
 def sub_c0 : SubRegIndex<64, 0>;
 def sub_c1 : SubRegIndex<64,64>;

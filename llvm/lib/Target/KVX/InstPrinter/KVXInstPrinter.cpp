@@ -124,6 +124,61 @@ void KVXInstPrinter::printDoscaleMod(
   }
 }
 
+void KVXInstPrinter::printRoundintMod(const MCInst *MI, unsigned OpNo,
+                                      raw_ostream &O) {
+  O << ".r";
+  int V = MI->getOperand(OpNo).getImm();
+  switch (V) {
+  case 0:
+    O << 'n';
+    break;
+  case 1:
+    O << 'u';
+    break;
+  case 2:
+    O << 'd';
+    break;
+  case 3:
+    O << 'z';
+    break;
+  case 4:
+    O << "hu";
+    break;
+  default:
+    llvm::errs() << "\nUnexpected value for int rounding mode: " << V << "\n";
+    report_fatal_error("Invalid rounding mode.");
+    break;
+  }
+}
+
+void KVXInstPrinter::printSaturateMod(const MCInst *MI, unsigned OpNo,
+                                      raw_ostream &O) {
+  O << ".sat";
+  const int V = MI->getOperand(OpNo).getImm();
+  if (V) {
+    if (V == 1)
+      O << 'u';
+    else {
+      llvm::errs() << "\nUnexpected value for int saturation mode: " << V
+                   << "\n";
+      report_fatal_error("Invalid saturation mode.");
+    }
+  }
+}
+
+void KVXInstPrinter::printRectifyMod(const MCInst *MI, unsigned OpNo,
+                                     raw_ostream &O) {
+  const int V = MI->getOperand(OpNo).getImm();
+  if (V) {
+    if (V == 1)
+      O << ".relu";
+    else {
+      llvm::errs() << "\nUnexpected value for rectify mode: " << V << "\n";
+      report_fatal_error("Invalid rectify mode.");
+    }
+  }
+}
+
 void KVXInstPrinter::printScalarcondMod(
     const MCInst *MI, unsigned OpNo,
     /*const MCSubtargetInfo &STI,*/ raw_ostream &O) {
