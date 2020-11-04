@@ -226,15 +226,15 @@ def LOp : KVX_PSEUDO<
 
 def LVp : KVX_PSEUDO<
         (outs VectorReg:$out),
-        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), []>;
+        (ins Wrapped64:$offset, SingleReg:$base, SpeculateMod:$var), []>;
 
 def LWIDEp : KVX_PSEUDO<
         (outs WideReg:$out),
-        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), []>;
+        (ins Wrapped64:$offset, SingleReg:$base, SpeculateMod:$var), []>;
 
 def LMATRIXp : KVX_PSEUDO<
         (outs MatrixReg:$out),
-        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), []>;
+        (ins Wrapped64:$offset, SingleReg:$base, SpeculateMod:$var), []>;
 }
 
 def lvspec : PatFrag<(ops node:$ptr), (v256i1 (load node:$ptr)), [{
@@ -541,13 +541,13 @@ defm : LoadPat<loadspecv2i64, v2i64, 4, LQp, LQri10, LQrr, variant_s>;
 defm : LoadPat<loadspecv4i32, v4i32, 4, LQp, LQri10, LQrr, variant_s>;
 
 defm : LoadPat<loadspecv4i64, v4i64, 5, LOp, LOri10, LOrr, variant_s>;
-defm : LoadPat<lvspec, v256i1, 5, LVp, LVri10, LVrr, variant_s>;
-defm : LoadPatRI<lvvspec, v512i1, LWIDEp, variant_s>;
+defm : LoadPat<lvspec, v256i1, 5, LVp, LVri10, LVrr, speculate_s>;
+defm : LoadPatRI<lvvspec, v512i1, LWIDEp, speculate_s>;
 def : Pat<(v512i1 (lvvspec SingleReg:$base)),
-          (v512i1 (LWIDEp (i64 0), SingleReg:$base, variant_s))>;
-defm : LoadPatRI<lxspec, v1024i1, LMATRIXp, variant_s>;
+          (v512i1 (LWIDEp (i64 0), SingleReg:$base, speculate_s))>;
+defm : LoadPatRI<lxspec, v1024i1, LMATRIXp, speculate_s>;
 def : Pat<(v1024i1 (lxspec SingleReg:$base)),
-          (v1024i1 (LMATRIXp (i64 0), SingleReg:$base, variant_s))>;
+          (v1024i1 (LMATRIXp (i64 0), SingleReg:$base, speculate_s))>;
 
 // normal loads
 defm : SimpleLoadPat<sextloadi1, i32, LBSp, LBSri10, LBSrr, variant_>;
@@ -591,13 +591,13 @@ defm : LoadPat<loadv2i64, v2i64, 4, LQp, LQri10, LQrr, variant_>;
 defm : LoadPat<loadv4i32, v4i32, 4, LQp, LQri10, LQrr, variant_>;
 
 defm : LoadPat<loadv4i64, v4i64, 5, LOp, LOri10, LOrr, variant_>;
-defm : LoadPat<load, v256i1, 5, LVp, LVri10, LVrr, variant_>;
-defm : LoadPatRI<load, v512i1, LWIDEp, variant_>;
+defm : LoadPat<load, v256i1, 5, LVp, LVri10, LVrr, speculate_>;
+defm : LoadPatRI<load, v512i1, LWIDEp, speculate_>;
 def : Pat<(v512i1 (load SingleReg:$base)),
-          (v512i1 (LWIDEp (i64 0), SingleReg:$base, variant_))>;
-defm : LoadPatRI<load, v1024i1, LMATRIXp, variant_>;
+          (v512i1 (LWIDEp (i64 0), SingleReg:$base, speculate_))>;
+defm : LoadPatRI<load, v1024i1, LMATRIXp, speculate_>;
 def : Pat<(v1024i1 (load SingleReg:$base)),
-          (v1024i1 (LMATRIXp (i64 0), SingleReg:$base, variant_))>;
+          (v1024i1 (LMATRIXp (i64 0), SingleReg:$base, speculate_))>;
 
 
 //===----------------------------------------------------------------------===//
