@@ -149,8 +149,8 @@ void KVXFrameLowering::adjustReg(MachineBasicBlock &MBB,
       .setMIFlag(Flag);
 }
 
-unsigned findScratchRegister(MachineBasicBlock &MBB, bool UseAtEnd,
-                             unsigned DefaultReg);
+Register findScratchRegister(MachineBasicBlock &MBB, bool UseAtEnd,
+                             Register Scratch = KVX::R4);
 
 void KVXFrameLowering::emitPrologue(MachineFunction &MF,
                                     MachineBasicBlock &MBB) const {
@@ -180,7 +180,7 @@ void KVXFrameLowering::emitPrologue(MachineFunction &MF,
       .addCFIIndex(CFIIndex)
       .setMIFlags(MachineInstr::FrameSetup);
 
-  unsigned ScratchReg = findScratchRegister(MBB, false, KVX::R32);
+  Register ScratchReg = findScratchRegister(MBB, false, KVX::R32);
 
   realignStack(MF, MBB, MBBI, DL, ScratchReg);
 
@@ -393,7 +393,7 @@ bool KVXFrameLowering::spillCalleeSavedRegisters(
   MachineFunction &MF = *MBB.getParent();
   const MCRegisterInfo *MRI = MF.getMMI().getContext().getRegisterInfo();
 
-  unsigned FPScratch = 0;
+  Register FPScratch = 0;
 
   if (hasFP(*MBB.getParent())) {
     if (!TRI->needsStackRealignment(MF)) {
@@ -529,7 +529,7 @@ bool KVXFrameLowering::restoreCalleeSavedRegisters(
     const TargetRegisterClass *RC = TRI->getMinimalPhysRegClass(Reg);
 
     if (MI->getOpcode() == KVX::ITAIL && MI->getOperand(0).getReg() == Reg) {
-      unsigned ScratchReg = findScratchRegister(MBB, true, KVX::R0);
+      Register ScratchReg = findScratchRegister(MBB, true);
       BuildMI(MBB, MI, DL, TII->get(KVX::COPY), ScratchReg).addReg(Reg);
       MI->getOperand(0).setReg(ScratchReg);
       MBB.addLiveIn(ScratchReg);

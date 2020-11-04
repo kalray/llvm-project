@@ -150,29 +150,15 @@ void KVXInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
                      TRI->getRegAsmName(SrcReg.id()) + ") to (" +
                      TRI->getRegAsmName(DstReg.id()) + ").\n");
 }
-unsigned findScratchRegister(MachineBasicBlock &MBB, bool UseAtEnd,
-                             unsigned DefaultReg = KVX::R16) {
+
+Register findScratchRegister(MachineBasicBlock &MBB, bool UseAtEnd,
+                             Register Scratch = KVX::R4) {
   RegScavenger RS;
 
-  unsigned ScratchRegister = DefaultReg;
-
-  RS.enterBasicBlock(MBB);
-
-  if (UseAtEnd && !MBB.empty()) {
-    // The scratch register will be used at the end of the block, so must
-    // consider all registers used within the block
-
-    MachineBasicBlock::iterator MBBI = MBB.getFirstTerminator();
-    // If no terminator, back iterator up to previous instruction.
-    if (MBBI == MBB.end())
-      MBBI = std::prev(MBBI);
-
-    if (MBBI != MBB.begin())
-      RS.forward(MBBI);
-  }
-
-  if (!RS.isRegUsed(ScratchRegister))
-    return ScratchRegister;
+  if (UseAtEnd)
+    RS.enterBasicBlockEnd(MBB);
+  else
+    RS.enterBasicBlock(MBB);
 
   // Get the list of callee-saved registers for the target.
   MachineFunction *MF = MBB.getParent();
@@ -180,24 +166,27 @@ unsigned findScratchRegister(MachineBasicBlock &MBB, bool UseAtEnd,
   const KVXRegisterInfo &RegInfo = *Subtarget.getRegisterInfo();
   const MCPhysReg *CSRegs = RegInfo.getCalleeSavedRegs(MBB.getParent());
 
-  // Get all the available registers in the block.
-  BitVector BV = RS.getRegsAvailable(&KVX::SingleRegRegClass);
-
   // We shouldn't use return registers as scratch register as they appear killed
-  BV.reset(KVX::R0, KVX::R4);
+  RS.setRegUsed(KVX::R0);
+  RS.setRegUsed(KVX::R1);
+  RS.setRegUsed(KVX::R2);
+  RS.setRegUsed(KVX::R3);
 
   // We shouldn't use callee-saved registers as scratch registers as they may be
   // available when looking for a candidate block for shrink wrapping but not
   // available when the actual prologue/epilogue is being emitted because they
   // were added as live-in to the prologue block by PrologueEpilogueInserter.
   for (int i = 0; CSRegs[i]; ++i)
-    BV.reset(CSRegs[i]);
+    RS.setRegUsed(CSRegs[i]);
 
-  int FirstScratchReg = BV.find_first();
-  ScratchRegister =
-      FirstScratchReg == -1 ? (unsigned)KVX::NoRegister : FirstScratchReg;
+  if (RS.isRegUsed(Scratch)) {
+    Scratch = RS.FindUnusedReg(&KVX::SingleRegRegClass);
+    // TODO: Shouldn't be a fatal error. Should be handled by the caller.
+    if (Scratch == 0)
+      report_fatal_error("Unable to find a scratch register");
+  }
 
-  return ScratchRegister;
+  return Scratch;
 }
 
 void KVXInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
@@ -235,7 +224,7 @@ void KVXInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
         dbgs() << "It is a matrix TCA register, loading using LMATRIXp.\n");
   } else if (KVX::OnlyraRegRegClass.hasSubClassEq(RC)) {
     LLVM_DEBUG(dbgs() << "It is a RA register, using LDp and SETrsta.\n");
-    unsigned ScratchReg = findScratchRegister(MBB, true);
+    Register ScratchReg = findScratchRegister(MBB, true, KVX::R16);
     BuildMI(MBB, I, DL, get(KVX::LDp), ScratchReg)
         .addImm(0)
         .addFrameIndex(FI)
@@ -289,7 +278,7 @@ void KVXInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
         dbgs() << "It is a vector TCA register, storing using SMATRIXp.\n");
   } else if (KVX::OnlyraRegRegClass.hasSubClassEq(RC)) {
     LLVM_DEBUG(dbgs() << "It is a RA register, using GETss2 and SDp.\n");
-    unsigned ScratchReg = findScratchRegister(MBB, false);
+    Register ScratchReg = findScratchRegister(MBB, false, KVX::R16);
     BuildMI(MBB, I, DL, get(KVX::GETss2), ScratchReg)
         .addReg(KVX::RA)
         .setMIFlags(MachineInstr::FrameSetup);
