@@ -1095,8 +1095,7 @@ bool KVXPreEmitExpandPseudo::expandMI(MachineBasicBlock &MBB,
                                       MachineBasicBlock::iterator &NextMBBI) {
   switch (MBBI->getOpcode()) {
   case KVX::SELECTp:
-    expandSELECT(TII, MBB, MBBI);
-    return true;
+    return expandSELECT(TII, MBB, MBBI);
   case KVX::ALOADADDp:
   case KVX::ALOADSUBp:
   case KVX::ALOADANDp:
@@ -1115,104 +1114,74 @@ bool KVXPreEmitExpandPseudo::expandMI(MachineBasicBlock &MBB,
   case KVX::ATASp:
     return expandATAS(TII, MBB, MBBI, NextMBBI);
   case KVX::FMULWCPp:
-    expandRoundingPairInstrOpcodes(KVX::FMULWCrr, KVX::FMULWCrr, TII, MBB,
-                                   MBBI);
-    return true;
+    return expandRoundingPairInstrOpcodes(KVX::FMULWCrr, KVX::FMULWCrr, TII,
+                                          MBB, MBBI);
   case KVX::FMULCWCPp:
-    expandRoundingPairInstrOpcodes(KVX::FMULCWCrr, KVX::FMULCWCrr, TII, MBB,
-                                   MBBI);
-    return true;
+    return expandRoundingPairInstrOpcodes(KVX::FMULCWCrr, KVX::FMULCWCrr, TII,
+                                          MBB, MBBI);
   case KVX::FMULDPp:
-    expandRoundingPairInstrOpcodes(KVX::FMULDrr, KVX::FMULDrr, TII, MBB, MBBI);
-    return true;
+    return expandRoundingPairInstrOpcodes(KVX::FMULDrr, KVX::FMULDrr, TII, MBB,
+                                          MBBI);
   case KVX::FMULDCp:
-    expandFMULDCInstr(TII, MBB, MBBI);
-    return true;
+    return expandFMULDCInstr(TII, MBB, MBBI);
   case KVX::FMULCDCp:
-    expandFMULCDCInstr(TII, MBB, MBBI);
-    return true;
+    return expandFMULCDCInstr(TII, MBB, MBBI);
   case KVX::FFMAWQp:
-    expandRoundingPairedRegInOutInstr(KVX::FFMAWPrr, TII, MBB, MBBI);
-    return true;
+    return expandRoundingPairedRegInOutInstr(KVX::FFMAWPrr, TII, MBB, MBBI);
   case KVX::FFMADPp:
-    expandRoundingPairedRegInOutInstr(KVX::FFMADrr, TII, MBB, MBBI);
-    return true;
+    return expandRoundingPairedRegInOutInstr(KVX::FFMADrr, TII, MBB, MBBI);
   case KVX::FFMSWQp:
-    expandRoundingPairedRegInOutInstr(KVX::FFMSWPrr, TII, MBB, MBBI);
-    return true;
+    return expandRoundingPairedRegInOutInstr(KVX::FFMSWPrr, TII, MBB, MBBI);
   case KVX::FFMSDPp:
-    expandRoundingPairedRegInOutInstr(KVX::FFMSDrr, TII, MBB, MBBI);
-    return true;
+    return expandRoundingPairedRegInOutInstr(KVX::FFMSDrr, TII, MBB, MBBI);
   case KVX::SBp:
-    expandStore(TII, MBB, MBBI, KVX::SBri10, KVX::SBri37, KVX::SBri64);
-    return true;
+    return expandStore(TII, MBB, MBBI, KVX::SBri10, KVX::SBri37, KVX::SBri64);
   case KVX::SHp:
-    expandStore(TII, MBB, MBBI, KVX::SHri10, KVX::SHri37, KVX::SHri64);
-    return true;
+    return expandStore(TII, MBB, MBBI, KVX::SHri10, KVX::SHri37, KVX::SHri64);
   case KVX::SWp:
-    expandStore(TII, MBB, MBBI, KVX::SWri10, KVX::SWri37, KVX::SWri64);
-    return true;
+    return expandStore(TII, MBB, MBBI, KVX::SWri10, KVX::SWri37, KVX::SWri64);
   case KVX::SDp:
-    expandStore(TII, MBB, MBBI, KVX::SDri10, KVX::SDri37, KVX::SDri64);
-    return true;
+    return expandStore(TII, MBB, MBBI, KVX::SDri10, KVX::SDri37, KVX::SDri64);
   case KVX::SQp:
-    expandStore(TII, MBB, MBBI, KVX::SQri10, KVX::SQri37, KVX::SQri64);
-    return true;
+    return expandStore(TII, MBB, MBBI, KVX::SQri10, KVX::SQri37, KVX::SQri64);
   case KVX::SOp:
-    expandStore(TII, MBB, MBBI, KVX::SOri10, KVX::SOri37, KVX::SOri64);
-    return true;
+    return expandStore(TII, MBB, MBBI, KVX::SOri10, KVX::SOri37, KVX::SOri64);
   case KVX::SVp:
-    expandStore(TII, MBB, MBBI, KVX::SVri10, KVX::SVri37, KVX::SVri64);
-    return true;
+    return expandStore(TII, MBB, MBBI, KVX::SVri10, KVX::SVri37, KVX::SVri64);
   case KVX::SWIDEp:
   case KVX::SMATRIXp:
-    expandWideMatrixLoadsStores(TII, MBB, MBBI, KVX::SVri10, KVX::SVri37,
-                                KVX::SVri64, true);
-    return true;
+    return expandWideMatrixLoadsStores(TII, MBB, MBBI, KVX::SVri10, KVX::SVri37,
+                                       KVX::SVri64, true);
   case KVX::LBSp:
-    expandLoad(TII, MBB, MBBI, KVX::LBSri10, KVX::LBSri37, KVX::LBSri64);
-    return true;
+    return expandLoad(TII, MBB, MBBI, KVX::LBSri10, KVX::LBSri37, KVX::LBSri64);
   case KVX::LBZp:
-    expandLoad(TII, MBB, MBBI, KVX::LBZri10, KVX::LBZri37, KVX::LBZri64);
-    return true;
+    return expandLoad(TII, MBB, MBBI, KVX::LBZri10, KVX::LBZri37, KVX::LBZri64);
   case KVX::LHSp:
-    expandLoad(TII, MBB, MBBI, KVX::LHSri10, KVX::LHSri37, KVX::LHSri64);
-    return true;
+    return expandLoad(TII, MBB, MBBI, KVX::LHSri10, KVX::LHSri37, KVX::LHSri64);
   case KVX::LHZp:
-    expandLoad(TII, MBB, MBBI, KVX::LHZri10, KVX::LHZri37, KVX::LHZri64);
-    return true;
+    return expandLoad(TII, MBB, MBBI, KVX::LHZri10, KVX::LHZri37, KVX::LHZri64);
   case KVX::LWSp:
-    expandLoad(TII, MBB, MBBI, KVX::LWSri10, KVX::LWSri37, KVX::LWSri64);
-    return true;
+    return expandLoad(TII, MBB, MBBI, KVX::LWSri10, KVX::LWSri37, KVX::LWSri64);
   case KVX::LWZp:
-    expandLoad(TII, MBB, MBBI, KVX::LWZri10, KVX::LWZri37, KVX::LWZri64);
-    return true;
+    return expandLoad(TII, MBB, MBBI, KVX::LWZri10, KVX::LWZri37, KVX::LWZri64);
   case KVX::LDp:
-    expandLoad(TII, MBB, MBBI, KVX::LDri10, KVX::LDri37, KVX::LDri64);
-    return true;
+    return expandLoad(TII, MBB, MBBI, KVX::LDri10, KVX::LDri37, KVX::LDri64);
   case KVX::LQp:
-    expandLoad(TII, MBB, MBBI, KVX::LQri10, KVX::LQri37, KVX::LQri64);
-    return true;
+    return expandLoad(TII, MBB, MBBI, KVX::LQri10, KVX::LQri37, KVX::LQri64);
   case KVX::LOp:
-    expandLoad(TII, MBB, MBBI, KVX::LOri10, KVX::LOri37, KVX::LOri64);
-    return true;
+    return expandLoad(TII, MBB, MBBI, KVX::LOri10, KVX::LOri37, KVX::LOri64);
   case KVX::LVp:
-    expandLoad(TII, MBB, MBBI, KVX::LVri10, KVX::LVri37, KVX::LVri64);
-    return true;
+    return expandLoad(TII, MBB, MBBI, KVX::LVri10, KVX::LVri37, KVX::LVri64);
   case KVX::LWIDEp:
   case KVX::LMATRIXp:
-    expandWideMatrixLoadsStores(TII, MBB, MBBI, KVX::LVri10, KVX::LVri37,
-                                KVX::LVri64);
-    return true;
+    return expandWideMatrixLoadsStores(TII, MBB, MBBI, KVX::LVri10, KVX::LVri37,
+                                       KVX::LVri64);
   case KVX::MADDWp:
-    expandMADDW(TII, MBB, MBBI);
-    return true;
+    return expandMADDW(TII, MBB, MBBI);
   case KVX::EXTFZWp:
-    expandEXTFZ(TII, MBB, MBBI, true);
-    return true;
+    return expandEXTFZ(TII, MBB, MBBI, true);
   case KVX::EXTFZDp:
-    expandEXTFZ(TII, MBB, MBBI, false);
-    return true;
+    return expandEXTFZ(TII, MBB, MBBI, false);
   default:
     break;
   }
