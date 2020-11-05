@@ -213,8 +213,13 @@ def int_kvx_moveoto: Intrinsic<[llvm_v256i1_ty], [llvm_v4i64_ty], [IntrNoMem]>;
 // Move from TCA registers to GPR
 def int_kvx_movefo: Intrinsic<[llvm_v4i64_ty], [llvm_v256i1_ty], [IntrNoMem]>;
 
+// Load / Store vector
+def int_kvx_lv: Intrinsic<[llvm_v256i1_ty], [llvm_ptr_ty, llvm_i32_ty], [IntrReadMem]>;
+def int_kvx_lv_c: Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_ptr_ty, llvm_i64_ty, llvm_i32_ty, llvm_i32_ty], [IntrHasSideEffects]>;
+def int_kvx_lvc: Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty], [IntrHasSideEffects]>;
+def int_kvx_lvc_c: Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_ptr_ty, llvm_i32_ty, llvm_i64_ty, llvm_i32_ty, llvm_i32_ty], [IntrHasSideEffects]>;
 // atomic register copy/shift operations
-def int_kvx_swapvfwo : Intrinsic<[llvm_v256i1_ty, llvm_v4i64_ty], [llvm_v4i64_ty, llvm_v256i1_ty], [IntrNoMem]>;
+// def int_kvx_swapvfwo : Intrinsic<[], [llvm_v4i64_ty, llvm_v256i1_ty], [IntrHasSideEffects]>;
 def int_kvx_alignov : Intrinsic<[llvm_v4i64_ty], [llvm_v256i1_ty, llvm_v256i1_ty, llvm_i64_ty], [IntrNoMem]>;
 def int_kvx_alignv : Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_v256i1_ty, llvm_i64_ty], [IntrNoMem]>;
 

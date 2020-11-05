@@ -19433,6 +19433,84 @@ static int KVX_getRoundingModifier(clang::ASTContext &Ctx,
   return -1;
 }
 
+static int KVX_getScalarcondModValue(const StringRef &Str) {
+  return StringSwitch<int>(Str)
+      .Case("dnez", 0)
+      .Case("deqz", 1)
+      .Case("dltz", 2)
+      .Case("dgez", 3)
+      .Case("dlez", 4)
+      .Case("dgtz", 5)
+      .Case("odd", 6)
+      .Case("even", 7)
+      .Case("wnez", 8)
+      .Case("weqz", 9)
+      .Case("wltz", 10)
+      .Case("wgez", 11)
+      .Case("wlez", 12)
+      .Case("wgtz", 13)
+      .Default(-1);
+}
+
+static int KVX_getSpeculateModValue(const StringRef &Str) {
+  return StringSwitch<int>(Str)
+        .Case("", 0)
+        .Case("s", 1)
+        .Default(-1);
+}
+
+static Value *KVX_emit_lv_lvc(bool IsLVC, bool IsCond, unsigned IntrinsicID,
+                              CodeGenFunction &CGF, const CallExpr *E) {
+  unsigned NumArgs = E->getNumArgs();
+  unsigned PositionMods = (IsCond ? (IsLVC? 1 : 2) : 0) + (IsLVC ? 3 : 1);
+  if (NumArgs != (PositionMods + 1)) {
+    CGF.CGM.Error(E->getBeginLoc(), "Incorrect number of arguments to builtin");
+    return nullptr;
+  }
+  SmallVector<Value *, 8> Args;
+
+  for (unsigned I = 0; I < PositionMods; I++)
+    Args.push_back(CGF.EmitScalarExpr(E->getArg(I)));
+
+  const auto *SL = dyn_cast<clang::StringLiteral>(
+      E->getArg(PositionMods)->IgnoreParenImpCasts());
+  if (!SL) {
+    CGF.CGM.Error(E->getArg(PositionMods)->getBeginLoc(),
+                  "It is required a modifier string.");
+    return nullptr;
+  }
+
+  // We always have Speculate Modifier.
+  // Scalar Condition Modifier depends in being a conditional
+  // load.
+  auto Mods = SL->getString().split(".").second.split(".");
+
+  int Speculate = KVX_getSpeculateModValue(Mods.first);
+  if (Speculate == -1) {
+    CGF.CGM.Error(
+        E->getArg(PositionMods)->getExprLoc(),
+        "Expected to start with a speculate modifier: '' or '.' or '.s'");
+    return nullptr;
+  }
+  Args.push_back(ConstantInt::get(CGF.IntTy, Speculate));
+
+  if (IsCond) {
+    auto SecondMod = KVX_getScalarcondModValue(Mods.second);
+    if (SecondMod == -1) {
+      CGF.CGM.Error(E->getArg(PositionMods - 1)->getExprLoc(),
+                    "A conditional load argument was used.");
+      CGF.CGM.Error(
+          E->getArg(PositionMods)->getExprLoc(),
+          "Expected a conditional comparison modifier: [.dnez .deqz .dltz "
+          ".dgez .dlez .dgtz .odd .even .wnez .weqz .wltz .wgez .wlez .wgtz]");
+      return nullptr;
+    }
+    Args.push_back(ConstantInt::get(CGF.IntTy, SecondMod));
+  }
+
+  return CGF.Builder.CreateCall(CGF.CGM.getIntrinsic(IntrinsicID), Args);
+}
+
 static Value *KVX_emitScaleNarrowBuiltin(unsigned NumMods, unsigned IntrinsicID,
                                          CodeGenFunction &CGF,
                                          const CallExpr *E) {
@@ -21598,6 +21676,14 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     return KVX_emitScaleNarrowBuiltin(3, Intrinsic::kvx_fscalewv, *this, E);
   case KVX::BI__builtin_kvx_fnarrowwhv:
     return KVX_emitScaleNarrowBuiltin(2, Intrinsic::kvx_fnarrowwhv, *this, E);
+  case KVX::BI__builtin_kvx_lv:
+    return KVX_emit_lv_lvc(false, false, Intrinsic::kvx_lv, *this, E);
+  case KVX::BI__builtin_kvx_lv_c:
+    return KVX_emit_lv_lvc(false, true, Intrinsic::kvx_lv_c, *this, E);
+  case KVX::BI__builtin_kvx_lvc:
+    return KVX_emit_lv_lvc(true, false, Intrinsic::kvx_lvc, *this, E);
+  case KVX::BI__builtin_kvx_lvc_c:
+    return KVX_emit_lv_lvc(true, true, Intrinsic::kvx_lvc_c, *this, E);
   }
   return nullptr;
 }
