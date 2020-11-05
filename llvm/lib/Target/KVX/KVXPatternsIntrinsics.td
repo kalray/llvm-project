@@ -319,8 +319,19 @@ def: Pat<(int_kvx_moveoto QuadReg:$r), (COPY_TO_REGCLASS QuadReg:$r, VectorReg)>
 // Move from TCA registers to GPR
 def: Pat<(int_kvx_movefo VectorReg:$v), (COPY_TO_REGCLASS $v, QuadReg)>;
 
-// Matrix load operaion
-//  def: Pat<(int_kvx_lvc : Intrinsic<[llvm_v1024i1_ty], [llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
+// Vector conditional load
+// TODO: Allow all addressing modes.
+def: Pat<(v256i1(int_kvx_lv SingleReg:$base, SpeculateMod:$spec)),
+         (LVri10 (i64 0), SingleReg:$base, SpeculateMod:$spec)>;
+
+def : Pat<(v256i1(int_kvx_lv_c VectorReg:$io, SingleReg:$base, SingleReg:$cond, SpeculateMod:$spec, ScalarcondMod:$scac)),
+         (LVrrc SingleReg:$cond, SingleReg:$base, VectorReg:$io, SpeculateMod:$spec, ScalarcondMod:$scac)>;
+
+def : Pat<(v1024i1(int_kvx_lvc v1024i1:$io, SingleReg:$base, ColumnMod:$a1, SpeculateMod:$spec)),
+         (LVmri10cs MatrixReg:$io, (i64 0), SingleReg:$base, ColumnMod:$a1, SpeculateMod:$spec)>;
+
+def : Pat<(v1024i1(int_kvx_lvc_c MatrixReg:$io, SingleReg:$base, ColumnMod:$a1, SingleReg:$cond, SpeculateMod:$spec, ScalarcondMod:$scac)),
+         (LVmrrccs MatrixReg:$io, SingleReg:$cond, SingleReg:$base, ColumnMod:$a1, SpeculateMod:$spec, ScalarcondMod:$scac)>;
 
 // atomic register copy/shift operations
 // def: Pat<(int_kvx_swapvfwo QuadReg:$r, VectorReg:$v),

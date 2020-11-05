@@ -78,8 +78,7 @@ def SpeculateMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 1);
 }
 
 def ColumnMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 3);}]> {
-  // FIXME: PrintMethod is not implemented yet
-  // let PrintMethod = "printColumnMod";
+  let PrintMethod = "printColumnMod";
 }
 
 def DoscaleMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 1);}]> {
