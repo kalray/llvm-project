@@ -179,16 +179,17 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
       CmdArgs.push_back(Args.MakeArgString(GCCLibDir + "/crtcxa.o"));
     }
 
-    // Keep same order as clang command line for all OPT_Wl_COMMA, OPT_l, OPT_L
-    // arguments and input files.
+    Args.AddAllArgs(CmdArgs, options::OPT_L);
+
+    // Keep same order as clang command line for all OPT_Wl_COMMA,
+    // OPT_l arguments and input files.
     for (const auto &II : Inputs) {
       if (II.isInputArg()) {
         const Arg &A = II.getInputArg();
         if (A.getOption().matches(options::OPT_Wl_COMMA)) {
           for (unsigned i = 0; i < A.getNumValues(); i++)
-	    CmdArgs.push_back(A.getValue(i));
-        } else if (A.getOption().matches(options::OPT_l) ||
-                   (A.getOption().matches(options::OPT_L))) {
+            CmdArgs.push_back(A.getValue(i));
+        } else if (A.getOption().matches(options::OPT_l)) {
           CmdArgs.push_back(
               Args.MakeArgString(A.getSpelling() + std::string(A.getValue())));
         }
