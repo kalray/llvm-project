@@ -19732,6 +19732,24 @@ static int KVX_getLoadAS(clang::ASTContext &Ctx, const clang::Expr *E) {
   return AS;
 }
 
+static bool KVX_isVolatile(CodeGenFunction &CGF, const CallExpr *E) {
+  bool Volatile = false;
+  auto *VolatileExpr = E->getArg(2)->IgnoreParenImpCasts();
+
+  if (VolatileExpr->getStmtClass() == Stmt::IntegerLiteralClass)
+    Volatile = cast<clang::IntegerLiteral>(VolatileExpr)->getValue().getZExtValue() != 0;
+  else if (VolatileExpr->getStmtClass() == Stmt::CXXBoolLiteralExprClass)
+    Volatile = cast<clang::CXXBoolLiteralExpr>(VolatileExpr)->getValue();
+  else
+    CGF.CGM.Error(E->getArg(2)->getBeginLoc(), "is not a bool immediate value");
+
+  QualType PtrTy = E->getArg(0)->IgnoreImpCasts()->getType();
+  Volatile +=
+    PtrTy->castAs<clang::PointerType>()->getPointeeType().isVolatileQualified();
+
+  return Volatile;
+}
+
 static Value *KVX_emitLoadBuiltin(CodeGenFunction &CGF, const CallExpr *E,
                                   llvm::Type *DataType) {
   int AS = KVX_getLoadAS(CGF.getContext(), E->getArg(1)->IgnoreParenImpCasts());
@@ -19740,17 +19758,7 @@ static Value *KVX_emitLoadBuiltin(CodeGenFunction &CGF, const CallExpr *E,
 
   Address Addr = CGF.EmitPointerWithAlignment(E->getArg(0));
 
-  bool Volatile = false;
-
-  auto *VolatileExpr = E->getArg(2)->IgnoreParenImpCasts();
-
-  if (VolatileExpr->getStmtClass() == Stmt::IntegerLiteralClass)
-    Volatile =
-        cast<clang::IntegerLiteral>(VolatileExpr)->getValue().getZExtValue() !=
-        0;
-  else
-    CGF.CGM.Error(E->getArg(2)->getBeginLoc(), "is not a bool immediate value");
-
+  bool Volatile = KVX_isVolatile(CGF, E);
   llvm::Type *ASType = DataType->getPointerTo(AS);
 
   auto AddrCast = CGF.Builder.CreatePointerBitCastOrAddrSpaceCast(Addr, ASType);
@@ -19776,17 +19784,7 @@ static Value *KVX_emitStoreBuiltin(CodeGenFunction &CGF, const CallExpr *E,
                                    llvm::Type *DataType) {
   Address Addr = CGF.EmitPointerWithAlignment(E->getArg(0));
 
-  bool Volatile = false;
-
-  auto *VolatileExpr = E->getArg(2)->IgnoreParenImpCasts();
-
-  if (VolatileExpr->getStmtClass() == Stmt::IntegerLiteralClass)
-    Volatile =
-        cast<clang::IntegerLiteral>(VolatileExpr)->getValue().getZExtValue() !=
-        0;
-  else
-    CGF.CGM.Error(E->getArg(2)->getBeginLoc(), "is not an immediate value");
-
+  bool Volatile = KVX_isVolatile(CGF, E);
   auto AddrCast = CGF.Builder.CreatePointerBitCastOrAddrSpaceCast(
       Addr, DataType->getPointerTo());
   auto *Store = CGF.Builder.CreateStore(CGF.EmitScalarExpr(E->getArg(1)),
