@@ -49,6 +49,17 @@ public:
     DoubleWidth = DoubleAlign = 64;
     LongDoubleWidth = LongDoubleAlign = 64;
 
+    SizeType = UnsignedLong;
+    PtrDiffType = SignedLong;
+    IntMaxType = SignedLong;
+    IntPtrType = SignedLong;
+    WCharType = SignedInt;
+    WIntType = UnsignedInt;
+    Char16Type = UnsignedShort;
+    Char32Type = UnsignedInt;
+    Int64Type = SignedLong;
+    SigAtomicType = SignedInt;
+
     HalfFormat = &llvm::APFloat::IEEEhalf();
     FloatFormat = &llvm::APFloat::IEEEsingle();
     DoubleFormat = &llvm::APFloat::IEEEdouble();
