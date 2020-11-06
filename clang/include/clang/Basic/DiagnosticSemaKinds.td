@@ -9569,6 +9569,8 @@ def err_ppc_builtin_only_on_pwr7 : Error<
   "this builtin is only valid on POWER7 or later CPUs">;
 def err_ppc_invalid_use_mma_type : Error<
   "invalid use of PPC MMA type">;
+def err_kvx_invalid_use_tca_type : Error<
+  "invalid use of KVX TCA type">;
 def err_x86_builtin_invalid_rounding : Error<
   "invalid rounding argument">;
 def err_x86_builtin_invalid_scale : Error<
