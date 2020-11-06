@@ -16,8 +16,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-// KVX_TCA_VECTOR_TYPE(__tca64, KVXTCACopro, 64)
-// KVX_TCA_VECTOR_TYPE(__tca128, KVXTCABlock, 128)
 KVX_TCA_VECTOR_TYPE(__tca256, KVXTCAVector, 256)
 KVX_TCA_VECTOR_TYPE(__tca512, KVXTCAWide, 512)
 KVX_TCA_VECTOR_TYPE(__tca1024, KVXTCAMatrix, 1024)

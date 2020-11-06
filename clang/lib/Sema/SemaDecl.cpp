@@ -8566,6 +8566,12 @@ void Sema::CheckVariableDeclarationType(VarDecl *NewVD) {
     NewVD->setInvalidDecl();
     return;
   }
+  // KVX TCA non-pointer types are not allowed as non-local variable types.
+  if (Context.getTargetInfo().getTriple().isKVX() && !NewVD->isLocalVarDecl() &&
+      CheckKVXTCAType(T, NewVD->getLocation())) {
+    NewVD->setInvalidDecl();
+    return;
+  }
 }
 
 /// Perform semantic checking on a newly-created variable
@@ -11353,6 +11359,11 @@ bool Sema::CheckFunctionDeclaration(Scope *S, FunctionDecl *NewFD,
   // PPC MMA non-pointer types are not allowed as function return types.
   if (Context.getTargetInfo().getTriple().isPPC64() &&
       CheckPPCMMAType(NewFD->getReturnType(), NewFD->getLocation())) {
+    NewFD->setInvalidDecl();
+  }
+  // KVX TCA non-pointer types are not allowed as function return types.
+  if (Context.getTargetInfo().getTriple().isKVX() &&
+      CheckKVXTCAType(NewFD->getReturnType(), NewFD->getLocation())) {
     NewFD->setInvalidDecl();
   }
 
@@ -14449,6 +14460,11 @@ ParmVarDecl *Sema::CheckParameter(DeclContext *DC, SourceLocation StartLoc,
   // PPC MMA non-pointer types are not allowed as function argument types.
   if (Context.getTargetInfo().getTriple().isPPC64() &&
       CheckPPCMMAType(New->getOriginalType(), New->getLocation())) {
+    New->setInvalidDecl();
+  }
+  // KVX TCA non-pointer types are not allowed as function argument types.
+  if (Context.getTargetInfo().getTriple().isKVX() &&
+      CheckKVXTCAType(New->getOriginalType(), New->getLocation())) {
     New->setInvalidDecl();
   }
 

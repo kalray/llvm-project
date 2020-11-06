@@ -4514,6 +4514,23 @@ bool Sema::CheckSystemZBuiltinFunctionCall(unsigned BuiltinID,
   return SemaBuiltinConstantArgRange(TheCall, i, l, u);
 }
 
+// Check if the given type is a non-pointer KVX TCA type. This function is used
+// in Sema to prevent invalid uses of restricted KVX TCA types.
+bool Sema::CheckKVXTCAType(QualType Type, SourceLocation TypeLoc) {
+  if (Type->isPointerType() || Type->isArrayType())
+    return false;
+
+  QualType CoreType = Type.getCanonicalType().getUnqualifiedType();
+#define KVX_TCA_VECTOR_TYPE(Name, Id, Size) || CoreType == Context.Id##Ty
+  if (false
+#include "clang/Basic/KVXTypes.def"
+  ) {
+    Diag(TypeLoc, diag::err_kvx_invalid_use_tca_type);
+    return true;
+  }
+  return false;
+}
+
 /// SemaBuiltinCpuSupports - Handle __builtin_cpu_supports(char *).
 /// This checks that the target supports __builtin_cpu_supports and
 /// that the string argument is constant and valid.
@@ -11877,6 +11894,10 @@ Sema::CheckReturnValExpr(Expr *RetValExp, QualType lhsType,
   // here prevent the user from using a PPC MMA type as trailing return type.
   if (Context.getTargetInfo().getTriple().isPPC64())
     CheckPPCMMAType(RetValExp->getType(), ReturnLoc);
+  // KVX TCA non-pointer types are not allowed as return type. Checking the type
+  // here prevent the user from using a KVX TCA type as trailing return type.
+  if (Context.getTargetInfo().getTriple().isKVX())
+    CheckKVXTCAType(RetValExp->getType(), ReturnLoc);
 }
 
 /// Check for comparisons of floating-point values using == and !=. Issue a

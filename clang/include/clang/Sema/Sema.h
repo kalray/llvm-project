@@ -13180,6 +13180,8 @@ private:
   ExprResult SemaBuiltinMatrixColumnMajorStore(CallExpr *TheCall,
                                                ExprResult CallResult);
 
+  bool CheckKVXTCAType(QualType Type, SourceLocation TypeLoc);
+
 public:
   enum FormatStringType {
     FST_Scanf,
