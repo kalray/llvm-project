@@ -515,6 +515,8 @@ BUILTIN(__builtin_kvx_lv_c, "Tt256Tt256&v*LiCc*", "")
 BUILTIN(__builtin_kvx_lvc, "Tt1024Tt1024&v*UiCc*", "")
 BUILTIN(__builtin_kvx_lvc_c, "Tt1024Tt1024&v*UiLiCc*", "")
 
+NARY_BUILTIN(swapvfwo, "vV4Li&Tt256&", "", 2)
+
 BUILTIN(__builtin_kvx_convdhv0, "vTt256Tt1024Cc*", "")
 BUILTIN(__builtin_kvx_convdhv1, "vTt256Tt1024Cc*", "")
 BUILTIN(__builtin_kvx_convdhv,  "Tt256Tt1024Cc*", "")

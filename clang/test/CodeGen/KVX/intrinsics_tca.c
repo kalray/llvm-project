@@ -60,8 +60,7 @@ typedef long __attribute__((__vector_size__(32))) v4i64_t;
 // CHECK-NEXT:    [[ARRAYIDX8:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 5
 // CHECK-NEXT:    [[TMP51:%.*]] = bitcast <256 x i1>* [[ARRAYIDX8]] to i8*
 // CHECK-NEXT:    [[TMP52:%.*]] = call <1024 x i1> @llvm.kvx.lvc.c(<1024 x i1> [[TMP50]], i8* nonnull [[TMP51]], i32 2, i64 [[A]], i32 0, i32 6)
-// CHECK-NEXT:    [[ARRAYIDX9:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 1
-// CHECK-NEXT:    store volatile <256 x i1> [[TMP46]], <256 x i1>* [[ARRAYIDX9]], align 32, !tbaa !2
+// CHECK-NEXT:    call void @llvm.kvx.swapvfwo(<4 x i64> [[TMP8]], <256 x i1> [[TMP46]])
 // CHECK-NEXT:    store volatile <256 x i1> [[TMP48]], <256 x i1>* [[V]], align 32, !tbaa !2
 // CHECK-NEXT:    store volatile <512 x i1> [[TMP39]], <512 x i1>* [[W]], align 64, !tbaa !8
 // CHECK-NEXT:    store volatile <1024 x i1> [[TMP52]], <1024 x i1>* [[M]], align 128, !tbaa !6
@@ -117,8 +116,7 @@ v4i64_t test_tca_builtins(long a, long b, long c, long d, volatile __tca256 *v, 
   lv2 = __builtin_kvx_lv(v, ".s");
   lm = __builtin_kvx_lvc(lm, &v[4], 3, ".s");
   lm = __builtin_kvx_lvc_c(lm, &v[5], 2, a, "..odd");
-
-  v[1] = lv;
+  __builtin_kvx_swapvfwo(vt, lv);
   v[0] = lv2;
   w[0] = lw;
   m[0] = lm;
