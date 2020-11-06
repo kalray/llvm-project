@@ -797,9 +797,11 @@ define void @test_fnarrowwhv(<256 x i1>* %p0){
   ret void
 }
 
+declare <256 x i1> @llvm.kvx.lv(i8*, i32)
 declare <256 x i1> @llvm.kvx.lv.c(<256 x i1>, i8*, i64, i32, i32)
 declare <1024 x i1> @llvm.kvx.lvc(<1024 x i1>, i8*, i32, i32)
 declare <1024 x i1> @llvm.kvx.lvc.c(<1024 x i1>, i8*, i32, i64, i32, i32)
+declare void @llvm.kvx.swapvfwo(<4 x i64>, <256 x i1>)
 
 ; Test generated from clang's intrinsics_tca.c
 define <4 x i64> @test_tca_builtins(i64 %a, i64 %b, i64 %c, i64 %d, <256 x i1>* %v, <512 x i1>* %w, <1024 x i1>* %m) {
@@ -840,6 +842,7 @@ define <4 x i64> @test_tca_builtins(i64 %a, i64 %b, i64 %c, i64 %d, <256 x i1>* 
 ; CHECK-NEXT:    alignv $a1 = $a0, $a1, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    convdhv1.ru.satu $a2_hi = $a4a5a6a7
+; CHECK-NEXT:    aligno $r8r9r10r11 = $a0, $a1, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    convdhv1.rhu.sat $a2_hi = $a4a5a6a7
 ; CHECK-NEXT:    ;;
@@ -923,14 +926,20 @@ define <4 x i64> @test_tca_builtins(i64 %a, i64 %b, i64 %c, i64 %d, <256 x i1>* 
 ; CHECK-NEXT:    addd $r1 = $r4, 128
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mt44d $a4a5a6a7 = $a4a5a6a7
+; CHECK-NEXT:    lv.s $a9 = 0[$r4]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv.c3.s $a4a5a6a7 = 0[$r1]
 ; CHECK-NEXT:    addd $r1 = $r4, 160
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv.c2.odd $r0 ? $a4a5a6a7 = [$r1]
-; CHECK-NEXT:    aligno $r0r1r2r3 = $a0, $a1, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 32[$r4] = $a8
+; CHECK-NEXT:    copyo $r0r1r2r3 = $r8r9r10r11
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    movefo $r0r1r2r3 = $a8
+; CHECK-NEXT:    movetq $a8_lo = $r1, $r0
+; CHECK-NEXT:    movetq $a8_hi = $r3, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 0[$r4] = $a9
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 0[$r5] = $a2
 ; CHECK-NEXT:    ;;
@@ -943,6 +952,11 @@ define <4 x i64> @test_tca_builtins(i64 %a, i64 %b, i64 %c, i64 %d, <256 x i1>* 
 ; CHECK-NEXT:    sv 64[$r6] = $a6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 96[$r6] = $a7
+; CHECK-NEXT:    copyd $r0 = $r8
+; CHECK-NEXT:    copyd $r1 = $r9
+; CHECK-NEXT:    copyd $r2 = $r10
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r3 = $r11
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -995,15 +1009,17 @@ entry:
   %arrayidx6 = getelementptr inbounds <256 x i1>, <256 x i1>* %v, i64 3
   %45 = bitcast <256 x i1>* %arrayidx6 to i8*
   %46 = tail call <256 x i1> @llvm.kvx.lv.c(<256 x i1> %44, i8* nonnull %45, i64 %a, i32 1, i32 7)
+  %47 = bitcast <256 x i1>* %v to i8*
+  %48 = tail call <256 x i1> @llvm.kvx.lv(i8* nonnull %47, i32 1)
   %arrayidx7 = getelementptr inbounds <256 x i1>, <256 x i1>* %v, i64 4
-  %47 = bitcast <256 x i1>* %arrayidx7 to i8*
-  %48 = tail call <1024 x i1> @llvm.kvx.lvc(<1024 x i1> %40, i8* nonnull %47, i32 3, i32 1)
+  %49 = bitcast <256 x i1>* %arrayidx7 to i8*
+  %50 = tail call <1024 x i1> @llvm.kvx.lvc(<1024 x i1> %40, i8* nonnull %49, i32 3, i32 1)
   %arrayidx8 = getelementptr inbounds <256 x i1>, <256 x i1>* %v, i64 5
-  %49 = bitcast <256 x i1>* %arrayidx8 to i8*
-  %50 = tail call <1024 x i1> @llvm.kvx.lvc.c(<1024 x i1> %48, i8* nonnull %49, i32 2, i64 %a, i32 0, i32 6)
-  %arrayidx9 = getelementptr inbounds <256 x i1>, <256 x i1>* %v, i64 1
-  store volatile <256 x i1> %46, <256 x i1>* %arrayidx9, align 32
+  %51 = bitcast <256 x i1>* %arrayidx8 to i8*
+  %52 = tail call <1024 x i1> @llvm.kvx.lvc.c(<1024 x i1> %50, i8* nonnull %51, i32 2, i64 %a, i32 0, i32 6)
+  tail call void @llvm.kvx.swapvfwo(<4 x i64> %8, <256 x i1> %46)
+  store volatile <256 x i1> %48, <256 x i1>* %v, align 32
   store volatile <512 x i1> %39, <512 x i1>* %w, align 64
-  store volatile <1024 x i1> %50, <1024 x i1>* %m, align 128
+  store volatile <1024 x i1> %52, <1024 x i1>* %m, align 128
   ret <4 x i64> %8
 }

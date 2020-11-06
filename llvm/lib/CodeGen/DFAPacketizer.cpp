@@ -212,6 +212,15 @@ void VLIWPacketizerList::PacketizeMIs(MachineBasicBlock *MBB,
       InstrCount++;
     }
     MachineInstr &MI = *BeginItr;
+
+    // Start a new bundle when we find a pre-defined bundle
+    if (MI.isBundle()) {
+      LLVM_DEBUG(dbgs() << "Pre-defined bundles should not be packed "
+                           "with an existing one. Close the current packet.");
+      endPacket(MBB, MI);
+      continue;
+    }
+
     initPacketizerState();
 
     // End the current packet if needed.
