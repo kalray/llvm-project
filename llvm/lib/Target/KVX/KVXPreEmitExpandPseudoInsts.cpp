@@ -1090,6 +1090,54 @@ static bool expandEXTFZ(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   return true;
 }
 
+static bool expandSWAPVFWOp(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
+                            MachineBasicBlock::iterator MBBI) {
+  MachineInstr &MI = *MBBI;
+  MachineFunction *MF = MBB.getParent();
+  const KVXRegisterInfo *TRI =
+      (const KVXRegisterInfo *)MF->getSubtarget().getRegisterInfo();
+
+  DebugLoc DL = MI.getDebugLoc();
+  Register V = MI.getOperand(0).getReg();
+  Register R = MI.getOperand(1).getReg();
+  auto RName = TRI->getRegAsmName(R.id());
+  auto VName = TRI->getRegAsmName(V.id());
+  unsigned MOVEFO = KVX::MOVEFOro;
+  if (KVX::VectorRegERegClass.contains(V))
+    MOVEFO = KVX::MOVEFOre;
+  else if (!KVX::VectorRegORegClass.contains(V))
+    report_fatal_error("First register of SWAPVFWOp (" + VName +
+                       ") is not a VectorReg.");
+  if (!KVX::QuadRegRegClass.contains(R))
+    report_fatal_error("Second register of SWAPVFWOp (" + RName +
+                       "is not a QuadReg.");
+
+  auto V_hi = TRI->getSubReg(V, KVX::sub_b1);
+  auto V_lo = TRI->getSubReg(V, KVX::sub_b0);
+  auto R0 = TRI->getSubReg(R, KVX::sub_s0);
+  auto R1 = TRI->getSubReg(R, KVX::sub_s1);
+  auto R2 = TRI->getSubReg(R, KVX::sub_s2);
+  auto R3 = TRI->getSubReg(R, KVX::sub_s3);
+  LLVM_DEBUG(
+      dbgs() << "Adding bundle to perform Vector QuadReg swap of registers: "
+             << RName << " <--> " << VName << "\n");
+  BuildMI(MBB, MBBI, DL, TII->get(KVX::BUNDLE));
+  auto &I2 =
+      BuildMI(MBB, MBBI, DL, TII->get(MOVEFO), R).addReg(V, RegState::Kill);
+  auto &I3 = BuildMI(MBB, MBBI, DL, TII->get(KVX::MOVETQrrbe), V_lo)
+                 .addReg(R1, RegState::Kill)
+                 .addReg(R0, RegState::Kill);
+  auto &I4 = BuildMI(MBB, MBBI, DL, TII->get(KVX::MOVETQrrbo), V_hi)
+                 .addReg(R3, RegState::Kill)
+                 .addReg(R2, RegState::Kill);
+  I2->bundleWithPred();
+  I3->bundleWithPred();
+  I4->bundleWithPred();
+  MI.eraseFromParent();
+  LLVM_DEBUG(dbgs() << "Swap bundle:"; MBB.dump());
+  return true;
+}
+
 bool KVXPreEmitExpandPseudo::expandMI(MachineBasicBlock &MBB,
                                       MachineBasicBlock::iterator MBBI,
                                       MachineBasicBlock::iterator &NextMBBI) {
@@ -1182,6 +1230,8 @@ bool KVXPreEmitExpandPseudo::expandMI(MachineBasicBlock &MBB,
     return expandEXTFZ(TII, MBB, MBBI, true);
   case KVX::EXTFZDp:
     return expandEXTFZ(TII, MBB, MBBI, false);
+  case KVX::SWAPVFWOp:
+    return expandSWAPVFWOp(TII, MBB, MBBI);
   default:
     break;
   }
