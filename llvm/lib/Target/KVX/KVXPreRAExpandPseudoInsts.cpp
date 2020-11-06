@@ -162,17 +162,13 @@ bool KVXPreRAExpandPseudo::expandMI(MachineBasicBlock &MBB,
                                     MachineBasicBlock::iterator &NextMBBI) {
   switch (MBBI->getOpcode()) {
   case KVX::GETp:
-    expandGetInstr(TII, MBB, MBBI);
-    return true;
+    return expandGetInstr(TII, MBB, MBBI);
   case KVX::WFXLp:
-    expandSystemRegValueInstr(KVX::WFXLrst4, TII, MBB, MBBI);
-    return true;
+    return expandSystemRegValueInstr(KVX::WFXLrst4, TII, MBB, MBBI);
   case KVX::WFXMp:
-    expandSystemRegValueInstr(KVX::WFXMrst4, TII, MBB, MBBI);
-    return true;
+    return expandSystemRegValueInstr(KVX::WFXMrst4, TII, MBB, MBBI);
   case KVX::SETp:
-    expandSystemRegValueInstr(KVX::SETrst4, TII, MBB, MBBI);
-    return true;
+    return expandSystemRegValueInstr(KVX::SETrst4, TII, MBB, MBBI);
   case KVX::DINVALLp:
   case KVX::DTOUCHLp:
   case KVX::DZEROLp:
