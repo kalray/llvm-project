@@ -84,7 +84,11 @@ protected:
 
 public:
   ClusterOSTargetInfo(const llvm::Triple &Triple, const TargetOptions &Opts)
-      : OSTargetInfo<Target>(Triple, Opts) {}
+      : OSTargetInfo<Target>(Triple, Opts) {
+    // This is just to be coherent with KVX gcc port
+    // But ClusterOS does not support __mcount yet
+    this->MCountName = "__mcount";
+  }
 };
 
 // KVXOSPorting target
