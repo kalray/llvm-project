@@ -33,8 +33,6 @@ public:
       : TargetInfo(Triple) {
     NoAsmVariants = true;
 
-    BigEndian = false;
-
     PointerWidth = PointerAlign = 64;
     BoolWidth = BoolAlign = 8;
     IntWidth = IntAlign = 32;
