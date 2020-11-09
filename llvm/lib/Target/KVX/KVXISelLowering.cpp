@@ -2343,4 +2343,9 @@ bool KVXTargetLowering::isLegalAddressingMode(const DataLayout &DL,
 
   // Check reg1 + scale*reg2 and reg1 + reg2
   return AM.Scale == 1 || (AM.Scale > 0 && (uint64_t)AM.Scale == NumBytes);
+
+}
+
+bool KVXTargetLowering::isLegalStoreImmediate(int64_t Imm) const {
+  return false;
 }

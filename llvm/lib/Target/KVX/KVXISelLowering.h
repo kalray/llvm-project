@@ -180,6 +180,7 @@ private:
   bool isLegalAddressingMode(const DataLayout &DL, const AddrMode &AM, Type *Ty,
                              unsigned AS,
                              Instruction *I = nullptr) const override;
+  bool isLegalStoreImmediate(int64_t Imm) const override;
 };
 
 } // namespace llvm
