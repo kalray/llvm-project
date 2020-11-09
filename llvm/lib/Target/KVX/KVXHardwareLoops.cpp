@@ -695,8 +695,8 @@ bool KVXHardwareLoops::ConvertToHardwareLoop(MachineFunction &MF,
   DebugLoc DL;
 
   MachineBasicBlock *DoneMBB = ExitMBB;
-  if (std::next(HeaderMBB)->getParent() &&
-      !HeaderMBB->isLayoutSuccessor(ExitMBB)) {
+
+  if (HeaderMBB->canFallThrough() && !HeaderMBB->isLayoutSuccessor(ExitMBB)) {
     LLVM_DEBUG(llvm::dbgs()
                << "HW Loop - Exit block is not succeeding header.\n");
 
