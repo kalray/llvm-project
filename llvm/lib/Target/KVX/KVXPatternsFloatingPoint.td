@@ -335,7 +335,12 @@ def : Pat<(v2f32 (fma v2f32:$rx, v2f32:$ry, v2f32:$rz)), (FFMAWPrr SingleReg:$rz
 def : Pat<(v2f16 (fma v2f16:$rx, v2f16:$ry, v2f16:$rz)), (FFMAHQrr SingleReg:$rz, SingleReg:$rx, SingleReg:$ry, rounding_, silent_)>;
 def : Pat<(v4f16 (fma v4f16:$rx, v4f16:$ry, v4f16:$rz)), (FFMAHQrr SingleReg:$rz, SingleReg:$rx, SingleReg:$ry, rounding_, silent_)>;
 
-// FFMS  -> TODO
+// FFMS
+def KVXFMS : SDNode<"KVXISD::FMS", SDTFPTernaryOp>;
+
+def : Pat<(f32 (KVXFMS f32:$rx, f32:$ry, f32:$rz)), (FFMSWrr SingleReg:$rz, SingleReg:$rx, SingleReg:$ry, rounding_, silent_)>;
+def : Pat<(f64 (KVXFMS f64:$rx, f64:$ry, f64:$rz)), (FFMSDrr SingleReg:$rz, SingleReg:$rx, SingleReg:$ry, rounding_, silent_)>;
+
 // FREC  -> TODO
 // FRSR  -> TODO
 // FIXED
@@ -508,3 +513,7 @@ def : Pat<(v2f64 (extract_subvector (v4f64 QuadReg:$v), (i64 0))),
 
 def : Pat<(v2f64 (extract_subvector (v4f64 QuadReg:$v), (i64 2))),
           (EXTRACT_SUBREG $v, sub_p1)>;
+
+// Patterns used only for -freciprocal-math
+def : Pat<(fdiv f32:$a, f32:$b), (FMULWrr SingleReg:$a, (FRECW SingleReg:$b, rounding_, silent_), rounding_, silent_)>;
+def : Pat<(fsqrt f32:$a), (FMULWrr SingleReg:$a, (FRSRW SingleReg:$a, rounding_, silent_), rounding_, silent_)>;

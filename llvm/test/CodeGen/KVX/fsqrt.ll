@@ -24,6 +24,18 @@ define float @sqrtf32(float %x) {
   ret float %tmp
 }
 
+define float @sqrtf32_fast(float %x) {
+; CHECK-LABEL: sqrtf32_fast:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    frsrw $r1 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fmulw $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %tmp = call fast float @llvm.sqrt.f32(float %x)
+  ret float %tmp
+}
+
 define double @sqrtf64(double %x) {
 ; CHECK-LABEL: sqrtf64:
 ; CHECK:       # %bb.0:
