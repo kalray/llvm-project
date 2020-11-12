@@ -15,6 +15,7 @@
 
 #include "KVX.h"
 #include "KVXInstrInfo.h"
+#include "KVXMachineFunctionInfo.h"
 #include "KVXTargetMachine.h"
 
 #include "llvm/CodeGen/LivePhysRegs.h"
@@ -1138,6 +1139,31 @@ static bool expandSWAPVFWOp(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   return true;
 }
 
+static bool expandSPCHECK(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
+                          MachineBasicBlock::iterator MBBI) {
+
+  MachineInstr &MI = *MBBI;
+  DebugLoc DL = MI.getDebugLoc();
+  Register CheckReg = MI.getOperand(2).getReg();
+
+  MachineFunction &MF = *MBB.getParent();
+
+  auto *KVXFI = MF.getInfo<KVXMachineFunctionInfo>();
+  MachineBasicBlock *OverflowMBB = KVXFI->getOverflowMBB();
+  if (OverflowMBB == nullptr)
+    report_fatal_error("call overflow mbb is missing");
+
+  BuildMI(MBB, MBBI, DL, TII->get(KVX::CB))
+      .addReg(CheckReg)
+      .addMBB(OverflowMBB)
+      .addImm(KVXMOD::SCALARCOND_DGTZ);
+
+  MBB.addSuccessor(OverflowMBB);
+
+  MI.eraseFromParent();
+  return true;
+}
+
 bool KVXPreEmitExpandPseudo::expandMI(MachineBasicBlock &MBB,
                                       MachineBasicBlock::iterator MBBI,
                                       MachineBasicBlock::iterator &NextMBBI) {
@@ -1232,6 +1258,8 @@ bool KVXPreEmitExpandPseudo::expandMI(MachineBasicBlock &MBB,
     return expandEXTFZ(TII, MBB, MBBI, false);
   case KVX::SWAPVFWOp:
     return expandSWAPVFWOp(TII, MBB, MBBI);
+  case KVX::SPCHECKp:
+    return expandSPCHECK(TII, MBB, MBBI);
   default:
     break;
   }

@@ -38,6 +38,10 @@ static cl::opt<bool> DisableLoadStorePacking(
     "disable-kvx-loadstore-packing", cl::Hidden, cl::init(true),
     cl::desc("Disable Load/Store Packing Pass for KVX target"));
 
+static cl::opt<std::string>
+    StackLimitRegister("fstack-limit-register",
+                       cl::desc("verify stack with a register for KVX"));
+
 extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeKVXTarget() {
   RegisterTargetMachine<KVXTargetMachine> X(getTheKVXTarget());
   auto PR = PassRegistry::getPassRegistry();
@@ -62,6 +66,18 @@ bool llvm::isScalarcondWord(unsigned Cond) {
   default:
     return false;
   }
+}
+
+bool llvm::hasStackLimitRegister() {
+  static int StackLimitRegisterValue = -1;
+
+  if (StackLimitRegisterValue == -1) {
+    StackLimitRegisterValue = StackLimitRegister.compare("sr") == 0;
+    if (!StackLimitRegister.empty() && StackLimitRegisterValue == 0)
+      report_fatal_error(
+          "only sr register is supported for stack-limit-register", false);
+  }
+  return StackLimitRegisterValue != 0;
 }
 
 unsigned llvm::GetImmOpCode(int64_t imm, unsigned i10code, unsigned i37code,

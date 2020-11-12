@@ -126,7 +126,19 @@ void KVXInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
     BuildMI(MBB, MBBI, DL, get(KVX::MOVETQrrbo), SubReg2)
         .addReg(TRI->getSubReg(SrcReg, KVX::sub_s2), getKillRegState(KillSrc))
         .addReg(TRI->getSubReg(SrcReg, KVX::sub_s3), getKillRegState(KillSrc));
+    return;
+  }
 
+  if (KVX::SingleRegRegClass.contains(DstReg) &&
+      KVX::OnlygetRegRegClass.contains(SrcReg)) {
+    LLVM_DEBUG(dbgs() << "It is a GETss2.\n");
+    BuildMI(MBB, MBBI, DL, get(KVX::GETss2), DstReg).addReg(SrcReg);
+    return;
+  }
+  if (KVX::SingleRegRegClass.contains(DstReg) &&
+      KVX::SystemRegRegClass.contains(SrcReg)) {
+    LLVM_DEBUG(dbgs() << "It is a GETss3.\n");
+    BuildMI(MBB, MBBI, DL, get(KVX::GETss3), DstReg).addReg(SrcReg);
     return;
   }
 

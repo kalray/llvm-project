@@ -77,6 +77,8 @@ def DINVALLp : KVX_PSEUDO<(outs), (ins AddrRI:$addr), []>;
 def DTOUCHLp : KVX_PSEUDO<(outs), (ins AddrRI:$addr), []>;
 def DZEROLp : KVX_PSEUDO<(outs), (ins AddrRI:$addr), []>;
 def IINVALSp : KVX_PSEUDO<(outs), (ins AddrRI:$addr), []>;
+let Constraints = "$output = $newsp" in
+def SPCHECKp : KVX_PSEUDO<(outs SingleReg:$output), (ins SingleReg:$newsp, SingleReg:$check), []>;
 
 //===----------------------------------------------------------------------===//
 // Peephole patterns.
