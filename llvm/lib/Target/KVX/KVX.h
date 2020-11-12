@@ -149,6 +149,8 @@ enum SPLAT32 {
 
 bool isScalarcondWord(unsigned Cond);
 
+bool hasStackLimitRegister();
+
 unsigned GetImmOpCode(int64_t imm, unsigned i10code, unsigned i37code,
                       unsigned i64code);
 unsigned GetImmMakeOpCode(int64_t imm);

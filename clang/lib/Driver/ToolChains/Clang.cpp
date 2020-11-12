@@ -5924,6 +5924,19 @@ void Clang::ConstructJob(Compilation &C, const JobAction &JA,
   if (Args.hasArg(options::OPT_fno_inline))
     CmdArgs.push_back("-fno-inline");
 
+  if (getToolChain().getTriple().isKVX()) {
+    if (Arg *A = Args.getLastArg(options::OPT_fstack_limit_register)) {
+      if (strncmp(A->getValue(), "=sr", 3) != 0) {
+        getToolChain().getDriver().Diag(
+            diag::err_drv_unsupported_option_argument)
+            << A->getOption().getName() << A->getValue();
+      } else {
+        CmdArgs.push_back("-mllvm");
+        Args.AddLastArg(CmdArgs, options::OPT_fstack_limit_register);
+      }
+    }
+  }
+
   Args.AddLastArg(CmdArgs, options::OPT_finline_functions,
                   options::OPT_finline_hint_functions,
                   options::OPT_fno_inline_functions);

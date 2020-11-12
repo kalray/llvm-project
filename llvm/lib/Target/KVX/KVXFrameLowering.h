@@ -32,6 +32,8 @@ public:
   void emitPrologue(MachineFunction &MF, MachineBasicBlock &MBB) const override;
   void emitEpilogue(MachineFunction &MF, MachineBasicBlock &MBB) const override;
 
+  void emitStackCheck(MachineFunction &MF, MachineBasicBlock &MBB) const;
+
   int getFrameIndexReference(const MachineFunction &MF, int FI,
                              Register &FrameReg) const override;
 

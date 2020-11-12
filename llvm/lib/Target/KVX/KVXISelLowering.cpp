@@ -459,6 +459,8 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::SINT_TO_FP, MVT::i64, Custom);
 
   setOperationAction(ISD::ADDRSPACECAST, MVT::i64, Custom);
+  setOperationAction(ISD::DYNAMIC_STACKALLOC, MVT::i64,
+                     hasStackLimitRegister() ? Custom : Expand);
 }
 
 EVT KVXTargetLowering::getSetCCResultType(const DataLayout &DL, LLVMContext &C,
@@ -927,7 +929,38 @@ SDValue KVXTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
       return Op;
     else
       return SDValue();
+  case ISD::DYNAMIC_STACKALLOC:
+    return lowerStackCheckAlloca(Op, DAG);
   }
+}
+
+SDValue KVXTargetLowering::lowerStackCheckAlloca(SDValue Op,
+                                                 SelectionDAG &DAG) const {
+  SDValue Chain = Op.getOperand(0);
+  SDValue Size = Op.getOperand(1);
+  unsigned Align = cast<ConstantSDNode>(Op.getOperand(2))->getZExtValue();
+  unsigned StackAlign = Subtarget.getFrameLowering()->getStackAlignment();
+  EVT VT = Size->getValueType(0);
+  SDLoc DL(Op);
+
+  unsigned SPReg = getStackPointerRegisterToSaveRestore();
+
+  SDValue SP = DAG.getCopyFromReg(Chain, DL, SPReg, VT);
+  SDValue NewSP = DAG.getNode(ISD::SUB, DL, VT, SP, Size);
+  if (Align > StackAlign)
+    NewSP = DAG.getNode(ISD::AND, DL, VT, NewSP,
+                        DAG.getConstant(-(uint64_t)Align, DL, VT));
+
+  SDValue Limit = DAG.getCopyFromReg(Chain, DL, KVX::SR, VT);
+  SDValue Check = DAG.getNode(ISD::SUB, DL, VT, Limit, NewSP);
+
+  NewSP =
+      SDValue(DAG.getMachineNode(KVX::SPCHECKp, DL, MVT::i64, NewSP, Check), 0);
+
+  Chain = DAG.getCopyToReg(SP.getValue(1), DL, SPReg, NewSP);
+
+  SDValue Ops[2] = {NewSP, Chain};
+  return DAG.getMergeValues(Ops, DL);
 }
 
 bool KVXTargetLowering::shouldInsertFencesForAtomic(

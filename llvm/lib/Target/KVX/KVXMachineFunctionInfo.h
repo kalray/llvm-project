@@ -39,10 +39,15 @@ private:
 
   unsigned ScratchReg;
 
+  MachineBasicBlock *OverflowMBB = nullptr;
+
 public:
   //  KVXMachineFunctionInfo() = default;
 
   KVXMachineFunctionInfo(MachineFunction &MF) {}
+
+  MachineBasicBlock *getOverflowMBB() { return OverflowMBB; }
+  void setOverflowMBB(MachineBasicBlock *MBB) { OverflowMBB = MBB; }
 
   int getVarArgsFrameIndex() const { return VarArgsFrameIndex; }
   void setVarArgsFrameIndex(int Index) { VarArgsFrameIndex = Index; }
