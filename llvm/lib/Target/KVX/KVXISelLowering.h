@@ -41,7 +41,8 @@ enum NodeType : unsigned {
   BRCOND,
   JT,
   JT_PCREL,
-  FENCE
+  FENCE,
+  FMS
 };
 } // namespace KVXISD
 

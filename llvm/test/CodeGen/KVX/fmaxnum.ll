@@ -23,6 +23,17 @@ define float @fmaxw(float %a, float %b) {
   %res = call float @llvm.maxnum.f32(float %a, float %b)
   ret float %res
 }
+
+define float @fmaxw_fast(float %a, float %b) {
+; CHECK-LABEL: fmaxw_fast:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fmaxw $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %res = call fast float @llvm.maxnum.f32(float %a, float %b)
+  ret float %res
+}
+
 declare float @llvm.maxnum.f32(float, float)
 
 define double @fmaxd(double %a, double %b) {
@@ -47,4 +58,15 @@ define double @fmaxd(double %a, double %b) {
   %res = call double @llvm.maxnum.f64(double %a, double %b)
   ret double %res
 }
+
+define double @fmaxd_fast(double %a, double %b) {
+; CHECK-LABEL: fmaxd_fast:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fmaxd $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %res = call fast double @llvm.maxnum.f64(double %a, double %b)
+  ret double %res
+}
+
 declare double @llvm.maxnum.f64(double, double)

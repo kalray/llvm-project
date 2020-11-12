@@ -23,6 +23,18 @@ define float @fminw(float %a, float %b) {
   %res = call float @llvm.minnum.f32(float %a, float %b)
   ret float %res
 }
+
+define dso_local float @fminw_fast(float %a, float %b) {
+; CHECK-LABEL: fminw_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fminw $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = tail call fast float @llvm.minnum.f32(float %a, float %b)
+  ret float %0
+}
+
 declare float @llvm.minnum.f32(float, float)
 
 define double @fmind(double %a, double %b) {
@@ -47,4 +59,16 @@ define double @fmind(double %a, double %b) {
   %res = call double @llvm.minnum.f64(double %a, double %b)
   ret double %res
 }
+
+define dso_local double @fmind_fast(double %a, double %b) {
+; CHECK-LABEL: fmind_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fmind $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = tail call fast double @llvm.minnum.f64(double %a, double %b)
+  ret double %0
+}
+
 declare double @llvm.minnum.f64(double, double)

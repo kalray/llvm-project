@@ -302,10 +302,10 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   }
 
   for (auto VT : { MVT::f32, MVT::f64 }) {
-    // Do not use hardware instructions f[min|max] for f[min|max]num.
+    // Use hardware instructions f[min|max] for f[min|max]num iff -ffast-math
     // See: T14224.
-    setOperationAction(ISD::FMINNUM, VT, Expand);
-    setOperationAction(ISD::FMAXNUM, VT, Expand);
+    setOperationAction(ISD::FMINNUM, VT, Custom);
+    setOperationAction(ISD::FMAXNUM, VT, Custom);
   }
 
   for (unsigned im = (unsigned)ISD::PRE_INC;
@@ -332,6 +332,9 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
 
     setOperationAction(ISD::SELECT_CC, VT, Expand);
   }
+
+  setOperationAction(ISD::FDIV, MVT::f32, Custom);
+  setOperationAction(ISD::FSQRT, MVT::f32, Custom);
 
   for (auto VT : {MVT::v2f64, MVT::v2f32, MVT::v4f32, MVT::v2i64, MVT::v4i32,
                   MVT::v2i32, MVT::v2i16, MVT::v4i16, MVT::v8i8, MVT::v2i8,
@@ -425,6 +428,8 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
       setOperationAction(I, VT, Expand);
 
   setTargetDAGCombine(ISD::ZERO_EXTEND);
+  setTargetDAGCombine(ISD::FADD);
+  setTargetDAGCombine(ISD::FSUB);
 
   setOperationAction(ISD::ATOMIC_FENCE, MVT::Other, Custom);
   // NOTE: We could use ACSWAPW instruction with some shifts and masks to
@@ -489,6 +494,8 @@ const char *KVXTargetLowering::getTargetNodeName(unsigned Opcode) const {
     return "KVX::BRCOND";
   case KVXISD::FENCE:
     return "KVX::FENCE";
+  case KVXISD::FMS:
+    return "KVX::FMS";
   default:
     return NULL;
   }
@@ -908,6 +915,18 @@ SDValue KVXTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
     return lowerATOMIC_LOAD_OP(Op, DAG);
   case ISD::ADDRSPACECAST:
     return lowerADDRSPACECAST(Op, DAG);
+  case ISD::FDIV:
+  case ISD::FSQRT:
+    if (Op.getNode()->getFlags().hasAllowReciprocal())
+      return Op;
+    else
+      return SDValue();
+  case ISD::FMINNUM:
+  case ISD::FMAXNUM:
+    if (Op.getNode()->getFlags().hasNoNaNs())
+      return Op;
+    else
+      return SDValue();
   }
 }
 
@@ -2289,6 +2308,30 @@ SDValue KVXTargetLowering::PerformDAGCombine(SDNode *N,
     break;
   case ISD::ZERO_EXTEND:
     return combineZext(N, DAG);
+  case ISD::FSUB:
+    if (N->getFlags().hasAllowContract()) {
+      if (N->getOperand(0)->getOpcode() == ISD::FMUL &&
+          N->getOperand(0)->getFlags().hasAllowContract() &&
+          N->getOperand(1)->getOpcode() != ISD::FMUL)
+        return DAG.getNode(ISD::FMA, SDLoc(N), N->getValueType(0),
+                           N->getOperand(0)->getOperand(1),
+                           N->getOperand(0)->getOperand(0),
+                           DAG.getNode(ISD::FNEG, SDLoc(N), N->getValueType(0),
+                                       N->getOperand(1)));
+    }
+    [[clang::fallthrough]];
+  case ISD::FADD:
+    if (N->getFlags().hasAllowContract()) {
+      unsigned MulOp = N->getOpcode() == ISD::FADD ? 0 : 1;
+      unsigned OpOp = MulOp == 0 ? 1 : 0;
+      if (N->getOperand(MulOp)->getOpcode() == ISD::FMUL &&
+          N->getOperand(MulOp)->getFlags().hasAllowContract())
+        return DAG.getNode(
+            N->getOpcode() == ISD::FADD ? ISD::FMA : KVXISD::FMS, SDLoc(N),
+            N->getValueType(0), N->getOperand(MulOp)->getOperand(1),
+            N->getOperand(MulOp)->getOperand(0), N->getOperand(OpOp));
+    }
+    break;
   }
 
   return SDValue();
