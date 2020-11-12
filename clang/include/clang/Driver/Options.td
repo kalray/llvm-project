@@ -4851,6 +4851,11 @@ defm stack_arrays : BooleanFFlag<"stack-arrays">, Group<gfortran_Group>;
 defm underscoring : BooleanFFlag<"underscoring">, Group<gfortran_Group>;
 defm whole_file : BooleanFFlag<"whole-file">, Group<gfortran_Group>;
 
+// KVX Options
+def m_kvx_Features_Group : OptionGroup<"<kvx features group>">,
+                             Group<m_Group>, DocName<"KVX">;
+def fstack_limit_register : Joined<["-"], "fstack-limit-register">, Group<m_kvx_Features_Group>;
+
 // C++ SYCL options
 def fsycl : Flag<["-"], "fsycl">, Flags<[NoXarchOption, CoreOption]>,
   Group<sycl_Group>, HelpText<"Enables SYCL kernels compilation for device">;

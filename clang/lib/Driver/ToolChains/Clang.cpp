@@ -6604,6 +6604,20 @@ void Clang::ConstructJob(Compilation &C, const JobAction &JA,
     InlineArg->render(Args, CmdArgs);
   }
 
+  if (getToolChain().getTriple().isKVX()) {
+    if (Arg *A = Args.getLastArg(options::OPT_fstack_limit_register)) {
+      if (strncmp(A->getValue(), "=sr", 3) != 0) {
+        getToolChain().getDriver().Diag(
+            diag::err_drv_unsupported_option_argument)
+            << A->getOption().getName() << A->getValue();
+      } else {
+        CmdArgs.push_back("-mllvm");
+        Args.AddLastArg(CmdArgs, options::OPT_fstack_limit_register);
+      }
+    }
+  }
+
+
   // FIXME: Find a better way to determine whether the language has modules
   // support by default, or just assume that all languages do.
   bool HaveModules =

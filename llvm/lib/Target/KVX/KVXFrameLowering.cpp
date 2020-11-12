@@ -152,6 +152,81 @@ void KVXFrameLowering::adjustReg(MachineBasicBlock &MBB,
 Register findScratchRegister(MachineBasicBlock &MBB, bool UseAtEnd,
                              Register Scratch = KVX::R4);
 
+void KVXFrameLowering::emitStackCheck(MachineFunction &MF,
+                                      MachineBasicBlock &MBB) const {
+  MachineFrameInfo &MFI = MF.getFrameInfo();
+
+  int64_t StackSize = (int64_t)MFI.getStackSize();
+
+  DebugLoc DL;
+  unsigned SPReg = getSPReg();
+
+  const KVXInstrInfo *TII = STI.getInstrInfo();
+
+  const KVXRegisterInfo *TRI =
+      (const KVXRegisterInfo *)MF.getSubtarget().getRegisterInfo();
+
+  auto CheckMBB = MF.CreateMachineBasicBlock();
+  auto CallMBB = MF.CreateMachineBasicBlock();
+
+  MF.insert(MBB.getIterator(), CheckMBB);
+  MF.insert(MBB.getIterator(), CallMBB);
+
+  CheckMBB->addSuccessor(&MBB);
+  CheckMBB->addSuccessor(CallMBB);
+
+  CallMBB->addSuccessor(&MBB);
+
+  auto *KVXFI = MF.getInfo<KVXMachineFunctionInfo>();
+  KVXFI->setOverflowMBB(CallMBB);
+
+  unsigned StackLimitReg = findScratchRegister(MBB, false, KVX::R17);
+  unsigned NewSPReg = findScratchRegister(MBB, false, KVX::R16);
+  MachineBasicBlock::iterator CheckI = CheckMBB->begin();
+  BuildMI(*CheckMBB, CheckI, DL, TII->get(KVX::GETss2), StackLimitReg)
+      .addReg(KVX::SR)
+      .setMIFlag(MachineInstr::FrameSetup);
+  BuildMI(*CheckMBB, CheckI, DL, TII->get(GetStackOpCode((uint64_t)StackSize)),
+          NewSPReg)
+      .addReg(SPReg)
+      .addImm(-StackSize)
+      .setMIFlag(MachineInstr::FrameSetup);
+
+  if (TRI->needsStackRealignment(MF)) {
+    MachineFrameInfo &MFI = MF.getFrameInfo();
+
+    if (MFI.getMaxAlignment() > getStackAlignment()) {
+      BuildMI(*CheckMBB, CheckI, DL, TII->get(KVX::ADDDri64), NewSPReg)
+          .addReg(NewSPReg)
+          .addImm(MFI.getMaxAlignment() - getStackAlignment())
+          .setMIFlag(MachineInstr::FrameSetup);
+      BuildMI(*CheckMBB, CheckI, DL, TII->get(KVX::ANDDri64), NewSPReg)
+          .addReg(NewSPReg)
+          .addImm(-(int)MFI.getMaxAlignment())
+          .setMIFlag(MachineInstr::FrameSetup);
+    }
+  }
+
+  BuildMI(*CheckMBB, CheckI, DL, TII->get(KVX::SBFDrr), NewSPReg)
+      .addReg(NewSPReg)
+      .addReg(StackLimitReg, RegState::Kill)
+      .setMIFlags(MachineInstr::FrameSetup);
+  BuildMI(*CheckMBB, CheckI, DL, TII->get(KVX::CB))
+      .addReg(NewSPReg, RegState::Kill)
+      .addMBB(&MBB)
+      .addImm(KVXMOD::SCALARCOND_DLEZ)
+      .setMIFlags(MachineInstr::FrameSetup);
+
+  MachineBasicBlock::iterator CallI = CallMBB->begin();
+  BuildMI(*CallMBB, CallI, DL, TII->get(KVX::GETss2), KVX::R0)
+      .addReg(KVX::PC)
+      .setMIFlags(MachineInstr::FrameSetup);
+  BuildMI(*CallMBB, CallI, DL, TII->get(KVX::COPYD), KVX::R1).addReg(SPReg);
+  BuildMI(*CallMBB, CallI, DL, TII->get(KVX::CALL))
+      .addExternalSymbol("__stack_overflow_detected")
+      .setMIFlags(MachineInstr::FrameSetup);
+}
+
 void KVXFrameLowering::emitPrologue(MachineFunction &MF,
                                     MachineBasicBlock &MBB) const {
   assert(&MF.front() == &MBB && "Shrink-wrapping not yet supported");
@@ -169,12 +244,18 @@ void KVXFrameLowering::emitPrologue(MachineFunction &MF,
   DebugLoc DL;
   unsigned SPReg = getSPReg();
 
+  const KVXInstrInfo *TII = STI.getInstrInfo();
+
+  const KVXRegisterInfo *TRI =
+      (const KVXRegisterInfo *)MF.getSubtarget().getRegisterInfo();
+
+  if (hasStackLimitRegister() && StackSize != 0)
+    emitStackCheck(MF, MBB);
+
   adjustReg(MBB, MBBI, DL, GetStackOpCode((uint64_t)StackSize), SPReg, SPReg,
             -StackSize, MachineInstr::FrameSetup);
 
   unsigned CFIIndex = MF.addFrameInst(MCCFIInstruction::cfiDefCfaOffset(nullptr, StackSize));
-
-  const KVXInstrInfo *TII = STI.getInstrInfo();
 
   BuildMI(MBB, MBBI, DL, TII->get(TargetOpcode::CFI_INSTRUCTION))
       .addCFIIndex(CFIIndex)
@@ -183,9 +264,6 @@ void KVXFrameLowering::emitPrologue(MachineFunction &MF,
   Register ScratchReg = findScratchRegister(MBB, false, KVX::R32);
 
   realignStack(MF, MBB, MBBI, DL, ScratchReg);
-
-  const KVXRegisterInfo *TRI =
-      (const KVXRegisterInfo *)MF.getSubtarget().getRegisterInfo();
 
   const std::vector<CalleeSavedInfo> &CSI = MFI.getCalleeSavedInfo();
   if (!CSI.empty()) {

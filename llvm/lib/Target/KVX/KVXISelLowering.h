@@ -154,6 +154,8 @@ private:
   SDValue lowerJumpTable(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerADDRSPACECAST(SDValue Op, SelectionDAG &DAG) const;
 
+  SDValue lowerStackCheckAlloca(SDValue Op, SelectionDAG &DAG) const;
+
   bool canLowerShiftVectorial(SDValue Op) const;
 
   SDValue lowerIntToFP(SDValue Op, SelectionDAG &DAG) const;
