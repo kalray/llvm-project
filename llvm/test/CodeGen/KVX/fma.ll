@@ -100,6 +100,220 @@ define <2 x double> @ffmav2f64(<2 x double> %a, <2 x double> %b, <2 x double> %c
   ret <2 x double> %res
 }
 
+define dso_local float @fma32_nodagcombine(float %a, float %b, float %c) {
+; CHECK-LABEL: fma32_nodagcombine:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fmulw $r1 = $r1, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    faddw $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = fmul float %b, %c
+  %add = fadd float %mul, %a
+  ret float %add
+}
+
+define dso_local double @fma64_nodagcombine(double %a, double %b, double %c) {
+; CHECK-LABEL: fma64_nodagcombine:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fmuld $r1 = $r1, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    faddd $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = fmul double %b, %c
+  %add = fadd double %mul, %a
+  ret double %add
+}
+
+define dso_local float @fma32_dagcombine(float %a, float %b, float %c) {
+; CHECK-LABEL: fma32_dagcombine:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    ffmaw $r0 = $r1, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = fmul fast float %c, %b
+  %add = fadd fast float %mul, %a
+  ret float %add
+}
+
+define dso_local double @fma64_dagcombine(double %a, double %b, double %c)  {
+; CHECK-LABEL: fma64_dagcombine:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    ffmad $r0 = $r1, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = fmul fast double %c, %b
+  %add = fadd fast double %mul, %a
+  ret double %add
+}
+
+define dso_local float @fma32_neg(float %a, float %b, float %c) {
+; CHECK-LABEL: fma32_neg:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fnegw $r2 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmaw $r2 = $r1, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = fmul fast float %a, %b
+  %sub = fsub fast float %mul, %c
+  ret float %sub
+}
+
+define dso_local double @fma64_neg(double %a, double %b, double %c) {
+; CHECK-LABEL: fma64_neg:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fnegd $r2 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmad $r2 = $r1, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = fmul fast double %a, %b
+  %sub = fsub fast double %mul, %c
+  ret double %sub
+}
+
+define dso_local float @fma32_contract(float %a, float %b, float %c) {
+; CHECK-LABEL: fma32_contract:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    ffmaw $r0 = $r1, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = fmul contract float %c, %b
+  %add = fadd contract float %mul, %a
+  ret float %add
+}
+
+define dso_local double @fma64_contract(double %a, double %b, double %c)  {
+; CHECK-LABEL: fma64_contract:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    ffmad $r0 = $r1, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = fmul contract double %c, %b
+  %add = fadd contract double %mul, %a
+  ret double %add
+}
+
+define dso_local float @fms32_nodagcombine(float %a, float %b, float %c) {
+; CHECK-LABEL: fms32_nodagcombine:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fmulw $r1 = $r1, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fsbfw $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = fmul float %b, %c
+  %sub = fsub float %a, %mul
+  ret float %sub
+}
+
+define dso_local double @fms64_nodagcombine(double %a, double %b, double %c) {
+; CHECK-LABEL: fms64_nodagcombine:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fmuld $r1 = $r1, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fsbfd $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = fmul double %b, %c
+  %sub = fsub double %a, %mul
+  ret double %sub
+}
+
+define dso_local float @fms32_dagcombine(float %a, float %b, float %c) {
+; CHECK-LABEL: fms32_dagcombine:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    ffmsw $r0 = $r1, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = fmul fast float %c, %b
+  %sub = fsub fast float %a, %mul
+  ret float %sub
+}
+
+define dso_local double @fms64_dagcombine(double %a, double %b, double %c)  {
+; CHECK-LABEL: fms64_dagcombine:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    ffmsd $r0 = $r1, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = fmul fast double %c, %b
+  %sub = fsub fast double %a, %mul
+  ret double %sub
+}
+
+define dso_local float @fms32_contract(float %a, float %b, float %c) {
+; CHECK-LABEL: fms32_contract:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    ffmsw $r0 = $r1, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = fmul contract float %c, %b
+  %sub = fsub contract float %a, %mul
+  ret float %sub
+}
+
+define dso_local double @fms64_contract(double %a, double %b, double %c)  {
+; CHECK-LABEL: fms64_contract:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    ffmsd $r0 = $r1, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = fmul contract double %c, %b
+  %sub = fsub contract double %a, %mul
+  ret double %sub
+}
+
+define dso_local float @fms32_2(float %a, float %b, float %c, float %d) {
+; CHECK-LABEL: fms32_2:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fmulw $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmsw $r0 = $r3, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = fmul fast float %a, %b
+  %mul1 = fmul fast float %c, %d
+  %sub = fsub fast float %mul, %mul1
+  ret float %sub
+}
+
+define dso_local double @fms64_2(double %a, double %b, double %c, double %d) {
+; CHECK-LABEL: fms64_2:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fmuld $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmsd $r0 = $r3, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = fmul fast double %a, %b
+  %mul1 = fmul fast double %c, %d
+  %sub = fsub fast double %mul, %mul1
+  ret double %sub
+}
+
 declare half @llvm.fma.f16(half, half, half)
 declare float @llvm.fma.f32(float, float, float)
 declare double @llvm.fma.f64(double, double, double)
