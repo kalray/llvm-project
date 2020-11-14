@@ -19459,10 +19459,9 @@ static int KVX_getSpeculateModValue(const StringRef &Str) {
         .Default(-1);
 }
 
-static Value *KVX_emit_lv_lvc(bool IsLVC, bool IsCond, unsigned IntrinsicID,
+static Value *KVX_emit_lvc_svc(unsigned PositionMods, bool IsCond, unsigned IntrinsicID,
                               CodeGenFunction &CGF, const CallExpr *E) {
   unsigned NumArgs = E->getNumArgs();
-  unsigned PositionMods = (IsCond ? (IsLVC? 1 : 2) : 0) + (IsLVC ? 3 : 1);
   if (NumArgs != (PositionMods + 1)) {
     CGF.CGM.Error(E->getBeginLoc(), "Incorrect number of arguments to builtin");
     return nullptr;
@@ -19483,16 +19482,19 @@ static Value *KVX_emit_lv_lvc(bool IsLVC, bool IsCond, unsigned IntrinsicID,
   // We always have Speculate Modifier.
   // Scalar Condition Modifier depends in being a conditional
   // load.
-  auto Mods = SL->getString().split(".").second.split(".");
+  auto Mods = SL->getString().split(".");
 
-  int Speculate = KVX_getSpeculateModValue(Mods.first);
-  if (Speculate == -1) {
-    CGF.CGM.Error(
-        E->getArg(PositionMods)->getExprLoc(),
-        "Expected to start with a speculate modifier: '' or '.' or '.s'");
-    return nullptr;
+  if (IntrinsicID != Intrinsic::kvx_sv_cond){
+    Mods = Mods.second.split(".");
+    int Speculate = KVX_getSpeculateModValue(Mods.first);
+    if (Speculate == -1) {
+      CGF.CGM.Error(
+          E->getArg(PositionMods)->getExprLoc(),
+          "Expected to start with a speculate modifier: '' or '.' or '.s'");
+      return nullptr;
+    }
+    Args.push_back(ConstantInt::get(CGF.IntTy, Speculate));
   }
-  Args.push_back(ConstantInt::get(CGF.IntTy, Speculate));
 
   if (IsCond) {
     auto SecondMod = KVX_getScalarcondModValue(Mods.second);
@@ -19713,23 +19715,28 @@ static Value *KVX_emitUnaryShiftingRoundingBuiltin(CodeGenFunction &CGF,
   return CGF.Builder.CreateCall(Callee, {Arg1, Arg2, Arg3});
 }
 
-static int KVX_getLoadAS(clang::ASTContext &Ctx, const clang::Expr *E) {
-  if (E->isNullPointerConstant(Ctx, Expr::NPC_NeverValueDependent)) {
+static int KVX_getLoadAS(clang::ASTContext &Ctx, const clang::Expr *E, bool IsSpec) {
+  if (E->isNullPointerConstant(Ctx, Expr::NPC_NeverValueDependent))
     return 0;
-  }
-  int AS = -1;
-  if (E->getStmtClass() == Stmt::StringLiteralClass) {
-    StringRef Str = cast<clang::StringLiteral>(E)->getString();
-    if (Str.empty())
-      AS = 0;
-    else
-      AS = llvm::StringSwitch<int>(Str)
-               .CaseLower(".u", 256)
-               .CaseLower(".us", 257)
-               .CaseLower(".s", 258)
-               .Default(-1);
-  }
-  return AS;
+
+  if (E->getStmtClass() != Stmt::StringLiteralClass)
+    return -1;
+
+  StringRef Str = cast<clang::StringLiteral>(E)->getString();
+  if (Str.empty())
+    return 0;
+
+  if (IsSpec)
+    return llvm::StringSwitch<int>(Str)
+                .Case("", 0)
+                .CaseLower(".s", 258)
+                .Default(-1);
+
+  return llvm::StringSwitch<int>(Str)
+              .CaseLower(".u", 256)
+              .CaseLower(".us", 257)
+              .CaseLower(".s", 258)
+              .Default(-1);
 }
 
 static bool KVX_isVolatile(CodeGenFunction &CGF, const CallExpr *E) {
@@ -19751,14 +19758,14 @@ static bool KVX_isVolatile(CodeGenFunction &CGF, const CallExpr *E) {
 }
 
 static Value *KVX_emitLoadBuiltin(CodeGenFunction &CGF, const CallExpr *E,
-                                  llvm::Type *DataType) {
-  int AS = KVX_getLoadAS(CGF.getContext(), E->getArg(1)->IgnoreParenImpCasts());
+                                  llvm::Type *DataType, bool isLV = false) {
+  int AS = KVX_getLoadAS(CGF.getContext(), E->getArg(1)->IgnoreParenImpCasts(), isLV);
   if (AS == -1)
     CGF.CGM.Error(E->getArg(1)->getBeginLoc(), "invalid value");
 
   Address Addr = CGF.EmitPointerWithAlignment(E->getArg(0));
 
-  bool Volatile = KVX_isVolatile(CGF, E);
+  bool Volatile = !isLV && KVX_isVolatile(CGF, E);
   llvm::Type *ASType = DataType->getPointerTo(AS);
 
   auto AddrCast = CGF.Builder.CreatePointerBitCastOrAddrSpaceCast(Addr, ASType);
@@ -19784,7 +19791,7 @@ static Value *KVX_emitStoreBuiltin(CodeGenFunction &CGF, const CallExpr *E,
                                    llvm::Type *DataType) {
   Address Addr = CGF.EmitPointerWithAlignment(E->getArg(0));
 
-  bool Volatile = KVX_isVolatile(CGF, E);
+  bool Volatile = (E->getNumArgs() >= 3) && KVX_isVolatile(CGF, E);
   auto AddrCast = CGF.Builder.CreatePointerBitCastOrAddrSpaceCast(
       Addr, DataType->getPointerTo());
   auto *Store = CGF.Builder.CreateStore(CGF.EmitScalarExpr(E->getArg(1)),
@@ -21675,13 +21682,17 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_fnarrowwhv:
     return KVX_emitScaleNarrowBuiltin(2, Intrinsic::kvx_fnarrowwhv, *this, E);
   case KVX::BI__builtin_kvx_lv:
-    return KVX_emit_lv_lvc(false, false, Intrinsic::kvx_lv, *this, E);
-  case KVX::BI__builtin_kvx_lv_c:
-    return KVX_emit_lv_lvc(false, true, Intrinsic::kvx_lv_c, *this, E);
+    return KVX_emitLoadBuiltin(*this, E, llvm::VectorType::get(Builder.getInt1Ty(), 256), true);
+  case KVX::BI__builtin_kvx_sv:
+    return KVX_emitStoreBuiltin(*this, E, llvm::VectorType::get(Builder.getInt1Ty(), 256));
+  case KVX::BI__builtin_kvx_lv_cond:
+    return KVX_emit_lvc_svc(3, true, Intrinsic::kvx_lv_cond, *this, E);
   case KVX::BI__builtin_kvx_lvc:
-    return KVX_emit_lv_lvc(true, false, Intrinsic::kvx_lvc, *this, E);
-  case KVX::BI__builtin_kvx_lvc_c:
-    return KVX_emit_lv_lvc(true, true, Intrinsic::kvx_lvc_c, *this, E);
+    return KVX_emit_lvc_svc(3, false, Intrinsic::kvx_lvc, *this, E);
+  case KVX::BI__builtin_kvx_lvc_cond:
+    return KVX_emit_lvc_svc(4, true, Intrinsic::kvx_lvc_cond, *this, E);
+  case KVX::BI__builtin_kvx_sv_cond:
+    return KVX_emit_lvc_svc(3, true, Intrinsic::kvx_sv_cond, *this, E);
   }
   return nullptr;
 }
