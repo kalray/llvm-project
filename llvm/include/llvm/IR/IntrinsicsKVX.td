@@ -214,10 +214,10 @@ def int_kvx_moveoto: Intrinsic<[llvm_v256i1_ty], [llvm_v4i64_ty], [IntrNoMem]>;
 def int_kvx_movefo: Intrinsic<[llvm_v4i64_ty], [llvm_v256i1_ty], [IntrNoMem]>;
 
 // Load / Store vector
-def int_kvx_lv: Intrinsic<[llvm_v256i1_ty], [llvm_ptr_ty, llvm_i32_ty], [IntrReadMem]>;
-def int_kvx_lv_c: Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_ptr_ty, llvm_i64_ty, llvm_i32_ty, llvm_i32_ty], [IntrHasSideEffects]>;
+def int_kvx_lv_cond: Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_ptr_ty, llvm_i64_ty, llvm_i32_ty, llvm_i32_ty], [IntrHasSideEffects]>;
 def int_kvx_lvc: Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty], [IntrHasSideEffects]>;
-def int_kvx_lvc_c: Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_ptr_ty, llvm_i32_ty, llvm_i64_ty, llvm_i32_ty, llvm_i32_ty], [IntrHasSideEffects]>;
+def int_kvx_lvc_cond: Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_ptr_ty, llvm_i32_ty, llvm_i64_ty, llvm_i32_ty, llvm_i32_ty], [IntrHasSideEffects]>;
+def int_kvx_sv_cond: Intrinsic<[], [llvm_ptr_ty, llvm_v256i1_ty, llvm_i64_ty, llvm_i32_ty], [IntrWriteMem]>;
 // atomic register copy/shift operations
 def int_kvx_swapvfwo : Intrinsic<[], [llvm_v4i64_ty, llvm_v256i1_ty], [IntrHasSideEffects]>;
 def int_kvx_alignov : Intrinsic<[llvm_v4i64_ty], [llvm_v256i1_ty, llvm_v256i1_ty, llvm_i64_ty], [IntrNoMem]>;
@@ -268,6 +268,4 @@ def int_kvx_mt44d : Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty], [IntrNoMem]>
 // fscalewv is not inplace, but has same args pattern
 def int_kvx_fscalewv : Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrHasSideEffects]>;
 def int_kvx_fnarrowwhv : Intrinsic<[llvm_v256i1_ty], [llvm_v512i1_ty, llvm_i32_ty, llvm_i32_ty], [IntrHasSideEffects]>;
-// Matrix load operaion
-//  def int_kvx_lvc : Intrinsic<[llvm_v1024i1_ty], [llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
 }  // TargetPrefix = "kvx"

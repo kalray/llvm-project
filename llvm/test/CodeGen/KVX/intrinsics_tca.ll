@@ -797,32 +797,33 @@ define void @test_fnarrowwhv(<256 x i1>* %p0){
   ret void
 }
 
-declare <256 x i1> @llvm.kvx.lv(i8*, i32)
-declare <256 x i1> @llvm.kvx.lv.c(<256 x i1>, i8*, i64, i32, i32)
+
+declare <256 x i1> @llvm.kvx.lv.cond(<256 x i1>, i8*, i64, i32, i32)
 declare <1024 x i1> @llvm.kvx.lvc(<1024 x i1>, i8*, i32, i32)
-declare <1024 x i1> @llvm.kvx.lvc.c(<1024 x i1>, i8*, i32, i64, i32, i32)
+declare <1024 x i1> @llvm.kvx.lvc.cond(<1024 x i1>, i8*, i32, i64, i32, i32)
 declare void @llvm.kvx.swapvfwo(<4 x i64>, <256 x i1>)
+declare void @llvm.kvx.sv.cond(i8*, <256 x i1>, i64, i32) #3
 
 ; Test generated from clang's intrinsics_tca.c
 define <4 x i64> @test_tca_builtins(i64 %a, i64 %b, i64 %c, i64 %d, <256 x i1>* %v, <512 x i1>* %w, <1024 x i1>* %m) {
 ; CHECK-LABEL: test_tca_builtins:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lv $a0 = 0[$r4]
-; CHECK-NEXT:    make $r9 = 1
-; CHECK-NEXT:    make $r8 = 0
+; CHECK-NEXT:    make $r33 = 1
+; CHECK-NEXT:    make $r32 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    movetq $a0_hi = $r8, $r9
+; CHECK-NEXT:    movetq $a0_hi = $r32, $r33
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a0 = 0[$r4]
-; CHECK-NEXT:    make $r10 = 2
-; CHECK-NEXT:    make $r11 = 3
+; CHECK-NEXT:    make $r34 = 2
+; CHECK-NEXT:    make $r35 = 3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    movetq $a0_lo = $r11, $r10
+; CHECK-NEXT:    movetq $a0_lo = $r35, $r34
 ; CHECK-NEXT:    make $r1 = 4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    movetq $a0_lo = $r11, $r1
+; CHECK-NEXT:    movetq $a0_lo = $r35, $r1
 ; CHECK-NEXT:    addd $r1 = $r4, 96
-; CHECK-NEXT:    movetq $a0_hi = $r9, $r10
+; CHECK-NEXT:    movetq $a0_hi = $r33, $r34
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 0[$r4] = $a0
 ; CHECK-NEXT:    ;;
@@ -835,8 +836,8 @@ define <4 x i64> @test_tca_builtins(i64 %a, i64 %b, i64 %c, i64 %d, <256 x i1>* 
 ; CHECK-NEXT:    lv $a6 = 64[$r6]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a7 = 96[$r6]
-; CHECK-NEXT:    movetq $a0_lo = $r8, $r9
-; CHECK-NEXT:    movetq $a0_hi = $r10, $r11
+; CHECK-NEXT:    movetq $a0_lo = $r32, $r33
+; CHECK-NEXT:    movetq $a0_hi = $r34, $r35
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    convdhv0.rn.sat $a2_lo = $a4a5a6a7
 ; CHECK-NEXT:    alignv $a1 = $a0, $a1, 16
@@ -940,6 +941,9 @@ define <4 x i64> @test_tca_builtins(i64 %a, i64 %b, i64 %c, i64 %d, <256 x i1>* 
 ; CHECK-NEXT:    movetq $a8_hi = $r3, $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 0[$r4] = $a9
+; CHECK-NEXT:    addd $r0 = $r4, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv.even $r33 ? [$r0] = $a9
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 0[$r5] = $a2
 ; CHECK-NEXT:    ;;
@@ -1008,17 +1012,20 @@ entry:
   %44 = tail call <256 x i1> @llvm.kvx.fscalewv(<256 x i1> %43, i32 7, i32 0, i32 1)
   %arrayidx6 = getelementptr inbounds <256 x i1>, <256 x i1>* %v, i64 3
   %45 = bitcast <256 x i1>* %arrayidx6 to i8*
-  %46 = tail call <256 x i1> @llvm.kvx.lv.c(<256 x i1> %44, i8* nonnull %45, i64 %a, i32 1, i32 7)
-  %47 = bitcast <256 x i1>* %v to i8*
-  %48 = tail call <256 x i1> @llvm.kvx.lv(i8* nonnull %47, i32 1)
+  %46 = tail call <256 x i1> @llvm.kvx.lv.cond(<256 x i1> %44, i8* nonnull %45, i64 %a, i32 1, i32 7)
+  %47 = addrspacecast <256 x i1>* %v to <256 x i1> addrspace(258)*
+  %48 = load <256 x i1>, <256 x i1> addrspace(258)* %47, align 32
   %arrayidx7 = getelementptr inbounds <256 x i1>, <256 x i1>* %v, i64 4
   %49 = bitcast <256 x i1>* %arrayidx7 to i8*
   %50 = tail call <1024 x i1> @llvm.kvx.lvc(<1024 x i1> %40, i8* nonnull %49, i32 3, i32 1)
   %arrayidx8 = getelementptr inbounds <256 x i1>, <256 x i1>* %v, i64 5
   %51 = bitcast <256 x i1>* %arrayidx8 to i8*
-  %52 = tail call <1024 x i1> @llvm.kvx.lvc.c(<1024 x i1> %50, i8* nonnull %51, i32 2, i64 %a, i32 0, i32 6)
+  %52 = tail call <1024 x i1> @llvm.kvx.lvc.cond(<1024 x i1> %50, i8* nonnull %51, i32 2, i64 %a, i32 0, i32 6)
   tail call void @llvm.kvx.swapvfwo(<4 x i64> %8, <256 x i1> %46)
-  store volatile <256 x i1> %48, <256 x i1>* %v, align 32
+  store <256 x i1> %48, <256 x i1>* %v, align 32
+  %arrayidx10 = getelementptr inbounds <256 x i1>, <256 x i1>* %v, i64 1
+  %53 = bitcast <256 x i1>* %arrayidx10 to i8*
+  tail call void @llvm.kvx.sv.cond(i8* nonnull %53, <256 x i1> %48, i64 1, i32 7)
   store volatile <512 x i1> %39, <512 x i1>* %w, align 64
   store volatile <1024 x i1> %52, <1024 x i1>* %m, align 128
   ret <4 x i64> %8
