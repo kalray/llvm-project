@@ -603,9 +603,9 @@ llvm::Type *CodeGenTypes::ConvertType(QualType T) {
 #include "clang/Basic/PPCTypes.def"
 #define KVX_TCA_VECTOR_TYPE(Name, Id, Size) \
     case BuiltinType::Id: \
-      ResultType = \
-        llvm::VectorType::get(ConvertType(Context.BoolTy), Size); \
-      break;
+      ResultType =                                                               \
+        llvm::FixedVectorType::get(ConvertType(Context.BoolTy), Size);         \
+    break;
 #include "clang/Basic/KVXTypes.def"
     case BuiltinType::Dependent:
 #define BUILTIN_TYPE(Id, SingletonId)

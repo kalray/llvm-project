@@ -195,14 +195,14 @@ void KVXFrameLowering::emitStackCheck(MachineFunction &MF,
   if (TRI->needsStackRealignment(MF)) {
     MachineFrameInfo &MFI = MF.getFrameInfo();
 
-    if (MFI.getMaxAlignment() > getStackAlignment()) {
+    if (MFI.getMaxAlign() > getStackAlignment()) {
       BuildMI(*CheckMBB, CheckI, DL, TII->get(KVX::ADDDri64), NewSPReg)
           .addReg(NewSPReg)
-          .addImm(MFI.getMaxAlignment() - getStackAlignment())
+          .addImm(MFI.getMaxAlign().value() - getStackAlignment())
           .setMIFlag(MachineInstr::FrameSetup);
       BuildMI(*CheckMBB, CheckI, DL, TII->get(KVX::ANDDri64), NewSPReg)
           .addReg(NewSPReg)
-          .addImm(-(int)MFI.getMaxAlignment())
+          .addImm(-(int)MFI.getMaxAlign().value())
           .setMIFlag(MachineInstr::FrameSetup);
     }
   }

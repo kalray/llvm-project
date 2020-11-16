@@ -84,11 +84,11 @@ public:
   }
   // LLT variant.
   bool allowsMisalignedMemoryAccesses(LLT Ty, unsigned AddrSpace,
-                                      unsigned Align,
+                                      Align Alignment,
                                       MachineMemOperand::Flags Flags,
                                       bool *Fast = nullptr) const override {
     if (Fast)
-      *Fast = (Align >= 32);
+      *Fast = (Alignment >= Align(32));
     return true;
   }
 
