@@ -81,7 +81,7 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
     // --gcc-toolchain installation prefix. We guess default paths from
     // kvx-cos-ld program path.
     std::string LDPath = getToolChain().GetProgramPath("kvx-cos-ld");
-    std::string LDPrefix = llvm::sys::path::parent_path(LDPath);
+    std::string LDPrefix = llvm::sys::path::parent_path(LDPath).str();
 
     const Arg *A = Args.getLastArg(options::OPT_march_EQ);
     if (A && strcmp(A->getValue(), "kv3-2") == 0) {

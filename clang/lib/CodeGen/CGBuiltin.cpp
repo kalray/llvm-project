@@ -20512,48 +20512,48 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
 
   case KVX::BI__builtin_kvx_fmaxwps: {
     Value *Arg1 = EmitScalarExpr(E->getArg(0));
-    Value *Callee = CGM.getIntrinsic(Intrinsic::kvx_fmaxwp);
+    Function *Callee = CGM.getIntrinsic(Intrinsic::kvx_fmaxwp);
     return Builder.CreateCall(
         Callee,
         {Arg1, KVX_emitVector32Scalar(*this, E->getArg(1),
-                                      llvm::VectorType::get(FloatTy, 2))});
+                                      llvm::FixedVectorType::get(FloatTy, 2))});
   }
 
   case KVX::BI__builtin_kvx_fmaxwqs:
     return KVX_emitVectorBuiltin(
         *this, E, Intrinsic::kvx_fmaxwp, 1, FloatTy, 4, 2, false,
         KVX_emitVector32Scalar(*this, E->getArg(1),
-                               llvm::VectorType::get(FloatTy, 2)));
+                               llvm::FixedVectorType::get(FloatTy, 2)));
 
   case KVX::BI__builtin_kvx_fmaxwos:
     return KVX_emitVectorBuiltin(
         *this, E, Intrinsic::kvx_fmaxwp, 1, FloatTy, 8, 2, false,
         KVX_emitVector32Scalar(*this, E->getArg(1),
-                               llvm::VectorType::get(FloatTy, 2)));
+                               llvm::FixedVectorType::get(FloatTy, 2)));
 
   case KVX::BI__builtin_kvx_fminwp:
     return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fminwp);
 
   case KVX::BI__builtin_kvx_fminwps: {
     Value *Arg1 = EmitScalarExpr(E->getArg(0));
-    Value *Callee = CGM.getIntrinsic(Intrinsic::kvx_fminwp);
+    Function *Callee = CGM.getIntrinsic(Intrinsic::kvx_fminwp);
     return Builder.CreateCall(
         Callee,
         {Arg1, KVX_emitVector32Scalar(*this, E->getArg(1),
-                                      llvm::VectorType::get(FloatTy, 2))});
+                                      llvm::FixedVectorType::get(FloatTy, 2))});
   }
 
   case KVX::BI__builtin_kvx_fminwqs:
     return KVX_emitVectorBuiltin(
         *this, E, Intrinsic::kvx_fminwp, 1, FloatTy, 4, 2, false,
         KVX_emitVector32Scalar(*this, E->getArg(1),
-                               llvm::VectorType::get(FloatTy, 2)));
+                               llvm::FixedVectorType::get(FloatTy, 2)));
 
   case KVX::BI__builtin_kvx_fminwos:
     return KVX_emitVectorBuiltin(
         *this, E, Intrinsic::kvx_fminwp, 1, FloatTy, 8, 2, false,
         KVX_emitVector32Scalar(*this, E->getArg(1),
-                               llvm::VectorType::get(FloatTy, 2)));
+                               llvm::FixedVectorType::get(FloatTy, 2)));
 
   case KVX::BI__builtin_kvx_faddwp:
     return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_faddwp, true);
@@ -21041,40 +21041,40 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
                                  1, false);
   case KVX::BI__builtin_kvx_abdhqs: {
     Value *Arg1 = EmitScalarExpr(E->getArg(0));
-    Value *Callee = CGM.getIntrinsic(Intrinsic::kvx_abdhq);
+    Function *Callee = CGM.getIntrinsic(Intrinsic::kvx_abdhq);
     return Builder.CreateCall(
         Callee,
         {Arg1, KVX_emitVector16Scalar(*this, E->getArg(1),
-                                      llvm::VectorType::get(Int16Ty, 4))});
+                                      llvm::FixedVectorType::get(Int16Ty, 4))});
   }
   case KVX::BI__builtin_kvx_abdhos:
     return KVX_emitVectorBuiltin(
         *this, E, Intrinsic::kvx_abdhq, 1, Int16Ty, 8, 4, false,
         KVX_emitVector16Scalar(*this, E->getArg(1),
-                               llvm::VectorType::get(Int16Ty, 4)));
+                               llvm::FixedVectorType::get(Int16Ty, 4)));
   case KVX::BI__builtin_kvx_abdhxs:
     return KVX_emitVectorBuiltin(
         *this, E, Intrinsic::kvx_abdhq, 1, Int16Ty, 16, 4, false,
         KVX_emitVector16Scalar(*this, E->getArg(1),
-                               llvm::VectorType::get(Int16Ty, 4)));
+                               llvm::FixedVectorType::get(Int16Ty, 4)));
   case KVX::BI__builtin_kvx_abdwps: {
     Value *Arg1 = EmitScalarExpr(E->getArg(0));
-    Value *Callee = CGM.getIntrinsic(Intrinsic::kvx_abdwp);
+    Function *Callee = CGM.getIntrinsic(Intrinsic::kvx_abdwp);
     return Builder.CreateCall(
         Callee,
         {Arg1, KVX_emitVector32Scalar(*this, E->getArg(1),
-                                      llvm::VectorType::get(Int32Ty, 2))});
+                                      llvm::FixedVectorType::get(Int32Ty, 2))});
   }
   case KVX::BI__builtin_kvx_abdwqs:
     return KVX_emitVectorBuiltin(
         *this, E, Intrinsic::kvx_abdwp, 1, Int32Ty, 4, 2, false,
         KVX_emitVector32Scalar(*this, E->getArg(1),
-                               llvm::VectorType::get(Int32Ty, 2)));
+                               llvm::FixedVectorType::get(Int32Ty, 2)));
   case KVX::BI__builtin_kvx_abdwos:
     return KVX_emitVectorBuiltin(
         *this, E, Intrinsic::kvx_abdwp, 1, Int32Ty, 8, 2, false,
         KVX_emitVector32Scalar(*this, E->getArg(1),
-                               llvm::VectorType::get(Int32Ty, 2)));
+                               llvm::FixedVectorType::get(Int32Ty, 2)));
   case KVX::BI__builtin_kvx_abddps:
     return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_abdd, 1, Int64Ty, 2,
                                  1, false, EmitScalarExpr(E->getArg(1)));
@@ -21169,40 +21169,40 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
                                  1, false);
   case KVX::BI__builtin_kvx_addshqs: {
     Value *Arg1 = EmitScalarExpr(E->getArg(0));
-    Value *Callee = CGM.getIntrinsic(Intrinsic::kvx_addshq);
+    Function *Callee = CGM.getIntrinsic(Intrinsic::kvx_addshq);
     return Builder.CreateCall(
         Callee,
         {Arg1, KVX_emitVector16Scalar(*this, E->getArg(1),
-                                      llvm::VectorType::get(Int16Ty, 4))});
+                                      llvm::FixedVectorType::get(Int16Ty, 4))});
   }
   case KVX::BI__builtin_kvx_addshos:
     return KVX_emitVectorBuiltin(
         *this, E, Intrinsic::kvx_addshq, 1, Int16Ty, 8, 4, false,
         KVX_emitVector16Scalar(*this, E->getArg(1),
-                               llvm::VectorType::get(Int16Ty, 4)));
+                               llvm::FixedVectorType::get(Int16Ty, 4)));
   case KVX::BI__builtin_kvx_addshxs:
     return KVX_emitVectorBuiltin(
         *this, E, Intrinsic::kvx_addshq, 1, Int16Ty, 16, 4, false,
         KVX_emitVector16Scalar(*this, E->getArg(1),
-                               llvm::VectorType::get(Int16Ty, 4)));
+                               llvm::FixedVectorType::get(Int16Ty, 4)));
   case KVX::BI__builtin_kvx_addswps: {
     Value *Arg1 = EmitScalarExpr(E->getArg(0));
-    Value *Callee = CGM.getIntrinsic(Intrinsic::kvx_addswp);
+    Function *Callee = CGM.getIntrinsic(Intrinsic::kvx_addswp);
     return Builder.CreateCall(
         Callee,
         {Arg1, KVX_emitVector32Scalar(*this, E->getArg(1),
-                                      llvm::VectorType::get(Int32Ty, 2))});
+                                      llvm::FixedVectorType::get(Int32Ty, 2))});
   }
   case KVX::BI__builtin_kvx_addswqs:
     return KVX_emitVectorBuiltin(
         *this, E, Intrinsic::kvx_addswp, 1, Int32Ty, 4, 2, false,
         KVX_emitVector32Scalar(*this, E->getArg(1),
-                               llvm::VectorType::get(Int32Ty, 2)));
+                               llvm::FixedVectorType::get(Int32Ty, 2)));
   case KVX::BI__builtin_kvx_addswos:
     return KVX_emitVectorBuiltin(
         *this, E, Intrinsic::kvx_addswp, 1, Int32Ty, 8, 2, false,
         KVX_emitVector32Scalar(*this, E->getArg(1),
-                               llvm::VectorType::get(Int32Ty, 2)));
+                               llvm::FixedVectorType::get(Int32Ty, 2)));
   case KVX::BI__builtin_kvx_addsdps:
     return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_addsd, 1, Int64Ty, 2,
                                  1, false, EmitScalarExpr(E->getArg(1)));
@@ -21233,40 +21233,40 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
                                  1, false);
   case KVX::BI__builtin_kvx_sbfshqs: {
     Value *Arg1 = EmitScalarExpr(E->getArg(0));
-    Value *Callee = CGM.getIntrinsic(Intrinsic::kvx_sbfshq);
+    Function *Callee = CGM.getIntrinsic(Intrinsic::kvx_sbfshq);
     return Builder.CreateCall(
         Callee,
         {Arg1, KVX_emitVector16Scalar(*this, E->getArg(1),
-                                      llvm::VectorType::get(Int16Ty, 4))});
+                                      llvm::FixedVectorType::get(Int16Ty, 4))});
   }
   case KVX::BI__builtin_kvx_sbfshos:
     return KVX_emitVectorBuiltin(
         *this, E, Intrinsic::kvx_sbfshq, 1, Int16Ty, 8, 4, false,
         KVX_emitVector16Scalar(*this, E->getArg(1),
-                               llvm::VectorType::get(Int16Ty, 4)));
+                               llvm::FixedVectorType::get(Int16Ty, 4)));
   case KVX::BI__builtin_kvx_sbfshxs:
     return KVX_emitVectorBuiltin(
         *this, E, Intrinsic::kvx_sbfshq, 1, Int16Ty, 16, 4, false,
         KVX_emitVector16Scalar(*this, E->getArg(1),
-                               llvm::VectorType::get(Int16Ty, 4)));
+                               llvm::FixedVectorType::get(Int16Ty, 4)));
   case KVX::BI__builtin_kvx_sbfswps: {
     Value *Arg1 = EmitScalarExpr(E->getArg(0));
-    Value *Callee = CGM.getIntrinsic(Intrinsic::kvx_sbfswp);
+    Function *Callee = CGM.getIntrinsic(Intrinsic::kvx_sbfswp);
     return Builder.CreateCall(
         Callee,
         {Arg1, KVX_emitVector32Scalar(*this, E->getArg(1),
-                                      llvm::VectorType::get(Int32Ty, 2))});
+                                      llvm::FixedVectorType::get(Int32Ty, 2))});
   }
   case KVX::BI__builtin_kvx_sbfswqs:
     return KVX_emitVectorBuiltin(
         *this, E, Intrinsic::kvx_sbfswp, 1, Int32Ty, 4, 2, false,
         KVX_emitVector32Scalar(*this, E->getArg(1),
-                               llvm::VectorType::get(Int32Ty, 2)));
+                               llvm::FixedVectorType::get(Int32Ty, 2)));
   case KVX::BI__builtin_kvx_sbfswos:
     return KVX_emitVectorBuiltin(
         *this, E, Intrinsic::kvx_sbfswp, 1, Int32Ty, 8, 2, false,
         KVX_emitVector32Scalar(*this, E->getArg(1),
-                               llvm::VectorType::get(Int32Ty, 2)));
+                               llvm::FixedVectorType::get(Int32Ty, 2)));
   case KVX::BI__builtin_kvx_sbfsdps:
     return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_sbfsd, 1, Int64Ty, 2,
                                  1, false, EmitScalarExpr(E->getArg(1)));
@@ -21301,40 +21301,40 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
                                  1, false);
   case KVX::BI__builtin_kvx_minhqs: {
     Value *Arg1 = EmitScalarExpr(E->getArg(0));
-    Value *Callee = CGM.getIntrinsic(Intrinsic::kvx_minhq);
+    Function *Callee = CGM.getIntrinsic(Intrinsic::kvx_minhq);
     return Builder.CreateCall(
         Callee,
         {Arg1, KVX_emitVector16Scalar(*this, E->getArg(1),
-                                      llvm::VectorType::get(Int16Ty, 4))});
+                                      llvm::FixedVectorType::get(Int16Ty, 4))});
   }
   case KVX::BI__builtin_kvx_minhos:
     return KVX_emitVectorBuiltin(
         *this, E, Intrinsic::kvx_minhq, 1, Int16Ty, 8, 4, false,
         KVX_emitVector16Scalar(*this, E->getArg(1),
-                               llvm::VectorType::get(Int16Ty, 4)));
+                               llvm::FixedVectorType::get(Int16Ty, 4)));
   case KVX::BI__builtin_kvx_minhxs:
     return KVX_emitVectorBuiltin(
         *this, E, Intrinsic::kvx_minhq, 1, Int16Ty, 16, 4, false,
         KVX_emitVector16Scalar(*this, E->getArg(1),
-                               llvm::VectorType::get(Int16Ty, 4)));
+                               llvm::FixedVectorType::get(Int16Ty, 4)));
   case KVX::BI__builtin_kvx_minwps: {
     Value *Arg1 = EmitScalarExpr(E->getArg(0));
-    Value *Callee = CGM.getIntrinsic(Intrinsic::kvx_minwp);
+    Function *Callee = CGM.getIntrinsic(Intrinsic::kvx_minwp);
     return Builder.CreateCall(
         Callee,
         {Arg1, KVX_emitVector32Scalar(*this, E->getArg(1),
-                                      llvm::VectorType::get(Int32Ty, 2))});
+                                      llvm::FixedVectorType::get(Int32Ty, 2))});
   }
   case KVX::BI__builtin_kvx_minwqs:
     return KVX_emitVectorBuiltin(
         *this, E, Intrinsic::kvx_minwp, 1, Int32Ty, 4, 2, false,
         KVX_emitVector32Scalar(*this, E->getArg(1),
-                               llvm::VectorType::get(Int32Ty, 2)));
+                               llvm::FixedVectorType::get(Int32Ty, 2)));
   case KVX::BI__builtin_kvx_minwos:
     return KVX_emitVectorBuiltin(
         *this, E, Intrinsic::kvx_minwp, 1, Int32Ty, 8, 2, false,
         KVX_emitVector32Scalar(*this, E->getArg(1),
-                               llvm::VectorType::get(Int32Ty, 2)));
+                               llvm::FixedVectorType::get(Int32Ty, 2)));
   case KVX::BI__builtin_kvx_mindps:
     return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_mind, 1, Int64Ty, 2,
                                  1, false, EmitScalarExpr(E->getArg(1)));
@@ -21369,40 +21369,40 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
                                  1, false);
   case KVX::BI__builtin_kvx_maxhqs: {
     Value *Arg1 = EmitScalarExpr(E->getArg(0));
-    Value *Callee = CGM.getIntrinsic(Intrinsic::kvx_maxhq);
+    Function *Callee = CGM.getIntrinsic(Intrinsic::kvx_maxhq);
     return Builder.CreateCall(
         Callee,
         {Arg1, KVX_emitVector16Scalar(*this, E->getArg(1),
-                                      llvm::VectorType::get(Int16Ty, 4))});
+                                      llvm::FixedVectorType::get(Int16Ty, 4))});
   }
   case KVX::BI__builtin_kvx_maxhos:
     return KVX_emitVectorBuiltin(
         *this, E, Intrinsic::kvx_maxhq, 1, Int16Ty, 8, 4, false,
         KVX_emitVector16Scalar(*this, E->getArg(1),
-                               llvm::VectorType::get(Int16Ty, 4)));
+                               llvm::FixedVectorType::get(Int16Ty, 4)));
   case KVX::BI__builtin_kvx_maxhxs:
     return KVX_emitVectorBuiltin(
         *this, E, Intrinsic::kvx_maxhq, 1, Int16Ty, 16, 4, false,
         KVX_emitVector16Scalar(*this, E->getArg(1),
-                               llvm::VectorType::get(Int16Ty, 4)));
+                               llvm::FixedVectorType::get(Int16Ty, 4)));
   case KVX::BI__builtin_kvx_maxwps: {
     Value *Arg1 = EmitScalarExpr(E->getArg(0));
-    Value *Callee = CGM.getIntrinsic(Intrinsic::kvx_maxwp);
+    Function *Callee = CGM.getIntrinsic(Intrinsic::kvx_maxwp);
     return Builder.CreateCall(
         Callee,
         {Arg1, KVX_emitVector32Scalar(*this, E->getArg(1),
-                                      llvm::VectorType::get(Int32Ty, 2))});
+                                      llvm::FixedVectorType::get(Int32Ty, 2))});
   }
   case KVX::BI__builtin_kvx_maxwqs:
     return KVX_emitVectorBuiltin(
         *this, E, Intrinsic::kvx_maxwp, 1, Int32Ty, 4, 2, false,
         KVX_emitVector32Scalar(*this, E->getArg(1),
-                               llvm::VectorType::get(Int32Ty, 2)));
+                               llvm::FixedVectorType::get(Int32Ty, 2)));
   case KVX::BI__builtin_kvx_maxwos:
     return KVX_emitVectorBuiltin(
         *this, E, Intrinsic::kvx_maxwp, 1, Int32Ty, 8, 2, false,
         KVX_emitVector32Scalar(*this, E->getArg(1),
-                               llvm::VectorType::get(Int32Ty, 2)));
+                               llvm::FixedVectorType::get(Int32Ty, 2)));
   case KVX::BI__builtin_kvx_maxdps:
     return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_maxd, 1, Int64Ty, 2,
                                  1, false, EmitScalarExpr(E->getArg(1)));
@@ -21437,40 +21437,40 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
                                  1, false);
   case KVX::BI__builtin_kvx_minuhqs: {
     Value *Arg1 = EmitScalarExpr(E->getArg(0));
-    Value *Callee = CGM.getIntrinsic(Intrinsic::kvx_minuhq);
+    Function *Callee = CGM.getIntrinsic(Intrinsic::kvx_minuhq);
     return Builder.CreateCall(
         Callee,
         {Arg1, KVX_emitVector16Scalar(*this, E->getArg(1),
-                                      llvm::VectorType::get(Int16Ty, 4))});
+                                      llvm::FixedVectorType::get(Int16Ty, 4))});
   }
   case KVX::BI__builtin_kvx_minuhos:
     return KVX_emitVectorBuiltin(
         *this, E, Intrinsic::kvx_minuhq, 1, Int16Ty, 8, 4, false,
         KVX_emitVector16Scalar(*this, E->getArg(1),
-                               llvm::VectorType::get(Int16Ty, 4)));
+                               llvm::FixedVectorType::get(Int16Ty, 4)));
   case KVX::BI__builtin_kvx_minuhxs:
     return KVX_emitVectorBuiltin(
         *this, E, Intrinsic::kvx_minuhq, 1, Int16Ty, 16, 4, false,
         KVX_emitVector16Scalar(*this, E->getArg(1),
-                               llvm::VectorType::get(Int16Ty, 4)));
+                               llvm::FixedVectorType::get(Int16Ty, 4)));
   case KVX::BI__builtin_kvx_minuwps: {
     Value *Arg1 = EmitScalarExpr(E->getArg(0));
-    Value *Callee = CGM.getIntrinsic(Intrinsic::kvx_minuwp);
+    Function *Callee = CGM.getIntrinsic(Intrinsic::kvx_minuwp);
     return Builder.CreateCall(
         Callee,
         {Arg1, KVX_emitVector32Scalar(*this, E->getArg(1),
-                                      llvm::VectorType::get(Int32Ty, 2))});
+                                      llvm::FixedVectorType::get(Int32Ty, 2))});
   }
   case KVX::BI__builtin_kvx_minuwqs:
     return KVX_emitVectorBuiltin(
         *this, E, Intrinsic::kvx_minuwp, 1, Int32Ty, 4, 2, false,
         KVX_emitVector32Scalar(*this, E->getArg(1),
-                               llvm::VectorType::get(Int32Ty, 2)));
+                               llvm::FixedVectorType::get(Int32Ty, 2)));
   case KVX::BI__builtin_kvx_minuwos:
     return KVX_emitVectorBuiltin(
         *this, E, Intrinsic::kvx_minuwp, 1, Int32Ty, 8, 2, false,
         KVX_emitVector32Scalar(*this, E->getArg(1),
-                               llvm::VectorType::get(Int32Ty, 2)));
+                               llvm::FixedVectorType::get(Int32Ty, 2)));
   case KVX::BI__builtin_kvx_minudps:
     return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_minud, 1, Int64Ty, 2,
                                  1, false, EmitScalarExpr(E->getArg(1)));
@@ -21505,40 +21505,40 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
                                  1, false);
   case KVX::BI__builtin_kvx_maxuhqs: {
     Value *Arg1 = EmitScalarExpr(E->getArg(0));
-    Value *Callee = CGM.getIntrinsic(Intrinsic::kvx_maxuhq);
+    Function *Callee = CGM.getIntrinsic(Intrinsic::kvx_maxuhq);
     return Builder.CreateCall(
         Callee,
         {Arg1, KVX_emitVector16Scalar(*this, E->getArg(1),
-                                      llvm::VectorType::get(Int16Ty, 4))});
+                                      llvm::FixedVectorType::get(Int16Ty, 4))});
   }
   case KVX::BI__builtin_kvx_maxuhos:
     return KVX_emitVectorBuiltin(
         *this, E, Intrinsic::kvx_maxuhq, 1, Int16Ty, 8, 4, false,
         KVX_emitVector16Scalar(*this, E->getArg(1),
-                               llvm::VectorType::get(Int16Ty, 4)));
+                               llvm::FixedVectorType::get(Int16Ty, 4)));
   case KVX::BI__builtin_kvx_maxuhxs:
     return KVX_emitVectorBuiltin(
         *this, E, Intrinsic::kvx_maxuhq, 1, Int16Ty, 16, 4, false,
         KVX_emitVector16Scalar(*this, E->getArg(1),
-                               llvm::VectorType::get(Int16Ty, 4)));
+                               llvm::FixedVectorType::get(Int16Ty, 4)));
   case KVX::BI__builtin_kvx_maxuwps: {
     Value *Arg1 = EmitScalarExpr(E->getArg(0));
-    Value *Callee = CGM.getIntrinsic(Intrinsic::kvx_maxuwp);
+    Function *Callee = CGM.getIntrinsic(Intrinsic::kvx_maxuwp);
     return Builder.CreateCall(
         Callee,
         {Arg1, KVX_emitVector32Scalar(*this, E->getArg(1),
-                                      llvm::VectorType::get(Int32Ty, 2))});
+                                      llvm::FixedVectorType::get(Int32Ty, 2))});
   }
   case KVX::BI__builtin_kvx_maxuwqs:
     return KVX_emitVectorBuiltin(
         *this, E, Intrinsic::kvx_maxuwp, 1, Int32Ty, 4, 2, false,
         KVX_emitVector32Scalar(*this, E->getArg(1),
-                               llvm::VectorType::get(Int32Ty, 2)));
+                               llvm::FixedVectorType::get(Int32Ty, 2)));
   case KVX::BI__builtin_kvx_maxuwos:
     return KVX_emitVectorBuiltin(
         *this, E, Intrinsic::kvx_maxuwp, 1, Int32Ty, 8, 2, false,
         KVX_emitVector32Scalar(*this, E->getArg(1),
-                               llvm::VectorType::get(Int32Ty, 2)));
+                               llvm::FixedVectorType::get(Int32Ty, 2)));
   case KVX::BI__builtin_kvx_maxudps:
     return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_maxud, 1, Int64Ty, 2,
                                  1, false, EmitScalarExpr(E->getArg(1)));
@@ -21682,9 +21682,11 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_fnarrowwhv:
     return KVX_emitScaleNarrowBuiltin(2, Intrinsic::kvx_fnarrowwhv, *this, E);
   case KVX::BI__builtin_kvx_lv:
-    return KVX_emitLoadBuiltin(*this, E, llvm::VectorType::get(Builder.getInt1Ty(), 256), true);
+    return KVX_emitLoadBuiltin(
+        *this, E, llvm::FixedVectorType::get(Builder.getInt1Ty(), 256), true);
   case KVX::BI__builtin_kvx_sv:
-    return KVX_emitStoreBuiltin(*this, E, llvm::VectorType::get(Builder.getInt1Ty(), 256));
+    return KVX_emitStoreBuiltin(
+        *this, E, llvm::FixedVectorType::get(Builder.getInt1Ty(), 256));
   case KVX::BI__builtin_kvx_lv_cond:
     return KVX_emit_lvc_svc(3, true, Intrinsic::kvx_lv_cond, *this, E);
   case KVX::BI__builtin_kvx_lvc:
