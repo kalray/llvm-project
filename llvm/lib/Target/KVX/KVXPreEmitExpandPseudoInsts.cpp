@@ -1099,19 +1099,21 @@ static bool expandSWAPVFWOp(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
       (const KVXRegisterInfo *)MF->getSubtarget().getRegisterInfo();
 
   DebugLoc DL = MI.getDebugLoc();
-  Register V = MI.getOperand(0).getReg();
-  Register R = MI.getOperand(1).getReg();
+  Register R = MI.getOperand(0).getReg();
+  Register V = MI.getOperand(1).getReg();
   auto RName = TRI->getRegAsmName(R.id());
   auto VName = TRI->getRegAsmName(V.id());
   unsigned MOVEFO = KVX::MOVEFOro;
+
+  if (!KVX::QuadRegRegClass.contains(R))
+    report_fatal_error("First register of SWAPVFWOp (" + RName +
+                       "is not a QuadReg.");
+
   if (KVX::VectorRegERegClass.contains(V))
     MOVEFO = KVX::MOVEFOre;
   else if (!KVX::VectorRegORegClass.contains(V))
-    report_fatal_error("First register of SWAPVFWOp (" + VName +
+    report_fatal_error("Second register of SWAPVFWOp (" + VName +
                        ") is not a VectorReg.");
-  if (!KVX::QuadRegRegClass.contains(R))
-    report_fatal_error("Second register of SWAPVFWOp (" + RName +
-                       "is not a QuadReg.");
 
   auto V_hi = TRI->getSubReg(V, KVX::sub_b1);
   auto V_lo = TRI->getSubReg(V, KVX::sub_b0);

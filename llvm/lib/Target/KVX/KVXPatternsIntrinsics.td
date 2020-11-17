@@ -17,7 +17,7 @@ def SETp : KVX_PSEUDO<(outs), (ins Sysnumber:$sysreg, SingleReg:$val),[]>;
 def WFXLp : KVX_PSEUDO<(outs), (ins Sysnumber:$sysreg, SingleReg:$val),[]>;
 def WFXMp : KVX_PSEUDO<(outs), (ins Sysnumber:$sysreg, SingleReg:$val),[]>;
 let Constraints = "$vIn = $vOut, $qIn = $qOut" in
-def SWAPVFWOp : KVX_PSEUDO<(outs VectorReg:$vOut, QuadReg:$qOut), (ins QuadReg:$qIn, VectorReg:$vIn),[]>;
+def SWAPVFWOp : KVX_PSEUDO<(outs QuadReg:$qOut, VectorReg:$vOut), (ins QuadReg:$qIn, VectorReg:$vIn),[]>;
 
 def: Pat<(int_kvx_get Sysnumber:$r), (GETp Sysnumber:$r)>;
 def: Pat<(int_kvx_wfxl Sysnumber:$r, i64:$val), (WFXLp Sysnumber:$r, SingleReg:$val)>;

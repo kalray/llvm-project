@@ -19459,6 +19459,24 @@ static int KVX_getSpeculateModValue(const StringRef &Str) {
         .Default(-1);
 }
 
+static Value *KVX_emit_swapvfwo(CodeGenFunction &CGF, const CallExpr *E){
+  if (E->getNumArgs() != 2){
+    CGF.CGM.Error(E->getBeginLoc(), "swapfwo expects two arguments.");
+    return nullptr;
+  }
+
+  Address AddrGPR = CGF.EmitPointerWithAlignment(E->getArg(0));
+  Address AddrTCA = CGF.EmitPointerWithAlignment(E->getArg(1));
+
+  SmallVector<Value *, 4> Args;
+  Args.push_back(CGF.Builder.CreateLoad(AddrGPR));
+  Args.push_back(CGF.Builder.CreateLoad(AddrTCA));
+
+  auto *R = CGF.Builder.CreateCall(CGF.CGM.getIntrinsic(Intrinsic::kvx_swapvfwo), Args);
+  CGF.Builder.CreateStore(CGF.Builder.CreateExtractValue(R, 0), AddrGPR);
+  return CGF.Builder.CreateStore(CGF.Builder.CreateExtractValue(R, 1), AddrTCA);
+}
+
 static Value *KVX_emit_lvc_svc(unsigned PositionMods, bool IsCond, unsigned IntrinsicID,
                               CodeGenFunction &CGF, const CallExpr *E) {
   unsigned NumArgs = E->getNumArgs();
@@ -21695,6 +21713,8 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     return KVX_emit_lvc_svc(4, true, Intrinsic::kvx_lvc_cond, *this, E);
   case KVX::BI__builtin_kvx_sv_cond:
     return KVX_emit_lvc_svc(3, true, Intrinsic::kvx_sv_cond, *this, E);
+  case KVX::BI__builtin_kvx_swapvfwo:
+    return KVX_emit_swapvfwo(*this, E);
   }
   return nullptr;
 }
