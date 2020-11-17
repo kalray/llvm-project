@@ -48,26 +48,28 @@ typedef long __attribute__((__vector_size__(32))) v4i64_t;
 // CHECK-NEXT:    [[TMP41:%.*]] = call <256 x i1> @llvm.kvx.fscalewv(<256 x i1> [[TMP18]], i32 7, i32 0, i32 0)
 // CHECK-NEXT:    [[TMP42:%.*]] = call <256 x i1> @llvm.kvx.fnarrowwhv(<512 x i1> [[TMP39]], i32 0, i32 1)
 // CHECK-NEXT:    [[TMP43:%.*]] = call <256 x i1> @llvm.kvx.fscalewv(<256 x i1> [[TMP41]], i32 4, i32 0, i32 1)
-// CHECK-NEXT:    [[TMP44:%.*]] = call <256 x i1> @llvm.kvx.fscalewv(<256 x i1> [[TMP43]], i32 7, i32 0, i32 1)
+// CHECK-NEXT:    [[TMP44:%.*]] = call { <4 x i64>, <256 x i1> } @llvm.kvx.swapvfwo(<4 x i64> [[TMP8]], <256 x i1> [[TMP43]])
+// CHECK-NEXT:    [[TMP45:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP44]], 0
+// CHECK-NEXT:    [[TMP46:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP44]], 1
+// CHECK-NEXT:    [[TMP47:%.*]] = call <256 x i1> @llvm.kvx.fscalewv(<256 x i1> [[TMP46]], i32 7, i32 0, i32 1)
 // CHECK-NEXT:    [[ARRAYIDX6:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 3
-// CHECK-NEXT:    [[TMP45:%.*]] = bitcast <256 x i1>* [[ARRAYIDX6]] to i8*
-// CHECK-NEXT:    [[TMP46:%.*]] = call <256 x i1> @llvm.kvx.lv.cond(<256 x i1> [[TMP44]], i8* nonnull [[TMP45]], i64 [[A:%.*]], i32 1, i32 7)
-// CHECK-NEXT:    [[TMP47:%.*]] = addrspacecast <256 x i1>* [[V]] to <256 x i1> addrspace(258)*
-// CHECK-NEXT:    [[TMP48:%.*]] = load <256 x i1>, <256 x i1> addrspace(258)* [[TMP47]], align 32
+// CHECK-NEXT:    [[TMP48:%.*]] = bitcast <256 x i1>* [[ARRAYIDX6]] to i8*
+// CHECK-NEXT:    [[TMP49:%.*]] = call <256 x i1> @llvm.kvx.lv.cond(<256 x i1> [[TMP47]], i8* nonnull [[TMP48]], i64 [[A:%.*]], i32 1, i32 7)
+// CHECK-NEXT:    [[TMP50:%.*]] = addrspacecast <256 x i1>* [[V]] to <256 x i1> addrspace(258)*
+// CHECK-NEXT:    [[TMP51:%.*]] = load <256 x i1>, <256 x i1> addrspace(258)* [[TMP50]], align 32
 // CHECK-NEXT:    [[ARRAYIDX7:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 4
-// CHECK-NEXT:    [[TMP49:%.*]] = bitcast <256 x i1>* [[ARRAYIDX7]] to i8*
-// CHECK-NEXT:    [[TMP50:%.*]] = call <1024 x i1> @llvm.kvx.lvc(<1024 x i1> [[TMP40]], i8* nonnull [[TMP49]], i32 3, i32 1)
+// CHECK-NEXT:    [[TMP52:%.*]] = bitcast <256 x i1>* [[ARRAYIDX7]] to i8*
+// CHECK-NEXT:    [[TMP53:%.*]] = call <1024 x i1> @llvm.kvx.lvc(<1024 x i1> [[TMP40]], i8* nonnull [[TMP52]], i32 3, i32 1)
 // CHECK-NEXT:    [[ARRAYIDX8:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 5
-// CHECK-NEXT:    [[TMP51:%.*]] = bitcast <256 x i1>* [[ARRAYIDX8]] to i8*
-// CHECK-NEXT:    [[TMP52:%.*]] = call <1024 x i1> @llvm.kvx.lvc.cond(<1024 x i1> [[TMP50]], i8* nonnull [[TMP51]], i32 2, i64 [[A]], i32 0, i32 6)
-// CHECK-NEXT:    call void @llvm.kvx.swapvfwo(<4 x i64> [[TMP8]], <256 x i1> [[TMP46]])
-// CHECK-NEXT:    store <256 x i1> [[TMP48]], <256 x i1>* [[V]], align 32
+// CHECK-NEXT:    [[TMP54:%.*]] = bitcast <256 x i1>* [[ARRAYIDX8]] to i8*
+// CHECK-NEXT:    [[TMP55:%.*]] = call <1024 x i1> @llvm.kvx.lvc.cond(<1024 x i1> [[TMP53]], i8* nonnull [[TMP54]], i32 2, i64 [[A]], i32 0, i32 6)
+// CHECK-NEXT:    store <256 x i1> [[TMP51]], <256 x i1>* [[V]], align 32
 // CHECK-NEXT:    [[ARRAYIDX10:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 1
-// CHECK-NEXT:    [[TMP53:%.*]] = bitcast <256 x i1>* [[ARRAYIDX10]] to i8*
-// CHECK-NEXT:    call void @llvm.kvx.sv.cond(i8* nonnull [[TMP53]], <256 x i1> [[TMP48]], i64 1, i32 7)
+// CHECK-NEXT:    [[TMP56:%.*]] = bitcast <256 x i1>* [[ARRAYIDX10]] to i8*
+// CHECK-NEXT:    call void @llvm.kvx.sv.cond(i8* nonnull [[TMP56]], <256 x i1> [[TMP51]], i64 1, i32 7)
 // CHECK-NEXT:    store volatile <512 x i1> [[TMP39]], <512 x i1>* [[W]], align 64, !tbaa !8
-// CHECK-NEXT:    store volatile <1024 x i1> [[TMP52]], <1024 x i1>* [[M]], align 128, !tbaa !6
-// CHECK-NEXT:    ret <4 x i64> [[TMP8]]
+// CHECK-NEXT:    store volatile <1024 x i1> [[TMP55]], <1024 x i1>* [[M]], align 128, !tbaa !6
+// CHECK-NEXT:    ret <4 x i64> [[TMP45]]
 //
 v4i64_t test_tca_builtins(long a, long b, long c, long d, volatile __tca256 *v, volatile __tca512 *w, volatile __tca1024 *m) {
   v4i64_t vt = {0, 1, 2, 3};
@@ -114,12 +116,12 @@ v4i64_t test_tca_builtins(long a, long b, long c, long d, volatile __tca256 *v, 
   lv = __builtin_kvx_fscalewv(lv2, "");
   lv2 = __builtin_kvx_fnarrowwhv(lw, ".rn.s");
   lv = __builtin_kvx_fscalewv(lv, ".rna..relu");
+  __builtin_kvx_swapvfwo(&vt, &lv);
   lv = __builtin_kvx_fscalewv(lv, "...relu");
   lv = __builtin_kvx_lv_cond(lv, &v[3], a, ".s.even");
   lv2 = __builtin_kvx_lv(v, ".s");
   lm = __builtin_kvx_lvc(lm, &v[4], 3, ".s");
   lm = __builtin_kvx_lvc_cond(lm, &v[5], 2, a, "..odd");
-  __builtin_kvx_swapvfwo(vt, lv);
   __builtin_kvx_sv(&v[0], lv2);
   __builtin_kvx_sv_cond(&v[1], lv2, 1, ".even");
   w[0] = lw;
