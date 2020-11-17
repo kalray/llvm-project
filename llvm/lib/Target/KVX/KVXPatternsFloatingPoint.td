@@ -32,7 +32,6 @@ defm : StorePat<store, v2f64, PairedReg, 4, SQp, SQri10, SQrr>;
 defm : StorePat<store, v4f64, QuadReg, 5, SOp, SOri10, SOrr>;
 
 // Load
-
 foreach type = [ f16, f32, f64, v2f16, v4f16, v2f32, v4f32, v2f64, v4f64 ] in {
 def load#type : PatFrag<(ops node:$ptr), (type (load node:$ptr)), [{
     const MemSDNode *LD = cast<MemSDNode>(N);
@@ -55,7 +54,7 @@ def loadspec#type : PatFrag<(ops node:$ptr), (type (load node:$ptr)), [{
   }]>;  
 }
 
-// bypass loads
+// Bypass loads
 defm : LoadPat<loadbypassf16, f16, 1, LHZp, LHZri10, LHZrr, variant_u>;
 
 defm : LoadPat<loadbypassf32, f32, 2, LWZp, LWZri10, LWZrr, variant_u>;
@@ -70,7 +69,7 @@ defm : LoadPat<loadbypassv2f64, v2f64, 4, LQp, LQri10, LQrr, variant_u>;
 
 defm : LoadPat<loadbypassv4f64, v4f64, 5, LOp, LOri10, LOrr, variant_u>;
 
-// preload loads
+// Preload loads
 defm : LoadPat<loadpreloadf16, f16, 1, LHZp, LHZri10, LHZrr, variant_us>;
 
 defm : LoadPat<loadpreloadf32, f32, 2, LWZp, LWZri10, LWZrr, variant_us>;
@@ -85,7 +84,7 @@ defm : LoadPat<loadpreloadv2f64, v2f64, 4, LQp, LQri10, LQrr, variant_us>;
 
 defm : LoadPat<loadpreloadv4f64, v4f64, 5, LOp, LOri10, LOrr, variant_us>;
 
-// spec loads
+// Speculative loads
 defm : LoadPat<loadspecf16, f16, 1, LHZp, LHZri10, LHZrr, variant_s>;
 
 defm : LoadPat<loadspecf32, f32, 2, LWZp, LWZri10, LWZrr, variant_s>;
@@ -100,7 +99,7 @@ defm : LoadPat<loadspecv2f64, v2f64, 4, LQp, LQri10, LQrr, variant_s>;
 
 defm : LoadPat<loadspecv4f64, v4f64, 5, LOp, LOri10, LOrr, variant_s>;
 
-// normal loads
+// Normal loads
 defm : LoadPat<loadf16, f16, 1, LHZp, LHZri10, LHZrr, variant_>;
 
 defm : LoadPat<loadf32, f32, 2, LWZp, LWZri10, LWZrr, variant_>;
@@ -115,13 +114,13 @@ defm : LoadPat<loadv2f64, v2f64, 4, LQp, LQri10, LQrr, variant_>;
 
 defm : LoadPat<loadv4f64, v4f64, 5, LOp, LOri10, LOrr, variant_>;
 
-// 16 bits
+// 16 bits bitcasts
 def : BITCAST<f16, i16, SingleReg>;
 def : BITCAST<i16, f16, SingleReg>;
 def : BITCAST<f16, v2i8, SingleReg>;
 def : BITCAST<v2i8, f16, SingleReg>;
 
-// 32 bits
+// 32 bits bitcasts
 def : BITCAST<f32, i32, SingleReg>;
 def : BITCAST<i32, f32, SingleReg>;
 def : BITCAST<v2i16, f32, SingleReg>;
@@ -133,7 +132,7 @@ def : BITCAST<v2i16, v2f16, SingleReg>;
 def : BITCAST<f32, v4i8, SingleReg>;
 def : BITCAST<v4i8, f32, SingleReg>;
 
-// 64 bits
+// 64 bits bitcasts
 def : BITCAST<f64, i64, SingleReg>;
 def : BITCAST<i64, f64, SingleReg>;
 def : BITCAST<v4i16, f64, SingleReg>;
@@ -153,7 +152,7 @@ def : BITCAST<v4f16, v2i32, SingleReg>;
 def : BITCAST<v4i16, v4f16, SingleReg>;
 def : BITCAST<v4f16, v4i16, SingleReg>;
 
-// 128 bits
+// 128 bits bitcasts
 def : BITCAST<v2i64, v4f32, PairedReg>;
 def : BITCAST<v4f32, v2i64, PairedReg>;
 def : BITCAST<v2f64, v2i64, PairedReg>;
@@ -161,14 +160,10 @@ def : BITCAST<v2i64, v2f64, PairedReg>;
 def : BITCAST<v4f32, v4i32, PairedReg>;
 def : BITCAST<v4i32, v4f32, PairedReg>;
 
-// 256 bits
+// 256 bits bitcasts
 def : BITCAST<v4i64, v4f64, QuadReg>;
 def : BITCAST<v4f64, v4i64, QuadReg>;
 
-// FPU Insns
-
-// FABS, see KVXInstrInfo.td
-// FADDC -> TODO
 // FADD
 def FADDH : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARY16X4
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary16:$a3),
@@ -185,8 +180,8 @@ def : Pat<(fadd v4f16:$rs1, v4f16:$rs2), (FADDHQrr SingleReg:$rs1, SingleReg:$rs
 def : Pat<(fadd v2f32:$rs1, v2f32:$rs2), (FADDWPrr SingleReg:$rs1, SingleReg:$rs2, rounding_, silent_)>;
 def : Pat<(fadd v4f32:$rs1, v4f32:$rs2), (FADDWQ PairedReg:$rs1, PairedReg:$rs2, rounding_, silent_)>;
 def : Pat<(fadd v2f64:$rs1, v2f64:$rs2), (FADDDP PairedReg:$rs1, PairedReg:$rs2, rounding_, silent_)>;
-// FCDIV -> TODO
-// FCOMP ->
+
+// FCOMP
 multiclass FCOMP<SDNode SetCC, Floatcomp Cmp, bit SwapOperands> {
   def : Pat<(i32 (SetCC f16:$rz, f16:$ry)),
     !if(SwapOperands,
@@ -222,13 +217,6 @@ multiclass FCOMP<SDNode SetCC, Floatcomp Cmp, bit SwapOperands> {
     )>;
 }
 
-// Using -ffast-math generates the following setcc patterns
-defm : FCOMP<seteq, floatcomp_oeq, 0>;
-defm : FCOMP<setgt, floatcomp_olt, 1>;
-defm : FCOMP<setge, floatcomp_oge, 0>;
-defm : FCOMP<setlt, floatcomp_olt, 0>;
-defm : FCOMP<setle, floatcomp_oge, 1>;
-defm : FCOMP<setne, floatcomp_one, 0>;
 // Ordered comparisons
 defm : FCOMP<setoeq, floatcomp_oeq, 0>;
 defm : FCOMP<setogt, floatcomp_olt, 1>;
@@ -236,11 +224,20 @@ defm : FCOMP<setoge, floatcomp_oge, 0>;
 defm : FCOMP<setolt, floatcomp_olt, 0>;
 defm : FCOMP<setole, floatcomp_oge, 1>;
 defm : FCOMP<setone, floatcomp_one, 0>;
+// Using -ffast-math generates the following setcc patterns
+// TODO: shouldn't be unordered ones?
+defm : FCOMP<seteq, floatcomp_oeq, 0>;
+defm : FCOMP<setgt, floatcomp_olt, 1>;
+defm : FCOMP<setge, floatcomp_oge, 0>;
+defm : FCOMP<setlt, floatcomp_olt, 0>;
+defm : FCOMP<setle, floatcomp_oge, 1>;
+defm : FCOMP<setne, floatcomp_one, 0>;
 def : Pat<(i32 (seto f16:$rz, f16:$ry)), (ORWrr (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, floatcomp_oge), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, floatcomp_olt))>;
 def : Pat<(i32 (seto f32:$rz, f32:$ry)), (ORWrr (FCOMPWrr SingleReg:$rz, SingleReg:$ry, floatcomp_oge), (FCOMPWrr SingleReg:$rz, SingleReg:$ry, floatcomp_olt))>;
 def : Pat<(i32 (seto f64:$rz, f64:$ry)), (ORWrr (FCOMPD   SingleReg:$rz, SingleReg:$ry, floatcomp_oge), (FCOMPD   SingleReg:$rz, SingleReg:$ry, floatcomp_olt))>;
 def : Pat<(i64 (seto f32:$rz, f32:$ry)), (ORDrr (FCOMPWrr SingleReg:$rz, SingleReg:$ry, floatcomp_oge), (FCOMPWrr SingleReg:$rz, SingleReg:$ry, floatcomp_olt))>;
 def : Pat<(i64 (seto f64:$rz, f64:$ry)), (ORDrr (FCOMPD   SingleReg:$rz, SingleReg:$ry, floatcomp_oge), (FCOMPD   SingleReg:$rz, SingleReg:$ry, floatcomp_olt))>;
+
 // Unordered comparisons
 defm : FCOMP<setueq, floatcomp_ueq, 0>;
 defm : FCOMP<setugt, floatcomp_ult, 1>;
@@ -254,9 +251,7 @@ def : Pat<(i32 (setuo f64:$rz, f64:$ry)), (ANDWrr (FCOMPD   SingleReg:$rz, Singl
 def : Pat<(i64 (setuo f32:$rz, f32:$ry)), (ANDDrr (FCOMPWrr SingleReg:$rz, SingleReg:$ry, floatcomp_uge), (FCOMPWrr SingleReg:$rz, SingleReg:$ry, floatcomp_ult))>;
 def : Pat<(i64 (setuo f64:$rz, f64:$ry)), (ANDDrr (FCOMPD   SingleReg:$rz, SingleReg:$ry, floatcomp_uge), (FCOMPD   SingleReg:$rz, SingleReg:$ry, floatcomp_ult))>;
 
-// FIXME: insns with immediates won't be supported in kv3-2. For binary
-// compatibility reasons, there is a risk for such insns to be removed from the
-// kv3-1 ISA. Remove or factorize the patterns below accordingly.
+// NOTE: insns with immediates won't be supported in kv3-2.
 def : Pat<(i32 (setoeq f32:$rz, Binary32:$imm)), (FCOMPWri SingleReg:$rz, Binary32:$imm, floatcomp_oeq)>;
 def : Pat<(i32 (setogt Binary32:$imm, f32:$ry)), (FCOMPWri SingleReg:$ry, Binary32:$imm, floatcomp_olt)>;
 def : Pat<(i32 (setoge f32:$rz, Binary32:$imm)), (FCOMPWri SingleReg:$rz, Binary32:$imm, floatcomp_oge)>;
@@ -323,7 +318,6 @@ defm : SELECTCONDD<(f16 f16:$truev), (f16 f16:$falsev),(f16 Binary16:$truev), (f
 defm : SELECTCONDD<(f32 f32:$truev), (f32 f32:$falsev),(f32 Binary32:$truev), (f32 Binary32:$falsev)>;
 defm : SELECTCONDD<(f64 f64:$truev), (f64 f64:$falsev),(f64 Binary64:$truev), (f64 Binary64:$falsev)>;
 
-// FDOT2 -> TODO
 // FFMA
 def : Pat<(f16 (fma f16:$rx, f16:$ry, f16:$rz)), (FFMAHQrr SingleReg:$rz, SingleReg:$rx, SingleReg:$ry, rounding_, silent_)>;
 def : Pat<(f32 (fma f32:$rx, f32:$ry, f32:$rz)), (FFMAWrr SingleReg:$rz, SingleReg:$rx, SingleReg:$ry, rounding_, silent_)>;
@@ -341,8 +335,6 @@ def KVXFMS : SDNode<"KVXISD::FMS", SDTFPTernaryOp>;
 def : Pat<(f32 (KVXFMS f32:$rx, f32:$ry, f32:$rz)), (FFMSWrr SingleReg:$rz, SingleReg:$rx, SingleReg:$ry, rounding_, silent_)>;
 def : Pat<(f64 (KVXFMS f64:$rx, f64:$ry, f64:$rz)), (FFMSDrr SingleReg:$rz, SingleReg:$rx, SingleReg:$ry, rounding_, silent_)>;
 
-// FREC  -> TODO
-// FRSR  -> TODO
 // FIXED
 def : Pat<(i32 (fp_to_uint f16:$val)), (FIXEDUW (FWIDENLHW SingleReg:$val, silent_), DefaultShift, rounding_rz, silent_)>;
 def : Pat<(i64 (fp_to_uint f16:$val)), (FIXEDUD (FWIDENLWD (FWIDENLHW SingleReg:$val, silent_), silent_), DefaultShift, rounding_rz, silent_)>;
@@ -356,8 +348,9 @@ def : Pat<(i32 (fp_to_sint f32:$val)), (FIXEDW SingleReg:$val, DefaultShift, rou
 def : Pat<(i64 (fp_to_sint f32:$val)), (FIXEDD (FWIDENLWD SingleReg:$val, silent_), DefaultShift, rounding_rz, silent_)>;
 def : Pat<(i32 (fp_to_sint f64:$val)), (FIXEDD SingleReg:$val, DefaultShift, rounding_rz, silent_)>;
 def : Pat<(i64 (fp_to_sint f64:$val)), (FIXEDD SingleReg:$val, DefaultShift, rounding_rz, silent_)>;
+
 // FLOAT
-// FIXME f16 patterns have issues with double rounding / implement RTcalls ?
+// FIXME: f16 patterns have issues with double rounding / implement RTcalls ?
 def : Pat<(f16 (uint_to_fp i32:$val)), (FNARROWWH (FLOATUW SingleReg:$val, DefaultShift, rounding_rn, silent_), rounding_rn, silent_)>;
 def : Pat<(f16 (uint_to_fp i64:$val)), (FNARROWWH (FNARROWDW (FLOATUD SingleReg:$val, DefaultShift, rounding_rn, silent_), rounding_rn, silent_), rounding_rn, silent_)>;
 def : Pat<(f32 (uint_to_fp i32:$val)), (FLOATUW SingleReg:$val, DefaultShift, rounding_rn, silent_)>;
@@ -368,12 +361,7 @@ def : Pat<(f16 (sint_to_fp i64:$val)), (FNARROWWH (FNARROWDW (FLOATD SingleReg:$
 def : Pat<(f32 (sint_to_fp i32:$val)), (FLOATW SingleReg:$val, DefaultShift, rounding_rn, silent_)>;
 def : Pat<(f64 (sint_to_fp i32:$val)), (FLOATD (SXWD SingleReg:$val), DefaultShift, rounding_rn, silent_)>;
 def : Pat<(f64 (sint_to_fp i64:$val)), (FLOATD SingleReg:$val, DefaultShift, rounding_rn, silent_)>;
-// FMAX  -> TODO
-// FMIN  -> TODO
-// FMM2A -> TODO
-// FMM2S -> TODO
-// FMM2  -> TODO
-// FMULC -> TODO
+
 // FMUL
 def FMULH : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARY16X4
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary16:$a3),
@@ -389,7 +377,7 @@ def : Pat<(fmul v2f16:$rs1, v2f16:$rs2), (FMULHQrr SingleReg:$rs1, SingleReg:$rs
 def : Pat<(fmul v4f16:$rs1, v4f16:$rs2), (FMULHQrr SingleReg:$rs1, SingleReg:$rs2, rounding_, silent_)>;
 def : Pat<(fmul v2f32:$rs1, v2f32:$rs2), (FMULWPrr SingleReg:$rs1, SingleReg:$rs2, rounding_, silent_)>;
 def : Pat<(fmul v4f32:$rs1, v4f32:$rs2), (FMULWQ PairedReg:$rs1, PairedReg:$rs2, rounding_, silent_)>;
-// FMUL*C -> TODO
+
 // FNARROW
 def : Pat<(f16 (fpround f32:$val)), (FNARROWWH SingleReg:$val, rounding_, silent_)>;
 def : Pat<(f16 (fpround f64:$val)), (FNARROWWH (FNARROWDW SingleReg:$val, rounding_, silent_), rounding_, silent_)>;
@@ -408,13 +396,13 @@ def : Pat<(v4f16 (fpround v4f64:$val)), (INSF
                                                 (FNARROWWH (FNARROWDW (f64 (EXTRACT_SUBREG QuadReg:$val, sub_s3)), rounding_, silent_), rounding_, silent_), 31, 16),
                                         63, 32)>;
 
-// FNEG, see KVXInstrInfo.td for f32, f64, v2f32, v4f16
+// FNEG
 def : Pat<(fneg f16:$rs), (FNEGHQ SingleReg:$rs)>;
 def : Pat<(fneg v2f16:$rs), (FNEGHQ SingleReg:$rs)>;
 def : Pat<(vfneg v2f16:$rs), (FNEGHQ SingleReg:$rs)>;
 def : Pat<(vfneg v4f16:$rs), (FNEGHQ SingleReg:$rs)>;
 def : Pat<(vfneg v2f32:$rs), (FNEGWP SingleReg:$rs)>;
-// FSBFC -> TODO
+
 // FSBF
 def FSBFH : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARY16X4
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary16:$a3),
@@ -431,9 +419,7 @@ def : Pat<(fsub v4f16:$rs1, v4f16:$rs2), (FSBFHQrr SingleReg:$rs2, SingleReg:$rs
 def : Pat<(fsub v2f32:$rs1, v2f32:$rs2), (FSBFWPrr SingleReg:$rs2, SingleReg:$rs1, rounding_, silent_)>;
 def : Pat<(fsub v4f32:$rs1, v4f32:$rs2), (FSBFWQ PairedReg:$rs2, PairedReg:$rs1, rounding_, silent_)>;
 def : Pat<(fsub v2f64:$rs1, v2f64:$rs2), (FSBFDP PairedReg:$rs2, PairedReg:$rs1, rounding_, silent_)>;
-// FSDIV -> TODO
-// FSINV -> TODO
-// FSISR -> TODO
+
 // FWIDEN
 def : Pat<(f64 (fpextend f32:$val)), (FWIDENLWD SingleReg:$val, silent_)>;
 def : Pat<(f64 (fpextend f16:$val)), (FWIDENLWD (FWIDENLHW SingleReg:$val, silent_), silent_)>;
