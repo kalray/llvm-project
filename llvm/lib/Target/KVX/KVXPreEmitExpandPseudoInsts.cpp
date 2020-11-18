@@ -320,7 +320,7 @@ static bool expandALOAD(unsigned int Opcode, const KVXInstrInfo *TII,
   assert(MI.getNumMemOperands() >= 1 &&
          "expandALOAD pseudo-instr expects MemOperands");
 
-  // FIXME: Some instructions can have more than 1 MemOperand. We assume that
+  // NOTE: Some instructions can have more than 1 MemOperand. We assume that
   // the first one is the right one.
   MachineMemOperand &MO = *MI.memoperands()[0];
   uint64_t MOSize = MO.getSize();
