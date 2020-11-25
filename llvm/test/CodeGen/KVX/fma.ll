@@ -314,9 +314,190 @@ entry:
   ret double %sub
 }
 
+define <4 x float> @fmawp_x2(<4 x float> %a, <4 x float> %b, <4 x float> %c) {
+; CHECK-LABEL: fmawp_x2:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    ffmawp $r5 = $r3, $r5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmawp $r4 = $r2, $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r4
+; CHECK-NEXT:    copyd $r1 = $r5
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %1 = fmul fast <4 x float> %c, %b
+  %2 = fadd fast <4 x float> %1, %c
+ret <4 x float> %2
+}
+
+define <4 x float> @not_fmawp_x2(<4 x float> %a, <4 x float> %b, <4 x float> %c) {
+; CHECK-LABEL: not_fmawp_x2:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fmulwq $r0r1 = $r4r5, $r2r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    faddwq $r0r1 = $r0r1, $r4r5
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %1 = fmul <4 x float> %c, %b
+  %2 = fadd <4 x float> %1, %c
+ret <4 x float> %2
+}
+
+define <4 x float> @fmawp_x2_int(<4 x float> %a, <4 x float> %b, <4 x float> %c) {
+; CHECK-LABEL: fmawp_x2_int:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    ffmawp $r5 = $r1, $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmawp $r4 = $r0, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r4
+; CHECK-NEXT:    copyd $r1 = $r5
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %res = call <4 x float> @llvm.fma.v4f32(<4 x float> %a, <4 x float> %b, <4 x float> %c)
+  ret <4 x float> %res
+}
+
+define <8 x float> @fmawp_x4(<8 x float> %a, <8 x float> %b, <8 x float> %c) {
+; CHECK-LABEL: fmawp_x4:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    ffmawp $r11 = $r7, $r11
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmawp $r9 = $r5, $r9
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmawp $r8 = $r4, $r8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmawp $r10 = $r6, $r10
+; CHECK-NEXT:    copyd $r0 = $r8
+; CHECK-NEXT:    copyd $r1 = $r9
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r2 = $r10
+; CHECK-NEXT:    copyd $r3 = $r11
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+%1 = fmul fast <8 x float> %c, %b
+%2 = fadd fast <8 x float> %1, %c
+ret <8 x float> %2
+}
+
+define <8 x float> @not_fmawp_x4(<8 x float> %a, <8 x float> %b, <8 x float> %c) {
+; CHECK-LABEL: not_fmawp_x4:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fmulwq $r0r1 = $r8r9, $r4r5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fmulwq $r2r3 = $r10r11, $r6r7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    faddwq $r2r3 = $r2r3, $r10r11
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    faddwq $r0r1 = $r0r1, $r8r9
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+%1 = fmul <8 x float> %c, %b
+%2 = fadd <8 x float> %1, %c
+ret <8 x float> %2
+}
+
+define <8 x float> @int_fmawp_x4(<8 x float> %a, <8 x float> %b, <8 x float> %c) {
+; CHECK-LABEL: int_fmawp_x4:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    ffmawp $r11 = $r3, $r7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmawp $r9 = $r1, $r5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmawp $r8 = $r0, $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmawp $r10 = $r2, $r6
+; CHECK-NEXT:    copyd $r0 = $r8
+; CHECK-NEXT:    copyd $r1 = $r9
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r2 = $r10
+; CHECK-NEXT:    copyd $r3 = $r11
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %res = call <8 x float> @llvm.fma.v8f32(<8 x float> %a, <8 x float> %b, <8 x float> %c)
+  ret <8 x float> %res
+}
+
+; FIXME: The fast is slower than the non-fast
+define <4 x float> @fmswp_x2(<4 x float> %a, <4 x float> %b, <4 x float> %c) {
+; CHECK-LABEL: fmswp_x2:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    make $r0 = 0x8000000080000000
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r1 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fsbfwq $r0r1 = $r4r5, $r0r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmawp $r1 = $r3, $r5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmawp $r0 = $r2, $r4
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %1 = fmul fast <4 x float> %c, %b
+  %2 = fsub fast <4 x float> %1, %c
+ret <4 x float> %2
+}
+
+define <4 x float> @not_fmswp_x2(<4 x float> %a, <4 x float> %b, <4 x float> %c) {
+; CHECK-LABEL: not_fmswp_x2:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fmulwq $r0r1 = $r4r5, $r2r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fsbfwq $r0r1 = $r4r5, $r0r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %1 = fmul <4 x float> %c, %b
+  %2 = fsub <4 x float> %1, %c
+ret <4 x float> %2
+}
+
+define <8 x float> @fmswp_x4(<8 x float> %a, <8 x float> %b, <8 x float> %c) {
+; CHECK-LABEL: fmswp_x4:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    make $r0 = 0x8000000080000000
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r1 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fsbfwq $r2r3 = $r10r11, $r0r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fsbfwq $r0r1 = $r8r9, $r0r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmawp $r3 = $r7, $r11
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmawp $r1 = $r5, $r9
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmawp $r2 = $r6, $r10
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmawp $r0 = $r4, $r8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+%1 = fmul fast <8 x float> %c, %b
+%2 = fsub fast <8 x float> %1, %c
+ret <8 x float> %2
+}
+
+define <8 x float> @not_fmswp_x4(<8 x float> %a, <8 x float> %b, <8 x float> %c) {
+; CHECK-LABEL: not_fmswp_x4:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fmulwq $r0r1 = $r8r9, $r4r5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fmulwq $r2r3 = $r10r11, $r6r7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fsbfwq $r2r3 = $r10r11, $r2r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fsbfwq $r0r1 = $r8r9, $r0r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+%1 = fmul <8 x float> %c, %b
+%2 = fsub <8 x float> %1, %c
+ret <8 x float> %2
+}
+
 declare half @llvm.fma.f16(half, half, half)
 declare float @llvm.fma.f32(float, float, float)
 declare double @llvm.fma.f64(double, double, double)
 declare <2 x float> @llvm.fma.v2f32(<2 x float>, <2 x float>, <2 x float>)
 declare <4 x half> @llvm.fma.v4f16(<4 x half>, <4 x half>, <4 x half>)
 declare <2 x double> @llvm.fma.v2f64(<2 x double>, <2 x double>, <2 x double>)
+declare <4 x float> @llvm.fma.v4f32(<4 x float>, <4 x float>, <4 x float>)
+declare <8 x float> @llvm.fma.v8f32(<8 x float>, <8 x float>, <8 x float>)

@@ -328,7 +328,22 @@ def : Pat<(f64 (fma f64:$rx, Binary64:$ry, f64:$rz)), (FFMADri SingleReg:$rz, Si
 def : Pat<(v2f32 (fma v2f32:$rx, v2f32:$ry, v2f32:$rz)), (FFMAWPrr SingleReg:$rz, SingleReg:$rx, SingleReg:$ry, rounding_, silent_)>;
 def : Pat<(v2f16 (fma v2f16:$rx, v2f16:$ry, v2f16:$rz)), (FFMAHQrr SingleReg:$rz, SingleReg:$rx, SingleReg:$ry, rounding_, silent_)>;
 def : Pat<(v4f16 (fma v4f16:$rx, v4f16:$ry, v4f16:$rz)), (FFMAHQrr SingleReg:$rz, SingleReg:$rx, SingleReg:$ry, rounding_, silent_)>;
-
+def : Pat<(v4f32 (fma v4f32:$rx, v4f32:$ry, v4f32:$rz)),
+          (REG_SEQUENCE PairedReg,
+            (FFMAWPrr
+              (v2f32 (EXTRACT_SUBREG PairedReg:$rz, sub_s0)),
+              (v2f32 (EXTRACT_SUBREG PairedReg:$rx, sub_s0)),
+              (v2f32 (EXTRACT_SUBREG PairedReg:$ry, sub_s0)),
+              rounding_,
+              silent_),
+            sub_s0,
+            (FFMAWPrr
+              (v2f32 (EXTRACT_SUBREG PairedReg:$rz, sub_s1)),
+              (v2f32 (EXTRACT_SUBREG PairedReg:$rx, sub_s1)),
+              (v2f32 (EXTRACT_SUBREG PairedReg:$ry, sub_s1)),
+              rounding_,
+              silent_),
+            sub_s1)>;
 // FFMS
 def KVXFMS : SDNode<"KVXISD::FMS", SDTFPTernaryOp>;
 
