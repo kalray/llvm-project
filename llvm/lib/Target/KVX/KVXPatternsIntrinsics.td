@@ -17,7 +17,7 @@ def SETp : KVX_PSEUDO<(outs), (ins Sysnumber:$sysreg, SingleReg:$val),[]>;
 def WFXLp : KVX_PSEUDO<(outs), (ins Sysnumber:$sysreg, SingleReg:$val),[]>;
 def WFXMp : KVX_PSEUDO<(outs), (ins Sysnumber:$sysreg, SingleReg:$val),[]>;
 let Constraints = "$vIn = $vOut, $qIn = $qOut" in
-def SWAPVFWOp : KVX_PSEUDO<(outs QuadReg:$qOut, VectorReg:$vOut), (ins QuadReg:$qIn, VectorReg:$vIn),[]>;
+def SWAPVOp : KVX_PSEUDO<(outs QuadReg:$qOut, VectorReg:$vOut), (ins QuadReg:$qIn, VectorReg:$vIn),[]>;
 
 def: Pat<(int_kvx_get Sysnumber:$r), (GETp Sysnumber:$r)>;
 def: Pat<(int_kvx_wfxl Sysnumber:$r, i64:$val), (WFXLp Sysnumber:$r, SingleReg:$val)>;
@@ -336,8 +336,8 @@ def : Pat<(int_kvx_sv_cond i64:$base, VectorReg:$val, i64:$cond, ScalarcondMod:$
           (SVrrc SingleReg:$cond, SingleReg:$base, VectorReg:$val, ScalarcondMod:$scac)>;
 
 // atomic register copy/shift operations
-def: Pat<(int_kvx_swapvfwo QuadReg:$r, VectorReg:$v),
-         (SWAPVFWOp QuadReg:$r, VectorReg:$v)>;
+def: Pat<(int_kvx_swapvo QuadReg:$r, VectorReg:$v),
+         (SWAPVOp QuadReg:$r, VectorReg:$v)>;
 
 def: Pat<(int_kvx_alignov VectorRegE:$a2, VectorRegO:$a3, Unsigned6:$a4), (ALIGNOreroi $a2, $a3, Unsigned6:$a4)>;
 def: Pat<(int_kvx_alignov VectorRegO:$a2, VectorRegE:$a3, Unsigned6:$a4), (ALIGNOrorei $a2, $a3, Unsigned6:$a4)>;

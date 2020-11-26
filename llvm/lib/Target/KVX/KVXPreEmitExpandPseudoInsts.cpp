@@ -1091,8 +1091,8 @@ static bool expandEXTFZ(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   return true;
 }
 
-static bool expandSWAPVFWOp(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
-                            MachineBasicBlock::iterator MBBI) {
+static bool expandSWAPVOp(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
+                          MachineBasicBlock::iterator MBBI) {
   MachineInstr &MI = *MBBI;
   MachineFunction *MF = MBB.getParent();
   const KVXRegisterInfo *TRI =
@@ -1106,13 +1106,13 @@ static bool expandSWAPVFWOp(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   unsigned MOVEFO = KVX::MOVEFOro;
 
   if (!KVX::QuadRegRegClass.contains(R))
-    report_fatal_error("First register of SWAPVFWOp (" + RName +
+    report_fatal_error("First register of SWAPVOp (" + RName +
                        "is not a QuadReg.");
 
   if (KVX::VectorRegERegClass.contains(V))
     MOVEFO = KVX::MOVEFOre;
   else if (!KVX::VectorRegORegClass.contains(V))
-    report_fatal_error("Second register of SWAPVFWOp (" + VName +
+    report_fatal_error("Second register of SWAPVOp (" + VName +
                        ") is not a VectorReg.");
 
   auto V_hi = TRI->getSubReg(V, KVX::sub_b1);
@@ -1128,11 +1128,11 @@ static bool expandSWAPVFWOp(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   auto &I2 =
       BuildMI(MBB, MBBI, DL, TII->get(MOVEFO), R).addReg(V, RegState::Kill);
   auto &I3 = BuildMI(MBB, MBBI, DL, TII->get(KVX::MOVETQrrbe), V_lo)
-                 .addReg(R1, RegState::Kill)
-                 .addReg(R0, RegState::Kill);
+                 .addReg(R0, RegState::Kill)
+                 .addReg(R1, RegState::Kill);
   auto &I4 = BuildMI(MBB, MBBI, DL, TII->get(KVX::MOVETQrrbo), V_hi)
-                 .addReg(R3, RegState::Kill)
-                 .addReg(R2, RegState::Kill);
+                 .addReg(R2, RegState::Kill)
+                 .addReg(R3, RegState::Kill);
   I2->bundleWithPred();
   I3->bundleWithPred();
   I4->bundleWithPred();
@@ -1258,8 +1258,8 @@ bool KVXPreEmitExpandPseudo::expandMI(MachineBasicBlock &MBB,
     return expandEXTFZ(TII, MBB, MBBI, true);
   case KVX::EXTFZDp:
     return expandEXTFZ(TII, MBB, MBBI, false);
-  case KVX::SWAPVFWOp:
-    return expandSWAPVFWOp(TII, MBB, MBBI);
+  case KVX::SWAPVOp:
+    return expandSWAPVOp(TII, MBB, MBBI);
   case KVX::SPCHECKp:
     return expandSPCHECK(TII, MBB, MBBI);
   default:
