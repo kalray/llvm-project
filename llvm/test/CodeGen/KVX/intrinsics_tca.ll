@@ -801,7 +801,7 @@ define void @test_fnarrowwhv(<256 x i1>* %p0){
 declare <256 x i1> @llvm.kvx.lv.cond(<256 x i1>, i8*, i64, i32, i32)
 declare <1024 x i1> @llvm.kvx.lvc(<1024 x i1>, i8*, i32, i32)
 declare <1024 x i1> @llvm.kvx.lvc.cond(<1024 x i1>, i8*, i32, i64, i32, i32)
-declare { <4 x i64>, <256 x i1> } @llvm.kvx.swapvfwo(<4 x i64>, <256 x i1>) #2
+declare { <4 x i64>, <256 x i1> } @llvm.kvx.swapvo(<4 x i64>, <256 x i1>) #2
 declare void @llvm.kvx.sv.cond(i8*, <256 x i1>, i64, i32) #3
 
 ; Test generated from clang's intrinsics_tca.c
@@ -916,8 +916,8 @@ define <4 x i64> @test_tca_builtins(i64 %a, i64 %b, i64 %c, i64 %d, <256 x i1>* 
 ; CHECK-NEXT:    mma444uhbd1 $a4a5a6a7 = $a4a5a6a7, $a0, $a0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    movefo $r0r1r2r3 = $a1
-; CHECK-NEXT:    movetq $a1_lo = $r1, $r0
-; CHECK-NEXT:    movetq $a1_hi = $r3, $r2
+; CHECK-NEXT:    movetq $a1_lo = $r0, $r1
+; CHECK-NEXT:    movetq $a1_hi = $r2, $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fscalewv.relu $a1 = $a1
 ; CHECK-NEXT:    ;;
@@ -1003,7 +1003,7 @@ entry:
   %41 = call <256 x i1> @llvm.kvx.fscalewv(<256 x i1> %18, i32 7, i32 0, i32 0)
   %42 = call <256 x i1> @llvm.kvx.fnarrowwhv(<512 x i1> %39, i32 0, i32 1)
   %43 = call <256 x i1> @llvm.kvx.fscalewv(<256 x i1> %41, i32 4, i32 0, i32 1)
-  %44 = call { <4 x i64>, <256 x i1> } @llvm.kvx.swapvfwo(<4 x i64> %8, <256 x i1> %43)
+  %44 = call { <4 x i64>, <256 x i1> } @llvm.kvx.swapvo(<4 x i64> %8, <256 x i1> %43)
   %45 = extractvalue { <4 x i64>, <256 x i1> } %44, 0
   %46 = extractvalue { <4 x i64>, <256 x i1> } %44, 1
   %47 = call <256 x i1> @llvm.kvx.fscalewv(<256 x i1> %46, i32 7, i32 0, i32 1)
