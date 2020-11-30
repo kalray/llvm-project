@@ -35,15 +35,6 @@ def : Pat<(add i64:$rs1, Wrapped64:$rs2), (ADDDri64 SingleReg:$rs1, Wrapped64:$r
 def : Pat<(add v2i16:$rs1, v2i16:$rs2), (ADDHQrr SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(add v4i16:$rs1, v4i16:$rs2), (ADDHQrr SingleReg:$rs1, SingleReg:$rs2)>;
 
-// MADDW
-def MADDWp : KVX_PSEUDO<(outs SingleReg:$out), (ins SingleReg:$a, SingleReg:$b, SingleReg:$c), []>;
-
-defm : ZEFPat<(add i32:$a, (mul i32:$b, i32:$c)), (MADDWp SingleReg:$a, SingleReg:$b, SingleReg:$c)>;
-defm : ZEFPat<(add (mul i32:$a, i32:$b), i32:$c), (MADDWp SingleReg:$c, SingleReg:$a, SingleReg:$b)>;
-
-defm : ZEFPat<(add i32:$a, (mul i32:$b, Wrapped32:$c)), (MADDWp SingleReg:$a, SingleReg:$b, Wrapped32:$c)>;
-defm : ZEFPat<(add (mul i32:$a, Wrapped32:$b), i32:$c), (MADDWp SingleReg:$c, SingleReg:$a, Wrapped32:$b)>;
-
 // ADDX*, SBFX*
 multiclass ADDXDPAT<SDNode sc, KVX_INSTRUCTION RRInstr, KVX_INSTRUCTION RIInstr> {
 def : Pat<(add i64:$r1, (shl i64:$r2, sc)), (RRInstr SingleReg:$r2, SingleReg:$r1)>;
@@ -371,11 +362,28 @@ def : Pat<(umin v4i16:$v1, v4i16:$v2), (MINUHQrr SingleReg:$v1, SingleReg:$v2)>;
 // TODO: implement patterns or intrinsics for the following instructions: CMULDT
 // CMULGHXDT CMULGLXDT CMULGMXDT CMULXDT COPYQ CRCBELLW CRCBELMW CRCLELLW
 // CRCLELMW DOT2SUWD DOT2SUWDP DOT2UWD DOT2UWDP DOT2W DOT2WD DOT2WDP DOT2WZP
-// MADDD MADDDT MADDHQ MADDHWQ MADDSUDT MADDSUHWQ MADDSUWD MADDSUWDP MADDUDT
-// MADDUHWQ MADDUWD MADDUWD MADDUWDP MSBFD MSBFDT MSBFHQ MSBFHWQ MSBFSUDT
-// MSBFSUHWQ MSBFSUWD MSBFUSWDP MSBFUDT MSBFUHWQ MSBFUWD MSBFUWDP MSBFUZDT MSBFW
+// MADDDT MADDHQ MADDHWQ MADDSUDT MADDSUHWQ MADDSUWD MADDSUWDP MADDUDT
+// MADDUHWQ MADDUWD MADDUWD MADDUWDP MSBFDT MSBFHQ MSBFHWQ MSBFSUDT
+// MSBFSUHWQ MSBFSUWD MSBFUSWDP MSBFUDT MSBFUHWQ MSBFUWD MSBFUWDP MSBFUZDT 
 // MSBFWD MSBFWDP MSBFWP MULCWDC MULDT MULHWQ MULSUDT MULSUHWQ MULSUWD MULSUWDP
 // MULUDT MULUHWQ MULUWD MULUWDP MULWDC MULWDP
+
+// MADDD
+def : Pat<(add i64:$a1, (mul i64:$a2, i64:$a3)), (MADDDrr SingleReg:$a1, SingleReg:$a2, SingleReg:$a3)>;
+def : Pat<(add i64:$a1, (mul i64:$a2, Wrapped64:$a3)), (MADDDri64 SingleReg:$a1, SingleReg:$a2, Wrapped64:$a3)>;
+def : Pat<(add i64:$a1, (mul i64:$a2, Signed10:$a3)), (MADDDri10 SingleReg:$a1, SingleReg:$a2, Wrapped64:$a3)>;
+def : Pat<(add i64:$a1, (mul i64:$a2, Signed37:$a3)), (MADDDri37 SingleReg:$a1, SingleReg:$a2, Wrapped64:$a3)>;
+
+// MADDW
+defm : ZEFPat<(add i32:$a1, (mul i32:$a2, i32:$a3)), (MADDWrr SingleReg:$a1, SingleReg:$a2, SingleReg:$a3)>;
+defm : ZEFPat<(add i32:$a1, (mul i32:$a2, Wrapped32:$a3)), (MADDWri SingleReg:$a1, SingleReg:$a2, Wrapped32:$a3)>;
+
+// MSBFW
+defm : ZEFPat<(sub i32:$a1, (mul i32:$a2, i32:$a3)), (MSBFWrr SingleReg:$a1, SingleReg:$a2, SingleReg:$a3)>;
+defm : ZEFPat<(sub i32:$a1, (mul i32:$a2, Wrapped32:$a3)), (MSBFWri SingleReg:$a1, SingleReg:$a2, Wrapped32:$a3)>;
+
+// MSBFD
+def : Pat<(sub i64:$a1, (mul i64:$a2, i64:$a3)), (MSBFD SingleReg:$a1, SingleReg:$a2, SingleReg:$a3)>;
 
 // MULD
 def : Pat<(mul i64:$rs1, i64:$rs2), (MULDrr SingleReg:$rs1, SingleReg:$rs2)>;

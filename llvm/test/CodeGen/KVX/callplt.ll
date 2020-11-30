@@ -36,11 +36,9 @@ define i64 @foo(double*, double*, double*, { i32, [3 x i64], [3 x i64], [3 x i64
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    call get_z
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    muld $r0 = $r20, $r18
+; CHECK-NEXT:    maddd $r21 = $r20, $r18
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, $r21
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, $r19
+; CHECK-NEXT:    addd $r0 = $r21, $r19
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lq $r20r21 = 16[$r12]

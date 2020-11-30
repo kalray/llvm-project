@@ -14,8 +14,8 @@ entry:
   ret i32 %add
 }
 
-define i32 @f_maddwri_1(i32 %a, i32 %b){
-; CHECK-LABEL: f_maddwri_1:
+define i32 @f_maddwri(i32 %a, i32 %b){
+; CHECK-LABEL: f_maddwri:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    maddw $r0 = $r1, 11
 ; CHECK-NEXT:    ret
@@ -26,25 +26,14 @@ entry:
   ret i32 %add
 }
 
-define i32 @f_maddwri_2(i32 %a, i32 %b){
-; CHECK-LABEL: f_maddwri_2:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    maddw $r0 = $r1, 11
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
-entry:
-  %mul = mul nsw i32 %b, 11
-  %add = add nsw i32 %mul, %a
-  ret i32 %add
-}
-
-define i32 @f_not_maddw(i32 %a, i32 %b){
-; CHECK-LABEL: f_not_maddw:
+define i32 @f_maddw(i32 %a, i32 %b){
+; CHECK-LABEL: f_maddw:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addw $r2 = $r1, $r0
-; CHECK-NEXT:    mulw $r0 = $r1, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r0 = $r2, $r0
+; CHECK-NEXT:    maddw $r2 = $r1, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
