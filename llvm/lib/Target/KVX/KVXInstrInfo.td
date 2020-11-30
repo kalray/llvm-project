@@ -2596,7 +2596,7 @@ let Constraints = "$a1 = $a1o" in
 def MSBFD : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "msbfd $a1 = $a2, $a3",
-   [/* no straightforward pattern */],
+   [(set i64:$a1o, (sub i64:$a1, (mul i64:$a2, i64:$a3)))],
    MAU_AUXR>;
 
 defm MADDWP : MC_20<"maddwp">;
