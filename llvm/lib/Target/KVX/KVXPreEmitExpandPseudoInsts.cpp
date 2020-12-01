@@ -1046,6 +1046,32 @@ static bool expandEXTFZ(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   return true;
 }
 
+static bool expandTcaInplace(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
+                             MachineBasicBlock::iterator MBBI, unsigned SubReg,
+                             unsigned Opcode) {
+  MachineFunction *MF = MBB.getParent();
+  const KVXRegisterInfo *TRI =
+      (const KVXRegisterInfo *)MF->getSubtarget().getRegisterInfo();
+
+  auto OutReg = TRI->getSubReg(MBBI->getOperand(0).getReg(), SubReg);
+
+  LLVM_DEBUG(auto RName = TRI->getRegAsmName(OutReg.id());;
+             dbgs() << "Expanding write to sub-register: " << RName
+                    << " from pseudo: " << *MBBI);
+
+  DebugLoc DL = MBBI->getDebugLoc();
+  MachineInstrBuilder I = BuildMI(MBB, MBBI, DL, TII->get(Opcode), OutReg);
+  for (unsigned Op = 2; Op < MBBI->getNumOperands(); Op++) {
+    LLVM_DEBUG(dbgs() << "Adding operand: " << MBBI->getOperand(Op) << " to "
+                      << *I.getInstr());
+    I->addOperand(*MF, MBBI->getOperand(Op));
+  }
+
+  LLVM_DEBUG(dbgs() << "Converted to: " << *I.getInstr() << '\n');
+  MBBI->eraseFromParent();
+  return true;
+}
+
 static bool expandSWAPVOp(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
                           MachineBasicBlock::iterator MBBI) {
   MachineInstr &MI = *MBBI;
@@ -1215,6 +1241,30 @@ bool KVXPreEmitExpandPseudo::expandMI(MachineBasicBlock &MBB,
     return expandSWAPVOp(TII, MBB, MBBI);
   case KVX::SPCHECKp:
     return expandSPCHECK(TII, MBB, MBBI);
+  case KVX::CONVDHV0p:
+    return expandTcaInplace(TII, MBB, MBBI, KVX::sub_b0, KVX::CONVDHV0);
+  case KVX::CONVDHV1p:
+    return expandTcaInplace(TII, MBB, MBBI, KVX::sub_b1, KVX::CONVDHV1);
+  case KVX::FMMA242HW0p:
+    return expandTcaInplace(TII, MBB, MBBI, KVX::sub_b0, KVX::FMMA242HW0);
+  case KVX::FMMA242HW1p:
+    return expandTcaInplace(TII, MBB, MBBI, KVX::sub_b1, KVX::FMMA242HW1);
+  case KVX::FMMA242HW2p:
+    return expandTcaInplace(TII, MBB, MBBI, KVX::sub_b0, KVX::FMMA242HW2);
+  case KVX::FMMA242HW3p:
+    return expandTcaInplace(TII, MBB, MBBI, KVX::sub_b1, KVX::FMMA242HW3);
+  case KVX::CONVWBV0p:
+    return expandTcaInplace(TII, MBB, MBBI, KVX::sub_c0, KVX::CONVWBV0);
+  case KVX::CONVWBV1p:
+    return expandTcaInplace(TII, MBB, MBBI, KVX::sub_c1, KVX::CONVWBV1);
+  case KVX::CONVWBV2p:
+    return expandTcaInplace(TII, MBB, MBBI, KVX::sub_c2, KVX::CONVWBV2);
+  case KVX::CONVWBV3p:
+    return expandTcaInplace(TII, MBB, MBBI, KVX::sub_c3, KVX::CONVWBV3);
+  case KVX::MOVETOHIp:
+    return expandTcaInplace(TII, MBB, MBBI, KVX::sub_b1, KVX::MOVETQrrbo);
+  case KVX::MOVETOLOp:
+    return expandTcaInplace(TII, MBB, MBBI, KVX::sub_b0, KVX::MOVETQrrbe);
   default:
     break;
   }
