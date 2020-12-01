@@ -205,8 +205,8 @@ def int_kvx_cmoved : Intrinsic<[llvm_i64_ty], [llvm_i64_ty, llvm_i64_ty, llvm_i6
 // TCA - tightly-coupled accelerator
 //===----------------------------------------------------------------------===//
 // Move from GRP to TCA registers
-def int_kvx_movetolo: Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_i64_ty, llvm_i64_ty], [IntrHasSideEffects]>;
-def int_kvx_movetohi: Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_i64_ty, llvm_i64_ty], [IntrHasSideEffects]>;
+def int_kvx_movetolo: Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_i64_ty, llvm_i64_ty], [IntrNoMem]>;
+def int_kvx_movetohi: Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_i64_ty, llvm_i64_ty], [IntrNoMem]>;
 def int_kvx_moveto: Intrinsic<[llvm_v256i1_ty], [llvm_i64_ty, llvm_i64_ty, llvm_i64_ty, llvm_i64_ty], [IntrNoMem]>;
 def int_kvx_moveoto: Intrinsic<[llvm_v256i1_ty], [llvm_v4i64_ty], [IntrNoMem]>;
 
@@ -225,7 +225,7 @@ def int_kvx_alignv : Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_v256i1_ty
 
 // TCA arithmetic intrinsics
 class KVX_TCA_Inplace<list<LLVMType> args>
-    : Intrinsic<[llvm_v256i1_ty], !listconcat([llvm_v256i1_ty], args), [IntrHasSideEffects]>;
+    : Intrinsic<[llvm_v256i1_ty], !listconcat([llvm_v256i1_ty], args), [IntrNoMem]>;
 
 class KVX_TCA_convd : KVX_TCA_Inplace<[llvm_v1024i1_ty, llvm_i32_ty, llvm_i32_ty]>;
 def int_kvx_convdhv0 : KVX_TCA_convd;
