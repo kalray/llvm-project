@@ -37,31 +37,28 @@ define <2 x i16> @ctpopv2i16(<2 x i16> %a) {
 ; CHECK-LABEL: ctpopv2i16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r1 = 0x10001
-; CHECK-NEXT:    make $r2 = 0x55555555
+; CHECK-NEXT:    make $r2 = 0x20002
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srlhqs $r1 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r1 = $r1, $r2
+; CHECK-NEXT:    andw $r1 = $r1, 0x55555555
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfhq $r0 = $r1, $r0
-; CHECK-NEXT:    make $r1 = 0x33333333
-; CHECK-NEXT:    make $r3 = 0x20002
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r2 = $r0, $r1
-; CHECK-NEXT:    srlhqs $r0 = $r0, $r3
+; CHECK-NEXT:    andw $r1 = $r0, 0x33333333
+; CHECK-NEXT:    srlhqs $r0 = $r0, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r0 = $r0, $r1
+; CHECK-NEXT:    andw $r0 = $r0, 0x33333333
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addhq $r0 = $r1, $r0
 ; CHECK-NEXT:    make $r1 = 0x40004
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addhq $r0 = $r2, $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srlhqs $r1 = $r0, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addhq $r0 = $r0, $r1
-; CHECK-NEXT:    make $r1 = 0xf0f0f0f
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r0 = $r0, $r1
 ; CHECK-NEXT:    make $r1 = 0x1010101
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 0xf0f0f0f
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mulhq $r0 = $r0, $r1
 ; CHECK-NEXT:    make $r1 = 0x80008
