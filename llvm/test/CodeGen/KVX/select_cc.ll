@@ -135,12 +135,10 @@ define <2 x float> @f_select_cc_v2f32(i32 %c, i32 %c2, <2 x float> %a, <2 x floa
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r0, 63, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r1 = $r2, $r0
-; CHECK-NEXT:    notd $r0 = $r0
+; CHECK-NEXT:    andnd $r1 = $r0, $r3
+; CHECK-NEXT:    andd $r0 = $r2, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r3, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ord $r0 = $r1, $r0
+; CHECK-NEXT:    ord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
