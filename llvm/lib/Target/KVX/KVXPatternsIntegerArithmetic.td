@@ -133,8 +133,22 @@ def : Pat<(and i64:$rs1, i64:$rs2), (ANDDrr SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(and i64:$rs1, Signed10:$rs2), (ANDDri10 SingleReg:$rs1, Signed10:$rs2)>;
 def : Pat<(and i64:$rs1, Signed37:$rs2), (ANDDri37 SingleReg:$rs1, Signed37:$rs2)>;
 def : Pat<(and i64:$rs1, Wrapped64:$rs2), (ANDDri64 SingleReg:$rs1, Wrapped64:$rs2)>;
-def : Pat<(and v2i32:$rs1, v2i32:$rs2), (ANDDrr SingleReg:$rs1, SingleReg:$rs2)>;
-def : Pat<(and v4i16:$rs1, v4i16:$rs2), (ANDDrr SingleReg:$rs1, SingleReg:$rs2)>;
+
+foreach vtype = [ v8i8, v4i16, v2i32 ] in {
+    def : Pat<(and vtype:$rs1, vtype:$rs2), (ANDDrr SingleReg:$rs1, SingleReg:$rs2)>;
+    def : Pat<(and vtype:$rs1, (vtype (bitconvert (i64 Wrapped64:$rs2)))), (ANDDri64 SingleReg:$rs1, Wrapped64:$rs2)>;
+}
+
+// ANDND
+def : Pat<(and (not i64:$rs1), i64:$rs2), (ANDNDrr SingleReg:$rs1, SingleReg:$rs2)>;
+def : Pat<(and (not i64:$rs1), Signed10:$rs2), (ANDNDri10 SingleReg:$rs1, Signed10:$rs2)>;
+def : Pat<(and (not i64:$rs1), Signed37:$rs2), (ANDNDri37 SingleReg:$rs1, Signed37:$rs2)>;
+def : Pat<(and (not i64:$rs1), Wrapped64:$rs2), (ANDNDri64 SingleReg:$rs1, Wrapped64:$rs2)>;
+
+foreach vtype = [ v8i8, v4i16, v2i32 ] in {
+    def : Pat<(and (vinot vtype:$rs1), vtype:$rs2), (ANDNDrr SingleReg:$rs1, SingleReg:$rs2)>;
+    def : Pat<(and (vinot vtype:$rs1), (vtype (bitconvert (i64 Wrapped64:$rs2)))), (ANDNDri64 SingleReg:$rs1, Wrapped64:$rs2)>;
+}
 
 // LANDW
 defm : ZEFPat<(and (i32 (setne i32:$v1, (i32 0))), (i32 (setne i32:$v2, (i32 0)))),
@@ -170,7 +184,11 @@ def : Pat<(i32 (seteq (or i64:$v1, i64:$v2), (i64 0))), (LNORDrr SingleReg:$v1, 
 defm : ZEFPat<(and i32:$rs1, i32:$rs2), (ANDWrr SingleReg:$rs1, SingleReg:$rs2)>;
 defm : ZEFPat<(and i32:$rs1, Signed10W:$rs2), (ANDWri10 SingleReg:$rs1, Signed10W:$rs2)>;
 defm : ZEFPat<(and i32:$rs1, Signed37W:$rs2), (ANDWri37 SingleReg:$rs1, Signed37W:$rs2)>;
-def : Pat<(and v2i16:$rs1, v2i16:$rs2), (ANDWrr SingleReg:$rs1, SingleReg:$rs2)>;
+
+foreach vtype = [ v4i8, v2i16 ] in {
+    def : Pat<(and vtype:$rs1, vtype:$rs2), (ANDWrr SingleReg:$rs1, SingleReg:$rs2)>;
+    def : Pat<(and vtype:$rs1, (vtype (bitconvert (i32 Signed37W:$rs2)))), (ANDWri37 SingleReg:$rs1, Signed37W:$rs2)>;
+}
 
 multiclass COMP_Pat<SDNode Node, Comparison Mod> {
   //COMPD
@@ -214,14 +232,21 @@ def : Pat<(or i64:$rs1, i64:$rs2), (ORDrr SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(or i64:$rs1, Signed10:$rs2), (ORDri10 SingleReg:$rs1, Signed10:$rs2)>;
 def : Pat<(or i64:$rs1, Signed37:$rs2), (ORDri37 SingleReg:$rs1, Signed37:$rs2)>;
 def : Pat<(or i64:$rs1, Wrapped64:$rs2), (ORDri64 SingleReg:$rs1, Wrapped64:$rs2)>;
-def : Pat<(or v2i32:$rs1, v2i32:$rs2), (ORDrr SingleReg:$rs1, SingleReg:$rs2)>;
-def : Pat<(or v4i16:$rs1, v4i16:$rs2), (ORDrr SingleReg:$rs1, SingleReg:$rs2)>;
+
+foreach vtype = [ v8i8, v4i16, v2i32 ] in {
+    def : Pat<(or vtype:$rs1, vtype:$rs2), (ORDrr SingleReg:$rs1, SingleReg:$rs2)>;
+    def : Pat<(or vtype:$rs1, (vtype (bitconvert (i64 Wrapped64:$rs2)))), (ORDri64 SingleReg:$rs1, Wrapped64:$rs2)>;
+}
 
 // ORW
 defm : ZEFPat<(or i32:$rs1, i32:$rs2), (ORWrr SingleReg:$rs1, SingleReg:$rs2)>;
 defm : ZEFPat<(or i32:$rs1, Signed10W:$rs2), (ORWri10 SingleReg:$rs1, Signed10W:$rs2)>;
 defm : ZEFPat<(or i32:$rs1, Signed37W:$rs2), (ORWri37 SingleReg:$rs1, Signed37W:$rs2)>;
-def : Pat<(or v2i16:$rs1, v2i16:$rs2), (ORWrr SingleReg:$rs1, SingleReg:$rs2)>;
+
+foreach vtype = [ v4i8, v2i16 ] in {
+    def : Pat<(or vtype:$rs1, vtype:$rs2), (ORWrr SingleReg:$rs1, SingleReg:$rs2)>;
+    def : Pat<(or vtype:$rs1, (vtype (bitconvert (i32 Signed37W:$rs2)))), (ORWri37 SingleReg:$rs1, Signed37W:$rs2)>;
+}
 
 // SBFD
 def : Pat<(sub i64:$rs1, i64:$rs2), (SBFDrr SingleReg:$rs2, SingleReg:$rs1)>;
@@ -278,14 +303,21 @@ def : Pat<(xor i64:$rs1, i64:$rs2), (XORDrr SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(xor i64:$rs1, Signed10:$rs2), (XORDri10 SingleReg:$rs1, Signed10:$rs2)>;
 def : Pat<(xor i64:$rs1, Signed37:$rs2), (XORDri37 SingleReg:$rs1, Signed37:$rs2)>;
 def : Pat<(xor i64:$rs1, Wrapped64:$rs2), (XORDri64 SingleReg:$rs1, Wrapped64:$rs2)>;
-def : Pat<(xor v2i32:$rs1, v2i32:$rs2), (XORDrr SingleReg:$rs1, SingleReg:$rs2)>;
-def : Pat<(xor v4i16:$rs1, v4i16:$rs2), (XORDrr SingleReg:$rs1, SingleReg:$rs2)>;
+
+foreach vtype = [ v8i8, v4i16, v2i32 ] in {
+    def : Pat<(xor vtype:$rs1, vtype:$rs2), (XORDrr SingleReg:$rs1, SingleReg:$rs2)>;
+    def : Pat<(xor vtype:$rs1, (vtype (bitconvert Wrapped64:$rs2))), (XORDri64 SingleReg:$rs1, Wrapped64:$rs2)>;
+}
 
 // XORW
 defm : ZEFPat<(xor i32:$rs1, i32:$rs2), (XORWrr SingleReg:$rs1, SingleReg:$rs2)>;
 defm : ZEFPat<(xor i32:$rs1, Signed10W:$rs2), (XORWri10 SingleReg:$rs1, Signed10W:$rs2)>;
 defm : ZEFPat<(xor i32:$rs1, Signed37W:$rs2), (XORWri37 SingleReg:$rs1, Signed37W:$rs2)>;
-def : Pat<(xor v2i16:$rs1, v2i16:$rs2), (XORWrr SingleReg:$rs1, SingleReg:$rs2)>;
+
+foreach vtype = [ v4i8, v2i16 ] in {
+    def : Pat<(xor vtype:$rs1, vtype:$rs2), (XORWrr SingleReg:$rs1, SingleReg:$rs2)>;
+    def : Pat<(xor vtype:$rs1, (vtype (bitconvert (i32 Signed37W:$rs2)))), (XORWri37 SingleReg:$rs1, Signed37W:$rs2)>;
+}
 
 // MINW
 def : Pat<(smin i32:$v1, i32:$v2), (MINWrr SingleReg:$v1, SingleReg:$v2)>;
@@ -427,10 +459,6 @@ def : Pat<(sub v8i8:$v1, v8i8:$v2),
                   (ORDri64 SingleReg:$v1, 0x8080808080808080)
             )
       )>;
-
-def : Pat<(and v8i8:$v1, v8i8:$v2), (ANDDrr SingleReg:$v1, SingleReg:$v2)>;
-def : Pat<(or v8i8:$v1, v8i8:$v2), (ORDrr SingleReg:$v1, SingleReg:$v2)>;
-def : Pat<(xor v8i8:$v1, v8i8:$v2), (XORDrr SingleReg:$v1, SingleReg:$v2)>;
 
 def EXTFZWp : KVX_PSEUDO<(outs SingleReg:$out), (ins SingleReg:$a, Wrapped32:$andm, Wrapped64:$shifc), []>;
 def EXTFZDp : KVX_PSEUDO<(outs SingleReg:$out), (ins SingleReg:$a, Wrapped64:$andm, Wrapped64:$shifc), []>;
