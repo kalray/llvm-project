@@ -697,7 +697,7 @@ SDValue KVXTargetLowering::LowerFormalArguments(
     // Copy the integer registers that may have been used for passing varargs
     // to the vararg save area.
     for (unsigned I = Idx; I < ArgRegs.size(); ++I, VarArgsOffset += 8) {
-      const unsigned Reg =
+      const Register Reg =
           RegInfo.createVirtualRegister(&KVX::SingleRegRegClass);
       RegInfo.addLiveIn(ArgRegs[I], Reg);
       SDValue ArgValue = DAG.getCopyFromReg(Chain, DL, Reg, MVT::i64);
@@ -986,7 +986,7 @@ Instruction *KVXTargetLowering::emitLeadingFence(IRBuilder<> &Builder,
   else if (isa<AtomicCmpXchgInst>(Inst))
     AS = static_cast<AtomicCmpXchgInst *>(Inst)->getPointerAddressSpace();
   else
-    llvm_unreachable("Unsupported atomic instruction");
+    report_fatal_error("Unsupported atomic instruction");
 
   if (AS == 1) { // __global AS (opencl_global): emit a call to OS intrinsic.
     Module *M = Builder.GetInsertBlock()->getParent()->getParent();
@@ -1003,17 +1003,16 @@ Instruction *KVXTargetLowering::emitLeadingFence(IRBuilder<> &Builder,
     L2Bypass->setDebugLoc(Inst->getDebugLoc());
 
     return L2Bypass;
-  } else { // Emit a fence.
-    switch (toCABI(Ord)) {
-    case AtomicOrderingCABI::relaxed:
-    case AtomicOrderingCABI::release:
-      return nullptr;
-    case AtomicOrderingCABI::consume:
-    case AtomicOrderingCABI::acquire:
-    case AtomicOrderingCABI::acq_rel:
-    case AtomicOrderingCABI::seq_cst:
-      return Builder.CreateFence(Ord);
-    }
+  } // Emit a fence.
+  switch (toCABI(Ord)) {
+  case AtomicOrderingCABI::relaxed:
+  case AtomicOrderingCABI::release:
+    return nullptr;
+  case AtomicOrderingCABI::consume:
+  case AtomicOrderingCABI::acquire:
+  case AtomicOrderingCABI::acq_rel:
+  case AtomicOrderingCABI::seq_cst:
+    return Builder.CreateFence(Ord);
   }
 }
 
@@ -1033,7 +1032,7 @@ Instruction *KVXTargetLowering::emitTrailingFence(IRBuilder<> &Builder,
     // Ensure to use stronger ordering.
     Ord = static_cast<AtomicCmpXchgInst *>(Inst)->getSuccessOrdering();
   } else
-    llvm_unreachable("Unsupported atomic instruction");
+    report_fatal_error("Unsupported atomic instruction");
 
   if (AS == 1) { // __global AS (opencl_global): emit a call to OS intrinsic.
     Module *M = Builder.GetInsertBlock()->getParent()->getParent();
@@ -1050,17 +1049,16 @@ Instruction *KVXTargetLowering::emitTrailingFence(IRBuilder<> &Builder,
     L2Bypass->setDebugLoc(Inst->getDebugLoc());
 
     return L2Bypass;
-  } else { // Emit a fence.
-    switch (toCABI(Ord)) {
-    case AtomicOrderingCABI::relaxed:
-    case AtomicOrderingCABI::acquire:
-      return nullptr;
-    case AtomicOrderingCABI::release:
-    case AtomicOrderingCABI::acq_rel:
-    case AtomicOrderingCABI::consume:
-    case AtomicOrderingCABI::seq_cst:
-      return Builder.CreateFence(Ord);
-    }
+  } // Emit a fence.
+  switch (toCABI(Ord)) {
+  case AtomicOrderingCABI::relaxed:
+  case AtomicOrderingCABI::acquire:
+    return nullptr;
+  case AtomicOrderingCABI::release:
+  case AtomicOrderingCABI::acq_rel:
+  case AtomicOrderingCABI::consume:
+  case AtomicOrderingCABI::seq_cst:
+    return Builder.CreateFence(Ord);
   }
 }
 
@@ -1157,7 +1155,7 @@ SDValue KVXTargetLowering::lowerGlobalAddress(SDValue Op,
 
     } break;
     default:
-      llvm_unreachable("Unsupported LinkageType");
+      report_fatal_error("Unsupported LinkageType");
     }
   } else {
     Result = DAG.getTargetGlobalAddress(GV, DL, PtrVT, 0);
@@ -1493,7 +1491,7 @@ static unsigned selectExtend(unsigned BitSize) {
   // i8 and i16 are not legal, explicit selection must be done
   switch (BitSize) {
   default:
-    llvm_unreachable("Unknown extend for this type");
+    report_fatal_error("Unknown extend for this type");
   case 8:
     return KVX::ZXBD;
   case 16:
@@ -1507,7 +1505,7 @@ static uint64_t selectMask(unsigned Size) {
   if (4 < Size && Size <= 64 && Size % 2 == 0)
     return Size == 64 ? UINT64_MAX : (1L << Size) - 1L;
 
-  llvm_unreachable("Unsupported size, cannot select mask!");
+  report_fatal_error("Unsupported size, cannot select mask!");
 }
 
 static SDValue getINSF(const SDLoc &DL, const SDValue &Vec, const SDValue &Val,
@@ -1603,7 +1601,7 @@ SDValue KVXTargetLowering::lowerBUILD_VECTOR(SDValue Op,
                                              SelectionDAG &DAG) const {
   switch (Op.getSimpleValueType().SimpleTy) {
   default:
-    llvm_unreachable("Unsupported lowering for this type!");
+    report_fatal_error("Unsupported lowering for this type!");
   case MVT::v2i16:
   case MVT::v2f16:
     return lowerBUILD_VECTOR_V2_32bit(Op, DAG);
@@ -1660,15 +1658,12 @@ SDValue KVXTargetLowering::lowerBUILD_VECTOR_V2_32bit(SDValue Op,
     uint64_t R = ((Op2Val & 0xFFFF) << 16) | (Op1Val & 0xFFFF);
 
     return DAG.getBitcast(Op.getValueType(), DAG.getConstant(R, DL, MVT::i32));
-  } else {
-    return SDValue(
-        DAG.getMachineNode(KVX::INSF, DL, Op.getValueType(),
-                           { Op1,
-                             Op2,
-                             DAG.getTargetConstant(31, DL, MVT::i64),
-                             DAG.getTargetConstant(16, DL, MVT::i64) }),
-        0);
   }
+  return SDValue(
+      DAG.getMachineNode(KVX::INSF, DL, Op.getValueType(),
+                         {Op1, Op2, DAG.getTargetConstant(31, DL, MVT::i64),
+                          DAG.getTargetConstant(16, DL, MVT::i64)}),
+      0);
 }
 
 SDValue KVXTargetLowering::lowerBUILD_VECTOR_V2_64bit(SDValue Op,
@@ -1722,58 +1717,55 @@ SDValue KVXTargetLowering::lowerBUILD_VECTOR_V2_64bit(SDValue Op,
     uint64_t R = ((Op2Val << 32) | (Op1Val & 0xFFFFFFFF));
 
     return DAG.getBitcast(Op.getValueType(), DAG.getConstant(R, DL, MVT::i64));
-  } else if (IsOp1Const) { // imm reg
+  }
+  if (IsOp1Const) { // imm reg
     Op1Val &= 0xFFFFFFFF;
 
     SDValue ShiftedOp2 = DAG.getNode(
         ISD::SHL, DL, MVT::i64,
-        { SDValue(DAG.getMachineNode(TargetOpcode::COPY, DL, MVT::i64,
-                                     DAG.getBitcast(MVT::i32, Op2)),
-                  0),
-          DAG.getConstant(32, DL, MVT::i32) });
+        {SDValue(DAG.getMachineNode(TargetOpcode::COPY, DL, MVT::i64,
+                                    DAG.getBitcast(MVT::i32, Op2)),
+                 0),
+         DAG.getConstant(32, DL, MVT::i32)});
 
     return DAG.getBitcast(
         Op.getValueType(),
         DAG.getNode(ISD::OR, DL, MVT::i64,
-                    { ShiftedOp2, DAG.getConstant(Op1Val, DL, MVT::i64) }));
-  } else if (IsOp2Const) { // reg imm
+                    {ShiftedOp2, DAG.getConstant(Op1Val, DL, MVT::i64)}));
+  }
+  if (IsOp2Const) { // reg imm
     Op2Val <<= 32;
 
-    SDValue Op1Val = DAG.getNode(ISD::ZERO_EXTEND, DL, MVT::i64,
-                                 DAG.getBitcast(MVT::i32, Op1));
+    SDValue SDOp1Val = DAG.getNode(ISD::ZERO_EXTEND, DL, MVT::i64,
+                                   DAG.getBitcast(MVT::i32, Op1));
 
     return DAG.getBitcast(
         Op.getValueType(),
         DAG.getNode(ISD::OR, DL, MVT::i64,
-                    { Op1Val, DAG.getConstant(Op2Val, DL, MVT::i64) }));
-  } else { // reg reg
-    if (Op1.isUndef() && Op2.isUndef())
-      return SDValue(
-          DAG.getMachineNode(TargetOpcode::IMPLICIT_DEF, DL, Op.getValueType()),
-          0);
-    if (useINSF) {
-      return SDValue(
-          DAG.getMachineNode(KVX::INSF, DL, Op.getValueType(),
-                             { Op1,
-                               Op2,
-                               DAG.getTargetConstant(63, DL, MVT::i64),
-                               DAG.getTargetConstant(32, DL, MVT::i64) }),
-          0);
-    } else {
-      SDValue ShiftedOp2 = DAG.getNode(
-          ISD::SHL, DL, MVT::i64,
-          { SDValue(DAG.getMachineNode(TargetOpcode::COPY, DL, MVT::i64,
-                                       DAG.getBitcast(MVT::i32, Op2)),
-                    0),
-            DAG.getConstant(32, DL, MVT::i32) });
-      SDValue Op1Val = DAG.getNode(ISD::ZERO_EXTEND, DL, MVT::i64,
-                                   DAG.getBitcast(MVT::i32, Op1));
-
-      return DAG.getBitcast(
-          Op.getValueType(),
-          DAG.getNode(ISD::OR, DL, MVT::i64, { Op1Val, ShiftedOp2 }));
-    }
+                    {SDOp1Val, DAG.getConstant(Op2Val, DL, MVT::i64)}));
+  } // reg reg
+  if (Op1.isUndef() && Op2.isUndef())
+    return SDValue(
+        DAG.getMachineNode(TargetOpcode::IMPLICIT_DEF, DL, Op.getValueType()),
+        0);
+  if (useINSF) {
+    return SDValue(
+        DAG.getMachineNode(KVX::INSF, DL, Op.getValueType(),
+                           {Op1, Op2, DAG.getTargetConstant(63, DL, MVT::i64),
+                            DAG.getTargetConstant(32, DL, MVT::i64)}),
+        0);
   }
+  SDValue ShiftedOp2 =
+      DAG.getNode(ISD::SHL, DL, MVT::i64,
+                  {SDValue(DAG.getMachineNode(TargetOpcode::COPY, DL, MVT::i64,
+                                              DAG.getBitcast(MVT::i32, Op2)),
+                           0),
+                   DAG.getConstant(32, DL, MVT::i32)});
+  SDValue SDOp1Val = DAG.getNode(ISD::ZERO_EXTEND, DL, MVT::i64,
+                                 DAG.getBitcast(MVT::i32, Op1));
+
+  return DAG.getBitcast(Op.getValueType(), DAG.getNode(ISD::OR, DL, MVT::i64,
+                                                       {SDOp1Val, ShiftedOp2}));
 }
 
 SDValue
@@ -1833,7 +1825,7 @@ static SDValue makeInsertConst(const SDLoc &DL, SDValue Vec, MVT Type,
 static MVT selectType(unsigned Size) {
   switch (Size) {
   default:
-    llvm_unreachable("Unsupported type for this size!");
+    report_fatal_error("Unsupported type for this size!");
   case 8:
   case 16:
   case 32:
@@ -2127,7 +2119,7 @@ KVXTargetLowering::getComparisonCondition(ISD::CondCode CCOpcode) const {
     Condition = KVXMOD::COMPARISON_GEU;
     break;
   default:
-    llvm_unreachable("not an integer condition code");
+    report_fatal_error("not an integer condition code");
   }
 
   return Condition;
@@ -2162,7 +2154,7 @@ unsigned KVXTargetLowering::getBranchCondition(ISD::CondCode CCOpcode,
     Condition = KVXMOD::SCALARCOND_DGEZ;
     break;
   default:
-    llvm_unreachable("not an integer condition code");
+    report_fatal_error("not an integer condition code");
   }
 
   return Word ? Condition + WordAddend : Condition;
