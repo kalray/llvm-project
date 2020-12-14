@@ -37,6 +37,12 @@ class BITCAST
   <ValueType DstVT, ValueType SrcVT, RegisterClass DstRC>
   : Pat<(DstVT (bitconvert (SrcVT DstRC:$src))), (DstVT DstRC:$src)>;
 
+
+def trunc_imm_32 : SDNodeXForm<imm, [{
+  return CurDAG->getTargetConstant(N->getZExtValue() & 0xffffffff, SDLoc(N), MVT::i32);
+}]>;
+
+
 def KVXInstrInfo : InstrInfo;
 
 include "KVXInstrInfo.td"
