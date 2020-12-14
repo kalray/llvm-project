@@ -40,43 +40,43 @@ multiclass ADDXDPAT<SDNode sc, KVX_INSTRUCTION RRInstr, KVX_INSTRUCTION RIInstr>
 def : Pat<(add i64:$r1, (shl i64:$r2, sc)), (RRInstr SingleReg:$r2, SingleReg:$r1)>;
 def : Pat<(add (shl i64:$r2, sc), i64:$r1), (RRInstr SingleReg:$r2, SingleReg:$r1)>;
 
-def : Pat<(add (shl i64:$r2, sc), Wrapped64W:$r1), (RIInstr SingleReg:$r2, Wrapped64W:$r1)>;
+def : Pat<(add (shl i64:$r2, sc), Wrapped64W:$r1), (RIInstr SingleReg:$r2, (trunc_imm_32 imm:$r1))>;
 }
 
 multiclass SBFXDPAT<SDNode sc, KVX_INSTRUCTION RRInstr, KVX_INSTRUCTION RIInstr> {
 def : Pat<(sub i64:$r1, (shl i64:$r2, sc)), (RRInstr SingleReg:$r2, SingleReg:$r1)>;
-def : Pat<(sub Wrapped64W:$r1, (shl i64:$r2, sc)), (RIInstr SingleReg:$r2, Wrapped64W:$r1)>;
+def : Pat<(sub Wrapped64W:$r1, (shl i64:$r2, sc)), (RIInstr SingleReg:$r2, (trunc_imm_32 imm:$r1))>;
 }
 
-defm : ADDXDPAT<(i64 4), ADDX16Dmrr, ADDX16Dmri>;
-defm : ADDXDPAT<(i64 3), ADDX8Dmrr, ADDX8Dmri>;
-defm : ADDXDPAT<(i64 2), ADDX4Dmrr, ADDX4Dmri>;
-defm : ADDXDPAT<(i64 1), ADDX2Dmrr, ADDX2Dmri>;
-defm : SBFXDPAT<(i64 4), SBFX16Dmrr, SBFX16Dmri>;
-defm : SBFXDPAT<(i64 3), SBFX8Dmrr, SBFX8Dmri>;
-defm : SBFXDPAT<(i64 2), SBFX4Dmrr, SBFX4Dmri>;
-defm : SBFXDPAT<(i64 1), SBFX2Dmrr, SBFX2Dmri>;
+defm : ADDXDPAT<(i64 4), ADDX16Drr, ADDX16Dri>;
+defm : ADDXDPAT<(i64 3), ADDX8Drr, ADDX8Dri>;
+defm : ADDXDPAT<(i64 2), ADDX4Drr, ADDX4Dri>;
+defm : ADDXDPAT<(i64 1), ADDX2Drr, ADDX2Dri>;
+defm : SBFXDPAT<(i64 4), SBFX16Drr, SBFX16Dri>;
+defm : SBFXDPAT<(i64 3), SBFX8Drr, SBFX8Dri>;
+defm : SBFXDPAT<(i64 2), SBFX4Drr, SBFX4Dri>;
+defm : SBFXDPAT<(i64 1), SBFX2Drr, SBFX2Dri>;
 
 multiclass ADDXUWDPAT<SDNode sc, KVX_INSTRUCTION RRInstr, KVX_INSTRUCTION RIInstr> {
 def : Pat<(add i64:$r1, (i64 (zext (shl i32:$r2, sc))) ), (RRInstr SingleReg:$r2, SingleReg:$r1)>;
 def : Pat<(add (i64 (zext (shl i32:$r2, sc))), i64:$r1), (RRInstr SingleReg:$r2, SingleReg:$r1)>;
 
-def : Pat<(add (i64 (zext (shl i32:$r2, sc))), Wrapped64W:$r1), (RIInstr SingleReg:$r2, Wrapped64W:$r1)>;
+def : Pat<(add (i64 (zext (shl i32:$r2, sc))), Wrapped64W:$r1), (RIInstr SingleReg:$r2, (trunc_imm_32 imm:$r1))>;
 }
 
 multiclass SBFXUWDPAT<SDNode sc, KVX_INSTRUCTION RRInstr, KVX_INSTRUCTION RIInstr> {
 def : Pat<(sub i64:$r1, (i64 (zext (shl i32:$r2, sc))) ), (RRInstr SingleReg:$r2, SingleReg:$r1)>;
-def : Pat<(sub Wrapped64W:$r1, (i64 (zext (shl i32:$r2, sc))) ), (RRInstr SingleReg:$r2, Wrapped64W:$r1)>;
+def : Pat<(sub Wrapped64W:$r1, (i64 (zext (shl i32:$r2, sc))) ), (RIInstr SingleReg:$r2, (trunc_imm_32 imm:$r1))>;
 }
 
-defm : ADDXUWDPAT<(i64 4), ADDX16UWDmrr, ADDX16UWDmri>;
-defm : ADDXUWDPAT<(i64 3), ADDX8UWDmrr, ADDX8UWDmri>;
-defm : ADDXUWDPAT<(i64 2), ADDX4UWDmrr, ADDX4UWDmri>;
-defm : ADDXUWDPAT<(i64 1), ADDX2UWDmrr, ADDX2UWDmri>;
-defm : SBFXUWDPAT<(i64 4), SBFX16UWDmrr, SBFX16UWDmri>;
-defm : SBFXUWDPAT<(i64 3), SBFX8UWDmrr, SBFX8UWDmri>;
-defm : SBFXUWDPAT<(i64 2), SBFX4UWDmrr, SBFX4UWDmri>;
-defm : SBFXUWDPAT<(i64 1), SBFX2UWDmrr, SBFX2UWDmri>;
+defm : ADDXUWDPAT<(i64 4), ADDX16UWDrr, ADDX16UWDri>;
+defm : ADDXUWDPAT<(i64 3), ADDX8UWDrr, ADDX8UWDri>;
+defm : ADDXUWDPAT<(i64 2), ADDX4UWDrr, ADDX4UWDri>;
+defm : ADDXUWDPAT<(i64 1), ADDX2UWDrr, ADDX2UWDri>;
+defm : SBFXUWDPAT<(i64 4), SBFX16UWDrr, SBFX16UWDri>;
+defm : SBFXUWDPAT<(i64 3), SBFX8UWDrr, SBFX8UWDri>;
+defm : SBFXUWDPAT<(i64 2), SBFX4UWDrr, SBFX4UWDri>;
+defm : SBFXUWDPAT<(i64 1), SBFX2UWDrr, SBFX2UWDri>;
 
 multiclass ADDXWPAT<SDNode sc, KVX_INSTRUCTION RRInstr, KVX_INSTRUCTION RIInstr> {
 defm : ZEFPat<(add i32:$r1, (shl i32:$r2, sc)), (RRInstr SingleReg:$r2, SingleReg:$r1)>;
@@ -103,22 +103,22 @@ multiclass ADDXWDPAT<SDNode sc, KVX_INSTRUCTION RRInstr, KVX_INSTRUCTION RIInstr
 def : Pat<(add i64:$r1, (i64 (sext (shl i32:$r2, sc))) ), (RRInstr SingleReg:$r2, SingleReg:$r1)>;
 def : Pat<(add (i64 (sext (shl i32:$r2, sc))), i64:$r1), (RRInstr SingleReg:$r2, SingleReg:$r1)>;
 
-def : Pat<(add (i64 (sext (shl i32:$r2, sc))), Wrapped64W:$r1), (RIInstr SingleReg:$r2, Wrapped64W:$r1)>;
+def : Pat<(add (i64 (sext (shl i32:$r2, sc))), Wrapped64W:$r1), (RIInstr SingleReg:$r2, (trunc_imm_32 imm:$r1))>;
 }
 
 multiclass SBFXWDPAT<SDNode sc, KVX_INSTRUCTION RRInstr, KVX_INSTRUCTION RIInstr> {
 def : Pat<(sub i64:$r1, (i64 (sext (shl i32:$r2, sc))) ), (RRInstr SingleReg:$r2, SingleReg:$r1)>;
-def : Pat<(sub Wrapped64W:$r1, (i64 (sext (shl i32:$r2, sc)))), (RIInstr SingleReg:$r2, Wrapped64W:$r1)>;
+def : Pat<(sub Wrapped64W:$r1, (i64 (sext (shl i32:$r2, sc)))), (RIInstr SingleReg:$r2, (trunc_imm_32 imm:$r1))>;
 }
 
-defm : ADDXWDPAT<(i64 4), ADDX16WDmrr, ADDX16WDmri>;
-defm : ADDXWDPAT<(i64 3), ADDX8WDmrr, ADDX8WDmri>;
-defm : ADDXWDPAT<(i64 2), ADDX4WDmrr, ADDX4WDmri>;
-defm : ADDXWDPAT<(i64 1), ADDX2WDmrr, ADDX2WDmri>;
-defm : SBFXWDPAT<(i64 4), SBFX16WDmrr, SBFX16WDmri>;
-defm : SBFXWDPAT<(i64 3), SBFX8WDmrr, SBFX8WDmri>;
-defm : SBFXWDPAT<(i64 2), SBFX4WDmrr, SBFX4WDmri>;
-defm : SBFXWDPAT<(i64 1), SBFX2WDmrr, SBFX2WDmri>;
+defm : ADDXWDPAT<(i64 4), ADDX16WDrr, ADDX16WDri>;
+defm : ADDXWDPAT<(i64 3), ADDX8WDrr, ADDX8WDri>;
+defm : ADDXWDPAT<(i64 2), ADDX4WDrr, ADDX4WDri>;
+defm : ADDXWDPAT<(i64 1), ADDX2WDrr, ADDX2WDri>;
+defm : SBFXWDPAT<(i64 4), SBFX16WDrr, SBFX16WDri>;
+defm : SBFXWDPAT<(i64 3), SBFX8WDrr, SBFX8WDri>;
+defm : SBFXWDPAT<(i64 2), SBFX4WDrr, SBFX4WDri>;
+defm : SBFXWDPAT<(i64 1), SBFX2WDrr, SBFX2WDri>;
 
 // ADDW
 defm : ZEFPat<(add i32:$rs1, i32:$rs2), (ADDWrr SingleReg:$rs1, SingleReg:$rs2)>;
