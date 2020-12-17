@@ -507,6 +507,18 @@ NARY_BUILTIN(moveoto, "Tt256V4Li", "n", 1)
 
 NARY_BUILTIN(movefo, "V4LiTt256", "n", 1)
 
+NARY_BUILTIN(insertwm, "Tt1024Tt1024Tt512Ui", "n", 3)
+NARY_BUILTIN(insertvm, "Tt1024Tt1024Tt256Ui", "n", 3)
+NARY_BUILTIN(insertvw, "Tt512Tt512Tt256Ui", "n", 3)
+
+NARY_BUILTIN(movefmw, "Tt512Tt1024Ui", "n", 2)
+NARY_BUILTIN(movefmv, "Tt256Tt1024Ui", "n", 2)
+NARY_BUILTIN(movefwv, "Tt256Tt512Ui", "n", 2)
+
+NARY_BUILTIN(buildfvm, "Tt1024Tt256Tt256Tt256Tt256", "n", 4)
+NARY_BUILTIN(buildfwm, "Tt1024Tt512Tt512", "n", 2)
+NARY_BUILTIN(buildfvw, "Tt512Tt256Tt256", "n", 2)
+
 NARY_BUILTIN(alignov, "V4LiTt256Tt256Li", "n", 3)
 NARY_BUILTIN(alignv, "Tt256Tt256Tt256Li", "n", 3)
 
