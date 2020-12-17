@@ -230,13 +230,6 @@ def LVp : KVX_PSEUDO<
         (outs VectorReg:$out),
         (ins Wrapped64:$offset, SingleReg:$base, SpeculateMod:$var), []>;
 
-def LWIDEp : KVX_PSEUDO<
-        (outs WideReg:$out),
-        (ins Wrapped64:$offset, SingleReg:$base, SpeculateMod:$var), []>;
-
-def LMATRIXp : KVX_PSEUDO<
-        (outs MatrixReg:$out),
-        (ins Wrapped64:$offset, SingleReg:$base, SpeculateMod:$var), []>;
 }
 
 def lvspec : PatFrag<(ops node:$ptr), (v256i1 (load node:$ptr)), [{
@@ -544,13 +537,16 @@ defm : LoadPat<loadspecv4i32, v4i32, 4, LQp, LQri10, LQrr, variant_s>;
 
 defm : LoadPat<loadspecv4i64, v4i64, 5, LOp, LOri10, LOrr, variant_s>;
 defm : LoadPat<lvspec, v256i1, 5, LVp, LVri10, LVrr, speculate_s>;
-defm : LoadPatRI<lvvspec, v512i1, LWIDEp, speculate_s>;
 def : Pat<(v512i1 (lvvspec SingleReg:$base)),
-          (v512i1 (LWIDEp (i64 0), SingleReg:$base, speculate_s))>;
-defm : LoadPatRI<lxspec, v1024i1, LMATRIXp, speculate_s>;
+          (v512i1 (REG_SEQUENCE WideReg,
+                    (LVp (i64 32), SingleReg:$base, speculate_),  sub_v1,
+                    (LVp (i64 0), SingleReg:$base, speculate_),  sub_v0))>;
 def : Pat<(v1024i1 (lxspec SingleReg:$base)),
-          (v1024i1 (LMATRIXp (i64 0), SingleReg:$base, speculate_s))>;
-
+          (v1024i1 (REG_SEQUENCE MatrixReg,
+                    (LVp (i64 96), SingleReg:$base, speculate_),  sub_v3,
+                    (LVp (i64 64), SingleReg:$base, speculate_),  sub_v2,
+                    (LVp (i64 32), SingleReg:$base, speculate_),  sub_v1,
+                    (LVp (i64 0), SingleReg:$base, speculate_),   sub_v0))>;
 // normal loads
 defm : SimpleLoadPat<sextloadi1, i32, LBSp, LBSri10, LBSrr, variant_>;
 defm : SimpleLoadPat<zextloadi1, i32, LBZp, LBZri10, LBZrr, variant_>;
@@ -594,12 +590,17 @@ defm : LoadPat<loadv4i32, v4i32, 4, LQp, LQri10, LQrr, variant_>;
 
 defm : LoadPat<loadv4i64, v4i64, 5, LOp, LOri10, LOrr, variant_>;
 defm : LoadPat<load, v256i1, 5, LVp, LVri10, LVrr, speculate_>;
-defm : LoadPatRI<load, v512i1, LWIDEp, speculate_>;
+
 def : Pat<(v512i1 (load SingleReg:$base)),
-          (v512i1 (LWIDEp (i64 0), SingleReg:$base, speculate_))>;
-defm : LoadPatRI<load, v1024i1, LMATRIXp, speculate_>;
+          (v512i1 (REG_SEQUENCE WideReg,
+                    (LVp (i64 32), SingleReg:$base, speculate_),  sub_v1,
+                    (LVp (i64 0), SingleReg:$base, speculate_),  sub_v0))>;
 def : Pat<(v1024i1 (load SingleReg:$base)),
-          (v1024i1 (LMATRIXp (i64 0), SingleReg:$base, speculate_))>;
+          (v1024i1 (REG_SEQUENCE MatrixReg,
+                    (LVp (i64 96), SingleReg:$base, speculate_), sub_v3,
+                    (LVp (i64 64), SingleReg:$base, speculate_), sub_v2,
+                    (LVp (i64 32), SingleReg:$base, speculate_), sub_v1,
+                    (LVp (i64 0), SingleReg:$base, speculate_),  sub_v0))>;
 
 
 //===----------------------------------------------------------------------===//
@@ -624,10 +625,6 @@ def SOp : KVX_PSEUDO<
         (outs), (ins Wrapped64:$offset, SingleReg:$base, QuadReg:$val), []>;
 def SVp : KVX_PSEUDO<
         (outs), (ins Wrapped64:$offset, SingleReg:$base, VectorReg:$val), []>;
-def SWIDEp : KVX_PSEUDO<
-        (outs), (ins Wrapped64:$offset, SingleReg:$base, WideReg:$val), []>;
-def SMATRIXp : KVX_PSEUDO<
-        (outs), (ins Wrapped64:$offset, SingleReg:$base, MatrixReg:$val), []>;
 }
 
 multiclass StorePatRI<PatFrag StoreOp, ValueType vt, RegisterClass rc,
@@ -719,14 +716,6 @@ defm : StorePat<store, v4i32, PairedReg, 4, SQp, SQri10, SQrr>;
 
 defm : StorePat<store, v4i64, QuadReg, 5, SOp, SOri10, SOrr>;
 defm : StorePat<store, v256i1,VectorReg,5, SVp, SVri10, SVrr>;
-defm : StorePatRI<store, v512i1, WideReg, SWIDEp, (v512i1 WideReg:$val)>;
-def : Pat<(store v512i1:$val, SingleReg:$base),
-          (SWIDEp (i64 0), SingleReg:$base, (v512i1 WideReg:$val))>;
-
-defm : StorePatRI<store, v1024i1, MatrixReg, SMATRIXp, (v1024i1 MatrixReg:$val)>;
-def : Pat<(store v1024i1:$val, SingleReg:$base),
-          (SMATRIXp (i64 0), SingleReg:$base, (v1024i1 MatrixReg:$val))>;
-
 // sign extend optimizations
 def : Pat<(and SingleReg:$val,(i64 0xffffffff)), (ZXWD SingleReg:$val)>;
 def : Pat<(and SingleReg:$val,(i32 0xffff)), (ZXHD SingleReg:$val)>;

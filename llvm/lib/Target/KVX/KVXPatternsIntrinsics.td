@@ -325,8 +325,57 @@ def: Pat<(int_kvx_moveto i64:$z, i64:$y, i64:$x, i64:$w),
             (MOVETOHIp (MOVETOLOp (v256i1(IMPLICIT_DEF)), SingleReg:$x, SingleReg:$w), SingleReg:$z, SingleReg:$y)>;
 
 def: Pat<(int_kvx_moveoto QuadReg:$r), (COPY_TO_REGCLASS QuadReg:$r, VectorReg)>;
-// Move from TCA registers to GPR
+
+// Copy from TCA to GPR registers
 def: Pat<(int_kvx_movefo VectorReg:$v), (COPY_TO_REGCLASS $v, QuadReg)>;
+
+// Copy TCA Sub-types (insert/extract sub-registers)
+// Operands:
+def sub_w_imm_check : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 1);}]>;
+def sub_w_imm_value : SDNodeXForm<imm, [{
+  return CurDAG->getTargetConstant(N->getZExtValue() + KVX::sub_w0, SDLoc(N), MVT::i32);
+}]>;
+
+def m_sub_v_imm_check : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 4);}]>;
+def m_sub_v_imm_value : Operand<i32>, SDNodeXForm<imm, [{
+  return CurDAG->getTargetConstant(N->getSExtValue() + KVX::sub_v0, SDLoc(N), MVT::i32);
+}]>;
+
+def w_sub_v_imm_check : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 1);}]>;
+def w_sub_v_imm_value : Operand<i32>, SDNodeXForm<imm, [{
+  return CurDAG->getTargetConstant(N->getSExtValue() + KVX::sub_v0, SDLoc(N), MVT::i32);
+}]>;
+
+// Builtins -> intrinsics patterns:
+def: Pat<(int_kvx_insertwm v1024i1:$a0, v512i1:$a1, sub_w_imm_check:$pos),
+    (INSERT_SUBREG MatrixReg:$a0, WideReg:$a1, (sub_w_imm_value imm:$pos))>;
+def: Pat<(int_kvx_insertvm v1024i1:$a0, v256i1:$a1, m_sub_v_imm_check:$pos),
+    (INSERT_SUBREG MatrixReg:$a0, VectorReg:$a1, (m_sub_v_imm_value imm:$pos))>;
+def: Pat<(int_kvx_insertvw v512i1:$a0, v256i1:$a1, w_sub_v_imm_check:$pos),
+    (INSERT_SUBREG WideReg:$a0, VectorReg:$a1, (w_sub_v_imm_value imm:$pos))>;
+def: Pat<(int_kvx_movefmw v1024i1:$a0, sub_w_imm_check:$pos),
+    (EXTRACT_SUBREG MatrixReg:$a0, (sub_w_imm_value imm:$pos))>;
+def: Pat<(int_kvx_movefmv v1024i1:$a0, m_sub_v_imm_check:$pos),
+    (EXTRACT_SUBREG MatrixReg:$a0, (m_sub_v_imm_value imm:$pos))>;
+def: Pat<(int_kvx_movefwv v512i1:$a0, w_sub_v_imm_check:$pos),
+    (EXTRACT_SUBREG WideReg:$a0, (w_sub_v_imm_value imm:$pos))>;
+
+def: Pat<(int_kvx_buildfvm v256i1:$v0, v256i1:$v1, v256i1:$v2, v256i1:$v3),
+            (REG_SEQUENCE MatrixReg,
+                (v256i1 VectorReg:$v0), (i32 sub_v0),
+                (v256i1 VectorReg:$v1), (i32 sub_v1),
+                (v256i1 VectorReg:$v2), (i32 sub_v2),
+                (v256i1 VectorReg:$v3), (i32 sub_v3))>;
+
+def: Pat<(int_kvx_buildfwm v512i1:$w0, v512i1:$w1),
+            (REG_SEQUENCE MatrixReg,
+                (v512i1 WideReg:$w0), (i32 sub_w0),
+                (v512i1 WideReg:$w1), (i32 sub_w1))>;
+
+def: Pat<(int_kvx_buildfvw v256i1:$v0, v256i1:$v1),
+            (REG_SEQUENCE WideReg,
+                (v256i1 VectorReg:$v0), (i32 sub_v0),
+                (v256i1 VectorReg:$v1), (i32 sub_v1))>;
 
 // Vector conditional load
 // TODO: Allow all addressing modes.

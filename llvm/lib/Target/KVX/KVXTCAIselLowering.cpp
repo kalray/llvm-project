@@ -49,7 +49,8 @@ void KVXTargetLowering::initializeTCALowering() {
                         ISD::LOAD, ISD::STORE, ISD::PREFETCH, ISD::ATOMIC_LOAD,
                         ISD::ATOMIC_STORE, ISD::ATOMIC_SWAP})
     setOperationAction(NodeType, MVT::v256i1, Legal);
-  for (auto VT : {MVT::v512i1, MVT::v1024i1})
-    for (auto NodeType : {ISD::LOAD, ISD::STORE})
-      setOperationAction(NodeType, VT, Legal);
+  for (auto VT : {MVT::v512i1, MVT::v1024i1}) {
+    setOperationAction(ISD::LOAD, VT, Legal);
+    setOperationAction(ISD::STORE, VT, Custom);
+  }
 }
