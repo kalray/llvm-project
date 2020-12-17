@@ -32,16 +32,16 @@ class KVXTTIImpl : public BasicTTIImplBase<KVXTTIImpl> {
 
   friend BaseT;
 
+  const TargetMachine *TM;
   const KVXSubtarget *ST;
   const KVXTargetLowering *TLI;
-
   const KVXSubtarget *getST() const { return ST; }
   const KVXTargetLowering *getTLI() const { return TLI; }
 
 public:
   explicit KVXTTIImpl(const KVXTargetMachine *TM, const Function &F)
-      : BaseT(TM, F.getParent()->getDataLayout()), ST(TM->getSubtargetImpl(F)),
-        TLI(ST->getTargetLowering()) {}
+      : BaseT(TM, F.getParent()->getDataLayout()), TM(TM),
+        ST(TM->getSubtargetImpl(F)), TLI(ST->getTargetLowering()) {}
 
   void getUnrollingPreferences(Loop *L, ScalarEvolution &SE,
                                TTI::UnrollingPreferences &UP);

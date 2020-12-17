@@ -19,6 +19,10 @@ using namespace llvm;
 
 void KVXTTIImpl::getUnrollingPreferences(Loop *L, ScalarEvolution &SE,
                                          TTI::UnrollingPreferences &UP) {
+  BaseT::getUnrollingPreferences(L, SE, UP);
+  if (TM->getOptLevel() < CodeGenOpt::Aggressive)
+    return;
+
   UP.Partial = true;
   UP.Runtime = true;
 
