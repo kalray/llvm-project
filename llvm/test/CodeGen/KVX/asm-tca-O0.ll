@@ -230,24 +230,25 @@ define void @use_wide_reg(<512 x i1>* %w, <256 x i1>* %v) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    copyd $r4 = $r0
-; CHECK-NEXT:    lv $a6 = 0[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    sd 8[$r12] = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a4 = 0[$r4]
+; CHECK-NEXT:    sd 0[$r12] = $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a5 = 32[$r4]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 0[$r12] = $r4
+; CHECK-NEXT:    lv $a4 = 0[$r4]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv $a6 = 0[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    mma484bw $a4a5 = $a4a5, $a6, $a6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP
-; CHECK-NEXT:    sv 0[$r4] = $a4
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 32[$r4] = $a5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 0[$r4] = $a4
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -274,27 +275,27 @@ define void @use_matrix_reg(<1024 x i1>* %x) {
 ; CHECK-NEXT:    copyd $r4 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    lv $a4 = 0[$r4]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a5 = 32[$r4]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a6 = 64[$r4]
+; CHECK-NEXT:    sd 0[$r12] = $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a7 = 96[$r4]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 0[$r12] = $r4
+; CHECK-NEXT:    lv $a6 = 64[$r4]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv $a5 = 32[$r4]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv $a4 = 0[$r4]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    mt44d $a4a5a6a7 = $a4a5a6a7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP
-; CHECK-NEXT:    sv 0[$r4] = $a4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 32[$r4] = $a5
+; CHECK-NEXT:    sv 96[$r4] = $a7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 64[$r4] = $a6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 96[$r4] = $a7
+; CHECK-NEXT:    sv 32[$r4] = $a5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 0[$r4] = $a4
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;

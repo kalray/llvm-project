@@ -934,7 +934,41 @@ SDValue KVXTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
       return SDValue();
   case ISD::DYNAMIC_STACKALLOC:
     return lowerStackCheckAlloca(Op, DAG);
+  case ISD::STORE:
+    return lowerSTORE(Op, DAG);
   }
+}
+SDValue KVXTargetLowering::lowerSTORE(SDValue Op, SelectionDAG &DAG) const {
+  SDValue STValue = Op->getOperand(1);
+  auto VT = STValue.getSimpleValueType();
+  if (!(VT == MVT::v512i1 || VT == MVT::v1024i1))
+    return SDValue();
+
+  SDValue Chain = Op.getOperand(0);
+  int End = KVX::sub_v0 + (VT == MVT::v512i1 ? 1 : 3);
+  auto Base = Op->getOperand(2).getValue(0);
+  auto SDOffset = Op->getOperand(3);
+  auto Offset = 0;
+  SDLoc OffsetDL(SDOffset);
+  if (!SDOffset->isUndef()) {
+    if (auto *IntOffset = dyn_cast<ConstantSDNode>(SDOffset))
+      Offset = IntOffset->getSExtValue();
+    else
+      Base = DAG.getNode(ISD::ADD, OffsetDL, Base.getValueType());
+  }
+  SDLoc DataDL(STValue);
+  SDLoc StoreDL(Op);
+  for (int Sub = KVX::sub_v0; Sub <= End; Sub++, Offset += 32) {
+    SDValue SubIdx = DAG.getTargetConstant(Sub, DataDL, MVT::i32);
+    SDValue NewOffset = DAG.getConstant(Offset, OffsetDL, MVT::i64);
+    SDValue SubValue(DAG.getMachineNode(TargetOpcode::EXTRACT_SUBREG, DataDL,
+                                        MVT::v256i1, {STValue, SubIdx}),
+                     0);
+    SDValue Ptr =
+        DAG.getNode(ISD::ADD, OffsetDL, Base.getValueType(), {Base, NewOffset});
+    Chain = DAG.getStore(Chain, StoreDL, SubValue, Ptr, MachinePointerInfo());
+  }
+  return Chain;
 }
 
 SDValue KVXTargetLowering::lowerStackCheckAlloca(SDValue Op,

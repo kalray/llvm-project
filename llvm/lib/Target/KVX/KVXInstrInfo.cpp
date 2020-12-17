@@ -158,6 +158,20 @@ void KVXInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
     }
   }
 
+  if (KVX::WideRegRegClass.contains(SrcReg, DstReg)) {
+    LLVM_DEBUG(dbgs() << "It is a TCA WideReg, use 2x copyv.\n");
+
+    auto Src = TRI->getSubReg(SrcReg, KVX::sub_v0);
+    auto Dst = TRI->getSubReg(DstReg, KVX::sub_v0);
+    BuildMI(MBB, MBBI, DL, get(KVX::COPYVre), Dst)
+        .addReg(Src, getKillRegState(KillSrc));
+    Src = TRI->getSubReg(SrcReg, KVX::sub_v1);
+    Dst = TRI->getSubReg(DstReg, KVX::sub_v1);
+    BuildMI(MBB, MBBI, DL, get(KVX::COPYVro), Dst)
+        .addReg(Src, getKillRegState(KillSrc));
+    return;
+  }
+
   report_fatal_error("Don't know how to handle register copy from (" +
                      TRI->getRegAsmName(SrcReg.id()) + ") to (" +
                      TRI->getRegAsmName(DstReg.id()) + ").\n");
@@ -228,12 +242,23 @@ void KVXInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
     LLVM_DEBUG(dbgs() << "It is a vector TCA register, loading using LVp.\n");
     Pseudo = KVX::LVp;
   } else if (KVX::WideRegRegClass.hasSubClassEq(RC)) {
-    LLVM_DEBUG(dbgs() << "It is a wide TCA register, loading using LWIDEp.\n");
-    Pseudo = KVX::LWIDEp;
+    LLVM_DEBUG(dbgs() << "It is a wide TCA register, using 2 LVp.\n");
+    auto LVp = get(KVX::LVp);
+    for (int Sub = KVX::sub_v0, Imm = 0; Sub <= KVX::sub_v1; Sub++, Imm += 32)
+      BuildMI(MBB, I, DL, LVp, TRI->getSubReg(DstReg, Sub))
+          .addImm(0)
+          .addFrameIndex(FI)
+          .addImm(KVXMOD::VARIANT_);
+    return;
   } else if (KVX::MatrixRegRegClass.hasSubClassEq(RC)) {
-    Pseudo = KVX::LMATRIXp;
-    LLVM_DEBUG(
-        dbgs() << "It is a matrix TCA register, loading using LMATRIXp.\n");
+    LLVM_DEBUG(dbgs() << "It is a matrix TCA register, loading using 4 LVp.\n");
+    auto LVp = get(KVX::LVp);
+    for (int Sub = KVX::sub_v0, Imm = 0; Sub <= KVX::sub_v3; Sub++, Imm += 32)
+      BuildMI(MBB, I, DL, LVp, TRI->getSubReg(DstReg, Sub))
+          .addImm(0)
+          .addFrameIndex(FI)
+          .addImm(KVXMOD::VARIANT_);
+    return;
   } else if (KVX::OnlyraRegRegClass.hasSubClassEq(RC)) {
     LLVM_DEBUG(dbgs() << "It is a RA register, using LDp and SETrsta.\n");
     Register ScratchReg = findScratchRegister(MBB, true, KVX::R16);
@@ -281,13 +306,26 @@ void KVXInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
     LLVM_DEBUG(dbgs() << "It is a vector TCA register, storing using SVp.\n");
     Pseudo = KVX::SVp;
   } else if (KVX::WideRegRegClass.hasSubClassEq(RC)) {
-    LLVM_DEBUG(
-        dbgs() << "It is a vector TCA register, storing using SWIDEp.\n");
-    Pseudo = KVX::SWIDEp;
+    LLVM_DEBUG(dbgs() << "It is a wide TCA register, using 2 SVp.\n");
+    auto SVp = get(KVX::SVp);
+    for (int Sub = KVX::sub_v0, Imm = 0; Sub <= KVX::sub_v1; Sub++, Imm += 32)
+      BuildMI(MBB, I, DL, SVp)
+          .addImm(Imm)
+          .addFrameIndex(FI)
+          .addReg(TRI->getSubReg(SrcReg, Sub), getKillRegState(IsKill))
+          .setMIFlags(MachineInstr::FrameSetup);
+    return;
   } else if (KVX::MatrixRegRegClass.hasSubClassEq(RC)) {
-    Pseudo = KVX::SMATRIXp;
     LLVM_DEBUG(
-        dbgs() << "It is a vector TCA register, storing using SMATRIXp.\n");
+        dbgs() << "It is a vector TCA register, storing using 4 x SVp.\n");
+    auto SVp = get(KVX::SVp);
+    for (int Sub = KVX::sub_v0, Imm = 0; Sub <= KVX::sub_v3; Sub++, Imm += 32)
+      BuildMI(MBB, I, DL, SVp)
+          .addImm(Imm)
+          .addFrameIndex(FI)
+          .addReg(TRI->getSubReg(SrcReg, Sub), getKillRegState(IsKill))
+          .setMIFlags(MachineInstr::FrameSetup);
+    return;
   } else if (KVX::OnlyraRegRegClass.hasSubClassEq(RC)) {
     LLVM_DEBUG(dbgs() << "It is a RA register, using GETss2 and SDp.\n");
     Register ScratchReg = findScratchRegister(MBB, false, KVX::R16);

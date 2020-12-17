@@ -223,6 +223,17 @@ def int_kvx_swapvo : Intrinsic<[llvm_v4i64_ty, llvm_v256i1_ty], [llvm_v4i64_ty, 
 def int_kvx_alignov : Intrinsic<[llvm_v4i64_ty], [llvm_v256i1_ty, llvm_v256i1_ty, llvm_i64_ty], [IntrNoMem]>;
 def int_kvx_alignv : Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_v256i1_ty, llvm_i64_ty], [IntrNoMem]>;
 
+// Matrix / Wide sub-registers manipulation
+def int_kvx_insertwm : Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_v512i1_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_insertvm : Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_v256i1_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_insertvw : Intrinsic<[llvm_v512i1_ty],  [llvm_v512i1_ty, llvm_v256i1_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_movefmw : Intrinsic<[llvm_v512i1_ty], [llvm_v1024i1_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_movefmv : Intrinsic<[llvm_v256i1_ty], [llvm_v1024i1_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_movefwv : Intrinsic<[llvm_v256i1_ty], [llvm_v512i1_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_buildfvm : Intrinsic<[llvm_v1024i1_ty], [llvm_v256i1_ty, llvm_v256i1_ty, llvm_v256i1_ty, llvm_v256i1_ty], [IntrNoMem]>;
+def int_kvx_buildfwm : Intrinsic<[llvm_v1024i1_ty], [llvm_v512i1_ty, llvm_v512i1_ty], [IntrNoMem]>;
+def int_kvx_buildfvw : Intrinsic<[llvm_v512i1_ty], [llvm_v256i1_ty, llvm_v256i1_ty], [IntrNoMem]>;
+
 // TCA arithmetic intrinsics
 class KVX_TCA_Inplace<list<LLVMType> args>
     : Intrinsic<[llvm_v256i1_ty], !listconcat([llvm_v256i1_ty], args), [IntrNoMem]>;

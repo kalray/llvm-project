@@ -299,3 +299,402 @@ void test(__tca256 *v) {
   v[0] = __builtin_kvx_movetohi(v[0], j[1], j[0]);
   v[0] = __builtin_kvx_movetolo(v[0], j[1], j[0]);
 }
+
+// O0-LABEL: @insertwm(
+// O0-NEXT:  entry:
+// O0-NEXT:    [[A0_ADDR:%.*]] = alloca <1024 x i1>*, align 8
+// O0-NEXT:    [[A1_ADDR:%.*]] = alloca <512 x i1>*, align 8
+// O0-NEXT:    store <1024 x i1>* [[A0:%.*]], <1024 x i1>** [[A0_ADDR]], align 8
+// O0-NEXT:    store <512 x i1>* [[A1:%.*]], <512 x i1>** [[A1_ADDR]], align 8
+// O0-NEXT:    [[TMP0:%.*]] = load <1024 x i1>*, <1024 x i1>** [[A0_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <1024 x i1>, <1024 x i1>* [[TMP0]], i64 0
+// O0-NEXT:    [[TMP1:%.*]] = load <1024 x i1>, <1024 x i1>* [[ARRAYIDX]], align 128
+// O0-NEXT:    [[TMP2:%.*]] = load <512 x i1>*, <512 x i1>** [[A1_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[TMP2]], i64 0
+// O0-NEXT:    [[TMP3:%.*]] = load <512 x i1>, <512 x i1>* [[ARRAYIDX1]], align 64
+// O0-NEXT:    [[TMP4:%.*]] = call <1024 x i1> @llvm.kvx.insertwm(<1024 x i1> [[TMP1]], <512 x i1> [[TMP3]], i32 0)
+// O0-NEXT:    [[TMP5:%.*]] = load <1024 x i1>*, <1024 x i1>** [[A0_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX2:%.*]] = getelementptr inbounds <1024 x i1>, <1024 x i1>* [[TMP5]], i64 0
+// O0-NEXT:    store <1024 x i1> [[TMP4]], <1024 x i1>* [[ARRAYIDX2]], align 128
+// O0-NEXT:    [[TMP6:%.*]] = load <1024 x i1>*, <1024 x i1>** [[A0_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <1024 x i1>, <1024 x i1>* [[TMP6]], i64 0
+// O0-NEXT:    [[TMP7:%.*]] = load <1024 x i1>, <1024 x i1>* [[ARRAYIDX3]], align 128
+// O0-NEXT:    [[TMP8:%.*]] = load <512 x i1>*, <512 x i1>** [[A1_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX4:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[TMP8]], i64 0
+// O0-NEXT:    [[TMP9:%.*]] = load <512 x i1>, <512 x i1>* [[ARRAYIDX4]], align 64
+// O0-NEXT:    [[TMP10:%.*]] = call <1024 x i1> @llvm.kvx.insertwm(<1024 x i1> [[TMP7]], <512 x i1> [[TMP9]], i32 1)
+// O0-NEXT:    [[TMP11:%.*]] = load <1024 x i1>*, <1024 x i1>** [[A0_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX5:%.*]] = getelementptr inbounds <1024 x i1>, <1024 x i1>* [[TMP11]], i64 0
+// O0-NEXT:    store <1024 x i1> [[TMP10]], <1024 x i1>* [[ARRAYIDX5]], align 128
+// O0-NEXT:    ret void
+//
+// O2-LABEL: @insertwm(
+// O2-NEXT:  entry:
+// O2-NEXT:    [[TMP0:%.*]] = load <1024 x i1>, <1024 x i1>* [[A0:%.*]], align 128, !tbaa !6
+// O2-NEXT:    [[TMP1:%.*]] = load <512 x i1>, <512 x i1>* [[A1:%.*]], align 64, !tbaa !8
+// O2-NEXT:    [[TMP2:%.*]] = call <1024 x i1> @llvm.kvx.insertwm(<1024 x i1> [[TMP0]], <512 x i1> [[TMP1]], i32 0)
+// O2-NEXT:    [[TMP3:%.*]] = call <1024 x i1> @llvm.kvx.insertwm(<1024 x i1> [[TMP2]], <512 x i1> [[TMP1]], i32 1)
+// O2-NEXT:    store <1024 x i1> [[TMP3]], <1024 x i1>* [[A0]], align 128, !tbaa !6
+// O2-NEXT:    ret void
+//
+void insertwm(__tca1024 *a0, __tca512 *a1) {
+  a0[0] = __builtin_kvx_insertwm(a0[0], a1[0], 0);
+  a0[0] = __builtin_kvx_insertwm(a0[0], a1[0], 1);
+}
+
+// O0-LABEL: @insertvm(
+// O0-NEXT:  entry:
+// O0-NEXT:    [[A0_ADDR:%.*]] = alloca <1024 x i1>*, align 8
+// O0-NEXT:    [[A1_ADDR:%.*]] = alloca <256 x i1>*, align 8
+// O0-NEXT:    store <1024 x i1>* [[A0:%.*]], <1024 x i1>** [[A0_ADDR]], align 8
+// O0-NEXT:    store <256 x i1>* [[A1:%.*]], <256 x i1>** [[A1_ADDR]], align 8
+// O0-NEXT:    [[TMP0:%.*]] = load <1024 x i1>*, <1024 x i1>** [[A0_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <1024 x i1>, <1024 x i1>* [[TMP0]], i64 0
+// O0-NEXT:    [[TMP1:%.*]] = load <1024 x i1>, <1024 x i1>* [[ARRAYIDX]], align 128
+// O0-NEXT:    [[TMP2:%.*]] = load <256 x i1>*, <256 x i1>** [[A1_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[TMP2]], i64 0
+// O0-NEXT:    [[TMP3:%.*]] = load <256 x i1>, <256 x i1>* [[ARRAYIDX1]], align 32
+// O0-NEXT:    [[TMP4:%.*]] = call <1024 x i1> @llvm.kvx.insertvm(<1024 x i1> [[TMP1]], <256 x i1> [[TMP3]], i32 0)
+// O0-NEXT:    [[TMP5:%.*]] = load <1024 x i1>*, <1024 x i1>** [[A0_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX2:%.*]] = getelementptr inbounds <1024 x i1>, <1024 x i1>* [[TMP5]], i64 0
+// O0-NEXT:    store <1024 x i1> [[TMP4]], <1024 x i1>* [[ARRAYIDX2]], align 128
+// O0-NEXT:    [[TMP6:%.*]] = load <1024 x i1>*, <1024 x i1>** [[A0_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <1024 x i1>, <1024 x i1>* [[TMP6]], i64 0
+// O0-NEXT:    [[TMP7:%.*]] = load <1024 x i1>, <1024 x i1>* [[ARRAYIDX3]], align 128
+// O0-NEXT:    [[TMP8:%.*]] = load <256 x i1>*, <256 x i1>** [[A1_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX4:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[TMP8]], i64 0
+// O0-NEXT:    [[TMP9:%.*]] = load <256 x i1>, <256 x i1>* [[ARRAYIDX4]], align 32
+// O0-NEXT:    [[TMP10:%.*]] = call <1024 x i1> @llvm.kvx.insertvm(<1024 x i1> [[TMP7]], <256 x i1> [[TMP9]], i32 1)
+// O0-NEXT:    [[TMP11:%.*]] = load <1024 x i1>*, <1024 x i1>** [[A0_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX5:%.*]] = getelementptr inbounds <1024 x i1>, <1024 x i1>* [[TMP11]], i64 0
+// O0-NEXT:    store <1024 x i1> [[TMP10]], <1024 x i1>* [[ARRAYIDX5]], align 128
+// O0-NEXT:    [[TMP12:%.*]] = load <1024 x i1>*, <1024 x i1>** [[A0_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX6:%.*]] = getelementptr inbounds <1024 x i1>, <1024 x i1>* [[TMP12]], i64 0
+// O0-NEXT:    [[TMP13:%.*]] = load <1024 x i1>, <1024 x i1>* [[ARRAYIDX6]], align 128
+// O0-NEXT:    [[TMP14:%.*]] = load <256 x i1>*, <256 x i1>** [[A1_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX7:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[TMP14]], i64 0
+// O0-NEXT:    [[TMP15:%.*]] = load <256 x i1>, <256 x i1>* [[ARRAYIDX7]], align 32
+// O0-NEXT:    [[TMP16:%.*]] = call <1024 x i1> @llvm.kvx.insertvm(<1024 x i1> [[TMP13]], <256 x i1> [[TMP15]], i32 2)
+// O0-NEXT:    [[TMP17:%.*]] = load <1024 x i1>*, <1024 x i1>** [[A0_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX8:%.*]] = getelementptr inbounds <1024 x i1>, <1024 x i1>* [[TMP17]], i64 0
+// O0-NEXT:    store <1024 x i1> [[TMP16]], <1024 x i1>* [[ARRAYIDX8]], align 128
+// O0-NEXT:    [[TMP18:%.*]] = load <1024 x i1>*, <1024 x i1>** [[A0_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX9:%.*]] = getelementptr inbounds <1024 x i1>, <1024 x i1>* [[TMP18]], i64 0
+// O0-NEXT:    [[TMP19:%.*]] = load <1024 x i1>, <1024 x i1>* [[ARRAYIDX9]], align 128
+// O0-NEXT:    [[TMP20:%.*]] = load <256 x i1>*, <256 x i1>** [[A1_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX10:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[TMP20]], i64 0
+// O0-NEXT:    [[TMP21:%.*]] = load <256 x i1>, <256 x i1>* [[ARRAYIDX10]], align 32
+// O0-NEXT:    [[TMP22:%.*]] = call <1024 x i1> @llvm.kvx.insertvm(<1024 x i1> [[TMP19]], <256 x i1> [[TMP21]], i32 3)
+// O0-NEXT:    [[TMP23:%.*]] = load <1024 x i1>*, <1024 x i1>** [[A0_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX11:%.*]] = getelementptr inbounds <1024 x i1>, <1024 x i1>* [[TMP23]], i64 0
+// O0-NEXT:    store <1024 x i1> [[TMP22]], <1024 x i1>* [[ARRAYIDX11]], align 128
+// O0-NEXT:    ret void
+//
+// O2-LABEL: @insertvm(
+// O2-NEXT:  entry:
+// O2-NEXT:    [[TMP0:%.*]] = load <1024 x i1>, <1024 x i1>* [[A0:%.*]], align 128, !tbaa !6
+// O2-NEXT:    [[TMP1:%.*]] = load <256 x i1>, <256 x i1>* [[A1:%.*]], align 32, !tbaa !2
+// O2-NEXT:    [[TMP2:%.*]] = call <1024 x i1> @llvm.kvx.insertvm(<1024 x i1> [[TMP0]], <256 x i1> [[TMP1]], i32 0)
+// O2-NEXT:    [[TMP3:%.*]] = call <1024 x i1> @llvm.kvx.insertvm(<1024 x i1> [[TMP2]], <256 x i1> [[TMP1]], i32 1)
+// O2-NEXT:    [[TMP4:%.*]] = call <1024 x i1> @llvm.kvx.insertvm(<1024 x i1> [[TMP3]], <256 x i1> [[TMP1]], i32 2)
+// O2-NEXT:    [[TMP5:%.*]] = call <1024 x i1> @llvm.kvx.insertvm(<1024 x i1> [[TMP4]], <256 x i1> [[TMP1]], i32 3)
+// O2-NEXT:    store <1024 x i1> [[TMP5]], <1024 x i1>* [[A0]], align 128, !tbaa !6
+// O2-NEXT:    ret void
+//
+void insertvm(__tca1024 *a0, __tca256 *a1) {
+  a0[0] = __builtin_kvx_insertvm(a0[0], a1[0], 0);
+  a0[0] = __builtin_kvx_insertvm(a0[0], a1[0], 1);
+  a0[0] = __builtin_kvx_insertvm(a0[0], a1[0], 2);
+  a0[0] = __builtin_kvx_insertvm(a0[0], a1[0], 3);
+}
+
+// O0-LABEL: @insertvw(
+// O0-NEXT:  entry:
+// O0-NEXT:    [[A0_ADDR:%.*]] = alloca <512 x i1>*, align 8
+// O0-NEXT:    [[A1_ADDR:%.*]] = alloca <256 x i1>*, align 8
+// O0-NEXT:    store <512 x i1>* [[A0:%.*]], <512 x i1>** [[A0_ADDR]], align 8
+// O0-NEXT:    store <256 x i1>* [[A1:%.*]], <256 x i1>** [[A1_ADDR]], align 8
+// O0-NEXT:    [[TMP0:%.*]] = load <512 x i1>*, <512 x i1>** [[A0_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[TMP0]], i64 0
+// O0-NEXT:    [[TMP1:%.*]] = load <512 x i1>, <512 x i1>* [[ARRAYIDX]], align 64
+// O0-NEXT:    [[TMP2:%.*]] = load <256 x i1>*, <256 x i1>** [[A1_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[TMP2]], i64 0
+// O0-NEXT:    [[TMP3:%.*]] = load <256 x i1>, <256 x i1>* [[ARRAYIDX1]], align 32
+// O0-NEXT:    [[TMP4:%.*]] = call <512 x i1> @llvm.kvx.insertvw(<512 x i1> [[TMP1]], <256 x i1> [[TMP3]], i32 0)
+// O0-NEXT:    [[TMP5:%.*]] = load <512 x i1>*, <512 x i1>** [[A0_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX2:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[TMP5]], i64 0
+// O0-NEXT:    store <512 x i1> [[TMP4]], <512 x i1>* [[ARRAYIDX2]], align 64
+// O0-NEXT:    [[TMP6:%.*]] = load <512 x i1>*, <512 x i1>** [[A0_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[TMP6]], i64 0
+// O0-NEXT:    [[TMP7:%.*]] = load <512 x i1>, <512 x i1>* [[ARRAYIDX3]], align 64
+// O0-NEXT:    [[TMP8:%.*]] = load <256 x i1>*, <256 x i1>** [[A1_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX4:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[TMP8]], i64 0
+// O0-NEXT:    [[TMP9:%.*]] = load <256 x i1>, <256 x i1>* [[ARRAYIDX4]], align 32
+// O0-NEXT:    [[TMP10:%.*]] = call <512 x i1> @llvm.kvx.insertvw(<512 x i1> [[TMP7]], <256 x i1> [[TMP9]], i32 1)
+// O0-NEXT:    [[TMP11:%.*]] = load <512 x i1>*, <512 x i1>** [[A0_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX5:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[TMP11]], i64 0
+// O0-NEXT:    store <512 x i1> [[TMP10]], <512 x i1>* [[ARRAYIDX5]], align 64
+// O0-NEXT:    ret void
+//
+// O2-LABEL: @insertvw(
+// O2-NEXT:  entry:
+// O2-NEXT:    [[TMP0:%.*]] = load <512 x i1>, <512 x i1>* [[A0:%.*]], align 64, !tbaa !8
+// O2-NEXT:    [[TMP1:%.*]] = load <256 x i1>, <256 x i1>* [[A1:%.*]], align 32, !tbaa !2
+// O2-NEXT:    [[TMP2:%.*]] = call <512 x i1> @llvm.kvx.insertvw(<512 x i1> [[TMP0]], <256 x i1> [[TMP1]], i32 0)
+// O2-NEXT:    [[TMP3:%.*]] = call <512 x i1> @llvm.kvx.insertvw(<512 x i1> [[TMP2]], <256 x i1> [[TMP1]], i32 1)
+// O2-NEXT:    store <512 x i1> [[TMP3]], <512 x i1>* [[A0]], align 64, !tbaa !8
+// O2-NEXT:    ret void
+//
+void insertvw(__tca512 *a0, __tca256 *a1) {
+  a0[0] = __builtin_kvx_insertvw(a0[0], a1[0], 0);
+  a0[0] = __builtin_kvx_insertvw(a0[0], a1[0], 1);
+}
+
+// O0-LABEL: @movefmw(
+// O0-NEXT:  entry:
+// O0-NEXT:    [[O_ADDR:%.*]] = alloca <512 x i1>*, align 8
+// O0-NEXT:    [[A0_ADDR:%.*]] = alloca <1024 x i1>*, align 8
+// O0-NEXT:    store <512 x i1>* [[O:%.*]], <512 x i1>** [[O_ADDR]], align 8
+// O0-NEXT:    store <1024 x i1>* [[A0:%.*]], <1024 x i1>** [[A0_ADDR]], align 8
+// O0-NEXT:    [[TMP0:%.*]] = load <1024 x i1>*, <1024 x i1>** [[A0_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <1024 x i1>, <1024 x i1>* [[TMP0]], i64 0
+// O0-NEXT:    [[TMP1:%.*]] = load <1024 x i1>, <1024 x i1>* [[ARRAYIDX]], align 128
+// O0-NEXT:    [[TMP2:%.*]] = call <512 x i1> @llvm.kvx.movefmw(<1024 x i1> [[TMP1]], i32 0)
+// O0-NEXT:    [[TMP3:%.*]] = load <512 x i1>*, <512 x i1>** [[O_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[TMP3]], i64 0
+// O0-NEXT:    store <512 x i1> [[TMP2]], <512 x i1>* [[ARRAYIDX1]], align 64
+// O0-NEXT:    [[TMP4:%.*]] = load <1024 x i1>*, <1024 x i1>** [[A0_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX2:%.*]] = getelementptr inbounds <1024 x i1>, <1024 x i1>* [[TMP4]], i64 0
+// O0-NEXT:    [[TMP5:%.*]] = load <1024 x i1>, <1024 x i1>* [[ARRAYIDX2]], align 128
+// O0-NEXT:    [[TMP6:%.*]] = call <512 x i1> @llvm.kvx.movefmw(<1024 x i1> [[TMP5]], i32 1)
+// O0-NEXT:    [[TMP7:%.*]] = load <512 x i1>*, <512 x i1>** [[O_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[TMP7]], i64 1
+// O0-NEXT:    store <512 x i1> [[TMP6]], <512 x i1>* [[ARRAYIDX3]], align 64
+// O0-NEXT:    ret void
+//
+// O2-LABEL: @movefmw(
+// O2-NEXT:  entry:
+// O2-NEXT:    [[TMP0:%.*]] = load <1024 x i1>, <1024 x i1>* [[A0:%.*]], align 128, !tbaa !6
+// O2-NEXT:    [[TMP1:%.*]] = call <512 x i1> @llvm.kvx.movefmw(<1024 x i1> [[TMP0]], i32 0)
+// O2-NEXT:    store <512 x i1> [[TMP1]], <512 x i1>* [[O:%.*]], align 64, !tbaa !8
+// O2-NEXT:    [[TMP2:%.*]] = call <512 x i1> @llvm.kvx.movefmw(<1024 x i1> [[TMP0]], i32 1)
+// O2-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[O]], i64 1
+// O2-NEXT:    store <512 x i1> [[TMP2]], <512 x i1>* [[ARRAYIDX3]], align 64, !tbaa !8
+// O2-NEXT:    ret void
+//
+void movefmw(__tca512 *o, __tca1024 *a0) {
+  o[0] = __builtin_kvx_movefmw(a0[0], 0);
+  o[1] = __builtin_kvx_movefmw(a0[0], 1);
+}
+
+// O0-LABEL: @movefmv(
+// O0-NEXT:  entry:
+// O0-NEXT:    [[O_ADDR:%.*]] = alloca <256 x i1>*, align 8
+// O0-NEXT:    [[A0_ADDR:%.*]] = alloca <1024 x i1>*, align 8
+// O0-NEXT:    store <256 x i1>* [[O:%.*]], <256 x i1>** [[O_ADDR]], align 8
+// O0-NEXT:    store <1024 x i1>* [[A0:%.*]], <1024 x i1>** [[A0_ADDR]], align 8
+// O0-NEXT:    [[TMP0:%.*]] = load <1024 x i1>*, <1024 x i1>** [[A0_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <1024 x i1>, <1024 x i1>* [[TMP0]], i64 0
+// O0-NEXT:    [[TMP1:%.*]] = load <1024 x i1>, <1024 x i1>* [[ARRAYIDX]], align 128
+// O0-NEXT:    [[TMP2:%.*]] = call <256 x i1> @llvm.kvx.movefmv(<1024 x i1> [[TMP1]], i32 0)
+// O0-NEXT:    [[TMP3:%.*]] = load <256 x i1>*, <256 x i1>** [[O_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[TMP3]], i64 0
+// O0-NEXT:    store <256 x i1> [[TMP2]], <256 x i1>* [[ARRAYIDX1]], align 32
+// O0-NEXT:    [[TMP4:%.*]] = load <1024 x i1>*, <1024 x i1>** [[A0_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX2:%.*]] = getelementptr inbounds <1024 x i1>, <1024 x i1>* [[TMP4]], i64 0
+// O0-NEXT:    [[TMP5:%.*]] = load <1024 x i1>, <1024 x i1>* [[ARRAYIDX2]], align 128
+// O0-NEXT:    [[TMP6:%.*]] = call <256 x i1> @llvm.kvx.movefmv(<1024 x i1> [[TMP5]], i32 1)
+// O0-NEXT:    [[TMP7:%.*]] = load <256 x i1>*, <256 x i1>** [[O_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[TMP7]], i64 1
+// O0-NEXT:    store <256 x i1> [[TMP6]], <256 x i1>* [[ARRAYIDX3]], align 32
+// O0-NEXT:    [[TMP8:%.*]] = load <1024 x i1>*, <1024 x i1>** [[A0_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX4:%.*]] = getelementptr inbounds <1024 x i1>, <1024 x i1>* [[TMP8]], i64 0
+// O0-NEXT:    [[TMP9:%.*]] = load <1024 x i1>, <1024 x i1>* [[ARRAYIDX4]], align 128
+// O0-NEXT:    [[TMP10:%.*]] = call <256 x i1> @llvm.kvx.movefmv(<1024 x i1> [[TMP9]], i32 2)
+// O0-NEXT:    [[TMP11:%.*]] = load <256 x i1>*, <256 x i1>** [[O_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX5:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[TMP11]], i64 2
+// O0-NEXT:    store <256 x i1> [[TMP10]], <256 x i1>* [[ARRAYIDX5]], align 32
+// O0-NEXT:    [[TMP12:%.*]] = load <1024 x i1>*, <1024 x i1>** [[A0_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX6:%.*]] = getelementptr inbounds <1024 x i1>, <1024 x i1>* [[TMP12]], i64 0
+// O0-NEXT:    [[TMP13:%.*]] = load <1024 x i1>, <1024 x i1>* [[ARRAYIDX6]], align 128
+// O0-NEXT:    [[TMP14:%.*]] = call <256 x i1> @llvm.kvx.movefmv(<1024 x i1> [[TMP13]], i32 3)
+// O0-NEXT:    [[TMP15:%.*]] = load <256 x i1>*, <256 x i1>** [[O_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX7:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[TMP15]], i64 3
+// O0-NEXT:    store <256 x i1> [[TMP14]], <256 x i1>* [[ARRAYIDX7]], align 32
+// O0-NEXT:    ret void
+//
+// O2-LABEL: @movefmv(
+// O2-NEXT:  entry:
+// O2-NEXT:    [[TMP0:%.*]] = load <1024 x i1>, <1024 x i1>* [[A0:%.*]], align 128, !tbaa !6
+// O2-NEXT:    [[TMP1:%.*]] = call <256 x i1> @llvm.kvx.movefmv(<1024 x i1> [[TMP0]], i32 0)
+// O2-NEXT:    store <256 x i1> [[TMP1]], <256 x i1>* [[O:%.*]], align 32, !tbaa !2
+// O2-NEXT:    [[TMP2:%.*]] = call <256 x i1> @llvm.kvx.movefmv(<1024 x i1> [[TMP0]], i32 1)
+// O2-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[O]], i64 1
+// O2-NEXT:    store <256 x i1> [[TMP2]], <256 x i1>* [[ARRAYIDX3]], align 32, !tbaa !2
+// O2-NEXT:    [[TMP3:%.*]] = call <256 x i1> @llvm.kvx.movefmv(<1024 x i1> [[TMP0]], i32 2)
+// O2-NEXT:    [[ARRAYIDX5:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[O]], i64 2
+// O2-NEXT:    store <256 x i1> [[TMP3]], <256 x i1>* [[ARRAYIDX5]], align 32, !tbaa !2
+// O2-NEXT:    [[TMP4:%.*]] = call <256 x i1> @llvm.kvx.movefmv(<1024 x i1> [[TMP0]], i32 3)
+// O2-NEXT:    [[ARRAYIDX7:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[O]], i64 3
+// O2-NEXT:    store <256 x i1> [[TMP4]], <256 x i1>* [[ARRAYIDX7]], align 32, !tbaa !2
+// O2-NEXT:    ret void
+//
+void movefmv(__tca256 *o, __tca1024 *a0) {
+  o[0] = __builtin_kvx_movefmv(a0[0], 0);
+  o[1] = __builtin_kvx_movefmv(a0[0], 1);
+  o[2] = __builtin_kvx_movefmv(a0[0], 2);
+  o[3] = __builtin_kvx_movefmv(a0[0], 3);
+}
+
+// O0-LABEL: @movefwv(
+// O0-NEXT:  entry:
+// O0-NEXT:    [[O_ADDR:%.*]] = alloca <256 x i1>*, align 8
+// O0-NEXT:    [[A0_ADDR:%.*]] = alloca <512 x i1>*, align 8
+// O0-NEXT:    store <256 x i1>* [[O:%.*]], <256 x i1>** [[O_ADDR]], align 8
+// O0-NEXT:    store <512 x i1>* [[A0:%.*]], <512 x i1>** [[A0_ADDR]], align 8
+// O0-NEXT:    [[TMP0:%.*]] = load <512 x i1>*, <512 x i1>** [[A0_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[TMP0]], i64 0
+// O0-NEXT:    [[TMP1:%.*]] = load <512 x i1>, <512 x i1>* [[ARRAYIDX]], align 64
+// O0-NEXT:    [[TMP2:%.*]] = call <256 x i1> @llvm.kvx.movefwv(<512 x i1> [[TMP1]], i32 0)
+// O0-NEXT:    [[TMP3:%.*]] = load <256 x i1>*, <256 x i1>** [[O_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[TMP3]], i64 0
+// O0-NEXT:    store <256 x i1> [[TMP2]], <256 x i1>* [[ARRAYIDX1]], align 32
+// O0-NEXT:    [[TMP4:%.*]] = load <512 x i1>*, <512 x i1>** [[A0_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX2:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[TMP4]], i64 0
+// O0-NEXT:    [[TMP5:%.*]] = load <512 x i1>, <512 x i1>* [[ARRAYIDX2]], align 64
+// O0-NEXT:    [[TMP6:%.*]] = call <256 x i1> @llvm.kvx.movefwv(<512 x i1> [[TMP5]], i32 1)
+// O0-NEXT:    [[TMP7:%.*]] = load <256 x i1>*, <256 x i1>** [[O_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[TMP7]], i64 1
+// O0-NEXT:    store <256 x i1> [[TMP6]], <256 x i1>* [[ARRAYIDX3]], align 32
+// O0-NEXT:    ret void
+//
+// O2-LABEL: @movefwv(
+// O2-NEXT:  entry:
+// O2-NEXT:    [[TMP0:%.*]] = load <512 x i1>, <512 x i1>* [[A0:%.*]], align 64, !tbaa !8
+// O2-NEXT:    [[TMP1:%.*]] = call <256 x i1> @llvm.kvx.movefwv(<512 x i1> [[TMP0]], i32 0)
+// O2-NEXT:    store <256 x i1> [[TMP1]], <256 x i1>* [[O:%.*]], align 32, !tbaa !2
+// O2-NEXT:    [[TMP2:%.*]] = call <256 x i1> @llvm.kvx.movefwv(<512 x i1> [[TMP0]], i32 1)
+// O2-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[O]], i64 1
+// O2-NEXT:    store <256 x i1> [[TMP2]], <256 x i1>* [[ARRAYIDX3]], align 32, !tbaa !2
+// O2-NEXT:    ret void
+//
+void movefwv(__tca256 *o, __tca512 *a0) {
+  o[0] = __builtin_kvx_movefwv(a0[0], 0);
+  o[1] = __builtin_kvx_movefwv(a0[0], 1);
+}
+
+// O0-LABEL: @buildfvm(
+// O0-NEXT:  entry:
+// O0-NEXT:    [[A_ADDR:%.*]] = alloca <256 x i1>*, align 8
+// O0-NEXT:    [[M_ADDR:%.*]] = alloca <1024 x i1>*, align 8
+// O0-NEXT:    store <256 x i1>* [[A:%.*]], <256 x i1>** [[A_ADDR]], align 8
+// O0-NEXT:    store <1024 x i1>* [[M:%.*]], <1024 x i1>** [[M_ADDR]], align 8
+// O0-NEXT:    [[TMP0:%.*]] = load <256 x i1>*, <256 x i1>** [[A_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[TMP0]], i64 0
+// O0-NEXT:    [[TMP1:%.*]] = load <256 x i1>, <256 x i1>* [[ARRAYIDX]], align 32
+// O0-NEXT:    [[TMP2:%.*]] = load <256 x i1>*, <256 x i1>** [[A_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[TMP2]], i64 2
+// O0-NEXT:    [[TMP3:%.*]] = load <256 x i1>, <256 x i1>* [[ARRAYIDX1]], align 32
+// O0-NEXT:    [[TMP4:%.*]] = load <256 x i1>*, <256 x i1>** [[A_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX2:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[TMP4]], i64 0
+// O0-NEXT:    [[TMP5:%.*]] = load <256 x i1>, <256 x i1>* [[ARRAYIDX2]], align 32
+// O0-NEXT:    [[TMP6:%.*]] = load <256 x i1>*, <256 x i1>** [[A_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[TMP6]], i64 1
+// O0-NEXT:    [[TMP7:%.*]] = load <256 x i1>, <256 x i1>* [[ARRAYIDX3]], align 32
+// O0-NEXT:    [[TMP8:%.*]] = call <1024 x i1> @llvm.kvx.buildfvm(<256 x i1> [[TMP1]], <256 x i1> [[TMP3]], <256 x i1> [[TMP5]], <256 x i1> [[TMP7]])
+// O0-NEXT:    [[TMP9:%.*]] = load <1024 x i1>*, <1024 x i1>** [[M_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX4:%.*]] = getelementptr inbounds <1024 x i1>, <1024 x i1>* [[TMP9]], i64 0
+// O0-NEXT:    store <1024 x i1> [[TMP8]], <1024 x i1>* [[ARRAYIDX4]], align 128
+// O0-NEXT:    ret void
+//
+// O2-LABEL: @buildfvm(
+// O2-NEXT:  entry:
+// O2-NEXT:    [[TMP0:%.*]] = load <256 x i1>, <256 x i1>* [[A:%.*]], align 32, !tbaa !2
+// O2-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[A]], i64 2
+// O2-NEXT:    [[TMP1:%.*]] = load <256 x i1>, <256 x i1>* [[ARRAYIDX1]], align 32, !tbaa !2
+// O2-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[A]], i64 1
+// O2-NEXT:    [[TMP2:%.*]] = load <256 x i1>, <256 x i1>* [[ARRAYIDX3]], align 32, !tbaa !2
+// O2-NEXT:    [[TMP3:%.*]] = call <1024 x i1> @llvm.kvx.buildfvm(<256 x i1> [[TMP0]], <256 x i1> [[TMP1]], <256 x i1> [[TMP0]], <256 x i1> [[TMP2]])
+// O2-NEXT:    store <1024 x i1> [[TMP3]], <1024 x i1>* [[M:%.*]], align 128, !tbaa !6
+// O2-NEXT:    ret void
+//
+void buildfvm(__tca256 *a, __tca1024 *M) {
+  M[0] = __builtin_kvx_buildfvm(a[0], a[2], a[0], a[1]);
+}
+
+// O0-LABEL: @buildfwm(
+// O0-NEXT:  entry:
+// O0-NEXT:    [[A_ADDR:%.*]] = alloca <512 x i1>*, align 8
+// O0-NEXT:    [[M_ADDR:%.*]] = alloca <1024 x i1>*, align 8
+// O0-NEXT:    store <512 x i1>* [[A:%.*]], <512 x i1>** [[A_ADDR]], align 8
+// O0-NEXT:    store <1024 x i1>* [[M:%.*]], <1024 x i1>** [[M_ADDR]], align 8
+// O0-NEXT:    [[TMP0:%.*]] = load <512 x i1>*, <512 x i1>** [[A_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[TMP0]], i64 2
+// O0-NEXT:    [[TMP1:%.*]] = load <512 x i1>, <512 x i1>* [[ARRAYIDX]], align 64
+// O0-NEXT:    [[TMP2:%.*]] = load <512 x i1>*, <512 x i1>** [[A_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[TMP2]], i64 2
+// O0-NEXT:    [[TMP3:%.*]] = load <512 x i1>, <512 x i1>* [[ARRAYIDX1]], align 64
+// O0-NEXT:    [[TMP4:%.*]] = call <1024 x i1> @llvm.kvx.buildfwm(<512 x i1> [[TMP1]], <512 x i1> [[TMP3]])
+// O0-NEXT:    [[TMP5:%.*]] = load <1024 x i1>*, <1024 x i1>** [[M_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX2:%.*]] = getelementptr inbounds <1024 x i1>, <1024 x i1>* [[TMP5]], i64 1
+// O0-NEXT:    store <1024 x i1> [[TMP4]], <1024 x i1>* [[ARRAYIDX2]], align 128
+// O0-NEXT:    [[TMP6:%.*]] = load <512 x i1>*, <512 x i1>** [[A_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[TMP6]], i64 2
+// O0-NEXT:    [[TMP7:%.*]] = load <512 x i1>, <512 x i1>* [[ARRAYIDX3]], align 64
+// O0-NEXT:    [[TMP8:%.*]] = load <512 x i1>*, <512 x i1>** [[A_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX4:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[TMP8]], i64 1
+// O0-NEXT:    [[TMP9:%.*]] = load <512 x i1>, <512 x i1>* [[ARRAYIDX4]], align 64
+// O0-NEXT:    [[TMP10:%.*]] = call <1024 x i1> @llvm.kvx.buildfwm(<512 x i1> [[TMP7]], <512 x i1> [[TMP9]])
+// O0-NEXT:    [[TMP11:%.*]] = load <1024 x i1>*, <1024 x i1>** [[M_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX5:%.*]] = getelementptr inbounds <1024 x i1>, <1024 x i1>* [[TMP11]], i64 0
+// O0-NEXT:    store <1024 x i1> [[TMP10]], <1024 x i1>* [[ARRAYIDX5]], align 128
+// O0-NEXT:    ret void
+//
+// O2-LABEL: @buildfwm(
+// O2-NEXT:  entry:
+// O2-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[A:%.*]], i64 2
+// O2-NEXT:    [[TMP0:%.*]] = load <512 x i1>, <512 x i1>* [[ARRAYIDX]], align 64, !tbaa !8
+// O2-NEXT:    [[TMP1:%.*]] = call <1024 x i1> @llvm.kvx.buildfwm(<512 x i1> [[TMP0]], <512 x i1> [[TMP0]])
+// O2-NEXT:    [[ARRAYIDX2:%.*]] = getelementptr inbounds <1024 x i1>, <1024 x i1>* [[M:%.*]], i64 1
+// O2-NEXT:    store <1024 x i1> [[TMP1]], <1024 x i1>* [[ARRAYIDX2]], align 128, !tbaa !6
+// O2-NEXT:    [[ARRAYIDX4:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[A]], i64 1
+// O2-NEXT:    [[TMP2:%.*]] = load <512 x i1>, <512 x i1>* [[ARRAYIDX4]], align 64, !tbaa !8
+// O2-NEXT:    [[TMP3:%.*]] = call <1024 x i1> @llvm.kvx.buildfwm(<512 x i1> [[TMP0]], <512 x i1> [[TMP2]])
+// O2-NEXT:    store <1024 x i1> [[TMP3]], <1024 x i1>* [[M]], align 128, !tbaa !6
+// O2-NEXT:    ret void
+//
+void buildfwm(__tca512 *a, __tca1024 *M) {
+  M[1] = __builtin_kvx_buildfwm(a[2], a[2]);
+  M[0] = __builtin_kvx_buildfwm(a[2], a[1]);
+}
+
+// O0-LABEL: @buildfvw(
+// O0-NEXT:  entry:
+// O0-NEXT:    [[A_ADDR:%.*]] = alloca <256 x i1>*, align 8
+// O0-NEXT:    [[W_ADDR:%.*]] = alloca <512 x i1>*, align 8
+// O0-NEXT:    store <256 x i1>* [[A:%.*]], <256 x i1>** [[A_ADDR]], align 8
+// O0-NEXT:    store <512 x i1>* [[W:%.*]], <512 x i1>** [[W_ADDR]], align 8
+// O0-NEXT:    [[TMP0:%.*]] = load <256 x i1>*, <256 x i1>** [[A_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[TMP0]], i64 0
+// O0-NEXT:    [[TMP1:%.*]] = load <256 x i1>, <256 x i1>* [[ARRAYIDX]], align 32
+// O0-NEXT:    [[TMP2:%.*]] = load <256 x i1>*, <256 x i1>** [[A_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[TMP2]], i64 2
+// O0-NEXT:    [[TMP3:%.*]] = load <256 x i1>, <256 x i1>* [[ARRAYIDX1]], align 32
+// O0-NEXT:    [[TMP4:%.*]] = call <512 x i1> @llvm.kvx.buildfvw(<256 x i1> [[TMP1]], <256 x i1> [[TMP3]])
+// O0-NEXT:    [[TMP5:%.*]] = load <512 x i1>*, <512 x i1>** [[W_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX2:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[TMP5]], i64 0
+// O0-NEXT:    store <512 x i1> [[TMP4]], <512 x i1>* [[ARRAYIDX2]], align 64
+// O0-NEXT:    ret void
+//
+// O2-LABEL: @buildfvw(
+// O2-NEXT:  entry:
+// O2-NEXT:    [[TMP0:%.*]] = load <256 x i1>, <256 x i1>* [[A:%.*]], align 32, !tbaa !2
+// O2-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[A]], i64 2
+// O2-NEXT:    [[TMP1:%.*]] = load <256 x i1>, <256 x i1>* [[ARRAYIDX1]], align 32, !tbaa !2
+// O2-NEXT:    [[TMP2:%.*]] = call <512 x i1> @llvm.kvx.buildfvw(<256 x i1> [[TMP0]], <256 x i1> [[TMP1]])
+// O2-NEXT:    store <512 x i1> [[TMP2]], <512 x i1>* [[W:%.*]], align 64, !tbaa !8
+// O2-NEXT:    ret void
+//
+void buildfvw(__tca256 *a, __tca512 *W) {
+  W[0] = __builtin_kvx_buildfvw(a[0], a[2]);
+}

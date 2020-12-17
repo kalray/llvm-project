@@ -155,6 +155,7 @@ private:
   SDValue lowerADDRSPACECAST(SDValue Op, SelectionDAG &DAG) const;
 
   SDValue lowerStackCheckAlloca(SDValue Op, SelectionDAG &DAG) const;
+  SDValue lowerSTORE(SDValue Op, SelectionDAG &DAG) const;
 
   bool canLowerShiftVectorial(SDValue Op) const;
 

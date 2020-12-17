@@ -289,13 +289,13 @@ define void @lw_sw(<512 x i1> * %0, i64 %1) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r1 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a0 = 0[$r1]
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a1 = 32[$r1]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 0[$r0] = $a0
+; CHECK-NEXT:    lv $a0 = 0[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 32[$r0] = $a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 0[$r0] = $a0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -312,21 +312,21 @@ define void @lm_sm(<1024 x i1> * %0, i64 %1) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r1 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a0 = 0[$r1]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a1 = 32[$r1]
+; CHECK-NEXT:    lv $a3 = 96[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a2 = 64[$r1]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a3 = 96[$r1]
+; CHECK-NEXT:    lv $a1 = 32[$r1]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 0[$r0] = $a0
+; CHECK-NEXT:    lv $a0 = 0[$r1]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 32[$r0] = $a1
+; CHECK-NEXT:    sv 96[$r0] = $a3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 64[$r0] = $a2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 96[$r0] = $a3
+; CHECK-NEXT:    sv 32[$r0] = $a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 0[$r0] = $a0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
