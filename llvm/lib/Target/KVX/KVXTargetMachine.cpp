@@ -197,8 +197,5 @@ void KVXPassConfig::addPreEmitPass() {
 
 TargetTransformInfo
 KVXTargetMachine::getTargetTransformInfo(const Function &F) {
-  if (getOptLevel() == CodeGenOpt::Aggressive)
-    return TargetTransformInfo(KVXTTIImpl(this, F));
-  else
-    return LLVMTargetMachine::getTargetTransformInfo(F);
+  return TargetTransformInfo(KVXTTIImpl(this, F));
 }
