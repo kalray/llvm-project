@@ -403,9 +403,17 @@ def : Pat<(add i64:$a1, (mul i64:$a2, Signed37:$a3)), (MADDDri37 SingleReg:$a1, 
 defm : ZEFPat<(add i32:$a1, (mul i32:$a2, i32:$a3)), (MADDWrr SingleReg:$a1, SingleReg:$a2, SingleReg:$a3)>;
 defm : ZEFPat<(add i32:$a1, (mul i32:$a2, Wrapped32:$a3)), (MADDWri SingleReg:$a1, SingleReg:$a2, Wrapped32:$a3)>;
 
+// MADDWD
+def : Pat<(add i64:$a1, (mul (i64 (sext i32:$a2)), (i64 (sext i32:$a3)))), (MADDWDrr SingleReg:$a1, SingleReg:$a2, SingleReg:$a3)>;
+def : Pat<(add i64:$a1, (mul (i64 (sext i32:$a2)), Wrapped64W:$a3)), (MADDWDri SingleReg:$a1, SingleReg:$a2, (trunc_imm_32 imm:$a3))>;
+
 // MSBFW
 defm : ZEFPat<(sub i32:$a1, (mul i32:$a2, i32:$a3)), (MSBFWrr SingleReg:$a1, SingleReg:$a2, SingleReg:$a3)>;
 defm : ZEFPat<(sub i32:$a1, (mul i32:$a2, Wrapped32:$a3)), (MSBFWri SingleReg:$a1, SingleReg:$a2, Wrapped32:$a3)>;
+
+// MSBFWD
+def : Pat<(sub i64:$a1, (mul (i64 (sext i32:$a2)), (i64 (sext i32:$a3)))), (MSBFWDrr SingleReg:$a1, SingleReg:$a2, SingleReg:$a3)>;
+def : Pat<(sub i64:$a1, (mul (i64 (sext i32:$a2)), Wrapped64W:$a3)), (MSBFWDri SingleReg:$a1, SingleReg:$a2, (trunc_imm_32 imm:$a3))>;
 
 // MSBFD
 def : Pat<(sub i64:$a1, (mul i64:$a2, i64:$a3)), (MSBFD SingleReg:$a1, SingleReg:$a2, SingleReg:$a3)>;
