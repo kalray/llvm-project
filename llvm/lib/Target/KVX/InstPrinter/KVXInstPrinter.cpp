@@ -465,3 +465,21 @@ void KVXInstPrinter::printSplat32Mod(const MCInst *MI, unsigned OpNo,
     break;
   }
 }
+
+// Emits 32-bits integer litteral values.
+//
+// Use the hexadecimal bit representation when the absolute value is above a
+// given Threshold. The goal is to make sure negative values do not end-up as
+// 64-bits hexa value.
+template <int Threshold>
+void KVXInstPrinter::printHexaBitsImm32(const MCInst *MI, unsigned OpNo,
+                                        raw_ostream &O) {
+  int64_t imm = MI->getOperand(OpNo).getImm();
+
+  if (std::abs(imm) <= Threshold) {
+    O << imm;
+  } else {
+    uint64_t i = imm & ((1ULL << 32) - 1);
+    O << formatHex(i);
+  }
+}
