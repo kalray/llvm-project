@@ -133,7 +133,7 @@ entry:
 define i32 @f3imm(i32 %b){
 ; CHECK-LABEL: f3imm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addx16w $r0 = $r0, 0xffffffffffffa460
+; CHECK-NEXT:    addx16w $r0 = $r0, 0xffffa460
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -145,7 +145,7 @@ entry:
 define i32 @f4imm(i32 %b){
 ; CHECK-LABEL: f4imm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addx16w $r0 = $r0, 0xffffffffffffa460
+; CHECK-NEXT:    addx16w $r0 = $r0, 0xffffa460
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -183,7 +183,7 @@ entry:
 define i64 @f7imm(i32 %b){
 ; CHECK-LABEL: f7imm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addx16wd $r0 = $r0, 0xffffffffffffa460
+; CHECK-NEXT:    addx16wd $r0 = $r0, 0xffffa460
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -196,7 +196,7 @@ entry:
 define i64 @f8imm(i32 %b){
 ; CHECK-LABEL: f8imm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addx16wd $r0 = $r0, 0xffffffffffffa460
+; CHECK-NEXT:    addx16wd $r0 = $r0, 0xffffa460
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

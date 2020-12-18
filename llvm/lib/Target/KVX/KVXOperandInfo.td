@@ -22,16 +22,31 @@ def Signed10 : Operand<i64>, ImmLeaf<i64, [{return isInt<10>(Imm);}]>;
 def Signed12 : Operand<i64>, ImmLeaf<i64, [{return isInt<12>(Imm);}]>;
 def Signed16 : Operand<i64>, ImmLeaf<i64, [{return isInt<16>(Imm);}]>;
 def Signed27 : Operand<i64>, ImmLeaf<i64, [{return isInt<27>(Imm);}]>;
-def Wrapped32 : Operand<i32>, ImmLeaf<i32, [{return isInt<32>(Imm);}]>;
+
+def Wrapped32 : Operand<i32>, ImmLeaf<i32, [{return isInt<32>(Imm);}]> {
+  let PrintMethod = "printHexaBitsImm32";
+}
+
 def Signed37 : Operand<i64>, ImmLeaf<i64, [{return isInt<37>(Imm);}]>;
 def Signed43 : Operand<i64>, ImmLeaf<i64, [{return isInt<43>(Imm);}]>;
 def Signed54 : Operand<i64>, ImmLeaf<i64, [{return isInt<54>(Imm);}]>;
 def Wrapped64 : Operand<i64>, ImmLeaf<i64, [{return isInt<64>(Imm);}]>;
 
-def Signed10W : Operand<i32>, ImmLeaf<i32, [{return isInt<10>(Imm);}]>;
-def Signed16W : Operand<i32>, ImmLeaf<i32, [{return isInt<16>(Imm);}]>;
-def Signed37W : Operand<i32>, ImmLeaf<i32, [{return isInt<37>(Imm);}]>;
-def Wrapped64W : Operand<i64>, ImmLeaf<i64, [{return isInt<32>(Imm);}]>;
+def Signed10W : Operand<i32>, ImmLeaf<i32, [{return isInt<10>(Imm);}]> {
+  let PrintMethod = "printHexaBitsImm32";
+}
+
+def Signed16W : Operand<i32>, ImmLeaf<i32, [{return isInt<16>(Imm);}]> {
+  let PrintMethod = "printHexaBitsImm32";
+}
+
+def Signed37W : Operand<i32>, ImmLeaf<i32, [{return isInt<37>(Imm);}]> {
+  let PrintMethod = "printHexaBitsImm32";
+}
+
+def Wrapped64W : Operand<i64>, ImmLeaf<i64, [{return isInt<32>(Imm);}]> {
+  let PrintMethod = "printHexaBitsImm32";
+}
 
 def ScalarcondMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 13);}]> {
   let PrintMethod = "printScalarcondMod";
