@@ -363,29 +363,22 @@ def : Pat<(umax i64:$v1, Signed10:$v2), (MAXUDri10 SingleReg:$v1, Signed10:$v2)>
 def : Pat<(umax i64:$v1, Signed37:$v2), (MAXUDri37 SingleReg:$v1, Signed37:$v2)>;
 def : Pat<(umax i64:$v1, Wrapped64:$v2), (MAXUDri64 SingleReg:$v1, Wrapped64:$v2)>;
 
-// MAXWP
-def : Pat<(smax v2i32:$v1, v2i32:$v2), (MAXWPrr SingleReg:$v1, SingleReg:$v2)>;
+multiclass Word_RR_RIsplat_select <ValueType VecTy, SDNode irnode, SDNode rinode, SDNode rrnode>
+{
+  def : Pat<(irnode VecTy:$v1, VecTy:$v2), (rrnode SingleReg:$v1, SingleReg:$v2)>;
+  def : Pat<(irnode VecTy:$v1, (VecTy (bitconvert (i64 UWord64:$v2)))), (rinode SingleReg:$v1, (trunc_imm_32 imm:$v2), splat32_)>;
+  def : Pat<(irnode VecTy:$v1, (VecTy (bitconvert (i64 UWsplat:$v2)))), (rinode SingleReg:$v1, (trunc_imm_32 imm:$v2), splat32_at)>;
+}
 
-// MAXUWP
-def : Pat<(umax v2i32:$v1, v2i32:$v2), (MAXUWPrr SingleReg:$v1, SingleReg:$v2)>;
+defm MAXWP : Word_RR_RIsplat_select<v2i32, smax, MAXWPri, MAXWPrr>;
+defm MAXUWP : Word_RR_RIsplat_select<v2i32, umax, MAXUWPri, MAXUWPrr>;
+defm MINWP : Word_RR_RIsplat_select<v2i32, smin, MINWPri, MINWPrr>;
+defm MINUWP : Word_RR_RIsplat_select<v2i32, umin, MINUWPri, MINUWPrr>;
 
-// MINWP
-def : Pat<(smin v2i32:$v1, v2i32:$v2), (MINWPrr SingleReg:$v1, SingleReg:$v2)>;
-
-// MINUWP
-def : Pat<(umin v2i32:$v1, v2i32:$v2), (MINUWPrr SingleReg:$v1, SingleReg:$v2)>;
-
-// MAXHQ
-def : Pat<(smax v4i16:$v1, v4i16:$v2), (MAXHQrr SingleReg:$v1, SingleReg:$v2)>;
-
-// MINHQ
-def : Pat<(smin v4i16:$v1, v4i16:$v2), (MINHQrr SingleReg:$v1, SingleReg:$v2)>;
-
-// MAXUHQ
-def : Pat<(umax v4i16:$v1, v4i16:$v2), (MAXUHQrr SingleReg:$v1, SingleReg:$v2)>;
-
-// MINUHQ
-def : Pat<(umin v4i16:$v1, v4i16:$v2), (MINUHQrr SingleReg:$v1, SingleReg:$v2)>;
+defm MAXHQ : Word_RR_RIsplat_select<v4i16, smax, MAXHQri, MAXHQrr>;
+defm MAXUHQ : Word_RR_RIsplat_select<v4i16, umax, MAXUHQri, MAXUHQrr>;
+defm MINHQ : Word_RR_RIsplat_select<v4i16, smin, MINHQri, MINHQrr>;
+defm MINUHQ : Word_RR_RIsplat_select<v4i16, umin, MINUHQri, MINUHQrr>;
 
 //===----------------------------------------------------------------------===//
 //  MAU Instructions - Patterns
