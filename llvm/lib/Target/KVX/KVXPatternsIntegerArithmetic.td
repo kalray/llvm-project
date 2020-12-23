@@ -25,6 +25,11 @@ def : BITCAST<v2i32, i64, SingleReg>;
 def : BITCAST<v2i16, i32, SingleReg>;
 def : BITCAST<i32, v2i16, SingleReg>;
 
+// ABSW
+def : Pat<(smax i32:$v, (i32 (ineg i32:$v))), (ABSW SingleReg:$v)>;
+// ABSD
+def : Pat<(smax i64:$v, (i64 (ineg i64:$v))), (ABSD SingleReg:$v)>;
+
 // ADDD
 def : Pat<(add i64:$rs1, i64:$rs2), (ADDDrr SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(add i64:$rs1, Signed10:$rs2), (ADDDri10 SingleReg:$rs1, Signed10:$rs2)>;

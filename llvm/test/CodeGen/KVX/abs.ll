@@ -54,3 +54,29 @@ entry:
   %2 = select <4 x i1> %0, <4 x i16> %1, <4 x i16> %a
   ret <4 x i16> %2
 }
+
+define i32 @absw2(i32 %a) {
+; CHECK-LABEL: absw2:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    absw $r0 = $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %sub = sub nsw i32 0, %a
+  %cmp = icmp slt i32 %sub, %a
+  %cond = select i1 %cmp, i32 %a, i32 %sub
+  ret i32 %cond
+}
+
+define i64 @abs2(i64 %a) {
+; CHECK-LABEL: abs2:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    absd $r0 = $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %sub = sub nsw i64 0, %a
+  %cmp = icmp slt i64 %sub, %a
+  %cond = select i1 %cmp, i64 %a, i64 %sub
+  ret i64 %cond
+}
