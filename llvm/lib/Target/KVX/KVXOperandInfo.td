@@ -38,14 +38,6 @@ def Wrapped32 : Operand<i32>, ImmLeaf<i32, [{return isInt<32>(Imm);}]>;
 def Wrapped64W : Operand<i64>, ImmLeaf<i64, [{return isInt<32>(Imm);}]>;
 }
 
-// Matches a 64-bits immediate value with 32-bits MSB 0. Used with simd
-// insns when splat modifier available but not set.
-def UWord64 : Operand<i64>, ImmLeaf<i64, [{return isUInt<32>(Imm);}]>;
-
-// Matches a 64-bits immediate value with the 32-bits MSB == 32-bits LSB. Used with simd
-// insns when splat modifier is set.
-def UWsplat : Operand<i64>, ImmLeaf<i64, [{return ((unsigned long)(Imm) >> 32) == (Imm & 0xffffffff);}]>;
-
 // Ensures that Imm - 1 is still a Wrapped32. Used for AVGR.
 def Wrapped32PlusOne : Operand<i32>, ImmLeaf<i32, [{return isInt<32>(Imm-1);}]>;
 
