@@ -6,10 +6,6 @@ define <2 x i32> @eq(<2 x i32> %a, <2 x i32> %b){
 ; CHECK-LABEL: eq:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnwp.eq $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sllwps $r0 = $r0, 31
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srawps $r0 = $r0, 31
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -22,10 +18,6 @@ define <2 x i32> @neq(<2 x i32> %a, <2 x i32> %b){
 ; CHECK-LABEL: neq:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnwp.ne $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sllwps $r0 = $r0, 31
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srawps $r0 = $r0, 31
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -38,10 +30,6 @@ define <2 x i32> @gt(<2 x i32> %a, <2 x i32> %b){
 ; CHECK-LABEL: gt:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnwp.gt $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sllwps $r0 = $r0, 31
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srawps $r0 = $r0, 31
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -54,10 +42,6 @@ define <2 x i32> @lt(<2 x i32> %a, <2 x i32> %b){
 ; CHECK-LABEL: lt:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnwp.lt $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sllwps $r0 = $r0, 31
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srawps $r0 = $r0, 31
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -70,10 +54,6 @@ define <2 x i32> @gte(<2 x i32> %a, <2 x i32> %b){
 ; CHECK-LABEL: gte:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnwp.ge $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sllwps $r0 = $r0, 31
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srawps $r0 = $r0, 31
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -86,10 +66,6 @@ define <2 x i32> @lte(<2 x i32> %a, <2 x i32> %b){
 ; CHECK-LABEL: lte:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnwp.le $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sllwps $r0 = $r0, 31
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srawps $r0 = $r0, 31
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

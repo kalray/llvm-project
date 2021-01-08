@@ -241,9 +241,18 @@ multiclass COMP_Pat<SDNode Node, Comparison Mod> {
   //COMPNHQ
   def : Pat<(v4i16 (Node v4i16:$lhs, v4i16:$rhs)),
         (COMPNHQ SingleReg:$lhs, SingleReg:$rhs, Mod)>;
+  def : Pat<(sra (shl (v4i16 (Node v4i16:$lhs, v4i16:$rhs)), (v4i16 v4_splat_15)), (v4i16 v4_splat_15)),
+        (COMPNHQ SingleReg:$lhs, SingleReg:$rhs, Mod)>;
+
+  def : Pat<(v2i16 (Node v2i16:$lhs, v2i16:$rhs)),
+        (ZXWD (COMPNHQ SingleReg:$lhs, SingleReg:$rhs, Mod))>;
+  def : Pat<(sra (shl (v2i16 (Node v2i16:$lhs, v2i16:$rhs)), (v2i16 v2_splat_15)), (v2i16 v2_splat_15)),
+        (ZXWD (COMPNHQ SingleReg:$lhs, SingleReg:$rhs, Mod))>;
 
   //COMPNWP
   def : Pat<(v2i32 (Node v2i32:$lhs, v2i32:$rhs)),
+        (COMPNWP SingleReg:$lhs, SingleReg:$rhs, Mod)>;
+  def : Pat<(sra (shl (v2i32 (Node v2i32:$lhs, v2i32:$rhs)), (v2i32 v2_splat_31)), (v2i32 v2_splat_31)),
         (COMPNWP SingleReg:$lhs, SingleReg:$rhs, Mod)>;
 }
 
