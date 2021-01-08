@@ -50,6 +50,7 @@ extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeKVXTarget() {
   initializeKVXLoadStorePackingPassPass(*PR);
   initializeKVXPacketizerPass(*PR);
   initializeKVXHardwareLoopsPass(*PR);
+  initializeKVXHardwareLoopsPreparePass(*PR);
 }
 
 bool llvm::isScalarcondWord(unsigned Cond) {
@@ -133,6 +134,7 @@ public:
   void addIRPasses() override;
   bool addInstSelector() override;
   void addPreRegAlloc() override;
+  bool addPreISel() override;
 
   void addPreEmitPass() override;
 };
@@ -188,9 +190,18 @@ void KVXPassConfig::addPreRegAlloc() {
 
 void KVXPassConfig::addPreEmitPass() {
   addPass(createKVXPreEmitExpandPseudoPass());
-  addPass(createKVXPacketizerPass(getOptLevel() >= CodeGenOpt::Default &&
-                                  !DisableBundling),
-          false);
+  if (getOptLevel() >= CodeGenOpt::Default) {
+    if (!DisableBundling)
+      addPass(createKVXPacketizerPass(true));
+  }
+}
+
+bool KVXPassConfig::addPreISel() {
+  if (TM->getOptLevel() >= CodeGenOpt::Default && !DisableHardwareLoops) {
+    addPass(createHardwareLoopsPass());
+    addPass(createKVXHardwareLoopsPreparePass());
+  }
+  return false;
 }
 
 TargetTransformInfo

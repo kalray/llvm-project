@@ -164,6 +164,7 @@ FunctionPass *createKVXPreRAExpandPseudoPass();
 FunctionPass *createKVXPreEmitExpandPseudoPass();
 FunctionPass *createKVXLoadStorePackingPass();
 FunctionPass *createKVXHardwareLoopsPass();
+FunctionPass *createKVXHardwareLoopsPreparePass();
 FunctionPass *createKVXPacketizerPass(bool ValidOptLevel);
 
 void initializeKVXPreRAExpandPseudoPass(PassRegistry &);
@@ -171,6 +172,7 @@ void initializeKVXPreEmitExpandPseudoPass(PassRegistry &);
 void initializeKVXLoadStorePackingPassPass(PassRegistry &);
 void initializeKVXPacketizerPass(PassRegistry &);
 void initializeKVXHardwareLoopsPass(PassRegistry &);
+void initializeKVXHardwareLoopsPreparePass(PassRegistry &);
 } // namespace llvm
 
 #endif // LLVM_LIB_TARGET_KVX_KVX_H
