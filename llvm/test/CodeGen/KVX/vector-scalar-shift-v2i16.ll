@@ -5,9 +5,7 @@ target triple = "kvx-kalray-cos"
 define <2 x i16> @sri_v2i16(<2 x i16> %a){
 ; CHECK-LABEL: sri_v2i16:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x30003
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srahqs $r0 = $r0, $r1
+; CHECK-NEXT:    srahqs $r0 = $r0, 3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -15,12 +13,49 @@ entry:
   ret <2 x i16> %shr
 }
 
+define <2 x i16> @not_sri_v2i16(<2 x i16> %a){
+; CHECK-LABEL: not_sri_v2i16:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    srahqs $r1 = $r0, 2
+; CHECK-NEXT:    srahqs $r0 = $r0, 3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %shr = ashr <2 x i16> %a, <i16 2, i16 3>
+  ret <2 x i16> %shr
+}
+
+define <2 x i16> @uri_v2i16(<2 x i16> %a){
+; CHECK-LABEL: uri_v2i16:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    srlhqs $r0 = $r0, 3
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %shr = lshr <2 x i16> %a, <i16 3, i16 3>
+  ret <2 x i16> %shr
+}
+
+define <2 x i16> @not_uri_v2i16(<2 x i16> %a){
+; CHECK-LABEL: not_uri_v2i16:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    srlhqs $r1 = $r0, 2
+; CHECK-NEXT:    srlhqs $r0 = $r0, 3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %shr = lshr <2 x i16> %a, <i16 2, i16 3>
+  ret <2 x i16> %shr
+}
+
 define <2 x i16> @sli_v2i16(<2 x i16> %a){
 ; CHECK-LABEL: sli_v2i16:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x30003
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sllhqs $r0 = $r0, $r1
+; CHECK-NEXT:    sllhqs $r0 = $r0, 3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -28,11 +63,24 @@ entry:
   ret <2 x i16> %shl
 }
 
+define <2 x i16> @not_sli_v2i16(<2 x i16> %a){
+; CHECK-LABEL: not_sli_v2i16:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    sllhqs $r1 = $r0, 1
+; CHECK-NEXT:    sllhqs $r0 = $r0, 3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %shl = shl <2 x i16> %a, <i16 1, i16 3>
+  ret <2 x i16> %shl
+}
+
+
 define <2 x i16> @srr_v2i16(<2 x i16> %a, i16 %c){
 ; CHECK-LABEL: srr_v2i16:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    insf $r1 = $r1, 31, 16
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srahqs $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -43,11 +91,54 @@ entry:
   ret <2 x i16> %shr
 }
 
+define <2 x i16> @not_srr_v2i16(<2 x i16> %a, <2 x i16> %b){
+; CHECK-LABEL: not_srr_v2i16:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    srahqs $r2 = $r0, $r1
+; CHECK-NEXT:    extfz $r1 = $r1, 19, 16
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srahqs $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r2, 15, 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %shr = ashr <2 x i16> %a, %b
+  ret <2 x i16> %shr
+}
+
+define <2 x i16> @urr_v2i16(<2 x i16> %a, i16 %c){
+; CHECK-LABEL: urr_v2i16:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    srlhqs $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = insertelement <2 x i16> undef, i16 %c, i32 0
+  %sh_prom = shufflevector <2 x i16> %0, <2 x i16> undef, <2 x i32> zeroinitializer
+  %shr = lshr <2 x i16> %a, %sh_prom
+  ret <2 x i16> %shr
+}
+
+define <2 x i16> @not_urr_v2i16(<2 x i16> %a, <2 x i16> %b){
+; CHECK-LABEL: not_urr_v2i16:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    srlhqs $r2 = $r0, $r1
+; CHECK-NEXT:    extfz $r1 = $r1, 19, 16
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srlhqs $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r2, 15, 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %shr = lshr <2 x i16> %a, %b
+  ret <2 x i16> %shr
+}
+
 define <2 x i16> @slr_v2i16(<2 x i16> %a, i16 %c){
 ; CHECK-LABEL: slr_v2i16:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    insf $r1 = $r1, 31, 16
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sllhqs $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -55,6 +146,22 @@ entry:
   %0 = insertelement <2 x i16> undef, i16 %c, i32 0
   %sh_prom = shufflevector <2 x i16> %0, <2 x i16> undef, <2 x i32> zeroinitializer
   %shl = shl <2 x i16> %a, %sh_prom
+  ret <2 x i16> %shl
+}
+
+define <2 x i16> @not_slr_v2i16(<2 x i16> %a, <2 x i16> %b){
+; CHECK-LABEL: not_slr_v2i16:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    sllhqs $r2 = $r0, $r1
+; CHECK-NEXT:    extfz $r1 = $r1, 19, 16
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sllhqs $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r2, 15, 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %shl = shl <2 x i16> %a, %b
   ret <2 x i16> %shl
 }
 

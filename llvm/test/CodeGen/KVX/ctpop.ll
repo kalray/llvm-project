@@ -37,24 +37,20 @@ define i64 @cbsd(i64 %a) {
 define <2 x i16> @ctpopv2i16(<2 x i16> %a) {
 ; CHECK-LABEL: ctpopv2i16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r1 = 0x10001
-; CHECK-NEXT:    make $r2 = 0x20002
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlhqs $r1 = $r0, $r1
+; CHECK-NEXT:    srlhqs $r1 = $r0, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    andw $r1 = $r1, 0x55555555
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfhq $r0 = $r1, $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    andw $r1 = $r0, 0x33333333
-; CHECK-NEXT:    srlhqs $r0 = $r0, $r2
+; CHECK-NEXT:    srlhqs $r0 = $r0, 2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    andw $r0 = $r0, 0x33333333
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addhq $r0 = $r1, $r0
-; CHECK-NEXT:    make $r1 = 0x40004
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlhqs $r1 = $r0, $r1
+; CHECK-NEXT:    srlhqs $r1 = $r0, 4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addhq $r0 = $r0, $r1
 ; CHECK-NEXT:    make $r1 = 0x1010101
@@ -62,9 +58,8 @@ define <2 x i16> @ctpopv2i16(<2 x i16> %a) {
 ; CHECK-NEXT:    andw $r0 = $r0, 0xf0f0f0f
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mulhq $r0 = $r0, $r1
-; CHECK-NEXT:    make $r1 = 0x80008
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlhqs $r0 = $r0, $r1
+; CHECK-NEXT:    srlhqs $r0 = $r0, 8
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %res = call <2 x i16> @llvm.ctpop.v2i16(<2 x i16> %a)
