@@ -140,8 +140,8 @@ def : Pat<(and i64:$rs1, Signed37:$rs2), (ANDDri37 SingleReg:$rs1, Signed37:$rs2
 def : Pat<(and i64:$rs1, Wrapped64:$rs2), (ANDDri64 SingleReg:$rs1, Wrapped64:$rs2)>;
 
 foreach vtype = [ v8i8, v4i16, v2i32 ] in {
+    def : Pat<(and vtype:$rs1, (vtype (is_imm_vec:$IMM))), (ANDDri64 SingleReg:$rs1, (build_imm_vec $IMM))>;
     def : Pat<(and vtype:$rs1, vtype:$rs2), (ANDDrr SingleReg:$rs1, SingleReg:$rs2)>;
-    def : Pat<(and vtype:$rs1, (vtype (bitconvert (i64 Wrapped64:$rs2)))), (ANDDri64 SingleReg:$rs1, Wrapped64:$rs2)>;
 }
 
 // ANDND
@@ -151,8 +151,8 @@ def : Pat<(and (not i64:$rs1), Signed37:$rs2), (ANDNDri37 SingleReg:$rs1, Signed
 def : Pat<(and (not i64:$rs1), Wrapped64:$rs2), (ANDNDri64 SingleReg:$rs1, Wrapped64:$rs2)>;
 
 foreach vtype = [ v8i8, v4i16, v2i32 ] in {
-    def : Pat<(and (vinot vtype:$rs1), vtype:$rs2), (ANDNDrr SingleReg:$rs1, SingleReg:$rs2)>;
-    def : Pat<(and (vinot vtype:$rs1), (vtype (bitconvert (i64 Wrapped64:$rs2)))), (ANDNDri64 SingleReg:$rs1, Wrapped64:$rs2)>;
+    def : Pat<(and (vnot vtype:$rs1), (vtype (is_imm_vec:$IMM))), (ANDNDri64 SingleReg:$rs1, (build_imm_vec $IMM))>;
+    def : Pat<(and (vnot vtype:$rs1), vtype:$rs2), (ANDNDrr SingleReg:$rs1, SingleReg:$rs2)>;
 }
 
 // LANDW
@@ -191,8 +191,8 @@ defm : ZEFPat<(and i32:$rs1, Signed10W:$rs2), (ANDWri10 SingleReg:$rs1, Signed10
 defm : ZEFPat<(and i32:$rs1, Signed37W:$rs2), (ANDWri37 SingleReg:$rs1, Signed37W:$rs2)>;
 
 foreach vtype = [ v4i8, v2i16 ] in {
+    def : Pat<(and vtype:$rs1, (vtype (is_imm_vec:$IMM))), (ANDWri37 SingleReg:$rs1, (build_imm_vec $IMM))>;
     def : Pat<(and vtype:$rs1, vtype:$rs2), (ANDWrr SingleReg:$rs1, SingleReg:$rs2)>;
-    def : Pat<(and vtype:$rs1, (vtype (bitconvert (i32 Signed37W:$rs2)))), (ANDWri37 SingleReg:$rs1, Signed37W:$rs2)>;
 }
 
 multiclass COMP_Pat<SDNode Node, Comparison Mod> {
@@ -240,7 +240,7 @@ def : Pat<(or i64:$rs1, Wrapped64:$rs2), (ORDri64 SingleReg:$rs1, Wrapped64:$rs2
 
 foreach vtype = [ v8i8, v4i16, v2i32 ] in {
     def : Pat<(or vtype:$rs1, vtype:$rs2), (ORDrr SingleReg:$rs1, SingleReg:$rs2)>;
-    def : Pat<(or vtype:$rs1, (vtype (bitconvert (i64 Wrapped64:$rs2)))), (ORDri64 SingleReg:$rs1, Wrapped64:$rs2)>;
+    def : Pat<(or vtype:$rs1, (vtype (is_imm_vec:$IMM))), (ORDri64 SingleReg:$rs1, (build_imm_vec $IMM))>;
 }
 
 // ORW
@@ -250,7 +250,7 @@ defm : ZEFPat<(or i32:$rs1, Signed37W:$rs2), (ORWri37 SingleReg:$rs1, Signed37W:
 
 foreach vtype = [ v4i8, v2i16 ] in {
     def : Pat<(or vtype:$rs1, vtype:$rs2), (ORWrr SingleReg:$rs1, SingleReg:$rs2)>;
-    def : Pat<(or vtype:$rs1, (vtype (bitconvert (i32 Signed37W:$rs2)))), (ORWri37 SingleReg:$rs1, Signed37W:$rs2)>;
+    def : Pat<(or vtype:$rs1, (vtype (is_imm_vec:$IMM))), (ORWri37 SingleReg:$rs1, (build_imm_vec $IMM))>;
 }
 
 // SBFD
@@ -310,8 +310,8 @@ def : Pat<(xor i64:$rs1, Signed37:$rs2), (XORDri37 SingleReg:$rs1, Signed37:$rs2
 def : Pat<(xor i64:$rs1, Wrapped64:$rs2), (XORDri64 SingleReg:$rs1, Wrapped64:$rs2)>;
 
 foreach vtype = [ v8i8, v4i16, v2i32 ] in {
+    def : Pat<(xor vtype:$rs1, (vtype (is_imm_vec:$IMM))), (XORDri64 SingleReg:$rs1, (build_imm_vec $IMM))>;
     def : Pat<(xor vtype:$rs1, vtype:$rs2), (XORDrr SingleReg:$rs1, SingleReg:$rs2)>;
-    def : Pat<(xor vtype:$rs1, (vtype (bitconvert Wrapped64:$rs2))), (XORDri64 SingleReg:$rs1, Wrapped64:$rs2)>;
 }
 
 // XORW
@@ -320,8 +320,8 @@ defm : ZEFPat<(xor i32:$rs1, Signed10W:$rs2), (XORWri10 SingleReg:$rs1, Signed10
 defm : ZEFPat<(xor i32:$rs1, Signed37W:$rs2), (XORWri37 SingleReg:$rs1, Signed37W:$rs2)>;
 
 foreach vtype = [ v4i8, v2i16 ] in {
+    def : Pat<(xor vtype:$rs1, (vtype (is_imm_vec:$IMM))), (XORWri37 SingleReg:$rs1, (build_imm_vec $IMM))>;
     def : Pat<(xor vtype:$rs1, vtype:$rs2), (XORWrr SingleReg:$rs1, SingleReg:$rs2)>;
-    def : Pat<(xor vtype:$rs1, (vtype (bitconvert (i32 Signed37W:$rs2)))), (XORWri37 SingleReg:$rs1, Signed37W:$rs2)>;
 }
 
 // MINW
@@ -368,22 +368,36 @@ def : Pat<(umax i64:$v1, Signed10:$v2), (MAXUDri10 SingleReg:$v1, Signed10:$v2)>
 def : Pat<(umax i64:$v1, Signed37:$v2), (MAXUDri37 SingleReg:$v1, Signed37:$v2)>;
 def : Pat<(umax i64:$v1, Wrapped64:$v2), (MAXUDri64 SingleReg:$v1, Wrapped64:$v2)>;
 
-multiclass Word_RR_RIsplat_select <ValueType VecTy, SDNode irnode, SDNode rinode, SDNode rrnode>
+multiclass Word_RR_RIsplat_select_v2 <SDNode irnode, SDNode rinode, SDNode rrnode>
 {
-  def : Pat<(irnode VecTy:$v1, VecTy:$v2), (rrnode SingleReg:$v1, SingleReg:$v2)>;
-  def : Pat<(irnode VecTy:$v1, (VecTy (bitconvert (i64 UWord64:$v2)))), (rinode SingleReg:$v1, (trunc_imm_32 imm:$v2), splat32_)>;
-  def : Pat<(irnode VecTy:$v1, (VecTy (bitconvert (i64 UWsplat:$v2)))), (rinode SingleReg:$v1, (trunc_imm_32 imm:$v2), splat32_at)>;
+  def : Pat<(irnode v2i32:$v1, (v2i32 (build_vector (i32 Wrapped32:$i), (i32 0)))), (rinode SingleReg:$v1, Wrapped32:$i, splat32_)>;
+  def : Pat<(irnode v2i32:$v1, (v2i32 (build_vector (i32 Wrapped32:$i), (i32 Wrapped32:$i)))), (rinode SingleReg:$v1, Wrapped32:$i, splat32_at)>;
+  def : Pat<(irnode v2i32:$v1, v2i32:$v2), (rrnode SingleReg:$v1, SingleReg:$v2)>;
 }
 
-defm MAXWP : Word_RR_RIsplat_select<v2i32, smax, MAXWPri, MAXWPrr>;
-defm MAXUWP : Word_RR_RIsplat_select<v2i32, umax, MAXUWPri, MAXUWPrr>;
-defm MINWP : Word_RR_RIsplat_select<v2i32, smin, MINWPri, MINWPrr>;
-defm MINUWP : Word_RR_RIsplat_select<v2i32, umin, MINUWPri, MINUWPrr>;
+defm MAXWP : Word_RR_RIsplat_select_v2<smax, MAXWPri, MAXWPrr>;
+defm MAXUWP : Word_RR_RIsplat_select_v2<umax, MAXUWPri, MAXUWPrr>;
+defm MINWP : Word_RR_RIsplat_select_v2<smin, MINWPri, MINWPrr>;
+defm MINUWP : Word_RR_RIsplat_select_v2<umin, MINUWPri, MINUWPrr>;
 
-defm MAXHQ : Word_RR_RIsplat_select<v4i16, smax, MAXHQri, MAXHQrr>;
-defm MAXUHQ : Word_RR_RIsplat_select<v4i16, umax, MAXUHQri, MAXUHQrr>;
-defm MINHQ : Word_RR_RIsplat_select<v4i16, smin, MINHQri, MINHQrr>;
-defm MINUHQ : Word_RR_RIsplat_select<v4i16, umin, MINUHQri, MINUHQrr>;
+multiclass Word_RR_RIsplat_select_H <SDNode irnode, SDNode rinode, SDNode rrnode>
+{
+  //v2i16
+  def : Pat<(irnode v2i16:$v1, (v2i16 (is_imm_vec:$IMM))), (rinode SingleReg:$v1, (build_imm_vec $IMM), splat32_)>;
+  def : Pat<(irnode v2i16:$v1, v2i16:$v2), (rrnode SingleReg:$v1, SingleReg:$v2)>;
+  //v4i16
+  def : Pat<(irnode v4i16:$v1, (v4i16 (build_vector:$IMM (i32 imm), (i32 imm), (i32 0), (i32 0)))), (rinode SingleReg:$v1, (build_imm_vec $IMM), splat32_)>;
+  def : Pat<(irnode v4i16:$v1, (v4i16 (build_vector:$IMM (i32 imm:$i0), (i32 imm:$i1), (i32 imm:$i0), (i32 imm:$i1)))), (rinode SingleReg:$v1, (build_imm_vec $IMM), splat32_at)>;
+  def : Pat<(irnode v4i16:$v1, v4i16:$v2), (rrnode SingleReg:$v1, SingleReg:$v2)>;
+  // v3i16 as a v4i16
+  def : Pat<(irnode v4i16:$v1, (v4i16 (build_vector:$IMM (i32 imm), (i32 imm), (i32 0), (i32 undef)))), (rinode SingleReg:$v1, (build_imm_vec $IMM), splat32_)>;
+  def : Pat<(irnode v4i16:$v1, (v4i16 (build_vector:$IMM (i32 imm:$i0), (i32 imm), (i32 imm:$i0), (i32 undef)))), (rinode SingleReg:$v1, (build_imm_vec $IMM), splat32_at)>;
+}
+
+defm MAXHQ : Word_RR_RIsplat_select_H<smax, MAXHQri, MAXHQrr>;
+defm MAXUHQ : Word_RR_RIsplat_select_H<umax, MAXUHQri, MAXUHQrr>;
+defm MINHQ : Word_RR_RIsplat_select_H<smin, MINHQri, MINHQrr>;
+defm MINUHQ : Word_RR_RIsplat_select_H<umin, MINUHQri, MINUHQrr>;
 
 //===----------------------------------------------------------------------===//
 //  MAU Instructions - Patterns

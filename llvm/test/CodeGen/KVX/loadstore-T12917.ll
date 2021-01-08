@@ -20,7 +20,8 @@ define i32 @f(){
 ; CHECK-NEXT:    .cfi_offset 67, -32
 ; CHECK-NEXT:    sxwd $r0 = $r0
 ; CHECK-NEXT:    make $r16 = a
-; CHECK-NEXT:    make $r17 = c
+; CHECK-NEXT:    make $r15 = c
+; CHECK-NEXT:    make $r17 = 4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r0r1r2r3 = 0[$r0]
 ; CHECK-NEXT:    ;;
@@ -31,14 +32,13 @@ define i32 @f(){
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r2]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r0r1r2r3 = 0[$r3]
-; CHECK-NEXT:    make $r15 = 4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r16 = 0[$r16]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 0[$r17] = $r15
-; CHECK-NEXT:    make $r17 = b
+; CHECK-NEXT:    sw 0[$r15] = $r17
+; CHECK-NEXT:    make $r15 = b
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 0[$r17] = $r15
+; CHECK-NEXT:    sw 0[$r15] = $r17
 ; CHECK-NEXT:    cb.weqz $r16 ? .LBB0_2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %if.then

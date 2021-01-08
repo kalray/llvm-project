@@ -40,24 +40,22 @@ for.end:
 }
 
 ; Case 2 : Loop with a run-time number of iterations.
-
+; TODO: Something on the vector handling change made the
+; two make $r0 = 0 not merge anymore. Why?
 define i32 @hwloop2(i32 %n, i32* nocapture %b) nounwind {
 ; CHECK-LABEL: hwloop2:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    copyd $r2 = $r0
-; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    cb.wlez $r0 ? .LBB1_1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.wlez $r2 ? .LBB1_3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.1: # %for.body.preheader
-; CHECK-NEXT:    addw $r0 = $r2, -1
+; CHECK-NEXT:  # %bb.3: # %for.body.preheader
+; CHECK-NEXT:    addw $r0 = $r0, -1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r2 = $r0, 1
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r2, .__LOOPDO_1_END_
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB1_2: # %for.body
+; CHECK-NEXT:  .LBB1_4: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    lwz $r2 = 0[$r1]
 ; CHECK-NEXT:    addd $r1 = $r1, 4
@@ -65,7 +63,11 @@ define i32 @hwloop2(i32 %n, i32* nocapture %b) nounwind {
 ; CHECK-NEXT:    addw $r0 = $r2, $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .__LOOPDO_1_END_:
-; CHECK-NEXT:  .LBB1_3: # %for.end
+; CHECK-NEXT:  # %bb.2: # %for.end
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  .LBB1_1:
+; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -98,23 +100,27 @@ for.end:
 define i32 @hwloop3(i32 %n, i32* nocapture %b) nounwind {
 ; CHECK-LABEL: hwloop3:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r2 = 0
-; CHECK-NEXT:    cb.wlez $r0 ? .LBB2_3
+; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.1: # %for.body.preheader
-; CHECK-NEXT:    make $r2 = 0
+; CHECK-NEXT:    cb.wlez $r2 ? .LBB2_1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB2_2: # %for.body
+; CHECK-NEXT:  # %bb.2: # %for.body.preheader
+; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  .LBB2_3: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    lwz $r3 = 0[$r1]
-; CHECK-NEXT:    addw $r0 = $r0, -4
+; CHECK-NEXT:    addw $r2 = $r2, -4
 ; CHECK-NEXT:    addd $r1 = $r1, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r2 = $r3, $r2
-; CHECK-NEXT:    cb.wnez $r0 ? .LBB2_2
+; CHECK-NEXT:    addw $r0 = $r3, $r0
+; CHECK-NEXT:    cb.wnez $r2 ? .LBB2_3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB2_3: # %for.end
-; CHECK-NEXT:    copyd $r0 = $r2
+; CHECK-NEXT:  # %bb.4: # %for.end
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  .LBB2_1:
+; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

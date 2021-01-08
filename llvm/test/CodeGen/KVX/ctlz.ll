@@ -4,17 +4,18 @@
 define i16 @ctlzi16(i16 %a) {
 ; CHECK-LABEL: ctlzi16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    zxhd $r1 = $r0
-; CHECK-NEXT:    make $r0 = 16
+; CHECK-NEXT:    zxhd $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.weqz $r1 ? .LBB0_2
+; CHECK-NEXT:    cb.weqz $r0 ? .LBB0_1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.1: # %cond.false
-; CHECK-NEXT:    clzw $r0 = $r1
+; CHECK-NEXT:  # %bb.2: # %cond.false
+; CHECK-NEXT:    clzw $r0 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addw $r0 = $r0, -16
+; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_2: # %cond.end
+; CHECK-NEXT:  .LBB0_1:
+; CHECK-NEXT:    make $r0 = 16
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %res = call i16 @llvm.ctlz.i16(i16 %a)
@@ -24,15 +25,14 @@ define i16 @ctlzi16(i16 %a) {
 define i32 @clzw(i32 %a) {
 ; CHECK-LABEL: clzw:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    copyd $r1 = $r0
+; CHECK-NEXT:    cb.weqz $r0 ? .LBB1_1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  # %bb.2: # %cond.false
+; CHECK-NEXT:    clzw $r0 = $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  .LBB1_1:
 ; CHECK-NEXT:    make $r0 = 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.weqz $r1 ? .LBB1_2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.1: # %cond.false
-; CHECK-NEXT:    clzw $r0 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB1_2: # %cond.end
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %res = call i32 @llvm.ctlz.i32(i32 %a)
@@ -42,15 +42,14 @@ define i32 @clzw(i32 %a) {
 define i64 @clzd(i64 %a) {
 ; CHECK-LABEL: clzd:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    copyd $r1 = $r0
+; CHECK-NEXT:    cb.deqz $r0 ? .LBB2_1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  # %bb.2: # %cond.false
+; CHECK-NEXT:    clzd $r0 = $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  .LBB2_1:
 ; CHECK-NEXT:    make $r0 = 64
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.deqz $r1 ? .LBB2_2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.1: # %cond.false
-; CHECK-NEXT:    clzd $r0 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB2_2: # %cond.end
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %res = call i64 @llvm.ctlz.i64(i64 %a)

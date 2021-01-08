@@ -73,3 +73,32 @@ entry:
   %1 = select <2 x i1> %0, <2 x i32> %a, <2 x i32> <i32 20, i32 0>
   ret <2 x i32> %1
 }
+
+define <2 x i32> @maxuwp_rr_1(<2 x i32> %a) {
+; CHECK-LABEL: maxuwp_rr_1:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r1 = 0x1400000000
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    maxuwp $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = icmp ugt <2 x i32> %a, <i32 0, i32 20>
+  %1 = select <2 x i1> %0, <2 x i32> %a, <2 x i32> <i32 0, i32 20>
+  ret <2 x i32> %1
+}
+
+define <2 x i32> @maxwp_rr_1(<2 x i32> %a) {
+; CHECK-LABEL: maxwp_rr_1:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r1 = 0x100000000
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    maxwp $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = icmp sgt <2 x i32> %a, <i32 0, i32 1>
+  %1 = select <2 x i1> %0, <2 x i32> %a, <2 x i32> <i32 0, i32 1>
+  ret <2 x i32> %1
+}
+

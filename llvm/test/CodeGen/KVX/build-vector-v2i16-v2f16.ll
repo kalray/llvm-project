@@ -5,7 +5,7 @@ target triple = "kvx-kalray-cos"
 define <2 x i16> @foo_v2i16(<2 x i16> %x) {
 ; CHECK-LABEL: foo_v2i16:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = 0xfffeffff
+; CHECK-NEXT:    make $r0 = 0xfffffffffffeffff
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -15,9 +15,39 @@ entry:
 define <2 x half> @foo_v2f16(<2 x half> %x) {
 ; CHECK-LABEL: foo_v2f16:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = 0xc133be00
+; CHECK-NEXT:    make $r0 = 0xffffffffc133be00
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
   ret <2 x half> <half 0xHBE00, half 0xHC133>
+}
+
+define <2 x i16> @bv_v2i16() {
+; CHECK-LABEL: bv_v2i16:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 0x30000
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  ret <2 x i16> <i16 0, i16 3>
+}
+
+define <2 x i32> @bv_v2i32() {
+; CHECK-LABEL: bv_v2i32:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 0x300000000
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  ret <2 x i32> <i32 0, i32 3>
+}
+
+define <4 x i16> @bv_v4i16() {
+; CHECK-LABEL: bv_v4i16:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 0x4000300020001
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  ret <4 x i16> <i16 1, i16 2, i16 3, i16 4>
 }

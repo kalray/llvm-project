@@ -27,11 +27,8 @@ include "KVXSchedule.td"
 
 include "KVXModifierInfo.td"
 
-def immZero : PatFrags<(ops), [(bitconvert (i32 0)), (bitconvert (i64 0))]>;
-def immOnes : PatFrags<(ops), [(bitconvert (i32 -1)), (bitconvert (i64 -1))]>;
-def vineg : PatFrag<(ops node:$v), (sub immZero, node:$v)>;
-def vfneg : PatFrag<(ops node:$v), (fsub immZero, node:$v)>;
-def vinot : PatFrag<(ops node:$v), (xor node:$v, immOnes)>;
+def vineg : PatFrag<(ops node:$v), (sub immAllZerosV, node:$v)>;
+def vfneg : PatFrag<(ops node:$v), (fsub immAllZerosV, node:$v)>;
 
 class BITCAST
   <ValueType DstVT, ValueType SrcVT, RegisterClass DstRC>

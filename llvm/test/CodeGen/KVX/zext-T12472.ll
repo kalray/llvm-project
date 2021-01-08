@@ -9,25 +9,24 @@ target triple = "kvx-kalray-cos"
 define i32 @__strncmp(i8* nocapture readonly %s1, i8* nocapture readonly %s2, i32 %n){
 ; CHECK-LABEL: __strncmp:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r3 = 0
-; CHECK-NEXT:    cb.weqz $r2 ? .LBB0_12
+; CHECK-NEXT:    cb.weqz $r2 ? .LBB0_8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %land.rhs.preheader
 ; CHECK-NEXT:    lbz $r3 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.weqz $r3 ? .LBB0_10
+; CHECK-NEXT:    cb.weqz $r3 ? .LBB0_11
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.2: # %land.rhs.preheader
 ; CHECK-NEXT:    addw $r4 = $r2, -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.weqz $r4 ? .LBB0_10
+; CHECK-NEXT:    cb.weqz $r4 ? .LBB0_11
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.3: # %land.rhs.preheader
 ; CHECK-NEXT:    lbz $r4 = 0[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compw.ne $r3 = $r3, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.odd $r3 ? .LBB0_10
+; CHECK-NEXT:    cb.odd $r3 ? .LBB0_11
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.4: # %if.end11.preheader
 ; CHECK-NEXT:    addw $r3 = $r2, -2
@@ -38,11 +37,11 @@ define i32 @__strncmp(i8* nocapture readonly %s1, i8* nocapture readonly %s2, i3
 ; CHECK-NEXT:    addd $r0 = $r0, 1
 ; CHECK-NEXT:    addd $r2 = $r1, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.weqz $r4 ? .LBB0_11
+; CHECK-NEXT:    cb.weqz $r4 ? .LBB0_12
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.6: # %if.end11
 ; CHECK-NEXT:    # in Loop: Header=BB0_5 Depth=1
-; CHECK-NEXT:    cb.weqz $r3 ? .LBB0_11
+; CHECK-NEXT:    cb.weqz $r3 ? .LBB0_12
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.7: # %if.end11
 ; CHECK-NEXT:    # in Loop: Header=BB0_5 Depth=1
@@ -54,20 +53,21 @@ define i32 @__strncmp(i8* nocapture readonly %s1, i8* nocapture readonly %s2, i3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.odd $r4 ? .LBB0_5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    goto .LBB0_11
+; CHECK-NEXT:    goto .LBB0_12
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_10:
+; CHECK-NEXT:  .LBB0_8:
+; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  .LBB0_11:
 ; CHECK-NEXT:    copyd $r2 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_11: # %while.end
+; CHECK-NEXT:  .LBB0_12: # %while.end
 ; CHECK-NEXT:    lbz $r0 = 0[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lbz $r1 = 0[$r2]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfw $r3 = $r1, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_12: # %return
-; CHECK-NEXT:    copyd $r0 = $r3
+; CHECK-NEXT:    sbfw $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
