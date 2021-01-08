@@ -29,6 +29,7 @@ add_llvm_target(KVXCodeGen
     KVXLoadStorePacking.cpp
     KVXVLIWPacketizer.cpp
     KVXHardwareLoops.cpp
+    KVXHardwareLoopsPrepare.cpp
     KVXTargetTransformInfo.cpp
     )
 
