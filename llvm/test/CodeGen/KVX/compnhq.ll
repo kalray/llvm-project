@@ -78,8 +78,6 @@ define <2 x i16> @v2_eq(<2 x i16> %a, <2 x i16> %b){
 ; CHECK-LABEL: v2_eq:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnhq.eq $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -92,8 +90,6 @@ define <2 x i16> @v2_neq(<2 x i16> %a, <2 x i16> %b){
 ; CHECK-LABEL: v2_neq:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnhq.ne $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -106,8 +102,6 @@ define <2 x i16> @v2_gt(<2 x i16> %a, <2 x i16> %b){
 ; CHECK-LABEL: v2_gt:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnhq.gt $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -120,8 +114,6 @@ define <2 x i16> @v2_lt(<2 x i16> %a, <2 x i16> %b){
 ; CHECK-LABEL: v2_lt:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnhq.lt $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -134,8 +126,6 @@ define <2 x i16> @v2_gte(<2 x i16> %a, <2 x i16> %b){
 ; CHECK-LABEL: v2_gte:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnhq.ge $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -148,8 +138,6 @@ define <2 x i16> @v2_lte(<2 x i16> %a, <2 x i16> %b){
 ; CHECK-LABEL: v2_lte:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnhq.le $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
