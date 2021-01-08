@@ -9,20 +9,24 @@ define void @foo(i32 %i, i32* nocapture %p){
 ; CHECK-LABEL: foo:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sxwd $r0 = $r0
-; CHECK-NEXT:    make $r2 = 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    mind $r0 = $r0, 2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbfd $r2 = $r0, 3
+; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    loopdo $r2, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_1: # %do.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    addx4d $r3 = $r2, $r1
-; CHECK-NEXT:    addd $r5 = $r2, 2
-; CHECK-NEXT:    addd $r2 = $r2, -1
+; CHECK-NEXT:    addx4d $r2 = $r0, $r1
+; CHECK-NEXT:    addd $r0 = $r0, -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r4 = 8[$r3]
-; CHECK-NEXT:    compd.gt $r5 = $r5, $r0
+; CHECK-NEXT:    lwz $r3 = 8[$r2]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 12[$r3] = $r4
-; CHECK-NEXT:    cb.odd $r5 ? .LBB0_1
+; CHECK-NEXT:    sw 12[$r2] = $r3
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:  .__LOOPDO_0_END_:
 ; CHECK-NEXT:  # %bb.2: # %do.end
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;

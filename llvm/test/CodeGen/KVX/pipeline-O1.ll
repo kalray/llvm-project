@@ -1,6 +1,6 @@
-; RUN: llc -mtriple=kvx -O1 -debug-pass=Structure < %s -o /dev/null 2>&1 | grep -v "Verify generated machine code" | FileCheck %s
-; RUN: llc -mtriple=kvx -O2 -debug-pass=Structure < %s -o /dev/null 2>&1 | grep -v "Verify generated machine code" | FileCheck %s
-; RUN: llc -mtriple=kvx -O3 -debug-pass=Structure < %s -o /dev/null 2>&1 | grep -v "Verify generated machine code" | FileCheck %s
+; RUN: llc -mtriple=kvx -O1 -debug-pass=Structure %s -o /dev/null 2>&1 | grep -v "Verify generated machine code" | FileCheck %s
+; RUN: llc -mtriple=kvx -O2 -debug-pass=Structure %s -o /dev/null 2>&1 | grep -v "Verify generated machine code" | FileCheck %s --check-prefixes=CHECK,LVLO2
+; RUN: llc -mtriple=kvx -O3 -debug-pass=Structure %s -o /dev/null 2>&1 | grep -v "Verify generated machine code" | FileCheck %s --check-prefixes=CHECK,LVLO2
 
 ; REQUIRES: asserts
 ; CHECK: Target Library Information
@@ -134,9 +134,9 @@
 ; CHECK-NEXT: Insert XRay ops
 ; CHECK-NEXT: Implement the 'patchable-function' attribute
 ; CHECK-NEXT: KVX pre emit pseudo instruction expansion pass
-; CHECK-NEXT: MachineDominator Tree Construction
-; CHECK-NEXT: Machine Natural Loop Construction
-; CHECK-NEXT: KVX Packetizer
+; LVLO2-NEXT: MachineDominator Tree Construction
+; LVLO2-NEXT: Machine Natural Loop Construction
+; LVLO2-NEXT: KVX Packetizer
 ; CHECK-NEXT: Contiguously Lay Out Funclets
 ; CHECK-NEXT: StackMap Liveness Analysis
 ; CHECK-NEXT: Live DEBUG_VALUE analysis
