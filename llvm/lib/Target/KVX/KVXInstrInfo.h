@@ -22,10 +22,14 @@
 
 namespace llvm {
 
+class KVXSubtarget;
+
 class KVXInstrInfo : public KVXGenInstrInfo {
 
+  const KVXSubtarget &Subtarget;
+
 public:
-  KVXInstrInfo();
+  explicit KVXInstrInfo(KVXSubtarget &ST);
 
   void copyPhysReg(MachineBasicBlock &MBB, MachineBasicBlock::iterator MBBI,
                    const DebugLoc &DL, MCRegister DstReg, MCRegister SrcReg,

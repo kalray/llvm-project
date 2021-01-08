@@ -10,6 +10,13 @@
 include "llvm/Target/Target.td"
 
 //===----------------------------------------------------------------------===//
+// Subtarget features.
+//===----------------------------------------------------------------------===//
+
+def FeatureFPIMM : SubtargetFeature<"fpimm", "HasFPIMM", "true",
+                                    "Enable FPU immediate-capable instructions">;
+
+//===----------------------------------------------------------------------===//
 //  Register Descriptions
 //===----------------------------------------------------------------------===//
 
@@ -80,5 +87,5 @@ def KVX : Target {
 //  Processors Supported
 //===----------------------------------------------------------------------===//
 
-def : ProcessorModel<"kv3-1", KVXSchedMachineModel, []>;
+def : ProcessorModel<"kv3-1", KVXSchedMachineModel, [FeatureFPIMM]>;
 def : ProcessorModel<"kv3-2", KVXSchedMachineModel, []>;

@@ -32,16 +32,16 @@ using namespace llvm;
 #include "KVXGenDFAPacketizer.inc"
 #include "KVXGenInstrInfo.inc"
 
-KVXInstrInfo::KVXInstrInfo()
-    : KVXGenInstrInfo(KVX::ADJCALLSTACKDOWN, KVX::ADJCALLSTACKUP) {}
+KVXInstrInfo::KVXInstrInfo(KVXSubtarget &ST)
+    : KVXGenInstrInfo(KVX::ADJCALLSTACKDOWN, KVX::ADJCALLSTACKUP),
+      Subtarget(ST) {}
 
 void KVXInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
                                MachineBasicBlock::iterator MBBI,
                                const DebugLoc &DL, MCRegister DstReg,
                                MCRegister SrcReg, bool KillSrc) const {
-  MachineFunction *MF = MBB.getParent();
-  const KVXRegisterInfo *TRI =
-      (const KVXRegisterInfo *)MF->getSubtarget().getRegisterInfo();
+
+  const KVXRegisterInfo *TRI = Subtarget.getRegisterInfo();
 
   LLVM_DEBUG(dbgs() << "Copy register (" + TRI->getRegAsmName(SrcReg.id()) +
                            ") to (" + TRI->getRegAsmName(DstReg.id()) + ").\n");

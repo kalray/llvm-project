@@ -56,15 +56,15 @@ define void @InitDataSet(i32 %m, i16* nocapture %x, i32 %n, i16* nocapture %h) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_7: # %vector.ph
 ; CHECK-NEXT:    andd $r5 = $r4, -2
+; CHECK-NEXT:    make $r7 = 0xffffffffdeaddead
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r7 = $r5, -2
+; CHECK-NEXT:    addd $r0 = $r5, -2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srld $r0 = $r0, 1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r8 = $r0, 1
 ; CHECK-NEXT:    addd $r0 = $r5, $r6
 ; CHECK-NEXT:    addx2d $r6 = $r6, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srld $r7 = $r7, 1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r8 = $r7, 1
-; CHECK-NEXT:    make $r7 = 0xffffffffdeaddead
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r8, .__LOOPDO_4_END_
 ; CHECK-NEXT:    ;;
@@ -143,15 +143,15 @@ define void @InitDataSet(i32 %m, i16* nocapture %x, i32 %n, i16* nocapture %h) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_19: # %vector.ph74
 ; CHECK-NEXT:    andd $r2 = $r1, -2
+; CHECK-NEXT:    make $r5 = 0xffffffffbeefbeef
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r5 = $r2, -2
+; CHECK-NEXT:    addd $r0 = $r2, -2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srld $r0 = $r0, 1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r6 = $r0, 1
 ; CHECK-NEXT:    addd $r0 = $r2, $r4
 ; CHECK-NEXT:    addx2d $r4 = $r4, $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srld $r5 = $r5, 1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r6 = $r5, 1
-; CHECK-NEXT:    make $r5 = 0xffffffffbeefbeef
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r6, .__LOOPDO_1_END_
 ; CHECK-NEXT:    ;;
@@ -356,8 +356,8 @@ define i32 @c()  {
 ; CHECK-NEXT:    cb.wlez $r18 ? .LBB1_6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %for.cond3.preheader.preheader
-; CHECK-NEXT:    sxwd $r0 = $r0
 ; CHECK-NEXT:    zxwd $r5 = $r18
+; CHECK-NEXT:    sxwd $r0 = $r0
 ; CHECK-NEXT:    make $r3 = g
 ; CHECK-NEXT:    make $r4 = b
 ; CHECK-NEXT:    ;;

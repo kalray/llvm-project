@@ -13,6 +13,9 @@
 // Last generated: 2020-09-16 15:58:51.230190.
 
 
+def HasFPIMM : Predicate<"Subtarget->hasFPIMM()">;
+
+
 class KVX_INSTRUCTION
   <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
   : Instruction {
@@ -914,7 +917,7 @@ class FLOATCOMP_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32
 
 // 1 insn(s):
 // FCOMPW
-let Size = 8 in
+let Size = 8, Predicates = [HasFPIMM] in
 class FLOATCOMP_REGISTERW_REGISTERZ_UPPER27_LOWER5_DOUBLE_BINARY32
   <dag outs, dag ins, string asmstr, list<dag> pattern>
   : KVX_INSTRUCTION <outs, ins, asmstr, pattern, ALU_LITE_X>;
@@ -1010,7 +1013,7 @@ class REGISTERM_REGISTERP_REGISTERO_SIMPLE
 
 // 9 insn(s):
 // FFMAD, FFMSD, FMULD, FADDD, FSBFD, FFMAWD, FFMSWD, FMULWD, FDOT2WD
-let Size = 12 in
+let Size = 12, Predicates = [HasFPIMM] in
 class REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARY64
   <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
   : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
@@ -1024,7 +1027,7 @@ class ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY64
 
 // 9 insn(s):
 // FFMAWP, FFMSWP, FMULWP, FMULWC, FMULCWC, FADDWP, FADDCWC, FSBFWP, FSBFCWC
-let Size = 12 in
+let Size = 12, Predicates = [HasFPIMM] in
 class REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARY32X2
   <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
   : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
@@ -1038,7 +1041,7 @@ class ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32X2
 
 // 5 insn(s):
 // FFMAHQ, FFMSHQ, FMULHQ, FADDHQ, FSBFHQ
-let Size = 12 in
+let Size = 12, Predicates = [HasFPIMM] in
 class REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARY16X4
   <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
   : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
@@ -1052,7 +1055,7 @@ class ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY16X4
 
 // 5 insn(s):
 // FMULWDP, FMULWDC, FMULCWDC, FFMAWDP, FFMSWDP
-let Size = 12 in
+let Size = 12, Predicates = [HasFPIMM] in
 class REGISTERM_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARY32X2
   <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
   : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
@@ -1066,7 +1069,7 @@ class ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE_BINARY32X2
 
 // 3 insn(s):
 // FMULHWQ, FFMAHWQ, FFMSHWQ
-let Size = 12 in
+let Size = 12, Predicates = [HasFPIMM] in
 class REGISTERM_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARY16X4
   <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
   : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
@@ -1088,7 +1091,7 @@ class ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE
 
 // 9 insn(s):
 // FFMAHW, FFMAW, FFMSHW, FFMSW, FADDW, FSBFW, FMULHW, FMULW, FDOT2W
-let Size = 8 in
+let Size = 8, Predicates = [HasFPIMM] in
 class REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE_BINARY32
   <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
   : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;

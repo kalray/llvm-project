@@ -9,8 +9,8 @@ target triple = "kvx-kalray-cos"
 define i32 @hwloop1() nounwind {
 ; CHECK-LABEL: hwloop1:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    make $r2 = 10
+; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    make $r1 = a
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r2, .__LOOPDO_0_END_

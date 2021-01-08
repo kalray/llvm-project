@@ -335,13 +335,13 @@ define <2 x double> @test_select_cc_f32_f32(<2 x double> %a, <2 x double> %b, <2
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.une $r4 = $r4, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r5 = $r4
-; CHECK-NEXT:    srad $r4 = $r4, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srad $r5 = $r4, 32
 ; CHECK-NEXT:    sxwd $r4 = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.dnez $r4 ? $r3 = $r1
-; CHECK-NEXT:    cmoved.dnez $r5 ? $r2 = $r0
+; CHECK-NEXT:    sxwd $r5 = $r5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.dnez $r5 ? $r3 = $r1
+; CHECK-NEXT:    cmoved.dnez $r4 ? $r2 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    copyd $r1 = $r3
@@ -572,16 +572,13 @@ define <2 x i32> @test_fptosi_i32(<2 x float> %a) #0 {
 define <2 x i64> @test_fptosi_i64(<2 x float> %a) #0 {
 ; CHECK-LABEL: test_fptosi_i64:
 ; CHECK:       # %bb.0:
+; CHECK-NEXT:    srad $r2 = $r0, 32
 ; CHECK-NEXT:    fwidenlwd $r1 = $r0
-; CHECK-NEXT:    srad $r0 = $r0, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedd.rz $r2 = $r1, 0
-; CHECK-NEXT:    fwidenlwd $r0 = $r0
+; CHECK-NEXT:    fixedd.rz $r0 = $r1, 0
+; CHECK-NEXT:    fwidenlwd $r2 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedd.rz $r3 = $r0, 0
-; CHECK-NEXT:    copyd $r0 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r3
+; CHECK-NEXT:    fixedd.rz $r1 = $r2, 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptosi <2 x float> %a to <2 x i64>
@@ -606,16 +603,13 @@ define <2 x i32> @test_fptoui_2xi32(<2 x float> %a) #0 {
 define <2 x i64> @test_fptoui_2xi64(<2 x float> %a) #0 {
 ; CHECK-LABEL: test_fptoui_2xi64:
 ; CHECK:       # %bb.0:
+; CHECK-NEXT:    srad $r2 = $r0, 32
 ; CHECK-NEXT:    fwidenlwd $r1 = $r0
-; CHECK-NEXT:    srad $r0 = $r0, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedud.rz $r2 = $r1, 0
-; CHECK-NEXT:    fwidenlwd $r0 = $r0
+; CHECK-NEXT:    fixedud.rz $r0 = $r1, 0
+; CHECK-NEXT:    fwidenlwd $r2 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedud.rz $r3 = $r0, 0
-; CHECK-NEXT:    copyd $r0 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r3
+; CHECK-NEXT:    fixedud.rz $r1 = $r2, 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptoui <2 x float> %a to <2 x i64>
@@ -1199,16 +1193,16 @@ define <2 x float> @test_fabs(<2 x float> %a) #0 {
 define <2 x float> @test_copysign(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-LABEL: test_copysign:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r3 = $r1, 32
-; CHECK-NEXT:    srad $r2 = $r0, 32
+; CHECK-NEXT:    srad $r2 = $r1, 32
+; CHECK-NEXT:    srad $r3 = $r0, 32
 ; CHECK-NEXT:    sraw $r1 = $r1, 31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sraw $r3 = $r3, 31
+; CHECK-NEXT:    sraw $r2 = $r2, 31
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r3, 31, 31
+; CHECK-NEXT:    insf $r3 = $r2, 31, 31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 63, 32
+; CHECK-NEXT:    insf $r0 = $r3, 63, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <2 x float> @llvm.copysign.v2f32(<2 x float> %a, <2 x float> %b)
@@ -1254,17 +1248,17 @@ define <2 x float> @test_copysign_f64(<2 x float> %a, <2 x double> %b) #0 {
 define <2 x double> @test_copysign_extended(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-LABEL: test_copysign_extended:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r3 = $r1, 32
+; CHECK-NEXT:    srad $r2 = $r1, 32
 ; CHECK-NEXT:    sraw $r1 = $r1, 31
-; CHECK-NEXT:    srad $r2 = $r0, 32
+; CHECK-NEXT:    srad $r3 = $r0, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 31
-; CHECK-NEXT:    sraw $r3 = $r3, 31
+; CHECK-NEXT:    sraw $r2 = $r2, 31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r3, 31, 31
+; CHECK-NEXT:    insf $r3 = $r2, 31, 31
 ; CHECK-NEXT:    fwidenlwd $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlwd $r1 = $r2
+; CHECK-NEXT:    fwidenlwd $r1 = $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <2 x float> @llvm.copysign.v2f32(<2 x float> %a, <2 x float> %b)
@@ -1514,12 +1508,12 @@ define <2 x float> @test_insertelement(<2 x float> %a, float %x, i64 %p) #0 {
 ; CHECK-LABEL: test_insertelement:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 0[$r12] = $r0
 ; CHECK-NEXT:    andd $r2 = $r2, 1
-; CHECK-NEXT:    addd $r0 = $r12, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw.xs $r2[$r0] = $r1
+; CHECK-NEXT:    addd $r3 = $r12, 0
+; CHECK-NEXT:    sd 0[$r12] = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw.xs $r2[$r3] = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r0 = 0[$r12]
 ; CHECK-NEXT:    addd $r12 = $r12, 32
