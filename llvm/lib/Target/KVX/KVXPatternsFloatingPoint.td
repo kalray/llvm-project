@@ -286,8 +286,12 @@ multiclass COMP_FPat<SDNode Node, Floatcomp Cmp, bit SWAP> {
 
   def : Pat<(v4i16 (Node v4f16:$rz, v4f16:$ry)),
     !if(SWAP, (FCOMPNHQ SingleReg:$ry, SingleReg:$rz, Cmp), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, Cmp))>;
+  def : Pat<(sra (shl (v4i16 (Node v4f16:$rz, v4f16:$ry)), (v4i16 v4_splat_15)), (v4i16 v4_splat_15)),
+    !if(SWAP, (FCOMPNHQ SingleReg:$ry, SingleReg:$rz, Cmp), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, Cmp))>;
 
   def : Pat<(v2i32 (Node v2f32:$rz, v2f32:$ry)),
+    !if(SWAP, (FCOMPNWP SingleReg:$ry, SingleReg:$rz, Cmp), (FCOMPNWP SingleReg:$rz, SingleReg:$ry, Cmp))>;
+  def : Pat<(sra (shl (v2i32 (Node v2f32:$rz, v2f32:$ry)), (v2i32 v2_splat_31)), (v2i32 v2_splat_31)),
     !if(SWAP, (FCOMPNWP SingleReg:$ry, SingleReg:$rz, Cmp), (FCOMPNWP SingleReg:$rz, SingleReg:$ry, Cmp))>;
 }
 
