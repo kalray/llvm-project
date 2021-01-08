@@ -997,3 +997,6 @@ def: Pat<(KVXJT_PCREL i64:$a), (PCRELmi64 SingleReg:$a)>;
 def: Pat<(srl (i32 (bswap i32:$v)), (i64 16)), (SBMM8ri64 SingleReg:$v, 0x0102)>;
 def: Pat<(i32 (bswap i32:$v)), (SBMM8ri64 SingleReg:$v, 0x01020408)>;
 def: Pat<(i64 (bswap i64:$v)), (SBMM8ri64 SingleReg:$v, 0x0102040810204080)>;
+def: Pat<(v2i16 (bswap v2i16:$v)), (SBMM8ri64 SingleReg:$v, 0x04080102)>;
+def: Pat<(v4i16 (bswap v4i16:$v)), (SBMM8ri64 SingleReg:$v, 0x4080102004080102)>;
+def: Pat<(v2i32 (bswap v2i32:$v)), (SBMM8ri64 SingleReg:$v, 0x1020408001020408)>;
