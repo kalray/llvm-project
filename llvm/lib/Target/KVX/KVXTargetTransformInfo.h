@@ -45,6 +45,14 @@ public:
 
   void getUnrollingPreferences(Loop *L, ScalarEvolution &SE,
                                TTI::UnrollingPreferences &UP);
+
+  bool isHardwareLoopProfitable(Loop *L, ScalarEvolution &SE,
+                                AssumptionCache &AC, TargetLibraryInfo *LibInfo,
+                                HardwareLoopInfo &HWLoopInfo);
+  bool isLoweredToCall(const Function *F);
+
+private:
+  bool isHardwareLoopProfitableCheck(Loop *L, ScalarEvolution &SE);
 };
 
 } // end namespace llvm
