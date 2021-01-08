@@ -35,8 +35,8 @@ define i32 @main() {
 ; CHECK-NEXT:    call f
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 67, -64
-; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ld $r16 = 0[$r12]
+; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 64

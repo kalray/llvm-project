@@ -47,8 +47,8 @@ define dso_local i32 @testalloca(i32 %n) local_unnamed_addr  {
 ; CHECK-NEXT:    cb.wlez $r0 ? .LBB0_5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.3: # %for.body.preheader
-; CHECK-NEXT:    make $r3 = 0
 ; CHECK-NEXT:    zxwd $r2 = $r0
+; CHECK-NEXT:    make $r3 = 0
 ; CHECK-NEXT:    copyd $r4 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_4: # %for.body

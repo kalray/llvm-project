@@ -6,62 +6,62 @@ target triple = "kvx-kalray-cos"
 define void @f(i32* nocapture %x, i32 %state) local_unnamed_addr #0 {
 ; CHECK-LABEL: f:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    compw.gtu $r3 = $r1, 8
-; CHECK-NEXT:    make $r2 = 1
+; CHECK-NEXT:    compw.gtu $r2 = $r1, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.odd $r3 ? .LBB0_11
+; CHECK-NEXT:    cb.odd $r2 ? .LBB0_11
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %entry
 ; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    make $r3 = .LJTI0_0
+; CHECK-NEXT:    make $r2 = .LJTI0_0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld.xs $r1 = $r1[$r3]
+; CHECK-NEXT:    ld.xs $r2 = $r1[$r2]
+; CHECK-NEXT:    make $r1 = 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    igoto $r1
+; CHECK-NEXT:    igoto $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_2: # %sw.bb1
 ; CHECK-NEXT:    addd $r0 = $r0, 4
-; CHECK-NEXT:    make $r2 = 2
+; CHECK-NEXT:    make $r1 = 2
 ; CHECK-NEXT:    goto .LBB0_10
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_3: # %sw.bb3
 ; CHECK-NEXT:    addd $r0 = $r0, 8
-; CHECK-NEXT:    make $r2 = 3
+; CHECK-NEXT:    make $r1 = 3
 ; CHECK-NEXT:    goto .LBB0_10
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_4: # %sw.bb6
 ; CHECK-NEXT:    addd $r0 = $r0, 12
-; CHECK-NEXT:    make $r2 = 4
+; CHECK-NEXT:    make $r1 = 4
 ; CHECK-NEXT:    goto .LBB0_10
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_5: # %sw.bb9
 ; CHECK-NEXT:    addd $r0 = $r0, 16
-; CHECK-NEXT:    make $r2 = 5
+; CHECK-NEXT:    make $r1 = 5
 ; CHECK-NEXT:    goto .LBB0_10
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_6: # %sw.bb12
 ; CHECK-NEXT:    addd $r0 = $r0, 20
-; CHECK-NEXT:    make $r2 = 6
+; CHECK-NEXT:    make $r1 = 6
 ; CHECK-NEXT:    goto .LBB0_10
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_7: # %sw.bb15
 ; CHECK-NEXT:    addd $r0 = $r0, 24
-; CHECK-NEXT:    make $r2 = 7
+; CHECK-NEXT:    make $r1 = 7
 ; CHECK-NEXT:    goto .LBB0_10
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_8: # %sw.bb18
 ; CHECK-NEXT:    addd $r0 = $r0, 28
-; CHECK-NEXT:    make $r2 = 8
+; CHECK-NEXT:    make $r1 = 8
 ; CHECK-NEXT:    goto .LBB0_10
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_9: # %sw.bb21
 ; CHECK-NEXT:    addd $r0 = $r0, 32
-; CHECK-NEXT:    make $r2 = 9
+; CHECK-NEXT:    make $r1 = 9
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_10: # %sw.epilog.sink.split
-; CHECK-NEXT:    lwz $r1 = 0[$r0]
+; CHECK-NEXT:    lwz $r2 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r1 = $r1, $r2
+; CHECK-NEXT:    addw $r1 = $r2, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 0[$r0] = $r1
 ; CHECK-NEXT:    ;;

@@ -31,15 +31,11 @@ entry:
 define <4 x i16> @shiftR(<4 x i16> %a, i32 %c){
 ; CHECK-LABEL: shiftR:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    copyd $r2 = $r1
+; CHECK-NEXT:    insf $r1 = $r1, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r2, 31, 16
+; CHECK-NEXT:    insf $r1 = $r1, 63, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r1, 47, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r1, 63, 48
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srahqs $r0 = $r0, $r2
+; CHECK-NEXT:    srahqs $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -53,15 +49,11 @@ entry:
 define <4 x i16> @shiftL(<4 x i16> %a, i32 %c){
 ; CHECK-LABEL: shiftL:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    copyd $r2 = $r1
+; CHECK-NEXT:    insf $r1 = $r1, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r2, 31, 16
+; CHECK-NEXT:    insf $r1 = $r1, 63, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r1, 47, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r1, 63, 48
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sllhqs $r0 = $r0, $r2
+; CHECK-NEXT:    sllhqs $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

@@ -10,8 +10,8 @@ define i32 @f0(i32* nocapture %a0) #0 {
 ; CHECK-LABEL: f0:
 ; CHECK:       # %bb.0: # %b0
 ; CHECK-NEXT:    make $r2 = 0
-; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    make $r3 = 8
+; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r3, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;
@@ -49,8 +49,8 @@ define i32 @f1(i32* nocapture %a0) #0 {
 ; CHECK-LABEL: f1:
 ; CHECK:       # %bb.0: # %b0
 ; CHECK-NEXT:    make $r2 = 0
-; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    make $r3 = 8
+; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r3, .__LOOPDO_1_END_
 ; CHECK-NEXT:    ;;
@@ -88,8 +88,8 @@ define i32 @f2(i32* nocapture %a0) #0 {
 ; CHECK-LABEL: f2:
 ; CHECK:       # %bb.0: # %b0
 ; CHECK-NEXT:    make $r2 = 0
-; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    make $r3 = 8
+; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r3, .__LOOPDO_2_END_
 ; CHECK-NEXT:    ;;

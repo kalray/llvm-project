@@ -2,7 +2,7 @@
 ; RUN: llc -disable-kvx-hwloops=false -o - -O3 %s | FileCheck %s
 target triple = "kvx-kalray-cos"
 
-; This test ensures that we can still lower an internal loop
+; This test ensures that we can still hwloop an internal loop
 ; from an external infinite loop such as, in C:
 ; -----
 ; a, b;
@@ -28,21 +28,25 @@ define i32 @d() {
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    sd 16[$r12] = $r16
+; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -16
+; CHECK-NEXT:    .cfi_offset 67, -8
+; CHECK-NEXT:    sd 16[$r12] = $r20
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_offset 20, -16
 ; CHECK-NEXT:    sq 0[$r12] = $r18r19
 ; CHECK-NEXT:    make $r0 = a
 ; CHECK-NEXT:    make $r18 = c
+; CHECK-NEXT:    make $r19 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 19, -24
 ; CHECK-NEXT:    .cfi_offset 18, -32
-; CHECK-NEXT:    make $r19 = b
+; CHECK-NEXT:    make $r2 = 0x7d0
 ; CHECK-NEXT:    lws $r0 = 0[$r0]
+; CHECK-NEXT:    make $r20 = b
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 0[$r18] = $r0
-; CHECK-NEXT:    make $r1 = 0
-; CHECK-NEXT:    make $r2 = 0x7d0
+; CHECK-NEXT:    copyd $r1 = $r19
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r2, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;
@@ -51,7 +55,7 @@ define i32 @d() {
 ; CHECK-NEXT:    lwz.xs $r2 = $r1[$r0]
 ; CHECK-NEXT:    addd $r1 = $r1, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 0[$r19] = $r2
+; CHECK-NEXT:    sw 0[$r20] = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .__LOOPDO_0_END_:
 ; CHECK-NEXT:  # %bb.1: # %for.cond.cleanup
@@ -59,7 +63,7 @@ define i32 @d() {
 ; CHECK-NEXT:    call f
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r0 = 0[$r18]
-; CHECK-NEXT:    make $r1 = 0
+; CHECK-NEXT:    copyd $r1 = $r19
 ; CHECK-NEXT:    goto .LBB0_2
 ; CHECK-NEXT:    ;;
 entry:

@@ -48,11 +48,11 @@ define linkonce_odr void @_ZN1fILi16EEC2Ev(%struct.f* %0) comdat align 2 {
 ; CHECK-NEXT:    .cfi_offset 67, -16
 ; CHECK-NEXT:    sq 0[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r0
+; CHECK-NEXT:    make $r19 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 19, -24
 ; CHECK-NEXT:    .cfi_offset 18, -32
 ; CHECK-NEXT:    sd 24[$r12] = $r18
-; CHECK-NEXT:    make $r19 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB1_1: # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    addd $r0 = $r18, $r19

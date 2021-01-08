@@ -44,11 +44,11 @@ define <4 x float> @select_cc(i32 %0, <4 x float> %1, <4 x float> %2) {
 ; CHECK-NEXT:    andw $r4 = $r4, $r8
 ; CHECK-NEXT:    andw $r2 = $r5, $r2
 ; CHECK-NEXT:    orw $r0 = $r9, $r0
+; CHECK-NEXT:    insf $r1 = $r3, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    orw $r2 = $r2, $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r2, 63, 32
-; CHECK-NEXT:    insf $r1 = $r3, 63, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %4 = icmp sgt i32 %0, 0

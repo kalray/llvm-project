@@ -19,6 +19,8 @@ def Sysnumber : Operand<i32>, ImmLeaf<i32, [{return isInt<12>(Imm);}]>;
 def Unsigned6 : Operand<i64>, ImmLeaf<i64, [{return isUInt<6>(Imm);}]>;
 def Signed6 : Operand<i64>, ImmLeaf<i64, [{return isInt<6>(Imm);}]>;
 def Signed10 : Operand<i64>, ImmLeaf<i64, [{return isInt<10>(Imm);}]>;
+// TODO: Signed12 to Signed27 should print in hex, limited to 32 bits
+// but our current printHexaBitsImm32 does not handle fp values.
 def Signed12 : Operand<i64>, ImmLeaf<i64, [{return isInt<12>(Imm);}]>;
 def Signed16 : Operand<i64>, ImmLeaf<i64, [{return isInt<16>(Imm);}]>;
 def Signed27 : Operand<i64>, ImmLeaf<i64, [{return isInt<27>(Imm);}]>;

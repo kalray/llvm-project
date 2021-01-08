@@ -191,4 +191,9 @@ private:
 
 } // namespace llvm
 
+namespace KVX_LOW {
+llvm::SDValue buildImmVector(llvm::SDNode &N, llvm::SelectionDAG &CurDag,
+                             bool IsFp = false);
+} // namespace KVX_LOW
+
 #endif

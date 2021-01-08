@@ -206,11 +206,8 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
                   MVT::v4i8, MVT::v8i8, MVT::v4f32, MVT::v2f64, MVT::v4f64})
     setOperationAction(ISD::SETCC, VT, Expand);
 
-  for (auto VT :
-       {MVT::v2i16, MVT::v4i16, MVT::v2i32, MVT::v4i32, MVT::v8i8, MVT::v2f16,
-        MVT::v4f16, MVT::v2f32, MVT::v4f32, MVT::v2i8, MVT::v4i8}) {
+  for (auto VT : {MVT::v4i32, MVT::v4f32})
     setOperationAction(ISD::BUILD_VECTOR, VT, Custom);
-  }
 
   for (auto VT : {MVT::v2i16, MVT::v4i16, MVT::v2i32, MVT::v2i64, MVT::v4i32,
                   MVT::v2i8, MVT::v4i8, MVT::v8i8, MVT::v2f16, MVT::v4f16,
@@ -382,7 +379,7 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setTruncStoreAction(MVT::v4f64, MVT::v4f16, Expand);
   setTruncStoreAction(MVT::v4f64, MVT::v4f32, Expand);
 
-  for (auto VT : {MVT::i32, MVT::i64, MVT::v2i32, MVT::v4i16}) {
+  for (auto VT : {MVT::i32, MVT::i64, MVT::v2i32, MVT::v2i16, MVT::v4i16}) {
     setOperationAction(ISD::SMIN, VT, Legal);
     setOperationAction(ISD::UMIN, VT, Legal);
     setOperationAction(ISD::SMAX, VT, Legal);
@@ -2499,4 +2496,42 @@ bool KVXTargetLowering::isLegalAddressingMode(const DataLayout &DL,
 
 bool KVXTargetLowering::isLegalStoreImmediate(int64_t Imm) const {
   return false;
+}
+
+SDValue KVX_LOW::buildImmVector(llvm::SDNode &N, llvm::SelectionDAG &CurDag,
+                                bool IsFP) {
+
+  auto *BV = dyn_cast<BuildVectorSDNode>(&N);
+  if (!BV)
+    return SDValue();
+
+  auto VT = N.getValueType(0);
+  auto NumElts = VT.getVectorNumElements();
+  assert(NumElts == BV->getNumOperands() &&
+         "Build vector and vector with distinct number of operands!");
+
+  auto EltSize = VT.getVectorElementType().getSizeInBits();
+  auto OutVT = MVT::getIntegerVT(VT.getSizeInBits());
+  assert(EltSize <= 64);
+  assert(NumElts * EltSize <= 64);
+  uint64_t EltMask = ~(((uint64_t)(-1)) << EltSize);
+  uint64_t V = 0;
+  for (unsigned I = 0; I < NumElts; I++) {
+    auto Op = BV->getOperand(I);
+    if (Op.isUndef())
+      continue;
+
+    if (IsFP)
+      V |= (cast<ConstantFPSDNode>(Op)
+                ->getValueAPF()
+                .bitcastToAPInt()
+                .getZExtValue() &
+            EltMask)
+           << (EltSize * I);
+    else
+      V |= (cast<ConstantSDNode>(Op)->getSExtValue() & EltMask)
+           << (EltSize * I);
+  }
+
+  return CurDag.getConstant(V, SDLoc(&N), OutVT, true);
 }

@@ -64,50 +64,51 @@ define <2 x i32> @bswapv2i32(<2 x i32> %a) {
 define <2 x i64> @bswapv2i64(<2 x i64> %a) {
 ; CHECK-LABEL: bswapv2i64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    extfz $r4 = $r1, 55, 48
+; CHECK-NEXT:    extfz $r2 = $r1, 7, 0
+; CHECK-NEXT:    extfz $r3 = $r1, 15, 8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r3 = $r2, 15, 8
+; CHECK-NEXT:    extfz $r2 = $r1, 23, 16
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    extfz $r4 = $r1, 31, 24
+; CHECK-NEXT:    extfz $r5 = $r1, 47, 40
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r4 = $r2, 15, 8
+; CHECK-NEXT:    extfz $r2 = $r1, 39, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r4 = $r3, 31, 16
+; CHECK-NEXT:    insf $r5 = $r2, 15, 8
 ; CHECK-NEXT:    srld $r3 = $r1, 56
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r3 = $r4, 15, 8
-; CHECK-NEXT:    extfz $r4 = $r1, 47, 40
+; CHECK-NEXT:    extfz $r6 = $r1, 55, 48
+; CHECK-NEXT:    extfz $r1 = $r0, 7, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r3 = $r4, 23, 16
-; CHECK-NEXT:    extfz $r4 = $r1, 39, 32
+; CHECK-NEXT:    insf $r3 = $r6, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r3 = $r4, 31, 24
-; CHECK-NEXT:    extfz $r4 = $r1, 31, 24
+; CHECK-NEXT:    insf $r3 = $r5, 31, 16
+; CHECK-NEXT:    extfz $r5 = $r0, 31, 24
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r3 = $r4, 39, 32
-; CHECK-NEXT:    extfz $r4 = $r1, 23, 16
+; CHECK-NEXT:    insf $r3 = $r4, 63, 32
+; CHECK-NEXT:    extfz $r4 = $r0, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r3 = $r4, 47, 40
-; CHECK-NEXT:    extfz $r4 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r3 = $r4, 55, 48
-; CHECK-NEXT:    extfz $r1 = $r1, 7, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r3 = $r1, 63, 56
-; CHECK-NEXT:    extfz $r1 = $r0, 55, 48
+; CHECK-NEXT:    insf $r4 = $r1, 15, 8
+; CHECK-NEXT:    extfz $r1 = $r0, 23, 16
 ; CHECK-NEXT:    srld $r2 = $r0, 56
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r1, 15, 8
-; CHECK-NEXT:    extfz $r1 = $r0, 47, 40
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r1, 23, 16
+; CHECK-NEXT:    insf $r5 = $r1, 15, 8
 ; CHECK-NEXT:    extfz $r1 = $r0, 39, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r1, 31, 24
-; CHECK-NEXT:    extfz $r1 = $r0, 31, 24
+; CHECK-NEXT:    insf $r5 = $r4, 31, 16
+; CHECK-NEXT:    extfz $r4 = $r0, 47, 40
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r1, 39, 32
-; CHECK-NEXT:    extfz $r1 = $r0, 23, 16
+; CHECK-NEXT:    insf $r4 = $r1, 15, 8
+; CHECK-NEXT:    extfz $r1 = $r0, 55, 48
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r1, 47, 40
-; CHECK-NEXT:    extfz $r1 = $r0, 15, 8
+; CHECK-NEXT:    insf $r2 = $r1, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r1, 55, 48
-; CHECK-NEXT:    extfz $r0 = $r0, 7, 0
+; CHECK-NEXT:    insf $r2 = $r4, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r0, 63, 56
+; CHECK-NEXT:    insf $r2 = $r5, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    copyd $r1 = $r3
