@@ -297,6 +297,38 @@ defm : ZEFPat<(sub Signed37W:$rs1, i32:$rs2), (SBFWri37 SingleReg:$rs2, Signed37
 // SBFWP
 def : Pat<(sub v2i32:$rs1, v2i32:$rs2), (SBFWPrr SingleReg:$rs2, SingleReg:$rs1)>;
 
+multiclass HQShiftScalarOps <SDNode Op, KVX_INSTRUCTION RI, KVX_INSTRUCTION RR>
+{
+def : Pat<(Op v2i16:$v, (v2i16 ( v2_splat (i32 imm:$i)))), (RI SingleReg:$v, (mod_16_imm_64 imm:$i))>;
+def : Pat<(Op v2i16:$v0, (v2i16 ( v2_splat i32:$v1))), (RR SingleReg:$v0, SingleReg:$v1)>;
+def : Pat<(Op v4i16:$v, (v4i16 ( v4_splat (i32 imm:$i)))), (RI SingleReg:$v, (mod_16_imm_64 imm:$i))>;
+def : Pat<(Op v4i16:$v0, (v4i16 ( v4_splat i32:$v1))), (RR SingleReg:$v0, SingleReg:$v1)>;
+
+def : Pat<(Op v4i16:$v, (v4i16 ( v3_splat (i32 imm:$i)))), (RI SingleReg:$v, (mod_16_imm_64 imm:$i))>;
+def : Pat<(Op v4i16:$v0, (v4i16 (v3_splat i32:$v1))), (RR SingleReg:$v0, SingleReg:$v1)>;
+
+def : Pat<(Op v2i16:$v, (v2i16 ( build_vector (i32 imm:$i0), (i32 imm:$i1)))),
+      (INSF(RI SingleReg:$v, (mod_16_imm_64 imm:$i1)), (RI SingleReg:$v, (mod_16_imm_64 imm:$i0)), 15, 0)>;
+def : Pat<(Op v2i16:$v0, v2i16:$v1),
+      (INSF(RR SingleReg:$v0, (EXTFZ SingleReg:$v1, 19, 16)), (RR SingleReg:$v0, SingleReg:$v1), 15, 0) >;
+
+// TODO: We can detect when some immediates are the same, and avoid all insf operations.
+// TODO: v3i16 could be done in less operations.
+def : Pat<(Op v4i16:$v, (v4i16 ( build_vector (i32 imm:$i0), (i32 imm:$i1), (i32 imm:$i2), (i32 imm:$i3)))),
+            (INSF
+                  (INSF(RI SingleReg:$v, (mod_16_imm_64 imm:$i3)), (RI SingleReg:$v, (mod_16_imm_64 imm:$i2)), 47, 32),
+                  (INSF(RI SingleReg:$v, (mod_16_imm_64 imm:$i1)), (RI SingleReg:$v, (mod_16_imm_64 imm:$i0)), 15, 0),
+                  31, 0)>;
+def : Pat<(Op v4i16:$v0, v4i16:$v1),
+            (INSF
+                  (INSF(RR SingleReg:$v0, (EXTFZ SingleReg:$v1, 51, 48)), (RR SingleReg:$v0, (EXTFZ SingleReg:$v1, 35, 32)), 47, 32),
+                  (INSF(RR SingleReg:$v0, (EXTFZ SingleReg:$v1, 19, 16)), (RR SingleReg:$v0, $v1), 15, 0),
+                  31, 0)>;
+}
+
+// SLLHQS
+defm : HQShiftScalarOps<shl, SLLHQSri, SLLHQSrr>;
+
 // SLLD
 def : Pat<(shl i64:$rs1, i64:$rs2), (SLLDrr SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(shl i64:$rs1, Unsigned6:$rs2), (SLLDri SingleReg:$rs1, Unsigned6:$rs2)>;
@@ -305,13 +337,35 @@ def : Pat<(shl i64:$rs1, Unsigned6:$rs2), (SLLDri SingleReg:$rs1, Unsigned6:$rs2
 defm : ZEFPat<(shl i32:$rs1, i64:$rs2), (SLLWrr SingleReg:$rs1, SingleReg:$rs2)>;
 defm : ZEFPat<(shl i32:$rs1, Unsigned6:$rs2), (SLLWri SingleReg:$rs1, Unsigned6:$rs2)>;
 
+multiclass WPShiftScalarOps <SDNode Op, KVX_INSTRUCTION RI, KVX_INSTRUCTION RR, KVX_INSTRUCTION RI_w, KVX_INSTRUCTION RR_w>
+{
+def : Pat<(Op v2i32:$v0, (v2i32 ( v2_splat (i32 imm:$i)))), (RI SingleReg:$v0, (mod_32_imm_64 imm:$i))>;
+def : Pat<(Op v2i32:$v0, (v2i32 ( v2_splat i32:$v1))), (RR SingleReg:$v0, SingleReg:$v1)>;
+def : Pat<(Op v2i32:$v, (v2i32 ( build_vector (i32 imm:$i0), (i32 imm:$i1)))),
+      (INSF(RI SingleReg:$v, (mod_32_imm_64 imm:$i1)), (RI_w SingleReg:$v, (mod_32_imm_64 imm:$i0)), 31, 0)>;
+def : Pat<(Op v2i32:$v0, v2i32:$v1),
+      (INSF(RR SingleReg:$v0, (EXTFZ SingleReg:$v1, 36, 32)), (RR_w SingleReg:$v0, SingleReg:$v1), 31, 0) >;
+}
+
+// SLLWPS
+defm : WPShiftScalarOps<shl, SLLWPSri, SLLWPSrr, SLLWri, SLLWrr>;
+
 // SRAD
 def : Pat<(sra i64:$rs1, i64:$rs2), (SRADrr SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(sra i64:$rs1, Unsigned6:$rs2), (SRADri SingleReg:$rs1, Unsigned6:$rs2)>;
 
+// SRAHQS
+defm : HQShiftScalarOps<sra, SRAHQSri, SRAHQSrr>;
+
 // SRAW
 def : Pat<(sra i32:$rs1, i64:$rs2), (SRAWrr SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(sra i32:$rs1, Unsigned6:$rs2), (SRAWri SingleReg:$rs1, Unsigned6:$rs2)>;
+
+// SRAWPS
+defm : WPShiftScalarOps<sra, SRAWPSri, SRAWPSrr, SRAWri, SRAWrr>;
+
+// SRLHQS
+defm : HQShiftScalarOps<srl, SRLHQSri, SRLHQSrr>;
 
 // SRLD
 def : Pat<(srl i64:$rs1, i64:$rs2), (SRLDrr SingleReg:$rs1, SingleReg:$rs2)>;
@@ -320,6 +374,9 @@ def : Pat<(srl i64:$rs1, Unsigned6:$rs2), (SRLDri SingleReg:$rs1, Unsigned6:$rs2
 // SRLW
 defm : ZEFPat<(srl i32:$rs1, i64:$rs2), (SRLWrr SingleReg:$rs1, SingleReg:$rs2)>;
 defm : ZEFPat<(srl i32:$rs1, Unsigned6:$rs2), (SRLWri SingleReg:$rs1, Unsigned6:$rs2)>;
+
+// SRLWPS
+defm : WPShiftScalarOps<srl, SRLWPSri, SRLWPSrr, SRLWri, SRLWrr>;
 
 // ROLW
 def : Pat<(rotl i32:$rs1, i64:$rs2), (ROLWrr SingleReg:$rs1, SingleReg:$rs2)>;

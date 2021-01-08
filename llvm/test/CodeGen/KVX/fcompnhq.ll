@@ -6,11 +6,10 @@ define <4 x half> @eq(<4 x half> %a, <4 x half> %b){
 ; CHECK-LABEL: eq:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.oeq $r0 = $r0, $r1
-; CHECK-NEXT:    make $r1 = 0xf000f000f000f
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sllhqs $r0 = $r0, $r1
+; CHECK-NEXT:    sllhqs $r0 = $r0, 15
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srahqs $r0 = $r0, $r1
+; CHECK-NEXT:    srahqs $r0 = $r0, 15
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -24,11 +23,10 @@ define <4 x half> @neq(<4 x half> %a, <4 x half> %b){
 ; CHECK-LABEL: neq:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.une $r0 = $r0, $r1
-; CHECK-NEXT:    make $r1 = 0xf000f000f000f
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sllhqs $r0 = $r0, $r1
+; CHECK-NEXT:    sllhqs $r0 = $r0, 15
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srahqs $r0 = $r0, $r1
+; CHECK-NEXT:    srahqs $r0 = $r0, 15
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -42,11 +40,10 @@ define <4 x half> @gt(<4 x half> %a, <4 x half> %b){
 ; CHECK-LABEL: gt:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.olt $r0 = $r1, $r0
-; CHECK-NEXT:    make $r1 = 0xf000f000f000f
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sllhqs $r0 = $r0, $r1
+; CHECK-NEXT:    sllhqs $r0 = $r0, 15
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srahqs $r0 = $r0, $r1
+; CHECK-NEXT:    srahqs $r0 = $r0, 15
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -60,11 +57,10 @@ define <4 x half> @lt(<4 x half> %a, <4 x half> %b){
 ; CHECK-LABEL: lt:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.olt $r0 = $r0, $r1
-; CHECK-NEXT:    make $r1 = 0xf000f000f000f
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sllhqs $r0 = $r0, $r1
+; CHECK-NEXT:    sllhqs $r0 = $r0, 15
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srahqs $r0 = $r0, $r1
+; CHECK-NEXT:    srahqs $r0 = $r0, 15
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -78,11 +74,10 @@ define <4 x half> @gte(<4 x half> %a, <4 x half> %b){
 ; CHECK-LABEL: gte:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.oge $r0 = $r0, $r1
-; CHECK-NEXT:    make $r1 = 0xf000f000f000f
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sllhqs $r0 = $r0, $r1
+; CHECK-NEXT:    sllhqs $r0 = $r0, 15
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srahqs $r0 = $r0, $r1
+; CHECK-NEXT:    srahqs $r0 = $r0, 15
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -96,11 +91,10 @@ define <4 x half> @lte(<4 x half> %a, <4 x half> %b){
 ; CHECK-LABEL: lte:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.oge $r0 = $r1, $r0
-; CHECK-NEXT:    make $r1 = 0xf000f000f000f
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sllhqs $r0 = $r0, $r1
+; CHECK-NEXT:    sllhqs $r0 = $r0, 15
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srahqs $r0 = $r0, $r1
+; CHECK-NEXT:    srahqs $r0 = $r0, 15
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

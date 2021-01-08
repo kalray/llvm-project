@@ -151,15 +151,12 @@ private:
   SDValue lowerEXTRACT_VECTOR_ELT(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerEXTRACT_VECTOR_ELT_REGISTER(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerCONCAT_VECTORS(SDValue Op, SelectionDAG &DAG) const;
-  SDValue lowerShiftVectorial(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerBR_CC(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerJumpTable(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerADDRSPACECAST(SDValue Op, SelectionDAG &DAG) const;
 
   SDValue lowerStackCheckAlloca(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerSTORE(SDValue Op, SelectionDAG &DAG) const;
-
-  bool canLowerShiftVectorial(SDValue Op) const;
 
   SDValue lowerIntToFP(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerATOMIC_FENCE(SDValue Op, SelectionDAG &DAG) const;

@@ -2,12 +2,10 @@
 ; RUN: llc < %s -O2 | FileCheck %s
 target triple = "kvx-kalray-cos"
 
-define <4 x i16> @shiftR_imm(<4 x i16> %a){
-; CHECK-LABEL: shiftR_imm:
+define <4 x i16> @ashiftR_imm(<4 x i16> %a){
+; CHECK-LABEL: ashiftR_imm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x3000300030003
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srahqs $r0 = $r0, $r1
+; CHECK-NEXT:    srahqs $r0 = $r0, 3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -15,12 +13,21 @@ entry:
   ret <4 x i16> %shr
 }
 
+define <4 x i16> @lshiftR_imm(<4 x i16> %a){
+; CHECK-LABEL: lshiftR_imm:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    srlhqs $r0 = $r0, 3
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %shr = lshr <4 x i16> %a, <i16 3, i16 3, i16 3, i16 3>
+  ret <4 x i16> %shr
+}
+
 define <4 x i16> @shiftL_imm(<4 x i16> %a){
 ; CHECK-LABEL: shiftL_imm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x3000300030003
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sllhqs $r0 = $r0, $r1
+; CHECK-NEXT:    sllhqs $r0 = $r0, 3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -28,13 +35,9 @@ entry:
   ret <4 x i16> %shl
 }
 
-define <4 x i16> @shiftR(<4 x i16> %a, i32 %c){
-; CHECK-LABEL: shiftR:
+define <4 x i16> @ashiftR(<4 x i16> %a, i32 %c){
+; CHECK-LABEL: ashiftR:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    insf $r1 = $r1, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r1, 63, 32
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srahqs $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -46,13 +49,23 @@ entry:
   ret <4 x i16> %shr
 }
 
+define <4 x i16> @lshiftR(<4 x i16> %a, i32 %c){
+; CHECK-LABEL: lshiftR:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    srlhqs $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = trunc i32 %c to i16
+  %1 = insertelement <4 x i16> undef, i16 %0, i32 0
+  %sh_prom = shufflevector <4 x i16> %1, <4 x i16> undef, <4 x i32> zeroinitializer
+  %shr = lshr <4 x i16> %a, %sh_prom
+  ret <4 x i16> %shr
+}
+
 define <4 x i16> @shiftL(<4 x i16> %a, i32 %c){
 ; CHECK-LABEL: shiftL:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    insf $r1 = $r1, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r1, 63, 32
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sllhqs $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -61,5 +74,144 @@ entry:
   %1 = insertelement <4 x i16> undef, i16 %0, i32 0
   %sh_prom = shufflevector <4 x i16> %1, <4 x i16> undef, <4 x i32> zeroinitializer
   %shl = shl <4 x i16> %a, %sh_prom
+  ret <4 x i16> %shl
+}
+
+; TODO: Improve when some shifts are the same value.
+; Although LLVM eliminates the shifts, it does not
+; eliminate the insf. Either custom-lower or create
+; patterns for all 12 variations.
+define <4 x i16> @ashiftR_imm_vec(<4 x i16> %a){
+; CHECK-LABEL: ashiftR_imm_vec:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    srahqs $r1 = $r0, 4
+; CHECK-NEXT:    srahqs $r2 = $r0, 3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srahqs $r0 = $r0, 2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r2, 47, 32
+; CHECK-NEXT:    insf $r2 = $r1, 15, 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r2, 31, 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %shr = ashr <4 x i16> %a, <i16 4, i16 3, i16 3, i16 2>
+  ret <4 x i16> %shr
+}
+
+define <4 x i16> @lshiftR_imm_vec(<4 x i16> %a){
+; CHECK-LABEL: lshiftR_imm_vec:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    srlhqs $r1 = $r0, 2
+; CHECK-NEXT:    srlhqs $r2 = $r0, 1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r2 = $r1, 15, 0
+; CHECK-NEXT:    srlhqs $r1 = $r0, 3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srlhqs $r0 = $r0, 4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 47, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r2, 31, 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %shr = lshr <4 x i16> %a, <i16 2, i16 1, i16 3, i16 4>
+  ret <4 x i16> %shr
+}
+
+define <4 x i16> @shiftL_imm_vec(<4 x i16> %a){
+; CHECK-LABEL: shiftL_imm_vec:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    sllhqs $r1 = $r0, 3
+; CHECK-NEXT:    sllhqs $r0 = $r0, 5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 47, 32
+; CHECK-NEXT:    insf $r1 = $r1, 15, 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 31, 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %shl = shl <4 x i16> %a, <i16 3, i16 3, i16 3, i16 5>
+  ret <4 x i16> %shl
+}
+
+define <4 x i16> @ashiftR_rr_vec(<4 x i16> %a, <4 x i16> %b){
+; CHECK-LABEL: ashiftR_rr_vec:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    extfz $r3 = $r1, 19, 16
+; CHECK-NEXT:    srahqs $r2 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srahqs $r3 = $r0, $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r3 = $r2, 15, 0
+; CHECK-NEXT:    extfz $r2 = $r1, 35, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    extfz $r1 = $r1, 51, 48
+; CHECK-NEXT:    srahqs $r2 = $r0, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srahqs $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r2, 47, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r3, 31, 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %shr = ashr <4 x i16> %a, %b
+  ret <4 x i16> %shr
+}
+
+define <4 x i16> @lshiftR_rr_vec(<4 x i16> %a, <4 x i16> %b){
+; CHECK-LABEL: lshiftR_rr_vec:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    extfz $r3 = $r1, 19, 16
+; CHECK-NEXT:    srlhqs $r2 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srlhqs $r3 = $r0, $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r3 = $r2, 15, 0
+; CHECK-NEXT:    extfz $r2 = $r1, 35, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    extfz $r1 = $r1, 51, 48
+; CHECK-NEXT:    srlhqs $r2 = $r0, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srlhqs $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r2, 47, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r3, 31, 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %shr = lshr <4 x i16> %a, %b
+  ret <4 x i16> %shr
+}
+
+define <4 x i16> @shiftL_rr_vec(<4 x i16> %a, <4 x i16> %b){
+; CHECK-LABEL: shiftL_rr_vec:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    extfz $r3 = $r1, 19, 16
+; CHECK-NEXT:    sllhqs $r2 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sllhqs $r3 = $r0, $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r3 = $r2, 15, 0
+; CHECK-NEXT:    extfz $r2 = $r1, 35, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    extfz $r1 = $r1, 51, 48
+; CHECK-NEXT:    sllhqs $r2 = $r0, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sllhqs $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r2, 47, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r3, 31, 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %shl = shl <4 x i16> %a, %b
   ret <4 x i16> %shl
 }
