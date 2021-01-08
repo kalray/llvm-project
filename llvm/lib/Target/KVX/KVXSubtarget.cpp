@@ -18,7 +18,7 @@
 
 using namespace llvm;
 
-#define DEBUG_TYPE "KVX-subtarget"
+#define DEBUG_TYPE "kvx-subtarget"
 
 #define GET_SUBTARGETINFO_TARGET_DESC
 #define GET_SUBTARGETINFO_CTOR
@@ -26,11 +26,22 @@ using namespace llvm;
 
 void KVXSubtarget::anchor() {}
 
+KVXSubtarget &KVXSubtarget::initializeSubtargetDependencies(StringRef CPU,
+                                                            StringRef FS) {
+
+  if (CPU.empty())
+    CPU = "kv3-1";
+
+  ParseSubtargetFeatures(CPU, FS);
+
+  return *this;
+}
+
 KVXSubtarget::KVXSubtarget(const Triple &TT, StringRef CPU,
                            const std::string &FS, const TargetMachine &TM)
     : KVXGenSubtargetInfo(TT, CPU, FS), OptLevel(TM.getOptLevel()),
-      FrameLowering(*this), InstrInfo(), RegInfo(getHwMode()),
-      TLInfo(TM, *this),
+      FrameLowering(*this), InstrInfo(initializeSubtargetDependencies(CPU, FS)),
+      RegInfo(getHwMode()), TLInfo(TM, *this),
       InstrItins(getInstrItineraryForCPU(KVX_MC::selectKVXCPU(CPU))) {
   assert(InstrItins.Itineraries != nullptr && "InstrItins not initialized");
 }

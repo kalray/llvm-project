@@ -95,11 +95,11 @@ define <2 x half> @narrow2d(<2 x double> %a) {
 ; CHECK-NEXT:    fnarrowdw $r2 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowdw $r0 = $r0
-; CHECK-NEXT:    fnarrowwh $r2 = $r2
+; CHECK-NEXT:    fnarrowwh $r1 = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    insf $r0 = $r1, 31, 16
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -113,21 +113,21 @@ define <4 x half> @narrow4d(<4 x double> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fnarrowdw $r4 = $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowdw $r5 = $r2
-; CHECK-NEXT:    fnarrowwh $r4 = $r4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowwh $r5 = $r5
 ; CHECK-NEXT:    fnarrowdw $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r5 = $r4, 31, 16
-; CHECK-NEXT:    fnarrowdw $r4 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowwh $r4 = $r4
+; CHECK-NEXT:    fnarrowdw $r5 = $r2
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r4, 31, 16
+; CHECK-NEXT:    fnarrowdw $r6 = $r1
+; CHECK-NEXT:    fnarrowwh $r1 = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r5, 63, 32
+; CHECK-NEXT:    fnarrowwh $r2 = $r5
+; CHECK-NEXT:    fnarrowwh $r3 = $r6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r2 = $r1, 31, 16
+; CHECK-NEXT:    insf $r0 = $r3, 31, 16
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r2, 63, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

@@ -129,11 +129,11 @@ define <8 x i8> @bchar8(i8 %a, i8 %b, i8 %c, i8 %d, i8 %e, i8 %f, i8 %g, i8 %h) 
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r4 = $r5, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r4 = $r6, 31, 16
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r4 = $r6, 31, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r2, 31, 16
 ; CHECK-NEXT:    ;;
@@ -160,11 +160,11 @@ define <8 x i16> @bshort8(i16 %a, i16 %b, i16 %c, i16 %d, i16 %e, i16 %f, i16 %g
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 63, 32
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r6 = $r7, 31, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r4 = $r5, 31, 16
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r2, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r4 = $r6, 63, 32
 ; CHECK-NEXT:    ;;
@@ -221,10 +221,10 @@ define void @blong8(<8 x i64>* noalias nocapture sret %agg.result, i64 %a, i64 %
 ; CHECK-NEXT:    # kill: def $r7 killed $r7 killed $q4 def $q4
 ; CHECK-NEXT:    # kill: def $r3 killed $r3 killed $q0 def $q0
 ; CHECK-NEXT:    # kill: def $r6 killed $r6 killed $q4 def $q4
-; CHECK-NEXT:    # kill: def $r5 killed $r5 killed $q4 def $q4
 ; CHECK-NEXT:    # kill: def $r2 killed $r2 killed $q0 def $q0
-; CHECK-NEXT:    # kill: def $r4 killed $r4 killed $q4 def $q4
+; CHECK-NEXT:    # kill: def $r5 killed $r5 killed $q4 def $q4
 ; CHECK-NEXT:    # kill: def $r1 killed $r1 killed $q0 def $q0
+; CHECK-NEXT:    # kill: def $r4 killed $r4 killed $q4 def $q4
 ; CHECK-NEXT:    so 32[$r15] = $r4r5r6r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    # kill: def $r0 killed $r0 killed $q0 def $q0
@@ -342,11 +342,11 @@ define <8 x half> @bhalf8(half %a, half %b, half %c, half %d, half %e, half %f, 
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 63, 32
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r6 = $r7, 31, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r4 = $r5, 31, 16
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r2, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r4 = $r6, 63, 32
 ; CHECK-NEXT:    ;;
@@ -403,10 +403,10 @@ define void @bdouble8(<8 x double>* noalias nocapture sret %agg.result, double %
 ; CHECK-NEXT:    # kill: def $r7 killed $r7 killed $q4 def $q4
 ; CHECK-NEXT:    # kill: def $r3 killed $r3 killed $q0 def $q0
 ; CHECK-NEXT:    # kill: def $r6 killed $r6 killed $q4 def $q4
-; CHECK-NEXT:    # kill: def $r5 killed $r5 killed $q4 def $q4
 ; CHECK-NEXT:    # kill: def $r2 killed $r2 killed $q0 def $q0
-; CHECK-NEXT:    # kill: def $r4 killed $r4 killed $q4 def $q4
+; CHECK-NEXT:    # kill: def $r5 killed $r5 killed $q4 def $q4
 ; CHECK-NEXT:    # kill: def $r1 killed $r1 killed $q0 def $q0
+; CHECK-NEXT:    # kill: def $r4 killed $r4 killed $q4 def $q4
 ; CHECK-NEXT:    so 32[$r15] = $r4r5r6r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    # kill: def $r0 killed $r0 killed $q0 def $q0

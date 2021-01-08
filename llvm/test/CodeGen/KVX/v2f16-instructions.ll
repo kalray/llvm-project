@@ -338,10 +338,10 @@ define <2 x half> @test_select(<2 x half> %a, <2 x half> %b, i1 zeroext %c) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r2 = $r2, 31, 16
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    notw $r3 = $r2
 ; CHECK-NEXT:    andw $r0 = $r0, $r2
-; CHECK-NEXT:    notw $r2 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r1 = $r1, $r2
+; CHECK-NEXT:    andw $r1 = $r1, $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    orw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -689,17 +689,14 @@ define <2 x i64> @test_fptosi_i64(<2 x half> %a) #0 {
 ; CHECK-NEXT:    srld $r0 = $r0, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fwidenlhw $r1 = $r1
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
+; CHECK-NEXT:    fwidenlhw $r2 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fwidenlwd $r1 = $r1
-; CHECK-NEXT:    fwidenlwd $r0 = $r0
+; CHECK-NEXT:    fwidenlwd $r2 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedd.rz $r2 = $r1, 0
+; CHECK-NEXT:    fixedd.rz $r0 = $r1, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedd.rz $r3 = $r0, 0
-; CHECK-NEXT:    copyd $r0 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r3
+; CHECK-NEXT:    fixedd.rz $r1 = $r2, 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptosi <2 x half> %a to <2 x i64>
@@ -756,17 +753,14 @@ define <2 x i64> @test_fptoui_2xi64(<2 x half> %a) #0 {
 ; CHECK-NEXT:    srld $r0 = $r0, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fwidenlhw $r1 = $r1
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
+; CHECK-NEXT:    fwidenlhw $r2 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fwidenlwd $r1 = $r1
-; CHECK-NEXT:    fwidenlwd $r0 = $r0
+; CHECK-NEXT:    fwidenlwd $r2 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedud.rz $r2 = $r1, 0
+; CHECK-NEXT:    fixedud.rz $r0 = $r1, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedud.rz $r3 = $r0, 0
-; CHECK-NEXT:    copyd $r0 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r3
+; CHECK-NEXT:    fixedud.rz $r1 = $r2, 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptoui <2 x half> %a to <2 x i64>
@@ -940,11 +934,11 @@ define <2 x half> @test_fptrunc_2xdouble(<2 x double> %a) #0 {
 ; CHECK-NEXT:    fnarrowdw $r2 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowdw $r0 = $r0
-; CHECK-NEXT:    fnarrowwh $r2 = $r2
+; CHECK-NEXT:    fnarrowwh $r1 = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    insf $r0 = $r1, 31, 16
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptrunc <2 x double> %a to <2 x half>
@@ -965,16 +959,13 @@ define <2 x double> @test_fpext_2xdouble(<2 x half> %a) #0 {
 ; CHECK-LABEL: test_fpext_2xdouble:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    zxhd $r1 = $r0
-; CHECK-NEXT:    srld $r0 = $r0, 16
+; CHECK-NEXT:    srld $r2 = $r0, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fwidenlhw $r1 = $r1
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
+; CHECK-NEXT:    fwidenlhw $r2 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlwd $r2 = $r1
-; CHECK-NEXT:    fwidenlwd $r3 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r2
-; CHECK-NEXT:    copyd $r1 = $r3
+; CHECK-NEXT:    fwidenlwd $r0 = $r1
+; CHECK-NEXT:    fwidenlwd $r1 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fpext <2 x half> %a to <2 x double>
@@ -1481,18 +1472,18 @@ define <2 x half> @test_fabs(<2 x half> %a) #0 {
 define <2 x half> @test_copysign(<2 x half> %a, <2 x half> %b) #0 {
 ; CHECK-LABEL: test_copysign:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srld $r3 = $r1, 16
+; CHECK-NEXT:    srld $r2 = $r1, 16
 ; CHECK-NEXT:    zxhd $r1 = $r1
-; CHECK-NEXT:    srld $r2 = $r0, 16
+; CHECK-NEXT:    srld $r3 = $r0, 16
 ; CHECK-NEXT:    zxhd $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sraw $r3 = $r3, 15
+; CHECK-NEXT:    sraw $r2 = $r2, 15
 ; CHECK-NEXT:    sraw $r1 = $r1, 15
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r3, 15, 15
+; CHECK-NEXT:    insf $r3 = $r2, 15, 15
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 15
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    insf $r0 = $r3, 31, 16
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <2 x half> @llvm.copysign.v2f16(<2 x half> %a, <2 x half> %b)
@@ -1502,17 +1493,17 @@ define <2 x half> @test_copysign(<2 x half> %a, <2 x half> %b) #0 {
 define <2 x half> @test_copysign_f32(<2 x half> %a, <2 x float> %b) #0 {
 ; CHECK-LABEL: test_copysign_f32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r3 = $r1, 32
-; CHECK-NEXT:    srld $r2 = $r0, 16
+; CHECK-NEXT:    srad $r2 = $r1, 32
+; CHECK-NEXT:    srld $r3 = $r0, 16
 ; CHECK-NEXT:    zxhd $r0 = $r0
 ; CHECK-NEXT:    sraw $r1 = $r1, 31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sraw $r3 = $r3, 31
+; CHECK-NEXT:    sraw $r2 = $r2, 31
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 15
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r3, 15, 15
+; CHECK-NEXT:    insf $r3 = $r2, 15, 15
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    insf $r0 = $r3, 31, 16
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %tb = fptrunc <2 x float> %b to <2 x half>
@@ -1542,18 +1533,18 @@ define <2 x half> @test_copysign_f64(<2 x half> %a, <2 x double> %b) #0 {
 define <2 x float> @test_copysign_extended(<2 x half> %a, <2 x half> %b) #0 {
 ; CHECK-LABEL: test_copysign_extended:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srld $r3 = $r1, 16
+; CHECK-NEXT:    srld $r2 = $r1, 16
 ; CHECK-NEXT:    zxhd $r1 = $r1
-; CHECK-NEXT:    srld $r2 = $r0, 16
+; CHECK-NEXT:    srld $r3 = $r0, 16
 ; CHECK-NEXT:    zxhd $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sraw $r3 = $r3, 15
+; CHECK-NEXT:    sraw $r2 = $r2, 15
 ; CHECK-NEXT:    sraw $r1 = $r1, 15
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r3, 15, 15
+; CHECK-NEXT:    insf $r3 = $r2, 15, 15
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 15
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    insf $r0 = $r3, 31, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fwidenlhwp $r0 = $r0
 ; CHECK-NEXT:    ret
@@ -1858,12 +1849,12 @@ define <2 x half> @test_insertelement(<2 x half> %a, half %x, i64 %p) #0 {
 ; CHECK-LABEL: test_insertelement:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 0[$r12] = $r0
 ; CHECK-NEXT:    andd $r2 = $r2, 1
-; CHECK-NEXT:    addd $r0 = $r12, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sh.xs $r2[$r0] = $r1
+; CHECK-NEXT:    addd $r3 = $r12, 0
+; CHECK-NEXT:    sw 0[$r12] = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sh.xs $r2[$r3] = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r0 = 0[$r12]
 ; CHECK-NEXT:    addd $r12 = $r12, 32

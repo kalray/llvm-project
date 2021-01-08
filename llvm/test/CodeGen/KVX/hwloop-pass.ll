@@ -5,8 +5,8 @@ target triple = "kvx-kalray-cos"
 define void @imm_imm_positive_bump(i32* nocapture %x){
 ; CHECK-LABEL: imm_imm_positive_bump:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    make $r3 = 100
+; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    make $r2 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r3, .__LOOPDO_0_END_
@@ -40,8 +40,8 @@ for.body:                                         ; preds = %for.body, %entry
 define void @imm_imm_negative_bump(i32* nocapture %x){
 ; CHECK-LABEL: imm_imm_negative_bump:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 99
 ; CHECK-NEXT:    make $r3 = 100
+; CHECK-NEXT:    make $r1 = 99
 ; CHECK-NEXT:    make $r2 = 99
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r3, .__LOOPDO_1_END_

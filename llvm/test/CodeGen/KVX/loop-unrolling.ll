@@ -12,33 +12,33 @@ define void @loop_unrolling(i32* nocapture %t){
 ; CHECK-NEXT:  .LBB0_1: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    ord $r3 = $r1, 1
+; CHECK-NEXT:    ord $r4 = $r1, 2
+; CHECK-NEXT:    ord $r5 = $r1, 3
+; CHECK-NEXT:    ord $r6 = $r1, 4
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw -16[$r0] = $r2
-; CHECK-NEXT:    addw $r2 = $r2, 8
+; CHECK-NEXT:    ord $r7 = $r1, 5
+; CHECK-NEXT:    ord $r8 = $r1, 6
+; CHECK-NEXT:    ord $r9 = $r1, 7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw -12[$r0] = $r3
-; CHECK-NEXT:    ord $r3 = $r1, 2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw -8[$r0] = $r3
-; CHECK-NEXT:    ord $r3 = $r1, 3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw -4[$r0] = $r3
-; CHECK-NEXT:    ord $r3 = $r1, 4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 0[$r0] = $r3
-; CHECK-NEXT:    ord $r3 = $r1, 5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 4[$r0] = $r3
-; CHECK-NEXT:    ord $r3 = $r1, 6
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 8[$r0] = $r3
-; CHECK-NEXT:    ord $r3 = $r1, 7
 ; CHECK-NEXT:    addd $r1 = $r1, 8
+; CHECK-NEXT:    sw -12[$r0] = $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 12[$r0] = $r3
-; CHECK-NEXT:    compd.eq $r3 = $r1, 1024
+; CHECK-NEXT:    sw -8[$r0] = $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw -4[$r0] = $r5
+; CHECK-NEXT:    compd.eq $r10 = $r1, 1024
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw 0[$r0] = $r6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw 4[$r0] = $r7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw 8[$r0] = $r8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw 12[$r0] = $r9
+; CHECK-NEXT:    addw $r2 = $r2, 8
 ; CHECK-NEXT:    addd $r0 = $r0, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.even $r3 ? .LBB0_1
+; CHECK-NEXT:    cb.even $r10 ? .LBB0_1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.2: # %for.cond.cleanup
 ; CHECK-NEXT:    ret

@@ -149,15 +149,15 @@ define dso_local i32 @testrealign() local_unnamed_addr  {
 ; CHECK-NEXT:    sd 0[$r12] = $r14
 ; CHECK-NEXT:    copyd $r14 = $r32
 ; CHECK-NEXT:    make $r0 = 7
-; CHECK-NEXT:    addd $r1 = $r12, 128
+; CHECK-NEXT:    make $r1 = 0x4d2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_escape 0x10, 0x0e, 0x02, 0x7c, 0x00
 ; CHECK-NEXT:    .cfi_def_cfa_register 14
 ; CHECK-NEXT:    sw 16[$r12] = $r0
-; CHECK-NEXT:    make $r0 = 0x4d2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 128[$r12] = $r0
+; CHECK-NEXT:    sw 128[$r12] = $r1
 ; CHECK-NEXT:    addd $r0 = $r12, 16
+; CHECK-NEXT:    addd $r1 = $r12, 128
 ; CHECK-NEXT:    call other
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r32 = $r14
