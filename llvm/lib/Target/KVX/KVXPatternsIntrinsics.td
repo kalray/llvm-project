@@ -19,6 +19,19 @@ def WFXMp : KVX_PSEUDO<(outs), (ins Sysnumber:$sysreg, SingleReg:$val),[]>;
 let Constraints = "$vIn = $vOut, $qIn = $qOut" in
 def SWAPVOp : KVX_PSEUDO<(outs QuadReg:$qOut, VectorReg:$vOut), (ins QuadReg:$qIn, VectorReg:$vIn),[]>;
 
+// Intermediary step from IR -> loopdo
+let hasSideEffects = 1, isNotDuplicable=1, hasNoSchedulingInfo = 1, Defs = [LC,LE,LS] in
+def LOOPDOp : KVX_PSEUDO <(outs), (ins SingleReg:$c), []>;
+// Intermediary step from IR -> ENDLOOP
+def LOOPDO_ENDp : KVX_PSEUDO <(outs SingleReg:$o), (ins), []>;
+// Required to preserve the loop structure and void elimination of required PHIs
+let isBarrier=1, isBranch = 1, isIndirectBranch = 1, isTerminator = 1, isNotDuplicable = 1, Uses = [LC,LE,LS], Defs = [LC,LE,LS], Size = 0, CodeSize = 0 in
+def ENDLOOP : KVX_PSEUDO <(outs), (ins Pcrel27:$LpHead,  Pcrel27:$LpExit, Pcrel27:$LpLatch), [ ], "ENDLOOP: $LpHead, $LpExit, $LpLatch">;
+
+// Loop pattern-matched IR intrinsics
+def : Pat<(int_set_loop_iterations i64:$c), (LOOPDOp SingleReg:$c)>;
+def : Pat<(int_kvx_loopdoexit), (LOOPDO_ENDp)>;
+
 def: Pat<(int_kvx_get Sysnumber:$r), (GETp Sysnumber:$r)>;
 def: Pat<(int_kvx_wfxl Sysnumber:$r, i64:$val), (WFXLp Sysnumber:$r, SingleReg:$val)>;
 def: Pat<(int_kvx_wfxm Sysnumber:$r, i64:$val), (WFXMp Sysnumber:$r, SingleReg:$val)>;

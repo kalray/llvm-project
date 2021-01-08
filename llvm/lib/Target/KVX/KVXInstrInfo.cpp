@@ -354,15 +354,17 @@ KVXInstrInfo::CreateTargetScheduleState(const TargetSubtargetInfo &STI) const {
   return static_cast<const KVXSubtarget &>(STI).createDFAPacketizer(II);
 }
 
-static void parseCondBranch(MachineInstr &LastInst, MachineBasicBlock *&Target,
+static bool parseCondBranch(MachineInstr &LastInst, MachineBasicBlock *&Target,
                             SmallVectorImpl<MachineOperand> &Cond) {
   // Block ends with fall-through condbranch.
   assert(LastInst.getDesc().isConditionalBranch() &&
          "Unknown conditional branch");
+  LLVM_DEBUG(dbgs() << "Obtaining conditional branch BB and condition.\n");
   Target = LastInst.getOperand(1).getMBB();
   Cond.push_back(MachineOperand::CreateImm(LastInst.getOpcode()));
   Cond.push_back(LastInst.getOperand(0));
   Cond.push_back(LastInst.getOperand(2));
+  return false;
 }
 
 static unsigned getOppositeBranchOpcode(int Opc) {
@@ -405,13 +407,17 @@ bool KVXInstrInfo::analyzeBranch(MachineBasicBlock &MBB,
                                  SmallVectorImpl<MachineOperand> &Cond,
                                  bool AllowModify) const {
 
+  LLVM_DEBUG(dbgs() << "Analyze branch from MBB: " << MBB.getName() << ".\n");
+
   TBB = FBB = nullptr;
   Cond.clear();
 
   // If the block has no terminators, it just falls into the block after it.
   MachineBasicBlock::iterator I = MBB.getLastNonDebugInstr();
-  if (I == MBB.end() || !isUnpredicatedTerminator(*I))
+  if (I == MBB.end() || !isUnpredicatedTerminator(*I)) {
+    LLVM_DEBUG(dbgs() << "Can only fallthrough.\n");
     return false;
+  }
 
   // Count the number of terminators and find the first unconditional or
   // indirect branch.
@@ -419,9 +425,13 @@ bool KVXInstrInfo::analyzeBranch(MachineBasicBlock &MBB,
   int NumTerminators = 0;
   for (auto J = I.getReverse(); J != MBB.rend() && isUnpredicatedTerminator(*J);
        J++) {
+    LLVM_DEBUG(dbgs() << "This is a terminator: " << *J);
     NumTerminators++;
     if (J->getDesc().isUnconditionalBranch() ||
         J->getDesc().isIndirectBranch()) {
+      LLVM_DEBUG(
+          dbgs() << "This is the first unconditional or indirect branch: "
+                 << *J);
       FirstUncondOrIndirectBr = J.getReverse();
     }
   }
@@ -429,23 +439,37 @@ bool KVXInstrInfo::analyzeBranch(MachineBasicBlock &MBB,
   // If AllowModify is true, we can erase any terminators after
   // FirstUncondOrIndirectBR.
   if (AllowModify && FirstUncondOrIndirectBr != MBB.end()) {
-    while (std::next(FirstUncondOrIndirectBr) != MBB.end()) {
+    LLVM_DEBUG(dbgs() << "Dead code in block: "; MBB.dump());
+    for (auto I = std::next(FirstUncondOrIndirectBr); I != MBB.end();
+         I = std::next(FirstUncondOrIndirectBr)) {
+      LLVM_DEBUG(dbgs() << "Eliminating dead instruction: " << *I);
       std::next(FirstUncondOrIndirectBr)->eraseFromParent();
       NumTerminators--;
     }
     I = FirstUncondOrIndirectBr;
+    LLVM_DEBUG(dbgs() << "Block reduced to: "; MBB.dump());
   }
 
   // We can't handle blocks that end in an indirect branch.
-  if (I->getDesc().isIndirectBranch())
+  if (I->getDesc().isIndirectBranch()) {
+    LLVM_DEBUG(dbgs() << "Can't handle indirect branch: " << *I);
     return true;
+  }
+
+  if (I->getOpcode() == KVX::ENDLOOP) {
+    LLVM_DEBUG(dbgs() << "Disable tail merging ENDLOOP block.\n");
+    return true;
+  }
 
   // We can't handle blocks with more than 2 terminators.
-  if (NumTerminators > 2)
+  if (NumTerminators > 2) {
+    LLVM_DEBUG(dbgs() << "Can't handle more than 2 terminators\n");
     return true;
+  }
 
   // Handle a single unconditional branch.
   if (NumTerminators == 1 && I->getDesc().isUnconditionalBranch()) {
+    LLVM_DEBUG(dbgs() << "Single unconditional branch: " << *I << ".\n");
     if (I->getOpcode() == KVX::TAIL) {
       TBB = &MBB; // not used
       Cond.push_back(I->getOperand(0));
@@ -457,22 +481,19 @@ bool KVXInstrInfo::analyzeBranch(MachineBasicBlock &MBB,
 
   // Handle a single conditional branch.
   if (NumTerminators == 1 && I->getDesc().isConditionalBranch()) {
-
-    parseCondBranch(*I, TBB, Cond);
-    return false;
+    LLVM_DEBUG(dbgs() << "Single conditional branch: " << *I << ".\n");
+    return parseCondBranch(*I, TBB, Cond);
   }
 
+  auto Prev = std::prev(I);
   // Handle a conditional branch followed by an unconditional branch.
-  if (NumTerminators == 2 && std::prev(I)->getDesc().isConditionalBranch() &&
+  if (NumTerminators == 2 && Prev->getDesc().isConditionalBranch() &&
       I->getDesc().isUnconditionalBranch() && I->getOpcode() == KVX::GOTO) {
-    parseCondBranch(*std::prev(I), TBB, Cond);
+    LLVM_DEBUG(dbgs() << "Has two branch instructions: " << *I
+                      << " and: " << *Prev);
+
     FBB = I->getOperand(0).getMBB();
-    // fix for hardware loops to pin ExitMBB (not optimize it)
-    if (I->getParent()->hasAddressTaken()) {
-      I->getParent()->removeSuccessor(FBB);
-      I->getParent()->addSuccessor(FBB, BranchProbability::getOne());
-    }
-    return false;
+    return parseCondBranch(*std::prev(I), TBB, Cond);
   }
 
   // Otherwise, we can't handle this.

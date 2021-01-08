@@ -1601,8 +1601,7 @@ def ICALL : REGISTERZ_SIMPLE
 
 defm SCALL : MC_00<"scall">;
 
-let isBarrier = 1, isBranch = 1, isIndirectBranch = 1, isTerminator = 1 in
-let Uses = [PS] in
+let isTerminator=1, hasSideEffects=1, isNotDuplicable=1, Defs = [LC,LE,LS] in
 def LOOPDO : REGISTERZ_PCREL17_SIMPLE
   <(outs), (ins SingleReg:$a1, Pcrel17:$a2),
    "loopdo $a1, $a2",
