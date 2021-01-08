@@ -34,51 +34,27 @@ define i64 @bswapi64(i64 %a) {
 define <2 x i16> @bswapv2i16(<2 x i16> %a) {
 ; CHECK-LABEL: bswapv2i16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    extfz $r2 = $r0, 7, 0
-; CHECK-NEXT:    extfz $r1 = $r0, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r2, 15, 8
-; CHECK-NEXT:    extfz $r2 = $r0, 31, 24
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r2, 23, 16
-; CHECK-NEXT:    extfz $r0 = $r0, 23, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r0, 31, 24
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x4080102
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %res = call <2 x i16> @llvm.bswap.v2i16(<2 x i16> %a)
   ret <2 x i16> %res
 }
 
+define <4 x i16> @bswapv4i16(<4 x i16> %a) {
+; CHECK-LABEL: bswapv4i16:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x4080102004080102
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %res = call <4 x i16> @llvm.bswap.v4i16(<4 x i16> %a)
+  ret <4 x i16> %res
+}
+
 define <2 x i32> @bswapv2i32(<2 x i32> %a) {
 ; CHECK-LABEL: bswapv2i32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    extfz $r2 = $r0, 23, 16
-; CHECK-NEXT:    extfz $r1 = $r0, 31, 24
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r2, 15, 8
-; CHECK-NEXT:    extfz $r2 = $r0, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r2, 23, 16
-; CHECK-NEXT:    extfz $r2 = $r0, 7, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r2, 31, 24
-; CHECK-NEXT:    srld $r2 = $r0, 56
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r2, 39, 32
-; CHECK-NEXT:    extfz $r2 = $r0, 55, 48
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r2, 47, 40
-; CHECK-NEXT:    extfz $r2 = $r0, 47, 40
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r2, 55, 48
-; CHECK-NEXT:    extfz $r0 = $r0, 39, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r0, 63, 56
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1020408001020408
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %res = call <2 x i32> @llvm.bswap.v2i32(<2 x i32> %a)
@@ -147,3 +123,4 @@ declare i64 @llvm.bswap.i64(i64)
 declare <2 x i16> @llvm.bswap.v2i16(<2 x i16>)
 declare <2 x i32> @llvm.bswap.v2i32(<2 x i32>)
 declare <2 x i64> @llvm.bswap.v2i64(<2 x i64>)
+declare <4 x i16> @llvm.bswap.v4i16(<4 x i16>)
