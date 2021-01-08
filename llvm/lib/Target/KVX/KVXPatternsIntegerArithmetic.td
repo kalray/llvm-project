@@ -130,6 +130,32 @@ defm : ZEFPat<(add i32:$rs1, i32:$rs2), (ADDWrr SingleReg:$rs1, SingleReg:$rs2)>
 defm : ZEFPat<(add i32:$rs1, Signed10W:$rs2), (ADDWri10 SingleReg:$rs1, Signed10W:$rs2)>;
 defm : ZEFPat<(add i32:$rs1, Signed37W:$rs2), (ADDWri37 SingleReg:$rs1, Signed37W:$rs2)>;
 
+// ADDS WP/HQ
+def : Pat<(v2i16(saddsat v2i16:$v0, v2i16:$v1)), (ADDSHQrr SingleReg:$v0, SingleReg:$v1)>;
+def : Pat<(v4i16(saddsat v4i16:$v0, v4i16:$v1)), (ADDSHQrr SingleReg:$v0, SingleReg:$v1)>;
+def : Pat<(v2i16(saddsat v2i16:$v0, (is_imm_vec:$IMM))),
+          (ADDSHQri SingleReg:$v0, (build_imm_vec $IMM), splat32_)>;
+def : Pat<(v4i16(saddsat v4i16:$v0, v4i16:$v1)),
+           (ADDSHQrr SingleReg:$v0, SingleReg:$v1)>;
+def : Pat<(v4i16(saddsat v4i16:$v0, (v4i16(build_vector:$IMM (i32 imm), (i32 imm), (i32 0), (i32 0))) ) ),
+           (ADDSHQri SingleReg:$v0, (i32(trunc_imm_32 (i32(build_imm_vec $IMM)))), splat32_)>;
+def : Pat<(v4i16(saddsat v4i16:$v0, (v4i16(build_vector:$IMM (i32 imm:$i0), (i32 imm:$i1), (i32 imm:$i0), (i32 imm:$i1))) ) ),
+           (ADDSHQri SingleReg:$v0, (i32(trunc_imm_32 (i32(build_imm_vec $IMM)))), splat32_at)>;
+
+def : Pat<(i32(saddsat i32:$v, Wrapped32:$i)), (ADDSWri SingleReg:$v, Wrapped32:$i)>;
+def : Pat<(i32(saddsat i32:$v0, i32:$v1)), (ADDSWrr SingleReg:$v0, SingleReg:$v1)>;
+def : Pat<(v2i32(saddsat v2i32:$v0, v2i32:$v1)), (ADDSWPrr SingleReg:$v0, SingleReg:$v1)>;
+def : Pat<(v2i32(saddsat v2i32:$v0, v2i32:$v1)), (ADDSWPrr SingleReg:$v0, SingleReg:$v1)>;
+def : Pat<(v2i32(saddsat v2i32:$v0, (v2i32 (build_vector (i32 Wrapped32:$i), (i32 0)) ))),
+          (ADDSWPri SingleReg:$v0, (trunc_imm_32 imm:$i), splat32_)>;
+def : Pat<(v2i32(saddsat v2i32:$v0, (v2i32 (v2_splat (i32 Wrapped32:$i))))),
+          (ADDSWPri SingleReg:$v0, (trunc_imm_32 imm:$i), splat32_at)>;
+
+def : Pat<(i64(saddsat i64:$v, Signed10:$i)), (ADDSDri10 SingleReg:$v, Signed10:$i)>;
+def : Pat<(i64(saddsat i64:$v, Signed37:$i)), (ADDSDri37 SingleReg:$v, Signed37:$i)>;
+def : Pat<(i64(saddsat i64:$v, Wrapped64:$i)), (ADDSDri64 SingleReg:$v, Wrapped64:$i)>;
+def : Pat<(i64(saddsat i64:$v0, i64:$v1)), (ADDSDrr SingleReg:$v0, SingleReg:$v1)>;
+
 // ADDWP
 def : Pat<(add v2i32:$rs1, v2i32:$rs2), (ADDWPrr SingleReg:$rs1, SingleReg:$rs2)>;
 
