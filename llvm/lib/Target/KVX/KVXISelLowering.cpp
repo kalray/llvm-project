@@ -433,6 +433,7 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setTargetDAGCombine(ISD::ZERO_EXTEND);
   setTargetDAGCombine(ISD::FADD);
   setTargetDAGCombine(ISD::FSUB);
+  setTargetDAGCombine(ISD::MUL);
 
   setOperationAction(ISD::ATOMIC_FENCE, MVT::Other, Custom);
   // NOTE: We could use ACSWAPW instruction with some shifts and masks to
@@ -501,6 +502,11 @@ const char *KVXTargetLowering::getTargetNodeName(unsigned Opcode) const {
     return "KVX::FENCE";
   case KVXISD::FMS:
     return "KVX::FMS";
+  case KVXISD::SEXT_MUL:
+    return "KVX::SEXT_MUL";
+  case KVXISD::ZEXT_MUL:
+    return "KVX::ZEXT_MUL";
+
   default:
     return NULL;
   }
@@ -2362,6 +2368,43 @@ static SDValue combineZext(SDNode *N, SelectionDAG &DAG) {
   return SDValue();
 }
 
+static SDValue combineMUL(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
+                          SelectionDAG &Dag) {
+  auto VT = N->getValueType(0);
+
+  if (VT != MVT::i64)
+    return SDValue();
+
+  const auto &Op0 = N->getOperand(0);
+  const auto &Op1 = N->getOperand(1);
+  KnownBits V0 = Dag.computeKnownBits(Op0);
+  KnownBits V1 = Dag.computeKnownBits(Op1);
+  bool UnsCond0 = V0.Zero.countLeadingOnes() >= 32;
+  bool UnsCond1 = V1.Zero.countLeadingOnes() >= 32;
+
+  unsigned Opcode = 0;
+  if (UnsCond0 && UnsCond1)
+    Opcode = KVXISD::ZEXT_MUL;
+  else {
+    bool SignCond0 =
+        V0.One.countLeadingOnes() > 32 || Op0->getOpcode() == ISD::SIGN_EXTEND;
+    bool SignCond1 =
+        V1.One.countLeadingOnes() > 32 || Op1->getOpcode() == ISD::SIGN_EXTEND;
+    if (auto *Const1 = dyn_cast<ConstantSDNode>(Op1))
+      SignCond1 &= isInt<32>(Const1->getZExtValue());
+
+    if ((UnsCond0 || SignCond0) && (UnsCond1 || SignCond1))
+      Opcode = KVXISD::SEXT_MUL;
+  }
+
+  if (!Opcode)
+    return SDValue();
+
+  SDValue T0 = Dag.getNode(ISD::TRUNCATE, SDLoc(Op0), MVT::i32, {Op0});
+  SDValue T1 = Dag.getNode(ISD::TRUNCATE, SDLoc(Op1), MVT::i32, {Op1});
+  return Dag.getNode(Opcode, SDLoc(N), MVT::i64, {T0, T1});
+}
+
 SDValue KVXTargetLowering::PerformDAGCombine(SDNode *N,
                                              DAGCombinerInfo &DCI) const {
   SelectionDAG &DAG = DCI.DAG;
@@ -2395,6 +2438,8 @@ SDValue KVXTargetLowering::PerformDAGCombine(SDNode *N,
             N->getOperand(MulOp)->getOperand(0), N->getOperand(OpOp));
     }
     break;
+  case ISD::MUL:
+    return combineMUL(N, DCI, DAG);
   }
 
   return SDValue();

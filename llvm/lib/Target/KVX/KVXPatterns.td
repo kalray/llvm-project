@@ -31,6 +31,11 @@ def KVXJT_PCREL: SDNode<"KVXISD::JT_PCREL", SDTKVXJTPcrel>;
 
 def KVXFence: SDNode<"KVXISD::FENCE", SDTNone, [SDNPHasChain, SDNPSideEffect]>;
 
+def SDT_KVX_X_YY : SDTypeProfile<1, 2, [SDTCisInt<0>, SDTCisSameAs<2, 1>, SDTCisInt<2>]>;
+
+def KVX_sext_mul  :  SDNode<"KVXISD::SEXT_MUL", SDT_KVX_X_YY, []>;
+def KVX_zext_mul :  SDNode<"KVXISD::ZEXT_MUL", SDT_KVX_X_YY, []>;
+
 //===----------------------------------------------------------------------===//
 // Selection DAG patterns using custom DAG nodes.
 //===----------------------------------------------------------------------===//
