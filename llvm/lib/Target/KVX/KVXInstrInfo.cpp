@@ -563,3 +563,29 @@ bool KVXInstrInfo::reverseBranchCondition(
   Cond[2].setImm(getOppositeBranchOpcode(Cond[2].getImm()));
   return false;
 }
+
+bool KVXInstrInfo::isSchedulingBoundary(const MachineInstr &MI,
+                                        const MachineBasicBlock *MBB,
+                                        const MachineFunction &MF) const {
+  switch (MI.getOpcode()) {
+  case KVX::FENCE:
+  case KVX::ENDLOOP:
+  case KVX::LOOPDO:
+  case TargetOpcode::EH_LABEL:
+    return true;
+  default:
+    break;
+  }
+  return TargetInstrInfo::isSchedulingBoundary(MI, MBB, MF);
+}
+
+MachineBasicBlock *
+KVXInstrInfo::getBranchDestBlock(const MachineInstr &MI) const {
+  switch (MI.getOpcode()) {
+  case KVX::GOTO:
+    return MI.getOperand(0).getMBB();
+  case KVX::CB:
+    return MI.getOperand(1).getMBB();
+  }
+  return nullptr;
+}
