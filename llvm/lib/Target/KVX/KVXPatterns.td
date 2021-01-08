@@ -117,9 +117,6 @@ def ITAIL : REGISTERZ_SIMPLE
    [ ],
    BCU>;
 
-let isBarrier=1, isBranch=1, isPseudo=1, isIndirectBranch=1, isTerminator=1 in
-def ENDLOOP : REGISTERZ_SIMPLE <(outs), (ins SingleReg:$bb), "ENDLOOP $bb", [ ], ALL>;
-
 def SDTKVXWrapper : SDTypeProfile<1, 1, [SDTCisSameAs<0, 1>, SDTCisPtrTy<0>]>;
 def SDTKVXTail : SDTypeProfile<0, -1, [SDTCisVT<0, i64>]>;
 
