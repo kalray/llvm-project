@@ -28,21 +28,23 @@ class KVXSubtarget;
 namespace KVXISD {
 enum NodeType : unsigned {
   FIRST_NUMBER = ISD::BUILTIN_OP_END,
-  RET,
-  CALL,
   AddrWrapper,
-  TAIL,
-  GetSystemReg,
-  PICInternIndirection,
-  PICExternIndirection,
-  PICPCRelativeGOTAddr,
-  PICAddrWrapper,
-  COMP,
   BRCOND,
+  CALL,
+  COMP,
+  FENCE,
+  FMS,
+  GetSystemReg,
   JT,
   JT_PCREL,
-  FENCE,
-  FMS
+  SEXT_MUL,
+  ZEXT_MUL,
+  PICAddrWrapper,
+  PICExternIndirection,
+  PICInternIndirection,
+  PICPCRelativeGOTAddr,
+  RET,
+  TAIL,
 };
 } // namespace KVXISD
 
