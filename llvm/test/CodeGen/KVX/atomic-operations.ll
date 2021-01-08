@@ -132,8 +132,8 @@ define i8 @atomic_test_and_set(i8* %ptr) {
 ; CHECK-NEXT:    cb.even $r4 ? .LBB5_1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB5_2:
-; CHECK-NEXT:    fence
 ; CHECK-NEXT:    zxbd $r0 = $r2
+; CHECK-NEXT:    fence
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compw.ne $r0 = $r0, 0
 ; CHECK-NEXT:    ret
