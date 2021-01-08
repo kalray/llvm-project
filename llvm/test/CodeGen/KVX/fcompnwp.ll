@@ -6,11 +6,10 @@ define <2 x float> @eq(<2 x float> %a, <2 x float> %b){
 ; CHECK-LABEL: eq:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnwp.oeq $r0 = $r0, $r1
-; CHECK-NEXT:    make $r1 = 0x1f0000001f
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sllwps $r0 = $r0, $r1
+; CHECK-NEXT:    sllwps $r0 = $r0, 31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srawps $r0 = $r0, $r1
+; CHECK-NEXT:    srawps $r0 = $r0, 31
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -24,11 +23,10 @@ define <2 x float> @neq(<2 x float> %a, <2 x float> %b){
 ; CHECK-LABEL: neq:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnwp.une $r0 = $r0, $r1
-; CHECK-NEXT:    make $r1 = 0x1f0000001f
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sllwps $r0 = $r0, $r1
+; CHECK-NEXT:    sllwps $r0 = $r0, 31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srawps $r0 = $r0, $r1
+; CHECK-NEXT:    srawps $r0 = $r0, 31
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -42,11 +40,10 @@ define <2 x float> @gt(<2 x float> %a, <2 x float> %b){
 ; CHECK-LABEL: gt:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnwp.olt $r0 = $r1, $r0
-; CHECK-NEXT:    make $r1 = 0x1f0000001f
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sllwps $r0 = $r0, $r1
+; CHECK-NEXT:    sllwps $r0 = $r0, 31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srawps $r0 = $r0, $r1
+; CHECK-NEXT:    srawps $r0 = $r0, 31
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -60,11 +57,10 @@ define <2 x float> @lt(<2 x float> %a, <2 x float> %b){
 ; CHECK-LABEL: lt:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnwp.olt $r0 = $r0, $r1
-; CHECK-NEXT:    make $r1 = 0x1f0000001f
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sllwps $r0 = $r0, $r1
+; CHECK-NEXT:    sllwps $r0 = $r0, 31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srawps $r0 = $r0, $r1
+; CHECK-NEXT:    srawps $r0 = $r0, 31
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -78,11 +74,10 @@ define <2 x float> @gte(<2 x float> %a, <2 x float> %b){
 ; CHECK-LABEL: gte:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnwp.oge $r0 = $r0, $r1
-; CHECK-NEXT:    make $r1 = 0x1f0000001f
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sllwps $r0 = $r0, $r1
+; CHECK-NEXT:    sllwps $r0 = $r0, 31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srawps $r0 = $r0, $r1
+; CHECK-NEXT:    srawps $r0 = $r0, 31
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -96,11 +91,10 @@ define <2 x float> @lte(<2 x float> %a, <2 x float> %b){
 ; CHECK-LABEL: lte:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnwp.oge $r0 = $r1, $r0
-; CHECK-NEXT:    make $r1 = 0x1f0000001f
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sllwps $r0 = $r0, $r1
+; CHECK-NEXT:    sllwps $r0 = $r0, 31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srawps $r0 = $r0, $r1
+; CHECK-NEXT:    srawps $r0 = $r0, 31
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

@@ -2,12 +2,10 @@
 ; RUN: llc < %s -O2 | FileCheck %s
 target triple = "kvx-kalray-cos"
 
-define <2 x i32> @shiftR_imm(<2 x i32> %a){
-; CHECK-LABEL: shiftR_imm:
+define <2 x i32> @ashiftR_imm(<2 x i32> %a){
+; CHECK-LABEL: ashiftR_imm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x300000003
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srawps $r0 = $r0, $r1
+; CHECK-NEXT:    srawps $r0 = $r0, 3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -15,12 +13,21 @@ entry:
   ret <2 x i32> %shr
 }
 
+define <2 x i32> @lshiftR_imm(<2 x i32> %a){
+; CHECK-LABEL: lshiftR_imm:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    srlwps $r0 = $r0, 3
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %shr = lshr <2 x i32> %a, <i32 3, i32 3>
+  ret <2 x i32> %shr
+}
+
 define <2 x i32> @shiftL_imm(<2 x i32> %a){
 ; CHECK-LABEL: shiftL_imm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x300000003
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sllwps $r0 = $r0, $r1
+; CHECK-NEXT:    sllwps $r0 = $r0, 3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -28,11 +35,9 @@ entry:
   ret <2 x i32> %shl
 }
 
-define <2 x i32> @shiftR(<2 x i32> %a, i32 %c){
-; CHECK-LABEL: shiftR:
+define <2 x i32> @ashiftR(<2 x i32> %a, i32 %c){
+; CHECK-LABEL: ashiftR:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    insf $r1 = $r1, 63, 32
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srawps $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -43,11 +48,22 @@ entry:
   ret <2 x i32> %shr
 }
 
+define <2 x i32> @lshiftR(<2 x i32> %a, i32 %c){
+; CHECK-LABEL: lshiftR:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    srlwps $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %splat.splatinsert = insertelement <2 x i32> undef, i32 %c, i32 0
+  %splat.splat = shufflevector <2 x i32> %splat.splatinsert, <2 x i32> undef, <2 x i32> zeroinitializer
+  %shr = lshr <2 x i32> %a, %splat.splat
+  ret <2 x i32> %shr
+}
+
 define <2 x i32> @shiftL(<2 x i32> %a, i32 %c){
 ; CHECK-LABEL: shiftL:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    insf $r1 = $r1, 63, 32
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sllwps $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -55,6 +71,96 @@ entry:
   %splat.splatinsert = insertelement <2 x i32> undef, i32 %c, i32 0
   %splat.splat = shufflevector <2 x i32> %splat.splatinsert, <2 x i32> undef, <2 x i32> zeroinitializer
   %shl = shl <2 x i32> %a, %splat.splat
+  ret <2 x i32> %shl
+}
+
+define <2 x i32> @ashiftR_imm_vec(<2 x i32> %a){
+; CHECK-LABEL: ashiftR_imm_vec:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    sraw $r1 = $r0, 2
+; CHECK-NEXT:    srawps $r0 = $r0, 3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 31, 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %shr = ashr <2 x i32> %a, <i32 2, i32 3>
+  ret <2 x i32> %shr
+}
+
+define <2 x i32> @lshiftR_imm_vec(<2 x i32> %a){
+; CHECK-LABEL: lshiftR_imm_vec:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    srlw $r1 = $r0, 3
+; CHECK-NEXT:    srlwps $r0 = $r0, 2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 31, 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %shr = lshr <2 x i32> %a, <i32 3, i32 2>
+  ret <2 x i32> %shr
+}
+
+define <2 x i32> @shiftL_imm_vec(<2 x i32> %a){
+; CHECK-LABEL: shiftL_imm_vec:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    sllw $r1 = $r0, 0
+; CHECK-NEXT:    sllwps $r0 = $r0, 3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 31, 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %shl = shl <2 x i32> %a, <i32 0, i32 3>
+  ret <2 x i32> %shl
+}
+
+define <2 x i32> @ashiftR_vec(<2 x i32> %a, <2 x i32> %c){
+; CHECK-LABEL: ashiftR_vec:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    sraw $r2 = $r0, $r1
+; CHECK-NEXT:    extfz $r1 = $r1, 36, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srawps $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r2, 31, 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %shr = ashr <2 x i32> %a, %c
+  ret <2 x i32> %shr
+}
+
+define <2 x i32> @lshiftR_vec(<2 x i32> %a, <2 x i32> %c){
+; CHECK-LABEL: lshiftR_vec:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    srlw $r2 = $r0, $r1
+; CHECK-NEXT:    extfz $r1 = $r1, 36, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srlwps $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r2, 31, 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %shr = lshr <2 x i32> %a, %c
+  ret <2 x i32> %shr
+}
+
+define <2 x i32> @shiftL_vec(<2 x i32> %a, <2 x i32> %c){
+; CHECK-LABEL: shiftL_vec:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    sllw $r2 = $r0, $r1
+; CHECK-NEXT:    extfz $r1 = $r1, 36, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sllwps $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r2, 31, 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %shl = shl <2 x i32> %a, %c
   ret <2 x i32> %shl
 }
 
