@@ -5,8 +5,8 @@ target triple = "kvx-kalray-cos"
 define void @loop_unrolling(i32* nocapture %t){
 ; CHECK-LABEL: loop_unrolling:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    addd $r0 = $r0, 16
+; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    make $r2 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_1: # %for.body

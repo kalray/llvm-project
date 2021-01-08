@@ -807,20 +807,20 @@ define <4 x i64> @test_tca_builtins(i64 %a, i64 %b, i64 %c, i64 %d, <256 x i1>* 
 ; CHECK-LABEL: test_tca_builtins:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lv $a0 = 0[$r4]
+; CHECK-NEXT:    make $r1 = 4
+; CHECK-NEXT:    make $r11 = 3
 ; CHECK-NEXT:    addd $r15 = $r4, 96
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a0 = 0[$r4]
-; CHECK-NEXT:    make $r1 = 4
-; CHECK-NEXT:    make $r11 = 3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    movetq $a0_lo = $r11, $r1
 ; CHECK-NEXT:    make $r10 = 2
 ; CHECK-NEXT:    make $r9 = 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    movetq $a0_hi = $r9, $r10
+; CHECK-NEXT:    make $r8 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 0[$r4] = $a0
-; CHECK-NEXT:    make $r8 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a1 = 0[$r4]
 ; CHECK-NEXT:    copyd $r7 = $r0

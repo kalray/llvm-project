@@ -5,8 +5,8 @@ target triple = "kvx-kalray-cos"
 define void @f32(float* nocapture %0) {
 ; CHECK-LABEL: f32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r1 = 0x3f000000
 ; CHECK-NEXT:    make $r2 = 20
+; CHECK-NEXT:    make $r1 = 0x3f000000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r2, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;

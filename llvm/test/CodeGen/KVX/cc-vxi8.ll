@@ -10,16 +10,14 @@ define void @foo(){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    sd 0[$r12] = $r16
-; CHECK-NEXT:    make $r0 = 0xfafb
+; CHECK-NEXT:    make $r0 = 0xfffffffffffffafb
 ; CHECK-NEXT:    call bar2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 67, -32
-; CHECK-NEXT:    sllw $r0 = $r0, 24
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    orw $r0 = $r0, 0xf9fafb
+; CHECK-NEXT:    make $r0 = 0xf9fafb
 ; CHECK-NEXT:    call bar3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r0 = 0xf8f9fafb
+; CHECK-NEXT:    make $r0 = 0xfffffffff8f9fafb
 ; CHECK-NEXT:    call bar4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 0[$r12]

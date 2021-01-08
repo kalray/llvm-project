@@ -73,3 +73,32 @@ entry:
   %1 = select <2 x i1> %0, <2 x i32> %a, <2 x i32> <i32 20, i32 0>
   ret <2 x i32> %1
 }
+
+define  <2 x i32> @minuwp_rr_2(<2 x i32> %a) {
+; CHECK-LABEL: minuwp_rr_2:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r1 = 0x200000000
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    minuwp $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = icmp ult <2 x i32> %a, <i32 0, i32 2>
+  %1 = select <2 x i1> %0, <2 x i32> %a, <2 x i32> <i32 0, i32 2>
+  ret <2 x i32> %1
+}
+
+define  <2 x i32> @minwp_rr_2(<2 x i32> %a) {
+; CHECK-LABEL: minwp_rr_2:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r1 = 0x1400000000
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    minwp $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = icmp slt <2 x i32> %a, <i32 0, i32 20>
+  %1 = select <2 x i1> %0, <2 x i32> %a, <2 x i32> <i32 0, i32 20>
+  ret <2 x i32> %1
+}
+

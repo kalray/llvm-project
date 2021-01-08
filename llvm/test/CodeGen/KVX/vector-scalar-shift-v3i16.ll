@@ -5,9 +5,7 @@ target triple = "kvx-kalray-cos"
 define <3 x i16> @shiftR_imm(<3 x i16> %a){
 ; CHECK-LABEL: shiftR_imm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    slld $r1 = $r0, 48
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ord $r1 = $r1, 0x300030003
+; CHECK-NEXT:    make $r1 = 0x300030003
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srahqs $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -20,9 +18,7 @@ entry:
 define <3 x i16> @shiftL_imm(<3 x i16> %a){
 ; CHECK-LABEL: shiftL_imm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    slld $r1 = $r0, 48
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ord $r1 = $r1, 0x300030003
+; CHECK-NEXT:    make $r1 = 0x300030003
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sllhqs $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -40,8 +36,6 @@ define <3 x i16> @shiftR(<3 x i16> %a, i16 %c){
 ; CHECK-NEXT:    insf $r2 = $r2, 31, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r2 = $r1, 47, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r0, 63, 48
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srahqs $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
@@ -61,8 +55,6 @@ define <3 x i16> @shiftL(<3 x i16> %a, i16 %c){
 ; CHECK-NEXT:    insf $r2 = $r2, 31, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r2 = $r1, 47, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r0, 63, 48
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sllhqs $r0 = $r0, $r2
 ; CHECK-NEXT:    ret

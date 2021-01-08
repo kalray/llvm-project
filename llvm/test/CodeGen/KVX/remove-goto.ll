@@ -8,13 +8,12 @@ target triple = "kvx-kalray-cos"
 define %struct.list_head_s* @core_list_reverse(%struct.list_head_s* %list){
 ; CHECK-LABEL: core_list_reverse:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0
-; CHECK-NEXT:    cb.deqz $r0 ? .LBB0_3
+; CHECK-NEXT:    cb.deqz $r0 ? .LBB0_1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.1: # %while.body.preheader
+; CHECK-NEXT:  # %bb.2: # %while.body.preheader
 ; CHECK-NEXT:    make $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_2: # %while.body
+; CHECK-NEXT:  .LBB0_3: # %while.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    copyd $r1 = $r0
 ; CHECK-NEXT:    ;;
@@ -22,9 +21,15 @@ define %struct.list_head_s* @core_list_reverse(%struct.list_head_s* %list){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 0[$r1] = $r2
 ; CHECK-NEXT:    copyd $r2 = $r1
-; CHECK-NEXT:    cb.dnez $r0 ? .LBB0_2
+; CHECK-NEXT:    cb.dnez $r0 ? .LBB0_3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_3: # %while.end
+; CHECK-NEXT:  # %bb.4: # %while.end
+; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  .LBB0_1:
+; CHECK-NEXT:    make $r1 = 0
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;

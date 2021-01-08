@@ -44,8 +44,6 @@ define void @_Z1av() {
 ; CHECK-NEXT:    cb.deqz $r1 ? .LBB0_10
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_2:
-; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r1 = 0[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fence
@@ -70,11 +68,9 @@ define void @_Z1av() {
 ; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_16:
-; CHECK-NEXT:    compd.eq $r0 = $r1, 0
+; CHECK-NEXT:    compd.eq $r1 = $r1, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.odd $r0 ? .LBB0_10
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    cb.odd $r1 ? .LBB0_10
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r1 = 0[$r0]
 ; CHECK-NEXT:    ;;
@@ -102,8 +98,6 @@ define void @_Z1av() {
 ; CHECK-NEXT:  .LBB0_19:
 ; CHECK-NEXT:    cb.deqz $r1 ? .LBB0_10
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r1 = 0[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fence
@@ -129,8 +123,6 @@ define void @_Z1av() {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_22:
 ; CHECK-NEXT:    cb.deqz $r1 ? .LBB0_10
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r1 = 0[$r0]
 ; CHECK-NEXT:    ;;
@@ -158,8 +150,6 @@ define void @_Z1av() {
 ; CHECK-NEXT:  .LBB0_25:
 ; CHECK-NEXT:    cb.deqz $r1 ? .LBB0_10
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r1 = 0[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fence
@@ -185,8 +175,6 @@ define void @_Z1av() {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_28:
 ; CHECK-NEXT:    cb.deqz $r1 ? .LBB0_10
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r1 = 0[$r0]
 ; CHECK-NEXT:    ;;
@@ -214,8 +202,6 @@ define void @_Z1av() {
 ; CHECK-NEXT:  .LBB0_31:
 ; CHECK-NEXT:    cb.deqz $r1 ? .LBB0_10
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r1 = 0[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fence
@@ -241,8 +227,6 @@ define void @_Z1av() {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_34:
 ; CHECK-NEXT:    cb.deqz $r1 ? .LBB0_10
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r1 = 0[$r0]
 ; CHECK-NEXT:    ;;

@@ -69,9 +69,9 @@ define i64 @atomicrmw_i64_xchg_as(i64 addrspace(1)* %ptr, i64 %c, i64 %s) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 20, -16
 ; CHECK-NEXT:    sq 0[$r12] = $r18r19
+; CHECK-NEXT:    make $r20 = 5
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    make $r20 = 5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 19, -24
 ; CHECK-NEXT:    .cfi_offset 18, -32
@@ -212,8 +212,8 @@ define i32 @atomic_load_i32(i32 addrspace(1)*%ptr) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 67, -16
 ; CHECK-NEXT:    sq 0[$r12] = $r18r19
-; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    make $r19 = 5
+; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 19, -24
 ; CHECK-NEXT:    .cfi_offset 18, -32
@@ -266,9 +266,9 @@ define void @atomic_store_i64(i64 addrspace(1)* %ptr, i64 %l) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 20, -16
 ; CHECK-NEXT:    sq 0[$r12] = $r18r19
+; CHECK-NEXT:    make $r20 = 3
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    make $r20 = 3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 19, -24
 ; CHECK-NEXT:    .cfi_offset 18, -32
@@ -433,9 +433,9 @@ define i64 @atomicrmw_i64_sub_global_as(i64 addrspace(1)*%src, i64 %b) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 20, -16
 ; CHECK-NEXT:    sq 0[$r12] = $r18r19
+; CHECK-NEXT:    make $r20 = 3
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    make $r20 = 3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 19, -24
 ; CHECK-NEXT:    .cfi_offset 18, -32

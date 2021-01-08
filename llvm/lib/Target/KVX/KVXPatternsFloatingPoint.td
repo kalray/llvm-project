@@ -444,6 +444,20 @@ def : Pat<(v4f32 (fpextend v4f16:$val)), (INSERT_SUBREG
                                            (INSERT_SUBREG (v4f32 (IMPLICIT_DEF)), (v2f32 (FWIDENLHWP SingleReg:$val, silent_)), sub_s0),
                                            (v2f32 (FWIDENMHWP SingleReg:$val, silent_)), sub_s1)>;
 
+// build_vector
+// v2f16
+def : Pat<(v2f16 (is_imm_vec:$IMM)), (MAKEi43 (build_fpimm_vec $IMM))>;
+def : Pat<(v2f16 (build_vector f16:$v0, f16:$v1)), (INSF SingleReg:$v0, SingleReg:$v1, 31, 16)>;
+
+// v2f32
+def : Pat<(v2f32 (is_imm_vec:$IMM)), (MAKEi64 (build_fpimm_vec $IMM))>;
+def : Pat<(v2f32 (build_vector f32:$v0, f32:$v1)), (INSF SingleReg:$v0, SingleReg:$v1, 63, 32)>;
+
+// v4f16
+def : Pat<(v4f16 (is_imm_vec:$IMM)), (MAKEi64 (build_fpimm_vec $IMM))>;
+def : Pat<(v4f16 (build_vector f16:$v0, f16:$v1, f16:$v2, f16:$v3)),
+          (INSF (INSF SingleReg:$v0, SingleReg:$v1, 31, 16), (INSF SingleReg:$v2, SingleReg:$v3, 31, 16), 63, 32)>;
+
 // v2f32
 def : Pat<(extractelt (v2f32 SingleReg:$v), 0), (COPY SingleReg:$v)>;
 def : Pat<(extractelt (v2f32 SingleReg:$v), 1), (SRADri SingleReg :$v, (i64 32))>;

@@ -65,79 +65,81 @@ define i32 @f(i32 %num){
 ; CHECK-NEXT:    .cfi_def_cfa_register 14
 ; CHECK-NEXT:    andd $r1 = $r1, -32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfd $r2 = $r1, $r12
+; CHECK-NEXT:    sbfd $r1 = $r1, $r12
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r12 = $r2
-; CHECK-NEXT:    make $r1 = 0
-; CHECK-NEXT:    cb.weqz $r0 ? .LBB1_7
+; CHECK-NEXT:    copyd $r12 = $r1
+; CHECK-NEXT:    cb.weqz $r0 ? .LBB1_6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %for.body.preheader.i
-; CHECK-NEXT:    make $r1 = 0
-; CHECK-NEXT:    zxwd $r3 = $r0
-; CHECK-NEXT:    copyd $r4 = $r2
+; CHECK-NEXT:    zxwd $r2 = $r0
+; CHECK-NEXT:    make $r3 = 0
+; CHECK-NEXT:    copyd $r4 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    loopdo $r3, .__LOOPDO_3_END_
+; CHECK-NEXT:    loopdo $r2, .__LOOPDO_3_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB1_2: # %for.body.i
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    mulw $r5 = $r1, $r1
-; CHECK-NEXT:    addw $r1 = $r1, 1
+; CHECK-NEXT:    mulw $r5 = $r3, $r3
+; CHECK-NEXT:    addw $r3 = $r3, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 0[$r4] = $r5
 ; CHECK-NEXT:    addd $r4 = $r4, 4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .__LOOPDO_3_END_:
 ; CHECK-NEXT:  # %bb.3: # %set.exit
-; CHECK-NEXT:    addx8wd $r1 = $r0, 31
+; CHECK-NEXT:    addx8wd $r3 = $r0, 31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r1 = $r1, -32
+; CHECK-NEXT:    andd $r3 = $r3, -32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfd $r4 = $r1, $r12
+; CHECK-NEXT:    sbfd $r3 = $r3, $r12
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r12 = $r4
-; CHECK-NEXT:    make $r1 = 0
+; CHECK-NEXT:    copyd $r12 = $r3
 ; CHECK-NEXT:    sllw $r6 = $r0, 1
-; CHECK-NEXT:    copyd $r5 = $r4
+; CHECK-NEXT:    make $r4 = 0
+; CHECK-NEXT:    copyd $r5 = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r6, .__LOOPDO_2_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB1_4: # %for.body.i36
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    mulw $r6 = $r1, $r1
-; CHECK-NEXT:    addw $r1 = $r1, 1
+; CHECK-NEXT:    mulw $r6 = $r4, $r4
+; CHECK-NEXT:    addw $r4 = $r4, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 0[$r5] = $r6
 ; CHECK-NEXT:    addd $r5 = $r5, 4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .__LOOPDO_2_END_:
 ; CHECK-NEXT:  # %bb.5: # %set.exit37
-; CHECK-NEXT:    make $r1 = 0
-; CHECK-NEXT:    cb.weqz $r0 ? .LBB1_7
+; CHECK-NEXT:    cb.weqz $r0 ? .LBB1_6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.6: # %for.body.preheader
-; CHECK-NEXT:    sxwd $r0 = $r0
-; CHECK-NEXT:    make $r1 = 0
+; CHECK-NEXT:  # %bb.9: # %for.body.preheader
+; CHECK-NEXT:    sxwd $r4 = $r0
+; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    loopdo $r3, .__LOOPDO_1_END_
+; CHECK-NEXT:    loopdo $r2, .__LOOPDO_1_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB1_8: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    lwz $r3 = 0[$r2]
-; CHECK-NEXT:    addd $r2 = $r2, 4
+; CHECK-NEXT:    lwz $r2 = 0[$r1]
+; CHECK-NEXT:    addd $r1 = $r1, 4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r5 = 0[$r4]
+; CHECK-NEXT:    lwz $r5 = 0[$r3]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz.xs $r6 = $r0[$r4]
-; CHECK-NEXT:    addd $r4 = $r4, 4
-; CHECK-NEXT:    addw $r1 = $r3, $r1
+; CHECK-NEXT:    lwz.xs $r6 = $r4[$r3]
+; CHECK-NEXT:    addd $r3 = $r3, 4
+; CHECK-NEXT:    addw $r0 = $r2, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r1 = $r1, $r5
+; CHECK-NEXT:    addw $r0 = $r0, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r1 = $r1, $r6
+; CHECK-NEXT:    addw $r0 = $r0, $r6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .__LOOPDO_1_END_:
+; CHECK-NEXT:    goto .LBB1_7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  .LBB1_6:
+; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB1_7: # %for.cond.cleanup
-; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    copyd $r12 = $r14
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_register 12

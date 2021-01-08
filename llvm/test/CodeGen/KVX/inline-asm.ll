@@ -10,7 +10,6 @@ define void @f() {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    sw 0[$r12] = $r0
-; CHECK-NEXT:    make $r0 = 0x4d2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    addd $tp = $r0, 0

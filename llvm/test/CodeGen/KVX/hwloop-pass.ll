@@ -6,8 +6,8 @@ define void @imm_imm_positive_bump(i32* nocapture %x){
 ; CHECK-LABEL: imm_imm_positive_bump:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r1 = 0
-; CHECK-NEXT:    make $r2 = 0
 ; CHECK-NEXT:    make $r3 = 100
+; CHECK-NEXT:    make $r2 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r3, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;
@@ -41,8 +41,8 @@ define void @imm_imm_negative_bump(i32* nocapture %x){
 ; CHECK-LABEL: imm_imm_negative_bump:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r1 = 99
-; CHECK-NEXT:    make $r2 = 99
 ; CHECK-NEXT:    make $r3 = 100
+; CHECK-NEXT:    make $r2 = 99
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r3, .__LOOPDO_1_END_
 ; CHECK-NEXT:    ;;
@@ -128,10 +128,10 @@ define void @imm_nonzero_reg_negative_bump(i32* nocapture %x, i32 %n){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %for.body.preheader
 ; CHECK-NEXT:    sxwd $r1 = $r1
+; CHECK-NEXT:    make $r2 = 99
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfd $r3 = $r1, 100
 ; CHECK-NEXT:    make $r1 = 99
-; CHECK-NEXT:    make $r2 = 99
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r3, .__LOOPDO_3_END_
 ; CHECK-NEXT:    ;;
