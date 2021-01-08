@@ -93,7 +93,7 @@ void KVXPacketizerList::endPacket(MachineBasicBlock *MBB,
 }
 
 bool KVXPacketizerList::isSoloInstruction(const MachineInstr &MI) {
-  if (MI.isInlineAsm() || MI.isBundle())
+  if (MI.isInlineAsm() || MI.isBundle() || MI.isEHLabel())
     return true;
 
   // WFXL, WFXM, and SET instructions have to be alone in a bundle if they write

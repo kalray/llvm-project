@@ -999,6 +999,78 @@ static bool expandTcaInplace(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   return true;
 }
 
+static bool expandENDLOOP(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
+                          MachineBasicBlock::iterator MBBI) {
+
+  MachineBasicBlock *ExitBB = MBBI->getOperand(1).getMBB();
+  MCSymbol *ExitSymbol = MBBI->getOperand(2).getMCSymbol();
+
+  DEBUG_WITH_TYPE("hardware-loops", dbgs() << "Expanding ENDLOOP: " << *MBBI);
+  // First, must find where to emit the end-loop symbol.
+  // In worst case, we'll have to ensure fallthrough the exit address by
+  // inserting a NOP instruction before it.
+  bool NeedsNOP = false;
+  // If ENDLOOP is not the first instruction of the BB, it's safe to emit
+  // replacing the pseudo. If this BB is not branched to, its also safe to
+  // replace it.
+  if (MBB.begin() != MBBI ||
+      (!MBB.hasAddressTaken() && !MBB.hasLabelMustBeEmitted())) {
+    BuildMI(MBB, MBBI, MBBI->getDebugLoc(), TII->get(TargetOpcode::EH_LABEL))
+        .addSym(ExitSymbol);
+    DEBUG_WITH_TYPE("hardware-loops", dbgs() << "Expanded label inplace.\n";
+                    MBB.dump());
+  } else if (MBB.pred_size() == 1) {
+    // If this block has a single predecessor, try to add the symbol to the end
+    // of it.
+    auto *PredBB = *MBB.pred_begin();
+    assert(!PredBB->empty() && "Did not expected an empty BB in the loop.\n");
+    auto InsPoint = PredBB->getLastNonDebugInstr();
+    if (PredBB->succ_size() != 1 || InsPoint->isBranch()) {
+      auto Stop = PredBB->getFirstTerminator();
+      // Test all branch instructions to find out where to insert the
+      // instruction
+      while (true) {
+        if (TII->getBranchDestBlock(*InsPoint) == &MBB)
+          break;
+        if (InsPoint == Stop) {
+          InsPoint = PredBB->end();
+          break;
+        }
+        --InsPoint;
+      }
+      if (InsPoint == PredBB->end())
+        NeedsNOP = true;
+    }
+    if (!NeedsNOP) {
+      BuildMI(*PredBB, InsPoint, MBBI->getDebugLoc(),
+              TII->get(TargetOpcode::EH_LABEL))
+          .addSym(ExitSymbol);
+      DEBUG_WITH_TYPE("hardware-loops",
+                      dbgs() << "Inserting symbol at predecessor end:\n";
+                      PredBB->dump());
+    }
+  } else
+    NeedsNOP = true;
+
+  if (NeedsNOP) {
+    DEBUG_WITH_TYPE(
+        "hardware-loops",
+        dbgs() << "Must emit a NOP instruction before the label.\n");
+    BuildMI(MBB, MBBI, MBBI->getDebugLoc(), TII->get(KVX::NOP));
+    BuildMI(MBB, MBBI, MBBI->getDebugLoc(), TII->get(TargetOpcode::EH_LABEL))
+        .addSym(ExitSymbol);
+  }
+  if (!MBB.isLayoutSuccessor(ExitBB)) {
+    BuildMI(MBB, MBBI, MBBI->getDebugLoc(), TII->get(KVX::GOTO))
+        .addMBB(ExitBB)
+        .getInstr();
+  }
+  MBBI->eraseFromParent();
+  DEBUG_WITH_TYPE("hardware-loops", dbgs() << "Latch block after cleanup:";
+                  MBB.dump());
+  return true;
+}
+
 static bool expandSWAPVOp(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
                           MachineBasicBlock::iterator MBBI) {
   MachineInstr &MI = *MBBI;
@@ -1184,6 +1256,8 @@ bool KVXPreEmitExpandPseudo::expandMI(MachineBasicBlock &MBB,
     return expandTcaInplace(TII, MBB, MBBI, KVX::sub_b1, KVX::MOVETQrrbo);
   case KVX::MOVETOLOp:
     return expandTcaInplace(TII, MBB, MBBI, KVX::sub_b0, KVX::MOVETQrrbe);
+  case KVX::ENDLOOP:
+    return expandENDLOOP(TII, MBB, MBBI);
   default:
     break;
   }

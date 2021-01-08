@@ -27,9 +27,6 @@ void KVXAsmPrinter::emitInstruction(const MachineInstr *MI) {
   if (emitPseudoExpansionLowering(*OutStreamer, MI))
     return;
 
-  if (MI->getOpcode() == KVX::ENDLOOP)
-    return;
-
   if (MI->isBundle()) {
     for (auto MII = ++MI->getIterator();
          MII != MI->getParent()->instr_end() && MII->isInsideBundle(); ++MII) {
