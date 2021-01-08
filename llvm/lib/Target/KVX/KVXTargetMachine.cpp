@@ -44,7 +44,7 @@ static cl::opt<std::string>
 
 extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeKVXTarget() {
   RegisterTargetMachine<KVXTargetMachine> X(getTheKVXTarget());
-  auto PR = PassRegistry::getPassRegistry();
+  auto *PR = PassRegistry::getPassRegistry();
   initializeKVXPreRAExpandPseudoPass(*PR);
   initializeKVXPreEmitExpandPseudoPass(*PR);
   initializeKVXLoadStorePackingPassPass(*PR);
@@ -80,23 +80,21 @@ bool llvm::hasStackLimitRegister() {
   return StackLimitRegisterValue != 0;
 }
 
-unsigned llvm::GetImmOpCode(int64_t imm, unsigned i10code, unsigned i37code,
-                            unsigned i64code) {
-  if (isInt<10>(imm))
-    return i10code;
-  else if (isInt<37>(imm))
-    return i37code;
-  else
-    return i64code;
+unsigned llvm::GetImmOpCode(int64_t Imm, unsigned I10code, unsigned I37code,
+                            unsigned I64code) {
+  if (isInt<10>(Imm))
+    return I10code;
+  if (isInt<37>(Imm))
+    return I37code;
+  return I64code;
 }
 
-unsigned llvm::GetImmMakeOpCode(int64_t imm) {
-  if (isInt<16>(imm))
+unsigned llvm::GetImmMakeOpCode(int64_t Imm) {
+  if (isInt<16>(Imm))
     return KVX::MAKEi16;
-  else if (isInt<43>(imm))
+  if (isInt<43>(Imm))
     return KVX::MAKEi43;
-  else
-    return KVX::MAKEi64;
+  return KVX::MAKEi64;
 }
 
 static Reloc::Model getEffectiveRelocModel(const Triple &TT,
