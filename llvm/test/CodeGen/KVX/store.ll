@@ -52,14 +52,14 @@ define <4 x i32> @test0(<4 x i32> %0, i8 %1) #1 {
 ; CHECK-LABEL: test0:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
+; CHECK-NEXT:    andd $r2 = $r2, 3
+; CHECK-NEXT:    make $r3 = 0xfffffffb
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
+; CHECK-NEXT:    addd $r4 = $r12, 0
 ; CHECK-NEXT:    sq 0[$r12] = $r0r1
-; CHECK-NEXT:    andd $r0 = $r2, 3
-; CHECK-NEXT:    make $r1 = 0xfffffffb
-; CHECK-NEXT:    addd $r2 = $r12, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw.xs $r0[$r2] = $r1
+; CHECK-NEXT:    sw.xs $r2[$r4] = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lq $r0r1 = 0[$r12]
 ; CHECK-NEXT:    addd $r12 = $r12, 32

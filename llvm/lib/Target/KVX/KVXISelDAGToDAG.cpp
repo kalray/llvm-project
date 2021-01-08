@@ -21,17 +21,25 @@
 #include "llvm/Support/raw_ostream.h"
 using namespace llvm;
 
-#define DEBUG_TYPE "KVX-isel"
+#define DEBUG_TYPE "kvx-isel"
 
 namespace {
 
 class KVXDAGToDAGISel final : public SelectionDAGISel {
+
+  const KVXSubtarget *Subtarget;
+
 public:
   explicit KVXDAGToDAGISel(KVXTargetMachine &TargetMachine)
-      : SelectionDAGISel(TargetMachine) {}
+      : SelectionDAGISel(TargetMachine), Subtarget(nullptr) {}
 
   StringRef getPassName() const override {
     return "KVX DAG->DAG Pattern Instruction Selection";
+  }
+
+  bool runOnMachineFunction(MachineFunction &MF) override {
+    Subtarget = &MF.getSubtarget<KVXSubtarget>();
+    return SelectionDAGISel::runOnMachineFunction(MF);
   }
 
   void Select(SDNode *Node) override;

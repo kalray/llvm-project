@@ -8,8 +8,8 @@ define i32* @f(i32 %s, i32 %c){
 ; CHECK-LABEL: f:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = x
-; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    make $r3 = 126
+; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    make $r2 = 0xfffffc18
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r0 = 0[$r0]
@@ -49,8 +49,8 @@ define i32* @g(i32 %s, i32 %c){
 ; CHECK-LABEL: g:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = x
-; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    make $r3 = 125
+; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    make $r2 = 0xfffffc18
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r0 = 0[$r0]

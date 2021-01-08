@@ -43,12 +43,12 @@ define <2 x i16> @ctpopv2i16(<2 x i16> %a) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfhq $r0 = $r1, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r1 = $r0, 0x33333333
-; CHECK-NEXT:    srlhqs $r0 = $r0, 2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srlhqs $r1 = $r0, 2
 ; CHECK-NEXT:    andw $r0 = $r0, 0x33333333
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addhq $r0 = $r1, $r0
+; CHECK-NEXT:    andw $r1 = $r1, 0x33333333
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addhq $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srlhqs $r1 = $r0, 4
 ; CHECK-NEXT:    ;;

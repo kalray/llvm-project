@@ -204,12 +204,12 @@ define float @asm_clobber_multiple_quad(float %a, <2 x i64> %b, <4 x i64> %c) {
 ; CHECK-NEXT:    .cfi_def_cfa_offset 64
 ; CHECK-NEXT:    sd 0[$r12] = $r16
 ; CHECK-NEXT:    copyd $r11 = $r6
-; CHECK-NEXT:    copyd $r7 = $r2
 ; CHECK-NEXT:    copyd $r10 = $r5
+; CHECK-NEXT:    copyd $r7 = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 67, -64
-; CHECK-NEXT:    sw 8[$r12] = $r0
 ; CHECK-NEXT:    copyd $r9 = $r4
+; CHECK-NEXT:    sw 8[$r12] = $r0
 ; CHECK-NEXT:    copyd $r6 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 16[$r12] = $r6r7
@@ -356,10 +356,11 @@ define i64 @local_regs(i32 %a, i64 %b, i64 %c, i64 %d, i64 %e, i64 %f, i64 %g) {
 ; CHECK-LABEL: local_regs:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -128
-; CHECK-NEXT:    copyd $r7 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 128
 ; CHECK-NEXT:    sw 0[$r12] = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 8[$r12] = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 16[$r12] = $r2
 ; CHECK-NEXT:    ;;
@@ -371,6 +372,8 @@ define i64 @local_regs(i32 %a, i64 %b, i64 %c, i64 %d, i64 %e, i64 %f, i64 %g) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 48[$r12] = $r6
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 56[$r12] = $r1
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 64[$r12] = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 72[$r12] = $r3
@@ -380,21 +383,17 @@ define i64 @local_regs(i32 %a, i64 %b, i64 %c, i64 %d, i64 %e, i64 %f, i64 %g) {
 ; CHECK-NEXT:    sd 88[$r12] = $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 96[$r12] = $r6
-; CHECK-NEXT:    zxwd $r8 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 8[$r12] = $r7
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 56[$r12] = $r7
+; CHECK-NEXT:    zxwd $r7 = $r0
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    copyd $r1 = $r2
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r2 = $r3
 ; CHECK-NEXT:    copyd $r3 = $r4
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r4 = $r5
 ; CHECK-NEXT:    copyd $r5 = $r6
-; CHECK-NEXT:    copyd $r0 = $r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
-; CHECK-NEXT:    scall $r8
+; CHECK-NEXT:    scall $r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP

@@ -55,33 +55,30 @@ define <4 x half> @f_Select32PAT(<4 x half> %x, <4 x half> %y){
 ; CHECK-NEXT:    extfz $r2 = $r0, 15, 0
 ; CHECK-NEXT:    extfz $r3 = $r1, 15, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompnhq.olt $r4 = $r2, $r3
+; CHECK-NEXT:    extfz $r4 = $r0, 31, 16
+; CHECK-NEXT:    extfz $r5 = $r1, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r4 ? $r2 = $r3
-; CHECK-NEXT:    extfz $r3 = $r0, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r4 = $r1, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompnhq.olt $r5 = $r3, $r4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r5 ? $r3 = $r4
-; CHECK-NEXT:    extfz $r4 = $r0, 47, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r5 = $r1, 47, 32
+; CHECK-NEXT:    extfz $r6 = $r0, 47, 32
+; CHECK-NEXT:    extfz $r7 = $r1, 47, 32
 ; CHECK-NEXT:    srld $r0 = $r0, 48
 ; CHECK-NEXT:    srld $r1 = $r1, 48
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompnhq.olt $r6 = $r4, $r5
-; CHECK-NEXT:    insf $r2 = $r3, 31, 16
+; CHECK-NEXT:    fcompnhq.olt $r8 = $r2, $r3
+; CHECK-NEXT:    fcompnhq.olt $r9 = $r4, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r6 ? $r4 = $r5
-; CHECK-NEXT:    fcompnhq.olt $r5 = $r0, $r1
+; CHECK-NEXT:    fcompnhq.olt $r10 = $r6, $r7
+; CHECK-NEXT:    fcompnhq.olt $r11 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r5 ? $r0 = $r1
+; CHECK-NEXT:    cmoved.wnez $r8 ? $r2 = $r3
+; CHECK-NEXT:    cmoved.wnez $r9 ? $r4 = $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r4 = $r0, 31, 16
+; CHECK-NEXT:    cmoved.wnez $r10 ? $r6 = $r7
+; CHECK-NEXT:    cmoved.wnez $r11 ? $r0 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r4, 63, 32
+; CHECK-NEXT:    insf $r2 = $r4, 31, 16
+; CHECK-NEXT:    insf $r6 = $r0, 31, 16
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r2 = $r6, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret

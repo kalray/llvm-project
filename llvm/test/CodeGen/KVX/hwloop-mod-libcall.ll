@@ -49,8 +49,8 @@ define i32 @ia(i32 %x, i32 %y)  {
 ; CHECK-NEXT:    sxwd $r0 = $r19
 ; CHECK-NEXT:    call __moddi3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    compw.ne $r1 = $r18, $r19
+; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    addd $r21 = $r21, 4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.odd $r1 ? .LBB0_2
