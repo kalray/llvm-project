@@ -65,24 +65,23 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   addRegisterClass(MVT::i32, &KVX::SingleRegRegClass);
   addRegisterClass(MVT::i64, &KVX::SingleRegRegClass);
   addRegisterClass(MVT::v2i8, &KVX::SingleRegRegClass);
-  addRegisterClass(MVT::v4i8, &KVX::SingleRegRegClass);
-  addRegisterClass(MVT::v8i8, &KVX::SingleRegRegClass);
   addRegisterClass(MVT::v2i16, &KVX::SingleRegRegClass);
   addRegisterClass(MVT::v2i32, &KVX::SingleRegRegClass);
-  addRegisterClass(MVT::v4i16, &KVX::SingleRegRegClass);
-  addRegisterClass(MVT::v2i16, &KVX::SingleRegRegClass);
   addRegisterClass(MVT::v2i64, &KVX::PairedRegRegClass);
+  addRegisterClass(MVT::v4i8, &KVX::SingleRegRegClass);
+  addRegisterClass(MVT::v4i16, &KVX::SingleRegRegClass);
   addRegisterClass(MVT::v4i32, &KVX::PairedRegRegClass);
   addRegisterClass(MVT::v4i64, &KVX::QuadRegRegClass);
+  addRegisterClass(MVT::v8i8, &KVX::SingleRegRegClass);
 
   addRegisterClass(MVT::f16, &KVX::SingleRegRegClass);
   addRegisterClass(MVT::f32, &KVX::SingleRegRegClass);
   addRegisterClass(MVT::f64, &KVX::SingleRegRegClass);
-  addRegisterClass(MVT::v4f16, &KVX::SingleRegRegClass);
   addRegisterClass(MVT::v2f16, &KVX::SingleRegRegClass);
   addRegisterClass(MVT::v2f32, &KVX::SingleRegRegClass);
-  addRegisterClass(MVT::v4f32, &KVX::PairedRegRegClass);
   addRegisterClass(MVT::v2f64, &KVX::PairedRegRegClass);
+  addRegisterClass(MVT::v4f16, &KVX::SingleRegRegClass);
+  addRegisterClass(MVT::v4f32, &KVX::PairedRegRegClass);
   addRegisterClass(MVT::v4f64, &KVX::QuadRegRegClass);
   initializeTCARegisters();
 
@@ -166,7 +165,9 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
         MVT::v4i16, MVT::v4f32, MVT::v4i32, MVT::v4i64, MVT::v8i8}) {
     setOperationAction(ISD::UDIV, VT, Expand);
     setOperationAction(ISD::SDIV, VT, Expand);
+    // TODO: vector_shuffle can, in many cases, be done with sbmm8
     setOperationAction(ISD::VECTOR_SHUFFLE, VT, Expand);
+    // TODO: add tests for why we need to expand SCALAR_TO_VECTOR
     setOperationAction(ISD::SCALAR_TO_VECTOR, VT, Expand);
 
     setOperationAction(ISD::SDIVREM, VT, Expand);
