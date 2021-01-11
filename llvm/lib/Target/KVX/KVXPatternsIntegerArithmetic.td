@@ -3,7 +3,7 @@
 //===----------------------------------------------------------------------===//
 
 // TODO: implement patterns or intrinsics for the following instructions:
-// ADDCHCP ADDCWC ANDNW COMPUWD COMPWD
+// ADDCHCP ADDCWC COMPUWD COMPWD
 // LNANDHQ LNANDWP LNORHQ LORHQ LORWP ROLWPS RORWPS SBFCHCP SBFCWC SBFUWD SBFWD
 // SBFX16HQ SBFX16WP SBFX2HQ SBFX2WP SBFX4HQ SBFX4WP SBFX8HQ SBFX8WP SXLBHQ
 // SXLHWP SXMBHQ SXMHWP
@@ -219,6 +219,10 @@ foreach vtype = [ v8i8, v4i16, v2i32 ] in {
     def : Pat<(and (vnot vtype:$rs1), (vtype (is_imm_vec:$IMM))), (ANDNDri64 SingleReg:$rs1, (build_imm_vec $IMM))>;
     def : Pat<(and (vnot vtype:$rs1), vtype:$rs2), (ANDNDrr SingleReg:$rs1, SingleReg:$rs2)>;
 }
+
+// ANDNW
+def : Pat<(i32(and (not i32:$rs1), i32:$rs2)), (ANDNWrr SingleReg:$rs1, SingleReg:$rs2)>;
+def : Pat<(i32(and (not i32:$r), Signed37W:$i)), (ANDNWri37 SingleReg:$r, imm:$i)>;
 
 // LANDW
 defm : ZEFPat<(and (i32 (setne i32:$v1, (i32 0))), (i32 (setne i32:$v2, (i32 0)))),
