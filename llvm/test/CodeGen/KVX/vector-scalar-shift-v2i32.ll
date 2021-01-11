@@ -164,3 +164,101 @@ entry:
   ret <2 x i32> %shl
 }
 
+define <2 x i32> @rol_i32x2_ri(<2 x i32> %in) {
+; CHECK-LABEL: rol_i32x2_ri:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    rolwps $r0 = $r0, 23
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+    %left = shl <2 x i32> %in, <i32 23, i32 23>
+    %right = lshr <2 x i32> %in, <i32 9, i32 9>
+    %ror = or <2 x i32> %left, %right
+    ret <2 x i32> %ror
+}
+
+define <2 x i32> @rol_i32x2_rr(<2 x i32> %a, i32 %l) {
+; CHECK-LABEL: rol_i32x2_rr:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    rolwps $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %splat.splatinsert = insertelement <2 x i32> undef, i32 %l, i32 0
+  %splat.splat = shufflevector <2 x i32> %splat.splatinsert, <2 x i32> undef, <2 x i32> zeroinitializer
+  %shl = shl <2 x i32> %a, %splat.splat
+  %sub = sub nsw i32 32, %l
+  %splat.splatinsert1 = insertelement <2 x i32> undef, i32 %sub, i32 0
+  %splat.splat2 = shufflevector <2 x i32> %splat.splatinsert1, <2 x i32> undef, <2 x i32> zeroinitializer
+  %shr = lshr <2 x i32> %a, %splat.splat2
+  %or = or <2 x i32> %shr, %shl
+  ret <2 x i32> %or
+}
+
+define <2 x i32> @ror_i32x2_rr(<2 x i32> %a, i32 %r) {
+; CHECK-LABEL: ror_i32x2_rr:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    rorwps $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %splat.splatinsert = insertelement <2 x i32> undef, i32 %r, i32 0
+  %splat.splat = shufflevector <2 x i32> %splat.splatinsert, <2 x i32> undef, <2 x i32> zeroinitializer
+  %shr = lshr <2 x i32> %a, %splat.splat
+  %sub = sub nsw i32 32, %r
+  %splat.splatinsert1 = insertelement <2 x i32> undef, i32 %sub, i32 0
+  %splat.splat2 = shufflevector <2 x i32> %splat.splatinsert1, <2 x i32> undef, <2 x i32> zeroinitializer
+  %shl = shl <2 x i32> %a, %splat.splat2
+  %or = or <2 x i32> %shl, %shr
+  ret <2 x i32> %or
+}
+
+define <2 x i32> @not_rol_i32x2_ri(<2 x i32> %in) {
+; CHECK-LABEL: not_rol_i32x2_ri:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    rolw $r1 = $r0, 23
+; CHECK-NEXT:    rolwps $r0 = $r0, 13
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 31, 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+    %left = shl <2 x i32> %in, <i32 23, i32 13>
+    %right = lshr <2 x i32> %in, <i32 9, i32 19>
+    %ror = or <2 x i32> %left, %right
+    ret <2 x i32> %ror
+}
+
+define <2 x i32> @not_rol_i32x2_rr(<2 x i32> %in, <2 x i32> %l) {
+; CHECK-LABEL: not_rol_i32x2_rr:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    rolw $r2 = $r0, $r1
+; CHECK-NEXT:    extfz $r1 = $r1, 36, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    rolwps $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r2, 31, 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+    %r = sub <2 x i32> <i32 32, i32 32>, %l
+    %left = shl <2 x i32> %in, %l
+    %right = lshr <2 x i32> %in, %r
+    %ror = or <2 x i32> %left, %right
+    ret <2 x i32> %ror
+}
+
+define <2 x i32> @not_ror_i32x2_rr(<2 x i32> %in, <2 x i32> %r) {
+; CHECK-LABEL: not_ror_i32x2_rr:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    rorw $r2 = $r0, $r1
+; CHECK-NEXT:    extfz $r1 = $r1, 36, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    rorwps $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r2, 31, 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+    %l = sub <2 x i32> <i32 32, i32 32>, %r
+    %left = shl <2 x i32> %in, %l
+    %right = lshr <2 x i32> %in, %r
+    %ror = or <2 x i32> %left, %right
+    ret <2 x i32> %ror
+}

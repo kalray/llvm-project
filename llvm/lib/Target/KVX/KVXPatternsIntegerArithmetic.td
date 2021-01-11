@@ -378,7 +378,7 @@ def : Pat<(Op v4i16:$v, (v4i16 ( v3_splat (i32 imm:$i)))), (RI SingleReg:$v, (mo
 def : Pat<(Op v4i16:$v0, (v4i16 (v3_splat i32:$v1))), (RR SingleReg:$v0, SingleReg:$v1)>;
 
 def : Pat<(Op v2i16:$v, (v2i16 ( build_vector (i32 imm:$i0), (i32 imm:$i1)))),
-      (INSF(RI SingleReg:$v, (mod_16_imm_64 imm:$i1)), (RI SingleReg:$v, (mod_16_imm_64 imm:$i0)), 15, 0)>;
+      (INSF (RI SingleReg:$v, (mod_16_imm_64 imm:$i1)), (RI SingleReg:$v, (mod_16_imm_64 imm:$i0)), 15, 0)>;
 def : Pat<(Op v2i16:$v0, v2i16:$v1),
       (INSF(RR SingleReg:$v0, (EXTFZ SingleReg:$v1, 19, 16)), (RR SingleReg:$v0, SingleReg:$v1), 15, 0) >;
 
@@ -452,9 +452,20 @@ defm : WPShiftScalarOps<srl, SRLWPSri, SRLWPSrr, SRLWri, SRLWrr>;
 def : Pat<(rotl i32:$rs1, i64:$rs2), (ROLWrr SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(rotl i32:$rs, Unsigned6:$is), (ROLWri SingleReg:$rs, Unsigned6:$is)>;
 
+// ROLWP
+defm : WPShiftScalarOps<rotl, ROLWPSri, ROLWPSrr, ROLWri, ROLWrr>;
+// LLVM does not detect the rotation across build_vectors. We need to do it manually
+def : Pat<(v2i32(or (srl v2i32:$r0, (v2i32 (v2_splat (i32 (sub (i32 32), i32:$r1)))) ), (shl v2i32:$r0, (v2i32 (v2_splat i32:$r1))))),
+          (ROLWPSrr SingleReg:$r0, SingleReg:$r1)>;
+
 // RORW
 def : Pat<(rotr i32:$rs1, i64:$rs2), (RORWrr SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(rotr i32:$rs, Unsigned6:$is), (RORWri SingleReg:$rs, Unsigned6:$is)>;
+
+// RORWP
+defm : WPShiftScalarOps<rotr, RORWPSri, RORWPSrr, RORWri, RORWrr>;
+def : Pat<(v2i32(or (shl v2i32:$r0, (v2i32 (v2_splat (i32 (sub (i32 32), i32:$r1)))) ), (srl v2i32:$r0, (v2i32 (v2_splat i32:$r1))))),
+          (RORWPSrr SingleReg:$r0, SingleReg:$r1)>;
 
 // XORD
 def : Pat<(xor i64:$rs1, i64:$rs2), (XORDrr SingleReg:$rs1, SingleReg:$rs2)>;
