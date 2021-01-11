@@ -3,8 +3,8 @@
 //===----------------------------------------------------------------------===//
 
 // TODO: implement patterns or intrinsics for the following instructions:
-// ADDCHCP ADDCWC ADDUWD ADDWD ADDX16HQ ADDX16WP ADDX2HQ ADDX2WP ADDX4HQ ADDX4WP
-// ADDX8HQ ADDX8WP ANDND ANDNW COMPNHQ COMPNWP COMPUWD COMPWD LANDHQ LANDWP
+// ADDCHCP ADDCWC ADDX16HQ ADDX16WP ADDX2HQ ADDX2WP ADDX4HQ ADDX4WP
+// ADDX8HQ ADDX8WP ANDNW COMPUWD COMPWD
 // LNANDHQ LNANDWP LNORHQ LORHQ LORWP ROLWPS RORWPS SBFCHCP SBFCWC SBFUWD SBFWD
 // SBFX16HQ SBFX16WP SBFX2HQ SBFX2WP SBFX4HQ SBFX4WP SBFX8HQ SBFX8WP SXLBHQ
 // SXLHWP SXMBHQ SXMHWP
@@ -184,6 +184,24 @@ foreach vtype = [ v8i8, v4i16, v2i32 ] in {
 // LANDW
 defm : ZEFPat<(and (i32 (setne i32:$v1, (i32 0))), (i32 (setne i32:$v2, (i32 0)))),
       (LANDWrr SingleReg:$v1, SingleReg:$v2)>;
+
+// RI variants don't seem usuable, as they turn into vselects.
+multiclass VECADDXDPAT<ValueType ty, KVX_INSTRUCTION RR, SDNode SplatVal> {
+def : Pat<(ty(and (setne ty:$v0, immAllZerosV), (setne ty:$v1, immAllZerosV))),
+            (RR SingleReg:$v0, SingleReg:$v1)>;
+
+def : Pat<(ty(sra( shl
+                  ( and (setne ty:$v0, immAllZerosV), (setne ty:$v1, immAllZerosV)),
+            SplatVal),SplatVal)), (RR SingleReg:$v0, SingleReg:$v1)>;
+}
+
+// LANDHQ
+defm : VECADDXDPAT<v2i16, LANDHQrr, (v2i16 v2_splat_15)>;
+defm : VECADDXDPAT<v4i16, LANDHQrr, (v4i16 v4_splat_15)>;
+// // LANDWP
+defm : VECADDXDPAT<v2i32, LANDWPrr, (v2i32 v2_splat_31)>;
+
+
 
 // LNANDW
 defm : ZEFPat<(or (i32 (seteq i32:$v1, (i32 0))), (i32 (seteq i32:$v2, (i32 0)))),
@@ -499,10 +517,10 @@ defm MINUHQ : Word_RR_RIsplat_select_H<umin, MINUHQri, MINUHQrr>;
 // CMULGHXDT CMULGLXDT CMULGMXDT CMULXDT COPYQ CRCBELLW CRCBELMW CRCLELLW
 // CRCLELMW DOT2SUWD DOT2SUWDP DOT2UWD DOT2UWDP DOT2W DOT2WD DOT2WDP DOT2WZP
 // MADDDT MADDHQ MADDHWQ MADDSUDT MADDSUHWQ MADDSUWD MADDSUWDP MADDUDT
-// MADDUHWQ MADDUWD MADDUWD MADDUWDP MSBFDT MSBFHQ MSBFHWQ MSBFSUDT
-// MSBFSUHWQ MSBFSUWD MSBFUSWDP MSBFUDT MSBFUHWQ MSBFUWD MSBFUWDP MSBFUZDT 
+// MADDUHWQ MADDUWDP MSBFDT MSBFHQ MSBFHWQ MSBFSUDT
+// MSBFSUHWQ MSBFSUWD MSBFUSWDP MSBFUDT MSBFUHWQ MSBFUWD MSBFUWDP MSBFUZDT
 // MSBFWD MSBFWDP MSBFWP MULCWDC MULDT MULHWQ MULSUDT MULSUHWQ MULSUWD MULSUWDP
-// MULUDT MULUHWQ MULUWD MULUWDP MULWDC MULWDP
+// MULUDT MULUHWQ MULUWDP MULWDC MULWDP
 
 // MADDD
 def : Pat<(add i64:$a1, (mul i64:$a2, i64:$a3)), (MADDDrr SingleReg:$a1, SingleReg:$a2, SingleReg:$a3)>;
