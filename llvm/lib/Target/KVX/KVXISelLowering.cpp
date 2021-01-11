@@ -2461,3 +2461,61 @@ SDValue KVX_LOW::buildImmVector(llvm::SDNode &N, llvm::SelectionDAG &CurDag,
 
   return CurDag.getConstant(V, SDLoc(&N), OutVT, true);
 }
+
+bool KVX_LOW::isImmVecOfLeqNbits(llvm::SDNode *N, llvm::SelectionDAG *CurDag,
+                                 unsigned short B) {
+  const BuildVectorSDNode *BV = dyn_cast<BuildVectorSDNode>(N);
+  if (!BV)
+    return false;
+
+  if (!BV->isConstant())
+    return false;
+
+  for (unsigned I = 0, E = BV->getNumOperands(); I != E; ++I) {
+    uint64_t Val = (cast<ConstantSDNode>(BV->getOperand(I)))->getSExtValue();
+    if (!isUIntN(B, Val))
+      return false;
+  }
+  return true;
+}
+
+bool KVX_LOW::isKVXSplat32ImmVec(llvm::SDNode *N, llvm::SelectionDAG *CurDag,
+                                 bool SplatAt) {
+  const BuildVectorSDNode *BV = dyn_cast<BuildVectorSDNode>(N);
+  if (!BV)
+    return false;
+
+  if (!BV->isConstant())
+    return false;
+
+  auto VT = BV->getValueType(0);
+
+  if (VT.getSizeInBits() > 64 || VT.getVectorNumElements() < 2 ||
+      (VT.getSizeInBits() <= 32 && SplatAt))
+    return false;
+
+  if (VT.getSizeInBits() <= 32 && !SplatAt)
+    return true;
+
+  // From the start of 32 bits, check if the value is either
+  // zero, for non-splat, for equals to the first half.
+  // Undef is also accepted as a match in the second half.
+  auto ElmCheck = 32 / VT.getVectorElementType().getSizeInBits();
+  auto ElmEnd = BV->getNumOperands();
+  for (unsigned FirstHalf = 0; ElmCheck != ElmEnd; ++ElmCheck, ++FirstHalf) {
+    auto SecondHalf = BV->getOperand(ElmCheck);
+    if (SecondHalf.isUndef())
+      continue;
+
+    if (!SplatAt) {
+      if ((cast<ConstantSDNode>(SecondHalf))->isNullValue())
+        continue;
+      return false;
+    }
+
+    if (SecondHalf != BV->getOperand(FirstHalf))
+      return false;
+  }
+
+  return true;
+}
