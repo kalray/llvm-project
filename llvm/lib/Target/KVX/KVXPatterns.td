@@ -915,6 +915,77 @@ def is_imm_vec : PatLeaf<(build_vector), [{
   return cast<BuildVectorSDNode>(N)->isConstant();
 }], build_imm_vec>;
 
+// TODO: Discover if we can pass the bit-size as
+// argument and eliminate duplicates.
+def is_imm_vec_leq1bit : PatLeaf<(build_vector), [{
+  return KVX_LOW::isImmVecOfLeqNbits(N, CurDAG, 1);
+}], build_imm_vec>;
+
+def is_imm_vec_leq2bits : PatLeaf<(build_vector), [{
+   return KVX_LOW::isImmVecOfLeqNbits(N, CurDAG, 2);
+}], build_imm_vec>;
+
+def is_imm_vec_leq3bits : PatLeaf<(build_vector), [{
+   return KVX_LOW::isImmVecOfLeqNbits(N, CurDAG, 3);
+}], build_imm_vec>;
+
+def is_imm_vec_leq4bits : PatLeaf<(build_vector), [{
+   return KVX_LOW::isImmVecOfLeqNbits(N, CurDAG, 4);
+}], build_imm_vec>;
+
+
+// TODO: Discover if we can pass the splat32_[at] as
+// argument and eliminate duplicates.
+def is_imm_vec_kvx_splat32_ : PatLeaf<(build_vector), [{
+   return KVX_LOW::isKVXSplat32ImmVec(N, CurDAG, false);
+}], build_imm_vec>;
+
+def is_imm_vec_kvx_splat32_at : PatLeaf<(build_vector), [{
+   return KVX_LOW::isKVXSplat32ImmVec(N, CurDAG, true);
+}], build_imm_vec>;
+
+// TODO: Discover if we can pass the bit-size and the
+//  splat32_[at] as arguments and eliminate duplicates.
+def imm_vec_1bit_splat_ :  PatLeaf<(build_vector), [{
+  return KVX_LOW::isImmVecOfLeqNbits(N, CurDAG, 1) &&
+         KVX_LOW::isKVXSplat32ImmVec(N, CurDAG, false);
+}], build_imm_vec>;
+
+def imm_vec_1bit_splat_at :  PatLeaf<(build_vector), [{
+  return KVX_LOW::isImmVecOfLeqNbits(N, CurDAG, 1) &&
+         KVX_LOW::isKVXSplat32ImmVec(N, CurDAG, true);
+}], build_imm_vec>;
+
+def imm_vec_2bit_splat_ :  PatLeaf<(build_vector), [{
+  return KVX_LOW::isImmVecOfLeqNbits(N, CurDAG, 2) &&
+         KVX_LOW::isKVXSplat32ImmVec(N, CurDAG, false);
+}], build_imm_vec>;
+
+def imm_vec_2bit_splat_at :  PatLeaf<(build_vector), [{
+  return KVX_LOW::isImmVecOfLeqNbits(N, CurDAG, 2) &&
+         KVX_LOW::isKVXSplat32ImmVec(N, CurDAG, true);
+}], build_imm_vec>;
+
+def imm_vec_3bit_splat_ :  PatLeaf<(build_vector), [{
+  return KVX_LOW::isImmVecOfLeqNbits(N, CurDAG, 3) &&
+         KVX_LOW::isKVXSplat32ImmVec(N, CurDAG, false);
+}], build_imm_vec>;
+
+def imm_vec_3bit_splat_at :  PatLeaf<(build_vector), [{
+  return KVX_LOW::isImmVecOfLeqNbits(N, CurDAG, 3) &&
+         KVX_LOW::isKVXSplat32ImmVec(N, CurDAG, true);
+}], build_imm_vec>;
+
+def imm_vec_4bit_splat_ :  PatLeaf<(build_vector), [{
+  return KVX_LOW::isImmVecOfLeqNbits(N, CurDAG, 4) &&
+         KVX_LOW::isKVXSplat32ImmVec(N, CurDAG, false);
+}], build_imm_vec>;
+
+def imm_vec_4bit_splat_at :  PatLeaf<(build_vector), [{
+  return KVX_LOW::isImmVecOfLeqNbits(N, CurDAG, 4) &&
+         KVX_LOW::isKVXSplat32ImmVec(N, CurDAG, true);
+}], build_imm_vec>;
+
 // v2i8
 def : Pat<(v2i8 (is_imm_vec:$IMM)), (MAKEi16 (build_imm_vec $IMM))>;
 def : Pat<(v2i8 (build_vector i32:$v0, i32:$v1)), (INSF SingleReg:$v0, SingleReg:$v1, 15, 8)>;
