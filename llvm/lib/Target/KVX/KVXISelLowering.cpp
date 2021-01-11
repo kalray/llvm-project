@@ -208,6 +208,8 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
                   MVT::v2f32, MVT::v4f32, MVT::v2f64, MVT::v4f64, MVT::v4i64}) {
     setOperationAction(ISD::INSERT_VECTOR_ELT, VT, Custom);
     setOperationAction(ISD::EXTRACT_VECTOR_ELT, VT, Custom);
+    // Fixme: VSELECT for v2[fi]16, v4[if]16 and v2[fi]32 can be implemented
+    // using cmove or (OR (AND (COMP, V0)), (ANDN (COMP, V1)))
     setOperationAction(ISD::VSELECT, VT, Expand);
     setOperationAction(ISD::CONCAT_VECTORS, VT, Custom);
   }
