@@ -3,8 +3,7 @@
 //===----------------------------------------------------------------------===//
 
 // TODO: implement patterns or intrinsics for the following instructions:
-// ADDCHCP ADDCWC ADDX16HQ ADDX16WP ADDX2HQ ADDX2WP ADDX4HQ ADDX4WP
-// ADDX8HQ ADDX8WP ANDNW COMPUWD COMPWD
+// ADDCHCP ADDCWC ANDNW COMPUWD COMPWD
 // LNANDHQ LNANDWP LNORHQ LORHQ LORWP ROLWPS RORWPS SBFCHCP SBFCWC SBFUWD SBFWD
 // SBFX16HQ SBFX16WP SBFX2HQ SBFX2WP SBFX4HQ SBFX4WP SBFX8HQ SBFX8WP SXLBHQ
 // SXLHWP SXMBHQ SXMHWP
@@ -125,6 +124,46 @@ defm : SBFXWDPAT<(i64 3), SBFX8WDrr, SBFX8WDri>;
 defm : SBFXWDPAT<(i64 2), SBFX4WDrr, SBFX4WDri>;
 defm : SBFXWDPAT<(i64 1), SBFX2WDrr, SBFX2WDri>;
 
+multiclass v2i16_ADDXPAT<SDNode sc, KVX_INSTRUCTION RR, KVX_INSTRUCTION RI, PatLeaf VC> {
+def : Pat<(v2i16(add (shl v2i16:$v, (v2i16(v2_splat sc))), (v2i16(is_imm_vec:$IMM)))),
+          (RI $v, (build_imm_vec $IMM), splat32_)>;
+def : Pat<(v2i16(or (shl v2i16:$v, (v2i16(v2_splat sc))), (v2i16(VC:$IMM)))),
+          (RI $v, (build_imm_vec $IMM), splat32_)>;
+def : Pat<(v2i16(add v2i16:$v0, (shl v2i16:$v1, (v2i16(v2_splat sc))))), (RR SingleReg:$v1, SingleReg:$v0)>;
+def : Pat<(v2i16(or (VC:$IMM), (shl v2i16:$v, (v2i16(v2_splat sc))))), (RR SingleReg:$IMM, SingleReg:$v)>;
+}
+
+defm : v2i16_ADDXPAT<(i32 1), ADDX2HQrr,  ADDX2HQri,  is_imm_vec_leq1bit>;
+defm : v2i16_ADDXPAT<(i32 2), ADDX4HQrr,  ADDX4HQri,  is_imm_vec_leq2bits>;
+defm : v2i16_ADDXPAT<(i32 3), ADDX8HQrr,  ADDX8HQri,  is_imm_vec_leq3bits>;
+defm : v2i16_ADDXPAT<(i32 4), ADDX16HQrr, ADDX16HQri, is_imm_vec_leq4bits>;
+
+multiclass vec_ADDXPAT<ValueType vt, SDNode sc, KVX_INSTRUCTION RR, KVX_INSTRUCTION RI, PatFrag v_splat, PatLeaf VC_, PatLeaf VC_at, PatLeaf VC_rr> {
+def : Pat<(vt(add (shl vt:$v, (vt(v_splat sc))), (vt(is_imm_vec_kvx_splat32_:$IMM)))),
+          (RI $v, (build_imm_vec $IMM), splat32_)>;
+def : Pat<(vt(or (shl vt:$v, (vt(v_splat sc))), (vt(VC_:$IMM)))),
+          (RI $v, (build_imm_vec $IMM), splat32_)>;
+def : Pat<(vt(add (shl vt:$v, (vt(v_splat sc))), (vt(is_imm_vec_kvx_splat32_at:$IMM)))),
+          (RI $v, (build_imm_vec $IMM), splat32_at)>;
+def : Pat<(vt(or (shl vt:$v, (vt(v_splat sc))), (vt(VC_at:$IMM)))),
+          (RI $v, (build_imm_vec $IMM), splat32_at)>;
+
+def : Pat<(vt(add vt:$v0, (shl vt:$v1, (vt(v_splat sc))))), (RR SingleReg:$v1, SingleReg:$v0)>;
+def : Pat<(vt(or (VC_rr:$IMM), (shl vt:$v, (vt(v_splat sc))))), (RR $IMM, SingleReg:$v)>;
+
+}
+
+defm : vec_ADDXPAT<v4i16, (i32 1), ADDX2HQrr,  ADDX2HQri,  v4_splat, imm_vec_1bit_splat_, imm_vec_1bit_splat_at, is_imm_vec_leq1bit>;
+defm : vec_ADDXPAT<v4i16, (i32 2), ADDX4HQrr,  ADDX4HQri,  v4_splat, imm_vec_2bit_splat_, imm_vec_2bit_splat_at, is_imm_vec_leq2bits>;
+defm : vec_ADDXPAT<v4i16, (i32 3), ADDX8HQrr,  ADDX8HQri,  v4_splat, imm_vec_3bit_splat_, imm_vec_3bit_splat_at, is_imm_vec_leq3bits>;
+defm : vec_ADDXPAT<v4i16, (i32 4), ADDX16HQrr, ADDX16HQri, v4_splat, imm_vec_4bit_splat_, imm_vec_4bit_splat_at, is_imm_vec_leq4bits>;
+
+defm : vec_ADDXPAT<v2i32, (i32 1), ADDX2WPrr,  ADDX2WPri,  v2_splat, imm_vec_1bit_splat_, imm_vec_1bit_splat_at, is_imm_vec_leq1bit>;
+defm : vec_ADDXPAT<v2i32, (i32 2), ADDX4WPrr,  ADDX4WPri,  v2_splat, imm_vec_2bit_splat_, imm_vec_2bit_splat_at, is_imm_vec_leq2bits>;
+defm : vec_ADDXPAT<v2i32, (i32 3), ADDX8WPrr,  ADDX8WPri,  v2_splat, imm_vec_3bit_splat_, imm_vec_3bit_splat_at, is_imm_vec_leq3bits>;
+defm : vec_ADDXPAT<v2i32, (i32 4), ADDX16WPrr, ADDX16WPri, v2_splat, imm_vec_4bit_splat_, imm_vec_4bit_splat_at, is_imm_vec_leq4bits>;
+
+
 // ADDW
 defm : ZEFPat<(add i32:$rs1, i32:$rs2), (ADDWrr SingleReg:$rs1, SingleReg:$rs2)>;
 defm : ZEFPat<(add i32:$rs1, Signed10W:$rs2), (ADDWri10 SingleReg:$rs1, Signed10W:$rs2)>;
@@ -137,9 +176,9 @@ def : Pat<(v2i16(saddsat v2i16:$v0, (is_imm_vec:$IMM))),
           (ADDSHQri SingleReg:$v0, (build_imm_vec $IMM), splat32_)>;
 def : Pat<(v4i16(saddsat v4i16:$v0, v4i16:$v1)),
            (ADDSHQrr SingleReg:$v0, SingleReg:$v1)>;
-def : Pat<(v4i16(saddsat v4i16:$v0, (v4i16(build_vector:$IMM (i32 imm), (i32 imm), (i32 0), (i32 0))) ) ),
+def : Pat<(v4i16(saddsat v4i16:$v0, (v4i16(is_imm_vec_kvx_splat32_:$IMM)) ) ),
            (ADDSHQri SingleReg:$v0, (i32(trunc_imm_32 (i32(build_imm_vec $IMM)))), splat32_)>;
-def : Pat<(v4i16(saddsat v4i16:$v0, (v4i16(build_vector:$IMM (i32 imm:$i0), (i32 imm:$i1), (i32 imm:$i0), (i32 imm:$i1))) ) ),
+def : Pat<(v4i16(saddsat v4i16:$v0, (v4i16(is_imm_vec_kvx_splat32_at:$IMM)) ) ),
            (ADDSHQri SingleReg:$v0, (i32(trunc_imm_32 (i32(build_imm_vec $IMM)))), splat32_at)>;
 
 def : Pat<(i32(saddsat i32:$v, Wrapped32:$i)), (ADDSWri SingleReg:$v, Wrapped32:$i)>;
@@ -186,7 +225,7 @@ defm : ZEFPat<(and (i32 (setne i32:$v1, (i32 0))), (i32 (setne i32:$v2, (i32 0))
       (LANDWrr SingleReg:$v1, SingleReg:$v2)>;
 
 // RI variants don't seem usuable, as they turn into vselects.
-multiclass VECADDXDPAT<ValueType ty, KVX_INSTRUCTION RR, SDNode SplatVal> {
+multiclass VECLANDPAT<ValueType ty, KVX_INSTRUCTION RR, SDNode SplatVal> {
 def : Pat<(ty(and (setne ty:$v0, immAllZerosV), (setne ty:$v1, immAllZerosV))),
             (RR SingleReg:$v0, SingleReg:$v1)>;
 
@@ -196,10 +235,10 @@ def : Pat<(ty(sra( shl
 }
 
 // LANDHQ
-defm : VECADDXDPAT<v2i16, LANDHQrr, (v2i16 v2_splat_15)>;
-defm : VECADDXDPAT<v4i16, LANDHQrr, (v4i16 v4_splat_15)>;
+defm : VECLANDPAT<v2i16, LANDHQrr, (v2i16 v2_splat_15)>;
+defm : VECLANDPAT<v4i16, LANDHQrr, (v4i16 v4_splat_15)>;
 // // LANDWP
-defm : VECADDXDPAT<v2i32, LANDWPrr, (v2i32 v2_splat_31)>;
+defm : VECLANDPAT<v2i32, LANDWPrr, (v2i32 v2_splat_31)>;
 
 
 
@@ -495,13 +534,10 @@ multiclass Word_RR_RIsplat_select_H <SDNode irnode, SDNode rinode, SDNode rrnode
   //v2i16
   def : Pat<(irnode v2i16:$v1, (v2i16 (is_imm_vec:$IMM))), (rinode SingleReg:$v1, (build_imm_vec $IMM), splat32_)>;
   def : Pat<(irnode v2i16:$v1, v2i16:$v2), (rrnode SingleReg:$v1, SingleReg:$v2)>;
-  //v4i16
-  def : Pat<(irnode v4i16:$v1, (v4i16 (build_vector:$IMM (i32 imm), (i32 imm), (i32 0), (i32 0)))), (rinode SingleReg:$v1, (build_imm_vec $IMM), splat32_)>;
-  def : Pat<(irnode v4i16:$v1, (v4i16 (build_vector:$IMM (i32 imm:$i0), (i32 imm:$i1), (i32 imm:$i0), (i32 imm:$i1)))), (rinode SingleReg:$v1, (build_imm_vec $IMM), splat32_at)>;
+  //v4i16 & v3i16
+  def : Pat<(irnode v4i16:$v1, (v4i16 (is_imm_vec_kvx_splat32_:$IMM))), (rinode SingleReg:$v1, (build_imm_vec $IMM), splat32_)>;
+  def : Pat<(irnode v4i16:$v1, (v4i16 (is_imm_vec_kvx_splat32_at:$IMM))), (rinode SingleReg:$v1, (build_imm_vec $IMM), splat32_at)>;
   def : Pat<(irnode v4i16:$v1, v4i16:$v2), (rrnode SingleReg:$v1, SingleReg:$v2)>;
-  // v3i16 as a v4i16
-  def : Pat<(irnode v4i16:$v1, (v4i16 (build_vector:$IMM (i32 imm), (i32 imm), (i32 0), (i32 undef)))), (rinode SingleReg:$v1, (build_imm_vec $IMM), splat32_)>;
-  def : Pat<(irnode v4i16:$v1, (v4i16 (build_vector:$IMM (i32 imm:$i0), (i32 imm), (i32 imm:$i0), (i32 undef)))), (rinode SingleReg:$v1, (build_imm_vec $IMM), splat32_at)>;
 }
 
 defm MAXHQ : Word_RR_RIsplat_select_H<smax, MAXHQri, MAXHQrr>;
