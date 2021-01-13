@@ -786,3 +786,377 @@ entry:
   %r = sext <4 x i1> %cmp to <4 x i16>
   ret <4 x i16> %r
 }
+
+define i1 @set_eq_i64_rr_i32ext_rv(i64 %a, i32 %b){
+; CHECK-LABEL: set_eq_i64_rr_i32ext_rv:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    compwd.eq $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %b1 = sext i32 %b to i64
+  %cmp = icmp eq i64 %a, %b1
+  ret i1 %cmp
+}
+
+define i1 @set_eq_i64_rr_i32ext(i64 %a, i32 %b){
+; CHECK-LABEL: set_eq_i64_rr_i32ext:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    compwd.eq $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %b1 = sext i32 %b to i64
+  %cmp = icmp eq i64 %b1, %a
+  ret i1 %cmp
+}
+
+define i1 @set_eq_i64_ri_i32ext_rv(i32 %a){
+; CHECK-LABEL: set_eq_i64_ri_i32ext_rv:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    compw.eq $r0 = $r0, 7
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %a1 = sext i32 %a to i64
+  %cmp = icmp eq i64 %a1, 7
+  ret i1 %cmp
+}
+
+define i1 @set_ne_i64_rr_i32ext_rv(i64 %a, i32 %b){
+; CHECK-LABEL: set_ne_i64_rr_i32ext_rv:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    compwd.ne $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %b1 = sext i32 %b to i64
+  %cmp = icmp ne i64 %a, %b1
+  ret i1 %cmp
+}
+
+define i1 @set_ne_i64_rr_i32ext(i64 %a, i32 %b){
+; CHECK-LABEL: set_ne_i64_rr_i32ext:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    compwd.ne $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %b1 = sext i32 %b to i64
+  %cmp = icmp ne i64 %b1, %a
+  ret i1 %cmp
+}
+
+define i1 @set_ne_i64_ri_i32ext_rv(i32 %a){
+; CHECK-LABEL: set_ne_i64_ri_i32ext_rv:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    compw.ne $r0 = $r0, 7
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %a1 = sext i32 %a to i64
+  %cmp = icmp ne i64 %a1, 7
+  ret i1 %cmp
+}
+
+define i1 @set_ugt_i64_rr_i32ext_rv(i64 %a, i32 %b){
+; CHECK-LABEL: set_ugt_i64_rr_i32ext_rv:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    compwd.leu $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %b1 = sext i32 %b to i64
+  %cmp = icmp ugt i64 %a, %b1
+  ret i1 %cmp
+}
+
+define i1 @set_ugt_i64_rr_i32ext(i64 %a, i32 %b){
+; CHECK-LABEL: set_ugt_i64_rr_i32ext:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    compwd.gtu $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %b1 = sext i32 %b to i64
+  %cmp = icmp ugt i64 %b1, %a
+  ret i1 %cmp
+}
+
+define i1 @set_ugt_i64_ri_i32ext_rv(i32 %a){
+; CHECK-LABEL: set_ugt_i64_ri_i32ext_rv:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    compw.gtu $r0 = $r0, 7
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %a1 = sext i32 %a to i64
+  %cmp = icmp ugt i64 %a1, 7
+  ret i1 %cmp
+}
+
+define i1 @set_uge_i64_rr_i32ext_rv(i64 %a, i32 %b){
+; CHECK-LABEL: set_uge_i64_rr_i32ext_rv:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    compwd.ltu $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %b1 = sext i32 %b to i64
+  %cmp = icmp uge i64 %a, %b1
+  ret i1 %cmp
+}
+
+define i1 @set_uge_i64_rr_i32ext(i64 %a, i32 %b){
+; CHECK-LABEL: set_uge_i64_rr_i32ext:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    compwd.geu $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %b1 = sext i32 %b to i64
+  %cmp = icmp uge i64 %b1, %a
+  ret i1 %cmp
+}
+
+define i1 @set_uge_i64_ri_i32ext_rv(i32 %a){
+; CHECK-LABEL: set_uge_i64_ri_i32ext_rv:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    compw.gtu $r0 = $r0, 6
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %a1 = sext i32 %a to i64
+  %cmp = icmp uge i64 %a1, 7
+  ret i1 %cmp
+}
+
+define i1 @set_ult_i64_rr_i32ext_rv(i64 %a, i32 %b){
+; CHECK-LABEL: set_ult_i64_rr_i32ext_rv:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    compwd.geu $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %b1 = sext i32 %b to i64
+  %cmp = icmp ult i64 %a, %b1
+  ret i1 %cmp
+}
+
+define i1 @set_ult_i64_rr_i32ext(i64 %a, i32 %b){
+; CHECK-LABEL: set_ult_i64_rr_i32ext:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    compwd.ltu $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %b1 = sext i32 %b to i64
+  %cmp = icmp ult i64 %b1, %a
+  ret i1 %cmp
+}
+
+define i1 @set_ult_i64_ri_i32ext_rv(i32 %a){
+; CHECK-LABEL: set_ult_i64_ri_i32ext_rv:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    compw.ltu $r0 = $r0, 7
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %a1 = sext i32 %a to i64
+  %cmp = icmp ult i64 %a1, 7
+  ret i1 %cmp
+}
+
+define i1 @set_ule_i64_rr_i32ext_rv(i64 %a, i32 %b){
+; CHECK-LABEL: set_ule_i64_rr_i32ext_rv:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    compwd.gtu $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %b1 = sext i32 %b to i64
+  %cmp = icmp ule i64 %a, %b1
+  ret i1 %cmp
+}
+
+define i1 @set_ule_i64_rr_i32ext(i64 %a, i32 %b){
+; CHECK-LABEL: set_ule_i64_rr_i32ext:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    compwd.leu $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %b1 = sext i32 %b to i64
+  %cmp = icmp ule i64 %b1, %a
+  ret i1 %cmp
+}
+
+define i1 @set_ule_i64_ri_i32ext_rv(i32 %a){
+; CHECK-LABEL: set_ule_i64_ri_i32ext_rv:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    compw.ltu $r0 = $r0, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %a1 = sext i32 %a to i64
+  %cmp = icmp ule i64 %a1, 7
+  ret i1 %cmp
+}
+
+define i1 @set_sgt_i64_rr_i32ext_rv(i64 %a, i32 %b){
+; CHECK-LABEL: set_sgt_i64_rr_i32ext_rv:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    compwd.le $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %b1 = sext i32 %b to i64
+  %cmp = icmp sgt i64 %a, %b1
+  ret i1 %cmp
+}
+
+define i1 @set_sgt_i64_rr_i32ext(i64 %a, i32 %b){
+; CHECK-LABEL: set_sgt_i64_rr_i32ext:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    compwd.gt $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %b1 = sext i32 %b to i64
+  %cmp = icmp sgt i64 %b1, %a
+  ret i1 %cmp
+}
+
+define i1 @set_sgt_i64_ri_i32ext_rv(i32 %a){
+; CHECK-LABEL: set_sgt_i64_ri_i32ext_rv:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    compw.gt $r0 = $r0, 7
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %a1 = sext i32 %a to i64
+  %cmp = icmp sgt i64 %a1, 7
+  ret i1 %cmp
+}
+
+define i1 @set_sge_i64_rr_i32ext_rv(i64 %a, i32 %b){
+; CHECK-LABEL: set_sge_i64_rr_i32ext_rv:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    compwd.lt $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %b1 = sext i32 %b to i64
+  %cmp = icmp sge i64 %a, %b1
+  ret i1 %cmp
+}
+
+define i1 @set_sge_i64_rr_i32ext(i64 %a, i32 %b){
+; CHECK-LABEL: set_sge_i64_rr_i32ext:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    compwd.ge $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %b1 = sext i32 %b to i64
+  %cmp = icmp sge i64 %b1, %a
+  ret i1 %cmp
+}
+
+define i1 @set_sge_i64_ri_i32ext_rv(i32 %a){
+; CHECK-LABEL: set_sge_i64_ri_i32ext_rv:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    compw.gt $r0 = $r0, 6
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %a1 = sext i32 %a to i64
+  %cmp = icmp sge i64 %a1, 7
+  ret i1 %cmp
+}
+
+define i1 @set_slt_i64_rr_i32ext_rv(i64 %a, i32 %b){
+; CHECK-LABEL: set_slt_i64_rr_i32ext_rv:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    compwd.ge $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %b1 = sext i32 %b to i64
+  %cmp = icmp slt i64 %a, %b1
+  ret i1 %cmp
+}
+
+define i1 @set_slt_i64_rr_i32ext(i64 %a, i32 %b){
+; CHECK-LABEL: set_slt_i64_rr_i32ext:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    compwd.lt $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %b1 = sext i32 %b to i64
+  %cmp = icmp slt i64 %b1, %a
+  ret i1 %cmp
+}
+
+define i1 @set_slt_i64_ri_i32ext_rv(i32 %a){
+; CHECK-LABEL: set_slt_i64_ri_i32ext_rv:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    compw.lt $r0 = $r0, 7
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %a1 = sext i32 %a to i64
+  %cmp = icmp slt i64 %a1, 7
+  ret i1 %cmp
+}
+
+define i1 @set_sle_i64_rr_i32ext_rv(i64 %a, i32 %b){
+; CHECK-LABEL: set_sle_i64_rr_i32ext_rv:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    compwd.gt $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %b1 = sext i32 %b to i64
+  %cmp = icmp sle i64 %a, %b1
+  ret i1 %cmp
+}
+
+define i1 @set_sle_i64_rr_i32ext(i64 %a, i32 %b){
+; CHECK-LABEL: set_sle_i64_rr_i32ext:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    compwd.le $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %b1 = sext i32 %b to i64
+  %cmp = icmp sle i64 %b1, %a
+  ret i1 %cmp
+}
+
+define i1 @set_sle_i64_ri_i32ext_rv(i32 %a){
+; CHECK-LABEL: set_sle_i64_ri_i32ext_rv:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    compw.lt $r0 = $r0, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %a1 = sext i32 %a to i64
+  %cmp = icmp sle i64 %a1, 7
+  ret i1 %cmp
+}
+
+define i1 @set_sle_i64_ri_i32ext_rv_not(i32 %a){
+; CHECK-LABEL: set_sle_i64_ri_i32ext_rv_not:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    sxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    compd.lt $r0 = $r0, 0x600000000
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %a1 = sext i32 %a to i64
+  %cmp = icmp sle i64 %a1, 25769803775
+  ret i1 %cmp
+}

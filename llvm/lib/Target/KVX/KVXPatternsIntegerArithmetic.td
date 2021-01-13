@@ -3,7 +3,7 @@
 //===----------------------------------------------------------------------===//
 
 // TODO: implement patterns or intrinsics for the following instructions:
-// ADDCHCP ADDCWC COMPUWD COMPWD
+// ADDCHCP ADDCWC
 // LNANDHQ LNANDWP LNORHQ LORHQ LORWP ROLWPS RORWPS SBFCHCP SBFCWC SBFUWD SBFWD
 // SBFX16HQ SBFX16WP SBFX2HQ SBFX2WP SBFX4HQ SBFX4WP SBFX8HQ SBFX8WP SXLBHQ
 // SXLHWP SXMBHQ SXMHWP
@@ -282,7 +282,7 @@ foreach vtype = [ v4i8, v2i16 ] in {
     def : Pat<(and vtype:$rs1, vtype:$rs2), (ANDWrr SingleReg:$rs1, SingleReg:$rs2)>;
 }
 
-multiclass COMP_Pat<SDNode Node, Comparison Mod> {
+multiclass COMP_Pat<SDNode Node, Comparison Mod, Comparison RevMod> {
   //COMPD
   def : Pat<(i32 (Node i64:$lhs, i64:$rhs)),
         (COMPDrr SingleReg:$lhs, SingleReg:$rhs, Mod)>;
@@ -293,11 +293,28 @@ multiclass COMP_Pat<SDNode Node, Comparison Mod> {
   def : Pat<(i32 (Node i64:$lhs, Wrapped64:$rhs)),
         (COMPDri64 SingleReg:$lhs, Wrapped64:$rhs, Mod)>;
 
+  //COMPUWD
+  def : Pat<(i32 (Node (i64(zext i32:$lhs)), i64:$rhs)),
+        (COMPUWD SingleReg:$lhs, SingleReg:$rhs, Mod)>;
+
+  def : Pat<(i32 (Node i64:$lhs, (i64(zext i32:$rhs)))),
+        (COMPUWD SingleReg:$rhs, SingleReg:$lhs, RevMod)>;
+
+  //COMPWD
+  def : Pat<(i32 (Node (i64(sext i32:$lhs)), i64:$rhs)),
+        (COMPWD SingleReg:$lhs, SingleReg:$rhs, Mod)>;
+
+  def : Pat<(i32 (Node i64:$lhs, (i64(sext i32:$rhs)))),
+        (COMPWD SingleReg:$rhs, SingleReg:$lhs, RevMod)>;
   //COMPW
   def : Pat<(i32 (Node i32:$lhs, i32:$rhs)),
         (COMPWrr SingleReg:$lhs, SingleReg:$rhs, Mod)>;
   def : Pat<(i32 (Node i32:$lhs, Wrapped32:$rhs)),
         (COMPWri SingleReg:$lhs, Wrapped32:$rhs, Mod)>;
+  def : Pat<(i32 (Node (i64(zext i32:$lhs)), Unsigned64W:$rhs)),
+        (COMPWri SingleReg:$lhs, (trunc_imm_32 imm:$rhs), Mod)>;
+  def : Pat<(i32 (Node (i64(sext i32:$lhs)), Wrapped64W:$rhs)),
+        (COMPWri SingleReg:$lhs, (trunc_imm_32 imm:$rhs), Mod)>;
 
   //COMPNHQ
   def : Pat<(v4i16 (Node v4i16:$lhs, v4i16:$rhs)),
@@ -317,16 +334,16 @@ multiclass COMP_Pat<SDNode Node, Comparison Mod> {
         (COMPNWP SingleReg:$lhs, SingleReg:$rhs, Mod)>;
 }
 
-defm : COMP_Pat<seteq,   comparison_eq>;
-defm : COMP_Pat<setne,   comparison_ne>;
-defm : COMP_Pat<setugt,  comparison_gtu>;
-defm : COMP_Pat<setuge,  comparison_geu>;
-defm : COMP_Pat<setult,  comparison_ltu>;
-defm : COMP_Pat<setule,  comparison_leu>;
-defm : COMP_Pat<setgt,   comparison_gt>;
-defm : COMP_Pat<setge,   comparison_ge>;
-defm : COMP_Pat<setlt,   comparison_lt>;
-defm : COMP_Pat<setle,   comparison_le>;
+defm : COMP_Pat<seteq,   comparison_eq, comparison_eq>;
+defm : COMP_Pat<setne,   comparison_ne, comparison_ne>;
+defm : COMP_Pat<setugt,  comparison_gtu, comparison_leu>;
+defm : COMP_Pat<setuge,  comparison_geu, comparison_ltu>;
+defm : COMP_Pat<setult,  comparison_ltu, comparison_geu>;
+defm : COMP_Pat<setule,  comparison_leu, comparison_gtu>;
+defm : COMP_Pat<setgt,   comparison_gt, comparison_le>;
+defm : COMP_Pat<setge,   comparison_ge, comparison_lt>;
+defm : COMP_Pat<setlt,   comparison_lt, comparison_ge>;
+defm : COMP_Pat<setle,   comparison_le, comparison_gt>;
 
 // ORD
 def : Pat<(or i64:$rs1, i64:$rs2), (ORDrr SingleReg:$rs1, SingleReg:$rs2)>;
