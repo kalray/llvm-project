@@ -2299,8 +2299,8 @@ v8i16 sllhosimm(v8i16 a) { return __builtin_kvx_sllhos(a, 3); }
 // CHECK-LABEL: @sllhxs(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[C:%.*]] = alloca <16 x i16>, align 32
-// CHECK-NEXT:    [[C_0_SROA_CAST2:%.*]] = bitcast <16 x i16>* [[C]] to i8*
-// CHECK-NEXT:    call void @llvm.lifetime.start.p0i8(i64 32, i8* nonnull [[C_0_SROA_CAST2]])
+// CHECK-NEXT:    [[C_0_C_0__SROA_CAST:%.*]] = bitcast <16 x i16>* [[C]] to i8*
+// CHECK-NEXT:    call void @llvm.lifetime.start.p0i8(i64 32, i8* nonnull [[C_0_C_0__SROA_CAST]])
 // CHECK-NEXT:    [[CONV:%.*]] = zext i32 [[B:%.*]] to i64
 // CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <16 x i16> [[A:%.*]], <16 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i16> @llvm.kvx.sllhqs(<4 x i16> [[TMP0]], i64 [[CONV]])
@@ -2316,7 +2316,7 @@ v8i16 sllhosimm(v8i16 a) { return __builtin_kvx_sllhos(a, 3); }
 // CHECK-NEXT:    [[TMP11:%.*]] = shufflevector <4 x i16> [[TMP10]], <4 x i16> undef, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
 // CHECK-NEXT:    [[TMP12:%.*]] = shufflevector <16 x i16> [[TMP8]], <16 x i16> [[TMP11]], <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 16, i32 17, i32 18, i32 19>
 // CHECK-NEXT:    store volatile <16 x i16> [[TMP12]], <16 x i16>* [[C]], align 32, !tbaa !2
-// CHECK-NEXT:    call void @llvm.lifetime.end.p0i8(i64 32, i8* nonnull [[C_0_SROA_CAST2]])
+// CHECK-NEXT:    call void @llvm.lifetime.end.p0i8(i64 32, i8* nonnull [[C_0_C_0__SROA_CAST]])
 // CHECK-NEXT:    ret void
 //
 void sllhxs(v16i16 a, unsigned int b) {
@@ -2326,8 +2326,8 @@ void sllhxs(v16i16 a, unsigned int b) {
 // CHECK-LABEL: @sllhxsimm(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[C:%.*]] = alloca <16 x i16>, align 32
-// CHECK-NEXT:    [[C_0_SROA_CAST2:%.*]] = bitcast <16 x i16>* [[C]] to i8*
-// CHECK-NEXT:    call void @llvm.lifetime.start.p0i8(i64 32, i8* nonnull [[C_0_SROA_CAST2]])
+// CHECK-NEXT:    [[C_0_C_0__SROA_CAST:%.*]] = bitcast <16 x i16>* [[C]] to i8*
+// CHECK-NEXT:    call void @llvm.lifetime.start.p0i8(i64 32, i8* nonnull [[C_0_C_0__SROA_CAST]])
 // CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <16 x i16> [[A:%.*]], <16 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i16> @llvm.kvx.sllhqs(<4 x i16> [[TMP0]], i64 3)
 // CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <16 x i16> [[A]], <16 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
@@ -2342,7 +2342,7 @@ void sllhxs(v16i16 a, unsigned int b) {
 // CHECK-NEXT:    [[TMP11:%.*]] = shufflevector <4 x i16> [[TMP10]], <4 x i16> undef, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
 // CHECK-NEXT:    [[TMP12:%.*]] = shufflevector <16 x i16> [[TMP8]], <16 x i16> [[TMP11]], <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 16, i32 17, i32 18, i32 19>
 // CHECK-NEXT:    store volatile <16 x i16> [[TMP12]], <16 x i16>* [[C]], align 32, !tbaa !2
-// CHECK-NEXT:    call void @llvm.lifetime.end.p0i8(i64 32, i8* nonnull [[C_0_SROA_CAST2]])
+// CHECK-NEXT:    call void @llvm.lifetime.end.p0i8(i64 32, i8* nonnull [[C_0_C_0__SROA_CAST]])
 // CHECK-NEXT:    ret void
 //
 void sllhxsimm(v16i16 a) { volatile v16i16 c = __builtin_kvx_sllhxs(a, 3); }
@@ -2350,12 +2350,12 @@ void sllhxsimm(v16i16 a) { volatile v16i16 c = __builtin_kvx_sllhxs(a, 3); }
 // CHECK-LABEL: @sllwps(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[C:%.*]] = alloca <2 x i32>, align 8
-// CHECK-NEXT:    [[C_0_SROA_CAST2:%.*]] = bitcast <2 x i32>* [[C]] to i8*
-// CHECK-NEXT:    call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull [[C_0_SROA_CAST2]])
+// CHECK-NEXT:    [[C_0_C_0__SROA_CAST:%.*]] = bitcast <2 x i32>* [[C]] to i8*
+// CHECK-NEXT:    call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull [[C_0_C_0__SROA_CAST]])
 // CHECK-NEXT:    [[CONV:%.*]] = zext i32 [[B:%.*]] to i64
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x i32> @llvm.kvx.sllwps(<2 x i32> [[A:%.*]], i64 [[CONV]])
 // CHECK-NEXT:    store volatile <2 x i32> [[TMP0]], <2 x i32>* [[C]], align 8, !tbaa !2
-// CHECK-NEXT:    call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull [[C_0_SROA_CAST2]])
+// CHECK-NEXT:    call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull [[C_0_C_0__SROA_CAST]])
 // CHECK-NEXT:    ret void
 //
 void sllwps(v2i32 a, unsigned int b) {
@@ -2365,11 +2365,11 @@ void sllwps(v2i32 a, unsigned int b) {
 // CHECK-LABEL: @sllwpsimm(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[C:%.*]] = alloca <2 x i32>, align 8
-// CHECK-NEXT:    [[C_0_SROA_CAST2:%.*]] = bitcast <2 x i32>* [[C]] to i8*
-// CHECK-NEXT:    call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull [[C_0_SROA_CAST2]])
+// CHECK-NEXT:    [[C_0_C_0__SROA_CAST:%.*]] = bitcast <2 x i32>* [[C]] to i8*
+// CHECK-NEXT:    call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull [[C_0_C_0__SROA_CAST]])
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x i32> @llvm.kvx.sllwps(<2 x i32> [[A:%.*]], i64 3)
 // CHECK-NEXT:    store volatile <2 x i32> [[TMP0]], <2 x i32>* [[C]], align 8, !tbaa !2
-// CHECK-NEXT:    call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull [[C_0_SROA_CAST2]])
+// CHECK-NEXT:    call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull [[C_0_C_0__SROA_CAST]])
 // CHECK-NEXT:    ret void
 //
 void sllwpsimm(v2i32 a) { volatile v2i32 c = __builtin_kvx_sllwps(a, 3); }
@@ -2783,8 +2783,8 @@ v8i16 srahosimm(v8i16 a) { return __builtin_kvx_srahos(a, 3); }
 // CHECK-LABEL: @srahxs(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[C:%.*]] = alloca <16 x i16>, align 32
-// CHECK-NEXT:    [[C_0_SROA_CAST2:%.*]] = bitcast <16 x i16>* [[C]] to i8*
-// CHECK-NEXT:    call void @llvm.lifetime.start.p0i8(i64 32, i8* nonnull [[C_0_SROA_CAST2]])
+// CHECK-NEXT:    [[C_0_C_0__SROA_CAST:%.*]] = bitcast <16 x i16>* [[C]] to i8*
+// CHECK-NEXT:    call void @llvm.lifetime.start.p0i8(i64 32, i8* nonnull [[C_0_C_0__SROA_CAST]])
 // CHECK-NEXT:    [[CONV:%.*]] = zext i32 [[B:%.*]] to i64
 // CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <16 x i16> [[A:%.*]], <16 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i16> @llvm.kvx.srahqs(<4 x i16> [[TMP0]], i64 [[CONV]])
@@ -2800,7 +2800,7 @@ v8i16 srahosimm(v8i16 a) { return __builtin_kvx_srahos(a, 3); }
 // CHECK-NEXT:    [[TMP11:%.*]] = shufflevector <4 x i16> [[TMP10]], <4 x i16> undef, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
 // CHECK-NEXT:    [[TMP12:%.*]] = shufflevector <16 x i16> [[TMP8]], <16 x i16> [[TMP11]], <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 16, i32 17, i32 18, i32 19>
 // CHECK-NEXT:    store volatile <16 x i16> [[TMP12]], <16 x i16>* [[C]], align 32, !tbaa !2
-// CHECK-NEXT:    call void @llvm.lifetime.end.p0i8(i64 32, i8* nonnull [[C_0_SROA_CAST2]])
+// CHECK-NEXT:    call void @llvm.lifetime.end.p0i8(i64 32, i8* nonnull [[C_0_C_0__SROA_CAST]])
 // CHECK-NEXT:    ret void
 //
 void srahxs(v16i16 a, unsigned int b) {
@@ -2810,8 +2810,8 @@ void srahxs(v16i16 a, unsigned int b) {
 // CHECK-LABEL: @srahxsimm(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[C:%.*]] = alloca <16 x i16>, align 32
-// CHECK-NEXT:    [[C_0_SROA_CAST2:%.*]] = bitcast <16 x i16>* [[C]] to i8*
-// CHECK-NEXT:    call void @llvm.lifetime.start.p0i8(i64 32, i8* nonnull [[C_0_SROA_CAST2]])
+// CHECK-NEXT:    [[C_0_C_0__SROA_CAST:%.*]] = bitcast <16 x i16>* [[C]] to i8*
+// CHECK-NEXT:    call void @llvm.lifetime.start.p0i8(i64 32, i8* nonnull [[C_0_C_0__SROA_CAST]])
 // CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <16 x i16> [[A:%.*]], <16 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i16> @llvm.kvx.srahqs(<4 x i16> [[TMP0]], i64 3)
 // CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <16 x i16> [[A]], <16 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
@@ -2826,7 +2826,7 @@ void srahxs(v16i16 a, unsigned int b) {
 // CHECK-NEXT:    [[TMP11:%.*]] = shufflevector <4 x i16> [[TMP10]], <4 x i16> undef, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
 // CHECK-NEXT:    [[TMP12:%.*]] = shufflevector <16 x i16> [[TMP8]], <16 x i16> [[TMP11]], <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 16, i32 17, i32 18, i32 19>
 // CHECK-NEXT:    store volatile <16 x i16> [[TMP12]], <16 x i16>* [[C]], align 32, !tbaa !2
-// CHECK-NEXT:    call void @llvm.lifetime.end.p0i8(i64 32, i8* nonnull [[C_0_SROA_CAST2]])
+// CHECK-NEXT:    call void @llvm.lifetime.end.p0i8(i64 32, i8* nonnull [[C_0_C_0__SROA_CAST]])
 // CHECK-NEXT:    ret void
 //
 void srahxsimm(v16i16 a) { volatile v16i16 c = __builtin_kvx_srahxs(a, 3); }
