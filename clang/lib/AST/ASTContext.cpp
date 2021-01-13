@@ -2241,7 +2241,7 @@ TypeInfo ASTContext::getTypeInfoImpl(const Type *T) const {
 #define KVX_TCA_VECTOR_TYPE(Name, Id, Size)                                    \
   case BuiltinType::Id:                                                        \
     Width = Size;                                                              \
-    Align = Size;                                                              \
+    Align = 256;                                                              \
       break;
 #include "clang/Basic/KVXTypes.def"
 #define RVV_VECTOR_TYPE(Name, Id, SingletonId, ElKind, ElBits, NF, IsSigned,   \

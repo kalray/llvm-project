@@ -99,10 +99,10 @@ __tca256 *asm_clobber_quad_matrix(__tca256 *a) {
 
 // CHECK-LABEL: @use_wide_reg(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <512 x i1>, <512 x i1>* [[W:%.*]], align 64, !tbaa !13
+// CHECK-NEXT:    [[TMP0:%.*]] = load <512 x i1>, <512 x i1>* [[W:%.*]], align 32, !tbaa !13
 // CHECK-NEXT:    [[TMP1:%.*]] = load <256 x i1>, <256 x i1>* [[V:%.*]], align 32, !tbaa !6
 // CHECK-NEXT:    [[TMP2:%.*]] = tail call <512 x i1> asm sideeffect "mma484bw $0 = $0, $1, $1", "=w,w,0,~{$r0r1r2r3},~{$a0a1a2a3}"(<256 x i1> [[TMP1]], <512 x i1> [[TMP0]]) #3, !srcloc !15
-// CHECK-NEXT:    store <512 x i1> [[TMP2]], <512 x i1>* [[W]], align 64, !tbaa !13
+// CHECK-NEXT:    store <512 x i1> [[TMP2]], <512 x i1>* [[W]], align 32, !tbaa !13
 // CHECK-NEXT:    ret void
 //
 void use_wide_reg(__tca512 *w, __tca256 *v) {
@@ -114,9 +114,9 @@ void use_wide_reg(__tca512 *w, __tca256 *v) {
 
 // CHECK-LABEL: @use_matrix_reg(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <1024 x i1>, <1024 x i1>* [[X:%.*]], align 128, !tbaa !16
+// CHECK-NEXT:    [[TMP0:%.*]] = load <1024 x i1>, <1024 x i1>* [[X:%.*]], align 32, !tbaa !16
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call <1024 x i1> asm sideeffect "mt44d $0 = $0", "=w,0,~{$r0r1r2r3},~{$a0a1a2a3}"(<1024 x i1> [[TMP0]]) #3, !srcloc !18
-// CHECK-NEXT:    store <1024 x i1> [[TMP1]], <1024 x i1>* [[X]], align 128, !tbaa !16
+// CHECK-NEXT:    store <1024 x i1> [[TMP1]], <1024 x i1>* [[X]], align 32, !tbaa !16
 // CHECK-NEXT:    ret void
 //
 void use_matrix_reg(__tca1024 *x) {
