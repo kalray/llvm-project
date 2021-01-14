@@ -3,10 +3,9 @@
 //===----------------------------------------------------------------------===//
 
 // TODO: implement patterns or intrinsics for the following instructions:
-// ADDCHCP ADDCWC
-// LNANDHQ LNANDWP LNORHQ LORHQ LORWP ROLWPS RORWPS SBFCHCP SBFCWC SBFUWD SBFWD
-// SBFX16HQ SBFX16WP SBFX2HQ SBFX2WP SBFX4HQ SBFX4WP SBFX8HQ SBFX8WP SXLBHQ
-// SXLHWP SXMBHQ SXMHWP
+// ADDCHCP ADDCWC SBFCHCP SBFCWC
+// LNANDHQ LNANDWP LNORHQ LORHQ LORWP
+// SBFUWD SBFWD
 
 // 128 bits
 def : BITCAST<v4i32, v2i64, PairedReg>;
@@ -464,6 +463,51 @@ defm : ZEFPat<(srl i32:$rs1, Unsigned6:$rs2), (SRLWri SingleReg:$rs1, Unsigned6:
 
 // SRLWPS
 defm : WPShiftScalarOps<srl, SRLWPSri, SRLWPSrr, SRLWri, SRLWrr>;
+
+// SXLBHQ
+def : Pat<(v2i16(sext v2i8:$v)), (SXLBHQ $v)>;
+def : Pat<(v4i16(sext v4i8:$v)), (SXLBHQ $v)>;
+def : Pat<(v2i16(anyext v2i8:$v)), (SXLBHQ $v)>;
+def : Pat<(v4i16(anyext v4i8:$v)), (SXLBHQ $v)>;
+def : Pat<(v2i16(zext v2i8:$v)), (ANDWri37 (SXLBHQ $v), 0xff00ff)>;
+def : Pat<(v4i16(zext v4i8:$v)), (ANDDri64 (SXLBHQ $v), 0xff00ff00ff00ff)>;
+def : Pat<(v4i16(sext (v4i8( extract_subvector v8i8:$v, (i64 0))))), (SXLBHQ $v)>;
+def : Pat<(v4i16(anyext (v4i8( extract_subvector v8i8:$v, (i64 0))))), (SXLBHQ $v)>;
+def : Pat<(v4i16(zext (v4i8( extract_subvector v8i8:$v, (i64 0))))), (ANDDri64 (SXLBHQ $v), 0xff00ff00ff00ff)>;
+
+// SXMBHQ
+def : Pat<(v4i16(sext (v4i8( extract_subvector v8i8:$v, (i64 4))))), (SXMBHQ $v)>;
+def : Pat<(v4i16(anyext (v4i8( extract_subvector v8i8:$v, (i64 4))))), (SXMBHQ $v)>;
+def : Pat<(v4i16(zext (v4i8( extract_subvector v8i8:$v, (i64 4))))), (ANDDri64 (SXMBHQ $v), 0xff00ff00ff00ff)>;
+
+// SXLHWP
+def : Pat<(v2i32(sext v2i8:$v)), (SXLHWP(SXLBHQ $v))>;
+def : Pat<(v2i32(anyext v2i8:$v)), (SXLHWP(SXLBHQ $v))>;
+def : Pat<(v2i32(zext v2i8:$v)), (ANDDri64 (SXLHWP(SXLBHQ $v)), 0xff000000ff)>;
+def : Pat<(v2i32(sext v2i16:$v)), (SXLHWP $v)>;
+def : Pat<(v2i32(anyext v2i16:$v)), (SXLHWP $v)>;
+def : Pat<(v2i32(zext v2i16:$v)), (ANDDri64 (SXLHWP $v), 0xffff0000ffff)>;
+
+// SXLHWP + SXLBHQ + SXMHWP + SXMBHQ
+def : Pat<(v4i32(sext (v4i8( extract_subvector v8i8:$v, (i64 4))))), (REG_SEQUENCE PairedReg, (SXLHWP(SXMBHQ $v)), sub_s0, (SXMHWP(SXMBHQ $v)), sub_s1)>;
+def : Pat<(v4i32(anyext (v4i8( extract_subvector v8i8:$v, (i64 4))))), (REG_SEQUENCE PairedReg, (SXLHWP(SXMBHQ $v)), sub_s0, (SXMHWP(SXMBHQ $v)), sub_s1)>;
+def : Pat<(v4i32(zext (v4i8( extract_subvector v8i8:$v, (i64 4))))), (REG_SEQUENCE PairedReg, (ANDDri64(SXLHWP(SXMBHQ $v)),0xff00ff00ff00ff), sub_s0,
+                                                          (ANDDri64(SXMHWP(SXMBHQ $v)),0xff00ff00ff00ff), sub_s1)>;
+
+def : Pat<(v4i32(sext (v4i8( extract_subvector v8i8:$v, (i64 0))))), (REG_SEQUENCE PairedReg, (SXLHWP(SXLBHQ $v)), sub_s0, (SXMHWP(SXLBHQ $v)), sub_s1)>;
+def : Pat<(v4i32(anyext (v4i8( extract_subvector v8i8:$v, (i64 0))))), (REG_SEQUENCE PairedReg, (SXLHWP(SXLBHQ $v)), sub_s0, (SXMHWP(SXLBHQ $v)), sub_s1)>;
+def : Pat<(v4i32(zext (v4i8( extract_subvector v8i8:$v, (i64 0))))), (REG_SEQUENCE PairedReg, (ANDDri64(SXLHWP(SXLBHQ $v)),0xff00ff00ff00ff), sub_s0,
+                                                          (ANDDri64(SXMHWP(SXLBHQ $v)),0xff00ff00ff00ff), sub_s1)>;
+
+def : Pat<(v4i32(sext v4i8:$v)), (REG_SEQUENCE PairedReg, (SXLHWP(SXLBHQ $v)), sub_s0, (SXMHWP(SXLBHQ $v)), sub_s1)>;
+def : Pat<(v4i32(anyext v4i8:$v)), (REG_SEQUENCE PairedReg, (SXLHWP(SXLBHQ $v)), sub_s0, (SXMHWP(SXLBHQ $v)), sub_s1)>;
+def : Pat<(v4i32(zext v4i8:$v)), (REG_SEQUENCE PairedReg, (ANDDri64(SXLHWP(SXLBHQ $v)),0xff00ff00ff00ff), sub_s0,
+                                                          (ANDDri64(SXMHWP(SXLBHQ $v)),0xff00ff00ff00ff), sub_s1)>;
+
+def : Pat<(v4i32(sext v4i16:$v)), (REG_SEQUENCE PairedReg, (SXMHWP $v), sub_s1, (SXLHWP $v), sub_s0)>;
+def : Pat<(v4i32(anyext v4i16:$v)), (REG_SEQUENCE PairedReg, (SXMHWP $v), sub_s1, (SXLHWP $v), sub_s0)>;
+def : Pat<(v4i32(zext v4i16:$v)), (REG_SEQUENCE PairedReg, (ANDDri64(SXMHWP $v),0xffff0000ffff), sub_s1,
+                                                           (ANDDri64(SXLHWP $v),0xffff0000ffff), sub_s0)>;
 
 // ROLW
 def : Pat<(rotl i32:$rs1, i64:$rs2), (ROLWrr SingleReg:$rs1, SingleReg:$rs2)>;
