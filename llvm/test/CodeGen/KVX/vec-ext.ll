@@ -101,8 +101,8 @@ define <4 x i32> @zext_4xi8_4xi32(<4 x i8> %a){
 ; CHECK-NEXT:    sxmhwp $r0 = $r2
 ; CHECK-NEXT:    sxlhwp $r2 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r1 = $r0, 0xff00ff00ff00ff
-; CHECK-NEXT:    andd $r0 = $r2, 0xff00ff00ff00ff
+; CHECK-NEXT:    andd $r1 = $r0, 0xff000000ff
+; CHECK-NEXT:    andd $r0 = $r2, 0xff000000ff
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -189,8 +189,8 @@ define <8 x i16> @zext_8xi8_8xi16(<8 x i8> %a){
 ; CHECK-NEXT:    sxlbhq $r1 = $r0
 ; CHECK-NEXT:    sxmbhq $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r2 = $r1, 0xff00ff00ff00ff
-; CHECK-NEXT:    andd $r1 = $r0, 0xff00ff00ff00ff
+; CHECK-NEXT:    andd $r2 = $r1, 0xff000000ff
+; CHECK-NEXT:    andd $r1 = $r0, 0xff000000ff
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
@@ -227,14 +227,14 @@ define <8 x i32> @zext_8xi8_8xi32(<8 x i8> %a){
 ; CHECK-NEXT:    sxmhwp $r2 = $r1
 ; CHECK-NEXT:    sxmhwp $r0 = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r3 = $r2, 0xff00ff00ff00ff
+; CHECK-NEXT:    andd $r3 = $r2, 0xff000000ff
 ; CHECK-NEXT:    sxlhwp $r1 = $r1
 ; CHECK-NEXT:    sxlhwp $r4 = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r2 = $r1, 0xff00ff00ff00ff
-; CHECK-NEXT:    andd $r1 = $r0, 0xff00ff00ff00ff
+; CHECK-NEXT:    andd $r2 = $r1, 0xff000000ff
+; CHECK-NEXT:    andd $r1 = $r0, 0xff000000ff
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r4, 0xff00ff00ff00ff
+; CHECK-NEXT:    andd $r0 = $r4, 0xff000000ff
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -526,6 +526,7 @@ entry:
   ret <2 x i32> %ext
 }
 
+; These could be simply 3 extfz followed by 1 "AND" + 3 insf.
 define <4 x i32> @zext_4xi1_4xi32(<4 x i1> %a){
 ; CHECK-LABEL: zext_4xi1_4xi32:
 ; CHECK:       # %bb.0: # %entry
@@ -552,8 +553,8 @@ define <4 x i32> @zext_4xi1_4xi32(<4 x i1> %a){
 ; CHECK-NEXT:    sxmhwp $r0 = $r2
 ; CHECK-NEXT:    sxlhwp $r2 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r1 = $r0, 0xff00ff00ff00ff
-; CHECK-NEXT:    andd $r0 = $r2, 0xff00ff00ff00ff
+; CHECK-NEXT:    andd $r1 = $r0, 0xff000000ff
+; CHECK-NEXT:    andd $r0 = $r2, 0xff000000ff
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
