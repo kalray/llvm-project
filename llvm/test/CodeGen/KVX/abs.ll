@@ -55,6 +55,45 @@ entry:
   ret <4 x i16> %2
 }
 
+define <4 x i16> @abshq_2(<4 x i16> %a){
+; CHECK-LABEL: abshq_2:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    abshq $r0 = $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %sub = sub <4 x i16> zeroinitializer, %a
+  %cmp = icmp slt <4 x i16> %sub, %a
+  %cond = select <4 x i1> %cmp, <4 x i16> %a, <4 x i16> %sub
+  ret <4 x i16> %cond
+}
+
+define <2 x i16> @abshqv2(<2 x i16> %a){
+; CHECK-LABEL: abshqv2:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    abshq $r0 = $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = icmp slt <2 x i16> %a, zeroinitializer
+  %1 = sub <2 x i16> zeroinitializer, %a
+  %2 = select <2 x i1> %0, <2 x i16> %1, <2 x i16> %a
+  ret <2 x i16> %2
+}
+
+define <2 x i16> @abshqv2_2(<2 x i16> %a){
+; CHECK-LABEL: abshqv2_2:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    abshq $r0 = $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %sub = sub <2 x i16> zeroinitializer, %a
+  %cmp = icmp slt <2 x i16> %sub, %a
+  %cond = select <2 x i1> %cmp, <2 x i16> %a, <2 x i16> %sub
+  ret <2 x i16> %cond
+}
+
 define i32 @absw2(i32 %a) {
 ; CHECK-LABEL: absw2:
 ; CHECK:       # %bb.0: # %entry
