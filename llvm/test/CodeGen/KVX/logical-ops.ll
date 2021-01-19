@@ -10,6 +10,8 @@ define <2 x i16> @land2h(<2 x i16> %a, <2 x i16> %b) {
 ; CHECK-LABEL: land2h:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    landhq $r0 = $r1, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    neghq $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -24,6 +26,8 @@ define <2 x i16> @uland2h(<2 x i16> %a, <2 x i16> %b) {
 ; CHECK-LABEL: uland2h:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    landhq $r0 = $r1, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    neghq $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -38,6 +42,8 @@ define <3 x i16> @land3h(<3 x i16> %a, <3 x i16> %b) {
 ; CHECK-LABEL: land3h:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    landhq $r0 = $r1, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    neghq $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -52,6 +58,8 @@ define <3 x i16> @uland3h(<3 x i16> %a, <3 x i16> %b) {
 ; CHECK-LABEL: uland3h:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    landhq $r0 = $r1, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    neghq $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -66,6 +74,8 @@ define <4 x i16> @land4h(<4 x i16> %a, <4 x i16> %b) {
 ; CHECK-LABEL: land4h:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    landhq $r0 = $r1, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    neghq $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -80,6 +90,8 @@ define <4 x i16> @uland4h(<4 x i16> %a, <4 x i16> %b) {
 ; CHECK-LABEL: uland4h:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    landhq $r0 = $r1, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    neghq $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -94,6 +106,8 @@ define <2 x i32> @landw2w(<2 x i32> %a, <2 x i32> %b) {
 ; CHECK-LABEL: landw2w:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    landwp $r0 = $r1, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    negwp $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -108,6 +122,8 @@ define <2 x i32> @ulandw2w(<2 x i32> %a, <2 x i32> %b) {
 ; CHECK-LABEL: ulandw2w:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    landwp $r0 = $r1, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    negwp $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
