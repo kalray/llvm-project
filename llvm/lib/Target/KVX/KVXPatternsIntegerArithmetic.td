@@ -234,22 +234,21 @@ defm : ZEFPat<(and (i32 (setne i32:$v1, (i32 0))), (i32 (setne i32:$v2, (i32 0))
       (LANDWrr SingleReg:$v1, SingleReg:$v2)>;
 
 // RI variants don't seem usuable, as they turn into vselects.
-multiclass VECLANDPAT<ValueType ty, KVX_INSTRUCTION RR, SDNode SplatVal> {
+multiclass VECLANDPAT<ValueType ty, KVX_INSTRUCTION RR, KVX_INSTRUCTION NEG, SDNode SplatVal> {
 def : Pat<(ty(and (setne ty:$v0, immAllZerosV), (setne ty:$v1, immAllZerosV))),
             (RR SingleReg:$v0, SingleReg:$v1)>;
 
 def : Pat<(ty(sra( shl
                   ( and (setne ty:$v0, immAllZerosV), (setne ty:$v1, immAllZerosV)),
-            SplatVal),SplatVal)), (RR SingleReg:$v0, SingleReg:$v1)>;
+            SplatVal),SplatVal)), (NEG(RR SingleReg:$v0, SingleReg:$v1))>;
 }
 
 // LANDHQ
-defm : VECLANDPAT<v2i16, LANDHQrr, (v2i16 v2_splat_15)>;
-defm : VECLANDPAT<v4i16, LANDHQrr, (v4i16 v4_splat_15)>;
-// // LANDWP
-defm : VECLANDPAT<v2i32, LANDWPrr, (v2i32 v2_splat_31)>;
+defm : VECLANDPAT<v2i16, LANDHQrr, NEGHQ, (v2i16 v2_splat_15)>;
+defm : VECLANDPAT<v4i16, LANDHQrr, NEGHQ, (v4i16 v4_splat_15)>;
 
-
+// LANDWP
+defm : VECLANDPAT<v2i32, LANDWPrr, NEGWP, (v2i32 v2_splat_31)>;
 
 // LNANDW
 defm : ZEFPat<(or (i32 (seteq i32:$v1, (i32 0))), (i32 (seteq i32:$v2, (i32 0)))),
