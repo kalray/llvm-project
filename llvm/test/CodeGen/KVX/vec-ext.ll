@@ -189,8 +189,8 @@ define <8 x i16> @zext_8xi8_8xi16(<8 x i8> %a){
 ; CHECK-NEXT:    sxlbhq $r1 = $r0
 ; CHECK-NEXT:    sxmbhq $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r2 = $r1, 0xff000000ff
-; CHECK-NEXT:    andd $r1 = $r0, 0xff000000ff
+; CHECK-NEXT:    andd $r2 = $r1, 0xff00ff00ff00ff
+; CHECK-NEXT:    andd $r1 = $r0, 0xff00ff00ff00ff
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
