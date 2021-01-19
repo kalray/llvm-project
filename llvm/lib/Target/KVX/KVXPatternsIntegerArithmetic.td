@@ -401,21 +401,54 @@ def : Pat<(Op v4i16:$v0, (v4i16 (v3_splat i32:$v1))), (RR SingleReg:$v0, SingleR
 
 def : Pat<(Op v2i16:$v, (v2i16 ( build_vector (i32 imm:$i0), (i32 imm:$i1)))),
       (INSF (RI SingleReg:$v, (mod_16_imm_64 imm:$i1)), (RI SingleReg:$v, (mod_16_imm_64 imm:$i0)), 15, 0)>;
+
+def : Pat<(Op v2i16:$v, (v2i16 ( build_vector (i32 i32:$s0), (i32 i32:$s1)))),
+      (INSF (RR SingleReg:$v, SingleReg:$s1), (RR SingleReg:$v, SingleReg:$s0), 15, 0)>;
+
 def : Pat<(Op v2i16:$v0, v2i16:$v1),
       (INSF(RR SingleReg:$v0, (EXTFZ SingleReg:$v1, 19, 16)), (RR SingleReg:$v0, SingleReg:$v1), 15, 0) >;
 
 // TODO: We can detect when some immediates are the same, and avoid all insf operations.
-// TODO: v3i16 could be done in less operations.
+def : Pat<(Op v4i16:$v, (v4i16 ( build_vector (i32 imm:$i0), (i32 imm:$i1), (i32 imm:$i2), (i32 undef)))),
+                  (INSF (RI SingleReg:$v, (mod_16_imm_64 imm:$i2)),
+                        (INSF (RI SingleReg:$v, (mod_16_imm_64 imm:$i1)),
+                              (RI SingleReg:$v, (mod_16_imm_64 imm:$i0)),
+                              15, 0),
+                        31, 0)>;
+
+def : Pat<(Op v4i16:$v, (v4i16 ( build_vector (i32 i32:$s0), (i32 i32:$s1), (i32 i32:$s2), (i32 undef)))),
+            (INSF (RR SingleReg:$v, SingleReg:$s2),
+                        (INSF (RR SingleReg:$v, SingleReg:$s1),
+                              (RR SingleReg:$v, SingleReg:$s0),
+                              15, 0),
+                        31, 0)>;
+
 def : Pat<(Op v4i16:$v, (v4i16 ( build_vector (i32 imm:$i0), (i32 imm:$i1), (i32 imm:$i2), (i32 imm:$i3)))),
-            (INSF
-                  (INSF(RI SingleReg:$v, (mod_16_imm_64 imm:$i3)), (RI SingleReg:$v, (mod_16_imm_64 imm:$i2)), 47, 32),
-                  (INSF(RI SingleReg:$v, (mod_16_imm_64 imm:$i1)), (RI SingleReg:$v, (mod_16_imm_64 imm:$i0)), 15, 0),
-                  31, 0)>;
+            (INSF (RI SingleReg:$v, (mod_16_imm_64 imm:$i3)),
+                  (INSF (RI SingleReg:$v, (mod_16_imm_64 imm:$i2)),
+                        (INSF (RI SingleReg:$v, (mod_16_imm_64 imm:$i1)),
+                              (RI SingleReg:$v, (mod_16_imm_64 imm:$i0)),
+                              15, 0),
+                        31, 0),
+                  47, 0)>;
+
+def : Pat<(Op v4i16:$v, (v4i16 ( build_vector (i32 i32:$s0), (i32 i32:$s1), (i32 i32:$s2), (i32 i32:$s3)))),
+            (INSF (RR SingleReg:$v, SingleReg:$s3),
+                  (INSF (RR SingleReg:$v, SingleReg:$s2),
+                        (INSF (RR SingleReg:$v, SingleReg:$s1),
+                              (RR SingleReg:$v, SingleReg:$s0),
+                              15, 0),
+                        31, 0),
+                  47, 0)>;
+
 def : Pat<(Op v4i16:$v0, v4i16:$v1),
-            (INSF
-                  (INSF(RR SingleReg:$v0, (EXTFZ SingleReg:$v1, 51, 48)), (RR SingleReg:$v0, (EXTFZ SingleReg:$v1, 35, 32)), 47, 32),
-                  (INSF(RR SingleReg:$v0, (EXTFZ SingleReg:$v1, 19, 16)), (RR SingleReg:$v0, $v1), 15, 0),
-                  31, 0)>;
+            (INSF (RR SingleReg:$v0, (EXTFZ SingleReg:$v1, 51, 48)),
+                  (INSF (RR SingleReg:$v0, (EXTFZ SingleReg:$v1, 35, 32)),
+                        (INSF (RR SingleReg:$v0, (EXTFZ SingleReg:$v1, 19, 16)),
+                              (RR SingleReg:$v0, $v1),
+                              15, 0),
+                        31, 0),
+                  47, 0)>;
 }
 
 // SLLHQS
