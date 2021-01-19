@@ -479,12 +479,12 @@ def : Pat<(v2i16(zext v2i8:$v)), (ANDWri37 (SXLBHQ $v), 0xff00ff)>;
 def : Pat<(v4i16(zext v4i8:$v)), (ANDDri64 (SXLBHQ $v), 0xff00ff00ff00ff)>;
 def : Pat<(v4i16(sext (v4i8( extract_subvector v8i8:$v, (i64 0))))), (SXLBHQ $v)>;
 def : Pat<(v4i16(anyext (v4i8( extract_subvector v8i8:$v, (i64 0))))), (SXLBHQ $v)>;
-def : Pat<(v4i16(zext (v4i8( extract_subvector v8i8:$v, (i64 0))))), (ANDDri64 (SXLBHQ $v), 0xff000000ff)>;
+def : Pat<(v4i16(zext (v4i8( extract_subvector v8i8:$v, (i64 0))))), (ANDDri64 (SXLBHQ $v), 0xff00ff00ff00ff)>;
 
 // SXMBHQ
 def : Pat<(v4i16(sext (v4i8( extract_subvector v8i8:$v, (i64 4))))), (SXMBHQ $v)>;
 def : Pat<(v4i16(anyext (v4i8( extract_subvector v8i8:$v, (i64 4))))), (SXMBHQ $v)>;
-def : Pat<(v4i16(zext (v4i8( extract_subvector v8i8:$v, (i64 4))))), (ANDDri64 (SXMBHQ $v), 0xff000000ff)>;
+def : Pat<(v4i16(zext (v4i8( extract_subvector v8i8:$v, (i64 4))))), (ANDDri64 (SXMBHQ $v), 0xff00ff00ff00ff)>;
 
 // SXLHWP
 def : Pat<(v2i32(sext v2i8:$v)), (SXLHWP(SXLBHQ $v))>;
