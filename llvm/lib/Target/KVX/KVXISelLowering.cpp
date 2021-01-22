@@ -181,6 +181,10 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::ROTL, MVT::v2i32, Legal);
   setOperationAction(ISD::ROTR, MVT::v2i32, Legal);
 
+  for (auto VT : {MVT::i8, MVT::i32, MVT::i64, MVT::v2i8, MVT::v2i16,
+                  MVT::v2i32, MVT::v4i8, MVT::v4i16, MVT::v8i8})
+    setOperationAction(ISD::BITREVERSE, VT, Legal);
+
   for (auto VT : {MVT::v4i32, MVT::v2i64, MVT::v4i64})
     setOperationAction(ISD::BSWAP, VT, Expand);
 

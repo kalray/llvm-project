@@ -1206,8 +1206,23 @@ def : Pat<(vnot v2i32:$v), (NOTD SingleReg:$v)>;
 def: Pat<(KVXJT tjumptable:$a), (MAKEi64 Wrapped64:$a)>;
 def: Pat<(KVXJT_PCREL i64:$a), (PCRELmi64 SingleReg:$a)>;
 
-def: Pat<(srl (i32 (bswap i32:$v)), (i64 16)), (SBMM8ri64 SingleReg:$v, 0x0102)>;
-def: Pat<(i32 (bswap i32:$v)), (SBMM8ri64 SingleReg:$v, 0x01020408)>;
+// BITREVERSE
+def: Pat<(i8 (bitreverse i8:$v)),     (SBMM8rr (MAKEi64 0x102040810204080), SingleReg:$v)>;
+def: Pat<(v2i8 (bitreverse v2i8:$v)), (SBMM8rr (MAKEi64 0x102040810204080), SingleReg:$v)>;
+def: Pat<(v4i8 (bitreverse v4i8:$v)), (SBMM8rr (MAKEi64 0x102040810204080), SingleReg:$v)>;
+def: Pat<(v8i8 (bitreverse v8i8:$v)), (SBMM8rr (MAKEi64 0x102040810204080), SingleReg:$v)>;
+
+def: Pat<(v2i16 (bitreverse v2i16:$v)), (SBMM8rr (MAKEi64 0x102040810204080), (SBMM8ri37 SingleReg:$v, 0x04080102))>;
+def: Pat<(v4i16 (bitreverse v4i16:$v)), (SBMM8rr (MAKEi64 0x0102040810204080), (SBMM8ri64 SingleReg:$v, 0x4080102004080102))>;
+
+def: Pat<(i32 (bitreverse i32:$v)), (SBMM8rr (MAKEi64 0x0102040810204080), (SBMM8ri37 SingleReg:$v, 0x01020408))>;
+def: Pat<(v2i32 (bitreverse v2i32:$v)), (SBMM8rr (MAKEi64 0x0102040810204080), (SBMM8ri64 SingleReg:$v, 0x1020408001020408))>;
+
+def: Pat<(i64 (bitreverse i64:$v)), (SBMM8rr (MAKEi64 0x0102040810204080), (SBMM8ri64 SingleReg:$v, 0x0102040810204080))>;
+
+// BSWAP
+def: Pat<(srl (i32 (bswap i32:$v)), (i64 16)), (SBMM8ri37 SingleReg:$v, 0x0102)>;
+def: Pat<(i32 (bswap i32:$v)), (SBMM8ri37 SingleReg:$v, 0x01020408)>;
 def: Pat<(i64 (bswap i64:$v)), (SBMM8ri64 SingleReg:$v, 0x0102040810204080)>;
 def: Pat<(v2i16 (bswap v2i16:$v)), (SBMM8ri64 SingleReg:$v, 0x04080102)>;
 def: Pat<(v4i16 (bswap v4i16:$v)), (SBMM8ri64 SingleReg:$v, 0x4080102004080102)>;
