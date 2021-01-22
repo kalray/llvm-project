@@ -7,22 +7,6 @@
 // LNANDHQ LNANDWP LNORHQ LORHQ LORWP
 // SBFUWD SBFWD
 
-// 128 bits
-def : BITCAST<v4i32, v2i64, PairedReg>;
-def : BITCAST<v2i64, v4i32, PairedReg>;
-
-// 64 bits
-def : BITCAST<v4i16, i64, SingleReg>;
-def : BITCAST<i64, v4i16, SingleReg>;
-def : BITCAST<v2i32, v4i16, SingleReg>;
-def : BITCAST<v4i16, v2i32, SingleReg>;
-def : BITCAST<i64, v2i32, SingleReg>;
-def : BITCAST<v2i32, i64, SingleReg>;
-
-// 32 bits
-def : BITCAST<v2i16, i32, SingleReg>;
-def : BITCAST<i32, v2i16, SingleReg>;
-
 // ABSHQ
 def : Pat<(abs v2i16:$v), (ABSHQ SingleReg:$v)>;
 def : Pat<(smax v2i16:$v, (v2i16 (vineg v2i16:$v))), (ABSHQ SingleReg:$v)>;
