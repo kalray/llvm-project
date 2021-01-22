@@ -64,6 +64,9 @@ define <2 x float> @ffmawp(<2 x float> %a, <2 x float> %b, <2 x float> %c) {
 define half @ffmaf16(half %a, half %b, half %c) {
 ; CHECK-LABEL: ffmaf16:
 ; CHECK:       # %bb.0:
+; CHECK-NEXT:    zxhd $r1 = $r1
+; CHECK-NEXT:    zxhd $r0 = $r0
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmahq $r2 = $r0, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r2
@@ -71,6 +74,21 @@ define half @ffmaf16(half %a, half %b, half %c) {
 ; CHECK-NEXT:    ;;
   %res = call half @llvm.fma.f16(half %a, half %b, half %c)
   ret half %res
+}
+
+define <2 x half> @ffmahq1(<2 x half> %a, <2 x half> %b, <2 x half> %c) {
+; CHECK-LABEL: ffmahq1:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmahq $r2 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %res = call <2 x half> @llvm.fma.v2f16(<2 x half> %a, <2 x half> %b, <2 x half> %c)
+  ret <2 x half> %res
 }
 
 define <4 x half> @ffmahq(<4 x half> %a, <4 x half> %b, <4 x half> %c) {
@@ -496,6 +514,7 @@ ret <8 x float> %2
 declare half @llvm.fma.f16(half, half, half)
 declare float @llvm.fma.f32(float, float, float)
 declare double @llvm.fma.f64(double, double, double)
+declare <2 x half> @llvm.fma.v2f16(<2 x half>, <2 x half>, <2 x half>)
 declare <2 x float> @llvm.fma.v2f32(<2 x float>, <2 x float>, <2 x float>)
 declare <4 x half> @llvm.fma.v4f16(<4 x half>, <4 x half>, <4 x half>)
 declare <2 x double> @llvm.fma.v2f64(<2 x double>, <2 x double>, <2 x double>)

@@ -119,21 +119,32 @@ def : Pat<(v2f16(fabs v2f16:$v)), (FABSHQ SingleReg:$v)>;
 def : Pat<(v4f16(fabs v4f16:$v)), (FABSHQ SingleReg:$v)>;
 
 // FADD
-def FADDH : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARY16X4
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary16:$a3),
-     "faddhq $a1 = $a2, $a3",
-     [(set f16:$a1, (fadd f16:$a2, Binary16:$a3))],
-     MAU_Y>;
+// TODO: Add ri variants
+// def : Pat<(fadd f16:$rs1, Binary16:$rs2), (FADDHQri (ZXHD SingleReg:$rs1), Binary16x4:$rs2)>;
 def : Pat<(fadd f32:$rs1, Binary32:$rs2), (FADDWri SingleReg:$rs1, Binary32:$rs2)>;
 def : Pat<(fadd f64:$rs1, Binary64:$rs2), (FADDDri SingleReg:$rs1, Binary64:$rs2)>;
-def : Pat<(fadd f16:$rs1, f16:$rs2), (FADDHQrr SingleReg:$rs1, SingleReg:$rs2, rounding_, silent_)>;
+def : Pat<(fadd f16:$rs1, f16:$rs2), (FADDHQrr (ZXHD SingleReg:$rs1), (ZXHD SingleReg:$rs2), rounding_, silent_)>;
 def : Pat<(fadd f32:$rs1, f32:$rs2), (FADDWrr SingleReg:$rs1, SingleReg:$rs2, rounding_, silent_)>;
 def : Pat<(fadd f64:$rs1, f64:$rs2), (FADDDrr SingleReg:$rs1, SingleReg:$rs2, rounding_, silent_)>;
-def : Pat<(fadd v2f16:$rs1, v2f16:$rs2), (FADDHQrr SingleReg:$rs1, SingleReg:$rs2, rounding_, silent_)>;
+def : Pat<(fadd v2f16:$rs1, v2f16:$rs2), (FADDHQrr (ZXWD SingleReg:$rs1), (ZXWD SingleReg:$rs2), rounding_, silent_)>;
 def : Pat<(fadd v4f16:$rs1, v4f16:$rs2), (FADDHQrr SingleReg:$rs1, SingleReg:$rs2, rounding_, silent_)>;
 def : Pat<(fadd v2f32:$rs1, v2f32:$rs2), (FADDWPrr SingleReg:$rs1, SingleReg:$rs2, rounding_, silent_)>;
 def : Pat<(fadd v4f32:$rs1, v4f32:$rs2), (FADDWQ PairedReg:$rs1, PairedReg:$rs2, rounding_, silent_)>;
 def : Pat<(fadd v2f64:$rs1, v2f64:$rs2), (FADDDP PairedReg:$rs1, PairedReg:$rs2, rounding_, silent_)>;
+def : Pat<(v4f64 (fadd v4f64:$rs1, v4f64:$rs2)),
+          (v4f64(REG_SEQUENCE QuadReg,
+            (v2f64(FADDDP
+              (v2f64 (EXTRACT_SUBREG QuadReg:$rs1, sub_p0)),
+              (v2f64 (EXTRACT_SUBREG QuadReg:$rs2, sub_p0)),
+              rounding_,
+              silent_)),
+            sub_p0,
+            (v2f64(FADDDP
+              (v2f64 (EXTRACT_SUBREG QuadReg:$rs1, sub_p1)),
+              (v2f64 (EXTRACT_SUBREG QuadReg:$rs2, sub_p1)),
+              rounding_,
+              silent_)),
+            sub_p1))>;
 
 // FCOMP
 multiclass FCOMP<SDNode SetCC, Floatcomp Cmp, bit SwapOperands> {
@@ -277,14 +288,17 @@ defm : SELECTCONDD<(f32 f32:$truev), (f32 f32:$falsev),(f32 Binary32:$truev), (f
 defm : SELECTCONDD<(f64 f64:$truev), (f64 f64:$falsev),(f64 Binary64:$truev), (f64 Binary64:$falsev)>;
 
 // FFMA
-def : Pat<(f16 (fma f16:$rx, f16:$ry, f16:$rz)), (FFMAHQrr SingleReg:$rz, SingleReg:$rx, SingleReg:$ry, rounding_, silent_)>;
+// TODO: Add ri variant
+def : Pat<(f16 (fma f16:$rx, f16:$ry, f16:$rz)), (FFMAHQrr SingleReg:$rz, (ZXHD SingleReg:$rx), (ZXHD SingleReg:$ry), rounding_, silent_)>;
 def : Pat<(f32 (fma f32:$rx, f32:$ry, f32:$rz)), (FFMAWrr SingleReg:$rz, SingleReg:$rx, SingleReg:$ry, rounding_, silent_)>;
 def : Pat<(f32 (fma f32:$rx, Binary32:$ry, f32:$rz)), (FFMAWri SingleReg:$rz, SingleReg:$rx, Binary32:$ry)>;
 def : Pat<(f64 (fma f64:$rx, f64:$ry, f64:$rz)), (FFMADrr SingleReg:$rz, SingleReg:$rx, SingleReg:$ry, rounding_, silent_)>;
 def : Pat<(f64 (fma f64:$rx, Binary64:$ry, f64:$rz)), (FFMADri SingleReg:$rz, SingleReg:$rx, Binary64:$ry)>;
 
+
+// TODO: Add ri variants
 def : Pat<(v2f32 (fma v2f32:$rx, v2f32:$ry, v2f32:$rz)), (FFMAWPrr SingleReg:$rz, SingleReg:$rx, SingleReg:$ry, rounding_, silent_)>;
-def : Pat<(v2f16 (fma v2f16:$rx, v2f16:$ry, v2f16:$rz)), (FFMAHQrr SingleReg:$rz, SingleReg:$rx, SingleReg:$ry, rounding_, silent_)>;
+def : Pat<(v2f16 (fma v2f16:$rx, v2f16:$ry, v2f16:$rz)), (FFMAHQrr SingleReg:$rz, (ZXWD SingleReg:$rx), (ZXWD SingleReg:$ry), rounding_, silent_)>;
 def : Pat<(v4f16 (fma v4f16:$rx, v4f16:$ry, v4f16:$rz)), (FFMAHQrr SingleReg:$rz, SingleReg:$rx, SingleReg:$ry, rounding_, silent_)>;
 def : Pat<(v4f32 (fma v4f32:$rx, v4f32:$ry, v4f32:$rz)),
           (REG_SEQUENCE PairedReg,
@@ -335,18 +349,14 @@ def : Pat<(f32 (sint_to_fp i32:$val)), (FLOATW SingleReg:$val, DefaultShift, rou
 def : Pat<(f64 (sint_to_fp i32:$val)), (FLOATD (SXWD SingleReg:$val), DefaultShift, rounding_rn, silent_)>;
 def : Pat<(f64 (sint_to_fp i64:$val)), (FLOATD SingleReg:$val, DefaultShift, rounding_rn, silent_)>;
 
-// FMUL
-def FMULH : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARY16X4
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary16:$a3),
-     "fmulhq $a1 = $a2, $a3",
-     [(set f16:$a1, (fmul f16:$a2, Binary16:$a3))],
-     MAU_Y>;
+// TODO: Add ri variants
+// def : Pat<(fmul f16:$rs1, (f16 Binary16:$rs2)), (f16(FMULHQri (f16(ZXHD (f16 SingleReg:$rs1))), Binary16x4:$a3, rounding_, silent_))>;
 def : Pat<(fmul f32:$rs1, Binary32:$rs2), (FMULWri SingleReg:$rs1, Binary32:$rs2)>;
 def : Pat<(fmul f64:$rs1, Binary64:$rs2), (FMULDri SingleReg:$rs1, Binary64:$rs2)>;
-def : Pat<(fmul f16:$rs1, f16:$rs2), (FMULHQrr SingleReg:$rs1, SingleReg:$rs2, rounding_, silent_)>;
+def : Pat<(fmul f16:$rs1, f16:$rs2), (FMULHQrr (ZXHD SingleReg:$rs1), (ZXHD SingleReg:$rs2), rounding_, silent_)>;
 def : Pat<(fmul f32:$rs1, f32:$rs2), (FMULWrr SingleReg:$rs1, SingleReg:$rs2, rounding_, silent_)>;
 def : Pat<(fmul f64:$rs1, f64:$rs2), (FMULDrr SingleReg:$rs1, SingleReg:$rs2, rounding_, silent_)>;
-def : Pat<(fmul v2f16:$rs1, v2f16:$rs2), (FMULHQrr SingleReg:$rs1, SingleReg:$rs2, rounding_, silent_)>;
+def : Pat<(fmul v2f16:$rs1, v2f16:$rs2), (FMULHQrr (ZXWD SingleReg:$rs1), (ZXWD SingleReg:$rs2), rounding_, silent_)>;
 def : Pat<(fmul v4f16:$rs1, v4f16:$rs2), (FMULHQrr SingleReg:$rs1, SingleReg:$rs2, rounding_, silent_)>;
 def : Pat<(fmul v2f32:$rs1, v2f32:$rs2), (FMULWPrr SingleReg:$rs1, SingleReg:$rs2, rounding_, silent_)>;
 def : Pat<(fmul v4f32:$rs1, v4f32:$rs2), (FMULWQ PairedReg:$rs1, PairedReg:$rs2, rounding_, silent_)>;
@@ -357,7 +367,7 @@ def : Pat<(f16 (fpround f64:$val)), (FNARROWWH (FNARROWDW SingleReg:$val, roundi
 def : Pat<(f32 (fpround f64:$val)), (FNARROWDW SingleReg:$val, rounding_, silent_)>;
 def : Pat<(v2f16 (fpround v2f32:$val)), (FNARROWWHQ (INSERT_SUBREG
                                                       (INSERT_SUBREG (v4f32 (IMPLICIT_DEF)), SingleReg:$val, sub_s0),
-                                                      (v2f32 (IMPLICIT_DEF)), sub_s1), rounding_, silent_)>;
+                                                      (ANDWri10 (v2f32 (IMPLICIT_DEF)), 0), sub_s1), rounding_, silent_)>;
 def : Pat<(v4f16 (fpround v4f32:$val)), (FNARROWWHQ PairedReg:$val, rounding_, silent_)>;
 
 def : Pat<(v2f16 (fpround v2f64:$val)), (INSF (FNARROWWH (FNARROWDW (f64 (EXTRACT_SUBREG PairedReg:$val, sub_s0)), rounding_, silent_), rounding_, silent_),
@@ -375,23 +385,32 @@ def : Pat<(fneg v2f16:$rs), (FNEGHQ SingleReg:$rs)>;
 def : Pat<(vfneg v2f16:$rs), (FNEGHQ SingleReg:$rs)>;
 def : Pat<(vfneg v4f16:$rs), (FNEGHQ SingleReg:$rs)>;
 def : Pat<(vfneg v2f32:$rs), (FNEGWP SingleReg:$rs)>;
-
-// FSBF
-def FSBFH : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARY16X4
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary16:$a3),
-     "fsbfhq $a1 = $a2, $a3",
-     [(set f16:$a1, (fsub f16:$a3, Binary16:$a2))],
-     MAU_Y>;
+// TODO: Add ri variants
+// def : Pat<(f16(fsub (f16 Binary16:$rs2), f16:$rs2)), (f16(FSBFHQri (f16(ZXHD SingleReg:$rs2)), Binary16x4:$rs1))>;
 def : Pat<(fsub Binary32:$rs1, f32:$rs2), (FSBFWri SingleReg:$rs2, Binary32:$rs1)>;
 def : Pat<(fsub Binary64:$rs1, f64:$rs2), (FSBFDri SingleReg:$rs2, Binary64:$rs1)>;
-def : Pat<(fsub f16:$rs1, f16:$rs2), (FSBFHQrr SingleReg:$rs2, SingleReg:$rs1, rounding_, silent_)>;
+def : Pat<(fsub f16:$rs1, f16:$rs2), (FSBFHQrr (ZXHD SingleReg:$rs2), (ZXHD SingleReg:$rs1), rounding_, silent_)>;
 def : Pat<(fsub f32:$rs1, f32:$rs2), (FSBFWrr SingleReg:$rs2, SingleReg:$rs1, rounding_, silent_)>;
 def : Pat<(fsub f64:$rs1, f64:$rs2), (FSBFDrr SingleReg:$rs2, SingleReg:$rs1, rounding_, silent_)>;
-def : Pat<(fsub v2f16:$rs1, v2f16:$rs2), (FSBFHQrr SingleReg:$rs2, SingleReg:$rs1, rounding_, silent_)>;
+def : Pat<(fsub v2f16:$rs1, v2f16:$rs2), (FSBFHQrr (ZXWD SingleReg:$rs2), (ZXWD SingleReg:$rs1), rounding_, silent_)>;
 def : Pat<(fsub v4f16:$rs1, v4f16:$rs2), (FSBFHQrr SingleReg:$rs2, SingleReg:$rs1, rounding_, silent_)>;
 def : Pat<(fsub v2f32:$rs1, v2f32:$rs2), (FSBFWPrr SingleReg:$rs2, SingleReg:$rs1, rounding_, silent_)>;
 def : Pat<(fsub v4f32:$rs1, v4f32:$rs2), (FSBFWQ PairedReg:$rs2, PairedReg:$rs1, rounding_, silent_)>;
 def : Pat<(fsub v2f64:$rs1, v2f64:$rs2), (FSBFDP PairedReg:$rs2, PairedReg:$rs1, rounding_, silent_)>;
+def : Pat<(v4f64 (fsub v4f64:$rs1, v4f64:$rs2)),
+          (v4f64(REG_SEQUENCE QuadReg,
+            (v2f64(FSBFDP
+              (v2f64 (EXTRACT_SUBREG QuadReg:$rs2, sub_p0)),
+              (v2f64 (EXTRACT_SUBREG QuadReg:$rs1, sub_p0)),
+              rounding_,
+              silent_)),
+            sub_p0,
+            (v2f64(FSBFDP
+              (v2f64 (EXTRACT_SUBREG QuadReg:$rs2, sub_p1)),
+              (v2f64 (EXTRACT_SUBREG QuadReg:$rs1, sub_p1)),
+              rounding_,
+              silent_)),
+            sub_p1))>;
 
 // FWIDEN
 def : Pat<(f64 (fpextend f32:$val)), (FWIDENLWD SingleReg:$val, silent_)>;
