@@ -114,6 +114,10 @@ defm : LoadPat<loadv2f64, v2f64, 4, LQp, LQri10, LQrr, variant_>;
 
 defm : LoadPat<loadv4f64, v4f64, 5, LOp, LOri10, LOrr, variant_>;
 
+// FABS
+def : Pat<(v2f16(fabs v2f16:$v)), (FABSHQ SingleReg:$v)>;
+def : Pat<(v4f16(fabs v4f16:$v)), (FABSHQ SingleReg:$v)>;
+
 // FADD
 def FADDH : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARY16X4
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary16:$a3),
