@@ -2,6 +2,174 @@
 ; RUN: llc -O2 -o - %s | FileCheck %s
 target triple = "kvx-kalray-cos"
 
+define <2 x i16> @add_i16x2_rr(<2 x i16> %a, <2 x i16> %b) {
+; CHECK-LABEL: add_i16x2_rr:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addhq $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %add = add <2 x i16> %a, %b
+  ret <2 x i16> %add
+}
+
+define <2 x i16> @add_i16x2_ri(<2 x i16> %a) {
+; CHECK-LABEL: add_i16x2_ri:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addhq $r0 = $r0, 0xffff
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %add = add <2 x i16> %a, <i16 -1, i16 0>
+  ret <2 x i16> %add
+}
+
+define <2 x i16> @not_sub_i16x2_ri(<2 x i16> %a) {
+; CHECK-LABEL: not_sub_i16x2_ri:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addhq $r0 = $r0, 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %sub = sub <2 x i16> %a, <i16 -1, i16 0>
+  ret <2 x i16> %sub
+}
+
+define <4 x i16> @add_i16x4_rr(<4 x i16> %a, <4 x i16> %b) {
+; CHECK-LABEL: add_i16x4_rr:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addhq $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %add = add <4 x i16> %a, %b
+  ret <4 x i16> %add
+}
+
+define <4 x i16> @add_i16x4_ri_(<4 x i16> %a) {
+; CHECK-LABEL: add_i16x4_ri_:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addhq $r0 = $r0, 0xffff0005
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %add = add <4 x i16> %a, <i16 5, i16 -1, i16 0, i16 0>
+  ret <4 x i16> %add
+}
+
+define <4 x i16> @add_i16x4_ri_at(<4 x i16> %a) {
+; CHECK-LABEL: add_i16x4_ri_at:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addhq.@ $r0 = $r0, 0xffff0005
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %add = add <4 x i16> %a, <i16 5, i16 -1, i16 5, i16 -1>
+  ret <4 x i16> %add
+}
+
+define <4 x i16> @add_i16x4_ri_rr2(<4 x i16> %a) {
+; CHECK-LABEL: add_i16x4_ri_rr2:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r1 = 0x10005ffff0005
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addhq $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %add = add <4 x i16> %a, <i16 5, i16 -1, i16 5, i16 1>
+  ret <4 x i16> %add
+}
+define <4 x i16> @not_sub_i16x4_ri_at(<4 x i16> %a) {
+; CHECK-LABEL: not_sub_i16x4_ri_at:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addhq.@ $r0 = $r0, 0x50001
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %sub = sub <4 x i16> %a, <i16 -1, i16 -5, i16 -1, i16 -5>
+  ret <4 x i16> %sub
+}
+
+define <4 x i16> @not_sub_i16x4_ri_(<4 x i16> %a) {
+; CHECK-LABEL: not_sub_i16x4_ri_:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addhq $r0 = $r0, 0x50001
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %sub = sub <4 x i16> %a, <i16 -1, i16 -5, i16 0, i16 0>
+  ret <4 x i16> %sub
+}
+
+define <2 x i32> @add_i32x2_rr(<2 x i32> %a, <2 x i32> %b) {
+; CHECK-LABEL: add_i32x2_rr:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addwp $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %add = add <2 x i32> %a, %b
+  ret <2 x i32> %add
+}
+
+define <2 x i32> @add_i32x2_ri_(<2 x i32> %a) {
+; CHECK-LABEL: add_i32x2_ri_:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addwp $r0 = $r0, -1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %add = add <2 x i32> %a, <i32 -1, i32 0>
+  ret <2 x i32> %add
+}
+
+define <2 x i32> @add_i32x2_ri_at(<2 x i32> %a) {
+; CHECK-LABEL: add_i32x2_ri_at:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addwp.@ $r0 = $r0, -1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %add = add <2 x i32> %a, <i32 -1, i32 -1>
+  ret <2 x i32> %add
+}
+
+define <2 x i32> @not_sub_i32x2_ri_(<2 x i32> %a) {
+; CHECK-LABEL: not_sub_i32x2_ri_:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addwp $r0 = $r0, 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %sub = sub <2 x i32> %a, <i32 -1, i32 0>
+  ret <2 x i32> %sub
+}
+
+define <2 x i32> @not_sub_i32x2_ri_at(<2 x i32> %a) {
+; CHECK-LABEL: not_sub_i32x2_ri_at:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addwp.@ $r0 = $r0, 0x1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %sub = sub <2 x i32> %a, <i32 -1, i32 -1>
+  ret <2 x i32> %sub
+}
+
+define <2 x i32> @add_i32x2_rr_2(<2 x i32> %a) {
+; CHECK-LABEL: add_i32x2_rr_2:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r1 = 0xffffffff00000001
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addwp $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %add = add <2 x i32> %a, <i32 1, i32 -1>
+  ret <2 x i32> %add
+}
+
 define <2 x i16> @addx2_i16x2_rr(<2 x i16> %a, <2 x i16> %b) {
 ; CHECK-LABEL: addx2_i16x2_rr:
 ; CHECK:       # %bb.0: # %entry
@@ -1064,3 +1232,519 @@ entry:
   %add = or <2 x i32> %mul, <i32 3, i32 2>
   ret <2 x i32> %add
 }
+
+define <2 x i16> @not_subx2_i16x2_ri_(<2 x i16> %a) {
+; CHECK-LABEL: not_subx2_i16x2_ri_:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx2hq $r0 = $r0, 0xfffeffff
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <2 x i16> %a, <i16 1, i16 1>
+  %sub = sub<2 x i16> %mul, <i16 1, i16 2>
+  ret <2 x i16> %sub
+}
+
+define <2 x i16> @not_subx2_u16x2_ri_(<2 x i16> %a) {
+; CHECK-LABEL: not_subx2_u16x2_ri_:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx2hq $r0 = $r0, 0xfffeffff
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <2 x i16> %a, <i16 1, i16 1>
+  %sub = sub<2 x i16> %mul, <i16 1, i16 2>
+  ret <2 x i16> %sub
+}
+
+define <4 x i16> @not_subx2_i16x4_ri_(<4 x i16> %a) {
+; CHECK-LABEL: not_subx2_i16x4_ri_:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx2hq $r0 = $r0, 0xfffeffff
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <4 x i16> %a, <i16 1, i16 1, i16 1, i16 1>
+  %sub = sub<4 x i16> %mul, <i16 1, i16 2, i16 0, i16 0>
+  ret <4 x i16> %sub
+}
+
+define <4 x i16> @not_subx2_i16x4_ri_at(<4 x i16> %a) {
+; CHECK-LABEL: not_subx2_i16x4_ri_at:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx2hq.@ $r0 = $r0, 0xfffeffff
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <4 x i16> %a, <i16 1, i16 1, i16 1, i16 1>
+  %sub = sub<4 x i16> %mul, <i16 1, i16 2, i16 1, i16 2>
+  ret <4 x i16> %sub
+}
+
+define <4 x i16> @not_subx2_u16x4_ri_(<4 x i16> %a) {
+; CHECK-LABEL: not_subx2_u16x4_ri_:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx2hq $r0 = $r0, 0xfffeffff
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <4 x i16> %a, <i16 1, i16 1, i16 1, i16 1>
+  %sub = sub<4 x i16> %mul, <i16 1, i16 2, i16 0, i16 0>
+  ret <4 x i16> %sub
+}
+
+define <4 x i16> @not_subx2_u16x4_ri_at(<4 x i16> %a) {
+; CHECK-LABEL: not_subx2_u16x4_ri_at:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx2hq.@ $r0 = $r0, 0xfffeffff
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <4 x i16> %a, <i16 1, i16 1, i16 1, i16 1>
+  %sub = sub<4 x i16> %mul, <i16 1, i16 2, i16 1, i16 2>
+  ret <4 x i16> %sub
+}
+
+define <2 x i32> @not_subx2_i32x2_ri_(<2 x i32> %a) {
+; CHECK-LABEL: not_subx2_i32x2_ri_:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx2wp $r0 = $r0, 0xffffffff
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <2 x i32> %a, <i32 1, i32 1>
+  %sub = sub<2 x i32> %mul, <i32 1, i32 0>
+  ret <2 x i32> %sub
+}
+
+define <2 x i32> @not_subx2_i32x2_ri_at(<2 x i32> %a) {
+; CHECK-LABEL: not_subx2_i32x2_ri_at:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx2wp.@ $r0 = $r0, 0xfffffffd
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <2 x i32> %a, <i32 1, i32 1>
+  %sub = sub<2 x i32> %mul, <i32 3, i32 3>
+  ret <2 x i32> %sub
+}
+
+define <2 x i32> @not_subx2_u32x2_ri_(<2 x i32> %a) {
+; CHECK-LABEL: not_subx2_u32x2_ri_:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx2wp $r0 = $r0, 0xffffffff
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <2 x i32> %a, <i32 1, i32 1>
+  %sub = sub<2 x i32> %mul, <i32 1, i32 0>
+  ret <2 x i32> %sub
+}
+
+define <2 x i32> @not_subx2_u32x2_ri_at(<2 x i32> %a) {
+; CHECK-LABEL: not_subx2_u32x2_ri_at:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx2wp.@ $r0 = $r0, 0xfffffffd
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <2 x i32> %a, <i32 1, i32 1>
+  %sub = sub<2 x i32> %mul, <i32 3, i32 3>
+  ret <2 x i32> %sub
+}
+
+define <2 x i16> @not_subx4_i16x2_ri_(<2 x i16> %a) {
+; CHECK-LABEL: not_subx4_i16x2_ri_:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx4hq $r0 = $r0, 0xfffeffff
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <2 x i16> %a, <i16 2, i16 2>
+  %sub = sub<2 x i16> %mul, <i16 1, i16 2>
+  ret <2 x i16> %sub
+}
+
+define <2 x i16> @not_subx4_u16x2_ri_(<2 x i16> %a) {
+; CHECK-LABEL: not_subx4_u16x2_ri_:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx4hq $r0 = $r0, 0xfffeffff
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <2 x i16> %a, <i16 2, i16 2>
+  %sub = sub<2 x i16> %mul, <i16 1, i16 2>
+  ret <2 x i16> %sub
+}
+
+define <4 x i16> @not_subx4_i16x4_ri_(<4 x i16> %a) {
+; CHECK-LABEL: not_subx4_i16x4_ri_:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx4hq $r0 = $r0, 0xfffeffff
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <4 x i16> %a, <i16 2, i16 2, i16 2, i16 2>
+  %sub = sub<4 x i16> %mul, <i16 1, i16 2, i16 0, i16 0>
+  ret <4 x i16> %sub
+}
+
+define <4 x i16> @not_subx4_i16x4_ri_at(<4 x i16> %a) {
+; CHECK-LABEL: not_subx4_i16x4_ri_at:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx4hq.@ $r0 = $r0, 0xfffeffff
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <4 x i16> %a, <i16 2, i16 2, i16 2, i16 2>
+  %sub = sub<4 x i16> %mul, <i16 1, i16 2, i16 1, i16 2>
+  ret <4 x i16> %sub
+}
+
+define <4 x i16> @not_subx4_u16x4_ri_(<4 x i16> %a) {
+; CHECK-LABEL: not_subx4_u16x4_ri_:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx4hq $r0 = $r0, 0xfffeffff
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <4 x i16> %a, <i16 2, i16 2, i16 2, i16 2>
+  %sub = sub<4 x i16> %mul, <i16 1, i16 2, i16 0, i16 0>
+  ret <4 x i16> %sub
+}
+
+define <4 x i16> @not_subx4_u16x4_ri_at(<4 x i16> %a) {
+; CHECK-LABEL: not_subx4_u16x4_ri_at:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx4hq.@ $r0 = $r0, 0xfffeffff
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <4 x i16> %a, <i16 2, i16 2, i16 2, i16 2>
+  %sub = sub<4 x i16> %mul, <i16 1, i16 2, i16 1, i16 2>
+  ret <4 x i16> %sub
+}
+
+define <2 x i32> @not_subx4_i32x2_ri_(<2 x i32> %a) {
+; CHECK-LABEL: not_subx4_i32x2_ri_:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx4wp $r0 = $r0, 0xffffffff
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <2 x i32> %a, <i32 2, i32 2>
+  %sub = sub<2 x i32> %mul, <i32 1, i32 0>
+  ret <2 x i32> %sub
+}
+
+define <2 x i32> @not_subx4_i32x2_ri_at(<2 x i32> %a) {
+; CHECK-LABEL: not_subx4_i32x2_ri_at:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx4wp.@ $r0 = $r0, 0xfffffffd
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <2 x i32> %a, <i32 2, i32 2>
+  %sub = sub<2 x i32> %mul, <i32 3, i32 3>
+  ret <2 x i32> %sub
+}
+
+define <2 x i32> @not_subx4_u32x2_ri_(<2 x i32> %a) {
+; CHECK-LABEL: not_subx4_u32x2_ri_:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx4wp $r0 = $r0, 0xffffffff
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <2 x i32> %a, <i32 2, i32 2>
+  %sub = sub<2 x i32> %mul, <i32 1, i32 0>
+  ret <2 x i32> %sub
+}
+
+define <2 x i32> @not_subx4_u32x2_ri_at(<2 x i32> %a) {
+; CHECK-LABEL: not_subx4_u32x2_ri_at:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx4wp.@ $r0 = $r0, 0xfffffffd
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <2 x i32> %a, <i32 2, i32 2>
+  %sub = sub<2 x i32> %mul, <i32 3, i32 3>
+  ret <2 x i32> %sub
+}
+
+define <2 x i16> @not_subx8_i16x2_ri_(<2 x i16> %a) {
+; CHECK-LABEL: not_subx8_i16x2_ri_:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx8hq $r0 = $r0, 0xfffeffff
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <2 x i16> %a, <i16 3, i16 3>
+  %sub = sub<2 x i16> %mul, <i16 1, i16 2>
+  ret <2 x i16> %sub
+}
+
+define <2 x i16> @not_subx8_u16x2_ri_(<2 x i16> %a) {
+; CHECK-LABEL: not_subx8_u16x2_ri_:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx8hq $r0 = $r0, 0xfffeffff
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <2 x i16> %a, <i16 3, i16 3>
+  %sub = sub<2 x i16> %mul, <i16 1, i16 2>
+  ret <2 x i16> %sub
+}
+
+define <4 x i16> @not_subx8_i16x4_ri_(<4 x i16> %a) {
+; CHECK-LABEL: not_subx8_i16x4_ri_:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx8hq $r0 = $r0, 0xfffeffff
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <4 x i16> %a, <i16 3, i16 3, i16 3, i16 3>
+  %sub = sub<4 x i16> %mul, <i16 1, i16 2, i16 0, i16 0>
+  ret <4 x i16> %sub
+}
+
+define <4 x i16> @not_subx8_i16x4_ri_at(<4 x i16> %a) {
+; CHECK-LABEL: not_subx8_i16x4_ri_at:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx8hq.@ $r0 = $r0, 0xfffeffff
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <4 x i16> %a, <i16 3, i16 3, i16 3, i16 3>
+  %sub = sub<4 x i16> %mul, <i16 1, i16 2, i16 1, i16 2>
+  ret <4 x i16> %sub
+}
+
+define <4 x i16> @not_subx8_u16x4_ri_(<4 x i16> %a) {
+; CHECK-LABEL: not_subx8_u16x4_ri_:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx8hq $r0 = $r0, 0xfffeffff
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <4 x i16> %a, <i16 3, i16 3, i16 3, i16 3>
+  %sub = sub<4 x i16> %mul, <i16 1, i16 2, i16 0, i16 0>
+  ret <4 x i16> %sub
+}
+
+define <4 x i16> @not_subx8_u16x4_ri_at(<4 x i16> %a) {
+; CHECK-LABEL: not_subx8_u16x4_ri_at:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx8hq.@ $r0 = $r0, 0xfffeffff
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <4 x i16> %a, <i16 3, i16 3, i16 3, i16 3>
+  %sub = sub<4 x i16> %mul, <i16 1, i16 2, i16 1, i16 2>
+  ret <4 x i16> %sub
+}
+
+define <2 x i32> @not_subx8_i32x2_ri_(<2 x i32> %a) {
+; CHECK-LABEL: not_subx8_i32x2_ri_:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx8wp $r0 = $r0, 0xffffffff
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <2 x i32> %a, <i32 3, i32 3>
+  %sub = sub<2 x i32> %mul, <i32 1, i32 0>
+  ret <2 x i32> %sub
+}
+
+define <2 x i32> @not_subx8_i32x2_ri_at(<2 x i32> %a) {
+; CHECK-LABEL: not_subx8_i32x2_ri_at:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx8wp.@ $r0 = $r0, 0xfffffffd
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <2 x i32> %a, <i32 3, i32 3>
+  %sub = sub<2 x i32> %mul, <i32 3, i32 3>
+  ret <2 x i32> %sub
+}
+
+define <2 x i32> @not_subx8_u32x2_ri_(<2 x i32> %a) {
+; CHECK-LABEL: not_subx8_u32x2_ri_:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx8wp $r0 = $r0, 0xffffffff
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <2 x i32> %a, <i32 3, i32 3>
+  %sub = sub<2 x i32> %mul, <i32 1, i32 0>
+  ret <2 x i32> %sub
+}
+
+define <2 x i32> @not_subx8_u32x2_ri_at(<2 x i32> %a) {
+; CHECK-LABEL: not_subx8_u32x2_ri_at:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx8wp.@ $r0 = $r0, 0xfffffffd
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <2 x i32> %a, <i32 3, i32 3>
+  %sub = sub<2 x i32> %mul, <i32 3, i32 3>
+  ret <2 x i32> %sub
+}
+
+define <2 x i16> @not_subx16_i16x2_ri_(<2 x i16> %a) {
+; CHECK-LABEL: not_subx16_i16x2_ri_:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx16hq $r0 = $r0, 0xfffeffff
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <2 x i16> %a, <i16 4, i16 4>
+  %sub = sub<2 x i16> %mul, <i16 1, i16 2>
+  ret <2 x i16> %sub
+}
+
+define <2 x i16> @not_subx16_u16x2_ri_(<2 x i16> %a) {
+; CHECK-LABEL: not_subx16_u16x2_ri_:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx16hq $r0 = $r0, -16
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <2 x i16> %a, <i16 4, i16 4>
+  %sub = sub<2 x i16> %mul, <i16 16, i16 1>
+  ret <2 x i16> %sub
+}
+
+define <2 x i16> @not_subx16_u16x2_ri_2(<2 x i16> %a) {
+; CHECK-LABEL: not_subx16_u16x2_ri_2:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx16hq $r0 = $r0, 0x10000
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <2 x i16> %a, <i16 4, i16 4>
+  %sub = sub<2 x i16> %mul, <i16 0, i16 -1>
+  ret <2 x i16> %sub
+}
+define <4 x i16> @not_subx16_i16x4_ri_(<4 x i16> %a) {
+; CHECK-LABEL: not_subx16_i16x4_ri_:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx16hq $r0 = $r0, 0xfffeffff
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <4 x i16> %a, <i16 4, i16 4, i16 4, i16 4>
+  %sub = sub<4 x i16> %mul, <i16 1, i16 2, i16 0, i16 0>
+  ret <4 x i16> %sub
+}
+
+define <4 x i16> @not_subx16_i16x4_ri_at(<4 x i16> %a) {
+; CHECK-LABEL: not_subx16_i16x4_ri_at:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx16hq.@ $r0 = $r0, 0xfffeffff
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <4 x i16> %a, <i16 4, i16 4, i16 4, i16 4>
+  %sub = sub<4 x i16> %mul, <i16 1, i16 2, i16 1, i16 2>
+  ret <4 x i16> %sub
+}
+
+define <4 x i16> @not_subx16_u16x4_ri_(<4 x i16> %a) {
+; CHECK-LABEL: not_subx16_u16x4_ri_:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx16hq $r0 = $r0, 0xfffeffff
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <4 x i16> %a, <i16 4, i16 4, i16 4, i16 4>
+  %sub = sub<4 x i16> %mul, <i16 1, i16 2, i16 0, i16 0>
+  ret <4 x i16> %sub
+}
+
+define <4 x i16> @not_subx16_u16x4_ri_at(<4 x i16> %a) {
+; CHECK-LABEL: not_subx16_u16x4_ri_at:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx16hq.@ $r0 = $r0, 0xfffeffff
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <4 x i16> %a, <i16 4, i16 4, i16 4, i16 4>
+  %sub = sub<4 x i16> %mul, <i16 1, i16 2, i16 1, i16 2>
+  ret <4 x i16> %sub
+}
+
+define <2 x i32> @not_subx16_i32x2_ri_(<2 x i32> %a) {
+; CHECK-LABEL: not_subx16_i32x2_ri_:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx16wp $r0 = $r0, 0xffffffff
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <2 x i32> %a, <i32 4, i32 4>
+  %sub = sub<2 x i32> %mul, <i32 1, i32 0>
+  ret <2 x i32> %sub
+}
+
+define <2 x i32> @not_subx16_i32x2_ri_at(<2 x i32> %a) {
+; CHECK-LABEL: not_subx16_i32x2_ri_at:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx16wp.@ $r0 = $r0, 0xfffffffd
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <2 x i32> %a, <i32 4, i32 4>
+  %sub = sub<2 x i32> %mul, <i32 3, i32 3>
+  ret <2 x i32> %sub
+}
+
+define <2 x i32> @not_subx16_u32x2_ri_(<2 x i32> %a) {
+; CHECK-LABEL: not_subx16_u32x2_ri_:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx16wp $r0 = $r0, 0xffffffff
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <2 x i32> %a, <i32 4, i32 4>
+  %sub = sub<2 x i32> %mul, <i32 1, i32 0>
+  ret <2 x i32> %sub
+}
+
+define <2 x i32> @not_subx16_u32x2_ri_2(<2 x i32> %a) {
+; CHECK-LABEL: not_subx16_u32x2_ri_2:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx16wp $r0 = $r0, 0xffff4111
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <2 x i32> %a, <i32 4, i32 4>
+  %sub = sub<2 x i32> %mul, <i32 48879, i32 0>
+  ret <2 x i32> %sub
+}
+
+define <2 x i32> @not_subx16_u32x2_ri_at(<2 x i32> %a) {
+; CHECK-LABEL: not_subx16_u32x2_ri_at:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx16wp.@ $r0 = $r0, 0xfffffffd
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <2 x i32> %a, <i32 4, i32 4>
+  %sub = sub<2 x i32> %mul, <i32 3, i32 3>
+  ret <2 x i32> %sub
+}
+
+define <2 x i32> @not_subx16_u32x2_ri_at_2(<2 x i32> %a) {
+; CHECK-LABEL: not_subx16_u32x2_ri_at_2:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx16wp.@ $r0 = $r0, 0xfffff448
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = shl <2 x i32> %a, <i32 4, i32 4>
+  %sub = sub<2 x i32> %mul, <i32 3000, i32 3000>
+  ret <2 x i32> %sub
+}
+

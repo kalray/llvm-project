@@ -2278,7 +2278,7 @@ bool KVXTargetLowering::isLegalStoreImmediate(int64_t Imm) const {
 }
 
 SDValue KVX_LOW::buildImmVector(llvm::SDNode &N, llvm::SelectionDAG &CurDag,
-                                bool IsFP) {
+                                bool IsFP, bool Negative) {
 
   auto *BV = dyn_cast<BuildVectorSDNode>(&N);
   if (!BV)
@@ -2300,16 +2300,21 @@ SDValue KVX_LOW::buildImmVector(llvm::SDNode &N, llvm::SelectionDAG &CurDag,
     if (Op.isUndef())
       continue;
 
-    if (IsFP)
-      V |= (cast<ConstantFPSDNode>(Op)
-                ->getValueAPF()
-                .bitcastToAPInt()
-                .getZExtValue() &
-            EltMask)
-           << (EltSize * I);
-    else
+    if (IsFP) {
+      if (Negative)
+        report_fatal_error(
+            "Must implement negative FP immediate vector construction.");
+
+      auto FPv = cast<ConstantFPSDNode>(Op)->getValueAPF();
+
+      V |= (FPv.bitcastToAPInt().getZExtValue() & EltMask) << (EltSize * I);
+    } else if (!Negative) {
       V |= (cast<ConstantSDNode>(Op)->getSExtValue() & EltMask)
            << (EltSize * I);
+    } else {
+      V |= (-cast<ConstantSDNode>(Op)->getSExtValue() & EltMask)
+           << (EltSize * I);
+    }
   }
 
   return CurDag.getConstant(V, SDLoc(&N), OutVT, true);
