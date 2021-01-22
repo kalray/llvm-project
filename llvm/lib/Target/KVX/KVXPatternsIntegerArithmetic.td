@@ -2,6 +2,14 @@
 //  ALU Instructions - Patterns
 //===----------------------------------------------------------------------===//
 
+def nuwadd : PatFrag<(ops node:$op0, node:$op1), (add node:$op0, node:$op1), [{
+    return N->getFlags().hasNoUnsignedWrap();
+  }]>;
+
+def nswadd : PatFrag<(ops node:$op0, node:$op1), (add node:$op0, node:$op1), [{
+    return N->getFlags().hasNoSignedWrap();
+  }]>;
+
 // TODO: implement patterns or intrinsics for the following instructions:
 // ADDCHCP ADDCWC SBFCHCP SBFCWC
 // LNANDHQ LNANDWP LNORHQ LORHQ LORWP
@@ -253,6 +261,77 @@ foreach vtype = [ v8i8, v4i16, v2i32 ] in {
 // ANDNW
 def : Pat<(i32(and (not i32:$rs1), i32:$rs2)), (ANDNWrr SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(i32(and (not i32:$r), Signed37W:$i)), (ANDNWri37 SingleReg:$r, imm:$i)>;
+// AVGW / AVGRW
+def : Pat<(sra  (add i32:$v0, Wrapped32:$v1), (i64 1)), (AVGWri SingleReg:$v0, Wrapped32:$v1)>;
+def : Pat<(sra  (add i32:$v0, i32:$v1),       (i64 1)), (AVGWrr SingleReg:$v0, SingleReg:$v1)>;
+
+def : Pat<(srl  (nswadd i32:$v0, Wrapped32:$v1), (i64 1)), (AVGWri SingleReg:$v0, Wrapped32:$v1)>;
+def : Pat<(srl  (nswadd i32:$v0, i32:$v1),       (i64 1)), (AVGWrr SingleReg:$v0, SingleReg:$v1)>;
+
+def : Pat<(sra  (add (add i32:$v0, i32:$v1),  (i32 1)), (i64 1)), (AVGRWrr SingleReg:$v0, SingleReg:$v1)>;
+def : Pat<(srl  (nswadd (nswadd i32:$v0, i32:$v1),  (i32 1)), (i64 1)), (AVGRWrr SingleReg:$v0, SingleReg:$v1)>;
+
+// AVGUW / AVGRUW
+def : Pat<(srl  (nuwadd i32:$v0, Wrapped32:$v1), (i64 1)), (AVGUWri SingleReg:$v0, Wrapped32:$v1)>;
+def : Pat<(srl  (nuwadd i32:$v0, i32:$v1),       (i64 1)), (AVGUWrr SingleReg:$v0, SingleReg:$v1)>;
+def : Pat<(i32(trunc(i64(srl (add (zext i32:$v0), Unsigned64W:$v1), (i64 1))))), (AVGUWri SingleReg:$v0, (trunc_imm_32 $v1))>;
+def : Pat<(i32(trunc(i64(srl (add (zext i32:$v0), (zext i32:$v1)), (i64 1))))), (AVGUWrr SingleReg:$v0, SingleReg:$v1)>;
+
+def : Pat<(srl (nuwadd (nuwadd i32:$v0, i32:$v1),  (i32 1)), (i32 1)), (AVGRUWrr SingleReg:$v0, SingleReg:$v1)>;
+def : Pat<(i32 (trunc(i64(srl  (add (add (zext i32:$v0), (zext i32:$v1)), (i64 1)), (i64 1))))), (AVGRUWrr SingleReg:$v0, SingleReg:$v1)>;
+
+// AVGUWP / AVGRUWP
+def : Pat<(srl ( nuwadd v2i32:$v, (v2i32 (build_vector (Wrapped32:$i), (i32 0))) ), (v2i32 (v2_splat_1) ) ), (AVGUWPri SingleReg:$v, (i32 (trunc_imm_32 imm:$i)), splat32_)>;
+def : Pat<(srl ( nuwadd v2i32:$v, (v2i32 (build_vector (Wrapped32:$i), (Wrapped32:$i))) ), (v2i32 (v2_splat_1) ) ), (AVGUWPri SingleReg:$v, (i32 (trunc_imm_32 imm:$i)), splat32_at)>;
+def : Pat<(srl ( nuwadd v2i32:$v, (v2i32 (build_vector (i32 Unsigned32PlusOne:$i), (i32 1)))), (v2i32 (v2_splat_1))), (AVGRWPri SingleReg:$v, (imm32u_sub_1(imm:$i)), splat32_ )>;
+
+def : Pat<(srl ( nuwadd v2i32:$v0, v2i32:$v1 ), (v2i32 (v2_splat_1) ) ), (AVGUWPrr SingleReg:$v1, SingleReg:$v0)>;
+
+def : Pat<(srl ( nuwadd ( nuwadd v2i32:$v0, v2i32:$v1 ), (v2i32 (v2_splat_1))), (v2i32 (v2_splat_1)) ), (AVGRUWPrr SingleReg:$v1, SingleReg:$v0)>;
+
+
+// AVGWP / AVGRWP
+def : Pat<(sra ( add v2i32:$v, (build_vector Wrapped32:$i, (i32 0) )), (v2i32 (v2_splat_1))),
+          (AVGWPri SingleReg:$v, imm:$i, splat32_)>;
+def : Pat<(sra ( add v2i32:$v, (build_vector Wrapped32:$i, Wrapped32:$i )), (v2i32 (v2_splat_1))),
+          (AVGWPri SingleReg:$v, Wrapped32:$i, splat32_at)>;
+def : Pat<(sra ( add v2i32:$v0, v2i32:$v1 ), (v2i32 (v2_splat_1)) ),
+          (AVGWPrr SingleReg:$v1, SingleReg:$v0)>;
+
+def : Pat<(sra ( add v2i32:$v, (v2i32(build_vector (i32 Wrapped32PlusOne:$i), (i32 1)))), (v2i32 (v2_splat_1) )),
+          (AVGRWPri SingleReg:$v, (imm32s_sub_1(imm:$i)), splat32_ )>;
+def : Pat<(sra (add ( add v2i32:$v0, v2i32:$v1 ), (v2i32 (v2_splat_1) ) ), (v2i32 (v2_splat_1)) ),
+          (AVGRWPrr SingleReg:$v1, SingleReg:$v0)>;
+def : Pat<(sra (add ( add v2i32:$v0, v2i32:$v1 ), (v2i32 (v2_splat_1)) ), (v2i32 (v2_splat_1)) ),
+          (AVGRWPrr SingleReg:$v1, SingleReg:$v0)>;
+
+// AVGHQ / AVGRHQ
+// v2i16
+def : Pat<(sra ( add v2i16:$v, (v2i16 (build_vector:$IMM (i32 imm), (i32 imm))) ) , (v2i16 (v2_splat_1))), (AVGHQri SingleReg:$v, (i32 (build_imm_vec $IMM) ), splat32_)>;
+def : Pat<(sra ( add v2i16:$v0, v2i16:$v1 ), (v2i16 (v2_splat_1))), (AVGHQrr SingleReg:$v1, SingleReg:$v0)>;
+
+def : Pat<(sra ( add ( add v2i16:$v0, v2i16:$v1 ), (v2i16 (v2_splat_1)) ), (v2i16 (v2_splat_1))), (AVGRHQrr SingleReg:$v1, SingleReg:$v0)>;
+
+// v4i16
+def : Pat<(sra ( add v4i16:$v, (v4i16 (build_vector:$IMM (i32 imm), (i32 imm), (i32 0), (i32 0)) ) ), (v4i16 (v4_splat_1))), (AVGHQri SingleReg:$v, (i32 (build_imm_vec $IMM)), splat32_)>;
+def : Pat<(sra ( add v4i16:$v, (v4i16 (build_vector:$IMM (i32 imm:$i0), (i32 imm:$i1), (i32 imm:$i0), (i32 imm:$i1)) ) ), (v4i16 (v4_splat_1))), (AVGHQri SingleReg:$v, (i32 (build_imm_vec $IMM)), splat32_at)>;
+def : Pat<(sra ( add v4i16:$v0, v4i16:$v1 ), (v4i16 (v4_splat_1))), (AVGHQrr SingleReg:$v1, SingleReg:$v0)>;
+
+def : Pat<(sra ( add ( add v4i16:$v0, v4i16:$v1 ), (v4i16 (v4_splat_1))), (v4i16 (v4_splat_1))), (AVGRHQrr SingleReg:$v1, SingleReg:$v0)>;
+
+
+// AVGUHQ / AVGRUHQ
+def : Pat<(srl ( nuwadd v2i16:$v, (v2i16 (build_vector:$IMM (i32 imm), (i32 imm)) ) ) , (v2i16 (v2_splat_1))), (AVGUHQri SingleReg:$v, (build_imm_vec $IMM), splat32_)>;
+def : Pat<(srl ( nuwadd v2i16:$v0, v2i16:$v1 ), (v2i16 (v2_splat_1))), (AVGUHQrr SingleReg:$v1, SingleReg:$v0)>;
+
+def : Pat<(srl ( nuwadd ( nuwadd v2i16:$v0, v2i16:$v1 ), (v2i16 (v2_splat_1)) ), (v2i16 (v2_splat_1))), (AVGRUHQrr SingleReg:$v1, SingleReg:$v0)>;
+
+def : Pat<(srl ( nuwadd v4i16:$v, (v4i16 (build_vector:$IMM (i32 imm), (i32 imm), (i32 0), (i32 0)) ) ), (v4i16 (v4_splat_1))), (AVGUHQri SingleReg:$v, (i32 (build_imm_vec $IMM)), splat32_)>;
+def : Pat<(srl ( nuwadd v4i16:$v, (v4i16 (build_vector:$IMM (i32 imm:$i0), (i32 imm:$i1), (i32 imm:$i0), (i32 imm:$i1)) ) ), (v4i16 (v4_splat_1))), (AVGUHQri SingleReg:$v, (i32 (build_imm_vec $IMM)), splat32_at)>;
+def : Pat<(srl ( nuwadd v4i16:$v0, v4i16:$v1 ), (v4i16 (v4_splat_1))), (AVGUHQrr SingleReg:$v1, SingleReg:$v0)>;
+
+def : Pat<(srl ( nuwadd ( nuwadd v4i16:$v0, v4i16:$v1 ), (v4i16 (v4_splat_1))), (v4i16 (v4_splat_1))), (AVGRUHQrr SingleReg:$v1, SingleReg:$v0)>;
+
 
 // LANDW
 defm : ZEFPat<(and (i32 (setne i32:$v1, (i32 0))), (i32 (setne i32:$v2, (i32 0)))),
