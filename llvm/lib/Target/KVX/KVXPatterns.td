@@ -955,7 +955,11 @@ def imm32u_sub_1 : SDNodeXForm<imm, [{
 }]>;
 
 def build_imm_vec : SDNodeXForm<build_vector, [{
-  return KVX_LOW::buildImmVector(*N, *CurDAG);
+  return KVX_LOW::buildImmVector(*N, *CurDAG, false);
+}]>;
+
+def build_imm_vec_neg : SDNodeXForm<build_vector, [{
+  return KVX_LOW::buildImmVector(*N, *CurDAG, false, true);
 }]>;
 
 def build_fpimm_vec : SDNodeXForm<build_vector, [{
@@ -1047,10 +1051,12 @@ def : Pat<(v2i16 (is_imm_vec:$IMM)), (MAKEi43 (build_imm_vec $IMM))>;
 def : Pat<(v2i16 (build_vector i32:$v0, i32:$v1)), (INSF SingleReg:$v0, SingleReg:$v1, 31, 16)>;
 
 // v2i32
+def : Pat<(v2i32 (is_imm_vec_kvx_splat32_:$IMM)), (MAKEi43 (build_imm_vec $IMM))>;
 def : Pat<(v2i32 (is_imm_vec:$IMM)), (MAKEi64 (build_imm_vec $IMM))>;
 def : Pat<(v2i32 (build_vector i32:$v0, i32:$v1)), (INSF SingleReg:$v0, SingleReg:$v1, 63, 32)>;
 
 // v3i16
+def : Pat<(v4i16 (is_imm_vec_kvx_splat32_:$IMM)), (MAKEi43 (build_imm_vec $IMM))>;
 def : Pat<(v4i16 (build_vector:$IMM (i32 imm), (i32 imm), (i32 imm), (i32 undef))), (MAKEi64 (build_imm_vec $IMM))>;
 def : Pat<(v4i16 (build_vector i32:$v0, i32:$v1, i32:$v2, (i32 undef))),
           (INSF (INSF SingleReg:$v0, SingleReg:$v1, 31, 16), SingleReg:$v2, 47, 32)>;
@@ -1061,6 +1067,7 @@ def : Pat<(v4i8 (build_vector i32:$v0, i32:$v1, i32:$v2, i32:$v3)),
           (INSF (INSF SingleReg:$v0, SingleReg:$v1, 15, 8), (INSF SingleReg:$v2, SingleReg:$v3, 15, 8), 31, 16)>;
 
 // v4i16
+def : Pat<(v4i16 (is_imm_vec_kvx_splat32_:$IMM)), (MAKEi43 (build_imm_vec $IMM))>;
 def : Pat<(v4i16 (is_imm_vec:$IMM)), (MAKEi64 (build_imm_vec $IMM))>;
 def : Pat<(v4i16 (build_vector i32:$v0, i32:$v1, i32:$v2, i32:$v3)),
           (INSF (INSF SingleReg:$v0, SingleReg:$v1, 31, 16), (INSF SingleReg:$v2, SingleReg:$v3, 31, 16), 63, 32)>;
@@ -1187,6 +1194,7 @@ def : Pat<(vineg v2i16:$v), (NEGHQ SingleReg:$v)>;
 
 // NEGW, see KVXInstrInfo.td
 // NEGWP, see KVXInstrInfo.td
+def : Pat<(sub (v2i32 (v2_splat (i32 0))), v2i32:$r), (NEGWP SingleReg:$r)>;
 
 // NOTW, see KVXInstrInfo.td for i32
 def : Pat<(vnot v2i16:$v), (NOTW SingleReg:$v)>;
