@@ -440,6 +440,15 @@ def : Pat<(v4f16 (build_vector f16:$v0, f16:$v1, f16:$v2, f16:$v3)),
 def : Pat<(extractelt (v2f32 SingleReg:$v), 0), (COPY SingleReg:$v)>;
 def : Pat<(extractelt (v2f32 SingleReg:$v), 1), (SRADri SingleReg :$v, (i64 32))>;
 
+// v2f32 <--> complex<float> (i64)
+def ComplexToVec : Pat<(v2f32 (build_vector (f32(bitconvert(i32(trunc(i64 SingleReg:$d))))),
+                            (f32(bitconvert(i32(trunc(i64(srl (i64 SingleReg:$d), (i64 32))))))))),
+          (v2f32 SingleReg:$d)>;
+
+def VecToComplex : Pat<(i64( or (shl (anyext (i32 ( extractelt (v2i32 SingleReg:$v), (i64 1)))), (i64 32)),
+                               (zext (i32 ( extractelt (v2i32 SingleReg:$v), (i64 0)))))),
+          (i64 SingleReg:$v)>;
+
 // v4f32
 def : Pat<(extractelt (v4f32 PairedReg:$v), 0), (f32 (EXTRACT_SUBREG $v, sub_s0))>;
 def : Pat<(extractelt (v4f32 PairedReg:$v), 1), (SRADri (f32 (EXTRACT_SUBREG $v, sub_s0)), (i64 32))>;
