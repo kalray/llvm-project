@@ -454,6 +454,7 @@ def : Pat<(v2f16 (is_imm_vec:$IMM)), (MAKEi43 (build_fpimm_vec $IMM))>;
 def : Pat<(v2f16 (build_vector f16:$v0, f16:$v1)), (INSF SingleReg:$v0, SingleReg:$v1, 31, 16)>;
 
 // v2f32
+def : Pat<(v2i32 (is_imm_vec_kvx_splat32_:$IMM)), (MAKEi43 (build_fpimm_vec $IMM))>;
 def : Pat<(v2f32 (is_imm_vec:$IMM)), (MAKEi64 (build_fpimm_vec $IMM))>;
 def : Pat<(v2f32 (build_vector f32:$v0, f32:$v1)), (INSF SingleReg:$v0, SingleReg:$v1, 63, 32)>;
 
