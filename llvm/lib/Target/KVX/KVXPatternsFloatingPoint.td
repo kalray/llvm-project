@@ -114,56 +114,6 @@ defm : LoadPat<loadv2f64, v2f64, 4, LQp, LQri10, LQrr, variant_>;
 
 defm : LoadPat<loadv4f64, v4f64, 5, LOp, LOri10, LOrr, variant_>;
 
-// 16 bits bitcasts
-def : BITCAST<f16, i16, SingleReg>;
-def : BITCAST<i16, f16, SingleReg>;
-def : BITCAST<f16, v2i8, SingleReg>;
-def : BITCAST<v2i8, f16, SingleReg>;
-
-// 32 bits bitcasts
-def : BITCAST<f32, i32, SingleReg>;
-def : BITCAST<i32, f32, SingleReg>;
-def : BITCAST<v2i16, f32, SingleReg>;
-def : BITCAST<f32, v2i16, SingleReg>;
-def : BITCAST<v2f16, i32, SingleReg>;
-def : BITCAST<i32, v2f16, SingleReg>;
-def : BITCAST<v2f16, v2i16, SingleReg>;
-def : BITCAST<v2i16, v2f16, SingleReg>;
-def : BITCAST<f32, v4i8, SingleReg>;
-def : BITCAST<v4i8, f32, SingleReg>;
-
-// 64 bits bitcasts
-def : BITCAST<f64, i64, SingleReg>;
-def : BITCAST<i64, f64, SingleReg>;
-def : BITCAST<v4i16, f64, SingleReg>;
-def : BITCAST<f64, v4i16, SingleReg>;
-def : BITCAST<v2i32, f64, SingleReg>;
-def : BITCAST<f64, v2i32, SingleReg>;
-def : BITCAST<v2f32, f64, SingleReg>;
-def : BITCAST<f64, v2f32, SingleReg>;
-def : BITCAST<v2f32, i64, SingleReg>;
-def : BITCAST<i64, v2f32, SingleReg>;
-def : BITCAST<v2i32, v2f32, SingleReg>;
-def : BITCAST<v2f32, v2i32, SingleReg>;
-def : BITCAST<i64, v4f16, SingleReg>;
-def : BITCAST<v4f16, i64, SingleReg>;
-def : BITCAST<v2i32, v4f16, SingleReg>;
-def : BITCAST<v4f16, v2i32, SingleReg>;
-def : BITCAST<v4i16, v4f16, SingleReg>;
-def : BITCAST<v4f16, v4i16, SingleReg>;
-
-// 128 bits bitcasts
-def : BITCAST<v2i64, v4f32, PairedReg>;
-def : BITCAST<v4f32, v2i64, PairedReg>;
-def : BITCAST<v2f64, v2i64, PairedReg>;
-def : BITCAST<v2i64, v2f64, PairedReg>;
-def : BITCAST<v4f32, v4i32, PairedReg>;
-def : BITCAST<v4i32, v4f32, PairedReg>;
-
-// 256 bits bitcasts
-def : BITCAST<v4i64, v4f64, QuadReg>;
-def : BITCAST<v4f64, v4i64, QuadReg>;
-
 // FADD
 def FADDH : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARY16X4
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary16:$a3),

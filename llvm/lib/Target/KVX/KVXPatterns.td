@@ -100,14 +100,65 @@ multiclass ZEFPat<dag pattern, dag result> {
 def SDT_KVXCall : SDTypeProfile<0, -1, [SDTCisVT<0, i64>]>;
 def Call : SDNode<"KVXISD::CALL", SDT_KVXCall, [SDNPHasChain, SDNPOptInGlue, SDNPOutGlue, SDNPVariadic]>;
 
-def : BITCAST<i64, v8i8, SingleReg>;
-def : BITCAST<v8i8, i64, SingleReg>;
-def : BITCAST<i32, v4i8, SingleReg>;
-def : BITCAST<v4i8, i32, SingleReg>;
-def : BITCAST<v2i16, v4i8, SingleReg>;
-def : BITCAST<v4i8, v2i16, SingleReg>;
-def : BITCAST<v8i8, v2i32, SingleReg>;
-def : BITCAST<v2i32, v8i8, SingleReg>;
+// 16 bit casts
+defm : BITCAST<f16, v2i8, SingleReg>;
+
+// // 32 bit casts
+defm : BITCAST<f32, i32, SingleReg>;
+defm : BITCAST<f32, v2f16, SingleReg>;
+defm : BITCAST<f32, v2i16, SingleReg>;
+defm : BITCAST<f32, v4i8, SingleReg>;
+
+defm : BITCAST<i32, v2f16, SingleReg>;
+defm : BITCAST<i32, v2i16, SingleReg>;
+defm : BITCAST<i32, v4i8, SingleReg>;
+
+defm : BITCAST<v2f16, v2i16, SingleReg>;
+defm : BITCAST<v2f16, v4i8, SingleReg>;
+
+defm : BITCAST<v2i16, v4i8, SingleReg>;
+
+// 64 bit casts
+defm : BITCAST<f64, i64, SingleReg>;
+defm : BITCAST<f64, v2f32, SingleReg>;
+defm : BITCAST<f64, v2i32, SingleReg>;
+defm : BITCAST<f64, v4f16, SingleReg>;
+defm : BITCAST<f64, v4i16, SingleReg>;
+defm : BITCAST<f64, v8i8, SingleReg>;
+
+defm : BITCAST<i64, v2f32, SingleReg>;
+defm : BITCAST<i64, v2i32, SingleReg>;
+defm : BITCAST<i64, v4f16, SingleReg>;
+defm : BITCAST<i64, v4i16, SingleReg>;
+defm : BITCAST<i64, v8i8, SingleReg>;
+
+defm : BITCAST<v2f32, v2i32, SingleReg>;
+defm : BITCAST<v2f32, v4f16, SingleReg>;
+defm : BITCAST<v2f32, v4i16, SingleReg>;
+defm : BITCAST<v2f32, v8i8, SingleReg>;
+
+defm : BITCAST<v2i32, v4f16, SingleReg>;
+defm : BITCAST<v2i32, v4i16, SingleReg>;
+defm : BITCAST<v2i32, v8i8, SingleReg>;
+
+defm : BITCAST<v4f16, v4i16, SingleReg>;
+defm : BITCAST<v4f16, v8i8, SingleReg>;
+
+defm : BITCAST<v4i16, v8i8, SingleReg>;
+
+// 128 bit casts
+defm : BITCAST<v2f64, v2i64, PairedReg>;
+defm : BITCAST<v2f64, v4f32, PairedReg>;
+defm : BITCAST<v2f64, v4i32, PairedReg>;
+
+defm : BITCAST<v2i64, v4f32, PairedReg>;
+defm : BITCAST<v2i64, v4i32, PairedReg>;
+
+defm : BITCAST<v4f32, v4i32, PairedReg>;
+
+// 256 bit casts
+defm : BITCAST<v4f64, v4i64, QuadReg>;
+
 
 let isCall = 1, isBarrier = 1, isBranch = 1, isTerminator = 1, isReturn = 1, Uses = [R12] in
 def TAIL : PCREL27_SIMPLE

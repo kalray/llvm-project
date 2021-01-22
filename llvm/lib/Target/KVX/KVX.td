@@ -30,9 +30,10 @@ include "KVXModifierInfo.td"
 def vineg : PatFrag<(ops node:$v), (sub immAllZerosV, node:$v)>;
 def vfneg : PatFrag<(ops node:$v), (fsub immAllZerosV, node:$v)>;
 
-class BITCAST
-  <ValueType DstVT, ValueType SrcVT, RegisterClass DstRC>
-  : Pat<(DstVT (bitconvert (SrcVT DstRC:$src))), (DstVT DstRC:$src)>;
+multiclass BITCAST <ValueType DstVT, ValueType SrcVT, RegisterClass RC> {
+  def : Pat<(DstVT (bitconvert (SrcVT RC:$src))), (DstVT RC:$src)>;
+  def : Pat<(SrcVT (bitconvert (DstVT RC:$src))), (SrcVT RC:$src)>;
+}
 
 
 def trunc_imm_32 : SDNodeXForm<imm, [{
