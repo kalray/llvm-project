@@ -1521,20 +1521,6 @@ SDValue KVXTargetLowering::lowerMULHVectorGeneric(SDValue Op, SelectionDAG &DAG,
   return DAG.getBuildVector(VectorType, DL, RV);
 }
 
-static unsigned selectExtend(unsigned BitSize) {
-  // i8 and i16 are not legal, explicit selection must be done
-  switch (BitSize) {
-  default:
-    report_fatal_error("Unknown extend for this type");
-  case 8:
-    return KVX::ZXBD;
-  case 16:
-    return KVX::ZXHD;
-  case 32:
-    return KVX::ZXWD;
-  }
-}
-
 static uint64_t selectMask(unsigned Size) {
   if (4 < Size && Size <= 64 && Size % 2 == 0)
     return Size == 64 ? UINT64_MAX : (1L << Size) - 1L;
@@ -1555,149 +1541,15 @@ static SDValue getINSF(const SDLoc &DL, const SDValue &Vec, const SDValue &Val,
                  0);
 }
 
-static SDValue lowerBUILD_VECTORGeneric(const SDValue &Op, SelectionDAG &DAG) {
-  SDLoc DL(Op);
-  uint64_t CurrentVal = 0;
-  unsigned char RegMap = 0;
-  const unsigned NumOperands = Op.getNumOperands();
-  EVT VectorType = Op.getValueType();
-  const unsigned VectorSize = VectorType.getVectorNumElements();
-  const unsigned BitSize = VectorType.getScalarSizeInBits();
-  uint64_t Mask = selectMask(BitSize);
-
-  EVT NodeType = MVT::i64;
-  int NodeSizeInBits = 64;
-
-  if (Op.getValueType() == MVT::v2i8) {
-    NodeType = MVT::i32;
-    NodeSizeInBits = 16;
-  }
-  if (Op.getValueType() == MVT::v4i8) {
-    NodeType = MVT::i32;
-    NodeSizeInBits = 32;
-  }
-
-  // Pack constants and mark non-constants indices
-  for (unsigned i = 0; i < NumOperands; ++i) {
-    uint64_t OpVal = 0;
-    if (auto *OpConst = dyn_cast<ConstantSDNode>(Op.getOperand(i)))
-      OpVal = OpConst->getZExtValue();
-    else if (auto *OpConst = dyn_cast<ConstantFPSDNode>(Op.getOperand(i)))
-      OpVal = OpConst->getValueAPF().bitcastToAPInt().getZExtValue();
-    else
-      RegMap |= 1 << i;
-
-    CurrentVal |= (OpVal & Mask) << (i * BitSize);
-  }
-
-  SDValue PartSDVal = DAG.getConstant(CurrentVal, DL, NodeType);
-
-  if (RegMap & 1) {
-    if (RegMap == ((1 << VectorSize) - 1)) {
-      PartSDVal = Op.getOperand(0);
-    } else {
-      SDValue ZESDVal = SDValue(DAG.getMachineNode(selectExtend(BitSize), DL,
-                                                   NodeType, Op.getOperand(0)),
-                                0);
-      PartSDVal = DAG.getNode(ISD::OR, DL, NodeType, {ZESDVal, PartSDVal});
-    }
-
-    RegMap ^= 1;
-  } else if (RegMap & (1 << (VectorSize - 1))) {
-    RegMap ^= (1 << (VectorSize - 1));
-
-    SDValue SHLSDVal = DAG.getNode(
-        ISD::SHL, DL, NodeType,
-        {SDValue(DAG.getMachineNode(TargetOpcode::COPY, DL, NodeType,
-                                    Op.getOperand(NumOperands - 1)),
-                 0),
-         DAG.getConstant(NodeSizeInBits - BitSize, DL, NodeType)});
-    PartSDVal = DAG.getNode(ISD::OR, DL, NodeType, {SHLSDVal, PartSDVal});
-  }
-
-  for (unsigned i = 0; i < NumOperands; ++i) {
-    if (RegMap & (1 << i))
-      PartSDVal = getINSF(DL, PartSDVal, Op.getOperand(i), BitSize, i, DAG,
-                          Op.getValueType());
-  }
-
-  if (Op.getValueType() == MVT::v2i8) {
-    // v2i8 COPY i32 (bitcast is not possible here)
-    return SDValue(DAG.getMachineNode(TargetOpcode::COPY, DL, Op.getValueType(),
-                                      PartSDVal),
-                   0);
-  }
-
-  return DAG.getBitcast(Op.getValueType(), PartSDVal);
-}
-
 SDValue KVXTargetLowering::lowerBUILD_VECTOR(SDValue Op,
                                              SelectionDAG &DAG) const {
   switch (Op.getSimpleValueType().SimpleTy) {
   default:
-    report_fatal_error("Unsupported lowering for this type!");
-  case MVT::v2i16:
-  case MVT::v2f16:
-    return lowerBUILD_VECTOR_V2_32bit(Op, DAG);
-  case MVT::v4i16:
-  case MVT::v4f16:
-  case MVT::v2i8:
-  case MVT::v4i8:
-  case MVT::v8i8:
-    return lowerBUILD_VECTORGeneric(Op, DAG);
-  case MVT::v2i32:
-  case MVT::v2f32:
-    return lowerBUILD_VECTOR_V2_64bit(Op, DAG);
+    report_fatal_error("Unsupported lowering build_vector for this type!");
   case MVT::v4i32:
   case MVT::v4f32:
     return lowerBUILD_VECTOR_V4_128bit(Op, DAG);
   }
-}
-
-SDValue KVXTargetLowering::lowerBUILD_VECTOR_V2_32bit(SDValue Op,
-                                                      SelectionDAG &DAG) const {
-  SDLoc DL(Op);
-
-  SDValue Op1 = Op.getOperand(0);
-  SDValue Op2 = Op.getOperand(1);
-
-  uint64_t Op1Val;
-  uint64_t Op2Val;
-
-  bool IsOp1Const = false;
-  bool IsOp2Const = false;
-
-  if (isa<ConstantSDNode>(Op1)) {
-    auto *Op1Const = dyn_cast<ConstantSDNode>(Op1);
-    Op1Val = Op1Const->getZExtValue();
-    IsOp1Const = true;
-  } else if (isa<ConstantFPSDNode>(Op1)) {
-    auto *Op1Const = dyn_cast<ConstantFPSDNode>(Op1);
-    Op1Val = Op1Const->getValueAPF().bitcastToAPInt().getZExtValue();
-    IsOp1Const = true;
-  }
-
-  if (isa<ConstantSDNode>(Op2)) {
-    auto *Op2Const = dyn_cast<ConstantSDNode>(Op2);
-    Op2Val = Op2Const->getZExtValue();
-    IsOp2Const = true;
-  } else if (isa<ConstantFPSDNode>(Op2)) {
-    auto *Op2Const = dyn_cast<ConstantFPSDNode>(Op2);
-    Op2Val = Op2Const->getValueAPF().bitcastToAPInt().getZExtValue();
-    IsOp2Const = true;
-  }
-
-  // imm imm
-  if (IsOp1Const && IsOp2Const) {
-    uint64_t R = ((Op2Val & 0xFFFF) << 16) | (Op1Val & 0xFFFF);
-
-    return DAG.getBitcast(Op.getValueType(), DAG.getConstant(R, DL, MVT::i32));
-  }
-  return SDValue(
-      DAG.getMachineNode(KVX::INSF, DL, Op.getValueType(),
-                         {Op1, Op2, DAG.getTargetConstant(31, DL, MVT::i64),
-                          DAG.getTargetConstant(16, DL, MVT::i64)}),
-      0);
 }
 
 SDValue KVXTargetLowering::lowerBUILD_VECTOR_V2_64bit(SDValue Op,
@@ -2503,13 +2355,17 @@ bool KVX_LOW::isKVXSplat32ImmVec(llvm::SDNode *N, llvm::SelectionDAG *CurDag,
   // Undef is also accepted as a match in the second half.
   auto ElmCheck = 32 / VT.getVectorElementType().getSizeInBits();
   auto ElmEnd = BV->getNumOperands();
+  bool IsFP = VT.isFloatingPoint();
   for (unsigned FirstHalf = 0; ElmCheck != ElmEnd; ++ElmCheck, ++FirstHalf) {
     auto SecondHalf = BV->getOperand(ElmCheck);
     if (SecondHalf.isUndef())
       continue;
 
     if (!SplatAt) {
-      if ((cast<ConstantSDNode>(SecondHalf))->isNullValue())
+      if (IsFP) {
+        if ((cast<ConstantFPSDNode>(SecondHalf))->isZero())
+          continue;
+      } else if ((cast<ConstantSDNode>(SecondHalf))->isNullValue())
         continue;
       return false;
     }
