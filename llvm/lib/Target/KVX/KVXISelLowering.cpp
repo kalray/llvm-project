@@ -358,9 +358,6 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::FP_EXTEND, MVT::v2f64, Expand);
   setOperationAction(ISD::FP_EXTEND, MVT::v4f64, Expand);
 
-  setOperationAction(ISD::FADD, MVT::v4f64, Expand);
-  setOperationAction(ISD::FSUB, MVT::v4f64, Expand);
-
   setOperationAction(ISD::FNEG, MVT::v2f64, Expand);
   setOperationAction(ISD::FNEG, MVT::v4f64, Expand);
   setOperationAction(ISD::FNEG, MVT::v4f32, Expand);

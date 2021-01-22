@@ -55,6 +55,8 @@ entry:
 define <2 x half> @narrow2(<2 x float> %a) {
 ; CHECK-LABEL: narrow2:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    andw $r1 = $r0, 0
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowwhq $r0 = $r0r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
