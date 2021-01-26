@@ -248,6 +248,10 @@ def : Pat<(i64 (setune f32:$rz, Binary32:$imm)), (FCOMPWri SingleReg:$rz, Binary
 
 
 multiclass COMP_FPat<SDNode Node, Floatcomp Cmp, bit SWAP> {
+  def : Pat<(v2i16 (Node v2f16:$rz, v2f16:$ry)),
+    !if(SWAP, (FCOMPNHQ SingleReg:$ry, SingleReg:$rz, Cmp), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, Cmp))>;
+  def : Pat<(sra (shl (v2i16 (Node v2f16:$rz, v2f16:$ry)), (v2i16 v2_splat_15)), (v2i16 v2_splat_15)),
+    !if(SWAP, (FCOMPNHQ SingleReg:$ry, SingleReg:$rz, Cmp), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, Cmp))>;
 
   def : Pat<(v4i16 (Node v4f16:$rz, v4f16:$ry)),
     !if(SWAP, (FCOMPNHQ SingleReg:$ry, SingleReg:$rz, Cmp), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, Cmp))>;
@@ -272,6 +276,9 @@ defm : COMP_FPat<setuge, floatcomp_uge, 0>;
 defm : COMP_FPat<setult, floatcomp_ult, 0>;
 defm : COMP_FPat<setule, floatcomp_uge, 1>;
 defm : COMP_FPat<setune, floatcomp_une, 0>;
+
+def : Pat<(v2i16 (seto v2f16:$rz, v2f16:$ry)), (ORWrr (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, floatcomp_oge), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, floatcomp_olt))>;
+def : Pat<(v2i16 (setuo v2f16:$rz, v2f16:$ry)), (ANDWrr (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, floatcomp_uge), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, floatcomp_ult))>;
 
 def : Pat<(v4i16 (seto v4f16:$rz, v4f16:$ry)), (ORDrr (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, floatcomp_oge), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, floatcomp_olt))>;
 def : Pat<(v4i16 (setuo v4f16:$rz, v4f16:$ry)), (ANDDrr (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, floatcomp_uge), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, floatcomp_ult))>;
