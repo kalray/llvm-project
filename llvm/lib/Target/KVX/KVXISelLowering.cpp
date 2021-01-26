@@ -335,6 +335,19 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::SELECT_CC, VT, Expand);
   }
 
+  setOperationAction(ISD::FCEIL, MVT::f16, Promote);
+  setOperationAction(ISD::FEXP, MVT::f16, Promote);
+  setOperationAction(ISD::FEXP2, MVT::f16, Promote);
+  setOperationAction(ISD::FFLOOR, MVT::f16, Promote);
+  setOperationAction(ISD::FLOG, MVT::f16, Promote);
+  setOperationAction(ISD::FLOG10, MVT::f16, Promote);
+  setOperationAction(ISD::FLOG2, MVT::f16, Promote);
+  setOperationAction(ISD::FNEARBYINT, MVT::f16, Promote);
+  setOperationAction(ISD::FPOWI, MVT::f16, Promote);
+  setOperationAction(ISD::FRINT, MVT::f16, Promote);
+  setOperationAction(ISD::FROUND, MVT::f16, Promote);
+  setOperationAction(ISD::FTRUNC, MVT::f16, Promote);
+
   setOperationAction(ISD::FDIV, MVT::f32, Custom);
   setOperationAction(ISD::FSQRT, MVT::f32, Custom);
 
