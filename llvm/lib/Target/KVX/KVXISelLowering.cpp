@@ -233,7 +233,6 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
 
   for (auto VT : {MVT::v2f16, MVT::v2f32, MVT::v4f16, MVT::v4f32, MVT::v2f64,
                   MVT::v2i64, MVT::v4f64, MVT::v4i64}) {
-    setOperationAction(ISD::FDIV, VT, Expand);
     setOperationAction(ISD::VECTOR_SHUFFLE, VT, Expand);
     setOperationAction(ISD::SCALAR_TO_VECTOR, VT, Expand);
   }
@@ -242,24 +241,6 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
 
   setOperationAction(ISD::FMUL, MVT::v4f64, Expand);
   setOperationAction(ISD::FMA, MVT::v4f64, Expand);
-
-  for (auto VT : {MVT::v2f16, MVT::v4f16, MVT::v2f32, MVT::v4f32, MVT::v2f64,
-                  MVT::v4f64}) {
-    setOperationAction(ISD::FCEIL, VT, Expand);
-    setOperationAction(ISD::FFLOOR, VT, Expand);
-    setOperationAction(ISD::FRINT, VT, Expand);
-    setOperationAction(ISD::FTRUNC, VT, Expand);
-    setOperationAction(ISD::FSIN, VT, Expand);
-    setOperationAction(ISD::FPOW, VT, Expand);
-    setOperationAction(ISD::FLOG10, VT, Expand);
-    setOperationAction(ISD::FLOG2, VT, Expand);
-    setOperationAction(ISD::FLOG, VT, Expand);
-    setOperationAction(ISD::FEXP2, VT, Expand);
-    setOperationAction(ISD::FEXP, VT, Expand);
-    setOperationAction(ISD::FCOS, VT, Expand);
-    setOperationAction(ISD::FREM, VT, Expand);
-    setOperationAction(ISD::FSQRT, VT, Expand);
-  }
 
   for (auto VT : {MVT::v4f32, MVT::v2f64, MVT::v4f64})
     setOperationAction(ISD::FABS, VT, Expand);
@@ -323,41 +304,39 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::BR_CC, VT, Expand);
 
     setOperationAction(ISD::FSUB, VT, Custom);
-
-    setOperationAction(ISD::FDIV, VT, VT == MVT::f16 ? Promote : Expand);
-    setOperationAction(ISD::FREM, VT, VT == MVT::f16 ? Promote : Expand);
-    setOperationAction(ISD::FSQRT, VT, VT == MVT::f16 ? Promote : Expand);
-    setOperationAction(ISD::FSIN, VT, VT == MVT::f16 ? Promote : Expand);
-    setOperationAction(ISD::FCOS, VT, VT == MVT::f16 ? Promote : Expand);
-    setOperationAction(ISD::FSINCOS, VT, VT == MVT::f16 ? Promote : Expand);
-    setOperationAction(ISD::FPOW, VT, VT == MVT::f16 ? Promote : Expand);
-
     setOperationAction(ISD::SELECT_CC, VT, Expand);
   }
+  for (auto VT : {MVT::v2f16, MVT::v2f32, MVT::v4f16, MVT::v4f32, MVT::v2f64,
+                  MVT::v2i64, MVT::v4f64, MVT::v4i64}) {
+    setOperationAction(ISD::VECTOR_SHUFFLE, VT, Expand);
+    setOperationAction(ISD::SCALAR_TO_VECTOR, VT, Expand);
+  }
 
-  setOperationAction(ISD::FCEIL, MVT::f16, Promote);
-  setOperationAction(ISD::FEXP, MVT::f16, Promote);
-  setOperationAction(ISD::FEXP2, MVT::f16, Promote);
-  setOperationAction(ISD::FFLOOR, MVT::f16, Promote);
-  setOperationAction(ISD::FLOG, MVT::f16, Promote);
-  setOperationAction(ISD::FLOG10, MVT::f16, Promote);
-  setOperationAction(ISD::FLOG2, MVT::f16, Promote);
-  setOperationAction(ISD::FNEARBYINT, MVT::f16, Promote);
-  setOperationAction(ISD::FPOWI, MVT::f16, Promote);
-  setOperationAction(ISD::FRINT, MVT::f16, Promote);
-  setOperationAction(ISD::FROUND, MVT::f16, Promote);
-  setOperationAction(ISD::FTRUNC, MVT::f16, Promote);
+  for (auto VT : {MVT::f16, MVT::f32, MVT::f64, MVT::v2f16, MVT::v2f32,
+                  MVT::v2f64, MVT::v4f16, MVT::v4f32, MVT::v4f64}) {
+    auto Action = (VT == MVT::f16)
+                      ? Promote
+                      : ((VT > MVT::LAST_FP_VALUETYPE) ? Expand : LibCall);
+    for (auto I :
+         {ISD::FCEIL, ISD::FCOS, ISD::FDIV, ISD::FEXP, ISD::FEXP2, ISD::FFLOOR,
+          ISD::FLOG, ISD::FLOG10, ISD::FLOG2, ISD::FNEARBYINT, ISD::FPOW,
+          ISD::FPOWI, ISD::FREM, ISD::FRINT, ISD::FROUND, ISD::FSIN,
+          ISD::FSINCOS, ISD::FSQRT, ISD::FTRUNC})
+      setOperationAction(I, VT, Action);
+  }
 
   setOperationAction(ISD::FDIV, MVT::f32, Custom);
   setOperationAction(ISD::FSQRT, MVT::f32, Custom);
 
-  for (auto VT : {MVT::v2f64, MVT::v2f32, MVT::v4f32, MVT::v2i64, MVT::v4i32,
-                  MVT::v2i32, MVT::v2i16, MVT::v4i16, MVT::v8i8, MVT::v2i8,
-                  MVT::v4i8, MVT::v4f64, MVT::v4i64}) {
+  for (auto VT : {MVT::v2f16, MVT::v2f32, MVT::v2f64, MVT::v2i8, MVT::v2i16,
+                  MVT::v2i32, MVT::v2i64, MVT::v4f16, MVT::v4f32, MVT::v4f64,
+                  MVT::v4i8, MVT::v4i16, MVT::v4i32, MVT::v4i64, MVT::v8i8}) {
     setOperationAction(ISD::SELECT_CC, VT, Expand);
     setOperationAction(ISD::SELECT, VT, Expand);
   }
 
+  // TODO: v2i32 FP_TO_[SU]INT v2f32 => FIXED[U]WP
+  // TODO: v2f32 [US]INT_TO_FP v2i32 => FLOAT[U]WP
   for (auto VT : {MVT::v2i16, MVT::v2i32, MVT::v2i64, MVT::v4i16, MVT::v4i32,
                   MVT::v2i8, MVT::v4i8, MVT::v4f64, MVT::v4i64}) {
     setOperationAction(ISD::FP_TO_SINT, VT, Expand);
