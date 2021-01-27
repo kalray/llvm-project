@@ -27,8 +27,8 @@
 using namespace llvm;
 
 static cl::opt<bool>
-    DisableHardwareLoops("disable-kvx-hwloops", cl::Hidden, cl::init(true),
-                         cl::desc("Disable Hardware Loops for KVX target"));
+    DisableLOOPDO("disable-kvx-hwloops", cl::Hidden, cl::init(true),
+                  cl::desc("Disable Hardware Loops for KVX target"));
 
 static cl::opt<bool>
 DisableBundling("disable-kvx-bundling", cl::Hidden,
@@ -183,7 +183,7 @@ void KVXPassConfig::addPreRegAlloc() {
   if (getOptLevel() >= CodeGenOpt::Default) {
     if (!DisableLoadStorePacking)
       addPass(createKVXLoadStorePackingPass());
-    if (!DisableHardwareLoops)
+    if (!DisableLOOPDO)
       addPass(createKVXHardwareLoopsPass());
   }
 }
@@ -197,7 +197,7 @@ void KVXPassConfig::addPreEmitPass() {
 }
 
 bool KVXPassConfig::addPreISel() {
-  if (TM->getOptLevel() >= CodeGenOpt::Default && !DisableHardwareLoops) {
+  if (TM->getOptLevel() >= CodeGenOpt::Default && !DisableLOOPDO) {
     addPass(createHardwareLoopsPass());
     addPass(createKVXHardwareLoopsPreparePass());
   }
