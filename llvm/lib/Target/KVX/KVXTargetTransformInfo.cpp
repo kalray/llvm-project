@@ -20,9 +20,24 @@
 using namespace llvm;
 #define DEBUG_TYPE "KVXTTI"
 
-static cl::opt<bool> DisableKvxHardwareLoops(
-    "disable-kvx-loopdo", cl::Hidden, cl::init(false),
-    cl::desc("Disable the generation of kvx hardware loops"));
+bool KVXTTIImpl::isLoweredToCall(const CallInst &CI) {
+  if (const Function *F = CI.getCalledFunction()) {
+    if (!F->isIntrinsic())
+      return isLoweredToCall(F);
+
+    // Some intrinsics won't lower to call in given circumstances
+    if (isa<FPMathOperator>(CI) && CI.getFastMathFlags().noNaNs()) {
+      switch (F->getIntrinsicID()) {
+      case Intrinsic::maxnum:
+      case Intrinsic::minnum:
+        return false;
+      }
+    }
+    return isLoweredToCall(F);
+  }
+  LLVM_DEBUG(dbgs() << "Don't know the function name.\n");
+  return true;
+}
 
 bool KVXTTIImpl::isLoweredToCall(const Function *F) {
   if (F->isIntrinsic()) {
@@ -34,13 +49,24 @@ bool KVXTTIImpl::isLoweredToCall(const Function *F) {
 
   StringRef Name = F->getName();
   switch (F->getIntrinsicID()) {
+  case Intrinsic::bitreverse:
+  case Intrinsic::bswap:
+  case Intrinsic::ctlz:
+  case Intrinsic::ctpop:
+  case Intrinsic::dbg_addr:
+  case Intrinsic::donothing:
+  case Intrinsic::fabs:
+  case Intrinsic::fma:
+  case Intrinsic::fmuladd:
+  case Intrinsic::lifetime_end:
+  case Intrinsic::lifetime_start:
   case Intrinsic::sadd_sat:
   case Intrinsic::ssub_sat:
-  case Intrinsic::fabs:
     return false;
   default:
     break;
   }
+
   if (Name == "fabs" || Name == "fabsf" || Name == "fabsl" || Name == "abs" ||
       Name == "labs" || Name == "llabs")
     return false;
@@ -59,7 +85,7 @@ bool KVXTTIImpl::isHardwareLoopProfitableCheck(Loop *L, ScalarEvolution &SE) {
                     << L->getHeader()->getName()
                     << " can be optimized as hardware loop.\n");
 
-  if (DisableKvxHardwareLoops || !SE.hasLoopInvariantBackedgeTakenCount(L))
+  if (!SE.hasLoopInvariantBackedgeTakenCount(L))
     return false;
 
   const SCEV *BackedgeTakenCount = SE.getBackedgeTakenCount(L);
@@ -84,15 +110,10 @@ bool KVXTTIImpl::isHardwareLoopProfitableCheck(Loop *L, ScalarEvolution &SE) {
     }
 
     if (auto *Call = dyn_cast<CallInst>(&I)) {
-      if (const Function *F = Call->getCalledFunction()) {
-        bool Ret = isLoweredToCall(F);
-        LLVM_DEBUG(dbgs() << "It is intrinsic call, and it "
-                          << (Ret ? "does" : "doesn't")
-                          << " lower to a call!\n");
-        return Ret;
-      }
-      LLVM_DEBUG(dbgs() << "Don't know the function name.\n");
-      return true;
+      bool Ret = isLoweredToCall(*Call);
+      LLVM_DEBUG(dbgs() << "It is intrinsic call, and it "
+                        << (Ret ? "does" : "doesn't") << " lower to a call!\n");
+      return Ret;
     }
 
     // Filter instructions we know it will be lowered to a libcall
@@ -100,11 +121,19 @@ bool KVXTTIImpl::isHardwareLoopProfitableCheck(Loop *L, ScalarEvolution &SE) {
     default:
       break;
     case Instruction::FDiv:
-      return !I.isFast();
-    case Instruction::InlineAsmVal:
-      return true;
+      return (!I.isFast()) || (I.getType()->getScalarSizeInBits() == 64);
+    case Instruction::FRem:
+    case Instruction::AtomicCmpXchg:
+      return cast<AtomicCmpXchgInst>(I).getPointerAddressSpace() == 1;
+    case Instruction::AtomicRMW:
+      return cast<AtomicRMWInst>(I).getPointerAddressSpace() == 1;
+    case Instruction::UIToFP:
+    case Instruction::SIToFP:
+      return (I.getType()->getScalarSizeInBits() == 32);
     case Instruction::SRem:
     case Instruction::URem:
+    case Instruction::UDiv:
+    case Instruction::SDiv:
       if (ConstantInt *CI = dyn_cast<ConstantInt>(I.getOperand(1))) {
         if (isPowerOf2_64(CI->getZExtValue()))
           return false;
