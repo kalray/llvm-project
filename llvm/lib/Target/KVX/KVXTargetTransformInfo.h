@@ -50,6 +50,7 @@ public:
                                 AssumptionCache &AC, TargetLibraryInfo *LibInfo,
                                 HardwareLoopInfo &HWLoopInfo);
   bool isLoweredToCall(const Function *F);
+  bool isLoweredToCall(const CallInst &CI);
 
 private:
   bool isHardwareLoopProfitableCheck(Loop *L, ScalarEvolution &SE);
