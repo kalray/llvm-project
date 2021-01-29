@@ -21,3 +21,20 @@ entry:
   %retc = or i64 %filti, %filtr
   ret i64 %retc
 }
+
+;   return c1 - conj(c2);
+define i64 @SBFCWCrr(i64 %c1, i64 %c2) {
+; CHECK-LABEL: SBFCWCrr:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    sbfcwc $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %i1 = and i64 %c1, -4294967296
+  %r = sub i64 %c1, %c2
+  %i = add i64 %i1, %c2
+  %ifilt = and i64 %i, -4294967296
+  %rfilt = and i64 %r, 4294967295
+  %retc = or i64 %ifilt, %rfilt
+  ret i64 %retc
+}
