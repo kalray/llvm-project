@@ -11,7 +11,7 @@ def nswadd : PatFrag<(ops node:$op0, node:$op1), (add node:$op0, node:$op1), [{
   }]>;
 
 // TODO: implement patterns or intrinsics for the following instructions:
-// ADDCHCP ADDCWC SBFCHCP SBFCWC
+// ADDCHCP SBFCHCP SBFCWC
 // LNANDHQ LNANDWP LNORHQ LORHQ LORWP
 // SBFUWD SBFWD
 
@@ -25,6 +25,12 @@ def : Pat<(smax i64:$v, (i64 (ineg i64:$v))), (ABSD SingleReg:$v)>;
 
 // ABSW
 def : Pat<(smax i32:$v, (i32 (ineg i32:$v))), (ABSW SingleReg:$v)>;
+
+// ADDCWC
+// TODO: ri variants
+def : Pat<(i64(or(and (sub i64:$r0, (and i64:$r1, (i64 0xffffffff00000000))), (i64 0xffffffff00000000) ),
+              (and (add i64:$r0, i64:$r1), (i64 0xffffffff)))),
+          (ADDCWCrr SingleReg:$r1, SingleReg:$r0)>;
 
 // ADDD
 def : Pat<(add i64:$rs1, i64:$rs2), (ADDDrr SingleReg:$rs1, SingleReg:$rs2)>;
