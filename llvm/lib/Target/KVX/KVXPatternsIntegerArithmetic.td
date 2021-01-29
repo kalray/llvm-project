@@ -662,6 +662,12 @@ def : Pat<(v4i32(anyext v4i16:$v)), (REG_SEQUENCE PairedReg, (SXMHWP $v), sub_s1
 def : Pat<(v4i32(zext v4i16:$v)), (REG_SEQUENCE PairedReg, (ANDDri64(SXMHWP $v),0xffff0000ffff), sub_s1,
                                                            (ANDDri64(SXLHWP $v),0xffff0000ffff), sub_s0)>;
 
+// SBFCWC
+// TODO: ri variants
+def : Pat<(i64(or(and (add i64:$r1, (and i64:$r0, (i64 0xffffffff00000000))), (i64 0xffffffff00000000) ),
+              (and (sub i64:$r0, i64:$r1), (i64 0xffffffff)))),
+          (SBFCWCrr SingleReg:$r1, SingleReg:$r0)>;
+
 // ROLW
 def : Pat<(rotl i32:$rs1, i64:$rs2), (ROLWrr SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(rotl i32:$rs, Unsigned6:$is), (ROLWri SingleReg:$rs, Unsigned6:$is)>;
