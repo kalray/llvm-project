@@ -804,8 +804,8 @@ declare <2 x float> @llvm.log10.v2f32(<2 x float> %a) #0
 declare <2 x float> @llvm.log2.v2f32(<2 x float> %a) #0
 declare <2 x float> @llvm.fma.v2f32(<2 x float> %a, <2 x float> %b, <2 x float> %c) #0
 declare <2 x float> @llvm.fabs.v2f32(<2 x float> %a) #0
-; declare <2 x float> @llvm.minnum.v2f32(<2 x float> %a, <2 x float> %b) #0
-; declare <2 x float> @llvm.maxnum.v2f32(<2 x float> %a, <2 x float> %b) #0
+declare <2 x float> @llvm.minnum.v2f32(<2 x float> %a, <2 x float> %b) #0
+declare <2 x float> @llvm.maxnum.v2f32(<2 x float> %a, <2 x float> %b) #0
 declare <2 x float> @llvm.copysign.v2f32(<2 x float> %a, <2 x float> %b) #0
 declare <2 x float> @llvm.floor.v2f32(<2 x float> %a) #0
 declare <2 x float> @llvm.ceil.v2f32(<2 x float> %a) #0
@@ -1170,25 +1170,103 @@ define <2 x float> @test_fabs(<2 x float> %a) #0 {
   ret <2 x float> %r
 }
 
-; define <2 x float> @test_minnum(<2 x float> %a, <2 x float> %b) #0 {
-;   %r = call <2 x float> @llvm.minnum.v2f32(<2 x float> %a, <2 x float> %b)
-;   ret <2 x float> %r
-; }
+define <2 x float> @test_minnum(<2 x float> %a, <2 x float> %b) #0 {
+; CHECK-LABEL: test_minnum:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    addd $r12 = $r12, -32
+; CHECK-NEXT:    get $r16 = $ra
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 24[$r12] = $r16
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 16[$r12] = $r20
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sq 0[$r12] = $r18r19
+; CHECK-NEXT:    copyd $r18 = $r1
+; CHECK-NEXT:    copyd $r19 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srad $r0 = $r19, 32
+; CHECK-NEXT:    srad $r1 = $r18, 32
+; CHECK-NEXT:    call fminf
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r20 = $r0
+; CHECK-NEXT:    copyd $r0 = $r19
+; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    call fminf
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r20, 63, 32
+; CHECK-NEXT:    lq $r18r19 = 0[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r20 = 16[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r16 = 24[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    set $ra = $r16
+; CHECK-NEXT:    addd $r12 = $r12, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %r = call <2 x float> @llvm.minnum.v2f32(<2 x float> %a, <2 x float> %b)
+  ret <2 x float> %r
+}
 
-; define <2 x float> @test_minnum_fast(<2 x float> %a, <2 x float> %b) #0 {
-;   %r = call fast <2 x float> @llvm.minnum.v2f32(<2 x float> %a, <2 x float> %b)
-;   ret <2 x float> %r
-; }
+define <2 x float> @test_minnum_fast(<2 x float> %a, <2 x float> %b) #0 {
+; CHECK-LABEL: test_minnum_fast:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fminwp $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %r = call fast <2 x float> @llvm.minnum.v2f32(<2 x float> %a, <2 x float> %b)
+  ret <2 x float> %r
+}
 
-; define <2 x float> @test_maxnum(<2 x float> %a, <2 x float> %b) #0 {
-;   %r = call <2 x float> @llvm.maxnum.v2f32(<2 x float> %a, <2 x float> %b)
-;   ret <2 x float> %r
-; }
+define <2 x float> @test_maxnum(<2 x float> %a, <2 x float> %b) #0 {
+; CHECK-LABEL: test_maxnum:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    addd $r12 = $r12, -32
+; CHECK-NEXT:    get $r16 = $ra
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 24[$r12] = $r16
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 16[$r12] = $r20
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sq 0[$r12] = $r18r19
+; CHECK-NEXT:    copyd $r18 = $r1
+; CHECK-NEXT:    copyd $r19 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srad $r0 = $r19, 32
+; CHECK-NEXT:    srad $r1 = $r18, 32
+; CHECK-NEXT:    call fmaxf
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r20 = $r0
+; CHECK-NEXT:    copyd $r0 = $r19
+; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    call fmaxf
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r20, 63, 32
+; CHECK-NEXT:    lq $r18r19 = 0[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r20 = 16[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r16 = 24[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    set $ra = $r16
+; CHECK-NEXT:    addd $r12 = $r12, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %r = call <2 x float> @llvm.maxnum.v2f32(<2 x float> %a, <2 x float> %b)
+  ret <2 x float> %r
+}
 
-; define <2 x float> @test_maxnum_fast(<2 x float> %a, <2 x float> %b) #0 {
-;   %r = call fast <2 x float> @llvm.maxnum.v2f32(<2 x float> %a, <2 x float> %b)
-;   ret <2 x float> %r
-; }
+define <2 x float> @test_maxnum_fast(<2 x float> %a, <2 x float> %b) #0 {
+; CHECK-LABEL: test_maxnum_fast:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fmaxwp $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %r = call fast <2 x float> @llvm.maxnum.v2f32(<2 x float> %a, <2 x float> %b)
+  ret <2 x float> %r
+}
 
 define <2 x float> @test_copysign(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-LABEL: test_copysign:
