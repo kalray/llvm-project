@@ -1014,26 +1014,71 @@ define half @test_fabs(half %a) #0 {
   ret half %r
 }
 
-; TODO: Add custom minnum/maxnum isel
-; define half @test_minnum(half %a, half %b) #0 {
-;   %r = call half @llvm.minnum.f16(half %a, half %b)
-;   ret half %r
-; }
+define half @test_minnum(half %a, half %b) #0 {
+; CHECK-LABEL: test_minnum:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    addd $r12 = $r12, -32
+; CHECK-NEXT:    get $r16 = $ra
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 0[$r12] = $r16
+; CHECK-NEXT:    fwidenlhw $r0 = $r0
+; CHECK-NEXT:    fwidenlhw $r1 = $r1
+; CHECK-NEXT:    call fminf
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r16 = 0[$r12]
+; CHECK-NEXT:    fnarrowwh $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    set $ra = $r16
+; CHECK-NEXT:    addd $r12 = $r12, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %r = call half @llvm.minnum.f16(half %a, half %b)
+  ret half %r
+}
 
-; define half @test_minnum_fast(half %a, half %b) #0 {
-;   %r = call fast half @llvm.minnum.f16(half %a, half %b)
-;   ret half %r
-; }
+define half @test_minnum_fast(half %a, half %b) #0 {
+; CHECK-LABEL: test_minnum_fast:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fminhq $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %r = call fast half @llvm.minnum.f16(half %a, half %b)
+  ret half %r
+}
 
-; define half @test_maxnum(half %a, half %b) #0 {
-;   %r = call half @llvm.maxnum.f16(half %a, half %b)
-;   ret half %r
-; }
+define half @test_maxnum(half %a, half %b) #0 {
+; CHECK-LABEL: test_maxnum:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    addd $r12 = $r12, -32
+; CHECK-NEXT:    get $r16 = $ra
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 0[$r12] = $r16
+; CHECK-NEXT:    fwidenlhw $r0 = $r0
+; CHECK-NEXT:    fwidenlhw $r1 = $r1
+; CHECK-NEXT:    call fmaxf
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r16 = 0[$r12]
+; CHECK-NEXT:    fnarrowwh $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    set $ra = $r16
+; CHECK-NEXT:    addd $r12 = $r12, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %r = call half @llvm.maxnum.f16(half %a, half %b)
+  ret half %r
+}
 
-; define half @test_maxnum_fast(half %a, half %b) #0 {
-;   %r = call fast half @llvm.maxnum.f16(half %a, half %b)
-;   ret half %r
-; }
+define half @test_maxnum_fast(half %a, half %b) #0 {
+; CHECK-LABEL: test_maxnum_fast:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fmaxhq $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %r = call fast half @llvm.maxnum.f16(half %a, half %b)
+  ret half %r
+}
 
 define half @test_copysign(half %a, half %b) #0 {
 ; CHECK-LABEL: test_copysign:
