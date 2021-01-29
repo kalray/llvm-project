@@ -387,6 +387,14 @@ def : Pat<(v4f16 (fpround v4f64:$val)), (INSF
                                                 (FNARROWWH (FNARROWDW (f64 (EXTRACT_SUBREG QuadReg:$val, sub_s3)), rounding_, silent_), rounding_, silent_), 31, 16),
                                         63, 32)>;
 
+// FMAX
+def : Pat<(f16 (fmaxnum f16:$v0, f16:$v1)), (FMAXHQ $v0, $v1)>;
+def : Pat<(v2f16 (fmaxnum v2f16:$v0, v2f16:$v1)), (FMAXHQ $v0, $v1)>;
+
+// FMIN
+def : Pat<(f16 (fminnum f16:$v0, f16:$v1)), (FMINHQ $v0, $v1)>;
+def : Pat<(v2f16 (fminnum v2f16:$v0, v2f16:$v1)), (FMINHQ $v0, $v1)>;
+
 // FNEG
 def : Pat<(fneg f16:$rs), (FNEGHQ SingleReg:$rs)>;
 def : Pat<(fneg v2f16:$rs), (FNEGHQ SingleReg:$rs)>;
