@@ -186,6 +186,9 @@ private:
                              unsigned AS,
                              Instruction *I = nullptr) const override;
   bool isLegalStoreImmediate(int64_t Imm) const override;
+  bool isStoreBitCastBeneficial(EVT StoreVT, EVT BitcastVT,
+                                const SelectionDAG &DAG,
+                                const MachineMemOperand &MMO) const override;
 };
 
 } // namespace llvm

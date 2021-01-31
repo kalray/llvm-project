@@ -3155,18 +3155,13 @@ define void @sllhxs(<16 x i16> %a, i32 %b) {
 ; CHECK-NEXT:    zxwd $r4 = $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    sllhqs $r3 = $r3, $r4
-; CHECK-NEXT:    sllhqs $r0 = $r0, $r4
+; CHECK-NEXT:    sllhqs $r8 = $r0, $r4
+; CHECK-NEXT:    sllhqs $r9 = $r1, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sllhqs $r1 = $r1, $r4
-; CHECK-NEXT:    sllhqs $r2 = $r2, $r4
-; CHECK-NEXT:    sd 24[$r12] = $r3
+; CHECK-NEXT:    sllhqs $r10 = $r2, $r4
+; CHECK-NEXT:    sllhqs $r11 = $r3, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 16[$r12] = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 8[$r12] = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 0[$r12] = $r0
+; CHECK-NEXT:    so 0[$r12] = $r8r9r10r11
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -3201,19 +3196,14 @@ define void @sllhxsimm(<16 x i16> %a) {
 ; CHECK-LABEL: sllhxsimm:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    sllhqs $r3 = $r3, 3
-; CHECK-NEXT:    sllhqs $r0 = $r0, 3
+; CHECK-NEXT:    sllhqs $r4 = $r0, 3
+; CHECK-NEXT:    sllhqs $r5 = $r1, 3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    sllhqs $r1 = $r1, 3
-; CHECK-NEXT:    sllhqs $r2 = $r2, 3
-; CHECK-NEXT:    sd 24[$r12] = $r3
+; CHECK-NEXT:    sllhqs $r6 = $r2, 3
+; CHECK-NEXT:    sllhqs $r7 = $r3, 3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 16[$r12] = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 8[$r12] = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 0[$r12] = $r0
+; CHECK-NEXT:    so 0[$r12] = $r4r5r6r7
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -3871,18 +3861,13 @@ define void @srahxs(<16 x i16> %a, i32 %b) {
 ; CHECK-NEXT:    zxwd $r4 = $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    srahqs $r3 = $r3, $r4
-; CHECK-NEXT:    srahqs $r0 = $r0, $r4
+; CHECK-NEXT:    srahqs $r8 = $r0, $r4
+; CHECK-NEXT:    srahqs $r9 = $r1, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srahqs $r1 = $r1, $r4
-; CHECK-NEXT:    srahqs $r2 = $r2, $r4
-; CHECK-NEXT:    sd 24[$r12] = $r3
+; CHECK-NEXT:    srahqs $r10 = $r2, $r4
+; CHECK-NEXT:    srahqs $r11 = $r3, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 16[$r12] = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 8[$r12] = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 0[$r12] = $r0
+; CHECK-NEXT:    so 0[$r12] = $r8r9r10r11
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -3913,19 +3898,14 @@ define void @srahxsimm(<16 x i16> %a) {
 ; CHECK-LABEL: srahxsimm:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    srahqs $r3 = $r3, 3
-; CHECK-NEXT:    srahqs $r0 = $r0, 3
+; CHECK-NEXT:    srahqs $r4 = $r0, 3
+; CHECK-NEXT:    srahqs $r5 = $r1, 3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    srahqs $r1 = $r1, 3
-; CHECK-NEXT:    srahqs $r2 = $r2, 3
-; CHECK-NEXT:    sd 24[$r12] = $r3
+; CHECK-NEXT:    srahqs $r6 = $r2, 3
+; CHECK-NEXT:    srahqs $r7 = $r3, 3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 16[$r12] = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 8[$r12] = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 0[$r12] = $r0
+; CHECK-NEXT:    so 0[$r12] = $r4r5r6r7
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
