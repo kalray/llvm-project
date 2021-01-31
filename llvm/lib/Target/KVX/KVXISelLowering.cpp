@@ -442,6 +442,10 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::ATOMIC_SWAP, VT, Custom);
   }
 
+  for (auto VT : {MVT::v8f32, MVT::v8i32, MVT::v16f16, MVT::v16i16, MVT::v32i8,
+                  MVT::v8f16, MVT::v8i16, MVT::v16i8})
+    setOperationAction(ISD::LOAD, VT, Custom);
+
   setMaxAtomicSizeInBitsSupported(64);
   setMinCmpXchgSizeInBits(32);
 
@@ -2301,6 +2305,48 @@ bool KVXTargetLowering::isLegalAddressingMode(const DataLayout &DL,
 
 bool KVXTargetLowering::isLegalStoreImmediate(int64_t Imm) const {
   return false;
+}
+
+void KVXTargetLowering::ReplaceNodeResults(SDNode *N,
+                                           SmallVectorImpl<SDValue> &Results,
+                                           SelectionDAG &DAG) const {
+  switch (N->getOpcode()) {
+  case ISD::LOAD: {
+    EVT ToVT;
+    EVT VT = N->getValueType(0);
+    switch (VT.getSimpleVT().SimpleTy) {
+    case MVT::v8f32:
+    case MVT::v8i32:
+    case MVT::v16f16:
+    case MVT::v16i16:
+    case MVT::v32i8:
+      ToVT = EVT(MVT::v4i64);
+      break;
+    case MVT::v8f16:
+    case MVT::v8i16:
+    case MVT::v16i8:
+      ToVT = EVT(MVT::v2i64);
+      break;
+    default:
+      return;
+    }
+    auto *LDN = dyn_cast<LoadSDNode>(N);
+    if (!LDN)
+      return;
+
+    SDValue Load =
+        DAG.getLoad(ToVT, SDLoc(N), LDN->getChain(), LDN->getBasePtr(),
+                    LDN->getPointerInfo(), LDN->getAlignment(),
+                    LDN->getMemOperand()->getFlags(), LDN->getAAInfo());
+
+    SDValue Cast = DAG.getBitcast(VT, Load);
+    Results.append(1, Cast);
+    Results.append(1, Load.getValue(1));
+    return;
+  }
+  default:
+    return;
+  }
 }
 
 SDValue KVX_LOW::buildImmVector(llvm::SDNode &N, llvm::SelectionDAG &CurDag,
