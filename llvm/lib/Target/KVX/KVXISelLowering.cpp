@@ -418,11 +418,6 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     for (auto I : {ISD::AND, ISD::OR, ISD::XOR, ISD::ADD, ISD::SUB, ISD::MUL})
       setOperationAction(I, VT, Expand);
 
-  setTargetDAGCombine(ISD::ZERO_EXTEND);
-  setTargetDAGCombine(ISD::FADD);
-  setTargetDAGCombine(ISD::FSUB);
-  setTargetDAGCombine(ISD::MUL);
-
   setOperationAction(ISD::ATOMIC_FENCE, MVT::Other, Custom);
   // NOTE: We could use ACSWAPW instruction with some shifts and masks to
   // support custom lowering of i8 and i16 operations. See ASWAPp for i8.
@@ -460,6 +455,12 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
 
   for (auto I : {MVT::v2i16, MVT::v4i16, MVT::i32, MVT::v2i32, MVT::i64})
     setOperationAction(ISD::SADDSAT, I, Legal);
+
+  setTargetDAGCombine(ISD::FADD);
+  setTargetDAGCombine(ISD::FSUB);
+  setTargetDAGCombine(ISD::MUL);
+  setTargetDAGCombine(ISD::STORE);
+  setTargetDAGCombine(ISD::ZERO_EXTEND);
 }
 
 EVT KVXTargetLowering::getSetCCResultType(const DataLayout &DL, LLVMContext &C,
@@ -2211,6 +2212,40 @@ static SDValue combineMUL(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
   return Dag.getNode(Opcode, SDLoc(N), MVT::i64, {T0, T1});
 }
 
+static SDValue combineStore(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
+                            SelectionDAG &Dag) {
+  StoreSDNode *ST = dyn_cast<StoreSDNode>(N);
+  if (!ST)
+    return SDValue();
+  SDValue Value = ST->getValue();
+  EVT VT = Value.getValueType();
+  if (!VT.isSimple())
+    return SDValue();
+  EVT ToVT;
+  switch (VT.getSimpleVT().SimpleTy) {
+  case MVT::v8f32:
+  case MVT::v8i32:
+  case MVT::v16f16:
+  case MVT::v16i16:
+  case MVT::v32i8:
+    ToVT = EVT(MVT::v4i64);
+    break;
+  case MVT::v8f16:
+  case MVT::v8i16:
+  case MVT::v16i8:
+    ToVT = EVT(MVT::v2i64);
+    break;
+  default:
+    return SDValue();
+  }
+  SDValue Chain = ST->getChain();
+  SDValue Ptr = ST->getBasePtr();
+
+  SDValue Cast = Dag.getBitcast(ToVT, Value);
+
+  return Dag.getStore(Chain, SDLoc(N), Cast, Ptr, ST->getMemOperand());
+}
+
 SDValue KVXTargetLowering::PerformDAGCombine(SDNode *N,
                                              DAGCombinerInfo &DCI) const {
   SelectionDAG &DAG = DCI.DAG;
@@ -2246,6 +2281,8 @@ SDValue KVXTargetLowering::PerformDAGCombine(SDNode *N,
     break;
   case ISD::MUL:
     return combineMUL(N, DCI, DAG);
+  case ISD::STORE:
+    return combineStore(N, DCI, DAG);
   }
 
   return SDValue();
@@ -2314,6 +2351,8 @@ void KVXTargetLowering::ReplaceNodeResults(SDNode *N,
   case ISD::LOAD: {
     EVT ToVT;
     EVT VT = N->getValueType(0);
+    if (!VT.isSimple())
+      return;
     switch (VT.getSimpleVT().SimpleTy) {
     case MVT::v8f32:
     case MVT::v8i32:
@@ -2346,6 +2385,21 @@ void KVXTargetLowering::ReplaceNodeResults(SDNode *N,
   }
   default:
     return;
+  }
+}
+
+bool KVXTargetLowering::isStoreBitCastBeneficial(
+    EVT StoreVT, EVT BitcastVT, const SelectionDAG &DAG,
+    const MachineMemOperand &MMO) const {
+  if (!BitcastVT.isSimple())
+    return false;
+
+  switch (BitcastVT.getSimpleVT().SimpleTy) {
+  case MVT::v2i64:
+  case MVT::v4i64:
+    return true;
+  default:
+    return false;
   }
 }
 
