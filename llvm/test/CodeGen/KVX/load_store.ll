@@ -373,13 +373,7 @@ entry:
 define void @storehalf16(<16 x half> %v, <16 x half>* nocapture %p) {
 ; CHECK-LABEL: storehalf16:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sd 56[$r4] = $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 48[$r4] = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 40[$r4] = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 32[$r4] = $r0
+; CHECK-NEXT:    so 32[$r4] = $r0r1r2r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -403,9 +397,7 @@ entry:
 define void @storefloat8(<8 x float> %v, <8 x float>* nocapture %p) {
 ; CHECK-LABEL: storefloat8:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sq 48[$r4] = $r2r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sq 32[$r4] = $r0r1
+; CHECK-NEXT:    so 32[$r4] = $r0r1r2r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -429,13 +421,7 @@ entry:
 define void @storechar32(<32 x i8> %v, <32 x i8>* nocapture %p) {
 ; CHECK-LABEL: storechar32:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sd 56[$r4] = $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 48[$r4] = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 40[$r4] = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 32[$r4] = $r0
+; CHECK-NEXT:    so 32[$r4] = $r0r1r2r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -459,13 +445,7 @@ entry:
 define void @storeuchar32(<32 x i8> %v, <32 x i8>* nocapture %p) {
 ; CHECK-LABEL: storeuchar32:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sd 56[$r4] = $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 48[$r4] = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 40[$r4] = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 32[$r4] = $r0
+; CHECK-NEXT:    so 32[$r4] = $r0r1r2r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -489,13 +469,7 @@ entry:
 define void @storeshort16(<16 x i16> %v, <16 x i16>* nocapture %p) {
 ; CHECK-LABEL: storeshort16:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sd 56[$r4] = $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 48[$r4] = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 40[$r4] = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 32[$r4] = $r0
+; CHECK-NEXT:    so 32[$r4] = $r0r1r2r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -519,13 +493,7 @@ entry:
 define void @storeushort16(<16 x i16> %v, <16 x i16>* nocapture %p) {
 ; CHECK-LABEL: storeushort16:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sd 56[$r4] = $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 48[$r4] = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 40[$r4] = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 32[$r4] = $r0
+; CHECK-NEXT:    so 32[$r4] = $r0r1r2r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -549,9 +517,7 @@ entry:
 define void @storeint8(<8 x i32> %v, <8 x i32>* nocapture %p) {
 ; CHECK-LABEL: storeint8:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sq 48[$r4] = $r2r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sq 32[$r4] = $r0r1
+; CHECK-NEXT:    so 32[$r4] = $r0r1r2r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -575,9 +541,7 @@ entry:
 define void @storeuint8(<8 x i32> %v, <8 x i32>* nocapture %p) {
 ; CHECK-LABEL: storeuint8:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sq 48[$r4] = $r2r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sq 32[$r4] = $r0r1
+; CHECK-NEXT:    so 32[$r4] = $r0r1r2r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -600,9 +564,7 @@ entry:
 define void @storehalf8(<8 x half> %v, <8 x half>* nocapture %p) {
 ; CHECK-LABEL: storehalf8:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sd 24[$r2] = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 16[$r2] = $r0
+; CHECK-NEXT:    sq 16[$r2] = $r0r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -674,9 +636,7 @@ entry:
 define void @storechar16(<16 x i8> %v, <16 x i8>* nocapture %p) {
 ; CHECK-LABEL: storechar16:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sd 24[$r2] = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 16[$r2] = $r0
+; CHECK-NEXT:    sq 16[$r2] = $r0r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -700,9 +660,7 @@ entry:
 define void @storeuchar16(<16 x i8> %v, <16 x i8>* nocapture %p) {
 ; CHECK-LABEL: storeuchar16:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sd 24[$r2] = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 16[$r2] = $r0
+; CHECK-NEXT:    sq 16[$r2] = $r0r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -726,9 +684,7 @@ entry:
 define void @storeshort8(<8 x i16> %v, <8 x i16>* nocapture %p) {
 ; CHECK-LABEL: storeshort8:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sd 24[$r2] = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 16[$r2] = $r0
+; CHECK-NEXT:    sq 16[$r2] = $r0r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -752,9 +708,7 @@ entry:
 define void @storeushort8(<8 x i16> %v, <8 x i16>* nocapture %p) {
 ; CHECK-LABEL: storeushort8:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sd 24[$r2] = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 16[$r2] = $r0
+; CHECK-NEXT:    sq 16[$r2] = $r0r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
