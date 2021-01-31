@@ -177,6 +177,9 @@ private:
 
   SDValue PerformDAGCombine(SDNode *N, DAGCombinerInfo &DCI) const override;
 
+  void ReplaceNodeResults(SDNode *N, SmallVectorImpl<SDValue> &Results,
+                          SelectionDAG &DAG) const override;
+
   // Return true if the addressing mode represented by AM is legal for this
   // target, for a load/store of the specified type.
   bool isLegalAddressingMode(const DataLayout &DL, const AddrMode &AM, Type *Ty,
