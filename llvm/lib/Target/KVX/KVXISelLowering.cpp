@@ -28,6 +28,7 @@
 #include "llvm/IR/DiagnosticPrinter.h"
 #include "llvm/Support/Debug.h"
 #include "llvm/Support/ErrorHandling.h"
+#include "llvm/Support/KnownBits.h"
 #include "llvm/Support/raw_ostream.h"
 
 using namespace llvm;
@@ -1131,12 +1132,6 @@ bool KVXTargetLowering::isZExtFree(SDValue Val, EVT VT2) const {
     return true; // KVX have a zero extended load for each data type.
 
   return false;
-}
-
-bool KVXTargetLowering::isNoopAddrSpaceCast(unsigned SrcAS,
-                                            unsigned DestAS) const {
-  // Addrspacecasts are always noops.
-  return true;
 }
 
 SDValue KVXTargetLowering::lowerRETURNADDR(SDValue Op,

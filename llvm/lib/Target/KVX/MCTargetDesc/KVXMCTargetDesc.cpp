@@ -63,7 +63,8 @@ static MCInstPrinter *createKVXMCInstPrinter(const Triple &T,
 
 static MCSubtargetInfo *createKVXMCSubtargetInfo(const Triple &TT,
                                                  StringRef CPU, StringRef FS) {
-  return createKVXMCSubtargetInfoImpl(TT, KVX_MC::selectKVXCPU(CPU), FS);
+  return createKVXMCSubtargetInfoImpl(
+      TT, KVX_MC::selectKVXCPU(CPU), /*TuneCPU*/ KVX_MC::selectKVXCPU(CPU), FS);
 }
 
 static MCTargetStreamer *createKVXTargetStreamer(MCStreamer &S,

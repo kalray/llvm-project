@@ -1,3 +1,5 @@
+add_llvm_component_group(KVX)
+
 set(LLVM_TARGET_DEFINITIONS KVX.td)
 
 tablegen(LLVM KVXGenAsmMatcher.inc -gen-asm-matcher)
@@ -31,6 +33,22 @@ add_llvm_target(KVXCodeGen
     KVXHardwareLoops.cpp
     KVXHardwareLoopsPrepare.cpp
     KVXTargetTransformInfo.cpp
+
+    LINK_COMPONENTS
+    Analysis
+    AsmPrinter
+    CodeGen
+    Core
+    MC
+    SelectionDAG
+    Target
+    Support
+    KVXDesc
+    KVXInfo
+    KVXAsmPrinter
+
+    ADD_TO_COMPONENT
+    KVX
     )
 
 add_subdirectory(TargetInfo)
