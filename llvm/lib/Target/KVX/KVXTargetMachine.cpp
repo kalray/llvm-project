@@ -209,3 +209,9 @@ TargetTransformInfo
 KVXTargetMachine::getTargetTransformInfo(const Function &F) {
   return TargetTransformInfo(KVXTTIImpl(this, F));
 }
+
+bool KVXTargetMachine::isNoopAddrSpaceCast(unsigned SrcAS,
+                                           unsigned DestAS) const {
+  // Addrspacecasts are always noops.
+  return true;
+}

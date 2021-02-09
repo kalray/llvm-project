@@ -19795,7 +19795,7 @@ static Value *KVX_emitLoadBuiltin(CodeGenFunction &CGF, const CallExpr *E,
     AlignmentInBytes =
         CGF.CGM.getContext()
             .toCharUnitsFromBits(DataType->getScalarSizeInBits() *
-                                 llvm::cast<llvm::VectorType>(DataType)->getNumElements())
+                llvm::cast<llvm::FixedVectorType>(DataType)->getNumElements())
             .getAsAlign();
   else
     AlignmentInBytes = CGF.CGM.getContext()
@@ -19820,7 +19820,7 @@ static Value *KVX_emitStoreBuiltin(CodeGenFunction &CGF, const CallExpr *E,
     AlignmentInBytes =
         CGF.CGM.getContext()
             .toCharUnitsFromBits(DataType->getScalarSizeInBits() *
-                                 llvm::cast<llvm::VectorType>(DataType)->getNumElements())
+                llvm::cast<llvm::FixedVectorType>(DataType)->getNumElements())
             .getAsAlign();
   else
     AlignmentInBytes = CGF.CGM.getContext()

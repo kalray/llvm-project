@@ -71,7 +71,6 @@ public:
   getPreferredVectorAction(MVT VT) const override;
 
   bool isZExtFree(SDValue Val, EVT VT2) const override;
-  bool isNoopAddrSpaceCast(unsigned SrcAS, unsigned DestAS) const override;
 
   // FIXME: These should be thought through
   // Returns true if the target allows unaligned memory accesses of the

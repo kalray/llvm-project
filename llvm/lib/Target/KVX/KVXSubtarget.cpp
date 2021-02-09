@@ -32,15 +32,15 @@ KVXSubtarget &KVXSubtarget::initializeSubtargetDependencies(StringRef CPU,
   if (CPU.empty())
     CPU = "kv3-1";
 
-  ParseSubtargetFeatures(CPU, FS);
+  ParseSubtargetFeatures(CPU, /* TuneCPU */ CPU, FS);
 
   return *this;
 }
 
 KVXSubtarget::KVXSubtarget(const Triple &TT, StringRef CPU,
                            const std::string &FS, const TargetMachine &TM)
-    : KVXGenSubtargetInfo(TT, CPU, FS), OptLevel(TM.getOptLevel()),
-      FrameLowering(*this), InstrInfo(initializeSubtargetDependencies(CPU, FS)),
+    : KVXGenSubtargetInfo(TT, CPU, /* TuneCPU */ CPU, FS),
+      OptLevel(TM.getOptLevel()), FrameLowering(*this), InstrInfo(initializeSubtargetDependencies(CPU, FS)),
       RegInfo(getHwMode()), TLInfo(TM, *this),
       InstrItins(getInstrItineraryForCPU(KVX_MC::selectKVXCPU(CPU))) {
   assert(InstrItins.Itineraries != nullptr && "InstrItins not initialized");

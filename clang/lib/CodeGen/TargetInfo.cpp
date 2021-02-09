@@ -11496,10 +11496,9 @@ Address KVXABIInfo::EmitVAArg(CodeGenFunction &CGF, Address VAListAddr,
   CharUnits SlotSize = CharUnits::fromQuantity(8);
 
   if (getContext().getTypeSize(Ty) > RegSize * NumRegs) {
-    std::pair<CharUnits, CharUnits> SizeAndAlign =
-        getContext().getTypeInfoInChars(Ty);
-    return emitVoidPtrVAArg(CGF, VAListAddr, Ty, /*Indirect=*/true,
-                            SizeAndAlign, SlotSize, /*AllowHigherAlign=*/false);
+    auto TInfo = getContext().getTypeInfoInChars(Ty);
+    return emitVoidPtrVAArg(CGF, VAListAddr, Ty, /*Indirect=*/true, TInfo,
+                            SlotSize, /*AllowHigherAlign=*/false);
   }
 
   ABIArgInfo AI = classifyType(Ty);

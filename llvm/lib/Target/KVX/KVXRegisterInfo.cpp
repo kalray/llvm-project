@@ -78,9 +78,10 @@ void KVXRegisterInfo::eliminateFrameIndex(MachineBasicBlock::iterator II,
   // Check if the previous operand is immediate, if true replace it with the
   // computed value
   if (FIOperandNum > 0 && MI.getOperand(FIOperandNum - 1).isImm()) {
-    Offset =
-        getFrameLowering(MF)->getFrameIndexReference(MF, FrameIndex, FrameReg) +
-        MI.getOperand(FIOperandNum - 1).getImm() +
+    Offset = getFrameLowering(MF)
+                 ->getFrameIndexReference(MF, FrameIndex, FrameReg)
+                 .getFixed() +
+             MI.getOperand(FIOperandNum - 1).getImm() +
         MF.getFrameInfo().getStackSize();
     if (TRI->needsStackRealignment(MF))
       Offset -= MFI.getStackSize();
@@ -92,8 +93,8 @@ void KVXRegisterInfo::eliminateFrameIndex(MachineBasicBlock::iterator II,
     // computed value
     if (FIOperandNum + 1 < MI.getNumOperands() &&
         MI.getOperand(FIOperandNum + 1).isImm()) {
-      Offset = getFrameLowering(MF)->getFrameIndexReference(MF, FrameIndex,
-                                                            FrameReg) +
+      Offset = getFrameLowering(MF)->getFrameIndexReference(MF, FrameIndex, FrameReg)
+                   .getFixed() +
                MI.getOperand(FIOperandNum + 1).getImm() +
                MF.getFrameInfo().getStackSize();
 
