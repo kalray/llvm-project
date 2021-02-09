@@ -406,8 +406,9 @@ void KVXFrameLowering::emitEpilogue(MachineFunction &MF,
       .setMIFlags(MachineInstr::FrameDestroy);
 }
 
-int KVXFrameLowering::getFrameIndexReference(const MachineFunction &MF, int FI,
-                                             Register &FrameReg) const {
+StackOffset KVXFrameLowering::getFrameIndexReference(const MachineFunction &MF,
+                                                     int FI,
+                                                     Register &FrameReg) const {
   const MachineFrameInfo &MFI = MF.getFrameInfo();
   auto *KVXFI = MF.getInfo<KVXMachineFunctionInfo>();
   FrameReg = getSPReg();
@@ -430,7 +431,7 @@ int KVXFrameLowering::getFrameIndexReference(const MachineFunction &MF, int FI,
   if (!TRI->needsStackRealignment(MF))
     Offset -= MFI.getStackSize();
 
-  return Offset + OffsetAdjust;
+  return StackOffset::getFixed(Offset + OffsetAdjust);
 }
 
 void KVXFrameLowering::determineCalleeSaves(MachineFunction &MF,
