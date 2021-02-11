@@ -172,21 +172,18 @@ define i32 @stackrealign2(i32 %n){
 ; CHECK-NEXT:    cb.wlez $r1 ? .LBB1_5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %for.body.preheader
-; CHECK-NEXT:    zxwd $r3 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r2 = $r3, -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    compd.ltu $r4 = $r2, 7
-; CHECK-NEXT:    andd $r2 = $r3, 7
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.even $r4 ? .LBB1_13
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.2:
+; CHECK-NEXT:    zxwd $r4 = $r1
 ; CHECK-NEXT:    make $r3 = 0
-; CHECK-NEXT:    goto .LBB1_3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB1_13: # %for.body.preheader.new
-; CHECK-NEXT:    sbfd $r3 = $r2, $r3
+; CHECK-NEXT:    addd $r2 = $r4, -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    compd.ltu $r5 = $r2, 7
+; CHECK-NEXT:    andd $r2 = $r4, 7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cb.odd $r5 ? .LBB1_3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  # %bb.2: # %for.body.preheader.new
+; CHECK-NEXT:    sbfd $r3 = $r2, $r4
 ; CHECK-NEXT:    addw $r4 = $r1, -7
 ; CHECK-NEXT:    addd $r5 = $r0, 16
 ; CHECK-NEXT:    ;;
@@ -630,21 +627,18 @@ define i32 @stackrealign4(i32 %n){
 ; CHECK-NEXT:    cb.wlez $r11 ? .LBB3_5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %for.body.preheader
-; CHECK-NEXT:    zxwd $r3 = $r11
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r2 = $r3, -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    compd.ltu $r4 = $r2, 7
-; CHECK-NEXT:    andd $r2 = $r3, 7
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.even $r4 ? .LBB3_13
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.2:
+; CHECK-NEXT:    zxwd $r4 = $r11
 ; CHECK-NEXT:    make $r3 = 0
-; CHECK-NEXT:    goto .LBB3_3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB3_13: # %for.body.preheader.new
-; CHECK-NEXT:    sbfd $r3 = $r2, $r3
+; CHECK-NEXT:    addd $r2 = $r4, -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    compd.ltu $r5 = $r2, 7
+; CHECK-NEXT:    andd $r2 = $r4, 7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cb.odd $r5 ? .LBB3_3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  # %bb.2: # %for.body.preheader.new
+; CHECK-NEXT:    sbfd $r3 = $r2, $r4
 ; CHECK-NEXT:    addw $r4 = $r11, -7
 ; CHECK-NEXT:    addd $r5 = $r15, 16
 ; CHECK-NEXT:    ;;

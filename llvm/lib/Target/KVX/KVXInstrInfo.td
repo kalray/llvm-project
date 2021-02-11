@@ -2322,6 +2322,7 @@ def CMOVEWP : SIMDCOND_REGISTERZ_REGISTERW_REGISTERY_SIMPLE
    "cmovewp$a1 $a2 ? $a3 = $a4",
    [/* no straightforward pattern */]>;
 
+let isAsCheapAsAMove = 1 in
 defm MAKE : MC_1D<"make">;
 
 defm PCREL : MC_1E<"pcrel">;

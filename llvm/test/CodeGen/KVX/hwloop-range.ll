@@ -18,21 +18,21 @@ define void @test(i32* nocapture %a, i32* nocapture readonly %b, i32 %n) {
 ; CHECK-NEXT:  # %bb.1: # %for.body.preheader
 ; CHECK-NEXT:    addw $r2 = $r2, -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r3 = $r2, 1
-; CHECK-NEXT:    make $r2 = g
+; CHECK-NEXT:    addd $r2 = $r2, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    loopdo $r3, .__LOOPDO_0_END_
+; CHECK-NEXT:    loopdo $r2, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_2: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
+; CHECK-NEXT:    make $r2 = g
 ; CHECK-NEXT:    lwz $r3 = 0[$r1]
 ; CHECK-NEXT:    addd $r1 = $r1, 4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r4 = 0[$r2]
+; CHECK-NEXT:    lwz $r2 = 0[$r2]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mulw $r3 = $r4, $r3
+; CHECK-NEXT:    mulw $r2 = $r2, $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 0[$r0] = $r3
+; CHECK-NEXT:    sw 0[$r0] = $r2
 ; CHECK-NEXT:    addd $r0 = $r0, 4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .__LOOPDO_0_END_:
