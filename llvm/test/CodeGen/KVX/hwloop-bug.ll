@@ -56,20 +56,21 @@ define void @InitDataSet(i32 %m, i16* nocapture %x, i32 %n, i16* nocapture %h) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_7: # %vector.ph
 ; CHECK-NEXT:    andd $r5 = $r4, -2
-; CHECK-NEXT:    make $r7 = 0xffffffffdeaddead
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r0 = $r5, -2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srld $r0 = $r0, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r8 = $r0, 1
+; CHECK-NEXT:    addd $r7 = $r0, 1
 ; CHECK-NEXT:    addd $r0 = $r5, $r6
 ; CHECK-NEXT:    addx2d $r6 = $r6, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    loopdo $r8, .__LOOPDO_4_END_
+; CHECK-NEXT:    loopdo $r7, .__LOOPDO_4_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_8: # %vector.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
+; CHECK-NEXT:    make $r7 = 0xffffffffdeaddead
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 0[$r6] = $r7
 ; CHECK-NEXT:    addd $r6 = $r6, 4
 ; CHECK-NEXT:    ;;
@@ -84,13 +85,14 @@ define void @InitDataSet(i32 %m, i16* nocapture %x, i32 %n, i16* nocapture %h) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfd $r4 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r5 = $r4, 1
-; CHECK-NEXT:    make $r4 = 0xdead
+; CHECK-NEXT:    addd $r4 = $r4, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    loopdo $r5, .__LOOPDO_3_END_
+; CHECK-NEXT:    loopdo $r4, .__LOOPDO_3_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_14: # %for.body4
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
+; CHECK-NEXT:    make $r4 = 0xdead
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sh.xs $r0[$r1] = $r4
 ; CHECK-NEXT:    addd $r0 = $r0, 1
 ; CHECK-NEXT:    ;;
@@ -143,20 +145,21 @@ define void @InitDataSet(i32 %m, i16* nocapture %x, i32 %n, i16* nocapture %h) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_19: # %vector.ph74
 ; CHECK-NEXT:    andd $r2 = $r1, -2
-; CHECK-NEXT:    make $r5 = 0xffffffffbeefbeef
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r0 = $r2, -2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srld $r0 = $r0, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r6 = $r0, 1
+; CHECK-NEXT:    addd $r5 = $r0, 1
 ; CHECK-NEXT:    addd $r0 = $r2, $r4
 ; CHECK-NEXT:    addx2d $r4 = $r4, $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    loopdo $r6, .__LOOPDO_1_END_
+; CHECK-NEXT:    loopdo $r5, .__LOOPDO_1_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_20: # %vector.body71
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
+; CHECK-NEXT:    make $r5 = 0xffffffffbeefbeef
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 0[$r4] = $r5
 ; CHECK-NEXT:    addd $r4 = $r4, 4
 ; CHECK-NEXT:    ;;
@@ -171,13 +174,14 @@ define void @InitDataSet(i32 %m, i16* nocapture %x, i32 %n, i16* nocapture %h) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfd $r1 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r2 = $r1, 1
-; CHECK-NEXT:    make $r1 = 0xbeef
+; CHECK-NEXT:    addd $r1 = $r1, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    loopdo $r2, .__LOOPDO_0_END_
+; CHECK-NEXT:    loopdo $r1, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_22: # %for.body23
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
+; CHECK-NEXT:    make $r1 = 0xbeef
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sh.xs $r0[$r3] = $r1
 ; CHECK-NEXT:    addd $r0 = $r0, 1
 ; CHECK-NEXT:    ;;
@@ -349,25 +353,26 @@ define i32 @c()  {
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    call g
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r1 = a
-; CHECK-NEXT:    make $r2 = 0
+; CHECK-NEXT:    make $r1 = 0
+; CHECK-NEXT:    make $r2 = a
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 0[$r1] = $r2
+; CHECK-NEXT:    sw 0[$r2] = $r1
 ; CHECK-NEXT:    cb.wlez $r18 ? .LBB1_6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %for.cond3.preheader.preheader
-; CHECK-NEXT:    zxwd $r5 = $r18
+; CHECK-NEXT:    zxwd $r2 = $r18
 ; CHECK-NEXT:    sxwd $r0 = $r0
-; CHECK-NEXT:    make $r3 = g
-; CHECK-NEXT:    make $r4 = b
+; CHECK-NEXT:    make $r3 = b
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    loopdo $r5, .__LOOPDO_6_END_
+; CHECK-NEXT:    loopdo $r2, .__LOOPDO_6_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    goto .LBB1_3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB1_2: # %for.cond.loopexit
 ; CHECK-NEXT:    # in Loop: Header=BB1_3 Depth=1
-; CHECK-NEXT:    sw 0[$r1] = $r2
+; CHECK-NEXT:    make $r2 = a
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw 0[$r2] = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .__LOOPDO_6_END_:
 ; CHECK-NEXT:    goto .LBB1_6
@@ -375,20 +380,22 @@ define i32 @c()  {
 ; CHECK-NEXT:  .LBB1_3: # %for.cond3.preheader
 ; CHECK-NEXT:    # =>This Loop Header: Depth=1
 ; CHECK-NEXT:    # Child Loop BB1_5 Depth 2
-; CHECK-NEXT:    addd $r2 = $r2, 1
+; CHECK-NEXT:    addd $r1 = $r1, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz.xs $r5 = $r2[$r0]
+; CHECK-NEXT:    lwz.xs $r2 = $r1[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.weqz $r5 ? .LBB1_2
+; CHECK-NEXT:    cb.weqz $r2 ? .LBB1_2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB1_5: # %for.body4
 ; CHECK-NEXT:    # Parent Loop BB1_3 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
-; CHECK-NEXT:    sw 0[$r4] = $r3
+; CHECK-NEXT:    make $r2 = g
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz.xs $r5 = $r2[$r0]
+; CHECK-NEXT:    sw 0[$r3] = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.wnez $r5 ? .LBB1_5
+; CHECK-NEXT:    lwz.xs $r2 = $r1[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cb.wnez $r2 ? .LBB1_5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    goto .LBB1_2
 ; CHECK-NEXT:    ;;

@@ -10,33 +10,33 @@ define void @set(i32* nocapture %x, i32 %num){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:  # %bb.1: # %for.body.lr.ph
-; CHECK-NEXT:    zxwd $r4 = $r1
+; CHECK-NEXT:    zxwd $r2 = $r1
 ; CHECK-NEXT:    make $r1 = 0
-; CHECK-NEXT:    make $r2 = 4
 ; CHECK-NEXT:    make $r3 = 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    loopdo $r4, .__LOOPDO_0_END_
+; CHECK-NEXT:    loopdo $r2, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_3: # %for.body
 ; CHECK-NEXT:    # =>This Loop Header: Depth=1
 ; CHECK-NEXT:    # Child Loop BB0_4 Depth 2
 ; CHECK-NEXT:    sw 0[$r12] = $r1
+; CHECK-NEXT:    make $r2 = 4
 ; CHECK-NEXT:    addw $r1 = $r1, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_4: # %for.body
 ; CHECK-NEXT:    # Parent Loop BB0_3 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
-; CHECK-NEXT:    lwz.u $r7 = 0[$r12]
+; CHECK-NEXT:    lwz.u $r5 = 0[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfw $r6 = $r2, $r7
+; CHECK-NEXT:    sbfw $r4 = $r2, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    acswapw 0[$r12] = $r6r7
+; CHECK-NEXT:    acswapw 0[$r12] = $r4r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.even $r6 ? .LBB0_4
+; CHECK-NEXT:    cb.even $r4 ? .LBB0_4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.5: # %for.body
 ; CHECK-NEXT:    # in Loop: Header=BB0_3 Depth=1
-; CHECK-NEXT:    copyw $r4 = $r7
+; CHECK-NEXT:    copyw $r2 = $r5
 ; CHECK-NEXT:    sw 0[$r0] = $r3
 ; CHECK-NEXT:    addd $r0 = $r0, 4
 ; CHECK-NEXT:    ;;
