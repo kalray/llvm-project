@@ -1393,11 +1393,14 @@ def: Pat<(v4i64 (bswap v4i64:$v)), (v4i64 (REG_SEQUENCE QuadReg,
                                       (SBMM8ri64 (i64(EXTRACT_SUBREG QuadReg:$v, sub_s2)), 0x0102040810204080), sub_s2,
                                       (SBMM8ri64 (i64(EXTRACT_SUBREG QuadReg:$v, sub_s3)), 0x0102040810204080), sub_s3))>;
 
-// For the moment we only use build_vector in tca for
-// zeroinit
-def: Pat<(v256i1 (build_vector)), (COPY A48)>;
-def: Pat<(v512i1 (build_vector)), (COPY W25)>;
-def: Pat<(v1024i1 (build_vector)), (COPY X12)>;
+// For the moment we only use build_vector in tca for zeroinit
+def COPYZAp : KVX_PSEUDO<(outs VectorReg:$dst), (ins), []>;
+def COPYZWp : KVX_PSEUDO<(outs WideReg:$dst), (ins), []>;
+def COPYZXp : KVX_PSEUDO<(outs MatrixReg:$dst), (ins), []>;
+
+def: Pat<(v256i1 (build_vector)), (COPYZAp)>; // A48, A49
+def: Pat<(v512i1 (build_vector)), (COPYZWp)>; // W25
+def: Pat<(v1024i1 (build_vector)), (COPYZXp)>; // X12
 
 // SUBD: Only used for FrameLowering and replaced by the correct ADDD
 // instruction at eliminateFrameIndex(). Do not use it in any pattern!

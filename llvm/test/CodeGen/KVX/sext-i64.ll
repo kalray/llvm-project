@@ -7,10 +7,10 @@ target triple = "kvx-kalray-cos"
 define void @test7(i64 %b, i8 %c){
 ; CHECK-LABEL: test7:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r2 = a
 ; CHECK-NEXT:    slld $r0 = $r0, $r1
-; CHECK-NEXT:    make $r1 = a
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 0[$r1] = $r0
+; CHECK-NEXT:    sd 0[$r2] = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -24,10 +24,10 @@ entry:
 define void @test7b(i64 %b, i8 %c){
 ; CHECK-LABEL: test7b:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r2 = a
 ; CHECK-NEXT:    slld $r0 = $r0, $r1
-; CHECK-NEXT:    make $r1 = a
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 0[$r1] = $r0
+; CHECK-NEXT:    sd 0[$r2] = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -40,10 +40,10 @@ entry:
 define void @test7c(i64 %b, i16 %c){
 ; CHECK-LABEL: test7c:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r2 = a
 ; CHECK-NEXT:    slld $r0 = $r0, $r1
-; CHECK-NEXT:    make $r1 = a
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 0[$r1] = $r0
+; CHECK-NEXT:    sd 0[$r2] = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -57,10 +57,10 @@ entry:
 define void @test7d(i64 %b, i16 %c){
 ; CHECK-LABEL: test7d:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r2 = a
 ; CHECK-NEXT:    slld $r0 = $r0, $r1
-; CHECK-NEXT:    make $r1 = a
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 0[$r1] = $r0
+; CHECK-NEXT:    sd 0[$r2] = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

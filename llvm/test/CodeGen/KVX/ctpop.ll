@@ -80,8 +80,8 @@ define <2 x i32> @cbswp(<2 x i32> %a) {
 define <2 x i64> @ctpopv2i64(<2 x i64> %a) {
 ; CHECK-LABEL: ctpopv2i64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    cbsd $r0 = $r0
 ; CHECK-NEXT:    cbsd $r1 = $r1
+; CHECK-NEXT:    cbsd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %res = call <2 x i64> @llvm.ctpop.v2i64(<2 x i64> %a)

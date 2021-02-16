@@ -31,6 +31,7 @@ define dso_local i32 @f(i32 %sz) {
 ; FP-ALL-NEXT:    .cfi_def_cfa 14, 16
 ; FP-ALL-NEXT:    sq 224[$r12] = $r18r19
 ; FP-ALL-NEXT:    sxwd $r0 = $r0
+; FP-ALL-NEXT:    addd $r1 = $r14, -144
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    .cfi_offset 18, -24
 ; FP-ALL-NEXT:    .cfi_offset 19, -32
@@ -38,9 +39,9 @@ define dso_local i32 @f(i32 %sz) {
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    andd $r0 = $r0, -32
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    sbfd $r1 = $r0, $r12
+; FP-ALL-NEXT:    sbfd $r2 = $r0, $r12
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    andd $r18 = $r1, -128
+; FP-ALL-NEXT:    andd $r18 = $r2, -128
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    copyd $r12 = $r18
 ; FP-ALL-NEXT:    ;;
@@ -48,7 +49,6 @@ define dso_local i32 @f(i32 %sz) {
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    copyd $r12 = $r19
 ; FP-ALL-NEXT:    copyd $r0 = $r18
-; FP-ALL-NEXT:    addd $r1 = $r14, -144
 ; FP-ALL-NEXT:    copyd $r2 = $r19
 ; FP-ALL-NEXT:    call g
 ; FP-ALL-NEXT:    ;;

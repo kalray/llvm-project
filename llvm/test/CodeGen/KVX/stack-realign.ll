@@ -86,15 +86,15 @@ define i32 @stackrealign1(){
 ; CHECK-NEXT:    .cfi_def_cfa 14, 16
 ; CHECK-NEXT:    sd 232[$r12] = $r31
 ; CHECK-NEXT:    andd $r31 = $r12, -128
-; CHECK-NEXT:    make $r0 = 7
-; CHECK-NEXT:    make $r1 = 0x4d2
+; CHECK-NEXT:    make $r2 = 7
+; CHECK-NEXT:    make $r3 = 0x4d2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 31, -24
-; CHECK-NEXT:    sw 228[$r31] = $r0
-; CHECK-NEXT:    addd $r0 = $r31, 228
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 128[$r31] = $r1
 ; CHECK-NEXT:    addd $r1 = $r31, 128
+; CHECK-NEXT:    addd $r0 = $r31, 228
+; CHECK-NEXT:    sw 228[$r31] = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw 128[$r31] = $r3
 ; CHECK-NEXT:    call other
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r12 = $r14, -240
@@ -175,41 +175,41 @@ define i32 @stackrealign2(i32 %n){
 ; CHECK-NEXT:    cb.odd $r5 ? .LBB1_4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.2: # %for.body.preheader.new
-; CHECK-NEXT:    sbfd $r4 = $r3, $r4
 ; CHECK-NEXT:    addw $r5 = $r1, -7
 ; CHECK-NEXT:    make $r2 = 0
+; CHECK-NEXT:    sbfd $r4 = $r3, $r4
 ; CHECK-NEXT:    copyd $r6 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB1_3: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    addw $r7 = $r5, 7
-; CHECK-NEXT:    addw $r8 = $r5, 6
-; CHECK-NEXT:    addd $r2 = $r2, 8
-; CHECK-NEXT:    addw $r9 = $r5, 3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 0[$r6] = $r7
-; CHECK-NEXT:    addw $r7 = $r5, 5
-; CHECK-NEXT:    addw $r10 = $r5, 2
-; CHECK-NEXT:    addw $r11 = $r5, 1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 4[$r6] = $r8
-; CHECK-NEXT:    addw $r8 = $r5, 4
-; CHECK-NEXT:    compd.eq $r15 = $r4, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 8[$r6] = $r7
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 12[$r6] = $r8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 16[$r6] = $r9
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 20[$r6] = $r10
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 24[$r6] = $r11
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addw $r7 = $r5, 2
+; CHECK-NEXT:    addw $r9 = $r5, 5
 ; CHECK-NEXT:    sw 28[$r6] = $r5
+; CHECK-NEXT:    addd $r2 = $r2, 8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r8 = $r6, 32
+; CHECK-NEXT:    sw 20[$r6] = $r7
+; CHECK-NEXT:    addw $r10 = $r5, 7
+; CHECK-NEXT:    addw $r7 = $r5, 3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw 8[$r6] = $r9
+; CHECK-NEXT:    addw $r11 = $r5, 6
+; CHECK-NEXT:    addw $r15 = $r5, 4
+; CHECK-NEXT:    addw $r9 = $r5, 1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw 0[$r6] = $r10
+; CHECK-NEXT:    compd.eq $r10 = $r4, $r2
 ; CHECK-NEXT:    addw $r5 = $r5, -8
-; CHECK-NEXT:    addd $r6 = $r6, 32
-; CHECK-NEXT:    cb.even $r15 ? .LBB1_3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw 12[$r6] = $r15
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw 4[$r6] = $r11
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw 16[$r6] = $r7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw 24[$r6] = $r9
+; CHECK-NEXT:    copyd $r6 = $r8
+; CHECK-NEXT:    cb.even $r10 ? .LBB1_3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB1_4: # %for.cond.cleanup.loopexit.unr-lcssa
 ; CHECK-NEXT:    cb.deqz $r3 ? .LBB1_12
@@ -288,10 +288,10 @@ define i32 @stackrealign2(i32 %n){
 ; CHECK-NEXT:    sw.xs $r2[$r0] = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB1_12: # %for.cond.cleanup
-; CHECK-NEXT:    make $r2 = 0x4d2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 128[$r31] = $r2
+; CHECK-NEXT:    make $r3 = 0x4d2
 ; CHECK-NEXT:    addd $r2 = $r31, 128
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw 128[$r31] = $r3
 ; CHECK-NEXT:    call other2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r12 = $r14, -240
@@ -470,47 +470,46 @@ define i64 @stackrealign3(i32 %x){
 ; CHECK-NEXT:    .cfi_offset 31, -24
 ; CHECK-NEXT:    sd 608[$r12] = $r18
 ; CHECK-NEXT:    andd $r31 = $r12, -128
-; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    make $r4 = 4
+; CHECK-NEXT:    make $r36 = 16
+; CHECK-NEXT:    make $r4 = 12
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 18, -32
-; CHECK-NEXT:    make $r8 = 8
-; CHECK-NEXT:    make $r32 = 12
-; CHECK-NEXT:    make $r36 = 16
-; CHECK-NEXT:    make $r5 = 3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r9 = 7
-; CHECK-NEXT:    make $r33 = 11
+; CHECK-NEXT:    make $r11 = 1
 ; CHECK-NEXT:    make $r37 = 15
-; CHECK-NEXT:    make $r6 = 2
+; CHECK-NEXT:    make $r5 = 11
+; CHECK-NEXT:    make $r33 = 7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r7 = 1
-; CHECK-NEXT:    make $r10 = 6
-; CHECK-NEXT:    make $r34 = 10
+; CHECK-NEXT:    make $r10 = 2
+; CHECK-NEXT:    make $r6 = 10
+; CHECK-NEXT:    make $r32 = 8
 ; CHECK-NEXT:    make $r38 = 14
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r11 = 5
-; CHECK-NEXT:    make $r35 = 9
 ; CHECK-NEXT:    make $r39 = 13
-; CHECK-NEXT:    addd $r15 = $r31, 128
+; CHECK-NEXT:    make $r35 = 5
+; CHECK-NEXT:    make $r9 = 3
+; CHECK-NEXT:    make $r8 = 4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r31, 380
-; CHECK-NEXT:    addd $r1 = $r31, 384
-; CHECK-NEXT:    so 480[$r31] = $r4r5r6r7
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    so 448[$r31] = $r8r9r10r11
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    so 416[$r31] = $r32r33r34r35
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    make $r7 = 9
+; CHECK-NEXT:    make $r34 = 6
+; CHECK-NEXT:    addd $r2 = $r31, 380
 ; CHECK-NEXT:    so 384[$r31] = $r36r37r38r39
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 380[$r31] = $r18
+; CHECK-NEXT:    addd $r1 = $r31, 384
+; CHECK-NEXT:    so 480[$r31] = $r8r9r10r11
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    so 416[$r31] = $r4r5r6r7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    so 448[$r31] = $r32r33r34r35
+; CHECK-NEXT:    addd $r15 = $r31, 128
+; CHECK-NEXT:    sxwd $r18 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw 380[$r31] = $r0
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    call otherv
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r0 = 128[$r31]
-; CHECK-NEXT:    sxwd $r1 = $r18
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, $r1
+; CHECK-NEXT:    addd $r0 = $r0, $r18
 ; CHECK-NEXT:    addd $r12 = $r14, -624
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r18 = 608[$r12]
@@ -611,41 +610,41 @@ define i32 @stackrealign4(i32 %n){
 ; CHECK-NEXT:    cb.odd $r5 ? .LBB3_4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.2: # %for.body.preheader.new
-; CHECK-NEXT:    sbfd $r4 = $r3, $r4
 ; CHECK-NEXT:    addw $r5 = $r11, -7
 ; CHECK-NEXT:    make $r2 = 0
+; CHECK-NEXT:    sbfd $r4 = $r3, $r4
 ; CHECK-NEXT:    copyd $r6 = $r15
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB3_3: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    addw $r0 = $r5, 7
-; CHECK-NEXT:    addw $r1 = $r5, 6
-; CHECK-NEXT:    addd $r2 = $r2, 8
-; CHECK-NEXT:    addw $r7 = $r5, 3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 0[$r6] = $r0
-; CHECK-NEXT:    addw $r0 = $r5, 5
-; CHECK-NEXT:    addw $r8 = $r5, 2
-; CHECK-NEXT:    addw $r9 = $r5, 1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 4[$r6] = $r1
-; CHECK-NEXT:    addw $r1 = $r5, 4
-; CHECK-NEXT:    compd.eq $r10 = $r4, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 8[$r6] = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 12[$r6] = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 16[$r6] = $r7
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 20[$r6] = $r8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 24[$r6] = $r9
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addw $r0 = $r5, 2
+; CHECK-NEXT:    addw $r7 = $r5, 5
 ; CHECK-NEXT:    sw 28[$r6] = $r5
+; CHECK-NEXT:    addd $r2 = $r2, 8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r1 = $r6, 32
+; CHECK-NEXT:    sw 20[$r6] = $r0
+; CHECK-NEXT:    addw $r8 = $r5, 7
+; CHECK-NEXT:    addw $r0 = $r5, 3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw 8[$r6] = $r7
+; CHECK-NEXT:    addw $r9 = $r5, 6
+; CHECK-NEXT:    addw $r10 = $r5, 4
+; CHECK-NEXT:    addw $r7 = $r5, 1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw 0[$r6] = $r8
+; CHECK-NEXT:    compd.eq $r8 = $r4, $r2
 ; CHECK-NEXT:    addw $r5 = $r5, -8
-; CHECK-NEXT:    addd $r6 = $r6, 32
-; CHECK-NEXT:    cb.even $r10 ? .LBB3_3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw 12[$r6] = $r10
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw 4[$r6] = $r9
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw 16[$r6] = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw 24[$r6] = $r7
+; CHECK-NEXT:    copyd $r6 = $r1
+; CHECK-NEXT:    cb.even $r8 ? .LBB3_3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB3_4: # %for.cond.cleanup.loopexit.unr-lcssa
 ; CHECK-NEXT:    cb.deqz $r3 ? .LBB3_12
@@ -725,193 +724,188 @@ define i32 @stackrealign4(i32 %n){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB3_12: # %for.cond.cleanup
 ; CHECK-NEXT:    make $r2 = 0x4d2
-; CHECK-NEXT:    make $r3 = g1
-; CHECK-NEXT:    make $r5 = g3
+; CHECK-NEXT:    make $r3 = g9
+; CHECK-NEXT:    make $r4 = g8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r6 = g4
+; CHECK-NEXT:    make $r5 = g7
 ; CHECK-NEXT:    sw 256[$r31] = $r2
-; CHECK-NEXT:    make $r2 = g2
+; CHECK-NEXT:    make $r2 = g6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r7 = g5
-; CHECK-NEXT:    make $r8 = g6
+; CHECK-NEXT:    make $r16 = g49
 ; CHECK-NEXT:    lwz $r0 = 0[$r3]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r9 = g7
-; CHECK-NEXT:    make $r10 = g8
+; CHECK-NEXT:    make $r3 = g4
+; CHECK-NEXT:    make $r17 = g46
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r16 = g11
-; CHECK-NEXT:    make $r17 = g12
+; CHECK-NEXT:    make $r32 = g45
+; CHECK-NEXT:    make $r34 = g43
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r32 = g13
-; CHECK-NEXT:    make $r33 = g14
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r34 = g15
-; CHECK-NEXT:    make $r35 = g16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r36 = g17
-; CHECK-NEXT:    make $r37 = g19
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r38 = g20
-; CHECK-NEXT:    make $r39 = g21
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r40 = g22
-; CHECK-NEXT:    make $r41 = g23
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r42 = g24
+; CHECK-NEXT:    make $r35 = g42
 ; CHECK-NEXT:    sd 248[$r31] = $r0
-; CHECK-NEXT:    make $r43 = g25
+; CHECK-NEXT:    make $r36 = g41
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r44 = g26
-; CHECK-NEXT:    make $r45 = g27
-; CHECK-NEXT:    sd 200[$r31] = $r11
+; CHECK-NEXT:    make $r38 = g39
+; CHECK-NEXT:    lwz $r0 = 0[$r4]
+; CHECK-NEXT:    make $r4 = g3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r11 = g9
-; CHECK-NEXT:    make $r46 = g28
+; CHECK-NEXT:    make $r39 = g38
+; CHECK-NEXT:    make $r40 = g37
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r47 = g29
-; CHECK-NEXT:    lwz $r0 = 0[$r2]
-; CHECK-NEXT:    make $r2 = g10
+; CHECK-NEXT:    make $r42 = g35
+; CHECK-NEXT:    make $r43 = g34
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    make $r44 = g33
+; CHECK-NEXT:    sd 240[$r31] = $r0
+; CHECK-NEXT:    make $r46 = g31
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lwz $r0 = 0[$r5]
+; CHECK-NEXT:    make $r47 = g50
 ; CHECK-NEXT:    make $r48 = g30
-; CHECK-NEXT:    make $r49 = g31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r50 = g32
-; CHECK-NEXT:    make $r51 = g33
+; CHECK-NEXT:    make $r50 = g51
+; CHECK-NEXT:    make $r51 = g28
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r52 = g34
-; CHECK-NEXT:    make $r53 = g35
+; CHECK-NEXT:    make $r52 = g27
+; CHECK-NEXT:    make $r54 = g25
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r54 = g36
-; CHECK-NEXT:    make $r55 = g37
+; CHECK-NEXT:    make $r55 = g24
+; CHECK-NEXT:    sd 232[$r31] = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r56 = g38
-; CHECK-NEXT:    make $r57 = g39
+; CHECK-NEXT:    lwz $r0 = 0[$r2]
+; CHECK-NEXT:    make $r2 = g2
+; CHECK-NEXT:    make $r56 = g23
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r58 = g40
-; CHECK-NEXT:    make $r59 = g41
+; CHECK-NEXT:    make $r58 = g21
+; CHECK-NEXT:    make $r59 = g20
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r60 = g42
-; CHECK-NEXT:    make $r61 = g43
+; CHECK-NEXT:    make $r60 = g19
+; CHECK-NEXT:    make $r62 = g17
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    make $r63 = g16
+; CHECK-NEXT:    make $r18 = g15
 ; CHECK-NEXT:    sd 224[$r31] = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r62 = g44
-; CHECK-NEXT:    make $r63 = g45
+; CHECK-NEXT:    make $r20 = g13
+; CHECK-NEXT:    make $r21 = g11
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r18 = g46
-; CHECK-NEXT:    lwz $r0 = 0[$r5]
-; CHECK-NEXT:    make $r19 = g47
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r20 = g48
-; CHECK-NEXT:    make $r21 = g49
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r22 = g50
-; CHECK-NEXT:    make $r23 = g51
+; CHECK-NEXT:    make $r22 = g10
+; CHECK-NEXT:    lwz $r0 = 0[$r3]
+; CHECK-NEXT:    make $r3 = g1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r24 = g52
 ; CHECK-NEXT:    make $r25 = g53
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r26 = g54
-; CHECK-NEXT:    make $r27 = g55
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r28 = g56
-; CHECK-NEXT:    make $r29 = g57
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r30 = g58
-; CHECK-NEXT:    make $r5 = g59
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r4 = g61
-; CHECK-NEXT:    make $r3 = g62
+; CHECK-NEXT:    make $r26 = g65
+; CHECK-NEXT:    make $r28 = g54
 ; CHECK-NEXT:    sd 216[$r31] = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r1 = g64
-; CHECK-NEXT:    lwz $r0 = 0[$r6]
+; CHECK-NEXT:    make $r29 = g48
+; CHECK-NEXT:    make $r30 = g61
+; CHECK-NEXT:    lwz $r0 = 0[$r4]
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    make $r10 = g57
+; CHECK-NEXT:    make $r8 = g12
 ; CHECK-NEXT:    sd 208[$r31] = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 192[$r31] = $r15
+; CHECK-NEXT:    make $r15 = g59
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r0 = 0[$r7]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 232[$r31] = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r0 = 0[$r8]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 240[$r31] = $r0
-; CHECK-NEXT:    make $r0 = g65
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r8 = 0[$r2]
-; CHECK-NEXT:    make $r2 = g18
+; CHECK-NEXT:    sd 200[$r31] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r7 = 0[$r2]
-; CHECK-NEXT:    make $r2 = g63
+; CHECK-NEXT:    make $r2 = g47
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r9 = 0[$r9]
+; CHECK-NEXT:    lwz $r6 = 0[$r3]
+; CHECK-NEXT:    make $r3 = g63
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r10 = 0[$r10]
+; CHECK-NEXT:    lwz $r15 = 0[$r15]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r11 = 0[$r11]
+; CHECK-NEXT:    lwz $r33 = 0[$r2]
+; CHECK-NEXT:    make $r2 = g44
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r16 = 0[$r16]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r17 = 0[$r17]
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lwz $r37 = 0[$r2]
+; CHECK-NEXT:    make $r2 = g40
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r32 = 0[$r32]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r33 = 0[$r33]
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r34 = 0[$r34]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lwz $r41 = 0[$r2]
+; CHECK-NEXT:    make $r2 = g36
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r35 = 0[$r35]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r36 = 0[$r36]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r37 = 0[$r37]
+; CHECK-NEXT:    lwz $r45 = 0[$r2]
+; CHECK-NEXT:    make $r2 = g32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r38 = 0[$r38]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r39 = 0[$r39]
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lwz $r49 = 0[$r2]
+; CHECK-NEXT:    make $r2 = g29
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r40 = 0[$r40]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r41 = 0[$r41]
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r42 = 0[$r42]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lwz $r53 = 0[$r2]
+; CHECK-NEXT:    make $r2 = g26
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r43 = 0[$r43]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r44 = 0[$r44]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r45 = 0[$r45]
+; CHECK-NEXT:    lwz $r57 = 0[$r2]
+; CHECK-NEXT:    make $r2 = g22
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r46 = 0[$r46]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r47 = 0[$r47]
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lwz $r61 = 0[$r2]
+; CHECK-NEXT:    make $r2 = g18
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r48 = 0[$r48]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r49 = 0[$r49]
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r50 = 0[$r50]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lwz $r19 = 0[$r2]
+; CHECK-NEXT:    make $r2 = g14
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r51 = 0[$r51]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r52 = 0[$r52]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r53 = 0[$r53]
+; CHECK-NEXT:    lwz $r23 = 0[$r2]
+; CHECK-NEXT:    make $r2 = g62
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r54 = 0[$r54]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r55 = 0[$r55]
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lwz $r27 = 0[$r2]
+; CHECK-NEXT:    make $r2 = g60
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r56 = 0[$r56]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r57 = 0[$r57]
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r58 = 0[$r58]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lwz $r1 = 0[$r2]
+; CHECK-NEXT:    make $r2 = g55
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r59 = 0[$r59]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r60 = 0[$r60]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r61 = 0[$r61]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r62 = 0[$r62]
 ; CHECK-NEXT:    ;;
@@ -919,15 +913,11 @@ define i32 @stackrealign4(i32 %n){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r18 = 0[$r18]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r19 = 0[$r19]
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r20 = 0[$r20]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r21 = 0[$r21]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r22 = 0[$r22]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r23 = 0[$r23]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r24 = 0[$r24]
 ; CHECK-NEXT:    ;;
@@ -935,158 +925,163 @@ define i32 @stackrealign4(i32 %n){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r26 = 0[$r26]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r27 = 0[$r27]
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r28 = 0[$r28]
+; CHECK-NEXT:    copyd $r5 = $r11
+; CHECK-NEXT:    make $r11 = g56
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lwz $r9 = 0[$r2]
+; CHECK-NEXT:    make $r2 = g58
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lwz $r4 = 0[$r8]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r29 = 0[$r29]
-; CHECK-NEXT:    copyd $r6 = $r15
-; CHECK-NEXT:    make $r15 = g60
+; CHECK-NEXT:    addd $r8 = $r31, 256
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lwz $r0 = 0[$r2]
+; CHECK-NEXT:    make $r2 = g64
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r30 = 0[$r30]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r5 = 0[$r5]
+; CHECK-NEXT:    lwz $r11 = 0[$r11]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r15 = 0[$r15]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r4 = 0[$r4]
+; CHECK-NEXT:    lwz $r10 = 0[$r10]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r3 = 0[$r3]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r1 = 0[$r1]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r0 = 0[$r0]
 ; CHECK-NEXT:    addd $r12 = $r12, -448
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 440[$r12] = $r0
+; CHECK-NEXT:    sw 440[$r12] = $r26
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 432[$r12] = $r1
+; CHECK-NEXT:    sw 432[$r12] = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 424[$r12] = $r2
-; CHECK-NEXT:    addd $r2 = $r31, 256
+; CHECK-NEXT:    sw 424[$r12] = $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 416[$r12] = $r3
+; CHECK-NEXT:    sw 416[$r12] = $r27
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 408[$r12] = $r4
+; CHECK-NEXT:    sw 408[$r12] = $r30
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 400[$r12] = $r15
+; CHECK-NEXT:    sw 400[$r12] = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 392[$r12] = $r5
+; CHECK-NEXT:    sw 392[$r12] = $r15
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 384[$r12] = $r30
+; CHECK-NEXT:    sw 384[$r12] = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 376[$r12] = $r29
+; CHECK-NEXT:    sw 376[$r12] = $r10
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 368[$r12] = $r28
+; CHECK-NEXT:    sw 368[$r12] = $r11
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 360[$r12] = $r27
+; CHECK-NEXT:    sw 360[$r12] = $r9
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 352[$r12] = $r26
+; CHECK-NEXT:    sw 352[$r12] = $r28
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 344[$r12] = $r25
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 336[$r12] = $r24
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 328[$r12] = $r23
+; CHECK-NEXT:    sw 328[$r12] = $r50
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 320[$r12] = $r22
+; CHECK-NEXT:    sw 320[$r12] = $r47
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 312[$r12] = $r21
+; CHECK-NEXT:    sw 312[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 304[$r12] = $r20
+; CHECK-NEXT:    sw 304[$r12] = $r29
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 296[$r12] = $r19
+; CHECK-NEXT:    sw 296[$r12] = $r33
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 288[$r12] = $r18
+; CHECK-NEXT:    sw 288[$r12] = $r17
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 280[$r12] = $r63
+; CHECK-NEXT:    sw 280[$r12] = $r32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 272[$r12] = $r62
+; CHECK-NEXT:    sw 272[$r12] = $r37
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 264[$r12] = $r61
+; CHECK-NEXT:    sw 264[$r12] = $r34
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 256[$r12] = $r60
+; CHECK-NEXT:    sw 256[$r12] = $r35
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 248[$r12] = $r59
+; CHECK-NEXT:    sw 248[$r12] = $r36
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 240[$r12] = $r58
+; CHECK-NEXT:    sw 240[$r12] = $r41
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 232[$r12] = $r57
+; CHECK-NEXT:    sw 232[$r12] = $r38
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 224[$r12] = $r56
+; CHECK-NEXT:    sw 224[$r12] = $r39
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 216[$r12] = $r55
+; CHECK-NEXT:    sw 216[$r12] = $r40
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 208[$r12] = $r54
+; CHECK-NEXT:    sw 208[$r12] = $r45
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 200[$r12] = $r53
+; CHECK-NEXT:    sw 200[$r12] = $r42
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 192[$r12] = $r52
+; CHECK-NEXT:    sw 192[$r12] = $r43
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 184[$r12] = $r51
+; CHECK-NEXT:    sw 184[$r12] = $r44
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 176[$r12] = $r50
+; CHECK-NEXT:    sw 176[$r12] = $r49
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 168[$r12] = $r49
+; CHECK-NEXT:    sw 168[$r12] = $r46
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 160[$r12] = $r48
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 152[$r12] = $r47
+; CHECK-NEXT:    sw 152[$r12] = $r53
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 144[$r12] = $r46
+; CHECK-NEXT:    sw 144[$r12] = $r51
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 136[$r12] = $r45
+; CHECK-NEXT:    sw 136[$r12] = $r52
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 128[$r12] = $r44
+; CHECK-NEXT:    sw 128[$r12] = $r57
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 120[$r12] = $r43
+; CHECK-NEXT:    sw 120[$r12] = $r54
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 112[$r12] = $r42
+; CHECK-NEXT:    sw 112[$r12] = $r55
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 104[$r12] = $r41
+; CHECK-NEXT:    sw 104[$r12] = $r56
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 96[$r12] = $r40
+; CHECK-NEXT:    sw 96[$r12] = $r61
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 88[$r12] = $r39
+; CHECK-NEXT:    sw 88[$r12] = $r58
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 80[$r12] = $r38
+; CHECK-NEXT:    sw 80[$r12] = $r59
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 72[$r12] = $r37
+; CHECK-NEXT:    sw 72[$r12] = $r60
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 64[$r12] = $r7
+; CHECK-NEXT:    sw 64[$r12] = $r19
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 56[$r12] = $r36
+; CHECK-NEXT:    sw 56[$r12] = $r62
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 48[$r12] = $r35
+; CHECK-NEXT:    sw 48[$r12] = $r63
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 40[$r12] = $r34
+; CHECK-NEXT:    sw 40[$r12] = $r18
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 32[$r12] = $r33
+; CHECK-NEXT:    sw 32[$r12] = $r23
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 24[$r12] = $r32
+; CHECK-NEXT:    sw 24[$r12] = $r20
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 16[$r12] = $r17
+; CHECK-NEXT:    sw 16[$r12] = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 8[$r12] = $r16
+; CHECK-NEXT:    sw 8[$r12] = $r21
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 0[$r12] = $r8
-; CHECK-NEXT:    copyd $r0 = $r6
+; CHECK-NEXT:    sw 0[$r12] = $r22
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r1 = 200[$r31]
+; CHECK-NEXT:    ld $r0 = 192[$r31]
+; CHECK-NEXT:    copyd $r1 = $r5
+; CHECK-NEXT:    copyd $r2 = $r8
+; CHECK-NEXT:    copyd $r3 = $r6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r3 = 248[$r31]
+; CHECK-NEXT:    copyd $r4 = $r7
+; CHECK-NEXT:    ld $r5 = 208[$r31]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r4 = 224[$r31]
+; CHECK-NEXT:    ld $r6 = 216[$r31]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r5 = 216[$r31]
+; CHECK-NEXT:    ld $r7 = 200[$r31]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r6 = 208[$r31]
+; CHECK-NEXT:    ld $r8 = 224[$r31]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r7 = 232[$r31]
+; CHECK-NEXT:    ld $r9 = 232[$r31]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r8 = 240[$r31]
+; CHECK-NEXT:    ld $r10 = 240[$r31]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r11 = 248[$r31]
 ; CHECK-NEXT:    call other4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r12 = $r12, 448

@@ -775,8 +775,8 @@ entry:
 define i16 @ravg_i16(i16 %a, i16 %b) {
 ; CHECK-LABEL: ravg_i16:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sxhd $r0 = $r0
 ; CHECK-NEXT:    sxhd $r1 = $r1
+; CHECK-NEXT:    sxhd $r0 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addw $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
@@ -849,8 +849,8 @@ entry:
 define i16 @ravg_u16(i16 %a, i16 %b) {
 ; CHECK-LABEL: ravg_u16:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    zxhd $r0 = $r0
 ; CHECK-NEXT:    zxhd $r1 = $r1
+; CHECK-NEXT:    zxhd $r0 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addw $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;

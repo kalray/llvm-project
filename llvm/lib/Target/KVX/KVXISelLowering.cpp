@@ -95,7 +95,7 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setMinFunctionAlignment(Align(64));
   setPrefFunctionAlignment(Align(64));
 
-  setSchedulingPreference(Sched::Source);
+  setSchedulingPreference(Sched::VLIW);
 
   initializeTCALowering();
 

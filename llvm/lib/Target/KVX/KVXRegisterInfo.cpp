@@ -54,6 +54,12 @@ BitVector KVXRegisterInfo::getReservedRegs(const MachineFunction &MF) const {
   markSuperRegs(Reserved, KVX::R13);
   markSuperRegs(Reserved, getFPReg());
   markSuperRegs(Reserved, KVX::RA);
+  markSuperRegs(Reserved, KVX::SR);
+
+  // Mark all Zero TCA registers as reserved.
+  for (auto Reg :
+       {KVX::A48, KVX::A49, KVX::A50, KVX::A51, KVX::W24, KVX::W25, KVX::X12})
+    markSuperRegs(Reserved, Reg);
 
   // Reserve a register if dynamic objects need stack realignment.
   if (needsLocalAreaRealignment(MF)) {
@@ -186,4 +192,13 @@ KVXRegisterInfo::getFrameRegister(const MachineFunction &MF) const {
   const TargetFrameLowering *TFI = getFrameLowering(MF);
 
   return TFI->hasFP(MF) ? getFPReg() : getSPReg();
+}
+
+bool KVXRegisterInfo::isConstantPhysReg(MCRegister PhysReg) const {
+  for (auto Reg :
+       {KVX::A48, KVX::A49, KVX::A50, KVX::A51, KVX::W24, KVX::W25, KVX::X12})
+    if (PhysReg == Reg)
+      return true;
+
+  return false;
 }

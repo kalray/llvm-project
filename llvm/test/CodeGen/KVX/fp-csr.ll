@@ -20,7 +20,7 @@ define i32 @foo(i32 %n, i32 %m) {
 ; CHECK-NEXT:    .cfi_def_cfa 14, 16
 ; CHECK-NEXT:    sq 0[$r12] = $r18r19
 ; CHECK-NEXT:    zxwd $r0 = $r0
-; CHECK-NEXT:    copyd $r18 = $r1
+; CHECK-NEXT:    sxwd $r19 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 18, -24
 ; CHECK-NEXT:    .cfi_offset 19, -32
@@ -28,15 +28,13 @@ define i32 @foo(i32 %n, i32 %m) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    andd $r0 = $r0, 0x7ffffffe0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfd $r19 = $r0, $r12
+; CHECK-NEXT:    sbfd $r18 = $r0, $r12
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r12 = $r19
-; CHECK-NEXT:    copyd $r0 = $r19
+; CHECK-NEXT:    copyd $r12 = $r18
+; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    call bar
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r0 = $r18
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz.xs $r0 = $r0[$r19]
+; CHECK-NEXT:    lwz.xs $r0 = $r19[$r18]
 ; CHECK-NEXT:    addd $r12 = $r14, -16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]

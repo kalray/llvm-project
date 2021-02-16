@@ -43,6 +43,8 @@ struct KVXRegisterInfo : public KVXGenRegisterInfo {
   bool trackLivenessAfterRegAlloc(const MachineFunction &MF) const override {
     return true;
   }
+
+  bool isConstantPhysReg(MCRegister PhysReg) const override;
 };
 
 } // namespace llvm

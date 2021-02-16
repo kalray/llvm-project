@@ -38,12 +38,12 @@ define double @test_extract_i(<4 x double> %a, i64 %idx) #0 {
 ; CHECK-LABEL: test_extract_i:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    so 0[$r12] = $r0r1r2r3
 ; CHECK-NEXT:    andd $r4 = $r4, 3
-; CHECK-NEXT:    addd $r0 = $r12, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld.xs $r0 = $r4[$r0]
+; CHECK-NEXT:    addd $r5 = $r12, 0
+; CHECK-NEXT:    so 0[$r12] = $r0r1r2r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld.xs $r0 = $r4[$r5]
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -54,9 +54,9 @@ define double @test_extract_i(<4 x double> %a, i64 %idx) #0 {
 define <4 x double> @test_fadd(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: test_fadd:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fadddp $r2r3 = $r2r3, $r6r7
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fadddp $r0r1 = $r0r1, $r4r5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fadddp $r2r3 = $r2r3, $r6r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fadd <4 x double> %a, %b
@@ -100,9 +100,9 @@ define <4 x double> @test_fadd_imm_1(<4 x double> %a) #0 {
 define <4 x double> @test_fsub(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: test_fsub:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fsbfdp $r2r3 = $r6r7, $r2r3
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fsbfdp $r0r1 = $r4r5, $r0r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fsbfdp $r2r3 = $r6r7, $r2r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fsub <4 x double> %a, %b
@@ -165,13 +165,13 @@ define <4 x double> @test_fneg(<4 x double> %a) #0 {
 define <4 x double> @test_fmul(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: test_fmul:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fmuld $r1 = $r1, $r5
+; CHECK-NEXT:    fmuld $r3 = $r3, $r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmuld $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld $r2 = $r2, $r6
+; CHECK-NEXT:    fmuld $r1 = $r1, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld $r3 = $r3, $r7
+; CHECK-NEXT:    fmuld $r2 = $r2, $r6
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fmul <4 x double> %a, %b
@@ -181,34 +181,32 @@ define <4 x double> @test_fmul(<4 x double> %a, <4 x double> %b) #0 {
 define <4 x double> @test_fdiv(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: test_fdiv:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -64
+; CHECK-NEXT:    addd $r12 = $r12, -96
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 56[$r12] = $r16
+; CHECK-NEXT:    sd 88[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 48[$r12] = $r25
+; CHECK-NEXT:    sq 72[$r12] = $r24r25
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    so 16[$r12] = $r20r21r22r23
+; CHECK-NEXT:    so 40[$r12] = $r20r21r22r23
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sq 0[$r12] = $r18r19
+; CHECK-NEXT:    sq 24[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r7
 ; CHECK-NEXT:    copyd $r19 = $r6
-; CHECK-NEXT:    copyd $r20 = $r4
+; CHECK-NEXT:    copyd $r20 = $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r21 = $r3
 ; CHECK-NEXT:    copyd $r22 = $r2
-; CHECK-NEXT:    copyd $r23 = $r0
-; CHECK-NEXT:    copyd $r0 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r5
+; CHECK-NEXT:    copyd $r23 = $r1
+; CHECK-NEXT:    copyd $r1 = $r4
 ; CHECK-NEXT:    call __divdf3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r25 = $r0
+; CHECK-NEXT:    copyd $r24 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r23
 ; CHECK-NEXT:    copyd $r1 = $r20
 ; CHECK-NEXT:    call __divdf3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r20 = $r0
+; CHECK-NEXT:    copyd $r25 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r22
 ; CHECK-NEXT:    copyd $r1 = $r19
 ; CHECK-NEXT:    call __divdf3
@@ -219,20 +217,20 @@ define <4 x double> @test_fdiv(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-NEXT:    call __divdf3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r3 = $r0
-; CHECK-NEXT:    copyd $r0 = $r20
+; CHECK-NEXT:    copyd $r0 = $r24
 ; CHECK-NEXT:    copyd $r1 = $r25
 ; CHECK-NEXT:    copyd $r2 = $r22
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lq $r18r19 = 0[$r12]
+; CHECK-NEXT:    lq $r18r19 = 24[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r20r21r22r23 = 16[$r12]
+; CHECK-NEXT:    lo $r20r21r22r23 = 40[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r25 = 48[$r12]
+; CHECK-NEXT:    lq $r24r25 = 72[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 56[$r12]
+; CHECK-NEXT:    ld $r16 = 88[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 64
+; CHECK-NEXT:    addd $r12 = $r12, 96
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -243,34 +241,32 @@ define <4 x double> @test_fdiv(<4 x double> %a, <4 x double> %b) #0 {
 define <4 x double> @test_frem(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: test_frem:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -64
+; CHECK-NEXT:    addd $r12 = $r12, -96
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 56[$r12] = $r16
+; CHECK-NEXT:    sd 88[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 48[$r12] = $r25
+; CHECK-NEXT:    sq 72[$r12] = $r24r25
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    so 16[$r12] = $r20r21r22r23
+; CHECK-NEXT:    so 40[$r12] = $r20r21r22r23
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sq 0[$r12] = $r18r19
+; CHECK-NEXT:    sq 24[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r7
 ; CHECK-NEXT:    copyd $r19 = $r6
-; CHECK-NEXT:    copyd $r20 = $r4
+; CHECK-NEXT:    copyd $r20 = $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r21 = $r3
 ; CHECK-NEXT:    copyd $r22 = $r2
-; CHECK-NEXT:    copyd $r23 = $r0
-; CHECK-NEXT:    copyd $r0 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r5
+; CHECK-NEXT:    copyd $r23 = $r1
+; CHECK-NEXT:    copyd $r1 = $r4
 ; CHECK-NEXT:    call fmod
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r25 = $r0
+; CHECK-NEXT:    copyd $r24 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r23
 ; CHECK-NEXT:    copyd $r1 = $r20
 ; CHECK-NEXT:    call fmod
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r20 = $r0
+; CHECK-NEXT:    copyd $r25 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r22
 ; CHECK-NEXT:    copyd $r1 = $r19
 ; CHECK-NEXT:    call fmod
@@ -281,20 +277,20 @@ define <4 x double> @test_frem(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-NEXT:    call fmod
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r3 = $r0
-; CHECK-NEXT:    copyd $r0 = $r20
+; CHECK-NEXT:    copyd $r0 = $r24
 ; CHECK-NEXT:    copyd $r1 = $r25
 ; CHECK-NEXT:    copyd $r2 = $r22
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lq $r18r19 = 0[$r12]
+; CHECK-NEXT:    lq $r18r19 = 24[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r20r21r22r23 = 16[$r12]
+; CHECK-NEXT:    lo $r20r21r22r23 = 40[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r25 = 48[$r12]
+; CHECK-NEXT:    lq $r24r25 = 72[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 56[$r12]
+; CHECK-NEXT:    ld $r16 = 88[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 64
+; CHECK-NEXT:    addd $r12 = $r12, 96
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -404,20 +400,20 @@ define <4 x double> @test_select(<4 x double> %a, <4 x double> %b, i1 zeroext %c
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r9 ? $r8 = 0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andnd $r7 = $r8, $r7
+; CHECK-NEXT:    andd $r3 = $r3, $r8
+; CHECK-NEXT:    andnd $r6 = $r8, $r6
+; CHECK-NEXT:    andd $r2 = $r2, $r8
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    andnd $r5 = $r8, $r5
 ; CHECK-NEXT:    andd $r1 = $r1, $r8
 ; CHECK-NEXT:    andnd $r4 = $r8, $r4
 ; CHECK-NEXT:    andd $r0 = $r0, $r8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andnd $r6 = $r8, $r6
-; CHECK-NEXT:    andd $r2 = $r2, $r8
-; CHECK-NEXT:    andnd $r7 = $r8, $r7
-; CHECK-NEXT:    andd $r3 = $r3, $r8
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ord $r3 = $r3, $r7
+; CHECK-NEXT:    ord $r2 = $r2, $r6
 ; CHECK-NEXT:    ord $r1 = $r1, $r5
 ; CHECK-NEXT:    ord $r0 = $r0, $r4
-; CHECK-NEXT:    ord $r2 = $r2, $r6
-; CHECK-NEXT:    ord $r3 = $r3, $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = select i1 %c, <4 x double> %a, <4 x double> %b
@@ -427,41 +423,41 @@ define <4 x double> @test_select(<4 x double> %a, <4 x double> %b, i1 zeroext %c
 define <4 x double> @test_select_cc(<4 x double> %a, <4 x double> %b, <4 x double> %c, <4 x double> %d) #0 {
 ; CHECK-LABEL: test_select_cc:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ld $r15 = 8[$r12]
+; CHECK-NEXT:    ld $r15 = 24[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 0[$r12]
+; CHECK-NEXT:    ld $r16 = 16[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r17 = 16[$r12]
+; CHECK-NEXT:    ld $r17 = 0[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r32 = 24[$r12]
-; CHECK-NEXT:    fcompd.une $r9 = $r9, $r15
-; CHECK-NEXT:    fcompd.une $r8 = $r8, $r16
+; CHECK-NEXT:    ld $r32 = 8[$r12]
+; CHECK-NEXT:    fcompd.une $r11 = $r11, $r15
+; CHECK-NEXT:    fcompd.une $r10 = $r10, $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompd.une $r10 = $r10, $r17
-; CHECK-NEXT:    fcompd.une $r11 = $r11, $r32
+; CHECK-NEXT:    fcompd.une $r8 = $r8, $r17
+; CHECK-NEXT:    fcompd.une $r9 = $r9, $r32
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r15 = $r8
+; CHECK-NEXT:    make $r8 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r15 ? $r8 = 0
 ; CHECK-NEXT:    copyw $r15 = $r11
 ; CHECK-NEXT:    make $r11 = -1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r15 ? $r11 = 0
 ; CHECK-NEXT:    copyw $r15 = $r10
 ; CHECK-NEXT:    make $r10 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r15 ? $r10 = 0
-; CHECK-NEXT:    copyw $r15 = $r8
-; CHECK-NEXT:    make $r8 = -1
-; CHECK-NEXT:    cmoved.dnez $r11 ? $r7 = $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r15 ? $r8 = 0
-; CHECK-NEXT:    copyw $r15 = $r9
-; CHECK-NEXT:    make $r9 = -1
-; CHECK-NEXT:    cmoved.dnez $r10 ? $r6 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r15 ? $r9 = 0
 ; CHECK-NEXT:    cmoved.dnez $r8 ? $r4 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.dnez $r9 ? $r5 = $r1
+; CHECK-NEXT:    cmoved.weqz $r15 ? $r10 = 0
+; CHECK-NEXT:    copyw $r15 = $r9
+; CHECK-NEXT:    make $r9 = -1
+; CHECK-NEXT:    cmoved.dnez $r11 ? $r7 = $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r15 ? $r9 = 0
+; CHECK-NEXT:    cmoved.dnez $r10 ? $r6 = $r2
 ; CHECK-NEXT:    copyd $r0 = $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.dnez $r9 ? $r5 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    copyd $r2 = $r6
@@ -477,45 +473,45 @@ define <4 x float> @test_select_cc_f32_f32(<4 x float> %a, <4 x float> %b, <4 x 
 ; CHECK-LABEL: test_select_cc_f32_f32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompd.une $r4 = $r4, $r8
-; CHECK-NEXT:    fcompd.une $r5 = $r5, $r9
-; CHECK-NEXT:    srad $r9 = $r1, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r8 = $r4
-; CHECK-NEXT:    make $r4 = -1
 ; CHECK-NEXT:    fcompd.une $r6 = $r6, $r10
+; CHECK-NEXT:    srad $r8 = $r3, 32
+; CHECK-NEXT:    srad $r10 = $r0, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r15 = $r4
+; CHECK-NEXT:    make $r4 = -1
+; CHECK-NEXT:    fcompd.une $r5 = $r5, $r9
 ; CHECK-NEXT:    fcompd.une $r7 = $r7, $r11
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r8 ? $r4 = 0
-; CHECK-NEXT:    copyw $r8 = $r5
-; CHECK-NEXT:    make $r5 = -1
-; CHECK-NEXT:    srad $r10 = $r2, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r8 ? $r5 = 0
-; CHECK-NEXT:    copyw $r8 = $r6
+; CHECK-NEXT:    cmoved.weqz $r15 ? $r4 = 0
+; CHECK-NEXT:    copyw $r15 = $r6
 ; CHECK-NEXT:    make $r6 = -1
+; CHECK-NEXT:    srad $r9 = $r1, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r15 ? $r6 = 0
+; CHECK-NEXT:    copyw $r15 = $r5
+; CHECK-NEXT:    make $r5 = -1
+; CHECK-NEXT:    srad $r11 = $r2, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r15 ? $r5 = 0
+; CHECK-NEXT:    copyw $r15 = $r7
+; CHECK-NEXT:    make $r7 = -1
 ; CHECK-NEXT:    zxwd $r4 = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r8 ? $r6 = 0
-; CHECK-NEXT:    copyw $r8 = $r7
-; CHECK-NEXT:    make $r7 = -1
-; CHECK-NEXT:    zxwd $r5 = $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r8 ? $r7 = 0
-; CHECK-NEXT:    srad $r11 = $r0, 32
+; CHECK-NEXT:    cmoved.weqz $r15 ? $r7 = 0
 ; CHECK-NEXT:    zxwd $r6 = $r6
-; CHECK-NEXT:    srad $r8 = $r3, 32
+; CHECK-NEXT:    zxwd $r5 = $r5
+; CHECK-NEXT:    cmoved.wnez $r4 ? $r2 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    zxwd $r7 = $r7
+; CHECK-NEXT:    cmoved.wnez $r5 ? $r11 = $r10
 ; CHECK-NEXT:    cmoved.wnez $r6 ? $r3 = $r1
-; CHECK-NEXT:    cmoved.wnez $r5 ? $r10 = $r11
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r4 ? $r2 = $r0
 ; CHECK-NEXT:    cmoved.wnez $r7 ? $r8 = $r9
+; CHECK-NEXT:    insf $r2 = $r11, 63, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r10, 63, 32
 ; CHECK-NEXT:    insf $r3 = $r8, 63, 32
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r2
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -532,30 +528,30 @@ define <4 x i1> @test_fcmp_une(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyw $r4 = $r3
 ; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.une $r2 = $r2, $r6
 ; CHECK-NEXT:    fcompd.une $r1 = $r1, $r5
+; CHECK-NEXT:    fcompd.une $r2 = $r2, $r6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    copyw $r4 = $r0
+; CHECK-NEXT:    make $r0 = -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
+; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
 ; CHECK-NEXT:    copyw $r4 = $r1
 ; CHECK-NEXT:    make $r1 = -1
 ; CHECK-NEXT:    zxwd $r3 = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
-; CHECK-NEXT:    zxwd $r2 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
-; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    insf $r2 = $r3, 15, 8
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r4 = $r2
+; CHECK-NEXT:    make $r2 = -1
 ; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r2, 31, 16
 ; CHECK-NEXT:    ret
@@ -572,30 +568,30 @@ define <4 x i1> @test_fcmp_ueq(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyw $r4 = $r3
 ; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.ueq $r2 = $r2, $r6
 ; CHECK-NEXT:    fcompd.ueq $r1 = $r1, $r5
+; CHECK-NEXT:    fcompd.ueq $r2 = $r2, $r6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    copyw $r4 = $r0
+; CHECK-NEXT:    make $r0 = -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
+; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
 ; CHECK-NEXT:    copyw $r4 = $r1
 ; CHECK-NEXT:    make $r1 = -1
 ; CHECK-NEXT:    zxwd $r3 = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
-; CHECK-NEXT:    zxwd $r2 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
-; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    insf $r2 = $r3, 15, 8
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r4 = $r2
+; CHECK-NEXT:    make $r2 = -1
 ; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r2, 31, 16
 ; CHECK-NEXT:    ret
@@ -612,30 +608,30 @@ define <4 x i1> @test_fcmp_ugt(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyw $r4 = $r3
 ; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.ult $r2 = $r6, $r2
 ; CHECK-NEXT:    fcompd.ult $r1 = $r5, $r1
+; CHECK-NEXT:    fcompd.ult $r2 = $r6, $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    copyw $r4 = $r0
+; CHECK-NEXT:    make $r0 = -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
+; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
 ; CHECK-NEXT:    copyw $r4 = $r1
 ; CHECK-NEXT:    make $r1 = -1
 ; CHECK-NEXT:    zxwd $r3 = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
-; CHECK-NEXT:    zxwd $r2 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
-; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    insf $r2 = $r3, 15, 8
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r4 = $r2
+; CHECK-NEXT:    make $r2 = -1
 ; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r2, 31, 16
 ; CHECK-NEXT:    ret
@@ -652,30 +648,30 @@ define <4 x i1> @test_fcmp_uge(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyw $r4 = $r3
 ; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.uge $r2 = $r2, $r6
 ; CHECK-NEXT:    fcompd.uge $r1 = $r1, $r5
+; CHECK-NEXT:    fcompd.uge $r2 = $r2, $r6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    copyw $r4 = $r0
+; CHECK-NEXT:    make $r0 = -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
+; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
 ; CHECK-NEXT:    copyw $r4 = $r1
 ; CHECK-NEXT:    make $r1 = -1
 ; CHECK-NEXT:    zxwd $r3 = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
-; CHECK-NEXT:    zxwd $r2 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
-; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    insf $r2 = $r3, 15, 8
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r4 = $r2
+; CHECK-NEXT:    make $r2 = -1
 ; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r2, 31, 16
 ; CHECK-NEXT:    ret
@@ -692,30 +688,30 @@ define <4 x i1> @test_fcmp_ult(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyw $r4 = $r3
 ; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.ult $r2 = $r2, $r6
 ; CHECK-NEXT:    fcompd.ult $r1 = $r1, $r5
+; CHECK-NEXT:    fcompd.ult $r2 = $r2, $r6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    copyw $r4 = $r0
+; CHECK-NEXT:    make $r0 = -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
+; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
 ; CHECK-NEXT:    copyw $r4 = $r1
 ; CHECK-NEXT:    make $r1 = -1
 ; CHECK-NEXT:    zxwd $r3 = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
-; CHECK-NEXT:    zxwd $r2 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
-; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    insf $r2 = $r3, 15, 8
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r4 = $r2
+; CHECK-NEXT:    make $r2 = -1
 ; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r2, 31, 16
 ; CHECK-NEXT:    ret
@@ -732,30 +728,30 @@ define <4 x i1> @test_fcmp_ule(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyw $r4 = $r3
 ; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.uge $r2 = $r6, $r2
 ; CHECK-NEXT:    fcompd.uge $r1 = $r5, $r1
+; CHECK-NEXT:    fcompd.uge $r2 = $r6, $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    copyw $r4 = $r0
+; CHECK-NEXT:    make $r0 = -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
+; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
 ; CHECK-NEXT:    copyw $r4 = $r1
 ; CHECK-NEXT:    make $r1 = -1
 ; CHECK-NEXT:    zxwd $r3 = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
-; CHECK-NEXT:    zxwd $r2 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
-; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    insf $r2 = $r3, 15, 8
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r4 = $r2
+; CHECK-NEXT:    make $r2 = -1
 ; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r2, 31, 16
 ; CHECK-NEXT:    ret
@@ -770,42 +766,42 @@ define <4 x i1> @test_fcmp_uno(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-NEXT:    fcompd.ult $r8 = $r3, $r7
 ; CHECK-NEXT:    fcompd.uge $r3 = $r3, $r7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompd.ult $r7 = $r2, $r6
-; CHECK-NEXT:    fcompd.uge $r2 = $r2, $r6
+; CHECK-NEXT:    fcompd.ult $r7 = $r0, $r4
+; CHECK-NEXT:    fcompd.uge $r0 = $r0, $r4
 ; CHECK-NEXT:    andw $r3 = $r3, $r8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompd.ult $r6 = $r1, $r5
+; CHECK-NEXT:    fcompd.ult $r4 = $r1, $r5
 ; CHECK-NEXT:    fcompd.uge $r1 = $r1, $r5
-; CHECK-NEXT:    andw $r2 = $r2, $r7
+; CHECK-NEXT:    andw $r0 = $r0, $r7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompd.ult $r5 = $r0, $r4
-; CHECK-NEXT:    fcompd.uge $r0 = $r0, $r4
+; CHECK-NEXT:    andw $r1 = $r1, $r4
 ; CHECK-NEXT:    copyw $r4 = $r3
 ; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    fcompd.ult $r5 = $r2, $r6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    andw $r1 = $r1, $r6
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
+; CHECK-NEXT:    fcompd.uge $r2 = $r2, $r6
 ; CHECK-NEXT:    copyw $r4 = $r1
 ; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    andw $r0 = $r0, $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
 ; CHECK-NEXT:    copyw $r4 = $r0
 ; CHECK-NEXT:    make $r0 = -1
-; CHECK-NEXT:    zxwd $r3 = $r3
+; CHECK-NEXT:    andw $r2 = $r2, $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
-; CHECK-NEXT:    zxwd $r2 = $r2
+; CHECK-NEXT:    copyw $r4 = $r2
+; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    zxwd $r3 = $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
 ; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    zxwd $r0 = $r0
-; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r2, 31, 16
 ; CHECK-NEXT:    ret
@@ -822,30 +818,30 @@ define <4 x i1> @test_fcmp_one(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyw $r4 = $r3
 ; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.one $r2 = $r2, $r6
 ; CHECK-NEXT:    fcompd.one $r1 = $r1, $r5
+; CHECK-NEXT:    fcompd.one $r2 = $r2, $r6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    copyw $r4 = $r0
+; CHECK-NEXT:    make $r0 = -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
+; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
 ; CHECK-NEXT:    copyw $r4 = $r1
 ; CHECK-NEXT:    make $r1 = -1
 ; CHECK-NEXT:    zxwd $r3 = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
-; CHECK-NEXT:    zxwd $r2 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
-; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    insf $r2 = $r3, 15, 8
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r4 = $r2
+; CHECK-NEXT:    make $r2 = -1
 ; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r2, 31, 16
 ; CHECK-NEXT:    ret
@@ -862,30 +858,30 @@ define <4 x i1> @test_fcmp_oeq(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyw $r4 = $r3
 ; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.oeq $r2 = $r2, $r6
 ; CHECK-NEXT:    fcompd.oeq $r1 = $r1, $r5
+; CHECK-NEXT:    fcompd.oeq $r2 = $r2, $r6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    copyw $r4 = $r0
+; CHECK-NEXT:    make $r0 = -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
+; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
 ; CHECK-NEXT:    copyw $r4 = $r1
 ; CHECK-NEXT:    make $r1 = -1
 ; CHECK-NEXT:    zxwd $r3 = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
-; CHECK-NEXT:    zxwd $r2 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
-; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    insf $r2 = $r3, 15, 8
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r4 = $r2
+; CHECK-NEXT:    make $r2 = -1
 ; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r2, 31, 16
 ; CHECK-NEXT:    ret
@@ -902,30 +898,30 @@ define <4 x i1> @test_fcmp_ogt(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyw $r4 = $r3
 ; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.olt $r2 = $r6, $r2
 ; CHECK-NEXT:    fcompd.olt $r1 = $r5, $r1
+; CHECK-NEXT:    fcompd.olt $r2 = $r6, $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    copyw $r4 = $r0
+; CHECK-NEXT:    make $r0 = -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
+; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
 ; CHECK-NEXT:    copyw $r4 = $r1
 ; CHECK-NEXT:    make $r1 = -1
 ; CHECK-NEXT:    zxwd $r3 = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
-; CHECK-NEXT:    zxwd $r2 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
-; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    insf $r2 = $r3, 15, 8
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r4 = $r2
+; CHECK-NEXT:    make $r2 = -1
 ; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r2, 31, 16
 ; CHECK-NEXT:    ret
@@ -942,30 +938,30 @@ define <4 x i1> @test_fcmp_oge(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyw $r4 = $r3
 ; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.oge $r2 = $r2, $r6
 ; CHECK-NEXT:    fcompd.oge $r1 = $r1, $r5
+; CHECK-NEXT:    fcompd.oge $r2 = $r2, $r6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    copyw $r4 = $r0
+; CHECK-NEXT:    make $r0 = -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
+; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
 ; CHECK-NEXT:    copyw $r4 = $r1
 ; CHECK-NEXT:    make $r1 = -1
 ; CHECK-NEXT:    zxwd $r3 = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
-; CHECK-NEXT:    zxwd $r2 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
-; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    insf $r2 = $r3, 15, 8
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r4 = $r2
+; CHECK-NEXT:    make $r2 = -1
 ; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r2, 31, 16
 ; CHECK-NEXT:    ret
@@ -982,30 +978,30 @@ define <4 x i1> @test_fcmp_olt(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyw $r4 = $r3
 ; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.olt $r2 = $r2, $r6
 ; CHECK-NEXT:    fcompd.olt $r1 = $r1, $r5
+; CHECK-NEXT:    fcompd.olt $r2 = $r2, $r6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    copyw $r4 = $r0
+; CHECK-NEXT:    make $r0 = -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
+; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
 ; CHECK-NEXT:    copyw $r4 = $r1
 ; CHECK-NEXT:    make $r1 = -1
 ; CHECK-NEXT:    zxwd $r3 = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
-; CHECK-NEXT:    zxwd $r2 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
-; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    insf $r2 = $r3, 15, 8
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r4 = $r2
+; CHECK-NEXT:    make $r2 = -1
 ; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r2, 31, 16
 ; CHECK-NEXT:    ret
@@ -1022,30 +1018,30 @@ define <4 x i1> @test_fcmp_ole(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyw $r4 = $r3
 ; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.oge $r2 = $r6, $r2
 ; CHECK-NEXT:    fcompd.oge $r1 = $r5, $r1
+; CHECK-NEXT:    fcompd.oge $r2 = $r6, $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    copyw $r4 = $r0
+; CHECK-NEXT:    make $r0 = -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
+; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
 ; CHECK-NEXT:    copyw $r4 = $r1
 ; CHECK-NEXT:    make $r1 = -1
 ; CHECK-NEXT:    zxwd $r3 = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
-; CHECK-NEXT:    zxwd $r2 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
-; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    insf $r2 = $r3, 15, 8
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r4 = $r2
+; CHECK-NEXT:    make $r2 = -1
 ; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r2, 31, 16
 ; CHECK-NEXT:    ret
@@ -1060,42 +1056,42 @@ define <4 x i1> @test_fcmp_ord(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-NEXT:    fcompd.olt $r8 = $r3, $r7
 ; CHECK-NEXT:    fcompd.oge $r3 = $r3, $r7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompd.olt $r7 = $r2, $r6
-; CHECK-NEXT:    fcompd.oge $r2 = $r2, $r6
+; CHECK-NEXT:    fcompd.olt $r7 = $r0, $r4
+; CHECK-NEXT:    fcompd.oge $r0 = $r0, $r4
 ; CHECK-NEXT:    orw $r3 = $r3, $r8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompd.olt $r6 = $r1, $r5
+; CHECK-NEXT:    fcompd.olt $r4 = $r1, $r5
 ; CHECK-NEXT:    fcompd.oge $r1 = $r1, $r5
-; CHECK-NEXT:    orw $r2 = $r2, $r7
+; CHECK-NEXT:    orw $r0 = $r0, $r7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompd.olt $r5 = $r0, $r4
-; CHECK-NEXT:    fcompd.oge $r0 = $r0, $r4
+; CHECK-NEXT:    orw $r1 = $r1, $r4
 ; CHECK-NEXT:    copyw $r4 = $r3
 ; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    fcompd.olt $r5 = $r2, $r6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    orw $r1 = $r1, $r6
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
+; CHECK-NEXT:    fcompd.oge $r2 = $r2, $r6
 ; CHECK-NEXT:    copyw $r4 = $r1
 ; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    orw $r0 = $r0, $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
 ; CHECK-NEXT:    copyw $r4 = $r0
 ; CHECK-NEXT:    make $r0 = -1
-; CHECK-NEXT:    zxwd $r3 = $r3
+; CHECK-NEXT:    orw $r2 = $r2, $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
-; CHECK-NEXT:    zxwd $r2 = $r2
+; CHECK-NEXT:    copyw $r4 = $r2
+; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    zxwd $r3 = $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
 ; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    zxwd $r0 = $r0
-; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r2, 31, 16
 ; CHECK-NEXT:    ret
@@ -1129,11 +1125,11 @@ define <4 x i64> @test_fptosi_i64(<4 x double> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fixedd.rz $r3 = $r3, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedd.rz $r2 = $r2, 0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedd.rz $r1 = $r1, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedd.rz $r0 = $r0, 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fixedd.rz $r2 = $r2, 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptosi <4 x double> %a to <4 x i64>
@@ -1165,11 +1161,11 @@ define <4 x i64> @test_fptoui_2xi64(<4 x double> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fixedud.rz $r3 = $r3, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedud.rz $r2 = $r2, 0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedud.rz $r1 = $r1, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedud.rz $r0 = $r0, 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fixedud.rz $r2 = $r2, 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptoui <4 x double> %a to <4 x i64>
@@ -1183,11 +1179,11 @@ define <4 x i16> @test_fptosi_i16(<4 x double> %a) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedd.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fixedd.rz $r2 = $r2, 0
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 16
-; CHECK-NEXT:    fixedd.rz $r1 = $r2, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 47, 32
 ; CHECK-NEXT:    fixedd.rz $r1 = $r3, 0
+; CHECK-NEXT:    insf $r0 = $r2, 47, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 48
 ; CHECK-NEXT:    ret
@@ -1203,11 +1199,11 @@ define <4 x i16> @test_fptoui_i16(<4 x double> %a) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedud.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fixedud.rz $r2 = $r2, 0
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 16
-; CHECK-NEXT:    fixedud.rz $r1 = $r2, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 47, 32
 ; CHECK-NEXT:    fixedud.rz $r1 = $r3, 0
+; CHECK-NEXT:    insf $r0 = $r2, 47, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 48
 ; CHECK-NEXT:    ret
@@ -1260,18 +1256,19 @@ define <4 x i8> @test_fptoui_i8(<4 x double> %a) #0 {
 define <4 x double> @test_uitofp_2xi32(<4 x i32> %a) #0 {
 ; CHECK-LABEL: test_uitofp_2xi32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    zxwd $r2 = $r0
-; CHECK-NEXT:    srld $r3 = $r0, 32
-; CHECK-NEXT:    zxwd $r4 = $r1
-; CHECK-NEXT:    srld $r5 = $r1, 32
+; CHECK-NEXT:    srld $r2 = $r0, 32
+; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatud.rn $r0 = $r2, 0
+; CHECK-NEXT:    floatud.rn $r5 = $r2, 0
+; CHECK-NEXT:    srld $r2 = $r1, 32
+; CHECK-NEXT:    zxwd $r1 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatud.rn $r1 = $r3, 0
+; CHECK-NEXT:    floatud.rn $r3 = $r2, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatud.rn $r2 = $r4, 0
+; CHECK-NEXT:    floatud.rn $r2 = $r1, 0
+; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatud.rn $r3 = $r5, 0
+; CHECK-NEXT:    floatud.rn $r0 = $r0, 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = uitofp <4 x i32> %a to <4 x double>
@@ -1281,13 +1278,13 @@ define <4 x double> @test_uitofp_2xi32(<4 x i32> %a) #0 {
 define <4 x double> @test_uitofp_2xi64(<4 x i64> %a) #0 {
 ; CHECK-LABEL: test_uitofp_2xi64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    floatud.rn $r0 = $r0, 0
+; CHECK-NEXT:    floatud.rn $r3 = $r3, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatud.rn $r1 = $r1, 0
+; CHECK-NEXT:    floatud.rn $r0 = $r0, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    floatud.rn $r2 = $r2, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatud.rn $r3 = $r3, 0
+; CHECK-NEXT:    floatud.rn $r1 = $r1, 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = uitofp <4 x i64> %a to <4 x double>
@@ -1297,18 +1294,19 @@ define <4 x double> @test_uitofp_2xi64(<4 x i64> %a) #0 {
 define <4 x double> @test_sitofp_2xi32(<4 x i32> %a) #0 {
 ; CHECK-LABEL: test_sitofp_2xi32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    sxwd $r2 = $r0
-; CHECK-NEXT:    srad $r3 = $r0, 32
-; CHECK-NEXT:    sxwd $r4 = $r1
-; CHECK-NEXT:    srad $r5 = $r1, 32
+; CHECK-NEXT:    srad $r2 = $r0, 32
+; CHECK-NEXT:    sxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatd.rn $r0 = $r2, 0
+; CHECK-NEXT:    floatd.rn $r5 = $r2, 0
+; CHECK-NEXT:    srad $r2 = $r1, 32
+; CHECK-NEXT:    sxwd $r1 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatd.rn $r1 = $r3, 0
+; CHECK-NEXT:    floatd.rn $r3 = $r2, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatd.rn $r2 = $r4, 0
+; CHECK-NEXT:    floatd.rn $r2 = $r1, 0
+; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatd.rn $r3 = $r5, 0
+; CHECK-NEXT:    floatd.rn $r0 = $r0, 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = sitofp <4 x i32> %a to <4 x double>
@@ -1318,13 +1316,13 @@ define <4 x double> @test_sitofp_2xi32(<4 x i32> %a) #0 {
 define <4 x double> @test_sitofp_2xi64(<4 x i64> %a) #0 {
 ; CHECK-LABEL: test_sitofp_2xi64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    floatd.rn $r0 = $r0, 0
+; CHECK-NEXT:    floatd.rn $r3 = $r3, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatd.rn $r1 = $r1, 0
+; CHECK-NEXT:    floatd.rn $r0 = $r0, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    floatd.rn $r2 = $r2, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatd.rn $r3 = $r3, 0
+; CHECK-NEXT:    floatd.rn $r1 = $r1, 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = sitofp <4 x i64> %a to <4 x double>
@@ -1335,26 +1333,26 @@ define <4 x double> @test_uitofp_2xi32_fadd(<4 x i32> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: test_uitofp_2xi32_fadd:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    zxwd $r6 = $r0
-; CHECK-NEXT:    zxwd $r7 = $r1
-; CHECK-NEXT:    srld $r1 = $r1, 32
-; CHECK-NEXT:    copyd $r11 = $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatud.rn $r8 = $r6, 0
 ; CHECK-NEXT:    srld $r0 = $r0, 32
-; CHECK-NEXT:    copyd $r5 = $r3
+; CHECK-NEXT:    copyd $r11 = $r5
 ; CHECK-NEXT:    copyd $r10 = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatud.rn $r6 = $r7, 0
-; CHECK-NEXT:    copyd $r4 = $r2
+; CHECK-NEXT:    floatud.rn $r8 = $r6, 0
+; CHECK-NEXT:    zxwd $r6 = $r1
+; CHECK-NEXT:    srld $r1 = $r1, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    floatud.rn $r7 = $r1, 0
+; CHECK-NEXT:    copyd $r1 = $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    floatud.rn $r6 = $r6, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    floatud.rn $r9 = $r0, 0
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fadddp $r6r7 = $r10r11, $r6r7
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fadddp $r0r1 = $r0r1, $r8r9
 ; CHECK-NEXT:    copyd $r2 = $r6
-; CHECK-NEXT:    fadddp $r0r1 = $r4r5, $r8r9
 ; CHECK-NEXT:    copyd $r3 = $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -1367,26 +1365,26 @@ define <4 x double> @test_sitofp_2xi32_fadd(<4 x i32> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: test_sitofp_2xi32_fadd:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sxwd $r6 = $r0
-; CHECK-NEXT:    sxwd $r7 = $r1
-; CHECK-NEXT:    srad $r1 = $r1, 32
-; CHECK-NEXT:    copyd $r11 = $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatd.rn $r8 = $r6, 0
 ; CHECK-NEXT:    srad $r0 = $r0, 32
-; CHECK-NEXT:    copyd $r5 = $r3
+; CHECK-NEXT:    copyd $r11 = $r5
 ; CHECK-NEXT:    copyd $r10 = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatd.rn $r6 = $r7, 0
-; CHECK-NEXT:    copyd $r4 = $r2
+; CHECK-NEXT:    floatd.rn $r8 = $r6, 0
+; CHECK-NEXT:    sxwd $r6 = $r1
+; CHECK-NEXT:    srad $r1 = $r1, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    floatd.rn $r7 = $r1, 0
+; CHECK-NEXT:    copyd $r1 = $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    floatd.rn $r6 = $r6, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    floatd.rn $r9 = $r0, 0
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fadddp $r6r7 = $r10r11, $r6r7
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fadddp $r0r1 = $r0r1, $r8r9
 ; CHECK-NEXT:    copyd $r2 = $r6
-; CHECK-NEXT:    fadddp $r0r1 = $r4r5, $r8r9
 ; CHECK-NEXT:    copyd $r3 = $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -1500,19 +1498,24 @@ define <4 x double> @test_powi(<4 x double> %a, i32 %b) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 56[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sq 40[$r12] = $r24r25
+; CHECK-NEXT:    sd 48[$r12] = $r25
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 32[$r12] = $r22
+; CHECK-NEXT:    sd 40[$r12] = $r22
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sq 16[$r12] = $r20r21
+; CHECK-NEXT:    sq 24[$r12] = $r20r21
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sq 0[$r12] = $r18r19
+; CHECK-NEXT:    sq 8[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r4
 ; CHECK-NEXT:    copyd $r19 = $r3
-; CHECK-NEXT:    copyd $r20 = $r2
+; CHECK-NEXT:    copyd $r20 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r21 = $r0
-; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    copyd $r0 = $r2
+; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    call __powidf2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r22 = $r0
+; CHECK-NEXT:    copyd $r0 = $r20
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    call __powidf2
 ; CHECK-NEXT:    ;;
@@ -1521,28 +1524,23 @@ define <4 x double> @test_powi(<4 x double> %a, i32 %b) #0 {
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    call __powidf2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r24 = $r0
-; CHECK-NEXT:    copyd $r0 = $r20
-; CHECK-NEXT:    copyd $r1 = $r18
-; CHECK-NEXT:    call __powidf2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r22 = $r0
+; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    call __powidf2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r3 = $r0
-; CHECK-NEXT:    copyd $r0 = $r24
+; CHECK-NEXT:    copyd $r0 = $r20
 ; CHECK-NEXT:    copyd $r1 = $r25
 ; CHECK-NEXT:    copyd $r2 = $r22
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lq $r18r19 = 0[$r12]
+; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lq $r20r21 = 16[$r12]
+; CHECK-NEXT:    lq $r20r21 = 24[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r22 = 32[$r12]
+; CHECK-NEXT:    ld $r22 = 40[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lq $r24r25 = 40[$r12]
+; CHECK-NEXT:    ld $r25 = 48[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 56[$r12]
 ; CHECK-NEXT:    ;;
@@ -1670,34 +1668,32 @@ define <4 x double> @test_cos(<4 x double> %a) #0 {
 define <4 x double> @test_pow(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: test_pow:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -64
+; CHECK-NEXT:    addd $r12 = $r12, -96
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 56[$r12] = $r16
+; CHECK-NEXT:    sd 88[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 48[$r12] = $r25
+; CHECK-NEXT:    sq 72[$r12] = $r24r25
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    so 16[$r12] = $r20r21r22r23
+; CHECK-NEXT:    so 40[$r12] = $r20r21r22r23
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sq 0[$r12] = $r18r19
+; CHECK-NEXT:    sq 24[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r7
 ; CHECK-NEXT:    copyd $r19 = $r6
-; CHECK-NEXT:    copyd $r20 = $r4
+; CHECK-NEXT:    copyd $r20 = $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r21 = $r3
 ; CHECK-NEXT:    copyd $r22 = $r2
-; CHECK-NEXT:    copyd $r23 = $r0
-; CHECK-NEXT:    copyd $r0 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r5
+; CHECK-NEXT:    copyd $r23 = $r1
+; CHECK-NEXT:    copyd $r1 = $r4
 ; CHECK-NEXT:    call pow
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r25 = $r0
+; CHECK-NEXT:    copyd $r24 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r23
 ; CHECK-NEXT:    copyd $r1 = $r20
 ; CHECK-NEXT:    call pow
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r20 = $r0
+; CHECK-NEXT:    copyd $r25 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r22
 ; CHECK-NEXT:    copyd $r1 = $r19
 ; CHECK-NEXT:    call pow
@@ -1708,20 +1704,20 @@ define <4 x double> @test_pow(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-NEXT:    call pow
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r3 = $r0
-; CHECK-NEXT:    copyd $r0 = $r20
+; CHECK-NEXT:    copyd $r0 = $r24
 ; CHECK-NEXT:    copyd $r1 = $r25
 ; CHECK-NEXT:    copyd $r2 = $r22
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lq $r18r19 = 0[$r12]
+; CHECK-NEXT:    lq $r18r19 = 24[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r20r21r22r23 = 16[$r12]
+; CHECK-NEXT:    lo $r20r21r22r23 = 40[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r25 = 48[$r12]
+; CHECK-NEXT:    lq $r24r25 = 72[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 56[$r12]
+; CHECK-NEXT:    ld $r16 = 88[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 64
+; CHECK-NEXT:    addd $r12 = $r12, 96
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -2014,15 +2010,15 @@ define <4 x double> @test_fma(<4 x double> %a, <4 x double> %b, <4 x double> %c)
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ffmad $r8 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmad $r9 = $r1, $r5
+; CHECK-NEXT:    ffmad $r11 = $r3, $r7
 ; CHECK-NEXT:    copyd $r0 = $r8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmad $r9 = $r1, $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad $r10 = $r2, $r6
 ; CHECK-NEXT:    copyd $r1 = $r9
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmad $r11 = $r3, $r7
 ; CHECK-NEXT:    copyd $r2 = $r10
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r3 = $r11
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -2033,11 +2029,11 @@ define <4 x double> @test_fma(<4 x double> %a, <4 x double> %b, <4 x double> %c)
 define <4 x double> @test_fabs(<4 x double> %a) #0 {
 ; CHECK-LABEL: test_fabs:
 ; CHECK:       # %bb.0:
+; CHECK-NEXT:    fabsd $r3 = $r3
 ; CHECK-NEXT:    fabsd $r0 = $r0
-; CHECK-NEXT:    fabsd $r1 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fabsd $r2 = $r2
-; CHECK-NEXT:    fabsd $r3 = $r3
+; CHECK-NEXT:    fabsd $r1 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <4 x double> @llvm.fabs.v4f64(<4 x double> %a)
@@ -2047,34 +2043,32 @@ define <4 x double> @test_fabs(<4 x double> %a) #0 {
 define <4 x double> @test_minnum(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: test_minnum:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -64
+; CHECK-NEXT:    addd $r12 = $r12, -96
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 56[$r12] = $r16
+; CHECK-NEXT:    sd 88[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 48[$r12] = $r25
+; CHECK-NEXT:    sq 72[$r12] = $r24r25
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    so 16[$r12] = $r20r21r22r23
+; CHECK-NEXT:    so 40[$r12] = $r20r21r22r23
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sq 0[$r12] = $r18r19
+; CHECK-NEXT:    sq 24[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r7
 ; CHECK-NEXT:    copyd $r19 = $r6
-; CHECK-NEXT:    copyd $r20 = $r4
+; CHECK-NEXT:    copyd $r20 = $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r21 = $r3
 ; CHECK-NEXT:    copyd $r22 = $r2
-; CHECK-NEXT:    copyd $r23 = $r0
-; CHECK-NEXT:    copyd $r0 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r5
+; CHECK-NEXT:    copyd $r23 = $r1
+; CHECK-NEXT:    copyd $r1 = $r4
 ; CHECK-NEXT:    call fmin
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r25 = $r0
+; CHECK-NEXT:    copyd $r24 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r23
 ; CHECK-NEXT:    copyd $r1 = $r20
 ; CHECK-NEXT:    call fmin
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r20 = $r0
+; CHECK-NEXT:    copyd $r25 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r22
 ; CHECK-NEXT:    copyd $r1 = $r19
 ; CHECK-NEXT:    call fmin
@@ -2085,20 +2079,20 @@ define <4 x double> @test_minnum(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-NEXT:    call fmin
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r3 = $r0
-; CHECK-NEXT:    copyd $r0 = $r20
+; CHECK-NEXT:    copyd $r0 = $r24
 ; CHECK-NEXT:    copyd $r1 = $r25
 ; CHECK-NEXT:    copyd $r2 = $r22
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lq $r18r19 = 0[$r12]
+; CHECK-NEXT:    lq $r18r19 = 24[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r20r21r22r23 = 16[$r12]
+; CHECK-NEXT:    lo $r20r21r22r23 = 40[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r25 = 48[$r12]
+; CHECK-NEXT:    lq $r24r25 = 72[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 56[$r12]
+; CHECK-NEXT:    ld $r16 = 88[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 64
+; CHECK-NEXT:    addd $r12 = $r12, 96
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -2109,20 +2103,20 @@ define <4 x double> @test_minnum(<4 x double> %a, <4 x double> %b) #0 {
 define <4 x double> @test_minnum_fast(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: test_minnum_fast:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fcompd.olt $r8 = $r1, $r5
+; CHECK-NEXT:    fcompd.olt $r8 = $r3, $r7
 ; CHECK-NEXT:    fcompd.olt $r9 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompd.olt $r10 = $r2, $r6
-; CHECK-NEXT:    fcompd.olt $r11 = $r3, $r7
+; CHECK-NEXT:    fcompd.olt $r10 = $r1, $r5
+; CHECK-NEXT:    fcompd.olt $r11 = $r2, $r6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.wnez $r9 ? $r4 = $r0
-; CHECK-NEXT:    cmoved.wnez $r8 ? $r5 = $r1
+; CHECK-NEXT:    cmoved.wnez $r8 ? $r7 = $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r10 ? $r6 = $r2
-; CHECK-NEXT:    cmoved.wnez $r11 ? $r7 = $r3
+; CHECK-NEXT:    cmoved.wnez $r10 ? $r5 = $r1
+; CHECK-NEXT:    cmoved.wnez $r11 ? $r6 = $r2
 ; CHECK-NEXT:    copyd $r0 = $r4
-; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    copyd $r2 = $r6
 ; CHECK-NEXT:    copyd $r3 = $r7
 ; CHECK-NEXT:    ret
@@ -2134,34 +2128,32 @@ define <4 x double> @test_minnum_fast(<4 x double> %a, <4 x double> %b) #0 {
 define <4 x double> @test_maxnum(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: test_maxnum:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -64
+; CHECK-NEXT:    addd $r12 = $r12, -96
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 56[$r12] = $r16
+; CHECK-NEXT:    sd 88[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 48[$r12] = $r25
+; CHECK-NEXT:    sq 72[$r12] = $r24r25
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    so 16[$r12] = $r20r21r22r23
+; CHECK-NEXT:    so 40[$r12] = $r20r21r22r23
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sq 0[$r12] = $r18r19
+; CHECK-NEXT:    sq 24[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r7
 ; CHECK-NEXT:    copyd $r19 = $r6
-; CHECK-NEXT:    copyd $r20 = $r4
+; CHECK-NEXT:    copyd $r20 = $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r21 = $r3
 ; CHECK-NEXT:    copyd $r22 = $r2
-; CHECK-NEXT:    copyd $r23 = $r0
-; CHECK-NEXT:    copyd $r0 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r5
+; CHECK-NEXT:    copyd $r23 = $r1
+; CHECK-NEXT:    copyd $r1 = $r4
 ; CHECK-NEXT:    call fmax
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r25 = $r0
+; CHECK-NEXT:    copyd $r24 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r23
 ; CHECK-NEXT:    copyd $r1 = $r20
 ; CHECK-NEXT:    call fmax
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r20 = $r0
+; CHECK-NEXT:    copyd $r25 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r22
 ; CHECK-NEXT:    copyd $r1 = $r19
 ; CHECK-NEXT:    call fmax
@@ -2172,20 +2164,20 @@ define <4 x double> @test_maxnum(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-NEXT:    call fmax
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r3 = $r0
-; CHECK-NEXT:    copyd $r0 = $r20
+; CHECK-NEXT:    copyd $r0 = $r24
 ; CHECK-NEXT:    copyd $r1 = $r25
 ; CHECK-NEXT:    copyd $r2 = $r22
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lq $r18r19 = 0[$r12]
+; CHECK-NEXT:    lq $r18r19 = 24[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r20r21r22r23 = 16[$r12]
+; CHECK-NEXT:    lo $r20r21r22r23 = 40[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r25 = 48[$r12]
+; CHECK-NEXT:    lq $r24r25 = 72[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 56[$r12]
+; CHECK-NEXT:    ld $r16 = 88[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 64
+; CHECK-NEXT:    addd $r12 = $r12, 96
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -2196,20 +2188,20 @@ define <4 x double> @test_maxnum(<4 x double> %a, <4 x double> %b) #0 {
 define <4 x double> @test_maxnum_fast(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: test_maxnum_fast:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fcompd.olt $r8 = $r5, $r1
+; CHECK-NEXT:    fcompd.olt $r8 = $r7, $r3
 ; CHECK-NEXT:    fcompd.olt $r9 = $r4, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompd.olt $r10 = $r6, $r2
-; CHECK-NEXT:    fcompd.olt $r11 = $r7, $r3
+; CHECK-NEXT:    fcompd.olt $r10 = $r5, $r1
+; CHECK-NEXT:    fcompd.olt $r11 = $r6, $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.wnez $r9 ? $r4 = $r0
-; CHECK-NEXT:    cmoved.wnez $r8 ? $r5 = $r1
+; CHECK-NEXT:    cmoved.wnez $r8 ? $r7 = $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r10 ? $r6 = $r2
-; CHECK-NEXT:    cmoved.wnez $r11 ? $r7 = $r3
+; CHECK-NEXT:    cmoved.wnez $r10 ? $r5 = $r1
+; CHECK-NEXT:    cmoved.wnez $r11 ? $r6 = $r2
 ; CHECK-NEXT:    copyd $r0 = $r4
-; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    copyd $r2 = $r6
 ; CHECK-NEXT:    copyd $r3 = $r7
 ; CHECK-NEXT:    ret
@@ -2221,16 +2213,16 @@ define <4 x double> @test_maxnum_fast(<4 x double> %a, <4 x double> %b) #0 {
 define <4 x double> @test_copysign(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: test_copysign:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r5 = $r5, 63
-; CHECK-NEXT:    srad $r4 = $r4, 63
-; CHECK-NEXT:    srad $r6 = $r6, 63
 ; CHECK-NEXT:    srad $r7 = $r7, 63
+; CHECK-NEXT:    srad $r4 = $r4, 63
+; CHECK-NEXT:    srad $r5 = $r5, 63
+; CHECK-NEXT:    srad $r6 = $r6, 63
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r5, 63, 63
 ; CHECK-NEXT:    insf $r0 = $r4, 63, 63
+; CHECK-NEXT:    insf $r3 = $r7, 63, 63
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r2 = $r6, 63, 63
-; CHECK-NEXT:    insf $r3 = $r7, 63, 63
+; CHECK-NEXT:    insf $r1 = $r5, 63, 63
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <4 x double> @llvm.copysign.v4f64(<4 x double> %a, <4 x double> %b)
@@ -2240,16 +2232,16 @@ define <4 x double> @test_copysign(<4 x double> %a, <4 x double> %b) #0 {
 define <4 x double> @test_copysign_f32(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: test_copysign_f32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r5 = $r5, 63
-; CHECK-NEXT:    srad $r4 = $r4, 63
-; CHECK-NEXT:    srad $r6 = $r6, 63
 ; CHECK-NEXT:    srad $r7 = $r7, 63
+; CHECK-NEXT:    srad $r4 = $r4, 63
+; CHECK-NEXT:    srad $r5 = $r5, 63
+; CHECK-NEXT:    srad $r6 = $r6, 63
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r5, 63, 63
 ; CHECK-NEXT:    insf $r0 = $r4, 63, 63
+; CHECK-NEXT:    insf $r3 = $r7, 63, 63
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r2 = $r6, 63, 63
-; CHECK-NEXT:    insf $r3 = $r7, 63, 63
+; CHECK-NEXT:    insf $r1 = $r5, 63, 63
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <4 x double> @llvm.copysign.v4f64(<4 x double> %a, <4 x double> %b)
@@ -2259,18 +2251,19 @@ define <4 x double> @test_copysign_f32(<4 x double> %a, <4 x double> %b) #0 {
 define <4 x double> @test_copysign_f64(<4 x double> %a, <4 x float> %b) #0 {
 ; CHECK-LABEL: test_copysign_f64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r6 = $r4, 32
-; CHECK-NEXT:    srad $r7 = $r5, 32
+; CHECK-NEXT:    srad $r7 = $r4, 32
+; CHECK-NEXT:    srad $r6 = $r5, 32
 ; CHECK-NEXT:    sraw $r4 = $r4, 31
-; CHECK-NEXT:    sraw $r5 = $r5, 31
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sraw $r6 = $r6, 31
 ; CHECK-NEXT:    sraw $r7 = $r7, 31
 ; CHECK-NEXT:    insf $r0 = $r4, 63, 63
-; CHECK-NEXT:    insf $r2 = $r5, 63, 63
+; CHECK-NEXT:    sraw $r4 = $r5, 31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r6, 63, 63
-; CHECK-NEXT:    insf $r3 = $r7, 63, 63
+; CHECK-NEXT:    insf $r3 = $r6, 63, 63
+; CHECK-NEXT:    insf $r1 = $r7, 63, 63
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r2 = $r4, 63, 63
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %tb = fpext <4 x float> %b to <4 x double>
@@ -2617,13 +2610,13 @@ define <4 x double> @test_round(<4 x double> %a) #0 {
 define <4 x double> @test_fmuladd(<4 x double> %a, <4 x double> %b, <4 x double> %c) #0 {
 ; CHECK-LABEL: test_fmuladd:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fmuld $r1 = $r1, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld $r0 = $r0, $r4
+; CHECK-NEXT:    fmuld $r3 = $r3, $r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmuld $r2 = $r2, $r6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld $r3 = $r3, $r7
+; CHECK-NEXT:    fmuld $r0 = $r0, $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fmuld $r1 = $r1, $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fadddp $r2r3 = $r2r3, $r10r11
 ; CHECK-NEXT:    ;;

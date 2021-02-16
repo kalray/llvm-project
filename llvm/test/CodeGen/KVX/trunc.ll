@@ -8,11 +8,11 @@ define void @f1(i64 %b, i16 %c){
 ; CHECK-LABEL: f1:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    make $r2 = a
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addw $r0 = $r0, $r1
-; CHECK-NEXT:    make $r1 = a
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sh 0[$r1] = $r0
+; CHECK-NEXT:    sh 0[$r2] = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

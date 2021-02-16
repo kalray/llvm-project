@@ -38,6 +38,7 @@ define i32 @f(i32 %sz) {
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    .cfi_offset 18, -32
 ; FP-NONE-NEXT:    addd $r0 = $r0, 31
+; FP-NONE-NEXT:    addd $r1 = $r31, 128
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    andd $r0 = $r0, -32
 ; FP-NONE-NEXT:    ;;
@@ -46,7 +47,6 @@ define i32 @f(i32 %sz) {
 ; FP-NONE-NEXT:    andd $r18 = $r0, -128
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    copyd $r12 = $r18
-; FP-NONE-NEXT:    addd $r1 = $r31, 128
 ; FP-NONE-NEXT:    copyd $r0 = $r18
 ; FP-NONE-NEXT:    call g
 ; FP-NONE-NEXT:    ;;
@@ -91,6 +91,7 @@ define i32 @f(i32 %sz) {
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    .cfi_offset 18, -32
 ; FP-ALL-NEXT:    addd $r0 = $r0, 31
+; FP-ALL-NEXT:    addd $r1 = $r31, 128
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    andd $r0 = $r0, -32
 ; FP-ALL-NEXT:    ;;
@@ -99,7 +100,6 @@ define i32 @f(i32 %sz) {
 ; FP-ALL-NEXT:    andd $r18 = $r0, -128
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    copyd $r12 = $r18
-; FP-ALL-NEXT:    addd $r1 = $r31, 128
 ; FP-ALL-NEXT:    copyd $r0 = $r18
 ; FP-ALL-NEXT:    call g
 ; FP-ALL-NEXT:    ;;

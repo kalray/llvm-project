@@ -16,8 +16,9 @@ define void @f(i64* %v) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    so 24[$r12] = $r20r21r22r23
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 16[$r12] = $r18
+; CHECK-NEXT:    sq 8[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r0
+; CHECK-NEXT:    make $r19 = x
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r20r21r22r23 = 0[$r18]
 ; CHECK-NEXT:    call g
@@ -26,15 +27,13 @@ define void @f(i64* %v) #0 {
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    call g
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r0 = x
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r0 = 0[$r0]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    so 0[$r0] = $r20r21r22r23
+; CHECK-NEXT:    ld $r0 = 0[$r19]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    so 32[$r0] = $r24r25r26r27
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r18 = 16[$r12]
+; CHECK-NEXT:    so 0[$r0] = $r20r21r22r23
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r20r21r22r23 = 24[$r12]
 ; CHECK-NEXT:    ;;

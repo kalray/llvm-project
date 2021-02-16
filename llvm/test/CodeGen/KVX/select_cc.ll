@@ -20,11 +20,10 @@ entry:
 define i32 @f_select_cc_i32(i32 %c, i32 %c2, i32 %a, i32 %b){
 ; CHECK-LABEL: f_select_cc_i32:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    compw.gt $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r0 ? $r3 = $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    compw.gt $r1 = $r0, $r1
 ; CHECK-NEXT:    copyd $r0 = $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.wnez $r1 ? $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -36,11 +35,10 @@ entry:
 define i32 @f_select_cc_i64(i64 %c, i64 %c2, i32 %a, i32 %b){
 ; CHECK-LABEL: f_select_cc_i64:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    compd.gt $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r0 ? $r3 = $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    compd.gt $r1 = $r0, $r1
 ; CHECK-NEXT:    copyd $r0 = $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.wnez $r1 ? $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -52,35 +50,33 @@ entry:
 define <4 x half> @f_Select32PAT(<4 x half> %x, <4 x half> %y){
 ; CHECK-LABEL: f_Select32PAT:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    extfz $r2 = $r0, 15, 0
-; CHECK-NEXT:    extfz $r3 = $r1, 15, 0
+; CHECK-NEXT:    extfz $r2 = $r0, 47, 32
+; CHECK-NEXT:    extfz $r6 = $r1, 47, 32
+; CHECK-NEXT:    srld $r4 = $r0, 48
+; CHECK-NEXT:    srld $r5 = $r1, 48
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r4 = $r0, 31, 16
-; CHECK-NEXT:    extfz $r5 = $r1, 31, 16
+; CHECK-NEXT:    extfz $r3 = $r1, 31, 16
+; CHECK-NEXT:    extfz $r8 = $r0, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r6 = $r0, 47, 32
-; CHECK-NEXT:    extfz $r7 = $r1, 47, 32
-; CHECK-NEXT:    srld $r0 = $r0, 48
-; CHECK-NEXT:    srld $r1 = $r1, 48
+; CHECK-NEXT:    extfz $r1 = $r1, 15, 0
+; CHECK-NEXT:    extfz $r0 = $r0, 15, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompnhq.olt $r8 = $r2, $r3
-; CHECK-NEXT:    fcompnhq.olt $r9 = $r4, $r5
+; CHECK-NEXT:    fcompnhq.olt $r7 = $r4, $r5
+; CHECK-NEXT:    fcompnhq.olt $r9 = $r2, $r6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompnhq.olt $r10 = $r6, $r7
+; CHECK-NEXT:    fcompnhq.olt $r10 = $r8, $r3
 ; CHECK-NEXT:    fcompnhq.olt $r11 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r8 ? $r2 = $r3
-; CHECK-NEXT:    cmoved.wnez $r9 ? $r4 = $r5
+; CHECK-NEXT:    cmoved.wnez $r7 ? $r4 = $r5
+; CHECK-NEXT:    cmoved.wnez $r9 ? $r2 = $r6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r10 ? $r6 = $r7
+; CHECK-NEXT:    cmoved.wnez $r10 ? $r8 = $r3
 ; CHECK-NEXT:    cmoved.wnez $r11 ? $r0 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r6 = $r0, 31, 16
 ; CHECK-NEXT:    insf $r2 = $r4, 31, 16
+; CHECK-NEXT:    insf $r0 = $r8, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r6, 63, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r2
+; CHECK-NEXT:    insf $r0 = $r2, 63, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -212,21 +208,20 @@ define void @test_select_matrix_reg(<1024 x i1> * %V, i1 %cc){
 ; CHECK-NEXT:    lv $a6 = 64[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a5 = 32[$r0]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a4 = 0[$r0]
 ; CHECK-NEXT:    alignv $a7 = $a7, $a0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    alignv $a6 = $a6, $a1, $r1
+; CHECK-NEXT:    lv $a0 = 0[$r0]
+; CHECK-NEXT:    alignv $a5 = $a5, $a2, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    alignv $a1 = $a5, $a2, $r1
+; CHECK-NEXT:    alignv $a2 = $a6, $a1, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    alignv $a0 = $a4, $a3, $r1
+; CHECK-NEXT:    alignv $a0 = $a0, $a3, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 96[$r0] = $a7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 64[$r0] = $a6
+; CHECK-NEXT:    sv 64[$r0] = $a2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 32[$r0] = $a1
+; CHECK-NEXT:    sv 32[$r0] = $a5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 0[$r0] = $a0
 ; CHECK-NEXT:    ret

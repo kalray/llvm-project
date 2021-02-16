@@ -40,95 +40,99 @@ define i32 @f(i32 %a1, i32 %a2, i32 %a3, i32 %a4, i32 %a5, i32 %a6, i32 %a7, i32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 18, -80
 ; CHECK-NEXT:    .cfi_offset 19, -88
-; CHECK-NEXT:    lwz $r15 = 40[$r14]
+; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r18 = $r10
+; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r19 = $r7
+; CHECK-NEXT:    addw $r1 = $r18, $r19
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r20 = $r6
+; CHECK-NEXT:    lwz $r0 = 40[$r14]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r20 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addw $r1 = $r1, $r20
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r15 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addw $r1 = $r1, $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addx4d $r2 = $r15, 31
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addw $r16 = $r1, $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r21 = $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r22 = $r2
+; CHECK-NEXT:    make $r17 = z
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r23 = $r1
+; CHECK-NEXT:    lwz $r1 = 16[$r14]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r24 = $r0
+; CHECK-NEXT:    andd $r32 = $r2, 0x7ffffffe0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r2 = 32[$r14]
+; CHECK-NEXT:    addw $r16 = $r16, $r21
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r1 = 24[$r14]
+; CHECK-NEXT:    lwz $r2 = 24[$r14]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r0 = 16[$r14]
+; CHECK-NEXT:    copyd $r22 = $r10
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r5 = $r15
+; CHECK-NEXT:    copyd $r23 = $r7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addx4d $r6 = $r5, 31
+; CHECK-NEXT:    copyd $r24 = $r6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r6 = $r6, 0x7ffffffe0
+; CHECK-NEXT:    lwz $r5 = 32[$r14]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfd $r6 = $r6, $r12
+; CHECK-NEXT:    sbfd $r6 = $r32, $r12
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addw $r7 = $r16, $r24
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r12 = $r6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r7 = $r23, $r24
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r7 = $r7, $r22
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r7 = $r7, $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r7 = $r7, $r4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r7 = $r7, $r21
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r7 = $r7, $r20
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r7 = $r7, $r19
+; CHECK-NEXT:    addw $r7 = $r7, $r23
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addw $r7 = $r7, $r8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addw $r7 = $r7, $r9
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r7 = $r7, $r18
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r10 = z
+; CHECK-NEXT:    addw $r7 = $r7, $r22
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addw $r7 = $r7, $r11
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r25 = 0[$r10]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r7 = $r7, $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addw $r7 = $r7, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addw $r7 = $r7, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r7 = $r7, $r15
+; CHECK-NEXT:    addw $r7 = $r7, $r5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lwz $r25 = 0[$r17]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addw $r7 = $r7, $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addw $r26 = $r7, $r25
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.wlez $r15 ? .LBB0_3
+; CHECK-NEXT:    cb.wlez $r0 ? .LBB0_3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %for.body.preheader
-; CHECK-NEXT:    make $r7 = 0
+; CHECK-NEXT:    make $r10 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r10 = $r6
+; CHECK-NEXT:    copyd $r7 = $r6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_2: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    addd $r5 = $r5, -1
+; CHECK-NEXT:    addd $r16 = $r7, 4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 0[$r10] = $r7
+; CHECK-NEXT:    addw $r17 = $r10, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r7 = $r7, 1
+; CHECK-NEXT:    addd $r15 = $r15, -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r10 = $r10, 4
+; CHECK-NEXT:    sw 0[$r7] = $r10
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.dnez $r5 ? .LBB0_2
+; CHECK-NEXT:    copyd $r7 = $r16
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r10 = $r17
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cb.dnez $r15 ? .LBB0_2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_3: # %for.cond.cleanup
-; CHECK-NEXT:    lwz $r5 = 40[$r6]
+; CHECK-NEXT:    lwz $r6 = 40[$r6]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    ;;
@@ -136,29 +140,29 @@ define i32 @f(i32 %a1, i32 %a2, i32 %a3, i32 %a4, i32 %a5, i32 %a6, i32 %a7, i32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 40[$r12] = $r26
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 32[$r12] = $r5
+; CHECK-NEXT:    sw 32[$r12] = $r6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 24[$r12] = $r15
+; CHECK-NEXT:    sw 24[$r12] = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 16[$r12] = $r2
+; CHECK-NEXT:    sw 16[$r12] = $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 8[$r12] = $r1
+; CHECK-NEXT:    sw 8[$r12] = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 0[$r12] = $r0
+; CHECK-NEXT:    sw 0[$r12] = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r24
+; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r23
+; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r2 = $r22
+; CHECK-NEXT:    copyd $r2 = $r20
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r5 = $r21
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r6 = $r20
+; CHECK-NEXT:    copyd $r6 = $r24
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r7 = $r19
+; CHECK-NEXT:    copyd $r7 = $r23
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r10 = $r18
+; CHECK-NEXT:    copyd $r10 = $r22
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    call h
 ; CHECK-NEXT:    ;;
@@ -166,19 +170,19 @@ define i32 @f(i32 %a1, i32 %a2, i32 %a3, i32 %a4, i32 %a5, i32 %a6, i32 %a7, i32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addw $r7 = $r0, $r26
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r24
+; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r23
+; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r2 = $r22
+; CHECK-NEXT:    copyd $r2 = $r20
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r3 = $r21
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r4 = $r20
+; CHECK-NEXT:    copyd $r4 = $r24
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r5 = $r19
+; CHECK-NEXT:    copyd $r5 = $r23
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r6 = $r18
+; CHECK-NEXT:    copyd $r6 = $r22
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r8 = $r25
 ; CHECK-NEXT:    ;;

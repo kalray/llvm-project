@@ -10,44 +10,38 @@ declare i64 @get_z()
 define i64 @foo(double*, double*, double*, { i32, [3 x i64], [3 x i64], [3 x i64], i8*, i32*, i32 }*, i64, i64, i64) {
 ; CHECK-LABEL: foo:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -64
+; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 64
+; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    .cfi_register 67, 16
-; CHECK-NEXT:    sd 56[$r12] = $r16
+; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 67, -8
-; CHECK-NEXT:    sq 40[$r12] = $r20r21
+; CHECK-NEXT:    sq 8[$r12] = $r18r19
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 20, -16
-; CHECK-NEXT:    .cfi_offset 21, -24
-; CHECK-NEXT:    sq 24[$r12] = $r18r19
-; CHECK-NEXT:    copyd $r18 = $r4
+; CHECK-NEXT:    .cfi_offset 18, -16
+; CHECK-NEXT:    .cfi_offset 19, -24
+; CHECK-NEXT:    ld $r19 = 32[$r3]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 18, -32
-; CHECK-NEXT:    .cfi_offset 19, -40
-; CHECK-NEXT:    ld $r20 = 56[$r3]
+; CHECK-NEXT:    ld $r0 = 56[$r3]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r21 = 32[$r3]
+; CHECK-NEXT:    maddd $r19 = $r0, $r4
 ; CHECK-NEXT:    call get_x
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r19 = $r0
+; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    call get_y
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r18 = $r19, $r18
 ; CHECK-NEXT:    call get_z
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    maddd $r21 = $r20, $r18
+; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r21, $r19
-; CHECK-NEXT:    lq $r18r19 = 24[$r12]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lq $r20r21 = 40[$r12]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 56[$r12]
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 64
+; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;

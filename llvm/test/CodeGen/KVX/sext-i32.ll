@@ -37,10 +37,10 @@ entry:
 define void @test6b(i32 %b, i16 %c){
 ; CHECK-LABEL: test6b:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r2 = a
 ; CHECK-NEXT:    sllw $r0 = $r0, $r1
-; CHECK-NEXT:    make $r1 = a
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 0[$r1] = $r0
+; CHECK-NEXT:    sw 0[$r2] = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -53,10 +53,10 @@ entry:
 define void @test6c(i32 %b, i16 %c){
 ; CHECK-LABEL: test6c:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r2 = a
 ; CHECK-NEXT:    sllw $r0 = $r0, $r1
-; CHECK-NEXT:    make $r1 = a
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 0[$r1] = $r0
+; CHECK-NEXT:    sw 0[$r2] = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -69,10 +69,10 @@ entry:
 define void @test6d(i32 %b, i8 %c){
 ; CHECK-LABEL: test6d:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r2 = a
 ; CHECK-NEXT:    sllw $r0 = $r0, $r1
-; CHECK-NEXT:    make $r1 = a
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 0[$r1] = $r0
+; CHECK-NEXT:    sw 0[$r2] = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -85,10 +85,10 @@ entry:
 define void @test6e(i32 %b, i8 %c){
 ; CHECK-LABEL: test6e:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r2 = a
 ; CHECK-NEXT:    sllw $r0 = $r0, $r1
-; CHECK-NEXT:    make $r1 = a
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 0[$r1] = $r0
+; CHECK-NEXT:    sw 0[$r2] = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

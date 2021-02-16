@@ -59,18 +59,18 @@ define <2 x float> @floorv2f32(<2 x float> %x) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 67, -8
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
-; CHECK-NEXT:    copyd $r18 = $r0
+; CHECK-NEXT:    srad $r18 = $r0, 32
+; CHECK-NEXT:    call floorf
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 18, -16
 ; CHECK-NEXT:    .cfi_offset 19, -24
-; CHECK-NEXT:    srad $r0 = $r18, 32
-; CHECK-NEXT:    call floorf
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    call floorf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r19, 63, 32
+; CHECK-NEXT:    insf $r19 = $r0, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]

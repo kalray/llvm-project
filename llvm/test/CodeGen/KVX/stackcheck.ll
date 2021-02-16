@@ -43,16 +43,18 @@ define dso_local i32 @testalloca(i32 %n) local_unnamed_addr  {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.2: # %for.body.preheader
 ; CHECK-NEXT:    zxwd $r2 = $r0
-; CHECK-NEXT:    make $r3 = 0
-; CHECK-NEXT:    copyd $r4 = $r1
+; CHECK-NEXT:    make $r4 = 0
+; CHECK-NEXT:    copyd $r3 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_3: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    sw 0[$r4] = $r3
+; CHECK-NEXT:    addd $r5 = $r3, 4
+; CHECK-NEXT:    addw $r6 = $r4, 1
+; CHECK-NEXT:    sw 0[$r3] = $r4
 ; CHECK-NEXT:    addd $r2 = $r2, -1
-; CHECK-NEXT:    addw $r3 = $r3, 1
-; CHECK-NEXT:    addd $r4 = $r4, 4
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r3 = $r5
+; CHECK-NEXT:    copyd $r4 = $r6
 ; CHECK-NEXT:    cb.dnez $r2 ? .LBB0_3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_4: # %for.cond.cleanup
@@ -138,15 +140,15 @@ define dso_local i32 @testrealign() local_unnamed_addr  {
 ; CHECK-NEXT:    .cfi_def_cfa 14, 16
 ; CHECK-NEXT:    sd 232[$r12] = $r31
 ; CHECK-NEXT:    andd $r31 = $r12, -128
-; CHECK-NEXT:    make $r0 = 7
-; CHECK-NEXT:    make $r1 = 0x4d2
+; CHECK-NEXT:    make $r2 = 7
+; CHECK-NEXT:    make $r3 = 0x4d2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 31, -24
-; CHECK-NEXT:    sw 228[$r31] = $r0
-; CHECK-NEXT:    addd $r0 = $r31, 228
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 128[$r31] = $r1
 ; CHECK-NEXT:    addd $r1 = $r31, 128
+; CHECK-NEXT:    addd $r0 = $r31, 228
+; CHECK-NEXT:    sw 228[$r31] = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw 128[$r31] = $r3
 ; CHECK-NEXT:    call other
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r12 = $r14, -240

@@ -16,10 +16,11 @@ define void @set(i32* nocapture %x, i32 %num){
 ; CHECK-NEXT:  .LBB0_3: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    mulw $r2 = $r1, $r1
+; CHECK-NEXT:    copyd $r3 = $r0
 ; CHECK-NEXT:    addw $r1 = $r1, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 0[$r0] = $r2
-; CHECK-NEXT:    addd $r0 = $r0, 4
+; CHECK-NEXT:    addd $r0 = $r3, 4
+; CHECK-NEXT:    sw 0[$r3] = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .__LOOPDO_0_END_:
 ; CHECK-NEXT:  .LBB0_2: # %for.cond.cleanup
@@ -81,22 +82,23 @@ define i32 @f(i32 %num){
 ; CHECK-NEXT:  .LBB1_2: # %for.body.i
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    mulw $r5 = $r3, $r3
+; CHECK-NEXT:    copyd $r6 = $r4
 ; CHECK-NEXT:    addw $r3 = $r3, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 0[$r4] = $r5
-; CHECK-NEXT:    addd $r4 = $r4, 4
+; CHECK-NEXT:    addd $r4 = $r6, 4
+; CHECK-NEXT:    sw 0[$r6] = $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .__LOOPDO_3_END_:
 ; CHECK-NEXT:  # %bb.3: # %set.exit
 ; CHECK-NEXT:    addx8wd $r3 = $r0, 31
+; CHECK-NEXT:    make $r4 = 0
+; CHECK-NEXT:    sllw $r6 = $r0, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    andd $r3 = $r3, -32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfd $r3 = $r3, $r12
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r12 = $r3
-; CHECK-NEXT:    sllw $r6 = $r0, 1
-; CHECK-NEXT:    make $r4 = 0
 ; CHECK-NEXT:    copyd $r5 = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r6, .__LOOPDO_2_END_
@@ -104,10 +106,11 @@ define i32 @f(i32 %num){
 ; CHECK-NEXT:  .LBB1_4: # %for.body.i36
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    mulw $r6 = $r4, $r4
+; CHECK-NEXT:    copyd $r7 = $r5
 ; CHECK-NEXT:    addw $r4 = $r4, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 0[$r5] = $r6
-; CHECK-NEXT:    addd $r5 = $r5, 4
+; CHECK-NEXT:    addd $r5 = $r7, 4
+; CHECK-NEXT:    sw 0[$r7] = $r6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .__LOOPDO_2_END_:
 ; CHECK-NEXT:  # %bb.5: # %set.exit37
@@ -125,14 +128,13 @@ define i32 @f(i32 %num){
 ; CHECK-NEXT:    addd $r1 = $r1, 4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r5 = 0[$r3]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz.xs $r6 = $r4[$r3]
-; CHECK-NEXT:    addd $r3 = $r3, 4
 ; CHECK-NEXT:    addw $r0 = $r2, $r0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lwz.xs $r2 = $r4[$r3]
+; CHECK-NEXT:    addd $r3 = $r3, 4
 ; CHECK-NEXT:    addw $r0 = $r0, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r0 = $r0, $r6
+; CHECK-NEXT:    addw $r0 = $r0, $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .__LOOPDO_1_END_:
 ; CHECK-NEXT:    goto .LBB1_7

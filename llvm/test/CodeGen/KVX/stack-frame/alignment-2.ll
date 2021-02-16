@@ -21,21 +21,22 @@ define i32 @h() {
 ; FP-NONE-NEXT:    .cfi_def_cfa_offset 96
 ; FP-NONE-NEXT:    .cfi_register 67, 16
 ; FP-NONE-NEXT:    sd 88[$r12] = $r16
-; FP-NONE-NEXT:    make $r0 = 0
-; FP-NONE-NEXT:    make $r4 = 9
-; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:    .cfi_offset 67, -8
-; FP-NONE-NEXT:    copyd $r1 = $r0
-; FP-NONE-NEXT:    copyd $r2 = $r0
-; FP-NONE-NEXT:    copyd $r3 = $r0
-; FP-NONE-NEXT:    copyd $r5 = $r0
-; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:    copyd $r6 = $r0
-; FP-NONE-NEXT:    so 32[$r12] = $r0r1r2r3
-; FP-NONE-NEXT:    copyd $r7 = $r0
+; FP-NONE-NEXT:    make $r4 = 0
+; FP-NONE-NEXT:    make $r8 = 9
 ; FP-NONE-NEXT:    addd $r0 = $r12, 0
 ; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:    so 0[$r12] = $r4r5r6r7
+; FP-NONE-NEXT:    .cfi_offset 67, -8
+; FP-NONE-NEXT:    copyd $r9 = $r4
+; FP-NONE-NEXT:    copyd $r5 = $r4
+; FP-NONE-NEXT:    copyd $r10 = $r4
+; FP-NONE-NEXT:    copyd $r6 = $r4
+; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    copyd $r11 = $r4
+; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    so 0[$r12] = $r8r9r10r11
+; FP-NONE-NEXT:    copyd $r7 = $r4
+; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    so 32[$r12] = $r4r5r6r7
 ; FP-NONE-NEXT:    call i
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    ld $r16 = 88[$r12]
@@ -58,22 +59,23 @@ define i32 @h() {
 ; FP-ALL-NEXT:    .cfi_offset 67, -8
 ; FP-ALL-NEXT:    sd 80[$r12] = $r14
 ; FP-ALL-NEXT:    addd $r14 = $r12, 80
-; FP-ALL-NEXT:    make $r0 = 0
-; FP-ALL-NEXT:    make $r4 = 9
+; FP-ALL-NEXT:    make $r4 = 0
+; FP-ALL-NEXT:    make $r8 = 9
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    .cfi_offset 14, -16
 ; FP-ALL-NEXT:    .cfi_def_cfa 14, 16
-; FP-ALL-NEXT:    copyd $r1 = $r0
-; FP-ALL-NEXT:    copyd $r2 = $r0
-; FP-ALL-NEXT:    copyd $r3 = $r0
-; FP-ALL-NEXT:    copyd $r5 = $r0
-; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    copyd $r6 = $r0
-; FP-ALL-NEXT:    so -48[$r14] = $r0r1r2r3
-; FP-ALL-NEXT:    copyd $r7 = $r0
 ; FP-ALL-NEXT:    addd $r0 = $r14, -80
+; FP-ALL-NEXT:    copyd $r9 = $r4
+; FP-ALL-NEXT:    copyd $r5 = $r4
+; FP-ALL-NEXT:    copyd $r10 = $r4
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    so -80[$r14] = $r4r5r6r7
+; FP-ALL-NEXT:    copyd $r6 = $r4
+; FP-ALL-NEXT:    copyd $r11 = $r4
+; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    so -80[$r14] = $r8r9r10r11
+; FP-ALL-NEXT:    copyd $r7 = $r4
+; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    so -48[$r14] = $r4r5r6r7
 ; FP-ALL-NEXT:    call i
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    addd $r12 = $r14, -80

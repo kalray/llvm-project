@@ -1113,6 +1113,52 @@ static bool expandTcaInplace(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   return true;
 }
 
+static bool expandCopyZ(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
+                        MachineBasicBlock::iterator MBBI) {
+  MachineFunction *MF = MBB.getParent();
+  const KVXRegisterInfo *TRI =
+      (const KVXRegisterInfo *)MF->getSubtarget().getRegisterInfo();
+  DebugLoc DL = MBBI->getDebugLoc();
+
+  Register DstReg = MBBI->getOperand(0).getReg();
+
+  if (KVX::VectorRegERegClass.contains(DstReg)) {
+    BuildMI(MBB, MBBI, DL, TII->get(KVX::COPYVre), DstReg).addReg(KVX::A48);
+  }
+
+  else if (KVX::VectorRegORegClass.contains(DstReg)) {
+    BuildMI(MBB, MBBI, DL, TII->get(KVX::COPYVro), DstReg).addReg(KVX::A49);
+  }
+
+  else if (KVX::WideRegRegClass.contains(DstReg)) {
+    Register SrcReg = KVX::W25;
+
+    auto Src = TRI->getSubReg(SrcReg, KVX::sub_v0);
+    auto Dst = TRI->getSubReg(DstReg, KVX::sub_v0);
+    BuildMI(MBB, MBBI, DL, TII->get(KVX::COPYVre), Dst).addReg(Src);
+
+    Src = TRI->getSubReg(SrcReg, KVX::sub_v1);
+    Dst = TRI->getSubReg(DstReg, KVX::sub_v1);
+    BuildMI(MBB, MBBI, DL, TII->get(KVX::COPYVro), Dst).addReg(Src);
+  }
+
+  else {
+    assert(KVX::MatrixRegRegClass.contains(DstReg));
+    Register SrcReg = KVX::X12;
+
+    auto VecType = KVX::COPYVre;
+    for (auto SubVec : {KVX::sub_v0, KVX::sub_v1, KVX::sub_v2, KVX::sub_v3}) {
+      auto Src = TRI->getSubReg(SrcReg, SubVec);
+      auto Dst = TRI->getSubReg(DstReg, SubVec);
+      BuildMI(MBB, MBBI, DL, TII->get(VecType), Dst).addReg(Src);
+      VecType = VecType == KVX::COPYVre ? KVX::COPYVro : KVX::COPYVre;
+    }
+  }
+
+  MBBI->eraseFromParent();
+  return true;
+}
+
 static bool expandENDLOOP(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
                           MachineBasicBlock::iterator MBBI) {
 
@@ -1481,6 +1527,10 @@ bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
   case KVX::DZEROLp:
   case KVX::IINVALSp:
     return expandCacheInstruction(TII, MBB, MBBI);
+  case KVX::COPYZAp:
+  case KVX::COPYZWp:
+  case KVX::COPYZXp:
+    return expandCopyZ(TII, MBB, MBBI);
   default:
     break;
   }

@@ -5,40 +5,39 @@ target triple = "kvx-kalray-cos"
 define void @loop_unrolling(i32* nocapture %t){
 ; CHECK-LABEL: loop_unrolling:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    make $r2 = 0
+; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_1: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    ord $r3 = $r1, 1
-; CHECK-NEXT:    ord $r4 = $r1, 2
-; CHECK-NEXT:    ord $r5 = $r1, 3
-; CHECK-NEXT:    ord $r6 = $r1, 4
+; CHECK-NEXT:    ord $r3 = $r2, 6
+; CHECK-NEXT:    sw 0[$r0] = $r1
+; CHECK-NEXT:    ord $r4 = $r2, 5
+; CHECK-NEXT:    ord $r5 = $r2, 7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ord $r7 = $r1, 5
-; CHECK-NEXT:    ord $r8 = $r1, 6
-; CHECK-NEXT:    ord $r9 = $r1, 7
-; CHECK-NEXT:    addd $r1 = $r1, 8
+; CHECK-NEXT:    ord $r6 = $r2, 3
+; CHECK-NEXT:    sw 24[$r0] = $r3
+; CHECK-NEXT:    ord $r7 = $r2, 4
+; CHECK-NEXT:    ord $r8 = $r2, 2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 0[$r0] = $r2
-; CHECK-NEXT:    addw $r2 = $r2, 8
+; CHECK-NEXT:    ord $r9 = $r2, 1
+; CHECK-NEXT:    addd $r2 = $r2, 8
+; CHECK-NEXT:    addd $r3 = $r0, 32
+; CHECK-NEXT:    sw 12[$r0] = $r6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 4[$r0] = $r3
-; CHECK-NEXT:    compd.eq $r3 = $r1, 1024
+; CHECK-NEXT:    sw 16[$r0] = $r7
+; CHECK-NEXT:    addw $r1 = $r1, 8
+; CHECK-NEXT:    compd.eq $r6 = $r2, 1024
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 8[$r0] = $r4
+; CHECK-NEXT:    sw 4[$r0] = $r9
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 12[$r0] = $r5
+; CHECK-NEXT:    sw 8[$r0] = $r8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 16[$r0] = $r6
+; CHECK-NEXT:    sw 28[$r0] = $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 20[$r0] = $r7
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 24[$r0] = $r8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 28[$r0] = $r9
-; CHECK-NEXT:    addd $r0 = $r0, 32
-; CHECK-NEXT:    cb.even $r3 ? .LBB0_1
+; CHECK-NEXT:    sw 20[$r0] = $r4
+; CHECK-NEXT:    copyd $r0 = $r3
+; CHECK-NEXT:    cb.even $r6 ? .LBB0_1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.2: # %for.cond.cleanup
 ; CHECK-NEXT:    ret
