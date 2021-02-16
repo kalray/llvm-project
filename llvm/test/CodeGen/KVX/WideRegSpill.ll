@@ -60,25 +60,30 @@ define i32 @a() {
 ; CHECK-NEXT:    goto .LBB0_1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_2: # in Loop: Header=BB0_1 Depth=1
-; CHECK-NEXT:    lv $a4 = 128[$r31]
+; CHECK-NEXT:    lv $a0 = 128[$r31]
 ; CHECK-NEXT:    compw.eq $r0 = $r0, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a5 = 160[$r31]
+; CHECK-NEXT:    lv $a1 = 160[$r31]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv $a2 = 192[$r31]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv $a3 = 224[$r31]
 ; CHECK-NEXT:    sllw $r0 = $r0, 6
+; CHECK-NEXT:    copyv $a4 = $a0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a6 = 192[$r31]
+; CHECK-NEXT:    copyv $a5 = $a1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a7 = 224[$r31]
+; CHECK-NEXT:    copyv $a1 = $a4
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyv $a0 = $a5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    alignv $a5 = $a1, $a0, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyv $a1 = $a4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    alignv $a4 = $a0, $a1, $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_5: # in Loop: Header=BB0_1 Depth=1
 ; CHECK-NEXT:    convwbv0.rz.sat $a0_x = $a4a5a6a7
+; CHECK-NEXT:    addd $r0 = $r19, 2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    convwbv1.rz.sat $a0_y = $a4a5a6a7
 ; CHECK-NEXT:    ;;
@@ -97,7 +102,7 @@ define i32 @a() {
 ; CHECK-NEXT:    convwbv3.rz.sat $a0_t = $a4a5a6a7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 0[$r19] = $a0
-; CHECK-NEXT:    addd $r19 = $r19, 2
+; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r21 = $r20
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_1: # =>This Loop Header: Depth=1
@@ -112,14 +117,13 @@ define i32 @a() {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    make $r1 = 3
+; CHECK-NEXT:    compw.ltu $r18 = $r18, 2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addw $r0 = $r0, 1
 ; CHECK-NEXT:    call __umoddi3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    compw.ltu $r1 = $r18, 2
 ; CHECK-NEXT:    zxwd $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.odd $r1 ? .LBB0_2
+; CHECK-NEXT:    cb.odd $r18 ? .LBB0_2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.3: # in Loop: Header=BB0_1 Depth=1
 ; CHECK-NEXT:    zxbd $r0 = $r0

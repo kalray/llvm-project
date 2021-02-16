@@ -52,11 +52,11 @@ define half @fidx(<4 x half> %v, i32 %idx){
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
+; CHECK-NEXT:    addd $r2 = $r12, 24
+; CHECK-NEXT:    andd $r1 = $r1, 3
 ; CHECK-NEXT:    sd 24[$r12] = $r0
-; CHECK-NEXT:    andd $r0 = $r1, 3
-; CHECK-NEXT:    addd $r1 = $r12, 24
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lhz.xs $r0 = $r0[$r1]
+; CHECK-NEXT:    lhz.xs $r0 = $r1[$r2]
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;

@@ -93,9 +93,9 @@ define <2 x double> @sub_v2f64_v2f64(<2 x double> %0, <2 x double> %1) {
 define <4 x double> @sub_v4f64_v4f64(<4 x double> %0, <4 x double> %1) {
 ; CHECK-LABEL: sub_v4f64_v4f64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fsbfdp $r2r3 = $r6r7, $r2r3
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fsbfdp $r0r1 = $r4r5, $r0r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fsbfdp $r2r3 = $r6r7, $r2r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = fsub <4 x double> %0, %1

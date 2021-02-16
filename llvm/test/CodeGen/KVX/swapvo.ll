@@ -16,27 +16,30 @@ define i32 @main() {
 ; CHECK-NEXT:    .cfi_def_cfa_offset 64
 ; CHECK-NEXT:    .cfi_register 67, 16
 ; CHECK-NEXT:    sd 56[$r12] = $r16
-; CHECK-NEXT:    make $r5 = 1
-; CHECK-NEXT:    make $r6 = 2
-; CHECK-NEXT:    make $r7 = 3
+; CHECK-NEXT:    make $r3 = 4
+; CHECK-NEXT:    make $r2 = 3
+; CHECK-NEXT:    make $r1 = 2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 67, -8
-; CHECK-NEXT:    make $r3 = 4
-; CHECK-NEXT:    copyd $r0 = $r5
-; CHECK-NEXT:    copyd $r1 = $r6
-; CHECK-NEXT:    copyd $r2 = $r7
+; CHECK-NEXT:    make $r0 = 1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyo $r4r5r6r7 = $r0r1r2r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r4 = 0
-; CHECK-NEXT:    movefo $r0r1r2r3 = $a0
-; CHECK-NEXT:    movetq $a0_lo = $r0, $r1
-; CHECK-NEXT:    movetq $a0_hi = $r2, $r3
+; CHECK-NEXT:    movefo $r4r5r6r7 = $a0
+; CHECK-NEXT:    movetq $a0_lo = $r4, $r5
+; CHECK-NEXT:    movetq $a0_hi = $r6, $r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 0[$r12] = $a0
+; CHECK-NEXT:    copyd $r6 = $r1
+; CHECK-NEXT:    copyd $r7 = $r2
+; CHECK-NEXT:    copyd $r5 = $r0
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r4
 ; CHECK-NEXT:    copyd $r2 = $r5
 ; CHECK-NEXT:    copyd $r3 = $r6
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r0 = .L.str
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r4 = $r7
 ; CHECK-NEXT:    call printf
 ; CHECK-NEXT:    ;;

@@ -34,12 +34,12 @@ define float @test_extract_i(<2 x float> %a, i64 %idx) #0 {
 ; CHECK-LABEL: test_extract_i:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    andd $r1 = $r1, 1
-; CHECK-NEXT:    addd $r0 = $r12, 24
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz.xs $r0 = $r1[$r0]
+; CHECK-NEXT:    addd $r2 = $r12, 24
+; CHECK-NEXT:    sd 24[$r12] = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lwz.xs $r0 = $r1[$r2]
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -147,11 +147,8 @@ define <2 x float> @test_fdiv(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-NEXT:    sd 16[$r12] = $r20
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 0[$r12] = $r18r19
-; CHECK-NEXT:    copyd $r18 = $r1
-; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r0 = $r19, 32
-; CHECK-NEXT:    srad $r1 = $r18, 32
+; CHECK-NEXT:    srad $r18 = $r1, 32
+; CHECK-NEXT:    srad $r19 = $r0, 32
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r20 = $r0
@@ -159,7 +156,9 @@ define <2 x float> @test_fdiv(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r20, 63, 32
+; CHECK-NEXT:    insf $r20 = $r0, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r20
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r20 = 16[$r12]
@@ -186,11 +185,8 @@ define <2 x float> @test_frem(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-NEXT:    sd 16[$r12] = $r20
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 0[$r12] = $r18r19
-; CHECK-NEXT:    copyd $r18 = $r1
-; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r0 = $r19, 32
-; CHECK-NEXT:    srad $r1 = $r18, 32
+; CHECK-NEXT:    srad $r18 = $r1, 32
+; CHECK-NEXT:    srad $r19 = $r0, 32
 ; CHECK-NEXT:    call fmodf
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r20 = $r0
@@ -198,7 +194,9 @@ define <2 x float> @test_frem(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    call fmodf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r20, 63, 32
+; CHECK-NEXT:    insf $r20 = $r0, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r20
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r20 = 16[$r12]
@@ -311,15 +309,15 @@ define <2 x float> @test_select_cc(<2 x float> %a, <2 x float> %b, <2 x float> %
 ; CHECK-LABEL: test_select_cc:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.une $r2 = $r2, $r3
-; CHECK-NEXT:    srad $r4 = $r1, 32
-; CHECK-NEXT:    srad $r5 = $r0, 32
+; CHECK-NEXT:    srad $r3 = $r1, 32
+; CHECK-NEXT:    srad $r4 = $r0, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r3 = $r2, 32
+; CHECK-NEXT:    srad $r5 = $r2, 32
 ; CHECK-NEXT:    cmoved.wnez $r2 ? $r1 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r3 ? $r4 = $r5
+; CHECK-NEXT:    cmoved.wnez $r5 ? $r3 = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r4, 63, 32
+; CHECK-NEXT:    insf $r1 = $r3, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
@@ -634,12 +632,14 @@ define <2 x i16> @test_fptoui_i16(<2 x float> %a) #0 {
 define <2 x i8> @test_fptosi_i8(<2 x float> %a) #0 {
 ; CHECK-LABEL: test_fptosi_i8:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r1 = $r0, 32
+; CHECK-NEXT:    fixedw.rz $r1 = $r0, 0
+; CHECK-NEXT:    srad $r0 = $r0, 32
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedw.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedw.rz $r1 = $r1, 0
+; CHECK-NEXT:    insf $r1 = $r0, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptosi <2 x float> %a to <2 x i8>
@@ -649,12 +649,14 @@ define <2 x i8> @test_fptosi_i8(<2 x float> %a) #0 {
 define <2 x i8> @test_fptoui_i8(<2 x float> %a) #0 {
 ; CHECK-LABEL: test_fptoui_i8:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r1 = $r0, 32
+; CHECK-NEXT:    fixeduw.rz $r1 = $r0, 0
+; CHECK-NEXT:    srad $r0 = $r0, 32
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixeduw.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixeduw.rz $r1 = $r1, 0
+; CHECK-NEXT:    insf $r1 = $r0, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptoui <2 x float> %a to <2 x i8>
@@ -845,16 +847,16 @@ define <2 x float> @test_sqrt(<2 x float> %a) #0 {
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
-; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r0 = $r18, 32
+; CHECK-NEXT:    srad $r18 = $r0, 32
 ; CHECK-NEXT:    call sqrtf
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    call sqrtf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r19, 63, 32
+; CHECK-NEXT:    insf $r19 = $r0, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
@@ -879,18 +881,18 @@ define <2 x float> @test_powi(<2 x float> %a, i32 %b) #0 {
 ; CHECK-NEXT:    sd 16[$r12] = $r20
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 0[$r12] = $r18r19
-; CHECK-NEXT:    copyd $r18 = $r1
-; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r0 = $r19, 32
+; CHECK-NEXT:    srad $r18 = $r0, 32
+; CHECK-NEXT:    copyd $r19 = $r1
 ; CHECK-NEXT:    call __powisf2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r20 = $r0
-; CHECK-NEXT:    copyd $r0 = $r19
-; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    copyd $r1 = $r19
 ; CHECK-NEXT:    call __powisf2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r20, 63, 32
+; CHECK-NEXT:    insf $r20 = $r0, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r20
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r20 = 16[$r12]
@@ -915,16 +917,16 @@ define <2 x float> @test_sin(<2 x float> %a) #0 {
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
-; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r0 = $r18, 32
+; CHECK-NEXT:    srad $r18 = $r0, 32
 ; CHECK-NEXT:    call sinf
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    call sinf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r19, 63, 32
+; CHECK-NEXT:    insf $r19 = $r0, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
@@ -947,16 +949,16 @@ define <2 x float> @test_cos(<2 x float> %a) #0 {
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
-; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r0 = $r18, 32
+; CHECK-NEXT:    srad $r18 = $r0, 32
 ; CHECK-NEXT:    call cosf
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    call cosf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r19, 63, 32
+; CHECK-NEXT:    insf $r19 = $r0, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
@@ -981,11 +983,8 @@ define <2 x float> @test_pow(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-NEXT:    sd 16[$r12] = $r20
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 0[$r12] = $r18r19
-; CHECK-NEXT:    copyd $r18 = $r1
-; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r0 = $r19, 32
-; CHECK-NEXT:    srad $r1 = $r18, 32
+; CHECK-NEXT:    srad $r18 = $r1, 32
+; CHECK-NEXT:    srad $r19 = $r0, 32
 ; CHECK-NEXT:    call powf
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r20 = $r0
@@ -993,7 +992,9 @@ define <2 x float> @test_pow(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    call powf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r20, 63, 32
+; CHECK-NEXT:    insf $r20 = $r0, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r20
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r20 = 16[$r12]
@@ -1018,16 +1019,16 @@ define <2 x float> @test_exp(<2 x float> %a) #0 {
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
-; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r0 = $r18, 32
+; CHECK-NEXT:    srad $r18 = $r0, 32
 ; CHECK-NEXT:    call expf
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    call expf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r19, 63, 32
+; CHECK-NEXT:    insf $r19 = $r0, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
@@ -1050,16 +1051,16 @@ define <2 x float> @test_exp2(<2 x float> %a) #0 {
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
-; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r0 = $r18, 32
+; CHECK-NEXT:    srad $r18 = $r0, 32
 ; CHECK-NEXT:    call exp2f
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    call exp2f
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r19, 63, 32
+; CHECK-NEXT:    insf $r19 = $r0, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
@@ -1082,16 +1083,16 @@ define <2 x float> @test_log(<2 x float> %a) #0 {
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
-; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r0 = $r18, 32
+; CHECK-NEXT:    srad $r18 = $r0, 32
 ; CHECK-NEXT:    call logf
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    call logf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r19, 63, 32
+; CHECK-NEXT:    insf $r19 = $r0, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
@@ -1114,16 +1115,16 @@ define <2 x float> @test_log10(<2 x float> %a) #0 {
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
-; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r0 = $r18, 32
+; CHECK-NEXT:    srad $r18 = $r0, 32
 ; CHECK-NEXT:    call log10f
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    call log10f
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r19, 63, 32
+; CHECK-NEXT:    insf $r19 = $r0, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
@@ -1146,16 +1147,16 @@ define <2 x float> @test_log2(<2 x float> %a) #0 {
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
-; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r0 = $r18, 32
+; CHECK-NEXT:    srad $r18 = $r0, 32
 ; CHECK-NEXT:    call log2f
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    call log2f
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r19, 63, 32
+; CHECK-NEXT:    insf $r19 = $r0, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
@@ -1202,11 +1203,8 @@ define <2 x float> @test_minnum(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-NEXT:    sd 16[$r12] = $r20
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 0[$r12] = $r18r19
-; CHECK-NEXT:    copyd $r18 = $r1
-; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r0 = $r19, 32
-; CHECK-NEXT:    srad $r1 = $r18, 32
+; CHECK-NEXT:    srad $r18 = $r1, 32
+; CHECK-NEXT:    srad $r19 = $r0, 32
 ; CHECK-NEXT:    call fminf
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r20 = $r0
@@ -1214,7 +1212,9 @@ define <2 x float> @test_minnum(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    call fminf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r20, 63, 32
+; CHECK-NEXT:    insf $r20 = $r0, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r20
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r20 = 16[$r12]
@@ -1251,11 +1251,8 @@ define <2 x float> @test_maxnum(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-NEXT:    sd 16[$r12] = $r20
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 0[$r12] = $r18r19
-; CHECK-NEXT:    copyd $r18 = $r1
-; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r0 = $r19, 32
-; CHECK-NEXT:    srad $r1 = $r18, 32
+; CHECK-NEXT:    srad $r18 = $r1, 32
+; CHECK-NEXT:    srad $r19 = $r0, 32
 ; CHECK-NEXT:    call fmaxf
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r20 = $r0
@@ -1263,7 +1260,9 @@ define <2 x float> @test_maxnum(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    call fmaxf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r20, 63, 32
+; CHECK-NEXT:    insf $r20 = $r0, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r20
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r20 = 16[$r12]
@@ -1374,16 +1373,16 @@ define <2 x float> @test_floor(<2 x float> %a) #0 {
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
-; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r0 = $r18, 32
+; CHECK-NEXT:    srad $r18 = $r0, 32
 ; CHECK-NEXT:    call floorf
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    call floorf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r19, 63, 32
+; CHECK-NEXT:    insf $r19 = $r0, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
@@ -1406,16 +1405,16 @@ define <2 x float> @test_ceil(<2 x float> %a) #0 {
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
-; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r0 = $r18, 32
+; CHECK-NEXT:    srad $r18 = $r0, 32
 ; CHECK-NEXT:    call ceilf
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    call ceilf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r19, 63, 32
+; CHECK-NEXT:    insf $r19 = $r0, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
@@ -1438,16 +1437,16 @@ define <2 x float> @test_trunc(<2 x float> %a) #0 {
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
-; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r0 = $r18, 32
+; CHECK-NEXT:    srad $r18 = $r0, 32
 ; CHECK-NEXT:    call truncf
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    call truncf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r19, 63, 32
+; CHECK-NEXT:    insf $r19 = $r0, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
@@ -1470,16 +1469,16 @@ define <2 x float> @test_rint(<2 x float> %a) #0 {
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
-; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r0 = $r18, 32
+; CHECK-NEXT:    srad $r18 = $r0, 32
 ; CHECK-NEXT:    call rintf
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    call rintf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r19, 63, 32
+; CHECK-NEXT:    insf $r19 = $r0, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
@@ -1502,16 +1501,16 @@ define <2 x float> @test_nearbyint(<2 x float> %a) #0 {
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
-; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r0 = $r18, 32
+; CHECK-NEXT:    srad $r18 = $r0, 32
 ; CHECK-NEXT:    call nearbyintf
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    call nearbyintf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r19, 63, 32
+; CHECK-NEXT:    insf $r19 = $r0, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
@@ -1534,16 +1533,16 @@ define <2 x float> @test_round(<2 x float> %a) #0 {
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
-; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r0 = $r18, 32
+; CHECK-NEXT:    srad $r18 = $r0, 32
 ; CHECK-NEXT:    call roundf
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    call roundf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r19, 63, 32
+; CHECK-NEXT:    insf $r19 = $r0, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]

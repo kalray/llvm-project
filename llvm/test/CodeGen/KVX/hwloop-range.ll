@@ -29,9 +29,10 @@ define void @test(i32* nocapture %a, i32* nocapture readonly %b, i32 %n) {
 ; CHECK-NEXT:    lwz $r4 = 0[$r2]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mulw $r3 = $r4, $r3
+; CHECK-NEXT:    copyd $r4 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 0[$r0] = $r3
-; CHECK-NEXT:    addd $r0 = $r0, 4
+; CHECK-NEXT:    addd $r0 = $r4, 4
+; CHECK-NEXT:    sw 0[$r4] = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .__LOOPDO_0_END_:
 ; CHECK-NEXT:  .LBB0_3: # %for.end

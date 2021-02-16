@@ -102,9 +102,9 @@ define i64 @atomicrmw_i64_xchg_as(i64 addrspace(1)* %ptr, i64 %c, i64 %s) {
 
 define i8 @atomic_test_and_set(i8* %ptr) {
 ; CHECK-LABEL: atomic_test_and_set:
-; CHECK:         fence
+; CHECK:         make $r1 = 1
+; CHECK-NEXT:    fence
 ; CHECK-NEXT:    andd $r3 = $r0, 3
-; CHECK-NEXT:    make $r1 = 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfd $r7 = $r3, 0
 ; CHECK-NEXT:    slld $r3 = $r3, 3

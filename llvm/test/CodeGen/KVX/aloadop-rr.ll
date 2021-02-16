@@ -12,6 +12,7 @@ define void @foo32() {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = a
 ; CHECK-NEXT:    make $r1 = b
+; CHECK-NEXT:    make $r2 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r0 = 0[$r0]
 ; CHECK-NEXT:    ;;
@@ -19,7 +20,6 @@ define void @foo32() {
 ; CHECK-NEXT:    slld $r0 = $r0, 2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fence
-; CHECK-NEXT:    make $r2 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_1: # %entry
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
@@ -49,6 +49,7 @@ define void @foo64() {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = a
 ; CHECK-NEXT:    make $r1 = c
+; CHECK-NEXT:    make $r2 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r0 = 0[$r0]
 ; CHECK-NEXT:    ;;
@@ -56,7 +57,6 @@ define void @foo64() {
 ; CHECK-NEXT:    slld $r0 = $r0, 3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fence
-; CHECK-NEXT:    make $r2 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB1_1: # %entry
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
