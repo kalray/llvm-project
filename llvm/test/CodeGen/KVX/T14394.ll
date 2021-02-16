@@ -20,32 +20,32 @@ define <4 x float> @select_cc(i32 %0, <4 x float> %1, <4 x float> %2) {
 ; CHECK-NEXT:    copyd $r3 = $r2
 ; CHECK-NEXT:    copyd $r2 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r1 = $r0
+; CHECK-NEXT:    copyw $r9 = $r0
 ; CHECK-NEXT:    make $r0 = -1
-; CHECK-NEXT:    srad $r6 = $r3, 32
-; CHECK-NEXT:    srad $r7 = $r4, 32
+; CHECK-NEXT:    srad $r1 = $r4, 32
+; CHECK-NEXT:    srad $r6 = $r5, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wlez $r1 ? $r0 = 0
-; CHECK-NEXT:    srad $r8 = $r2, 32
-; CHECK-NEXT:    srad $r1 = $r5, 32
+; CHECK-NEXT:    cmoved.wlez $r9 ? $r0 = 0
+; CHECK-NEXT:    srad $r8 = $r3, 32
+; CHECK-NEXT:    srad $r7 = $r2, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andnw $r5 = $r0, $r5
+; CHECK-NEXT:    andnw $r6 = $r0, $r6
 ; CHECK-NEXT:    andw $r3 = $r3, $r0
-; CHECK-NEXT:    andnw $r9 = $r0, $r1
-; CHECK-NEXT:    andw $r6 = $r6, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andnw $r4 = $r0, $r4
-; CHECK-NEXT:    andw $r2 = $r2, $r0
-; CHECK-NEXT:    andnw $r7 = $r0, $r7
+; CHECK-NEXT:    andw $r7 = $r7, $r0
 ; CHECK-NEXT:    andw $r8 = $r8, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    orw $r1 = $r3, $r5
-; CHECK-NEXT:    orw $r3 = $r6, $r9
-; CHECK-NEXT:    orw $r0 = $r2, $r4
-; CHECK-NEXT:    orw $r2 = $r8, $r7
+; CHECK-NEXT:    andnw $r1 = $r0, $r1
+; CHECK-NEXT:    andnw $r5 = $r0, $r5
+; CHECK-NEXT:    andnw $r4 = $r0, $r4
+; CHECK-NEXT:    andw $r0 = $r2, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 63, 32
-; CHECK-NEXT:    insf $r1 = $r3, 63, 32
+; CHECK-NEXT:    orw $r2 = $r8, $r6
+; CHECK-NEXT:    orw $r6 = $r7, $r1
+; CHECK-NEXT:    orw $r1 = $r3, $r5
+; CHECK-NEXT:    orw $r0 = $r0, $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r1 = $r2, 63, 32
+; CHECK-NEXT:    insf $r0 = $r6, 63, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %4 = icmp sgt i32 %0, 0

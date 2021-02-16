@@ -7,52 +7,53 @@ target triple = "kvx-kalray-cos"
 define internal fastcc void @init_array(double* nocapture %alpha, double* nocapture %beta, [4 x double]* nocapture %A, [4 x double]* nocapture %B, [4 x double]* nocapture %C, [4 x double]* nocapture %D, [4 x double]* nocapture %D_StrictFP) {
 ; CHECK-LABEL: init_array:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r4 = 0x40dfa70000000000
-; CHECK-NEXT:    make $r5 = 0x40a0960000000000
+; CHECK-NEXT:    make $r6 = 0x40dfa70000000000
+; CHECK-NEXT:    make $r7 = 0x40a0960000000000
+; CHECK-NEXT:    make $r4 = 0
+; CHECK-NEXT:    make $r5 = 4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 0[$r0] = $r4
-; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    sd 0[$r0] = $r6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 0[$r1] = $r5
-; CHECK-NEXT:    make $r1 = 4
+; CHECK-NEXT:    sd 0[$r1] = $r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_1: # %for.cond1.preheader
 ; CHECK-NEXT:    # =>This Loop Header: Depth=1
 ; CHECK-NEXT:    # Child Loop BB0_2 Depth 2
-; CHECK-NEXT:    zxwd $r4 = $r0
-; CHECK-NEXT:    make $r5 = 0
+; CHECK-NEXT:    zxwd $r0 = $r4
+; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    make $r6 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r4 = $r4
+; CHECK-NEXT:    sxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatd.rn $r4 = $r4, 0
+; CHECK-NEXT:    floatd.rn $r0 = $r0, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    loopdo $r1, .__LOOPDO_1_END_
+; CHECK-NEXT:    loopdo $r5, .__LOOPDO_1_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_2: # %for.body3
 ; CHECK-NEXT:    # Parent Loop BB0_1 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
-; CHECK-NEXT:    sxwd $r7 = $r5
-; CHECK-NEXT:    addw $r5 = $r5, 1
+; CHECK-NEXT:    sxwd $r7 = $r1
+; CHECK-NEXT:    copyd $r8 = $r6
+; CHECK-NEXT:    addw $r1 = $r1, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    floatd.rn $r7 = $r7, 0
+; CHECK-NEXT:    addd $r6 = $r8, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld $r7 = $r4, $r7
+; CHECK-NEXT:    fmuld $r7 = $r0, $r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmuld $r7 = $r7, 0x3fd0000000000000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd.xs $r6[$r2] = $r7
-; CHECK-NEXT:    addd $r6 = $r6, 1
+; CHECK-NEXT:    sd.xs $r8[$r2] = $r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .__LOOPDO_1_END_:
 ; CHECK-NEXT:  # %bb.3: # %for.inc8
 ; CHECK-NEXT:    # in Loop: Header=BB0_1 Depth=1
-; CHECK-NEXT:    addd $r0 = $r0, 1
+; CHECK-NEXT:    addd $r4 = $r4, 1
 ; CHECK-NEXT:    addd $r2 = $r2, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    compd.ne $r4 = $r0, 4
+; CHECK-NEXT:    compd.ne $r0 = $r4, 4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.odd $r4 ? .LBB0_1
+; CHECK-NEXT:    cb.odd $r0 ? .LBB0_1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.4: # %for.cond15.preheader.preheader
 ; CHECK-NEXT:    make $r0 = 0
@@ -75,16 +76,17 @@ define internal fastcc void @init_array(double* nocapture %alpha, double* nocapt
 ; CHECK-NEXT:    # Parent Loop BB0_5 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
 ; CHECK-NEXT:    sxwd $r6 = $r4
+; CHECK-NEXT:    copyd $r7 = $r5
 ; CHECK-NEXT:    addw $r4 = $r4, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    floatd.rn $r6 = $r6, 0
+; CHECK-NEXT:    addd $r5 = $r7, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmuld $r6 = $r2, $r6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmuld $r6 = $r6, 0x3fd0000000000000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd.xs $r5[$r3] = $r6
-; CHECK-NEXT:    addd $r5 = $r5, 1
+; CHECK-NEXT:    sd.xs $r7[$r3] = $r6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .__LOOPDO_0_END_:
 ; CHECK-NEXT:  # %bb.7: # %for.inc31

@@ -96,8 +96,8 @@ define half @ffmahq_v1_ri(half %a, half %b) {
 ; CHECK-LABEL: ffmahq_v1_ri:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r2 = 0x4300
-; CHECK-NEXT:    zxhd $r1 = $r1
 ; CHECK-NEXT:    zxhd $r0 = $r0
+; CHECK-NEXT:    zxhd $r1 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    zxhd $r2 = $r2
 ; CHECK-NEXT:    ;;
@@ -419,12 +419,12 @@ entry:
 define <4 x float> @fmawp_x2(<4 x float> %a, <4 x float> %b, <4 x float> %c) {
 ; CHECK-LABEL: fmawp_x2:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    copyd $r0 = $r4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmawp $r1 = $r1, $r3
+; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmawp $r0 = $r0, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmawp $r1 = $r1, $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = fmul fast <4 x float> %c, %b
@@ -463,18 +463,18 @@ define <4 x float> @fmawp_x2_int(<4 x float> %a, <4 x float> %b, <4 x float> %c)
 define <8 x float> @fmawp_x4(<8 x float> %a, <8 x float> %b, <8 x float> %c) {
 ; CHECK-LABEL: fmawp_x4:
 ; CHECK:       # %bb.0:
+; CHECK-NEXT:    copyd $r0 = $r8
+; CHECK-NEXT:    copyd $r1 = $r9
 ; CHECK-NEXT:    copyd $r3 = $r11
 ; CHECK-NEXT:    copyd $r2 = $r10
-; CHECK-NEXT:    copyd $r1 = $r9
-; CHECK-NEXT:    copyd $r0 = $r8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmawp $r0 = $r0, $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmawp $r1 = $r1, $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmawp $r3 = $r3, $r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmawp $r2 = $r2, $r6
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmawp $r1 = $r1, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmawp $r0 = $r0, $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 %1 = fmul fast <8 x float> %c, %b
@@ -489,9 +489,9 @@ define <8 x float> @not_fmawp_x4(<8 x float> %a, <8 x float> %b, <8 x float> %c)
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmulwq $r2r3 = $r10r11, $r6r7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddwq $r2r3 = $r2r3, $r10r11
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    faddwq $r0r1 = $r0r1, $r8r9
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    faddwq $r2r3 = $r2r3, $r10r11
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 %1 = fmul <8 x float> %c, %b
@@ -504,15 +504,15 @@ define <8 x float> @int_fmawp_x4(<8 x float> %a, <8 x float> %b, <8 x float> %c)
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ffmawp $r8 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmawp $r11 = $r3, $r7
-; CHECK-NEXT:    copyd $r0 = $r8
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmawp $r9 = $r1, $r5
+; CHECK-NEXT:    copyd $r0 = $r8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmawp $r10 = $r2, $r6
 ; CHECK-NEXT:    copyd $r1 = $r9
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmawp $r11 = $r3, $r7
 ; CHECK-NEXT:    copyd $r2 = $r10
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r3 = $r11
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -566,9 +566,9 @@ define <8 x float> @fmswp_x4(<8 x float> %a, <8 x float> %b, <8 x float> %c) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmawp $r3 = $r7, $r11
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmawp $r1 = $r5, $r9
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmawp $r2 = $r6, $r10
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmawp $r1 = $r5, $r9
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmawp $r0 = $r4, $r8
 ; CHECK-NEXT:    ret
@@ -581,13 +581,13 @@ ret <8 x float> %2
 define <8 x float> @not_fmswp_x4(<8 x float> %a, <8 x float> %b, <8 x float> %c) {
 ; CHECK-LABEL: not_fmswp_x4:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fmulwq $r0r1 = $r8r9, $r4r5
+; CHECK-NEXT:    fmulwq $r0r1 = $r10r11, $r6r7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulwq $r2r3 = $r10r11, $r6r7
+; CHECK-NEXT:    fmulwq $r4r5 = $r8r9, $r4r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfwq $r2r3 = $r10r11, $r2r3
+; CHECK-NEXT:    fsbfwq $r2r3 = $r10r11, $r0r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfwq $r0r1 = $r8r9, $r0r1
+; CHECK-NEXT:    fsbfwq $r0r1 = $r8r9, $r4r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 %1 = fmul <8 x float> %c, %b
@@ -745,8 +745,8 @@ define half @fmshq_v1_ri(half %a, half %b) {
 ; CHECK-LABEL: fmshq_v1_ri:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r2 = 0xdfd0
-; CHECK-NEXT:    zxhd $r1 = $r1
 ; CHECK-NEXT:    zxhd $r0 = $r0
+; CHECK-NEXT:    zxhd $r1 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    zxhd $r2 = $r2
 ; CHECK-NEXT:    ;;
@@ -763,8 +763,8 @@ define half @fmahq_v1_ri(half %a, half %b) {
 ; CHECK-LABEL: fmahq_v1_ri:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r2 = 0x5fd0
-; CHECK-NEXT:    zxhd $r1 = $r1
 ; CHECK-NEXT:    zxhd $r0 = $r0
+; CHECK-NEXT:    zxhd $r1 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    zxhd $r2 = $r2
 ; CHECK-NEXT:    ;;

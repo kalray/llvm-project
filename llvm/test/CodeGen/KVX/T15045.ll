@@ -16,8 +16,8 @@ target triple = "kvx-kalray-cos"
 define void @_Z1av() {
 ; CHECK-LABEL: _Z1av:
 ; CHECK:         addd $r12 = $r12, -32
-; CHECK-NEXT:    fence
 ; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    fence
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    copyd $r3 = $r0

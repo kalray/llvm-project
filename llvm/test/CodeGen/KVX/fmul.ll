@@ -95,13 +95,13 @@ define <2 x double> @mul_v2f64_v2f64(<2 x double> %0, <2 x double> %1) {
 define <4 x double> @mul_v4f64_v4f64(<4 x double> %0, <4 x double> %1) {
 ; CHECK-LABEL: mul_v4f64_v4f64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fmuld $r1 = $r1, $r5
+; CHECK-NEXT:    fmuld $r3 = $r3, $r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmuld $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld $r2 = $r2, $r6
+; CHECK-NEXT:    fmuld $r1 = $r1, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld $r3 = $r3, $r7
+; CHECK-NEXT:    fmuld $r2 = $r2, $r6
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = fmul <4 x double> %0, %1

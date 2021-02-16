@@ -8,11 +8,11 @@ define void @test5(i8 %b, i8 %c){
 ; CHECK-LABEL: test5:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    zxbd $r0 = $r0
+; CHECK-NEXT:    make $r2 = a
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sllw $r0 = $r0, $r1
-; CHECK-NEXT:    make $r1 = a
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r1] = $r0
+; CHECK-NEXT:    sb 0[$r2] = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -28,11 +28,11 @@ define void @test5b(i8 %b, i8 %c){
 ; CHECK-LABEL: test5b:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    zxbd $r0 = $r0
+; CHECK-NEXT:    make $r2 = a
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srlw $r0 = $r0, $r1
-; CHECK-NEXT:    make $r1 = a
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r1] = $r0
+; CHECK-NEXT:    sb 0[$r2] = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

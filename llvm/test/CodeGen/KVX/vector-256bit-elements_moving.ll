@@ -585,9 +585,9 @@ entry:
 define void @v2i64_concat_v4i64(<2 x i64> *%0, <2 x i64> *%1, <4 x i64> *%2){
 ; CHECK-LABEL: v2i64_concat_v4i64:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    lq $r4r5 = 0[$r0]
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lq $r6r7 = 0[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lq $r4r5 = 0[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    so 0[$r2] = $r4r5r6r7
 ; CHECK-NEXT:    ret
@@ -652,9 +652,9 @@ entry:
 define void @v2double_concat_v4double(<2 x double> *%0, <2 x double> *%1, <4 x double> *%2){
 ; CHECK-LABEL: v2double_concat_v4double:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    lq $r4r5 = 0[$r0]
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lq $r6r7 = 0[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lq $r4r5 = 0[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    so 0[$r2] = $r4r5r6r7
 ; CHECK-NEXT:    ret
@@ -670,9 +670,9 @@ entry:
 define void @v2double_concat_v4double_unaligned(double * align 1 %0, <4 x double>* %out){
 ; CHECK-LABEL: v2double_concat_v4double_unaligned:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    lq $r4r5 = 0[$r0]
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lq $r6r7 = 64[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lq $r4r5 = 0[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    so 0[$r1] = $r4r5r6r7
 ; CHECK-NEXT:    ret
@@ -690,9 +690,9 @@ entry:
 define void @v2i64_concat_v4i64_unaligned(i64 * align 1 %0, <4 x i64>* %out){
 ; CHECK-LABEL: v2i64_concat_v4i64_unaligned:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    lq $r4r5 = 0[$r0]
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lq $r6r7 = 64[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lq $r4r5 = 0[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    so 0[$r1] = $r4r5r6r7
 ; CHECK-NEXT:    ret
@@ -711,12 +711,12 @@ define void @v2i64_concat_v4i64_unaligned2(i64* nocapture readonly %0){
 ; CHECK-LABEL: v2i64_concat_v4i64_unaligned2:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    lq $r4r5 = 0[$r0]
+; CHECK-NEXT:    lq $r2r3 = 64[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    lq $r6r7 = 64[$r0]
+; CHECK-NEXT:    lq $r0r1 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    so 0[$r12] = $r4r5r6r7
+; CHECK-NEXT:    so 0[$r12] = $r0r1r2r3
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;

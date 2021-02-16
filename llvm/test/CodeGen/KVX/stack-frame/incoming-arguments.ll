@@ -22,7 +22,6 @@ define i32 @fn1(i32 %a, i32 %b, i32 %c, i32 %d, i32 %e, i32 %f, i32 %g, i32 %h, 
 ; FP-NONE-NEXT:    lwz $r2 = 8[$r12]
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    addw $r0 = $r0, $r3
-; FP-NONE-NEXT:    lwz $r3 = 16[$r12]
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    addw $r0 = $r0, $r4
 ; FP-NONE-NEXT:    ;;
@@ -41,10 +40,11 @@ define i32 @fn1(i32 %a, i32 %b, i32 %c, i32 %d, i32 %e, i32 %f, i32 %g, i32 %h, 
 ; FP-NONE-NEXT:    addw $r0 = $r0, $r11
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    addw $r0 = $r0, $r1
+; FP-NONE-NEXT:    lwz $r1 = 16[$r12]
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    addw $r0 = $r0, $r2
 ; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:    addw $r0 = $r0, $r3
+; FP-NONE-NEXT:    addw $r0 = $r0, $r1
 ; FP-NONE-NEXT:    ret
 ; FP-NONE-NEXT:    ;;
 ;
@@ -70,7 +70,6 @@ define i32 @fn1(i32 %a, i32 %b, i32 %c, i32 %d, i32 %e, i32 %f, i32 %g, i32 %h, 
 ; FP-ALL-NEXT:    lwz $r2 = 24[$r14]
 ; FP-ALL-NEXT:    addw $r0 = $r0, $r3
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    lwz $r3 = 32[$r14]
 ; FP-ALL-NEXT:    addw $r0 = $r0, $r4
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    addw $r0 = $r0, $r5
@@ -88,10 +87,11 @@ define i32 @fn1(i32 %a, i32 %b, i32 %c, i32 %d, i32 %e, i32 %f, i32 %g, i32 %h, 
 ; FP-ALL-NEXT:    addw $r0 = $r0, $r11
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    addw $r0 = $r0, $r1
+; FP-ALL-NEXT:    lwz $r1 = 32[$r14]
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    addw $r0 = $r0, $r2
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    addw $r0 = $r0, $r3
+; FP-ALL-NEXT:    addw $r0 = $r0, $r1
 ; FP-ALL-NEXT:    addd $r12 = $r14, -16
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    ld $r14 = 16[$r12]

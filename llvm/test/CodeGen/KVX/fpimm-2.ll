@@ -32,10 +32,10 @@ entry:
 define float @f32_comp_imm(float %f) {
 ; CHECK-LABEL: f32_comp_imm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x3f800000
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompw.une $r2 = $r0, $r1
+; CHECK-NEXT:    make $r2 = 0x3f800000
 ; CHECK-NEXT:    fnegw $r1 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompw.une $r2 = $r0, $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.wnez $r2 ? $r1 = $r0
 ; CHECK-NEXT:    ;;

@@ -227,8 +227,8 @@ entry:
 define <4 x i32> @sadd_satv4i32(<4 x i32> %a, <4 x i32> %b) {
 ; CHECK-LABEL: sadd_satv4i32:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addswp $r0 = $r2, $r0
 ; CHECK-NEXT:    addswp $r1 = $r3, $r1
+; CHECK-NEXT:    addswp $r0 = $r2, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

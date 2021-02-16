@@ -8,9 +8,9 @@ define i64 @asm_clobber_single_none(<2 x i64> %v, i64 %A) {
 ; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 64
-; CHECK-NEXT:    sq 48[$r12] = $r0r1
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 40[$r12] = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sq 48[$r12] = $r0r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    movetq $r4r5 = $r0, $r1
@@ -99,9 +99,9 @@ define i8* @asm_clobber_single_quad(i8* %A, i8* %B, i8* %C) {
 ; CHECK-NEXT:    copyd $r4 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    sd 24[$r12] = $r0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 16[$r12] = $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 8[$r12] = $r2
 ; CHECK-NEXT:    ;;
@@ -198,46 +198,51 @@ entry:
 define float @asm_clobber_multiple_quad(float %a, <2 x i64> %b, <4 x i64> %c) {
 ; CHECK-LABEL: asm_clobber_multiple_quad:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addd $r12 = $r12, -64
+; CHECK-NEXT:    addd $r12 = $r12, -96
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 64
+; CHECK-NEXT:    .cfi_def_cfa_offset 96
 ; CHECK-NEXT:    .cfi_register 67, 16
-; CHECK-NEXT:    sd 56[$r12] = $r16
-; CHECK-NEXT:    copyd $r7 = $r6
-; CHECK-NEXT:    copyd $r6 = $r5
-; CHECK-NEXT:    copyd $r9 = $r2
+; CHECK-NEXT:    sd 88[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 67, -8
-; CHECK-NEXT:    copyd $r5 = $r4
-; CHECK-NEXT:    sw 52[$r12] = $r0
+; CHECK-NEXT:    sd 80[$r12] = $r18
+; CHECK-NEXT:    copyd $r7 = $r6
+; CHECK-NEXT:    copyd $r9 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_offset 18, -16
+; CHECK-NEXT:    sw 76[$r12] = $r0
+; CHECK-NEXT:    copyd $r6 = $r5
 ; CHECK-NEXT:    copyd $r8 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sq 32[$r12] = $r8r9
+; CHECK-NEXT:    sq 48[$r12] = $r8r9
+; CHECK-NEXT:    copyd $r5 = $r4
 ; CHECK-NEXT:    copyd $r4 = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    so 0[$r12] = $r4r5r6r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    #NO_APP
-; CHECK-NEXT:    lq $r0r1 = 32[$r12]
+; CHECK-NEXT:    lq $r0r1 = 48[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r2 = 0[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lwz $r18 = 76[$r12]
 ; CHECK-NEXT:    addd $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r0 = $r0, $r2
 ; CHECK-NEXT:    call __floatdisf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r1 = 52[$r12]
+; CHECK-NEXT:    faddw $r0 = $r18, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddw $r0 = $r1, $r0
+; CHECK-NEXT:    sw 76[$r12] = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 52[$r12] = $r0
+; CHECK-NEXT:    ld $r18 = 80[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 56[$r12]
+; CHECK-NEXT:    ld $r16 = 88[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 64
+; CHECK-NEXT:    addd $r12 = $r12, 96
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -361,11 +366,19 @@ define i64 @local_regs(i32 %a, i64 %b, i64 %c, i64 %d, i64 %e, i64 %f, i64 %g) {
 ; CHECK-NEXT:    sw 124[$r12] = $r0
 ; CHECK-NEXT:    zxwd $r7 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 112[$r12] = $r1
+; CHECK-NEXT:    sd 56[$r12] = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 104[$r12] = $r2
+; CHECK-NEXT:    sd 24[$r12] = $r6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 32[$r12] = $r5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 40[$r12] = $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 48[$r12] = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 96[$r12] = $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 112[$r12] = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 88[$r12] = $r4
 ; CHECK-NEXT:    ;;
@@ -373,17 +386,9 @@ define i64 @local_regs(i32 %a, i64 %b, i64 %c, i64 %d, i64 %e, i64 %f, i64 %g) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 72[$r12] = $r6
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 104[$r12] = $r2
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 64[$r12] = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 56[$r12] = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 48[$r12] = $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 40[$r12] = $r4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 32[$r12] = $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r6
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    copyd $r1 = $r2
 ; CHECK-NEXT:    copyd $r2 = $r3

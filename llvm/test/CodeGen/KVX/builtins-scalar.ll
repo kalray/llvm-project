@@ -404,8 +404,8 @@ declare float @llvm.kvx.faddw(float, float, i32) #1
 define double @faddd(float %v1, float %v2){
 ; CHECK-LABEL: faddd:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fwidenlwd $r0 = $r0
 ; CHECK-NEXT:    fwidenlwd $r1 = $r1
+; CHECK-NEXT:    fwidenlwd $r0 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    faddd.rz $r0 = $r0, $r1
 ; CHECK-NEXT:    ret

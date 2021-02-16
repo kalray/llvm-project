@@ -18,8 +18,8 @@ declare <4 x i16> @llvm.kvx.abdhq(<4 x i16>, <4 x i16>)
 define <8 x i16> @abdho(<8 x i16> %a, <8 x i16> %b) {
 ; CHECK-LABEL: abdho:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    abdhq $r0 = $r0, $r2
 ; CHECK-NEXT:    abdhq $r1 = $r1, $r3
+; CHECK-NEXT:    abdhq $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -36,11 +36,11 @@ entry:
 define <16 x i16> @abdhx(<16 x i16> %a, <16 x i16> %b) {
 ; CHECK-LABEL: abdhx:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    abdhq $r0 = $r0, $r4
-; CHECK-NEXT:    abdhq $r1 = $r1, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    abdhq $r2 = $r2, $r6
 ; CHECK-NEXT:    abdhq $r3 = $r3, $r7
+; CHECK-NEXT:    abdhq $r0 = $r0, $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    abdhq $r1 = $r1, $r5
+; CHECK-NEXT:    abdhq $r2 = $r2, $r6
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -80,8 +80,8 @@ declare <2 x i32> @llvm.kvx.abdwp(<2 x i32>, <2 x i32>)
 define <4 x i32> @abdwq(<4 x i32> %a, <4 x i32> %b) {
 ; CHECK-LABEL: abdwq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    abdwp $r0 = $r0, $r2
 ; CHECK-NEXT:    abdwp $r1 = $r1, $r3
+; CHECK-NEXT:    abdwp $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -98,11 +98,11 @@ entry:
 define <8 x i32> @abdwo(<8 x i32> %a, <8 x i32> %b) {
 ; CHECK-LABEL: abdwo:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    abdwp $r0 = $r0, $r4
-; CHECK-NEXT:    abdwp $r1 = $r1, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    abdwp $r2 = $r2, $r6
 ; CHECK-NEXT:    abdwp $r3 = $r3, $r7
+; CHECK-NEXT:    abdwp $r0 = $r0, $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    abdwp $r1 = $r1, $r5
+; CHECK-NEXT:    abdwp $r2 = $r2, $r6
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -129,8 +129,8 @@ entry:
 define <2 x i64> @abddp(<2 x i64> %a, <2 x i64> %b) {
 ; CHECK-LABEL: abddp:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    abdd $r0 = $r0, $r2
 ; CHECK-NEXT:    abdd $r1 = $r1, $r3
+; CHECK-NEXT:    abdd $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -150,11 +150,11 @@ declare i64 @llvm.kvx.abdd(i64, i64)
 define <4 x i64> @abddq(<4 x i64> %a, <4 x i64> %b) {
 ; CHECK-LABEL: abddq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    abdd $r0 = $r0, $r4
-; CHECK-NEXT:    abdd $r1 = $r1, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    abdd $r2 = $r2, $r6
 ; CHECK-NEXT:    abdd $r3 = $r3, $r7
+; CHECK-NEXT:    abdd $r0 = $r0, $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    abdd $r1 = $r1, $r5
+; CHECK-NEXT:    abdd $r2 = $r2, $r6
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -200,8 +200,8 @@ define <8 x i16> @abdhos(<8 x i16> %a, i16 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x201020102010201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    abdhq $r0 = $r0, $r2
 ; CHECK-NEXT:    abdhq $r1 = $r1, $r2
+; CHECK-NEXT:    abdhq $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -221,11 +221,11 @@ define <16 x i16> @abdhxs(<16 x i16> %a, i16 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x201020102010201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    abdhq $r0 = $r0, $r4
-; CHECK-NEXT:    abdhq $r1 = $r1, $r4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    abdhq $r2 = $r2, $r4
 ; CHECK-NEXT:    abdhq $r3 = $r3, $r4
+; CHECK-NEXT:    abdhq $r2 = $r2, $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    abdhq $r1 = $r1, $r4
+; CHECK-NEXT:    abdhq $r0 = $r0, $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -269,8 +269,8 @@ define <4 x i32> @abdwqs(<4 x i32> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x804020108040201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    abdwp $r0 = $r0, $r2
 ; CHECK-NEXT:    abdwp $r1 = $r1, $r2
+; CHECK-NEXT:    abdwp $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -290,11 +290,11 @@ define <8 x i32> @abdwos(<8 x i32> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x804020108040201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    abdwp $r0 = $r0, $r4
 ; CHECK-NEXT:    abdwp $r1 = $r1, $r4
+; CHECK-NEXT:    abdwp $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    abdwp $r2 = $r2, $r4
 ; CHECK-NEXT:    abdwp $r3 = $r3, $r4
+; CHECK-NEXT:    abdwp $r2 = $r2, $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -320,8 +320,8 @@ entry:
 define <2 x i64> @abddps(<2 x i64> %a, i64 %b) {
 ; CHECK-LABEL: abddps:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    abdd $r0 = $r0, $r2
 ; CHECK-NEXT:    abdd $r1 = $r1, $r2
+; CHECK-NEXT:    abdd $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -337,8 +337,8 @@ entry:
 define <4 x i64> @abddqs(<4 x i64> %a, i64 %b) {
 ; CHECK-LABEL: abddqs:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    abdd $r0 = $r0, $r4
 ; CHECK-NEXT:    abdd $r1 = $r1, $r4
+; CHECK-NEXT:    abdd $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    abdd $r2 = $r2, $r4
 ; CHECK-NEXT:    abdd $r3 = $r3, $r4
@@ -376,8 +376,8 @@ declare <4 x i16> @llvm.kvx.avghq(<4 x i16>, <4 x i16>)
 define <8 x i16> @avgho(<8 x i16> %a, <8 x i16> %b) {
 ; CHECK-LABEL: avgho:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    avghq $r0 = $r0, $r2
 ; CHECK-NEXT:    avghq $r1 = $r1, $r3
+; CHECK-NEXT:    avghq $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -394,11 +394,11 @@ entry:
 define <16 x i16> @avghx(<16 x i16> %a, <16 x i16> %b) {
 ; CHECK-LABEL: avghx:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    avghq $r0 = $r0, $r4
-; CHECK-NEXT:    avghq $r1 = $r1, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    avghq $r2 = $r2, $r6
 ; CHECK-NEXT:    avghq $r3 = $r3, $r7
+; CHECK-NEXT:    avghq $r0 = $r0, $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    avghq $r1 = $r1, $r5
+; CHECK-NEXT:    avghq $r2 = $r2, $r6
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -438,8 +438,8 @@ declare <2 x i32> @llvm.kvx.avgwp(<2 x i32>, <2 x i32>)
 define <4 x i32> @avgwq(<4 x i32> %a, <4 x i32> %b) {
 ; CHECK-LABEL: avgwq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    avgwp $r0 = $r0, $r2
 ; CHECK-NEXT:    avgwp $r1 = $r1, $r3
+; CHECK-NEXT:    avgwp $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -456,11 +456,11 @@ entry:
 define <8 x i32> @avgwo(<8 x i32> %a, <8 x i32> %b) {
 ; CHECK-LABEL: avgwo:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    avgwp $r0 = $r0, $r4
-; CHECK-NEXT:    avgwp $r1 = $r1, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    avgwp $r2 = $r2, $r6
 ; CHECK-NEXT:    avgwp $r3 = $r3, $r7
+; CHECK-NEXT:    avgwp $r0 = $r0, $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    avgwp $r1 = $r1, $r5
+; CHECK-NEXT:    avgwp $r2 = $r2, $r6
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -500,8 +500,8 @@ declare <4 x i16> @llvm.kvx.avguhq(<4 x i16>, <4 x i16>)
 define <8 x i16> @avguho(<8 x i16> %a, <8 x i16> %b) {
 ; CHECK-LABEL: avguho:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    avguhq $r0 = $r0, $r2
 ; CHECK-NEXT:    avguhq $r1 = $r1, $r3
+; CHECK-NEXT:    avguhq $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -518,11 +518,11 @@ entry:
 define <16 x i16> @avguhx(<16 x i16> %a, <16 x i16> %b) {
 ; CHECK-LABEL: avguhx:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    avguhq $r0 = $r0, $r4
-; CHECK-NEXT:    avguhq $r1 = $r1, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    avguhq $r2 = $r2, $r6
 ; CHECK-NEXT:    avguhq $r3 = $r3, $r7
+; CHECK-NEXT:    avguhq $r0 = $r0, $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    avguhq $r1 = $r1, $r5
+; CHECK-NEXT:    avguhq $r2 = $r2, $r6
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -562,8 +562,8 @@ declare <2 x i32> @llvm.kvx.avguwp(<2 x i32>, <2 x i32>)
 define <4 x i32> @avguwq(<4 x i32> %a, <4 x i32> %b) {
 ; CHECK-LABEL: avguwq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    avguwp $r0 = $r0, $r2
 ; CHECK-NEXT:    avguwp $r1 = $r1, $r3
+; CHECK-NEXT:    avguwp $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -580,11 +580,11 @@ entry:
 define <8 x i32> @avguwo(<8 x i32> %a, <8 x i32> %b) {
 ; CHECK-LABEL: avguwo:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    avguwp $r0 = $r0, $r4
-; CHECK-NEXT:    avguwp $r1 = $r1, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    avguwp $r2 = $r2, $r6
 ; CHECK-NEXT:    avguwp $r3 = $r3, $r7
+; CHECK-NEXT:    avguwp $r0 = $r0, $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    avguwp $r1 = $r1, $r5
+; CHECK-NEXT:    avguwp $r2 = $r2, $r6
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -624,8 +624,8 @@ declare <4 x i16> @llvm.kvx.avgrhq(<4 x i16>, <4 x i16>)
 define <8 x i16> @avgrho(<8 x i16> %a, <8 x i16> %b) {
 ; CHECK-LABEL: avgrho:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    avgrhq $r0 = $r0, $r2
 ; CHECK-NEXT:    avgrhq $r1 = $r1, $r3
+; CHECK-NEXT:    avgrhq $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -642,11 +642,11 @@ entry:
 define <16 x i16> @avgrhx(<16 x i16> %a, <16 x i16> %b) {
 ; CHECK-LABEL: avgrhx:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    avgrhq $r0 = $r0, $r4
-; CHECK-NEXT:    avgrhq $r1 = $r1, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    avgrhq $r2 = $r2, $r6
 ; CHECK-NEXT:    avgrhq $r3 = $r3, $r7
+; CHECK-NEXT:    avgrhq $r0 = $r0, $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    avgrhq $r1 = $r1, $r5
+; CHECK-NEXT:    avgrhq $r2 = $r2, $r6
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -686,8 +686,8 @@ declare <2 x i32> @llvm.kvx.avgrwp(<2 x i32>, <2 x i32>)
 define <4 x i32> @avgrwq(<4 x i32> %a, <4 x i32> %b) {
 ; CHECK-LABEL: avgrwq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    avgrwp $r0 = $r0, $r2
 ; CHECK-NEXT:    avgrwp $r1 = $r1, $r3
+; CHECK-NEXT:    avgrwp $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -704,11 +704,11 @@ entry:
 define <8 x i32> @avgrwo(<8 x i32> %a, <8 x i32> %b) {
 ; CHECK-LABEL: avgrwo:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    avgrwp $r0 = $r0, $r4
-; CHECK-NEXT:    avgrwp $r1 = $r1, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    avgrwp $r2 = $r2, $r6
 ; CHECK-NEXT:    avgrwp $r3 = $r3, $r7
+; CHECK-NEXT:    avgrwp $r0 = $r0, $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    avgrwp $r1 = $r1, $r5
+; CHECK-NEXT:    avgrwp $r2 = $r2, $r6
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -748,8 +748,8 @@ declare <4 x i16> @llvm.kvx.avgruhq(<4 x i16>, <4 x i16>)
 define <8 x i16> @avgruho(<8 x i16> %a, <8 x i16> %b) {
 ; CHECK-LABEL: avgruho:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    avgruhq $r0 = $r0, $r2
 ; CHECK-NEXT:    avgruhq $r1 = $r1, $r3
+; CHECK-NEXT:    avgruhq $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -766,11 +766,11 @@ entry:
 define <16 x i16> @avgruhx(<16 x i16> %a, <16 x i16> %b) {
 ; CHECK-LABEL: avgruhx:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    avgruhq $r0 = $r0, $r4
-; CHECK-NEXT:    avgruhq $r1 = $r1, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    avgruhq $r2 = $r2, $r6
 ; CHECK-NEXT:    avgruhq $r3 = $r3, $r7
+; CHECK-NEXT:    avgruhq $r0 = $r0, $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    avgruhq $r1 = $r1, $r5
+; CHECK-NEXT:    avgruhq $r2 = $r2, $r6
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -810,8 +810,8 @@ declare <2 x i32> @llvm.kvx.avgruwp(<2 x i32>, <2 x i32>)
 define <4 x i32> @avgruwq(<4 x i32> %a, <4 x i32> %b) {
 ; CHECK-LABEL: avgruwq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    avgruwp $r0 = $r0, $r2
 ; CHECK-NEXT:    avgruwp $r1 = $r1, $r3
+; CHECK-NEXT:    avgruwp $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -828,11 +828,11 @@ entry:
 define <8 x i32> @avgruwo(<8 x i32> %a, <8 x i32> %b) {
 ; CHECK-LABEL: avgruwo:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    avgruwp $r0 = $r0, $r4
-; CHECK-NEXT:    avgruwp $r1 = $r1, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    avgruwp $r2 = $r2, $r6
 ; CHECK-NEXT:    avgruwp $r3 = $r3, $r7
+; CHECK-NEXT:    avgruwp $r0 = $r0, $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    avgruwp $r1 = $r1, $r5
+; CHECK-NEXT:    avgruwp $r2 = $r2, $r6
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -872,8 +872,8 @@ declare <4 x i16> @llvm.kvx.addshq(<4 x i16>, <4 x i16>)
 define <8 x i16> @addsho(<8 x i16> %a, <8 x i16> %b) {
 ; CHECK-LABEL: addsho:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addshq $r0 = $r0, $r2
 ; CHECK-NEXT:    addshq $r1 = $r1, $r3
+; CHECK-NEXT:    addshq $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -890,11 +890,11 @@ entry:
 define <16 x i16> @addshx(<16 x i16> %a, <16 x i16> %b) {
 ; CHECK-LABEL: addshx:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addshq $r0 = $r0, $r4
-; CHECK-NEXT:    addshq $r1 = $r1, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addshq $r2 = $r2, $r6
 ; CHECK-NEXT:    addshq $r3 = $r3, $r7
+; CHECK-NEXT:    addshq $r0 = $r0, $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addshq $r1 = $r1, $r5
+; CHECK-NEXT:    addshq $r2 = $r2, $r6
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -934,8 +934,8 @@ declare <2 x i32> @llvm.kvx.addswp(<2 x i32>, <2 x i32>)
 define <4 x i32> @addswq(<4 x i32> %a, <4 x i32> %b) {
 ; CHECK-LABEL: addswq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addswp $r0 = $r0, $r2
 ; CHECK-NEXT:    addswp $r1 = $r1, $r3
+; CHECK-NEXT:    addswp $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -952,11 +952,11 @@ entry:
 define <8 x i32> @addswo(<8 x i32> %a, <8 x i32> %b) {
 ; CHECK-LABEL: addswo:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addswp $r0 = $r0, $r4
-; CHECK-NEXT:    addswp $r1 = $r1, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addswp $r2 = $r2, $r6
 ; CHECK-NEXT:    addswp $r3 = $r3, $r7
+; CHECK-NEXT:    addswp $r0 = $r0, $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addswp $r1 = $r1, $r5
+; CHECK-NEXT:    addswp $r2 = $r2, $r6
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -983,8 +983,8 @@ entry:
 define <2 x i64> @addsdp(<2 x i64> %a, <2 x i64> %b) {
 ; CHECK-LABEL: addsdp:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addsd $r0 = $r0, $r2
 ; CHECK-NEXT:    addsd $r1 = $r1, $r3
+; CHECK-NEXT:    addsd $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1004,11 +1004,11 @@ declare i64 @llvm.kvx.addsd(i64, i64)
 define <4 x i64> @addsdq(<4 x i64> %a, <4 x i64> %b) {
 ; CHECK-LABEL: addsdq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addsd $r0 = $r0, $r4
-; CHECK-NEXT:    addsd $r1 = $r1, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addsd $r2 = $r2, $r6
 ; CHECK-NEXT:    addsd $r3 = $r3, $r7
+; CHECK-NEXT:    addsd $r0 = $r0, $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addsd $r1 = $r1, $r5
+; CHECK-NEXT:    addsd $r2 = $r2, $r6
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1052,8 +1052,8 @@ define <8 x i16> @addshos(<8 x i16> %a, i16 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x201020102010201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addshq $r0 = $r0, $r2
 ; CHECK-NEXT:    addshq $r1 = $r1, $r2
+; CHECK-NEXT:    addshq $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1073,11 +1073,11 @@ define <16 x i16> @addshxs(<16 x i16> %a, i16 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x201020102010201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addshq $r0 = $r0, $r4
-; CHECK-NEXT:    addshq $r1 = $r1, $r4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addshq $r2 = $r2, $r4
 ; CHECK-NEXT:    addshq $r3 = $r3, $r4
+; CHECK-NEXT:    addshq $r2 = $r2, $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addshq $r1 = $r1, $r4
+; CHECK-NEXT:    addshq $r0 = $r0, $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1121,8 +1121,8 @@ define <4 x i32> @addswqs(<4 x i32> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x804020108040201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addswp $r0 = $r0, $r2
 ; CHECK-NEXT:    addswp $r1 = $r1, $r2
+; CHECK-NEXT:    addswp $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1142,11 +1142,11 @@ define <8 x i32> @addswos(<8 x i32> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x804020108040201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addswp $r0 = $r0, $r4
 ; CHECK-NEXT:    addswp $r1 = $r1, $r4
+; CHECK-NEXT:    addswp $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addswp $r2 = $r2, $r4
 ; CHECK-NEXT:    addswp $r3 = $r3, $r4
+; CHECK-NEXT:    addswp $r2 = $r2, $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1172,8 +1172,8 @@ entry:
 define <2 x i64> @addsdps(<2 x i64> %a, i64 %b) {
 ; CHECK-LABEL: addsdps:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addsd $r0 = $r0, $r2
 ; CHECK-NEXT:    addsd $r1 = $r1, $r2
+; CHECK-NEXT:    addsd $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1189,8 +1189,8 @@ entry:
 define <4 x i64> @addsdqs(<4 x i64> %a, i64 %b) {
 ; CHECK-LABEL: addsdqs:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addsd $r0 = $r0, $r4
 ; CHECK-NEXT:    addsd $r1 = $r1, $r4
+; CHECK-NEXT:    addsd $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addsd $r2 = $r2, $r4
 ; CHECK-NEXT:    addsd $r3 = $r3, $r4
@@ -1228,8 +1228,8 @@ declare <4 x i16> @llvm.kvx.sbfshq(<4 x i16>, <4 x i16>)
 define <8 x i16> @sbfsho(<8 x i16> %a, <8 x i16> %b) {
 ; CHECK-LABEL: sbfsho:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbfshq $r0 = $r0, $r2
 ; CHECK-NEXT:    sbfshq $r1 = $r1, $r3
+; CHECK-NEXT:    sbfshq $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1246,11 +1246,11 @@ entry:
 define <16 x i16> @sbfshx(<16 x i16> %a, <16 x i16> %b) {
 ; CHECK-LABEL: sbfshx:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbfshq $r0 = $r0, $r4
-; CHECK-NEXT:    sbfshq $r1 = $r1, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfshq $r2 = $r2, $r6
 ; CHECK-NEXT:    sbfshq $r3 = $r3, $r7
+; CHECK-NEXT:    sbfshq $r0 = $r0, $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbfshq $r1 = $r1, $r5
+; CHECK-NEXT:    sbfshq $r2 = $r2, $r6
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1290,8 +1290,8 @@ declare <2 x i32> @llvm.kvx.sbfswp(<2 x i32>, <2 x i32>)
 define <4 x i32> @sbfswq(<4 x i32> %a, <4 x i32> %b) {
 ; CHECK-LABEL: sbfswq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbfswp $r0 = $r0, $r2
 ; CHECK-NEXT:    sbfswp $r1 = $r1, $r3
+; CHECK-NEXT:    sbfswp $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1308,11 +1308,11 @@ entry:
 define <8 x i32> @sbfswo(<8 x i32> %a, <8 x i32> %b) {
 ; CHECK-LABEL: sbfswo:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbfswp $r0 = $r0, $r4
-; CHECK-NEXT:    sbfswp $r1 = $r1, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfswp $r2 = $r2, $r6
 ; CHECK-NEXT:    sbfswp $r3 = $r3, $r7
+; CHECK-NEXT:    sbfswp $r0 = $r0, $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbfswp $r1 = $r1, $r5
+; CHECK-NEXT:    sbfswp $r2 = $r2, $r6
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1339,8 +1339,8 @@ entry:
 define <2 x i64> @sbfsdp(<2 x i64> %a, <2 x i64> %b) {
 ; CHECK-LABEL: sbfsdp:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbfsd $r0 = $r0, $r2
 ; CHECK-NEXT:    sbfsd $r1 = $r1, $r3
+; CHECK-NEXT:    sbfsd $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1360,11 +1360,11 @@ declare i64 @llvm.kvx.sbfsd(i64, i64)
 define <4 x i64> @sbfsdq(<4 x i64> %a, <4 x i64> %b) {
 ; CHECK-LABEL: sbfsdq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbfsd $r0 = $r0, $r4
-; CHECK-NEXT:    sbfsd $r1 = $r1, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfsd $r2 = $r2, $r6
 ; CHECK-NEXT:    sbfsd $r3 = $r3, $r7
+; CHECK-NEXT:    sbfsd $r0 = $r0, $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbfsd $r1 = $r1, $r5
+; CHECK-NEXT:    sbfsd $r2 = $r2, $r6
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1408,8 +1408,8 @@ define <8 x i16> @sbfshos(<8 x i16> %a, i16 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x201020102010201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfshq $r0 = $r0, $r2
 ; CHECK-NEXT:    sbfshq $r1 = $r1, $r2
+; CHECK-NEXT:    sbfshq $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1429,11 +1429,11 @@ define <16 x i16> @sbfshxs(<16 x i16> %a, i16 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x201020102010201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfshq $r0 = $r0, $r4
-; CHECK-NEXT:    sbfshq $r1 = $r1, $r4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfshq $r2 = $r2, $r4
 ; CHECK-NEXT:    sbfshq $r3 = $r3, $r4
+; CHECK-NEXT:    sbfshq $r2 = $r2, $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbfshq $r1 = $r1, $r4
+; CHECK-NEXT:    sbfshq $r0 = $r0, $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1477,8 +1477,8 @@ define <4 x i32> @sbfswqs(<4 x i32> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x804020108040201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfswp $r0 = $r0, $r2
 ; CHECK-NEXT:    sbfswp $r1 = $r1, $r2
+; CHECK-NEXT:    sbfswp $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1498,11 +1498,11 @@ define <8 x i32> @sbfswos(<8 x i32> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x804020108040201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfswp $r0 = $r0, $r4
 ; CHECK-NEXT:    sbfswp $r1 = $r1, $r4
+; CHECK-NEXT:    sbfswp $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfswp $r2 = $r2, $r4
 ; CHECK-NEXT:    sbfswp $r3 = $r3, $r4
+; CHECK-NEXT:    sbfswp $r2 = $r2, $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1528,8 +1528,8 @@ entry:
 define <2 x i64> @sbfsdps(<2 x i64> %a, i64 %b) {
 ; CHECK-LABEL: sbfsdps:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbfsd $r0 = $r0, $r2
 ; CHECK-NEXT:    sbfsd $r1 = $r1, $r2
+; CHECK-NEXT:    sbfsd $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1545,8 +1545,8 @@ entry:
 define <4 x i64> @sbfsdqs(<4 x i64> %a, i64 %b) {
 ; CHECK-LABEL: sbfsdqs:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbfsd $r0 = $r0, $r4
 ; CHECK-NEXT:    sbfsd $r1 = $r1, $r4
+; CHECK-NEXT:    sbfsd $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfsd $r2 = $r2, $r4
 ; CHECK-NEXT:    sbfsd $r3 = $r3, $r4
@@ -1610,8 +1610,8 @@ declare <4 x i16> @llvm.kvx.minhq(<4 x i16>, <4 x i16>)
 define <8 x i16> @minho(<8 x i16> %a, <8 x i16> %b) {
 ; CHECK-LABEL: minho:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    minhq $r0 = $r0, $r2
 ; CHECK-NEXT:    minhq $r1 = $r1, $r3
+; CHECK-NEXT:    minhq $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1628,10 +1628,10 @@ entry:
 define <16 x i16> @minhx(<16 x i16> %a, <16 x i16> %b) {
 ; CHECK-LABEL: minhx:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    minhq $r3 = $r3, $r7
 ; CHECK-NEXT:    minhq $r0 = $r0, $r4
 ; CHECK-NEXT:    minhq $r1 = $r1, $r5
 ; CHECK-NEXT:    minhq $r2 = $r2, $r6
-; CHECK-NEXT:    minhq $r3 = $r3, $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1671,8 +1671,8 @@ declare <2 x i32> @llvm.kvx.minwp(<2 x i32>, <2 x i32>)
 define <4 x i32> @minwq(<4 x i32> %a, <4 x i32> %b) {
 ; CHECK-LABEL: minwq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    minwp $r0 = $r0, $r2
 ; CHECK-NEXT:    minwp $r1 = $r1, $r3
+; CHECK-NEXT:    minwp $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1689,10 +1689,10 @@ entry:
 define <8 x i32> @minwo(<8 x i32> %a, <8 x i32> %b) {
 ; CHECK-LABEL: minwo:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    minwp $r3 = $r3, $r7
 ; CHECK-NEXT:    minwp $r0 = $r0, $r4
 ; CHECK-NEXT:    minwp $r1 = $r1, $r5
 ; CHECK-NEXT:    minwp $r2 = $r2, $r6
-; CHECK-NEXT:    minwp $r3 = $r3, $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1719,8 +1719,8 @@ entry:
 define <2 x i64> @mindp(<2 x i64> %a, <2 x i64> %b) {
 ; CHECK-LABEL: mindp:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    mind $r0 = $r0, $r2
 ; CHECK-NEXT:    mind $r1 = $r1, $r3
+; CHECK-NEXT:    mind $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1738,10 +1738,10 @@ entry:
 define <4 x i64> @mindq(<4 x i64> %a, <4 x i64> %b) {
 ; CHECK-LABEL: mindq:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    mind $r3 = $r3, $r7
 ; CHECK-NEXT:    mind $r0 = $r0, $r4
 ; CHECK-NEXT:    mind $r1 = $r1, $r5
 ; CHECK-NEXT:    mind $r2 = $r2, $r6
-; CHECK-NEXT:    mind $r3 = $r3, $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1785,8 +1785,8 @@ define <8 x i16> @minhos(<8 x i16> %a, i16 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x201020102010201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    minhq $r0 = $r0, $r2
 ; CHECK-NEXT:    minhq $r1 = $r1, $r2
+; CHECK-NEXT:    minhq $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1806,10 +1806,10 @@ define <16 x i16> @minhxs(<16 x i16> %a, i16 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x201020102010201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    minhq $r0 = $r0, $r4
-; CHECK-NEXT:    minhq $r1 = $r1, $r4
-; CHECK-NEXT:    minhq $r2 = $r2, $r4
 ; CHECK-NEXT:    minhq $r3 = $r3, $r4
+; CHECK-NEXT:    minhq $r2 = $r2, $r4
+; CHECK-NEXT:    minhq $r1 = $r1, $r4
+; CHECK-NEXT:    minhq $r0 = $r0, $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1853,8 +1853,8 @@ define <4 x i32> @minwqs(<4 x i32> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x804020108040201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    minwp $r0 = $r0, $r2
 ; CHECK-NEXT:    minwp $r1 = $r1, $r2
+; CHECK-NEXT:    minwp $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1874,10 +1874,10 @@ define <8 x i32> @minwos(<8 x i32> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x804020108040201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    minwp $r0 = $r0, $r4
 ; CHECK-NEXT:    minwp $r1 = $r1, $r4
-; CHECK-NEXT:    minwp $r2 = $r2, $r4
+; CHECK-NEXT:    minwp $r0 = $r0, $r4
 ; CHECK-NEXT:    minwp $r3 = $r3, $r4
+; CHECK-NEXT:    minwp $r2 = $r2, $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1903,8 +1903,8 @@ entry:
 define <2 x i64> @mindps(<2 x i64> %a, i64 %b) {
 ; CHECK-LABEL: mindps:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    mind $r0 = $r0, $r2
 ; CHECK-NEXT:    mind $r1 = $r1, $r2
+; CHECK-NEXT:    mind $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1920,8 +1920,8 @@ entry:
 define <4 x i64> @mindqs(<4 x i64> %a, i64 %b) {
 ; CHECK-LABEL: mindqs:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    mind $r0 = $r0, $r4
 ; CHECK-NEXT:    mind $r1 = $r1, $r4
+; CHECK-NEXT:    mind $r0 = $r0, $r4
 ; CHECK-NEXT:    mind $r2 = $r2, $r4
 ; CHECK-NEXT:    mind $r3 = $r3, $r4
 ; CHECK-NEXT:    ret
@@ -1984,8 +1984,8 @@ declare <4 x i16> @llvm.kvx.maxhq(<4 x i16>, <4 x i16>)
 define <8 x i16> @maxho(<8 x i16> %a, <8 x i16> %b) {
 ; CHECK-LABEL: maxho:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    maxhq $r0 = $r0, $r2
 ; CHECK-NEXT:    maxhq $r1 = $r1, $r3
+; CHECK-NEXT:    maxhq $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2002,10 +2002,10 @@ entry:
 define <16 x i16> @maxhx(<16 x i16> %a, <16 x i16> %b) {
 ; CHECK-LABEL: maxhx:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    maxhq $r3 = $r3, $r7
 ; CHECK-NEXT:    maxhq $r0 = $r0, $r4
 ; CHECK-NEXT:    maxhq $r1 = $r1, $r5
 ; CHECK-NEXT:    maxhq $r2 = $r2, $r6
-; CHECK-NEXT:    maxhq $r3 = $r3, $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2045,8 +2045,8 @@ declare <2 x i32> @llvm.kvx.maxwp(<2 x i32>, <2 x i32>)
 define <4 x i32> @maxwq(<4 x i32> %a, <4 x i32> %b) {
 ; CHECK-LABEL: maxwq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    maxwp $r0 = $r0, $r2
 ; CHECK-NEXT:    maxwp $r1 = $r1, $r3
+; CHECK-NEXT:    maxwp $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2063,10 +2063,10 @@ entry:
 define <8 x i32> @maxwo(<8 x i32> %a, <8 x i32> %b) {
 ; CHECK-LABEL: maxwo:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    maxwp $r3 = $r3, $r7
 ; CHECK-NEXT:    maxwp $r0 = $r0, $r4
 ; CHECK-NEXT:    maxwp $r1 = $r1, $r5
 ; CHECK-NEXT:    maxwp $r2 = $r2, $r6
-; CHECK-NEXT:    maxwp $r3 = $r3, $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2093,8 +2093,8 @@ entry:
 define <2 x i64> @maxdp(<2 x i64> %a, <2 x i64> %b) {
 ; CHECK-LABEL: maxdp:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    maxd $r0 = $r0, $r2
 ; CHECK-NEXT:    maxd $r1 = $r1, $r3
+; CHECK-NEXT:    maxd $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2112,10 +2112,10 @@ entry:
 define <4 x i64> @maxdq(<4 x i64> %a, <4 x i64> %b) {
 ; CHECK-LABEL: maxdq:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    maxd $r3 = $r3, $r7
 ; CHECK-NEXT:    maxd $r0 = $r0, $r4
 ; CHECK-NEXT:    maxd $r1 = $r1, $r5
 ; CHECK-NEXT:    maxd $r2 = $r2, $r6
-; CHECK-NEXT:    maxd $r3 = $r3, $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2159,8 +2159,8 @@ define <8 x i16> @maxhos(<8 x i16> %a, i16 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x201020102010201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    maxhq $r0 = $r0, $r2
 ; CHECK-NEXT:    maxhq $r1 = $r1, $r2
+; CHECK-NEXT:    maxhq $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2180,10 +2180,10 @@ define <16 x i16> @maxhxs(<16 x i16> %a, i16 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x201020102010201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    maxhq $r0 = $r0, $r4
-; CHECK-NEXT:    maxhq $r1 = $r1, $r4
-; CHECK-NEXT:    maxhq $r2 = $r2, $r4
 ; CHECK-NEXT:    maxhq $r3 = $r3, $r4
+; CHECK-NEXT:    maxhq $r2 = $r2, $r4
+; CHECK-NEXT:    maxhq $r1 = $r1, $r4
+; CHECK-NEXT:    maxhq $r0 = $r0, $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2227,8 +2227,8 @@ define <4 x i32> @maxwqs(<4 x i32> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x804020108040201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    maxwp $r0 = $r0, $r2
 ; CHECK-NEXT:    maxwp $r1 = $r1, $r2
+; CHECK-NEXT:    maxwp $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2248,10 +2248,10 @@ define <8 x i32> @maxwos(<8 x i32> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x804020108040201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    maxwp $r0 = $r0, $r4
 ; CHECK-NEXT:    maxwp $r1 = $r1, $r4
-; CHECK-NEXT:    maxwp $r2 = $r2, $r4
+; CHECK-NEXT:    maxwp $r0 = $r0, $r4
 ; CHECK-NEXT:    maxwp $r3 = $r3, $r4
+; CHECK-NEXT:    maxwp $r2 = $r2, $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2277,8 +2277,8 @@ entry:
 define <2 x i64> @maxdps(<2 x i64> %a, i64 %b) {
 ; CHECK-LABEL: maxdps:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    maxd $r0 = $r0, $r2
 ; CHECK-NEXT:    maxd $r1 = $r1, $r2
+; CHECK-NEXT:    maxd $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2294,8 +2294,8 @@ entry:
 define <4 x i64> @maxdqs(<4 x i64> %a, i64 %b) {
 ; CHECK-LABEL: maxdqs:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    maxd $r0 = $r0, $r4
 ; CHECK-NEXT:    maxd $r1 = $r1, $r4
+; CHECK-NEXT:    maxd $r0 = $r0, $r4
 ; CHECK-NEXT:    maxd $r2 = $r2, $r4
 ; CHECK-NEXT:    maxd $r3 = $r3, $r4
 ; CHECK-NEXT:    ret
@@ -2380,8 +2380,8 @@ declare <4 x i16> @llvm.kvx.minuhq(<4 x i16>, <4 x i16>)
 define <8 x i16> @minuho(<8 x i16> %a, <8 x i16> %b) {
 ; CHECK-LABEL: minuho:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    minuhq $r0 = $r0, $r2
 ; CHECK-NEXT:    minuhq $r1 = $r1, $r3
+; CHECK-NEXT:    minuhq $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2398,10 +2398,10 @@ entry:
 define <16 x i16> @minuhx(<16 x i16> %a, <16 x i16> %b) {
 ; CHECK-LABEL: minuhx:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    minuhq $r3 = $r3, $r7
 ; CHECK-NEXT:    minuhq $r0 = $r0, $r4
 ; CHECK-NEXT:    minuhq $r1 = $r1, $r5
 ; CHECK-NEXT:    minuhq $r2 = $r2, $r6
-; CHECK-NEXT:    minuhq $r3 = $r3, $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2441,8 +2441,8 @@ declare <2 x i32> @llvm.kvx.minuwp(<2 x i32>, <2 x i32>)
 define <4 x i32> @minuwq(<4 x i32> %a, <4 x i32> %b) {
 ; CHECK-LABEL: minuwq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    minuwp $r0 = $r0, $r2
 ; CHECK-NEXT:    minuwp $r1 = $r1, $r3
+; CHECK-NEXT:    minuwp $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2459,10 +2459,10 @@ entry:
 define <8 x i32> @minuwo(<8 x i32> %a, <8 x i32> %b) {
 ; CHECK-LABEL: minuwo:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    minuwp $r3 = $r3, $r7
 ; CHECK-NEXT:    minuwp $r0 = $r0, $r4
 ; CHECK-NEXT:    minuwp $r1 = $r1, $r5
 ; CHECK-NEXT:    minuwp $r2 = $r2, $r6
-; CHECK-NEXT:    minuwp $r3 = $r3, $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2489,8 +2489,8 @@ entry:
 define <2 x i64> @minudp(<2 x i64> %a, <2 x i64> %b) {
 ; CHECK-LABEL: minudp:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    minud $r0 = $r0, $r2
 ; CHECK-NEXT:    minud $r1 = $r1, $r3
+; CHECK-NEXT:    minud $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2508,10 +2508,10 @@ entry:
 define <4 x i64> @minudq(<4 x i64> %a, <4 x i64> %b) {
 ; CHECK-LABEL: minudq:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    minud $r3 = $r3, $r7
 ; CHECK-NEXT:    minud $r0 = $r0, $r4
 ; CHECK-NEXT:    minud $r1 = $r1, $r5
 ; CHECK-NEXT:    minud $r2 = $r2, $r6
-; CHECK-NEXT:    minud $r3 = $r3, $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2555,8 +2555,8 @@ define <8 x i16> @minuhos(<8 x i16> %a, i16 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x201020102010201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    minuhq $r0 = $r0, $r2
 ; CHECK-NEXT:    minuhq $r1 = $r1, $r2
+; CHECK-NEXT:    minuhq $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2576,10 +2576,10 @@ define <16 x i16> @minuhxs(<16 x i16> %a, i16 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x201020102010201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    minuhq $r0 = $r0, $r4
-; CHECK-NEXT:    minuhq $r1 = $r1, $r4
-; CHECK-NEXT:    minuhq $r2 = $r2, $r4
 ; CHECK-NEXT:    minuhq $r3 = $r3, $r4
+; CHECK-NEXT:    minuhq $r2 = $r2, $r4
+; CHECK-NEXT:    minuhq $r1 = $r1, $r4
+; CHECK-NEXT:    minuhq $r0 = $r0, $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2623,8 +2623,8 @@ define <4 x i32> @minuwqs(<4 x i32> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x804020108040201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    minuwp $r0 = $r0, $r2
 ; CHECK-NEXT:    minuwp $r1 = $r1, $r2
+; CHECK-NEXT:    minuwp $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2644,10 +2644,10 @@ define <8 x i32> @minuwos(<8 x i32> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x804020108040201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    minuwp $r0 = $r0, $r4
 ; CHECK-NEXT:    minuwp $r1 = $r1, $r4
-; CHECK-NEXT:    minuwp $r2 = $r2, $r4
+; CHECK-NEXT:    minuwp $r0 = $r0, $r4
 ; CHECK-NEXT:    minuwp $r3 = $r3, $r4
+; CHECK-NEXT:    minuwp $r2 = $r2, $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2673,8 +2673,8 @@ entry:
 define <2 x i64> @minudps(<2 x i64> %a, i64 %b) {
 ; CHECK-LABEL: minudps:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    minud $r0 = $r0, $r2
 ; CHECK-NEXT:    minud $r1 = $r1, $r2
+; CHECK-NEXT:    minud $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2690,8 +2690,8 @@ entry:
 define <4 x i64> @minudqs(<4 x i64> %a, i64 %b) {
 ; CHECK-LABEL: minudqs:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    minud $r0 = $r0, $r4
 ; CHECK-NEXT:    minud $r1 = $r1, $r4
+; CHECK-NEXT:    minud $r0 = $r0, $r4
 ; CHECK-NEXT:    minud $r2 = $r2, $r4
 ; CHECK-NEXT:    minud $r3 = $r3, $r4
 ; CHECK-NEXT:    ret
@@ -2754,8 +2754,8 @@ declare <4 x i16> @llvm.kvx.maxuhq(<4 x i16>, <4 x i16>)
 define <8 x i16> @maxuho(<8 x i16> %a, <8 x i16> %b) {
 ; CHECK-LABEL: maxuho:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    maxuhq $r0 = $r0, $r2
 ; CHECK-NEXT:    maxuhq $r1 = $r1, $r3
+; CHECK-NEXT:    maxuhq $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2772,10 +2772,10 @@ entry:
 define <16 x i16> @maxuhx(<16 x i16> %a, <16 x i16> %b) {
 ; CHECK-LABEL: maxuhx:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    maxuhq $r3 = $r3, $r7
 ; CHECK-NEXT:    maxuhq $r0 = $r0, $r4
 ; CHECK-NEXT:    maxuhq $r1 = $r1, $r5
 ; CHECK-NEXT:    maxuhq $r2 = $r2, $r6
-; CHECK-NEXT:    maxuhq $r3 = $r3, $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2815,8 +2815,8 @@ declare <2 x i32> @llvm.kvx.maxuwp(<2 x i32>, <2 x i32>)
 define <4 x i32> @maxuwq(<4 x i32> %a, <4 x i32> %b) {
 ; CHECK-LABEL: maxuwq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    maxuwp $r0 = $r0, $r2
 ; CHECK-NEXT:    maxuwp $r1 = $r1, $r3
+; CHECK-NEXT:    maxuwp $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2833,10 +2833,10 @@ entry:
 define <8 x i32> @maxuwo(<8 x i32> %a, <8 x i32> %b) {
 ; CHECK-LABEL: maxuwo:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    maxuwp $r3 = $r3, $r7
 ; CHECK-NEXT:    maxuwp $r0 = $r0, $r4
 ; CHECK-NEXT:    maxuwp $r1 = $r1, $r5
 ; CHECK-NEXT:    maxuwp $r2 = $r2, $r6
-; CHECK-NEXT:    maxuwp $r3 = $r3, $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2863,8 +2863,8 @@ entry:
 define <2 x i64> @maxudp(<2 x i64> %a, <2 x i64> %b) {
 ; CHECK-LABEL: maxudp:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    maxud $r0 = $r0, $r2
 ; CHECK-NEXT:    maxud $r1 = $r1, $r3
+; CHECK-NEXT:    maxud $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2882,10 +2882,10 @@ entry:
 define <4 x i64> @maxudq(<4 x i64> %a, <4 x i64> %b) {
 ; CHECK-LABEL: maxudq:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    maxud $r3 = $r3, $r7
 ; CHECK-NEXT:    maxud $r0 = $r0, $r4
 ; CHECK-NEXT:    maxud $r1 = $r1, $r5
 ; CHECK-NEXT:    maxud $r2 = $r2, $r6
-; CHECK-NEXT:    maxud $r3 = $r3, $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2929,8 +2929,8 @@ define <8 x i16> @maxuhos(<8 x i16> %a, i16 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x201020102010201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    maxuhq $r0 = $r0, $r2
 ; CHECK-NEXT:    maxuhq $r1 = $r1, $r2
+; CHECK-NEXT:    maxuhq $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2950,10 +2950,10 @@ define <16 x i16> @maxuhxs(<16 x i16> %a, i16 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x201020102010201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    maxuhq $r0 = $r0, $r4
-; CHECK-NEXT:    maxuhq $r1 = $r1, $r4
-; CHECK-NEXT:    maxuhq $r2 = $r2, $r4
 ; CHECK-NEXT:    maxuhq $r3 = $r3, $r4
+; CHECK-NEXT:    maxuhq $r2 = $r2, $r4
+; CHECK-NEXT:    maxuhq $r1 = $r1, $r4
+; CHECK-NEXT:    maxuhq $r0 = $r0, $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2997,8 +2997,8 @@ define <4 x i32> @maxuwqs(<4 x i32> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x804020108040201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    maxuwp $r0 = $r0, $r2
 ; CHECK-NEXT:    maxuwp $r1 = $r1, $r2
+; CHECK-NEXT:    maxuwp $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3018,10 +3018,10 @@ define <8 x i32> @maxuwos(<8 x i32> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x804020108040201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    maxuwp $r0 = $r0, $r4
 ; CHECK-NEXT:    maxuwp $r1 = $r1, $r4
-; CHECK-NEXT:    maxuwp $r2 = $r2, $r4
+; CHECK-NEXT:    maxuwp $r0 = $r0, $r4
 ; CHECK-NEXT:    maxuwp $r3 = $r3, $r4
+; CHECK-NEXT:    maxuwp $r2 = $r2, $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3047,8 +3047,8 @@ entry:
 define <2 x i64> @maxudps(<2 x i64> %a, i64 %b) {
 ; CHECK-LABEL: maxudps:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    maxud $r0 = $r0, $r2
 ; CHECK-NEXT:    maxud $r1 = $r1, $r2
+; CHECK-NEXT:    maxud $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3064,8 +3064,8 @@ entry:
 define <4 x i64> @maxudqs(<4 x i64> %a, i64 %b) {
 ; CHECK-LABEL: maxudqs:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    maxud $r0 = $r0, $r4
 ; CHECK-NEXT:    maxud $r1 = $r1, $r4
+; CHECK-NEXT:    maxud $r0 = $r0, $r4
 ; CHECK-NEXT:    maxud $r2 = $r2, $r4
 ; CHECK-NEXT:    maxud $r3 = $r3, $r4
 ; CHECK-NEXT:    ret
@@ -3118,8 +3118,8 @@ define <8 x i16> @sllhos(<8 x i16> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sllhqs $r0 = $r0, $r2
 ; CHECK-NEXT:    sllhqs $r1 = $r1, $r2
+; CHECK-NEXT:    sllhqs $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3135,8 +3135,8 @@ entry:
 define <8 x i16> @sllhosimm(<8 x i16> %a) {
 ; CHECK-LABEL: sllhosimm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sllhqs $r0 = $r0, 3
 ; CHECK-NEXT:    sllhqs $r1 = $r1, 3
+; CHECK-NEXT:    sllhqs $r0 = $r0, 3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3155,8 +3155,8 @@ define void @sllhxs(<16 x i16> %a, i32 %b) {
 ; CHECK-NEXT:    zxwd $r4 = $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    sllhqs $r0 = $r0, $r4
 ; CHECK-NEXT:    sllhqs $r1 = $r1, $r4
+; CHECK-NEXT:    sllhqs $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sllhqs $r2 = $r2, $r4
 ; CHECK-NEXT:    sllhqs $r3 = $r3, $r4
@@ -3196,12 +3196,12 @@ define void @sllhxsimm(<16 x i16> %a) {
 ; CHECK-LABEL: sllhxsimm:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -32
+; CHECK-NEXT:    sllhqs $r3 = $r3, 3
 ; CHECK-NEXT:    sllhqs $r0 = $r0, 3
-; CHECK-NEXT:    sllhqs $r1 = $r1, 3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    sllhqs $r2 = $r2, 3
-; CHECK-NEXT:    sllhqs $r3 = $r3, 3
+; CHECK-NEXT:    sllhqs $r1 = $r1, 3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    so 0[$r12] = $r0r1r2r3
 ; CHECK-NEXT:    addd $r12 = $r12, 32
@@ -3281,8 +3281,8 @@ define <4 x i32> @sllwqs(<4 x i32> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sllwps $r0 = $r0, $r2
 ; CHECK-NEXT:    sllwps $r1 = $r1, $r2
+; CHECK-NEXT:    sllwps $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3298,8 +3298,8 @@ entry:
 define <4 x i32> @sllwqsimm(<4 x i32> %a) {
 ; CHECK-LABEL: sllwqsimm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sllwps $r0 = $r0, 3
 ; CHECK-NEXT:    sllwps $r1 = $r1, 3
+; CHECK-NEXT:    sllwps $r0 = $r0, 3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3316,11 +3316,11 @@ define <8 x i32> @sllwos(<8 x i32> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    zxwd $r4 = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sllwps $r0 = $r0, $r4
 ; CHECK-NEXT:    sllwps $r1 = $r1, $r4
+; CHECK-NEXT:    sllwps $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sllwps $r2 = $r2, $r4
 ; CHECK-NEXT:    sllwps $r3 = $r3, $r4
+; CHECK-NEXT:    sllwps $r2 = $r2, $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3344,11 +3344,11 @@ entry:
 define <8 x i32> @sllwosimm(<8 x i32> %a) {
 ; CHECK-LABEL: sllwosimm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sllwps $r0 = $r0, 3
+; CHECK-NEXT:    sllwps $r3 = $r3, 3
 ; CHECK-NEXT:    sllwps $r1 = $r1, 3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sllwps $r2 = $r2, 3
-; CHECK-NEXT:    sllwps $r3 = $r3, 3
+; CHECK-NEXT:    sllwps $r0 = $r0, 3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3373,8 +3373,8 @@ define <2 x i64> @slldps(<2 x i64> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    slld $r0 = $r0, $r2
 ; CHECK-NEXT:    slld $r1 = $r1, $r2
+; CHECK-NEXT:    slld $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3393,8 +3393,8 @@ declare i64 @llvm.kvx.slld(i64, i64)
 define <2 x i64> @slldpsimm(<2 x i64> %a) {
 ; CHECK-LABEL: slldpsimm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    slld $r0 = $r0, 3
 ; CHECK-NEXT:    slld $r1 = $r1, 3
+; CHECK-NEXT:    slld $r0 = $r0, 3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3412,10 +3412,10 @@ define <4 x i64> @slldqs(<4 x i64> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    zxwd $r4 = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    slld $r0 = $r0, $r4
 ; CHECK-NEXT:    slld $r1 = $r1, $r4
-; CHECK-NEXT:    slld $r2 = $r2, $r4
+; CHECK-NEXT:    slld $r0 = $r0, $r4
 ; CHECK-NEXT:    slld $r3 = $r3, $r4
+; CHECK-NEXT:    slld $r2 = $r2, $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3438,10 +3438,10 @@ entry:
 define <4 x i64> @slldqsimm(<4 x i64> %a) {
 ; CHECK-LABEL: slldqsimm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    slld $r0 = $r0, 3
+; CHECK-NEXT:    slld $r3 = $r3, 3
 ; CHECK-NEXT:    slld $r1 = $r1, 3
 ; CHECK-NEXT:    slld $r2 = $r2, 3
-; CHECK-NEXT:    slld $r3 = $r3, 3
+; CHECK-NEXT:    slld $r0 = $r0, 3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3492,8 +3492,8 @@ define <8 x i16> @slshos(<8 x i16> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    slshqs $r0 = $r0, $r2
 ; CHECK-NEXT:    slshqs $r1 = $r1, $r2
+; CHECK-NEXT:    slshqs $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3509,8 +3509,8 @@ entry:
 define <8 x i16> @slshosimm(<8 x i16> %a) {
 ; CHECK-LABEL: slshosimm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    slshqs $r0 = $r0, 3
 ; CHECK-NEXT:    slshqs $r1 = $r1, 3
+; CHECK-NEXT:    slshqs $r0 = $r0, 3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3527,11 +3527,11 @@ define <16 x i16> @slshxs(<16 x i16> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    zxwd $r4 = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    slshqs $r0 = $r0, $r4
 ; CHECK-NEXT:    slshqs $r1 = $r1, $r4
+; CHECK-NEXT:    slshqs $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    slshqs $r2 = $r2, $r4
 ; CHECK-NEXT:    slshqs $r3 = $r3, $r4
+; CHECK-NEXT:    slshqs $r2 = $r2, $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3555,11 +3555,11 @@ entry:
 define <16 x i16> @slshxsimm(<16 x i16> %a) {
 ; CHECK-LABEL: slshxsimm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    slshqs $r0 = $r0, 3
+; CHECK-NEXT:    slshqs $r3 = $r3, 3
 ; CHECK-NEXT:    slshqs $r1 = $r1, 3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    slshqs $r2 = $r2, 3
-; CHECK-NEXT:    slshqs $r3 = $r3, 3
+; CHECK-NEXT:    slshqs $r0 = $r0, 3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3611,8 +3611,8 @@ define <4 x i32> @slswqs(<4 x i32> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    slswps $r0 = $r0, $r2
 ; CHECK-NEXT:    slswps $r1 = $r1, $r2
+; CHECK-NEXT:    slswps $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3628,8 +3628,8 @@ entry:
 define <4 x i32> @slswqsimm(<4 x i32> %a) {
 ; CHECK-LABEL: slswqsimm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    slswps $r0 = $r0, 3
 ; CHECK-NEXT:    slswps $r1 = $r1, 3
+; CHECK-NEXT:    slswps $r0 = $r0, 3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3646,11 +3646,11 @@ define <8 x i32> @slswos(<8 x i32> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    zxwd $r4 = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    slswps $r0 = $r0, $r4
 ; CHECK-NEXT:    slswps $r1 = $r1, $r4
+; CHECK-NEXT:    slswps $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    slswps $r2 = $r2, $r4
 ; CHECK-NEXT:    slswps $r3 = $r3, $r4
+; CHECK-NEXT:    slswps $r2 = $r2, $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3674,11 +3674,11 @@ entry:
 define <8 x i32> @slswosimm(<8 x i32> %a) {
 ; CHECK-LABEL: slswosimm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    slswps $r0 = $r0, 3
+; CHECK-NEXT:    slswps $r3 = $r3, 3
 ; CHECK-NEXT:    slswps $r1 = $r1, 3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    slswps $r2 = $r2, 3
-; CHECK-NEXT:    slswps $r3 = $r3, 3
+; CHECK-NEXT:    slswps $r0 = $r0, 3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3703,8 +3703,8 @@ define <2 x i64> @slsdps(<2 x i64> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    slsd $r0 = $r0, $r2
 ; CHECK-NEXT:    slsd $r1 = $r1, $r2
+; CHECK-NEXT:    slsd $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3723,8 +3723,8 @@ declare i64 @llvm.kvx.slsd(i64, i64)
 define <2 x i64> @slsdpsimm(<2 x i64> %a) {
 ; CHECK-LABEL: slsdpsimm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    slsd $r0 = $r0, 3
 ; CHECK-NEXT:    slsd $r1 = $r1, 3
+; CHECK-NEXT:    slsd $r0 = $r0, 3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3742,11 +3742,11 @@ define <4 x i64> @slsdqs(<4 x i64> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    zxwd $r4 = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    slsd $r0 = $r0, $r4
 ; CHECK-NEXT:    slsd $r1 = $r1, $r4
+; CHECK-NEXT:    slsd $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    slsd $r2 = $r2, $r4
 ; CHECK-NEXT:    slsd $r3 = $r3, $r4
+; CHECK-NEXT:    slsd $r2 = $r2, $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3769,11 +3769,11 @@ entry:
 define <4 x i64> @slsdqsimm(<4 x i64> %a) {
 ; CHECK-LABEL: slsdqsimm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    slsd $r0 = $r0, 3
+; CHECK-NEXT:    slsd $r3 = $r3, 3
 ; CHECK-NEXT:    slsd $r1 = $r1, 3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    slsd $r2 = $r2, 3
-; CHECK-NEXT:    slsd $r3 = $r3, 3
+; CHECK-NEXT:    slsd $r0 = $r0, 3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3824,8 +3824,8 @@ define <8 x i16> @srahos(<8 x i16> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srahqs $r0 = $r0, $r2
 ; CHECK-NEXT:    srahqs $r1 = $r1, $r2
+; CHECK-NEXT:    srahqs $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3841,8 +3841,8 @@ entry:
 define <8 x i16> @srahosimm(<8 x i16> %a) {
 ; CHECK-LABEL: srahosimm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    srahqs $r0 = $r0, 3
 ; CHECK-NEXT:    srahqs $r1 = $r1, 3
+; CHECK-NEXT:    srahqs $r0 = $r0, 3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3861,8 +3861,8 @@ define void @srahxs(<16 x i16> %a, i32 %b) {
 ; CHECK-NEXT:    zxwd $r4 = $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    srahqs $r0 = $r0, $r4
 ; CHECK-NEXT:    srahqs $r1 = $r1, $r4
+; CHECK-NEXT:    srahqs $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srahqs $r2 = $r2, $r4
 ; CHECK-NEXT:    srahqs $r3 = $r3, $r4
@@ -3898,12 +3898,12 @@ define void @srahxsimm(<16 x i16> %a) {
 ; CHECK-LABEL: srahxsimm:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -32
+; CHECK-NEXT:    srahqs $r3 = $r3, 3
 ; CHECK-NEXT:    srahqs $r0 = $r0, 3
-; CHECK-NEXT:    srahqs $r1 = $r1, 3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    srahqs $r2 = $r2, 3
-; CHECK-NEXT:    srahqs $r3 = $r3, 3
+; CHECK-NEXT:    srahqs $r1 = $r1, 3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    so 0[$r12] = $r0r1r2r3
 ; CHECK-NEXT:    addd $r12 = $r12, 32
@@ -3963,8 +3963,8 @@ define <4 x i32> @srawqs(<4 x i32> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srawps $r0 = $r0, $r2
 ; CHECK-NEXT:    srawps $r1 = $r1, $r2
+; CHECK-NEXT:    srawps $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3980,8 +3980,8 @@ entry:
 define <4 x i32> @srawqsimm(<4 x i32> %a) {
 ; CHECK-LABEL: srawqsimm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    srawps $r0 = $r0, 3
 ; CHECK-NEXT:    srawps $r1 = $r1, 3
+; CHECK-NEXT:    srawps $r0 = $r0, 3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3998,11 +3998,11 @@ define <8 x i32> @srawos(<8 x i32> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    zxwd $r4 = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srawps $r0 = $r0, $r4
 ; CHECK-NEXT:    srawps $r1 = $r1, $r4
+; CHECK-NEXT:    srawps $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srawps $r2 = $r2, $r4
 ; CHECK-NEXT:    srawps $r3 = $r3, $r4
+; CHECK-NEXT:    srawps $r2 = $r2, $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4026,11 +4026,11 @@ entry:
 define <8 x i32> @srawosimm(<8 x i32> %a) {
 ; CHECK-LABEL: srawosimm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    srawps $r0 = $r0, 3
+; CHECK-NEXT:    srawps $r3 = $r3, 3
 ; CHECK-NEXT:    srawps $r1 = $r1, 3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srawps $r2 = $r2, 3
-; CHECK-NEXT:    srawps $r3 = $r3, 3
+; CHECK-NEXT:    srawps $r0 = $r0, 3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4055,8 +4055,8 @@ define <2 x i64> @sradps(<2 x i64> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r0 = $r0, $r2
 ; CHECK-NEXT:    srad $r1 = $r1, $r2
+; CHECK-NEXT:    srad $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4075,8 +4075,8 @@ declare i64 @llvm.kvx.srad(i64, i64)
 define <2 x i64> @sradpsimm(<2 x i64> %a) {
 ; CHECK-LABEL: sradpsimm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    srad $r0 = $r0, 3
 ; CHECK-NEXT:    srad $r1 = $r1, 3
+; CHECK-NEXT:    srad $r0 = $r0, 3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4094,10 +4094,10 @@ define <4 x i64> @sradqs(<4 x i64> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    zxwd $r4 = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r0 = $r0, $r4
 ; CHECK-NEXT:    srad $r1 = $r1, $r4
-; CHECK-NEXT:    srad $r2 = $r2, $r4
+; CHECK-NEXT:    srad $r0 = $r0, $r4
 ; CHECK-NEXT:    srad $r3 = $r3, $r4
+; CHECK-NEXT:    srad $r2 = $r2, $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4120,10 +4120,10 @@ entry:
 define <4 x i64> @sradqsimm(<4 x i64> %a) {
 ; CHECK-LABEL: sradqsimm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    srad $r0 = $r0, 3
+; CHECK-NEXT:    srad $r3 = $r3, 3
 ; CHECK-NEXT:    srad $r1 = $r1, 3
 ; CHECK-NEXT:    srad $r2 = $r2, 3
-; CHECK-NEXT:    srad $r3 = $r3, 3
+; CHECK-NEXT:    srad $r0 = $r0, 3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4174,8 +4174,8 @@ define <8 x i16> @srlhos(<8 x i16> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlhqs $r0 = $r0, $r2
 ; CHECK-NEXT:    srlhqs $r1 = $r1, $r2
+; CHECK-NEXT:    srlhqs $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4191,8 +4191,8 @@ entry:
 define <8 x i16> @srlhosimm(<8 x i16> %a) {
 ; CHECK-LABEL: srlhosimm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    srlhqs $r0 = $r0, 3
 ; CHECK-NEXT:    srlhqs $r1 = $r1, 3
+; CHECK-NEXT:    srlhqs $r0 = $r0, 3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4209,11 +4209,11 @@ define <16 x i16> @srlhxs(<16 x i16> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    zxwd $r4 = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlhqs $r0 = $r0, $r4
 ; CHECK-NEXT:    srlhqs $r1 = $r1, $r4
+; CHECK-NEXT:    srlhqs $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlhqs $r2 = $r2, $r4
 ; CHECK-NEXT:    srlhqs $r3 = $r3, $r4
+; CHECK-NEXT:    srlhqs $r2 = $r2, $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4237,11 +4237,11 @@ entry:
 define <16 x i16> @srlhxsimm(<16 x i16> %a) {
 ; CHECK-LABEL: srlhxsimm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    srlhqs $r0 = $r0, 3
+; CHECK-NEXT:    srlhqs $r3 = $r3, 3
 ; CHECK-NEXT:    srlhqs $r1 = $r1, 3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srlhqs $r2 = $r2, 3
-; CHECK-NEXT:    srlhqs $r3 = $r3, 3
+; CHECK-NEXT:    srlhqs $r0 = $r0, 3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4293,8 +4293,8 @@ define <4 x i32> @srlwqs(<4 x i32> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlwps $r0 = $r0, $r2
 ; CHECK-NEXT:    srlwps $r1 = $r1, $r2
+; CHECK-NEXT:    srlwps $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4310,8 +4310,8 @@ entry:
 define <4 x i32> @srlwqsimm(<4 x i32> %a) {
 ; CHECK-LABEL: srlwqsimm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    srlwps $r0 = $r0, 3
 ; CHECK-NEXT:    srlwps $r1 = $r1, 3
+; CHECK-NEXT:    srlwps $r0 = $r0, 3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4328,11 +4328,11 @@ define <8 x i32> @srlwos(<8 x i32> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    zxwd $r4 = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlwps $r0 = $r0, $r4
 ; CHECK-NEXT:    srlwps $r1 = $r1, $r4
+; CHECK-NEXT:    srlwps $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlwps $r2 = $r2, $r4
 ; CHECK-NEXT:    srlwps $r3 = $r3, $r4
+; CHECK-NEXT:    srlwps $r2 = $r2, $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4356,11 +4356,11 @@ entry:
 define <8 x i32> @srlwosimm(<8 x i32> %a) {
 ; CHECK-LABEL: srlwosimm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    srlwps $r0 = $r0, 3
+; CHECK-NEXT:    srlwps $r3 = $r3, 3
 ; CHECK-NEXT:    srlwps $r1 = $r1, 3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srlwps $r2 = $r2, 3
-; CHECK-NEXT:    srlwps $r3 = $r3, 3
+; CHECK-NEXT:    srlwps $r0 = $r0, 3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4385,8 +4385,8 @@ define <2 x i64> @srldps(<2 x i64> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srld $r0 = $r0, $r2
 ; CHECK-NEXT:    srld $r1 = $r1, $r2
+; CHECK-NEXT:    srld $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4405,8 +4405,8 @@ declare i64 @llvm.kvx.srld(i64, i64)
 define <2 x i64> @srldpsimm(<2 x i64> %a) {
 ; CHECK-LABEL: srldpsimm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    srld $r0 = $r0, 3
 ; CHECK-NEXT:    srld $r1 = $r1, 3
+; CHECK-NEXT:    srld $r0 = $r0, 3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4424,10 +4424,10 @@ define <4 x i64> @srldqs(<4 x i64> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    zxwd $r4 = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srld $r0 = $r0, $r4
 ; CHECK-NEXT:    srld $r1 = $r1, $r4
-; CHECK-NEXT:    srld $r2 = $r2, $r4
+; CHECK-NEXT:    srld $r0 = $r0, $r4
 ; CHECK-NEXT:    srld $r3 = $r3, $r4
+; CHECK-NEXT:    srld $r2 = $r2, $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4450,10 +4450,10 @@ entry:
 define <4 x i64> @srldqsimm(<4 x i64> %a) {
 ; CHECK-LABEL: srldqsimm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    srld $r0 = $r0, 3
+; CHECK-NEXT:    srld $r3 = $r3, 3
 ; CHECK-NEXT:    srld $r1 = $r1, 3
 ; CHECK-NEXT:    srld $r2 = $r2, 3
-; CHECK-NEXT:    srld $r3 = $r3, 3
+; CHECK-NEXT:    srld $r0 = $r0, 3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4504,8 +4504,8 @@ define <8 x i16> @srshos(<8 x i16> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srshqs $r0 = $r0, $r2
 ; CHECK-NEXT:    srshqs $r1 = $r1, $r2
+; CHECK-NEXT:    srshqs $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4521,8 +4521,8 @@ entry:
 define <8 x i16> @srshosimm(<8 x i16> %a) {
 ; CHECK-LABEL: srshosimm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    srshqs $r0 = $r0, 3
 ; CHECK-NEXT:    srshqs $r1 = $r1, 3
+; CHECK-NEXT:    srshqs $r0 = $r0, 3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4539,11 +4539,11 @@ define <16 x i16> @srshxs(<16 x i16> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    zxwd $r4 = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srshqs $r0 = $r0, $r4
 ; CHECK-NEXT:    srshqs $r1 = $r1, $r4
+; CHECK-NEXT:    srshqs $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srshqs $r2 = $r2, $r4
 ; CHECK-NEXT:    srshqs $r3 = $r3, $r4
+; CHECK-NEXT:    srshqs $r2 = $r2, $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4567,11 +4567,11 @@ entry:
 define <16 x i16> @srshxsimm(<16 x i16> %a) {
 ; CHECK-LABEL: srshxsimm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    srshqs $r0 = $r0, 3
+; CHECK-NEXT:    srshqs $r3 = $r3, 3
 ; CHECK-NEXT:    srshqs $r1 = $r1, 3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srshqs $r2 = $r2, 3
-; CHECK-NEXT:    srshqs $r3 = $r3, 3
+; CHECK-NEXT:    srshqs $r0 = $r0, 3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4623,8 +4623,8 @@ define <4 x i32> @srswqs(<4 x i32> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srswps $r0 = $r0, $r2
 ; CHECK-NEXT:    srswps $r1 = $r1, $r2
+; CHECK-NEXT:    srswps $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4640,8 +4640,8 @@ entry:
 define <4 x i32> @srswqsimm(<4 x i32> %a) {
 ; CHECK-LABEL: srswqsimm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    srswps $r0 = $r0, 3
 ; CHECK-NEXT:    srswps $r1 = $r1, 3
+; CHECK-NEXT:    srswps $r0 = $r0, 3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4658,11 +4658,11 @@ define <8 x i32> @srswos(<8 x i32> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    zxwd $r4 = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srswps $r0 = $r0, $r4
 ; CHECK-NEXT:    srswps $r1 = $r1, $r4
+; CHECK-NEXT:    srswps $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srswps $r2 = $r2, $r4
 ; CHECK-NEXT:    srswps $r3 = $r3, $r4
+; CHECK-NEXT:    srswps $r2 = $r2, $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4686,11 +4686,11 @@ entry:
 define <8 x i32> @srswosimm(<8 x i32> %a) {
 ; CHECK-LABEL: srswosimm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    srswps $r0 = $r0, 3
+; CHECK-NEXT:    srswps $r3 = $r3, 3
 ; CHECK-NEXT:    srswps $r1 = $r1, 3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srswps $r2 = $r2, 3
-; CHECK-NEXT:    srswps $r3 = $r3, 3
+; CHECK-NEXT:    srswps $r0 = $r0, 3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4715,8 +4715,8 @@ define <2 x i64> @srsdps(<2 x i64> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srsd $r0 = $r0, $r2
 ; CHECK-NEXT:    srsd $r1 = $r1, $r2
+; CHECK-NEXT:    srsd $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4735,8 +4735,8 @@ declare i64 @llvm.kvx.srsd(i64, i64)
 define <2 x i64> @srsdpsimm(<2 x i64> %a) {
 ; CHECK-LABEL: srsdpsimm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    srsd $r0 = $r0, 3
 ; CHECK-NEXT:    srsd $r1 = $r1, 3
+; CHECK-NEXT:    srsd $r0 = $r0, 3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4754,11 +4754,11 @@ define <4 x i64> @srsdqs(<4 x i64> %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    zxwd $r4 = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srsd $r0 = $r0, $r4
 ; CHECK-NEXT:    srsd $r1 = $r1, $r4
+; CHECK-NEXT:    srsd $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srsd $r2 = $r2, $r4
 ; CHECK-NEXT:    srsd $r3 = $r3, $r4
+; CHECK-NEXT:    srsd $r2 = $r2, $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4781,11 +4781,11 @@ entry:
 define <4 x i64> @srsdqsimm(<4 x i64> %a) {
 ; CHECK-LABEL: srsdqsimm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    srsd $r0 = $r0, 3
+; CHECK-NEXT:    srsd $r3 = $r3, 3
 ; CHECK-NEXT:    srsd $r1 = $r1, 3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srsd $r2 = $r2, 3
-; CHECK-NEXT:    srsd $r3 = $r3, 3
+; CHECK-NEXT:    srsd $r0 = $r0, 3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4820,8 +4820,8 @@ declare <2 x i32> @llvm.kvx.clswp(<2 x i32>)
 define <4 x i32> @clswq(<4 x i32> %v) {
 ; CHECK-LABEL: clswq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    clswp $r0 = $r0
 ; CHECK-NEXT:    clswp $r1 = $r1
+; CHECK-NEXT:    clswp $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4836,11 +4836,11 @@ entry:
 define <8 x i32> @clswo(<8 x i32> %v) {
 ; CHECK-LABEL: clswo:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    clswp $r0 = $r0
+; CHECK-NEXT:    clswp $r3 = $r3
 ; CHECK-NEXT:    clswp $r1 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    clswp $r2 = $r2
-; CHECK-NEXT:    clswp $r3 = $r3
+; CHECK-NEXT:    clswp $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4863,8 +4863,8 @@ entry:
 define <2 x i64> @clsdp(<2 x i64> %v) {
 ; CHECK-LABEL: clsdp:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    clsd $r0 = $r0
 ; CHECK-NEXT:    clsd $r1 = $r1
+; CHECK-NEXT:    clsd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4882,11 +4882,11 @@ declare i64 @llvm.kvx.clsd(i64)
 define <4 x i64> @clsdq(<4 x i64> %v) {
 ; CHECK-LABEL: clsdq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    clsd $r0 = $r0
+; CHECK-NEXT:    clsd $r3 = $r3
 ; CHECK-NEXT:    clsd $r1 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    clsd $r2 = $r2
-; CHECK-NEXT:    clsd $r3 = $r3
+; CHECK-NEXT:    clsd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4921,8 +4921,8 @@ declare <2 x i32> @llvm.kvx.clzwp(<2 x i32>)
 define <4 x i32> @clzwq(<4 x i32> %v) {
 ; CHECK-LABEL: clzwq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    clzwp $r0 = $r0
 ; CHECK-NEXT:    clzwp $r1 = $r1
+; CHECK-NEXT:    clzwp $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4937,11 +4937,11 @@ entry:
 define <8 x i32> @clzwo(<8 x i32> %v) {
 ; CHECK-LABEL: clzwo:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    clzwp $r0 = $r0
+; CHECK-NEXT:    clzwp $r3 = $r3
 ; CHECK-NEXT:    clzwp $r1 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    clzwp $r2 = $r2
-; CHECK-NEXT:    clzwp $r3 = $r3
+; CHECK-NEXT:    clzwp $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4964,8 +4964,8 @@ entry:
 define <2 x i64> @clzdp(<2 x i64> %v) {
 ; CHECK-LABEL: clzdp:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    clzd $r0 = $r0
 ; CHECK-NEXT:    clzd $r1 = $r1
+; CHECK-NEXT:    clzd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4983,11 +4983,11 @@ declare i64 @llvm.kvx.clzd(i64)
 define <4 x i64> @clzdq(<4 x i64> %v) {
 ; CHECK-LABEL: clzdq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    clzd $r0 = $r0
+; CHECK-NEXT:    clzd $r3 = $r3
 ; CHECK-NEXT:    clzd $r1 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    clzd $r2 = $r2
-; CHECK-NEXT:    clzd $r3 = $r3
+; CHECK-NEXT:    clzd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -5022,8 +5022,8 @@ declare <2 x i32> @llvm.kvx.ctzwp(<2 x i32>)
 define <4 x i32> @ctzwq(<4 x i32> %v) {
 ; CHECK-LABEL: ctzwq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    ctzwp $r0 = $r0
 ; CHECK-NEXT:    ctzwp $r1 = $r1
+; CHECK-NEXT:    ctzwp $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -5038,11 +5038,11 @@ entry:
 define <8 x i32> @ctzwo(<8 x i32> %v) {
 ; CHECK-LABEL: ctzwo:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    ctzwp $r0 = $r0
+; CHECK-NEXT:    ctzwp $r3 = $r3
 ; CHECK-NEXT:    ctzwp $r1 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ctzwp $r2 = $r2
-; CHECK-NEXT:    ctzwp $r3 = $r3
+; CHECK-NEXT:    ctzwp $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -5065,8 +5065,8 @@ entry:
 define <2 x i64> @ctzdp(<2 x i64> %v) {
 ; CHECK-LABEL: ctzdp:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    ctzd $r0 = $r0
 ; CHECK-NEXT:    ctzd $r1 = $r1
+; CHECK-NEXT:    ctzd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -5084,11 +5084,11 @@ declare i64 @llvm.kvx.ctzd(i64)
 define <4 x i64> @ctzdq(<4 x i64> %v) {
 ; CHECK-LABEL: ctzdq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    ctzd $r0 = $r0
+; CHECK-NEXT:    ctzd $r3 = $r3
 ; CHECK-NEXT:    ctzd $r1 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ctzd $r2 = $r2
-; CHECK-NEXT:    ctzd $r3 = $r3
+; CHECK-NEXT:    ctzd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -5123,8 +5123,8 @@ declare <2 x i32> @llvm.kvx.cbswp(<2 x i32>)
 define <4 x i32> @cbswq(<4 x i32> %v) {
 ; CHECK-LABEL: cbswq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    cbswp $r0 = $r0
 ; CHECK-NEXT:    cbswp $r1 = $r1
+; CHECK-NEXT:    cbswp $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -5139,11 +5139,11 @@ entry:
 define <8 x i32> @cbswo(<8 x i32> %v) {
 ; CHECK-LABEL: cbswo:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    cbswp $r0 = $r0
+; CHECK-NEXT:    cbswp $r3 = $r3
 ; CHECK-NEXT:    cbswp $r1 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cbswp $r2 = $r2
-; CHECK-NEXT:    cbswp $r3 = $r3
+; CHECK-NEXT:    cbswp $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -5166,8 +5166,8 @@ entry:
 define <2 x i64> @cbsdp(<2 x i64> %v) {
 ; CHECK-LABEL: cbsdp:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    cbsd $r0 = $r0
 ; CHECK-NEXT:    cbsd $r1 = $r1
+; CHECK-NEXT:    cbsd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -5185,11 +5185,11 @@ declare i64 @llvm.kvx.cbsd(i64)
 define <4 x i64> @cbsdq(<4 x i64> %v) {
 ; CHECK-LABEL: cbsdq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    cbsd $r0 = $r0
+; CHECK-NEXT:    cbsd $r3 = $r3
 ; CHECK-NEXT:    cbsd $r1 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cbsd $r2 = $r2
-; CHECK-NEXT:    cbsd $r3 = $r3
+; CHECK-NEXT:    cbsd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -5239,8 +5239,8 @@ define <4 x float> @fminwqs(<4 x float> %v1, float %v2) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x804020108040201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fminwp $r0 = $r0, $r2
 ; CHECK-NEXT:    fminwp $r1 = $r1, $r2
+; CHECK-NEXT:    fminwp $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -5264,11 +5264,11 @@ define <8 x float> @fminwos(<8 x float> %v1, float %v2) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x804020108040201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fminwp $r0 = $r0, $r4
-; CHECK-NEXT:    fminwp $r1 = $r1, $r4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fminwp $r2 = $r2, $r4
 ; CHECK-NEXT:    fminwp $r3 = $r3, $r4
+; CHECK-NEXT:    fminwp $r2 = $r2, $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fminwp $r1 = $r1, $r4
+; CHECK-NEXT:    fminwp $r0 = $r0, $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -5294,8 +5294,8 @@ entry:
 define <2 x double> @fmindps(<2 x double> %v1, double %v2) {
 ; CHECK-LABEL: fmindps:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmind $r0 = $r0, $r2
 ; CHECK-NEXT:    fmind $r1 = $r1, $r2
+; CHECK-NEXT:    fmind $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -5313,8 +5313,8 @@ declare double @llvm.kvx.fmind(double, double)
 define <4 x double> @fmindqs(<4 x double> %v1, double %v2) {
 ; CHECK-LABEL: fmindqs:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmind $r0 = $r0, $r4
 ; CHECK-NEXT:    fmind $r1 = $r1, $r4
+; CHECK-NEXT:    fmind $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmind $r2 = $r2, $r4
 ; CHECK-NEXT:    fmind $r3 = $r3, $r4
@@ -5367,8 +5367,8 @@ define <4 x float> @fmaxwqs(<4 x float> %v1, float %v2) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x804020108040201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmaxwp $r0 = $r0, $r2
 ; CHECK-NEXT:    fmaxwp $r1 = $r1, $r2
+; CHECK-NEXT:    fmaxwp $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -5392,11 +5392,11 @@ define <8 x float> @fmaxwos(<8 x float> %v1, float %v2) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x804020108040201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmaxwp $r0 = $r0, $r4
-; CHECK-NEXT:    fmaxwp $r1 = $r1, $r4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmaxwp $r2 = $r2, $r4
 ; CHECK-NEXT:    fmaxwp $r3 = $r3, $r4
+; CHECK-NEXT:    fmaxwp $r2 = $r2, $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fmaxwp $r1 = $r1, $r4
+; CHECK-NEXT:    fmaxwp $r0 = $r0, $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -5422,8 +5422,8 @@ entry:
 define <2 x double> @fmaxdps(<2 x double> %v1, double %v2) {
 ; CHECK-LABEL: fmaxdps:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmaxd $r0 = $r0, $r2
 ; CHECK-NEXT:    fmaxd $r1 = $r1, $r2
+; CHECK-NEXT:    fmaxd $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -5441,8 +5441,8 @@ declare double @llvm.kvx.fmaxd(double, double)
 define <4 x double> @fmaxdqs(<4 x double> %v1, double %v2) {
 ; CHECK-LABEL: fmaxdqs:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmaxd $r0 = $r0, $r4
 ; CHECK-NEXT:    fmaxd $r1 = $r1, $r4
+; CHECK-NEXT:    fmaxd $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmaxd $r2 = $r2, $r4
 ; CHECK-NEXT:    fmaxd $r3 = $r3, $r4

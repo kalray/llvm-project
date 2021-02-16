@@ -10,16 +10,19 @@ define i32 @hwloop1() nounwind {
 ; CHECK-LABEL: hwloop1:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r2 = 10
-; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    make $r1 = a
+; CHECK-NEXT:    make $r1 = 0
+; CHECK-NEXT:    make $r0 = a
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r2, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_1: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    sw 0[$r1] = $r0
-; CHECK-NEXT:    addw $r0 = $r0, 1
-; CHECK-NEXT:    addd $r1 = $r1, 4
+; CHECK-NEXT:    copyd $r2 = $r1
+; CHECK-NEXT:    copyd $r3 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r0 = $r3, 4
+; CHECK-NEXT:    addw $r1 = $r2, 1
+; CHECK-NEXT:    sw 0[$r3] = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .__LOOPDO_0_END_:
 ; CHECK-NEXT:  # %bb.2: # %for.end
@@ -161,9 +164,12 @@ define i32 @hwloop4(i32 %n, i32* nocapture %b) nounwind {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB3_2: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    sw 0[$r1] = $r0
-; CHECK-NEXT:    addw $r0 = $r0, 1
-; CHECK-NEXT:    addd $r1 = $r1, 4
+; CHECK-NEXT:    copyd $r2 = $r0
+; CHECK-NEXT:    copyd $r3 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addw $r0 = $r2, 1
+; CHECK-NEXT:    addd $r1 = $r3, 4
+; CHECK-NEXT:    sw 0[$r3] = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .__LOOPDO_2_END_:
 ; CHECK-NEXT:  .LBB3_3: # %for.end
@@ -204,12 +210,13 @@ define void @hwloop5(i32* nocapture %a, i32* nocapture %res) nounwind {
 ; CHECK-NEXT:  .LBB4_1: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    lwz $r2 = 0[$r0]
+; CHECK-NEXT:    copyd $r3 = $r1
 ; CHECK-NEXT:    addd $r0 = $r0, 4
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r1 = $r3, 4
 ; CHECK-NEXT:    mulw $r2 = $r2, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 0[$r1] = $r2
-; CHECK-NEXT:    addd $r1 = $r1, 4
+; CHECK-NEXT:    sw 0[$r3] = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .__LOOPDO_3_END_:
 ; CHECK-NEXT:  # %bb.2: # %for.end

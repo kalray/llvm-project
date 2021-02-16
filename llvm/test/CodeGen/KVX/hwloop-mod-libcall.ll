@@ -15,51 +15,57 @@ define i32 @ia(i32 %x, i32 %y)  {
 ; CHECK-NEXT:    sd 56[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 67, -8
-; CHECK-NEXT:    sq 40[$r12] = $r20r21
+; CHECK-NEXT:    sd 48[$r12] = $r22
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 20, -16
-; CHECK-NEXT:    .cfi_offset 21, -24
-; CHECK-NEXT:    sq 24[$r12] = $r18r19
+; CHECK-NEXT:    .cfi_offset 22, -16
+; CHECK-NEXT:    sq 32[$r12] = $r20r21
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_offset 20, -24
+; CHECK-NEXT:    .cfi_offset 21, -32
+; CHECK-NEXT:    sq 16[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 18, -32
-; CHECK-NEXT:    .cfi_offset 19, -40
+; CHECK-NEXT:    .cfi_offset 18, -40
+; CHECK-NEXT:    .cfi_offset 19, -48
 ; CHECK-NEXT:    sxwd $r20 = $r18
 ; CHECK-NEXT:    sxwd $r0 = $r19
+; CHECK-NEXT:    compw.eq $r21 = $r19, $r18
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r20
 ; CHECK-NEXT:    call __moddi3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    compw.eq $r1 = $r19, $r18
 ; CHECK-NEXT:    zxwd $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.odd $r1 ? .LBB0_3
+; CHECK-NEXT:    cb.odd $r21 ? .LBB0_3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %for.body.lr.ph
 ; CHECK-NEXT:    make $r1 = I
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r21 = 0[$r1]
+; CHECK-NEXT:    ld $r2 = 0[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_2: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    addw $r19 = $r19, 1
-; CHECK-NEXT:    sw 0[$r21] = $r0
-; CHECK-NEXT:    copyd $r1 = $r20
+; CHECK-NEXT:    sw 0[$r2] = $r0
+; CHECK-NEXT:    addd $r21 = $r2, 4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r0 = $r19
+; CHECK-NEXT:    sxwd $r1 = $r19
+; CHECK-NEXT:    compw.ne $r22 = $r18, $r19
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    copyd $r1 = $r20
 ; CHECK-NEXT:    call __moddi3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    compw.ne $r1 = $r18, $r19
 ; CHECK-NEXT:    zxwd $r0 = $r0
-; CHECK-NEXT:    addd $r21 = $r21, 4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.odd $r1 ? .LBB0_2
+; CHECK-NEXT:    copyd $r2 = $r21
+; CHECK-NEXT:    cb.odd $r22 ? .LBB0_2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_3: # %for.end
-; CHECK-NEXT:    lq $r18r19 = 24[$r12]
+; CHECK-NEXT:    lq $r18r19 = 16[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lq $r20r21 = 40[$r12]
+; CHECK-NEXT:    lq $r20r21 = 32[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r22 = 48[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 56[$r12]
 ; CHECK-NEXT:    ;;

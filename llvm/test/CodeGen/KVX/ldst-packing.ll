@@ -5,20 +5,19 @@ target triple = "kvx-kalray-cos"
 define i64 @f_5_quadpack(i64* nocapture readonly %v){
 ; CHECK-LABEL: f_5_quadpack:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    ld $r1 = 0[$r0]
+; CHECK-NEXT:    ld $r1 = 8[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r2 = 8[$r0]
+; CHECK-NEXT:    ld $r2 = 0[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r3 = 16[$r0]
+; CHECK-NEXT:    addd $r1 = $r1, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r4 = 24[$r0]
+; CHECK-NEXT:    ld $r2 = 24[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r0 = 32[$r0]
-; CHECK-NEXT:    addd $r1 = $r2, $r1
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r1 = $r1, $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r1 = $r1, $r4
+; CHECK-NEXT:    addd $r1 = $r1, $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r0 = $r1, $r0
 ; CHECK-NEXT:    ret

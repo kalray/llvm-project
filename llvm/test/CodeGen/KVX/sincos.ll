@@ -14,15 +14,15 @@ define float @f1rn(float %x) {
 ; CHECK-NEXT:    .cfi_offset 67, -8
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    call sinf
+; CHECK-NEXT:    call cosf
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 18, -16
 ; CHECK-NEXT:    .cfi_offset 19, -24
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
-; CHECK-NEXT:    call cosf
+; CHECK-NEXT:    call sinf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddw $r0 = $r19, $r0
+; CHECK-NEXT:    faddw $r0 = $r0, $r19
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
@@ -88,15 +88,15 @@ define double @f2rn(double %x) {
 ; CHECK-NEXT:    .cfi_offset 67, -8
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    call sin
+; CHECK-NEXT:    call cos
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 18, -16
 ; CHECK-NEXT:    .cfi_offset 19, -24
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
-; CHECK-NEXT:    call cos
+; CHECK-NEXT:    call sin
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddd $r0 = $r19, $r0
+; CHECK-NEXT:    faddd $r0 = $r0, $r19
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]

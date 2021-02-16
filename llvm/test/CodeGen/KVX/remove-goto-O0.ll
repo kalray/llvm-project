@@ -66,12 +66,12 @@ define i32 @f(){
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
+; CHECK-NEXT:    sw 28[$r12] = $r0
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 24[$r12] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB1_1: # %for.cond
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    sw 28[$r12] = $r0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r0 = 28[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compw.gt $r0 = $r0, 3
@@ -91,6 +91,8 @@ define i32 @f(){
 ; CHECK-NEXT:    lwz $r0 = 28[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addw $r0 = $r0, 1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw 28[$r12] = $r0
 ; CHECK-NEXT:    goto .LBB1_1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB1_3: # %for.end

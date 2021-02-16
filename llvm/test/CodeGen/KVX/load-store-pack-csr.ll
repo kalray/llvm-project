@@ -51,16 +51,17 @@ define i64 @f_2_pairpack(){
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 67, -8
-; CHECK-NEXT:    sq 8[$r12] = $r18r19
+; CHECK-NEXT:    sd 16[$r12] = $r18
 ; CHECK-NEXT:    make $r0 = v
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 18, -16
-; CHECK-NEXT:    .cfi_offset 19, -24
-; CHECK-NEXT:    lq $r18r19 = 0[$r0]
+; CHECK-NEXT:    lq $r0r1 = 0[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r18 = $r1, $r0
 ; CHECK-NEXT:    call foo
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r19, $r18
-; CHECK-NEXT:    lq $r18r19 = 8[$r12]
+; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    ld $r18 = 16[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
@@ -88,24 +89,20 @@ define i64 @f_3_pairpack(){
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 67, -8
-; CHECK-NEXT:    sd 16[$r12] = $r20
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 20, -16
-; CHECK-NEXT:    sq 0[$r12] = $r18r19
+; CHECK-NEXT:    sd 16[$r12] = $r18
 ; CHECK-NEXT:    make $r0 = v
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 18, -24
-; CHECK-NEXT:    .cfi_offset 19, -32
-; CHECK-NEXT:    lq $r18r19 = 0[$r0]
+; CHECK-NEXT:    .cfi_offset 18, -16
+; CHECK-NEXT:    lq $r2r3 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r20 = 16[$r0]
+; CHECK-NEXT:    ld $r0 = 16[$r0]
+; CHECK-NEXT:    addd $r1 = $r3, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r18 = $r1, $r0
 ; CHECK-NEXT:    call foo
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r19, $r18
-; CHECK-NEXT:    lq $r18r19 = 0[$r12]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, $r20
-; CHECK-NEXT:    ld $r20 = 16[$r12]
+; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    ld $r18 = 16[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
@@ -136,20 +133,25 @@ define i64 @f_4_quadpack(){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 67, -8
 ; CHECK-NEXT:    so 24[$r12] = $r20r21r22r23
-; CHECK-NEXT:    make $r0 = v
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 20, -16
 ; CHECK-NEXT:    .cfi_offset 21, -24
 ; CHECK-NEXT:    .cfi_offset 22, -32
 ; CHECK-NEXT:    .cfi_offset 23, -40
+; CHECK-NEXT:    sd 16[$r12] = $r18
+; CHECK-NEXT:    make $r0 = v
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_offset 18, -48
 ; CHECK-NEXT:    lo $r20r21r22r23 = 0[$r0]
-; CHECK-NEXT:    call foo
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r0 = $r21, $r20
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, $r22
+; CHECK-NEXT:    addd $r18 = $r0, $r22
+; CHECK-NEXT:    call foo
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, $r23
+; CHECK-NEXT:    addd $r0 = $r18, $r23
+; CHECK-NEXT:    ld $r18 = 16[$r12]
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r20r21r22r23 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 56[$r12]
@@ -174,44 +176,36 @@ entry:
 define i64 @f_5_quadpack(){
 ; CHECK-LABEL: f_5_quadpack:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addd $r12 = $r12, -64
+; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 64
+; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    .cfi_register 67, 16
-; CHECK-NEXT:    sd 56[$r12] = $r16
+; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 67, -8
-; CHECK-NEXT:    so 24[$r12] = $r20r21r22r23
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 20, -16
-; CHECK-NEXT:    .cfi_offset 21, -24
-; CHECK-NEXT:    .cfi_offset 22, -32
-; CHECK-NEXT:    .cfi_offset 23, -40
-; CHECK-NEXT:    sd 16[$r12] = $r18
+; CHECK-NEXT:    sq 8[$r12] = $r18r19
 ; CHECK-NEXT:    make $r0 = v
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 18, -48
-; CHECK-NEXT:    lo $r20r21r22r23 = 0[$r0]
+; CHECK-NEXT:    .cfi_offset 18, -16
+; CHECK-NEXT:    .cfi_offset 19, -24
+; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r18 = 32[$r0]
+; CHECK-NEXT:    addd $r1 = $r5, $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r1 = $r1, $r6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r19 = $r1, $r7
 ; CHECK-NEXT:    call foo
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r21, $r20
+; CHECK-NEXT:    addd $r0 = $r19, $r18
+; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, $r22
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, $r23
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, $r18
-; CHECK-NEXT:    ld $r18 = 16[$r12]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r20r21r22r23 = 24[$r12]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 56[$r12]
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 64
+; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -232,47 +226,42 @@ entry:
 define i64 @f_6_1quad1pairpack(){
 ; CHECK-LABEL: f_6_1quad1pairpack:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addd $r12 = $r12, -64
+; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 64
+; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    .cfi_register 67, 16
-; CHECK-NEXT:    sd 56[$r12] = $r16
+; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 67, -8
-; CHECK-NEXT:    so 24[$r12] = $r20r21r22r23
+; CHECK-NEXT:    sq 8[$r12] = $r20r21
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 20, -16
 ; CHECK-NEXT:    .cfi_offset 21, -24
-; CHECK-NEXT:    .cfi_offset 22, -32
-; CHECK-NEXT:    .cfi_offset 23, -40
-; CHECK-NEXT:    sq 8[$r12] = $r18r19
+; CHECK-NEXT:    sd 0[$r12] = $r18
 ; CHECK-NEXT:    make $r0 = v
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 18, -48
-; CHECK-NEXT:    .cfi_offset 19, -56
-; CHECK-NEXT:    lo $r20r21r22r23 = 0[$r0]
+; CHECK-NEXT:    .cfi_offset 18, -32
+; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lq $r18r19 = 32[$r0]
+; CHECK-NEXT:    lq $r20r21 = 32[$r0]
+; CHECK-NEXT:    addd $r1 = $r5, $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r1 = $r1, $r6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r18 = $r1, $r7
 ; CHECK-NEXT:    call foo
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r21, $r20
+; CHECK-NEXT:    addd $r0 = $r18, $r20
+; CHECK-NEXT:    ld $r18 = 0[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, $r22
+; CHECK-NEXT:    addd $r0 = $r0, $r21
+; CHECK-NEXT:    lq $r20r21 = 8[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, $r23
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, $r18
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, $r19
-; CHECK-NEXT:    lq $r18r19 = 8[$r12]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r20r21r22r23 = 24[$r12]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 56[$r12]
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 64
+; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -295,83 +284,69 @@ entry:
 define i64 @f_14_3quad1pairpack(){
 ; CHECK-LABEL: f_14_3quad1pairpack:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addd $r12 = $r12, -128
+; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 128
+; CHECK-NEXT:    .cfi_def_cfa_offset 64
 ; CHECK-NEXT:    .cfi_register 67, 16
-; CHECK-NEXT:    sd 120[$r12] = $r16
+; CHECK-NEXT:    sd 56[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 67, -8
-; CHECK-NEXT:    so 88[$r12] = $r28r29r30r31
+; CHECK-NEXT:    sq 40[$r12] = $r24r25
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 28, -16
-; CHECK-NEXT:    .cfi_offset 29, -24
-; CHECK-NEXT:    .cfi_offset 30, -32
-; CHECK-NEXT:    .cfi_offset 31, -40
-; CHECK-NEXT:    so 56[$r12] = $r24r25r26r27
+; CHECK-NEXT:    .cfi_offset 24, -16
+; CHECK-NEXT:    .cfi_offset 25, -24
+; CHECK-NEXT:    so 8[$r12] = $r20r21r22r23
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 24, -48
-; CHECK-NEXT:    .cfi_offset 25, -56
-; CHECK-NEXT:    .cfi_offset 26, -64
-; CHECK-NEXT:    .cfi_offset 27, -72
-; CHECK-NEXT:    so 24[$r12] = $r20r21r22r23
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 20, -80
-; CHECK-NEXT:    .cfi_offset 21, -88
-; CHECK-NEXT:    .cfi_offset 22, -96
-; CHECK-NEXT:    .cfi_offset 23, -104
-; CHECK-NEXT:    sq 8[$r12] = $r18r19
+; CHECK-NEXT:    .cfi_offset 20, -32
+; CHECK-NEXT:    .cfi_offset 21, -40
+; CHECK-NEXT:    .cfi_offset 22, -48
+; CHECK-NEXT:    .cfi_offset 23, -56
+; CHECK-NEXT:    sd 0[$r12] = $r18
 ; CHECK-NEXT:    make $r0 = v
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 18, -112
-; CHECK-NEXT:    .cfi_offset 19, -120
-; CHECK-NEXT:    lo $r20r21r22r23 = 0[$r0]
+; CHECK-NEXT:    .cfi_offset 18, -64
+; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r24r25r26r27 = 32[$r0]
+; CHECK-NEXT:    lo $r8r9r10r11 = 32[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r28r29r30r31 = 64[$r0]
+; CHECK-NEXT:    lo $r20r21r22r23 = 64[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lq $r18r19 = 96[$r0]
+; CHECK-NEXT:    lq $r24r25 = 96[$r0]
+; CHECK-NEXT:    addd $r1 = $r5, $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r1 = $r1, $r6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r1 = $r1, $r7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r1 = $r1, $r8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r1 = $r1, $r9
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r1 = $r1, $r10
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r18 = $r1, $r11
 ; CHECK-NEXT:    call foo
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r21, $r20
+; CHECK-NEXT:    addd $r0 = $r18, $r20
+; CHECK-NEXT:    ld $r18 = 0[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r0 = $r0, $r21
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r0 = $r0, $r22
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r0 = $r0, $r23
+; CHECK-NEXT:    lo $r20r21r22r23 = 8[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r0 = $r0, $r24
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r0 = $r0, $r25
+; CHECK-NEXT:    lq $r24r25 = 40[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, $r26
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, $r27
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, $r28
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, $r29
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, $r30
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, $r31
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, $r18
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, $r19
-; CHECK-NEXT:    lq $r18r19 = 8[$r12]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r20r21r22r23 = 24[$r12]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r24r25r26r27 = 56[$r12]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r28r29r30r31 = 88[$r12]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 120[$r12]
+; CHECK-NEXT:    ld $r16 = 56[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 128
+; CHECK-NEXT:    addd $r12 = $r12, 64
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -410,89 +385,74 @@ entry:
 define i64 @f_15_3quad1pairpack(){
 ; CHECK-LABEL: f_15_3quad1pairpack:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addd $r12 = $r12, -128
+; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 128
+; CHECK-NEXT:    .cfi_def_cfa_offset 64
 ; CHECK-NEXT:    .cfi_register 67, 16
-; CHECK-NEXT:    sd 120[$r12] = $r16
+; CHECK-NEXT:    sd 56[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 67, -8
-; CHECK-NEXT:    so 88[$r12] = $r28r29r30r31
+; CHECK-NEXT:    sd 48[$r12] = $r24
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 28, -16
-; CHECK-NEXT:    .cfi_offset 29, -24
-; CHECK-NEXT:    .cfi_offset 30, -32
-; CHECK-NEXT:    .cfi_offset 31, -40
-; CHECK-NEXT:    so 56[$r12] = $r24r25r26r27
+; CHECK-NEXT:    .cfi_offset 24, -16
+; CHECK-NEXT:    so 16[$r12] = $r20r21r22r23
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 24, -48
-; CHECK-NEXT:    .cfi_offset 25, -56
-; CHECK-NEXT:    .cfi_offset 26, -64
-; CHECK-NEXT:    .cfi_offset 27, -72
-; CHECK-NEXT:    so 24[$r12] = $r20r21r22r23
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 20, -80
-; CHECK-NEXT:    .cfi_offset 21, -88
-; CHECK-NEXT:    .cfi_offset 22, -96
-; CHECK-NEXT:    .cfi_offset 23, -104
-; CHECK-NEXT:    sq 8[$r12] = $r18r19
+; CHECK-NEXT:    .cfi_offset 20, -24
+; CHECK-NEXT:    .cfi_offset 21, -32
+; CHECK-NEXT:    .cfi_offset 22, -40
+; CHECK-NEXT:    .cfi_offset 23, -48
+; CHECK-NEXT:    sq 0[$r12] = $r18r19
 ; CHECK-NEXT:    make $r0 = v
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 18, -112
-; CHECK-NEXT:    .cfi_offset 19, -120
-; CHECK-NEXT:    lo $r20r21r22r23 = 0[$r0]
+; CHECK-NEXT:    .cfi_offset 18, -56
+; CHECK-NEXT:    .cfi_offset 19, -64
+; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r24r25r26r27 = 32[$r0]
+; CHECK-NEXT:    lo $r8r9r10r11 = 32[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r28r29r30r31 = 64[$r0]
+; CHECK-NEXT:    lo $r20r21r22r23 = 64[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lq $r18r19 = 96[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r0 = 112[$r0]
+; CHECK-NEXT:    ld $r24 = 112[$r0]
+; CHECK-NEXT:    addd $r1 = $r5, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 0[$r12] = $r0
+; CHECK-NEXT:    addd $r1 = $r1, $r6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r1 = $r1, $r7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r1 = $r1, $r8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r1 = $r1, $r9
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r1 = $r1, $r10
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r1 = $r1, $r11
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r20 = $r1, $r20
 ; CHECK-NEXT:    call foo
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r21, $r20
-; CHECK-NEXT:    ld $r1 = 0[$r12]
+; CHECK-NEXT:    addd $r0 = $r20, $r21
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r0 = $r0, $r22
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r0 = $r0, $r23
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, $r24
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, $r25
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, $r26
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, $r27
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, $r28
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, $r29
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, $r30
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, $r31
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r0 = $r0, $r18
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r0 = $r0, $r19
-; CHECK-NEXT:    lq $r18r19 = 8[$r12]
+; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r20r21r22r23 = 24[$r12]
-; CHECK-NEXT:    addd $r0 = $r0, $r1
+; CHECK-NEXT:    lo $r20r21r22r23 = 16[$r12]
+; CHECK-NEXT:    addd $r0 = $r0, $r24
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r24r25r26r27 = 56[$r12]
+; CHECK-NEXT:    ld $r24 = 48[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r28r29r30r31 = 88[$r12]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 120[$r12]
+; CHECK-NEXT:    ld $r16 = 56[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 128
+; CHECK-NEXT:    addd $r12 = $r12, 64
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;

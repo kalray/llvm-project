@@ -16,14 +16,12 @@
 //   please contact code owner.
 // Last generated: 2020-06-20 21:47:17.941683.
 
-
-// ISSUEI_FU FuncUnits have been disabled due to DFA limitations.
-// May be enabled with LLVM 10 since DFA algorithms have been updated to get rid
-// of those limitations.
-// This is safe since KVXPacketizer ensures that Sched::ALL instructions are
-// alone in a bundle.
+// TODO: This file has been modified manually! Please fix the generator.
 //
-// foreach I = 0-7 in def ISSUE#I#_FU : FuncUnit;
+// - NOPI_FU units usage has been restored.
+// - Fix KVXSchedMachineModel properties.
+// - Set average/estimated cycle costs of all InstrItinClass.
+
 foreach I = 0-3 in def TINY#I#_FU : FuncUnit;
 foreach I = 0-1 in def LITE#I#_FU : FuncUnit;
 def FULL_FU : FuncUnit;
@@ -36,11 +34,6 @@ def AUXW_FU : FuncUnit;
 def CRRP_FU : FuncUnit;
 def CRWL_FU : FuncUnit;
 def CRWH_FU : FuncUnit;
-// NOPI_FU FuncUnits have been disabled due to DFA limitations (see ISSUEI_FP)
-// This is safe since only NOP, IGET, and WAITIT instructions are using this unit.
-// They can't be packetized together today since NOP instruction can't be emitted
-// yet.
-//
 foreach I = 0-3 in def NOP#I#_FU : FuncUnit;
 
 
@@ -89,279 +82,203 @@ def SWAPVO : InstrItinClass;
 def KVXItinList {
 list<InstrItinData> ItinList = [
   InstrItinData<ALL, [
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU]>
+    // This itineray is empty, it consumes all resources. This is checked by KVXPacketizer.
   ]>,
   InstrItinData<ALU_NOP, [
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    // InstrStage<1, [NOP0_FU, NOP1_FU, NOP2_FU, NOP3_FU]>
+    InstrStage<1, [NOP0_FU, NOP1_FU, NOP2_FU, NOP3_FU]>
   ]>,
   InstrItinData<ALU_TINY, [
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
+    InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
   ]>,
   InstrItinData<ALU_TINY_X, [
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
+    InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
   ]>,
   InstrItinData<ALU_TINY_Y, [
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
+    InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
   ]>,
   InstrItinData<ALU_LITE, [
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
+    InstrStage<3, [LITE0_FU, LITE1_FU], 0>,
+    InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
   ]>,
   InstrItinData<ALU_LITE_X, [
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
+    InstrStage<3, [LITE0_FU, LITE1_FU], 0>,
+    InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
   ]>,
   InstrItinData<ALU_LITE_Y, [
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
+    InstrStage<3, [LITE0_FU, LITE1_FU], 0>,
+    InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
   ]>,
   InstrItinData<ALU_LITE_CRWL, [
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [CRWL_FU]>
+    InstrStage<3, [LITE0_FU, LITE1_FU], 0>,
+    InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<3, [CRWL_FU]>
   ]>,
   InstrItinData<ALU_LITE_CRWH, [
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [CRWH_FU]>
+    InstrStage<3, [LITE0_FU, LITE1_FU], 0>,
+    InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<3, [CRWH_FU]>
   ]>,
   InstrItinData<ALU_FULL, [
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
-    InstrStage<1, [FULL_FU]>
+    InstrStage<4, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<4, [LITE0_FU, LITE1_FU], 0>,
+    InstrStage<4, [FULL_FU]>
   ]>,
   InstrItinData<ALU_FULL_X, [
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
-    InstrStage<1, [FULL_FU]>
+    InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<3, [LITE0_FU, LITE1_FU], 0>,
+    InstrStage<3, [FULL_FU]>
   ]>,
   InstrItinData<ALU_FULL_Y, [
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
-    InstrStage<1, [FULL_FU]>
+    InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<3, [LITE0_FU, LITE1_FU], 0>,
+    InstrStage<3, [FULL_FU]>
   ]>,
   InstrItinData<BCU, [
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    InstrStage<1, [BCU_FU]>
+    InstrStage<2, [BCU_FU]>
   ]>,
   InstrItinData<BCU_CRRP_CRWL_CRWH, [
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    InstrStage<1, [BCU_FU], 0>,
-    InstrStage<1, [CRRP_FU], 0>,
-    InstrStage<1, [CRWL_FU], 0>,
-    InstrStage<1, [CRWH_FU]>
+    InstrStage<5, [BCU_FU], 0>,
+    InstrStage<5, [CRRP_FU], 0>,
+    InstrStage<5, [CRWL_FU], 0>,
+    InstrStage<5, [CRWH_FU]>
   ]>,
   InstrItinData<BCU_TINY_AUXW_CRRP, [
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    InstrStage<1, [BCU_FU], 0>,
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [AUXW_FU], 0>,
-    InstrStage<1, [CRRP_FU]>
+    InstrStage<5, [BCU_FU], 0>,
+    InstrStage<5, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<5, [AUXW_FU], 0>,
+    InstrStage<5, [CRRP_FU]>
   ]>,
   InstrItinData<BCU_TINY_TINY_MAU_XNOP, [
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    InstrStage<1, [BCU_FU], 0>,
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [MAU_FU]>
-    // InstrStage<1, [MAU_FU], 0>,
-    // InstrStage<1, [NOP0_FU, NOP1_FU, NOP2_FU, NOP3_FU], 0>,
-    // InstrStage<1, [NOP0_FU, NOP1_FU, NOP2_FU, NOP3_FU], 0>,
-    // InstrStage<1, [NOP0_FU, NOP1_FU, NOP2_FU, NOP3_FU], 0>,
-    // InstrStage<1, [NOP0_FU, NOP1_FU, NOP2_FU, NOP3_FU]>
+    InstrStage<3, [BCU_FU], 0>,
+    InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<3, [MAU_FU], 0>,
+    InstrStage<3, [NOP0_FU, NOP1_FU, NOP2_FU, NOP3_FU], 0>,
+    InstrStage<3, [NOP0_FU, NOP1_FU, NOP2_FU, NOP3_FU], 0>,
+    InstrStage<3, [NOP0_FU, NOP1_FU, NOP2_FU, NOP3_FU], 0>,
+    InstrStage<3, [NOP0_FU, NOP1_FU, NOP2_FU, NOP3_FU]>
   ]>,
   InstrItinData<TCA, [
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    InstrStage<1, [TCA_FU]>
+    InstrStage<5, [TCA_FU]>
   ]>,
   InstrItinData<LSU, [
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU]>
   ]>,
   InstrItinData<LSU_X, [
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU]>
   ]>,
   InstrItinData<LSU_Y, [
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU]>
   ]>,
   InstrItinData<LSU_CRRP, [
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU], 0>,
     InstrStage<1, [CRRP_FU]>
   ]>,
   InstrItinData<LSU_CRRP_X, [
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU], 0>,
     InstrStage<1, [CRRP_FU]>
   ]>,
   InstrItinData<LSU_CRRP_Y, [
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU], 0>,
     InstrStage<1, [CRRP_FU]>
   ]>,
   InstrItinData<LSU_AUXR, [
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU], 0>,
     InstrStage<1, [AUXR_FU]>
   ]>,
   InstrItinData<LSU_AUXR_X, [
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU], 0>,
     InstrStage<1, [AUXR_FU]>
   ]>,
   InstrItinData<LSU_AUXR_Y, [
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU], 0>,
     InstrStage<1, [AUXR_FU]>
   ]>,
   InstrItinData<LSU_AUXW, [
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU], 0>,
     InstrStage<1, [AUXW_FU]>
   ]>,
   InstrItinData<LSU_AUXW_X, [
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU], 0>,
     InstrStage<1, [AUXW_FU]>
   ]>,
   InstrItinData<LSU_AUXW_Y, [
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU], 0>,
     InstrStage<1, [AUXW_FU]>
   ]>,
   InstrItinData<LSU_AUXR_AUXW, [
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU], 0>,
     InstrStage<1, [AUXR_FU], 0>,
     InstrStage<1, [AUXW_FU]>
   ]>,
   InstrItinData<LSU_AUXR_AUXW_X, [
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU], 0>,
     InstrStage<1, [AUXR_FU], 0>,
     InstrStage<1, [AUXW_FU]>
   ]>,
   InstrItinData<LSU_AUXR_AUXW_Y, [
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU], 0>,
     InstrStage<1, [AUXR_FU], 0>,
     InstrStage<1, [AUXW_FU]>
   ]>,
   InstrItinData<MAU, [
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [MAU_FU]>
+    InstrStage<4, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<4, [MAU_FU]>
   ]>,
   InstrItinData<MAU_X, [
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [MAU_FU]>
+    InstrStage<4, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<4, [MAU_FU]>
   ]>,
   InstrItinData<MAU_Y, [
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [MAU_FU]>
+    InstrStage<4, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<4, [MAU_FU]>
   ]>,
   InstrItinData<MAU_AUXR, [
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [MAU_FU], 0>,
-    InstrStage<1, [AUXR_FU]>
+    InstrStage<4, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<4, [MAU_FU], 0>,
+    InstrStage<4, [AUXR_FU]>
   ]>,
   InstrItinData<MAU_AUXR_X, [
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [MAU_FU], 0>,
-    InstrStage<1, [AUXR_FU]>
+    InstrStage<4, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<4, [MAU_FU], 0>,
+    InstrStage<4, [AUXR_FU]>
   ]>,
   InstrItinData<MAU_AUXR_Y, [
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    // InstrStage<1, [ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU], 0>,
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [MAU_FU], 0>,
-    InstrStage<1, [AUXR_FU]>
+    InstrStage<4, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<4, [MAU_FU], 0>,
+    InstrStage<4, [AUXR_FU]>
   ]>,
   // We need to expand SWAPVOp pseudos after packetizer. To correctly schedule/bundle them,
   // we need a dedicated scheduling itinerary for it.
   InstrItinData<SWAPVO, [
     // moveto E == ALU_LITE_CRWL
-    InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [CRWL_FU], 0>,
+    InstrStage<3, [LITE0_FU, LITE1_FU], 0>,
+    InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<3, [CRWL_FU], 0>,
     // moveto O == ALU_LITE_CRWH
-    InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [CRWH_FU], 0>,
+    InstrStage<3, [LITE0_FU, LITE1_FU], 0>,
+    InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<3, [CRWH_FU], 0>,
     // movefo == BCU_TINY_AUXW_CRRP
-    InstrStage<1, [BCU_FU], 0>,
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [AUXW_FU], 0>,
-    InstrStage<1, [CRRP_FU]>
+    InstrStage<5, [BCU_FU], 0>,
+    InstrStage<5, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<5, [AUXW_FU], 0>,
+    InstrStage<5, [CRRP_FU]>
   ]>
 ];
 }
@@ -369,7 +286,6 @@ list<InstrItinData> ItinList = [
 
 def KVXItineraries:
   ProcessorItineraries<[
-    // ISSUE0_FU, ISSUE1_FU, ISSUE2_FU, ISSUE3_FU, ISSUE4_FU, ISSUE5_FU, ISSUE6_FU, ISSUE7_FU,
     TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU,
     LITE0_FU, LITE1_FU,
     FULL_FU,
@@ -381,15 +297,19 @@ def KVXItineraries:
     AUXW_FU,
     CRRP_FU,
     CRWL_FU,
-    CRWH_FU
-    // CRWH_FU,
-    // NOP0_FU, NOP1_FU, NOP2_FU, NOP3_FU
+    CRWH_FU,
+    NOP0_FU, NOP1_FU, NOP2_FU, NOP3_FU
   ], [], KVXItinList.ItinList>;
 
 
 def KVXSchedMachineModel : SchedMachineModel {
   let Itineraries = KVXItineraries;
-  let IssueWidth = 8;
+  let MicroOpBufferSize = 0; // VLIW In-order
+  let IssueWidth = 6; // 5-issue VLIW core + 1-issue TCA
+  let LoadLatency = 5; // Cycles to access L1$, (23 cycles if miss)
+  let PostRAScheduler = 1;
+  let CompleteModel = 1;
+  let MispredictPenalty = 0;
 }
 
 

@@ -86,8 +86,8 @@ define <2 x i32> @ctzwp(<2 x i32> %a) {
 define <2 x i64> @cttzv2i64(<2 x i64> %a) {
 ; CHECK-LABEL: cttzv2i64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ctzd $r0 = $r0
 ; CHECK-NEXT:    ctzd $r1 = $r1
+; CHECK-NEXT:    ctzd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %res = call <2 x i64> @llvm.cttz.v2i64(<2 x i64> %a)
