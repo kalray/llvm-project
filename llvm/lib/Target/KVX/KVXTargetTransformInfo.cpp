@@ -54,6 +54,9 @@ bool KVXTTIImpl::isLoweredToCall(const Function *F) {
   case Intrinsic::ctlz:
   case Intrinsic::ctpop:
   case Intrinsic::dbg_addr:
+  case Intrinsic::dbg_declare:
+  case Intrinsic::dbg_label:
+  case Intrinsic::dbg_value:
   case Intrinsic::donothing:
   case Intrinsic::fabs:
   case Intrinsic::fma:
