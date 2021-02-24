@@ -242,3 +242,14 @@ bool KVXTTIImpl::isHardwareLoopProfitable(Loop *L, ScalarEvolution &SE,
   HWLoopInfo.LoopDecrement = ConstantInt::get(HWLoopInfo.CountType, 1);
   return true;
 }
+
+unsigned KVXTTIImpl::getInliningThresholdMultiplier() const {
+  switch (TM->getOptLevel()) {
+  case CodeGenOpt::Aggressive:
+    return 3;
+  case CodeGenOpt::Default:
+    return 2;
+  default:
+    return 1;
+  }
+}
