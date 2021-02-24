@@ -53,6 +53,8 @@ public:
   bool isLoweredToCall(const CallInst &CI);
   unsigned getInliningThresholdMultiplier() const;
 
+  unsigned getNumberOfRegisters(unsigned ClassID) const;
+
 private:
   bool isHardwareLoopProfitableCheck(Loop *L, ScalarEvolution &SE);
 };

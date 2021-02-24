@@ -253,3 +253,5 @@ unsigned KVXTTIImpl::getInliningThresholdMultiplier() const {
     return 1;
   }
 }
+
+unsigned KVXTTIImpl::getNumberOfRegisters(unsigned ClassID) const { return 64; }
