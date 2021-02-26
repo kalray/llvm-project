@@ -133,9 +133,13 @@
 ; CHECK-NEXT: Insert XRay ops
 ; CHECK-NEXT: Implement the 'patchable-function' attribute
 ; CHECK-NEXT: KVX pre emit pseudo instruction expansion pass
+; CHECK-NEXT: MachineDominator Tree Construction
+; CHECK-NEXT: Machine Natural Loop Construction
+; CHECK-NEXT: KVX Packetizer
 ; CHECK-NEXT: Contiguously Lay Out Funclets
 ; CHECK-NEXT: StackMap Liveness Analysis
 ; CHECK-NEXT: Live DEBUG_VALUE analysis
 ; CHECK-NEXT: Lazy Machine Block Frequency Analysis
 ; CHECK-NEXT: Machine Optimization Remark Emitter
 ; CHECK-NEXT: KVX Assembly Printer
+; CHECK-NEXT: Free MachineFunction

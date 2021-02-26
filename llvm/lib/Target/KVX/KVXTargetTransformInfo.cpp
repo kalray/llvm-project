@@ -199,27 +199,24 @@ bool KVXTTIImpl::isHardwareLoopProfitableCheck(Loop *L, ScalarEvolution &SE) {
   return true;
 }
 
+// TODO: Are there any reasons we would require twiking the enabled
+//       features or the cost (e.g. ARMTargetTransformInfo.cpp)?
+//       Unrolling may prevent hwloops, e.g.
 void KVXTTIImpl::getUnrollingPreferences(Loop *L, ScalarEvolution &SE,
                                          TTI::UnrollingPreferences &UP) {
   BaseT::getUnrollingPreferences(L, SE, UP);
-  if (TM->getOptLevel() < CodeGenOpt::Aggressive)
+  auto OptLvl = TM->getOptLevel();
+  UP.PartialOptSizeThreshold = 15;
+  if (OptLvl < CodeGenOpt::Default)
     return;
 
   UP.Partial = true;
   UP.Runtime = true;
+  if (TM->getOptLevel() < CodeGenOpt::Aggressive)
+    return;
 
-  UP.PartialThreshold = 2000;
-  // For inner loop, try to unroll more loops.
-  if (L->getLoopDepth() > 1)
-    UP.PartialThreshold *= 2;
-
-  UP.MaxCount = 8;
   UP.UnrollRemainder = true;
-  UP.AllowExpensiveTripCount = true;
   UP.Force = true;
-
-  // Disable partial & runtime unrolling on -Os.
-  UP.PartialOptSizeThreshold = 0;
 }
 
 bool KVXTTIImpl::isHardwareLoopProfitable(Loop *L, ScalarEvolution &SE,
