@@ -1,4 +1,4 @@
-; RUN: llc -O2 < %s | FileCheck %s
+; RUN: llc -disable-kvx-hwloops=false -O2 < %s | FileCheck %s
 target triple = "kvx-kalray-cos"
 
 ; CHECK: loopdo
