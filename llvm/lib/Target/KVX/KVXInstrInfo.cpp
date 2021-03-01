@@ -242,11 +242,12 @@ void KVXInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
     LLVM_DEBUG(dbgs() << "It is a vector TCA register, loading using LVp.\n");
     Pseudo = KVX::LVp;
   } else if (KVX::WideRegRegClass.hasSubClassEq(RC)) {
+    // TODO: Add tests for Wide and Matrix loads.
     LLVM_DEBUG(dbgs() << "It is a wide TCA register, using 2 LVp.\n");
     auto LVp = get(KVX::LVp);
     for (int Sub = KVX::sub_v0, Imm = 0; Sub <= KVX::sub_v1; Sub++, Imm += 32)
       BuildMI(MBB, I, DL, LVp, TRI->getSubReg(DstReg, Sub))
-          .addImm(0)
+          .addImm(Imm)
           .addFrameIndex(FI)
           .addImm(KVXMOD::VARIANT_);
     return;
@@ -255,7 +256,7 @@ void KVXInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
     auto LVp = get(KVX::LVp);
     for (int Sub = KVX::sub_v0, Imm = 0; Sub <= KVX::sub_v3; Sub++, Imm += 32)
       BuildMI(MBB, I, DL, LVp, TRI->getSubReg(DstReg, Sub))
-          .addImm(0)
+          .addImm(Imm)
           .addFrameIndex(FI)
           .addImm(KVXMOD::VARIANT_);
     return;
