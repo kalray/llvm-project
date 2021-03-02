@@ -35,6 +35,13 @@ class KVX_PSEUDO
     let hasNoSchedulingInfo = 1;
   }
 
+class KVX_PSEUDO_W_SCHEDINFO
+  <dag outs, dag ins, list<dag> pattern, InstrItinClass itin, string asmstr = "pseudo">
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin> {
+    let isPseudo = 1;
+    let isCodeGenOnly = 1;
+    let Itinerary = itin;
+  }
 
 // 16 insn(s):
 // AWAIT, SLEEP, STOP, BARRIER, TLBREAD, TLBPROBE, TLBWRITE, TLBDINVAL,

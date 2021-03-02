@@ -23,11 +23,11 @@ define void @asm_tca(i8* %v, i64 %A) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP
+; CHECK-NEXT:    ld $r0 = 0[$r12]
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 32[$r12] = $a0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 64[$r12] = $a1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r0 = 0[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    copyv $a0 = $a0

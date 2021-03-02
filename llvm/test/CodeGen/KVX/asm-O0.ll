@@ -16,9 +16,9 @@ define i64 @asm_clobber_single_none(<2 x i64> %v, i64 %A) {
 ; CHECK-NEXT:    movetq $r4r5 = $r0, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP
-; CHECK-NEXT:    sq 32[$r12] = $r4r5
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r0 = 16[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sq 32[$r12] = $r4r5
 ; CHECK-NEXT:    addd $r12 = $r12, 64
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -51,9 +51,9 @@ define i64 @asm_clobber_single_single(i64 %A) {
 ; CHECK-NEXT:    movetq $r2r3 = $r1, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP
-; CHECK-NEXT:    sq 16[$r12] = $r2r3
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r0 = 0[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sq 16[$r12] = $r2r3
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -101,9 +101,9 @@ define i8* @asm_clobber_single_quad(i8* %A, i8* %B, i8* %C) {
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    sd 0[$r12] = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 16[$r12] = $r2
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 8[$r12] = $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 16[$r12] = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    copyd $r0 = $r4
@@ -359,6 +359,7 @@ define i64 @local_regs(i32 %a, i64 %b, i64 %c, i64 %d, i64 %e, i64 %f, i64 %g) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 128
 ; CHECK-NEXT:    sw 0[$r12] = $r0
+; CHECK-NEXT:    zxwd $r7 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 8[$r12] = $r1
 ; CHECK-NEXT:    ;;
@@ -383,11 +384,10 @@ define i64 @local_regs(i32 %a, i64 %b, i64 %c, i64 %d, i64 %e, i64 %f, i64 %g) {
 ; CHECK-NEXT:    sd 88[$r12] = $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 96[$r12] = $r6
-; CHECK-NEXT:    zxwd $r7 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    copyd $r1 = $r2
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r2 = $r3
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r3 = $r4
 ; CHECK-NEXT:    copyd $r4 = $r5
 ; CHECK-NEXT:    copyd $r5 = $r6
