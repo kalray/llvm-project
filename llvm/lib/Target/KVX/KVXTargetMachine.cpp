@@ -119,6 +119,9 @@ KVXTargetMachine::KVXTargetMachine(const Target &T, const Triple &TT,
                         getEffectiveRelocModel(TT, RM),
                         getEffectiveCodeModel(CM, CodeModel::Small), OL),
       TLOF(std::make_unique<KVXELFTargetObjectFile>()) {
+
+  this->Options.DisableIntegratedAS = true;
+
   initAsmInfo();
 }
 
