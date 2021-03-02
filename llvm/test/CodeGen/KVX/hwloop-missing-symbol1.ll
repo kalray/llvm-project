@@ -364,61 +364,58 @@ define i32 @main(i32 %argc, i8** nocapture readnone %argv)  {
 ; CHECK-NEXT:    # in Loop: Header=BB1_1 Depth=1
 ; CHECK-NEXT:    make $r3 = h
 ; CHECK-NEXT:    make $r0 = 4
-; CHECK-NEXT:    make $r5 = 49
-; CHECK-NEXT:    make $r6 = 64
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    compd.ltu $r17 = $r26, 4
-; CHECK-NEXT:    make $r4 = 1
-; CHECK-NEXT:    make $r18 = 16
-; CHECK-NEXT:    make $r1 = 25
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sh 14[$r3] = $r5
+; CHECK-NEXT:    make $r5 = 64
+; CHECK-NEXT:    make $r1 = 36
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sh 4[$r3] = $r0
+; CHECK-NEXT:    make $r0 = 25
+; CHECK-NEXT:    make $r2 = 49
+; CHECK-NEXT:    make $r4 = 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sh 16[$r3] = $r6
+; CHECK-NEXT:    sh 10[$r3] = $r0
+; CHECK-NEXT:    make $r0 = 81
+; CHECK-NEXT:    make $r18 = 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sh 6[$r3] = $r22
-; CHECK-NEXT:    make $r2 = 36
-; CHECK-NEXT:    make $r7 = 81
-; CHECK-NEXT:    make $r8 = 100
+; CHECK-NEXT:    sh 16[$r3] = $r5
+; CHECK-NEXT:    make $r5 = 144
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r9 = 121
+; CHECK-NEXT:    sh 12[$r3] = $r1
+; CHECK-NEXT:    make $r1 = 100
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sh 14[$r3] = $r2
+; CHECK-NEXT:    make $r2 = 121
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sh 18[$r3] = $r0
+; CHECK-NEXT:    make $r0 = 169
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sh 24[$r3] = $r5
+; CHECK-NEXT:    compd.ltu $r5 = $r26, 4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sh 20[$r3] = $r1
+; CHECK-NEXT:    make $r1 = 196
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sh 22[$r3] = $r2
+; CHECK-NEXT:    make $r2 = 225
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sh 26[$r3] = $r0
 ; CHECK-NEXT:    make $r6 = 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r17 ? $r6 = 2
-; CHECK-NEXT:    sh 10[$r3] = $r1
+; CHECK-NEXT:    cmoved.weqz $r5 ? $r6 = 2
+; CHECK-NEXT:    zxwd $r5 = $r26
+; CHECK-NEXT:    sh 28[$r3] = $r1
+; CHECK-NEXT:    make $r0 = y
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    make $r1 = x
+; CHECK-NEXT:    sh 0[$r3] = $r21
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sh 2[$r3] = $r4
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sh 6[$r3] = $r22
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sh 8[$r3] = $r18
-; CHECK-NEXT:    make $r10 = 144
-; CHECK-NEXT:    make $r11 = 169
-; CHECK-NEXT:    make $r15 = 196
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r16 = 225
-; CHECK-NEXT:    sh 12[$r3] = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sh 18[$r3] = $r7
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sh 20[$r3] = $r8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sh 22[$r3] = $r9
-; CHECK-NEXT:    zxwd $r5 = $r26
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sh 24[$r3] = $r10
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sh 26[$r3] = $r11
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sh 28[$r3] = $r15
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sh 0[$r3] = $r21
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sh 30[$r3] = $r16
+; CHECK-NEXT:    sh 30[$r3] = $r2
 ; CHECK-NEXT:    copyd $r2 = $r18
-; CHECK-NEXT:    make $r0 = y
-; CHECK-NEXT:    make $r1 = x
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r7 = $r5
 ; CHECK-NEXT:    call fircirc
 ; CHECK-NEXT:    ;;
@@ -573,61 +570,59 @@ define i32 @main(i32 %argc, i8** nocapture readnone %argv)  {
 ; CHECK-NEXT:  # %bb.15: # %for.cond10.preheader.i88
 ; CHECK-NEXT:    # in Loop: Header=BB1_9 Depth=1
 ; CHECK-NEXT:    make $r3 = h
-; CHECK-NEXT:    make $r5 = 25
-; CHECK-NEXT:    make $r20 = 0
-; CHECK-NEXT:    make $r4 = 1
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r0 = 4
 ; CHECK-NEXT:    make $r1 = 9
-; CHECK-NEXT:    make $r2 = 16
-; CHECK-NEXT:    make $r6 = 36
+; CHECK-NEXT:    make $r5 = 64
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sh 10[$r3] = $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sh 2[$r3] = $r4
-; CHECK-NEXT:    make $r7 = 49
-; CHECK-NEXT:    make $r8 = 64
-; CHECK-NEXT:    make $r9 = 81
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r10 = 100
 ; CHECK-NEXT:    sh 4[$r3] = $r0
+; CHECK-NEXT:    make $r0 = 25
+; CHECK-NEXT:    make $r2 = 49
+; CHECK-NEXT:    make $r20 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sh 6[$r3] = $r1
+; CHECK-NEXT:    make $r1 = 36
+; CHECK-NEXT:    make $r4 = 1
+; CHECK-NEXT:    make $r6 = 144
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sh 12[$r3] = $r6
+; CHECK-NEXT:    sh 16[$r3] = $r5
+; CHECK-NEXT:    make $r5 = 121
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sh 8[$r3] = $r2
-; CHECK-NEXT:    make $r11 = 121
-; CHECK-NEXT:    make $r15 = 144
-; CHECK-NEXT:    make $r16 = 169
+; CHECK-NEXT:    sh 10[$r3] = $r0
+; CHECK-NEXT:    make $r0 = 81
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r17 = 196
-; CHECK-NEXT:    sh 14[$r3] = $r7
+; CHECK-NEXT:    sh 12[$r3] = $r1
+; CHECK-NEXT:    make $r1 = 100
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sh 16[$r3] = $r8
+; CHECK-NEXT:    sh 22[$r3] = $r5
+; CHECK-NEXT:    make $r5 = 225
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sh 18[$r3] = $r9
+; CHECK-NEXT:    sh 14[$r3] = $r2
+; CHECK-NEXT:    make $r2 = 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sh 20[$r3] = $r10
-; CHECK-NEXT:    make $r32 = 225
+; CHECK-NEXT:    sh 18[$r3] = $r0
+; CHECK-NEXT:    make $r0 = 169
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sh 20[$r3] = $r1
+; CHECK-NEXT:    make $r1 = 196
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sh 30[$r3] = $r5
 ; CHECK-NEXT:    zxwd $r5 = $r24
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sh 22[$r3] = $r11
+; CHECK-NEXT:    sh 24[$r3] = $r6
+; CHECK-NEXT:    srlw $r6 = $r23, 3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sh 24[$r3] = $r15
+; CHECK-NEXT:    sh 26[$r3] = $r0
+; CHECK-NEXT:    make $r0 = y
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sh 26[$r3] = $r16
+; CHECK-NEXT:    sh 28[$r3] = $r1
+; CHECK-NEXT:    make $r1 = x
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sh 0[$r3] = $r20
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sh 28[$r3] = $r17
-; CHECK-NEXT:    srlw $r6 = $r23, 3
+; CHECK-NEXT:    sh 2[$r3] = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sh 30[$r3] = $r32
-; CHECK-NEXT:    make $r0 = y
-; CHECK-NEXT:    make $r1 = x
+; CHECK-NEXT:    sh 8[$r3] = $r2
 ; CHECK-NEXT:    copyd $r7 = $r5
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    call fircirc
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r0 = .L.str

@@ -835,13 +835,12 @@ define <4 x i64> @test_tca_builtins(i64 %a, i64 %b, i64 %c, i64 %d, <256 x i1>* 
 ; CHECK-NEXT:    lv $a6 = 0[$r5]
 ; CHECK-NEXT:    movetq $a8_lo = $r32, $r33
 ; CHECK-NEXT:    movetq $a8_hi = $r34, $r35
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    alignv $a5 = $a8, $a5, 16
 ; CHECK-NEXT:    convwbv0.ru.sat $a4_x = $a0a1a2a3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    aligno $r8r9r10r11 = $a8, $a5, 1
+; CHECK-NEXT:    alignv $a5 = $a8, $a5, 16
 ; CHECK-NEXT:    convwbv1.ru.sat $a4_y = $a0a1a2a3
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    aligno $r8r9r10r11 = $a8, $a5, 1
 ; CHECK-NEXT:    convwbv2.ru.sat $a4_z = $a0a1a2a3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    convwbv3.ru.sat $a4_t = $a0a1a2a3
