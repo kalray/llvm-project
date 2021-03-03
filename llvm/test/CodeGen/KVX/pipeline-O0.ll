@@ -5,18 +5,14 @@
 ; CHECK-NEXT: Target Pass Configuration
 ; CHECK-NEXT: Machine Module Information
 ; CHECK-NEXT: Target Transform Information
-; CHECK-NEXT: Type-Based Alias Analysis
-; CHECK-NEXT: Scoped NoAlias Alias Analysis
-; CHECK-NEXT: Assumption Cache Tracker
 ; CHECK-NEXT: Create Garbage Collector Module Metadata
+; CHECK-NEXT: Assumption Cache Tracker
 ; CHECK-NEXT: Profile summary info
 ; CHECK-NEXT: Machine Branch Probability Analysis
 ; CHECK-NEXT: ModulePass Manager
 ; CHECK-NEXT: Pre-ISel Intrinsic Lowering
 ; CHECK-NEXT: FunctionPass Manager
 ; CHECK-NEXT: Expand Atomic instructions
-; CHECK-NEXT: Dominator Tree Construction
-; CHECK-NEXT: Basic Alias Analysis (stateless AA impl)
 ; CHECK-NEXT: Module Verifier
 ; CHECK-NEXT: Lower Garbage Collection Instructions
 ; CHECK-NEXT: Shadow Stack GC Lowering
@@ -27,7 +23,6 @@
 ; CHECK-NEXT: Expand reduction intrinsics
 ; CHECK-NEXT: Rewrite Symbols
 ; CHECK-NEXT: FunctionPass Manager
-; CHECK-NEXT: Dominator Tree Construction
 ; CHECK-NEXT: Exception handling preparation
 ; CHECK-NEXT: Safe Stack instrumentation pass
 ; CHECK-NEXT: Insert stack protectors
@@ -36,6 +31,7 @@
 ; CHECK-NEXT: Basic Alias Analysis (stateless AA impl)
 ; CHECK-NEXT: Function Alias Analysis Results
 ; CHECK-NEXT: Natural Loop Information
+; CHECK-NEXT: Post-Dominator Tree Construction
 ; CHECK-NEXT: Branch Probability Analysis
 ; CHECK-NEXT: Lazy Branch Probability Analysis
 ; CHECK-NEXT: Lazy Block Frequency Analysis
@@ -46,6 +42,7 @@
 ; CHECK-NEXT: Eliminate PHI nodes for register allocation
 ; CHECK-NEXT: Two-Address instruction pass
 ; CHECK-NEXT: Fast Register Allocator
+; CHECK-NEXT: Fixup Statepoint Caller Saved
 ; CHECK-NEXT: Lazy Machine Block Frequency Analysis
 ; CHECK-NEXT: Machine Optimization Remark Emitter
 ; CHECK-NEXT: Prologue/Epilogue Insertion & Frame Finalization

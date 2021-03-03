@@ -48,9 +48,7 @@ define i32 @hwloop2(i32 %n, i32* nocapture %b) nounwind {
 ; CHECK-NEXT:    cb.wlez $r0 ? .LBB1_1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.3: # %for.body.preheader
-; CHECK-NEXT:    addw $r0 = $r0, -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r2 = $r0, 1
+; CHECK-NEXT:    zxwd $r2 = $r0
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r2, .__LOOPDO_1_END_
@@ -156,9 +154,7 @@ define i32 @hwloop4(i32 %n, i32* nocapture %b) nounwind {
 ; CHECK-NEXT:    cb.wlez $r0 ? .LBB3_3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %for.body.preheader
-; CHECK-NEXT:    addw $r0 = $r0, -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r2 = $r0, 1
+; CHECK-NEXT:    zxwd $r2 = $r0
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r2, .__LOOPDO_2_END_

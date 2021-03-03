@@ -536,7 +536,7 @@ entry:
   %1 = bitcast i32* %a to i8*
   call void @llvm.lifetime.start.p0i8(i64 4, i8* nonnull %1) #3
   store i32 %x, i32* %a, align 4
-  call void @otherv(<16 x i64>* nonnull sret %tmp, i32* nonnull %a, <16 x i64>* nonnull %i) #3
+  call void @otherv(<16 x i64>* nonnull sret(<16 x i64>) %tmp, i32* nonnull %a, <16 x i64>* nonnull %i) #3
   %2 = load <16 x i64>, <16 x i64>* %tmp, align 128
   %vecext = extractelement <16 x i64> %2, i32 0
   %conv = sext i32 %x to i64
@@ -546,7 +546,7 @@ entry:
   ret i64 %add
 }
 
-declare void @otherv(<16 x i64>* sret, i32*, <16 x i64>*) #2
+declare void @otherv(<16 x i64>* sret(<16 x i64>), i32*, <16 x i64>*) #2
 
 define i32 @stackrealign4(i32 %n){
 ; CHECK-LABEL: stackrealign4:

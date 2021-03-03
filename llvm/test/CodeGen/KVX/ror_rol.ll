@@ -31,8 +31,6 @@ define i32 @ror_i32_ri(i32 %in) {
 define i32 @ror_i32_rr(i32 %in, i32 %r) {
 ; CHECK-LABEL: ror_i32_rr:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    rorw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -46,8 +44,6 @@ define i32 @ror_i32_rr(i32 %in, i32 %r) {
 define i32 @rol_i32_rr(i32 %in, i32 %l) {
 ; CHECK-LABEL: rol_i32_rr:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    rolw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -109,9 +105,9 @@ define <3 x i16> @test_fshl_v3i16(<3 x i16> %a, <3 x i16> %b) {
 ; CHECK-LABEL: test_fshl_v3i16:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    neghq $r2 = $r1
-; CHECK-NEXT:    andd $r1 = $r1, 0xf000f000f
+; CHECK-NEXT:    andd $r1 = $r1, 0xf000f000f000f
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r2 = $r2, 0xf000f000f
+; CHECK-NEXT:    andd $r2 = $r2, 0xf000f000f000f
 ; CHECK-NEXT:    extfz $r3 = $r1, 19, 16
 ; CHECK-NEXT:    sllhqs $r5 = $r0, $r1
 ; CHECK-NEXT:    ;;

@@ -32,9 +32,7 @@ define i32 @c() #0 {
 ; CHECK-NEXT:    cb.wlez $r0 ? .LBB0_1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.3: # %for.body.preheader
-; CHECK-NEXT:    addw $r0 = $r0, -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r1 = $r0, 1
+; CHECK-NEXT:    zxwd $r1 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r1, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;

@@ -523,10 +523,6 @@ entry:
   ret <2 x i32> %r
 }
 
-; RUN: llc -O2 -o - %s | FileCheck %s
-
-target triple = "kvx-kalray-cos"
-
 define <4 x i16> @set_eq_v4i16_rr(<4 x i16> %a, <4 x i16> %b){
 ; CHECK-LABEL: set_eq_v4i16_rr:
 ; CHECK:       # %bb.0: # %entry
