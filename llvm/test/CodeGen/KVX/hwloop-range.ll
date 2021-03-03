@@ -16,9 +16,7 @@ define void @test(i32* nocapture %a, i32* nocapture readonly %b, i32 %n) {
 ; CHECK-NEXT:    cb.wlez $r2 ? .LBB0_3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %for.body.preheader
-; CHECK-NEXT:    addw $r2 = $r2, -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r3 = $r2, 1
+; CHECK-NEXT:    zxwd $r3 = $r2
 ; CHECK-NEXT:    make $r2 = g
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r3, .__LOOPDO_0_END_
