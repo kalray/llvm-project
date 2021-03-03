@@ -262,11 +262,7 @@ define void @reg_imm_nonzero_negative_bump(i32* nocapture %x, i32 %start){
 ; CHECK-NEXT:  # %bb.1: # %for.body.preheader
 ; CHECK-NEXT:    zxwd $r2 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mind $r3 = $r2, 3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfd $r3 = $r3, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r3 = $r3, 1
+; CHECK-NEXT:    addd $r3 = $r2, -2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r3, .__LOOPDO_6_END_
 ; CHECK-NEXT:    ;;
@@ -311,11 +307,7 @@ define void @reg_imm_nonzero_positive_bump(i32* nocapture %x, i32 %start){
 ; CHECK-NEXT:  # %bb.1: # %for.body.preheader
 ; CHECK-NEXT:    sxwd $r2 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    maxd $r3 = $r2, 99
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfd $r3 = $r2, $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r3 = $r3, 1
+; CHECK-NEXT:    sbfd $r3 = $r2, 100
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r3, .__LOOPDO_7_END_
 ; CHECK-NEXT:    ;;
@@ -358,12 +350,8 @@ define void @reg_imm_zero_positive_bump(i32* nocapture %x, i32 %start){
 ; CHECK-NEXT:  # %bb.1: # %for.body.preheader
 ; CHECK-NEXT:    sxwd $r2 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    maxd $r3 = $r2, 0
+; CHECK-NEXT:    sbfd $r3 = $r2, 1
 ; CHECK-NEXT:    sbfx4d $r0 = $r2, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfd $r3 = $r2, $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r3 = $r3, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r3, .__LOOPDO_8_END_
 ; CHECK-NEXT:    ;;
@@ -500,8 +488,6 @@ define void @reg_reg_negative_bump(i32* nocapture %x, i32 %start, i32 %end){
 ; CHECK-NEXT:  # %bb.1: # %for.body.preheader
 ; CHECK-NEXT:    sxwd $r3 = $r1
 ; CHECK-NEXT:    sxwd $r2 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mind $r2 = $r2, $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfd $r2 = $r2, $r3
 ; CHECK-NEXT:    ;;

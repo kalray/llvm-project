@@ -306,15 +306,14 @@ v8f32 selectfwo(v8f32 v1, v8f32 v2, v8i32 c) {
 // CHECK-NEXT:    [[TMP1:%.*]] = extractelement <2 x i64> [[BC1]], i64 0
 // CHECK-NEXT:    [[TMP2:%.*]] = extractelement <2 x i64> [[C:%.*]], i64 0
 // CHECK-NEXT:    [[TMP3:%.*]] = tail call i64 @llvm.kvx.cmoved(i64 [[TMP0]], i64 [[TMP1]], i64 [[TMP2]], i32 0)
-// CHECK-NEXT:    [[TMP4:%.*]] = bitcast i64 [[TMP3]] to double
-// CHECK-NEXT:    [[TMP5:%.*]] = insertelement <2 x double> undef, double [[TMP4]], i64 0
-// CHECK-NEXT:    [[TMP6:%.*]] = extractelement <2 x i64> [[BC]], i64 1
-// CHECK-NEXT:    [[TMP7:%.*]] = extractelement <2 x i64> [[BC1]], i64 1
-// CHECK-NEXT:    [[TMP8:%.*]] = extractelement <2 x i64> [[C]], i64 1
-// CHECK-NEXT:    [[TMP9:%.*]] = tail call i64 @llvm.kvx.cmoved(i64 [[TMP6]], i64 [[TMP7]], i64 [[TMP8]], i32 0)
-// CHECK-NEXT:    [[TMP10:%.*]] = bitcast i64 [[TMP9]] to double
-// CHECK-NEXT:    [[TMP11:%.*]] = insertelement <2 x double> [[TMP5]], double [[TMP10]], i64 1
-// CHECK-NEXT:    ret <2 x double> [[TMP11]]
+// CHECK-NEXT:    [[TMP4:%.*]] = insertelement <2 x i64> undef, i64 [[TMP3]], i64 0
+// CHECK-NEXT:    [[TMP5:%.*]] = extractelement <2 x i64> [[BC]], i64 1
+// CHECK-NEXT:    [[TMP6:%.*]] = extractelement <2 x i64> [[BC1]], i64 1
+// CHECK-NEXT:    [[TMP7:%.*]] = extractelement <2 x i64> [[C]], i64 1
+// CHECK-NEXT:    [[TMP8:%.*]] = tail call i64 @llvm.kvx.cmoved(i64 [[TMP5]], i64 [[TMP6]], i64 [[TMP7]], i32 0)
+// CHECK-NEXT:    [[TMP9:%.*]] = insertelement <2 x i64> [[TMP4]], i64 [[TMP8]], i64 1
+// CHECK-NEXT:    [[TMP10:%.*]] = bitcast <2 x i64> [[TMP9]] to <2 x double>
+// CHECK-NEXT:    ret <2 x double> [[TMP10]]
 //
 v2f64 selectfdp(v2f64 v1, v2f64 v2, v2i64 c) {
   return __builtin_kvx_selectfdp(v1, v2, c, ".nez");
@@ -328,27 +327,24 @@ v2f64 selectfdp(v2f64 v1, v2f64 v2, v2i64 c) {
 // CHECK-NEXT:    [[TMP1:%.*]] = extractelement <4 x i64> [[BC1]], i64 0
 // CHECK-NEXT:    [[TMP2:%.*]] = extractelement <4 x i64> [[C:%.*]], i64 0
 // CHECK-NEXT:    [[TMP3:%.*]] = tail call i64 @llvm.kvx.cmoved(i64 [[TMP0]], i64 [[TMP1]], i64 [[TMP2]], i32 0)
-// CHECK-NEXT:    [[TMP4:%.*]] = bitcast i64 [[TMP3]] to double
-// CHECK-NEXT:    [[TMP5:%.*]] = insertelement <4 x double> undef, double [[TMP4]], i64 0
-// CHECK-NEXT:    [[TMP6:%.*]] = extractelement <4 x i64> [[BC]], i64 1
-// CHECK-NEXT:    [[TMP7:%.*]] = extractelement <4 x i64> [[BC1]], i64 1
-// CHECK-NEXT:    [[TMP8:%.*]] = extractelement <4 x i64> [[C]], i64 1
-// CHECK-NEXT:    [[TMP9:%.*]] = tail call i64 @llvm.kvx.cmoved(i64 [[TMP6]], i64 [[TMP7]], i64 [[TMP8]], i32 0)
-// CHECK-NEXT:    [[TMP10:%.*]] = bitcast i64 [[TMP9]] to double
-// CHECK-NEXT:    [[TMP11:%.*]] = insertelement <4 x double> [[TMP5]], double [[TMP10]], i64 1
-// CHECK-NEXT:    [[TMP12:%.*]] = extractelement <4 x i64> [[BC]], i64 2
-// CHECK-NEXT:    [[TMP13:%.*]] = extractelement <4 x i64> [[BC1]], i64 2
-// CHECK-NEXT:    [[TMP14:%.*]] = extractelement <4 x i64> [[C]], i64 2
-// CHECK-NEXT:    [[TMP15:%.*]] = tail call i64 @llvm.kvx.cmoved(i64 [[TMP12]], i64 [[TMP13]], i64 [[TMP14]], i32 0)
-// CHECK-NEXT:    [[TMP16:%.*]] = bitcast i64 [[TMP15]] to double
-// CHECK-NEXT:    [[TMP17:%.*]] = insertelement <4 x double> [[TMP11]], double [[TMP16]], i64 2
-// CHECK-NEXT:    [[TMP18:%.*]] = extractelement <4 x i64> [[BC]], i64 3
-// CHECK-NEXT:    [[TMP19:%.*]] = extractelement <4 x i64> [[BC1]], i64 3
-// CHECK-NEXT:    [[TMP20:%.*]] = extractelement <4 x i64> [[C]], i64 3
-// CHECK-NEXT:    [[TMP21:%.*]] = tail call i64 @llvm.kvx.cmoved(i64 [[TMP18]], i64 [[TMP19]], i64 [[TMP20]], i32 0)
-// CHECK-NEXT:    [[TMP22:%.*]] = bitcast i64 [[TMP21]] to double
-// CHECK-NEXT:    [[TMP23:%.*]] = insertelement <4 x double> [[TMP17]], double [[TMP22]], i64 3
-// CHECK-NEXT:    ret <4 x double> [[TMP23]]
+// CHECK-NEXT:    [[TMP4:%.*]] = insertelement <4 x i64> undef, i64 [[TMP3]], i64 0
+// CHECK-NEXT:    [[TMP5:%.*]] = extractelement <4 x i64> [[BC]], i64 1
+// CHECK-NEXT:    [[TMP6:%.*]] = extractelement <4 x i64> [[BC1]], i64 1
+// CHECK-NEXT:    [[TMP7:%.*]] = extractelement <4 x i64> [[C]], i64 1
+// CHECK-NEXT:    [[TMP8:%.*]] = tail call i64 @llvm.kvx.cmoved(i64 [[TMP5]], i64 [[TMP6]], i64 [[TMP7]], i32 0)
+// CHECK-NEXT:    [[TMP9:%.*]] = insertelement <4 x i64> [[TMP4]], i64 [[TMP8]], i64 1
+// CHECK-NEXT:    [[TMP10:%.*]] = extractelement <4 x i64> [[BC]], i64 2
+// CHECK-NEXT:    [[TMP11:%.*]] = extractelement <4 x i64> [[BC1]], i64 2
+// CHECK-NEXT:    [[TMP12:%.*]] = extractelement <4 x i64> [[C]], i64 2
+// CHECK-NEXT:    [[TMP13:%.*]] = tail call i64 @llvm.kvx.cmoved(i64 [[TMP10]], i64 [[TMP11]], i64 [[TMP12]], i32 0)
+// CHECK-NEXT:    [[TMP14:%.*]] = insertelement <4 x i64> [[TMP9]], i64 [[TMP13]], i64 2
+// CHECK-NEXT:    [[TMP15:%.*]] = extractelement <4 x i64> [[BC]], i64 3
+// CHECK-NEXT:    [[TMP16:%.*]] = extractelement <4 x i64> [[BC1]], i64 3
+// CHECK-NEXT:    [[TMP17:%.*]] = extractelement <4 x i64> [[C]], i64 3
+// CHECK-NEXT:    [[TMP18:%.*]] = tail call i64 @llvm.kvx.cmoved(i64 [[TMP15]], i64 [[TMP16]], i64 [[TMP17]], i32 0)
+// CHECK-NEXT:    [[TMP19:%.*]] = insertelement <4 x i64> [[TMP14]], i64 [[TMP18]], i64 3
+// CHECK-NEXT:    [[TMP20:%.*]] = bitcast <4 x i64> [[TMP19]] to <4 x double>
+// CHECK-NEXT:    ret <4 x double> [[TMP20]]
 //
 v4f64 selectfdq(v4f64 v1, v4f64 v2, v4i64 c) {
   return __builtin_kvx_selectfdq(v1, v2, c, ".nez");

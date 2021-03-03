@@ -19,25 +19,25 @@ define i32 @c()  {
 ; CHECK-NEXT:    make $r2 = 4
 ; CHECK-NEXT:    goto .LBB0_2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_106: # %while.cond.loopexit.loopexit.7
+; CHECK-NEXT:  .LBB0_113: # %while.cond.loopexit.loopexit.7
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
 ; CHECK-NEXT:    lwz $r4 = 0[$r0]
-; CHECK-NEXT:    copyd $r3 = $r6
+; CHECK-NEXT:    copyd $r3 = $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_107: # %while.cond.loopexit.7
+; CHECK-NEXT:  .LBB0_114: # %while.cond.loopexit.7
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
 ; CHECK-NEXT:    cb.weqz $r4 ? .LBB0_8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_2: # %for.cond.preheader
 ; CHECK-NEXT:    # =>This Loop Header: Depth=1
 ; CHECK-NEXT:    # Child Loop BB0_10 Depth 2
-; CHECK-NEXT:    # Child Loop BB0_27 Depth 2
-; CHECK-NEXT:    # Child Loop BB0_40 Depth 2
-; CHECK-NEXT:    # Child Loop BB0_53 Depth 2
-; CHECK-NEXT:    # Child Loop BB0_66 Depth 2
-; CHECK-NEXT:    # Child Loop BB0_79 Depth 2
-; CHECK-NEXT:    # Child Loop BB0_92 Depth 2
-; CHECK-NEXT:    # Child Loop BB0_105 Depth 2
+; CHECK-NEXT:    # Child Loop BB0_28 Depth 2
+; CHECK-NEXT:    # Child Loop BB0_42 Depth 2
+; CHECK-NEXT:    # Child Loop BB0_56 Depth 2
+; CHECK-NEXT:    # Child Loop BB0_70 Depth 2
+; CHECK-NEXT:    # Child Loop BB0_84 Depth 2
+; CHECK-NEXT:    # Child Loop BB0_98 Depth 2
+; CHECK-NEXT:    # Child Loop BB0_112 Depth 2
 ; CHECK-NEXT:    cb.wltz $r3 ? .LBB0_3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.7: # %while.cond.loopexit
@@ -184,101 +184,107 @@ define i32 @c()  {
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
 ; CHECK-NEXT:    cb.wltz $r3 ? .LBB0_18
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.29: # %while.cond.loopexit.1
+; CHECK-NEXT:  # %bb.30: # %while.cond.loopexit.1
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    cb.wnez $r4 ? .LBB0_30
+; CHECK-NEXT:    cb.wnez $r4 ? .LBB0_31
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    goto .LBB0_8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_18: # %for.body.preheader.1
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
 ; CHECK-NEXT:    negw $r4 = $r3
+; CHECK-NEXT:    copyd $r5 = $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r5 = $r4, 7
-; CHECK-NEXT:    copyd $r4 = $r3
+; CHECK-NEXT:    andw $r4 = $r4, 7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.weqz $r5 ? .LBB0_26
+; CHECK-NEXT:    cb.weqz $r4 ? .LBB0_26
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.19: # %for.body.prol.110
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 1
-; CHECK-NEXT:    compw.eq $r7 = $r5, 1
+; CHECK-NEXT:    ld $r5 = 0[$r1]
+; CHECK-NEXT:    compw.eq $r6 = $r4, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r7 ? .LBB0_26
+; CHECK-NEXT:    sb 0[$r5] = $r2
+; CHECK-NEXT:    addw $r5 = $r3, 1
+; CHECK-NEXT:    cb.odd $r6 ? .LBB0_26
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.20: # %for.body.prol.1.1
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 2
-; CHECK-NEXT:    compw.eq $r7 = $r5, 2
+; CHECK-NEXT:    ld $r5 = 0[$r1]
+; CHECK-NEXT:    compw.eq $r6 = $r4, 2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r7 ? .LBB0_26
+; CHECK-NEXT:    sb 0[$r5] = $r2
+; CHECK-NEXT:    addw $r5 = $r3, 2
+; CHECK-NEXT:    cb.odd $r6 ? .LBB0_26
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.21: # %for.body.prol.2.1
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 3
-; CHECK-NEXT:    compw.eq $r7 = $r5, 3
+; CHECK-NEXT:    ld $r5 = 0[$r1]
+; CHECK-NEXT:    compw.eq $r6 = $r4, 3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r7 ? .LBB0_26
+; CHECK-NEXT:    sb 0[$r5] = $r2
+; CHECK-NEXT:    addw $r5 = $r3, 3
+; CHECK-NEXT:    cb.odd $r6 ? .LBB0_26
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.22: # %for.body.prol.3.1
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 4
-; CHECK-NEXT:    compw.eq $r7 = $r5, 4
+; CHECK-NEXT:    ld $r5 = 0[$r1]
+; CHECK-NEXT:    compw.eq $r6 = $r4, 4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r7 ? .LBB0_26
+; CHECK-NEXT:    sb 0[$r5] = $r2
+; CHECK-NEXT:    addw $r5 = $r3, 4
+; CHECK-NEXT:    cb.odd $r6 ? .LBB0_26
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.23: # %for.body.prol.4.1
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 5
-; CHECK-NEXT:    compw.eq $r7 = $r5, 5
+; CHECK-NEXT:    ld $r5 = 0[$r1]
+; CHECK-NEXT:    compw.eq $r6 = $r4, 5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r7 ? .LBB0_26
+; CHECK-NEXT:    sb 0[$r5] = $r2
+; CHECK-NEXT:    addw $r5 = $r3, 5
+; CHECK-NEXT:    cb.odd $r6 ? .LBB0_26
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.24: # %for.body.prol.5.1
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 6
-; CHECK-NEXT:    compw.eq $r5 = $r5, 6
+; CHECK-NEXT:    ld $r5 = 0[$r1]
+; CHECK-NEXT:    compw.eq $r4 = $r4, 6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r5 ? .LBB0_26
+; CHECK-NEXT:    sb 0[$r5] = $r2
+; CHECK-NEXT:    addw $r5 = $r3, 6
+; CHECK-NEXT:    cb.odd $r4 ? .LBB0_26
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.25: # %for.body.prol.6.1
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r5 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 7
+; CHECK-NEXT:    ld $r4 = 0[$r1]
+; CHECK-NEXT:    addw $r5 = $r3, 7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r5] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
+; CHECK-NEXT:    sb 0[$r4] = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_26: # %for.body.prol.loopexit.1
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
 ; CHECK-NEXT:    compw.gtu $r3 = $r3, -8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.odd $r3 ? .LBB0_28
+; CHECK-NEXT:    cb.odd $r3 ? .LBB0_29
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_27: # %for.body.1
+; CHECK-NEXT:  # %bb.27: # %for.body.1.preheader
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    maxw $r3 = $r5, -8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbfw $r3 = $r5, $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addw $r3 = $r3, 7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srld $r3 = $r3, 3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r3 = $r3, 1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    loopdo $r3, .__LOOPDO_1_END_
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  .LBB0_28: # %for.body.1
 ; CHECK-NEXT:    # Parent Loop BB0_2 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
 ; CHECK-NEXT:    ld $r3 = 0[$r1]
-; CHECK-NEXT:    addw $r6 = $r4, 8
-; CHECK-NEXT:    compw.lt $r5 = $r4, -8
+; CHECK-NEXT:    addw $r5 = $r5, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sb 0[$r3] = $r2
 ; CHECK-NEXT:    ;;
@@ -309,115 +315,120 @@ define i32 @c()  {
 ; CHECK-NEXT:    ld $r3 = 0[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sb 0[$r3] = $r2
-; CHECK-NEXT:    copyd $r4 = $r6
-; CHECK-NEXT:    cb.odd $r5 ? .LBB0_27
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_28: # %while.cond.loopexit.loopexit.1
+; CHECK-NEXT:  .__LOOPDO_1_END_:
+; CHECK-NEXT:  .LBB0_29: # %while.cond.loopexit.loopexit.1
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
 ; CHECK-NEXT:    lwz $r4 = 0[$r0]
-; CHECK-NEXT:    copyd $r3 = $r6
+; CHECK-NEXT:    copyd $r3 = $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.weqz $r4 ? .LBB0_8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_30: # %for.cond.preheader.2
+; CHECK-NEXT:  .LBB0_31: # %for.cond.preheader.2
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    cb.wltz $r3 ? .LBB0_31
+; CHECK-NEXT:    cb.wltz $r3 ? .LBB0_32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.42: # %while.cond.loopexit.2
+; CHECK-NEXT:  # %bb.44: # %while.cond.loopexit.2
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    cb.wnez $r4 ? .LBB0_43
+; CHECK-NEXT:    cb.wnez $r4 ? .LBB0_45
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    goto .LBB0_8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_31: # %for.body.preheader.2
+; CHECK-NEXT:  .LBB0_32: # %for.body.preheader.2
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
 ; CHECK-NEXT:    negw $r4 = $r3
+; CHECK-NEXT:    copyd $r5 = $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r5 = $r4, 7
-; CHECK-NEXT:    copyd $r4 = $r3
+; CHECK-NEXT:    andw $r4 = $r4, 7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.weqz $r5 ? .LBB0_39
+; CHECK-NEXT:    cb.weqz $r4 ? .LBB0_40
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.32: # %for.body.prol.215
-; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 1
-; CHECK-NEXT:    compw.eq $r7 = $r5, 1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r7 ? .LBB0_39
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.33: # %for.body.prol.1.2
-; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 2
-; CHECK-NEXT:    compw.eq $r7 = $r5, 2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r7 ? .LBB0_39
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.34: # %for.body.prol.2.2
-; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 3
-; CHECK-NEXT:    compw.eq $r7 = $r5, 3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r7 ? .LBB0_39
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.35: # %for.body.prol.3.2
-; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 4
-; CHECK-NEXT:    compw.eq $r7 = $r5, 4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r7 ? .LBB0_39
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.36: # %for.body.prol.4.2
-; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 5
-; CHECK-NEXT:    compw.eq $r7 = $r5, 5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r7 ? .LBB0_39
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.37: # %for.body.prol.5.2
-; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 6
-; CHECK-NEXT:    compw.eq $r5 = $r5, 6
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r5 ? .LBB0_39
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.38: # %for.body.prol.6.2
+; CHECK-NEXT:  # %bb.33: # %for.body.prol.215
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
 ; CHECK-NEXT:    ld $r5 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 7
+; CHECK-NEXT:    compw.eq $r6 = $r4, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sb 0[$r5] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
+; CHECK-NEXT:    addw $r5 = $r3, 1
+; CHECK-NEXT:    cb.odd $r6 ? .LBB0_40
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_39: # %for.body.prol.loopexit.2
+; CHECK-NEXT:  # %bb.34: # %for.body.prol.1.2
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    ld $r5 = 0[$r1]
+; CHECK-NEXT:    compw.eq $r6 = $r4, 2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sb 0[$r5] = $r2
+; CHECK-NEXT:    addw $r5 = $r3, 2
+; CHECK-NEXT:    cb.odd $r6 ? .LBB0_40
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  # %bb.35: # %for.body.prol.2.2
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    ld $r5 = 0[$r1]
+; CHECK-NEXT:    compw.eq $r6 = $r4, 3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sb 0[$r5] = $r2
+; CHECK-NEXT:    addw $r5 = $r3, 3
+; CHECK-NEXT:    cb.odd $r6 ? .LBB0_40
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  # %bb.36: # %for.body.prol.3.2
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    ld $r5 = 0[$r1]
+; CHECK-NEXT:    compw.eq $r6 = $r4, 4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sb 0[$r5] = $r2
+; CHECK-NEXT:    addw $r5 = $r3, 4
+; CHECK-NEXT:    cb.odd $r6 ? .LBB0_40
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  # %bb.37: # %for.body.prol.4.2
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    ld $r5 = 0[$r1]
+; CHECK-NEXT:    compw.eq $r6 = $r4, 5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sb 0[$r5] = $r2
+; CHECK-NEXT:    addw $r5 = $r3, 5
+; CHECK-NEXT:    cb.odd $r6 ? .LBB0_40
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  # %bb.38: # %for.body.prol.5.2
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    ld $r5 = 0[$r1]
+; CHECK-NEXT:    compw.eq $r4 = $r4, 6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sb 0[$r5] = $r2
+; CHECK-NEXT:    addw $r5 = $r3, 6
+; CHECK-NEXT:    cb.odd $r4 ? .LBB0_40
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  # %bb.39: # %for.body.prol.6.2
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    ld $r4 = 0[$r1]
+; CHECK-NEXT:    addw $r5 = $r3, 7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sb 0[$r4] = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  .LBB0_40: # %for.body.prol.loopexit.2
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
 ; CHECK-NEXT:    compw.gtu $r3 = $r3, -8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.odd $r3 ? .LBB0_41
+; CHECK-NEXT:    cb.odd $r3 ? .LBB0_43
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_40: # %for.body.2
+; CHECK-NEXT:  # %bb.41: # %for.body.2.preheader
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    maxw $r3 = $r5, -8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbfw $r3 = $r5, $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addw $r3 = $r3, 7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srld $r3 = $r3, 3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r3 = $r3, 1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    loopdo $r3, .__LOOPDO_2_END_
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  .LBB0_42: # %for.body.2
 ; CHECK-NEXT:    # Parent Loop BB0_2 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
 ; CHECK-NEXT:    ld $r3 = 0[$r1]
-; CHECK-NEXT:    addw $r6 = $r4, 8
-; CHECK-NEXT:    compw.lt $r5 = $r4, -8
+; CHECK-NEXT:    addw $r5 = $r5, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sb 0[$r3] = $r2
 ; CHECK-NEXT:    ;;
@@ -448,115 +459,120 @@ define i32 @c()  {
 ; CHECK-NEXT:    ld $r3 = 0[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sb 0[$r3] = $r2
-; CHECK-NEXT:    copyd $r4 = $r6
-; CHECK-NEXT:    cb.odd $r5 ? .LBB0_40
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_41: # %while.cond.loopexit.loopexit.2
+; CHECK-NEXT:  .__LOOPDO_2_END_:
+; CHECK-NEXT:  .LBB0_43: # %while.cond.loopexit.loopexit.2
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
 ; CHECK-NEXT:    lwz $r4 = 0[$r0]
-; CHECK-NEXT:    copyd $r3 = $r6
+; CHECK-NEXT:    copyd $r3 = $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.weqz $r4 ? .LBB0_8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_43: # %for.cond.preheader.3
+; CHECK-NEXT:  .LBB0_45: # %for.cond.preheader.3
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    cb.wltz $r3 ? .LBB0_44
+; CHECK-NEXT:    cb.wltz $r3 ? .LBB0_46
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.55: # %while.cond.loopexit.3
+; CHECK-NEXT:  # %bb.58: # %while.cond.loopexit.3
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    cb.wnez $r4 ? .LBB0_56
+; CHECK-NEXT:    cb.wnez $r4 ? .LBB0_59
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    goto .LBB0_8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_44: # %for.body.preheader.3
+; CHECK-NEXT:  .LBB0_46: # %for.body.preheader.3
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
 ; CHECK-NEXT:    negw $r4 = $r3
+; CHECK-NEXT:    copyd $r5 = $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r5 = $r4, 7
-; CHECK-NEXT:    copyd $r4 = $r3
+; CHECK-NEXT:    andw $r4 = $r4, 7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.weqz $r5 ? .LBB0_52
+; CHECK-NEXT:    cb.weqz $r4 ? .LBB0_54
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.45: # %for.body.prol.320
-; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 1
-; CHECK-NEXT:    compw.eq $r7 = $r5, 1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r7 ? .LBB0_52
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.46: # %for.body.prol.1.3
-; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 2
-; CHECK-NEXT:    compw.eq $r7 = $r5, 2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r7 ? .LBB0_52
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.47: # %for.body.prol.2.3
-; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 3
-; CHECK-NEXT:    compw.eq $r7 = $r5, 3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r7 ? .LBB0_52
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.48: # %for.body.prol.3.3
-; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 4
-; CHECK-NEXT:    compw.eq $r7 = $r5, 4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r7 ? .LBB0_52
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.49: # %for.body.prol.4.3
-; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 5
-; CHECK-NEXT:    compw.eq $r7 = $r5, 5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r7 ? .LBB0_52
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.50: # %for.body.prol.5.3
-; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 6
-; CHECK-NEXT:    compw.eq $r5 = $r5, 6
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r5 ? .LBB0_52
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.51: # %for.body.prol.6.3
+; CHECK-NEXT:  # %bb.47: # %for.body.prol.320
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
 ; CHECK-NEXT:    ld $r5 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 7
+; CHECK-NEXT:    compw.eq $r6 = $r4, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sb 0[$r5] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
+; CHECK-NEXT:    addw $r5 = $r3, 1
+; CHECK-NEXT:    cb.odd $r6 ? .LBB0_54
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_52: # %for.body.prol.loopexit.3
+; CHECK-NEXT:  # %bb.48: # %for.body.prol.1.3
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    ld $r5 = 0[$r1]
+; CHECK-NEXT:    compw.eq $r6 = $r4, 2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sb 0[$r5] = $r2
+; CHECK-NEXT:    addw $r5 = $r3, 2
+; CHECK-NEXT:    cb.odd $r6 ? .LBB0_54
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  # %bb.49: # %for.body.prol.2.3
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    ld $r5 = 0[$r1]
+; CHECK-NEXT:    compw.eq $r6 = $r4, 3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sb 0[$r5] = $r2
+; CHECK-NEXT:    addw $r5 = $r3, 3
+; CHECK-NEXT:    cb.odd $r6 ? .LBB0_54
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  # %bb.50: # %for.body.prol.3.3
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    ld $r5 = 0[$r1]
+; CHECK-NEXT:    compw.eq $r6 = $r4, 4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sb 0[$r5] = $r2
+; CHECK-NEXT:    addw $r5 = $r3, 4
+; CHECK-NEXT:    cb.odd $r6 ? .LBB0_54
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  # %bb.51: # %for.body.prol.4.3
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    ld $r5 = 0[$r1]
+; CHECK-NEXT:    compw.eq $r6 = $r4, 5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sb 0[$r5] = $r2
+; CHECK-NEXT:    addw $r5 = $r3, 5
+; CHECK-NEXT:    cb.odd $r6 ? .LBB0_54
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  # %bb.52: # %for.body.prol.5.3
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    ld $r5 = 0[$r1]
+; CHECK-NEXT:    compw.eq $r4 = $r4, 6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sb 0[$r5] = $r2
+; CHECK-NEXT:    addw $r5 = $r3, 6
+; CHECK-NEXT:    cb.odd $r4 ? .LBB0_54
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  # %bb.53: # %for.body.prol.6.3
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    ld $r4 = 0[$r1]
+; CHECK-NEXT:    addw $r5 = $r3, 7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sb 0[$r4] = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  .LBB0_54: # %for.body.prol.loopexit.3
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
 ; CHECK-NEXT:    compw.gtu $r3 = $r3, -8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.odd $r3 ? .LBB0_54
+; CHECK-NEXT:    cb.odd $r3 ? .LBB0_57
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_53: # %for.body.3
+; CHECK-NEXT:  # %bb.55: # %for.body.3.preheader
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    maxw $r3 = $r5, -8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbfw $r3 = $r5, $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addw $r3 = $r3, 7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srld $r3 = $r3, 3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r3 = $r3, 1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    loopdo $r3, .__LOOPDO_3_END_
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  .LBB0_56: # %for.body.3
 ; CHECK-NEXT:    # Parent Loop BB0_2 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
 ; CHECK-NEXT:    ld $r3 = 0[$r1]
-; CHECK-NEXT:    addw $r6 = $r4, 8
-; CHECK-NEXT:    compw.lt $r5 = $r4, -8
+; CHECK-NEXT:    addw $r5 = $r5, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sb 0[$r3] = $r2
 ; CHECK-NEXT:    ;;
@@ -587,115 +603,120 @@ define i32 @c()  {
 ; CHECK-NEXT:    ld $r3 = 0[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sb 0[$r3] = $r2
-; CHECK-NEXT:    copyd $r4 = $r6
-; CHECK-NEXT:    cb.odd $r5 ? .LBB0_53
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_54: # %while.cond.loopexit.loopexit.3
+; CHECK-NEXT:  .__LOOPDO_3_END_:
+; CHECK-NEXT:  .LBB0_57: # %while.cond.loopexit.loopexit.3
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
 ; CHECK-NEXT:    lwz $r4 = 0[$r0]
-; CHECK-NEXT:    copyd $r3 = $r6
+; CHECK-NEXT:    copyd $r3 = $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.weqz $r4 ? .LBB0_8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_56: # %for.cond.preheader.4
+; CHECK-NEXT:  .LBB0_59: # %for.cond.preheader.4
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    cb.wltz $r3 ? .LBB0_57
+; CHECK-NEXT:    cb.wltz $r3 ? .LBB0_60
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.68: # %while.cond.loopexit.4
+; CHECK-NEXT:  # %bb.72: # %while.cond.loopexit.4
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    cb.wnez $r4 ? .LBB0_69
+; CHECK-NEXT:    cb.wnez $r4 ? .LBB0_73
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    goto .LBB0_8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_57: # %for.body.preheader.4
+; CHECK-NEXT:  .LBB0_60: # %for.body.preheader.4
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
 ; CHECK-NEXT:    negw $r4 = $r3
+; CHECK-NEXT:    copyd $r5 = $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r5 = $r4, 7
-; CHECK-NEXT:    copyd $r4 = $r3
+; CHECK-NEXT:    andw $r4 = $r4, 7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.weqz $r5 ? .LBB0_65
+; CHECK-NEXT:    cb.weqz $r4 ? .LBB0_68
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.58: # %for.body.prol.425
-; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 1
-; CHECK-NEXT:    compw.eq $r7 = $r5, 1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r7 ? .LBB0_65
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.59: # %for.body.prol.1.4
-; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 2
-; CHECK-NEXT:    compw.eq $r7 = $r5, 2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r7 ? .LBB0_65
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.60: # %for.body.prol.2.4
-; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 3
-; CHECK-NEXT:    compw.eq $r7 = $r5, 3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r7 ? .LBB0_65
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.61: # %for.body.prol.3.4
-; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 4
-; CHECK-NEXT:    compw.eq $r7 = $r5, 4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r7 ? .LBB0_65
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.62: # %for.body.prol.4.4
-; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 5
-; CHECK-NEXT:    compw.eq $r7 = $r5, 5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r7 ? .LBB0_65
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.63: # %for.body.prol.5.4
-; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 6
-; CHECK-NEXT:    compw.eq $r5 = $r5, 6
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r5 ? .LBB0_65
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.64: # %for.body.prol.6.4
+; CHECK-NEXT:  # %bb.61: # %for.body.prol.425
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
 ; CHECK-NEXT:    ld $r5 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 7
+; CHECK-NEXT:    compw.eq $r6 = $r4, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sb 0[$r5] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
+; CHECK-NEXT:    addw $r5 = $r3, 1
+; CHECK-NEXT:    cb.odd $r6 ? .LBB0_68
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_65: # %for.body.prol.loopexit.4
+; CHECK-NEXT:  # %bb.62: # %for.body.prol.1.4
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    ld $r5 = 0[$r1]
+; CHECK-NEXT:    compw.eq $r6 = $r4, 2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sb 0[$r5] = $r2
+; CHECK-NEXT:    addw $r5 = $r3, 2
+; CHECK-NEXT:    cb.odd $r6 ? .LBB0_68
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  # %bb.63: # %for.body.prol.2.4
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    ld $r5 = 0[$r1]
+; CHECK-NEXT:    compw.eq $r6 = $r4, 3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sb 0[$r5] = $r2
+; CHECK-NEXT:    addw $r5 = $r3, 3
+; CHECK-NEXT:    cb.odd $r6 ? .LBB0_68
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  # %bb.64: # %for.body.prol.3.4
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    ld $r5 = 0[$r1]
+; CHECK-NEXT:    compw.eq $r6 = $r4, 4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sb 0[$r5] = $r2
+; CHECK-NEXT:    addw $r5 = $r3, 4
+; CHECK-NEXT:    cb.odd $r6 ? .LBB0_68
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  # %bb.65: # %for.body.prol.4.4
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    ld $r5 = 0[$r1]
+; CHECK-NEXT:    compw.eq $r6 = $r4, 5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sb 0[$r5] = $r2
+; CHECK-NEXT:    addw $r5 = $r3, 5
+; CHECK-NEXT:    cb.odd $r6 ? .LBB0_68
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  # %bb.66: # %for.body.prol.5.4
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    ld $r5 = 0[$r1]
+; CHECK-NEXT:    compw.eq $r4 = $r4, 6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sb 0[$r5] = $r2
+; CHECK-NEXT:    addw $r5 = $r3, 6
+; CHECK-NEXT:    cb.odd $r4 ? .LBB0_68
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  # %bb.67: # %for.body.prol.6.4
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    ld $r4 = 0[$r1]
+; CHECK-NEXT:    addw $r5 = $r3, 7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sb 0[$r4] = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  .LBB0_68: # %for.body.prol.loopexit.4
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
 ; CHECK-NEXT:    compw.gtu $r3 = $r3, -8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.odd $r3 ? .LBB0_67
+; CHECK-NEXT:    cb.odd $r3 ? .LBB0_71
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_66: # %for.body.4
+; CHECK-NEXT:  # %bb.69: # %for.body.4.preheader
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    maxw $r3 = $r5, -8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbfw $r3 = $r5, $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addw $r3 = $r3, 7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srld $r3 = $r3, 3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r3 = $r3, 1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    loopdo $r3, .__LOOPDO_4_END_
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  .LBB0_70: # %for.body.4
 ; CHECK-NEXT:    # Parent Loop BB0_2 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
 ; CHECK-NEXT:    ld $r3 = 0[$r1]
-; CHECK-NEXT:    addw $r6 = $r4, 8
-; CHECK-NEXT:    compw.lt $r5 = $r4, -8
+; CHECK-NEXT:    addw $r5 = $r5, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sb 0[$r3] = $r2
 ; CHECK-NEXT:    ;;
@@ -726,115 +747,120 @@ define i32 @c()  {
 ; CHECK-NEXT:    ld $r3 = 0[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sb 0[$r3] = $r2
-; CHECK-NEXT:    copyd $r4 = $r6
-; CHECK-NEXT:    cb.odd $r5 ? .LBB0_66
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_67: # %while.cond.loopexit.loopexit.4
+; CHECK-NEXT:  .__LOOPDO_4_END_:
+; CHECK-NEXT:  .LBB0_71: # %while.cond.loopexit.loopexit.4
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
 ; CHECK-NEXT:    lwz $r4 = 0[$r0]
-; CHECK-NEXT:    copyd $r3 = $r6
+; CHECK-NEXT:    copyd $r3 = $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.weqz $r4 ? .LBB0_8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_69: # %for.cond.preheader.5
+; CHECK-NEXT:  .LBB0_73: # %for.cond.preheader.5
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    cb.wltz $r3 ? .LBB0_70
+; CHECK-NEXT:    cb.wltz $r3 ? .LBB0_74
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.81: # %while.cond.loopexit.5
+; CHECK-NEXT:  # %bb.86: # %while.cond.loopexit.5
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    cb.wnez $r4 ? .LBB0_82
+; CHECK-NEXT:    cb.wnez $r4 ? .LBB0_87
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    goto .LBB0_8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_70: # %for.body.preheader.5
+; CHECK-NEXT:  .LBB0_74: # %for.body.preheader.5
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
 ; CHECK-NEXT:    negw $r4 = $r3
+; CHECK-NEXT:    copyd $r5 = $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r5 = $r4, 7
-; CHECK-NEXT:    copyd $r4 = $r3
+; CHECK-NEXT:    andw $r4 = $r4, 7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.weqz $r5 ? .LBB0_78
+; CHECK-NEXT:    cb.weqz $r4 ? .LBB0_82
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.71: # %for.body.prol.530
-; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 1
-; CHECK-NEXT:    compw.eq $r7 = $r5, 1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r7 ? .LBB0_78
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.72: # %for.body.prol.1.5
-; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 2
-; CHECK-NEXT:    compw.eq $r7 = $r5, 2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r7 ? .LBB0_78
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.73: # %for.body.prol.2.5
-; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 3
-; CHECK-NEXT:    compw.eq $r7 = $r5, 3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r7 ? .LBB0_78
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.74: # %for.body.prol.3.5
-; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 4
-; CHECK-NEXT:    compw.eq $r7 = $r5, 4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r7 ? .LBB0_78
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.75: # %for.body.prol.4.5
-; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 5
-; CHECK-NEXT:    compw.eq $r7 = $r5, 5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r7 ? .LBB0_78
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.76: # %for.body.prol.5.5
-; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 6
-; CHECK-NEXT:    compw.eq $r5 = $r5, 6
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r5 ? .LBB0_78
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.77: # %for.body.prol.6.5
+; CHECK-NEXT:  # %bb.75: # %for.body.prol.530
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
 ; CHECK-NEXT:    ld $r5 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 7
+; CHECK-NEXT:    compw.eq $r6 = $r4, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sb 0[$r5] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
+; CHECK-NEXT:    addw $r5 = $r3, 1
+; CHECK-NEXT:    cb.odd $r6 ? .LBB0_82
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_78: # %for.body.prol.loopexit.5
+; CHECK-NEXT:  # %bb.76: # %for.body.prol.1.5
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    ld $r5 = 0[$r1]
+; CHECK-NEXT:    compw.eq $r6 = $r4, 2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sb 0[$r5] = $r2
+; CHECK-NEXT:    addw $r5 = $r3, 2
+; CHECK-NEXT:    cb.odd $r6 ? .LBB0_82
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  # %bb.77: # %for.body.prol.2.5
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    ld $r5 = 0[$r1]
+; CHECK-NEXT:    compw.eq $r6 = $r4, 3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sb 0[$r5] = $r2
+; CHECK-NEXT:    addw $r5 = $r3, 3
+; CHECK-NEXT:    cb.odd $r6 ? .LBB0_82
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  # %bb.78: # %for.body.prol.3.5
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    ld $r5 = 0[$r1]
+; CHECK-NEXT:    compw.eq $r6 = $r4, 4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sb 0[$r5] = $r2
+; CHECK-NEXT:    addw $r5 = $r3, 4
+; CHECK-NEXT:    cb.odd $r6 ? .LBB0_82
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  # %bb.79: # %for.body.prol.4.5
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    ld $r5 = 0[$r1]
+; CHECK-NEXT:    compw.eq $r6 = $r4, 5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sb 0[$r5] = $r2
+; CHECK-NEXT:    addw $r5 = $r3, 5
+; CHECK-NEXT:    cb.odd $r6 ? .LBB0_82
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  # %bb.80: # %for.body.prol.5.5
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    ld $r5 = 0[$r1]
+; CHECK-NEXT:    compw.eq $r4 = $r4, 6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sb 0[$r5] = $r2
+; CHECK-NEXT:    addw $r5 = $r3, 6
+; CHECK-NEXT:    cb.odd $r4 ? .LBB0_82
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  # %bb.81: # %for.body.prol.6.5
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    ld $r4 = 0[$r1]
+; CHECK-NEXT:    addw $r5 = $r3, 7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sb 0[$r4] = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  .LBB0_82: # %for.body.prol.loopexit.5
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
 ; CHECK-NEXT:    compw.gtu $r3 = $r3, -8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.odd $r3 ? .LBB0_80
+; CHECK-NEXT:    cb.odd $r3 ? .LBB0_85
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_79: # %for.body.5
+; CHECK-NEXT:  # %bb.83: # %for.body.5.preheader
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    maxw $r3 = $r5, -8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbfw $r3 = $r5, $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addw $r3 = $r3, 7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srld $r3 = $r3, 3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r3 = $r3, 1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    loopdo $r3, .__LOOPDO_5_END_
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  .LBB0_84: # %for.body.5
 ; CHECK-NEXT:    # Parent Loop BB0_2 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
 ; CHECK-NEXT:    ld $r3 = 0[$r1]
-; CHECK-NEXT:    addw $r6 = $r4, 8
-; CHECK-NEXT:    compw.lt $r5 = $r4, -8
+; CHECK-NEXT:    addw $r5 = $r5, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sb 0[$r3] = $r2
 ; CHECK-NEXT:    ;;
@@ -865,115 +891,120 @@ define i32 @c()  {
 ; CHECK-NEXT:    ld $r3 = 0[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sb 0[$r3] = $r2
-; CHECK-NEXT:    copyd $r4 = $r6
-; CHECK-NEXT:    cb.odd $r5 ? .LBB0_79
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_80: # %while.cond.loopexit.loopexit.5
+; CHECK-NEXT:  .__LOOPDO_5_END_:
+; CHECK-NEXT:  .LBB0_85: # %while.cond.loopexit.loopexit.5
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
 ; CHECK-NEXT:    lwz $r4 = 0[$r0]
-; CHECK-NEXT:    copyd $r3 = $r6
+; CHECK-NEXT:    copyd $r3 = $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.weqz $r4 ? .LBB0_8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_82: # %for.cond.preheader.6
+; CHECK-NEXT:  .LBB0_87: # %for.cond.preheader.6
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    cb.wltz $r3 ? .LBB0_83
+; CHECK-NEXT:    cb.wltz $r3 ? .LBB0_88
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.94: # %while.cond.loopexit.6
+; CHECK-NEXT:  # %bb.100: # %while.cond.loopexit.6
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    cb.wnez $r4 ? .LBB0_95
+; CHECK-NEXT:    cb.wnez $r4 ? .LBB0_101
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    goto .LBB0_8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_83: # %for.body.preheader.6
+; CHECK-NEXT:  .LBB0_88: # %for.body.preheader.6
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
 ; CHECK-NEXT:    negw $r4 = $r3
+; CHECK-NEXT:    copyd $r5 = $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r5 = $r4, 7
-; CHECK-NEXT:    copyd $r4 = $r3
+; CHECK-NEXT:    andw $r4 = $r4, 7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.weqz $r5 ? .LBB0_91
+; CHECK-NEXT:    cb.weqz $r4 ? .LBB0_96
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.84: # %for.body.prol.634
-; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 1
-; CHECK-NEXT:    compw.eq $r7 = $r5, 1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r7 ? .LBB0_91
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.85: # %for.body.prol.1.6
-; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 2
-; CHECK-NEXT:    compw.eq $r7 = $r5, 2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r7 ? .LBB0_91
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.86: # %for.body.prol.2.6
-; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 3
-; CHECK-NEXT:    compw.eq $r7 = $r5, 3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r7 ? .LBB0_91
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.87: # %for.body.prol.3.6
-; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 4
-; CHECK-NEXT:    compw.eq $r7 = $r5, 4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r7 ? .LBB0_91
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.88: # %for.body.prol.4.6
-; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 5
-; CHECK-NEXT:    compw.eq $r7 = $r5, 5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r7 ? .LBB0_91
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.89: # %for.body.prol.5.6
-; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 6
-; CHECK-NEXT:    compw.eq $r5 = $r5, 6
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r5 ? .LBB0_91
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.90: # %for.body.prol.6.6
+; CHECK-NEXT:  # %bb.89: # %for.body.prol.634
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
 ; CHECK-NEXT:    ld $r5 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 7
+; CHECK-NEXT:    compw.eq $r6 = $r4, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sb 0[$r5] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
+; CHECK-NEXT:    addw $r5 = $r3, 1
+; CHECK-NEXT:    cb.odd $r6 ? .LBB0_96
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_91: # %for.body.prol.loopexit.6
+; CHECK-NEXT:  # %bb.90: # %for.body.prol.1.6
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    ld $r5 = 0[$r1]
+; CHECK-NEXT:    compw.eq $r6 = $r4, 2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sb 0[$r5] = $r2
+; CHECK-NEXT:    addw $r5 = $r3, 2
+; CHECK-NEXT:    cb.odd $r6 ? .LBB0_96
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  # %bb.91: # %for.body.prol.2.6
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    ld $r5 = 0[$r1]
+; CHECK-NEXT:    compw.eq $r6 = $r4, 3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sb 0[$r5] = $r2
+; CHECK-NEXT:    addw $r5 = $r3, 3
+; CHECK-NEXT:    cb.odd $r6 ? .LBB0_96
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  # %bb.92: # %for.body.prol.3.6
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    ld $r5 = 0[$r1]
+; CHECK-NEXT:    compw.eq $r6 = $r4, 4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sb 0[$r5] = $r2
+; CHECK-NEXT:    addw $r5 = $r3, 4
+; CHECK-NEXT:    cb.odd $r6 ? .LBB0_96
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  # %bb.93: # %for.body.prol.4.6
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    ld $r5 = 0[$r1]
+; CHECK-NEXT:    compw.eq $r6 = $r4, 5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sb 0[$r5] = $r2
+; CHECK-NEXT:    addw $r5 = $r3, 5
+; CHECK-NEXT:    cb.odd $r6 ? .LBB0_96
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  # %bb.94: # %for.body.prol.5.6
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    ld $r5 = 0[$r1]
+; CHECK-NEXT:    compw.eq $r4 = $r4, 6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sb 0[$r5] = $r2
+; CHECK-NEXT:    addw $r5 = $r3, 6
+; CHECK-NEXT:    cb.odd $r4 ? .LBB0_96
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  # %bb.95: # %for.body.prol.6.6
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    ld $r4 = 0[$r1]
+; CHECK-NEXT:    addw $r5 = $r3, 7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sb 0[$r4] = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  .LBB0_96: # %for.body.prol.loopexit.6
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
 ; CHECK-NEXT:    compw.gtu $r3 = $r3, -8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.odd $r3 ? .LBB0_93
+; CHECK-NEXT:    cb.odd $r3 ? .LBB0_99
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_92: # %for.body.6
+; CHECK-NEXT:  # %bb.97: # %for.body.6.preheader
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    maxw $r3 = $r5, -8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbfw $r3 = $r5, $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addw $r3 = $r3, 7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srld $r3 = $r3, 3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r3 = $r3, 1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    loopdo $r3, .__LOOPDO_6_END_
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  .LBB0_98: # %for.body.6
 ; CHECK-NEXT:    # Parent Loop BB0_2 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
 ; CHECK-NEXT:    ld $r3 = 0[$r1]
-; CHECK-NEXT:    addw $r6 = $r4, 8
-; CHECK-NEXT:    compw.lt $r5 = $r4, -8
+; CHECK-NEXT:    addw $r5 = $r5, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sb 0[$r3] = $r2
 ; CHECK-NEXT:    ;;
@@ -1004,109 +1035,114 @@ define i32 @c()  {
 ; CHECK-NEXT:    ld $r3 = 0[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sb 0[$r3] = $r2
-; CHECK-NEXT:    copyd $r4 = $r6
-; CHECK-NEXT:    cb.odd $r5 ? .LBB0_92
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_93: # %while.cond.loopexit.loopexit.6
+; CHECK-NEXT:  .__LOOPDO_6_END_:
+; CHECK-NEXT:  .LBB0_99: # %while.cond.loopexit.loopexit.6
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
 ; CHECK-NEXT:    lwz $r4 = 0[$r0]
-; CHECK-NEXT:    copyd $r3 = $r6
+; CHECK-NEXT:    copyd $r3 = $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.weqz $r4 ? .LBB0_8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_95: # %for.cond.preheader.7
+; CHECK-NEXT:  .LBB0_101: # %for.cond.preheader.7
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    cb.wgez $r3 ? .LBB0_107
+; CHECK-NEXT:    cb.wgez $r3 ? .LBB0_114
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.96: # %for.body.preheader.7
+; CHECK-NEXT:  # %bb.102: # %for.body.preheader.7
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
 ; CHECK-NEXT:    negw $r4 = $r3
+; CHECK-NEXT:    copyd $r5 = $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r5 = $r4, 7
-; CHECK-NEXT:    copyd $r4 = $r3
+; CHECK-NEXT:    andw $r4 = $r4, 7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.weqz $r5 ? .LBB0_104
+; CHECK-NEXT:    cb.weqz $r4 ? .LBB0_110
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.97: # %for.body.prol.7
-; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 1
-; CHECK-NEXT:    compw.eq $r7 = $r5, 1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r7 ? .LBB0_104
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.98: # %for.body.prol.1.7
-; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 2
-; CHECK-NEXT:    compw.eq $r7 = $r5, 2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r7 ? .LBB0_104
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.99: # %for.body.prol.2.7
-; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 3
-; CHECK-NEXT:    compw.eq $r7 = $r5, 3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r7 ? .LBB0_104
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.100: # %for.body.prol.3.7
-; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 4
-; CHECK-NEXT:    compw.eq $r7 = $r5, 4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r7 ? .LBB0_104
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.101: # %for.body.prol.4.7
-; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 5
-; CHECK-NEXT:    compw.eq $r7 = $r5, 5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r7 ? .LBB0_104
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.102: # %for.body.prol.5.7
-; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    ld $r6 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 6
-; CHECK-NEXT:    compw.eq $r5 = $r5, 6
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 0[$r6] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    cb.odd $r5 ? .LBB0_104
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.103: # %for.body.prol.6.7
+; CHECK-NEXT:  # %bb.103: # %for.body.prol.7
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
 ; CHECK-NEXT:    ld $r5 = 0[$r1]
-; CHECK-NEXT:    addw $r4 = $r3, 7
+; CHECK-NEXT:    compw.eq $r6 = $r4, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sb 0[$r5] = $r2
-; CHECK-NEXT:    copyd $r6 = $r4
+; CHECK-NEXT:    addw $r5 = $r3, 1
+; CHECK-NEXT:    cb.odd $r6 ? .LBB0_110
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_104: # %for.body.prol.loopexit.7
+; CHECK-NEXT:  # %bb.104: # %for.body.prol.1.7
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    ld $r5 = 0[$r1]
+; CHECK-NEXT:    compw.eq $r6 = $r4, 2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sb 0[$r5] = $r2
+; CHECK-NEXT:    addw $r5 = $r3, 2
+; CHECK-NEXT:    cb.odd $r6 ? .LBB0_110
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  # %bb.105: # %for.body.prol.2.7
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    ld $r5 = 0[$r1]
+; CHECK-NEXT:    compw.eq $r6 = $r4, 3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sb 0[$r5] = $r2
+; CHECK-NEXT:    addw $r5 = $r3, 3
+; CHECK-NEXT:    cb.odd $r6 ? .LBB0_110
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  # %bb.106: # %for.body.prol.3.7
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    ld $r5 = 0[$r1]
+; CHECK-NEXT:    compw.eq $r6 = $r4, 4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sb 0[$r5] = $r2
+; CHECK-NEXT:    addw $r5 = $r3, 4
+; CHECK-NEXT:    cb.odd $r6 ? .LBB0_110
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  # %bb.107: # %for.body.prol.4.7
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    ld $r5 = 0[$r1]
+; CHECK-NEXT:    compw.eq $r6 = $r4, 5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sb 0[$r5] = $r2
+; CHECK-NEXT:    addw $r5 = $r3, 5
+; CHECK-NEXT:    cb.odd $r6 ? .LBB0_110
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  # %bb.108: # %for.body.prol.5.7
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    ld $r5 = 0[$r1]
+; CHECK-NEXT:    compw.eq $r4 = $r4, 6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sb 0[$r5] = $r2
+; CHECK-NEXT:    addw $r5 = $r3, 6
+; CHECK-NEXT:    cb.odd $r4 ? .LBB0_110
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  # %bb.109: # %for.body.prol.6.7
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    ld $r4 = 0[$r1]
+; CHECK-NEXT:    addw $r5 = $r3, 7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sb 0[$r4] = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  .LBB0_110: # %for.body.prol.loopexit.7
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
 ; CHECK-NEXT:    compw.gtu $r3 = $r3, -8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.odd $r3 ? .LBB0_106
+; CHECK-NEXT:    cb.odd $r3 ? .LBB0_113
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_105: # %for.body.7
+; CHECK-NEXT:  # %bb.111: # %for.body.7.preheader
+; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:    maxw $r3 = $r5, -8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbfw $r3 = $r5, $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addw $r3 = $r3, 7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srld $r3 = $r3, 3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r3 = $r3, 1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    loopdo $r3, .__LOOPDO_7_END_
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  .LBB0_112: # %for.body.7
 ; CHECK-NEXT:    # Parent Loop BB0_2 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
 ; CHECK-NEXT:    ld $r3 = 0[$r1]
-; CHECK-NEXT:    addw $r6 = $r4, 8
-; CHECK-NEXT:    compw.lt $r5 = $r4, -8
+; CHECK-NEXT:    addw $r5 = $r5, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sb 0[$r3] = $r2
 ; CHECK-NEXT:    ;;
@@ -1137,10 +1173,9 @@ define i32 @c()  {
 ; CHECK-NEXT:    ld $r3 = 0[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sb 0[$r3] = $r2
-; CHECK-NEXT:    copyd $r4 = $r6
-; CHECK-NEXT:    cb.odd $r5 ? .LBB0_105
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    goto .LBB0_106
+; CHECK-NEXT:  .__LOOPDO_7_END_:
+; CHECK-NEXT:    goto .LBB0_113
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_8: # %while.end
 ; CHECK-NEXT:    ret
