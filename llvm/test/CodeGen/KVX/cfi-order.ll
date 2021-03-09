@@ -240,7 +240,7 @@ define i32 @f() local_unnamed_addr #1 !dbg !47 {
 ; CHECK-NEXT:    #DEBUG_VALUE: f:U2 <- undef
 ; CHECK-NEXT:    #DEBUG_VALUE: f:S1 <- undef
 ; CHECK-NEXT:    #DEBUG_VALUE: f:S2 <- undef
-; CHECK-NEXT:    .loc 1 0 0 prologue_end # cfi-order.c:0:0
+; CHECK-NEXT:    .loc 1 32 3 prologue_end # cfi-order.c:32:3
 ; CHECK-NEXT:    make $r0 = 8
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
