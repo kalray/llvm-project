@@ -8,17 +8,16 @@ define void @matrix_add_const(i32 %N, i16* nocapture %A, i16 %val){
 ; CHECK-NEXT:    cb.weqz $r0 ? .LBB0_5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %for.cond1.preheader.lr.ph
-; CHECK-NEXT:    make $r3 = 0
-; CHECK-NEXT:    zxwd $r4 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r5 = $r3
+; CHECK-NEXT:    zxwd $r3 = $r0
+; CHECK-NEXT:    make $r4 = 0
+; CHECK-NEXT:    make $r5 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_2: # %for.body3.lr.ph
 ; CHECK-NEXT:    # =>This Loop Header: Depth=1
 ; CHECK-NEXT:    # Child Loop BB0_3 Depth 2
-; CHECK-NEXT:    copyd $r6 = $r3
+; CHECK-NEXT:    copyd $r6 = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    loopdo $r4, .__LOOPDO_0_END_
+; CHECK-NEXT:    loopdo $r3, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_3: # %for.body3
 ; CHECK-NEXT:    # Parent Loop BB0_2 Depth=1
@@ -36,7 +35,7 @@ define void @matrix_add_const(i32 %N, i16* nocapture %A, i16 %val){
 ; CHECK-NEXT:  # %bb.4: # %for.inc7
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
 ; CHECK-NEXT:    addw $r5 = $r5, 1
-; CHECK-NEXT:    addw $r3 = $r3, $r0
+; CHECK-NEXT:    addw $r4 = $r4, $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compw.ne $r6 = $r5, $r0
 ; CHECK-NEXT:    ;;

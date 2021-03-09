@@ -75,7 +75,7 @@ define <4 x i32> @bv_v4i32() {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 0xfffffffeffffffff
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r0
+; CHECK-NEXT:    make $r1 = 0xfffffffeffffffff
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -90,9 +90,9 @@ define <4 x i64> @bv_v4i64() {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r1 = -2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r2 = $r0
+; CHECK-NEXT:    make $r2 = -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r3 = $r1
+; CHECK-NEXT:    make $r3 = -2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -116,7 +116,7 @@ define <8 x i16> @bv_v8i16() {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 0xfffefffffffeffff
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r0
+; CHECK-NEXT:    make $r1 = 0xfffefffffffeffff
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -129,11 +129,11 @@ define <8 x i32> @bv_v8i32() {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 0xfffffffeffffffff
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r0
+; CHECK-NEXT:    make $r1 = 0xfffffffeffffffff
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r2 = $r0
+; CHECK-NEXT:    make $r2 = 0xfffffffeffffffff
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r3 = $r0
+; CHECK-NEXT:    make $r3 = 0xfffffffeffffffff
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -203,7 +203,7 @@ define <4 x float> @bv_v4f32() {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 0xc0000000bf800000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r0
+; CHECK-NEXT:    make $r1 = 0xc0000000bf800000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -218,9 +218,9 @@ define <4 x double> @bv_v4f64() {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r1 = 0xc000000000000000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r2 = $r0
+; CHECK-NEXT:    make $r2 = 0xbff0000000000000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r3 = $r1
+; CHECK-NEXT:    make $r3 = 0xc000000000000000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -233,7 +233,7 @@ define <8 x half> @bv_v8f16() {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 0xc000bc00c000bc00
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r0
+; CHECK-NEXT:    make $r1 = 0xc000bc00c000bc00
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -246,11 +246,11 @@ define <8 x float> @bv_v8f32() {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 0xc0000000bf800000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r0
+; CHECK-NEXT:    make $r1 = 0xc0000000bf800000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r2 = $r0
+; CHECK-NEXT:    make $r2 = 0xc0000000bf800000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r3 = $r0
+; CHECK-NEXT:    make $r3 = 0xc0000000bf800000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;

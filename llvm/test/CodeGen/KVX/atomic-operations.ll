@@ -62,22 +62,17 @@ define i64 @atomicrmw_i64_xchg_as(i64 addrspace(1)* %ptr, i64 %c, i64 %s) {
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    sd 24[$r12] = $r16
+; CHECK-NEXT:    sd 16[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -8
-; CHECK-NEXT:    sd 16[$r12] = $r20
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 20, -16
+; CHECK-NEXT:    .cfi_offset 67, -16
 ; CHECK-NEXT:    sq 0[$r12] = $r18r19
-; CHECK-NEXT:    make $r20 = 5
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    copyd $r19 = $r0
+; CHECK-NEXT:    make $r0 = 5
+; CHECK-NEXT:    call __kvx_atomic_global_in
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 19, -24
 ; CHECK-NEXT:    .cfi_offset 18, -32
-; CHECK-NEXT:    copyd $r0 = $r20
-; CHECK-NEXT:    call __kvx_atomic_global_in
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB4_1:
 ; CHECK-NEXT:    ld.u $r1 = 0[$r19]
 ; CHECK-NEXT:    copyd $r0 = $r18
@@ -87,15 +82,13 @@ define i64 @atomicrmw_i64_xchg_as(i64 addrspace(1)* %ptr, i64 %c, i64 %s) {
 ; CHECK-NEXT:    cb.even $r0 ? .LBB4_1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r18 = $r1
-; CHECK-NEXT:    copyd $r0 = $r20
+; CHECK-NEXT:    make $r0 = 5
 ; CHECK-NEXT:    call __kvx_atomic_global_out
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r20 = 16[$r12]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 24[$r12]
+; CHECK-NEXT:    ld $r16 = 16[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
@@ -208,26 +201,23 @@ define i32 @atomic_load_i32(i32 addrspace(1)*%ptr) {
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    sd 16[$r12] = $r16
+; CHECK-NEXT:    sd 8[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -16
-; CHECK-NEXT:    sq 0[$r12] = $r18r19
-; CHECK-NEXT:    make $r19 = 5
+; CHECK-NEXT:    .cfi_offset 67, -24
+; CHECK-NEXT:    sd 0[$r12] = $r18
 ; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 19, -24
-; CHECK-NEXT:    .cfi_offset 18, -32
-; CHECK-NEXT:    copyd $r0 = $r19
+; CHECK-NEXT:    make $r0 = 5
 ; CHECK-NEXT:    call __kvx_atomic_global_in
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_offset 18, -32
+; CHECK-NEXT:    make $r0 = 5
 ; CHECK-NEXT:    lwz.u $r18 = 0[$r18]
-; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    call __kvx_atomic_global_out
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r18
-; CHECK-NEXT:    lq $r18r19 = 0[$r12]
+; CHECK-NEXT:    ld $r18 = 0[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 16[$r12]
+; CHECK-NEXT:    ld $r16 = 8[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
@@ -259,31 +249,24 @@ define void @atomic_store_i64(i64 addrspace(1)* %ptr, i64 %l) {
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    sd 24[$r12] = $r16
+; CHECK-NEXT:    sd 16[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -8
-; CHECK-NEXT:    sd 16[$r12] = $r20
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 20, -16
+; CHECK-NEXT:    .cfi_offset 67, -16
 ; CHECK-NEXT:    sq 0[$r12] = $r18r19
-; CHECK-NEXT:    make $r20 = 3
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    copyd $r19 = $r0
+; CHECK-NEXT:    make $r0 = 3
+; CHECK-NEXT:    call __kvx_atomic_global_in
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 19, -24
 ; CHECK-NEXT:    .cfi_offset 18, -32
-; CHECK-NEXT:    copyd $r0 = $r20
-; CHECK-NEXT:    call __kvx_atomic_global_in
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    make $r0 = 3
 ; CHECK-NEXT:    sd 0[$r19] = $r18
-; CHECK-NEXT:    copyd $r0 = $r20
 ; CHECK-NEXT:    call __kvx_atomic_global_out
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r20 = 16[$r12]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 24[$r12]
+; CHECK-NEXT:    ld $r16 = 16[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
@@ -426,22 +409,17 @@ define i64 @atomicrmw_i64_sub_global_as(i64 addrspace(1)*%src, i64 %b) {
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    sd 24[$r12] = $r16
+; CHECK-NEXT:    sd 16[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -8
-; CHECK-NEXT:    sd 16[$r12] = $r20
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 20, -16
+; CHECK-NEXT:    .cfi_offset 67, -16
 ; CHECK-NEXT:    sq 0[$r12] = $r18r19
-; CHECK-NEXT:    make $r20 = 3
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    copyd $r19 = $r0
+; CHECK-NEXT:    make $r0 = 3
+; CHECK-NEXT:    call __kvx_atomic_global_in
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 19, -24
 ; CHECK-NEXT:    .cfi_offset 18, -32
-; CHECK-NEXT:    copyd $r0 = $r20
-; CHECK-NEXT:    call __kvx_atomic_global_in
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB18_1:
 ; CHECK-NEXT:    ld.u $r1 = 0[$r19]
 ; CHECK-NEXT:    ;;
@@ -452,15 +430,13 @@ define i64 @atomicrmw_i64_sub_global_as(i64 addrspace(1)*%src, i64 %b) {
 ; CHECK-NEXT:    cb.even $r0 ? .LBB18_1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r18 = $r1
-; CHECK-NEXT:    copyd $r0 = $r20
+; CHECK-NEXT:    make $r0 = 3
 ; CHECK-NEXT:    call __kvx_atomic_global_out
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r20 = 16[$r12]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 24[$r12]
+; CHECK-NEXT:    ld $r16 = 16[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
