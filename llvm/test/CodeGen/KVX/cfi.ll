@@ -38,15 +38,15 @@ define i8 @h() local_unnamed_addr #0 !dbg !28 {
 ; CHECK-NEXT:    .loc 1 24 0 # cfi.c:24:0
 ; CHECK-NEXT:    .cfi_startproc
 ; CHECK-NEXT:  # %bb.0: # %entry
-; CHECK-NEXT:    #DEBUG_VALUE: h:b <- [DW_OP_LLVM_fragment 24 8] -4
-; CHECK-NEXT:    #DEBUG_VALUE: h:b <- [DW_OP_LLVM_fragment 16 8] -3
-; CHECK-NEXT:    #DEBUG_VALUE: h:b <- [DW_OP_LLVM_fragment 8 8] -2
-; CHECK-NEXT:    #DEBUG_VALUE: h:b <- [DW_OP_LLVM_fragment 0 8] -1
-; CHECK-NEXT:    #DEBUG_VALUE: h:a <- [DW_OP_LLVM_fragment 24 8] -4
-; CHECK-NEXT:    #DEBUG_VALUE: h:a <- [DW_OP_LLVM_fragment 16 8] -3
-; CHECK-NEXT:    #DEBUG_VALUE: h:a <- [DW_OP_LLVM_fragment 8 8] -2
 ; CHECK-NEXT:    #DEBUG_VALUE: h:a <- [DW_OP_LLVM_fragment 0 8] -1
-; CHECK-NEXT:    .loc 1 0 0 prologue_end # cfi.c:0:0
+; CHECK-NEXT:    #DEBUG_VALUE: h:a <- [DW_OP_LLVM_fragment 8 8] -2
+; CHECK-NEXT:    #DEBUG_VALUE: h:a <- [DW_OP_LLVM_fragment 16 8] -3
+; CHECK-NEXT:    #DEBUG_VALUE: h:a <- [DW_OP_LLVM_fragment 24 8] -4
+; CHECK-NEXT:    #DEBUG_VALUE: h:b <- [DW_OP_LLVM_fragment 0 8] -1
+; CHECK-NEXT:    #DEBUG_VALUE: h:b <- [DW_OP_LLVM_fragment 8 8] -2
+; CHECK-NEXT:    #DEBUG_VALUE: h:b <- [DW_OP_LLVM_fragment 16 8] -3
+; CHECK-NEXT:    #DEBUG_VALUE: h:b <- [DW_OP_LLVM_fragment 24 8] -4
+; CHECK-NEXT:    .loc 1 33 3 prologue_end # cfi.c:33:3
 ; CHECK-NEXT:    make $r0 = 236
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;

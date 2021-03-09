@@ -622,11 +622,13 @@ multiclass MC_10<string OpcStr> {
 //   defm ANDND
 //   defm ORND
 multiclass MC_11<string OpcStr> {
+  let isAsCheapAsAMove = 1 in
   def rr : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      ALU_TINY>;
+  let isAsCheapAsAMove = 1 in
   def ri10 : REGISTERW_REGISTERZ_SIGNED10_SIMPLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
@@ -753,6 +755,7 @@ multiclass MC_13<string OpcStr> {
 //   defm ANDNW
 //   defm ORNW
 multiclass MC_14<string OpcStr> {
+  let isAsCheapAsAMove = 1 in
   def ri10 : REGISTERW_REGISTERZ_SIGNED10_SIMPLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10W:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
@@ -763,6 +766,7 @@ multiclass MC_14<string OpcStr> {
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      ALU_TINY_X>;
+  let isAsCheapAsAMove = 1 in
   def rr : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
@@ -804,6 +808,7 @@ multiclass MC_15<string OpcStr> {
 //   defm MAXHQ
 //   defm MAXUHQ
 multiclass MC_16<string OpcStr> {
+  let isAsCheapAsAMove = 1 in
   def rr : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
@@ -912,6 +917,7 @@ multiclass MC_18<string OpcStr> {
 //   defm SLLW
 //   defm SRAW
 //   defm SRLW
+let isAsCheapAsAMove = 1 in
 multiclass MC_19<string OpcStr> {
   def ri : REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Unsigned6:$a3),
@@ -964,22 +970,21 @@ multiclass MC_1B<string OpcStr> {
 // multiclass MC_1C is used by:
 //   defm CMOVED
 multiclass MC_1C<string OpcStr> {
-  let Constraints = "$a3 = $a3o" in
+  let Constraints = "$a3 = $a3o", isMoveImm = 1 in {
   def ri10 : SCALARCOND_REGISTERZ_REGISTERW_SIGNED10_SIMPLE
     <(outs SingleReg:$a3o), (ins SingleReg:$a2, SingleReg:$a3, Signed10:$a4, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? $a3 = $a4"),
      [/* no straightforward pattern */]>;
-  let Constraints = "$a3 = $a3o" in
   def ri37 : SCALARCOND_REGISTERZ_REGISTERW_UPPER27_LOWER10_DOUBLE
     <(outs SingleReg:$a3o), (ins SingleReg:$a2, SingleReg:$a3, Signed37:$a4, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? $a3 = $a4"),
      [/* no straightforward pattern */]>;
-  let Constraints = "$a3 = $a3o" in
   def ri64 : SCALARCOND_REGISTERZ_REGISTERW_EXTEND27_UPPER27_LOWER10_TRIPLE
     <(outs SingleReg:$a3o), (ins SingleReg:$a2, SingleReg:$a3, Wrapped64:$a4, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? $a3 = $a4"),
      [/* no straightforward pattern */]>;
-  let Constraints = "$a3 = $a3o" in
+  }
+  let Constraints = "$a3 = $a3o", isMoveReg = 1 in
   def rr : SCALARCOND_REGISTERZ_REGISTERW_REGISTERY_SIMPLE
     <(outs SingleReg:$a3o), (ins SingleReg:$a2, SingleReg:$a3, SingleReg:$a4, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? $a3 = $a4"),
@@ -1487,6 +1492,7 @@ multiclass MC_34<string OpcStr> {
 
 // multiclass MC_35 is used by:
 //   defm COPYV
+let isMoveReg = 1 in
 multiclass MC_35<string OpcStr> {
   def re : REGISTERA_REGISTERBE_SIMPLE
     <(outs VectorReg:$a1), (ins VectorRegE:$a2),
@@ -2322,7 +2328,7 @@ def CMOVEWP : SIMDCOND_REGISTERZ_REGISTERW_REGISTERY_SIMPLE
    "cmovewp$a1 $a2 ? $a3 = $a4",
    [/* no straightforward pattern */]>;
 
-let isAsCheapAsAMove = 1 in
+let isAsCheapAsAMove = 1, isReMaterializable = 1, isMoveImm = 1 in
 defm MAKE : MC_1D<"make">;
 
 defm PCREL : MC_1E<"pcrel">;
@@ -3078,12 +3084,14 @@ def FMM212W : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE
    [/* no straightforward pattern */],
    MAU>;
 
+let isMoveReg = 1 in
 def COPYQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "copyq $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    MAU>;
 
+let isMoveReg = 1 in
 def COPYO : REGISTERN_REGISTERQ_SIMPLE
   <(outs QuadReg:$a1), (ins QuadReg:$a2),
    "copyo $a1 = $a2",

@@ -75,10 +75,10 @@ define i32 @test1(i32* nocapture %0, i32* nocapture readonly %1, i32 %2) #2 {
 ; CHECK-NEXT:    sxwd $r2 = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz.xs $r3 = $r2[$r1]
-; CHECK-NEXT:    make $r1 = 0
+; CHECK-NEXT:    copyd $r1 = $r0
+; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw.xs $r2[$r0] = $r3
-; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    sw.xs $r2[$r1] = $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %4 = sext i32 %2 to i64

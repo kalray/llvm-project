@@ -121,14 +121,13 @@ define i32 @f()  {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srld $r1 = $r1, 3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r1 = $r1, 1
+; CHECK-NEXT:    addd $r2 = $r1, 1
+; CHECK-NEXT:    make $r1 = a
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    loopdo $r1, .__LOOPDO_0_END_
+; CHECK-NEXT:    loopdo $r2, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_7: # %for.body.for.body_crit_edge
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    make $r1 = a
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r2 = 0[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 12[$r0] = $r2
@@ -157,9 +156,9 @@ define i32 @f()  {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw -12[$r0] = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r1 = 0[$r1]
+; CHECK-NEXT:    lwz $r2 = 0[$r1]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw -16[$r0] = $r1
+; CHECK-NEXT:    sw -16[$r0] = $r2
 ; CHECK-NEXT:    addd $r0 = $r0, -32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .__LOOPDO_0_END_:

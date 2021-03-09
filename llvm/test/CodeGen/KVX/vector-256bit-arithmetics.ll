@@ -7915,48 +7915,44 @@ define <4 x i64> @fbnsigned_long_4__division_imm(<4 x i64> %a) {
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 160
-; CHECK-NEXT:    sd 72[$r12] = $r16
+; CHECK-NEXT:    sd 64[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -88
-; CHECK-NEXT:    so 40[$r12] = $r24r25r26r27
+; CHECK-NEXT:    .cfi_offset 67, -96
+; CHECK-NEXT:    so 32[$r12] = $r24r25r26r27
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 27, -96
-; CHECK-NEXT:    .cfi_offset 26, -104
-; CHECK-NEXT:    .cfi_offset 25, -112
-; CHECK-NEXT:    .cfi_offset 24, -120
-; CHECK-NEXT:    so 8[$r12] = $r20r21r22r23
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 23, -128
-; CHECK-NEXT:    .cfi_offset 22, -136
-; CHECK-NEXT:    .cfi_offset 21, -144
-; CHECK-NEXT:    .cfi_offset 20, -152
-; CHECK-NEXT:    sd 0[$r12] = $r18
+; CHECK-NEXT:    .cfi_offset 27, -104
+; CHECK-NEXT:    .cfi_offset 26, -112
+; CHECK-NEXT:    .cfi_offset 25, -120
+; CHECK-NEXT:    .cfi_offset 24, -128
+; CHECK-NEXT:    so 0[$r12] = $r20r21r22r23
 ; CHECK-NEXT:    copyd $r23 = $r3
-; CHECK-NEXT:    make $r18 = 3
 ; CHECK-NEXT:    copyd $r22 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 18, -160
 ; CHECK-NEXT:    copyd $r21 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_offset 23, -136
+; CHECK-NEXT:    .cfi_offset 22, -144
+; CHECK-NEXT:    .cfi_offset 21, -152
+; CHECK-NEXT:    .cfi_offset 20, -160
+; CHECK-NEXT:    make $r1 = 3
 ; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    so 96[$r12] = $r20r21r22r23
 ; CHECK-NEXT:    copyd $r0 = $r21
-; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    call __divdi3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r25 = $r0
+; CHECK-NEXT:    make $r1 = 3
 ; CHECK-NEXT:    copyd $r0 = $r20
-; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    call __divdi3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r24 = $r0
+; CHECK-NEXT:    make $r1 = 3
 ; CHECK-NEXT:    copyd $r0 = $r22
-; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    call __divdi3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r26 = $r0
+; CHECK-NEXT:    make $r1 = 3
 ; CHECK-NEXT:    copyd $r0 = $r23
-; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    call __divdi3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r27 = $r0
@@ -7967,13 +7963,11 @@ define <4 x i64> @fbnsigned_long_4__division_imm(<4 x i64> %a) {
 ; CHECK-NEXT:    copyd $r2 = $r26
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r3 = $r27
-; CHECK-NEXT:    ld $r18 = 0[$r12]
+; CHECK-NEXT:    lo $r20r21r22r23 = 0[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r20r21r22r23 = 8[$r12]
+; CHECK-NEXT:    lo $r24r25r26r27 = 32[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r24r25r26r27 = 40[$r12]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 72[$r12]
+; CHECK-NEXT:    ld $r16 = 64[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 160
