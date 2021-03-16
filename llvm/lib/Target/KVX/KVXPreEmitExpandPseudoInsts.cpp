@@ -14,6 +14,7 @@
 //===----------------------------------------------------------------------===//
 
 #include "KVX.h"
+#include "KVXGenRegisterInfo.inc"
 #include "KVXInstrInfo.h"
 #include "KVXMachineFunctionInfo.h"
 #include "KVXTargetMachine.h"
@@ -22,7 +23,6 @@
 #include "llvm/CodeGen/MachineFunctionPass.h"
 #include "llvm/CodeGen/MachineInstrBuilder.h"
 #include "llvm/Support/Debug.h"
-
 using namespace llvm;
 
 #define KVX_PREEMIT_EXPAND_PSEUDO_NAME                                         \
@@ -1146,6 +1146,70 @@ static bool expandSPCHECK(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   return true;
 }
 
+static bool expandWideMatrixLoadsStores(const KVXInstrInfo *TII,
+                                        MachineBasicBlock &MBB,
+                                        MachineBasicBlock::iterator MBBI,
+                                        unsigned ri10, unsigned ri37,
+                                        unsigned ri64, bool IsStore = false) {
+  LLVM_DEBUG(dbgs() << "Expanding: "; MBBI->dump());
+  MachineInstr &MI = *MBBI;
+  DebugLoc DL = MI.getDebugLoc();
+
+  Register InOutReg, Base;
+  int64_t Offset, VariantKill;
+  if (IsStore) {
+    Offset = MI.getOperand(0).getImm();
+    Base = MI.getOperand(1).getReg();
+    InOutReg = MI.getOperand(2).getReg();
+    VariantKill = MI.getOperand(2).isKill() ? RegState::Kill : 0;
+  } else {
+    InOutReg = MI.getOperand(0).getReg();
+    Offset = MI.getOperand(1).getImm();
+    Base = MI.getOperand(2).getReg();
+    VariantKill = MI.getOperand(3).getImm();
+  }
+
+  MachineFunction *MF = MBB.getParent();
+  const KVXRegisterInfo *TRI =
+      (const KVXRegisterInfo *)MF->getSubtarget().getRegisterInfo();
+
+  LLVM_DEBUG(dbgs() << "Creating a " << (IsStore ? "store from" : "load to")
+                    << " register: " << TRI->getRegAsmName(InOutReg) << '\n');
+  int End;
+  if (KVX::MatrixRegRegClass.contains(InOutReg))
+    End = 4;
+  else if (KVX::WideRegRegClass.contains(InOutReg))
+    End = 2;
+  else
+    report_fatal_error("Expanding a vector load that is not for wide or matrix "
+                       "registers output.\n");
+
+  LLVM_DEBUG(dbgs() << "It will require " << End << " lv operations\n");
+
+  for (int C = 0; C < End; C++) {
+    Register SubReg = TRI->getSubReg(InOutReg, KVX::sub_v0 + C);
+
+    LLVM_DEBUG(dbgs() << "Acting in register #:" << C << " ("
+                      << TRI->getRegAsmName(SubReg) << ").\n");
+
+    if (IsStore)
+      BuildMI(MBB, MBBI, DL, TII->get(GetImmOpCode(Offset, ri10, ri37, ri64)))
+          .addImm(Offset)
+          .addReg(Base)
+          .addReg(SubReg, VariantKill);
+
+    else
+      BuildMI(MBB, MBBI, DL, TII->get(GetImmOpCode(Offset, ri10, ri37, ri64)))
+          .addReg(SubReg, RegState::DefineNoRead)
+          .addImm(Offset)
+          .addReg(Base)
+          .addImm(VariantKill);
+    Offset += 32;
+  }
+  MI.eraseFromParent();
+  return true;
+}
+
 bool KVXPreEmitExpandPseudo::expandMI(MachineBasicBlock &MBB,
                                       MachineBasicBlock::iterator MBBI,
                                       MachineBasicBlock::iterator &NextMBBI) {
@@ -1204,6 +1268,10 @@ bool KVXPreEmitExpandPseudo::expandMI(MachineBasicBlock &MBB,
     return expandStore(TII, MBB, MBBI, KVX::SOri10, KVX::SOri37, KVX::SOri64);
   case KVX::SVp:
     return expandStore(TII, MBB, MBBI, KVX::SVri10, KVX::SVri37, KVX::SVri64);
+  case KVX::SWIDEp:
+  case KVX::SMATRIXp:
+    return expandWideMatrixLoadsStores(TII, MBB, MBBI, KVX::SVri10, KVX::SVri37,
+                                       KVX::SVri64, true);
   case KVX::LBSp:
     return expandLoad(TII, MBB, MBBI, KVX::LBSri10, KVX::LBSri37, KVX::LBSri64);
   case KVX::LBZp:
@@ -1224,6 +1292,10 @@ bool KVXPreEmitExpandPseudo::expandMI(MachineBasicBlock &MBB,
     return expandLoad(TII, MBB, MBBI, KVX::LOri10, KVX::LOri37, KVX::LOri64);
   case KVX::LVp:
     return expandLoad(TII, MBB, MBBI, KVX::LVri10, KVX::LVri37, KVX::LVri64);
+  case KVX::LWIDEp:
+  case KVX::LMATRIXp:
+    return expandWideMatrixLoadsStores(TII, MBB, MBBI, KVX::LVri10, KVX::LVri37,
+                                       KVX::LVri64, false);
   case KVX::EXTFZWp:
     return expandEXTFZ(TII, MBB, MBBI, true);
   case KVX::EXTFZDp:
