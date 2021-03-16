@@ -196,7 +196,7 @@ void KVXPassConfig::addPreEmitPass() {
   addPass(createKVXPreEmitExpandPseudoPass());
   if (getOptLevel() >= CodeGenOpt::Default) {
     if (!DisableBundling)
-      addPass(createKVXPacketizerPass(true));
+      addPass(createKVXPacketizerPass());
   }
 }
 
