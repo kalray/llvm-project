@@ -37,8 +37,7 @@ class KVXPacketizer : public MachineFunctionPass {
 public:
   static char ID;
 
-  KVXPacketizer(bool ValidOptLevel = false)
-      : MachineFunctionPass(ID), ValidOptLevel(ValidOptLevel) {}
+  KVXPacketizer() : MachineFunctionPass(ID) {}
 
   StringRef getPassName() const override { return "KVX Packetizer"; }
 
@@ -54,8 +53,6 @@ public:
 
   bool runOnMachineFunction(MachineFunction &Fn) override;
 
-private:
-  bool ValidOptLevel;
 };
 
 } // end anonymous namespace
@@ -70,9 +67,8 @@ INITIALIZE_PASS_END(KVXPacketizer, "kvx-packetizer", "KVX Packetizer", false,
                     false)
 
 KVXPacketizerList::KVXPacketizerList(MachineFunction &MF, MachineLoopInfo &MLI,
-                                     AAResults *AA, bool ValidOptLevel)
-    : VLIWPacketizerList(MF, MLI, AA), PacketSize(0),
-      ValidOptLevel(ValidOptLevel) {}
+                                     AAResults *AA)
+    : VLIWPacketizerList(MF, MLI, AA), PacketSize(0) {}
 
 bool KVXPacketizerList::shouldAddToPacket(const MachineInstr &MI) {
   return MI.getDesc().getSize() + PacketSize <= MAX_SYLLABLES_BYTE_COUNT;
@@ -101,7 +97,7 @@ bool KVXPacketizerList::isSoloInstruction(const MachineInstr &MI) {
   if (isSetOrWFXLOrWFXM(MI.getOpcode()))
     return KVX::AloneRegRegClass.contains(MI.getOperand(0).getReg());
 
-  return !ValidOptLevel || MI.getDesc().getSchedClass() == KVX::Sched::ALL;
+  return MI.getDesc().getSchedClass() == KVX::Sched::ALL;
 }
 
 bool KVXPacketizerList::usesCarry(unsigned Opcode) {
@@ -510,7 +506,7 @@ bool KVXPacketizer::runOnMachineFunction(MachineFunction &MF) {
   auto *AA = &getAnalysis<AAResultsWrapperPass>().getAAResults();
 
   MF.getProperties().set(MachineFunctionProperties::Property::TracksLiveness);
-  KVXPacketizerList Packetizer(MF, MLI, AA, ValidOptLevel);
+  KVXPacketizerList Packetizer(MF, MLI, AA);
 
   for (auto &MB : MF) {
     auto End = MB.end();
@@ -534,6 +530,4 @@ bool KVXPacketizer::runOnMachineFunction(MachineFunction &MF) {
   return true;
 }
 
-FunctionPass *llvm::createKVXPacketizerPass(bool ValidOptLevel) {
-  return new KVXPacketizer(ValidOptLevel);
-}
+FunctionPass *llvm::createKVXPacketizerPass() { return new KVXPacketizer(); }

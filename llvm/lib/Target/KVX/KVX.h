@@ -165,7 +165,7 @@ FunctionPass *createKVXPreEmitExpandPseudoPass();
 FunctionPass *createKVXLoadStorePackingPass();
 FunctionPass *createKVXHardwareLoopsPass();
 FunctionPass *createKVXHardwareLoopsPreparePass();
-FunctionPass *createKVXPacketizerPass(bool ValidOptLevel);
+FunctionPass *createKVXPacketizerPass();
 
 void initializeKVXPreRAExpandPseudoPass(PassRegistry &);
 void initializeKVXPreEmitExpandPseudoPass(PassRegistry &);

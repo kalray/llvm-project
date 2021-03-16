@@ -21,9 +21,7 @@ namespace llvm {
 class KVXPacketizerList : public VLIWPacketizerList {
 
 public:
-
-  KVXPacketizerList(MachineFunction &MF, MachineLoopInfo &MLI,
-                    AAResults *AA, bool ValidOptLevel);
+  KVXPacketizerList(MachineFunction &MF, MachineLoopInfo &MLI, AAResults *AA);
 
   bool isSoloInstruction(const MachineInstr &MI) override;
   bool isLegalToPacketizeTogether(SUnit *SUI, SUnit *SUJ) override;
@@ -44,7 +42,6 @@ public:
 
 private:
   int PacketSize;
-  bool ValidOptLevel;
 
   bool isScheduledAlone(unsigned opcode);
 
