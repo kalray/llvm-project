@@ -282,6 +282,13 @@ def LVp : KVX_PSEUDO_W_SCHEDINFO<
         (outs VectorReg:$out),
         (ins Wrapped64:$offset, SingleReg:$base, SpeculateMod:$var), [], LSU>;
 
+def LWIDEp : KVX_PSEUDO<
+        (outs WideReg:$out),
+        (ins Wrapped64:$offset, SingleReg:$base, SpeculateMod:$var), []>;
+
+def LMATRIXp : KVX_PSEUDO<
+        (outs MatrixReg:$out),
+        (ins Wrapped64:$offset, SingleReg:$base, SpeculateMod:$var), []>;
 }
 
 def lvspec : PatFrag<(ops node:$ptr), (v256i1 (load node:$ptr)), [{
@@ -677,6 +684,10 @@ def SOp : KVX_PSEUDO_W_SCHEDINFO<
         (outs), (ins Wrapped64:$offset, SingleReg:$base, QuadReg:$val), [], LSU_AUXW>;
 def SVp : KVX_PSEUDO_W_SCHEDINFO<
         (outs), (ins Wrapped64:$offset, SingleReg:$base, VectorReg:$val), [], LSU>;
+def SWIDEp : KVX_PSEUDO<
+        (outs), (ins Wrapped64:$offset, SingleReg:$base, WideReg:$val), []>;
+def SMATRIXp : KVX_PSEUDO<
+        (outs), (ins Wrapped64:$offset, SingleReg:$base, MatrixReg:$val), []>;
 }
 
 multiclass StorePatRI<PatFrag StoreOp, ValueType vt, RegisterClass rc,
