@@ -70,6 +70,7 @@ public:
 
   bool useIntegratedAs() const override { return false; }
   bool isCrossCompiling() const override { return true; }
+  bool IsMathErrnoDefault() const override { return false; }
   bool SupportsProfiling() const override { return false; }
   unsigned GetDefaultDwarfVersion() const override { return 2; }
 
