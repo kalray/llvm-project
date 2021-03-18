@@ -252,3 +252,16 @@ unsigned KVXTTIImpl::getInliningThresholdMultiplier() const {
 }
 
 unsigned KVXTTIImpl::getNumberOfRegisters(unsigned ClassID) const { return 64; }
+
+bool KVXTTIImpl::isLSRCostLess(TargetTransformInfo::LSRCost &C1,
+                               TargetTransformInfo::LSRCost &C2) {
+  // Care first for num-regs then number of inst.
+  // Care last for ImmCost and scale.
+  // TODO: Check if NumRegs really matches the actual use of registers.
+  // We might be able to invert NumRegs and Insns if we know that reg
+  // pressure is low or that it won't spill.
+  return std::tie(C1.NumRegs, C1.Insns, C1.AddRecCost, C1.NumIVMuls,
+                  C1.SetupCost, C1.NumBaseAdds, C1.ImmCost, C1.ScaleCost) <
+         std::tie(C2.NumRegs, C2.Insns, C2.AddRecCost, C2.NumIVMuls,
+                  C2.SetupCost, C2.NumBaseAdds, C2.ImmCost, C2.ScaleCost);
+}

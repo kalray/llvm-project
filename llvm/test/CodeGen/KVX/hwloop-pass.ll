@@ -81,7 +81,6 @@ define void @imm_nonzero_reg_positive_bump(i32* nocapture %x, i32 %n){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %for.body.preheader
 ; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    addd $r0 = $r0, 12
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r2 = $r1, -3
 ; CHECK-NEXT:    make $r1 = 3
@@ -90,7 +89,7 @@ define void @imm_nonzero_reg_positive_bump(i32* nocapture %x, i32 %n){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB2_3: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    sw 0[$r0] = $r1
+; CHECK-NEXT:    sw 12[$r0] = $r1
 ; CHECK-NEXT:    addw $r1 = $r1, 1
 ; CHECK-NEXT:    addd $r0 = $r0, 4
 ; CHECK-NEXT:    ;;

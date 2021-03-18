@@ -12,19 +12,16 @@ define void @foo(i32 %i, i32* nocapture %p){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mind $r0 = $r0, 2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfd $r2 = $r0, 3
-; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    sbfd $r0 = $r0, 3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    loopdo $r2, .__LOOPDO_0_END_
+; CHECK-NEXT:    loopdo $r0, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_1: # %do.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    addx4d $r2 = $r0, $r1
-; CHECK-NEXT:    addd $r0 = $r0, -1
+; CHECK-NEXT:    lwz $r0 = 8[$r1]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r3 = 8[$r2]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 12[$r2] = $r3
+; CHECK-NEXT:    sw 12[$r1] = $r0
+; CHECK-NEXT:    addd $r1 = $r1, -4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .__LOOPDO_0_END_:
 ; CHECK-NEXT:  # %bb.2: # %do.end
