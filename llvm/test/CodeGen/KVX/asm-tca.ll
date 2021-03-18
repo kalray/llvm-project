@@ -147,10 +147,10 @@ define void @use_wide_reg(<512 x i1>* nocapture %w, <256 x i1>* nocapture readon
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = load <512 x i1>, <512 x i1>* %w, align 64
+  %0 = load <512 x i1>, <512 x i1>* %w, align 32
   %1 = load <256 x i1>, <256 x i1>* %v, align 32
   %2 = tail call <512 x i1> asm sideeffect "mma484bw $0 = $0, $1, $1", "=w,w,0,~{$r0r1r2r3},~{$a0a1a2a3}"(<256 x i1> %1, <512 x i1> %0)
-  store <512 x i1> %2, <512 x i1>* %w, align 64
+  store <512 x i1> %2, <512 x i1>* %w, align 32
   ret void
 }
 
