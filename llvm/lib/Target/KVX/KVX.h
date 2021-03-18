@@ -148,7 +148,7 @@ enum SPLAT32 {
 } // namespace KVXMOD
 
 namespace KVX {
-enum STAGE { PRE_RA, PRE_SCHED2, PRE_BUNDLE };
+enum STAGE { PRE_RA, PRE_SCHED2, PRE_BUNDLE, PRE_EMIT };
 } // namespace KVX
 
 bool isScalarcondWord(unsigned Cond);
