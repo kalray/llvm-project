@@ -861,35 +861,34 @@ define <4 x i64> @test_tca_builtins(i64 %a, i64 %b, i64 %c, i64 %d, <256 x i1>* 
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mma484subw $a6a7 = $a6a7, $a8, $a8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma444hbd0 $a0a1a2a3 = $a0a1a2a3, $a8, $a8
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fscalewv $a4 = $a4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    mma444hbd0 $a0a1a2a3 = $a0a1a2a3, $a8, $a8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mma484ubw $a6a7 = $a6a7, $a8, $a8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mma444hbd1 $a0a1a2a3 = $a0a1a2a3, $a8, $a8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma444hd $a0a1a2a3 = $a0a1a2a3, $a8, $a8
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mma484usbw $a6a7 = $a6a7, $a8, $a8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma444suhbd0 $a0a1a2a3 = $a0a1a2a3, $a8, $a8
+; CHECK-NEXT:    mma444hd $a0a1a2a3 = $a0a1a2a3, $a8, $a8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowwhv.rn.s $a9 = $a6a7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma444suhbd1 $a0a1a2a3 = $a0a1a2a3, $a8, $a8
+; CHECK-NEXT:    mma444suhbd0 $a0a1a2a3 = $a0a1a2a3, $a8, $a8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fscalewv.rna.relu $a4 = $a4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    movefo $r8r9r10r11 = $a4
-; CHECK-NEXT:    movetq $a4_lo = $r8, $r9
-; CHECK-NEXT:    movetq $a4_hi = $r10, $r11
+; CHECK-NEXT:    mma444suhbd1 $a0a1a2a3 = $a0a1a2a3, $a8, $a8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mma444suhd $a0a1a2a3 = $a0a1a2a3, $a8, $a8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mma444uhbd0 $a0a1a2a3 = $a0a1a2a3, $a8, $a8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mma444uhbd1 $a0a1a2a3 = $a0a1a2a3, $a8, $a8
+; CHECK-NEXT:    movefo $r8r9r10r11 = $a4
+; CHECK-NEXT:    movetq $a4_lo = $r8, $r9
+; CHECK-NEXT:    movetq $a4_hi = $r10, $r11
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fscalewv.relu $a4 = $a4
 ; CHECK-NEXT:    ;;
