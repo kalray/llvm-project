@@ -475,17 +475,17 @@ define <4 x half> @test_select_cc(<4 x half> %a, <4 x half> %b, <4 x half> %c, <
 ; CHECK-NEXT:    extfz $r10 = $r1, 31, 16
 ; CHECK-NEXT:    extfz $r6 = $r2, 47, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r9 = $r2, 31, 16
 ; CHECK-NEXT:    extfz $r8 = $r0, 47, 32
+; CHECK-NEXT:    extfz $r9 = $r2, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r3 ? $r4 = $r5
 ; CHECK-NEXT:    extfz $r11 = $r0, 31, 16
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    extfz $r2 = $r2, 15, 0
-; CHECK-NEXT:    cmoved.wnez $r6 ? $r7 = $r8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    extfz $r1 = $r1, 15, 0
 ; CHECK-NEXT:    extfz $r0 = $r0, 15, 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.wnez $r3 ? $r4 = $r5
+; CHECK-NEXT:    cmoved.wnez $r6 ? $r7 = $r8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.wnez $r9 ? $r10 = $r11
 ; CHECK-NEXT:    cmoved.wnez $r2 ? $r1 = $r0
@@ -516,17 +516,18 @@ define <4 x float> @test_select_cc_f32_f16(<4 x float> %a, <4 x float> %b, <4 x 
 ; CHECK-NEXT:    srad $r4 = $r3, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srad $r10 = $r6, 32
-; CHECK-NEXT:    srad $r5 = $r7, 32
-; CHECK-NEXT:    cmoved.wnez $r7 ? $r3 = $r1
 ; CHECK-NEXT:    cmoved.wnez $r6 ? $r2 = $r0
+; CHECK-NEXT:    srad $r5 = $r7, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.wnez $r10 ? $r9 = $r11
+; CHECK-NEXT:    cmoved.wnez $r7 ? $r3 = $r1
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.wnez $r5 ? $r4 = $r8
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r2 = $r9, 63, 32
-; CHECK-NEXT:    insf $r3 = $r4, 63, 32
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r3 = $r4, 63, 32
 ; CHECK-NEXT:    copyd $r0 = $r2
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -539,23 +540,21 @@ define <4 x half> @test_select_cc_f16_f32(<4 x half> %a, <4 x half> %b, <4 x flo
 ; CHECK-LABEL: test_select_cc_f16_f32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srad $r7 = $r2, 32
-; CHECK-NEXT:    srad $r9 = $r3, 32
 ; CHECK-NEXT:    srad $r6 = $r4, 32
-; CHECK-NEXT:    srad $r8 = $r5, 32
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fcompw.une $r2 = $r2, $r4
-; CHECK-NEXT:    fcompw.une $r4 = $r7, $r6
-; CHECK-NEXT:    srld $r7 = $r0, 48
+; CHECK-NEXT:    srad $r9 = $r3, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompw.une $r3 = $r3, $r5
-; CHECK-NEXT:    fcompw.une $r5 = $r9, $r8
+; CHECK-NEXT:    fcompw.une $r4 = $r7, $r6
 ; CHECK-NEXT:    copyw $r6 = $r2
 ; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    srad $r8 = $r5, 32
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompw.une $r3 = $r3, $r5
 ; CHECK-NEXT:    cmoved.weqz $r6 ? $r2 = 0
 ; CHECK-NEXT:    copyw $r6 = $r4
 ; CHECK-NEXT:    make $r4 = -1
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompw.une $r5 = $r9, $r8
 ; CHECK-NEXT:    cmoved.weqz $r6 ? $r4 = 0
 ; CHECK-NEXT:    copyw $r6 = $r3
 ; CHECK-NEXT:    make $r3 = -1
@@ -563,12 +562,13 @@ define <4 x half> @test_select_cc_f16_f32(<4 x half> %a, <4 x half> %b, <4 x flo
 ; CHECK-NEXT:    cmoved.weqz $r6 ? $r3 = 0
 ; CHECK-NEXT:    copyw $r6 = $r5
 ; CHECK-NEXT:    make $r5 = -1
+; CHECK-NEXT:    srld $r7 = $r0, 48
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r6 ? $r5 = 0
+; CHECK-NEXT:    srld $r6 = $r1, 48
 ; CHECK-NEXT:    extfz $r8 = $r1, 47, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    extfz $r9 = $r0, 47, 32
-; CHECK-NEXT:    srld $r6 = $r1, 48
 ; CHECK-NEXT:    extfz $r10 = $r1, 31, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    extfz $r11 = $r0, 31, 16

@@ -81,8 +81,8 @@ define i64 @atomicrmw_i64_xchg_as(i64 addrspace(1)* %ptr, i64 %c, i64 %s) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.even $r0 ? .LBB4_1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    make $r0 = 5
+; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    call __kvx_atomic_global_out
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r18
@@ -103,20 +103,20 @@ define i64 @atomicrmw_i64_xchg_as(i64 addrspace(1)* %ptr, i64 %c, i64 %s) {
 define i8 @atomic_test_and_set(i8* %ptr) {
 ; CHECK-LABEL: atomic_test_and_set:
 ; CHECK:         fence
-; CHECK-NEXT:    make $r1 = 1
 ; CHECK-NEXT:    andd $r3 = $r0, 3
+; CHECK-NEXT:    make $r1 = 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfd $r7 = $r3, 0
 ; CHECK-NEXT:    slld $r3 = $r3, 3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB5_1:
 ; CHECK-NEXT:    lwz.u $r5 = $r7[$r0]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlw $r2 = $r5, $r3
 ; CHECK-NEXT:    sllw $r6 = $r1, $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r2 = $r2, 255
+; CHECK-NEXT:    srlw $r2 = $r5, $r3
 ; CHECK-NEXT:    orw $r4 = $r5, $r6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r2 = $r2, 255
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.wnez $r2 ? .LBB5_2
 ; CHECK-NEXT:    ;;
@@ -429,8 +429,8 @@ define i64 @atomicrmw_i64_sub_global_as(i64 addrspace(1)*%src, i64 %b) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.even $r0 ? .LBB18_1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    make $r0 = 3
+; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    call __kvx_atomic_global_out
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r18

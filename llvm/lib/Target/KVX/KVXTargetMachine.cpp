@@ -45,8 +45,7 @@ static cl::opt<std::string>
 extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeKVXTarget() {
   RegisterTargetMachine<KVXTargetMachine> X(getTheKVXTarget());
   auto *PR = PassRegistry::getPassRegistry();
-  initializeKVXPreRAExpandPseudoPass(*PR);
-  initializeKVXPreEmitExpandPseudoPass(*PR);
+  initializeKVXExpandPseudoPass(*PR);
   initializeKVXLoadStorePackingPassPass(*PR);
   initializeKVXPacketizerPass(*PR);
   initializeKVXHardwareLoopsPass(*PR);
@@ -139,7 +138,7 @@ public:
   bool addInstSelector() override;
   void addPreRegAlloc() override;
   bool addPreISel() override;
-
+  void addPreSched2() override;
   void addPreEmitPass() override;
 };
 } // namespace
@@ -183,7 +182,7 @@ bool KVXPassConfig::addInstSelector() {
 }
 
 void KVXPassConfig::addPreRegAlloc() {
-  addPass(createKVXPreRAExpandPseudoPass());
+  addPass(createKVXExpandPseudoPass(KVX::PRE_RA));
   if (getOptLevel() >= CodeGenOpt::Default) {
     if (!DisableLoadStorePacking)
       addPass(createKVXLoadStorePackingPass());
@@ -192,12 +191,14 @@ void KVXPassConfig::addPreRegAlloc() {
   }
 }
 
+void KVXPassConfig::addPreSched2() {
+  addPass(createKVXExpandPseudoPass(KVX::PRE_SCHED2));
+}
+
 void KVXPassConfig::addPreEmitPass() {
-  addPass(createKVXPreEmitExpandPseudoPass());
-  if (getOptLevel() >= CodeGenOpt::Default) {
-    if (!DisableBundling)
-      addPass(createKVXPacketizerPass());
-  }
+  addPass(createKVXExpandPseudoPass(KVX::PRE_BUNDLE));
+  if ((getOptLevel() >= CodeGenOpt::Default) && (!DisableBundling))
+    addPass(createKVXPacketizerPass());
 }
 
 bool KVXPassConfig::addPreISel() {

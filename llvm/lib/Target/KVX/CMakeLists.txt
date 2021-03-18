@@ -19,8 +19,7 @@ add_llvm_target(KVXCodeGen
     KVXISelLowering.cpp
     KVXTCAIselLowering.cpp
     KVXAsmPrinter.cpp
-    KVXPreRAExpandPseudoInsts.cpp
-    KVXPreEmitExpandPseudoInsts.cpp
+    KVXExpandPseudoInsts.cpp
     KVXInstrInfo.cpp
     KVXRegisterInfo.cpp
     KVXTargetMachine.cpp

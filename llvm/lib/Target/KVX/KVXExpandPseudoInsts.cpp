@@ -1,4 +1,4 @@
-//===-- KVXPreEmitExpandPseudoInsts.cpp - Expand pseudo instructions ------===//
+//===-- KVXExpandPseudoInsts.cpp - Expand pseudo instructions ------===//
 //
 //                     The LLVM Compiler Infrastructure
 //
@@ -8,9 +8,10 @@
 //===----------------------------------------------------------------------===//
 //
 // This file contains a pass that expands pseudo instructions into target
-// instructions. This pass should be run after register allocation but before
-// the post-regalloc scheduling pass.
-//
+// instructions. This pass runs 3 times:
+// - Before Register Allocator
+// - Before the post-regalloc schedulling
+// - Before packetizer
 //===----------------------------------------------------------------------===//
 
 #include "KVX.h"
@@ -25,19 +26,19 @@
 #include "llvm/Support/Debug.h"
 using namespace llvm;
 
-#define KVX_PREEMIT_EXPAND_PSEUDO_NAME                                         \
-  "KVX pre emit pseudo instruction expansion pass"
-#define DEBUG_TYPE "pre-emit-expand-pseudo"
+#define KVX_PREEMIT_EXPAND_PSEUDO_NAME "KVX pseudo instruction expansion pass"
+#define DEBUG_TYPE "kvx-expand-pseudo"
 
 namespace {
 
-class KVXPreEmitExpandPseudo : public MachineFunctionPass {
+class KVXExpandPseudo : public MachineFunctionPass {
 public:
   const KVXInstrInfo *TII;
   static char ID;
 
-  KVXPreEmitExpandPseudo() : MachineFunctionPass(ID) {
-    initializeKVXPreEmitExpandPseudoPass(*PassRegistry::getPassRegistry());
+  KVXExpandPseudo(KVX::STAGE S = KVX::PRE_RA)
+      : MachineFunctionPass(ID), Stage(S) {
+    initializeKVXExpandPseudoPass(*PassRegistry::getPassRegistry());
   }
 
   bool runOnMachineFunction(MachineFunction &MF) override;
@@ -47,14 +48,15 @@ public:
   }
 
 private:
+  const KVX::STAGE Stage;
   bool expandMBB(MachineBasicBlock &MBB);
   bool expandMI(MachineBasicBlock &MBB, MachineBasicBlock::iterator MBBI,
                 MachineBasicBlock::iterator &NextMBBI);
 };
 
-char KVXPreEmitExpandPseudo::ID = 0;
+char KVXExpandPseudo::ID = 0;
 
-bool KVXPreEmitExpandPseudo::runOnMachineFunction(MachineFunction &MF) {
+bool KVXExpandPseudo::runOnMachineFunction(MachineFunction &MF) {
   TII = static_cast<const KVXInstrInfo *>(MF.getSubtarget().getInstrInfo());
   bool Modified = false;
   for (auto &MBB : MF)
@@ -62,15 +64,19 @@ bool KVXPreEmitExpandPseudo::runOnMachineFunction(MachineFunction &MF) {
   return Modified;
 }
 
-bool KVXPreEmitExpandPseudo::expandMBB(MachineBasicBlock &MBB) {
+bool KVXExpandPseudo::expandMBB(MachineBasicBlock &MBB) {
   bool Modified = false;
 
   MachineBasicBlock::iterator MBBI = MBB.begin(), E = MBB.end();
   while (MBBI != E) {
     MachineBasicBlock::iterator NMBBI = std::next(MBBI);
-    Modified |= expandMI(MBB, MBBI, NMBBI);
+    if (MBBI->isPseudo())
+      Modified |= expandMI(MBB, MBBI, NMBBI);
     MBBI = NMBBI;
   }
+
+  if (Stage == KVX::PRE_RA)
+    return Modified;
 
   // TODO: Remove useless GOTOs. Should be done in a separate pass.
   if (!MBB.empty()) {
@@ -138,6 +144,98 @@ static void BuildCMOVED(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   }
 }
 
+// ========================================================================== //
+
+static bool expandGetInstr(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
+                           MachineBasicBlock::iterator MBBI) {
+  MachineInstr &MI = *MBBI;
+  DebugLoc DL = MI.getDebugLoc();
+
+  unsigned DestReg = MI.getOperand(0).getReg();
+  int64_t regNo = MI.getOperand(1).getImm();
+
+  BuildMI(MBB, MBBI, DL, TII->get(KVX::GETss3), DestReg)
+      .addReg(KVX::SystemRegRegClass.getRegister(regNo));
+
+  MI.eraseFromParent();
+  return true;
+}
+
+static bool expandSystemRegValueInstr(unsigned int Opcode,
+                                      const KVXInstrInfo *TII,
+                                      MachineBasicBlock &MBB,
+                                      MachineBasicBlock::iterator MBBI) {
+  MachineInstr &MI = *MBBI;
+  DebugLoc DL = MI.getDebugLoc();
+
+  unsigned int sysReg =
+      KVX::SystemRegRegClass.getRegister(MI.getOperand(0).getImm());
+  unsigned valReg = MI.getOperand(1).getReg();
+
+  BuildMI(MBB, MBBI, DL, TII->get(Opcode), sysReg).addReg(valReg);
+
+  MI.eraseFromParent();
+  return true;
+}
+
+static bool expandCacheInstruction(const KVXInstrInfo *TII,
+                                   MachineBasicBlock &MBB,
+                                   MachineBasicBlock::iterator MBBI) {
+  MachineInstr &MI = *MBBI;
+  DebugLoc DL = MI.getDebugLoc();
+  unsigned Base = MI.getOperand(1).getReg();
+
+  bool OffsetIsReg = MI.getOperand(0).isReg();
+  if (!(OffsetIsReg || MI.getOperand(0).isImm())) {
+    MBBI->print(errs());
+    report_fatal_error("Cache instruction operand unsupported");
+  }
+
+  unsigned OpCode;
+  switch (MBBI->getOpcode()) {
+  case KVX::DINVALLp:
+    OpCode = OffsetIsReg
+                 ? KVX::DINVALLrr
+                 : GetImmOpCode(MI.getOperand(0).getImm(), KVX::DINVALLri10,
+                                KVX::DINVALLri37, KVX::DINVALLri64);
+    break;
+  case KVX::DTOUCHLp:
+    OpCode = OffsetIsReg
+                 ? KVX::DTOUCHLrr
+                 : GetImmOpCode(MI.getOperand(0).getImm(), KVX::DTOUCHLri10,
+                                KVX::DTOUCHLri37, KVX::DTOUCHLri64);
+    break;
+  case KVX::DZEROLp:
+    OpCode = OffsetIsReg
+                 ? KVX::DZEROLrr
+                 : GetImmOpCode(MI.getOperand(0).getImm(), KVX::DZEROLri10,
+                                KVX::DZEROLri37, KVX::DZEROLri64);
+    break;
+  case KVX::IINVALSp:
+    OpCode = OffsetIsReg
+                 ? KVX::IINVALSrr
+                 : GetImmOpCode(MI.getOperand(0).getImm(), KVX::IINVALSri10,
+                                KVX::IINVALSri37, KVX::IINVALSri64);
+    break;
+  default:
+    report_fatal_error("Cache instruction not supported");
+  }
+
+  if (OffsetIsReg)
+    BuildMI(MBB, MBBI, DL, TII->get(OpCode))
+        .addReg(MI.getOperand(0).getReg())
+        .addReg(Base);
+  else
+    BuildMI(MBB, MBBI, DL, TII->get(OpCode))
+        .addImm(MI.getOperand(0).getImm())
+        .addReg(Base);
+
+  MI.eraseFromParent();
+  return true;
+}
+
+// ========================================================================== //
+
 static bool expandSELECT(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
                          MachineBasicBlock::iterator MBBI) {
   MachineInstr &MI = *MBBI;
@@ -204,10 +302,11 @@ static bool expandSELECT(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
       BuildCMOVED(TII, MBB, MBBI, DestReg, FalseReg, ScratchReg, CondMod);
     }
 
-  } else {
-    assert(FalseVal.isReg());
+  } else if (!FalseVal.isReg()) {
+    MI.print(errs());
+    report_fatal_error("FalseVal is not a register");
+  } else
     BuildCMOVED(TII, MBB, MBBI, FalseVal.getReg(), TrueReg, CondReg, CondMod);
-  }
 
   MI.eraseFromParent();
   return true;
@@ -271,7 +370,8 @@ signed getACSWAPOpcodeModifyAddr(const KVXInstrInfo *TII,
 
 // Return operation opcode used by the atomic_load_operation operations.
 unsigned getAtomicOPOpcode(uint64_t Size, unsigned Pseudo) {
-  assert((Size == 4 || Size == 8) && "Size isn't supported for AtomicOPOpcode");
+  if (!(Size == 4 || Size == 8))
+    report_fatal_error("Size isn't supported for AtomicOPOpcode");
 
   switch (Pseudo) {
   case KVX::ALOADADDp:
@@ -297,7 +397,7 @@ unsigned getAtomicOPOpcode(uint64_t Size, unsigned Pseudo) {
   case KVX::ASWAPp:
     return Size == 4 ? KVX::COPYW : KVX::COPYD;
   default:
-    llvm_unreachable("Invalid ALOADOP Pseudo opcode");
+    report_fatal_error("Invalid ALOADOP Pseudo opcode");
   }
 }
 
@@ -317,16 +417,24 @@ static bool expandALOAD(unsigned int Opcode, const KVXInstrInfo *TII,
   LLVM_DEBUG(dbgs() << "  " << MI.getNumOperands() << " operands ("
                     << MI.getNumMemOperands() << " memoperands)" << '\n');
 
-  assert(MI.getNumMemOperands() >= 1 &&
-         "expandALOAD pseudo-instr expects MemOperands");
+  if (!MI.getNumMemOperands()) {
+    MBBI->print(errs());
+    report_fatal_error("expandALOAD pseudo-instr expects MemOperands");
+  }
 
   // NOTE: Some instructions can have more than 1 MemOperand. We assume that
   // the first one is the right one.
   MachineMemOperand &MO = *MI.memoperands()[0];
   uint64_t MOSize = MO.getSize();
 
-  assert(MO.isAtomic() && "MemOperand is not atomic");
-  assert((MOSize == 4 || MOSize == 8) && "MemOperand size isn't supported");
+  if (!MO.isAtomic()) {
+    MBBI->print(errs());
+    report_fatal_error("MemOperand is not atomic");
+  }
+  if (!(MOSize == 4 || MOSize == 8)) {
+    MBBI->print(errs());
+    report_fatal_error("MemOperand size isn't supported");
+  }
 
   LLVM_DEBUG(dbgs() << "  memoperand size: " << MOSize << '\n');
 
@@ -428,12 +536,16 @@ static bool expandATAS(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
 
   MachineInstr &MI = *MBBI;
 
-  assert(MI.hasOneMemOperand() &&
-         "expandATAS pseudo-instr expects one MemOperand");
+  if (!MI.hasOneMemOperand()) {
+    MBBI->print(errs());
+    report_fatal_error("expandATAS pseudo-instr expects one MemOperand");
+  }
 
-  assert(
-      MI.memoperands()[0]->getSize() == 1 &&
-      "expandATAS only support atomicrmw xchg i8*, 1 operation (test_and_set)");
+  if (MI.memoperands()[0]->getSize() != 1) {
+    MBBI->print(errs());
+    report_fatal_error("expandATAS only support atomicrmw xchg i8*, 1 "
+                       "operation (test_and_set)");
+  }
 
   DebugLoc DL = MI.getDebugLoc();
   MachineFunction *MF = MBB.getParent();
@@ -575,8 +687,10 @@ static bool expandACMPSWAP(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   const KVXRegisterInfo *TRI =
       (const KVXRegisterInfo *)MF->getSubtarget().getRegisterInfo();
 
-  assert(MI.getNumMemOperands() >= 1 &&
-         "expandACMPSWAP pseudo-instr expects MemOperands");
+  if (!MI.getNumMemOperands()) {
+    MBBI->print(errs());
+    report_fatal_error("expandALOAD pseudo-instr expects MemOperands");
+  }
 
   // FIXME: Some instructions can have more than 1 MemOperand. We assume that
   // the first one is the right one.
@@ -1023,7 +1137,10 @@ static bool expandENDLOOP(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
     // If this block has a single predecessor, try to add the symbol to the end
     // of it.
     auto *PredBB = *MBB.pred_begin();
-    assert(!PredBB->empty() && "Did not expected an empty BB in the loop.\n");
+    if (PredBB->empty()) {
+      MBBI->print(errs());
+      report_fatal_error("Did not expected an empty BB in the loop.\n");
+    }
     auto InsPoint = PredBB->getLastNonDebugInstr();
     if (PredBB->succ_size() != 1 || InsPoint->isBranch()) {
       auto Stop = PredBB->getFirstTerminator();
@@ -1210,9 +1327,31 @@ static bool expandWideMatrixLoadsStores(const KVXInstrInfo *TII,
   return true;
 }
 
-bool KVXPreEmitExpandPseudo::expandMI(MachineBasicBlock &MBB,
-                                      MachineBasicBlock::iterator MBBI,
-                                      MachineBasicBlock::iterator &NextMBBI) {
+bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
+                               MachineBasicBlock::iterator MBBI,
+                               MachineBasicBlock::iterator &NextMBBI) {
+  LLVM_DEBUG(dbgs() << "Expanding pseudo: "; MBBI->dump());
+  switch (MBBI->getOpcode()) {
+  case KVX::GETp:
+    return expandGetInstr(TII, MBB, MBBI);
+  case KVX::WFXLp:
+    return expandSystemRegValueInstr(KVX::WFXLrst4, TII, MBB, MBBI);
+  case KVX::WFXMp:
+    return expandSystemRegValueInstr(KVX::WFXMrst4, TII, MBB, MBBI);
+  case KVX::SETp:
+    return expandSystemRegValueInstr(KVX::SETrst4, TII, MBB, MBBI);
+  case KVX::DINVALLp:
+  case KVX::DTOUCHLp:
+  case KVX::DZEROLp:
+  case KVX::IINVALSp:
+    return expandCacheInstruction(TII, MBB, MBBI);
+  default:
+    break;
+  }
+
+  if (Stage < KVX::PRE_SCHED2)
+    return false;
+
   switch (MBBI->getOpcode()) {
   case KVX::SELECTp:
     return expandSELECT(TII, MBB, MBBI);
@@ -1227,8 +1366,6 @@ bool KVXPreEmitExpandPseudo::expandMI(MachineBasicBlock &MBB,
   case KVX::ALOADUMINp:
   case KVX::ALOADUMAXp:
     return expandALOAD(MBBI->getOpcode(), TII, MBB, MBBI, NextMBBI);
-  case KVX::ACMPSWAPp:
-    return expandACMPSWAP(TII, MBB, MBBI, NextMBBI);
   case KVX::ASWAPp:
     return expandASWAP(TII, MBB, MBBI, NextMBBI);
   case KVX::ATASp:
@@ -1328,6 +1465,16 @@ bool KVXPreEmitExpandPseudo::expandMI(MachineBasicBlock &MBB,
     return expandTcaInplace(TII, MBB, MBBI, KVX::sub_b1, KVX::MOVETQrrbo);
   case KVX::MOVETOLOp:
     return expandTcaInplace(TII, MBB, MBBI, KVX::sub_b0, KVX::MOVETQrrbe);
+  default:
+    break;
+  }
+
+  if (Stage < KVX::PRE_BUNDLE)
+    return false;
+
+  switch (MBBI->getOpcode()) {
+  case KVX::ACMPSWAPp:
+    return expandACMPSWAP(TII, MBB, MBBI, NextMBBI);
   case KVX::ENDLOOP:
     return expandENDLOOP(TII, MBB, MBBI);
   default:
@@ -1339,12 +1486,12 @@ bool KVXPreEmitExpandPseudo::expandMI(MachineBasicBlock &MBB,
 
 } // end of anonymous namespace
 
-INITIALIZE_PASS(KVXPreEmitExpandPseudo, "kvx-preemit-expand-pseudo",
+INITIALIZE_PASS(KVXExpandPseudo, "kvx-preemit-expand-pseudo",
                 KVX_PREEMIT_EXPAND_PSEUDO_NAME, false, false)
 namespace llvm {
 
-FunctionPass *createKVXPreEmitExpandPseudoPass() {
-  return new KVXPreEmitExpandPseudo();
+FunctionPass *createKVXExpandPseudoPass(KVX::STAGE S) {
+  return new KVXExpandPseudo(S);
 }
 
 } // end of namespace llvm

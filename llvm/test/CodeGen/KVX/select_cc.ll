@@ -75,8 +75,8 @@ define <4 x half> @f_Select32PAT(<4 x half> %x, <4 x half> %y){
 ; CHECK-NEXT:    cmoved.wnez $r10 ? $r6 = $r7
 ; CHECK-NEXT:    cmoved.wnez $r11 ? $r0 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r4, 31, 16
 ; CHECK-NEXT:    insf $r6 = $r0, 31, 16
+; CHECK-NEXT:    insf $r2 = $r4, 31, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r2 = $r6, 63, 32
 ; CHECK-NEXT:    ;;
