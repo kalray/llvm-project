@@ -25,17 +25,17 @@ define i32 @main() {
 ; CHECK-NEXT:    copyd $r1 = $r6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r2 = $r7
+; CHECK-NEXT:    make $r3 = 4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    movefo $r0r1r2r3 = $a0
 ; CHECK-NEXT:    movetq $a0_lo = $r0, $r1
 ; CHECK-NEXT:    movetq $a0_hi = $r2, $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 32[$r12] = $a0
-; CHECK-NEXT:    make $r3 = 4
 ; CHECK-NEXT:    copyd $r1 = $r4
 ; CHECK-NEXT:    copyd $r2 = $r5
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r3 = $r6
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r0 = .L.str
 ; CHECK-NEXT:    copyd $r4 = $r7
 ; CHECK-NEXT:    call printf

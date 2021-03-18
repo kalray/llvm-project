@@ -83,6 +83,7 @@ def LSU_AUXW_Y : InstrItinClass;
 def LSU_AUXR_AUXW : InstrItinClass;
 def LSU_AUXR_AUXW_X : InstrItinClass;
 def LSU_AUXR_AUXW_Y : InstrItinClass;
+def SWAPVO : InstrItinClass;
 
 
 def KVXItinList {
@@ -344,6 +345,23 @@ list<InstrItinData> ItinList = [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [MAU_FU], 0>,
     InstrStage<1, [AUXR_FU]>
+  ]>,
+  // We need to expand SWAPVOp pseudos after packetizer. To correctly schedule/bundle them,
+  // we need a dedicated scheduling itinerary for it.
+  InstrItinData<SWAPVO, [
+    // moveto E == ALU_LITE_CRWL
+    InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [CRWL_FU], 0>,
+    // moveto O == ALU_LITE_CRWH
+    InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [CRWH_FU], 0>,
+    // movefo == BCU_TINY_AUXW_CRRP
+    InstrStage<1, [BCU_FU], 0>,
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [AUXW_FU], 0>,
+    InstrStage<1, [CRRP_FU]>
   ]>
 ];
 }
