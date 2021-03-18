@@ -21,7 +21,6 @@ define void @set(i32* nocapture %x, i32 %num){
 ; CHECK-NEXT:    # =>This Loop Header: Depth=1
 ; CHECK-NEXT:    # Child Loop BB0_4 Depth 2
 ; CHECK-NEXT:    sw 0[$r12] = $r1
-; CHECK-NEXT:    addw $r1 = $r1, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_4: # %for.body
 ; CHECK-NEXT:    # Parent Loop BB0_3 Depth=1
@@ -39,6 +38,7 @@ define void @set(i32* nocapture %x, i32 %num){
 ; CHECK-NEXT:    copyw $r4 = $r7
 ; CHECK-NEXT:    sw 0[$r0] = $r3
 ; CHECK-NEXT:    addd $r0 = $r0, 4
+; CHECK-NEXT:    addw $r1 = $r1, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .__LOOPDO_0_END_:
 ; CHECK-NEXT:  .LBB0_2: # %for.cond.cleanup

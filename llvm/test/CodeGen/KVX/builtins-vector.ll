@@ -1323,9 +1323,9 @@ define <2 x double> @fmuldc(<2 x double> %v1, <2 x double> %v2){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fmuld.rn $r4 = $r0, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmsd.rn $r4 = $r1, $r3
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmuld.rn $r5 = $r0, $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmsd.rn $r4 = $r1, $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad.rn $r5 = $r2, $r1
 ; CHECK-NEXT:    copyd $r0 = $r4
@@ -1345,21 +1345,21 @@ define <4 x double> @fmuldcp(<4 x double> %v1, <4 x double> %v2){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fmuld.rn $r8 = $r0, $r4
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fmuld.rn $r9 = $r0, $r5
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmsd.rn $r8 = $r1, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld.rn $r9 = $r0, $r5
+; CHECK-NEXT:    fmuld.rn $r5 = $r2, $r7
+; CHECK-NEXT:    copyd $r0 = $r8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad.rn $r9 = $r4, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmuld.rn $r4 = $r2, $r6
+; CHECK-NEXT:    copyd $r1 = $r9
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmsd.rn $r4 = $r3, $r7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld.rn $r5 = $r2, $r7
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad.rn $r5 = $r6, $r3
-; CHECK-NEXT:    copyd $r0 = $r8
-; CHECK-NEXT:    copyd $r1 = $r9
 ; CHECK-NEXT:    copyd $r2 = $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r3 = $r5
@@ -1379,13 +1379,13 @@ entry:
 define <2 x double> @fmulcdc(<2 x double> %v1, <2 x double> %v2){
 ; CHECK-LABEL: fmulcdc:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmuld.rn $r6 = $r0, $r2
 ; CHECK-NEXT:    copyd $r4 = $r3
+; CHECK-NEXT:    fmuld.rn $r6 = $r0, $r2
+; CHECK-NEXT:    copyd $r5 = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad.rn $r4 = $r6, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmuld.rn $r6 = $r2, $r1
-; CHECK-NEXT:    copyd $r5 = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmsd.rn $r5 = $r6, $r0
 ; CHECK-NEXT:    copyd $r0 = $r4
@@ -1403,23 +1403,23 @@ declare <2 x double> @llvm.kvx.fmulcdc(<2 x double>, <2 x double>, i32) #1
 define <4 x double> @fmulcdcp(<4 x double> %v1, <4 x double> %v2){
 ; CHECK-LABEL: fmulcdcp:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmuld.rn $r10 = $r0, $r4
 ; CHECK-NEXT:    copyd $r8 = $r5
+; CHECK-NEXT:    fmuld.rn $r10 = $r0, $r4
+; CHECK-NEXT:    copyd $r9 = $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad.rn $r8 = $r10, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmuld.rn $r10 = $r4, $r1
-; CHECK-NEXT:    copyd $r9 = $r5
+; CHECK-NEXT:    copyd $r4 = $r7
+; CHECK-NEXT:    copyd $r5 = $r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmsd.rn $r9 = $r10, $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmuld.rn $r0 = $r2, $r6
-; CHECK-NEXT:    copyd $r4 = $r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad.rn $r4 = $r0, $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmuld.rn $r0 = $r6, $r3
-; CHECK-NEXT:    copyd $r5 = $r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmsd.rn $r5 = $r0, $r2
 ; CHECK-NEXT:    copyd $r0 = $r8
@@ -1524,12 +1524,12 @@ define <8 x float> @ffmawo(<8 x float> %v1, <8 x float> %v2, <8 x float> %v3){
 ; CHECK-NEXT:    ffmawp.rn $r8 = $r0, $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmawp.rn $r9 = $r1, $r5
+; CHECK-NEXT:    copyd $r0 = $r8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmawp.rn $r10 = $r2, $r6
+; CHECK-NEXT:    copyd $r1 = $r9
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmawp.rn $r11 = $r3, $r7
-; CHECK-NEXT:    copyd $r0 = $r8
-; CHECK-NEXT:    copyd $r1 = $r9
 ; CHECK-NEXT:    copyd $r2 = $r10
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r3 = $r11
@@ -1572,12 +1572,12 @@ define <4 x double> @ffmadq(<4 x double> %v1, <4 x double> %v2, <4 x double> %v3
 ; CHECK-NEXT:    ffmad.rn $r8 = $r0, $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad.rn $r9 = $r1, $r5
+; CHECK-NEXT:    copyd $r0 = $r8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad.rn $r10 = $r2, $r6
+; CHECK-NEXT:    copyd $r1 = $r9
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad.rn $r11 = $r3, $r7
-; CHECK-NEXT:    copyd $r0 = $r8
-; CHECK-NEXT:    copyd $r1 = $r9
 ; CHECK-NEXT:    copyd $r2 = $r10
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r3 = $r11
@@ -1635,12 +1635,12 @@ define <8 x float> @ffmswo(<8 x float> %v1, <8 x float> %v2, <8 x float> %v3){
 ; CHECK-NEXT:    ffmswp.rn $r8 = $r0, $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmswp.rn $r9 = $r1, $r5
+; CHECK-NEXT:    copyd $r0 = $r8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmswp.rn $r10 = $r2, $r6
+; CHECK-NEXT:    copyd $r1 = $r9
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmswp.rn $r11 = $r3, $r7
-; CHECK-NEXT:    copyd $r0 = $r8
-; CHECK-NEXT:    copyd $r1 = $r9
 ; CHECK-NEXT:    copyd $r2 = $r10
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r3 = $r11
@@ -1683,12 +1683,12 @@ define <4 x double> @ffmsdq(<4 x double> %v1, <4 x double> %v2, <4 x double> %v3
 ; CHECK-NEXT:    ffmsd.rn $r8 = $r0, $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmsd.rn $r9 = $r1, $r5
+; CHECK-NEXT:    copyd $r0 = $r8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmsd.rn $r10 = $r2, $r6
+; CHECK-NEXT:    copyd $r1 = $r9
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmsd.rn $r11 = $r3, $r7
-; CHECK-NEXT:    copyd $r0 = $r8
-; CHECK-NEXT:    copyd $r1 = $r9
 ; CHECK-NEXT:    copyd $r2 = $r10
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r3 = $r11
