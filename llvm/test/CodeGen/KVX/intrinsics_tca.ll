@@ -952,7 +952,7 @@ entry:
   %14 = call <256 x i1> @llvm.kvx.convwbv1(<256 x i1> %12, <1024 x i1> %9, i32 2, i32 1)
   %15 = call <256 x i1> @llvm.kvx.convwbv2(<256 x i1> %12, <1024 x i1> %9, i32 3, i32 0)
   %16 = call <256 x i1> @llvm.kvx.convwbv3(<256 x i1> %12, <1024 x i1> %9, i32 4, i32 1)
-  %17 = load volatile <512 x i1>, <512 x i1>* %w, align 64
+  %17 = load volatile <512 x i1>, <512 x i1>* %w, align 32
   %18 = call <256 x i1> @llvm.kvx.convwbv(<1024 x i1> %9, i32 1, i32 0)
   %19 = call <256 x i1> @llvm.kvx.fmma242hw0(<256 x i1> %5, <512 x i1> %17, <256 x i1> %5, <256 x i1> %18)
   %20 = call <256 x i1> @llvm.kvx.fmma242hw1(<256 x i1> %18, <512 x i1> %17, <256 x i1> %5, <256 x i1> %18)
@@ -998,7 +998,7 @@ entry:
   %arrayidx10 = getelementptr inbounds <256 x i1>, <256 x i1>* %v, i64 1
   %56 = bitcast <256 x i1>* %arrayidx10 to i8*
   call void @llvm.kvx.sv.cond(i8* nonnull %56, <256 x i1> %51, i64 1, i32 7)
-  store volatile <512 x i1> %39, <512 x i1>* %w, align 64
+  store volatile <512 x i1> %39, <512 x i1>* %w, align 32
   store volatile <1024 x i1> %55, <1024 x i1>* %m, align 128
   ret <4 x i64> %45
 }
@@ -1168,7 +1168,7 @@ define void @fmma242hw(<256 x i1>* nocapture %v, <512 x i1>* nocapture %w) {
 ; CHECK-NEXT:    ;;
 entry:
   %0 = load <256 x i1>, <256 x i1>* %v, align 32
-  %1 = load <512 x i1>, <512 x i1>* %w, align 64
+  %1 = load <512 x i1>, <512 x i1>* %w, align 32
   %arrayidx2 = getelementptr inbounds <256 x i1>, <256 x i1>* %v, i64 1
   %2 = load <256 x i1>, <256 x i1>* %arrayidx2, align 32
   %arrayidx3 = getelementptr inbounds <256 x i1>, <256 x i1>* %v, i64 2
@@ -1181,10 +1181,10 @@ entry:
   store <256 x i1> %7, <256 x i1>* %arrayidx3, align 32
   store <256 x i1> %5, <256 x i1>* %v, align 32
   %arrayidx16 = getelementptr inbounds <512 x i1>, <512 x i1>* %w, i64 1
-  %8 = load <512 x i1>, <512 x i1>* %arrayidx16, align 64
+  %8 = load <512 x i1>, <512 x i1>* %arrayidx16, align 32
   %9 = tail call <512 x i1> @llvm.kvx.fmma242hw(<512 x i1> %8, <256 x i1> %7, <256 x i1> %6)
   %arrayidx19 = getelementptr inbounds <512 x i1>, <512 x i1>* %w, i64 3
-  store <512 x i1> %9, <512 x i1>* %arrayidx19, align 64
+  store <512 x i1> %9, <512 x i1>* %arrayidx19, align 32
   ret void
 }
 
@@ -1239,7 +1239,7 @@ define void @insertwm(<1024 x i1>* nocapture %a0, <512 x i1>* nocapture readonly
 ; CHECK-NEXT:    ;;
 entry:
   %0 = load <1024 x i1>, <1024 x i1>* %a0, align 128
-  %1 = load <512 x i1>, <512 x i1>* %a1, align 64
+  %1 = load <512 x i1>, <512 x i1>* %a1, align 32
   %2 = tail call <1024 x i1> @llvm.kvx.insertwm(<1024 x i1> %0, <512 x i1> %1, i32 0)
   %3 = tail call <1024 x i1> @llvm.kvx.insertwm(<1024 x i1> %2, <512 x i1> %1, i32 1)
   store <1024 x i1> %3, <1024 x i1>* %a0, align 128
@@ -1306,11 +1306,11 @@ define void @insertvw(<512 x i1>* nocapture %a0, <256 x i1>* nocapture readonly 
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = load <512 x i1>, <512 x i1>* %a0, align 64
+  %0 = load <512 x i1>, <512 x i1>* %a0, align 32
   %1 = load <256 x i1>, <256 x i1>* %a1, align 32
   %2 = tail call <512 x i1> @llvm.kvx.insertvw(<512 x i1> %0, <256 x i1> %1, i32 0)
   %3 = tail call <512 x i1> @llvm.kvx.insertvw(<512 x i1> %2, <256 x i1> %1, i32 1)
-  store <512 x i1> %3, <512 x i1>* %a0, align 64
+  store <512 x i1> %3, <512 x i1>* %a0, align 32
   ret void
 }
 
@@ -1339,10 +1339,10 @@ define void @movefmw(<512 x i1>* nocapture %o, <1024 x i1>* nocapture readonly %
 entry:
   %0 = load <1024 x i1>, <1024 x i1>* %a0, align 128
   %1 = tail call <512 x i1> @llvm.kvx.movefmw(<1024 x i1> %0, i32 0)
-  store <512 x i1> %1, <512 x i1>* %o, align 64
+  store <512 x i1> %1, <512 x i1>* %o, align 32
   %2 = tail call <512 x i1> @llvm.kvx.movefmw(<1024 x i1> %0, i32 1)
   %arrayidx3 = getelementptr inbounds <512 x i1>, <512 x i1>* %o, i64 1
-  store <512 x i1> %2, <512 x i1>* %arrayidx3, align 64
+  store <512 x i1> %2, <512 x i1>* %arrayidx3, align 32
   ret void
 }
 
@@ -1399,7 +1399,7 @@ define void @movefwv(<256 x i1>* nocapture %o, <512 x i1>* nocapture readonly %a
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = load <512 x i1>, <512 x i1>* %a0, align 64
+  %0 = load <512 x i1>, <512 x i1>* %a0, align 32
   %1 = tail call <256 x i1> @llvm.kvx.movefwv(<512 x i1> %0, i32 0)
   store <256 x i1> %1, <256 x i1>* %o, align 32
   %2 = tail call <256 x i1> @llvm.kvx.movefwv(<512 x i1> %0, i32 1)
@@ -1479,12 +1479,12 @@ define void @buildfwm(<512 x i1>* nocapture readonly %a, <1024 x i1>* nocapture 
 ; CHECK-NEXT:    ;;
 entry:
   %arrayidx = getelementptr inbounds <512 x i1>, <512 x i1>* %a, i64 2
-  %0 = load <512 x i1>, <512 x i1>* %arrayidx, align 64
+  %0 = load <512 x i1>, <512 x i1>* %arrayidx, align 32
   %1 = tail call <1024 x i1> @llvm.kvx.buildfwm(<512 x i1> %0, <512 x i1> %0)
   %arrayidx2 = getelementptr inbounds <1024 x i1>, <1024 x i1>* %M, i64 1
   store <1024 x i1> %1, <1024 x i1>* %arrayidx2, align 128
   %arrayidx4 = getelementptr inbounds <512 x i1>, <512 x i1>* %a, i64 1
-  %2 = load <512 x i1>, <512 x i1>* %arrayidx4, align 64
+  %2 = load <512 x i1>, <512 x i1>* %arrayidx4, align 32
   %3 = tail call <1024 x i1> @llvm.kvx.buildfwm(<512 x i1> %0, <512 x i1> %2)
   store <1024 x i1> %3, <1024 x i1>* %M, align 128
   ret void
@@ -1509,7 +1509,7 @@ entry:
   %arrayidx1 = getelementptr inbounds <256 x i1>, <256 x i1>* %a, i64 2
   %1 = load <256 x i1>, <256 x i1>* %arrayidx1, align 32
   %2 = tail call <512 x i1> @llvm.kvx.buildfvw(<256 x i1> %0, <256 x i1> %1)
-  store <512 x i1> %2, <512 x i1>* %W, align 64
+  store <512 x i1> %2, <512 x i1>* %W, align 32
   ret void
 }
 
