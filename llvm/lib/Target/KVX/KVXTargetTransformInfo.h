@@ -51,6 +51,8 @@ public:
                                 HardwareLoopInfo &HWLoopInfo);
   bool isLoweredToCall(const Function *F);
   bool isLoweredToCall(const CallInst &CI);
+  bool isLSRCostLess(TargetTransformInfo::LSRCost &C1,
+                     TargetTransformInfo::LSRCost &C2);
   unsigned getInliningThresholdMultiplier() const;
 
   unsigned getNumberOfRegisters(unsigned ClassID) const;
