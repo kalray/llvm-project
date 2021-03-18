@@ -268,6 +268,14 @@ bool KVXTargetInfo::validateAsmConstraint(
   return false;
 }
 
+void KVXTargetInfo::adjust(LangOptions &Opts) {
+  TargetInfo::adjust(Opts);
+
+  // Keep vector aligned to its size.
+  if (Opts.OpenCL)
+    MaxVectorAlign = 0;
+}
+
 void KVXTargetInfo::getTargetDefines(const LangOptions &Opts,
                                      MacroBuilder &Builder) const {
   Builder.defineMacro("__ELF__", "1");

@@ -259,12 +259,12 @@ entry:
   store <256 x i1>* %v, <256 x i1>** %v.addr, align 8
   %0 = load <512 x i1>*, <512 x i1>** %w.addr, align 8
   %arrayidx = getelementptr inbounds <512 x i1>, <512 x i1>* %0, i64 0
-  %1 = load <512 x i1>, <512 x i1>* %arrayidx, align 64
+  %1 = load <512 x i1>, <512 x i1>* %arrayidx, align 32
   %2 = load <256 x i1>*, <256 x i1>** %v.addr, align 8
   %arrayidx1 = getelementptr inbounds <256 x i1>, <256 x i1>* %2, i64 0
   %3 = load <256 x i1>, <256 x i1>* %arrayidx1, align 32
   %4 = call <512 x i1> asm sideeffect "mma484bw $0 = $0, $1, $1", "=w,w,0,~{$r0r1r2r3},~{$a0a1a2a3}"(<256 x i1> %3, <512 x i1> %1)
-  store <512 x i1> %4, <512 x i1>* %arrayidx, align 64
+  store <512 x i1> %4, <512 x i1>* %arrayidx, align 32
   ret void
 }
 
