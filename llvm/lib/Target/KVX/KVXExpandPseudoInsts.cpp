@@ -1190,7 +1190,22 @@ static bool expandENDLOOP(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
 
 static bool expandSWAPVOp(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
                           MachineBasicBlock::iterator MBBI) {
-  MachineInstr &MI = *MBBI;
+  bool StandAlone = MBBI->getOpcode() == KVX::SWAPVOp;
+  assert((StandAlone || MBBI->getOpcode() == KVX::BUNDLE) &&
+         "Unexpected pseudo");
+  auto I = MBBI->getIterator();
+  MachineBasicBlock::iterator InsertHere = MBBI;
+  if (!StandAlone) { // Search if we have a swapvo inside
+    auto E = MBBI->getParent()->instr_end();
+    while (++I != E && I->isInsideBundle())
+      if (I->isPseudo() && I->getOpcode() == KVX::SWAPVOp)
+        break;
+    if (I == E || !I->isInsideBundle())
+      return false;
+    InsertHere = std::next(InsertHere);
+  }
+  LLVM_DEBUG(dbgs() << "Expanding: "; I->dump());
+  MachineInstr &MI = *I;
   MachineFunction *MF = MBB.getParent();
   const KVXRegisterInfo *TRI =
       (const KVXRegisterInfo *)MF->getSubtarget().getRegisterInfo();
@@ -1218,22 +1233,27 @@ static bool expandSWAPVOp(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   auto R1 = TRI->getSubReg(R, KVX::sub_s1);
   auto R2 = TRI->getSubReg(R, KVX::sub_s2);
   auto R3 = TRI->getSubReg(R, KVX::sub_s3);
-  LLVM_DEBUG(
-      dbgs() << "Adding bundle to perform Vector QuadReg swap of registers: "
-             << RName << " <--> " << VName << "\n");
-  BuildMI(MBB, MBBI, DL, TII->get(KVX::BUNDLE));
-  auto &I2 =
-      BuildMI(MBB, MBBI, DL, TII->get(MOVEFO), R).addReg(V, RegState::Kill);
-  auto &I3 = BuildMI(MBB, MBBI, DL, TII->get(KVX::MOVETQrrbe), V_lo)
+  if (StandAlone) {
+    LLVM_DEBUG(
+        dbgs() << "Adding bundle to perform Vector QuadReg swap of registers: "
+               << RName << " <--> " << VName << "\n");
+    BuildMI(MBB, InsertHere, DL, TII->get(KVX::BUNDLE));
+  }
+  auto &I2 = BuildMI(MBB, InsertHere, DL, TII->get(MOVEFO), R)
+                 .addReg(V, RegState::Kill);
+  auto &I3 = BuildMI(MBB, InsertHere, DL, TII->get(KVX::MOVETQrrbe), V_lo)
                  .addReg(R0, RegState::Kill)
                  .addReg(R1, RegState::Kill);
-  auto &I4 = BuildMI(MBB, MBBI, DL, TII->get(KVX::MOVETQrrbo), V_hi)
+  I2->bundleWithPred();
+  auto &I4 = BuildMI(MBB, InsertHere, DL, TII->get(KVX::MOVETQrrbo), V_hi)
                  .addReg(R2, RegState::Kill)
                  .addReg(R3, RegState::Kill);
-  I2->bundleWithPred();
   I3->bundleWithPred();
   I4->bundleWithPred();
-  MI.eraseFromParent();
+  if (StandAlone)
+    MI.eraseFromParent();
+  else
+    MI.eraseFromBundle();
   LLVM_DEBUG(dbgs() << "Swap bundle:"; MBB.dump());
   return true;
 }
@@ -1437,8 +1457,6 @@ bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
     return expandEXTFZ(TII, MBB, MBBI, true);
   case KVX::EXTFZDp:
     return expandEXTFZ(TII, MBB, MBBI, false);
-  case KVX::SWAPVOp:
-    return expandSWAPVOp(TII, MBB, MBBI);
   case KVX::SPCHECKp:
     return expandSPCHECK(TII, MBB, MBBI);
   case KVX::CONVDHV0p:
@@ -1481,7 +1499,16 @@ bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
     break;
   }
 
-  return false;
+  if (Stage < KVX::PRE_EMIT)
+    return false;
+
+  switch (MBBI->getOpcode()) {
+  case KVX::SWAPVOp:
+  case KVX::BUNDLE:
+    return expandSWAPVOp(TII, MBB, MBBI);
+  default:
+    return false;
+  }
 }
 
 } // end of anonymous namespace

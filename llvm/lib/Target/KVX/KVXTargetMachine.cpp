@@ -199,6 +199,8 @@ void KVXPassConfig::addPreEmitPass() {
   addPass(createKVXExpandPseudoPass(KVX::PRE_BUNDLE));
   if ((getOptLevel() >= CodeGenOpt::Default) && (!DisableBundling))
     addPass(createKVXPacketizerPass());
+
+  addPass(createKVXExpandPseudoPass(KVX::PRE_EMIT));
 }
 
 bool KVXPassConfig::addPreISel() {
