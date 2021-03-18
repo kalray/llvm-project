@@ -10,9 +10,9 @@ define void @asm_tca(i8* %v, i64 %A) {
 ; CHECK-NEXT:    addd $r3 = $r1, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 128
-; CHECK-NEXT:    sd 8[$r12] = $r1
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 0[$r12] = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 8[$r12] = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 16[$r12] = $r3
 ; CHECK-NEXT:    ;;
@@ -232,9 +232,9 @@ define void @use_wide_reg(<512 x i1>* %w, <256 x i1>* %v) {
 ; CHECK-NEXT:    copyd $r4 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    sd 8[$r12] = $r1
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 0[$r12] = $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 8[$r12] = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a5 = 32[$r4]
 ; CHECK-NEXT:    ;;

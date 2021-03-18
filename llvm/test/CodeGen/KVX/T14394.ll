@@ -20,13 +20,13 @@ define <4 x float> @select_cc(i32 %0, <4 x float> %1, <4 x float> %2) {
 ; CHECK-NEXT:    copyw $r2 = $r0
 ; CHECK-NEXT:    make $r0 = -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wlez $r2 ? $r0 = 0
 ; CHECK-NEXT:    copyd $r4 = $r3
 ; CHECK-NEXT:    copyd $r6 = $r1
+; CHECK-NEXT:    cmoved.wlez $r2 ? $r0 = 0
 ; CHECK-NEXT:    srad $r2 = $r5, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r1 = $r7, 32
 ; CHECK-NEXT:    srad $r3 = $r4, 32
+; CHECK-NEXT:    srad $r1 = $r7, 32
 ; CHECK-NEXT:    srad $r8 = $r6, 32
 ; CHECK-NEXT:    andnw $r9 = $r0, $r5
 ; CHECK-NEXT:    ;;
@@ -44,8 +44,8 @@ define <4 x float> @select_cc(i32 %0, <4 x float> %1, <4 x float> %2) {
 ; CHECK-NEXT:    orw $r0 = $r5, $r4
 ; CHECK-NEXT:    orw $r3 = $r6, $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r2, 63, 32
 ; CHECK-NEXT:    insf $r0 = $r3, 63, 32
+; CHECK-NEXT:    insf $r1 = $r2, 63, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %4 = icmp sgt i32 %0, 0
