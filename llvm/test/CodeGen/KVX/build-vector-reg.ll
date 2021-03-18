@@ -243,7 +243,7 @@ entry:
   %vecinit5 = insertelement <8 x i64> %vecinit4, i64 %f, i32 5
   %vecinit6 = insertelement <8 x i64> %vecinit5, i64 %g, i32 6
   %vecinit7 = insertelement <8 x i64> %vecinit6, i64 %h, i32 7
-  store <8 x i64> %vecinit7, <8 x i64>* %agg.result, align 64
+  store <8 x i64> %vecinit7, <8 x i64>* %agg.result, align 32
   ret void
 }
 
@@ -425,6 +425,6 @@ entry:
   %vecinit5 = insertelement <8 x double> %vecinit4, double %f, i32 5
   %vecinit6 = insertelement <8 x double> %vecinit5, double %g, i32 6
   %vecinit7 = insertelement <8 x double> %vecinit6, double %h, i32 7
-  store <8 x double> %vecinit7, <8 x double>* %agg.result, align 64
+  store <8 x double> %vecinit7, <8 x double>* %agg.result, align 32
   ret void
 }
