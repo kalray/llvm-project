@@ -147,6 +147,10 @@ enum SPLAT32 {
 
 } // namespace KVXMOD
 
+namespace KVX {
+enum STAGE { PRE_RA, PRE_SCHED2, PRE_BUNDLE };
+} // namespace KVX
+
 bool isScalarcondWord(unsigned Cond);
 
 bool hasStackLimitRegister();
@@ -160,15 +164,13 @@ FunctionPass *createKVXISelDag(KVXTargetMachine &TM);
 void LowerKVXMachineInstrToMCInst(const MachineInstr *MI, MCInst &OutMI,
                                   AsmPrinter &AP);
 
-FunctionPass *createKVXPreRAExpandPseudoPass();
-FunctionPass *createKVXPreEmitExpandPseudoPass();
+FunctionPass *createKVXExpandPseudoPass(KVX::STAGE);
 FunctionPass *createKVXLoadStorePackingPass();
 FunctionPass *createKVXHardwareLoopsPass();
 FunctionPass *createKVXHardwareLoopsPreparePass();
 FunctionPass *createKVXPacketizerPass();
 
-void initializeKVXPreRAExpandPseudoPass(PassRegistry &);
-void initializeKVXPreEmitExpandPseudoPass(PassRegistry &);
+void initializeKVXExpandPseudoPass(PassRegistry &);
 void initializeKVXLoadStorePackingPassPass(PassRegistry &);
 void initializeKVXPacketizerPass(PassRegistry &);
 void initializeKVXHardwareLoopsPass(PassRegistry &);

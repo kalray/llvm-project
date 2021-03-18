@@ -385,9 +385,9 @@ define <2 x float> @test_select_cc_f32_f16(<2 x float> %a, <2 x float> %b, <2 x 
 ; CHECK-NEXT:    sxlhwp $r2 = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srad $r3 = $r2, 32
+; CHECK-NEXT:    cmoved.wnez $r2 ? $r1 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.wnez $r3 ? $r4 = $r5
-; CHECK-NEXT:    cmoved.wnez $r2 ? $r1 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r1 = $r4, 63, 32
 ; CHECK-NEXT:    ;;

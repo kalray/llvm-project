@@ -9,9 +9,11 @@ define void @test_movetohi(i64 %a, i64 %b, <256 x i1>* %p0, <256 x i1>* %p1) {
 ; CHECK-NEXT:    lv $a0 = 0[$r2]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a1 = 0[$r3]
-; CHECK-NEXT:    movetq $a0_hi = $r1, $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    movetq $a1_hi = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    movetq $a0_hi = $r1, $r0
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 0[$r2] = $a0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 0[$r3] = $a1
@@ -34,9 +36,11 @@ define void @test_movetolo(i64 %a, i64 %b, <256 x i1>* %p0, <256 x i1>* %p1) {
 ; CHECK-NEXT:    lv $a0 = 0[$r2]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a1 = 0[$r3]
-; CHECK-NEXT:    movetq $a0_lo = $r1, $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    movetq $a1_lo = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    movetq $a0_lo = $r1, $r0
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 0[$r2] = $a0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 0[$r3] = $a1
@@ -806,17 +810,17 @@ define <4 x i64> @test_tca_builtins(i64 %a, i64 %b, i64 %c, i64 %d, <256 x i1>* 
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r1 = 4
 ; CHECK-NEXT:    make $r35 = 3
-; CHECK-NEXT:    lv $a1 = 0[$r4]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    movetq $a0_lo = $r35, $r1
 ; CHECK-NEXT:    make $r34 = 2
-; CHECK-NEXT:    lv $a1 = 0[$r4]
 ; CHECK-NEXT:    addd $r1 = $r4, 96
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r33 = 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    movetq $a0_hi = $r33, $r34
+; CHECK-NEXT:    lv $a1 = 0[$r4]
 ; CHECK-NEXT:    make $r32 = 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv $a1 = 0[$r4]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 0[$r4] = $a0
 ; CHECK-NEXT:    ;;
@@ -833,59 +837,59 @@ define <4 x i64> @test_tca_builtins(i64 %a, i64 %b, i64 %c, i64 %d, <256 x i1>* 
 ; CHECK-NEXT:    lv $a7 = 32[$r5]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a6 = 0[$r5]
-; CHECK-NEXT:    movetq $a8_lo = $r32, $r33
-; CHECK-NEXT:    movetq $a8_hi = $r34, $r35
 ; CHECK-NEXT:    convwbv0.ru.sat $a4_x = $a0a1a2a3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    alignv $a5 = $a8, $a5, 16
 ; CHECK-NEXT:    convwbv1.ru.sat $a4_y = $a0a1a2a3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    aligno $r8r9r10r11 = $a8, $a5, 1
 ; CHECK-NEXT:    convwbv2.ru.sat $a4_z = $a0a1a2a3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    convwbv3.ru.sat $a4_t = $a0a1a2a3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma444hbd0 $a0a1a2a3 = $a0a1a2a3, $a8, $a8
+; CHECK-NEXT:    movetq $a8_lo = $r32, $r33
+; CHECK-NEXT:    movetq $a8_hi = $r34, $r35
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmma242hw2 $a11_lo = $a6a7, $a4, $a8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma444hbd1 $a0a1a2a3 = $a0a1a2a3, $a8, $a8
+; CHECK-NEXT:    alignv $a5 = $a8, $a5, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmma242hw3 $a11_hi = $a6a7, $a4, $a8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma444hd $a0a1a2a3 = $a0a1a2a3, $a8, $a8
+; CHECK-NEXT:    aligno $r8r9r10r11 = $a8, $a5, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmma242hw0 $a10_lo = $a6a7, $a4, $a8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma444suhbd0 $a0a1a2a3 = $a0a1a2a3, $a8, $a8
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmma242hw1 $a10_hi = $a6a7, $a4, $a8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fscalewv $a4 = $a4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mma484bw $a6a7 = $a10a11, $a8, $a8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mma484subw $a6a7 = $a6a7, $a8, $a8
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    mma444hbd0 $a0a1a2a3 = $a0a1a2a3, $a8, $a8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fscalewv $a4 = $a4
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mma484ubw $a6a7 = $a6a7, $a8, $a8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    mma444hbd1 $a0a1a2a3 = $a0a1a2a3, $a8, $a8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    mma444hd $a0a1a2a3 = $a0a1a2a3, $a8, $a8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mma484usbw $a6a7 = $a6a7, $a8, $a8
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    mma444suhbd0 $a0a1a2a3 = $a0a1a2a3, $a8, $a8
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowwhv.rn.s $a9 = $a6a7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    mma444suhbd1 $a0a1a2a3 = $a0a1a2a3, $a8, $a8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fscalewv.rna.relu $a4 = $a4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma444suhbd1 $a0a1a2a3 = $a0a1a2a3, $a8, $a8
+; CHECK-NEXT:    movefo $r8r9r10r11 = $a4
+; CHECK-NEXT:    movetq $a4_lo = $r8, $r9
+; CHECK-NEXT:    movetq $a4_hi = $r10, $r11
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mma444suhd $a0a1a2a3 = $a0a1a2a3, $a8, $a8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mma444uhbd0 $a0a1a2a3 = $a0a1a2a3, $a8, $a8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mma444uhbd1 $a0a1a2a3 = $a0a1a2a3, $a8, $a8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    movefo $r8r9r10r11 = $a4
-; CHECK-NEXT:    movetq $a4_lo = $r8, $r9
-; CHECK-NEXT:    movetq $a4_hi = $r10, $r11
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fscalewv.relu $a4 = $a4
 ; CHECK-NEXT:    ;;
@@ -1071,12 +1075,13 @@ define void @convwbv(<256 x i1>* nocapture %v, <1024 x i1>* nocapture readonly %
 ; CHECK-NEXT:    convwbv2.rd.sat $a0_z = $a4a5a6a7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyv $a1 = $a0
-; CHECK-NEXT:    convwbv3.rn.sat $a0_t = $a4a5a6a7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    convwbv3.rhu.satu $a1_t = $a4a5a6a7
-; CHECK-NEXT:    sv 0[$r0] = $a0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    convwbv3.rn.sat $a0_t = $a4a5a6a7
 ; CHECK-NEXT:    sv 32[$r0] = $a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 0[$r0] = $a0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a3 = 96[$r1]
 ; CHECK-NEXT:    ;;
@@ -1355,13 +1360,13 @@ define void @movefmv(<256 x i1>* nocapture %o, <1024 x i1>* nocapture readonly %
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a0 = 0[$r1]
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 0[$r0] = $a0
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 32[$r0] = $a1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 64[$r0] = $a2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 96[$r0] = $a3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 0[$r0] = $a0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1389,9 +1394,9 @@ define void @movefwv(<256 x i1>* nocapture %o, <512 x i1>* nocapture readonly %a
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a0 = 0[$r1]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 32[$r0] = $a1
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 0[$r0] = $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 32[$r0] = $a1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

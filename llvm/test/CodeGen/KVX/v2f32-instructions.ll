@@ -316,9 +316,9 @@ define <2 x float> @test_select_cc(<2 x float> %a, <2 x float> %b, <2 x float> %
 ; CHECK-NEXT:    srad $r5 = $r0, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srad $r3 = $r2, 32
+; CHECK-NEXT:    cmoved.wnez $r2 ? $r1 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.wnez $r3 ? $r4 = $r5
-; CHECK-NEXT:    cmoved.wnez $r2 ? $r1 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r1 = $r4, 63, 32
 ; CHECK-NEXT:    ;;
@@ -339,11 +339,11 @@ define <2 x double> @test_select_cc_f32_f32(<2 x double> %a, <2 x double> %b, <2
 ; CHECK-NEXT:    sxwd $r4 = $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxwd $r5 = $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.dnez $r5 ? $r3 = $r1
 ; CHECK-NEXT:    cmoved.dnez $r4 ? $r2 = $r0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.dnez $r5 ? $r3 = $r1
 ; CHECK-NEXT:    copyd $r0 = $r2
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;

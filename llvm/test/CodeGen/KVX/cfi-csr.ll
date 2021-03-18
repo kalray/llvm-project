@@ -938,29 +938,33 @@ define i32 @fsum6_sum(i32 %first, i32 %second, ...) local_unnamed_addr #0 !dbg !
 ; CHECK-NEXT:  .Ltmp86:
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:result <- $r18
 ; CHECK-NEXT:    .loc 1 297 22 prologue_end # cfi-csr.c:297:22
-; CHECK-NEXT:    sd 96[$r12] = $r8
+; CHECK-NEXT:    sd 120[$r12] = $r11
 ; CHECK-NEXT:    addw $r18 = $r1, $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp87:
+; CHECK-NEXT:    .loc 1 0 22 is_stmt 0 # cfi-csr.c:0:22
+; CHECK-NEXT:    sd 112[$r12] = $r10
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 104[$r12] = $r9
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  .Ltmp88:
+; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args <- $r8
+; CHECK-NEXT:    .loc 1 302 15 is_stmt 1 # cfi-csr.c:302:15
+; CHECK-NEXT:    sd 96[$r12] = $r8
+; CHECK-NEXT:    ord $r8 = $r15, 8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  .Ltmp89:
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args2 <- [DW_OP_constu 104, DW_OP_minus, DW_OP_deref] $r12
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args <- [DW_OP_constu 112, DW_OP_minus, DW_OP_deref] $r12
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args <- $r15
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:second <- $r1
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:first <- $r0
-; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args <- $r8
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:v <- $r7
 ; CHECK-NEXT:    .loc 1 0 0 is_stmt 0 # cfi-csr.c:0:0
 ; CHECK-NEXT:    sd 88[$r12] = $r7
-; CHECK-NEXT:    ord $r8 = $r15, 8
 ; CHECK-NEXT:    zxwd $r7 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .Ltmp88:
-; CHECK-NEXT:    sd 120[$r12] = $r11
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 112[$r12] = $r10
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 104[$r12] = $r9
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:  .Ltmp90:
 ; CHECK-NEXT:    sd 80[$r12] = $r6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 72[$r12] = $r5
@@ -978,7 +982,7 @@ define i32 @fsum6_sum(i32 %first, i32 %second, ...) local_unnamed_addr #0 !dbg !
 ; CHECK-NEXT:    sd 16[$r12] = $r8
 ; CHECK-NEXT:    cb.wlez $r7 ? .LBB8_2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .Ltmp89:
+; CHECK-NEXT:  .Ltmp91:
 ; CHECK-NEXT:  .LBB8_1: # %while.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args2 <- [DW_OP_constu 104, DW_OP_minus, DW_OP_deref] $r12
@@ -987,28 +991,28 @@ define i32 @fsum6_sum(i32 %first, i32 %second, ...) local_unnamed_addr #0 !dbg !
 ; CHECK-NEXT:    copyd $r0 = $r7
 ; CHECK-NEXT:    call other
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .Ltmp90:
+; CHECK-NEXT:  .Ltmp92:
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args <- $r1
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:result <- $r18
 ; CHECK-NEXT:    .loc 1 302 15 # cfi-csr.c:302:15
 ; CHECK-NEXT:    ld $r1 = 16[$r12]
 ; CHECK-NEXT:    addw $r18 = $r0, $r18
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .Ltmp91:
+; CHECK-NEXT:  .Ltmp93:
 ; CHECK-NEXT:    addd $r2 = $r1, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .Ltmp92:
+; CHECK-NEXT:  .Ltmp94:
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args <- $r2
 ; CHECK-NEXT:    sd 16[$r12] = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r7 = 0[$r1]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .Ltmp93:
+; CHECK-NEXT:  .Ltmp95:
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:v <- $r7
 ; CHECK-NEXT:    .loc 1 302 3 is_stmt 0 # cfi-csr.c:302:3
 ; CHECK-NEXT:    cb.wgtz $r7 ? .LBB8_1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .Ltmp94:
+; CHECK-NEXT:  .Ltmp96:
 ; CHECK-NEXT:  .LBB8_2: # %while.end
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args2 <- [DW_OP_constu 104, DW_OP_minus, DW_OP_deref] $r12
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:result <- $r18
@@ -1020,7 +1024,7 @@ define i32 @fsum6_sum(i32 %first, i32 %second, ...) local_unnamed_addr #0 !dbg !
 ; CHECK-NEXT:    addd $r1 = $r0, 8
 ; CHECK-NEXT:    addw $r0 = $r18, -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .Ltmp95:
+; CHECK-NEXT:  .Ltmp97:
 ; CHECK-NEXT:  .LBB8_3: # %while.cond4
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args <- [DW_OP_constu 112, DW_OP_minus, DW_OP_deref] $r12
@@ -1033,17 +1037,17 @@ define i32 @fsum6_sum(i32 %first, i32 %second, ...) local_unnamed_addr #0 !dbg !
 ; CHECK-NEXT:    sd 24[$r12] = $r1
 ; CHECK-NEXT:    addw $r0 = $r0, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .Ltmp96:
+; CHECK-NEXT:  .Ltmp98:
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:result <- [DW_OP_plus_uconst 1, DW_OP_stack_value] undef
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:v <- $r2
 ; CHECK-NEXT:    lwz $r2 = -8[$r1]
 ; CHECK-NEXT:    addd $r1 = $r1, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .Ltmp97:
+; CHECK-NEXT:  .Ltmp99:
 ; CHECK-NEXT:    .loc 1 306 3 # cfi-csr.c:306:3
 ; CHECK-NEXT:    cb.wgtz $r2 ? .LBB8_3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .Ltmp98:
+; CHECK-NEXT:  .Ltmp100:
 ; CHECK-NEXT:  # %bb.4: # %while.end11
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args <- [DW_OP_constu 112, DW_OP_minus, DW_OP_deref] $r12
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args2 <- [DW_OP_constu 104, DW_OP_minus, DW_OP_deref] $r12
@@ -1061,7 +1065,7 @@ define i32 @fsum6_sum(i32 %first, i32 %second, ...) local_unnamed_addr #0 !dbg !
 ; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .Ltmp99:
+; CHECK-NEXT:  .Ltmp101:
 entry:
   %args = alloca i8*, align 8
   %args2 = alloca i8*, align 8
