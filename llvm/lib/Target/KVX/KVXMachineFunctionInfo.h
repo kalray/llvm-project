@@ -14,6 +14,7 @@
 #ifndef LLVM_LIB_TARGET_KVX_KVXMACHINEFUNCTIONINFO_H
 #define LLVM_LIB_TARGET_KVX_KVXMACHINEFUNCTIONINFO_H
 
+#include "KVX.h"
 #include "llvm/CodeGen/MachineFrameInfo.h"
 #include "llvm/CodeGen/MachineFunction.h"
 #include "llvm/CodeGen/SelectionDAGNodes.h"
@@ -32,12 +33,18 @@ private:
   unsigned OutgoingArgsMaxSize = 0;
   // Arguments passed in memory size
   unsigned MemArgsSaveSize = 0;
-  /// Min-max index for CSR
-  std::pair<int, int> CSRIndices = { 0, 0 };
+  /// Min-max index for callee saved frame indexes
+  std::pair<int, int> MinMaxCSFrameIndexes = {0, 0};
+  // FP index
+  unsigned FPIndex = 0;
   // SRET register
   unsigned SRETReg;
+  // SP is dynamically realigned
+  bool AdjustLocalAreaSP = false;
 
-  unsigned ScratchReg;
+  unsigned MaxAlignment = 0;
+
+  Register AdjustedSP;
 
   MachineBasicBlock *OverflowMBB = nullptr;
 
@@ -64,16 +71,29 @@ public:
   unsigned getMemArgsSaveSize() const { return MemArgsSaveSize; }
   void setMemArgsSaveSize(unsigned Size) { MemArgsSaveSize = Size; }
 
-  const std::pair<int, int> &getCSRIndices() const { return CSRIndices; }
-  void setCSRIndices(const std::pair<int, int> &Indices) {
-    CSRIndices = Indices;
+  const std::pair<int, int> &getMinMaxCSFrameIndexes() const {
+    return MinMaxCSFrameIndexes;
   }
+  void setMinMaxCSFrameIndexes(const std::pair<int, int> &Indexes) {
+    MinMaxCSFrameIndexes = Indexes;
+  }
+
+  unsigned getFPIndex() const { return FPIndex; }
+  void setFPIndex(unsigned FI) { FPIndex = FI; }
+
+  unsigned getMaxAlignment() const { return MaxAlignment; }
+  void setMaxAlignment(unsigned Align) {
+    MaxAlignment = std::max(Align, MaxAlignment);
+  }
+
+  bool isAdjustLocalAreaSP() const { return AdjustLocalAreaSP; }
+  void setAdjustLocalAreaSP(bool Adjust) { AdjustLocalAreaSP = Adjust; }
 
   unsigned getSRETReg() { return SRETReg; }
   void setSRETReg(unsigned Reg) { SRETReg = Reg; }
 
-  unsigned getScratchReg() { return ScratchReg; }
-  void setScratchReg(unsigned Reg) { ScratchReg = Reg; }
+  unsigned getAdjustedSP() const { return AdjustedSP; }
+  void setAdjustedSP(unsigned Reg) { AdjustedSP = Reg; }
 };
 
 } // end namespace llvm

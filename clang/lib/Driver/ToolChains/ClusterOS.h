@@ -72,7 +72,10 @@ public:
   bool isCrossCompiling() const override { return true; }
   bool IsMathErrnoDefault() const override { return false; }
   bool SupportsProfiling() const override { return false; }
-  unsigned GetDefaultDwarfVersion() const override { return 2; }
+  unsigned GetDefaultDwarfVersion() const override { return 4; }
+  llvm::DebuggerKind getDefaultDebuggerTuning() const override {
+    return llvm::DebuggerKind::GDB;
+  }
 
   bool GCCInstallationIsValid() const;
   StringRef getGCCMultilibArch() const;

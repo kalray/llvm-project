@@ -16,35 +16,24 @@ target triple = "kvx-kalray-cos"
 define dso_local i32 @f(i32 %sz) {
 ; FP-ALL-LABEL: f:
 ; FP-ALL:       # %bb.0: # %entry
-; FP-ALL-NEXT:    addd $r12 = $r12, -384
-; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    .cfi_def_cfa_offset 384
-; FP-ALL-NEXT:    copyd $r32 = $r12
-; FP-ALL-NEXT:    addd $r12 = $r12, 96
-; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    .cfi_def_cfa_register 32
-; FP-ALL-NEXT:    andd $r12 = $r12, -128
-; FP-ALL-NEXT:    copyd $r33 = $r14
-; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    copyd $r14 = $r12
+; FP-ALL-NEXT:    addd $r12 = $r12, -256
 ; FP-ALL-NEXT:    get $r16 = $ra
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    sd 32[$r12] = $r16
+; FP-ALL-NEXT:    .cfi_def_cfa_offset 256
+; FP-ALL-NEXT:    .cfi_register 67, 16
+; FP-ALL-NEXT:    sd 248[$r12] = $r16
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    .cfi_escape 0x10, 0x43, 0x02, 0x7e, 0x20
-; FP-ALL-NEXT:    sd 24[$r12] = $r33
+; FP-ALL-NEXT:    .cfi_offset 67, -8
+; FP-ALL-NEXT:    sd 240[$r12] = $r14
+; FP-ALL-NEXT:    addd $r14 = $r12, 240
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    .cfi_escape 0x10, 0x0e, 0x02, 0x7e, 0x18
-; FP-ALL-NEXT:    sd 16[$r12] = $r31
-; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    .cfi_escape 0x10, 0x1f, 0x02, 0x7e, 0x10
-; FP-ALL-NEXT:    sq 0[$r12] = $r18r19
-; FP-ALL-NEXT:    copyd $r31 = $r32
+; FP-ALL-NEXT:    .cfi_offset 14, -16
+; FP-ALL-NEXT:    .cfi_def_cfa 14, 16
+; FP-ALL-NEXT:    sq 224[$r12] = $r18r19
 ; FP-ALL-NEXT:    sxwd $r0 = $r0
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    .cfi_escape 0x10, 0x13, 0x02, 0x7e, 0x08
-; FP-ALL-NEXT:    .cfi_escape 0x10, 0x12, 0x02, 0x7e, 0x00
-; FP-ALL-NEXT:    .cfi_def_cfa_register 31
+; FP-ALL-NEXT:    .cfi_offset 18, -24
+; FP-ALL-NEXT:    .cfi_offset 19, -32
 ; FP-ALL-NEXT:    addd $r0 = $r0, 31
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    andd $r0 = $r0, -32
@@ -59,35 +48,29 @@ define dso_local i32 @f(i32 %sz) {
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    copyd $r12 = $r19
 ; FP-ALL-NEXT:    copyd $r0 = $r18
-; FP-ALL-NEXT:    addd $r1 = $r14, 128
+; FP-ALL-NEXT:    addd $r1 = $r14, -144
 ; FP-ALL-NEXT:    copyd $r2 = $r19
 ; FP-ALL-NEXT:    call g
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    lwz $r0 = 0[$r18]
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    lwz $r1 = 128[$r14]
+; FP-ALL-NEXT:    lwz $r1 = -144[$r14]
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    lwz $r2 = 0[$r19]
-; FP-ALL-NEXT:    copyd $r32 = $r31
 ; FP-ALL-NEXT:    addw $r0 = $r1, $r0
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    addw $r0 = $r0, $r2
-; FP-ALL-NEXT:    copyd $r12 = $r14
+; FP-ALL-NEXT:    addd $r12 = $r14, -240
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    .cfi_def_cfa_register 32
-; FP-ALL-NEXT:    lq $r18r19 = 0[$r12]
+; FP-ALL-NEXT:    lq $r18r19 = 224[$r12]
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    ld $r31 = 16[$r12]
+; FP-ALL-NEXT:    ld $r14 = 240[$r12]
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    ld $r16 = 32[$r12]
+; FP-ALL-NEXT:    ld $r16 = 248[$r12]
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    set $ra = $r16
-; FP-ALL-NEXT:    ld $r14 = 24[$r12]
-; FP-ALL-NEXT:    copyd $r12 = $r32
+; FP-ALL-NEXT:    addd $r12 = $r12, 256
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    .cfi_restore 67
-; FP-ALL-NEXT:    .cfi_def_cfa_register 12
-; FP-ALL-NEXT:    addd $r12 = $r12, 384
 ; FP-ALL-NEXT:    ret
 ; FP-ALL-NEXT:    ;;
 entry:
