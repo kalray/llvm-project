@@ -9,33 +9,33 @@ define i32 @factorial(i32 %v){
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    sd 0[$r12] = $r16
+; CHECK-NEXT:    .cfi_register 67, 16
+; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -32
-; CHECK-NEXT:    sw 8[$r12] = $r0
+; CHECK-NEXT:    .cfi_offset 67, -8
+; CHECK-NEXT:    sw 20[$r12] = $r0
 ; CHECK-NEXT:    cb.wlez $r0 ? .LBB0_2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %if.then
-; CHECK-NEXT:    lwz $r0 = 8[$r12]
+; CHECK-NEXT:    lwz $r0 = 20[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addw $r0 = $r0, -1
 ; CHECK-NEXT:    call factorial
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r1 = 8[$r12]
+; CHECK-NEXT:    lwz $r1 = 20[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mulw $r0 = $r1, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 8[$r12] = $r0
+; CHECK-NEXT:    sw 20[$r12] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_2: # %if.end
-; CHECK-NEXT:    lwz $r0 = 8[$r12]
+; CHECK-NEXT:    lwz $r0 = 20[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 0[$r12]
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -66,13 +66,13 @@ define i32 @f(){
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    sw 4[$r12] = $r0
+; CHECK-NEXT:    sw 24[$r12] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB1_1: # %for.cond
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    sw 0[$r12] = $r0
+; CHECK-NEXT:    sw 28[$r12] = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r0 = 0[$r12]
+; CHECK-NEXT:    lwz $r0 = 28[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compw.gt $r0 = $r0, 3
 ; CHECK-NEXT:    ;;
@@ -80,15 +80,15 @@ define i32 @f(){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.2: # %for.body
 ; CHECK-NEXT:    # in Loop: Header=BB1_1 Depth=1
-; CHECK-NEXT:    lwz $r0 = 0[$r12]
+; CHECK-NEXT:    lwz $r0 = 28[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r1 = 4[$r12]
+; CHECK-NEXT:    lwz $r1 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addw $r0 = $r1, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 4[$r12] = $r0
+; CHECK-NEXT:    sw 24[$r12] = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r0 = 0[$r12]
+; CHECK-NEXT:    lwz $r0 = 28[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addw $r0 = $r0, 1
 ; CHECK-NEXT:    goto .LBB1_1

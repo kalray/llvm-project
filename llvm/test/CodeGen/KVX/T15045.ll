@@ -25,11 +25,11 @@ define void @_Z1av() {
 ; CHECK-NEXT:  .LBB0_11:
 ; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    acswapd 0[$r12] = $r2r3
+; CHECK-NEXT:    acswapd 24[$r12] = $r2r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.odd $r2 ? .LBB0_12
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld.u $r1 = 0[$r12]
+; CHECK-NEXT:    ld.u $r1 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compd.eq $r2 = $r1, $r3
 ; CHECK-NEXT:    ;;
@@ -52,11 +52,11 @@ define void @_Z1av() {
 ; CHECK-NEXT:  .LBB0_14:
 ; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    acswapd 0[$r12] = $r2r3
+; CHECK-NEXT:    acswapd 24[$r12] = $r2r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.odd $r2 ? .LBB0_15
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld.u $r1 = 0[$r12]
+; CHECK-NEXT:    ld.u $r1 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compd.eq $r2 = $r1, $r3
 ; CHECK-NEXT:    ;;
@@ -80,11 +80,11 @@ define void @_Z1av() {
 ; CHECK-NEXT:  .LBB0_17:
 ; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    acswapd 0[$r12] = $r2r3
+; CHECK-NEXT:    acswapd 24[$r12] = $r2r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.odd $r2 ? .LBB0_18
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld.u $r1 = 0[$r12]
+; CHECK-NEXT:    ld.u $r1 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compd.eq $r2 = $r1, $r3
 ; CHECK-NEXT:    ;;
@@ -106,11 +106,11 @@ define void @_Z1av() {
 ; CHECK-NEXT:  .LBB0_20:
 ; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    acswapd 0[$r12] = $r2r3
+; CHECK-NEXT:    acswapd 24[$r12] = $r2r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.odd $r2 ? .LBB0_21
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld.u $r1 = 0[$r12]
+; CHECK-NEXT:    ld.u $r1 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compd.eq $r2 = $r1, $r3
 ; CHECK-NEXT:    ;;
@@ -132,11 +132,11 @@ define void @_Z1av() {
 ; CHECK-NEXT:  .LBB0_23:
 ; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    acswapd 0[$r12] = $r2r3
+; CHECK-NEXT:    acswapd 24[$r12] = $r2r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.odd $r2 ? .LBB0_24
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld.u $r1 = 0[$r12]
+; CHECK-NEXT:    ld.u $r1 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compd.eq $r2 = $r1, $r3
 ; CHECK-NEXT:    ;;
@@ -158,11 +158,11 @@ define void @_Z1av() {
 ; CHECK-NEXT:  .LBB0_26:
 ; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    acswapd 0[$r12] = $r2r3
+; CHECK-NEXT:    acswapd 24[$r12] = $r2r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.odd $r2 ? .LBB0_27
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld.u $r1 = 0[$r12]
+; CHECK-NEXT:    ld.u $r1 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compd.eq $r2 = $r1, $r3
 ; CHECK-NEXT:    ;;
@@ -184,11 +184,11 @@ define void @_Z1av() {
 ; CHECK-NEXT:  .LBB0_29:
 ; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    acswapd 0[$r12] = $r2r3
+; CHECK-NEXT:    acswapd 24[$r12] = $r2r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.odd $r2 ? .LBB0_30
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld.u $r1 = 0[$r12]
+; CHECK-NEXT:    ld.u $r1 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compd.eq $r2 = $r1, $r3
 ; CHECK-NEXT:    ;;
@@ -210,11 +210,11 @@ define void @_Z1av() {
 ; CHECK-NEXT:  .LBB0_32:
 ; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    acswapd 0[$r12] = $r2r3
+; CHECK-NEXT:    acswapd 24[$r12] = $r2r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.odd $r2 ? .LBB0_33
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld.u $r1 = 0[$r12]
+; CHECK-NEXT:    ld.u $r1 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compd.eq $r2 = $r1, $r3
 ; CHECK-NEXT:    ;;
@@ -236,11 +236,11 @@ define void @_Z1av() {
 ; CHECK-NEXT:  .LBB0_35:
 ; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    acswapd 0[$r12] = $r2r3
+; CHECK-NEXT:    acswapd 24[$r12] = $r2r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.odd $r2 ? .LBB0_36
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld.u $r1 = 0[$r12]
+; CHECK-NEXT:    ld.u $r1 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compd.eq $r2 = $r1, $r3
 ; CHECK-NEXT:    ;;

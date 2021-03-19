@@ -56,12 +56,12 @@ define <4 x i32> @test0(<4 x i32> %0, i8 %1) #1 {
 ; CHECK-NEXT:    make $r3 = 0xfffffffb
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    addd $r4 = $r12, 0
-; CHECK-NEXT:    sq 0[$r12] = $r0r1
+; CHECK-NEXT:    addd $r4 = $r12, 16
+; CHECK-NEXT:    sq 16[$r12] = $r0r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw.xs $r2[$r4] = $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lq $r0r1 = 0[$r12]
+; CHECK-NEXT:    lq $r0r1 = 16[$r12]
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;

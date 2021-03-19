@@ -71,44 +71,43 @@ target triple = "kvx-kalray-cos"
 define i32 @stackrealign1(){
 ; CHECK-LABEL: stackrealign1:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addd $r12 = $r12, -384
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 384
-; CHECK-NEXT:    copyd $r32 = $r12
-; CHECK-NEXT:    addd $r12 = $r12, 96
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_register 32
-; CHECK-NEXT:    andd $r12 = $r12, -128
+; CHECK-NEXT:    addd $r12 = $r12, -256
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 8[$r12] = $r16
+; CHECK-NEXT:    .cfi_def_cfa_offset 256
+; CHECK-NEXT:    .cfi_register 67, 16
+; CHECK-NEXT:    sd 248[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_escape 0x10, 0x43, 0x02, 0x7c, 0x08
-; CHECK-NEXT:    sd 0[$r12] = $r14
-; CHECK-NEXT:    copyd $r14 = $r32
+; CHECK-NEXT:    .cfi_offset 67, -8
+; CHECK-NEXT:    sd 240[$r12] = $r14
+; CHECK-NEXT:    addd $r14 = $r12, 240
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_offset 14, -16
+; CHECK-NEXT:    .cfi_def_cfa 14, 16
+; CHECK-NEXT:    sd 232[$r12] = $r31
+; CHECK-NEXT:    andd $r31 = $r12, -128
 ; CHECK-NEXT:    make $r0 = 7
 ; CHECK-NEXT:    make $r1 = 0x4d2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_escape 0x10, 0x0e, 0x02, 0x7c, 0x00
-; CHECK-NEXT:    .cfi_def_cfa_register 14
-; CHECK-NEXT:    sw 16[$r12] = $r0
-; CHECK-NEXT:    addd $r0 = $r12, 16
+; CHECK-NEXT:    .cfi_offset 31, -24
+; CHECK-NEXT:    sw 228[$r31] = $r0
+; CHECK-NEXT:    addd $r0 = $r31, 228
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 128[$r12] = $r1
-; CHECK-NEXT:    addd $r1 = $r12, 128
+; CHECK-NEXT:    sw 128[$r31] = $r1
+; CHECK-NEXT:    addd $r1 = $r31, 128
 ; CHECK-NEXT:    call other
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r32 = $r14
-; CHECK-NEXT:    ld $r16 = 8[$r12]
+; CHECK-NEXT:    addd $r12 = $r14, -240
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_register 32
+; CHECK-NEXT:    ld $r31 = 232[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r14 = 240[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r16 = 248[$r12]
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    ld $r14 = 0[$r12]
-; CHECK-NEXT:    copyd $r12 = $r32
+; CHECK-NEXT:    addd $r12 = $r12, 256
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_restore 67
-; CHECK-NEXT:    .cfi_def_cfa_register 12
-; CHECK-NEXT:    addd $r12 = $r12, 384
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -135,31 +134,24 @@ declare void @llvm.lifetime.end.p0i8(i64 immarg, i8* nocapture) #1
 define i32 @stackrealign2(i32 %n){
 ; CHECK-LABEL: stackrealign2:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addd $r12 = $r12, -384
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 384
-; CHECK-NEXT:    copyd $r32 = $r12
-; CHECK-NEXT:    addd $r12 = $r12, 96
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_register 32
-; CHECK-NEXT:    andd $r12 = $r12, -128
-; CHECK-NEXT:    copyd $r33 = $r14
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r14 = $r12
+; CHECK-NEXT:    addd $r12 = $r12, -256
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 16[$r12] = $r16
+; CHECK-NEXT:    .cfi_def_cfa_offset 256
+; CHECK-NEXT:    .cfi_register 67, 16
+; CHECK-NEXT:    sd 248[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_escape 0x10, 0x43, 0x02, 0x7e, 0x10
-; CHECK-NEXT:    sd 8[$r12] = $r33
+; CHECK-NEXT:    .cfi_offset 67, -8
+; CHECK-NEXT:    sd 240[$r12] = $r14
+; CHECK-NEXT:    addd $r14 = $r12, 240
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_escape 0x10, 0x0e, 0x02, 0x7e, 0x08
-; CHECK-NEXT:    sd 0[$r12] = $r31
-; CHECK-NEXT:    copyd $r31 = $r32
+; CHECK-NEXT:    .cfi_offset 14, -16
+; CHECK-NEXT:    .cfi_def_cfa 14, 16
+; CHECK-NEXT:    sd 232[$r12] = $r31
 ; CHECK-NEXT:    copyd $r1 = $r0
+; CHECK-NEXT:    andd $r31 = $r12, -128
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_escape 0x10, 0x1f, 0x02, 0x7e, 0x00
-; CHECK-NEXT:    .cfi_def_cfa_register 31
+; CHECK-NEXT:    .cfi_offset 31, -24
 ; CHECK-NEXT:    sxwd $r0 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addx4d $r0 = $r0, 31
@@ -298,25 +290,21 @@ define i32 @stackrealign2(i32 %n){
 ; CHECK-NEXT:  .LBB1_12: # %for.cond.cleanup
 ; CHECK-NEXT:    make $r2 = 0x4d2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 128[$r14] = $r2
-; CHECK-NEXT:    addd $r2 = $r14, 128
+; CHECK-NEXT:    sw 128[$r31] = $r2
+; CHECK-NEXT:    addd $r2 = $r31, 128
 ; CHECK-NEXT:    call other2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r32 = $r31
-; CHECK-NEXT:    copyd $r12 = $r14
+; CHECK-NEXT:    addd $r12 = $r14, -240
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_register 32
-; CHECK-NEXT:    ld $r31 = 0[$r12]
+; CHECK-NEXT:    ld $r31 = 232[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 16[$r12]
+; CHECK-NEXT:    ld $r14 = 240[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r16 = 248[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    ld $r14 = 8[$r12]
-; CHECK-NEXT:    copyd $r12 = $r32
+; CHECK-NEXT:    addd $r12 = $r12, 256
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_restore 67
-; CHECK-NEXT:    .cfi_def_cfa_register 12
-; CHECK-NEXT:    addd $r12 = $r12, 384
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -465,28 +453,27 @@ define i64 @stackrealign3(i32 %x){
 ; CHECK-LABEL: stackrealign3:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -640
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 640
-; CHECK-NEXT:    copyd $r32 = $r12
-; CHECK-NEXT:    addd $r12 = $r12, 96
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_register 32
-; CHECK-NEXT:    andd $r12 = $r12, -128
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 16[$r12] = $r16
+; CHECK-NEXT:    .cfi_def_cfa_offset 640
+; CHECK-NEXT:    .cfi_register 67, 16
+; CHECK-NEXT:    sd 632[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_escape 0x10, 0x43, 0x02, 0x7c, 0x10
-; CHECK-NEXT:    sd 8[$r12] = $r14
+; CHECK-NEXT:    .cfi_offset 67, -8
+; CHECK-NEXT:    sd 624[$r12] = $r14
+; CHECK-NEXT:    addd $r14 = $r12, 624
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_escape 0x10, 0x0e, 0x02, 0x7c, 0x08
-; CHECK-NEXT:    sd 0[$r12] = $r18
-; CHECK-NEXT:    copyd $r14 = $r32
+; CHECK-NEXT:    .cfi_offset 14, -16
+; CHECK-NEXT:    .cfi_def_cfa 14, 16
+; CHECK-NEXT:    sd 616[$r12] = $r31
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_offset 31, -24
+; CHECK-NEXT:    sd 608[$r12] = $r18
+; CHECK-NEXT:    andd $r31 = $r12, -128
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    make $r4 = 4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_escape 0x10, 0x12, 0x02, 0x7c, 0x00
-; CHECK-NEXT:    .cfi_def_cfa_register 14
+; CHECK-NEXT:    .cfi_offset 18, -32
 ; CHECK-NEXT:    make $r8 = 8
 ; CHECK-NEXT:    make $r32 = 12
 ; CHECK-NEXT:    make $r36 = 16
@@ -505,38 +492,38 @@ define i64 @stackrealign3(i32 %x){
 ; CHECK-NEXT:    make $r11 = 5
 ; CHECK-NEXT:    make $r35 = 9
 ; CHECK-NEXT:    make $r39 = 13
-; CHECK-NEXT:    addd $r15 = $r12, 384
+; CHECK-NEXT:    addd $r15 = $r31, 128
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r12, 256
-; CHECK-NEXT:    addd $r1 = $r12, 128
-; CHECK-NEXT:    so 224[$r12] = $r4r5r6r7
+; CHECK-NEXT:    addd $r0 = $r31, 380
+; CHECK-NEXT:    addd $r1 = $r31, 384
+; CHECK-NEXT:    so 480[$r31] = $r4r5r6r7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    so 192[$r12] = $r8r9r10r11
+; CHECK-NEXT:    so 448[$r31] = $r8r9r10r11
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    so 160[$r12] = $r32r33r34r35
+; CHECK-NEXT:    so 416[$r31] = $r32r33r34r35
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    so 128[$r12] = $r36r37r38r39
+; CHECK-NEXT:    so 384[$r31] = $r36r37r38r39
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 256[$r12] = $r18
+; CHECK-NEXT:    sw 380[$r31] = $r18
 ; CHECK-NEXT:    call otherv
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r0 = 384[$r12]
+; CHECK-NEXT:    ld $r0 = 128[$r31]
 ; CHECK-NEXT:    sxwd $r1 = $r18
-; CHECK-NEXT:    copyd $r32 = $r14
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r0 = $r0, $r1
-; CHECK-NEXT:    ld $r18 = 0[$r12]
+; CHECK-NEXT:    addd $r12 = $r14, -624
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_register 32
-; CHECK-NEXT:    ld $r16 = 16[$r12]
+; CHECK-NEXT:    ld $r18 = 608[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r31 = 616[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r14 = 624[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r16 = 632[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    ld $r14 = 8[$r12]
-; CHECK-NEXT:    copyd $r12 = $r32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_restore 67
-; CHECK-NEXT:    .cfi_def_cfa_register 12
 ; CHECK-NEXT:    addd $r12 = $r12, 640
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -564,50 +551,43 @@ declare void @otherv(<16 x i64>* sret, i32*, <16 x i64>*) #2
 define i32 @stackrealign4(i32 %n){
 ; CHECK-LABEL: stackrealign4:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addd $r12 = $r12, -384
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 384
-; CHECK-NEXT:    copyd $r32 = $r12
-; CHECK-NEXT:    addd $r12 = $r12, 96
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_register 32
-; CHECK-NEXT:    andd $r12 = $r12, -128
-; CHECK-NEXT:    copyd $r33 = $r14
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r14 = $r12
+; CHECK-NEXT:    addd $r12 = $r12, -512
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 120[$r12] = $r16
+; CHECK-NEXT:    .cfi_def_cfa_offset 512
+; CHECK-NEXT:    .cfi_register 67, 16
+; CHECK-NEXT:    sd 504[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_escape 0x10, 0x43, 0x03, 0x7e, 0xf8, 0x00
-; CHECK-NEXT:    sd 112[$r12] = $r33
+; CHECK-NEXT:    .cfi_offset 67, -8
+; CHECK-NEXT:    sd 496[$r12] = $r14
+; CHECK-NEXT:    addd $r14 = $r12, 496
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_escape 0x10, 0x0e, 0x03, 0x7e, 0xf0, 0x00
-; CHECK-NEXT:    so 80[$r12] = $r28r29r30r31
+; CHECK-NEXT:    .cfi_offset 14, -16
+; CHECK-NEXT:    .cfi_def_cfa 14, 16
+; CHECK-NEXT:    so 464[$r12] = $r28r29r30r31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_escape 0x10, 0x1f, 0x03, 0x7e, 0xe8, 0x00
-; CHECK-NEXT:    .cfi_escape 0x10, 0x1e, 0x03, 0x7e, 0xe0, 0x00
-; CHECK-NEXT:    .cfi_escape 0x10, 0x1d, 0x03, 0x7e, 0xd8, 0x00
-; CHECK-NEXT:    .cfi_escape 0x10, 0x1c, 0x03, 0x7e, 0xd0, 0x00
-; CHECK-NEXT:    so 48[$r12] = $r24r25r26r27
+; CHECK-NEXT:    .cfi_offset 28, -24
+; CHECK-NEXT:    .cfi_offset 29, -32
+; CHECK-NEXT:    .cfi_offset 30, -40
+; CHECK-NEXT:    .cfi_offset 31, -48
+; CHECK-NEXT:    so 432[$r12] = $r24r25r26r27
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_escape 0x10, 0x1b, 0x03, 0x7e, 0xc8, 0x00
-; CHECK-NEXT:    .cfi_escape 0x10, 0x1a, 0x03, 0x7e, 0xc0, 0x00
-; CHECK-NEXT:    .cfi_escape 0x10, 0x19, 0x02, 0x7e, 0x38
-; CHECK-NEXT:    .cfi_escape 0x10, 0x18, 0x02, 0x7e, 0x30
-; CHECK-NEXT:    so 16[$r12] = $r20r21r22r23
+; CHECK-NEXT:    .cfi_offset 24, -56
+; CHECK-NEXT:    .cfi_offset 25, -64
+; CHECK-NEXT:    .cfi_offset 26, -72
+; CHECK-NEXT:    .cfi_offset 27, -80
+; CHECK-NEXT:    so 400[$r12] = $r20r21r22r23
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_escape 0x10, 0x17, 0x02, 0x7e, 0x28
-; CHECK-NEXT:    .cfi_escape 0x10, 0x16, 0x02, 0x7e, 0x20
-; CHECK-NEXT:    .cfi_escape 0x10, 0x15, 0x02, 0x7e, 0x18
-; CHECK-NEXT:    .cfi_escape 0x10, 0x14, 0x02, 0x7e, 0x10
-; CHECK-NEXT:    sq 0[$r12] = $r18r19
-; CHECK-NEXT:    copyd $r31 = $r32
+; CHECK-NEXT:    .cfi_offset 20, -88
+; CHECK-NEXT:    .cfi_offset 21, -96
+; CHECK-NEXT:    .cfi_offset 22, -104
+; CHECK-NEXT:    .cfi_offset 23, -112
+; CHECK-NEXT:    sq 384[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r11 = $r0
+; CHECK-NEXT:    andd $r31 = $r12, -128
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_escape 0x10, 0x13, 0x02, 0x7e, 0x08
-; CHECK-NEXT:    .cfi_escape 0x10, 0x12, 0x02, 0x7e, 0x00
-; CHECK-NEXT:    .cfi_def_cfa_register 31
+; CHECK-NEXT:    .cfi_offset 18, -120
+; CHECK-NEXT:    .cfi_offset 19, -128
 ; CHECK-NEXT:    sxwd $r0 = $r11
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addx4d $r0 = $r0, 31
@@ -749,7 +729,7 @@ define i32 @stackrealign4(i32 %n){
 ; CHECK-NEXT:    make $r5 = g3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r6 = g4
-; CHECK-NEXT:    sw 128[$r14] = $r2
+; CHECK-NEXT:    sw 256[$r31] = $r2
 ; CHECK-NEXT:    make $r2 = g2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r7 = g5
@@ -778,12 +758,12 @@ define i32 @stackrealign4(i32 %n){
 ; CHECK-NEXT:    make $r41 = g23
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r42 = g24
-; CHECK-NEXT:    sd 136[$r14] = $r0
+; CHECK-NEXT:    sd 248[$r31] = $r0
 ; CHECK-NEXT:    make $r43 = g25
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r44 = g26
 ; CHECK-NEXT:    make $r45 = g27
-; CHECK-NEXT:    sd 184[$r14] = $r11
+; CHECK-NEXT:    sd 200[$r31] = $r11
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r11 = g9
 ; CHECK-NEXT:    make $r46 = g28
@@ -812,7 +792,7 @@ define i32 @stackrealign4(i32 %n){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r60 = g42
 ; CHECK-NEXT:    make $r61 = g43
-; CHECK-NEXT:    sd 160[$r14] = $r0
+; CHECK-NEXT:    sd 224[$r31] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r62 = g44
 ; CHECK-NEXT:    make $r63 = g45
@@ -841,20 +821,20 @@ define i32 @stackrealign4(i32 %n){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r4 = g61
 ; CHECK-NEXT:    make $r3 = g62
-; CHECK-NEXT:    sd 168[$r14] = $r0
+; CHECK-NEXT:    sd 216[$r31] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r1 = g64
 ; CHECK-NEXT:    lwz $r0 = 0[$r6]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 176[$r14] = $r0
+; CHECK-NEXT:    sd 208[$r31] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r0 = 0[$r7]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 152[$r14] = $r0
+; CHECK-NEXT:    sd 232[$r31] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r0 = 0[$r8]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 144[$r14] = $r0
+; CHECK-NEXT:    sd 240[$r31] = $r0
 ; CHECK-NEXT:    make $r0 = g65
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r8 = 0[$r2]
@@ -985,7 +965,7 @@ define i32 @stackrealign4(i32 %n){
 ; CHECK-NEXT:    sw 432[$r12] = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 424[$r12] = $r2
-; CHECK-NEXT:    addd $r2 = $r14, 128
+; CHECK-NEXT:    addd $r2 = $r31, 256
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 416[$r12] = $r3
 ; CHECK-NEXT:    ;;
@@ -1094,44 +1074,40 @@ define i32 @stackrealign4(i32 %n){
 ; CHECK-NEXT:    sw 0[$r12] = $r8
 ; CHECK-NEXT:    copyd $r0 = $r6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r1 = 184[$r14]
+; CHECK-NEXT:    ld $r1 = 200[$r31]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r3 = 136[$r14]
+; CHECK-NEXT:    ld $r3 = 248[$r31]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r4 = 160[$r14]
+; CHECK-NEXT:    ld $r4 = 224[$r31]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r5 = 168[$r14]
+; CHECK-NEXT:    ld $r5 = 216[$r31]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r6 = 176[$r14]
+; CHECK-NEXT:    ld $r6 = 208[$r31]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r7 = 152[$r14]
+; CHECK-NEXT:    ld $r7 = 232[$r31]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r8 = 144[$r14]
+; CHECK-NEXT:    ld $r8 = 240[$r31]
 ; CHECK-NEXT:    call other4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r12 = $r12, 448
-; CHECK-NEXT:    copyd $r32 = $r31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_register 32
-; CHECK-NEXT:    copyd $r12 = $r14
+; CHECK-NEXT:    addd $r12 = $r14, -496
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lq $r18r19 = 0[$r12]
+; CHECK-NEXT:    lq $r18r19 = 384[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r20r21r22r23 = 16[$r12]
+; CHECK-NEXT:    lo $r20r21r22r23 = 400[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r24r25r26r27 = 48[$r12]
+; CHECK-NEXT:    lo $r24r25r26r27 = 432[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r28r29r30r31 = 80[$r12]
+; CHECK-NEXT:    lo $r28r29r30r31 = 464[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 120[$r12]
+; CHECK-NEXT:    ld $r14 = 496[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r16 = 504[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    ld $r14 = 112[$r12]
-; CHECK-NEXT:    copyd $r12 = $r32
+; CHECK-NEXT:    addd $r12 = $r12, 512
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_restore 67
-; CHECK-NEXT:    .cfi_def_cfa_register 12
-; CHECK-NEXT:    addd $r12 = $r12, 384
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
