@@ -21,6 +21,7 @@
 #include "llvm/CodeGen/MachineInstrBuilder.h"
 #include "llvm/CodeGen/MachineRegisterInfo.h"
 #include "llvm/CodeGen/RegisterScavenging.h"
+#include "llvm/MC/MCDwarf.h"
 #include "llvm/Support/Debug.h"
 #include "llvm/Support/ErrorHandling.h"
 #include "llvm/Support/TargetRegistry.h"
@@ -328,9 +329,22 @@ void KVXInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
     LLVM_DEBUG(dbgs() << "Matrix TCA register, storing using SMATRIXp.\n");
   } else if (KVX::OnlyraRegRegClass.hasSubClassEq(RC)) {
     LLVM_DEBUG(dbgs() << "It is a RA register, using GETss2 and SDp.\n");
+
+    MachineFunction &MF = *MBB.getParent();
+    const TargetSubtargetInfo &STI = MF.getSubtarget();
+    const TargetInstrInfo *TII = STI.getInstrInfo();
+    const MCRegisterInfo *MRI = STI.getRegisterInfo();
+
     Register ScratchReg = findScratchRegister(MBB, false, KVX::R16);
     BuildMI(MBB, I, DL, get(KVX::GETss2), ScratchReg)
         .addReg(KVX::RA)
+        .setMIFlags(MachineInstr::FrameSetup);
+
+    unsigned CFIIndex = MF.addFrameInst(MCCFIInstruction::createRegister(
+        nullptr, MRI->getDwarfRegNum(KVX::RA, true),
+        MRI->getDwarfRegNum(ScratchReg, true)));
+    BuildMI(MBB, I, DL, TII->get(TargetOpcode::CFI_INSTRUCTION))
+        .addCFIIndex(CFIIndex)
         .setMIFlags(MachineInstr::FrameSetup);
 
     BuildMI(MBB, I, DL, get(KVX::SDp))

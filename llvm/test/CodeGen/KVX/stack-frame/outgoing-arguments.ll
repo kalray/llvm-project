@@ -24,14 +24,15 @@ define i32 @fn(i32* nocapture readonly %a) {
 ; FP-NONE-NEXT:    get $r16 = $ra
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    .cfi_def_cfa_offset 64
-; FP-NONE-NEXT:    sd 40[$r12] = $r16
+; FP-NONE-NEXT:    .cfi_register 67, 16
+; FP-NONE-NEXT:    sd 56[$r12] = $r16
 ; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:    .cfi_offset 67, -48
-; FP-NONE-NEXT:    sq 24[$r12] = $r18r19
+; FP-NONE-NEXT:    .cfi_offset 67, -8
+; FP-NONE-NEXT:    sq 40[$r12] = $r18r19
 ; FP-NONE-NEXT:    copyd $r18 = $r0
 ; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:    .cfi_offset 19, -56
-; FP-NONE-NEXT:    .cfi_offset 18, -64
+; FP-NONE-NEXT:    .cfi_offset 18, -16
+; FP-NONE-NEXT:    .cfi_offset 19, -24
 ; FP-NONE-NEXT:    lwz $r0 = 0[$r18]
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    lwz $r1 = 4[$r18]
@@ -104,31 +105,36 @@ define i32 @fn(i32* nocapture readonly %a) {
 ; FP-NONE-NEXT:    call add
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    addw $r0 = $r0, $r19
-; FP-NONE-NEXT:    lq $r18r19 = 24[$r12]
+; FP-NONE-NEXT:    lq $r18r19 = 40[$r12]
 ; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:    ld $r16 = 40[$r12]
+; FP-NONE-NEXT:    ld $r16 = 56[$r12]
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    set $ra = $r16
 ; FP-NONE-NEXT:    addd $r12 = $r12, 64
 ; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:    .cfi_def_cfa_offset 0
 ; FP-NONE-NEXT:    ret
 ; FP-NONE-NEXT:    ;;
 ;
 ; FP-ALL-LABEL: fn:
 ; FP-ALL:       # %bb.0: # %entry
-; FP-ALL-NEXT:    addd $r12 = $r12, -64
+; FP-ALL-NEXT:    addd $r12 = $r12, -32
 ; FP-ALL-NEXT:    get $r16 = $ra
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    .cfi_def_cfa_offset 64
-; FP-ALL-NEXT:    sd 40[$r12] = $r16
+; FP-ALL-NEXT:    .cfi_def_cfa_offset 32
+; FP-ALL-NEXT:    .cfi_register 67, 16
+; FP-ALL-NEXT:    sd 24[$r12] = $r16
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    .cfi_offset 67, -48
-; FP-ALL-NEXT:    sq 24[$r12] = $r18r19
+; FP-ALL-NEXT:    .cfi_offset 67, -8
+; FP-ALL-NEXT:    sd 16[$r12] = $r14
+; FP-ALL-NEXT:    addd $r14 = $r12, 16
+; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    .cfi_offset 14, -16
+; FP-ALL-NEXT:    .cfi_def_cfa 14, 16
+; FP-ALL-NEXT:    sq 0[$r12] = $r18r19
 ; FP-ALL-NEXT:    copyd $r18 = $r0
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    .cfi_offset 19, -56
-; FP-ALL-NEXT:    .cfi_offset 18, -64
+; FP-ALL-NEXT:    .cfi_offset 18, -24
+; FP-ALL-NEXT:    .cfi_offset 19, -32
 ; FP-ALL-NEXT:    lwz $r0 = 0[$r18]
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    lwz $r1 = 4[$r18]
@@ -158,6 +164,7 @@ define i32 @fn(i32* nocapture readonly %a) {
 ; FP-ALL-NEXT:    lwz $r16 = 52[$r18]
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    lwz $r17 = 56[$r18]
+; FP-ALL-NEXT:    addd $r12 = $r12, -32
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    sw 16[$r12] = $r17
 ; FP-ALL-NEXT:    ;;
@@ -166,6 +173,7 @@ define i32 @fn(i32* nocapture readonly %a) {
 ; FP-ALL-NEXT:    sw 0[$r12] = $r15
 ; FP-ALL-NEXT:    call add
 ; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    addd $r12 = $r12, 32
 ; FP-ALL-NEXT:    copyd $r19 = $r0
 ; FP-ALL-NEXT:    lwz $r0 = 0[$r18]
 ; FP-ALL-NEXT:    ;;
@@ -194,21 +202,27 @@ define i32 @fn(i32* nocapture readonly %a) {
 ; FP-ALL-NEXT:    lwz $r15 = 52[$r18]
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    lwz $r16 = 56[$r18]
+; FP-ALL-NEXT:    addd $r12 = $r12, -32
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    sw 8[$r12] = $r16
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    sw 0[$r12] = $r15
 ; FP-ALL-NEXT:    call add
 ; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    addd $r12 = $r12, 32
 ; FP-ALL-NEXT:    addw $r0 = $r0, $r19
-; FP-ALL-NEXT:    lq $r18r19 = 24[$r12]
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    ld $r16 = 40[$r12]
+; FP-ALL-NEXT:    addd $r12 = $r14, -16
+; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    lq $r18r19 = 0[$r12]
+; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ld $r14 = 16[$r12]
+; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ld $r16 = 24[$r12]
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    set $ra = $r16
-; FP-ALL-NEXT:    addd $r12 = $r12, 64
+; FP-ALL-NEXT:    addd $r12 = $r12, 32
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    .cfi_def_cfa_offset 0
 ; FP-ALL-NEXT:    ret
 ; FP-ALL-NEXT:    ;;
 entry:

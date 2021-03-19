@@ -222,9 +222,9 @@ def callseq_end   : SDNode<"ISD::CALLSEQ_END",   SDT_SimpleCallSeqEnd,
 
 let Defs = [R12], Uses = [R12] in {
 def ADJCALLSTACKDOWN : KVX_PSEUDO<(outs), (ins i32imm:$amt, i32imm:$amt2),
-                               [(callseq_start timm:$amt, timm:$amt2)], "ADJCALLSTACKDOWN $amt">;
+                               [(callseq_start timm:$amt, timm:$amt2)], "ADJCALLSTACKDOWN">;
 def ADJCALLSTACKUP : KVX_PSEUDO<(outs), (ins i32imm:$amt1, i32imm:$amt2),
-                            [(callseq_end timm:$amt1, timm:$amt2)], "ADJCALLSTACKUP $amt1">;
+                            [(callseq_end timm:$amt1, timm:$amt2)], "ADJCALLSTACKUP">;
 } // Defs = [R12], Uses = [R12]
 
 def MAKETLS : REGISTERW_EXTEND27_UPPER27_LOWER10_TRIPLE
@@ -846,6 +846,9 @@ def : Pat<(brcond i32:$cond, bb:$dst), (CB SingleReg:$cond, Pcrel17:$dst, scalar
 def : Pat<(brcond i64:$cond, bb:$dst), (CB SingleReg:$cond, Pcrel17:$dst, scalarcond_dnez)>;
 
 
+// This ADDDri64 is modified at eliminateFrameIndex. Correct immediate variant
+// is selected there.
+// TODO: Use a pseudo instruction? See SUBD below.
 def : Pat<(i64 AddrFI:$fi), (ADDDri64 SingleReg:$fi, (i64 0))>;
 
 def : Pat<(brind (i32 SingleReg:$r)), (IGOTO SingleReg:$r)>;
@@ -1265,3 +1268,8 @@ def: Pat<(v2i32 (bswap v2i32:$v)), (SBMM8ri64 SingleReg:$v, 0x1020408001020408)>
 def: Pat<(v256i1 (build_vector)), (COPY A48)>;
 def: Pat<(v512i1 (build_vector)), (COPY W25)>;
 def: Pat<(v1024i1 (build_vector)), (COPY X12)>;
+
+// SUBD: Only used for FrameLowering and replaced by the correct ADDD
+// instruction at eliminateFrameIndex(). Do not use it in any pattern!
+// TODO: Avoid this definition by using a pseudo instruction.
+defm SUBD : MC_11<"subd">;

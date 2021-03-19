@@ -72,7 +72,6 @@ define i32 @add(i32 %n, ...) {
 ; FP-NONE-NEXT:    addd $r12 = $r12, 96
 ; FP-NONE-NEXT:    ret
 ; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:    .cfi_def_cfa_offset 0
 ; FP-NONE-NEXT:  .LBB0_8: # %for.body.preheader.new
 ; FP-NONE-NEXT:    sbfw $r2 = $r0, $r1
 ; FP-NONE-NEXT:    make $r0 = 0
@@ -158,37 +157,47 @@ define i32 @add(i32 %n, ...) {
 ;
 ; FP-ALL-LABEL: add:
 ; FP-ALL:       # %bb.0: # %entry
-; FP-ALL-NEXT:    addd $r12 = $r12, -96
+; FP-ALL-NEXT:    addd $r12 = $r12, -128
+; FP-ALL-NEXT:    get $r16 = $ra
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    .cfi_def_cfa_offset 96
-; FP-ALL-NEXT:    sd 88[$r12] = $r11
+; FP-ALL-NEXT:    .cfi_def_cfa_offset 128
+; FP-ALL-NEXT:    .cfi_register 67, 16
+; FP-ALL-NEXT:    sd 32[$r12] = $r16
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    sd 80[$r12] = $r10
+; FP-ALL-NEXT:    .cfi_offset 67, -96
+; FP-ALL-NEXT:    sd 24[$r12] = $r14
+; FP-ALL-NEXT:    addd $r14 = $r12, 24
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    sd 72[$r12] = $r9
+; FP-ALL-NEXT:    .cfi_offset 14, -104
+; FP-ALL-NEXT:    .cfi_def_cfa 14, 104
+; FP-ALL-NEXT:    sd 96[$r14] = $r11
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    sd 64[$r12] = $r8
-; FP-ALL-NEXT:    addd $r8 = $r12, 8
+; FP-ALL-NEXT:    sd 88[$r14] = $r10
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    sd 56[$r12] = $r7
+; FP-ALL-NEXT:    sd 80[$r14] = $r9
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    sd 48[$r12] = $r6
+; FP-ALL-NEXT:    sd 72[$r14] = $r8
+; FP-ALL-NEXT:    addd $r8 = $r14, 16
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    sd 40[$r12] = $r5
+; FP-ALL-NEXT:    sd 64[$r14] = $r7
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    sd 32[$r12] = $r4
+; FP-ALL-NEXT:    sd 56[$r14] = $r6
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    sd 24[$r12] = $r3
+; FP-ALL-NEXT:    sd 48[$r14] = $r5
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    sd 16[$r12] = $r2
+; FP-ALL-NEXT:    sd 40[$r14] = $r4
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    sd 8[$r12] = $r1
+; FP-ALL-NEXT:    sd 32[$r14] = $r3
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    sd 0[$r12] = $r8
+; FP-ALL-NEXT:    sd 24[$r14] = $r2
+; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    sd 16[$r14] = $r1
+; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    sd -8[$r14] = $r8
 ; FP-ALL-NEXT:    cb.wlez $r0 ? .LBB0_1
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:  # %bb.2: # %for.body.preheader
-; FP-ALL-NEXT:    ld $r4 = 0[$r12]
+; FP-ALL-NEXT:    ld $r4 = -8[$r14]
 ; FP-ALL-NEXT:    addw $r1 = $r0, -1
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    compw.ltu $r2 = $r1, 7
@@ -202,10 +211,8 @@ define i32 @add(i32 %n, ...) {
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:  .LBB0_1:
 ; FP-ALL-NEXT:    make $r0 = 0
-; FP-ALL-NEXT:    addd $r12 = $r12, 96
-; FP-ALL-NEXT:    ret
+; FP-ALL-NEXT:    goto .LBB0_7
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    .cfi_def_cfa_offset 0
 ; FP-ALL-NEXT:  .LBB0_8: # %for.body.preheader.new
 ; FP-ALL-NEXT:    sbfw $r2 = $r0, $r1
 ; FP-ALL-NEXT:    make $r0 = 0
@@ -216,47 +223,47 @@ define i32 @add(i32 %n, ...) {
 ; FP-ALL-NEXT:    addd $r4 = $r3, 8
 ; FP-ALL-NEXT:    addw $r2 = $r2, 8
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    sd 0[$r12] = $r4
+; FP-ALL-NEXT:    sd -8[$r14] = $r4
 ; FP-ALL-NEXT:    addd $r4 = $r3, 16
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    lwz $r5 = 0[$r3]
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    sd 0[$r12] = $r4
+; FP-ALL-NEXT:    sd -8[$r14] = $r4
 ; FP-ALL-NEXT:    addd $r4 = $r3, 24
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    lwz $r6 = 8[$r3]
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    sd 0[$r12] = $r4
+; FP-ALL-NEXT:    sd -8[$r14] = $r4
 ; FP-ALL-NEXT:    addd $r4 = $r3, 32
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    lwz $r7 = 16[$r3]
 ; FP-ALL-NEXT:    addw $r0 = $r5, $r0
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    sd 0[$r12] = $r4
+; FP-ALL-NEXT:    sd -8[$r14] = $r4
 ; FP-ALL-NEXT:    addd $r4 = $r3, 40
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    lwz $r8 = 24[$r3]
 ; FP-ALL-NEXT:    addw $r0 = $r6, $r0
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    sd 0[$r12] = $r4
+; FP-ALL-NEXT:    sd -8[$r14] = $r4
 ; FP-ALL-NEXT:    addd $r4 = $r3, 48
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    lwz $r5 = 32[$r3]
 ; FP-ALL-NEXT:    addw $r0 = $r7, $r0
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    sd 0[$r12] = $r4
+; FP-ALL-NEXT:    sd -8[$r14] = $r4
 ; FP-ALL-NEXT:    addd $r4 = $r3, 56
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    lwz $r6 = 40[$r3]
 ; FP-ALL-NEXT:    addw $r0 = $r8, $r0
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    sd 0[$r12] = $r4
+; FP-ALL-NEXT:    sd -8[$r14] = $r4
 ; FP-ALL-NEXT:    addd $r4 = $r3, 64
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    lwz $r7 = 48[$r3]
 ; FP-ALL-NEXT:    addw $r0 = $r5, $r0
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    sd 0[$r12] = $r4
+; FP-ALL-NEXT:    sd -8[$r14] = $r4
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    lwz $r3 = 56[$r3]
 ; FP-ALL-NEXT:    addw $r0 = $r6, $r0
@@ -275,7 +282,7 @@ define i32 @add(i32 %n, ...) {
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:  .LBB0_6: # %for.body.epil
 ; FP-ALL-NEXT:    # =>This Inner Loop Header: Depth=1
-; FP-ALL-NEXT:    sd 0[$r12] = $r2
+; FP-ALL-NEXT:    sd -8[$r14] = $r2
 ; FP-ALL-NEXT:    addw $r1 = $r1, -1
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    lwz $r3 = -8[$r2]
@@ -285,7 +292,15 @@ define i32 @add(i32 %n, ...) {
 ; FP-ALL-NEXT:    cb.wnez $r1 ? .LBB0_6
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:  .LBB0_7: # %for.cond.cleanup
-; FP-ALL-NEXT:    addd $r12 = $r12, 96
+; FP-ALL-NEXT:    addd $r12 = $r14, -24
+; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ld $r14 = 24[$r12]
+; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ld $r16 = 32[$r12]
+; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    set $ra = $r16
+; FP-ALL-NEXT:    addd $r12 = $r12, 128
+; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    ret
 ; FP-ALL-NEXT:    ;;
 entry:
