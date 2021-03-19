@@ -11,12 +11,13 @@
 //
 //===----------------------------------------------------------------------===//
 
+#include "KVXMCTargetDesc.h"
 #include "InstPrinter/KVXInstPrinter.h"
 #include "KVXAsmInfo.h"
-#include "KVXMCTargetDesc.h"
 #include "KVXTargetStreamer.h"
 #include "llvm/ADT/STLExtras.h"
 #include "llvm/MC/MCAsmInfo.h"
+#include "llvm/MC/MCDwarf.h"
 #include "llvm/MC/MCInstrInfo.h"
 #include "llvm/MC/MCRegisterInfo.h"
 #include "llvm/MC/MCStreamer.h"
@@ -50,7 +51,14 @@ static MCRegisterInfo *createKVXMCRegisterInfo(const Triple &TT) {
 static MCAsmInfo *createKVXMCAsmInfo(const MCRegisterInfo &MRI,
                                      const Triple &TT,
                                      const MCTargetOptions &Options) {
-  return new KVXMCAsmInfo(TT);
+  MCAsmInfo *MAI = new KVXMCAsmInfo(TT);
+
+  // Initial state of FP.
+  unsigned Reg = MRI.getDwarfRegNum(KVX::R12, true);
+  MCCFIInstruction Inst = MCCFIInstruction::cfiDefCfa(nullptr, Reg, 0);
+  MAI->addInitialFrameState(Inst);
+
+  return MAI;
 }
 
 static MCInstPrinter *createKVXMCInstPrinter(const Triple &T,
