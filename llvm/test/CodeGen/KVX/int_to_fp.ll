@@ -48,16 +48,16 @@ define float @ui64_to_f32(i64 %x){
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    sd 0[$r12] = $r16
+; CHECK-NEXT:    .cfi_register 67, 16
+; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call __floatundisf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -32
-; CHECK-NEXT:    ld $r16 = 0[$r12]
+; CHECK-NEXT:    .cfi_offset 67, -8
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -135,16 +135,16 @@ define float @i64_to_f32(i64 %x){
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    sd 0[$r12] = $r16
+; CHECK-NEXT:    .cfi_register 67, 16
+; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call __floatdisf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -32
-; CHECK-NEXT:    ld $r16 = 0[$r12]
+; CHECK-NEXT:    .cfi_offset 67, -8
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

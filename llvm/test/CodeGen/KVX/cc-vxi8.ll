@@ -9,24 +9,24 @@ define void @foo(){
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    sd 0[$r12] = $r16
+; CHECK-NEXT:    .cfi_register 67, 16
+; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    make $r0 = 0xfffffffffffffafb
 ; CHECK-NEXT:    call bar2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -32
+; CHECK-NEXT:    .cfi_offset 67, -8
 ; CHECK-NEXT:    make $r0 = 0xf9fafb
 ; CHECK-NEXT:    call bar3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r0 = 0xfffffffff8f9fafb
 ; CHECK-NEXT:    call bar4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 0[$r12]
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    make $r0 = 0xf4f5f6f7f8f9fafb
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    goto bar8
 ; CHECK-NEXT:    ;;
 entry:

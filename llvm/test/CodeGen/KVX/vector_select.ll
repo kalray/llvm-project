@@ -370,18 +370,18 @@ define void @test_v16_select(<16 x i8> * %m, <16 x i8> * %n){
 ; CHECK-NEXT:    .cfi_def_cfa_offset 64
 ; CHECK-NEXT:    sq 48[$r12] = $r24r25
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 25, -8
-; CHECK-NEXT:    .cfi_offset 24, -16
+; CHECK-NEXT:    .cfi_offset 24, -8
+; CHECK-NEXT:    .cfi_offset 25, -16
 ; CHECK-NEXT:    so 16[$r12] = $r20r21r22r23
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 23, -24
-; CHECK-NEXT:    .cfi_offset 22, -32
-; CHECK-NEXT:    .cfi_offset 21, -40
-; CHECK-NEXT:    .cfi_offset 20, -48
+; CHECK-NEXT:    .cfi_offset 20, -24
+; CHECK-NEXT:    .cfi_offset 21, -32
+; CHECK-NEXT:    .cfi_offset 22, -40
+; CHECK-NEXT:    .cfi_offset 23, -48
 ; CHECK-NEXT:    sq 0[$r12] = $r18r19
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 19, -56
-; CHECK-NEXT:    .cfi_offset 18, -64
+; CHECK-NEXT:    .cfi_offset 18, -56
+; CHECK-NEXT:    .cfi_offset 19, -64
 ; CHECK-NEXT:    lq $r16r17 = 0[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lq $r10r11 = 0[$r1]
@@ -712,29 +712,29 @@ define void @test_v32_select(<32 x i8> * %m, <32 x i8> * %n){
 ; CHECK-NEXT:    addd $r12 = $r12, -160
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 160
-; CHECK-NEXT:    so 80[$r12] = $r28r29r30r31
+; CHECK-NEXT:    so 128[$r12] = $r28r29r30r31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 31, -56
-; CHECK-NEXT:    .cfi_offset 30, -64
-; CHECK-NEXT:    .cfi_offset 29, -72
-; CHECK-NEXT:    .cfi_offset 28, -80
-; CHECK-NEXT:    so 48[$r12] = $r24r25r26r27
+; CHECK-NEXT:    .cfi_offset 28, -8
+; CHECK-NEXT:    .cfi_offset 29, -16
+; CHECK-NEXT:    .cfi_offset 30, -24
+; CHECK-NEXT:    .cfi_offset 31, -32
+; CHECK-NEXT:    so 96[$r12] = $r24r25r26r27
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 27, -88
-; CHECK-NEXT:    .cfi_offset 26, -96
-; CHECK-NEXT:    .cfi_offset 25, -104
-; CHECK-NEXT:    .cfi_offset 24, -112
-; CHECK-NEXT:    so 16[$r12] = $r20r21r22r23
+; CHECK-NEXT:    .cfi_offset 24, -40
+; CHECK-NEXT:    .cfi_offset 25, -48
+; CHECK-NEXT:    .cfi_offset 26, -56
+; CHECK-NEXT:    .cfi_offset 27, -64
+; CHECK-NEXT:    so 64[$r12] = $r20r21r22r23
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 23, -120
-; CHECK-NEXT:    .cfi_offset 22, -128
-; CHECK-NEXT:    .cfi_offset 21, -136
-; CHECK-NEXT:    .cfi_offset 20, -144
-; CHECK-NEXT:    sq 0[$r12] = $r18r19
+; CHECK-NEXT:    .cfi_offset 20, -72
+; CHECK-NEXT:    .cfi_offset 21, -80
+; CHECK-NEXT:    .cfi_offset 22, -88
+; CHECK-NEXT:    .cfi_offset 23, -96
+; CHECK-NEXT:    sq 48[$r12] = $r18r19
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 19, -152
-; CHECK-NEXT:    .cfi_offset 18, -160
-; CHECK-NEXT:    sd 112[$r12] = $r0
+; CHECK-NEXT:    .cfi_offset 18, -104
+; CHECK-NEXT:    .cfi_offset 19, -112
+; CHECK-NEXT:    sd 40[$r12] = $r0
 ; CHECK-NEXT:    make $r45 = -1
 ; CHECK-NEXT:    make $r46 = -1
 ; CHECK-NEXT:    make $r44 = -1
@@ -818,7 +818,7 @@ define void @test_v32_select(<32 x i8> * %m, <32 x i8> * %n){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.wnez $r2 ? $r47 = 0
 ; CHECK-NEXT:    cmoved.wnez $r4 ? $r50 = 0
-; CHECK-NEXT:    sd 120[$r12] = $r0
+; CHECK-NEXT:    sd 32[$r12] = $r0
 ; CHECK-NEXT:    make $r2 = -1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.wnez $r45 ? $r55 = 0
@@ -830,7 +830,7 @@ define void @test_v32_select(<32 x i8> * %m, <32 x i8> * %n){
 ; CHECK-NEXT:    insf $r55 = $r50, 15, 8
 ; CHECK-NEXT:    sxbd $r58 = $r53
 ; CHECK-NEXT:    make $r50 = -1
-; CHECK-NEXT:    sd 128[$r12] = $r1
+; CHECK-NEXT:    sd 24[$r12] = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxbd $r59 = $r51
 ; CHECK-NEXT:    extfz $r54 = $r9, 47, 40
@@ -1065,11 +1065,11 @@ define void @test_v32_select(<32 x i8> * %m, <32 x i8> * %n){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.wltz $r28 ? $r20 = 0
 ; CHECK-NEXT:    cmoved.wltz $r27 ? $r54 = 0
-; CHECK-NEXT:    ld $r28 = 120[$r12]
+; CHECK-NEXT:    ld $r28 = 32[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    extfz $r10 = $r10, 15, 8
 ; CHECK-NEXT:    cmoved.wltz $r29 ? $r18 = 0
-; CHECK-NEXT:    ld $r27 = 128[$r12]
+; CHECK-NEXT:    ld $r27 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.wltz $r30 ? $r24 = 0
 ; CHECK-NEXT:    insf $r45 = $r61, 15, 8
@@ -1290,7 +1290,7 @@ define void @test_v32_select(<32 x i8> * %m, <32 x i8> * %n){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.wnez $r4 ? $r34 = $r37
 ; CHECK-NEXT:    cmoved.wnez $r0 ? $r47 = $r7
-; CHECK-NEXT:    ld $r0 = 112[$r12]
+; CHECK-NEXT:    ld $r0 = 40[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.wnez $r15 ? $r11 = $r22
 ; CHECK-NEXT:    cmoved.wnez $r5 ? $r36 = $r41
@@ -1317,13 +1317,13 @@ define void @test_v32_select(<32 x i8> * %m, <32 x i8> * %n){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    so 0[$r0] = $r44r45r46r47
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lq $r18r19 = 0[$r12]
+; CHECK-NEXT:    lq $r18r19 = 48[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r20r21r22r23 = 16[$r12]
+; CHECK-NEXT:    lo $r20r21r22r23 = 64[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r24r25r26r27 = 48[$r12]
+; CHECK-NEXT:    lo $r24r25r26r27 = 96[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r28r29r30r31 = 80[$r12]
+; CHECK-NEXT:    lo $r28r29r30r31 = 128[$r12]
 ; CHECK-NEXT:    addd $r12 = $r12, 160
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;

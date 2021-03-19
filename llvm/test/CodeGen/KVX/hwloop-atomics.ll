@@ -20,16 +20,16 @@ define void @set(i32* nocapture %x, i32 %num){
 ; CHECK-NEXT:  .LBB0_3: # %for.body
 ; CHECK-NEXT:    # =>This Loop Header: Depth=1
 ; CHECK-NEXT:    # Child Loop BB0_4 Depth 2
-; CHECK-NEXT:    sw 0[$r12] = $r1
+; CHECK-NEXT:    sw 28[$r12] = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_4: # %for.body
 ; CHECK-NEXT:    # Parent Loop BB0_3 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
-; CHECK-NEXT:    lwz.u $r7 = 0[$r12]
+; CHECK-NEXT:    lwz.u $r7 = 28[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfw $r6 = $r2, $r7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    acswapw 0[$r12] = $r6r7
+; CHECK-NEXT:    acswapw 28[$r12] = $r6r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.even $r6 ? .LBB0_4
 ; CHECK-NEXT:    ;;

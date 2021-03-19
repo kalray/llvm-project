@@ -323,37 +323,38 @@ define i32 @main(i32 %argc, i8** nocapture readnone %argv)  {
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 128
-; CHECK-NEXT:    sd 112[$r12] = $r16
+; CHECK-NEXT:    .cfi_register 67, 16
+; CHECK-NEXT:    sd 120[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -16
-; CHECK-NEXT:    so 80[$r12] = $r28r29r30r31
+; CHECK-NEXT:    .cfi_offset 67, -8
+; CHECK-NEXT:    so 88[$r12] = $r28r29r30r31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 31, -24
+; CHECK-NEXT:    .cfi_offset 28, -16
+; CHECK-NEXT:    .cfi_offset 29, -24
 ; CHECK-NEXT:    .cfi_offset 30, -32
-; CHECK-NEXT:    .cfi_offset 29, -40
-; CHECK-NEXT:    .cfi_offset 28, -48
-; CHECK-NEXT:    so 48[$r12] = $r24r25r26r27
+; CHECK-NEXT:    .cfi_offset 31, -40
+; CHECK-NEXT:    so 56[$r12] = $r24r25r26r27
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 27, -56
+; CHECK-NEXT:    .cfi_offset 24, -48
+; CHECK-NEXT:    .cfi_offset 25, -56
 ; CHECK-NEXT:    .cfi_offset 26, -64
-; CHECK-NEXT:    .cfi_offset 25, -72
-; CHECK-NEXT:    .cfi_offset 24, -80
-; CHECK-NEXT:    so 16[$r12] = $r20r21r22r23
+; CHECK-NEXT:    .cfi_offset 27, -72
+; CHECK-NEXT:    so 24[$r12] = $r20r21r22r23
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 23, -88
+; CHECK-NEXT:    .cfi_offset 20, -80
+; CHECK-NEXT:    .cfi_offset 21, -88
 ; CHECK-NEXT:    .cfi_offset 22, -96
-; CHECK-NEXT:    .cfi_offset 21, -104
-; CHECK-NEXT:    .cfi_offset 20, -112
-; CHECK-NEXT:    sq 0[$r12] = $r18r19
+; CHECK-NEXT:    .cfi_offset 23, -104
+; CHECK-NEXT:    sq 8[$r12] = $r18r19
 ; CHECK-NEXT:    make $r0 = .L.str
 ; CHECK-NEXT:    call BENCH_START
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_offset 18, -112
 ; CHECK-NEXT:    .cfi_offset 19, -120
-; CHECK-NEXT:    .cfi_offset 18, -128
 ; CHECK-NEXT:    make $r20 = 0
 ; CHECK-NEXT:    make $r21 = 256
 ; CHECK-NEXT:    make $r22 = x
-; CHECK-NEXT:    addd $r18 = $r12, 120
+; CHECK-NEXT:    addd $r18 = $r12, 5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r23 = 0xdead
 ; CHECK-NEXT:    make $r24 = h
@@ -445,10 +446,10 @@ define i32 @main(i32 %argc, i8** nocapture readnone %argv)  {
 ; CHECK-NEXT:    addw $r0 = $r26, 48
 ; CHECK-NEXT:    sbfd $r27 = $r25, 256
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 120[$r12] = $r0
+; CHECK-NEXT:    sb 5[$r12] = $r0
 ; CHECK-NEXT:    make $r0 = .L.str
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 121[$r12] = $r20
+; CHECK-NEXT:    sb 6[$r12] = $r20
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    call BENCH_START_S
 ; CHECK-NEXT:    ;;
@@ -513,7 +514,7 @@ define i32 @main(i32 %argc, i8** nocapture readnone %argv)  {
 ; CHECK-NEXT:    make $r20 = 8
 ; CHECK-NEXT:    make $r21 = 8
 ; CHECK-NEXT:    make $r23 = 0
-; CHECK-NEXT:    addd $r18 = $r12, 120
+; CHECK-NEXT:    addd $r18 = $r12, 5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r24 = x
 ; CHECK-NEXT:    make $r25 = 0xffffffffdeaddead
@@ -545,10 +546,10 @@ define i32 @main(i32 %argc, i8** nocapture readnone %argv)  {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addw $r0 = $r1, 48
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 120[$r12] = $r0
+; CHECK-NEXT:    sb 5[$r12] = $r0
 ; CHECK-NEXT:    make $r0 = .L.str
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 121[$r12] = $r23
+; CHECK-NEXT:    sb 6[$r12] = $r23
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    call BENCH_START_S
 ; CHECK-NEXT:    ;;
@@ -650,30 +651,29 @@ define i32 @main(i32 %argc, i8** nocapture readnone %argv)  {
 ; CHECK-NEXT:    make $r0 = 32
 ; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 120[$r12] = $r0
+; CHECK-NEXT:    sb 5[$r12] = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 121[$r12] = $r0
+; CHECK-NEXT:    sb 6[$r12] = $r0
 ; CHECK-NEXT:    make $r0 = .L.str
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sb 122[$r12] = $r1
-; CHECK-NEXT:    addd $r1 = $r12, 120
+; CHECK-NEXT:    sb 7[$r12] = $r1
+; CHECK-NEXT:    addd $r1 = $r12, 5
 ; CHECK-NEXT:    call BENCH_STOP_S
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lq $r18r19 = 0[$r12]
+; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r20r21r22r23 = 16[$r12]
+; CHECK-NEXT:    lo $r20r21r22r23 = 24[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r24r25r26r27 = 48[$r12]
+; CHECK-NEXT:    lo $r24r25r26r27 = 56[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r28r29r30r31 = 80[$r12]
+; CHECK-NEXT:    lo $r28r29r30r31 = 88[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 112[$r12]
+; CHECK-NEXT:    ld $r16 = 120[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 128
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

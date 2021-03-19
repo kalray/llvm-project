@@ -8,28 +8,28 @@ define float @f1rn(float %x) {
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    sd 16[$r12] = $r16
+; CHECK-NEXT:    .cfi_register 67, 16
+; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -16
-; CHECK-NEXT:    sq 0[$r12] = $r18r19
+; CHECK-NEXT:    .cfi_offset 67, -8
+; CHECK-NEXT:    sq 8[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    call sinf
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_offset 18, -16
 ; CHECK-NEXT:    .cfi_offset 19, -24
-; CHECK-NEXT:    .cfi_offset 18, -32
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    call cosf
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    faddw $r0 = $r19, $r0
-; CHECK-NEXT:    lq $r18r19 = 0[$r12]
+; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 16[$r12]
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %tmp1 = call float @sinf(float %x) readnone
@@ -45,28 +45,28 @@ define float @f1(float %x) {
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    sd 16[$r12] = $r16
+; CHECK-NEXT:    .cfi_register 67, 16
+; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -16
-; CHECK-NEXT:    sq 0[$r12] = $r18r19
+; CHECK-NEXT:    .cfi_offset 67, -8
+; CHECK-NEXT:    sq 8[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    call sinf
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_offset 18, -16
 ; CHECK-NEXT:    .cfi_offset 19, -24
-; CHECK-NEXT:    .cfi_offset 18, -32
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    call cosf
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    faddw $r0 = $r19, $r0
-; CHECK-NEXT:    lq $r18r19 = 0[$r12]
+; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 16[$r12]
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %tmp1 = call float @sinf(float %x)
@@ -82,28 +82,28 @@ define double @f2rn(double %x) {
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    sd 16[$r12] = $r16
+; CHECK-NEXT:    .cfi_register 67, 16
+; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -16
-; CHECK-NEXT:    sq 0[$r12] = $r18r19
+; CHECK-NEXT:    .cfi_offset 67, -8
+; CHECK-NEXT:    sq 8[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    call sin
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_offset 18, -16
 ; CHECK-NEXT:    .cfi_offset 19, -24
-; CHECK-NEXT:    .cfi_offset 18, -32
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    call cos
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    faddd $r0 = $r19, $r0
-; CHECK-NEXT:    lq $r18r19 = 0[$r12]
+; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 16[$r12]
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %tmp1 = call double @sin(double %x) readnone
@@ -119,28 +119,28 @@ define double @f2(double %x) {
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    sd 16[$r12] = $r16
+; CHECK-NEXT:    .cfi_register 67, 16
+; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -16
-; CHECK-NEXT:    sq 0[$r12] = $r18r19
+; CHECK-NEXT:    .cfi_offset 67, -8
+; CHECK-NEXT:    sq 8[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    call sin
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_offset 18, -16
 ; CHECK-NEXT:    .cfi_offset 19, -24
-; CHECK-NEXT:    .cfi_offset 18, -32
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    call cos
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    faddd $r0 = $r19, $r0
-; CHECK-NEXT:    lq $r18r19 = 0[$r12]
+; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 16[$r12]
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %tmp1 = call double @sin(double %x)

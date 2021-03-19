@@ -8,38 +8,39 @@ target triple = "kvx-kalray-cos"
 define i32 @f(i32 %a1, i32 %a2, i32 %a3, i32 %a4, i32 %a5, i32 %a6, i32 %a7, i32 %a8, i32 %a9, i32 %a10, i32 %a11, i32 %a12, i32 %a13, i32 %a14, i32 %a15, i32 %a16) {
 ; CHECK-LABEL: f:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addd $r12 = $r12, -128
+; CHECK-NEXT:    addd $r12 = $r12, -96
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 128
+; CHECK-NEXT:    .cfi_def_cfa_offset 96
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 96[$r12] = $r16
+; CHECK-NEXT:    .cfi_register 67, 16
+; CHECK-NEXT:    sd 88[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -16
-; CHECK-NEXT:    sd 88[$r12] = $r14
+; CHECK-NEXT:    .cfi_offset 67, -8
+; CHECK-NEXT:    sd 80[$r12] = $r14
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 14, -24
-; CHECK-NEXT:    sd 80[$r12] = $r26
+; CHECK-NEXT:    .cfi_offset 14, -16
+; CHECK-NEXT:    addd $r14 = $r12, 80
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 26, -32
-; CHECK-NEXT:    sq 64[$r12] = $r24r25
+; CHECK-NEXT:    .cfi_def_cfa 14, 16
+; CHECK-NEXT:    sd 72[$r12] = $r26
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_offset 26, -24
+; CHECK-NEXT:    sq 56[$r12] = $r24r25
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_offset 24, -32
 ; CHECK-NEXT:    .cfi_offset 25, -40
-; CHECK-NEXT:    .cfi_offset 24, -48
-; CHECK-NEXT:    so 32[$r12] = $r20r21r22r23
+; CHECK-NEXT:    so 24[$r12] = $r20r21r22r23
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 23, -56
+; CHECK-NEXT:    .cfi_offset 20, -48
+; CHECK-NEXT:    .cfi_offset 21, -56
 ; CHECK-NEXT:    .cfi_offset 22, -64
-; CHECK-NEXT:    .cfi_offset 21, -72
-; CHECK-NEXT:    .cfi_offset 20, -80
-; CHECK-NEXT:    sq 16[$r12] = $r18r19
+; CHECK-NEXT:    .cfi_offset 23, -72
+; CHECK-NEXT:    sq 8[$r12] = $r18r19
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_offset 18, -80
 ; CHECK-NEXT:    .cfi_offset 19, -88
-; CHECK-NEXT:    .cfi_offset 18, -96
-; CHECK-NEXT:    copyd $r14 = $r12
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_register 14
-; CHECK-NEXT:    lwz $r15 = 152[$r14]
+; CHECK-NEXT:    lwz $r15 = 40[$r14]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r18 = $r10
 ; CHECK-NEXT:    ;;
@@ -55,11 +56,11 @@ define i32 @f(i32 %a1, i32 %a2, i32 %a3, i32 %a4, i32 %a5, i32 %a6, i32 %a7, i32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r24 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r2 = 144[$r14]
+; CHECK-NEXT:    lwz $r2 = 32[$r14]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r1 = 136[$r14]
+; CHECK-NEXT:    lwz $r1 = 24[$r14]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r0 = 128[$r14]
+; CHECK-NEXT:    lwz $r0 = 16[$r14]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    zxwd $r5 = $r15
 ; CHECK-NEXT:    ;;
@@ -181,26 +182,24 @@ define i32 @f(i32 %a1, i32 %a2, i32 %a3, i32 %a4, i32 %a5, i32 %a6, i32 %a7, i32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r8 = $r25
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r12 = $r14
+; CHECK-NEXT:    addd $r12 = $r14, -80
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_register 12
-; CHECK-NEXT:    lq $r18r19 = 16[$r12]
+; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r20r21r22r23 = 32[$r12]
+; CHECK-NEXT:    lo $r20r21r22r23 = 24[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lq $r24r25 = 64[$r12]
+; CHECK-NEXT:    lq $r24r25 = 56[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r26 = 80[$r12]
+; CHECK-NEXT:    ld $r26 = 72[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 96[$r12]
+; CHECK-NEXT:    ld $r14 = 80[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r16 = 88[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r14 = 88[$r12]
+; CHECK-NEXT:    addd $r12 = $r12, 96
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r12 = $r12, 128
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    goto g
 ; CHECK-NEXT:    ;;
 entry:

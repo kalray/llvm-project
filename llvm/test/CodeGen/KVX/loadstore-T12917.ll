@@ -14,10 +14,11 @@ define i32 @f(){
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    sd 0[$r12] = $r16
+; CHECK-NEXT:    .cfi_register 67, 16
+; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call g
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -32
+; CHECK-NEXT:    .cfi_offset 67, -8
 ; CHECK-NEXT:    sxwd $r0 = $r0
 ; CHECK-NEXT:    make $r15 = a
 ; CHECK-NEXT:    make $r16 = c
@@ -76,12 +77,11 @@ define i32 @f(){
 ; CHECK-NEXT:    call h
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_2: # %if.end
-; CHECK-NEXT:    ld $r16 = 0[$r12]
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

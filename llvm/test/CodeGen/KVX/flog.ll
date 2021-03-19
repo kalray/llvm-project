@@ -8,16 +8,16 @@ define float @logf32(float %x) {
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    sd 0[$r12] = $r16
+; CHECK-NEXT:    .cfi_register 67, 16
+; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call logf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -32
-; CHECK-NEXT:    ld $r16 = 0[$r12]
+; CHECK-NEXT:    .cfi_offset 67, -8
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %tmp = call float @llvm.log.f32(float %x)
@@ -31,16 +31,16 @@ define double @logf64(double %x) {
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    sd 0[$r12] = $r16
+; CHECK-NEXT:    .cfi_register 67, 16
+; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call log
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -32
-; CHECK-NEXT:    ld $r16 = 0[$r12]
+; CHECK-NEXT:    .cfi_offset 67, -8
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %tmp = call double @llvm.log.f64(double %x)
@@ -54,14 +54,15 @@ define <2 x float> @logv2f32(<2 x float> %x) {
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    sd 16[$r12] = $r16
+; CHECK-NEXT:    .cfi_register 67, 16
+; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -16
-; CHECK-NEXT:    sq 0[$r12] = $r18r19
+; CHECK-NEXT:    .cfi_offset 67, -8
+; CHECK-NEXT:    sq 8[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_offset 18, -16
 ; CHECK-NEXT:    .cfi_offset 19, -24
-; CHECK-NEXT:    .cfi_offset 18, -32
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call logf
 ; CHECK-NEXT:    ;;
@@ -70,14 +71,13 @@ define <2 x float> @logv2f32(<2 x float> %x) {
 ; CHECK-NEXT:    call logf
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r19, 63, 32
-; CHECK-NEXT:    lq $r18r19 = 0[$r12]
+; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 16[$r12]
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %tmp = call <2 x float> @llvm.log.v2f32(<2 x float> %x)
@@ -91,33 +91,33 @@ define <2 x double> @logv2f64(<2 x double> %x) {
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    sd 16[$r12] = $r16
+; CHECK-NEXT:    .cfi_register 67, 16
+; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -16
-; CHECK-NEXT:    sd 8[$r12] = $r20
+; CHECK-NEXT:    .cfi_offset 67, -8
+; CHECK-NEXT:    sd 16[$r12] = $r20
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 20, -24
-; CHECK-NEXT:    sd 0[$r12] = $r18
+; CHECK-NEXT:    .cfi_offset 20, -16
+; CHECK-NEXT:    sd 8[$r12] = $r18
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    call log
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 18, -32
+; CHECK-NEXT:    .cfi_offset 18, -24
 ; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    call log
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r20
-; CHECK-NEXT:    ld $r18 = 0[$r12]
+; CHECK-NEXT:    ld $r18 = 8[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r20 = 8[$r12]
+; CHECK-NEXT:    ld $r20 = 16[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 16[$r12]
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %tmp = call <2 x double> @llvm.log.v2f64(<2 x double> %x)

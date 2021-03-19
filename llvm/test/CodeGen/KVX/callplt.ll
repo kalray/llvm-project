@@ -14,18 +14,19 @@ define i64 @foo(double*, double*, double*, { i32, [3 x i64], [3 x i64], [3 x i64
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 64
-; CHECK-NEXT:    sd 32[$r12] = $r16
+; CHECK-NEXT:    .cfi_register 67, 16
+; CHECK-NEXT:    sd 56[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -32
-; CHECK-NEXT:    sq 16[$r12] = $r20r21
+; CHECK-NEXT:    .cfi_offset 67, -8
+; CHECK-NEXT:    sq 40[$r12] = $r20r21
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 21, -40
-; CHECK-NEXT:    .cfi_offset 20, -48
-; CHECK-NEXT:    sq 0[$r12] = $r18r19
+; CHECK-NEXT:    .cfi_offset 20, -16
+; CHECK-NEXT:    .cfi_offset 21, -24
+; CHECK-NEXT:    sq 24[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 19, -56
-; CHECK-NEXT:    .cfi_offset 18, -64
+; CHECK-NEXT:    .cfi_offset 18, -32
+; CHECK-NEXT:    .cfi_offset 19, -40
 ; CHECK-NEXT:    ld $r20 = 56[$r3]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r21 = 32[$r3]
@@ -39,16 +40,15 @@ define i64 @foo(double*, double*, double*, { i32, [3 x i64], [3 x i64], [3 x i64
 ; CHECK-NEXT:    maddd $r21 = $r20, $r18
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r0 = $r21, $r19
-; CHECK-NEXT:    lq $r18r19 = 0[$r12]
+; CHECK-NEXT:    lq $r18r19 = 24[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lq $r20r21 = 16[$r12]
+; CHECK-NEXT:    lq $r20r21 = 40[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 32[$r12]
+; CHECK-NEXT:    ld $r16 = 56[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 64
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %8 = getelementptr { i32, [3 x i64], [3 x i64], [3 x i64], i8*, i32*, i32 }, { i32, [3 x i64], [3 x i64], [3 x i64], i8*, i32*, i32 }* %3, i64 0, i32 3, i64 0
