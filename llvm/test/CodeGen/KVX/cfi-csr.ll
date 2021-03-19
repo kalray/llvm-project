@@ -16,14 +16,20 @@ define i64 @f_1_nopack() local_unnamed_addr #0 !dbg !16 {
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
+; CHECK-NEXT:    .cfi_register 67, 16
 ; CHECK-NEXT:    .loc 1 8 12 prologue_end # cfi-csr.c:8:12
-; CHECK-NEXT:    sd 8[$r12] = $r16
+; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -24
-; CHECK-NEXT:    sd 0[$r12] = $r18
+; CHECK-NEXT:    .cfi_offset 67, -8
+; CHECK-NEXT:    sd 16[$r12] = $r14
+; CHECK-NEXT:    addd $r14 = $r12, 16
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_offset 14, -16
+; CHECK-NEXT:    .cfi_def_cfa 14, 16
+; CHECK-NEXT:    sd 8[$r12] = $r18
 ; CHECK-NEXT:    make $r0 = v
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 18, -32
+; CHECK-NEXT:    .cfi_offset 18, -24
 ; CHECK-NEXT:  .Ltmp0:
 ; CHECK-NEXT:    #DEBUG_VALUE: f_1_nopack:a <- $r18
 ; CHECK-NEXT:    ld $r18 = 0[$r0]
@@ -32,14 +38,17 @@ define i64 @f_1_nopack() local_unnamed_addr #0 !dbg !16 {
 ; CHECK-NEXT:  .Ltmp1:
 ; CHECK-NEXT:    .loc 1 12 3 # cfi-csr.c:12:3
 ; CHECK-NEXT:    copyd $r0 = $r18
-; CHECK-NEXT:    ld $r18 = 0[$r12]
+; CHECK-NEXT:    addd $r12 = $r14, -16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 8[$r12]
+; CHECK-NEXT:    ld $r18 = 8[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r14 = 16[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp2:
@@ -66,14 +75,20 @@ define i64 @f_2_pairpack() local_unnamed_addr #0 !dbg !29 {
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    sd 16[$r12] = $r16
+; CHECK-NEXT:    .cfi_register 67, 16
+; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -16
+; CHECK-NEXT:    .cfi_offset 67, -8
+; CHECK-NEXT:    sd 16[$r12] = $r14
+; CHECK-NEXT:    addd $r14 = $r12, 16
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_offset 14, -16
+; CHECK-NEXT:    .cfi_def_cfa 14, 16
 ; CHECK-NEXT:    sq 0[$r12] = $r18r19
 ; CHECK-NEXT:    make $r0 = v
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 19, -24
-; CHECK-NEXT:    .cfi_offset 18, -32
+; CHECK-NEXT:    .cfi_offset 18, -24
+; CHECK-NEXT:    .cfi_offset 19, -32
 ; CHECK-NEXT:  .Ltmp3:
 ; CHECK-NEXT:    .loc 1 29 12 prologue_end # cfi-csr.c:29:12
 ; CHECK-NEXT:    ld $r18 = 0[$r0]
@@ -88,16 +103,19 @@ define i64 @f_2_pairpack() local_unnamed_addr #0 !dbg !29 {
 ; CHECK-NEXT:  .Ltmp5:
 ; CHECK-NEXT:    .loc 1 34 12 # cfi-csr.c:34:12
 ; CHECK-NEXT:    addd $r0 = $r19, $r18
+; CHECK-NEXT:    addd $r12 = $r14, -16
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .loc 1 34 3 is_stmt 0 # cfi-csr.c:34:3
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp6:
-; CHECK-NEXT:    .loc 1 34 3 is_stmt 0 # cfi-csr.c:34:3
-; CHECK-NEXT:    ld $r16 = 16[$r12]
+; CHECK-NEXT:    ld $r14 = 16[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp7:
@@ -117,21 +135,27 @@ define i64 @f_3_pairpack() local_unnamed_addr #0 !dbg !39 {
 ; CHECK-NEXT:    .loc 1 51 0 is_stmt 1 # cfi-csr.c:51:0
 ; CHECK-NEXT:    .cfi_startproc
 ; CHECK-NEXT:  # %bb.0: # %entry
-; CHECK-NEXT:    addd $r12 = $r12, -32
+; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    sd 24[$r12] = $r16
+; CHECK-NEXT:    .cfi_def_cfa_offset 64
+; CHECK-NEXT:    .cfi_register 67, 16
+; CHECK-NEXT:    sd 56[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 67, -8
-; CHECK-NEXT:    sd 16[$r12] = $r20
+; CHECK-NEXT:    sd 48[$r12] = $r14
+; CHECK-NEXT:    addd $r14 = $r12, 48
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 20, -16
-; CHECK-NEXT:    sq 0[$r12] = $r18r19
+; CHECK-NEXT:    .cfi_offset 14, -16
+; CHECK-NEXT:    .cfi_def_cfa 14, 16
+; CHECK-NEXT:    sd 40[$r12] = $r20
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_offset 20, -24
+; CHECK-NEXT:    sq 24[$r12] = $r18r19
 ; CHECK-NEXT:    make $r0 = v
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 19, -24
 ; CHECK-NEXT:    .cfi_offset 18, -32
+; CHECK-NEXT:    .cfi_offset 19, -40
 ; CHECK-NEXT:  .Ltmp8:
 ; CHECK-NEXT:    .loc 1 52 12 prologue_end # cfi-csr.c:52:12
 ; CHECK-NEXT:    ld $r18 = 0[$r0]
@@ -151,20 +175,24 @@ define i64 @f_3_pairpack() local_unnamed_addr #0 !dbg !39 {
 ; CHECK-NEXT:  .Ltmp11:
 ; CHECK-NEXT:    .loc 1 58 12 # cfi-csr.c:58:12
 ; CHECK-NEXT:    addd $r0 = $r19, $r18
-; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .Ltmp12:
 ; CHECK-NEXT:    .loc 1 58 16 is_stmt 0 # cfi-csr.c:58:16
 ; CHECK-NEXT:    addd $r0 = $r0, $r20
-; CHECK-NEXT:    ld $r20 = 16[$r12]
+; CHECK-NEXT:    addd $r12 = $r14, -48
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 58 3 # cfi-csr.c:58:3
-; CHECK-NEXT:    ld $r16 = 24[$r12]
+; CHECK-NEXT:    lq $r18r19 = 24[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  .Ltmp12:
+; CHECK-NEXT:    ld $r20 = 40[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r14 = 48[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r16 = 56[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 32
+; CHECK-NEXT:    addd $r12 = $r12, 64
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp13:
@@ -191,18 +219,24 @@ define i64 @f_4_quadpack() local_unnamed_addr #0 !dbg !52 {
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 64
-; CHECK-NEXT:    sd 32[$r12] = $r16
+; CHECK-NEXT:    .cfi_register 67, 16
+; CHECK-NEXT:    sd 56[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -32
-; CHECK-NEXT:    sq 16[$r12] = $r20r21
+; CHECK-NEXT:    .cfi_offset 67, -8
+; CHECK-NEXT:    sd 48[$r12] = $r14
+; CHECK-NEXT:    addd $r14 = $r12, 48
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 21, -40
-; CHECK-NEXT:    .cfi_offset 20, -48
-; CHECK-NEXT:    sq 0[$r12] = $r18r19
+; CHECK-NEXT:    .cfi_offset 14, -16
+; CHECK-NEXT:    .cfi_def_cfa 14, 16
+; CHECK-NEXT:    sq 32[$r12] = $r20r21
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_offset 20, -24
+; CHECK-NEXT:    .cfi_offset 21, -32
+; CHECK-NEXT:    sq 16[$r12] = $r18r19
 ; CHECK-NEXT:    make $r0 = v
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 19, -56
-; CHECK-NEXT:    .cfi_offset 18, -64
+; CHECK-NEXT:    .cfi_offset 18, -40
+; CHECK-NEXT:    .cfi_offset 19, -48
 ; CHECK-NEXT:  .Ltmp14:
 ; CHECK-NEXT:    .loc 1 80 12 prologue_end # cfi-csr.c:80:12
 ; CHECK-NEXT:    ld $r18 = 0[$r0]
@@ -227,24 +261,28 @@ define i64 @f_4_quadpack() local_unnamed_addr #0 !dbg !52 {
 ; CHECK-NEXT:  .Ltmp18:
 ; CHECK-NEXT:    .loc 1 87 12 # cfi-csr.c:87:12
 ; CHECK-NEXT:    addd $r0 = $r19, $r18
-; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .Ltmp19:
 ; CHECK-NEXT:    .loc 1 87 16 is_stmt 0 # cfi-csr.c:87:16
 ; CHECK-NEXT:    addd $r0 = $r0, $r20
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 87 20 # cfi-csr.c:87:20
 ; CHECK-NEXT:    addd $r0 = $r0, $r21
-; CHECK-NEXT:    lq $r20r21 = 16[$r12]
+; CHECK-NEXT:    addd $r12 = $r14, -48
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .loc 1 87 3 # cfi-csr.c:87:3
+; CHECK-NEXT:    lq $r18r19 = 16[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  .Ltmp19:
+; CHECK-NEXT:    lq $r20r21 = 32[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp20:
-; CHECK-NEXT:    .loc 1 87 3 # cfi-csr.c:87:3
-; CHECK-NEXT:    ld $r16 = 32[$r12]
+; CHECK-NEXT:    ld $r14 = 48[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r16 = 56[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 64
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp21:
@@ -274,21 +312,27 @@ define i64 @f_5_quadpack() local_unnamed_addr #0 !dbg !68 {
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 64
-; CHECK-NEXT:    sd 40[$r12] = $r16
+; CHECK-NEXT:    .cfi_register 67, 16
+; CHECK-NEXT:    sd 56[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -24
-; CHECK-NEXT:    sd 32[$r12] = $r22
+; CHECK-NEXT:    .cfi_offset 67, -8
+; CHECK-NEXT:    sd 48[$r12] = $r14
+; CHECK-NEXT:    addd $r14 = $r12, 48
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 22, -32
-; CHECK-NEXT:    sq 16[$r12] = $r20r21
+; CHECK-NEXT:    .cfi_offset 14, -16
+; CHECK-NEXT:    .cfi_def_cfa 14, 16
+; CHECK-NEXT:    sd 40[$r12] = $r22
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_offset 22, -24
+; CHECK-NEXT:    sq 24[$r12] = $r20r21
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_offset 20, -32
 ; CHECK-NEXT:    .cfi_offset 21, -40
-; CHECK-NEXT:    .cfi_offset 20, -48
-; CHECK-NEXT:    sq 0[$r12] = $r18r19
+; CHECK-NEXT:    sq 8[$r12] = $r18r19
 ; CHECK-NEXT:    make $r0 = v
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_offset 18, -48
 ; CHECK-NEXT:    .cfi_offset 19, -56
-; CHECK-NEXT:    .cfi_offset 18, -64
 ; CHECK-NEXT:  .Ltmp22:
 ; CHECK-NEXT:    .loc 1 108 12 prologue_end # cfi-csr.c:108:12
 ; CHECK-NEXT:    ld $r18 = 0[$r0]
@@ -318,28 +362,33 @@ define i64 @f_5_quadpack() local_unnamed_addr #0 !dbg !68 {
 ; CHECK-NEXT:  .Ltmp27:
 ; CHECK-NEXT:    .loc 1 116 12 # cfi-csr.c:116:12
 ; CHECK-NEXT:    addd $r0 = $r19, $r18
-; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .Ltmp28:
 ; CHECK-NEXT:    .loc 1 116 16 is_stmt 0 # cfi-csr.c:116:16
 ; CHECK-NEXT:    addd $r0 = $r0, $r20
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 116 20 # cfi-csr.c:116:20
 ; CHECK-NEXT:    addd $r0 = $r0, $r21
-; CHECK-NEXT:    lq $r20r21 = 16[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .Ltmp29:
 ; CHECK-NEXT:    .loc 1 116 24 # cfi-csr.c:116:24
 ; CHECK-NEXT:    addd $r0 = $r0, $r22
-; CHECK-NEXT:    ld $r22 = 32[$r12]
+; CHECK-NEXT:    addd $r12 = $r14, -48
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 116 3 # cfi-csr.c:116:3
-; CHECK-NEXT:    ld $r16 = 40[$r12]
+; CHECK-NEXT:    lq $r18r19 = 8[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  .Ltmp28:
+; CHECK-NEXT:    lq $r20r21 = 24[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  .Ltmp29:
+; CHECK-NEXT:    ld $r22 = 40[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r14 = 48[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r16 = 56[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 64
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp30:
@@ -372,20 +421,26 @@ define i64 @f_6_1quad1pairpack() local_unnamed_addr #0 !dbg !87 {
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 64
-; CHECK-NEXT:    sd 48[$r12] = $r16
+; CHECK-NEXT:    .cfi_register 67, 16
+; CHECK-NEXT:    sd 56[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -16
+; CHECK-NEXT:    .cfi_offset 67, -8
+; CHECK-NEXT:    sd 48[$r12] = $r14
+; CHECK-NEXT:    addd $r14 = $r12, 48
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_offset 14, -16
+; CHECK-NEXT:    .cfi_def_cfa 14, 16
 ; CHECK-NEXT:    so 16[$r12] = $r20r21r22r23
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 23, -24
-; CHECK-NEXT:    .cfi_offset 22, -32
-; CHECK-NEXT:    .cfi_offset 21, -40
-; CHECK-NEXT:    .cfi_offset 20, -48
+; CHECK-NEXT:    .cfi_offset 20, -24
+; CHECK-NEXT:    .cfi_offset 21, -32
+; CHECK-NEXT:    .cfi_offset 22, -40
+; CHECK-NEXT:    .cfi_offset 23, -48
 ; CHECK-NEXT:    sq 0[$r12] = $r18r19
 ; CHECK-NEXT:    make $r0 = v
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 19, -56
-; CHECK-NEXT:    .cfi_offset 18, -64
+; CHECK-NEXT:    .cfi_offset 18, -56
+; CHECK-NEXT:    .cfi_offset 19, -64
 ; CHECK-NEXT:  .Ltmp31:
 ; CHECK-NEXT:    .loc 1 141 12 prologue_end # cfi-csr.c:141:12
 ; CHECK-NEXT:    ld $r18 = 0[$r0]
@@ -420,9 +475,7 @@ define i64 @f_6_1quad1pairpack() local_unnamed_addr #0 !dbg !87 {
 ; CHECK-NEXT:  .Ltmp37:
 ; CHECK-NEXT:    .loc 1 150 12 # cfi-csr.c:150:12
 ; CHECK-NEXT:    addd $r0 = $r19, $r18
-; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .Ltmp38:
 ; CHECK-NEXT:    .loc 1 150 16 is_stmt 0 # cfi-csr.c:150:16
 ; CHECK-NEXT:    addd $r0 = $r0, $r20
 ; CHECK-NEXT:    ;;
@@ -434,16 +487,22 @@ define i64 @f_6_1quad1pairpack() local_unnamed_addr #0 !dbg !87 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 150 28 # cfi-csr.c:150:28
 ; CHECK-NEXT:    addd $r0 = $r0, $r23
+; CHECK-NEXT:    addd $r12 = $r14, -48
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .loc 1 150 3 # cfi-csr.c:150:3
+; CHECK-NEXT:    lq $r18r19 = 0[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  .Ltmp38:
 ; CHECK-NEXT:    lo $r20r21r22r23 = 16[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp39:
-; CHECK-NEXT:    .loc 1 150 3 # cfi-csr.c:150:3
-; CHECK-NEXT:    ld $r16 = 48[$r12]
+; CHECK-NEXT:    ld $r14 = 48[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r16 = 56[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 64
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp40:
@@ -479,32 +538,38 @@ define i64 @f_14_3quad1pairpack() local_unnamed_addr #0 !dbg !109 {
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 128
-; CHECK-NEXT:    sd 112[$r12] = $r16
+; CHECK-NEXT:    .cfi_register 67, 16
+; CHECK-NEXT:    sd 120[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -16
+; CHECK-NEXT:    .cfi_offset 67, -8
+; CHECK-NEXT:    sd 112[$r12] = $r14
+; CHECK-NEXT:    addd $r14 = $r12, 112
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_offset 14, -16
+; CHECK-NEXT:    .cfi_def_cfa 14, 16
 ; CHECK-NEXT:    so 80[$r12] = $r28r29r30r31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 31, -24
-; CHECK-NEXT:    .cfi_offset 30, -32
-; CHECK-NEXT:    .cfi_offset 29, -40
-; CHECK-NEXT:    .cfi_offset 28, -48
+; CHECK-NEXT:    .cfi_offset 28, -24
+; CHECK-NEXT:    .cfi_offset 29, -32
+; CHECK-NEXT:    .cfi_offset 30, -40
+; CHECK-NEXT:    .cfi_offset 31, -48
 ; CHECK-NEXT:    so 48[$r12] = $r24r25r26r27
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 27, -56
-; CHECK-NEXT:    .cfi_offset 26, -64
-; CHECK-NEXT:    .cfi_offset 25, -72
-; CHECK-NEXT:    .cfi_offset 24, -80
+; CHECK-NEXT:    .cfi_offset 24, -56
+; CHECK-NEXT:    .cfi_offset 25, -64
+; CHECK-NEXT:    .cfi_offset 26, -72
+; CHECK-NEXT:    .cfi_offset 27, -80
 ; CHECK-NEXT:    so 16[$r12] = $r20r21r22r23
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 23, -88
-; CHECK-NEXT:    .cfi_offset 22, -96
-; CHECK-NEXT:    .cfi_offset 21, -104
-; CHECK-NEXT:    .cfi_offset 20, -112
+; CHECK-NEXT:    .cfi_offset 20, -88
+; CHECK-NEXT:    .cfi_offset 21, -96
+; CHECK-NEXT:    .cfi_offset 22, -104
+; CHECK-NEXT:    .cfi_offset 23, -112
 ; CHECK-NEXT:    sq 0[$r12] = $r18r19
 ; CHECK-NEXT:    make $r0 = v
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 19, -120
-; CHECK-NEXT:    .cfi_offset 18, -128
+; CHECK-NEXT:    .cfi_offset 18, -120
+; CHECK-NEXT:    .cfi_offset 19, -128
 ; CHECK-NEXT:  .Ltmp41:
 ; CHECK-NEXT:    .loc 1 175 12 prologue_end # cfi-csr.c:175:12
 ; CHECK-NEXT:    ld $r18 = 0[$r0]
@@ -579,9 +644,7 @@ define i64 @f_14_3quad1pairpack() local_unnamed_addr #0 !dbg !109 {
 ; CHECK-NEXT:  .Ltmp55:
 ; CHECK-NEXT:    .loc 1 192 12 # cfi-csr.c:192:12
 ; CHECK-NEXT:    addd $r0 = $r19, $r18
-; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .Ltmp56:
 ; CHECK-NEXT:    .loc 1 192 16 is_stmt 0 # cfi-csr.c:192:16
 ; CHECK-NEXT:    addd $r0 = $r0, $r20
 ; CHECK-NEXT:    ;;
@@ -593,9 +656,7 @@ define i64 @f_14_3quad1pairpack() local_unnamed_addr #0 !dbg !109 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 192 28 # cfi-csr.c:192:28
 ; CHECK-NEXT:    addd $r0 = $r0, $r23
-; CHECK-NEXT:    lo $r20r21r22r23 = 16[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .Ltmp57:
 ; CHECK-NEXT:    .loc 1 192 32 # cfi-csr.c:192:32
 ; CHECK-NEXT:    addd $r0 = $r0, $r24
 ; CHECK-NEXT:    ;;
@@ -607,9 +668,7 @@ define i64 @f_14_3quad1pairpack() local_unnamed_addr #0 !dbg !109 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 192 44 # cfi-csr.c:192:44
 ; CHECK-NEXT:    addd $r0 = $r0, $r27
-; CHECK-NEXT:    lo $r24r25r26r27 = 48[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .Ltmp58:
 ; CHECK-NEXT:    .loc 1 192 48 # cfi-csr.c:192:48
 ; CHECK-NEXT:    addd $r0 = $r0, $r28
 ; CHECK-NEXT:    ;;
@@ -621,16 +680,28 @@ define i64 @f_14_3quad1pairpack() local_unnamed_addr #0 !dbg !109 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 192 60 # cfi-csr.c:192:60
 ; CHECK-NEXT:    addd $r0 = $r0, $r31
+; CHECK-NEXT:    addd $r12 = $r14, -112
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .loc 1 192 3 # cfi-csr.c:192:3
+; CHECK-NEXT:    lq $r18r19 = 0[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  .Ltmp56:
+; CHECK-NEXT:    lo $r20r21r22r23 = 16[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  .Ltmp57:
+; CHECK-NEXT:    lo $r24r25r26r27 = 48[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  .Ltmp58:
 ; CHECK-NEXT:    lo $r28r29r30r31 = 80[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp59:
-; CHECK-NEXT:    .loc 1 192 3 # cfi-csr.c:192:3
-; CHECK-NEXT:    ld $r16 = 112[$r12]
+; CHECK-NEXT:    ld $r14 = 112[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r16 = 120[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 128
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp60:
@@ -686,36 +757,42 @@ define i64 @f_15_3quad1pairpack() local_unnamed_addr #0 !dbg !155 {
 ; CHECK-NEXT:    .loc 1 230 0 is_stmt 1 # cfi-csr.c:230:0
 ; CHECK-NEXT:    .cfi_startproc
 ; CHECK-NEXT:  # %bb.0: # %entry
-; CHECK-NEXT:    addd $r12 = $r12, -128
+; CHECK-NEXT:    addd $r12 = $r12, -160
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 128
-; CHECK-NEXT:    sd 112[$r12] = $r16
+; CHECK-NEXT:    .cfi_def_cfa_offset 160
+; CHECK-NEXT:    .cfi_register 67, 16
+; CHECK-NEXT:    sd 152[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -16
-; CHECK-NEXT:    so 80[$r12] = $r28r29r30r31
+; CHECK-NEXT:    .cfi_offset 67, -8
+; CHECK-NEXT:    sd 144[$r12] = $r14
+; CHECK-NEXT:    addd $r14 = $r12, 144
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 31, -24
-; CHECK-NEXT:    .cfi_offset 30, -32
-; CHECK-NEXT:    .cfi_offset 29, -40
-; CHECK-NEXT:    .cfi_offset 28, -48
-; CHECK-NEXT:    so 48[$r12] = $r24r25r26r27
+; CHECK-NEXT:    .cfi_offset 14, -16
+; CHECK-NEXT:    .cfi_def_cfa 14, 16
+; CHECK-NEXT:    so 112[$r12] = $r28r29r30r31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 27, -56
-; CHECK-NEXT:    .cfi_offset 26, -64
-; CHECK-NEXT:    .cfi_offset 25, -72
-; CHECK-NEXT:    .cfi_offset 24, -80
-; CHECK-NEXT:    so 16[$r12] = $r20r21r22r23
+; CHECK-NEXT:    .cfi_offset 28, -24
+; CHECK-NEXT:    .cfi_offset 29, -32
+; CHECK-NEXT:    .cfi_offset 30, -40
+; CHECK-NEXT:    .cfi_offset 31, -48
+; CHECK-NEXT:    so 80[$r12] = $r24r25r26r27
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 23, -88
-; CHECK-NEXT:    .cfi_offset 22, -96
-; CHECK-NEXT:    .cfi_offset 21, -104
-; CHECK-NEXT:    .cfi_offset 20, -112
-; CHECK-NEXT:    sq 0[$r12] = $r18r19
+; CHECK-NEXT:    .cfi_offset 24, -56
+; CHECK-NEXT:    .cfi_offset 25, -64
+; CHECK-NEXT:    .cfi_offset 26, -72
+; CHECK-NEXT:    .cfi_offset 27, -80
+; CHECK-NEXT:    so 48[$r12] = $r20r21r22r23
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_offset 20, -88
+; CHECK-NEXT:    .cfi_offset 21, -96
+; CHECK-NEXT:    .cfi_offset 22, -104
+; CHECK-NEXT:    .cfi_offset 23, -112
+; CHECK-NEXT:    sq 32[$r12] = $r18r19
 ; CHECK-NEXT:    make $r0 = v
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 19, -120
-; CHECK-NEXT:    .cfi_offset 18, -128
+; CHECK-NEXT:    .cfi_offset 18, -120
+; CHECK-NEXT:    .cfi_offset 19, -128
 ; CHECK-NEXT:  .Ltmp61:
 ; CHECK-NEXT:    .loc 1 231 12 prologue_end # cfi-csr.c:231:12
 ; CHECK-NEXT:    ld $r1 = 0[$r0]
@@ -723,10 +800,10 @@ define i64 @f_15_3quad1pairpack() local_unnamed_addr #0 !dbg !155 {
 ; CHECK-NEXT:  .Ltmp62:
 ; CHECK-NEXT:    #DEBUG_VALUE: f_15_3quad1pairpack:a <- $r1
 ; CHECK-NEXT:    .loc 1 232 12 # cfi-csr.c:232:12
-; CHECK-NEXT:    sd 120[$r12] = $r1
+; CHECK-NEXT:    sd -120[$r14] = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp63:
-; CHECK-NEXT:    #DEBUG_VALUE: f_15_3quad1pairpack:a <- [DW_OP_constu 8, DW_OP_minus] [$r12+0]
+; CHECK-NEXT:    #DEBUG_VALUE: f_15_3quad1pairpack:a <- [DW_OP_constu 136, DW_OP_minus] [$r14+0]
 ; CHECK-NEXT:    ld $r19 = 8[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp64:
@@ -798,7 +875,7 @@ define i64 @f_15_3quad1pairpack() local_unnamed_addr #0 !dbg !155 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp77:
 ; CHECK-NEXT:    .loc 1 249 12 # cfi-csr.c:249:12
-; CHECK-NEXT:    ld $r0 = 120[$r12]
+; CHECK-NEXT:    ld $r0 = -120[$r14]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp78:
 ; CHECK-NEXT:    #DEBUG_VALUE: f_15_3quad1pairpack:a <- $r0
@@ -843,25 +920,28 @@ define i64 @f_15_3quad1pairpack() local_unnamed_addr #0 !dbg !155 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 249 64 # cfi-csr.c:249:64
 ; CHECK-NEXT:    addd $r0 = $r0, $r18
-; CHECK-NEXT:    lq $r18r19 = 0[$r12]
+; CHECK-NEXT:    addd $r12 = $r14, -144
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .loc 1 249 3 # cfi-csr.c:249:3
+; CHECK-NEXT:    lq $r18r19 = 32[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp80:
-; CHECK-NEXT:    .loc 1 249 3 # cfi-csr.c:249:3
-; CHECK-NEXT:    lo $r20r21r22r23 = 16[$r12]
+; CHECK-NEXT:    lo $r20r21r22r23 = 48[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp81:
-; CHECK-NEXT:    lo $r24r25r26r27 = 48[$r12]
+; CHECK-NEXT:    lo $r24r25r26r27 = 80[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp82:
-; CHECK-NEXT:    lo $r28r29r30r31 = 80[$r12]
+; CHECK-NEXT:    lo $r28r29r30r31 = 112[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp83:
-; CHECK-NEXT:    ld $r16 = 112[$r12]
+; CHECK-NEXT:    ld $r14 = 144[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r16 = 152[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 128
+; CHECK-NEXT:    addd $r12 = $r12, 160
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp84:
@@ -926,66 +1006,72 @@ define i32 @fsum6_sum(i32 %first, i32 %second, ...) local_unnamed_addr #0 !dbg !
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 128
-; CHECK-NEXT:    sd 8[$r12] = $r16
+; CHECK-NEXT:    .cfi_register 67, 16
+; CHECK-NEXT:    sd 40[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -120
+; CHECK-NEXT:    .cfi_offset 67, -88
+; CHECK-NEXT:    sd 32[$r12] = $r14
+; CHECK-NEXT:    addd $r14 = $r12, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_offset 14, -96
+; CHECK-NEXT:    .cfi_def_cfa 14, 96
 ; CHECK-NEXT:  .Ltmp85:
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:result <- undef
-; CHECK-NEXT:    sd 0[$r12] = $r18
-; CHECK-NEXT:    addd $r15 = $r12, 48
+; CHECK-NEXT:    sd 24[$r12] = $r18
+; CHECK-NEXT:    addd $r15 = $r14, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 18, -128
+; CHECK-NEXT:    .cfi_offset 18, -104
 ; CHECK-NEXT:  .Ltmp86:
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:result <- $r18
 ; CHECK-NEXT:    .loc 1 297 22 prologue_end # cfi-csr.c:297:22
-; CHECK-NEXT:    sd 120[$r12] = $r11
+; CHECK-NEXT:    sd 88[$r14] = $r11
 ; CHECK-NEXT:    addw $r18 = $r1, $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp87:
 ; CHECK-NEXT:    .loc 1 0 22 is_stmt 0 # cfi-csr.c:0:22
-; CHECK-NEXT:    sd 112[$r12] = $r10
+; CHECK-NEXT:    sd 80[$r14] = $r10
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 104[$r12] = $r9
+; CHECK-NEXT:    sd 72[$r14] = $r9
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp88:
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args <- $r8
 ; CHECK-NEXT:    .loc 1 302 15 is_stmt 1 # cfi-csr.c:302:15
-; CHECK-NEXT:    sd 96[$r12] = $r8
+; CHECK-NEXT:    sd 64[$r14] = $r8
 ; CHECK-NEXT:    ord $r8 = $r15, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp89:
-; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args2 <- [DW_OP_constu 104, DW_OP_minus, DW_OP_deref] $r12
-; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args <- [DW_OP_constu 112, DW_OP_minus, DW_OP_deref] $r12
+; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args2 <- [DW_OP_constu 120, DW_OP_minus, DW_OP_deref] $r14
+; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args <- [DW_OP_constu 112, DW_OP_minus, DW_OP_deref] $r14
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args <- $r15
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:second <- $r1
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:first <- $r0
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:v <- $r7
 ; CHECK-NEXT:    .loc 1 0 0 is_stmt 0 # cfi-csr.c:0:0
-; CHECK-NEXT:    sd 88[$r12] = $r7
+; CHECK-NEXT:    sd 56[$r14] = $r7
 ; CHECK-NEXT:    zxwd $r7 = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp90:
-; CHECK-NEXT:    sd 80[$r12] = $r6
+; CHECK-NEXT:    sd 48[$r14] = $r6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 72[$r12] = $r5
+; CHECK-NEXT:    sd 40[$r14] = $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 64[$r12] = $r4
+; CHECK-NEXT:    sd 32[$r14] = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 56[$r12] = $r3
+; CHECK-NEXT:    sd 24[$r14] = $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 48[$r12] = $r2
+; CHECK-NEXT:    sd 16[$r14] = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 300 3 is_stmt 1 # cfi-csr.c:300:3
-; CHECK-NEXT:    sd 24[$r12] = $r15
+; CHECK-NEXT:    sd -24[$r14] = $r15
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 302 15 # cfi-csr.c:302:15
-; CHECK-NEXT:    sd 16[$r12] = $r8
+; CHECK-NEXT:    sd -16[$r14] = $r8
 ; CHECK-NEXT:    cb.wlez $r7 ? .LBB8_2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp91:
 ; CHECK-NEXT:  .LBB8_1: # %while.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args2 <- [DW_OP_constu 104, DW_OP_minus, DW_OP_deref] $r12
+; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args2 <- [DW_OP_constu 120, DW_OP_minus, DW_OP_deref] $r14
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:result <- $r18
 ; CHECK-NEXT:    .loc 1 303 15 # cfi-csr.c:303:15
 ; CHECK-NEXT:    copyd $r0 = $r7
@@ -995,7 +1081,7 @@ define i32 @fsum6_sum(i32 %first, i32 %second, ...) local_unnamed_addr #0 !dbg !
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args <- $r1
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:result <- $r18
 ; CHECK-NEXT:    .loc 1 302 15 # cfi-csr.c:302:15
-; CHECK-NEXT:    ld $r1 = 16[$r12]
+; CHECK-NEXT:    ld $r1 = -16[$r14]
 ; CHECK-NEXT:    addw $r18 = $r0, $r18
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp93:
@@ -1003,7 +1089,7 @@ define i32 @fsum6_sum(i32 %first, i32 %second, ...) local_unnamed_addr #0 !dbg !
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp94:
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args <- $r2
-; CHECK-NEXT:    sd 16[$r12] = $r2
+; CHECK-NEXT:    sd -16[$r14] = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r7 = 0[$r1]
 ; CHECK-NEXT:    ;;
@@ -1014,11 +1100,11 @@ define i32 @fsum6_sum(i32 %first, i32 %second, ...) local_unnamed_addr #0 !dbg !
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp96:
 ; CHECK-NEXT:  .LBB8_2: # %while.end
-; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args2 <- [DW_OP_constu 104, DW_OP_minus, DW_OP_deref] $r12
+; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args2 <- [DW_OP_constu 120, DW_OP_minus, DW_OP_deref] $r14
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:result <- $r18
-; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args <- [DW_OP_constu 112, DW_OP_minus, DW_OP_deref] $r12
+; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args <- [DW_OP_constu 112, DW_OP_minus, DW_OP_deref] $r14
 ; CHECK-NEXT:    .loc 1 306 15 is_stmt 1 # cfi-csr.c:306:15
-; CHECK-NEXT:    ld $r0 = 24[$r12]
+; CHECK-NEXT:    ld $r0 = -24[$r14]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 306 3 is_stmt 0 # cfi-csr.c:306:3
 ; CHECK-NEXT:    addd $r1 = $r0, 8
@@ -1027,14 +1113,14 @@ define i32 @fsum6_sum(i32 %first, i32 %second, ...) local_unnamed_addr #0 !dbg !
 ; CHECK-NEXT:  .Ltmp97:
 ; CHECK-NEXT:  .LBB8_3: # %while.cond4
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args <- [DW_OP_constu 112, DW_OP_minus, DW_OP_deref] $r12
-; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args2 <- [DW_OP_constu 104, DW_OP_minus, DW_OP_deref] $r12
+; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args <- [DW_OP_constu 112, DW_OP_minus, DW_OP_deref] $r14
+; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args2 <- [DW_OP_constu 120, DW_OP_minus, DW_OP_deref] $r14
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:result <- $r18
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:result <- undef
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args2 <- undef
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args2 <- [DW_OP_plus_uconst 8, DW_OP_stack_value] undef
 ; CHECK-NEXT:    .loc 1 306 15 # cfi-csr.c:306:15
-; CHECK-NEXT:    sd 24[$r12] = $r1
+; CHECK-NEXT:    sd -24[$r14] = $r1
 ; CHECK-NEXT:    addw $r0 = $r0, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp98:
@@ -1049,23 +1135,27 @@ define i32 @fsum6_sum(i32 %first, i32 %second, ...) local_unnamed_addr #0 !dbg !
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp100:
 ; CHECK-NEXT:  # %bb.4: # %while.end11
-; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args <- [DW_OP_constu 112, DW_OP_minus, DW_OP_deref] $r12
-; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args2 <- [DW_OP_constu 104, DW_OP_minus, DW_OP_deref] $r12
+; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args <- [DW_OP_constu 112, DW_OP_minus, DW_OP_deref] $r14
+; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args2 <- [DW_OP_constu 120, DW_OP_minus, DW_OP_deref] $r14
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:result <- $r18
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:result <- undef
-; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args2 <- [DW_OP_constu 104, DW_OP_minus, DW_OP_deref] $r12
+; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args2 <- [DW_OP_constu 120, DW_OP_minus, DW_OP_deref] $r14
 ; CHECK-NEXT:    .loc 1 309 3 is_stmt 1 # cfi-csr.c:309:3
-; CHECK-NEXT:    ld $r18 = 0[$r12]
+; CHECK-NEXT:    addd $r12 = $r14, -32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 8[$r12]
+; CHECK-NEXT:    ld $r18 = 24[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r14 = 32[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  .Ltmp101:
+; CHECK-NEXT:    ld $r16 = 40[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 128
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .Ltmp101:
+; CHECK-NEXT:  .Ltmp102:
 entry:
   %args = alloca i8*, align 8
   %args2 = alloca i8*, align 8

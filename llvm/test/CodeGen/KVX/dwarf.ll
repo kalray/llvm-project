@@ -10,76 +10,86 @@ define i32 @noalign(i32 %n, i32 %n2, i32 %n3) #0 !dbg !10 {
 ; CHECK-NEXT:    .cfi_sections .debug_frame
 ; CHECK-NEXT:    .cfi_startproc
 ; CHECK-NEXT:  # %bb.0: # %entry
-; CHECK-NEXT:    addd $r12 = $r12, -32
+; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
+; CHECK-NEXT:    .cfi_def_cfa_offset 64
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 0[$r12] = $r16
+; CHECK-NEXT:    .cfi_register 67, 16
+; CHECK-NEXT:    sd 56[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -32
-; CHECK-NEXT:    sw 8[$r12] = $r0
+; CHECK-NEXT:    .cfi_offset 67, -8
+; CHECK-NEXT:    sd 48[$r12] = $r14
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 12[$r12] = $r1
+; CHECK-NEXT:    .cfi_offset 14, -16
+; CHECK-NEXT:    addd $r14 = $r12, 48
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 16[$r12] = $r2
+; CHECK-NEXT:    .cfi_def_cfa 14, 16
+; CHECK-NEXT:    sw -4[$r14] = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw -8[$r14] = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw -12[$r14] = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r0 = 7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp0:
 ; CHECK-NEXT:    .loc 1 6 7 prologue_end # dwarf.c:6:7
-; CHECK-NEXT:    sw 20[$r12] = $r0
+; CHECK-NEXT:    sw -16[$r14] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r0 = 0x4d2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 7 7 # dwarf.c:7:7
-; CHECK-NEXT:    sw 24[$r12] = $r0
+; CHECK-NEXT:    sw -20[$r14] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 8 8 # dwarf.c:8:8
-; CHECK-NEXT:    lwz $r0 = 8[$r12]
+; CHECK-NEXT:    lwz $r0 = -4[$r14]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 8 5 is_stmt 0 # dwarf.c:8:5
-; CHECK-NEXT:    lwz $r1 = 24[$r12]
+; CHECK-NEXT:    lwz $r1 = -20[$r14]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfw $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 24[$r12] = $r0
+; CHECK-NEXT:    sw -20[$r14] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 9 8 is_stmt 1 # dwarf.c:9:8
-; CHECK-NEXT:    lwz $r0 = 12[$r12]
+; CHECK-NEXT:    lwz $r0 = -8[$r14]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 9 5 is_stmt 0 # dwarf.c:9:5
-; CHECK-NEXT:    lwz $r1 = 24[$r12]
+; CHECK-NEXT:    lwz $r1 = -20[$r14]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addw $r0 = $r1, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 24[$r12] = $r0
+; CHECK-NEXT:    sw -20[$r14] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 10 8 is_stmt 1 # dwarf.c:10:8
-; CHECK-NEXT:    lwz $r0 = 16[$r12]
+; CHECK-NEXT:    lwz $r0 = -12[$r14]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 10 5 is_stmt 0 # dwarf.c:10:5
-; CHECK-NEXT:    lwz $r1 = 24[$r12]
+; CHECK-NEXT:    lwz $r1 = -20[$r14]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mulw $r0 = $r1, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 24[$r12] = $r0
+; CHECK-NEXT:    sw -20[$r14] = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r12, 20
+; CHECK-NEXT:    addd $r0 = $r14, -16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r1 = $r12, 24
+; CHECK-NEXT:    addd $r1 = $r14, -20
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 11 10 is_stmt 1 # dwarf.c:11:10
 ; CHECK-NEXT:    call other
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 11 3 is_stmt 0 # dwarf.c:11:3
-; CHECK-NEXT:    ld $r16 = 0[$r12]
+; CHECK-NEXT:    addd $r12 = $r14, -48
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r14 = 48[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r16 = 56[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r12 = $r12, 32
+; CHECK-NEXT:    addd $r12 = $r12, 64
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp1:
@@ -125,98 +135,93 @@ define i32 @stackrealign1(i32 %n, i32 %n2, i32 %n3) #0 !dbg !32 {
 ; CHECK-NEXT:    .loc 1 31 0 is_stmt 1 # dwarf.c:31:0
 ; CHECK-NEXT:    .cfi_startproc
 ; CHECK-NEXT:  # %bb.0: # %entry
-; CHECK-NEXT:    addd $r12 = $r12, -384
+; CHECK-NEXT:    addd $r12 = $r12, -256
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 384
-; CHECK-NEXT:    copyd $r32 = $r12
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_register 32
-; CHECK-NEXT:    addd $r12 = $r12, 96
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r12 = $r12, -128
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_def_cfa_offset 256
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 8[$r12] = $r16
+; CHECK-NEXT:    .cfi_register 67, 16
+; CHECK-NEXT:    sd 248[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_escape 0x10, 0x43, 0x02, 0x7c, 0x08
-; CHECK-NEXT:    sd 0[$r12] = $r14
+; CHECK-NEXT:    .cfi_offset 67, -8
+; CHECK-NEXT:    sd 240[$r12] = $r14
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_escape 0x10, 0x0e, 0x02, 0x7c, 0x00
-; CHECK-NEXT:    copyd $r14 = $r32
+; CHECK-NEXT:    .cfi_offset 14, -16
+; CHECK-NEXT:    addd $r14 = $r12, 240
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_register 14
-; CHECK-NEXT:    sw 16[$r12] = $r0
+; CHECK-NEXT:    .cfi_def_cfa 14, 16
+; CHECK-NEXT:    sd 232[$r12] = $r31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 20[$r12] = $r1
+; CHECK-NEXT:    .cfi_offset 31, -24
+; CHECK-NEXT:    andd $r31 = $r12, -128
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 24[$r12] = $r2
+; CHECK-NEXT:    sw 228[$r31] = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw 224[$r31] = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw 220[$r31] = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r0 = 7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp2:
 ; CHECK-NEXT:    .loc 1 32 7 prologue_end # dwarf.c:32:7
-; CHECK-NEXT:    sw 28[$r12] = $r0
+; CHECK-NEXT:    sw 216[$r31] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r0 = 0x4d2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 33 20 # dwarf.c:33:20
-; CHECK-NEXT:    sw 128[$r12] = $r0
+; CHECK-NEXT:    sw 128[$r31] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 34 8 # dwarf.c:34:8
-; CHECK-NEXT:    lwz $r0 = 16[$r12]
+; CHECK-NEXT:    lwz $r0 = 228[$r31]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 34 5 is_stmt 0 # dwarf.c:34:5
-; CHECK-NEXT:    lwz $r1 = 128[$r12]
+; CHECK-NEXT:    lwz $r1 = 128[$r31]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfw $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 128[$r12] = $r0
+; CHECK-NEXT:    sw 128[$r31] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 35 8 is_stmt 1 # dwarf.c:35:8
-; CHECK-NEXT:    lwz $r0 = 20[$r12]
+; CHECK-NEXT:    lwz $r0 = 224[$r31]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 35 5 is_stmt 0 # dwarf.c:35:5
-; CHECK-NEXT:    lwz $r1 = 128[$r12]
+; CHECK-NEXT:    lwz $r1 = 128[$r31]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addw $r0 = $r1, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 128[$r12] = $r0
+; CHECK-NEXT:    sw 128[$r31] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 36 8 is_stmt 1 # dwarf.c:36:8
-; CHECK-NEXT:    lwz $r0 = 24[$r12]
+; CHECK-NEXT:    lwz $r0 = 220[$r31]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 36 5 is_stmt 0 # dwarf.c:36:5
-; CHECK-NEXT:    lwz $r1 = 128[$r12]
+; CHECK-NEXT:    lwz $r1 = 128[$r31]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mulw $r0 = $r1, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 128[$r12] = $r0
+; CHECK-NEXT:    sw 128[$r31] = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r12, 28
+; CHECK-NEXT:    addd $r0 = $r31, 216
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r1 = $r12, 128
+; CHECK-NEXT:    addd $r1 = $r31, 128
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 37 10 is_stmt 1 # dwarf.c:37:10
 ; CHECK-NEXT:    call other1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 37 3 is_stmt 0 # dwarf.c:37:3
-; CHECK-NEXT:    copyd $r32 = $r14
+; CHECK-NEXT:    addd $r12 = $r14, -240
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_register 32
-; CHECK-NEXT:    ld $r16 = 8[$r12]
+; CHECK-NEXT:    ld $r31 = 232[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r14 = 240[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r16 = 248[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_restore 67
-; CHECK-NEXT:    ld $r14 = 0[$r12]
+; CHECK-NEXT:    addd $r12 = $r12, 256
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r12 = $r32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_register 12
-; CHECK-NEXT:    addd $r12 = $r12, 384
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp3:
@@ -260,39 +265,31 @@ define i32 @stackrealign2(i32 %n) #0 !dbg !52 {
 ; CHECK-NEXT:    .loc 1 68 0 is_stmt 1 # dwarf.c:68:0
 ; CHECK-NEXT:    .cfi_startproc
 ; CHECK-NEXT:  # %bb.0: # %entry
-; CHECK-NEXT:    addd $r12 = $r12, -384
+; CHECK-NEXT:    addd $r12 = $r12, -256
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 384
-; CHECK-NEXT:    copyd $r32 = $r12
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_register 32
-; CHECK-NEXT:    addd $r12 = $r12, 96
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r12 = $r12, -128
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r33 = $r14
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r14 = $r12
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_def_cfa_offset 256
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 16[$r12] = $r16
+; CHECK-NEXT:    .cfi_register 67, 16
+; CHECK-NEXT:    sd 248[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_escape 0x10, 0x43, 0x02, 0x7e, 0x10
-; CHECK-NEXT:    sd 8[$r12] = $r33
+; CHECK-NEXT:    .cfi_offset 67, -8
+; CHECK-NEXT:    sd 240[$r12] = $r14
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_escape 0x10, 0x0e, 0x02, 0x7e, 0x08
-; CHECK-NEXT:    sd 0[$r12] = $r31
+; CHECK-NEXT:    .cfi_offset 14, -16
+; CHECK-NEXT:    addd $r14 = $r12, 240
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_escape 0x10, 0x1f, 0x02, 0x7e, 0x00
-; CHECK-NEXT:    copyd $r31 = $r32
+; CHECK-NEXT:    .cfi_def_cfa 14, 16
+; CHECK-NEXT:    sd 232[$r12] = $r31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_register 31
-; CHECK-NEXT:    sw 24[$r14] = $r0
+; CHECK-NEXT:    .cfi_offset 31, -24
+; CHECK-NEXT:    andd $r31 = $r12, -128
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw 228[$r31] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp4:
 ; CHECK-NEXT:    .loc 1 69 41 prologue_end # dwarf.c:69:41
-; CHECK-NEXT:    lws $r0 = 24[$r14]
+; CHECK-NEXT:    lws $r0 = 228[$r31]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 69 20 is_stmt 0 # dwarf.c:69:20
 ; CHECK-NEXT:    addx4d $r0 = $r0, 31
@@ -306,22 +303,22 @@ define i32 @stackrealign2(i32 %n) #0 !dbg !52 {
 ; CHECK-NEXT:    copyd $r12 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 69 8 # dwarf.c:69:8
-; CHECK-NEXT:    sd 32[$r14] = $r0
+; CHECK-NEXT:    sd 216[$r31] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp5:
 ; CHECK-NEXT:    .loc 1 70 12 is_stmt 1 # dwarf.c:70:12
-; CHECK-NEXT:    sw 40[$r14] = $r0
+; CHECK-NEXT:    sw 212[$r31] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB2_1: # %for.cond
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:  .Ltmp6:
 ; CHECK-NEXT:    .loc 1 70 19 is_stmt 0 # dwarf.c:70:19
-; CHECK-NEXT:    lwz $r0 = 40[$r14]
+; CHECK-NEXT:    lwz $r0 = 212[$r31]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 70 23 # dwarf.c:70:23
-; CHECK-NEXT:    lwz $r1 = 24[$r14]
+; CHECK-NEXT:    lwz $r1 = 228[$r31]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp7:
 ; CHECK-NEXT:    .loc 1 70 3 # dwarf.c:70:3
@@ -333,16 +330,16 @@ define i32 @stackrealign2(i32 %n) #0 !dbg !52 {
 ; CHECK-NEXT:    # in Loop: Header=BB2_1 Depth=1
 ; CHECK-NEXT:  .Ltmp8:
 ; CHECK-NEXT:    .loc 1 71 13 is_stmt 1 # dwarf.c:71:13
-; CHECK-NEXT:    lwz $r0 = 24[$r14]
+; CHECK-NEXT:    lwz $r0 = 228[$r31]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 71 17 is_stmt 0 # dwarf.c:71:17
-; CHECK-NEXT:    lwz $r1 = 40[$r14]
+; CHECK-NEXT:    lwz $r1 = 212[$r31]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 71 15 # dwarf.c:71:15
 ; CHECK-NEXT:    sbfw $r0 = $r1, $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 71 5 # dwarf.c:71:5
-; CHECK-NEXT:    ld $r2 = 32[$r14]
+; CHECK-NEXT:    ld $r2 = 216[$r31]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxwd $r1 = $r1
 ; CHECK-NEXT:    ;;
@@ -352,11 +349,11 @@ define i32 @stackrealign2(i32 %n) #0 !dbg !52 {
 ; CHECK-NEXT:  # %bb.3: # %for.inc
 ; CHECK-NEXT:    # in Loop: Header=BB2_1 Depth=1
 ; CHECK-NEXT:    .loc 1 70 27 is_stmt 1 # dwarf.c:70:27
-; CHECK-NEXT:    lwz $r0 = 40[$r14]
+; CHECK-NEXT:    lwz $r0 = 212[$r31]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addw $r0 = $r0, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 40[$r14] = $r0
+; CHECK-NEXT:    sw 212[$r31] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 70 3 is_stmt 0 # dwarf.c:70:3
 ; CHECK-NEXT:    goto .LBB2_1
@@ -367,40 +364,32 @@ define i32 @stackrealign2(i32 %n) #0 !dbg !52 {
 ; CHECK-NEXT:    make $r0 = 0x4d2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 72 20 is_stmt 1 # dwarf.c:72:20
-; CHECK-NEXT:    sw 128[$r14] = $r0
+; CHECK-NEXT:    sw 128[$r31] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 73 17 # dwarf.c:73:17
-; CHECK-NEXT:    ld $r0 = 32[$r14]
+; CHECK-NEXT:    ld $r0 = 216[$r31]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 73 21 is_stmt 0 # dwarf.c:73:21
-; CHECK-NEXT:    lwz $r1 = 24[$r14]
+; CHECK-NEXT:    lwz $r1 = 228[$r31]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r2 = $r14, 128
+; CHECK-NEXT:    addd $r2 = $r31, 128
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 73 10 # dwarf.c:73:10
 ; CHECK-NEXT:    call other2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 73 3 # dwarf.c:73:3
-; CHECK-NEXT:    copyd $r32 = $r31
+; CHECK-NEXT:    addd $r12 = $r14, -240
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_register 32
-; CHECK-NEXT:    copyd $r12 = $r14
+; CHECK-NEXT:    ld $r31 = 232[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r31 = 0[$r12]
+; CHECK-NEXT:    ld $r14 = 240[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 16[$r12]
+; CHECK-NEXT:    ld $r16 = 248[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_restore 67
-; CHECK-NEXT:    ld $r14 = 8[$r12]
+; CHECK-NEXT:    addd $r12 = $r12, 256
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r12 = $r32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_register 12
-; CHECK-NEXT:    addd $r12 = $r12, 384
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp10:
@@ -467,20 +456,21 @@ define i32 @teststackalloca(i32 %n) #0 !dbg !88 {
 ; CHECK-NEXT:    .cfi_def_cfa_offset 64
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 8[$r12] = $r16
+; CHECK-NEXT:    .cfi_register 67, 16
+; CHECK-NEXT:    sd 56[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -56
-; CHECK-NEXT:    sd 0[$r12] = $r14
+; CHECK-NEXT:    .cfi_offset 67, -8
+; CHECK-NEXT:    sd 48[$r12] = $r14
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 14, -64
-; CHECK-NEXT:    copyd $r14 = $r12
+; CHECK-NEXT:    .cfi_offset 14, -16
+; CHECK-NEXT:    addd $r14 = $r12, 48
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_register 14
-; CHECK-NEXT:    sw 16[$r14] = $r0
+; CHECK-NEXT:    .cfi_def_cfa 14, 16
+; CHECK-NEXT:    sw -4[$r14] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp11:
 ; CHECK-NEXT:    .loc 1 115 41 prologue_end # dwarf.c:115:41
-; CHECK-NEXT:    lws $r0 = 16[$r14]
+; CHECK-NEXT:    lws $r0 = -4[$r14]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 115 20 is_stmt 0 # dwarf.c:115:20
 ; CHECK-NEXT:    addx4d $r0 = $r0, 31
@@ -494,22 +484,22 @@ define i32 @teststackalloca(i32 %n) #0 !dbg !88 {
 ; CHECK-NEXT:    copyd $r12 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 115 8 # dwarf.c:115:8
-; CHECK-NEXT:    sd 24[$r14] = $r0
+; CHECK-NEXT:    sd -16[$r14] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp12:
 ; CHECK-NEXT:    .loc 1 116 12 is_stmt 1 # dwarf.c:116:12
-; CHECK-NEXT:    sw 32[$r14] = $r0
+; CHECK-NEXT:    sw -20[$r14] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB3_1: # %for.cond
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:  .Ltmp13:
 ; CHECK-NEXT:    .loc 1 116 19 is_stmt 0 # dwarf.c:116:19
-; CHECK-NEXT:    lwz $r0 = 32[$r14]
+; CHECK-NEXT:    lwz $r0 = -20[$r14]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 116 23 # dwarf.c:116:23
-; CHECK-NEXT:    lwz $r1 = 16[$r14]
+; CHECK-NEXT:    lwz $r1 = -4[$r14]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp14:
 ; CHECK-NEXT:    .loc 1 116 3 # dwarf.c:116:3
@@ -521,16 +511,16 @@ define i32 @teststackalloca(i32 %n) #0 !dbg !88 {
 ; CHECK-NEXT:    # in Loop: Header=BB3_1 Depth=1
 ; CHECK-NEXT:  .Ltmp15:
 ; CHECK-NEXT:    .loc 1 117 13 is_stmt 1 # dwarf.c:117:13
-; CHECK-NEXT:    lwz $r0 = 16[$r14]
+; CHECK-NEXT:    lwz $r0 = -4[$r14]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 117 17 is_stmt 0 # dwarf.c:117:17
-; CHECK-NEXT:    lwz $r1 = 32[$r14]
+; CHECK-NEXT:    lwz $r1 = -20[$r14]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 117 15 # dwarf.c:117:15
 ; CHECK-NEXT:    sbfw $r0 = $r1, $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 117 5 # dwarf.c:117:5
-; CHECK-NEXT:    ld $r2 = 24[$r14]
+; CHECK-NEXT:    ld $r2 = -16[$r14]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxwd $r1 = $r1
 ; CHECK-NEXT:    ;;
@@ -540,11 +530,11 @@ define i32 @teststackalloca(i32 %n) #0 !dbg !88 {
 ; CHECK-NEXT:  # %bb.3: # %for.inc
 ; CHECK-NEXT:    # in Loop: Header=BB3_1 Depth=1
 ; CHECK-NEXT:    .loc 1 116 27 is_stmt 1 # dwarf.c:116:27
-; CHECK-NEXT:    lwz $r0 = 32[$r14]
+; CHECK-NEXT:    lwz $r0 = -20[$r14]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addw $r0 = $r0, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 32[$r14] = $r0
+; CHECK-NEXT:    sw -20[$r14] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 116 3 is_stmt 0 # dwarf.c:116:3
 ; CHECK-NEXT:    goto .LBB3_1
@@ -555,32 +545,30 @@ define i32 @teststackalloca(i32 %n) #0 !dbg !88 {
 ; CHECK-NEXT:    make $r0 = 0x4d2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 118 7 is_stmt 1 # dwarf.c:118:7
-; CHECK-NEXT:    sw 36[$r14] = $r0
+; CHECK-NEXT:    sw -24[$r14] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 119 17 # dwarf.c:119:17
-; CHECK-NEXT:    ld $r0 = 24[$r14]
+; CHECK-NEXT:    ld $r0 = -16[$r14]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 119 21 is_stmt 0 # dwarf.c:119:21
-; CHECK-NEXT:    lwz $r1 = 16[$r14]
+; CHECK-NEXT:    lwz $r1 = -4[$r14]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r2 = $r14, 36
+; CHECK-NEXT:    addd $r2 = $r14, -24
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 119 10 # dwarf.c:119:10
 ; CHECK-NEXT:    call other4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 119 3 # dwarf.c:119:3
-; CHECK-NEXT:    copyd $r12 = $r14
+; CHECK-NEXT:    addd $r12 = $r14, -48
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_register 12
-; CHECK-NEXT:    ld $r16 = 8[$r12]
+; CHECK-NEXT:    ld $r14 = 48[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r16 = 56[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r14 = 0[$r12]
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r12 = $r12, 64
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp17:

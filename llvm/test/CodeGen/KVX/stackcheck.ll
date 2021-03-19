@@ -17,15 +17,16 @@ define dso_local i32 @testalloca(i32 %n) local_unnamed_addr  {
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    sd 8[$r12] = $r16
+; CHECK-NEXT:    .cfi_register 67, 16
+; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -24
-; CHECK-NEXT:    sd 0[$r12] = $r14
-; CHECK-NEXT:    copyd $r14 = $r12
+; CHECK-NEXT:    .cfi_offset 67, -8
+; CHECK-NEXT:    sd 16[$r12] = $r14
+; CHECK-NEXT:    addd $r14 = $r12, 16
 ; CHECK-NEXT:    sxwd $r1 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 14, -32
-; CHECK-NEXT:    .cfi_def_cfa_register 14
+; CHECK-NEXT:    .cfi_offset 14, -16
+; CHECK-NEXT:    .cfi_def_cfa 14, 16
 ; CHECK-NEXT:    get $r2 = $sr
 ; CHECK-NEXT:    addx4d $r1 = $r1, 31
 ; CHECK-NEXT:    ;;
@@ -60,16 +61,15 @@ define dso_local i32 @testalloca(i32 %n) local_unnamed_addr  {
 ; CHECK-NEXT:    sxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz.xs $r0 = $r0[$r1]
-; CHECK-NEXT:    copyd $r12 = $r14
+; CHECK-NEXT:    addd $r12 = $r14, -16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_register 12
-; CHECK-NEXT:    ld $r16 = 8[$r12]
+; CHECK-NEXT:    ld $r14 = 16[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    ld $r14 = 0[$r12]
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_5: # Label of block must be emitted
@@ -115,59 +115,53 @@ declare void @llvm.lifetime.end.p0i8(i64 immarg, i8* nocapture)
 define dso_local i32 @testrealign() local_unnamed_addr  {
 ; CHECK-LABEL: testrealign:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r16 = $r12, -384
 ; CHECK-NEXT:    get $r17 = $sr
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r16 = $r16, 96
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r16 = $r16, -128
+; CHECK-NEXT:    addd $r16 = $r12, -256
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfd $r16 = $r16, $r17
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.dgtz $r16 ? .LBB1_2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %entry
-; CHECK-NEXT:    addd $r12 = $r12, -384
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 384
-; CHECK-NEXT:    copyd $r32 = $r12
-; CHECK-NEXT:    addd $r12 = $r12, 96
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_register 32
-; CHECK-NEXT:    andd $r12 = $r12, -128
+; CHECK-NEXT:    addd $r12 = $r12, -256
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 8[$r12] = $r16
+; CHECK-NEXT:    .cfi_def_cfa_offset 256
+; CHECK-NEXT:    .cfi_register 67, 16
+; CHECK-NEXT:    sd 248[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_escape 0x10, 0x43, 0x02, 0x7c, 0x08
-; CHECK-NEXT:    sd 0[$r12] = $r14
-; CHECK-NEXT:    copyd $r14 = $r32
+; CHECK-NEXT:    .cfi_offset 67, -8
+; CHECK-NEXT:    sd 240[$r12] = $r14
+; CHECK-NEXT:    addd $r14 = $r12, 240
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_offset 14, -16
+; CHECK-NEXT:    .cfi_def_cfa 14, 16
+; CHECK-NEXT:    sd 232[$r12] = $r31
+; CHECK-NEXT:    andd $r31 = $r12, -128
 ; CHECK-NEXT:    make $r0 = 7
 ; CHECK-NEXT:    make $r1 = 0x4d2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_escape 0x10, 0x0e, 0x02, 0x7c, 0x00
-; CHECK-NEXT:    .cfi_def_cfa_register 14
-; CHECK-NEXT:    sw 16[$r12] = $r0
-; CHECK-NEXT:    addd $r0 = $r12, 16
+; CHECK-NEXT:    .cfi_offset 31, -24
+; CHECK-NEXT:    sw 228[$r31] = $r0
+; CHECK-NEXT:    addd $r0 = $r31, 228
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 128[$r12] = $r1
-; CHECK-NEXT:    addd $r1 = $r12, 128
+; CHECK-NEXT:    sw 128[$r31] = $r1
+; CHECK-NEXT:    addd $r1 = $r31, 128
 ; CHECK-NEXT:    call other
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r32 = $r14
-; CHECK-NEXT:    ld $r16 = 8[$r12]
+; CHECK-NEXT:    addd $r12 = $r14, -240
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_register 32
+; CHECK-NEXT:    ld $r31 = 232[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r14 = 240[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r16 = 248[$r12]
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    ld $r14 = 0[$r12]
-; CHECK-NEXT:    copyd $r12 = $r32
+; CHECK-NEXT:    addd $r12 = $r12, 256
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_restore 67
-; CHECK-NEXT:    .cfi_def_cfa_register 12
-; CHECK-NEXT:    addd $r12 = $r12, 384
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:  .LBB1_2: # Label of block must be emitted
 ; CHECK-NEXT:    get $r0 = $pc
 ; CHECK-NEXT:    copyd $r1 = $r12

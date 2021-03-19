@@ -12,13 +12,14 @@ define %struct.Y @f(i64 %x.coerce0, i64 %x.coerce1, i64 %x.coerce2, i64 %x.coerc
 ; CHECK-NEXT:    .cfi_def_cfa_offset 64
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 32[$r12] = $r16
+; CHECK-NEXT:    .cfi_register 67, 16
+; CHECK-NEXT:    sd 56[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -32
-; CHECK-NEXT:    sq 16[$r12] = $r18r19
+; CHECK-NEXT:    .cfi_offset 67, -8
+; CHECK-NEXT:    sq 40[$r12] = $r18r19
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 19, -40
-; CHECK-NEXT:    .cfi_offset 18, -48
+; CHECK-NEXT:    .cfi_offset 18, -16
+; CHECK-NEXT:    .cfi_offset 19, -24
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r1 = 64[$r12]
@@ -49,15 +50,14 @@ define %struct.Y @f(i64 %x.coerce0, i64 %x.coerce1, i64 %x.coerce2, i64 %x.coerc
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r2 = $r18
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lq $r18r19 = 16[$r12]
+; CHECK-NEXT:    lq $r18r19 = 40[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 32[$r12]
+; CHECK-NEXT:    ld $r16 = 56[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r12 = $r12, 64
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    goto h
 ; CHECK-NEXT:    ;;
 entry:

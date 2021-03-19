@@ -10,11 +10,11 @@ define void @asm_tca(i8* %v, i64 %A) {
 ; CHECK-NEXT:    addd $r3 = $r1, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 128
-; CHECK-NEXT:    sd 0[$r12] = $r2
+; CHECK-NEXT:    sd 120[$r12] = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 8[$r12] = $r1
+; CHECK-NEXT:    sd 112[$r12] = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 16[$r12] = $r3
+; CHECK-NEXT:    sd 104[$r12] = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    lv $a0 = $r1[$r2]
@@ -23,11 +23,11 @@ define void @asm_tca(i8* %v, i64 %A) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP
-; CHECK-NEXT:    ld $r0 = 0[$r12]
+; CHECK-NEXT:    ld $r0 = 120[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 32[$r12] = $a0
+; CHECK-NEXT:    sv 64[$r12] = $a0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 64[$r12] = $a1
+; CHECK-NEXT:    sv 32[$r12] = $a1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    copyv $a0 = $a0
@@ -35,7 +35,7 @@ define void @asm_tca(i8* %v, i64 %A) {
 ; CHECK-NEXT:    sv 0[$r0] = $a1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP
-; CHECK-NEXT:    sv 96[$r12] = $a0
+; CHECK-NEXT:    sv 0[$r12] = $a0
 ; CHECK-NEXT:    addd $r12 = $r12, 128
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -73,9 +73,9 @@ define void @asm_clobber_vec_vec(i64 %A) {
 ; CHECK-NEXT:    addd $r12 = $r12, -96
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 96
-; CHECK-NEXT:    lv $a1 = 64[$r12]
+; CHECK-NEXT:    lv $a1 = 0[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 0[$r12] = $r0
+; CHECK-NEXT:    sd 88[$r12] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    copyv $a1 = $a1
@@ -102,9 +102,9 @@ define void @asm_clobber_vec_block(i64 %A) {
 ; CHECK-NEXT:    addd $r12 = $r12, -96
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 96
-; CHECK-NEXT:    lv $a1 = 64[$r12]
+; CHECK-NEXT:    lv $a1 = 0[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 0[$r12] = $r0
+; CHECK-NEXT:    sd 88[$r12] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    copyv $a1 = $a1
@@ -132,7 +132,7 @@ define void @asm_clobber_wide_vec(<256 x i1>* %a) {
 ; CHECK-NEXT:    lv $a2 = 0[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    sd 0[$r12] = $r0
+; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    copyv $a2 = $a2
@@ -161,9 +161,9 @@ define void @asm_clobber_multiple_quad(<256 x i1>* %c, <256 x i1>* %b) {
 ; CHECK-NEXT:    lv $a4 = 0[$r4]
 ; CHECK-NEXT:    copyd $r5 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 0[$r12] = $r4
+; CHECK-NEXT:    sd 24[$r12] = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 8[$r12] = $r5
+; CHECK-NEXT:    sd 16[$r12] = $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    copyv $a4 = $a5
@@ -204,13 +204,13 @@ define <256 x i1>* @asm_clobber_quad_matrix(<256 x i1>* %a) {
 ; CHECK-NEXT:    lv $a4 = 0[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    sd 0[$r12] = $r0
+; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    sv 0[$r3] = $a4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP
-; CHECK-NEXT:    ld $r0 = 0[$r12]
+; CHECK-NEXT:    ld $r0 = 24[$r12]
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -232,9 +232,9 @@ define void @use_wide_reg(<512 x i1>* %w, <256 x i1>* %v) {
 ; CHECK-NEXT:    copyd $r4 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    sd 0[$r12] = $r4
+; CHECK-NEXT:    sd 24[$r12] = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 8[$r12] = $r1
+; CHECK-NEXT:    sd 16[$r12] = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a5 = 32[$r4]
 ; CHECK-NEXT:    ;;
@@ -275,7 +275,7 @@ define void @use_matrix_reg(<1024 x i1>* %x) {
 ; CHECK-NEXT:    copyd $r4 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    sd 0[$r12] = $r4
+; CHECK-NEXT:    sd 24[$r12] = $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a7 = 96[$r4]
 ; CHECK-NEXT:    ;;

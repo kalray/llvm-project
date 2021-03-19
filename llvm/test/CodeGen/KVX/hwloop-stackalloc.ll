@@ -54,15 +54,16 @@ define i32 @f(i32 %num){
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    sd 8[$r12] = $r16
+; CHECK-NEXT:    .cfi_register 67, 16
+; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -24
-; CHECK-NEXT:    sd 0[$r12] = $r14
-; CHECK-NEXT:    copyd $r14 = $r12
+; CHECK-NEXT:    .cfi_offset 67, -8
+; CHECK-NEXT:    sd 16[$r12] = $r14
+; CHECK-NEXT:    addd $r14 = $r12, 16
 ; CHECK-NEXT:    addx4wd $r1 = $r0, 31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 14, -32
-; CHECK-NEXT:    .cfi_def_cfa_register 14
+; CHECK-NEXT:    .cfi_offset 14, -16
+; CHECK-NEXT:    .cfi_def_cfa 14, 16
 ; CHECK-NEXT:    andd $r1 = $r1, -32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfd $r1 = $r1, $r12
@@ -140,16 +141,15 @@ define i32 @f(i32 %num){
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB1_7: # %for.cond.cleanup
-; CHECK-NEXT:    copyd $r12 = $r14
+; CHECK-NEXT:    addd $r12 = $r14, -16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_register 12
-; CHECK-NEXT:    ld $r16 = 8[$r12]
+; CHECK-NEXT:    ld $r14 = 16[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    ld $r14 = 0[$r12]
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

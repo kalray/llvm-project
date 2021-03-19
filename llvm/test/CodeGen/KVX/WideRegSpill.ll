@@ -25,51 +25,50 @@ define i32 @a() {
 ; CHECK-LABEL: a:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -384
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 384
-; CHECK-NEXT:    copyd $r32 = $r12
-; CHECK-NEXT:    addd $r12 = $r12, 96
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_register 32
-; CHECK-NEXT:    andd $r12 = $r12, -128
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 40[$r12] = $r16
+; CHECK-NEXT:    .cfi_def_cfa_offset 384
+; CHECK-NEXT:    .cfi_register 67, 16
+; CHECK-NEXT:    sd 376[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_escape 0x10, 0x43, 0x02, 0x7c, 0x28
-; CHECK-NEXT:    sd 32[$r12] = $r14
+; CHECK-NEXT:    .cfi_offset 67, -8
+; CHECK-NEXT:    sd 368[$r12] = $r14
+; CHECK-NEXT:    addd $r14 = $r12, 368
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_escape 0x10, 0x0e, 0x02, 0x7c, 0x20
-; CHECK-NEXT:    sq 16[$r12] = $r20r21
+; CHECK-NEXT:    .cfi_offset 14, -16
+; CHECK-NEXT:    .cfi_def_cfa 14, 16
+; CHECK-NEXT:    sd 360[$r12] = $r31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_escape 0x10, 0x15, 0x02, 0x7c, 0x18
-; CHECK-NEXT:    .cfi_escape 0x10, 0x14, 0x02, 0x7c, 0x10
-; CHECK-NEXT:    sq 0[$r12] = $r18r19
-; CHECK-NEXT:    copyd $r14 = $r32
+; CHECK-NEXT:    .cfi_offset 31, -24
+; CHECK-NEXT:    sq 344[$r12] = $r20r21
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_offset 20, -32
+; CHECK-NEXT:    .cfi_offset 21, -40
+; CHECK-NEXT:    sq 328[$r12] = $r18r19
+; CHECK-NEXT:    andd $r31 = $r12, -128
 ; CHECK-NEXT:    make $r19 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_escape 0x10, 0x13, 0x02, 0x7c, 0x08
-; CHECK-NEXT:    .cfi_escape 0x10, 0x12, 0x02, 0x7c, 0x00
-; CHECK-NEXT:    .cfi_def_cfa_register 14
-; CHECK-NEXT:    sv 128[$r12] = $a0
+; CHECK-NEXT:    .cfi_offset 18, -48
+; CHECK-NEXT:    .cfi_offset 19, -56
+; CHECK-NEXT:    sv 128[$r31] = $a0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 160[$r12] = $a1
+; CHECK-NEXT:    sv 160[$r31] = $a1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 192[$r12] = $a2
+; CHECK-NEXT:    sv 192[$r31] = $a2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 224[$r12] = $a3
+; CHECK-NEXT:    sv 224[$r31] = $a3
 ; CHECK-NEXT:    goto .LBB0_1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_2: # in Loop: Header=BB0_1 Depth=1
-; CHECK-NEXT:    lv $a4 = 128[$r12]
+; CHECK-NEXT:    lv $a4 = 128[$r31]
 ; CHECK-NEXT:    compw.eq $r0 = $r0, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a5 = 160[$r12]
+; CHECK-NEXT:    lv $a5 = 160[$r31]
 ; CHECK-NEXT:    sllw $r0 = $r0, 6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a6 = 192[$r12]
+; CHECK-NEXT:    lv $a6 = 192[$r31]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a7 = 224[$r12]
+; CHECK-NEXT:    lv $a7 = 224[$r31]
 ; CHECK-NEXT:    copyv $a0 = $a5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    alignv $a5 = $a1, $a0, $r0
@@ -88,13 +87,13 @@ define i32 @a() {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyv $a9 = $a5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 128[$r12] = $a8
+; CHECK-NEXT:    sv 128[$r31] = $a8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 160[$r12] = $a9
+; CHECK-NEXT:    sv 160[$r31] = $a9
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 192[$r12] = $a10
+; CHECK-NEXT:    sv 192[$r31] = $a10
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 224[$r12] = $a11
+; CHECK-NEXT:    sv 224[$r31] = $a11
 ; CHECK-NEXT:    convwbv3.rz.sat $a0_t = $a4a5a6a7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 0[$r19] = $a0

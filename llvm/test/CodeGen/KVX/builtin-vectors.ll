@@ -3238,7 +3238,7 @@ define void @sllwps(<2 x i32> %a, i32 %b) {
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    sllwps $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 0[$r12] = $r0
+; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -3262,7 +3262,7 @@ define void @sllwpsimm(<2 x i32> %a) {
 ; CHECK-NEXT:    sllwps $r0 = $r0, 3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    sd 0[$r12] = $r0
+; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
