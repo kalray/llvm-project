@@ -357,3 +357,18 @@ bool KVXTargetInfo::DecodeTargetTypeFromStr(const char *&Str,
   }
   return true;
 };
+
+void KVXTargetInfo::setSupportedOpenCLOpts() {
+  auto &Opts = getSupportedOpenCLOpts();
+
+  Opts.support("cl_khr_byte_addressable_store");
+  Opts.support("cl_khr_global_int32_base_atomics");
+  Opts.support("cl_khr_global_int32_extended_atomics");
+  Opts.support("cl_khr_local_int32_base_atomics");
+  Opts.support("cl_khr_local_int32_extended_atomics");
+  Opts.support("cl_khr_fp16");
+  Opts.support("cl_khr_fp64");
+  Opts.support("cl_khr_int64_base_atomics");
+  Opts.support("cl_khr_int64_extended_atomics");
+  Opts.support("cles_khr_int64");
+}
