@@ -6,6 +6,13 @@ target triple = "kvx-kalray-cos"
 define void @f(i32* nocapture %x, i32 %state) local_unnamed_addr #0 {
 ; CHECK-LABEL: f:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addd $r12 = $r12, -32
+; CHECK-NEXT:    get $r16 = $ra
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 24[$r12] = $r16
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 16[$r12] = $r14
+; CHECK-NEXT:    addd $r14 = $r12, 16
 ; CHECK-NEXT:    compw.gtu $r2 = $r1, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.odd $r2 ? .LBB0_11
@@ -66,6 +73,15 @@ define void @f(i32* nocapture %x, i32 %state) local_unnamed_addr #0 {
 ; CHECK-NEXT:    sw 0[$r0] = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_11: # %sw.epilog
+; CHECK-NEXT:    addd $r12 = $r14, -16
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r14 = 16[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r16 = 24[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    set $ra = $r16
+; CHECK-NEXT:    addd $r12 = $r12, 32
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

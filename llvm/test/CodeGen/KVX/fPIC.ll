@@ -29,19 +29,19 @@ define i32 @main() {
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 64
-; CHECK-NEXT:    sd 0[$r12] = $r16
-; CHECK-NEXT:    addd $r0 = $r12, 8
+; CHECK-NEXT:    .cfi_register 67, 16
+; CHECK-NEXT:    sd 56[$r12] = $r16
+; CHECK-NEXT:    addd $r0 = $r12, 16
 ; CHECK-NEXT:    make $r1 = 5
 ; CHECK-NEXT:    call f
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -64
-; CHECK-NEXT:    ld $r16 = 0[$r12]
+; CHECK-NEXT:    .cfi_offset 67, -8
+; CHECK-NEXT:    ld $r16 = 56[$r12]
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 64
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
