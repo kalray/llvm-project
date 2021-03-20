@@ -56,6 +56,7 @@ public:
   unsigned getInliningThresholdMultiplier() const;
 
   unsigned getNumberOfRegisters(unsigned ClassID) const;
+  unsigned getRegisterBitWidth(bool Vector) const { return 64; }
 
 private:
   bool isHardwareLoopProfitableCheck(Loop *L, ScalarEvolution &SE);
