@@ -67,6 +67,9 @@ public:
     return &InstrItins;
   }
 
+  bool enableAdvancedRASplitCost() const override { return true; }
+  bool enableSubRegLiveness() const override { return true; }
+
   bool enableMachineSchedDefaultSched() const override { return false; }
   bool enablePostRAScheduler() const override { return true; }
   bool enableMachineScheduler() const override { return true; }
