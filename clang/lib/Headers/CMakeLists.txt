@@ -66,6 +66,7 @@ set(files
   inttypes.h
   invpcidintrin.h
   iso646.h
+  kvxtcaintrin.h
   limits.h
   lwpintrin.h
   lzcntintrin.h
