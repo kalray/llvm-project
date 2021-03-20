@@ -157,6 +157,7 @@ set(x86_files
   immintrin.h
   invpcidintrin.h
   keylockerintrin.h
+  kvxtcaintrin.h
   lwpintrin.h
   lzcntintrin.h
   mm3dnow.h
