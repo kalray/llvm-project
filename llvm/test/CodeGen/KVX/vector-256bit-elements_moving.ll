@@ -83,9 +83,10 @@ entry:
 define <2 x double> @f64x4_extract_elements_10(<4 x double> %0) {
 ; CHECK-LABEL: f64x4_extract_elements_10:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    copyd $r3 = $r1
 ; CHECK-NEXT:    copyd $r2 = $r0
-; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r3
 ; CHECK-NEXT:    copyd $r1 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -97,8 +98,8 @@ entry:
 define <2 x double> @f64x4_extract_elements_23(<4 x double> %0) {
 ; CHECK-LABEL: f64x4_extract_elements_23:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    copyd $r0 = $r2
+; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -175,9 +176,10 @@ entry:
 define <2 x i64> @i64x4_extract_elements_10(<4 x i64> %0) {
 ; CHECK-LABEL: i64x4_extract_elements_10:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    copyd $r3 = $r1
 ; CHECK-NEXT:    copyd $r2 = $r0
-; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r3
 ; CHECK-NEXT:    copyd $r1 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -189,8 +191,8 @@ entry:
 define <2 x i64> @i64x4_extract_elements_23(<4 x i64> %0) {
 ; CHECK-LABEL: i64x4_extract_elements_23:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    copyd $r0 = $r2
+; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
