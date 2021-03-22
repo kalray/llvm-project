@@ -42,7 +42,7 @@
 ; CHECK-NEXT: KVX DAG->DAG Pattern Instruction Selection
 ; CHECK-NEXT: Finalize ISel and expand pseudo-instructions
 ; CHECK-NEXT: Local Stack Slot Allocation
-; CHECK-NEXT: KVX pre regalloc pseudo instruction expansion pass
+; CHECK-NEXT: KVX pseudo instruction expansion pass
 ; CHECK-NEXT: Eliminate PHI nodes for register allocation
 ; CHECK-NEXT: Two-Address instruction pass
 ; CHECK-NEXT: Fast Register Allocator
@@ -50,11 +50,13 @@
 ; CHECK-NEXT: Machine Optimization Remark Emitter
 ; CHECK-NEXT: Prologue/Epilogue Insertion & Frame Finalization
 ; CHECK-NEXT: Post-RA pseudo instruction expansion pass
+; CHECK-NEXT: KVX pseudo instruction expansion pass
 ; CHECK-NEXT: Analyze Machine Code For Garbage Collection
 ; CHECK-NEXT: Insert fentry calls
 ; CHECK-NEXT: Insert XRay ops
 ; CHECK-NEXT: Implement the 'patchable-function' attribute
-; CHECK-NEXT: KVX pre emit pseudo instruction expansion pass
+; CHECK-NEXT: KVX pseudo instruction expansion pass
+; CHECK-NEXT: KVX pseudo instruction expansion pass
 ; CHECK-NEXT: Contiguously Lay Out Funclets
 ; CHECK-NEXT: StackMap Liveness Analysis
 ; CHECK-NEXT: Live DEBUG_VALUE analysis
