@@ -81,7 +81,7 @@
 ; CHECK-NEXT: Machine code sinking
 ; CHECK-NEXT: Peephole Optimizations
 ; CHECK-NEXT: Remove dead machine instructions
-; CHECK-NEXT: KVX pre regalloc pseudo instruction expansion pass
+; CHECK-NEXT: KVX pseudo instruction expansion pass
 ; CHECK-NEXT: Detect Dead Lanes
 ; CHECK-NEXT: Process Implicit Definitions
 ; CHECK-NEXT: Remove unreachable machine basic blocks
@@ -122,6 +122,7 @@
 ; CHECK-NEXT: Tail Duplication
 ; CHECK-NEXT: Machine Copy Propagation Pass
 ; CHECK-NEXT: Post-RA pseudo instruction expansion pass
+; CHECK-NEXT: KVX pseudo instruction expansion pass
 ; CHECK-NEXT: MachineDominator Tree Construction
 ; CHECK-NEXT: Machine Natural Loop Construction
 ; CHECK-NEXT: Post RA top-down list latency scheduler
@@ -132,10 +133,11 @@
 ; CHECK-NEXT: Insert fentry calls
 ; CHECK-NEXT: Insert XRay ops
 ; CHECK-NEXT: Implement the 'patchable-function' attribute
-; CHECK-NEXT: KVX pre emit pseudo instruction expansion pass
+; CHECK-NEXT: KVX pseudo instruction expansion pass
 ; CHECK-NEXT: MachineDominator Tree Construction
 ; CHECK-NEXT: Machine Natural Loop Construction
 ; CHECK-NEXT: KVX Packetizer
+; CHECK-NEXT: KVX pseudo instruction expansion pass
 ; CHECK-NEXT: Contiguously Lay Out Funclets
 ; CHECK-NEXT: StackMap Liveness Analysis
 ; CHECK-NEXT: Live DEBUG_VALUE analysis
