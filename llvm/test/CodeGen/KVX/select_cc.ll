@@ -145,3 +145,95 @@ entry:
   ret <2 x float> %cond
 }
 
+define void @test_select_vector_reg(<256 x i1> * %V, i1 %cc){
+; CHECK-LABEL: test_select_vector_reg:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    lv $a1 = 0[$r0]
+; CHECK-NEXT:    sllw $r1 = $r1, 6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv $a0 = 0[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    alignv $a0 = $a0, $a1, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 0[$r0] = $a0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %v0 = load volatile <256 x i1>, <256 x i1>* %V, align 32
+  %v1 = load volatile <256 x i1>, <256 x i1>* %V, align 32
+  %v3 = select i1 %cc, <256 x i1> %v0, <256 x i1> %v1
+  store volatile <256 x i1> %v3, <256 x i1>* %V, align 32
+  ret void
+}
+
+define void @test_select_wide_reg(<512 x i1> * %V, i1 %cc){
+; CHECK-LABEL: test_select_wide_reg:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    lv $a0 = 32[$r0]
+; CHECK-NEXT:    sllw $r1 = $r1, 6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv $a1 = 0[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv $a3 = 32[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv $a2 = 0[$r0]
+; CHECK-NEXT:    alignv $a5 = $a3, $a0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    alignv $a4 = $a2, $a1, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 32[$r0] = $a5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 0[$r0] = $a4
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %v0 = load volatile <512 x i1>, <512 x i1>* %V, align 32
+  %v1 = load volatile <512 x i1>, <512 x i1>* %V, align 32
+  %v3 = select i1 %cc, <512 x i1> %v0, <512 x i1> %v1
+  store volatile <512 x i1> %v3, <512 x i1>* %V, align 32
+  ret void
+}
+
+; TODO: Wide and load matrix should be expanded
+; before scheduling when possible, to allow lv
+; and alignv on the same bundle
+define void @test_select_matrix_reg(<1024 x i1> * %V, i1 %cc){
+; CHECK-LABEL: test_select_matrix_reg:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    lv $a0 = 96[$r0]
+; CHECK-NEXT:    sllw $r1 = $r1, 6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv $a1 = 64[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv $a2 = 32[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv $a3 = 0[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv $a7 = 96[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv $a6 = 64[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv $a5 = 32[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv $a4 = 0[$r0]
+; CHECK-NEXT:    alignv $a11 = $a7, $a0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    alignv $a10 = $a6, $a1, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    alignv $a9 = $a5, $a2, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    alignv $a8 = $a4, $a3, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 96[$r0] = $a11
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 64[$r0] = $a10
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 32[$r0] = $a9
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 0[$r0] = $a8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %v0 = load volatile <1024 x i1>, <1024 x i1>* %V, align 32
+  %v1 = load volatile <1024 x i1>, <1024 x i1>* %V, align 32
+  %v3 = select i1 %cc, <1024 x i1> %v0, <1024 x i1> %v1
+  store volatile <1024 x i1> %v3, <1024 x i1>* %V, align 32
+  ret void
+}

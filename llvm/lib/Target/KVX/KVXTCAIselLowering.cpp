@@ -53,4 +53,7 @@ void KVXTargetLowering::initializeTCALowering() {
     setOperationAction(ISD::LOAD, VT, Legal);
     setOperationAction(ISD::STORE, VT, Custom);
   }
+
+  for (auto VT : {MVT::v256i1, MVT::v512i1, MVT::v1024i1})
+    setOperationAction(ISD::SELECT, VT, Legal);
 }

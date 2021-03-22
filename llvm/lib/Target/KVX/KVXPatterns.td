@@ -883,6 +883,28 @@ multiclass SELECTCONDW<SDNode ntrue, SDNode nfalse, SDNode itrue, SDNode ifalse>
                 (SELECTp SingleReg:$cmp, itrue, ifalse, scalarcond_wnez)>;
 }
 
+// TCA select
+// We use a hacky method to perform a select for tca vector operations.
+// (select cc, v1, v2) becomes ALIGNV (v2, v1, cc * 64)
+// FIXME: For now we are enforcing it to be performed in a fixed rero
+// or rore. Perhaps this should be a pseudo and the correct instruction
+// chosen after reg-alloc?
+def : Pat <(select i32:$cc, v256i1:$truev, v256i1:$falsev),
+           (ALIGNVreror VectorReg:$falsev, VectorReg:$truev, (SLLWri SingleReg:$cc, 6))>;
+
+def : Pat <(select i32:$cc, v512i1:$truev, v512i1:$falsev),
+           (REG_SEQUENCE WideReg,
+           (ALIGNVreror (EXTRACT_SUBREG WideReg:$falsev, sub_v0), (EXTRACT_SUBREG WideReg:$truev, sub_v0), (SLLWri SingleReg:$cc, 6)), sub_v0,
+           (ALIGNVrorer (EXTRACT_SUBREG WideReg:$falsev, sub_v1), (EXTRACT_SUBREG WideReg:$truev, sub_v1), (SLLWri SingleReg:$cc, 6)), sub_v1
+           )>;
+def : Pat <(select i32:$cc, v1024i1:$truev, v1024i1:$falsev),
+           (REG_SEQUENCE MatrixReg,
+           (ALIGNVreror (EXTRACT_SUBREG MatrixReg:$falsev, sub_v0), (EXTRACT_SUBREG MatrixReg:$truev, sub_v0), (SLLWri SingleReg:$cc, 6)), sub_v0,
+           (ALIGNVrorer (EXTRACT_SUBREG MatrixReg:$falsev, sub_v1), (EXTRACT_SUBREG MatrixReg:$truev, sub_v1), (SLLWri SingleReg:$cc, 6)), sub_v1,
+           (ALIGNVreror (EXTRACT_SUBREG MatrixReg:$falsev, sub_v2), (EXTRACT_SUBREG MatrixReg:$truev, sub_v2), (SLLWri SingleReg:$cc, 6)), sub_v2,
+           (ALIGNVrorer (EXTRACT_SUBREG MatrixReg:$falsev, sub_v3), (EXTRACT_SUBREG MatrixReg:$truev, sub_v3), (SLLWri SingleReg:$cc, 6)), sub_v3
+           )>;
+
 defm : SELECTCONDW<(i32 i32:$truev), (i32 i32:$falsev), (i32 Wrapped32:$truev), (i32 Wrapped32:$falsev)>;
 defm : SELECTCONDW<(i64 i64:$truev), (i64 i64:$falsev), (i64 Wrapped64:$truev), (i64 Wrapped64:$falsev)>;
 defm : SELECTCONDW<(KVXWrapper tglobaladdr:$truev), (KVXWrapper tglobaladdr:$falsev), (i64 SingleReg:$truev), (i64 SingleReg:$falsev)>;
