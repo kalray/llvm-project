@@ -44,7 +44,9 @@ void
 KVXInstPrinter::printOperand(const MCInst *MI, unsigned OpNo,
                              /*const MCSubtargetInfo &STI,*/ raw_ostream &O,
                              const char *Modifier) {
-  assert((Modifier == 0 || Modifier[0] == 0) && "No modifiers supported");
+  if (!(Modifier == 0 || Modifier[0] == 0))
+    report_fatal_error("No modifiers supported");
+
   const MCOperand &MO = MI->getOperand(OpNo);
 
   if (MO.isReg()) {
@@ -86,7 +88,9 @@ KVXInstPrinter::printOperand(const MCInst *MI, unsigned OpNo,
     return;
   }
 
-  assert(MO.isExpr() && "Unknown operand kind in printOperand");
+  if (!MO.isExpr())
+    report_fatal_error("Unknown operand kind in printOperand");
+
   MO.getExpr()->print(O, &MAI);
 }
 

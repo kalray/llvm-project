@@ -102,7 +102,7 @@ def Splat32Mod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 1);}]
 }
 
 def Binary16 : Operand<f16>, FPImmLeaf<f16, [{
-      return isInt<16>(Imm.bitcastToAPInt().getZExtValue());
+      return isUInt<16>(Imm.bitcastToAPInt().getZExtValue());
     }]> {
   let PrintMethod = "printBinary16ImmOperand";
 }
@@ -115,7 +115,7 @@ def Binary16x4 : Operand<v4f16>, FPImmLeaf<v4f16, [{
 }
 
 def Binary32 : Operand<f32>, FPImmLeaf<f32, [{
-      return isInt<32>(Imm.bitcastToAPInt().getZExtValue());
+      return isUInt<32>(Imm.bitcastToAPInt().getZExtValue());
     }]> {
   let PrintMethod = "printBinary32ImmOperand";
 }
@@ -128,7 +128,7 @@ def Binary32x2 : Operand<v2f32>, FPImmLeaf<v2f32, [{
 }
 
 def Binary64 : Operand<f64>, FPImmLeaf<f64, [{
-      return isInt<64>(Imm.bitcastToAPInt().getZExtValue());
+      return isUInt<64>(Imm.bitcastToAPInt().getZExtValue());
     }]> {
   let PrintMethod = "printBinary64ImmOperand";
 }
