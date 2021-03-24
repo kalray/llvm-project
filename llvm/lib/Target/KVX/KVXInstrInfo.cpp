@@ -172,6 +172,19 @@ void KVXInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
     return;
   }
 
+  if (KVX::MatrixRegRegClass.contains(SrcReg, DstReg)) {
+    LLVM_DEBUG(dbgs() << "It is a TCA MatrixReg, use 4x copyv.\n");
+    auto VecType = KVX::COPYVre;
+    for (auto SubVec : {KVX::sub_v0, KVX::sub_v1, KVX::sub_v2, KVX::sub_v3}) {
+      auto Src = TRI->getSubReg(SrcReg, SubVec);
+      auto Dst = TRI->getSubReg(DstReg, SubVec);
+      BuildMI(MBB, MBBI, DL, get(VecType), Dst)
+          .addReg(Src, getKillRegState(KillSrc));
+      VecType = VecType == KVX::COPYVre ? KVX::COPYVro : KVX::COPYVre;
+    }
+    return;
+  }
+
   report_fatal_error("Don't know how to handle register copy from (" +
                      TRI->getRegAsmName(SrcReg.id()) + ") to (" +
                      TRI->getRegAsmName(DstReg.id()) + ").\n");
