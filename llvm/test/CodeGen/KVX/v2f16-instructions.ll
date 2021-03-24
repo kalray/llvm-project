@@ -1427,12 +1427,11 @@ define <2 x half> @test_log2(<2 x half> %a) #0 {
 define <2 x half> @test_fma(<2 x half> %a, <2 x half> %b, <2 x half> %c) #0 {
 ; CHECK-LABEL: test_fma:
 ; CHECK:       # %bb.0:
+; CHECK-NEXT:    zxwd $r3 = $r0
 ; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    zxwd $r0 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmahq $r2 = $r0, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r2
+; CHECK-NEXT:    ffmahq $r0 = $r3, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <2 x half> @llvm.fma.v2f16(<2 x half> %a, <2 x half> %b, <2 x half> %c)

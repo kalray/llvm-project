@@ -33,7 +33,6 @@ enum NodeType : unsigned {
   CALL,
   COMP,
   FENCE,
-  FMS,
   GetSystemReg,
   JT,
   JT_PCREL,

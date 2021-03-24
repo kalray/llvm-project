@@ -992,12 +992,12 @@ define half @test_log2(half %a) #0 {
 define half @test_fma(half %a, half %b, half %c) #0 {
 ; CHECK-LABEL: test_fma:
 ; CHECK:       # %bb.0:
+; CHECK-NEXT:    zxhd $r3 = $r0
 ; CHECK-NEXT:    zxhd $r1 = $r1
-; CHECK-NEXT:    zxhd $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmahq $r2 = $r0, $r1
+; CHECK-NEXT:    zxhd $r0 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r2
+; CHECK-NEXT:    ffmahq $r0 = $r3, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call half @llvm.fma.f16(half %a, half %b, half %c)

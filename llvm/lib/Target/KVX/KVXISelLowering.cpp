@@ -457,7 +457,6 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   for (auto I : {MVT::v2i16, MVT::v4i16, MVT::i32, MVT::v2i32, MVT::i64})
     setOperationAction(ISD::SADDSAT, I, Legal);
 
-  setTargetDAGCombine(ISD::FADD);
   setTargetDAGCombine(ISD::FSUB);
   setTargetDAGCombine(ISD::MUL);
   setTargetDAGCombine(ISD::STORE);
@@ -497,8 +496,6 @@ const char *KVXTargetLowering::getTargetNodeName(unsigned Opcode) const {
     return "KVX::BRCOND";
   case KVXISD::FENCE:
     return "KVX::FENCE";
-  case KVXISD::FMS:
-    return "KVX::FMS";
   case KVXISD::SEXT_MUL:
     return "KVX::SEXT_MUL";
   case KVXISD::ZEXT_MUL:
@@ -2260,18 +2257,6 @@ SDValue KVXTargetLowering::PerformDAGCombine(SDNode *N,
                            N->getOperand(0)->getOperand(0),
                            DAG.getNode(ISD::FNEG, SDLoc(N), N->getValueType(0),
                                        N->getOperand(1)));
-    }
-    [[clang::fallthrough]];
-  case ISD::FADD:
-    if (N->getFlags().hasAllowContract()) {
-      unsigned MulOp = N->getOpcode() == ISD::FADD ? 0 : 1;
-      unsigned OpOp = MulOp == 0 ? 1 : 0;
-      if (N->getOperand(MulOp)->getOpcode() == ISD::FMUL &&
-          N->getOperand(MulOp)->getFlags().hasAllowContract())
-        return DAG.getNode(
-            N->getOpcode() == ISD::FADD ? ISD::FMA : KVXISD::FMS, SDLoc(N),
-            N->getValueType(0), N->getOperand(MulOp)->getOperand(1),
-            N->getOperand(MulOp)->getOperand(0), N->getOperand(OpOp));
     }
     break;
   case ISD::MUL:
