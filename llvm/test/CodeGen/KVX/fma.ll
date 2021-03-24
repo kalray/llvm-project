@@ -64,27 +64,59 @@ define <2 x float> @ffmawp(<2 x float> %a, <2 x float> %b, <2 x float> %c) {
 define half @ffmaf16(half %a, half %b, half %c) {
 ; CHECK-LABEL: ffmaf16:
 ; CHECK:       # %bb.0:
+; CHECK-NEXT:    zxhd $r3 = $r0
 ; CHECK-NEXT:    zxhd $r1 = $r1
-; CHECK-NEXT:    zxhd $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmahq $r2 = $r0, $r1
+; CHECK-NEXT:    zxhd $r0 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r2
+; CHECK-NEXT:    ffmahq $r0 = $r3, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %res = call half @llvm.fma.f16(half %a, half %b, half %c)
   ret half %res
 }
 
+define half @ffmahq_v1_rr(half %a, half %b, half %c) {
+; CHECK-LABEL: ffmahq_v1_rr:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    zxhd $r2 = $r2
+; CHECK-NEXT:    zxhd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxhd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmahq $r0 = $r1, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %mul = fmul fast half %b, %c
+  %add = fadd fast half %mul, %a
+  ret half %add
+}
+
+define half @ffmahq_v1_ri(half %a, half %b) {
+; CHECK-LABEL: ffmahq_v1_ri:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    make $r2 = 0x4300
+; CHECK-NEXT:    zxhd $r1 = $r1
+; CHECK-NEXT:    zxhd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxhd $r2 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmahq $r0 = $r1, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %mul = fmul fast half 3.5, %b
+  %add = fadd fast half %a, %mul
+  ret half %add
+}
+
 define <2 x half> @ffmahq1(<2 x half> %a, <2 x half> %b, <2 x half> %c) {
 ; CHECK-LABEL: ffmahq1:
 ; CHECK:       # %bb.0:
+; CHECK-NEXT:    zxwd $r3 = $r0
 ; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    zxwd $r0 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmahq $r2 = $r0, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r2
+; CHECK-NEXT:    ffmahq $r0 = $r3, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %res = call <2 x half> @llvm.fma.v2f16(<2 x half> %a, <2 x half> %b, <2 x half> %c)
@@ -118,8 +150,8 @@ define <2 x double> @ffmav2f64(<2 x double> %a, <2 x double> %b, <2 x double> %c
   ret <2 x double> %res
 }
 
-define dso_local float @fma32_nodagcombine(float %a, float %b, float %c) {
-; CHECK-LABEL: fma32_nodagcombine:
+define float @fma32_not(float %a, float %b, float %c) {
+; CHECK-LABEL: fma32_not:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fmulw $r1 = $r1, $r2
 ; CHECK-NEXT:    ;;
@@ -132,8 +164,8 @@ entry:
   ret float %add
 }
 
-define dso_local double @fma64_nodagcombine(double %a, double %b, double %c) {
-; CHECK-LABEL: fma64_nodagcombine:
+define double @fma64_not(double %a, double %b, double %c) {
+; CHECK-LABEL: fma64_not:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fmuld $r1 = $r1, $r2
 ; CHECK-NEXT:    ;;
@@ -146,10 +178,10 @@ entry:
   ret double %add
 }
 
-define dso_local float @fma32_dagcombine(float %a, float %b, float %c) {
-; CHECK-LABEL: fma32_dagcombine:
+define float @fma32_rr(float %a, float %b, float %c) {
+; CHECK-LABEL: fma32_rr:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    ffmaw $r0 = $r1, $r2
+; CHECK-NEXT:    ffmaw $r0 = $r2, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -158,10 +190,10 @@ entry:
   ret float %add
 }
 
-define dso_local double @fma64_dagcombine(double %a, double %b, double %c)  {
-; CHECK-LABEL: fma64_dagcombine:
+define double @fma64_rr(double %a, double %b, double %c)  {
+; CHECK-LABEL: fma64_rr:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    ffmad $r0 = $r1, $r2
+; CHECK-NEXT:    ffmad $r0 = $r2, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -170,7 +202,7 @@ entry:
   ret double %add
 }
 
-define dso_local float @fma32_neg(float %a, float %b, float %c) {
+define float @fma32_neg(float %a, float %b, float %c) {
 ; CHECK-LABEL: fma32_neg:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fnegw $r2 = $r2
@@ -186,7 +218,7 @@ entry:
   ret float %sub
 }
 
-define dso_local double @fma64_neg(double %a, double %b, double %c) {
+define double @fma64_neg(double %a, double %b, double %c) {
 ; CHECK-LABEL: fma64_neg:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fnegd $r2 = $r2
@@ -202,10 +234,10 @@ entry:
   ret double %sub
 }
 
-define dso_local float @fma32_contract(float %a, float %b, float %c) {
+define float @fma32_contract(float %a, float %b, float %c) {
 ; CHECK-LABEL: fma32_contract:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    ffmaw $r0 = $r1, $r2
+; CHECK-NEXT:    ffmaw $r0 = $r2, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -214,10 +246,10 @@ entry:
   ret float %add
 }
 
-define dso_local double @fma64_contract(double %a, double %b, double %c)  {
+define double @fma64_contract(double %a, double %b, double %c)  {
 ; CHECK-LABEL: fma64_contract:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    ffmad $r0 = $r1, $r2
+; CHECK-NEXT:    ffmad $r0 = $r2, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -226,8 +258,8 @@ entry:
   ret double %add
 }
 
-define dso_local float @fms32_nodagcombine(float %a, float %b, float %c) {
-; CHECK-LABEL: fms32_nodagcombine:
+define float @fms32_not(float %a, float %b, float %c) {
+; CHECK-LABEL: fms32_not:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fmulw $r1 = $r1, $r2
 ; CHECK-NEXT:    ;;
@@ -240,8 +272,8 @@ entry:
   ret float %sub
 }
 
-define dso_local double @fms64_nodagcombine(double %a, double %b, double %c) {
-; CHECK-LABEL: fms64_nodagcombine:
+define double @fms64_not(double %a, double %b, double %c) {
+; CHECK-LABEL: fms64_not:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fmuld $r1 = $r1, $r2
 ; CHECK-NEXT:    ;;
@@ -254,8 +286,8 @@ entry:
   ret double %sub
 }
 
-define dso_local float @fms32_dagcombine(float %a, float %b, float %c) {
-; CHECK-LABEL: fms32_dagcombine:
+define float @fms32_rr(float %a, float %b, float %c) {
+; CHECK-LABEL: fms32_rr:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ffmsw $r0 = $r1, $r2
 ; CHECK-NEXT:    ret
@@ -266,8 +298,35 @@ entry:
   ret float %sub
 }
 
-define dso_local double @fms64_dagcombine(double %a, double %b, double %c)  {
-; CHECK-LABEL: fms64_dagcombine:
+; We can't tell difference of fms or fma for immediates
+define float @fms32_ri(float %a, float %b) {
+; CHECK-LABEL: fms32_ri:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    ffmaw $r0 = $r1, 0xc0600000
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = fmul fast float 3.5, %b
+  %sub = fsub fast float %a, %mul
+  ret float %sub
+}
+
+; We can't tell difference of fms or fma for immediates
+define float @fma32_ri(float %a, float %b) {
+; CHECK-LABEL: fma32_ri:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    ffmaw $r0 = $r1, 0x40600000
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = fmul fast float 3.5, %b
+  %sub = fadd fast float %a, %mul
+  ret float %sub
+}
+
+
+define double @fms64_rr(double %a, double %b, double %c)  {
+; CHECK-LABEL: fms64_rr:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ffmsd $r0 = $r1, $r2
 ; CHECK-NEXT:    ret
@@ -278,7 +337,32 @@ entry:
   ret double %sub
 }
 
-define dso_local float @fms32_contract(float %a, float %b, float %c) {
+define double @fms64_ri(double %a, double %b)  {
+; CHECK-LABEL: fms64_ri:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    ffmad $r0 = $r1, 0xc00c000000000000
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = fmul fast double %b, 3.5
+  %sub = fsub fast double %a, %mul
+  ret double %sub
+}
+
+define double @fma64_ri(double %a, double %b)  {
+; CHECK-LABEL: fma64_ri:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    ffmad $r0 = $r1, 0x400c000000000000
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = fmul fast double %b, 3.5
+  %sub = fadd fast double %a, %mul
+  ret double %sub
+}
+
+
+define float @fms32_contract(float %a, float %b, float %c) {
 ; CHECK-LABEL: fms32_contract:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ffmsw $r0 = $r1, $r2
@@ -290,7 +374,7 @@ entry:
   ret float %sub
 }
 
-define dso_local double @fms64_contract(double %a, double %b, double %c)  {
+define double @fms64_contract(double %a, double %b, double %c)  {
 ; CHECK-LABEL: fms64_contract:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ffmsd $r0 = $r1, $r2
@@ -302,7 +386,7 @@ entry:
   ret double %sub
 }
 
-define dso_local float @fms32_2(float %a, float %b, float %c, float %d) {
+define float @fms32_2(float %a, float %b, float %c, float %d) {
 ; CHECK-LABEL: fms32_2:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fmulw $r0 = $r0, $r1
@@ -317,7 +401,7 @@ entry:
   ret float %sub
 }
 
-define dso_local double @fms64_2(double %a, double %b, double %c, double %d) {
+define double @fms64_2(double %a, double %b, double %c, double %d) {
 ; CHECK-LABEL: fms64_2:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fmuld $r0 = $r0, $r1
@@ -335,9 +419,9 @@ entry:
 define <4 x float> @fmawp_x2(<4 x float> %a, <4 x float> %b, <4 x float> %c) {
 ; CHECK-LABEL: fmawp_x2:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ffmawp $r5 = $r3, $r5
+; CHECK-NEXT:    ffmawp $r5 = $r5, $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmawp $r4 = $r2, $r4
+; CHECK-NEXT:    ffmawp $r4 = $r4, $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r4
 ; CHECK-NEXT:    copyd $r1 = $r5
@@ -379,13 +463,13 @@ define <4 x float> @fmawp_x2_int(<4 x float> %a, <4 x float> %b, <4 x float> %c)
 define <8 x float> @fmawp_x4(<8 x float> %a, <8 x float> %b, <8 x float> %c) {
 ; CHECK-LABEL: fmawp_x4:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ffmawp $r11 = $r7, $r11
+; CHECK-NEXT:    ffmawp $r11 = $r11, $r7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmawp $r9 = $r5, $r9
+; CHECK-NEXT:    ffmawp $r9 = $r9, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmawp $r8 = $r4, $r8
+; CHECK-NEXT:    ffmawp $r8 = $r8, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmawp $r10 = $r6, $r10
+; CHECK-NEXT:    ffmawp $r10 = $r10, $r6
 ; CHECK-NEXT:    copyd $r0 = $r8
 ; CHECK-NEXT:    copyd $r1 = $r9
 ; CHECK-NEXT:    ;;
@@ -520,3 +604,175 @@ declare <4 x half> @llvm.fma.v4f16(<4 x half>, <4 x half>, <4 x half>)
 declare <2 x double> @llvm.fma.v2f64(<2 x double>, <2 x double>, <2 x double>)
 declare <4 x float> @llvm.fma.v4f32(<4 x float>, <4 x float>, <4 x float>)
 declare <8 x float> @llvm.fma.v8f32(<8 x float>, <8 x float>, <8 x float>)
+
+define <2 x float> @fmswp_rr(<2 x float> %a, <2 x float> %b, <2 x float> %c) {
+; CHECK-LABEL: fmswp_rr:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    ffmswp $r0 = $r1, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = fmul fast <2 x float> %c, %b
+  %sub = fsub fast <2 x float> %a, %mul
+  ret <2 x float> %sub
+}
+
+define float @fmsw_ri(float %a, float %b) {
+; CHECK-LABEL: fmsw_ri:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    ffmaw $r0 = $r1, 0xc0400000
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = fmul fast float 3.0, %b
+  %sub = fsub fast float %a, %mul
+  ret float %sub
+}
+
+
+define <2 x float> @fmawp_ri(<2 x float> %a, <2 x float> %b) {
+; CHECK-LABEL: fmawp_ri:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    ffmawp $r0 = $r1, 0xc040000040400000
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = fmul fast <2 x float> <float -3.0, float 3.0>, %b
+  %sub = fsub fast <2 x float> %a, %mul
+  ret <2 x float> %sub
+}
+
+define <4 x half> @fmshq_rr(<4 x half> %a, <4 x half> %b, <4 x half> %c) {
+; CHECK-LABEL: fmshq_rr:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    ffmshq $r0 = $r1, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = fmul fast <4 x half> %c, %b
+  %sub = fsub fast <4 x half> %a, %mul
+  ret <4 x half> %sub
+}
+
+define <4 x half> @fmshq_ri(<4 x half> %a, <4 x half> %b) {
+; CHECK-LABEL: fmshq_ri:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    ffmahq $r0 = $r1, 0x5fd0dfd03c00bc00
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = fmul fast <4 x half> %b, <half 1.0, half -1.0, half 500.0, half -500.0>
+  %sub = fsub fast <4 x half> %a, %mul
+  ret <4 x half> %sub
+}
+
+define <4 x half> @fmahq_ri(<4 x half> %a, <4 x half> %b) {
+; CHECK-LABEL: fmahq_ri:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    ffmahq $r0 = $r1, 0xdfd05fd0bc003c00
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = fmul fast <4 x half> %b, <half 1.0, half -1.0, half 500.0, half -500.0>
+  %sub = fadd fast <4 x half> %a, %mul
+  ret <4 x half> %sub
+}
+
+define <2 x half> @fmshq_v2_rr(<2 x half> %a, <2 x half> %b, <2 x half> %c) {
+; CHECK-LABEL: fmshq_v2_rr:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    zxwd $r2 = $r2
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmshq $r0 = $r1, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = fmul fast <2 x half> %c, %b
+  %sub = fsub fast <2 x half> %a, %mul
+  ret <2 x half> %sub
+}
+
+define <2 x half> @fmshq_v2_ri(<2 x half> %a, <2 x half> %b) {
+; CHECK-LABEL: fmshq_v2_ri:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmahq $r0 = $r1, 0x5fd0bc00
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = fmul fast <2 x half> %b, <half 1.0, half -500.0>
+  %sub = fsub fast <2 x half> %a, %mul
+  ret <2 x half> %sub
+}
+
+define <2 x half> @fmahq_v2_ri(<2 x half> %a, <2 x half> %b) {
+; CHECK-LABEL: fmahq_v2_ri:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmahq $r0 = $r1, 0xffffffffdfd03c00
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = fmul fast <2 x half> %b, <half 1.0, half -500.0>
+  %sub = fadd fast <2 x half> %a, %mul
+  ret <2 x half> %sub
+}
+
+define half @fmshq_v1_rr(half %a, half %b, half %c) {
+; CHECK-LABEL: fmshq_v1_rr:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    zxhd $r2 = $r2
+; CHECK-NEXT:    zxhd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxhd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmshq $r0 = $r1, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = fmul fast half %c, %b
+  %sub = fsub fast half %a, %mul
+  ret half %sub
+}
+
+define half @fmshq_v1_ri(half %a, half %b) {
+; CHECK-LABEL: fmshq_v1_ri:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r2 = 0xdfd0
+; CHECK-NEXT:    zxhd $r1 = $r1
+; CHECK-NEXT:    zxhd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxhd $r2 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmahq $r0 = $r1, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = fmul fast half %b, 500.0
+  %sub = fsub fast half %a, %mul
+  ret half %sub
+}
+
+define half @fmahq_v1_ri(half %a, half %b) {
+; CHECK-LABEL: fmahq_v1_ri:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r2 = 0x5fd0
+; CHECK-NEXT:    zxhd $r1 = $r1
+; CHECK-NEXT:    zxhd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxhd $r2 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmahq $r0 = $r1, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %mul = fmul fast half %b, 500.0
+  %sub = fadd fast half %a, %mul
+  ret half %sub
+}
