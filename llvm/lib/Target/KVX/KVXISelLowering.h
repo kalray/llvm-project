@@ -51,6 +51,7 @@ class KVXTargetLowering : public TargetLowering {
   const KVXSubtarget &Subtarget;
   void initializeTCARegisters();
   void initializeTCALowering();
+  SDValue lowerTCAZeroInit(SDValue Op, SelectionDAG &DAG) const;
 
 public:
   explicit KVXTargetLowering(const TargetMachine &TM, const KVXSubtarget &STI);
