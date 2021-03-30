@@ -54,6 +54,29 @@ void KVXTargetLowering::initializeTCALowering() {
     setOperationAction(ISD::STORE, VT, Custom);
   }
 
-  for (auto VT : {MVT::v256i1, MVT::v512i1, MVT::v1024i1})
+  for (auto VT : {MVT::v256i1, MVT::v512i1, MVT::v1024i1}) {
     setOperationAction(ISD::SELECT, VT, Legal);
+    setOperationAction(ISD::BUILD_VECTOR, VT, Custom);
+  }
+}
+
+SDValue KVXTargetLowering::lowerTCAZeroInit(SDValue Op,
+                                            SelectionDAG &DAG) const {
+  // For now we only use TCA registers BUILD_VECTOR as a zeroinit operation
+  // Sanity check:
+  if (Op->getOpcode() != ISD::BUILD_VECTOR)
+    report_fatal_error("Not a ISD::BUILD_VECTOR");
+  switch (Op->getSimpleValueType(0).SimpleTy) {
+  case MVT::v256i1:
+  case MVT::v512i1:
+  case MVT::v1024i1:
+    break;
+  default:
+    report_fatal_error("Not a TCA type");
+  }
+  // Make sure it is a zero init.
+  for (unsigned I = 0; I < Op.getNumOperands(); I++)
+    if (Op.getConstantOperandVal(I))
+      return SDValue();
+  return Op;
 }

@@ -1572,6 +1572,10 @@ SDValue KVXTargetLowering::lowerBUILD_VECTOR(SDValue Op,
   case MVT::v4i32:
   case MVT::v4f32:
     return lowerBUILD_VECTOR_V4_128bit(Op, DAG);
+  case MVT::v256i1:
+  case MVT::v512i1:
+  case MVT::v1024i1:
+    return lowerTCAZeroInit(Op, DAG);
   }
 }
 

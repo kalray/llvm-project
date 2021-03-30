@@ -1259,3 +1259,9 @@ def: Pat<(i64 (bswap i64:$v)), (SBMM8ri64 SingleReg:$v, 0x0102040810204080)>;
 def: Pat<(v2i16 (bswap v2i16:$v)), (SBMM8ri64 SingleReg:$v, 0x04080102)>;
 def: Pat<(v4i16 (bswap v4i16:$v)), (SBMM8ri64 SingleReg:$v, 0x4080102004080102)>;
 def: Pat<(v2i32 (bswap v2i32:$v)), (SBMM8ri64 SingleReg:$v, 0x1020408001020408)>;
+
+// For the moment we only use build_vector in tca for
+// zeroinit
+def: Pat<(v256i1 (build_vector)), (COPY A48)>;
+def: Pat<(v512i1 (build_vector)), (COPY W25)>;
+def: Pat<(v1024i1 (build_vector)), (COPY X12)>;
