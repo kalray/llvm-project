@@ -933,54 +933,6 @@ def C204 : XCR<204, "$a51_x", ["$a51.x"]>, DwarfRegNum<[460]>;
 def C205 : XCR<205, "$a51_y", ["$a51.y"]>, DwarfRegNum<[461]>;
 def C206 : XCR<206, "$a51_z", ["$a51.z"]>, DwarfRegNum<[462]>;
 def C207 : XCR<207, "$a51_t", ["$a51.t"]>, DwarfRegNum<[463]>;
-def C208 : XCR<208, "$a52_x", ["$a52.x"]>, DwarfRegNum<[464]>;
-def C209 : XCR<209, "$a52_y", ["$a52.y"]>, DwarfRegNum<[465]>;
-def C210 : XCR<210, "$a52_z", ["$a52.z"]>, DwarfRegNum<[466]>;
-def C211 : XCR<211, "$a52_t", ["$a52.t"]>, DwarfRegNum<[467]>;
-def C212 : XCR<212, "$a53_x", ["$a53.x"]>, DwarfRegNum<[468]>;
-def C213 : XCR<213, "$a53_y", ["$a53.y"]>, DwarfRegNum<[469]>;
-def C214 : XCR<214, "$a53_z", ["$a53.z"]>, DwarfRegNum<[470]>;
-def C215 : XCR<215, "$a53_t", ["$a53.t"]>, DwarfRegNum<[471]>;
-def C216 : XCR<216, "$a54_x", ["$a54.x"]>, DwarfRegNum<[472]>;
-def C217 : XCR<217, "$a54_y", ["$a54.y"]>, DwarfRegNum<[473]>;
-def C218 : XCR<218, "$a54_z", ["$a54.z"]>, DwarfRegNum<[474]>;
-def C219 : XCR<219, "$a54_t", ["$a54.t"]>, DwarfRegNum<[475]>;
-def C220 : XCR<220, "$a55_x", ["$a55.x"]>, DwarfRegNum<[476]>;
-def C221 : XCR<221, "$a55_y", ["$a55.y"]>, DwarfRegNum<[477]>;
-def C222 : XCR<222, "$a55_z", ["$a55.z"]>, DwarfRegNum<[478]>;
-def C223 : XCR<223, "$a55_t", ["$a55.t"]>, DwarfRegNum<[479]>;
-def C224 : XCR<224, "$a56_x", ["$a56.x"]>, DwarfRegNum<[480]>;
-def C225 : XCR<225, "$a56_y", ["$a56.y"]>, DwarfRegNum<[481]>;
-def C226 : XCR<226, "$a56_z", ["$a56.z"]>, DwarfRegNum<[482]>;
-def C227 : XCR<227, "$a56_t", ["$a56.t"]>, DwarfRegNum<[483]>;
-def C228 : XCR<228, "$a57_x", ["$a57.x"]>, DwarfRegNum<[484]>;
-def C229 : XCR<229, "$a57_y", ["$a57.y"]>, DwarfRegNum<[485]>;
-def C230 : XCR<230, "$a57_z", ["$a57.z"]>, DwarfRegNum<[486]>;
-def C231 : XCR<231, "$a57_t", ["$a57.t"]>, DwarfRegNum<[487]>;
-def C232 : XCR<232, "$a58_x", ["$a58.x"]>, DwarfRegNum<[488]>;
-def C233 : XCR<233, "$a58_y", ["$a58.y"]>, DwarfRegNum<[489]>;
-def C234 : XCR<234, "$a58_z", ["$a58.z"]>, DwarfRegNum<[490]>;
-def C235 : XCR<235, "$a58_t", ["$a58.t"]>, DwarfRegNum<[491]>;
-def C236 : XCR<236, "$a59_x", ["$a59.x"]>, DwarfRegNum<[492]>;
-def C237 : XCR<237, "$a59_y", ["$a59.y"]>, DwarfRegNum<[493]>;
-def C238 : XCR<238, "$a59_z", ["$a59.z"]>, DwarfRegNum<[494]>;
-def C239 : XCR<239, "$a59_t", ["$a59.t"]>, DwarfRegNum<[495]>;
-def C240 : XCR<240, "$a60_x", ["$a60.x"]>, DwarfRegNum<[496]>;
-def C241 : XCR<241, "$a60_y", ["$a60.y"]>, DwarfRegNum<[497]>;
-def C242 : XCR<242, "$a60_z", ["$a60.z"]>, DwarfRegNum<[498]>;
-def C243 : XCR<243, "$a60_t", ["$a60.t"]>, DwarfRegNum<[499]>;
-def C244 : XCR<244, "$a61_x", ["$a61.x"]>, DwarfRegNum<[500]>;
-def C245 : XCR<245, "$a61_y", ["$a61.y"]>, DwarfRegNum<[501]>;
-def C246 : XCR<246, "$a61_z", ["$a61.z"]>, DwarfRegNum<[502]>;
-def C247 : XCR<247, "$a61_t", ["$a61.t"]>, DwarfRegNum<[503]>;
-def C248 : XCR<248, "$a62_x", ["$a62.x"]>, DwarfRegNum<[504]>;
-def C249 : XCR<249, "$a62_y", ["$a62.y"]>, DwarfRegNum<[505]>;
-def C250 : XCR<250, "$a62_z", ["$a62.z"]>, DwarfRegNum<[506]>;
-def C251 : XCR<251, "$a62_t", ["$a62.t"]>, DwarfRegNum<[507]>;
-def C252 : XCR<252, "$a63_x", ["$a63.x"]>, DwarfRegNum<[508]>;
-def C253 : XCR<253, "$a63_y", ["$a63.y"]>, DwarfRegNum<[509]>;
-def C254 : XCR<254, "$a63_z", ["$a63.z"]>, DwarfRegNum<[510]>;
-def C255 : XCR<255, "$a63_t", ["$a63.t"]>, DwarfRegNum<[511]>;
 
 
 // Extension Block Registers
@@ -1088,30 +1040,6 @@ def B100 : XBR<100, "$a50_lo", [C200, C201], ["$a50.lo"]>;
 def B101 : XBR<101, "$a50_hi", [C202, C203], ["$a50.hi"]>;
 def B102 : XBR<102, "$a51_lo", [C204, C205], ["$a51.lo"]>;
 def B103 : XBR<103, "$a51_hi", [C206, C207], ["$a51.hi"]>;
-def B104 : XBR<104, "$a52_lo", [C208, C209], ["$a52.lo"]>;
-def B105 : XBR<105, "$a52_hi", [C210, C211], ["$a52.hi"]>;
-def B106 : XBR<106, "$a53_lo", [C212, C213], ["$a53.lo"]>;
-def B107 : XBR<107, "$a53_hi", [C214, C215], ["$a53.hi"]>;
-def B108 : XBR<108, "$a54_lo", [C216, C217], ["$a54.lo"]>;
-def B109 : XBR<109, "$a54_hi", [C218, C219], ["$a54.hi"]>;
-def B110 : XBR<110, "$a55_lo", [C220, C221], ["$a55.lo"]>;
-def B111 : XBR<111, "$a55_hi", [C222, C223], ["$a55.hi"]>;
-def B112 : XBR<112, "$a56_lo", [C224, C225], ["$a56.lo"]>;
-def B113 : XBR<113, "$a56_hi", [C226, C227], ["$a56.hi"]>;
-def B114 : XBR<114, "$a57_lo", [C228, C229], ["$a57.lo"]>;
-def B115 : XBR<115, "$a57_hi", [C230, C231], ["$a57.hi"]>;
-def B116 : XBR<116, "$a58_lo", [C232, C233], ["$a58.lo"]>;
-def B117 : XBR<117, "$a58_hi", [C234, C235], ["$a58.hi"]>;
-def B118 : XBR<118, "$a59_lo", [C236, C237], ["$a59.lo"]>;
-def B119 : XBR<119, "$a59_hi", [C238, C239], ["$a59.hi"]>;
-def B120 : XBR<120, "$a60_lo", [C240, C241], ["$a60.lo"]>;
-def B121 : XBR<121, "$a60_hi", [C242, C243], ["$a60.hi"]>;
-def B122 : XBR<122, "$a61_lo", [C244, C245], ["$a61.lo"]>;
-def B123 : XBR<123, "$a61_hi", [C246, C247], ["$a61.hi"]>;
-def B124 : XBR<124, "$a62_lo", [C248, C249], ["$a62.lo"]>;
-def B125 : XBR<125, "$a62_hi", [C250, C251], ["$a62.hi"]>;
-def B126 : XBR<126, "$a63_lo", [C252, C253], ["$a63.lo"]>;
-def B127 : XBR<127, "$a63_hi", [C254, C255], ["$a63.hi"]>;
 
 
 // Extension Vector Registers
@@ -1167,18 +1095,6 @@ def A48 : XVR<48, "$a48", [B96,	B97] >;
 def A49 : XVR<49, "$a49", [B98,	B99] >;
 def A50 : XVR<50, "$a50", [B100,B101]>;
 def A51 : XVR<51, "$a51", [B102,B103]>;
-def A52 : XVR<52, "$a52", [B104,B105]>;
-def A53 : XVR<53, "$a53", [B106,B107]>;
-def A54 : XVR<54, "$a54", [B108,B109]>;
-def A55 : XVR<55, "$a55", [B110,B111]>;
-def A56 : XVR<56, "$a56", [B112,B113]>;
-def A57 : XVR<57, "$a57", [B114,B115]>;
-def A58 : XVR<58, "$a58", [B116,B117]>;
-def A59 : XVR<59, "$a59", [B118,B119]>;
-def A60 : XVR<60, "$a60", [B120,B121]>;
-def A61 : XVR<61, "$a61", [B122,B123]>;
-def A62 : XVR<62, "$a62", [B124,B125]>;
-def A63 : XVR<63, "$a63", [B126,B127]>;
 
 
 // Extension Wide Registers
@@ -1208,12 +1124,6 @@ def W22 : XWR<22, "$a44a45", [A44,A45]>;
 def W23 : XWR<23, "$a46a47", [A46,A47]>;
 def W24 : XWR<24, "$a48a49", [A48,A49]>;
 def W25 : XWR<25, "$a50a51", [A50,A51]>;
-def W26 : XWR<26, "$a52a53", [A52,A53]>;
-def W27 : XWR<27, "$a54a55", [A54,A55]>;
-def W28 : XWR<28, "$a56a57", [A56,A57]>;
-def W29 : XWR<29, "$a58a59", [A58,A59]>;
-def W30 : XWR<30, "$a60a61", [A60,A61]>;
-def W31 : XWR<31, "$a62a63", [A62,A63]>;
 
 
 // Extension Matrix Registers
@@ -1230,9 +1140,6 @@ def X9  : XMR< 9, "$a36a37a38a39", [W18,W19]>;
 def X10 : XMR<10, "$a40a41a42a43", [W20,W21]>;
 def X11 : XMR<11, "$a44a45a46a47", [W22,W23]>;
 def X12 : XMR<12, "$a48a49a50a51", [W24,W25]>;
-def X13 : XMR<13, "$a52a53a54a55", [W26,W27]>;
-def X14 : XMR<14, "$a56a57a58a59", [W28,W29]>;
-def X15 : XMR<15, "$a60a61a62a63", [W30,W31]>;
 
 
 } // let Namespace = "KVX"
@@ -1356,13 +1263,7 @@ def CoproReg : RegisterClass<"KVX",
    C144, C145, C146, C147, C148, C149, C150, C151, C152, C153, C154, C155,
    C156, C157, C158, C159, C160, C161, C162, C163, C164, C165, C166, C167,
    C168, C169, C170, C171, C172, C173, C174, C175, C176, C177, C178, C179,
-   C180, C181, C182, C183, C184, C185, C186, C187, C188, C189, C190, C191,
-   C192, C193, C194, C195, C196, C197, C198, C199, C200, C201, C202, C203,
-   C204, C205, C206, C207, C208, C209, C210, C211, C212, C213, C214, C215,
-   C216, C217, C218, C219, C220, C221, C222, C223, C224, C225, C226, C227,
-   C228, C229, C230, C231, C232, C233, C234, C235, C236, C237, C238, C239,
-   C240, C241, C242, C243, C244, C245, C246, C247, C248, C249, C250, C251,
-   C252, C253, C254, C255)>;
+   C180, C181, C182, C183, C184, C185, C186, C187, C188, C189, C190, C191)>;
 
 // XBR - Extension Block Registers
 let Size = 128 in
@@ -1376,10 +1277,7 @@ def BlockReg : RegisterClass<"KVX",
     B48,  B49,  B50,  B51,  B52,  B53,  B54,  B55,  B56,  B57,  B58,  B59,
     B60,  B61,  B62,  B63,  B64,  B65,  B66,  B67,  B68,  B69,  B70,  B71,
     B72,  B73,  B74,  B75,  B76,  B77,  B78,  B79,  B80,  B81,  B82,  B83,
-    B84,  B85,  B86,  B87,  B88,  B89,  B90,  B91,  B92,  B93,  B94,  B95,
-    B96,  B97,  B98,  B99, B100, B101, B102, B103, B104, B105, B106, B107,
-   B108, B109, B110, B111, B112, B113, B114, B115, B116, B117, B118, B119,
-   B120, B121, B122, B123, B124, B125, B126, B127)>;
+    B84,  B85,  B86,  B87,  B88,  B89,  B90,  B91,  B92,  B93,  B94,  B95)>;
 
 // XVR - Extension Vector Registers
 let Size = 256 in
@@ -1389,8 +1287,17 @@ def VectorReg : RegisterClass<"KVX",
     A0,  A1,  A2,  A3,  A4,  A5,  A6,  A7,  A8,  A9, A10, A11, A12, A13, A14,
    A15, A16, A17, A18, A19, A20, A21, A22, A23, A24, A25, A26, A27, A28, A29,
    A30, A31, A32, A33, A34, A35, A36, A37, A38, A39, A40, A41, A42, A43, A44,
-   A45, A46, A47, A48, A49, A50, A51, A52, A53, A54, A55, A56, A57, A58, A59,
-   A60, A61, A62, A63)>;
+   A45, A46, A47)>;
+
+let Size = 256, isAllocatable = 0, CopyCost = -1 in
+def ZeroVectorRegE : RegisterClass<"KVX",
+  [v256i1],
+  256, (add A48, A50)>;
+
+let Size = 256, isAllocatable = 0, CopyCost = -1 in
+def ZeroVectorRegO : RegisterClass<"KVX",
+  [v256i1],
+  256, (add A49, A51)>;
 
 // XWR - Extension Wide Registers
 let Size = 512 in
@@ -1398,16 +1305,23 @@ def WideReg : RegisterClass<"KVX",
   [v512i1],
   512, (add
     W0,  W1,  W2,  W3,  W4,  W5,  W6,  W7,  W8,  W9, W10, W11, W12, W13, W14,
-   W15, W16, W17, W18, W19, W20, W21, W22, W23, W24, W25, W26, W27, W28, W29,
-   W30, W31)>;
+   W15, W16, W17, W18, W19, W20, W21, W22, W23)>;
+
+let Size = 512, isAllocatable = 0, CopyCost = -1 in
+def ZeroWideReg : RegisterClass<"KVX",
+  [v512i1],
+  512, (add W24, W25)>;
 
 // XMR - Extension Matrix Registers
 let Size = 1024 in
 def MatrixReg : RegisterClass<"KVX",
   [v1024i1],
   1024, (add
-    X0,  X1,  X2,  X3,  X4,  X5,  X6,  X7,  X8,  X9, X10, X11, X12, X13, X14,
-   X15)>;
+    X0,  X1,  X2,  X3,  X4,  X5,  X6,  X7,  X8,  X9, X10, X11)>;
+let Size = 1024, isAllocatable = 0, CopyCost = -1 in
+def ZeroMatrixReg : RegisterClass<"KVX",
+  [v1024i1],
+  1024, (add X12)>;
 
 // SFR - RegClas Implying Alone in Bundle
 let Size = 64 in
@@ -1605,8 +1519,7 @@ def VectorRegE : RegisterClass<"KVX",
   [v256i1],
   256, (add
     A0,  A2,  A4,  A6,  A8, A10, A12, A14, A16, A18, A20, A22, A24, A26, A28,
-   A30, A32, A34, A36, A38, A40, A42, A44, A46, A48, A50, A52, A54, A56, A58,
-   A60, A62)>;
+   A30, A32, A34, A36, A38, A40, A42, A44, A46)>;
 
 // XVR - Accelerator Registers Odd Numbered
 let Size = 256 in
@@ -1614,8 +1527,7 @@ def VectorRegO : RegisterClass<"KVX",
   [v256i1],
   256, (add
     A1,  A3,  A5,  A7,  A9, A11, A13, A15, A17, A19, A21, A23, A25, A27, A29,
-   A31, A33, A35, A37, A39, A41, A43, A45, A47, A49, A51, A53, A55, A57, A59,
-   A61, A63)>;
+   A31, A33, A35, A37, A39, A41, A43, A45, A47)>;
 
 // XBR - Block Registers Even Numbered
 let Size = 128 in
@@ -1625,9 +1537,7 @@ def BlockRegE : RegisterClass<"KVX",
      B0,   B2,   B4,   B6,   B8,  B10,  B12,  B14,  B16,  B18,  B20,  B22,
     B24,  B26,  B28,  B30,  B32,  B34,  B36,  B38,  B40,  B42,  B44,  B46,
     B48,  B50,  B52,  B54,  B56,  B58,  B60,  B62,  B64,  B66,  B68,  B70,
-    B72,  B74,  B76,  B78,  B80,  B82,  B84,  B86,  B88,  B90,  B92,  B94,
-    B96,  B98, B100, B102, B104, B106, B108, B110, B112, B114, B116, B118,
-   B120, B122, B124, B126)>;
+    B72,  B74,  B76,  B78,  B80,  B82,  B84,  B86,  B88,  B90,  B92,  B94)>;
 
 // XBR - Block Registers Odd Numbered
 let Size = 128 in
@@ -1637,9 +1547,7 @@ def BlockRegO : RegisterClass<"KVX",
      B1,   B3,   B5,   B7,   B9,  B11,  B13,  B15,  B17,  B19,  B21,  B23,
     B25,  B27,  B29,  B31,  B33,  B35,  B37,  B39,  B41,  B43,  B45,  B47,
     B49,  B51,  B53,  B55,  B57,  B59,  B61,  B63,  B65,  B67,  B69,  B71,
-    B73,  B75,  B77,  B79,  B81,  B83,  B85,  B87,  B89,  B91,  B93,  B95,
-    B97,  B99, B101, B103, B105, B107, B109, B111, B113, B115, B117, B119,
-   B121, B123, B125, B127)>;
+    B73,  B75,  B77,  B79,  B81,  B83,  B85,  B87,  B89,  B91,  B93,  B95)>;
 
 // XBR - Block Registers 0 Modulo 4
 let Size = 128 in
@@ -1647,8 +1555,7 @@ def BlockReg0M4 : RegisterClass<"KVX",
   [v128i1],
   128, (add
      B0,   B4,   B8,  B12,  B16,  B20,  B24,  B28,  B32,  B36,  B40,  B44,
-    B48,  B52,  B56,  B60,  B64,  B68,  B72,  B76,  B80,  B84,  B88,  B92,
-    B96, B100, B104, B108, B112, B116, B120, B124)>;
+    B48,  B52,  B56,  B60,  B64,  B68,  B72,  B76,  B80,  B84,  B88,  B92)>;
 
 // XBR - Block Registers 1 Modulo 4
 let Size = 128 in
@@ -1656,8 +1563,7 @@ def BlockReg1M4 : RegisterClass<"KVX",
   [v128i1],
   128, (add
      B1,   B5,   B9,  B13,  B17,  B21,  B25,  B29,  B33,  B37,  B41,  B45,
-    B49,  B53,  B57,  B61,  B65,  B69,  B73,  B77,  B81,  B85,  B89,  B93,
-    B97, B101, B105, B109, B113, B117, B121, B125)>;
+    B49,  B53,  B57,  B61,  B65,  B69,  B73,  B77,  B81,  B85,  B89,  B93)>;
 
 // XBR - Block Registers 2 Modulo 4
 let Size = 128 in
@@ -1665,8 +1571,7 @@ def BlockReg2M4 : RegisterClass<"KVX",
   [v128i1],
   128, (add
      B2,   B6,  B10,  B14,  B18,  B22,  B26,  B30,  B34,  B38,  B42,  B46,
-    B50,  B54,  B58,  B62,  B66,  B70,  B74,  B78,  B82,  B86,  B90,  B94,
-    B98, B102, B106, B110, B114, B118, B122, B126)>;
+    B50,  B54,  B58,  B62,  B66,  B70,  B74,  B78,  B82,  B86,  B90,  B94)>;
 
 // XBR - Block Registers 3 Modulo 4
 let Size = 128 in
@@ -1674,8 +1579,7 @@ def BlockReg3M4 : RegisterClass<"KVX",
   [v128i1],
   128, (add
      B3,   B7,  B11,  B15,  B19,  B23,  B27,  B31,  B35,  B39,  B43,  B47,
-    B51,  B55,  B59,  B63,  B67,  B71,  B75,  B79,  B83,  B87,  B91,  B95,
-    B99, B103, B107, B111, B115, B119, B123, B127)>;
+    B51,  B55,  B59,  B63,  B67,  B71,  B75,  B79,  B83,  B87,  B91,  B95)>;
 
 // XCR - Coprocessor Registers 0 Modulo 4
 let Size = 64 in
@@ -1685,9 +1589,7 @@ def CoproReg0M4 : RegisterClass<"KVX",
      C0,   C4,   C8,  C12,  C16,  C20,  C24,  C28,  C32,  C36,  C40,  C44,
     C48,  C52,  C56,  C60,  C64,  C68,  C72,  C76,  C80,  C84,  C88,  C92,
     C96, C100, C104, C108, C112, C116, C120, C124, C128, C132, C136, C140,
-   C144, C148, C152, C156, C160, C164, C168, C172, C176, C180, C184, C188,
-   C192, C196, C200, C204, C208, C212, C216, C220, C224, C228, C232, C236,
-   C240, C244, C248, C252)>;
+   C144, C148, C152, C156, C160, C164, C168, C172, C176, C180, C184, C188)>;
 
 // XCR - Coprocessor Registers 1 Modulo 4
 let Size = 64 in
@@ -1697,9 +1599,7 @@ def CoproReg1M4 : RegisterClass<"KVX",
      C1,   C5,   C9,  C13,  C17,  C21,  C25,  C29,  C33,  C37,  C41,  C45,
     C49,  C53,  C57,  C61,  C65,  C69,  C73,  C77,  C81,  C85,  C89,  C93,
     C97, C101, C105, C109, C113, C117, C121, C125, C129, C133, C137, C141,
-   C145, C149, C153, C157, C161, C165, C169, C173, C177, C181, C185, C189,
-   C193, C197, C201, C205, C209, C213, C217, C221, C225, C229, C233, C237,
-   C241, C245, C249, C253)>;
+   C145, C149, C153, C157, C161, C165, C169, C173, C177, C181, C185, C189)>;
 
 // XCR - Coprocessor Registers 2 Modulo 4
 let Size = 64 in
@@ -1709,9 +1609,7 @@ def CoproReg2M4 : RegisterClass<"KVX",
      C2,   C6,  C10,  C14,  C18,  C22,  C26,  C30,  C34,  C38,  C42,  C46,
     C50,  C54,  C58,  C62,  C66,  C70,  C74,  C78,  C82,  C86,  C90,  C94,
     C98, C102, C106, C110, C114, C118, C122, C126, C130, C134, C138, C142,
-   C146, C150, C154, C158, C162, C166, C170, C174, C178, C182, C186, C190,
-   C194, C198, C202, C206, C210, C214, C218, C222, C226, C230, C234, C238,
-   C242, C246, C250, C254)>;
+   C146, C150, C154, C158, C162, C166, C170, C174, C178, C182, C186, C190)>;
 
 // XCR - Coprocessor Registers 3 Modulo 4
 let Size = 64 in
@@ -1721,6 +1619,4 @@ def CoproReg3M4 : RegisterClass<"KVX",
      C3,   C7,  C11,  C15,  C19,  C23,  C27,  C31,  C35,  C39,  C43,  C47,
     C51,  C55,  C59,  C63,  C67,  C71,  C75,  C79,  C83,  C87,  C91,  C95,
     C99, C103, C107, C111, C115, C119, C123, C127, C131, C135, C139, C143,
-   C147, C151, C155, C159, C163, C167, C171, C175, C179, C183, C187, C191,
-   C195, C199, C203, C207, C211, C215, C219, C223, C227, C231, C235, C239,
-   C243, C247, C251, C255)>;
+   C147, C151, C155, C159, C163, C167, C171, C175, C179, C183, C187, C191)>;

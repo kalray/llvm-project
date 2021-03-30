@@ -144,13 +144,15 @@ void KVXInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
 
   // Between TCA registers
   if (KVX::VectorRegRegClass.contains(DstReg)) {
-    if (KVX::VectorRegERegClass.contains(SrcReg)) {
+    if (KVX::VectorRegERegClass.contains(SrcReg) ||
+        KVX::ZeroVectorRegERegClass.contains(SrcReg)) {
       LLVM_DEBUG(dbgs() << "It is a TCA VectorRegE copyvre.\n");
       BuildMI(MBB, MBBI, DL, get(KVX::COPYVre), DstReg)
           .addReg(SrcReg, getKillRegState(KillSrc));
       return;
     }
-    if (KVX::VectorRegORegClass.contains(SrcReg)) {
+    if (KVX::VectorRegORegClass.contains(SrcReg) ||
+        KVX::ZeroVectorRegORegClass.contains(SrcReg)) {
       LLVM_DEBUG(dbgs() << "It is a TCA VectorRegO copyvro.\n");
       BuildMI(MBB, MBBI, DL, get(KVX::COPYVro), DstReg)
           .addReg(SrcReg, getKillRegState(KillSrc));
@@ -158,7 +160,9 @@ void KVXInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
     }
   }
 
-  if (KVX::WideRegRegClass.contains(SrcReg, DstReg)) {
+  if (KVX::WideRegRegClass.contains(DstReg) &&
+      (KVX::WideRegRegClass.contains(SrcReg) ||
+       KVX::ZeroWideRegRegClass.contains(SrcReg))) {
     LLVM_DEBUG(dbgs() << "It is a TCA WideReg, use 2x copyv.\n");
 
     auto Src = TRI->getSubReg(SrcReg, KVX::sub_v0);
@@ -172,7 +176,9 @@ void KVXInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
     return;
   }
 
-  if (KVX::MatrixRegRegClass.contains(SrcReg, DstReg)) {
+  if (KVX::MatrixRegRegClass.contains(DstReg) &&
+      (KVX::MatrixRegRegClass.contains(SrcReg) ||
+       KVX::ZeroMatrixRegRegClass.contains(SrcReg))) {
     LLVM_DEBUG(dbgs() << "It is a TCA MatrixReg, use 4x copyv.\n");
     auto VecType = KVX::COPYVre;
     for (auto SubVec : {KVX::sub_v0, KVX::sub_v1, KVX::sub_v2, KVX::sub_v3}) {
