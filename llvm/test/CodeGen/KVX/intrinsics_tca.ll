@@ -824,108 +824,108 @@ define <4 x i64> @test_tca_builtins(i64 %a, i64 %b, i64 %c, i64 %d, <256 x i1>* 
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 0[$r4] = $a0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a5 = 0[$r4]
+; CHECK-NEXT:    lv $a1 = 0[$r4]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a3 = 96[$r6]
+; CHECK-NEXT:    lv $a7 = 96[$r6]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a2 = 64[$r6]
+; CHECK-NEXT:    lv $a6 = 64[$r6]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a1 = 32[$r6]
+; CHECK-NEXT:    lv $a5 = 32[$r6]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a0 = 0[$r6]
+; CHECK-NEXT:    lv $a4 = 0[$r6]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a7 = 32[$r5]
+; CHECK-NEXT:    lv $a3 = 32[$r5]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a6 = 0[$r5]
-; CHECK-NEXT:    convwbv0.ru.sat $a4_x = $a0a1a2a3
+; CHECK-NEXT:    lv $a2 = 0[$r5]
+; CHECK-NEXT:    convwbv0.ru.sat $a0_x = $a4a5a6a7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    convwbv1.ru.sat $a4_y = $a0a1a2a3
+; CHECK-NEXT:    convwbv1.ru.sat $a0_y = $a4a5a6a7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    convwbv2.ru.sat $a4_z = $a0a1a2a3
+; CHECK-NEXT:    convwbv2.ru.sat $a0_z = $a4a5a6a7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    convwbv3.ru.sat $a4_t = $a0a1a2a3
+; CHECK-NEXT:    convwbv3.ru.sat $a0_t = $a4a5a6a7
 ; CHECK-NEXT:    movetq $a8_lo = $r32, $r33
 ; CHECK-NEXT:    movetq $a8_hi = $r34, $r35
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmma242hw2 $a11_lo = $a6a7, $a4, $a8
-; CHECK-NEXT:    alignv $a5 = $a8, $a5, 16
+; CHECK-NEXT:    fmma242hw2 $a11_lo = $a2a3, $a0, $a8
+; CHECK-NEXT:    alignv $a1 = $a8, $a1, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmma242hw3 $a11_hi = $a6a7, $a4, $a8
-; CHECK-NEXT:    aligno $r8r9r10r11 = $a8, $a5, 1
+; CHECK-NEXT:    fmma242hw3 $a11_hi = $a2a3, $a0, $a8
+; CHECK-NEXT:    aligno $r8r9r10r11 = $a8, $a1, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmma242hw0 $a10_lo = $a6a7, $a4, $a8
+; CHECK-NEXT:    fmma242hw0 $a10_lo = $a2a3, $a0, $a8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmma242hw1 $a10_hi = $a6a7, $a4, $a8
+; CHECK-NEXT:    fmma242hw1 $a10_hi = $a2a3, $a0, $a8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma484bw $a6a7 = $a10a11, $a8, $a8
+; CHECK-NEXT:    mma484bw $a2a3 = $a10a11, $a8, $a8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma484subw $a6a7 = $a6a7, $a8, $a8
+; CHECK-NEXT:    mma484subw $a2a3 = $a2a3, $a8, $a8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fscalewv $a4 = $a4
+; CHECK-NEXT:    fscalewv $a0 = $a0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma444hbd0 $a0a1a2a3 = $a0a1a2a3, $a8, $a8
+; CHECK-NEXT:    mma444hbd0 $a4a5a6a7 = $a4a5a6a7, $a8, $a8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma484ubw $a6a7 = $a6a7, $a8, $a8
+; CHECK-NEXT:    mma484ubw $a2a3 = $a2a3, $a8, $a8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma444hbd1 $a0a1a2a3 = $a0a1a2a3, $a8, $a8
+; CHECK-NEXT:    mma444hbd1 $a4a5a6a7 = $a4a5a6a7, $a8, $a8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma484usbw $a6a7 = $a6a7, $a8, $a8
+; CHECK-NEXT:    mma484usbw $a2a3 = $a2a3, $a8, $a8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma444hd $a0a1a2a3 = $a0a1a2a3, $a8, $a8
+; CHECK-NEXT:    mma444hd $a4a5a6a7 = $a4a5a6a7, $a8, $a8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowwhv.rn.s $a9 = $a6a7
+; CHECK-NEXT:    fnarrowwhv.rn.s $a9 = $a2a3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma444suhbd0 $a0a1a2a3 = $a0a1a2a3, $a8, $a8
+; CHECK-NEXT:    mma444suhbd0 $a4a5a6a7 = $a4a5a6a7, $a8, $a8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fscalewv.rna.relu $a4 = $a4
+; CHECK-NEXT:    fscalewv.rna.relu $a0 = $a0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma444suhbd1 $a0a1a2a3 = $a0a1a2a3, $a8, $a8
+; CHECK-NEXT:    mma444suhbd1 $a4a5a6a7 = $a4a5a6a7, $a8, $a8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma444suhd $a0a1a2a3 = $a0a1a2a3, $a8, $a8
+; CHECK-NEXT:    mma444suhd $a4a5a6a7 = $a4a5a6a7, $a8, $a8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma444uhbd0 $a0a1a2a3 = $a0a1a2a3, $a8, $a8
+; CHECK-NEXT:    mma444uhbd0 $a4a5a6a7 = $a4a5a6a7, $a8, $a8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma444uhbd1 $a0a1a2a3 = $a0a1a2a3, $a8, $a8
-; CHECK-NEXT:    movefo $r8r9r10r11 = $a4
-; CHECK-NEXT:    movetq $a4_lo = $r8, $r9
-; CHECK-NEXT:    movetq $a4_hi = $r10, $r11
+; CHECK-NEXT:    mma444uhbd1 $a4a5a6a7 = $a4a5a6a7, $a8, $a8
+; CHECK-NEXT:    movefo $r8r9r10r11 = $a0
+; CHECK-NEXT:    movetq $a0_lo = $r8, $r9
+; CHECK-NEXT:    movetq $a0_hi = $r10, $r11
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fscalewv.relu $a4 = $a4
+; CHECK-NEXT:    fscalewv.relu $a0 = $a0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma444uhd $a0a1a2a3 = $a0a1a2a3, $a8, $a8
+; CHECK-NEXT:    mma444uhd $a4a5a6a7 = $a4a5a6a7, $a8, $a8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma444ushbd0 $a0a1a2a3 = $a0a1a2a3, $a8, $a8
+; CHECK-NEXT:    mma444ushbd0 $a4a5a6a7 = $a4a5a6a7, $a8, $a8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma444ushbd1 $a0a1a2a3 = $a0a1a2a3, $a8, $a8
+; CHECK-NEXT:    mma444ushbd1 $a4a5a6a7 = $a4a5a6a7, $a8, $a8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma444ushd $a0a1a2a3 = $a0a1a2a3, $a8, $a8
-; CHECK-NEXT:    lv.s.even $r0 ? $a4 = [$r1]
+; CHECK-NEXT:    mma444ushd $a4a5a6a7 = $a4a5a6a7, $a8, $a8
+; CHECK-NEXT:    lv.s.even $r0 ? $a0 = [$r1]
 ; CHECK-NEXT:    addd $r1 = $r4, 128
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mt44d $a0a1a2a3 = $a0a1a2a3
-; CHECK-NEXT:    lv.s $a4 = 0[$r4]
+; CHECK-NEXT:    mt44d $a4a5a6a7 = $a4a5a6a7
+; CHECK-NEXT:    lv.s $a0 = 0[$r4]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv.c3.s $a0a1a2a3 = 0[$r1]
+; CHECK-NEXT:    lv.c3.s $a4a5a6a7 = 0[$r1]
 ; CHECK-NEXT:    addd $r1 = $r4, 160
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv.c2.odd $r0 ? $a0a1a2a3 = [$r1]
+; CHECK-NEXT:    lv.c2.odd $r0 ? $a4a5a6a7 = [$r1]
 ; CHECK-NEXT:    addd $r0 = $r4, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 0[$r4] = $a4
+; CHECK-NEXT:    sv 0[$r4] = $a0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv.even $r33 ? [$r0] = $a4
+; CHECK-NEXT:    sv.even $r33 ? [$r0] = $a0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 32[$r5] = $a7
+; CHECK-NEXT:    sv 32[$r5] = $a3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 0[$r5] = $a6
+; CHECK-NEXT:    sv 0[$r5] = $a2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 96[$r6] = $a3
+; CHECK-NEXT:    sv 96[$r6] = $a7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 64[$r6] = $a2
+; CHECK-NEXT:    sv 64[$r6] = $a6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 32[$r6] = $a1
+; CHECK-NEXT:    sv 32[$r6] = $a5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 0[$r6] = $a0
+; CHECK-NEXT:    sv 0[$r6] = $a4
 ; CHECK-NEXT:    copyd $r0 = $r8
 ; CHECK-NEXT:    copyd $r1 = $r9
 ; CHECK-NEXT:    copyd $r2 = $r10
