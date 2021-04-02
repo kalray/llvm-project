@@ -67,17 +67,13 @@ public:
     return &InstrItins;
   }
 
-  bool enableMachineSchedDefaultSched() const override { return false; }
-  bool enablePostRAScheduler() const override { return true; }
-  bool enableMachineScheduler() const override { return true; }
-
-  bool useAA() const override {
-    if (OptLevel != CodeGenOpt::None)
-      return true;
-    return false;
-  }
-
-  bool hasFPIMM() const { return HasFPIMM; }
+  bool enableAdvancedRASplitCost() const override;
+  bool enableSubRegLiveness() const override;
+  bool enableMachineSchedDefaultSched() const override;
+  bool enablePostRAScheduler() const override;
+  bool enableMachineScheduler() const override;
+  bool hasFPIMM() const;
+  bool useAA() const override;
 };
 } // namespace llvm
 

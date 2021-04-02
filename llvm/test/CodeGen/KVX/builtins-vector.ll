@@ -1983,12 +1983,9 @@ entry:
 define <2 x double> @fixeddp(<2 x i64> %v){
 ; CHECK-LABEL: fixeddp:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fixedd.rn $r2 = $r0, 3
+; CHECK-NEXT:    fixedd.rn $r0 = $r0, 3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedd.rn $r3 = $r1, 3
-; CHECK-NEXT:    copyd $r0 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r3
+; CHECK-NEXT:    fixedd.rn $r1 = $r1, 3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2008,18 +2005,13 @@ declare i64 @llvm.kvx.fixedd(double, i64, i32) #1
 define <4 x double> @fixeddq(<4 x i64> %v){
 ; CHECK-LABEL: fixeddq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fixedd.rn $r4 = $r0, 3
+; CHECK-NEXT:    fixedd.rn $r0 = $r0, 3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedd.rn $r5 = $r1, 3
+; CHECK-NEXT:    fixedd.rn $r1 = $r1, 3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedd.rn $r6 = $r2, 3
+; CHECK-NEXT:    fixedd.rn $r2 = $r2, 3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedd.rn $r7 = $r3, 3
-; CHECK-NEXT:    copyd $r0 = $r4
-; CHECK-NEXT:    copyd $r1 = $r5
-; CHECK-NEXT:    copyd $r2 = $r6
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r3 = $r7
+; CHECK-NEXT:    fixedd.rn $r3 = $r3, 3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2102,12 +2094,9 @@ entry:
 define <2 x double> @fixedudp(<2 x i64> %v){
 ; CHECK-LABEL: fixedudp:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fixedud.rn $r2 = $r0, 3
+; CHECK-NEXT:    fixedud.rn $r0 = $r0, 3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedud.rn $r3 = $r1, 3
-; CHECK-NEXT:    copyd $r0 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r3
+; CHECK-NEXT:    fixedud.rn $r1 = $r1, 3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2127,18 +2116,13 @@ declare i64 @llvm.kvx.fixedud(double, i64, i32) #1
 define <4 x double> @fixedudq(<4 x i64> %v){
 ; CHECK-LABEL: fixedudq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fixedud.rn $r4 = $r0, 3
+; CHECK-NEXT:    fixedud.rn $r0 = $r0, 3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedud.rn $r5 = $r1, 3
+; CHECK-NEXT:    fixedud.rn $r1 = $r1, 3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedud.rn $r6 = $r2, 3
+; CHECK-NEXT:    fixedud.rn $r2 = $r2, 3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedud.rn $r7 = $r3, 3
-; CHECK-NEXT:    copyd $r0 = $r4
-; CHECK-NEXT:    copyd $r1 = $r5
-; CHECK-NEXT:    copyd $r2 = $r6
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r3 = $r7
+; CHECK-NEXT:    fixedud.rn $r3 = $r3, 3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

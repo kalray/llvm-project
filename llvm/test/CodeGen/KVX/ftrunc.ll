@@ -91,12 +91,11 @@ define <2 x double> @truncv2f64(<2 x double> %x) {
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    sd 24[$r12] = $r16
+; CHECK-NEXT:    sd 16[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -8
-; CHECK-NEXT:    sq 8[$r12] = $r20r21
+; CHECK-NEXT:    .cfi_offset 67, -16
+; CHECK-NEXT:    sd 8[$r12] = $r20
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 21, -16
 ; CHECK-NEXT:    .cfi_offset 20, -24
 ; CHECK-NEXT:    sd 0[$r12] = $r18
 ; CHECK-NEXT:    copyd $r18 = $r1
@@ -107,15 +106,13 @@ define <2 x double> @truncv2f64(<2 x double> %x) {
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    call trunc
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r21 = $r0
+; CHECK-NEXT:    copyd $r1 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r20
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r21
 ; CHECK-NEXT:    ld $r18 = 0[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lq $r20r21 = 8[$r12]
+; CHECK-NEXT:    ld $r20 = 8[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 24[$r12]
+; CHECK-NEXT:    ld $r16 = 16[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32

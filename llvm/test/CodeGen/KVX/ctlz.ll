@@ -91,11 +91,8 @@ define <2 x i32> @clzwp(<2 x i32> %a) {
 define <2 x i64> @ctlzv2i64(<2 x i64> %a) {
 ; CHECK-LABEL: ctlzv2i64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    clzd $r2 = $r0
-; CHECK-NEXT:    clzd $r3 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r2
-; CHECK-NEXT:    copyd $r1 = $r3
+; CHECK-NEXT:    clzd $r0 = $r0
+; CHECK-NEXT:    clzd $r1 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %res = call <2 x i64> @llvm.ctlz.v2i64(<2 x i64> %a)

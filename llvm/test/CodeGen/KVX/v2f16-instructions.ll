@@ -689,10 +689,10 @@ define <2 x i64> @test_fptosi_i64(<2 x half> %a) #0 {
 ; CHECK-NEXT:    srld $r0 = $r0, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fwidenlhw $r1 = $r1
-; CHECK-NEXT:    fwidenlhw $r2 = $r0
+; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fwidenlwd $r1 = $r1
-; CHECK-NEXT:    fwidenlwd $r2 = $r2
+; CHECK-NEXT:    fwidenlwd $r2 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedd.rz $r0 = $r1, 0
 ; CHECK-NEXT:    ;;
@@ -753,10 +753,10 @@ define <2 x i64> @test_fptoui_2xi64(<2 x half> %a) #0 {
 ; CHECK-NEXT:    srld $r0 = $r0, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fwidenlhw $r1 = $r1
-; CHECK-NEXT:    fwidenlhw $r2 = $r0
+; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fwidenlwd $r1 = $r1
-; CHECK-NEXT:    fwidenlwd $r2 = $r2
+; CHECK-NEXT:    fwidenlwd $r2 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedud.rz $r0 = $r1, 0
 ; CHECK-NEXT:    ;;
@@ -931,10 +931,10 @@ define <2 x half> @test_fptrunc_2xfloat(<2 x float> %a) #0 {
 define <2 x half> @test_fptrunc_2xdouble(<2 x double> %a) #0 {
 ; CHECK-LABEL: test_fptrunc_2xdouble:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fnarrowdw $r2 = $r1
+; CHECK-NEXT:    fnarrowdw $r1 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowdw $r0 = $r0
-; CHECK-NEXT:    fnarrowwh $r1 = $r2
+; CHECK-NEXT:    fnarrowwh $r1 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ;;
@@ -959,10 +959,10 @@ define <2 x double> @test_fpext_2xdouble(<2 x half> %a) #0 {
 ; CHECK-LABEL: test_fpext_2xdouble:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    zxhd $r1 = $r0
-; CHECK-NEXT:    srld $r2 = $r0, 16
+; CHECK-NEXT:    srld $r0 = $r0, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fwidenlhw $r1 = $r1
-; CHECK-NEXT:    fwidenlhw $r2 = $r2
+; CHECK-NEXT:    fwidenlhw $r2 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fwidenlwd $r0 = $r1
 ; CHECK-NEXT:    fwidenlwd $r1 = $r2
@@ -1471,14 +1471,13 @@ define <2 x half> @test_minnum(<2 x half> %a, <2 x half> %b) #0 {
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    call fminf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    insf $r0 = $r20, 63, 32
+; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r20 = 16[$r12]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    andw $r1 = $r0, 0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    fnarrowwhq $r0 = $r0r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
@@ -1523,14 +1522,13 @@ define <2 x half> @test_maxnum(<2 x half> %a, <2 x half> %b) #0 {
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    call fmaxf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    insf $r0 = $r20, 63, 32
+; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r20 = 16[$r12]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    andw $r1 = $r0, 0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    fnarrowwhq $r0 = $r0r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16

@@ -138,11 +138,11 @@ define <4 x half> @ffmahq(<4 x half> %a, <4 x half> %b, <4 x half> %c) {
 define <2 x double> @ffmav2f64(<2 x double> %a, <2 x double> %b, <2 x double> %c) {
 ; CHECK-LABEL: ffmav2f64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ffmad $r5 = $r1, $r3
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad $r4 = $r0, $r2
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmad $r5 = $r1, $r3
 ; CHECK-NEXT:    copyd $r0 = $r4
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -419,12 +419,12 @@ entry:
 define <4 x float> @fmawp_x2(<4 x float> %a, <4 x float> %b, <4 x float> %c) {
 ; CHECK-LABEL: fmawp_x2:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ffmawp $r5 = $r5, $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmawp $r4 = $r4, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r4
 ; CHECK-NEXT:    copyd $r1 = $r5
+; CHECK-NEXT:    copyd $r0 = $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmawp $r1 = $r1, $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmawp $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = fmul fast <4 x float> %c, %b
@@ -448,11 +448,11 @@ ret <4 x float> %2
 define <4 x float> @fmawp_x2_int(<4 x float> %a, <4 x float> %b, <4 x float> %c) {
 ; CHECK-LABEL: fmawp_x2_int:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ffmawp $r5 = $r1, $r3
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmawp $r4 = $r0, $r2
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmawp $r5 = $r1, $r3
 ; CHECK-NEXT:    copyd $r0 = $r4
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -463,18 +463,18 @@ define <4 x float> @fmawp_x2_int(<4 x float> %a, <4 x float> %b, <4 x float> %c)
 define <8 x float> @fmawp_x4(<8 x float> %a, <8 x float> %b, <8 x float> %c) {
 ; CHECK-LABEL: fmawp_x4:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ffmawp $r11 = $r11, $r7
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmawp $r9 = $r9, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmawp $r8 = $r8, $r4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmawp $r10 = $r10, $r6
-; CHECK-NEXT:    copyd $r0 = $r8
-; CHECK-NEXT:    copyd $r1 = $r9
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r2 = $r10
 ; CHECK-NEXT:    copyd $r3 = $r11
+; CHECK-NEXT:    copyd $r2 = $r10
+; CHECK-NEXT:    copyd $r1 = $r9
+; CHECK-NEXT:    copyd $r0 = $r8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmawp $r3 = $r3, $r7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmawp $r2 = $r2, $r6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmawp $r1 = $r1, $r5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmawp $r0 = $r0, $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 %1 = fmul fast <8 x float> %c, %b
@@ -502,14 +502,14 @@ ret <8 x float> %2
 define <8 x float> @int_fmawp_x4(<8 x float> %a, <8 x float> %b, <8 x float> %c) {
 ; CHECK-LABEL: int_fmawp_x4:
 ; CHECK:       # %bb.0:
+; CHECK-NEXT:    ffmawp $r8 = $r0, $r4
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmawp $r11 = $r3, $r7
+; CHECK-NEXT:    copyd $r0 = $r8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmawp $r9 = $r1, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmawp $r8 = $r0, $r4
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmawp $r10 = $r2, $r6
-; CHECK-NEXT:    copyd $r0 = $r8
 ; CHECK-NEXT:    copyd $r1 = $r9
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r2 = $r10
