@@ -430,9 +430,9 @@ define void @test_fmma242hw(<512 x i1>* %p0){
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fmma242hw2 $a1_lo = $a0a1, $a0, $a0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmma242hw3 $a1_hi = $a0a1, $a0, $a0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmma242hw0 $a0_lo = $a0a1, $a0, $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fmma242hw3 $a1_hi = $a0a1, $a0, $a0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmma242hw1 $a0_hi = $a0a1, $a0, $a0
 ; CHECK-NEXT:    sv 32[$r0] = $a1
@@ -810,15 +810,15 @@ define <4 x i64> @test_tca_builtins(i64 %a, i64 %b, i64 %c, i64 %d, <256 x i1>* 
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r1 = 4
 ; CHECK-NEXT:    make $r35 = 3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    movetq $a0_lo = $r35, $r1
 ; CHECK-NEXT:    make $r34 = 2
-; CHECK-NEXT:    addd $r1 = $r4, 96
 ; CHECK-NEXT:    make $r33 = 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    movetq $a0_hi = $r33, $r34
-; CHECK-NEXT:    lv $a1 = 0[$r4]
+; CHECK-NEXT:    movetq $a0_lo = $r35, $r1
 ; CHECK-NEXT:    make $r32 = 0
+; CHECK-NEXT:    addd $r1 = $r4, 96
+; CHECK-NEXT:    movetq $a0_hi = $r33, $r34
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv $a1 = 0[$r4]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a1 = 0[$r4]
 ; CHECK-NEXT:    ;;
@@ -1156,9 +1156,9 @@ define void @fmma242hw(<256 x i1>* nocapture %v, <512 x i1>* nocapture %w) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmma242hw2 $a3_lo = $a0a1, $a6, $a5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmma242hw3 $a3_hi = $a0a1, $a6, $a5
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmma242hw0 $a2_lo = $a0a1, $a6, $a5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fmma242hw3 $a3_hi = $a0a1, $a6, $a5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmma242hw1 $a2_hi = $a0a1, $a6, $a5
 ; CHECK-NEXT:    sv 224[$r1] = $a3
@@ -1212,11 +1212,11 @@ entry:
 define void @insertwm(<1024 x i1>* nocapture %a0, <512 x i1>* nocapture readonly %a1) {
 ; CHECK-LABEL: insertwm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    lv $a3 = 96[$r0]
+; CHECK-NEXT:    lv $a0 = 96[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a2 = 64[$r0]
+; CHECK-NEXT:    lv $a0 = 64[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a1 = 32[$r0]
+; CHECK-NEXT:    lv $a0 = 32[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a0 = 0[$r0]
 ; CHECK-NEXT:    ;;
@@ -1251,11 +1251,11 @@ declare <1024 x i1> @llvm.kvx.insertwm(<1024 x i1>, <512 x i1>, i32) #1
 define void @insertvm(<1024 x i1>* nocapture %a0, <256 x i1>* nocapture readonly %a1) {
 ; CHECK-LABEL: insertvm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    lv $a3 = 96[$r0]
+; CHECK-NEXT:    lv $a0 = 96[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a2 = 64[$r0]
+; CHECK-NEXT:    lv $a0 = 64[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a1 = 32[$r0]
+; CHECK-NEXT:    lv $a0 = 32[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a0 = 0[$r0]
 ; CHECK-NEXT:    ;;
@@ -1292,7 +1292,7 @@ declare <1024 x i1> @llvm.kvx.insertvm(<1024 x i1>, <256 x i1>, i32) #1
 define void @insertvw(<512 x i1>* nocapture %a0, <256 x i1>* nocapture readonly %a1) {
 ; CHECK-LABEL: insertvw:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    lv $a1 = 32[$r0]
+; CHECK-NEXT:    lv $a0 = 32[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a0 = 0[$r0]
 ; CHECK-NEXT:    ;;
