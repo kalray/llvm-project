@@ -45,3 +45,15 @@ KVXSubtarget::KVXSubtarget(const Triple &TT, StringRef CPU,
       InstrItins(getInstrItineraryForCPU(KVX_MC::selectKVXCPU(CPU))) {
   assert(InstrItins.Itineraries != nullptr && "InstrItins not initialized");
 }
+
+bool KVXSubtarget::enableAdvancedRASplitCost() const {
+  return OptLevel > CodeGenOpt::Default;
+};
+bool KVXSubtarget::enableMachineScheduler() const { return true; }
+bool KVXSubtarget::enableMachineSchedDefaultSched() const { return false; }
+bool KVXSubtarget::enablePostRAScheduler() const { return true; }
+bool KVXSubtarget::enableSubRegLiveness() const {
+  return OptLevel > CodeGenOpt::Less;
+}
+bool KVXSubtarget::useAA() const { return (OptLevel != CodeGenOpt::None); }
+bool KVXSubtarget::hasFPIMM() const { return HasFPIMM; }

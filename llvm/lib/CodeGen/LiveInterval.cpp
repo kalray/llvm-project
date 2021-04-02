@@ -970,16 +970,18 @@ void LiveInterval::computeSubRangeUndefs(SmallVectorImpl<SlotIndex> &Undefs,
   for (const MachineOperand &MO : MRI.def_operands(reg())) {
     if (!MO.isUndef())
       continue;
-    unsigned SubReg = MO.getSubReg();
-    assert(SubReg != 0 && "Undef should only be set on subreg defs");
-    LaneBitmask DefMask = TRI.getSubRegIndexLaneMask(SubReg);
-    LaneBitmask UndefMask = VRegMask & ~DefMask;
-    if ((UndefMask & LaneMask).any()) {
-      const MachineInstr &MI = *MO.getParent();
-      bool EarlyClobber = MO.isEarlyClobber();
-      SlotIndex Pos = Indexes.getInstructionIndex(MI).getRegSlot(EarlyClobber);
-      Undefs.push_back(Pos);
+    // If it is a SubReg, see if they overlap,
+    // or if it is the entire reg, just add it
+    if (unsigned SubReg = MO.getSubReg()) {
+      LaneBitmask DefMask = TRI.getSubRegIndexLaneMask(SubReg);
+      LaneBitmask UndefMask = VRegMask & ~DefMask;
+      if (!(UndefMask & LaneMask).any())
+        return;
     }
+    const MachineInstr &MI = *MO.getParent();
+    bool EarlyClobber = MO.isEarlyClobber();
+    SlotIndex Pos = Indexes.getInstructionIndex(MI).getRegSlot(EarlyClobber);
+    Undefs.push_back(Pos);
   }
 }
 

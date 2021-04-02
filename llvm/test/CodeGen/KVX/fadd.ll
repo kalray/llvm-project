@@ -163,14 +163,9 @@ define <2 x double> @add_v2f64_v2f64(<2 x double> %0, <2 x double> %1) {
 define <4 x double> @add_v4f64_v4f64(<4 x double> %0, <4 x double> %1) {
 ; CHECK-LABEL: add_v4f64_v4f64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fadddp $r10r11 = $r2r3, $r6r7
+; CHECK-NEXT:    fadddp $r2r3 = $r2r3, $r6r7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fadddp $r8r9 = $r0r1, $r4r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r8
-; CHECK-NEXT:    copyd $r1 = $r9
-; CHECK-NEXT:    copyd $r2 = $r10
-; CHECK-NEXT:    copyd $r3 = $r11
+; CHECK-NEXT:    fadddp $r0r1 = $r0r1, $r4r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = fadd <4 x double> %0, %1

@@ -50,29 +50,29 @@ define i32 @f(){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    faddd $r15 = $r15, $r35
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddd $r15 = $r15, $r8
+; CHECK-NEXT:    faddd $r8 = $r15, $r8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddd $r15 = $r15, $r9
+; CHECK-NEXT:    faddd $r8 = $r8, $r9
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddd $r15 = $r15, $r10
+; CHECK-NEXT:    faddd $r8 = $r8, $r10
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddd $r8 = $r15, $r11
+; CHECK-NEXT:    faddd $r8 = $r8, $r11
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddd $r8 = $r8, $r4
+; CHECK-NEXT:    faddd $r4 = $r8, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddd $r8 = $r8, $r5
+; CHECK-NEXT:    faddd $r4 = $r4, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddd $r8 = $r8, $r6
+; CHECK-NEXT:    faddd $r4 = $r4, $r6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddd $r4 = $r8, $r7
+; CHECK-NEXT:    faddd $r4 = $r4, $r7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddd $r4 = $r4, $r0
+; CHECK-NEXT:    faddd $r0 = $r4, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddd $r4 = $r4, $r1
+; CHECK-NEXT:    faddd $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddd $r4 = $r4, $r2
+; CHECK-NEXT:    faddd $r0 = $r0, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddd $r0 = $r4, $r3
+; CHECK-NEXT:    faddd $r0 = $r0, $r3
 ; CHECK-NEXT:    call h
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_2: # %if.end

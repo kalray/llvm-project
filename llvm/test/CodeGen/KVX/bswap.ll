@@ -64,53 +64,49 @@ define <2 x i32> @bswapv2i32(<2 x i32> %a) {
 define <2 x i64> @bswapv2i64(<2 x i64> %a) {
 ; CHECK-LABEL: bswapv2i64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    extfz $r4 = $r1, 7, 0
-; CHECK-NEXT:    extfz $r5 = $r1, 15, 8
-; CHECK-NEXT:    srld $r3 = $r1, 56
+; CHECK-NEXT:    extfz $r2 = $r1, 7, 0
+; CHECK-NEXT:    extfz $r3 = $r1, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r10 = $r1, 55, 48
-; CHECK-NEXT:    extfz $r6 = $r1, 23, 16
+; CHECK-NEXT:    extfz $r4 = $r1, 23, 16
+; CHECK-NEXT:    extfz $r5 = $r1, 31, 24
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r7 = $r1, 31, 24
-; CHECK-NEXT:    extfz $r8 = $r1, 39, 32
+; CHECK-NEXT:    extfz $r6 = $r1, 39, 32
+; CHECK-NEXT:    extfz $r7 = $r1, 47, 40
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r9 = $r1, 47, 40
+; CHECK-NEXT:    extfz $r8 = $r1, 55, 48
+; CHECK-NEXT:    srld $r1 = $r1, 56
+; CHECK-NEXT:    extfz $r9 = $r0, 7, 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    extfz $r10 = $r0, 15, 8
+; CHECK-NEXT:    extfz $r11 = $r0, 23, 16
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    extfz $r15 = $r0, 31, 24
+; CHECK-NEXT:    extfz $r16 = $r0, 39, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    extfz $r17 = $r0, 47, 40
+; CHECK-NEXT:    extfz $r32 = $r0, 55, 48
+; CHECK-NEXT:    srld $r0 = $r0, 56
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r3 = $r2, 15, 8
 ; CHECK-NEXT:    insf $r5 = $r4, 15, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r7 = $r6, 15, 8
-; CHECK-NEXT:    insf $r9 = $r8, 15, 8
+; CHECK-NEXT:    insf $r1 = $r8, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r3 = $r10, 15, 8
-; CHECK-NEXT:    insf $r7 = $r5, 31, 16
+; CHECK-NEXT:    insf $r10 = $r9, 15, 8
+; CHECK-NEXT:    insf $r15 = $r11, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r3 = $r9, 31, 16
-; CHECK-NEXT:    extfz $r1 = $r0, 7, 0
+; CHECK-NEXT:    insf $r17 = $r16, 15, 8
+; CHECK-NEXT:    insf $r0 = $r32, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r3 = $r7, 63, 32
-; CHECK-NEXT:    extfz $r4 = $r0, 15, 8
+; CHECK-NEXT:    insf $r5 = $r3, 31, 16
+; CHECK-NEXT:    insf $r1 = $r7, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r5 = $r0, 23, 16
-; CHECK-NEXT:    extfz $r6 = $r0, 31, 24
-; CHECK-NEXT:    srld $r2 = $r0, 56
+; CHECK-NEXT:    insf $r15 = $r10, 31, 16
+; CHECK-NEXT:    insf $r0 = $r17, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r7 = $r0, 39, 32
-; CHECK-NEXT:    extfz $r8 = $r0, 47, 40
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r0 = $r0, 55, 48
-; CHECK-NEXT:    insf $r4 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r6 = $r5, 15, 8
-; CHECK-NEXT:    insf $r8 = $r7, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r0, 15, 8
-; CHECK-NEXT:    insf $r6 = $r4, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r8, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r6, 63, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r2
-; CHECK-NEXT:    copyd $r1 = $r3
+; CHECK-NEXT:    insf $r1 = $r5, 63, 32
+; CHECK-NEXT:    insf $r0 = $r15, 63, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %res = call <2 x i64> @llvm.bswap.v2i64(<2 x i64> %a)

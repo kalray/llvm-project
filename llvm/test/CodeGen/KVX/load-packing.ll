@@ -24,11 +24,11 @@ define i64 @f4(i64* nocapture readonly %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo $r0r1r2r3 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r4 = $r1, $r0
+; CHECK-NEXT:    addd $r0 = $r1, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r4 = $r4, $r2
+; CHECK-NEXT:    addd $r0 = $r0, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r4, $r3
+; CHECK-NEXT:    addd $r0 = $r0, $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -53,11 +53,11 @@ define i64 @f2_2(i64* nocapture readonly %a, i64* nocapture readonly %b) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lq $r0r1 = 0[$r1]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r4 = $r1, $r3
+; CHECK-NEXT:    addd $r1 = $r1, $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addx2d $r2 = $r2, $r4
+; CHECK-NEXT:    addx2d $r1 = $r2, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r2, $r0
+; CHECK-NEXT:    addd $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -98,11 +98,11 @@ define i64 @f4_force(i64* nocapture readonly %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo $r0r1r2r3 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r4 = $r1, $r0
+; CHECK-NEXT:    addd $r0 = $r1, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r4 = $r4, $r2
+; CHECK-NEXT:    addd $r0 = $r0, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r4, $r3
+; CHECK-NEXT:    addd $r0 = $r0, $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

@@ -482,25 +482,25 @@ define i64 @stackrealign3(i32 %x){
 ; CHECK-NEXT:    .cfi_escape 0x10, 0x0e, 0x02, 0x7c, 0x08
 ; CHECK-NEXT:    sd 0[$r12] = $r18
 ; CHECK-NEXT:    copyd $r14 = $r32
+; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    make $r4 = 4
-; CHECK-NEXT:    make $r8 = 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_escape 0x10, 0x12, 0x02, 0x7c, 0x00
 ; CHECK-NEXT:    .cfi_def_cfa_register 14
+; CHECK-NEXT:    make $r8 = 8
 ; CHECK-NEXT:    make $r32 = 12
 ; CHECK-NEXT:    make $r36 = 16
 ; CHECK-NEXT:    make $r5 = 3
-; CHECK-NEXT:    make $r9 = 7
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    make $r9 = 7
 ; CHECK-NEXT:    make $r33 = 11
 ; CHECK-NEXT:    make $r37 = 15
 ; CHECK-NEXT:    make $r6 = 2
-; CHECK-NEXT:    make $r10 = 6
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    make $r7 = 1
+; CHECK-NEXT:    make $r10 = 6
 ; CHECK-NEXT:    make $r34 = 10
 ; CHECK-NEXT:    make $r38 = 14
-; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    make $r7 = 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r11 = 5
 ; CHECK-NEXT:    make $r35 = 9
