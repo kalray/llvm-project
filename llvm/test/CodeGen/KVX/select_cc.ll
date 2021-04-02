@@ -176,13 +176,13 @@ define void @test_select_wide_reg(<512 x i1> * %V, i1 %cc){
 ; CHECK-NEXT:    lv $a3 = 32[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a2 = 0[$r0]
-; CHECK-NEXT:    alignv $a5 = $a3, $a0, $r1
+; CHECK-NEXT:    alignv $a3 = $a3, $a0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    alignv $a4 = $a2, $a1, $r1
+; CHECK-NEXT:    alignv $a0 = $a2, $a1, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 32[$r0] = $a5
+; CHECK-NEXT:    sv 32[$r0] = $a3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 0[$r0] = $a4
+; CHECK-NEXT:    sv 0[$r0] = $a0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %v0 = load volatile <512 x i1>, <512 x i1>* %V, align 32
@@ -214,21 +214,21 @@ define void @test_select_matrix_reg(<1024 x i1> * %V, i1 %cc){
 ; CHECK-NEXT:    lv $a5 = 32[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a4 = 0[$r0]
-; CHECK-NEXT:    alignv $a11 = $a7, $a0, $r1
+; CHECK-NEXT:    alignv $a7 = $a7, $a0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    alignv $a10 = $a6, $a1, $r1
+; CHECK-NEXT:    alignv $a6 = $a6, $a1, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    alignv $a9 = $a5, $a2, $r1
+; CHECK-NEXT:    alignv $a1 = $a5, $a2, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    alignv $a8 = $a4, $a3, $r1
+; CHECK-NEXT:    alignv $a0 = $a4, $a3, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 96[$r0] = $a11
+; CHECK-NEXT:    sv 96[$r0] = $a7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 64[$r0] = $a10
+; CHECK-NEXT:    sv 64[$r0] = $a6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 32[$r0] = $a9
+; CHECK-NEXT:    sv 32[$r0] = $a1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 0[$r0] = $a8
+; CHECK-NEXT:    sv 0[$r0] = $a0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %v0 = load volatile <1024 x i1>, <1024 x i1>* %V, align 32

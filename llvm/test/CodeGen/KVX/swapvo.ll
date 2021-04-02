@@ -15,18 +15,17 @@ define i32 @main() {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 64
 ; CHECK-NEXT:    sd 0[$r12] = $r16
-; CHECK-NEXT:    make $r4 = 0
 ; CHECK-NEXT:    make $r5 = 1
 ; CHECK-NEXT:    make $r6 = 2
+; CHECK-NEXT:    make $r7 = 3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 67, -64
-; CHECK-NEXT:    make $r7 = 3
+; CHECK-NEXT:    make $r3 = 4
 ; CHECK-NEXT:    copyd $r0 = $r5
 ; CHECK-NEXT:    copyd $r1 = $r6
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r2 = $r7
-; CHECK-NEXT:    make $r3 = 4
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    make $r4 = 0
 ; CHECK-NEXT:    movefo $r0r1r2r3 = $a0
 ; CHECK-NEXT:    movetq $a0_lo = $r0, $r1
 ; CHECK-NEXT:    movetq $a0_hi = $r2, $r3

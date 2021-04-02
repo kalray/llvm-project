@@ -572,13 +572,13 @@ define <2 x i32> @test_fptosi_i32(<2 x float> %a) #0 {
 define <2 x i64> @test_fptosi_i64(<2 x float> %a) #0 {
 ; CHECK-LABEL: test_fptosi_i64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r2 = $r0, 32
-; CHECK-NEXT:    fwidenlwd $r1 = $r0
+; CHECK-NEXT:    srad $r1 = $r0, 32
+; CHECK-NEXT:    fwidenlwd $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedd.rz $r0 = $r1, 0
-; CHECK-NEXT:    fwidenlwd $r2 = $r2
+; CHECK-NEXT:    fwidenlwd $r1 = $r1
+; CHECK-NEXT:    fixedd.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedd.rz $r1 = $r2, 0
+; CHECK-NEXT:    fixedd.rz $r1 = $r1, 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptosi <2 x float> %a to <2 x i64>
@@ -603,13 +603,13 @@ define <2 x i32> @test_fptoui_2xi32(<2 x float> %a) #0 {
 define <2 x i64> @test_fptoui_2xi64(<2 x float> %a) #0 {
 ; CHECK-LABEL: test_fptoui_2xi64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r2 = $r0, 32
-; CHECK-NEXT:    fwidenlwd $r1 = $r0
+; CHECK-NEXT:    srad $r1 = $r0, 32
+; CHECK-NEXT:    fwidenlwd $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedud.rz $r0 = $r1, 0
-; CHECK-NEXT:    fwidenlwd $r2 = $r2
+; CHECK-NEXT:    fwidenlwd $r1 = $r1
+; CHECK-NEXT:    fixedud.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedud.rz $r1 = $r2, 0
+; CHECK-NEXT:    fixedud.rz $r1 = $r1, 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptoui <2 x float> %a to <2 x i64>
@@ -761,13 +761,10 @@ define <2 x float> @test_fptrunc_2xdouble(<2 x double> %a) #0 {
 define <2 x double> @test_fpext_2xdouble(<2 x float> %a) #0 {
 ; CHECK-LABEL: test_fpext_2xdouble:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fwidenlwd $r2 = $r0
-; CHECK-NEXT:    srad $r0 = $r0, 32
+; CHECK-NEXT:    srad $r1 = $r0, 32
+; CHECK-NEXT:    fwidenlwd $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlwd $r3 = $r0
-; CHECK-NEXT:    copyd $r0 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r3
+; CHECK-NEXT:    fwidenlwd $r1 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fpext <2 x float> %a to <2 x double>
@@ -1327,11 +1324,11 @@ define <2 x double> @test_copysign_extended(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-LABEL: test_copysign_extended:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srad $r2 = $r1, 32
-; CHECK-NEXT:    sraw $r1 = $r1, 31
 ; CHECK-NEXT:    srad $r3 = $r0, 32
+; CHECK-NEXT:    sraw $r1 = $r1, 31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 31, 31
 ; CHECK-NEXT:    sraw $r2 = $r2, 31
+; CHECK-NEXT:    insf $r0 = $r1, 31, 31
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r3 = $r2, 31, 31
 ; CHECK-NEXT:    fwidenlwd $r0 = $r0
