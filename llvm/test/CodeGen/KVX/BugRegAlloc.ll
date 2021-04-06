@@ -1,5 +1,5 @@
 ; REQUIRES: asserts
-; RUN: bin/llc -O3 -o - %s | FileCheck %s
+; RUN: llc -O3 -o - %s | FileCheck %s
 ; CHECK: End function
 target triple = "kvx-kalray-cos"
 
