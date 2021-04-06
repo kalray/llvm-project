@@ -1277,8 +1277,6 @@ static bool expandSPCHECK(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
       .addMBB(OverflowMBB)
       .addImm(KVXMOD::SCALARCOND_DGTZ);
 
-  MBB.addSuccessor(OverflowMBB);
-
   MI.eraseFromParent();
   return true;
 }

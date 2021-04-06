@@ -175,7 +175,7 @@ void KVXFrameLowering::emitStackCheck(MachineFunction &MF,
   CheckMBB->addSuccessor(&MBB);
   CheckMBB->addSuccessor(CallMBB);
 
-  CallMBB->addSuccessor(&MBB);
+  CallMBB->setLabelMustBeEmitted();
 
   auto *KVXFI = MF.getInfo<KVXMachineFunctionInfo>();
   KVXFI->setOverflowMBB(CallMBB);
