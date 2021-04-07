@@ -2440,8 +2440,14 @@ bool KVX_LOW::isImmVecOfLeqNbits(llvm::SDNode *N, llvm::SelectionDAG *CurDag,
     return false;
 
   for (unsigned I = 0, E = BV->getNumOperands(); I != E; ++I) {
-    uint64_t Val = (cast<ConstantSDNode>(BV->getOperand(I)))->getSExtValue();
-    if (!isUIntN(B, Val))
+    auto Op = BV->getOperand(I);
+    if (Op->isUndef())
+      continue;
+
+    if (auto *CSDN = dyn_cast<ConstantSDNode>(Op)) {
+      if (!isUIntN(B, CSDN->getSExtValue()))
+        return false;
+    } else
       return false;
   }
   return true;
