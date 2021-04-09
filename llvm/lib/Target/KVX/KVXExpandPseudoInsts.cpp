@@ -536,9 +536,9 @@ static bool expandATAS(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
 
   MachineInstr &MI = *MBBI;
 
-  if (!MI.hasOneMemOperand()) {
+  if (!MI.getNumMemOperands()) {
     MBBI->print(errs());
-    report_fatal_error("expandATAS pseudo-instr expects one MemOperand");
+    report_fatal_error("expandATAS pseudo-instr expects MemOperands");
   }
 
   if (MI.memoperands()[0]->getSize() != 1) {
