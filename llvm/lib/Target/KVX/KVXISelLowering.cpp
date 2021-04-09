@@ -2140,7 +2140,7 @@ SDValue KVXTargetLowering::lowerATOMIC_LOAD_OP(SDValue Op,
     // Expand all atomic_load operations to libcall for i8 and i16.
   case MVT::i8:
     // Except for ATOMIC_SWAP in order to support __atomic_test_and_set.
-    if (Op.getOpcode() == ISD::ATOMIC_SWAP && Op.getConstantOperandVal(2) == 1)
+    if (Op.getOpcode() == ISD::ATOMIC_SWAP)
       return Op;
     LLVM_FALLTHROUGH;
   case MVT::i16:
