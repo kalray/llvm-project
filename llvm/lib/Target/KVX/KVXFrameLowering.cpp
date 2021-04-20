@@ -504,6 +504,11 @@ MachineBasicBlock::iterator KVXFrameLowering::eliminateCallFramePseudoInstr(
   return MBB.erase(MI);
 }
 
+TargetFrameLowering::DwarfFrameBase
+KVXFrameLowering::getDwarfFrameBase(const MachineFunction &MF) const {
+  return {DwarfFrameBase::CFA, {0}};
+}
+
 void KVXFrameLowering::emitStackCheck(MachineFunction &MF,
                                       MachineBasicBlock &MBB) const {
   MachineFrameInfo &MFI = MF.getFrameInfo();
