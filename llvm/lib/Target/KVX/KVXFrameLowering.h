@@ -58,6 +58,7 @@ public:
   MachineBasicBlock::iterator
   eliminateCallFramePseudoInstr(MachineFunction &MF, MachineBasicBlock &MBB,
                                 MachineBasicBlock::iterator MI) const override;
+  DwarfFrameBase getDwarfFrameBase(const MachineFunction &MF) const override;
 
 protected:
   const KVXSubtarget &STI;
