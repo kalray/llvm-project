@@ -183,7 +183,7 @@ static bool expandCacheInstruction(const KVXInstrInfo *TII,
                                    MachineBasicBlock::iterator MBBI) {
   MachineInstr &MI = *MBBI;
   DebugLoc DL = MI.getDebugLoc();
-  unsigned Base = MI.getOperand(1).getReg();
+  Register Base = MI.getOperand(1).getReg();
 
   bool OffsetIsReg = MI.getOperand(0).isReg();
   if (!(OffsetIsReg || MI.getOperand(0).isImm())) {
@@ -1358,11 +1358,6 @@ bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
     return expandSystemRegValueInstr(KVX::WFXMrst4, TII, MBB, MBBI);
   case KVX::SETp:
     return expandSystemRegValueInstr(KVX::SETrst4, TII, MBB, MBBI);
-  case KVX::DINVALLp:
-  case KVX::DTOUCHLp:
-  case KVX::DZEROLp:
-  case KVX::IINVALSp:
-    return expandCacheInstruction(TII, MBB, MBBI);
   default:
     break;
   }
@@ -1481,6 +1476,11 @@ bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
     return expandTcaInplace(TII, MBB, MBBI, KVX::sub_b1, KVX::MOVETQrrbo);
   case KVX::MOVETOLOp:
     return expandTcaInplace(TII, MBB, MBBI, KVX::sub_b0, KVX::MOVETQrrbe);
+  case KVX::DINVALLp:
+  case KVX::DTOUCHLp:
+  case KVX::DZEROLp:
+  case KVX::IINVALSp:
+    return expandCacheInstruction(TII, MBB, MBBI);
   default:
     break;
   }
