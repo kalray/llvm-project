@@ -337,12 +337,19 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::SELECT, VT, Expand);
   }
 
-  // TODO: v2i32 FP_TO_[SU]INT v2f32 => FIXED[U]WP
-  // TODO: v2f32 [US]INT_TO_FP v2i32 => FLOAT[U]WP
-  for (auto VT : {MVT::v2i16, MVT::v2i32, MVT::v2i64, MVT::v4i16, MVT::v4i32,
-                  MVT::v2i8, MVT::v4i8, MVT::v4f64, MVT::v4i64}) {
+  for (auto VT : {MVT::v2i8, MVT::v4i8, MVT::v8i8}) {
     setOperationAction(ISD::FP_TO_SINT, VT, Expand);
     setOperationAction(ISD::FP_TO_UINT, VT, Expand);
+  }
+
+  for (auto VT : {MVT::v2i16, MVT::v2i32, MVT::v2i64, MVT::v4i16, MVT::v4i32,
+                  MVT::v4i64}) {
+    setOperationAction(ISD::FP_TO_SINT, VT, Legal);
+    setOperationAction(ISD::FP_TO_UINT, VT, Legal);
+  }
+
+  for (auto VT : {MVT::v2i8, MVT::v2i16, MVT::v2i32, MVT::v2i64, MVT::v4i8,
+                  MVT::v4i16, MVT::v4i32, MVT::v4i64, MVT::v8i8}) {
     setOperationAction(ISD::SINT_TO_FP, VT, Expand);
     setOperationAction(ISD::UINT_TO_FP, VT, Expand);
   }
