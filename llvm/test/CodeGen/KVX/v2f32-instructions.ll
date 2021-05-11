@@ -91,7 +91,6 @@ define <2 x float> @test_fsub(<2 x float> %a, <2 x float> %b) #0 {
   ret <2 x float> %r
 }
 
-; TODO: The upper bits should be zeroed
 define <2 x float> @test_fsub_imm(<2 x float> %a) #0 {
 ; CHECK-LABEL: test_fsub_imm:
 ; CHECK:       # %bb.0:
@@ -557,12 +556,7 @@ define <2 x i1> @test_fcmp_ord(<2 x float> %a, <2 x float> %b) #0 {
 define <2 x i32> @test_fptosi_i32(<2 x float> %a) #0 {
 ; CHECK-LABEL: test_fptosi_i32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r1 = $r0, 32
-; CHECK-NEXT:    fixedw.rz $r0 = $r0, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedw.rz $r1 = $r1, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 63, 32
+; CHECK-NEXT:    fixedwp.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptosi <2 x float> %a to <2 x i32>
@@ -572,13 +566,12 @@ define <2 x i32> @test_fptosi_i32(<2 x float> %a) #0 {
 define <2 x i64> @test_fptosi_i64(<2 x float> %a) #0 {
 ; CHECK-LABEL: test_fptosi_i64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r1 = $r0, 32
+; CHECK-NEXT:    fwidenmwd $r1 = $r0
 ; CHECK-NEXT:    fwidenlwd $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlwd $r1 = $r1
-; CHECK-NEXT:    fixedd.rz $r0 = $r0, 0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedd.rz $r1 = $r1, 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fixedd.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptosi <2 x float> %a to <2 x i64>
@@ -588,12 +581,7 @@ define <2 x i64> @test_fptosi_i64(<2 x float> %a) #0 {
 define <2 x i32> @test_fptoui_2xi32(<2 x float> %a) #0 {
 ; CHECK-LABEL: test_fptoui_2xi32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r1 = $r0, 32
-; CHECK-NEXT:    fixeduw.rz $r0 = $r0, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixeduw.rz $r1 = $r1, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 63, 32
+; CHECK-NEXT:    fixeduwp.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptoui <2 x float> %a to <2 x i32>
@@ -603,19 +591,75 @@ define <2 x i32> @test_fptoui_2xi32(<2 x float> %a) #0 {
 define <2 x i64> @test_fptoui_2xi64(<2 x float> %a) #0 {
 ; CHECK-LABEL: test_fptoui_2xi64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r1 = $r0, 32
+; CHECK-NEXT:    fwidenmwd $r1 = $r0
 ; CHECK-NEXT:    fwidenlwd $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlwd $r1 = $r1
-; CHECK-NEXT:    fixedud.rz $r0 = $r0, 0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedud.rz $r1 = $r1, 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fixedud.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptoui <2 x float> %a to <2 x i64>
   ret <2 x i64> %r
 }
 
+define <2 x i16> @test_fptosi_i16(<2 x float> %a) #0 {
+; CHECK-LABEL: test_fptosi_i16:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fixedwp.rz $r0 = $r0, 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r0, 31, 16
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srld $r0 = $r0, 16
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %r = fptosi <2 x float> %a to <2 x i16>
+  ret <2 x i16> %r
+}
+
+define <2 x i16> @test_fptoui_i16(<2 x float> %a) #0 {
+; CHECK-LABEL: test_fptoui_i16:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fixeduwp.rz $r0 = $r0, 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r0, 31, 16
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srld $r0 = $r0, 16
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %r = fptoui <2 x float> %a to <2 x i16>
+  ret <2 x i16> %r
+}
+
+define <2 x i8> @test_fptosi_i8(<2 x float> %a) #0 {
+; CHECK-LABEL: test_fptosi_i8:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    srad $r1 = $r0, 32
+; CHECK-NEXT:    fixedw.rz $r0 = $r0, 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fixedw.rz $r1 = $r1, 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %r = fptosi <2 x float> %a to <2 x i8>
+  ret <2 x i8> %r
+}
+
+define <2 x i8> @test_fptoui_i8(<2 x float> %a) #0 {
+; CHECK-LABEL: test_fptoui_i8:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    srad $r1 = $r0, 32
+; CHECK-NEXT:    fixeduw.rz $r0 = $r0, 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fixeduw.rz $r1 = $r1, 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %r = fptoui <2 x float> %a to <2 x i8>
+  ret <2 x i8> %r
+}
 define <2 x float> @test_uitofp_2xi32(<2 x i32> %a) #0 {
 ; CHECK-LABEL: test_uitofp_2xi32:
 ; CHECK:       # %bb.0:

@@ -106,7 +106,6 @@ define <2 x half> @test_fsub(<2 x half> %a, <2 x half> %b) #0 {
   ret <2 x half> %r
 }
 
-; TODO: The upper bits should be zeroed
 define <2 x half> @test_fsub_imm(<2 x half> %a) #0 {
 ; CHECK-LABEL: test_fsub_imm:
 ; CHECK:       # %bb.0:
@@ -639,128 +638,90 @@ define <2 x i1> @test_fcmp_ord(<2 x half> %a, <2 x half> %b) #0 {
   ret <2 x i1> %r
 }
 
-; TODO: Could insf(extfz(FIXEDUWP(FWIDENLHWP)))
 define <2 x i16> @test_fptosi_i16(<2 x half> %a) #0 {
 ; CHECK-LABEL: test_fptosi_i16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srld $r1 = $r0, 16
-; CHECK-NEXT:    zxhd $r0 = $r0
+; CHECK-NEXT:    fwidenlhwp $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r1 = $r1
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
+; CHECK-NEXT:    fixedwp.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedw.rz $r1 = $r1, 0
+; CHECK-NEXT:    insf $r0 = $r0, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedw.rz $r0 = $r0, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 31, 16
+; CHECK-NEXT:    srld $r0 = $r0, 16
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptosi <2 x half> %a to <2 x i16>
   ret <2 x i16> %r
 }
 
-; TODO: Could do  FIXEDUWP(FWIDENLHWP)
 define <2 x i32> @test_fptosi_i32(<2 x half> %a) #0 {
 ; CHECK-LABEL: test_fptosi_i32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srld $r1 = $r0, 16
-; CHECK-NEXT:    zxhd $r0 = $r0
+; CHECK-NEXT:    fwidenlhwp $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r1 = $r1
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedw.rz $r1 = $r1, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedw.rz $r0 = $r0, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 63, 32
+; CHECK-NEXT:    fixedwp.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptosi <2 x half> %a to <2 x i32>
   ret <2 x i32> %r
 }
 
-;TODO: Could use FWIDENLHW
 define <2 x i64> @test_fptosi_i64(<2 x half> %a) #0 {
 ; CHECK-LABEL: test_fptosi_i64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    zxhd $r1 = $r0
-; CHECK-NEXT:    srld $r0 = $r0, 16
+; CHECK-NEXT:    fwidenlhwp $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r1 = $r1
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
+; CHECK-NEXT:    fwidenmwd $r1 = $r0
+; CHECK-NEXT:    fwidenlwd $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlwd $r1 = $r1
-; CHECK-NEXT:    fwidenlwd $r2 = $r0
+; CHECK-NEXT:    fixedd.rz $r1 = $r1, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedd.rz $r0 = $r1, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedd.rz $r1 = $r2, 0
+; CHECK-NEXT:    fixedd.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptosi <2 x half> %a to <2 x i64>
   ret <2 x i64> %r
 }
 
-; TODO: Could use insf(extfz(FIXEDUWP(FWIDENLHW)))
 define <2 x i16> @test_fptoui_2xi16(<2 x half> %a) #0 {
 ; CHECK-LABEL: test_fptoui_2xi16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srld $r1 = $r0, 16
-; CHECK-NEXT:    zxhd $r0 = $r0
+; CHECK-NEXT:    fwidenlhwp $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r1 = $r1
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
+; CHECK-NEXT:    fixeduwp.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixeduw.rz $r1 = $r1, 0
+; CHECK-NEXT:    insf $r0 = $r0, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixeduw.rz $r0 = $r0, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 31, 16
+; CHECK-NEXT:    srld $r0 = $r0, 16
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptoui <2 x half> %a to <2 x i16>
   ret <2 x i16> %r
 }
 
-; TODO: Could use [FIXEDUWP,FIXEDUWP]([FWIDENMWD,FWIDENLWD](FWIDENLHW))
 define <2 x i32> @test_fptoui_2xi32(<2 x half> %a) #0 {
 ; CHECK-LABEL: test_fptoui_2xi32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srld $r1 = $r0, 16
-; CHECK-NEXT:    zxhd $r0 = $r0
+; CHECK-NEXT:    fwidenlhwp $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r1 = $r1
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixeduw.rz $r1 = $r1, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixeduw.rz $r0 = $r0, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 63, 32
+; CHECK-NEXT:    fixeduwp.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptoui <2 x half> %a to <2 x i32>
   ret <2 x i32> %r
 }
 
-; TODO: Could use FIXEDUWP(FWIDENLHW))
 define <2 x i64> @test_fptoui_2xi64(<2 x half> %a) #0 {
 ; CHECK-LABEL: test_fptoui_2xi64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    zxhd $r1 = $r0
-; CHECK-NEXT:    srld $r0 = $r0, 16
+; CHECK-NEXT:    fwidenlhwp $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r1 = $r1
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
+; CHECK-NEXT:    fwidenmwd $r1 = $r0
+; CHECK-NEXT:    fwidenlwd $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlwd $r1 = $r1
-; CHECK-NEXT:    fwidenlwd $r2 = $r0
+; CHECK-NEXT:    fixedud.rz $r1 = $r1, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedud.rz $r0 = $r1, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedud.rz $r1 = $r2, 0
+; CHECK-NEXT:    fixedud.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptoui <2 x half> %a to <2 x i64>
