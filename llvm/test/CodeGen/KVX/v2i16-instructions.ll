@@ -274,8 +274,8 @@ define <2 x i16> @test_rem(<2 x i16> %a, <2 x i16> %b) #0 {
   ret <2 x i16> %r
 }
 
-define void @test_ldst_v4i16(<2 x i16>* %a, <2 x i16>* %b) {
-; CHECK-LABEL: test_ldst_v4i16:
+define void @test_ldst_v2i16(<2 x i16>* %a, <2 x i16>* %b) {
+; CHECK-LABEL: test_ldst_v2i16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lwz $r0 = 0[$r0]
 ; CHECK-NEXT:    ;;
@@ -502,25 +502,15 @@ define <2 x i64> @test_sext_2xi64(<2 x i16> %a) #0 {
   ret <2 x i64> %r
 }
 
-declare <2 x i16> @llvm.abs.v4i16(<2 x i16> %a) #0
+declare <2 x i16> @llvm.abs.v2i16(<2 x i16>, i1) #0
 
 define <2 x i16> @test_abs(<2 x i16> %a) #0 {
 ; CHECK-LABEL: test_abs:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    call llvm.abs.v4i16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    abshq $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %r = call <2 x i16> @llvm.abs.v4i16(<2 x i16> %a)
+  %r = call <2 x i16> @llvm.abs.v2i16(<2 x i16> %a, i1 false)
   ret <2 x i16> %r
 }
 
@@ -558,6 +548,29 @@ define <2 x i16> @test_insertelement(<2 x i16> %a, i16 %x, i64 %p) #0 {
 ; CHECK-NEXT:    ;;
   %i = insertelement <2 x i16> %a, i16 %x, i64 %p
   ret <2 x i16> %i
+}
+
+define <2 x i16> @mulsub(<2 x i16> %a, <2 x i16> %b, <2 x i16> %c) #0 {
+; CHECK-LABEL: mulsub:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    mulhq $r1 = $r1, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbfhq $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %mul = mul <2 x i16> %b, %c
+  %sub = sub <2 x i16> %a, %mul
+  ret <2 x i16> %sub
+}
+
+define <2 x i16> @vnot(<2 x i16> %a) #0 {
+; CHECK-LABEL: vnot:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    notw $r0 = $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %vnot = xor <2 x i16> %a, <i16 -1, i16 -1>
+  ret <2 x i16> %vnot
 }
 
 attributes #0 = { nounwind }
