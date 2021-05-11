@@ -745,25 +745,24 @@ define <4 x i64> @test_sext_2xi64(<4 x i32> %a) #0 {
   ret <4 x i64> %r
 }
 
-declare <4 x i32> @llvm.abs.v4i32(<4 x i32> %a) #0
+declare <4 x i32> @llvm.abs.v4i32(<4 x i32>, i1) #0
 
 define <4 x i32> @test_abs(<4 x i32> %a) #0 {
 ; CHECK-LABEL: test_abs:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    get $r16 = $ra
+; CHECK-NEXT:    srad $r2 = $r1, 32
+; CHECK-NEXT:    srad $r3 = $r0, 32
+; CHECK-NEXT:    absw $r1 = $r1
+; CHECK-NEXT:    absw $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    call llvm.abs.v4i32
+; CHECK-NEXT:    absw $r2 = $r2
+; CHECK-NEXT:    absw $r3 = $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r3, 63, 32
+; CHECK-NEXT:    insf $r1 = $r2, 63, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %r = call <4 x i32> @llvm.abs.v4i32(<4 x i32> %a)
+  %r = call <4 x i32> @llvm.abs.v4i32(<4 x i32> %a, i1 false)
   ret <4 x i32> %r
 }
 

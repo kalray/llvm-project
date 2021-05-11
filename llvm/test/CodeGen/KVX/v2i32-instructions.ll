@@ -274,8 +274,8 @@ define <2 x i32> @test_rem(<2 x i32> %a, <2 x i32> %b) #0 {
   ret <2 x i32> %r
 }
 
-define void @test_ldst_v4i32(<2 x i32>* %a, <2 x i32>* %b) {
-; CHECK-LABEL: test_ldst_v4i32:
+define void @test_ldst_v2i32(<2 x i32>* %a, <2 x i32>* %b) {
+; CHECK-LABEL: test_ldst_v2i32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ld $r0 = 0[$r0]
 ; CHECK-NEXT:    ;;
@@ -493,25 +493,15 @@ define <2 x i64> @test_sext_2xi64(<2 x i32> %a) #0 {
   ret <2 x i64> %r
 }
 
-declare <2 x i32> @llvm.abs.v4i32(<2 x i32> %a) #0
+declare <2 x i32> @llvm.abs.v2i32(<2 x i32>, i1) #0
 
 define <2 x i32> @test_abs(<2 x i32> %a) #0 {
 ; CHECK-LABEL: test_abs:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    call llvm.abs.v4i32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    abswp $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %r = call <2 x i32> @llvm.abs.v4i32(<2 x i32> %a)
+  %r = call <2 x i32> @llvm.abs.v2i32(<2 x i32> %a, i1 false)
   ret <2 x i32> %r
 }
 
@@ -550,5 +540,25 @@ define <2 x i32> @test_insertelement(<2 x i32> %a, i32 %x, i64 %p) #0 {
   ret <2 x i32> %i
 }
 
+define <2 x i32> @mulsub(<2 x i32> %a, <2 x i32> %b, <2 x i32> %c) #0 {
+; CHECK-LABEL: mulsub:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    msbfwp $r0 = $r1, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %mul = mul <2 x i32> %b, %c
+  %sub = sub <2 x i32> %a, %mul
+  ret <2 x i32> %sub
+}
+
+define <2 x i32> @vnot(<2 x i32> %a) #0 {
+; CHECK-LABEL: vnot:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    notd $r0 = $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %vnot = xor <2 x i32> %a, <i32 -1, i32 -1>
+  ret <2 x i32> %vnot
+}
 
 attributes #0 = { nounwind }

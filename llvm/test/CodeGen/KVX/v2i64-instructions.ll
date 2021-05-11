@@ -271,8 +271,8 @@ define <2 x i64> @test_rem(<2 x i64> %a, <2 x i64> %b) #0 {
   ret <2 x i64> %r
 }
 
-define void @test_ldst_v4i64(<2 x i64>* %a, <2 x i64>* %b) {
-; CHECK-LABEL: test_ldst_v4i64:
+define void @test_ldst_v2i64(<2 x i64>* %a, <2 x i64>* %b) {
+; CHECK-LABEL: test_ldst_v2i64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lq $r2r3 = 0[$r0]
 ; CHECK-NEXT:    ;;
@@ -542,25 +542,16 @@ define <2 x i1> @test_icmp_ult(<2 x i64> %a, <2 x i64> %b) #0 {
   ret <2 x i1> %r
 }
 
-declare <2 x i64> @llvm.abs.v4i64(<2 x i64> %a) #0
+declare <2 x i64> @llvm.abs.v2i64(<2 x i64>, i1) #0
 
 define <2 x i64> @test_abs(<2 x i64> %a) #0 {
 ; CHECK-LABEL: test_abs:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    call llvm.abs.v4i64
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    absd $r0 = $r0
+; CHECK-NEXT:    absd $r1 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %r = call <2 x i64> @llvm.abs.v4i64(<2 x i64> %a)
+  %r = call <2 x i64> @llvm.abs.v2i64(<2 x i64> %a, i1 false)
   ret <2 x i64> %r
 }
 

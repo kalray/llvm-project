@@ -27,11 +27,6 @@ def ORNDriPat : PatFrag<(ops node:$op0, node:$op1), (xor node:$op0, node:$op1), 
     return ((c1->getSExtValue()+1) == (-c2->getSExtValue()));
   }]>;
 
-// TODO: implement patterns or intrinsics for the following instructions:
-// ADDCHCP SBFCHCP SBFCWC
-// LNANDHQ LNANDWP LNORHQ LORHQ LORWP
-// SBFUWD SBFWD
-
 // ABSHQ
 def : Pat<(abs v2i16:$v), (ABSHQ SingleReg:$v)>;
 def : Pat<(smax v2i16:$v, (v2i16 (vineg v2i16:$v))), (ABSHQ SingleReg:$v)>;
@@ -842,15 +837,6 @@ defm MINUHQ : Word_RR_RIsplat_select_H<umin, MINUHQri, MINUHQrr>;
 //  MAU Instructions - Patterns
 //===----------------------------------------------------------------------===//
 
-// TODO: implement patterns or intrinsics for the following instructions: CMULDT
-// CMULGHXDT CMULGLXDT CMULGMXDT CMULXDT COPYQ CRCBELLW CRCBELMW CRCLELLW
-// CRCLELMW DOT2SUWD DOT2SUWDP DOT2UWD DOT2UWDP DOT2W DOT2WD DOT2WDP DOT2WZP
-// MADDDT MADDHWQ MADDSUDT MADDSUHWQ MADDSUWD MADDSUWDP MADDUDT
-// MADDUHWQ MADDUWDP MSBFDT MSBFHQ MSBFHWQ MSBFSUDT
-// MSBFSUHWQ MSBFSUWD MSBFUSWDP MSBFUDT MSBFUHWQ MSBFUWD MSBFUWDP MSBFUZDT
-// MSBFWD MSBFWDP MSBFWP MULCWDC MULDT MULHWQ MULSUDT MULSUHWQ MULSUWD MULSUWDP
-// MULUDT MULUHWQ MULUWDP MULWDC MULWDP
-
 // MADDD
 def : Pat<(add i64:$a1, (mul i64:$a2, i64:$a3)), (MADDDrr SingleReg:$a1, SingleReg:$a2, SingleReg:$a3)>;
 def : Pat<(add i64:$a1, (mul i64:$a2, Wrapped64:$a3)), (MADDDri64 SingleReg:$a1, SingleReg:$a2, Wrapped64:$a3)>;
@@ -907,6 +893,9 @@ def : Pat<(v4i32 (add v4i32:$a1, (mul v4i32:$a2, v4i32:$a3))),
 // MSBFW
 defm : ZEFPat<(sub i32:$a1, (mul i32:$a2, i32:$a3)), (MSBFWrr SingleReg:$a1, SingleReg:$a2, SingleReg:$a3)>;
 defm : ZEFPat<(sub i32:$a1, (mul i32:$a2, Wrapped32:$a3)), (MSBFWri SingleReg:$a1, SingleReg:$a2, Wrapped32:$a3)>;
+
+// MSBFWP
+def : Pat<(sub v2i32:$a1, (mul v2i32:$a2, v2i32:$a3)), (MSBFWP SingleReg:$a1, SingleReg:$a2, SingleReg:$a3)>;
 
 // MSBFWD
 def : Pat<(sub i64:$a1, (KVX_sext_mul i32:$a2, i32:$a3)), (MSBFWDrr SingleReg:$a1, SingleReg:$a2, SingleReg:$a3)>;

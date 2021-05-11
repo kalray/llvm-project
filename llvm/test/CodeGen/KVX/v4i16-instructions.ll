@@ -637,25 +637,15 @@ define <4 x i64> @test_sext_2xi64(<4 x i16> %a) #0 {
   ret <4 x i64> %r
 }
 
-declare <4 x i16> @llvm.abs.v4i16(<4 x i16> %a) #0
+declare <4 x i16> @llvm.abs.v4i16(<4 x i16>, i1) #0
 
 define <4 x i16> @test_abs(<4 x i16> %a) #0 {
 ; CHECK-LABEL: test_abs:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    call llvm.abs.v4i16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    abshq $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %r = call <4 x i16> @llvm.abs.v4i16(<4 x i16> %a)
+  %r = call <4 x i16> @llvm.abs.v4i16(<4 x i16> %a, i1 false)
   ret <4 x i16> %r
 }
 
@@ -718,5 +708,27 @@ define <4 x i16> @test_insertelement(<4 x i16> %a, i16 %x, i64 %p) #0 {
   ret <4 x i16> %i
 }
 
+define <4 x i16> @mulsub(<4 x i16> %a, <4 x i16> %b, <4 x i16> %c) #0 {
+; CHECK-LABEL: mulsub:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    mulhq $r1 = $r1, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbfhq $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %mul = mul <4 x i16> %b, %c
+  %sub = sub <4 x i16> %a, %mul
+  ret <4 x i16> %sub
+}
+
+define <4 x i16> @vnot(<4 x i16> %a) #0 {
+; CHECK-LABEL: vnot:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    notd $r0 = $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %vnot = xor <4 x i16> %a, <i16 -1, i16 -1, i16 -1, i16 -1>
+  ret <4 x i16> %vnot
+}
 
 attributes #0 = { nounwind }
