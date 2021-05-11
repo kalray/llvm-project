@@ -701,6 +701,103 @@ def : Pat<(v2f64 (extract_subvector (v4f64 QuadReg:$v), (i64 0))),
 def : Pat<(v2f64 (extract_subvector (v4f64 QuadReg:$v), (i64 2))),
           (EXTRACT_SUBREG $v, sub_p1)>;
 
+// insert_vector_element
+// v2f16
+def : Pat<(v2f16 (insertelt v2f16:$to, f16:$e, i64:$idx)),
+          (CMOVEDrr SingleReg:$idx,
+            (INSF SingleReg:$to, SingleReg:$e, 31, 16),
+            (INSF SingleReg:$to, SingleReg:$e, 15, 0),
+            7)>;
+
+// v2f32
+def : Pat<(v2f32 (insertelt v2f32:$to, f32:$e, i64:$idx)),
+          (CMOVEDrr SingleReg:$idx,
+            (INSF SingleReg:$to, SingleReg:$e, 63, 32),
+            (INSF SingleReg:$to, SingleReg:$e, 31, 0),
+            7)>;
+
+// v2f64
+def : Pat<(v2f64 (insertelt v2f64:$to, f64:$e, i64:$idx)),
+          (REG_SEQUENCE PairedReg,
+            (CMOVEDrr SingleReg:$idx, (EXTRACT_SUBREG PairedReg:$to, sub_s0), SingleReg:$e, 7),
+            sub_s0,
+            (CMOVEDrr SingleReg:$idx, (EXTRACT_SUBREG PairedReg:$to, sub_s1), SingleReg:$e, 6),
+            sub_s1 )>;
+// v4f16
+def : Pat<(v4f16 (insertelt v4f16:$to, f16:$e, i64:$idx)),
+              (CMOVEHQ
+                (COMPNHQ
+                  (MAKEi64 0x3000200010000),
+                  (INSF
+                    (INSF SingleReg:$idx, SingleReg:$idx, 31, 16),
+                    (INSF SingleReg:$idx, SingleReg:$idx, 31, 16),
+                    63, 32),
+                  1),
+                  SingleReg:$to,
+                  (INSF
+                    (INSF SingleReg:$e, SingleReg:$e, 31, 16),
+                    (INSF SingleReg:$e, SingleReg:$e, 31, 16),
+                    63, 32),
+                0)>;
+
+// v4f32
+def : Pat<(v4f32 (insertelt v4f32:$to, f32:$e, 0)),
+            (REG_SEQUENCE PairedReg,
+              (INSF (v2f32(EXTRACT_SUBREG PairedReg:$to, sub_s0)), SingleReg:$e, 31, 0),
+              sub_s0,
+              (v2f32 (EXTRACT_SUBREG PairedReg:$to, sub_s1)),
+              sub_s1)>;
+
+def : Pat<(v4f32 (insertelt v4f32:$to, f32:$e, (i64 1))),
+            (REG_SEQUENCE PairedReg,
+              (INSF (v2f32(EXTRACT_SUBREG PairedReg:$to, sub_s0)), SingleReg:$e, 63, 32),
+              sub_s0,
+              (v2f32 (EXTRACT_SUBREG PairedReg:$to, sub_s1)),
+              sub_s1)>;
+
+def : Pat<(v4f32 (insertelt v4f32:$to, f32:$e, (i64 2))),
+            (REG_SEQUENCE PairedReg,
+              (v2f32 (EXTRACT_SUBREG PairedReg:$to, sub_s0)),
+              sub_s0,
+              (v2f32 (INSF (EXTRACT_SUBREG PairedReg:$to, sub_s1), SingleReg:$e, 31, 0)),
+              sub_s1)>;
+
+def : Pat<(v4f32 (insertelt v4f32:$to, f32:$e, (i64 3))),
+            (REG_SEQUENCE PairedReg,
+              (v2f32 (EXTRACT_SUBREG PairedReg:$to, sub_s0)),
+              sub_s0,
+              (v2f32 (INSF (EXTRACT_SUBREG PairedReg:$to, sub_s1), SingleReg:$e, 63, 32)),
+              sub_s1)>;
+
+def : Pat<(v4f32 (insertelt v4f32:$to, f32:$e, i64:$idx)),
+            (REG_SEQUENCE PairedReg,
+              (CMOVEWP
+                (COMPNWP (MAKEi64 0x100000000), (INSF SingleReg:$idx, SingleReg:$idx, 63, 31), 1),
+                (v2f32 (EXTRACT_SUBREG PairedReg:$to, sub_s0)),
+                (INSF SingleReg:$e, SingleReg:$e, 63, 31),
+                1
+               ),
+               sub_s0,
+              (CMOVEWP
+                (COMPNWP (MAKEi64 0x300000002), (INSF SingleReg:$idx, SingleReg:$idx, 63, 31), 1),
+                (v2f32 (EXTRACT_SUBREG PairedReg:$to, sub_s1)),
+                (INSF SingleReg:$e, SingleReg:$e, 63, 31),
+                1
+               ),
+               sub_s1)>;
+
+// v4f64
+def : Pat<(v4f64 (insertelt v4f64:$to, f64:$e, i64:$idx)),
+          (REG_SEQUENCE QuadReg,
+            (CMOVEDrr (COMPDri10 SingleReg:$idx, 0, 1), (EXTRACT_SUBREG QuadReg:$to, sub_s0), SingleReg:$e, 6),
+            sub_s0,
+            (CMOVEDrr (COMPDri10 SingleReg:$idx, 1, 1), (EXTRACT_SUBREG QuadReg:$to, sub_s1), SingleReg:$e, 6),
+            sub_s1,
+            (CMOVEDrr (COMPDri10 SingleReg:$idx, 2, 1), (EXTRACT_SUBREG QuadReg:$to, sub_s2), SingleReg:$e, 6),
+            sub_s2,
+            (CMOVEDrr (COMPDri10 SingleReg:$idx, 3, 1), (EXTRACT_SUBREG QuadReg:$to, sub_s3), SingleReg:$e, 6),
+            sub_s3)>;
+
 // Patterns used only for -freciprocal-math
 def : Pat<(fdiv f32:$a, f32:$b), (FMULWrr SingleReg:$a, (FRECW SingleReg:$b, rounding_, silent_), rounding_, silent_)>;
 def : Pat<(fsqrt f32:$a), (FMULWrr SingleReg:$a, (FRSRW SingleReg:$a, rounding_, silent_), rounding_, silent_)>;

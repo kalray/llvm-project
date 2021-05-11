@@ -2668,19 +2668,40 @@ define <4 x double> @test_insertelement1(<4 x double> %a, double %x) #0 {
   ret <4 x double> %i
 }
 
+define <4 x double> @test_insertelement2(<4 x double> %a, double %x) #0 {
+; CHECK-LABEL: test_insertelement2:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    copyd $r2 = $r4
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %i = insertelement <4 x double> %a, double %x, i64 2
+  ret <4 x double> %i
+}
+
+define <4 x double> @test_insertelement3(<4 x double> %a, double %x) #0 {
+; CHECK-LABEL: test_insertelement3:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    copyd $r3 = $r4
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %i = insertelement <4 x double> %a, double %x, i64 3
+  ret <4 x double> %i
+}
+
+
 define <4 x double> @test_insertelement(<4 x double> %a, double %x, i64 %p) #0 {
 ; CHECK-LABEL: test_insertelement:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    andd $r5 = $r5, 3
+; CHECK-NEXT:    compd.eq $r6 = $r5, 3
+; CHECK-NEXT:    compd.eq $r7 = $r5, 2
+; CHECK-NEXT:    compd.eq $r8 = $r5, 1
+; CHECK-NEXT:    compd.eq $r5 = $r5, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r6 = $r12, 0
-; CHECK-NEXT:    so 0[$r12] = $r0r1r2r3
+; CHECK-NEXT:    cmoved.odd $r6 ? $r3 = $r4
+; CHECK-NEXT:    cmoved.odd $r7 ? $r2 = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd.xs $r5[$r6] = $r4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r0r1r2r3 = 0[$r12]
-; CHECK-NEXT:    addd $r12 = $r12, 32
+; CHECK-NEXT:    cmoved.odd $r8 ? $r1 = $r4
+; CHECK-NEXT:    cmoved.odd $r5 ? $r0 = $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %i = insertelement <4 x double> %a, double %x, i64 %p

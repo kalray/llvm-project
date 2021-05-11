@@ -1219,6 +1219,105 @@ def : Pat<(v2i8 (extract_subvector (v8i8 SingleReg:$v), (i64 6))),(v2i8 (EXTFZ S
 def : Pat<(v4i8 (extract_subvector (v8i8 SingleReg:$v), (i64 0))),(v4i8 (EXTFZ SingleReg:$v, 31,0))>;
 def : Pat<(v4i8 (extract_subvector (v8i8 SingleReg:$v), (i64 4))),(v4i8 (EXTFZ SingleReg:$v, 63,32))>;
 
+// insert_vector_element
+// v2i16
+def : Pat<(v2i16 (insertelt v2i16:$to, i16:$e, i64:$idx)),
+          (CMOVEDrr SingleReg:$idx,
+            (INSF SingleReg:$to, SingleReg:$e, 31, 16),
+            (INSF SingleReg:$to, SingleReg:$e, 15, 0),
+            7)>;
+
+// v2i32
+def : Pat<(v2i32 (insertelt v2i32:$to, i32:$e, i64:$idx)),
+          (CMOVEDrr SingleReg:$idx,
+            (INSF SingleReg:$to, SingleReg:$e, 63, 32),
+            (INSF SingleReg:$to, SingleReg:$e, 31, 0),
+            7)>;
+
+// v4i16
+def : Pat<(v4i16 (insertelt v4i16:$to, i16:$e, i64:$idx)),
+              (CMOVEHQ
+                (COMPNHQ
+                  (MAKEi64 0x3000200010000),
+                  (INSF
+                    (INSF SingleReg:$idx, SingleReg:$idx, 31, 16),
+                    (INSF SingleReg:$idx, SingleReg:$idx, 31, 16),
+                    63, 32),
+                  1),
+                  SingleReg:$to,
+                  (INSF
+                    (INSF SingleReg:$e, SingleReg:$e, 31, 16),
+                    (INSF SingleReg:$e, SingleReg:$e, 31, 16),
+                    63, 32),
+                0)>;
+
+// v4i32
+def : Pat<(v4i32 (insertelt v4i32:$to, i32:$e, 0)),
+            (REG_SEQUENCE PairedReg,
+              (INSF (v2i32(EXTRACT_SUBREG PairedReg:$to, sub_s0)), SingleReg:$e, 31, 0),
+              sub_s0,
+              (v2i32 (EXTRACT_SUBREG PairedReg:$to, sub_s1)),
+              sub_s1)>;
+
+def : Pat<(v4i32 (insertelt v4i32:$to, i32:$e, (i64 1))),
+            (REG_SEQUENCE PairedReg,
+              (INSF (v2i32(EXTRACT_SUBREG PairedReg:$to, sub_s0)), SingleReg:$e, 63, 32),
+              sub_s0,
+              (v2i32 (EXTRACT_SUBREG PairedReg:$to, sub_s1)),
+              sub_s1)>;
+
+def : Pat<(v4i32 (insertelt v4i32:$to, i32:$e, (i64 2))),
+            (REG_SEQUENCE PairedReg,
+              (v2i32 (EXTRACT_SUBREG PairedReg:$to, sub_s0)),
+              sub_s0,
+              (v2i32 (INSF (EXTRACT_SUBREG PairedReg:$to, sub_s1), SingleReg:$e, 31, 0)),
+              sub_s1)>;
+
+def : Pat<(v4i32 (insertelt v4i32:$to, i32:$e, (i64 3))),
+            (REG_SEQUENCE PairedReg,
+              (v2i32 (EXTRACT_SUBREG PairedReg:$to, sub_s0)),
+              sub_s0,
+              (v2i32 (INSF (EXTRACT_SUBREG PairedReg:$to, sub_s1), SingleReg:$e, 63, 32)),
+              sub_s1)>;
+
+def : Pat<(v4i32 (insertelt v4i32:$to, i32:$e, i64:$idx)),
+            (REG_SEQUENCE PairedReg,
+              (CMOVEWP
+                (COMPNWP (MAKEi64 0x100000000), (INSF SingleReg:$idx, SingleReg:$idx, 63, 31), 1),
+                (v2i32 (EXTRACT_SUBREG PairedReg:$to, sub_s0)),
+                (INSF SingleReg:$e, SingleReg:$e, 63, 31),
+                1
+               ),
+               sub_s0,
+              (CMOVEWP
+                (COMPNWP (MAKEi64 0x300000002), (INSF SingleReg:$idx, SingleReg:$idx, 63, 31), 1),
+                (v2i32 (EXTRACT_SUBREG PairedReg:$to, sub_s1)),
+                (INSF SingleReg:$e, SingleReg:$e, 63, 31),
+                1
+               ),
+               sub_s1)>;
+
+// v2i64
+def : Pat<(v2i64 (insertelt v2i64:$to, i64:$e, i64:$idx)),
+          (REG_SEQUENCE PairedReg,
+            (CMOVEDrr SingleReg:$idx, (EXTRACT_SUBREG PairedReg:$to, sub_s0), SingleReg:$e, 7),
+            sub_s0,
+            (CMOVEDrr SingleReg:$idx, (EXTRACT_SUBREG PairedReg:$to, sub_s1), SingleReg:$e, 6),
+            sub_s1 )>;
+
+// v2i64
+def : Pat<(v4i64 (insertelt v4i64:$to, i64:$e, i64:$idx)),
+          (REG_SEQUENCE QuadReg,
+            (CMOVEDrr (COMPDri10 SingleReg:$idx, 0, 1), (EXTRACT_SUBREG QuadReg:$to, sub_s0), SingleReg:$e, 6),
+            sub_s0,
+            (CMOVEDrr (COMPDri10 SingleReg:$idx, 1, 1), (EXTRACT_SUBREG QuadReg:$to, sub_s1), SingleReg:$e, 6),
+            sub_s1,
+            (CMOVEDrr (COMPDri10 SingleReg:$idx, 2, 1), (EXTRACT_SUBREG QuadReg:$to, sub_s2), SingleReg:$e, 6),
+            sub_s2,
+            (CMOVEDrr (COMPDri10 SingleReg:$idx, 3, 1), (EXTRACT_SUBREG QuadReg:$to, sub_s3), SingleReg:$e, 6),
+            sub_s3)>;
+
+
 //===----------------------------------------------------------------------===//
 //  Synthetic Instructions - Patterns
 //===----------------------------------------------------------------------===//

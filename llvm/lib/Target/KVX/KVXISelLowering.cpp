@@ -215,8 +215,9 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
                   MVT::v2f32, MVT::v4f32, MVT::v2f64, MVT::v4f64, MVT::v4i64}) {
     setOperationAction(ISD::INSERT_VECTOR_ELT, VT, Custom);
     setOperationAction(ISD::EXTRACT_VECTOR_ELT, VT, Custom);
-    // Fixme: VSELECT for v2[fi]16, v4[if]16 and v2[fi]32 can be implemented
-    // using cmove or (OR (AND (COMP, V0)), (ANDN (COMP, V1)))
+    // Fixme: VSELECT for any 64 bit vector can be implemented as
+    // using (OR (AND (NEG(COMP), V0)), (ANDN (NEG(COMP), V1)))
+    // as far COMP results in the same sized vector.
     setOperationAction(ISD::VSELECT, VT, Expand);
     setOperationAction(ISD::CONCAT_VECTORS, VT, Custom);
   }
@@ -430,6 +431,10 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   for (auto VT : {MVT::v2i8, MVT::v4i8, MVT::v2i64, MVT::v4i32, MVT::v4i64})
     for (auto I : {ISD::AND, ISD::OR, ISD::XOR, ISD::ADD, ISD::SUB, ISD::MUL})
       setOperationAction(I, VT, Expand);
+
+  for (auto VT : {MVT::v2i32, MVT::v4i32})
+    for (auto I : {ISD::ADD, ISD::MUL, ISD::SUB})
+      setOperationAction(I, VT, Legal);
 
   setOperationAction(ISD::ATOMIC_FENCE, MVT::Other, Custom);
   // NOTE: We could use ACSWAPW instruction with some shifts and masks to
@@ -1706,31 +1711,15 @@ KVXTargetLowering::lowerBUILD_VECTOR_V4_128bit(SDValue Op,
   LLVMContext &Ctx = *DAG.getContext();
   EVT HalfVT = VT.getHalfNumVectorElementsVT(Ctx);
 
-  SDValue VecLow = DAG.getNode(ISD::BUILD_VECTOR, DL, HalfVT, { V1, V2 });
-  // if BUILD_VECTOR is still necessary after folding
-  if (!VecLow.isUndef() && VecLow.getOpcode() == ISD::BUILD_VECTOR) {
-    VecLow = lowerBUILD_VECTOR_V2_64bit(VecLow, DAG, false);
-  }
+  SDValue VecLow = DAG.getNode(ISD::BUILD_VECTOR, DL, HalfVT, {V1, V2});
+  SDValue VecHi = DAG.getNode(ISD::BUILD_VECTOR, DL, HalfVT, {V3, V4});
 
-  SDValue VecHi = DAG.getNode(ISD::BUILD_VECTOR, DL, HalfVT, { V3, V4 });
-  // if BUILD_VECTOR is still necessary after folding
-  if (!VecHi.isUndef() && VecHi.getOpcode() == ISD::BUILD_VECTOR) {
-    VecHi = lowerBUILD_VECTOR_V2_64bit(VecHi, DAG, false);
-  }
-
-  SDValue ImpV =
-      SDValue(DAG.getMachineNode(TargetOpcode::IMPLICIT_DEF, DL, VT), 0);
-  SDValue InsLow = SDValue(
-      DAG.getMachineNode(
-          TargetOpcode::INSERT_SUBREG, DL, VT,
-          {ImpV, VecLow, DAG.getTargetConstant(KVX::sub_s0, DL, MVT::i64)}),
-      0);
-  if (VecHi.isUndef())
-    return InsLow;
   return SDValue(
       DAG.getMachineNode(
-          TargetOpcode::INSERT_SUBREG, DL, VT,
-          {InsLow, VecHi, DAG.getTargetConstant(KVX::sub_s1, DL, MVT::i64)}),
+          TargetOpcode::REG_SEQUENCE, DL, VT,
+          {DAG.getTargetConstant(KVX::PairedRegRegClassID, DL, MVT::i64), VecHi,
+           DAG.getTargetConstant(KVX::sub_s1, DL, MVT::i64), VecLow,
+           DAG.getTargetConstant(KVX::sub_s0, DL, MVT::i64)}),
       0);
 }
 
@@ -1773,8 +1762,8 @@ SDValue KVXTargetLowering::lowerINSERT_VECTOR_ELT(SDValue Op,
   if (ConstantSDNode *InsertPos = dyn_cast<ConstantSDNode>(Idx)) {
 
     if (Vec.getValueType() == MVT::v4f32 || Vec.getValueType() == MVT::v4i32)
-      return lowerINSERT_VECTOR_ELT_V4_128bit(DL, DAG, Vec, Val,
-                                              InsertPos->getZExtValue());
+      return Op;
+
     if (Vec.getValueType() == MVT::v2f64 || Vec.getValueType() == MVT::v2i64 ||
         Vec.getValueType() == MVT::v4f64 || Vec.getValueType() == MVT::v4i64)
       return lowerINSERT_VECTOR_ELT_64bit_elt(DL, DAG, Vec, Val,
@@ -1800,58 +1789,24 @@ SDValue KVXTargetLowering::lowerINSERT_VECTOR_ELT(SDValue Op,
                    0);
   }
 
-  EVT EltVT = VecVT.getVectorElementType();
-
-  SDValue StackPtr = DAG.CreateStackTemporary(VecVT);
-  int SPFI = cast<FrameIndexSDNode>(StackPtr.getNode())->getIndex();
-
-  // Store the vector.
-  SDValue Ch = DAG.getStore(
-      DAG.getEntryNode(), DL, Vec, StackPtr,
-      MachinePointerInfo::getFixedStack(DAG.getMachineFunction(), SPFI));
-
-  // Calculate insert location.
-  SDValue StackPtr2 = getVectorElementPointer(DAG, StackPtr, VecVT, Idx);
-
-  // Store the scalar value.
-  Ch = DAG.getTruncStore(Ch, DL, Val, StackPtr2, MachinePointerInfo(), EltVT);
-
-  // Load the updated vector.
-  return DAG.getLoad(
-      VecVT, DL, Ch, StackPtr,
-      MachinePointerInfo::getFixedStack(DAG.getMachineFunction(), SPFI));
-}
-
-SDValue KVXTargetLowering::lowerINSERT_VECTOR_ELT_V4_128bit(
-    SDLoc &dl, SelectionDAG &DAG, SDValue Vec, SDValue Val,
-    uint64_t index) const {
-  SDValue v1, subRegIdx, mask;
-  if (index % 2 == 0) {
-    subRegIdx = DAG.getTargetConstant(index == 0 ? KVX::sub_s0 : KVX::sub_s1,
-                                      dl, MVT::i32);
-    v1 = DAG.getNode(ISD::ZERO_EXTEND, dl, MVT::i64,
-                     DAG.getBitcast(MVT::i32, Val));
-    mask = DAG.getConstant(0xffffffff00000000, dl, MVT::i64);
-  } else {
-    subRegIdx = DAG.getTargetConstant(index == 1 ? KVX::sub_s0 : KVX::sub_s1,
-                                      dl, MVT::i32);
-    SDValue val32 = SDValue(DAG.getMachineNode(TargetOpcode::COPY, dl, MVT::i64,
-                                               DAG.getBitcast(MVT::i32, Val)),
-                            0);
-    v1 = DAG.getNode(ISD::SHL, dl, MVT::i64,
-                     { val32, DAG.getConstant(32, dl, MVT::i32) });
-    mask = DAG.getConstant(0xffffffff, dl, MVT::i64);
+  switch (VecVT.getSimpleVT().SimpleTy) {
+  default:
+    return SDValue();
+  case MVT::v2i16:
+  case MVT::v2f16:
+  case MVT::v2i32:
+  case MVT::v2f32:
+  case MVT::v2f64:
+  case MVT::v2i64:
+  case MVT::v4f16:
+  case MVT::v4i16:
+  case MVT::v4f32:
+  case MVT::v4i32:
+  case MVT::v4f64:
+  case MVT::v4i64:
+    return Op;
   }
-  SDValue subreg = SDValue(DAG.getMachineNode(TargetOpcode::EXTRACT_SUBREG, dl,
-                                              MVT::i64, { Vec, subRegIdx }),
-                           0);
-
-  SDValue v2 = DAG.getNode(ISD::AND, dl, MVT::i64, { subreg, mask });
-
-  SDValue orResult = DAG.getNode(ISD::OR, dl, MVT::i64, { v1, v2 });
-  return SDValue(DAG.getMachineNode(TargetOpcode::INSERT_SUBREG, dl, MVT::v4f32,
-                                    { Vec, orResult, subRegIdx }),
-                 0);
+  return SDValue();
 }
 
 SDValue KVXTargetLowering::lowerINSERT_VECTOR_ELT_64bit_elt(
@@ -2300,6 +2255,7 @@ KVXTargetLowering::getPreferredVectorAction(MVT VT) const {
   case MVT::v8i1:
   case MVT::v16i1:
   case MVT::v32i1:
+  case MVT::v8i32:
     return LegalizeTypeAction::TypeSplitVector;
   default:
     break;

@@ -524,9 +524,9 @@ define <8 x float> @int_fmawp_x4(<8 x float> %a, <8 x float> %b, <8 x float> %c)
 define <4 x float> @fmswp_x2(<4 x float> %a, <4 x float> %b, <4 x float> %c) {
 ; CHECK-LABEL: fmswp_x2:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r0 = 0x8000000080000000
+; CHECK-NEXT:    make $r1 = 0x8000000080000000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r0
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fsbfwq $r0r1 = $r4r5, $r0r1
 ; CHECK-NEXT:    ;;
@@ -556,9 +556,9 @@ ret <4 x float> %2
 define <8 x float> @fmswp_x4(<8 x float> %a, <8 x float> %b, <8 x float> %c) {
 ; CHECK-LABEL: fmswp_x4:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r0 = 0x8000000080000000
+; CHECK-NEXT:    make $r1 = 0x8000000080000000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r0
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fsbfwq $r2r3 = $r10r11, $r0r1
 ; CHECK-NEXT:    ;;
