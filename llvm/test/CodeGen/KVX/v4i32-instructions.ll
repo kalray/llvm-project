@@ -826,4 +826,24 @@ define <4 x i32> @test_insertelement(<4 x i32> %a, i32 %x, i64 %p) #0 {
   ret <4 x i32> %i
 }
 
+define void @bug() {
+; CHECK-LABEL: bug:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  .LBB36_1: # %loop
+; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
+; CHECK-NEXT:    insf $r3 = $r0, 31, 0
+; CHECK-NEXT:    goto .LBB36_1
+; CHECK-NEXT:    ;;
+entry:
+  br label %loop
+
+loop:
+  %0 = phi <4 x i32> [ %1, %loop ], [ undef, %entry ]
+  %1 = insertelement <4 x i32> %0, i32 0, i64 2
+  %2 = extractelement <4 x i32> %0, i32 3
+  br label %loop
+}
+
 attributes #0 = { nounwind }
