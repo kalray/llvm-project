@@ -1050,25 +1050,11 @@ define <4 x half> @test_uitofp_4xi16(<4 x i16> %a) #0 {
 define <4 x half> @test_uitofp_4xi32(<4 x i32> %a) #0 {
 ; CHECK-LABEL: test_uitofp_4xi32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r2 = $r1, 32
-; CHECK-NEXT:    srad $r3 = $r0, 32
-; CHECK-NEXT:    floatuw.rn $r1 = $r1, 0
+; CHECK-NEXT:    floatuwp.rn $r0 = $r0, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatuw.rn $r2 = $r2, 0
-; CHECK-NEXT:    fnarrowwh.rn $r1 = $r1
+; CHECK-NEXT:    floatuwp.rn $r1 = $r1, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatuw.rn $r3 = $r3, 0
-; CHECK-NEXT:    fnarrowwh.rn $r2 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatuw.rn $r0 = $r0, 0
-; CHECK-NEXT:    fnarrowwh.rn $r3 = $r3
-; CHECK-NEXT:    insf $r1 = $r2, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowwh.rn $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r3, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 63, 32
+; CHECK-NEXT:    fnarrowwhq.rn $r0 = $r0r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = uitofp <4 x i32> %a to <4 x half>
@@ -1110,25 +1096,11 @@ define <4 x half> @test_uitofp_4xi64(<4 x i64> %a) #0 {
 define <4 x half> @test_sitofp_4xi32(<4 x i32> %a) #0 {
 ; CHECK-LABEL: test_sitofp_4xi32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r2 = $r1, 32
-; CHECK-NEXT:    srad $r3 = $r0, 32
-; CHECK-NEXT:    floatw.rn $r1 = $r1, 0
+; CHECK-NEXT:    floatwp.rn $r0 = $r0, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatw.rn $r2 = $r2, 0
-; CHECK-NEXT:    fnarrowwh.rn $r1 = $r1
+; CHECK-NEXT:    floatwp.rn $r1 = $r1, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatw.rn $r3 = $r3, 0
-; CHECK-NEXT:    fnarrowwh.rn $r2 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatw.rn $r0 = $r0, 0
-; CHECK-NEXT:    fnarrowwh.rn $r3 = $r3
-; CHECK-NEXT:    insf $r1 = $r2, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowwh.rn $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r3, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 63, 32
+; CHECK-NEXT:    fnarrowwhq.rn $r0 = $r0r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = sitofp <4 x i32> %a to <4 x half>
@@ -1169,25 +1141,11 @@ define <4 x half> @test_sitofp_4xi64(<4 x i64> %a) #0 {
 define <4 x half> @test_uitofp_4xi32_fadd(<4 x i32> %a, <4 x half> %b) #0 {
 ; CHECK-LABEL: test_uitofp_4xi32_fadd:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r3 = $r1, 32
-; CHECK-NEXT:    srad $r4 = $r0, 32
-; CHECK-NEXT:    floatuw.rn $r1 = $r1, 0
+; CHECK-NEXT:    floatuwp.rn $r0 = $r0, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatuw.rn $r3 = $r3, 0
-; CHECK-NEXT:    fnarrowwh.rn $r1 = $r1
+; CHECK-NEXT:    floatuwp.rn $r1 = $r1, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatuw.rn $r4 = $r4, 0
-; CHECK-NEXT:    fnarrowwh.rn $r3 = $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatuw.rn $r0 = $r0, 0
-; CHECK-NEXT:    fnarrowwh.rn $r4 = $r4
-; CHECK-NEXT:    insf $r1 = $r3, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowwh.rn $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r4, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 63, 32
+; CHECK-NEXT:    fnarrowwhq.rn $r0 = $r0r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    faddhq $r0 = $r2, $r0
 ; CHECK-NEXT:    ret
@@ -1200,25 +1158,11 @@ define <4 x half> @test_uitofp_4xi32_fadd(<4 x i32> %a, <4 x half> %b) #0 {
 define <4 x half> @test_sitofp_4xi32_fadd(<4 x i32> %a, <4 x half> %b) #0 {
 ; CHECK-LABEL: test_sitofp_4xi32_fadd:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r3 = $r1, 32
-; CHECK-NEXT:    srad $r4 = $r0, 32
-; CHECK-NEXT:    floatw.rn $r1 = $r1, 0
+; CHECK-NEXT:    floatwp.rn $r0 = $r0, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatw.rn $r3 = $r3, 0
-; CHECK-NEXT:    fnarrowwh.rn $r1 = $r1
+; CHECK-NEXT:    floatwp.rn $r1 = $r1, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatw.rn $r4 = $r4, 0
-; CHECK-NEXT:    fnarrowwh.rn $r3 = $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatw.rn $r0 = $r0, 0
-; CHECK-NEXT:    fnarrowwh.rn $r4 = $r4
-; CHECK-NEXT:    insf $r1 = $r3, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowwh.rn $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r4, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 63, 32
+; CHECK-NEXT:    fnarrowwhq.rn $r0 = $r0r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    faddhq $r0 = $r2, $r0
 ; CHECK-NEXT:    ret

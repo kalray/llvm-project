@@ -476,16 +476,52 @@ defm : FP_TO_INT<fp_to_uint, FIXEDUW, FIXEDUD, FIXEDUWP>;
 
 // FLOAT
 // FIXME: f16 patterns have issues with double rounding / implement RTcalls ?
-def : Pat<(f16 (uint_to_fp i32:$val)), (FNARROWWH (FLOATUW SingleReg:$val, DefaultShift, rounding_rn, silent_), rounding_rn, silent_)>;
-def : Pat<(f16 (uint_to_fp i64:$val)), (FNARROWWH (FNARROWDW (FLOATUD SingleReg:$val, DefaultShift, rounding_rn, silent_), rounding_rn, silent_), rounding_rn, silent_)>;
-def : Pat<(f32 (uint_to_fp i32:$val)), (FLOATUW SingleReg:$val, DefaultShift, rounding_rn, silent_)>;
-def : Pat<(f64 (uint_to_fp i32:$val)), (FLOATUD (ZXWD SingleReg:$val), DefaultShift, rounding_rn, silent_)>;
-def : Pat<(f64 (uint_to_fp i64:$val)), (FLOATUD SingleReg:$val, DefaultShift, rounding_rn, silent_)>;
-def : Pat<(f16 (sint_to_fp i32:$val)), (FNARROWWH (FLOATW SingleReg:$val, DefaultShift, rounding_rn, silent_), rounding_rn, silent_)>;
-def : Pat<(f16 (sint_to_fp i64:$val)), (FNARROWWH (FNARROWDW (FLOATD SingleReg:$val, DefaultShift, rounding_rn, silent_), rounding_rn, silent_), rounding_rn, silent_)>;
-def : Pat<(f32 (sint_to_fp i32:$val)), (FLOATW SingleReg:$val, DefaultShift, rounding_rn, silent_)>;
-def : Pat<(f64 (sint_to_fp i32:$val)), (FLOATD (SXWD SingleReg:$val), DefaultShift, rounding_rn, silent_)>;
-def : Pat<(f64 (sint_to_fp i64:$val)), (FLOATD SingleReg:$val, DefaultShift, rounding_rn, silent_)>;
+multiclass INT_TO_FP<SDNode int_to_fp, KVX_INSTRUCTION i32inst, KVX_INSTRUCTION i64inst, KVX_INSTRUCTION v2i32inst, KVX_INSTRUCTION ext, KVX_INSTRUCTION shift> {
+def : Pat<(f16 (int_to_fp i32:$val)), (FNARROWWH (i32inst SingleReg:$val, DefaultShift, rounding_rn, silent_), rounding_rn, silent_)>;
+def : Pat<(f16 (int_to_fp i64:$val)), (FNARROWWH (FNARROWDW (i64inst SingleReg:$val, DefaultShift, rounding_rn, silent_), rounding_rn, silent_), rounding_rn, silent_)>;
+
+def : Pat<(f32 (int_to_fp i32:$val)), (i32inst SingleReg:$val, DefaultShift, rounding_rn, silent_)>;
+def : Pat<(f32 (int_to_fp i64:$val)), (FNARROWDW (i64inst SingleReg:$val, DefaultShift, rounding_rn, silent_), rounding_rn, silent_)>;
+
+def : Pat<(f64 (int_to_fp i32:$val)), (i64inst (ext SingleReg:$val), DefaultShift, rounding_rn, silent_)>;
+def : Pat<(f64 (int_to_fp i64:$val)), (i64inst SingleReg:$val, DefaultShift, rounding_rn, silent_)>;
+
+def : Pat<(v2f16 (int_to_fp v2i32:$val)), (FNARROWWHQ
+                                            (REG_SEQUENCE PairedReg,
+                                              (MAKEi16 0), sub_s1,
+                                              (v2i32inst SingleReg:$val, DefaultShift, rounding_rn, silent_), sub_s0
+                                            ),
+                                            rounding_rn, silent_)>;
+
+def : Pat<(v2f32 (int_to_fp v2i32:$val)), (v2i32inst SingleReg:$val, DefaultShift, rounding_rn, silent_)>;
+
+def : Pat<(v2f64 (int_to_fp v2i32:$val)), (REG_SEQUENCE PairedReg,
+                                            (i64inst (shift SingleReg:$val, 32), DefaultShift, rounding_rn, silent_),
+                                            sub_s1,
+                                            (i64inst (ext SingleReg:$val), DefaultShift, rounding_rn, silent_),
+                                            sub_s0)>;
+
+def : Pat<(v4f16 (int_to_fp v4i32:$val)), (FNARROWWHQ
+                                            (REG_SEQUENCE PairedReg,
+                                              (v2i32inst (EXTRACT_SUBREG PairedReg:$val, sub_s1), DefaultShift, rounding_rn, silent_), sub_s1,
+                                              (v2i32inst (EXTRACT_SUBREG PairedReg:$val, sub_s0), DefaultShift, rounding_rn, silent_), sub_s0
+                                            ),
+                                            rounding_rn, silent_)>;
+
+def : Pat<(v4f32 (int_to_fp v4i32:$val)), (REG_SEQUENCE PairedReg,
+                                              (v2i32inst (EXTRACT_SUBREG PairedReg:$val, sub_s0), DefaultShift, rounding_rn, silent_), sub_s0,
+                                              (v2i32inst (EXTRACT_SUBREG PairedReg:$val, sub_s1), DefaultShift, rounding_rn, silent_), sub_s1)>;
+
+def : Pat<(v4f64 (int_to_fp v4i32:$val)), (REG_SEQUENCE QuadReg,
+                                            (i64inst (shift (EXTRACT_SUBREG PairedReg:$val, sub_s1), 32), DefaultShift, rounding_rn, silent_), sub_s3,
+                                            (i64inst (ext (EXTRACT_SUBREG PairedReg:$val, sub_s1)), DefaultShift, rounding_rn, silent_), sub_s2,
+                                            (i64inst (shift (EXTRACT_SUBREG PairedReg:$val, sub_s0), 32), DefaultShift, rounding_rn, silent_), sub_s1,
+                                            (i64inst (ext (EXTRACT_SUBREG PairedReg:$val, sub_s0)), DefaultShift, rounding_rn, silent_), sub_s0)>;
+
+}
+
+defm : INT_TO_FP<sint_to_fp, FLOATW, FLOATD, FLOATWP, SXWD, SRADri>;
+defm : INT_TO_FP<uint_to_fp, FLOATUW, FLOATUD, FLOATUWP, ZXWD, SRLDri>;
 
 // FMUL
 // TODO: Add ri variants
