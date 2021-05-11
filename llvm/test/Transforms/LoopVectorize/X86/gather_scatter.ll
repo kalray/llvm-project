@@ -1751,7 +1751,7 @@ define void @test_gather_not_profitable_pr48429(i32 %d, float* readonly %ptr, fl
 ; AVX512-NEXT:    [[SCEVGEP4:%.*]] = getelementptr float, float* [[PTR]], i64 [[TMP9]]
 ; AVX512-NEXT:    [[SCEVGEP6:%.*]] = getelementptr float, float* [[PTR]], i64 [[IDXPROM]]
 ; AVX512-NEXT:    [[TMP10:%.*]] = add nuw nsw i64 [[TMP6]], 1
-; AVX512-NEXT:    [[TMP11:%.*]] = sub i64 [[TMP10]], [[IDX_EXT]]
+; AVX512-NEXT:    [[TMP11:%.*]] = sub nsw i64 [[TMP10]], [[IDX_EXT]]
 ; AVX512-NEXT:    [[SCEVGEP8:%.*]] = getelementptr float, float* [[PTR]], i64 [[TMP11]]
 ; AVX512-NEXT:    [[BOUND0:%.*]] = icmp ugt float* [[SCEVGEP4]], [[DEST]]
 ; AVX512-NEXT:    [[BOUND1:%.*]] = icmp ugt float* [[SCEVGEP]], [[PTR]]
@@ -1951,7 +1951,7 @@ define void @test_gather_not_profitable_pr48429(i32 %d, float* readonly %ptr, fl
 ; FVW2-NEXT:    [[SCEVGEP4:%.*]] = getelementptr float, float* [[PTR]], i64 [[TMP9]]
 ; FVW2-NEXT:    [[SCEVGEP6:%.*]] = getelementptr float, float* [[PTR]], i64 [[IDXPROM]]
 ; FVW2-NEXT:    [[TMP10:%.*]] = add nuw nsw i64 [[TMP6]], 1
-; FVW2-NEXT:    [[TMP11:%.*]] = sub i64 [[TMP10]], [[IDX_EXT]]
+; FVW2-NEXT:    [[TMP11:%.*]] = sub nsw i64 [[TMP10]], [[IDX_EXT]]
 ; FVW2-NEXT:    [[SCEVGEP8:%.*]] = getelementptr float, float* [[PTR]], i64 [[TMP11]]
 ; FVW2-NEXT:    [[BOUND0:%.*]] = icmp ugt float* [[SCEVGEP4]], [[DEST]]
 ; FVW2-NEXT:    [[BOUND1:%.*]] = icmp ugt float* [[SCEVGEP]], [[PTR]]

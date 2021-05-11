@@ -137,6 +137,7 @@
 #include "llvm/Transforms/Instrumentation/ThreadSanitizer.h"
 #include "llvm/Transforms/ObjCARC.h"
 #include "llvm/Transforms/Scalar/ADCE.h"
+#include "llvm/Transforms/Scalar/AJT.h"
 #include "llvm/Transforms/Scalar/AlignmentFromAssumptions.h"
 #include "llvm/Transforms/Scalar/AnnotationRemarks.h"
 #include "llvm/Transforms/Scalar/BDCE.h"
@@ -297,6 +298,7 @@ extern cl::opt<bool> EnableIROutliner;
 extern cl::opt<bool> EnableOrderFileInstrumentation;
 extern cl::opt<bool> EnableCHR;
 extern cl::opt<bool> EnableUnrollAndJam;
+extern cl::opt<bool> EnableAggressiveJumpThreading;
 extern cl::opt<bool> EnableLoopFlatten;
 extern cl::opt<bool> RunNewGVN;
 extern cl::opt<bool> RunPartialInlining;
@@ -1306,6 +1308,12 @@ PassBuilder::buildModuleOptimizationPipeline(OptimizationLevel Level,
 
   // Enhance/cleanup vector code.
   OptimizePM.addPass(VectorCombinePass());
+
+  if (EnableAggressiveJumpThreading) {
+    OptimizePM.addPass(AJTPass());
+    OptimizePM.addPass(CorrelatedValuePropagationPass());
+  }
+
   OptimizePM.addPass(InstCombinePass());
 
   // Unroll small loops to hide loop backedge latency and saturate any parallel

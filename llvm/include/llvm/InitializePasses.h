@@ -209,6 +209,7 @@ void initializeInterleavedLoadCombinePass(PassRegistry &);
 void initializeInternalizeLegacyPassPass(PassRegistry&);
 void initializeIntervalPartitionPass(PassRegistry&);
 void initializeJumpThreadingPass(PassRegistry&);
+void initializeAJTLegacyPassPass(PassRegistry&);
 void initializeLCSSAVerificationPassPass(PassRegistry&);
 void initializeLCSSAWrapperPassPass(PassRegistry&);
 void initializeLazyBlockFrequencyInfoPassPass(PassRegistry&);

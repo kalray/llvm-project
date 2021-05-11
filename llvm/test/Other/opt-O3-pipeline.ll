@@ -263,6 +263,17 @@
 ; CHECK-NEXT:       Inject TLI Mappings
 ; CHECK-NEXT:       SLP Vectorizer
 ; CHECK-NEXT:       Optimize scalar/vector ops
+; CHECK-NEXT:       LCSSA Verifier
+; CHECK-NEXT:       Loop-Closed SSA Form Pass
+; CHECK-NEXT:       Aggressive Jump Threading
+; CHECK-NEXT:       Dominator Tree Construction
+; CHECK-NEXT:       Lazy Value Information Analysis
+; CHECK-NEXT:       Value Propagation
+; CHECK-NEXT:       Basic Alias Analysis (stateless AA impl)
+; CHECK-NEXT:       Function Alias Analysis Results
+; CHECK-NEXT:       Natural Loop Information
+; CHECK-NEXT:       Lazy Branch Probability Analysis
+; CHECK-NEXT:       Lazy Block Frequency Analysis
 ; CHECK-NEXT:       Optimization Remark Emitter
 ; CHECK-NEXT:       Combine redundant instructions
 ; CHECK-NEXT:       Canonicalize natural loops
