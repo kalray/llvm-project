@@ -294,6 +294,7 @@ foreach vtype = [ v8i8, v4i16, v2i32 ] in {
 // ANDNW
 def : Pat<(i32(and (not i32:$rs1), i32:$rs2)), (ANDNWrr SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(i32(and (not i32:$r), Signed37W:$i)), (ANDNWri37 SingleReg:$r, imm:$i)>;
+
 // AVGW / AVGRW
 def : Pat<(sra  (add i32:$v0, Wrapped32:$v1), (i64 1)), (AVGWri SingleReg:$v0, Wrapped32:$v1)>;
 def : Pat<(sra  (add i32:$v0, i32:$v1),       (i64 1)), (AVGWrr SingleReg:$v0, SingleReg:$v1)>;
@@ -418,7 +419,7 @@ defm : ZEFPat<(and i32:$rs1, i32:$rs2), (ANDWrr SingleReg:$rs1, SingleReg:$rs2)>
 defm : ZEFPat<(and i32:$rs1, Signed10W:$rs2), (ANDWri10 SingleReg:$rs1, Signed10W:$rs2)>;
 defm : ZEFPat<(and i32:$rs1, Signed37W:$rs2), (ANDWri37 SingleReg:$rs1, Signed37W:$rs2)>;
 
-foreach vtype = [ v4i8, v2i16 ] in {
+foreach vtype = [ v2i8, v4i8, v2i16 ] in {
     def : Pat<(and vtype:$rs1, (vtype (is_imm_vec:$IMM))), (ANDWri37 SingleReg:$rs1, (build_imm_vec $IMM))>;
     def : Pat<(and vtype:$rs1, vtype:$rs2), (ANDWrr SingleReg:$rs1, SingleReg:$rs2)>;
 }
@@ -508,12 +509,22 @@ foreach vtype = [ v8i8, v4i16, v2i32 ] in {
     def : Pat<(or (vnot vtype:$rs1), vtype:$rs2), (ORNDrr SingleReg:$rs1, SingleReg:$rs2)>;
 }
 
+// ORNW
+def : Pat<(or (not i32:$rs1), i32:$rs2), (ORNWrr SingleReg:$rs1, SingleReg:$rs2)>;
+def : Pat<(ORNDriPat (or i32:$rs1, Signed10W:$c1), Signed10W), (ORNWri10 SingleReg:$rs1, Signed10W:$c1)>;
+def : Pat<(ORNDriPat (or i32:$rs1, Signed37W:$c1), Signed37W), (ORNWri37 SingleReg:$rs1, Signed37W:$c1)>;
+// TODO: Add ri10 to vector types
+foreach vtype = [ v2i8, v4i8, v2i16 ] in {
+    def : Pat<(or (vnot vtype:$rs1), (vtype (is_imm_vec:$IMM))), (ORNWri37 SingleReg:$rs1, (build_imm_vec $IMM))>;
+    def : Pat<(or (vnot vtype:$rs1), vtype:$rs2), (ORNDrr SingleReg:$rs1, SingleReg:$rs2)>;
+}
+
 // ORW
 defm : ZEFPat<(or i32:$rs1, i32:$rs2), (ORWrr SingleReg:$rs1, SingleReg:$rs2)>;
 defm : ZEFPat<(or i32:$rs1, Signed10W:$rs2), (ORWri10 SingleReg:$rs1, Signed10W:$rs2)>;
 defm : ZEFPat<(or i32:$rs1, Signed37W:$rs2), (ORWri37 SingleReg:$rs1, Signed37W:$rs2)>;
 
-foreach vtype = [ v4i8, v2i16 ] in {
+foreach vtype = [ v2i8, v4i8, v2i16 ] in {
     def : Pat<(or vtype:$rs1, vtype:$rs2), (ORWrr SingleReg:$rs1, SingleReg:$rs2)>;
     def : Pat<(or vtype:$rs1, (vtype (is_imm_vec:$IMM))), (ORWri37 SingleReg:$rs1, (build_imm_vec $IMM))>;
 }
@@ -750,7 +761,7 @@ defm : ZEFPat<(xor i32:$rs1, i32:$rs2), (XORWrr SingleReg:$rs1, SingleReg:$rs2)>
 defm : ZEFPat<(xor i32:$rs1, Signed10W:$rs2), (XORWri10 SingleReg:$rs1, Signed10W:$rs2)>;
 defm : ZEFPat<(xor i32:$rs1, Signed37W:$rs2), (XORWri37 SingleReg:$rs1, Signed37W:$rs2)>;
 
-foreach vtype = [ v4i8, v2i16 ] in {
+foreach vtype = [ v2i8, v4i8, v2i16 ] in {
     def : Pat<(xor vtype:$rs1, (vtype (is_imm_vec:$IMM))), (XORWri37 SingleReg:$rs1, (build_imm_vec $IMM))>;
     def : Pat<(xor vtype:$rs1, vtype:$rs2), (XORWrr SingleReg:$rs1, SingleReg:$rs2)>;
 }

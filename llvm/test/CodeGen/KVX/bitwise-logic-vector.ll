@@ -276,3 +276,193 @@ entry:
   %andn = and <2 x i32> %not_a, <i32 43, i32 43>
   ret <2 x i32> %andn
 }
+
+;; v4i8
+define <4 x i8> @v4i8xor(<4 x i8> %a, <4 x i8> %b){
+; CHECK-LABEL: v4i8xor:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    xorw $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %xor = xor <4 x i8> %b, %a
+  ret <4 x i8> %xor
+}
+
+define <4 x i8> @v4i8xor_imm(<4 x i8> %a){
+; CHECK-LABEL: v4i8xor_imm:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    xorw $r0 = $r0, 0x10303fd
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %xor = xor <4 x i8> %a, <i8 -3, i8 3, i8 3, i8 1>
+  ret <4 x i8> %xor
+}
+
+define <4 x i8> @v4i8or(<4 x i8> %a, <4 x i8> %b){
+; CHECK-LABEL: v4i8or:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    orw $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %or = or <4 x i8> %b, %a
+  ret <4 x i8> %or
+}
+
+define <4 x i8> @v4i8or_imm(<4 x i8> %a){
+; CHECK-LABEL: v4i8or_imm:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    orw $r0 = $r0, 0x103070f
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %or = or <4 x i8> %a, <i8 15, i8 7, i8 3, i8 1>
+  ret <4 x i8> %or
+}
+
+define <4 x i8> @v4i8and(<4 x i8> %a, <4 x i8> %b){
+; CHECK-LABEL: v4i8and:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    andw $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %and = and <4 x i8> %b, %a
+  ret <4 x i8> %and
+}
+
+define <4 x i8> @v4i8and_imm(<4 x i8> %a){
+; CHECK-LABEL: v4i8and_imm:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    andw $r0 = $r0, 0x4030201
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %and = and <4 x i8> %a, <i8 1, i8 2, i8 3, i8 4>
+  ret <4 x i8> %and
+}
+
+define <4 x i8> @v4i8annd(<4 x i8> %a, <4 x i8> %b){
+; CHECK-LABEL: v4i8annd:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    xorw $r0 = $r0, -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %not_a = xor <4 x i8> %a, <i8 -1, i8 -1, i8 -1, i8 -1>
+  %and = and <4 x i8> %not_a, %b
+  ret <4 x i8> %and
+}
+
+define <4 x i8> @v4i8andn_imm(<4 x i8> %a){
+; CHECK-LABEL: v4i8andn_imm:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    xorw $r0 = $r0, -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 0x2b2b2b2b
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %not_a = xor <4 x i8> %a, <i8 -1, i8 -1, i8 -1, i8 -1>
+  %andn = and <4 x i8> %not_a, <i8 43, i8 43, i8 43, i8 43>
+  ret <4 x i8> %andn
+}
+
+;; v2i8
+define <2 x i8> @v2i8xor(<2 x i8> %a, <2 x i8> %b){
+; CHECK-LABEL: v2i8xor:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    xorw $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %xor = xor <2 x i8> %b, %a
+  ret <2 x i8> %xor
+}
+
+define <2 x i8> @v2i8xor_imm(<2 x i8> %a){
+; CHECK-LABEL: v2i8xor_imm:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    xorw $r0 = $r0, 1021
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %xor = xor <2 x i8> %a, <i8 -3, i8 3>
+  ret <2 x i8> %xor
+}
+
+define <2 x i8> @v2i8or(<2 x i8> %a, <2 x i8> %b){
+; CHECK-LABEL: v2i8or:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    orw $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %or = or <2 x i8> %b, %a
+  ret <2 x i8> %or
+}
+
+define <2 x i8> @v2i8or_imm(<2 x i8> %a){
+; CHECK-LABEL: v2i8or_imm:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    orw $r0 = $r0, 0x70f
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %or = or <2 x i8> %a, <i8 15, i8 7>
+  ret <2 x i8> %or
+}
+
+define <2 x i8> @v2i8and(<2 x i8> %a, <2 x i8> %b){
+; CHECK-LABEL: v2i8and:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    andw $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %and = and <2 x i8> %b, %a
+  ret <2 x i8> %and
+}
+
+define <2 x i8> @v2i8and_imm(<2 x i8> %a){
+; CHECK-LABEL: v2i8and_imm:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    andw $r0 = $r0, 513
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %and = and <2 x i8> %a, <i8 1, i8 2>
+  ret <2 x i8> %and
+}
+
+define <2 x i8> @v2i8annd(<2 x i8> %a, <2 x i8> %b){
+; CHECK-LABEL: v2i8annd:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    xorw $r0 = $r0, -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %not_a = xor <2 x i8> %a, <i8 -1, i8 -1>
+  %and = and <2 x i8> %not_a, %b
+  ret <2 x i8> %and
+}
+
+define <2 x i8> @v2i8andn_imm(<2 x i8> %a){
+; CHECK-LABEL: v2i8andn_imm:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    xorw $r0 = $r0, -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 0x2b2b
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %not_a = xor <2 x i8> %a, <i8 -1, i8 -1>
+  %andn = and <2 x i8> %not_a, <i8 43, i8 43>
+  ret <2 x i8> %andn
+}
