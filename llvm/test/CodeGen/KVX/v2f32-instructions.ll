@@ -663,12 +663,7 @@ define <2 x i8> @test_fptoui_i8(<2 x float> %a) #0 {
 define <2 x float> @test_uitofp_2xi32(<2 x i32> %a) #0 {
 ; CHECK-LABEL: test_uitofp_2xi32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r1 = $r0, 32
-; CHECK-NEXT:    floatuw.rn $r0 = $r0, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatuw.rn $r1 = $r1, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 63, 32
+; CHECK-NEXT:    floatuwp.rn $r0 = $r0, 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = uitofp <2 x i32> %a to <2 x float>
@@ -709,12 +704,7 @@ define <2 x float> @test_uitofp_2xi64(<2 x i64> %a) #0 {
 define <2 x float> @test_sitofp_2xi32(<2 x i32> %a) #0 {
 ; CHECK-LABEL: test_sitofp_2xi32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r1 = $r0, 32
-; CHECK-NEXT:    floatw.rn $r0 = $r0, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatw.rn $r1 = $r1, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 63, 32
+; CHECK-NEXT:    floatwp.rn $r0 = $r0, 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = sitofp <2 x i32> %a to <2 x float>
@@ -755,12 +745,7 @@ define <2 x float> @test_sitofp_2xi64(<2 x i64> %a) #0 {
 define <2 x float> @test_uitofp_2xi32_fadd(<2 x i32> %a, <2 x float> %b) #0 {
 ; CHECK-LABEL: test_uitofp_2xi32_fadd:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r2 = $r0, 32
-; CHECK-NEXT:    floatuw.rn $r0 = $r0, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatuw.rn $r2 = $r2, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 63, 32
+; CHECK-NEXT:    floatuwp.rn $r0 = $r0, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    faddwp $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
@@ -773,12 +758,7 @@ define <2 x float> @test_uitofp_2xi32_fadd(<2 x i32> %a, <2 x float> %b) #0 {
 define <2 x float> @test_sitofp_2xi32_fadd(<2 x i32> %a, <2 x float> %b) #0 {
 ; CHECK-LABEL: test_sitofp_2xi32_fadd:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r2 = $r0, 32
-; CHECK-NEXT:    floatw.rn $r0 = $r0, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatw.rn $r2 = $r2, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 63, 32
+; CHECK-NEXT:    floatwp.rn $r0 = $r0, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    faddwp $r0 = $r1, $r0
 ; CHECK-NEXT:    ret

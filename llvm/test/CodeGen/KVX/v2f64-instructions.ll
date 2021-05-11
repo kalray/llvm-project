@@ -856,13 +856,12 @@ define <2 x i8> @test_fptoui_i8(<2 x double> %a) #0 {
 define <2 x double> @test_uitofp_2xi32(<2 x i32> %a) #0 {
 ; CHECK-LABEL: test_uitofp_2xi32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r1 = $r0, 32
-; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    zxwd $r1 = $r0
+; CHECK-NEXT:    srld $r2 = $r0, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    floatud.rn $r0 = $r0, 0
+; CHECK-NEXT:    floatud.rn $r0 = $r1, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatud.rn $r1 = $r1, 0
+; CHECK-NEXT:    floatud.rn $r1 = $r2, 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = uitofp <2 x i32> %a to <2 x double>
@@ -884,13 +883,12 @@ define <2 x double> @test_uitofp_2xi64(<2 x i64> %a) #0 {
 define <2 x double> @test_sitofp_2xi32(<2 x i32> %a) #0 {
 ; CHECK-LABEL: test_sitofp_2xi32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r1 = $r0, 32
-; CHECK-NEXT:    sxwd $r0 = $r0
+; CHECK-NEXT:    sxwd $r1 = $r0
+; CHECK-NEXT:    srad $r2 = $r0, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r1 = $r1
-; CHECK-NEXT:    floatd.rn $r0 = $r0, 0
+; CHECK-NEXT:    floatd.rn $r0 = $r1, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatd.rn $r1 = $r1, 0
+; CHECK-NEXT:    floatd.rn $r1 = $r2, 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = sitofp <2 x i32> %a to <2 x double>
@@ -913,9 +911,8 @@ define <2 x double> @test_uitofp_2xi32_fadd(<2 x i32> %a, <2 x double> %b) #0 {
 ; CHECK-LABEL: test_uitofp_2xi32_fadd:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    zxwd $r3 = $r0
-; CHECK-NEXT:    srad $r0 = $r0, 32
+; CHECK-NEXT:    srld $r0 = $r0, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    floatud.rn $r4 = $r3, 0
 ; CHECK-NEXT:    copyd $r3 = $r2
 ; CHECK-NEXT:    copyd $r2 = $r1
@@ -936,7 +933,6 @@ define <2 x double> @test_sitofp_2xi32_fadd(<2 x i32> %a, <2 x double> %b) #0 {
 ; CHECK-NEXT:    sxwd $r3 = $r0
 ; CHECK-NEXT:    srad $r0 = $r0, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r0 = $r0
 ; CHECK-NEXT:    floatd.rn $r4 = $r3, 0
 ; CHECK-NEXT:    copyd $r3 = $r2
 ; CHECK-NEXT:    copyd $r2 = $r1

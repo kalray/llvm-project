@@ -1258,20 +1258,18 @@ define <4 x i8> @test_fptoui_i8(<4 x double> %a) #0 {
 define <4 x double> @test_uitofp_2xi32(<4 x i32> %a) #0 {
 ; CHECK-LABEL: test_uitofp_2xi32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r2 = $r0, 32
-; CHECK-NEXT:    srad $r3 = $r1, 32
-; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    zxwd $r2 = $r0
+; CHECK-NEXT:    srld $r3 = $r0, 32
 ; CHECK-NEXT:    zxwd $r4 = $r1
+; CHECK-NEXT:    srld $r5 = $r1, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r3 = $r3
-; CHECK-NEXT:    zxwd $r2 = $r2
-; CHECK-NEXT:    floatud.rn $r0 = $r0, 0
+; CHECK-NEXT:    floatud.rn $r0 = $r2, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatud.rn $r1 = $r2, 0
+; CHECK-NEXT:    floatud.rn $r1 = $r3, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    floatud.rn $r2 = $r4, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatud.rn $r3 = $r3, 0
+; CHECK-NEXT:    floatud.rn $r3 = $r5, 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = uitofp <4 x i32> %a to <4 x double>
@@ -1297,20 +1295,18 @@ define <4 x double> @test_uitofp_2xi64(<4 x i64> %a) #0 {
 define <4 x double> @test_sitofp_2xi32(<4 x i32> %a) #0 {
 ; CHECK-LABEL: test_sitofp_2xi32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r2 = $r0, 32
-; CHECK-NEXT:    srad $r3 = $r1, 32
-; CHECK-NEXT:    sxwd $r0 = $r0
+; CHECK-NEXT:    sxwd $r2 = $r0
+; CHECK-NEXT:    srad $r3 = $r0, 32
 ; CHECK-NEXT:    sxwd $r4 = $r1
+; CHECK-NEXT:    srad $r5 = $r1, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r3 = $r3
-; CHECK-NEXT:    sxwd $r2 = $r2
-; CHECK-NEXT:    floatd.rn $r0 = $r0, 0
+; CHECK-NEXT:    floatd.rn $r0 = $r2, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatd.rn $r1 = $r2, 0
+; CHECK-NEXT:    floatd.rn $r1 = $r3, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    floatd.rn $r2 = $r4, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatd.rn $r3 = $r3, 0
+; CHECK-NEXT:    floatd.rn $r3 = $r5, 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = sitofp <4 x i32> %a to <4 x double>
@@ -1336,19 +1332,17 @@ define <4 x double> @test_sitofp_2xi64(<4 x i64> %a) #0 {
 define <4 x double> @test_uitofp_2xi32_fadd(<4 x i32> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: test_uitofp_2xi32_fadd:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    zxwd $r7 = $r1
-; CHECK-NEXT:    srad $r1 = $r1, 32
 ; CHECK-NEXT:    zxwd $r6 = $r0
-; CHECK-NEXT:    srad $r0 = $r0, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    zxwd $r7 = $r1
+; CHECK-NEXT:    srld $r1 = $r1, 32
 ; CHECK-NEXT:    copyd $r11 = $r5
-; CHECK-NEXT:    floatud.rn $r8 = $r6, 0
-; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatud.rn $r6 = $r7, 0
+; CHECK-NEXT:    floatud.rn $r8 = $r6, 0
+; CHECK-NEXT:    srld $r0 = $r0, 32
 ; CHECK-NEXT:    copyd $r5 = $r3
 ; CHECK-NEXT:    copyd $r10 = $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    floatud.rn $r6 = $r7, 0
 ; CHECK-NEXT:    copyd $r4 = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    floatud.rn $r7 = $r1, 0
@@ -1370,19 +1364,17 @@ define <4 x double> @test_uitofp_2xi32_fadd(<4 x i32> %a, <4 x double> %b) #0 {
 define <4 x double> @test_sitofp_2xi32_fadd(<4 x i32> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: test_sitofp_2xi32_fadd:
 ; CHECK:       # %bb.0:
+; CHECK-NEXT:    sxwd $r6 = $r0
 ; CHECK-NEXT:    sxwd $r7 = $r1
 ; CHECK-NEXT:    srad $r1 = $r1, 32
-; CHECK-NEXT:    sxwd $r6 = $r0
-; CHECK-NEXT:    srad $r0 = $r0, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r1 = $r1
 ; CHECK-NEXT:    copyd $r11 = $r5
-; CHECK-NEXT:    floatd.rn $r8 = $r6, 0
-; CHECK-NEXT:    sxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatd.rn $r6 = $r7, 0
+; CHECK-NEXT:    floatd.rn $r8 = $r6, 0
+; CHECK-NEXT:    srad $r0 = $r0, 32
 ; CHECK-NEXT:    copyd $r5 = $r3
 ; CHECK-NEXT:    copyd $r10 = $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    floatd.rn $r6 = $r7, 0
 ; CHECK-NEXT:    copyd $r4 = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    floatd.rn $r7 = $r1, 0
