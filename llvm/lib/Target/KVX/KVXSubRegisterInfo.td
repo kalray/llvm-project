@@ -29,7 +29,6 @@ def sub_c1 : SubRegIndex<64,64>;
 def sub_c2 : ComposedSubRegIndex<sub_b1,sub_c0>;
 def sub_c3 : ComposedSubRegIndex<sub_b1,sub_c1>;
 
-// TODO: GPR sub-registers
 def sub_p0 : SubRegIndex<128,  0>;
 def sub_p1 : SubRegIndex<128,128>;
 

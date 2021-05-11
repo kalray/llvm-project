@@ -518,7 +518,6 @@ entry:
   ret <4 x i64> %ins2
 }
 
-; TODOO: Eliminate redundant copyq
 define void @v4i64_upper_half_extract(<4 x i64> *%0,  <2 x i64> * %1){
 ; CHECK-LABEL: v4i64_upper_half_extract:
 ; CHECK:       # %bb.0: # %entry
