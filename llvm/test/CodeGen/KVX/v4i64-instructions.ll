@@ -752,25 +752,19 @@ define <4 x i1> @test_icmp_ult(<4 x i64> %a, <4 x i64> %b) #0 {
   ret <4 x i1> %r
 }
 
-declare <4 x i64> @llvm.abs.v4i64(<4 x i64> %a) #0
+declare <4 x i64> @llvm.abs.v4i64(<4 x i64>, i1) #0
 
 define <4 x i64> @test_abs(<4 x i64> %a) #0 {
 ; CHECK-LABEL: test_abs:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    get $r16 = $ra
+; CHECK-NEXT:    absd $r0 = $r0
+; CHECK-NEXT:    absd $r1 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    call llvm.abs.v4i64
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    absd $r2 = $r2
+; CHECK-NEXT:    absd $r3 = $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %r = call <4 x i64> @llvm.abs.v4i64(<4 x i64> %a)
+  %r = call <4 x i64> @llvm.abs.v4i64(<4 x i64> %a, i1 false)
   ret <4 x i64> %r
 }
 
