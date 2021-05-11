@@ -10,6 +10,23 @@ def nswadd : PatFrag<(ops node:$op0, node:$op1), (add node:$op0, node:$op1), [{
     return N->getFlags().hasNoSignedWrap();
   }]>;
 
+def ORNDriPat : PatFrag<(ops node:$op0, node:$op1), (xor node:$op0, node:$op1), [{
+      return true;
+    ConstantSDNode *c1 = dyn_cast<ConstantSDNode>(N->getOperand(1));
+    if (!c1)
+      return false;
+    SDValue op0 = N->getOperand(0);
+
+    if (op0.getOpcode() != ISD::OR)
+      return false;
+
+    ConstantSDNode *c2 = dyn_cast<ConstantSDNode>(op0->getOperand(1));
+    if (!c2)
+      return false;
+
+    return ((c1->getSExtValue()+1) == (-c2->getSExtValue()));
+  }]>;
+
 // TODO: implement patterns or intrinsics for the following instructions:
 // ADDCHCP SBFCHCP SBFCWC
 // LNANDHQ LNANDWP LNORHQ LORHQ LORWP
@@ -478,6 +495,17 @@ def : Pat<(or i64:$rs1, Wrapped64:$rs2), (ORDri64 SingleReg:$rs1, Wrapped64:$rs2
 foreach vtype = [ v8i8, v4i16, v2i32 ] in {
     def : Pat<(or vtype:$rs1, vtype:$rs2), (ORDrr SingleReg:$rs1, SingleReg:$rs2)>;
     def : Pat<(or vtype:$rs1, (vtype (is_imm_vec:$IMM))), (ORDri64 SingleReg:$rs1, (build_imm_vec $IMM))>;
+}
+
+// ORND
+def : Pat<(or (not i64:$rs1), i64:$rs2), (ORNDrr SingleReg:$rs1, SingleReg:$rs2)>;
+def : Pat<(ORNDriPat (or i64:$rs1, Signed10:$c1), Signed10), (ORNDri10 SingleReg:$rs1, Signed10:$c1)>;
+def : Pat<(ORNDriPat (or i64:$rs1, Signed37:$c1), Signed37), (ORNDri37 SingleReg:$rs1, Signed37:$c1)>;
+def : Pat<(ORNDriPat (or i64:$rs1, Wrapped64:$c1), Wrapped64), (ORNDri64 SingleReg:$rs1, Wrapped64:$c1)>;
+// TODO: Add ri37 and ri10 to vector types
+foreach vtype = [ v8i8, v4i16, v2i32 ] in {
+    def : Pat<(or (vnot vtype:$rs1), (vtype (is_imm_vec:$IMM))), (ORNDri64 SingleReg:$rs1, (build_imm_vec $IMM))>;
+    def : Pat<(or (vnot vtype:$rs1), vtype:$rs2), (ORNDrr SingleReg:$rs1, SingleReg:$rs2)>;
 }
 
 // ORW

@@ -201,7 +201,6 @@ bool isImmVecOfLeqNbits(llvm::SDNode *N, llvm::SelectionDAG *CurDag,
 
 bool isKVXSplat32ImmVec(llvm::SDNode *N, llvm::SelectionDAG *CurDag,
                         bool SplatAT);
-
 } // namespace KVX_LOW
 
 #endif
