@@ -148,8 +148,7 @@ entry:
   %ext = zext <2 x i16> %a to <2 x i32>
   ret <2 x i32> %ext
 }
-; TODO: Improve somehow? The reg-alloc could avoid the copy
-; if the extension has been done to r2r3 straight away
+
 define <4 x i32> @zext_4xi16_4xi32(<4 x i16> %a){
 ; CHECK-LABEL: zext_4xi16_4xi32:
 ; CHECK:       # %bb.0: # %entry
