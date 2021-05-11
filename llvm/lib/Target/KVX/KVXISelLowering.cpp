@@ -428,7 +428,12 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
 
   // there are no instructions for operations on v2i8, v4i8
   setOperationAction(ISD::MUL, MVT::v8i8, Expand);
-  for (auto VT : {MVT::v2i8, MVT::v4i8, MVT::v2i64, MVT::v4i32, MVT::v4i64})
+
+  for (auto VT : {MVT::v2i8, MVT::v4i8})
+    for (auto I : {ISD::ADD, ISD::SUB, ISD::MUL})
+      setOperationAction(I, VT, Expand);
+
+  for (auto VT : {MVT::v2i64, MVT::v4i32, MVT::v4i64})
     for (auto I : {ISD::AND, ISD::OR, ISD::XOR, ISD::ADD, ISD::SUB, ISD::MUL})
       setOperationAction(I, VT, Expand);
 
