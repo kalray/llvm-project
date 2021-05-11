@@ -51,18 +51,19 @@ define void @reg(i32* nocapture %0, i64 %1, i64 %2) {
 define <4 x i32> @test0(<4 x i32> %0, i8 %1) #1 {
 ; CHECK-LABEL: test0:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    andd $r2 = $r2, 3
-; CHECK-NEXT:    make $r3 = 0xfffffffb
+; CHECK-NEXT:    sxbd $r2 = $r2
+; CHECK-NEXT:    make $r4 = 0xfffffffb
+; CHECK-NEXT:    make $r3 = 0x300000002
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    addd $r4 = $r12, 16
-; CHECK-NEXT:    sq 16[$r12] = $r0r1
+; CHECK-NEXT:    make $r5 = 0x100000000
+; CHECK-NEXT:    insf $r2 = $r2, 63, 31
+; CHECK-NEXT:    insf $r4 = $r4, 63, 31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw.xs $r2[$r4] = $r3
+; CHECK-NEXT:    compnwp.eq $r3 = $r3, $r2
+; CHECK-NEXT:    compnwp.eq $r2 = $r5, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lq $r0r1 = 16[$r12]
-; CHECK-NEXT:    addd $r12 = $r12, 32
+; CHECK-NEXT:    cmovewp.eqz $r3 ? $r1 = $r4
+; CHECK-NEXT:    cmovewp.eqz $r2 ? $r0 = $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = insertelement <4 x i32> %0, i32 -5, i8 %1

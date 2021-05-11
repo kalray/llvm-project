@@ -241,6 +241,16 @@ def : Pat<(add v2i32:$r, (v2i32 (v2_splat (i32 Wrapped32:$i)))), (ADDWPri Single
 def : Pat<(add v2i32:$rs1, v2i32:$rs2), (ADDWPrr SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(sub v2i32:$rs1, (v2i32(is_imm_vec_kvx_splat32_:$IMM))), (ADDWPri SingleReg:$rs1, (build_imm_vec_neg $IMM), splat32_)>;
 def : Pat<(sub v2i32:$rs1, (v2i32(is_imm_vec_kvx_splat32_at:$IMM))), (ADDWPri SingleReg:$rs1, (build_imm_vec_neg $IMM), splat32_at)>;
+// TODO: Add immediate sub-vector creation so we can
+// add immediate variants to v4i32, e.g.
+def : Pat<(v4i32 (add v4i32:$a1, v4i32:$a2)),
+          (REG_SEQUENCE PairedReg,
+            (v2i32(ADDWPrr (v2i32(EXTRACT_SUBREG PairedReg:$a1, sub_s0)),
+                      (v2i32(EXTRACT_SUBREG PairedReg:$a2, sub_s0)))),
+            sub_s0,
+            (v2i32(ADDWPrr (v2i32(EXTRACT_SUBREG PairedReg:$a1, sub_s1)),
+                      (v2i32(EXTRACT_SUBREG PairedReg:$a2, sub_s1)))),
+            sub_s1)>;
 
 // ANDD
 def : Pat<(and i64:$rs1, i64:$rs2), (ANDDrr SingleReg:$rs1, SingleReg:$rs2)>;
@@ -502,6 +512,15 @@ defm : ZEFPat<(sub Signed37W:$rs1, i32:$rs2), (SBFWri37 SingleReg:$rs2, Signed37
 def : Pat<(sub (v2i32 (build_vector (i32 Wrapped32:$i), (i32 0))), v2i32:$r), (SBFWPri SingleReg:$r, Wrapped32:$i, splat32_)>;
 def : Pat<(sub (v2i32 (v2_splat (i32 Wrapped32:$i))), v2i32:$r), (SBFWPri SingleReg:$r, Wrapped32:$i, splat32_at)>;
 def : Pat<(sub v2i32:$rs1, v2i32:$rs2), (SBFWPrr SingleReg:$rs2, SingleReg:$rs1)>;
+
+def : Pat<(sub v4i32:$rs1, v4i32:$rs2),
+      (REG_SEQUENCE PairedReg,
+            (v2i32 (SBFWPrr (v2i32(EXTRACT_SUBREG PairedReg:$rs2, sub_s1)),
+                            (v2i32(EXTRACT_SUBREG PairedReg:$rs1, sub_s1)))),
+            sub_s1,
+            (v2i32 (SBFWPrr (v2i32(EXTRACT_SUBREG PairedReg:$rs2, sub_s0)),
+                            (v2i32(EXTRACT_SUBREG PairedReg:$rs1, sub_s0)))),
+            sub_s0)>;
 
 multiclass HQShiftScalarOps <SDNode Op, KVX_INSTRUCTION RI, KVX_INSTRUCTION RR>
 {
@@ -787,7 +806,7 @@ defm MINUHQ : Word_RR_RIsplat_select_H<umin, MINUHQri, MINUHQrr>;
 // TODO: implement patterns or intrinsics for the following instructions: CMULDT
 // CMULGHXDT CMULGLXDT CMULGMXDT CMULXDT COPYQ CRCBELLW CRCBELMW CRCLELLW
 // CRCLELMW DOT2SUWD DOT2SUWDP DOT2UWD DOT2UWDP DOT2W DOT2WD DOT2WDP DOT2WZP
-// MADDDT MADDHQ MADDHWQ MADDSUDT MADDSUHWQ MADDSUWD MADDSUWDP MADDUDT
+// MADDDT MADDHWQ MADDSUDT MADDSUHWQ MADDSUWD MADDSUWDP MADDUDT
 // MADDUHWQ MADDUWDP MSBFDT MSBFHQ MSBFHWQ MSBFSUDT
 // MSBFSUHWQ MSBFSUWD MSBFUSWDP MSBFUDT MSBFUHWQ MSBFUWD MSBFUWDP MSBFUZDT
 // MSBFWD MSBFWDP MSBFWP MULCWDC MULDT MULHWQ MULSUDT MULSUHWQ MULSUWD MULSUWDP
@@ -798,6 +817,12 @@ def : Pat<(add i64:$a1, (mul i64:$a2, i64:$a3)), (MADDDrr SingleReg:$a1, SingleR
 def : Pat<(add i64:$a1, (mul i64:$a2, Wrapped64:$a3)), (MADDDri64 SingleReg:$a1, SingleReg:$a2, Wrapped64:$a3)>;
 def : Pat<(add i64:$a1, (mul i64:$a2, Signed10:$a3)), (MADDDri10 SingleReg:$a1, SingleReg:$a2, Wrapped64:$a3)>;
 def : Pat<(add i64:$a1, (mul i64:$a2, Signed37:$a3)), (MADDDri37 SingleReg:$a1, SingleReg:$a2, Wrapped64:$a3)>;
+
+// MADDHQ
+def : Pat<(add v2i16:$a1, (mul v2i16:$a2, (v2i16(is_imm_vec:$IMM)))), (MADDHQri37 SingleReg:$a1, SingleReg:$a2, (build_imm_vec $IMM))>;
+def : Pat<(add v2i16:$a1, (mul v2i16:$a2, v2i16:$a3)), (MADDHQrr SingleReg:$a1, SingleReg:$a2, SingleReg:$a3)>;
+def : Pat<(add v4i16:$a1, (mul v4i16:$a2, (v4i16(is_imm_vec:$IMM)))), (MADDHQri64 SingleReg:$a1, SingleReg:$a2, (build_imm_vec $IMM))>;
+def : Pat<(add v4i16:$a1, (mul v4i16:$a2, v4i16:$a3)), (MADDHQrr SingleReg:$a1, SingleReg:$a2, SingleReg:$a3)>;
 
 // MADDW
 defm : ZEFPat<(add i32:$a1, (mul i32:$a2, i32:$a3)), (MADDWrr SingleReg:$a1, SingleReg:$a2, SingleReg:$a3)>;
@@ -816,6 +841,29 @@ def : Pat<(i64(add (i64(KVX_zext_mul i32:$v0, Wrapped32:$v1)), i64:$v2)),
 
 def : Pat<(i64(add (i64(KVX_zext_mul i32:$v0, i32:$v1)), i64:$v2)),
             (i64(MADDUWDrr SingleReg:$v2, SingleReg:$v0, SingleReg:$v1))>;
+
+// MADDWP
+// TODO: ri37 & ri10 variants
+def : Pat<(v2i32 (add v2i32:$a1, (mul v2i32:$a2, (v2i32(is_imm_vec:$IMM))))),
+      (MADDWPri64 SingleReg:$a1, SingleReg:$a2, (build_imm_vec $IMM))>;
+
+def : Pat<(v2i32 (add v2i32:$a1, (mul v2i32:$a2, v2i32:$a3))),
+      (MADDWPrr SingleReg:$a1, SingleReg:$a2, SingleReg:$a3)>;
+
+// TODO: Add immediate sub-vector creation so we can
+// add immediate variant to v4i32, e.g.
+def : Pat<(v4i32 (add v4i32:$a1, (mul v4i32:$a2, v4i32:$a3))),
+      (REG_SEQUENCE PairedReg,
+            (v2i32 (MADDWPrr
+                  (v2i32 (EXTRACT_SUBREG PairedReg:$a1, sub_s0)),
+                  (v2i32 (EXTRACT_SUBREG PairedReg:$a2, sub_s0)),
+                  (v2i32 (EXTRACT_SUBREG PairedReg:$a3, sub_s0)))),
+            sub_s0,
+            (v2i32 (MADDWPrr
+                  (v2i32 (EXTRACT_SUBREG PairedReg:$a1, sub_s1)),
+                  (v2i32 (EXTRACT_SUBREG PairedReg:$a2, sub_s1)),
+                  (v2i32 (EXTRACT_SUBREG PairedReg:$a3, sub_s1)))),
+            sub_s1)>;
 
 // MSBFW
 defm : ZEFPat<(sub i32:$a1, (mul i32:$a2, i32:$a3)), (MSBFWrr SingleReg:$a1, SingleReg:$a2, SingleReg:$a3)>;
@@ -852,6 +900,9 @@ def : Pat<(mul v4i16:$rs1, v4i16:$rs2), (MULHQrr SingleReg:$rs1, SingleReg:$rs2)
 
 // MULWP
 def : Pat<(mul v2i32:$rs1, v2i32:$rs2), (MULWPrr SingleReg:$rs1, SingleReg:$rs2)>;
+
+// MULWQ
+def : Pat<(mul v4i32:$rs1, v4i32:$rs2), (MULWQ PairedReg:$rs1, PairedReg:$rs2)>;
 
 def : Pat<(add v8i8:$v1, v8i8:$v2),
       (XORDrr

@@ -63,9 +63,9 @@ define <4 x float> @test_fadd(<4 x float> %a, <4 x float> %b) #0 {
 define <4 x float> @test_fadd_imm_0(<4 x float> %a) #0 {
 ; CHECK-LABEL: test_fadd_imm_0:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r2 = 0x400000003f800000
+; CHECK-NEXT:    make $r3 = 0x400000003f800000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r3 = $r2
+; CHECK-NEXT:    copyd $r2 = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    faddwq $r0r1 = $r0r1, $r2r3
 ; CHECK-NEXT:    ret
@@ -77,9 +77,9 @@ define <4 x float> @test_fadd_imm_0(<4 x float> %a) #0 {
 define <4 x float> @test_fadd_imm_1(<4 x float> %a) #0 {
 ; CHECK-LABEL: test_fadd_imm_1:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r2 = 0x400000003f800000
+; CHECK-NEXT:    make $r3 = 0x400000003f800000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r3 = $r2
+; CHECK-NEXT:    copyd $r2 = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    faddwq $r0r1 = $r0r1, $r2r3
 ; CHECK-NEXT:    ret
@@ -103,9 +103,9 @@ define <4 x float> @test_fsub(<4 x float> %a, <4 x float> %b) #0 {
 define <4 x float> @test_fsub_imm(<4 x float> %a) #0 {
 ; CHECK-LABEL: test_fsub_imm:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r2 = 0xc0000000bf800000
+; CHECK-NEXT:    make $r3 = 0xc0000000bf800000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r3 = $r2
+; CHECK-NEXT:    copyd $r2 = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    faddwq $r0r1 = $r0r1, $r2r3
 ; CHECK-NEXT:    ret
@@ -118,9 +118,9 @@ define <4 x float> @test_fsub_imm(<4 x float> %a) #0 {
 define <4 x float> @test_fsub_fromimm(<4 x float> %a) #0 {
 ; CHECK-LABEL: test_fsub_fromimm:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r2 = 0x400000003f800000
+; CHECK-NEXT:    make $r3 = 0x400000003f800000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r3 = $r2
+; CHECK-NEXT:    copyd $r2 = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fsbfwq $r0r1 = $r0r1, $r2r3
 ; CHECK-NEXT:    ret
@@ -132,9 +132,9 @@ define <4 x float> @test_fsub_fromimm(<4 x float> %a) #0 {
 define <4 x float> @test_fneg(<4 x float> %a) #0 {
 ; CHECK-LABEL: test_fneg:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r2 = 0
+; CHECK-NEXT:    make $r3 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r3 = $r2
+; CHECK-NEXT:    copyd $r2 = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fsbfwq $r0r1 = $r0r1, $r2r3
 ; CHECK-NEXT:    ret
@@ -2513,16 +2513,14 @@ define <4 x float> @test_fmuladd(<4 x float> %a, <4 x float> %b, <4 x float> %c)
 define <4 x float> @test_shufflevector(<4 x float> %a) #0 {
 ; CHECK-LABEL: test_shufflevector:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r2 = $r0, 32
-; CHECK-NEXT:    srad $r3 = $r1, 32
-; CHECK-NEXT:    slld $r0 = $r0, 32
-; CHECK-NEXT:    slld $r4 = $r1, 32
+; CHECK-NEXT:    srad $r2 = $r1, 32
+; CHECK-NEXT:    srad $r3 = $r0, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r2 = $r2
-; CHECK-NEXT:    zxwd $r3 = $r3
+; CHECK-NEXT:    insf $r2 = $r1, 63, 32
+; CHECK-NEXT:    insf $r3 = $r0, 63, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ord $r1 = $r2, $r0
-; CHECK-NEXT:    ord $r0 = $r3, $r4
+; CHECK-NEXT:    copyd $r0 = $r2
+; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %s = shufflevector <4 x float> %a, <4 x float> undef, <4 x i32> <i32 3, i32 2, i32 1, i32 0>
@@ -2532,10 +2530,7 @@ define <4 x float> @test_shufflevector(<4 x float> %a) #0 {
 define <4 x float> @test_insertelement0(<4 x float> %a, float %x) #0 {
 ; CHECK-LABEL: test_insertelement0:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    andd $r0 = $r0, 0xffffffff00000000
-; CHECK-NEXT:    zxwd $r2 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ord $r0 = $r2, $r0
+; CHECK-NEXT:    insf $r0 = $r2, 31, 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %i = insertelement <4 x float> %a, float %x, i64 0
@@ -2545,10 +2540,7 @@ define <4 x float> @test_insertelement0(<4 x float> %a, float %x) #0 {
 define <4 x float> @test_insertelement1(<4 x float> %a, float %x) #0 {
 ; CHECK-LABEL: test_insertelement1:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    zxwd $r0 = $r0
-; CHECK-NEXT:    slld $r2 = $r2, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ord $r0 = $r2, $r0
+; CHECK-NEXT:    insf $r0 = $r2, 63, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %i = insertelement <4 x float> %a, float %x, i64 1
@@ -2558,16 +2550,16 @@ define <4 x float> @test_insertelement1(<4 x float> %a, float %x) #0 {
 define <4 x float> @test_insertelement(<4 x float> %a, float %x, i64 %p) #0 {
 ; CHECK-LABEL: test_insertelement:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    andd $r3 = $r3, 3
+; CHECK-NEXT:    insf $r3 = $r3, 63, 31
+; CHECK-NEXT:    make $r4 = 0x300000002
+; CHECK-NEXT:    make $r5 = 0x100000000
+; CHECK-NEXT:    insf $r2 = $r2, 63, 31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r4 = $r12, 16
-; CHECK-NEXT:    sq 16[$r12] = $r0r1
+; CHECK-NEXT:    compnwp.eq $r4 = $r4, $r3
+; CHECK-NEXT:    compnwp.eq $r3 = $r5, $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw.xs $r3[$r4] = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lq $r0r1 = 16[$r12]
-; CHECK-NEXT:    addd $r12 = $r12, 32
+; CHECK-NEXT:    cmovewp.eqz $r4 ? $r1 = $r2
+; CHECK-NEXT:    cmovewp.eqz $r3 ? $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %i = insertelement <4 x float> %a, float %x, i64 %p

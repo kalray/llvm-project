@@ -1789,16 +1789,8 @@ define <2 x double> @test_insertelement1(<2 x double> %a, double %x) #0 {
 define <2 x double> @test_insertelement(<2 x double> %a, double %x, i64 %p) #0 {
 ; CHECK-LABEL: test_insertelement:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    andd $r3 = $r3, 1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r4 = $r12, 16
-; CHECK-NEXT:    sq 16[$r12] = $r0r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd.xs $r3[$r4] = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lq $r0r1 = 16[$r12]
-; CHECK-NEXT:    addd $r12 = $r12, 32
+; CHECK-NEXT:    cmoved.odd $r3 ? $r1 = $r2
+; CHECK-NEXT:    cmoved.even $r3 ? $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %i = insertelement <2 x double> %a, double %x, i64 %p
