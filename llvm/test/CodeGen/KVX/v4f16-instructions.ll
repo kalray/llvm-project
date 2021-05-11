@@ -138,7 +138,6 @@ define <4 x half> @test_fsub(<4 x half> %a, <4 x half> %b) #0 {
   ret <4 x half> %r
 }
 
-; TODO: The upper bits should be zeroed
 define <4 x half> @test_fsub_imm_1(<4 x half> %a) #0 {
 ; CHECK-LABEL: test_fsub_imm_1:
 ; CHECK:       # %bb.0:
@@ -849,7 +848,6 @@ define <4 x i1> @test_fcmp_olt(<4 x half> %a, <4 x half> %b) #0 {
   ret <4 x i1> %r
 }
 
-; XCHECK-LABEL: test_fcmp_ole(
 define <4 x i1> @test_fcmp_ole(<4 x half> %a, <4 x half> %b) #0 {
 ; CHECK-LABEL: test_fcmp_ole:
 ; CHECK:       # %bb.0:
@@ -895,198 +893,126 @@ define <4 x i1> @test_fcmp_ord(<4 x half> %a, <4 x half> %b) #0 {
   ret <4 x i1> %r
 }
 
-; TODO: Could insf(extfz(FIXEDUWP(FWIDENLHWP)))
 define <4 x i16> @test_fptosi_i16(<4 x half> %a) #0 {
 ; CHECK-LABEL: test_fptosi_i16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srld $r1 = $r0, 48
-; CHECK-NEXT:    extfz $r2 = $r0, 47, 32
-; CHECK-NEXT:    extfz $r3 = $r0, 31, 16
+; CHECK-NEXT:    fwidenmhwp $r1 = $r0
+; CHECK-NEXT:    fwidenlhwp $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r0 = $r0, 15, 0
-; CHECK-NEXT:    fwidenlhw $r1 = $r1
+; CHECK-NEXT:    fixedwp.rz $r1 = $r1, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r2 = $r2
-; CHECK-NEXT:    fwidenlhw $r3 = $r3
-; CHECK-NEXT:    fixedw.rz $r1 = $r1, 0
+; CHECK-NEXT:    fixedwp.rz $r0 = $r0, 0
+; CHECK-NEXT:    extfz $r2 = $r1, 47, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
-; CHECK-NEXT:    fixedw.rz $r2 = $r2, 0
+; CHECK-NEXT:    insf $r0 = $r2, 63, 48
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedw.rz $r3 = $r3, 0
-; CHECK-NEXT:    insf $r2 = $r1, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedw.rz $r0 = $r0, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r3, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 63, 32
+; CHECK-NEXT:    insf $r0 = $r1, 31, 16
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptosi <4 x half> %a to <4 x i16>
   ret <4 x i16> %r
 }
 
-; TODO: Could do  FIXEDUWP(FWIDENLHWP)
 define <4 x i32> @test_fptosi_i32(<4 x half> %a) #0 {
 ; CHECK-LABEL: test_fptosi_i32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srld $r1 = $r0, 48
-; CHECK-NEXT:    extfz $r2 = $r0, 47, 32
-; CHECK-NEXT:    extfz $r3 = $r0, 31, 16
+; CHECK-NEXT:    fwidenmhwp $r1 = $r0
+; CHECK-NEXT:    fwidenlhwp $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r0 = $r0, 15, 0
-; CHECK-NEXT:    fwidenlhw $r1 = $r1
+; CHECK-NEXT:    fixedwp.rz $r1 = $r1, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
-; CHECK-NEXT:    fwidenlhw $r2 = $r2
-; CHECK-NEXT:    fixedw.rz $r4 = $r1, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r3 = $r3
-; CHECK-NEXT:    fixedw.rz $r1 = $r2, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedw.rz $r2 = $r3, 0
-; CHECK-NEXT:    insf $r1 = $r4, 63, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedw.rz $r0 = $r0, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 63, 32
+; CHECK-NEXT:    fixedwp.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptosi <4 x half> %a to <4 x i32>
   ret <4 x i32> %r
 }
 
-;TODO: Could use FWIDENLHW
 define <4 x i64> @test_fptosi_i64(<4 x half> %a) #0 {
 ; CHECK-LABEL: test_fptosi_i64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    extfz $r1 = $r0, 15, 0
-; CHECK-NEXT:    extfz $r2 = $r0, 31, 16
+; CHECK-NEXT:    fwidenmhwp $r1 = $r0
+; CHECK-NEXT:    fwidenlhwp $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r3 = $r0, 47, 32
-; CHECK-NEXT:    srld $r0 = $r0, 48
-; CHECK-NEXT:    fwidenlhw $r1 = $r1
+; CHECK-NEXT:    fwidenmwd $r2 = $r1
+; CHECK-NEXT:    fwidenmwd $r4 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r2 = $r2
-; CHECK-NEXT:    fwidenlhw $r3 = $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
+; CHECK-NEXT:    fwidenlwd $r0 = $r0
 ; CHECK-NEXT:    fwidenlwd $r1 = $r1
+; CHECK-NEXT:    fixedd.rz $r3 = $r2, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlwd $r4 = $r0
-; CHECK-NEXT:    fwidenlwd $r2 = $r2
-; CHECK-NEXT:    fixedd.rz $r0 = $r1, 0
+; CHECK-NEXT:    fixedd.rz $r2 = $r1, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlwd $r3 = $r3
-; CHECK-NEXT:    fixedd.rz $r1 = $r2, 0
+; CHECK-NEXT:    fixedd.rz $r1 = $r4, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedd.rz $r2 = $r3, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedd.rz $r3 = $r4, 0
+; CHECK-NEXT:    fixedd.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptosi <4 x half> %a to <4 x i64>
   ret <4 x i64> %r
 }
 
-; TODO: Could use insf(extfz(FIXEDUWP(FWIDENLHW)))
-define <4 x i16> @test_fptoui_2xi16(<4 x half> %a) #0 {
-; CHECK-LABEL: test_fptoui_2xi16:
+define <4 x i16> @test_fptoui_4xi16(<4 x half> %a) #0 {
+; CHECK-LABEL: test_fptoui_4xi16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srld $r1 = $r0, 48
-; CHECK-NEXT:    extfz $r2 = $r0, 47, 32
-; CHECK-NEXT:    extfz $r3 = $r0, 31, 16
+; CHECK-NEXT:    fwidenmhwp $r1 = $r0
+; CHECK-NEXT:    fwidenlhwp $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r0 = $r0, 15, 0
-; CHECK-NEXT:    fwidenlhw $r1 = $r1
+; CHECK-NEXT:    fixeduwp.rz $r1 = $r1, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r2 = $r2
-; CHECK-NEXT:    fwidenlhw $r3 = $r3
-; CHECK-NEXT:    fixeduw.rz $r1 = $r1, 0
+; CHECK-NEXT:    fixeduwp.rz $r0 = $r0, 0
+; CHECK-NEXT:    extfz $r2 = $r1, 47, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
-; CHECK-NEXT:    fixeduw.rz $r2 = $r2, 0
+; CHECK-NEXT:    insf $r0 = $r2, 63, 48
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixeduw.rz $r3 = $r3, 0
-; CHECK-NEXT:    insf $r2 = $r1, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixeduw.rz $r0 = $r0, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r3, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 63, 32
+; CHECK-NEXT:    insf $r0 = $r1, 31, 16
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptoui <4 x half> %a to <4 x i16>
   ret <4 x i16> %r
 }
 
-; TODO: Could use [FIXEDUWP,FIXEDUWP]([FWIDENMWD,FWIDENLWD](FWIDENLHW))
-define <4 x i32> @test_fptoui_2xi32(<4 x half> %a) #0 {
-; CHECK-LABEL: test_fptoui_2xi32:
+define <4 x i32> @test_fptoui_4xi32(<4 x half> %a) #0 {
+; CHECK-LABEL: test_fptoui_4xi32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srld $r1 = $r0, 48
-; CHECK-NEXT:    extfz $r2 = $r0, 47, 32
-; CHECK-NEXT:    extfz $r3 = $r0, 31, 16
+; CHECK-NEXT:    fwidenmhwp $r1 = $r0
+; CHECK-NEXT:    fwidenlhwp $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r0 = $r0, 15, 0
-; CHECK-NEXT:    fwidenlhw $r1 = $r1
+; CHECK-NEXT:    fixeduwp.rz $r1 = $r1, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
-; CHECK-NEXT:    fwidenlhw $r2 = $r2
-; CHECK-NEXT:    fixeduw.rz $r4 = $r1, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r3 = $r3
-; CHECK-NEXT:    fixeduw.rz $r1 = $r2, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixeduw.rz $r2 = $r3, 0
-; CHECK-NEXT:    insf $r1 = $r4, 63, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixeduw.rz $r0 = $r0, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 63, 32
+; CHECK-NEXT:    fixeduwp.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptoui <4 x half> %a to <4 x i32>
   ret <4 x i32> %r
 }
 
-; TODO: Could use FIXEDUWP(FWIDENLHW))
-define <4 x i64> @test_fptoui_2xi64(<4 x half> %a) #0 {
-; CHECK-LABEL: test_fptoui_2xi64:
+define <4 x i64> @test_fptoui_4xi64(<4 x half> %a) #0 {
+; CHECK-LABEL: test_fptoui_4xi64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    extfz $r1 = $r0, 15, 0
-; CHECK-NEXT:    extfz $r2 = $r0, 31, 16
+; CHECK-NEXT:    fwidenmhwp $r1 = $r0
+; CHECK-NEXT:    fwidenlhwp $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r3 = $r0, 47, 32
-; CHECK-NEXT:    srld $r0 = $r0, 48
-; CHECK-NEXT:    fwidenlhw $r1 = $r1
+; CHECK-NEXT:    fwidenmwd $r2 = $r1
+; CHECK-NEXT:    fwidenmwd $r4 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r2 = $r2
-; CHECK-NEXT:    fwidenlhw $r3 = $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
+; CHECK-NEXT:    fwidenlwd $r0 = $r0
 ; CHECK-NEXT:    fwidenlwd $r1 = $r1
+; CHECK-NEXT:    fixedud.rz $r3 = $r2, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlwd $r4 = $r0
-; CHECK-NEXT:    fwidenlwd $r2 = $r2
-; CHECK-NEXT:    fixedud.rz $r0 = $r1, 0
+; CHECK-NEXT:    fixedud.rz $r2 = $r1, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlwd $r3 = $r3
-; CHECK-NEXT:    fixedud.rz $r1 = $r2, 0
+; CHECK-NEXT:    fixedud.rz $r1 = $r4, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedud.rz $r2 = $r3, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedud.rz $r3 = $r4, 0
+; CHECK-NEXT:    fixedud.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptoui <4 x half> %a to <4 x i64>
   ret <4 x i64> %r
 }
 
-define <4 x half> @test_uitofp_2xi16(<4 x i16> %a) #0 {
-; CHECK-LABEL: test_uitofp_2xi16:
+define <4 x half> @test_uitofp_4xi16(<4 x i16> %a) #0 {
+; CHECK-LABEL: test_uitofp_4xi16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srld $r1 = $r0, 48
 ; CHECK-NEXT:    extfz $r2 = $r0, 47, 32
@@ -1121,8 +1047,8 @@ define <4 x half> @test_uitofp_2xi16(<4 x i16> %a) #0 {
   ret <4 x half> %r
 }
 
-define <4 x half> @test_uitofp_2xi32(<4 x i32> %a) #0 {
-; CHECK-LABEL: test_uitofp_2xi32:
+define <4 x half> @test_uitofp_4xi32(<4 x i32> %a) #0 {
+; CHECK-LABEL: test_uitofp_4xi32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srad $r2 = $r1, 32
 ; CHECK-NEXT:    srad $r3 = $r0, 32
@@ -1150,8 +1076,8 @@ define <4 x half> @test_uitofp_2xi32(<4 x i32> %a) #0 {
 }
 
 ; Could use vector fnarrow variants
-define <4 x half> @test_uitofp_2xi64(<4 x i64> %a) #0 {
-; CHECK-LABEL: test_uitofp_2xi64:
+define <4 x half> @test_uitofp_4xi64(<4 x i64> %a) #0 {
+; CHECK-LABEL: test_uitofp_4xi64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    floatud.rn $r3 = $r3, 0
 ; CHECK-NEXT:    ;;
@@ -1181,8 +1107,8 @@ define <4 x half> @test_uitofp_2xi64(<4 x i64> %a) #0 {
   ret <4 x half> %r
 }
 
-define <4 x half> @test_sitofp_2xi32(<4 x i32> %a) #0 {
-; CHECK-LABEL: test_sitofp_2xi32:
+define <4 x half> @test_sitofp_4xi32(<4 x i32> %a) #0 {
+; CHECK-LABEL: test_sitofp_4xi32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srad $r2 = $r1, 32
 ; CHECK-NEXT:    srad $r3 = $r0, 32
@@ -1209,8 +1135,8 @@ define <4 x half> @test_sitofp_2xi32(<4 x i32> %a) #0 {
   ret <4 x half> %r
 }
 
-define <4 x half> @test_sitofp_2xi64(<4 x i64> %a) #0 {
-; CHECK-LABEL: test_sitofp_2xi64:
+define <4 x half> @test_sitofp_4xi64(<4 x i64> %a) #0 {
+; CHECK-LABEL: test_sitofp_4xi64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    floatd.rn $r3 = $r3, 0
 ; CHECK-NEXT:    ;;
@@ -1240,8 +1166,8 @@ define <4 x half> @test_sitofp_2xi64(<4 x i64> %a) #0 {
   ret <4 x half> %r
 }
 
-define <4 x half> @test_uitofp_2xi32_fadd(<4 x i32> %a, <4 x half> %b) #0 {
-; CHECK-LABEL: test_uitofp_2xi32_fadd:
+define <4 x half> @test_uitofp_4xi32_fadd(<4 x i32> %a, <4 x half> %b) #0 {
+; CHECK-LABEL: test_uitofp_4xi32_fadd:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srad $r3 = $r1, 32
 ; CHECK-NEXT:    srad $r4 = $r0, 32
@@ -1271,8 +1197,8 @@ define <4 x half> @test_uitofp_2xi32_fadd(<4 x i32> %a, <4 x half> %b) #0 {
   ret <4 x half> %r
 }
 
-define <4 x half> @test_sitofp_2xi32_fadd(<4 x i32> %a, <4 x half> %b) #0 {
-; CHECK-LABEL: test_sitofp_2xi32_fadd:
+define <4 x half> @test_sitofp_4xi32_fadd(<4 x i32> %a, <4 x half> %b) #0 {
+; CHECK-LABEL: test_sitofp_4xi32_fadd:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srad $r3 = $r1, 32
 ; CHECK-NEXT:    srad $r4 = $r0, 32
@@ -1302,8 +1228,8 @@ define <4 x half> @test_sitofp_2xi32_fadd(<4 x i32> %a, <4 x half> %b) #0 {
   ret <4 x half> %r
 }
 
-define <4 x half> @test_fptrunc_2xfloat(<4 x float> %a) #0 {
-; CHECK-LABEL: test_fptrunc_2xfloat:
+define <4 x half> @test_fptrunc_4xfloat(<4 x float> %a) #0 {
+; CHECK-LABEL: test_fptrunc_4xfloat:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fnarrowwhq $r0 = $r0r1
 ; CHECK-NEXT:    ret
@@ -1313,8 +1239,8 @@ define <4 x half> @test_fptrunc_2xfloat(<4 x float> %a) #0 {
 }
 
 ; Could use vector fnarrow variants
-define <4 x half> @test_fptrunc_2xdouble(<4 x double> %a) #0 {
-; CHECK-LABEL: test_fptrunc_2xdouble:
+define <4 x half> @test_fptrunc_4xdouble(<4 x double> %a) #0 {
+; CHECK-LABEL: test_fptrunc_4xdouble:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fnarrowdw $r3 = $r3
 ; CHECK-NEXT:    ;;
@@ -1339,8 +1265,8 @@ define <4 x half> @test_fptrunc_2xdouble(<4 x double> %a) #0 {
   ret <4 x half> %r
 }
 
-define <4 x float> @test_fpext_2xfloat(<4 x half> %a) #0 {
-; CHECK-LABEL: test_fpext_2xfloat:
+define <4 x float> @test_fpext_4xfloat(<4 x half> %a) #0 {
+; CHECK-LABEL: test_fpext_4xfloat:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fwidenlhwp $r2 = $r0
 ; CHECK-NEXT:    fwidenmhwp $r1 = $r0
@@ -1352,8 +1278,8 @@ define <4 x float> @test_fpext_2xfloat(<4 x half> %a) #0 {
   ret <4 x float> %r
 }
 
-define <4 x double> @test_fpext_2xdouble(<4 x half> %a) #0 {
-; CHECK-LABEL: test_fpext_2xdouble:
+define <4 x double> @test_fpext_4xdouble(<4 x half> %a) #0 {
+; CHECK-LABEL: test_fpext_4xdouble:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    extfz $r1 = $r0, 15, 0
 ; CHECK-NEXT:    extfz $r2 = $r0, 31, 16
@@ -1378,8 +1304,8 @@ define <4 x double> @test_fpext_2xdouble(<4 x half> %a) #0 {
   ret <4 x double> %r
 }
 
-define <4 x i16> @test_bitcast_2xhalf_to_2xi16(<4 x half> %a) #0 {
-; CHECK-LABEL: test_bitcast_2xhalf_to_2xi16:
+define <4 x i16> @test_bitcast_4xhalf_to_4xi16(<4 x half> %a) #0 {
+; CHECK-LABEL: test_bitcast_4xhalf_to_4xi16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -1387,8 +1313,8 @@ define <4 x i16> @test_bitcast_2xhalf_to_2xi16(<4 x half> %a) #0 {
   ret <4 x i16> %r
 }
 
-define <4 x half> @test_bitcast_2xi16_to_2xhalf(<4 x i16> %a) #0 {
-; CHECK-LABEL: test_bitcast_2xi16_to_2xhalf:
+define <4 x half> @test_bitcast_4xi16_to_4xhalf(<4 x i16> %a) #0 {
+; CHECK-LABEL: test_bitcast_4xi16_to_4xhalf:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -1967,7 +1893,6 @@ define <4 x half> @test_log10(<4 x half> %a) #0 {
  ret <4 x half> %r
 }
 
-;;; XCHECK-LABEL: test_log2(
 define <4 x half> @test_log2(<4 x half> %a) #0 {
 ; CHECK-LABEL: test_log2:
 ; CHECK:       # %bb.0:
