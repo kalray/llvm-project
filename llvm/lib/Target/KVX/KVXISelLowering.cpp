@@ -348,10 +348,15 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::FP_TO_UINT, VT, Legal);
   }
 
-  for (auto VT : {MVT::v2i8, MVT::v2i16, MVT::v2i32, MVT::v2i64, MVT::v4i8,
-                  MVT::v4i16, MVT::v4i32, MVT::v4i64, MVT::v8i8}) {
+  for (auto VT : {MVT::v2i8, MVT::v2i16, MVT::v2i64, MVT::v4i8, MVT::v4i16,
+                  MVT::v4i64, MVT::v8i8}) {
     setOperationAction(ISD::SINT_TO_FP, VT, Expand);
     setOperationAction(ISD::UINT_TO_FP, VT, Expand);
+  }
+
+  for (auto VT : {MVT::v2i32, MVT::v4i32}) {
+    setOperationAction(ISD::SINT_TO_FP, VT, Custom);
+    setOperationAction(ISD::UINT_TO_FP, VT, Custom);
   }
 
   setOperationAction(ISD::FP_ROUND, MVT::v2f32, Expand);
@@ -2101,6 +2106,13 @@ SDValue KVXTargetLowering::lowerADDRSPACECAST(SDValue Op,
 }
 
 SDValue KVXTargetLowering::lowerIntToFP(SDValue Op, SelectionDAG &DAG) const {
+  auto VT = Op.getValueType();
+  if (VT.isVector()) {
+    if (Op.getOperand(0).getScalarValueSizeInBits() == 32)
+      return Op;
+    return SDValue();
+  }
+
   if (Op.getValueType() != MVT::f32)
     return Op;
 
