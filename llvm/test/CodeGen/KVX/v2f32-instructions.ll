@@ -1606,16 +1606,12 @@ define <2 x float> @test_insertelement1(<2 x float> %a, float %x) #0 {
 define <2 x float> @test_insertelement(<2 x float> %a, float %x, i64 %p) #0 {
 ; CHECK-LABEL: test_insertelement:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    andd $r2 = $r2, 1
+; CHECK-NEXT:    copyd $r3 = $r0
+; CHECK-NEXT:    insf $r0 = $r1, 63, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r3 = $r12, 24
-; CHECK-NEXT:    sd 24[$r12] = $r0
+; CHECK-NEXT:    insf $r3 = $r1, 31, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw.xs $r2[$r3] = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r0 = 24[$r12]
-; CHECK-NEXT:    addd $r12 = $r12, 32
+; CHECK-NEXT:    cmoved.even $r2 ? $r0 = $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %i = insertelement <2 x float> %a, float %x, i64 %p
