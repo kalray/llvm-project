@@ -347,9 +347,7 @@ entry:
 define <4 x i8> @v4i8annd(<4 x i8> %a, <4 x i8> %b){
 ; CHECK-LABEL: v4i8annd:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    xorw $r0 = $r0, -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r0 = $r0, $r1
+; CHECK-NEXT:    andnw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -361,9 +359,7 @@ entry:
 define <4 x i8> @v4i8andn_imm(<4 x i8> %a){
 ; CHECK-LABEL: v4i8andn_imm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    xorw $r0 = $r0, -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r0 = $r0, 0x2b2b2b2b
+; CHECK-NEXT:    andnw $r0 = $r0, 0x2b2b2b2b
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -442,9 +438,7 @@ entry:
 define <2 x i8> @v2i8annd(<2 x i8> %a, <2 x i8> %b){
 ; CHECK-LABEL: v2i8annd:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    xorw $r0 = $r0, -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r0 = $r0, $r1
+; CHECK-NEXT:    andnw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -456,9 +450,7 @@ entry:
 define <2 x i8> @v2i8andn_imm(<2 x i8> %a){
 ; CHECK-LABEL: v2i8andn_imm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    xorw $r0 = $r0, -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r0 = $r0, 0x2b2b
+; CHECK-NEXT:    andnw $r0 = $r0, 0x2b2b
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

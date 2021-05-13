@@ -670,10 +670,8 @@ define <4 x i8> @test_select(<4 x i8> %a, <4 x i8> %b, i1 zeroext %c) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r2 = $r2, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xorw $r3 = $r2, -1
+; CHECK-NEXT:    andnw $r1 = $r2, $r1
 ; CHECK-NEXT:    andw $r0 = $r0, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r1 = $r1, $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    orw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -1232,7 +1230,7 @@ define <4 x i8> @mulsub(<4 x i8> %a, <4 x i8> %b, <4 x i8> %c) #0 {
 define <4 x i8> @vnot(<4 x i8> %a) #0 {
 ; CHECK-LABEL: vnot:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    xorw $r0 = $r0, -1
+; CHECK-NEXT:    notw $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %vnot = xor <4 x i8> %a, <i8 -1, i8 -1, i8 -1, i8 -1>
