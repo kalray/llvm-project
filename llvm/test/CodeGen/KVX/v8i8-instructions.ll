@@ -1195,7 +1195,7 @@ define <8 x i8> @mulsub(<8 x i8> %a, <8 x i8> %b, <8 x i8> %c) #0 {
 define <8 x i8> @vnot(<8 x i8> %a) #0 {
 ; CHECK-LABEL: vnot:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    xord $r0 = $r0, -1
+; CHECK-NEXT:    notd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %vnot = xor <8 x i8> %a, <i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>

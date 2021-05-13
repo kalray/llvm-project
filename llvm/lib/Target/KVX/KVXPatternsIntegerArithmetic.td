@@ -290,6 +290,11 @@ foreach vtype = [ v8i8, v4i16, v2i32 ] in {
 def : Pat<(i32(and (not i32:$rs1), i32:$rs2)), (ANDNWrr SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(i32(and (not i32:$r), Signed37W:$i)), (ANDNWri37 SingleReg:$r, imm:$i)>;
 
+foreach vtype = [ v2i8, v2i16, v4i8 ] in {
+    def : Pat<(and (vnot vtype:$rs1), (vtype (is_imm_vec:$IMM))), (ANDNWri37 SingleReg:$rs1, (build_imm_vec $IMM))>;
+    def : Pat<(and (vnot vtype:$rs1), vtype:$rs2), (ANDNWrr SingleReg:$rs1, SingleReg:$rs2)>;
+}
+
 // AVGW / AVGRW
 def : Pat<(sra  (add i32:$v0, Wrapped32:$v1), (i64 1)), (AVGWri SingleReg:$v0, Wrapped32:$v1)>;
 def : Pat<(sra  (add i32:$v0, i32:$v1),       (i64 1)), (AVGWrr SingleReg:$v0, SingleReg:$v1)>;
@@ -481,6 +486,17 @@ defm : COMP_Pat<setgt,   comparison_gt, comparison_le>;
 defm : COMP_Pat<setge,   comparison_ge, comparison_lt>;
 defm : COMP_Pat<setlt,   comparison_lt, comparison_ge>;
 defm : COMP_Pat<setle,   comparison_le, comparison_gt>;
+
+// NXOR ri variants are not easy, as they become a single xor
+// NXORD
+def : Pat<(xor (xor i64:$rs1, i64:$rs2), (i64 -1)), (NXORDrr SingleReg:$rs1, SingleReg:$rs2)>;
+foreach vtype = [ v2i32, v4i16, v8i8 ] in
+    def : Pat<(vnot (xor vtype:$rs1, vtype:$rs2)), (NXORDrr SingleReg:$rs1, SingleReg:$rs2)>;
+
+// NXORW
+def : Pat<(xor (xor i32:$rs1, i32:$rs2), (i32 -1)), (NXORWrr SingleReg:$rs1, SingleReg:$rs2)>;
+foreach vtype = [ v2i8, v2i16, v4i8 ] in
+    def : Pat<(vnot (xor vtype:$rs1, vtype:$rs2)), (NXORWrr SingleReg:$rs1, SingleReg:$rs2)>;
 
 // ORD
 def : Pat<(or i64:$rs1, i64:$rs2), (ORDrr SingleReg:$rs1, SingleReg:$rs2)>;
