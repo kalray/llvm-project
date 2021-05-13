@@ -8,7 +8,7 @@
 //===----------------------------------------------------------------------===//
 // TODO: Add patterns for
 // ACSWAPD ACSWAPW ADDCHCP ADDUWD ADDWD ALCLRD ALCLRW CLRF CMULDT CMULGHXDT
-// CMULGLXDT CMULGMXDT CMULXDT
+// CMULGLXDT CMULGMXDT CMULXDT ABSDWP ABSDW ABDHQ ABDD
 // CRCBELLW CRCBELMW CRCLELLW CRCLELMW DOT2SUWD DOT2SUWDP DOT2UWD DOT2UWDP
 // DOT2W DOT2WD DOT2WDP DOT2WZP FCDIVWP FDOT2W FDOT2WD FDOT2WDP FDOT2WZP
 // FFMAHW FFMAHWQ FFMAWDP FFMSHW FFMSHWQ FFMSWDP FMULCWDC FMULHW FMULHWQ
@@ -1346,10 +1346,13 @@ def : Pat<(sub (v2i32 (v2_splat (i32 0))), v2i32:$r), (NEGWP SingleReg:$r)>;
 
 // NOTW, see KVXInstrInfo.td for i32
 def : Pat<(vnot v2i16:$v), (NOTW SingleReg:$v)>;
+def : Pat<(vnot v4i8:$v), (NOTW SingleReg:$v)>;
+def : Pat<(vnot v2i8:$v), (NOTW SingleReg:$v)>;
 
 // NOTD, see KVXInstrInfo.td for i64
-def : Pat<(vnot v4i16:$v), (NOTD SingleReg:$v)>;
 def : Pat<(vnot v2i32:$v), (NOTD SingleReg:$v)>;
+def : Pat<(vnot v4i16:$v), (NOTD SingleReg:$v)>;
+def : Pat<(vnot v8i8:$v), (NOTD SingleReg:$v)>;
 
 def: Pat<(KVXJT tjumptable:$a), (MAKEi64 Wrapped64:$a)>;
 def: Pat<(KVXJT_PCREL i64:$a), (PCRELmi64 SingleReg:$a)>;
