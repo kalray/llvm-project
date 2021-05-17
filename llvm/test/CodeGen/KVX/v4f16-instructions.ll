@@ -896,17 +896,28 @@ define <4 x i1> @test_fcmp_ord(<4 x half> %a, <4 x half> %b) #0 {
 define <4 x i16> @test_fptosi_i16(<4 x half> %a) #0 {
 ; CHECK-LABEL: test_fptosi_i16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fwidenmhwp $r1 = $r0
-; CHECK-NEXT:    fwidenlhwp $r0 = $r0
+; CHECK-NEXT:    srld $r1 = $r0, 48
+; CHECK-NEXT:    extfz $r2 = $r0, 47, 32
+; CHECK-NEXT:    extfz $r3 = $r0, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedwp.rz $r1 = $r1, 0
+; CHECK-NEXT:    extfz $r0 = $r0, 15, 0
+; CHECK-NEXT:    fwidenlhw $r1 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedwp.rz $r0 = $r0, 0
-; CHECK-NEXT:    extfz $r2 = $r1, 47, 32
+; CHECK-NEXT:    fwidenlhw $r2 = $r2
+; CHECK-NEXT:    fwidenlhw $r3 = $r3
+; CHECK-NEXT:    fixedw.rz $r1 = $r1, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 63, 48
+; CHECK-NEXT:    fwidenlhw $r0 = $r0
+; CHECK-NEXT:    fixedw.rz $r2 = $r2, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 31, 16
+; CHECK-NEXT:    fixedw.rz $r3 = $r3, 0
+; CHECK-NEXT:    insf $r2 = $r1, 31, 16
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fixedw.rz $r0 = $r0, 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r3, 31, 16
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r2, 63, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptosi <4 x half> %a to <4 x i16>
@@ -955,17 +966,28 @@ define <4 x i64> @test_fptosi_i64(<4 x half> %a) #0 {
 define <4 x i16> @test_fptoui_4xi16(<4 x half> %a) #0 {
 ; CHECK-LABEL: test_fptoui_4xi16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fwidenmhwp $r1 = $r0
-; CHECK-NEXT:    fwidenlhwp $r0 = $r0
+; CHECK-NEXT:    srld $r1 = $r0, 48
+; CHECK-NEXT:    extfz $r2 = $r0, 47, 32
+; CHECK-NEXT:    extfz $r3 = $r0, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixeduwp.rz $r1 = $r1, 0
+; CHECK-NEXT:    extfz $r0 = $r0, 15, 0
+; CHECK-NEXT:    fwidenlhw $r1 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixeduwp.rz $r0 = $r0, 0
-; CHECK-NEXT:    extfz $r2 = $r1, 47, 32
+; CHECK-NEXT:    fwidenlhw $r2 = $r2
+; CHECK-NEXT:    fwidenlhw $r3 = $r3
+; CHECK-NEXT:    fixeduw.rz $r1 = $r1, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 63, 48
+; CHECK-NEXT:    fwidenlhw $r0 = $r0
+; CHECK-NEXT:    fixeduw.rz $r2 = $r2, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 31, 16
+; CHECK-NEXT:    fixeduw.rz $r3 = $r3, 0
+; CHECK-NEXT:    insf $r2 = $r1, 31, 16
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fixeduw.rz $r0 = $r0, 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r3, 31, 16
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r2, 63, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptoui <4 x half> %a to <4 x i16>
