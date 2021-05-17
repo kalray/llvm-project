@@ -405,34 +405,7 @@ def : Pat<(v2i64 (fp_to_int v2f64:$val)), (REG_SEQUENCE PairedReg,
                                            (i64inst (f64 (EXTRACT_SUBREG PairedReg:$val, sub_s0)), DefaultShift, rounding_rz, silent_), sub_s0,
                                            (i64inst (f64 (EXTRACT_SUBREG PairedReg:$val, sub_s1)), DefaultShift, rounding_rz, silent_), sub_s1)>;
 
-def : Pat<(v4i16 (fp_to_int v4f16:$val)), (INSF
-                                             (INSF
-                                                (v2i32inst (v2f32(FWIDENLHWP SingleReg:$val, silent_)), DefaultShift, rounding_rz, silent_),
-                                                (EXTFZ
-                                                  (v2i32inst (v2f32(FWIDENMHWP SingleReg:$val, silent_)), DefaultShift, rounding_rz, silent_),
-                                                  47, 32),
-                                                  63, 48),
-                                                  (v2i32inst (v2f32(FWIDENMHWP SingleReg:$val, silent_)), DefaultShift, rounding_rz, silent_),
-                                                  31, 16)>;
-
-def : Pat<(v4i16 (fp_to_int v4f32:$val)), (INSF
-                                             (INSF
-                                                (v2i32inst (v2f32 (EXTRACT_SUBREG PairedReg:$val, sub_s0)), DefaultShift, rounding_rz, silent_),
-                                                (EXTFZ
-                                                  (v2i32inst (v2f32 (EXTRACT_SUBREG PairedReg:$val, sub_s1)), DefaultShift, rounding_rz, silent_),
-                                                  47, 32),
-                                                  63, 48),
-                                                  (v2i32inst (v2f32 (EXTRACT_SUBREG PairedReg:$val, sub_s1)), DefaultShift, rounding_rz, silent_),
-                                                  31, 16)>;
-
-def : Pat<(v4i16 (fp_to_int v4f64:$val)), (INSF (INSF (INSF
-                                                        (i64inst (f64 (EXTRACT_SUBREG QuadReg:$val, sub_s0)), DefaultShift, rounding_rz, silent_),
-                                                        (i64inst (f64 (EXTRACT_SUBREG QuadReg:$val, sub_s1)), DefaultShift, rounding_rz, silent_),
-                                                        31, 16),
-                                                      (i64inst (f64 (EXTRACT_SUBREG QuadReg:$val, sub_s2)), DefaultShift, rounding_rz, silent_),
-                                                      47, 32),
-                                                 (i64inst (f64 (EXTRACT_SUBREG QuadReg:$val, sub_s3)), DefaultShift, rounding_rz, silent_),
-                                                 63, 48)>;
+// TODO: v4i16 patterns
 
 def : Pat<(v4i32 (fp_to_int v4f16:$val)), (REG_SEQUENCE PairedReg,
                                             (v2i32inst (v2f32(FWIDENLHWP SingleReg:$val, silent_)), DefaultShift, rounding_rz, silent_), sub_s0,
@@ -467,8 +440,8 @@ def : Pat<(v4i64 (fp_to_int v4f32:$val)), (REG_SEQUENCE QuadReg,
 def : Pat<(v4i64 (fp_to_int v4f64:$val)), (REG_SEQUENCE QuadReg,
                                            (i64inst (f64 (EXTRACT_SUBREG QuadReg:$val, sub_s0)), DefaultShift, rounding_rz, silent_), sub_s0,
                                            (i64inst (f64 (EXTRACT_SUBREG QuadReg:$val, sub_s1)), DefaultShift, rounding_rz, silent_), sub_s1,
-                                           (i64inst (f64 (EXTRACT_SUBREG QuadReg:$val, sub_s0)), DefaultShift, rounding_rz, silent_), sub_s2,
-                                           (i64inst (f64 (EXTRACT_SUBREG QuadReg:$val, sub_s1)), DefaultShift, rounding_rz, silent_), sub_s3)>;
+                                           (i64inst (f64 (EXTRACT_SUBREG QuadReg:$val, sub_s2)), DefaultShift, rounding_rz, silent_), sub_s2,
+                                           (i64inst (f64 (EXTRACT_SUBREG QuadReg:$val, sub_s3)), DefaultShift, rounding_rz, silent_), sub_s3)>;
 }
 
 defm : FP_TO_INT<fp_to_sint, FIXEDW, FIXEDD, FIXEDWP>;
