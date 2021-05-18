@@ -51,9 +51,7 @@ define float @test_extract_i(<4 x float> %a, i64 %idx) #0 {
 define <4 x float> @test_fadd(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK-LABEL: test_fadd:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    faddwp $r0 = $r0, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddwp $r1 = $r1, $r3
+; CHECK-NEXT:    faddwq $r0r1 = $r0r1, $r2r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fadd <4 x float> %a, %b
@@ -91,9 +89,7 @@ define <4 x float> @test_fadd_imm_1(<4 x float> %a) #0 {
 define <4 x float> @test_fsub(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK-LABEL: test_fsub:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fsbfwp $r0 = $r2, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfwp $r1 = $r3, $r1
+; CHECK-NEXT:    fsbfwq $r0r1 = $r2r3, $r0r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fsub <4 x float> %a, %b
@@ -146,9 +142,7 @@ define <4 x float> @test_fneg(<4 x float> %a) #0 {
 define <4 x float> @test_fmul(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK-LABEL: test_fmul:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fmulwp $r0 = $r0, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulwp $r1 = $r1, $r3
+; CHECK-NEXT:    fmulwq $r0r1 = $r0r1, $r2r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fmul <4 x float> %a, %b

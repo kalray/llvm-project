@@ -62,9 +62,7 @@ define <2 x float> @sub_v2f32_v2f32(<2 x float> %0, <2 x float> %1) {
 define <4 x float> @sub_v4f32_v4f32(<4 x float> %0, <4 x float> %1) {
 ; CHECK-LABEL: sub_v4f32_v4f32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fsbfwp $r0 = $r2, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfwp $r1 = $r3, $r1
+; CHECK-NEXT:    fsbfwq $r0r1 = $r2r3, $r0r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = fsub <4 x float> %0, %1

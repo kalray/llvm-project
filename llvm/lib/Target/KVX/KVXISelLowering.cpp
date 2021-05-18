@@ -17,6 +17,7 @@
 #include "KVXTargetMachine.h"
 #include "llvm/ADT/Statistic.h"
 #include "llvm/CodeGen/CallingConvLower.h"
+#include "llvm/CodeGen/ISDOpcodes.h"
 #include "llvm/CodeGen/MachineFrameInfo.h"
 #include "llvm/CodeGen/MachineFunction.h"
 #include "llvm/CodeGen/MachineInstrBuilder.h"
@@ -2368,6 +2369,16 @@ bool KVXTargetLowering::isStoreBitCastBeneficial(
   default:
     return false;
   }
+}
+
+bool KVXTargetLowering::isOpFree(const SDNode *Node) const {
+  switch (Node->getOpcode()) {
+  case ISD::EXTRACT_SUBVECTOR:
+  case ISD::EXTRACT_VECTOR_ELT:
+    if (Node->getValueType(0).getFixedSizeInBits() % 64 == 0)
+      return true;
+  }
+  return false;
 }
 
 SDValue KVX_LOW::buildImmVector(llvm::SDNode &N, llvm::SelectionDAG &CurDag,
