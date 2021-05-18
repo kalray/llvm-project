@@ -19654,6 +19654,12 @@ static SDValue narrowInsertExtractVectorBinOp(SDNode *Extract,
   if (!TLI.isOperationLegalOrCustom(BinOpcode, SubVT, LegalOperations))
     return SDValue();
 
+  // If the extract operation is free and the wider vector is legal
+  // then we don't split the binop.
+  if (TLI.isOpFree(Extract) &&
+      TLI.isOperationLegalOrCustom(BinOpcode, VecVT, LegalOperations))
+    return SDValue();
+
   SDValue Sub0 = getSubVectorSrc(Bop0, Index, SubVT);
   SDValue Sub1 = getSubVectorSrc(Bop1, Index, SubVT);
 

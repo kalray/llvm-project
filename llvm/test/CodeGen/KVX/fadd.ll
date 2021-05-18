@@ -130,9 +130,7 @@ define <2 x float> @add_v2f32_imm(<2 x float> %0) {
 define <4 x float> @add_v4f32_v4f32(<4 x float> %0, <4 x float> %1) {
 ; CHECK-LABEL: add_v4f32_v4f32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    faddwp $r0 = $r0, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddwp $r1 = $r1, $r3
+; CHECK-NEXT:    faddwq $r0r1 = $r0r1, $r2r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = fadd <4 x float> %0, %1

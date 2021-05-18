@@ -1111,6 +1111,9 @@ public:
        getOperationAction(Op, VT) == Custom);
   }
 
+  /// Returns true if at selection dag we know that this instruction is free
+  virtual bool isOpFree(const SDNode *) const { return false; }
+
   /// Return true if the specified operation is legal on this target or can be
   /// made legal using promotion. This is used to help guide high-level lowering
   /// decisions. LegalOnly is an optional convenience for code paths traversed

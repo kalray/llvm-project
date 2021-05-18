@@ -188,6 +188,7 @@ private:
   bool isStoreBitCastBeneficial(EVT StoreVT, EVT BitcastVT,
                                 const SelectionDAG &DAG,
                                 const MachineMemOperand &MMO) const override;
+  bool isOpFree(const SDNode *) const override;
 };
 
 } // namespace llvm

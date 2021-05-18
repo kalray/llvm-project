@@ -87,8 +87,8 @@ define i32 @test_extract_i(<4 x i32> %a, i64 %idx) #0 {
 define <4 x i32> @test_add(<4 x i32> %a, <4 x i32> %b) #0 {
 ; CHECK-LABEL: test_add:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addwp $r0 = $r0, $r2
 ; CHECK-NEXT:    addwp $r1 = $r1, $r3
+; CHECK-NEXT:    addwp $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = add <4 x i32> %a, %b
@@ -181,15 +181,10 @@ define <4 x i32> @test_neg(<4 x i32> %a) #0 {
   ret <4 x i32> %r
 }
 
-; FIXME: The calling convention passes 2 <2 x i32> and
-; dag combine decides to not use <4 x i32> for a single
-; instruction.
 define <4 x i32> @test_mul(<4 x i32> %a, <4 x i32> %b) #0 {
 ; CHECK-LABEL: test_mul:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    mulwp $r0 = $r0, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mulwp $r1 = $r1, $r3
+; CHECK-NEXT:    mulwq $r0r1 = $r0r1, $r2r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = mul <4 x i32> %a, %b
