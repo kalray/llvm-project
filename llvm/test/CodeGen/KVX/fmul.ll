@@ -62,9 +62,7 @@ define <2 x float> @mul_v2f32_v2f32(<2 x float> %0, <2 x float> %1) {
 define <4 x float> @mul_v4f32_v4f32(<4 x float> %0, <4 x float> %1) {
 ; CHECK-LABEL: mul_v4f32_v4f32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fmulwp $r0 = $r0, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulwp $r1 = $r1, $r3
+; CHECK-NEXT:    fmulwq $r0r1 = $r0r1, $r2r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = fmul <4 x float> %0, %1
