@@ -1379,6 +1379,20 @@ def: Pat<(v2i16 (bswap v2i16:$v)), (SBMM8ri64 SingleReg:$v, 0x04080102)>;
 def: Pat<(v4i16 (bswap v4i16:$v)), (SBMM8ri64 SingleReg:$v, 0x4080102004080102)>;
 def: Pat<(v2i32 (bswap v2i32:$v)), (SBMM8ri64 SingleReg:$v, 0x1020408001020408)>;
 
+def: Pat<(v2i64 (bswap v2i64:$v)), (v2i64 (REG_SEQUENCE PairedReg,
+                                      (SBMM8ri64 (i64(EXTRACT_SUBREG PairedReg:$v, sub_s0)), 0x0102040810204080), sub_s0,
+                                      (SBMM8ri64 (i64(EXTRACT_SUBREG PairedReg:$v, sub_s1)), 0x0102040810204080), sub_s1))>;
+
+def: Pat<(v4i32 (bswap v4i32:$v)), (v4i32 (REG_SEQUENCE PairedReg,
+                                      (SBMM8ri64 (v2i32(EXTRACT_SUBREG PairedReg:$v, sub_s0)), 0x1020408001020408), sub_s0,
+                                      (SBMM8ri64 (v2i32(EXTRACT_SUBREG PairedReg:$v, sub_s1)), 0x1020408001020408), sub_s1))>;
+
+def: Pat<(v4i64 (bswap v4i64:$v)), (v4i64 (REG_SEQUENCE QuadReg,
+                                      (SBMM8ri64 (i64(EXTRACT_SUBREG QuadReg:$v, sub_s0)), 0x0102040810204080), sub_s0,
+                                      (SBMM8ri64 (i64(EXTRACT_SUBREG QuadReg:$v, sub_s1)), 0x0102040810204080), sub_s1,
+                                      (SBMM8ri64 (i64(EXTRACT_SUBREG QuadReg:$v, sub_s2)), 0x0102040810204080), sub_s2,
+                                      (SBMM8ri64 (i64(EXTRACT_SUBREG QuadReg:$v, sub_s3)), 0x0102040810204080), sub_s3))>;
+
 // For the moment we only use build_vector in tca for
 // zeroinit
 def: Pat<(v256i1 (build_vector)), (COPY A48)>;
