@@ -350,9 +350,6 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::FP_TO_UINT, VT, Legal);
   }
 
-  setOperationAction(ISD::FP_TO_SINT, MVT::v4i16, Expand);
-  setOperationAction(ISD::FP_TO_UINT, MVT::v4i16, Expand);
-
   for (auto VT : {MVT::v2i8, MVT::v2i16, MVT::v2i64, MVT::v4i8, MVT::v4i16,
                   MVT::v4i64, MVT::v8i8}) {
     setOperationAction(ISD::SINT_TO_FP, VT, Expand);
