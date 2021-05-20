@@ -1113,20 +1113,17 @@ define <4 x i64> @test_fptoui_2xi64(<4 x float> %a) #0 {
 define <4 x i16> @test_fptosi_i16(<4 x float> %a) #0 {
 ; CHECK-LABEL: test_fptosi_i16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r2 = $r1, 32
-; CHECK-NEXT:    srad $r3 = $r0, 32
-; CHECK-NEXT:    fixedw.rz $r1 = $r1, 0
+; CHECK-NEXT:    fixedwp.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedw.rz $r2 = $r2, 0
+; CHECK-NEXT:    extfz $r2 = $r0, 47, 32
+; CHECK-NEXT:    fixedwp.rz $r1 = $r1, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedw.rz $r3 = $r3, 0
-; CHECK-NEXT:    insf $r1 = $r2, 31, 16
+; CHECK-NEXT:    insf $r0 = $r2, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedw.rz $r0 = $r0, 0
+; CHECK-NEXT:    insf $r0 = $r1, 47, 32
+; CHECK-NEXT:    extfz $r1 = $r1, 47, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r3, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 63, 32
+; CHECK-NEXT:    insf $r0 = $r1, 63, 48
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptosi <4 x float> %a to <4 x i16>
@@ -1136,20 +1133,17 @@ define <4 x i16> @test_fptosi_i16(<4 x float> %a) #0 {
 define <4 x i16> @test_fptoui_i16(<4 x float> %a) #0 {
 ; CHECK-LABEL: test_fptoui_i16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r2 = $r1, 32
-; CHECK-NEXT:    srad $r3 = $r0, 32
-; CHECK-NEXT:    fixeduw.rz $r1 = $r1, 0
+; CHECK-NEXT:    fixeduwp.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixeduw.rz $r2 = $r2, 0
+; CHECK-NEXT:    extfz $r2 = $r0, 47, 32
+; CHECK-NEXT:    fixeduwp.rz $r1 = $r1, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixeduw.rz $r3 = $r3, 0
-; CHECK-NEXT:    insf $r1 = $r2, 31, 16
+; CHECK-NEXT:    insf $r0 = $r2, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixeduw.rz $r0 = $r0, 0
+; CHECK-NEXT:    insf $r0 = $r1, 47, 32
+; CHECK-NEXT:    extfz $r1 = $r1, 47, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r3, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 63, 32
+; CHECK-NEXT:    insf $r0 = $r1, 63, 48
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptoui <4 x float> %a to <4 x i16>
