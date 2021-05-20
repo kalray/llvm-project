@@ -64,55 +64,38 @@ define <2 x i32> @bswapv2i32(<2 x i32> %a) {
 define <2 x i64> @bswapv2i64(<2 x i64> %a) {
 ; CHECK-LABEL: bswapv2i64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    extfz $r2 = $r1, 7, 0
-; CHECK-NEXT:    extfz $r3 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r4 = $r1, 23, 16
-; CHECK-NEXT:    extfz $r5 = $r1, 31, 24
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r6 = $r1, 39, 32
-; CHECK-NEXT:    extfz $r7 = $r1, 47, 40
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r8 = $r1, 55, 48
-; CHECK-NEXT:    srld $r1 = $r1, 56
-; CHECK-NEXT:    extfz $r9 = $r0, 7, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r10 = $r0, 15, 8
-; CHECK-NEXT:    extfz $r11 = $r0, 23, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r15 = $r0, 31, 24
-; CHECK-NEXT:    extfz $r16 = $r0, 39, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r17 = $r0, 47, 40
-; CHECK-NEXT:    extfz $r32 = $r0, 55, 48
-; CHECK-NEXT:    srld $r0 = $r0, 56
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r3 = $r2, 15, 8
-; CHECK-NEXT:    insf $r5 = $r4, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r7 = $r6, 15, 8
-; CHECK-NEXT:    insf $r1 = $r8, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r10 = $r9, 15, 8
-; CHECK-NEXT:    insf $r15 = $r11, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r17 = $r16, 15, 8
-; CHECK-NEXT:    insf $r0 = $r32, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r5 = $r3, 31, 16
-; CHECK-NEXT:    insf $r1 = $r7, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r15 = $r10, 31, 16
-; CHECK-NEXT:    insf $r0 = $r17, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r5, 63, 32
-; CHECK-NEXT:    insf $r0 = $r15, 63, 32
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x102040810204080
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x102040810204080
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %res = call <2 x i64> @llvm.bswap.v2i64(<2 x i64> %a)
   ret <2 x i64> %res
 }
 
+define <4 x i32> @bswapv4i32(<4 x i32> %a) {
+; CHECK-LABEL: bswapv4i32:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x1020408001020408
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1020408001020408
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %res = call <4 x i32> @llvm.bswap.v4i32(<4 x i32> %a)
+  ret <4 x i32> %res
+}
+
+define <4 x i64> @bswapv4i64(<4 x i64> %a) {
+; CHECK-LABEL: bswapv4i64:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    sbmm8 $r3 = $r3, 0x102040810204080
+; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x102040810204080
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x102040810204080
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x102040810204080
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %res = call <4 x i64> @llvm.bswap.v4i64(<4 x i64> %a)
+  ret <4 x i64> %res
+}
 declare i16 @llvm.bswap.i16(i16)
 declare i32 @llvm.bswap.i32(i32)
 declare i64 @llvm.bswap.i64(i64)
@@ -120,3 +103,5 @@ declare <2 x i16> @llvm.bswap.v2i16(<2 x i16>)
 declare <2 x i32> @llvm.bswap.v2i32(<2 x i32>)
 declare <2 x i64> @llvm.bswap.v2i64(<2 x i64>)
 declare <4 x i16> @llvm.bswap.v4i16(<4 x i16>)
+declare <4 x i32> @llvm.bswap.v4i32(<4 x i32>)
+declare <4 x i64> @llvm.bswap.v4i64(<4 x i64>)
