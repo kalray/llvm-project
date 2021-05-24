@@ -609,7 +609,7 @@ def : Pat<(Op v2i16:$v, (v2i16 ( build_vector (i32 i32:$s0), (i32 i32:$s1)))),
 def : Pat<(Op v2i16:$v0, v2i16:$v1),
       (INSF(RR SingleReg:$v0, (EXTFZ SingleReg:$v1, 19, 16)), (RR SingleReg:$v0, SingleReg:$v1), 15, 0) >;
 
-// TODO: We can detect when some immediates are the same, and avoid all insf operations.
+// We can detect when some immediates are the same, and avoid all insf operations.
 def : Pat<(Op v4i16:$v, (v4i16 ( build_vector (i32 imm:$i0), (i32 imm:$i1), (i32 imm:$i2), (i32 undef)))),
                   (INSF (RI SingleReg:$v, (mod_16_imm_64 imm:$i2)),
                         (INSF (RI SingleReg:$v, (mod_16_imm_64 imm:$i1)),
@@ -761,7 +761,7 @@ def : Pat<(rotl i32:$rs, Unsigned6:$is), (ROLWri SingleReg:$rs, Unsigned6:$is)>;
 
 // ROLWP
 defm : WPShiftScalarOps<rotl, ROLWPSri, ROLWPSrr, ROLWri, ROLWrr>;
-// LLVM does not detect the rotation across build_vectors. We need to do it manually
+// TODO: LLVM does not detect the rotation across build_vectors. We need to do it manually
 def : Pat<(v2i32(or (srl v2i32:$r0, (v2i32 (v2_splat (i32 (sub (i32 32), i32:$r1)))) ), (shl v2i32:$r0, (v2i32 (v2_splat i32:$r1))))),
           (ROLWPSrr SingleReg:$r0, SingleReg:$r1)>;
 

@@ -2535,17 +2535,14 @@ define <4 x float> @test_fmuladd(<4 x float> %a, <4 x float> %b, <4 x float> %c)
   ret <4 x float> %r
 }
 
+; TODO: Copyd is not required
 define <4 x float> @test_shufflevector(<4 x float> %a) #0 {
 ; CHECK-LABEL: test_shufflevector:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r2 = $r1, 32
-; CHECK-NEXT:    srad $r3 = $r0, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r1, 63, 32
-; CHECK-NEXT:    insf $r3 = $r0, 63, 32
+; CHECK-NEXT:    sbmm8 $r2 = $r1, 0x804020180402010
+; CHECK-NEXT:    sbmm8 $r1 = $r0, 0x804020180402010
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r2
-; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %s = shufflevector <4 x float> %a, <4 x float> undef, <4 x i32> <i32 3, i32 2, i32 1, i32 0>
