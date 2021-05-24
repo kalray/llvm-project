@@ -569,4 +569,198 @@ define <2 x i32> @vnot(<2 x i32> %a) #0 {
   ret <2 x i32> %vnot
 }
 
+define <2 x i32> @shuffle_v2i32_0_0(<2 x i32> %0, <2 x i32> %1) #0 {
+; CHECK-LABEL: shuffle_v2i32_0_0:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    insf $r0 = $r0, 63, 32
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %2 = shufflevector <2 x i32> %0, <2 x i32> %1, <2 x i32> <i32 0, i32 0>
+  ret <2 x i32> %2
+}
+
+define <2 x i32> @shuffle_v2i32_0_1(<2 x i32> %0, <2 x i32> %1) #0 {
+; CHECK-LABEL: shuffle_v2i32_0_1:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %2 = shufflevector <2 x i32> %0, <2 x i32> %1, <2 x i32> <i32 0, i32 1>
+  ret <2 x i32> %2
+}
+
+define <2 x i32> @shuffle_v2i32_0_2(<2 x i32> %0, <2 x i32> %1) #0 {
+; CHECK-LABEL: shuffle_v2i32_0_2:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    insf $r0 = $r1, 63, 32
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %2 = shufflevector <2 x i32> %0, <2 x i32> %1, <2 x i32> <i32 0, i32 2>
+  ret <2 x i32> %2
+}
+
+define <2 x i32> @shuffle_v2i32_0_3(<2 x i32> %0, <2 x i32> %1) #0 {
+; CHECK-LABEL: shuffle_v2i32_0_3:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    srad $r1 = $r1, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 63, 32
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %2 = shufflevector <2 x i32> %0, <2 x i32> %1, <2 x i32> <i32 0, i32 3>
+  ret <2 x i32> %2
+}
+
+define <2 x i32> @shuffle_v2i32_1_0(<2 x i32> %0, <2 x i32> %1) #0 {
+; CHECK-LABEL: shuffle_v2i32_1_0:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x804020180402010
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %2 = shufflevector <2 x i32> %0, <2 x i32> %1, <2 x i32> <i32 1, i32 0>
+  ret <2 x i32> %2
+}
+
+define <2 x i32> @shuffle_v2i32_1_1(<2 x i32> %0, <2 x i32> %1) #0 {
+; CHECK-LABEL: shuffle_v2i32_1_1:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x8040201080402010
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %2 = shufflevector <2 x i32> %0, <2 x i32> %1, <2 x i32> <i32 1, i32 1>
+  ret <2 x i32> %2
+}
+
+define <2 x i32> @shuffle_v2i32_1_2(<2 x i32> %0, <2 x i32> %1) #0 {
+; CHECK-LABEL: shuffle_v2i32_1_2:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    insf $r0 = $r1, 31, 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x804020180402010
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %2 = shufflevector <2 x i32> %0, <2 x i32> %1, <2 x i32> <i32 1, i32 2>
+  ret <2 x i32> %2
+}
+
+define <2 x i32> @shuffle_v2i32_1_3(<2 x i32> %0, <2 x i32> %1) #0 {
+; CHECK-LABEL: shuffle_v2i32_1_3:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    srad $r1 = $r1, 32
+; CHECK-NEXT:    srad $r0 = $r0, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 63, 32
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %2 = shufflevector <2 x i32> %0, <2 x i32> %1, <2 x i32> <i32 1, i32 3>
+  ret <2 x i32> %2
+}
+
+define <2 x i32> @shuffle_v2i32_2_0(<2 x i32> %0, <2 x i32> %1) #0 {
+; CHECK-LABEL: shuffle_v2i32_2_0:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    insf $r1 = $r0, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %2 = shufflevector <2 x i32> %0, <2 x i32> %1, <2 x i32> <i32 2, i32 0>
+  ret <2 x i32> %2
+}
+
+define <2 x i32> @shuffle_v2i32_2_1(<2 x i32> %0, <2 x i32> %1) #0 {
+; CHECK-LABEL: shuffle_v2i32_2_1:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    srad $r2 = $r0, 32
+; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r2, 63, 32
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %2 = shufflevector <2 x i32> %0, <2 x i32> %1, <2 x i32> <i32 2, i32 1>
+  ret <2 x i32> %2
+}
+
+define <2 x i32> @shuffle_v2i32_2_2(<2 x i32> %0, <2 x i32> %1) #0 {
+; CHECK-LABEL: shuffle_v2i32_2_2:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r0, 63, 32
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %2 = shufflevector <2 x i32> %0, <2 x i32> %1, <2 x i32> <i32 2, i32 2>
+  ret <2 x i32> %2
+}
+
+define <2 x i32> @shuffle_v2i32_2_3(<2 x i32> %0, <2 x i32> %1) #0 {
+; CHECK-LABEL: shuffle_v2i32_2_3:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %2 = shufflevector <2 x i32> %0, <2 x i32> %1, <2 x i32> <i32 2, i32 3>
+  ret <2 x i32> %2
+}
+
+define <2 x i32> @shuffle_v2i32_3_0(<2 x i32> %0, <2 x i32> %1) #0 {
+; CHECK-LABEL: shuffle_v2i32_3_0:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    insf $r1 = $r0, 31, 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbmm8 $r0 = $r1, 0x804020180402010
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %2 = shufflevector <2 x i32> %0, <2 x i32> %1, <2 x i32> <i32 3, i32 0>
+  ret <2 x i32> %2
+}
+
+define <2 x i32> @shuffle_v2i32_3_1(<2 x i32> %0, <2 x i32> %1) #0 {
+; CHECK-LABEL: shuffle_v2i32_3_1:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    srad $r2 = $r0, 32
+; CHECK-NEXT:    srad $r0 = $r1, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r2, 63, 32
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %2 = shufflevector <2 x i32> %0, <2 x i32> %1, <2 x i32> <i32 3, i32 1>
+  ret <2 x i32> %2
+}
+
+define <2 x i32> @shuffle_v2i32_3_2(<2 x i32> %0, <2 x i32> %1) #0 {
+; CHECK-LABEL: shuffle_v2i32_3_2:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    sbmm8 $r0 = $r1, 0x804020180402010
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %2 = shufflevector <2 x i32> %0, <2 x i32> %1, <2 x i32> <i32 3, i32 2>
+  ret <2 x i32> %2
+}
+
+define <2 x i32> @shuffle_v2i32_3_3(<2 x i32> %0, <2 x i32> %1) #0 {
+; CHECK-LABEL: shuffle_v2i32_3_3:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    sbmm8 $r0 = $r1, 0x8040201080402010
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %2 = shufflevector <2 x i32> %0, <2 x i32> %1, <2 x i32> <i32 3, i32 3>
+  ret <2 x i32> %2
+}
+
 attributes #0 = { nounwind }
