@@ -883,6 +883,14 @@ def : Pat<(i64(add (i64(KVX_zext_mul i32:$v0, Wrapped32:$v1)), i64:$v2)),
 def : Pat<(i64(add (i64(KVX_zext_mul i32:$v0, i32:$v1)), i64:$v2)),
             (i64(MADDUWDrr SingleReg:$v2, SingleReg:$v0, SingleReg:$v1))>;
 
+// MADDSUWD
+def : Pat<(i64(add (i64(KVX_szext_mul i32:$v0, Wrapped32:$v1)), i64:$v2)),
+            (i64(MADDSUWDri SingleReg:$v2, SingleReg:$v0, Wrapped32:$v1))>;
+
+def : Pat<(i64(add (i64(KVX_szext_mul i32:$v0, i32:$v1)), i64:$v2)),
+            (i64(MADDSUWDrr SingleReg:$v2, SingleReg:$v0, SingleReg:$v1))>;
+
+
 // MADDWP
 // TODO: ri37 & ri10 variants
 def : Pat<(v2i32 (add v2i32:$a1, (mul v2i32:$a2, (v2i32(is_imm_vec:$IMM))))),
@@ -926,17 +934,53 @@ def : Pat<(mul i64:$rs1, Signed10:$rs2), (MULDri10 SingleReg:$rs1, Signed10:$rs2
 def : Pat<(mul i64:$rs1, Signed37:$rs2), (MULDri37 SingleReg:$rs1, Signed37:$rs2)>;
 def : Pat<(mul i64:$rs1, Wrapped64:$rs2), (MULDri64 SingleReg:$rs1, Wrapped64:$rs2)>;
 
+// MULDT
+def : Pat<(mulhs i64:$rs1, Signed10:$rs2), (i64 (EXTRACT_SUBREG (MULDTri10 SingleReg:$rs1, Signed10:$rs2), sub_s1))>;
+def : Pat<(mulhs i64:$rs1, Signed37:$rs2), (i64 (EXTRACT_SUBREG (MULDTri37 SingleReg:$rs1, Signed37:$rs2), sub_s1))>;
+def : Pat<(mulhs i64:$rs1, Wrapped64:$rs2), (i64 (EXTRACT_SUBREG (MULDTri64 SingleReg:$rs1, Wrapped64:$rs2), sub_s1))>;
+def : Pat<(mulhs i64:$rs1, i64:$rs2), (i64 (EXTRACT_SUBREG (MULDTrr SingleReg:$rs1, SingleReg:$rs2), sub_s1))>;
+
+def : Pat<(v2i64(KVX_sext_mul i64:$rs1, Signed10:$rs2)),  (v2i64(MULDTri10 SingleReg:$rs1, Signed10:$rs2))>;
+def : Pat<(v2i64(KVX_sext_mul i64:$rs1, Signed37:$rs2)),  (v2i64(MULDTri37 SingleReg:$rs1, Signed37:$rs2))>;
+def : Pat<(v2i64(KVX_sext_mul i64:$rs1, Wrapped64:$rs2)), (v2i64(MULDTri64 SingleReg:$rs1, Wrapped64:$rs2))>;
+def : Pat<(v2i64(KVX_sext_mul i64:$rs1, i64:$rs2)), (v2i64(MULDTrr SingleReg:$rs1, SingleReg:$rs2))>;
+
+// MULUDT
+def : Pat<(mulhu i64:$rs1, Signed10:$rs2), (i64 (EXTRACT_SUBREG (MULUDTri10 SingleReg:$rs1, Signed10:$rs2), sub_s1))>;
+def : Pat<(mulhu i64:$rs1, Wrapped64W:$rs2), (i64 (EXTRACT_SUBREG (MULUDTri37 SingleReg:$rs1, Wrapped64W:$rs2), sub_s1))>;
+def : Pat<(mulhu i64:$rs1, Wrapped64:$rs2), (i64 (EXTRACT_SUBREG (MULUDTri64 SingleReg:$rs1, Wrapped64:$rs2), sub_s1))>;
+def : Pat<(mulhu i64:$rs1, i64:$rs2), (i64 (EXTRACT_SUBREG (MULUDTrr SingleReg:$rs1, SingleReg:$rs2), sub_s1))>;
+
+def : Pat<(v2i64(KVX_zext_mul i64:$rs1, Unsigned10:$rs2)),  (v2i64(MULUDTri10 SingleReg:$rs1, Unsigned10:$rs2))>;
+def : Pat<(v2i64(KVX_zext_mul i64:$rs1, Signed37:$rs2)),  (v2i64(MULUDTri37 SingleReg:$rs1, Signed37:$rs2))>;
+def : Pat<(v2i64(KVX_zext_mul i64:$rs1, Wrapped64:$rs2)), (v2i64(MULUDTri64 SingleReg:$rs1, Wrapped64:$rs2))>;
+def : Pat<(v2i64(KVX_zext_mul i64:$rs1, i64:$rs2)), (v2i64(MULUDTrr SingleReg:$rs1, SingleReg:$rs2))>;
+
+// MULSUDT
+def : Pat<(v2i64(KVX_szext_mul i64:$rs1, Signed10:$rs2)),  (v2i64(MULSUDTri10 SingleReg:$rs1, Signed10:$rs2))>;
+def : Pat<(v2i64(KVX_szext_mul i64:$rs1, Signed37:$rs2)),  (v2i64(MULSUDTri37 SingleReg:$rs1, Signed37:$rs2))>;
+def : Pat<(v2i64(KVX_szext_mul i64:$rs1, Wrapped64:$rs2)), (v2i64(MULSUDTri64 SingleReg:$rs1, Wrapped64:$rs2))>;
+def : Pat<(v2i64(KVX_szext_mul i64:$rs1, i64:$rs2)), (v2i64(MULSUDTrr SingleReg:$rs1, SingleReg:$rs2))>;
+
 // MULW
 defm : ZEFPat<(mul i32:$rs1, i32:$rs2), (MULWrr SingleReg:$rs1, SingleReg:$rs2)>;
 defm : ZEFPat<(mul i32:$rs1, Wrapped32:$rs2), (MULWri SingleReg:$rs1, Wrapped32:$rs2)>;
 
 // MULWD
+def : Pat<(i32(mulhs i32:$rs1, i32:$rs2)), (i32 (SRADri (MULWDrr SingleReg:$rs1, SingleReg:$rs2), 32))>;
+def : Pat<(i32(mulhs i32:$rs1, imm:$rs2)), (i32 (SRADri (MULWDri SingleReg:$rs1, Wrapped32:$rs2), 32))>;
 def : Pat<(i64(KVX_sext_mul i32:$v0, Wrapped32:$v1)), (i64(MULWDri SingleReg:$v0, Wrapped32:$v1))>;
 def : Pat<(i64(KVX_sext_mul i32:$v0, i32:$v1)), (i64(MULWDrr SingleReg:$v0, SingleReg:$v1))>;
 
 // MULUWD
+def : Pat<(i32(mulhu i32:$rs1, i32:$rs2)), (i32 (SRLDri (MULUWDrr SingleReg:$rs1, SingleReg:$rs2), 32))>;
+def : Pat<(i32(mulhu i32:$rs1, imm:$rs2)), (i32 (SRLDri (MULUWDri SingleReg:$rs1, Wrapped32:$rs2), 32))>;
 def : Pat<(i64(KVX_zext_mul i32:$v0, Wrapped32:$v1)), (i64(MULUWDri SingleReg:$v0, Wrapped32:$v1))>;
 def : Pat<(i64(KVX_zext_mul i32:$v0, i32:$v1)), (i64(MULUWDrr SingleReg:$v0, SingleReg:$v1))>;
+
+// MULSUWD
+def : Pat<(i64(KVX_szext_mul i32:$v0, Wrapped32:$v1)), (i64(MULSUWDri SingleReg:$v0, Wrapped32:$v1))>;
+def : Pat<(i64(KVX_szext_mul i32:$v0, i32:$v1)), (i64(MULSUWDrr SingleReg:$v0, SingleReg:$v1))>;
 
 // MULHQ
 def : Pat<(mul v2i16:$rs1, v2i16:$rs2), (MULHQrr SingleReg:$rs1, SingleReg:$rs2)>;

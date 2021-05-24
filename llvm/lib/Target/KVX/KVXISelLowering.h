@@ -37,6 +37,7 @@ enum NodeType : unsigned {
   JT,
   JT_PCREL,
   SEXT_MUL,
+  SZEXT_MUL,
   ZEXT_MUL,
   PICAddrWrapper,
   PICExternIndirection,
@@ -155,6 +156,8 @@ private:
 
   SDValue lowerStackCheckAlloca(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerSTORE(SDValue Op, SelectionDAG &DAG) const;
+  SDValue lowerMulExtend(const unsigned Opcode, SDValue Op,
+                         SelectionDAG &DAG) const;
 
   SDValue lowerIntToFP(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerATOMIC_FENCE(SDValue Op, SelectionDAG &DAG) const;

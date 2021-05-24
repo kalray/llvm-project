@@ -48,7 +48,7 @@ define i64 @not_madduwrr(i64 %a, i32 %b, i32 %c) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    mulw $r1 = $r2, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r1, $r0
+; CHECK-NEXT:    adduwd $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -63,7 +63,7 @@ define i64 @not_madduwri(i64 %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    mulw $r1 = $r1, 0x4d2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r1, $r0
+; CHECK-NEXT:    adduwd $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -284,9 +284,7 @@ define i64 @not_maddwrr(i64 %a, i32 %b, i32 %c) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    mulw $r1 = $r2, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r1, $r0
+; CHECK-NEXT:    addwd $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -301,9 +299,7 @@ define i64 @not_maddwri(i64 %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    mulw $r1 = $r1, 0x4d2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r1, $r0
+; CHECK-NEXT:    addwd $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -469,18 +465,46 @@ entry:
   %add = add i64 %mul, %a
   ret i64 %add
 }
-define i64 @maddwdi16_2(i64 %a, i32 %b, i16 %c) {
-; CHECK-LABEL: maddwdi16_2:
+define i64 @maddsuwdi16_2(i64 %a, i32 %b, i16 %c) {
+; CHECK-LABEL: maddsuwdi16_2:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    zxhd $r2 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    maddwd $r0 = $r2, $r1
+; CHECK-NEXT:    maddsuwd $r0 = $r1, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
   %conv = sext i32 %b to i64
   %conv1 = zext i16 %c to i64
   %mul = mul nuw nsw i64 %conv1, %conv
+  %add = add i64 %mul, %a
+  ret i64 %add
+}
+
+define i64 @maddsuwd(i64 %a, i32 %b, i32 %c) {
+; CHECK-LABEL: maddsuwd:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    maddsuwd $r0 = $r1, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %conv = sext i32 %b to i64
+  %conv1 = zext i32 %c to i64
+  %mul = mul nuw nsw i64 %conv1, %conv
+  %add = add i64 %mul, %a
+  ret i64 %add
+}
+
+; FIXME: Can't define immediate is negative
+define i64 @maddsuwd_ri(i64 %a, i32 %b) {
+; CHECK-LABEL: maddsuwd_ri:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    maddwd $r0 = $r1, -13
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %conv1 = sext i32 %b to i64
+  %mul = mul i64 %conv1, -13
   %add = add i64 %mul, %a
   ret i64 %add
 }

@@ -470,46 +470,46 @@ define i64 @stackrealign3(i32 %x){
 ; CHECK-NEXT:    .cfi_offset 31, -24
 ; CHECK-NEXT:    sd 608[$r12] = $r18
 ; CHECK-NEXT:    andd $r31 = $r12, -128
-; CHECK-NEXT:    make $r36 = 16
-; CHECK-NEXT:    make $r4 = 12
+; CHECK-NEXT:    make $r7 = 1
+; CHECK-NEXT:    make $r8 = 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 18, -32
-; CHECK-NEXT:    make $r11 = 1
-; CHECK-NEXT:    make $r37 = 15
-; CHECK-NEXT:    make $r5 = 11
-; CHECK-NEXT:    make $r33 = 7
+; CHECK-NEXT:    make $r6 = 2
+; CHECK-NEXT:    make $r9 = 15
+; CHECK-NEXT:    make $r11 = 13
+; CHECK-NEXT:    make $r32 = 12
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r10 = 2
-; CHECK-NEXT:    make $r6 = 10
-; CHECK-NEXT:    make $r32 = 8
-; CHECK-NEXT:    make $r38 = 14
+; CHECK-NEXT:    make $r33 = 11
+; CHECK-NEXT:    make $r36 = 8
+; CHECK-NEXT:    make $r38 = 6
+; CHECK-NEXT:    make $r37 = 7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r39 = 13
-; CHECK-NEXT:    make $r35 = 5
-; CHECK-NEXT:    make $r9 = 3
-; CHECK-NEXT:    make $r8 = 4
+; CHECK-NEXT:    make $r39 = 5
+; CHECK-NEXT:    make $r34 = 10
+; CHECK-NEXT:    make $r5 = 3
+; CHECK-NEXT:    make $r35 = 9
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r7 = 9
-; CHECK-NEXT:    make $r34 = 6
+; CHECK-NEXT:    make $r10 = 14
+; CHECK-NEXT:    make $r4 = 4
+; CHECK-NEXT:    so 448[$r31] = $r36r37r38r39
 ; CHECK-NEXT:    addd $r2 = $r31, 380
-; CHECK-NEXT:    so 384[$r31] = $r36r37r38r39
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r1 = $r31, 384
-; CHECK-NEXT:    so 480[$r31] = $r8r9r10r11
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    so 416[$r31] = $r4r5r6r7
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    so 448[$r31] = $r32r33r34r35
+; CHECK-NEXT:    so 416[$r31] = $r32r33r34r35
 ; CHECK-NEXT:    addd $r15 = $r31, 128
-; CHECK-NEXT:    sxwd $r18 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 380[$r31] = $r0
+; CHECK-NEXT:    so 480[$r31] = $r4r5r6r7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    so 384[$r31] = $r8r9r10r11
+; CHECK-NEXT:    copyd $r18 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw 380[$r31] = $r18
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    call otherv
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r0 = 128[$r31]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, $r18
+; CHECK-NEXT:    addwd $r0 = $r18, $r0
 ; CHECK-NEXT:    addd $r12 = $r14, -624
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r18 = 608[$r12]
