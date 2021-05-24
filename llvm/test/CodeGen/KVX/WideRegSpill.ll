@@ -24,130 +24,85 @@ target triple = "kvx-kalray-cos"
 define i32 @a() {
 ; CHECK-LABEL: a:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -384
-; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 384
-; CHECK-NEXT:    .cfi_register 67, 16
-; CHECK-NEXT:    sd 376[$r12] = $r16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -8
-; CHECK-NEXT:    sd 368[$r12] = $r14
-; CHECK-NEXT:    addd $r14 = $r12, 368
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 14, -16
-; CHECK-NEXT:    .cfi_def_cfa 14, 16
-; CHECK-NEXT:    sd 360[$r12] = $r31
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 31, -24
-; CHECK-NEXT:    sq 344[$r12] = $r20r21
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 20, -32
-; CHECK-NEXT:    .cfi_offset 21, -40
-; CHECK-NEXT:    sq 328[$r12] = $r18r19
-; CHECK-NEXT:    andd $r31 = $r12, -128
-; CHECK-NEXT:    make $r19 = 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 18, -48
-; CHECK-NEXT:    .cfi_offset 19, -56
-; CHECK-NEXT:    sv 128[$r31] = $a0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 160[$r31] = $a1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 192[$r31] = $a2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 224[$r31] = $a3
+; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    goto .LBB0_1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_2: # in Loop: Header=BB0_1 Depth=1
-; CHECK-NEXT:    lv $a0 = 128[$r31]
-; CHECK-NEXT:    compw.eq $r0 = $r0, 1
+; CHECK-NEXT:    compw.eq $r2 = $r3, 1
+; CHECK-NEXT:    copyv $a3 = $a0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a1 = 160[$r31]
+; CHECK-NEXT:    sllw $r2 = $r2, 6
+; CHECK-NEXT:    copyv $a0 = $a1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a2 = 192[$r31]
+; CHECK-NEXT:    alignv $a1 = $a1, $a0, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a3 = 224[$r31]
-; CHECK-NEXT:    sllw $r0 = $r0, 6
-; CHECK-NEXT:    copyv $a4 = $a0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyv $a5 = $a1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyv $a1 = $a4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyv $a0 = $a5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    alignv $a5 = $a1, $a0, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    alignv $a4 = $a0, $a1, $r0
+; CHECK-NEXT:    alignv $a0 = $a0, $a3, $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_5: # in Loop: Header=BB0_1 Depth=1
-; CHECK-NEXT:    convwbv0.rz.sat $a0_x = $a4a5a6a7
-; CHECK-NEXT:    addd $r0 = $r19, 2
+; CHECK-NEXT:    convwbv0.rz.sat $a2_x = $a0a1a2a3
+; CHECK-NEXT:    addd $r2 = $r0, 2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    convwbv1.rz.sat $a0_y = $a4a5a6a7
+; CHECK-NEXT:    convwbv1.rz.sat $a2_y = $a0a1a2a3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    convwbv2.rz.sat $a0_z = $a4a5a6a7
-; CHECK-NEXT:    copyv $a8 = $a4
+; CHECK-NEXT:    convwbv2.rz.sat $a2_z = $a0a1a2a3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyv $a9 = $a5
+; CHECK-NEXT:    convwbv3.rz.sat $a2_t = $a0a1a2a3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 128[$r31] = $a8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 160[$r31] = $a9
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 192[$r31] = $a10
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 224[$r31] = $a11
-; CHECK-NEXT:    convwbv3.rz.sat $a0_t = $a4a5a6a7
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 0[$r19] = $a0
-; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    copyd $r21 = $r20
+; CHECK-NEXT:    sv 0[$r0] = $a2
+; CHECK-NEXT:    copyd $r0 = $r2
+; CHECK-NEXT:    copyd $r2 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_1: # =>This Loop Header: Depth=1
 ; CHECK-NEXT:    # Child Loop BB0_4 Depth 2
-; CHECK-NEXT:    maxw $r20 = $r21, 0
-; CHECK-NEXT:    make $r1 = 3
+; CHECK-NEXT:    maxw $r1 = $r2, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfw $r18 = $r21, $r20
+; CHECK-NEXT:    sbfw $r3 = $r2, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r18
-; CHECK-NEXT:    call __umoddi3
+; CHECK-NEXT:    muluwd $r4 = $r3, 0xaaaaaaab
+; CHECK-NEXT:    compw.ltu $r5 = $r3, 2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r0 = $r0
-; CHECK-NEXT:    make $r1 = 3
-; CHECK-NEXT:    compw.ltu $r18 = $r18, 2
+; CHECK-NEXT:    srld $r4 = $r4, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r0 = $r0, 1
-; CHECK-NEXT:    call __umoddi3
+; CHECK-NEXT:    srlw $r4 = $r4, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r0 = $r0
-; CHECK-NEXT:    cb.odd $r18 ? .LBB0_2
+; CHECK-NEXT:    msbfw $r3 = $r4, 3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addw $r3 = $r3, 1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxbd $r3 = $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    muluwd $r4 = $r3, 0xaaaaaaab
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srld $r4 = $r4, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srlw $r4 = $r4, 1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    msbfw $r3 = $r4, 3
+; CHECK-NEXT:    cb.odd $r5 ? .LBB0_2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.3: # in Loop: Header=BB0_1 Depth=1
-; CHECK-NEXT:    zxbd $r0 = $r0
+; CHECK-NEXT:    zxbd $r3 = $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    compw.eq $r1 = $r0, 1
+; CHECK-NEXT:    compw.eq $r4 = $r3, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r2 = $r1
-; CHECK-NEXT:    make $r1 = 1
+; CHECK-NEXT:    copyw $r5 = $r4
+; CHECK-NEXT:    make $r4 = 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 2
+; CHECK-NEXT:    cmoved.weqz $r5 ? $r4 = 2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r0 ? $r1 = 0
+; CHECK-NEXT:    cmoved.weqz $r3 ? $r4 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r0 = $r1, $r21
+; CHECK-NEXT:    addw $r2 = $r4, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r0 = $r0, -3
+; CHECK-NEXT:    addw $r2 = $r2, -3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_4: # Parent Loop BB0_1 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
-; CHECK-NEXT:    addw $r0 = $r0, 3
+; CHECK-NEXT:    addw $r2 = $r2, 3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    compw.lt $r1 = $r0, -2
+; CHECK-NEXT:    compw.lt $r3 = $r2, -2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.odd $r1 ? .LBB0_4
+; CHECK-NEXT:    cb.odd $r3 ? .LBB0_4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    goto .LBB0_5
 ; CHECK-NEXT:    ;;

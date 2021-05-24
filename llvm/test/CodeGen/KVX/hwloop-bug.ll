@@ -57,7 +57,7 @@ define void @InitDataSet(i32 %m, i16* nocapture %x, i32 %n, i16* nocapture %h) {
 ; CHECK-NEXT:    addx2d $r7 = $r0, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r6 = $r5, -2
-; CHECK-NEXT:    addd $r0 = $r5, $r0
+; CHECK-NEXT:    adduwd $r0 = $r0, $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srld $r6 = $r6, 1
 ; CHECK-NEXT:    ;;
@@ -145,7 +145,7 @@ define void @InitDataSet(i32 %m, i16* nocapture %x, i32 %n, i16* nocapture %h) {
 ; CHECK-NEXT:    addx2d $r5 = $r0, $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r4 = $r2, -2
-; CHECK-NEXT:    addd $r0 = $r2, $r0
+; CHECK-NEXT:    adduwd $r0 = $r0, $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srld $r4 = $r4, 1
 ; CHECK-NEXT:    ;;

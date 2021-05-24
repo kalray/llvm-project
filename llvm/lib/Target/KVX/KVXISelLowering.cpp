@@ -23,15 +23,18 @@
 #include "llvm/CodeGen/MachineInstrBuilder.h"
 #include "llvm/CodeGen/MachineRegisterInfo.h"
 #include "llvm/CodeGen/SelectionDAGISel.h"
+#include "llvm/CodeGen/SelectionDAGNodes.h"
 #include "llvm/CodeGen/TargetLoweringObjectFileImpl.h"
 #include "llvm/CodeGen/ValueTypes.h"
 #include "llvm/IR/DiagnosticInfo.h"
 #include "llvm/IR/DiagnosticPrinter.h"
+#include "llvm/Support/Casting.h"
 #include "llvm/Support/Debug.h"
 #include "llvm/Support/ErrorHandling.h"
 #include "llvm/Support/KnownBits.h"
+#include "llvm/Support/MathExtras.h"
 #include "llvm/Support/raw_ostream.h"
-
+#include "llvm/Target/TargetMachine.h"
 using namespace llvm;
 
 #define DEBUG_TYPE "KVXISelLowering"
@@ -251,14 +254,12 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::UMUL_LOHI, MVT::v4i64, Expand);
 
   for (auto VT : {MVT::i32, MVT::i64}) {
-    setOperationAction(ISD::SMUL_LOHI, VT, Expand);
-    setOperationAction(ISD::UMUL_LOHI, VT, Expand);
-    setOperationAction(ISD::MULHS, VT, Expand);
-    setOperationAction(ISD::MULHU, VT, Expand);
-
     setOperationAction(ISD::SELECT_CC, VT, Expand);
     setOperationAction(ISD::BR_CC, VT, Custom);
   }
+  setOperationAction(ISD::SMUL_LOHI, MVT::i64, Custom);
+  setOperationAction(ISD::UMUL_LOHI, MVT::i64, Custom);
+
   setOperationAction(ISD::ROTL, MVT::i64, Expand);
   setOperationAction(ISD::ROTR, MVT::i64, Expand);
 
@@ -518,6 +519,8 @@ const char *KVXTargetLowering::getTargetNodeName(unsigned Opcode) const {
     return "KVX::FENCE";
   case KVXISD::SEXT_MUL:
     return "KVX::SEXT_MUL";
+  case KVXISD::SZEXT_MUL:
+    return "KVX::SZEXT_MUL";
   case KVXISD::ZEXT_MUL:
     return "KVX::ZEXT_MUL";
 
@@ -984,8 +987,59 @@ SDValue KVXTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
     return lowerStackCheckAlloca(Op, DAG);
   case ISD::STORE:
     return lowerSTORE(Op, DAG);
+  case ISD::SMUL_LOHI:
+  case ISD::UMUL_LOHI:
+    return lowerMulExtend(Op.getOpcode(), Op, DAG);
   }
 }
+
+SDValue KVXTargetLowering::lowerMulExtend(const unsigned Opcode, SDValue Op,
+                                          SelectionDAG &DAG) const {
+  if (Op->getValueType(0).getSimpleVT() != MVT::i64)
+    return SDValue();
+
+  SDLoc Loc(Op);
+  unsigned TargetInstruction = 0;
+  SDValue Op1;
+  if (Opcode == ISD::SMUL_LOHI) {
+    if (auto *CN = dyn_cast<ConstantSDNode>(Op->getOperand(1))) {
+      const APInt &AP = CN->getAPIntValue();
+      unsigned NB = AP.getMinSignedBits();
+      Op1 = DAG.getTargetConstant(AP.getSExtValue(), Loc, MVT::i64);
+      TargetInstruction =
+          GetImmOpCode(NB, KVX::MULDTri10, KVX::MULDTri37, KVX::MULDTri64);
+    } else {
+      TargetInstruction = KVX::MULDTrr;
+      Op1 = Op.getOperand(1);
+    }
+  } else if (auto *CN = dyn_cast<ConstantSDNode>(Op->getOperand(1))) {
+    const APInt &AP = CN->getAPIntValue();
+    unsigned NB = AP.getMinSignedBits();
+    Op1 = DAG.getTargetConstant(AP.getZExtValue(), Loc, MVT::i64);
+    TargetInstruction =
+        GetImmOpCode(NB, KVX::MULUDTri10, KVX::MULUDTri37, KVX::MULUDTri64);
+  } else {
+    TargetInstruction = KVX::MULUDTrr;
+    Op1 = Op.getOperand(1);
+  }
+
+  SDValue MulExt =
+      SDValue(DAG.getMachineNode(TargetInstruction, Loc, MVT::v2i64,
+                                 Op.getOperand(0), Op1),
+              0);
+  SDValue SubIdx0 = DAG.getTargetConstant(KVX::sub_s0, Loc, MVT::i32);
+  SDValue SubIdx1 = DAG.getTargetConstant(KVX::sub_s1, Loc, MVT::i32);
+  SDValue Lo = SDValue(DAG.getMachineNode(TargetOpcode::EXTRACT_SUBREG, Loc,
+                                          MVT::i64, {MulExt, SubIdx0}),
+                       0);
+  SDValue Hi = SDValue(DAG.getMachineNode(TargetOpcode::EXTRACT_SUBREG, Loc,
+                                          MVT::i64, {MulExt, SubIdx1}),
+                       0);
+  DAG.ReplaceAllUsesOfValueWith(Op.getValue(0), Lo);
+  DAG.ReplaceAllUsesOfValueWith(Op.getValue(1), Hi);
+  return SDValue();
+}
+
 SDValue KVXTargetLowering::lowerSTORE(SDValue Op, SelectionDAG &DAG) const {
   SDValue STValue = Op->getOperand(1);
   auto VT = STValue.getSimpleValueType();
@@ -2151,27 +2205,44 @@ static SDValue combineZext(SDNode *N, SelectionDAG &DAG) {
 static SDValue combineMUL(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
                           SelectionDAG &Dag) {
   auto VT = N->getValueType(0);
-
-  if (VT != MVT::i64)
+  unsigned HalfSize;
+  MVT HalfSizeVT;
+  if (VT == MVT::i64) {
+    HalfSize = 32;
+    HalfSizeVT = MVT::i32;
+  } else if (VT == MVT::i128) {
+    HalfSize = 64;
+    HalfSizeVT = MVT::i64;
+  } else
     return SDValue();
 
-  const auto &Op0 = N->getOperand(0);
-  const auto &Op1 = N->getOperand(1);
+  auto Op0 = N->getOperand(0);
+  auto Op1 = N->getOperand(1);
   KnownBits V0 = Dag.computeKnownBits(Op0);
   KnownBits V1 = Dag.computeKnownBits(Op1);
-  bool UnsCond0 = V0.Zero.countLeadingOnes() >= 32;
-  bool UnsCond1 = V1.Zero.countLeadingOnes() >= 32;
+  bool UnsCond0 = V0.Zero.countLeadingOnes() >= HalfSize;
+  bool Op1IsSmallConstant = false;
+  if (auto *Const1 = dyn_cast<ConstantSDNode>(Op1)) {
+    if (VT == MVT::i64)
+      Op1IsSmallConstant = isInt<32>(Const1->getZExtValue());
+    else
+      Op1IsSmallConstant = !Const1->getAPIntValue().isNegative();
+  }
+
+  // We can't ditinguish if a SDNode is signed or unsigned,
+  // so assume sign/unsign based on the first operand.
+  bool UnsCond1 = V1.Zero.countLeadingOnes() >= HalfSize || Op1IsSmallConstant;
 
   unsigned Opcode = 0;
   if (UnsCond0 && UnsCond1)
     Opcode = KVXISD::ZEXT_MUL;
   else {
-    bool SignCond0 =
-        V0.One.countLeadingOnes() > 32 || Op0->getOpcode() == ISD::SIGN_EXTEND;
-    bool SignCond1 =
-        V1.One.countLeadingOnes() > 32 || Op1->getOpcode() == ISD::SIGN_EXTEND;
+    bool SignCond0 = V0.One.countLeadingOnes() > HalfSize ||
+                     Op0->getOpcode() == ISD::SIGN_EXTEND;
+    bool SignCond1 = V1.One.countLeadingOnes() > HalfSize ||
+                     Op1->getOpcode() == ISD::SIGN_EXTEND;
     if (auto *Const1 = dyn_cast<ConstantSDNode>(Op1))
-      SignCond1 &= isInt<32>(Const1->getZExtValue());
+      SignCond1 &= Op1IsSmallConstant;
 
     if ((UnsCond0 || SignCond0) && (UnsCond1 || SignCond1))
       Opcode = KVXISD::SEXT_MUL;
@@ -2180,9 +2251,26 @@ static SDValue combineMUL(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
   if (!Opcode)
     return SDValue();
 
-  SDValue T0 = Dag.getNode(ISD::TRUNCATE, SDLoc(Op0), MVT::i32, {Op0});
-  SDValue T1 = Dag.getNode(ISD::TRUNCATE, SDLoc(Op1), MVT::i32, {Op1});
-  return Dag.getNode(Opcode, SDLoc(N), MVT::i64, {T0, T1});
+  auto Op0Opc = Op0->getOpcode();
+  auto Op1Opc = Op1->getOpcode();
+  if ((Op0Opc == ISD::ZERO_EXTEND || Op0Opc == ISD::SIGN_EXTEND) &&
+      (Op1Opc == ISD::ZERO_EXTEND || Op1Opc == ISD::SIGN_EXTEND) &&
+      (Op0Opc != Op1Opc)) {
+    // We have a mixed sign/zero extend operation
+    if (Op0Opc == ISD::ZERO_EXTEND)
+      std::swap(Op0, Op1);
+    Opcode = KVXISD::SZEXT_MUL;
+  }
+
+  SDValue T0 = Dag.getNode(ISD::TRUNCATE, SDLoc(Op0), HalfSizeVT, {Op0});
+  SDValue T1 = Dag.getNode(ISD::TRUNCATE, SDLoc(Op1), HalfSizeVT, {Op1});
+  if (VT == MVT::i64)
+    return Dag.getNode(Opcode, SDLoc(N), MVT::i64, {T0, T1});
+
+  // i128 is not legal, hide it in a v2i64 vector and bitcast it to i128.
+  // The legalizer will just split the bitcast operation.
+  SDValue Vec = SDValue(Dag.getNode(Opcode, SDLoc(N), MVT::v2i64, {T0, T1}));
+  return Dag.getNode(ISD::BITCAST, SDLoc(N), MVT::i128, Vec);
 }
 
 static SDValue combineStore(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
