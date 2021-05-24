@@ -8715,59 +8715,34 @@ define <32 x i8> @p_mul_add_v32i8_v32i8(<32 x i8>* nocapture readonly %0, <32 x 
 define <4 x i64> @fbnsigned_long_4__division_imm(<4 x i64> %a) {
 ; CHECK-LABEL: fbnsigned_long_4__division_imm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addd $r12 = $r12, -128
-; CHECK-NEXT:    get $r16 = $ra
+; CHECK-NEXT:    addd $r12 = $r12, -64
+; CHECK-NEXT:    muldt $r4r5 = $r1, 0x5555555555555556
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 128
-; CHECK-NEXT:    .cfi_register 67, 16
-; CHECK-NEXT:    sd 120[$r12] = $r16
+; CHECK-NEXT:    .cfi_def_cfa_offset 64
+; CHECK-NEXT:    so 32[$r12] = $r0r1r2r3
+; CHECK-NEXT:    muldt $r6r7 = $r0, 0x5555555555555556
+; CHECK-NEXT:    srld $r4 = $r5, 63
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -8
-; CHECK-NEXT:    so 88[$r12] = $r20r21r22r23
-; CHECK-NEXT:    copyd $r23 = $r3
-; CHECK-NEXT:    copyd $r22 = $r2
-; CHECK-NEXT:    copyd $r21 = $r1
+; CHECK-NEXT:    adduwd $r5 = $r4, $r5
+; CHECK-NEXT:    muldt $r8r9 = $r3, 0x5555555555555556
+; CHECK-NEXT:    srld $r6 = $r7, 63
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 20, -16
-; CHECK-NEXT:    .cfi_offset 21, -24
-; CHECK-NEXT:    .cfi_offset 22, -32
-; CHECK-NEXT:    .cfi_offset 23, -40
-; CHECK-NEXT:    copyd $r20 = $r0
-; CHECK-NEXT:    make $r1 = 3
+; CHECK-NEXT:    adduwd $r4 = $r6, $r7
+; CHECK-NEXT:    muldt $r10r11 = $r2, 0x5555555555555556
+; CHECK-NEXT:    srld $r8 = $r9, 63
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    so 32[$r12] = $r20r21r22r23
-; CHECK-NEXT:    call __divdi3
+; CHECK-NEXT:    adduwd $r7 = $r8, $r9
+; CHECK-NEXT:    srld $r6 = $r11, 63
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r20 = $r0
-; CHECK-NEXT:    make $r1 = 3
-; CHECK-NEXT:    copyd $r0 = $r21
-; CHECK-NEXT:    call __divdi3
+; CHECK-NEXT:    adduwd $r6 = $r6, $r11
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r21 = $r0
-; CHECK-NEXT:    make $r1 = 3
-; CHECK-NEXT:    copyd $r0 = $r22
-; CHECK-NEXT:    call __divdi3
+; CHECK-NEXT:    so 0[$r12] = $r4r5r6r7
+; CHECK-NEXT:    copyd $r0 = $r4
+; CHECK-NEXT:    copyd $r1 = $r5
+; CHECK-NEXT:    copyd $r2 = $r6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r22 = $r0
-; CHECK-NEXT:    make $r1 = 3
-; CHECK-NEXT:    copyd $r0 = $r23
-; CHECK-NEXT:    call __divdi3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r23 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    so 0[$r12] = $r20r21r22r23
-; CHECK-NEXT:    copyd $r0 = $r20
-; CHECK-NEXT:    copyd $r1 = $r21
-; CHECK-NEXT:    copyd $r2 = $r22
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r3 = $r23
-; CHECK-NEXT:    lo $r20r21r22r23 = 88[$r12]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 120[$r12]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 128
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r3 = $r7
+; CHECK-NEXT:    addd $r12 = $r12, 64
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

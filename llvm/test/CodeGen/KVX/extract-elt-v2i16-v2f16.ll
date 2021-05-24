@@ -7,7 +7,7 @@ define i64 @ext_v2i16_0(<2 x i16> %x, i64 %y) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sxhd $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, $r1
+; CHECK-NEXT:    addwd $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -22,7 +22,7 @@ define i64 @ext_v2i16_1(<2 x i16> %x, i64 %y) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    extfs $r0 = $r0, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, $r1
+; CHECK-NEXT:    addwd $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
