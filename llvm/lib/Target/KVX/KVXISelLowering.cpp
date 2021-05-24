@@ -2573,3 +2573,29 @@ bool KVX_LOW::isKVXSplat32ImmVec(llvm::SDNode *N, llvm::SelectionDAG *CurDag,
 
   return true;
 }
+
+bool KVX_LOW::isExtended(llvm::SDNode *N, llvm::SelectionDAG *CurDag,
+                         bool SignExt) {
+  if (SignExt)
+    switch (N->getOpcode()) {
+    default: {
+      auto Ones = CurDag->computeKnownBits(SDValue(N, 0)).Zero;
+      return Ones.countLeadingOnes() >= Ones.getBitWidth() / 2;
+    }
+    case ISD::SIGN_EXTEND:
+    case ISD::SIGN_EXTEND_INREG:
+      return true;
+    case ISD::LOAD:
+      return cast<LoadSDNode>(N)->getExtensionType() == ISD::SEXTLOAD;
+    }
+  switch (N->getOpcode()) {
+  default: {
+    auto Zeros = CurDag->computeKnownBits(SDValue(N, 0)).Zero;
+    return Zeros.countLeadingOnes() >= Zeros.getBitWidth() / 2;
+  }
+  case ISD::ZERO_EXTEND:
+    return true;
+  case ISD::LOAD:
+    return cast<LoadSDNode>(N)->getExtensionType() == ISD::ZEXTLOAD;
+  }
+}
