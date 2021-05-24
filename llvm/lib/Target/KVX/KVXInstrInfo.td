@@ -1782,6 +1782,7 @@ defm SBMM8 : MC_12<"sbmm8">;
 
 defm SBMMT8 : MC_12<"sbmmt8">;
 
+let isAdd = 1 in
 defm ADDSD : MC_12<"addsd">;
 
 defm SBFSD : MC_12<"sbfsd">;
@@ -1802,10 +1803,12 @@ defm SBFX8D : MC_13<"sbfx8d">;
 
 defm SBFX16D : MC_13<"sbfx16d">;
 
+let isAdd = 1 in
 defm ADDWD : MC_13<"addwd">;
 
 defm SBFWD : MC_13<"sbfwd">;
 
+let isAdd = 1 in
 defm ADDUWD : MC_13<"adduwd">;
 
 defm SBFUWD : MC_13<"sbfuwd">;
@@ -1855,6 +1858,7 @@ defm ANDNW : MC_14<"andnw">;
 
 defm ORNW : MC_14<"ornw">;
 
+let isAdd = 1 in
 defm ADDSW : MC_13<"addsw">;
 
 defm SBFSW : MC_13<"sbfsw">;
@@ -1891,6 +1895,7 @@ defm LORW : MC_13<"lorw">;
 
 defm LNORW : MC_13<"lnorw">;
 
+let isAdd = 1 in
 defm ADDWP : MC_16<"addwp">;
 
 defm SBFWP : MC_16<"sbfwp">;
@@ -1905,10 +1910,12 @@ defm MAXWP : MC_16<"maxwp">;
 
 defm MAXUWP : MC_16<"maxuwp">;
 
+let isAdd = 1 in
 defm ADDCWC : MC_17<"addcwc">;
 
 defm SBFCWC : MC_17<"sbfcwc">;
 
+let isAdd = 1 in
 defm ADDSWP : MC_17<"addswp">;
 
 defm SBFSWP : MC_17<"sbfswp">;
@@ -1945,6 +1952,7 @@ defm LORWP : MC_17<"lorwp">;
 
 defm LNORWP : MC_17<"lnorwp">;
 
+let isAdd = 1 in
 defm ADDHQ : MC_16<"addhq">;
 
 defm SBFHQ : MC_16<"sbfhq">;
@@ -1959,10 +1967,12 @@ defm MAXHQ : MC_16<"maxhq">;
 
 defm MAXUHQ : MC_16<"maxuhq">;
 
+let isAdd = 1 in
 defm ADDCHCP : MC_17<"addchcp">;
 
 defm SBFCHCP : MC_17<"sbfchcp">;
 
+let isAdd = 1 in
 defm ADDSHQ : MC_17<"addshq">;
 
 defm SBFSHQ : MC_17<"sbfshq">;

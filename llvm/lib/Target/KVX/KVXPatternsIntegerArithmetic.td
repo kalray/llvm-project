@@ -247,6 +247,24 @@ def : Pat<(i64(saddsat i64:$v, Signed37:$i)), (ADDSDri37 SingleReg:$v, Signed37:
 def : Pat<(i64(saddsat i64:$v, Wrapped64:$i)), (ADDSDri64 SingleReg:$v, Wrapped64:$i)>;
 def : Pat<(i64(saddsat i64:$v0, i64:$v1)), (ADDSDrr SingleReg:$v0, SingleReg:$v1)>;
 
+def isZeroExtended : PatLeaf<(i64 SingleReg:$src), [{
+  return KVX_LOW::isExtended(N, CurDAG, false);
+}]>;
+
+def isSignExtended : PatLeaf<(i64 SingleReg:$src), [{
+  return KVX_LOW::isExtended(N, CurDAG, true);
+}]>;
+
+// ADDUWD
+// TODO: Add ri variant
+def : Pat<(i64(add i64:$v0, (zext i32:$v1))), (ADDUWDrr SingleReg:$v1, SingleReg:$v0)>;
+def : Pat<(i64(add i64:$v0, isZeroExtended:$v1)), (ADDUWDrr SingleReg:$v1, SingleReg:$v0)>;
+
+// ADDWD
+// TODO: Add ri variant
+def : Pat<(i64(add i64:$v0, (sext i32:$v1))), (ADDWDrr SingleReg:$v1, SingleReg:$v0)>;
+def : Pat<(i64(add i64:$v0, isSignExtended:$v1)), (ADDWDrr SingleReg:$v1, SingleReg:$v0)>;
+
 // ADDWP
 def : Pat<(add v2i32:$r, (v2i32 (build_vector (i32 Wrapped32:$i), (i32 0)))), (ADDWPri SingleReg:$r, Wrapped32:$i, splat32_)>;
 def : Pat<(add v2i32:$r, (v2i32 (v2_splat (i32 Wrapped32:$i)))), (ADDWPri SingleReg:$r, Wrapped32:$i, splat32_at)>;
