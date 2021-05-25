@@ -655,7 +655,20 @@ set(ve_SOURCES
   ${GENERIC_SOURCES})
 
 set(kvx_SOURCES
+  kvx/divdf3.c
+  kvx/divsf3.c
   kvx/udivmoddi4.c
+  kvx/udivdi3.c
+  kvx/umoddi3.c
+  kvx/divdi3.c
+  kvx/moddi3.c
+  kvx/udivmodsi4.c
+  kvx/udivsi3.c
+  kvx/umodsi3.c
+  kvx/divsi3.c
+  kvx/modsi3.c
+  kvx/floatdisf.c
+  kvx/floatundisf.c
   ${GENERIC_SOURCES}
   ${GENERIC_TF_SOURCES}
 )
