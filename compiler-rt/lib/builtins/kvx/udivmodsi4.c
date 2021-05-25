@@ -5,10 +5,10 @@
  */
 #include "kvxint_div.h"
 
-KVXINT_TEMPLATE_UDIVMOD(64);
+KVXINT_TEMPLATE_UDIVMOD(32);
 
-uint64_t __udivmoddi4(uint64_t N, uint64_t D, uint64_t *Rp) {
-  const struct kvxint_quotient_remainder64 retval = kvxint_udivmod64(N, D);
+uint32_t __udivmodsi4(uint32_t N, uint32_t D, uint32_t *Rp) {
+  const struct kvxint_quotient_remainder32 retval = kvxint_udivmod32(N, D);
 
   if (Rp != NULL) {
     *Rp = retval.remainder;
