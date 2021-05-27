@@ -417,6 +417,15 @@ double floatd(long x) {
   return __builtin_kvx_floatd(x, 3, ".rn");
 }
 
+// CHECK-LABEL: @floatd_limit(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call double @llvm.kvx.floatd(i64 [[X:%.*]], i64 63, i32 0)
+// CHECK-NEXT:    ret double [[TMP0]]
+//
+double floatd_limit(long x) {
+  return __builtin_kvx_floatd(x, 63, ".rn");
+}
+
 // CHECK-LABEL: @floatuw(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.floatuw(i32 [[X:%.*]], i64 3, i32 3)
