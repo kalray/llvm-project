@@ -19,45 +19,22 @@
 namespace llvm {
 
 class KVXPacketizerList : public VLIWPacketizerList {
-
 public:
   KVXPacketizerList(MachineFunction &MF, MachineLoopInfo &MLI, AAResults *AA);
 
-  bool isSoloInstruction(const MachineInstr &MI) override;
-  bool isLegalToPacketizeTogether(SUnit *SUI, SUnit *SUJ) override;
-
   bool shouldAddToPacket(const MachineInstr &MI) override;
-
   MachineBasicBlock::iterator addToPacket(MachineInstr &MI) override;
-
   void endPacket(MachineBasicBlock *MBB,
-                 MachineBasicBlock::iterator MI) override;
-
-  int getSchedClassIssueSize(const MachineInstr &MI);
-
+                 MachineBasicBlock::iterator MBBI) override;
+  bool isSoloInstruction(const MachineInstr &MI) override;
   bool ignorePseudoInstruction(const MachineInstr &MI,
                                const MachineBasicBlock *) override;
+  bool isLegalToPacketizeTogether(SUnit *SUI, SUnit *SUJ) override;
 
-  void moveCFIDebugInstructions(MachineFunction &MF);
+  void moveDebugInstructionsOut(MachineFunction &MF);
 
 private:
-  int PacketSize;
-
-  bool isScheduledAlone(unsigned opcode);
-
-  bool usesCarry(unsigned opcode);
-  bool isSetOrWFXL(unsigned Opcode);
-  bool isSetOrWFXLOrWFXM(unsigned Opcode);
-  bool useFloatingPointIEEE754(unsigned opcode);
-
-  bool isALU(unsigned scheduleCode);
-  bool isMAU(unsigned scheduleCode);
-  bool isALUCarryWithSetOrWFXL(unsigned ISchedClass, unsigned IOpcode,
-                               unsigned JOpcode);
-  bool isALUFP754OrMAUFP754WithSetOrWFX_(unsigned ISchedClass, unsigned IOpcode,
-                                         unsigned JOpcode);
-
-  bool shouldBeLastInBundle(unsigned opcode);
+  unsigned PacketSize, MaxPacketSize;
 };
 
 } // end namespace llvm
