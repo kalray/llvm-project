@@ -1888,13 +1888,13 @@ define <16 x half> @mul_add_v16f16_v16f16(<16 x half> %0, <16 x half> %1, <16 x 
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmulhq $r2 = $r2, $r6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddhq $r3 = $r3, $r11
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    faddhq $r0 = $r0, $r8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    faddhq $r1 = $r1, $r9
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    faddhq $r2 = $r2, $r10
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    faddhq $r3 = $r3, $r11
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %4 = fmul <16 x half> %0, %1

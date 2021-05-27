@@ -1222,28 +1222,28 @@ class REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
 let Size = 4 in
 class REGISTERA0_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, TCA>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, TCA_FP16>;
 
 // 1 insn(s):
 // FMMA242HW1
 let Size = 4 in
 class REGISTERA1_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, TCA>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, TCA_FP16>;
 
 // 1 insn(s):
 // FMMA242HW2
 let Size = 4 in
 class REGISTERA2_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, TCA>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, TCA_FP16>;
 
 // 1 insn(s):
 // FMMA242HW3
 let Size = 4 in
 class REGISTERA3_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, TCA>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, TCA_FP16>;
 
 // 1 insn(s):
 // CONVDHV0
