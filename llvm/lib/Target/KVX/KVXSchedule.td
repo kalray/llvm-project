@@ -43,6 +43,7 @@ def BCU_TINY_TINY_MAU_XNOP : InstrItinClass;
 def BCU_CRRP_CRWL_CRWH : InstrItinClass;
 def BCU_TINY_AUXW_CRRP : InstrItinClass;
 def TCA : InstrItinClass;
+def TCA_FP16 : InstrItinClass;
 def ALU_NOP : InstrItinClass;
 def ALU_TINY : InstrItinClass;
 def ALU_TINY_X : InstrItinClass;
@@ -53,14 +54,21 @@ def ALU_LITE_Y : InstrItinClass;
 def ALU_LITE_CRWL : InstrItinClass;
 def ALU_LITE_CRWH : InstrItinClass;
 def ALU_FULL : InstrItinClass;
+def SFU : InstrItinClass;
 def ALU_FULL_X : InstrItinClass;
 def ALU_FULL_Y : InstrItinClass;
 def MAU : InstrItinClass;
+def MAU_FP16 : InstrItinClass;
 def MAU_X : InstrItinClass;
+def MAU_X_FP16 : InstrItinClass;
 def MAU_Y : InstrItinClass;
+def MAU_Y_FP16 : InstrItinClass;
 def MAU_AUXR : InstrItinClass;
 def MAU_AUXR_X : InstrItinClass;
 def MAU_AUXR_Y : InstrItinClass;
+def MAU_AUXR_FP16 : InstrItinClass;
+def MAU_AUXR_X_FP16 : InstrItinClass;
+def MAU_AUXR_Y_FP16 : InstrItinClass;
 def LSU : InstrItinClass;
 def LSU_X : InstrItinClass;
 def LSU_Y : InstrItinClass;
@@ -123,6 +131,11 @@ list<InstrItinData> ItinList = [
     InstrStage<4, [LITE0_FU, LITE1_FU], 0>,
     InstrStage<4, [FULL_FU]>
   ]>,
+  InstrItinData<SFU, [
+    InstrStage<16, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<16, [LITE0_FU, LITE1_FU], 0>,
+    InstrStage<16, [FULL_FU]>
+  ]>,
   InstrItinData<ALU_FULL_X, [
     InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<3, [LITE0_FU, LITE1_FU], 0>,
@@ -160,6 +173,9 @@ list<InstrItinData> ItinList = [
   ]>,
   InstrItinData<TCA, [
     InstrStage<5, [TCA_FU]>
+  ]>,
+  InstrItinData<TCA_FP16, [
+    InstrStage<7, [TCA_FU]>
   ]>,
   InstrItinData<LSU, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
@@ -240,13 +256,25 @@ list<InstrItinData> ItinList = [
     InstrStage<4, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<4, [MAU_FU]>
   ]>,
+  InstrItinData<MAU_FP16, [
+    InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<3, [MAU_FU]>
+  ]>,
   InstrItinData<MAU_X, [
     InstrStage<4, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<4, [MAU_FU]>
   ]>,
+  InstrItinData<MAU_X_FP16, [
+    InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<3, [MAU_FU]>
+  ]>,
   InstrItinData<MAU_Y, [
     InstrStage<4, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<4, [MAU_FU]>
+  ]>,
+  InstrItinData<MAU_Y_FP16, [
+    InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<3, [MAU_FU]>
   ]>,
   InstrItinData<MAU_AUXR, [
     InstrStage<4, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
@@ -262,6 +290,21 @@ list<InstrItinData> ItinList = [
     InstrStage<4, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<4, [MAU_FU], 0>,
     InstrStage<4, [AUXR_FU]>
+  ]>,
+  InstrItinData<MAU_AUXR_FP16, [
+    InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<3, [MAU_FU], 0>,
+    InstrStage<3, [AUXR_FU]>
+  ]>,
+  InstrItinData<MAU_AUXR_X_FP16, [
+    InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<3, [MAU_FU], 0>,
+    InstrStage<3, [AUXR_FU]>
+  ]>,
+  InstrItinData<MAU_AUXR_Y_FP16, [
+    InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<3, [MAU_FU], 0>,
+    InstrStage<3, [AUXR_FU]>
   ]>,
   // We need to expand SWAPVOp pseudos after packetizer. To correctly schedule/bundle them,
   // we need a dedicated scheduling itinerary for it.
