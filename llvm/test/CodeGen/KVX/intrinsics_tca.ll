@@ -805,9 +805,9 @@ define <4 x i64> @test_tca_builtins(i64 %a, i64 %b, i64 %c, i64 %d, <256 x i1>* 
 ; CHECK-LABEL: test_tca_builtins:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r35 = 3
-; CHECK-NEXT:    make $r1 = 4
 ; CHECK-NEXT:    make $r34 = 2
 ; CHECK-NEXT:    make $r33 = 1
+; CHECK-NEXT:    make $r1 = 4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a0 = 0[$r4]
 ; CHECK-NEXT:    make $r32 = 0

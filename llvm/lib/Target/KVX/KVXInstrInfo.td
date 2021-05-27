@@ -1436,11 +1436,13 @@ multiclass MC_30<string OpcStr> {
 //   defm FMULW
 //   defm FDOT2W
 multiclass MC_31<string OpcStr> {
+  let Defs = [CS], Uses = [CS] in
   def ri : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE_BINARY32
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary32:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      MAU_X>;
+  let Defs = [CS], Uses = [CS] in
   def rr : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32
     <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
@@ -1466,12 +1468,10 @@ multiclass MC_31_2<string OpcStr> {
 // multiclass MC_32 is used by:
 //   defm MOVETQ
 multiclass MC_32<string OpcStr> {
-  let Defs = [CS] in
   def rrbe : REGISTERAL_REGISTERZ_REGISTERY_SIMPLE
     <(outs BlockRegE:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */]>;
-  let Defs = [CS] in
   def rrbo : REGISTERAH_REGISTERZ_REGISTERY_SIMPLE
     <(outs BlockRegO:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
@@ -2071,7 +2071,7 @@ defm SBFX8UWD : MC_13<"sbfx8uwd">;
 
 defm SBFX16UWD : MC_13<"sbfx16uwd">;
 
-let Defs = [CS] in
+let Defs = [CS], Uses = [CS] in
 def ADDDC : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "addd.c $a1 = $a2, $a3",
@@ -2085,7 +2085,7 @@ def SBFDC : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
    [/* no straightforward pattern */],
    ALU_FULL>;
 
-let Defs = [CS] in
+let Defs = [CS], Uses = [CS] in
 def ADDDCI : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "addd.ci $a1 = $a2, $a3",

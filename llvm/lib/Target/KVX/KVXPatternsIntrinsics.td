@@ -12,10 +12,11 @@ def: Pat<(int_kvx_tlbprobe), (TLBPROBE)>;
 def: Pat<(int_kvx_tlbread), (TLBREAD)>;
 def: Pat<(int_kvx_tlbwrite), (TLBWRITE)>;
 
-def GETp : KVX_PSEUDO<(outs SingleReg:$dst), (ins Sysnumber:$param),[]>;
-def SETp : KVX_PSEUDO<(outs), (ins Sysnumber:$sysreg, SingleReg:$val),[]>;
-def WFXLp : KVX_PSEUDO<(outs), (ins Sysnumber:$sysreg, SingleReg:$val),[]>;
-def WFXMp : KVX_PSEUDO<(outs), (ins Sysnumber:$sysreg, SingleReg:$val),[]>;
+def GETp : KVX_PSEUDO_W_SCHEDINFO<(outs SingleReg:$dst), (ins Sysnumber:$param), [], BCU>;
+def SETp : KVX_PSEUDO_W_SCHEDINFO<(outs), (ins Sysnumber:$sysreg, SingleReg:$val), [], BCU>;
+def WFXLp : KVX_PSEUDO_W_SCHEDINFO<(outs), (ins Sysnumber:$sysreg, SingleReg:$val), [], BCU>;
+def WFXMp : KVX_PSEUDO_W_SCHEDINFO<(outs), (ins Sysnumber:$sysreg, SingleReg:$val), [], BCU>;
+
 let Constraints = "$vIn = $vOut, $qIn = $qOut" in
 def SWAPVOp : KVX_PSEUDO_W_SCHEDINFO<(outs QuadReg:$qOut, VectorReg:$vOut), (ins QuadReg:$qIn, VectorReg:$vIn),[], SWAPVO>;
 
