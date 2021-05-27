@@ -22,7 +22,7 @@ def int_kvx_dtouchl: Intrinsic<[], [llvm_ptr_ty], []>;
 def int_kvx_dzerol: Intrinsic<[], [llvm_ptr_ty], []>;
 def int_kvx_iinvals: Intrinsic<[], [llvm_ptr_ty], []>;
 
-def int_kvx_get : Intrinsic<[llvm_i64_ty], [llvm_i32_ty],[IntrReadMem]>;
+def int_kvx_get : Intrinsic<[llvm_i64_ty], [llvm_i32_ty], []>;
 def int_kvx_set : Intrinsic<[], [llvm_i32_ty, llvm_i64_ty], []>;
 def int_kvx_wfxl : Intrinsic<[], [llvm_i32_ty, llvm_i64_ty], []>;
 def int_kvx_wfxm : Intrinsic<[], [llvm_i32_ty, llvm_i64_ty], []>;
@@ -112,10 +112,10 @@ def int_kvx_sbfshq: Intrinsic<[llvm_v4i16_ty], [llvm_v4i16_ty, llvm_v4i16_ty], [
 def int_kvx_sbfswp: Intrinsic<[llvm_v2i32_ty], [llvm_v2i32_ty, llvm_v2i32_ty], [IntrNoMem]>;
 def int_kvx_sbfsw: Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_sbfsd: Intrinsic<[llvm_i64_ty], [llvm_i64_ty, llvm_i64_ty], [IntrNoMem]>;
-def int_kvx_addd: Intrinsic<[llvm_i64_ty], [llvm_i64_ty, llvm_i64_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_addd: Intrinsic<[llvm_i64_ty], [llvm_i64_ty, llvm_i64_ty, llvm_i32_ty], [IntrNoMem, IntrHasSideEffects]>;
 def int_kvx_addshq: Intrinsic<[llvm_v4i16_ty], [llvm_v4i16_ty, llvm_v4i16_ty], [IntrNoMem]>;
 def int_kvx_addswp: Intrinsic<[llvm_v2i32_ty], [llvm_v2i32_ty, llvm_v2i32_ty], [IntrNoMem]>;
-def int_kvx_sbfd: Intrinsic<[llvm_i64_ty], [llvm_i64_ty, llvm_i64_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_sbfd: Intrinsic<[llvm_i64_ty], [llvm_i64_ty, llvm_i64_ty, llvm_i32_ty], [IntrNoMem, IntrHasSideEffects]>;
 def int_kvx_avghq: Intrinsic<[llvm_v4i16_ty], [llvm_v4i16_ty, llvm_v4i16_ty], [IntrNoMem]>;
 def int_kvx_avgw: Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_avgwp: Intrinsic<[llvm_v2i32_ty], [llvm_v2i32_ty, llvm_v2i32_ty], [IntrNoMem]>;
@@ -138,6 +138,10 @@ def int_kvx_fmaxw: Intrinsic<[llvm_float_ty], [llvm_float_ty, llvm_float_ty], [I
 def int_kvx_fmaxd: Intrinsic<[llvm_double_ty], [llvm_double_ty, llvm_double_ty], [IntrNoMem]>;
 def int_kvx_frecw: Intrinsic<[llvm_float_ty], [llvm_float_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_frsrw: Intrinsic<[llvm_float_ty], [llvm_float_ty, llvm_i32_ty], [IntrNoMem]>;
+// TODO: Add InstHasSideEffects to all FP instructions that modify CS to ensure
+// correct scheduling dependencies with instructions that read/write system
+// register that are not known before pseudo expansion (as for addd and sbfd for
+// example).
 def int_kvx_faddw: Intrinsic<[llvm_float_ty], [llvm_float_ty, llvm_float_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_faddd: Intrinsic<[llvm_double_ty], [llvm_double_ty, llvm_double_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_fsbfw: Intrinsic<[llvm_float_ty], [llvm_float_ty, llvm_float_ty, llvm_i32_ty], [IntrNoMem]>;

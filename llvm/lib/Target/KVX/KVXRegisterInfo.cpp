@@ -55,6 +55,7 @@ BitVector KVXRegisterInfo::getReservedRegs(const MachineFunction &MF) const {
   markSuperRegs(Reserved, getFPReg());
   markSuperRegs(Reserved, KVX::RA);
   markSuperRegs(Reserved, KVX::SR);
+  markSuperRegs(Reserved, KVX::CS);
 
   // Mark all Zero TCA registers as reserved.
   for (auto Reg :
