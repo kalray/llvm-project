@@ -19713,7 +19713,7 @@ static Value *KVX_emitUnaryShiftingRoundingBuiltin(CodeGenFunction &CGF,
   if (ShiftExpr->getStmtClass() == Stmt::IntegerLiteralClass) {
     ShiftValue =
         cast<clang::IntegerLiteral>(ShiftExpr)->getValue().getZExtValue();
-    if (!isInt<6>(ShiftValue))
+    if (!isUInt<6>(ShiftValue))
       EmitError = true;
   } else
     EmitError = true;
@@ -20084,7 +20084,7 @@ KVX_emitVectorShiftingBuiltin(CodeGenFunction &CGF, const CallExpr *E,
   if (ShiftExpr->getStmtClass() == Stmt::IntegerLiteralClass) {
     ShiftValue =
         cast<clang::IntegerLiteral>(ShiftExpr)->getValue().getZExtValue();
-    if (!isInt<6>(ShiftValue)) {
+    if (!isUInt<6>(ShiftValue)) {
       CGF.CGM.Error(
           E->getArg(1)->getBeginLoc(),
           "expects a 6-bit unsigned immediate in the second argument");
