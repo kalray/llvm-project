@@ -825,72 +825,6 @@ static bool expandACMPSWAP(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   return true;
 }
 
-static bool expandRoundingPairInstrOpcodes(unsigned int OpCode1,
-                                           unsigned int OpCode2,
-                                           const KVXInstrInfo *TII,
-                                           MachineBasicBlock &MBB,
-                                           MachineBasicBlock::iterator MBBI) {
-  MachineInstr &MI = *MBBI;
-  DebugLoc DL = MI.getDebugLoc();
-
-  MachineFunction *MF = MBB.getParent();
-  const KVXRegisterInfo *TRI =
-      (const KVXRegisterInfo *)MF->getSubtarget().getRegisterInfo();
-
-  unsigned outReg = MI.getOperand(0).getReg();
-  unsigned v1Reg = MI.getOperand(1).getReg();
-  unsigned v2Reg = MI.getOperand(2).getReg();
-  int64_t rounding = MI.getOperand(3).getImm();
-
-  BuildMI(MBB, MBBI, DL, TII->get(OpCode1), TRI->getSubReg(outReg, KVX::sub_s0))
-      .addReg(TRI->getSubReg(v1Reg, KVX::sub_s0))
-      .addReg(TRI->getSubReg(v2Reg, KVX::sub_s0))
-      .addImm(rounding)
-      .addImm(KVXMOD::SILENT_);
-  BuildMI(MBB, MBBI, DL, TII->get(OpCode2), TRI->getSubReg(outReg, KVX::sub_s1))
-      .addReg(TRI->getSubReg(v1Reg, KVX::sub_s1))
-      .addReg(TRI->getSubReg(v2Reg, KVX::sub_s1))
-      .addImm(rounding)
-      .addImm(KVXMOD::SILENT_);
-
-  MI.eraseFromParent();
-  return true;
-}
-
-static bool
-expandRoundingPairedRegInOutInstr(unsigned int OpCode, const KVXInstrInfo *TII,
-                                  MachineBasicBlock &MBB,
-                                  MachineBasicBlock::iterator MBBI) {
-  MachineInstr &MI = *MBBI;
-  DebugLoc DL = MI.getDebugLoc();
-
-  MachineFunction *MF = MBB.getParent();
-  const KVXRegisterInfo *TRI =
-      (const KVXRegisterInfo *)MF->getSubtarget().getRegisterInfo();
-
-  unsigned outReg = MI.getOperand(0).getReg();
-  unsigned v1Reg = MI.getOperand(1).getReg();
-  unsigned v2Reg = MI.getOperand(2).getReg();
-  int64_t rounding = MI.getOperand(4).getImm();
-
-  BuildMI(MBB, MBBI, DL, TII->get(OpCode), TRI->getSubReg(outReg, KVX::sub_s0))
-      .addReg(TRI->getSubReg(outReg, KVX::sub_s0))
-      .addReg(TRI->getSubReg(v1Reg, KVX::sub_s0))
-      .addReg(TRI->getSubReg(v2Reg, KVX::sub_s0))
-      .addImm(rounding)
-      .addImm(KVXMOD::SILENT_);
-
-  BuildMI(MBB, MBBI, DL, TII->get(OpCode), TRI->getSubReg(outReg, KVX::sub_s1))
-      .addReg(TRI->getSubReg(outReg, KVX::sub_s1))
-      .addReg(TRI->getSubReg(v1Reg, KVX::sub_s1))
-      .addReg(TRI->getSubReg(v2Reg, KVX::sub_s1))
-      .addImm(rounding)
-      .addImm(KVXMOD::SILENT_);
-
-  MI.eraseFromParent();
-  return true;
-}
-
 static bool expandStore(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
                         MachineBasicBlock::iterator MBBI, unsigned ri10,
                         unsigned ri37, unsigned ri64) {
@@ -1334,17 +1268,6 @@ bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
     return expandASWAP(TII, MBB, MBBI, NextMBBI);
   case KVX::ATASp:
     return expandATAS(TII, MBB, MBBI, NextMBBI);
-  case KVX::FMULDPp:
-    return expandRoundingPairInstrOpcodes(KVX::FMULDrr, KVX::FMULDrr, TII, MBB,
-                                          MBBI);
-  case KVX::FFMAWQp:
-    return expandRoundingPairedRegInOutInstr(KVX::FFMAWPrr, TII, MBB, MBBI);
-  case KVX::FFMADPp:
-    return expandRoundingPairedRegInOutInstr(KVX::FFMADrr, TII, MBB, MBBI);
-  case KVX::FFMSWQp:
-    return expandRoundingPairedRegInOutInstr(KVX::FFMSWPrr, TII, MBB, MBBI);
-  case KVX::FFMSDPp:
-    return expandRoundingPairedRegInOutInstr(KVX::FFMSDrr, TII, MBB, MBBI);
   case KVX::SBp:
     return expandStore(TII, MBB, MBBI, KVX::SBri10, KVX::SBri37, KVX::SBri64);
   case KVX::SHp:
