@@ -1196,13 +1196,13 @@ declare <2 x double> @llvm.kvx.fmuldp(<2 x double>, <2 x double>, i32) #1
 define <4 x double> @fmuldq(<4 x double> %v1, <4 x double> %v2){
 ; CHECK-LABEL: fmuldq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmuld.rn $r2 = $r2, $r6
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld.rn $r3 = $r3, $r7
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmuld.rn $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmuld.rn $r1 = $r1, $r5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fmuld.rn $r3 = $r3, $r7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fmuld.rn $r2 = $r2, $r6
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
