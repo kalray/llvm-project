@@ -17594,6 +17594,20 @@ Value *CodeGenFunction::EmitHexagonBuiltinExpr(unsigned BuiltinID,
   return nullptr;
 }
 
+static bool KVX_hasConjugateModifier(clang::ASTContext &Ctx,
+                                     const clang::Expr *E) {
+  if (E->isNullPointerConstant(Ctx, Expr::NPC_NeverValueDependent)) {
+    return false;
+  }
+
+  if (E->getStmtClass() == Stmt::StringLiteralClass) {
+    StringRef Str = cast<clang::StringLiteral>(E)->getString();
+    return Str.startswith(".c");
+  }
+
+  return false;
+}
+
 static int KVX_getRoundingModifier(clang::ASTContext &Ctx,
                                    const clang::Expr *E) {
   if (E->isNullPointerConstant(Ctx, Expr::NPC_NeverValueDependent)) {
@@ -17601,6 +17615,8 @@ static int KVX_getRoundingModifier(clang::ASTContext &Ctx,
   }
   if (E->getStmtClass() == Stmt::StringLiteralClass) {
     StringRef Str = cast<clang::StringLiteral>(E)->getString();
+    if (Str.startswith(".c"))
+      Str = Str.drop_front(2);
     return llvm::StringSwitch<int>(Str)
         .Case("", 7)
         .CaseLower(".rn", 0)
@@ -17868,15 +17884,63 @@ static Value *KVX_emitNaryBuiltin(unsigned N, CodeGenFunction &CGF,
     Args.push_back(CGF.EmitScalarExpr(E->getArg(I++)));
 
   if (HasRounding) {
-    int Modifier = KVX_getRoundingModifier(CGF.getContext(),
-                                           E->getArg(I)->IgnoreParenImpCasts());
+    if (KVX_hasConjugateModifier(CGF.getContext(),
+                                 E->getArg(I)->IgnoreParenImpCasts())) {
+      switch (IntrinsicID) {
+      case Intrinsic::kvx_faddwp:
+        IntrinsicID = Intrinsic::kvx_faddcwc;
+        break;
+      case Intrinsic::kvx_fsbfwp:
+        IntrinsicID = Intrinsic::kvx_fsbfcwc;
+        break;
+      case Intrinsic::kvx_fadddp:
+        IntrinsicID = Intrinsic::kvx_faddcdc;
+        break;
+      case Intrinsic::kvx_fsbfdp:
+        IntrinsicID = Intrinsic::kvx_fsbfcdc;
+        break;
+      case Intrinsic::kvx_fmulwc:
+        IntrinsicID = Intrinsic::kvx_fmulcwc;
+        break;
+      case Intrinsic::kvx_fmulwcp:
+        IntrinsicID = Intrinsic::kvx_fmulcwcp;
+        break;
+      case Intrinsic::kvx_fmuldc:
+        IntrinsicID = Intrinsic::kvx_fmulcdc;
+        break;
+      case Intrinsic::kvx_ffmawc:
+        IntrinsicID = Intrinsic::kvx_ffmacwc;
+        break;
+      case Intrinsic::kvx_ffmawcp:
+        IntrinsicID = Intrinsic::kvx_ffmacwcp;
+        break;
+      case Intrinsic::kvx_ffmadc:
+        IntrinsicID = Intrinsic::kvx_ffmacdc;
+        break;
+      case Intrinsic::kvx_ffmswc:
+        IntrinsicID = Intrinsic::kvx_ffmscwc;
+        break;
+      case Intrinsic::kvx_ffmswcp:
+        IntrinsicID = Intrinsic::kvx_ffmscwcp;
+        break;
+      case Intrinsic::kvx_ffmsdc:
+        IntrinsicID = Intrinsic::kvx_ffmscdc;
+        break;
+      default:
+        CGF.CGM.Error(E->getArg(1)->getBeginLoc(),
+                      "conjugate modifier not supported for this builtin");
+      }
+    }
 
-    if (Modifier == -1) {
+    int RoundingModifier = KVX_getRoundingModifier(
+        CGF.getContext(), E->getArg(I)->IgnoreParenImpCasts());
+
+    if (RoundingModifier == -1) {
       CGF.CGM.Error(E->getArg(I)->getBeginLoc(), "invalid rounding modifier");
       return nullptr;
     }
 
-    Args.push_back(ConstantInt::get(CGF.IntTy, Modifier));
+    Args.push_back(ConstantInt::get(CGF.IntTy, RoundingModifier));
   }
 
   Function *Callee = CGF.CGM.getIntrinsic(IntrinsicID);
@@ -18203,14 +18267,48 @@ static Value *KVX_emitVectorBuiltin(CodeGenFunction &CGF, const CallExpr *E,
   Value *ModifierArg = NULL;
 
   if (Rounding) {
-    int Modifier = KVX_getRoundingModifier(
+
+    if (KVX_hasConjugateModifier(
+            CGF.getContext(), E->getArg(NumOperands)->IgnoreParenImpCasts())) {
+      switch (IntrinsicID) {
+      case Intrinsic::kvx_fadddp:
+        IntrinsicID = Intrinsic::kvx_faddcdc;
+        break;
+      case Intrinsic::kvx_fsbfdp:
+        IntrinsicID = Intrinsic::kvx_fsbfcdc;
+        break;
+      case Intrinsic::kvx_fmulwcp:
+        IntrinsicID = Intrinsic::kvx_fmulcwcp;
+        break;
+      case Intrinsic::kvx_fmuldc:
+        IntrinsicID = Intrinsic::kvx_fmulcdc;
+        break;
+      case Intrinsic::kvx_ffmadc:
+        IntrinsicID = Intrinsic::kvx_ffmacdc;
+        break;
+      case Intrinsic::kvx_ffmsdc:
+        IntrinsicID = Intrinsic::kvx_ffmscdc;
+        break;
+      case Intrinsic::kvx_ffmawcp:
+        IntrinsicID = Intrinsic::kvx_ffmacwcp;
+        break;
+      case Intrinsic::kvx_ffmswcp:
+        IntrinsicID = Intrinsic::kvx_ffmscwcp;
+        break;
+      default:
+        CGF.CGM.Error(E->getArg(NumOperands)->getBeginLoc(),
+                      "conjugate modifier not supported for this builtin");
+      }
+    }
+
+    int RoundingModifier = KVX_getRoundingModifier(
         CGF.getContext(), E->getArg(NumOperands)->IgnoreParenImpCasts());
 
-    if (Modifier == -1)
+    if (RoundingModifier == -1)
       CGF.CGM.Error(E->getArg(NumOperands)->getBeginLoc(),
                     "invalid rounding modifier");
 
-    ModifierArg = ConstantInt::get(CGF.IntTy, Modifier);
+    ModifierArg = ConstantInt::get(CGF.IntTy, RoundingModifier);
   }
 
   Function *Callee = CGF.CGM.getIntrinsic(IntrinsicID);
@@ -18760,38 +18858,20 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_faddwp:
     return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_faddwp, true);
 
-  case KVX::BI__builtin_kvx_faddcwc:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_faddcwc, true);
-
   case KVX::BI__builtin_kvx_faddwq:
     return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_faddwq, true);
-
-  case KVX::BI__builtin_kvx_faddcwcp:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_faddcwcp, true);
 
   case KVX::BI__builtin_kvx_fadddp:
     return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fadddp, true);
 
-  case KVX::BI__builtin_kvx_faddcdc:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_faddcdc, true);
-
   case KVX::BI__builtin_kvx_fsbfwp:
     return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fsbfwp, true);
-
-  case KVX::BI__builtin_kvx_fsbfcwc:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fsbfcwc, true);
 
   case KVX::BI__builtin_kvx_fsbfwq:
     return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fsbfwq, true);
 
-  case KVX::BI__builtin_kvx_fsbfcwcp:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fsbfcwcp, true);
-
   case KVX::BI__builtin_kvx_fsbfdp:
     return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fsbfdp, true);
-
-  case KVX::BI__builtin_kvx_fsbfcdc:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fsbfcdc, true);
 
   case KVX::BI__builtin_kvx_fmulwp:
     return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fmulwp, true);
@@ -18799,17 +18879,11 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_fmulwc:
     return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fmulwc, true);
 
-  case KVX::BI__builtin_kvx_fmulcwc:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fmulcwc, true);
-
   case KVX::BI__builtin_kvx_fmulwq:
     return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fmulwq, true);
 
   case KVX::BI__builtin_kvx_fmulwcp:
     return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fmulwcp, true);
-
-  case KVX::BI__builtin_kvx_fmulcwcp:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fmulcwcp, true);
 
   case KVX::BI__builtin_kvx_fmuldp:
     return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fmuldp, true);
@@ -18817,20 +18891,26 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_fmuldc:
     return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fmuldc, true);
 
-  case KVX::BI__builtin_kvx_fmulcdc:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fmulcdc, true);
-
   case KVX::BI__builtin_kvx_fmm212w:
     return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fmm212w, true);
 
   case KVX::BI__builtin_kvx_ffmawp:
     return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmawp, true);
 
+  case KVX::BI__builtin_kvx_ffmawc:
+    return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmawc, true);
+
   case KVX::BI__builtin_kvx_ffmawq:
     return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmawq, true);
 
+  case KVX::BI__builtin_kvx_ffmawcp:
+    return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmawcp, true);
+
   case KVX::BI__builtin_kvx_ffmadp:
     return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmadp, true);
+
+  case KVX::BI__builtin_kvx_ffmadc:
+    return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmadc, true);
 
   case KVX::BI__builtin_kvx_fmma212w:
     return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_fmma212w, true);
@@ -18838,11 +18918,20 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_ffmswp:
     return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmswp, true);
 
+  case KVX::BI__builtin_kvx_ffmswc:
+    return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmswc, true);
+
   case KVX::BI__builtin_kvx_ffmswq:
     return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmswq, true);
 
+  case KVX::BI__builtin_kvx_ffmswcp:
+    return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmswcp, true);
+
   case KVX::BI__builtin_kvx_ffmsdp:
     return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmsdp, true);
+
+  case KVX::BI__builtin_kvx_ffmsdc:
+    return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmsdc, true);
 
   case KVX::BI__builtin_kvx_fmms212w:
     return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_fmms212w, true);
@@ -18894,6 +18983,19 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     return Builder.CreateCall(CGM.getIntrinsic(Intrinsic::kvx_aladdw),
                               {Addr, Value});
   }
+
+  case KVX::BI__builtin_kvx_fconjwc:
+    return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_fconjwc);
+  case KVX::BI__builtin_kvx_fconjwcp:
+    return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_fconjwcp);
+  case KVX::BI__builtin_kvx_fconjwcq:
+    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fconjwcp, 1, FloatTy,
+                                 8, 4, false);
+  case KVX::BI__builtin_kvx_fconjdc:
+    return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_fconjdc);
+  case KVX::BI__builtin_kvx_fconjdcp:
+    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fconjdc, 1, DoubleTy,
+                                 4, 2, false);
 
   case KVX::BI__builtin_kvx_abdw:
     return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_abdw);
@@ -19111,23 +19213,11 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_fadddq:
     return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fadddp, 2, DoubleTy,
                                  4, 2, true);
-  case KVX::BI__builtin_kvx_faddcwcq:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_faddcwcp, 2, FloatTy,
-                                 8, 4, true);
-  case KVX::BI__builtin_kvx_faddcdcp:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_faddcdc, 2, DoubleTy,
-                                 4, 2, true);
   case KVX::BI__builtin_kvx_fsbfwo:
     return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fsbfwq, 2, FloatTy, 8,
                                  4, true);
   case KVX::BI__builtin_kvx_fsbfdq:
     return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fsbfdp, 2, DoubleTy,
-                                 4, 2, true);
-  case KVX::BI__builtin_kvx_fsbfcwcq:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fsbfcwcp, 2, FloatTy,
-                                 8, 4, true);
-  case KVX::BI__builtin_kvx_fsbfcdcp:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fsbfcdc, 2, DoubleTy,
                                  4, 2, true);
   case KVX::BI__builtin_kvx_fmulwo:
     return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fmulwq, 2, FloatTy, 8,
@@ -19138,24 +19228,30 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_fmulwcq:
     return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fmulwcp, 2, FloatTy,
                                  8, 4, true);
-  case KVX::BI__builtin_kvx_fmulcwcq:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fmulcwcp, 2, FloatTy,
-                                 8, 4, true);
   case KVX::BI__builtin_kvx_fmuldcp:
     return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fmuldc, 2, DoubleTy,
                                  4, 2, true);
-  case KVX::BI__builtin_kvx_fmulcdcp:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fmulcdc, 2, DoubleTy,
+  case KVX::BI__builtin_kvx_ffmadcp:
+    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_ffmadc, 3, DoubleTy,
+                                 4, 2, true);
+  case KVX::BI__builtin_kvx_ffmsdcp:
+    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_ffmsdc, 3, DoubleTy,
                                  4, 2, true);
   case KVX::BI__builtin_kvx_ffmawo:
     return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_ffmawq, 3, FloatTy, 8,
                                  4, true);
+  case KVX::BI__builtin_kvx_ffmawcq:
+    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_ffmawcp, 3, FloatTy,
+                                 8, 4, true);
   case KVX::BI__builtin_kvx_ffmadq:
     return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_ffmadp, 3, DoubleTy,
                                  4, 2, true);
   case KVX::BI__builtin_kvx_ffmswo:
     return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_ffmswq, 3, FloatTy, 8,
                                  4, true);
+  case KVX::BI__builtin_kvx_ffmswcq:
+    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_ffmswcp, 3, FloatTy,
+                                 8, 4, true);
   case KVX::BI__builtin_kvx_ffmsdq:
     return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_ffmsdp, 3, DoubleTy,
                                  4, 2, true);

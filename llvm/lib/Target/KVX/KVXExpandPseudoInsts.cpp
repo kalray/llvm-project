@@ -857,101 +857,6 @@ static bool expandRoundingPairInstrOpcodes(unsigned int OpCode1,
   return true;
 }
 
-static bool expandFMULDCInstr(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
-                              MachineBasicBlock::iterator MBBI) {
-  MachineInstr &MI = *MBBI;
-  DebugLoc DL = MI.getDebugLoc();
-
-  MachineFunction *MF = MBB.getParent();
-  const KVXRegisterInfo *TRI =
-      (const KVXRegisterInfo *)MF->getSubtarget().getRegisterInfo();
-
-  unsigned outReg = MI.getOperand(0).getReg();
-  unsigned v1Reg = MI.getOperand(1).getReg();
-  unsigned v2Reg = MI.getOperand(2).getReg();
-  int64_t rounding = MI.getOperand(3).getImm();
-
-  BuildMI(MBB, MBBI, DL, TII->get(KVX::FMULDrr),
-          TRI->getSubReg(outReg, KVX::sub_s0))
-      .addReg(TRI->getSubReg(v1Reg, KVX::sub_s0))
-      .addReg(TRI->getSubReg(v2Reg, KVX::sub_s0))
-      .addImm(rounding)
-      .addImm(KVXMOD::SILENT_);
-  BuildMI(MBB, MBBI, DL, TII->get(KVX::FFMSDrr),
-          TRI->getSubReg(outReg, KVX::sub_s0))
-      .addReg(TRI->getSubReg(outReg, KVX::sub_s0))
-      .addReg(TRI->getSubReg(v1Reg, KVX::sub_s1))
-      .addReg(TRI->getSubReg(v2Reg, KVX::sub_s1))
-      .addImm(rounding)
-      .addImm(KVXMOD::SILENT_);
-  BuildMI(MBB, MBBI, DL, TII->get(KVX::FMULDrr),
-          TRI->getSubReg(outReg, KVX::sub_s1))
-      .addReg(TRI->getSubReg(v1Reg, KVX::sub_s0))
-      .addReg(TRI->getSubReg(v2Reg, KVX::sub_s1))
-      .addImm(rounding)
-      .addImm(KVXMOD::SILENT_);
-  BuildMI(MBB, MBBI, DL, TII->get(KVX::FFMADrr),
-          TRI->getSubReg(outReg, KVX::sub_s1))
-      .addReg(TRI->getSubReg(outReg, KVX::sub_s1))
-      .addReg(TRI->getSubReg(v2Reg, KVX::sub_s0))
-      .addReg(TRI->getSubReg(v1Reg, KVX::sub_s1))
-      .addImm(rounding)
-      .addImm(KVXMOD::SILENT_);
-
-  MI.eraseFromParent();
-  return true;
-}
-
-static bool expandFMULCDCInstr(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
-                               MachineBasicBlock::iterator MBBI) {
-  MachineInstr &MI = *MBBI;
-  DebugLoc DL = MI.getDebugLoc();
-
-  MachineFunction *MF = MBB.getParent();
-  const KVXRegisterInfo *TRI =
-      (const KVXRegisterInfo *)MF->getSubtarget().getRegisterInfo();
-
-  unsigned outReg = MI.getOperand(0).getReg();
-  unsigned Scratch = MI.getOperand(1).getReg();
-  unsigned v1Reg = MI.getOperand(2).getReg();
-  unsigned v2Reg = MI.getOperand(3).getReg();
-  int64_t rounding = MI.getOperand(4).getImm();
-
-  BuildMI(MBB, MBBI, DL, TII->get(KVX::FMULDrr), Scratch)
-      .addReg(TRI->getSubReg(v1Reg, KVX::sub_s0))
-      .addReg(TRI->getSubReg(v2Reg, KVX::sub_s0))
-      .addImm(rounding)
-      .addImm(KVXMOD::SILENT_);
-  BuildMI(MBB, MBBI, DL, TII->get(KVX::COPYD),
-          TRI->getSubReg(outReg, KVX::sub_s0))
-      .addReg(TRI->getSubReg(v2Reg, KVX::sub_s1));
-  BuildMI(MBB, MBBI, DL, TII->get(KVX::FFMADrr),
-          TRI->getSubReg(outReg, KVX::sub_s0))
-      .addReg(TRI->getSubReg(outReg, KVX::sub_s0))
-      .addReg(Scratch)
-      .addReg(TRI->getSubReg(v1Reg, KVX::sub_s1))
-      .addImm(rounding)
-      .addImm(KVXMOD::SILENT_);
-  BuildMI(MBB, MBBI, DL, TII->get(KVX::FMULDrr), Scratch)
-      .addReg(TRI->getSubReg(v2Reg, KVX::sub_s0))
-      .addReg(TRI->getSubReg(v1Reg, KVX::sub_s1))
-      .addImm(rounding)
-      .addImm(KVXMOD::SILENT_);
-  BuildMI(MBB, MBBI, DL, TII->get(KVX::COPYD),
-          TRI->getSubReg(outReg, KVX::sub_s1))
-      .addReg(TRI->getSubReg(v2Reg, KVX::sub_s1));
-  BuildMI(MBB, MBBI, DL, TII->get(KVX::FFMSDrr),
-          TRI->getSubReg(outReg, KVX::sub_s1))
-      .addReg(TRI->getSubReg(outReg, KVX::sub_s1))
-      .addReg(Scratch)
-      .addReg(TRI->getSubReg(v1Reg, KVX::sub_s0))
-      .addImm(rounding)
-      .addImm(KVXMOD::SILENT_);
-
-  MI.eraseFromParent();
-  return true;
-}
-
 static bool
 expandRoundingPairedRegInOutInstr(unsigned int OpCode, const KVXInstrInfo *TII,
                                   MachineBasicBlock &MBB,
@@ -1429,19 +1334,9 @@ bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
     return expandASWAP(TII, MBB, MBBI, NextMBBI);
   case KVX::ATASp:
     return expandATAS(TII, MBB, MBBI, NextMBBI);
-  case KVX::FMULWCPp:
-    return expandRoundingPairInstrOpcodes(KVX::FMULWCrr, KVX::FMULWCrr, TII,
-                                          MBB, MBBI);
-  case KVX::FMULCWCPp:
-    return expandRoundingPairInstrOpcodes(KVX::FMULCWCrr, KVX::FMULCWCrr, TII,
-                                          MBB, MBBI);
   case KVX::FMULDPp:
     return expandRoundingPairInstrOpcodes(KVX::FMULDrr, KVX::FMULDrr, TII, MBB,
                                           MBBI);
-  case KVX::FMULDCp:
-    return expandFMULDCInstr(TII, MBB, MBBI);
-  case KVX::FMULCDCp:
-    return expandFMULCDCInstr(TII, MBB, MBBI);
   case KVX::FFMAWQp:
     return expandRoundingPairedRegInOutInstr(KVX::FFMAWPrr, TII, MBB, MBBI);
   case KVX::FFMADPp:
