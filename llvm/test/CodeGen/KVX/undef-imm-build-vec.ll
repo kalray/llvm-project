@@ -17,7 +17,7 @@ define void @_pocl_kernel_LUT_workgroup() {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    andd $r1 = $r1, 0xff000000ff
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addx2wp $r1 = $r0, $r1
+; CHECK-NEXT:    addx2wp $r1 = $r1, $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srad $r1 = $r1, 32
 ; CHECK-NEXT:    ;;
