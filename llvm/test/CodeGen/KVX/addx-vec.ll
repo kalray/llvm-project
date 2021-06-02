@@ -689,7 +689,7 @@ define <4 x i16> @addx4_i16x4_rr_2(<4 x i16> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r1 = 0x3000100020001
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addx4hq $r0 = $r1, $r0
+; CHECK-NEXT:    addx4hq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -742,7 +742,7 @@ define <4 x i16> @addx4_u16x4_rr_2(<4 x i16> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r1 = 0x3000100020001
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addx4hq $r0 = $r1, $r0
+; CHECK-NEXT:    addx4hq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -780,7 +780,7 @@ define <2 x i32> @addx4_i32x2_rr_2(<2 x i32> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r1 = 0x200000003
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addx4wp $r0 = $r1, $r0
+; CHECK-NEXT:    addx4wp $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -818,7 +818,7 @@ define <2 x i32> @addx4_u32x2_rr_2(<2 x i32> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r1 = 0x200000003
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addx4wp $r0 = $r1, $r0
+; CHECK-NEXT:    addx4wp $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -880,7 +880,7 @@ define <4 x i16> @addx8_i16x4_rr_2(<4 x i16> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r1 = 0x3000100020001
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addx8hq $r0 = $r1, $r0
+; CHECK-NEXT:    addx8hq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -918,7 +918,7 @@ define <4 x i16> @addx8_u16x4_rr_2(<4 x i16> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r1 = 0x3000100020001
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addx8hq $r0 = $r1, $r0
+; CHECK-NEXT:    addx8hq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -956,7 +956,7 @@ define <2 x i32> @addx8_i32x2_rr_2(<2 x i32> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r1 = 0x200000003
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addx8wp $r0 = $r1, $r0
+; CHECK-NEXT:    addx8wp $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -994,7 +994,7 @@ define <2 x i32> @addx8_u32x2_rr_2(<2 x i32> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r1 = 0x200000003
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addx8wp $r0 = $r1, $r0
+; CHECK-NEXT:    addx8wp $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1084,7 +1084,7 @@ define <4 x i16> @addx16_i16x4_rr_2(<4 x i16> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r1 = 0x3000100020001
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addx16hq $r0 = $r1, $r0
+; CHECK-NEXT:    addx16hq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1122,7 +1122,7 @@ define <4 x i16> @addx16_u16x4_rr_2(<4 x i16> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r1 = 0x3000100020001
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addx16hq $r0 = $r1, $r0
+; CHECK-NEXT:    addx16hq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1160,7 +1160,7 @@ define <2 x i32> @addx16_i32x2_rr_2(<2 x i32> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r1 = 0x200000003
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addx16wp $r0 = $r1, $r0
+; CHECK-NEXT:    addx16wp $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1224,7 +1224,7 @@ define <2 x i32> @addx16_u32x2_rr_2(<2 x i32> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r1 = 0x200000003
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addx16wp $r0 = $r1, $r0
+; CHECK-NEXT:    addx16wp $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

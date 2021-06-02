@@ -140,7 +140,7 @@ def : Pat<(v2i16(add (shl v2i16:$v, (v2i16(v2_splat sc))), (v2i16(is_imm_vec:$IM
 def : Pat<(v2i16(or (shl v2i16:$v, (v2i16(v2_splat sc))), (v2i16(VC:$IMM)))),
           (RI $v, (build_imm_vec $IMM), splat32_)>;
 def : Pat<(v2i16(add v2i16:$v0, (shl v2i16:$v1, (v2i16(v2_splat sc))))), (RR SingleReg:$v1, SingleReg:$v0)>;
-def : Pat<(v2i16(or (VC:$IMM), (shl v2i16:$v, (v2i16(v2_splat sc))))), (RR SingleReg:$IMM, SingleReg:$v)>;
+def : Pat<(v2i16(or (VC:$IMM), (shl v2i16:$v, (v2i16(v2_splat sc))))), (RR SingleReg:$v, SingleReg:$IMM)>;
 def : Pat<(v2i16(sub (shl v2i16:$v, (v2i16(v2_splat sc))), (v2i16(is_imm_vec:$IMM)))),
           (RI $v, (build_imm_vec_neg $IMM), splat32_)>;
 }
@@ -160,7 +160,7 @@ def : Pat<(vt(or (shl vt:$v, (vt(v_splat sc))), (vt(VC_at:$IMM)))),
           (RI $v, (build_imm_vec $IMM), splat32_at)>;
 
 def : Pat<(vt(add vt:$v0, (shl vt:$v1, (vt(v_splat sc))))), (RR SingleReg:$v1, SingleReg:$v0)>;
-def : Pat<(vt(or (VC_rr:$IMM), (shl vt:$v, (vt(v_splat sc))))), (RR $IMM, SingleReg:$v)>;
+def : Pat<(vt(or (VC_rr:$IMM), (shl vt:$v, (vt(v_splat sc))))), (RR SingleReg:$v, $IMM)>;
 def : Pat<(vt(sub (shl vt:$v, (vt(v_splat sc))), (vt(is_imm_vec_kvx_splat32_:$IMM)))),
           (RI $v, (build_imm_vec_neg $IMM), splat32_)>;
 def : Pat<(vt(sub (shl vt:$v, (vt(v_splat sc))), (vt(is_imm_vec_kvx_splat32_at:$IMM)))),
