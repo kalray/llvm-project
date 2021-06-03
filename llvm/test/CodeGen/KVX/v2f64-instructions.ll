@@ -348,7 +348,6 @@ define <2 x float> @test_select_cc_f32_f32(<2 x float> %a, <2 x float> %b, <2 x 
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompd.une $r3 = $r3, $r5
 ; CHECK-NEXT:    fcompd.une $r2 = $r2, $r4
-; CHECK-NEXT:    srad $r5 = $r0, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyw $r4 = $r3
 ; CHECK-NEXT:    make $r3 = -1
@@ -358,17 +357,13 @@ define <2 x float> @test_select_cc_f32_f32(<2 x float> %a, <2 x float> %b, <2 x 
 ; CHECK-NEXT:    make $r2 = -1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    srad $r4 = $r1, 32
 ; CHECK-NEXT:    zxwd $r3 = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    zxwd $r2 = $r2
-; CHECK-NEXT:    cmoved.wnez $r3 ? $r4 = $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r2 ? $r1 = $r0
+; CHECK-NEXT:    insf $r2 = $r3, 63, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r4, 63, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    cmovewp.even $r2 ? $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %cc = fcmp une <2 x double> %c, %d

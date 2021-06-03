@@ -373,17 +373,8 @@ define <2 x i32> @test_select_cc(<2 x i32> %a, <2 x i32> %b, <2 x i32> %c, <2 x 
 ; CHECK-LABEL: test_select_cc:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compnwp.lt $r2 = $r2, $r3
-; CHECK-NEXT:    srad $r3 = $r1, 32
-; CHECK-NEXT:    srad $r4 = $r0, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r5 = $r2, 32
-; CHECK-NEXT:    cmoved.wnez $r2 ? $r1 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r5 ? $r3 = $r4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r3, 63, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    cmovewp.even $r2 ? $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %cc = icmp slt <2 x i32> %c, %d
