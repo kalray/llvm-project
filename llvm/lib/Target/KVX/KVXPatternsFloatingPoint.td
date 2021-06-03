@@ -278,6 +278,27 @@ multiclass COMP_FPat<SDNode Node, Floatcomp Cmp, bit SWAP> {
     !if(SWAP, (FCOMPNWP SingleReg:$ry, SingleReg:$rz, Cmp), (FCOMPNWP SingleReg:$rz, SingleReg:$ry, Cmp))>;
   def : Pat<(sra (shl (v2i32 (Node v2f32:$rz, v2f32:$ry)), (v2i32 v2_splat_31)), (v2i32 v2_splat_31)),
     !if(SWAP, (FCOMPNWP SingleReg:$ry, SingleReg:$rz, Cmp), (FCOMPNWP SingleReg:$rz, SingleReg:$ry, Cmp))>;
+
+  def : Pat<(v4i32 (Node v4f32:$rz, v4f32:$ry)),
+    !if(SWAP,
+        (v4i32 (REG_SEQUENCE PairedReg,
+            (v2i32 ( FCOMPNWP (v2f32 (EXTRACT_SUBREG PairedReg:$ry, sub_s0)),
+                            (v2f32 (EXTRACT_SUBREG PairedReg:$rz, sub_s0)),
+                   Cmp)),
+            sub_s0,
+            (v2i32 (FCOMPNWP (v2f32 (EXTRACT_SUBREG PairedReg:$ry, sub_s1)),
+                            (v2f32 (EXTRACT_SUBREG PairedReg:$rz, sub_s1)),
+                   Cmp)),
+            sub_s1)),
+        (v4i32 (REG_SEQUENCE PairedReg,
+            (v2i32 ( FCOMPNWP (v2f32 (EXTRACT_SUBREG PairedReg:$rz, sub_s0)),
+                            (v2f32 (EXTRACT_SUBREG PairedReg:$ry, sub_s0)),
+                   Cmp)),
+            sub_s0,
+            (v2i32 (FCOMPNWP (v2f32 (EXTRACT_SUBREG PairedReg:$rz, sub_s1)),
+                            (v2f32 (EXTRACT_SUBREG PairedReg:$ry, sub_s1)),
+                   Cmp)),
+            sub_s1)))>;
 }
 
 defm : COMP_FPat<setoeq, floatcomp_oeq, 0>;
@@ -301,6 +322,49 @@ def : Pat<(v4i16 (setuo v4f16:$rz, v4f16:$ry)), (ANDDrr (FCOMPNHQ SingleReg:$rz,
 
 def : Pat<(v2i32 (seto v2f32:$rz, v2f32:$ry)), (ORDrr (FCOMPNWP SingleReg:$rz, SingleReg:$ry, floatcomp_oge), (FCOMPNWP SingleReg:$rz, SingleReg:$ry, floatcomp_olt))>;
 def : Pat<(v2i32 (setuo v2f32:$rz, v2f32:$ry)), (ANDDrr (FCOMPNWP SingleReg:$rz, SingleReg:$ry, floatcomp_uge), (FCOMPNWP SingleReg:$rz, SingleReg:$ry, floatcomp_ult))>;
+
+def : Pat<(v4i32 (seto v4f32:$rz, v4f32:$ry)),
+          (v4i32 (REG_SEQUENCE PairedReg,
+            (v2i32 (ORDrr (FCOMPNWP
+              (v2f32 (EXTRACT_SUBREG PairedReg:$rz, sub_s0)),
+              (v2f32 (EXTRACT_SUBREG PairedReg:$ry, sub_s0)),
+              floatcomp_oge),
+                (FCOMPNWP
+                  (v2f32 (EXTRACT_SUBREG PairedReg:$rz, sub_s0)),
+                  (v2f32 (EXTRACT_SUBREG PairedReg:$ry, sub_s0)),
+                  floatcomp_olt))),
+              sub_s0,
+            (v2i32 (ORDrr (FCOMPNWP
+              (v2f32 (EXTRACT_SUBREG PairedReg:$rz, sub_s1)),
+              (v2f32 (EXTRACT_SUBREG PairedReg:$ry, sub_s1)),
+              floatcomp_oge),
+                (FCOMPNWP
+                  (v2f32 (EXTRACT_SUBREG PairedReg:$rz, sub_s1)),
+                  (v2f32 (EXTRACT_SUBREG PairedReg:$ry, sub_s1)),
+                  floatcomp_olt))),
+              sub_s1))>;
+
+def : Pat<(v4i32 (setuo v4f32:$rz, v4f32:$ry)),
+          (v4i32 (REG_SEQUENCE PairedReg,
+            (v2i32 (ANDDrr (FCOMPNWP
+              (v2f32 (EXTRACT_SUBREG PairedReg:$rz, sub_s0)),
+              (v2f32 (EXTRACT_SUBREG PairedReg:$ry, sub_s0)),
+              floatcomp_uge),
+                (FCOMPNWP
+                  (v2f32 (EXTRACT_SUBREG PairedReg:$rz, sub_s0)),
+                  (v2f32 (EXTRACT_SUBREG PairedReg:$ry, sub_s0)),
+                  floatcomp_ult))),
+              sub_s0,
+            (v2i32 (ANDDrr (FCOMPNWP
+              (v2f32 (EXTRACT_SUBREG PairedReg:$rz, sub_s1)),
+              (v2f32 (EXTRACT_SUBREG PairedReg:$ry, sub_s1)),
+              floatcomp_uge),
+                (FCOMPNWP
+                  (v2f32 (EXTRACT_SUBREG PairedReg:$rz, sub_s1)),
+                  (v2f32 (EXTRACT_SUBREG PairedReg:$ry, sub_s1)),
+                  floatcomp_ult))),
+              sub_s1))>;
+
 
 defm : SELECTCONDW<(f16 f16:$truev), (f16 f16:$falsev),(f16 Binary16:$truev), (f16 Binary16:$falsev)>;
 defm : SELECTCONDW<(f32 f32:$truev), (f32 f32:$falsev),(f32 Binary32:$truev), (f32 Binary32:$falsev)>;

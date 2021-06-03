@@ -548,49 +548,28 @@ define <4 x float> @test_select_cc_f32_f16(<4 x float> %a, <4 x float> %b, <4 x 
 define <4 x half> @test_select_cc_f16_f32(<4 x half> %a, <4 x half> %b, <4 x float> %c, <4 x float> %d) #0 {
 ; CHECK-LABEL: test_select_cc_f16_f32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r7 = $r2, 32
-; CHECK-NEXT:    srad $r9 = $r4, 32
-; CHECK-NEXT:    srad $r8 = $r3, 32
-; CHECK-NEXT:    srad $r6 = $r5, 32
+; CHECK-NEXT:    fcompnwp.une $r2 = $r2, $r4
+; CHECK-NEXT:    fcompnwp.une $r3 = $r3, $r5
+; CHECK-NEXT:    srld $r6 = $r0, 32
+; CHECK-NEXT:    srld $r7 = $r1, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompw.une $r7 = $r7, $r9
-; CHECK-NEXT:    fcompw.une $r6 = $r8, $r6
-; CHECK-NEXT:    srld $r8 = $r1, 32
-; CHECK-NEXT:    srld $r9 = $r0, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r15 = $r7
-; CHECK-NEXT:    make $r7 = -1
-; CHECK-NEXT:    fcompw.une $r2 = $r2, $r4
-; CHECK-NEXT:    fcompw.une $r3 = $r3, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r15 ? $r7 = 0
-; CHECK-NEXT:    copyw $r15 = $r6
-; CHECK-NEXT:    make $r6 = -1
-; CHECK-NEXT:    srlw $r4 = $r0, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r15 ? $r6 = 0
-; CHECK-NEXT:    copyw $r15 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    srlw $r10 = $r1, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r15 ? $r2 = 0
-; CHECK-NEXT:    copyw $r15 = $r3
-; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    srld $r8 = $r0, 48
+; CHECK-NEXT:    srlw $r9 = $r0, 16
+; CHECK-NEXT:    srlw $r4 = $r1, 16
 ; CHECK-NEXT:    srld $r5 = $r1, 48
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srld $r11 = $r0, 48
-; CHECK-NEXT:    cmoved.weqz $r15 ? $r3 = 0
-; CHECK-NEXT:    cmoved.wnez $r7 ? $r10 = $r4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srld $r10 = $r3, 32
+; CHECK-NEXT:    srld $r11 = $r2, 32
+; CHECK-NEXT:    cmoved.wnez $r3 ? $r7 = $r6
 ; CHECK-NEXT:    cmoved.wnez $r2 ? $r1 = $r0
-; CHECK-NEXT:    cmoved.wnez $r6 ? $r5 = $r11
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r3 ? $r8 = $r9
-; CHECK-NEXT:    insf $r1 = $r10, 31, 16
+; CHECK-NEXT:    cmoved.wnez $r10 ? $r5 = $r8
+; CHECK-NEXT:    cmoved.wnez $r11 ? $r4 = $r9
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r8 = $r5, 31, 16
+; CHECK-NEXT:    insf $r7 = $r5, 31, 16
+; CHECK-NEXT:    insf $r1 = $r4, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r8, 63, 32
+; CHECK-NEXT:    insf $r1 = $r7, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
