@@ -217,12 +217,15 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
                   MVT::v2f32, MVT::v4f32, MVT::v2f64, MVT::v4f64, MVT::v4i64}) {
     setOperationAction(ISD::INSERT_VECTOR_ELT, VT, Custom);
     setOperationAction(ISD::EXTRACT_VECTOR_ELT, VT, Custom);
-    // Fixme: VSELECT for any 64 bit vector can be implemented as
-    // using (OR (AND (NEG(COMP), V0)), (ANDN (NEG(COMP), V1)))
-    // as far COMP results in the same sized vector.
-    setOperationAction(ISD::VSELECT, VT, Expand);
     setOperationAction(ISD::CONCAT_VECTORS, VT, Custom);
   }
+
+
+  for (auto VT : {MVT::v2i8, MVT::v2f64,MVT::v2i64,
+                  MVT::v4i8, MVT::v4f64, MVT::v4i64,
+                  MVT::v8i8})
+
+    setOperationAction(ISD::VSELECT, VT, Expand);
 
   setOperationAction(ISD::EXTRACT_SUBVECTOR, MVT::v2i32, Legal);
 

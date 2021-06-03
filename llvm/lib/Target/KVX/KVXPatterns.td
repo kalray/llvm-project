@@ -1020,8 +1020,6 @@ def is_imm_vec : PatLeaf<(build_vector), [{
   return cast<BuildVectorSDNode>(N)->isConstant();
 }], build_imm_vec>;
 
-// TODO: Discover if we can pass the bit-size as
-// argument and eliminate duplicates.
 def is_imm_vec_leq1bit : PatLeaf<(build_vector), [{
   return KVX_LOW::isImmVecOfLeqNbits(N, CurDAG, 1);
 }], build_imm_vec>;
@@ -1039,8 +1037,6 @@ def is_imm_vec_leq4bits : PatLeaf<(build_vector), [{
 }], build_imm_vec>;
 
 
-// TODO: Discover if we can pass the splat32_[at] as
-// argument and eliminate duplicates.
 def is_imm_vec_kvx_splat32_ : PatLeaf<(build_vector), [{
    return KVX_LOW::isKVXSplat32ImmVec(N, CurDAG, false);
 }], build_imm_vec>;
@@ -1049,8 +1045,6 @@ def is_imm_vec_kvx_splat32_at : PatLeaf<(build_vector), [{
    return KVX_LOW::isKVXSplat32ImmVec(N, CurDAG, true);
 }], build_imm_vec>;
 
-// TODO: Discover if we can pass the bit-size and the
-//  splat32_[at] as arguments and eliminate duplicates.
 def imm_vec_1bit_splat_ :  PatLeaf<(build_vector), [{
   return KVX_LOW::isImmVecOfLeqNbits(N, CurDAG, 1) &&
          KVX_LOW::isKVXSplat32ImmVec(N, CurDAG, false);
@@ -1090,6 +1084,36 @@ def imm_vec_4bit_splat_at :  PatLeaf<(build_vector), [{
   return KVX_LOW::isImmVecOfLeqNbits(N, CurDAG, 4) &&
          KVX_LOW::isKVXSplat32ImmVec(N, CurDAG, true);
 }], build_imm_vec>;
+
+multiclass KVX_VSELECT_SingleReg<ValueType vt, ValueType ct, KVX_INSTRUCTION instRR> {
+def : Pat<(vt (vselect ct:$c, vt:$true, vt:$false)),
+          (vt (instRR SingleReg:$c, SingleReg:$true, SingleReg:$false, simplecond_even))>;
+}
+
+defm : KVX_VSELECT_SingleReg <v2f16, v2i16, CMOVEHQ>;
+defm : KVX_VSELECT_SingleReg <v2i16, v2i16, CMOVEHQ>;
+defm : KVX_VSELECT_SingleReg <v4f16, v4i16, CMOVEHQ>;
+defm : KVX_VSELECT_SingleReg <v4i16, v4i16, CMOVEHQ>;
+defm : KVX_VSELECT_SingleReg <v2f32, v2i32, CMOVEWP>;
+defm : KVX_VSELECT_SingleReg <v2i32, v2i32, CMOVEWP>;
+
+// For v4f32 and v4i32 vselect
+multiclass KVX_VSELECT_PairedReg<ValueType vt, ValueType halfvt> {
+def : Pat<(vt (vselect v4i32:$c, vt:$true, vt:$false)),
+          (vt (REG_SEQUENCE PairedReg,
+              (halfvt (CMOVEWP (v2i32 (EXTRACT_SUBREG PairedReg:$c, sub_s0)),
+                               (halfvt (EXTRACT_SUBREG PairedReg:$true, sub_s0)),
+                               (halfvt (EXTRACT_SUBREG PairedReg:$false, sub_s0)),
+                               simplecond_even)),
+              sub_s0,
+              (halfvt (CMOVEWP (v2i32 (EXTRACT_SUBREG PairedReg:$c, sub_s1)),
+                               (halfvt (EXTRACT_SUBREG PairedReg:$true, sub_s1)),
+                               (halfvt (EXTRACT_SUBREG PairedReg:$false, sub_s1)),
+                               simplecond_even)),
+              sub_s1))>;
+}
+defm : KVX_VSELECT_PairedReg <v4f32, v2f32>;
+defm : KVX_VSELECT_PairedReg <v4i32, v2i32>;
 
 // v2i8
 def : Pat<(v2i8 (is_imm_vec:$IMM)), (MAKEi16 (build_imm_vec $IMM))>;
