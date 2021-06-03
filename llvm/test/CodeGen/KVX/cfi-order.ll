@@ -50,15 +50,15 @@ define void @testuvec(<4 x i32>* nocapture readonly %A, <4 x i32>* nocapture rea
 ; CHECK-NEXT:    .loc 1 5 49 is_stmt 0 # cfi-order.c:5:49
 ; CHECK-NEXT:    lq $r6r7 = 0[$r0]
 ; CHECK-NEXT:    copyd $r24 = $r2
-; CHECK-NEXT:    srad $r0 = $r4, 32
+; CHECK-NEXT:    srld $r0 = $r4, 32
 ; CHECK-NEXT:    zxwd $r18 = $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp1:
 ; CHECK-NEXT:    .loc 1 5 52 # cfi-order.c:5:52
-; CHECK-NEXT:    srad $r3 = $r5, 32
+; CHECK-NEXT:    srld $r3 = $r5, 32
 ; CHECK-NEXT:    zxwd $r19 = $r5
-; CHECK-NEXT:    srad $r4 = $r6, 32
-; CHECK-NEXT:    srad $r5 = $r7, 32
+; CHECK-NEXT:    srld $r4 = $r6, 32
+; CHECK-NEXT:    srld $r5 = $r7, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    zxwd $r1 = $r0
 ; CHECK-NEXT:    zxwd $r20 = $r7
@@ -172,19 +172,19 @@ define void @testsvec(<4 x i32>* nocapture readonly %A, <4 x i32>* nocapture rea
 ; CHECK-NEXT:    .loc 1 6 54 # cfi-order.c:6:54
 ; CHECK-NEXT:    lq $r4r5 = 0[$r1]
 ; CHECK-NEXT:    copyd $r24 = $r2
-; CHECK-NEXT:    srad $r3 = $r6, 32
+; CHECK-NEXT:    srld $r3 = $r6, 32
 ; CHECK-NEXT:    sxwd $r20 = $r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp5:
 ; CHECK-NEXT:    .loc 1 6 52 # cfi-order.c:6:52
 ; CHECK-NEXT:    sxwd $r22 = $r6
-; CHECK-NEXT:    srad $r0 = $r4, 32
+; CHECK-NEXT:    srld $r0 = $r4, 32
 ; CHECK-NEXT:    sxwd $r18 = $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp6:
 ; CHECK-NEXT:    sxwd $r19 = $r5
-; CHECK-NEXT:    srad $r4 = $r7, 32
-; CHECK-NEXT:    srad $r5 = $r5, 32
+; CHECK-NEXT:    srld $r4 = $r7, 32
+; CHECK-NEXT:    srld $r5 = $r5, 32
 ; CHECK-NEXT:    sxwd $r1 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp7:

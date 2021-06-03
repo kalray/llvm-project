@@ -79,7 +79,6 @@ entry:
 define half @ext_v2f16_0(<2 x half> %x) {
 ; CHECK-LABEL: ext_v2f16_0:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    zxhd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

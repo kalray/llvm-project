@@ -616,7 +616,7 @@ def : Pat<(v4f32 (fpextend v4f16:$val)), (INSERT_SUBREG
                                            (INSERT_SUBREG (v4f32 (IMPLICIT_DEF)), (v2f32 (FWIDENLHWP SingleReg:$val, silent_)), sub_s0),
                                            (v2f32 (FWIDENMHWP SingleReg:$val, silent_)), sub_s1)>;
 
-// build_vector
+// build_vector and vector_extract
 // v2f16
 def : Pat<(v2f16 (is_imm_vec:$IMM)), (MAKEi43 (build_fpimm_vec $IMM))>;
 def : Pat<(v2f16 (build_vector (f16(vector_extract v2f16:$v, 0)), (f16(vector_extract v2f16:$v, 0)))),
@@ -628,6 +628,7 @@ def : Pat<(v2f16 (build_vector (f16(vector_extract v2f16:$v, 1)), (f16(vector_ex
 def : Pat<(v2f16 (build_vector (f16(vector_extract v2f16:$v, 1)), (f16(vector_extract v2f16:$v, 1)))),
           (SBMM8ri64 SingleReg:$v, 0x08040804)>;
 def : Pat<(v2f16 (build_vector f16:$v0, f16:$v1)), (INSF SingleReg:$v0, SingleReg:$v1, 31, 16)>;
+def : Pat<(f16 (vector_extract v2f16:$v, i64:$p)), (SRLWrr SingleReg:$v, (SLLWri SingleReg:$p, 5))>;
 
 // v2f32
 def : Pat<(v2i32 (is_imm_vec_kvx_splat32_:$IMM)), (MAKEi43 (build_fpimm_vec $IMM))>;
@@ -639,11 +640,13 @@ def : Pat<(v2f32 (build_vector (f32(vector_extract v2f32:$v, 1)), (f32(vector_ex
           (SBMM8ri64 SingleReg:$v, 0x8040201080402010)>;
 def : Pat<(v2f32 (build_vector (f32(vector_extract v2f32:$v0, 1)), (f32(vector_extract v2f32:$v1, 0)))),
           (SBMM8ri64 (INSF SingleReg:$v0, SingleReg:$v1, 31, 0), 0x0804020180402010)>;
+def : Pat<(f32 (vector_extract v2f32:$v, i64:$p)), (SRLDrr SingleReg:$v, (SLLWri SingleReg:$p, 6))>;
 
 // v4f16
 def : Pat<(v4f16 (is_imm_vec:$IMM)), (MAKEi64 (build_fpimm_vec $IMM))>;
 def : Pat<(v4f16 (build_vector f16:$v0, f16:$v1, f16:$v2, f16:$v3)),
           (INSF (INSF SingleReg:$v0, SingleReg:$v1, 31, 16), (INSF SingleReg:$v2, SingleReg:$v3, 31, 16), 63, 32)>;
+def : Pat<(f16 (vector_extract v4f16:$v, i64:$p)), (SRLDrr SingleReg:$v, (SLLWri SingleReg:$p, 5))>;
 
 // v2f32
 def : Pat<(extractelt (v2f32 SingleReg:$v), 0), (COPY SingleReg:$v)>;
@@ -657,6 +660,7 @@ def ComplexToVec : Pat<(v2f32 (build_vector (f32(bitconvert(i32(trunc(i64 Single
 def VecToComplex : Pat<(i64( or (shl (anyext (i32 ( extractelt (v2i32 SingleReg:$v), (i64 1)))), (i64 32)),
                                (zext (i32 ( extractelt (v2i32 SingleReg:$v), (i64 0)))))),
           (i64 SingleReg:$v)>;
+def : Pat<(f32 (vector_extract v2f32:$v, i64:$p)), (SRLDrr SingleReg:$v, (SLLWri SingleReg:$p, 5))>;
 
 // v4f32
 def : Pat<(extractelt (v4f32 PairedReg:$v), 0), (f32 (EXTRACT_SUBREG $v, sub_s0))>;
@@ -684,15 +688,17 @@ def : Pat<(v4f32 (concat_vectors v2f32:$v1, v2f32:$v2)),
 
 def : Pat<(extractelt (v2f64 PairedReg:$v), 0), (f64 (EXTRACT_SUBREG $v, sub_s0))>;
 def : Pat<(extractelt (v2f64 PairedReg:$v), 1), (f64 (EXTRACT_SUBREG $v, sub_s1))>;
+def : Pat<(f64 (vector_extract v2f64:$v, i64:$p)),
+          (CMOVEDrr SingleReg:$p, (i64 (EXTRACT_SUBREG PairedReg:$v, sub_s0)), (i64 (EXTRACT_SUBREG PairedReg:$v, sub_s1)), 6)>;
 
 // v2f16
-def : Pat<(extractelt v2f16:$v, 0), (ZXHD SingleReg:$v)>;
+def : Pat<(extractelt v2f16:$v, 0), (COPY SingleReg:$v)>;
 def : Pat<(extractelt v2f16:$v, 1), (SRLWri SingleReg:$v, (i64 16))>;
 
 // v4f16
-def : Pat<(extractelt (v4f16 SingleReg:$v), 0), (EXTFZ SingleReg:$v, 15, 0)>;
-def : Pat<(extractelt (v4f16 SingleReg:$v), 1), (EXTFZ SingleReg:$v, 31, 16)>;
-def : Pat<(extractelt (v4f16 SingleReg:$v), 2), (EXTFZ SingleReg:$v, 47, 32)>;
+def : Pat<(extractelt (v4f16 SingleReg:$v), 0), (COPY SingleReg:$v)>;
+def : Pat<(extractelt (v4f16 SingleReg:$v), 1), (SRLWri SingleReg:$v, 16)>;
+def : Pat<(extractelt (v4f16 SingleReg:$v), 2), (SRLDri SingleReg:$v, 32)>;
 def : Pat<(extractelt (v4f16 SingleReg:$v), 3), (SRLDri SingleReg:$v, (i64 48))>;
 
 def : Pat<(fcopysign f64:$v1, f64:$v2), (INSF SingleReg:$v1, (f64 (SRADri SingleReg:$v2, 63)), 63, 63)>;

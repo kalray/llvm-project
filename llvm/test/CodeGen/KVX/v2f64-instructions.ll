@@ -31,18 +31,10 @@ define double @test_extract_1(<2 x double> %a) #0 {
   ret double %e
 }
 
-; TODO: could be a simple cmoved
 define double @test_extract_i(<2 x double> %a, i64 %idx) #0 {
 ; CHECK-LABEL: test_extract_i:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    andd $r2 = $r2, 1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r3 = $r12, 16
-; CHECK-NEXT:    sq 16[$r12] = $r0r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld.xs $r0 = $r2[$r3]
-; CHECK-NEXT:    addd $r12 = $r12, 32
+; CHECK-NEXT:    cmoved.odd $r2 ? $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %e = extractelement <2 x double> %a, i64 %idx
