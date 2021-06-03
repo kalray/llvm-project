@@ -1189,7 +1189,7 @@ def : Pat<(i64 (vector_extract v2i64:$v, i64:$p)),
           (CMOVEDrr SingleReg:$p,
             (i64 (EXTRACT_SUBREG PairedReg:$v, sub_s0)),
             (i64 (EXTRACT_SUBREG PairedReg:$v, sub_s1)),
-            6 // ODD
+            scalarcond_odd
             )>;
 
 // v4i64
@@ -1261,14 +1261,14 @@ def : Pat<(v2i16 (insertelt v2i16:$to, i16:$e, i64:$idx)),
           (CMOVEDrr SingleReg:$idx,
             (INSF SingleReg:$to, SingleReg:$e, 31, 16),
             (INSF SingleReg:$to, SingleReg:$e, 15, 0),
-            7)>;
+            scalarcond_even)>;
 
 // v2i32
 def : Pat<(v2i32 (insertelt v2i32:$to, i32:$e, i64:$idx)),
           (CMOVEDrr SingleReg:$idx,
             (INSF SingleReg:$to, SingleReg:$e, 63, 32),
             (INSF SingleReg:$to, SingleReg:$e, 31, 0),
-            7)>;
+            scalarcond_even)>;
 
 // v4i16
 def : Pat<(v4i16 (insertelt v4i16:$to, i16:$e, i64:$idx)),
@@ -1279,13 +1279,13 @@ def : Pat<(v4i16 (insertelt v4i16:$to, i16:$e, i64:$idx)),
                     (INSF SingleReg:$idx, SingleReg:$idx, 31, 16),
                     (INSF SingleReg:$idx, SingleReg:$idx, 31, 16),
                     63, 32),
-                  1),
+                  comparison_eq),
                   SingleReg:$to,
                   (INSF
                     (INSF SingleReg:$e, SingleReg:$e, 31, 16),
                     (INSF SingleReg:$e, SingleReg:$e, 31, 16),
                     63, 32),
-                0)>;
+                simplecond_nez)>;
 
 // v4i32
 def : Pat<(v4i32 (insertelt v4i32:$to, i32:$e, 0)),
@@ -1319,38 +1319,38 @@ def : Pat<(v4i32 (insertelt v4i32:$to, i32:$e, (i64 3))),
 def : Pat<(v4i32 (insertelt v4i32:$to, i32:$e, i64:$idx)),
             (REG_SEQUENCE PairedReg,
               (CMOVEWP
-                (COMPNWP (MAKEi64 0x100000000), (INSF SingleReg:$idx, SingleReg:$idx, 63, 31), 1),
+                (COMPNWP (MAKEi64 0x100000000), (INSF SingleReg:$idx, SingleReg:$idx, 63, 31), comparison_eq),
                 (v2i32 (EXTRACT_SUBREG PairedReg:$to, sub_s0)),
                 (INSF SingleReg:$e, SingleReg:$e, 63, 31),
-                1
+                simplecond_eqz
                ),
                sub_s0,
               (CMOVEWP
-                (COMPNWP (MAKEi64 0x300000002), (INSF SingleReg:$idx, SingleReg:$idx, 63, 31), 1),
+                (COMPNWP (MAKEi64 0x300000002), (INSF SingleReg:$idx, SingleReg:$idx, 63, 31), comparison_eq),
                 (v2i32 (EXTRACT_SUBREG PairedReg:$to, sub_s1)),
                 (INSF SingleReg:$e, SingleReg:$e, 63, 31),
-                1
+                simplecond_eqz
                ),
                sub_s1)>;
 
 // v2i64
 def : Pat<(v2i64 (insertelt v2i64:$to, i64:$e, i64:$idx)),
           (REG_SEQUENCE PairedReg,
-            (CMOVEDrr SingleReg:$idx, (i64 (EXTRACT_SUBREG PairedReg:$to, sub_s0)), SingleReg:$e, 7),
+            (CMOVEDrr SingleReg:$idx, (i64 (EXTRACT_SUBREG PairedReg:$to, sub_s0)), SingleReg:$e, scalarcond_even),
             sub_s0,
-            (CMOVEDrr SingleReg:$idx, (i64 (EXTRACT_SUBREG PairedReg:$to, sub_s1)), SingleReg:$e, 6),
+            (CMOVEDrr SingleReg:$idx, (i64 (EXTRACT_SUBREG PairedReg:$to, sub_s1)), SingleReg:$e, scalarcond_odd),
             sub_s1 )>;
 
 // v2i64
 def : Pat<(v4i64 (insertelt v4i64:$to, i64:$e, i64:$idx)),
           (REG_SEQUENCE QuadReg,
-            (CMOVEDrr (COMPDri10 SingleReg:$idx, 0, 1), (i64 (EXTRACT_SUBREG QuadReg:$to, sub_s0)), SingleReg:$e, 6),
+            (CMOVEDrr (COMPDri10 SingleReg:$idx, 0, comparison_eq), (i64 (EXTRACT_SUBREG QuadReg:$to, sub_s0)), SingleReg:$e, scalarcond_odd),
             sub_s0,
-            (CMOVEDrr (COMPDri10 SingleReg:$idx, 1, 1), (i64 (EXTRACT_SUBREG QuadReg:$to, sub_s1)), SingleReg:$e, 6),
+            (CMOVEDrr (COMPDri10 SingleReg:$idx, 1, comparison_eq), (i64 (EXTRACT_SUBREG QuadReg:$to, sub_s1)), SingleReg:$e, scalarcond_odd),
             sub_s1,
-            (CMOVEDrr (COMPDri10 SingleReg:$idx, 2, 1), (i64 (EXTRACT_SUBREG QuadReg:$to, sub_s2)), SingleReg:$e, 6),
+            (CMOVEDrr (COMPDri10 SingleReg:$idx, 2, comparison_eq), (i64 (EXTRACT_SUBREG QuadReg:$to, sub_s2)), SingleReg:$e, scalarcond_odd),
             sub_s2,
-            (CMOVEDrr (COMPDri10 SingleReg:$idx, 3, 1), (i64 (EXTRACT_SUBREG QuadReg:$to, sub_s3)), SingleReg:$e, 6),
+            (CMOVEDrr (COMPDri10 SingleReg:$idx, 3, comparison_eq), (i64 (EXTRACT_SUBREG QuadReg:$to, sub_s3)), SingleReg:$e, scalarcond_odd),
             sub_s3)>;
 
 
