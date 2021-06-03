@@ -344,18 +344,8 @@ define <2 x half> @test_select_cc(<2 x half> %a, <2 x half> %b, <2 x half> %c, <
 ; CHECK-LABEL: test_select_cc:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.une $r2 = $r2, $r3
-; CHECK-NEXT:    srlw $r3 = $r1, 16
-; CHECK-NEXT:    srlw $r4 = $r0, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlw $r5 = $r2, 16
-; CHECK-NEXT:    zxhd $r2 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r5 ? $r3 = $r4
-; CHECK-NEXT:    cmoved.wnez $r2 ? $r1 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r3, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    cmovehq.even $r2 ? $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %cc = fcmp une <2 x half> %c, %d
@@ -367,19 +357,10 @@ define <2 x float> @test_select_cc_f32_f16(<2 x float> %a, <2 x float> %b, <2 x 
 ; CHECK-LABEL: test_select_cc_f32_f16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.une $r2 = $r2, $r3
-; CHECK-NEXT:    srad $r3 = $r1, 32
-; CHECK-NEXT:    srad $r4 = $r0, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxlhwp $r2 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r5 = $r2, 32
-; CHECK-NEXT:    cmoved.wnez $r2 ? $r1 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r5 ? $r3 = $r4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r3, 63, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    cmovewp.even $r2 ? $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %cc = fcmp une <2 x half> %c, %d
@@ -391,17 +372,12 @@ define <2 x half> @test_select_cc_f16_f32(<2 x half> %a, <2 x half> %b, <2 x flo
 ; CHECK-LABEL: test_select_cc_f16_f32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.une $r2 = $r2, $r3
-; CHECK-NEXT:    srlw $r3 = $r1, 16
-; CHECK-NEXT:    srlw $r4 = $r0, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r5 = $r2, 32
-; CHECK-NEXT:    cmoved.wnez $r2 ? $r1 = $r0
+; CHECK-NEXT:    srad $r3 = $r2, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r5 ? $r3 = $r4
+; CHECK-NEXT:    insf $r2 = $r3, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r3, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    cmovehq.even $r2 ? $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %cc = fcmp une <2 x float> %c, %d

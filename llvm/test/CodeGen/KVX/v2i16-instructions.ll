@@ -376,21 +376,9 @@ define <2 x i16> @test_select(<2 x i16> %a, <2 x i16> %b, i1 zeroext %c) #0 {
 define <2 x i16> @test_select_cc(<2 x i16> %a, <2 x i16> %b, <2 x i16> %c, <2 x i16> %d) #0 {
 ; CHECK-LABEL: test_select_cc:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    compnhq.lt $r3 = $r2, $r3
-; CHECK-NEXT:    zxhd $r2 = $r1
-; CHECK-NEXT:    zxhd $r4 = $r0
-; CHECK-NEXT:    srlw $r0 = $r0, 16
+; CHECK-NEXT:    compnhq.lt $r2 = $r2, $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxhd $r5 = $r3
-; CHECK-NEXT:    srlw $r1 = $r1, 16
-; CHECK-NEXT:    srlw $r3 = $r3, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r5 ? $r2 = $r4
-; CHECK-NEXT:    cmoved.wnez $r3 ? $r1 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r1, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r2
+; CHECK-NEXT:    cmovehq.even $r2 ? $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %cc = icmp slt <2 x i16> %c, %d

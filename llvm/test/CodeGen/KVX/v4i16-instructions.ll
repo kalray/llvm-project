@@ -474,32 +474,8 @@ define <4 x i16> @test_select_cc(<4 x i16> %a, <4 x i16> %b, <4 x i16> %c, <4 x 
 ; CHECK-LABEL: test_select_cc:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compnhq.lt $r2 = $r2, $r3
-; CHECK-NEXT:    extfz $r3 = $r0, 47, 32
-; CHECK-NEXT:    zxhd $r4 = $r0
-; CHECK-NEXT:    srld $r5 = $r0, 48
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlw $r15 = $r0, 16
-; CHECK-NEXT:    extfz $r6 = $r2, 47, 32
-; CHECK-NEXT:    extfz $r8 = $r1, 47, 32
-; CHECK-NEXT:    srlw $r7 = $r2, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlw $r10 = $r1, 16
-; CHECK-NEXT:    srld $r9 = $r2, 48
-; CHECK-NEXT:    srld $r11 = $r1, 48
-; CHECK-NEXT:    zxhd $r2 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxhd $r0 = $r1
-; CHECK-NEXT:    cmoved.wnez $r6 ? $r8 = $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r9 ? $r11 = $r5
-; CHECK-NEXT:    cmoved.wnez $r7 ? $r10 = $r15
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r2 ? $r0 = $r4
-; CHECK-NEXT:    insf $r8 = $r11, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r10, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r8, 63, 32
+; CHECK-NEXT:    cmovehq.even $r2 ? $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %cc = icmp slt <4 x i16> %c, %d
