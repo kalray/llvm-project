@@ -5,7 +5,6 @@ target triple = "kvx-kalray-cos"
 define half @f1(<4 x half> %v){
 ; CHECK-LABEL: f1:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    extfz $r0 = $r0, 15, 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -16,7 +15,7 @@ entry:
 define half @f2(<4 x half> %v){
 ; CHECK-LABEL: f2:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    extfz $r0 = $r0, 31, 16
+; CHECK-NEXT:    srlw $r0 = $r0, 16
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -27,7 +26,7 @@ entry:
 define half @f3(<4 x half> %v){
 ; CHECK-LABEL: f3:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    extfz $r0 = $r0, 47, 32
+; CHECK-NEXT:    srld $r0 = $r0, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -49,15 +48,11 @@ entry:
 define half @fidx(<4 x half> %v, i32 %idx){
 ; CHECK-LABEL: fidx:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addd $r12 = $r12, -32
+; CHECK-NEXT:    sxwd $r1 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    addd $r2 = $r12, 24
-; CHECK-NEXT:    andd $r1 = $r1, 3
-; CHECK-NEXT:    sd 24[$r12] = $r0
+; CHECK-NEXT:    sllw $r1 = $r1, 5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lhz.xs $r0 = $r1[$r2]
-; CHECK-NEXT:    addd $r12 = $r12, 32
+; CHECK-NEXT:    srld $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
