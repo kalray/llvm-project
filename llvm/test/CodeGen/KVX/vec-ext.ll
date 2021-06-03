@@ -274,7 +274,7 @@ define <2 x i8> @sext_2xi1_2xi8(<2 x i1> %a){
 ; CHECK-LABEL: sext_2xi1_2xi8:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    extfz $r1 = $r0, 15, 8
-; CHECK-NEXT:    extfz $r0 = $r0, 7, 0
+; CHECK-NEXT:    zxbd $r0 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    extfs $r1 = $r1, 0, 0
 ; CHECK-NEXT:    extfs $r0 = $r0, 0, 0
@@ -290,11 +290,10 @@ entry:
 define <4 x i8> @sext_4xi1_4xi8(<4 x i1> %a){
 ; CHECK-LABEL: sext_4xi1_4xi8:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    extfz $r1 = $r0, 31, 24
+; CHECK-NEXT:    srlw $r1 = $r0, 24
 ; CHECK-NEXT:    extfz $r2 = $r0, 23, 16
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    extfz $r3 = $r0, 15, 8
-; CHECK-NEXT:    extfz $r0 = $r0, 7, 0
+; CHECK-NEXT:    zxbd $r0 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    extfs $r1 = $r1, 0, 0
 ; CHECK-NEXT:    extfs $r2 = $r2, 0, 0
@@ -425,8 +424,8 @@ define <4 x i32> @sext_4xi1_4xi32(<4 x i1> %a){
 ; CHECK-NEXT:    sxmhwp $r1 = $r0
 ; CHECK-NEXT:    sxlhwp $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r2 = $r1, 32
-; CHECK-NEXT:    srad $r3 = $r0, 32
+; CHECK-NEXT:    srld $r2 = $r1, 32
+; CHECK-NEXT:    srld $r3 = $r0, 32
 ; CHECK-NEXT:    extfs $r1 = $r1, 0, 0
 ; CHECK-NEXT:    extfs $r0 = $r0, 0, 0
 ; CHECK-NEXT:    ;;

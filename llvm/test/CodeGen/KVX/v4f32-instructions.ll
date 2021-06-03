@@ -357,12 +357,12 @@ define <4 x float> @test_select(<4 x float> %a, <4 x float> %b, i1 zeroext %c) #
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    copyw $r9 = $r4
 ; CHECK-NEXT:    make $r4 = -1
-; CHECK-NEXT:    srad $r5 = $r2, 32
-; CHECK-NEXT:    srad $r6 = $r3, 32
+; CHECK-NEXT:    srld $r5 = $r2, 32
+; CHECK-NEXT:    srld $r6 = $r3, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r9 ? $r4 = 0
-; CHECK-NEXT:    srad $r7 = $r0, 32
-; CHECK-NEXT:    srad $r8 = $r1, 32
+; CHECK-NEXT:    srld $r7 = $r0, 32
+; CHECK-NEXT:    srld $r8 = $r1, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    andnw $r6 = $r4, $r6
 ; CHECK-NEXT:    andw $r1 = $r1, $r4

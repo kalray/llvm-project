@@ -1883,6 +1883,18 @@ KVXTargetLowering::lowerEXTRACT_VECTOR_ELT_REGISTER(SDValue Op,
   SDLoc dl(Op);
 
   EVT VecVT = Vec.getValueType();
+  switch (VecVT.getSimpleVT().SimpleTy) {
+  default:
+    break;
+  case MVT::v2f16:
+  case MVT::v2f32:
+  case MVT::v2i32:
+  case MVT::v2f64:
+  case MVT::v2i64:
+  case MVT::v4f16:
+    return Op;
+  }
+
   SDValue StackPtr = DAG.CreateStackTemporary(VecVT);
   SDValue Ch =
       DAG.getStore(DAG.getEntryNode(), dl, Vec, StackPtr, MachinePointerInfo());

@@ -22,12 +22,12 @@ define <4 x float> @select_cc(i32 %0, <4 x float> %1, <4 x float> %2) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyw $r9 = $r0
 ; CHECK-NEXT:    make $r0 = -1
-; CHECK-NEXT:    srad $r1 = $r4, 32
-; CHECK-NEXT:    srad $r6 = $r5, 32
+; CHECK-NEXT:    srld $r1 = $r4, 32
+; CHECK-NEXT:    srld $r6 = $r5, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.wlez $r9 ? $r0 = 0
-; CHECK-NEXT:    srad $r8 = $r3, 32
-; CHECK-NEXT:    srad $r7 = $r2, 32
+; CHECK-NEXT:    srld $r8 = $r3, 32
+; CHECK-NEXT:    srld $r7 = $r2, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    andnw $r6 = $r0, $r6
 ; CHECK-NEXT:    andw $r3 = $r3, $r0
