@@ -729,4 +729,86 @@ define <4 x i16> @vnot(<4 x i16> %a) #0 {
   ret <4 x i16> %vnot
 }
 
+define <4 x i16> @lnand(<4 x i16> %0, <4 x i16> %1) #0 {
+; CHECK-LABEL: lnand:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    lnandhq $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = icmp eq <4 x i16> %0, zeroinitializer
+  %4 = icmp eq <4 x i16> %1, zeroinitializer
+  %5 = or <4 x i1> %4, %3
+  %6 = zext <4 x i1> %5 to <4 x i16>
+  ret <4 x i16> %6
+}
+
+define <4 x i16> @lnandn(<4 x i16> %0, <4 x i16> %1) #0 {
+; CHECK-LABEL: lnandn:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    lnandhq $r0 = $r1, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    neghq $r0 = $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = icmp eq <4 x i16> %0, zeroinitializer
+  %4 = icmp eq <4 x i16> %1, zeroinitializer
+  %5 = or <4 x i1> %4, %3
+  %6 = sext <4 x i1> %5 to <4 x i16>
+  ret <4 x i16> %6
+}
+
+define <4 x i16> @lor(<4 x i16> %0, <4 x i16> %1) #0 {
+; CHECK-LABEL: lor:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    lorhq $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = or <4 x i16> %1, %0
+  %4 = icmp ne <4 x i16> %3, zeroinitializer
+  %5 = zext <4 x i1> %4 to <4 x i16>
+  ret <4 x i16> %5
+}
+
+; Not sure this is better than a (compnhq.ne (ord), (make 0))
+define <4 x i16> @lorneg(<4 x i16> %0, <4 x i16> %1) #0 {
+; CHECK-LABEL: lorneg:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    lorhq $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    neghq $r0 = $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = or <4 x i16> %1, %0
+  %4 = icmp ne <4 x i16> %3, zeroinitializer
+  %5 = sext <4 x i1> %4 to <4 x i16>
+  ret <4 x i16> %5
+}
+
+define <4 x i16> @lnor(<4 x i16> %0, <4 x i16> %1) #0 {
+; CHECK-LABEL: lnor:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    lnorhq $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = or <4 x i16> %1, %0
+  %4 = icmp eq <4 x i16> %3, zeroinitializer
+  %5 = zext <4 x i1> %4 to <4 x i16>
+  ret <4 x i16> %5
+}
+
+; Not sure this is better than a (compnhq.eq (ord), (make 0))
+define <4 x i16> @lnorneg(<4 x i16> %0, <4 x i16> %1) #0 {
+; CHECK-LABEL: lnorneg:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    lnorhq $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    neghq $r0 = $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = or <4 x i16> %1, %0
+  %4 = icmp eq <4 x i16> %3, zeroinitializer
+  %5 = sext <4 x i1> %4 to <4 x i16>
+  ret <4 x i16> %5
+}
+
 attributes #0 = { nounwind }

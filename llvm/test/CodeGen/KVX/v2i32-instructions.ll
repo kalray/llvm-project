@@ -749,4 +749,86 @@ entry:
   ret <2 x i32> %2
 }
 
+define <2 x i32> @lnand(<2 x i32> %0, <2 x i32> %1) #0 {
+; CHECK-LABEL: lnand:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    lnandwp $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = icmp eq <2 x i32> %0, zeroinitializer
+  %4 = icmp eq <2 x i32> %1, zeroinitializer
+  %5 = or <2 x i1> %4, %3
+  %6 = zext <2 x i1> %5 to <2 x i32>
+  ret <2 x i32> %6
+}
+
+define <2 x i32> @lnandn(<2 x i32> %0, <2 x i32> %1) #0 {
+; CHECK-LABEL: lnandn:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    lnandwp $r0 = $r1, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    negwp $r0 = $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = icmp eq <2 x i32> %0, zeroinitializer
+  %4 = icmp eq <2 x i32> %1, zeroinitializer
+  %5 = or <2 x i1> %4, %3
+  %6 = sext <2 x i1> %5 to <2 x i32>
+  ret <2 x i32> %6
+}
+
+define <2 x i32> @lor(<2 x i32> %0, <2 x i32> %1) #0 {
+; CHECK-LABEL: lor:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    lorwp $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = or <2 x i32> %1, %0
+  %4 = icmp ne <2 x i32> %3, zeroinitializer
+  %5 = zext <2 x i1> %4 to <2 x i32>
+  ret <2 x i32> %5
+}
+
+; Not sure this is better than a (compnwq.ne (ord), (make 0))
+define <2 x i32> @lorneg(<2 x i32> %0, <2 x i32> %1) #0 {
+; CHECK-LABEL: lorneg:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    lorwp $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    negwp $r0 = $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = or <2 x i32> %1, %0
+  %4 = icmp ne <2 x i32> %3, zeroinitializer
+  %5 = sext <2 x i1> %4 to <2 x i32>
+  ret <2 x i32> %5
+}
+
+define <2 x i32> @lnor(<2 x i32> %0, <2 x i32> %1) #0 {
+; CHECK-LABEL: lnor:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    lnorwp $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = or <2 x i32> %1, %0
+  %4 = icmp eq <2 x i32> %3, zeroinitializer
+  %5 = zext <2 x i1> %4 to <2 x i32>
+  ret <2 x i32> %5
+}
+
+; Not sure this is better than a (compnwq.eq (ord), (make 0))
+define <2 x i32> @lnorneg(<2 x i32> %0, <2 x i32> %1) #0 {
+; CHECK-LABEL: lnorneg:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    lnorwp $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    negwp $r0 = $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = or <2 x i32> %1, %0
+  %4 = icmp eq <2 x i32> %3, zeroinitializer
+  %5 = sext <2 x i1> %4 to <2 x i32>
+  ret <2 x i32> %5
+}
+
 attributes #0 = { nounwind }
