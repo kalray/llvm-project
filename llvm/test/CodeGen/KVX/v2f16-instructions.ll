@@ -2006,4 +2006,744 @@ entry:
   ret <2 x half> %2
 }
 
+define <2 x i16> @fcmp_setoeq(<2 x half> %a, <2 x half> %b) #0 {
+; CHECK-LABEL: fcmp_setoeq:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.oeq $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp oeq <2 x half> %a, %b
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setoeq_single(<2 x half> %a) #0 {
+; CHECK-LABEL: fcmp_setoeq_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.oeq $r0 = $r0, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sllhqs $r0 = $r0, 15
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srahqs $r0 = $r0, 15
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp oeq <2 x half> %a, %a
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setogt(<2 x half> %a, <2 x half> %b) #0 {
+; CHECK-LABEL: fcmp_setogt:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.olt $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ogt <2 x half> %a, %b
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setogt_single(<2 x half> %a) #0 {
+; CHECK-LABEL: fcmp_setogt_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ogt <2 x half> %a, %a
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setoge(<2 x half> %a, <2 x half> %b) #0 {
+; CHECK-LABEL: fcmp_setoge:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.oge $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp oge <2 x half> %a, %b
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setoge_single(<2 x half> %a) #0 {
+; CHECK-LABEL: fcmp_setoge_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.oeq $r0 = $r0, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sllhqs $r0 = $r0, 15
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srahqs $r0 = $r0, 15
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp oge <2 x half> %a, %a
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setolt(<2 x half> %a, <2 x half> %b) #0 {
+; CHECK-LABEL: fcmp_setolt:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.olt $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp olt <2 x half> %a, %b
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setolt_single(<2 x half> %a) #0 {
+; CHECK-LABEL: fcmp_setolt_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp olt <2 x half> %a, %a
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setole(<2 x half> %a, <2 x half> %b) #0 {
+; CHECK-LABEL: fcmp_setole:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.oge $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ole <2 x half> %a, %b
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setole_single(<2 x half> %a) #0 {
+; CHECK-LABEL: fcmp_setole_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.oeq $r0 = $r0, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sllhqs $r0 = $r0, 15
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srahqs $r0 = $r0, 15
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ole <2 x half> %a, %a
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setone(<2 x half> %a, <2 x half> %b) #0 {
+; CHECK-LABEL: fcmp_setone:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.one $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp one <2 x half> %a, %b
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setone_single(<2 x half> %a) #0 {
+; CHECK-LABEL: fcmp_setone_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp one <2 x half> %a, %a
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setord(<2 x half> %a, <2 x half> %b) #0 {
+; CHECK-LABEL: fcmp_setord:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.olt $r2 = $r0, $r1
+; CHECK-NEXT:    fcompnhq.oge $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    orw $r0 = $r0, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sllhqs $r0 = $r0, 15
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srahqs $r0 = $r0, 15
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ord <2 x half> %a, %b
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setord_single(<2 x half> %a) #0 {
+; CHECK-LABEL: fcmp_setord_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.oeq $r0 = $r0, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sllhqs $r0 = $r0, 15
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srahqs $r0 = $r0, 15
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ord <2 x half> %a, %a
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setuno(<2 x half> %a, <2 x half> %b) #0 {
+; CHECK-LABEL: fcmp_setuno:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.ult $r2 = $r0, $r1
+; CHECK-NEXT:    fcompnhq.uge $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sllhqs $r0 = $r0, 15
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srahqs $r0 = $r0, 15
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp uno <2 x half> %a, %b
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setuno_single(<2 x half> %a) #0 {
+; CHECK-LABEL: fcmp_setuno_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.une $r0 = $r0, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sllhqs $r0 = $r0, 15
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srahqs $r0 = $r0, 15
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp uno <2 x half> %a, %a
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setueq(<2 x half> %a, <2 x half> %b) #0 {
+; CHECK-LABEL: fcmp_setueq:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.ueq $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ueq <2 x half> %a, %b
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setueq_single(<2 x half> %a) #0 {
+; CHECK-LABEL: fcmp_setueq_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ueq <2 x half> %a, %a
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setugt(<2 x half> %a, <2 x half> %b) #0 {
+; CHECK-LABEL: fcmp_setugt:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.ult $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ugt <2 x half> %a, %b
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setugt_single(<2 x half> %a) #0 {
+; CHECK-LABEL: fcmp_setugt_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.une $r0 = $r0, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sllhqs $r0 = $r0, 15
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srahqs $r0 = $r0, 15
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ugt <2 x half> %a, %a
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setuge(<2 x half> %a, <2 x half> %b) #0 {
+; CHECK-LABEL: fcmp_setuge:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.uge $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp uge <2 x half> %a, %b
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setuge_single(<2 x half> %a) #0 {
+; CHECK-LABEL: fcmp_setuge_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp uge <2 x half> %a, %a
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setult(<2 x half> %a, <2 x half> %b) #0 {
+; CHECK-LABEL: fcmp_setult:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.ult $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ult <2 x half> %a, %b
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setult_single(<2 x half> %a) #0 {
+; CHECK-LABEL: fcmp_setult_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.une $r0 = $r0, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sllhqs $r0 = $r0, 15
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srahqs $r0 = $r0, 15
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ult <2 x half> %a, %a
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setule(<2 x half> %a, <2 x half> %b) #0 {
+; CHECK-LABEL: fcmp_setule:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.uge $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ule <2 x half> %a, %b
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setule_single(<2 x half> %a) #0 {
+; CHECK-LABEL: fcmp_setule_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ule <2 x half> %a, %a
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setune(<2 x half> %a, <2 x half> %b) #0 {
+; CHECK-LABEL: fcmp_setune:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.une $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp une <2 x half> %a, %b
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setune_single(<2 x half> %a) #0 {
+; CHECK-LABEL: fcmp_setune_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.une $r0 = $r0, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sllhqs $r0 = $r0, 15
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srahqs $r0 = $r0, 15
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp une <2 x half> %a, %a
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setoeq_fast(<2 x half> %a, <2 x half> %b) #0 {
+; CHECK-LABEL: fcmp_setoeq_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.oeq $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast oeq <2 x half> %a, %b
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setoeq_single_fast(<2 x half> %a) #0 {
+; CHECK-LABEL: fcmp_setoeq_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast oeq <2 x half> %a, %a
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setogt_fast(<2 x half> %a, <2 x half> %b) #0 {
+; CHECK-LABEL: fcmp_setogt_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.olt $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ogt <2 x half> %a, %b
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setogt_single_fast(<2 x half> %a) #0 {
+; CHECK-LABEL: fcmp_setogt_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ogt <2 x half> %a, %a
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setoge_fast(<2 x half> %a, <2 x half> %b) #0 {
+; CHECK-LABEL: fcmp_setoge_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.oge $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast oge <2 x half> %a, %b
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setoge_single_fast(<2 x half> %a) #0 {
+; CHECK-LABEL: fcmp_setoge_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast oge <2 x half> %a, %a
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setolt_fast(<2 x half> %a, <2 x half> %b) #0 {
+; CHECK-LABEL: fcmp_setolt_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.olt $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast olt <2 x half> %a, %b
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setolt_single_fast(<2 x half> %a) #0 {
+; CHECK-LABEL: fcmp_setolt_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast olt <2 x half> %a, %a
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setole_fast(<2 x half> %a, <2 x half> %b) #0 {
+; CHECK-LABEL: fcmp_setole_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.oge $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ole <2 x half> %a, %b
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setole_single_fast(<2 x half> %a) #0 {
+; CHECK-LABEL: fcmp_setole_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ole <2 x half> %a, %a
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setone_fast(<2 x half> %a, <2 x half> %b) #0 {
+; CHECK-LABEL: fcmp_setone_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.one $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast one <2 x half> %a, %b
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setone_single_fast(<2 x half> %a) #0 {
+; CHECK-LABEL: fcmp_setone_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast one <2 x half> %a, %a
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setord_fast(<2 x half> %a, <2 x half> %b) #0 {
+; CHECK-LABEL: fcmp_setord_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.olt $r2 = $r0, $r1
+; CHECK-NEXT:    fcompnhq.oge $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    orw $r0 = $r0, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sllhqs $r0 = $r0, 15
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srahqs $r0 = $r0, 15
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ord <2 x half> %a, %b
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setord_single_fast(<2 x half> %a) #0 {
+; CHECK-LABEL: fcmp_setord_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.oeq $r0 = $r0, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sllhqs $r0 = $r0, 15
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srahqs $r0 = $r0, 15
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ord <2 x half> %a, %a
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setuno_fast(<2 x half> %a, <2 x half> %b) #0 {
+; CHECK-LABEL: fcmp_setuno_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.ult $r2 = $r0, $r1
+; CHECK-NEXT:    fcompnhq.uge $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sllhqs $r0 = $r0, 15
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srahqs $r0 = $r0, 15
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast uno <2 x half> %a, %b
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setuno_single_fast(<2 x half> %a) #0 {
+; CHECK-LABEL: fcmp_setuno_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.une $r0 = $r0, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sllhqs $r0 = $r0, 15
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srahqs $r0 = $r0, 15
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast uno <2 x half> %a, %a
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setueq_fast(<2 x half> %a, <2 x half> %b) #0 {
+; CHECK-LABEL: fcmp_setueq_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.oeq $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ueq <2 x half> %a, %b
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setueq_single_fast(<2 x half> %a) #0 {
+; CHECK-LABEL: fcmp_setueq_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ueq <2 x half> %a, %a
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setugt_fast(<2 x half> %a, <2 x half> %b) #0 {
+; CHECK-LABEL: fcmp_setugt_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.olt $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ugt <2 x half> %a, %b
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setugt_single_fast(<2 x half> %a) #0 {
+; CHECK-LABEL: fcmp_setugt_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ugt <2 x half> %a, %a
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setuge_fast(<2 x half> %a, <2 x half> %b) #0 {
+; CHECK-LABEL: fcmp_setuge_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.oge $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast uge <2 x half> %a, %b
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setuge_single_fast(<2 x half> %a) #0 {
+; CHECK-LABEL: fcmp_setuge_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast uge <2 x half> %a, %a
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setult_fast(<2 x half> %a, <2 x half> %b) #0 {
+; CHECK-LABEL: fcmp_setult_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.olt $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ult <2 x half> %a, %b
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setult_single_fast(<2 x half> %a) #0 {
+; CHECK-LABEL: fcmp_setult_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ult <2 x half> %a, %a
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setule_fast(<2 x half> %a, <2 x half> %b) #0 {
+; CHECK-LABEL: fcmp_setule_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.oge $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ule <2 x half> %a, %b
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setule_single_fast(<2 x half> %a) #0 {
+; CHECK-LABEL: fcmp_setule_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ule <2 x half> %a, %a
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setune_fast(<2 x half> %a, <2 x half> %b) #0 {
+; CHECK-LABEL: fcmp_setune_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.one $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast une <2 x half> %a, %b
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
+define <2 x i16> @fcmp_setune_single_fast(<2 x half> %a) #0 {
+; CHECK-LABEL: fcmp_setune_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast une <2 x half> %a, %a
+  %1 = sext <2 x i1> %0 to <2 x i16>
+  ret <2 x i16> %1
+}
+
 attributes #0 = { nounwind }

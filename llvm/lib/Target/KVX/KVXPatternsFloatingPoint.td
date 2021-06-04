@@ -213,10 +213,15 @@ defm : FCOMP<setge, floatcomp_oge, 0>;
 defm : FCOMP<setlt, floatcomp_olt, 0>;
 defm : FCOMP<setle, floatcomp_oge, 1>;
 defm : FCOMP<setne, floatcomp_one, 0>;
+def : Pat<(i32 (seto f16:$r, f16:$r)), (FCOMPNHQ SingleReg:$r, SingleReg:$r, floatcomp_oeq)>;
 def : Pat<(i32 (seto f16:$rz, f16:$ry)), (ORWrr (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, floatcomp_oge), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, floatcomp_olt))>;
+def : Pat<(i32 (seto f32:$r, f32:$r)), (FCOMPWrr SingleReg:$r, SingleReg:$r, floatcomp_oeq)>;
 def : Pat<(i32 (seto f32:$rz, f32:$ry)), (ORWrr (FCOMPWrr SingleReg:$rz, SingleReg:$ry, floatcomp_oge), (FCOMPWrr SingleReg:$rz, SingleReg:$ry, floatcomp_olt))>;
+def : Pat<(i32 (seto f64:$r, f64:$r)), (FCOMPD SingleReg:$r, SingleReg:$r, floatcomp_oeq)>;
 def : Pat<(i32 (seto f64:$rz, f64:$ry)), (ORWrr (FCOMPD   SingleReg:$rz, SingleReg:$ry, floatcomp_oge), (FCOMPD   SingleReg:$rz, SingleReg:$ry, floatcomp_olt))>;
+def : Pat<(i64 (seto f32:$r, f32:$r)), (FCOMPWrr SingleReg:$r, SingleReg:$r, floatcomp_oeq)>;
 def : Pat<(i64 (seto f32:$rz, f32:$ry)), (ORDrr (FCOMPWrr SingleReg:$rz, SingleReg:$ry, floatcomp_oge), (FCOMPWrr SingleReg:$rz, SingleReg:$ry, floatcomp_olt))>;
+def : Pat<(i64 (seto f64:$r, f64:$r)), (FCOMPD SingleReg:$r, SingleReg:$r, floatcomp_oeq)>;
 def : Pat<(i64 (seto f64:$rz, f64:$ry)), (ORDrr (FCOMPD   SingleReg:$rz, SingleReg:$ry, floatcomp_oge), (FCOMPD   SingleReg:$rz, SingleReg:$ry, floatcomp_olt))>;
 
 // Unordered comparisons
@@ -226,10 +231,15 @@ defm : FCOMP<setuge, floatcomp_uge, 0>;
 defm : FCOMP<setult, floatcomp_ult, 0>;
 defm : FCOMP<setule, floatcomp_uge, 1>;
 defm : FCOMP<setune, floatcomp_une, 0>;
+def : Pat<(i32 (setuo f16:$r, f16:$r)), (FCOMPNHQ SingleReg:$r, SingleReg:$r, floatcomp_une)>;
 def : Pat<(i32 (setuo f16:$rz, f16:$ry)), (ANDWrr (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, floatcomp_uge), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, floatcomp_ult))>;
+def : Pat<(i32 (setuo f32:$r, f32:$r)), (FCOMPWrr SingleReg:$r, SingleReg:$r, floatcomp_une)>;
 def : Pat<(i32 (setuo f32:$rz, f32:$ry)), (ANDWrr (FCOMPWrr SingleReg:$rz, SingleReg:$ry, floatcomp_uge), (FCOMPWrr SingleReg:$rz, SingleReg:$ry, floatcomp_ult))>;
+def : Pat<(i32 (setuo f64:$r, f64:$r)), (FCOMPD   SingleReg:$r, SingleReg:$r, floatcomp_une)>;
 def : Pat<(i32 (setuo f64:$rz, f64:$ry)), (ANDWrr (FCOMPD   SingleReg:$rz, SingleReg:$ry, floatcomp_uge), (FCOMPD   SingleReg:$rz, SingleReg:$ry, floatcomp_ult))>;
+def : Pat<(i64 (setuo f32:$r, f32:$r)), (FCOMPWrr SingleReg:$r, SingleReg:$r, floatcomp_une)>;
 def : Pat<(i64 (setuo f32:$rz, f32:$ry)), (ANDDrr (FCOMPWrr SingleReg:$rz, SingleReg:$ry, floatcomp_uge), (FCOMPWrr SingleReg:$rz, SingleReg:$ry, floatcomp_ult))>;
+def : Pat<(i64 (setuo f64:$r, f64:$r)), (FCOMPD   SingleReg:$r, SingleReg:$r, floatcomp_une)>;
 def : Pat<(i64 (setuo f64:$rz, f64:$ry)), (ANDDrr (FCOMPD   SingleReg:$rz, SingleReg:$ry, floatcomp_uge), (FCOMPD   SingleReg:$rz, SingleReg:$ry, floatcomp_ult))>;
 
 // TODO: have some tests for these patterns.
@@ -314,14 +324,42 @@ defm : COMP_FPat<setult, floatcomp_ult, 0>;
 defm : COMP_FPat<setule, floatcomp_uge, 1>;
 defm : COMP_FPat<setune, floatcomp_une, 0>;
 
+// Using -ffast-math generates the following setcc patterns
+// TODO: shouldn't be unordered ones?
+defm : COMP_FPat<seteq, floatcomp_oeq, 0>;
+defm : COMP_FPat<setgt, floatcomp_olt, 1>;
+defm : COMP_FPat<setge, floatcomp_oge, 0>;
+defm : COMP_FPat<setlt, floatcomp_olt, 0>;
+defm : COMP_FPat<setle, floatcomp_oge, 1>;
+defm : COMP_FPat<setne, floatcomp_one, 0>;
+
+def : Pat<(v2i16 (seto v2f16:$r, v2f16:$r)), (FCOMPNHQ SingleReg:$r, SingleReg:$r, floatcomp_oeq)>;
 def : Pat<(v2i16 (seto v2f16:$rz, v2f16:$ry)), (ORWrr (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, floatcomp_oge), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, floatcomp_olt))>;
+def : Pat<(v2i16 (setuo v2f16:$r, v2f16:$r)), (FCOMPNHQ SingleReg:$r, SingleReg:$r, floatcomp_une)>;
 def : Pat<(v2i16 (setuo v2f16:$rz, v2f16:$ry)), (ANDWrr (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, floatcomp_uge), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, floatcomp_ult))>;
 
+def : Pat<(v4i16 (seto v4f16:$r, v4f16:$r)), (FCOMPNHQ SingleReg:$r, SingleReg:$r, floatcomp_oeq)>;
 def : Pat<(v4i16 (seto v4f16:$rz, v4f16:$ry)), (ORDrr (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, floatcomp_oge), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, floatcomp_olt))>;
+def : Pat<(v2i16 (setuo v4f16:$r, v4f16:$r)), (FCOMPNHQ SingleReg:$r, SingleReg:$r, floatcomp_une)>;
 def : Pat<(v4i16 (setuo v4f16:$rz, v4f16:$ry)), (ANDDrr (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, floatcomp_uge), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, floatcomp_ult))>;
 
+def : Pat<(v2i32 (seto v2f32:$r, v2f32:$r)), (FCOMPNWP SingleReg:$r, SingleReg:$r, floatcomp_oeq)>;
 def : Pat<(v2i32 (seto v2f32:$rz, v2f32:$ry)), (ORDrr (FCOMPNWP SingleReg:$rz, SingleReg:$ry, floatcomp_oge), (FCOMPNWP SingleReg:$rz, SingleReg:$ry, floatcomp_olt))>;
+def : Pat<(v2i32 (setuo v2f32:$r, v2f32:$r)), (FCOMPNWP SingleReg:$r, SingleReg:$r, floatcomp_une)>;
 def : Pat<(v2i32 (setuo v2f32:$rz, v2f32:$ry)), (ANDDrr (FCOMPNWP SingleReg:$rz, SingleReg:$ry, floatcomp_uge), (FCOMPNWP SingleReg:$rz, SingleReg:$ry, floatcomp_ult))>;
+
+def : Pat<(v4i32 (seto v4f32:$r, v4f32:$r)),
+          (v4i32 (REG_SEQUENCE PairedReg,
+            (v2i32 (FCOMPNWP
+              (v2f32 (EXTRACT_SUBREG PairedReg:$r, sub_s0)),
+              (v2f32 (EXTRACT_SUBREG PairedReg:$r, sub_s0)),
+              floatcomp_oeq)),
+            sub_s0,
+            (v2i32 (FCOMPNWP
+              (v2f32 (EXTRACT_SUBREG PairedReg:$r, sub_s1)),
+              (v2f32 (EXTRACT_SUBREG PairedReg:$r, sub_s1)),
+              floatcomp_oeq)),
+              sub_s1))>;
 
 def : Pat<(v4i32 (seto v4f32:$rz, v4f32:$ry)),
           (v4i32 (REG_SEQUENCE PairedReg,
@@ -344,6 +382,19 @@ def : Pat<(v4i32 (seto v4f32:$rz, v4f32:$ry)),
                   floatcomp_olt))),
               sub_s1))>;
 
+def : Pat<(v4i32 (setuo v4f32:$r, v4f32:$r)),
+          (v4i32 (REG_SEQUENCE PairedReg,
+            (v2i32 (FCOMPNWP
+              (v2f32 (EXTRACT_SUBREG PairedReg:$r, sub_s0)),
+              (v2f32 (EXTRACT_SUBREG PairedReg:$r, sub_s0)),
+              floatcomp_une)),
+            sub_s0,
+            (v2i32 (FCOMPNWP
+              (v2f32 (EXTRACT_SUBREG PairedReg:$r, sub_s1)),
+              (v2f32 (EXTRACT_SUBREG PairedReg:$r, sub_s1)),
+              floatcomp_une)),
+            sub_s1))>;
+
 def : Pat<(v4i32 (setuo v4f32:$rz, v4f32:$ry)),
           (v4i32 (REG_SEQUENCE PairedReg,
             (v2i32 (ANDDrr (FCOMPNWP
@@ -364,7 +415,6 @@ def : Pat<(v4i32 (setuo v4f32:$rz, v4f32:$ry)),
                   (v2f32 (EXTRACT_SUBREG PairedReg:$ry, sub_s1)),
                   floatcomp_ult))),
               sub_s1))>;
-
 
 defm : SELECTCONDW<(f16 f16:$truev), (f16 f16:$falsev),(f16 Binary16:$truev), (f16 Binary16:$falsev)>;
 defm : SELECTCONDW<(f32 f32:$truev), (f32 f32:$falsev),(f32 Binary32:$truev), (f32 Binary32:$falsev)>;
