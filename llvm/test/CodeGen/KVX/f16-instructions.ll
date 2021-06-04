@@ -1283,5 +1283,765 @@ define half @test_fmuladd(half %a, half %b, half %c) #0 {
   ret half %r
 }
 
+define i32 @fcmp_setoeq(half %a, half %b) #0 {
+; CHECK-LABEL: fcmp_setoeq:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.oeq $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp oeq half %a, %b
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setoeq_single(half %a) #0 {
+; CHECK-LABEL: fcmp_setoeq_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.oeq $r0 = $r0, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp oeq half %a, %a
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setogt(half %a, half %b) #0 {
+; CHECK-LABEL: fcmp_setogt:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.olt $r0 = $r1, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ogt half %a, %b
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setogt_single(half %a) #0 {
+; CHECK-LABEL: fcmp_setogt_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ogt half %a, %a
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setoge(half %a, half %b) #0 {
+; CHECK-LABEL: fcmp_setoge:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.oge $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp oge half %a, %b
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setoge_single(half %a) #0 {
+; CHECK-LABEL: fcmp_setoge_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.oeq $r0 = $r0, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp oge half %a, %a
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setolt(half %a, half %b) #0 {
+; CHECK-LABEL: fcmp_setolt:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.olt $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp olt half %a, %b
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setolt_single(half %a) #0 {
+; CHECK-LABEL: fcmp_setolt_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp olt half %a, %a
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setole(half %a, half %b) #0 {
+; CHECK-LABEL: fcmp_setole:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.oge $r0 = $r1, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ole half %a, %b
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setole_single(half %a) #0 {
+; CHECK-LABEL: fcmp_setole_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.oeq $r0 = $r0, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ole half %a, %a
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setone(half %a, half %b) #0 {
+; CHECK-LABEL: fcmp_setone:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.one $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp one half %a, %b
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setone_single(half %a) #0 {
+; CHECK-LABEL: fcmp_setone_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp one half %a, %a
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setord(half %a, half %b) #0 {
+; CHECK-LABEL: fcmp_setord:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.olt $r2 = $r0, $r1
+; CHECK-NEXT:    fcompnhq.oge $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    orw $r0 = $r0, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ord half %a, %b
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setord_single(half %a) #0 {
+; CHECK-LABEL: fcmp_setord_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.oeq $r0 = $r0, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ord half %a, %a
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setuno(half %a, half %b) #0 {
+; CHECK-LABEL: fcmp_setuno:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.ult $r2 = $r0, $r1
+; CHECK-NEXT:    fcompnhq.uge $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp uno half %a, %b
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setuno_single(half %a) #0 {
+; CHECK-LABEL: fcmp_setuno_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.une $r0 = $r0, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp uno half %a, %a
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setueq(half %a, half %b) #0 {
+; CHECK-LABEL: fcmp_setueq:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.ueq $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ueq half %a, %b
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setueq_single(half %a) #0 {
+; CHECK-LABEL: fcmp_setueq_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ueq half %a, %a
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setugt(half %a, half %b) #0 {
+; CHECK-LABEL: fcmp_setugt:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.ult $r0 = $r1, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ugt half %a, %b
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setugt_single(half %a) #0 {
+; CHECK-LABEL: fcmp_setugt_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.une $r0 = $r0, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ugt half %a, %a
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setuge(half %a, half %b) #0 {
+; CHECK-LABEL: fcmp_setuge:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.uge $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp uge half %a, %b
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setuge_single(half %a) #0 {
+; CHECK-LABEL: fcmp_setuge_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp uge half %a, %a
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setult(half %a, half %b) #0 {
+; CHECK-LABEL: fcmp_setult:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.ult $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ult half %a, %b
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setult_single(half %a) #0 {
+; CHECK-LABEL: fcmp_setult_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.une $r0 = $r0, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ult half %a, %a
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setule(half %a, half %b) #0 {
+; CHECK-LABEL: fcmp_setule:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.uge $r0 = $r1, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ule half %a, %b
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setule_single(half %a) #0 {
+; CHECK-LABEL: fcmp_setule_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ule half %a, %a
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setune(half %a, half %b) #0 {
+; CHECK-LABEL: fcmp_setune:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.une $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp une half %a, %b
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setune_single(half %a) #0 {
+; CHECK-LABEL: fcmp_setune_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.une $r0 = $r0, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp une half %a, %a
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setoeq_fast(half %a, half %b) #0 {
+; CHECK-LABEL: fcmp_setoeq_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.oeq $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast oeq half %a, %b
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setoeq_single_fast(half %a) #0 {
+; CHECK-LABEL: fcmp_setoeq_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast oeq half %a, %a
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setogt_fast(half %a, half %b) #0 {
+; CHECK-LABEL: fcmp_setogt_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.olt $r0 = $r1, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ogt half %a, %b
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setogt_single_fast(half %a) #0 {
+; CHECK-LABEL: fcmp_setogt_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ogt half %a, %a
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setoge_fast(half %a, half %b) #0 {
+; CHECK-LABEL: fcmp_setoge_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.oge $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast oge half %a, %b
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setoge_single_fast(half %a) #0 {
+; CHECK-LABEL: fcmp_setoge_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast oge half %a, %a
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setolt_fast(half %a, half %b) #0 {
+; CHECK-LABEL: fcmp_setolt_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.olt $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast olt half %a, %b
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setolt_single_fast(half %a) #0 {
+; CHECK-LABEL: fcmp_setolt_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast olt half %a, %a
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setole_fast(half %a, half %b) #0 {
+; CHECK-LABEL: fcmp_setole_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.oge $r0 = $r1, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ole half %a, %b
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setole_single_fast(half %a) #0 {
+; CHECK-LABEL: fcmp_setole_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ole half %a, %a
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setone_fast(half %a, half %b) #0 {
+; CHECK-LABEL: fcmp_setone_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.one $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast one half %a, %b
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setone_single_fast(half %a) #0 {
+; CHECK-LABEL: fcmp_setone_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast one half %a, %a
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setord_fast(half %a, half %b) #0 {
+; CHECK-LABEL: fcmp_setord_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.olt $r2 = $r0, $r1
+; CHECK-NEXT:    fcompnhq.oge $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    orw $r0 = $r0, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ord half %a, %b
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setord_single_fast(half %a) #0 {
+; CHECK-LABEL: fcmp_setord_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.oeq $r0 = $r0, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ord half %a, %a
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setuno_fast(half %a, half %b) #0 {
+; CHECK-LABEL: fcmp_setuno_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.ult $r2 = $r0, $r1
+; CHECK-NEXT:    fcompnhq.uge $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast uno half %a, %b
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setuno_single_fast(half %a) #0 {
+; CHECK-LABEL: fcmp_setuno_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.une $r0 = $r0, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast uno half %a, %a
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setueq_fast(half %a, half %b) #0 {
+; CHECK-LABEL: fcmp_setueq_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.oeq $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ueq half %a, %b
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setueq_single_fast(half %a) #0 {
+; CHECK-LABEL: fcmp_setueq_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ueq half %a, %a
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setugt_fast(half %a, half %b) #0 {
+; CHECK-LABEL: fcmp_setugt_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.olt $r0 = $r1, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ugt half %a, %b
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setugt_single_fast(half %a) #0 {
+; CHECK-LABEL: fcmp_setugt_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ugt half %a, %a
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setuge_fast(half %a, half %b) #0 {
+; CHECK-LABEL: fcmp_setuge_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.oge $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast uge half %a, %b
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setuge_single_fast(half %a) #0 {
+; CHECK-LABEL: fcmp_setuge_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast uge half %a, %a
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setult_fast(half %a, half %b) #0 {
+; CHECK-LABEL: fcmp_setult_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.olt $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ult half %a, %b
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setult_single_fast(half %a) #0 {
+; CHECK-LABEL: fcmp_setult_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ult half %a, %a
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setule_fast(half %a, half %b) #0 {
+; CHECK-LABEL: fcmp_setule_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.oge $r0 = $r1, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ule half %a, %b
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setule_single_fast(half %a) #0 {
+; CHECK-LABEL: fcmp_setule_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ule half %a, %a
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setune_fast(half %a, half %b) #0 {
+; CHECK-LABEL: fcmp_setune_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.one $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast une half %a, %b
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
+define i32 @fcmp_setune_single_fast(half %a) #0 {
+; CHECK-LABEL: fcmp_setune_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast une half %a, %a
+  %1 = zext i1 %0 to i32
+  ret i32 %1
+}
+
 attributes #0 = { nounwind }
 attributes #1 = { "unsafe-fp-math" = "true" }

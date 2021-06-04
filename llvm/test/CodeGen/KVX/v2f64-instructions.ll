@@ -1781,4 +1781,1210 @@ define <2 x double> @test_insertelement(<2 x double> %a, double %x, i64 %p) #0 {
   ret <2 x double> %i
 }
 
+define <2 x i1> @fcmp_setoeq(<2 x double> %a, <2 x double> %b) #0 {
+; CHECK-LABEL: fcmp_setoeq:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompd.oeq $r1 = $r1, $r3
+; CHECK-NEXT:    fcompd.oeq $r0 = $r0, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r2 = $r1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
+; CHECK-NEXT:    copyw $r2 = $r0
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp oeq <2 x double> %a, %b
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setoeq_single(<2 x double> %a) #0 {
+; CHECK-LABEL: fcmp_setoeq_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompd.oeq $r1 = $r1, $r1
+; CHECK-NEXT:    fcompd.oeq $r0 = $r0, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r2 = $r1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
+; CHECK-NEXT:    copyw $r2 = $r0
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp oeq <2 x double> %a, %a
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setogt(<2 x double> %a, <2 x double> %b) #0 {
+; CHECK-LABEL: fcmp_setogt:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompd.olt $r1 = $r3, $r1
+; CHECK-NEXT:    fcompd.olt $r0 = $r2, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r2 = $r1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
+; CHECK-NEXT:    copyw $r2 = $r0
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ogt <2 x double> %a, %b
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setogt_single(<2 x double> %a) #0 {
+; CHECK-LABEL: fcmp_setogt_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ogt <2 x double> %a, %a
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setoge(<2 x double> %a, <2 x double> %b) #0 {
+; CHECK-LABEL: fcmp_setoge:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompd.oge $r1 = $r1, $r3
+; CHECK-NEXT:    fcompd.oge $r0 = $r0, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r2 = $r1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
+; CHECK-NEXT:    copyw $r2 = $r0
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp oge <2 x double> %a, %b
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setoge_single(<2 x double> %a) #0 {
+; CHECK-LABEL: fcmp_setoge_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompd.oeq $r1 = $r1, $r1
+; CHECK-NEXT:    fcompd.oeq $r0 = $r0, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r2 = $r1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
+; CHECK-NEXT:    copyw $r2 = $r0
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp oge <2 x double> %a, %a
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setolt(<2 x double> %a, <2 x double> %b) #0 {
+; CHECK-LABEL: fcmp_setolt:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompd.olt $r1 = $r1, $r3
+; CHECK-NEXT:    fcompd.olt $r0 = $r0, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r2 = $r1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
+; CHECK-NEXT:    copyw $r2 = $r0
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp olt <2 x double> %a, %b
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setolt_single(<2 x double> %a) #0 {
+; CHECK-LABEL: fcmp_setolt_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp olt <2 x double> %a, %a
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setole(<2 x double> %a, <2 x double> %b) #0 {
+; CHECK-LABEL: fcmp_setole:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompd.oge $r1 = $r3, $r1
+; CHECK-NEXT:    fcompd.oge $r0 = $r2, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r2 = $r1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
+; CHECK-NEXT:    copyw $r2 = $r0
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ole <2 x double> %a, %b
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setole_single(<2 x double> %a) #0 {
+; CHECK-LABEL: fcmp_setole_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompd.oeq $r1 = $r1, $r1
+; CHECK-NEXT:    fcompd.oeq $r0 = $r0, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r2 = $r1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
+; CHECK-NEXT:    copyw $r2 = $r0
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ole <2 x double> %a, %a
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setone(<2 x double> %a, <2 x double> %b) #0 {
+; CHECK-LABEL: fcmp_setone:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompd.one $r1 = $r1, $r3
+; CHECK-NEXT:    fcompd.one $r0 = $r0, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r2 = $r1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
+; CHECK-NEXT:    copyw $r2 = $r0
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp one <2 x double> %a, %b
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setone_single(<2 x double> %a) #0 {
+; CHECK-LABEL: fcmp_setone_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp one <2 x double> %a, %a
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setord(<2 x double> %a, <2 x double> %b) #0 {
+; CHECK-LABEL: fcmp_setord:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompd.olt $r4 = $r1, $r3
+; CHECK-NEXT:    fcompd.oge $r1 = $r1, $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompd.olt $r3 = $r0, $r2
+; CHECK-NEXT:    fcompd.oge $r0 = $r0, $r2
+; CHECK-NEXT:    orw $r1 = $r1, $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r2 = $r1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    orw $r0 = $r0, $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
+; CHECK-NEXT:    copyw $r2 = $r0
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ord <2 x double> %a, %b
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setord_single(<2 x double> %a) #0 {
+; CHECK-LABEL: fcmp_setord_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompd.oeq $r1 = $r1, $r1
+; CHECK-NEXT:    fcompd.oeq $r0 = $r0, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r2 = $r1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
+; CHECK-NEXT:    copyw $r2 = $r0
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ord <2 x double> %a, %a
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setuno(<2 x double> %a, <2 x double> %b) #0 {
+; CHECK-LABEL: fcmp_setuno:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompd.ult $r4 = $r1, $r3
+; CHECK-NEXT:    fcompd.uge $r1 = $r1, $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompd.ult $r3 = $r0, $r2
+; CHECK-NEXT:    fcompd.uge $r0 = $r0, $r2
+; CHECK-NEXT:    andw $r1 = $r1, $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r2 = $r1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    andw $r0 = $r0, $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
+; CHECK-NEXT:    copyw $r2 = $r0
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp uno <2 x double> %a, %b
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setuno_single(<2 x double> %a) #0 {
+; CHECK-LABEL: fcmp_setuno_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompd.une $r1 = $r1, $r1
+; CHECK-NEXT:    fcompd.une $r0 = $r0, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r2 = $r1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
+; CHECK-NEXT:    copyw $r2 = $r0
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp uno <2 x double> %a, %a
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setueq(<2 x double> %a, <2 x double> %b) #0 {
+; CHECK-LABEL: fcmp_setueq:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompd.ueq $r1 = $r1, $r3
+; CHECK-NEXT:    fcompd.ueq $r0 = $r0, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r2 = $r1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
+; CHECK-NEXT:    copyw $r2 = $r0
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ueq <2 x double> %a, %b
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setueq_single(<2 x double> %a) #0 {
+; CHECK-LABEL: fcmp_setueq_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 257
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ueq <2 x double> %a, %a
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setugt(<2 x double> %a, <2 x double> %b) #0 {
+; CHECK-LABEL: fcmp_setugt:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompd.ult $r1 = $r3, $r1
+; CHECK-NEXT:    fcompd.ult $r0 = $r2, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r2 = $r1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
+; CHECK-NEXT:    copyw $r2 = $r0
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ugt <2 x double> %a, %b
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setugt_single(<2 x double> %a) #0 {
+; CHECK-LABEL: fcmp_setugt_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompd.une $r1 = $r1, $r1
+; CHECK-NEXT:    fcompd.une $r0 = $r0, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r2 = $r1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
+; CHECK-NEXT:    copyw $r2 = $r0
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ugt <2 x double> %a, %a
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setuge(<2 x double> %a, <2 x double> %b) #0 {
+; CHECK-LABEL: fcmp_setuge:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompd.uge $r1 = $r1, $r3
+; CHECK-NEXT:    fcompd.uge $r0 = $r0, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r2 = $r1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
+; CHECK-NEXT:    copyw $r2 = $r0
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp uge <2 x double> %a, %b
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setuge_single(<2 x double> %a) #0 {
+; CHECK-LABEL: fcmp_setuge_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 257
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp uge <2 x double> %a, %a
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setult(<2 x double> %a, <2 x double> %b) #0 {
+; CHECK-LABEL: fcmp_setult:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompd.ult $r1 = $r1, $r3
+; CHECK-NEXT:    fcompd.ult $r0 = $r0, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r2 = $r1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
+; CHECK-NEXT:    copyw $r2 = $r0
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ult <2 x double> %a, %b
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setult_single(<2 x double> %a) #0 {
+; CHECK-LABEL: fcmp_setult_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompd.une $r1 = $r1, $r1
+; CHECK-NEXT:    fcompd.une $r0 = $r0, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r2 = $r1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
+; CHECK-NEXT:    copyw $r2 = $r0
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ult <2 x double> %a, %a
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setule(<2 x double> %a, <2 x double> %b) #0 {
+; CHECK-LABEL: fcmp_setule:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompd.uge $r1 = $r3, $r1
+; CHECK-NEXT:    fcompd.uge $r0 = $r2, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r2 = $r1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
+; CHECK-NEXT:    copyw $r2 = $r0
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ule <2 x double> %a, %b
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setule_single(<2 x double> %a) #0 {
+; CHECK-LABEL: fcmp_setule_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 257
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp ule <2 x double> %a, %a
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setune(<2 x double> %a, <2 x double> %b) #0 {
+; CHECK-LABEL: fcmp_setune:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompd.une $r1 = $r1, $r3
+; CHECK-NEXT:    fcompd.une $r0 = $r0, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r2 = $r1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
+; CHECK-NEXT:    copyw $r2 = $r0
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp une <2 x double> %a, %b
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setune_single(<2 x double> %a) #0 {
+; CHECK-LABEL: fcmp_setune_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompd.une $r1 = $r1, $r1
+; CHECK-NEXT:    fcompd.une $r0 = $r0, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r2 = $r1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
+; CHECK-NEXT:    copyw $r2 = $r0
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp une <2 x double> %a, %a
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setoeq_fast(<2 x double> %a, <2 x double> %b) #0 {
+; CHECK-LABEL: fcmp_setoeq_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompd.oeq $r1 = $r1, $r3
+; CHECK-NEXT:    fcompd.oeq $r0 = $r0, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r2 = $r1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
+; CHECK-NEXT:    copyw $r2 = $r0
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast oeq <2 x double> %a, %b
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setoeq_single_fast(<2 x double> %a) #0 {
+; CHECK-LABEL: fcmp_setoeq_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 257
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast oeq <2 x double> %a, %a
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setogt_fast(<2 x double> %a, <2 x double> %b) #0 {
+; CHECK-LABEL: fcmp_setogt_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompd.olt $r1 = $r3, $r1
+; CHECK-NEXT:    fcompd.olt $r0 = $r2, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r2 = $r1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
+; CHECK-NEXT:    copyw $r2 = $r0
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ogt <2 x double> %a, %b
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setogt_single_fast(<2 x double> %a) #0 {
+; CHECK-LABEL: fcmp_setogt_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ogt <2 x double> %a, %a
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setoge_fast(<2 x double> %a, <2 x double> %b) #0 {
+; CHECK-LABEL: fcmp_setoge_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompd.oge $r1 = $r1, $r3
+; CHECK-NEXT:    fcompd.oge $r0 = $r0, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r2 = $r1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
+; CHECK-NEXT:    copyw $r2 = $r0
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast oge <2 x double> %a, %b
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setoge_single_fast(<2 x double> %a) #0 {
+; CHECK-LABEL: fcmp_setoge_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 257
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast oge <2 x double> %a, %a
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setolt_fast(<2 x double> %a, <2 x double> %b) #0 {
+; CHECK-LABEL: fcmp_setolt_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompd.olt $r1 = $r1, $r3
+; CHECK-NEXT:    fcompd.olt $r0 = $r0, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r2 = $r1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
+; CHECK-NEXT:    copyw $r2 = $r0
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast olt <2 x double> %a, %b
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setolt_single_fast(<2 x double> %a) #0 {
+; CHECK-LABEL: fcmp_setolt_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast olt <2 x double> %a, %a
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setole_fast(<2 x double> %a, <2 x double> %b) #0 {
+; CHECK-LABEL: fcmp_setole_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompd.oge $r1 = $r3, $r1
+; CHECK-NEXT:    fcompd.oge $r0 = $r2, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r2 = $r1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
+; CHECK-NEXT:    copyw $r2 = $r0
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ole <2 x double> %a, %b
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setole_single_fast(<2 x double> %a) #0 {
+; CHECK-LABEL: fcmp_setole_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 257
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ole <2 x double> %a, %a
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setone_fast(<2 x double> %a, <2 x double> %b) #0 {
+; CHECK-LABEL: fcmp_setone_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompd.one $r1 = $r1, $r3
+; CHECK-NEXT:    fcompd.one $r0 = $r0, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r2 = $r1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
+; CHECK-NEXT:    copyw $r2 = $r0
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast one <2 x double> %a, %b
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setone_single_fast(<2 x double> %a) #0 {
+; CHECK-LABEL: fcmp_setone_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast one <2 x double> %a, %a
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setord_fast(<2 x double> %a, <2 x double> %b) #0 {
+; CHECK-LABEL: fcmp_setord_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompd.olt $r4 = $r1, $r3
+; CHECK-NEXT:    fcompd.oge $r1 = $r1, $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompd.olt $r3 = $r0, $r2
+; CHECK-NEXT:    fcompd.oge $r0 = $r0, $r2
+; CHECK-NEXT:    orw $r1 = $r1, $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r2 = $r1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    orw $r0 = $r0, $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
+; CHECK-NEXT:    copyw $r2 = $r0
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ord <2 x double> %a, %b
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setord_single_fast(<2 x double> %a) #0 {
+; CHECK-LABEL: fcmp_setord_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompd.oeq $r1 = $r1, $r1
+; CHECK-NEXT:    fcompd.oeq $r0 = $r0, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r2 = $r1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
+; CHECK-NEXT:    copyw $r2 = $r0
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ord <2 x double> %a, %a
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setuno_fast(<2 x double> %a, <2 x double> %b) #0 {
+; CHECK-LABEL: fcmp_setuno_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompd.ult $r4 = $r1, $r3
+; CHECK-NEXT:    fcompd.uge $r1 = $r1, $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompd.ult $r3 = $r0, $r2
+; CHECK-NEXT:    fcompd.uge $r0 = $r0, $r2
+; CHECK-NEXT:    andw $r1 = $r1, $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r2 = $r1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    andw $r0 = $r0, $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
+; CHECK-NEXT:    copyw $r2 = $r0
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast uno <2 x double> %a, %b
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setuno_single_fast(<2 x double> %a) #0 {
+; CHECK-LABEL: fcmp_setuno_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompd.une $r1 = $r1, $r1
+; CHECK-NEXT:    fcompd.une $r0 = $r0, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r2 = $r1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
+; CHECK-NEXT:    copyw $r2 = $r0
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast uno <2 x double> %a, %a
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setueq_fast(<2 x double> %a, <2 x double> %b) #0 {
+; CHECK-LABEL: fcmp_setueq_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompd.oeq $r1 = $r1, $r3
+; CHECK-NEXT:    fcompd.oeq $r0 = $r0, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r2 = $r1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
+; CHECK-NEXT:    copyw $r2 = $r0
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ueq <2 x double> %a, %b
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setueq_single_fast(<2 x double> %a) #0 {
+; CHECK-LABEL: fcmp_setueq_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 257
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ueq <2 x double> %a, %a
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setugt_fast(<2 x double> %a, <2 x double> %b) #0 {
+; CHECK-LABEL: fcmp_setugt_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompd.olt $r1 = $r3, $r1
+; CHECK-NEXT:    fcompd.olt $r0 = $r2, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r2 = $r1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
+; CHECK-NEXT:    copyw $r2 = $r0
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ugt <2 x double> %a, %b
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setugt_single_fast(<2 x double> %a) #0 {
+; CHECK-LABEL: fcmp_setugt_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ugt <2 x double> %a, %a
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setuge_fast(<2 x double> %a, <2 x double> %b) #0 {
+; CHECK-LABEL: fcmp_setuge_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompd.oge $r1 = $r1, $r3
+; CHECK-NEXT:    fcompd.oge $r0 = $r0, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r2 = $r1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
+; CHECK-NEXT:    copyw $r2 = $r0
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast uge <2 x double> %a, %b
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setuge_single_fast(<2 x double> %a) #0 {
+; CHECK-LABEL: fcmp_setuge_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 257
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast uge <2 x double> %a, %a
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setult_fast(<2 x double> %a, <2 x double> %b) #0 {
+; CHECK-LABEL: fcmp_setult_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompd.olt $r1 = $r1, $r3
+; CHECK-NEXT:    fcompd.olt $r0 = $r0, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r2 = $r1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
+; CHECK-NEXT:    copyw $r2 = $r0
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ult <2 x double> %a, %b
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setult_single_fast(<2 x double> %a) #0 {
+; CHECK-LABEL: fcmp_setult_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ult <2 x double> %a, %a
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setule_fast(<2 x double> %a, <2 x double> %b) #0 {
+; CHECK-LABEL: fcmp_setule_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompd.oge $r1 = $r3, $r1
+; CHECK-NEXT:    fcompd.oge $r0 = $r2, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r2 = $r1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
+; CHECK-NEXT:    copyw $r2 = $r0
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ule <2 x double> %a, %b
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setule_single_fast(<2 x double> %a) #0 {
+; CHECK-LABEL: fcmp_setule_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 257
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast ule <2 x double> %a, %a
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setune_fast(<2 x double> %a, <2 x double> %b) #0 {
+; CHECK-LABEL: fcmp_setune_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompd.one $r1 = $r1, $r3
+; CHECK-NEXT:    fcompd.one $r0 = $r0, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyw $r2 = $r1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
+; CHECK-NEXT:    copyw $r2 = $r0
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast une <2 x double> %a, %b
+  ret <2 x i1> %0
+}
+
+define <2 x i1> @fcmp_setune_single_fast(<2 x double> %a) #0 {
+; CHECK-LABEL: fcmp_setune_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = fcmp fast une <2 x double> %a, %a
+  ret <2 x i1> %0
+}
+
 attributes #0 = { nounwind }
