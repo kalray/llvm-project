@@ -406,31 +406,71 @@ defm : VECLANDPAT<v4i16, LANDHQrr, NEGHQ, (v4i16 v4_splat_15)>;
 // LANDWP
 defm : VECLANDPAT<v2i32, LANDWPrr, NEGWP, (v2i32 v2_splat_31)>;
 
+// LANDD
+defm : ZEFPat<(and (i32 (setne i64:$v1, (i64 0))), (i32 (setne i64:$v2, (i64 0)))),
+      (LANDDrr SingleReg:$v1, SingleReg:$v2)>;
+
+multiclass PAT_LNAND_VEC<ValueType vt, PatFrags zext, PatFrag splat, KVX_INSTRUCTION LNAND, KVX_INSTRUCTION NEG> {
+def : Pat<(vt (zext (seteq vt:$rhs, immAllZerosV), (seteq vt:$lhs, immAllZerosV))),
+          (vt (LNAND SingleReg:$rhs, SingleReg:$lhs))>;
+
+def : Pat<(vt (sra (shl ( or (seteq vt:$rhs, immAllZerosV), (seteq vt:$lhs, immAllZerosV)), (vt splat)), (vt splat))),
+          (vt (NEG (LNAND SingleReg:$rhs, SingleReg:$lhs)))>;
+}
+
+// LNANDHQ
+defm : PAT_LNAND_VEC<v2i16, ZEXT_VEC2_SETCC_Pat, v2_splat_15, LNANDHQrr, NEGHQ>;
+defm : PAT_LNAND_VEC<v4i16, ZEXT_VEC4_SETCC_Pat, v4_splat_15, LNANDHQrr, NEGHQ>;
+
 // LNANDW
 defm : ZEFPat<(or (i32 (seteq i32:$v1, (i32 0))), (i32 (seteq i32:$v2, (i32 0)))),
       (LNANDWrr SingleReg:$v1, SingleReg:$v2)>;
 
-// LANDD
-defm : ZEFPat<(and (i32 (setne i64:$v1, (i64 0))), (i32 (setne i64:$v2, (i64 0)))),
-      (LANDDrr SingleReg:$v1, SingleReg:$v2)>;
+// LNANDWP
+defm : PAT_LNAND_VEC<v2i32, ZEXT_VEC2_SETCC_Pat, v2_splat_31, LNANDWPrr, NEGWP>;
 
 // LNANDD
 defm : ZEFPat<(or (i32 (seteq i64:$v1, (i64 0))), (i32 (seteq i64:$v2, (i64 0)))),
       (LNANDDrr SingleReg:$v1, SingleReg:$v2)>;
 
-// LORW
-def : Pat<(i32 (setne (or i32:$v1, i32:$v2), (i32 0))),
-      (LORWrr SingleReg:$v1, SingleReg:$v2)>;
+multiclass PAT_LOR_VEC<ValueType vt, PatFrag and_splat, PatFrag splat, KVX_INSTRUCTION LOR, KVX_INSTRUCTION NEG, SDNode cmp> {
+def : Pat<(vt (and (cmp (or vt:$lhs, vt:$rhs), immAllZerosV), and_splat)),
+          (vt (LOR SingleReg:$rhs, SingleReg:$lhs))>;
+
+def : Pat<(vt (cmp (or vt:$lhs, vt:$rhs), immAllZerosV)),
+          (vt (LOR SingleReg:$rhs, SingleReg:$lhs))>;
+
+def : Pat<(vt (sra (shl ( cmp (or vt:$lhs, vt:$rhs), immAllZerosV), (vt splat)), (vt splat))),
+          (vt (NEG (LOR SingleReg:$rhs, SingleReg:$lhs)))>;
+}
+
+// LNORD
+def : Pat<(i32 (seteq (or i64:$v1, i64:$v2), (i64 0))), (LNORDrr SingleReg:$v1, SingleReg:$v2)>;
+
+// LNORHQ
+defm : PAT_LOR_VEC<v2i16, v2_splat_1, v2_splat_15, LNORHQrr, NEGHQ, seteq>;
+defm : PAT_LOR_VEC<v4i16, v4_splat_1, v4_splat_15, LNORHQrr, NEGHQ, seteq>;
 
 // LNORW
 def : Pat<(i32 (seteq (or i32:$v1, i32:$v2), (i32 0))), (LNORWrr SingleReg:$v1, SingleReg:$v2)>;
+
+// LNORWP
+defm : PAT_LOR_VEC<v2i32, v2_splat_1, v2_splat_31, LNORWPrr, NEGWP, seteq>;
+
+// LORHQ
+defm : PAT_LOR_VEC<v2i16, v2_splat_1, v2_splat_15, LORHQrr, NEGHQ, setne>;
+defm : PAT_LOR_VEC<v4i16, v4_splat_1, v4_splat_15, LORHQrr, NEGHQ, setne>;
 
 // LORD
 def : Pat<(i32 (setne (or i64:$v1, i64:$v2), (i64 0))),
       (LORDrr SingleReg:$v1, SingleReg:$v2)>;
 
-// LNORD
-def : Pat<(i32 (seteq (or i64:$v1, i64:$v2), (i64 0))), (LNORDrr SingleReg:$v1, SingleReg:$v2)>;
+// LORW
+def : Pat<(i32 (setne (or i32:$v1, i32:$v2), (i32 0))),
+      (LORWrr SingleReg:$v1, SingleReg:$v2)>;
+
+// LORWP
+defm : PAT_LOR_VEC<v2i32, v2_splat_1, v2_splat_31, LORWPrr, NEGWP, setne>;
 
 // ANDW
 defm : ZEFPat<(and i32:$rs1, i32:$rs2), (ANDWrr SingleReg:$rs1, SingleReg:$rs2)>;
