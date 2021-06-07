@@ -11,7 +11,6 @@ def nswadd : PatFrag<(ops node:$op0, node:$op1), (add node:$op0, node:$op1), [{
   }]>;
 
 def ORNDriPat : PatFrag<(ops node:$op0, node:$op1), (xor node:$op0, node:$op1), [{
-      return true;
     ConstantSDNode *c1 = dyn_cast<ConstantSDNode>(N->getOperand(1));
     if (!c1)
       return false;

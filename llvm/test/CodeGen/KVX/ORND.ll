@@ -89,3 +89,16 @@ define <8 x i8> @ORNDri_v8i8(<8 x i8> %0) {
   %3 = or <8 x i8> %2, <i8 1, i8 2, i8 3, i8 4, i8 1, i8 2, i8 3, i8 4>
   ret <8 x i8> %3
 }
+
+define i64 @NOT_ORNDri10(i64 %0) {
+; CHECK-LABEL: NOT_ORNDri10:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    ord $r0 = $r0, -60
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xord $r0 = $r0, 60
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = or i64 %0, -60
+  %3 = xor i64 %2, 60
+  ret i64 %3
+}
