@@ -841,4 +841,28 @@ define <2 x i16> @lnorneg(<2 x i16> %0, <2 x i16> %1) #0 {
   %5 = sext <2 x i1> %4 to <2 x i16>
   ret <2 x i16> %5
 }
+
+define <2 x i16> @abdhq_rr(<2 x i16> %a, <2 x i16> %b) #0 {
+; CHECK-LABEL: abdhq_rr:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    abdhq $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %sub = sub nsw <2 x i16> %a, %b
+  %0 = tail call <2 x i16> @llvm.abs.v2i16(<2 x i16> %sub, i1 true)
+  ret <2 x i16> %0
+}
+
+define <2 x i16> @abdhq_ri(<2 x i16> %0) #0 {
+; CHECK-LABEL: abdhq_ri:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    abdhq $r0 = $r0, 0x10000f
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = sub nsw <2 x i16> <i16 15, i16 16>, %0
+  %3 = tail call <2 x i16> @llvm.abs.v2i16(<2 x i16> %2, i1 true)
+  ret <2 x i16> %3
+}
+
 attributes #0 = { nounwind }

@@ -831,4 +831,51 @@ define <2 x i32> @lnorneg(<2 x i32> %0, <2 x i32> %1) #0 {
   ret <2 x i32> %5
 }
 
+
+define <2 x i32> @abdwp_rr(<2 x i32> %a, <2 x i32> %b) #0 {
+; CHECK-LABEL: abdwp_rr:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    abdwp $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %sub = sub nsw <2 x i32> %a, %b
+  %0 = tail call <2 x i32> @llvm.abs.v2i32(<2 x i32> %sub, i1 true)
+  ret <2 x i32> %0
+}
+
+define <2 x i32> @abdwp_not_ri(<2 x i32> %0) #0 {
+; CHECK-LABEL: abdwp_not_ri:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    make $r1 = 0x100000000f
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    abdwp $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = sub nsw <2 x i32> <i32 15, i32 16>, %0
+  %3 = tail call <2 x i32> @llvm.abs.v2i32(<2 x i32> %2, i1 true)
+  ret <2 x i32> %3
+}
+
+define <2 x i32> @abdwp_ri_(<2 x i32> %0) #0 {
+; CHECK-LABEL: abdwp_ri_:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    abdwp $r0 = $r0, 15
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = sub nsw <2 x i32> <i32 15, i32 0>, %0
+  %3 = tail call <2 x i32> @llvm.abs.v2i32(<2 x i32> %2, i1 true)
+  ret <2 x i32> %3
+}
+
+define <2 x i32> @abdwp_ri_at(<2 x i32> %0) #0 {
+; CHECK-LABEL: abdwp_ri_at:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    abdwp.@ $r0 = $r0, 0xf
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = sub nsw <2 x i32> <i32 15, i32 15>, %0
+  %3 = tail call <2 x i32> @llvm.abs.v2i32(<2 x i32> %2, i1 true)
+  ret <2 x i32> %3
+}
 attributes #0 = { nounwind }
