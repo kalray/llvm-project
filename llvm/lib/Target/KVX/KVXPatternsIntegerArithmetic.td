@@ -27,6 +27,30 @@ def ORNDriPat : PatFrag<(ops node:$op0, node:$op1), (xor node:$op0, node:$op1), 
     return ((c1->getSExtValue()+1) == (-c2->getSExtValue()));
   }]>;
 
+// ABDD
+def : Pat<(i64 (abs (sub imm:$lhs, i64:$rhs))), (i64 (ABDDri10 SingleReg:$rhs, Signed10:$lhs))>;
+def : Pat<(i64 (abs (sub imm:$lhs, i64:$rhs))), (i64 (ABDDri37 SingleReg:$rhs, Signed37:$lhs))>;
+def : Pat<(i64 (abs (sub imm:$lhs, i64:$rhs))), (i64 (ABDDri64 SingleReg:$rhs, Wrapped64:$lhs))>;
+def : Pat<(i64 (abs (sub i64:$lhs, i64:$rhs))), (i64 (ABDDrr SingleReg:$rhs, SingleReg:$lhs))>;
+
+// ABDW
+def : Pat<(i32 (abs (sub imm:$lhs, i32:$rhs))), (i32 (ABDWri10 SingleReg:$rhs, Signed10W:$lhs))>;
+def : Pat<(i32 (abs (sub imm:$lhs, i32:$rhs))), (i32 (ABDWri37 SingleReg:$rhs, Wrapped32:$lhs))>;
+def : Pat<(i32 (abs (sub i32:$lhs, i32:$rhs))), (i32 (ABDWrr SingleReg:$rhs, SingleReg:$lhs))>;
+
+// ABDHQ
+def : Pat<(v2i16 (abs (sub (v2i16 (is_imm_vec:$IMM)), v2i16:$rhs))), (v2i16 (ABDHQri SingleReg:$rhs, (build_imm_vec $IMM), splat32_ ) )>;
+def : Pat<(v2i16 (abs (sub v2i16:$lhs, v2i16:$rhs))), (v2i16 (ABDHQrr SingleReg:$rhs, SingleReg:$lhs))>;
+
+def : Pat<(v4i16 (abs (sub (v4i16 (is_imm_vec_kvx_splat32_:$IMM)), v4i16:$rhs))), (v4i16 (ABDHQri SingleReg:$rhs, (build_imm_vec $IMM), splat32_ ) )>;
+def : Pat<(v4i16 (abs (sub (v4i16 (is_imm_vec_kvx_splat32_at:$IMM)), v4i16:$rhs))), (v4i16 (ABDHQri SingleReg:$rhs, (build_imm_vec $IMM), splat32_at ) )>;
+def : Pat<(v4i16 (abs (sub v4i16:$lhs, v4i16:$rhs))), (v4i16 (ABDHQrr SingleReg:$rhs, SingleReg:$lhs))>;
+
+// ABDWP
+def : Pat<(v2i32 (abs (sub (v2i32 (is_imm_vec_kvx_splat32_:$IMM)), v2i32:$rhs))), (v2i32 (ABDWPri SingleReg:$rhs, (build_imm_vec $IMM), splat32_ ) )>;
+def : Pat<(v2i32 (abs (sub (v2i32 (is_imm_vec_kvx_splat32_at:$IMM)), v2i32:$rhs))), (v2i32 (ABDWPri SingleReg:$rhs, (build_imm_vec $IMM), splat32_at ) )>;
+def : Pat<(v2i32 (abs (sub v2i32:$lhs, v2i32:$rhs))), (v2i32 (ABDWPrr SingleReg:$rhs, SingleReg:$lhs))>;
+
 // ABSHQ
 def : Pat<(abs v2i16:$v), (ABSHQ SingleReg:$v)>;
 def : Pat<(smax v2i16:$v, (v2i16 (vineg v2i16:$v))), (ABSHQ SingleReg:$v)>;

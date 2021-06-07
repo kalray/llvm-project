@@ -811,4 +811,52 @@ define <4 x i16> @lnorneg(<4 x i16> %0, <4 x i16> %1) #0 {
   ret <4 x i16> %5
 }
 
+
+define <4 x i16> @abdhq_rr(<4 x i16> %a, <4 x i16> %b) #0 {
+; CHECK-LABEL: abdhq_rr:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    abdhq $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %sub = sub nsw <4 x i16> %a, %b
+  %0 = tail call <4 x i16> @llvm.abs.v4i16(<4 x i16> %sub, i1 true)
+  ret <4 x i16> %0
+}
+
+define <4 x i16> @abdhq_not_ri(<4 x i16> %0) #0 {
+; CHECK-LABEL: abdhq_not_ri:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    make $r1 = 0x10000f00100012
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    abdhq $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = sub nsw <4 x i16> <i16 18, i16 16, i16 15, i16 16>, %0
+  %3 = tail call <4 x i16> @llvm.abs.v4i16(<4 x i16> %2, i1 true)
+  ret <4 x i16> %3
+}
+
+define <4 x i16> @abdhq_ri_(<4 x i16> %0) #0 {
+; CHECK-LABEL: abdhq_ri_:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    abdhq $r0 = $r0, 0x10000f
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = sub nsw <4 x i16> <i16 15, i16 16, i16 0, i16 0>, %0
+  %3 = tail call <4 x i16> @llvm.abs.v4i16(<4 x i16> %2, i1 true)
+  ret <4 x i16> %3
+}
+
+define <4 x i16> @abdhq_ri_at(<4 x i16> %0) #0 {
+; CHECK-LABEL: abdhq_ri_at:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    abdhq.@ $r0 = $r0, 0x10000f
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = sub nsw <4 x i16> <i16 15, i16 16, i16 15, i16 16>, %0
+  %3 = tail call <4 x i16> @llvm.abs.v4i16(<4 x i16> %2, i1 true)
+  ret <4 x i16> %3
+}
+
 attributes #0 = { nounwind }
