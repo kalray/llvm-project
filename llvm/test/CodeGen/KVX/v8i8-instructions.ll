@@ -1249,4 +1249,48 @@ define <8 x i8> @vnot(<8 x i8> %a) #0 {
   ret <8 x i8> %vnot
 }
 
+define <8 x i8> @nandd_rr(<8 x i8> %0, <8 x i8> %1) {
+; CHECK-LABEL: nandd_rr:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    nandd $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = and <8 x i8> %1, %0
+  %4 = xor <8 x i8> %3, <i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
+  ret <8 x i8> %4
+}
+
+define <8 x i8> @nandd_ri10(<8 x i8> %0) {
+; CHECK-LABEL: nandd_ri10:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    nandd $r0 = $r0, 252
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = and <8 x i8> %0, <i8 252, i8 0, i8 0, i8 0, i8 0, i8 0, i8 0, i8 0>
+  %3 = xor <8 x i8> %2, <i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
+  ret <8 x i8> %3
+}
+
+define <8 x i8> @nandd_ri37(<8 x i8> %0) {
+; CHECK-LABEL: nandd_ri37:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    nandd $r0 = $r0, 0x17ffea00df00fc
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = and <8 x i8> %0, <i8 252, i8 0, i8 223, i8 0, i8 234, i8 -1, i8 23, i8 0>
+  %3 = xor <8 x i8> %2, <i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
+  ret <8 x i8> %3
+}
+
+define <8 x i8> @nandd_ri37_2(<8 x i8> %0) {
+; CHECK-LABEL: nandd_ri37_2:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    nandd $r0 = $r0, 0x1700ea00df00fc
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = and <8 x i8> %0, <i8 252, i8 0, i8 223, i8 0, i8 234, i8 0, i8 23, i8 0>
+  %3 = xor <8 x i8> %2, <i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
+  ret <8 x i8> %3
+}
+
 attributes #0 = { nounwind }
