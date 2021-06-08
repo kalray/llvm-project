@@ -18,7 +18,7 @@
 // MADDUWD MADDUWDP MADDUZDT MADDWDP MSBFDT MSBFHQ
 // MSBFHWQ MSBFSUDT MSBFSUHWQ MSBFSUWD MSBFSUWDP MSBFUDT MSBFUHWQ MSBFUWD MSBFUSWDP MSBFUWDP
 // MSBFUZDT MSBFWDP MULCWDC MULHWQ MULSUHWQ MULSUWDP
-// MULUHWQ MULUWDP MULWDC MULWDP NANDD NANDW NOP RFE RSWAP RSWAP SATDH
+// MULUHWQ MULUWDP MULWDC MULWDP NOP RFE RSWAP RSWAP SATDH
 // SATDW SBFCHCP SBFCWC SBFWD SBFUWD SCALL
 
 
@@ -994,6 +994,11 @@ def ZEXT_VEC2_SETCC_Pat : PatFrags<(ops node:$lhs, node:$rhs),
 def ZEXT_VEC4_SETCC_Pat : PatFrags<(ops node:$lhs, node:$rhs),
         [(or node:$lhs, node:$rhs), (and (or node:$lhs, node:$rhs), v4_splat_1)]>;
 
+def get_not_imm : SDNodeXForm<imm, [{
+  return CurDAG->getTargetConstant(~N->getSExtValue(), SDLoc(N), N->getValueType(0));
+}]>;
+
+
 def mod_16_imm_64 : SDNodeXForm<imm, [{
   return CurDAG->getTargetConstant(N->getZExtValue() % 16, SDLoc(N), MVT::i64);
 }]>;
@@ -1024,6 +1029,10 @@ def build_fpimm_vec : SDNodeXForm<build_vector, [{
 
 def is_imm_vec : PatLeaf<(build_vector), [{
   return cast<BuildVectorSDNode>(N)->isConstant();
+}], build_imm_vec>;
+
+def is_imm_vec_ri37 : PatLeaf<(build_vector), [{
+   return KVX_LOW::isKVXSplat32ImmVec(N, CurDAG, false);
 }], build_imm_vec>;
 
 def is_imm_vec_leq1bit : PatLeaf<(build_vector), [{
