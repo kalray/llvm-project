@@ -878,4 +878,60 @@ define <2 x i32> @abdwp_ri_at(<2 x i32> %0) #0 {
   %3 = tail call <2 x i32> @llvm.abs.v2i32(<2 x i32> %2, i1 true)
   ret <2 x i32> %3
 }
+
+define <2 x i32> @nandd_v2i32_rr(<2 x i32> %0, <2 x i32> %1) {
+; CHECK-LABEL: nandd_v2i32_rr:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    nandd $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = and <2 x i32> %1, %0
+  %4 = xor <2 x i32> %3, <i32 -1, i32 -1>
+  ret <2 x i32> %4
+}
+
+define <2 x i32> @nandd_v2i32_ri10(<2 x i32> %0) {
+; CHECK-LABEL: nandd_v2i32_ri10:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    nandd $r0 = $r0, 1023
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = and <2 x i32> %0, <i32 1023, i32 0>
+  %3 = xor <2 x i32> %2, <i32 -1, i32 -1>
+  ret <2 x i32> %3
+}
+
+define <2 x i32> @nandd_v2i32_ri37(<2 x i32> %0) {
+; CHECK-LABEL: nandd_v2i32_ri37:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    nandd $r0 = $r0, 1024
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = and <2 x i32> %0, <i32 1024, i32 0>
+  %3 = xor <2 x i32> %2, <i32 -1, i32 -1>
+  ret <2 x i32> %3
+}
+
+define <2 x i32> @nandd_v2i32_ri37_2(<2 x i32> %0) {
+; CHECK-LABEL: nandd_v2i32_ri37_2:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    nandd $r0 = $r0, 0xd0000000d
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = and <2 x i32> %0, <i32 13, i32 13>
+  %3 = xor <2 x i32> %2, <i32 -1, i32 -1>
+  ret <2 x i32> %3
+}
+
+define <2 x i32> @nandd_v2i32_ri64(<2 x i32> %0) {
+; CHECK-LABEL: nandd_v2i32_ri64:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    nandd $r0 = $r0, 0xdae1c0000000d
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = and <2 x i32> %0, <i32 13, i32 896540>
+  %3 = xor <2 x i32> %2, <i32 -1, i32 -1>
+  ret <2 x i32> %3
+}
+
 attributes #0 = { nounwind }

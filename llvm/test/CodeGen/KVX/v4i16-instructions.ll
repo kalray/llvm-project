@@ -859,4 +859,92 @@ define <4 x i16> @abdhq_ri_at(<4 x i16> %0) #0 {
   ret <4 x i16> %3
 }
 
+define <4 x i16> @nandd_v4i16_rr(<4 x i16> %0, <4 x i16> %1) {
+; CHECK-LABEL: nandd_v4i16_rr:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    nandd $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = and <4 x i16> %1, %0
+  %4 = xor <4 x i16> %3, <i16 -1, i16 -1, i16 -1, i16 -1>
+  ret <4 x i16> %4
+}
+
+define <4 x i16> @nandd_v4i16_ri10(<4 x i16> %0) {
+; CHECK-LABEL: nandd_v4i16_ri10:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    nandd $r0 = $r0, 1023
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = and <4 x i16> %0, <i16 1023, i16 0, i16 0, i16 0>
+  %3 = xor <4 x i16> %2, <i16 -1, i16 -1, i16 -1, i16 -1>
+  ret <4 x i16> %3
+}
+
+define <4 x i16> @nandd_v4i16_ri37_0(<4 x i16> %0) {
+; CHECK-LABEL: nandd_v4i16_ri37_0:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    nandd $r0 = $r0, 0xfffd0400
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = and <4 x i16> %0, <i16 1024, i16 -3, i16 0, i16 0>
+  %3 = xor <4 x i16> %2, <i16 -1, i16 -1, i16 -1, i16 -1>
+  ret <4 x i16> %3
+}
+
+define <4 x i16> @nandd_v4i16_ri37_1(<4 x i16> %0) {
+; CHECK-LABEL: nandd_v4i16_ri37_1:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    nandd $r0 = $r0, 0xfffd0400
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = and <4 x i16> %0, <i16 1024, i16 -3, i16 0, i16 0>
+  %3 = xor <4 x i16> %2, <i16 -1, i16 -1, i16 -1, i16 -1>
+  ret <4 x i16> %3
+}
+
+define <4 x i16> @nandd_v4i16_ri37_2(<4 x i16> %0) {
+; CHECK-LABEL: nandd_v4i16_ri37_2:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    nandd $r0 = $r0, 0x1ffffd0400
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = and <4 x i16> %0, <i16 1024, i16 -3, i16 31, i16 0>
+  %3 = xor <4 x i16> %2, <i16 -1, i16 -1, i16 -1, i16 -1>
+  ret <4 x i16> %3
+}
+
+define <4 x i16> @nandd_v4i16_ri64_0(<4 x i16> %0) {
+; CHECK-LABEL: nandd_v4i16_ri64_0:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    nandd $r0 = $r0, 0x20fffd0400
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = and <4 x i16> %0, <i16 1024, i16 -3, i16 32, i16 0>
+  %3 = xor <4 x i16> %2, <i16 -1, i16 -1, i16 -1, i16 -1>
+  ret <4 x i16> %3
+}
+
+define <4 x i16> @nandd_v4i16_ri64_1(<4 x i16> %0) {
+; CHECK-LABEL: nandd_v4i16_ri64_1:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    nandd $r0 = $r0, 0xfffffffd0400
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = and <4 x i16> %0, <i16 1024, i16 -3, i16 -1, i16 0>
+  %3 = xor <4 x i16> %2, <i16 -1, i16 -1, i16 -1, i16 -1>
+  ret <4 x i16> %3
+}
+
+define <4 x i16> @nandd_v4i16_ri64_2(<4 x i16> %0) {
+; CHECK-LABEL: nandd_v4i16_ri64_2:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    nandd $r0 = $r0, 0x1001ffffd0400
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = and <4 x i16> %0, <i16 1024, i16 -3, i16 31, i16 1>
+  %3 = xor <4 x i16> %2, <i16 -1, i16 -1, i16 -1, i16 -1>
+  ret <4 x i16> %3
+}
+
 attributes #0 = { nounwind }

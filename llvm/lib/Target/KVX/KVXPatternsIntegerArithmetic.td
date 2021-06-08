@@ -744,6 +744,30 @@ def : Pat<(mul v2i32:$rs1, v2i32:$rs2), (MULWPrr SingleReg:$rs1, SingleReg:$rs2)
 // MULWQ
 def : Pat<(mul v4i32:$rs1, v4i32:$rs2), (MULWQ PairedReg:$rs1, PairedReg:$rs2)>;
 
+// NANDD
+def : Pat<(i64 (or (not i64:$r), (i64 Signed10:$i))), (NANDDri10 SingleReg:$r, (get_not_imm $i) )>;
+def : Pat<(i64 (or (not i64:$r), (i64 Signed37:$i))), (NANDDri37 SingleReg:$r, (get_not_imm $i) )>;
+def : Pat<(i64 (or (not i64:$r), (i64 Wrapped64:$i))), (NANDDri64 SingleReg:$r, (get_not_imm $i) )>;
+def : Pat<(not (and i64:$rs1, i64:$rs2)), (NANDDrr SingleReg:$rs1, SingleReg:$rs2)>;
+
+// TODO: ri10 patterns
+foreach vtype = [ v2i32, v4i16, v8i8 ] in {
+    def : Pat<(vnot (and vtype:$r, (vtype (is_imm_vec_ri37:$IMM)))), (NANDDri37 SingleReg:$r, (build_imm_vec $IMM))>;
+    def : Pat<(vnot (and vtype:$r, (vtype (is_imm_vec:$IMM)))), (NANDDri64 SingleReg:$r, (build_imm_vec $IMM))>;
+    def : Pat<(vnot (and vtype:$rs1, vtype:$rs2)), (NANDDrr SingleReg:$rs1, SingleReg:$rs2)>;
+}
+
+// // NANDW
+def : Pat<(i32 (or (not i32:$r), (i32 Signed10W:$i))), (NANDWri10 SingleReg:$r, (get_not_imm $i) )>;
+def : Pat<(i32 (or (not i32:$r), (i32 Wrapped32:$i))), (NANDWri37 SingleReg:$r, (get_not_imm $i) )>;
+def : Pat<(not (and i32:$rs1, i32:$rs2)), (NANDWrr SingleReg:$rs1, SingleReg:$rs2)>;
+
+// TODO: ri10 patterns
+foreach vtype = [ v2i8, v4i8, v2i16 ] in {
+    def : Pat<(vnot (and vtype:$r, (vtype (is_imm_vec:$IMM)))), (NANDWri37 SingleReg:$r, (build_imm_vec $IMM))>;
+    def : Pat<(vnot (and vtype:$rs1, vtype:$rs2)), (NANDWrr SingleReg:$rs1, SingleReg:$rs2)>;
+}
+
 // NXOR ri variants are not easy, as they become a single xor
 // NXORD
 def : Pat<(xor (xor i64:$rs1, i64:$rs2), (i64 -1)), (NXORDrr SingleReg:$rs1, SingleReg:$rs2)>;

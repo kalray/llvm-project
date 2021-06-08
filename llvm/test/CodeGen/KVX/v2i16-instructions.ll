@@ -865,4 +865,48 @@ define <2 x i16> @abdhq_ri(<2 x i16> %0) #0 {
   ret <2 x i16> %3
 }
 
+define <2 x i16> @nandw_v2i16_rr(<2 x i16> %0, <2 x i16> %1) {
+; CHECK-LABEL: nandw_v2i16_rr:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    nandw $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = and <2 x i16> %1, %0
+  %4 = xor <2 x i16> %3, <i16 -1, i16 -1>
+  ret <2 x i16> %4
+}
+
+define <2 x i16> @nandw_v2i16_ri10(<2 x i16> %0) {
+; CHECK-LABEL: nandw_v2i16_ri10:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    nandw $r0 = $r0, 1023
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = and <2 x i16> %0, <i16 1023, i16 0>
+  %3 = xor <2 x i16> %2, <i16 -1, i16 -1>
+  ret <2 x i16> %3
+}
+
+define <2 x i16> @nandw_v2i16_ri37(<2 x i16> %0) {
+; CHECK-LABEL: nandw_v2i16_ri37:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    nandw $r0 = $r0, 1024
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = and <2 x i16> %0, <i16 1024, i16 0>
+  %3 = xor <2 x i16> %2, <i16 -1, i16 -1>
+  ret <2 x i16> %3
+}
+
+define <2 x i16> @nandw_v2i16_ri37_2(<2 x i16> %0) {
+; CHECK-LABEL: nandw_v2i16_ri37_2:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    nandw $r0 = $r0, 0xd000d
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = and <2 x i16> %0, <i16 13, i16 13>
+  %3 = xor <2 x i16> %2, <i16 -1, i16 -1>
+  ret <2 x i16> %3
+}
+
 attributes #0 = { nounwind }
