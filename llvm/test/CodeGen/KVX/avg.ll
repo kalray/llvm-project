@@ -54,7 +54,7 @@ entry:
 define i32 @avg_u32_1(i32 %a, i32 %b) {
 ; CHECK-LABEL: avg_u32_1:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    avgw $r0 = $r1, $r0
+; CHECK-NEXT:    avguw $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -833,7 +833,7 @@ define i16 @avg_u16(i16 %a, i16 %b) {
 ; CHECK-NEXT:    zxhd $r0 = $r0
 ; CHECK-NEXT:    zxhd $r1 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    avgw $r0 = $r1, $r0
+; CHECK-NEXT:    avguw $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -874,7 +874,7 @@ define i16 @avg_u16_ri(i16 %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    zxhd $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    avgw $r0 = $r0, 140
+; CHECK-NEXT:    avguw $r0 = $r0, 140
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
