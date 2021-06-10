@@ -2489,8 +2489,10 @@ bool KVXTargetLowering::isOpFree(const SDNode *Node) const {
   return false;
 }
 
+// Negative is a bitmask, telling which elements numbers must have
+// their value negated.
 SDValue KVX_LOW::buildImmVector(llvm::SDNode &N, llvm::SelectionDAG &CurDag,
-                                bool IsFP, bool Negative) {
+                                bool IsFP, unsigned long Negative) {
 
   auto *BV = dyn_cast<BuildVectorSDNode>(&N);
   if (!BV)
@@ -2507,24 +2509,23 @@ SDValue KVX_LOW::buildImmVector(llvm::SDNode &N, llvm::SelectionDAG &CurDag,
   assert(NumElts * EltSize <= 64);
   uint64_t EltMask = ~(((uint64_t)(-1)) << EltSize);
   uint64_t V = 0;
-  for (unsigned I = 0; I < NumElts; I++) {
+  unsigned long ShouldNegate = 1;
+  for (unsigned I = 0; I < NumElts; I++, ShouldNegate <<= 1) {
     auto Op = BV->getOperand(I);
     if (Op.isUndef())
       continue;
 
     if (IsFP) {
-      if (Negative)
-        report_fatal_error(
-            "Must implement negative FP immediate vector construction.");
-
       auto FPv = cast<ConstantFPSDNode>(Op)->getValueAPF();
+      if (Negative & ShouldNegate)
+        FPv.changeSign();
 
       V |= (FPv.bitcastToAPInt().getZExtValue() & EltMask) << (EltSize * I);
-    } else if (!Negative) {
-      V |= (cast<ConstantSDNode>(Op)->getSExtValue() & EltMask)
+    } else if (Negative & ShouldNegate) {
+      V |= (-cast<ConstantSDNode>(Op)->getSExtValue() & EltMask)
            << (EltSize * I);
     } else {
-      V |= (-cast<ConstantSDNode>(Op)->getSExtValue() & EltMask)
+      V |= (cast<ConstantSDNode>(Op)->getSExtValue() & EltMask)
            << (EltSize * I);
     }
   }

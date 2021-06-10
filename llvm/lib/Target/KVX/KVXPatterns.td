@@ -10,7 +10,7 @@
 // ACSWAPD ACSWAPW ADDCHCP ALCLRD ALCLRW CLRF CMULDT CMULGHXDT
 // CMULGLXDT CMULGMXDT CMULXDT
 // CRCBELLW CRCBELMW CRCLELLW CRCLELMW DOT2SUWDP DOT2UWDP
-// DOT2WDP DOT2WZP FCDIVWP FDOT2W FDOT2WD FDOT2WDP FDOT2WZP
+// DOT2WDP DOT2WZP FCDIVWP FDOT2WD FDOT2WDP FDOT2WZP
 // FFMAHW FFMAHWQ FFMAWDP FFMSHW FFMSHWQ FFMSWDP FMULCWDC FMULHW FMULHWQ
 // FMULWDC FMULWDP FNARROWDWP FSDIVWP FSRECWP FSRSRWP FWIDENMHWP FWIDENMWD
 // IGET
@@ -1020,11 +1020,19 @@ def build_imm_vec : SDNodeXForm<build_vector, [{
 }]>;
 
 def build_imm_vec_neg : SDNodeXForm<build_vector, [{
-  return KVX_LOW::buildImmVector(*N, *CurDAG, false, true);
+  return KVX_LOW::buildImmVector(*N, *CurDAG, false, -1);
 }]>;
 
 def build_fpimm_vec : SDNodeXForm<build_vector, [{
   return KVX_LOW::buildImmVector(*N, *CurDAG, true);
+}]>;
+
+def build_fpimm_vec_neg0 : SDNodeXForm<build_vector, [{
+  return KVX_LOW::buildImmVector(*N, *CurDAG, true, 1);
+}]>;
+
+def build_fpimm_vec_neg1 : SDNodeXForm<build_vector, [{
+  return KVX_LOW::buildImmVector(*N, *CurDAG, true, 2);
 }]>;
 
 def is_imm_vec : PatLeaf<(build_vector), [{
