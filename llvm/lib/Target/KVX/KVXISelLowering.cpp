@@ -2239,46 +2239,54 @@ static SDValue combineMUL(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
   KnownBits V0 = Dag.computeKnownBits(Op0);
   KnownBits V1 = Dag.computeKnownBits(Op1);
   bool UnsCond0 = V0.Zero.countLeadingOnes() >= HalfSize;
-  bool Op1IsSmallConstant = false;
+  bool Op1IsSmallSConstant = false;
+  bool Op1IsSmallUConstant = false;
   if (auto *Const1 = dyn_cast<ConstantSDNode>(Op1)) {
-    if (VT == MVT::i64)
-      Op1IsSmallConstant = isInt<32>(Const1->getZExtValue());
-    else
-      Op1IsSmallConstant = !Const1->getAPIntValue().isNegative();
+    if (VT == MVT::i64) {
+      Op1IsSmallSConstant = isInt<32>(Const1->getSExtValue());
+      Op1IsSmallUConstant = isUInt<32>(Const1->getZExtValue());
+    } else
+      Op1IsSmallSConstant = !Const1->getAPIntValue().isNegative();
   }
 
-  // We can't ditinguish if a SDNode is signed or unsigned,
-  // so assume sign/unsign based on the first operand.
-  bool UnsCond1 = V1.Zero.countLeadingOnes() >= HalfSize || Op1IsSmallConstant;
+  bool UnsCond1 = V1.Zero.countLeadingOnes() >= HalfSize || Op1IsSmallUConstant;
 
   unsigned Opcode = 0;
+  bool SignCond0 = false;
+  bool SignCond1 = false;
   if (UnsCond0 && UnsCond1)
     Opcode = KVXISD::ZEXT_MUL;
   else {
-    bool SignCond0 = V0.One.countLeadingOnes() > HalfSize ||
-                     Op0->getOpcode() == ISD::SIGN_EXTEND;
-    bool SignCond1 = V1.One.countLeadingOnes() > HalfSize ||
-                     Op1->getOpcode() == ISD::SIGN_EXTEND;
-    if (auto *Const1 = dyn_cast<ConstantSDNode>(Op1))
-      SignCond1 &= Op1IsSmallConstant;
+    SignCond0 = V0.One.countLeadingOnes() > HalfSize ||
+                Op0->getOpcode() == ISD::SIGN_EXTEND ||
+                Op0->getOpcode() == ISD::SIGN_EXTEND_INREG;
 
-    if ((UnsCond0 || SignCond0) && (UnsCond1 || SignCond1))
-      Opcode = KVXISD::SEXT_MUL;
+    if (!SignCond0 && Op0.getOpcode() == ISD::SRA)
+      if (auto *I = dyn_cast<ConstantSDNode>(Op0.getOperand(1)))
+        SignCond0 = I->getZExtValue() >= HalfSize;
+
+    SignCond1 = Op1IsSmallSConstant || V1.One.countLeadingOnes() > HalfSize ||
+                Op1->getOpcode() == ISD::SIGN_EXTEND ||
+                Op1->getOpcode() == ISD::SIGN_EXTEND_INREG;
+
+    if (!SignCond1 && Op1.getOpcode() == ISD::SRA)
+      if (auto *I = dyn_cast<ConstantSDNode>(Op1.getOperand(1)))
+        SignCond1 = I->getZExtValue() >= HalfSize;
+  }
+
+  // We have a sign/sign extend operation
+  if (SignCond0 && SignCond1)
+    Opcode = KVXISD::SEXT_MUL;
+  else if ((SignCond0 && UnsCond1) ||
+           (UnsCond0 && SignCond1 && !Op1IsSmallSConstant)) {
+    // We have a mixed sign/zero extend operation
+    if (UnsCond0)
+      std::swap(Op0, Op1);
+    Opcode = KVXISD::SZEXT_MUL;
   }
 
   if (!Opcode)
     return SDValue();
-
-  auto Op0Opc = Op0->getOpcode();
-  auto Op1Opc = Op1->getOpcode();
-  if ((Op0Opc == ISD::ZERO_EXTEND || Op0Opc == ISD::SIGN_EXTEND) &&
-      (Op1Opc == ISD::ZERO_EXTEND || Op1Opc == ISD::SIGN_EXTEND) &&
-      (Op0Opc != Op1Opc)) {
-    // We have a mixed sign/zero extend operation
-    if (Op0Opc == ISD::ZERO_EXTEND)
-      std::swap(Op0, Op1);
-    Opcode = KVXISD::SZEXT_MUL;
-  }
 
   SDValue T0 = Dag.getNode(ISD::TRUNCATE, SDLoc(Op0), HalfSizeVT, {Op0});
   SDValue T1 = Dag.getNode(ISD::TRUNCATE, SDLoc(Op1), HalfSizeVT, {Op1});

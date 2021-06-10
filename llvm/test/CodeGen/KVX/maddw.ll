@@ -342,12 +342,12 @@ entry:
 define i64 @maddwdri(i64 %a, i32 %b) {
 ; CHECK-LABEL: maddwdri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    maddwd $r0 = $r1, 0x4d2
+; CHECK-NEXT:    maddwd $r0 = $r1, 0xfffffb2e
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
   %conv = sext i32 %b to i64
-  %mul = mul nuw nsw i64 %conv, 1234
+  %mul = mul nuw nsw i64 %conv, -1234
   %add = add i64 %mul, %a
   ret i64 %add
 }
@@ -356,13 +356,13 @@ define i64 @maddwdri_load(i64 %a, i32* nocapture readonly %b)  {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r1 = 0[$r1]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    maddwd $r0 = $r1, 0x4d2
+; CHECK-NEXT:    maddwd $r0 = $r1, 0xfffffb2e
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
   %0 = load i32, i32* %b, align 4
   %conv = sext i32 %0 to i64
-  %mul = mul nuw nsw i64 %conv, 1234
+  %mul = mul nuw nsw i64 %conv, -1234
   %add = add i64 %mul, %a
   ret i64 %add
 }
@@ -408,13 +408,13 @@ define i64 @maddwdri2(i64 %a, i32* nocapture readonly %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r1 = 0[$r1]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    maddwd $r0 = $r1, 0x4d2
+; CHECK-NEXT:    maddwd $r0 = $r1, 0xfffffb2e
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
   %0 = load i32, i32* %b, align 4
   %conv = sext i32 %0 to i64
-  %mul = mul nuw nsw i64 %conv, 1234
+  %mul = mul nuw nsw i64 %conv, -1234
   %add = add i64 %mul, %a
   ret i64 %add
 }
@@ -423,13 +423,13 @@ define i64 @maddwdri3(i64 %a, i32* nocapture readonly %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r1 = 0[$r1]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    maddwd $r0 = $r1, -1
+; CHECK-NEXT:    maddwd $r0 = $r1, -3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
   %0 = load i32, i32* %b, align 4
   %conv = sext i32 %0 to i64
-  %mul = mul i64 %conv, 4294967295
+  %mul = mul i64 %conv, -3
   %add = add i64 %mul, %a
   ret i64 %add
 }
@@ -495,16 +495,29 @@ entry:
   ret i64 %add
 }
 
-; FIXME: Can't define immediate is negative
+; TODO: Add unsigned immediate printers
 define i64 @maddsuwd_ri(i64 %a, i32 %b) {
 ; CHECK-LABEL: maddsuwd_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    maddwd $r0 = $r1, -13
+; CHECK-NEXT:    maddsuwd $r0 = $r1, -6
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
   %conv1 = sext i32 %b to i64
-  %mul = mul i64 %conv1, -13
+  %mul = mul i64 %conv1, 4294967290
+  %add = add i64 %mul, %a
+  ret i64 %add
+}
+
+define i64 @maddwd_ri(i64 %a, i32 %b) {
+; CHECK-LABEL: maddwd_ri:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    maddwd $r0 = $r1, -3
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %conv1 = sext i32 %b to i64
+  %mul = mul i64 %conv1, -3
   %add = add i64 %mul, %a
   ret i64 %add
 }

@@ -366,13 +366,13 @@ define i64 @mulwdri_load(i32* nocapture readonly %b)  {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r0 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mulwd $r0 = $r0, 0x4d2
+; CHECK-NEXT:    mulwd $r0 = $r0, 0xfffffb2e
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
   %0 = load i32, i32* %b, align 4
   %conv = sext i32 %0 to i64
-  %mul = mul nuw nsw i64 %conv, 1234
+  %mul = mul nuw nsw i64 %conv, -1234
   ret i64 %mul
 }
 define i64 @mulwdrr_load(i32* nocapture readonly %b, i32 %c)  {
@@ -415,13 +415,13 @@ define i64 @mulwdri2(i32* nocapture readonly %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r0 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mulwd $r0 = $r0, 0x4d2
+; CHECK-NEXT:    mulwd $r0 = $r0, 0xfffffb2e
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
   %0 = load i32, i32* %b, align 4
   %conv = sext i32 %0 to i64
-  %mul = mul nuw nsw i64 %conv, 1234
+  %mul = mul nuw nsw i64 %conv, -1234
   ret i64 %mul
 }
 define i64 @mulwdri3(i32* nocapture readonly %b) {
@@ -429,13 +429,13 @@ define i64 @mulwdri3(i32* nocapture readonly %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r0 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mulwd $r0 = $r0, -1
+; CHECK-NEXT:    mulwd $r0 = $r0, -5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
   %0 = load i32, i32* %b, align 4
   %conv = sext i32 %0 to i64
-  %mul = mul i64 %conv, 4294967295
+  %mul = mul i64 %conv, -5
   ret i64 %mul
 }
 
@@ -673,7 +673,6 @@ define i128 @i128unsignunsign_imm(i64 %0) {
   ret i128 %3
 }
 
-; FIXME: At llvm IR it is not possible to distinguish signed or unsigned numbers!?
 define i128 @i128signunsign_imm(i64 %0) {
 ; CHECK-LABEL: i128signunsign_imm:
 ; CHECK:       # %bb.0:
@@ -685,14 +684,12 @@ define i128 @i128signunsign_imm(i64 %0) {
   ret i128 %3
 }
 
-; FIXME: Again, mixed sign issue
 define i128 @i128unsigsign_imm(i64 %0) {
 ; CHECK-LABEL: i128unsigsign_imm:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    muludt $r2r3 = $r0, -13
+; CHECK-NEXT:    make $r1 = -13
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfd $r1 = $r0, $r3
-; CHECK-NEXT:    copyd $r0 = $r2
+; CHECK-NEXT:    mulsudt $r0r1 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = zext i64 %0 to i128
@@ -774,7 +771,7 @@ define i64 @i64unsignunsign_imm(i32 %0) {
 define i64 @i64signunsign_imm(i32 %0) {
 ; CHECK-LABEL: i64signunsign_imm:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    mulwd $r0 = $r0, -1
+; CHECK-NEXT:    mulsuwd $r0 = $r0, -1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = sext i32 %0 to i64
@@ -785,10 +782,230 @@ define i64 @i64signunsign_imm(i32 %0) {
 define i64 @i64unsigsign_imm(i32 %0) {
 ; CHECK-LABEL: i64unsigsign_imm:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    muluwd $r0 = $r0, -13
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    muld $r0 = $r0, -13
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = zext i32 %0 to i64
   %3 = mul nsw i64 %2, -13
   ret i64 %3
+}
+
+define i64 @MULWD_0(i64 %0) {
+; CHECK-LABEL: MULWD_0:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    srld $r1 = $r0, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    mulwd $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = shl i64 %0, 32
+  %3 = ashr exact i64 %2, 32
+  %4 = ashr i64 %0, 32
+  %5 = mul nsw i64 %3, %4
+  ret i64 %5
+}
+
+define i64 @MULWD_1(i64 %0) {
+; CHECK-LABEL: MULWD_1:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    srld $r1 = $r0, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    mulwd $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = ashr i64 %0, 32
+  %3 = shl i64 %0, 32
+  %4 = ashr exact i64 %3, 32
+  %5 = mul nsw i64 %4, %2
+  ret i64 %5
+}
+
+define i64 @MULWD_2(i64 %0, i32 %1) {
+; CHECK-LABEL: MULWD_2:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    srld $r0 = $r0, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    mulwd $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = ashr i64 %0, 32
+  %4 = sext i32 %1 to i64
+  %5 = mul nsw i64 %3, %4
+  ret i64 %5
+}
+
+define i64 @MULWD_3(i64 %0, i32 %1) {
+; CHECK-LABEL: MULWD_3:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    mulwd $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = shl i64 %0, 32
+  %4 = ashr exact i64 %3, 32
+  %5 = sext i32 %1 to i64
+  %6 = mul nsw i64 %4, %5
+  ret i64 %6
+}
+
+define i64 @MULUWD_0(i64 %0) {
+; CHECK-LABEL: MULUWD_0:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    srld $r1 = $r0, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    muluwd $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = lshr i64 %0, 32
+  %3 = and i64 %0, 4294967295
+  %4 = mul nuw nsw i64 %3, %2
+  ret i64 %4
+}
+
+define i64 @MULUWD_1(i64 %0) {
+; CHECK-LABEL: MULUWD_1:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    srld $r1 = $r0, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    muluwd $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = lshr i64 %0, 32
+  %3 = and i64 %0, 4294967295
+  %4 = mul nuw nsw i64 %2, %3
+  ret i64 %4
+}
+
+define i64 @MULUWD_2(i64 %0, i32 %1) {
+; CHECK-LABEL: MULUWD_2:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    srld $r0 = $r0, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    muluwd $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = lshr i64 %0, 32
+  %4 = zext i32 %1 to i64
+  %5 = mul nuw nsw i64 %3, %4
+  ret i64 %5
+}
+
+define i64 @MULUWD_3(i64 %0, i32 %1) {
+; CHECK-LABEL: MULUWD_3:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    muluwd $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = and i64 %0, 4294967295
+  %4 = zext i32 %1 to i64
+  %5 = mul nuw nsw i64 %3, %4
+  ret i64 %5
+}
+
+define i64 @MULUWD_4(i64 %0) {
+; CHECK-LABEL: MULUWD_4:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    muluwd $r0 = $r0, 14
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = and i64 %0, 4294967295
+  %3 = mul nuw nsw i64 %2, 14
+  ret i64 %3
+}
+
+define i64 @MULSUWD_0(i64 %0, i64 %1) {
+; CHECK-LABEL: MULSUWD_0:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    mulsuwd $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = and i64 %0, 4294967295
+  %4 = shl i64 %1, 32
+  %5 = ashr exact i64 %4, 32
+  %6 = mul nsw i64 %5, %3
+  ret i64 %6
+}
+
+define i64 @MULSUWD_1(i64 %0, i64 %1) {
+; CHECK-LABEL: MULSUWD_1:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    srld $r0 = $r0, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    mulsuwd $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = lshr i64 %0, 32
+  %4 = shl i64 %1, 32
+  %5 = ashr exact i64 %4, 32
+  %6 = mul nsw i64 %5, %3
+  ret i64 %6
+}
+
+define i64 @MULSUWD_2(i64 %0, i64 %1) {
+; CHECK-LABEL: MULSUWD_2:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    srld $r0 = $r0, 32
+; CHECK-NEXT:    srld $r1 = $r1, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    mulsuwd $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = lshr i64 %0, 32
+  %4 = ashr i64 %1, 32
+  %5 = mul nsw i64 %4, %3
+  ret i64 %5
+}
+
+define i64 @MULSUWD_3(i64 %0, i64 %1) {
+; CHECK-LABEL: MULSUWD_3:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    srld $r1 = $r1, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    mulsuwd $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = and i64 %0, 4294967295
+  %4 = ashr i64 %1, 32
+  %5 = mul nsw i64 %4, %3
+  ret i64 %5
+}
+
+define i64 @MULSUWD_4(i64 %0, i32 %1) {
+; CHECK-LABEL: MULSUWD_4:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    srld $r0 = $r0, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    mulsuwd $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = lshr i64 %0, 32
+  %4 = sext i32 %1 to i64
+  %5 = mul nsw i64 %3, %4
+  ret i64 %5
+}
+
+define i64 @MULSUWD_5(i64 %0, i32 %1) {
+; CHECK-LABEL: MULSUWD_5:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    mulsuwd $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = and i64 %0, 4294967295
+  %4 = sext i32 %1 to i64
+  %5 = mul nsw i64 %3, %4
+  ret i64 %5
+}
+
+define i64 @ZX_MULD(i64 %0, i64 %1) {
+; CHECK-LABEL: ZX_MULD:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    muld $r0 = $r0, -14
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = and i64 %0, 4294967295
+  %4 = mul nsw i64 %3, -14
+  ret i64 %4
 }
