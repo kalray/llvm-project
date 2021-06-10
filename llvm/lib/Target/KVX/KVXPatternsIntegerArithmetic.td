@@ -431,46 +431,55 @@ defm : COMP_Pat<setle,   comparison_le, comparison_gt>;
 
 // DOT2SUWD
 // TODO: add ri variants
-def : Pat<(i64 (add ( KVX_szext_mul
+multiclass DOT2_RR_SingleReg<SDNode ExtMul, KVX_INSTRUCTION RR> {
+def : Pat<(i64 (add ( ExtMul
                         (i32 (vector_extract v2i32:$lhs, 0)),
                         (i32 (vector_extract v2i32:$rhs, 0))
                     ),
-                    ( KVX_szext_mul
+                    ( ExtMul
                     (i32 (vector_extract v2i32:$lhs, 1)),
                     (i32 (vector_extract v2i32:$rhs, 1))
                     ))),
-           (i64 (DOT2SUWDrr SingleReg:$lhs, SingleReg:$rhs))>;
+           (i64 (RR SingleReg:$lhs, SingleReg:$rhs))>;
 
-def : Pat<(i64 (add ( KVX_szext_mul
+def : Pat<(i64 (add ( ExtMul
                         (i32 (trunc (i64 SingleReg:$lhs))),
                         (i32 (trunc (i64 SingleReg:$rhs)))
                     ),
-                    ( KVX_szext_mul
+                    ( ExtMul
                     (i32 (trunc (i64 (srl (i64 SingleReg:$lhs), (i64 32))))),
                     (i32 (trunc (i64 (srl (i64 SingleReg:$rhs), (i64 32)))))
                     ))),
-           (i64 (DOT2SUWDrr SingleReg:$lhs, SingleReg:$rhs))>;
+           (i64 (RR SingleReg:$lhs, SingleReg:$rhs))>;
 
-def : Pat<(i64 (add ( KVX_szext_mul
+def : Pat<(i64 (add ( ExtMul
                         (i32 (vector_extract v2i32:$lhs, 0)),
                         (i32 (trunc (i64 SingleReg:$rhs)))
                     ),
-                    ( KVX_szext_mul
+                    ( ExtMul
                     (i32 (vector_extract v2i32:$lhs, 1)),
                     (i32 (trunc (i64 (srl (i64 SingleReg:$rhs), (i64 32)))))
                     ))),
-           (i64 (DOT2SUWDrr SingleReg:$lhs, SingleReg:$rhs))>;
+           (i64 (RR SingleReg:$lhs, SingleReg:$rhs))>;
 
-def : Pat<(i64 (add ( KVX_szext_mul
+def : Pat<(i64 (add ( ExtMul
                         (i32 (trunc (i64 SingleReg:$lhs))),
                         (i32 (vector_extract v2i32:$rhs, 0))
                     ),
-                    ( KVX_szext_mul
+                    ( ExtMul
                     (i32 (trunc (i64 (srl (i64 SingleReg:$lhs), (i64 32))))),
                     (i32 (vector_extract v2i32:$rhs, 1))
                     ))),
-           (i64 (DOT2SUWDrr SingleReg:$lhs, SingleReg:$rhs))>;
+           (i64 (RR SingleReg:$lhs, SingleReg:$rhs))>;
+}
+// DOT2SUWD
+defm : DOT2_RR_SingleReg<KVX_szext_mul, DOT2SUWDrr>;
 
+// DOT2UWD
+defm : DOT2_RR_SingleReg<KVX_zext_mul, DOT2UWDrr>;
+
+//DOT2WD
+defm : DOT2_RR_SingleReg<KVX_sext_mul, DOT2WDrr>;
 
 // EXTF
 def : Pat<(and (srl i64:$v, Wrapped64:$shiftc), Wrapped64:$andm), (EXTFZDp SingleReg:$v, Wrapped64:$andm, Wrapped64:$shiftc)>;
