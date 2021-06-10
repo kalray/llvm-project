@@ -1563,6 +1563,8 @@ KVXTargetLowering::getRegForInlineAsmConstraint(const TargetRegisterInfo *TRI,
     if (RegNo == 0)
       return TargetLowering::getRegForInlineAsmConstraint(TRI, Constraint, VT);
   }
+  if (KVX::SystemRegRegClass.contains(RegNo))
+    return std::make_pair(RegNo, &KVX::SystemRegRegClass);
   if (KVX::SingleRegRegClass.contains(RegNo))
     return std::make_pair(RegNo, &KVX::SingleRegRegClass);
   if (KVX::PairedRegRegClass.contains(RegNo))
