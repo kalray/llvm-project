@@ -1289,13 +1289,14 @@ multiclass MC_29<string OpcStr> {
 }
 
 // multiclass MC_2A is used by:
-//   defm FMULWP
-//   defm FMULWC
-//   defm FMULCWC
-//   defm FADDWP
 //   defm FADDCWC
-//   defm FSBFWP
+//   defm FADDWP
+//   defm FDOT2W
+//   defm FMULCWC
+//   defm FMULWC
+//   defm FMULWP
 //   defm FSBFCWC
+//   defm FSBFWP
 multiclass MC_2A<string OpcStr> {
   def ri : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARY32X2
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary32x2:$a3),
@@ -1434,7 +1435,6 @@ multiclass MC_30<string OpcStr> {
 //   defm FADDW
 //   defm FSBFW
 //   defm FMULW
-//   defm FDOT2W
 multiclass MC_31<string OpcStr> {
   let Defs = [CS], Uses = [CS] in
   def ri : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE_BINARY32
@@ -3090,7 +3090,7 @@ defm FMULW : MC_31<"fmulw">;
 
 defm FMULWD : MC_29<"fmulwd">;
 
-defm FDOT2W : MC_31<"fdot2w">;
+defm FDOT2W : MC_2A<"fdot2w">;
 
 defm FDOT2WD : MC_29<"fdot2wd">;
 
