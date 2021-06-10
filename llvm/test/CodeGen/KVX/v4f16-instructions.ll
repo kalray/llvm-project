@@ -454,7 +454,7 @@ define <4 x half> @test_tailcall_flipped(<4 x half> %a, <4 x half> %b) #0 {
   ret <4 x half> %r
 }
 
-; This could be selected to (cmovehq(sra(sll %c, 31), 31), %a, %b)
+; This could be selected to (cmovehq(negate(is_odd %c), %a, %b)
 define <4 x half> @test_select(<4 x half> %a, <4 x half> %b, i1 zeroext %c) #0 {
 ; CHECK-LABEL: test_select:
 ; CHECK:       # %bb.0:
@@ -463,9 +463,7 @@ define <4 x half> @test_select(<4 x half> %a, <4 x half> %b, i1 zeroext %c) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r3 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r2, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r2, 63, 32
+; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x201020102010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    andnd $r1 = $r2, $r1
 ; CHECK-NEXT:    andd $r0 = $r0, $r2

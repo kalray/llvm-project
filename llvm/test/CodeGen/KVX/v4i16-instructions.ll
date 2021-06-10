@@ -448,6 +448,7 @@ define <4 x i16> @test_tailcall_flipped(<4 x i16> %a, <4 x i16> %b) #0 {
   ret <4 x i16> %r
 }
 
+; This could be selected to (cmovehq(negate(is_odd %c), %a, %b)
 define <4 x i16> @test_select(<4 x i16> %a, <4 x i16> %b, i1 zeroext %c) #0 {
 ; CHECK-LABEL: test_select:
 ; CHECK:       # %bb.0:
@@ -456,9 +457,7 @@ define <4 x i16> @test_select(<4 x i16> %a, <4 x i16> %b, i1 zeroext %c) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r3 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r2, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r2, 63, 32
+; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x201020102010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    andnd $r1 = $r2, $r1
 ; CHECK-NEXT:    andd $r0 = $r0, $r2
@@ -945,6 +944,110 @@ define <4 x i16> @nandd_v4i16_ri64_2(<4 x i16> %0) {
   %2 = and <4 x i16> %0, <i16 1024, i16 -3, i16 31, i16 1>
   %3 = xor <4 x i16> %2, <i16 -1, i16 -1, i16 -1, i16 -1>
   ret <4 x i16> %3
+}
+
+define <4 x i16> @splat(i32 %0) {
+; CHECK-LABEL: splat:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x201020102010201
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = trunc i32 %0 to i16
+  %3 = insertelement <4 x i16> undef, i16 %2, i32 0
+  %4 = shufflevector <4 x i16> %3, <4 x i16> undef, <4 x i32> zeroinitializer
+  ret <4 x i16> %4
+}
+
+define <4 x i16> @splat_0(<4 x i16> %0) {
+; CHECK-LABEL: splat_0:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x201020102010201
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = shufflevector <4 x i16> %0, <4 x i16> undef, <4 x i32> zeroinitializer
+  ret <4 x i16> %2
+}
+
+define <4 x i16> @splat_1(<4 x i16> %0) {
+; CHECK-LABEL: splat_1:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x804080408040804
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = shufflevector <4 x i16> %0, <4 x i16> undef, <4 x i32> <i32 1, i32 1, i32 1, i32 1>
+  ret <4 x i16> %2
+}
+
+define <4 x i16> @splat_1_32(i32 %0) {
+; CHECK-LABEL: splat_1_32:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x804080408040804
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = lshr i32 %0, 16
+  %3 = trunc i32 %2 to i16
+  %4 = insertelement <4 x i16> undef, i16 %3, i32 0
+  %5 = shufflevector <4 x i16> %4, <4 x i16> undef, <4 x i32> zeroinitializer
+  ret <4 x i16> %5
+}
+
+define <4 x i16> @splat_1_64(i64 %0) {
+; CHECK-LABEL: splat_1_64:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x804080408040804
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = lshr i64 %0, 16
+  %3 = trunc i64 %2 to i16
+  %4 = insertelement <4 x i16> undef, i16 %3, i32 0
+  %5 = shufflevector <4 x i16> %4, <4 x i16> undef, <4 x i32> zeroinitializer
+  ret <4 x i16> %5
+}
+
+define <4 x i16> @splat_2(<4 x i16> %0) {
+; CHECK-LABEL: splat_2:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x2010201020102010
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = shufflevector <4 x i16> %0, <4 x i16> undef, <4 x i32> <i32 2, i32 2, i32 2, i32 2>
+  ret <4 x i16> %2
+}
+
+define <4 x i16> @splat_2_64(i64 %0) {
+; CHECK-LABEL: splat_2_64:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x2010201020102010
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = lshr i64 %0, 32
+  %3 = trunc i64 %2 to i16
+  %4 = insertelement <4 x i16> undef, i16 %3, i32 0
+  %5 = shufflevector <4 x i16> %4, <4 x i16> undef, <4 x i32> zeroinitializer
+  ret <4 x i16> %5
+}
+
+define <4 x i16> @splat_3(<4 x i16> %0) {
+; CHECK-LABEL: splat_3:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x8040804080408040
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = shufflevector <4 x i16> %0, <4 x i16> undef, <4 x i32> <i32 3, i32 3, i32 3, i32 3>
+  ret <4 x i16> %2
+}
+
+define <4 x i16> @splat_3_64(i64 %0) {
+; CHECK-LABEL: splat_3_64:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x8040804080408040
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = lshr i64 %0, 48
+  %3 = trunc i64 %2 to i16
+  %4 = insertelement <4 x i16> undef, i16 %3, i32 0
+  %5 = shufflevector <4 x i16> %4, <4 x i16> undef, <4 x i32> zeroinitializer
+  ret <4 x i16> %5
 }
 
 attributes #0 = { nounwind }
