@@ -1896,17 +1896,15 @@ define <16 x i16> @mul_v16i16_v16i16(<16 x i16> %0, <16 x i16> %1) {
 define <16 x i16> @mul_v16i16_i16(<16 x i16> %0, i16 %1) {
 ; CHECK-LABEL: mul_v16i16_i16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    insf $r4 = $r4, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r4 = $r4, 63, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mulhq $r3 = $r4, $r3
+; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x201020102010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mulhq $r2 = $r4, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mulhq $r1 = $r4, $r1
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mulhq $r0 = $r4, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    mulhq $r3 = $r4, $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    mulhq $r1 = $r4, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = insertelement <16 x i16> undef, i16 %1, i32 0
@@ -2433,14 +2431,12 @@ define <16 x i16> @add_v16i16_v16i16(<16 x i16> %0, <16 x i16> %1) {
 define <16 x i16> @add_v16i16_i16(<16 x i16> %0, i16 %1) {
 ; CHECK-LABEL: add_v16i16_i16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    insf $r4 = $r4, 31, 16
+; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x201020102010201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r4 = $r4, 63, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addhq $r3 = $r4, $r3
 ; CHECK-NEXT:    addhq $r2 = $r4, $r2
-; CHECK-NEXT:    addhq $r1 = $r4, $r1
 ; CHECK-NEXT:    addhq $r0 = $r4, $r0
+; CHECK-NEXT:    addhq $r3 = $r4, $r3
+; CHECK-NEXT:    addhq $r1 = $r4, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = insertelement <16 x i16> undef, i16 %1, i32 0
@@ -2465,14 +2461,12 @@ define <16 x i16> @sub_v16i16_v16i16(<16 x i16> %0, <16 x i16> %1) {
 define <16 x i16> @sub_v16i16_i16(<16 x i16> %0, i16 %1) {
 ; CHECK-LABEL: sub_v16i16_i16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    insf $r4 = $r4, 31, 16
+; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x201020102010201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r4 = $r4, 63, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfhq $r3 = $r4, $r3
 ; CHECK-NEXT:    sbfhq $r2 = $r4, $r2
-; CHECK-NEXT:    sbfhq $r1 = $r4, $r1
 ; CHECK-NEXT:    sbfhq $r0 = $r4, $r0
+; CHECK-NEXT:    sbfhq $r3 = $r4, $r3
+; CHECK-NEXT:    sbfhq $r1 = $r4, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = insertelement <16 x i16> undef, i16 %1, i32 0
@@ -6223,20 +6217,18 @@ define <16 x i16> @p_mul_v16i16_v16i16(<16 x i16>* nocapture readonly %0, <16 x 
 define <16 x i16> @p_mul_v16i16_i16(<16 x i16>* nocapture readonly %0, i16* nocapture readonly %1) {
 ; CHECK-LABEL: p_mul_v16i16_i16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    lhz $r4 = 0[$r1]
+; CHECK-NEXT:    lhz $r1 = 0[$r1]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r0r1r2r3 = 0[$r0]
-; CHECK-NEXT:    insf $r4 = $r4, 31, 16
+; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
+; CHECK-NEXT:    sbmm8 $r2 = $r1, 0x201020102010201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r4 = $r4, 63, 32
+; CHECK-NEXT:    mulhq $r3 = $r2, $r7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mulhq $r3 = $r4, $r3
+; CHECK-NEXT:    mulhq $r0 = $r2, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mulhq $r2 = $r4, $r2
+; CHECK-NEXT:    mulhq $r1 = $r2, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mulhq $r1 = $r4, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mulhq $r0 = $r4, $r0
+; CHECK-NEXT:    mulhq $r2 = $r2, $r6
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = load <16 x i16>, <16 x i16>* %0, align 32
@@ -6778,17 +6770,15 @@ define <16 x i16> @p_add_v16i16_v16i16(<16 x i16>* nocapture readonly %0, <16 x 
 define <16 x i16> @p_add_v16i16_i16(<16 x i16>* nocapture readonly %0, i16* nocapture readonly %1) {
 ; CHECK-LABEL: p_add_v16i16_i16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    lhz $r4 = 0[$r1]
+; CHECK-NEXT:    lhz $r1 = 0[$r1]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r0r1r2r3 = 0[$r0]
-; CHECK-NEXT:    insf $r4 = $r4, 31, 16
+; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
+; CHECK-NEXT:    sbmm8 $r2 = $r1, 0x201020102010201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r4 = $r4, 63, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addhq $r3 = $r4, $r3
-; CHECK-NEXT:    addhq $r2 = $r4, $r2
-; CHECK-NEXT:    addhq $r1 = $r4, $r1
-; CHECK-NEXT:    addhq $r0 = $r4, $r0
+; CHECK-NEXT:    addhq $r3 = $r2, $r7
+; CHECK-NEXT:    addhq $r0 = $r2, $r4
+; CHECK-NEXT:    addhq $r1 = $r2, $r5
+; CHECK-NEXT:    addhq $r2 = $r2, $r6
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = load <16 x i16>, <16 x i16>* %0, align 32
