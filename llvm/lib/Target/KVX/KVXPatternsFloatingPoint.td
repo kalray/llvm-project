@@ -424,6 +424,41 @@ defm : SELECTCONDD<(f16 f16:$truev), (f16 f16:$falsev),(f16 Binary16:$truev), (f
 defm : SELECTCONDD<(f32 f32:$truev), (f32 f32:$falsev),(f32 Binary32:$truev), (f32 Binary32:$falsev)>;
 defm : SELECTCONDD<(f64 f64:$truev), (f64 f64:$falsev),(f64 Binary64:$truev), (f64 Binary64:$falsev)>;
 
+//FDOT2W
+// TODO: add ri37 variation
+def : Pat<(f32 (fadd (f32 (vector_extract (v2f32 (fmul v2f32:$lhs, (is_imm_vec:$rhs))), (i64 0))),
+                    (f32 (vector_extract (v2f32 (fmul v2f32:$lhs, (is_imm_vec:$rhs))), (i64 1))))),
+          (f32 (FDOT2Wri SingleReg:$lhs, (build_fpimm_vec $rhs)))>;
+
+def : Pat<(f32 (fsub (f32 (vector_extract (v2f32 (fmul v2f32:$lhs, (is_imm_vec:$rhs))), (i64 1))),
+                    (f32 (vector_extract (v2f32 (fmul v2f32:$lhs, (is_imm_vec:$rhs))), (i64 0))))),
+          (f32 (FDOT2Wri SingleReg:$lhs, (build_fpimm_vec_neg0 $rhs)))>;
+
+def : Pat<(f32 (fsub (f32 (vector_extract (v2f32 (fmul v2f32:$lhs, (is_imm_vec:$rhs))), (i64 0))),
+                    (f32 (vector_extract (v2f32 (fmul v2f32:$lhs, (is_imm_vec:$rhs))), (i64 1))))),
+          (f32 (FDOT2Wri SingleReg:$lhs, (build_fpimm_vec_neg1 $rhs)))>;
+
+def : Pat<(f32 (fadd (f32 (vector_extract (v2f32 (fmul v2f32:$lhs, v2f32:$rhs)), (i64 0))),
+                     (f32 (vector_extract (v2f32 (fmul v2f32:$lhs, v2f32:$rhs)), (i64 1))))),
+          (f32 (FDOT2Wrr SingleReg:$lhs, SingleReg:$rhs, rounding_, silent_))>;
+
+def : Pat<(f32 (fadd (f32 (fmul
+                              (f32 (bitconvert (i32 (trunc (i64 (srl i64:$lhs, (i64 32))))))),
+                              (f32 (bitconvert (i32 (trunc (i64 (srl i64:$rhs, (i64 32))))))))),
+                     (f32 (fmul
+                              (f32 (bitconvert (i32 (trunc i64:$lhs)))),
+                              (f32 ( bitconvert (i32 (trunc i64:$rhs)))))))),
+          (f32 (FDOT2Wrr SingleReg:$lhs, SingleReg:$rhs, rounding_, silent_))>;
+
+def : Pat<(f32 (fadd (f32 (fmul
+                              (f32 (vector_extract v2f32:$lhs, (i64 1))),
+                              (f32 (bitconvert (i32 (trunc (i64 (srl i64:$rhs, (i64 32))))))))),
+                     (f32 (fmul
+                              (f32 (vector_extract v2f32:$lhs, (i64 0))),
+                              (f32 ( bitconvert (i32 (trunc i64:$rhs)))))))),
+          (f32 (FDOT2Wrr SingleReg:$lhs, SingleReg:$rhs, rounding_, silent_))>;
+
+
 // FFMA
 // FIXME: Must find a way to convert a Binary16 to a Binary16x4
 // def : Pat<(f16 (kvx_fma f16:$rx, Binary16:$ry, f16:$rz)), (f16(FFMAHQri (f16 SingleReg:$rz), (f16 SingleReg:$rx), ???:$ry))>, Requires<[HasFPIMM]>;
