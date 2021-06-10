@@ -429,7 +429,6 @@ defm : COMP_Pat<setge,   comparison_ge, comparison_lt>;
 defm : COMP_Pat<setlt,   comparison_lt, comparison_ge>;
 defm : COMP_Pat<setle,   comparison_le, comparison_gt>;
 
-// DOT2SUWD
 // TODO: add ri variants
 multiclass DOT2_RR_SingleReg<SDNode ExtMul, KVX_INSTRUCTION RR> {
 def : Pat<(i64 (add ( ExtMul
@@ -477,6 +476,24 @@ defm : DOT2_RR_SingleReg<KVX_szext_mul, DOT2SUWDrr>;
 
 // DOT2UWD
 defm : DOT2_RR_SingleReg<KVX_zext_mul, DOT2UWDrr>;
+
+//DOT2W
+// TODO: add ri37 variation
+def : Pat<(i32 (add (i32 (vector_extract (v2i32 (mul v2i32:$lhs, (is_imm_vec:$rhs))), (i64 0))),
+                    (i32 (vector_extract (v2i32 (mul v2i32:$lhs, (is_imm_vec:$rhs))), (i64 1))))),
+          (i32 (DOT2Wri64 SingleReg:$lhs, (build_imm_vec $rhs)))>;
+
+def : Pat<(i32 (add (i32 (vector_extract (v2i32 (mul v2i32:$lhs, v2i32:$rhs)), (i64 0))),
+                    (i32 (vector_extract (v2i32 (mul v2i32:$lhs, v2i32:$rhs)), (i64 1))))),
+          (i32 (DOT2Wrr SingleReg:$lhs, SingleReg:$rhs))>;
+
+def : Pat<(i32 (add (i32 (mul (i32 (trunc (i64 (srl i64:$lhs, (i64 32))))), (i32 (trunc (i64 (srl i64:$rhs, (i64 32))))))),
+                    (i32 (mul (i32 (trunc i64:$lhs)), (i32 (trunc i64:$rhs)))))),
+          (i32 (DOT2Wrr SingleReg:$lhs, SingleReg:$rhs))>;
+
+def : Pat<(i32 (add (i32 (mul (i32 (vector_extract v2i32:$lhs, (i64 1))), (i32 (trunc (i64 (srl i64:$rhs, (i64 32))))))),
+                    (i32 (mul (i32 (vector_extract v2i32:$lhs, (i64 0))), (i32 (trunc i64:$rhs)))))),
+          (i32 (DOT2Wrr SingleReg:$lhs, SingleReg:$rhs))>;
 
 //DOT2WD
 defm : DOT2_RR_SingleReg<KVX_sext_mul, DOT2WDrr>;
