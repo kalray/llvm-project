@@ -5,9 +5,6 @@ target triple = "kvx-kalray-cos"
 ; Test that the loop start address operand uses a constant extender
 ; if the offset is out of range.
 
-; TODO: Remove such instructions:
-; addw $r2 = $r2, -1
-; addd $r2 = $r2, 1
 @g = external global i32, align 4
 
 define void @test(i32* nocapture %a, i32* nocapture readonly %b, i32 %n) {
