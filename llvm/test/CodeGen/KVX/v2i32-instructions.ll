@@ -2,7 +2,7 @@
 ; RUN: llc -O2 -o - %s | FileCheck %s
 target triple = "kvx-kalray-cos"
 
-define <2 x i32> @test_ret_const() #0 {
+define <2 x i32> @test_ret_const() {
 ; CHECK-LABEL: test_ret_const:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r0 = 0x200000001
@@ -11,7 +11,7 @@ define <2 x i32> @test_ret_const() #0 {
   ret <2 x i32> <i32 1, i32 2>
 }
 
-define i32 @test_extract_0(<2 x i32> %a) #0 {
+define i32 @test_extract_0(<2 x i32> %a) {
 ; CHECK-LABEL: test_extract_0:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ret
@@ -20,7 +20,7 @@ define i32 @test_extract_0(<2 x i32> %a) #0 {
   ret i32 %e
 }
 
-define i32 @test_extract_1(<2 x i32> %a) #0 {
+define i32 @test_extract_1(<2 x i32> %a) {
 ; CHECK-LABEL: test_extract_1:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srad $r0 = $r0, 32
@@ -30,7 +30,7 @@ define i32 @test_extract_1(<2 x i32> %a) #0 {
   ret i32 %e
 }
 
-define i32 @test_extract_i(<2 x i32> %a, i64 %idx) #0 {
+define i32 @test_extract_i(<2 x i32> %a, i64 %idx) {
 ; CHECK-LABEL: test_extract_i:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sllw $r1 = $r1, 6
@@ -42,7 +42,7 @@ define i32 @test_extract_i(<2 x i32> %a, i64 %idx) #0 {
   ret i32 %e
 }
 
-define <2 x i32> @test_add(<2 x i32> %a, <2 x i32> %b) #0 {
+define <2 x i32> @test_add(<2 x i32> %a, <2 x i32> %b) {
 ; CHECK-LABEL: test_add:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addwp $r0 = $r0, $r1
@@ -52,7 +52,7 @@ define <2 x i32> @test_add(<2 x i32> %a, <2 x i32> %b) #0 {
   ret <2 x i32> %r
 }
 
-define <2 x i32> @test_add_imm_0(<2 x i32> %a) #0 {
+define <2 x i32> @test_add_imm_0(<2 x i32> %a) {
 ; CHECK-LABEL: test_add_imm_0:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r1 = 0x200000001
@@ -64,7 +64,7 @@ define <2 x i32> @test_add_imm_0(<2 x i32> %a) #0 {
   ret <2 x i32> %r
 }
 
-define <2 x i32> @test_add_imm_1(<2 x i32> %a) #0 {
+define <2 x i32> @test_add_imm_1(<2 x i32> %a) {
 ; CHECK-LABEL: test_add_imm_1:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r1 = 0x200000001
@@ -76,7 +76,7 @@ define <2 x i32> @test_add_imm_1(<2 x i32> %a) #0 {
   ret <2 x i32> %r
 }
 
-define <2 x i32> @test_sub(<2 x i32> %a, <2 x i32> %b) #0 {
+define <2 x i32> @test_sub(<2 x i32> %a, <2 x i32> %b) {
 ; CHECK-LABEL: test_sub:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbfwp $r0 = $r1, $r0
@@ -86,7 +86,7 @@ define <2 x i32> @test_sub(<2 x i32> %a, <2 x i32> %b) #0 {
   ret <2 x i32> %r
 }
 
-define <2 x i32> @test_sub_imm(<2 x i32> %a) #0 {
+define <2 x i32> @test_sub_imm(<2 x i32> %a) {
 ; CHECK-LABEL: test_sub_imm:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r1 = 0x200000001
@@ -98,7 +98,7 @@ define <2 x i32> @test_sub_imm(<2 x i32> %a) #0 {
   ret <2 x i32> %r
 }
 
-define <2 x i32> @test_sub_fromimm(<2 x i32> %a) #0 {
+define <2 x i32> @test_sub_fromimm(<2 x i32> %a) {
 ; CHECK-LABEL: test_sub_fromimm:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r1 = 0x200000001
@@ -111,7 +111,7 @@ define <2 x i32> @test_sub_fromimm(<2 x i32> %a) #0 {
 }
 
 
-define <2 x i32> @test_fma(<2 x i32> %a, <2 x i32> %b, <2 x i32> %c) #0 {
+define <2 x i32> @test_fma(<2 x i32> %a, <2 x i32> %b, <2 x i32> %c) {
 ; CHECK-LABEL: test_fma:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    maddwp $r0 = $r1, $r2
@@ -122,7 +122,7 @@ define <2 x i32> @test_fma(<2 x i32> %a, <2 x i32> %b, <2 x i32> %c) #0 {
   ret <2 x i32> %ad
 }
 
-define <2 x i32> @test_fma_imm(<2 x i32> %a, <2 x i32> %b) #0 {
+define <2 x i32> @test_fma_imm(<2 x i32> %a, <2 x i32> %b) {
 ; CHECK-LABEL: test_fma_imm:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    maddwp $r0 = $r1, 0x200000005
@@ -134,7 +134,7 @@ define <2 x i32> @test_fma_imm(<2 x i32> %a, <2 x i32> %b) #0 {
 }
 
 ; TODO: Prevent using sll
-define <2 x i32> @test_fma_imm_2(<2 x i32> %a, <2 x i32> %b) #0 {
+define <2 x i32> @test_fma_imm_2(<2 x i32> %a, <2 x i32> %b) {
 ; CHECK-LABEL: test_fma_imm_2:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sllw $r2 = $r1, 0
@@ -150,7 +150,7 @@ define <2 x i32> @test_fma_imm_2(<2 x i32> %a, <2 x i32> %b) #0 {
   ret <2 x i32> %ad
 }
 
-define <2 x i32> @test_neg(<2 x i32> %a) #0 {
+define <2 x i32> @test_neg(<2 x i32> %a) {
 ; CHECK-LABEL: test_neg:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    negwp $r0 = $r0
@@ -160,7 +160,7 @@ define <2 x i32> @test_neg(<2 x i32> %a) #0 {
   ret <2 x i32> %r
 }
 
-define <2 x i32> @test_mul(<2 x i32> %a, <2 x i32> %b) #0 {
+define <2 x i32> @test_mul(<2 x i32> %a, <2 x i32> %b) {
 ; CHECK-LABEL: test_mul:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    mulwp $r0 = $r0, $r1
@@ -170,7 +170,7 @@ define <2 x i32> @test_mul(<2 x i32> %a, <2 x i32> %b) #0 {
   ret <2 x i32> %r
 }
 
-define <2 x i32> @test_mul_2(<2 x i32> %a, <2 x i32> %b, <2 x i32> %c) #0 {
+define <2 x i32> @test_mul_2(<2 x i32> %a, <2 x i32> %b, <2 x i32> %c) {
 ; CHECK-LABEL: test_mul_2:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    mulwp $r0 = $r0, $r1
@@ -290,7 +290,7 @@ define void @test_ldst_v2i32(<2 x i32>* %a, <2 x i32>* %b) {
   ret void
 }
 
-declare <2 x i32> @test_callee(<2 x i32> %a, <2 x i32> %b) #0
+declare <2 x i32> @test_callee(<2 x i32> %a, <2 x i32> %b)
 
 define <2 x i32> @test_call(<2 x i32> %a, <2 x i32> %b) #0 {
 ; CHECK-LABEL: test_call:
@@ -336,7 +336,7 @@ define <2 x i32> @test_call_flipped(<2 x i32> %a, <2 x i32> %b) #0 {
   ret <2 x i32> %r
 }
 
-define <2 x i32> @test_tailcall_flipped(<2 x i32> %a, <2 x i32> %b) #0 {
+define <2 x i32> @test_tailcall_flipped(<2 x i32> %a, <2 x i32> %b) {
 ; CHECK-LABEL: test_tailcall_flipped:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    copyd $r2 = $r0
@@ -349,7 +349,7 @@ define <2 x i32> @test_tailcall_flipped(<2 x i32> %a, <2 x i32> %b) #0 {
   ret <2 x i32> %r
 }
 
-define <2 x i32> @test_select(<2 x i32> %a, <2 x i32> %b, i1 zeroext %c) #0 {
+define <2 x i32> @test_select(<2 x i32> %a, <2 x i32> %b, i1 zeroext %c) {
 ; CHECK-LABEL: test_select:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    copyw $r3 = $r2
@@ -369,7 +369,7 @@ define <2 x i32> @test_select(<2 x i32> %a, <2 x i32> %b, i1 zeroext %c) #0 {
   ret <2 x i32> %r
 }
 
-define <2 x i32> @test_select_cc(<2 x i32> %a, <2 x i32> %b, <2 x i32> %c, <2 x i32> %d) #0 {
+define <2 x i32> @test_select_cc(<2 x i32> %a, <2 x i32> %b, <2 x i32> %c, <2 x i32> %d) {
 ; CHECK-LABEL: test_select_cc:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compnwp.lt $r2 = $r2, $r3
@@ -382,7 +382,7 @@ define <2 x i32> @test_select_cc(<2 x i32> %a, <2 x i32> %b, <2 x i32> %c, <2 x 
   ret <2 x i32> %r
 }
 
-define <2 x i64> @test_select_cc_f32_f32(<2 x i64> %a, <2 x i64> %b, <2 x i32> %c, <2 x i32> %d) #0 {
+define <2 x i64> @test_select_cc_f32_f32(<2 x i64> %a, <2 x i64> %b, <2 x i32> %c, <2 x i32> %d) {
 ; CHECK-LABEL: test_select_cc_f32_f32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compnwp.ltu $r4 = $r4, $r5
@@ -404,7 +404,7 @@ define <2 x i64> @test_select_cc_f32_f32(<2 x i64> %a, <2 x i64> %b, <2 x i32> %
   ret <2 x i64> %r
 }
 
-define <2 x i1> @test_icmp_ule(<2 x i32> %a, <2 x i32> %b) #0 {
+define <2 x i1> @test_icmp_ule(<2 x i32> %a, <2 x i32> %b) {
 ; CHECK-LABEL: test_icmp_ule:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compnwp.leu $r0 = $r0, $r1
@@ -418,7 +418,7 @@ define <2 x i1> @test_icmp_ule(<2 x i32> %a, <2 x i32> %b) #0 {
   ret <2 x i1> %r
 }
 
-define <2 x i1> @test_icmp_slt(<2 x i32> %a, <2 x i32> %b) #0 {
+define <2 x i1> @test_icmp_slt(<2 x i32> %a, <2 x i32> %b) {
 ; CHECK-LABEL: test_icmp_slt:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compnwp.lt $r0 = $r0, $r1
@@ -432,7 +432,7 @@ define <2 x i1> @test_icmp_slt(<2 x i32> %a, <2 x i32> %b) #0 {
   ret <2 x i1> %r
 }
 
-define <2 x i1> @test_icmp_ugt(<2 x i32> %a, <2 x i32> %b) #0 {
+define <2 x i1> @test_icmp_ugt(<2 x i32> %a, <2 x i32> %b) {
 ; CHECK-LABEL: test_icmp_ugt:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compnwp.gtu $r0 = $r0, $r1
@@ -446,7 +446,7 @@ define <2 x i1> @test_icmp_ugt(<2 x i32> %a, <2 x i32> %b) #0 {
   ret <2 x i1> %r
 }
 
-define <2 x i1> @test_icmp_uge(<2 x i32> %a, <2 x i32> %b) #0 {
+define <2 x i1> @test_icmp_uge(<2 x i32> %a, <2 x i32> %b) {
 ; CHECK-LABEL: test_icmp_uge:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compnwp.geu $r0 = $r0, $r1
@@ -460,7 +460,7 @@ define <2 x i1> @test_icmp_uge(<2 x i32> %a, <2 x i32> %b) #0 {
   ret <2 x i1> %r
 }
 
-define <2 x i1> @test_icmp_ult(<2 x i32> %a, <2 x i32> %b) #0 {
+define <2 x i1> @test_icmp_ult(<2 x i32> %a, <2 x i32> %b) {
 ; CHECK-LABEL: test_icmp_ult:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compnwp.ltu $r0 = $r0, $r1
@@ -474,7 +474,7 @@ define <2 x i1> @test_icmp_ult(<2 x i32> %a, <2 x i32> %b) #0 {
   ret <2 x i1> %r
 }
 
-define <2 x i64> @test_sext_2xi64(<2 x i32> %a) #0 {
+define <2 x i64> @test_sext_2xi64(<2 x i32> %a) {
 ; CHECK-LABEL: test_sext_2xi64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srad $r1 = $r0, 32
@@ -489,7 +489,7 @@ define <2 x i64> @test_sext_2xi64(<2 x i32> %a) #0 {
 
 declare <2 x i32> @llvm.abs.v2i32(<2 x i32>, i1) #0
 
-define <2 x i32> @test_abs(<2 x i32> %a) #0 {
+define <2 x i32> @test_abs(<2 x i32> %a) {
 ; CHECK-LABEL: test_abs:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    abswp $r0 = $r0
@@ -499,7 +499,7 @@ define <2 x i32> @test_abs(<2 x i32> %a) #0 {
   ret <2 x i32> %r
 }
 
-define <2 x i32> @test_insertelement0(<2 x i32> %a, i32 %x) #0 {
+define <2 x i32> @test_insertelement0(<2 x i32> %a, i32 %x) {
 ; CHECK-LABEL: test_insertelement0:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 0
@@ -509,7 +509,7 @@ define <2 x i32> @test_insertelement0(<2 x i32> %a, i32 %x) #0 {
   ret <2 x i32> %i
 }
 
-define <2 x i32> @test_insertelement1(<2 x i32> %a, i32 %x) #0 {
+define <2 x i32> @test_insertelement1(<2 x i32> %a, i32 %x) {
 ; CHECK-LABEL: test_insertelement1:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 32
@@ -519,7 +519,7 @@ define <2 x i32> @test_insertelement1(<2 x i32> %a, i32 %x) #0 {
   ret <2 x i32> %i
 }
 
-define <2 x i32> @test_insertelement(<2 x i32> %a, i32 %x, i64 %p) #0 {
+define <2 x i32> @test_insertelement(<2 x i32> %a, i32 %x, i64 %p) {
 ; CHECK-LABEL: test_insertelement:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    copyd $r3 = $r0
@@ -534,7 +534,7 @@ define <2 x i32> @test_insertelement(<2 x i32> %a, i32 %x, i64 %p) #0 {
   ret <2 x i32> %i
 }
 
-define <2 x i32> @mulsub(<2 x i32> %a, <2 x i32> %b, <2 x i32> %c) #0 {
+define <2 x i32> @mulsub(<2 x i32> %a, <2 x i32> %b, <2 x i32> %c) {
 ; CHECK-LABEL: mulsub:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    msbfwp $r0 = $r1, $r2
@@ -545,7 +545,7 @@ define <2 x i32> @mulsub(<2 x i32> %a, <2 x i32> %b, <2 x i32> %c) #0 {
   ret <2 x i32> %sub
 }
 
-define <2 x i32> @vnot(<2 x i32> %a) #0 {
+define <2 x i32> @vnot(<2 x i32> %a) {
 ; CHECK-LABEL: vnot:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    notd $r0 = $r0
@@ -555,7 +555,7 @@ define <2 x i32> @vnot(<2 x i32> %a) #0 {
   ret <2 x i32> %vnot
 }
 
-define <2 x i32> @shuffle_v2i32_0_0(<2 x i32> %0, <2 x i32> %1) #0 {
+define <2 x i32> @shuffle_v2i32_0_0(<2 x i32> %0, <2 x i32> %1) {
 ; CHECK-LABEL: shuffle_v2i32_0_0:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    insf $r0 = $r0, 63, 32
@@ -566,7 +566,7 @@ entry:
   ret <2 x i32> %2
 }
 
-define <2 x i32> @shuffle_v2i32_0_1(<2 x i32> %0, <2 x i32> %1) #0 {
+define <2 x i32> @shuffle_v2i32_0_1(<2 x i32> %0, <2 x i32> %1) {
 ; CHECK-LABEL: shuffle_v2i32_0_1:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ret
@@ -576,7 +576,7 @@ entry:
   ret <2 x i32> %2
 }
 
-define <2 x i32> @shuffle_v2i32_0_2(<2 x i32> %0, <2 x i32> %1) #0 {
+define <2 x i32> @shuffle_v2i32_0_2(<2 x i32> %0, <2 x i32> %1) {
 ; CHECK-LABEL: shuffle_v2i32_0_2:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 32
@@ -587,7 +587,7 @@ entry:
   ret <2 x i32> %2
 }
 
-define <2 x i32> @shuffle_v2i32_0_3(<2 x i32> %0, <2 x i32> %1) #0 {
+define <2 x i32> @shuffle_v2i32_0_3(<2 x i32> %0, <2 x i32> %1) {
 ; CHECK-LABEL: shuffle_v2i32_0_3:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    srad $r1 = $r1, 32
@@ -600,7 +600,7 @@ entry:
   ret <2 x i32> %2
 }
 
-define <2 x i32> @shuffle_v2i32_1_0(<2 x i32> %0, <2 x i32> %1) #0 {
+define <2 x i32> @shuffle_v2i32_1_0(<2 x i32> %0, <2 x i32> %1) {
 ; CHECK-LABEL: shuffle_v2i32_1_0:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x804020180402010
@@ -611,7 +611,7 @@ entry:
   ret <2 x i32> %2
 }
 
-define <2 x i32> @shuffle_v2i32_1_1(<2 x i32> %0, <2 x i32> %1) #0 {
+define <2 x i32> @shuffle_v2i32_1_1(<2 x i32> %0, <2 x i32> %1) {
 ; CHECK-LABEL: shuffle_v2i32_1_1:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x8040201080402010
@@ -622,7 +622,7 @@ entry:
   ret <2 x i32> %2
 }
 
-define <2 x i32> @shuffle_v2i32_1_2(<2 x i32> %0, <2 x i32> %1) #0 {
+define <2 x i32> @shuffle_v2i32_1_2(<2 x i32> %0, <2 x i32> %1) {
 ; CHECK-LABEL: shuffle_v2i32_1_2:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 0
@@ -635,7 +635,7 @@ entry:
   ret <2 x i32> %2
 }
 
-define <2 x i32> @shuffle_v2i32_1_3(<2 x i32> %0, <2 x i32> %1) #0 {
+define <2 x i32> @shuffle_v2i32_1_3(<2 x i32> %0, <2 x i32> %1) {
 ; CHECK-LABEL: shuffle_v2i32_1_3:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    srad $r1 = $r1, 32
@@ -649,7 +649,7 @@ entry:
   ret <2 x i32> %2
 }
 
-define <2 x i32> @shuffle_v2i32_2_0(<2 x i32> %0, <2 x i32> %1) #0 {
+define <2 x i32> @shuffle_v2i32_2_0(<2 x i32> %0, <2 x i32> %1) {
 ; CHECK-LABEL: shuffle_v2i32_2_0:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    insf $r1 = $r0, 63, 32
@@ -662,7 +662,7 @@ entry:
   ret <2 x i32> %2
 }
 
-define <2 x i32> @shuffle_v2i32_2_1(<2 x i32> %0, <2 x i32> %1) #0 {
+define <2 x i32> @shuffle_v2i32_2_1(<2 x i32> %0, <2 x i32> %1) {
 ; CHECK-LABEL: shuffle_v2i32_2_1:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    srad $r2 = $r0, 32
@@ -676,7 +676,7 @@ entry:
   ret <2 x i32> %2
 }
 
-define <2 x i32> @shuffle_v2i32_2_2(<2 x i32> %0, <2 x i32> %1) #0 {
+define <2 x i32> @shuffle_v2i32_2_2(<2 x i32> %0, <2 x i32> %1) {
 ; CHECK-LABEL: shuffle_v2i32_2_2:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    copyd $r0 = $r1
@@ -689,7 +689,7 @@ entry:
   ret <2 x i32> %2
 }
 
-define <2 x i32> @shuffle_v2i32_2_3(<2 x i32> %0, <2 x i32> %1) #0 {
+define <2 x i32> @shuffle_v2i32_2_3(<2 x i32> %0, <2 x i32> %1) {
 ; CHECK-LABEL: shuffle_v2i32_2_3:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    copyd $r0 = $r1
@@ -700,7 +700,7 @@ entry:
   ret <2 x i32> %2
 }
 
-define <2 x i32> @shuffle_v2i32_3_0(<2 x i32> %0, <2 x i32> %1) #0 {
+define <2 x i32> @shuffle_v2i32_3_0(<2 x i32> %0, <2 x i32> %1) {
 ; CHECK-LABEL: shuffle_v2i32_3_0:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    insf $r1 = $r0, 31, 0
@@ -713,7 +713,7 @@ entry:
   ret <2 x i32> %2
 }
 
-define <2 x i32> @shuffle_v2i32_3_1(<2 x i32> %0, <2 x i32> %1) #0 {
+define <2 x i32> @shuffle_v2i32_3_1(<2 x i32> %0, <2 x i32> %1) {
 ; CHECK-LABEL: shuffle_v2i32_3_1:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    srad $r2 = $r0, 32
@@ -727,7 +727,7 @@ entry:
   ret <2 x i32> %2
 }
 
-define <2 x i32> @shuffle_v2i32_3_2(<2 x i32> %0, <2 x i32> %1) #0 {
+define <2 x i32> @shuffle_v2i32_3_2(<2 x i32> %0, <2 x i32> %1) {
 ; CHECK-LABEL: shuffle_v2i32_3_2:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbmm8 $r0 = $r1, 0x804020180402010
@@ -738,7 +738,7 @@ entry:
   ret <2 x i32> %2
 }
 
-define <2 x i32> @shuffle_v2i32_3_3(<2 x i32> %0, <2 x i32> %1) #0 {
+define <2 x i32> @shuffle_v2i32_3_3(<2 x i32> %0, <2 x i32> %1) {
 ; CHECK-LABEL: shuffle_v2i32_3_3:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbmm8 $r0 = $r1, 0x8040201080402010
@@ -749,7 +749,7 @@ entry:
   ret <2 x i32> %2
 }
 
-define <2 x i32> @lnand(<2 x i32> %0, <2 x i32> %1) #0 {
+define <2 x i32> @lnand(<2 x i32> %0, <2 x i32> %1) {
 ; CHECK-LABEL: lnand:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lnandwp $r0 = $r1, $r0
@@ -762,7 +762,7 @@ define <2 x i32> @lnand(<2 x i32> %0, <2 x i32> %1) #0 {
   ret <2 x i32> %6
 }
 
-define <2 x i32> @lnandn(<2 x i32> %0, <2 x i32> %1) #0 {
+define <2 x i32> @lnandn(<2 x i32> %0, <2 x i32> %1) {
 ; CHECK-LABEL: lnandn:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lnandwp $r0 = $r1, $r0
@@ -777,7 +777,7 @@ define <2 x i32> @lnandn(<2 x i32> %0, <2 x i32> %1) #0 {
   ret <2 x i32> %6
 }
 
-define <2 x i32> @lor(<2 x i32> %0, <2 x i32> %1) #0 {
+define <2 x i32> @lor(<2 x i32> %0, <2 x i32> %1) {
 ; CHECK-LABEL: lor:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lorwp $r0 = $r0, $r1
@@ -790,7 +790,7 @@ define <2 x i32> @lor(<2 x i32> %0, <2 x i32> %1) #0 {
 }
 
 ; Not sure this is better than a (compnwq.ne (ord), (make 0))
-define <2 x i32> @lorneg(<2 x i32> %0, <2 x i32> %1) #0 {
+define <2 x i32> @lorneg(<2 x i32> %0, <2 x i32> %1) {
 ; CHECK-LABEL: lorneg:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lorwp $r0 = $r0, $r1
@@ -804,7 +804,7 @@ define <2 x i32> @lorneg(<2 x i32> %0, <2 x i32> %1) #0 {
   ret <2 x i32> %5
 }
 
-define <2 x i32> @lnor(<2 x i32> %0, <2 x i32> %1) #0 {
+define <2 x i32> @lnor(<2 x i32> %0, <2 x i32> %1) {
 ; CHECK-LABEL: lnor:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lnorwp $r0 = $r0, $r1
@@ -817,7 +817,7 @@ define <2 x i32> @lnor(<2 x i32> %0, <2 x i32> %1) #0 {
 }
 
 ; Not sure this is better than a (compnwq.eq (ord), (make 0))
-define <2 x i32> @lnorneg(<2 x i32> %0, <2 x i32> %1) #0 {
+define <2 x i32> @lnorneg(<2 x i32> %0, <2 x i32> %1) {
 ; CHECK-LABEL: lnorneg:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lnorwp $r0 = $r0, $r1
@@ -832,7 +832,7 @@ define <2 x i32> @lnorneg(<2 x i32> %0, <2 x i32> %1) #0 {
 }
 
 
-define <2 x i32> @abdwp_rr(<2 x i32> %a, <2 x i32> %b) #0 {
+define <2 x i32> @abdwp_rr(<2 x i32> %a, <2 x i32> %b) {
 ; CHECK-LABEL: abdwp_rr:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    abdwp $r0 = $r1, $r0
@@ -844,7 +844,7 @@ entry:
   ret <2 x i32> %0
 }
 
-define <2 x i32> @abdwp_not_ri(<2 x i32> %0) #0 {
+define <2 x i32> @abdwp_not_ri(<2 x i32> %0) {
 ; CHECK-LABEL: abdwp_not_ri:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r1 = 0x100000000f
@@ -857,7 +857,7 @@ define <2 x i32> @abdwp_not_ri(<2 x i32> %0) #0 {
   ret <2 x i32> %3
 }
 
-define <2 x i32> @abdwp_ri_(<2 x i32> %0) #0 {
+define <2 x i32> @abdwp_ri_(<2 x i32> %0) {
 ; CHECK-LABEL: abdwp_ri_:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    abdwp $r0 = $r0, 15
@@ -868,7 +868,7 @@ define <2 x i32> @abdwp_ri_(<2 x i32> %0) #0 {
   ret <2 x i32> %3
 }
 
-define <2 x i32> @abdwp_ri_at(<2 x i32> %0) #0 {
+define <2 x i32> @abdwp_ri_at(<2 x i32> %0) {
 ; CHECK-LABEL: abdwp_ri_at:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    abdwp.@ $r0 = $r0, 0xf

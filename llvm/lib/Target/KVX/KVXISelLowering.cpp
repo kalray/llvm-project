@@ -170,7 +170,8 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
         MVT::v4i16, MVT::v4f32, MVT::v4i32, MVT::v4i64, MVT::v8i8}) {
     setOperationAction(ISD::UDIV, VT, Expand);
     setOperationAction(ISD::SDIV, VT, Expand);
-    // TODO: vector_shuffle can, in many cases, be done with sbmm8
+    // TODO: if one vector is undef and the type fits in a singleReg,
+    // using sbmm8 might be profitable.
     setOperationAction(ISD::VECTOR_SHUFFLE, VT, Expand);
     // TODO: add tests for why we need to expand SCALAR_TO_VECTOR
     setOperationAction(ISD::SCALAR_TO_VECTOR, VT, Expand);
