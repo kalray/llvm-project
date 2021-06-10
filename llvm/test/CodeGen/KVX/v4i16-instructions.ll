@@ -2,7 +2,7 @@
 ; RUN: llc -O2 -o - %s | FileCheck %s
 target triple = "kvx-kalray-cos"
 
-define <4 x i16> @test_ret_const() #0 {
+define <4 x i16> @test_ret_const() {
 ; CHECK-LABEL: test_ret_const:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r0 = 0x2000100020001
@@ -11,7 +11,7 @@ define <4 x i16> @test_ret_const() #0 {
   ret <4 x i16> <i16 1, i16 2, i16 1, i16 2>
 }
 
-define i16 @test_extract_0(<4 x i16> %a) #0 {
+define i16 @test_extract_0(<4 x i16> %a) {
 ; CHECK-LABEL: test_extract_0:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    zxhd $r0 = $r0
@@ -21,7 +21,7 @@ define i16 @test_extract_0(<4 x i16> %a) #0 {
   ret i16 %e
 }
 
-define i16 @test_extract_1(<4 x i16> %a) #0 {
+define i16 @test_extract_1(<4 x i16> %a) {
 ; CHECK-LABEL: test_extract_1:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srlw $r0 = $r0, 16
@@ -31,7 +31,7 @@ define i16 @test_extract_1(<4 x i16> %a) #0 {
   ret i16 %e
 }
 
-define i16 @test_extract_2(<4 x i16> %a) #0 {
+define i16 @test_extract_2(<4 x i16> %a) {
 ; CHECK-LABEL: test_extract_2:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    extfz $r0 = $r0, 47, 32
@@ -41,7 +41,7 @@ define i16 @test_extract_2(<4 x i16> %a) #0 {
   ret i16 %e
 }
 
-define i16 @test_extract_3(<4 x i16> %a) #0 {
+define i16 @test_extract_3(<4 x i16> %a) {
 ; CHECK-LABEL: test_extract_3:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srld $r0 = $r0, 48
@@ -51,7 +51,7 @@ define i16 @test_extract_3(<4 x i16> %a) #0 {
   ret i16 %e
 }
 
-define <4 x i16> @test_fma(<4 x i16> %a, <4 x i16> %b, <4 x i16> %c) #0 {
+define <4 x i16> @test_fma(<4 x i16> %a, <4 x i16> %b, <4 x i16> %c) {
 ; CHECK-LABEL: test_fma:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    maddhq $r0 = $r1, $r2
@@ -62,7 +62,7 @@ define <4 x i16> @test_fma(<4 x i16> %a, <4 x i16> %b, <4 x i16> %c) #0 {
   ret <4 x i16> %ad
 }
 
-define <4 x i16> @test_fma_imm(<4 x i16> %a, <4 x i16> %b) #0 {
+define <4 x i16> @test_fma_imm(<4 x i16> %a, <4 x i16> %b) {
 ; CHECK-LABEL: test_fma_imm:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    maddhq $r0 = $r1, 0x3000100020007
@@ -75,7 +75,7 @@ define <4 x i16> @test_fma_imm(<4 x i16> %a, <4 x i16> %b) #0 {
 
 
 ; TODO: Prevent using sllhqs for fma
-define <4 x i16> @test_fma_imm_2(<4 x i16> %a, <4 x i16> %b) #0 {
+define <4 x i16> @test_fma_imm_2(<4 x i16> %a, <4 x i16> %b) {
 ; CHECK-LABEL: test_fma_imm_2:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sllhqs $r2 = $r1, 1
@@ -115,7 +115,7 @@ define i16 @test_extract_i(<4 x i16> %a, i64 %idx) #0 {
   ret i16 %e
 }
 
-define <4 x i16> @test_add(<4 x i16> %a, <4 x i16> %b) #0 {
+define <4 x i16> @test_add(<4 x i16> %a, <4 x i16> %b) {
 ; CHECK-LABEL: test_add:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addhq $r0 = $r0, $r1
@@ -125,7 +125,7 @@ define <4 x i16> @test_add(<4 x i16> %a, <4 x i16> %b) #0 {
   ret <4 x i16> %r
 }
 
-define <4 x i16> @test_add_imm_0(<4 x i16> %a) #0 {
+define <4 x i16> @test_add_imm_0(<4 x i16> %a) {
 ; CHECK-LABEL: test_add_imm_0:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addhq.@ $r0 = $r0, 0x20001
@@ -135,7 +135,7 @@ define <4 x i16> @test_add_imm_0(<4 x i16> %a) #0 {
   ret <4 x i16> %r
 }
 
-define <4 x i16> @test_add_imm_1(<4 x i16> %a) #0 {
+define <4 x i16> @test_add_imm_1(<4 x i16> %a) {
 ; CHECK-LABEL: test_add_imm_1:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addhq.@ $r0 = $r0, 0x20001
@@ -145,7 +145,7 @@ define <4 x i16> @test_add_imm_1(<4 x i16> %a) #0 {
   ret <4 x i16> %r
 }
 
-define <4 x i16> @test_sub(<4 x i16> %a, <4 x i16> %b) #0 {
+define <4 x i16> @test_sub(<4 x i16> %a, <4 x i16> %b) {
 ; CHECK-LABEL: test_sub:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbfhq $r0 = $r1, $r0
@@ -155,7 +155,7 @@ define <4 x i16> @test_sub(<4 x i16> %a, <4 x i16> %b) #0 {
   ret <4 x i16> %r
 }
 
-define <4 x i16> @test_sub_imm(<4 x i16> %a) #0 {
+define <4 x i16> @test_sub_imm(<4 x i16> %a) {
 ; CHECK-LABEL: test_sub_imm:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addhq.@ $r0 = $r0, 0xfffeffff
@@ -165,7 +165,7 @@ define <4 x i16> @test_sub_imm(<4 x i16> %a) #0 {
   ret <4 x i16> %r
 }
 
-define <4 x i16> @test_sub_fromimm(<4 x i16> %a) #0 {
+define <4 x i16> @test_sub_fromimm(<4 x i16> %a) {
 ; CHECK-LABEL: test_sub_fromimm:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbfhq.@ $r0 = $r0, 0x20001
@@ -175,7 +175,7 @@ define <4 x i16> @test_sub_fromimm(<4 x i16> %a) #0 {
   ret <4 x i16> %r
 }
 
-define <4 x i16> @test_neg(<4 x i16> %a) #0 {
+define <4 x i16> @test_neg(<4 x i16> %a) {
 ; CHECK-LABEL: test_neg:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    neghq $r0 = $r0
@@ -188,7 +188,7 @@ define <4 x i16> @test_neg(<4 x i16> %a) #0 {
 ; FIXME: The calling convention passes 2 <2 x i16> and
 ; dag combine decides to not use <4 x i16> for a single
 ; instruction.
-define <4 x i16> @test_mul(<4 x i16> %a, <4 x i16> %b) #0 {
+define <4 x i16> @test_mul(<4 x i16> %a, <4 x i16> %b) {
 ; CHECK-LABEL: test_mul:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    mulhq $r0 = $r0, $r1
@@ -198,7 +198,7 @@ define <4 x i16> @test_mul(<4 x i16> %a, <4 x i16> %b) #0 {
   ret <4 x i16> %r
 }
 
-define <4 x i16> @test_mul_2(<4 x i16> %a, <4 x i16> %b, <4 x i16> %c) #0 {
+define <4 x i16> @test_mul_2(<4 x i16> %a, <4 x i16> %b, <4 x i16> %c) {
 ; CHECK-LABEL: test_mul_2:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    mulhq $r0 = $r0, $r1
@@ -388,7 +388,7 @@ define void @test_ldst_v4i16(<4 x i16>* %a, <4 x i16>* %b) {
   ret void
 }
 
-declare <4 x i16> @test_callee(<4 x i16> %a, <4 x i16> %b) #0
+declare <4 x i16> @test_callee(<4 x i16> %a, <4 x i16> %b)
 
 define <4 x i16> @test_call(<4 x i16> %a, <4 x i16> %b) #0 {
 ; CHECK-LABEL: test_call:
@@ -435,7 +435,7 @@ define <4 x i16> @test_call_flipped(<4 x i16> %a, <4 x i16> %b) #0 {
 }
 
 ; Can perform swap in a single bundle
-define <4 x i16> @test_tailcall_flipped(<4 x i16> %a, <4 x i16> %b) #0 {
+define <4 x i16> @test_tailcall_flipped(<4 x i16> %a, <4 x i16> %b) {
 ; CHECK-LABEL: test_tailcall_flipped:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    copyd $r2 = $r0
@@ -449,7 +449,7 @@ define <4 x i16> @test_tailcall_flipped(<4 x i16> %a, <4 x i16> %b) #0 {
 }
 
 ; This could be selected to (cmovehq(negate(is_odd %c), %a, %b)
-define <4 x i16> @test_select(<4 x i16> %a, <4 x i16> %b, i1 zeroext %c) #0 {
+define <4 x i16> @test_select(<4 x i16> %a, <4 x i16> %b, i1 zeroext %c) {
 ; CHECK-LABEL: test_select:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    copyw $r3 = $r2
@@ -469,7 +469,7 @@ define <4 x i16> @test_select(<4 x i16> %a, <4 x i16> %b, i1 zeroext %c) #0 {
   ret <4 x i16> %r
 }
 
-define <4 x i16> @test_select_cc(<4 x i16> %a, <4 x i16> %b, <4 x i16> %c, <4 x i16> %d) #0 {
+define <4 x i16> @test_select_cc(<4 x i16> %a, <4 x i16> %b, <4 x i16> %c, <4 x i16> %d) {
 ; CHECK-LABEL: test_select_cc:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compnhq.lt $r2 = $r2, $r3
@@ -482,7 +482,7 @@ define <4 x i16> @test_select_cc(<4 x i16> %a, <4 x i16> %b, <4 x i16> %c, <4 x 
   ret <4 x i16> %r
 }
 
-define <4 x i64> @test_select_cc_f32_f32(<4 x i64> %a, <4 x i64> %b, <4 x i16> %c, <4 x i16> %d) #0 {
+define <4 x i64> @test_select_cc_f32_f32(<4 x i64> %a, <4 x i64> %b, <4 x i16> %c, <4 x i16> %d) {
 ; CHECK-LABEL: test_select_cc_f32_f32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compnhq.ltu $r8 = $r8, $r9
@@ -515,7 +515,7 @@ define <4 x i64> @test_select_cc_f32_f32(<4 x i64> %a, <4 x i64> %b, <4 x i16> %
   ret <4 x i64> %r
 }
 
-define <4 x i1> @test_icmp_ule(<4 x i16> %a, <4 x i16> %b) #0 {
+define <4 x i1> @test_icmp_ule(<4 x i16> %a, <4 x i16> %b) {
 ; CHECK-LABEL: test_icmp_ule:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compnhq.leu $r0 = $r0, $r1
@@ -535,7 +535,7 @@ define <4 x i1> @test_icmp_ule(<4 x i16> %a, <4 x i16> %b) #0 {
   ret <4 x i1> %r
 }
 
-define <4 x i1> @test_icmp_slt(<4 x i16> %a, <4 x i16> %b) #0 {
+define <4 x i1> @test_icmp_slt(<4 x i16> %a, <4 x i16> %b) {
 ; CHECK-LABEL: test_icmp_slt:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compnhq.lt $r0 = $r0, $r1
@@ -555,7 +555,7 @@ define <4 x i1> @test_icmp_slt(<4 x i16> %a, <4 x i16> %b) #0 {
   ret <4 x i1> %r
 }
 
-define <4 x i1> @test_icmp_ugt(<4 x i16> %a, <4 x i16> %b) #0 {
+define <4 x i1> @test_icmp_ugt(<4 x i16> %a, <4 x i16> %b) {
 ; CHECK-LABEL: test_icmp_ugt:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compnhq.gtu $r0 = $r0, $r1
@@ -575,7 +575,7 @@ define <4 x i1> @test_icmp_ugt(<4 x i16> %a, <4 x i16> %b) #0 {
   ret <4 x i1> %r
 }
 
-define <4 x i1> @test_icmp_uge(<4 x i16> %a, <4 x i16> %b) #0 {
+define <4 x i1> @test_icmp_uge(<4 x i16> %a, <4 x i16> %b) {
 ; CHECK-LABEL: test_icmp_uge:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compnhq.geu $r0 = $r0, $r1
@@ -595,7 +595,7 @@ define <4 x i1> @test_icmp_uge(<4 x i16> %a, <4 x i16> %b) #0 {
   ret <4 x i1> %r
 }
 
-define <4 x i1> @test_icmp_ult(<4 x i16> %a, <4 x i16> %b) #0 {
+define <4 x i1> @test_icmp_ult(<4 x i16> %a, <4 x i16> %b) {
 ; CHECK-LABEL: test_icmp_ult:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compnhq.ltu $r0 = $r0, $r1
@@ -615,7 +615,7 @@ define <4 x i1> @test_icmp_ult(<4 x i16> %a, <4 x i16> %b) #0 {
   ret <4 x i1> %r
 }
 
-define <4 x i64> @test_sext_2xi64(<4 x i16> %a) #0 {
+define <4 x i64> @test_sext_2xi64(<4 x i16> %a) {
 ; CHECK-LABEL: test_sext_2xi64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    extfz $r2 = $r0, 47, 32
@@ -636,7 +636,7 @@ define <4 x i64> @test_sext_2xi64(<4 x i16> %a) #0 {
 
 declare <4 x i16> @llvm.abs.v4i16(<4 x i16>, i1) #0
 
-define <4 x i16> @test_abs(<4 x i16> %a) #0 {
+define <4 x i16> @test_abs(<4 x i16> %a) {
 ; CHECK-LABEL: test_abs:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    abshq $r0 = $r0
@@ -646,7 +646,7 @@ define <4 x i16> @test_abs(<4 x i16> %a) #0 {
   ret <4 x i16> %r
 }
 
-define <4 x i16> @test_insertelement0(<4 x i16> %a, i16 %x) #0 {
+define <4 x i16> @test_insertelement0(<4 x i16> %a, i16 %x) {
 ; CHECK-LABEL: test_insertelement0:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 0
@@ -656,7 +656,7 @@ define <4 x i16> @test_insertelement0(<4 x i16> %a, i16 %x) #0 {
   ret <4 x i16> %i
 }
 
-define <4 x i16> @test_insertelement1(<4 x i16> %a, i16 %x) #0 {
+define <4 x i16> @test_insertelement1(<4 x i16> %a, i16 %x) {
 ; CHECK-LABEL: test_insertelement1:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 16
@@ -666,7 +666,7 @@ define <4 x i16> @test_insertelement1(<4 x i16> %a, i16 %x) #0 {
   ret <4 x i16> %i
 }
 
-define <4 x i16> @test_insertelement2(<4 x i16> %a, i16 %x) #0 {
+define <4 x i16> @test_insertelement2(<4 x i16> %a, i16 %x) {
 ; CHECK-LABEL: test_insertelement2:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    insf $r0 = $r1, 47, 32
@@ -676,7 +676,7 @@ define <4 x i16> @test_insertelement2(<4 x i16> %a, i16 %x) #0 {
   ret <4 x i16> %i
 }
 
-define <4 x i16> @test_insertelement3(<4 x i16> %a, i16 %x) #0 {
+define <4 x i16> @test_insertelement3(<4 x i16> %a, i16 %x) {
 ; CHECK-LABEL: test_insertelement3:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 48
@@ -686,7 +686,7 @@ define <4 x i16> @test_insertelement3(<4 x i16> %a, i16 %x) #0 {
   ret <4 x i16> %i
 }
 
-define <4 x i16> @test_insertelement(<4 x i16> %a, i16 %x, i64 %p) #0 {
+define <4 x i16> @test_insertelement(<4 x i16> %a, i16 %x, i64 %p) {
 ; CHECK-LABEL: test_insertelement:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    insf $r2 = $r2, 31, 16
@@ -705,7 +705,7 @@ define <4 x i16> @test_insertelement(<4 x i16> %a, i16 %x, i64 %p) #0 {
   ret <4 x i16> %i
 }
 
-define <4 x i16> @mulsub(<4 x i16> %a, <4 x i16> %b, <4 x i16> %c) #0 {
+define <4 x i16> @mulsub(<4 x i16> %a, <4 x i16> %b, <4 x i16> %c) {
 ; CHECK-LABEL: mulsub:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    mulhq $r1 = $r1, $r2
@@ -718,7 +718,7 @@ define <4 x i16> @mulsub(<4 x i16> %a, <4 x i16> %b, <4 x i16> %c) #0 {
   ret <4 x i16> %sub
 }
 
-define <4 x i16> @vnot(<4 x i16> %a) #0 {
+define <4 x i16> @vnot(<4 x i16> %a) {
 ; CHECK-LABEL: vnot:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    notd $r0 = $r0
@@ -728,7 +728,7 @@ define <4 x i16> @vnot(<4 x i16> %a) #0 {
   ret <4 x i16> %vnot
 }
 
-define <4 x i16> @lnand(<4 x i16> %0, <4 x i16> %1) #0 {
+define <4 x i16> @lnand(<4 x i16> %0, <4 x i16> %1) {
 ; CHECK-LABEL: lnand:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lnandhq $r0 = $r1, $r0
@@ -741,7 +741,7 @@ define <4 x i16> @lnand(<4 x i16> %0, <4 x i16> %1) #0 {
   ret <4 x i16> %6
 }
 
-define <4 x i16> @lnandn(<4 x i16> %0, <4 x i16> %1) #0 {
+define <4 x i16> @lnandn(<4 x i16> %0, <4 x i16> %1) {
 ; CHECK-LABEL: lnandn:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lnandhq $r0 = $r1, $r0
@@ -756,7 +756,7 @@ define <4 x i16> @lnandn(<4 x i16> %0, <4 x i16> %1) #0 {
   ret <4 x i16> %6
 }
 
-define <4 x i16> @lor(<4 x i16> %0, <4 x i16> %1) #0 {
+define <4 x i16> @lor(<4 x i16> %0, <4 x i16> %1) {
 ; CHECK-LABEL: lor:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lorhq $r0 = $r0, $r1
@@ -769,7 +769,7 @@ define <4 x i16> @lor(<4 x i16> %0, <4 x i16> %1) #0 {
 }
 
 ; Not sure this is better than a (compnhq.ne (ord), (make 0))
-define <4 x i16> @lorneg(<4 x i16> %0, <4 x i16> %1) #0 {
+define <4 x i16> @lorneg(<4 x i16> %0, <4 x i16> %1) {
 ; CHECK-LABEL: lorneg:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lorhq $r0 = $r0, $r1
@@ -783,7 +783,7 @@ define <4 x i16> @lorneg(<4 x i16> %0, <4 x i16> %1) #0 {
   ret <4 x i16> %5
 }
 
-define <4 x i16> @lnor(<4 x i16> %0, <4 x i16> %1) #0 {
+define <4 x i16> @lnor(<4 x i16> %0, <4 x i16> %1) {
 ; CHECK-LABEL: lnor:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lnorhq $r0 = $r0, $r1
@@ -796,7 +796,7 @@ define <4 x i16> @lnor(<4 x i16> %0, <4 x i16> %1) #0 {
 }
 
 ; Not sure this is better than a (compnhq.eq (ord), (make 0))
-define <4 x i16> @lnorneg(<4 x i16> %0, <4 x i16> %1) #0 {
+define <4 x i16> @lnorneg(<4 x i16> %0, <4 x i16> %1) {
 ; CHECK-LABEL: lnorneg:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lnorhq $r0 = $r0, $r1
@@ -811,7 +811,7 @@ define <4 x i16> @lnorneg(<4 x i16> %0, <4 x i16> %1) #0 {
 }
 
 
-define <4 x i16> @abdhq_rr(<4 x i16> %a, <4 x i16> %b) #0 {
+define <4 x i16> @abdhq_rr(<4 x i16> %a, <4 x i16> %b) {
 ; CHECK-LABEL: abdhq_rr:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    abdhq $r0 = $r1, $r0
@@ -823,7 +823,7 @@ entry:
   ret <4 x i16> %0
 }
 
-define <4 x i16> @abdhq_not_ri(<4 x i16> %0) #0 {
+define <4 x i16> @abdhq_not_ri(<4 x i16> %0) {
 ; CHECK-LABEL: abdhq_not_ri:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r1 = 0x10000f00100012
@@ -836,7 +836,7 @@ define <4 x i16> @abdhq_not_ri(<4 x i16> %0) #0 {
   ret <4 x i16> %3
 }
 
-define <4 x i16> @abdhq_ri_(<4 x i16> %0) #0 {
+define <4 x i16> @abdhq_ri_(<4 x i16> %0) {
 ; CHECK-LABEL: abdhq_ri_:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    abdhq $r0 = $r0, 0x10000f
@@ -847,7 +847,7 @@ define <4 x i16> @abdhq_ri_(<4 x i16> %0) #0 {
   ret <4 x i16> %3
 }
 
-define <4 x i16> @abdhq_ri_at(<4 x i16> %0) #0 {
+define <4 x i16> @abdhq_ri_at(<4 x i16> %0) {
 ; CHECK-LABEL: abdhq_ri_at:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    abdhq.@ $r0 = $r0, 0x10000f
