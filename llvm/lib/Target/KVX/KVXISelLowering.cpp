@@ -98,7 +98,13 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setMinFunctionAlignment(Align(64));
   setPrefFunctionAlignment(Align(64));
 
-  setSchedulingPreference(Sched::VLIW);
+  // TODO: VLIW allows better performances but not fully correct yet since
+  // set/wfxm/wfxl builtins can be wrongly scheduled due to a SystemRegister
+  // dependency issue, see T16482. Until we fix the VLIW scheduler to take into
+  // account such kind of dependencies, a potential workaround could be to
+  // switch back to VLIW by default and setting Source only when some assembly
+  // inline is detected (since those builtins generate asm inline).
+  setSchedulingPreference(Sched::Source);
 
   initializeTCALowering();
 

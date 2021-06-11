@@ -29,18 +29,17 @@ define i32 @a() {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_2: # in Loop: Header=BB0_1 Depth=1
 ; CHECK-NEXT:    compw.eq $r2 = $r3, 1
-; CHECK-NEXT:    copyv $a3 = $a0
+; CHECK-NEXT:    copyv $a2 = $a1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sllw $r2 = $r2, 6
-; CHECK-NEXT:    copyv $a0 = $a1
+; CHECK-NEXT:    copyv $a3 = $a0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    alignv $a1 = $a1, $a0, $r2
+; CHECK-NEXT:    alignv $a1 = $a1, $a2, $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    alignv $a0 = $a0, $a3, $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_5: # in Loop: Header=BB0_1 Depth=1
 ; CHECK-NEXT:    convwbv0.rz.sat $a2_x = $a0a1a2a3
-; CHECK-NEXT:    addd $r2 = $r0, 2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    convwbv1.rz.sat $a2_y = $a0a1a2a3
 ; CHECK-NEXT:    ;;
@@ -49,7 +48,7 @@ define i32 @a() {
 ; CHECK-NEXT:    convwbv3.rz.sat $a2_t = $a0a1a2a3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 0[$r0] = $a2
-; CHECK-NEXT:    copyd $r0 = $r2
+; CHECK-NEXT:    addd $r0 = $r0, 2
 ; CHECK-NEXT:    copyd $r2 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_1: # =>This Loop Header: Depth=1

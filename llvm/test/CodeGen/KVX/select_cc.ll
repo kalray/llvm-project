@@ -50,29 +50,29 @@ entry:
 define <4 x half> @f_Select32PAT(<4 x half> %x, <4 x half> %y){
 ; CHECK-LABEL: f_Select32PAT:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    srld $r2 = $r0, 32
-; CHECK-NEXT:    srld $r4 = $r1, 32
+; CHECK-NEXT:    srlw $r2 = $r0, 16
 ; CHECK-NEXT:    srlw $r3 = $r1, 16
-; CHECK-NEXT:    srlw $r5 = $r0, 16
+; CHECK-NEXT:    srld $r6 = $r0, 32
+; CHECK-NEXT:    srld $r7 = $r1, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srld $r6 = $r1, 48
-; CHECK-NEXT:    srld $r7 = $r0, 48
-; CHECK-NEXT:    fcompnhq.olt $r8 = $r2, $r4
-; CHECK-NEXT:    fcompnhq.olt $r9 = $r5, $r3
+; CHECK-NEXT:    srld $r8 = $r0, 48
+; CHECK-NEXT:    srld $r9 = $r1, 48
+; CHECK-NEXT:    fcompnhq.olt $r4 = $r0, $r1
+; CHECK-NEXT:    fcompnhq.olt $r5 = $r2, $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompnhq.olt $r10 = $r7, $r6
-; CHECK-NEXT:    fcompnhq.olt $r11 = $r0, $r1
+; CHECK-NEXT:    fcompnhq.olt $r10 = $r6, $r7
+; CHECK-NEXT:    fcompnhq.olt $r11 = $r8, $r9
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r8 ? $r2 = $r4
-; CHECK-NEXT:    cmoved.wnez $r10 ? $r7 = $r6
+; CHECK-NEXT:    cmoved.wnez $r4 ? $r0 = $r1
+; CHECK-NEXT:    cmoved.wnez $r5 ? $r2 = $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r9 ? $r5 = $r3
-; CHECK-NEXT:    cmoved.wnez $r11 ? $r0 = $r1
+; CHECK-NEXT:    cmoved.wnez $r10 ? $r6 = $r7
+; CHECK-NEXT:    cmoved.wnez $r11 ? $r8 = $r9
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r7, 31, 16
-; CHECK-NEXT:    insf $r0 = $r5, 31, 16
+; CHECK-NEXT:    insf $r6 = $r8, 31, 16
+; CHECK-NEXT:    insf $r0 = $r2, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 63, 32
+; CHECK-NEXT:    insf $r0 = $r6, 63, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -207,17 +207,17 @@ define void @test_select_matrix_reg(<1024 x i1> * %V, i1 %cc){
 ; CHECK-NEXT:    alignv $a7 = $a7, $a0, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a0 = 0[$r0]
-; CHECK-NEXT:    alignv $a5 = $a5, $a2, $r1
+; CHECK-NEXT:    alignv $a6 = $a6, $a1, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    alignv $a2 = $a6, $a1, $r1
+; CHECK-NEXT:    alignv $a1 = $a5, $a2, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    alignv $a0 = $a0, $a3, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 96[$r0] = $a7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 64[$r0] = $a2
+; CHECK-NEXT:    sv 64[$r0] = $a6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 32[$r0] = $a5
+; CHECK-NEXT:    sv 32[$r0] = $a1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 0[$r0] = $a0
 ; CHECK-NEXT:    ret

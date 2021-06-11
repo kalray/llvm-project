@@ -11,57 +11,56 @@ define i32 @debug_sanity(i32* nocapture %p, i32 %a, i32 %b, i32 %c, i32 %d) !dbg
 ; CHECK-NEXT:    .file 1 "/dir/source.c"
 ; CHECK-NEXT:    .loc 1 5 0
 ; CHECK-NEXT:    .cfi_startproc
-; CHECK-NEXT:    addd $r12 = $r12, -64
+; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 64
+; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    .cfi_register 67, 16
-; CHECK-NEXT:    .loc 1 6 19 prologue_end
-; CHECK-NEXT:    sd 56[$r12] = $r16
+; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 67, -8
-; CHECK-NEXT:    sq 40[$r12] = $r20r21
+; CHECK-NEXT:    sd 16[$r12] = $r20
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 20, -16
-; CHECK-NEXT:    .cfi_offset 21, -24
 ; CHECK-NEXT:  .Ltmp0:
-; CHECK-NEXT:    sq 24[$r12] = $r18r19
-; CHECK-NEXT:    copyd $r18 = $r2
-; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    addw $r20 = $r3, $r1
+; CHECK-NEXT:    sq 0[$r12] = $r18r19
+; CHECK-NEXT:    copyd $r18 = $r1
+; CHECK-NEXT:    copyd $r20 = $r0
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp1:
-; CHECK-NEXT:    .cfi_offset 18, -32
-; CHECK-NEXT:    .cfi_offset 19, -40
-; CHECK-NEXT:    .loc 1 7 3
-; CHECK-NEXT:    sxwd $r21 = $r1
-; CHECK-NEXT:    copyd $r0 = $r18
-; CHECK-NEXT:    call debug_sanity_extfn
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .loc 1 6 23
-; CHECK-NEXT:    addx2w $r1 = $r18, $r20
+; CHECK-NEXT:    .cfi_offset 18, -24
+; CHECK-NEXT:    .cfi_offset 19, -32
+; CHECK-NEXT:    .loc 1 6 19 prologue_end
+; CHECK-NEXT:    addw $r1 = $r3, $r18
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp2:
-; CHECK-NEXT:    .loc 1 7 14
-; CHECK-NEXT:    addw $r0 = $r0, $r1
+; CHECK-NEXT:    .loc 1 6 23 is_stmt 0
+; CHECK-NEXT:    addx2w $r19 = $r2, $r1
+; CHECK-NEXT:    call debug_sanity_extfn
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  .Ltmp3:
+; CHECK-NEXT:    .loc 1 7 14 is_stmt 1
+; CHECK-NEXT:    addw $r0 = $r0, $r19
+; CHECK-NEXT:    sxwd $r1 = $r18
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 7 8 is_stmt 0
-; CHECK-NEXT:    sw.xs $r21[$r19] = $r0
-; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    sw.xs $r1[$r20] = $r0
+; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 8 3 is_stmt 1
-; CHECK-NEXT:    lq $r18r19 = 24[$r12]
+; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lq $r20r21 = 40[$r12]
+; CHECK-NEXT:    ld $r20 = 16[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 56[$r12]
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 64
+; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .Ltmp3:
+; CHECK-NEXT:  .Ltmp4:
 entry:
   call void @llvm.dbg.value(metadata i32* %p, metadata !13, metadata !DIExpression()), !dbg !19
   call void @llvm.dbg.value(metadata i32 %a, metadata !14, metadata !DIExpression()), !dbg !19
