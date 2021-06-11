@@ -29,18 +29,16 @@ define internal fastcc void @init_array(double* nocapture %alpha, double* nocapt
 ; CHECK-NEXT:  .LBB0_2: # %for.body3
 ; CHECK-NEXT:    # Parent Loop BB0_1 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
-; CHECK-NEXT:    copyd $r6 = $r1
+; CHECK-NEXT:    sxwd $r6 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r1 = $r6
+; CHECK-NEXT:    floatd.rn $r6 = $r6, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatd.rn $r1 = $r1, 0
+; CHECK-NEXT:    fmuld $r6 = $r0, $r6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld $r1 = $r0, $r1
+; CHECK-NEXT:    fmuld $r6 = $r6, 0x3fd0000000000000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld $r7 = $r1, 0x3fd0000000000000
-; CHECK-NEXT:    addd $r1 = $r6, 1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd.xs $r6[$r2] = $r7
+; CHECK-NEXT:    sd.xs $r1[$r2] = $r6
+; CHECK-NEXT:    addd $r1 = $r1, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .__LOOPDO_1_END_:
 ; CHECK-NEXT:  # %bb.3: # %for.inc8

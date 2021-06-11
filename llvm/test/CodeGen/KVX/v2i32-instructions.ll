@@ -194,24 +194,22 @@ define <2 x i32> @test_div(<2 x i32> %a, <2 x i32> %b) #0 {
 ; CHECK-NEXT:    sd 16[$r12] = $r20
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 0[$r12] = $r18r19
-; CHECK-NEXT:    srad $r2 = $r1, 32
-; CHECK-NEXT:    srad $r3 = $r0, 32
-; CHECK-NEXT:    sxwd $r1 = $r1
+; CHECK-NEXT:    copyd $r18 = $r1
+; CHECK-NEXT:    copyd $r19 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srad $r0 = $r19, 32
+; CHECK-NEXT:    srad $r1 = $r18, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxwd $r0 = $r0
-; CHECK-NEXT:    sxwd $r18 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r19 = $r3
+; CHECK-NEXT:    sxwd $r1 = $r1
 ; CHECK-NEXT:    call __divdi3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r20 = $r0
-; CHECK-NEXT:    copyd $r0 = $r19
-; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    sxwd $r0 = $r19
+; CHECK-NEXT:    sxwd $r1 = $r18
 ; CHECK-NEXT:    call __divdi3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r20 = $r0, 63, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r20
+; CHECK-NEXT:    insf $r0 = $r20, 63, 32
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r20 = 16[$r12]
@@ -238,24 +236,22 @@ define <2 x i32> @test_rem(<2 x i32> %a, <2 x i32> %b) #0 {
 ; CHECK-NEXT:    sd 16[$r12] = $r20
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 0[$r12] = $r18r19
-; CHECK-NEXT:    srad $r2 = $r1, 32
-; CHECK-NEXT:    srad $r3 = $r0, 32
-; CHECK-NEXT:    sxwd $r1 = $r1
+; CHECK-NEXT:    copyd $r18 = $r1
+; CHECK-NEXT:    copyd $r19 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srad $r0 = $r19, 32
+; CHECK-NEXT:    srad $r1 = $r18, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxwd $r0 = $r0
-; CHECK-NEXT:    sxwd $r18 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r19 = $r3
+; CHECK-NEXT:    sxwd $r1 = $r1
 ; CHECK-NEXT:    call __moddi3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r20 = $r0
-; CHECK-NEXT:    copyd $r0 = $r19
-; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    sxwd $r0 = $r19
+; CHECK-NEXT:    sxwd $r1 = $r18
 ; CHECK-NEXT:    call __moddi3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r20 = $r0, 63, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r20
+; CHECK-NEXT:    insf $r0 = $r20, 63, 32
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r20 = 16[$r12]

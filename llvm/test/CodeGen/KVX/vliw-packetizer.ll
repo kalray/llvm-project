@@ -41,11 +41,9 @@ entry:
 ; TODO: this is wrong since faddw should be scheduled after set.
 define float @rule4_set(i64 %a, float %b, float %c) {
 ; CHECK-LABEL: rule4_set:
-; CHECK:         faddw $r1 = $r1, $r2
+; CHECK:         set $cs = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    set $cs = $r0
-; CHECK-NEXT:    copyd $r0 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    faddw $r0 = $r1, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -59,11 +57,9 @@ declare float @llvm.kvx.faddw(float, float, i32) #2
 ; TODO: this is wrong since faddw should be scheduled after set.
 define float @rule4_set_builtins_only(i64 %a, float %b, float %c) {
 ; CHECK-LABEL: rule4_set_builtins_only:
-; CHECK:         faddw.rn $r1 = $r1, $r2
+; CHECK:         set $cs = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    set $cs = $r0
-; CHECK-NEXT:    copyd $r0 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    faddw.rn $r0 = $r1, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -75,11 +71,9 @@ ret float %add
 ; TODO: this is wrong since faddw should be scheduled after wfxm.
 define float @rule4_wfxm(i64 %a, float %b, float %c) {
 ; CHECK-LABEL: rule4_wfxm:
-; CHECK:         faddw $r1 = $r1, $r2
+; CHECK:         wfxm $cs, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    wfxm $cs, $r0
-; CHECK-NEXT:    copyd $r0 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    faddw $r0 = $r1, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -91,11 +85,9 @@ entry:
 ; TODO: this is wrong since faddw should be scheduled after wfxm.
 define float @rule4_wfxm_builtins_only(i64 %a, float %b, float %c) {
 ; CHECK-LABEL: rule4_wfxm_builtins_only:
-; CHECK:         faddw.rn $r1 = $r1, $r2
+; CHECK:         wfxm $cs, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    wfxm $cs, $r0
-; CHECK-NEXT:    copyd $r0 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    faddw.rn $r0 = $r1, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -109,11 +101,9 @@ declare void @llvm.kvx.wfxm(i32, i64)
 ; TODO: this is wrong since faddw should be scheduled after wfxl.
 define float @rule4_wfxl(i64 %a, float %b, float %c) {
 ; CHECK-LABEL: rule4_wfxl:
-; CHECK:         faddw $r1 = $r1, $r2
+; CHECK:         wfxl $cs, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    wfxl $cs, $r0
-; CHECK-NEXT:    copyd $r0 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    faddw $r0 = $r1, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
