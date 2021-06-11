@@ -149,8 +149,10 @@ entry:
 define <8 x i16> @sext_8xi8_8xi16(<8 x i8> %a){
 ; CHECK-LABEL: sext_8xi8_8xi16:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    sxlbhq $r2 = $r0
 ; CHECK-NEXT:    sxmbhq $r1 = $r0
-; CHECK-NEXT:    sxlbhq $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -161,8 +163,10 @@ entry:
 define <8 x i16> @zext_8xi8_8xi16(<8 x i8> %a){
 ; CHECK-LABEL: zext_8xi8_8xi16:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    sbmm8 $r2 = $r0, 0x8000400020001
 ; CHECK-NEXT:    sbmm8 $r1 = $r0, 0x80004000200010
-; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x8000400020001
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -206,11 +210,12 @@ entry:
 define <8 x i32> @sext_8xi16_8xi32(<8 x i16> %a){
 ; CHECK-LABEL: sext_8xi16_8xi32:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sxmhwp $r3 = $r1
+; CHECK-NEXT:    sxlhwp $r4 = $r0
 ; CHECK-NEXT:    sxlhwp $r2 = $r1
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sxmhwp $r3 = $r1
 ; CHECK-NEXT:    sxmhwp $r1 = $r0
-; CHECK-NEXT:    sxlhwp $r0 = $r0
+; CHECK-NEXT:    copyd $r0 = $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -221,12 +226,11 @@ entry:
 define <8 x i32> @zext_8xi16_8xi32(<8 x i16> %a){
 ; CHECK-LABEL: zext_8xi16_8xi32:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r4 = $r0, 0x80400000201
+; CHECK-NEXT:    sbmm8 $r3 = $r1, 0x804000002010
 ; CHECK-NEXT:    sbmm8 $r2 = $r1, 0x80400000201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r3 = $r1, 0x804000002010
 ; CHECK-NEXT:    sbmm8 $r1 = $r0, 0x804000002010
-; CHECK-NEXT:    copyd $r0 = $r4
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x80400000201
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -390,8 +394,8 @@ define <4 x i32> @sext_4xi1_4xi32(<4 x i1> %a){
 ; CHECK-NEXT:    extfs $r2 = $r2, 0, 0
 ; CHECK-NEXT:    extfs $r3 = $r3, 0, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r2, 63, 32
 ; CHECK-NEXT:    insf $r0 = $r3, 63, 32
+; CHECK-NEXT:    insf $r1 = $r2, 63, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

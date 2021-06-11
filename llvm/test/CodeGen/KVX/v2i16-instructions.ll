@@ -193,26 +193,25 @@ define <2 x i16> @test_div(<2 x i16> %a, <2 x i16> %b) #0 {
 ; CHECK-NEXT:    sd 16[$r12] = $r20
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 0[$r12] = $r18r19
-; CHECK-NEXT:    sxhd $r2 = $r1
-; CHECK-NEXT:    sxhd $r3 = $r0
-; CHECK-NEXT:    sraw $r4 = $r0, 16
+; CHECK-NEXT:    copyd $r18 = $r1
+; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sraw $r5 = $r1, 16
-; CHECK-NEXT:    sxwd $r1 = $r2
-; CHECK-NEXT:    sxwd $r0 = $r3
+; CHECK-NEXT:    sraw $r0 = $r19, 16
+; CHECK-NEXT:    sraw $r1 = $r18, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r18 = $r4
-; CHECK-NEXT:    sxwd $r19 = $r5
+; CHECK-NEXT:    sxwd $r0 = $r0
+; CHECK-NEXT:    sxwd $r1 = $r1
 ; CHECK-NEXT:    call __divdi3
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sxhd $r1 = $r18
 ; CHECK-NEXT:    copyd $r20 = $r0
-; CHECK-NEXT:    copyd $r0 = $r18
-; CHECK-NEXT:    copyd $r1 = $r19
+; CHECK-NEXT:    sxhd $r0 = $r19
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sxwd $r0 = $r0
+; CHECK-NEXT:    sxwd $r1 = $r1
 ; CHECK-NEXT:    call __divdi3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r20 = $r0, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r20
+; CHECK-NEXT:    insf $r0 = $r20, 31, 16
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r20 = 16[$r12]
@@ -239,26 +238,25 @@ define <2 x i16> @test_rem(<2 x i16> %a, <2 x i16> %b) #0 {
 ; CHECK-NEXT:    sd 16[$r12] = $r20
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 0[$r12] = $r18r19
-; CHECK-NEXT:    sxhd $r2 = $r1
-; CHECK-NEXT:    sxhd $r3 = $r0
-; CHECK-NEXT:    sraw $r4 = $r0, 16
+; CHECK-NEXT:    copyd $r18 = $r1
+; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sraw $r5 = $r1, 16
-; CHECK-NEXT:    sxwd $r1 = $r2
-; CHECK-NEXT:    sxwd $r0 = $r3
+; CHECK-NEXT:    sraw $r0 = $r19, 16
+; CHECK-NEXT:    sraw $r1 = $r18, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r18 = $r4
-; CHECK-NEXT:    sxwd $r19 = $r5
+; CHECK-NEXT:    sxwd $r0 = $r0
+; CHECK-NEXT:    sxwd $r1 = $r1
 ; CHECK-NEXT:    call __moddi3
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sxhd $r1 = $r18
 ; CHECK-NEXT:    copyd $r20 = $r0
-; CHECK-NEXT:    copyd $r0 = $r18
-; CHECK-NEXT:    copyd $r1 = $r19
+; CHECK-NEXT:    sxhd $r0 = $r19
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sxwd $r0 = $r0
+; CHECK-NEXT:    sxwd $r1 = $r1
 ; CHECK-NEXT:    call __moddi3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r20 = $r0, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r20
+; CHECK-NEXT:    insf $r0 = $r20, 31, 16
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r20 = 16[$r12]
@@ -385,11 +383,11 @@ define <2 x i64> @test_select_cc_f32_f32(<2 x i64> %a, <2 x i64> %b, <2 x i16> %
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compnhq.ltu $r4 = $r4, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfs $r5 = $r4, 31, 16
-; CHECK-NEXT:    sxhd $r4 = $r4
+; CHECK-NEXT:    sxhd $r5 = $r4
+; CHECK-NEXT:    extfs $r4 = $r4, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.dnez $r4 ? $r2 = $r0
-; CHECK-NEXT:    cmoved.dnez $r5 ? $r3 = $r1
+; CHECK-NEXT:    cmoved.dnez $r5 ? $r2 = $r0
+; CHECK-NEXT:    cmoved.dnez $r4 ? $r3 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    copyd $r1 = $r3
@@ -463,8 +461,10 @@ define <2 x i1> @test_icmp_ult(<2 x i16> %a, <2 x i16> %b) {
 define <2 x i64> @test_sext_2xi64(<2 x i16> %a) {
 ; CHECK-LABEL: test_sext_2xi64:
 ; CHECK:       # %bb.0:
+; CHECK-NEXT:    sxhd $r2 = $r0
 ; CHECK-NEXT:    extfs $r1 = $r0, 31, 16
-; CHECK-NEXT:    sxhd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = sext <2 x i16> %a to <2 x i64>

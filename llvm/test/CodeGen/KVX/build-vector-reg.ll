@@ -93,9 +93,9 @@ entry:
 define <4 x i32> @bint4(i32 %a, i32 %b, i32 %c, i32 %d) {
 ; CHECK-LABEL: bint4:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    insf $r2 = $r3, 63, 32
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r2 = $r3, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r2
 ; CHECK-NEXT:    ;;
@@ -127,15 +127,15 @@ define <8 x i8> @bchar8(i8 %a, i8 %b, i8 %c, i8 %d, i8 %e, i8 %f, i8 %g, i8 %h) 
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    insf $r6 = $r7, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    insf $r4 = $r5, 15, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r4 = $r5, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r4 = $r6, 31, 16
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r2, 31, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r4, 63, 32
 ; CHECK-NEXT:    ;;
@@ -156,13 +156,13 @@ entry:
 define <8 x i16> @bshort8(i16 %a, i16 %b, i16 %c, i16 %d, i16 %e, i16 %f, i16 %g, i16 %h) {
 ; CHECK-LABEL: bshort8:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    insf $r6 = $r7, 31, 16
+; CHECK-NEXT:    insf $r2 = $r3, 31, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r3, 31, 16
+; CHECK-NEXT:    insf $r6 = $r7, 31, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r1 = $r5, 31, 16
 ; CHECK-NEXT:    ;;
@@ -187,19 +187,19 @@ entry:
 define <8 x i32> @bint8(i32 %a, i32 %b, i32 %c, i32 %d, i32 %e, i32 %f, i32 %g, i32 %h) {
 ; CHECK-LABEL: bint8:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    insf $r6 = $r7, 63, 32
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r2
+; CHECK-NEXT:    insf $r2 = $r3, 63, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r3, 63, 32
+; CHECK-NEXT:    copyd $r3 = $r6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r4 = $r5, 63, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r2 = $r4
+; CHECK-NEXT:    insf $r3 = $r7, 63, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r3 = $r6
+; CHECK-NEXT:    copyd $r1 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r2 = $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -306,9 +306,9 @@ entry:
 define <4 x float> @bfloat4(float %a, float %b, float %c, float %d) {
 ; CHECK-LABEL: bfloat4:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    insf $r2 = $r3, 63, 32
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r2 = $r3, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r2
 ; CHECK-NEXT:    ;;
@@ -338,13 +338,13 @@ entry:
 define <8 x half> @bhalf8(half %a, half %b, half %c, half %d, half %e, half %f, half %g, half %h) {
 ; CHECK-LABEL: bhalf8:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    insf $r6 = $r7, 31, 16
+; CHECK-NEXT:    insf $r2 = $r3, 31, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r3, 31, 16
+; CHECK-NEXT:    insf $r6 = $r7, 31, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r1 = $r5, 31, 16
 ; CHECK-NEXT:    ;;
@@ -369,19 +369,19 @@ entry:
 define <8 x float> @bfloat8(float %a, float %b, float %c, float %d, float %e, float %f, float %g, float %h) {
 ; CHECK-LABEL: bfloat8:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    insf $r6 = $r7, 63, 32
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r2
+; CHECK-NEXT:    insf $r2 = $r3, 63, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r3, 63, 32
+; CHECK-NEXT:    copyd $r3 = $r6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r4 = $r5, 63, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r2 = $r4
+; CHECK-NEXT:    insf $r3 = $r7, 63, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r3 = $r6
+; CHECK-NEXT:    copyd $r1 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r2 = $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;

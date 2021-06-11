@@ -17,10 +17,8 @@ define i32* @f(i32 %s, i32 %c){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_2: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    copyd $r2 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r1 = $r2, -4
-; CHECK-NEXT:    sw.xs $r2[$r0] = $r2
+; CHECK-NEXT:    sw.xs $r1[$r0] = $r1
+; CHECK-NEXT:    addd $r1 = $r1, -4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .__LOOPDO_0_END_:
 ; CHECK-NEXT:  # %bb.1: # %for.cond.cleanup
@@ -56,10 +54,8 @@ define i32* @g(i32 %s, i32 %c){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB1_2: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    copyd $r2 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r1 = $r2, -4
-; CHECK-NEXT:    sw.xs $r2[$r0] = $r2
+; CHECK-NEXT:    sw.xs $r1[$r0] = $r1
+; CHECK-NEXT:    addd $r1 = $r1, -4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .__LOOPDO_1_END_:
 ; CHECK-NEXT:  # %bb.1: # %for.cond.cleanup

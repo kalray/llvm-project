@@ -118,9 +118,9 @@ declare <2 x float> @llvm.kvx.fconjwc(<2 x float>)
 define <4 x float> @fmulwcp(<4 x float> %a, <4 x float> %b) {
 ; CHECK-LABEL: fmulwcp:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmulwc.rn $r0 = $r0, $r2
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmulwc.rn $r1 = $r1, $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fmulwc.rn $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -135,13 +135,13 @@ declare <4 x float> @llvm.kvx.fmulwcp(<4 x float>, <4 x float>, i32)
 define <4 x float> @ffmawcp(<4 x float> %a, <4 x float> %b, <4 x float> %c) {
 ; CHECK-LABEL: ffmawcp:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmulwc.rn $r0 = $r2, $r0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmulwc.rn $r1 = $r3, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddwp.rn $r0 = $r0, $r4
+; CHECK-NEXT:    fmulwc.rn $r0 = $r2, $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    faddwp.rn $r1 = $r1, $r5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    faddwp.rn $r0 = $r0, $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -156,13 +156,13 @@ declare <4 x float> @llvm.kvx.ffmawcp(<4 x float>, <4 x float>, <4 x float>, i32
 define <4 x float> @ffmswcp(<4 x float> %a, <4 x float> %b, <4 x float> %c) {
 ; CHECK-LABEL: ffmswcp:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmulwc.rn $r0 = $r2, $r0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmulwc.rn $r1 = $r3, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfwp.rn $r0 = $r0, $r4
+; CHECK-NEXT:    fmulwc.rn $r0 = $r2, $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fsbfwp.rn $r1 = $r1, $r5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fsbfwp.rn $r0 = $r0, $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -177,9 +177,9 @@ declare <4 x float> @llvm.kvx.ffmswcp(<4 x float>, <4 x float>, <4 x float>, i32
 define <4 x float> @fmulcwcp(<4 x float> %a, <4 x float> %b) {
 ; CHECK-LABEL: fmulcwcp:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmulcwc.rn $r0 = $r0, $r2
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmulcwc.rn $r1 = $r1, $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fmulcwc.rn $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -194,13 +194,13 @@ declare <4 x float> @llvm.kvx.fmulcwcp(<4 x float>, <4 x float>, i32)
 define <4 x float> @ffmacwcp(<4 x float> %a, <4 x float> %b, <4 x float> %c) {
 ; CHECK-LABEL: ffmacwcp:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmulcwc.rn $r0 = $r2, $r0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmulcwc.rn $r1 = $r3, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddcwc.rn $r0 = $r0, $r4
+; CHECK-NEXT:    fmulcwc.rn $r0 = $r2, $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    faddcwc.rn $r1 = $r1, $r5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    faddcwc.rn $r0 = $r0, $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -215,13 +215,13 @@ declare <4 x float> @llvm.kvx.ffmacwcp(<4 x float>, <4 x float>, <4 x float>, i3
 define <4 x float> @ffmscwcp(<4 x float> %a, <4 x float> %b, <4 x float> %c) {
 ; CHECK-LABEL: ffmscwcp:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmulcwc.rn $r0 = $r2, $r0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmulcwc.rn $r1 = $r3, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfcwc.rn $r0 = $r0, $r4
+; CHECK-NEXT:    fmulcwc.rn $r0 = $r2, $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fsbfcwc.rn $r1 = $r1, $r5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fsbfcwc.rn $r0 = $r0, $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -252,9 +252,9 @@ declare <4 x float> @llvm.kvx.fconjwcp(<4 x float>)
 define <8 x float> @fmulwcq(<8 x float> %a, <8 x float> %b) local_unnamed_addr #3 {
 ; CHECK-LABEL: fmulwcq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmulwc.rn $r0 = $r0, $r4
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmulwc.rn $r1 = $r1, $r5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fmulwc.rn $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmulwc.rn $r3 = $r3, $r7
 ; CHECK-NEXT:    ;;
@@ -276,21 +276,21 @@ entry:
 define <8 x float> @ffmawcq(<8 x float> %a, <8 x float> %b, <8 x float> %c) local_unnamed_addr #3 {
 ; CHECK-LABEL: ffmawcq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmulwc.rn $r0 = $r4, $r0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmulwc.rn $r1 = $r5, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulwc.rn $r2 = $r6, $r2
+; CHECK-NEXT:    fmulwc.rn $r0 = $r4, $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmulwc.rn $r3 = $r7, $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddwp.rn $r0 = $r0, $r8
+; CHECK-NEXT:    fmulwc.rn $r2 = $r6, $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    faddwp.rn $r1 = $r1, $r9
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddwp.rn $r2 = $r2, $r10
+; CHECK-NEXT:    faddwp.rn $r0 = $r0, $r8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    faddwp.rn $r3 = $r3, $r11
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    faddwp.rn $r2 = $r2, $r10
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -310,21 +310,21 @@ entry:
 define <8 x float> @ffmswcq(<8 x float> %a, <8 x float> %b, <8 x float> %c) local_unnamed_addr #3 {
 ; CHECK-LABEL: ffmswcq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmulwc.rn $r0 = $r4, $r0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmulwc.rn $r1 = $r5, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulwc.rn $r2 = $r6, $r2
+; CHECK-NEXT:    fmulwc.rn $r0 = $r4, $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmulwc.rn $r3 = $r7, $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfwp.rn $r0 = $r0, $r8
+; CHECK-NEXT:    fmulwc.rn $r2 = $r6, $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fsbfwp.rn $r1 = $r1, $r9
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfwp.rn $r2 = $r2, $r10
+; CHECK-NEXT:    fsbfwp.rn $r0 = $r0, $r8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fsbfwp.rn $r3 = $r3, $r11
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fsbfwp.rn $r2 = $r2, $r10
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -344,9 +344,9 @@ entry:
 define <8 x float> @fmulcwcq(<8 x float> %a, <8 x float> %b) local_unnamed_addr #3 {
 ; CHECK-LABEL: fmulcwcq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmulcwc.rn $r0 = $r0, $r4
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmulcwc.rn $r1 = $r1, $r5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fmulcwc.rn $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmulcwc.rn $r3 = $r3, $r7
 ; CHECK-NEXT:    ;;
@@ -368,21 +368,21 @@ entry:
 define <8 x float> @ffmacwcq(<8 x float> %a, <8 x float> %b, <8 x float> %c) local_unnamed_addr #3 {
 ; CHECK-LABEL: ffmacwcq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmulcwc.rn $r0 = $r4, $r0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmulcwc.rn $r1 = $r5, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulcwc.rn $r2 = $r6, $r2
+; CHECK-NEXT:    fmulcwc.rn $r0 = $r4, $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmulcwc.rn $r3 = $r7, $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddcwc.rn $r0 = $r0, $r8
+; CHECK-NEXT:    fmulcwc.rn $r2 = $r6, $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    faddcwc.rn $r1 = $r1, $r9
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddcwc.rn $r2 = $r2, $r10
+; CHECK-NEXT:    faddcwc.rn $r0 = $r0, $r8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    faddcwc.rn $r3 = $r3, $r11
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    faddcwc.rn $r2 = $r2, $r10
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -402,21 +402,21 @@ entry:
 define <8 x float> @ffmscwcq(<8 x float> %a, <8 x float> %b, <8 x float> %c) local_unnamed_addr #3 {
 ; CHECK-LABEL: ffmscwcq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmulcwc.rn $r0 = $r4, $r0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmulcwc.rn $r1 = $r5, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulcwc.rn $r2 = $r6, $r2
+; CHECK-NEXT:    fmulcwc.rn $r0 = $r4, $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmulcwc.rn $r3 = $r7, $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfcwc.rn $r0 = $r0, $r8
+; CHECK-NEXT:    fmulcwc.rn $r2 = $r6, $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fsbfcwc.rn $r1 = $r1, $r9
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfcwc.rn $r2 = $r2, $r10
+; CHECK-NEXT:    fsbfcwc.rn $r0 = $r0, $r8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fsbfcwc.rn $r3 = $r3, $r11
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fsbfcwc.rn $r2 = $r2, $r10
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -436,11 +436,11 @@ entry:
 define <8 x float> @fconjwcq(<8 x float> %a) local_unnamed_addr #3 {
 ; CHECK-LABEL: fconjwcq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fnegd $r2 = $r2
-; CHECK-NEXT:    fnegd $r3 = $r3
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnegd $r1 = $r1
 ; CHECK-NEXT:    fnegd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fnegd $r3 = $r3
+; CHECK-NEXT:    fnegd $r2 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -607,26 +607,23 @@ declare <2 x double> @llvm.kvx.fconjdc(<2 x double>)
 define <4 x double> @fmuldcp(<4 x double> %a, <4 x double> %b) {
 ; CHECK-LABEL: fmuldcp:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmuld.rn $r8 = $r0, $r4
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmuld.rn $r9 = $r0, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld.rn $r10 = $r2, $r6
+; CHECK-NEXT:    fmuld.rn $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld.rn $r11 = $r2, $r7
+; CHECK-NEXT:    ffmsd.rn $r0 = $r1, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmsd.rn $r8 = $r1, $r5
+; CHECK-NEXT:    fmuld.rn $r5 = $r2, $r7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fmuld.rn $r2 = $r2, $r6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad.rn $r9 = $r1, $r4
-; CHECK-NEXT:    copyd $r0 = $r8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmsd.rn $r10 = $r3, $r7
+; CHECK-NEXT:    ffmad.rn $r5 = $r3, $r6
 ; CHECK-NEXT:    copyd $r1 = $r9
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmad.rn $r11 = $r3, $r6
-; CHECK-NEXT:    copyd $r2 = $r10
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r3 = $r11
+; CHECK-NEXT:    ffmsd.rn $r2 = $r3, $r7
+; CHECK-NEXT:    copyd $r3 = $r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -648,21 +645,21 @@ define <4 x double> @ffmadcp(<4 x double> %a, <4 x double> %b, <4 x double> %c) 
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmuld.rn $r16 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld.rn $r33 = $r3, $r6
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld.rn $r32 = $r2, $r6
+; CHECK-NEXT:    fmuld.rn $r4 = $r2, $r6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad.rn $r17 = $r0, $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmsd.rn $r16 = $r1, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmad.rn $r33 = $r2, $r7
+; CHECK-NEXT:    fmuld.rn $r5 = $r3, $r6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmsd.rn $r32 = $r3, $r7
+; CHECK-NEXT:    ffmad.rn $r5 = $r2, $r7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmsd.rn $r4 = $r3, $r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fadddp.rn $r0r1 = $r16r17, $r8r9
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fadddp.rn $r2r3 = $r32r33, $r10r11
+; CHECK-NEXT:    fadddp.rn $r2r3 = $r4r5, $r10r11
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -686,21 +683,21 @@ define <4 x double> @ffmsdcp(<4 x double> %a, <4 x double> %b, <4 x double> %c) 
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmuld.rn $r16 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld.rn $r33 = $r3, $r6
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld.rn $r32 = $r2, $r6
+; CHECK-NEXT:    fmuld.rn $r4 = $r2, $r6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad.rn $r17 = $r0, $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmsd.rn $r16 = $r1, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmad.rn $r33 = $r2, $r7
+; CHECK-NEXT:    fmuld.rn $r5 = $r3, $r6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmsd.rn $r32 = $r3, $r7
+; CHECK-NEXT:    ffmad.rn $r5 = $r2, $r7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmsd.rn $r4 = $r3, $r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fsbfdp.rn $r0r1 = $r16r17, $r8r9
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfdp.rn $r2r3 = $r32r33, $r10r11
+; CHECK-NEXT:    fsbfdp.rn $r2r3 = $r4r5, $r10r11
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -720,26 +717,23 @@ entry:
 define <4 x double> @fmulcdcp(<4 x double> %a, <4 x double> %b) {
 ; CHECK-LABEL: fmulcdcp:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmuld.rn $r8 = $r0, $r4
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmuld.rn $r9 = $r0, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld.rn $r10 = $r2, $r6
+; CHECK-NEXT:    fmuld.rn $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld.rn $r11 = $r2, $r7
+; CHECK-NEXT:    ffmad.rn $r0 = $r1, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmad.rn $r8 = $r1, $r5
+; CHECK-NEXT:    fmuld.rn $r5 = $r2, $r7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fmuld.rn $r2 = $r2, $r6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmsd.rn $r9 = $r1, $r4
-; CHECK-NEXT:    copyd $r0 = $r8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmad.rn $r10 = $r3, $r7
+; CHECK-NEXT:    ffmsd.rn $r5 = $r3, $r6
 ; CHECK-NEXT:    copyd $r1 = $r9
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmsd.rn $r11 = $r3, $r6
-; CHECK-NEXT:    copyd $r2 = $r10
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r3 = $r11
+; CHECK-NEXT:    ffmad.rn $r2 = $r3, $r7
+; CHECK-NEXT:    copyd $r3 = $r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -761,21 +755,21 @@ define <4 x double> @ffmacdcp(<4 x double> %a, <4 x double> %b, <4 x double> %c)
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmuld.rn $r16 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld.rn $r33 = $r3, $r6
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld.rn $r32 = $r2, $r6
+; CHECK-NEXT:    fmuld.rn $r4 = $r2, $r6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmsd.rn $r17 = $r0, $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad.rn $r16 = $r1, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmsd.rn $r33 = $r2, $r7
+; CHECK-NEXT:    fmuld.rn $r5 = $r3, $r6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmad.rn $r32 = $r3, $r7
+; CHECK-NEXT:    ffmsd.rn $r5 = $r2, $r7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmad.rn $r4 = $r3, $r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    faddcdc.rn $r0r1 = $r16r17, $r8r9
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddcdc.rn $r2r3 = $r32r33, $r10r11
+; CHECK-NEXT:    faddcdc.rn $r2r3 = $r4r5, $r10r11
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -799,21 +793,21 @@ define <4 x double> @ffmscdcp(<4 x double> %a, <4 x double> %b, <4 x double> %c)
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmuld.rn $r16 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld.rn $r33 = $r3, $r6
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld.rn $r32 = $r2, $r6
+; CHECK-NEXT:    fmuld.rn $r4 = $r2, $r6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmsd.rn $r17 = $r0, $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad.rn $r16 = $r1, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmsd.rn $r33 = $r2, $r7
+; CHECK-NEXT:    fmuld.rn $r5 = $r3, $r6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmad.rn $r32 = $r3, $r7
+; CHECK-NEXT:    ffmsd.rn $r5 = $r2, $r7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmad.rn $r4 = $r3, $r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fsbfcdc.rn $r0r1 = $r16r17, $r8r9
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfcdc.rn $r2r3 = $r32r33, $r10r11
+; CHECK-NEXT:    fsbfcdc.rn $r2r3 = $r4r5, $r10r11
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -833,8 +827,8 @@ entry:
 define <4 x double> @fconjdcp(<4 x double> %a) {
 ; CHECK-LABEL: fconjdcp:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fnegd $r3 = $r3
 ; CHECK-NEXT:    fnegd $r1 = $r1
+; CHECK-NEXT:    fnegd $r3 = $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
