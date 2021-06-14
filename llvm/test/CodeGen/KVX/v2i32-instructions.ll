@@ -209,12 +209,9 @@ define <2 x i32> @test_div(<2 x i32> %a, <2 x i32> %b) #0 {
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    call __divdi3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r1 = $r20
-; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    insf $r20 = $r0, 63, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r0, 63, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    copyd $r0 = $r20
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r20 = 16[$r12]
@@ -256,12 +253,9 @@ define <2 x i32> @test_rem(<2 x i32> %a, <2 x i32> %b) #0 {
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    call __moddi3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r1 = $r20
-; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    insf $r20 = $r0, 63, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r0, 63, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    copyd $r0 = $r20
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r20 = 16[$r12]

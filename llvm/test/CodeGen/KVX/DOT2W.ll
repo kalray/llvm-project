@@ -81,8 +81,6 @@ define i32 @DOT2W_ri_10_1(<2 x i32> %0) {
 define i32 @DOT2W_ri_10_2(i64 %0) {
 ; CHECK-LABEL: DOT2W_ri_10_2:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    zxwd $r0 = $r0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mulw $r0 = $r0, 1023
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -91,12 +89,9 @@ define i32 @DOT2W_ri_10_2(i64 %0) {
   ret i32 %3
 }
 
-; FIXME: trunc should be a nop
 define i32 @DOT2W_ri_10_3(i64 %0) {
 ; CHECK-LABEL: DOT2W_ri_10_3:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    zxwd $r0 = $r0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mulw $r0 = $r0, -1023
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -135,9 +130,6 @@ define i32 @DOT2W_ri_37_2(i64 %0) {
 ; CHECK-LABEL: DOT2W_ri_37_2:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srld $r1 = $r0, 32
-; CHECK-NEXT:    zxwd $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r1 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mulw $r1 = $r1, 31
 ; CHECK-NEXT:    ;;
@@ -159,9 +151,6 @@ define i32 @DOT2W_ri_37_3(i64 %0) {
 ; CHECK-LABEL: DOT2W_ri_37_3:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srld $r1 = $r0, 32
-; CHECK-NEXT:    zxwd $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r1 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mulw $r1 = $r1, 31
 ; CHECK-NEXT:    ;;
@@ -209,13 +198,12 @@ define i32 @DOT2W_ri_64_2(i64 %0) {
 ; CHECK-LABEL: DOT2W_ri_64_2:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srld $r1 = $r0, 27
-; CHECK-NEXT:    zxwd $r2 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    andw $r1 = $r1, -32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r0 = $r1, -32
+; CHECK-NEXT:    maddw $r1 = $r0, 3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    maddw $r0 = $r2, 3
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = trunc i64 %0 to i32
@@ -231,13 +219,12 @@ define i32 @DOT2W_ri_64_3(i64 %0) {
 ; CHECK-LABEL: DOT2W_ri_64_3:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srld $r1 = $r0, 27
-; CHECK-NEXT:    zxwd $r2 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    andw $r1 = $r1, -32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r0 = $r1, -32
+; CHECK-NEXT:    maddw $r1 = $r0, 3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    maddw $r0 = $r2, 3
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = trunc i64 %0 to i32

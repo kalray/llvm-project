@@ -146,7 +146,6 @@ define i64 @DOT2UWD_ri_37_2(i64 %0) {
 ; CHECK-LABEL: DOT2UWD_ri_37_2:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srld $r1 = $r0, 32
-; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    muluwd $r1 = $r1, 31
 ; CHECK-NEXT:    ;;
@@ -167,7 +166,6 @@ define i64 @DOT2UWD_ri_37_3(i64 %0) {
 ; CHECK-LABEL: DOT2UWD_ri_37_3:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srld $r1 = $r0, 32
-; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    muluwd $r1 = $r1, 31
 ; CHECK-NEXT:    ;;
@@ -231,12 +229,13 @@ define i64 @DOT2UWD_ri_64_1(<2 x i32> %0) {
 define i64 @DOT2UWD_ri_64_2(i64 %0) {
 ; CHECK-LABEL: DOT2UWD_ri_64_2:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    zxwd $r1 = $r0
-; CHECK-NEXT:    srld $r0 = $r0, 27
+; CHECK-NEXT:    srld $r1 = $r0, 27
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x1fffffffe0
+; CHECK-NEXT:    andd $r1 = $r1, 0x1fffffffe0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    madduwd $r0 = $r1, 3
+; CHECK-NEXT:    madduwd $r1 = $r0, 3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = and i64 %0, 4294967295
@@ -250,12 +249,13 @@ define i64 @DOT2UWD_ri_64_2(i64 %0) {
 define i64 @DOT2UWD_ri_64_3(i64 %0) {
 ; CHECK-LABEL: DOT2UWD_ri_64_3:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    zxwd $r1 = $r0
-; CHECK-NEXT:    srld $r0 = $r0, 27
+; CHECK-NEXT:    srld $r1 = $r0, 27
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x1fffffffe0
+; CHECK-NEXT:    andd $r1 = $r1, 0x1fffffffe0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    madduwd $r0 = $r1, 3
+; CHECK-NEXT:    madduwd $r1 = $r0, 3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = and i64 %0, 4294967295

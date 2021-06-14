@@ -422,9 +422,6 @@ define <2 x i1> @test_icmp_ule(<2 x i64> %a, <2 x i64> %b) #0 {
 ; CHECK-NEXT:    make $r0 = -1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
-; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 8
 ; CHECK-NEXT:    ret
@@ -447,9 +444,6 @@ define <2 x i1> @test_icmp_slt(<2 x i64> %a, <2 x i64> %b) #0 {
 ; CHECK-NEXT:    make $r0 = -1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
-; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 8
 ; CHECK-NEXT:    ret
@@ -472,9 +466,6 @@ define <2 x i1> @test_icmp_ugt(<2 x i64> %a, <2 x i64> %b) #0 {
 ; CHECK-NEXT:    make $r0 = -1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
-; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 8
 ; CHECK-NEXT:    ret
@@ -497,9 +488,6 @@ define <2 x i1> @test_icmp_uge(<2 x i64> %a, <2 x i64> %b) #0 {
 ; CHECK-NEXT:    make $r0 = -1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
-; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 8
 ; CHECK-NEXT:    ret
@@ -522,9 +510,6 @@ define <2 x i1> @test_icmp_ult(<2 x i64> %a, <2 x i64> %b) #0 {
 ; CHECK-NEXT:    make $r0 = -1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
-; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 8
 ; CHECK-NEXT:    ret

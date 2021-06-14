@@ -2490,6 +2490,28 @@ bool KVXTargetLowering::isOpFree(const SDNode *Node) const {
   return false;
 }
 
+bool KVXTargetLowering::isTruncateFree(Type *SrcTy, Type *DstTy) const {
+  if (!(SrcTy->isIntegerTy() && DstTy->isIntegerTy()))
+    return false;
+
+  unsigned SrcBits = SrcTy->getPrimitiveSizeInBits();
+  unsigned DestBits = DstTy->getPrimitiveSizeInBits();
+  return (SrcBits > DestBits);
+}
+
+bool KVXTargetLowering::isTruncateFree(EVT SrcVT, EVT DstVT) const {
+  if (SrcVT.isVector() || DstVT.isVector() || !SrcVT.isInteger() ||
+      !DstVT.isInteger())
+    return false;
+
+  unsigned SrcBits = SrcVT.getSizeInBits();
+  unsigned DestBits = DstVT.getSizeInBits();
+  return (SrcBits > DestBits);
+}
+
+// -----------------------------------------------------------------------------
+//        Namespace KVX_LOW
+// -----------------------------------------------------------------------------
 // Negative is a bitmask, telling which elements numbers must have
 // their value negated.
 SDValue KVX_LOW::buildImmVector(llvm::SDNode &N, llvm::SelectionDAG &CurDag,
