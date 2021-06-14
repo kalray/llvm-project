@@ -20,19 +20,19 @@ define %struct.Y @f(i64 %x.coerce0, i64 %x.coerce1, i64 %x.coerce2, i64 %x.coerc
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 18, -16
 ; CHECK-NEXT:    .cfi_offset 19, -24
-; CHECK-NEXT:    addd $r0 = $r0, 10
+; CHECK-NEXT:    addd $r18 = $r0, 10
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r18 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r15 = 72[$r12]
+; CHECK-NEXT:    ld $r0 = 72[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r19 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r1 = 64[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 8[$r12] = $r15
+; CHECK-NEXT:    sd 8[$r12] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 0[$r12] = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r19
 ; CHECK-NEXT:    ;;

@@ -35,7 +35,6 @@ define i32 @get(){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    get $r0 = $ps
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

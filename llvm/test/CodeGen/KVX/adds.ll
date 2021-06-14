@@ -247,8 +247,6 @@ define i32 @sadd_sat32_trunc(i32 %a, i32 %b) {
 ; CHECK-NEXT:    mind $r0 = $r0, 0x7fff
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    maxd $r0 = $r0, 0xffffffffffff8000
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -286,8 +284,6 @@ define i32 @sadd_sat32_zext(i32 %a, i32 %b) {
 ; CHECK-NEXT:    adduwd $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    minud $r0 = $r0, 0x7fffffff
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

@@ -102,11 +102,8 @@ define float @DOT2W_ri_2(<2 x float> %0) {
 define float @DOT2W_ri_3(i64 %0) {
 ; CHECK-LABEL: DOT2W_ri_3:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    zxwd $r1 = $r0
+; CHECK-NEXT:    fmulw $r1 = $r0, 0x447fc000
 ; CHECK-NEXT:    srld $r0 = $r0, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulw $r1 = $r1, 0x447fc000
-; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmulw $r0 = $r0, 0x3f333333
 ; CHECK-NEXT:    ;;
@@ -127,11 +124,8 @@ define float @DOT2W_ri_3(i64 %0) {
 define float @DOT2W_ri_4(i64 %0) {
 ; CHECK-LABEL: DOT2W_ri_4:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    zxwd $r1 = $r0
+; CHECK-NEXT:    fmulw $r1 = $r0, 0xc47fc000
 ; CHECK-NEXT:    srld $r0 = $r0, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulw $r1 = $r1, 0xc47fc000
-; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmulw $r0 = $r0, 0x3f333333
 ; CHECK-NEXT:    ;;

@@ -43,19 +43,17 @@ define dso_local i32 @testalloca(i32 %n) local_unnamed_addr  {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.2: # %for.body.preheader
 ; CHECK-NEXT:    zxwd $r2 = $r0
-; CHECK-NEXT:    make $r4 = 0
-; CHECK-NEXT:    copyd $r3 = $r1
+; CHECK-NEXT:    make $r3 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_3: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    addd $r5 = $r3, 4
-; CHECK-NEXT:    addw $r6 = $r4, 1
-; CHECK-NEXT:    sw 0[$r3] = $r4
-; CHECK-NEXT:    addd $r2 = $r2, -1
+; CHECK-NEXT:    addd $r4 = $r3, 1
+; CHECK-NEXT:    sw.xs $r3[$r1] = $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r3 = $r5
-; CHECK-NEXT:    copyd $r4 = $r6
-; CHECK-NEXT:    cb.dnez $r2 ? .LBB0_3
+; CHECK-NEXT:    compd.eq $r5 = $r2, $r4
+; CHECK-NEXT:    copyd $r3 = $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cb.even $r5 ? .LBB0_3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_4: # %for.cond.cleanup
 ; CHECK-NEXT:    addw $r0 = $r0, -2

@@ -958,19 +958,19 @@ defm : SELECTCONDD<(i32 i32:$truev), (i32 i32:$falsev), (i32 Wrapped32:$truev), 
 defm : SELECTCONDD<(i64 i64:$truev), (i64 i64:$falsev), (i64 Wrapped64:$truev), (i64 Wrapped64:$falsev)>;
 defm : SELECTCONDD<(KVXWrapper tglobaladdr:$truev), (KVXWrapper tglobaladdr:$falsev), (i64 SingleReg:$truev), (i64 SingleReg:$falsev)>;
 
-def : Pat<(i1 (trunc i64:$param)), (ANDDri10 SingleReg:$param, (i64 1))>;
-def : Pat<(i8 (trunc i64:$param)), (ZXBD SingleReg:$param)>;
-def : Pat<(i16 (trunc i64:$param)), (ZXHD SingleReg:$param)>;
-def : Pat<(i32 (trunc i64:$param)), (ZXWD SingleReg:$param)>;
+def : Pat<(i1 (trunc i64:$param)),  (COPY SingleReg:$param)>;
+def : Pat<(i8 (trunc i64:$param)),  (COPY SingleReg:$param)>;
+def : Pat<(i16 (trunc i64:$param)), (COPY SingleReg:$param)>;
+def : Pat<(i32 (trunc i64:$param)), (COPY SingleReg:$param)>;
 
-def : Pat<(i1 (trunc i32:$param)), (ANDWri10 SingleReg:$param, (i32 1))>;
-def : Pat<(i8 (trunc i32:$param)), (ZXBD SingleReg:$param)>;
-def : Pat<(i16 (trunc i32:$param)), (ZXHD SingleReg:$param)>;
+def : Pat<(i1 (trunc i32:$param)),  (COPY SingleReg:$param)>;
+def : Pat<(i8 (trunc i32:$param)),  (COPY SingleReg:$param)>;
+def : Pat<(i16 (trunc i32:$param)), (COPY SingleReg:$param)>;
 
-def : Pat<(i1 (trunc i16:$param)), (ANDWri10 SingleReg:$param, (i32 1))>;
-def : Pat<(i8 (trunc i16:$param)), (ZXBD SingleReg:$param)>;
+def : Pat<(i1 (trunc i16:$param)),  (COPY SingleReg:$param)>;
+def : Pat<(i8 (trunc i16:$param)),  (COPY SingleReg:$param)>;
 
-def : Pat<(i1 (trunc i8:$param)), (ANDWri10 SingleReg:$param, (i32 1))>;
+def : Pat<(i1 (trunc i8:$param)),   (COPY SingleReg:$param)>;
 
 //===----------------------------------------------------------------------===//
 // Vector patterns.

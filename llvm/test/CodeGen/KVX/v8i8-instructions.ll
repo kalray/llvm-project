@@ -607,28 +607,18 @@ define <8 x i8> @test_div(<8 x i8> %a, <8 x i8> %b) #0 {
 ; CHECK-NEXT:    copyd $r1 = $r26
 ; CHECK-NEXT:    call __divdi3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r1 = $r19
-; CHECK-NEXT:    zxwd $r5 = $r21
-; CHECK-NEXT:    zxwd $r2 = $r23
-; CHECK-NEXT:    zxwd $r3 = $r20
+; CHECK-NEXT:    insf $r19 = $r21, 15, 8
+; CHECK-NEXT:    insf $r24 = $r0, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r0 = $r0
-; CHECK-NEXT:    zxwd $r4 = $r24
-; CHECK-NEXT:    zxwd $r6 = $r18
-; CHECK-NEXT:    zxwd $r7 = $r22
+; CHECK-NEXT:    insf $r20 = $r23, 15, 8
+; CHECK-NEXT:    insf $r18 = $r22, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r3 = $r2, 15, 8
-; CHECK-NEXT:    insf $r6 = $r7, 15, 8
+; CHECK-NEXT:    insf $r19 = $r24, 31, 16
+; CHECK-NEXT:    insf $r20 = $r18, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r5, 15, 8
-; CHECK-NEXT:    insf $r4 = $r0, 15, 8
+; CHECK-NEXT:    insf $r19 = $r20, 63, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r4, 31, 16
-; CHECK-NEXT:    insf $r3 = $r6, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r3, 63, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r20r21r22r23 = 24[$r12]
@@ -769,28 +759,18 @@ define <8 x i8> @test_rem(<8 x i8> %a, <8 x i8> %b) #0 {
 ; CHECK-NEXT:    copyd $r1 = $r26
 ; CHECK-NEXT:    call __moddi3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r1 = $r19
-; CHECK-NEXT:    zxwd $r5 = $r21
-; CHECK-NEXT:    zxwd $r2 = $r23
-; CHECK-NEXT:    zxwd $r3 = $r20
+; CHECK-NEXT:    insf $r19 = $r21, 15, 8
+; CHECK-NEXT:    insf $r24 = $r0, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r0 = $r0
-; CHECK-NEXT:    zxwd $r4 = $r24
-; CHECK-NEXT:    zxwd $r6 = $r18
-; CHECK-NEXT:    zxwd $r7 = $r22
+; CHECK-NEXT:    insf $r20 = $r23, 15, 8
+; CHECK-NEXT:    insf $r18 = $r22, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r3 = $r2, 15, 8
-; CHECK-NEXT:    insf $r6 = $r7, 15, 8
+; CHECK-NEXT:    insf $r19 = $r24, 31, 16
+; CHECK-NEXT:    insf $r20 = $r18, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r5, 15, 8
-; CHECK-NEXT:    insf $r4 = $r0, 15, 8
+; CHECK-NEXT:    insf $r19 = $r20, 63, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r4, 31, 16
-; CHECK-NEXT:    insf $r3 = $r6, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r3, 63, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r20r21r22r23 = 24[$r12]

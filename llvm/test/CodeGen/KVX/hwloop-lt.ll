@@ -8,22 +8,20 @@ define i32* @f(i32 %s, i32 %c){
 ; CHECK-LABEL: f:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = x
-; CHECK-NEXT:    make $r3 = 126
+; CHECK-NEXT:    make $r2 = 126
 ; CHECK-NEXT:    make $r1 = 0
-; CHECK-NEXT:    make $r2 = 0xfffffc18
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r0 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    loopdo $r3, .__LOOPDO_0_END_
+; CHECK-NEXT:    loopdo $r2, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_2: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    copyd $r4 = $r2
-; CHECK-NEXT:    addx4d $r3 = $r1, $r0
+; CHECK-NEXT:    addx4d $r2 = $r1, $r0
+; CHECK-NEXT:    addd $r3 = $r1, 0xfffffc18
 ; CHECK-NEXT:    addd $r1 = $r1, 4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r2 = $r4, 4
-; CHECK-NEXT:    sw 0xfffffffffffff060[$r3] = $r4
+; CHECK-NEXT:    sw 0xfffffffffffff060[$r2] = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .__LOOPDO_0_END_:
 ; CHECK-NEXT:  # %bb.1: # %for.cond.cleanup
@@ -50,22 +48,20 @@ define i32* @g(i32 %s, i32 %c){
 ; CHECK-LABEL: g:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = x
-; CHECK-NEXT:    make $r3 = 125
+; CHECK-NEXT:    make $r2 = 125
 ; CHECK-NEXT:    make $r1 = 0
-; CHECK-NEXT:    make $r2 = 0xfffffc18
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r0 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    loopdo $r3, .__LOOPDO_1_END_
+; CHECK-NEXT:    loopdo $r2, .__LOOPDO_1_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB1_2: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    copyd $r4 = $r2
-; CHECK-NEXT:    addx4d $r3 = $r1, $r0
+; CHECK-NEXT:    addx4d $r2 = $r1, $r0
+; CHECK-NEXT:    addd $r3 = $r1, 0xfffffc18
 ; CHECK-NEXT:    addd $r1 = $r1, 4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r2 = $r4, 4
-; CHECK-NEXT:    sw 0xfffffffffffff060[$r3] = $r4
+; CHECK-NEXT:    sw 0xfffffffffffff060[$r2] = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .__LOOPDO_1_END_:
 ; CHECK-NEXT:  # %bb.1: # %for.cond.cleanup

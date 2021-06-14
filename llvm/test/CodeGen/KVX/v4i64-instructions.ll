@@ -564,17 +564,12 @@ define <4 x i1> @test_icmp_ule(<4 x i64> %a, <4 x i64> %b) #0 {
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
 ; CHECK-NEXT:    copyw $r4 = $r1
 ; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    zxwd $r3 = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
 ; CHECK-NEXT:    copyw $r4 = $r2
 ; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
@@ -604,17 +599,12 @@ define <4 x i1> @test_icmp_slt(<4 x i64> %a, <4 x i64> %b) #0 {
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
 ; CHECK-NEXT:    copyw $r4 = $r1
 ; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    zxwd $r3 = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
 ; CHECK-NEXT:    copyw $r4 = $r2
 ; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
@@ -644,17 +634,12 @@ define <4 x i1> @test_icmp_ugt(<4 x i64> %a, <4 x i64> %b) #0 {
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
 ; CHECK-NEXT:    copyw $r4 = $r1
 ; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    zxwd $r3 = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
 ; CHECK-NEXT:    copyw $r4 = $r2
 ; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
@@ -684,17 +669,12 @@ define <4 x i1> @test_icmp_uge(<4 x i64> %a, <4 x i64> %b) #0 {
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
 ; CHECK-NEXT:    copyw $r4 = $r1
 ; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    zxwd $r3 = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
 ; CHECK-NEXT:    copyw $r4 = $r2
 ; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
@@ -724,17 +704,12 @@ define <4 x i1> @test_icmp_ult(<4 x i64> %a, <4 x i64> %b) #0 {
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
 ; CHECK-NEXT:    copyw $r4 = $r1
 ; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    zxwd $r3 = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
 ; CHECK-NEXT:    copyw $r4 = $r2
 ; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8

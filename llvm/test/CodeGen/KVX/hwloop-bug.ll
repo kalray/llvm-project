@@ -101,24 +101,23 @@ define void @InitDataSet(i32 %m, i16* nocapture %x, i32 %n, i16* nocapture %h) {
 ; CHECK-NEXT:    cb.wlez $r2 ? .LBB0_11
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.12: # %for.body13.preheader
-; CHECK-NEXT:    zxwd $r4 = $r2
-; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    copyd $r1 = $r3
+; CHECK-NEXT:    zxwd $r0 = $r2
+; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    loopdo $r4, .__LOOPDO_2_END_
+; CHECK-NEXT:    loopdo $r0, .__LOOPDO_2_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_19: # %for.body13
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    mulw $r4 = $r0, $r0
-; CHECK-NEXT:    copyd $r5 = $r1
-; CHECK-NEXT:    addw $r0 = $r0, 1
+; CHECK-NEXT:    copyd $r4 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r1 = $r5, 2
-; CHECK-NEXT:    sh 0[$r5] = $r4
+; CHECK-NEXT:    mulw $r5 = $r4, $r4
+; CHECK-NEXT:    addd $r1 = $r4, 1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sh.xs $r4[$r3] = $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .__LOOPDO_2_END_:
 ; CHECK-NEXT:  # %bb.14: # %for.cond20.preheader
-; CHECK-NEXT:    compw.gtu $r0 = $r2, 15
+; CHECK-NEXT:    compw.gtu $r0 = $r0, 15
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.even $r0 ? .LBB0_15
 ; CHECK-NEXT:    ;;

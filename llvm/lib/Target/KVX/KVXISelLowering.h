@@ -192,6 +192,8 @@ private:
                                 const SelectionDAG &DAG,
                                 const MachineMemOperand &MMO) const override;
   bool isOpFree(const SDNode *) const override;
+  bool isTruncateFree(Type *SrcTy, Type *DstTy) const override;
+  bool isTruncateFree(EVT SrcVT, EVT DstVT) const override;
 };
 
 } // namespace llvm
