@@ -1681,11 +1681,12 @@ define <2 x double> @test_round(<2 x double> %a) #0 {
 define <2 x double> @test_fmuladd(<2 x double> %a, <2 x double> %b, <2 x double> %c) #0 {
 ; CHECK-LABEL: test_fmuladd:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fmuld $r1 = $r1, $r3
+; CHECK-NEXT:    ffmad $r4 = $r0, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld $r0 = $r0, $r2
+; CHECK-NEXT:    ffmad $r5 = $r1, $r3
+; CHECK-NEXT:    copyd $r0 = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fadddp $r0r1 = $r0r1, $r4r5
+; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <2 x double> @llvm.fmuladd.v2f64(<2 x double> %a, <2 x double> %b, <2 x double> %c)

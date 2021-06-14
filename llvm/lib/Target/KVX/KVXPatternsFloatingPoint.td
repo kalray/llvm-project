@@ -505,6 +505,18 @@ def : Pat <(v2f32 (fsubcont v2f32:$r0, (fmulcont v2f32:$r2, v2f32:$r1))), (FFMSW
 def : Pat <(v2f16 (fsubcont v2f16:$r0, (fmulcont v2f16:$r2, v2f16:$r1))), (FFMSHQrr (ZXWD SingleReg:$r0), (ZXWD SingleReg:$r1), (ZXWD SingleReg:$r2), rounding_, silent_)>;
 def : Pat <(v4f16 (fsubcont v4f16:$r0, (fmulcont v4f16:$r2, v4f16:$r1))), (FFMSHQrr SingleReg:$r0, SingleReg:$r1, SingleReg:$r2, rounding_, silent_)>;
 
+multiclass FFMSPAT<ValueType vt, KVX_INSTRUCTION FMS, KVX_INSTRUCTION MUL> {
+def : Pat<(vt (fma (fneg vt:$rx), vt:$ry, vt:$rz)), (FMS SingleReg:$rz, SingleReg:$rx, SingleReg:$ry, rounding_, silent_)>;
+def : Pat<(vt (fma vt:$rx, vt:$ry, (fneg (fmul vt:$rz, vt:$ra)))),
+      (FMS (MUL vt:$rx, vt:$ry, rounding_, silent_), SingleReg:$rz, SingleReg:$ra, rounding_, silent_)>;
+}
+defm : FFMSPAT<f16, FFMSHQrr, FMULHQrr>;
+defm : FFMSPAT<f32, FFMSWrr, FMULWrr>;
+defm : FFMSPAT<f64, FFMSDrr, FMULDrr>;
+defm : FFMSPAT<v2f32, FFMSWPrr, FMULWPrr>;
+defm : FFMSPAT<v2f16, FFMSHQrr, FMULHQrr>;
+defm : FFMSPAT<v4f16, FFMSHQrr, FMULHQrr>;
+
 // FIXED
 multiclass FP_TO_INT<SDNode fp_to_int, KVX_INSTRUCTION i32inst, KVX_INSTRUCTION i64inst, KVX_INSTRUCTION v2i32inst> {
 def : Pat<(i32 (fp_to_int f16:$val)), (i32inst (FWIDENLHW SingleReg:$val, silent_), DefaultShift, rounding_rz, silent_)>;
