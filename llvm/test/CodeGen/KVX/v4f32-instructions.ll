@@ -2212,9 +2212,12 @@ define <4 x float> @test_round(<4 x float> %a) #0 {
 define <4 x float> @test_fmuladd(<4 x float> %a, <4 x float> %b, <4 x float> %c) #0 {
 ; CHECK-LABEL: test_fmuladd:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fmulwq $r0r1 = $r0r1, $r2r3
+; CHECK-NEXT:    ffmawp $r4 = $r0, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddwq $r0r1 = $r0r1, $r4r5
+; CHECK-NEXT:    ffmawp $r5 = $r1, $r3
+; CHECK-NEXT:    copyd $r0 = $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <4 x float> @llvm.fmuladd.v2f32(<4 x float> %a, <4 x float> %b, <4 x float> %c)

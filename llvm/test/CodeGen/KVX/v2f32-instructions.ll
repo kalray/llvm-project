@@ -1545,9 +1545,9 @@ define <2 x float> @test_round(<2 x float> %a) #0 {
 define <2 x float> @test_fmuladd(<2 x float> %a, <2 x float> %b, <2 x float> %c) #0 {
 ; CHECK-LABEL: test_fmuladd:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fmulwp $r0 = $r0, $r1
+; CHECK-NEXT:    ffmawp $r2 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddwp $r0 = $r0, $r2
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <2 x float> @llvm.fmuladd.v2f32(<2 x float> %a, <2 x float> %b, <2 x float> %c)

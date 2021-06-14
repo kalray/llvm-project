@@ -194,6 +194,10 @@ private:
   bool isOpFree(const SDNode *) const override;
   bool isTruncateFree(Type *SrcTy, Type *DstTy) const override;
   bool isTruncateFree(EVT SrcVT, EVT DstVT) const override;
+  bool isFMAFasterThanFMulAndFAdd(const MachineFunction &MF,
+                                  EVT VT) const override;
+
+  bool isFMAFasterThanFMulAndFAdd(const Function &F, Type *) const override;
 };
 
 } // namespace llvm

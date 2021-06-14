@@ -2523,17 +2523,18 @@ define <4 x double> @test_round(<4 x double> %a) #0 {
 define <4 x double> @test_fmuladd(<4 x double> %a, <4 x double> %b, <4 x double> %c) #0 {
 ; CHECK-LABEL: test_fmuladd:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fmuld $r3 = $r3, $r7
+; CHECK-NEXT:    ffmad $r8 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld $r2 = $r2, $r6
+; CHECK-NEXT:    ffmad $r11 = $r3, $r7
+; CHECK-NEXT:    copyd $r0 = $r8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld $r0 = $r0, $r4
+; CHECK-NEXT:    ffmad $r9 = $r1, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld $r1 = $r1, $r5
+; CHECK-NEXT:    ffmad $r10 = $r2, $r6
+; CHECK-NEXT:    copyd $r1 = $r9
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fadddp $r2r3 = $r2r3, $r10r11
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fadddp $r0r1 = $r0r1, $r8r9
+; CHECK-NEXT:    copyd $r2 = $r10
+; CHECK-NEXT:    copyd $r3 = $r11
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <4 x double> @llvm.fmuladd.v4f64(<4 x double> %a, <4 x double> %b, <4 x double> %c)

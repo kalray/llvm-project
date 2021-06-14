@@ -2476,9 +2476,9 @@ define <4 x half> @test_round(<4 x half> %a) #0 {
 define <4 x half> @test_fmuladd(<4 x half> %a, <4 x half> %b, <4 x half> %c) #0 {
 ; CHECK-LABEL: test_fmuladd:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fmulhq $r0 = $r0, $r1
+; CHECK-NEXT:    ffmahq $r2 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddhq $r0 = $r0, $r2
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <4 x half> @llvm.fmuladd.v4f16(<4 x half> %a, <4 x half> %b, <4 x half> %c)
