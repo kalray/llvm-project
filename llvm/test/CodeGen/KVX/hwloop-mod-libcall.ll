@@ -35,7 +35,6 @@ define i32 @ia(i32 %x, i32 %y)  {
 ; CHECK-NEXT:    copyd $r1 = $r20
 ; CHECK-NEXT:    call __moddi3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    cb.odd $r21 ? .LBB0_3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %for.body.lr.ph
@@ -56,7 +55,6 @@ define i32 @ia(i32 %x, i32 %y)  {
 ; CHECK-NEXT:    copyd $r1 = $r20
 ; CHECK-NEXT:    call __moddi3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    copyd $r2 = $r21
 ; CHECK-NEXT:    cb.odd $r22 ? .LBB0_2
 ; CHECK-NEXT:    ;;

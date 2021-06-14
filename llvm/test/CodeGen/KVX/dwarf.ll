@@ -330,18 +330,18 @@ define i32 @stackrealign2(i32 %n) #0 !dbg !52 {
 ; CHECK-NEXT:    # in Loop: Header=BB2_1 Depth=1
 ; CHECK-NEXT:  .Ltmp8:
 ; CHECK-NEXT:    .loc 1 71 13 is_stmt 1 # dwarf.c:71:13
-; CHECK-NEXT:    lwz $r1 = 228[$r31]
+; CHECK-NEXT:    lwz $r2 = 228[$r31]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 71 17 is_stmt 0 # dwarf.c:71:17
-; CHECK-NEXT:    lwz $r0 = 212[$r31]
+; CHECK-NEXT:    lws $r0 = 212[$r31]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r1 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 71 15 # dwarf.c:71:15
-; CHECK-NEXT:    sbfw $r2 = $r0, $r1
+; CHECK-NEXT:    sbfw $r2 = $r1, $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 71 5 # dwarf.c:71:5
 ; CHECK-NEXT:    ld $r1 = 216[$r31]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 71 11 # dwarf.c:71:11
 ; CHECK-NEXT:    sw.xs $r0[$r1] = $r2
@@ -511,18 +511,18 @@ define i32 @teststackalloca(i32 %n) #0 !dbg !88 {
 ; CHECK-NEXT:    # in Loop: Header=BB3_1 Depth=1
 ; CHECK-NEXT:  .Ltmp15:
 ; CHECK-NEXT:    .loc 1 117 13 is_stmt 1 # dwarf.c:117:13
-; CHECK-NEXT:    lwz $r1 = -4[$r14]
+; CHECK-NEXT:    lwz $r2 = -4[$r14]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 117 17 is_stmt 0 # dwarf.c:117:17
-; CHECK-NEXT:    lwz $r0 = -20[$r14]
+; CHECK-NEXT:    lws $r0 = -20[$r14]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r1 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 117 15 # dwarf.c:117:15
-; CHECK-NEXT:    sbfw $r2 = $r0, $r1
+; CHECK-NEXT:    sbfw $r2 = $r1, $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 117 5 # dwarf.c:117:5
 ; CHECK-NEXT:    ld $r1 = -16[$r14]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 117 11 # dwarf.c:117:11
 ; CHECK-NEXT:    sw.xs $r0[$r1] = $r2

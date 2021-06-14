@@ -265,17 +265,12 @@ define <4 x i16> @test_div(<4 x i16> %a, <4 x i16> %b) #0 {
 ; CHECK-NEXT:    copyd $r1 = $r19
 ; CHECK-NEXT:    call __divdi3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r1 = $r24
-; CHECK-NEXT:    zxwd $r2 = $r20
-; CHECK-NEXT:    zxwd $r3 = $r21
-; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    insf $r24 = $r20, 31, 16
+; CHECK-NEXT:    insf $r0 = $r21, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r2, 31, 16
-; CHECK-NEXT:    insf $r0 = $r3, 31, 16
+; CHECK-NEXT:    insf $r24 = $r0, 63, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r0, 63, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    copyd $r0 = $r24
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r20r21r22r23 = 16[$r12]
@@ -347,17 +342,12 @@ define <4 x i16> @test_rem(<4 x i16> %a, <4 x i16> %b) #0 {
 ; CHECK-NEXT:    copyd $r1 = $r19
 ; CHECK-NEXT:    call __moddi3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r1 = $r24
-; CHECK-NEXT:    zxwd $r2 = $r20
-; CHECK-NEXT:    zxwd $r3 = $r21
-; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    insf $r24 = $r20, 31, 16
+; CHECK-NEXT:    insf $r0 = $r21, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r2, 31, 16
-; CHECK-NEXT:    insf $r0 = $r3, 31, 16
+; CHECK-NEXT:    insf $r24 = $r0, 63, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r0, 63, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    copyd $r0 = $r24
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r20r21r22r23 = 16[$r12]

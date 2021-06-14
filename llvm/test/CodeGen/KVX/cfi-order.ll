@@ -85,16 +85,13 @@ define void @testuvec(<4 x i32>* nocapture readonly %A, <4 x i32>* nocapture rea
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    call __udivdi3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r0 = $r0
-; CHECK-NEXT:    zxwd $r2 = $r25
-; CHECK-NEXT:    zxwd $r1 = $r19
-; CHECK-NEXT:    zxwd $r3 = $r20
+; CHECK-NEXT:    copyd $r18 = $r0
+; CHECK-NEXT:    insf $r19 = $r20, 63, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 63, 32
-; CHECK-NEXT:    insf $r1 = $r3, 63, 32
+; CHECK-NEXT:    insf $r18 = $r25, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 5 47 # cfi-order.c:5:47
-; CHECK-NEXT:    sq 0[$r24] = $r0r1
+; CHECK-NEXT:    sq 0[$r24] = $r18r19
 ; CHECK-NEXT:    addd $r12 = $r14, -80
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 5 58 # cfi-order.c:5:58
@@ -209,16 +206,13 @@ define void @testsvec(<4 x i32>* nocapture readonly %A, <4 x i32>* nocapture rea
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    call __divdi3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r0 = $r0
-; CHECK-NEXT:    zxwd $r2 = $r25
-; CHECK-NEXT:    zxwd $r1 = $r19
-; CHECK-NEXT:    zxwd $r3 = $r20
+; CHECK-NEXT:    copyd $r18 = $r0
+; CHECK-NEXT:    insf $r19 = $r20, 63, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 63, 32
-; CHECK-NEXT:    insf $r1 = $r3, 63, 32
+; CHECK-NEXT:    insf $r18 = $r25, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 6 47 # cfi-order.c:6:47
-; CHECK-NEXT:    sq 0[$r24] = $r0r1
+; CHECK-NEXT:    sq 0[$r24] = $r18r19
 ; CHECK-NEXT:    addd $r12 = $r14, -80
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 6 58 # cfi-order.c:6:58
