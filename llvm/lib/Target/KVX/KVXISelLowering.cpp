@@ -483,7 +483,6 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   for (auto I : {MVT::v2i16, MVT::v4i16, MVT::i32, MVT::v2i32, MVT::i64})
     setOperationAction(ISD::SADDSAT, I, Legal);
 
-  setTargetDAGCombine(ISD::FSUB);
   setTargetDAGCombine(ISD::MUL);
   setTargetDAGCombine(ISD::STORE);
   setTargetDAGCombine(ISD::ZERO_EXTEND);
@@ -2343,18 +2342,6 @@ SDValue KVXTargetLowering::PerformDAGCombine(SDNode *N,
     break;
   case ISD::ZERO_EXTEND:
     return combineZext(N, DAG);
-  case ISD::FSUB:
-    if (N->getFlags().hasAllowContract()) {
-      if (N->getOperand(0)->getOpcode() == ISD::FMUL &&
-          N->getOperand(0)->getFlags().hasAllowContract() &&
-          N->getOperand(1)->getOpcode() != ISD::FMUL)
-        return DAG.getNode(ISD::FMA, SDLoc(N), N->getValueType(0),
-                           N->getOperand(0)->getOperand(1),
-                           N->getOperand(0)->getOperand(0),
-                           DAG.getNode(ISD::FNEG, SDLoc(N), N->getValueType(0),
-                                       N->getOperand(1)));
-    }
-    break;
   case ISD::MUL:
     return combineMUL(N, DCI, DAG);
   case ISD::STORE:
@@ -2509,11 +2496,40 @@ bool KVXTargetLowering::isTruncateFree(EVT SrcVT, EVT DstVT) const {
   return (SrcBits > DestBits);
 }
 
+bool KVXTargetLowering::isFMAFasterThanFMulAndFAdd(const MachineFunction &MF,
+                                                   EVT VT) const {
+  if (!VT.isSimple())
+    return false;
+
+  auto Simple = VT.getScalarType().getSimpleVT().SimpleTy;
+  switch (Simple) {
+  case MVT::f16:
+  case MVT::f32:
+  case MVT::f64:
+    return true;
+  default:
+    return false;
+  }
+}
+
+bool KVXTargetLowering::isFMAFasterThanFMulAndFAdd(const Function &F,
+                                                   Type *Ty) const {
+  switch (Ty->getScalarType()->getTypeID()) {
+  case Type::HalfTyID:
+  case Type::FloatTyID:
+  case Type::DoubleTyID:
+    return true;
+  default:
+    return false;
+  }
+}
+
 // -----------------------------------------------------------------------------
 //        Namespace KVX_LOW
 // -----------------------------------------------------------------------------
 // Negative is a bitmask, telling which elements numbers must have
 // their value negated.
+
 SDValue KVX_LOW::buildImmVector(llvm::SDNode &N, llvm::SelectionDAG &CurDag,
                                 bool IsFP, unsigned long Negative) {
 
