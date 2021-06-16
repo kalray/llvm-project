@@ -2529,7 +2529,7 @@ bool KVXTargetLowering::isOpFree(const SDNode *Node) const {
 }
 
 bool KVXTargetLowering::isTruncateFree(Type *SrcTy, Type *DstTy) const {
-  if (!(SrcTy->isIntegerTy() && DstTy->isIntegerTy()))
+  if (DstTy->isVectorTy() || (!(SrcTy->isIntegerTy() && DstTy->isIntegerTy())))
     return false;
 
   unsigned SrcBits = SrcTy->getPrimitiveSizeInBits();
