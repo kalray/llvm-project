@@ -484,6 +484,7 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::SADDSAT, I, Legal);
 
   setTargetDAGCombine(ISD::MUL);
+  setTargetDAGCombine(ISD::SRA);
   setTargetDAGCombine(ISD::STORE);
   setTargetDAGCombine(ISD::ZERO_EXTEND);
 }
@@ -2202,6 +2203,54 @@ SDValue KVXTargetLowering::lowerATOMIC_LOAD_OP(SDValue Op,
   return Op;
 }
 
+static SDValue combineSRA(SDNode *N, SelectionDAG &DAG) {
+  if (N->getSimpleValueType(0).SimpleTy != MVT::i64)
+    return SDValue();
+
+  auto Op0 = N->getOperand(0);
+  if (Op0->getOpcode() != ISD::SHL || !Op0->hasOneUse())
+    return SDValue();
+
+  auto *SHLszSD = dyn_cast<ConstantSDNode>(Op0->getOperand(1));
+  if (!SHLszSD)
+    return SDValue();
+
+  auto *SRAszSD = dyn_cast<ConstantSDNode>(N->getOperand(1));
+  if (!SRAszSD)
+    return SDValue();
+
+  int EltSz = 64 - SHLszSD->getSExtValue();
+
+  MVT VT;
+  switch (EltSz) {
+  case 8:
+    VT = MVT::i8;
+    break;
+  case 16:
+    VT = MVT::i16;
+    break;
+  case 32:
+    VT = MVT::i32;
+    break;
+  default:
+    return SDValue();
+  }
+
+  auto SExt = DAG.getNode(ISD::SIGN_EXTEND_INREG, SDLoc(SDValue(N, 0)),
+                          MVT::i64, Op0.getOperand(0), DAG.getValueType(VT));
+
+  int SRAsz = SRAszSD->getSExtValue() - SHLszSD->getSExtValue();
+  if (SRAsz == 0)
+    return SExt;
+
+  if (SRAsz > 0)
+    return DAG.getNode(ISD::SRA, SDLoc(Op0), MVT::i64, SExt,
+                       DAG.getConstant(SRAsz, SDLoc(SRAszSD), MVT::i64));
+
+  return DAG.getNode(ISD::SHL, SDLoc(Op0), MVT::i64, SExt,
+                     DAG.getConstant(-SRAsz, SDLoc(SRAszSD), MVT::i64));
+}
+
 static SDValue combineZext(SDNode *N, SelectionDAG &DAG) {
   SDValue N0 = N->getOperand(0);
   SDValue N00 = N0->getOperand(0);
@@ -2340,12 +2389,14 @@ SDValue KVXTargetLowering::PerformDAGCombine(SDNode *N,
   switch (N->getOpcode()) {
   default:
     break;
-  case ISD::ZERO_EXTEND:
-    return combineZext(N, DAG);
   case ISD::MUL:
     return combineMUL(N, DCI, DAG);
+  case ISD::SRA:
+    return combineSRA(N, DAG);
   case ISD::STORE:
     return combineStore(N, DCI, DAG);
+  case ISD::ZERO_EXTEND:
+    return combineZext(N, DAG);
   }
 
   return SDValue();
