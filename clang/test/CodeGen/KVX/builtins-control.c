@@ -31,7 +31,7 @@ int get() {
 
 // CHECK-LABEL: @wfxl(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    tail call void @llvm.kvx.wfxl(i32 13, i64 2)
+// CHECK-NEXT:    tail call void asm sideeffect "wfxl $$pm0, $0", "r,~{$pm0}"(i64 2) [[ATTR1:#.*]]
 // CHECK-NEXT:    ret void
 //
 void wfxl() {
@@ -40,7 +40,7 @@ void wfxl() {
 
 // CHECK-LABEL: @wfxm(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    tail call void @llvm.kvx.wfxm(i32 13, i64 2)
+// CHECK-NEXT:    tail call void asm sideeffect "wfxm $$pm0, $0", "r,~{$pm0}"(i64 2) [[ATTR1]]
 // CHECK-NEXT:    ret void
 //
 void wfxm() {
@@ -49,7 +49,7 @@ void wfxm() {
 
 // CHECK-LABEL: @set(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    tail call void @llvm.kvx.set(i32 1, i64 2)
+// CHECK-NEXT:    tail call void asm sideeffect "set $$ps = $0", "r,~{$ps}"(i64 2) [[ATTR1]]
 // CHECK-NEXT:    ret void
 //
 void set() {

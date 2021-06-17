@@ -7,13 +7,15 @@ target triple = "kvx-kalray-cos"
 ; bundled with a SET or WFXL instruction on CS.
 define i64 @rule3_c(i64 %a, i64 %b, i64 %c) {
 ; CHECK-LABEL: rule3_c:
-; CHECK:         set $cs = $r0
+; CHECK:         #APP
+; CHECK-NEXT:    set $cs = $r0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    addd.c $r0 = $r1, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  tail call void @llvm.kvx.set(i32 4, i64 %a) ; 4 = CS
+  tail call void asm sideeffect "set $$cs = $0", "r,~{$cs}"(i64 %a)
   %0 = tail call i64 @llvm.kvx.addd(i64 %b, i64 %c, i32 1) ; 1 = "c"
   ret i64 %0
 }
@@ -24,13 +26,15 @@ declare i64 @llvm.kvx.addd(i64, i64, i32) #2
 
 define i64 @rule3_ci(i64 %a, i64 %b, i64 %c) {
 ; CHECK-LABEL: rule3_ci:
-; CHECK:         set $cs = $r0
+; CHECK:         #APP
+; CHECK-NEXT:    set $cs = $r0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    addd.ci $r0 = $r1, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  tail call void @llvm.kvx.set(i32 4, i64 %a) ; 4 = CS
+  tail call void asm sideeffect "set $$cs = $0", "r,~{$cs}"(i64 %a)
   %0 = tail call i64 @llvm.kvx.addd(i64 %b, i64 %c, i32 2) ; 2 = "ci"
   ret i64 %0
 }
@@ -38,76 +42,81 @@ entry:
 ; Rule 4: An ALU or MAU instruction that produces an IEEE 754
 ; floating point flag must not be bundled with a SET or WFX*
 ; instruction on CS.
-; TODO: this is wrong since faddw should be scheduled after set.
 define float @rule4_set(i64 %a, float %b, float %c) {
 ; CHECK-LABEL: rule4_set:
-; CHECK:         set $cs = $r0
+; CHECK:         #APP
+; CHECK-NEXT:    set $cs = $r0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    faddw $r0 = $r1, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  tail call void @llvm.kvx.set(i32 4, i64 %a) ; 4 = CS
+  tail call void asm sideeffect "set $$cs = $0", "r,~{$cs}"(i64 %a)
   %add = fadd float %b, %c
   ret float %add
 }
 
 declare float @llvm.kvx.faddw(float, float, i32) #2
 
-; TODO: this is wrong since faddw should be scheduled after set.
 define float @rule4_set_builtins_only(i64 %a, float %b, float %c) {
 ; CHECK-LABEL: rule4_set_builtins_only:
-; CHECK:         set $cs = $r0
+; CHECK:         #APP
+; CHECK-NEXT:    set $cs = $r0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    faddw.rn $r0 = $r1, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-tail call void @llvm.kvx.set(i32 4, i64 %a) ; 4 = CS
-%add = tail call float @llvm.kvx.faddw(float %b, float %c, i32 0)
-ret float %add
+  tail call void asm sideeffect "set $$cs = $0", "r,~{$cs}"(i64 %a)
+  %add = tail call float @llvm.kvx.faddw(float %b, float %c, i32 0)
+  ret float %add
 }
 
-; TODO: this is wrong since faddw should be scheduled after wfxm.
 define float @rule4_wfxm(i64 %a, float %b, float %c) {
 ; CHECK-LABEL: rule4_wfxm:
-; CHECK:         wfxm $cs, $r0
+; CHECK:         #APP
+; CHECK-NEXT:    wfxm $cs, $r0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    faddw $r0 = $r1, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  tail call void @llvm.kvx.wfxm(i32 4, i64 %a) ; 4 = CS
+  tail call void asm sideeffect "wfxm $$cs, $0", "r,~{$cs}"(i64 %a)
   %add = fadd float %b, %c
   ret float %add
 }
 
-; TODO: this is wrong since faddw should be scheduled after wfxm.
 define float @rule4_wfxm_builtins_only(i64 %a, float %b, float %c) {
 ; CHECK-LABEL: rule4_wfxm_builtins_only:
-; CHECK:         wfxm $cs, $r0
+; CHECK:         #APP
+; CHECK-NEXT:    wfxm $cs, $r0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    faddw.rn $r0 = $r1, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-tail call void @llvm.kvx.wfxm(i32 4, i64 %a) ; 4 = CS
-%add = tail call float @llvm.kvx.faddw(float %b, float %c, i32 0)
-ret float %add
+  tail call void asm sideeffect "wfxm $$cs, $0", "r,~{$cs}"(i64 %a)
+  %add = tail call float @llvm.kvx.faddw(float %b, float %c, i32 0)
+  ret float %add
 }
 
 declare void @llvm.kvx.wfxm(i32, i64)
 
-; TODO: this is wrong since faddw should be scheduled after wfxl.
 define float @rule4_wfxl(i64 %a, float %b, float %c) {
 ; CHECK-LABEL: rule4_wfxl:
-; CHECK:         wfxl $cs, $r0
+; CHECK:         #APP
+; CHECK-NEXT:    wfxl $cs, $r0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    faddw $r0 = $r1, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  tail call void @llvm.kvx.wfxl(i32 4, i64 %a) ; 4 = CS
+  tail call void asm sideeffect "wfxl $$cs, $0", "r,~{$cs}"(i64 %a)
   %add = fadd float %b, %c
   ret float %add
 }
