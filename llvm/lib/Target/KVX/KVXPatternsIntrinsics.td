@@ -13,9 +13,6 @@ def: Pat<(int_kvx_tlbread), (TLBREAD)>;
 def: Pat<(int_kvx_tlbwrite), (TLBWRITE)>;
 
 def GETp : KVX_PSEUDO_W_SCHEDINFO<(outs SingleReg:$dst), (ins Sysnumber:$param), [], BCU>;
-def SETp : KVX_PSEUDO_W_SCHEDINFO<(outs), (ins Sysnumber:$sysreg, SingleReg:$val), [], BCU>;
-def WFXLp : KVX_PSEUDO_W_SCHEDINFO<(outs), (ins Sysnumber:$sysreg, SingleReg:$val), [], BCU>;
-def WFXMp : KVX_PSEUDO_W_SCHEDINFO<(outs), (ins Sysnumber:$sysreg, SingleReg:$val), [], BCU>;
 
 let Constraints = "$vIn = $vOut, $qIn = $qOut" in
 def SWAPVOp : KVX_PSEUDO_W_SCHEDINFO<(outs QuadReg:$qOut, VectorReg:$vOut), (ins QuadReg:$qIn, VectorReg:$vIn),[], SWAPVO>;
@@ -34,9 +31,6 @@ def : Pat<(int_set_loop_iterations i64:$c), (LOOPDOp SingleReg:$c)>;
 def : Pat<(int_kvx_loopdoexit), (LOOPDO_ENDp)>;
 
 def: Pat<(int_kvx_get Sysnumber:$r), (GETp Sysnumber:$r)>;
-def: Pat<(int_kvx_wfxl Sysnumber:$r, i64:$val), (WFXLp Sysnumber:$r, SingleReg:$val)>;
-def: Pat<(int_kvx_wfxm Sysnumber:$r, i64:$val), (WFXMp Sysnumber:$r, SingleReg:$val)>;
-def: Pat<(int_kvx_set Sysnumber:$r, i64:$val), (SETp Sysnumber:$r, SingleReg:$val)>;
 
 def: Pat<(int_kvx_syncgroup SingleReg:$r), (SYNCGROUP SingleReg:$r)>;
 def: Pat<(int_kvx_waitit i64:$r), (WAITIT SingleReg:$r)>;

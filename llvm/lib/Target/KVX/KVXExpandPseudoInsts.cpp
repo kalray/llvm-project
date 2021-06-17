@@ -161,23 +161,6 @@ static bool expandGetInstr(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   return true;
 }
 
-static bool expandSystemRegValueInstr(unsigned int Opcode,
-                                      const KVXInstrInfo *TII,
-                                      MachineBasicBlock &MBB,
-                                      MachineBasicBlock::iterator MBBI) {
-  MachineInstr &MI = *MBBI;
-  DebugLoc DL = MI.getDebugLoc();
-
-  unsigned int sysReg =
-      KVX::SystemRegRegClass.getRegister(MI.getOperand(0).getImm());
-  unsigned valReg = MI.getOperand(1).getReg();
-
-  BuildMI(MBB, MBBI, DL, TII->get(Opcode), sysReg).addReg(valReg);
-
-  MI.eraseFromParent();
-  return true;
-}
-
 static bool expandCacheInstruction(const KVXInstrInfo *TII,
                                    MachineBasicBlock &MBB,
                                    MachineBasicBlock::iterator MBBI) {
@@ -1237,12 +1220,6 @@ bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
   switch (MBBI->getOpcode()) {
   case KVX::GETp:
     return expandGetInstr(TII, MBB, MBBI);
-  case KVX::WFXLp:
-    return expandSystemRegValueInstr(KVX::WFXLrst4, TII, MBB, MBBI);
-  case KVX::WFXMp:
-    return expandSystemRegValueInstr(KVX::WFXMrst4, TII, MBB, MBBI);
-  case KVX::SETp:
-    return expandSystemRegValueInstr(KVX::SETrst4, TII, MBB, MBBI);
   default:
     break;
   }

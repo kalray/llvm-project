@@ -50,12 +50,14 @@ define void @wfxl(){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 2
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    wfxl $pm0, $r0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  tail call void @llvm.kvx.wfxl(i32 13, i64 2)
+  tail call void asm sideeffect "wfxl $$pm0, $0", "r,~{$pm0}"(i64 2)
   ret void
 }
 
@@ -66,12 +68,14 @@ define void @wfxm(){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    wfxm $pm0, $r0
+; CHECK-NEXT:    #APP
+; CHECK-NEXT:    wfxl $pm0, $r0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  tail call void @llvm.kvx.wfxm(i32 13, i64 2)
+  tail call void asm sideeffect "wfxl $$pm0, $0", "r,~{$pm0}"(i64 2)
   ret void
 }
 
@@ -82,12 +86,14 @@ define void @set(){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 2
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    set $ps = $r0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  tail call void @llvm.kvx.set(i32 1, i64 2)
+  tail call void asm sideeffect "set $$ps = $0", "r,~{$ps}"(i64 2)
   ret void
 }
 
