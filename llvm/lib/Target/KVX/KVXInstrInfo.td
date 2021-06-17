@@ -3143,6 +3143,7 @@ defm ALIGNO : MC_33<"aligno">;
 
 defm ALIGNV : MC_34<"alignv">;
 
+let Uses = [PCR] in {
 def MT44D : REGISTERAQ_REGISTERBQ_SIMPLE
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2),
    "mt44d $a1 = $a2",
@@ -3287,6 +3288,7 @@ def FNARROWWHV : XROUNDING_SILENT2_REGISTERA_REGISTERBP_SIMPLE
   <(outs VectorReg:$a3), (ins WideReg:$a4, RoundingMod:$a1, SilentMod:$a2),
    "fnarrowwhv$a1$a2 $a3 = $a4",
    [/* no straightforward pattern */]>;
+}
 
 def COPYD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
