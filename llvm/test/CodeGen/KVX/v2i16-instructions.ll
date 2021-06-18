@@ -405,10 +405,7 @@ define <2 x i1> @test_icmp_ule(<2 x i16> %a, <2 x i16> %b) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compnhq.leu $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlw $r1 = $r0, 16
-; CHECK-NEXT:    zxhd $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x401
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = icmp ule <2 x i16> %a, %b
@@ -420,10 +417,7 @@ define <2 x i1> @test_icmp_slt(<2 x i16> %a, <2 x i16> %b) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compnhq.lt $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlw $r1 = $r0, 16
-; CHECK-NEXT:    zxhd $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x401
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = icmp slt <2 x i16> %a, %b
@@ -435,10 +429,7 @@ define <2 x i1> @test_icmp_ugt(<2 x i16> %a, <2 x i16> %b) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compnhq.gtu $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlw $r1 = $r0, 16
-; CHECK-NEXT:    zxhd $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x401
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = icmp ugt <2 x i16> %a, %b
@@ -450,10 +441,7 @@ define <2 x i1> @test_icmp_uge(<2 x i16> %a, <2 x i16> %b) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compnhq.geu $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlw $r1 = $r0, 16
-; CHECK-NEXT:    zxhd $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x401
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = icmp uge <2 x i16> %a, %b
@@ -465,10 +453,7 @@ define <2 x i1> @test_icmp_ult(<2 x i16> %a, <2 x i16> %b) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compnhq.ltu $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlw $r1 = $r0, 16
-; CHECK-NEXT:    zxhd $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x401
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = icmp ult <2 x i16> %a, %b
@@ -901,6 +886,30 @@ define <2 x i16> @nandw_v2i16_ri37_2(<2 x i16> %0) {
   %2 = and <2 x i16> %0, <i16 13, i16 13>
   %3 = xor <2 x i16> %2, <i16 -1, i16 -1>
   ret <2 x i16> %3
+}
+
+define <2 x i8> @trunc_to_v2i8(<2 x i16> %a) {
+; CHECK-LABEL: trunc_to_v2i8:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x401
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %r = trunc <2 x i16> %a to <2 x i8>
+  ret <2 x i8> %r
+}
+
+define <2 x i8> @trunc_to_v2i8_buildvector(i32 %arg1, i32 %arg2) {
+; CHECK-LABEL: trunc_to_v2i8_buildvector:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %arg1b = trunc i32 %arg1 to i16
+  %arg2b = trunc i32 %arg2 to i16
+  %v0 = insertelement <2 x i16> undef, i16 %arg1b, i32 0
+  %v1 = insertelement <2 x i16> %v0, i16 %arg2b, i32 1
+  %conv = trunc <2 x i16> %v1 to <2 x i8>
+  ret <2 x i8> %conv
 }
 
 attributes #0 = { nounwind }

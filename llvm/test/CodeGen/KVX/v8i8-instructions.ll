@@ -1273,4 +1273,26 @@ define <8 x i8> @nandd_ri37_2(<8 x i8> %0) {
   ret <8 x i8> %3
 }
 
+define <8 x i8> @concat(<4 x i8> %a) #0 {
+; CHECK-LABEL: concat:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    insf $r0 = $r0, 63, 32
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %r = shufflevector <4 x i8> %a, <4 x i8> undef,
+                        <8 x i32> <i32 0, i32 1, i32 2, i32 3,
+                        i32 0, i32 1, i32 2, i32 3>
+  ret <8 x i8> %r
+}
+
+define <8 x i8> @concat2(<4 x i8> %a, <4 x i8> %b){
+; CHECK-LABEL: concat2:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    insf $r0 = $r1, 63, 32
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %v = shufflevector <4 x i8> %a, <4 x i8> %b, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+  ret <8 x i8> %v
+}
+
 attributes #0 = { nounwind }

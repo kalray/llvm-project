@@ -562,5 +562,26 @@ define <2 x i64> @test_insertelement(<2 x i64> %a, i64 %x, i64 %p) #0 {
   ret <2 x i64> %i
 }
 
+define <2 x i8> @trunc_to_v2i8(<2 x i64> %a){
+; CHECK-LABEL: trunc_to_v2i8:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %r = trunc <2 x i64> %a to <2 x i8>
+  ret <2 x i8> %r
+}
+
+define <2 x i8> @trunc_to_v2i64_buildvector(i64 %arg1, i64 %arg2) {
+; CHECK-LABEL: trunc_to_v2i64_buildvector:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %v0 = insertelement <2 x i64> undef, i64 %arg1, i32 0
+  %v1 = insertelement <2 x i64> %v0, i64 %arg2, i32 1
+  %conv = trunc <2 x i64> %v1 to <2 x i8>
+  ret <2 x i8> %conv
+}
 
 attributes #0 = { nounwind }

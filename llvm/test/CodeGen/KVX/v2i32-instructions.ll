@@ -403,9 +403,7 @@ define <2 x i1> @test_icmp_ule(<2 x i32> %a, <2 x i32> %b) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compnwp.leu $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r1 = $r0, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = icmp ule <2 x i32> %a, %b
@@ -417,9 +415,7 @@ define <2 x i1> @test_icmp_slt(<2 x i32> %a, <2 x i32> %b) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compnwp.lt $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r1 = $r0, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = icmp slt <2 x i32> %a, %b
@@ -431,9 +427,7 @@ define <2 x i1> @test_icmp_ugt(<2 x i32> %a, <2 x i32> %b) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compnwp.gtu $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r1 = $r0, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = icmp ugt <2 x i32> %a, %b
@@ -445,9 +439,7 @@ define <2 x i1> @test_icmp_uge(<2 x i32> %a, <2 x i32> %b) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compnwp.geu $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r1 = $r0, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = icmp uge <2 x i32> %a, %b
@@ -459,9 +451,7 @@ define <2 x i1> @test_icmp_ult(<2 x i32> %a, <2 x i32> %b) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compnwp.ltu $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r1 = $r0, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = icmp ult <2 x i32> %a, %b
@@ -926,6 +916,28 @@ define <2 x i32> @nandd_v2i32_ri64(<2 x i32> %0) {
   %2 = and <2 x i32> %0, <i32 13, i32 896540>
   %3 = xor <2 x i32> %2, <i32 -1, i32 -1>
   ret <2 x i32> %3
+}
+
+define <2 x i8> @trunc_to_v2i8(<2 x i32> %a){
+; CHECK-LABEL: trunc_to_v2i8:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %r = trunc <2 x i32> %a to <2 x i8>
+  ret <2 x i8> %r
+}
+
+define <2 x i8> @trunc_to_v2i8_buildvector(i32 %arg1, i32 %arg2) {
+; CHECK-LABEL: trunc_to_v2i8_buildvector:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %v0 = insertelement <2 x i32> undef, i32 %arg1, i32 0
+  %v1 = insertelement <2 x i32> %v0, i32 %arg2, i32 1
+  %conv = trunc <2 x i32> %v1 to <2 x i8>
+  ret <2 x i8> %conv
 }
 
 attributes #0 = { nounwind }
