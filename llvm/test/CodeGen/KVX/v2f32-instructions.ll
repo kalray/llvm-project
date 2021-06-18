@@ -340,9 +340,7 @@ define <2 x i1> @test_fcmp_une(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.une $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r1 = $r0, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp une <2 x float> %a, %b
@@ -354,9 +352,7 @@ define <2 x i1> @test_fcmp_ueq(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.ueq $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r1 = $r0, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp ueq <2 x float> %a, %b
@@ -368,9 +364,7 @@ define <2 x i1> @test_fcmp_ugt(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.ult $r0 = $r1, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r1 = $r0, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp ugt <2 x float> %a, %b
@@ -382,9 +376,7 @@ define <2 x i1> @test_fcmp_uge(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.uge $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r1 = $r0, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp uge <2 x float> %a, %b
@@ -396,9 +388,7 @@ define <2 x i1> @test_fcmp_ult(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.ult $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r1 = $r0, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp ult <2 x float> %a, %b
@@ -410,9 +400,7 @@ define <2 x i1> @test_fcmp_ule(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.uge $r0 = $r1, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r1 = $r0, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp ule <2 x float> %a, %b
@@ -427,9 +415,7 @@ define <2 x i1> @test_fcmp_uno(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    andd $r0 = $r0, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r1 = $r0, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp uno <2 x float> %a, %b
@@ -441,9 +427,7 @@ define <2 x i1> @test_fcmp_one(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.one $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r1 = $r0, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp one <2 x float> %a, %b
@@ -455,9 +439,7 @@ define <2 x i1> @test_fcmp_oeq(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.oeq $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r1 = $r0, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp oeq <2 x float> %a, %b
@@ -469,9 +451,7 @@ define <2 x i1> @test_fcmp_ogt(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.olt $r0 = $r1, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r1 = $r0, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp ogt <2 x float> %a, %b
@@ -483,9 +463,7 @@ define <2 x i1> @test_fcmp_oge(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.oge $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r1 = $r0, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp oge <2 x float> %a, %b
@@ -497,9 +475,7 @@ define <2 x i1> @test_fcmp_olt(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.olt $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r1 = $r0, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp olt <2 x float> %a, %b
@@ -511,9 +487,7 @@ define <2 x i1> @test_fcmp_ole(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.oge $r0 = $r1, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r1 = $r0, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp ole <2 x float> %a, %b
@@ -528,9 +502,7 @@ define <2 x i1> @test_fcmp_ord(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r0 = $r0, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r1 = $r0, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp ord <2 x float> %a, %b

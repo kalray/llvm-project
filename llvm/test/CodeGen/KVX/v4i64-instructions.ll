@@ -796,4 +796,59 @@ define <4 x i64> @test_insertelement(<4 x i64> %a, i64 %x, i64 %p) #0 {
   ret <4 x i64> %i
 }
 
+define <4 x i8> @trunc_to_v4i8(<4 x i64> %a) {
+; CHECK-LABEL: trunc_to_v4i8:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    insf $r2 = $r3, 15, 8
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %r = trunc <4 x i64> %a to <4 x i8>
+  ret <4 x i8> %r
+}
+
+define <4 x i8> @trunc_to_v4i8_buildvector(i64 %arg1, i64 %arg2, i64 %arg3, i64 %arg4) {
+; CHECK-LABEL: trunc_to_v4i8_buildvector:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    insf $r2 = $r3, 15, 8
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %v0 = insertelement <4 x i64> undef, i64 %arg1, i32 0
+  %v1 = insertelement <4 x i64> %v0, i64 %arg2, i32 1
+  %v2 = insertelement <4 x i64> %v1, i64 %arg3, i32 2
+  %v3 = insertelement <4 x i64> %v2, i64 %arg4, i32 3
+  %conv = trunc <4 x i64> %v3 to <4 x i8>
+  ret <4 x i8> %conv
+}
+
+define <4 x i64> @concat(<2 x i64> %a, <2 x i64> %b){
+; CHECK-LABEL: concat:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %v = shufflevector <2 x i64> %a, <2 x i64> %b, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  ret <4 x i64> %v
+}
+
+define <4 x i64> @revconcat(<2 x i64> %b, <2 x i64> %a){
+; CHECK-LABEL: revconcat:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    copyd $r4 = $r1
+; CHECK-NEXT:    copyd $r5 = $r0
+; CHECK-NEXT:    copyd $r0 = $r2
+; CHECK-NEXT:    copyd $r1 = $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r2 = $r5
+; CHECK-NEXT:    copyd $r3 = $r4
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %v = shufflevector <2 x i64> %a, <2 x i64> %b, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  ret <4 x i64> %v
+}
+
 attributes #0 = { nounwind }

@@ -149,8 +149,7 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setTruncStoreAction(MVT::v4i32, MVT::v4i16, Expand);
   setTruncStoreAction(MVT::v4i32, MVT::v4i8, Expand);
 
-  for (auto VT : {MVT::v2i8, MVT::v2i16, MVT::v2i32, MVT::v4i8, MVT::v4i16,
-                  MVT::v4i32, MVT::v4i64})
+  for (auto VT : {MVT::v2i16, MVT::v2i32, MVT::v4i16, MVT::v4i32, MVT::v4i64})
     setOperationAction(ISD::TRUNCATE, VT, Expand);
 
   setOperationAction(ISD::EXTRACT_SUBVECTOR, MVT::v2i16, Expand);
@@ -1944,9 +1943,10 @@ SDValue KVXTargetLowering::lowerCONCAT_VECTORS(SDValue Op,
                                                SelectionDAG &DAG) const {
   auto OperandSize = Op.getOperand(0).getValueSizeInBits();
   auto ResultSize = Op.getValueSizeInBits();
+  if (Op.getNumOperands() != 2)
+    return SDValue();
 
-  if ((OperandSize == 64 && ResultSize == 128) ||
-      (OperandSize == 128 && ResultSize == 256))
+  if ((ResultSize <= 64) || (OperandSize >= 64 && ResultSize <= 256))
     return Op;
 
   if (!((OperandSize == 16 && ResultSize == 32) ||
@@ -2412,6 +2412,7 @@ KVXTargetLowering::getPreferredVectorAction(MVT VT) const {
   case MVT::v16i1:
   case MVT::v32i1:
   case MVT::v8i32:
+  case MVT::v16i8:
     return LegalizeTypeAction::TypeSplitVector;
   default:
     break;
