@@ -1286,4 +1286,14 @@ define <4 x i8> @nandw_v2i8_ri37_2(<4 x i8> %0) {
   ret <4 x i8> %3
 }
 
+define <4 x i8> @concat(<2 x i8> %a, <2 x i8> %b){
+; CHECK-LABEL: concat:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    insf $r0 = $r1, 31, 16
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %v = shufflevector <2 x i8> %a, <2 x i8> %b, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  ret <4 x i8> %v
+}
+
 attributes #0 = { nounwind }

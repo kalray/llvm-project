@@ -532,15 +532,7 @@ define <4 x i1> @test_fcmp_une(<4 x half> %a, <4 x half> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.une $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srld $r1 = $r0, 48
-; CHECK-NEXT:    extfz $r2 = $r0, 47, 32
-; CHECK-NEXT:    srlw $r3 = $r0, 16
-; CHECK-NEXT:    zxhd $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r1, 15, 8
-; CHECK-NEXT:    insf $r0 = $r3, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp une <4 x half> %a, %b
@@ -552,15 +544,7 @@ define <4 x i1> @test_fcmp_ueq(<4 x half> %a, <4 x half> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.ueq $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srld $r1 = $r0, 48
-; CHECK-NEXT:    extfz $r2 = $r0, 47, 32
-; CHECK-NEXT:    srlw $r3 = $r0, 16
-; CHECK-NEXT:    zxhd $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r1, 15, 8
-; CHECK-NEXT:    insf $r0 = $r3, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp ueq <4 x half> %a, %b
@@ -572,15 +556,7 @@ define <4 x i1> @test_fcmp_ugt(<4 x half> %a, <4 x half> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.ult $r0 = $r1, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srld $r1 = $r0, 48
-; CHECK-NEXT:    extfz $r2 = $r0, 47, 32
-; CHECK-NEXT:    srlw $r3 = $r0, 16
-; CHECK-NEXT:    zxhd $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r1, 15, 8
-; CHECK-NEXT:    insf $r0 = $r3, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp ugt <4 x half> %a, %b
@@ -592,15 +568,7 @@ define <4 x i1> @test_fcmp_uge(<4 x half> %a, <4 x half> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.uge $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srld $r1 = $r0, 48
-; CHECK-NEXT:    extfz $r2 = $r0, 47, 32
-; CHECK-NEXT:    srlw $r3 = $r0, 16
-; CHECK-NEXT:    zxhd $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r1, 15, 8
-; CHECK-NEXT:    insf $r0 = $r3, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp uge <4 x half> %a, %b
@@ -612,15 +580,7 @@ define <4 x i1> @test_fcmp_ult(<4 x half> %a, <4 x half> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.ult $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srld $r1 = $r0, 48
-; CHECK-NEXT:    extfz $r2 = $r0, 47, 32
-; CHECK-NEXT:    srlw $r3 = $r0, 16
-; CHECK-NEXT:    zxhd $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r1, 15, 8
-; CHECK-NEXT:    insf $r0 = $r3, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp ult <4 x half> %a, %b
@@ -632,15 +592,7 @@ define <4 x i1> @test_fcmp_ule(<4 x half> %a, <4 x half> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.uge $r0 = $r1, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srld $r1 = $r0, 48
-; CHECK-NEXT:    extfz $r2 = $r0, 47, 32
-; CHECK-NEXT:    srlw $r3 = $r0, 16
-; CHECK-NEXT:    zxhd $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r1, 15, 8
-; CHECK-NEXT:    insf $r0 = $r3, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp ule <4 x half> %a, %b
@@ -655,15 +607,7 @@ define <4 x i1> @test_fcmp_uno(<4 x half> %a, <4 x half> %b) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    andd $r0 = $r0, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srld $r1 = $r0, 48
-; CHECK-NEXT:    extfz $r2 = $r0, 47, 32
-; CHECK-NEXT:    srlw $r3 = $r0, 16
-; CHECK-NEXT:    zxhd $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r1, 15, 8
-; CHECK-NEXT:    insf $r0 = $r3, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp uno <4 x half> %a, %b
@@ -675,15 +619,7 @@ define <4 x i1> @test_fcmp_one(<4 x half> %a, <4 x half> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.one $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srld $r1 = $r0, 48
-; CHECK-NEXT:    extfz $r2 = $r0, 47, 32
-; CHECK-NEXT:    srlw $r3 = $r0, 16
-; CHECK-NEXT:    zxhd $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r1, 15, 8
-; CHECK-NEXT:    insf $r0 = $r3, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp one <4 x half> %a, %b
@@ -695,15 +631,7 @@ define <4 x i1> @test_fcmp_oeq(<4 x half> %a, <4 x half> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.oeq $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srld $r1 = $r0, 48
-; CHECK-NEXT:    extfz $r2 = $r0, 47, 32
-; CHECK-NEXT:    srlw $r3 = $r0, 16
-; CHECK-NEXT:    zxhd $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r1, 15, 8
-; CHECK-NEXT:    insf $r0 = $r3, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp oeq <4 x half> %a, %b
@@ -715,15 +643,7 @@ define <4 x i1> @test_fcmp_ogt(<4 x half> %a, <4 x half> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.olt $r0 = $r1, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srld $r1 = $r0, 48
-; CHECK-NEXT:    extfz $r2 = $r0, 47, 32
-; CHECK-NEXT:    srlw $r3 = $r0, 16
-; CHECK-NEXT:    zxhd $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r1, 15, 8
-; CHECK-NEXT:    insf $r0 = $r3, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp ogt <4 x half> %a, %b
@@ -735,15 +655,7 @@ define <4 x i1> @test_fcmp_oge(<4 x half> %a, <4 x half> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.oge $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srld $r1 = $r0, 48
-; CHECK-NEXT:    extfz $r2 = $r0, 47, 32
-; CHECK-NEXT:    srlw $r3 = $r0, 16
-; CHECK-NEXT:    zxhd $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r1, 15, 8
-; CHECK-NEXT:    insf $r0 = $r3, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp oge <4 x half> %a, %b
@@ -755,15 +667,7 @@ define <4 x i1> @test_fcmp_olt(<4 x half> %a, <4 x half> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.olt $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srld $r1 = $r0, 48
-; CHECK-NEXT:    extfz $r2 = $r0, 47, 32
-; CHECK-NEXT:    srlw $r3 = $r0, 16
-; CHECK-NEXT:    zxhd $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r1, 15, 8
-; CHECK-NEXT:    insf $r0 = $r3, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp olt <4 x half> %a, %b
@@ -775,15 +679,7 @@ define <4 x i1> @test_fcmp_ole(<4 x half> %a, <4 x half> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.oge $r0 = $r1, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srld $r1 = $r0, 48
-; CHECK-NEXT:    extfz $r2 = $r0, 47, 32
-; CHECK-NEXT:    srlw $r3 = $r0, 16
-; CHECK-NEXT:    zxhd $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r1, 15, 8
-; CHECK-NEXT:    insf $r0 = $r3, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp ole <4 x half> %a, %b
@@ -798,15 +694,7 @@ define <4 x i1> @test_fcmp_ord(<4 x half> %a, <4 x half> %b) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r0 = $r0, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srld $r1 = $r0, 48
-; CHECK-NEXT:    extfz $r2 = $r0, 47, 32
-; CHECK-NEXT:    srlw $r3 = $r0, 16
-; CHECK-NEXT:    zxhd $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r1, 15, 8
-; CHECK-NEXT:    insf $r0 = $r3, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp ord <4 x half> %a, %b

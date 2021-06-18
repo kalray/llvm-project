@@ -510,15 +510,7 @@ define <4 x i1> @test_icmp_ule(<4 x i16> %a, <4 x i16> %b) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compnhq.leu $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srld $r1 = $r0, 48
-; CHECK-NEXT:    extfz $r2 = $r0, 47, 32
-; CHECK-NEXT:    srlw $r3 = $r0, 16
-; CHECK-NEXT:    zxhd $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r1, 15, 8
-; CHECK-NEXT:    insf $r0 = $r3, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = icmp ule <4 x i16> %a, %b
@@ -530,15 +522,7 @@ define <4 x i1> @test_icmp_slt(<4 x i16> %a, <4 x i16> %b) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compnhq.lt $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srld $r1 = $r0, 48
-; CHECK-NEXT:    extfz $r2 = $r0, 47, 32
-; CHECK-NEXT:    srlw $r3 = $r0, 16
-; CHECK-NEXT:    zxhd $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r1, 15, 8
-; CHECK-NEXT:    insf $r0 = $r3, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = icmp slt <4 x i16> %a, %b
@@ -550,15 +534,7 @@ define <4 x i1> @test_icmp_ugt(<4 x i16> %a, <4 x i16> %b) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compnhq.gtu $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srld $r1 = $r0, 48
-; CHECK-NEXT:    extfz $r2 = $r0, 47, 32
-; CHECK-NEXT:    srlw $r3 = $r0, 16
-; CHECK-NEXT:    zxhd $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r1, 15, 8
-; CHECK-NEXT:    insf $r0 = $r3, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = icmp ugt <4 x i16> %a, %b
@@ -570,15 +546,7 @@ define <4 x i1> @test_icmp_uge(<4 x i16> %a, <4 x i16> %b) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compnhq.geu $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srld $r1 = $r0, 48
-; CHECK-NEXT:    extfz $r2 = $r0, 47, 32
-; CHECK-NEXT:    srlw $r3 = $r0, 16
-; CHECK-NEXT:    zxhd $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r1, 15, 8
-; CHECK-NEXT:    insf $r0 = $r3, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = icmp uge <4 x i16> %a, %b
@@ -590,19 +558,52 @@ define <4 x i1> @test_icmp_ult(<4 x i16> %a, <4 x i16> %b) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compnhq.ltu $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srld $r1 = $r0, 48
-; CHECK-NEXT:    extfz $r2 = $r0, 47, 32
-; CHECK-NEXT:    srlw $r3 = $r0, 16
-; CHECK-NEXT:    zxhd $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r1, 15, 8
-; CHECK-NEXT:    insf $r0 = $r3, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = icmp ult <4 x i16> %a, %b
   ret <4 x i1> %r
+}
+
+define <4 x i8> @trunc_to_v4i8(<4 x i16> %a) {
+; CHECK-LABEL: trunc_to_v4i8:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x40100401
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %r = trunc <4 x i16> %a to <4 x i8>
+  ret <4 x i8> %r
+}
+
+define <4 x i8> @trunc_to_v4i8_buildvector(i32 %arg1, i32 %arg2, i32 %arg3, i32 %arg4) {
+; CHECK-LABEL: trunc_to_v4i8_buildvector:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    insf $r2 = $r3, 15, 8
+; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %arg1b = trunc i32 %arg1 to i16
+  %arg2b = trunc i32 %arg2 to i16
+  %arg3b = trunc i32 %arg3 to i16
+  %arg4b = trunc i32 %arg4 to i16
+  %v0 = insertelement <4 x i16> undef, i16 %arg1b, i32 0
+  %v1 = insertelement <4 x i16> %v0, i16 %arg2b, i32 1
+  %v2 = insertelement <4 x i16> %v1, i16 %arg3b, i32 2
+  %v3 = insertelement <4 x i16> %v2, i16 %arg4b, i32 3
+  %conv = trunc <4 x i16> %v3 to <4 x i8>
+  ret <4 x i8> %conv
+}
+
+define <4 x i16> @concat(<2 x i16> %a, <2 x i16> %b){
+; CHECK-LABEL: concat:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    insf $r0 = $r1, 63, 32
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %v = shufflevector <2 x i16> %a, <2 x i16> %b, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  ret <4 x i16> %v
 }
 
 define <4 x i64> @test_sext_2xi64(<4 x i16> %a) {
