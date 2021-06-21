@@ -28,7 +28,7 @@ float my_fmaf(float x, float y, float z)
 // TODO: Make the same happen to half arguments.
 // CHECK-LABEL: @my_fmah(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[CALL:%.*]] = call half @fmaf16(half [[X:%.*]], half [[Y:%.*]], half [[Z:%.*]]) #4
+// CHECK-NEXT:    [[CALL:%.*]] = call half @fmaf16(half [[X:%.*]], half [[Y:%.*]], half [[Z:%.*]]) [[ATTR4:#.*]]
 // CHECK-NEXT:    ret half [[CALL]]
 //
 _Float16 my_fmah(_Float16 x, _Float16 y, _Float16 z)
