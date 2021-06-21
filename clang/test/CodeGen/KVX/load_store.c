@@ -7,7 +7,7 @@ typedef long int __attribute__((__vector_size__(32))) v4i64_t;
 // CHECK-LABEL: @so_4xdouble_ri(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <4 x double>, <4 x double>* [[F:%.*]], i64 1
-// CHECK-NEXT:    store volatile <4 x double> [[V:%.*]], <4 x double>* [[ARRAYIDX]], align 32, !tbaa !2
+// CHECK-NEXT:    store volatile <4 x double> [[V:%.*]], <4 x double>* [[ARRAYIDX]], align 32, [[TBAA2:!tbaa !.*]]
 // CHECK-NEXT:    ret void
 //
 void so_4xdouble_ri(v4f64_t v, volatile v4f64_t *f) {
@@ -18,7 +18,7 @@ void so_4xdouble_ri(v4f64_t v, volatile v4f64_t *f) {
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[IDXPROM:%.*]] = sext i32 [[C:%.*]] to i64
 // CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <4 x double>, <4 x double>* [[F:%.*]], i64 [[IDXPROM]]
-// CHECK-NEXT:    store volatile <4 x double> [[V:%.*]], <4 x double>* [[ARRAYIDX]], align 32, !tbaa !2
+// CHECK-NEXT:    store volatile <4 x double> [[V:%.*]], <4 x double>* [[ARRAYIDX]], align 32, [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void so_4xdouble_rr(v4f64_t v, volatile v4f64_t *f, int c) {
@@ -29,7 +29,7 @@ void so_4xdouble_rr(v4f64_t v, volatile v4f64_t *f, int c) {
 // CHECK-LABEL: @lo_4xdouble_ri(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <4 x double>, <4 x double>* [[F:%.*]], i64 -1
-// CHECK-NEXT:    [[TMP0:%.*]] = load volatile <4 x double>, <4 x double>* [[ARRAYIDX]], align 32, !tbaa !2
+// CHECK-NEXT:    [[TMP0:%.*]] = load volatile <4 x double>, <4 x double>* [[ARRAYIDX]], align 32, [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void lo_4xdouble_ri(volatile v4f64_t *f) {
@@ -40,7 +40,7 @@ void lo_4xdouble_ri(volatile v4f64_t *f) {
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[IDXPROM:%.*]] = sext i32 [[C:%.*]] to i64
 // CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <4 x i64>, <4 x i64>* [[F:%.*]], i64 [[IDXPROM]]
-// CHECK-NEXT:    [[TMP0:%.*]] = load volatile <4 x i64>, <4 x i64>* [[ARRAYIDX]], align 32, !tbaa !2
+// CHECK-NEXT:    [[TMP0:%.*]] = load volatile <4 x i64>, <4 x i64>* [[ARRAYIDX]], align 32, [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void lo_4xdouble_rr(volatile v4i64_t *f, int c) {
@@ -51,7 +51,7 @@ void lo_4xdouble_rr(volatile v4i64_t *f, int c) {
 // CHECK-LABEL: @lo_4xdouble_ri_p(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <4 x double>, <4 x double> addrspace(257)* [[F:%.*]], i64 -1
-// CHECK-NEXT:    [[TMP0:%.*]] = load volatile <4 x double>, <4 x double> addrspace(257)* [[ARRAYIDX]], align 32, !tbaa !2
+// CHECK-NEXT:    [[TMP0:%.*]] = load volatile <4 x double>, <4 x double> addrspace(257)* [[ARRAYIDX]], align 32, [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void lo_4xdouble_ri_p(__preload volatile v4f64_t *f) {
@@ -62,7 +62,7 @@ void lo_4xdouble_ri_p(__preload volatile v4f64_t *f) {
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[IDXPROM:%.*]] = sext i32 [[C:%.*]] to i64
 // CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <4 x double>, <4 x double> addrspace(257)* [[F:%.*]], i64 [[IDXPROM]]
-// CHECK-NEXT:    [[TMP0:%.*]] = load volatile <4 x double>, <4 x double> addrspace(257)* [[ARRAYIDX]], align 32, !tbaa !2
+// CHECK-NEXT:    [[TMP0:%.*]] = load volatile <4 x double>, <4 x double> addrspace(257)* [[ARRAYIDX]], align 32, [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void lo_4xdouble_rr_p(__preload volatile v4f64_t *f, int c) {
@@ -73,7 +73,7 @@ void lo_4xdouble_rr_p(__preload volatile v4f64_t *f, int c) {
 // CHECK-LABEL: @lo_4xdouble_ri_b(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <4 x double>, <4 x double> addrspace(256)* [[F:%.*]], i64 -1
-// CHECK-NEXT:    [[TMP0:%.*]] = load volatile <4 x double>, <4 x double> addrspace(256)* [[ARRAYIDX]], align 32, !tbaa !2
+// CHECK-NEXT:    [[TMP0:%.*]] = load volatile <4 x double>, <4 x double> addrspace(256)* [[ARRAYIDX]], align 32, [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void lo_4xdouble_ri_b(__bypass volatile v4f64_t *f) {
@@ -84,7 +84,7 @@ void lo_4xdouble_ri_b(__bypass volatile v4f64_t *f) {
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[IDXPROM:%.*]] = sext i32 [[C:%.*]] to i64
 // CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <4 x double>, <4 x double> addrspace(256)* [[F:%.*]], i64 [[IDXPROM]]
-// CHECK-NEXT:    [[TMP0:%.*]] = load volatile <4 x double>, <4 x double> addrspace(256)* [[ARRAYIDX]], align 32, !tbaa !2
+// CHECK-NEXT:    [[TMP0:%.*]] = load volatile <4 x double>, <4 x double> addrspace(256)* [[ARRAYIDX]], align 32, [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void lo_4xdouble_rr_b(__bypass volatile v4f64_t *f, int c) {
@@ -95,7 +95,7 @@ void lo_4xdouble_rr_b(__bypass volatile v4f64_t *f, int c) {
 // CHECK-LABEL: @lo_4xdouble_ri_s(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <4 x double>, <4 x double> addrspace(258)* [[F:%.*]], i64 -1
-// CHECK-NEXT:    [[TMP0:%.*]] = load volatile <4 x double>, <4 x double> addrspace(258)* [[ARRAYIDX]], align 32, !tbaa !2
+// CHECK-NEXT:    [[TMP0:%.*]] = load volatile <4 x double>, <4 x double> addrspace(258)* [[ARRAYIDX]], align 32, [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void lo_4xdouble_ri_s(__speculative volatile v4f64_t *f) {
@@ -106,7 +106,7 @@ void lo_4xdouble_ri_s(__speculative volatile v4f64_t *f) {
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[IDXPROM:%.*]] = sext i32 [[C:%.*]] to i64
 // CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <4 x double>, <4 x double> addrspace(258)* [[F:%.*]], i64 [[IDXPROM]]
-// CHECK-NEXT:    [[TMP0:%.*]] = load volatile <4 x double>, <4 x double> addrspace(258)* [[ARRAYIDX]], align 32, !tbaa !2
+// CHECK-NEXT:    [[TMP0:%.*]] = load volatile <4 x double>, <4 x double> addrspace(258)* [[ARRAYIDX]], align 32, [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void lo_4xdouble_rr_s(__speculative volatile v4f64_t *f, int c) {
@@ -117,7 +117,7 @@ void lo_4xdouble_rr_s(__speculative volatile v4f64_t *f, int c) {
 // CHECK-LABEL: @so_4xi64_ri(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <4 x i64>, <4 x i64>* [[F:%.*]], i64 1
-// CHECK-NEXT:    store volatile <4 x i64> [[V:%.*]], <4 x i64>* [[ARRAYIDX]], align 32, !tbaa !2
+// CHECK-NEXT:    store volatile <4 x i64> [[V:%.*]], <4 x i64>* [[ARRAYIDX]], align 32, [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void so_4xi64_ri(v4i64_t v, volatile v4i64_t *f) {
@@ -128,7 +128,7 @@ void so_4xi64_ri(v4i64_t v, volatile v4i64_t *f) {
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[IDXPROM:%.*]] = sext i32 [[C:%.*]] to i64
 // CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <4 x i64>, <4 x i64>* [[F:%.*]], i64 [[IDXPROM]]
-// CHECK-NEXT:    store volatile <4 x i64> [[V:%.*]], <4 x i64>* [[ARRAYIDX]], align 32, !tbaa !2
+// CHECK-NEXT:    store volatile <4 x i64> [[V:%.*]], <4 x i64>* [[ARRAYIDX]], align 32, [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void so_4xi64_rr(v4i64_t v, volatile v4i64_t *f, int c) {
@@ -139,7 +139,7 @@ void so_4xi64_rr(v4i64_t v, volatile v4i64_t *f, int c) {
 // CHECK-LABEL: @lo_4xi64_ri(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <4 x i64>, <4 x i64>* [[F:%.*]], i64 -1
-// CHECK-NEXT:    [[TMP0:%.*]] = load volatile <4 x i64>, <4 x i64>* [[ARRAYIDX]], align 32, !tbaa !2
+// CHECK-NEXT:    [[TMP0:%.*]] = load volatile <4 x i64>, <4 x i64>* [[ARRAYIDX]], align 32, [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void lo_4xi64_ri(volatile v4i64_t *f) {
@@ -150,7 +150,7 @@ void lo_4xi64_ri(volatile v4i64_t *f) {
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[IDXPROM:%.*]] = sext i32 [[C:%.*]] to i64
 // CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <4 x i64>, <4 x i64>* [[F:%.*]], i64 [[IDXPROM]]
-// CHECK-NEXT:    [[TMP0:%.*]] = load volatile <4 x i64>, <4 x i64>* [[ARRAYIDX]], align 32, !tbaa !2
+// CHECK-NEXT:    [[TMP0:%.*]] = load volatile <4 x i64>, <4 x i64>* [[ARRAYIDX]], align 32, [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void lo_4xi64_rr(volatile v4i64_t *f, int c) {
@@ -161,7 +161,7 @@ void lo_4xi64_rr(volatile v4i64_t *f, int c) {
 // CHECK-LABEL: @lo_4xi64_ri_p(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <4 x i64>, <4 x i64> addrspace(257)* [[F:%.*]], i64 -1
-// CHECK-NEXT:    [[TMP0:%.*]] = load volatile <4 x i64>, <4 x i64> addrspace(257)* [[ARRAYIDX]], align 32, !tbaa !2
+// CHECK-NEXT:    [[TMP0:%.*]] = load volatile <4 x i64>, <4 x i64> addrspace(257)* [[ARRAYIDX]], align 32, [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void lo_4xi64_ri_p(__preload volatile v4i64_t *f) {
@@ -172,7 +172,7 @@ void lo_4xi64_ri_p(__preload volatile v4i64_t *f) {
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[IDXPROM:%.*]] = sext i32 [[C:%.*]] to i64
 // CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <4 x i64>, <4 x i64> addrspace(257)* [[F:%.*]], i64 [[IDXPROM]]
-// CHECK-NEXT:    [[TMP0:%.*]] = load volatile <4 x i64>, <4 x i64> addrspace(257)* [[ARRAYIDX]], align 32, !tbaa !2
+// CHECK-NEXT:    [[TMP0:%.*]] = load volatile <4 x i64>, <4 x i64> addrspace(257)* [[ARRAYIDX]], align 32, [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void lo_4xi64_rr_p(__preload volatile v4i64_t *f, int c) {
@@ -183,7 +183,7 @@ void lo_4xi64_rr_p(__preload volatile v4i64_t *f, int c) {
 // CHECK-LABEL: @lo_4xi64_ri_b(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <4 x i64>, <4 x i64> addrspace(256)* [[F:%.*]], i64 -1
-// CHECK-NEXT:    [[TMP0:%.*]] = load volatile <4 x i64>, <4 x i64> addrspace(256)* [[ARRAYIDX]], align 32, !tbaa !2
+// CHECK-NEXT:    [[TMP0:%.*]] = load volatile <4 x i64>, <4 x i64> addrspace(256)* [[ARRAYIDX]], align 32, [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void lo_4xi64_ri_b(__bypass volatile v4i64_t *f) {
@@ -194,7 +194,7 @@ void lo_4xi64_ri_b(__bypass volatile v4i64_t *f) {
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[IDXPROM:%.*]] = sext i32 [[C:%.*]] to i64
 // CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <4 x i64>, <4 x i64> addrspace(256)* [[F:%.*]], i64 [[IDXPROM]]
-// CHECK-NEXT:    [[TMP0:%.*]] = load volatile <4 x i64>, <4 x i64> addrspace(256)* [[ARRAYIDX]], align 32, !tbaa !2
+// CHECK-NEXT:    [[TMP0:%.*]] = load volatile <4 x i64>, <4 x i64> addrspace(256)* [[ARRAYIDX]], align 32, [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void lo_4xi64_rr_b(__bypass volatile v4i64_t *f, int c) {
@@ -205,7 +205,7 @@ void lo_4xi64_rr_b(__bypass volatile v4i64_t *f, int c) {
 // CHECK-LABEL: @lo_4xi64_ri_s(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <4 x i64>, <4 x i64> addrspace(258)* [[F:%.*]], i64 -1
-// CHECK-NEXT:    [[TMP0:%.*]] = load volatile <4 x i64>, <4 x i64> addrspace(258)* [[ARRAYIDX]], align 32, !tbaa !2
+// CHECK-NEXT:    [[TMP0:%.*]] = load volatile <4 x i64>, <4 x i64> addrspace(258)* [[ARRAYIDX]], align 32, [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void lo_4xi64_ri_s(__speculative volatile v4i64_t *f) {
@@ -216,7 +216,7 @@ void lo_4xi64_ri_s(__speculative volatile v4i64_t *f) {
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[IDXPROM:%.*]] = sext i32 [[C:%.*]] to i64
 // CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <4 x i64>, <4 x i64> addrspace(258)* [[F:%.*]], i64 [[IDXPROM]]
-// CHECK-NEXT:    [[TMP0:%.*]] = load volatile <4 x i64>, <4 x i64> addrspace(258)* [[ARRAYIDX]], align 32, !tbaa !2
+// CHECK-NEXT:    [[TMP0:%.*]] = load volatile <4 x i64>, <4 x i64> addrspace(258)* [[ARRAYIDX]], align 32, [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void lo_4xi64_rr_s(__speculative volatile v4i64_t *f, int c) {
