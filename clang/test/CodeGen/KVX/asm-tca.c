@@ -27,7 +27,7 @@ void asm_tca(void *v, long A) {
 
 // CHECK-LABEL: @asm_clobber_vec_vec(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <256 x i1> asm sideeffect "copyv $0 = $1", "=w,w,~{$a0}"(<256 x i1> undef) #3, !srcloc !4
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <256 x i1> asm sideeffect "copyv $0 = $1", "=w,w,~{$a0}"(<256 x i1> undef) [[ATTR3:#.*]], !srcloc !4
 // CHECK-NEXT:    ret void
 //
 void asm_clobber_vec_vec(long A) {
@@ -41,7 +41,7 @@ void asm_clobber_vec_vec(long A) {
 
 // CHECK-LABEL: @asm_clobber_vec_block(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <256 x i1> asm sideeffect "copyv $0 = $1", "=w,w,~{$a0.hi}"(<256 x i1> undef) #3, !srcloc !5
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <256 x i1> asm sideeffect "copyv $0 = $1", "=w,w,~{$a0.hi}"(<256 x i1> undef) [[ATTR3]], !srcloc !5
 // CHECK-NEXT:    ret void
 //
 void asm_clobber_vec_block(long A) {
@@ -55,8 +55,8 @@ void asm_clobber_vec_block(long A) {
 
 // CHECK-LABEL: @asm_clobber_wide_vec(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, <256 x i1>* [[A:%.*]], align 32, !tbaa !6
-// CHECK-NEXT:    tail call void asm sideeffect "copyv $0 = $0", "w,~{$r0r1r2r3},~{$a0a1}"(<256 x i1> [[TMP0]]) #3, !srcloc !10
+// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, <256 x i1>* [[A:%.*]], align 32, [[TBAA6:!tbaa !.*]]
+// CHECK-NEXT:    tail call void asm sideeffect "copyv $0 = $0", "w,~{$r0r1r2r3},~{$a0a1}"(<256 x i1> [[TMP0]]) [[ATTR3]], !srcloc !10
 // CHECK-NEXT:    ret void
 //
 void asm_clobber_wide_vec(__tca256 *a) {
@@ -68,12 +68,12 @@ void asm_clobber_wide_vec(__tca256 *a) {
 
 // CHECK-LABEL: @asm_clobber_multiple_quad(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, <256 x i1>* [[C:%.*]], align 32, !tbaa !6
+// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, <256 x i1>* [[C:%.*]], align 32, [[TBAA6]]
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call { <256 x i1>, <256 x i1> } asm sideeffect "copyv $0 = $1\0A\09
 // CHECK-NEXT:    [[ASMRESULT:%.*]] = extractvalue { <256 x i1>, <256 x i1> } [[TMP1]], 0
 // CHECK-NEXT:    [[ASMRESULT3:%.*]] = extractvalue { <256 x i1>, <256 x i1> } [[TMP1]], 1
-// CHECK-NEXT:    store <256 x i1> [[ASMRESULT]], <256 x i1>* [[C]], align 32, !tbaa !6
-// CHECK-NEXT:    store <256 x i1> [[ASMRESULT3]], <256 x i1>* [[B:%.*]], align 32, !tbaa !6
+// CHECK-NEXT:    store <256 x i1> [[ASMRESULT]], <256 x i1>* [[C]], align 32, [[TBAA6]]
+// CHECK-NEXT:    store <256 x i1> [[ASMRESULT3]], <256 x i1>* [[B:%.*]], align 32, [[TBAA6]]
 // CHECK-NEXT:    ret void
 //
 void asm_clobber_multiple_quad(__tca256 *c, __tca256 *b) {
@@ -85,8 +85,8 @@ void asm_clobber_multiple_quad(__tca256 *c, __tca256 *b) {
 
 // CHECK-LABEL: @asm_clobber_quad_matrix(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, <256 x i1>* [[A:%.*]], align 32, !tbaa !6
-// CHECK-NEXT:    tail call void asm sideeffect "sv 0[$$r3] = $0", "w,~{$r0r1r2r3},~{$a0a1a2a3}"(<256 x i1> [[TMP0]]) #3, !srcloc !12
+// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, <256 x i1>* [[A:%.*]], align 32, [[TBAA6]]
+// CHECK-NEXT:    tail call void asm sideeffect "sv 0[$$r3] = $0", "w,~{$r0r1r2r3},~{$a0a1a2a3}"(<256 x i1> [[TMP0]]) [[ATTR3]], !srcloc !12
 // CHECK-NEXT:    ret <256 x i1>* [[A]]
 //
 __tca256 *asm_clobber_quad_matrix(__tca256 *a) {
@@ -99,10 +99,10 @@ __tca256 *asm_clobber_quad_matrix(__tca256 *a) {
 
 // CHECK-LABEL: @use_wide_reg(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <512 x i1>, <512 x i1>* [[W:%.*]], align 32, !tbaa !13
-// CHECK-NEXT:    [[TMP1:%.*]] = load <256 x i1>, <256 x i1>* [[V:%.*]], align 32, !tbaa !6
-// CHECK-NEXT:    [[TMP2:%.*]] = tail call <512 x i1> asm sideeffect "mma484bw $0 = $0, $1, $1", "=w,w,0,~{$r0r1r2r3},~{$a0a1a2a3}"(<256 x i1> [[TMP1]], <512 x i1> [[TMP0]]) #3, !srcloc !15
-// CHECK-NEXT:    store <512 x i1> [[TMP2]], <512 x i1>* [[W]], align 32, !tbaa !13
+// CHECK-NEXT:    [[TMP0:%.*]] = load <512 x i1>, <512 x i1>* [[W:%.*]], align 32, [[TBAA13:!tbaa !.*]]
+// CHECK-NEXT:    [[TMP1:%.*]] = load <256 x i1>, <256 x i1>* [[V:%.*]], align 32, [[TBAA6]]
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <512 x i1> asm sideeffect "mma484bw $0 = $0, $1, $1", "=w,w,0,~{$r0r1r2r3},~{$a0a1a2a3}"(<256 x i1> [[TMP1]], <512 x i1> [[TMP0]]) [[ATTR3]], !srcloc !15
+// CHECK-NEXT:    store <512 x i1> [[TMP2]], <512 x i1>* [[W]], align 32, [[TBAA13]]
 // CHECK-NEXT:    ret void
 //
 void use_wide_reg(__tca512 *w, __tca256 *v) {
@@ -114,9 +114,9 @@ void use_wide_reg(__tca512 *w, __tca256 *v) {
 
 // CHECK-LABEL: @use_matrix_reg(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <1024 x i1>, <1024 x i1>* [[X:%.*]], align 32, !tbaa !16
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <1024 x i1> asm sideeffect "mt44d $0 = $0", "=w,0,~{$r0r1r2r3},~{$a0a1a2a3}"(<1024 x i1> [[TMP0]]) #3, !srcloc !18
-// CHECK-NEXT:    store <1024 x i1> [[TMP1]], <1024 x i1>* [[X]], align 32, !tbaa !16
+// CHECK-NEXT:    [[TMP0:%.*]] = load <1024 x i1>, <1024 x i1>* [[X:%.*]], align 32, [[TBAA16:!tbaa !.*]]
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <1024 x i1> asm sideeffect "mt44d $0 = $0", "=w,0,~{$r0r1r2r3},~{$a0a1a2a3}"(<1024 x i1> [[TMP0]]) [[ATTR3]], !srcloc !18
+// CHECK-NEXT:    store <1024 x i1> [[TMP1]], <1024 x i1>* [[X]], align 32, [[TBAA16]]
 // CHECK-NEXT:    ret void
 //
 void use_matrix_reg(__tca1024 *x) {

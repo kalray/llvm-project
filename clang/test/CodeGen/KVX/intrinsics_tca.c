@@ -3,23 +3,23 @@
 typedef long __attribute__((__vector_size__(32))) v4i64_t;
 // CHECK-LABEL: @test_tca_builtins(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load volatile <256 x i1>, <256 x i1>* [[V:%.*]], align 32, !tbaa !2
+// CHECK-NEXT:    [[TMP0:%.*]] = load volatile <256 x i1>, <256 x i1>* [[V:%.*]], align 32, [[TBAA2:!tbaa !.*]]
 // CHECK-NEXT:    [[TMP1:%.*]] = call <256 x i1> @llvm.kvx.movetohi(<256 x i1> [[TMP0]], i64 0, i64 1)
-// CHECK-NEXT:    store volatile <256 x i1> [[TMP1]], <256 x i1>* [[V]], align 32, !tbaa !2
-// CHECK-NEXT:    [[TMP2:%.*]] = load volatile <256 x i1>, <256 x i1>* [[V]], align 32, !tbaa !2
+// CHECK-NEXT:    store volatile <256 x i1> [[TMP1]], <256 x i1>* [[V]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[TMP2:%.*]] = load volatile <256 x i1>, <256 x i1>* [[V]], align 32, [[TBAA2]]
 // CHECK-NEXT:    [[TMP3:%.*]] = call <256 x i1> @llvm.kvx.movetolo(<256 x i1> [[TMP2]], i64 3, i64 2)
-// CHECK-NEXT:    store volatile <256 x i1> [[TMP3]], <256 x i1>* [[V]], align 32, !tbaa !2
+// CHECK-NEXT:    store volatile <256 x i1> [[TMP3]], <256 x i1>* [[V]], align 32, [[TBAA2]]
 // CHECK-NEXT:    [[TMP4:%.*]] = call <256 x i1> @llvm.kvx.moveto(i64 1, i64 2, i64 3, i64 4)
 // CHECK-NEXT:    [[ARRAYIDX4:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 1
-// CHECK-NEXT:    store volatile <256 x i1> [[TMP4]], <256 x i1>* [[ARRAYIDX4]], align 32, !tbaa !2
+// CHECK-NEXT:    store volatile <256 x i1> [[TMP4]], <256 x i1>* [[ARRAYIDX4]], align 32, [[TBAA2]]
 // CHECK-NEXT:    [[TMP5:%.*]] = call <256 x i1> @llvm.kvx.moveoto(<4 x i64> <i64 0, i64 1, i64 2, i64 3>)
-// CHECK-NEXT:    [[TMP6:%.*]] = load volatile <256 x i1>, <256 x i1>* [[V]], align 32, !tbaa !2
+// CHECK-NEXT:    [[TMP6:%.*]] = load volatile <256 x i1>, <256 x i1>* [[V]], align 32, [[TBAA2]]
 // CHECK-NEXT:    [[TMP7:%.*]] = call <256 x i1> @llvm.kvx.alignv(<256 x i1> [[TMP5]], <256 x i1> [[TMP6]], i64 16)
 // CHECK-NEXT:    [[TMP8:%.*]] = call <4 x i64> @llvm.kvx.alignov(<256 x i1> [[TMP5]], <256 x i1> [[TMP7]], i64 1)
-// CHECK-NEXT:    [[TMP9:%.*]] = load volatile <1024 x i1>, <1024 x i1>* [[M:%.*]], align 32, !tbaa !6
+// CHECK-NEXT:    [[TMP9:%.*]] = load volatile <1024 x i1>, <1024 x i1>* [[M:%.*]], align 32, [[TBAA6:!tbaa !.*]]
 // CHECK-NEXT:    [[TMP10:%.*]] = call <256 x i1> @llvm.kvx.convdhv0(<256 x i1> [[TMP5]], <1024 x i1> [[TMP9]], i32 0, i32 0)
 // CHECK-NEXT:    [[TMP11:%.*]] = call <256 x i1> @llvm.kvx.convdhv1(<256 x i1> [[TMP10]], <1024 x i1> [[TMP9]], i32 1, i32 1)
-// CHECK-NEXT:    [[TMP12:%.*]] = load volatile <512 x i1>, <512 x i1>* [[W:%.*]], align 32, !tbaa !8
+// CHECK-NEXT:    [[TMP12:%.*]] = load volatile <512 x i1>, <512 x i1>* [[W:%.*]], align 32, [[TBAA8:!tbaa !.*]]
 // CHECK-NEXT:    [[TMP13:%.*]] = call <256 x i1> @llvm.kvx.convwbv(<1024 x i1> [[TMP9]], i32 1, i32 0)
 // CHECK-NEXT:    [[TMP14:%.*]] = call <256 x i1> @llvm.kvx.fmma242hw0(<256 x i1> [[TMP11]], <512 x i1> [[TMP12]], <256 x i1> [[TMP11]], <256 x i1> [[TMP13]])
 // CHECK-NEXT:    [[TMP15:%.*]] = call <256 x i1> @llvm.kvx.fmma242hw1(<256 x i1> [[TMP14]], <512 x i1> [[TMP12]], <256 x i1> [[TMP11]], <256 x i1> [[TMP14]])
@@ -64,8 +64,8 @@ typedef long __attribute__((__vector_size__(32))) v4i64_t;
 // CHECK-NEXT:    store <256 x i1> [[TMP46]], <256 x i1>* [[V]], align 32
 // CHECK-NEXT:    [[TMP51:%.*]] = bitcast <256 x i1>* [[ARRAYIDX4]] to i8*
 // CHECK-NEXT:    call void @llvm.kvx.sv.cond(i8* nonnull [[TMP51]], <256 x i1> [[TMP46]], i64 1, i32 7)
-// CHECK-NEXT:    store volatile <512 x i1> [[TMP34]], <512 x i1>* [[W]], align 32, !tbaa !8
-// CHECK-NEXT:    store volatile <1024 x i1> [[TMP50]], <1024 x i1>* [[M]], align 32, !tbaa !6
+// CHECK-NEXT:    store volatile <512 x i1> [[TMP34]], <512 x i1>* [[W]], align 32, [[TBAA8]]
+// CHECK-NEXT:    store volatile <1024 x i1> [[TMP50]], <1024 x i1>* [[M]], align 32, [[TBAA6]]
 // CHECK-NEXT:    ret <4 x i64> [[TMP40]]
 //
 v4i64_t test_tca_builtins(long a, long b, long c, long d, volatile __tca256 *v, volatile __tca512 *w, volatile __tca1024 *m) {
