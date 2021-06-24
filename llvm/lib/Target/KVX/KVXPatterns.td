@@ -873,7 +873,7 @@ def : Pat<(brind (i32 SingleReg:$r)), (IGOTO SingleReg:$r)>;
 let Constraints = "@earlyclobber $scratch, $dst = $falsev" in
 def SELECTp : KVX_PSEUDO<(outs SingleReg:$dst, SingleReg:$scratch),
                          (ins SingleReg:$cmp, SingleReg:$truev, SingleReg:$falsev, ScalarcondMod:$cond),[]>;
-
+// TODO: i32 (select (i32 setcc:$v), -1, 0) should be a simple NEGW $v
 multiclass SELECTCONDW<SDNode ntrue, SDNode nfalse, SDNode itrue, SDNode ifalse>
 {
         def : Pat<(select (i32 (seteq i32:$val, (i32 0))), ntrue, nfalse),
@@ -926,6 +926,8 @@ def : Pat <(select i32:$cc, v1024i1:$truev, v1024i1:$falsev),
 defm : SELECTCONDW<(i32 i32:$truev), (i32 i32:$falsev), (i32 Wrapped32:$truev), (i32 Wrapped32:$falsev)>;
 defm : SELECTCONDW<(i64 i64:$truev), (i64 i64:$falsev), (i64 Wrapped64:$truev), (i64 Wrapped64:$falsev)>;
 defm : SELECTCONDW<(KVXWrapper tglobaladdr:$truev), (KVXWrapper tglobaladdr:$falsev), (i64 SingleReg:$truev), (i64 SingleReg:$falsev)>;
+
+// TODO: i64 (select (i32 setcc:$v), -1, 0) should be a simple NEGD $v
 
 multiclass SELECTCONDD<SDNode ntrue, SDNode nfalse, SDNode itrue, SDNode ifalse>
 {
@@ -1165,6 +1167,14 @@ def : Pat<(v2i16 (build_vector (i32(vector_extract v2i16:$v, 1)), (i32(vector_ex
           (SBMM8ri64 SingleReg:$v, 0x08040804)>;
 def : Pat<(v2i16 (build_vector i32:$v0, i32:$v1)), (INSF SingleReg:$v0, SingleReg:$v1, 31, 16)>;
 
+def : Pat<(v2i16 (trunc v2i32:$v)), (SBMM8ri37 $v, 0x20100201)>;
+def : Pat<(v2i16 (trunc v2i64:$v)), (INSF (i64 (EXTRACT_SUBREG PairedReg:$v, sub_s0)),
+                                         (i64 (EXTRACT_SUBREG PairedReg:$v, sub_s1)),
+                                         15, 8)>;
+
+def : Pat<(v2i16 (trunc (v2i32 (build_vector i64:$s0, i32:$s1)))), (INSF SingleReg:$s0, SingleReg:$s1, 31, 16)>;
+def : Pat<(v2i16 (trunc (v2i64 (build_vector i64:$s0, i64:$s1)))), (INSF SingleReg:$s0, SingleReg:$s1, 31, 16)>;
+
 // v2i32
 def : Pat<(v2i32 (is_imm_vec_kvx_splat32_:$IMM)), (MAKEi43 (build_imm_vec $IMM))>;
 def : Pat<(v2i32 (is_imm_vec:$IMM)), (MAKEi64 (build_imm_vec $IMM))>;
@@ -1175,6 +1185,11 @@ def : Pat<(v2i32 (build_vector (i32(vector_extract v2i32:$v, 1)), (i32(vector_ex
           (SBMM8ri64 SingleReg:$v, 0x8040201080402010)>;
 def : Pat<(v2i32 (build_vector (i32(vector_extract v2i32:$v0, 1)), (i32(vector_extract v2i32:$v1, 0)))),
           (SBMM8ri64 (INSF SingleReg:$v0, SingleReg:$v1, 31, 0), 0x0804020180402010)>;
+
+def : Pat<(v2i32 (trunc (v2i64 (build_vector i64:$s0, i64:$s1)))), (INSF SingleReg:$s0, SingleReg:$s1, 63, 32)>;
+def : Pat<(v2i32 (trunc v2i64:$v)), (INSF (i64 (EXTRACT_SUBREG PairedReg:$v, sub_s0)),
+                                         (i64 (EXTRACT_SUBREG PairedReg:$v, sub_s1)),
+                                         63, 32)>;
 
 // v3i16
 def : Pat<(v4i16 (is_imm_vec_kvx_splat32_:$IMM)), (MAKEi43 (build_imm_vec $IMM))>;
@@ -1238,6 +1253,26 @@ def : Pat<(v4i16 (build_vector i32:$v0, i32:$v1, i32:$v2, i32:$v3)),
           (INSF (INSF SingleReg:$v0, SingleReg:$v1, 31, 16), (INSF SingleReg:$v2, SingleReg:$v3, 31, 16), 63, 32)>;
 def : Pat<(v4i16 (concat_vectors v2i16:$v0, v2i16:$v1)),
           (v4i16 (INSF SingleReg:$v0, SingleReg:$v1, 63, 32))>;
+
+def : Pat<(v4i16 (trunc v4i32:$v)), (INSF (SBMM8ri37 (i64(EXTRACT_SUBREG PairedReg:$v, sub_s0)), 0x20100201),
+                                         (SBMM8ri37 (i64(EXTRACT_SUBREG PairedReg:$v, sub_s1)), 0x20100201),
+                                         63, 32)>;
+def : Pat<(v4i16 (trunc v4i64:$v)), (INSF (INSF (i64 (EXTRACT_SUBREG QuadReg:$v, sub_s0)),
+                                               (i64 (EXTRACT_SUBREG QuadReg:$v, sub_s1)),
+                                               31, 16),
+                                          (INSF (i64 (EXTRACT_SUBREG QuadReg:$v, sub_s2)),
+                                                (i64 (EXTRACT_SUBREG QuadReg:$v, sub_s3)),
+                                               31, 16),
+                                         63, 32)>;
+
+def : Pat<(v4i16 (trunc (v4i32 (build_vector i32:$s0, i32:$s1, i32:$s2, i32:$s3)))), (INSF
+                                                                                         (INSF SingleReg:$s0, SingleReg:$s1, 31, 16),
+                                                                                         (INSF SingleReg:$s2, SingleReg:$s3, 31, 16),
+                                                                                         63, 32)>;
+def : Pat<(v4i16 (trunc (v4i64 (build_vector i64:$s0, i64:$s1, i64:$s2, i64:$s3)))), (INSF
+                                                                                         (INSF SingleReg:$s0, SingleReg:$s1, 31, 16),
+                                                                                         (INSF SingleReg:$s2, SingleReg:$s3, 31, 16),
+                                                                                         63, 32)>;
 
 // v8i8
 def : Pat<(v8i8 (is_imm_vec:$IMM)), (MAKEi64 (build_imm_vec $IMM))>;
@@ -1329,6 +1364,16 @@ def : Pat<(extractelt (v4i32 PairedReg:$v), 0), (i32 (EXTRACT_SUBREG $v, sub_s0)
 def : Pat<(extractelt (v4i32 PairedReg:$v), 1), (SRLDri (i32 (EXTRACT_SUBREG $v, sub_s0)), (i64 32))>;
 def : Pat<(extractelt (v4i32 PairedReg:$v), 2), (i32 (EXTRACT_SUBREG $v, sub_s1))>;
 def : Pat<(extractelt (v4i32 PairedReg:$v), 3), (SRLDri (i32 (EXTRACT_SUBREG $v, sub_s1)), (i64 32))>;
+
+def : Pat<(v4i32 (trunc v4i64:$v)), (REG_SEQUENCE PairedReg,
+                                      (INSF (i64 (EXTRACT_SUBREG QuadReg:$v, sub_s0)),
+                                            (i64 (EXTRACT_SUBREG QuadReg:$v, sub_s1)),
+                                            63, 32),
+                                      sub_s0,
+                                      (INSF (i64 (EXTRACT_SUBREG QuadReg:$v, sub_s2)),
+                                            (i64 (EXTRACT_SUBREG QuadReg:$v, sub_s3)),
+                                            63, 32),
+                                      sub_s1)>;
 
 // v2i8
 def : Pat<(i32 (vector_extract (v2i8 SingleReg:$v), 0)), (ZXBD SingleReg:$v)>;
