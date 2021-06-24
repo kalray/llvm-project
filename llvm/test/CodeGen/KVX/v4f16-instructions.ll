@@ -511,11 +511,8 @@ define <4 x half> @test_select_cc_f16_f32(<4 x half> %a, <4 x half> %b, <4 x flo
 ; CHECK-NEXT:    fcompnwp.une $r2 = $r2, $r4
 ; CHECK-NEXT:    fcompnwp.une $r3 = $r3, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srld $r4 = $r3, 32
-; CHECK-NEXT:    srld $r5 = $r2, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r3 = $r4, 31, 16
-; CHECK-NEXT:    insf $r2 = $r5, 31, 16
+; CHECK-NEXT:    sbmm8 $r3 = $r3, 0x20100201
+; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x20100201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r2 = $r3, 63, 32
 ; CHECK-NEXT:    ;;

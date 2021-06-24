@@ -149,9 +149,6 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setTruncStoreAction(MVT::v4i32, MVT::v4i16, Expand);
   setTruncStoreAction(MVT::v4i32, MVT::v4i8, Expand);
 
-  for (auto VT : {MVT::v2i16, MVT::v2i32, MVT::v4i16, MVT::v4i32, MVT::v4i64})
-    setOperationAction(ISD::TRUNCATE, VT, Expand);
-
   setOperationAction(ISD::EXTRACT_SUBVECTOR, MVT::v2i16, Expand);
   setOperationAction(ISD::EXTRACT_SUBVECTOR, MVT::v2f16, Expand);
 
@@ -2409,10 +2406,15 @@ KVXTargetLowering::getPreferredVectorAction(MVT VT) const {
 
   switch (VT.SimpleTy) {
   case MVT::v8i1:
-  case MVT::v16i1:
-  case MVT::v32i1:
+  case MVT::v8i16:
   case MVT::v8i32:
+
+  case MVT::v16i1:
   case MVT::v16i8:
+  case MVT::v16i16:
+
+  case MVT::v32i1:
+  case MVT::v32i8:
     return LegalizeTypeAction::TypeSplitVector;
   default:
     break;
