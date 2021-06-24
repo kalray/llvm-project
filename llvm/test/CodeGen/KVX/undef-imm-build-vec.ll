@@ -11,11 +11,7 @@ define void @_pocl_kernel_LUT_workgroup() {
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    lhz $r1 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxlbhq $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxlhwp $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r1 = $r1, 0xff000000ff
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x200000001
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addx2wp $r1 = $r1, $r0
 ; CHECK-NEXT:    ;;

@@ -967,6 +967,10 @@ def zanyext : PatFrags<(ops node:$op),
                        [(zext node:$op),
                         (anyext node:$op)]>;
 
+def sanyext : PatFrags<(ops node:$op),
+                       [(sext node:$op),
+                        (anyext node:$op)]>;
+
 // null_frag - The null pattern operator is used in multiclass instantiations
 // which accept an SDPatternOperator for use in matching patterns for internal
 // definitions. When expanding a pattern, if the null fragment is referenced
