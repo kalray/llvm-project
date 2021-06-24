@@ -496,6 +496,7 @@ BUILTIN(__builtin_kvx_srsdps, "V2LiV2LiULi", "")
 BUILTIN(__builtin_kvx_srsdqs, "V4LiV4LiULi", "")
 BUILTIN(__builtin_kvx_stsud, "ULiULiULi", "")
 BUILTIN(__builtin_kvx_stsuw, "UiUiUi", "")
+NARY_BUILTIN(trunchbo, "V8cV8s", "n", 1)
 
 //===----------------------------------------------------------------------===//
 // TCA
