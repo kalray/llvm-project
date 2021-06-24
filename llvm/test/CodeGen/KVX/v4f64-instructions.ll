@@ -472,30 +472,35 @@ define <4 x double> @test_select_cc(<4 x double> %a, <4 x double> %b, <4 x doubl
 define <4 x float> @test_select_cc_f32_f32(<4 x float> %a, <4 x float> %b, <4 x double> %c, <4 x double> %d) #0 {
 ; CHECK-LABEL: test_select_cc_f32_f32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fcompd.une $r5 = $r5, $r9
-; CHECK-NEXT:    fcompd.une $r6 = $r6, $r10
-; CHECK-NEXT:    make $r9 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r6 ? $r9 = 0
-; CHECK-NEXT:    copyw $r6 = $r5
-; CHECK-NEXT:    make $r5 = -1
+; CHECK-NEXT:    fcompd.une $r4 = $r4, $r8
 ; CHECK-NEXT:    fcompd.une $r7 = $r7, $r11
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r6 ? $r5 = 0
-; CHECK-NEXT:    make $r6 = -1
-; CHECK-NEXT:    fcompd.une $r4 = $r4, $r8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r7 ? $r6 = 0
-; CHECK-NEXT:    copyw $r7 = $r4
+; CHECK-NEXT:    copyw $r8 = $r4
 ; CHECK-NEXT:    make $r4 = -1
+; CHECK-NEXT:    fcompd.une $r5 = $r5, $r9
+; CHECK-NEXT:    fcompd.une $r6 = $r6, $r10
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r7 ? $r4 = 0
-; CHECK-NEXT:    insf $r9 = $r6, 63, 32
+; CHECK-NEXT:    cmoved.weqz $r8 ? $r4 = 0
+; CHECK-NEXT:    copyw $r8 = $r7
+; CHECK-NEXT:    make $r7 = -1
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r8 ? $r7 = 0
+; CHECK-NEXT:    copyw $r8 = $r5
+; CHECK-NEXT:    make $r5 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r8 ? $r5 = 0
+; CHECK-NEXT:    copyw $r8 = $r6
+; CHECK-NEXT:    make $r6 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r8 ? $r6 = 0
 ; CHECK-NEXT:    insf $r4 = $r5, 63, 32
-; CHECK-NEXT:    cmovewp.even $r9 ? $r1 = $r3
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r6 = $r7, 63, 32
 ; CHECK-NEXT:    cmovewp.even $r4 ? $r0 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r5 = $r6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmovewp.even $r5 ? $r1 = $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %cc = fcmp une <4 x double> %c, %d

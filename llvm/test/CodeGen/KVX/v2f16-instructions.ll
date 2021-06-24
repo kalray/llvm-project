@@ -373,9 +373,7 @@ define <2 x half> @test_select_cc_f16_f32(<2 x half> %a, <2 x half> %b, <2 x flo
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.une $r2 = $r2, $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r3 = $r2, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r3, 31, 16
+; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x20100201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmovehq.even $r2 ? $r0 = $r1
 ; CHECK-NEXT:    ret
