@@ -255,7 +255,7 @@ double fmind(double v1, double v2) {
 
 // CHECK-LABEL: @frecw(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.frecw(float [[A:%.*]], i32 3)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.frecw(float [[A:%.*]], i32 3, i32 0)
 // CHECK-NEXT:    ret float [[TMP0]]
 //
 float frecw(float a) {
@@ -264,7 +264,7 @@ float frecw(float a) {
 
 // CHECK-LABEL: @frsrw(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.frsrw(float [[A:%.*]], i32 3)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.frsrw(float [[A:%.*]], i32 3, i32 0)
 // CHECK-NEXT:    ret float [[TMP0]]
 //
 float frsrw(float a) {
@@ -273,7 +273,7 @@ float frsrw(float a) {
 
 // CHECK-LABEL: @faddw(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.faddw(float [[V1:%.*]], float [[V2:%.*]], i32 3)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.faddw(float [[V1:%.*]], float [[V2:%.*]], i32 3, i32 0)
 // CHECK-NEXT:    ret float [[TMP0]]
 //
 float faddw(float v1, float v2) {
@@ -284,7 +284,7 @@ float faddw(float v1, float v2) {
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[CONV:%.*]] = fpext float [[V1:%.*]] to double
 // CHECK-NEXT:    [[CONV1:%.*]] = fpext float [[V2:%.*]] to double
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call double @llvm.kvx.faddd(double [[CONV]], double [[CONV1]], i32 3)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call double @llvm.kvx.faddd(double [[CONV]], double [[CONV1]], i32 3, i32 0)
 // CHECK-NEXT:    ret double [[TMP0]]
 //
 double faddd(float v1, float v2) {
@@ -293,7 +293,7 @@ double faddd(float v1, float v2) {
 
 // CHECK-LABEL: @fsbfw(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.fsbfw(float [[V1:%.*]], float [[V2:%.*]], i32 3)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.fsbfw(float [[V1:%.*]], float [[V2:%.*]], i32 3, i32 0)
 // CHECK-NEXT:    ret float [[TMP0]]
 //
 float fsbfw(float v1, float v2) {
@@ -302,7 +302,7 @@ float fsbfw(float v1, float v2) {
 
 // CHECK-LABEL: @fsbfd(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call double @llvm.kvx.fsbfd(double [[V1:%.*]], double [[V2:%.*]], i32 3)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call double @llvm.kvx.fsbfd(double [[V1:%.*]], double [[V2:%.*]], i32 3, i32 0)
 // CHECK-NEXT:    ret double [[TMP0]]
 //
 double fsbfd(double v1, double v2) {
@@ -311,7 +311,7 @@ double fsbfd(double v1, double v2) {
 
 // CHECK-LABEL: @fmulw(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.fmulw(float [[V1:%.*]], float [[V2:%.*]], i32 3)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.fmulw(float [[V1:%.*]], float [[V2:%.*]], i32 3, i32 0)
 // CHECK-NEXT:    ret float [[TMP0]]
 //
 float fmulw(float v1, float v2) {
@@ -320,7 +320,7 @@ float fmulw(float v1, float v2) {
 
 // CHECK-LABEL: @fmuld(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call double @llvm.kvx.fmuld(double [[V1:%.*]], double [[V2:%.*]], i32 3)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call double @llvm.kvx.fmuld(double [[V1:%.*]], double [[V2:%.*]], i32 3, i32 0)
 // CHECK-NEXT:    ret double [[TMP0]]
 //
 double fmuld(double v1, double v2) {
@@ -329,7 +329,7 @@ double fmuld(double v1, double v2) {
 
 // CHECK-LABEL: @fmulwd(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call double @llvm.kvx.fmulwd(float [[V1:%.*]], float [[V2:%.*]], i32 3)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call double @llvm.kvx.fmulwd(float [[V1:%.*]], float [[V2:%.*]], i32 3, i32 0)
 // CHECK-NEXT:    ret double [[TMP0]]
 //
 double fmulwd(float v1, float v2) {
@@ -338,7 +338,7 @@ double fmulwd(float v1, float v2) {
 
 // CHECK-LABEL: @ffmaw(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.ffmaw(float [[A:%.*]], float [[B:%.*]], float [[C:%.*]], i32 3)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.ffmaw(float [[A:%.*]], float [[B:%.*]], float [[C:%.*]], i32 3, i32 0)
 // CHECK-NEXT:    ret float [[TMP0]]
 //
 float ffmaw(float a, float b, float c) {
@@ -347,7 +347,7 @@ float ffmaw(float a, float b, float c) {
 
 // CHECK-LABEL: @ffmad(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call double @llvm.kvx.ffmad(double [[A:%.*]], double [[B:%.*]], double [[C:%.*]], i32 3)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call double @llvm.kvx.ffmad(double [[A:%.*]], double [[B:%.*]], double [[C:%.*]], i32 3, i32 0)
 // CHECK-NEXT:    ret double [[TMP0]]
 //
 double ffmad(double a, double b, double c) {
@@ -356,7 +356,7 @@ double ffmad(double a, double b, double c) {
 
 // CHECK-LABEL: @ffmawd(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call double @llvm.kvx.ffmawd(float [[A:%.*]], float [[B:%.*]], double [[C:%.*]], i32 3)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call double @llvm.kvx.ffmawd(float [[A:%.*]], float [[B:%.*]], double [[C:%.*]], i32 3, i32 0)
 // CHECK-NEXT:    ret double [[TMP0]]
 //
 double ffmawd(float a, float b, double c) {
@@ -365,7 +365,7 @@ double ffmawd(float a, float b, double c) {
 
 // CHECK-LABEL: @ffmsw(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.ffmsw(float [[A:%.*]], float [[B:%.*]], float [[C:%.*]], i32 3)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.ffmsw(float [[A:%.*]], float [[B:%.*]], float [[C:%.*]], i32 3, i32 0)
 // CHECK-NEXT:    ret float [[TMP0]]
 //
 float ffmsw(float a, float b, float c) {
@@ -374,7 +374,7 @@ float ffmsw(float a, float b, float c) {
 
 // CHECK-LABEL: @ffmsw_(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.ffmsw(float [[A:%.*]], float [[B:%.*]], float [[C:%.*]], i32 7)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.ffmsw(float [[A:%.*]], float [[B:%.*]], float [[C:%.*]], i32 7, i32 0)
 // CHECK-NEXT:    ret float [[TMP0]]
 //
 float ffmsw_(float a, float b, float c) {
@@ -383,7 +383,7 @@ float ffmsw_(float a, float b, float c) {
 
 // CHECK-LABEL: @ffmsd(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call double @llvm.kvx.ffmsd(double [[A:%.*]], double [[B:%.*]], double [[C:%.*]], i32 3)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call double @llvm.kvx.ffmsd(double [[A:%.*]], double [[B:%.*]], double [[C:%.*]], i32 3, i32 0)
 // CHECK-NEXT:    ret double [[TMP0]]
 //
 double ffmsd(double a, double b, double c) {
@@ -392,7 +392,7 @@ double ffmsd(double a, double b, double c) {
 
 // CHECK-LABEL: @ffmswd(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call double @llvm.kvx.ffmswd(float [[A:%.*]], float [[B:%.*]], double [[C:%.*]], i32 3)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call double @llvm.kvx.ffmswd(float [[A:%.*]], float [[B:%.*]], double [[C:%.*]], i32 3, i32 0)
 // CHECK-NEXT:    ret double [[TMP0]]
 //
 double ffmswd(float a, float b, double c) {
@@ -401,7 +401,7 @@ double ffmswd(float a, float b, double c) {
 
 // CHECK-LABEL: @floatw(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.floatw(i32 [[X:%.*]], i64 3, i32 0)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.floatw(i32 [[X:%.*]], i64 3, i32 0, i32 0)
 // CHECK-NEXT:    ret float [[TMP0]]
 //
 float floatw(int x) {
@@ -410,16 +410,34 @@ float floatw(int x) {
 
 // CHECK-LABEL: @floatd(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call double @llvm.kvx.floatd(i64 [[X:%.*]], i64 3, i32 0)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call double @llvm.kvx.floatd(i64 [[X:%.*]], i64 3, i32 0, i32 0)
 // CHECK-NEXT:    ret double [[TMP0]]
 //
 double floatd(long x) {
   return __builtin_kvx_floatd(x, 3, ".rn");
 }
 
+// CHECK-LABEL: @floatw_s(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.floatw(i32 [[X:%.*]], i64 3, i32 0, i32 1)
+// CHECK-NEXT:    ret float [[TMP0]]
+//
+float floatw_s(int x) {
+  return __builtin_kvx_floatw(x, 3, ".rn.s");
+}
+
+// CHECK-LABEL: @floatd_s(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call double @llvm.kvx.floatd(i64 [[X:%.*]], i64 3, i32 0, i32 1)
+// CHECK-NEXT:    ret double [[TMP0]]
+//
+double floatd_s(long x) {
+  return __builtin_kvx_floatd(x, 3, ".rn.s");
+}
+
 // CHECK-LABEL: @floatd_limit(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call double @llvm.kvx.floatd(i64 [[X:%.*]], i64 63, i32 0)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call double @llvm.kvx.floatd(i64 [[X:%.*]], i64 63, i32 0, i32 0)
 // CHECK-NEXT:    ret double [[TMP0]]
 //
 double floatd_limit(long x) {
@@ -428,7 +446,7 @@ double floatd_limit(long x) {
 
 // CHECK-LABEL: @floatuw(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.floatuw(i32 [[X:%.*]], i64 3, i32 3)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.floatuw(i32 [[X:%.*]], i64 3, i32 3, i32 0)
 // CHECK-NEXT:    ret float [[TMP0]]
 //
 float floatuw(unsigned int x) {
@@ -437,7 +455,7 @@ float floatuw(unsigned int x) {
 
 // CHECK-LABEL: @floatud(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call double @llvm.kvx.floatud(i64 [[X:%.*]], i64 3, i32 3)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call double @llvm.kvx.floatud(i64 [[X:%.*]], i64 3, i32 3, i32 0)
 // CHECK-NEXT:    ret double [[TMP0]]
 //
 double floatud(unsigned long x) {
@@ -446,7 +464,7 @@ double floatud(unsigned long x) {
 
 // CHECK-LABEL: @fixedw(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i32 @llvm.kvx.fixedw(float [[X:%.*]], i64 3, i32 0)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call i32 @llvm.kvx.fixedw(float [[X:%.*]], i64 3, i32 0, i32 0)
 // CHECK-NEXT:    ret i32 [[TMP0]]
 //
 int fixedw(float x) {
@@ -455,16 +473,52 @@ int fixedw(float x) {
 
 // CHECK-LABEL: @fixedd(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.fixedd(double [[X:%.*]], i64 3, i32 0)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.fixedd(double [[X:%.*]], i64 3, i32 0, i32 0)
 // CHECK-NEXT:    ret i64 [[TMP0]]
 //
 long fixedd(double x) {
   return __builtin_kvx_fixedd(x, 3, ".rn");
 }
 
+// CHECK-LABEL: @fixedw_s(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call i32 @llvm.kvx.fixedw(float [[X:%.*]], i64 3, i32 0, i32 1)
+// CHECK-NEXT:    ret i32 [[TMP0]]
+//
+int fixedw_s(float x) {
+  return __builtin_kvx_fixedw(x, 3, ".rn.s");
+}
+
+// CHECK-LABEL: @fixedd_s(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.fixedd(double [[X:%.*]], i64 3, i32 0, i32 1)
+// CHECK-NEXT:    ret i64 [[TMP0]]
+//
+long fixedd_s(double x) {
+  return __builtin_kvx_fixedd(x, 3, ".rn.s");
+}
+
+// CHECK-LABEL: @fixedw_s_only(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call i32 @llvm.kvx.fixedw(float [[X:%.*]], i64 3, i32 7, i32 1)
+// CHECK-NEXT:    ret i32 [[TMP0]]
+//
+int fixedw_s_only(float x) {
+  return __builtin_kvx_fixedw(x, 3, ".s");
+}
+
+// CHECK-LABEL: @fixedd_s_only(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.fixedd(double [[X:%.*]], i64 3, i32 7, i32 1)
+// CHECK-NEXT:    ret i64 [[TMP0]]
+//
+long fixedd_s_only(double x) {
+  return __builtin_kvx_fixedd(x, 3, ".s");
+}
+
 // CHECK-LABEL: @fixeduw(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i32 @llvm.kvx.fixeduw(float [[X:%.*]], i64 3, i32 3)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call i32 @llvm.kvx.fixeduw(float [[X:%.*]], i64 3, i32 3, i32 0)
 // CHECK-NEXT:    ret i32 [[TMP0]]
 //
 unsigned int fixeduw(float x) {
@@ -473,7 +527,7 @@ unsigned int fixeduw(float x) {
 
 // CHECK-LABEL: @fixedud(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.fixedud(double [[X:%.*]], i64 3, i32 3)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.fixedud(double [[X:%.*]], i64 3, i32 3, i32 0)
 // CHECK-NEXT:    ret i64 [[TMP0]]
 //
 unsigned long fixedud(double x) {
@@ -482,56 +536,56 @@ unsigned long fixedud(double x) {
 
 // CHECK-LABEL: @fcdivw(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.fcdivw(float [[V1:%.*]], float [[V2:%.*]])
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.fcdivw(float [[V1:%.*]], float [[V2:%.*]], i32 0)
 // CHECK-NEXT:    ret float [[TMP0]]
 //
 float fcdivw(float v1, float v2) {
-  return __builtin_kvx_fcdivw(v1, v2);
+  return __builtin_kvx_fcdivw(v1, v2, "");
 }
 
 // CHECK-LABEL: @fcdivd(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call double @llvm.kvx.fcdivd(double [[V1:%.*]], double [[V2:%.*]])
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call double @llvm.kvx.fcdivd(double [[V1:%.*]], double [[V2:%.*]], i32 0)
 // CHECK-NEXT:    ret double [[TMP0]]
 //
 double fcdivd(double v1, double v2) {
-  return __builtin_kvx_fcdivd(v1, v2);
+  return __builtin_kvx_fcdivd(v1, v2, "");
 }
 
 // CHECK-LABEL: @fsdivw(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.fsdivw(float [[V1:%.*]], float [[V2:%.*]])
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.fsdivw(float [[V1:%.*]], float [[V2:%.*]], i32 0)
 // CHECK-NEXT:    ret float [[TMP0]]
 //
 float fsdivw(float v1, float v2) {
-  return __builtin_kvx_fsdivw(v1, v2);
+  return __builtin_kvx_fsdivw(v1, v2, "");
 }
 
 // CHECK-LABEL: @fsdivd(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call double @llvm.kvx.fsdivd(double [[V1:%.*]], double [[V2:%.*]])
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call double @llvm.kvx.fsdivd(double [[V1:%.*]], double [[V2:%.*]], i32 0)
 // CHECK-NEXT:    ret double [[TMP0]]
 //
 double fsdivd(double v1, double v2) {
-  return __builtin_kvx_fsdivd(v1, v2);
+  return __builtin_kvx_fsdivd(v1, v2, "");
 }
 
 // CHECK-LABEL: @fsrecw(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.fsrecw(float [[V:%.*]])
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.fsrecw(float [[V:%.*]], i32 0)
 // CHECK-NEXT:    ret float [[TMP0]]
 //
 float fsrecw(float v) {
-  return __builtin_kvx_fsrecw(v);
+  return __builtin_kvx_fsrecw(v, "");
 }
 
 // CHECK-LABEL: @fsrecd(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call double @llvm.kvx.fsrecd(double [[V:%.*]])
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call double @llvm.kvx.fsrecd(double [[V:%.*]], i32 0)
 // CHECK-NEXT:    ret double [[TMP0]]
 //
 double fsrecd(double v) {
-  return __builtin_kvx_fsrecd(v);
+  return __builtin_kvx_fsrecd(v, "");
 }
 
 // CHECK-LABEL: @sbmm8(
@@ -582,28 +636,28 @@ unsigned long stsud(unsigned long x, unsigned long y) {
 
 // CHECK-LABEL: @fwidenlhw(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.fwidenlhw(i32 [[V:%.*]])
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.fwidenlhw(i32 [[V:%.*]], i32 0)
 // CHECK-NEXT:    ret float [[TMP0]]
 //
 float fwidenlhw(unsigned int v) {
-  return __builtin_kvx_fwidenlhw(v);
+  return __builtin_kvx_fwidenlhw(v, "");
 }
 
 // CHECK-LABEL: @fwidenmhw(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.fwidenmhw(i32 [[V:%.*]])
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.fwidenmhw(i32 [[V:%.*]], i32 0)
 // CHECK-NEXT:    ret float [[TMP0]]
 //
 float fwidenmhw(unsigned int v) {
-  return __builtin_kvx_fwidenmhw(v);
+  return __builtin_kvx_fwidenmhw(v, "");
 }
 
 // CHECK-LABEL: @fnarrowwh(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i32 @llvm.kvx.fnarrowwh(float [[V:%.*]])
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call i32 @llvm.kvx.fnarrowwh(float [[V:%.*]], i32 7, i32 0)
 // CHECK-NEXT:    [[CONV:%.*]] = trunc i32 [[TMP0]] to i16
 // CHECK-NEXT:    ret i16 [[CONV]]
 //
 unsigned short fnarrowwh(float v) {
-  return __builtin_kvx_fnarrowwh(v);
+  return __builtin_kvx_fnarrowwh(v, "");
 }

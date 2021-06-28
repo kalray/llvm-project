@@ -19425,6 +19425,17 @@ static bool KVX_hasConjugateModifier(clang::ASTContext &Ctx,
   return false;
 }
 
+static int KVX_getSilentModifier(const clang::Expr *E) {
+  if (E->getStmtClass() == Stmt::StringLiteralClass) {
+    StringRef Str = cast<clang::StringLiteral>(E)->getString();
+
+    if (Str.endswith(".s"))
+      return 1;
+  }
+
+  return 0;
+}
+
 static int KVX_getRoundingModifier(clang::ASTContext &Ctx,
                                    const clang::Expr *E) {
   if (E->isNullPointerConstant(Ctx, Expr::NPC_NeverValueDependent)) {
@@ -19434,6 +19445,8 @@ static int KVX_getRoundingModifier(clang::ASTContext &Ctx,
     StringRef Str = cast<clang::StringLiteral>(E)->getString();
     if (Str.startswith(".c"))
       Str = Str.drop_front(2);
+    if (Str.endswith(".s"))
+      Str = Str.drop_back(2);
     return llvm::StringSwitch<int>(Str)
         .Case("", 7)
         .CaseLower(".rn", 0)
@@ -19708,7 +19721,8 @@ static Value *KVX_emitTrunchBuiltin(CodeGenFunction &CGF, const CallExpr *E,
 
 static Value *KVX_emitNaryBuiltin(unsigned N, CodeGenFunction &CGF,
                                   const CallExpr *E, unsigned IntrinsicID,
-                                  bool HasRounding = false) {
+                                  bool HasRounding = false,
+                                  bool HasSilent = false) {
   switch (IntrinsicID) {
   case Intrinsic::kvx_trunchbo:
     return KVX_emitTrunchBuiltin(CGF, E, IntrinsicID);
@@ -19716,7 +19730,7 @@ static Value *KVX_emitNaryBuiltin(unsigned N, CodeGenFunction &CGF,
     break;
   }
 
-  if (E->getNumArgs() != ((HasRounding ? 1 : 0) + N)) {
+  if (E->getNumArgs() != ((HasRounding || HasSilent ? 1 : 0) + N)) {
     CGF.CGM.Error(E->getBeginLoc(), "Incorrect number of arguments to builtin");
     return nullptr;
   }
@@ -19786,6 +19800,13 @@ static Value *KVX_emitNaryBuiltin(unsigned N, CodeGenFunction &CGF,
     Args.push_back(ConstantInt::get(CGF.IntTy, RoundingModifier));
   }
 
+  // HasRounding implies HasSilent
+  if (HasSilent || HasRounding) {
+    int SilentModifier =
+        KVX_getSilentModifier(E->getArg(I)->IgnoreParenImpCasts());
+    Args.push_back(ConstantInt::get(CGF.IntTy, SilentModifier));
+  }
+
   Function *Callee = CGF.CGM.getIntrinsic(IntrinsicID);
   return CGF.Builder.CreateCall(Callee, Args);
 }
@@ -19821,7 +19842,12 @@ static Value *KVX_emitUnaryShiftingRoundingBuiltin(CodeGenFunction &CGF,
   Value *Arg3 = ConstantInt::get(CGF.IntTy, Modifier);
 
   Function *Callee = CGF.CGM.getIntrinsic(IntrinsicID);
-  return CGF.Builder.CreateCall(Callee, {Arg1, Arg2, Arg3});
+
+  int SilentModifier =
+      KVX_getSilentModifier(E->getArg(2)->IgnoreParenImpCasts());
+  Value *Arg4 = ConstantInt::get(CGF.IntTy, SilentModifier);
+
+  return CGF.Builder.CreateCall(Callee, {Arg1, Arg2, Arg3, Arg4});
 }
 
 static int KVX_getLoadAS(clang::ASTContext &Ctx, const clang::Expr *E, bool IsSpec) {
@@ -20108,6 +20134,7 @@ static Value *KVX_emitVectorBuiltin(CodeGenFunction &CGF, const CallExpr *E,
     Operands.push_back(CGF.EmitScalarExpr(E->getArg(Op)));
 
   Value *ModifierArg = NULL;
+  Value *SilentArg = NULL;
 
   if (Rounding) {
 
@@ -20152,6 +20179,10 @@ static Value *KVX_emitVectorBuiltin(CodeGenFunction &CGF, const CallExpr *E,
                     "invalid rounding modifier");
 
     ModifierArg = ConstantInt::get(CGF.IntTy, RoundingModifier);
+
+    int SilentModifier =
+        KVX_getSilentModifier(E->getArg(2)->IgnoreParenImpCasts());
+    SilentArg = ConstantInt::get(CGF.IntTy, SilentModifier);
   }
 
   Function *Callee = CGF.CGM.getIntrinsic(IntrinsicID);
@@ -20172,6 +20203,8 @@ static Value *KVX_emitVectorBuiltin(CodeGenFunction &CGF, const CallExpr *E,
     }
     if (ModifierArg)
       SV.push_back(ModifierArg);
+    if (SilentArg)
+      SV.push_back(SilentArg);
     if (Scalar)
       SV.push_back(Scalar);
 
@@ -20227,6 +20260,10 @@ KVX_emitVectorShiftingBuiltin(CodeGenFunction &CGF, const CallExpr *E,
 
   Value *ModifierArg = ConstantInt::get(CGF.IntTy, Modifier);
 
+  int SilentModifier =
+      KVX_getSilentModifier(E->getArg(2)->IgnoreParenImpCasts());
+  Value *SilentArg = ConstantInt::get(CGF.IntTy, SilentModifier);
+
   Function *Callee = CGF.CGM.getIntrinsic(IntrinsicID);
   Value *Result = UndefValue::get(OutputVecTy);
   for (uint64_t i = 0; i < VectorSize; i += SliceSize) {
@@ -20243,6 +20280,7 @@ KVX_emitVectorShiftingBuiltin(CodeGenFunction &CGF, const CallExpr *E,
     }
     SV.push_back(ShiftArg);
     SV.push_back(ModifierArg);
+    SV.push_back(SilentArg);
 
     Value *OV = CGF.Builder.CreateCall(Callee, SV);
     if (SliceSize == 1)
@@ -21002,17 +21040,17 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_ffmswd:
     return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmswd, true);
   case KVX::BI__builtin_kvx_fcdivw:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fcdivw);
+    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fcdivw, false, true);
   case KVX::BI__builtin_kvx_fcdivd:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fcdivd);
+    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fcdivd, false, true);
   case KVX::BI__builtin_kvx_fsdivw:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fsdivw);
+    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fsdivw, false, true);
   case KVX::BI__builtin_kvx_fsdivd:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fsdivd);
+    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fsdivd, false, true);
   case KVX::BI__builtin_kvx_fsrecw:
-    return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_fsrecw);
+    return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_fsrecw, false, true);
   case KVX::BI__builtin_kvx_fsrecd:
-    return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_fsrecd);
+    return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_fsrecd, false, true);
   case KVX::BI__builtin_kvx_fsrsrw:
     return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_fsrsrw);
   case KVX::BI__builtin_kvx_fsrsrd:
@@ -21024,11 +21062,14 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_satd:
     return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_satd);
   case KVX::BI__builtin_kvx_fwidenlhw:
-    return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_fwidenlhw);
+    return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_fwidenlhw, false,
+                               true);
   case KVX::BI__builtin_kvx_fwidenmhw:
-    return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_fwidenmhw);
+    return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_fwidenmhw, false,
+                               true);
   case KVX::BI__builtin_kvx_fnarrowwh:
-    return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_fnarrowwh);
+    return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_fnarrowwh, true,
+                               true);
   case KVX::BI__builtin_kvx_selecthq:
     return KVX_emitTernarySimdCondBuiltin(*this, E, Intrinsic::kvx_cmovehq);
   case KVX::BI__builtin_kvx_selectho:

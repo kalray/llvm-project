@@ -13,7 +13,7 @@ typedef double __attribute__((__vector_size__(4 * sizeof(double)))) v4f64;
 
 // CHECK-LABEL: @fmulwc(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x float> @llvm.kvx.fmulwc(<2 x float> [[A:%.*]], <2 x float> [[B:%.*]], i32 0)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x float> @llvm.kvx.fmulwc(<2 x float> [[A:%.*]], <2 x float> [[B:%.*]], i32 0, i32 0)
 // CHECK-NEXT:    ret <2 x float> [[TMP0]]
 //
 v2f32 fmulwc(v2f32 a, v2f32 b) {
@@ -22,7 +22,7 @@ v2f32 fmulwc(v2f32 a, v2f32 b) {
 
 // CHECK-LABEL: @ffmawc(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x float> @llvm.kvx.ffmawc(<2 x float> [[A:%.*]], <2 x float> [[B:%.*]], <2 x float> [[C:%.*]], i32 0)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x float> @llvm.kvx.ffmawc(<2 x float> [[A:%.*]], <2 x float> [[B:%.*]], <2 x float> [[C:%.*]], i32 0, i32 0)
 // CHECK-NEXT:    ret <2 x float> [[TMP0]]
 //
 v2f32 ffmawc(v2f32 a, v2f32 b, v2f32 c) {
@@ -31,7 +31,7 @@ v2f32 ffmawc(v2f32 a, v2f32 b, v2f32 c) {
 
 // CHECK-LABEL: @ffmswc(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x float> @llvm.kvx.ffmswc(<2 x float> [[A:%.*]], <2 x float> [[B:%.*]], <2 x float> [[C:%.*]], i32 0)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x float> @llvm.kvx.ffmswc(<2 x float> [[A:%.*]], <2 x float> [[B:%.*]], <2 x float> [[C:%.*]], i32 0, i32 0)
 // CHECK-NEXT:    ret <2 x float> [[TMP0]]
 //
 v2f32 ffmswc(v2f32 a, v2f32 b, v2f32 c) {
@@ -40,7 +40,7 @@ v2f32 ffmswc(v2f32 a, v2f32 b, v2f32 c) {
 
 // CHECK-LABEL: @fmulcwc(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x float> @llvm.kvx.fmulcwc(<2 x float> [[A:%.*]], <2 x float> [[B:%.*]], i32 0)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x float> @llvm.kvx.fmulcwc(<2 x float> [[A:%.*]], <2 x float> [[B:%.*]], i32 0, i32 0)
 // CHECK-NEXT:    ret <2 x float> [[TMP0]]
 //
 v2f32 fmulcwc(v2f32 a, v2f32 b) {
@@ -49,7 +49,7 @@ v2f32 fmulcwc(v2f32 a, v2f32 b) {
 
 // CHECK-LABEL: @ffmacwc(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x float> @llvm.kvx.ffmacwc(<2 x float> [[A:%.*]], <2 x float> [[B:%.*]], <2 x float> [[C:%.*]], i32 0)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x float> @llvm.kvx.ffmacwc(<2 x float> [[A:%.*]], <2 x float> [[B:%.*]], <2 x float> [[C:%.*]], i32 0, i32 0)
 // CHECK-NEXT:    ret <2 x float> [[TMP0]]
 //
 v2f32 ffmacwc(v2f32 a, v2f32 b, v2f32 c) {
@@ -58,7 +58,7 @@ v2f32 ffmacwc(v2f32 a, v2f32 b, v2f32 c) {
 
 // CHECK-LABEL: @ffmscwc(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x float> @llvm.kvx.ffmscwc(<2 x float> [[A:%.*]], <2 x float> [[B:%.*]], <2 x float> [[C:%.*]], i32 0)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x float> @llvm.kvx.ffmscwc(<2 x float> [[A:%.*]], <2 x float> [[B:%.*]], <2 x float> [[C:%.*]], i32 0, i32 0)
 // CHECK-NEXT:    ret <2 x float> [[TMP0]]
 //
 v2f32 ffmscwc(v2f32 a, v2f32 b, v2f32 c) {
@@ -80,7 +80,7 @@ v2f32 fconjwc(v2f32 a) {
 
 // CHECK-LABEL: @fmulwcp(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.kvx.fmulwcp(<4 x float> [[A:%.*]], <4 x float> [[B:%.*]], i32 0)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.kvx.fmulwcp(<4 x float> [[A:%.*]], <4 x float> [[B:%.*]], i32 0, i32 0)
 // CHECK-NEXT:    ret <4 x float> [[TMP0]]
 //
 v4f32 fmulwcp(v4f32 a, v4f32 b) {
@@ -89,7 +89,7 @@ v4f32 fmulwcp(v4f32 a, v4f32 b) {
 
 // CHECK-LABEL: @ffmawcp(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.kvx.ffmawcp(<4 x float> [[A:%.*]], <4 x float> [[B:%.*]], <4 x float> [[C:%.*]], i32 0)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.kvx.ffmawcp(<4 x float> [[A:%.*]], <4 x float> [[B:%.*]], <4 x float> [[C:%.*]], i32 0, i32 0)
 // CHECK-NEXT:    ret <4 x float> [[TMP0]]
 //
 v4f32 ffmawcp(v4f32 a, v4f32 b, v4f32 c) {
@@ -98,7 +98,7 @@ v4f32 ffmawcp(v4f32 a, v4f32 b, v4f32 c) {
 
 // CHECK-LABEL: @ffmswcp(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.kvx.ffmswcp(<4 x float> [[A:%.*]], <4 x float> [[B:%.*]], <4 x float> [[C:%.*]], i32 0)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.kvx.ffmswcp(<4 x float> [[A:%.*]], <4 x float> [[B:%.*]], <4 x float> [[C:%.*]], i32 0, i32 0)
 // CHECK-NEXT:    ret <4 x float> [[TMP0]]
 //
 v4f32 ffmswcp(v4f32 a, v4f32 b, v4f32 c) {
@@ -107,7 +107,7 @@ v4f32 ffmswcp(v4f32 a, v4f32 b, v4f32 c) {
 
 // CHECK-LABEL: @fmulcwcp(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.kvx.fmulcwcp(<4 x float> [[A:%.*]], <4 x float> [[B:%.*]], i32 0)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.kvx.fmulcwcp(<4 x float> [[A:%.*]], <4 x float> [[B:%.*]], i32 0, i32 0)
 // CHECK-NEXT:    ret <4 x float> [[TMP0]]
 //
 v4f32 fmulcwcp(v4f32 a, v4f32 b) {
@@ -116,7 +116,7 @@ v4f32 fmulcwcp(v4f32 a, v4f32 b) {
 
 // CHECK-LABEL: @ffmacwcp(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.kvx.ffmacwcp(<4 x float> [[A:%.*]], <4 x float> [[B:%.*]], <4 x float> [[C:%.*]], i32 0)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.kvx.ffmacwcp(<4 x float> [[A:%.*]], <4 x float> [[B:%.*]], <4 x float> [[C:%.*]], i32 0, i32 0)
 // CHECK-NEXT:    ret <4 x float> [[TMP0]]
 //
 v4f32 ffmacwcp(v4f32 a, v4f32 b, v4f32 c) {
@@ -125,7 +125,7 @@ v4f32 ffmacwcp(v4f32 a, v4f32 b, v4f32 c) {
 
 // CHECK-LABEL: @ffmscwcp(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.kvx.ffmscwcp(<4 x float> [[A:%.*]], <4 x float> [[B:%.*]], <4 x float> [[C:%.*]], i32 0)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.kvx.ffmscwcp(<4 x float> [[A:%.*]], <4 x float> [[B:%.*]], <4 x float> [[C:%.*]], i32 0, i32 0)
 // CHECK-NEXT:    ret <4 x float> [[TMP0]]
 //
 v4f32 ffmscwcp(v4f32 a, v4f32 b, v4f32 c) {
@@ -149,10 +149,10 @@ v4f32 fconjwcp(v4f32 a) {
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <8 x float> [[A:%.*]], <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
 // CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <8 x float> [[B:%.*]], <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
-// CHECK-NEXT:    [[TMP2:%.*]] = tail call <4 x float> @llvm.kvx.fmulwcp(<4 x float> [[TMP0]], <4 x float> [[TMP1]], i32 0)
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <4 x float> @llvm.kvx.fmulwcp(<4 x float> [[TMP0]], <4 x float> [[TMP1]], i32 0, i32 0)
 // CHECK-NEXT:    [[TMP3:%.*]] = shufflevector <8 x float> [[A]], <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
 // CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <8 x float> [[B]], <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
-// CHECK-NEXT:    [[TMP5:%.*]] = tail call <4 x float> @llvm.kvx.fmulwcp(<4 x float> [[TMP3]], <4 x float> [[TMP4]], i32 0)
+// CHECK-NEXT:    [[TMP5:%.*]] = tail call <4 x float> @llvm.kvx.fmulwcp(<4 x float> [[TMP3]], <4 x float> [[TMP4]], i32 0, i32 0)
 // CHECK-NEXT:    [[TMP6:%.*]] = shufflevector <4 x float> [[TMP2]], <4 x float> [[TMP5]], <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
 // CHECK-NEXT:    ret <8 x float> [[TMP6]]
 //
@@ -165,11 +165,11 @@ v8f32 fmulwcq(v8f32 a, v8f32 b) {
 // CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <8 x float> [[A:%.*]], <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
 // CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <8 x float> [[B:%.*]], <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
 // CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <8 x float> [[C:%.*]], <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
-// CHECK-NEXT:    [[TMP3:%.*]] = tail call <4 x float> @llvm.kvx.ffmawcp(<4 x float> [[TMP0]], <4 x float> [[TMP1]], <4 x float> [[TMP2]], i32 0)
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <4 x float> @llvm.kvx.ffmawcp(<4 x float> [[TMP0]], <4 x float> [[TMP1]], <4 x float> [[TMP2]], i32 0, i32 0)
 // CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <8 x float> [[A]], <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
 // CHECK-NEXT:    [[TMP5:%.*]] = shufflevector <8 x float> [[B]], <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
 // CHECK-NEXT:    [[TMP6:%.*]] = shufflevector <8 x float> [[C]], <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
-// CHECK-NEXT:    [[TMP7:%.*]] = tail call <4 x float> @llvm.kvx.ffmawcp(<4 x float> [[TMP4]], <4 x float> [[TMP5]], <4 x float> [[TMP6]], i32 0)
+// CHECK-NEXT:    [[TMP7:%.*]] = tail call <4 x float> @llvm.kvx.ffmawcp(<4 x float> [[TMP4]], <4 x float> [[TMP5]], <4 x float> [[TMP6]], i32 0, i32 0)
 // CHECK-NEXT:    [[TMP8:%.*]] = shufflevector <4 x float> [[TMP3]], <4 x float> [[TMP7]], <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
 // CHECK-NEXT:    ret <8 x float> [[TMP8]]
 //
@@ -182,11 +182,11 @@ v8f32 ffmawcq(v8f32 a, v8f32 b, v8f32 c) {
 // CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <8 x float> [[A:%.*]], <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
 // CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <8 x float> [[B:%.*]], <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
 // CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <8 x float> [[C:%.*]], <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
-// CHECK-NEXT:    [[TMP3:%.*]] = tail call <4 x float> @llvm.kvx.ffmswcp(<4 x float> [[TMP0]], <4 x float> [[TMP1]], <4 x float> [[TMP2]], i32 0)
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <4 x float> @llvm.kvx.ffmswcp(<4 x float> [[TMP0]], <4 x float> [[TMP1]], <4 x float> [[TMP2]], i32 0, i32 0)
 // CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <8 x float> [[A]], <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
 // CHECK-NEXT:    [[TMP5:%.*]] = shufflevector <8 x float> [[B]], <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
 // CHECK-NEXT:    [[TMP6:%.*]] = shufflevector <8 x float> [[C]], <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
-// CHECK-NEXT:    [[TMP7:%.*]] = tail call <4 x float> @llvm.kvx.ffmswcp(<4 x float> [[TMP4]], <4 x float> [[TMP5]], <4 x float> [[TMP6]], i32 0)
+// CHECK-NEXT:    [[TMP7:%.*]] = tail call <4 x float> @llvm.kvx.ffmswcp(<4 x float> [[TMP4]], <4 x float> [[TMP5]], <4 x float> [[TMP6]], i32 0, i32 0)
 // CHECK-NEXT:    [[TMP8:%.*]] = shufflevector <4 x float> [[TMP3]], <4 x float> [[TMP7]], <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
 // CHECK-NEXT:    ret <8 x float> [[TMP8]]
 //
@@ -198,10 +198,10 @@ v8f32 ffmswcq(v8f32 a, v8f32 b, v8f32 c) {
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <8 x float> [[A:%.*]], <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
 // CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <8 x float> [[B:%.*]], <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
-// CHECK-NEXT:    [[TMP2:%.*]] = tail call <4 x float> @llvm.kvx.fmulcwcp(<4 x float> [[TMP0]], <4 x float> [[TMP1]], i32 0)
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <4 x float> @llvm.kvx.fmulcwcp(<4 x float> [[TMP0]], <4 x float> [[TMP1]], i32 0, i32 0)
 // CHECK-NEXT:    [[TMP3:%.*]] = shufflevector <8 x float> [[A]], <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
 // CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <8 x float> [[B]], <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
-// CHECK-NEXT:    [[TMP5:%.*]] = tail call <4 x float> @llvm.kvx.fmulcwcp(<4 x float> [[TMP3]], <4 x float> [[TMP4]], i32 0)
+// CHECK-NEXT:    [[TMP5:%.*]] = tail call <4 x float> @llvm.kvx.fmulcwcp(<4 x float> [[TMP3]], <4 x float> [[TMP4]], i32 0, i32 0)
 // CHECK-NEXT:    [[TMP6:%.*]] = shufflevector <4 x float> [[TMP2]], <4 x float> [[TMP5]], <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
 // CHECK-NEXT:    ret <8 x float> [[TMP6]]
 //
@@ -214,11 +214,11 @@ v8f32 fmulcwcq(v8f32 a, v8f32 b) {
 // CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <8 x float> [[A:%.*]], <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
 // CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <8 x float> [[B:%.*]], <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
 // CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <8 x float> [[C:%.*]], <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
-// CHECK-NEXT:    [[TMP3:%.*]] = tail call <4 x float> @llvm.kvx.ffmacwcp(<4 x float> [[TMP0]], <4 x float> [[TMP1]], <4 x float> [[TMP2]], i32 0)
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <4 x float> @llvm.kvx.ffmacwcp(<4 x float> [[TMP0]], <4 x float> [[TMP1]], <4 x float> [[TMP2]], i32 0, i32 0)
 // CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <8 x float> [[A]], <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
 // CHECK-NEXT:    [[TMP5:%.*]] = shufflevector <8 x float> [[B]], <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
 // CHECK-NEXT:    [[TMP6:%.*]] = shufflevector <8 x float> [[C]], <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
-// CHECK-NEXT:    [[TMP7:%.*]] = tail call <4 x float> @llvm.kvx.ffmacwcp(<4 x float> [[TMP4]], <4 x float> [[TMP5]], <4 x float> [[TMP6]], i32 0)
+// CHECK-NEXT:    [[TMP7:%.*]] = tail call <4 x float> @llvm.kvx.ffmacwcp(<4 x float> [[TMP4]], <4 x float> [[TMP5]], <4 x float> [[TMP6]], i32 0, i32 0)
 // CHECK-NEXT:    [[TMP8:%.*]] = shufflevector <4 x float> [[TMP3]], <4 x float> [[TMP7]], <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
 // CHECK-NEXT:    ret <8 x float> [[TMP8]]
 //
@@ -231,11 +231,11 @@ v8f32 ffmacwcq(v8f32 a, v8f32 b, v8f32 c) {
 // CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <8 x float> [[A:%.*]], <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
 // CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <8 x float> [[B:%.*]], <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
 // CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <8 x float> [[C:%.*]], <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
-// CHECK-NEXT:    [[TMP3:%.*]] = tail call <4 x float> @llvm.kvx.ffmscwcp(<4 x float> [[TMP0]], <4 x float> [[TMP1]], <4 x float> [[TMP2]], i32 0)
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <4 x float> @llvm.kvx.ffmscwcp(<4 x float> [[TMP0]], <4 x float> [[TMP1]], <4 x float> [[TMP2]], i32 0, i32 0)
 // CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <8 x float> [[A]], <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
 // CHECK-NEXT:    [[TMP5:%.*]] = shufflevector <8 x float> [[B]], <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
 // CHECK-NEXT:    [[TMP6:%.*]] = shufflevector <8 x float> [[C]], <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
-// CHECK-NEXT:    [[TMP7:%.*]] = tail call <4 x float> @llvm.kvx.ffmscwcp(<4 x float> [[TMP4]], <4 x float> [[TMP5]], <4 x float> [[TMP6]], i32 0)
+// CHECK-NEXT:    [[TMP7:%.*]] = tail call <4 x float> @llvm.kvx.ffmscwcp(<4 x float> [[TMP4]], <4 x float> [[TMP5]], <4 x float> [[TMP6]], i32 0, i32 0)
 // CHECK-NEXT:    [[TMP8:%.*]] = shufflevector <4 x float> [[TMP3]], <4 x float> [[TMP7]], <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
 // CHECK-NEXT:    ret <8 x float> [[TMP8]]
 //
@@ -262,7 +262,7 @@ v8f32 fconjwcq(v8f32 a) {
 
 // CHECK-LABEL: @fmuldc(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x double> @llvm.kvx.fmuldc(<2 x double> [[A:%.*]], <2 x double> [[B:%.*]], i32 0)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x double> @llvm.kvx.fmuldc(<2 x double> [[A:%.*]], <2 x double> [[B:%.*]], i32 0, i32 0)
 // CHECK-NEXT:    ret <2 x double> [[TMP0]]
 //
 v2f64 fmuldc(v2f64 a, v2f64 b) {
@@ -271,7 +271,7 @@ v2f64 fmuldc(v2f64 a, v2f64 b) {
 
 // CHECK-LABEL: @ffmadc(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x double> @llvm.kvx.ffmadc(<2 x double> [[A:%.*]], <2 x double> [[B:%.*]], <2 x double> [[C:%.*]], i32 0)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x double> @llvm.kvx.ffmadc(<2 x double> [[A:%.*]], <2 x double> [[B:%.*]], <2 x double> [[C:%.*]], i32 0, i32 0)
 // CHECK-NEXT:    ret <2 x double> [[TMP0]]
 //
 v2f64 ffmadc(v2f64 a, v2f64 b, v2f64 c) {
@@ -280,7 +280,7 @@ v2f64 ffmadc(v2f64 a, v2f64 b, v2f64 c) {
 
 // CHECK-LABEL: @ffmsdc(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x double> @llvm.kvx.ffmsdc(<2 x double> [[A:%.*]], <2 x double> [[B:%.*]], <2 x double> [[C:%.*]], i32 0)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x double> @llvm.kvx.ffmsdc(<2 x double> [[A:%.*]], <2 x double> [[B:%.*]], <2 x double> [[C:%.*]], i32 0, i32 0)
 // CHECK-NEXT:    ret <2 x double> [[TMP0]]
 //
 v2f64 ffmsdc(v2f64 a, v2f64 b, v2f64 c) {
@@ -289,7 +289,7 @@ v2f64 ffmsdc(v2f64 a, v2f64 b, v2f64 c) {
 
 // CHECK-LABEL: @fmulcdc(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x double> @llvm.kvx.fmulcdc(<2 x double> [[A:%.*]], <2 x double> [[B:%.*]], i32 0)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x double> @llvm.kvx.fmulcdc(<2 x double> [[A:%.*]], <2 x double> [[B:%.*]], i32 0, i32 0)
 // CHECK-NEXT:    ret <2 x double> [[TMP0]]
 //
 v2f64 fmulcdc(v2f64 a, v2f64 b) {
@@ -298,7 +298,7 @@ v2f64 fmulcdc(v2f64 a, v2f64 b) {
 
 // CHECK-LABEL: @ffmacdc(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x double> @llvm.kvx.ffmacdc(<2 x double> [[A:%.*]], <2 x double> [[B:%.*]], <2 x double> [[C:%.*]], i32 0)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x double> @llvm.kvx.ffmacdc(<2 x double> [[A:%.*]], <2 x double> [[B:%.*]], <2 x double> [[C:%.*]], i32 0, i32 0)
 // CHECK-NEXT:    ret <2 x double> [[TMP0]]
 //
 v2f64 ffmacdc(v2f64 a, v2f64 b, v2f64 c) {
@@ -307,7 +307,7 @@ v2f64 ffmacdc(v2f64 a, v2f64 b, v2f64 c) {
 
 // CHECK-LABEL: @ffmscdc(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x double> @llvm.kvx.ffmscdc(<2 x double> [[A:%.*]], <2 x double> [[B:%.*]], <2 x double> [[C:%.*]], i32 0)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x double> @llvm.kvx.ffmscdc(<2 x double> [[A:%.*]], <2 x double> [[B:%.*]], <2 x double> [[C:%.*]], i32 0, i32 0)
 // CHECK-NEXT:    ret <2 x double> [[TMP0]]
 //
 v2f64 ffmscdc(v2f64 a, v2f64 b, v2f64 c) {
@@ -331,10 +331,10 @@ v2f64 fconjdc(v2f64 a) {
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <4 x double> [[A:%.*]], <4 x double> undef, <2 x i32> <i32 0, i32 1>
 // CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <4 x double> [[B:%.*]], <4 x double> undef, <2 x i32> <i32 0, i32 1>
-// CHECK-NEXT:    [[TMP2:%.*]] = tail call <2 x double> @llvm.kvx.fmuldc(<2 x double> [[TMP0]], <2 x double> [[TMP1]], i32 0)
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <2 x double> @llvm.kvx.fmuldc(<2 x double> [[TMP0]], <2 x double> [[TMP1]], i32 0, i32 0)
 // CHECK-NEXT:    [[TMP3:%.*]] = shufflevector <4 x double> [[A]], <4 x double> undef, <2 x i32> <i32 2, i32 3>
 // CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <4 x double> [[B]], <4 x double> undef, <2 x i32> <i32 2, i32 3>
-// CHECK-NEXT:    [[TMP5:%.*]] = tail call <2 x double> @llvm.kvx.fmuldc(<2 x double> [[TMP3]], <2 x double> [[TMP4]], i32 0)
+// CHECK-NEXT:    [[TMP5:%.*]] = tail call <2 x double> @llvm.kvx.fmuldc(<2 x double> [[TMP3]], <2 x double> [[TMP4]], i32 0, i32 0)
 // CHECK-NEXT:    [[TMP6:%.*]] = shufflevector <2 x double> [[TMP2]], <2 x double> [[TMP5]], <4 x i32> <i32 0, i32 1, i32 2, i32 3>
 // CHECK-NEXT:    ret <4 x double> [[TMP6]]
 //
@@ -347,11 +347,11 @@ v4f64 fmuldcp(v4f64 a, v4f64 b) {
 // CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <4 x double> [[A:%.*]], <4 x double> undef, <2 x i32> <i32 0, i32 1>
 // CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <4 x double> [[B:%.*]], <4 x double> undef, <2 x i32> <i32 0, i32 1>
 // CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <4 x double> [[C:%.*]], <4 x double> undef, <2 x i32> <i32 0, i32 1>
-// CHECK-NEXT:    [[TMP3:%.*]] = tail call <2 x double> @llvm.kvx.ffmadc(<2 x double> [[TMP0]], <2 x double> [[TMP1]], <2 x double> [[TMP2]], i32 0)
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <2 x double> @llvm.kvx.ffmadc(<2 x double> [[TMP0]], <2 x double> [[TMP1]], <2 x double> [[TMP2]], i32 0, i32 0)
 // CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <4 x double> [[A]], <4 x double> undef, <2 x i32> <i32 2, i32 3>
 // CHECK-NEXT:    [[TMP5:%.*]] = shufflevector <4 x double> [[B]], <4 x double> undef, <2 x i32> <i32 2, i32 3>
 // CHECK-NEXT:    [[TMP6:%.*]] = shufflevector <4 x double> [[C]], <4 x double> undef, <2 x i32> <i32 2, i32 3>
-// CHECK-NEXT:    [[TMP7:%.*]] = tail call <2 x double> @llvm.kvx.ffmadc(<2 x double> [[TMP4]], <2 x double> [[TMP5]], <2 x double> [[TMP6]], i32 0)
+// CHECK-NEXT:    [[TMP7:%.*]] = tail call <2 x double> @llvm.kvx.ffmadc(<2 x double> [[TMP4]], <2 x double> [[TMP5]], <2 x double> [[TMP6]], i32 0, i32 0)
 // CHECK-NEXT:    [[TMP8:%.*]] = shufflevector <2 x double> [[TMP3]], <2 x double> [[TMP7]], <4 x i32> <i32 0, i32 1, i32 2, i32 3>
 // CHECK-NEXT:    ret <4 x double> [[TMP8]]
 //
@@ -364,11 +364,11 @@ v4f64 ffmadcp(v4f64 a, v4f64 b, v4f64 c) {
 // CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <4 x double> [[A:%.*]], <4 x double> undef, <2 x i32> <i32 0, i32 1>
 // CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <4 x double> [[B:%.*]], <4 x double> undef, <2 x i32> <i32 0, i32 1>
 // CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <4 x double> [[C:%.*]], <4 x double> undef, <2 x i32> <i32 0, i32 1>
-// CHECK-NEXT:    [[TMP3:%.*]] = tail call <2 x double> @llvm.kvx.ffmsdc(<2 x double> [[TMP0]], <2 x double> [[TMP1]], <2 x double> [[TMP2]], i32 0)
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <2 x double> @llvm.kvx.ffmsdc(<2 x double> [[TMP0]], <2 x double> [[TMP1]], <2 x double> [[TMP2]], i32 0, i32 0)
 // CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <4 x double> [[A]], <4 x double> undef, <2 x i32> <i32 2, i32 3>
 // CHECK-NEXT:    [[TMP5:%.*]] = shufflevector <4 x double> [[B]], <4 x double> undef, <2 x i32> <i32 2, i32 3>
 // CHECK-NEXT:    [[TMP6:%.*]] = shufflevector <4 x double> [[C]], <4 x double> undef, <2 x i32> <i32 2, i32 3>
-// CHECK-NEXT:    [[TMP7:%.*]] = tail call <2 x double> @llvm.kvx.ffmsdc(<2 x double> [[TMP4]], <2 x double> [[TMP5]], <2 x double> [[TMP6]], i32 0)
+// CHECK-NEXT:    [[TMP7:%.*]] = tail call <2 x double> @llvm.kvx.ffmsdc(<2 x double> [[TMP4]], <2 x double> [[TMP5]], <2 x double> [[TMP6]], i32 0, i32 0)
 // CHECK-NEXT:    [[TMP8:%.*]] = shufflevector <2 x double> [[TMP3]], <2 x double> [[TMP7]], <4 x i32> <i32 0, i32 1, i32 2, i32 3>
 // CHECK-NEXT:    ret <4 x double> [[TMP8]]
 //
@@ -380,10 +380,10 @@ v4f64 ffmsdcp(v4f64 a, v4f64 b, v4f64 c) {
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <4 x double> [[A:%.*]], <4 x double> undef, <2 x i32> <i32 0, i32 1>
 // CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <4 x double> [[B:%.*]], <4 x double> undef, <2 x i32> <i32 0, i32 1>
-// CHECK-NEXT:    [[TMP2:%.*]] = tail call <2 x double> @llvm.kvx.fmulcdc(<2 x double> [[TMP0]], <2 x double> [[TMP1]], i32 0)
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <2 x double> @llvm.kvx.fmulcdc(<2 x double> [[TMP0]], <2 x double> [[TMP1]], i32 0, i32 0)
 // CHECK-NEXT:    [[TMP3:%.*]] = shufflevector <4 x double> [[A]], <4 x double> undef, <2 x i32> <i32 2, i32 3>
 // CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <4 x double> [[B]], <4 x double> undef, <2 x i32> <i32 2, i32 3>
-// CHECK-NEXT:    [[TMP5:%.*]] = tail call <2 x double> @llvm.kvx.fmulcdc(<2 x double> [[TMP3]], <2 x double> [[TMP4]], i32 0)
+// CHECK-NEXT:    [[TMP5:%.*]] = tail call <2 x double> @llvm.kvx.fmulcdc(<2 x double> [[TMP3]], <2 x double> [[TMP4]], i32 0, i32 0)
 // CHECK-NEXT:    [[TMP6:%.*]] = shufflevector <2 x double> [[TMP2]], <2 x double> [[TMP5]], <4 x i32> <i32 0, i32 1, i32 2, i32 3>
 // CHECK-NEXT:    ret <4 x double> [[TMP6]]
 //
@@ -396,11 +396,11 @@ v4f64 fmulcdcp(v4f64 a, v4f64 b) {
 // CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <4 x double> [[A:%.*]], <4 x double> undef, <2 x i32> <i32 0, i32 1>
 // CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <4 x double> [[B:%.*]], <4 x double> undef, <2 x i32> <i32 0, i32 1>
 // CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <4 x double> [[C:%.*]], <4 x double> undef, <2 x i32> <i32 0, i32 1>
-// CHECK-NEXT:    [[TMP3:%.*]] = tail call <2 x double> @llvm.kvx.ffmacdc(<2 x double> [[TMP0]], <2 x double> [[TMP1]], <2 x double> [[TMP2]], i32 0)
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <2 x double> @llvm.kvx.ffmacdc(<2 x double> [[TMP0]], <2 x double> [[TMP1]], <2 x double> [[TMP2]], i32 0, i32 0)
 // CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <4 x double> [[A]], <4 x double> undef, <2 x i32> <i32 2, i32 3>
 // CHECK-NEXT:    [[TMP5:%.*]] = shufflevector <4 x double> [[B]], <4 x double> undef, <2 x i32> <i32 2, i32 3>
 // CHECK-NEXT:    [[TMP6:%.*]] = shufflevector <4 x double> [[C]], <4 x double> undef, <2 x i32> <i32 2, i32 3>
-// CHECK-NEXT:    [[TMP7:%.*]] = tail call <2 x double> @llvm.kvx.ffmacdc(<2 x double> [[TMP4]], <2 x double> [[TMP5]], <2 x double> [[TMP6]], i32 0)
+// CHECK-NEXT:    [[TMP7:%.*]] = tail call <2 x double> @llvm.kvx.ffmacdc(<2 x double> [[TMP4]], <2 x double> [[TMP5]], <2 x double> [[TMP6]], i32 0, i32 0)
 // CHECK-NEXT:    [[TMP8:%.*]] = shufflevector <2 x double> [[TMP3]], <2 x double> [[TMP7]], <4 x i32> <i32 0, i32 1, i32 2, i32 3>
 // CHECK-NEXT:    ret <4 x double> [[TMP8]]
 //
@@ -413,11 +413,11 @@ v4f64 ffmacdcp(v4f64 a, v4f64 b, v4f64 c) {
 // CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <4 x double> [[A:%.*]], <4 x double> undef, <2 x i32> <i32 0, i32 1>
 // CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <4 x double> [[B:%.*]], <4 x double> undef, <2 x i32> <i32 0, i32 1>
 // CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <4 x double> [[C:%.*]], <4 x double> undef, <2 x i32> <i32 0, i32 1>
-// CHECK-NEXT:    [[TMP3:%.*]] = tail call <2 x double> @llvm.kvx.ffmscdc(<2 x double> [[TMP0]], <2 x double> [[TMP1]], <2 x double> [[TMP2]], i32 0)
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <2 x double> @llvm.kvx.ffmscdc(<2 x double> [[TMP0]], <2 x double> [[TMP1]], <2 x double> [[TMP2]], i32 0, i32 0)
 // CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <4 x double> [[A]], <4 x double> undef, <2 x i32> <i32 2, i32 3>
 // CHECK-NEXT:    [[TMP5:%.*]] = shufflevector <4 x double> [[B]], <4 x double> undef, <2 x i32> <i32 2, i32 3>
 // CHECK-NEXT:    [[TMP6:%.*]] = shufflevector <4 x double> [[C]], <4 x double> undef, <2 x i32> <i32 2, i32 3>
-// CHECK-NEXT:    [[TMP7:%.*]] = tail call <2 x double> @llvm.kvx.ffmscdc(<2 x double> [[TMP4]], <2 x double> [[TMP5]], <2 x double> [[TMP6]], i32 0)
+// CHECK-NEXT:    [[TMP7:%.*]] = tail call <2 x double> @llvm.kvx.ffmscdc(<2 x double> [[TMP4]], <2 x double> [[TMP5]], <2 x double> [[TMP6]], i32 0, i32 0)
 // CHECK-NEXT:    [[TMP8:%.*]] = shufflevector <2 x double> [[TMP3]], <2 x double> [[TMP7]], <4 x i32> <i32 0, i32 1, i32 2, i32 3>
 // CHECK-NEXT:    ret <4 x double> [[TMP8]]
 //

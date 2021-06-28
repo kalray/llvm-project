@@ -832,11 +832,11 @@ define <2 x float> @faddwp(<2 x float> %v1, <2 x float> %v2){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <2 x float> @llvm.kvx.faddwp(<2 x float> %v1, <2 x float> %v2, i32 0)
+  %0 = tail call <2 x float> @llvm.kvx.faddwp(<2 x float> %v1, <2 x float> %v2, i32 0, i32 0)
   ret <2 x float> %0
 }
 
-declare <2 x float> @llvm.kvx.faddwp(<2 x float>, <2 x float>, i32) #1
+declare <2 x float> @llvm.kvx.faddwp(<2 x float>, <2 x float>, i32, i32) #1
 
 define <4 x float> @faddwq(<4 x float> %v1, <4 x float> %v2){
 ; CHECK-LABEL: faddwq:
@@ -845,11 +845,11 @@ define <4 x float> @faddwq(<4 x float> %v1, <4 x float> %v2){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <4 x float> @llvm.kvx.faddwq(<4 x float> %v1, <4 x float> %v2, i32 0)
+  %0 = tail call <4 x float> @llvm.kvx.faddwq(<4 x float> %v1, <4 x float> %v2, i32 0, i32 0)
   ret <4 x float> %0
 }
 
-declare <4 x float> @llvm.kvx.faddwq(<4 x float>, <4 x float>, i32) #1
+declare <4 x float> @llvm.kvx.faddwq(<4 x float>, <4 x float>, i32, i32) #1
 
 define <8 x float> @faddwo(<8 x float> %v1, <8 x float> %v2){
 ; CHECK-LABEL: faddwo:
@@ -862,10 +862,10 @@ define <8 x float> @faddwo(<8 x float> %v1, <8 x float> %v2){
 entry:
   %0 = shufflevector <8 x float> %v1, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %1 = shufflevector <8 x float> %v2, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
-  %2 = tail call <4 x float> @llvm.kvx.faddwq(<4 x float> %0, <4 x float> %1, i32 0)
+  %2 = tail call <4 x float> @llvm.kvx.faddwq(<4 x float> %0, <4 x float> %1, i32 0, i32 0)
   %3 = shufflevector <8 x float> %v1, <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
   %4 = shufflevector <8 x float> %v2, <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
-  %5 = tail call <4 x float> @llvm.kvx.faddwq(<4 x float> %3, <4 x float> %4, i32 0)
+  %5 = tail call <4 x float> @llvm.kvx.faddwq(<4 x float> %3, <4 x float> %4, i32 0, i32 0)
   %6 = shufflevector <4 x float> %2, <4 x float> %5, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   ret <8 x float> %6
 }
@@ -877,11 +877,11 @@ define <2 x double> @fadddp(<2 x double> %v1, <2 x double> %v2){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <2 x double> @llvm.kvx.fadddp(<2 x double> %v1, <2 x double> %v2, i32 0)
+  %0 = tail call <2 x double> @llvm.kvx.fadddp(<2 x double> %v1, <2 x double> %v2, i32 0, i32 0)
   ret <2 x double> %0
 }
 
-declare <2 x double> @llvm.kvx.fadddp(<2 x double>, <2 x double>, i32) #1
+declare <2 x double> @llvm.kvx.fadddp(<2 x double>, <2 x double>, i32, i32) #1
 
 define <4 x double> @fadddq(<4 x double> %v1, <4 x double> %v2){
 ; CHECK-LABEL: fadddq:
@@ -894,10 +894,10 @@ define <4 x double> @fadddq(<4 x double> %v1, <4 x double> %v2){
 entry:
   %0 = shufflevector <4 x double> %v1, <4 x double> undef, <2 x i32> <i32 0, i32 1>
   %1 = shufflevector <4 x double> %v2, <4 x double> undef, <2 x i32> <i32 0, i32 1>
-  %2 = tail call <2 x double> @llvm.kvx.fadddp(<2 x double> %0, <2 x double> %1, i32 0)
+  %2 = tail call <2 x double> @llvm.kvx.fadddp(<2 x double> %0, <2 x double> %1, i32 0, i32 0)
   %3 = shufflevector <4 x double> %v1, <4 x double> undef, <2 x i32> <i32 2, i32 3>
   %4 = shufflevector <4 x double> %v2, <4 x double> undef, <2 x i32> <i32 2, i32 3>
-  %5 = tail call <2 x double> @llvm.kvx.fadddp(<2 x double> %3, <2 x double> %4, i32 0)
+  %5 = tail call <2 x double> @llvm.kvx.fadddp(<2 x double> %3, <2 x double> %4, i32 0, i32 0)
   %6 = shufflevector <2 x double> %2, <2 x double> %5, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   ret <4 x double> %6
 }
@@ -909,11 +909,11 @@ define <2 x float> @faddcwc(<2 x float> %v1, <2 x float> %v2){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <2 x float> @llvm.kvx.faddcwc(<2 x float> %v1, <2 x float> %v1, i32 0)
+  %0 = tail call <2 x float> @llvm.kvx.faddcwc(<2 x float> %v1, <2 x float> %v1, i32 0, i32 0)
   ret <2 x float> %0
 }
 
-declare <2 x float> @llvm.kvx.faddcwc(<2 x float>, <2 x float>, i32) #1
+declare <2 x float> @llvm.kvx.faddcwc(<2 x float>, <2 x float>, i32, i32) #1
 
 define <4 x float> @faddcwcp(<4 x float> %v1, <4 x float> %v2){
 ; CHECK-LABEL: faddcwcp:
@@ -922,11 +922,11 @@ define <4 x float> @faddcwcp(<4 x float> %v1, <4 x float> %v2){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <4 x float> @llvm.kvx.faddcwcp(<4 x float> %v1, <4 x float> %v2, i32 0)
+  %0 = tail call <4 x float> @llvm.kvx.faddcwcp(<4 x float> %v1, <4 x float> %v2, i32 0, i32 0)
   ret <4 x float> %0
 }
 
-declare <4 x float> @llvm.kvx.faddcwcp(<4 x float>, <4 x float>, i32) #1
+declare <4 x float> @llvm.kvx.faddcwcp(<4 x float>, <4 x float>, i32, i32) #1
 
 define <8 x float> @faddcwcq(<8 x float> %v1, <8 x float> %v2){
 ; CHECK-LABEL: faddcwcq:
@@ -939,10 +939,10 @@ define <8 x float> @faddcwcq(<8 x float> %v1, <8 x float> %v2){
 entry:
   %0 = shufflevector <8 x float> %v1, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %1 = shufflevector <8 x float> %v2, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
-  %2 = tail call <4 x float> @llvm.kvx.faddcwcp(<4 x float> %0, <4 x float> %1, i32 0)
+  %2 = tail call <4 x float> @llvm.kvx.faddcwcp(<4 x float> %0, <4 x float> %1, i32 0, i32 0)
   %3 = shufflevector <8 x float> %v1, <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
   %4 = shufflevector <8 x float> %v2, <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
-  %5 = tail call <4 x float> @llvm.kvx.faddcwcp(<4 x float> %3, <4 x float> %4, i32 0)
+  %5 = tail call <4 x float> @llvm.kvx.faddcwcp(<4 x float> %3, <4 x float> %4, i32 0, i32 0)
   %6 = shufflevector <4 x float> %2, <4 x float> %5, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   ret <8 x float> %6
 }
@@ -954,11 +954,11 @@ define <2 x double> @faddcdc(<2 x double> %v1, <2 x double> %v2){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <2 x double> @llvm.kvx.faddcdc(<2 x double> %v1, <2 x double> %v2, i32 0)
+  %0 = tail call <2 x double> @llvm.kvx.faddcdc(<2 x double> %v1, <2 x double> %v2, i32 0, i32 0)
   ret <2 x double> %0
 }
 
-declare <2 x double> @llvm.kvx.faddcdc(<2 x double>, <2 x double>, i32) #1
+declare <2 x double> @llvm.kvx.faddcdc(<2 x double>, <2 x double>, i32, i32) #1
 
 define <4 x double> @faddcdcp(<4 x double> %v1, <4 x double> %v2){
 ; CHECK-LABEL: faddcdcp:
@@ -971,10 +971,10 @@ define <4 x double> @faddcdcp(<4 x double> %v1, <4 x double> %v2){
 entry:
   %0 = shufflevector <4 x double> %v1, <4 x double> undef, <2 x i32> <i32 0, i32 1>
   %1 = shufflevector <4 x double> %v2, <4 x double> undef, <2 x i32> <i32 0, i32 1>
-  %2 = tail call <2 x double> @llvm.kvx.faddcdc(<2 x double> %0, <2 x double> %1, i32 0)
+  %2 = tail call <2 x double> @llvm.kvx.faddcdc(<2 x double> %0, <2 x double> %1, i32 0, i32 0)
   %3 = shufflevector <4 x double> %v1, <4 x double> undef, <2 x i32> <i32 2, i32 3>
   %4 = shufflevector <4 x double> %v2, <4 x double> undef, <2 x i32> <i32 2, i32 3>
-  %5 = tail call <2 x double> @llvm.kvx.faddcdc(<2 x double> %3, <2 x double> %4, i32 0)
+  %5 = tail call <2 x double> @llvm.kvx.faddcdc(<2 x double> %3, <2 x double> %4, i32 0, i32 0)
   %6 = shufflevector <2 x double> %2, <2 x double> %5, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   ret <4 x double> %6
 }
@@ -986,11 +986,11 @@ define <2 x float> @fsbfwp(<2 x float> %v1, <2 x float> %v2){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <2 x float> @llvm.kvx.fsbfwp(<2 x float> %v1, <2 x float> %v2, i32 0)
+  %0 = tail call <2 x float> @llvm.kvx.fsbfwp(<2 x float> %v1, <2 x float> %v2, i32 0, i32 0)
   ret <2 x float> %0
 }
 
-declare <2 x float> @llvm.kvx.fsbfwp(<2 x float>, <2 x float>, i32) #1
+declare <2 x float> @llvm.kvx.fsbfwp(<2 x float>, <2 x float>, i32, i32) #1
 
 define <4 x float> @fsbfwq(<4 x float> %v1, <4 x float> %v2){
 ; CHECK-LABEL: fsbfwq:
@@ -999,11 +999,11 @@ define <4 x float> @fsbfwq(<4 x float> %v1, <4 x float> %v2){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <4 x float> @llvm.kvx.fsbfwq(<4 x float> %v1, <4 x float> %v2, i32 0)
+  %0 = tail call <4 x float> @llvm.kvx.fsbfwq(<4 x float> %v1, <4 x float> %v2, i32 0, i32 0)
   ret <4 x float> %0
 }
 
-declare <4 x float> @llvm.kvx.fsbfwq(<4 x float>, <4 x float>, i32) #1
+declare <4 x float> @llvm.kvx.fsbfwq(<4 x float>, <4 x float>, i32, i32) #1
 
 define <8 x float> @fsbfwo(<8 x float> %v1, <8 x float> %v2){
 ; CHECK-LABEL: fsbfwo:
@@ -1016,10 +1016,10 @@ define <8 x float> @fsbfwo(<8 x float> %v1, <8 x float> %v2){
 entry:
   %0 = shufflevector <8 x float> %v1, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %1 = shufflevector <8 x float> %v2, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
-  %2 = tail call <4 x float> @llvm.kvx.fsbfwq(<4 x float> %0, <4 x float> %1, i32 0)
+  %2 = tail call <4 x float> @llvm.kvx.fsbfwq(<4 x float> %0, <4 x float> %1, i32 0, i32 0)
   %3 = shufflevector <8 x float> %v1, <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
   %4 = shufflevector <8 x float> %v2, <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
-  %5 = tail call <4 x float> @llvm.kvx.fsbfwq(<4 x float> %3, <4 x float> %4, i32 0)
+  %5 = tail call <4 x float> @llvm.kvx.fsbfwq(<4 x float> %3, <4 x float> %4, i32 0, i32 0)
   %6 = shufflevector <4 x float> %2, <4 x float> %5, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   ret <8 x float> %6
 }
@@ -1031,11 +1031,11 @@ define <2 x double> @fsbfdp(<2 x double> %v1, <2 x double> %v2){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <2 x double> @llvm.kvx.fsbfdp(<2 x double> %v1, <2 x double> %v2, i32 0)
+  %0 = tail call <2 x double> @llvm.kvx.fsbfdp(<2 x double> %v1, <2 x double> %v2, i32 0, i32 0)
   ret <2 x double> %0
 }
 
-declare <2 x double> @llvm.kvx.fsbfdp(<2 x double>, <2 x double>, i32) #1
+declare <2 x double> @llvm.kvx.fsbfdp(<2 x double>, <2 x double>, i32, i32) #1
 
 define <4 x double> @fsbfdq(<4 x double> %v1, <4 x double> %v2){
 ; CHECK-LABEL: fsbfdq:
@@ -1048,10 +1048,10 @@ define <4 x double> @fsbfdq(<4 x double> %v1, <4 x double> %v2){
 entry:
   %0 = shufflevector <4 x double> %v1, <4 x double> undef, <2 x i32> <i32 0, i32 1>
   %1 = shufflevector <4 x double> %v2, <4 x double> undef, <2 x i32> <i32 0, i32 1>
-  %2 = tail call <2 x double> @llvm.kvx.fsbfdp(<2 x double> %0, <2 x double> %1, i32 0)
+  %2 = tail call <2 x double> @llvm.kvx.fsbfdp(<2 x double> %0, <2 x double> %1, i32 0, i32 0)
   %3 = shufflevector <4 x double> %v1, <4 x double> undef, <2 x i32> <i32 2, i32 3>
   %4 = shufflevector <4 x double> %v2, <4 x double> undef, <2 x i32> <i32 2, i32 3>
-  %5 = tail call <2 x double> @llvm.kvx.fsbfdp(<2 x double> %3, <2 x double> %4, i32 0)
+  %5 = tail call <2 x double> @llvm.kvx.fsbfdp(<2 x double> %3, <2 x double> %4, i32 0, i32 0)
   %6 = shufflevector <2 x double> %2, <2 x double> %5, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   ret <4 x double> %6
 }
@@ -1063,11 +1063,11 @@ define <2 x float> @fsbfcwc(<2 x float> %v1, <2 x float> %v2){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <2 x float> @llvm.kvx.fsbfcwc(<2 x float> %v1, <2 x float> %v2, i32 0)
+  %0 = tail call <2 x float> @llvm.kvx.fsbfcwc(<2 x float> %v1, <2 x float> %v2, i32 0, i32 0)
   ret <2 x float> %0
 }
 
-declare <2 x float> @llvm.kvx.fsbfcwc(<2 x float>, <2 x float>, i32) #1
+declare <2 x float> @llvm.kvx.fsbfcwc(<2 x float>, <2 x float>, i32, i32) #1
 
 define <4 x float> @fsbfcwcp(<4 x float> %v1, <4 x float> %v2){
 ; CHECK-LABEL: fsbfcwcp:
@@ -1076,11 +1076,11 @@ define <4 x float> @fsbfcwcp(<4 x float> %v1, <4 x float> %v2){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <4 x float> @llvm.kvx.fsbfcwcp(<4 x float> %v1, <4 x float> %v2, i32 0)
+  %0 = tail call <4 x float> @llvm.kvx.fsbfcwcp(<4 x float> %v1, <4 x float> %v2, i32 0, i32 0)
   ret <4 x float> %0
 }
 
-declare <4 x float> @llvm.kvx.fsbfcwcp(<4 x float>, <4 x float>, i32) #1
+declare <4 x float> @llvm.kvx.fsbfcwcp(<4 x float>, <4 x float>, i32, i32) #1
 
 define <8 x float> @fsbfcwcq(<8 x float> %v1, <8 x float> %v2){
 ; CHECK-LABEL: fsbfcwcq:
@@ -1093,10 +1093,10 @@ define <8 x float> @fsbfcwcq(<8 x float> %v1, <8 x float> %v2){
 entry:
   %0 = shufflevector <8 x float> %v1, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %1 = shufflevector <8 x float> %v2, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
-  %2 = tail call <4 x float> @llvm.kvx.fsbfcwcp(<4 x float> %0, <4 x float> %1, i32 0)
+  %2 = tail call <4 x float> @llvm.kvx.fsbfcwcp(<4 x float> %0, <4 x float> %1, i32 0, i32 0)
   %3 = shufflevector <8 x float> %v1, <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
   %4 = shufflevector <8 x float> %v2, <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
-  %5 = tail call <4 x float> @llvm.kvx.fsbfcwcp(<4 x float> %3, <4 x float> %4, i32 0)
+  %5 = tail call <4 x float> @llvm.kvx.fsbfcwcp(<4 x float> %3, <4 x float> %4, i32 0, i32 0)
   %6 = shufflevector <4 x float> %2, <4 x float> %5, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   ret <8 x float> %6
 }
@@ -1108,11 +1108,11 @@ define <2 x double> @fsbfcdc(<2 x double> %v1, <2 x double> %v2){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <2 x double> @llvm.kvx.fsbfcdc(<2 x double> %v1, <2 x double> %v2, i32 0)
+  %0 = tail call <2 x double> @llvm.kvx.fsbfcdc(<2 x double> %v1, <2 x double> %v2, i32 0, i32 0)
   ret <2 x double> %0
 }
 
-declare <2 x double> @llvm.kvx.fsbfcdc(<2 x double>, <2 x double>, i32) #1
+declare <2 x double> @llvm.kvx.fsbfcdc(<2 x double>, <2 x double>, i32, i32) #1
 
 define <4 x double> @fsbfcdcp(<4 x double> %v1, <4 x double> %v2){
 ; CHECK-LABEL: fsbfcdcp:
@@ -1125,10 +1125,10 @@ define <4 x double> @fsbfcdcp(<4 x double> %v1, <4 x double> %v2){
 entry:
   %0 = shufflevector <4 x double> %v1, <4 x double> undef, <2 x i32> <i32 0, i32 1>
   %1 = shufflevector <4 x double> %v2, <4 x double> undef, <2 x i32> <i32 0, i32 1>
-  %2 = tail call <2 x double> @llvm.kvx.fsbfcdc(<2 x double> %0, <2 x double> %1, i32 0)
+  %2 = tail call <2 x double> @llvm.kvx.fsbfcdc(<2 x double> %0, <2 x double> %1, i32 0, i32 0)
   %3 = shufflevector <4 x double> %v1, <4 x double> undef, <2 x i32> <i32 2, i32 3>
   %4 = shufflevector <4 x double> %v2, <4 x double> undef, <2 x i32> <i32 2, i32 3>
-  %5 = tail call <2 x double> @llvm.kvx.fsbfcdc(<2 x double> %3, <2 x double> %4, i32 0)
+  %5 = tail call <2 x double> @llvm.kvx.fsbfcdc(<2 x double> %3, <2 x double> %4, i32 0, i32 0)
   %6 = shufflevector <2 x double> %2, <2 x double> %5, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   ret <4 x double> %6
 }
@@ -1140,11 +1140,11 @@ define <2 x float> @fmulwp(<2 x float> %v1, <2 x float> %v2){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <2 x float> @llvm.kvx.fmulwp(<2 x float> %v1, <2 x float> %v2, i32 0)
+  %0 = tail call <2 x float> @llvm.kvx.fmulwp(<2 x float> %v1, <2 x float> %v2, i32 0, i32 0)
   ret <2 x float> %0
 }
 
-declare <2 x float> @llvm.kvx.fmulwp(<2 x float>, <2 x float>, i32) #1
+declare <2 x float> @llvm.kvx.fmulwp(<2 x float>, <2 x float>, i32, i32) #1
 
 define <4 x float> @fmulwq(<4 x float> %v1, <4 x float> %v2){
 ; CHECK-LABEL: fmulwq:
@@ -1153,11 +1153,11 @@ define <4 x float> @fmulwq(<4 x float> %v1, <4 x float> %v2){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <4 x float> @llvm.kvx.fmulwq(<4 x float> %v1, <4 x float> %v2, i32 0)
+  %0 = tail call <4 x float> @llvm.kvx.fmulwq(<4 x float> %v1, <4 x float> %v2, i32 0, i32 0)
   ret <4 x float> %0
 }
 
-declare <4 x float> @llvm.kvx.fmulwq(<4 x float>, <4 x float>, i32) #1
+declare <4 x float> @llvm.kvx.fmulwq(<4 x float>, <4 x float>, i32, i32) #1
 
 define <8 x float> @fmulwo(<8 x float> %v1, <8 x float> %v2){
 ; CHECK-LABEL: fmulwo:
@@ -1170,10 +1170,10 @@ define <8 x float> @fmulwo(<8 x float> %v1, <8 x float> %v2){
 entry:
   %0 = shufflevector <8 x float> %v1, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %1 = shufflevector <8 x float> %v2, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
-  %2 = tail call <4 x float> @llvm.kvx.fmulwq(<4 x float> %0, <4 x float> %1, i32 0)
+  %2 = tail call <4 x float> @llvm.kvx.fmulwq(<4 x float> %0, <4 x float> %1, i32 0, i32 0)
   %3 = shufflevector <8 x float> %v1, <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
   %4 = shufflevector <8 x float> %v2, <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
-  %5 = tail call <4 x float> @llvm.kvx.fmulwq(<4 x float> %3, <4 x float> %4, i32 0)
+  %5 = tail call <4 x float> @llvm.kvx.fmulwq(<4 x float> %3, <4 x float> %4, i32 0, i32 0)
   %6 = shufflevector <4 x float> %2, <4 x float> %5, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   ret <8 x float> %6
 }
@@ -1187,11 +1187,11 @@ define <2 x double> @fmuldp(<2 x double> %v1, <2 x double> %v2){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <2 x double> @llvm.kvx.fmuldp(<2 x double> %v1, <2 x double> %v2, i32 0)
+  %0 = tail call <2 x double> @llvm.kvx.fmuldp(<2 x double> %v1, <2 x double> %v2, i32 0, i32 0)
   ret <2 x double> %0
 }
 
-declare <2 x double> @llvm.kvx.fmuldp(<2 x double>, <2 x double>, i32) #1
+declare <2 x double> @llvm.kvx.fmuldp(<2 x double>, <2 x double>, i32, i32) #1
 
 define <4 x double> @fmuldq(<4 x double> %v1, <4 x double> %v2){
 ; CHECK-LABEL: fmuldq:
@@ -1208,10 +1208,10 @@ define <4 x double> @fmuldq(<4 x double> %v1, <4 x double> %v2){
 entry:
   %0 = shufflevector <4 x double> %v1, <4 x double> undef, <2 x i32> <i32 0, i32 1>
   %1 = shufflevector <4 x double> %v2, <4 x double> undef, <2 x i32> <i32 0, i32 1>
-  %2 = tail call <2 x double> @llvm.kvx.fmuldp(<2 x double> %0, <2 x double> %1, i32 0)
+  %2 = tail call <2 x double> @llvm.kvx.fmuldp(<2 x double> %0, <2 x double> %1, i32 0, i32 0)
   %3 = shufflevector <4 x double> %v1, <4 x double> undef, <2 x i32> <i32 2, i32 3>
   %4 = shufflevector <4 x double> %v2, <4 x double> undef, <2 x i32> <i32 2, i32 3>
-  %5 = tail call <2 x double> @llvm.kvx.fmuldp(<2 x double> %3, <2 x double> %4, i32 0)
+  %5 = tail call <2 x double> @llvm.kvx.fmuldp(<2 x double> %3, <2 x double> %4, i32 0, i32 0)
   %6 = shufflevector <2 x double> %2, <2 x double> %5, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   ret <4 x double> %6
 }
@@ -1223,11 +1223,11 @@ define <4 x float> @fmm212w(<2 x float> %v1, <2 x float> %v2){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <4 x float> @llvm.kvx.fmm212w(<2 x float> %v1, <2 x float> %v2, i32 0)
+  %0 = tail call <4 x float> @llvm.kvx.fmm212w(<2 x float> %v1, <2 x float> %v2, i32 0, i32 0)
   ret <4 x float> %0
 }
 
-declare <4 x float> @llvm.kvx.fmm212w(<2 x float>, <2 x float>, i32) #1
+declare <4 x float> @llvm.kvx.fmm212w(<2 x float>, <2 x float>, i32, i32) #1
 
 define <4 x float> @fmma212w(<2 x float> %v1, <2 x float> %v2, <4 x float> %v3){
 ; CHECK-LABEL: fmma212w:
@@ -1239,11 +1239,11 @@ define <4 x float> @fmma212w(<2 x float> %v1, <2 x float> %v2, <4 x float> %v3){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <4 x float> @llvm.kvx.fmma212w(<2 x float> %v1, <2 x float> %v2, <4 x float> %v3, i32 0)
+  %0 = tail call <4 x float> @llvm.kvx.fmma212w(<2 x float> %v1, <2 x float> %v2, <4 x float> %v3, i32 0, i32 0)
   ret <4 x float> %0
 }
 
-declare <4 x float> @llvm.kvx.fmma212w(<2 x float>, <2 x float>, <4 x float>, i32) #1
+declare <4 x float> @llvm.kvx.fmma212w(<2 x float>, <2 x float>, <4 x float>, i32, i32) #1
 
 define <4 x float> @fmms212w(<2 x float> %v1, <2 x float> %v2, <4 x float> %v3){
 ; CHECK-LABEL: fmms212w:
@@ -1255,11 +1255,11 @@ define <4 x float> @fmms212w(<2 x float> %v1, <2 x float> %v2, <4 x float> %v3){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <4 x float> @llvm.kvx.fmms212w(<2 x float> %v1, <2 x float> %v2, <4 x float> %v3, i32 0)
+  %0 = tail call <4 x float> @llvm.kvx.fmms212w(<2 x float> %v1, <2 x float> %v2, <4 x float> %v3, i32 0, i32 0)
   ret <4 x float> %0
 }
 
-declare <4 x float> @llvm.kvx.fmms212w(<2 x float>, <2 x float>, <4 x float>, i32) #1
+declare <4 x float> @llvm.kvx.fmms212w(<2 x float>, <2 x float>, <4 x float>, i32, i32) #1
 
 define <2 x float> @ffmawp(<2 x float> %v1, <2 x float> %v2, <2 x float> %v3){
 ; CHECK-LABEL: ffmawp:
@@ -1270,11 +1270,11 @@ define <2 x float> @ffmawp(<2 x float> %v1, <2 x float> %v2, <2 x float> %v3){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <2 x float> @llvm.kvx.ffmawp(<2 x float> %v1, <2 x float> %v2, <2 x float> %v3, i32 0)
+  %0 = tail call <2 x float> @llvm.kvx.ffmawp(<2 x float> %v1, <2 x float> %v2, <2 x float> %v3, i32 0, i32 0)
   ret <2 x float> %0
 }
 
-declare <2 x float> @llvm.kvx.ffmawp(<2 x float>, <2 x float>, <2 x float>, i32) #1
+declare <2 x float> @llvm.kvx.ffmawp(<2 x float>, <2 x float>, <2 x float>, i32, i32) #1
 
 define <4 x float> @ffmawq(<4 x float> %v1, <4 x float> %v2, <4 x float> %v3){
 ; CHECK-LABEL: ffmawq:
@@ -1288,11 +1288,11 @@ define <4 x float> @ffmawq(<4 x float> %v1, <4 x float> %v2, <4 x float> %v3){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <4 x float> @llvm.kvx.ffmawq(<4 x float> %v1, <4 x float> %v2, <4 x float> %v3, i32 0)
+  %0 = tail call <4 x float> @llvm.kvx.ffmawq(<4 x float> %v1, <4 x float> %v2, <4 x float> %v3, i32 0, i32 0)
   ret <4 x float> %0
 }
 
-declare <4 x float> @llvm.kvx.ffmawq(<4 x float>, <4 x float>, <4 x float>, i32) #1
+declare <4 x float> @llvm.kvx.ffmawq(<4 x float>, <4 x float>, <4 x float>, i32, i32) #1
 
 define <8 x float> @ffmawo(<8 x float> %v1, <8 x float> %v2, <8 x float> %v3){
 ; CHECK-LABEL: ffmawo:
@@ -1315,11 +1315,11 @@ entry:
   %0 = shufflevector <8 x float> %v1, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %1 = shufflevector <8 x float> %v2, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %2 = shufflevector <8 x float> %v3, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
-  %3 = tail call <4 x float> @llvm.kvx.ffmawq(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 0)
+  %3 = tail call <4 x float> @llvm.kvx.ffmawq(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 0, i32 0)
   %4 = shufflevector <8 x float> %v1, <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
   %5 = shufflevector <8 x float> %v2, <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
   %6 = shufflevector <8 x float> %v3, <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
-  %7 = tail call <4 x float> @llvm.kvx.ffmawq(<4 x float> %4, <4 x float> %5, <4 x float> %6, i32 0)
+  %7 = tail call <4 x float> @llvm.kvx.ffmawq(<4 x float> %4, <4 x float> %5, <4 x float> %6, i32 0, i32 0)
   %8 = shufflevector <4 x float> %3, <4 x float> %7, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   ret <8 x float> %8
 }
@@ -1336,11 +1336,11 @@ define <2 x double> @ffmadp(<2 x double> %v1, <2 x double> %v2, <2 x double> %v3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <2 x double> @llvm.kvx.ffmadp(<2 x double> %v1, <2 x double> %v2, <2 x double> %v3, i32 0)
+  %0 = tail call <2 x double> @llvm.kvx.ffmadp(<2 x double> %v1, <2 x double> %v2, <2 x double> %v3, i32 0, i32 0)
   ret <2 x double> %0
 }
 
-declare <2 x double> @llvm.kvx.ffmadp(<2 x double>, <2 x double>, <2 x double>, i32) #1
+declare <2 x double> @llvm.kvx.ffmadp(<2 x double>, <2 x double>, <2 x double>, i32, i32) #1
 
 define <4 x double> @ffmadq(<4 x double> %v1, <4 x double> %v2, <4 x double> %v3){
 ; CHECK-LABEL: ffmadq:
@@ -1363,11 +1363,11 @@ entry:
   %0 = shufflevector <4 x double> %v1, <4 x double> undef, <2 x i32> <i32 0, i32 1>
   %1 = shufflevector <4 x double> %v2, <4 x double> undef, <2 x i32> <i32 0, i32 1>
   %2 = shufflevector <4 x double> %v3, <4 x double> undef, <2 x i32> <i32 0, i32 1>
-  %3 = tail call <2 x double> @llvm.kvx.ffmadp(<2 x double> %0, <2 x double> %1, <2 x double> %2, i32 0)
+  %3 = tail call <2 x double> @llvm.kvx.ffmadp(<2 x double> %0, <2 x double> %1, <2 x double> %2, i32 0, i32 0)
   %4 = shufflevector <4 x double> %v1, <4 x double> undef, <2 x i32> <i32 2, i32 3>
   %5 = shufflevector <4 x double> %v2, <4 x double> undef, <2 x i32> <i32 2, i32 3>
   %6 = shufflevector <4 x double> %v3, <4 x double> undef, <2 x i32> <i32 2, i32 3>
-  %7 = tail call <2 x double> @llvm.kvx.ffmadp(<2 x double> %4, <2 x double> %5, <2 x double> %6, i32 0)
+  %7 = tail call <2 x double> @llvm.kvx.ffmadp(<2 x double> %4, <2 x double> %5, <2 x double> %6, i32 0, i32 0)
   %8 = shufflevector <2 x double> %3, <2 x double> %7, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   ret <4 x double> %8
 }
@@ -1381,11 +1381,11 @@ define <2 x float> @ffmswp(<2 x float> %v1, <2 x float> %v2, <2 x float> %v3){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <2 x float> @llvm.kvx.ffmswp(<2 x float> %v1, <2 x float> %v2, <2 x float> %v3, i32 0)
+  %0 = tail call <2 x float> @llvm.kvx.ffmswp(<2 x float> %v1, <2 x float> %v2, <2 x float> %v3, i32 0, i32 0)
   ret <2 x float> %0
 }
 
-declare <2 x float> @llvm.kvx.ffmswp(<2 x float>, <2 x float>, <2 x float>, i32) #1
+declare <2 x float> @llvm.kvx.ffmswp(<2 x float>, <2 x float>, <2 x float>, i32, i32) #1
 
 define <4 x float> @ffmswq(<4 x float> %v1, <4 x float> %v2, <4 x float> %v3){
 ; CHECK-LABEL: ffmswq:
@@ -1399,11 +1399,11 @@ define <4 x float> @ffmswq(<4 x float> %v1, <4 x float> %v2, <4 x float> %v3){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <4 x float> @llvm.kvx.ffmswq(<4 x float> %v1, <4 x float> %v2, <4 x float> %v3, i32 0)
+  %0 = tail call <4 x float> @llvm.kvx.ffmswq(<4 x float> %v1, <4 x float> %v2, <4 x float> %v3, i32 0, i32 0)
   ret <4 x float> %0
 }
 
-declare <4 x float> @llvm.kvx.ffmswq(<4 x float>, <4 x float>, <4 x float>, i32) #1
+declare <4 x float> @llvm.kvx.ffmswq(<4 x float>, <4 x float>, <4 x float>, i32, i32) #1
 
 define <8 x float> @ffmswo(<8 x float> %v1, <8 x float> %v2, <8 x float> %v3){
 ; CHECK-LABEL: ffmswo:
@@ -1426,11 +1426,11 @@ entry:
   %0 = shufflevector <8 x float> %v1, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %1 = shufflevector <8 x float> %v2, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %2 = shufflevector <8 x float> %v3, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
-  %3 = tail call <4 x float> @llvm.kvx.ffmswq(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 0)
+  %3 = tail call <4 x float> @llvm.kvx.ffmswq(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 0, i32 0)
   %4 = shufflevector <8 x float> %v1, <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
   %5 = shufflevector <8 x float> %v2, <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
   %6 = shufflevector <8 x float> %v3, <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
-  %7 = tail call <4 x float> @llvm.kvx.ffmswq(<4 x float> %4, <4 x float> %5, <4 x float> %6, i32 0)
+  %7 = tail call <4 x float> @llvm.kvx.ffmswq(<4 x float> %4, <4 x float> %5, <4 x float> %6, i32 0, i32 0)
   %8 = shufflevector <4 x float> %3, <4 x float> %7, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   ret <8 x float> %8
 }
@@ -1447,11 +1447,11 @@ define <2 x double> @ffmsdp(<2 x double> %v1, <2 x double> %v2, <2 x double> %v3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <2 x double> @llvm.kvx.ffmsdp(<2 x double> %v1, <2 x double> %v2, <2 x double> %v3, i32 0)
+  %0 = tail call <2 x double> @llvm.kvx.ffmsdp(<2 x double> %v1, <2 x double> %v2, <2 x double> %v3, i32 0, i32 0)
   ret <2 x double> %0
 }
 
-declare <2 x double> @llvm.kvx.ffmsdp(<2 x double>, <2 x double>, <2 x double>, i32) #1
+declare <2 x double> @llvm.kvx.ffmsdp(<2 x double>, <2 x double>, <2 x double>, i32, i32) #1
 
 define <4 x double> @ffmsdq(<4 x double> %v1, <4 x double> %v2, <4 x double> %v3){
 ; CHECK-LABEL: ffmsdq:
@@ -1474,11 +1474,11 @@ entry:
   %0 = shufflevector <4 x double> %v1, <4 x double> undef, <2 x i32> <i32 0, i32 1>
   %1 = shufflevector <4 x double> %v2, <4 x double> undef, <2 x i32> <i32 0, i32 1>
   %2 = shufflevector <4 x double> %v3, <4 x double> undef, <2 x i32> <i32 0, i32 1>
-  %3 = tail call <2 x double> @llvm.kvx.ffmsdp(<2 x double> %0, <2 x double> %1, <2 x double> %2, i32 0)
+  %3 = tail call <2 x double> @llvm.kvx.ffmsdp(<2 x double> %0, <2 x double> %1, <2 x double> %2, i32 0, i32 0)
   %4 = shufflevector <4 x double> %v1, <4 x double> undef, <2 x i32> <i32 2, i32 3>
   %5 = shufflevector <4 x double> %v2, <4 x double> undef, <2 x i32> <i32 2, i32 3>
   %6 = shufflevector <4 x double> %v3, <4 x double> undef, <2 x i32> <i32 2, i32 3>
-  %7 = tail call <2 x double> @llvm.kvx.ffmsdp(<2 x double> %4, <2 x double> %5, <2 x double> %6, i32 0)
+  %7 = tail call <2 x double> @llvm.kvx.ffmsdp(<2 x double> %4, <2 x double> %5, <2 x double> %6, i32 0, i32 0)
   %8 = shufflevector <2 x double> %3, <2 x double> %7, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   ret <4 x double> %8
 }
@@ -1490,11 +1490,22 @@ define <2 x float> @floatwp(<2 x i32> %v){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <2 x float> @llvm.kvx.floatwp(<2 x i32> %v, i64 3, i32 0)
+  %0 = tail call <2 x float> @llvm.kvx.floatwp(<2 x i32> %v, i64 3, i32 0, i32 0)
   ret <2 x float> %0
 }
 
-declare <2 x float> @llvm.kvx.floatwp(<2 x i32>, i64, i32) #1
+define <2 x float> @floatwp_s(<2 x i32> %v){
+; CHECK-LABEL: floatwp_s:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    floatwp.rn.s $r0 = $r0, 3
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = tail call <2 x float> @llvm.kvx.floatwp(<2 x i32> %v, i64 3, i32 0, i32 1)
+  ret <2 x float> %0
+}
+
+declare <2 x float> @llvm.kvx.floatwp(<2 x i32>, i64, i32, i32) #1
 
 define <4 x float> @floatwq(<4 x i32> %v){
 ; CHECK-LABEL: floatwq:
@@ -1506,9 +1517,26 @@ define <4 x float> @floatwq(<4 x i32> %v){
 ; CHECK-NEXT:    ;;
 entry:
   %0 = shufflevector <4 x i32> %v, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
-  %1 = tail call <2 x float> @llvm.kvx.floatwp(<2 x i32> %0, i64 3, i32 0)
+  %1 = tail call <2 x float> @llvm.kvx.floatwp(<2 x i32> %0, i64 3, i32 0, i32 0)
   %2 = shufflevector <4 x i32> %v, <4 x i32> undef, <2 x i32> <i32 2, i32 3>
-  %3 = tail call <2 x float> @llvm.kvx.floatwp(<2 x i32> %2, i64 3, i32 0)
+  %3 = tail call <2 x float> @llvm.kvx.floatwp(<2 x i32> %2, i64 3, i32 0, i32 0)
+  %4 = shufflevector <2 x float> %1, <2 x float> %3, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  ret <4 x float> %4
+}
+
+define <4 x float> @floatwq_s(<4 x i32> %v){
+; CHECK-LABEL: floatwq_s:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    floatwp.rn.s $r0 = $r0, 3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    floatwp.rn.s $r1 = $r1, 3
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = shufflevector <4 x i32> %v, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
+  %1 = tail call <2 x float> @llvm.kvx.floatwp(<2 x i32> %0, i64 3, i32 0, i32 1)
+  %2 = shufflevector <4 x i32> %v, <4 x i32> undef, <2 x i32> <i32 2, i32 3>
+  %3 = tail call <2 x float> @llvm.kvx.floatwp(<2 x i32> %2, i64 3, i32 0, i32 1)
   %4 = shufflevector <2 x float> %1, <2 x float> %3, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   ret <4 x float> %4
 }
@@ -1527,16 +1555,16 @@ define <8 x float> @floatwo(<8 x i32> %v){
 ; CHECK-NEXT:    ;;
 entry:
   %0 = shufflevector <8 x i32> %v, <8 x i32> undef, <2 x i32> <i32 0, i32 1>
-  %1 = tail call <2 x float> @llvm.kvx.floatwp(<2 x i32> %0, i64 3, i32 0)
+  %1 = tail call <2 x float> @llvm.kvx.floatwp(<2 x i32> %0, i64 3, i32 0, i32 0)
   %2 = shufflevector <8 x i32> %v, <8 x i32> undef, <2 x i32> <i32 2, i32 3>
-  %3 = tail call <2 x float> @llvm.kvx.floatwp(<2 x i32> %2, i64 3, i32 0)
+  %3 = tail call <2 x float> @llvm.kvx.floatwp(<2 x i32> %2, i64 3, i32 0, i32 0)
   %4 = shufflevector <2 x float> %1, <2 x float> %3, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 undef, i32 undef, i32 undef, i32 undef>
   %5 = shufflevector <8 x i32> %v, <8 x i32> undef, <2 x i32> <i32 4, i32 5>
-  %6 = tail call <2 x float> @llvm.kvx.floatwp(<2 x i32> %5, i64 3, i32 0)
+  %6 = tail call <2 x float> @llvm.kvx.floatwp(<2 x i32> %5, i64 3, i32 0, i32 0)
   %7 = shufflevector <2 x float> %6, <2 x float> undef, <8 x i32> <i32 0, i32 1, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
   %8 = shufflevector <8 x float> %4, <8 x float> %7, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 8, i32 9, i32 undef, i32 undef>
   %9 = shufflevector <8 x i32> %v, <8 x i32> undef, <2 x i32> <i32 6, i32 7>
-  %10 = tail call <2 x float> @llvm.kvx.floatwp(<2 x i32> %9, i64 3, i32 0)
+  %10 = tail call <2 x float> @llvm.kvx.floatwp(<2 x i32> %9, i64 3, i32 0, i32 0)
   %11 = shufflevector <2 x float> %10, <2 x float> undef, <8 x i32> <i32 0, i32 1, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
   %12 = shufflevector <8 x float> %8, <8 x float> %11, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 8, i32 9>
   ret <8 x float> %12
@@ -1552,15 +1580,15 @@ define <2 x double> @floatdp(<2 x i64> %v){
 ; CHECK-NEXT:    ;;
 entry:
   %0 = extractelement <2 x i64> %v, i64 0
-  %1 = tail call double @llvm.kvx.floatd(i64 %0, i64 3, i32 0)
+  %1 = tail call double @llvm.kvx.floatd(i64 %0, i64 3, i32 0, i32 0)
   %2 = insertelement <2 x double> undef, double %1, i64 0
   %3 = extractelement <2 x i64> %v, i64 1
-  %4 = tail call double @llvm.kvx.floatd(i64 %3, i64 3, i32 0)
+  %4 = tail call double @llvm.kvx.floatd(i64 %3, i64 3, i32 0, i32 0)
   %5 = insertelement <2 x double> %2, double %4, i64 1
   ret <2 x double> %5
 }
 
-declare double @llvm.kvx.floatd(i64, i64, i32) #1
+declare double @llvm.kvx.floatd(i64, i64, i32, i32) #1
 
 define <4 x double> @floatdq(<4 x i64> %v){
 ; CHECK-LABEL: floatdq:
@@ -1576,16 +1604,16 @@ define <4 x double> @floatdq(<4 x i64> %v){
 ; CHECK-NEXT:    ;;
 entry:
   %0 = extractelement <4 x i64> %v, i64 0
-  %1 = tail call double @llvm.kvx.floatd(i64 %0, i64 3, i32 0)
+  %1 = tail call double @llvm.kvx.floatd(i64 %0, i64 3, i32 0, i32 0)
   %2 = insertelement <4 x double> undef, double %1, i64 0
   %3 = extractelement <4 x i64> %v, i64 1
-  %4 = tail call double @llvm.kvx.floatd(i64 %3, i64 3, i32 0)
+  %4 = tail call double @llvm.kvx.floatd(i64 %3, i64 3, i32 0, i32 0)
   %5 = insertelement <4 x double> %2, double %4, i64 1
   %6 = extractelement <4 x i64> %v, i64 2
-  %7 = tail call double @llvm.kvx.floatd(i64 %6, i64 3, i32 0)
+  %7 = tail call double @llvm.kvx.floatd(i64 %6, i64 3, i32 0, i32 0)
   %8 = insertelement <4 x double> %5, double %7, i64 2
   %9 = extractelement <4 x i64> %v, i64 3
-  %10 = tail call double @llvm.kvx.floatd(i64 %9, i64 3, i32 0)
+  %10 = tail call double @llvm.kvx.floatd(i64 %9, i64 3, i32 0, i32 0)
   %11 = insertelement <4 x double> %8, double %10, i64 3
   ret <4 x double> %11
 }
@@ -1597,11 +1625,11 @@ define <2 x float> @floatuwp(<2 x i32> %v){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <2 x float> @llvm.kvx.floatuwp(<2 x i32> %v, i64 3, i32 0)
+  %0 = tail call <2 x float> @llvm.kvx.floatuwp(<2 x i32> %v, i64 3, i32 0, i32 0)
   ret <2 x float> %0
 }
 
-declare <2 x float> @llvm.kvx.floatuwp(<2 x i32>, i64, i32) #1
+declare <2 x float> @llvm.kvx.floatuwp(<2 x i32>, i64, i32, i32) #1
 
 define <4 x float> @floatuwq(<4 x i32> %v){
 ; CHECK-LABEL: floatuwq:
@@ -1613,9 +1641,9 @@ define <4 x float> @floatuwq(<4 x i32> %v){
 ; CHECK-NEXT:    ;;
 entry:
   %0 = shufflevector <4 x i32> %v, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
-  %1 = tail call <2 x float> @llvm.kvx.floatuwp(<2 x i32> %0, i64 3, i32 0)
+  %1 = tail call <2 x float> @llvm.kvx.floatuwp(<2 x i32> %0, i64 3, i32 0, i32 0)
   %2 = shufflevector <4 x i32> %v, <4 x i32> undef, <2 x i32> <i32 2, i32 3>
-  %3 = tail call <2 x float> @llvm.kvx.floatuwp(<2 x i32> %2, i64 3, i32 0)
+  %3 = tail call <2 x float> @llvm.kvx.floatuwp(<2 x i32> %2, i64 3, i32 0, i32 0)
   %4 = shufflevector <2 x float> %1, <2 x float> %3, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   ret <4 x float> %4
 }
@@ -1634,16 +1662,16 @@ define <8 x float> @floatuwo(<8 x i32> %v){
 ; CHECK-NEXT:    ;;
 entry:
   %0 = shufflevector <8 x i32> %v, <8 x i32> undef, <2 x i32> <i32 0, i32 1>
-  %1 = tail call <2 x float> @llvm.kvx.floatuwp(<2 x i32> %0, i64 3, i32 0)
+  %1 = tail call <2 x float> @llvm.kvx.floatuwp(<2 x i32> %0, i64 3, i32 0, i32 0)
   %2 = shufflevector <8 x i32> %v, <8 x i32> undef, <2 x i32> <i32 2, i32 3>
-  %3 = tail call <2 x float> @llvm.kvx.floatuwp(<2 x i32> %2, i64 3, i32 0)
+  %3 = tail call <2 x float> @llvm.kvx.floatuwp(<2 x i32> %2, i64 3, i32 0, i32 0)
   %4 = shufflevector <2 x float> %1, <2 x float> %3, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 undef, i32 undef, i32 undef, i32 undef>
   %5 = shufflevector <8 x i32> %v, <8 x i32> undef, <2 x i32> <i32 4, i32 5>
-  %6 = tail call <2 x float> @llvm.kvx.floatuwp(<2 x i32> %5, i64 3, i32 0)
+  %6 = tail call <2 x float> @llvm.kvx.floatuwp(<2 x i32> %5, i64 3, i32 0, i32 0)
   %7 = shufflevector <2 x float> %6, <2 x float> undef, <8 x i32> <i32 0, i32 1, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
   %8 = shufflevector <8 x float> %4, <8 x float> %7, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 8, i32 9, i32 undef, i32 undef>
   %9 = shufflevector <8 x i32> %v, <8 x i32> undef, <2 x i32> <i32 6, i32 7>
-  %10 = tail call <2 x float> @llvm.kvx.floatuwp(<2 x i32> %9, i64 3, i32 0)
+  %10 = tail call <2 x float> @llvm.kvx.floatuwp(<2 x i32> %9, i64 3, i32 0, i32 0)
   %11 = shufflevector <2 x float> %10, <2 x float> undef, <8 x i32> <i32 0, i32 1, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
   %12 = shufflevector <8 x float> %8, <8 x float> %11, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 8, i32 9>
   ret <8 x float> %12
@@ -1659,15 +1687,15 @@ define <2 x double> @floatudp(<2 x i64> %v){
 ; CHECK-NEXT:    ;;
 entry:
   %0 = extractelement <2 x i64> %v, i64 0
-  %1 = tail call double @llvm.kvx.floatud(i64 %0, i64 3, i32 0)
+  %1 = tail call double @llvm.kvx.floatud(i64 %0, i64 3, i32 0, i32 0)
   %2 = insertelement <2 x double> undef, double %1, i64 0
   %3 = extractelement <2 x i64> %v, i64 1
-  %4 = tail call double @llvm.kvx.floatud(i64 %3, i64 3, i32 0)
+  %4 = tail call double @llvm.kvx.floatud(i64 %3, i64 3, i32 0, i32 0)
   %5 = insertelement <2 x double> %2, double %4, i64 1
   ret <2 x double> %5
 }
 
-declare double @llvm.kvx.floatud(i64, i64, i32) #1
+declare double @llvm.kvx.floatud(i64, i64, i32, i32) #1
 
 define <4 x double> @floatudq(<4 x i64> %v){
 ; CHECK-LABEL: floatudq:
@@ -1683,16 +1711,16 @@ define <4 x double> @floatudq(<4 x i64> %v){
 ; CHECK-NEXT:    ;;
 entry:
   %0 = extractelement <4 x i64> %v, i64 0
-  %1 = tail call double @llvm.kvx.floatud(i64 %0, i64 3, i32 0)
+  %1 = tail call double @llvm.kvx.floatud(i64 %0, i64 3, i32 0, i32 0)
   %2 = insertelement <4 x double> undef, double %1, i64 0
   %3 = extractelement <4 x i64> %v, i64 1
-  %4 = tail call double @llvm.kvx.floatud(i64 %3, i64 3, i32 0)
+  %4 = tail call double @llvm.kvx.floatud(i64 %3, i64 3, i32 0, i32 0)
   %5 = insertelement <4 x double> %2, double %4, i64 1
   %6 = extractelement <4 x i64> %v, i64 2
-  %7 = tail call double @llvm.kvx.floatud(i64 %6, i64 3, i32 0)
+  %7 = tail call double @llvm.kvx.floatud(i64 %6, i64 3, i32 0, i32 0)
   %8 = insertelement <4 x double> %5, double %7, i64 2
   %9 = extractelement <4 x i64> %v, i64 3
-  %10 = tail call double @llvm.kvx.floatud(i64 %9, i64 3, i32 0)
+  %10 = tail call double @llvm.kvx.floatud(i64 %9, i64 3, i32 0, i32 0)
   %11 = insertelement <4 x double> %8, double %10, i64 3
   ret <4 x double> %11
 }
@@ -1704,11 +1732,22 @@ define <2 x i32> @fixedwp(<2 x float> %v){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <2 x i32> @llvm.kvx.fixedwp(<2 x float> %v, i64 3, i32 0)
+  %0 = tail call <2 x i32> @llvm.kvx.fixedwp(<2 x float> %v, i64 3, i32 0, i32 0)
   ret <2 x i32> %0
 }
 
-declare <2 x i32> @llvm.kvx.fixedwp(<2 x float>, i64, i32) #1
+define <2 x i32> @fixedwp_s(<2 x float> %v){
+; CHECK-LABEL: fixedwp_s:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fixedwp.rn.s $r0 = $r0, 3
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = tail call <2 x i32> @llvm.kvx.fixedwp(<2 x float> %v, i64 3, i32 0, i32 1)
+  ret <2 x i32> %0
+}
+
+declare <2 x i32> @llvm.kvx.fixedwp(<2 x float>, i64, i32, i32) #1
 
 define <4 x i32> @fixedwq(<4 x float> %v){
 ; CHECK-LABEL: fixedwq:
@@ -1720,9 +1759,26 @@ define <4 x i32> @fixedwq(<4 x float> %v){
 ; CHECK-NEXT:    ;;
 entry:
   %0 = shufflevector <4 x float> %v, <4 x float> undef, <2 x i32> <i32 0, i32 1>
-  %1 = tail call <2 x i32> @llvm.kvx.fixedwp(<2 x float> %0, i64 3, i32 0)
+  %1 = tail call <2 x i32> @llvm.kvx.fixedwp(<2 x float> %0, i64 3, i32 0, i32 0)
   %2 = shufflevector <4 x float> %v, <4 x float> undef, <2 x i32> <i32 2, i32 3>
-  %3 = tail call <2 x i32> @llvm.kvx.fixedwp(<2 x float> %2, i64 3, i32 0)
+  %3 = tail call <2 x i32> @llvm.kvx.fixedwp(<2 x float> %2, i64 3, i32 0, i32 0)
+  %4 = shufflevector <2 x i32> %1, <2 x i32> %3, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  ret <4 x i32> %4
+}
+
+define <4 x i32> @fixedwq_s(<4 x float> %v){
+; CHECK-LABEL: fixedwq_s:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fixedwp.rn.s $r0 = $r0, 3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fixedwp.rn.s $r1 = $r1, 3
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = shufflevector <4 x float> %v, <4 x float> undef, <2 x i32> <i32 0, i32 1>
+  %1 = tail call <2 x i32> @llvm.kvx.fixedwp(<2 x float> %0, i64 3, i32 0, i32 1)
+  %2 = shufflevector <4 x float> %v, <4 x float> undef, <2 x i32> <i32 2, i32 3>
+  %3 = tail call <2 x i32> @llvm.kvx.fixedwp(<2 x float> %2, i64 3, i32 0, i32 1)
   %4 = shufflevector <2 x i32> %1, <2 x i32> %3, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   ret <4 x i32> %4
 }
@@ -1741,16 +1797,16 @@ define <8 x i32> @fixedwo(<8 x float> %v){
 ; CHECK-NEXT:    ;;
 entry:
   %0 = shufflevector <8 x float> %v, <8 x float> undef, <2 x i32> <i32 0, i32 1>
-  %1 = tail call <2 x i32> @llvm.kvx.fixedwp(<2 x float> %0, i64 3, i32 0)
+  %1 = tail call <2 x i32> @llvm.kvx.fixedwp(<2 x float> %0, i64 3, i32 0, i32 0)
   %2 = shufflevector <8 x float> %v, <8 x float> undef, <2 x i32> <i32 2, i32 3>
-  %3 = tail call <2 x i32> @llvm.kvx.fixedwp(<2 x float> %2, i64 3, i32 0)
+  %3 = tail call <2 x i32> @llvm.kvx.fixedwp(<2 x float> %2, i64 3, i32 0, i32 0)
   %4 = shufflevector <2 x i32> %1, <2 x i32> %3, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 undef, i32 undef, i32 undef, i32 undef>
   %5 = shufflevector <8 x float> %v, <8 x float> undef, <2 x i32> <i32 4, i32 5>
-  %6 = tail call <2 x i32> @llvm.kvx.fixedwp(<2 x float> %5, i64 3, i32 0)
+  %6 = tail call <2 x i32> @llvm.kvx.fixedwp(<2 x float> %5, i64 3, i32 0, i32 0)
   %7 = shufflevector <2 x i32> %6, <2 x i32> undef, <8 x i32> <i32 0, i32 1, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
   %8 = shufflevector <8 x i32> %4, <8 x i32> %7, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 8, i32 9, i32 undef, i32 undef>
   %9 = shufflevector <8 x float> %v, <8 x float> undef, <2 x i32> <i32 6, i32 7>
-  %10 = tail call <2 x i32> @llvm.kvx.fixedwp(<2 x float> %9, i64 3, i32 0)
+  %10 = tail call <2 x i32> @llvm.kvx.fixedwp(<2 x float> %9, i64 3, i32 0, i32 0)
   %11 = shufflevector <2 x i32> %10, <2 x i32> undef, <8 x i32> <i32 0, i32 1, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
   %12 = shufflevector <8 x i32> %8, <8 x i32> %11, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 8, i32 9>
   ret <8 x i32> %12
@@ -1767,16 +1823,16 @@ define <2 x double> @fixeddp(<2 x i64> %v){
 entry:
   %0 = bitcast <2 x i64> %v to <2 x double>
   %1 = extractelement <2 x double> %0, i64 0
-  %2 = tail call i64 @llvm.kvx.fixedd(double %1, i64 3, i32 0)
+  %2 = tail call i64 @llvm.kvx.fixedd(double %1, i64 3, i32 0, i32 0)
   %3 = insertelement <2 x i64> undef, i64 %2, i64 0
   %4 = extractelement <2 x double> %0, i64 1
-  %5 = tail call i64 @llvm.kvx.fixedd(double %4, i64 3, i32 0)
+  %5 = tail call i64 @llvm.kvx.fixedd(double %4, i64 3, i32 0, i32 0)
   %6 = insertelement <2 x i64> %3, i64 %5, i64 1
   %7 = bitcast <2 x i64> %6 to <2 x double>
   ret <2 x double> %7
 }
 
-declare i64 @llvm.kvx.fixedd(double, i64, i32) #1
+declare i64 @llvm.kvx.fixedd(double, i64, i32, i32) #1
 
 define <4 x double> @fixeddq(<4 x i64> %v){
 ; CHECK-LABEL: fixeddq:
@@ -1793,16 +1849,16 @@ define <4 x double> @fixeddq(<4 x i64> %v){
 entry:
   %0 = bitcast <4 x i64> %v to <4 x double>
   %1 = extractelement <4 x double> %0, i64 0
-  %2 = tail call i64 @llvm.kvx.fixedd(double %1, i64 3, i32 0)
+  %2 = tail call i64 @llvm.kvx.fixedd(double %1, i64 3, i32 0, i32 0)
   %3 = insertelement <4 x i64> undef, i64 %2, i64 0
   %4 = extractelement <4 x double> %0, i64 1
-  %5 = tail call i64 @llvm.kvx.fixedd(double %4, i64 3, i32 0)
+  %5 = tail call i64 @llvm.kvx.fixedd(double %4, i64 3, i32 0, i32 0)
   %6 = insertelement <4 x i64> %3, i64 %5, i64 1
   %7 = extractelement <4 x double> %0, i64 2
-  %8 = tail call i64 @llvm.kvx.fixedd(double %7, i64 3, i32 0)
+  %8 = tail call i64 @llvm.kvx.fixedd(double %7, i64 3, i32 0, i32 0)
   %9 = insertelement <4 x i64> %6, i64 %8, i64 2
   %10 = extractelement <4 x double> %0, i64 3
-  %11 = tail call i64 @llvm.kvx.fixedd(double %10, i64 3, i32 0)
+  %11 = tail call i64 @llvm.kvx.fixedd(double %10, i64 3, i32 0, i32 0)
   %12 = insertelement <4 x i64> %9, i64 %11, i64 3
   %13 = bitcast <4 x i64> %12 to <4 x double>
   ret <4 x double> %13
@@ -1815,11 +1871,11 @@ define <2 x i32> @fixeduwp(<2 x float> %v){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <2 x i32> @llvm.kvx.fixeduwp(<2 x float> %v, i64 3, i32 0)
+  %0 = tail call <2 x i32> @llvm.kvx.fixeduwp(<2 x float> %v, i64 3, i32 0, i32 0)
   ret <2 x i32> %0
 }
 
-declare <2 x i32> @llvm.kvx.fixeduwp(<2 x float>, i64, i32) #1
+declare <2 x i32> @llvm.kvx.fixeduwp(<2 x float>, i64, i32, i32) #1
 
 define <4 x i32> @fixeduwq(<4 x float> %v){
 ; CHECK-LABEL: fixeduwq:
@@ -1831,9 +1887,9 @@ define <4 x i32> @fixeduwq(<4 x float> %v){
 ; CHECK-NEXT:    ;;
 entry:
   %0 = shufflevector <4 x float> %v, <4 x float> undef, <2 x i32> <i32 0, i32 1>
-  %1 = tail call <2 x i32> @llvm.kvx.fixeduwp(<2 x float> %0, i64 3, i32 0)
+  %1 = tail call <2 x i32> @llvm.kvx.fixeduwp(<2 x float> %0, i64 3, i32 0, i32 0)
   %2 = shufflevector <4 x float> %v, <4 x float> undef, <2 x i32> <i32 2, i32 3>
-  %3 = tail call <2 x i32> @llvm.kvx.fixeduwp(<2 x float> %2, i64 3, i32 0)
+  %3 = tail call <2 x i32> @llvm.kvx.fixeduwp(<2 x float> %2, i64 3, i32 0, i32 0)
   %4 = shufflevector <2 x i32> %1, <2 x i32> %3, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   ret <4 x i32> %4
 }
@@ -1852,16 +1908,16 @@ define <8 x i32> @fixeduwo(<8 x float> %v){
 ; CHECK-NEXT:    ;;
 entry:
   %0 = shufflevector <8 x float> %v, <8 x float> undef, <2 x i32> <i32 0, i32 1>
-  %1 = tail call <2 x i32> @llvm.kvx.fixeduwp(<2 x float> %0, i64 3, i32 0)
+  %1 = tail call <2 x i32> @llvm.kvx.fixeduwp(<2 x float> %0, i64 3, i32 0, i32 0)
   %2 = shufflevector <8 x float> %v, <8 x float> undef, <2 x i32> <i32 2, i32 3>
-  %3 = tail call <2 x i32> @llvm.kvx.fixeduwp(<2 x float> %2, i64 3, i32 0)
+  %3 = tail call <2 x i32> @llvm.kvx.fixeduwp(<2 x float> %2, i64 3, i32 0, i32 0)
   %4 = shufflevector <2 x i32> %1, <2 x i32> %3, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 undef, i32 undef, i32 undef, i32 undef>
   %5 = shufflevector <8 x float> %v, <8 x float> undef, <2 x i32> <i32 4, i32 5>
-  %6 = tail call <2 x i32> @llvm.kvx.fixeduwp(<2 x float> %5, i64 3, i32 0)
+  %6 = tail call <2 x i32> @llvm.kvx.fixeduwp(<2 x float> %5, i64 3, i32 0, i32 0)
   %7 = shufflevector <2 x i32> %6, <2 x i32> undef, <8 x i32> <i32 0, i32 1, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
   %8 = shufflevector <8 x i32> %4, <8 x i32> %7, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 8, i32 9, i32 undef, i32 undef>
   %9 = shufflevector <8 x float> %v, <8 x float> undef, <2 x i32> <i32 6, i32 7>
-  %10 = tail call <2 x i32> @llvm.kvx.fixeduwp(<2 x float> %9, i64 3, i32 0)
+  %10 = tail call <2 x i32> @llvm.kvx.fixeduwp(<2 x float> %9, i64 3, i32 0, i32 0)
   %11 = shufflevector <2 x i32> %10, <2 x i32> undef, <8 x i32> <i32 0, i32 1, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
   %12 = shufflevector <8 x i32> %8, <8 x i32> %11, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 8, i32 9>
   ret <8 x i32> %12
@@ -1878,16 +1934,16 @@ define <2 x double> @fixedudp(<2 x i64> %v){
 entry:
   %0 = bitcast <2 x i64> %v to <2 x double>
   %1 = extractelement <2 x double> %0, i64 0
-  %2 = tail call i64 @llvm.kvx.fixedud(double %1, i64 3, i32 0)
+  %2 = tail call i64 @llvm.kvx.fixedud(double %1, i64 3, i32 0, i32 0)
   %3 = insertelement <2 x i64> undef, i64 %2, i64 0
   %4 = extractelement <2 x double> %0, i64 1
-  %5 = tail call i64 @llvm.kvx.fixedud(double %4, i64 3, i32 0)
+  %5 = tail call i64 @llvm.kvx.fixedud(double %4, i64 3, i32 0, i32 0)
   %6 = insertelement <2 x i64> %3, i64 %5, i64 1
   %7 = bitcast <2 x i64> %6 to <2 x double>
   ret <2 x double> %7
 }
 
-declare i64 @llvm.kvx.fixedud(double, i64, i32) #1
+declare i64 @llvm.kvx.fixedud(double, i64, i32, i32) #1
 
 define <4 x double> @fixedudq(<4 x i64> %v){
 ; CHECK-LABEL: fixedudq:
@@ -1904,16 +1960,16 @@ define <4 x double> @fixedudq(<4 x i64> %v){
 entry:
   %0 = bitcast <4 x i64> %v to <4 x double>
   %1 = extractelement <4 x double> %0, i64 0
-  %2 = tail call i64 @llvm.kvx.fixedud(double %1, i64 3, i32 0)
+  %2 = tail call i64 @llvm.kvx.fixedud(double %1, i64 3, i32 0, i32 0)
   %3 = insertelement <4 x i64> undef, i64 %2, i64 0
   %4 = extractelement <4 x double> %0, i64 1
-  %5 = tail call i64 @llvm.kvx.fixedud(double %4, i64 3, i32 0)
+  %5 = tail call i64 @llvm.kvx.fixedud(double %4, i64 3, i32 0, i32 0)
   %6 = insertelement <4 x i64> %3, i64 %5, i64 1
   %7 = extractelement <4 x double> %0, i64 2
-  %8 = tail call i64 @llvm.kvx.fixedud(double %7, i64 3, i32 0)
+  %8 = tail call i64 @llvm.kvx.fixedud(double %7, i64 3, i32 0, i32 0)
   %9 = insertelement <4 x i64> %6, i64 %8, i64 2
   %10 = extractelement <4 x double> %0, i64 3
-  %11 = tail call i64 @llvm.kvx.fixedud(double %10, i64 3, i32 0)
+  %11 = tail call i64 @llvm.kvx.fixedud(double %10, i64 3, i32 0, i32 0)
   %12 = insertelement <4 x i64> %9, i64 %11, i64 3
   %13 = bitcast <4 x i64> %12 to <4 x double>
   ret <4 x double> %13

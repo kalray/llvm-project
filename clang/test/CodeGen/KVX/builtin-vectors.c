@@ -3887,10 +3887,10 @@ v4f64 fmaxdqs(v4f64 v1, double v2) {
 // CHECK-LABEL: @floatdp(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = extractelement <2 x i64> [[A:%.*]], i64 0
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call double @llvm.kvx.floatd(i64 [[TMP0]], i64 63, i32 0)
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call double @llvm.kvx.floatd(i64 [[TMP0]], i64 63, i32 0, i32 0)
 // CHECK-NEXT:    [[TMP2:%.*]] = insertelement <2 x double> undef, double [[TMP1]], i64 0
 // CHECK-NEXT:    [[TMP3:%.*]] = extractelement <2 x i64> [[A]], i64 1
-// CHECK-NEXT:    [[TMP4:%.*]] = tail call double @llvm.kvx.floatd(i64 [[TMP3]], i64 63, i32 0)
+// CHECK-NEXT:    [[TMP4:%.*]] = tail call double @llvm.kvx.floatd(i64 [[TMP3]], i64 63, i32 0, i32 0)
 // CHECK-NEXT:    [[TMP5:%.*]] = insertelement <2 x double> [[TMP2]], double [[TMP4]], i64 1
 // CHECK-NEXT:    [[TMP6:%.*]] = bitcast <2 x double> [[TMP5]] to <2 x i64>
 // CHECK-NEXT:    ret <2 x i64> [[TMP6]]

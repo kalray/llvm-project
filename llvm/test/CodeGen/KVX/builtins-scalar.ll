@@ -369,11 +369,11 @@ define float @frecw(float %a){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call float @llvm.kvx.frecw(float %a, i32 3)
+  %0 = tail call float @llvm.kvx.frecw(float %a, i32 3, i32 0)
   ret float %0
 }
 
-declare float @llvm.kvx.frecw(float, i32) #1
+declare float @llvm.kvx.frecw(float, i32, i32) #1
 
 define float @frsrw(float %a){
 ; CHECK-LABEL: frsrw:
@@ -382,11 +382,11 @@ define float @frsrw(float %a){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call float @llvm.kvx.frsrw(float %a, i32 3)
+  %0 = tail call float @llvm.kvx.frsrw(float %a, i32 3, i32 0)
   ret float %0
 }
 
-declare float @llvm.kvx.frsrw(float, i32) #1
+declare float @llvm.kvx.frsrw(float, i32, i32) #1
 
 define float @faddw(float %v1, float %v2){
 ; CHECK-LABEL: faddw:
@@ -395,11 +395,11 @@ define float @faddw(float %v1, float %v2){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call float @llvm.kvx.faddw(float %v1, float %v2, i32 3)
+  %0 = tail call float @llvm.kvx.faddw(float %v1, float %v2, i32 3, i32 0)
   ret float %0
 }
 
-declare float @llvm.kvx.faddw(float, float, i32) #1
+declare float @llvm.kvx.faddw(float, float, i32, i32) #1
 
 define double @faddd(float %v1, float %v2){
 ; CHECK-LABEL: faddd:
@@ -413,11 +413,11 @@ define double @faddd(float %v1, float %v2){
 entry:
   %conv = fpext float %v1 to double
   %conv1 = fpext float %v2 to double
-  %0 = tail call double @llvm.kvx.faddd(double %conv, double %conv1, i32 3)
+  %0 = tail call double @llvm.kvx.faddd(double %conv, double %conv1, i32 3, i32 0)
   ret double %0
 }
 
-declare double @llvm.kvx.faddd(double, double, i32) #1
+declare double @llvm.kvx.faddd(double, double, i32, i32) #1
 
 define float @fsbfw(float %v1, float %v2){
 ; CHECK-LABEL: fsbfw:
@@ -426,11 +426,11 @@ define float @fsbfw(float %v1, float %v2){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call float @llvm.kvx.fsbfw(float %v1, float %v2, i32 3)
+  %0 = tail call float @llvm.kvx.fsbfw(float %v1, float %v2, i32 3, i32 0)
   ret float %0
 }
 
-declare float @llvm.kvx.fsbfw(float, float, i32) #1
+declare float @llvm.kvx.fsbfw(float, float, i32, i32) #1
 
 define double @fsbfd(double %v1, double %v2){
 ; CHECK-LABEL: fsbfd:
@@ -439,11 +439,11 @@ define double @fsbfd(double %v1, double %v2){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call double @llvm.kvx.fsbfd(double %v1, double %v2, i32 3)
+  %0 = tail call double @llvm.kvx.fsbfd(double %v1, double %v2, i32 3, i32 0)
   ret double %0
 }
 
-declare double @llvm.kvx.fsbfd(double, double, i32) #1
+declare double @llvm.kvx.fsbfd(double, double, i32, i32) #1
 
 define float @fmulw(float %v1, float %v2){
 ; CHECK-LABEL: fmulw:
@@ -452,11 +452,11 @@ define float @fmulw(float %v1, float %v2){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call float @llvm.kvx.fmulw(float %v1, float %v2, i32 3)
+  %0 = tail call float @llvm.kvx.fmulw(float %v1, float %v2, i32 3, i32 0)
   ret float %0
 }
 
-declare float @llvm.kvx.fmulw(float, float, i32) #1
+declare float @llvm.kvx.fmulw(float, float, i32, i32) #1
 
 define double @fmuld(double %v1, double %v2){
 ; CHECK-LABEL: fmuld:
@@ -465,11 +465,11 @@ define double @fmuld(double %v1, double %v2){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call double @llvm.kvx.fmuld(double %v1, double %v2, i32 3)
+  %0 = tail call double @llvm.kvx.fmuld(double %v1, double %v2, i32 3, i32 0)
   ret double %0
 }
 
-declare double @llvm.kvx.fmuld(double, double, i32) #1
+declare double @llvm.kvx.fmuld(double, double, i32, i32) #1
 
 define double @fmulwd(float %v1, float %v2){
 ; CHECK-LABEL: fmulwd:
@@ -478,11 +478,11 @@ define double @fmulwd(float %v1, float %v2){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call double @llvm.kvx.fmulwd(float %v1, float %v2, i32 3)
+  %0 = tail call double @llvm.kvx.fmulwd(float %v1, float %v2, i32 3, i32 0)
   ret double %0
 }
 
-declare double @llvm.kvx.fmulwd(float, float, i32) #1
+declare double @llvm.kvx.fmulwd(float, float, i32, i32) #1
 
 define float @ffmaw(float %a, float %b, float %c){
 ; CHECK-LABEL: ffmaw:
@@ -493,11 +493,11 @@ define float @ffmaw(float %a, float %b, float %c){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call float @llvm.kvx.ffmaw(float %a, float %b, float %c, i32 3)
+  %0 = tail call float @llvm.kvx.ffmaw(float %a, float %b, float %c, i32 3, i32 0)
   ret float %0
 }
 
-declare float @llvm.kvx.ffmaw(float, float, float, i32) #1
+declare float @llvm.kvx.ffmaw(float, float, float, i32, i32) #1
 
 define double @ffmad(double %a, double %b, double %c){
 ; CHECK-LABEL: ffmad:
@@ -508,11 +508,11 @@ define double @ffmad(double %a, double %b, double %c){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call double @llvm.kvx.ffmad(double %a, double %b, double %c, i32 3)
+  %0 = tail call double @llvm.kvx.ffmad(double %a, double %b, double %c, i32 3, i32 0)
   ret double %0
 }
 
-declare double @llvm.kvx.ffmad(double, double, double, i32) #1
+declare double @llvm.kvx.ffmad(double, double, double, i32, i32) #1
 
 define double @ffmawd(float %a, float %b, double %c){
 ; CHECK-LABEL: ffmawd:
@@ -523,11 +523,11 @@ define double @ffmawd(float %a, float %b, double %c){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call double @llvm.kvx.ffmawd(float %a, float %b, double %c, i32 3)
+  %0 = tail call double @llvm.kvx.ffmawd(float %a, float %b, double %c, i32 3, i32 0)
   ret double %0
 }
 
-declare double @llvm.kvx.ffmawd(float, float, double, i32) #1
+declare double @llvm.kvx.ffmawd(float, float, double, i32, i32) #1
 
 define float @ffmsw(float %a, float %b, float %c){
 ; CHECK-LABEL: ffmsw:
@@ -538,11 +538,11 @@ define float @ffmsw(float %a, float %b, float %c){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call float @llvm.kvx.ffmsw(float %a, float %b, float %c, i32 3)
+  %0 = tail call float @llvm.kvx.ffmsw(float %a, float %b, float %c, i32 3, i32 0)
   ret float %0
 }
 
-declare float @llvm.kvx.ffmsw(float, float, float, i32) #1
+declare float @llvm.kvx.ffmsw(float, float, float, i32, i32) #1
 
 define float @ffmsw_(float %a, float %b, float %c){
 ; CHECK-LABEL: ffmsw_:
@@ -553,7 +553,7 @@ define float @ffmsw_(float %a, float %b, float %c){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call float @llvm.kvx.ffmsw(float %a, float %b, float %c, i32 7)
+  %0 = tail call float @llvm.kvx.ffmsw(float %a, float %b, float %c, i32 7, i32 0)
   ret float %0
 }
 
@@ -566,11 +566,11 @@ define double @ffmsd(double %a, double %b, double %c){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call double @llvm.kvx.ffmsd(double %a, double %b, double %c, i32 3)
+  %0 = tail call double @llvm.kvx.ffmsd(double %a, double %b, double %c, i32 3, i32 0)
   ret double %0
 }
 
-declare double @llvm.kvx.ffmsd(double, double, double, i32) #1
+declare double @llvm.kvx.ffmsd(double, double, double, i32, i32) #1
 
 define double @ffmswd(float %a, float %b, double %c){
 ; CHECK-LABEL: ffmswd:
@@ -581,11 +581,11 @@ define double @ffmswd(float %a, float %b, double %c){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call double @llvm.kvx.ffmswd(float %a, float %b, double %c, i32 3)
+  %0 = tail call double @llvm.kvx.ffmswd(float %a, float %b, double %c, i32 3, i32 0)
   ret double %0
 }
 
-declare double @llvm.kvx.ffmswd(float, float, double, i32) #1
+declare double @llvm.kvx.ffmswd(float, float, double, i32, i32) #1
 
 define float @floatw(i32 %x){
 ; CHECK-LABEL: floatw:
@@ -594,11 +594,22 @@ define float @floatw(i32 %x){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call float @llvm.kvx.floatw(i32 %x, i64 3, i32 0)
+  %0 = tail call float @llvm.kvx.floatw(i32 %x, i64 3, i32 0, i32 0)
   ret float %0
 }
 
-declare float @llvm.kvx.floatw(i32, i64, i32) #1
+define float @floatw_s(i32 %x){
+; CHECK-LABEL: floatw_s:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    floatw.rn.s $r0 = $r0, 3
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = tail call float @llvm.kvx.floatw(i32 %x, i64 3, i32 0, i32 1)
+  ret float %0
+}
+
+declare float @llvm.kvx.floatw(i32, i64, i32, i32) #1
 
 define double @floatd(i64 %x){
 ; CHECK-LABEL: floatd:
@@ -607,11 +618,11 @@ define double @floatd(i64 %x){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call double @llvm.kvx.floatd(i64 %x, i64 3, i32 0)
+  %0 = tail call double @llvm.kvx.floatd(i64 %x, i64 3, i32 0, i32 0)
   ret double %0
 }
 
-declare double @llvm.kvx.floatd(i64, i64, i32) #1
+declare double @llvm.kvx.floatd(i64, i64, i32, i32) #1
 
 define float @floatuw(i32 %x){
 ; CHECK-LABEL: floatuw:
@@ -620,11 +631,11 @@ define float @floatuw(i32 %x){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call float @llvm.kvx.floatuw(i32 %x, i64 3, i32 3)
+  %0 = tail call float @llvm.kvx.floatuw(i32 %x, i64 3, i32 3, i32 0)
   ret float %0
 }
 
-declare float @llvm.kvx.floatuw(i32, i64, i32) #1
+declare float @llvm.kvx.floatuw(i32, i64, i32, i32) #1
 
 define double @floatud(i64 %x){
 ; CHECK-LABEL: floatud:
@@ -633,11 +644,11 @@ define double @floatud(i64 %x){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call double @llvm.kvx.floatud(i64 %x, i64 3, i32 3)
+  %0 = tail call double @llvm.kvx.floatud(i64 %x, i64 3, i32 3, i32 0)
   ret double %0
 }
 
-declare double @llvm.kvx.floatud(i64, i64, i32) #1
+declare double @llvm.kvx.floatud(i64, i64, i32, i32) #1
 
 define i32 @fixedw(float %x){
 ; CHECK-LABEL: fixedw:
@@ -646,11 +657,22 @@ define i32 @fixedw(float %x){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call i32 @llvm.kvx.fixedw(float %x, i64 3, i32 0)
+  %0 = tail call i32 @llvm.kvx.fixedw(float %x, i64 3, i32 0, i32 0)
   ret i32 %0
 }
 
-declare i32 @llvm.kvx.fixedw(float, i64, i32) #1
+define i32 @fixedw_s(float %x){
+; CHECK-LABEL: fixedw_s:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fixedw.rn.s $r0 = $r0, 3
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = tail call i32 @llvm.kvx.fixedw(float %x, i64 3, i32 0, i32 1)
+  ret i32 %0
+}
+
+declare i32 @llvm.kvx.fixedw(float, i64, i32, i32) #1
 
 define i64 @fixedd(double %x){
 ; CHECK-LABEL: fixedd:
@@ -659,11 +681,11 @@ define i64 @fixedd(double %x){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call i64 @llvm.kvx.fixedd(double %x, i64 3, i32 0)
+  %0 = tail call i64 @llvm.kvx.fixedd(double %x, i64 3, i32 0, i32 0)
   ret i64 %0
 }
 
-declare i64 @llvm.kvx.fixedd(double, i64, i32) #1
+declare i64 @llvm.kvx.fixedd(double, i64, i32, i32) #1
 
 define i32 @fixeduw(float %x){
 ; CHECK-LABEL: fixeduw:
@@ -672,11 +694,11 @@ define i32 @fixeduw(float %x){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call i32 @llvm.kvx.fixeduw(float %x, i64 3, i32 3)
+  %0 = tail call i32 @llvm.kvx.fixeduw(float %x, i64 3, i32 3, i32 0)
   ret i32 %0
 }
 
-declare i32 @llvm.kvx.fixeduw(float, i64, i32) #1
+declare i32 @llvm.kvx.fixeduw(float, i64, i32, i32) #1
 
 define i64 @fixedud(double %x){
 ; CHECK-LABEL: fixedud:
@@ -685,11 +707,11 @@ define i64 @fixedud(double %x){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call i64 @llvm.kvx.fixedud(double %x, i64 3, i32 3)
+  %0 = tail call i64 @llvm.kvx.fixedud(double %x, i64 3, i32 3, i32 0)
   ret i64 %0
 }
 
-declare i64 @llvm.kvx.fixedud(double, i64, i32) #1
+declare i64 @llvm.kvx.fixedud(double, i64, i32, i32) #1
 
 define float @fcdivw(float %v1, float %v2){
 ; CHECK-LABEL: fcdivw:
@@ -698,11 +720,11 @@ define float @fcdivw(float %v1, float %v2){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call float @llvm.kvx.fcdivw(float %v1, float %v2)
+  %0 = tail call float @llvm.kvx.fcdivw(float %v1, float %v2, i32 0)
   ret float %0
 }
 
-declare float @llvm.kvx.fcdivw(float, float) #1
+declare float @llvm.kvx.fcdivw(float, float, i32) #1
 
 define double @fcdivd(double %v1, double %v2){
 ; CHECK-LABEL: fcdivd:
@@ -711,11 +733,11 @@ define double @fcdivd(double %v1, double %v2){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call double @llvm.kvx.fcdivd(double %v1, double %v2)
+  %0 = tail call double @llvm.kvx.fcdivd(double %v1, double %v2, i32 0)
   ret double %0
 }
 
-declare double @llvm.kvx.fcdivd(double, double) #1
+declare double @llvm.kvx.fcdivd(double, double, i32) #1
 
 define float @fsdivw(float %v1, float %v2){
 ; CHECK-LABEL: fsdivw:
@@ -724,11 +746,11 @@ define float @fsdivw(float %v1, float %v2){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call float @llvm.kvx.fsdivw(float %v1, float %v2)
+  %0 = tail call float @llvm.kvx.fsdivw(float %v1, float %v2, i32 0)
   ret float %0
 }
 
-declare float @llvm.kvx.fsdivw(float, float) #1
+declare float @llvm.kvx.fsdivw(float, float, i32) #1
 
 define double @fsdivd(double %v1, double %v2){
 ; CHECK-LABEL: fsdivd:
@@ -737,11 +759,11 @@ define double @fsdivd(double %v1, double %v2){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call double @llvm.kvx.fsdivd(double %v1, double %v2)
+  %0 = tail call double @llvm.kvx.fsdivd(double %v1, double %v2, i32 0)
   ret double %0
 }
 
-declare double @llvm.kvx.fsdivd(double, double) #1
+declare double @llvm.kvx.fsdivd(double, double, i32) #1
 
 define float @fsrecw(float %v){
 ; CHECK-LABEL: fsrecw:
@@ -750,11 +772,11 @@ define float @fsrecw(float %v){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call float @llvm.kvx.fsrecw(float %v)
+  %0 = tail call float @llvm.kvx.fsrecw(float %v, i32 0)
   ret float %0
 }
 
-declare float @llvm.kvx.fsrecw(float) #1
+declare float @llvm.kvx.fsrecw(float, i32) #1
 
 define double @fsrecd(double %v){
 ; CHECK-LABEL: fsrecd:
@@ -763,11 +785,11 @@ define double @fsrecd(double %v){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call double @llvm.kvx.fsrecd(double %v)
+  %0 = tail call double @llvm.kvx.fsrecd(double %v, i32 0)
   ret double %0
 }
 
-declare double @llvm.kvx.fsrecd(double) #1
+declare double @llvm.kvx.fsrecd(double, i32) #1
 
 define i64 @sbmm8(i64 %a, i64 %b){
 ; CHECK-LABEL: sbmm8:
@@ -844,11 +866,11 @@ define float @fwidenlhw(i32 %v){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call float @llvm.kvx.fwidenlhw(i32 %v)
+  %0 = tail call float @llvm.kvx.fwidenlhw(i32 %v, i32 0)
   ret float %0
 }
 
-declare float @llvm.kvx.fwidenlhw(i32) #1
+declare float @llvm.kvx.fwidenlhw(i32, i32) #1
 
 define float @fwidenmhw(i32 %v){
 ; CHECK-LABEL: fwidenmhw:
@@ -857,23 +879,23 @@ define float @fwidenmhw(i32 %v){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call float @llvm.kvx.fwidenmhw(i32 %v)
+  %0 = tail call float @llvm.kvx.fwidenmhw(i32 %v, i32 0)
   ret float %0
 }
 
-declare float @llvm.kvx.fwidenmhw(i32) #1
+declare float @llvm.kvx.fwidenmhw(i32, i32) #1
 
 define i16 @fnarrowwh(float %v){
 ; CHECK-LABEL: fnarrowwh:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fnarrowwh $r0 = $r0
+; CHECK-NEXT:    fnarrowwh.rn $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call i32 @llvm.kvx.fnarrowwh(float %v)
+  %0 = tail call i32 @llvm.kvx.fnarrowwh(float %v, i32 0, i32 0)
   %conv = trunc i32 %0 to i16
   ret i16 %conv
 }
 
-declare i32 @llvm.kvx.fnarrowwh(float) #1
+declare i32 @llvm.kvx.fnarrowwh(float, i32, i32) #1
 

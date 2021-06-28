@@ -57,7 +57,7 @@ entry:
   ret float %add
 }
 
-declare float @llvm.kvx.faddw(float, float, i32) #2
+declare float @llvm.kvx.faddw(float, float, i32, i32) #2
 
 define float @rule4_set_builtins_only(i64 %a, float %b, float %c) {
 ; CHECK-LABEL: rule4_set_builtins_only:
@@ -70,7 +70,7 @@ define float @rule4_set_builtins_only(i64 %a, float %b, float %c) {
 ; CHECK-NEXT:    ;;
 entry:
   tail call void asm sideeffect "set $$cs = $0", "r,~{$cs}"(i64 %a)
-  %add = tail call float @llvm.kvx.faddw(float %b, float %c, i32 0)
+  %add = tail call float @llvm.kvx.faddw(float %b, float %c, i32 0, i32 0)
   ret float %add
 }
 
@@ -100,7 +100,7 @@ define float @rule4_wfxm_builtins_only(i64 %a, float %b, float %c) {
 ; CHECK-NEXT:    ;;
 entry:
   tail call void asm sideeffect "wfxm $$cs, $0", "r,~{$cs}"(i64 %a)
-  %add = tail call float @llvm.kvx.faddw(float %b, float %c, i32 0)
+  %add = tail call float @llvm.kvx.faddw(float %b, float %c, i32 0, i32 0)
   ret float %add
 }
 
