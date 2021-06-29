@@ -522,9 +522,7 @@ define <2 x i16> @test_insertelement(<2 x i16> %a, i16 %x, i64 %p) {
 define <2 x i16> @mulsub(<2 x i16> %a, <2 x i16> %b, <2 x i16> %c) {
 ; CHECK-LABEL: mulsub:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    mulhq $r1 = $r1, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfhq $r0 = $r1, $r0
+; CHECK-NEXT:    msbfhq $r0 = $r1, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %mul = mul <2 x i16> %b, %c

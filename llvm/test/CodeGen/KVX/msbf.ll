@@ -71,3 +71,55 @@ entry:
   %sub = sub nsw i64 %a, %mul
   ret i64 %sub
 }
+
+
+define i64 @MSBFSUWD(i64 %0, i32 %1, i32 %2) {
+; CHECK-LABEL: MSBFSUWD:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    msbfsuwd $r0 = $r1, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %4 = sext i32 %1 to i64
+  %5 = zext i32 %2 to i64
+  %6 = mul nsw i64 %5, %4
+  %7 = sub nsw i64 %0, %6
+  ret i64 %7
+}
+
+define i64 @MSBFSUWD_ri(i64 %0, i32 %1) {
+; CHECK-LABEL: MSBFSUWD_ri:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    msbfsuwd $r0 = $r1, 0x80000001
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  entry:
+  %2 = sext i32 %1 to i64
+  %3 = mul nsw i64 %2, 2147483649
+  %4 = sub nsw i64 %0, %3
+  ret i64 %4
+}
+
+define i64 @MSBFUWD(i64 %0, i32 %1, i32 %2) {
+; CHECK-LABEL: MSBFUWD:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    msbfuwd $r0 = $r2, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %4 = zext i32 %1 to i64
+  %5 = zext i32 %2 to i64
+  %6 = mul nuw nsw i64 %5, %4
+  %7 = sub nsw i64 %0, %6
+  ret i64 %7
+}
+
+define i64 @MSBFUWD_ri(i64 %0, i32 %1) {
+; CHECK-LABEL: MSBFUWD_ri:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    msbfuwd $r0 = $r1, 13
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = zext i32 %1 to i64
+  %4 = mul nuw nsw i64 %3, 13
+  %5 = sub nsw i64 %0, %4
+  ret i64 %5
+}

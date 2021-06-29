@@ -664,4 +664,44 @@ define <2 x i64> @MADDUWDP(<2 x i64> %0, <2 x i32> %1, <2 x i32> %2) {
   ret <2 x i64> %7
 }
 
+define <2 x i64> @MSBFUWDP(<2 x i64> %0, <2 x i32> %1, <2 x i32> %2) {
+; CHECK-LABEL: MSBFUWDP:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    msbfuwdp $r0r1 = $r3, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %4 = zext <2 x i32> %1 to <2 x i64>
+  %5 = zext <2 x i32> %2 to <2 x i64>
+  %6 = mul nsw <2 x i64> %5, %4
+  %7 = sub <2 x i64> %0, %6
+  ret <2 x i64> %7
+}
+
+define <2 x i64> @MSBFSUWDP(<2 x i64> %0, <2 x i32> %1, <2 x i32> %2) {
+; CHECK-LABEL: MSBFSUWDP:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    msbfsuwdp $r0r1 = $r2, $r3
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %4 = sext <2 x i32> %1 to <2 x i64>
+  %5 = zext <2 x i32> %2 to <2 x i64>
+  %6 = mul nsw <2 x i64> %5, %4
+  %7 = sub <2 x i64> %0, %6
+  ret <2 x i64> %7
+}
+
+define <2 x i64> @MSBFWDP(<2 x i64> %0, <2 x i32> %1, <2 x i32> %2) {
+; CHECK-LABEL: MSBFWDP:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    msbfwdp $r0r1 = $r3, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  entry:
+  %3 = sext <2 x i32> %1 to <2 x i64>
+  %4 = sext <2 x i32> %2 to <2 x i64>
+  %5 = mul nsw <2 x i64> %4, %3
+  %6 = sub <2 x i64> %0, %5
+  ret <2 x i64> %6
+}
+
 attributes #0 = { nounwind }
