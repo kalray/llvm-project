@@ -888,6 +888,26 @@ define <2 x i16> @nandw_v2i16_ri37_2(<2 x i16> %0) {
   ret <2 x i16> %3
 }
 
+define <2 x i16> @trunc_from_v2i64(<2 x i64> %a) {
+; CHECK-LABEL: trunc_from_v2i64:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    insf $r0 = $r1, 31, 16
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %r = trunc <2 x i64> %a to <2 x i16>
+  ret <2 x i16> %r
+}
+
+define <2 x i16> @trunc_from_v2i32(<2 x i32> %a) {
+; CHECK-LABEL: trunc_from_v2i32:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x20100201
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %r = trunc <2 x i32> %a to <2 x i16>
+  ret <2 x i16> %r
+}
+
 define <2 x i8> @trunc_to_v2i8(<2 x i16> %a) {
 ; CHECK-LABEL: trunc_to_v2i8:
 ; CHECK:       # %bb.0:
