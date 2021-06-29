@@ -930,4 +930,53 @@ define <2 x i8> @trunc_to_v2i8_buildvector(i32 %arg1, i32 %arg2) {
   ret <2 x i8> %conv
 }
 
+define  <2 x i16> @v2_maxhq_rr_i16(<2 x i16> %a, <2 x i16> %b) {
+; CHECK-LABEL: v2_maxhq_rr_i16:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    maxhq $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = call <2 x i16> @llvm.smax.v2i16(<2 x i16> %a, <2 x i16> %b)
+  ret <2 x i16> %0
+}
+
+define  <2 x i16> @v2_minhq_rr_i16(<2 x i16> %a, <2 x i16> %b) {
+; CHECK-LABEL: v2_minhq_rr_i16:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    minhq $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = call <2 x i16> @llvm.smin.v2i16(<2 x i16> %a, <2 x i16> %b)
+  ret <2 x i16> %0
+}
+
+define  <2 x i16> @v2_umaxhq_rr_i16(<2 x i16> %a, <2 x i16> %b) {
+; CHECK-LABEL: v2_umaxhq_rr_i16:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    maxuhq $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = call <2 x i16> @llvm.umax.v2i16(<2 x i16> %a, <2 x i16> %b)
+  ret <2 x i16> %0
+}
+
+define  <2 x i16> @v2_uminhq_rr_i16(<2 x i16> %a, <2 x i16> %b) {
+; CHECK-LABEL: v2_uminhq_rr_i16:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    minuhq $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = call <2 x i16> @llvm.umin.v2i16(<2 x i16> %a, <2 x i16> %b)
+  ret <2 x i16> %0
+}
+
+declare <2 x i16> @llvm.smax.v2i16(<2 x i16> %a, <2 x i16> %b)
+declare <2 x i16> @llvm.smin.v2i16(<2 x i16> %a, <2 x i16> %b)
+declare <2 x i16> @llvm.umax.v2i16(<2 x i16> %a, <2 x i16> %b)
+declare <2 x i16> @llvm.umin.v2i16(<2 x i16> %a, <2 x i16> %b)
+
 attributes #0 = { nounwind }
