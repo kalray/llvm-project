@@ -586,4 +586,82 @@ define <2 x i8> @trunc_to_v2i64_buildvector(i64 %arg1, i64 %arg2) {
   ret <2 x i8> %conv
 }
 
+define <2 x i64> @MULWDP(<2 x i32> %a, <2 x i32> %b) {
+; CHECK-LABEL: MULWDP:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    mulwdp $r0r1 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = sext <2 x i32> %a to <2 x i64>
+  %1 = sext <2 x i32> %b to <2 x i64>
+  %mul = mul nsw <2 x i64> %1, %0
+  ret <2 x i64> %mul
+}
+
+define <2 x i64> @MULSUWDP(<2 x i32> %a, <2 x i32> %b) {
+; CHECK-LABEL: MULSUWDP:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    mulsuwdp $r0r1 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = sext <2 x i32> %a to <2 x i64>
+  %1 = zext <2 x i32> %b to <2 x i64>
+  %mul = mul nsw <2 x i64> %1, %0
+  ret <2 x i64> %mul
+}
+
+define <2 x i64> @MULUWDP(<2 x i32> %a, <2 x i32> %b) {
+; CHECK-LABEL: MULUWDP:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    muluwdp $r0r1 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = zext <2 x i32> %a to <2 x i64>
+  %1 = zext <2 x i32> %b to <2 x i64>
+  %mul = mul nuw <2 x i64> %1, %0
+  ret <2 x i64> %mul
+}
+
+define <2 x i64> @MADDWDP(<2 x i64> %0, <2 x i32> %1, <2 x i32> %2) {
+; CHECK-LABEL: MADDWDP:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    maddwdp $r0r1 = $r3, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %4 = sext <2 x i32> %1 to <2 x i64>
+  %5 = sext <2 x i32> %2 to <2 x i64>
+  %6 = mul nsw <2 x i64> %5, %4
+  %7 = add <2 x i64> %6, %0
+  ret <2 x i64> %7
+}
+
+define <2 x i64> @MADDSUWDP(<2 x i64> %0, <2 x i32> %1, <2 x i32> %2) {
+; CHECK-LABEL: MADDSUWDP:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    maddsuwdp $r0r1 = $r2, $r3
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %4 = sext <2 x i32> %1 to <2 x i64>
+  %5 = zext <2 x i32> %2 to <2 x i64>
+  %6 = mul nsw <2 x i64> %5, %4
+  %7 = add <2 x i64> %6, %0
+  ret <2 x i64> %7
+}
+
+define <2 x i64> @MADDUWDP(<2 x i64> %0, <2 x i32> %1, <2 x i32> %2) {
+; CHECK-LABEL: MADDUWDP:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    madduwdp $r0r1 = $r3, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %4 = zext <2 x i32> %1 to <2 x i64>
+  %5 = zext <2 x i32> %2 to <2 x i64>
+  %6 = mul nuw <2 x i64> %5, %4
+  %7 = add <2 x i64> %6, %0
+  ret <2 x i64> %7
+}
+
 attributes #0 = { nounwind }

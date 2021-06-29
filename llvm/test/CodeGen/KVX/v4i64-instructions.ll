@@ -857,4 +857,115 @@ define <4 x i64> @revconcat(<2 x i64> %b, <2 x i64> %a){
   ret <4 x i64> %v
 }
 
+define <4 x i64> @MULWDP(<4 x i32> %a, <4 x i32> %b) {
+; CHECK-LABEL: MULWDP:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    mulwdp $r6r7 = $r3, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    mulwdp $r0r1 = $r2, $r0
+; CHECK-NEXT:    copyd $r2 = $r6
+; CHECK-NEXT:    copyd $r3 = $r7
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = sext <4 x i32> %a to <4 x i64>
+  %1 = sext <4 x i32> %b to <4 x i64>
+  %mul = mul nsw <4 x i64> %1, %0
+  ret <4 x i64> %mul
+}
+
+define <4 x i64> @MULSUWDP(<4 x i32> %a, <4 x i32> %b) {
+; CHECK-LABEL: MULSUWDP:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    mulsuwdp $r6r7 = $r1, $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    mulsuwdp $r0r1 = $r0, $r2
+; CHECK-NEXT:    copyd $r2 = $r6
+; CHECK-NEXT:    copyd $r3 = $r7
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = sext <4 x i32> %a to <4 x i64>
+  %1 = zext <4 x i32> %b to <4 x i64>
+  %mul = mul nsw <4 x i64> %1, %0
+  ret <4 x i64> %mul
+}
+
+define <4 x i64> @MULUWDP(<4 x i32> %a, <4 x i32> %b) {
+; CHECK-LABEL: MULUWDP:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    muluwdp $r6r7 = $r3, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    muluwdp $r0r1 = $r2, $r0
+; CHECK-NEXT:    copyd $r2 = $r6
+; CHECK-NEXT:    copyd $r3 = $r7
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = zext <4 x i32> %a to <4 x i64>
+  %1 = zext <4 x i32> %b to <4 x i64>
+  %mul = mul nuw <4 x i64> %1, %0
+  ret <4 x i64> %mul
+}
+
+define <4 x i64> @MADDWDP(<4 x i64> %0, <4 x i32> %1, <4 x i32> %2) {
+; CHECK-LABEL: MADDWDP:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    mulwdp $r10r11 = $r7, $r5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    mulwdp $r4r5 = $r6, $r4
+; CHECK-NEXT:    addd $r2 = $r10, $r2
+; CHECK-NEXT:    addd $r3 = $r11, $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r1 = $r5, $r1
+; CHECK-NEXT:    addd $r0 = $r4, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %4 = sext <4 x i32> %1 to <4 x i64>
+  %5 = sext <4 x i32> %2 to <4 x i64>
+  %6 = mul nsw <4 x i64> %5, %4
+  %7 = add <4 x i64> %6, %0
+  ret <4 x i64> %7
+}
+
+define <4 x i64> @MADDSUWDP(<4 x i64> %0, <4 x i32> %1, <4 x i32> %2) {
+; CHECK-LABEL: MADDSUWDP:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    mulsuwdp $r10r11 = $r5, $r7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    mulsuwdp $r4r5 = $r4, $r6
+; CHECK-NEXT:    addd $r2 = $r10, $r2
+; CHECK-NEXT:    addd $r3 = $r11, $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r1 = $r5, $r1
+; CHECK-NEXT:    addd $r0 = $r4, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %4 = sext <4 x i32> %1 to <4 x i64>
+  %5 = zext <4 x i32> %2 to <4 x i64>
+  %6 = mul nsw <4 x i64> %5, %4
+  %7 = add <4 x i64> %6, %0
+  ret <4 x i64> %7
+}
+
+define <4 x i64> @MADDUWDP(<4 x i64> %0, <4 x i32> %1, <4 x i32> %2) {
+; CHECK-LABEL: MADDUWDP:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    muluwdp $r10r11 = $r7, $r5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    muluwdp $r4r5 = $r6, $r4
+; CHECK-NEXT:    addd $r2 = $r10, $r2
+; CHECK-NEXT:    addd $r3 = $r11, $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r1 = $r5, $r1
+; CHECK-NEXT:    addd $r0 = $r4, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %4 = zext <4 x i32> %1 to <4 x i64>
+  %5 = zext <4 x i32> %2 to <4 x i64>
+  %6 = mul nuw <4 x i64> %5, %4
+  %7 = add <4 x i64> %6, %0
+  ret <4 x i64> %7
+}
+
 attributes #0 = { nounwind }
