@@ -120,7 +120,6 @@ define <4 x i8> @test_fma_imm(<4 x i8> %a, <4 x i8> %b) #0 {
 }
 
 
-; TODO: Prevent using sllhqs for fma
 define <4 x i8> @test_fma_imm_2(<4 x i8> %a, <4 x i8> %b) #0 {
 ; CHECK-LABEL: test_fma_imm_2:
 ; CHECK:       # %bb.0:

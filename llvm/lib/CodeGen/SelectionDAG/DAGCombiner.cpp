@@ -3999,73 +3999,78 @@ SDValue DAGCombiner::visitMUL(SDNode *N) {
     return DAG.getNode(ISD::SUB, DL, VT,
                        DAG.getConstant(0, DL, VT), N0);
 
-  // fold (mul x, (1 << c)) -> x << c
-  if (isConstantOrConstantVector(N1, /*NoOpaques*/ true) &&
-      DAG.isKnownToBeAPowerOfTwo(N1) &&
-      (!VT.isVector() || Level <= AfterLegalizeVectorOps)) {
-    SDValue LogBase2 = BuildLogBase2(N1, DL);
-    EVT ShiftVT = getShiftAmountTy(N0.getValueType());
-    SDValue Trunc = DAG.getZExtOrTrunc(LogBase2, DL, ShiftVT);
-    return DAG.getNode(ISD::SHL, DL, VT, N0, Trunc);
-  }
+  // Only use shl instead of a MUL if the target knows how to handle them
+  // or if MUL is not supported
+  if (TLI.isOperationLegalOrCustomOrPromote(ISD::SHL, VT) ||
+     !TLI.isOperationLegalOrCustomOrPromote(ISD::MUL, VT)) {
+    // fold (mul x, (1 << c)) -> x << c
+    if (isConstantOrConstantVector(N1, /*NoOpaques*/ true) &&
+        DAG.isKnownToBeAPowerOfTwo(N1) &&
+        (!VT.isVector() || Level <= AfterLegalizeVectorOps)) {
+        SDValue LogBase2 = BuildLogBase2(N1, DL);
+      EVT ShiftVT = getShiftAmountTy(N0.getValueType());
+      SDValue Trunc = DAG.getZExtOrTrunc(LogBase2, DL, ShiftVT);
+      return DAG.getNode(ISD::SHL, DL, VT, N0, Trunc);
+    }
 
-  // fold (mul x, -(1 << c)) -> -(x << c) or (-x) << c
-  if (N1IsConst && !N1IsOpaqueConst && ConstValue1.isNegatedPowerOf2()) {
-    unsigned Log2Val = (-ConstValue1).logBase2();
-    // FIXME: If the input is something that is easily negated (e.g. a
-    // single-use add), we should put the negate there.
-    return DAG.getNode(ISD::SUB, DL, VT,
-                       DAG.getConstant(0, DL, VT),
-                       DAG.getNode(ISD::SHL, DL, VT, N0,
-                            DAG.getConstant(Log2Val, DL,
-                                      getShiftAmountTy(N0.getValueType()))));
-  }
+    // fold (mul x, -(1 << c)) -> -(x << c) or (-x) << c
+    if (N1IsConst && !N1IsOpaqueConst && ConstValue1.isNegatedPowerOf2()) {
+      unsigned Log2Val = (-ConstValue1).logBase2();
+        // FIXME: If the input is something that is easily negated (e.g. a
+      // single-use add), we should put the negate there.
+      return DAG.getNode(ISD::SUB, DL, VT,
+                        DAG.getConstant(0, DL, VT),
+                        DAG.getNode(ISD::SHL, DL, VT, N0,
+                              DAG.getConstant(Log2Val, DL,
+                                        getShiftAmountTy(N0.getValueType()))));
+    }
 
-  // Try to transform:
-  // (1) multiply-by-(power-of-2 +/- 1) into shift and add/sub.
-  // mul x, (2^N + 1) --> add (shl x, N), x
-  // mul x, (2^N - 1) --> sub (shl x, N), x
-  // Examples: x * 33 --> (x << 5) + x
-  //           x * 15 --> (x << 4) - x
-  //           x * -33 --> -((x << 5) + x)
-  //           x * -15 --> -((x << 4) - x) ; this reduces --> x - (x << 4)
-  // (2) multiply-by-(power-of-2 +/- power-of-2) into shifts and add/sub.
-  // mul x, (2^N + 2^M) --> (add (shl x, N), (shl x, M))
-  // mul x, (2^N - 2^M) --> (sub (shl x, N), (shl x, M))
-  // Examples: x * 0x8800 --> (x << 15) + (x << 11)
-  //           x * 0xf800 --> (x << 16) - (x << 11)
-  //           x * -0x8800 --> -((x << 15) + (x << 11))
-  //           x * -0xf800 --> -((x << 16) - (x << 11)) ; (x << 11) - (x << 16)
-  if (N1IsConst && TLI.decomposeMulByConstant(*DAG.getContext(), VT, N1)) {
-    // TODO: We could handle more general decomposition of any constant by
-    //       having the target set a limit on number of ops and making a
-    //       callback to determine that sequence (similar to sqrt expansion).
-    unsigned MathOp = ISD::DELETED_NODE;
-    APInt MulC = ConstValue1.abs();
-    // The constant `2` should be treated as (2^0 + 1).
-    unsigned TZeros = MulC == 2 ? 0 : MulC.countTrailingZeros();
-    MulC.lshrInPlace(TZeros);
-    if ((MulC - 1).isPowerOf2())
-      MathOp = ISD::ADD;
-    else if ((MulC + 1).isPowerOf2())
-      MathOp = ISD::SUB;
+    // Try to transform:
+    // (1) multiply-by-(power-of-2 +/- 1) into shift and add/sub.
+    // mul x, (2^N + 1) --> add (shl x, N), x
+    // mul x, (2^N - 1) --> sub (shl x, N), x
+    // Examples: x * 33 --> (x << 5) + x
+    //           x * 15 --> (x << 4) - x
+    //           x * -33 --> -((x << 5) + x)
+    //           x * -15 --> -((x << 4) - x) ; this reduces --> x - (x << 4)
+    // (2) multiply-by-(power-of-2 +/- power-of-2) into shifts and add/sub.
+    // mul x, (2^N + 2^M) --> (add (shl x, N), (shl x, M))
+    // mul x, (2^N - 2^M) --> (sub (shl x, N), (shl x, M))
+    // Examples: x * 0x8800 --> (x << 15) + (x << 11)
+    //           x * 0xf800 --> (x << 16) - (x << 11)
+    //           x * -0x8800 --> -((x << 15) + (x << 11))
+    //           x * -0xf800 --> -((x << 16) - (x << 11)) ; (x << 11) - (x << 16)
+    if (N1IsConst && TLI.decomposeMulByConstant(*DAG.getContext(), VT, N1)) {
+      // TODO: We could handle more general decomposition of any constant by
+      //       having the target set a limit on number of ops and making a
+      //       callback to determine that sequence (similar to sqrt expansion).
+      unsigned MathOp = ISD::DELETED_NODE;
+      APInt MulC = ConstValue1.abs();
+      // The constant `2` should be treated as (2^0 + 1).
+      unsigned TZeros = MulC == 2 ? 0 : MulC.countTrailingZeros();
+      MulC.lshrInPlace(TZeros);
+      if ((MulC - 1).isPowerOf2())
+        MathOp = ISD::ADD;
+      else if ((MulC + 1).isPowerOf2())
+        MathOp = ISD::SUB;
 
-    if (MathOp != ISD::DELETED_NODE) {
-      unsigned ShAmt =
-          MathOp == ISD::ADD ? (MulC - 1).logBase2() : (MulC + 1).logBase2();
-      ShAmt += TZeros;
-      assert(ShAmt < VT.getScalarSizeInBits() &&
-             "multiply-by-constant generated out of bounds shift");
-      SDValue Shl =
-          DAG.getNode(ISD::SHL, DL, VT, N0, DAG.getConstant(ShAmt, DL, VT));
-      SDValue R =
-          TZeros ? DAG.getNode(MathOp, DL, VT, Shl,
-                               DAG.getNode(ISD::SHL, DL, VT, N0,
-                                           DAG.getConstant(TZeros, DL, VT)))
-                 : DAG.getNode(MathOp, DL, VT, Shl, N0);
-      if (ConstValue1.isNegative())
-        R = DAG.getNode(ISD::SUB, DL, VT, DAG.getConstant(0, DL, VT), R);
-      return R;
+      if (MathOp != ISD::DELETED_NODE) {
+        unsigned ShAmt =
+            MathOp == ISD::ADD ? (MulC - 1).logBase2() : (MulC + 1).logBase2();
+        ShAmt += TZeros;
+        assert(ShAmt < VT.getScalarSizeInBits() &&
+              "multiply-by-constant generated out of bounds shift");
+          SDValue Shl =
+            DAG.getNode(ISD::SHL, DL, VT, N0, DAG.getConstant(ShAmt, DL, VT));
+        SDValue R =
+            TZeros ? DAG.getNode(MathOp, DL, VT, Shl,
+                                DAG.getNode(ISD::SHL, DL, VT, N0,
+                                            DAG.getConstant(TZeros, DL, VT)))
+                  : DAG.getNode(MathOp, DL, VT, Shl, N0);
+        if (ConstValue1.isNegative())
+          R = DAG.getNode(ISD::SUB, DL, VT, DAG.getConstant(0, DL, VT), R);
+        return R;
+      }
     }
   }
 
