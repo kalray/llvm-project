@@ -1014,4 +1014,30 @@ define <2 x i32> @MADDUHWQ(<2 x i32> %0, <2 x i16> %1, <2 x i16> %2) {
   ret <2 x i32> %7
 }
 
+define <2 x i32> @MSBFHWQ(<2 x i32> %0, <2 x i16> %1, <2 x i16> %2) {
+; CHECK-LABEL: MSBFHWQ:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    msbfhwq $r0r1 = $r2, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %4 = sext <2 x i16> %1 to <2 x i32>
+  %5 = sext <2 x i16> %2 to <2 x i32>
+  %6 = mul nsw <2 x i32> %5, %4
+  %7 = sub <2 x i32> %0, %6
+  ret <2 x i32> %7
+}
+
+define <2 x i32> @MSBFSUHWQ(<2 x i32> %0, <2 x i16> %1, <2 x i16> %2) {
+; CHECK-LABEL: MSBFSUHWQ:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    msbfsuhwq $r0r1 = $r1, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %4 = sext <2 x i16> %1 to <2 x i32>
+  %5 = zext <2 x i16> %2 to <2 x i32>
+  %6 = mul nsw <2 x i32> %5, %4
+  %7 = sub <2 x i32> %0, %6
+  ret <2 x i32> %7
+}
+
 attributes #0 = { nounwind }

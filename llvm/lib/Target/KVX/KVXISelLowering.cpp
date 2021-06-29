@@ -448,6 +448,7 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
       setOperationAction(I, VT, Legal);
 
   setOperationAction(ISD::ADD, MVT::v2i64, Custom);
+  setOperationAction(ISD::SUB, MVT::v2i64, Custom);
   setOperationAction(ISD::ATOMIC_FENCE, MVT::Other, Custom);
   // NOTE: We could use ACSWAPW instruction with some shifts and masks to
   // support custom lowering of i8 and i16 operations. See ASWAPp for i8.
@@ -930,6 +931,20 @@ SDValue KVXTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
     default:
       break;
     }
+
+    switch (Op.getOperand(1)->getOpcode()) {
+    case KVXISD::SEXT_MUL:
+    case KVXISD::ZEXT_MUL:
+    case KVXISD::SZEXT_MUL:
+      return Op;
+    default:
+      return SDValue();
+    }
+  }
+
+  case ISD::SUB: { // TODO: Add v4i64
+    if (Op.getSimpleValueType() != MVT::v2i64)
+      return SDValue();
 
     switch (Op.getOperand(1)->getOpcode()) {
     case KVXISD::SEXT_MUL:

@@ -777,6 +777,59 @@ defm MINWP : Word_RR_RIsplat_select_v2<smin, MINWPri, MINWPrr>;
 // MSBFD
 def : Pat<(sub i64:$a1, (mul i64:$a2, i64:$a3)), (MSBFD SingleReg:$a1, SingleReg:$a2, SingleReg:$a3)>;
 
+// MSBFHQ
+def : Pat<(sub v2i16:$a1, (mul v2i16:$a2, v2i16:$a3)), (MSBFHQ SingleReg:$a1, SingleReg:$a2, SingleReg:$a3)>;
+def : Pat<(sub v4i16:$a1, (mul v4i16:$a2, v4i16:$a3)), (MSBFHQ SingleReg:$a1, SingleReg:$a2, SingleReg:$a3)>;
+
+// MSBFHWQ
+def : Pat<(v2i32(sub v2i32:$v2, (v2i32(KVX_sext_mul v2i16:$v0, v2i16:$v1)))),
+          (v2i32 (EXTRACT_SUBREG (v4i32
+                  (MSBFHWQ (INSERT_SUBREG (v4i32 (IMPLICIT_DEF)), SingleReg:$v2, sub_s0), SingleReg:$v0, SingleReg:$v1)),
+            sub_s0))>;
+
+def : Pat<(v4i32(sub v4i32:$v2, (v4i32(KVX_sext_mul v4i16:$v0, v4i16:$v1)))),
+          (v4i32(MSBFHWQ PairedReg:$v2, SingleReg:$v0, SingleReg:$v1))>;
+
+// MSBFSUHWQ
+def : Pat<(v2i32(sub v2i32:$v2, (v2i32(KVX_szext_mul v2i16:$v0, v2i16:$v1)))),
+          (v2i32 (EXTRACT_SUBREG (v4i32
+                  (MSBFSUHWQ (INSERT_SUBREG (v4i32 (IMPLICIT_DEF)), SingleReg:$v2, sub_s0), SingleReg:$v0, SingleReg:$v1)),
+            sub_s0))>;
+
+def : Pat<(v4i32(sub v4i32:$v2, (v4i32(KVX_szext_mul v4i16:$v0, v4i16:$v1)))),
+          (v4i32(MSBFSUHWQ PairedReg:$v2, SingleReg:$v0, SingleReg:$v1))>;
+
+// MSBFSUWD
+def : Pat<(i64(sub i64:$v2, (i64(KVX_szext_mul i32:$v0, Wrapped32:$v1)))),
+            (i64(MSBFSUWDri SingleReg:$v2, SingleReg:$v0, Wrapped32:$v1))>;
+
+def : Pat<(i64(sub i64:$v2, (i64(KVX_szext_mul i32:$v0, i32:$v1)))),
+            (i64(MSBFSUWDrr SingleReg:$v2, SingleReg:$v0, SingleReg:$v1))>;
+
+// MSBFSUWDP
+def : Pat<(v2i64(sub v2i64:$v2, (v2i64(KVX_szext_mul v2i32:$v0, v2i32:$v1)))),
+          (v2i64(MSBFSUWDP PairedReg:$v2, SingleReg:$v0, SingleReg:$v1))>;
+
+// MSBFUHWQ
+def : Pat<(v2i32(sub v2i32:$v2, (v2i32(KVX_zext_mul v2i16:$v0, v2i16:$v1)))),
+          (v2i32 (EXTRACT_SUBREG (v4i32
+                  (MSBFUHWQ (INSERT_SUBREG (v4i32 (IMPLICIT_DEF)), SingleReg:$v2, sub_s0), SingleReg:$v0, SingleReg:$v1)),
+            sub_s0))>;
+
+def : Pat<(v4i32(sub v4i32:$v2, (v4i32(KVX_zext_mul v4i16:$v0, v4i16:$v1)))),
+          (v4i32(MSBFUHWQ PairedReg:$v2, SingleReg:$v0, SingleReg:$v1))>;
+
+// MSBFUWD
+def : Pat<(i64(sub i64:$v2, (i64(KVX_zext_mul i32:$v0, Wrapped32:$v1)))),
+            (i64(MSBFUWDri SingleReg:$v2, SingleReg:$v0, Wrapped32:$v1))>;
+
+def : Pat<(i64(sub i64:$v2, (i64(KVX_zext_mul i32:$v0, i32:$v1)))),
+            (i64(MSBFUWDrr SingleReg:$v2, SingleReg:$v0, SingleReg:$v1))>;
+
+// MSBFUWDP
+def : Pat<(v2i64(sub v2i64:$v2, (v2i64(KVX_zext_mul v2i32:$v0, v2i32:$v1)))),
+          (v2i64(MSBFUWDP PairedReg:$v2, SingleReg:$v0, SingleReg:$v1))>;
+
 // MSBFW
 defm : ZEFPat<(sub i32:$a1, (mul i32:$a2, i32:$a3)), (MSBFWrr SingleReg:$a1, SingleReg:$a2, SingleReg:$a3)>;
 defm : ZEFPat<(sub i32:$a1, (mul i32:$a2, Wrapped32:$a3)), (MSBFWri SingleReg:$a1, SingleReg:$a2, Wrapped32:$a3)>;
@@ -785,6 +838,10 @@ defm : ZEFPat<(sub i32:$a1, (mul i32:$a2, Wrapped32:$a3)), (MSBFWri SingleReg:$a
 def : Pat<(sub i64:$a1, (KVX_szext_mul i32:$a2, Wrapped32:$a3)), (MSBFWDri SingleReg:$a1, SingleReg:$a2, Wrapped32:$a3)>;
 def : Pat<(sub i64:$a1, (KVX_sext_mul i32:$a2, Wrapped32:$a3)), (MSBFWDri SingleReg:$a1, SingleReg:$a2, (trunc_imm_32 imm:$a3))>;
 def : Pat<(sub i64:$a1, (KVX_sext_mul i32:$a2, i32:$a3)), (MSBFWDrr SingleReg:$a1, SingleReg:$a2, SingleReg:$a3)>;
+
+// MSBFWDP
+def : Pat<(v2i64(sub v2i64:$v2, (v2i64(KVX_sext_mul v2i32:$v0, v2i32:$v1)))),
+          (v2i64(MSBFWDP PairedReg:$v2, SingleReg:$v0, SingleReg:$v1))>;
 
 // MSBFWP
 def : Pat<(sub v2i32:$a1, (mul v2i32:$a2, v2i32:$a3)), (MSBFWP SingleReg:$a1, SingleReg:$a2, SingleReg:$a3)>;
