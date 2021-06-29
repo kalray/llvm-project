@@ -1014,4 +1014,53 @@ define <4 x i16> @splat_3_64(i64 %0) {
   ret <4 x i16> %5
 }
 
+define  <4 x i16> @v4_maxhq_rr_i16(<4 x i16> %a, <4 x i16> %b) {
+; CHECK-LABEL: v4_maxhq_rr_i16:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    maxhq $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = call <4 x i16> @llvm.smax.v4i16(<4 x i16> %a, <4 x i16> %b)
+  ret <4 x i16> %0
+}
+
+define  <4 x i16> @v4_minhq_rr_i16(<4 x i16> %a, <4 x i16> %b) {
+; CHECK-LABEL: v4_minhq_rr_i16:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    minhq $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = call <4 x i16> @llvm.smin.v4i16(<4 x i16> %a, <4 x i16> %b)
+  ret <4 x i16> %0
+}
+
+define  <4 x i16> @v4_umaxhq_rr_i16(<4 x i16> %a, <4 x i16> %b) {
+; CHECK-LABEL: v4_umaxhq_rr_i16:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    maxuhq $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = call <4 x i16> @llvm.umax.v4i16(<4 x i16> %a, <4 x i16> %b)
+  ret <4 x i16> %0
+}
+
+define  <4 x i16> @v4_uminhq_rr_i16(<4 x i16> %a, <4 x i16> %b) {
+; CHECK-LABEL: v4_uminhq_rr_i16:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    minuhq $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = call <4 x i16> @llvm.umin.v4i16(<4 x i16> %a, <4 x i16> %b)
+  ret <4 x i16> %0
+}
+
+declare <4 x i16> @llvm.smax.v4i16(<4 x i16> %a, <4 x i16> %b)
+declare <4 x i16> @llvm.smin.v4i16(<4 x i16> %a, <4 x i16> %b)
+declare <4 x i16> @llvm.umax.v4i16(<4 x i16> %a, <4 x i16> %b)
+declare <4 x i16> @llvm.umin.v4i16(<4 x i16> %a, <4 x i16> %b)
+
 attributes #0 = { nounwind }
