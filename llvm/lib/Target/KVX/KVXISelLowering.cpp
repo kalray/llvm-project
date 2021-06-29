@@ -447,6 +447,7 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     for (auto I : {ISD::ADD, ISD::MUL, ISD::SUB})
       setOperationAction(I, VT, Legal);
 
+  setOperationAction(ISD::ADD, MVT::v2i64, Custom);
   setOperationAction(ISD::ATOMIC_FENCE, MVT::Other, Custom);
   // NOTE: We could use ACSWAPW instruction with some shifts and masks to
   // support custom lowering of i8 and i16 operations. See ASWAPp for i8.
@@ -917,6 +918,28 @@ SDValue KVXTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
   switch (Op.getOpcode()) {
   default:
     report_fatal_error("unimplemented operand");
+  case ISD::ADD: { // TODO: Add v4i64
+    if (Op.getSimpleValueType() != MVT::v2i64)
+      return SDValue();
+
+    switch (Op.getOperand(0)->getOpcode()) {
+    case KVXISD::SEXT_MUL:
+    case KVXISD::ZEXT_MUL:
+    case KVXISD::SZEXT_MUL:
+      return Op;
+    default:
+      break;
+    }
+
+    switch (Op.getOperand(1)->getOpcode()) {
+    case KVXISD::SEXT_MUL:
+    case KVXISD::ZEXT_MUL:
+    case KVXISD::SZEXT_MUL:
+      return Op;
+    default:
+      return SDValue();
+    }
+  }
   case ISD::RETURNADDR:
     return lowerRETURNADDR(Op, DAG);
   case ISD::GlobalAddress:
@@ -2283,9 +2306,27 @@ static SDValue combineMUL(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
   } else if (VT == MVT::i128) {
     HalfSize = 64;
     HalfSizeVT = MVT::i64;
-  } else
+  } else if (!VT.isVector() || !VT.isSimple())
     return SDValue();
-
+  else {
+    // We avoid converting vectors of non-legal number of
+    // elements before they are legalized. Then we do
+    // match at the second dag-combine execution.
+    switch (VT.getSimpleVT().SimpleTy) {
+    default:
+      return SDValue();
+    case MVT::v2i32:
+    case MVT::v4i32:
+    case MVT::v2i64:
+    case MVT::v4i64:
+      break;
+    }
+    HalfSize = VT.getScalarSizeInBits() >> 1;
+    HalfSizeVT = MVT::getVectorVT(VT.getScalarType()
+                                      .getHalfSizedIntegerVT(*Dag.getContext())
+                                      .getSimpleVT(),
+                                  VT.getVectorNumElements());
+  }
   auto Op0 = N->getOperand(0);
   auto Op1 = N->getOperand(1);
   KnownBits V0 = Dag.computeKnownBits(Op0);
@@ -2293,14 +2334,16 @@ static SDValue combineMUL(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
   bool UnsCond0 = V0.Zero.countLeadingOnes() >= HalfSize;
   bool Op1IsSmallSConstant = false;
   bool Op1IsSmallUConstant = false;
-  if (auto *Const1 = dyn_cast<ConstantSDNode>(Op1)) {
-    if (VT == MVT::i64) {
-      Op1IsSmallSConstant = isInt<32>(Const1->getSExtValue());
-      Op1IsSmallUConstant = isUInt<32>(Const1->getZExtValue());
-    } else
-      Op1IsSmallSConstant = !Const1->getAPIntValue().isNegative();
-  }
 
+  if (!VT.isVector()) {
+    if (auto *Const1 = dyn_cast<ConstantSDNode>(Op1)) {
+      if (VT == MVT::i64) {
+        Op1IsSmallSConstant = isInt<32>(Const1->getSExtValue());
+        Op1IsSmallUConstant = isUInt<32>(Const1->getZExtValue());
+      } else
+        Op1IsSmallSConstant = !Const1->getAPIntValue().isNegative();
+    }
+  }
   bool UnsCond1 = V1.Zero.countLeadingOnes() >= HalfSize || Op1IsSmallUConstant;
 
   unsigned Opcode = 0;
@@ -2342,8 +2385,8 @@ static SDValue combineMUL(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
 
   SDValue T0 = Dag.getNode(ISD::TRUNCATE, SDLoc(Op0), HalfSizeVT, {Op0});
   SDValue T1 = Dag.getNode(ISD::TRUNCATE, SDLoc(Op1), HalfSizeVT, {Op1});
-  if (VT == MVT::i64)
-    return Dag.getNode(Opcode, SDLoc(N), MVT::i64, {T0, T1});
+  if (VT != MVT::i128)
+    return Dag.getNode(Opcode, SDLoc(N), VT, {T0, T1});
 
   // i128 is not legal, hide it in a v2i64 vector and bitcast it to i128.
   // The legalizer will just split the bitcast operation.
