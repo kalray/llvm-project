@@ -818,4 +818,44 @@ define <3 x i32> @MADDSUHWQ_v3(<3 x i32> %0, <3 x i16> %1, <3 x i16> %2) {
   ret <3 x i32> %7
 }
 
+
+define <4 x i32> @MSBFHWQ(<4 x i32> %0, <4 x i16> %1, <4 x i16> %2) {
+; CHECK-LABEL: MSBFHWQ:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    msbfhwq $r0r1 = $r3, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %4 = sext <4 x i16> %1 to <4 x i32>
+  %5 = sext <4 x i16> %2 to <4 x i32>
+  %6 = mul nsw <4 x i32> %5, %4
+  %7 = sub <4 x i32> %0, %6
+  ret <4 x i32> %7
+}
+
+define <4 x i32> @MSBFSUHWQ(<4 x i32> %0, <4 x i16> %1, <4 x i16> %2) {
+; CHECK-LABEL: MSBFSUHWQ:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    msbfsuhwq $r0r1 = $r2, $r3
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %4 = sext <4 x i16> %1 to <4 x i32>
+  %5 = zext <4 x i16> %2 to <4 x i32>
+  %6 = mul nsw <4 x i32> %5, %4
+  %7 = sub <4 x i32> %0, %6
+  ret <4 x i32> %7
+}
+
+define <4 x i32> @MSBFUHWQ(<4 x i32> %0, <4 x i16> %1, <4 x i16> %2) {
+; CHECK-LABEL: MSBFUHWQ:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    msbfuhwq $r0r1 = $r3, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %4 = zext <4 x i16> %1 to <4 x i32>
+  %5 = zext <4 x i16> %2 to <4 x i32>
+  %6 = mul nuw <4 x i32> %5, %4
+  %7 = sub <4 x i32> %0, %6
+  ret <4 x i32> %7
+}
+
 attributes #0 = { nounwind }
