@@ -1170,7 +1170,7 @@ def : Pat<(v2i16 (build_vector i32:$v0, i32:$v1)), (INSF SingleReg:$v0, SingleRe
 def : Pat<(v2i16 (trunc v2i32:$v)), (SBMM8ri37 $v, 0x20100201)>;
 def : Pat<(v2i16 (trunc v2i64:$v)), (INSF (i64 (EXTRACT_SUBREG PairedReg:$v, sub_s0)),
                                          (i64 (EXTRACT_SUBREG PairedReg:$v, sub_s1)),
-                                         15, 8)>;
+                                         31, 16)>;
 
 def : Pat<(v2i16 (trunc (v2i32 (build_vector i64:$s0, i32:$s1)))), (INSF SingleReg:$s0, SingleReg:$s1, 31, 16)>;
 def : Pat<(v2i16 (trunc (v2i64 (build_vector i64:$s0, i64:$s1)))), (INSF SingleReg:$s0, SingleReg:$s1, 31, 16)>;
