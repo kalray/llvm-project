@@ -725,4 +725,97 @@ loop:
   br label %loop
 }
 
+define <4 x i32> @MULHWQ(<4 x i16> %a, <4 x i16> %b) {
+; CHECK-LABEL: MULHWQ:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    mulhwq $r0r1 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = sext <4 x i16> %a to <4 x i32>
+  %1 = sext <4 x i16> %b to <4 x i32>
+  %mul = mul nsw <4 x i32> %1, %0
+  ret <4 x i32> %mul
+}
+
+define <4 x i32> @MULSUHWQ(<4 x i16> %a, <4 x i16> %b) {
+; CHECK-LABEL: MULSUHWQ:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    mulsuhwq $r0r1 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = sext <4 x i16> %a to <4 x i32>
+  %1 = zext <4 x i16> %b to <4 x i32>
+  %mul = mul nsw <4 x i32> %1, %0
+  ret <4 x i32> %mul
+}
+
+define <4 x i32> @MULUHWQ(<4 x i16> %a, <4 x i16> %b) {
+; CHECK-LABEL: MULUHWQ:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    muluhwq $r0r1 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = zext <4 x i16> %a to <4 x i32>
+  %1 = zext <4 x i16> %b to <4 x i32>
+  %mul = mul nuw <4 x i32> %1, %0
+  ret <4 x i32> %mul
+}
+
+define <4 x i32> @MADDHWQ(<4 x i32> %0, <4 x i16> %1, <4 x i16> %2) {
+; CHECK-LABEL: MADDHWQ:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    maddhwq $r0r1 = $r3, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %4 = sext <4 x i16> %1 to <4 x i32>
+  %5 = sext <4 x i16> %2 to <4 x i32>
+  %6 = mul nsw <4 x i32> %5, %4
+  %7 = add <4 x i32> %6, %0
+  ret <4 x i32> %7
+}
+
+define <4 x i32> @MADDSUHWQ(<4 x i32> %0, <4 x i16> %1, <4 x i16> %2) {
+; CHECK-LABEL: MADDSUHWQ:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    maddsuhwq $r0r1 = $r2, $r3
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %4 = sext <4 x i16> %1 to <4 x i32>
+  %5 = zext <4 x i16> %2 to <4 x i32>
+  %6 = mul nsw <4 x i32> %5, %4
+  %7 = add <4 x i32> %6, %0
+  ret <4 x i32> %7
+}
+
+define <4 x i32> @MADDUHWQ(<4 x i32> %0, <4 x i16> %1, <4 x i16> %2) {
+; CHECK-LABEL: MADDUHWQ:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    madduhwq $r0r1 = $r3, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %4 = zext <4 x i16> %1 to <4 x i32>
+  %5 = zext <4 x i16> %2 to <4 x i32>
+  %6 = mul nuw <4 x i32> %5, %4
+  %7 = add <4 x i32> %6, %0
+  ret <4 x i32> %7
+}
+
+define <3 x i32> @MADDSUHWQ_v3(<3 x i32> %0, <3 x i16> %1, <3 x i16> %2) {
+; CHECK-LABEL: MADDSUHWQ_v3:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    maddsuhwq $r0r1 = $r2, $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r1 = $r0, 63, 32
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %4 = sext <3 x i16> %1 to <3 x i32>
+  %5 = zext <3 x i16> %2 to <3 x i32>
+  %6 = mul nsw <3 x i32> %5, %4
+  %7 = add <3 x i32> %6, %0
+  ret <3 x i32> %7
+}
+
 attributes #0 = { nounwind }
