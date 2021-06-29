@@ -44,21 +44,15 @@ define <4 x i32> @test_fma(<4 x i32> %a, <4 x i32> %b, <4 x i32> %c) #0 {
   ret <4 x i32> %ad
 }
 
-; TODO: Improve immediate variants
 define <4 x i32> @test_fma_imm(<4 x i32> %a, <4 x i32> %b) #0 {
 ; CHECK-LABEL: test_fma_imm:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r4 = $r2, 32
-; CHECK-NEXT:    srad $r5 = $r3, 32
+; CHECK-NEXT:    make $r5 = 0x200000001
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sllw $r4 = $r4, 1
-; CHECK-NEXT:    sllw $r5 = $r5, 1
+; CHECK-NEXT:    copyd $r4 = $r5
+; CHECK-NEXT:    maddwp $r1 = $r3, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r4, 63, 32
-; CHECK-NEXT:    insf $r3 = $r5, 63, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addwp $r1 = $r1, $r3
-; CHECK-NEXT:    addwp $r0 = $r0, $r2
+; CHECK-NEXT:    maddwp $r0 = $r2, $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %m = mul <4 x i32> <i32 1, i32 2, i32 1, i32 2>, %b
