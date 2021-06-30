@@ -270,9 +270,9 @@ ClusterOS::ClusterOS(const Driver &D, const llvm::Triple &Triple,
 }
 
 std::string ClusterOS::getIncludeDirRoot() const {
-  std::string GCCPath = GetProgramPath("kvx-cos-gcc");
-  StringRef GCCPrefix = llvm::sys::path::parent_path(GCCPath);
-  return llvm::sys::path::parent_path(GCCPrefix).str() + "/kvx-cos/include";
+  std::string LDPath = GetProgramPath("kvx-cos-ld");
+  StringRef LDPrefix = llvm::sys::path::parent_path(LDPath);
+  return llvm::sys::path::parent_path(LDPrefix).str() + "/kvx-cos/include";
 }
 
 StringRef ClusterOS::getGCCMultilibArch() const {
