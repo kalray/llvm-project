@@ -573,16 +573,11 @@ declare <2 x i8> @llvm.abs.v2i8(<2 x i8>, i1) #0
 define <2 x i8> @test_abs(<2 x i8> %a) #0 {
 ; CHECK-LABEL: test_abs:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    extfz $r1 = $r0, 15, 8
-; CHECK-NEXT:    zxbd $r0 = $r0
+; CHECK-NEXT:    sxlbhq $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxbd $r1 = $r1
-; CHECK-NEXT:    sxbd $r0 = $r0
+; CHECK-NEXT:    abshq $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    absw $r1 = $r1
-; CHECK-NEXT:    absw $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x401
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <2 x i8> @llvm.abs.v2i8(<2 x i8> %a, i1 false)
