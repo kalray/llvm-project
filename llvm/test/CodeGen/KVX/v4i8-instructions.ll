@@ -666,27 +666,11 @@ declare <4 x i8> @llvm.abs.v4i8(<4 x i8>, i1) #0
 define <4 x i8> @test_abs(<4 x i8> %a) #0 {
 ; CHECK-LABEL: test_abs:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srlw $r1 = $r0, 24
-; CHECK-NEXT:    extfz $r2 = $r0, 23, 16
-; CHECK-NEXT:    extfz $r3 = $r0, 15, 8
-; CHECK-NEXT:    zxbd $r0 = $r0
+; CHECK-NEXT:    sxlbhq $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxbd $r1 = $r1
-; CHECK-NEXT:    sxbd $r2 = $r2
+; CHECK-NEXT:    abshq $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxbd $r3 = $r3
-; CHECK-NEXT:    sxbd $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    absw $r1 = $r1
-; CHECK-NEXT:    absw $r2 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    absw $r3 = $r3
-; CHECK-NEXT:    absw $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r1, 15, 8
-; CHECK-NEXT:    insf $r0 = $r3, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <4 x i8> @llvm.abs.v4i8(<4 x i8> %a, i1 false)
