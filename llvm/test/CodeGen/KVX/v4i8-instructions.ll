@@ -818,4 +818,73 @@ define <4 x i8> @concat(<2 x i8> %a, <2 x i8> %b){
   ret <4 x i8> %v
 }
 
+define  <4 x i8> @v4_maxhq_rr_i8(<4 x i8> %a, <4 x i8> %b) {
+; CHECK-LABEL: v4_maxhq_rr_i8:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    sxlbhq $r1 = $r1
+; CHECK-NEXT:    sxlbhq $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    maxhq $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x40100401
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = call <4 x i8> @llvm.smax.v4i8(<4 x i8> %a, <4 x i8> %b)
+  ret <4 x i8> %0
+}
+
+define  <4 x i8> @v4_minhq_rr_i8(<4 x i8> %a, <4 x i8> %b) {
+; CHECK-LABEL: v4_minhq_rr_i8:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    sxlbhq $r1 = $r1
+; CHECK-NEXT:    sxlbhq $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    minhq $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x40100401
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = call <4 x i8> @llvm.smin.v4i8(<4 x i8> %a, <4 x i8> %b)
+  ret <4 x i8> %0
+}
+
+define  <4 x i8> @v4_umaxhq_rr_i8(<4 x i8> %a, <4 x i8> %b) {
+; CHECK-LABEL: v4_umaxhq_rr_i8:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x8000400020001
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x8000400020001
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    maxuhq $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x40100401
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = call <4 x i8> @llvm.umax.v4i8(<4 x i8> %a, <4 x i8> %b)
+  ret <4 x i8> %0
+}
+
+define  <4 x i8> @v4_uminhq_rr_i8(<4 x i8> %a, <4 x i8> %b) {
+; CHECK-LABEL: v4_uminhq_rr_i8:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x8000400020001
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x8000400020001
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    minuhq $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x40100401
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = call <4 x i8> @llvm.umin.v4i8(<4 x i8> %a, <4 x i8> %b)
+  ret <4 x i8> %0
+}
+
+declare <4 x i8> @llvm.smax.v4i8(<4 x i8> %a, <4 x i8> %b)
+declare <4 x i8> @llvm.smin.v4i8(<4 x i8> %a, <4 x i8> %b)
+declare <4 x i8> @llvm.umax.v4i8(<4 x i8> %a, <4 x i8> %b)
+declare <4 x i8> @llvm.umin.v4i8(<4 x i8> %a, <4 x i8> %b)
+
 attributes #0 = { nounwind }
