@@ -594,10 +594,10 @@ define dso_local void @ubto16f64_512(<16 x i16> %a, <16 x double>* %res) "min-le
 define <16 x i16> @test_16f32toub_256(<16 x float>* %ptr, <16 x i16> %passthru) "min-legal-vector-width"="256" {
 ; CHECK-LABEL: test_16f32toub_256:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    vcvttps2dq (%rdi), %ymm1
+; CHECK-NEXT:    vcvttps2udq (%rdi), %ymm1
 ; CHECK-NEXT:    vpslld $31, %ymm1, %ymm1
 ; CHECK-NEXT:    vpmovd2m %ymm1, %k0
-; CHECK-NEXT:    vcvttps2dq 32(%rdi), %ymm1
+; CHECK-NEXT:    vcvttps2udq 32(%rdi), %ymm1
 ; CHECK-NEXT:    vpslld $31, %ymm1, %ymm1
 ; CHECK-NEXT:    vpmovd2m %ymm1, %k1
 ; CHECK-NEXT:    kunpckbw %k0, %k1, %k1
@@ -612,7 +612,7 @@ define <16 x i16> @test_16f32toub_256(<16 x float>* %ptr, <16 x i16> %passthru) 
 define <16 x i16> @test_16f32toub_512(<16 x float>* %ptr, <16 x i16> %passthru) "min-legal-vector-width"="512" {
 ; CHECK-LABEL: test_16f32toub_512:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    vcvttps2dq (%rdi), %zmm1
+; CHECK-NEXT:    vcvttps2udq (%rdi), %zmm1
 ; CHECK-NEXT:    vpslld $31, %zmm1, %zmm1
 ; CHECK-NEXT:    vpmovd2m %zmm1, %k1
 ; CHECK-NEXT:    vmovdqu16 %ymm0, %ymm0 {%k1} {z}

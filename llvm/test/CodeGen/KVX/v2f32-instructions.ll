@@ -566,9 +566,7 @@ define <2 x i16> @test_fptosi_i16(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fixedwp.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r0, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srld $r0 = $r0, 16
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x20100201
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptosi <2 x float> %a to <2 x i16>
@@ -580,9 +578,7 @@ define <2 x i16> @test_fptoui_i16(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fixeduwp.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r0, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srld $r0 = $r0, 16
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x20100201
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptoui <2 x float> %a to <2 x i16>
@@ -592,12 +588,9 @@ define <2 x i16> @test_fptoui_i16(<2 x float> %a) #0 {
 define <2 x i8> @test_fptosi_i8(<2 x float> %a) #0 {
 ; CHECK-LABEL: test_fptosi_i8:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r1 = $r0, 32
-; CHECK-NEXT:    fixedw.rz $r0 = $r0, 0
+; CHECK-NEXT:    fixedwp.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedw.rz $r1 = $r1, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptosi <2 x float> %a to <2 x i8>
@@ -607,12 +600,9 @@ define <2 x i8> @test_fptosi_i8(<2 x float> %a) #0 {
 define <2 x i8> @test_fptoui_i8(<2 x float> %a) #0 {
 ; CHECK-LABEL: test_fptoui_i8:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r1 = $r0, 32
-; CHECK-NEXT:    fixeduw.rz $r0 = $r0, 0
+; CHECK-NEXT:    fixeduwp.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixeduw.rz $r1 = $r1, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptoui <2 x float> %a to <2 x i8>

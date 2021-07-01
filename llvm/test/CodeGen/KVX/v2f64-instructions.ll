@@ -740,6 +740,7 @@ define <2 x i64> @test_fptoui_2xi64(<2 x double> %a) #0 {
   ret <2 x i64> %r
 }
 
+;TODO: Don't need sbmm8, just  insf $r0 = $r1, 31, 16
 define <2 x i16> @test_fptosi_i16(<2 x double> %a) #0 {
 ; CHECK-LABEL: test_fptosi_i16:
 ; CHECK:       # %bb.0:
@@ -747,7 +748,9 @@ define <2 x i16> @test_fptosi_i16(<2 x double> %a) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedd.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 31, 16
+; CHECK-NEXT:    insf $r0 = $r1, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x20100201
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptosi <2 x double> %a to <2 x i16>
@@ -761,7 +764,9 @@ define <2 x i16> @test_fptoui_i16(<2 x double> %a) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedud.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 31, 16
+; CHECK-NEXT:    insf $r0 = $r1, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x20100201
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptoui <2 x double> %a to <2 x i16>
@@ -775,13 +780,17 @@ define <2 x i8> @test_fptosi_i8(<2 x double> %a) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedd.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    insf $r0 = $r1, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptosi <2 x double> %a to <2 x i8>
   ret <2 x i8> %r
 }
 
+; TODO: Could have just insf $r0 = $r1, 15, 8
+; instead of sbmm8(insf)
 define <2 x i8> @test_fptoui_i8(<2 x double> %a) #0 {
 ; CHECK-LABEL: test_fptoui_i8:
 ; CHECK:       # %bb.0:
@@ -789,7 +798,9 @@ define <2 x i8> @test_fptoui_i8(<2 x double> %a) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedud.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    insf $r0 = $r1, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptoui <2 x double> %a to <2 x i8>

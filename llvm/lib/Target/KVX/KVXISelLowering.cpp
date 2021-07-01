@@ -207,9 +207,7 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::SRA, VT, Expand);
   }
 
-  for (auto VT : { MVT::v2f64, MVT::v2i64, MVT::v2i8,
-                   MVT::v4f64, MVT::v4i64, MVT::v4i8,
-                   MVT::v8i8})
+  for (auto VT : {MVT::v2f64, MVT::v2i64, MVT::v4f64, MVT::v4i64, MVT::v8i8})
     setOperationAction(ISD::SETCC, VT, Expand);
 
   for (auto VT : {MVT::v4i32, MVT::v4f32})
@@ -349,14 +347,15 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::FP_TO_UINT, VT, Expand);
   }
 
-  for (auto VT : {MVT::v2i16, MVT::v2i32, MVT::v2i64, MVT::v4i16, MVT::v4i32,
-                  MVT::v4i64}) {
+  setOperationAction(ISD::FP_TO_SINT, MVT::v8i8, Expand);
+  setOperationAction(ISD::FP_TO_UINT, MVT::v8i8, Expand);
+
+  for (auto VT : {MVT::v2i32, MVT::v2i64, MVT::v4i32, MVT::v4i64}) {
     setOperationAction(ISD::FP_TO_SINT, VT, Legal);
     setOperationAction(ISD::FP_TO_UINT, VT, Legal);
   }
 
-  for (auto VT : {MVT::v2i8, MVT::v2i16, MVT::v2i64, MVT::v4i8, MVT::v4i16,
-                  MVT::v4i64, MVT::v8i8}) {
+  for (auto VT : {MVT::v2i64, MVT::v4i64, MVT::v8i8}) {
     setOperationAction(ISD::SINT_TO_FP, VT, Expand);
     setOperationAction(ISD::UINT_TO_FP, VT, Expand);
   }
@@ -432,12 +431,20 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     setLoadExtAction(ISD::EXTLOAD, VT, MVT::f64, Expand);
   }
 
-  // there are no instructions for operations on v2i8, v4i8
   setOperationAction(ISD::MUL, MVT::v8i8, Expand);
 
-  for (auto VT : {MVT::v2i8, MVT::v4i8})
-    for (auto I : {ISD::ADD, ISD::SUB, ISD::MUL})
-      setOperationAction(I, VT, Expand);
+  for (auto I :
+       {ISD::FP_TO_SINT, ISD::FP_TO_UINT, ISD::SINT_TO_FP, ISD::UINT_TO_FP}) {
+    setOperationPromotedToType(I, MVT::v2i16, MVT::v2i32);
+    setOperationPromotedToType(I, MVT::v4i16, MVT::v4i32);
+  }
+
+  for (auto I :
+       {ISD::ADD, ISD::FP_TO_SINT, ISD::FP_TO_UINT, ISD::MUL, ISD::SETCC,
+        ISD::SINT_TO_FP, ISD::SUB, ISD::UINT_TO_FP, ISD::VSELECT}) {
+    setOperationPromotedToType(I, MVT::v2i8, MVT::v2i16);
+    setOperationPromotedToType(I, MVT::v4i8, MVT::v4i16);
+  }
 
   for (auto VT : {MVT::v2i64, MVT::v4i32, MVT::v4i64})
     for (auto I : {ISD::AND, ISD::OR, ISD::XOR, ISD::ADD, ISD::SUB, ISD::MUL})

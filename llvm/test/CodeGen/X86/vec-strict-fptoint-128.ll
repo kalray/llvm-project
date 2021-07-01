@@ -3279,7 +3279,8 @@ define <4 x i1> @strict_vector_fptoui_v4f32_to_v4i1(<4 x float> %a) #0 {
 ;
 ; AVX512F-LABEL: strict_vector_fptoui_v4f32_to_v4i1:
 ; AVX512F:       # %bb.0:
-; AVX512F-NEXT:    vcvttps2dq %xmm0, %xmm0
+; AVX512F-NEXT:    vmovaps %xmm0, %xmm0
+; AVX512F-NEXT:    vcvttps2udq %zmm0, %zmm0
 ; AVX512F-NEXT:    vpslld $31, %xmm0, %xmm0
 ; AVX512F-NEXT:    vptestmd %zmm0, %zmm0, %k1
 ; AVX512F-NEXT:    vpternlogd $255, %zmm0, %zmm0, %zmm0 {%k1} {z}
@@ -3289,7 +3290,7 @@ define <4 x i1> @strict_vector_fptoui_v4f32_to_v4i1(<4 x float> %a) #0 {
 ;
 ; AVX512VL-LABEL: strict_vector_fptoui_v4f32_to_v4i1:
 ; AVX512VL:       # %bb.0:
-; AVX512VL-NEXT:    vcvttps2dq %xmm0, %xmm0
+; AVX512VL-NEXT:    vcvttps2udq %xmm0, %xmm0
 ; AVX512VL-NEXT:    vpslld $31, %xmm0, %xmm0
 ; AVX512VL-NEXT:    vptestmd %xmm0, %xmm0, %k1
 ; AVX512VL-NEXT:    vpcmpeqd %xmm0, %xmm0, %xmm0
@@ -3298,7 +3299,8 @@ define <4 x i1> @strict_vector_fptoui_v4f32_to_v4i1(<4 x float> %a) #0 {
 ;
 ; AVX512DQ-LABEL: strict_vector_fptoui_v4f32_to_v4i1:
 ; AVX512DQ:       # %bb.0:
-; AVX512DQ-NEXT:    vcvttps2dq %xmm0, %xmm0
+; AVX512DQ-NEXT:    vmovaps %xmm0, %xmm0
+; AVX512DQ-NEXT:    vcvttps2udq %zmm0, %zmm0
 ; AVX512DQ-NEXT:    vpslld $31, %xmm0, %xmm0
 ; AVX512DQ-NEXT:    vpmovd2m %zmm0, %k0
 ; AVX512DQ-NEXT:    vpmovm2d %k0, %zmm0
@@ -3308,7 +3310,7 @@ define <4 x i1> @strict_vector_fptoui_v4f32_to_v4i1(<4 x float> %a) #0 {
 ;
 ; AVX512VLDQ-LABEL: strict_vector_fptoui_v4f32_to_v4i1:
 ; AVX512VLDQ:       # %bb.0:
-; AVX512VLDQ-NEXT:    vcvttps2dq %xmm0, %xmm0
+; AVX512VLDQ-NEXT:    vcvttps2udq %xmm0, %xmm0
 ; AVX512VLDQ-NEXT:    vpslld $31, %xmm0, %xmm0
 ; AVX512VLDQ-NEXT:    vpmovd2m %xmm0, %k0
 ; AVX512VLDQ-NEXT:    vpmovm2d %k0, %xmm0

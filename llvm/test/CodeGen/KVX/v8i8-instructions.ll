@@ -846,136 +846,30 @@ define <8 x i8> @test_select(<8 x i8> %a, <8 x i8> %b, i1 zeroext %c) #0 {
 define <8 x i8> @test_select_cc(<8 x i8> %a, <8 x i8> %b, <8 x i8> %c, <8 x i8> %d) #0 {
 ; CHECK-LABEL: test_select_cc:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    zxwd $r4 = $r3
-; CHECK-NEXT:    zxwd $r5 = $r2
-; CHECK-NEXT:    srld $r3 = $r3, 32
-; CHECK-NEXT:    srld $r2 = $r2, 32
+; CHECK-NEXT:    sxlbhq $r4 = $r3
+; CHECK-NEXT:    sxlbhq $r5 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxbd $r6 = $r4
-; CHECK-NEXT:    zxbd $r7 = $r5
-; CHECK-NEXT:    extfz $r8 = $r4, 15, 8
-; CHECK-NEXT:    extfz $r9 = $r5, 15, 8
+; CHECK-NEXT:    sxmbhq $r3 = $r3
+; CHECK-NEXT:    sxmbhq $r2 = $r2
+; CHECK-NEXT:    compnhq.lt $r4 = $r5, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r10 = $r4, 23, 16
-; CHECK-NEXT:    extfz $r11 = $r5, 23, 16
-; CHECK-NEXT:    srlw $r4 = $r4, 24
-; CHECK-NEXT:    srlw $r5 = $r5, 24
+; CHECK-NEXT:    compnhq.lt $r2 = $r2, $r3
+; CHECK-NEXT:    sbmm8 $r3 = $r1, 0x80004000200010
+; CHECK-NEXT:    sbmm8 $r5 = $r0, 0x80004000200010
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxbd $r15 = $r3
-; CHECK-NEXT:    zxbd $r16 = $r2
-; CHECK-NEXT:    sxbd $r6 = $r6
-; CHECK-NEXT:    sxbd $r7 = $r7
+; CHECK-NEXT:    andd $r4 = $r4, 0xff00ff00ff00ff
+; CHECK-NEXT:    andd $r2 = $r2, 0xff00ff00ff00ff
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxbd $r8 = $r8
-; CHECK-NEXT:    sxbd $r9 = $r9
-; CHECK-NEXT:    compw.lt $r6 = $r7, $r6
-; CHECK-NEXT:    zxwd $r35 = $r0
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x8000400020001
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x8000400020001
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r17 = $r3, 15, 8
-; CHECK-NEXT:    extfz $r32 = $r2, 15, 8
-; CHECK-NEXT:    compw.lt $r7 = $r9, $r8
-; CHECK-NEXT:    srlw $r38 = $r35, 24
+; CHECK-NEXT:    cmovehq.even $r4 ? $r0 = $r1
+; CHECK-NEXT:    cmovehq.even $r2 ? $r5 = $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r8 = $r3, 23, 16
-; CHECK-NEXT:    extfz $r9 = $r2, 23, 16
-; CHECK-NEXT:    srlw $r3 = $r3, 24
-; CHECK-NEXT:    srlw $r2 = $r2, 24
+; CHECK-NEXT:    sbmm8 $r1 = $r5, 0x40100401
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxbd $r4 = $r4
-; CHECK-NEXT:    sxbd $r5 = $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxbd $r15 = $r15
-; CHECK-NEXT:    sxbd $r16 = $r16
-; CHECK-NEXT:    compw.lt $r4 = $r5, $r4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxbd $r5 = $r8
-; CHECK-NEXT:    sxbd $r8 = $r9
-; CHECK-NEXT:    compw.lt $r9 = $r16, $r15
-; CHECK-NEXT:    srld $r16 = $r0, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxbd $r10 = $r10
-; CHECK-NEXT:    sxbd $r11 = $r11
-; CHECK-NEXT:    copyw $r41 = $r9
-; CHECK-NEXT:    make $r9 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxbd $r17 = $r17
-; CHECK-NEXT:    sxbd $r32 = $r32
-; CHECK-NEXT:    compw.lt $r10 = $r11, $r10
-; CHECK-NEXT:    compw.lt $r5 = $r8, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    compw.lt $r11 = $r32, $r17
-; CHECK-NEXT:    cmoved.weqz $r41 ? $r9 = 0
-; CHECK-NEXT:    sxbd $r3 = $r3
-; CHECK-NEXT:    srld $r15 = $r1, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxbd $r2 = $r2
-; CHECK-NEXT:    copyw $r41 = $r11
-; CHECK-NEXT:    make $r11 = -1
-; CHECK-NEXT:    extfz $r8 = $r16, 23, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    compw.lt $r2 = $r2, $r3
-; CHECK-NEXT:    cmoved.weqz $r41 ? $r11 = 0
-; CHECK-NEXT:    copyw $r41 = $r5
-; CHECK-NEXT:    make $r5 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r41 ? $r5 = 0
-; CHECK-NEXT:    copyw $r41 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    extfz $r3 = $r15, 23, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlw $r17 = $r15, 24
-; CHECK-NEXT:    srlw $r32 = $r16, 24
-; CHECK-NEXT:    cmoved.weqz $r41 ? $r2 = 0
-; CHECK-NEXT:    cmoved.wnez $r5 ? $r3 = $r8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r2 ? $r17 = $r32
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    make $r5 = -1
-; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r33 = $r15, 15, 8
-; CHECK-NEXT:    cmoved.weqz $r6 ? $r2 = 0
-; CHECK-NEXT:    make $r6 = -1
-; CHECK-NEXT:    zxbd $r15 = $r15
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxbd $r0 = $r16
-; CHECK-NEXT:    cmoved.weqz $r7 ? $r5 = 0
-; CHECK-NEXT:    copyw $r7 = $r4
-; CHECK-NEXT:    make $r4 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r34 = $r16, 15, 8
-; CHECK-NEXT:    cmoved.wnez $r9 ? $r15 = $r0
-; CHECK-NEXT:    srlw $r37 = $r1, 24
-; CHECK-NEXT:    zxbd $r0 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r7 ? $r4 = 0
-; CHECK-NEXT:    extfz $r16 = $r1, 23, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r39 = $r1, 15, 8
-; CHECK-NEXT:    extfz $r40 = $r35, 15, 8
-; CHECK-NEXT:    zxbd $r1 = $r35
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r36 = $r35, 23, 16
-; CHECK-NEXT:    cmoved.weqz $r10 ? $r6 = 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r11 ? $r33 = $r34
-; CHECK-NEXT:    cmoved.wnez $r4 ? $r37 = $r38
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r6 ? $r16 = $r36
-; CHECK-NEXT:    cmoved.wnez $r5 ? $r39 = $r40
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r2 ? $r0 = $r1
-; CHECK-NEXT:    insf $r3 = $r17, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r15 = $r33, 15, 8
-; CHECK-NEXT:    insf $r16 = $r37, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r39, 15, 8
-; CHECK-NEXT:    insf $r15 = $r3, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r16, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r15, 63, 32
+; CHECK-NEXT:    insf $r0 = $r1, 63, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %cc = icmp slt <8 x i8> %c, %d
