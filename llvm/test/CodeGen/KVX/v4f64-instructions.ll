@@ -1093,20 +1093,25 @@ define <4 x i64> @test_fptoui_2xi64(<4 x double> %a) #0 {
   ret <4 x i64> %r
 }
 
+; TODO: Don't need the sbmm8, just 3 insf
 define <4 x i16> @test_fptosi_i16(<4 x double> %a) #0 {
 ; CHECK-LABEL: test_fptosi_i16:
 ; CHECK:       # %bb.0:
+; CHECK-NEXT:    fixedd.rz $r3 = $r3, 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fixedd.rz $r5 = $r2, 0
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedd.rz $r1 = $r1, 0
+; CHECK-NEXT:    insf $r5 = $r3, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedd.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedd.rz $r2 = $r2, 0
-; CHECK-NEXT:    insf $r0 = $r1, 31, 16
+; CHECK-NEXT:    insf $r0 = $r1, 63, 32
+; CHECK-NEXT:    sbmm8 $r1 = $r5, 0x20100201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedd.rz $r1 = $r3, 0
-; CHECK-NEXT:    insf $r0 = $r2, 47, 32
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x20100201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 63, 48
+; CHECK-NEXT:    insf $r0 = $r1, 63, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptosi <4 x double> %a to <4 x i16>
@@ -1116,17 +1121,21 @@ define <4 x i16> @test_fptosi_i16(<4 x double> %a) #0 {
 define <4 x i16> @test_fptoui_i16(<4 x double> %a) #0 {
 ; CHECK-LABEL: test_fptoui_i16:
 ; CHECK:       # %bb.0:
+; CHECK-NEXT:    fixedud.rz $r3 = $r3, 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fixedud.rz $r5 = $r2, 0
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedud.rz $r1 = $r1, 0
+; CHECK-NEXT:    insf $r5 = $r3, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedud.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedud.rz $r2 = $r2, 0
-; CHECK-NEXT:    insf $r0 = $r1, 31, 16
+; CHECK-NEXT:    insf $r0 = $r1, 63, 32
+; CHECK-NEXT:    sbmm8 $r1 = $r5, 0x20100201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedud.rz $r1 = $r3, 0
-; CHECK-NEXT:    insf $r0 = $r2, 47, 32
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x20100201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 63, 48
+; CHECK-NEXT:    insf $r0 = $r1, 63, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptoui <4 x double> %a to <4 x i16>
@@ -1138,16 +1147,19 @@ define <4 x i8> @test_fptosi_i8(<4 x double> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fixedd.rz $r3 = $r3, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedd.rz $r2 = $r2, 0
+; CHECK-NEXT:    fixedd.rz $r5 = $r2, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedd.rz $r1 = $r1, 0
-; CHECK-NEXT:    insf $r2 = $r3, 15, 8
+; CHECK-NEXT:    insf $r5 = $r3, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedd.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    insf $r0 = $r1, 63, 32
+; CHECK-NEXT:    sbmm8 $r1 = $r5, 0x1001
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 31, 16
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptosi <4 x double> %a to <4 x i8>
@@ -1159,16 +1171,19 @@ define <4 x i8> @test_fptoui_i8(<4 x double> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fixedud.rz $r3 = $r3, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedud.rz $r2 = $r2, 0
+; CHECK-NEXT:    fixedud.rz $r5 = $r2, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedud.rz $r1 = $r1, 0
-; CHECK-NEXT:    insf $r2 = $r3, 15, 8
+; CHECK-NEXT:    insf $r5 = $r3, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedud.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    insf $r0 = $r1, 63, 32
+; CHECK-NEXT:    sbmm8 $r1 = $r5, 0x1001
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 31, 16
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptoui <4 x double> %a to <4 x i8>

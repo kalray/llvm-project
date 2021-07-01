@@ -558,9 +558,7 @@ define <2 x i16> @test_fptosi_i16(<2 x half> %a) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedwp.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r0, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srld $r0 = $r0, 16
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x20100201
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptosi <2 x half> %a to <2 x i16>
@@ -603,9 +601,7 @@ define <2 x i16> @test_fptoui_2xi16(<2 x half> %a) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixeduwp.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r0, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srld $r0 = $r0, 16
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x20100201
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptoui <2 x half> %a to <2 x i16>
@@ -644,20 +640,12 @@ define <2 x i64> @test_fptoui_2xi64(<2 x half> %a) #0 {
 define <2 x half> @test_uitofp_2xi16(<2 x i16> %a) #0 {
 ; CHECK-LABEL: test_uitofp_2xi16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srlw $r1 = $r0, 16
-; CHECK-NEXT:    zxhd $r0 = $r0
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x80400000201
+; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxhd $r1 = $r1
-; CHECK-NEXT:    zxhd $r0 = $r0
+; CHECK-NEXT:    floatuwp.rn $r0 = $r0, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatuw.rn $r1 = $r1, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatuw.rn $r0 = $r0, 0
-; CHECK-NEXT:    fnarrowwh.rn $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowwh.rn $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 31, 16
+; CHECK-NEXT:    fnarrowwhq.rn $r0 = $r0r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = uitofp <2 x i16> %a to <2 x half>
