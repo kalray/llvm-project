@@ -70,3 +70,28 @@ entry:
 
 declare i32 @llvm.kvx.aladdw(i8*, i32) #3
 
+define i64 @alclrd(i8* readonly %p){
+; CHECK-LABEL: alclrd:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    alclrd $r0 = 0[$r0]
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = tail call i64 @llvm.kvx.alclrd(i8* %p)
+  ret i64 %0
+}
+
+declare i64 @llvm.kvx.alclrd(i8*) #3
+
+define i32 @alclrw(i8* readonly %p){
+; CHECK-LABEL: alclrw:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    alclrw $r0 = 0[$r0]
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = tail call i32 @llvm.kvx.alclrw(i8* %p)
+  ret i32 %0
+}
+
+declare i32 @llvm.kvx.alclrw(i8*) #3

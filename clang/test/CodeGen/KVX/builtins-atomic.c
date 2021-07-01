@@ -38,3 +38,21 @@ unsigned long aladdd(void *p, long v) {
 unsigned int aladdw(void *p, int v) {
   return __builtin_kvx_aladdw(p, v);
 }
+
+// CHECK-LABEL: @alclrd(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.alclrd(i8* [[P:%.*]])
+// CHECK-NEXT:    ret i64 [[TMP0]]
+//
+unsigned long alclrd(void *p) {
+  return __builtin_kvx_alclrd(p);
+}
+
+// CHECK-LABEL: @alclrw(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call i32 @llvm.kvx.alclrw(i8* [[P:%.*]])
+// CHECK-NEXT:    ret i32 [[TMP0]]
+//
+unsigned int alclrw(void *p) {
+  return __builtin_kvx_alclrw(p);
+}
