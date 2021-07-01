@@ -255,6 +255,14 @@ FunctionPass *createJumpThreadingPass(bool FreezeSelectCond = false,
 
 //===----------------------------------------------------------------------===//
 //
+// DFAJumpThreading - When a switch statement inside a loop is used to
+// implement a deterministic finite automata we can jump thread the switch
+// statement reducing number of conditional jumps.
+//
+FunctionPass *createDFAJumpThreadingPass();
+
+//===----------------------------------------------------------------------===//
+//
 // AggressiveJumpThreading - This pass performs more aggressive 'jump threading'
 // than the JumpThreading pass. The pass can jump over loop heads.
 // As a result it can create unnatural loops.

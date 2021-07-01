@@ -96,6 +96,10 @@ cl::opt<bool> EnableLoopFlatten("enable-loop-flatten", cl::init(false),
                                 cl::Hidden,
                                 cl::desc("Enable the LoopFlatten Pass"));
 
+cl::opt<bool> EnableDFAJumpThreading("enable-dfa-jump-thread",
+                                     cl::desc("Enable DFA jump threading."),
+                                     cl::init(true), cl::Hidden);
+
 static cl::opt<bool>
     EnablePrepareForThinLTO("prepare-for-thinlto", cl::init(false), cl::Hidden,
                             cl::desc("Enable preparation for ThinLTO."));
@@ -493,6 +497,9 @@ void PassManagerBuilder::addFunctionSimplificationPasses(
   MPM.add(createInstructionCombiningPass());
   addExtensionsToPM(EP_Peephole, MPM);
   if (OptLevel > 1) {
+    if (EnableDFAJumpThreading && SizeLevel == 0)
+      MPM.add(createDFAJumpThreadingPass());
+
     MPM.add(createJumpThreadingPass());         // Thread jumps
     MPM.add(createCorrelatedValuePropagationPass());
   }
@@ -843,7 +850,7 @@ void PassManagerBuilder::populateModulePassManager(
   MPM.add(createVectorCombinePass());
 
   addExtensionsToPM(EP_Peephole, MPM);
-  if (EnableAJT || OptLevel > 2) {
+  if (EnableAJT) {
     MPM.add(createAJTPass());
     MPM.add(createCorrelatedValuePropagationPass());
   }
