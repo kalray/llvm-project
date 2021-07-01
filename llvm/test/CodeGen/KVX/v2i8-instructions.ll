@@ -696,4 +696,72 @@ define <2 x i8> @nandw_v2i8_ri37_2(<2 x i8> %0) {
   ret <2 x i8> %3
 }
 
+define  <2 x i8> @v2_maxhq_rr_i8(<2 x i8> %a, <2 x i8> %b) {
+; CHECK-LABEL: v2_maxhq_rr_i8:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    sxlbhq $r1 = $r1
+; CHECK-NEXT:    sxlbhq $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    maxhq $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x401
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = call <2 x i8> @llvm.smax.v2i8(<2 x i8> %a, <2 x i8> %b)
+  ret <2 x i8> %0
+}
+
+define  <2 x i8> @v2_minhq_rr_i8(<2 x i8> %a, <2 x i8> %b) {
+; CHECK-LABEL: v2_minhq_rr_i8:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    sxlbhq $r1 = $r1
+; CHECK-NEXT:    sxlbhq $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    minhq $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x401
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = call <2 x i8> @llvm.smin.v2i8(<2 x i8> %a, <2 x i8> %b)
+  ret <2 x i8> %0
+}
+
+define  <2 x i8> @v2_umaxhq_rr_i8(<2 x i8> %a, <2 x i8> %b) {
+; CHECK-LABEL: v2_umaxhq_rr_i8:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x20001
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x20001
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    maxuhq $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x401
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = call <2 x i8> @llvm.umax.v2i8(<2 x i8> %a, <2 x i8> %b)
+  ret <2 x i8> %0
+}
+
+define  <2 x i8> @v2_uminhq_rr_i8(<2 x i8> %a, <2 x i8> %b) {
+; CHECK-LABEL: v2_uminhq_rr_i8:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x20001
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x20001
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    minuhq $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x401
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = call <2 x i8> @llvm.umin.v2i8(<2 x i8> %a, <2 x i8> %b)
+  ret <2 x i8> %0
+}
+
+declare <2 x i8> @llvm.smax.v2i8(<2 x i8> %a, <2 x i8> %b)
+declare <2 x i8> @llvm.smin.v2i8(<2 x i8> %a, <2 x i8> %b)
+declare <2 x i8> @llvm.umax.v2i8(<2 x i8> %a, <2 x i8> %b)
+declare <2 x i8> @llvm.umin.v2i8(<2 x i8> %a, <2 x i8> %b)
 attributes #0 = { nounwind }

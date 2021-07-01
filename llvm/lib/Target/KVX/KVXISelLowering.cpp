@@ -441,7 +441,8 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
 
   for (auto I :
        {ISD::ABS, ISD::ADD, ISD::FP_TO_SINT, ISD::FP_TO_UINT, ISD::MUL,
-        ISD::SETCC, ISD::SINT_TO_FP, ISD::SUB, ISD::UINT_TO_FP, ISD::VSELECT}) {
+                 ISD::SETCC, ISD::SINT_TO_FP, ISD::SMAX, ISD::SMIN, ISD::SUB,
+                 ISD::UINT_TO_FP, ISD::UMAX, ISD::UMIN, ISD::VSELECT}) {
     setOperationPromotedToType(I, MVT::v2i8, MVT::v2i16);
     setOperationPromotedToType(I, MVT::v4i8, MVT::v4i16);
   }
