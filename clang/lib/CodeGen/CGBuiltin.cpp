@@ -20553,6 +20553,19 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     return Builder.CreateCall(Callee, {Addr, Expect, Update});
   }
 
+  case KVX::BI__builtin_kvx_alclrw: {
+    Value *Addr =
+        Builder.CreateBitCast(EmitScalarExpr(E->getArg(0)), Int8PtrTy);
+    Function *Callee = CGM.getIntrinsic(Intrinsic::kvx_alclrw);
+    return Builder.CreateCall(Callee, {Addr});
+  }
+  case KVX::BI__builtin_kvx_alclrd: {
+    Value *Addr =
+        Builder.CreateBitCast(EmitScalarExpr(E->getArg(0)), Int8PtrTy);
+    Function *Callee = CGM.getIntrinsic(Intrinsic::kvx_alclrd);
+    return Builder.CreateCall(Callee, {Addr});
+  }
+
   case KVX::BI__builtin_kvx_lbz:
     return Builder.CreateZExt(KVX_emitLoadBuiltin(*this, E, Int8Ty), Int64Ty);
   case KVX::BI__builtin_kvx_lbs:

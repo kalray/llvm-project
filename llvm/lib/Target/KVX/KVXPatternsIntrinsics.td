@@ -64,6 +64,9 @@ def: Pat<(int_kvx_acswapd i64:$addr, i64:$expect, i64:$update), (i64 (EXTRACT_SU
   (v2i64 (ACSWAPDri10 (i64 0), SingleReg:$addr, (INSERT_SUBREG (INSERT_SUBREG (v2i64 (IMPLICIT_DEF)),
     SingleReg:$expect, sub_s0), SingleReg:$update, sub_s1))), sub_s1))>;
 
+def: Pat<(int_kvx_alclrw i64:$addr), (ALCLRWri10 (i64 0), SingleReg:$addr)>;
+def: Pat<(int_kvx_alclrd i64:$addr), (ALCLRDri10 (i64 0), SingleReg:$addr)>;
+
 def: Pat<(int_kvx_fabswp v2f32:$r), (FABSWP SingleReg:$r)>;
 def: Pat<(int_kvx_fnegwp v2f32:$r), (FNEGWP SingleReg:$r)>;
 
