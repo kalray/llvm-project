@@ -671,22 +671,17 @@ define <4 x i1> @test_fcmp_ord(<4 x half> %a, <4 x half> %b) #0 {
 define <4 x i16> @test_fptosi_i16(<4 x half> %a) #0 {
 ; CHECK-LABEL: test_fptosi_i16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fwidenlhwp $r1 = $r0
-; CHECK-NEXT:    fwidenmhwp $r0 = $r0
+; CHECK-NEXT:    fwidenmhwp $r1 = $r0
+; CHECK-NEXT:    fwidenlhwp $r0 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedwp.rz $r1 = $r1, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r2 = $r1, 47, 32
 ; CHECK-NEXT:    fixedwp.rz $r0 = $r0, 0
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x20100201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r2, 31, 16
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x20100201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r0, 47, 32
-; CHECK-NEXT:    extfz $r0 = $r0, 47, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r0, 63, 48
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    insf $r0 = $r1, 63, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptosi <4 x half> %a to <4 x i16>
@@ -735,22 +730,17 @@ define <4 x i64> @test_fptosi_i64(<4 x half> %a) #0 {
 define <4 x i16> @test_fptoui_4xi16(<4 x half> %a) #0 {
 ; CHECK-LABEL: test_fptoui_4xi16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fwidenlhwp $r1 = $r0
-; CHECK-NEXT:    fwidenmhwp $r0 = $r0
+; CHECK-NEXT:    fwidenmhwp $r1 = $r0
+; CHECK-NEXT:    fwidenlhwp $r0 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixeduwp.rz $r1 = $r1, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r2 = $r1, 47, 32
 ; CHECK-NEXT:    fixeduwp.rz $r0 = $r0, 0
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x20100201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r2, 31, 16
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x20100201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r0, 47, 32
-; CHECK-NEXT:    extfz $r0 = $r0, 47, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r0, 63, 48
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    insf $r0 = $r1, 63, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptoui <4 x half> %a to <4 x i16>
@@ -799,33 +789,14 @@ define <4 x i64> @test_fptoui_4xi64(<4 x half> %a) #0 {
 define <4 x half> @test_uitofp_4xi16(<4 x i16> %a) #0 {
 ; CHECK-LABEL: test_uitofp_4xi16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srld $r1 = $r0, 48
-; CHECK-NEXT:    extfz $r2 = $r0, 47, 32
-; CHECK-NEXT:    srlw $r3 = $r0, 16
-; CHECK-NEXT:    zxhd $r0 = $r0
+; CHECK-NEXT:    sbmm8 $r2 = $r0, 0x80400000201
+; CHECK-NEXT:    sbmm8 $r1 = $r0, 0x804000002010
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxhd $r1 = $r1
-; CHECK-NEXT:    zxhd $r2 = $r2
+; CHECK-NEXT:    floatuwp.rn $r2 = $r2, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxhd $r3 = $r3
-; CHECK-NEXT:    zxhd $r0 = $r0
-; CHECK-NEXT:    floatuw.rn $r1 = $r1, 0
+; CHECK-NEXT:    floatuwp.rn $r3 = $r1, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatuw.rn $r2 = $r2, 0
-; CHECK-NEXT:    fnarrowwh.rn $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatuw.rn $r3 = $r3, 0
-; CHECK-NEXT:    fnarrowwh.rn $r2 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r1, 31, 16
-; CHECK-NEXT:    floatuw.rn $r0 = $r0, 0
-; CHECK-NEXT:    fnarrowwh.rn $r3 = $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowwh.rn $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r3, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 63, 32
+; CHECK-NEXT:    fnarrowwhq.rn $r0 = $r2r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = uitofp <4 x i16> %a to <4 x half>
