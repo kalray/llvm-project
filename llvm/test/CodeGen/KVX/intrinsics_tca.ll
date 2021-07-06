@@ -419,9 +419,9 @@ define void @test_fmma242hw3(<256 x i1>* %p0){
   ret void
 }
 
-declare <512 x i1> @llvm.kvx.fmma242hw(<512 x i1>, <256 x i1>, <256 x i1>)
-define void @test_fmma242hw(<512 x i1>* %p0){
-; CHECK-LABEL: test_fmma242hw:
+declare <512 x i1> @llvm.kvx.fmma444hw(<512 x i1>, <256 x i1>, <256 x i1>)
+define void @test_fmma444hw(<512 x i1>* %p0){
+; CHECK-LABEL: test_fmma444hw:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fmma242hw2 $a1_lo = $a0a1, $a0, $a0
 ; CHECK-NEXT:    ;;
@@ -435,7 +435,7 @@ define void @test_fmma242hw(<512 x i1>* %p0){
 ; CHECK-NEXT:    sv 0[$r0] = $a0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %v1 = tail call <512 x i1> @llvm.kvx.fmma242hw(<512 x i1> undef, <256 x i1> undef, <256 x i1> undef)
+  %v1 = tail call <512 x i1> @llvm.kvx.fmma444hw(<512 x i1> undef, <256 x i1> undef, <256 x i1> undef)
   store <512 x i1> %v1, <512 x i1>* %p0, align 32
   ret void
 }
@@ -803,124 +803,166 @@ declare void @llvm.kvx.sv.cond(i8*, <256 x i1>, i64, i32) #3
 define <4 x i64> @test_tca_builtins(i64 %a, i64 %b, i64 %c, i64 %d, <256 x i1>* %v, <512 x i1>* %w, <1024 x i1>* %m) {
 ; CHECK-LABEL: test_tca_builtins:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 4
-; CHECK-NEXT:    make $r35 = 3
-; CHECK-NEXT:    make $r34 = 2
 ; CHECK-NEXT:    make $r33 = 1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    movetq $a0_lo = $r35, $r1
-; CHECK-NEXT:    lv $a1 = 0[$r4]
 ; CHECK-NEXT:    make $r32 = 0
-; CHECK-NEXT:    addd $r1 = $r4, 96
+; CHECK-NEXT:    lv $a0 = 0[$r4]
+; CHECK-NEXT:    make $r34 = 2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a1 = 0[$r4]
-; CHECK-NEXT:    movetq $a0_hi = $r33, $r34
+; CHECK-NEXT:    make $r35 = 3
+; CHECK-NEXT:    movetq $a0_hi = $r32, $r33
+; CHECK-NEXT:    make $r1 = 4
 ; CHECK-NEXT:    addd $r2 = $r4, 128
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 0[$r4] = $a0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a1 = 0[$r4]
+; CHECK-NEXT:    lv $a0 = 0[$r4]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a7 = 96[$r6]
+; CHECK-NEXT:    movetq $a0_lo = $r35, $r34
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a6 = 64[$r6]
+; CHECK-NEXT:    movetq $a1_lo = $r35, $r1
+; CHECK-NEXT:    addd $r1 = $r4, 96
+; CHECK-NEXT:    sv 0[$r4] = $a0
+; CHECK-NEXT:    movetq $a1_hi = $r33, $r34
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a5 = 32[$r6]
+; CHECK-NEXT:    sv 32[$r4] = $a1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a4 = 0[$r6]
-; CHECK-NEXT:    movetq $a0_lo = $r32, $r33
-; CHECK-NEXT:    movetq $a0_hi = $r34, $r35
+; CHECK-NEXT:    lv $a5 = 0[$r4]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a3 = 32[$r5]
+; CHECK-NEXT:    lv $a3 = 96[$r6]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a2 = 0[$r5]
-; CHECK-NEXT:    alignv $a1 = $a0, $a1, 16
-; CHECK-NEXT:    mma444hbd0 $a8a9a10a11 = $a4a5a6a7, $a0, $a0
+; CHECK-NEXT:    lv $a2 = 64[$r6]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    aligno $r8r9r10r11 = $a0, $a1, 1
-; CHECK-NEXT:    mma444hbd1 $a8a9a10a11 = $a8a9a10a11, $a0, $a0
+; CHECK-NEXT:    lv $a1 = 32[$r6]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma444hd $a8a9a10a11 = $a8a9a10a11, $a0, $a0
+; CHECK-NEXT:    lv $a0 = 0[$r6]
+; CHECK-NEXT:    movetq $a4_lo = $r32, $r33
+; CHECK-NEXT:    movetq $a4_hi = $r34, $r35
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma444suhbd0 $a8a9a10a11 = $a8a9a10a11, $a0, $a0
+; CHECK-NEXT:    lv $a7 = 32[$r5]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma444suhbd1 $a8a9a10a11 = $a8a9a10a11, $a0, $a0
+; CHECK-NEXT:    lv $a6 = 0[$r5]
+; CHECK-NEXT:    alignv $a5 = $a4, $a5, 16
+; CHECK-NEXT:    convwbv0.ru.sat $a8_x = $a0a1a2a3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma444suhd $a8a9a10a11 = $a8a9a10a11, $a0, $a0
+; CHECK-NEXT:    aligno $r8r9r10r11 = $a4, $a5, 1
+; CHECK-NEXT:    convdhv0.rn.sat $a4_lo = $a0a1a2a3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma444uhbd0 $a8a9a10a11 = $a8a9a10a11, $a0, $a0
+; CHECK-NEXT:    convwbv1.ru.sat $a8_y = $a0a1a2a3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma444uhbd1 $a8a9a10a11 = $a8a9a10a11, $a0, $a0
+; CHECK-NEXT:    convdhv1.ru.satu $a4_hi = $a0a1a2a3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma444uhd $a8a9a10a11 = $a8a9a10a11, $a0, $a0
+; CHECK-NEXT:    convwbv2.ru.sat $a8_z = $a0a1a2a3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    convwbv0.ru.sat $a12_x = $a4a5a6a7
+; CHECK-NEXT:    convwbv3.ru.sat $a8_t = $a0a1a2a3
+; CHECK-NEXT:    copyv $a10 = $a4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    convwbv1.ru.sat $a12_y = $a4a5a6a7
+; CHECK-NEXT:    fmma242hw0 $a10_lo = $a6a7, $a10, $a8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    convwbv2.ru.sat $a12_z = $a4a5a6a7
+; CHECK-NEXT:    copyv $a8 = $a10
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma444ushbd0 $a8a9a10a11 = $a8a9a10a11, $a0, $a0
+; CHECK-NEXT:    fmma242hw1 $a8_hi = $a6a7, $a4, $a8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    convwbv3.ru.sat $a12_t = $a4a5a6a7
+; CHECK-NEXT:    copyv $a4 = $a8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma444ushbd1 $a4a5a6a7 = $a8a9a10a11, $a0, $a0
+; CHECK-NEXT:    fmma242hw2 $a4_lo = $a6a7, $a4, $a10
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmma242hw2 $a9_lo = $a2a3, $a12, $a0
+; CHECK-NEXT:    copyv $a10 = $a4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmma242hw3 $a9_hi = $a2a3, $a12, $a0
+; CHECK-NEXT:    fmma242hw3 $a10_hi = $a6a7, $a8, $a10
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmma242hw0 $a8_lo = $a2a3, $a12, $a0
+; CHECK-NEXT:    mma444hbd0 $a0a1a2a3 = $a0a1a2a3, $a10, $a10
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmma242hw1 $a8_hi = $a2a3, $a12, $a0
+; CHECK-NEXT:    fmma242hw2 $a9_lo = $a6a7, $a4, $a10
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma484bw $a2a3 = $a8a9, $a0, $a0
+; CHECK-NEXT:    fmma242hw3 $a9_hi = $a6a7, $a4, $a10
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma484subw $a2a3 = $a2a3, $a0, $a0
+; CHECK-NEXT:    fmma242hw0 $a8_lo = $a6a7, $a4, $a10
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma484ubw $a2a3 = $a2a3, $a0, $a0
+; CHECK-NEXT:    fmma242hw1 $a8_hi = $a6a7, $a4, $a10
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma484usbw $a2a3 = $a2a3, $a0, $a0
+; CHECK-NEXT:    mma444hbd1 $a0a1a2a3 = $a0a1a2a3, $a10, $a10
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fscalewv $a8 = $a12
+; CHECK-NEXT:    mma444hbd0 $a0a1a2a3 = $a0a1a2a3, $a8, $a10
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowwhv.rn.s $a9 = $a2a3
+; CHECK-NEXT:    mma444hbd1 $a0a1a2a3 = $a0a1a2a3, $a9, $a10
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fscalewv.rna.relu $a1 = $a8
+; CHECK-NEXT:    mma444hd $a0a1a2a3 = $a0a1a2a3, $a10, $a10
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma444ushd $a4a5a6a7 = $a4a5a6a7, $a0, $a0
-; CHECK-NEXT:    movefo $r8r9r10r11 = $a1
-; CHECK-NEXT:    movetq $a1_lo = $r8, $r9
-; CHECK-NEXT:    movetq $a1_hi = $r10, $r11
+; CHECK-NEXT:    mma444suhbd0 $a0a1a2a3 = $a0a1a2a3, $a10, $a10
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fscalewv.relu $a0 = $a1
+; CHECK-NEXT:    mma444suhbd1 $a0a1a2a3 = $a0a1a2a3, $a10, $a10
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mt44d $a4a5a6a7 = $a4a5a6a7
-; CHECK-NEXT:    lv.s.even $r0 ? $a0 = [$r1]
+; CHECK-NEXT:    mma444suhbd0 $a0a1a2a3 = $a0a1a2a3, $a8, $a10
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    mma444suhbd1 $a0a1a2a3 = $a0a1a2a3, $a9, $a10
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    mma444suhd $a0a1a2a3 = $a0a1a2a3, $a10, $a10
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    mma444uhbd0 $a0a1a2a3 = $a0a1a2a3, $a10, $a10
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    mma444uhbd1 $a0a1a2a3 = $a0a1a2a3, $a10, $a10
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    mma444uhbd0 $a0a1a2a3 = $a0a1a2a3, $a8, $a10
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    mma444uhbd1 $a0a1a2a3 = $a0a1a2a3, $a9, $a10
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    mma484bw $a6a7 = $a8a9, $a10, $a10
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    mma444uhd $a0a1a2a3 = $a0a1a2a3, $a10, $a10
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    mma484subw $a6a7 = $a6a7, $a10, $a10
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    mma444ushbd0 $a0a1a2a3 = $a0a1a2a3, $a10, $a10
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    mma484ubw $a6a7 = $a6a7, $a10, $a10
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    mma444ushbd1 $a0a1a2a3 = $a0a1a2a3, $a10, $a10
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    mma484usbw $a6a7 = $a6a7, $a10, $a10
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fscalewv $a4 = $a4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    mma444ushbd0 $a0a1a2a3 = $a0a1a2a3, $a8, $a10
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fnarrowwhv.rn.s $a5 = $a6a7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fscalewv.rna.relu $a4 = $a4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    mma444ushbd1 $a0a1a2a3 = $a0a1a2a3, $a9, $a10
+; CHECK-NEXT:    movefo $r8r9r10r11 = $a4
+; CHECK-NEXT:    movetq $a4_lo = $r8, $r9
+; CHECK-NEXT:    movetq $a4_hi = $r10, $r11
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    mma444ushd $a0a1a2a3 = $a0a1a2a3, $a10, $a10
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fscalewv.relu $a4 = $a4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    mt44d $a0a1a2a3 = $a0a1a2a3
+; CHECK-NEXT:    lv.s.even $r0 ? $a4 = [$r1]
 ; CHECK-NEXT:    addd $r1 = $r4, 160
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv.s $a0 = 0[$r4]
+; CHECK-NEXT:    lv.s $a4 = 0[$r4]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv.c3.s $a4a5a6a7 = 0[$r2]
+; CHECK-NEXT:    lv.c3.s $a0a1a2a3 = 0[$r2]
 ; CHECK-NEXT:    addd $r2 = $r4, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv.c2.odd $r0 ? $a4a5a6a7 = [$r1]
+; CHECK-NEXT:    lv.c2.odd $r0 ? $a0a1a2a3 = [$r1]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 0[$r4] = $a0
+; CHECK-NEXT:    sv 0[$r4] = $a4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv.even $r33 ? [$r2] = $a0
+; CHECK-NEXT:    sv.even $r33 ? [$r2] = $a4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 32[$r5] = $a3
+; CHECK-NEXT:    sv 32[$r5] = $a7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 0[$r5] = $a2
+; CHECK-NEXT:    sv 0[$r5] = $a6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 96[$r6] = $a7
+; CHECK-NEXT:    sv 96[$r6] = $a3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 64[$r6] = $a6
+; CHECK-NEXT:    sv 64[$r6] = $a2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 32[$r6] = $a5
+; CHECK-NEXT:    sv 32[$r6] = $a1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 0[$r6] = $a4
+; CHECK-NEXT:    sv 0[$r6] = $a0
 ; CHECK-NEXT:    copyd $r0 = $r8
 ; CHECK-NEXT:    copyd $r1 = $r9
 ; CHECK-NEXT:    copyd $r2 = $r10
@@ -931,71 +973,72 @@ define <4 x i64> @test_tca_builtins(i64 %a, i64 %b, i64 %c, i64 %d, <256 x i1>* 
 entry:
   %0 = load volatile <256 x i1>, <256 x i1>* %v, align 32
   %1 = call <256 x i1> @llvm.kvx.movetohi(<256 x i1> %0, i64 0, i64 1)
+  store volatile <256 x i1> %1, <256 x i1>* %v, align 32
   %2 = load volatile <256 x i1>, <256 x i1>* %v, align 32
   %3 = call <256 x i1> @llvm.kvx.movetolo(<256 x i1> %2, i64 3, i64 2)
+  store volatile <256 x i1> %3, <256 x i1>* %v, align 32
   %4 = call <256 x i1> @llvm.kvx.moveto(i64 1, i64 2, i64 3, i64 4)
-  store volatile <256 x i1> %4, <256 x i1>* %v, align 32
+  %arrayidx4 = getelementptr inbounds <256 x i1>, <256 x i1>* %v, i64 1
+  store volatile <256 x i1> %4, <256 x i1>* %arrayidx4, align 32
   %5 = call <256 x i1> @llvm.kvx.moveoto(<4 x i64> <i64 0, i64 1, i64 2, i64 3>)
   %6 = load volatile <256 x i1>, <256 x i1>* %v, align 32
   %7 = call <256 x i1> @llvm.kvx.alignv(<256 x i1> %5, <256 x i1> %6, i64 16)
   %8 = call <4 x i64> @llvm.kvx.alignov(<256 x i1> %5, <256 x i1> %7, i64 1)
-  %9 = load volatile <1024 x i1>, <1024 x i1>* %m, align 128
+  %9 = load volatile <1024 x i1>, <1024 x i1>* %m, align 32
   %10 = call <256 x i1> @llvm.kvx.convdhv0(<256 x i1> %5, <1024 x i1> %9, i32 0, i32 0)
-  %11 = call <256 x i1> @llvm.kvx.convdhv1(<256 x i1> %5, <1024 x i1> %9, i32 1, i32 1)
-  %12 = call <256 x i1> @llvm.kvx.convdhv(<1024 x i1> %9, i32 4, i32 0)
-  %13 = call <256 x i1> @llvm.kvx.convwbv0(<256 x i1> %12, <1024 x i1> %9, i32 1, i32 0)
-  %14 = call <256 x i1> @llvm.kvx.convwbv1(<256 x i1> %12, <1024 x i1> %9, i32 2, i32 1)
-  %15 = call <256 x i1> @llvm.kvx.convwbv2(<256 x i1> %12, <1024 x i1> %9, i32 3, i32 0)
-  %16 = call <256 x i1> @llvm.kvx.convwbv3(<256 x i1> %12, <1024 x i1> %9, i32 4, i32 1)
-  %17 = load volatile <512 x i1>, <512 x i1>* %w, align 32
-  %18 = call <256 x i1> @llvm.kvx.convwbv(<1024 x i1> %9, i32 1, i32 0)
-  %19 = call <256 x i1> @llvm.kvx.fmma242hw0(<256 x i1> %5, <512 x i1> %17, <256 x i1> %5, <256 x i1> %18)
-  %20 = call <256 x i1> @llvm.kvx.fmma242hw1(<256 x i1> %18, <512 x i1> %17, <256 x i1> %5, <256 x i1> %18)
-  %21 = call <256 x i1> @llvm.kvx.fmma242hw2(<256 x i1> %5, <512 x i1> %17, <256 x i1> %5, <256 x i1> %18)
-  %22 = call <256 x i1> @llvm.kvx.fmma242hw3(<256 x i1> %18, <512 x i1> %17, <256 x i1> %5, <256 x i1> %18)
-  %23 = call <512 x i1> @llvm.kvx.fmma242hw(<512 x i1> %17, <256 x i1> %18, <256 x i1> %5)
-  %24 = call <1024 x i1> @llvm.kvx.mma444hbd0(<1024 x i1> %9, <256 x i1> %5, <256 x i1> %5)
-  %25 = call <1024 x i1> @llvm.kvx.mma444hbd1(<1024 x i1> %24, <256 x i1> %5, <256 x i1> %5)
-  %26 = call <1024 x i1> @llvm.kvx.mma444hd(<1024 x i1> %25, <256 x i1> %5, <256 x i1> %5)
-  %27 = call <1024 x i1> @llvm.kvx.mma444suhbd0(<1024 x i1> %26, <256 x i1> %5, <256 x i1> %5)
-  %28 = call <1024 x i1> @llvm.kvx.mma444suhbd1(<1024 x i1> %27, <256 x i1> %5, <256 x i1> %5)
-  %29 = call <1024 x i1> @llvm.kvx.mma444suhd(<1024 x i1> %28, <256 x i1> %5, <256 x i1> %5)
-  %30 = call <1024 x i1> @llvm.kvx.mma444uhbd0(<1024 x i1> %29, <256 x i1> %5, <256 x i1> %5)
-  %31 = call <1024 x i1> @llvm.kvx.mma444uhbd1(<1024 x i1> %30, <256 x i1> %5, <256 x i1> %5)
-  %32 = call <1024 x i1> @llvm.kvx.mma444uhd(<1024 x i1> %31, <256 x i1> %5, <256 x i1> %5)
-  %33 = call <1024 x i1> @llvm.kvx.mma444ushbd0(<1024 x i1> %32, <256 x i1> %5, <256 x i1> %5)
-  %34 = call <1024 x i1> @llvm.kvx.mma444ushbd1(<1024 x i1> %33, <256 x i1> %5, <256 x i1> %5)
-  %35 = call <1024 x i1> @llvm.kvx.mma444ushd(<1024 x i1> %34, <256 x i1> %5, <256 x i1> %5)
-  %36 = call <512 x i1> @llvm.kvx.mma484bw(<512 x i1> %23, <256 x i1> %5, <256 x i1> %5)
-  %37 = call <512 x i1> @llvm.kvx.mma484subw(<512 x i1> %36, <256 x i1> %5, <256 x i1> %5)
-  %38 = call <512 x i1> @llvm.kvx.mma484ubw(<512 x i1> %37, <256 x i1> %5, <256 x i1> %5)
-  %39 = call <512 x i1> @llvm.kvx.mma484usbw(<512 x i1> %38, <256 x i1> %5, <256 x i1> %5)
-  %40 = call <1024 x i1> @llvm.kvx.mt44d(<1024 x i1> %35)
-  %41 = call <256 x i1> @llvm.kvx.fscalewv(<256 x i1> %18, i32 7, i32 0, i32 0)
-  %42 = call <256 x i1> @llvm.kvx.fnarrowwhv(<512 x i1> %39, i32 0, i32 1)
-  %43 = call <256 x i1> @llvm.kvx.fscalewv(<256 x i1> %41, i32 4, i32 0, i32 1)
-  %44 = call { <4 x i64>, <256 x i1> } @llvm.kvx.swapvo(<4 x i64> %8, <256 x i1> %43)
-  %45 = extractvalue { <4 x i64>, <256 x i1> } %44, 0
-  %46 = extractvalue { <4 x i64>, <256 x i1> } %44, 1
-  %47 = call <256 x i1> @llvm.kvx.fscalewv(<256 x i1> %46, i32 7, i32 0, i32 1)
-  %arrayidx6 = getelementptr inbounds <256 x i1>, <256 x i1>* %v, i64 3
-  %48 = bitcast <256 x i1>* %arrayidx6 to i8*
-  %49 = call <256 x i1> @llvm.kvx.lv.cond(<256 x i1> %47, i8* nonnull %48, i64 %a, i32 1, i32 7)
-  %50 = addrspacecast <256 x i1>* %v to <256 x i1> addrspace(258)*
-  %51 = load <256 x i1>, <256 x i1> addrspace(258)* %50, align 32
-  %arrayidx7 = getelementptr inbounds <256 x i1>, <256 x i1>* %v, i64 4
-  %52 = bitcast <256 x i1>* %arrayidx7 to i8*
-  %53 = call <1024 x i1> @llvm.kvx.lvc(<1024 x i1> %40, i8* nonnull %52, i32 3, i32 1)
-  %arrayidx8 = getelementptr inbounds <256 x i1>, <256 x i1>* %v, i64 5
-  %54 = bitcast <256 x i1>* %arrayidx8 to i8*
-  %55 = call <1024 x i1> @llvm.kvx.lvc.cond(<1024 x i1> %53, i8* nonnull %54, i32 2, i64 %a, i32 0, i32 6)
-  store <256 x i1> %51, <256 x i1>* %v, align 32
-  %arrayidx10 = getelementptr inbounds <256 x i1>, <256 x i1>* %v, i64 1
-  %56 = bitcast <256 x i1>* %arrayidx10 to i8*
-  call void @llvm.kvx.sv.cond(i8* nonnull %56, <256 x i1> %51, i64 1, i32 7)
-  store volatile <512 x i1> %39, <512 x i1>* %w, align 32
-  store volatile <1024 x i1> %55, <1024 x i1>* %m, align 128
-  ret <4 x i64> %45
+  %11 = call <256 x i1> @llvm.kvx.convdhv1(<256 x i1> %10, <1024 x i1> %9, i32 1, i32 1)
+  %12 = load volatile <512 x i1>, <512 x i1>* %w, align 32
+  %13 = call <256 x i1> @llvm.kvx.convwbv(<1024 x i1> %9, i32 1, i32 0)
+  %14 = call <256 x i1> @llvm.kvx.fmma242hw0(<256 x i1> %11, <512 x i1> %12, <256 x i1> %11, <256 x i1> %13)
+  %15 = call <256 x i1> @llvm.kvx.fmma242hw1(<256 x i1> %14, <512 x i1> %12, <256 x i1> %11, <256 x i1> %14)
+  %16 = call <256 x i1> @llvm.kvx.fmma242hw2(<256 x i1> %15, <512 x i1> %12, <256 x i1> %15, <256 x i1> %14)
+  %17 = call <256 x i1> @llvm.kvx.fmma242hw3(<256 x i1> %16, <512 x i1> %12, <256 x i1> %15, <256 x i1> %16)
+  %18 = call <512 x i1> @llvm.kvx.fmma444hw(<512 x i1> %12, <256 x i1> %16, <256 x i1> %17)
+  %19 = call <1024 x i1> @llvm.kvx.mma444hbd0(<1024 x i1> %9, <256 x i1> %17, <256 x i1> %17)
+  %20 = call <1024 x i1> @llvm.kvx.mma444hbd1(<1024 x i1> %19, <256 x i1> %17, <256 x i1> %17)
+  %21 = call <1024 x i1> @llvm.kvx.mma484hbd(<1024 x i1> %20, <512 x i1> %18, <256 x i1> %17)
+  %22 = call <1024 x i1> @llvm.kvx.mma444hd(<1024 x i1> %21, <256 x i1> %17, <256 x i1> %17)
+  %23 = call <1024 x i1> @llvm.kvx.mma444suhbd0(<1024 x i1> %22, <256 x i1> %17, <256 x i1> %17)
+  %24 = call <1024 x i1> @llvm.kvx.mma444suhbd1(<1024 x i1> %23, <256 x i1> %17, <256 x i1> %17)
+  %25 = call <1024 x i1> @llvm.kvx.mma484suhbd(<1024 x i1> %24, <512 x i1> %18, <256 x i1> %17)
+  %26 = call <1024 x i1> @llvm.kvx.mma444suhd(<1024 x i1> %25, <256 x i1> %17, <256 x i1> %17)
+  %27 = call <1024 x i1> @llvm.kvx.mma444uhbd0(<1024 x i1> %26, <256 x i1> %17, <256 x i1> %17)
+  %28 = call <1024 x i1> @llvm.kvx.mma444uhbd1(<1024 x i1> %27, <256 x i1> %17, <256 x i1> %17)
+  %29 = call <1024 x i1> @llvm.kvx.mma484uhbd(<1024 x i1> %28, <512 x i1> %18, <256 x i1> %17)
+  %30 = call <1024 x i1> @llvm.kvx.mma444uhd(<1024 x i1> %29, <256 x i1> %17, <256 x i1> %17)
+  %31 = call <1024 x i1> @llvm.kvx.mma444ushbd0(<1024 x i1> %30, <256 x i1> %17, <256 x i1> %17)
+  %32 = call <1024 x i1> @llvm.kvx.mma444ushbd1(<1024 x i1> %31, <256 x i1> %17, <256 x i1> %17)
+  %33 = call <1024 x i1> @llvm.kvx.mma484ushbd(<1024 x i1> %32, <512 x i1> %18, <256 x i1> %17)
+  %34 = call <1024 x i1> @llvm.kvx.mma444ushd(<1024 x i1> %33, <256 x i1> %17, <256 x i1> %17)
+  %35 = call <512 x i1> @llvm.kvx.mma484bw(<512 x i1> %18, <256 x i1> %17, <256 x i1> %17)
+  %36 = call <512 x i1> @llvm.kvx.mma484subw(<512 x i1> %35, <256 x i1> %17, <256 x i1> %17)
+  %37 = call <512 x i1> @llvm.kvx.mma484ubw(<512 x i1> %36, <256 x i1> %17, <256 x i1> %17)
+  %38 = call <512 x i1> @llvm.kvx.mma484usbw(<512 x i1> %37, <256 x i1> %17, <256 x i1> %17)
+  %39 = call <1024 x i1> @llvm.kvx.mt44d(<1024 x i1> %34)
+  %40 = call <256 x i1> @llvm.kvx.fscalewv(<256 x i1> %16, i32 7, i32 0, i32 0)
+  %41 = call <256 x i1> @llvm.kvx.fnarrowwhv(<512 x i1> %38, i32 0, i32 1)
+  %42 = call <256 x i1> @llvm.kvx.fscalewv(<256 x i1> %40, i32 4, i32 0, i32 1)
+  %43 = call { <4 x i64>, <256 x i1> } @llvm.kvx.swapvo(<4 x i64> %8, <256 x i1> %42)
+  %44 = extractvalue { <4 x i64>, <256 x i1> } %43, 0
+  %45 = extractvalue { <4 x i64>, <256 x i1> } %43, 1
+  %46 = call <256 x i1> @llvm.kvx.fscalewv(<256 x i1> %45, i32 7, i32 0, i32 1)
+  %arrayidx8 = getelementptr inbounds <256 x i1>, <256 x i1>* %v, i64 3
+  %47 = bitcast <256 x i1>* %arrayidx8 to i8*
+  %48 = call <256 x i1> @llvm.kvx.lv.cond(<256 x i1> %46, i8* nonnull %47, i64 %a, i32 1, i32 7)
+  %49 = addrspacecast <256 x i1>* %v to <256 x i1> addrspace(258)*
+  %50 = load <256 x i1>, <256 x i1> addrspace(258)* %49, align 32
+  %arrayidx9 = getelementptr inbounds <256 x i1>, <256 x i1>* %v, i64 4
+  %51 = bitcast <256 x i1>* %arrayidx9 to i8*
+  %52 = call <1024 x i1> @llvm.kvx.lvc(<1024 x i1> %39, i8* nonnull %51, i32 3, i32 1)
+  %arrayidx10 = getelementptr inbounds <256 x i1>, <256 x i1>* %v, i64 5
+  %53 = bitcast <256 x i1>* %arrayidx10 to i8*
+  %54 = call <1024 x i1> @llvm.kvx.lvc.cond(<1024 x i1> %52, i8* nonnull %53, i32 2, i64 %a, i32 0, i32 6)
+  store <256 x i1> %50, <256 x i1>* %v, align 32
+  %55 = bitcast <256 x i1>* %arrayidx4 to i8*
+  call void @llvm.kvx.sv.cond(i8* nonnull %55, <256 x i1> %50, i64 1, i32 7)
+  store volatile <512 x i1> %38, <512 x i1>* %w, align 32
+  store volatile <1024 x i1> %54, <1024 x i1>* %m, align 32
+  ret <4 x i64> %44
 }
 
 define void @convdhv(<256 x i1>* nocapture %v, <1024 x i1>* nocapture readonly %m) {
@@ -1115,8 +1158,8 @@ entry:
   ret void
 }
 
-define void @fmma242hw(<256 x i1>* nocapture %v, <512 x i1>* nocapture %w) {
-; CHECK-LABEL: fmma242hw:
+define void @fmma444hw(<256 x i1>* nocapture %v, <512 x i1>* nocapture %w) {
+; CHECK-LABEL: fmma444hw:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lv $a0 = 0[$r0]
 ; CHECK-NEXT:    addd $r2 = $r1, 64
@@ -1177,7 +1220,7 @@ entry:
   store <256 x i1> %5, <256 x i1>* %v, align 32
   %arrayidx16 = getelementptr inbounds <512 x i1>, <512 x i1>* %w, i64 1
   %8 = load <512 x i1>, <512 x i1>* %arrayidx16, align 32
-  %9 = tail call <512 x i1> @llvm.kvx.fmma242hw(<512 x i1> %8, <256 x i1> %7, <256 x i1> %6)
+  %9 = tail call <512 x i1> @llvm.kvx.fmma444hw(<512 x i1> %8, <256 x i1> %7, <256 x i1> %6)
   %arrayidx19 = getelementptr inbounds <512 x i1>, <512 x i1>* %w, i64 3
   store <512 x i1> %9, <512 x i1>* %arrayidx19, align 32
   ret void
@@ -1510,3 +1553,7 @@ entry:
 }
 
 declare <512 x i1> @llvm.kvx.buildfvw(<256 x i1>, <256 x i1>) #1
+declare <1024 x i1> @llvm.kvx.mma484hbd(<1024 x i1>, <512 x i1>, <256 x i1>) #1
+declare <1024 x i1> @llvm.kvx.mma484suhbd(<1024 x i1>, <512 x i1>, <256 x i1>) #1
+declare <1024 x i1> @llvm.kvx.mma484uhbd(<1024 x i1>, <512 x i1>, <256 x i1>) #1
+declare <1024 x i1> @llvm.kvx.mma484ushbd(<1024 x i1>, <512 x i1>, <256 x i1>) #1
