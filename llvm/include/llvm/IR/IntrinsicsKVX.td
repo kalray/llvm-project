@@ -277,21 +277,25 @@ def int_kvx_fmma242hw0 : KVX_TCA_fmma;
 def int_kvx_fmma242hw1 : KVX_TCA_fmma;
 def int_kvx_fmma242hw2 : KVX_TCA_fmma;
 def int_kvx_fmma242hw3 : KVX_TCA_fmma;
-def int_kvx_fmma242hw : Intrinsic<[llvm_v512i1_ty], [llvm_v512i1_ty, llvm_v256i1_ty, llvm_v256i1_ty], [IntrNoMem]>;
+def int_kvx_fmma444hw : Intrinsic<[llvm_v512i1_ty], [llvm_v512i1_ty, llvm_v256i1_ty, llvm_v256i1_ty], [IntrNoMem]>;
 
 class KVX_TCA_Ternary<list<LLVMType> args>
     : Intrinsic<args, !listconcat(args, [llvm_v256i1_ty], [llvm_v256i1_ty]), [IntrNoMem]>;
 def int_kvx_mma444hbd0 : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
 def int_kvx_mma444hbd1 : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
+def int_kvx_mma484hbd : Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_v512i1_ty, llvm_v256i1_ty], [IntrNoMem]>;
 def int_kvx_mma444hd : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
 def int_kvx_mma444suhbd0 : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
 def int_kvx_mma444suhbd1 : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
+def int_kvx_mma484suhbd : Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_v512i1_ty, llvm_v256i1_ty], [IntrNoMem]>;
 def int_kvx_mma444suhd : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
 def int_kvx_mma444uhbd0 : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
 def int_kvx_mma444uhbd1 : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
+def int_kvx_mma484uhbd : Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_v512i1_ty, llvm_v256i1_ty], [IntrNoMem]>;
 def int_kvx_mma444uhd : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
 def int_kvx_mma444ushbd0 : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
 def int_kvx_mma444ushbd1 : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
+def int_kvx_mma484ushbd : Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_v512i1_ty, llvm_v256i1_ty], [IntrNoMem]>;
 def int_kvx_mma444ushd : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
 def int_kvx_mma484bw : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
 def int_kvx_mma484subw : KVX_TCA_Ternary<[llvm_v512i1_ty]>;

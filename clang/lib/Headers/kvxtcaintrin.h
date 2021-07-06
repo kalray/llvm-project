@@ -190,7 +190,7 @@ typedef __tca1024 tca1024_t; // Maps to a variable that is held in a MatrixReg
 /// Let W be a 4x4 matrix of floats, V0 and V1 be 2x4 matrixes of half floats.
 /// Add to each quarter of W the the matrix multiply of V0 by the transposed
 /// (V1). W = W[0-3] + V0 X T(V1).
-// tca512_t __builtin_kvx_fmma242hw (tca512_t W, tca256_t V0, tca256_t V1);
+// tca512_t __builtin_kvx_fmma444hw (tca512_t W, tca256_t V0, tca256_t V1);
 
 /// Let M be a 4x4 matrix of int64_t,
 /// V0 a 4x4 matrix of signed short and

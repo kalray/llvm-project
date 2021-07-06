@@ -141,7 +141,7 @@ void convwbv(__tca256 *v, __tca1024 *m) {
   v[2] = __builtin_kvx_convwbv(m[1], ".rz.satu");
 }
 
-// O0-LABEL: @fmma242hw(
+// O0-LABEL: @fmma444hw(
 // O0-NEXT:  entry:
 // O0-NEXT:    [[V_ADDR:%.*]] = alloca <256 x i1>*, align 8
 // O0-NEXT:    [[W_ADDR:%.*]] = alloca <512 x i1>*, align 8
@@ -217,13 +217,13 @@ void convwbv(__tca256 *v, __tca1024 *m) {
 // O0-NEXT:    [[TMP42:%.*]] = load <256 x i1>*, <256 x i1>** [[V_ADDR]], align 8
 // O0-NEXT:    [[ARRAYIDX18:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[TMP42]], i64 1
 // O0-NEXT:    [[TMP43:%.*]] = load <256 x i1>, <256 x i1>* [[ARRAYIDX18]], align 32
-// O0-NEXT:    [[TMP44:%.*]] = call <512 x i1> @llvm.kvx.fmma242hw(<512 x i1> [[TMP39]], <256 x i1> [[TMP41]], <256 x i1> [[TMP43]])
+// O0-NEXT:    [[TMP44:%.*]] = call <512 x i1> @llvm.kvx.fmma444hw(<512 x i1> [[TMP39]], <256 x i1> [[TMP41]], <256 x i1> [[TMP43]])
 // O0-NEXT:    [[TMP45:%.*]] = load <512 x i1>*, <512 x i1>** [[W_ADDR]], align 8
 // O0-NEXT:    [[ARRAYIDX19:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[TMP45]], i64 3
 // O0-NEXT:    store <512 x i1> [[TMP44]], <512 x i1>* [[ARRAYIDX19]], align 32
 // O0-NEXT:    ret void
 //
-// O2-LABEL: @fmma242hw(
+// O2-LABEL: @fmma444hw(
 // O2-NEXT:  entry:
 // O2-NEXT:    [[TMP0:%.*]] = load <256 x i1>, <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
 // O2-NEXT:    [[TMP1:%.*]] = load <512 x i1>, <512 x i1>* [[W:%.*]], align 32, [[TBAA8:!tbaa !.*]]
@@ -240,19 +240,19 @@ void convwbv(__tca256 *v, __tca1024 *m) {
 // O2-NEXT:    store <256 x i1> [[TMP5]], <256 x i1>* [[V]], align 32, [[TBAA2]]
 // O2-NEXT:    [[ARRAYIDX16:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[W]], i64 1
 // O2-NEXT:    [[TMP8:%.*]] = load <512 x i1>, <512 x i1>* [[ARRAYIDX16]], align 32, [[TBAA8]]
-// O2-NEXT:    [[TMP9:%.*]] = call <512 x i1> @llvm.kvx.fmma242hw(<512 x i1> [[TMP8]], <256 x i1> [[TMP7]], <256 x i1> [[TMP6]])
+// O2-NEXT:    [[TMP9:%.*]] = call <512 x i1> @llvm.kvx.fmma444hw(<512 x i1> [[TMP8]], <256 x i1> [[TMP7]], <256 x i1> [[TMP6]])
 // O2-NEXT:    [[ARRAYIDX19:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[W]], i64 3
 // O2-NEXT:    store <512 x i1> [[TMP9]], <512 x i1>* [[ARRAYIDX19]], align 32, [[TBAA8]]
 // O2-NEXT:    ret void
 //
-void fmma242hw(__tca256 *v, __tca512 *w) {
+void fmma444hw(__tca256 *v, __tca512 *w) {
   __tca256 local = v[0];
   local = __builtin_kvx_fmma242hw0(local, w[0], v[1], v[2]);
   local = __builtin_kvx_fmma242hw1(local, w[0], v[1], v[2]);
   v[1] = __builtin_kvx_fmma242hw2(local, w[0], v[1], v[2]);
   v[2] = __builtin_kvx_fmma242hw3(local, w[0], v[1], v[2]);
   v[0] = local;
-  w[3] = __builtin_kvx_fmma242hw(w[1], v[2], v[1]);
+  w[3] = __builtin_kvx_fmma444hw(w[1], v[2], v[1]);
 }
 
 // O0-LABEL: @test(

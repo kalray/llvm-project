@@ -25,48 +25,52 @@ typedef long __attribute__((__vector_size__(32))) v4i64_t;
 // CHECK-NEXT:    [[TMP15:%.*]] = call <256 x i1> @llvm.kvx.fmma242hw1(<256 x i1> [[TMP14]], <512 x i1> [[TMP12]], <256 x i1> [[TMP11]], <256 x i1> [[TMP14]])
 // CHECK-NEXT:    [[TMP16:%.*]] = call <256 x i1> @llvm.kvx.fmma242hw2(<256 x i1> [[TMP15]], <512 x i1> [[TMP12]], <256 x i1> [[TMP15]], <256 x i1> [[TMP14]])
 // CHECK-NEXT:    [[TMP17:%.*]] = call <256 x i1> @llvm.kvx.fmma242hw3(<256 x i1> [[TMP16]], <512 x i1> [[TMP12]], <256 x i1> [[TMP15]], <256 x i1> [[TMP16]])
-// CHECK-NEXT:    [[TMP18:%.*]] = call <512 x i1> @llvm.kvx.fmma242hw(<512 x i1> [[TMP12]], <256 x i1> [[TMP16]], <256 x i1> [[TMP17]])
+// CHECK-NEXT:    [[TMP18:%.*]] = call <512 x i1> @llvm.kvx.fmma444hw(<512 x i1> [[TMP12]], <256 x i1> [[TMP16]], <256 x i1> [[TMP17]])
 // CHECK-NEXT:    [[TMP19:%.*]] = call <1024 x i1> @llvm.kvx.mma444hbd0(<1024 x i1> [[TMP9]], <256 x i1> [[TMP17]], <256 x i1> [[TMP17]])
 // CHECK-NEXT:    [[TMP20:%.*]] = call <1024 x i1> @llvm.kvx.mma444hbd1(<1024 x i1> [[TMP19]], <256 x i1> [[TMP17]], <256 x i1> [[TMP17]])
-// CHECK-NEXT:    [[TMP21:%.*]] = call <1024 x i1> @llvm.kvx.mma444hd(<1024 x i1> [[TMP20]], <256 x i1> [[TMP17]], <256 x i1> [[TMP17]])
-// CHECK-NEXT:    [[TMP22:%.*]] = call <1024 x i1> @llvm.kvx.mma444suhbd0(<1024 x i1> [[TMP21]], <256 x i1> [[TMP17]], <256 x i1> [[TMP17]])
-// CHECK-NEXT:    [[TMP23:%.*]] = call <1024 x i1> @llvm.kvx.mma444suhbd1(<1024 x i1> [[TMP22]], <256 x i1> [[TMP17]], <256 x i1> [[TMP17]])
-// CHECK-NEXT:    [[TMP24:%.*]] = call <1024 x i1> @llvm.kvx.mma444suhd(<1024 x i1> [[TMP23]], <256 x i1> [[TMP17]], <256 x i1> [[TMP17]])
-// CHECK-NEXT:    [[TMP25:%.*]] = call <1024 x i1> @llvm.kvx.mma444uhbd0(<1024 x i1> [[TMP24]], <256 x i1> [[TMP17]], <256 x i1> [[TMP17]])
-// CHECK-NEXT:    [[TMP26:%.*]] = call <1024 x i1> @llvm.kvx.mma444uhbd1(<1024 x i1> [[TMP25]], <256 x i1> [[TMP17]], <256 x i1> [[TMP17]])
-// CHECK-NEXT:    [[TMP27:%.*]] = call <1024 x i1> @llvm.kvx.mma444uhd(<1024 x i1> [[TMP26]], <256 x i1> [[TMP17]], <256 x i1> [[TMP17]])
-// CHECK-NEXT:    [[TMP28:%.*]] = call <1024 x i1> @llvm.kvx.mma444ushbd0(<1024 x i1> [[TMP27]], <256 x i1> [[TMP17]], <256 x i1> [[TMP17]])
-// CHECK-NEXT:    [[TMP29:%.*]] = call <1024 x i1> @llvm.kvx.mma444ushbd1(<1024 x i1> [[TMP28]], <256 x i1> [[TMP17]], <256 x i1> [[TMP17]])
-// CHECK-NEXT:    [[TMP30:%.*]] = call <1024 x i1> @llvm.kvx.mma444ushd(<1024 x i1> [[TMP29]], <256 x i1> [[TMP17]], <256 x i1> [[TMP17]])
-// CHECK-NEXT:    [[TMP31:%.*]] = call <512 x i1> @llvm.kvx.mma484bw(<512 x i1> [[TMP18]], <256 x i1> [[TMP17]], <256 x i1> [[TMP17]])
-// CHECK-NEXT:    [[TMP32:%.*]] = call <512 x i1> @llvm.kvx.mma484subw(<512 x i1> [[TMP31]], <256 x i1> [[TMP17]], <256 x i1> [[TMP17]])
-// CHECK-NEXT:    [[TMP33:%.*]] = call <512 x i1> @llvm.kvx.mma484ubw(<512 x i1> [[TMP32]], <256 x i1> [[TMP17]], <256 x i1> [[TMP17]])
-// CHECK-NEXT:    [[TMP34:%.*]] = call <512 x i1> @llvm.kvx.mma484usbw(<512 x i1> [[TMP33]], <256 x i1> [[TMP17]], <256 x i1> [[TMP17]])
-// CHECK-NEXT:    [[TMP35:%.*]] = call <1024 x i1> @llvm.kvx.mt44d(<1024 x i1> [[TMP30]])
-// CHECK-NEXT:    [[TMP36:%.*]] = call <256 x i1> @llvm.kvx.fscalewv(<256 x i1> [[TMP16]], i32 7, i32 0, i32 0)
-// CHECK-NEXT:    [[TMP37:%.*]] = call <256 x i1> @llvm.kvx.fnarrowwhv(<512 x i1> [[TMP34]], i32 0, i32 1)
-// CHECK-NEXT:    [[TMP38:%.*]] = call <256 x i1> @llvm.kvx.fscalewv(<256 x i1> [[TMP36]], i32 4, i32 0, i32 1)
-// CHECK-NEXT:    [[TMP39:%.*]] = call { <4 x i64>, <256 x i1> } @llvm.kvx.swapvo(<4 x i64> [[TMP8]], <256 x i1> [[TMP38]])
-// CHECK-NEXT:    [[TMP40:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP39]], 0
-// CHECK-NEXT:    [[TMP41:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP39]], 1
-// CHECK-NEXT:    [[TMP42:%.*]] = call <256 x i1> @llvm.kvx.fscalewv(<256 x i1> [[TMP41]], i32 7, i32 0, i32 1)
+// CHECK-NEXT:    [[TMP21:%.*]] = call <1024 x i1> @llvm.kvx.mma484hbd(<1024 x i1> [[TMP20]], <512 x i1> [[TMP18]], <256 x i1> [[TMP17]])
+// CHECK-NEXT:    [[TMP22:%.*]] = call <1024 x i1> @llvm.kvx.mma444hd(<1024 x i1> [[TMP21]], <256 x i1> [[TMP17]], <256 x i1> [[TMP17]])
+// CHECK-NEXT:    [[TMP23:%.*]] = call <1024 x i1> @llvm.kvx.mma444suhbd0(<1024 x i1> [[TMP22]], <256 x i1> [[TMP17]], <256 x i1> [[TMP17]])
+// CHECK-NEXT:    [[TMP24:%.*]] = call <1024 x i1> @llvm.kvx.mma444suhbd1(<1024 x i1> [[TMP23]], <256 x i1> [[TMP17]], <256 x i1> [[TMP17]])
+// CHECK-NEXT:    [[TMP25:%.*]] = call <1024 x i1> @llvm.kvx.mma484suhbd(<1024 x i1> [[TMP24]], <512 x i1> [[TMP18]], <256 x i1> [[TMP17]])
+// CHECK-NEXT:    [[TMP26:%.*]] = call <1024 x i1> @llvm.kvx.mma444suhd(<1024 x i1> [[TMP25]], <256 x i1> [[TMP17]], <256 x i1> [[TMP17]])
+// CHECK-NEXT:    [[TMP27:%.*]] = call <1024 x i1> @llvm.kvx.mma444uhbd0(<1024 x i1> [[TMP26]], <256 x i1> [[TMP17]], <256 x i1> [[TMP17]])
+// CHECK-NEXT:    [[TMP28:%.*]] = call <1024 x i1> @llvm.kvx.mma444uhbd1(<1024 x i1> [[TMP27]], <256 x i1> [[TMP17]], <256 x i1> [[TMP17]])
+// CHECK-NEXT:    [[TMP29:%.*]] = call <1024 x i1> @llvm.kvx.mma484uhbd(<1024 x i1> [[TMP28]], <512 x i1> [[TMP18]], <256 x i1> [[TMP17]])
+// CHECK-NEXT:    [[TMP30:%.*]] = call <1024 x i1> @llvm.kvx.mma444uhd(<1024 x i1> [[TMP29]], <256 x i1> [[TMP17]], <256 x i1> [[TMP17]])
+// CHECK-NEXT:    [[TMP31:%.*]] = call <1024 x i1> @llvm.kvx.mma444ushbd0(<1024 x i1> [[TMP30]], <256 x i1> [[TMP17]], <256 x i1> [[TMP17]])
+// CHECK-NEXT:    [[TMP32:%.*]] = call <1024 x i1> @llvm.kvx.mma444ushbd1(<1024 x i1> [[TMP31]], <256 x i1> [[TMP17]], <256 x i1> [[TMP17]])
+// CHECK-NEXT:    [[TMP33:%.*]] = call <1024 x i1> @llvm.kvx.mma484ushbd(<1024 x i1> [[TMP32]], <512 x i1> [[TMP18]], <256 x i1> [[TMP17]])
+// CHECK-NEXT:    [[TMP34:%.*]] = call <1024 x i1> @llvm.kvx.mma444ushd(<1024 x i1> [[TMP33]], <256 x i1> [[TMP17]], <256 x i1> [[TMP17]])
+// CHECK-NEXT:    [[TMP35:%.*]] = call <512 x i1> @llvm.kvx.mma484bw(<512 x i1> [[TMP18]], <256 x i1> [[TMP17]], <256 x i1> [[TMP17]])
+// CHECK-NEXT:    [[TMP36:%.*]] = call <512 x i1> @llvm.kvx.mma484subw(<512 x i1> [[TMP35]], <256 x i1> [[TMP17]], <256 x i1> [[TMP17]])
+// CHECK-NEXT:    [[TMP37:%.*]] = call <512 x i1> @llvm.kvx.mma484ubw(<512 x i1> [[TMP36]], <256 x i1> [[TMP17]], <256 x i1> [[TMP17]])
+// CHECK-NEXT:    [[TMP38:%.*]] = call <512 x i1> @llvm.kvx.mma484usbw(<512 x i1> [[TMP37]], <256 x i1> [[TMP17]], <256 x i1> [[TMP17]])
+// CHECK-NEXT:    [[TMP39:%.*]] = call <1024 x i1> @llvm.kvx.mt44d(<1024 x i1> [[TMP34]])
+// CHECK-NEXT:    [[TMP40:%.*]] = call <256 x i1> @llvm.kvx.fscalewv(<256 x i1> [[TMP16]], i32 7, i32 0, i32 0)
+// CHECK-NEXT:    [[TMP41:%.*]] = call <256 x i1> @llvm.kvx.fnarrowwhv(<512 x i1> [[TMP38]], i32 0, i32 1)
+// CHECK-NEXT:    [[TMP42:%.*]] = call <256 x i1> @llvm.kvx.fscalewv(<256 x i1> [[TMP40]], i32 4, i32 0, i32 1)
+// CHECK-NEXT:    [[TMP43:%.*]] = call { <4 x i64>, <256 x i1> } @llvm.kvx.swapvo(<4 x i64> [[TMP8]], <256 x i1> [[TMP42]])
+// CHECK-NEXT:    [[TMP44:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP43]], 0
+// CHECK-NEXT:    [[TMP45:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP43]], 1
+// CHECK-NEXT:    [[TMP46:%.*]] = call <256 x i1> @llvm.kvx.fscalewv(<256 x i1> [[TMP45]], i32 7, i32 0, i32 1)
 // CHECK-NEXT:    [[ARRAYIDX8:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 3
-// CHECK-NEXT:    [[TMP43:%.*]] = bitcast <256 x i1>* [[ARRAYIDX8]] to i8*
-// CHECK-NEXT:    [[TMP44:%.*]] = call <256 x i1> @llvm.kvx.lv.cond(<256 x i1> [[TMP42]], i8* nonnull [[TMP43]], i64 [[A:%.*]], i32 1, i32 7)
-// CHECK-NEXT:    [[TMP45:%.*]] = addrspacecast <256 x i1>* [[V]] to <256 x i1> addrspace(258)*
-// CHECK-NEXT:    [[TMP46:%.*]] = load <256 x i1>, <256 x i1> addrspace(258)* [[TMP45]], align 32
+// CHECK-NEXT:    [[TMP47:%.*]] = bitcast <256 x i1>* [[ARRAYIDX8]] to i8*
+// CHECK-NEXT:    [[TMP48:%.*]] = call <256 x i1> @llvm.kvx.lv.cond(<256 x i1> [[TMP46]], i8* nonnull [[TMP47]], i64 [[A:%.*]], i32 1, i32 7)
+// CHECK-NEXT:    [[TMP49:%.*]] = addrspacecast <256 x i1>* [[V]] to <256 x i1> addrspace(258)*
+// CHECK-NEXT:    [[TMP50:%.*]] = load <256 x i1>, <256 x i1> addrspace(258)* [[TMP49]], align 32
 // CHECK-NEXT:    [[ARRAYIDX9:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 4
-// CHECK-NEXT:    [[TMP47:%.*]] = bitcast <256 x i1>* [[ARRAYIDX9]] to i8*
-// CHECK-NEXT:    [[TMP48:%.*]] = call <1024 x i1> @llvm.kvx.lvc(<1024 x i1> [[TMP35]], i8* nonnull [[TMP47]], i32 3, i32 1)
+// CHECK-NEXT:    [[TMP51:%.*]] = bitcast <256 x i1>* [[ARRAYIDX9]] to i8*
+// CHECK-NEXT:    [[TMP52:%.*]] = call <1024 x i1> @llvm.kvx.lvc(<1024 x i1> [[TMP39]], i8* nonnull [[TMP51]], i32 3, i32 1)
 // CHECK-NEXT:    [[ARRAYIDX10:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 5
-// CHECK-NEXT:    [[TMP49:%.*]] = bitcast <256 x i1>* [[ARRAYIDX10]] to i8*
-// CHECK-NEXT:    [[TMP50:%.*]] = call <1024 x i1> @llvm.kvx.lvc.cond(<1024 x i1> [[TMP48]], i8* nonnull [[TMP49]], i32 2, i64 [[A]], i32 0, i32 6)
-// CHECK-NEXT:    store <256 x i1> [[TMP46]], <256 x i1>* [[V]], align 32
-// CHECK-NEXT:    [[TMP51:%.*]] = bitcast <256 x i1>* [[ARRAYIDX4]] to i8*
-// CHECK-NEXT:    call void @llvm.kvx.sv.cond(i8* nonnull [[TMP51]], <256 x i1> [[TMP46]], i64 1, i32 7)
-// CHECK-NEXT:    store volatile <512 x i1> [[TMP34]], <512 x i1>* [[W]], align 32, [[TBAA8]]
-// CHECK-NEXT:    store volatile <1024 x i1> [[TMP50]], <1024 x i1>* [[M]], align 32, [[TBAA6]]
-// CHECK-NEXT:    ret <4 x i64> [[TMP40]]
+// CHECK-NEXT:    [[TMP53:%.*]] = bitcast <256 x i1>* [[ARRAYIDX10]] to i8*
+// CHECK-NEXT:    [[TMP54:%.*]] = call <1024 x i1> @llvm.kvx.lvc.cond(<1024 x i1> [[TMP52]], i8* nonnull [[TMP53]], i32 2, i64 [[A]], i32 0, i32 6)
+// CHECK-NEXT:    store <256 x i1> [[TMP50]], <256 x i1>* [[V]], align 32
+// CHECK-NEXT:    [[TMP55:%.*]] = bitcast <256 x i1>* [[ARRAYIDX4]] to i8*
+// CHECK-NEXT:    call void @llvm.kvx.sv.cond(i8* nonnull [[TMP55]], <256 x i1> [[TMP50]], i64 1, i32 7)
+// CHECK-NEXT:    store volatile <512 x i1> [[TMP38]], <512 x i1>* [[W]], align 32, [[TBAA8]]
+// CHECK-NEXT:    store volatile <1024 x i1> [[TMP54]], <1024 x i1>* [[M]], align 32, [[TBAA6]]
+// CHECK-NEXT:    ret <4 x i64> [[TMP44]]
 //
 v4i64_t test_tca_builtins(long a, long b, long c, long d, volatile __tca256 *v, volatile __tca512 *w, volatile __tca1024 *m) {
   v4i64_t vt = {0, 1, 2, 3};
@@ -92,18 +96,22 @@ v4i64_t test_tca_builtins(long a, long b, long c, long d, volatile __tca256 *v, 
   lv = __builtin_kvx_fmma242hw1(lv2, lw, lv, lv2);
   lv2 = __builtin_kvx_fmma242hw2(lv, lw, lv, lv2);
   lv = __builtin_kvx_fmma242hw3(lv2, lw, lv, lv2);
-  lw = __builtin_kvx_fmma242hw(lw, lv2, lv);
+  lw = __builtin_kvx_fmma444hw(lw, lv2, lv);
   lm = __builtin_kvx_mma444hbd0(lm, lv, lv);
   lm = __builtin_kvx_mma444hbd1(lm, lv, lv);
+  lm = __builtin_kvx_mma484hbd(lm, lw, lv);
   lm = __builtin_kvx_mma444hd(lm, lv, lv);
   lm = __builtin_kvx_mma444suhbd0(lm, lv, lv);
   lm = __builtin_kvx_mma444suhbd1(lm, lv, lv);
+  lm = __builtin_kvx_mma484suhbd(lm, lw, lv);
   lm = __builtin_kvx_mma444suhd(lm, lv, lv);
   lm = __builtin_kvx_mma444uhbd0(lm, lv, lv);
   lm = __builtin_kvx_mma444uhbd1(lm, lv, lv);
+  lm = __builtin_kvx_mma484uhbd(lm, lw, lv);
   lm = __builtin_kvx_mma444uhd(lm, lv, lv);
   lm = __builtin_kvx_mma444ushbd0(lm, lv, lv);
   lm = __builtin_kvx_mma444ushbd1(lm, lv, lv);
+  lm = __builtin_kvx_mma484ushbd(lm, lw, lv);
   lm = __builtin_kvx_mma444ushd(lm, lv, lv);
   lw = __builtin_kvx_mma484bw(lw, lv, lv);
   lw = __builtin_kvx_mma484subw(lw, lv, lv);
