@@ -11,6 +11,16 @@
 #ifndef __KVXTCAINTRIN_H_
 #define __KVXTCAINTRIN_H_
 
+// FIXME: Generic vector types declarations should not be here.
+typedef char  char32     __attribute__((vector_size(32 * sizeof(char))));
+typedef short short16    __attribute__((vector_size(16 * sizeof(short))));
+typedef int   int8       __attribute__((vector_size(8 *  sizeof(int))));
+typedef long  long4      __attribute__((vector_size(4 *  sizeof(long))));
+
+typedef _Float16 half16  __attribute__((vector_size(16 * sizeof(_Float16))));
+typedef float    float8  __attribute__((vector_size(8 *  sizeof(float))));
+typedef double   double4 __attribute__((vector_size(4 *  sizeof(double))));
+
 // TCA opaque data types:
 typedef __tca256 tca256_t;   // Maps to a variable that is held in a VectorReg
 typedef __tca512 tca512_t;   // Maps to a variable that is held in a WideReg
@@ -151,40 +161,36 @@ typedef __tca1024 tca1024_t; // Maps to a variable that is held in a MatrixReg
 /// Modifiers: Roundint, Saturate
 // tca256_t __builtin_kvx_convwbv (tca1024_t M, const char *mods);
 
-/// Let W be a 4x4 matrix of floats, V1 and V2 be 2x4 matrixes of half floats.
-/// Add the first quarter (2x2) of W to the matrix multiply of V0 by the
-/// transposed (V1).
-/// Returns W[0] = W[0] + V0 X T(V1)
-/// The output is written to the lower half of the vector V0. If the assigned
-/// vector is not the same variable as V0, possibly a copy is done before, as to
-/// preserve the other values of the vector.
+/// Let W be a 4x4 matrix of floats, V1 and V2 be 2x4 matrixes of half floats
+/// and V0 a matrix of 2x4 floats.
+/// Add the first quarter (2x2) of W to the matrix multiply of V1 by the transposed (V2).
+/// Write the result into the first half of V0 and return the resulting 2x4 matrix V0.
+/// Makes V0 = {W[0] + V1 * T(V1), V0[1]}.
+/// Returns V0.
 // tca256_t __builtin_kvx_fmma242hw0 (tca256_t V0,  tca512_t W,  tca256_t V1, tca256_t V2);
 
-/// Let W be a 4x4 matrix of floats, V1 and V2 be 2x4 matrixes of half floats.
-/// Add the second quarter (2x2) of W to the matrix multiply of V0 by the
-/// transposed (V1).
-/// Returns W[0] = W[0] + V0 X T(V1)
-/// The output is written to the upper half of the vector V0. If the assigned
-/// vector is not the same variable as V0, possibly a copy is done before, as to
-/// preserve the other values of the vector.
+/// Let W be a 4x4 matrix of floats, V1 and V2 be 2x4 matrixes of half floats
+/// and V0 a matrix of 2x4 floats.
+/// Add the second quarter (2x2) of W to the matrix multiply of V1 by the transposed (V2).
+/// Write the result into the second half of V0 and return the resulting 2x4 matrix V0.
+/// Makes V0 = {V0[0], W[1] + V1 * T(V1)}.
+/// Returns V0.
 // tca256_t __builtin_kvx_fmma242hw1 (tca256_t V0,  tca512_t W,  tca256_t V1, tca256_t V2);
 
-/// Let W be a 4x4 matrix of floats, V1 and V2 be 2x4 matrixes of half floats.
-/// Add the third quarter (2x2) of W to the matrix multiply of V0 by the
-/// transposed (V1).
-/// Returns W[0] = W[0] + V0 X T(V1)
-/// The output is written to the lower half of the vector V0. If the assigned
-/// vector is not the same variable as V0, possibly a copy is done before, as to
-/// preserve the other values of the vector.
+/// Let W be a 4x4 matrix of floats, V1 and V2 be 2x4 matrixes of half floats
+/// and V0 a matrix of 2x4 floats.
+/// Add the third quarter (2x2) of W to the matrix multiply of V1 by the transposed (V2).
+/// Write the result into the first half of V0 and return the resulting 2x4 matrix V0.
+/// Makes V0 = {W[2] + V1 * T(V1), V0[1]}.
+/// Returns V0.
 // tca256_t __builtin_kvx_fmma242hw2 (tca256_t V0,  tca512_t W,  tca256_t V1, tca256_t V2);
 
-/// Let W be a 4x4 matrix of floats, V1 and V2 be 2x4 matrixes of half floats.
-/// Add the last quarter (2x2) of W to the matrix multiply of V0 by the
-/// transposed (V1).
-/// W[0] = W[0] + V0 X T(V1)
-/// The output is written to the upper half of the vector V0. If the assigned
-/// vector is not the same variable as V0, possibly a copy is done before, as to
-/// preserve the other values of the vector.
+/// Let W be a 4x4 matrix of floats, V1 and V2 be 2x4 matrixes of half floats
+/// and V0 a matrix of 2x4 floats.
+/// Add the forth quarter (2x2) of W to the matrix multiply of V1 by the transposed (V2).
+/// Write the result into the second half of V0 and return the resulting 2x4 matrix V0.
+/// Makes V0 = {V0[0], W[3] + V1 * T(V1)}.
+/// Returns V0.
 // tca256_t __builtin_kvx_fmma242hw3 (tca256_t V0,  tca512_t W,  tca256_t V1, tca256_t V2);
 
 /// Let W be a 4x4 matrix of floats, V0 and V1 be 2x4 matrixes of half floats.
@@ -194,35 +200,48 @@ typedef __tca1024 tca1024_t; // Maps to a variable that is held in a MatrixReg
 
 /// Let M be a 4x4 matrix of int64_t,
 /// V0 a 4x4 matrix of signed short and
-/// V1 a 4x4 matrix of int64_t interpreted as a 4x4 matrix of char.
-/// Returns M + V0 x transposed (V1).
+/// V1 a 4x8 matrix of char.
+/// V1' is the first half of V1, giving a 4x4 matrix of char.
+/// Returns the 4x4 matrix of int64_t = M + V0 x transposed (V1').
 // tca1024_t __builtin_kvx_mma444hbd0 (tca1024_t M, tca256_t V0, tca256_t V1);
 
 /// Let M be a 4x4 matrix of int64_t,
 /// V0 a 4x4 matrix of signed short and
-/// V1 a 4x4 matrix of int64_t.
-/// T is a 4x4 matrix of int64_t interpreted as a 4x4 matrix of char obtained
-/// obtained from the lower char of the upper word of each int64_t element.
-/// Returns M + V0 x transposed (T)
+/// V1 a 4x8 matrix of char.
+/// V1' is the second half of V1, giving a 4x4 matrix of char.
+/// Returns the 4x4 matrix of int64_t = M + V0 x transposed (V1').
 // tca1024_t __builtin_kvx_mma444hbd1 (tca1024_t M, tca256_t V0, tca256_t V1);
 
 /// Let M be a 4x4 matrix of int64_t,
+/// V0 a 4x8 matrix of signed short and
+/// V1 a 4x8 matrix of char.
+/// Returns M + V0 x transposed (V1)
+// tca1024_t __builtin_kvx_mma484hbd (tca1024_t M, tca512_t V0, tca256_t V1);
+
+/// Let M be a 4x4 matrix of int64_t,
 /// V0 and V1 4x4 matrixes of signed short.
-/// Returns M + V0 x transposed (V1).
+/// Returns the 4x4 matrix of int64_t = M + V0 x transposed (V1).
 // tca1024_t __builtin_kvx_mma444hd (tca1024_t M, tca256_t V0, tca256_t V1);
 
 /// Let M be a 4x4 matrix of int64_t,
 /// V0 a 4x4 matrix of signed short and
-/// V1 a 4x4 matrix of int64_t interpreted as a 4x4 matrix of unsigned char.
-/// Returns the 4x4 matrix of int64_t = M + V0 x transposed (V1).
+/// V1 a 4x8 matrix of unsigned char.
+/// V1' is the second half of V1, giving a 4x4 matrix of unsigned char.
+/// Returns the 4x4 matrix of int64_t = M + V0 x transposed (V1').
 // tca1024_t __builtin_kvx_mma444suhbd0 (tca1024_t M, tca256_t V0, tca256_t V1);
 
 /// Let M be a 4x4 matrix of int64_t,
 /// V0 a 4x4 matrix of signed short and
-/// V1 a 4x4 matrix of int64_t interpreted as a 4x4 matrix of unsigned char,
-/// obtained from the lower char of the upper word of each int64_t element.
-/// Returns the 4x4 matrix of int64_t = M + V0 x transposed (V1).
+/// V1 a 4x8 matrix of unsigned char.
+/// V1' is the second half of V1, giving a 4x4 matrix of unsigned char.
+/// Returns the 4x4 matrix of int64_t = M + V0 x transposed (V1').
 // tca1024_t __builtin_kvx_mma444suhbd1 (tca1024_t M, tca256_t V0, tca256_t V1);
+
+/// Let M be a 4x4 matrix of int64_t,
+/// V0 a 4x8 matrix of signed short and
+/// V1 a 4x8 matrix of unsigned char.
+/// Returns the 4x4 matrix of int64_t = M + V0 x transposed (V1).
+// tca1024_t __builtin_kvx_mma484suhbd (tca1024_t M, tca512_t V0, tca256_t V1);
 
 /// Let M be a 4x4 matrix of int64_t,
 /// V0 a 4x4 matrixes of signed short and
@@ -231,17 +250,24 @@ typedef __tca1024 tca1024_t; // Maps to a variable that is held in a MatrixReg
 // tca1024_t __builtin_kvx_mma444suhd (tca1024_t M, tca256_t V0, tca256_t V1);
 
 /// Let M be a 4x4 matrix of int64_t,
-/// V0 is a 4x4 matrix of unsigned short,
-/// V1 a 4x4 matrix of int64_t interpreted as a 4x4 matrix of unsigned char.
-/// Returns the 4x4 matrix of int64_t = M + V0 x transposed (V1)
+/// V0 a 4x4 matrix of unsigned short,
+/// V1 a 4x8 matrix of unsigned char.
+/// V1' is the second half of V1, giving a 4x4 matrix of unsigned char.
+/// Returns the 4x4 matrix of int64_t = M + V0 x transposed (V1')
 // tca1024_t __builtin_kvx_mma444uhbd0 (tca1024_t M, tca256_t V0, tca256_t V1);
 
 /// Let M be a 4x4 matrix of int64_t,
 /// V0 a 4x4 matrix of unsigned short.
-/// V1 a 4x4 matrix of int64_t interpreted as a 4x4 matrix of unsigned char,
-/// obtained from the lower char of the upper word of each int64_t element.
-/// Returns the 4x4 matrix of int64_t = M + V0 x transposed (V1)
+/// V1 a 4x8 matrix of unsigned char.
+/// V1' is the second half of V1, giving a 4x4 matrix of unsigned char.
+/// Returns the 4x4 matrix of int64_t = M + V0 x transposed (V1')
 // tca1024_t __builtin_kvx_mma444uhbd1 (tca1024_t M, tca256_t V0, tca256_t V1);
+
+/// Let M be a 4x4 matrix of int64_t,
+/// V0 a 4x8 matrix of unsigned short.
+/// V1 a 4x8 matrix of unsigned char.
+/// Returns the 4x4 matrix of int64_t = M + V0 x transposed (V1)
+// tca1024_t __builtin_kvx_mma484uhbd (tca1024_t M, tca512_t V0, tca256_t V1);
 
 /// Let M be a 4x4 matrix of int64_t,
 /// V0 and V1 4x4 matrixes of unsigned short.
@@ -250,16 +276,23 @@ typedef __tca1024 tca1024_t; // Maps to a variable that is held in a MatrixReg
 
 /// Let M be a 4x4 matrix of int64_t,
 /// V0 a 4x4 matrix of unsigned short and
-/// V1 a 4x4 matrix of int64_t interpreted as a 4x4 matrix of char.
-/// Returns the 4x4 matrix of int64_t = M + V0 x transposed (V1).
+/// V1 a 4x8 matrix of char.
+/// V1' is the first half of V1, giving a 4x4 matrix of char.
+/// Returns the 4x4 matrix of int64_t = M + V0 x transposed (V1').
 // tca1024_t __builtin_kvx_mma444ushbd0 (tca1024_t M, tca256_t V0, tca256_t V1);
 
 /// Let M be a 4x4 matrix of int64_t,
 /// V0 a 4x4 matrix of unsigned short,
-/// V1 a 4x4 matrix of int64_t interpreted as a 4x4 matrix of char,
-/// obtained from the lower char of the upper word of each int64_t element.
-/// Returns the 4x4 matrix of int64_t = M + V0 x transposed (V1)
+/// V1 a 4x8 matrix of char.
+/// V1' is the second half of V1, giving a 4x4 matrix of char.
+/// Returns the 4x4 matrix of int64_t = M + V0 x transposed (V1')
 // tca1024_t __builtin_kvx_mma444ushbd1 (tca1024_t M, tca256_t V0, tca256_t V1);
+
+/// Let M be a 4x4 matrix of int64_t,
+/// V0 a 4x8 matrix of unsigned short,
+/// V1 a 4x8 matrix of char.
+/// Returns the 4x4 matrix of int64_t = M + V0 x transposed (V1)
+// tca1024_t __builtin_kvx_mma484ushbd (tca1024_t M, tca512_t V0, tca256_t V1);
 
 /// Let M be a 4x4 matrix of int64_t,
 /// V0 is 4x4 matrixes of unsigned short and
@@ -356,5 +389,185 @@ typedef __tca1024 tca1024_t; // Maps to a variable that is held in a MatrixReg
 /// (ScalarCond, condition)).
 /// Modifiers: ScalarCond
 // void __builtin_kvx_sv_cond (tca256_t *p, tca256_t V, int64_t condition, const char *mods);
+
+/// Copy a 32 x char vector from the TCA to the core.
+inline char32 __builtin_kvx_movefobv(tca256_t *v) {
+  return (char32)__builtin_kvx_movefo(*v);
+}
+
+/// Copy a 16 x short vector from the TCA to the core.
+inline short16 __builtin_kvx_movefohx(tca256_t *v) {
+  return (short16)__builtin_kvx_movefo(*v);
+}
+
+/// Copy a 8 x int vector from the TCA to the core.
+inline int8 __builtin_kvx_movefowo(__tca256 *v) {
+  return (int8)__builtin_kvx_movefo(*v);
+}
+
+/// Copy a 4 x long vector from the TCA to the core.
+inline long4 __builtin_kvx_movefodq(__tca256 *v) {
+  return (long4)__builtin_kvx_movefo(*v);
+}
+
+/// Copy a 16 x _Float16 vector from the TCA to the core.
+inline half16 __builtin_kvx_movefofhx(tca256_t *v) {
+  return (half16)__builtin_kvx_movefo(*v);
+}
+
+/// Copy a 8 x float vector from the TCA to the core.
+inline float8 __builtin_kvx_movefofwo(__tca256 *v) {
+  return (float8)__builtin_kvx_movefo(*v);
+}
+
+/// Copy a 4 x double vector from the TCA to the core.
+inline double4 __builtin_kvx_movefofdq(__tca256 *v) {
+  return (double4)__builtin_kvx_movefo(*v);
+}
+
+/// tca256_t Funnel-logical-shift-bytes-right vectors V0 and V1.
+/// Output to the core.
+/// char32 = {V0, V1} >> 8 * sh.
+//  0 <= sh < 64. Shift number of bytes.
+inline char32 __builtin_kvx_alignobv(__tca256 *v0, __tca256 *v1,
+                                     unsigned long byteshift) {
+  return (char32)__builtin_kvx_alignov(*v0, *v1, byteshift);
+}
+
+/// tca256_t Funnel-logical-shift-bytes-right vectors V0 and V1.
+/// Output to the core.
+/// short16 = {V0, V1} >> 8 * sh.
+//  0 <= sh < 64. Shift number of bytes.
+inline short16 __builtin_kvx_alignohx(__tca256 *v0, __tca256 *v1,
+                                      unsigned long byteshift) {
+  return (short16)__builtin_kvx_alignov(*v0, *v1, byteshift);
+}
+
+/// tca256_t Funnel-logical-shift-bytes-right vectors V0 and V1.
+/// Output to the core.
+/// int8 = {V0, V1} >> 8 * sh.
+//  0 <= sh < 64. Shift number of bytes.
+inline int8 __builtin_kvx_alignowo(__tca256 *v0, __tca256 *v1,
+                                   unsigned long byteshift) {
+  return (int8)__builtin_kvx_alignov(*v0, *v1, byteshift);
+}
+
+/// tca256_t Funnel-logical-shift-bytes-right vectors V0 and V1.
+/// Output to the core.
+/// long4 = {V0, V1} >> 8 * sh.
+//  0 <= sh < 64. Shift number of bytes.
+inline long4 __builtin_kvx_alignodq(__tca256 *v0, __tca256 *v1,
+                                    unsigned long byteshift) {
+  return (long4)__builtin_kvx_alignov(*v0, *v1, byteshift);
+}
+
+/// tca256_t Funnel-logical-shift-bytes-right vectors V0 and V1.
+/// Output to the core.
+/// half16 = {V0, V1} >> 8 * sh.
+//  0 <= sh < 64. Shift number of bytes.
+inline half16 __builtin_kvx_alignofhx(__tca256 *v0, __tca256 *v1,
+                                      unsigned long byteshift) {
+  return (half16)__builtin_kvx_alignov(*v0, *v1, byteshift);
+}
+
+/// tca256_t Funnel-logical-shift-bytes-right vectors V0 and V1.
+/// Output to the core.
+/// float8 = {V0, V1} >> 8 * sh.
+//  0 <= sh < 64. Shift number of bytes.
+inline float8 __builtin_kvx_alignofwo(__tca256 *v0, __tca256 *v1,
+                                      unsigned long byteshift) {
+  return (float8)__builtin_kvx_alignov(*v0, *v1, byteshift);
+}
+
+/// tca256_t Funnel-logical-shift-bytes-right vectors V0 and V1.
+/// Output to the core.
+/// double4 = {V0, V1} >> 8 * sh.
+//  0 <= sh < 64. Shift number of bytes.
+inline double4 __builtin_kvx_alignofdq(__tca256 *v0, __tca256 *v1,
+                                       unsigned long byteshift) {
+  return (double4)__builtin_kvx_alignov(*v0, *v1, byteshift);
+}
+
+/// Copy a 32 x char vector from a core QuadRegister to the tca.
+inline __tca256 *__builtin_kvx_movetobv(char32 bv, __tca256 *v) {
+  *v = __builtin_kvx_moveoto(bv);
+  return v;
+}
+
+/// Copy a 16 x short vector from a core QuadRegister to the tca.
+inline __tca256 *__builtin_kvx_movetohx(short16 hx, __tca256 *v) {
+  *v = __builtin_kvx_moveoto(hx);
+  return v;
+}
+
+/// Copy a 8 x int vector from a core QuadRegister to the tca.
+inline __tca256 *__builtin_kvx_movetowo(int8 wo, __tca256 *v) {
+  *v = __builtin_kvx_moveoto(wo);
+  return v;
+}
+
+/// Copy a 4 x long vector from a core QuadRegister to the tca.
+inline __tca256 *__builtin_kvx_movetodq(long4 dq, __tca256 *v) {
+  *v = __builtin_kvx_moveoto(dq);
+  return v;
+}
+
+/// Copy a 16 x _Float16 vector from a core QuadRegister to the tca.
+inline __tca256 *__builtin_kvx_movetofhx(half16 fhx, __tca256 *v) {
+  *v = __builtin_kvx_moveoto(fhx);
+  return v;
+}
+
+/// Copy a 8 x float vector from a core QuadRegister to the tca.
+inline __tca256 *__builtin_kvx_movetofo(float8 fo, __tca256 *v) {
+  *v = __builtin_kvx_moveoto(fo);
+  return v;
+}
+
+/// Copy a 4 x double vector from a core QuadRegister to the tca.
+inline __tca256 *__builtin_kvx_movetofdq(double4 fdq, __tca256 *v) {
+  *v = __builtin_kvx_moveoto(fdq);
+  return v;
+}
+
+/// Swap values of a tca256_t and a core QuadRegister holding a 32 x char
+/// vector.
+inline void __builtin_kvx_swapvobv(char32 *v0, __tca256 *v1) {
+  __builtin_kvx_swapvo((long4 *)v0, v1);
+}
+
+/// Swap values of a tca256_t and a core QuadRegister holding a 16 x short
+/// vector.
+inline void __builtin_kvx_swapvohx(short16 *v0, __tca256 *v1) {
+  __builtin_kvx_swapvo((long4 *)v0, v1);
+}
+
+/// Swap values of a tca256_t and a core QuadRegister holding a 8 x intvector.
+inline void __builtin_kvx_swapvowo(int8 *v0, __tca256 *v1) {
+  __builtin_kvx_swapvo((long4 *)v0, v1);
+}
+
+/// Swap values of a tca256_t and a core QuadRegister holding a 4 x long vector.
+inline void __builtin_kvx_swapvodq(long4 *v0, __tca256 *v1) {
+  __builtin_kvx_swapvo(v0, v1);
+}
+
+/// Swap values of a tca256_t and a core QuadRegister holding a 16 x _Float16
+/// vector.
+inline void __builtin_kvx_swapvofhx(half16 *v0, __tca256 *v1) {
+  __builtin_kvx_swapvo((long4 *)v0, v1);
+}
+
+/// Swap values of a tca256_t and a core QuadRegister holding a 16 x float
+/// vector.
+inline void __builtin_kvx_swapvofwo(float8 *v0, __tca256 *v1) {
+  __builtin_kvx_swapvo((long4 *)v0, v1);
+}
+
+/// Swap values of a tca256_t and a core QuadRegister holding a 16 x double
+/// vector.
+inline void __builtin_kvx_swapvofdq(double4 *v0, __tca256 *v1) {
+  __builtin_kvx_swapvo((long4 *)v0, v1);
+}
 
 #endif // __KVXTCAINTRIN_H_
