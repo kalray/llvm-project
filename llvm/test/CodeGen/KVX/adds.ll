@@ -106,9 +106,7 @@ define signext i4 @sadd_sat4(i4 signext %a, i4 signext %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addw $r0 = $r1, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    minw $r0 = $r0, 7
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    maxw $r0 = $r0, -8
+; CHECK-NEXT:    satd $r0 = $r0, 4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -244,9 +242,7 @@ define i32 @sadd_sat32_trunc(i32 %a, i32 %b) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addwd $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mind $r0 = $r0, 0x7fff
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    maxd $r0 = $r0, 0xffffffffffff8000
+; CHECK-NEXT:    satdh $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

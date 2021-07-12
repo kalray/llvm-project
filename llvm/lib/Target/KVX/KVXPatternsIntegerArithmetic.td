@@ -1065,6 +1065,67 @@ defm : WPShiftScalarOps<rotr, RORWPSri, RORWPSrr, RORWri, RORWrr>;
 def : Pat<(v2i32(or (shl v2i32:$r0, (v2i32 (v2_splat (i32 (sub (i32 32), i32:$r1)))) ), (srl v2i32:$r0, (v2i32 (v2_splat i32:$r1))))),
           (RORWPSrr SingleReg:$r0, SingleReg:$r1)>;
 
+let Predicates = [HasFPIMM] in {
+// SATD
+multiclass SATDW_PAT<int min_val, int max_val, SDNode num_bits> {
+def : Pat<(i32(smin (smax i32:$v, (i32 min_val)), (i32 max_val))), (SATDri SingleReg:$v, num_bits)>;
+def : Pat<(i32(smax (smin i32:$v, (i32 max_val)), (i32 min_val))), (SATDri SingleReg:$v, num_bits)>;
+def : Pat<(i64(smin (smax i64:$v, (i64 min_val)), (i64 max_val))), (SATDri SingleReg:$v, num_bits)>;
+def : Pat<(i64(smax (smin i64:$v, (i64 max_val)), (i64 min_val))), (SATDri SingleReg:$v, num_bits)>;
+}
+foreach Bits = {2-15, 17-31} in {
+      defm : SATDW_PAT<!sub(0, !shl(1, !sub(Bits, 1))), !sub(!shl(1, !sub(Bits, 1)), 1), Bits>;
+}
+
+multiclass SATD_PAT<SDNode min_val, SDNode max_val, SDNode num_bits> {
+def : Pat<(i64(smin (smax i64:$v, (i64 min_val)), (i64 max_val))), (SATDri SingleReg:$v, num_bits)>;
+def : Pat<(i64(smax (smin i64:$v, (i64 max_val)), (i64 min_val))), (SATDri SingleReg:$v, num_bits)>;
+}
+
+defm : SATD_PAT<-4294967296, 4294967295, 33>;
+defm : SATD_PAT<-8589934592, 8589934591, 34>;
+defm : SATD_PAT<-17179869184, 17179869183, 35>;
+defm : SATD_PAT<-34359738368, 34359738367, 36>;
+defm : SATD_PAT<-68719476736, 68719476735, 37>;
+defm : SATD_PAT<-137438953472, 137438953471, 38>;
+defm : SATD_PAT<-274877906944, 274877906943, 39>;
+defm : SATD_PAT<-549755813888, 549755813887, 40>;
+defm : SATD_PAT<-1099511627776, 1099511627775, 41>;
+defm : SATD_PAT<-2199023255552, 2199023255551, 42>;
+defm : SATD_PAT<-4398046511104, 4398046511103, 43>;
+defm : SATD_PAT<-8796093022208, 8796093022207, 44>;
+defm : SATD_PAT<-17592186044416, 17592186044415, 45>;
+defm : SATD_PAT<-35184372088832, 35184372088831, 46>;
+defm : SATD_PAT<-70368744177664, 70368744177663, 47>;
+defm : SATD_PAT<-140737488355328, 140737488355327, 48>;
+defm : SATD_PAT<-281474976710656, 281474976710655, 49>;
+defm : SATD_PAT<-562949953421312, 562949953421311, 50>;
+defm : SATD_PAT<-1125899906842624, 1125899906842623, 51>;
+defm : SATD_PAT<-2251799813685248, 2251799813685247, 52>;
+defm : SATD_PAT<-4503599627370496, 4503599627370495, 53>;
+defm : SATD_PAT<-9007199254740992, 9007199254740991, 54>;
+defm : SATD_PAT<-18014398509481984, 18014398509481983, 55>;
+defm : SATD_PAT<-36028797018963968, 36028797018963967, 56>;
+defm : SATD_PAT<-72057594037927936, 72057594037927935, 57>;
+defm : SATD_PAT<-144115188075855872, 144115188075855871, 58>;
+defm : SATD_PAT<-288230376151711744, 288230376151711743, 59>;
+defm : SATD_PAT<-576460752303423488, 576460752303423487, 60>;
+defm : SATD_PAT<-1152921504606846976, 1152921504606846975, 61>;
+defm : SATD_PAT<-2305843009213693952, 2305843009213693951, 62>;
+defm : SATD_PAT<-4611686018427387904, 4611686018427387903, 63>;
+
+// SATDH
+def : Pat<(i64( smin (smax i64:$v, -32768), 32767 )), (SATDH SingleReg:$v)>;
+def : Pat<(i64( smax (smin i64:$v, 32767), -32768 )), (SATDH SingleReg:$v)>;
+
+def : Pat<(i32( smin (smax i32:$v, -32768), (i32 32767) )), (SATDH SingleReg:$v)>;
+def : Pat<(i32( smax (smin i32:$v, 32767), (i32 -32768) )), (SATDH SingleReg:$v)>;
+
+// SATDW
+def : Pat<(i64( smin (smax i64:$v, -2147483648), 2147483647 )), (SATDW SingleReg:$v)>;
+def : Pat<(i64( smax (smin i64:$v, 2147483647), -2147483648 )), (SATDW SingleReg:$v)>;
+} // let Requires<[hasFPIMM]>
+
 // SBFCWC
 // TODO: ri variants
 def : Pat<(i64(or(and (add i64:$r1, (and i64:$r0, (i64 0xffffffff00000000))), (i64 0xffffffff00000000) ),
