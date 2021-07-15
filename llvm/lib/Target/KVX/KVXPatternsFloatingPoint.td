@@ -734,11 +734,27 @@ def : Pat<(f16 (fminnum f16:$v0, f16:$v1)), (FMINHQ $v0, $v1)>;
 def : Pat<(v2f16 (fminnum v2f16:$v0, v2f16:$v1)), (FMINHQ $v0, $v1)>;
 
 // FNEG
-def : Pat<(fneg f16:$rs), (FNEGHQ SingleReg:$rs)>;
-def : Pat<(fneg v2f16:$rs), (FNEGHQ SingleReg:$rs)>;
+def : Pat<(vfneg f16:$rs), (FNEGHQ SingleReg:$rs)>;
+def : Pat<(vfneg v2f16:$rs), (FNEGHQ SingleReg:$rs)>;
 def : Pat<(vfneg v2f16:$rs), (FNEGHQ SingleReg:$rs)>;
 def : Pat<(vfneg v4f16:$rs), (FNEGHQ SingleReg:$rs)>;
 def : Pat<(vfneg v2f32:$rs), (FNEGWP SingleReg:$rs)>;
+def : Pat<(vfneg v4f32:$rs),
+          (v4f32 (REG_SEQUENCE PairedReg,
+            (v2f32(FNEGWP (v2f32 (EXTRACT_SUBREG PairedReg:$rs, sub_s0)))), sub_s0,
+            (v2f32(FNEGWP (v2f32 (EXTRACT_SUBREG PairedReg:$rs, sub_s1)))), sub_s1))>;
+
+def : Pat<(vfneg v2f64:$rs),
+          (v2f64 (REG_SEQUENCE PairedReg,
+            (f64 (FNEGD (f64 (EXTRACT_SUBREG PairedReg:$rs, sub_s0)))), sub_s0,
+            (f64 (FNEGD (f64 (EXTRACT_SUBREG PairedReg:$rs, sub_s1)))), sub_s1))>;
+
+def : Pat<(vfneg v4f64:$rs),
+          (v4f64 (REG_SEQUENCE QuadReg,
+            (f64 (FNEGD (f64 (EXTRACT_SUBREG QuadReg:$rs, sub_s0)))), sub_s0,
+            (f64 (FNEGD (f64 (EXTRACT_SUBREG QuadReg:$rs, sub_s1)))), sub_s1,
+            (f64 (XORDri64 (f64 (EXTRACT_SUBREG QuadReg:$rs, sub_s2)), 0x8000000000000000)), sub_s2,
+            (f64 (XORDri64 (f64 (EXTRACT_SUBREG QuadReg:$rs, sub_s3)), 0x8000000000000000)), sub_s3))>;
 
 // FSBF
 // TODO: Add ri variants

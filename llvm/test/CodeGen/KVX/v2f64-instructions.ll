@@ -117,11 +117,8 @@ define <2 x double> @test_fsub_fromimm(<2 x double> %a) #0 {
 define <2 x double> @test_fneg(<2 x double> %a) #0 {
 ; CHECK-LABEL: test_fneg:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r2 = 0x0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r3 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfdp $r0r1 = $r0r1, $r2r3
+; CHECK-NEXT:    fnegd $r1 = $r1
+; CHECK-NEXT:    fnegd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fsub <2 x double> <double 0.0, double 0.0>, %a
