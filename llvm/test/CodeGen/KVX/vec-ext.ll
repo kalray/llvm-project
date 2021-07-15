@@ -429,3 +429,27 @@ entry:
   %ext = zext <4 x i1> %a to <4 x i32>
   ret <4 x i32> %ext
 }
+
+define { i64, i64, i64, i64 } @T16772(<8 x i8> %0, <2 x i32> %1) {
+; CHECK-LABEL: T16772:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    floatuwp.rn $r2 = $r1, 0
+; CHECK-NEXT:    sbmm8 $r1 = $r0, 0x8000000040
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x2000000010
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    make $r3 = 0x3d70b07f3d70b07f
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = shufflevector <8 x i8> %0, <8 x i8> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+  %4 = zext <4 x i8> %3 to <4 x i32>
+  %5 = uitofp <2 x i32> %1 to <2 x float>
+  %6 = bitcast <4 x i32> %4 to <2 x i64>
+  %7 = extractelement <2 x i64> %6, i32 0
+  %8 = insertvalue { i64, i64, i64, i64 } undef, i64 %7, 0
+  %9 = extractelement <2 x i64> %6, i32 1
+  %10 = insertvalue { i64, i64, i64, i64 } %8, i64 %9, 1
+  %11 = bitcast <2 x float> %5 to i64
+  %12 = insertvalue { i64, i64, i64, i64 } %10, i64 %11, 2
+  %13 = insertvalue { i64, i64, i64, i64 } %12, i64 4427232494243328127, 3
+  ret { i64, i64, i64, i64 } %13
+}

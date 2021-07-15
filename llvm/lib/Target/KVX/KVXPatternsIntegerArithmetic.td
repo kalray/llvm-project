@@ -1353,8 +1353,8 @@ def : Pat<(v2i32(zext v2i16:$v)), (SBMM8ri64 $v, 0x80400000201)>;
 
 // SXLHWP + SXLBHQ + SXMHWP + SXMBHQ
 def : Pat<(v4i32(sext (v4i8( extract_subvector v8i8:$v, (i64 4))))), (REG_SEQUENCE PairedReg, (SXLHWP(SXMBHQ $v)), sub_s0, (SXMHWP(SXMBHQ $v)), sub_s1)>;
-def : Pat<(v4i32(zanyext (v4i8( extract_subvector v8i8:$v, (i64 4))))), (REG_SEQUENCE PairedReg, (SBMM8ri37 $v, 0x2000000010), sub_s0,
-                                                          (SBMM8ri37 $v, 0x8000000040), sub_s1)>;
+def : Pat<(v4i32(zanyext (v4i8( extract_subvector v8i8:$v, (i64 4))))), (REG_SEQUENCE PairedReg, (SBMM8ri64 $v, 0x2000000010), sub_s0,
+                                                          (SBMM8ri64 $v, 0x8000000040), sub_s1)>;
 
 def : Pat<(v4i32(sext (v4i8( extract_subvector v8i8:$v, (i64 0))))), (REG_SEQUENCE PairedReg, (SXLHWP(SXLBHQ $v)), sub_s0, (SXMHWP(SXLBHQ $v)), sub_s1)>;
 def : Pat<(v4i32(zanyext (v4i8( extract_subvector v8i8:$v, (i64 0))))), (REG_SEQUENCE PairedReg, (SBMM8ri37 $v, 0x200000001), sub_s0,
