@@ -35,7 +35,7 @@ include "KVXSchedule.td"
 include "KVXModifierInfo.td"
 
 def vineg : PatFrag<(ops node:$v), (sub immAllZerosV, node:$v)>;
-def vfneg : PatFrag<(ops node:$v), (fsub immAllZerosV, node:$v)>;
+def vfneg : PatFrags<(ops node:$v), [(fsub immAllZerosV, node:$v), (fneg node:$v)]>;
 
 multiclass BITCAST <ValueType DstVT, ValueType SrcVT, RegisterClass RC> {
   def : Pat<(DstVT (bitconvert (SrcVT RC:$src))), (DstVT RC:$src)>;

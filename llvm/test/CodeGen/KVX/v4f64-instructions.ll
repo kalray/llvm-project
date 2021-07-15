@@ -147,15 +147,11 @@ define <4 x double> @test_fsub_fromimm(<4 x double> %a) #0 {
 define <4 x double> @test_fneg(<4 x double> %a) #0 {
 ; CHECK-LABEL: test_fneg:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r4 = 0x0
+; CHECK-NEXT:    xord $r3 = $r3, -9223372036854775808
+; CHECK-NEXT:    xord $r2 = $r2, -9223372036854775808
+; CHECK-NEXT:    fnegd $r1 = $r1
+; CHECK-NEXT:    fnegd $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r5 = $r4
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    copyd $r7 = $r4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfdp $r2r3 = $r2r3, $r6r7
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfdp $r0r1 = $r0r1, $r4r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fsub <4 x double> <double 0.0, double 0.0, double 0.0, double 0.0>, %a
