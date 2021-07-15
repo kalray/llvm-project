@@ -800,13 +800,10 @@ define <2 x float> @test_fpext_2xfloat(<2 x half> %a) #0 {
 define <2 x double> @test_fpext_2xdouble(<2 x half> %a) #0 {
 ; CHECK-LABEL: test_fpext_2xdouble:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srlw $r1 = $r0, 16
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
+; CHECK-NEXT:    fwidenlhwp $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r1 = $r1
+; CHECK-NEXT:    fwidenmwd $r1 = $r0
 ; CHECK-NEXT:    fwidenlwd $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlwd $r1 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fpext <2 x half> %a to <2 x double>
