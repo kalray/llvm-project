@@ -733,10 +733,8 @@ define <2 x float> @test_fptrunc_2xdouble(<2 x double> %a) #0 {
 define <2 x double> @test_fpext_2xdouble(<2 x float> %a) #0 {
 ; CHECK-LABEL: test_fpext_2xdouble:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r1 = $r0, 32
+; CHECK-NEXT:    fwidenmwd $r1 = $r0
 ; CHECK-NEXT:    fwidenlwd $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlwd $r1 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fpext <2 x float> %a to <2 x double>
@@ -1303,9 +1301,11 @@ define <2 x double> @test_copysign_extended(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 31
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r3 = $r2, 31, 31
-; CHECK-NEXT:    fwidenlwd $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlwd $r1 = $r3
+; CHECK-NEXT:    insf $r0 = $r3, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fwidenmwd $r1 = $r0
+; CHECK-NEXT:    fwidenlwd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <2 x float> @llvm.copysign.v2f32(<2 x float> %a, <2 x float> %b)

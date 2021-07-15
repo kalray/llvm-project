@@ -244,9 +244,6 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::VECTOR_SHUFFLE, VT, Expand);
     setOperationAction(ISD::SCALAR_TO_VECTOR, VT, Expand);
   }
-  setOperationAction(ISD::FMUL, MVT::v2f64, Expand);
-  setOperationAction(ISD::FMA, MVT::v2f64, Expand);
-
   setOperationAction(ISD::FMUL, MVT::v4f64, Expand);
   setOperationAction(ISD::FMA, MVT::v4f64, Expand);
 
@@ -367,7 +364,6 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
 
   setOperationAction(ISD::FP_ROUND, MVT::v2f32, Expand);
   setOperationAction(ISD::FP_ROUND, MVT::v4f32, Expand);
-  setOperationAction(ISD::FP_EXTEND, MVT::v2f64, Expand);
   setOperationAction(ISD::FP_EXTEND, MVT::v4f64, Expand);
 
   setTruncStoreAction(MVT::v2i16, MVT::v2i8, Expand);
@@ -2474,11 +2470,14 @@ KVXTargetLowering::getPreferredVectorAction(MVT VT) const {
 
   switch (VT.SimpleTy) {
   case MVT::v8i1:
+  case MVT::v8f16:
   case MVT::v8i16:
+  case MVT::v8f32:
   case MVT::v8i32:
 
   case MVT::v16i1:
   case MVT::v16i8:
+  case MVT::v16f16:
   case MVT::v16i16:
 
   case MVT::v32i1:

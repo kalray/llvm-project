@@ -520,21 +520,17 @@ define <8 x float> @int_fmawp_x4(<8 x float> %a, <8 x float> %b, <8 x float> %c)
   ret <8 x float> %res
 }
 
-; FIXME: The fast is slower than the non-fast
 define <4 x float> @fmswp_x2(<4 x float> %a, <4 x float> %b, <4 x float> %c) {
 ; CHECK-LABEL: fmswp_x2:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fnegwp $r1 = $r5
-; CHECK-NEXT:    fnegwp $r0 = $r4
+; CHECK-NEXT:    ffmswp $r1 = $r5, $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmawp $r1 = $r5, $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmawp $r0 = $r4, $r2
+; CHECK-NEXT:    ffmswp $r0 = $r4, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = fmul fast <4 x float> %c, %b
-  %2 = fsub fast <4 x float> %1, %c
-ret <4 x float> %2
+  %2 = fsub fast <4 x float> %a, %1
+  ret <4 x float> %2
 }
 
 define <4 x float> @not_fmswp_x2(<4 x float> %a, <4 x float> %b, <4 x float> %c) {
@@ -760,4 +756,118 @@ entry:
   %mul = fmul fast half %b, 500.0
   %sub = fadd fast half %a, %mul
   ret half %sub
+}
+
+define float @ffmahw_rr(float %0, half %1, half %2) {
+; CHECK-LABEL: ffmahw_rr:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    ffmahw $r0 = $r2, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %4 = fpext half %1 to float
+  %5 = fpext half %2 to float
+  %6 = fmul fast float %5, %4
+  %7 = fadd fast float %6, %0
+  ret float %7
+}
+
+define <4 x float> @ffmahwq_rr(<4 x float> %0, <4 x half> %1, <4 x half> %2) {
+; CHECK-LABEL: ffmahwq_rr:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    ffmahwq $r0r1 = $r3, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %4 = fpext <4 x half> %1 to <4 x float>
+  %5 = fpext <4 x half> %2 to <4 x float>
+  %6 = fmul fast <4 x float> %5, %4
+  %7 = fadd fast <4 x float> %6, %0
+  ret <4 x float> %7
+}
+
+define <2 x double> @ffmawdp_rr(<2 x double> %0, <2 x float> %1, <2 x float> %2) {
+; CHECK-LABEL: ffmawdp_rr:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    ffmawdp $r0r1 = $r3, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %4 = fpext <2 x float> %1 to <2 x double>
+  %5 = fpext <2 x float> %2 to <2 x double>
+  %6 = fmul fast <2 x double> %5, %4
+  %7 = fadd fast <2 x double> %6, %0
+  ret <2 x double> %7
+}
+
+define float @ffmshw_rr(float %0, half %1, half %2) {
+; CHECK-LABEL: ffmshw_rr:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    ffmshw $r0 = $r2, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %4 = fpext half %1 to float
+  %5 = fpext half %2 to float
+  %6 = fmul fast float %5, %4
+  %7 = fsub fast float %0, %6
+  ret float %7
+}
+
+define <4 x float> @ffmshwq_rr(<4 x float> %0, <4 x half> %1, <4 x half> %2) {
+; CHECK-LABEL: ffmshwq_rr:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    ffmshwq $r0r1 = $r3, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %4 = fpext <4 x half> %1 to <4 x float>
+  %5 = fpext <4 x half> %2 to <4 x float>
+  %6 = fmul fast <4 x float> %5, %4
+  %7 = fsub fast <4 x float> %0, %6
+  ret <4 x float> %7
+}
+
+define <2 x double> @ffmswdp_rr(<2 x double> %0, <2 x float> %1, <2 x float> %2) {
+; CHECK-LABEL: ffmswdp_rr:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    ffmswdp $r0r1 = $r3, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %4 = fpext <2 x float> %1 to <2 x double>
+  %5 = fpext <2 x float> %2 to <2 x double>
+  %6 = fmul fast <2 x double> %5, %4
+  %7 = fsub fast <2 x double> %0, %6
+  ret <2 x double> %7
+}
+
+define float @fmulhw(half %0, half %1) {
+; CHECK-LABEL: fmulhw:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fmulhw $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = fpext half %0 to float
+  %4 = fpext half %1 to float
+  %5 = fmul fast float %4, %3
+  ret float %5
+}
+
+define <4 x float> @fmulhwq(<4 x half> %0, <4 x half> %1) {
+; CHECK-LABEL: fmulhwq:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fmulhwq $r0r1 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = fpext <4 x half> %0 to <4 x float>
+  %4 = fpext <4 x half> %1 to <4 x float>
+  %5 = fmul fast <4 x float> %4, %3
+  ret <4 x float> %5
+}
+
+define <2 x double> @fmulwdp_rr(<2 x float> %0, <2 x float> %1) {
+; CHECK-LABEL: fmulwdp_rr:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fmulwdp $r0r1 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = fpext <2 x float> %0 to <2 x double>
+  %4 = fpext <2 x float> %1 to <2 x double>
+  %5 = fmul fast <2 x double> %4, %3
+  ret <2 x double> %5
 }
