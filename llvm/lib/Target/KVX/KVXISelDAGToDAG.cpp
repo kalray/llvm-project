@@ -45,7 +45,7 @@ public:
   void Select(SDNode *Node) override;
 
   bool SelectAddrFI(SDValue Addr, SDValue &Base);
-  bool SelectAddrRI(SDValue Addr, SDValue &Index, SDValue &Base);
+  bool SelectAddrRR(SDValue Addr, SDValue &Index, SDValue &Base);
 
   MachineSDNode *buildMake(SDLoc &DL, SDNode *Imm, EVT VT) const;
 #include "KVXGenDAGISel.inc"
@@ -62,7 +62,7 @@ bool KVXDAGToDAGISel::SelectAddrFI(SDValue Addr, SDValue &Base) {
   return false;
 }
 
-bool KVXDAGToDAGISel::SelectAddrRI(SDValue Addr, SDValue &Index,
+bool KVXDAGToDAGISel::SelectAddrRR(SDValue Addr, SDValue &Index,
                                    SDValue &Base) {
   if (auto FIN = dyn_cast<FrameIndexSDNode>(Addr)) {
     Base = CurDAG->getTargetFrameIndex(
