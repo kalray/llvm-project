@@ -970,15 +970,11 @@ define <4 x float> @test_fptrunc_2xdouble(<4 x double> %a) #0 {
 define <4 x double> @test_fpext_2xdouble(<4 x float> %a) #0 {
 ; CHECK-LABEL: test_fpext_2xdouble:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r2 = $r0, 32
-; CHECK-NEXT:    srad $r3 = $r1, 32
-; CHECK-NEXT:    fwidenlwd $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlwd $r5 = $r2
+; CHECK-NEXT:    fwidenmwd $r3 = $r1
 ; CHECK-NEXT:    fwidenlwd $r2 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlwd $r3 = $r3
-; CHECK-NEXT:    copyd $r1 = $r5
+; CHECK-NEXT:    fwidenmwd $r1 = $r0
+; CHECK-NEXT:    fwidenlwd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fpext <4 x float> %a to <4 x double>
@@ -1782,29 +1778,31 @@ define <4 x float> @test_copysign_f64(<4 x float> %a, <4 x double> %b) #0 {
 define <4 x double> @test_copysign_extended(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK-LABEL: test_copysign_extended:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r4 = $r3, 32
-; CHECK-NEXT:    srad $r6 = $r1, 32
-; CHECK-NEXT:    sraw $r3 = $r3, 31
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sraw $r4 = $r4, 31
-; CHECK-NEXT:    insf $r1 = $r3, 31, 31
-; CHECK-NEXT:    srad $r3 = $r0, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r6 = $r4, 31, 31
 ; CHECK-NEXT:    srad $r4 = $r2, 32
+; CHECK-NEXT:    srad $r5 = $r0, 32
 ; CHECK-NEXT:    sraw $r2 = $r2, 31
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sraw $r4 = $r4, 31
 ; CHECK-NEXT:    insf $r0 = $r2, 31, 31
+; CHECK-NEXT:    srad $r2 = $r1, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r5 = $r4, 31, 31
+; CHECK-NEXT:    srad $r4 = $r3, 32
+; CHECK-NEXT:    sraw $r3 = $r3, 31
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sraw $r4 = $r4, 31
+; CHECK-NEXT:    insf $r1 = $r3, 31, 31
+; CHECK-NEXT:    insf $r0 = $r5, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r2 = $r4, 31, 31
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r1 = $r2, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fwidenmwd $r3 = $r1
 ; CHECK-NEXT:    fwidenlwd $r2 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r3 = $r4, 31, 31
+; CHECK-NEXT:    fwidenmwd $r1 = $r0
 ; CHECK-NEXT:    fwidenlwd $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlwd $r5 = $r3
-; CHECK-NEXT:    fwidenlwd $r3 = $r6
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <4 x float> @llvm.copysign.v2f32(<4 x float> %a, <4 x float> %b)

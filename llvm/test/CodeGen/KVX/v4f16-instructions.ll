@@ -981,22 +981,14 @@ define <4 x float> @test_fpext_4xfloat(<4 x half> %a) #0 {
 define <4 x double> @test_fpext_4xdouble(<4 x half> %a) #0 {
 ; CHECK-LABEL: test_fpext_4xdouble:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fwidenlhw $r2 = $r0
-; CHECK-NEXT:    srlw $r1 = $r0, 16
+; CHECK-NEXT:    fwidenmhwp $r1 = $r0
+; CHECK-NEXT:    fwidenlhwp $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlwd $r4 = $r2
-; CHECK-NEXT:    srld $r2 = $r0, 32
-; CHECK-NEXT:    srld $r0 = $r0, 48
-; CHECK-NEXT:    fwidenlhw $r1 = $r1
+; CHECK-NEXT:    fwidenmwd $r3 = $r1
+; CHECK-NEXT:    fwidenlwd $r2 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r2 = $r2
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlwd $r3 = $r0
-; CHECK-NEXT:    fwidenlwd $r1 = $r1
-; CHECK-NEXT:    copyd $r0 = $r4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlwd $r2 = $r2
+; CHECK-NEXT:    fwidenmwd $r1 = $r0
+; CHECK-NEXT:    fwidenlwd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fpext <4 x half> %a to <4 x double>
