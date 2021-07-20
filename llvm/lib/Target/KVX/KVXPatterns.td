@@ -83,8 +83,7 @@ def : Pat<(KVXFence), (FENCE)>;
 
 def AddrFI : ComplexPattern<iPTR, 1, "SelectAddrFI", [frameindex], []>;
 
-// FIXME: rename AddrRI to Addr
-def AddrRI : Operand<iPTR>, ComplexPattern<iPTR, 2, "SelectAddrRI", [], []> {
+def AddrRR : Operand<iPTR>, ComplexPattern<iPTR, 2, "SelectAddrRR", [], []> {
   let PrintMethod = "printMemOperand";
   let MIOperandInfo = (ops SingleReg:$offset, SingleReg:$baseReg );
 }
@@ -93,10 +92,10 @@ def AddrRI : Operand<iPTR>, ComplexPattern<iPTR, 2, "SelectAddrRI", [], []> {
 // Pseudo instructions patterns.
 //===----------------------------------------------------------------------===//
 
-def DINVALLp : KVX_PSEUDO<(outs), (ins AddrRI:$addr), []>;
-def DTOUCHLp : KVX_PSEUDO<(outs), (ins AddrRI:$addr), []>;
-def DZEROLp : KVX_PSEUDO<(outs), (ins AddrRI:$addr), []>;
-def IINVALSp : KVX_PSEUDO<(outs), (ins AddrRI:$addr), []>;
+def DINVALLp : KVX_PSEUDO<(outs), (ins AddrRR:$addr), []>;
+def DTOUCHLp : KVX_PSEUDO<(outs), (ins AddrRR:$addr), []>;
+def DZEROLp : KVX_PSEUDO<(outs), (ins AddrRR:$addr), []>;
+def IINVALSp : KVX_PSEUDO<(outs), (ins AddrRR:$addr), []>;
 let Constraints = "$output = $newsp" in
 def SPCHECKp : KVX_PSEUDO<(outs SingleReg:$output), (ins SingleReg:$newsp, SingleReg:$check), []>;
 

@@ -32,27 +32,25 @@ defm : StorePat<store, v2f64, PairedReg, 4, SQp, SQri10, SQrr>;
 defm : StorePat<store, v4f64, QuadReg, 5, SOp, SOri10, SOrr>;
 
 // Load
-foreach type = [ f16, f32, f64, v2f16, v4f16, v2f32, v4f32, v2f64, v4f64 ] in {
-def load#type : PatFrag<(ops node:$ptr), (type (load node:$ptr)), [{
+def cachedload : PatFrag<(ops node:$ptr), (load node:$ptr), [{
     const MemSDNode *LD = cast<MemSDNode>(N);
     return LD->getAddressSpace() < 256;
   }]>;
 
-def loadbypass#type : PatFrag<(ops node:$ptr), (type (load node:$ptr)), [{
+def loadbypass : PatFrag<(ops node:$ptr), (load node:$ptr), [{
     const MemSDNode *LD = cast<MemSDNode>(N);
     return LD->getAddressSpace() == 256;
   }]>;
 
-def loadpreload#type : PatFrag<(ops node:$ptr), (type (load node:$ptr)), [{
+def loadpreload : PatFrag<(ops node:$ptr), (load node:$ptr), [{
     const MemSDNode *LD = cast<MemSDNode>(N);
     return LD->getAddressSpace() == 257;
   }]>;
 
-def loadspec#type : PatFrag<(ops node:$ptr), (type (load node:$ptr)), [{
+def loadspec : PatFrag<(ops node:$ptr), (load node:$ptr), [{
     const MemSDNode *LD = cast<MemSDNode>(N);
     return LD->getAddressSpace() == 258;
   }]>;
-}
 
 def fmulcont : PatFrag<(ops node:$op0, node:$op1), (fmul node:$op0, node:$op1), [{
     return N->getFlags().hasAllowContract();
@@ -70,65 +68,24 @@ def kvx_fma : PatFrags<(ops node:$op0, node:$op1, node:$op2),
               [(fma node:$op0, node:$op1, node:$op2),
                (faddcont node:$op2, (fmulcont node:$op0, node:$op1))]>;
 
-// Bypass loads
-defm : LoadPat<loadbypassf16, f16, 1, LHZp, LHZri10, LHZrr, variant_u>;
+multiclass LoadSuperClass<ValueType vt, int sc, KVX_PSEUDO pinst,
+                   KVX_INSTRUCTION ri10, KVX_INSTRUCTION rr> {
 
-defm : LoadPat<loadbypassf32, f32, 2, LWZp, LWZri10, LWZrr, variant_u>;
-defm : LoadPat<loadbypassv2f16, v2f16, 2, LWZp, LWZri10, LWZrr, variant_u>;
+defm : LoadPat<loadbypass, vt, sc, pinst, ri10, rr, variant_u>;
+defm : LoadPat<loadpreload, vt, sc, pinst, ri10, rr, variant_us>;
+defm : LoadPat<loadspec, vt, sc, pinst, ri10, rr, variant_s>;
+defm : LoadPat<cachedload, vt, sc, pinst, ri10, rr, variant_>;
+}
 
-defm : LoadPat<loadbypassf64, f64, 3, LDp, LDri10, LDrr, variant_u>;
-defm : LoadPat<loadbypassv2f32, v2f32, 3, LDp, LDri10, LDrr, variant_u>;
-defm : LoadPat<loadbypassv4f16, v4f16, 3, LDp, LDri10, LDrr, variant_u>;
-
-defm : LoadPat<loadbypassv4f32, v4f32, 4, LQp, LQri10, LQrr, variant_u>;
-defm : LoadPat<loadbypassv2f64, v2f64, 4, LQp, LQri10, LQrr, variant_u>;
-
-defm : LoadPat<loadbypassv4f64, v4f64, 5, LOp, LOri10, LOrr, variant_u>;
-
-// Preload loads
-defm : LoadPat<loadpreloadf16, f16, 1, LHZp, LHZri10, LHZrr, variant_us>;
-
-defm : LoadPat<loadpreloadf32, f32, 2, LWZp, LWZri10, LWZrr, variant_us>;
-defm : LoadPat<loadpreloadv2f16, v2f16, 2, LWZp, LWZri10, LWZrr, variant_us>;
-
-defm : LoadPat<loadpreloadf64, f64, 3, LDp, LDri10, LDrr, variant_us>;
-defm : LoadPat<loadpreloadv2f32, v2f32, 3, LDp, LDri10, LDrr, variant_us>;
-defm : LoadPat<loadpreloadv4f16, v4f16, 3, LDp, LDri10, LDrr, variant_us>;
-
-defm : LoadPat<loadpreloadv4f32, v4f32, 4, LQp, LQri10, LQrr, variant_us>;
-defm : LoadPat<loadpreloadv2f64, v2f64, 4, LQp, LQri10, LQrr, variant_us>;
-
-defm : LoadPat<loadpreloadv4f64, v4f64, 5, LOp, LOri10, LOrr, variant_us>;
-
-// Speculative loads
-defm : LoadPat<loadspecf16, f16, 1, LHZp, LHZri10, LHZrr, variant_s>;
-
-defm : LoadPat<loadspecf32, f32, 2, LWZp, LWZri10, LWZrr, variant_s>;
-defm : LoadPat<loadspecv2f16, v2f16, 2, LWZp, LWZri10, LWZrr, variant_s>;
-
-defm : LoadPat<loadspecf64, f64, 3, LDp, LDri10, LDrr, variant_s>;
-defm : LoadPat<loadspecv2f32, v2f32, 3, LDp, LDri10, LDrr, variant_s>;
-defm : LoadPat<loadspecv4f16, v4f16, 3, LDp, LDri10, LDrr, variant_s>;
-
-defm : LoadPat<loadspecv4f32, v4f32, 4, LQp, LQri10, LQrr, variant_s>;
-defm : LoadPat<loadspecv2f64, v2f64, 4, LQp, LQri10, LQrr, variant_s>;
-
-defm : LoadPat<loadspecv4f64, v4f64, 5, LOp, LOri10, LOrr, variant_s>;
-
-// Normal loads
-defm : LoadPat<loadf16, f16, 1, LHZp, LHZri10, LHZrr, variant_>;
-
-defm : LoadPat<loadf32, f32, 2, LWZp, LWZri10, LWZrr, variant_>;
-defm : LoadPat<loadv2f16, v2f16, 2, LWZp, LWZri10, LWZrr, variant_>;
-
-defm : LoadPat<loadf64, f64, 3, LDp, LDri10, LDrr, variant_>;
-defm : LoadPat<loadv2f32, v2f32, 3, LDp, LDri10, LDrr, variant_>;
-defm : LoadPat<loadv4f16, v4f16, 3, LDp, LDri10, LDrr, variant_>;
-
-defm : LoadPat<loadv4f32, v4f32, 4, LQp, LQri10, LQrr, variant_>;
-defm : LoadPat<loadv2f64, v2f64, 4, LQp, LQri10, LQrr, variant_>;
-
-defm : LoadPat<loadv4f64, v4f64, 5, LOp, LOri10, LOrr, variant_>;
+defm : LoadSuperClass<f16, 1, LHZp, LHZri10, LHZrr>;
+defm : LoadSuperClass<f32, 2, LWZp, LWZri10, LWZrr>;
+defm : LoadSuperClass<v2f16, 2, LWZp, LWZri10, LWZrr>;
+defm : LoadSuperClass<f64, 3, LDp, LDri10, LDrr>;
+defm : LoadSuperClass<v2f32, 3, LDp, LDri10, LDrr>;
+defm : LoadSuperClass<v4f16, 3, LDp, LDri10, LDrr>;
+defm : LoadSuperClass<v4f32, 4, LQp, LQri10, LQrr>;
+defm : LoadSuperClass<v2f64, 4, LQp, LQri10, LQrr>;
+defm : LoadSuperClass<v4f64, 5, LOp, LOri10, LOrr>;
 
 // FABS
 def : Pat<(v2f16(fabs v2f16:$v)), (FABSHQ SingleReg:$v)>;
@@ -550,7 +507,6 @@ defm : FFMSPAT<v2f16, FFMSHQrr, FMULHQrr>;
 defm : FFMSPAT<v4f16, FFMSHQrr, FMULHQrr>;
 
 // FFMSWDP
-// TODO: ri variants
 // TODO: Add ri variants
 def : Pat<(v4f32 (kvx_fma (vfneg v4f32:$rx), v4f32:$ry, v4f32:$rz)),
           (REG_SEQUENCE PairedReg,

@@ -35,10 +35,10 @@ def: Pat<(int_kvx_get Sysnumber:$r), (GETp Sysnumber:$r)>;
 def: Pat<(int_kvx_syncgroup SingleReg:$r), (SYNCGROUP SingleReg:$r)>;
 def: Pat<(int_kvx_waitit i64:$r), (WAITIT SingleReg:$r)>;
 
-def: Pat<(int_kvx_dinvall AddrRI:$addr), (DINVALLp AddrRI:$addr)>;
-def: Pat<(int_kvx_dtouchl AddrRI:$addr), (DTOUCHLp AddrRI:$addr)>;
-def: Pat<(int_kvx_dzerol AddrRI:$addr), (DZEROLp AddrRI:$addr)>;
-def: Pat<(int_kvx_iinvals AddrRI:$addr), (IINVALSp AddrRI:$addr)>;
+def: Pat<(int_kvx_dinvall AddrRR:$addr), (DINVALLp AddrRR:$addr)>;
+def: Pat<(int_kvx_dtouchl AddrRR:$addr), (DTOUCHLp AddrRR:$addr)>;
+def: Pat<(int_kvx_dzerol AddrRR:$addr), (DZEROLp AddrRR:$addr)>;
+def: Pat<(int_kvx_iinvals AddrRR:$addr), (IINVALSp AddrRR:$addr)>;
 
 // remove unecessary sign extension
 def: Pat<(int_kvx_sbmm8 (sext_inreg i64:$v, i16), (i64 0x0201020102010201)), (SBMM8ri64 SingleReg:$v, (i64 0x0201020102010201))>;
