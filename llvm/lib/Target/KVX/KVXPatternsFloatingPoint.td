@@ -900,6 +900,18 @@ def : Pat<(v2f64 (fpextend v2f32:$val)),
                   (FWIDENLWD SingleReg:$val, silent_), sub_s0,
                   (FWIDENMWD SingleReg:$val, silent_), sub_s1))>;
 
+def : Pat<(v4f64 (fpextend v4f16:$val)), (REG_SEQUENCE QuadReg,
+                                           (FWIDENLWD (FWIDENLHWP SingleReg:$val, silent_), silent_), sub_s0,
+                                           (FWIDENMWD (FWIDENLHWP SingleReg:$val, silent_), silent_), sub_s1,
+                                           (FWIDENLWD (FWIDENMHWP SingleReg:$val, silent_), silent_), sub_s2,
+                                           (FWIDENMWD (FWIDENMHWP SingleReg:$val, silent_), silent_), sub_s3)>;
+
+def : Pat<(v4f64 (fpextend v4f32:$val)), (REG_SEQUENCE QuadReg,
+                                           (FWIDENLWD (v2f32 (EXTRACT_SUBREG PairedReg:$val, sub_s0)), silent_), sub_s0,
+                                           (FWIDENMWD (v2f32 (EXTRACT_SUBREG PairedReg:$val, sub_s0)), silent_), sub_s1,
+                                           (FWIDENLWD (v2f32 (EXTRACT_SUBREG PairedReg:$val, sub_s1)), silent_), sub_s2,
+                                           (FWIDENMWD (v2f32 (EXTRACT_SUBREG PairedReg:$val, sub_s1)), silent_), sub_s3)>;
+
 // build_vector and vector_extract
 // v2f16
 def : Pat<(v2f16 (is_imm_vec:$IMM)), (MAKEi43 (build_fpimm_vec $IMM))>;
