@@ -355,6 +355,14 @@ def : Pat<(sra (add ( add v2i32:$v0, v2i32:$v1 ), (v2i32 (v2_splat_1) ) ), (v2i3
 def : Pat<(sra (add ( add v2i32:$v0, v2i32:$v1 ), (v2i32 (v2_splat_1)) ), (v2i32 (v2_splat_1)) ),
           (AVGRWPrr SingleReg:$v1, SingleReg:$v0)>;
 
+// CBSWP
+def : Pat<(v4i32(ctpop v4i32:$v0)),
+          (REG_SEQUENCE PairedReg,
+            (CBSWP(v2i32(EXTRACT_SUBREG PairedReg:$v0, sub_s0))),
+            sub_s0,
+            (CBSWP(v2i32(EXTRACT_SUBREG PairedReg:$v0, sub_s1))),
+            sub_s1)>;
+
 multiclass COMP_Pat<SDNode Node, Comparison Mod, Comparison RevMod> {
   // COMPD
   def : Pat<(i32 (Node i64:$lhs, i64:$rhs)),
