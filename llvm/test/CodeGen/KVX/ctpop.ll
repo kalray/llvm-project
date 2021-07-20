@@ -37,34 +37,15 @@ define i64 @cbsd(i64 %a) {
 define <2 x i16> @ctpopv2i16(<2 x i16> %a) {
 ; CHECK-LABEL: ctpopv2i16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srlhqs $r1 = $r0, 1
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x80400000201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r1 = $r1, 0x55555555
+; CHECK-NEXT:    cbswp $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfhq $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlhqs $r1 = $r0, 2
-; CHECK-NEXT:    andw $r0 = $r0, 0x33333333
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r1 = $r1, 0x33333333
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addhq $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlhqs $r1 = $r0, 4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addhq $r0 = $r0, $r1
-; CHECK-NEXT:    make $r1 = 0x1010101
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r0 = $r0, 0xf0f0f0f
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mulhq $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlhqs $r0 = $r0, 8
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x20100201
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %res = call <2 x i16> @llvm.ctpop.v2i16(<2 x i16> %a)
   ret <2 x i16> %res
-  ; FIXME: Can it be expanded using two cbsw insns?
 }
 
 define <2 x i32> @cbswp(<2 x i32> %a) {
@@ -88,12 +69,59 @@ define <2 x i64> @ctpopv2i64(<2 x i64> %a) {
   ret <2 x i64> %res
 }
 
+define <4 x i16> @ctpop4i16(<4 x i16> %a) {
+; CHECK-LABEL: ctpop4i16:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    sbmm8 $r1 = $r0, 0x804000002010
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x80400000201
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cbswp $r1 = $r1
+; CHECK-NEXT:    cbswp $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x20100201
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x20100201
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 63, 32
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %res = call <4 x i16> @llvm.ctpop.v4i16(<4 x i16> %a)
+  ret <4 x i16> %res
+}
+
+define <4 x i32> @cbswpx2(<4 x i32> %a) {
+; CHECK-LABEL: cbswpx2:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    cbswp $r1 = $r1
+; CHECK-NEXT:    cbswp $r0 = $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %res = call <4 x i32> @llvm.ctpop.v4i32(<4 x i32> %a)
+  ret <4 x i32> %res
+}
+
+define <4 x i64> @ctpopv4i64(<4 x i64> %a) {
+; CHECK-LABEL: ctpopv4i64:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    cbsd $r0 = $r0
+; CHECK-NEXT:    cbsd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cbsd $r2 = $r2
+; CHECK-NEXT:    cbsd $r3 = $r3
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %res = call <4 x i64> @llvm.ctpop.v4i64(<4 x i64> %a)
+  ret <4 x i64> %res
+}
+
 declare i16 @llvm.ctpop.i16(i16)
 declare i32 @llvm.ctpop.i32(i32)
 declare i64 @llvm.ctpop.i64(i64)
 declare <2 x i16> @llvm.ctpop.v2i16(<2 x i16>)
 declare <2 x i32> @llvm.ctpop.v2i32(<2 x i32>)
 declare <2 x i64> @llvm.ctpop.v2i64(<2 x i64>)
+declare <4 x i16> @llvm.ctpop.v4i16(<4 x i16>)
+declare <4 x i32> @llvm.ctpop.v4i32(<4 x i32>)
+declare <4 x i64> @llvm.ctpop.v4i64(<4 x i64>)
 
 define i64 @cbsdl(i64 %a) {
 ; CHECK-LABEL: cbsdl:
