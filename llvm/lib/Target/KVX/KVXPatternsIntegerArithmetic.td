@@ -1425,3 +1425,9 @@ def : Pat<(sub v8i8:$v1, v8i8:$v2),
                   (ORDri64 SingleReg:$v1, 0x8080808080808080)
             )
       )>;
+
+def : Pat<(abs v8i8:$v),
+      (INSF
+            (SBMM8ri37 (ABSHQ (SXLBHQ SingleReg:$v)), 0x40100401),
+            (SBMM8ri37 (ABSHQ (SXMBHQ SingleReg:$v)), 0x40100401),
+      32, 63)>;

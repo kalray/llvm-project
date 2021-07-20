@@ -422,8 +422,6 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     setLoadExtAction(ISD::EXTLOAD, VT, MVT::f64, Expand);
   }
 
-  setOperationAction(ISD::MUL, MVT::v8i8, Expand);
-
   for (auto I : {ISD::FP_TO_SINT, ISD::FP_TO_UINT, ISD::SINT_TO_FP,
                  ISD::UINT_TO_FP, ISD::CTPOP}) {
     setOperationPromotedToType(I, MVT::v2i16, MVT::v2i32);
@@ -431,13 +429,16 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   }
   setOperationAction(ISD::CTPOP, MVT::v4i32, Legal);
 
-  for (auto I :
-       {ISD::ABS, ISD::ADD, ISD::FP_TO_SINT, ISD::FP_TO_UINT, ISD::MUL,
+  for (auto I : {ISD::ABS, ISD::ADD, ISD::FP_TO_SINT, ISD::FP_TO_UINT, ISD::MUL,
                  ISD::SETCC, ISD::SINT_TO_FP, ISD::SMAX, ISD::SMIN, ISD::SUB,
                  ISD::UINT_TO_FP, ISD::UMAX, ISD::UMIN, ISD::VSELECT}) {
     setOperationPromotedToType(I, MVT::v2i8, MVT::v2i16);
     setOperationPromotedToType(I, MVT::v4i8, MVT::v4i16);
+    setOperationPromotedToType(I, MVT::v8i8, MVT::v8i16);
   }
+
+  for (auto I : {ISD::ABS, ISD::ADD, ISD::SUB})
+    setOperationAction(I, MVT::v8i8, Legal);
 
   for (auto VT : {MVT::v2i64, MVT::v4i32, MVT::v4i64})
     for (auto I : {ISD::AND, ISD::OR, ISD::XOR, ISD::ADD, ISD::SUB, ISD::MUL})
