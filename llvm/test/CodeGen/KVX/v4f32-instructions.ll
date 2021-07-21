@@ -1721,7 +1721,7 @@ define <4 x float> @test_copysign_v4f16(<4 x float> %a, <4 x half> %b) #0 {
 ; CHECK-NEXT:    fabswp $r0 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r3 = $r2, 0x8000000020000000
-; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x80000000200000
+; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x800000002000000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r1 = $r1, $r3
 ; CHECK-NEXT:    ord $r0 = $r0, $r2

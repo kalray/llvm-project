@@ -102,18 +102,14 @@ define <4 x i8> @test_fma_imm_2(<4 x i8> %a, <4 x i8> %b) #0 {
   ret <4 x i8> %ad
 }
 
-; Can improve this by using srld (lshl %i, 4)
 define i8 @test_extract_i(<4 x i8> %a, i64 %idx) #0 {
 ; CHECK-LABEL: test_extract_i:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    andd $r1 = $r1, 3
+; CHECK-NEXT:    sllw $r1 = $r1, 3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r2 = $r12, 28
-; CHECK-NEXT:    sw 28[$r12] = $r0
+; CHECK-NEXT:    srlw $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lbz $r0 = $r1[$r2]
-; CHECK-NEXT:    addd $r12 = $r12, 32
+; CHECK-NEXT:    zxbd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %e = extractelement <4 x i8> %a, i64 %idx
@@ -220,9 +216,6 @@ define <4 x i8> @test_neg(<4 x i8> %a) #0 {
   ret <4 x i8> %r
 }
 
-; FIXME: The calling convention passes 2 <2 x i8> and
-; dag combine decides to not use <4 x i8> for a single
-; instruction.
 define <4 x i8> @test_mul(<4 x i8> %a, <4 x i8> %b) #0 {
 ; CHECK-LABEL: test_mul:
 ; CHECK:       # %bb.0:

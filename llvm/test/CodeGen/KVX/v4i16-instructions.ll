@@ -101,14 +101,11 @@ define <4 x i16> @test_fma_imm_2(<4 x i16> %a, <4 x i16> %b) {
 define i16 @test_extract_i(<4 x i16> %a, i64 %idx) #0 {
 ; CHECK-LABEL: test_extract_i:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    andd $r1 = $r1, 3
+; CHECK-NEXT:    sllw $r1 = $r1, 4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r2 = $r12, 24
-; CHECK-NEXT:    sd 24[$r12] = $r0
+; CHECK-NEXT:    srld $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lhz.xs $r0 = $r1[$r2]
-; CHECK-NEXT:    addd $r12 = $r12, 32
+; CHECK-NEXT:    zxhd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %e = extractelement <4 x i16> %a, i64 %idx

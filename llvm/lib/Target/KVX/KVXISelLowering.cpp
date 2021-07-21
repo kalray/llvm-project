@@ -1937,12 +1937,17 @@ KVXTargetLowering::lowerEXTRACT_VECTOR_ELT_REGISTER(SDValue Op,
   switch (VecVT.getSimpleVT().SimpleTy) {
   default:
     break;
+  case MVT::v2i8:
   case MVT::v2f16:
+  case MVT::v2i16:
   case MVT::v2f32:
   case MVT::v2i32:
   case MVT::v2f64:
   case MVT::v2i64:
+  case MVT::v4i8:
   case MVT::v4f16:
+  case MVT::v4i16:
+  case MVT::v8i8:
     return Op;
   }
 
