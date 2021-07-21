@@ -47,6 +47,10 @@ def trunc_imm_32 : SDNodeXForm<imm, [{
   return CurDAG->getTargetConstant(N->getZExtValue() & 0xffffffff, SDLoc(N), MVT::i32);
 }]>;
 
+def get_fpimm_16 : SDNodeXForm<fpimm, [{
+  return CurDAG->getTargetConstantFP(N->getValueAPF(), SDLoc(N), MVT::f16);
+}]>;
+
 
 def KVXInstrInfo : InstrInfo;
 

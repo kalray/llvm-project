@@ -63,12 +63,9 @@ define <1 x half> @test_fadd_v1f16(<1 x half> %a, <1 x half> %b) #0 {
 define half @test_fadd_imm_0(half %b) #0 {
 ; CHECK-LABEL: test_fadd_imm_0:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r1 = 0x3c00
 ; CHECK-NEXT:    zxhd $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxhd $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddhq $r0 = $r0, $r1
+; CHECK-NEXT:    faddhq $r0 = $r0, 0x3c00
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fadd half 1.0, %b
@@ -78,12 +75,9 @@ define half @test_fadd_imm_0(half %b) #0 {
 define half @test_fadd_imm_1(half %a) #0 {
 ; CHECK-LABEL: test_fadd_imm_1:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r1 = 0x3c00
 ; CHECK-NEXT:    zxhd $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxhd $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddhq $r0 = $r0, $r1
+; CHECK-NEXT:    faddhq $r0 = $r0, 0x3c00
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fadd half %a, 1.0
@@ -123,6 +117,18 @@ define half @test_fmul(half %a, half %b) #0 {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fmul half %a, %b
+  ret half %r
+}
+
+define half @test_fmul_imm(half %a) #0 {
+; CHECK-LABEL: test_fmul_imm:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    zxhd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fmulhq $r0 = $r0, 0x3d33
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %r = fmul half %a, 0xH3D33
   ret half %r
 }
 
@@ -475,7 +481,7 @@ define void @test_br_cc(half %a, half %b, i32* %p1, i32* %p2) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.olt $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.wnez $r0 ? .LBB34_2
+; CHECK-NEXT:    cb.wnez $r0 ? .LBB35_2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %then
 ; CHECK-NEXT:    make $r0 = 0
@@ -483,7 +489,7 @@ define void @test_br_cc(half %a, half %b, i32* %p1, i32* %p2) #0 {
 ; CHECK-NEXT:    sw 0[$r2] = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB34_2: # %else
+; CHECK-NEXT:  .LBB35_2: # %else
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 0[$r3] = $r0
@@ -514,14 +520,14 @@ define half @test_phi(half* %p1) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lhz $r20 = 0[$r18]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB35_1: # %loop
+; CHECK-NEXT:  .LBB36_1: # %loop
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    copyd $r19 = $r20
 ; CHECK-NEXT:    lhz $r20 = 0[$r18]
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    call test_dummy
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.wnez $r0 ? .LBB35_1
+; CHECK-NEXT:    cb.wnez $r0 ? .LBB36_1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.2: # %return
 ; CHECK-NEXT:    copyd $r0 = $r19

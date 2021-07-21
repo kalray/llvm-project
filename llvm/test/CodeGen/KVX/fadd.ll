@@ -2,16 +2,12 @@
 ; RUN: llc -O2 -o - %s | FileCheck %s
 target triple = "kvx-kalray-cos"
 
-; TODO: Add support for ri variant
 define half @add_f16_i(half %0) {
 ; CHECK-LABEL: add_f16_i:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r1 = 0x3800
 ; CHECK-NEXT:    zxhd $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxhd $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddhq $r0 = $r0, $r1
+; CHECK-NEXT:    faddhq $r0 = $r0, 0x3800
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = fadd half %0, 0.5
@@ -31,16 +27,12 @@ define half @add_f16_f16(half %0, half %1) {
   ret half %3
 }
 
-; TODO: Add support for ri variant
 define <2 x half> @add_v2f16_i(<2 x half> %0) {
 ; CHECK-LABEL: add_v2f16_i:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r1 = 0x3c003800
 ; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddhq $r0 = $r0, $r1
+; CHECK-NEXT:    faddhq $r0 = $r0, 0x3c003800
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = fadd <2 x half> %0, <half 0.5, half 1.0>
@@ -60,13 +52,10 @@ define <2 x half> @add_v2f16_v2f16(<2 x half> %0, <2 x half> %1) {
   ret <2 x half> %3
 }
 
-; TODO: Add support for ri variant
 define <4 x half> @add_v4f16_i(<4 x half> %0) {
 ; CHECK-LABEL: add_v4f16_i:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r1 = 0x3c0038003c003800
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddhq $r0 = $r0, $r1
+; CHECK-NEXT:    faddhq $r0 = $r0, 0x3c0038003c003800
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = fadd <4 x half> %0, <half 0.5, half 1.0, half 0.5, half 1.0>
@@ -114,13 +103,10 @@ define <2 x float> @add_v2f32_v2f32(<2 x float> %0, <2 x float> %1) {
   ret <2 x float> %3
 }
 
-; TODO: Add support for ri variant
 define <2 x float> @add_v2f32_imm(<2 x float> %0) {
 ; CHECK-LABEL: add_v2f32_imm:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r1 = 0x400000003f800000
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddwp $r0 = $r0, $r1
+; CHECK-NEXT:    faddwp $r0 = $r0, 0x400000003f800000
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = fadd <2 x float> %0, <float 1.0, float 2.0>
