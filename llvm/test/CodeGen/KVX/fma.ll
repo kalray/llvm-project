@@ -95,13 +95,10 @@ define half @ffmahq_v1_rr(half %a, half %b, half %c) {
 define half @ffmahq_v1_ri(half %a, half %b) {
 ; CHECK-LABEL: ffmahq_v1_ri:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r2 = 0x4300
 ; CHECK-NEXT:    zxhd $r1 = $r1
 ; CHECK-NEXT:    zxhd $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxhd $r2 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmahq $r0 = $r1, $r2
+; CHECK-NEXT:    ffmahq $r0 = $r1, 0x4300
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %mul = fmul fast half 3.5, %b
@@ -725,13 +722,10 @@ entry:
 define half @fmshq_v1_ri(half %a, half %b) {
 ; CHECK-LABEL: fmshq_v1_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r2 = 0xdfd0
 ; CHECK-NEXT:    zxhd $r1 = $r1
 ; CHECK-NEXT:    zxhd $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxhd $r2 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmahq $r0 = $r1, $r2
+; CHECK-NEXT:    ffmahq $r0 = $r1, 0xdfd0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -743,13 +737,10 @@ entry:
 define half @fmahq_v1_ri(half %a, half %b) {
 ; CHECK-LABEL: fmahq_v1_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r2 = 0x5fd0
 ; CHECK-NEXT:    zxhd $r1 = $r1
 ; CHECK-NEXT:    zxhd $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxhd $r2 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmahq $r0 = $r1, $r2
+; CHECK-NEXT:    ffmahq $r0 = $r1, 0x5fd0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

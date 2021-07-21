@@ -100,7 +100,6 @@ define <2 x double> @test_fsub_imm(<2 x double> %a) #0 {
   ret <2 x double> %r
 }
 
-; TODO: Could use ri variant
 define <2 x double> @test_fsub_fromimm(<2 x double> %a) #0 {
 ; CHECK-LABEL: test_fsub_fromimm:
 ; CHECK:       # %bb.0:

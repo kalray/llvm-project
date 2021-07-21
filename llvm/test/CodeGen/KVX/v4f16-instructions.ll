@@ -72,13 +72,10 @@ define <4 x half> @test_fadd(<4 x half> %a, <4 x half> %b) #0 {
   ret <4 x half> %r
 }
 
-; TODO: This could use the RI variant
 define <4 x half> @test_fadd_imm_0(<4 x half> %a) #0 {
 ; CHECK-LABEL: test_fadd_imm_0:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r1 = 0x4400420040003c00
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddhq $r0 = $r0, $r1
+; CHECK-NEXT:    faddhq $r0 = $r0, 0x4400420040003c00
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fadd <4 x half> <half 1.0, half 2.0, half 3.0, half 4.0>, %a
@@ -88,9 +85,7 @@ define <4 x half> @test_fadd_imm_0(<4 x half> %a) #0 {
 define <4 x half> @test_fadd_imm_1(<4 x half> %a) #0 {
 ; CHECK-LABEL: test_fadd_imm_1:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r1 = 0x4400420040003c00
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddhq $r0 = $r0, $r1
+; CHECK-NEXT:    faddhq $r0 = $r0, 0x4400420040003c00
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fadd <4 x half> %a, <half 1.0, half 2.0, half 3.0, half 4.0>
@@ -100,9 +95,7 @@ define <4 x half> @test_fadd_imm_1(<4 x half> %a) #0 {
 define <4 x half> @test_fadd_imm_2(<4 x half> %a) #0 {
 ; CHECK-LABEL: test_fadd_imm_2:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r1 = 0x40003c0040003c00
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddhq $r0 = $r0, $r1
+; CHECK-NEXT:    faddhq $r0 = $r0, 0x40003c0040003c00
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fadd <4 x half> %a, <half 1.0, half 2.0, half 1.0, half 2.0>
@@ -112,9 +105,7 @@ define <4 x half> @test_fadd_imm_2(<4 x half> %a) #0 {
 define <4 x half> @test_fadd_imm_3(<4 x half> %a) #0 {
 ; CHECK-LABEL: test_fadd_imm_3:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r1 = 0x40003c00
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddhq $r0 = $r0, $r1
+; CHECK-NEXT:    faddhq $r0 = $r0, 0x40003c00
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fadd <4 x half> %a, <half 1.0, half 2.0, half 0.0, half 0.0>
@@ -134,9 +125,7 @@ define <4 x half> @test_fsub(<4 x half> %a, <4 x half> %b) #0 {
 define <4 x half> @test_fsub_imm_1(<4 x half> %a) #0 {
 ; CHECK-LABEL: test_fsub_imm_1:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r1 = 0xc400c200c000bc00
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddhq $r0 = $r0, $r1
+; CHECK-NEXT:    faddhq $r0 = $r0, 0xc400c200c000bc00
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fsub <4 x half> %a, <half 1.0, half 2.0, half 3.0, half 4.0>
@@ -146,9 +135,7 @@ define <4 x half> @test_fsub_imm_1(<4 x half> %a) #0 {
 define <4 x half> @test_fsub_imm_2(<4 x half> %a) #0 {
 ; CHECK-LABEL: test_fsub_imm_2:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r1 = 0x80008000c000bc00
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddhq $r0 = $r0, $r1
+; CHECK-NEXT:    faddhq $r0 = $r0, 0x80008000c000bc00
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fsub <4 x half> %a, <half 1.0, half 2.0, half 0.0, half 0.0>
@@ -158,22 +145,17 @@ define <4 x half> @test_fsub_imm_2(<4 x half> %a) #0 {
 define <4 x half> @test_fsub_imm_3(<4 x half> %a) #0 {
 ; CHECK-LABEL: test_fsub_imm_3:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r1 = 0xc000bc00c000bc00
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddhq $r0 = $r0, $r1
+; CHECK-NEXT:    faddhq $r0 = $r0, 0xc000bc00c000bc00
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fsub <4 x half> %a, <half 1.0, half 2.0, half 1.0, half 2.0>
   ret <4 x half> %r
 }
 
-; TODO: Could use ri variant
 define <4 x half> @test_fsub_fromimm1(<4 x half> %a) #0 {
 ; CHECK-LABEL: test_fsub_fromimm1:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r1 = 0x4400420040003c00
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfhq $r0 = $r0, $r1
+; CHECK-NEXT:    fsbfhq $r0 = $r0, 0x4400420040003c00
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fsub <4 x half> <half 1.0, half 2.0, half 3.0, half 4.0>, %a
@@ -183,9 +165,7 @@ define <4 x half> @test_fsub_fromimm1(<4 x half> %a) #0 {
 define <4 x half> @test_fsub_fromimm2(<4 x half> %a) #0 {
 ; CHECK-LABEL: test_fsub_fromimm2:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r1 = 0x40003c00
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfhq $r0 = $r0, $r1
+; CHECK-NEXT:    fsbfhq $r0 = $r0, 0x40003c00
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fsub <4 x half> <half 1.0, half 2.0, half 0.0, half 0.0>, %a
@@ -195,9 +175,7 @@ define <4 x half> @test_fsub_fromimm2(<4 x half> %a) #0 {
 define <4 x half> @test_fsub_fromimm3(<4 x half> %a) #0 {
 ; CHECK-LABEL: test_fsub_fromimm3:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r1 = 0x40003c0040003c00
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfhq $r0 = $r0, $r1
+; CHECK-NEXT:    fsbfhq $r0 = $r0, 0x40003c0040003c00
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fsub <4 x half> <half 1.0, half 2.0, half 1.0, half 2.0>, %a
@@ -221,6 +199,16 @@ define <4 x half> @test_fmul(<4 x half> %a, <4 x half> %b) #0 {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fmul <4 x half> %a, %b
+  ret <4 x half> %r
+}
+
+define <4 x half> @test_fmul_imm(<4 x half> %a) {
+; CHECK-LABEL: test_fmul_imm:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fmulhq $r0 = $r0, 0x40003c0040003c00
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %r = fmul <4 x half> %a, <half 1.0, half 2.0, half 1.0, half 2.0>
   ret <4 x half> %r
 }
 

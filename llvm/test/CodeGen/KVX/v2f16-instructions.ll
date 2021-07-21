@@ -55,16 +55,12 @@ define <2 x half> @test_fadd(<2 x half> %a, <2 x half> %b) #0 {
   ret <2 x half> %r
 }
 
-; TODO: This could use the RI variant
 define <2 x half> @test_fadd_imm_0(<2 x half> %a) #0 {
 ; CHECK-LABEL: test_fadd_imm_0:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r1 = 0x40003c00
 ; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddhq $r0 = $r0, $r1
+; CHECK-NEXT:    faddhq $r0 = $r0, 0x40003c00
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fadd <2 x half> <half 1.0, half 2.0>, %a
@@ -74,12 +70,9 @@ define <2 x half> @test_fadd_imm_0(<2 x half> %a) #0 {
 define <2 x half> @test_fadd_imm_1(<2 x half> %a) #0 {
 ; CHECK-LABEL: test_fadd_imm_1:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r1 = 0x40003c00
 ; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddhq $r0 = $r0, $r1
+; CHECK-NEXT:    faddhq $r0 = $r0, 0x40003c00
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fadd <2 x half> %a, <half 1.0, half 2.0>
@@ -102,28 +95,21 @@ define <2 x half> @test_fsub(<2 x half> %a, <2 x half> %b) #0 {
 define <2 x half> @test_fsub_imm(<2 x half> %a) #0 {
 ; CHECK-LABEL: test_fsub_imm:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r1 = 0xffffffffc000bc00
 ; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddhq $r0 = $r0, $r1
+; CHECK-NEXT:    faddhq $r0 = $r0, 0xffffffffc000bc00
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fsub <2 x half> %a, <half 1.0, half 2.0>
   ret <2 x half> %r
 }
 
-; TODO: Could use ri variant
 define <2 x half> @test_fsub_fromimm(<2 x half> %a) #0 {
 ; CHECK-LABEL: test_fsub_fromimm:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r1 = 0x40003c00
 ; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfhq $r0 = $r0, $r1
+; CHECK-NEXT:    fsbfhq $r0 = $r0, 0x40003c00
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fsub <2 x half> <half 1.0, half 2.0>, %a
@@ -150,6 +136,18 @@ define <2 x half> @test_fmul(<2 x half> %a, <2 x half> %b) #0 {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fmul <2 x half> %a, %b
+  ret <2 x half> %r
+}
+
+define <2 x half> @test_fmul_imm(<2 x half> %a) {
+; CHECK-LABEL: test_fmul_imm:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fmulhq $r0 = $r0, 0x40003c00
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %r = fmul <2 x half> %a, <half 1.0, half 2.0>
   ret <2 x half> %r
 }
 

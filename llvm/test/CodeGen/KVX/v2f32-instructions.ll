@@ -55,9 +55,7 @@ define <2 x float> @test_fadd(<2 x float> %a, <2 x float> %b) #0 {
 define <2 x float> @test_fadd_imm_0(<2 x float> %a) #0 {
 ; CHECK-LABEL: test_fadd_imm_0:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r1 = 0x400000003f800000
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddwp $r0 = $r0, $r1
+; CHECK-NEXT:    faddwp $r0 = $r0, 0x400000003f800000
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fadd <2 x float> <float 1.0, float 2.0>, %a
@@ -67,9 +65,7 @@ define <2 x float> @test_fadd_imm_0(<2 x float> %a) #0 {
 define <2 x float> @test_fadd_imm_1(<2 x float> %a) #0 {
 ; CHECK-LABEL: test_fadd_imm_1:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r1 = 0x400000003f800000
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddwp $r0 = $r0, $r1
+; CHECK-NEXT:    faddwp $r0 = $r0, 0x400000003f800000
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fadd <2 x float> %a, <float 1.0, float 2.0>
@@ -89,22 +85,17 @@ define <2 x float> @test_fsub(<2 x float> %a, <2 x float> %b) #0 {
 define <2 x float> @test_fsub_imm(<2 x float> %a) #0 {
 ; CHECK-LABEL: test_fsub_imm:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r1 = 0xc0000000bf800000
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddwp $r0 = $r0, $r1
+; CHECK-NEXT:    faddwp $r0 = $r0, 0xc0000000bf800000
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fsub <2 x float> %a, <float 1.0, float 2.0>
   ret <2 x float> %r
 }
 
-; TODO: Could use ri variant
 define <2 x float> @test_fsub_fromimm(<2 x float> %a) #0 {
 ; CHECK-LABEL: test_fsub_fromimm:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r1 = 0x400000003f800000
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfwp $r0 = $r0, $r1
+; CHECK-NEXT:    fsbfwp $r0 = $r0, 0x400000003f800000
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fsub <2 x float> <float 1.0, float 2.0>, %a
