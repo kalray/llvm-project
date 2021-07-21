@@ -147,18 +147,14 @@ define <8 x i8> @test_fma_imm_2(<8 x i8> %a, <8 x i8> %b) #0 {
   ret <8 x i8> %ad
 }
 
-; Can improve this by using srld (lshl %i, 4)
 define i8 @test_extract_i(<8 x i8> %a, i64 %idx) #0 {
 ; CHECK-LABEL: test_extract_i:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    andd $r1 = $r1, 7
+; CHECK-NEXT:    sllw $r1 = $r1, 3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r2 = $r12, 24
-; CHECK-NEXT:    sd 24[$r12] = $r0
+; CHECK-NEXT:    srld $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lbz $r0 = $r1[$r2]
-; CHECK-NEXT:    addd $r12 = $r12, 32
+; CHECK-NEXT:    zxbd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %e = extractelement <8 x i8> %a, i64 %idx

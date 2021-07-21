@@ -1292,23 +1292,28 @@ def : Pat<(i32 (vector_extract v2i32:$v, i64:$p)), (SRLDrr SingleReg:$v, (SLLWri
 // v2i16
 def : Pat<(i32 (vector_extract v2i16:$v, 0)), (ZXHD SingleReg:$v)>;
 def : Pat<(i32 (vector_extract v2i16:$v, 1)), (SRLWri SingleReg:$v, (i64 16))>;
+def : Pat<(i32 (vector_extract v2i16:$v, i64:$p)), (ZXHD (SRLWrr SingleReg:$v, (SLLWri SingleReg:$p, 4)))>;
 
 def : Pat<(i32 (sext_inreg (vector_extract v2i16:$v, 0), i16)), (SXHD SingleReg:$v)>;
 def : Pat<(i32 (sext_inreg (vector_extract v2i16:$v, 1), i16)), (SRAWri SingleReg:$v, (i64 16))>;
+def : Pat<(i32 (sext_inreg (vector_extract v2i16:$v, i64:$p), i16)), (SXHD (SRLWrr SingleReg:$v, (SLLWri SingleReg:$p, 4)))>;
 
 def : Pat<(i64 (sext_inreg (i64 (anyext (i32 (vector_extract v2i16:$v, 0)))), i16)), (SXHD SingleReg:$v)>;
 def : Pat<(i64 (sext_inreg (i64 (anyext (i32 (vector_extract v2i16:$v, 1)))), i16)), (EXTFS SingleReg:$v, 31, 16)>;
+def : Pat<(i64 (sext_inreg (vector_extract v2i16:$v, i64:$p), i16)), (SXHD (SRLWrr SingleReg:$v, (SLLWri SingleReg:$p, 4)))>;
 
 // v4i16
 def : Pat<(i32 (vector_extract (v4i16 SingleReg:$v), 0)), (ZXHD SingleReg:$v)>;
 def : Pat<(i32 (vector_extract (v4i16 SingleReg:$v), 1)), (SRLWri SingleReg:$v, 16)>;
 def : Pat<(i32 (vector_extract (v4i16 SingleReg:$v), 2)), (EXTFZ SingleReg:$v, 47, 32)>;
 def : Pat<(i32 (vector_extract (v4i16 SingleReg:$v), 3)), (SRLDri SingleReg:$v, (i64 48))>;
+def : Pat<(i32 (vector_extract v4i16:$v, i64:$p)), (ZXHD (SRLDrr SingleReg:$v, (SLLWri SingleReg:$p, 4)))>;
 
 def : Pat<(i32 (sext_inreg (vector_extract (v4i16 SingleReg:$v), 0), i16)), (SXHD SingleReg:$v)>;
 def : Pat<(i32 (sext_inreg (vector_extract (v4i16 SingleReg:$v), 1), i16)), (EXTFS SingleReg:$v, 31, 16)>;
 def : Pat<(i32 (sext_inreg (vector_extract (v4i16 SingleReg:$v), 2), i16)), (EXTFS SingleReg:$v, 47, 32)>;
 def : Pat<(i32 (sext_inreg (vector_extract (v4i16 SingleReg:$v), 3), i16)), (SRADri SingleReg:$v, (i64 48))>;
+def : Pat<(i32 (sext_inreg (vector_extract v4i16:$v, i64:$p), i16)), (ZXHD (SRLDrr SingleReg:$v, (SLLWri SingleReg:$p, 4)))>;
 
 // v2i64
 def : Pat<(v2i64 (build_vector i64:$v1, i64:$v2)),
@@ -1377,12 +1382,14 @@ def : Pat<(v4i32 (trunc v4i64:$v)), (REG_SEQUENCE PairedReg,
 // v2i8
 def : Pat<(i32 (vector_extract (v2i8 SingleReg:$v), 0)), (ZXBD SingleReg:$v)>;
 def : Pat<(i32 (vector_extract (v2i8 SingleReg:$v), 1)), (EXTFZ SingleReg:$v, 15, 8)>;
+def : Pat<(i32 (vector_extract (v2i8 SingleReg:$v), i64:$idx)), (ZXBD (SRLWri SingleReg:$v, (SLLWri SingleReg:$idx, 3)))>;
 
 // v4i8
 def : Pat<(i32 (vector_extract (v4i8 SingleReg:$v), 0)), (ZXBD SingleReg:$v)>;
 def : Pat<(i32 (vector_extract (v4i8 SingleReg:$v), 1)), (EXTFZ SingleReg:$v, 15, 8)>;
 def : Pat<(i32 (vector_extract (v4i8 SingleReg:$v), 2)), (EXTFZ SingleReg:$v, 23, 16)>;
 def : Pat<(i32 (vector_extract (v4i8 SingleReg:$v), 3)), (SRLWri SingleReg:$v, 24)>;
+def : Pat<(i32 (vector_extract (v4i8 SingleReg:$v), i64:$idx)), (ZXBD (SRLWri SingleReg:$v, (SLLWri SingleReg:$idx, 3)))>;
 
 def : Pat<(v2i8 (extract_subvector (v4i8 SingleReg:$v), (i64 0))),(v2i8 (ZXHD SingleReg:$v))>;
 def : Pat<(v2i8 (extract_subvector (v4i8 SingleReg:$v), (i64 2))),(v2i8 (SRLWri SingleReg:$v, 16))>;
@@ -1396,6 +1403,7 @@ def : Pat<(i32 (vector_extract (v8i8 SingleReg:$v), 4)), (EXTFZ SingleReg:$v, 39
 def : Pat<(i32 (vector_extract (v8i8 SingleReg:$v), 5)), (EXTFZ SingleReg:$v, 47, 40)>;
 def : Pat<(i32 (vector_extract (v8i8 SingleReg:$v), 6)), (EXTFZ SingleReg:$v, 55, 48)>;
 def : Pat<(i32 (vector_extract (v8i8 SingleReg:$v), 7)), (SRLDri SingleReg:$v, (i64 56))>;
+def : Pat<(i32 (vector_extract (v8i8 SingleReg:$v), i64:$idx)), (ZXBD (SRLDri SingleReg:$v, (SLLWri SingleReg:$idx, 3)))>;
 
 def : Pat<(v2i8 (extract_subvector (v8i8 SingleReg:$v), (i64 0))),(v2i8 (ZXHD SingleReg:$v))>;
 def : Pat<(v2i8 (extract_subvector (v8i8 SingleReg:$v), (i64 2))),(v2i8 (SRLWri SingleReg:$v, 16))>;

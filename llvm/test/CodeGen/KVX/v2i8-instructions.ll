@@ -31,18 +31,14 @@ define i8 @test_extract_1(<2 x i8> %a) #0 {
   ret i8 %e
 }
 
-; TODO: Improve extract elements to a lshr(idx << 4)
 define i8 @test_extract_i(<2 x i8> %a, i64 %idx) #0 {
 ; CHECK-LABEL: test_extract_i:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    andd $r1 = $r1, 1
+; CHECK-NEXT:    sllw $r1 = $r1, 3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r2 = $r12, 30
-; CHECK-NEXT:    sh 30[$r12] = $r0
+; CHECK-NEXT:    srlw $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lbz $r0 = $r1[$r2]
-; CHECK-NEXT:    addd $r12 = $r12, 32
+; CHECK-NEXT:    zxbd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %e = extractelement <2 x i8> %a, i64 %idx
