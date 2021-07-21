@@ -72,7 +72,7 @@ KVXInstPrinter::printOperand(const MCInst *MI, unsigned OpNo,
       printBinary64ImmOperand(MI, OpNo, O);
       break;
     default:
-      llvm_unreachable("unable to determine FPImm size");
+      report_fatal_error("unable to determine FPImm size");
     }
     return;
   }
@@ -333,7 +333,7 @@ void KVXInstPrinter::printRoundingMod(const MCInst *MI, unsigned OpNo,
   case 7: // Use CS rounding
     break;
   default:
-    llvm_unreachable("illegal rounding mode");
+    report_fatal_error("illegal rounding mode");
   }
 }
 
@@ -348,7 +348,7 @@ void KVXInstPrinter::printSilentMod(const MCInst *MI, unsigned OpNo,
     O << ".s";
     break;
   default:
-    llvm_unreachable("illegal silent mode");
+    report_fatal_error("illegal silent mode");
   }
 }
 
@@ -398,7 +398,7 @@ void KVXInstPrinter::printFloatcompMod(const MCInst *MI, unsigned OpNo,
     O << ".ult";
     break;
   default:
-    llvm_unreachable("illegal rounding mode");
+    report_fatal_error("illegal rounding mode");
   }
 }
 
@@ -421,6 +421,13 @@ void KVXInstPrinter::printBinary64ImmOperand(const MCInst *MI, unsigned OpNo,
 void KVXInstPrinter::printFPImmOperand(const MCInst *MI, unsigned OpNo,
                                        unsigned Size, raw_ostream &O) {
   const MCOperand &MO = MI->getOperand(OpNo);
+  if (!MO.isFPImm()) {
+    if (MO.isImm())
+      return printOperand(MI, OpNo, O);
+
+    LLVM_DEBUG(MI->dump(); errs() << "Bad FP operand:"; MO.dump());
+    report_fatal_error("illegal fp operand");
+  }
   switch (Size) {
   // FP is a half
   case 16: {
@@ -452,7 +459,7 @@ void KVXInstPrinter::printFPImmOperand(const MCInst *MI, unsigned OpNo,
     O << s.str();
   } break;
   default:
-    llvm_unreachable("illegal size");
+    report_fatal_error("illegal size");
   }
   return;
 }
