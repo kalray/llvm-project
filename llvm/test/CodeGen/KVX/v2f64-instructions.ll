@@ -1450,22 +1450,25 @@ define <2 x double> @test_copysign(<2 x double> %a, <2 x double> %b) #0 {
   ret <2 x double> %r
 }
 
-define <2 x double> @test_copysign_f32(<2 x double> %a, <2 x double> %b) #0 {
-; CHECK-LABEL: test_copysign_f32:
+define <2 x double> @test_copysign_v2f16(<2 x double> %a, <2 x half> %b) #0 {
+; CHECK-LABEL: test_copysign_v2f16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r3 = $r3, 63
-; CHECK-NEXT:    srad $r2 = $r2, 63
+; CHECK-NEXT:    srlw $r3 = $r2, 16
+; CHECK-NEXT:    sraw $r2 = $r2, 15
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sraw $r3 = $r3, 15
+; CHECK-NEXT:    insf $r0 = $r2, 63, 63
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r1 = $r3, 63, 63
-; CHECK-NEXT:    insf $r0 = $r2, 63, 63
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %r = call <2 x double> @llvm.copysign.v2f64(<2 x double> %a, <2 x double> %b)
+  %tb = fpext <2 x half> %b to <2 x double>
+  %r = call <2 x double> @llvm.copysign.v2f64(<2 x double> %a, <2 x double> %tb)
   ret <2 x double> %r
 }
 
-define <2 x double> @test_copysign_f64(<2 x double> %a, <2 x float> %b) #0 {
-; CHECK-LABEL: test_copysign_f64:
+define <2 x double> @test_copysign_v2f32(<2 x double> %a, <2 x float> %b) #0 {
+; CHECK-LABEL: test_copysign_v2f32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srad $r3 = $r2, 32
 ; CHECK-NEXT:    sraw $r2 = $r2, 31

@@ -316,6 +316,9 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::SCALAR_TO_VECTOR, VT, Expand);
   }
 
+  for (auto VT : {MVT::v2f16, MVT::v2f32, MVT::v4f16, MVT::v4f32})
+    setOperationAction(ISD::FCOPYSIGN, VT, Legal);
+
   for (auto VT : {MVT::f16, MVT::f32, MVT::f64, MVT::v2f16, MVT::v2f32,
                   MVT::v2f64, MVT::v4f16, MVT::v4f32, MVT::v4f64}) {
     auto Action = (VT == MVT::f16)
