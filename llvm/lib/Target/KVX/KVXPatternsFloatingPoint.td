@@ -963,6 +963,113 @@ def : Pat<(fcopysign f16:$v1, f64:$v2), (INSF SingleReg:$v1, (f64 (SRADri Single
 def : Pat<(fcopysign f16:$v1, f32:$v2), (INSF SingleReg:$v1, (f64 (SRAWri SingleReg:$v2, 31)), 15, 15)>;
 def : Pat<(fcopysign f16:$v1, f16:$v2), (INSF SingleReg:$v1, (f64 (SRAWri SingleReg:$v2, 15)), 15, 15)>;
 
+def : Pat<(fcopysign v2f16:$v1, v2f16:$v2),
+          (ORWrr (ANDWri37 SingleReg:$v1, 0x7FFF7FFF), (ANDWri37 SingleReg:$v2, 0x80008000))>;
+
+def : Pat<(fcopysign v2f16:$v1, v2f32:$v2),
+          (ORWrr (ANDWri37 SingleReg:$v1, 0x7FFF7FFF), (ANDWri37 (SBMM8ri37 SingleReg:$v2, 0x80000800), 0x80008000))>;
+
+def : Pat<(fcopysign v2f16:$v1, v2f64:$v2),
+          (INSF
+            (INSF SingleReg:$v1,
+              (SRLDri (i64 (EXTRACT_SUBREG PairedReg:$v2, sub_s0)), 63),
+              15, 15
+            ),
+            (SRLDri (i64 (EXTRACT_SUBREG PairedReg:$v2, sub_s1)), 63),
+            31, 31
+          )>;
+
+def : Pat<(fcopysign v4f16:$v1, v4f16:$v2),
+          (ORDrr (FABSHQ SingleReg:$v1), (ANDDri64 SingleReg:$v2, 0x8000800080008000))>;
+
+def : Pat<(fcopysign v2f32:$v1, v2f16:$v2),
+          (ORDrr (FABSWP SingleReg:$v1), (SBMM8ri64 (ANDWri37 SingleReg:$v2, 0x80008000), 0x800000002000000))>;
+
+def : Pat<(fcopysign v2f32:$v1, v2f32:$v2),
+          (ORDrr (FABSWP SingleReg:$v1), (ANDDri64 SingleReg:$v2, 0x8000000080000000))>;
+
+def : Pat<(fcopysign v2f32:$v1, v2f64:$v2),
+          (INSF
+            (INSF SingleReg:$v1,
+              (SRLDri (i64 (EXTRACT_SUBREG PairedReg:$v2, sub_s0)), 63),
+              31, 31
+            ),
+            (SRLDri (i64 (EXTRACT_SUBREG PairedReg:$v2, sub_s1)), 63),
+            63, 63
+          )>;
+
+def : Pat<(fcopysign v4f16:$v1, v4f32:$v2),
+          (ORDrr
+            (FABSHQ SingleReg:$v1),
+            (ANDDri64
+              (FNARROWWHQ PairedReg:$v2, rounding_rna, silent_s),
+            0x8000800080008000))>;
+
+def : Pat<(fcopysign v4f16:$v1, v4f64:$v2),
+          (INSF
+            (INSF
+              (INSF
+                (INSF
+                  v4f16:$v1,
+                  (SRLDri (i64 (EXTRACT_SUBREG QuadReg:$v2, sub_s0)), 63), 15, 15
+                ),
+                (SRLDri (i64 (EXTRACT_SUBREG QuadReg:$v2, sub_s1)), 63), 31, 31
+              ),
+              (SRLDri (i64 (EXTRACT_SUBREG QuadReg:$v2, sub_s2)), 63), 47, 47
+            ),
+            (SRLDri (i64 (EXTRACT_SUBREG QuadReg:$v2, sub_s0)), 63), 63, 63)>;
+
+def : Pat<(fcopysign v4f32:$v1, v4f16:$v2),
+          (REG_SEQUENCE PairedReg,
+            (ORDrr
+              (FABSWP (v2f32 (EXTRACT_SUBREG PairedReg:$v1, sub_s0))),
+              (SBMM8ri64 (ANDDri64 SingleReg:$v2, 0x8000800080008000), 0x800000002000000)
+            ),
+            sub_s0,
+            (ORDrr
+              (FABSWP (v2f32 (EXTRACT_SUBREG PairedReg:$v1, sub_s1))),
+              (SBMM8ri64 (ANDDri64 SingleReg:$v2, 0x8000800080008000), 0x8000000020000000)
+            ),
+            sub_s1)>;
+
+def : Pat<(fcopysign v4f32:$v1, v4f32:$v2),
+          (REG_SEQUENCE PairedReg,
+            (ORDrr
+              (FABSWP (v2f32 (EXTRACT_SUBREG PairedReg:$v1, sub_s0))),
+              (ANDDri64
+                (v2f32 (EXTRACT_SUBREG PairedReg:$v2, sub_s0)),
+                0x8000000080000000
+              )),
+              sub_s0,
+            (ORDrr
+              (FABSWP (v2f32 (EXTRACT_SUBREG PairedReg:$v1, sub_s1))),
+              (ANDDri64
+                (v2f32 (EXTRACT_SUBREG PairedReg:$v2, sub_s1)),
+                0x8000000080000000
+              )),
+              sub_s1)>;
+
+def : Pat<(fcopysign v4f32:$v1, v4f64:$v2),
+          (REG_SEQUENCE PairedReg,
+          (INSF
+            (INSF (v2f32 (EXTRACT_SUBREG PairedReg:$v1, sub_s0)),
+              (SRLDri (i64 (EXTRACT_SUBREG QuadReg:$v2, sub_s0)), 63),
+              31, 31
+            ),
+            (SRLDri (i64 (EXTRACT_SUBREG QuadReg:$v2, sub_s1)), 63),
+            63, 63
+          ),
+          sub_s0,
+          (INSF
+            (INSF (v2f32 (EXTRACT_SUBREG PairedReg:$v1, sub_s1)),
+              (SRLDri (i64 (EXTRACT_SUBREG QuadReg:$v2, sub_s2)), 63),
+              31, 31
+            ),
+            (SRLDri (i64 (EXTRACT_SUBREG QuadReg:$v2, sub_s3)), 63),
+            63, 63
+          ),
+          sub_s1)>;
+
 // v4f64
 def : Pat<(extractelt (v4f64 QuadReg:$v), 0), (f64 (EXTRACT_SUBREG $v, sub_s0))>;
 def : Pat<(extractelt (v4f64 QuadReg:$v), 1), (f64 (EXTRACT_SUBREG $v, sub_s1))>;

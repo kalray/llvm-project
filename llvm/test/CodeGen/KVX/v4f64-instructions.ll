@@ -2169,27 +2169,32 @@ define <4 x double> @test_copysign(<4 x double> %a, <4 x double> %b) #0 {
   ret <4 x double> %r
 }
 
-define <4 x double> @test_copysign_f32(<4 x double> %a, <4 x double> %b) #0 {
-; CHECK-LABEL: test_copysign_f32:
+define <4 x double> @test_copysign_v4f16(<4 x double> %a, <4 x half> %b) #0 {
+; CHECK-LABEL: test_copysign_v4f16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r5 = $r5, 63
-; CHECK-NEXT:    srad $r4 = $r4, 63
+; CHECK-NEXT:    srlw $r5 = $r4, 16
+; CHECK-NEXT:    sraw $r6 = $r4, 15
+; CHECK-NEXT:    srld $r7 = $r4, 32
+; CHECK-NEXT:    srld $r4 = $r4, 48
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sraw $r5 = $r5, 15
+; CHECK-NEXT:    sraw $r4 = $r4, 15
+; CHECK-NEXT:    insf $r0 = $r6, 63, 63
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r1 = $r5, 63, 63
-; CHECK-NEXT:    insf $r0 = $r4, 63, 63
-; CHECK-NEXT:    srad $r4 = $r6, 63
-; CHECK-NEXT:    srad $r5 = $r7, 63
+; CHECK-NEXT:    sraw $r5 = $r7, 15
+; CHECK-NEXT:    insf $r3 = $r4, 63, 63
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r4, 63, 63
-; CHECK-NEXT:    insf $r3 = $r5, 63, 63
+; CHECK-NEXT:    insf $r2 = $r5, 63, 63
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %r = call <4 x double> @llvm.copysign.v4f64(<4 x double> %a, <4 x double> %b)
+  %tb = fpext <4 x half> %b to <4 x double>
+  %r = call <4 x double> @llvm.copysign.v4f64(<4 x double> %a, <4 x double> %tb)
   ret <4 x double> %r
 }
 
-define <4 x double> @test_copysign_f64(<4 x double> %a, <4 x float> %b) #0 {
-; CHECK-LABEL: test_copysign_f64:
+define <4 x double> @test_copysign_v4f32(<4 x double> %a, <4 x float> %b) #0 {
+; CHECK-LABEL: test_copysign_v4f32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srad $r6 = $r4, 32
 ; CHECK-NEXT:    sraw $r4 = $r4, 31

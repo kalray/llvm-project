@@ -1238,51 +1238,42 @@ define <2 x float> @test_maxnum_fast(<2 x float> %a, <2 x float> %b) #0 {
 define <2 x float> @test_copysign(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-LABEL: test_copysign:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r2 = $r1, 32
-; CHECK-NEXT:    srad $r3 = $r0, 32
-; CHECK-NEXT:    sraw $r1 = $r1, 31
+; CHECK-NEXT:    andd $r1 = $r1, 0x8000000080000000
+; CHECK-NEXT:    fabswp $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sraw $r2 = $r2, 31
-; CHECK-NEXT:    insf $r0 = $r1, 31, 31
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r3 = $r2, 31, 31
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r3, 63, 32
+; CHECK-NEXT:    ord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <2 x float> @llvm.copysign.v2f32(<2 x float> %a, <2 x float> %b)
   ret <2 x float> %r
 }
 
-define <2 x float> @test_copysign_f32(<2 x float> %a, <2 x double> %b) #0 {
-; CHECK-LABEL: test_copysign_f32:
+define <2 x float> @test_copysign_v2f16(<2 x float> %a, <2 x half> %b) #0 {
+; CHECK-LABEL: test_copysign_v2f16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r2 = $r2, 63
-; CHECK-NEXT:    srad $r3 = $r0, 32
-; CHECK-NEXT:    srad $r1 = $r1, 63
+; CHECK-NEXT:    andw $r1 = $r1, 0x80008000
+; CHECK-NEXT:    fabswp $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r3 = $r2, 31, 31
-; CHECK-NEXT:    insf $r0 = $r1, 31, 31
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x800000002000000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r3, 63, 32
+; CHECK-NEXT:    ord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %tb = fptrunc <2 x double> %b to <2 x float>
+  %tb = fpext <2 x half> %b to <2 x float>
   %r = call <2 x float> @llvm.copysign.v2f32(<2 x float> %a, <2 x float> %tb)
   ret <2 x float> %r
 }
 
-define <2 x float> @test_copysign_f64(<2 x float> %a, <2 x double> %b) #0 {
-; CHECK-LABEL: test_copysign_f64:
+define <2 x float> @test_copysign_v2f64(<2 x double> %b, <2 x float> %a) #0 {
+; CHECK-LABEL: test_copysign_v2f64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r2 = $r2, 63
-; CHECK-NEXT:    srad $r3 = $r0, 32
-; CHECK-NEXT:    srad $r1 = $r1, 63
+; CHECK-NEXT:    srld $r3 = $r0, 63
+; CHECK-NEXT:    copyd $r0 = $r2
+; CHECK-NEXT:    srld $r1 = $r1, 63
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r3 = $r2, 31, 31
-; CHECK-NEXT:    insf $r0 = $r1, 31, 31
+; CHECK-NEXT:    insf $r0 = $r3, 31, 31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r3, 63, 32
+; CHECK-NEXT:    insf $r0 = $r1, 63, 63
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %tb = fptrunc <2 x double> %b to <2 x float>
@@ -1293,16 +1284,10 @@ define <2 x float> @test_copysign_f64(<2 x float> %a, <2 x double> %b) #0 {
 define <2 x double> @test_copysign_extended(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-LABEL: test_copysign_extended:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r2 = $r1, 32
-; CHECK-NEXT:    srad $r3 = $r0, 32
-; CHECK-NEXT:    sraw $r1 = $r1, 31
+; CHECK-NEXT:    andd $r1 = $r1, 0x8000000080000000
+; CHECK-NEXT:    fabswp $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sraw $r2 = $r2, 31
-; CHECK-NEXT:    insf $r0 = $r1, 31, 31
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r3 = $r2, 31, 31
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r3, 63, 32
+; CHECK-NEXT:    ord $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fwidenmwd $r1 = $r0
 ; CHECK-NEXT:    fwidenlwd $r0 = $r0

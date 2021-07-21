@@ -265,8 +265,8 @@ define <4 x float> @test_frem(<4 x float> %a, <4 x float> %b) #0 {
   ret <4 x float> %r
 }
 
-define void @test_ldst_v2f32(<4 x float>* %a, <4 x float>* %b) {
-; CHECK-LABEL: test_ldst_v2f32:
+define void @test_ldst_v4f32(<4 x float>* %a, <4 x float>* %b) {
+; CHECK-LABEL: test_ldst_v4f32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lq $r2r3 = 0[$r0]
 ; CHECK-NEXT:    ;;
@@ -999,28 +999,28 @@ define <4 x float> @test_bitcast_2xi32_to_2xfloat(<4 x i32> %a) #0 {
   ret <4 x float> %r
 }
 
-declare <4 x float> @llvm.sqrt.v2f32(<4 x float> %a) #0
-declare <4 x float> @llvm.powi.v2f32(<4 x float> %a, i32 %b) #0
-declare <4 x float> @llvm.sin.v2f32(<4 x float> %a) #0
-declare <4 x float> @llvm.cos.v2f32(<4 x float> %a) #0
-declare <4 x float> @llvm.pow.v2f32(<4 x float> %a, <4 x float> %b) #0
-declare <4 x float> @llvm.exp.v2f32(<4 x float> %a) #0
-declare <4 x float> @llvm.exp2.v2f32(<4 x float> %a) #0
-declare <4 x float> @llvm.log.v2f32(<4 x float> %a) #0
-declare <4 x float> @llvm.log10.v2f32(<4 x float> %a) #0
-declare <4 x float> @llvm.log2.v2f32(<4 x float> %a) #0
-declare <4 x float> @llvm.fma.v2f32(<4 x float> %a, <4 x float> %b, <4 x float> %c) #0
-declare <4 x float> @llvm.fabs.v2f32(<4 x float> %a) #0
-declare <4 x float> @llvm.minnum.v2f32(<4 x float> %a, <4 x float> %b) #0
-declare <4 x float> @llvm.maxnum.v2f32(<4 x float> %a, <4 x float> %b) #0
-declare <4 x float> @llvm.copysign.v2f32(<4 x float> %a, <4 x float> %b) #0
-declare <4 x float> @llvm.floor.v2f32(<4 x float> %a) #0
-declare <4 x float> @llvm.ceil.v2f32(<4 x float> %a) #0
-declare <4 x float> @llvm.trunc.v2f32(<4 x float> %a) #0
-declare <4 x float> @llvm.rint.v2f32(<4 x float> %a) #0
-declare <4 x float> @llvm.nearbyint.v2f32(<4 x float> %a) #0
-declare <4 x float> @llvm.round.v2f32(<4 x float> %a) #0
-declare <4 x float> @llvm.fmuladd.v2f32(<4 x float> %a, <4 x float> %b, <4 x float> %c) #0
+declare <4 x float> @llvm.sqrt.v4f32(<4 x float> %a) #0
+declare <4 x float> @llvm.powi.v4f32(<4 x float> %a, i32 %b) #0
+declare <4 x float> @llvm.sin.v4f32(<4 x float> %a) #0
+declare <4 x float> @llvm.cos.v4f32(<4 x float> %a) #0
+declare <4 x float> @llvm.pow.v4f32(<4 x float> %a, <4 x float> %b) #0
+declare <4 x float> @llvm.exp.v4f32(<4 x float> %a) #0
+declare <4 x float> @llvm.exp2.v4f32(<4 x float> %a) #0
+declare <4 x float> @llvm.log.v4f32(<4 x float> %a) #0
+declare <4 x float> @llvm.log10.v4f32(<4 x float> %a) #0
+declare <4 x float> @llvm.log2.v4f32(<4 x float> %a) #0
+declare <4 x float> @llvm.fma.v4f32(<4 x float> %a, <4 x float> %b, <4 x float> %c) #0
+declare <4 x float> @llvm.fabs.v4f32(<4 x float> %a) #0
+declare <4 x float> @llvm.minnum.v4f32(<4 x float> %a, <4 x float> %b) #0
+declare <4 x float> @llvm.maxnum.v4f32(<4 x float> %a, <4 x float> %b) #0
+declare <4 x float> @llvm.copysign.v4f32(<4 x float> %a, <4 x float> %b) #0
+declare <4 x float> @llvm.floor.v4f32(<4 x float> %a) #0
+declare <4 x float> @llvm.ceil.v4f32(<4 x float> %a) #0
+declare <4 x float> @llvm.trunc.v4f32(<4 x float> %a) #0
+declare <4 x float> @llvm.rint.v4f32(<4 x float> %a) #0
+declare <4 x float> @llvm.nearbyint.v4f32(<4 x float> %a) #0
+declare <4 x float> @llvm.round.v4f32(<4 x float> %a) #0
+declare <4 x float> @llvm.fmuladd.v4f32(<4 x float> %a, <4 x float> %b, <4 x float> %c) #0
 
 define <4 x float> @test_sqrt(<4 x float> %a) #0 {
 ; CHECK-LABEL: test_sqrt:
@@ -1066,7 +1066,7 @@ define <4 x float> @test_sqrt(<4 x float> %a) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %r = call <4 x float> @llvm.sqrt.v2f32(<4 x float> %a)
+  %r = call <4 x float> @llvm.sqrt.v4f32(<4 x float> %a)
   ret <4 x float> %r
 }
 
@@ -1123,7 +1123,7 @@ define <4 x float> @test_powi(<4 x float> %a, i32 %b) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
- %r = call <4 x float> @llvm.powi.v2f32(<4 x float> %a, i32 %b)
+ %r = call <4 x float> @llvm.powi.v4f32(<4 x float> %a, i32 %b)
  ret <4 x float> %r
 }
 
@@ -1171,7 +1171,7 @@ define <4 x float> @test_sin(<4 x float> %a) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %r = call <4 x float> @llvm.sin.v2f32(<4 x float> %a)
+  %r = call <4 x float> @llvm.sin.v4f32(<4 x float> %a)
   ret <4 x float> %r
 }
 
@@ -1219,7 +1219,7 @@ define <4 x float> @test_cos(<4 x float> %a) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %r = call <4 x float> @llvm.cos.v2f32(<4 x float> %a)
+  %r = call <4 x float> @llvm.cos.v4f32(<4 x float> %a)
   ret <4 x float> %r
 }
 
@@ -1277,7 +1277,7 @@ define <4 x float> @test_pow(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
- %r = call <4 x float> @llvm.pow.v2f32(<4 x float> %a, <4 x float> %b)
+ %r = call <4 x float> @llvm.pow.v4f32(<4 x float> %a, <4 x float> %b)
  ret <4 x float> %r
 }
 
@@ -1325,7 +1325,7 @@ define <4 x float> @test_exp(<4 x float> %a) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
- %r = call <4 x float> @llvm.exp.v2f32(<4 x float> %a)
+ %r = call <4 x float> @llvm.exp.v4f32(<4 x float> %a)
  ret <4 x float> %r
 }
 
@@ -1373,7 +1373,7 @@ define <4 x float> @test_exp2(<4 x float> %a) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
- %r = call <4 x float> @llvm.exp2.v2f32(<4 x float> %a)
+ %r = call <4 x float> @llvm.exp2.v4f32(<4 x float> %a)
  ret <4 x float> %r
 }
 
@@ -1421,7 +1421,7 @@ define <4 x float> @test_log(<4 x float> %a) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
- %r = call <4 x float> @llvm.log.v2f32(<4 x float> %a)
+ %r = call <4 x float> @llvm.log.v4f32(<4 x float> %a)
  ret <4 x float> %r
 }
 
@@ -1469,7 +1469,7 @@ define <4 x float> @test_log10(<4 x float> %a) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
- %r = call <4 x float> @llvm.log10.v2f32(<4 x float> %a)
+ %r = call <4 x float> @llvm.log10.v4f32(<4 x float> %a)
  ret <4 x float> %r
 }
 
@@ -1517,7 +1517,7 @@ define <4 x float> @test_log2(<4 x float> %a) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
- %r = call <4 x float> @llvm.log2.v2f32(<4 x float> %a)
+ %r = call <4 x float> @llvm.log2.v4f32(<4 x float> %a)
  ret <4 x float> %r
 }
 
@@ -1532,7 +1532,7 @@ define <4 x float> @test_fma(<4 x float> %a, <4 x float> %b, <4 x float> %c) #0 
 ; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %r = call <4 x float> @llvm.fma.v2f32(<4 x float> %a, <4 x float> %b, <4 x float> %c)
+  %r = call <4 x float> @llvm.fma.v4f32(<4 x float> %a, <4 x float> %b, <4 x float> %c)
   ret <4 x float> %r
 }
 
@@ -1551,7 +1551,7 @@ define <4 x float> @test_fabs(<4 x float> %a) #0 {
 ; CHECK-NEXT:    insf $r1 = $r2, 63, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %r = call <4 x float> @llvm.fabs.v2f32(<4 x float> %a)
+  %r = call <4 x float> @llvm.fabs.v4f32(<4 x float> %a)
   ret <4 x float> %r
 }
 
@@ -1611,7 +1611,7 @@ define <4 x float> @test_minnum(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %r = call <4 x float> @llvm.minnum.v2f32(<4 x float> %a, <4 x float> %b)
+  %r = call <4 x float> @llvm.minnum.v4f32(<4 x float> %a, <4 x float> %b)
   ret <4 x float> %r
 }
 
@@ -1622,7 +1622,7 @@ define <4 x float> @test_minnum_fast(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK-NEXT:    fminwp $r1 = $r1, $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %r = call fast <4 x float> @llvm.minnum.v2f32(<4 x float> %a, <4 x float> %b)
+  %r = call fast <4 x float> @llvm.minnum.v4f32(<4 x float> %a, <4 x float> %b)
   ret <4 x float> %r
 }
 
@@ -1682,7 +1682,7 @@ define <4 x float> @test_maxnum(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %r = call <4 x float> @llvm.maxnum.v2f32(<4 x float> %a, <4 x float> %b)
+  %r = call <4 x float> @llvm.maxnum.v4f32(<4 x float> %a, <4 x float> %b)
   ret <4 x float> %r
 }
 
@@ -1693,110 +1693,80 @@ define <4 x float> @test_maxnum_fast(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK-NEXT:    fmaxwp $r1 = $r1, $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %r = call fast <4 x float> @llvm.maxnum.v2f32(<4 x float> %a, <4 x float> %b)
+  %r = call fast <4 x float> @llvm.maxnum.v4f32(<4 x float> %a, <4 x float> %b)
   ret <4 x float> %r
 }
 
 define <4 x float> @test_copysign(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK-LABEL: test_copysign:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r4 = $r3, 32
-; CHECK-NEXT:    srad $r5 = $r1, 32
-; CHECK-NEXT:    sraw $r3 = $r3, 31
+; CHECK-NEXT:    andd $r3 = $r3, 0x8000000080000000
+; CHECK-NEXT:    fabswp $r1 = $r1
+; CHECK-NEXT:    andd $r2 = $r2, 0x8000000080000000
+; CHECK-NEXT:    fabswp $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sraw $r4 = $r4, 31
-; CHECK-NEXT:    insf $r1 = $r3, 31, 31
-; CHECK-NEXT:    srad $r3 = $r0, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r5 = $r4, 31, 31
-; CHECK-NEXT:    srad $r4 = $r2, 32
-; CHECK-NEXT:    sraw $r2 = $r2, 31
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sraw $r4 = $r4, 31
-; CHECK-NEXT:    insf $r0 = $r2, 31, 31
-; CHECK-NEXT:    insf $r1 = $r5, 63, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r3 = $r4, 31, 31
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r3, 63, 32
+; CHECK-NEXT:    ord $r1 = $r1, $r3
+; CHECK-NEXT:    ord $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %r = call <4 x float> @llvm.copysign.v2f32(<4 x float> %a, <4 x float> %b)
+  %r = call <4 x float> @llvm.copysign.v4f32(<4 x float> %a, <4 x float> %b)
   ret <4 x float> %r
 }
 
-define <4 x float> @test_copysign_f32(<4 x float> %a, <4 x double> %b) #0 {
-; CHECK-LABEL: test_copysign_f32:
+define <4 x float> @test_copysign_v4f16(<4 x float> %a, <4 x half> %b) #0 {
+; CHECK-LABEL: test_copysign_v4f16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r4 = $r4, 63
-; CHECK-NEXT:    srad $r6 = $r1, 32
-; CHECK-NEXT:    srad $r5 = $r5, 63
-; CHECK-NEXT:    srad $r3 = $r3, 63
+; CHECK-NEXT:    andd $r2 = $r2, 0x8000800080008000
+; CHECK-NEXT:    fabswp $r1 = $r1
+; CHECK-NEXT:    fabswp $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r4, 31, 31
-; CHECK-NEXT:    srad $r4 = $r0, 32
-; CHECK-NEXT:    srad $r2 = $r2, 63
-; CHECK-NEXT:    insf $r6 = $r5, 31, 31
+; CHECK-NEXT:    sbmm8 $r3 = $r2, 0x8000000020000000
+; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x80000000200000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r4 = $r3, 31, 31
-; CHECK-NEXT:    insf $r0 = $r2, 31, 31
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r4, 63, 32
-; CHECK-NEXT:    insf $r1 = $r6, 63, 32
+; CHECK-NEXT:    ord $r1 = $r1, $r3
+; CHECK-NEXT:    ord $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %tb = fptrunc <4 x double> %b to <4 x float>
-  %r = call <4 x float> @llvm.copysign.v2f32(<4 x float> %a, <4 x float> %tb)
+  %tb = fpext <4 x half> %b to <4 x float>
+  %r = call <4 x float> @llvm.copysign.v4f32(<4 x float> %a, <4 x float> %tb)
   ret <4 x float> %r
 }
 
-define <4 x float> @test_copysign_f64(<4 x float> %a, <4 x double> %b) #0 {
-; CHECK-LABEL: test_copysign_f64:
+define <4 x float> @test_copysign_v4f64(<4 x float> %a, <4 x double> %b) #0 {
+; CHECK-LABEL: test_copysign_v4f64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r4 = $r4, 63
-; CHECK-NEXT:    srad $r6 = $r1, 32
-; CHECK-NEXT:    srad $r5 = $r5, 63
-; CHECK-NEXT:    srad $r3 = $r3, 63
+; CHECK-NEXT:    copyd $r6 = $r4
+; CHECK-NEXT:    copyd $r4 = $r2
+; CHECK-NEXT:    copyd $r7 = $r5
+; CHECK-NEXT:    copyd $r5 = $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r4, 31, 31
-; CHECK-NEXT:    srad $r4 = $r0, 32
-; CHECK-NEXT:    srad $r2 = $r2, 63
-; CHECK-NEXT:    insf $r6 = $r5, 31, 31
+; CHECK-NEXT:    srld $r2 = $r6, 63
+; CHECK-NEXT:    srld $r4 = $r4, 63
+; CHECK-NEXT:    srld $r3 = $r5, 63
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r4 = $r3, 31, 31
-; CHECK-NEXT:    insf $r0 = $r2, 31, 31
+; CHECK-NEXT:    insf $r0 = $r4, 31, 31
+; CHECK-NEXT:    insf $r1 = $r2, 31, 31
+; CHECK-NEXT:    srld $r2 = $r7, 63
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r4, 63, 32
-; CHECK-NEXT:    insf $r1 = $r6, 63, 32
+; CHECK-NEXT:    insf $r1 = $r2, 63, 63
+; CHECK-NEXT:    insf $r0 = $r3, 63, 63
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %tb = fptrunc <4 x double> %b to <4 x float>
-  %r = call <4 x float> @llvm.copysign.v2f32(<4 x float> %a, <4 x float> %tb)
+  %r = call <4 x float> @llvm.copysign.v4f32(<4 x float> %a, <4 x float> %tb)
   ret <4 x float> %r
 }
 
 define <4 x double> @test_copysign_extended(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK-LABEL: test_copysign_extended:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r4 = $r2, 32
-; CHECK-NEXT:    srad $r5 = $r0, 32
-; CHECK-NEXT:    sraw $r2 = $r2, 31
+; CHECK-NEXT:    andd $r3 = $r3, 0x8000000080000000
+; CHECK-NEXT:    fabswp $r1 = $r1
+; CHECK-NEXT:    andd $r2 = $r2, 0x8000000080000000
+; CHECK-NEXT:    fabswp $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sraw $r4 = $r4, 31
-; CHECK-NEXT:    insf $r0 = $r2, 31, 31
-; CHECK-NEXT:    srad $r2 = $r1, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r5 = $r4, 31, 31
-; CHECK-NEXT:    srad $r4 = $r3, 32
-; CHECK-NEXT:    sraw $r3 = $r3, 31
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sraw $r4 = $r4, 31
-; CHECK-NEXT:    insf $r1 = $r3, 31, 31
-; CHECK-NEXT:    insf $r0 = $r5, 63, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r4, 31, 31
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r2, 63, 32
+; CHECK-NEXT:    ord $r1 = $r1, $r3
+; CHECK-NEXT:    ord $r0 = $r0, $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fwidenmwd $r3 = $r1
 ; CHECK-NEXT:    fwidenlwd $r2 = $r1
@@ -1805,7 +1775,7 @@ define <4 x double> @test_copysign_extended(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK-NEXT:    fwidenlwd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %r = call <4 x float> @llvm.copysign.v2f32(<4 x float> %a, <4 x float> %b)
+  %r = call <4 x float> @llvm.copysign.v4f32(<4 x float> %a, <4 x float> %b)
   %xr = fpext <4 x float> %r to <4 x double>
   ret <4 x double> %xr
 }
@@ -1854,7 +1824,7 @@ define <4 x float> @test_floor(<4 x float> %a) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %r = call <4 x float> @llvm.floor.v2f32(<4 x float> %a)
+  %r = call <4 x float> @llvm.floor.v4f32(<4 x float> %a)
   ret <4 x float> %r
 }
 
@@ -1902,7 +1872,7 @@ define <4 x float> @test_ceil(<4 x float> %a) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %r = call <4 x float> @llvm.ceil.v2f32(<4 x float> %a)
+  %r = call <4 x float> @llvm.ceil.v4f32(<4 x float> %a)
   ret <4 x float> %r
 }
 
@@ -1950,7 +1920,7 @@ define <4 x float> @test_trunc(<4 x float> %a) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %r = call <4 x float> @llvm.trunc.v2f32(<4 x float> %a)
+  %r = call <4 x float> @llvm.trunc.v4f32(<4 x float> %a)
   ret <4 x float> %r
 }
 
@@ -1998,7 +1968,7 @@ define <4 x float> @test_rint(<4 x float> %a) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %r = call <4 x float> @llvm.rint.v2f32(<4 x float> %a)
+  %r = call <4 x float> @llvm.rint.v4f32(<4 x float> %a)
   ret <4 x float> %r
 }
 
@@ -2046,7 +2016,7 @@ define <4 x float> @test_nearbyint(<4 x float> %a) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %r = call <4 x float> @llvm.nearbyint.v2f32(<4 x float> %a)
+  %r = call <4 x float> @llvm.nearbyint.v4f32(<4 x float> %a)
   ret <4 x float> %r
 }
 
@@ -2094,7 +2064,7 @@ define <4 x float> @test_round(<4 x float> %a) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %r = call <4 x float> @llvm.round.v2f32(<4 x float> %a)
+  %r = call <4 x float> @llvm.round.v4f32(<4 x float> %a)
   ret <4 x float> %r
 }
 
@@ -2109,7 +2079,7 @@ define <4 x float> @test_fmuladd(<4 x float> %a, <4 x float> %b, <4 x float> %c)
 ; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %r = call <4 x float> @llvm.fmuladd.v2f32(<4 x float> %a, <4 x float> %b, <4 x float> %c)
+  %r = call <4 x float> @llvm.fmuladd.v4f32(<4 x float> %a, <4 x float> %b, <4 x float> %c)
   ret <4 x float> %r
 }
 
