@@ -111,8 +111,7 @@ def Binary16 : Operand<f16>, FPImmLeaf<f16, [{
 def Binary16x4 : Operand<v4f16>, FPImmLeaf<v4f16, [{
       return isInt<64>(Imm.bitcastToAPInt().getZExtValue());
     }]> {
-  // FIXME: PrintMethod is not implemented yet
-  // let PrintMethod = "printBinary16x4ImmOperand";
+  let PrintMethod = "printBinary64ImmOperand";
 }
 
 def Binary32 : Operand<f32>, FPImmLeaf<f32, [{
@@ -124,8 +123,7 @@ def Binary32 : Operand<f32>, FPImmLeaf<f32, [{
 def Binary32x2 : Operand<v2f32>, FPImmLeaf<v2f32, [{
       return isInt<64>(Imm.bitcastToAPInt().getZExtValue());
     }]> {
-  // FIXME: PrintMethod is not implemented yet
-  // let PrintMethod = "printBinary32x2ImmOperand";
+  let PrintMethod = "printBinary64ImmOperand";
 }
 
 def Binary64 : Operand<f64>, FPImmLeaf<f64, [{
