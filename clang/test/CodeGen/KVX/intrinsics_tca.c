@@ -49,7 +49,7 @@ typedef long __attribute__((__vector_size__(32))) v4i64_t;
 // CHECK-NEXT:    [[TMP39:%.*]] = call <1024 x i1> @llvm.kvx.mt44d(<1024 x i1> [[TMP34]])
 // CHECK-NEXT:    [[TMP40:%.*]] = call <256 x i1> @llvm.kvx.fscalewv(<256 x i1> [[TMP16]], i32 7, i32 0, i32 0)
 // CHECK-NEXT:    [[TMP41:%.*]] = call <256 x i1> @llvm.kvx.fnarrowwhv(<512 x i1> [[TMP38]], i32 0, i32 1)
-// CHECK-NEXT:    [[TMP42:%.*]] = call <256 x i1> @llvm.kvx.fscalewv(<256 x i1> [[TMP40]], i32 4, i32 0, i32 1)
+// CHECK-NEXT:    [[TMP42:%.*]] = call <256 x i1> @llvm.kvx.fscalewv(<256 x i1> [[TMP40]], i32 0, i32 0, i32 1)
 // CHECK-NEXT:    [[TMP43:%.*]] = call { <4 x i64>, <256 x i1> } @llvm.kvx.swapvo(<4 x i64> [[TMP8]], <256 x i1> [[TMP42]])
 // CHECK-NEXT:    [[TMP44:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP43]], 0
 // CHECK-NEXT:    [[TMP45:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP43]], 1
@@ -120,7 +120,7 @@ v4i64_t test_tca_builtins(long a, long b, long c, long d, volatile __tca256 *v, 
   lm = __builtin_kvx_mt44d(lm);
   lv = __builtin_kvx_fscalewv(lv2, "");
   lv2 = __builtin_kvx_fnarrowwhv(lw, ".rn.s");
-  lv = __builtin_kvx_fscalewv(lv, ".rna..relu");
+  lv = __builtin_kvx_fscalewv(lv, ".rn..relu");
   __builtin_kvx_swapvo(&vt, &lv);
   lv = __builtin_kvx_fscalewv(lv, "...relu");
   lv = __builtin_kvx_lv_cond(lv, &v[3], a, ".s.even");
