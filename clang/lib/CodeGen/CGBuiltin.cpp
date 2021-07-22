@@ -17636,9 +17636,6 @@ static int KVX_getRoundingModifier(clang::ASTContext &Ctx,
         .CaseLower(".ru", 1)
         .CaseLower(".rd", 2)
         .CaseLower(".rz", 3)
-        .CaseLower(".rna", 4)
-        .CaseLower(".rnz", 5)
-        .CaseLower(".ro", 6)
         .Default(-1);
   }
 
@@ -17783,9 +17780,6 @@ static Value *KVX_emitScaleNarrowBuiltin(unsigned NumMods, unsigned IntrinsicID,
                   .CaseLower("ru", 1)
                   .CaseLower("rd", 2)
                   .CaseLower("rz", 3)
-                  .CaseLower("rna", 4)
-                  .CaseLower("rnz", 5)
-                  .CaseLower("ro", 6)
                   .Default(-1);
 
   int Silent = llvm::StringSwitch<int>(Mods.first)
@@ -17804,7 +17798,7 @@ static Value *KVX_emitScaleNarrowBuiltin(unsigned NumMods, unsigned IntrinsicID,
     if (Round < 0)
       CGF.CGM.Error(E->getArg(1)->getBeginLoc(),
                     "Invalid rounding modifer, should be one of: '. "
-                    ".rn .ru .rd .rz .rna .rnz .ro'.");
+                    ".rn .ru .rd .rz'.");
 
     if (Silent < 0)
       CGF.CGM.Error(E->getArg(1)->getBeginLoc(),
