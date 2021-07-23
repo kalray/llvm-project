@@ -134,7 +134,9 @@ define i32 @sath4(i32 %0) {
 define i32 @satd_w2b(i32 %0) {
 ; CHECK-LABEL: satd_w2b:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    satd $r0 = $r0, 2
+; CHECK-NEXT:    minw $r0 = $r0, 1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    maxw $r0 = $r0, -2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ;
@@ -177,7 +179,9 @@ define i64 @satd_2b(i64 %0) {
 define i32 @satd_w3b(i32 %0) {
 ; CHECK-LABEL: satd_w3b:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    satd $r0 = $r0, 3
+; CHECK-NEXT:    minw $r0 = $r0, 3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    maxw $r0 = $r0, -4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ;
@@ -220,7 +224,9 @@ define i64 @satd_3b(i64 %0) {
 define i32 @satd_w4b(i32 %0) {
 ; CHECK-LABEL: satd_w4b:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    satd $r0 = $r0, 4
+; CHECK-NEXT:    minw $r0 = $r0, 7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    maxw $r0 = $r0, -8
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ;
@@ -263,7 +269,9 @@ define i64 @satd_4b(i64 %0) {
 define i32 @satd_w8b(i32 %0) {
 ; CHECK-LABEL: satd_w8b:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    satd $r0 = $r0, 8
+; CHECK-NEXT:    minw $r0 = $r0, 127
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    maxw $r0 = $r0, -128
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ;
@@ -306,7 +314,9 @@ define i64 @satd_8b(i64 %0) {
 define i32 @satd_w15b(i32 %0) {
 ; CHECK-LABEL: satd_w15b:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    satd $r0 = $r0, 15
+; CHECK-NEXT:    minw $r0 = $r0, 0x3fff
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    maxw $r0 = $r0, 0xffffc000
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ;
@@ -348,7 +358,9 @@ define i64 @satd_15b(i64 %0) {
 define i32 @satd_w31b(i32 %0) {
 ; CHECK-LABEL: satd_w31b:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    satd $r0 = $r0, 31
+; CHECK-NEXT:    minw $r0 = $r0, 0x3fffffff
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    maxw $r0 = $r0, 0xc0000000
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ;
