@@ -477,6 +477,19 @@ void KVXInstPrinter::printSplat32Mod(const MCInst *MI, unsigned OpNo,
   }
 }
 
+void KVXInstPrinter::printConjugateMod(const MCInst *MI, unsigned OpNo,
+                                       raw_ostream &O) {
+  const MCOperand &MO = MI->getOperand(OpNo);
+  int variant = MO.getImm();
+  switch (variant) {
+  case 0:
+    break;
+  case 1:
+    O << ".c";
+    break;
+  }
+}
+
 // Emits 32-bits integer litteral values.
 //
 // Use the hexadecimal bit representation when the absolute value is above a

@@ -11,12 +11,12 @@ define <2 x float> @fmulwc(<2 x float> %a, <2 x float> %b) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <2 x float> @llvm.kvx.fmulwc(<2 x float> %a, <2 x float> %b, i32 0, i32 0)
+  %0 = tail call <2 x float> @llvm.kvx.fmulwc(<2 x float> %a, <2 x float> %b, i32 0, i32 0, i32 0)
   ret <2 x float> %0
 }
 
 
-declare <2 x float> @llvm.kvx.fmulwc(<2 x float>, <2 x float>, i32, i32)
+declare <2 x float> @llvm.kvx.fmulwc(<2 x float>, <2 x float>, i32, i32, i32)
 
 
 define <2 x float> @ffmawc(<2 x float> %a, <2 x float> %b, <2 x float> %c) {
@@ -28,12 +28,12 @@ define <2 x float> @ffmawc(<2 x float> %a, <2 x float> %b, <2 x float> %c) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <2 x float> @llvm.kvx.ffmawc(<2 x float> %a, <2 x float> %b, <2 x float> %c, i32 0, i32 0)
+  %0 = tail call <2 x float> @llvm.kvx.ffmawc(<2 x float> %a, <2 x float> %b, <2 x float> %c, i32 0, i32 0, i32 0)
   ret <2 x float> %0
 }
 
 
-declare <2 x float> @llvm.kvx.ffmawc(<2 x float>, <2 x float>, <2 x float>, i32, i32)
+declare <2 x float> @llvm.kvx.ffmawc(<2 x float>, <2 x float>, <2 x float>, i32, i32, i32)
 
 define <2 x float> @ffmswc(<2 x float> %a, <2 x float> %b, <2 x float> %c) {
 ; CHECK-LABEL: ffmswc:
@@ -44,60 +44,51 @@ define <2 x float> @ffmswc(<2 x float> %a, <2 x float> %b, <2 x float> %c) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <2 x float> @llvm.kvx.ffmswc(<2 x float> %a, <2 x float> %b, <2 x float> %c, i32 0, i32 0)
+  %0 = tail call <2 x float> @llvm.kvx.ffmswc(<2 x float> %a, <2 x float> %b, <2 x float> %c, i32 0, i32 0, i32 0)
   ret <2 x float> %0
 }
 
-declare <2 x float> @llvm.kvx.ffmswc(<2 x float>, <2 x float>, <2 x float>, i32, i32)
+declare <2 x float> @llvm.kvx.ffmswc(<2 x float>, <2 x float>, <2 x float>, i32, i32, i32)
 
 
 define <2 x float> @fmulcwc(<2 x float> %a, <2 x float> %b) {
 ; CHECK-LABEL: fmulcwc:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmulcwc.rn $r0 = $r0, $r1
+; CHECK-NEXT:    fmulwc.c.rn $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <2 x float> @llvm.kvx.fmulcwc(<2 x float> %a, <2 x float> %b, i32 0, i32 0)
+  %0 = tail call <2 x float> @llvm.kvx.fmulwc(<2 x float> %a, <2 x float> %b, i32 1, i32 0, i32 0)
   ret <2 x float> %0
 }
-
-
-declare <2 x float> @llvm.kvx.fmulcwc(<2 x float>, <2 x float>, i32, i32)
 
 
 define <2 x float> @ffmacwc(<2 x float> %a, <2 x float> %b, <2 x float> %c) {
 ; CHECK-LABEL: ffmacwc:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmulcwc.rn $r0 = $r1, $r0
+; CHECK-NEXT:    fmulwc.c.rn $r0 = $r1, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddcwc.rn $r0 = $r0, $r2
+; CHECK-NEXT:    faddwp.c.rn $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <2 x float> @llvm.kvx.ffmacwc(<2 x float> %a, <2 x float> %b, <2 x float> %c, i32 0, i32 0)
+  %0 = tail call <2 x float> @llvm.kvx.ffmawc(<2 x float> %a, <2 x float> %b, <2 x float> %c, i32 1, i32 0, i32 0)
   ret <2 x float> %0
 }
-
-
-declare <2 x float> @llvm.kvx.ffmacwc(<2 x float>, <2 x float>, <2 x float>, i32, i32)
 
 
 define <2 x float> @ffmscwc(<2 x float> %a, <2 x float> %b, <2 x float> %c) {
 ; CHECK-LABEL: ffmscwc:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmulcwc.rn $r0 = $r1, $r0
+; CHECK-NEXT:    fmulwc.c.rn $r0 = $r1, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfcwc.rn $r0 = $r0, $r2
+; CHECK-NEXT:    fsbfwp.c.rn $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <2 x float> @llvm.kvx.ffmscwc(<2 x float> %a, <2 x float> %b, <2 x float> %c, i32 0, i32 0)
+  %0 = tail call <2 x float> @llvm.kvx.ffmswc(<2 x float> %a, <2 x float> %b, <2 x float> %c, i32 1, i32 0, i32 0)
   ret <2 x float> %0
 }
-
-
-declare <2 x float> @llvm.kvx.ffmscwc(<2 x float>, <2 x float>, <2 x float>, i32, i32)
 
 
 define <2 x float> @fconjwc(<2 x float> %a) {
@@ -124,12 +115,12 @@ define <4 x float> @fmulwcp(<4 x float> %a, <4 x float> %b) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <4 x float> @llvm.kvx.fmulwcp(<4 x float> %a, <4 x float> %b, i32 0, i32 0)
+  %0 = tail call <4 x float> @llvm.kvx.fmulwcp(<4 x float> %a, <4 x float> %b, i32 0, i32 0, i32 0)
   ret <4 x float> %0
 }
 
 
-declare <4 x float> @llvm.kvx.fmulwcp(<4 x float>, <4 x float>, i32, i32)
+declare <4 x float> @llvm.kvx.fmulwcp(<4 x float>, <4 x float>, i32, i32, i32)
 
 
 define <4 x float> @ffmawcp(<4 x float> %a, <4 x float> %b, <4 x float> %c) {
@@ -145,12 +136,12 @@ define <4 x float> @ffmawcp(<4 x float> %a, <4 x float> %b, <4 x float> %c) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <4 x float> @llvm.kvx.ffmawcp(<4 x float> %a, <4 x float> %b, <4 x float> %c, i32 0, i32 0)
+  %0 = tail call <4 x float> @llvm.kvx.ffmawcp(<4 x float> %a, <4 x float> %b, <4 x float> %c, i32 0, i32 0, i32 0)
   ret <4 x float> %0
 }
 
 
-declare <4 x float> @llvm.kvx.ffmawcp(<4 x float>, <4 x float>, <4 x float>, i32, i32)
+declare <4 x float> @llvm.kvx.ffmawcp(<4 x float>, <4 x float>, <4 x float>, i32, i32, i32)
 
 
 define <4 x float> @ffmswcp(<4 x float> %a, <4 x float> %b, <4 x float> %c) {
@@ -166,71 +157,62 @@ define <4 x float> @ffmswcp(<4 x float> %a, <4 x float> %b, <4 x float> %c) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <4 x float> @llvm.kvx.ffmswcp(<4 x float> %a, <4 x float> %b, <4 x float> %c,  i32 0, i32 0)
+  %0 = tail call <4 x float> @llvm.kvx.ffmswcp(<4 x float> %a, <4 x float> %b, <4 x float> %c, i32 0, i32 0, i32 0)
   ret <4 x float> %0
 }
 
 
-declare <4 x float> @llvm.kvx.ffmswcp(<4 x float>, <4 x float>, <4 x float>,  i32, i32)
+declare <4 x float> @llvm.kvx.ffmswcp(<4 x float>, <4 x float>, <4 x float>,  i32, i32, i32)
 
 
 define <4 x float> @fmulcwcp(<4 x float> %a, <4 x float> %b) {
 ; CHECK-LABEL: fmulcwcp:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmulcwc.rn $r1 = $r1, $r3
+; CHECK-NEXT:    fmulwc.c.rn $r1 = $r1, $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulcwc.rn $r0 = $r0, $r2
+; CHECK-NEXT:    fmulwc.c.rn $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <4 x float> @llvm.kvx.fmulcwcp(<4 x float> %a, <4 x float> %b,  i32 0, i32 0)
+  %0 = tail call <4 x float> @llvm.kvx.fmulwcp(<4 x float> %a, <4 x float> %b, i32 1, i32 0, i32 0)
   ret <4 x float> %0
 }
-
-
-declare <4 x float> @llvm.kvx.fmulcwcp(<4 x float>, <4 x float>,  i32, i32)
 
 
 define <4 x float> @ffmacwcp(<4 x float> %a, <4 x float> %b, <4 x float> %c) {
 ; CHECK-LABEL: ffmacwcp:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmulcwc.rn $r1 = $r3, $r1
+; CHECK-NEXT:    fmulwc.c.rn $r1 = $r3, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulcwc.rn $r0 = $r2, $r0
+; CHECK-NEXT:    fmulwc.c.rn $r0 = $r2, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddcwc.rn $r1 = $r1, $r5
+; CHECK-NEXT:    faddwp.c.rn $r1 = $r1, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddcwc.rn $r0 = $r0, $r4
+; CHECK-NEXT:    faddwp.c.rn $r0 = $r0, $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <4 x float> @llvm.kvx.ffmacwcp(<4 x float> %a, <4 x float> %b, <4 x float> %c,  i32 0, i32 0)
+  %0 = tail call <4 x float> @llvm.kvx.ffmawcp(<4 x float> %a, <4 x float> %b, <4 x float> %c, i32 1, i32 0, i32 0)
   ret <4 x float> %0
 }
-
-
-declare <4 x float> @llvm.kvx.ffmacwcp(<4 x float>, <4 x float>, <4 x float>,  i32, i32)
 
 
 define <4 x float> @ffmscwcp(<4 x float> %a, <4 x float> %b, <4 x float> %c) {
 ; CHECK-LABEL: ffmscwcp:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmulcwc.rn $r1 = $r3, $r1
+; CHECK-NEXT:    fmulwc.c.rn $r1 = $r3, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulcwc.rn $r0 = $r2, $r0
+; CHECK-NEXT:    fmulwc.c.rn $r0 = $r2, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfcwc.rn $r1 = $r1, $r5
+; CHECK-NEXT:    fsbfwp.c.rn $r1 = $r1, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfcwc.rn $r0 = $r0, $r4
+; CHECK-NEXT:    fsbfwp.c.rn $r0 = $r0, $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <4 x float> @llvm.kvx.ffmscwcp(<4 x float> %a, <4 x float> %b, <4 x float> %c,  i32 0, i32 0)
+  %0 = tail call <4 x float> @llvm.kvx.ffmswcp(<4 x float> %a, <4 x float> %b, <4 x float> %c, i32 1, i32 0, i32 0)
   ret <4 x float> %0
 }
-
-
-declare <4 x float> @llvm.kvx.ffmscwcp(<4 x float>, <4 x float>, <4 x float>,  i32, i32)
 
 
 define <4 x float> @fconjwcp(<4 x float> %a) {
@@ -264,10 +246,10 @@ define <8 x float> @fmulwcq(<8 x float> %a, <8 x float> %b) local_unnamed_addr #
 entry:
   %0 = shufflevector <8 x float> %a, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %1 = shufflevector <8 x float> %b, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
-  %2 = tail call <4 x float> @llvm.kvx.fmulwcp(<4 x float> %0, <4 x float> %1,  i32 0, i32 0)
+  %2 = tail call <4 x float> @llvm.kvx.fmulwcp(<4 x float> %0, <4 x float> %1, i32 0, i32 0, i32 0)
   %3 = shufflevector <8 x float> %a, <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
   %4 = shufflevector <8 x float> %b, <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
-  %5 = tail call <4 x float> @llvm.kvx.fmulwcp(<4 x float> %3, <4 x float> %4,  i32 0, i32 0)
+  %5 = tail call <4 x float> @llvm.kvx.fmulwcp(<4 x float> %3, <4 x float> %4,  i32 0, i32 0, i32 0)
   %6 = shufflevector <4 x float> %2, <4 x float> %5, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   ret <8 x float> %6
 }
@@ -297,11 +279,11 @@ entry:
   %0 = shufflevector <8 x float> %a, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %1 = shufflevector <8 x float> %b, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %2 = shufflevector <8 x float> %c, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
-  %3 = tail call <4 x float> @llvm.kvx.ffmawcp(<4 x float> %0, <4 x float> %1, <4 x float> %2,  i32 0, i32 0)
+  %3 = tail call <4 x float> @llvm.kvx.ffmawcp(<4 x float> %0, <4 x float> %1, <4 x float> %2,  i32 0, i32 0, i32 0)
   %4 = shufflevector <8 x float> %a, <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
   %5 = shufflevector <8 x float> %b, <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
   %6 = shufflevector <8 x float> %c, <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
-  %7 = tail call <4 x float> @llvm.kvx.ffmawcp(<4 x float> %4, <4 x float> %5, <4 x float> %6,  i32 0, i32 0)
+  %7 = tail call <4 x float> @llvm.kvx.ffmawcp(<4 x float> %4, <4 x float> %5, <4 x float> %6,  i32 0, i32 0, i32 0)
   %8 = shufflevector <4 x float> %3, <4 x float> %7, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   ret <8 x float> %8
 }
@@ -331,11 +313,11 @@ entry:
   %0 = shufflevector <8 x float> %a, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %1 = shufflevector <8 x float> %b, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %2 = shufflevector <8 x float> %c, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
-  %3 = tail call <4 x float> @llvm.kvx.ffmswcp(<4 x float> %0, <4 x float> %1, <4 x float> %2,  i32 0, i32 0)
+  %3 = tail call <4 x float> @llvm.kvx.ffmswcp(<4 x float> %0, <4 x float> %1, <4 x float> %2,  i32 0, i32 0, i32 0)
   %4 = shufflevector <8 x float> %a, <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
   %5 = shufflevector <8 x float> %b, <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
   %6 = shufflevector <8 x float> %c, <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
-  %7 = tail call <4 x float> @llvm.kvx.ffmswcp(<4 x float> %4, <4 x float> %5, <4 x float> %6,  i32 0, i32 0)
+  %7 = tail call <4 x float> @llvm.kvx.ffmswcp(<4 x float> %4, <4 x float> %5, <4 x float> %6,  i32 0, i32 0, i32 0)
   %8 = shufflevector <4 x float> %3, <4 x float> %7, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   ret <8 x float> %8
 }
@@ -344,22 +326,22 @@ entry:
 define <8 x float> @fmulcwcq(<8 x float> %a, <8 x float> %b) local_unnamed_addr #3 {
 ; CHECK-LABEL: fmulcwcq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmulcwc.rn $r1 = $r1, $r5
+; CHECK-NEXT:    fmulwc.c.rn $r1 = $r1, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulcwc.rn $r0 = $r0, $r4
+; CHECK-NEXT:    fmulwc.c.rn $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulcwc.rn $r3 = $r3, $r7
+; CHECK-NEXT:    fmulwc.c.rn $r3 = $r3, $r7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulcwc.rn $r2 = $r2, $r6
+; CHECK-NEXT:    fmulwc.c.rn $r2 = $r2, $r6
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
   %0 = shufflevector <8 x float> %a, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %1 = shufflevector <8 x float> %b, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
-  %2 = tail call <4 x float> @llvm.kvx.fmulcwcp(<4 x float> %0, <4 x float> %1,  i32 0, i32 0)
+  %2 = tail call <4 x float> @llvm.kvx.fmulwcp(<4 x float> %0, <4 x float> %1, i32 1, i32 0, i32 0)
   %3 = shufflevector <8 x float> %a, <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
   %4 = shufflevector <8 x float> %b, <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
-  %5 = tail call <4 x float> @llvm.kvx.fmulcwcp(<4 x float> %3, <4 x float> %4,  i32 0, i32 0)
+  %5 = tail call <4 x float> @llvm.kvx.fmulwcp(<4 x float> %3, <4 x float> %4, i32 1, i32 0, i32 0)
   %6 = shufflevector <4 x float> %2, <4 x float> %5, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   ret <8 x float> %6
 }
@@ -368,32 +350,32 @@ entry:
 define <8 x float> @ffmacwcq(<8 x float> %a, <8 x float> %b, <8 x float> %c) local_unnamed_addr #3 {
 ; CHECK-LABEL: ffmacwcq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmulcwc.rn $r1 = $r5, $r1
+; CHECK-NEXT:    fmulwc.c.rn $r1 = $r5, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulcwc.rn $r0 = $r4, $r0
+; CHECK-NEXT:    fmulwc.c.rn $r0 = $r4, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulcwc.rn $r3 = $r7, $r3
+; CHECK-NEXT:    fmulwc.c.rn $r3 = $r7, $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulcwc.rn $r2 = $r6, $r2
+; CHECK-NEXT:    fmulwc.c.rn $r2 = $r6, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddcwc.rn $r1 = $r1, $r9
+; CHECK-NEXT:    faddwp.c.rn $r1 = $r1, $r9
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddcwc.rn $r0 = $r0, $r8
+; CHECK-NEXT:    faddwp.c.rn $r0 = $r0, $r8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddcwc.rn $r3 = $r3, $r11
+; CHECK-NEXT:    faddwp.c.rn $r3 = $r3, $r11
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddcwc.rn $r2 = $r2, $r10
+; CHECK-NEXT:    faddwp.c.rn $r2 = $r2, $r10
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
   %0 = shufflevector <8 x float> %a, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %1 = shufflevector <8 x float> %b, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %2 = shufflevector <8 x float> %c, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
-  %3 = tail call <4 x float> @llvm.kvx.ffmacwcp(<4 x float> %0, <4 x float> %1, <4 x float> %2,  i32 0, i32 0)
+  %3 = tail call <4 x float> @llvm.kvx.ffmawcp(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 1, i32 0, i32 0)
   %4 = shufflevector <8 x float> %a, <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
   %5 = shufflevector <8 x float> %b, <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
   %6 = shufflevector <8 x float> %c, <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
-  %7 = tail call <4 x float> @llvm.kvx.ffmacwcp(<4 x float> %4, <4 x float> %5, <4 x float> %6,  i32 0, i32 0)
+  %7 = tail call <4 x float> @llvm.kvx.ffmawcp(<4 x float> %4, <4 x float> %5, <4 x float> %6, i32 1, i32 0, i32 0)
   %8 = shufflevector <4 x float> %3, <4 x float> %7, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   ret <8 x float> %8
 }
@@ -402,32 +384,32 @@ entry:
 define <8 x float> @ffmscwcq(<8 x float> %a, <8 x float> %b, <8 x float> %c) local_unnamed_addr #3 {
 ; CHECK-LABEL: ffmscwcq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmulcwc.rn $r1 = $r5, $r1
+; CHECK-NEXT:    fmulwc.c.rn $r1 = $r5, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulcwc.rn $r0 = $r4, $r0
+; CHECK-NEXT:    fmulwc.c.rn $r0 = $r4, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulcwc.rn $r3 = $r7, $r3
+; CHECK-NEXT:    fmulwc.c.rn $r3 = $r7, $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulcwc.rn $r2 = $r6, $r2
+; CHECK-NEXT:    fmulwc.c.rn $r2 = $r6, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfcwc.rn $r1 = $r1, $r9
+; CHECK-NEXT:    fsbfwp.c.rn $r1 = $r1, $r9
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfcwc.rn $r0 = $r0, $r8
+; CHECK-NEXT:    fsbfwp.c.rn $r0 = $r0, $r8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfcwc.rn $r3 = $r3, $r11
+; CHECK-NEXT:    fsbfwp.c.rn $r3 = $r3, $r11
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfcwc.rn $r2 = $r2, $r10
+; CHECK-NEXT:    fsbfwp.c.rn $r2 = $r2, $r10
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
   %0 = shufflevector <8 x float> %a, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %1 = shufflevector <8 x float> %b, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %2 = shufflevector <8 x float> %c, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
-  %3 = tail call <4 x float> @llvm.kvx.ffmscwcp(<4 x float> %0, <4 x float> %1, <4 x float> %2,  i32 0, i32 0)
+  %3 = tail call <4 x float> @llvm.kvx.ffmswcp(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 1, i32 0, i32 0)
   %4 = shufflevector <8 x float> %a, <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
   %5 = shufflevector <8 x float> %b, <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
   %6 = shufflevector <8 x float> %c, <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
-  %7 = tail call <4 x float> @llvm.kvx.ffmscwcp(<4 x float> %4, <4 x float> %5, <4 x float> %6,  i32 0, i32 0)
+  %7 = tail call <4 x float> @llvm.kvx.ffmswcp(<4 x float> %4, <4 x float> %5, <4 x float> %6, i32 1, i32 0, i32 0)
   %8 = shufflevector <4 x float> %3, <4 x float> %7, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   ret <8 x float> %8
 }
@@ -554,7 +536,7 @@ define <2 x double> @ffmacdc(<2 x double> %a, <2 x double> %b, <2 x double> %c) 
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad.rn $r6 = $r1, $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddcdc.rn $r0r1 = $r6r7, $r4r5
+; CHECK-NEXT:    fadddp.c.rn $r0r1 = $r6r7, $r4r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -577,7 +559,7 @@ define <2 x double> @ffmscdc(<2 x double> %a, <2 x double> %b, <2 x double> %c) 
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad.rn $r6 = $r1, $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfcdc.rn $r0r1 = $r6r7, $r4r5
+; CHECK-NEXT:    fsbfdp.c.rn $r0r1 = $r6r7, $r4r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -767,9 +749,9 @@ define <4 x double> @ffmacdcp(<4 x double> %a, <4 x double> %b, <4 x double> %c)
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad.rn $r4 = $r3, $r7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddcdc.rn $r0r1 = $r16r17, $r8r9
+; CHECK-NEXT:    fadddp.c.rn $r0r1 = $r16r17, $r8r9
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddcdc.rn $r2r3 = $r4r5, $r10r11
+; CHECK-NEXT:    fadddp.c.rn $r2r3 = $r4r5, $r10r11
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -805,9 +787,9 @@ define <4 x double> @ffmscdcp(<4 x double> %a, <4 x double> %b, <4 x double> %c)
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad.rn $r4 = $r3, $r7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfcdc.rn $r0r1 = $r16r17, $r8r9
+; CHECK-NEXT:    fsbfdp.c.rn $r0r1 = $r16r17, $r8r9
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfcdc.rn $r2r3 = $r4r5, $r10r11
+; CHECK-NEXT:    fsbfdp.c.rn $r2r3 = $r4r5, $r10r11
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

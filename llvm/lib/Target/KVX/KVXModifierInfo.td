@@ -117,3 +117,7 @@ def scaling_xs : Scaling<1>;
 class Splat32<int N> : PatLeaf<(i32 N)>;
 def splat32_ : Splat32<0>;
 def splat32_at : Splat32<1>;
+
+class Conjugate<int N> : PatLeaf<(i32 N)>;
+def conjugate_ : Conjugate<0>;
+def conjugate_c : Conjugate<1>;
