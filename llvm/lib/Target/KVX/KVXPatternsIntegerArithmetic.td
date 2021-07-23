@@ -1076,8 +1076,6 @@ def : Pat<(v2i32(or (shl v2i32:$r0, (v2i32 (v2_splat (i32 (sub (i32 32), i32:$r1
 let Predicates = [HasFPIMM] in {
 // SATD
 multiclass SATDW_PAT<int min_val, int max_val, SDNode num_bits> {
-def : Pat<(i32(smin (smax i32:$v, (i32 min_val)), (i32 max_val))), (SATDri SingleReg:$v, num_bits)>;
-def : Pat<(i32(smax (smin i32:$v, (i32 max_val)), (i32 min_val))), (SATDri SingleReg:$v, num_bits)>;
 def : Pat<(i64(smin (smax i64:$v, (i64 min_val)), (i64 max_val))), (SATDri SingleReg:$v, num_bits)>;
 def : Pat<(i64(smax (smin i64:$v, (i64 max_val)), (i64 min_val))), (SATDri SingleReg:$v, num_bits)>;
 }
