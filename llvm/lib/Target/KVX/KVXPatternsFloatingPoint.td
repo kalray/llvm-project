@@ -102,21 +102,23 @@ def : Pat<(v2f16(fadd v2f16:$r, (v2f16 (is_imm_vec:$IMM)))), (v2f16 (FADDHQri (Z
 def : Pat<(fadd v2f16:$rs1, v2f16:$rs2), (FADDHQrr (ZXWD SingleReg:$rs1), (ZXWD SingleReg:$rs2), rounding_, silent_)>;
 def : Pat<(v4f16(fadd v4f16:$r, (v4f16 (is_imm_vec:$IMM)))), (v4f16 (FADDHQri SingleReg:$r, (build_fpimm_vec $IMM)))>, Requires<[HasFPIMM]>;
 def : Pat<(fadd v4f16:$rs1, v4f16:$rs2), (FADDHQrr SingleReg:$rs1, SingleReg:$rs2, rounding_, silent_)>;
-def : Pat<(v2f32(fadd v2f32:$r, (v2f32 (is_imm_vec:$IMM)))), (v2f32 (FADDWPri SingleReg:$r, (build_fpimm_vec $IMM)))>, Requires<[HasFPIMM]>;
-def : Pat<(fadd v2f32:$rs1, v2f32:$rs2), (FADDWPrr SingleReg:$rs1, SingleReg:$rs2, rounding_, silent_)>;
-def : Pat<(fadd v4f32:$rs1, v4f32:$rs2), (FADDWQ PairedReg:$rs1, PairedReg:$rs2, rounding_, silent_)>;
-def : Pat<(fadd v2f64:$rs1, v2f64:$rs2), (FADDDP PairedReg:$rs1, PairedReg:$rs2, rounding_, silent_)>;
+def : Pat<(v2f32(fadd v2f32:$r, (v2f32 (is_imm_vec:$IMM)))), (v2f32 (FADDWPri SingleReg:$r, (build_fpimm_vec $IMM), conjugate_))>, Requires<[HasFPIMM]>;
+def : Pat<(fadd v2f32:$rs1, v2f32:$rs2), (FADDWPrr SingleReg:$rs1, SingleReg:$rs2, conjugate_, rounding_, silent_)>;
+def : Pat<(fadd v4f32:$rs1, v4f32:$rs2), (FADDWQ PairedReg:$rs1, PairedReg:$rs2, conjugate_, rounding_, silent_)>;
+def : Pat<(fadd v2f64:$rs1, v2f64:$rs2), (FADDDP PairedReg:$rs1, PairedReg:$rs2, conjugate_, rounding_, silent_)>;
 def : Pat<(v4f64 (fadd v4f64:$rs1, v4f64:$rs2)),
           (v4f64(REG_SEQUENCE QuadReg,
             (v2f64(FADDDP
               (v2f64 (EXTRACT_SUBREG QuadReg:$rs1, sub_p0)),
               (v2f64 (EXTRACT_SUBREG QuadReg:$rs2, sub_p0)),
+              conjugate_,
               rounding_,
               silent_)),
             sub_p0,
             (v2f64(FADDDP
               (v2f64 (EXTRACT_SUBREG QuadReg:$rs1, sub_p1)),
               (v2f64 (EXTRACT_SUBREG QuadReg:$rs2, sub_p1)),
+              conjugate_,
               rounding_,
               silent_)),
             sub_p1))>;
@@ -824,21 +826,23 @@ def : Pat<(v2f16(fsub (v2f16 (is_imm_vec:$IMM)), v2f16:$r)), (FSBFHQri (ZXWD Sin
 def : Pat<(fsub v2f16:$rs1, v2f16:$rs2), (FSBFHQrr (ZXWD SingleReg:$rs2), (ZXWD SingleReg:$rs1), rounding_, silent_)>;
 def : Pat<(v4f16(fsub (v4f16 (is_imm_vec:$IMM)), v4f16:$r)), (FSBFHQri SingleReg:$r, (build_fpimm_vec fpimm:$IMM))>, Requires<[HasFPIMM]>;
 def : Pat<(fsub v4f16:$rs1, v4f16:$rs2), (FSBFHQrr SingleReg:$rs2, SingleReg:$rs1, rounding_, silent_)>;
-def : Pat<(v2f32(fsub (v2f32 (is_imm_vec:$IMM)), v2f32:$r)), (FSBFWPri SingleReg:$r, (build_fpimm_vec fpimm:$IMM))>, Requires<[HasFPIMM]>;
-def : Pat<(fsub v2f32:$rs1, v2f32:$rs2), (FSBFWPrr SingleReg:$rs2, SingleReg:$rs1, rounding_, silent_)>;
-def : Pat<(fsub v4f32:$rs1, v4f32:$rs2), (FSBFWQ PairedReg:$rs2, PairedReg:$rs1, rounding_, silent_)>;
-def : Pat<(fsub v2f64:$rs1, v2f64:$rs2), (FSBFDP PairedReg:$rs2, PairedReg:$rs1, rounding_, silent_)>;
+def : Pat<(v2f32(fsub (v2f32 (is_imm_vec:$IMM)), v2f32:$r)), (FSBFWPri SingleReg:$r, (build_fpimm_vec fpimm:$IMM), conjugate_)>, Requires<[HasFPIMM]>;
+def : Pat<(fsub v2f32:$rs1, v2f32:$rs2), (FSBFWPrr SingleReg:$rs2, SingleReg:$rs1, conjugate_, rounding_, silent_)>;
+def : Pat<(fsub v4f32:$rs1, v4f32:$rs2), (FSBFWQ PairedReg:$rs2, PairedReg:$rs1, conjugate_, rounding_, silent_)>;
+def : Pat<(fsub v2f64:$rs1, v2f64:$rs2), (FSBFDP PairedReg:$rs2, PairedReg:$rs1, conjugate_, rounding_, silent_)>;
 def : Pat<(v4f64 (fsub v4f64:$rs1, v4f64:$rs2)),
           (v4f64(REG_SEQUENCE QuadReg,
             (v2f64(FSBFDP
               (v2f64 (EXTRACT_SUBREG QuadReg:$rs2, sub_p0)),
               (v2f64 (EXTRACT_SUBREG QuadReg:$rs1, sub_p0)),
+              conjugate_,
               rounding_,
               silent_)),
             sub_p0,
             (v2f64(FSBFDP
               (v2f64 (EXTRACT_SUBREG QuadReg:$rs2, sub_p1)),
               (v2f64 (EXTRACT_SUBREG QuadReg:$rs1, sub_p1)),
+              conjugate_,
               rounding_,
               silent_)),
             sub_p1))>;

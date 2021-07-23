@@ -19734,53 +19734,44 @@ static Value *KVX_emitNaryBuiltin(unsigned N, CodeGenFunction &CGF,
   while (I < N)
     Args.push_back(CGF.EmitScalarExpr(E->getArg(I++)));
 
+  bool HasConjugateMod = false;
+
   if (HasRounding) {
-    if (KVX_hasConjugateModifier(CGF.getContext(),
-                                 E->getArg(I)->IgnoreParenImpCasts())) {
-      switch (IntrinsicID) {
-      case Intrinsic::kvx_faddwp:
-        IntrinsicID = Intrinsic::kvx_faddcwc;
-        break;
-      case Intrinsic::kvx_fsbfwp:
-        IntrinsicID = Intrinsic::kvx_fsbfcwc;
-        break;
-      case Intrinsic::kvx_fadddp:
-        IntrinsicID = Intrinsic::kvx_faddcdc;
-        break;
-      case Intrinsic::kvx_fsbfdp:
-        IntrinsicID = Intrinsic::kvx_fsbfcdc;
-        break;
-      case Intrinsic::kvx_fmulwc:
-        IntrinsicID = Intrinsic::kvx_fmulcwc;
-        break;
-      case Intrinsic::kvx_fmulwcp:
-        IntrinsicID = Intrinsic::kvx_fmulcwcp;
-        break;
-      case Intrinsic::kvx_fmuldc:
+    HasConjugateMod = KVX_hasConjugateModifier(
+        CGF.getContext(), E->getArg(I)->IgnoreParenImpCasts());
+
+    // Determine if the intrinsic has a conjugate modifier to set.
+    switch (IntrinsicID) {
+    case Intrinsic::kvx_faddwp:
+    case Intrinsic::kvx_faddwq:
+    case Intrinsic::kvx_fsbfwp:
+    case Intrinsic::kvx_fsbfwq:
+    case Intrinsic::kvx_fadddp:
+    case Intrinsic::kvx_fsbfdp:
+    case Intrinsic::kvx_fmulwc:
+    case Intrinsic::kvx_fmulwcp:
+    case Intrinsic::kvx_ffmawc:
+    case Intrinsic::kvx_ffmawcp:
+    case Intrinsic::kvx_ffmswc:
+    case Intrinsic::kvx_ffmswcp:
+      Args.push_back(ConstantInt::get(CGF.IntTy, HasConjugateMod ? 1 : 0));
+      break;
+    case Intrinsic::kvx_fmuldc:
+      if (HasConjugateMod)
         IntrinsicID = Intrinsic::kvx_fmulcdc;
-        break;
-      case Intrinsic::kvx_ffmawc:
-        IntrinsicID = Intrinsic::kvx_ffmacwc;
-        break;
-      case Intrinsic::kvx_ffmawcp:
-        IntrinsicID = Intrinsic::kvx_ffmacwcp;
-        break;
-      case Intrinsic::kvx_ffmadc:
+      break;
+    case Intrinsic::kvx_ffmadc:
+      if (HasConjugateMod)
         IntrinsicID = Intrinsic::kvx_ffmacdc;
-        break;
-      case Intrinsic::kvx_ffmswc:
-        IntrinsicID = Intrinsic::kvx_ffmscwc;
-        break;
-      case Intrinsic::kvx_ffmswcp:
-        IntrinsicID = Intrinsic::kvx_ffmscwcp;
-        break;
-      case Intrinsic::kvx_ffmsdc:
+      break;
+    case Intrinsic::kvx_ffmsdc:
+      if (HasConjugateMod)
         IntrinsicID = Intrinsic::kvx_ffmscdc;
-        break;
-      default:
+      break;
+    default:
+      if (HasConjugateMod)
         CGF.CGM.Error(E->getArg(1)->getBeginLoc(),
                       "conjugate modifier not supported for this builtin");
-      }
     }
 
     int RoundingModifier = KVX_getRoundingModifier(
@@ -20127,42 +20118,44 @@ static Value *KVX_emitVectorBuiltin(CodeGenFunction &CGF, const CallExpr *E,
   for (unsigned Op = 0; Op < NumOperands; Op++)
     Operands.push_back(CGF.EmitScalarExpr(E->getArg(Op)));
 
+  bool HasConjugateMod = false;
+
   Value *ModifierArg = NULL;
   Value *SilentArg = NULL;
+  Value *ConjugateArg = NULL;
 
   if (Rounding) {
 
-    if (KVX_hasConjugateModifier(
-            CGF.getContext(), E->getArg(NumOperands)->IgnoreParenImpCasts())) {
-      switch (IntrinsicID) {
-      case Intrinsic::kvx_fadddp:
-        IntrinsicID = Intrinsic::kvx_faddcdc;
-        break;
-      case Intrinsic::kvx_fsbfdp:
-        IntrinsicID = Intrinsic::kvx_fsbfcdc;
-        break;
-      case Intrinsic::kvx_fmulwcp:
-        IntrinsicID = Intrinsic::kvx_fmulcwcp;
-        break;
-      case Intrinsic::kvx_fmuldc:
+    HasConjugateMod = KVX_hasConjugateModifier(
+        CGF.getContext(), E->getArg(NumOperands)->IgnoreParenImpCasts());
+
+    // Determine if the intrinsic has a conjugate modifier to set.
+    switch (IntrinsicID) {
+    case Intrinsic::kvx_faddwq:
+    case Intrinsic::kvx_fsbfwq:
+    case Intrinsic::kvx_fadddp:
+    case Intrinsic::kvx_fsbfdp:
+    case Intrinsic::kvx_fmulwcp:
+    case Intrinsic::kvx_ffmawcp:
+    case Intrinsic::kvx_ffmswcp:
+      ConjugateArg = ConstantInt::get(CGF.IntTy, HasConjugateMod ? 1 : 0);
+      break;
+    case Intrinsic::kvx_fmuldc:
+      if (HasConjugateMod)
         IntrinsicID = Intrinsic::kvx_fmulcdc;
-        break;
-      case Intrinsic::kvx_ffmadc:
+      break;
+    case Intrinsic::kvx_ffmadc:
+      if (HasConjugateMod)
         IntrinsicID = Intrinsic::kvx_ffmacdc;
-        break;
-      case Intrinsic::kvx_ffmsdc:
+      break;
+    case Intrinsic::kvx_ffmsdc:
+      if (HasConjugateMod)
         IntrinsicID = Intrinsic::kvx_ffmscdc;
-        break;
-      case Intrinsic::kvx_ffmawcp:
-        IntrinsicID = Intrinsic::kvx_ffmacwcp;
-        break;
-      case Intrinsic::kvx_ffmswcp:
-        IntrinsicID = Intrinsic::kvx_ffmscwcp;
-        break;
-      default:
+      break;
+    default:
+      if (HasConjugateMod)
         CGF.CGM.Error(E->getArg(NumOperands)->getBeginLoc(),
                       "conjugate modifier not supported for this builtin");
-      }
     }
 
     int RoundingModifier = KVX_getRoundingModifier(
@@ -20195,6 +20188,8 @@ static Value *KVX_emitVectorBuiltin(CodeGenFunction &CGF, const CallExpr *E,
         SV.push_back(CGF.Builder.CreateShuffleVector(
             Operands[Op], Undef, makeArrayRef(Ind, SliceSize)));
     }
+    if (ConjugateArg)
+      SV.push_back(ConjugateArg);
     if (ModifierArg)
       SV.push_back(ModifierArg);
     if (SilentArg)

@@ -1289,14 +1289,8 @@ multiclass MC_29<string OpcStr> {
 }
 
 // multiclass MC_2A is used by:
-//   defm FADDCWC
-//   defm FADDWP
 //   defm FDOT2W
-//   defm FMULCWC
-//   defm FMULWC
 //   defm FMULWP
-//   defm FSBFCWC
-//   defm FSBFWP
 multiclass MC_2A<string OpcStr> {
   def ri : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARY32X2
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary32x2:$a3),
@@ -1306,6 +1300,23 @@ multiclass MC_2A<string OpcStr> {
   def rr : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32X2
     <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
+     [/* no straightforward pattern */],
+     MAU>;
+}
+
+// multiclass MC_2A is used by:
+//   defm FADDWP
+//   defm FMULWC
+//   defm FSBFWP
+multiclass MC_2AM<string OpcStr> {
+  def ri : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARY32X2
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary32x2:$a3, ConjugateMod:$a4),
+     !strconcat (OpcStr, "$a4 $a1 = $a2, $a3"),
+     [/* no straightforward pattern */],
+     MAU_Y>;
+  def rr : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32X2
+    <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, ConjugateMod:$a6, RoundingMod:$a1, SilentMod:$a2),
+     !strconcat (OpcStr, "$a6$a1$a2 $a3 = $a4, $a5"),
      [/* no straightforward pattern */],
      MAU>;
 }
@@ -2993,70 +3004,44 @@ def FMULWQ : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE
    "fmulwq$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */]>;
 
-defm FMULWC : MC_2A<"fmulwc">;
+defm FMULWC : MC_2AM<"fmulwc">;
 
 defm FMULWDC : MC_2C<"fmulwdc">;
-
-defm FMULCWC : MC_2A<"fmulcwc">;
 
 defm FMULCWDC : MC_2C<"fmulcwdc">;
 
 let isAdd = 1 in
 defm FADDD : MC_29<"faddd">;
 
-defm FADDWP : MC_2A<"faddwp">;
+defm FADDWP : MC_2AM<"faddwp">;
 
 let isAdd = 1 in
 defm FADDHQ : MC_2B<"faddhq">;
 
 def FADDDP : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE
-  <(outs PairedReg:$a3), (ins PairedReg:$a4, PairedReg:$a5, RoundingMod:$a1, SilentMod:$a2),
-   "fadddp$a1$a2 $a3 = $a4, $a5",
+  <(outs PairedReg:$a3), (ins PairedReg:$a4, PairedReg:$a5, ConjugateMod:$a6, RoundingMod:$a1, SilentMod:$a2),
+   "fadddp$a6$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */]>;
 
 def FADDWQ : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE
-  <(outs PairedReg:$a3), (ins PairedReg:$a4, PairedReg:$a5, RoundingMod:$a1, SilentMod:$a2),
-   "faddwq$a1$a2 $a3 = $a4, $a5",
-   [/* no straightforward pattern */]>;
-
-defm FADDCWC : MC_2A<"faddcwc">;
-
-def FADDCDC : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE
-  <(outs PairedReg:$a3), (ins PairedReg:$a4, PairedReg:$a5, RoundingMod:$a1, SilentMod:$a2),
-   "faddcdc$a1$a2 $a3 = $a4, $a5",
-   [/* no straightforward pattern */]>;
-
-def FADDCWCP : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE
-  <(outs PairedReg:$a3), (ins PairedReg:$a4, PairedReg:$a5, RoundingMod:$a1, SilentMod:$a2),
-   "faddcwcp$a1$a2 $a3 = $a4, $a5",
+  <(outs PairedReg:$a3), (ins PairedReg:$a4, PairedReg:$a5, ConjugateMod:$a6, RoundingMod:$a1, SilentMod:$a2),
+   "faddwq$a6$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */]>;
 
 defm FSBFD : MC_29<"fsbfd">;
 
-defm FSBFWP : MC_2A<"fsbfwp">;
+defm FSBFWP : MC_2AM<"fsbfwp">;
 
 defm FSBFHQ : MC_2B<"fsbfhq">;
 
 def FSBFDP : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE
-  <(outs PairedReg:$a3), (ins PairedReg:$a4, PairedReg:$a5, RoundingMod:$a1, SilentMod:$a2),
-   "fsbfdp$a1$a2 $a3 = $a4, $a5",
+  <(outs PairedReg:$a3), (ins PairedReg:$a4, PairedReg:$a5, ConjugateMod:$a6, RoundingMod:$a1, SilentMod:$a2),
+   "fsbfdp$a6$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */]>;
 
 def FSBFWQ : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE
-  <(outs PairedReg:$a3), (ins PairedReg:$a4, PairedReg:$a5, RoundingMod:$a1, SilentMod:$a2),
-   "fsbfwq$a1$a2 $a3 = $a4, $a5",
-   [/* no straightforward pattern */]>;
-
-defm FSBFCWC : MC_2A<"fsbfcwc">;
-
-def FSBFCDC : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE
-  <(outs PairedReg:$a3), (ins PairedReg:$a4, PairedReg:$a5, RoundingMod:$a1, SilentMod:$a2),
-   "fsbfcdc$a1$a2 $a3 = $a4, $a5",
-   [/* no straightforward pattern */]>;
-
-def FSBFCWCP : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE
-  <(outs PairedReg:$a3), (ins PairedReg:$a4, PairedReg:$a5, RoundingMod:$a1, SilentMod:$a2),
-   "fsbfcwcp$a1$a2 $a3 = $a4, $a5",
+  <(outs PairedReg:$a3), (ins PairedReg:$a4, PairedReg:$a5, ConjugateMod:$a6, RoundingMod:$a1, SilentMod:$a2),
+   "fsbfwq$a6$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */]>;
 
 defm FFMAHW : MC_2E_2<"ffmahw">;

@@ -1032,15 +1032,15 @@ class ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY64
   <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
   : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
-// 9 insn(s):
-// FFMAWP, FFMSWP, FMULWP, FMULWC, FMULCWC, FADDWP, FADDCWC, FSBFWP, FSBFCWC
+// 6 insn(s):
+// FFMAWP, FFMSWP, FMULWP, FMULWC, FADDWP, FSBFWP
 let Size = 12, Predicates = [HasFPIMM] in
 class REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARY32X2
   <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
   : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
-// 9 insn(s):
-// FFMAWP, FFMSWP, FMULWP, FMULWC, FMULCWC, FADDWP, FADDCWC, FSBFWP, FSBFCWC
+// 6 insn(s):
+// FFMAWP, FFMSWP, FMULWP, FMULWC, FADDWP, FSBFWP
 let Size = 4 in
 class ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32X2
   <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
@@ -1088,9 +1088,8 @@ class ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE_BINARY16X4
   <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
   : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
-// 11 insn(s):
-// FMULWQ, FADDDP, FADDWQ, FADDCDC, FADDCWCP, FSBFDP, FSBFWQ, FSBFCDC,
-// FSBFCWCP, FDOT2WZP, FDOT2WDP
+// 7 insn(s):
+// FMULWQ, FADDDP, FADDWQ, FSBFDP, FSBFWQ, FDOT2WZP, FDOT2WDP
 let Size = 4 in
 class ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>

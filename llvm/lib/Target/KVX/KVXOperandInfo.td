@@ -102,6 +102,10 @@ def Splat32Mod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 1);}]
   let PrintMethod = "printSplat32Mod";
 }
 
+def ConjugateMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 1);}]> {
+  let PrintMethod = "printConjugateMod";
+}
+
 def Binary16 : Operand<f16>, FPImmLeaf<f16, [{
       return isUInt<16>(Imm.bitcastToAPInt().getZExtValue());
     }]> {
