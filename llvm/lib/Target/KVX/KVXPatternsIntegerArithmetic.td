@@ -73,7 +73,7 @@ def : Pat<(smax i32:$v, (i32 (ineg i32:$v))), (ABSW SingleReg:$v)>;
 // TODO: ri variants
 def : Pat<(i64(or(and (sub i64:$r0, (and i64:$r1, (i64 0xffffffff00000000))), (i64 0xffffffff00000000) ),
               (and (add i64:$r0, i64:$r1), (i64 0xffffffff)))),
-          (ADDCWCrr SingleReg:$r1, SingleReg:$r0)>;
+          (ADDCWCrr SingleReg:$r1, SingleReg:$r0)>, Requires<[IsV1]>;
 
 // ADDD
 def : Pat<(add i64:$rs1, i64:$rs2), (ADDDrr SingleReg:$rs1, SingleReg:$rs2)>;
@@ -515,20 +515,20 @@ defm : ZEFPat<(and (i32 (setne i64:$v1, (i64 0))), (i32 (setne i64:$v2, (i64 0))
 
 multiclass PAT_LNAND_VEC<ValueType vt, PatFrags zext, PatFrag splat, KVX_INSTRUCTION LNAND, KVX_INSTRUCTION NEG> {
 def : Pat<(vt (zext (seteq vt:$rhs, immAllZerosV), (seteq vt:$lhs, immAllZerosV))),
-          (vt (LNAND SingleReg:$rhs, SingleReg:$lhs))>;
+          (vt (LNAND SingleReg:$rhs, SingleReg:$lhs))>, Requires<[IsV1]>;
 
 def : Pat<(vt (sra (shl ( or (seteq vt:$rhs, immAllZerosV), (seteq vt:$lhs, immAllZerosV)), (vt splat)), (vt splat))),
-          (vt (NEG (LNAND SingleReg:$rhs, SingleReg:$lhs)))>;
+          (vt (NEG (LNAND SingleReg:$rhs, SingleReg:$lhs)))>, Requires<[IsV1]>;
 }
 
 // RI variants don't seem usuable, as they turn into vselects.
 multiclass VECLANDPAT<ValueType ty, KVX_INSTRUCTION RR, KVX_INSTRUCTION NEG, SDNode SplatVal> {
 def : Pat<(ty(and (setne ty:$v0, immAllZerosV), (setne ty:$v1, immAllZerosV))),
-            (RR SingleReg:$v0, SingleReg:$v1)>;
+            (RR SingleReg:$v0, SingleReg:$v1)>, Requires<[IsV1]>;
 
 def : Pat<(ty(sra( shl
                   ( and (setne ty:$v0, immAllZerosV), (setne ty:$v1, immAllZerosV)),
-            SplatVal),SplatVal)), (NEG(RR SingleReg:$v0, SingleReg:$v1))>;
+            SplatVal),SplatVal)), (NEG(RR SingleReg:$v0, SingleReg:$v1))>, Requires<[IsV1]>;
 }
 
 // LANDHQ
@@ -549,13 +549,13 @@ defm : ZEFPat<(or (i32 (seteq i64:$v1, (i64 0))), (i32 (seteq i64:$v2, (i64 0)))
 
 multiclass PAT_LOR_VEC<ValueType vt, PatFrag and_splat, PatFrag splat, KVX_INSTRUCTION LOR, KVX_INSTRUCTION NEG, SDNode cmp> {
 def : Pat<(vt (and (cmp (or vt:$lhs, vt:$rhs), immAllZerosV), and_splat)),
-          (vt (LOR SingleReg:$rhs, SingleReg:$lhs))>;
+          (vt (LOR SingleReg:$rhs, SingleReg:$lhs))>, Requires<[IsV1]>;
 
 def : Pat<(vt (cmp (or vt:$lhs, vt:$rhs), immAllZerosV)),
-          (vt (LOR SingleReg:$rhs, SingleReg:$lhs))>;
+          (vt (LOR SingleReg:$rhs, SingleReg:$lhs))>, Requires<[IsV1]>;
 
 def : Pat<(vt (sra (shl ( cmp (or vt:$lhs, vt:$rhs), immAllZerosV), (vt splat)), (vt splat))),
-          (vt (NEG (LOR SingleReg:$rhs, SingleReg:$lhs)))>;
+          (vt (NEG (LOR SingleReg:$rhs, SingleReg:$lhs)))>, Requires<[IsV1]>;
 }
 
 // LNANDHQ
@@ -1073,7 +1073,7 @@ defm : WPShiftScalarOps<rotr, RORWPSri, RORWPSrr, RORWri, RORWrr>;
 def : Pat<(v2i32(or (shl v2i32:$r0, (v2i32 (v2_splat (i32 (sub (i32 32), i32:$r1)))) ), (srl v2i32:$r0, (v2i32 (v2_splat i32:$r1))))),
           (RORWPSrr SingleReg:$r0, SingleReg:$r1)>;
 
-let Predicates = [HasFPIMM] in {
+let Predicates = [IsV1] in {
 // SATD
 multiclass SATDW_PAT<int min_val, int max_val, SDNode num_bits> {
 def : Pat<(i64(smin (smax i64:$v, (i64 min_val)), (i64 max_val))), (SATDri SingleReg:$v, num_bits)>;
@@ -1136,7 +1136,7 @@ def : Pat<(i64( smax (smin i64:$v, 2147483647), -2147483648 )), (SATDW SingleReg
 // TODO: ri variants
 def : Pat<(i64(or(and (add i64:$r1, (and i64:$r0, (i64 0xffffffff00000000))), (i64 0xffffffff00000000) ),
               (and (sub i64:$r0, i64:$r1), (i64 0xffffffff)))),
-          (SBFCWCrr SingleReg:$r1, SingleReg:$r0)>;
+          (SBFCWCrr SingleReg:$r1, SingleReg:$r0)>, Requires<[IsV1]>;
 
 // SBFD
 def : Pat<(sub i64:$rs1, i64:$rs2), (SBFDrr SingleReg:$rs2, SingleReg:$rs1)>;
