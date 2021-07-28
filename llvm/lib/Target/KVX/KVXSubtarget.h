@@ -29,7 +29,7 @@ namespace llvm {
 class KVXSubtarget : public KVXGenSubtargetInfo {
   virtual void anchor();
 
-  bool HasFPIMM = false;
+  bool IsV1 = false;
 
   CodeGenOpt::Level OptLevel;
   KVXFrameLowering FrameLowering;
@@ -72,7 +72,7 @@ public:
   bool enableMachineSchedDefaultSched() const override;
   bool enablePostRAScheduler() const override;
   bool enableMachineScheduler() const override;
-  bool hasFPIMM() const;
+  bool isV1() const;
   bool useAA() const override;
 };
 } // namespace llvm

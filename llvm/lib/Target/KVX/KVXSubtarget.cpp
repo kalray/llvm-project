@@ -56,4 +56,4 @@ bool KVXSubtarget::enableSubRegLiveness() const {
   return OptLevel > CodeGenOpt::Less;
 }
 bool KVXSubtarget::useAA() const { return (OptLevel != CodeGenOpt::None); }
-bool KVXSubtarget::hasFPIMM() const { return HasFPIMM; }
+bool KVXSubtarget::isV1() const { return IsV1; }
