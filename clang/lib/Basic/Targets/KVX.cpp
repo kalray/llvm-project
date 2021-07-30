@@ -281,14 +281,17 @@ void KVXTargetInfo::getTargetDefines(const LangOptions &Opts,
   Builder.defineMacro("__ELF__", "1");
   Builder.defineMacro("__KVX__", "3");
   Builder.defineMacro("__kvx__", "3");
+  Builder.defineMacro("__KV3_64__", "1");
 
   if (CPU == "kv3-2") {
     Builder.defineMacro("__KV3__", "2");
     Builder.defineMacro("__kv3__", "2");
+    Builder.defineMacro("__kv3_2__", "1");
     Builder.defineMacro("__kvxarch_kv3_2", "1");
   } else { // kv3-1
     Builder.defineMacro("__KV3__", "1");
     Builder.defineMacro("__kv3__", "1");
+    Builder.defineMacro("__kv3_1__", "1");
     Builder.defineMacro("__kvxarch_kv3_1", "1");
   }
 
