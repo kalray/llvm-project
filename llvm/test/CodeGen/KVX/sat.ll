@@ -88,14 +88,16 @@ define i64 @sath2(i64 %0) {
   ret i64 %5
 }
 
-define i32 @sath3(i32 %0) {
-; CHECK-LABEL: sath3:
+define i32 @not_sath3(i32 %0) {
+; CHECK-LABEL: not_sath3:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    satdh $r0 = $r0
+; CHECK-NEXT:    maxw $r0 = $r0, 0xffff8000
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    minw $r0 = $r0, 0x7fff
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ;
-; V2-LABEL: sath3:
+; V2-LABEL: not_sath3:
 ; V2:       # %bb.0:
 ; V2-NEXT:    maxw $r0 = $r0, 0xffff8000
 ; V2-NEXT:    ;;
@@ -109,14 +111,16 @@ define i32 @sath3(i32 %0) {
   ret i32 %5
 }
 
-define i32 @sath4(i32 %0) {
-; CHECK-LABEL: sath4:
+define i32 @not_sath4(i32 %0) {
+; CHECK-LABEL: not_sath4:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    satdh $r0 = $r0
+; CHECK-NEXT:    minw $r0 = $r0, 0x7fff
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    maxw $r0 = $r0, 0xffff8000
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ;
-; V2-LABEL: sath4:
+; V2-LABEL: not_sath4:
 ; V2:       # %bb.0:
 ; V2-NEXT:    minw $r0 = $r0, 0x7fff
 ; V2-NEXT:    ;;
