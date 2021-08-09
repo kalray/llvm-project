@@ -287,6 +287,8 @@ define half @test_select_cc(half %a, half %b, half %c, half %d) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.une $r2 = $r2, $r3
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r2 = $r2, 1
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.wnez $r2 ? $r1 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r1
@@ -301,6 +303,8 @@ define float @test_select_cc_f32_f16(float %a, float %b, half %c, half %d) #0 {
 ; CHECK-LABEL: test_select_cc_f32_f16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.une $r2 = $r2, $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r2 = $r2, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.wnez $r2 ? $r1 = $r0
 ; CHECK-NEXT:    ;;
@@ -331,6 +335,8 @@ define i1 @test_fcmp_une(half %a, half %b) #0 {
 ; CHECK-LABEL: test_fcmp_une:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.une $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp une half %a, %b
@@ -341,6 +347,8 @@ define i1 @test_fcmp_ueq(half %a, half %b) #0 {
 ; CHECK-LABEL: test_fcmp_ueq:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.ueq $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp ueq half %a, %b
@@ -351,6 +359,8 @@ define i1 @test_fcmp_ugt(half %a, half %b) #0 {
 ; CHECK-LABEL: test_fcmp_ugt:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.ult $r0 = $r1, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp ugt half %a, %b
@@ -361,6 +371,8 @@ define i1 @test_fcmp_uge(half %a, half %b) #0 {
 ; CHECK-LABEL: test_fcmp_uge:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.uge $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp uge half %a, %b
@@ -371,6 +383,8 @@ define i1 @test_fcmp_ult(half %a, half %b) #0 {
 ; CHECK-LABEL: test_fcmp_ult:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.ult $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp ult half %a, %b
@@ -381,6 +395,8 @@ define i1 @test_fcmp_ule(half %a, half %b) #0 {
 ; CHECK-LABEL: test_fcmp_ule:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.uge $r0 = $r1, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp ule half %a, %b
@@ -395,6 +411,8 @@ define i1 @test_fcmp_uno(half %a, half %b) #0 {
 ; CHECK-NEXT:    fcompnhq.uge $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    andw $r0 = $r0, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp uno half %a, %b
@@ -405,6 +423,8 @@ define i1 @test_fcmp_one(half %a, half %b) #0 {
 ; CHECK-LABEL: test_fcmp_one:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.one $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp one half %a, %b
@@ -415,6 +435,8 @@ define i1 @test_fcmp_oeq(half %a, half %b) #0 {
 ; CHECK-LABEL: test_fcmp_oeq:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.oeq $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp oeq half %a, %b
@@ -425,6 +447,8 @@ define i1 @test_fcmp_ogt(half %a, half %b) #0 {
 ; CHECK-LABEL: test_fcmp_ogt:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.olt $r0 = $r1, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp ogt half %a, %b
@@ -435,6 +459,8 @@ define i1 @test_fcmp_oge(half %a, half %b) #0 {
 ; CHECK-LABEL: test_fcmp_oge:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.oge $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp oge half %a, %b
@@ -446,6 +472,8 @@ define i1 @test_fcmp_olt(half %a, half %b) #0 {
 ; CHECK-LABEL: test_fcmp_olt:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.olt $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp olt half %a, %b
@@ -457,6 +485,8 @@ define i1 @test_fcmp_ole(half %a, half %b) #0 {
 ; CHECK-LABEL: test_fcmp_ole:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.oge $r0 = $r1, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp ole half %a, %b
@@ -470,6 +500,8 @@ define i1 @test_fcmp_ord(half %a, half %b) #0 {
 ; CHECK-NEXT:    fcompnhq.oge $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    orw $r0 = $r0, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp ord half %a, %b
@@ -480,6 +512,8 @@ define void @test_br_cc(half %a, half %b, i32* %p1, i32* %p2) #0 {
 ; CHECK-LABEL: test_br_cc:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.olt $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.wnez $r0 ? .LBB35_2
 ; CHECK-NEXT:    ;;
@@ -526,6 +560,8 @@ define half @test_phi(half* %p1) #0 {
 ; CHECK-NEXT:    lhz $r20 = 0[$r18]
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    call test_dummy
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.wnez $r0 ? .LBB36_1
 ; CHECK-NEXT:    ;;

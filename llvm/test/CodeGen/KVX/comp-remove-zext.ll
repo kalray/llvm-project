@@ -405,7 +405,7 @@ define i64 @foo_i64_f16_eq(half %a, half %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.une $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 1
+; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

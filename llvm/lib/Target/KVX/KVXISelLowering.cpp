@@ -64,6 +64,10 @@ static bool CC_SRET_KVX(unsigned ValNo, MVT ValVT, MVT LocVT,
 KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
                                      const KVXSubtarget &STI)
     : TargetLowering(TM), Subtarget(STI) {
+  setBooleanContents(ZeroOrOneBooleanContent);
+
+  if (!STI.isV1())
+    setBooleanVectorContents(ZeroOrNegativeOneBooleanContent);
 
   (void)Subtarget;
   // set up the register classes

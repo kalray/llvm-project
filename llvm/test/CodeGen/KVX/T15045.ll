@@ -70,7 +70,9 @@ define void @_Z1av() {
 ; CHECK-NEXT:  .LBB0_16:
 ; CHECK-NEXT:    compd.eq $r1 = $r1, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.odd $r1 ? .LBB0_10
+; CHECK-NEXT:    compw.ne $r1 = $r1, 1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cb.even $r1 ? .LBB0_10
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r1 = 0[$r0]
 ; CHECK-NEXT:    ;;

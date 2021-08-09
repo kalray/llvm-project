@@ -62,7 +62,11 @@ define <4 x half> @f_Select32PAT(<4 x half> %x, <4 x half> %y){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fcompnhq.olt $r10 = $r6, $r7
 ; CHECK-NEXT:    fcompnhq.olt $r11 = $r8, $r9
+; CHECK-NEXT:    andw $r4 = $r4, 1
+; CHECK-NEXT:    andw $r5 = $r5, 1
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andw $r10 = $r10, 1
+; CHECK-NEXT:    andw $r11 = $r11, 1
 ; CHECK-NEXT:    cmoved.wnez $r4 ? $r0 = $r1
 ; CHECK-NEXT:    cmoved.wnez $r5 ? $r2 = $r3
 ; CHECK-NEXT:    ;;
@@ -140,10 +144,11 @@ entry:
 define void @test_select_vector_reg(<256 x i1> * %V, i1 %cc){
 ; CHECK-LABEL: test_select_vector_reg:
 ; CHECK:       # %bb.0:
+; CHECK-NEXT:    andw $r1 = $r1, 1
 ; CHECK-NEXT:    lv $a1 = 0[$r0]
-; CHECK-NEXT:    sllw $r1 = $r1, 6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a0 = 0[$r0]
+; CHECK-NEXT:    sllw $r1 = $r1, 6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    alignv $a0 = $a0, $a1, $r1
 ; CHECK-NEXT:    ;;
@@ -160,14 +165,16 @@ define void @test_select_vector_reg(<256 x i1> * %V, i1 %cc){
 define void @test_select_wide_reg(<512 x i1> * %V, i1 %cc){
 ; CHECK-LABEL: test_select_wide_reg:
 ; CHECK:       # %bb.0:
+; CHECK-NEXT:    andw $r1 = $r1, 1
 ; CHECK-NEXT:    lv $a0 = 32[$r0]
-; CHECK-NEXT:    sllw $r1 = $r1, 6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a1 = 0[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a3 = 32[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a2 = 0[$r0]
+; CHECK-NEXT:    sllw $r1 = $r1, 6
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    alignv $a3 = $a3, $a0, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    alignv $a0 = $a2, $a1, $r1
@@ -190,14 +197,15 @@ define void @test_select_wide_reg(<512 x i1> * %V, i1 %cc){
 define void @test_select_matrix_reg(<1024 x i1> * %V, i1 %cc){
 ; CHECK-LABEL: test_select_matrix_reg:
 ; CHECK:       # %bb.0:
+; CHECK-NEXT:    andw $r1 = $r1, 1
 ; CHECK-NEXT:    lv $a0 = 96[$r0]
-; CHECK-NEXT:    sllw $r1 = $r1, 6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a1 = 64[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a2 = 32[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a3 = 0[$r0]
+; CHECK-NEXT:    sllw $r1 = $r1, 6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a7 = 96[$r0]
 ; CHECK-NEXT:    ;;
