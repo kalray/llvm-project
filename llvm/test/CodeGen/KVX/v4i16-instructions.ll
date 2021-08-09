@@ -1217,10 +1217,6 @@ define <4 x i16> @lnandn(<4 x i16> %0, <4 x i16> %1) {
 ; V2-NEXT:    compnhq.eq $r1 = $r1, $r2
 ; V2-NEXT:    ;;
 ; V2-NEXT:    ord $r0 = $r1, $r0
-; V2-NEXT:    ;;
-; V2-NEXT:    sllhqs $r0 = $r0, 15
-; V2-NEXT:    ;;
-; V2-NEXT:    srahqs $r0 = $r0, 15
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %3 = icmp eq <4 x i16> %0, zeroinitializer

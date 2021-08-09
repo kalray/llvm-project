@@ -1259,10 +1259,6 @@ define <2 x i32> @lnandn(<2 x i32> %0, <2 x i32> %1) {
 ; V2-NEXT:    compnwp.eq $r1 = $r1, $r2
 ; V2-NEXT:    ;;
 ; V2-NEXT:    ord $r0 = $r1, $r0
-; V2-NEXT:    ;;
-; V2-NEXT:    sllwps $r0 = $r0, 31
-; V2-NEXT:    ;;
-; V2-NEXT:    srawps $r0 = $r0, 31
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %3 = icmp eq <2 x i32> %0, zeroinitializer

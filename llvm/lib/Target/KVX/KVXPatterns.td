@@ -106,7 +106,16 @@ def SPCHECKp : KVX_PSEUDO<(outs SingleReg:$output), (ins SingleReg:$newsp, Singl
 // Remove zero/any extend from i32 to i64 (instructions embed it)
 multiclass ZEFPat<dag pattern, dag result> {
   def : Pat<(i32 pattern), result>;
-  def : Pat<(i64 (zext pattern)), result>;
+  def : Pat<(i64 (zanyext pattern)), result>;
+}
+
+//  match zanyext as well (and pattern, 1) and a combination of both
+multiclass ZAext_And1_Pat<dag pattern, dag result> {
+  def : Pat<(i32 pattern), result>;
+  def : Pat<(i32 (and (i32 pattern), 1)), result>;
+  def : Pat<(i64 (zanyext pattern)), result>;
+  def : Pat<(i64 (zanyext (i32 (and (i32 pattern), 1)))), result>;
+  def : Pat<(i64 (and (zanyext (i32 pattern)), 1)), result>;
 }
 
 // FIXME: clean code below

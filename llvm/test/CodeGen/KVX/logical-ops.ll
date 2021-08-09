@@ -24,10 +24,6 @@ define <2 x i16> @land2h(<2 x i16> %a, <2 x i16> %b) {
 ; V2-NEXT:    compnhq.ne $r1 = $r1, $r2
 ; V2-NEXT:    ;;
 ; V2-NEXT:    andw $r0 = $r1, $r0
-; V2-NEXT:    ;;
-; V2-NEXT:    sllhqs $r0 = $r0, 15
-; V2-NEXT:    ;;
-; V2-NEXT:    srahqs $r0 = $r0, 15
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
 entry:
@@ -55,10 +51,6 @@ define <2 x i16> @uland2h(<2 x i16> %a, <2 x i16> %b) {
 ; V2-NEXT:    compnhq.ne $r1 = $r1, $r2
 ; V2-NEXT:    ;;
 ; V2-NEXT:    andw $r0 = $r1, $r0
-; V2-NEXT:    ;;
-; V2-NEXT:    sllhqs $r0 = $r0, 15
-; V2-NEXT:    ;;
-; V2-NEXT:    srahqs $r0 = $r0, 15
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
 entry:
@@ -86,10 +78,6 @@ define <3 x i16> @land3h(<3 x i16> %a, <3 x i16> %b) {
 ; V2-NEXT:    compnhq.ne $r1 = $r1, $r2
 ; V2-NEXT:    ;;
 ; V2-NEXT:    andd $r0 = $r1, $r0
-; V2-NEXT:    ;;
-; V2-NEXT:    sllhqs $r0 = $r0, 15
-; V2-NEXT:    ;;
-; V2-NEXT:    srahqs $r0 = $r0, 15
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
 entry:
@@ -117,10 +105,6 @@ define <3 x i16> @uland3h(<3 x i16> %a, <3 x i16> %b) {
 ; V2-NEXT:    compnhq.ne $r1 = $r1, $r2
 ; V2-NEXT:    ;;
 ; V2-NEXT:    andd $r0 = $r1, $r0
-; V2-NEXT:    ;;
-; V2-NEXT:    sllhqs $r0 = $r0, 15
-; V2-NEXT:    ;;
-; V2-NEXT:    srahqs $r0 = $r0, 15
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
 entry:
@@ -148,10 +132,6 @@ define <4 x i16> @land4h(<4 x i16> %a, <4 x i16> %b) {
 ; V2-NEXT:    compnhq.ne $r1 = $r1, $r2
 ; V2-NEXT:    ;;
 ; V2-NEXT:    andd $r0 = $r1, $r0
-; V2-NEXT:    ;;
-; V2-NEXT:    sllhqs $r0 = $r0, 15
-; V2-NEXT:    ;;
-; V2-NEXT:    srahqs $r0 = $r0, 15
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
 entry:
@@ -179,10 +159,6 @@ define <4 x i16> @uland4h(<4 x i16> %a, <4 x i16> %b) {
 ; V2-NEXT:    compnhq.ne $r1 = $r1, $r2
 ; V2-NEXT:    ;;
 ; V2-NEXT:    andd $r0 = $r1, $r0
-; V2-NEXT:    ;;
-; V2-NEXT:    sllhqs $r0 = $r0, 15
-; V2-NEXT:    ;;
-; V2-NEXT:    srahqs $r0 = $r0, 15
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
 entry:
@@ -210,10 +186,6 @@ define <2 x i32> @landw2w(<2 x i32> %a, <2 x i32> %b) {
 ; V2-NEXT:    compnwp.ne $r1 = $r1, $r2
 ; V2-NEXT:    ;;
 ; V2-NEXT:    andd $r0 = $r1, $r0
-; V2-NEXT:    ;;
-; V2-NEXT:    sllwps $r0 = $r0, 31
-; V2-NEXT:    ;;
-; V2-NEXT:    srawps $r0 = $r0, 31
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
 entry:
@@ -241,10 +213,6 @@ define <2 x i32> @ulandw2w(<2 x i32> %a, <2 x i32> %b) {
 ; V2-NEXT:    compnwp.ne $r1 = $r1, $r2
 ; V2-NEXT:    ;;
 ; V2-NEXT:    andd $r0 = $r1, $r0
-; V2-NEXT:    ;;
-; V2-NEXT:    sllwps $r0 = $r0, 31
-; V2-NEXT:    ;;
-; V2-NEXT:    srawps $r0 = $r0, 31
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
 entry:

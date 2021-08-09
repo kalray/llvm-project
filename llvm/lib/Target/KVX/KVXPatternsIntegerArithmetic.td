@@ -1127,7 +1127,7 @@ def : Pat<(i64( smax (smin i64:$v, 32767), -32768 )), (SATDH SingleReg:$v)>;
 // SATDW
 def : Pat<(i64( smin (smax i64:$v, -2147483648), 2147483647 )), (SATDW SingleReg:$v)>;
 def : Pat<(i64( smax (smin i64:$v, 2147483647), -2147483648 )), (SATDW SingleReg:$v)>;
-} // let Requires<[hasFPIMM]>
+} // let Requires<[IsV1]>
 
 // SBFCWC
 // TODO: ri variants
