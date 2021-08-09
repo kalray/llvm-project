@@ -10,7 +10,7 @@ define i32 @acswapw(i32* %p, i32 %a, i32 %b){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    acswapw 0[$r0] = $r2r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r3
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -29,7 +29,7 @@ define i64 @acswapd(i32* %p, i64 %a, i64 %b){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    acswapd 0[$r0] = $r2r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r3
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
