@@ -1582,6 +1582,81 @@ def: Pat<(v4i64 (bswap v4i64:$v)), (v4i64 (REG_SEQUENCE QuadReg,
                                       (SBMM8ri64 (i64(EXTRACT_SUBREG QuadReg:$v, sub_s2)), 0x0102040810204080), sub_s2,
                                       (SBMM8ri64 (i64(EXTRACT_SUBREG QuadReg:$v, sub_s3)), 0x0102040810204080), sub_s3))>;
 
+multiclass CMOVE_ENTIRE_VEC_IMM <ValueType vt, KVX_INSTRUCTION RI, SDNodeXForm build> {
+def : Pat<(vt (select i32:$cc, vt:$t, is_imm_vec:$f)),
+            (vt (RI SingleReg:$cc, SingleReg:$t, (build $f), scalarcond_even))>;
+def : Pat<(vt (select i32:$cc, is_imm_vec:$t, vt:$f)),
+            (vt (RI SingleReg:$cc, SingleReg:$f, (build $t), scalarcond_odd))>;
+def : Pat<(vt (select i32:$cc, vt:$t, is_imm_vec_ri37:$f)),
+            (vt (CMOVEDri37 SingleReg:$cc, SingleReg:$t, (build $f), scalarcond_even))>;
+def : Pat<(vt (select i32:$cc, is_imm_vec_ri37:$t, vt:$f)),
+            (vt (CMOVEDri37 SingleReg:$cc, SingleReg:$f, (build $t), scalarcond_odd))>;
+}
+
+// TODO: Test if using the pseudo select instructions to vectors up to 64 bits is possible
+// as they are optimized.
+foreach vt = [ v2i8, v2i16, v4i8 ] in
+defm : CMOVE_ENTIRE_VEC_IMM<vt, CMOVEDri37, build_imm_vec>;
+defm : CMOVE_ENTIRE_VEC_IMM<v2f16, CMOVEDri37, build_fpimm_vec>;
+
+foreach vt = [ v2i32, v4i16, v8i8 ] in
+defm : CMOVE_ENTIRE_VEC_IMM<vt, CMOVEDri64, build_imm_vec>;
+foreach vt = [ v2f32, v4f16 ] in
+defm : CMOVE_ENTIRE_VEC_IMM<vt, CMOVEDri64, build_fpimm_vec>;
+
+foreach vt = [ v2i8, v2f16, v2i16, v2f32, v2i32, v4i8, v4f16, v4i16, v8i8 ] in {
+      def : Pat<(vt (select i32:$cc, vt:$t, vt:$f)),
+                (CMOVEDrr SingleReg:$cc, SingleReg:$t, SingleReg:$f, scalarcond_even)>;
+      def : Pat<(vt (select i64:$cc, vt:$t, vt:$f)),
+                (CMOVEDrr SingleReg:$cc, SingleReg:$t, SingleReg:$f, scalarcond_even)>;
+}
+
+foreach vt = [ v2f64, v2i64, v4f32, v4i32 ] in {
+def : Pat<(vt (select i32:$cc, vt:$t, vt:$f)),
+            (REG_SEQUENCE PairedReg,
+            (CMOVEDrr
+                  SingleReg:$cc,
+                  (i64(EXTRACT_SUBREG PairedReg:$t, sub_s0)),
+                  (i64(EXTRACT_SUBREG PairedReg:$f, sub_s0)),
+                  scalarcond_even),
+            sub_s0,
+            (CMOVEDrr
+                  SingleReg:$cc,
+                  (i64(EXTRACT_SUBREG PairedReg:$t, sub_s1)),
+                  (i64(EXTRACT_SUBREG PairedReg:$f, sub_s1)),
+                  scalarcond_even),
+            sub_s1)>;
+}
+
+foreach vt = [ v4f64, v4i64 ] in {
+def : Pat<(vt (select i32:$cc, vt:$t, vt:$f)),
+            (REG_SEQUENCE QuadReg,
+            (CMOVEDrr
+                  SingleReg:$cc,
+                  (i64(EXTRACT_SUBREG QuadReg:$t, sub_s0)),
+                  (i64(EXTRACT_SUBREG QuadReg:$f, sub_s0)),
+                  scalarcond_even),
+            sub_s0,
+            (CMOVEDrr
+                  SingleReg:$cc,
+                  (i64(EXTRACT_SUBREG QuadReg:$t, sub_s1)),
+                  (i64(EXTRACT_SUBREG QuadReg:$f, sub_s1)),
+                  scalarcond_even),
+            sub_s1,
+            (CMOVEDrr
+                  SingleReg:$cc,
+                  (i64(EXTRACT_SUBREG QuadReg:$t, sub_s2)),
+                  (i64(EXTRACT_SUBREG QuadReg:$f, sub_s2)),
+                  scalarcond_even),
+            sub_s2,
+            (CMOVEDrr
+                  SingleReg:$cc,
+                  (i64(EXTRACT_SUBREG QuadReg:$t, sub_s3)),
+                  (i64(EXTRACT_SUBREG QuadReg:$f, sub_s3)),
+                  scalarcond_even),
+            sub_s3)>;
+}
+
 // For the moment we only use build_vector in tca for zeroinit
 def COPYZAp : KVX_PSEUDO<(outs VectorReg:$dst), (ins), []>;
 def COPYZWp : KVX_PSEUDO<(outs WideReg:$dst), (ins), []>;

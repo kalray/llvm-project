@@ -311,21 +311,10 @@ define <2 x half> @test_tailcall_flipped(<2 x half> %a, <2 x half> %b) #0 {
   ret <2 x half> %r
 }
 
-; This could be selected to (cmovehq(sra(sll %c, 31), 31), %a, %b)
 define <2 x half> @test_select(<2 x half> %a, <2 x half> %b, i1 zeroext %c) #0 {
 ; CHECK-LABEL: test_select:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    copyw $r3 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r3 ? $r2 = 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r2, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andnw $r1 = $r2, $r1
-; CHECK-NEXT:    andw $r0 = $r0, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    orw $r0 = $r0, $r1
+; CHECK-NEXT:    cmoved.even $r2 ? $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = select i1 %c, <2 x half> %a, <2 x half> %b

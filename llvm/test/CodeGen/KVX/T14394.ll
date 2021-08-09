@@ -11,42 +11,19 @@
 ;   return a > 0 ? v1 : v2;
 ; }
 
-; TODO: Generated code can be optimized.
 define <4 x float> @select_cc(i32 %0, <4 x float> %1, <4 x float> %2) {
 ; CHECK-LABEL: select_cc:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    copyw $r5 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    compw.gt $r6 = $r0, 0
+; CHECK-NEXT:    copyd $r5 = $r2
+; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    copyd $r1 = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wlez $r5 ? $r0 = 0
-; CHECK-NEXT:    copyd $r5 = $r4
-; CHECK-NEXT:    copyd $r7 = $r2
-; CHECK-NEXT:    copyd $r8 = $r3
+; CHECK-NEXT:    copyd $r2 = $r3
+; CHECK-NEXT:    cmoved.even $r6 ? $r5 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andnw $r2 = $r0, $r5
-; CHECK-NEXT:    srld $r5 = $r5, 32
-; CHECK-NEXT:    copyd $r10 = $r1
-; CHECK-NEXT:    srld $r6 = $r7, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andnw $r3 = $r0, $r5
-; CHECK-NEXT:    andw $r5 = $r6, $r0
-; CHECK-NEXT:    srld $r6 = $r10, 32
-; CHECK-NEXT:    srld $r1 = $r8, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r4 = $r7, $r0
-; CHECK-NEXT:    andnw $r7 = $r0, $r8
-; CHECK-NEXT:    andnw $r9 = $r0, $r1
-; CHECK-NEXT:    andw $r8 = $r10, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r6 = $r6, $r0
-; CHECK-NEXT:    orw $r1 = $r4, $r2
-; CHECK-NEXT:    orw $r2 = $r5, $r3
-; CHECK-NEXT:    orw $r0 = $r8, $r7
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    orw $r3 = $r6, $r9
-; CHECK-NEXT:    insf $r1 = $r2, 63, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r3, 63, 32
+; CHECK-NEXT:    cmoved.even $r6 ? $r0 = $r2
+; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %4 = icmp sgt i32 %0, 0

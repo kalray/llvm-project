@@ -407,22 +407,8 @@ define <4 x i32> @test_tailcall_flipped(<4 x i32> %a, <4 x i32> %b) #0 {
 define <4 x i32> @test_select(<4 x i32> %a, <4 x i32> %b, i1 zeroext %c) #0 {
 ; CHECK-LABEL: test_select:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r5 = $r3, 32
-; CHECK-NEXT:    srad $r6 = $r1, 32
-; CHECK-NEXT:    srad $r7 = $r2, 32
-; CHECK-NEXT:    srad $r8 = $r0, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r4 ? $r5 = $r6
-; CHECK-NEXT:    cmoved.wnez $r4 ? $r3 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r4 ? $r7 = $r8
-; CHECK-NEXT:    cmoved.wnez $r4 ? $r2 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r7, 63, 32
-; CHECK-NEXT:    insf $r3 = $r5, 63, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r2
-; CHECK-NEXT:    copyd $r1 = $r3
+; CHECK-NEXT:    cmoved.even $r4 ? $r1 = $r3
+; CHECK-NEXT:    cmoved.even $r4 ? $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = select i1 %c, <4 x i32> %a, <4 x i32> %b

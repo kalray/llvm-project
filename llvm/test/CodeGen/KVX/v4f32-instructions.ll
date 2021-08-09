@@ -110,7 +110,6 @@ define <4 x float> @test_fsub_imm(<4 x float> %a) #0 {
   ret <4 x float> %r
 }
 
-; TODO: Could use ri variant
 define <4 x float> @test_fsub_fromimm(<4 x float> %a) #0 {
 ; CHECK-LABEL: test_fsub_fromimm:
 ; CHECK:       # %bb.0:
@@ -343,37 +342,11 @@ define <4 x float> @test_tailcall_flipped(<4 x float> %a, <4 x float> %b) #0 {
   ret <4 x float> %r
 }
 
-; This could be selected to (cmovehq(sra(sll %c, 31), 31), %a, %b)
 define <4 x float> @test_select(<4 x float> %a, <4 x float> %b, i1 zeroext %c) #0 {
 ; CHECK-LABEL: test_select:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    copyw $r5 = $r4
-; CHECK-NEXT:    make $r4 = -1
-; CHECK-NEXT:    srld $r8 = $r0, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r5 ? $r4 = 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r6 = $r1, $r4
-; CHECK-NEXT:    srld $r1 = $r1, 32
-; CHECK-NEXT:    andnw $r5 = $r4, $r3
-; CHECK-NEXT:    srld $r3 = $r3, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r7 = $r1, $r4
-; CHECK-NEXT:    srld $r1 = $r2, 32
-; CHECK-NEXT:    andnw $r3 = $r4, $r3
-; CHECK-NEXT:    andnw $r2 = $r4, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r0 = $r0, $r4
-; CHECK-NEXT:    andnw $r9 = $r4, $r1
-; CHECK-NEXT:    andw $r4 = $r8, $r4
-; CHECK-NEXT:    orw $r1 = $r6, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    orw $r3 = $r7, $r3
-; CHECK-NEXT:    orw $r0 = $r0, $r2
-; CHECK-NEXT:    orw $r2 = $r4, $r9
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 63, 32
-; CHECK-NEXT:    insf $r1 = $r3, 63, 32
+; CHECK-NEXT:    cmoved.even $r4 ? $r1 = $r3
+; CHECK-NEXT:    cmoved.even $r4 ? $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = select i1 %c, <4 x float> %a, <4 x float> %b
@@ -1778,6 +1751,25 @@ define <4 x double> @test_copysign_extended(<4 x float> %a, <4 x float> %b) #0 {
   %r = call <4 x float> @llvm.copysign.v4f32(<4 x float> %a, <4 x float> %b)
   %xr = fpext <4 x float> %r to <4 x double>
   ret <4 x double> %xr
+}
+
+define <4 x float> @test_copysign_fp16(<4 x float> %a, <4 x half> %b) #0 {
+; CHECK-LABEL: test_copysign_fp16:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    andd $r2 = $r2, 0x8000800080008000
+; CHECK-NEXT:    fabswp $r1 = $r1
+; CHECK-NEXT:    fabswp $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbmm8 $r3 = $r2, 0x8000000020000000
+; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x800000002000000
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ord $r1 = $r1, $r3
+; CHECK-NEXT:    ord $r0 = $r0, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %eb = fpext <4 x half> %b to <4 x float>
+  %r = call <4 x float> @llvm.copysign.v4f32(<4 x float> %a, <4 x float> %eb)
+  ret <4 x float> %r
 }
 
 define <4 x float> @test_floor(<4 x float> %a) #0 {

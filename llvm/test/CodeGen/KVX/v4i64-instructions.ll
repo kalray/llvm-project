@@ -50,7 +50,6 @@ define <4 x i64> @test_fma(<4 x i64> %a, <4 x i64> %b, <4 x i64> %c) #0 {
   ret <4 x i64> %ad
 }
 
-; TODO: Improve immediate variants
 define <4 x i64> @test_fma_imm(<4 x i64> %a, <4 x i64> %b) #0 {
 ; CHECK-LABEL: test_fma_imm:
 ; CHECK:       # %bb.0:
@@ -174,9 +173,6 @@ define <4 x i64> @test_neg(<4 x i64> %a) #0 {
   ret <4 x i64> %r
 }
 
-; FIXME: The calling convention passes 2 <2 x i64> and
-; dag combine decides to not use <4 x i64> for a single
-; instruction.
 define <4 x i64> @test_mul(<4 x i64> %a, <4 x i64> %b) #0 {
 ; CHECK-LABEL: test_mul:
 ; CHECK:       # %bb.0:
@@ -438,16 +434,11 @@ define <4 x i64> @test_tailcall_flipped(<4 x i64> %a, <4 x i64> %b) #0 {
 define <4 x i64> @test_select(<4 x i64> %a, <4 x i64> %b, i1 zeroext %c) #0 {
 ; CHECK-LABEL: test_select:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    cmoved.wnez $r8 ? $r4 = $r0
-; CHECK-NEXT:    cmoved.wnez $r8 ? $r5 = $r1
+; CHECK-NEXT:    cmoved.even $r8 ? $r3 = $r7
+; CHECK-NEXT:    cmoved.even $r8 ? $r2 = $r6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r8 ? $r6 = $r2
-; CHECK-NEXT:    cmoved.wnez $r8 ? $r7 = $r3
-; CHECK-NEXT:    copyd $r0 = $r4
-; CHECK-NEXT:    copyd $r1 = $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r2 = $r6
-; CHECK-NEXT:    copyd $r3 = $r7
+; CHECK-NEXT:    cmoved.even $r8 ? $r1 = $r5
+; CHECK-NEXT:    cmoved.even $r8 ? $r0 = $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = select i1 %c, <4 x i64> %a, <4 x i64> %b

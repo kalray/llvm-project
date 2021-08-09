@@ -157,7 +157,6 @@ define <4 x i16> @test_fma_imm_2(<4 x i16> %a, <4 x i16> %b) {
   ret <4 x i16> %ad
 }
 
-; Can improve this by using srld (lshl %i, 4)
 define i16 @test_extract_i(<4 x i16> %a, i64 %idx) #0 {
 ; CHECK-LABEL: test_extract_i:
 ; CHECK:       # %bb.0:
@@ -294,9 +293,6 @@ define <4 x i16> @test_neg(<4 x i16> %a) {
   ret <4 x i16> %r
 }
 
-; FIXME: The calling convention passes 2 <2 x i16> and
-; dag combine decides to not use <4 x i16> for a single
-; instruction.
 define <4 x i16> @test_mul(<4 x i16> %a, <4 x i16> %b) {
 ; CHECK-LABEL: test_mul:
 ; CHECK:       # %bb.0:
@@ -708,37 +704,16 @@ define <4 x i16> @test_tailcall_flipped(<4 x i16> %a, <4 x i16> %b) {
   ret <4 x i16> %r
 }
 
-; This could be selected to (cmovehq(negate(is_odd %c), %a, %b)
 define <4 x i16> @test_select(<4 x i16> %a, <4 x i16> %b, i1 zeroext %c) {
 ; CHECK-LABEL: test_select:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    copyw $r3 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r3 ? $r2 = 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x201020102010201
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andnd $r1 = $r2, $r1
-; CHECK-NEXT:    andd $r0 = $r0, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ord $r0 = $r0, $r1
+; CHECK-NEXT:    cmoved.even $r2 ? $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ;
 ; V2-LABEL: test_select:
 ; V2:       # %bb.0:
-; V2-NEXT:    copyw $r3 = $r2
-; V2-NEXT:    make $r2 = -1
-; V2-NEXT:    ;;
-; V2-NEXT:    cmoved.weqz $r3 ? $r2 = 0
-; V2-NEXT:    ;;
-; V2-NEXT:    sbmm8 $r2 = $r2, 0x201020102010201
-; V2-NEXT:    ;;
-; V2-NEXT:    andnd $r1 = $r2, $r1
-; V2-NEXT:    andd $r0 = $r0, $r2
-; V2-NEXT:    ;;
-; V2-NEXT:    ord $r0 = $r0, $r1
+; V2-NEXT:    cmoved.even $r2 ? $r0 = $r1
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %r = select i1 %c, <4 x i16> %a, <4 x i16> %b

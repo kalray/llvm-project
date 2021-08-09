@@ -28,11 +28,6 @@ entry:
   ret <4 x float> %conv
 }
 
-; TODO: Support QuadReg in return CC should improve the generated code
-; by avoiding the useless copyd instructions. These copyd instructions
-; are the result of the new extract_subvector patterns introduced with
-; this patch, fixing a worst behavior, using the stack as a way to
-; convert the returning QuadReg into four SingleRegs.
 define <8 x float> @expand8(<8 x half> %a) {
 ; CHECK-LABEL: expand8:
 ; CHECK:       # %bb.0: # %entry

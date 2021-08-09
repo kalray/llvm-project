@@ -391,29 +391,14 @@ define <4 x double> @test_tailcall_flipped(<4 x double> %a, <4 x double> %b) #0 
   ret <4 x double> %r
 }
 
-; This could be selected to (cmovehq(sra(sll %c, 31), 31), %a, %b)
 define <4 x double> @test_select(<4 x double> %a, <4 x double> %b, i1 zeroext %c) #0 {
 ; CHECK-LABEL: test_select:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    copyw $r9 = $r8
-; CHECK-NEXT:    make $r8 = -1
+; CHECK-NEXT:    cmoved.even $r8 ? $r3 = $r7
+; CHECK-NEXT:    cmoved.even $r8 ? $r2 = $r6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r9 ? $r8 = 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andnd $r5 = $r8, $r5
-; CHECK-NEXT:    andd $r1 = $r1, $r8
-; CHECK-NEXT:    andnd $r4 = $r8, $r4
-; CHECK-NEXT:    andd $r0 = $r0, $r8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andnd $r6 = $r8, $r6
-; CHECK-NEXT:    andd $r2 = $r2, $r8
-; CHECK-NEXT:    andnd $r7 = $r8, $r7
-; CHECK-NEXT:    andd $r3 = $r3, $r8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ord $r1 = $r1, $r5
-; CHECK-NEXT:    ord $r0 = $r0, $r4
-; CHECK-NEXT:    ord $r2 = $r2, $r6
-; CHECK-NEXT:    ord $r3 = $r3, $r7
+; CHECK-NEXT:    cmoved.even $r8 ? $r1 = $r5
+; CHECK-NEXT:    cmoved.even $r8 ? $r0 = $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = select i1 %c, <4 x double> %a, <4 x double> %b

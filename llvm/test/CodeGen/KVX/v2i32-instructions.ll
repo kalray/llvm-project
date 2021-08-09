@@ -584,33 +584,13 @@ define <2 x i32> @test_tailcall_flipped(<2 x i32> %a, <2 x i32> %b) {
 define <2 x i32> @test_select(<2 x i32> %a, <2 x i32> %b, i1 zeroext %c) {
 ; CHECK-LABEL: test_select:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    copyw $r3 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r3 ? $r2 = 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r2, 63, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andnd $r1 = $r2, $r1
-; CHECK-NEXT:    andd $r0 = $r0, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ord $r0 = $r0, $r1
+; CHECK-NEXT:    cmoved.even $r2 ? $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ;
 ; V2-LABEL: test_select:
 ; V2:       # %bb.0:
-; V2-NEXT:    copyw $r3 = $r2
-; V2-NEXT:    make $r2 = -1
-; V2-NEXT:    ;;
-; V2-NEXT:    cmoved.weqz $r3 ? $r2 = 0
-; V2-NEXT:    ;;
-; V2-NEXT:    insf $r2 = $r2, 63, 32
-; V2-NEXT:    ;;
-; V2-NEXT:    andnd $r1 = $r2, $r1
-; V2-NEXT:    andd $r0 = $r0, $r2
-; V2-NEXT:    ;;
-; V2-NEXT:    ord $r0 = $r0, $r1
+; V2-NEXT:    cmoved.even $r2 ? $r0 = $r1
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %r = select i1 %c, <2 x i32> %a, <2 x i32> %b

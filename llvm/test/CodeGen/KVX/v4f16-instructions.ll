@@ -412,21 +412,10 @@ define <4 x half> @test_tailcall_flipped(<4 x half> %a, <4 x half> %b) #0 {
   ret <4 x half> %r
 }
 
-; This could be selected to (cmovehq(negate(is_odd %c), %a, %b)
 define <4 x half> @test_select(<4 x half> %a, <4 x half> %b, i1 zeroext %c) #0 {
 ; CHECK-LABEL: test_select:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    copyw $r3 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r3 ? $r2 = 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x201020102010201
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andnd $r1 = $r2, $r1
-; CHECK-NEXT:    andd $r0 = $r0, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ord $r0 = $r0, $r1
+; CHECK-NEXT:    cmoved.even $r2 ? $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = select i1 %c, <4 x half> %a, <4 x half> %b
@@ -1806,6 +1795,7 @@ define <4 x half> @test_copysign_v4f32(<4 x half> %a, <4 x float> %b) #0 {
   ret <4 x half> %r
 }
 
+; TODO: The bundler could eliminate these useless copyd
 define <4 x half> @test_copysign_v4f64(<4 x half> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: test_copysign_v4f64:
 ; CHECK:       # %bb.0:
