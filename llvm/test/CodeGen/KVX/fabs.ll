@@ -79,3 +79,40 @@ declare float @llvm.fabs.f32(float)
 declare double @llvm.fabs.f64(double)
 declare <2x float> @llvm.fabs.v2f32(<2 x float>)
 declare <2x double> @llvm.fabs.v2f64(<2 x double>)
+
+define double @bitcast_fabsd(double %x) {
+; CHECK-LABEL: bitcast_fabsd:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fabsd $r0 = $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %bc1 = bitcast double %x to i64
+  %and = and i64 %bc1, 9223372036854775807
+  %bc2 = bitcast i64 %and to double
+  ret double %bc2
+}
+
+define float @bitcast_fabsw(float %x) {
+; CHECK-LABEL: bitcast_fabsw:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fabsw $r0 = $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %bc1 = bitcast float %x to i32
+  %and = and i32 %bc1, 2147483647
+  %bc2 = bitcast i32 %and to float
+  ret float %bc2
+}
+
+define half @bitcast_fabsh(half %x) {
+; CHECK-LABEL: bitcast_fabsh:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fabshq $r0 = $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %bc1 = bitcast half %x to i16
+  %and = and i16 %bc1, 32767
+  %bc2 = bitcast i16 %and to half
+  ret half %bc2
+}
+

@@ -35,3 +35,38 @@ entry:
   ret double %sub
 }
 
+define double @bitcast_fnegd(double %x) {
+; CHECK-LABEL: bitcast_fnegd:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fnegd $r0 = $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %bc1 = bitcast double %x to i64
+  %xor = xor i64 %bc1, 9223372036854775808
+  %bc2 = bitcast i64 %xor to double
+  ret double %bc2
+}
+
+define float @bitcast_fnegw(float %x) {
+; CHECK-LABEL: bitcast_fnegw:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fnegw $r0 = $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %bc1 = bitcast float %x to i32
+  %xor = xor i32 %bc1, 2147483648
+  %bc2 = bitcast i32 %xor to float
+  ret float %bc2
+}
+
+define half @bitcast_fnegh(half %x) {
+; CHECK-LABEL: bitcast_fnegh:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fneghq $r0 = $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %bc1 = bitcast half %x to i16
+  %xor = xor i16 %bc1, 32768
+  %bc2 = bitcast i16 %xor to half
+  ret half %bc2
+}
