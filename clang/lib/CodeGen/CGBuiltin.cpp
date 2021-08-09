@@ -18716,25 +18716,27 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_acswapw: {
     SourceLocation Loc = E->getExprLoc();
     Value *Addr = Builder.CreateBitCast(EmitScalarExpr(E->getArg(0)), Int8PtrTy);
-    Value *Expect = EmitScalarConversion(EmitScalarExpr(E->getArg(1)),
-                                         E->getArg(1)->getType(), getContext().IntTy, Loc);
     Value *Update =
-      EmitScalarConversion(EmitScalarExpr(E->getArg(2)),
+        EmitScalarConversion(EmitScalarExpr(E->getArg(1)),
+                             E->getArg(1)->getType(), getContext().IntTy, Loc);
+    Value *Expect =
+        EmitScalarConversion(EmitScalarExpr(E->getArg(2)),
                            E->getArg(2)->getType(), getContext().IntTy, Loc);
     Function *Callee = CGM.getIntrinsic(Intrinsic::kvx_acswapw);
-    return Builder.CreateCall(Callee, {Addr, Expect, Update});
+    return Builder.CreateCall(Callee, {Addr, Update, Expect});
   }
 
   case KVX::BI__builtin_kvx_acswapd: {
     SourceLocation Loc = E->getExprLoc();
     Value *Addr = Builder.CreateBitCast(EmitScalarExpr(E->getArg(0)), Int8PtrTy);
-    Value *Expect = EmitScalarConversion(EmitScalarExpr(E->getArg(1)),
-                                         E->getArg(1)->getType(), getContext().LongTy, Loc);
     Value *Update =
-      EmitScalarConversion(EmitScalarExpr(E->getArg(2)),
+        EmitScalarConversion(EmitScalarExpr(E->getArg(1)),
+                             E->getArg(1)->getType(), getContext().LongTy, Loc);
+    Value *Expect =
+        EmitScalarConversion(EmitScalarExpr(E->getArg(2)),
                            E->getArg(2)->getType(), getContext().LongTy, Loc);
     Function *Callee = CGM.getIntrinsic(Intrinsic::kvx_acswapd);
-    return Builder.CreateCall(Callee, {Addr, Expect, Update});
+    return Builder.CreateCall(Callee, {Addr, Update, Expect});
   }
 
   case KVX::BI__builtin_kvx_alclrw: {
