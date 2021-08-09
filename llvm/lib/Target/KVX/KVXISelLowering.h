@@ -201,6 +201,11 @@ private:
 
   bool hasAndNot(SDValue X) const override;
   bool enableAggressiveFMAFusion(EVT VT) const override;
+  bool isCheapToSpeculateCttz() const override { return true; }
+
+  bool isCheapToSpeculateCtlz() const override { return true; }
+
+  bool isCtlzFast() const override { return true; }
 };
 
 } // namespace llvm

@@ -4,16 +4,9 @@
 define i16 @cttzi16(i16 %a) {
 ; CHECK-LABEL: cttzi16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    zxhd $r1 = $r0
+; CHECK-NEXT:    orw $r0 = $r0, 0x10000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.weqz $r1 ? .LBB0_1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.2: # %cond.false
 ; CHECK-NEXT:    ctzw $r0 = $r0
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_1:
-; CHECK-NEXT:    make $r0 = 16
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %res = call i16 @llvm.cttz.i16(i16 %a)
@@ -23,14 +16,7 @@ define i16 @cttzi16(i16 %a) {
 define i32 @ctzw(i32 %a) {
 ; CHECK-LABEL: ctzw:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    cb.weqz $r0 ? .LBB1_1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.2: # %cond.false
 ; CHECK-NEXT:    ctzw $r0 = $r0
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB1_1:
-; CHECK-NEXT:    make $r0 = 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %res = call i32 @llvm.cttz.i32(i32 %a)
@@ -40,14 +26,7 @@ define i32 @ctzw(i32 %a) {
 define i64 @ctzd(i64 %a) {
 ; CHECK-LABEL: ctzd:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    cb.deqz $r0 ? .LBB2_1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.2: # %cond.false
 ; CHECK-NEXT:    ctzd $r0 = $r0
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB2_1:
-; CHECK-NEXT:    make $r0 = 64
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %res = call i64 @llvm.cttz.i64(i64 %a)
