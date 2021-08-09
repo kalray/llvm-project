@@ -198,6 +198,8 @@ private:
                                   EVT VT) const override;
 
   bool isFMAFasterThanFMulAndFAdd(const Function &F, Type *) const override;
+
+  bool hasAndNot(SDValue X) const override;
 };
 
 } // namespace llvm

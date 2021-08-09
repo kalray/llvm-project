@@ -2659,6 +2659,20 @@ bool KVXTargetLowering::isFMAFasterThanFMulAndFAdd(const Function &F,
   }
 }
 
+bool KVXTargetLowering::hasAndNot(SDValue X) const {
+  auto VT = X.getValueType();
+  if (!(VT.isSimple()))
+    return false;
+
+  switch (VT.getSimpleVT().SimpleTy) {
+  case MVT::i32:
+  case MVT::i64:
+    return true;
+  default:
+    return false;
+  }
+}
+
 // -----------------------------------------------------------------------------
 //        Namespace KVX_LOW
 // -----------------------------------------------------------------------------
