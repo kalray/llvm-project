@@ -200,6 +200,7 @@ private:
   bool isFMAFasterThanFMulAndFAdd(const Function &F, Type *) const override;
 
   bool hasAndNot(SDValue X) const override;
+  bool enableAggressiveFMAFusion(EVT VT) const override;
 };
 
 } // namespace llvm
