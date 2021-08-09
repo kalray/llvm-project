@@ -115,7 +115,6 @@ define <8 x i8> @test_fma_imm(<8 x i8> %a, <8 x i8> %b) #0 {
 }
 
 
-; TODO: Prevent using sllhqs for fma
 define <8 x i8> @test_fma_imm_2(<8 x i8> %a, <8 x i8> %b) #0 {
 ; CHECK-LABEL: test_fma_imm_2:
 ; CHECK:       # %bb.0:
@@ -290,9 +289,6 @@ define <8 x i8> @test_neg(<8 x i8> %a) #0 {
   ret <8 x i8> %r
 }
 
-; FIXME: The calling convention passes 2 <2 x i8> and
-; dag combine decides to not use <8 x i8> for a single
-; instruction.
 define <8 x i8> @test_mul(<8 x i8> %a, <8 x i8> %b) #0 {
 ; CHECK-LABEL: test_mul:
 ; CHECK:       # %bb.0:
@@ -663,7 +659,7 @@ define <8 x i8> @test_call_flipped(<8 x i8> %a, <8 x i8> %b) #0 {
   ret <8 x i8> %r
 }
 
-; Can perform swap in a single bundle
+; TODO: Can perform swap in a single bundle
 define <8 x i8> @test_tailcall_flipped(<8 x i8> %a, <8 x i8> %b) #0 {
 ; CHECK-LABEL: test_tailcall_flipped:
 ; CHECK:       # %bb.0:
@@ -680,21 +676,7 @@ define <8 x i8> @test_tailcall_flipped(<8 x i8> %a, <8 x i8> %b) #0 {
 define <8 x i8> @test_select(<8 x i8> %a, <8 x i8> %b, i1 zeroext %c) #0 {
 ; CHECK-LABEL: test_select:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    copyw $r3 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r3 ? $r2 = 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r2, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r2, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r2, 63, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andnd $r1 = $r2, $r1
-; CHECK-NEXT:    andd $r0 = $r0, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ord $r0 = $r0, $r1
+; CHECK-NEXT:    cmoved.even $r2 ? $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = select i1 %c, <8 x i8> %a, <8 x i8> %b

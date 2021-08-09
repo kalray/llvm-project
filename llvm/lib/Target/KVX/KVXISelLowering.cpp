@@ -341,7 +341,7 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
                   MVT::v2i32, MVT::v2i64, MVT::v4f16, MVT::v4f32, MVT::v4f64,
                   MVT::v4i8, MVT::v4i16, MVT::v4i32, MVT::v4i64, MVT::v8i8}) {
     setOperationAction(ISD::SELECT_CC, VT, Expand);
-    setOperationAction(ISD::SELECT, VT, Expand);
+    setOperationAction(ISD::SELECT, VT, Legal);
   }
 
   for (auto VT : {MVT::v2i8, MVT::v4i8, MVT::v8i8}) {

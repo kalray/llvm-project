@@ -120,19 +120,10 @@ entry:
 define <2 x float> @f_select_cc_v2f32(i32 %c, i32 %c2, <2 x float> %a, <2 x float> %b){
 ; CHECK-LABEL: f_select_cc_v2f32:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    compw.gt $r0 = $r0, $r1
+; CHECK-NEXT:    compw.gt $r1 = $r0, $r1
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r1 = $r0
-; CHECK-NEXT:    make $r0 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r1 ? $r0 = 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r0, 63, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andnd $r1 = $r0, $r3
-; CHECK-NEXT:    andd $r0 = $r2, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ord $r0 = $r0, $r1
+; CHECK-NEXT:    cmoved.even $r1 ? $r0 = $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

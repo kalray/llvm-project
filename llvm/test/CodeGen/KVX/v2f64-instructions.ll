@@ -292,22 +292,11 @@ define <2 x double> @test_tailcall_flipped(<2 x double> %a, <2 x double> %b) #0 
   ret <2 x double> %r
 }
 
-; This could be selected to (cmovehq(sra(sll %c, 31), 31), %a, %b)
 define <2 x double> @test_select(<2 x double> %a, <2 x double> %b, i1 zeroext %c) #0 {
 ; CHECK-LABEL: test_select:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    copyw $r5 = $r4
-; CHECK-NEXT:    make $r4 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r5 ? $r4 = 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andnd $r3 = $r4, $r3
-; CHECK-NEXT:    andd $r1 = $r1, $r4
-; CHECK-NEXT:    andnd $r2 = $r4, $r2
-; CHECK-NEXT:    andd $r0 = $r0, $r4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ord $r1 = $r1, $r3
-; CHECK-NEXT:    ord $r0 = $r0, $r2
+; CHECK-NEXT:    cmoved.even $r4 ? $r1 = $r3
+; CHECK-NEXT:    cmoved.even $r4 ? $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = select i1 %c, <2 x double> %a, <2 x double> %b

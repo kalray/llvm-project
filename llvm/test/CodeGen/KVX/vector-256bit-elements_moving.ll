@@ -79,7 +79,7 @@ entry:
   ret <2 x double> %ext
 }
 
-; TODO: Vector swap can be done in 1 bunddle. And it could be a single copyq.
+; TODO: Vector swap can be done in 1 bunddle.
 define <2 x double> @f64x4_extract_elements_10(<4 x double> %0) {
 ; CHECK-LABEL: f64x4_extract_elements_10:
 ; CHECK:       # %bb.0: # %entry
@@ -256,7 +256,7 @@ entry:
   ret <4 x double> %ins
 }
 
-; TODO: Single copyq
+; TODO: could do in a single bundle if the latest was copyd r1 = r4
 define <4 x double> @f64x4_insert_elements_01_1(<4 x double> %0, double %1) {
 ; CHECK-LABEL: f64x4_insert_elements_01_1:
 ; CHECK:       # %bb.0: # %entry
@@ -449,7 +449,6 @@ entry:
   ret <4 x i64> %ins2
 }
 
-; TODO: Can optiomize to a single copyq
 define <4 x i64> @i64x4_insert_elements_23(<4 x i64> %0, i64 %1, i64 %2) {
 ; CHECK-LABEL: i64x4_insert_elements_23:
 ; CHECK:       # %bb.0: # %entry
@@ -463,7 +462,6 @@ entry:
   ret <4 x i64> %ins2
 }
 
-; TODO: Can optiomize to a single copyq
 define <4 x i64> @i64x4_insert_elements_32(<4 x i64> %0, i64 %1, i64 %2) {
 ; CHECK-LABEL: i64x4_insert_elements_32:
 ; CHECK:       # %bb.0: # %entry
@@ -503,7 +501,7 @@ entry:
   ret <4 x i64> %ins2
 }
 
-; TODO: The copy can be in a single copyq
+; TODO: This can be done in a single bundle
 define <4 x i64> @i64x4_insert_elements_21_1(<4 x i64> %0, i64 %1) {
 ; CHECK-LABEL: i64x4_insert_elements_21_1:
 ; CHECK:       # %bb.0: # %entry

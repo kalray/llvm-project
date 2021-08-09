@@ -133,7 +133,6 @@ define <2 x i64> @test_fma_imm(<2 x i64> %a, <2 x i64> %b) {
   ret <2 x i64> %ad
 }
 
-; TODO: Prevent using sll
 define <2 x i64> @test_fma_imm_2(<2 x i64> %a, <2 x i64> %b) {
 ; CHECK-LABEL: test_fma_imm_2:
 ; CHECK:       # %bb.0:
@@ -345,11 +344,8 @@ define <2 x i64> @test_tailcall_flipped(<2 x i64> %a, <2 x i64> %b) {
 define <2 x i64> @test_select(<2 x i64> %a, <2 x i64> %b, i1 zeroext %c) {
 ; CHECK-LABEL: test_select:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    cmoved.wnez $r4 ? $r2 = $r0
-; CHECK-NEXT:    cmoved.wnez $r4 ? $r3 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r2
-; CHECK-NEXT:    copyd $r1 = $r3
+; CHECK-NEXT:    cmoved.even $r4 ? $r1 = $r3
+; CHECK-NEXT:    cmoved.even $r4 ? $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = select i1 %c, <2 x i64> %a, <2 x i64> %b
