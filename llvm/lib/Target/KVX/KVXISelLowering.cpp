@@ -2633,18 +2633,7 @@ bool KVXTargetLowering::isTruncateFree(EVT SrcVT, EVT DstVT) const {
 
 bool KVXTargetLowering::isFMAFasterThanFMulAndFAdd(const MachineFunction &MF,
                                                    EVT VT) const {
-  if (!VT.isSimple())
-    return false;
-
-  auto Simple = VT.getScalarType().getSimpleVT().SimpleTy;
-  switch (Simple) {
-  case MVT::f16:
-  case MVT::f32:
-  case MVT::f64:
-    return true;
-  default:
-    return false;
-  }
+  return enableAggressiveFMAFusion(VT);
 }
 
 bool KVXTargetLowering::isFMAFasterThanFMulAndFAdd(const Function &F,
@@ -2667,6 +2656,21 @@ bool KVXTargetLowering::hasAndNot(SDValue X) const {
   switch (VT.getSimpleVT().SimpleTy) {
   case MVT::i32:
   case MVT::i64:
+    return true;
+  default:
+    return false;
+  }
+}
+
+bool KVXTargetLowering::enableAggressiveFMAFusion(EVT VT) const {
+  if (!VT.isSimple())
+    return false;
+
+  auto Simple = VT.getScalarType().getSimpleVT().SimpleTy;
+  switch (Simple) {
+  case MVT::f16:
+  case MVT::f32:
+  case MVT::f64:
     return true;
   default:
     return false;

@@ -64,10 +64,6 @@ def fsubcont : PatFrag<(ops node:$op0, node:$op1), (fsub node:$op0, node:$op1), 
     return N->getFlags().hasAllowContract();
   }]>;
 
-def kvx_fma : PatFrags<(ops node:$op0, node:$op1, node:$op2),
-              [(fma node:$op0, node:$op1, node:$op2),
-               (faddcont node:$op2, (fmulcont node:$op0, node:$op1))]>;
-
 multiclass LoadSuperClass<ValueType vt, int sc, KVX_PSEUDO pinst,
                    KVX_INSTRUCTION ri10, KVX_INSTRUCTION rr> {
 
@@ -384,17 +380,17 @@ def : Pat<(f32 (fadd (f32 (fmul
 
 
 // FFMA
-def : Pat<(f16 (kvx_fma f16:$rx, Binary16:$IMM, f16:$rz)), (f16(FFMAHQri (ZXHD(f16 SingleReg:$rz)), (ZXHD(f16 SingleReg:$rx)), (get_fpimm_16 fpimm:$IMM)))>, Requires<[IsV1]>;
-def : Pat<(f16 (kvx_fma f16:$rx, f16:$ry, f16:$rz)), (FFMAHQrr (ZXHD SingleReg:$rz), (ZXHD SingleReg:$rx), (ZXHD SingleReg:$ry), rounding_, silent_)>;
+def : Pat<(f16 (fma f16:$rx, Binary16:$IMM, f16:$rz)), (f16(FFMAHQri (ZXHD(f16 SingleReg:$rz)), (ZXHD(f16 SingleReg:$rx)), (get_fpimm_16 fpimm:$IMM)))>, Requires<[IsV1]>;
+def : Pat<(f16 (fma f16:$rx, f16:$ry, f16:$rz)), (FFMAHQrr (ZXHD SingleReg:$rz), (ZXHD SingleReg:$rx), (ZXHD SingleReg:$ry), rounding_, silent_)>;
 
-def : Pat<(f32 (kvx_fma f32:$rx, Binary32:$ry, f32:$rz)), (FFMAWri SingleReg:$rz, SingleReg:$rx, Binary32:$ry)>, Requires<[IsV1]>;
-def : Pat<(f32 (kvx_fma f32:$rx, f32:$ry, f32:$rz)), (FFMAWrr SingleReg:$rz, SingleReg:$rx, SingleReg:$ry, rounding_, silent_)>;
+def : Pat<(f32 (fma f32:$rx, Binary32:$ry, f32:$rz)), (FFMAWri SingleReg:$rz, SingleReg:$rx, Binary32:$ry)>, Requires<[IsV1]>;
+def : Pat<(f32 (fma f32:$rx, f32:$ry, f32:$rz)), (FFMAWrr SingleReg:$rz, SingleReg:$rx, SingleReg:$ry, rounding_, silent_)>;
 
-def : Pat<(f64 (kvx_fma f64:$rx, Binary64:$ry, f64:$rz)), (FFMADri SingleReg:$rz, SingleReg:$rx, Binary64:$ry)>, Requires <[IsV1]>;
-def : Pat<(f64 (kvx_fma f64:$rx, f64:$ry, f64:$rz)), (FFMADrr SingleReg:$rz, SingleReg:$rx, SingleReg:$ry, rounding_, silent_)>;
+def : Pat<(f64 (fma f64:$rx, Binary64:$ry, f64:$rz)), (FFMADri SingleReg:$rz, SingleReg:$rx, Binary64:$ry)>, Requires <[IsV1]>;
+def : Pat<(f64 (fma f64:$rx, f64:$ry, f64:$rz)), (FFMADrr SingleReg:$rz, SingleReg:$rx, SingleReg:$ry, rounding_, silent_)>;
 
 // TODO: Add ri variants
-def : Pat<(v2f64 (kvx_fma v2f64:$rx, v2f64:$ry, v2f64:$rz)),
+def : Pat<(v2f64 (fma v2f64:$rx, v2f64:$ry, v2f64:$rz)),
           (v2f64 (REG_SEQUENCE PairedReg,
                   (f64 (FFMADrr
                        (f64 (EXTRACT_SUBREG PairedReg:$rz, sub_s0)),
@@ -409,17 +405,17 @@ def : Pat<(v2f64 (kvx_fma v2f64:$rx, v2f64:$ry, v2f64:$rz)),
                        rounding_, silent_)),
                   sub_s1))>;
 
-def : Pat<(v2f32 (kvx_fma v2f32:$rx, v2f32:$ry, v2f32:$rz)), (FFMAWPrr SingleReg:$rz, SingleReg:$rx, SingleReg:$ry, rounding_, silent_)>;
-def : Pat<(v2f32 (kvx_fma v2f32:$rx, (v2f32 (is_imm_vec:$IMM)), v2f32:$rz)), (FFMAWPri SingleReg:$rz, SingleReg:$rx, (build_fpimm_vec $IMM))>, Requires<[IsV1]>;
+def : Pat<(v2f32 (fma v2f32:$rx, v2f32:$ry, v2f32:$rz)), (FFMAWPrr SingleReg:$rz, SingleReg:$rx, SingleReg:$ry, rounding_, silent_)>;
+def : Pat<(v2f32 (fma v2f32:$rx, (v2f32 (is_imm_vec:$IMM)), v2f32:$rz)), (FFMAWPri SingleReg:$rz, SingleReg:$rx, (build_fpimm_vec $IMM))>, Requires<[IsV1]>;
 
-def : Pat<(v2f16 (kvx_fma v2f16:$rx, (v2f16 (is_imm_vec:$IMM)), v2f16:$rz)), (FFMAHQri  (ZXWD SingleReg:$rz), (ZXWD SingleReg:$rx), (build_fpimm_vec $IMM))>, Requires<[IsV1]>;
-def : Pat<(v2f16 (kvx_fma v2f16:$rx, v2f16:$ry, v2f16:$rz)), (FFMAHQrr (ZXWD SingleReg:$rz), (ZXWD SingleReg:$rx), (ZXWD SingleReg:$ry), rounding_, silent_)>;
+def : Pat<(v2f16 (fma v2f16:$rx, (v2f16 (is_imm_vec:$IMM)), v2f16:$rz)), (FFMAHQri  (ZXWD SingleReg:$rz), (ZXWD SingleReg:$rx), (build_fpimm_vec $IMM))>, Requires<[IsV1]>;
+def : Pat<(v2f16 (fma v2f16:$rx, v2f16:$ry, v2f16:$rz)), (FFMAHQrr (ZXWD SingleReg:$rz), (ZXWD SingleReg:$rx), (ZXWD SingleReg:$ry), rounding_, silent_)>;
 
-def : Pat<(v4f16 (kvx_fma v4f16:$rx, (v4f16 (is_imm_vec:$IMM)), v4f16:$rz)), (FFMAHQri SingleReg:$rz, SingleReg:$rx, (build_fpimm_vec $IMM))>, Requires<[IsV1]>;
-def : Pat<(v4f16 (kvx_fma v4f16:$rx, v4f16:$ry, v4f16:$rz)), (FFMAHQrr SingleReg:$rz, SingleReg:$rx, SingleReg:$ry, rounding_, silent_)>;
+def : Pat<(v4f16 (fma v4f16:$rx, (v4f16 (is_imm_vec:$IMM)), v4f16:$rz)), (FFMAHQri SingleReg:$rz, SingleReg:$rx, (build_fpimm_vec $IMM))>, Requires<[IsV1]>;
+def : Pat<(v4f16 (fma v4f16:$rx, v4f16:$ry, v4f16:$rz)), (FFMAHQrr SingleReg:$rz, SingleReg:$rx, SingleReg:$ry, rounding_, silent_)>;
 
 // TODO: Add ri variants
-def : Pat<(v4f32 (kvx_fma v4f32:$rx, v4f32:$ry, v4f32:$rz)),
+def : Pat<(v4f32 (fma v4f32:$rx, v4f32:$ry, v4f32:$rz)),
           (REG_SEQUENCE PairedReg,
             (FFMAWPrr
               (v2f32 (EXTRACT_SUBREG PairedReg:$rz, sub_s0)),
@@ -438,17 +434,17 @@ def : Pat<(v4f32 (kvx_fma v4f32:$rx, v4f32:$ry, v4f32:$rz)),
 
 // FFMAHW
 // TODO: ri variants
-def : Pat<(f32 (kvx_fma (f32 (fpextend f16:$r1)), (f32 (fpextend f16:$r2)), f32:$r0)),
+def : Pat<(f32 (fma (f32 (fpextend f16:$r1)), (f32 (fpextend f16:$r2)), f32:$r0)),
           (FFMAHWrr SingleReg:$r0, SingleReg:$r1, SingleReg:$r2, rounding_, silent_)>;
 
 // FFMAHWQ
 // TODO: ri variants
-def : Pat<(v4f32 (kvx_fma (v4f32 (fpextend v4f16:$r1)), (v4f32 (fpextend v4f16:$r2)), v4f32:$r0)),
+def : Pat<(v4f32 (fma (v4f32 (fpextend v4f16:$r1)), (v4f32 (fpextend v4f16:$r2)), v4f32:$r0)),
           (FFMAHWQrr PairedReg:$r0, SingleReg:$r1, SingleReg:$r2, rounding_, silent_)>;
 
 // FFMAWDP
 // TODO: ri variants
-def : Pat<(v2f64 (kvx_fma (v2f64 (fpextend v2f32:$r1)), (v2f64 (fpextend v2f32:$r2)), v2f64:$r0)),
+def : Pat<(v2f64 (fma (v2f64 (fpextend v2f32:$r1)), (v2f64 (fpextend v2f32:$r2)), v2f64:$r0)),
           (FFMAWDPrr PairedReg:$r0, SingleReg:$r1, SingleReg:$r2, rounding_, silent_)>;
 
 // FFMS
@@ -474,7 +470,7 @@ defm : FFMSPAT<v4f16, FFMSHQrr, FMULHQrr>;
 
 // FFMSWDP
 // TODO: Add ri variants
-def : Pat<(v4f32 (kvx_fma (vfneg v4f32:$rx), v4f32:$ry, v4f32:$rz)),
+def : Pat<(v4f32 (fma (vfneg v4f32:$rx), v4f32:$ry, v4f32:$rz)),
           (REG_SEQUENCE PairedReg,
             (FFMSWPrr
               (v2f32 (EXTRACT_SUBREG PairedReg:$rz, sub_s0)),
