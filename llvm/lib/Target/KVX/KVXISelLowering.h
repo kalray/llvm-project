@@ -206,6 +206,12 @@ private:
   bool isCheapToSpeculateCtlz() const override { return true; }
 
   bool isCtlzFast() const override { return true; }
+
+  // TODO: This does not affect vectors. Should do the
+  // same for xor/and instructions in patterns.
+  bool hasBitPreservingFPLogic(EVT VT) const override {
+    return VT == MVT::f16 || VT == MVT::f32 || VT == MVT::f64;
+  }
 };
 
 } // namespace llvm
