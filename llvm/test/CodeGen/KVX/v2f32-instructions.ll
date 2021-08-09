@@ -311,15 +311,13 @@ define <2 x double> @test_select_cc_f32_f32(<2 x double> %a, <2 x double> %b, <2
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.une $r4 = $r4, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r5 = $r4, 32
+; CHECK-NEXT:    extfs $r5 = $r4, 63, 32
 ; CHECK-NEXT:    sxwd $r4 = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r5 = $r5
 ; CHECK-NEXT:    cmoved.dnez $r4 ? $r2 = $r0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.dnez $r5 ? $r3 = $r1
-; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;

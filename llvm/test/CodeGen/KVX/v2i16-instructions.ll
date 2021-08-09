@@ -646,11 +646,11 @@ define <2 x i64> @test_select_cc_f32_f32(<2 x i64> %a, <2 x i64> %b, <2 x i16> %
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compnhq.ltu $r4 = $r4, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxhd $r5 = $r4
-; CHECK-NEXT:    extfs $r4 = $r4, 31, 16
+; CHECK-NEXT:    extfs $r5 = $r4, 31, 16
+; CHECK-NEXT:    sxhd $r4 = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.dnez $r5 ? $r2 = $r0
-; CHECK-NEXT:    cmoved.dnez $r4 ? $r3 = $r1
+; CHECK-NEXT:    cmoved.dnez $r4 ? $r2 = $r0
+; CHECK-NEXT:    cmoved.dnez $r5 ? $r3 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    copyd $r1 = $r3
@@ -661,11 +661,11 @@ define <2 x i64> @test_select_cc_f32_f32(<2 x i64> %a, <2 x i64> %b, <2 x i16> %
 ; V2:       # %bb.0:
 ; V2-NEXT:    compnhq.ltu $r4 = $r4, $r5
 ; V2-NEXT:    ;;
-; V2-NEXT:    sxhd $r5 = $r4
-; V2-NEXT:    extfs $r4 = $r4, 31, 16
+; V2-NEXT:    extfs $r5 = $r4, 31, 16
+; V2-NEXT:    sxhd $r4 = $r4
 ; V2-NEXT:    ;;
-; V2-NEXT:    cmoved.dnez $r5 ? $r2 = $r0
-; V2-NEXT:    cmoved.dnez $r4 ? $r3 = $r1
+; V2-NEXT:    cmoved.dnez $r4 ? $r2 = $r0
+; V2-NEXT:    cmoved.dnez $r5 ? $r3 = $r1
 ; V2-NEXT:    ;;
 ; V2-NEXT:    copyd $r0 = $r2
 ; V2-NEXT:    copyd $r1 = $r3
@@ -779,19 +779,15 @@ define <2 x i1> @test_icmp_ult(<2 x i16> %a, <2 x i16> %b) {
 define <2 x i64> @test_sext_2xi64(<2 x i16> %a) {
 ; CHECK-LABEL: test_sext_2xi64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    sxhd $r2 = $r0
 ; CHECK-NEXT:    extfs $r1 = $r0, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r2
+; CHECK-NEXT:    sxhd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ;
 ; V2-LABEL: test_sext_2xi64:
 ; V2:       # %bb.0:
-; V2-NEXT:    sxhd $r2 = $r0
 ; V2-NEXT:    extfs $r1 = $r0, 31, 16
-; V2-NEXT:    ;;
-; V2-NEXT:    copyd $r0 = $r2
+; V2-NEXT:    sxhd $r0 = $r0
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %r = sext <2 x i16> %a to <2 x i64>
