@@ -1395,6 +1395,14 @@ foreach vtype = [ v2i8, v4i8, v2i16 ] in {
     def : Pat<(xor vtype:$rs1, vtype:$rs2), (XORWrr SingleReg:$rs1, SingleReg:$rs2)>;
 }
 
+// Sign/Zero/Any extensions to v2i64
+def : Pat<(v2i64(sext v2i8:$v)), (v2i64 (REG_SEQUENCE PairedReg, (SXBD $v), sub_s0, (EXTFS $v, 15, 8), sub_s1))>;
+def : Pat<(v2i64(zanyext v2i8:$v)), (v2i64 (REG_SEQUENCE PairedReg, (ZXBD $v), sub_s0, (EXTFZ $v, 15, 8), sub_s1))>;
+def : Pat<(v2i64(sext v2i16:$v)), (v2i64 (REG_SEQUENCE PairedReg, (SXHD $v), sub_s0, (EXTFS $v, 31, 16), sub_s1))>;
+def : Pat<(v2i64(zanyext v2i16:$v)), (v2i64 (REG_SEQUENCE PairedReg, (ZXHD $v), sub_s0, (EXTFZ $v, 31, 16), sub_s1))>;
+def : Pat<(v2i64(sext v2i32:$v)), (v2i64 (REG_SEQUENCE PairedReg, (SXWD $v), sub_s0, (EXTFS $v, 63, 32), sub_s1))>;
+def : Pat<(v2i64(zanyext v2i32:$v)), (v2i64 (REG_SEQUENCE PairedReg, (ZXWD $v), sub_s0, (EXTFZ $v, 63, 32), sub_s1))>;
+
 def : Pat<(add v8i8:$v1, v8i8:$v2),
       (XORDrr
             (ADDDrr

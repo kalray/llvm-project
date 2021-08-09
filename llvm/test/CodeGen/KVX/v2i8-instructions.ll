@@ -457,14 +457,11 @@ define <2 x i64> @test_select_cc_f32_f32(<2 x i64> %a, <2 x i64> %b, <2 x i8> %c
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x401
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxbd $r5 = $r4
-; CHECK-NEXT:    extfz $r4 = $r4, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxbd $r5 = $r5
+; CHECK-NEXT:    extfs $r5 = $r4, 15, 8
 ; CHECK-NEXT:    sxbd $r4 = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.dnez $r5 ? $r2 = $r0
-; CHECK-NEXT:    cmoved.dnez $r4 ? $r3 = $r1
+; CHECK-NEXT:    cmoved.dnez $r4 ? $r2 = $r0
+; CHECK-NEXT:    cmoved.dnez $r5 ? $r3 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    copyd $r1 = $r3
@@ -553,11 +550,8 @@ define <2 x i1> @test_icmp_ult(<2 x i8> %a, <2 x i8> %b) #0 {
 define <2 x i64> @test_sext_2xi64(<2 x i8> %a) #0 {
 ; CHECK-LABEL: test_sext_2xi64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    zxbd $r1 = $r0
-; CHECK-NEXT:    extfz $r2 = $r0, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxbd $r0 = $r1
-; CHECK-NEXT:    sxbd $r1 = $r2
+; CHECK-NEXT:    extfs $r1 = $r0, 15, 8
+; CHECK-NEXT:    sxbd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = sext <2 x i8> %a to <2 x i64>
