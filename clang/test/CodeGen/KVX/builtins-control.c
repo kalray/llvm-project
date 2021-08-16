@@ -191,7 +191,7 @@ void set() {
 // CHECK-NEXT:    tail call void asm sideeffect "set $$res129 = $0", "r,~{$res129}"(i64 0) [[ATTR1]]
 // CHECK-NEXT:    tail call void asm sideeffect "set $$res130 = $0", "r,~{$res130}"(i64 0) [[ATTR1]]
 // CHECK-NEXT:    tail call void asm sideeffect "set $$res131 = $0", "r,~{$res131}"(i64 0) [[ATTR1]]
-// CHECK-NEXT:    tail call void asm sideeffect "set $$ps = $0", "r,~{$ps}"(i64 0) [[ATTR1]]
+// CHECK-NEXT:    tail call void asm sideeffect "set $$sps = $0", "r,~{$sps}"(i64 0) [[ATTR1]]
 // CHECK-NEXT:    tail call void asm sideeffect "set $$res133 = $0", "r,~{$res133}"(i64 0) [[ATTR1]]
 // CHECK-NEXT:    tail call void asm sideeffect "set $$res134 = $0", "r,~{$res134}"(i64 0) [[ATTR1]]
 // CHECK-NEXT:    tail call void asm sideeffect "set $$res135 = $0", "r,~{$res135}"(i64 0) [[ATTR1]]
