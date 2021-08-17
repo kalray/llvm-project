@@ -485,7 +485,7 @@ defm : DOT2_RR_SingleReg<KVX_szext_mul, DOT2SUWDrr>;
 // DOT2UWD
 defm : DOT2_RR_SingleReg<KVX_zext_mul, DOT2UWDrr>;
 
-//DOT2W
+// DOT2W
 // TODO: add ri37 variation
 def : Pat<(i32 (add (i32 (vector_extract (v2i32 (mul v2i32:$lhs, (is_imm_vec:$rhs))), (i64 0))),
                     (i32 (vector_extract (v2i32 (mul v2i32:$lhs, (is_imm_vec:$rhs))), (i64 1))))),
@@ -503,9 +503,21 @@ def : Pat<(i32 (add (i32 (mul (i32 (vector_extract v2i32:$lhs, (i64 1))), (i32 (
                     (i32 (mul (i32 (vector_extract v2i32:$lhs, (i64 0))), (i32 (trunc i64:$rhs)))))),
           (i32 (DOT2Wrr SingleReg:$lhs, SingleReg:$rhs))>;
 
-//DOT2WD
+// DOT2WD
 defm : DOT2_RR_SingleReg<KVX_sext_mul, DOT2WDrr>;
 
+// DOT2WZP
+def dotMulFrag : PatFrag<(ops node:$lhs, node:$rhs, node:$idx), (extractelt (mul node:$rhs, node:$lhs), node:$idx)>;
+def : Pat<(v2i64 (zext (v2i32 (build_vector
+                              (i32 (add
+                                    (dotMulFrag v4i32:$lhs, v4i32:$rhs, (i64 0)),
+                                    (dotMulFrag v4i32:$lhs, v4i32:$rhs, (i64 1))
+                              )),
+                              (i32 (add
+                                    (dotMulFrag v4i32:$lhs, v4i32:$rhs, (i64 2)),
+                                    (dotMulFrag v4i32:$lhs, v4i32:$rhs, (i64 3))
+         )))))),
+         (v2i64 (DOT2WZP PairedReg:$lhs, PairedReg:$rhs))>;
 // EXTF
 def : Pat<(and (srl i64:$v, Wrapped64:$shiftc), Wrapped64:$andm), (EXTFZDp SingleReg:$v, Wrapped64:$andm, Wrapped64:$shiftc)>;
 
