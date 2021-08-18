@@ -205,27 +205,16 @@ define <2 x i16> @test_fma_imm(<2 x i16> %a, <2 x i16> %b) {
   ret <2 x i16> %ad
 }
 
-; TODO: Prevent using sll
 define <2 x i16> @test_fma_imm_2(<2 x i16> %a, <2 x i16> %b) {
 ; CHECK-LABEL: test_fma_imm_2:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    sllhqs $r2 = $r1, 0
-; CHECK-NEXT:    sllhqs $r1 = $r1, 1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r2, 15, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addhq $r0 = $r0, $r1
+; CHECK-NEXT:    maddhq $r0 = $r1, 0x20001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ;
 ; V2-LABEL: test_fma_imm_2:
 ; V2:       # %bb.0:
-; V2-NEXT:    sllhqs $r2 = $r1, 0
-; V2-NEXT:    sllhqs $r1 = $r1, 1
-; V2-NEXT:    ;;
-; V2-NEXT:    insf $r1 = $r2, 15, 0
-; V2-NEXT:    ;;
-; V2-NEXT:    addhq $r0 = $r0, $r1
+; V2-NEXT:    maddhq $r0 = $r1, 0x20001
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %m = mul <2 x i16> <i16 1, i16 2>, %b

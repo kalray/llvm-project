@@ -215,27 +215,16 @@ define <2 x i32> @test_fma_imm(<2 x i32> %a, <2 x i32> %b) {
   ret <2 x i32> %ad
 }
 
-; TODO: Prevent using sll
 define <2 x i32> @test_fma_imm_2(<2 x i32> %a, <2 x i32> %b) {
 ; CHECK-LABEL: test_fma_imm_2:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    sllw $r2 = $r1, 0
-; CHECK-NEXT:    sllwps $r1 = $r1, 1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r2, 31, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addwp $r0 = $r0, $r1
+; CHECK-NEXT:    maddwp $r0 = $r1, 0x200000001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ;
 ; V2-LABEL: test_fma_imm_2:
 ; V2:       # %bb.0:
-; V2-NEXT:    sllw $r2 = $r1, 0
-; V2-NEXT:    sllwps $r1 = $r1, 1
-; V2-NEXT:    ;;
-; V2-NEXT:    insf $r1 = $r2, 31, 0
-; V2-NEXT:    ;;
-; V2-NEXT:    addwp $r0 = $r0, $r1
+; V2-NEXT:    maddwp $r0 = $r1, 0x200000001
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %m = mul <2 x i32> <i32 1, i32 2>, %b

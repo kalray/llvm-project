@@ -212,6 +212,8 @@ private:
   bool hasBitPreservingFPLogic(EVT VT) const override {
     return VT == MVT::f16 || VT == MVT::f32 || VT == MVT::f64;
   }
+
+  bool shouldReplaceBy(SDNode *From, unsigned ToOpcode) const override;
 };
 
 } // namespace llvm

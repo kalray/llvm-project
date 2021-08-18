@@ -2659,6 +2659,17 @@ bool KVXTargetLowering::enableAggressiveFMAFusion(EVT VT) const {
   }
 }
 
+bool KVXTargetLowering::shouldReplaceBy(SDNode *From, unsigned ToOpcode) const {
+  switch (ToOpcode) {
+  default:
+    return true;
+
+  // We prefer vector multiplies to vector shifts
+  case ISD::SHL:
+    return !From->getValueType(0).isVector();
+  }
+}
+
 // -----------------------------------------------------------------------------
 //        Namespace KVX_LOW
 // -----------------------------------------------------------------------------

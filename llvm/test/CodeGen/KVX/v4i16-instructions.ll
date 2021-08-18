@@ -117,39 +117,16 @@ define <4 x i16> @test_fma_imm(<4 x i16> %a, <4 x i16> %b) {
 }
 
 
-; TODO: Prevent using sllhqs for fma
 define <4 x i16> @test_fma_imm_2(<4 x i16> %a, <4 x i16> %b) {
 ; CHECK-LABEL: test_fma_imm_2:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    sllhqs $r2 = $r1, 1
-; CHECK-NEXT:    sllhqs $r1 = $r1, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r3 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r3 = $r1, 15, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r3, 31, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r1, 47, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addhq $r0 = $r0, $r2
+; CHECK-NEXT:    maddhq $r0 = $r1, 0x2000100020001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ;
 ; V2-LABEL: test_fma_imm_2:
 ; V2:       # %bb.0:
-; V2-NEXT:    sllhqs $r2 = $r1, 1
-; V2-NEXT:    sllhqs $r1 = $r1, 0
-; V2-NEXT:    ;;
-; V2-NEXT:    copyd $r3 = $r2
-; V2-NEXT:    ;;
-; V2-NEXT:    insf $r3 = $r1, 15, 0
-; V2-NEXT:    ;;
-; V2-NEXT:    insf $r1 = $r3, 31, 0
-; V2-NEXT:    ;;
-; V2-NEXT:    insf $r2 = $r1, 47, 0
-; V2-NEXT:    ;;
-; V2-NEXT:    addhq $r0 = $r0, $r2
+; V2-NEXT:    maddhq $r0 = $r1, 0x2000100020001
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %m = mul <4 x i16> <i16 1, i16 2, i16 1, i16 2>, %b
