@@ -985,7 +985,7 @@ def : Pat<(i1 (trunc i8:$param)),   (COPY SingleReg:$param)>;
 //===----------------------------------------------------------------------===//
 // Vector patterns.
 //===----------------------------------------------------------------------===//
-
+// TODO: Legalize splat_vector and replace all custom splats using build_vector
 def v2_splat : PatFrag<(ops node:$i), (build_vector node:$i, node:$i)>;
 def v2_splat_1 : PatFrags<(ops), [(v2_splat (i32 1)), (v2_splat (i64 1))]>;
 def v2_splat_15 : PatFrags<(ops), [(v2_splat (i32 15)), (v2_splat (i64 15))]>;
@@ -997,6 +997,8 @@ def v3_splat_1 : PatFrags<(ops), [(v3_splat (i32 1)), (v3_splat (i64 1))]>;
 def v4_splat : PatFrag<(ops node:$i), (build_vector node:$i, node:$i, node:$i, node:$i)>;
 def v4_splat_1 : PatFrags<(ops), [(v4_splat (i32 1)), (v4_splat (i64 1))]>;
 def v4_splat_15 : PatFrags<(ops), [(v4_splat (i32 15)), (v4_splat (i64 15))]>;
+
+def v8_splat : PatFrag<(ops node:$i), (build_vector node:$i, node:$i, node:$i, node:$i, node:$i, node:$i, node:$i, node:$i)>;
 
 def ZEXT_VEC2_SETCC_Pat : PatFrags<(ops node:$lhs, node:$rhs),
         [(or node:$lhs, node:$rhs), (and (or node:$lhs, node:$rhs), v2_splat_1)]>;
@@ -1290,6 +1292,7 @@ def : Pat<(v8i8 (build_vector i32:$v0, i32:$v1, i32:$v2, i32:$v3, i32:$v4, i32:$
           (INSF (INSF SingleReg:$v4, SingleReg:$v5, 15, 8), (INSF SingleReg:$v6, SingleReg:$v7, 15, 8), 31, 16),
           63, 32)>;
 
+def : Pat<(v8i8 (v8_splat i32:$s)), (SBMM8ri64 SingleReg:$s, 0x0101010101010101)>;
 def : Pat<(v8i8 (concat_vectors v4i8:$v0, v4i8:$v1)),
   (INSF  SingleReg:$v0, SingleReg:$v1, 63, 32)>;
 
@@ -1421,6 +1424,8 @@ def : Pat<(v2i8 (extract_subvector (v8i8 SingleReg:$v), (i64 6))),(v2i8 (SRLDri 
 
 def : Pat<(v4i8 (extract_subvector (v8i8 SingleReg:$v), (i64 0))),(v4i8 (ZXWD SingleReg:$v))>;
 def : Pat<(v4i8 (extract_subvector (v8i8 SingleReg:$v), (i64 4))),(v4i8 (SRLDri SingleReg:$v, 32))>;
+
+def : Pat<(v8i8 (v8_splat (i32 SingleReg:$s))), (SBMM8ri64 SingleReg:$s, 0x0101010101010101)>;
 
 // insert_vector_element
 // v2i16

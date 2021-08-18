@@ -922,4 +922,129 @@ define <8 x i8> @concat2(<4 x i8> %a, <4 x i8> %b){
   ret <8 x i8> %v
 }
 
+define <8 x i8> @splat_v8i8(i32 %s) {
+; CHECK-LABEL: splat_v8i8:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x101010101010101
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %conv = trunc i32 %s to i8
+  %vecinit = insertelement <8 x i8> undef, i8 %conv, i32 0
+  %vecinit14 = shufflevector <8 x i8> %vecinit, <8 x i8> undef, <8 x i32> zeroinitializer
+  ret <8 x i8> %vecinit14
+}
+
+define <8 x i8> @splat_v8i8_ri() {
+; CHECK-LABEL: splat_v8i8_ri:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 0x202020202020202
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  ret <8 x i8> <i8 2, i8 2, i8 2, i8 2, i8 2, i8 2, i8 2, i8 2>
+}
+
+define <8 x i8> @shl(<8 x i8> %v, i32 %s) {
+; CHECK-LABEL: shl:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    andd $r2 = $r0, 0xff00ff00ff00ff
+; CHECK-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    slld $r0 = $r0, $r1
+; CHECK-NEXT:    slld $r2 = $r2, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andd $r1 = $r2, 0xff00ff00ff00ff
+; CHECK-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ord $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = trunc i32 %s to i8
+  %1 = insertelement <8 x i8> undef, i8 %0, i32 0
+  %sh_prom = shufflevector <8 x i8> %1, <8 x i8> undef, <8 x i32> zeroinitializer
+  %shl = shl <8 x i8> %v, %sh_prom
+  ret <8 x i8> %shl
+}
+
+define <8 x i8> @lsr(<8 x i8> %v, i32 %s) {
+; CHECK-LABEL: lsr:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    andd $r2 = $r0, 0xff00ff00ff00ff
+; CHECK-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srld $r0 = $r0, $r1
+; CHECK-NEXT:    srld $r2 = $r2, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andd $r1 = $r2, 0xff00ff00ff00ff
+; CHECK-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ord $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = trunc i32 %s to i8
+  %1 = insertelement <8 x i8> undef, i8 %0, i32 0
+  %sh_prom = shufflevector <8 x i8> %1, <8 x i8> undef, <8 x i32> zeroinitializer
+  %shr = lshr <8 x i8> %v, %sh_prom
+  ret <8 x i8> %shr
+}
+
+define <8 x i8> @rotl(<8 x i8> %v, i32 %s) {
+; CHECK-LABEL: rotl:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    sbmm8 $r2 = $r0, 0x4040101004040101
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x8080202008080202
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sllhqs $r0 = $r0, $r1
+; CHECK-NEXT:    sllhqs $r2 = $r2, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srlhqs $r1 = $r2, 8
+; CHECK-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ord $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = trunc i32 %s to i8
+  %1 = insertelement <8 x i8> undef, i8 %0, i32 0
+  %sh_prom = shufflevector <8 x i8> %1, <8 x i8> undef, <8 x i32> zeroinitializer
+  %shl = shl <8 x i8> %v, %sh_prom
+  %2 = sub i8 8, %0
+  %3 = insertelement <8 x i8> undef, i8 %2, i32 0
+  %sh_prom3 = shufflevector <8 x i8> %3, <8 x i8> undef, <8 x i32> zeroinitializer
+  %shr = lshr <8 x i8> %v, %sh_prom3
+  %or = or <8 x i8> %shr, %shl
+  ret <8 x i8> %or
+}
+
+define <8 x i8> @rotr(<8 x i8> %v, i32 %s) {
+; CHECK-LABEL: rotr:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    sbmm8 $r2 = $r0, 0x8080202008080202
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x4040101004040101
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srlhqs $r0 = $r0, $r1
+; CHECK-NEXT:    srlhqs $r2 = $r2, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sllhqs $r1 = $r2, 8
+; CHECK-NEXT:    andnd $r0 = $r0, 0xff00ff00ff00ff00
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ord $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = trunc i32 %s to i8
+  %1 = insertelement <8 x i8> undef, i8 %0, i32 0
+  %sh_prom = shufflevector <8 x i8> %1, <8 x i8> undef, <8 x i32> zeroinitializer
+  %shr = lshr <8 x i8> %v, %sh_prom
+  %2 = sub i8 8, %0
+  %3 = insertelement <8 x i8> undef, i8 %2, i32 0
+  %sh_prom3 = shufflevector <8 x i8> %3, <8 x i8> undef, <8 x i32> zeroinitializer
+  %shl = shl <8 x i8> %v, %sh_prom3
+  %or = or <8 x i8> %shl, %shr
+  ret <8 x i8> %or
+}
+
 attributes #0 = { nounwind }

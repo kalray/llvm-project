@@ -1072,7 +1072,7 @@ def : Pat<(Op v2i32:$v0, v2i32:$v1),
 }
 // ROLWP
 defm : WPShiftScalarOps<rotl, ROLWPSri, ROLWPSrr, ROLWri, ROLWrr>;
-// TODO: LLVM does not detect the rotation across build_vectors. We need to do it manually
+// LLVM does not detect the rotation across build_vectors. We need to do it manually
 def : Pat<(v2i32(or (srl v2i32:$r0, (v2i32 (v2_splat (i32 (sub (i32 32), i32:$r1)))) ), (shl v2i32:$r0, (v2i32 (v2_splat i32:$r1))))),
           (ROLWPSrr SingleReg:$r0, SingleReg:$r1)>;
 
@@ -1082,6 +1082,7 @@ def : Pat<(rotr i32:$rs, Unsigned6:$is), (RORWri SingleReg:$rs, Unsigned6:$is)>;
 
 // RORWP
 defm : WPShiftScalarOps<rotr, RORWPSri, RORWPSrr, RORWri, RORWrr>;
+// LLVM does not detect the rotation across build_vectors. We need to do it manually
 def : Pat<(v2i32(or (shl v2i32:$r0, (v2i32 (v2_splat (i32 (sub (i32 32), i32:$r1)))) ), (srl v2i32:$r0, (v2i32 (v2_splat i32:$r1))))),
           (RORWPSrr SingleReg:$r0, SingleReg:$r1)>;
 
@@ -1446,3 +1447,82 @@ def : Pat<(abs v8i8:$v),
             (SBMM8ri37 (ABSHQ (SXLBHQ SingleReg:$v)), 0x40100401),
             (SBMM8ri37 (ABSHQ (SXMBHQ SingleReg:$v)), 0x40100401),
       32, 63)>;
+
+def : Pat<(v8i8(shl v8i8:$v, (v8i8 (v8_splat i32:$s)))),
+          (ORDrr
+            (ANDDri64
+                  (SLLDrr
+                        (ANDDri64 SingleReg:$v, 0xff00ff00ff00ff00),
+                  SingleReg:$s),
+            0xff00ff00ff00ff00),
+            (ANDDri64
+                  (SLLDrr
+                        (ANDDri64 SingleReg:$v, 0xff00ff00ff00ff),
+                  SingleReg:$s),
+            0xff00ff00ff00ff))>;
+
+
+def : Pat<(v8i8(srl v8i8:$v, (v8i8 (v8_splat i32:$s)))),
+          (ORDrr
+            (ANDDri64
+                  (SRLDrr
+                        (ANDDri64 SingleReg:$v, 0xff00ff00ff00ff00),
+                  SingleReg:$s),
+            0xff00ff00ff00ff00),
+            (ANDDri64
+                  (SRLDrr
+                        (ANDDri64 SingleReg:$v, 0xff00ff00ff00ff),
+                  SingleReg:$s),
+            0xff00ff00ff00ff))>;
+
+def : Pat<(v8i8(or (srl v8i8:$v, (v8i8 (v8_splat (i32 (sub (i32 8), i32:$s)))) ), (shl v8i8:$v, (v8i8 (v8_splat i32:$s))))),
+          (ORDrr
+            (ANDDri64
+                  (SLLHQSrr
+                        (SBMM8ri64 SingleReg:$v, 0x8080202008080202),
+                  SingleReg:$s),
+            0xff00ff00ff00ff00),
+            (SRLHQSri
+                  (SLLHQSrr
+                        (SBMM8ri64 SingleReg:$v, 0x4040101004040101),
+                  SingleReg:$s),
+            8))>;
+
+def : Pat<(v8i8(rotl v8i8:$v, (v8i8 (v8_splat i32:$s)))),
+          (ORDrr
+            (ANDDri64
+                  (SLLHQSrr
+                        (SBMM8ri64 SingleReg:$v, 0x8080202008080202),
+                  SingleReg:$s),
+            0xff00ff00ff00ff00),
+            (SRLHQSri
+                  (SLLHQSrr
+                        (SBMM8ri64 SingleReg:$v, 0x4040101004040101),
+                  SingleReg:$s),
+            8))>;
+
+def : Pat<(v8i8(or (shl v8i8:$v, (v8i8 (v8_splat (i32 (sub (i32 8), i32:$s)))) ), (srl v8i8:$v, (v8i8 (v8_splat i32:$s))))),
+          (ORDrr
+            (ANDNDri64
+                  (SRLHQSrr
+                        (SBMM8ri64 SingleReg:$v, 0x4040101004040101),
+                  SingleReg:$s),
+            0xff00ff00ff00ff00),
+            (SLLHQSri
+                  (SRLHQSrr
+                        (SBMM8ri64 SingleReg:$v, 0x8080202008080202),
+                  SingleReg:$s),
+            8))>;
+
+def : Pat<(v8i8(rotr v8i8:$v, (v8i8 (v8_splat i32:$s)))),
+          (ORDrr
+            (ANDNDri64
+                  (SRLHQSrr
+                        (SBMM8ri64 SingleReg:$v, 0x4040101004040101),
+                  SingleReg:$s),
+            0xff00ff00ff00ff00),
+            (SLLHQSri
+                  (SRLHQSrr
+                        (SBMM8ri64 SingleReg:$v, 0x8080202008080202),
+                  SingleReg:$s),
+            8))>;

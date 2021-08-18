@@ -193,6 +193,11 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::SRA, VT, Expand);
   }
 
+  setOperationAction(ISD::SHL, MVT::v8i8, Custom);
+  setOperationAction(ISD::SRL, MVT::v8i8, Custom);
+  setOperationAction(ISD::ROTL, MVT::v8i8, Custom);
+  setOperationAction(ISD::ROTR, MVT::v8i8, Custom);
+
   for (auto VT : {MVT::v2f64, MVT::v2i64, MVT::v4f64, MVT::v4i64, MVT::v8i8})
     setOperationAction(ISD::SETCC, VT, Expand);
 
@@ -1025,6 +1030,23 @@ SDValue KVXTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
   case ISD::SMUL_LOHI:
   case ISD::UMUL_LOHI:
     return lowerMulExtend(Op.getOpcode(), Op, DAG);
+
+  case ISD::ROTL:
+  case ISD::ROTR:
+  case ISD::SHL:
+  case ISD::SRL: {
+    if (!(Op.getValueType().isSimple() &&
+          Op.getValueType().getSimpleVT().SimpleTy == MVT::v8i8))
+      return SDValue();
+
+    auto N1 = Op.getOperand(1);
+    if ((N1.getOpcode() == ISD::VECTOR_SHUFFLE &&
+         cast<ShuffleVectorSDNode>(N1)->isSplat()) ||
+        (N1.getOpcode() == ISD::BUILD_VECTOR &&
+         cast<BuildVectorSDNode>(N1)->getSplatValue()))
+      return Op;
+    return SDValue();
+  }
   }
 }
 
@@ -2667,6 +2689,11 @@ bool KVXTargetLowering::shouldReplaceBy(SDNode *From, unsigned ToOpcode) const {
   // We prefer vector multiplies to vector shifts
   case ISD::SHL:
     return !From->getValueType(0).isVector();
+
+  // Avoid infinite convertion ROTL <-> ROTR
+  case ISD::ROTL:
+  case ISD::ROTR:
+    return false;
   }
 }
 
