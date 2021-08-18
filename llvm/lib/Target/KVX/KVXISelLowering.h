@@ -214,6 +214,12 @@ private:
   }
 
   bool shouldReplaceBy(SDNode *From, unsigned ToOpcode) const override;
+
+  // For scalar types we reduce one instruction, as we do not require
+  // to materialize the constant -1.
+  bool shouldFoldMaskToVariableShiftPair(SDValue VT) const override {
+    return !VT.getValueType().isVector();
+  }
 };
 
 } // namespace llvm
