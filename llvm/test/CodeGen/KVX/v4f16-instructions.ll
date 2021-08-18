@@ -915,27 +915,14 @@ define <4 x half> @test_fptrunc_4xfloat(<4 x float> %a) #0 {
   ret <4 x half> %r
 }
 
-; Could use vector fnarrow variants
 define <4 x half> @test_fptrunc_4xdouble(<4 x double> %a) #0 {
 ; CHECK-LABEL: test_fptrunc_4xdouble:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fnarrowdw $r3 = $r3
+; CHECK-NEXT:    fnarrowdwp $r3 = $r2r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowdw $r2 = $r2
-; CHECK-NEXT:    fnarrowwh $r3 = $r3
+; CHECK-NEXT:    fnarrowdwp $r2 = $r0r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowdw $r1 = $r1
-; CHECK-NEXT:    fnarrowwh $r2 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r3, 31, 16
-; CHECK-NEXT:    fnarrowdw $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowwh $r1 = $r1
-; CHECK-NEXT:    fnarrowwh $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 63, 32
+; CHECK-NEXT:    fnarrowwhq $r0 = $r2r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptrunc <4 x double> %a to <4 x half>
