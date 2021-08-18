@@ -3693,8 +3693,7 @@ SDValue DAGCombiner::visitMUL(SDNode *N) {
 
   // Only use shl instead of a MUL if the target knows how to handle them
   // or if MUL is not supported
-  if (TLI.isOperationLegalOrCustomOrPromote(ISD::SHL, VT) ||
-     !TLI.isOperationLegalOrCustomOrPromote(ISD::MUL, VT)) {
+  if (TLI.shouldReplaceBy(N, ISD::SHL)) {
     // fold (mul x, (1 << c)) -> x << c
     if (isConstantOrConstantVector(N1, /*NoOpaques*/ true) &&
         DAG.isKnownToBeAPowerOfTwo(N1) &&
