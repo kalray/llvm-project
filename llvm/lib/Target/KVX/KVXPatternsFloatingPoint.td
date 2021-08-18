@@ -731,17 +731,20 @@ def : Pat<(f16 (fpround f64:$val)), (FNARROWWH (FNARROWDW SingleReg:$val, roundi
 def : Pat<(f32 (fpround f64:$val)), (FNARROWDW SingleReg:$val, rounding_, silent_)>;
 def : Pat<(v2f16 (fpround v2f32:$val)), (FNARROWWHQ (INSERT_SUBREG
                                                       (INSERT_SUBREG (v4f32 (IMPLICIT_DEF)), SingleReg:$val, sub_s0),
-                                                      (ANDWri10 (v2f32 (IMPLICIT_DEF)), 0), sub_s1), rounding_, silent_)>;
+                                                      (MAKEi16 0), sub_s1), rounding_, silent_)>;
+def : Pat<(v2f16 (fpround v2f64:$val)), (v2f16 (FNARROWWHQ (v4f32 (REG_SEQUENCE PairedReg,
+                                          (v2f32 (FNARROWDWP PairedReg:$val, rounding_, silent_)), sub_s0,
+                                          (v2f32 (MAKEi16 0)), sub_s1) ),
+                                          rounding_, silent_))>;
+
+def : Pat<(v2f32 (fpround v2f64:$val)), (FNARROWDWP PairedReg:$val, rounding_, silent_)>;
+
 def : Pat<(v4f16 (fpround v4f32:$val)), (FNARROWWHQ PairedReg:$val, rounding_, silent_)>;
 
-def : Pat<(v2f16 (fpround v2f64:$val)), (INSF (FNARROWWH (FNARROWDW (f64 (EXTRACT_SUBREG PairedReg:$val, sub_s0)), rounding_, silent_), rounding_, silent_),
-                                              (FNARROWWH (FNARROWDW (f64 (EXTRACT_SUBREG PairedReg:$val, sub_s1)), rounding_, silent_), rounding_, silent_), 31, 16)>;
-def : Pat<(v4f16 (fpround v4f64:$val)), (INSF
-                                          (INSF (FNARROWWH (FNARROWDW (f64 (EXTRACT_SUBREG QuadReg:$val, sub_s0)), rounding_, silent_), rounding_, silent_),
-                                                (FNARROWWH (FNARROWDW (f64 (EXTRACT_SUBREG QuadReg:$val, sub_s1)), rounding_, silent_), rounding_, silent_), 31, 16),
-                                          (INSF (FNARROWWH (FNARROWDW (f64 (EXTRACT_SUBREG QuadReg:$val, sub_s2)), rounding_, silent_), rounding_, silent_),
-                                                (FNARROWWH (FNARROWDW (f64 (EXTRACT_SUBREG QuadReg:$val, sub_s3)), rounding_, silent_), rounding_, silent_), 31, 16),
-                                        63, 32)>;
+def : Pat<(v4f16 (fpround v4f64:$val)), (FNARROWWHQ (REG_SEQUENCE PairedReg,
+                                          (FNARROWDWP (v2f64 (EXTRACT_SUBREG QuadReg:$val, sub_p0)), rounding_, silent_), sub_s0,
+                                          (FNARROWDWP (v2f64 (EXTRACT_SUBREG QuadReg:$val, sub_p1)), rounding_, silent_), sub_s1),
+                                          rounding_, silent_)>;
 
 // FMAX
 def : Pat<(f16 (fmaxnum f16:$v0, f16:$v1)), (FMAXHQ $v0, $v1)>;

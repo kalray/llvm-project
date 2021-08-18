@@ -47,7 +47,7 @@ entry:
 define <2 x half> @narrow2(<2 x float> %a) {
 ; CHECK-LABEL: narrow2:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    andw $r1 = $r0, 0
+; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowwhq $r0 = $r0r1
 ; CHECK-NEXT:    ret
@@ -80,18 +80,13 @@ entry:
   ret <8 x half> %conv
 }
 
-; Sanity for v2f64 to v2f16 using scalar instructions.
 define <2 x half> @narrow2d(<2 x double> %a) {
 ; CHECK-LABEL: narrow2d:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fnarrowdw $r1 = $r1
+; CHECK-NEXT:    fnarrowdwp $r0 = $r0r1
+; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowdw $r0 = $r0
-; CHECK-NEXT:    fnarrowwh $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowwh $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 31, 16
+; CHECK-NEXT:    fnarrowwhq $r0 = $r0r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -99,27 +94,14 @@ entry:
   ret <2 x half> %conv
 }
 
-; Sanity for v4f64 to v4f16 using scalar instructions.
 define <4 x half> @narrow4d(<4 x double> %a) {
 ; CHECK-LABEL: narrow4d:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fnarrowdw $r3 = $r3
+; CHECK-NEXT:    fnarrowdwp $r3 = $r2r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowdw $r2 = $r2
-; CHECK-NEXT:    fnarrowwh $r3 = $r3
+; CHECK-NEXT:    fnarrowdwp $r2 = $r0r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowdw $r1 = $r1
-; CHECK-NEXT:    fnarrowwh $r2 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r3, 31, 16
-; CHECK-NEXT:    fnarrowdw $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowwh $r1 = $r1
-; CHECK-NEXT:    fnarrowwh $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 63, 32
+; CHECK-NEXT:    fnarrowwhq $r0 = $r2r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

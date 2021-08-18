@@ -747,7 +747,7 @@ define <2 x half> @test_sitofp_2xi32_fadd(<2 x i32> %a, <2 x half> %b) #0 {
 define <2 x half> @test_fptrunc_2xfloat(<2 x float> %a) #0 {
 ; CHECK-LABEL: test_fptrunc_2xfloat:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    andw $r1 = $r0, 0
+; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowwhq $r0 = $r0r1
 ; CHECK-NEXT:    ret
@@ -756,18 +756,13 @@ define <2 x half> @test_fptrunc_2xfloat(<2 x float> %a) #0 {
   ret <2 x half> %r
 }
 
-; Could use vector fnarrow variants
 define <2 x half> @test_fptrunc_2xdouble(<2 x double> %a) #0 {
 ; CHECK-LABEL: test_fptrunc_2xdouble:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fnarrowdw $r1 = $r1
+; CHECK-NEXT:    fnarrowdwp $r0 = $r0r1
+; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowdw $r0 = $r0
-; CHECK-NEXT:    fnarrowwh $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowwh $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 31, 16
+; CHECK-NEXT:    fnarrowwhq $r0 = $r0r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptrunc <2 x double> %a to <2 x half>
@@ -1277,13 +1272,13 @@ define <2 x half> @test_minnum(<2 x half> %a, <2 x half> %b) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r20, 63, 32
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
+; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r20 = 16[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    andw $r1 = $r0, 0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowwhq $r0 = $r0r1
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
@@ -1328,13 +1323,13 @@ define <2 x half> @test_maxnum(<2 x half> %a, <2 x half> %b) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r20, 63, 32
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
+; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r20 = 16[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    andw $r1 = $r0, 0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowwhq $r0 = $r0r1
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
