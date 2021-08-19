@@ -961,20 +961,7 @@ define <4 x float> @FADDCWCP_3(<4 x float> %0, <4 x float> %1) {
 define <2 x float> @FMULCWC_3(<2 x float> %0, <2 x float> %1) {
 ; CHECK-LABEL: FMULCWC_3:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r3 = $r0, 32
-; CHECK-NEXT:    srad $r4 = $r1, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulw $r2 = $r4, $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmaw $r2 = $r1, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulw $r0 = $r4, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmsw $r0 = $r1, $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r0, 63, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r2
+; CHECK-NEXT:    fmulwc.c $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = extractelement <2 x float> %0, i32 0
