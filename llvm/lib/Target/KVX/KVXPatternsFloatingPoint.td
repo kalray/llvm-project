@@ -733,6 +733,17 @@ def : Pat<(v2f32 (build_vector
             (fmulcont (extractelt  v2f32:$t4, 1), (extractelt v2f32:$t2, 0))))),
           (FMULWCrr SingleReg:$t4, SingleReg:$t2, conjugate_, rounding_, silent_)>;
 
+def : Pat<(v2f32 (build_vector
+          (fma
+            (extractelt v2f32:$t4, 0),
+            (extractelt v2f32:$t2, 0),
+          (fmulcont (extractelt  v2f32:$t4, 1), (extractelt v2f32:$t2, 1))),
+          (fma
+            (extractelt v2f32:$t4, 0),
+            (extractelt v2f32:$t2, 1),
+            (fneg (fmulcont (extractelt  v2f32:$t4, 1), (extractelt v2f32:$t2, 0)))))),
+          (FMULWCrr SingleReg:$t2, SingleReg:$t4, conjugate_c, rounding_, silent_)>;
+
 // FMULWDP TODO: Add ri variants
 def : Pat<(fmul (v2f64 (fpextend v2f32:$rs1)), (v2f64 (fpextend v2f32:$rs2))),
           (FMULWDPrr SingleReg:$rs1, SingleReg:$rs2, rounding_, silent_)>;
