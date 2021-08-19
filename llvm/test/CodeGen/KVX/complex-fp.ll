@@ -1134,3 +1134,30 @@ define <4 x float> @FSBFCWCP_3(<4 x float> %0, <4 x float> %1) {
   %11 = fsub fast <4 x float> %10, %1
   ret <4 x float> %11
 }
+
+define <2 x float> @faddfmulc(<2 x float> %0, <2 x float> %1, <2 x float> %2) {
+; CHECK-LABEL: faddfmulc:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fmulwc $r0 = $r1, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    faddwp $r0 = $r0, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %4 = extractelement <2 x float> %0, i64 0
+  %5 = extractelement <2 x float> %1, i64 0
+  %6 = fmul fast float %5, %4
+  %7 = extractelement <2 x float> %0, i64 1
+  %8 = extractelement <2 x float> %1, i64 1
+  %9 = extractelement <2 x float> %2, i64 0
+  %10 = fadd fast float %9, %6
+  %11 = fmul fast float %8, %7
+  %12 = fsub fast float %10, %11
+  %13 = insertelement <2 x float> poison, float %12, i64 0
+  %14 = fmul fast float %8, %4
+  %15 = fmul fast float %5, %7
+  %16 = fadd fast float %14, %15
+  %17 = extractelement <2 x float> %2, i64 1
+  %18 = fadd fast float %16, %17
+  %19 = insertelement <2 x float> %13, float %18, i64 1
+  ret <2 x float> %19
+}

@@ -2745,6 +2745,36 @@ SDValue KVX_LOW::buildImmVector(llvm::SDNode &N, llvm::SelectionDAG &CurDag,
   return CurDag.getConstant(V, SDLoc(&N), OutVT, true);
 }
 
+llvm::SDValue KVX_LOW::buildFdotImm(llvm::SDNode &N, llvm::SelectionDAG &CurDag,
+                                    bool SwapLoHi) {
+  if (N.getOpcode() != ISD::FMA)
+    report_fatal_error(
+        "Build fdot imm should be called from first matched FMA\n.");
+
+  auto *LowVal = dyn_cast<ConstantFPSDNode>(N.getOperand(1));
+  if (!LowVal)
+    report_fatal_error(
+        "Build fdot imm should be called in a FMA with a constant fp value\n.");
+
+  SDValue Op2 = N.getOperand(2);
+  if (Op2.getOpcode() != ISD::FMUL)
+    report_fatal_error(
+        "Build fdot imm should have the last operand as a FMUL\n.");
+
+  auto *HiVal = dyn_cast<ConstantFPSDNode>(Op2.getOperand(1));
+  if (!HiVal)
+    report_fatal_error(
+        "Build fdot imm did not find the second immediate in the FMUL\n.");
+
+  if (SwapLoHi)
+    std::swap(HiVal, LowVal);
+
+  uint64_t V = HiVal->getValueAPF().bitcastToAPInt().getZExtValue() << 32 |
+               LowVal->getValueAPF().bitcastToAPInt().getZExtValue();
+
+  return CurDag.getConstant(V, SDLoc(&N), MVT::i64, true);
+}
+
 bool KVX_LOW::isImmVecOfLeqNbits(llvm::SDNode *N, llvm::SelectionDAG *CurDag,
                                  unsigned short B) {
   const BuildVectorSDNode *BV = dyn_cast<BuildVectorSDNode>(N);
