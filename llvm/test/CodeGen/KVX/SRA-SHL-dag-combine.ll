@@ -181,7 +181,7 @@ define i64 @short_double(i64* nocapture readonly %0, i64 %1) {
 define i8 @ushort_char(i8* nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: ushort_char:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    andd $r1 = $r1, 0xffff
+; CHECK-NEXT:    clrf $r1 = $r1, 63, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lbz $r0 = $r1[$r0]
 ; CHECK-NEXT:    ret
@@ -195,7 +195,7 @@ define i8 @ushort_char(i8* nocapture readonly %0, i64 %1) {
 define i16 @ushort_short(i16* nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: ushort_short:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    andd $r1 = $r1, 0xffff
+; CHECK-NEXT:    clrf $r1 = $r1, 63, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lhz.xs $r0 = $r1[$r0]
 ; CHECK-NEXT:    ret
@@ -209,7 +209,7 @@ define i16 @ushort_short(i16* nocapture readonly %0, i64 %1) {
 define i32 @ushort_word(i32* nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: ushort_word:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    andd $r1 = $r1, 0xffff
+; CHECK-NEXT:    clrf $r1 = $r1, 63, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz.xs $r0 = $r1[$r0]
 ; CHECK-NEXT:    ret
@@ -223,7 +223,7 @@ define i32 @ushort_word(i32* nocapture readonly %0, i64 %1) {
 define i64 @ushort_double(i64* nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: ushort_double:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    andd $r1 = $r1, 0xffff
+; CHECK-NEXT:    clrf $r1 = $r1, 63, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld.xs $r0 = $r1[$r0]
 ; CHECK-NEXT:    ret
@@ -297,7 +297,7 @@ define i64 @char_double(i64* nocapture readonly %0, i64 %1) {
 define i8 @uchar_char(i8* nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: uchar_char:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    andd $r1 = $r1, 255
+; CHECK-NEXT:    clrf $r1 = $r1, 63, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lbz $r0 = $r1[$r0]
 ; CHECK-NEXT:    ret
@@ -311,7 +311,7 @@ define i8 @uchar_char(i8* nocapture readonly %0, i64 %1) {
 define i16 @uchar_short(i16* nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: uchar_short:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    andd $r1 = $r1, 255
+; CHECK-NEXT:    clrf $r1 = $r1, 63, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lhz.xs $r0 = $r1[$r0]
 ; CHECK-NEXT:    ret
@@ -325,7 +325,7 @@ define i16 @uchar_short(i16* nocapture readonly %0, i64 %1) {
 define i32 @uchar_word(i32* nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: uchar_word:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    andd $r1 = $r1, 255
+; CHECK-NEXT:    clrf $r1 = $r1, 63, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz.xs $r0 = $r1[$r0]
 ; CHECK-NEXT:    ret
@@ -339,7 +339,7 @@ define i32 @uchar_word(i32* nocapture readonly %0, i64 %1) {
 define i64 @uchar_double(i64* nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: uchar_double:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    andd $r1 = $r1, 255
+; CHECK-NEXT:    clrf $r1 = $r1, 63, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld.xs $r0 = $r1[$r0]
 ; CHECK-NEXT:    ret

@@ -294,7 +294,7 @@ define i32 @stackrealign2(i32 %n) #0 !dbg !52 {
 ; CHECK-NEXT:    .loc 1 69 20 is_stmt 0 # dwarf.c:69:20
 ; CHECK-NEXT:    addx4d $r0 = $r0, 31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, -32
+; CHECK-NEXT:    clrf $r0 = $r0, 4, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r12
 ; CHECK-NEXT:    ;;
@@ -475,7 +475,7 @@ define i32 @teststackalloca(i32 %n) #0 !dbg !88 {
 ; CHECK-NEXT:    .loc 1 115 20 is_stmt 0 # dwarf.c:115:20
 ; CHECK-NEXT:    addx4d $r0 = $r0, 31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, -32
+; CHECK-NEXT:    clrf $r0 = $r0, 4, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r12
 ; CHECK-NEXT:    ;;

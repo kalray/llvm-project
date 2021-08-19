@@ -428,10 +428,10 @@ define void @reg_reg_positive_bump(i32* nocapture %x, i32 %start, i32 %end){
 ; CHECK-NEXT:    cb.odd $r3 ? .LBB10_2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %for.body.preheader
-; CHECK-NEXT:    sxwd $r3 = $r1
 ; CHECK-NEXT:    sxwd $r2 = $r2
+; CHECK-NEXT:    sxwd $r3 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfd $r2 = $r3, $r2
+; CHECK-NEXT:    sbfwd $r2 = $r1, $r2
 ; CHECK-NEXT:    addx4d $r0 = $r3, $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r2, .__LOOPDO_10_END_
@@ -477,9 +477,8 @@ define void @reg_reg_negative_bump(i32* nocapture %x, i32 %start, i32 %end){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %for.body.preheader
 ; CHECK-NEXT:    sxwd $r1 = $r1
-; CHECK-NEXT:    sxwd $r2 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfd $r2 = $r2, $r1
+; CHECK-NEXT:    sbfwd $r2 = $r2, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r2 = $r2, 1
 ; CHECK-NEXT:    ;;

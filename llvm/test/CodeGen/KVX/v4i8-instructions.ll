@@ -702,7 +702,7 @@ define <4 x i8> @test_insertelement(<4 x i8> %a, i8 %x, i64 %p) #0 {
 ; CHECK-LABEL: test_insertelement:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    andd $r2 = $r2, 3
+; CHECK-NEXT:    clrf $r2 = $r2, 63, 2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r3 = $r12, 28
 ; CHECK-NEXT:    sw 28[$r12] = $r0

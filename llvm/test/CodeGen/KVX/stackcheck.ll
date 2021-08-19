@@ -30,7 +30,7 @@ define dso_local i32 @testalloca(i32 %n) local_unnamed_addr  {
 ; CHECK-NEXT:    get $r2 = $sr
 ; CHECK-NEXT:    addx4d $r1 = $r1, 31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r1 = $r1, -32
+; CHECK-NEXT:    clrf $r1 = $r1, 4, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfd $r1 = $r1, $r12
 ; CHECK-NEXT:    ;;

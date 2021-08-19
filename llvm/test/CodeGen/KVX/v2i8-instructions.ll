@@ -589,7 +589,7 @@ define <2 x i8> @test_insertelement(<2 x i8> %a, i8 %x, i64 %p) #0 {
 ; CHECK-LABEL: test_insertelement:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    andd $r2 = $r2, 1
+; CHECK-NEXT:    clrf $r2 = $r2, 63, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r3 = $r12, 30
 ; CHECK-NEXT:    sh 30[$r12] = $r0

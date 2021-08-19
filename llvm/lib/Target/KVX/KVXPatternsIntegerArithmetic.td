@@ -28,6 +28,43 @@ def nuwadd : PatFrag<(ops node:$op0, node:$op1), (add node:$op0, node:$op1), [{
     return N->getFlags().hasNoUnsignedWrap();
   }]>;
 
+def notShiftMaskStart : SDNodeXForm<imm, [{
+  const auto AP = N->getAPIntValue();
+  return CurDAG->getTargetConstant(
+      AP.countTrailingOnes(),
+      SDLoc(N), MVT::i32);
+}]>;
+
+def notShiftMaskEnd : SDNodeXForm<imm, [{
+  const auto AP = N->getAPIntValue();
+  return CurDAG->getTargetConstant(
+      AP.getBitWidth() - AP.countLeadingOnes() - 1,
+      SDLoc(N), MVT::i32);
+
+}]>;
+
+def isNotShiftMask : PatLeaf<(imm), [{
+  return (~N->getAPIntValue()).isShiftedMask();
+}]>;
+
+def ShiftMaskStart : SDNodeXForm<imm, [{
+  const auto AP = N->getAPIntValue();
+  return CurDAG->getTargetConstant(
+      std::max(0l, (long)(AP.countTrailingZeros())-1),
+      SDLoc(N), MVT::i32);
+}]>;
+
+def ShiftMaskEnd : SDNodeXForm<imm, [{
+  const auto AP = N->getAPIntValue();
+  return CurDAG->getTargetConstant(
+      AP.getBitWidth() - AP.countLeadingZeros() -1,
+      SDLoc(N), MVT::i32);
+}]>;
+
+def isShiftMask : PatLeaf<(imm), [{
+  return N->getAPIntValue().isShiftedMask();
+}]>;
+
 defm : ZEFPat<(and (srl i32:$v, Wrapped64:$shiftc), Wrapped32:$andm), (EXTFZWp SingleReg:$v, Wrapped32:$andm, Wrapped64:$shiftc)>;
 
 //===----------------------------------------------------------------------===//
@@ -68,6 +105,28 @@ def : Pat<(smax v4i16:$v, (v4i16 (vineg v4i16:$v))), (ABSHQ SingleReg:$v)>;
 
 // ABSW
 def : Pat<(smax i32:$v, (i32 (ineg i32:$v))), (ABSW SingleReg:$v)>;
+
+// ADDCHCP
+// TODO: add ri variants
+def : Pat<(i64 (or
+                  (and
+                        (add i64:$t4, i64:$t2),
+                        (i64 0xffff)),
+                  (and (sub i64:$t4, (and i64:$t2, (i64 0xffff0000))), (i64 0xffff0000)))),
+          (ADDCHCPrr SingleReg:$t2, SingleReg:$t4)>, Requires<[IsV1]>;
+
+def : Pat<(i64 (or
+                  (or
+                        (or
+                              (and
+                                    (add (and i64:$t2, (i64 0xffff00000000)), i64:$t4),
+                                    (i64 0xffff00000000)),
+                              (and
+                                    (add i64:$t2, i64:$t4),
+                                    (i64 0xffff))),
+                        (and (sub i64:$t2, (and i64:$t4, (i64 0xffff000000000000))), (i64 0xffff000000000000))),
+                  (and (sub i64:$t2, (and i64:$t4, (i64 0xffff0000))), (i64 0xffff0000)))),
+          (ADDCHCPrr SingleReg:$t4, SingleReg:$t2)>, Requires<[IsV1]>;
 
 // ADDCWC
 // TODO: ri variants
@@ -245,7 +304,9 @@ defm : VECADDXPAT<v2i32, (i32 2), ADDX4WPrr,  ADDX4WPri,  v2_splat, imm_vec_2bit
 defm : VECADDXPAT<v2i32, (i32 3), ADDX8WPrr,  ADDX8WPri,  v2_splat, imm_vec_3bit_splat_, imm_vec_3bit_splat_at, is_imm_vec_leq3bits>;
 defm : VECADDXPAT<v2i32, (i32 4), ADDX16WPrr, ADDX16WPri, v2_splat, imm_vec_4bit_splat_, imm_vec_4bit_splat_at, is_imm_vec_leq4bits>;
 
-// ANDD
+// ANDD, CLRF
+def : Pat<(and i64:$rs1, isNotShiftMask:$imm), (i64(CLRF SingleReg:$rs1, (notShiftMaskEnd $imm), (notShiftMaskStart $imm) ))>;
+def : Pat<(and i64:$rs1, isShiftMask:$imm), (CLRF SingleReg:$rs1, (ShiftMaskStart $imm), (ShiftMaskEnd $imm) )>;
 def : Pat<(and i64:$rs1, i64:$rs2), (ANDDrr SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(and i64:$rs1, Signed10:$rs2), (ANDDri10 SingleReg:$rs1, Signed10:$rs2)>;
 def : Pat<(and i64:$rs1, Signed37:$rs2), (ANDDri37 SingleReg:$rs1, Signed37:$rs2)>;
@@ -1142,6 +1203,32 @@ def : Pat<(i64( smin (smax i64:$v, -2147483648), 2147483647 )), (SATDW SingleReg
 def : Pat<(i64( smax (smin i64:$v, 2147483647), -2147483648 )), (SATDW SingleReg:$v)>;
 } // let Requires<[IsV1]>
 
+// SBFCHCP TODO: add ri variants
+def : Pat<(i64 (or
+                  (and (sub i64:$t4, i64:$t2), (i64 0xffff)),
+                  (and
+                    (add (and i64:$t4, (i64 0xffff0000)), i64:$t2),
+                    (i64 0xffff0000))
+              )
+            ),
+          (SBFCHCPrr SingleReg:$t4, SingleReg:$t2)>, Requires<[IsV1]>;
+
+def : Pat<(i64 (or
+                  (or
+                    (or
+                       (and(sub i64:$t4, (and i64:$t2, (i64 0xffff00000000))), (i64 0xffff00000000)),
+                       (and (sub i64:$t4, i64:$t2), (i64 0xffff))),
+                    (and
+                       (add (and i64:$t2, (i64 0xffff000000000000)), i64:$t4),
+                       (i64 0xffff000000000000))),
+                  (and
+                    (add (and i64:$t4, (i64 0xffff0000)), i64:$t2),
+                    (i64 0xffff0000))
+              )
+            ),
+          (SBFCHCPrr SingleReg:$t4, SingleReg:$t2)>, Requires<[IsV1]>;
+
+
 // SBFCWC
 // TODO: ri variants
 def : Pat<(i64(or(and (add i64:$r1, (and i64:$r0, (i64 0xffffffff00000000))), (i64 0xffffffff00000000) ),
@@ -1160,6 +1247,14 @@ def : Pat<(sub v2i16:$rs1, v2i16:$rs2), (SBFHQrr SingleReg:$rs2, SingleReg:$rs1)
 def : Pat<(sub (v4i16(is_imm_vec_kvx_splat32_:$IMM)), v4i16:$rs1), (SBFHQri SingleReg:$rs1, (build_imm_vec $IMM), splat32_)>;
 def : Pat<(sub (v4i16(is_imm_vec_kvx_splat32_at:$IMM)), v4i16:$rs1), (SBFHQri SingleReg:$rs1, (build_imm_vec $IMM), splat32_at)>;
 def : Pat<(sub v4i16:$rs1, v4i16:$rs2), (SBFHQrr SingleReg:$rs2, SingleReg:$rs1)>;
+
+// SBFUWD ri variants are not usefull, as SBFD is cheaper
+// FIXME: In most cases we don't produce a zxwd,
+// so using SBFUWD is worse than using a SBFD
+// def : Pat<(i64 (sub i64:$d, (zext i32:$w))), (SBFUWDrr SingleReg:$d, SingleReg:$w)>;
+
+// SBFWD ri variants are not usefull, as SBFD is cheaper
+def : Pat<(i64 (sub i64:$d, (sext i32:$w))), (SBFWDrr SingleReg:$w, SingleReg:$d)>;
 
 // SBFW
 defm : ZEFPat<(sub i32:$rs1, i32:$rs2), (SBFWrr SingleReg:$rs2, SingleReg:$rs1)>;

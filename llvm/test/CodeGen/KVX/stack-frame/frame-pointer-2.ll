@@ -36,7 +36,7 @@ define dso_local i32 @test(i32 %sz, i32 %x) {
 ; FP-ALL-NEXT:    .cfi_offset 18, -24
 ; FP-ALL-NEXT:    addd $r1 = $r2, 31
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    andd $r1 = $r1, -32
+; FP-ALL-NEXT:    clrf $r1 = $r1, 4, 0
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    sbfd $r18 = $r1, $r12
 ; FP-ALL-NEXT:    ;;

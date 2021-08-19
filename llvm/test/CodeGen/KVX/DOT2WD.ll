@@ -239,7 +239,7 @@ define i64 @DOT2WD_ri_64_2(i64 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srad $r1 = $r0, 27
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r1 = $r1, -32
+; CHECK-NEXT:    clrf $r1 = $r1, 4, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    maddwd $r1 = $r0, 3
 ; CHECK-NEXT:    ;;
@@ -260,7 +260,7 @@ define i64 @DOT2WD_ri_64_3(i64 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srad $r1 = $r0, 27
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r1 = $r1, -32
+; CHECK-NEXT:    clrf $r1 = $r1, 4, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    maddwd $r1 = $r0, 3
 ; CHECK-NEXT:    ;;

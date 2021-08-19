@@ -44,7 +44,7 @@ define dso_local i32 @test(i32 %sz, i32 %x) {
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    addd $r0 = $r0, 31
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    andd $r0 = $r0, -32
+; FP-ALL-NEXT:    clrf $r0 = $r0, 4, 0
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    sbfd $r20 = $r0, $r12
 ; FP-ALL-NEXT:    ;;
@@ -59,7 +59,7 @@ define dso_local i32 @test(i32 %sz, i32 %x) {
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    addd $r0 = $r0, 31
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    andd $r0 = $r0, -32
+; FP-ALL-NEXT:    clrf $r0 = $r0, 4, 0
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    sbfd $r18 = $r0, $r12
 ; FP-ALL-NEXT:    ;;

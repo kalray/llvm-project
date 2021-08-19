@@ -38,7 +38,7 @@ define double @test_extract_i(<4 x double> %a, i64 %idx) #0 {
 ; CHECK-LABEL: test_extract_i:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    andd $r4 = $r4, 3
+; CHECK-NEXT:    clrf $r4 = $r4, 63, 2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r5 = $r12, 0
 ; CHECK-NEXT:    so 0[$r12] = $r0r1r2r3
