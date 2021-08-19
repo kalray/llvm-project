@@ -26,7 +26,7 @@ define i32 @foo(i32 %n, i32 %m) {
 ; CHECK-NEXT:    .cfi_offset 19, -32
 ; CHECK-NEXT:    addx4d $r0 = $r0, 31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x7ffffffe0
+; CHECK-NEXT:    clrf $r0 = $r0, 4, 34
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfd $r19 = $r0, $r12
 ; CHECK-NEXT:    ;;

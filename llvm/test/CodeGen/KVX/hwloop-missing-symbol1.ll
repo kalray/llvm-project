@@ -52,7 +52,7 @@ define void @InitDataSet(i32 %m, i16* nocapture %x, i32 %n, i16* nocapture %h)  
 ; CHECK-NEXT:    goto .LBB0_6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_7: # %vector.ph
-; CHECK-NEXT:    andd $r5 = $r4, -2
+; CHECK-NEXT:    clrf $r5 = $r4, 0, 0
 ; CHECK-NEXT:    make $r7 = 0xffffffffdeaddead
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r0 = $r5, -2
@@ -137,7 +137,7 @@ define void @InitDataSet(i32 %m, i16* nocapture %x, i32 %n, i16* nocapture %h)  
 ; CHECK-NEXT:    goto .LBB0_18
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_19: # %vector.ph74
-; CHECK-NEXT:    andd $r2 = $r1, -2
+; CHECK-NEXT:    clrf $r2 = $r1, 0, 0
 ; CHECK-NEXT:    make $r5 = 0xffffffffbeefbeef
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r0 = $r2, -2
@@ -476,11 +476,10 @@ define i32 @main(i32 %argc, i8** nocapture readnone %argv)  {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.5: # %vector.ph
 ; CHECK-NEXT:    # in Loop: Header=BB1_1 Depth=1
-; CHECK-NEXT:    andd $r0 = $r1, -2
-; CHECK-NEXT:    andd $r2 = $r1, -2
+; CHECK-NEXT:    clrf $r2 = $r1, 0, 0
 ; CHECK-NEXT:    copyd $r3 = $r27
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, -2
+; CHECK-NEXT:    addd $r0 = $r2, -2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srld $r0 = $r0, 1
 ; CHECK-NEXT:    ;;

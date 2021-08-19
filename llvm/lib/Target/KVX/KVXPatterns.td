@@ -6,21 +6,24 @@
 // License. See LICENSE.TXT for details.
 //
 //===----------------------------------------------------------------------===//
-// TODO: Add patterns for
-// ACSWAPD ACSWAPW ADDCHCP ALCLRD ALCLRW CLRF CMULDT CMULGHXDT
-// CMULGLXDT CMULGMXDT CMULXDT
-// CRCBELLW CRCBELMW CRCLELLW CRCLELMW DOT2SUWDP DOT2UWDP
-// DOT2WDP FCDIVWP FDOT2WD FDOT2WDP FDOT2WZP
-// FMULCWDC
-// FMULWDC FSDIVWP FSRECWP FSRSRWP FWIDENMHWP FWIDENMWD
-// IGET
-// MADDDT MADDSUDT MADDUDT
-// MADDUZDT MSBFDT
-// MSBFSUDT MSBFUDT
-// MSBFUZDT MULCWDC
-// MULWDC NOP RFE RSWAP RSWAP
-// SBFCHCP SBFCWC SBFWD SBFUWD SCALL
+// TODO:
+// These instructions output two results and can't be selected at ISEL
+// DOT2SUWDP DOT2UWDP DOT2WDP DOT2WZP FDOT2WD FDOT2WDP FDOT2WZP FMULCWDC FMULWDC
 
+// Require builtins:
+// FSRSRWP IGET NOP RFE RSWAP SCALL
+
+// Require builtins and better specification to understand them
+// CRCBELLW CRCBELMW CRCLELLW CRCLELMW CMULGLXDT CMULGMXDT CMULXDT FSDIVWP FCDIVWP
+// CMULGHXDT FSRECWP
+
+// We can only generate 1 out of 7 variations of:
+// ACSWAPD ACSWAPW ALCLRD ALCLRW
+
+// These instructions require i128 legalization
+// MADDDT MADDSUDT MADDUDT MADDUZDT MSBFDT MSBFSUDT MSBFUDT MSBFUZDT
+
+// Add conditional flavours for all load/stores/mem-atomics
 
 //===----------------------------------------------------------------------===//
 // Custom selection DAG type profile definitions.

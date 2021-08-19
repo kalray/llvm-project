@@ -156,7 +156,7 @@ define i32 @stackrealign2(i32 %n){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addx4d $r0 = $r0, 31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, -32
+; CHECK-NEXT:    clrf $r0 = $r0, 4, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfd $r0 = $r0, $r12
 ; CHECK-NEXT:    ;;
@@ -170,7 +170,7 @@ define i32 @stackrealign2(i32 %n){
 ; CHECK-NEXT:    addd $r2 = $r4, -1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compd.ltu $r5 = $r2, 7
-; CHECK-NEXT:    andd $r2 = $r4, 7
+; CHECK-NEXT:    clrf $r2 = $r4, 63, 3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.odd $r5 ? .LBB1_5
 ; CHECK-NEXT:    ;;
@@ -578,7 +578,7 @@ define i32 @stackrealign4(i32 %n){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addx4d $r0 = $r0, 31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, -32
+; CHECK-NEXT:    clrf $r0 = $r0, 4, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfd $r11 = $r0, $r12
 ; CHECK-NEXT:    ;;
@@ -592,7 +592,7 @@ define i32 @stackrealign4(i32 %n){
 ; CHECK-NEXT:    addd $r2 = $r4, -1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compd.ltu $r5 = $r2, 7
-; CHECK-NEXT:    andd $r2 = $r4, 7
+; CHECK-NEXT:    clrf $r2 = $r4, 63, 3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.odd $r5 ? .LBB3_5
 ; CHECK-NEXT:    ;;

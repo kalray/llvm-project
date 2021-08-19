@@ -64,7 +64,7 @@ define i32 @f(i32 %a1, i32 %a2, i32 %a3, i32 %a4, i32 %a5, i32 %a6, i32 %a7, i32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addx4d $r1 = $r15, 31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r1 = $r1, 0x7ffffffe0
+; CHECK-NEXT:    clrf $r1 = $r1, 4, 34
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfd $r1 = $r1, $r12
 ; CHECK-NEXT:    ;;

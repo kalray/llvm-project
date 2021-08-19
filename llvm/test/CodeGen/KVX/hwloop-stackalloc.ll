@@ -63,7 +63,7 @@ define i32 @f(i32 %num){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 14, -16
 ; CHECK-NEXT:    .cfi_def_cfa 14, 16
-; CHECK-NEXT:    andd $r1 = $r1, -32
+; CHECK-NEXT:    clrf $r1 = $r1, 4, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfd $r1 = $r1, $r12
 ; CHECK-NEXT:    ;;
@@ -87,7 +87,7 @@ define i32 @f(i32 %num){
 ; CHECK-NEXT:  # %bb.3: # %set.exit
 ; CHECK-NEXT:    addx8wd $r2 = $r0, 31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r2 = $r2, -32
+; CHECK-NEXT:    clrf $r2 = $r2, 4, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfd $r2 = $r2, $r12
 ; CHECK-NEXT:    ;;

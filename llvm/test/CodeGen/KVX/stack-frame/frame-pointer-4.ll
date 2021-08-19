@@ -36,11 +36,11 @@ define dso_local i32 @f(i32 %sz) {
 ; FP-ALL-NEXT:    .cfi_offset 19, -32
 ; FP-ALL-NEXT:    addd $r0 = $r0, 31
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    andd $r0 = $r0, -32
+; FP-ALL-NEXT:    clrf $r0 = $r0, 4, 0
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    sbfd $r1 = $r0, $r12
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    andd $r18 = $r1, -128
+; FP-ALL-NEXT:    clrf $r18 = $r1, 6, 0
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    copyd $r12 = $r18
 ; FP-ALL-NEXT:    ;;

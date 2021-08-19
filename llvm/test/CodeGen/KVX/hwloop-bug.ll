@@ -55,7 +55,7 @@ define void @InitDataSet(i32 %m, i16* nocapture %x, i32 %n, i16* nocapture %h) {
 ; CHECK-NEXT:    goto .LBB0_6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_7: # %vector.ph
-; CHECK-NEXT:    andd $r5 = $r4, -2
+; CHECK-NEXT:    clrf $r5 = $r4, 0, 0
 ; CHECK-NEXT:    make $r7 = 0xffffffffdeaddead
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r0 = $r5, -2
@@ -140,7 +140,7 @@ define void @InitDataSet(i32 %m, i16* nocapture %x, i32 %n, i16* nocapture %h) {
 ; CHECK-NEXT:    goto .LBB0_18
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_19: # %vector.ph74
-; CHECK-NEXT:    andd $r2 = $r1, -2
+; CHECK-NEXT:    clrf $r2 = $r1, 0, 0
 ; CHECK-NEXT:    make $r5 = 0xffffffffbeefbeef
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r0 = $r2, -2

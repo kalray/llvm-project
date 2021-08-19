@@ -49,7 +49,7 @@ entry:
 define <4 x half> @f1(<4 x half> %v){
 ; CHECK-LABEL: f1:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    andd $r0 = $r0, 0xffffffffffff0000
+; CHECK-NEXT:    clrf $r0 = $r0, 15, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r0 = $r0, 0x4940
 ; CHECK-NEXT:    ret
@@ -62,7 +62,7 @@ entry:
 define <4 x half> @f2(<4 x half> %v){
 ; CHECK-LABEL: f2:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    andd $r0 = $r0, 0xffffffff0000ffff
+; CHECK-NEXT:    clrf $r0 = $r0, 31, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r0 = $r0, 0x494d0000
 ; CHECK-NEXT:    ret
@@ -75,7 +75,7 @@ entry:
 define <4 x half> @f3(<4 x half> %v){
 ; CHECK-LABEL: f3:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    andd $r0 = $r0, 0xffff0000ffffffff
+; CHECK-NEXT:    clrf $r0 = $r0, 47, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r0 = $r0, 0x495a00000000
 ; CHECK-NEXT:    ret
@@ -88,7 +88,7 @@ entry:
 define <4 x half> @f4(<4 x half> %v){
 ; CHECK-LABEL: f4:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    andd $r0 = $r0, 0xffffffffffff
+; CHECK-NEXT:    clrf $r0 = $r0, 63, 48
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r0 = $r0, 0x4966000000000000
 ; CHECK-NEXT:    ret
@@ -101,7 +101,7 @@ entry:
 define <4 x half> @f5(<4 x half> %v){
 ; CHECK-LABEL: f5:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    andd $r0 = $r0, 0xffffffffffff0000
+; CHECK-NEXT:    clrf $r0 = $r0, 15, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r0 = $r0, 0xc940
 ; CHECK-NEXT:    ret
@@ -114,7 +114,7 @@ entry:
 define <4 x half> @f6(<4 x half> %v){
 ; CHECK-LABEL: f6:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    andd $r0 = $r0, 0xffffffff0000ffff
+; CHECK-NEXT:    clrf $r0 = $r0, 31, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r0 = $r0, 0xc94d0000
 ; CHECK-NEXT:    ret
@@ -127,7 +127,7 @@ entry:
 define <4 x half> @f7(<4 x half> %v){
 ; CHECK-LABEL: f7:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    andd $r0 = $r0, 0xffff0000ffffffff
+; CHECK-NEXT:    clrf $r0 = $r0, 47, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r0 = $r0, 0xc95a00000000
 ; CHECK-NEXT:    ret
@@ -140,7 +140,7 @@ entry:
 define <4 x half> @f8(<4 x half> %v){
 ; CHECK-LABEL: f8:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    andd $r0 = $r0, 0xffffffffffff
+; CHECK-NEXT:    clrf $r0 = $r0, 63, 48
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r0 = $r0, 0xc966000000000000
 ; CHECK-NEXT:    ret
