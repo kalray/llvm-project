@@ -29,6 +29,10 @@ static cl::opt<int> MinimumJumpTablesEntries(
     "kvx-minimum-jump-tables-entries", cl::Hidden, cl::ZeroOrMore, cl::init(5),
     cl::desc("Set minimum jump tables entries count."));
 
+static cl::opt<bool> UseVLIWSched("use-kvx-vliw-sched", cl::Hidden,
+                                  cl::ZeroOrMore, cl::init(false),
+                                  cl::desc("Use VLIW Scheduler."));
+
 #include "KVXGenCallingConv.inc"
 
 static bool CC_SRET_KVX(unsigned ValNo, MVT ValVT, MVT LocVT,
@@ -92,7 +96,11 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   // account such kind of dependencies, a potential workaround could be to
   // switch back to VLIW by default and setting Source only when some assembly
   // inline is detected (since those builtins generate asm inline).
-  setSchedulingPreference(Sched::Source);
+  if (UseVLIWSched)
+    // Use -use-kvx-vliw-sched to keep old behavior.
+    setSchedulingPreference(Sched::VLIW);
+  else
+    setSchedulingPreference(Sched::Source);
 
   initializeTCALowering();
 
