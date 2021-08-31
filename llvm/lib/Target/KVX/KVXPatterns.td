@@ -317,30 +317,6 @@ def LMATRIXp : KVX_PSEUDO<
         (ins Wrapped64:$offset, SingleReg:$base, SpeculateMod:$var), []>;
 }
 
-foreach type = [ i1, i8, i16, i32, i64, v2i8, v4i8, v8i8, v2i32, v4i16, v2i16, v2i64, v4i32, v4i64] in {
-
-def kload#type : PatFrag<(ops node:$ptr), (type (load node:$ptr))>;
-
-def kextload#type : PatFrag<(ops node:$ptr), (extload node:$ptr)>
-{
-  let IsLoad = 1;
-  let MemoryVT = type;
-}
-
-def kzextload#type : PatFrag<(ops node:$ptr), (zextload node:$ptr)>
-{
-  let IsLoad = 1;
-  let MemoryVT = type;
-}
-
-def ksextload#type : PatFrag<(ops node:$ptr), (sextload node:$ptr)>
-{
-  let IsLoad = 1;
-  let MemoryVT = type;
-}
-
-}
-
 def IsOrAdd: PatFrag<(ops node:$A, node:$B), (or node:$A, node:$B), [{
   return isOrEquivalentToAdd(N);
 }]>;
@@ -367,15 +343,19 @@ def get_mem_mod : SDNodeXForm<ld, [{
     return CurDAG->getTargetConstant(Mod, SDLoc(N), MVT::i32);
    }]>;
 
-multiclass LoadPatRI<PatFrag LoadOp, ValueType vt, KVX_PSEUDO pinst> {
+multiclass LoadPatRI<PatFrag LoadOp, ValueType vt, KVX_PSEUDO pinst, KVX_INSTRUCTION ri10, KVX_INSTRUCTION ri37, KVX_INSTRUCTION ri64> {
 
   def : Pat<(vt (LoadOp:$LD AddrFI:$base)), (pinst (i64 0), SingleReg:$base, (get_mem_mod $LD))>;
   def : Pat<(vt (LoadOp:$LD (add AddrFI:$base, Wrapped64:$offset))),
             (pinst Wrapped64:$offset, SingleReg:$base, (get_mem_mod $LD))>;
   def : Pat<(vt (LoadOp:$LD (IsOrAdd AddrFI:$base, Wrapped64:$offset))),
             (pinst Wrapped64:$offset, SingleReg:$base, (get_mem_mod $LD))>;
+  def : Pat<(vt (LoadOp:$LD (add SingleReg:$base, Signed10:$offset))),
+            (ri10 Wrapped64:$offset, SingleReg:$base, (get_mem_mod $LD))>;
+  def : Pat<(vt (LoadOp:$LD (add SingleReg:$base, Signed37:$offset))),
+            (ri37 Wrapped64:$offset, SingleReg:$base, (get_mem_mod $LD))>;
   def : Pat<(vt (LoadOp:$LD (add SingleReg:$base, Wrapped64:$offset))),
-            (pinst Wrapped64:$offset, SingleReg:$base, (get_mem_mod $LD))>;
+            (ri64 Wrapped64:$offset, SingleReg:$base, (get_mem_mod $LD))>;
 }
 
 multiclass LoadPatRR<PatFrag LoadOp, ValueType vt, KVX_INSTRUCTION rr> {
@@ -401,64 +381,58 @@ multiclass LoadPatXS<PatFrag LoadOp, ValueType vt, int sc, KVX_INSTRUCTION rr> {
 }
 
 multiclass SimpleLoadPat<PatFrag LoadOp, ValueType vt, KVX_PSEUDO pinst,
-                         KVX_INSTRUCTION ri10, KVX_INSTRUCTION rr> {
+                         KVX_INSTRUCTION ri10, KVX_INSTRUCTION ri37, KVX_INSTRUCTION ri64, KVX_INSTRUCTION rr> {
   def : Pat<(vt (LoadOp:$LD SingleReg:$base)),
             (ri10 (i64 0), SingleReg:$base, (get_mem_mod $LD))>;
-  defm : LoadPatRI<LoadOp, vt, pinst>;
+  defm : LoadPatRI<LoadOp, vt, pinst, ri10, ri37, ri64>;
   defm : LoadPatRR<LoadOp, vt, rr>;
 }
 
 multiclass LoadPat<PatFrag LoadOp, ValueType vt, int sc, KVX_PSEUDO pinst,
-                   KVX_INSTRUCTION ri10, KVX_INSTRUCTION rr> {
+                   KVX_INSTRUCTION ri10, KVX_INSTRUCTION ri37, KVX_INSTRUCTION ri64, KVX_INSTRUCTION rr> {
   def : Pat<(vt (LoadOp:$LD SingleReg:$base)),
             (ri10 (i64 0), SingleReg:$base, (get_mem_mod $LD))>;
-  defm : LoadPatRI<LoadOp, vt, pinst>;
+  defm : LoadPatRI<LoadOp, vt, pinst, ri10, ri37, ri64>;
   defm : LoadPatXS<LoadOp, vt, sc, rr>;
   defm : LoadPatRR<LoadOp, vt, rr>;
 }
 
-defm : SimpleLoadPat<ksextloadi1, i32, LBSp, LBSri10, LBSrr>;
-defm : SimpleLoadPat<kzextloadi1, i32, LBZp, LBZri10, LBZrr>;
-defm : SimpleLoadPat<kextloadi1, i32, LBZp, LBZri10, LBZrr>;
-defm : SimpleLoadPat<ksextloadi1, i64, LBSp, LBSri10, LBSrr>;
-defm : SimpleLoadPat<kzextloadi1, i64, LBZp, LBZri10, LBZrr>;
-defm : SimpleLoadPat<kextloadi1, i64, LBZp, LBZri10, LBZrr>;
-defm : SimpleLoadPat<kloadi1, i1, LBSp, LBSri10, LBSrr>;
+foreach extvt = [ i32, i64 ] in {
+defm : SimpleLoadPat<sextloadi1, extvt, LBSp, LBSri10, LBSri37, LBSri64, LBSrr>;
+defm : SimpleLoadPat<zextloadi1, extvt, LBZp, LBZri10, LBZri37, LBZri64, LBZrr>;
+defm : SimpleLoadPat<extloadi1, extvt, LBZp, LBZri10, LBZri37, LBZri64, LBZrr>;
 
-defm : SimpleLoadPat<ksextloadi8, i32, LBSp, LBSri10, LBSrr>;
-defm : SimpleLoadPat<kzextloadi8, i32, LBZp, LBZri10, LBZrr>;
-defm : SimpleLoadPat<kextloadi8, i32, LBZp, LBZri10, LBZrr>;
-defm : SimpleLoadPat<ksextloadi8, i64, LBSp, LBSri10, LBSrr>;
-defm : SimpleLoadPat<kzextloadi8, i64, LBZp, LBZri10, LBZrr>;
-defm : SimpleLoadPat<kextloadi8, i64, LBZp, LBZri10, LBZrr>;
-defm : SimpleLoadPat<kloadi8, i8, LBSp, LBSri10, LBSrr>;
+defm : SimpleLoadPat<sextloadi8, extvt, LBSp, LBSri10, LBSri37, LBSri64, LBSrr>;
+defm : SimpleLoadPat<zextloadi8, extvt, LBZp, LBZri10, LBZri37, LBZri64, LBZrr>;
+defm : SimpleLoadPat<extloadi8, extvt, LBZp, LBZri10, LBZri37, LBZri64, LBZrr>;
 
-defm : LoadPat<ksextloadi16, i32, 1, LHSp, LHSri10, LHSrr>;
-defm : LoadPat<kzextloadi16, i32, 1, LHZp, LHZri10, LHZrr>;
-defm : LoadPat<kextloadi16, i32, 1, LHZp, LHZri10, LHZrr>;
-defm : LoadPat<ksextloadi16, i64, 1, LHSp, LHSri10, LHSrr>;
-defm : LoadPat<kzextloadi16, i64, 1, LHZp, LHZri10, LHZrr>;
-defm : LoadPat<kextloadi16, i64, 1, LHZp, LHZri10, LHZrr>;
-defm : LoadPat<kloadi16, i16, 1, LHSp, LHSri10, LHSrr>;
-defm : LoadPat<kloadv2i8, v2i8, 1, LHZp, LHZri10, LHZrr>;
+defm : LoadPat<sextloadi16, extvt, 1, LHSp, LHSri10, LHSri37, LHSri64, LHSrr>;
+defm : LoadPat<zextloadi16, extvt, 1, LHZp, LHZri10, LHZri37, LHZri64, LHZrr>;
+defm : LoadPat<extloadi16, extvt, 1, LHZp, LHZri10, LHZri37, LHZri64, LHZrr>;
+}
+defm : LoadPat<sextloadi32, i64, 2, LWSp, LWSri10, LWSri37, LWSri64, LWSrr>;
+defm : LoadPat<zextloadi32, i64, 2, LWZp, LWZri10, LWZri37, LWZri64, LWZrr>;
+defm : LoadPat<extloadi32, i64, 2, LWZp, LWZri10, LWZri37, LWZri64, LWZrr>;
 
-defm : LoadPat<ksextloadi32, i64, 2, LWSp, LWSri10, LWSrr>;
-defm : LoadPat<kzextloadi32, i64, 2, LWZp, LWZri10, LWZrr>;
-defm : LoadPat<kextloadi32, i64, 2, LWZp, LWZri10, LWZrr>;
-defm : LoadPat<kloadi32, i32, 2, LWZp, LWZri10, LWZrr>;
-defm : LoadPat<kloadv2i16, v2i16, 2, LWZp, LWZri10, LWZrr>;
-defm : LoadPat<kloadv4i8, v4i8, 2, LWZp, LWZri10, LWZrr>;
+defm : SimpleLoadPat<load, i1, LBSp, LBSri10, LBSri37, LBSri64, LBSrr>;
+defm : SimpleLoadPat<load, i8, LBSp, LBSri10, LBSri37, LBSri64, LBSrr>;
+defm : LoadPat<load, i16, 1, LHSp, LHSri10, LHSri37, LHSri64, LHSrr>;
+defm : LoadPat<load, v2i8, 1, LHZp, LHZri10, LHZri37, LHZri64, LHZrr>;
 
-defm : LoadPat<kloadi64, i64, 3, LDp, LDri10, LDrr>;
-defm : LoadPat<kloadv8i8, v8i8, 3, LDp, LDri10, LDrr>;
-defm : LoadPat<kloadv2i32, v2i32, 3, LDp, LDri10, LDrr>;
-defm : LoadPat<kloadv4i16, v4i16, 3, LDp, LDri10, LDrr>;
+defm : LoadPat<load, i32, 2, LWZp, LWZri10, LWZri37, LWZri64, LWZrr>;
+defm : LoadPat<load, v2i16, 2, LWZp, LWZri10, LWZri37, LWZri64, LWZrr>;
+defm : LoadPat<load, v4i8, 2, LWZp, LWZri10, LWZri37, LWZri64, LWZrr>;
 
-defm : LoadPat<kloadv2i64, v2i64, 4, LQp, LQri10, LQrr>;
-defm : LoadPat<kloadv4i32, v4i32, 4, LQp, LQri10, LQrr>;
+defm : LoadPat<load, i64, 3, LDp, LDri10, LDri37, LDri64, LDrr>;
+defm : LoadPat<load, v8i8, 3, LDp, LDri10, LDri37, LDri64, LDrr>;
+defm : LoadPat<load, v2i32, 3, LDp, LDri10, LDri37, LDri64, LDrr>;
+defm : LoadPat<load, v4i16, 3, LDp, LDri10, LDri37, LDri64, LDrr>;
 
-defm : LoadPat<kloadv4i64, v4i64, 5, LOp, LOri10, LOrr>;
-defm : LoadPat<load, v256i1, 5, LVp, LVri10, LVrr>;
+defm : LoadPat<load, v2i64, 4, LQp, LQri10, LQri37, LQri64, LQrr>;
+defm : LoadPat<load, v4i32, 4, LQp, LQri10, LQri37, LQri64, LQrr>;
+
+defm : LoadPat<load, v4i64, 5, LOp, LOri10, LOri37, LOri64, LOrr>;
+defm : LoadPat<load, v256i1, 5, LVp, LVri10, LVri37, LVri64, LVrr>;
 
 def : Pat<(v512i1 (load SingleReg:$base)),
           (v512i1 (REG_SEQUENCE WideReg,
@@ -481,17 +455,17 @@ def : Pat<(v1024i1 (load SingleReg:$base)),
 let mayStore = 1 in
 {
 def SBp : KVX_PSEUDO_W_SCHEDINFO<
-        (outs), (ins Wrapped64:$offset, SingleReg:$base, SingleReg:$val), [], LSU_AUXW>;
+        (outs), (ins Wrapped64:$offset, SingleReg:$base, SingleReg:$val), [], LSU_AUXR_Y>;
 def SHp : KVX_PSEUDO_W_SCHEDINFO<
-        (outs), (ins Wrapped64:$offset, SingleReg:$base, SingleReg:$val), [], LSU_AUXW>;
+        (outs), (ins Wrapped64:$offset, SingleReg:$base, SingleReg:$val), [], LSU_AUXR_Y>;
 def SWp : KVX_PSEUDO_W_SCHEDINFO<
-        (outs), (ins Wrapped64:$offset, SingleReg:$base, SingleReg:$val), [], LSU_AUXW>;
+        (outs), (ins Wrapped64:$offset, SingleReg:$base, SingleReg:$val), [], LSU_AUXR_Y>;
 def SDp : KVX_PSEUDO_W_SCHEDINFO<
-        (outs), (ins Wrapped64:$offset, SingleReg:$base, SingleReg:$val), [], LSU_AUXW>;
+        (outs), (ins Wrapped64:$offset, SingleReg:$base, SingleReg:$val), [], LSU_AUXR_Y>;
 def SQp : KVX_PSEUDO_W_SCHEDINFO<
-        (outs), (ins Wrapped64:$offset, SingleReg:$base, PairedReg:$val), [], LSU_AUXW>;
+        (outs), (ins Wrapped64:$offset, SingleReg:$base, PairedReg:$val), [], LSU_AUXR_Y>;
 def SOp : KVX_PSEUDO_W_SCHEDINFO<
-        (outs), (ins Wrapped64:$offset, SingleReg:$base, QuadReg:$val), [], LSU_AUXW>;
+        (outs), (ins Wrapped64:$offset, SingleReg:$base, QuadReg:$val), [], LSU_AUXR_Y>;
 def SVp : KVX_PSEUDO_W_SCHEDINFO<
         (outs), (ins Wrapped64:$offset, SingleReg:$base, VectorReg:$val), [], LSU>;
 def SWIDEp : KVX_PSEUDO<
