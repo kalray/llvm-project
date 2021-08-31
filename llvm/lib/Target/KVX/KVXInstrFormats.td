@@ -154,245 +154,245 @@ class BRANCHCOND_REGISTERZ_PCREL17_SIMPLE
 let Size = 4 in
 class VARIANT_REGISTERW_SIGNED10_REGISTERZ_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_LOAD>;
 
 // 7 insn(s):
 // LBZ, LBS, LHZ, LHS, LWZ, LWS, LD
 let Size = 8 in
 class VARIANT_REGISTERW_UPPER27_LOWER10_REGISTERZ_DOUBLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_X>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_X_LOAD>;
 
 // 7 insn(s):
 // LBZ, LBS, LHZ, LHS, LWZ, LWS, LD
 let Size = 12 in
 class VARIANT_REGISTERW_EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_Y>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_Y_LOAD>;
 
 // 7 insn(s):
 // LBZ, LBS, LHZ, LHS, LWZ, LWS, LD
 let Size = 4 in
 class VARIANT_LSUCOND_REGISTERY_REGISTERW_REGISTERZ_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_LOAD>;
 
 // 7 insn(s):
 // LBZ, LBS, LHZ, LHS, LWZ, LWS, LD
 let Size = 8 in
 class VARIANT_LSUCOND_REGISTERY_REGISTERW_OFFSET27_REGISTERZ_DOUBLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_X>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_X_LOAD>;
 
 // 7 insn(s):
 // LBZ, LBS, LHZ, LHS, LWZ, LWS, LD
 let Size = 12 in
 class VARIANT_LSUCOND_REGISTERY_REGISTERW_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_Y>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_Y_LOAD>;
 
 // 7 insn(s):
 // LBZ, LBS, LHZ, LHS, LWZ, LWS, LD
 let Size = 4 in
 class VARIANT_DOSCALE_REGISTERW_REGISTERY_REGISTERZ_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_LOAD>;
 
 // 1 insn(s):
 // LQ
 let Size = 4 in
 class VARIANT_REGISTERM_SIGNED10_REGISTERZ_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_LOAD>;
 
 // 1 insn(s):
 // LQ
 let Size = 8 in
 class VARIANT_REGISTERM_UPPER27_LOWER10_REGISTERZ_DOUBLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_X>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_X_LOAD>;
 
 // 1 insn(s):
 // LQ
 let Size = 12 in
 class VARIANT_REGISTERM_EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_Y>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_Y_LOAD>;
 
 // 1 insn(s):
 // LQ
 let Size = 4 in
 class VARIANT_LSUCOND_REGISTERY_REGISTERM_REGISTERZ_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_LOAD>;
 
 // 1 insn(s):
 // LQ
 let Size = 8 in
 class VARIANT_LSUCOND_REGISTERY_REGISTERM_OFFSET27_REGISTERZ_DOUBLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_X>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_X_LOAD>;
 
 // 1 insn(s):
 // LQ
 let Size = 12 in
 class VARIANT_LSUCOND_REGISTERY_REGISTERM_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_Y>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_Y_LOAD>;
 
 // 1 insn(s):
 // LQ
 let Size = 4 in
 class VARIANT_DOSCALE_REGISTERM_REGISTERY_REGISTERZ_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_LOAD>;
 
 // 1 insn(s):
 // LO
 let Size = 4 in
 class VARIANT_REGISTERN_SIGNED10_REGISTERZ_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_LOAD>;
 
 // 1 insn(s):
 // LO
 let Size = 8 in
 class VARIANT_REGISTERN_UPPER27_LOWER10_REGISTERZ_DOUBLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_X>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_X_LOAD>;
 
 // 1 insn(s):
 // LO
 let Size = 12 in
 class VARIANT_REGISTERN_EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_Y>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_Y_LOAD>;
 
 // 1 insn(s):
 // LO
 let Size = 4 in
 class VARIANT_LSUCOND_REGISTERY_REGISTERN_REGISTERZ_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_LOAD>;
 
 // 1 insn(s):
 // LO
 let Size = 8 in
 class VARIANT_LSUCOND_REGISTERY_REGISTERN_OFFSET27_REGISTERZ_DOUBLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_X>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_X_LOAD>;
 
 // 1 insn(s):
 // LO
 let Size = 12 in
 class VARIANT_LSUCOND_REGISTERY_REGISTERN_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_Y>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_Y_LOAD>;
 
 // 1 insn(s):
 // LO
 let Size = 4 in
 class VARIANT_DOSCALE_REGISTERN_REGISTERY_REGISTERZ_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_LOAD>;
 
 // 1 insn(s):
 // LV
 let Size = 4 in
 class SPECULATE_REGISTERA_SIGNED10_REGISTERZ_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_LOAD>;
 
 // 1 insn(s):
 // LV
 let Size = 8 in
 class SPECULATE_REGISTERA_UPPER27_LOWER10_REGISTERZ_DOUBLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_X>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_X_LOAD>;
 
 // 1 insn(s):
 // LV
 let Size = 12 in
 class SPECULATE_REGISTERA_EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_Y>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_Y_LOAD>;
 
 // 1 insn(s):
 // LV
 let Size = 4 in
 class SPECULATE_LSUCOND_REGISTERY_REGISTERA_REGISTERZ_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_LOAD>;
 
 // 1 insn(s):
 // LV
 let Size = 8 in
 class SPECULATE_LSUCOND_REGISTERY_REGISTERA_OFFSET27_REGISTERZ_DOUBLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_X>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_X_LOAD>;
 
 // 1 insn(s):
 // LV
 let Size = 12 in
 class SPECULATE_LSUCOND_REGISTERY_REGISTERA_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_Y>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_Y_LOAD>;
 
 // 1 insn(s):
 // LV
 let Size = 4 in
 class SPECULATE_DOSCALE_REGISTERA_REGISTERY_REGISTERZ_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_LOAD>;
 
 // 1 insn(s):
 // LV
 let Size = 4 in
 class COLUMN_SPECULATE_REGISTERAQ_SIGNED10_REGISTERZ_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_LOAD>;
 
 // 1 insn(s):
 // LV
 let Size = 8 in
 class COLUMN_SPECULATE_REGISTERAQ_UPPER27_LOWER10_REGISTERZ_DOUBLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_X>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_X_LOAD>;
 
 // 1 insn(s):
 // LV
 let Size = 12 in
 class COLUMN_SPECULATE_REGISTERAQ_EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_Y>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_Y_LOAD>;
 
 // 1 insn(s):
 // LV
 let Size = 4 in
 class COLUMN_SPECULATE_LSUCOND_REGISTERY_REGISTERAQ_REGISTERZ_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_LOAD>;
 
 // 1 insn(s):
 // LV
 let Size = 8 in
 class COLUMN_SPECULATE_LSUCOND_REGISTERY_REGISTERAQ_OFFSET27_REGISTERZ_DOUBLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_X>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_X_LOAD>;
 
 // 1 insn(s):
 // LV
 let Size = 12 in
 class COLUMN_SPECULATE_LSUCOND_REGISTERY_REGISTERAQ_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_Y>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_Y_LOAD>;
 
 // 1 insn(s):
 // LV
 let Size = 4 in
 class COLUMN_SPECULATE_DOSCALE_REGISTERAQ_REGISTERY_REGISTERZ_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_LOAD>;
 
 // 6 insn(s):
 // SB, SH, SW, SD, ALADDW, ALADDD
@@ -497,196 +497,196 @@ class LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_REGISTERU_TRIPLE
 let Size = 4 in
 class SIGNED10_REGISTERZ_REGISTERV_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXR>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXR_STORE>;
 
 // 1 insn(s):
 // SO
 let Size = 8 in
 class UPPER27_LOWER10_REGISTERZ_REGISTERV_DOUBLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXR_X>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXR_X_STORE>;
 
 // 1 insn(s):
 // SO
 let Size = 12 in
 class EXTEND27_UPPER27_LOWER10_REGISTERZ_REGISTERV_TRIPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXR_Y>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXR_Y_STORE>;
 
 // 1 insn(s):
 // SO
 let Size = 4 in
 class DOSCALE_REGISTERY_REGISTERZ_REGISTERV_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXR>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXR_STORE>;
 
 // 1 insn(s):
 // SO
 let Size = 4 in
 class LSUCOND_REGISTERY_REGISTERZ_REGISTERV_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXR>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXR_STORE>;
 
 // 1 insn(s):
 // SO
 let Size = 8 in
 class LSUCOND_REGISTERY_OFFSET27_REGISTERZ_REGISTERV_DOUBLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXR_X>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXR_X_STORE>;
 
 // 1 insn(s):
 // SO
 let Size = 12 in
 class LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_REGISTERV_TRIPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXR_Y>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXR_Y_STORE>;
 
 // 1 insn(s):
 // SV
 let Size = 4 in
 class SIGNED10_REGISTERZ_REGISTERE_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_CRRP>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_CRRP_STORE>;
 
 // 1 insn(s):
 // SV
 let Size = 8 in
 class UPPER27_LOWER10_REGISTERZ_REGISTERE_DOUBLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_CRRP_X>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_CRRP_X_STORE>;
 
 // 1 insn(s):
 // SV
 let Size = 12 in
 class EXTEND27_UPPER27_LOWER10_REGISTERZ_REGISTERE_TRIPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_CRRP_Y>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_CRRP_Y_STORE>;
 
 // 1 insn(s):
 // SV
 let Size = 4 in
 class DOSCALE_REGISTERY_REGISTERZ_REGISTERE_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_CRRP>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_CRRP_STORE>;
 
 // 1 insn(s):
 // SV
 let Size = 4 in
 class LSUCOND_REGISTERY_REGISTERZ_REGISTERE_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_CRRP>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_CRRP_STORE>;
 
 // 1 insn(s):
 // SV
 let Size = 8 in
 class LSUCOND_REGISTERY_OFFSET27_REGISTERZ_REGISTERE_DOUBLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_CRRP_X>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_CRRP_X_STORE>;
 
 // 1 insn(s):
 // SV
 let Size = 12 in
 class LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_REGISTERE_TRIPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_CRRP_Y>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_CRRP_Y_STORE>;
 
 // 2 insn(s):
 // ALCLRW, ALCLRD
 let Size = 4 in
 class REGISTERW_SIGNED10_REGISTERZ_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_ALCLR>;
 
 // 2 insn(s):
 // ALCLRW, ALCLRD
 let Size = 8 in
 class REGISTERW_UPPER27_LOWER10_REGISTERZ_DOUBLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_X>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_X_ALCLR>;
 
 // 2 insn(s):
 // ALCLRW, ALCLRD
 let Size = 12 in
 class REGISTERW_EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_Y>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_Y_ALCLR>;
 
 // 2 insn(s):
 // ALCLRW, ALCLRD
 let Size = 4 in
 class DOSCALE_REGISTERW_REGISTERY_REGISTERZ_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_ALCLR>;
 
 // 2 insn(s):
 // ALCLRW, ALCLRD
 let Size = 4 in
 class LSUCOND_REGISTERY_REGISTERW_REGISTERZ_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_ALCLR>;
 
 // 2 insn(s):
 // ALCLRW, ALCLRD
 let Size = 8 in
 class LSUCOND_REGISTERY_REGISTERW_OFFSET27_REGISTERZ_DOUBLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_X>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_X_ALCLR>;
 
 // 2 insn(s):
 // ALCLRW, ALCLRD
 let Size = 12 in
 class LSUCOND_REGISTERY_REGISTERW_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_Y>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_Y_ALCLR>;
 
 // 4 insn(s):
 // DTOUCHL, DINVALL, DZEROL, IINVALS
 let Size = 4 in
 class SIGNED10_REGISTERZ_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_LOAD>;
 
 // 4 insn(s):
 // DTOUCHL, DINVALL, DZEROL, IINVALS
 let Size = 8 in
 class UPPER27_LOWER10_REGISTERZ_DOUBLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_X>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_X_LOAD>;
 
 // 4 insn(s):
 // DTOUCHL, DINVALL, DZEROL, IINVALS
 let Size = 12 in
 class EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_Y>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_Y_LOAD>;
 
 // 4 insn(s):
 // DTOUCHL, DINVALL, DZEROL, IINVALS
 let Size = 4 in
 class REGISTERY_REGISTERZ_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_LOAD>;
 
 // 4 insn(s):
 // DTOUCHL, DINVALL, DZEROL, IINVALS
 let Size = 4 in
 class LSUCOND_REGISTERY_REGISTERZ_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_LOAD>;
 
 // 4 insn(s):
 // DTOUCHL, DINVALL, DZEROL, IINVALS
 let Size = 8 in
 class LSUCOND_REGISTERY_OFFSET27_REGISTERZ_DOUBLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_X>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_X_LOAD>;
 
 // 4 insn(s):
 // DTOUCHL, DINVALL, DZEROL, IINVALS
 let Size = 12 in
 class LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_Y>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_Y_LOAD>;
 
 // 208 insn(s):
 // STSUD, ADDD, SBFD, ABDD, MIND, MINUD, MAXD, MAXUD, ANDD, NANDD, ORD, NORD,
@@ -962,21 +962,21 @@ class SILENT2_REGISTERW_REGISTERP_SIMPLE
 let Size = 4 in
 class ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE_BINARY64
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, MAU>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, MAU_FP>;
 
 // 4 insn(s):
 // FLOATWP, FLOATUWP, FIXEDWP, FIXEDUWP
 let Size = 4 in
 class ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE_BINARY32X2
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, MAU>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, MAU_FP>;
 
 // 4 insn(s):
 // FLOATW, FLOATUW, FIXEDW, FIXEDUW
 let Size = 4 in
 class ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE_BINARY32
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, MAU>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, MAU_FP>;
 
 // 40 insn(s):
 // MADDHWQ, MSBFHWQ, MADDUHWQ, MSBFUHWQ, MADDSUHWQ, MSBFSUHWQ, MADDDT,
@@ -1100,7 +1100,7 @@ class ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE_BINARY16X4
 let Size = 4 in
 class ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, MAU_AUXR>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, MAU_AUXR_FP>;
 
 // 9 insn(s):
 // FFMAHW, FFMAW, FFMSHW, FFMSW, FADDW, FSBFW, FMULHW, FMULW, FDOT2W
@@ -1128,7 +1128,7 @@ class ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE
 let Size = 4 in
 class REGISTERN_REGISTERQ_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXR_AUXW>;
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXR_AUXW_LOAD>;
 
 // 1 insn(s):
 // MOVETQ

@@ -25,7 +25,7 @@ define i32 @debug_sanity(i32* nocapture %p, i32 %a, i32 %b, i32 %c, i32 %d) !dbg
 ; CHECK-NEXT:  .Ltmp0:
 ; CHECK-NEXT:    sq 0[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r1
-; CHECK-NEXT:    copyd $r20 = $r0
+; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp1:
@@ -36,17 +36,17 @@ define i32 @debug_sanity(i32* nocapture %p, i32 %a, i32 %b, i32 %c, i32 %d) !dbg
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp2:
 ; CHECK-NEXT:    .loc 1 6 23 is_stmt 0
-; CHECK-NEXT:    addx2w $r19 = $r2, $r1
+; CHECK-NEXT:    addx2w $r20 = $r2, $r1
 ; CHECK-NEXT:    call debug_sanity_extfn
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp3:
 ; CHECK-NEXT:    .loc 1 7 14 is_stmt 1
-; CHECK-NEXT:    addw $r0 = $r0, $r19
+; CHECK-NEXT:    addw $r0 = $r0, $r20
 ; CHECK-NEXT:    sxwd $r1 = $r18
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 7 8 is_stmt 0
-; CHECK-NEXT:    sw.xs $r1[$r20] = $r0
-; CHECK-NEXT:    copyd $r0 = $r19
+; CHECK-NEXT:    sw.xs $r1[$r19] = $r0
+; CHECK-NEXT:    copyd $r0 = $r20
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 8 3 is_stmt 1
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]

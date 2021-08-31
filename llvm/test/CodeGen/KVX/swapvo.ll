@@ -22,11 +22,12 @@ define i32 @main() {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 67, -8
 ; CHECK-NEXT:    make $r3 = 4
+; CHECK-NEXT:    make $r4 = 0
 ; CHECK-NEXT:    copyd $r0 = $r5
 ; CHECK-NEXT:    copyd $r1 = $r6
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r2 = $r7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r4 = 0
 ; CHECK-NEXT:    movefo $r0r1r2r3 = $a0
 ; CHECK-NEXT:    movetq $a0_lo = $r0, $r1
 ; CHECK-NEXT:    movetq $a0_hi = $r2, $r3

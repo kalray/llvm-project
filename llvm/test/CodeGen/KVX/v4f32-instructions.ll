@@ -382,13 +382,13 @@ define <4 x double> @test_select_cc_f32_f32(<4 x double> %a, <4 x double> %b, <4
 ; CHECK-NEXT:    sxwd $r11 = $r11
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.dnez $r8 ? $r4 = $r0
-; CHECK-NEXT:    cmoved.dnez $r11 ? $r5 = $r1
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.dnez $r9 ? $r6 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.dnez $r11 ? $r5 = $r1
 ; CHECK-NEXT:    cmoved.dnez $r10 ? $r7 = $r3
 ; CHECK-NEXT:    copyd $r0 = $r4
-; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    copyd $r2 = $r6
 ; CHECK-NEXT:    copyd $r3 = $r7
 ; CHECK-NEXT:    ret
@@ -650,15 +650,15 @@ define <4 x i64> @test_fptosi_i64(<4 x float> %a) #0 {
 ; CHECK-LABEL: test_fptosi_i64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fwidenmwd $r2 = $r1
-; CHECK-NEXT:    fwidenlwd $r1 = $r1
+; CHECK-NEXT:    fwidenmwd $r4 = $r0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fwidenlwd $r0 = $r0
+; CHECK-NEXT:    fwidenlwd $r1 = $r1
 ; CHECK-NEXT:    fixedd.rz $r3 = $r2, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedd.rz $r2 = $r1, 0
-; CHECK-NEXT:    fwidenmwd $r1 = $r0
-; CHECK-NEXT:    fwidenlwd $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedd.rz $r1 = $r1, 0
+; CHECK-NEXT:    fixedd.rz $r1 = $r4, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedd.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ret
@@ -683,15 +683,15 @@ define <4 x i64> @test_fptoui_2xi64(<4 x float> %a) #0 {
 ; CHECK-LABEL: test_fptoui_2xi64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fwidenmwd $r2 = $r1
-; CHECK-NEXT:    fwidenlwd $r1 = $r1
+; CHECK-NEXT:    fwidenmwd $r4 = $r0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fwidenlwd $r0 = $r0
+; CHECK-NEXT:    fwidenlwd $r1 = $r1
 ; CHECK-NEXT:    fixedud.rz $r3 = $r2, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedud.rz $r2 = $r1, 0
-; CHECK-NEXT:    fwidenmwd $r1 = $r0
-; CHECK-NEXT:    fwidenlwd $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedud.rz $r1 = $r1, 0
+; CHECK-NEXT:    fixedud.rz $r1 = $r4, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedud.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ret
@@ -927,9 +927,9 @@ define <4 x float> @test_fptrunc_2xdouble(<4 x double> %a) #0 {
 ; CHECK-NEXT:    fnarrowdw $r2 = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowdw $r1 = $r1
-; CHECK-NEXT:    insf $r2 = $r3, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowdw $r0 = $r0
+; CHECK-NEXT:    insf $r2 = $r3, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 32
 ; CHECK-NEXT:    copyd $r1 = $r2
@@ -2398,8 +2398,8 @@ define <4 x i32> @fcmp_setord(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK-NEXT:    extfs $r1 = $r1, 0, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srld $r3 = $r0, 32
-; CHECK-NEXT:    extfs $r2 = $r2, 0, 0
 ; CHECK-NEXT:    extfs $r0 = $r0, 0, 0
+; CHECK-NEXT:    extfs $r2 = $r2, 0, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    extfs $r3 = $r3, 0, 0
 ; CHECK-NEXT:    insf $r1 = $r2, 63, 32
@@ -2452,8 +2452,8 @@ define <4 x i32> @fcmp_setuno(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK-NEXT:    extfs $r1 = $r1, 0, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srld $r3 = $r0, 32
-; CHECK-NEXT:    extfs $r2 = $r2, 0, 0
 ; CHECK-NEXT:    extfs $r0 = $r0, 0, 0
+; CHECK-NEXT:    extfs $r2 = $r2, 0, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    extfs $r3 = $r3, 0, 0
 ; CHECK-NEXT:    insf $r1 = $r2, 63, 32
@@ -2983,8 +2983,8 @@ define <4 x i32> @fcmp_setord_fast(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK-NEXT:    extfs $r1 = $r1, 0, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srld $r3 = $r0, 32
-; CHECK-NEXT:    extfs $r2 = $r2, 0, 0
 ; CHECK-NEXT:    extfs $r0 = $r0, 0, 0
+; CHECK-NEXT:    extfs $r2 = $r2, 0, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    extfs $r3 = $r3, 0, 0
 ; CHECK-NEXT:    insf $r1 = $r2, 63, 32
@@ -3037,8 +3037,8 @@ define <4 x i32> @fcmp_setuno_fast(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK-NEXT:    extfs $r1 = $r1, 0, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srld $r3 = $r0, 32
-; CHECK-NEXT:    extfs $r2 = $r2, 0, 0
 ; CHECK-NEXT:    extfs $r0 = $r0, 0, 0
+; CHECK-NEXT:    extfs $r2 = $r2, 0, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    extfs $r3 = $r3, 0, 0
 ; CHECK-NEXT:    insf $r1 = $r2, 63, 32

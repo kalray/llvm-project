@@ -591,21 +591,21 @@ define <4 x double> @fmuldcp(<4 x double> %a, <4 x double> %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fmuld.rn $r9 = $r0, $r5
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fmuld.rn $r11 = $r2, $r7
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmuld.rn $r0 = $r0, $r4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmsd.rn $r0 = $r1, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld.rn $r5 = $r2, $r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmuld.rn $r2 = $r2, $r6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad.rn $r9 = $r1, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmad.rn $r5 = $r3, $r6
-; CHECK-NEXT:    copyd $r1 = $r9
+; CHECK-NEXT:    ffmad.rn $r11 = $r3, $r6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmsd.rn $r0 = $r1, $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmsd.rn $r2 = $r3, $r7
-; CHECK-NEXT:    copyd $r3 = $r5
+; CHECK-NEXT:    copyd $r1 = $r9
+; CHECK-NEXT:    copyd $r3 = $r11
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -625,23 +625,23 @@ define <4 x double> @ffmadcp(<4 x double> %a, <4 x double> %b, <4 x double> %c) 
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fmuld.rn $r17 = $r1, $r4
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fmuld.rn $r33 = $r3, $r6
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmuld.rn $r16 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld.rn $r4 = $r2, $r6
+; CHECK-NEXT:    fmuld.rn $r32 = $r2, $r6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad.rn $r17 = $r0, $r5
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmad.rn $r33 = $r2, $r7
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmsd.rn $r16 = $r1, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld.rn $r5 = $r3, $r6
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmad.rn $r5 = $r2, $r7
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmsd.rn $r4 = $r3, $r7
+; CHECK-NEXT:    ffmsd.rn $r32 = $r3, $r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fadddp.rn $r0r1 = $r16r17, $r8r9
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fadddp.rn $r2r3 = $r4r5, $r10r11
+; CHECK-NEXT:    fadddp.rn $r2r3 = $r32r33, $r10r11
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -663,23 +663,23 @@ define <4 x double> @ffmsdcp(<4 x double> %a, <4 x double> %b, <4 x double> %c) 
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fmuld.rn $r17 = $r1, $r4
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fmuld.rn $r33 = $r3, $r6
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmuld.rn $r16 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld.rn $r4 = $r2, $r6
+; CHECK-NEXT:    fmuld.rn $r32 = $r2, $r6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad.rn $r17 = $r0, $r5
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmad.rn $r33 = $r2, $r7
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmsd.rn $r16 = $r1, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld.rn $r5 = $r3, $r6
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmad.rn $r5 = $r2, $r7
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmsd.rn $r4 = $r3, $r7
+; CHECK-NEXT:    ffmsd.rn $r32 = $r3, $r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fsbfdp.rn $r0r1 = $r16r17, $r8r9
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfdp.rn $r2r3 = $r4r5, $r10r11
+; CHECK-NEXT:    fsbfdp.rn $r2r3 = $r32r33, $r10r11
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -701,21 +701,21 @@ define <4 x double> @fmulcdcp(<4 x double> %a, <4 x double> %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fmuld.rn $r9 = $r0, $r5
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fmuld.rn $r11 = $r2, $r7
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmuld.rn $r0 = $r0, $r4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmad.rn $r0 = $r1, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld.rn $r5 = $r2, $r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmuld.rn $r2 = $r2, $r6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmsd.rn $r9 = $r1, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmsd.rn $r5 = $r3, $r6
-; CHECK-NEXT:    copyd $r1 = $r9
+; CHECK-NEXT:    ffmsd.rn $r11 = $r3, $r6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmad.rn $r0 = $r1, $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad.rn $r2 = $r3, $r7
-; CHECK-NEXT:    copyd $r3 = $r5
+; CHECK-NEXT:    copyd $r1 = $r9
+; CHECK-NEXT:    copyd $r3 = $r11
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -735,23 +735,23 @@ define <4 x double> @ffmacdcp(<4 x double> %a, <4 x double> %b, <4 x double> %c)
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fmuld.rn $r17 = $r1, $r4
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fmuld.rn $r33 = $r3, $r6
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmuld.rn $r16 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld.rn $r4 = $r2, $r6
+; CHECK-NEXT:    fmuld.rn $r32 = $r2, $r6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmsd.rn $r17 = $r0, $r5
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmsd.rn $r33 = $r2, $r7
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad.rn $r16 = $r1, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld.rn $r5 = $r3, $r6
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmsd.rn $r5 = $r2, $r7
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmad.rn $r4 = $r3, $r7
+; CHECK-NEXT:    ffmad.rn $r32 = $r3, $r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fadddp.c.rn $r0r1 = $r16r17, $r8r9
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fadddp.c.rn $r2r3 = $r4r5, $r10r11
+; CHECK-NEXT:    fadddp.c.rn $r2r3 = $r32r33, $r10r11
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -773,23 +773,23 @@ define <4 x double> @ffmscdcp(<4 x double> %a, <4 x double> %b, <4 x double> %c)
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fmuld.rn $r17 = $r1, $r4
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fmuld.rn $r33 = $r3, $r6
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmuld.rn $r16 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld.rn $r4 = $r2, $r6
+; CHECK-NEXT:    fmuld.rn $r32 = $r2, $r6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmsd.rn $r17 = $r0, $r5
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmsd.rn $r33 = $r2, $r7
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad.rn $r16 = $r1, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld.rn $r5 = $r3, $r6
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmsd.rn $r5 = $r2, $r7
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmad.rn $r4 = $r3, $r7
+; CHECK-NEXT:    ffmad.rn $r32 = $r3, $r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fsbfdp.c.rn $r0r1 = $r16r17, $r8r9
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfdp.c.rn $r2r3 = $r4r5, $r10r11
+; CHECK-NEXT:    fsbfdp.c.rn $r2r3 = $r32r33, $r10r11
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

@@ -93,8 +93,8 @@ define <8 x i8> @test_fma_imm(<8 x i8> %a, <8 x i8> %b) #0 {
 ; CHECK-NEXT:    mulhq $r2 = $r2, $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mulhq $r1 = $r1, $r3
-; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x40100401
 ; CHECK-NEXT:    andd $r3 = $r0, 0x7f7f7f7f7f7f7f7f
+; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x40100401
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x40100401
 ; CHECK-NEXT:    ;;
@@ -125,8 +125,8 @@ define <8 x i8> @test_fma_imm_2(<8 x i8> %a, <8 x i8> %b) #0 {
 ; CHECK-NEXT:    mulhq $r2 = $r2, $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mulhq $r1 = $r1, $r3
-; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x40100401
 ; CHECK-NEXT:    andd $r3 = $r0, 0x7f7f7f7f7f7f7f7f
+; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x40100401
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x40100401
 ; CHECK-NEXT:    ;;
@@ -314,25 +314,25 @@ define <8 x i8> @test_mul(<8 x i8> %a, <8 x i8> %b) #0 {
 define <8 x i8> @test_mul_2(<8 x i8> %a, <8 x i8> %b, <8 x i8> %c) #0 {
 ; CHECK-LABEL: test_mul_2:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    sxlbhq $r3 = $r1
-; CHECK-NEXT:    sxlbhq $r4 = $r0
+; CHECK-NEXT:    sxmbhq $r3 = $r1
+; CHECK-NEXT:    sxmbhq $r4 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxmbhq $r1 = $r1
-; CHECK-NEXT:    sxmbhq $r0 = $r0
+; CHECK-NEXT:    sxlbhq $r1 = $r1
+; CHECK-NEXT:    sxlbhq $r0 = $r0
 ; CHECK-NEXT:    mulhq $r3 = $r4, $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mulhq $r0 = $r0, $r1
 ; CHECK-NEXT:    sxmbhq $r1 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mulhq $r0 = $r0, $r1
-; CHECK-NEXT:    sxlbhq $r1 = $r2
+; CHECK-NEXT:    sxlbhq $r2 = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mulhq $r1 = $r3, $r1
-; CHECK-NEXT:    sbmm8 $r2 = $r0, 0x40100401
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r0 = $r1, 0x40100401
+; CHECK-NEXT:    mulhq $r0 = $r0, $r2
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x40100401
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 63, 32
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x40100401
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 63, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = mul <8 x i8> %a, %b
@@ -384,10 +384,10 @@ define <8 x i8> @test_div(<8 x i8> %a, <8 x i8> %b) #0 {
 ; CHECK-NEXT:    sxbd $r0 = $r0
 ; CHECK-NEXT:    sxbd $r1 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r0 = $r0
-; CHECK-NEXT:    sxwd $r1 = $r1
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r21 = $r20, 15, 8
+; CHECK-NEXT:    sxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sxwd $r1 = $r1
 ; CHECK-NEXT:    call __divdi3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    extfz $r1 = $r18, 39, 32
@@ -433,10 +433,10 @@ define <8 x i8> @test_div(<8 x i8> %a, <8 x i8> %b) #0 {
 ; CHECK-NEXT:    sxbd $r0 = $r0
 ; CHECK-NEXT:    sxbd $r1 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r0 = $r0
-; CHECK-NEXT:    sxwd $r1 = $r1
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r21 = $r20, 15, 8
+; CHECK-NEXT:    sxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sxwd $r1 = $r1
 ; CHECK-NEXT:    call __divdi3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    zxbd $r1 = $r18
@@ -514,10 +514,10 @@ define <8 x i8> @test_rem(<8 x i8> %a, <8 x i8> %b) #0 {
 ; CHECK-NEXT:    sxbd $r0 = $r0
 ; CHECK-NEXT:    sxbd $r1 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r0 = $r0
-; CHECK-NEXT:    sxwd $r1 = $r1
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r21 = $r20, 15, 8
+; CHECK-NEXT:    sxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sxwd $r1 = $r1
 ; CHECK-NEXT:    call __moddi3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    extfz $r1 = $r18, 39, 32
@@ -563,10 +563,10 @@ define <8 x i8> @test_rem(<8 x i8> %a, <8 x i8> %b) #0 {
 ; CHECK-NEXT:    sxbd $r0 = $r0
 ; CHECK-NEXT:    sxbd $r1 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r0 = $r0
-; CHECK-NEXT:    sxwd $r1 = $r1
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r21 = $r20, 15, 8
+; CHECK-NEXT:    sxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sxwd $r1 = $r1
 ; CHECK-NEXT:    call __moddi3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    zxbd $r1 = $r18
@@ -693,21 +693,21 @@ define <8 x i8> @test_select_cc(<8 x i8> %a, <8 x i8> %b, <8 x i8> %c, <8 x i8> 
 ; CHECK-NEXT:    sxmbhq $r2 = $r2
 ; CHECK-NEXT:    compnhq.lt $r4 = $r5, $r4
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbmm8 $r5 = $r1, 0x80004000200010
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x8000400020001
 ; CHECK-NEXT:    compnhq.lt $r2 = $r2, $r3
-; CHECK-NEXT:    sbmm8 $r3 = $r1, 0x80004000200010
-; CHECK-NEXT:    sbmm8 $r5 = $r0, 0x80004000200010
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbmm8 $r3 = $r0, 0x80004000200010
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x8000400020001
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    andd $r4 = $r4, 0xff00ff00ff00ff
 ; CHECK-NEXT:    andd $r2 = $r2, 0xff00ff00ff00ff
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x8000400020001
-; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x8000400020001
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmovehq.even $r4 ? $r0 = $r1
-; CHECK-NEXT:    cmovehq.even $r2 ? $r5 = $r3
+; CHECK-NEXT:    cmovehq.even $r2 ? $r3 = $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r1 = $r5, 0x40100401
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x40100401
+; CHECK-NEXT:    sbmm8 $r1 = $r3, 0x40100401
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 32
 ; CHECK-NEXT:    ret

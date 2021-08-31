@@ -320,39 +320,39 @@ multiclass MC_09<string OpcStr> {
     <(outs), (ins Signed10:$a1, SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [/* no straightforward pattern */],
-     LSU_AUXR>;
+     LSU_AUXR_STORE>;
   def ri37 : UPPER27_LOWER10_REGISTERZ_REGISTERT_DOUBLE
     <(outs), (ins Signed37:$a1, SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [/* no straightforward pattern */],
-     LSU_AUXR_X>;
+     LSU_AUXR_X_STORE>;
   def ri64 : EXTEND27_UPPER27_LOWER10_REGISTERZ_REGISTERT_TRIPLE
     <(outs), (ins Wrapped64:$a1, SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [/* no straightforward pattern */],
-     LSU_AUXR_Y>;
+     LSU_AUXR_Y_STORE>;
   def rr : DOSCALE_REGISTERY_REGISTERZ_REGISTERT_SIMPLE
     <(outs), (ins SingleReg:$a2, SingleReg:$a3, SingleReg:$a4, DoscaleMod:$a1),
      !strconcat (OpcStr, "$a1 $a2[$a3] = $a4"),
      [/* no straightforward pattern */],
-     LSU_AUXR>;
+     LSU_AUXR_STORE>;
   }
   def rrc : LSUCOND_REGISTERY_REGISTERZ_REGISTERT_SIMPLE
     <(outs), (ins SingleReg:$a3, SingleReg:$a4, ScalarcondMod:$a1, SingleReg:$a2),
      !strconcat (OpcStr, "$a1 $a2 ? [$a3] = $a4"),
      [/* no straightforward pattern */],
-     LSU_AUXR>;
+     LSU_AUXR_STORE>;
 
   def ri27c : LSUCOND_REGISTERY_OFFSET27_REGISTERZ_REGISTERT_DOUBLE
     <(outs), (ins Signed27:$a3, SingleReg:$a4, SingleReg:$a5, ScalarcondMod:$a1, SingleReg:$a2),
      !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
      [/* no straightforward pattern */],
-     LSU_AUXR_X>;
+     LSU_AUXR_X_STORE>;
   def ri54c : LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_REGISTERT_TRIPLE
     <(outs), (ins Signed54:$a3, SingleReg:$a4, SingleReg:$a5, ScalarcondMod:$a1, SingleReg:$a2),
      !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
      [/* no straightforward pattern */],
-     LSU_AUXR_Y>;
+     LSU_AUXR_Y_STORE>;
 }
 
 // multiclass MC_0A is used by:
@@ -364,38 +364,38 @@ multiclass MC_0A<string OpcStr> {
     <(outs), (ins Signed10:$a1, SingleReg:$a2, PairedReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [/* no straightforward pattern */],
-     LSU_AUXR>;
+     LSU_AUXR_STORE>;
   def ri37 : UPPER27_LOWER10_REGISTERZ_REGISTERU_DOUBLE
     <(outs), (ins Signed37:$a1, SingleReg:$a2, PairedReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [/* no straightforward pattern */],
-     LSU_AUXR_X>;
+     LSU_AUXR_X_STORE>;
   def ri64 : EXTEND27_UPPER27_LOWER10_REGISTERZ_REGISTERU_TRIPLE
     <(outs), (ins Wrapped64:$a1, SingleReg:$a2, PairedReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [/* no straightforward pattern */],
-     LSU_AUXR_Y>;
+     LSU_AUXR_Y_STORE>;
   def rr : DOSCALE_REGISTERY_REGISTERZ_REGISTERU_SIMPLE
     <(outs), (ins SingleReg:$a2, SingleReg:$a3, PairedReg:$a4, DoscaleMod:$a1),
      !strconcat (OpcStr, "$a1 $a2[$a3] = $a4"),
      [/* no straightforward pattern */],
-     LSU_AUXR>;
+     LSU_AUXR_STORE>;
   }
   def rrc : LSUCOND_REGISTERY_REGISTERZ_REGISTERU_SIMPLE
     <(outs), (ins SingleReg:$a3, PairedReg:$a4, ScalarcondMod:$a1, SingleReg:$a2),
      !strconcat (OpcStr, "$a1 $a2 ? [$a3] = $a4"),
      [/* no straightforward pattern */],
-     LSU_AUXR>;
+     LSU_AUXR_STORE>;
   def ri27c : LSUCOND_REGISTERY_OFFSET27_REGISTERZ_REGISTERU_DOUBLE
     <(outs), (ins Signed27:$a3, SingleReg:$a4, PairedReg:$a5, ScalarcondMod:$a1, SingleReg:$a2),
      !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
      [/* no straightforward pattern */],
-     LSU_AUXR_X>;
+     LSU_AUXR_X_STORE>;
   def ri54c : LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_REGISTERU_TRIPLE
     <(outs), (ins Signed54:$a3, SingleReg:$a4, PairedReg:$a5, ScalarcondMod:$a1, SingleReg:$a2),
      !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
      [/* no straightforward pattern */],
-     LSU_AUXR_Y>;
+     LSU_AUXR_Y_STORE>;
 }
 
 // multiclass MC_0B is used by:
@@ -473,6 +473,7 @@ multiclass MC_0C<string OpcStr> {
 // multiclass MC_0D is used by:
 //   defm ACSWAPW
 //   defm ACSWAPD
+// TODO: can't differentiate registerU from registerZ in OperandLatencies
 let mayLoad = 1, mayStore = 1 in
 multiclass MC_0D<string OpcStr> {
   let isPredicable = 1 in {
@@ -481,44 +482,44 @@ multiclass MC_0D<string OpcStr> {
     <(outs PairedReg:$a3o), (ins Signed10:$a1, SingleReg:$a2, PairedReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [/* no straightforward pattern */],
-     LSU_AUXR_AUXW>;
+     LSU_AUXR_AUXW_LOAD>;
   let Constraints = "$a3 = $a3o" in
   def ri37 : UPPER27_LOWER10_REGISTERZ_REGISTERU_DOUBLE
     <(outs PairedReg:$a3o), (ins Signed37:$a1, SingleReg:$a2, PairedReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [/* no straightforward pattern */],
-     LSU_AUXR_AUXW_X>;
+     LSU_AUXR_AUXW_X_LOAD>;
   let Constraints = "$a3 = $a3o" in
   def ri64 : EXTEND27_UPPER27_LOWER10_REGISTERZ_REGISTERU_TRIPLE
     <(outs PairedReg:$a3o), (ins Wrapped64:$a1, SingleReg:$a2, PairedReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [/* no straightforward pattern */],
-     LSU_AUXR_AUXW_Y>;
+     LSU_AUXR_AUXW_Y_LOAD>;
   let Constraints = "$a4 = $a4o" in
   def rr : DOSCALE_REGISTERY_REGISTERZ_REGISTERU_SIMPLE
     <(outs PairedReg:$a4o), (ins SingleReg:$a2, SingleReg:$a3, PairedReg:$a4, DoscaleMod:$a1),
      !strconcat (OpcStr, "$a1 $a2[$a3] = $a4"),
      [/* no straightforward pattern */],
-     LSU_AUXR_AUXW>;
+     LSU_AUXR_AUXW_LOAD>;
   }
   let Constraints = "$a4 = $a4o" in
   def rrc : LSUCOND_REGISTERY_REGISTERZ_REGISTERU_SIMPLE
     <(outs PairedReg:$a4o), (ins SingleReg:$a3, PairedReg:$a4, ScalarcondMod:$a1, SingleReg:$a2),
      !strconcat (OpcStr, "$a1 $a2 ? [$a3] = $a4"),
      [/* no straightforward pattern */],
-     LSU_AUXR_AUXW>;
+     LSU_AUXR_AUXW_LOAD>;
   let Constraints = "$a5 = $a5o" in
   def ri27c : LSUCOND_REGISTERY_OFFSET27_REGISTERZ_REGISTERU_DOUBLE
     <(outs PairedReg:$a5o), (ins Signed27:$a3, SingleReg:$a4, PairedReg:$a5, ScalarcondMod:$a1, SingleReg:$a2),
      !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
      [/* no straightforward pattern */],
-     LSU_AUXR_AUXW_X>;
+     LSU_AUXR_AUXW_X_LOAD>;
   let Constraints = "$a5 = $a5o" in
   def ri54c : LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_REGISTERU_TRIPLE
     <(outs PairedReg:$a5o), (ins Signed54:$a3, SingleReg:$a4, PairedReg:$a5, ScalarcondMod:$a1, SingleReg:$a2),
      !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
      [/* no straightforward pattern */],
-     LSU_AUXR_AUXW_Y>;
+     LSU_AUXR_AUXW_Y_LOAD>;
 }
 
 // multiclass MC_0E is used by:
@@ -564,6 +565,7 @@ multiclass MC_0E<string OpcStr> {
 // multiclass MC_0F is used by:
 //   defm ALADDW
 //   defm ALADDD
+// TODO: cannot differentiate OperandLatencies for regT and regZ
 let mayLoad = 1, mayStore = 1 in
 multiclass MC_0F<string OpcStr> {
   let isPredicable = 1 in {
@@ -572,44 +574,44 @@ multiclass MC_0F<string OpcStr> {
     <(outs SingleReg:$a3o), (ins Signed10:$a1, SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [/* no straightforward pattern */],
-     LSU_AUXR_AUXW>;
+     LSU_AUXR_AUXW_LOAD>;
   let Constraints = "$a3 = $a3o" in
   def ri37 : UPPER27_LOWER10_REGISTERZ_REGISTERT_DOUBLE
     <(outs SingleReg:$a3o), (ins Signed37:$a1, SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [/* no straightforward pattern */],
-     LSU_AUXR_AUXW_X>;
+     LSU_AUXR_AUXW_X_LOAD>;
   let Constraints = "$a3 = $a3o" in
   def ri64 : EXTEND27_UPPER27_LOWER10_REGISTERZ_REGISTERT_TRIPLE
     <(outs SingleReg:$a3o), (ins Wrapped64:$a1, SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [/* no straightforward pattern */],
-     LSU_AUXR_AUXW_Y>;
+     LSU_AUXR_AUXW_Y_LOAD>;
   let Constraints = "$a4 = $a4o" in
   def rr : DOSCALE_REGISTERY_REGISTERZ_REGISTERT_SIMPLE
     <(outs SingleReg:$a4o), (ins SingleReg:$a2, SingleReg:$a3, SingleReg:$a4, DoscaleMod:$a1),
      !strconcat (OpcStr, "$a1 $a2[$a3] = $a4"),
      [/* no straightforward pattern */],
-     LSU_AUXR_AUXW>;
+     LSU_AUXR_AUXW_LOAD>;
   }
   let Constraints = "$a4 = $a4o" in
   def rrc : LSUCOND_REGISTERY_REGISTERZ_REGISTERT_SIMPLE
     <(outs SingleReg:$a4o), (ins SingleReg:$a3, SingleReg:$a4, ScalarcondMod:$a1, SingleReg:$a2),
      !strconcat (OpcStr, "$a1 $a2 ? [$a3] = $a4"),
      [/* no straightforward pattern */],
-     LSU_AUXR_AUXW>;
+     LSU_AUXR_AUXW_LOAD>;
   let Constraints = "$a5 = $a5o" in
   def ri27c : LSUCOND_REGISTERY_OFFSET27_REGISTERZ_REGISTERT_DOUBLE
     <(outs SingleReg:$a5o), (ins Signed27:$a3, SingleReg:$a4, SingleReg:$a5, ScalarcondMod:$a1, SingleReg:$a2),
      !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
      [/* no straightforward pattern */],
-     LSU_AUXR_AUXW_X>;
+     LSU_AUXR_AUXW_X_LOAD>;
   let Constraints = "$a5 = $a5o" in
   def ri54c : LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_REGISTERT_TRIPLE
     <(outs SingleReg:$a5o), (ins Signed54:$a3, SingleReg:$a4, SingleReg:$a5, ScalarcondMod:$a1, SingleReg:$a2),
      !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
      [/* no straightforward pattern */],
-     LSU_AUXR_AUXW_Y>;
+     LSU_AUXR_AUXW_Y_LOAD>;
 }
 
 // multiclass MC_10 is used by:
@@ -1269,13 +1271,13 @@ multiclass MC_26<string OpcStr> {
     <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, Binary64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     MAU_AUXR_Y>;
+     MAU_AUXR_Y_FP>;
   let Constraints = "$a3 = $a3o" in
   def rr : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY64
     <(outs SingleReg:$a3o), (ins SingleReg:$a3, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
      [/* no straightforward pattern */],
-     MAU_AUXR>;
+     MAU_AUXR_FP>;
 }
 
 // multiclass MC_27 is used by:
@@ -1287,13 +1289,13 @@ multiclass MC_27<string OpcStr> {
     <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, Binary32x2:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     MAU_AUXR_Y>;
+     MAU_AUXR_Y_FP>;
   let Constraints = "$a3 = $a3o" in
   def rr : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32X2
     <(outs SingleReg:$a3o), (ins SingleReg:$a3, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
      [/* no straightforward pattern */],
-     MAU_AUXR>;
+     MAU_AUXR_FP>;
 }
 
 // multiclass MC_28 is used by:
@@ -1305,13 +1307,13 @@ multiclass MC_28<string OpcStr> {
     <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, Binary16x4:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     MAU_AUXR_Y_FP16>;
+     MAU_AUXR_Y_FP>;
   let Constraints = "$a3 = $a3o" in
   def rr : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY16X4
     <(outs SingleReg:$a3o), (ins SingleReg:$a3, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
      [/* no straightforward pattern */],
-     MAU_AUXR_FP16>;
+     MAU_AUXR_FP>;
 }
 
 // multiclass MC_29 is used by:
@@ -1325,12 +1327,12 @@ multiclass MC_29<string OpcStr> {
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     MAU_Y>;
+     MAU_Y_FP>;
   def rr : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY64
     <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
      [/* no straightforward pattern */],
-     MAU>;
+     MAU_FP>;
 }
 
 // multiclass MC_2A is used by:
@@ -1341,12 +1343,12 @@ multiclass MC_2A<string OpcStr> {
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary32x2:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     MAU_Y>;
+     MAU_Y_FP>;
   def rr : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32X2
     <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
      [/* no straightforward pattern */],
-     MAU>;
+     MAU_FP>;
 }
 
 // FIXME: For coolidge, this class should hold ri10,ri37,ri64 variants.
@@ -1359,12 +1361,12 @@ multiclass MC_2AM<string OpcStr> {
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary32x2:$a3, ConjugateMod:$a4),
      !strconcat (OpcStr, "$a4 $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     MAU_Y>;
+     MAU_Y_FP>;
   def rr : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32X2
     <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, ConjugateMod:$a6, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a6$a1$a2 $a3 = $a4, $a5"),
      [/* no straightforward pattern */],
-     MAU>;
+     MAU_FP>;
 }
 
 // multiclass MC_2B is used by:
@@ -1376,12 +1378,12 @@ multiclass MC_2B<string OpcStr> {
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary16x4:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     MAU_Y_FP16>;
+     MAU_Y_FP>;
   def rr : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY16X4
     <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
      [/* no straightforward pattern */],
-     MAU_FP16>;
+     MAU_FP>;
 }
 
 // multiclass MC_2C is used by:
@@ -1393,12 +1395,12 @@ multiclass MC_2C<string OpcStr> {
     <(outs PairedReg:$a1), (ins SingleReg:$a2, Binary32x2:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     MAU_Y>;
+     MAU_Y_FP>;
   def rr : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE_BINARY32X2
     <(outs PairedReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
      [/* no straightforward pattern */],
-     MAU>;
+     MAU_FP>;
 }
 
 // multiclass MC_2D is used by:
@@ -1408,12 +1410,12 @@ multiclass MC_2D<string OpcStr> {
     <(outs PairedReg:$a1), (ins SingleReg:$a2, Binary16x4:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     MAU_Y_FP16>;
+     MAU_Y_FP>;
   def rr : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE_BINARY16X4
     <(outs PairedReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
      [/* no straightforward pattern */],
-     MAU_FP16>;
+     MAU_FP>;
 }
 
 // multiclass MC_2E is used by:
@@ -1425,13 +1427,13 @@ multiclass MC_2E<string OpcStr> {
     <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, Binary32:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     MAU_AUXR_X>;
+     MAU_AUXR_X_FP>;
   let Constraints = "$a3 = $a3o" in
   def rr : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32
     <(outs SingleReg:$a3o), (ins SingleReg:$a3, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
      [/* no straightforward pattern */],
-     MAU_AUXR>;
+     MAU_AUXR_FP>;
 }
 
 // multiclass MC_2E_2 is used by:
@@ -1443,13 +1445,13 @@ multiclass MC_2E_2<string OpcStr> {
     <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, Binary32:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     MAU_AUXR_X_FP16>;
+     MAU_AUXR_X_FP>;
   let Constraints = "$a3 = $a3o" in
   def rr : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32
     <(outs SingleReg:$a3o), (ins SingleReg:$a3, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
      [/* no straightforward pattern */],
-     MAU_AUXR_FP16>;
+     MAU_AUXR_FP>;
 }
 
 // multiclass MC_2F is used by:
@@ -1461,13 +1463,13 @@ multiclass MC_2F<string OpcStr> {
     <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, Binary32x2:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     MAU_AUXR_Y>;
+     MAU_AUXR_Y_FP>;
   let Constraints = "$a3 = $a3o" in
   def rr : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE_BINARY32X2
     <(outs PairedReg:$a3o), (ins PairedReg:$a3, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
      [/* no straightforward pattern */],
-     MAU_AUXR>;
+     MAU_AUXR_FP>;
 }
 
 // multiclass MC_30 is used by:
@@ -1479,13 +1481,13 @@ multiclass MC_30<string OpcStr> {
     <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, Binary16x4:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     MAU_AUXR_Y_FP16>;
+     MAU_AUXR_Y_FP>;
   let Constraints = "$a3 = $a3o" in
   def rr : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE_BINARY16X4
     <(outs PairedReg:$a3o), (ins PairedReg:$a3, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
      [/* no straightforward pattern */],
-     MAU_AUXR_FP16>;
+     MAU_AUXR_FP>;
 }
 
 // multiclass MC_31 is used by:
@@ -1498,13 +1500,13 @@ multiclass MC_31<string OpcStr> {
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary32:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     MAU_X>;
+     MAU_X_FP>;
   let Defs = [CS], Uses = [CS] in
   def rr : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32
     <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
      [/* no straightforward pattern */],
-     MAU>;
+     MAU_FP>;
 }
 
 // multiclass MC_31_2 is used by:
@@ -1514,12 +1516,12 @@ multiclass MC_31_2<string OpcStr> {
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary32:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     MAU_X_FP16>;
+     MAU_X_FP>;
   def rr : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32
     <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
      [/* no straightforward pattern */],
-     MAU_FP16>;
+     MAU_FP>;
 }
 
 // multiclass MC_32 is used by:
@@ -1811,20 +1813,20 @@ def DINVAL : SIMPLE
   <(outs), (ins),
    "dinval",
    [/* no straightforward pattern */],
-   LSU>;
+   LSU_LOAD>;
 
 def IINVAL : SIMPLE
   <(outs), (ins),
    "iinval",
    [/* no straightforward pattern */],
-   LSU>;
+   LSU_LOAD>;
 
 let hasSideEffects = 1 in
 def FENCE : SIMPLE
   <(outs), (ins),
    "fence",
    [/* no straightforward pattern */],
-   LSU>;
+   LSU_LOAD>;
 
 def NOP : SIMPLE
   <(outs), (ins),
@@ -2745,42 +2747,42 @@ def MADDHWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "maddhwq $a1 = $a2, $a3",
    [/* no straightforward pattern */],
-   MAU_AUXR_FP16>;
+   MAU_AUXR>;
 
 let Constraints = "$a1 = $a1o" in
 def MSBFHWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "msbfhwq $a1 = $a2, $a3",
    [/* no straightforward pattern */],
-   MAU_AUXR_FP16>;
+   MAU_AUXR>;
 
 let Constraints = "$a1 = $a1o" in
 def MADDUHWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "madduhwq $a1 = $a2, $a3",
    [/* no straightforward pattern */],
-   MAU_AUXR_FP16>;
+   MAU_AUXR>;
 
 let Constraints = "$a1 = $a1o" in
 def MSBFUHWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "msbfuhwq $a1 = $a2, $a3",
    [/* no straightforward pattern */],
-   MAU_AUXR_FP16>;
+   MAU_AUXR>;
 
 let Constraints = "$a1 = $a1o" in
 def MADDSUHWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "maddsuhwq $a1 = $a2, $a3",
    [/* no straightforward pattern */],
-   MAU_AUXR_FP16>;
+   MAU_AUXR>;
 
 let Constraints = "$a1 = $a1o" in
 def MSBFSUHWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "msbfsuhwq $a1 = $a2, $a3",
    [/* no straightforward pattern */],
-   MAU_AUXR_FP16>;
+   MAU_AUXR>;
 
 defm MADDDT : MC_21<"madddt">;
 
@@ -2925,19 +2927,19 @@ def MULHWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "mulhwq $a1 = $a2, $a3",
    [/* no straightforward pattern */],
-   MAU_FP16>;
+   MAU>;
 
 def MULUHWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "muluhwq $a1 = $a2, $a3",
    [/* no straightforward pattern */],
-   MAU_FP16>;
+   MAU>;
 
 def MULSUHWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "mulsuhwq $a1 = $a2, $a3",
    [/* no straightforward pattern */],
-   MAU_FP16>;
+   MAU>;
 
 defm MADDWD : MC_24<"maddwd">;
 

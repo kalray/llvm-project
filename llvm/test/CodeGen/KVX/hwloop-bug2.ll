@@ -40,8 +40,8 @@ define i32 @d() {
 ; CHECK-NEXT:    .cfi_offset 18, -16
 ; CHECK-NEXT:    .cfi_offset 19, -24
 ; CHECK-NEXT:    make $r1 = 0
-; CHECK-NEXT:    lws $r0 = 0[$r0]
 ; CHECK-NEXT:    make $r19 = b
+; CHECK-NEXT:    lws $r0 = 0[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 0[$r18] = $r0
 ; CHECK-NEXT:    ;;
