@@ -1964,6 +1964,8 @@ KVXTargetLowering::lowerEXTRACT_VECTOR_ELT_REGISTER(SDValue Op,
   case MVT::v4i8:
   case MVT::v4f16:
   case MVT::v4i16:
+  case MVT::v4f32:
+  case MVT::v4i32:
   case MVT::v8i8:
     return Op;
   }
