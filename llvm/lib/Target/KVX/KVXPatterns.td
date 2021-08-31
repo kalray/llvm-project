@@ -501,15 +501,19 @@ def SMATRIXp : KVX_PSEUDO<
 }
 
 multiclass StorePatRI<PatFrag StoreOp, ValueType vt, RegisterClass rc,
-                      KVX_PSEUDO pinst, SDNode nval > {
+                      KVX_PSEUDO pinst, SDNode nval, KVX_INSTRUCTION ri10, KVX_INSTRUCTION ri37, KVX_INSTRUCTION ri64> {
   def : Pat<(StoreOp vt:$val, AddrFI:$base),
             (pinst (i64 0), SingleReg:$base, nval)>;
   def : Pat<(StoreOp vt:$val, (add AddrFI:$base, Wrapped64:$offset)),
             (pinst Wrapped64:$offset, SingleReg:$base, nval)>;
   def : Pat<(StoreOp vt:$val, (IsOrAdd AddrFI:$base, Wrapped64:$offset)),
             (pinst Wrapped64:$offset, SingleReg:$base, nval)>;
+  def : Pat<(StoreOp vt:$val, (add SingleReg:$base, Signed10:$offset)),
+            (ri10 Signed10:$offset, SingleReg:$base, nval)>;
+  def : Pat<(StoreOp vt:$val, (add SingleReg:$base, Signed37:$offset)),
+            (ri37 Signed37:$offset, SingleReg:$base, nval)>;
   def : Pat<(StoreOp vt:$val, (add SingleReg:$base, Wrapped64:$offset)),
-            (pinst Wrapped64:$offset, SingleReg:$base, nval)>;
+            (ri64 Wrapped64:$offset, SingleReg:$base, nval)>;
 }
 
 multiclass StorePatRR<PatFrag StoreOp, ValueType vt, RegisterClass rc,
@@ -537,58 +541,58 @@ multiclass StorePatXS<PatFrag StoreOp, ValueType vt, RegisterClass rc, int sc,
 }
 
 multiclass SimpleStorePat<PatFrag StoreOp, ValueType vt, RegisterClass rc,
-                          KVX_PSEUDO pinst, KVX_INSTRUCTION ri10,
+                          KVX_PSEUDO pinst, KVX_INSTRUCTION ri10, KVX_INSTRUCTION ri37, KVX_INSTRUCTION ri64,
                           KVX_INSTRUCTION rr> {
   def : Pat<(StoreOp vt:$val, SingleReg:$base),
             (ri10 (i64 0), SingleReg:$base, (vt rc:$val))>;
-  defm : StorePatRI<StoreOp, vt, rc, pinst, (vt rc:$val)>;
+  defm : StorePatRI<StoreOp, vt, rc, pinst, (vt rc:$val), ri10, ri37, ri64>;
   defm : StorePatRR<StoreOp, vt, rc, rr, (vt rc:$val)>;
 }
 
 multiclass StorePat<PatFrag StoreOp, ValueType vt, RegisterClass rc, int sc,
-                    KVX_PSEUDO pinst, KVX_INSTRUCTION ri10,
+                    KVX_PSEUDO pinst, KVX_INSTRUCTION ri10, KVX_INSTRUCTION ri37, KVX_INSTRUCTION ri64,
                     KVX_INSTRUCTION rr> {
   def : Pat<(StoreOp vt:$val, SingleReg:$base),
             (ri10 (i64 0), SingleReg:$base, (vt rc:$val))>;
-  defm : StorePatRI<StoreOp, vt, rc, pinst, (vt rc:$val)>;
+  defm : StorePatRI<StoreOp, vt, rc, pinst, (vt rc:$val), ri10, ri37, ri64>;
   defm : StorePatRR<StoreOp, vt, rc, rr, (vt rc:$val)>;
   defm : StorePatXS<StoreOp, vt, rc, sc, rr, (vt rc:$val)>;
 }
 
 multiclass StorePatNode<PatFrag StoreOp, ValueType vt, RegisterClass rc, int sc,
-                        KVX_PSEUDO pinst, KVX_INSTRUCTION ri10,
+                        KVX_PSEUDO pinst, KVX_INSTRUCTION ri10, KVX_INSTRUCTION ri37, KVX_INSTRUCTION ri64,
                         KVX_INSTRUCTION rr, SDNode nval> {
   def : Pat<(StoreOp vt:$val, SingleReg:$base),
             (ri10 (i64 0), SingleReg:$base, nval)>;
-  defm : StorePatRI<StoreOp, vt, rc, pinst, nval>;
+  defm : StorePatRI<StoreOp, vt, rc, pinst, nval, ri10, ri37, ri64>;
   defm : StorePatRR<StoreOp, vt, rc, rr, nval>;
   defm : StorePatXS<StoreOp, vt, rc, sc, rr, nval>;
 }
 
-defm : SimpleStorePat<store, i8, SingleReg, SBp, SBri10, SBrr>;
-defm : SimpleStorePat<truncstorei8, i32, SingleReg, SBp, SBri10, SBrr>;
-defm : SimpleStorePat<truncstorei8, i64, SingleReg, SBp, SBri10, SBrr>;
+defm : SimpleStorePat<store, i8, SingleReg, SBp, SBri10,  SBri37,  SBri64, SBrr>;
+defm : SimpleStorePat<truncstorei8, i32, SingleReg, SBp, SBri10,  SBri37,  SBri64, SBrr>;
+defm : SimpleStorePat<truncstorei8, i64, SingleReg, SBp, SBri10,  SBri37,  SBri64, SBrr>;
 
-defm : StorePat<store, i16, SingleReg, 1, SHp, SHri10, SHrr>;
-defm : StorePat<truncstorei16, i32, SingleReg, 1, SHp, SHri10, SHrr>;
-defm : StorePat<truncstorei16, i64, SingleReg, 1, SHp, SHri10, SHrr>;
-defm : StorePat<store, v2i8, SingleReg, 1 , SHp, SHri10, SHrr>;
+defm : StorePat<store, i16, SingleReg, 1, SHp, SHri10,  SHri37,  SHri64, SHrr>;
+defm : StorePat<truncstorei16, i32, SingleReg, 1, SHp, SHri10,  SHri37,  SHri64, SHrr>;
+defm : StorePat<truncstorei16, i64, SingleReg, 1, SHp, SHri10,  SHri37,  SHri64, SHrr>;
+defm : StorePat<store, v2i8, SingleReg, 1 , SHp, SHri10,  SHri37,  SHri64, SHrr>;
 
-defm : StorePat<store, i32, SingleReg, 2, SWp, SWri10, SWrr>;
-defm : StorePat<truncstorei32, i64, SingleReg, 2, SWp, SWri10, SWrr>;
-defm : StorePat<store, v2i16, SingleReg, 2, SWp, SWri10, SWrr>;
-defm : StorePat<store, v4i8, SingleReg, 2, SWp, SWri10, SWrr>;
+defm : StorePat<store, i32, SingleReg, 2, SWp, SWri10,  SWri37,  SWri64, SWrr>;
+defm : StorePat<truncstorei32, i64, SingleReg, 2, SWp, SWri10,  SWri37,  SWri64, SWrr>;
+defm : StorePat<store, v2i16, SingleReg, 2, SWp, SWri10,  SWri37,  SWri64, SWrr>;
+defm : StorePat<store, v4i8, SingleReg, 2, SWp, SWri10,  SWri37,  SWri64, SWrr>;
 
-defm : StorePat<store, i64, SingleReg, 3, SDp, SDri10, SDrr>;
-defm : StorePat<store, v8i8, SingleReg, 3, SDp, SDri10, SDrr>;
-defm : StorePat<store, v2i32, SingleReg, 3, SDp, SDri10, SDrr>;
-defm : StorePat<store, v4i16, SingleReg, 3 , SDp, SDri10, SDrr>;
+defm : StorePat<store, i64, SingleReg, 3, SDp, SDri10,  SDri37,  SDri64, SDrr>;
+defm : StorePat<store, v8i8, SingleReg, 3, SDp, SDri10,  SDri37,  SDri64, SDrr>;
+defm : StorePat<store, v2i32, SingleReg, 3, SDp, SDri10,  SDri37,  SDri64, SDrr>;
+defm : StorePat<store, v4i16, SingleReg, 3 , SDp, SDri10,  SDri37,  SDri64, SDrr>;
 
-defm : StorePat<store, v2i64, PairedReg, 4, SQp, SQri10, SQrr>;
-defm : StorePat<store, v4i32, PairedReg, 4, SQp, SQri10, SQrr>;
+defm : StorePat<store, v2i64, PairedReg, 4, SQp, SQri10,  SQri37,  SQri64, SQrr>;
+defm : StorePat<store, v4i32, PairedReg, 4, SQp, SQri10,  SQri37,  SQri64, SQrr>;
 
-defm : StorePat<store, v4i64, QuadReg, 5, SOp, SOri10, SOrr>;
-defm : StorePat<store, v256i1,VectorReg,5, SVp, SVri10, SVrr>;
+defm : StorePat<store, v4i64, QuadReg, 5, SOp, SOri10,  SOri37,  SOri64, SOrr>;
+defm : StorePat<store, v256i1,VectorReg,5, SVp, SVri10,  SVri37,  SVri64, SVrr>;
 // sign extend optimizations
 def : Pat<(and SingleReg:$val,(i64 0xffffffff)), (ZXWD SingleReg:$val)>;
 def : Pat<(and SingleReg:$val,(i32 0xffff)), (ZXHD SingleReg:$val)>;
