@@ -624,3 +624,495 @@ KVXInstrInfo::getBranchDestBlock(const MachineInstr &MI) const {
   }
   return nullptr;
 }
+
+bool KVXInstrInfo::isPredicable(const MachineInstr &MI) const {
+  LLVM_DEBUG(dbgs() << "IsPredicable? " << MI);
+  if (MI.isPredicable()) {
+    // It's ok to const_cast, we won't modify if passing an empty
+    // second argument (Pred).
+    if (PredicateInstruction(const_cast<MachineInstr &>(MI), {})) {
+      LLVM_DEBUG(dbgs() << "true\n");
+      // TODO: This only allows store operations
+      // We must change LLVM to pass the true/false
+      // instructions when adding performing a select
+      // of the produced value.
+      return MI.mayStore() && !MI.mayLoad();
+    }
+  }
+  LLVM_DEBUG(dbgs() << "false\n");
+  return false;
+}
+
+bool KVXInstrInfo::isPredicated(const MachineInstr &MI) const {
+  LLVM_DEBUG(dbgs() << "IsPredicated? " << MI);
+
+  // A predicable instruction is not predicated
+  if (MI.isPredicable()) {
+    LLVM_DEBUG(dbgs() << "false\n");
+    return false;
+  }
+  switch (MI.getOpcode()) {
+  // A CMOVED is predicated
+  case KVX::CMOVEDri10:
+  case KVX::CMOVEDri37:
+  case KVX::CMOVEDri64:
+  case KVX::CMOVEDrr:
+    LLVM_DEBUG(dbgs() << "true\n");
+    return true;
+  // The remaining mem instructions are predicated
+  default:
+    LLVM_DEBUG(
+        dbgs() << ((MI.mayLoad() || MI.mayStore()) ? "true\n" : "false\n"));
+    return MI.mayLoad() || MI.mayStore();
+  }
+}
+
+bool KVXInstrInfo::canInsertSelect(const MachineBasicBlock &MBB,
+                                   ArrayRef<MachineOperand> Cond,
+                                   Register DstReg, Register TrueReg,
+                                   Register FalseReg, int &CondCycles,
+                                   int &TrueCycles, int &FalseCycles) const {
+  LLVM_DEBUG(dbgs() << "canInsertSelect? ");
+  const MachineRegisterInfo &MRI = MBB.getParent()->getRegInfo();
+  if (&KVX::SingleRegRegClass != MRI.getRegClass(DstReg)) {
+    LLVM_DEBUG(dbgs() << "false\n");
+    return false;
+  }
+  CondCycles = FalseCycles = 1;
+  // If we are comparing a value to zero, we don't need
+  // a comparison instruction
+  if (Cond[2].isCImm() && Cond[2].getCImm()->isZero())
+    CondCycles = 0;
+
+  LLVM_DEBUG(dbgs() << "true\n");
+  return true;
+}
+
+void KVXInstrInfo::insertSelect(MachineBasicBlock &MBB,
+                                MachineBasicBlock::iterator I,
+                                const DebugLoc &DL, Register DstReg,
+                                ArrayRef<MachineOperand> Cond, Register TrueReg,
+                                Register FalseReg) const {
+  auto BBEnd = MBB.end();
+  auto TrueMI = BBEnd;
+  auto FalseMI = TrueMI;
+  for (auto BI = MBB.begin(), C = I; C != BI; --C) {
+    if (C->getOperand(0).isReg() && C->getOperand(0).getReg() == TrueReg) {
+      LLVM_DEBUG(dbgs() << "Print: Got TrueReg instr:"; C->dump());
+      TrueMI = C;
+      if (FalseMI != BBEnd)
+        break;
+    }
+    if (C->getOperand(0).isReg() && C->getOperand(0).getReg() == FalseReg) {
+      LLVM_DEBUG(dbgs() << "Print: Got FalseReg instr:"; C->dump());
+      FalseMI = C;
+      if (TrueMI != BBEnd)
+        break;
+    }
+  }
+  assert(TrueMI != FalseMI && "True and False instructions can't be the same!");
+  LLVM_DEBUG(dbgs() << "InsertSelect\n");
+  LLVM_DEBUG(dbgs() << "I: "; I->dump());
+  LLVM_DEBUG(dbgs() << "DstReg:" << DstReg << '\n');
+  LLVM_DEBUG(dbgs() << "TrueReg:" << TrueReg << '\n');
+  LLVM_DEBUG(dbgs() << "FalseReg:" << FalseReg << '\n');
+  LLVM_DEBUG(dbgs() << "Cond:");
+  LLVM_DEBUG(for (auto &V : Cond) V.dump(););
+  // TODO: For the moment we just try to predicate the last
+  // executed of the true/false instruction.
+  // We could detect if one is a copy instruction, and avoid
+  // predicting it, but predicting the first instruction, and
+  // setting the input of the copy as the result of it.
+  MachineRegisterInfo &MRI = MBB.getParent()->getRegInfo();
+  if (&KVX::SingleRegRegClass != MRI.getRegClass(DstReg))
+    report_fatal_error("Can only select between 64 bit registers.");
+
+  // We can prevent adding an CMOVE over the two instructions in these cases:
+  // select (copy[d] Reg0), (copy[d] Reg1)  -> cmoved (Reg0), (Reg1)
+  // select (copy[d] Reg), (make Imm)  -> cmoved (Reg), (Imm)
+  // select (make Imm1), (make Imm2)  -> cmoved (make Imm1), Imm2
+
+  // If it does not sit in one of those conditions, create
+  // DstReg = cmoved (FalseReg), (TrueReg)
+  if (!(!isPredicated(*TrueMI) && !isPredicated(*FalseMI) &&
+        (TrueMI->isFullCopy() || TrueMI->isMoveImmediate() ||
+         TrueMI->isMoveReg()) &&
+        (FalseMI->isFullCopy() || FalseMI->isMoveImmediate() ||
+         FalseMI->isMoveReg()))) {
+    BuildMI(MBB, I, DL, get(KVX::CMOVEDrr), DstReg)
+        .add(Cond[1])
+        .addReg(FalseReg)
+        .addReg(TrueReg)
+        .add(Cond[2]);
+    return;
+  }
+
+  auto TrueOp = TrueMI->getOperand(1);
+  auto FalseOp = FalseMI->getOperand(1);
+  // select (copy[d] Reg0), (copy[d] Reg1)  -> cmoved (Reg0), (Reg1)
+  if (!TrueOp.isImm() && !FalseOp.isImm()) {
+    // TwoAddressInstructionPass does not accept non-virtual registers
+    Register TReg = TrueOp.getReg();
+    Register FReg = FalseOp.getReg();
+    if (!TReg.isVirtual())
+      TReg = TrueReg;
+    if (!FReg.isVirtual())
+      FReg = FalseReg;
+    BuildMI(MBB, I, DL, get(KVX::CMOVEDrr), DstReg)
+        .add(Cond[1])
+        .addReg(FReg)
+        .addReg(TReg)
+        .add(Cond[2]);
+    return;
+  }
+  int64_t Val;
+  if (TrueOp.isImm())
+    Val = TrueOp.getImm();
+  else
+    Val = FalseOp.getImm();
+  unsigned Opcode;
+  if (isInt<10>(Val))
+    Opcode = KVX::CMOVEDri10;
+  else if (isInt<37>(Val))
+    Opcode = KVX::CMOVEDri37;
+  else
+    Opcode = KVX::CMOVEDri64;
+  // select (make Imm1), (make Imm2)  -> cmoved (make Imm1), Imm2
+  if (TrueOp.isImm() && FalseOp.isImm()) {
+    LLVM_DEBUG(dbgs() << "Generated CMOVEDri (make " << FalseOp.getImm()
+                      << "), " << Val << '\n');
+    BuildMI(MBB, I, DL, get(Opcode), DstReg)
+        .add(Cond[1])
+        .addReg(FalseReg)
+        .addImm(Val)
+        .add(Cond[2]);
+    return;
+  }
+  // select (copy[d] FalseOp), (make Imm)  -> cmoved FalseOp, Imm
+  if (TrueOp.isImm()) {
+    Register FReg = FalseOp.getReg();
+    if (!FReg.isVirtual())
+      FReg = FalseReg;
+
+    LLVM_DEBUG(dbgs() << "Generated CMOVEDri (" << FalseOp << "), " << Val
+                      << '\n');
+    BuildMI(MBB, I, DL, get(Opcode), DstReg)
+        .add(Cond[1])
+        .addReg(FReg)
+        .addImm(Val)
+        .add(Cond[2]);
+    return;
+  }
+  // We must invert the true/false sides and test condition
+  LLVM_DEBUG(dbgs() << "Generated inverted condition CMOVEDri (make " << TrueOp
+                    << "), " << FalseOp.getImm() << '\n');
+  Register TReg = TrueOp.getReg();
+  if (!TReg.isVirtual())
+    TReg = TrueReg;
+  BuildMI(MBB, I, DL, get(Opcode), DstReg)
+      .add(Cond[1])
+      .addReg(TReg)
+      .addImm(Val)
+      .addImm(getOppositeBranchOpcode(Cond[2].getImm()));
+  return;
+};
+
+unsigned KVXInstrInfo::getPredicationCost(const MachineInstr &MI) const {
+  LLVM_DEBUG(dbgs() << "getPredicationCost: 0\n");
+  // For the moment we only deal with cases without predication costs,
+  // where we can simply replace the opcode and add the test operands.
+  return 0;
+}
+
+bool KVXInstrInfo::isProfitableToIfCvt(MachineBasicBlock &MBB,
+                                       unsigned NumCycles,
+                                       unsigned ExtraPredCycles,
+                                       BranchProbability Probability) const {
+  // TODO: Improve the cost model. For now, just assume we
+  // always want to convert the if.
+  LLVM_DEBUG(dbgs() << "isProfitableToIfCvt: true\n");
+  return true;
+};
+
+bool KVXInstrInfo::PredicateInstruction(MachineInstr &MI,
+                                        ArrayRef<MachineOperand> Pred) const {
+  LLVM_DEBUG(dbgs() << "PredicateInstruction\n");
+  assert(!isPredicated(MI) &&
+         "Can't predicate an already predicated instruction");
+  unsigned Oprrc, Opri27c, Opri54c;
+  bool IsRR = false;
+
+  switch (MI.getOpcode()) {
+  default:
+    return false;
+  case KVX::LBSrr:
+    IsRR = true;
+    LLVM_FALLTHROUGH;
+  case KVX::LBSri10:
+  case KVX::LBSri37:
+  case KVX::LBSri64:
+    Oprrc = KVX::LBSrrc;
+    Opri27c = KVX::LBSri27c;
+    Opri54c = KVX::LBSri54c;
+    break;
+  case KVX::LBZrr:
+    IsRR = true;
+    LLVM_FALLTHROUGH;
+  case KVX::LBZri10:
+  case KVX::LBZri37:
+  case KVX::LBZri64:
+    Oprrc = KVX::LBZrrc;
+    Opri27c = KVX::LBZri27c;
+    Opri54c = KVX::LBZri54c;
+    break;
+  case KVX::LDrr:
+    IsRR = true;
+    LLVM_FALLTHROUGH;
+  case KVX::LDri10:
+  case KVX::LDri37:
+  case KVX::LDri64:
+    Oprrc = KVX::LDrrc;
+    Opri27c = KVX::LDri27c;
+    Opri54c = KVX::LDri54c;
+    break;
+  case KVX::LHSrr:
+    IsRR = true;
+    LLVM_FALLTHROUGH;
+  case KVX::LHSri10:
+    Oprrc = KVX::LHSrrc;
+    Opri27c = KVX::LHSri27c;
+    Opri54c = KVX::LHSri54c;
+    break;
+  case KVX::LHZrr:
+    IsRR = true;
+    LLVM_FALLTHROUGH;
+  case KVX::LHZri10:
+  case KVX::LHZri37:
+  case KVX::LHZri64:
+    Oprrc = KVX::LHZrrc;
+    Opri27c = KVX::LHZri27c;
+    Opri54c = KVX::LHZri54c;
+    break;
+  case KVX::LOrr:
+    IsRR = true;
+    LLVM_FALLTHROUGH;
+  case KVX::LOri10:
+  case KVX::LOri37:
+  case KVX::LOri64:
+    Oprrc = KVX::LOrrc;
+    Opri27c = KVX::LOri27c;
+    Opri54c = KVX::LOri54c;
+    break;
+  case KVX::LQrr:
+    IsRR = true;
+    LLVM_FALLTHROUGH;
+  case KVX::LQri10:
+  case KVX::LQri37:
+  case KVX::LQri64:
+    Oprrc = KVX::LQrrc;
+    Opri27c = KVX::LQri27c;
+    Opri54c = KVX::LQri54c;
+    break;
+  case KVX::LVmrrcs:
+    IsRR = true;
+    LLVM_FALLTHROUGH;
+  case KVX::LVmri10cs:
+  case KVX::LVmri37cs:
+  case KVX::LVmri64cs:
+    Oprrc = KVX::LVmrrcs;
+    Opri27c = KVX::LVmri27ccs;
+    Opri54c = KVX::LVmri54ccs;
+    break;
+  case KVX::LVrr:
+    IsRR = true;
+    LLVM_FALLTHROUGH;
+  case KVX::LVri10:
+  case KVX::LVri37:
+  case KVX::LVri64:
+    Oprrc = KVX::LVrrc;
+    Opri27c = KVX::LVri27c;
+    Opri54c = KVX::LVri54c;
+    break;
+  case KVX::LVrrcs:
+    IsRR = true;
+    LLVM_FALLTHROUGH;
+  case KVX::LVri10cs:
+  case KVX::LVri37cs:
+  case KVX::LVri64cs:
+    Oprrc = KVX::LVrrccs;
+    Opri27c = KVX::LVri27ccs;
+    Opri54c = KVX::LVri54ccs;
+    break;
+  case KVX::LWSrr:
+    IsRR = true;
+    LLVM_FALLTHROUGH;
+  case KVX::LWSri10:
+  case KVX::LWSri37:
+  case KVX::LWSri64:
+    Oprrc = KVX::LWSrrc;
+    Opri27c = KVX::LWSri27c;
+    Opri54c = KVX::LWSri54c;
+    break;
+  case KVX::LWZrr:
+    IsRR = true;
+    LLVM_FALLTHROUGH;
+  case KVX::LWZri10:
+  case KVX::LWZri37:
+  case KVX::LWZri64:
+    Oprrc = KVX::LWZrrc;
+    Opri27c = KVX::LWZri27c;
+    Opri54c = KVX::LWZri54c;
+    break;
+  case KVX::SBrr:
+    IsRR = true;
+    LLVM_FALLTHROUGH;
+  case KVX::SBri10:
+  case KVX::SBri37:
+  case KVX::SBri64:
+    Oprrc = KVX::SBrrc;
+    Opri27c = KVX::SBri27c;
+    Opri54c = KVX::SBri54c;
+    break;
+  case KVX::SDrr:
+    IsRR = true;
+    LLVM_FALLTHROUGH;
+  case KVX::SDri10:
+  case KVX::SDri37:
+  case KVX::SDri64:
+    Oprrc = KVX::SDrrc;
+    Opri27c = KVX::SDri27c;
+    Opri54c = KVX::SDri54c;
+    break;
+  case KVX::SHrr:
+    IsRR = true;
+    LLVM_FALLTHROUGH;
+  case KVX::SHri10:
+  case KVX::SHri37:
+  case KVX::SHri64:
+    Oprrc = KVX::SHrrc;
+    Opri27c = KVX::SHri27c;
+    Opri54c = KVX::SHri54c;
+    break;
+  case KVX::SOrr:
+    IsRR = true;
+    LLVM_FALLTHROUGH;
+  case KVX::SOri10:
+  case KVX::SOri37:
+  case KVX::SOri64:
+    Oprrc = KVX::SOrrc;
+    Opri27c = KVX::SOri27c;
+    Opri54c = KVX::SOri54c;
+    break;
+  case KVX::SQrr:
+    IsRR = true;
+    LLVM_FALLTHROUGH;
+  case KVX::SQri10:
+  case KVX::SQri37:
+  case KVX::SQri64:
+    Oprrc = KVX::SQrrc;
+    Opri27c = KVX::SQri27c;
+    Opri54c = KVX::SQri54c;
+    break;
+  case KVX::SVrr:
+    IsRR = true;
+    LLVM_FALLTHROUGH;
+  case KVX::SVri10:
+  case KVX::SVri37:
+  case KVX::SVri64:
+    Oprrc = KVX::SVrrc;
+    Opri27c = KVX::SVri27c;
+    Opri54c = KVX::SVri54c;
+    break;
+  case KVX::SWrr:
+    IsRR = true;
+    LLVM_FALLTHROUGH;
+  case KVX::SWri10:
+  case KVX::SWri37:
+  case KVX::SWri64:
+    Oprrc = KVX::SWrrc;
+    Opri27c = KVX::SWri27c;
+    Opri54c = KVX::SWri54c;
+    break;
+  }
+  LLVM_DEBUG(dbgs() << "Checking if we can predicate: "; MI.dump());
+  unsigned NewOpcode = 0;
+  bool MustRemoveOffset = false;
+  if (IsRR) {
+    auto DoScale = MI.getOperand(MI.mayLoad() ? 4 : 3);
+    if (!DoScale.isImm() || DoScale.getImm() != 0) {
+      LLVM_DEBUG(
+          dbgs() << "TODO: Allow predicated load/store with scaled offset.\n");
+      return false;
+    }
+    auto Offset = MI.getOperand(MI.mayLoad() ? 1 : 0);
+    if (!Offset.isImm() || Offset.getImm() != 0) {
+      LLVM_DEBUG(
+          dbgs() << "TODO: Allow predicated rr load with non-zero offset.\n");
+      return false;
+    }
+    NewOpcode = Oprrc;
+  } else {
+    auto Imm = MI.getOperand(MI.mayLoad() ? 1 : 0);
+    if (!Imm.isImm()) {
+      LLVM_DEBUG(MI.dump());
+      report_fatal_error("Expected an immediate value as offset.\n");
+    }
+    int64_t Val = Imm.getImm();
+    if (Val == 0) {
+      NewOpcode = Oprrc;
+      MustRemoveOffset = true;
+      LLVM_DEBUG(dbgs() << "Offset is zero, can use rrc variant.\n");
+    } else if (isInt<27>(Val)) {
+      NewOpcode = Opri27c;
+      LLVM_DEBUG(dbgs() << "Offset fits 27 bits.\n");
+    } else if (isInt<54>(Val)) {
+      LLVM_DEBUG(dbgs() << "Offset fits 54 bits.\n");
+      NewOpcode = Opri54c;
+    } else {
+      LLVM_DEBUG(
+          dbgs() << "TODO: We don't yet suport materializing immediates.\n");
+      return false;
+    }
+  }
+
+  assert(NewOpcode);
+  // We use this to allow detecting if we actually are ment to
+  // modify the instruction or we are just checking if we can
+  // predicate it.
+  if (Pred.empty())
+    return true;
+
+  if (Pred[0].getImm() != KVX::CB)
+    report_fatal_error("Predicate does not come from a CB.\n");
+
+  // The conditional version does not hold offset or doScale arguments.
+  if (IsRR) {
+    // TODO: Allow non-zero offset.
+    // TODO: Allow scalled values.
+    // TODO: Allow predicating loads.
+    // TODO: Allow predicating register copies into cmoves.
+    if (MI.mayLoad())
+      report_fatal_error(
+          "TODO: Can't predicate loads, must insert output as input.");
+    else {
+      // Remove doScale argument
+      MI.RemoveOperand(3);
+      // Remove zero offset operand
+      MI.RemoveOperand(0);
+    }
+  } else if (MustRemoveOffset) {
+    if (MI.mayLoad())
+      report_fatal_error(
+          "TODO: Can't predicate loads, must insert output as input.");
+    else
+      MI.RemoveOperand(0);
+  }
+
+  MI.setDesc(get(NewOpcode));
+  MachineInstrBuilder(*MI.getParent()->getParent(), MI)
+      .addImm(Pred[2].getImm())
+      .addReg(Pred[1].getReg());
+
+  LLVM_DEBUG(dbgs() << "Predicated instruction now is: "; MI.dump());
+  return true;
+}
