@@ -229,7 +229,7 @@ llvm::SDValue buildImmVector(llvm::SDNode &N, llvm::SelectionDAG &CurDag,
                              bool IsFp = false, unsigned long Negative = 0);
 
 llvm::SDValue buildFdotImm(llvm::SDNode &N, llvm::SelectionDAG &CurDag,
-                           bool SwapLoHi = false);
+                           bool SwapLoHi = false, unsigned long Negative = 0);
 
 bool isImmVecOfLeqNbits(llvm::SDNode *N, llvm::SelectionDAG *CurDag,
                         unsigned short B);

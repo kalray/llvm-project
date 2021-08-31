@@ -717,35 +717,91 @@ def : Pat<(fmul (v4f32 (fpextend v4f16:$rs1)), (v4f32 (fpextend v4f16:$rs2))),
 // FMULWC
 def : Pat<(v2f32 (build_vector
           (fma
+            (extractelt v2f32:$t2, 0),
+            fpimm:$t5,
+            (fneg (fmulcont (extractelt v2f32:$t2, 1), fpimm:$t9))),
+          (fma:$FMA
+            (extractelt v2f32:$t2, 1),
+            fpimm:$t5,
+            (fmulcont (extractelt v2f32:$t2, 0), fpimm:$t9)))),
+          (FMULWCri SingleReg:$t2, (build_fdot_imm $FMA), conjugate_)>, Requires<[IsV1]>;
+
+def : Pat<(v2f32 (build_vector
+          (fma:$FMA
+            (extractelt v2f32:$t2, 1),
+            fpimm:$t5,
+            (fmulcont (extractelt v2f32:$t2, 0), fpimm:$t9)),
+          (fma
+            (extractelt v2f32:$t2, 0),
+            fpimm:$t5,
+            (fneg (fmulcont (extractelt v2f32:$t2, 1), fpimm:$t9))))),
+          (FMULWCri SingleReg:$t2, (build_fdot_imm_swp $FMA), conjugate_c)>, Requires<[IsV1]>;
+
+def : Pat<(v2f32 (build_vector
+          (fma:$FMA
+            (extractelt v2f32:$t2, 1),
+            fpimm:$t5,
+            (fmulcont (extractelt v2f32:$t2, 0), fpimm:$t9)),
+          (fma
+            (extractelt v2f32:$t2, 1),
+            fpimm:$t9,
+            (fneg (fmulcont (extractelt v2f32:$t2, 0), fpimm:$t5))))),
+          (FMULWCri SingleReg:$t2, (build_fdot_imm_swp_neg0 $FMA), conjugate_)>, Requires<[IsV1]>;
+
+def : Pat<(v2f32 (build_vector
+          (fma:$FMA
+            (extractelt v2f32:$t2, 0),
+            fpimm:$t5,
+            (fmulcont (extractelt v2f32:$t2, 1), fpimm:$t9)),
+          (fma
+            (extractelt v2f32:$t2, 1),
+            fpimm:$t5,
+            (fneg (fmulcont (extractelt v2f32:$t2, 0), fpimm:$t9))))),
+          (FMULWCri SingleReg:$t2, (build_fdot_imm_neg1 $FMA), conjugate_)>, Requires<[IsV1]>;
+
+
+def : Pat<(v2f32 (build_vector
+          (fma
             (extractelt v2f32:$t4, 0),
             (extractelt v2f32:$t2, 0),
-            (fneg (fmulcont (extractelt  v2f32:$t4, 1), (extractelt v2f32:$t2, 1)))),
+            (fneg (fmulcont (extractelt v2f32:$t4, 1), (extractelt v2f32:$t2, 1)))),
           (fma
             (extractelt v2f32:$t4, 0),
             (extractelt v2f32:$t2, 1),
-            (fmulcont (extractelt  v2f32:$t4, 1), (extractelt v2f32:$t2, 0))))),
+            (fmulcont (extractelt v2f32:$t4, 1), (extractelt v2f32:$t2, 0))))),
           (FMULWCrr SingleReg:$t4, SingleReg:$t2, conjugate_, rounding_, silent_)>;
 
 def : Pat<(v2f32 (build_vector
           (fma
             (extractelt v2f32:$t4, 0),
             (extractelt v2f32:$t2, 0),
-          (fmulcont (extractelt  v2f32:$t4, 1), (extractelt v2f32:$t2, 1))),
+          (fmulcont (extractelt v2f32:$t4, 1), (extractelt v2f32:$t2, 1))),
           (fma
             (extractelt v2f32:$t4, 0),
             (extractelt v2f32:$t2, 1),
-            (fneg (fmulcont (extractelt  v2f32:$t4, 1), (extractelt v2f32:$t2, 0)))))),
+            (fneg (fmulcont (extractelt v2f32:$t4, 1), (extractelt v2f32:$t2, 0)))))),
           (FMULWCrr SingleReg:$t2, SingleReg:$t4, conjugate_c, rounding_, silent_)>;
 
 def : Pat<(v2f32 (build_vector
           (fma
             (fneg (extractelt v2f32:$t4, 1)),
             (extractelt v2f32:$t2, 1),
-            (fma (extractelt  v2f32:$t4, 0), (extractelt v2f32:$t2, 0), (extractelt v2f32:$t6, 0))),
+            (fma (extractelt v2f32:$t4, 0), (extractelt v2f32:$t2, 0), (extractelt v2f32:$t6, 0))),
           (fma
             (extractelt v2f32:$t4, 1),
             (extractelt v2f32:$t2, 0),
-            (fma (extractelt  v2f32:$t4, 0), (extractelt v2f32:$t2, 1), (extractelt v2f32:$t6, 1))))),
+            (fma (extractelt v2f32:$t4, 0), (extractelt v2f32:$t2, 1), (extractelt v2f32:$t6, 1))))),
+          (FADDWPrr (FMULWCrr SingleReg:$t4, SingleReg:$t2, conjugate_, rounding_, silent_), SingleReg:$t6, conjugate_, rounding_, silent_)>;
+
+def : Pat<(v2f32 (build_vector
+          (fma
+            (fneg (extractelt v2f32:$t4, 1)),
+            (extractelt v2f32:$t2, 1),
+            (fma (extractelt v2f32:$t4, 0), (extractelt v2f32:$t2, 0), (extractelt v2f32:$t6, 0))),
+          (fma
+            (extractelt v2f32:$t4, 0),
+            (extractelt v2f32:$t2, 1),
+            (fma (extractelt v2f32:$t4, 1), (extractelt v2f32:$t2, 0), (extractelt v2f32:$t6, 1))))),
           (FADDWPrr (FMULWCrr SingleReg:$t4, SingleReg:$t2, conjugate_, rounding_, silent_), SingleReg:$t6, conjugate_, rounding_, silent_)>;
 
 // FMULWDP TODO: Add ri variants
