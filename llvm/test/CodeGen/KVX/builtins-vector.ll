@@ -1288,12 +1288,12 @@ define <8 x float> @ffmawo(<8 x float> %v1, <8 x float> %v2, <8 x float> %v3){
 ; CHECK-NEXT:    ffmawp.rn $r8 = $r0, $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmawp.rn $r9 = $r1, $r5
-; CHECK-NEXT:    copyd $r0 = $r8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmawp.rn $r11 = $r3, $r7
-; CHECK-NEXT:    copyd $r1 = $r9
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmawp.rn $r10 = $r2, $r6
+; CHECK-NEXT:    copyd $r0 = $r8
+; CHECK-NEXT:    copyd $r1 = $r9
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r2 = $r10
 ; CHECK-NEXT:    copyd $r3 = $r11
@@ -1336,12 +1336,12 @@ define <4 x double> @ffmadq(<4 x double> %v1, <4 x double> %v2, <4 x double> %v3
 ; CHECK-NEXT:    ffmad.rn $r8 = $r0, $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad.rn $r9 = $r1, $r5
-; CHECK-NEXT:    copyd $r0 = $r8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad.rn $r11 = $r3, $r7
-; CHECK-NEXT:    copyd $r1 = $r9
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad.rn $r10 = $r2, $r6
+; CHECK-NEXT:    copyd $r0 = $r8
+; CHECK-NEXT:    copyd $r1 = $r9
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r2 = $r10
 ; CHECK-NEXT:    copyd $r3 = $r11
@@ -1399,12 +1399,12 @@ define <8 x float> @ffmswo(<8 x float> %v1, <8 x float> %v2, <8 x float> %v3){
 ; CHECK-NEXT:    ffmswp.rn $r8 = $r0, $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmswp.rn $r9 = $r1, $r5
-; CHECK-NEXT:    copyd $r0 = $r8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmswp.rn $r11 = $r3, $r7
-; CHECK-NEXT:    copyd $r1 = $r9
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmswp.rn $r10 = $r2, $r6
+; CHECK-NEXT:    copyd $r0 = $r8
+; CHECK-NEXT:    copyd $r1 = $r9
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r2 = $r10
 ; CHECK-NEXT:    copyd $r3 = $r11
@@ -1447,12 +1447,12 @@ define <4 x double> @ffmsdq(<4 x double> %v1, <4 x double> %v2, <4 x double> %v3
 ; CHECK-NEXT:    ffmsd.rn $r8 = $r0, $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmsd.rn $r9 = $r1, $r5
-; CHECK-NEXT:    copyd $r0 = $r8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmsd.rn $r11 = $r3, $r7
-; CHECK-NEXT:    copyd $r1 = $r9
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmsd.rn $r10 = $r2, $r6
+; CHECK-NEXT:    copyd $r0 = $r8
+; CHECK-NEXT:    copyd $r1 = $r9
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r2 = $r10
 ; CHECK-NEXT:    copyd $r3 = $r11

@@ -371,32 +371,29 @@ define i32 @main(i32 %argc, i8** nocapture readnone %argv)  {
 ; CHECK-NEXT:  .LBB1_9: # %for.cond10.preheader.i
 ; CHECK-NEXT:    # in Loop: Header=BB1_1 Depth=1
 ; CHECK-NEXT:    make $r0 = 1
-; CHECK-NEXT:    make $r1 = 121
 ; CHECK-NEXT:    make $r6 = 1
 ; CHECK-NEXT:    sh 0[$r25] = $r21
+; CHECK-NEXT:    make $r1 = x
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sh 24[$r25] = $r29
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sh 26[$r25] = $r30
+; CHECK-NEXT:    make $r2 = 16
+; CHECK-NEXT:    make $r3 = h
+; CHECK-NEXT:    make $r4 = 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sh 2[$r25] = $r0
 ; CHECK-NEXT:    make $r0 = 4
-; CHECK-NEXT:    make $r2 = 16
-; CHECK-NEXT:    make $r3 = h
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sh 22[$r25] = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sh 28[$r25] = $r31
+; CHECK-NEXT:    sh 26[$r25] = $r30
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sh 4[$r25] = $r0
 ; CHECK-NEXT:    make $r0 = 9
-; CHECK-NEXT:    make $r1 = x
-; CHECK-NEXT:    make $r4 = 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sh 30[$r25] = $r20
+; CHECK-NEXT:    sh 28[$r25] = $r31
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sh 6[$r25] = $r0
 ; CHECK-NEXT:    make $r0 = 16
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sh 30[$r25] = $r20
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sh 8[$r25] = $r0
 ; CHECK-NEXT:    make $r0 = 25
@@ -417,6 +414,9 @@ define i32 @main(i32 %argc, i8** nocapture readnone %argv)  {
 ; CHECK-NEXT:    make $r0 = 100
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sh 20[$r25] = $r0
+; CHECK-NEXT:    make $r0 = 121
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sh 22[$r25] = $r0
 ; CHECK-NEXT:    compd.ltu $r0 = $r19, 4
 ; CHECK-NEXT:    copyd $r5 = $r19
 ; CHECK-NEXT:    copyd $r7 = $r19
@@ -544,17 +544,17 @@ define i32 @main(i32 %argc, i8** nocapture readnone %argv)  {
 ; CHECK-NEXT:    copyd $r3 = $r21
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfd $r1 = $r1, 492
-; CHECK-NEXT:    slld $r4 = $r31, 4
 ; CHECK-NEXT:    srld $r0 = $r0, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srld $r1 = $r1, 2
-; CHECK-NEXT:    ord $r27 = $r4, 8
 ; CHECK-NEXT:    srlw $r0 = $r0, 3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r26 = $r1, 1
 ; CHECK-NEXT:    cmoved.wnez $r2 ? $r3 = $r0
+; CHECK-NEXT:    addd $r26 = $r1, 1
+; CHECK-NEXT:    slld $r2 = $r31, 4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addw $r0 = $r3, 48
+; CHECK-NEXT:    ord $r27 = $r2, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sb 5[$r12] = $r0
 ; CHECK-NEXT:    make $r0 = .L.str
@@ -595,19 +595,19 @@ define i32 @main(i32 %argc, i8** nocapture readnone %argv)  {
 ; CHECK-NEXT:    make $r1 = x
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sh 26[$r25] = $r28
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sh 28[$r25] = $r29
+; CHECK-NEXT:    make $r2 = 16
+; CHECK-NEXT:    make $r3 = h
+; CHECK-NEXT:    make $r4 = 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sh 2[$r25] = $r0
 ; CHECK-NEXT:    make $r0 = 4
-; CHECK-NEXT:    make $r2 = 16
-; CHECK-NEXT:    make $r3 = h
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sh 30[$r25] = $r30
-; CHECK-NEXT:    make $r4 = 1
+; CHECK-NEXT:    sh 28[$r25] = $r29
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sh 4[$r25] = $r0
 ; CHECK-NEXT:    make $r0 = 9
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sh 30[$r25] = $r30
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sh 6[$r25] = $r0
 ; CHECK-NEXT:    make $r0 = 16

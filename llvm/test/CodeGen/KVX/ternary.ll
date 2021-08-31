@@ -66,10 +66,11 @@ entry:
 define i64 @Int64TernaryRegReg(i1 %value, i64 %v1, i64 %v2){
 ; CHECK-LABEL: Int64TernaryRegReg:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    andw $r3 = $r0, 1
-; CHECK-NEXT:    copyd $r0 = $r2
+; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r3 ? $r0 = $r1
+; CHECK-NEXT:    cmoved.wnez $r0 ? $r2 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -173,12 +174,13 @@ define i64 @Int64TernaryGlobalReg(i1 %value, i64 %v1){
 ; CHECK-LABEL: Int64TernaryGlobalReg:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r2 = g1
-; CHECK-NEXT:    andw $r3 = $r0, 1
+; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r2 = 0[$r2]
-; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r3 ? $r0 = $r2
+; CHECK-NEXT:    cmoved.wnez $r0 ? $r1 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -218,10 +220,11 @@ entry:
 define double @FloatTernaryRegReg(i1 %value, double %v1, double %v2){
 ; CHECK-LABEL: FloatTernaryRegReg:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    andw $r3 = $r0, 1
-; CHECK-NEXT:    copyd $r0 = $r2
+; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r3 ? $r0 = $r1
+; CHECK-NEXT:    cmoved.wnez $r0 ? $r2 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -324,12 +327,13 @@ define double @FloatTernaryGlobalReg(i1 %value, double %v1){
 ; CHECK-LABEL: FloatTernaryGlobalReg:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r2 = gf1
-; CHECK-NEXT:    andw $r3 = $r0, 1
+; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r2 = 0[$r2]
-; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r3 ? $r0 = $r2
+; CHECK-NEXT:    cmoved.wnez $r0 ? $r1 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -369,10 +373,11 @@ entry:
 define i32 @Int32TernaryRegReg(i1 %value, i32 %v1, i32 %v2){
 ; CHECK-LABEL: Int32TernaryRegReg:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    andw $r3 = $r0, 1
-; CHECK-NEXT:    copyd $r0 = $r2
+; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r3 ? $r0 = $r1
+; CHECK-NEXT:    cmoved.wnez $r0 ? $r2 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -475,12 +480,13 @@ define i32 @Int32TernaryGlobalReg(i1 %value, i32 %v1){
 ; CHECK-LABEL: Int32TernaryGlobalReg:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r2 = gi32_1
-; CHECK-NEXT:    andw $r3 = $r0, 1
+; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
-; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r3 ? $r0 = $r2
+; CHECK-NEXT:    cmoved.wnez $r0 ? $r1 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

@@ -738,14 +738,14 @@ define <4 x i64> @test_select_cc_f32_f32(<4 x i64> %a, <4 x i64> %b, <4 x i16> %
 ; CHECK-NEXT:    sxhd $r11 = $r11
 ; CHECK-NEXT:    sxhd $r8 = $r8
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.dnez $r10 ? $r6 = $r2
+; CHECK-NEXT:    cmoved.dnez $r9 ? $r7 = $r3
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.dnez $r11 ? $r4 = $r0
 ; CHECK-NEXT:    cmoved.dnez $r8 ? $r5 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.dnez $r10 ? $r6 = $r2
-; CHECK-NEXT:    cmoved.dnez $r9 ? $r7 = $r3
 ; CHECK-NEXT:    copyd $r0 = $r4
 ; CHECK-NEXT:    copyd $r1 = $r5
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r2 = $r6
 ; CHECK-NEXT:    copyd $r3 = $r7
 ; CHECK-NEXT:    ret
@@ -766,14 +766,14 @@ define <4 x i64> @test_select_cc_f32_f32(<4 x i64> %a, <4 x i64> %b, <4 x i16> %
 ; V2-NEXT:    sxhd $r11 = $r11
 ; V2-NEXT:    sxhd $r8 = $r8
 ; V2-NEXT:    ;;
+; V2-NEXT:    cmoved.dnez $r10 ? $r6 = $r2
+; V2-NEXT:    cmoved.dnez $r9 ? $r7 = $r3
+; V2-NEXT:    ;;
 ; V2-NEXT:    cmoved.dnez $r11 ? $r4 = $r0
 ; V2-NEXT:    cmoved.dnez $r8 ? $r5 = $r1
 ; V2-NEXT:    ;;
-; V2-NEXT:    cmoved.dnez $r10 ? $r6 = $r2
-; V2-NEXT:    cmoved.dnez $r9 ? $r7 = $r3
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
-; V2-NEXT:    ;;
 ; V2-NEXT:    copyd $r2 = $r6
 ; V2-NEXT:    copyd $r3 = $r7
 ; V2-NEXT:    ret
@@ -949,32 +949,30 @@ define <4 x i64> @test_sext_2xi64(<4 x i16> %a) {
 ; CHECK-LABEL: test_sext_2xi64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    zxhd $r1 = $r0
-; CHECK-NEXT:    extfz $r2 = $r0, 47, 32
+; CHECK-NEXT:    srlw $r2 = $r0, 16
+; CHECK-NEXT:    extfz $r3 = $r0, 47, 32
+; CHECK-NEXT:    srld $r4 = $r0, 48
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxhd $r4 = $r1
-; CHECK-NEXT:    srlw $r1 = $r0, 16
-; CHECK-NEXT:    srld $r0 = $r0, 48
-; CHECK-NEXT:    sxhd $r2 = $r2
+; CHECK-NEXT:    sxhd $r0 = $r1
+; CHECK-NEXT:    sxhd $r1 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxhd $r3 = $r0
-; CHECK-NEXT:    sxhd $r1 = $r1
-; CHECK-NEXT:    copyd $r0 = $r4
+; CHECK-NEXT:    sxhd $r2 = $r3
+; CHECK-NEXT:    sxhd $r3 = $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ;
 ; V2-LABEL: test_sext_2xi64:
 ; V2:       # %bb.0:
 ; V2-NEXT:    zxhd $r1 = $r0
-; V2-NEXT:    extfz $r2 = $r0, 47, 32
+; V2-NEXT:    srlw $r2 = $r0, 16
+; V2-NEXT:    extfz $r3 = $r0, 47, 32
+; V2-NEXT:    srld $r4 = $r0, 48
 ; V2-NEXT:    ;;
-; V2-NEXT:    sxhd $r4 = $r1
-; V2-NEXT:    srlw $r1 = $r0, 16
-; V2-NEXT:    srld $r0 = $r0, 48
-; V2-NEXT:    sxhd $r2 = $r2
+; V2-NEXT:    sxhd $r0 = $r1
+; V2-NEXT:    sxhd $r1 = $r2
 ; V2-NEXT:    ;;
-; V2-NEXT:    sxhd $r3 = $r0
-; V2-NEXT:    sxhd $r1 = $r1
-; V2-NEXT:    copyd $r0 = $r4
+; V2-NEXT:    sxhd $r2 = $r3
+; V2-NEXT:    sxhd $r3 = $r4
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %r = sext <4 x i16> %a to <4 x i64>
@@ -1067,8 +1065,8 @@ define <4 x i16> @test_insertelement(<4 x i16> %a, i16 %x, i64 %p) {
 ; CHECK-LABEL: test_insertelement:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    insf $r2 = $r2, 31, 16
-; CHECK-NEXT:    insf $r1 = $r1, 31, 16
 ; CHECK-NEXT:    make $r3 = 0x3000200010000
+; CHECK-NEXT:    insf $r1 = $r1, 31, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r2 = $r2, 63, 32
 ; CHECK-NEXT:    insf $r1 = $r1, 63, 32
@@ -1082,8 +1080,8 @@ define <4 x i16> @test_insertelement(<4 x i16> %a, i16 %x, i64 %p) {
 ; V2-LABEL: test_insertelement:
 ; V2:       # %bb.0:
 ; V2-NEXT:    insf $r2 = $r2, 31, 16
-; V2-NEXT:    insf $r1 = $r1, 31, 16
 ; V2-NEXT:    make $r3 = 0x3000200010000
+; V2-NEXT:    insf $r1 = $r1, 31, 16
 ; V2-NEXT:    ;;
 ; V2-NEXT:    insf $r2 = $r2, 63, 32
 ; V2-NEXT:    insf $r1 = $r1, 63, 32

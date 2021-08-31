@@ -128,38 +128,37 @@ define i32 @f()  {
 ; CHECK-NEXT:  .LBB0_7: # %for.body.for.body_crit_edge
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    lwz $r2 = 0[$r0]
-; CHECK-NEXT:    copyd $r3 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw -4[$r3] = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r1 = 0[$r0]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw -8[$r3] = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r1 = 0[$r0]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw -12[$r3] = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r1 = 0[$r0]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw -16[$r3] = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r1 = 0[$r0]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw -20[$r3] = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r1 = 0[$r0]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw -24[$r3] = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r1 = 0[$r0]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw -28[$r3] = $r1
-; CHECK-NEXT:    addd $r1 = $r3, -32
+; CHECK-NEXT:    sw -4[$r1] = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r2 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw -32[$r3] = $r2
+; CHECK-NEXT:    sw -8[$r1] = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lwz $r2 = 0[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw -12[$r1] = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lwz $r2 = 0[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw -16[$r1] = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lwz $r2 = 0[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw -20[$r1] = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lwz $r2 = 0[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw -24[$r1] = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lwz $r2 = 0[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw -28[$r1] = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lwz $r2 = 0[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw -32[$r1] = $r2
+; CHECK-NEXT:    addd $r1 = $r1, -32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .__LOOPDO_0_END_:
 ; CHECK-NEXT:  .LBB0_8: # %for.end

@@ -95,11 +95,11 @@ define i32 @fn1(i32 %a, i32 %b, i32 %c, i32 %d, i32 %e, i32 %f, i32 %g, i32 %h, 
 ; FP-NONE-NEXT:    lq $r18r19 = 8[$r12]
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    lo $r20r21r22r23 = 24[$r12]
-; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:    lo $r24r25r26r27 = 56[$r12]
 ; FP-NONE-NEXT:    addw $r0 = $r0, $r30
 ; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    lo $r24r25r26r27 = 56[$r12]
 ; FP-NONE-NEXT:    addw $r0 = $r0, $r31
+; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    lo $r28r29r30r31 = 88[$r12]
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    ld $r16 = 120[$r12]

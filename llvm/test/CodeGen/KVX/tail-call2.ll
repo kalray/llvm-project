@@ -94,13 +94,13 @@ define i32 @f(i32 %a1, i32 %a2, i32 %a3, i32 %a4, i32 %a5, i32 %a6, i32 %a7, i32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addw $r2 = $r2, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r2 = $r2, $r16
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r5 = z
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r2 = $r2, $r17
+; CHECK-NEXT:    addw $r2 = $r2, $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r25 = 0[$r5]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addw $r2 = $r2, $r17
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addw $r2 = $r2, $r15
 ; CHECK-NEXT:    ;;

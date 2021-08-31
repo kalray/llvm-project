@@ -33,7 +33,7 @@ def PCRELGOTADDR : REGISTERW_EXTEND27_UPPER27_LOWER10_TRIPLE
 
 def PICEXTERNINDIRECTION : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
     <(outs SingleReg:$addr), (ins SingleReg:$gotaddr, Wrapped64:$gotoff),
-    "ld $addr = @got( $gotoff )[$gotaddr]", [], LSU_AUXW_Y>;
+    "ld $addr = @got( $gotoff )[$gotaddr]", [], LSU_AUXW_Y_LOAD>;
 
 def : Pat<(i64 (PICExternIndirection (i64 tglobaladdr:$gotoff))),
   (PICEXTERNINDIRECTION (PCRELGOTADDR), Pcrel27:$gotoff)>;

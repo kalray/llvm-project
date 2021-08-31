@@ -49,8 +49,8 @@ define <4 x i32> @test_fma_imm(<4 x i32> %a, <4 x i32> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r5 = 0x200000001
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r4 = $r5
 ; CHECK-NEXT:    maddwp $r1 = $r3, $r5
+; CHECK-NEXT:    copyd $r4 = $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    maddwp $r0 = $r2, $r4
 ; CHECK-NEXT:    ret
@@ -444,13 +444,13 @@ define <4 x i64> @test_select_cc_f32_f32(<4 x i64> %a, <4 x i64> %b, <4 x i32> %
 ; CHECK-NEXT:    sxwd $r11 = $r11
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.dnez $r8 ? $r4 = $r0
-; CHECK-NEXT:    cmoved.dnez $r11 ? $r5 = $r1
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.dnez $r9 ? $r6 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.dnez $r11 ? $r5 = $r1
 ; CHECK-NEXT:    cmoved.dnez $r10 ? $r7 = $r3
 ; CHECK-NEXT:    copyd $r0 = $r4
-; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    copyd $r2 = $r6
 ; CHECK-NEXT:    copyd $r3 = $r7
 ; CHECK-NEXT:    ret

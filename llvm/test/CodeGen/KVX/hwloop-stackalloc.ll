@@ -120,13 +120,14 @@ define i32 @f(i32 %num){
 ; CHECK-NEXT:    addd $r1 = $r1, 4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r5 = 0[$r2]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lwz.xs $r6 = $r4[$r2]
+; CHECK-NEXT:    addd $r2 = $r2, 4
 ; CHECK-NEXT:    addw $r0 = $r3, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz.xs $r3 = $r4[$r2]
-; CHECK-NEXT:    addd $r2 = $r2, 4
 ; CHECK-NEXT:    addw $r0 = $r0, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r0 = $r0, $r3
+; CHECK-NEXT:    addw $r0 = $r0, $r6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .__LOOPDO_1_END_:
 ; CHECK-NEXT:    goto .LBB1_7

@@ -277,34 +277,34 @@ let mayLoad = 1 in
 {
 def LBSp : KVX_PSEUDO_W_SCHEDINFO<
         (outs SingleReg:$out),
-        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), [], LSU_AUXW>;
+        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), [], LSU_AUXW_LOAD>;
 def LBZp : KVX_PSEUDO_W_SCHEDINFO<
         (outs SingleReg:$out),
-        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), [], LSU_AUXW>;
+        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), [], LSU_AUXW_LOAD>;
 def LHSp : KVX_PSEUDO_W_SCHEDINFO<
         (outs SingleReg:$out),
-        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), [], LSU_AUXW>;
+        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), [], LSU_AUXW_LOAD>;
 def LHZp : KVX_PSEUDO_W_SCHEDINFO<
         (outs SingleReg:$out),
-        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), [], LSU_AUXW>;
+        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), [], LSU_AUXW_LOAD>;
 def LWSp : KVX_PSEUDO_W_SCHEDINFO<
         (outs SingleReg:$out),
-        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), [], LSU_AUXW>;
+        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), [], LSU_AUXW_LOAD>;
 def LWZp : KVX_PSEUDO_W_SCHEDINFO<
         (outs SingleReg:$out),
-        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), [], LSU_AUXW>;
+        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), [], LSU_AUXW_LOAD>;
 def LDp : KVX_PSEUDO_W_SCHEDINFO<
         (outs SingleReg:$out),
-        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), [], LSU_AUXW>;
+        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), [], LSU_AUXW_LOAD>;
 def LQp : KVX_PSEUDO_W_SCHEDINFO<
         (outs PairedReg:$out),
-        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), [], LSU_AUXW>;
+        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), [], LSU_AUXW_LOAD>;
 def LOp : KVX_PSEUDO_W_SCHEDINFO<
         (outs QuadReg:$out),
-        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), [], LSU_AUXW>;
+        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), [], LSU_AUXW_LOAD>;
 def LVp : KVX_PSEUDO_W_SCHEDINFO<
         (outs VectorReg:$out),
-        (ins Wrapped64:$offset, SingleReg:$base, SpeculateMod:$var), [], LSU>;
+        (ins Wrapped64:$offset, SingleReg:$base, SpeculateMod:$var), [], LSU_LOAD>;
 
 def LWIDEp : KVX_PSEUDO<
         (outs WideReg:$out),
@@ -453,19 +453,19 @@ def : Pat<(v1024i1 (load SingleReg:$base)),
 let mayStore = 1 in
 {
 def SBp : KVX_PSEUDO_W_SCHEDINFO<
-        (outs), (ins Wrapped64:$offset, SingleReg:$base, SingleReg:$val), [], LSU_AUXR_Y>;
+        (outs), (ins Wrapped64:$offset, SingleReg:$base, SingleReg:$val), [], LSU_AUXR_Y_STORE>;
 def SHp : KVX_PSEUDO_W_SCHEDINFO<
-        (outs), (ins Wrapped64:$offset, SingleReg:$base, SingleReg:$val), [], LSU_AUXR_Y>;
+        (outs), (ins Wrapped64:$offset, SingleReg:$base, SingleReg:$val), [], LSU_AUXR_Y_STORE>;
 def SWp : KVX_PSEUDO_W_SCHEDINFO<
-        (outs), (ins Wrapped64:$offset, SingleReg:$base, SingleReg:$val), [], LSU_AUXR_Y>;
+        (outs), (ins Wrapped64:$offset, SingleReg:$base, SingleReg:$val), [], LSU_AUXR_Y_STORE>;
 def SDp : KVX_PSEUDO_W_SCHEDINFO<
-        (outs), (ins Wrapped64:$offset, SingleReg:$base, SingleReg:$val), [], LSU_AUXR_Y>;
+        (outs), (ins Wrapped64:$offset, SingleReg:$base, SingleReg:$val), [], LSU_AUXR_Y_STORE>;
 def SQp : KVX_PSEUDO_W_SCHEDINFO<
-        (outs), (ins Wrapped64:$offset, SingleReg:$base, PairedReg:$val), [], LSU_AUXR_Y>;
+        (outs), (ins Wrapped64:$offset, SingleReg:$base, PairedReg:$val), [], LSU_AUXR_Y_STORE>;
 def SOp : KVX_PSEUDO_W_SCHEDINFO<
-        (outs), (ins Wrapped64:$offset, SingleReg:$base, QuadReg:$val), [], LSU_AUXR_Y>;
+        (outs), (ins Wrapped64:$offset, SingleReg:$base, QuadReg:$val), [], LSU_AUXR_Y_STORE>;
 def SVp : KVX_PSEUDO_W_SCHEDINFO<
-        (outs), (ins Wrapped64:$offset, SingleReg:$base, VectorReg:$val), [], LSU>;
+        (outs), (ins Wrapped64:$offset, SingleReg:$base, VectorReg:$val), [], LSU_STORE>;
 def SWIDEp : KVX_PSEUDO<
         (outs), (ins Wrapped64:$offset, SingleReg:$base, WideReg:$val), []>;
 def SMATRIXp : KVX_PSEUDO<

@@ -1227,8 +1227,8 @@ define <2 x half> @test_fma(<2 x half> %a, <2 x half> %b, <2 x half> %c) #0 {
 ; CHECK-LABEL: test_fma:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    zxwd $r3 = $r0
-; CHECK-NEXT:    zxwd $r1 = $r1
 ; CHECK-NEXT:    zxwd $r0 = $r2
+; CHECK-NEXT:    zxwd $r1 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmahq $r0 = $r3, $r1
 ; CHECK-NEXT:    ret
@@ -1643,8 +1643,8 @@ define <2 x half> @test_fmuladd(<2 x half> %a, <2 x half> %b, <2 x half> %c) #0 
 ; CHECK-LABEL: test_fmuladd:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    zxwd $r3 = $r0
-; CHECK-NEXT:    zxwd $r1 = $r1
 ; CHECK-NEXT:    zxwd $r0 = $r2
+; CHECK-NEXT:    zxwd $r1 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmahq $r0 = $r3, $r1
 ; CHECK-NEXT:    ret

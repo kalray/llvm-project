@@ -28,11 +28,11 @@ define i32 @a() {
 ; CHECK-NEXT:    goto .LBB0_1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_2: # in Loop: Header=BB0_1 Depth=1
-; CHECK-NEXT:    compw.eq $r2 = $r3, 1
 ; CHECK-NEXT:    copyv $a2 = $a1
+; CHECK-NEXT:    compw.eq $r2 = $r3, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sllw $r2 = $r2, 6
 ; CHECK-NEXT:    copyv $a3 = $a0
+; CHECK-NEXT:    sllw $r2 = $r2, 6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    alignv $a1 = $a1, $a2, $r2
 ; CHECK-NEXT:    ;;

@@ -58,34 +58,83 @@ def SFU : InstrItinClass;
 def ALU_FULL_X : InstrItinClass;
 def ALU_FULL_Y : InstrItinClass;
 def MAU : InstrItinClass;
-def MAU_FP16 : InstrItinClass;
+def MAU_FP : InstrItinClass;
 def MAU_X : InstrItinClass;
-def MAU_X_FP16 : InstrItinClass;
+def MAU_X_FP : InstrItinClass;
 def MAU_Y : InstrItinClass;
-def MAU_Y_FP16 : InstrItinClass;
+def MAU_Y_FP : InstrItinClass;
 def MAU_AUXR : InstrItinClass;
 def MAU_AUXR_X : InstrItinClass;
 def MAU_AUXR_Y : InstrItinClass;
-def MAU_AUXR_FP16 : InstrItinClass;
-def MAU_AUXR_X_FP16 : InstrItinClass;
-def MAU_AUXR_Y_FP16 : InstrItinClass;
-def LSU : InstrItinClass;
-def LSU_X : InstrItinClass;
-def LSU_Y : InstrItinClass;
-def LSU_CRRP : InstrItinClass;
-def LSU_CRRP_X : InstrItinClass;
-def LSU_CRRP_Y : InstrItinClass;
-def LSU_AUXR : InstrItinClass;
-def LSU_AUXR_X : InstrItinClass;
-def LSU_AUXR_Y : InstrItinClass;
-def LSU_AUXW : InstrItinClass;
-def LSU_AUXW_X : InstrItinClass;
-def LSU_AUXW_Y : InstrItinClass;
-def LSU_AUXR_AUXW : InstrItinClass;
-def LSU_AUXR_AUXW_X : InstrItinClass;
-def LSU_AUXR_AUXW_Y : InstrItinClass;
+def MAU_AUXR_FP : InstrItinClass;
+def MAU_AUXR_X_FP : InstrItinClass;
+def MAU_AUXR_Y_FP : InstrItinClass;
+
+def LSU_STORE : InstrItinClass;
+def LSU_X_STORE : InstrItinClass;
+def LSU_Y_STORE : InstrItinClass;
+def LSU_CRRP_STORE : InstrItinClass;
+def LSU_CRRP_X_STORE : InstrItinClass;
+def LSU_CRRP_Y_STORE : InstrItinClass;
+def LSU_AUXR_STORE : InstrItinClass;
+def LSU_AUXR_X_STORE : InstrItinClass;
+def LSU_AUXR_Y_STORE : InstrItinClass;
+def LSU_AUXW_STORE : InstrItinClass;
+def LSU_AUXW_X_STORE : InstrItinClass;
+def LSU_AUXW_Y_STORE : InstrItinClass;
+def LSU_AUXR_AUXW_STORE : InstrItinClass;
+def LSU_AUXR_AUXW_X_STORE : InstrItinClass;
+def LSU_AUXR_AUXW_Y_STORE : InstrItinClass;
+
+def LSU_LOAD : InstrItinClass;
+def LSU_X_LOAD : InstrItinClass;
+def LSU_Y_LOAD : InstrItinClass;
+def LSU_CRRP_LOAD : InstrItinClass;
+def LSU_CRRP_X_LOAD : InstrItinClass;
+def LSU_CRRP_Y_LOAD : InstrItinClass;
+def LSU_AUXR_LOAD : InstrItinClass;
+def LSU_AUXR_X_LOAD : InstrItinClass;
+def LSU_AUXR_Y_LOAD : InstrItinClass;
+def LSU_AUXW_LOAD : InstrItinClass;
+def LSU_AUXW_X_LOAD : InstrItinClass;
+def LSU_AUXW_Y_LOAD : InstrItinClass;
+def LSU_AUXR_AUXW_LOAD : InstrItinClass;
+def LSU_AUXR_AUXW_X_LOAD : InstrItinClass;
+def LSU_AUXR_AUXW_Y_LOAD : InstrItinClass;
+
+def LSU_AUXW_ALCLR : InstrItinClass;
+def LSU_AUXW_X_ALCLR : InstrItinClass;
+def LSU_AUXW_Y_ALCLR : InstrItinClass;
+
 def SWAPVO : InstrItinClass;
 
+/**
+ *  The KV3 pipeline has PF, ID, RR, E1..E5 stages
+ *  PF can be ignored since there is no read/write in that stage
+ *  Some instructions read at ID, most at RR, some at E1
+ *  All instructions write their operands at E1..E5
+ *
+ *  In the KV3 VLIW, the resources only matter for encoding the bundles (aka
+ *  there will never be a stall because of two instructions using the same MAU)
+ *  Yet, the Packetizer still needs to know about resource usage in order to
+ *  figure out how many instructions can be issued at the same cycle.
+ *
+ *  Our model, defined below, encodes the resource usage at the first stage
+ *  (ID), then adds the other stages (RR, E1..E5) as stages that do not consume
+ *  resources. To let the scheduler compute stalls accurately, we specify by
+ *  hand the time of access of the different operands with the OperandCycles
+ *  field.
+ *
+ *  In addition to the above, all instructions from the KV3 (not the TCA)
+ *  benefit from a bypass mechanism. We also model this.
+ */
+
+/** TODO
+ *  General issues with the current description:
+ *  - ISSUE resources are not modeled, so the scheduler might be too greedy in
+ *    the bundling; the packetizer will then split the bundle in two, which is
+ *    suboptimal.
+ */
 
 def KVXItinList {
 list<InstrItinData> ItinList = [
@@ -94,235 +143,397 @@ list<InstrItinData> ItinList = [
   ]>,
   InstrItinData<ALU_NOP, [
     InstrStage<1, [NOP0_FU, NOP1_FU, NOP2_FU, NOP3_FU]>
-  ]>,
+    ]
+  >,
   InstrItinData<ALU_TINY, [
-    InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
-  ]>,
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>,
+    ], [3, 2, 2]
+  >,
   InstrItinData<ALU_TINY_X, [
-    InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
-  ]>,
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>,
+    ], [3, 2, 2]
+  >,
   InstrItinData<ALU_TINY_Y, [
-    InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
-  ]>,
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
+    ], [3, 2, 2]
+  >,
   InstrItinData<ALU_LITE, [
-    InstrStage<3, [LITE0_FU, LITE1_FU], 0>,
-    InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
-  ]>,
+    InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
+    ], [3, 2, 2]
+  >,
   InstrItinData<ALU_LITE_X, [
-    InstrStage<3, [LITE0_FU, LITE1_FU], 0>,
-    InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
-  ]>,
+    InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
+    ], [3, 2, 2]
+  >,
   InstrItinData<ALU_LITE_Y, [
-    InstrStage<3, [LITE0_FU, LITE1_FU], 0>,
-    InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
-  ]>,
+    InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
+    ], [3, 2, 2]
+  >,
   InstrItinData<ALU_LITE_CRWL, [
-    InstrStage<3, [LITE0_FU, LITE1_FU], 0>,
-    InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<3, [CRWL_FU]>
-  ]>,
+    InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [CRWL_FU]>
+    ], [3, 2, 2]
+  >,
   InstrItinData<ALU_LITE_CRWH, [
-    InstrStage<3, [LITE0_FU, LITE1_FU], 0>,
-    InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<3, [CRWH_FU]>
-  ]>,
+    InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [CRWH_FU]>
+    ], [3, 2, 2]
+  >,
   InstrItinData<ALU_FULL, [
-    InstrStage<4, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<4, [LITE0_FU, LITE1_FU], 0>,
-    InstrStage<4, [FULL_FU]>
-  ]>,
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
+    InstrStage<1, [FULL_FU]>
+  ], [3, 2, 2]
+  >,
   InstrItinData<SFU, [
-    InstrStage<16, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<16, [LITE0_FU, LITE1_FU], 0>,
-    InstrStage<16, [FULL_FU]>
-  ]>,
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
+    InstrStage<1, [FULL_FU]>
+  ], [13, 2, 2]
+  >,
   InstrItinData<ALU_FULL_X, [
-    InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<3, [LITE0_FU, LITE1_FU], 0>,
-    InstrStage<3, [FULL_FU]>
-  ]>,
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
+    InstrStage<1, [FULL_FU]>
+    ], [3, 2, 2]
+  >,
   InstrItinData<ALU_FULL_Y, [
-    InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<3, [LITE0_FU, LITE1_FU], 0>,
-    InstrStage<3, [FULL_FU]>
-  ]>,
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
+    InstrStage<1, [FULL_FU]>
+    ], [3, 2, 2]
+  >,
   InstrItinData<BCU, [
-    InstrStage<2, [BCU_FU]>
-  ]>,
+    InstrStage<1, [BCU_FU]> // TODO: branch penalty not modeled
+    ]
+  >,
   InstrItinData<BCU_CRRP_CRWL_CRWH, [
-    InstrStage<5, [BCU_FU], 0>,
-    InstrStage<5, [CRRP_FU], 0>,
-    InstrStage<5, [CRWL_FU], 0>,
-    InstrStage<5, [CRWH_FU]>
-  ]>,
+    InstrStage<1, [BCU_FU], 0>,
+    InstrStage<1, [CRRP_FU], 0>,
+    InstrStage<1, [CRWL_FU], 0>,
+    InstrStage<1, [CRWH_FU]>
+    ], [5, 2, 2]
+  >,
   InstrItinData<BCU_TINY_AUXW_CRRP, [
-    InstrStage<5, [BCU_FU], 0>,
-    InstrStage<5, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<5, [AUXW_FU], 0>,
-    InstrStage<5, [CRRP_FU]>
-  ]>,
+    InstrStage<1, [BCU_FU], 0>,
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [AUXW_FU], 0>,
+    InstrStage<1, [CRRP_FU]>
+    ], [5, 2, 2]
+  >,
+  // TODO : need to split this class into several to handle bypasses finely
+  // (SFRs have no bypasses but GPRs do)
   InstrItinData<BCU_TINY_TINY_MAU_XNOP, [
-    InstrStage<3, [BCU_FU], 0>,
-    InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<3, [MAU_FU], 0>,
-    InstrStage<3, [NOP0_FU, NOP1_FU, NOP2_FU, NOP3_FU], 0>,
-    InstrStage<3, [NOP0_FU, NOP1_FU, NOP2_FU, NOP3_FU], 0>,
-    InstrStage<3, [NOP0_FU, NOP1_FU, NOP2_FU, NOP3_FU], 0>,
-    InstrStage<3, [NOP0_FU, NOP1_FU, NOP2_FU, NOP3_FU]>
-  ]>,
+    InstrStage<1, [BCU_FU], 0>,
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [MAU_FU], 0>,
+    InstrStage<1, [NOP0_FU, NOP1_FU, NOP2_FU, NOP3_FU], 0>,
+    InstrStage<1, [NOP0_FU, NOP1_FU, NOP2_FU, NOP3_FU], 0>,
+    InstrStage<1, [NOP0_FU, NOP1_FU, NOP2_FU, NOP3_FU], 0>,
+    InstrStage<1, [NOP0_FU, NOP1_FU, NOP2_FU, NOP3_FU]>
+    ], [3, 2, 2]
+  >,
   InstrItinData<TCA, [
-    InstrStage<5, [TCA_FU]>
-  ]>,
+    InstrStage<1, [TCA_FU]>
+    ], [5, 2, 2]
+  >,
   InstrItinData<TCA_FP16, [
-    InstrStage<7, [TCA_FU]>
-  ]>,
-  InstrItinData<LSU, [
+    InstrStage<1, [TCA_FU]>
+    ], [7, 2, 2]
+  >,
+  // NOTE : stores have up to 5 operands
+  InstrItinData<LSU_STORE, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU]>
-  ]>,
-  InstrItinData<LSU_X, [
+    ], [2, 2, 2, 2, 2]
+  >,
+  InstrItinData<LSU_X_STORE, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU]>
-  ]>,
-  InstrItinData<LSU_Y, [
+    ], [2, 2, 2, 2, 2]
+  >,
+  InstrItinData<LSU_Y_STORE, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU]>
-  ]>,
-  InstrItinData<LSU_CRRP, [
+    ], [2, 2, 2, 2, 2]
+  >,
+  // TODO : latency will be off for SV, and can't be easily fixed
+  // Indeed, the QuadReg (who is read at E1) is either in 2nd or 3rd position
+  // cf. MC_0B in KVXInstrInfo.td
+  InstrItinData<LSU_CRRP_STORE, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU], 0>,
     InstrStage<1, [CRRP_FU]>
-  ]>,
-  InstrItinData<LSU_CRRP_X, [
+    ], [2, 2, 2, 2, 2]
+  >,
+  InstrItinData<LSU_CRRP_X_STORE, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU], 0>,
     InstrStage<1, [CRRP_FU]>
-  ]>,
-  InstrItinData<LSU_CRRP_Y, [
+    ], [2, 2, 2, 2, 2]
+  >,
+  InstrItinData<LSU_CRRP_Y_STORE, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU], 0>,
     InstrStage<1, [CRRP_FU]>
-  ]>,
-  InstrItinData<LSU_AUXR, [
+    ], [2, 2, 2, 2, 2]
+  >,
+  InstrItinData<LSU_AUXR_STORE, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU], 0>,
     InstrStage<1, [AUXR_FU]>
-  ]>,
-  InstrItinData<LSU_AUXR_X, [
+    ], [2, 2, 2, 2, 2]
+  >,
+  InstrItinData<LSU_AUXR_X_STORE, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU], 0>,
     InstrStage<1, [AUXR_FU]>
-  ]>,
-  InstrItinData<LSU_AUXR_Y, [
+    ], [2, 2, 2, 2, 2]
+  >,
+  InstrItinData<LSU_AUXR_Y_STORE, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU], 0>,
     InstrStage<1, [AUXR_FU]>
-  ]>,
-  InstrItinData<LSU_AUXW, [
+    ], [2, 2, 2, 2, 2]
+  >,
+  InstrItinData<LSU_AUXW_STORE, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU], 0>,
     InstrStage<1, [AUXW_FU]>
-  ]>,
-  InstrItinData<LSU_AUXW_X, [
+    ], [2, 2, 2, 2, 2]
+  >,
+  InstrItinData<LSU_AUXW_X_STORE, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU], 0>,
     InstrStage<1, [AUXW_FU]>
-  ]>,
-  InstrItinData<LSU_AUXW_Y, [
+    ], [2, 2, 2, 2, 2]
+  >,
+  InstrItinData<LSU_AUXW_Y_STORE, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU], 0>,
     InstrStage<1, [AUXW_FU]>
-  ]>,
-  InstrItinData<LSU_AUXR_AUXW, [
+    ], [2, 2, 2, 2, 2]
+  >,
+  InstrItinData<LSU_AUXR_AUXW_STORE, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU], 0>,
     InstrStage<1, [AUXR_FU], 0>,
     InstrStage<1, [AUXW_FU]>
-  ]>,
-  InstrItinData<LSU_AUXR_AUXW_X, [
+    ], [2, 2, 2, 2, 2]
+  >,
+  InstrItinData<LSU_AUXR_AUXW_X_STORE, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU], 0>,
     InstrStage<1, [AUXR_FU], 0>,
     InstrStage<1, [AUXW_FU]>
-  ]>,
-  InstrItinData<LSU_AUXR_AUXW_Y, [
+    ], [2, 2, 2, 2, 2]
+  >,
+  InstrItinData<LSU_AUXR_AUXW_Y_STORE, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU], 0>,
     InstrStage<1, [AUXR_FU], 0>,
     InstrStage<1, [AUXW_FU]>
-  ]>,
+    ], [2, 2, 2, 2, 2]
+  >,
+  // ALCLRW, ALCLRD: result available at E2
+    InstrItinData<LSU_AUXW_ALCLR, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [LSU_FU], 0>,
+    InstrStage<1, [AUXW_FU]>
+    ], [4, 2, 2, 2, 2, 2]
+  >,
+  InstrItinData<LSU_AUXW_X_ALCLR, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [LSU_FU], 0>,
+    InstrStage<1, [AUXW_FU]>
+    ], [4, 2, 2, 2, 2, 2]
+  >,
+  InstrItinData<LSU_AUXW_Y_ALCLR, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [LSU_FU], 0>,
+    InstrStage<1, [AUXW_FU]>
+    ], [4, 2, 2, 2, 2, 2]
+  >,
+  InstrItinData<LSU_LOAD, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [LSU_FU]>
+    ], [5, 2, 2, 2, 2, 2]
+  >,
+  InstrItinData<LSU_X_LOAD, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [LSU_FU]>
+    ], [5, 2, 2, 2, 2, 2]
+  >,
+  InstrItinData<LSU_Y_LOAD, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [LSU_FU]>
+    ], [5, 2, 2, 2, 2, 2]
+  >,
+  InstrItinData<LSU_CRRP_LOAD, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [LSU_FU], 0>,
+    InstrStage<1, [CRRP_FU]>
+    ], [5, 2, 2, 2, 2, 2]
+  >,
+  InstrItinData<LSU_CRRP_X_LOAD, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [LSU_FU], 0>,
+    InstrStage<1, [CRRP_FU]>
+    ], [5, 2, 2, 2, 2, 2]
+  >,
+  InstrItinData<LSU_CRRP_Y_LOAD, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [LSU_FU], 0>,
+    InstrStage<1, [CRRP_FU]>
+    ], [5, 2, 2, 2, 2, 2]
+  >,
+  InstrItinData<LSU_AUXR_LOAD, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [LSU_FU], 0>,
+    InstrStage<1, [AUXR_FU]>
+    ], [5, 2, 2, 2, 2, 2]
+  >,
+  InstrItinData<LSU_AUXR_X_LOAD, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [LSU_FU], 0>,
+    InstrStage<1, [AUXR_FU]>
+    ], [5, 2, 2, 2, 2, 2]
+  >,
+  InstrItinData<LSU_AUXR_Y_LOAD, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [LSU_FU], 0>,
+    InstrStage<1, [AUXR_FU]>
+    ], [5, 2, 2, 2, 2, 2]
+  >,
+  InstrItinData<LSU_AUXW_LOAD, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [LSU_FU], 0>,
+    InstrStage<1, [AUXW_FU]>
+    ], [5, 2, 2, 2, 2, 2]
+  >,
+  InstrItinData<LSU_AUXW_X_LOAD, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [LSU_FU], 0>,
+    InstrStage<1, [AUXW_FU]>
+    ], [5, 2, 2, 2, 2, 2]
+  >,
+  InstrItinData<LSU_AUXW_Y_LOAD, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [LSU_FU], 0>,
+    InstrStage<1, [AUXW_FU]>
+    ], [5, 2, 2, 2, 2, 2]
+  >,
+  InstrItinData<LSU_AUXR_AUXW_LOAD, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [LSU_FU], 0>,
+    InstrStage<1, [AUXR_FU], 0>,
+    InstrStage<1, [AUXW_FU]>
+    ], [5, 2, 2, 2, 2, 2]
+  >,
+  InstrItinData<LSU_AUXR_AUXW_X_LOAD, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [LSU_FU], 0>,
+    InstrStage<1, [AUXR_FU], 0>,
+    InstrStage<1, [AUXW_FU]>
+    ], [5, 2, 2, 2, 2, 2]
+  >,
+  InstrItinData<LSU_AUXR_AUXW_Y_LOAD, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [LSU_FU], 0>,
+    InstrStage<1, [AUXR_FU], 0>,
+    InstrStage<1, [AUXW_FU]>
+    ], [5, 2, 2, 2, 2, 2]
+  >,
   InstrItinData<MAU, [
-    InstrStage<4, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<4, [MAU_FU]>
-  ]>,
-  InstrItinData<MAU_FP16, [
-    InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<3, [MAU_FU]>
-  ]>,
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [MAU_FU]>
+    ], [4, 2, 2]
+  >,
+  InstrItinData<MAU_FP, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [MAU_FU]>
+    ], [6, 2, 2]
+  >,
   InstrItinData<MAU_X, [
-    InstrStage<4, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<4, [MAU_FU]>
-  ]>,
-  InstrItinData<MAU_X_FP16, [
-    InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<3, [MAU_FU]>
-  ]>,
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [MAU_FU]>
+    ], [4, 2, 2]
+  >,
+  InstrItinData<MAU_X_FP, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [MAU_FU]>
+    ], [6, 2, 2]
+  >,
   InstrItinData<MAU_Y, [
-    InstrStage<4, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<4, [MAU_FU]>
-  ]>,
-  InstrItinData<MAU_Y_FP16, [
-    InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<3, [MAU_FU]>
-  ]>,
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [MAU_FU]>
+    ], [4, 2, 2]
+  >,
+  InstrItinData<MAU_Y_FP, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [MAU_FU]>
+    ], [6, 2, 2]
+  >,
   InstrItinData<MAU_AUXR, [
-    InstrStage<4, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<4, [MAU_FU], 0>,
-    InstrStage<4, [AUXR_FU]>
-  ]>,
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [MAU_FU], 0>,
+    InstrStage<1, [AUXR_FU]>
+    ], [4, 2, 2]
+  >,
   InstrItinData<MAU_AUXR_X, [
-    InstrStage<4, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<4, [MAU_FU], 0>,
-    InstrStage<4, [AUXR_FU]>
-  ]>,
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [MAU_FU], 0>,
+    InstrStage<1, [AUXR_FU]>
+    ], [4, 2, 2]
+  >,
   InstrItinData<MAU_AUXR_Y, [
-    InstrStage<4, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<4, [MAU_FU], 0>,
-    InstrStage<4, [AUXR_FU]>
-  ]>,
-  InstrItinData<MAU_AUXR_FP16, [
-    InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<3, [MAU_FU], 0>,
-    InstrStage<3, [AUXR_FU]>
-  ]>,
-  InstrItinData<MAU_AUXR_X_FP16, [
-    InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<3, [MAU_FU], 0>,
-    InstrStage<3, [AUXR_FU]>
-  ]>,
-  InstrItinData<MAU_AUXR_Y_FP16, [
-    InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<3, [MAU_FU], 0>,
-    InstrStage<3, [AUXR_FU]>
-  ]>,
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [MAU_FU], 0>,
+    InstrStage<1, [AUXR_FU]>
+    ], [4, 2, 2]
+  >,
+  InstrItinData<MAU_AUXR_FP, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [MAU_FU], 0>,
+    InstrStage<1, [AUXR_FU]>
+    ], [6, 2, 2]
+  >,
+  InstrItinData<MAU_AUXR_X_FP, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [MAU_FU], 0>,
+    InstrStage<1, [AUXR_FU]>
+    ], [6, 2, 2]
+  >,
+  InstrItinData<MAU_AUXR_Y_FP, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [MAU_FU], 0>,
+    InstrStage<1, [AUXR_FU]>
+    ], [6, 2, 2]
+  >,
+  // TODO : add OperandLatencies here as well
   // We need to expand SWAPVOp pseudos after packetizer. To correctly schedule/bundle them,
   // we need a dedicated scheduling itinerary for it.
   InstrItinData<SWAPVO, [
     // moveto E == ALU_LITE_CRWL
-    InstrStage<3, [LITE0_FU, LITE1_FU], 0>,
-    InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<3, [CRWL_FU], 0>,
+    InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [CRWL_FU], 0>,
     // moveto O == ALU_LITE_CRWH
-    InstrStage<3, [LITE0_FU, LITE1_FU], 0>,
-    InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<3, [CRWH_FU], 0>,
+    InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [CRWH_FU], 0>,
     // movefo == BCU_TINY_AUXW_CRRP
-    InstrStage<5, [BCU_FU], 0>,
-    InstrStage<5, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<5, [AUXW_FU], 0>,
-    InstrStage<5, [CRRP_FU]>
-  ]>
+    InstrStage<3, [BCU_FU], 0>,
+    InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<3, [AUXW_FU], 0>,
+    InstrStage<3, [CRRP_FU]>
+  ], [3, 5, 2, 2]>
 ];
 }
 

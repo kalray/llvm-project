@@ -434,10 +434,11 @@ define { i64, i64, i64, i64 } @T16772(<8 x i8> %0, <2 x i32> %1) {
 ; CHECK-LABEL: T16772:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    floatuwp.rn $r2 = $r1, 0
-; CHECK-NEXT:    sbmm8 $r1 = $r0, 0x8000000040
-; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x2000000010
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbmm8 $r5 = $r0, 0x8000000040
 ; CHECK-NEXT:    make $r3 = 0x3d70b07f3d70b07f
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x2000000010
+; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = shufflevector <8 x i8> %0, <8 x i8> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>

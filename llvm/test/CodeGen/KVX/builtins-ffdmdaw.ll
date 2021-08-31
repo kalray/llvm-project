@@ -54,18 +54,18 @@ declare <2 x float> @llvm.kvx.ffdmdawp(<4 x float>, <4 x float>, <2 x float>, i3
 define <4 x float> @ffdmdawq(<8 x float> %a, <8 x float> %b, <4 x float> %c) {
 ; CHECK-LABEL: ffdmdawq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    copyd $r11 = $r6
 ; CHECK-NEXT:    ffmawp $r8 = $r0, $r4
-; CHECK-NEXT:    copyd $r17 = $r2
 ; CHECK-NEXT:    copyd $r0 = $r5
+; CHECK-NEXT:    copyd $r4 = $r1
+; CHECK-NEXT:    copyd $r1 = $r6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r2 = $r1
-; CHECK-NEXT:    ffmawp $r8 = $r17, $r11
+; CHECK-NEXT:    copyd $r5 = $r2
+; CHECK-NEXT:    ffmawp $r9 = $r4, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmawp $r9 = $r2, $r0
-; CHECK-NEXT:    copyd $r0 = $r8
+; CHECK-NEXT:    ffmawp $r8 = $r5, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmawp $r9 = $r3, $r7
+; CHECK-NEXT:    copyd $r0 = $r8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r9
 ; CHECK-NEXT:    ret
@@ -104,18 +104,18 @@ entry:
 define <4 x float> @ffdmdawq_rn_s(<8 x float> %a, <8 x float> %b, <4 x float> %c) {
 ; CHECK-LABEL: ffdmdawq_rn_s:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    copyd $r11 = $r6
 ; CHECK-NEXT:    ffmawp.rn.s $r8 = $r0, $r4
-; CHECK-NEXT:    copyd $r17 = $r2
 ; CHECK-NEXT:    copyd $r0 = $r5
+; CHECK-NEXT:    copyd $r4 = $r1
+; CHECK-NEXT:    copyd $r1 = $r6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r2 = $r1
-; CHECK-NEXT:    ffmawp.rn.s $r8 = $r17, $r11
+; CHECK-NEXT:    copyd $r5 = $r2
+; CHECK-NEXT:    ffmawp.rn.s $r9 = $r4, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmawp.rn.s $r9 = $r2, $r0
-; CHECK-NEXT:    copyd $r0 = $r8
+; CHECK-NEXT:    ffmawp.rn.s $r8 = $r5, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmawp.rn.s $r9 = $r3, $r7
+; CHECK-NEXT:    copyd $r0 = $r8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r9
 ; CHECK-NEXT:    ret

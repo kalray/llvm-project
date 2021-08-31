@@ -11,36 +11,36 @@ define void @f32(float* nocapture %0) {
 ; CHECK-NEXT:    loopdo $r2, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_2: # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    faddw $r3 = $r1, 0x3f800000
+; CHECK-NEXT:    faddw $r2 = $r1, 0x3f800000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddw $r5 = $r3, 0x3f800000
+; CHECK-NEXT:    fixedw.rz $r6 = $r1, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddw $r7 = $r5, 0x3f800000
+; CHECK-NEXT:    faddw $r3 = $r2, 0x3f800000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddw $r9 = $r7, 0x3f800000
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedw.rz $r2 = $r1, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedw.rz $r4 = $r3, 0
-; CHECK-NEXT:    sxwd $r2 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw.xs $r2[$r0] = $r1
-; CHECK-NEXT:    fixedw.rz $r6 = $r5, 0
-; CHECK-NEXT:    sxwd $r4 = $r4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw.xs $r4[$r0] = $r3
-; CHECK-NEXT:    fixedw.rz $r8 = $r7, 0
+; CHECK-NEXT:    fixedw.rz $r7 = $r2, 0
 ; CHECK-NEXT:    sxwd $r6 = $r6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw.xs $r6[$r0] = $r5
-; CHECK-NEXT:    fixedw.rz $r10 = $r9, 0
-; CHECK-NEXT:    sxwd $r2 = $r8
+; CHECK-NEXT:    sw.xs $r6[$r0] = $r1
+; CHECK-NEXT:    faddw $r4 = $r3, 0x3f800000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw.xs $r2[$r0] = $r7
-; CHECK-NEXT:    sxwd $r3 = $r10
-; CHECK-NEXT:    faddw $r1 = $r9, 0x3f800000
+; CHECK-NEXT:    fixedw.rz $r8 = $r3, 0
+; CHECK-NEXT:    sxwd $r7 = $r7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw.xs $r3[$r0] = $r9
+; CHECK-NEXT:    sw.xs $r7[$r0] = $r2
+; CHECK-NEXT:    faddw $r5 = $r4, 0x3f800000
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fixedw.rz $r9 = $r4, 0
+; CHECK-NEXT:    sxwd $r1 = $r8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw.xs $r1[$r0] = $r3
+; CHECK-NEXT:    fixedw.rz $r10 = $r5, 0
+; CHECK-NEXT:    sxwd $r2 = $r9
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw.xs $r2[$r0] = $r4
+; CHECK-NEXT:    sxwd $r1 = $r10
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw.xs $r1[$r0] = $r5
+; CHECK-NEXT:    faddw $r1 = $r5, 0x3f800000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .__LOOPDO_0_END_:
 ; CHECK-NEXT:  # %bb.1:
@@ -91,36 +91,36 @@ define void @f64(double* nocapture %0) {
 ; CHECK-NEXT:    loopdo $r2, .__LOOPDO_1_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB1_2: # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    faddd $r3 = $r1, 0x3ff0000000000000
+; CHECK-NEXT:    faddd $r2 = $r1, 0x3ff0000000000000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddd $r5 = $r3, 0x3ff0000000000000
+; CHECK-NEXT:    fixedd.rz $r6 = $r1, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddd $r7 = $r5, 0x3ff0000000000000
+; CHECK-NEXT:    faddd $r3 = $r2, 0x3ff0000000000000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddd $r9 = $r7, 0x3ff0000000000000
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedd.rz $r2 = $r1, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fixedd.rz $r4 = $r3, 0
-; CHECK-NEXT:    sxwd $r2 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd.xs $r2[$r0] = $r1
-; CHECK-NEXT:    fixedd.rz $r6 = $r5, 0
-; CHECK-NEXT:    sxwd $r4 = $r4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd.xs $r4[$r0] = $r3
-; CHECK-NEXT:    fixedd.rz $r8 = $r7, 0
+; CHECK-NEXT:    fixedd.rz $r7 = $r2, 0
 ; CHECK-NEXT:    sxwd $r6 = $r6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd.xs $r6[$r0] = $r5
-; CHECK-NEXT:    fixedd.rz $r10 = $r9, 0
-; CHECK-NEXT:    sxwd $r2 = $r8
+; CHECK-NEXT:    sd.xs $r6[$r0] = $r1
+; CHECK-NEXT:    faddd $r4 = $r3, 0x3ff0000000000000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd.xs $r2[$r0] = $r7
-; CHECK-NEXT:    sxwd $r3 = $r10
-; CHECK-NEXT:    faddd $r1 = $r9, 0x3ff0000000000000
+; CHECK-NEXT:    fixedd.rz $r8 = $r3, 0
+; CHECK-NEXT:    sxwd $r7 = $r7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd.xs $r3[$r0] = $r9
+; CHECK-NEXT:    sd.xs $r7[$r0] = $r2
+; CHECK-NEXT:    faddd $r5 = $r4, 0x3ff0000000000000
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fixedd.rz $r9 = $r4, 0
+; CHECK-NEXT:    sxwd $r1 = $r8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd.xs $r1[$r0] = $r3
+; CHECK-NEXT:    fixedd.rz $r10 = $r5, 0
+; CHECK-NEXT:    sxwd $r2 = $r9
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd.xs $r2[$r0] = $r4
+; CHECK-NEXT:    sxwd $r1 = $r10
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd.xs $r1[$r0] = $r5
+; CHECK-NEXT:    faddd $r1 = $r5, 0x3ff0000000000000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .__LOOPDO_1_END_:
 ; CHECK-NEXT:  # %bb.1:
