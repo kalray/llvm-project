@@ -16,12 +16,12 @@ def atomicloadi16toi32 : PatFrag<(ops node:$ptr),
 def atomicloadi32 : PatFrag<(ops node:$ptr), (i32 (atomic_load_32 node:$ptr))>;
 def atomicloadi64 : PatFrag<(ops node:$ptr), (i64 (atomic_load_64 node:$ptr))>;
 
-defm : SimpleLoadPat<atomicloadi8, i8, LBZp, LBZri10, LBZrr, variant_u>;
-defm : SimpleLoadPat<atomicloadi8toi32, i32, LBZp, LBZri10, LBZrr, variant_u>;
-defm : LoadPat<atomicloadi16, i16, 1, LHZp, LHZri10, LHZrr, variant_u>;
-defm : LoadPat<atomicloadi16toi32, i32, 1, LHZp, LHZri10, LHZrr, variant_u>;
-defm : LoadPat<atomicloadi32, i32, 2, LWZp, LWZri10, LWZrr, variant_u>;
-defm : LoadPat<atomicloadi64, i64, 3, LDp, LDri10, LDrr, variant_u>;
+defm : SimpleLoadPat<atomicloadi8, i8, LBZp, LBZri10, LBZrr>;
+defm : SimpleLoadPat<atomicloadi8toi32, i32, LBZp, LBZri10, LBZrr>;
+defm : LoadPat<atomicloadi16, i16, 1, LHZp, LHZri10, LHZrr>;
+defm : LoadPat<atomicloadi16toi32, i32, 1, LHZp, LHZri10, LHZrr>;
+defm : LoadPat<atomicloadi32, i32, 2, LWZp, LWZri10, LWZrr>;
+defm : LoadPat<atomicloadi64, i64, 3, LDp, LDri10, LDrr>;
 
 def atomicstore8 : PatFrag<(ops node:$val, node:$ptr),
                            (atomic_store_8 node:$ptr, node:$val)>;

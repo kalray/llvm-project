@@ -317,119 +317,23 @@ def LMATRIXp : KVX_PSEUDO<
         (ins Wrapped64:$offset, SingleReg:$base, SpeculateMod:$var), []>;
 }
 
-def lvspec : PatFrag<(ops node:$ptr), (v256i1 (load node:$ptr)), [{
-    const MemSDNode *LD = cast<MemSDNode>(N);
-    return LD->getAddressSpace() == 258;
-   }]>;
-
-def lvvspec : PatFrag<(ops node:$ptr), (v512i1 (load node:$ptr)), [{
-    const MemSDNode *LD = cast<MemSDNode>(N);
-    return LD->getAddressSpace() == 258;
-   }]>;
-
-def lxspec : PatFrag<(ops node:$ptr), (v1024i1 (load node:$ptr)), [{
-    const MemSDNode *LD = cast<MemSDNode>(N);
-    return LD->getAddressSpace() == 258;
-   }]>;
-
 foreach type = [ i1, i8, i16, i32, i64, v2i8, v4i8, v8i8, v2i32, v4i16, v2i16, v2i64, v4i32, v4i64] in {
 
-def load#type : PatFrag<(ops node:$ptr), (type (load node:$ptr)), [{
-    const MemSDNode *LD = cast<MemSDNode>(N);
-    return LD->getAddressSpace() < 256;
-  }]>;
+def kload#type : PatFrag<(ops node:$ptr), (type (load node:$ptr))>;
 
-def loadbypass#type : PatFrag<(ops node:$ptr), (type (load node:$ptr)), [{
-    const MemSDNode *LD = cast<MemSDNode>(N);
-    return LD->getAddressSpace() == 256;
-  }]>;
-
-def extloadbypass#type : PatFrag<(ops node:$ptr), (extload node:$ptr), [{
-    const MemSDNode *LD = cast<MemSDNode>(N);
-    return LD->getAddressSpace() == 256;
-  }]>
+def kextload#type : PatFrag<(ops node:$ptr), (extload node:$ptr)>
 {
   let IsLoad = 1;
   let MemoryVT = type;
 }
 
-def zextloadbypass#type : PatFrag<(ops node:$ptr), (zextload node:$ptr), [{
-    const MemSDNode *LD = cast<MemSDNode>(N);
-    return LD->getAddressSpace() == 256;
-  }]>
+def kzextload#type : PatFrag<(ops node:$ptr), (zextload node:$ptr)>
 {
   let IsLoad = 1;
   let MemoryVT = type;
 }
 
-def sextloadbypass#type : PatFrag<(ops node:$ptr), (sextload node:$ptr), [{
-    const MemSDNode *LD = cast<MemSDNode>(N);
-    return LD->getAddressSpace() == 256;
-  }]>
-{
-  let IsLoad = 1;
-  let MemoryVT = type;
-}
-
-def loadpreload#type : PatFrag<(ops node:$ptr), (type (load node:$ptr)), [{
-    const MemSDNode *LD = cast<MemSDNode>(N);
-    return LD->getAddressSpace() == 257;
-  }]>;
-
-def extloadpreload#type : PatFrag<(ops node:$ptr), (extload node:$ptr), [{
-    const MemSDNode *LD = cast<MemSDNode>(N);
-    return LD->getAddressSpace() == 257;
-  }]>
-{
-  let IsLoad = 1;
-  let MemoryVT = type;
-}
-
-def zextloadpreload#type : PatFrag<(ops node:$ptr), (zextload node:$ptr), [{
-    const MemSDNode *LD = cast<MemSDNode>(N);
-    return LD->getAddressSpace() == 257;
-  }]>
-{
-  let IsLoad = 1;
-  let MemoryVT = type;
-}
-
-def sextloadpreload#type : PatFrag<(ops node:$ptr), (sextload node:$ptr), [{
-    const MemSDNode *LD = cast<MemSDNode>(N);
-    return LD->getAddressSpace() == 257;
-  }] >
-{
-  let IsLoad = 1;
-  let MemoryVT = type;
-}
-
-def loadspec#type : PatFrag<(ops node:$ptr), (type (load node:$ptr)), [{
-    const MemSDNode *LD = cast<MemSDNode>(N);
-    return LD->getAddressSpace() == 258;
-  }]>;
-
-def extloadspec#type : PatFrag<(ops node:$ptr), (extload node:$ptr), [{
-    const MemSDNode *LD = cast<MemSDNode>(N);
-    return LD->getAddressSpace() == 258;
-  }]>
-{
-  let IsLoad = 1;
-  let MemoryVT = type;
-}
-
-def zextloadspec#type : PatFrag<(ops node:$ptr), (zextload node:$ptr), [{
-    const MemSDNode *LD = cast<MemSDNode>(N);
-    return LD->getAddressSpace() == 258;
-  }]>
-{
-  let IsLoad = 1;
-  let MemoryVT = type;
-}
-
-def sextloadspec#type : PatFrag<(ops node:$ptr), (sextload node:$ptr), [{
-    const MemSDNode *LD = cast<MemSDNode>(N);
-    return LD->getAddressSpace() == 258;
-  }]>
+def ksextload#type : PatFrag<(ops node:$ptr), (sextload node:$ptr)>
 {
   let IsLoad = 1;
   let MemoryVT = type;
@@ -441,240 +345,120 @@ def IsOrAdd: PatFrag<(ops node:$A, node:$B), (or node:$A, node:$B), [{
   return isOrEquivalentToAdd(N);
 }]>;
 
-multiclass LoadPatRI<PatFrag LoadOp, ValueType vt, KVX_PSEUDO pinst,
-                     int mod> {
-  def : Pat<(vt (LoadOp AddrFI:$base)), (pinst (i64 0), SingleReg:$base, mod)>;
-  def : Pat<(vt (LoadOp (add AddrFI:$base, Wrapped64:$offset))),
-            (pinst Wrapped64:$offset, SingleReg:$base, mod)>;
-  def : Pat<(vt (LoadOp (IsOrAdd AddrFI:$base, Wrapped64:$offset))),
-            (pinst Wrapped64:$offset, SingleReg:$base, mod)>;
-  def : Pat<(vt (LoadOp (add SingleReg:$base, Wrapped64:$offset))),
-            (pinst Wrapped64:$offset, SingleReg:$base, mod)>;
+def get_mem_mod : SDNodeXForm<ld, [{
+    const MemSDNode *M = cast<MemSDNode>(N);
+    unsigned Mod = llvm::KVXMOD::VARIANT_;
+    switch (M->getAddressSpace()){
+      default:
+      break;
+      case 256:
+        Mod = llvm::KVXMOD::VARIANT_U;
+      break;
+      case 257:
+        Mod = llvm::KVXMOD::VARIANT_US;
+      break;
+      case 258:
+        Mod = llvm::KVXMOD::VARIANT_S;
+      break;
+    }
+    if (M->isAtomic())
+      Mod = llvm::KVXMOD::VARIANT_U;
+
+    return CurDAG->getTargetConstant(Mod, SDLoc(N), MVT::i32);
+   }]>;
+
+multiclass LoadPatRI<PatFrag LoadOp, ValueType vt, KVX_PSEUDO pinst> {
+
+  def : Pat<(vt (LoadOp:$LD AddrFI:$base)), (pinst (i64 0), SingleReg:$base, (get_mem_mod $LD))>;
+  def : Pat<(vt (LoadOp:$LD (add AddrFI:$base, Wrapped64:$offset))),
+            (pinst Wrapped64:$offset, SingleReg:$base, (get_mem_mod $LD))>;
+  def : Pat<(vt (LoadOp:$LD (IsOrAdd AddrFI:$base, Wrapped64:$offset))),
+            (pinst Wrapped64:$offset, SingleReg:$base, (get_mem_mod $LD))>;
+  def : Pat<(vt (LoadOp:$LD (add SingleReg:$base, Wrapped64:$offset))),
+            (pinst Wrapped64:$offset, SingleReg:$base, (get_mem_mod $LD))>;
 }
 
-multiclass LoadPatRR<PatFrag LoadOp, ValueType vt, KVX_INSTRUCTION rr,
-                     int mod> {
-  def : Pat<(vt (LoadOp (add SingleReg:$base, SingleReg:$offset))),
-            (rr SingleReg:$offset, SingleReg:$base, mod, scaling_)>;
-  def : Pat<(vt (LoadOp (or SingleReg:$base, SingleReg:$offset))),
-            (rr SingleReg:$offset, SingleReg:$base, mod, scaling_)>;
+multiclass LoadPatRR<PatFrag LoadOp, ValueType vt, KVX_INSTRUCTION rr> {
+  def : Pat<(vt (LoadOp:$LD (add SingleReg:$base, SingleReg:$offset))),
+            (rr SingleReg:$offset, SingleReg:$base, scaling_, (get_mem_mod $LD))>;
+  def : Pat<(vt (LoadOp:$LD (or SingleReg:$base, SingleReg:$offset))),
+            (rr SingleReg:$offset, SingleReg:$base, scaling_, (get_mem_mod $LD))>;
 }
 
-multiclass LoadPatXS<PatFrag LoadOp, ValueType vt, int sc, KVX_INSTRUCTION rr,
-                     int mod> {
-  def : Pat<(vt (LoadOp
+multiclass LoadPatXS<PatFrag LoadOp, ValueType vt, int sc, KVX_INSTRUCTION rr> {
+  def : Pat<(vt (LoadOp:$LD
                   (add SingleReg:$base, (shl SingleReg:$offset, (i64 sc))))),
-            (rr SingleReg:$offset, SingleReg:$base, mod, scaling_xs)>;
-  def : Pat<(vt (LoadOp
+            (rr SingleReg:$offset, SingleReg:$base, (get_mem_mod $LD), scaling_xs)>;
+  def : Pat<(vt (LoadOp:$LD
                   (add (shl SingleReg:$offset, (i64 sc)), SingleReg:$base))),
-            (rr SingleReg:$offset, SingleReg:$base, mod, scaling_xs)>;
-  def : Pat<(vt (LoadOp
+            (rr SingleReg:$offset, SingleReg:$base, (get_mem_mod $LD), scaling_xs)>;
+  def : Pat<(vt (LoadOp:$LD
                   (or SingleReg:$base, (shl SingleReg:$offset, (i64 sc))))),
-            (rr SingleReg:$offset, SingleReg:$base, mod, scaling_xs)>;
-  def : Pat<(vt (LoadOp
+            (rr SingleReg:$offset, SingleReg:$base, (get_mem_mod $LD), scaling_xs)>;
+  def : Pat<(vt (LoadOp:$LD
                   (or (shl SingleReg:$offset, (i64 sc)), SingleReg:$base))),
-            (rr SingleReg:$offset, SingleReg:$base, mod, scaling_xs)>;
+            (rr SingleReg:$offset, SingleReg:$base, (get_mem_mod $LD), scaling_xs)>;
 }
 
 multiclass SimpleLoadPat<PatFrag LoadOp, ValueType vt, KVX_PSEUDO pinst,
-                         KVX_INSTRUCTION ri10, KVX_INSTRUCTION rr, int mod> {
-  def : Pat<(vt (LoadOp SingleReg:$base)),
-            (ri10 (i64 0), SingleReg:$base, mod)>;
-  defm : LoadPatRI<LoadOp, vt, pinst, mod>;
-  defm : LoadPatRR<LoadOp, vt, rr, mod>;
+                         KVX_INSTRUCTION ri10, KVX_INSTRUCTION rr> {
+  def : Pat<(vt (LoadOp:$LD SingleReg:$base)),
+            (ri10 (i64 0), SingleReg:$base, (get_mem_mod $LD))>;
+  defm : LoadPatRI<LoadOp, vt, pinst>;
+  defm : LoadPatRR<LoadOp, vt, rr>;
 }
 
 multiclass LoadPat<PatFrag LoadOp, ValueType vt, int sc, KVX_PSEUDO pinst,
-                   KVX_INSTRUCTION ri10, KVX_INSTRUCTION rr, int mod> {
-  def : Pat<(vt (LoadOp SingleReg:$base)),
-            (ri10 (i64 0), SingleReg:$base, mod)>;
-  defm : LoadPatRI<LoadOp, vt, pinst, mod>;
-  defm : LoadPatRR<LoadOp, vt, rr, mod>;
-  defm : LoadPatXS<LoadOp, vt, sc, rr, mod>;
+                   KVX_INSTRUCTION ri10, KVX_INSTRUCTION rr> {
+  def : Pat<(vt (LoadOp:$LD SingleReg:$base)),
+            (ri10 (i64 0), SingleReg:$base, (get_mem_mod $LD))>;
+  defm : LoadPatRI<LoadOp, vt, pinst>;
+  defm : LoadPatXS<LoadOp, vt, sc, rr>;
+  defm : LoadPatRR<LoadOp, vt, rr>;
 }
 
-// bypass loads
-defm : SimpleLoadPat<sextloadbypassi1, i32, LBSp, LBSri10, LBSrr, variant_u>;
-defm : SimpleLoadPat<zextloadbypassi1, i32, LBZp, LBZri10, LBZrr, variant_u>;
-defm : SimpleLoadPat<extloadbypassi1, i32, LBZp, LBZri10, LBZrr, variant_u>;
-defm : SimpleLoadPat<sextloadbypassi1, i64, LBSp, LBSri10, LBSrr, variant_u>;
-defm : SimpleLoadPat<zextloadbypassi1, i64, LBZp, LBZri10, LBZrr, variant_u>;
-defm : SimpleLoadPat<extloadbypassi1, i64, LBZp, LBZri10, LBZrr, variant_u>;
-defm : SimpleLoadPat<loadbypassi1, i1, LBSp, LBSri10, LBSrr, variant_u>;
+defm : SimpleLoadPat<ksextloadi1, i32, LBSp, LBSri10, LBSrr>;
+defm : SimpleLoadPat<kzextloadi1, i32, LBZp, LBZri10, LBZrr>;
+defm : SimpleLoadPat<kextloadi1, i32, LBZp, LBZri10, LBZrr>;
+defm : SimpleLoadPat<ksextloadi1, i64, LBSp, LBSri10, LBSrr>;
+defm : SimpleLoadPat<kzextloadi1, i64, LBZp, LBZri10, LBZrr>;
+defm : SimpleLoadPat<kextloadi1, i64, LBZp, LBZri10, LBZrr>;
+defm : SimpleLoadPat<kloadi1, i1, LBSp, LBSri10, LBSrr>;
 
-defm : SimpleLoadPat<sextloadbypassi8, i32, LBSp, LBSri10, LBSrr, variant_u>;
-defm : SimpleLoadPat<zextloadbypassi8, i32, LBZp, LBZri10, LBZrr, variant_u>;
-defm : SimpleLoadPat<extloadbypassi8, i32, LBZp, LBZri10, LBZrr, variant_u>;
-defm : SimpleLoadPat<sextloadbypassi8, i64, LBSp, LBSri10, LBSrr, variant_u>;
-defm : SimpleLoadPat<zextloadbypassi8, i64, LBZp, LBZri10, LBZrr, variant_u>;
-defm : SimpleLoadPat<extloadbypassi8, i64, LBZp, LBZri10, LBZrr, variant_u>;
-defm : SimpleLoadPat<loadbypassi8, i8, LBSp, LBSri10, LBSrr, variant_u>;
+defm : SimpleLoadPat<ksextloadi8, i32, LBSp, LBSri10, LBSrr>;
+defm : SimpleLoadPat<kzextloadi8, i32, LBZp, LBZri10, LBZrr>;
+defm : SimpleLoadPat<kextloadi8, i32, LBZp, LBZri10, LBZrr>;
+defm : SimpleLoadPat<ksextloadi8, i64, LBSp, LBSri10, LBSrr>;
+defm : SimpleLoadPat<kzextloadi8, i64, LBZp, LBZri10, LBZrr>;
+defm : SimpleLoadPat<kextloadi8, i64, LBZp, LBZri10, LBZrr>;
+defm : SimpleLoadPat<kloadi8, i8, LBSp, LBSri10, LBSrr>;
 
-defm : LoadPat<sextloadbypassi16, i32, 1, LHSp, LHSri10, LHSrr, variant_u>;
-defm : LoadPat<zextloadbypassi16, i32, 1, LHZp, LHZri10, LHZrr, variant_u>;
-defm : LoadPat<extloadbypassi16, i32, 1, LHZp, LHZri10, LHZrr, variant_u>;
-defm : LoadPat<sextloadbypassi16, i64, 1, LHSp, LHSri10, LHSrr, variant_u>;
-defm : LoadPat<zextloadbypassi16, i64, 1, LHZp, LHZri10, LHZrr, variant_u>;
-defm : LoadPat<extloadbypassi16, i64, 1, LHZp, LHZri10, LHZrr, variant_u>;
-defm : LoadPat<loadbypassi16, i16, 1, LHSp, LHSri10, LHSrr, variant_u>;
-defm : LoadPat<loadbypassv2i8, v2i8, 1, LHZp, LHZri10, LHZrr, variant_u>;
+defm : LoadPat<ksextloadi16, i32, 1, LHSp, LHSri10, LHSrr>;
+defm : LoadPat<kzextloadi16, i32, 1, LHZp, LHZri10, LHZrr>;
+defm : LoadPat<kextloadi16, i32, 1, LHZp, LHZri10, LHZrr>;
+defm : LoadPat<ksextloadi16, i64, 1, LHSp, LHSri10, LHSrr>;
+defm : LoadPat<kzextloadi16, i64, 1, LHZp, LHZri10, LHZrr>;
+defm : LoadPat<kextloadi16, i64, 1, LHZp, LHZri10, LHZrr>;
+defm : LoadPat<kloadi16, i16, 1, LHSp, LHSri10, LHSrr>;
+defm : LoadPat<kloadv2i8, v2i8, 1, LHZp, LHZri10, LHZrr>;
 
-defm : LoadPat<sextloadbypassi32, i64, 2, LWSp, LWSri10, LWSrr, variant_u>;
-defm : LoadPat<zextloadbypassi32, i64, 2, LWZp, LWZri10, LWZrr, variant_u>;
-defm : LoadPat<extloadbypassi32, i64, 2, LWZp, LWZri10, LWZrr, variant_u>;
-defm : LoadPat<loadbypassi32, i32, 2, LWZp, LWZri10, LWZrr, variant_u>;
-defm : LoadPat<loadbypassv2i16, v2i16, 2, LWZp, LWZri10, LWZrr, variant_u>;
-defm : LoadPat<loadbypassv4i8, v4i8, 2, LWZp, LWZri10, LWZrr, variant_u>;
+defm : LoadPat<ksextloadi32, i64, 2, LWSp, LWSri10, LWSrr>;
+defm : LoadPat<kzextloadi32, i64, 2, LWZp, LWZri10, LWZrr>;
+defm : LoadPat<kextloadi32, i64, 2, LWZp, LWZri10, LWZrr>;
+defm : LoadPat<kloadi32, i32, 2, LWZp, LWZri10, LWZrr>;
+defm : LoadPat<kloadv2i16, v2i16, 2, LWZp, LWZri10, LWZrr>;
+defm : LoadPat<kloadv4i8, v4i8, 2, LWZp, LWZri10, LWZrr>;
 
-defm : LoadPat<loadbypassi64, i64, 3, LDp, LDri10, LDrr, variant_u>;
-defm : LoadPat<loadbypassv8i8, v8i8, 3, LDp, LDri10, LDrr, variant_u>;
-defm : LoadPat<loadbypassv2i32, v2i32, 3, LDp, LDri10, LDrr, variant_u>;
-defm : LoadPat<loadbypassv4i16, v4i16, 3, LDp, LDri10, LDrr, variant_u>;
+defm : LoadPat<kloadi64, i64, 3, LDp, LDri10, LDrr>;
+defm : LoadPat<kloadv8i8, v8i8, 3, LDp, LDri10, LDrr>;
+defm : LoadPat<kloadv2i32, v2i32, 3, LDp, LDri10, LDrr>;
+defm : LoadPat<kloadv4i16, v4i16, 3, LDp, LDri10, LDrr>;
 
-defm : LoadPat<loadbypassv2i64, v2i64, 4, LQp, LQri10, LQrr, variant_u>;
-defm : LoadPat<loadbypassv4i32, v4i32, 4, LQp, LQri10, LQrr, variant_u>;
+defm : LoadPat<kloadv2i64, v2i64, 4, LQp, LQri10, LQrr>;
+defm : LoadPat<kloadv4i32, v4i32, 4, LQp, LQri10, LQrr>;
 
-defm : LoadPat<loadbypassv4i64, v4i64, 5, LOp, LOri10, LOrr, variant_u>;
-
-// preload loads
-defm : SimpleLoadPat<sextloadpreloadi1, i32, LBSp, LBSri10, LBSrr, variant_us>;
-defm : SimpleLoadPat<zextloadpreloadi1, i32, LBZp, LBZri10, LBZrr, variant_us>;
-defm : SimpleLoadPat<extloadpreloadi1, i32, LBZp, LBZri10, LBZrr, variant_us>;
-defm : SimpleLoadPat<sextloadpreloadi1, i64, LBSp, LBSri10, LBSrr, variant_us>;
-defm : SimpleLoadPat<zextloadpreloadi1, i64, LBZp, LBZri10, LBZrr, variant_us>;
-defm : SimpleLoadPat<extloadpreloadi1, i64, LBZp, LBZri10, LBZrr, variant_us>;
-defm : SimpleLoadPat<loadpreloadi1, i1, LBSp, LBSri10, LBSrr, variant_us>;
-
-defm : SimpleLoadPat<sextloadpreloadi8, i32, LBSp, LBSri10, LBSrr, variant_us>;
-defm : SimpleLoadPat<zextloadpreloadi8, i32, LBZp, LBZri10, LBZrr, variant_us>;
-defm : SimpleLoadPat<extloadpreloadi8, i32, LBZp, LBZri10, LBZrr, variant_us>;
-defm : SimpleLoadPat<sextloadpreloadi8, i64, LBSp, LBSri10, LBSrr, variant_us>;
-defm : SimpleLoadPat<zextloadpreloadi8, i64, LBZp, LBZri10, LBZrr, variant_us>;
-defm : SimpleLoadPat<extloadpreloadi8, i64, LBZp, LBZri10, LBZrr, variant_us>;
-defm : SimpleLoadPat<loadpreloadi8, i8, LBSp, LBSri10, LBSrr, variant_us>;
-
-defm : LoadPat<sextloadpreloadi16, i32, 1, LHSp, LHSri10, LHSrr, variant_us>;
-defm : LoadPat<zextloadpreloadi16, i32, 1, LHZp, LHZri10, LHZrr, variant_us>;
-defm : LoadPat<extloadpreloadi16, i32, 1, LHZp, LHZri10, LHZrr, variant_us>;
-defm : LoadPat<sextloadpreloadi16, i64, 1, LHSp, LHSri10, LHSrr, variant_us>;
-defm : LoadPat<zextloadpreloadi16, i64, 1, LHZp, LHZri10, LHZrr, variant_us>;
-defm : LoadPat<extloadpreloadi16, i64, 1, LHZp, LHZri10, LHZrr, variant_us>;
-defm : LoadPat<loadpreloadi16, i16, 1, LHSp, LHSri10, LHSrr, variant_us>;
-defm : LoadPat<loadpreloadv2i8, v2i8, 1, LHZp, LHZri10, LHZrr, variant_us>;
-
-defm : LoadPat<sextloadpreloadi32, i64, 2, LWSp, LWSri10, LWSrr, variant_us>;
-defm : LoadPat<zextloadpreloadi32, i64, 2, LWZp, LWZri10, LWZrr, variant_us>;
-defm : LoadPat<extloadpreloadi32, i64, 2, LWZp, LWZri10, LWZrr, variant_us>;
-defm : LoadPat<loadpreloadi32, i32, 2, LWZp, LWZri10, LWZrr, variant_us>;
-defm : LoadPat<loadpreloadv2i16, v2i16, 2, LWZp, LWZri10, LWZrr, variant_us>;
-defm : LoadPat<loadpreloadv4i8, v4i8, 2, LWZp, LWZri10, LWZrr, variant_us>;
-
-defm : LoadPat<loadpreloadi64, i64, 3, LDp, LDri10, LDrr, variant_us>;
-defm : LoadPat<loadpreloadv8i8, v8i8, 3, LDp, LDri10, LDrr, variant_us>;
-defm : LoadPat<loadpreloadv2i32, v2i32, 3, LDp, LDri10, LDrr, variant_us>;
-defm : LoadPat<loadpreloadv4i16, v4i16, 3, LDp, LDri10, LDrr, variant_us>;
-
-defm : LoadPat<loadpreloadv2i64, v2i64, 4, LQp, LQri10, LQrr, variant_us>;
-defm : LoadPat<loadpreloadv4i32, v4i32, 4, LQp, LQri10, LQrr, variant_us>;
-
-defm : LoadPat<loadpreloadv4i64, v4i64, 5, LOp, LOri10, LOrr, variant_us>;
-
-// speculative loads
-defm : SimpleLoadPat<sextloadspeci1, i32, LBSp, LBSri10, LBSrr, variant_s>;
-defm : SimpleLoadPat<zextloadspeci1, i32, LBZp, LBZri10, LBZrr, variant_s>;
-defm : SimpleLoadPat<extloadspeci1, i32, LBZp, LBZri10, LBZrr, variant_s>;
-defm : SimpleLoadPat<sextloadspeci1, i64, LBSp, LBSri10, LBSrr, variant_s>;
-defm : SimpleLoadPat<zextloadspeci1, i64, LBZp, LBZri10, LBZrr, variant_s>;
-defm : SimpleLoadPat<extloadspeci1, i64, LBZp, LBZri10, LBZrr, variant_s>;
-defm : SimpleLoadPat<loadspeci1, i1, LBSp, LBSri10, LBSrr, variant_s>;
-
-defm : SimpleLoadPat<sextloadspeci8, i32, LBSp, LBSri10, LBSrr, variant_s>;
-defm : SimpleLoadPat<zextloadspeci8, i32, LBZp, LBZri10, LBZrr, variant_s>;
-defm : SimpleLoadPat<extloadspeci8, i32, LBZp, LBZri10, LBZrr, variant_s>;
-defm : SimpleLoadPat<sextloadspeci8, i64, LBSp, LBSri10, LBSrr, variant_s>;
-defm : SimpleLoadPat<zextloadspeci8, i64, LBZp, LBZri10, LBZrr, variant_s>;
-defm : SimpleLoadPat<extloadspeci8, i64, LBZp, LBZri10, LBZrr, variant_s>;
-defm : SimpleLoadPat<loadspeci8, i8, LBSp, LBSri10, LBSrr, variant_s>;
-
-defm : LoadPat<sextloadspeci16, i32, 1, LHSp, LHSri10, LHSrr, variant_s>;
-defm : LoadPat<zextloadspeci16, i32, 1, LHZp, LHZri10, LHZrr, variant_s>;
-defm : LoadPat<extloadspeci16, i32, 1, LHZp, LHZri10, LHZrr, variant_s>;
-defm : LoadPat<sextloadspeci16, i64, 1, LHSp, LHSri10, LHSrr, variant_s>;
-defm : LoadPat<zextloadspeci16, i64, 1, LHZp, LHZri10, LHZrr, variant_s>;
-defm : LoadPat<extloadspeci16, i64, 1, LHZp, LHZri10, LHZrr, variant_s>;
-defm : LoadPat<loadspeci16, i16, 1, LHSp, LHSri10, LHSrr, variant_s>;
-defm : LoadPat<loadspecv2i8, v2i8, 1, LHZp, LHZri10, LHZrr, variant_s>;
-
-defm : LoadPat<sextloadspeci32, i64, 2, LWSp, LWSri10, LWSrr, variant_s>;
-defm : LoadPat<zextloadspeci32, i64, 2, LWZp, LWZri10, LWZrr, variant_s>;
-defm : LoadPat<extloadspeci32, i64, 2, LWZp, LWZri10, LWZrr, variant_s>;
-defm : LoadPat<loadspeci32, i32, 2, LWZp, LWZri10, LWZrr, variant_s>;
-defm : LoadPat<loadspecv2i16, v2i16, 2, LWZp, LWZri10, LWZrr, variant_s>;
-defm : LoadPat<loadspecv4i8, v4i8, 2, LWZp, LWZri10, LWZrr, variant_s>;
-
-defm : LoadPat<loadspeci64, i64, 3, LDp, LDri10, LDrr, variant_s>;
-defm : LoadPat<loadspecv8i8, v8i8, 3, LDp, LDri10, LDrr, variant_s>;
-defm : LoadPat<loadspecv2i32, v2i32, 3, LDp, LDri10, LDrr, variant_s>;
-defm : LoadPat<loadspecv4i16, v4i16, 3, LDp, LDri10, LDrr, variant_s>;
-
-defm : LoadPat<loadspecv2i64, v2i64, 4, LQp, LQri10, LQrr, variant_s>;
-defm : LoadPat<loadspecv4i32, v4i32, 4, LQp, LQri10, LQrr, variant_s>;
-
-defm : LoadPat<loadspecv4i64, v4i64, 5, LOp, LOri10, LOrr, variant_s>;
-defm : LoadPat<lvspec, v256i1, 5, LVp, LVri10, LVrr, speculate_s>;
-def : Pat<(v512i1 (lvvspec SingleReg:$base)),
-          (v512i1 (REG_SEQUENCE WideReg,
-                    (LVp (i64 32), SingleReg:$base, speculate_),  sub_v1,
-                    (LVp (i64 0), SingleReg:$base, speculate_),  sub_v0))>;
-def : Pat<(v1024i1 (lxspec SingleReg:$base)),
-          (v1024i1 (REG_SEQUENCE MatrixReg,
-                    (LVp (i64 96), SingleReg:$base, speculate_),  sub_v3,
-                    (LVp (i64 64), SingleReg:$base, speculate_),  sub_v2,
-                    (LVp (i64 32), SingleReg:$base, speculate_),  sub_v1,
-                    (LVp (i64 0), SingleReg:$base, speculate_),   sub_v0))>;
-// normal loads
-defm : SimpleLoadPat<sextloadi1, i32, LBSp, LBSri10, LBSrr, variant_>;
-defm : SimpleLoadPat<zextloadi1, i32, LBZp, LBZri10, LBZrr, variant_>;
-defm : SimpleLoadPat<extloadi1, i32, LBZp, LBZri10, LBZrr, variant_>;
-defm : SimpleLoadPat<sextloadi1, i64, LBSp, LBSri10, LBSrr, variant_>;
-defm : SimpleLoadPat<zextloadi1, i64, LBZp, LBZri10, LBZrr, variant_>;
-defm : SimpleLoadPat<extloadi1, i64, LBZp, LBZri10, LBZrr, variant_>;
-defm : SimpleLoadPat<loadi1, i1, LBSp, LBSri10, LBSrr, variant_>;
-
-defm : SimpleLoadPat<sextloadi8, i32, LBSp, LBSri10, LBSrr, variant_>;
-defm : SimpleLoadPat<zextloadi8, i32, LBZp, LBZri10, LBZrr, variant_>;
-defm : SimpleLoadPat<extloadi8, i32, LBZp, LBZri10, LBZrr, variant_>;
-defm : SimpleLoadPat<sextloadi8, i64, LBSp, LBSri10, LBSrr, variant_>;
-defm : SimpleLoadPat<zextloadi8, i64, LBZp, LBZri10, LBZrr, variant_>;
-defm : SimpleLoadPat<extloadi8, i64, LBZp, LBZri10, LBZrr, variant_>;
-defm : SimpleLoadPat<loadi8, i8, LBSp, LBSri10, LBSrr, variant_>;
-
-defm : LoadPat<sextloadi16, i32, 1, LHSp, LHSri10, LHSrr, variant_>;
-defm : LoadPat<zextloadi16, i32, 1, LHZp, LHZri10, LHZrr, variant_>;
-defm : LoadPat<extloadi16, i32, 1, LHZp, LHZri10, LHZrr, variant_>;
-defm : LoadPat<sextloadi16, i64, 1, LHSp, LHSri10, LHSrr, variant_>;
-defm : LoadPat<zextloadi16, i64, 1, LHZp, LHZri10, LHZrr, variant_>;
-defm : LoadPat<extloadi16, i64, 1, LHZp, LHZri10, LHZrr, variant_>;
-defm : LoadPat<loadi16, i16, 1, LHSp, LHSri10, LHSrr, variant_>;
-defm : LoadPat<loadv2i8, v2i8, 1, LHZp, LHZri10, LHZrr, variant_>;
-
-defm : LoadPat<sextloadi32, i64, 2, LWSp, LWSri10, LWSrr, variant_>;
-defm : LoadPat<zextloadi32, i64, 2, LWZp, LWZri10, LWZrr, variant_>;
-defm : LoadPat<extloadi32, i64, 2, LWZp, LWZri10, LWZrr, variant_>;
-defm : LoadPat<loadi32, i32, 2, LWZp, LWZri10, LWZrr, variant_>;
-defm : LoadPat<loadv2i16, v2i16, 2, LWZp, LWZri10, LWZrr, variant_>;
-defm : LoadPat<loadv4i8, v4i8, 2, LWZp, LWZri10, LWZrr, variant_>;
-
-defm : LoadPat<loadi64, i64, 3, LDp, LDri10, LDrr, variant_>;
-defm : LoadPat<loadv8i8, v8i8, 3, LDp, LDri10, LDrr, variant_>;
-defm : LoadPat<loadv2i32, v2i32, 3, LDp, LDri10, LDrr, variant_>;
-defm : LoadPat<loadv4i16, v4i16, 3, LDp, LDri10, LDrr, variant_>;
-
-defm : LoadPat<loadv2i64, v2i64, 4, LQp, LQri10, LQrr, variant_>;
-defm : LoadPat<loadv4i32, v4i32, 4, LQp, LQri10, LQrr, variant_>;
-
-defm : LoadPat<loadv4i64, v4i64, 5, LOp, LOri10, LOrr, variant_>;
-defm : LoadPat<load, v256i1, 5, LVp, LVri10, LVrr, speculate_>;
+defm : LoadPat<kloadv4i64, v4i64, 5, LOp, LOri10, LOrr>;
+defm : LoadPat<load, v256i1, 5, LVp, LVri10, LVrr>;
 
 def : Pat<(v512i1 (load SingleReg:$base)),
           (v512i1 (REG_SEQUENCE WideReg,

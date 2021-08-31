@@ -31,27 +31,6 @@ defm : StorePat<store, v2f64, PairedReg, 4, SQp, SQri10, SQrr>;
 
 defm : StorePat<store, v4f64, QuadReg, 5, SOp, SOri10, SOrr>;
 
-// Load
-def cachedload : PatFrag<(ops node:$ptr), (load node:$ptr), [{
-    const MemSDNode *LD = cast<MemSDNode>(N);
-    return LD->getAddressSpace() < 256;
-  }]>;
-
-def loadbypass : PatFrag<(ops node:$ptr), (load node:$ptr), [{
-    const MemSDNode *LD = cast<MemSDNode>(N);
-    return LD->getAddressSpace() == 256;
-  }]>;
-
-def loadpreload : PatFrag<(ops node:$ptr), (load node:$ptr), [{
-    const MemSDNode *LD = cast<MemSDNode>(N);
-    return LD->getAddressSpace() == 257;
-  }]>;
-
-def loadspec : PatFrag<(ops node:$ptr), (load node:$ptr), [{
-    const MemSDNode *LD = cast<MemSDNode>(N);
-    return LD->getAddressSpace() == 258;
-  }]>;
-
 def fmulcont : PatFrag<(ops node:$op0, node:$op1), (fmul node:$op0, node:$op1), [{
     return N->getFlags().hasAllowContract();
   }]>;
@@ -64,24 +43,15 @@ def fsubcont : PatFrag<(ops node:$op0, node:$op1), (fsub node:$op0, node:$op1), 
     return N->getFlags().hasAllowContract();
   }]>;
 
-multiclass LoadSuperClass<ValueType vt, int sc, KVX_PSEUDO pinst,
-                   KVX_INSTRUCTION ri10, KVX_INSTRUCTION rr> {
-
-defm : LoadPat<loadbypass, vt, sc, pinst, ri10, rr, variant_u>;
-defm : LoadPat<loadpreload, vt, sc, pinst, ri10, rr, variant_us>;
-defm : LoadPat<loadspec, vt, sc, pinst, ri10, rr, variant_s>;
-defm : LoadPat<cachedload, vt, sc, pinst, ri10, rr, variant_>;
-}
-
-defm : LoadSuperClass<f16, 1, LHZp, LHZri10, LHZrr>;
-defm : LoadSuperClass<f32, 2, LWZp, LWZri10, LWZrr>;
-defm : LoadSuperClass<v2f16, 2, LWZp, LWZri10, LWZrr>;
-defm : LoadSuperClass<f64, 3, LDp, LDri10, LDrr>;
-defm : LoadSuperClass<v2f32, 3, LDp, LDri10, LDrr>;
-defm : LoadSuperClass<v4f16, 3, LDp, LDri10, LDrr>;
-defm : LoadSuperClass<v4f32, 4, LQp, LQri10, LQrr>;
-defm : LoadSuperClass<v2f64, 4, LQp, LQri10, LQrr>;
-defm : LoadSuperClass<v4f64, 5, LOp, LOri10, LOrr>;
+defm : LoadPat<load, f16, 1, LHZp, LHZri10, LHZrr>;
+defm : LoadPat<load, f32, 2, LWZp, LWZri10, LWZrr>;
+defm : LoadPat<load, v2f16, 2, LWZp, LWZri10, LWZrr>;
+defm : LoadPat<load, f64, 3, LDp, LDri10, LDrr>;
+defm : LoadPat<load, v2f32, 3, LDp, LDri10, LDrr>;
+defm : LoadPat<load, v4f16, 3, LDp, LDri10, LDrr>;
+defm : LoadPat<load, v4f32, 4, LQp, LQri10, LQrr>;
+defm : LoadPat<load, v2f64, 4, LQp, LQri10, LQrr>;
+defm : LoadPat<load, v4f64, 5, LOp, LOri10, LOrr>;
 
 // FABS
 def : Pat<(v2f16(fabs v2f16:$v)), (FABSHQ SingleReg:$v)>;
