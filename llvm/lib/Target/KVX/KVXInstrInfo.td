@@ -1014,8 +1014,9 @@ multiclass MC_1B<string OpcStr> {
 
 // multiclass MC_1C is used by:
 //   defm CMOVED
+let isAsCheapAsAMove = 1 in
 multiclass MC_1C<string OpcStr> {
-  let Constraints = "$a3 = $a3o", isMoveImm = 1 in {
+  let Constraints = "$a3 = $a3o", isMoveImm = 1, isReMaterializable = 1 in {
   def ri10 : SCALARCOND_REGISTERZ_REGISTERW_SIGNED10_SIMPLE
     <(outs SingleReg:$a3o), (ins SingleReg:$a2, SingleReg:$a3, Signed10:$a4, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? $a3 = $a4"),

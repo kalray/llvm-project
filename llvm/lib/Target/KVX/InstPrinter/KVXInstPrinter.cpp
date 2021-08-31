@@ -242,6 +242,8 @@ void KVXInstPrinter::printSimplecondMod(
                                ".lez", ",gtz", ".odd", ".even"};
   if (Variant < 8)
     O << VariantList[Variant];
+  else
+    report_fatal_error("Unexpected simple condition value: ");
 }
 
 void KVXInstPrinter::printComparisonMod(

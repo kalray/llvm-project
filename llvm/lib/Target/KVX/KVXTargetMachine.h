@@ -43,6 +43,7 @@ public:
   }
 
   bool isNoopAddrSpaceCast(unsigned SrcAS, unsigned DestAS) const override;
+  bool addILPOpts();
 };
 
 } // end namespace llvm

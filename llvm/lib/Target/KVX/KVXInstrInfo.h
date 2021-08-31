@@ -70,6 +70,23 @@ public:
                             const MachineFunction &MF) const override;
 
   MachineBasicBlock *getBranchDestBlock(const MachineInstr &MI) const override;
+
+  bool isPredicable(const MachineInstr &MI) const override;
+  bool isPredicated(const MachineInstr &MI) const override;
+  bool canInsertSelect(const MachineBasicBlock &MBB,
+                       ArrayRef<MachineOperand> Cond, Register DstReg,
+                       Register TrueReg, Register FalseReg, int &CondCycles,
+                       int &TrueCycles, int &FalseCycles) const override;
+  void insertSelect(MachineBasicBlock &MBB, MachineBasicBlock::iterator I,
+                    const DebugLoc &DL, Register DstReg,
+                    ArrayRef<MachineOperand> Cond, Register TrueReg,
+                    Register FalseReg) const override;
+  unsigned getPredicationCost(const MachineInstr &MI) const override;
+  bool isProfitableToIfCvt(MachineBasicBlock &MBB, unsigned NumCycles,
+                           unsigned ExtraPredCycles,
+                           BranchProbability Probability) const override;
+  bool PredicateInstruction(MachineInstr &MI,
+                            ArrayRef<MachineOperand> Pred) const override;
 };
 
 } // namespace llvm

@@ -140,6 +140,7 @@ public:
   bool addPreISel() override;
   void addPreSched2() override;
   void addPreEmitPass() override;
+  bool addILPOpts() override;
 };
 } // namespace
 
@@ -209,6 +210,11 @@ bool KVXPassConfig::addPreISel() {
     addPass(createKVXHardwareLoopsPreparePass());
   }
   return false;
+}
+
+bool KVXPassConfig::addILPOpts() {
+  addPass(&EarlyIfPredicatorID);
+  return true;
 }
 
 TargetTransformInfo
