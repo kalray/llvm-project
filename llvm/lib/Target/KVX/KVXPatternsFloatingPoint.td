@@ -43,15 +43,15 @@ def fsubcont : PatFrag<(ops node:$op0, node:$op1), (fsub node:$op0, node:$op1), 
     return N->getFlags().hasAllowContract();
   }]>;
 
-defm : LoadPat<load, f16, 1, LHZp, LHZri10, LHZrr>;
-defm : LoadPat<load, f32, 2, LWZp, LWZri10, LWZrr>;
-defm : LoadPat<load, v2f16, 2, LWZp, LWZri10, LWZrr>;
-defm : LoadPat<load, f64, 3, LDp, LDri10, LDrr>;
-defm : LoadPat<load, v2f32, 3, LDp, LDri10, LDrr>;
-defm : LoadPat<load, v4f16, 3, LDp, LDri10, LDrr>;
-defm : LoadPat<load, v4f32, 4, LQp, LQri10, LQrr>;
-defm : LoadPat<load, v2f64, 4, LQp, LQri10, LQrr>;
-defm : LoadPat<load, v4f64, 5, LOp, LOri10, LOrr>;
+defm : LoadPat<load, f16, 1, LHZp, LHZri10, LHZri37, LHZri64, LHZrr>;
+defm : LoadPat<load, f32, 2, LWZp, LWZri10, LWZri37, LWZri64, LWZrr>;
+defm : LoadPat<load, v2f16, 2, LWZp, LWZri10, LWZri37, LWZri64, LWZrr>;
+defm : LoadPat<load, f64, 3, LDp, LDri10, LDri37, LDri64, LDrr>;
+defm : LoadPat<load, v2f32, 3, LDp, LDri10, LDri37, LDri64, LDrr>;
+defm : LoadPat<load, v4f16, 3, LDp, LDri10, LDri37, LDri64, LDrr>;
+defm : LoadPat<load, v4f32, 4, LQp, LQri10, LQri37, LQri64, LQrr>;
+defm : LoadPat<load, v2f64, 4, LQp, LQri10, LQri37, LQri64, LQrr>;
+defm : LoadPat<load, v4f64, 5, LOp, LOri10, LOri37, LOri64, LOrr>;
 
 // FABS
 def : Pat<(v2f16(fabs v2f16:$v)), (FABSHQ SingleReg:$v)>;
