@@ -1397,13 +1397,13 @@ define void @movefmv(<256 x i1>* nocapture %o, <1024 x i1>* nocapture readonly %
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a0 = 0[$r1]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 0[$r0] = $a0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 32[$r0] = $a1
+; CHECK-NEXT:    sv 96[$r0] = $a3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 64[$r0] = $a2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 96[$r0] = $a3
+; CHECK-NEXT:    sv 32[$r0] = $a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 0[$r0] = $a0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1431,9 +1431,9 @@ define void @movefwv(<256 x i1>* nocapture %o, <512 x i1>* nocapture readonly %a
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a0 = 0[$r1]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 0[$r0] = $a0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 32[$r0] = $a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 0[$r0] = $a0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

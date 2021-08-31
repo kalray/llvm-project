@@ -186,23 +186,24 @@ define i32 @stackrealign2(i32 %n){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r8 = $r7, -1
 ; CHECK-NEXT:    addd $r9 = $r7, 0xfffffffe
-; CHECK-NEXT:    sw 0[$r6] = $r7
 ; CHECK-NEXT:    addd $r10 = $r7, 0xfffffffd
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r11 = $r7, 0xfffffffc
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 4[$r6] = $r8
 ; CHECK-NEXT:    addd $r8 = $r7, 0xfffffffb
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 8[$r6] = $r9
 ; CHECK-NEXT:    addd $r9 = $r7, 0xfffffffa
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw 0[$r6] = $r7
 ; CHECK-NEXT:    addd $r7 = $r7, 0xfffffff9
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw 20[$r6] = $r8
+; CHECK-NEXT:    addd $r8 = $r5, $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 12[$r6] = $r10
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 16[$r6] = $r11
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 20[$r6] = $r8
-; CHECK-NEXT:    addd $r8 = $r5, $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 24[$r6] = $r9
 ; CHECK-NEXT:    ;;
@@ -608,23 +609,24 @@ define i32 @stackrealign4(i32 %n){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r1 = $r0, -1
 ; CHECK-NEXT:    addd $r7 = $r0, 0xfffffffe
-; CHECK-NEXT:    sw 0[$r6] = $r0
 ; CHECK-NEXT:    addd $r8 = $r0, 0xfffffffd
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r9 = $r0, 0xfffffffc
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 4[$r6] = $r1
 ; CHECK-NEXT:    addd $r1 = $r0, 0xfffffffb
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 8[$r6] = $r7
 ; CHECK-NEXT:    addd $r7 = $r0, 0xfffffffa
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw 0[$r6] = $r0
 ; CHECK-NEXT:    addd $r0 = $r0, 0xfffffff9
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw 20[$r6] = $r1
+; CHECK-NEXT:    addd $r1 = $r5, $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 12[$r6] = $r8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 16[$r6] = $r9
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 20[$r6] = $r1
-; CHECK-NEXT:    addd $r1 = $r5, $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 24[$r6] = $r7
 ; CHECK-NEXT:    ;;

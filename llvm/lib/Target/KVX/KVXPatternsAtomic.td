@@ -32,10 +32,10 @@ def atomicstore32 : PatFrag<(ops node:$val, node:$ptr),
 def atomicstore64 : PatFrag<(ops node:$val, node:$ptr),
                             (atomic_store_64 node:$ptr, node:$val)>;
 
-defm : SimpleStorePat<atomicstore8, i32, SingleReg, SBp, SBri10, SBrr>;
-defm : StorePat<atomicstore16, i32, SingleReg, 1, SHp, SHri10, SHrr>;
-defm : StorePat<atomicstore32, i32, SingleReg, 2, SWp, SWri10, SWrr>;
-defm : StorePat<atomicstore64, i64, SingleReg, 3, SDp, SDri10, SDrr>;
+defm : SimpleStorePat<atomicstore8, i32, SingleReg, SBp, SBri10,  SBri37,  SBri64, SBrr>;
+defm : StorePat<atomicstore16, i32, SingleReg, 1, SHp, SHri10,  SHri37,  SHri64, SHrr>;
+defm : StorePat<atomicstore32, i32, SingleReg, 2, SWp, SWri10,  SWri37,  SWri64, SWrr>;
+defm : StorePat<atomicstore64, i64, SingleReg, 3, SDp, SDri10,  SDri37,  SDri64, SDrr>;
 
 
 // ATOMIC RMW

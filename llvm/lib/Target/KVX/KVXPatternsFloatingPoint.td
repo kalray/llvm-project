@@ -10,26 +10,26 @@
 def DefaultShift : PatLeaf<(i64 0)>;
 
 // Store
-defm : StorePat<store, f16, SingleReg, 1, SHp, SHri10, SHrr>;
-defm : StorePatNode<truncstoref16, f32, SingleReg, 1, SHp, SHri10, SHrr,
+defm : StorePat<store, f16, SingleReg, 1, SHp, SHri10,  SHri37,  SHri64, SHrr>;
+defm : StorePatNode<truncstoref16, f32, SingleReg, 1, SHp, SHri10,  SHri37,  SHri64, SHrr,
                     (FNARROWWH SingleReg:$val, rounding_, silent_)>;
-defm : StorePatNode<truncstoref16, f64, SingleReg, 1, SHp, SHri10, SHrr,
+defm : StorePatNode<truncstoref16, f64, SingleReg, 1, SHp, SHri10,  SHri37,  SHri64, SHrr,
                     (FNARROWWH (FNARROWDW SingleReg:$val, rounding_, silent_),
                       rounding_, silent_)>;
 
-defm : StorePat<store, f32, SingleReg, 2, SWp, SWri10, SWrr>;
-defm : StorePatNode<truncstoref32, f64, SingleReg, 2, SWp, SWri10, SWrr,
+defm : StorePat<store, f32, SingleReg, 2, SWp, SWri10,  SWri37,  SWri64, SWrr>;
+defm : StorePatNode<truncstoref32, f64, SingleReg, 2, SWp, SWri10,  SWri37,  SWri64, SWrr,
                     (FNARROWDW SingleReg:$val, rounding_, silent_)>;
-defm : StorePat<store, v2f16, SingleReg, 2, SWp, SWri10, SWrr>;
+defm : StorePat<store, v2f16, SingleReg, 2, SWp, SWri10,  SWri37,  SWri64, SWrr>;
 
-defm : StorePat<store, f64, SingleReg, 3, SDp, SDri10, SDrr>;
-defm : StorePat<store, v2f32, SingleReg, 3, SDp, SDri10, SDrr>;
-defm : StorePat<store, v4f16, SingleReg, 3, SDp, SDri10, SDrr>;
+defm : StorePat<store, f64, SingleReg, 3, SDp, SDri10,  SDri37,  SDri64, SDrr>;
+defm : StorePat<store, v2f32, SingleReg, 3, SDp, SDri10,  SDri37,  SDri64, SDrr>;
+defm : StorePat<store, v4f16, SingleReg, 3, SDp, SDri10,  SDri37,  SDri64, SDrr>;
 
-defm : StorePat<store, v4f32, PairedReg, 4, SQp, SQri10, SQrr>;
-defm : StorePat<store, v2f64, PairedReg, 4, SQp, SQri10, SQrr>;
+defm : StorePat<store, v4f32, PairedReg, 4, SQp, SQri10,  SQri37,  SQri64, SQrr>;
+defm : StorePat<store, v2f64, PairedReg, 4, SQp, SQri10,  SQri37,  SQri64, SQrr>;
 
-defm : StorePat<store, v4f64, QuadReg, 5, SOp, SOri10, SOrr>;
+defm : StorePat<store, v4f64, QuadReg, 5, SOp, SOri10,  SOri37,  SOri64, SOrr>;
 
 def fmulcont : PatFrag<(ops node:$op0, node:$op1), (fmul node:$op0, node:$op1), [{
     return N->getFlags().hasAllowContract();
