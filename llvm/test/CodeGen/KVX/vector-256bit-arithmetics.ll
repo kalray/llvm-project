@@ -3998,9 +3998,9 @@ define <8 x float> @p_div_v8f32_v8f32(<8 x float>* nocapture readonly %0, <8 x f
 ; CHECK-NEXT:    lo $r20r21r22r23 = 0[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r24r25r26r27 = 0[$r1]
-; CHECK-NEXT:    srad $r0 = $r23, 32
+; CHECK-NEXT:    srld $r0 = $r23, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r1 = $r27, 32
+; CHECK-NEXT:    srld $r1 = $r27, 32
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r18 = $r0
@@ -4008,9 +4008,9 @@ define <8 x float> @p_div_v8f32_v8f32(<8 x float>* nocapture readonly %0, <8 x f
 ; CHECK-NEXT:    copyd $r1 = $r27
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r2 = $r22, 32
+; CHECK-NEXT:    srld $r2 = $r22, 32
 ; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    srad $r1 = $r26, 32
+; CHECK-NEXT:    srld $r1 = $r26, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    call __divsf3
@@ -4020,9 +4020,9 @@ define <8 x float> @p_div_v8f32_v8f32(<8 x float>* nocapture readonly %0, <8 x f
 ; CHECK-NEXT:    copyd $r1 = $r26
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r2 = $r21, 32
+; CHECK-NEXT:    srld $r2 = $r21, 32
 ; CHECK-NEXT:    copyd $r22 = $r0
-; CHECK-NEXT:    srad $r1 = $r25, 32
+; CHECK-NEXT:    srld $r1 = $r25, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    call __divsf3
@@ -4032,9 +4032,9 @@ define <8 x float> @p_div_v8f32_v8f32(<8 x float>* nocapture readonly %0, <8 x f
 ; CHECK-NEXT:    copyd $r1 = $r25
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r2 = $r20, 32
+; CHECK-NEXT:    srld $r2 = $r20, 32
 ; CHECK-NEXT:    copyd $r21 = $r0
-; CHECK-NEXT:    srad $r1 = $r24, 32
+; CHECK-NEXT:    srld $r1 = $r24, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    call __divsf3
@@ -4103,7 +4103,7 @@ define <8 x float> @p_div_v8f32_f32(<8 x float>* nocapture readonly %0, float* n
 ; CHECK-NEXT:    lo $r20r21r22r23 = 0[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r18 = 0[$r1]
-; CHECK-NEXT:    srad $r0 = $r23, 32
+; CHECK-NEXT:    srld $r0 = $r23, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    call __divsf3
@@ -4113,7 +4113,7 @@ define <8 x float> @p_div_v8f32_f32(<8 x float>* nocapture readonly %0, float* n
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r1 = $r22, 32
+; CHECK-NEXT:    srld $r1 = $r22, 32
 ; CHECK-NEXT:    copyd $r23 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r1
@@ -4125,7 +4125,7 @@ define <8 x float> @p_div_v8f32_f32(<8 x float>* nocapture readonly %0, float* n
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r1 = $r21, 32
+; CHECK-NEXT:    srld $r1 = $r21, 32
 ; CHECK-NEXT:    copyd $r22 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r1
@@ -4137,7 +4137,7 @@ define <8 x float> @p_div_v8f32_f32(<8 x float>* nocapture readonly %0, float* n
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r1 = $r20, 32
+; CHECK-NEXT:    srld $r1 = $r20, 32
 ; CHECK-NEXT:    copyd $r21 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r1

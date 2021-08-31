@@ -1626,8 +1626,8 @@ define <4 x half> @test_minnum(<4 x half> %a, <4 x half> %b) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fwidenmhwp $r19 = $r1
 ; CHECK-NEXT:    fwidenmhwp $r21 = $r0
-; CHECK-NEXT:    srad $r0 = $r18, 32
-; CHECK-NEXT:    srad $r1 = $r22, 32
+; CHECK-NEXT:    srld $r0 = $r18, 32
+; CHECK-NEXT:    srld $r1 = $r22, 32
 ; CHECK-NEXT:    call fminf
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r20 = $r0
@@ -1636,8 +1636,8 @@ define <4 x half> @test_minnum(<4 x half> %a, <4 x half> %b) #0 {
 ; CHECK-NEXT:    call fminf
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    srad $r0 = $r21, 32
-; CHECK-NEXT:    srad $r1 = $r19, 32
+; CHECK-NEXT:    srld $r0 = $r21, 32
+; CHECK-NEXT:    srld $r1 = $r19, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r18 = $r20, 63, 32
 ; CHECK-NEXT:    call fminf
@@ -1697,8 +1697,8 @@ define <4 x half> @test_maxnum(<4 x half> %a, <4 x half> %b) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fwidenmhwp $r19 = $r1
 ; CHECK-NEXT:    fwidenmhwp $r21 = $r0
-; CHECK-NEXT:    srad $r0 = $r18, 32
-; CHECK-NEXT:    srad $r1 = $r22, 32
+; CHECK-NEXT:    srld $r0 = $r18, 32
+; CHECK-NEXT:    srld $r1 = $r22, 32
 ; CHECK-NEXT:    call fmaxf
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r20 = $r0
@@ -1707,8 +1707,8 @@ define <4 x half> @test_maxnum(<4 x half> %a, <4 x half> %b) #0 {
 ; CHECK-NEXT:    call fmaxf
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    srad $r0 = $r21, 32
-; CHECK-NEXT:    srad $r1 = $r19, 32
+; CHECK-NEXT:    srld $r0 = $r21, 32
+; CHECK-NEXT:    srld $r1 = $r19, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r18 = $r20, 63, 32
 ; CHECK-NEXT:    call fmaxf

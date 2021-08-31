@@ -1176,6 +1176,21 @@ def : Pat<(extractelt (v4i32 PairedReg:$v), 1), (SRLDri (i32 (EXTRACT_SUBREG $v,
 def : Pat<(extractelt (v4i32 PairedReg:$v), 2), (i32 (EXTRACT_SUBREG $v, sub_s1))>;
 def : Pat<(extractelt (v4i32 PairedReg:$v), 3), (SRLDri (i32 (EXTRACT_SUBREG $v, sub_s1)), (i64 32))>;
 
+def : Pat<(i32(extractelt v4i32:$v, i64:$s)),
+          (i32
+            (SRLDrr
+              (v2i32
+                (CMOVEDrr
+                  (i32 (SRLWri (i64 SingleReg:$s), 1)),
+                  (v2i32 (EXTRACT_SUBREG (v4i32 PairedReg:$v), sub_s0)),
+                  (v2i32 (EXTRACT_SUBREG (v4i32 PairedReg:$v), sub_s1)),
+                  scalarcond_odd
+                )
+              ),
+              (i32 (SLLWri ( i32 (ANDWri10 (i64 SingleReg:$s), 1)), 5))
+            )
+          )>;
+
 def : Pat<(v4i32 (trunc v4i64:$v)), (REG_SEQUENCE PairedReg,
                                       (INSF (i64 (EXTRACT_SUBREG QuadReg:$v, sub_s0)),
                                             (i64 (EXTRACT_SUBREG QuadReg:$v, sub_s1)),

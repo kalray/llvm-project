@@ -34,14 +34,13 @@ define float @test_extract_1(<4 x float> %a) #0 {
 define float @test_extract_i(<4 x float> %a, i64 %idx) #0 {
 ; CHECK-LABEL: test_extract_i:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    clrf $r2 = $r2, 63, 2
+; CHECK-NEXT:    srlw $r3 = $r2, 1
+; CHECK-NEXT:    andw $r2 = $r2, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r3 = $r12, 16
-; CHECK-NEXT:    sq 16[$r12] = $r0r1
+; CHECK-NEXT:    cmoved.odd $r3 ? $r0 = $r1
+; CHECK-NEXT:    sllw $r1 = $r2, 5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz.xs $r0 = $r2[$r3]
-; CHECK-NEXT:    addd $r12 = $r12, 32
+; CHECK-NEXT:    srld $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %e = extractelement <4 x float> %a, i64 %idx

@@ -915,9 +915,25 @@ def : Pat<(f32 (vector_extract v2f32:$v, i64:$p)), (SRLDrr SingleReg:$v, (SLLWri
 
 // v4f32
 def : Pat<(extractelt (v4f32 PairedReg:$v), 0), (f32 (EXTRACT_SUBREG $v, sub_s0))>;
-def : Pat<(extractelt (v4f32 PairedReg:$v), 1), (SRADri (f32 (EXTRACT_SUBREG $v, sub_s0)), (i64 32))>;
+def : Pat<(extractelt (v4f32 PairedReg:$v), 1), (SRLDri (f32 (EXTRACT_SUBREG $v, sub_s0)), (i64 32))>;
 def : Pat<(extractelt (v4f32 PairedReg:$v), 2), (f32 (EXTRACT_SUBREG $v, sub_s1))>;
-def : Pat<(extractelt (v4f32 PairedReg:$v), 3), (SRADri (f32 (EXTRACT_SUBREG $v, sub_s1)), (i64 32))>;
+def : Pat<(extractelt (v4f32 PairedReg:$v), 3), (SRLDri (f32 (EXTRACT_SUBREG $v, sub_s1)), (i64 32))>;
+
+def : Pat<(f32(extractelt v4f32:$v, i64:$s)),
+          (f32
+            (SRLDrr
+              (v2f32
+                (CMOVEDrr
+                  (i32 (SRLWri (i64 SingleReg:$s), 1)),
+                  (v2f32 (EXTRACT_SUBREG (v4f32 PairedReg:$v), sub_s0)),
+                  (v2f32 (EXTRACT_SUBREG (v4f32 PairedReg:$v), sub_s1)),
+                  scalarcond_odd
+                )
+              ),
+              (i32 (SLLWri ( i32 (ANDWri10 (i64 SingleReg:$s), 1)), 5))
+            )
+          )>;
+
 
 def : Pat<(v2f32 (extract_subvector (v4f32 PairedReg:$v), (i64 0))),
           (v2f32 (EXTRACT_SUBREG $v, sub_s0))>;
