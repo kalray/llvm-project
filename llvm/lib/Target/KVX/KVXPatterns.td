@@ -834,8 +834,20 @@ def build_fdot_imm : SDNodeXForm<build_vector, [{
   return KVX_LOW::buildFdotImm(*N, *CurDAG);
 }]>;
 
+def build_fdot_imm_neg0 : SDNodeXForm<build_vector, [{
+  return KVX_LOW::buildFdotImm(*N, *CurDAG, false, 1);
+}]>;
+
+def build_fdot_imm_neg1 : SDNodeXForm<build_vector, [{
+  return KVX_LOW::buildFdotImm(*N, *CurDAG, false, 2);
+}]>;
+
 def build_fdot_imm_swp : SDNodeXForm<build_vector, [{
   return KVX_LOW::buildFdotImm(*N, *CurDAG, true);
+}]>;
+
+def build_fdot_imm_swp_neg0 : SDNodeXForm<build_vector, [{
+  return KVX_LOW::buildFdotImm(*N, *CurDAG, true, 1);
 }]>;
 
 def build_fpimm_vec_neg0 : SDNodeXForm<build_vector, [{

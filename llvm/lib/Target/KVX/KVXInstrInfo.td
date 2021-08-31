@@ -1349,6 +1349,7 @@ multiclass MC_2A<string OpcStr> {
      MAU>;
 }
 
+// FIXME: For coolidge, this class should hold ri10,ri37,ri64 variants.
 // multiclass MC_2A is used by:
 //   defm FADDWP
 //   defm FMULWC
