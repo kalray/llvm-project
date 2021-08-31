@@ -1668,4 +1668,23 @@ define <2 x i32> @MSBFSUHWQ(<2 x i32> %0, <2 x i16> %1, <2 x i16> %2) {
   ret <2 x i32> %7
 }
 
+define i1 @vnez (<2 x i32> %0) {
+; CHECK-LABEL: vnez:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    compd.ne $r0 = $r0, 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+;
+; V2-LABEL: vnez:
+; V2:       # %bb.0:
+; V2-NEXT:    compd.ne $r0 = $r0, 0
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+  %2 = extractelement <2 x i32> %0, i32 0
+  %3 = extractelement <2 x i32> %0, i32 1
+  %4 = or i32 %2, %3
+  %5 = icmp ne i32 %4, 0
+  ret i1 %5
+}
+
 attributes #0 = { nounwind }

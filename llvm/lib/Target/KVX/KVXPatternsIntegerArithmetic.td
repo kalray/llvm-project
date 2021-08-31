@@ -1621,3 +1621,7 @@ def : Pat<(v8i8(rotr v8i8:$v, (v8i8 (v8_splat i32:$s)))),
                         (SBMM8ri64 SingleReg:$v, 0x8080202008080202),
                   SingleReg:$s),
             8))>;
+
+// LOR between v2i32 elements
+def : Pat<(i32 (setne (or (extractelt v2i32:$v, 0), (extractelt v2i32:$v, 1)), 0)),
+          (COMPDri10 SingleReg:$v, 0, comparison_ne)>;
