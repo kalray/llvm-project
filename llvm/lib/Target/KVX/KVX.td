@@ -47,6 +47,14 @@ def trunc_imm_32 : SDNodeXForm<imm, [{
   return CurDAG->getTargetConstant(N->getZExtValue() & 0xffffffff, SDLoc(N), MVT::i32);
 }]>;
 
+def imm32_to_imm64 : SDNodeXForm<imm, [{
+  return CurDAG->getTargetConstant(N->getZExtValue(), SDLoc(N), MVT::i64);
+}]>;
+
+def fpimm_to_i64 : SDNodeXForm<fpimm, [{
+  return CurDAG->getTargetConstant(N->getValueAPF().bitcastToAPInt().getZExtValue(), SDLoc(N), MVT::i64);
+}]>;
+
 def get_fpimm_16 : SDNodeXForm<fpimm, [{
   return CurDAG->getTargetConstantFP(N->getValueAPF(), SDLoc(N), MVT::f16);
 }]>;

@@ -408,43 +408,38 @@ define <4 x double> @test_select(<4 x double> %a, <4 x double> %b, i1 zeroext %c
 define <4 x double> @test_select_cc(<4 x double> %a, <4 x double> %b, <4 x double> %c, <4 x double> %d) #0 {
 ; CHECK-LABEL: test_select_cc:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ld $r15 = 16[$r12]
+; CHECK-NEXT:    ld $r15 = 24[$r12]
+; CHECK-NEXT:    make $r17 = -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 24[$r12]
+; CHECK-NEXT:    ld $r16 = 16[$r12]
+; CHECK-NEXT:    fcompd.une $r11 = $r11, $r15
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r17 = 8[$r12]
+; CHECK-NEXT:    ld $r15 = 8[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r32 = 0[$r12]
-; CHECK-NEXT:    fcompd.une $r10 = $r10, $r15
-; CHECK-NEXT:    fcompd.une $r11 = $r11, $r16
+; CHECK-NEXT:    fcompd.une $r10 = $r10, $r16
+; CHECK-NEXT:    make $r16 = -1
+; CHECK-NEXT:    cmoved.even $r11 ? $r17 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompd.une $r8 = $r8, $r32
-; CHECK-NEXT:    copyw $r15 = $r11
 ; CHECK-NEXT:    make $r11 = -1
-; CHECK-NEXT:    fcompd.une $r9 = $r9, $r17
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r15 ? $r11 = 0
-; CHECK-NEXT:    copyw $r15 = $r10
+; CHECK-NEXT:    cmoved.even $r10 ? $r16 = 0
 ; CHECK-NEXT:    make $r10 = -1
+; CHECK-NEXT:    fcompd.une $r8 = $r8, $r32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r15 ? $r10 = 0
-; CHECK-NEXT:    copyw $r15 = $r8
-; CHECK-NEXT:    make $r8 = -1
-; CHECK-NEXT:    cmoved.dnez $r11 ? $r7 = $r3
+; CHECK-NEXT:    fcompd.une $r9 = $r9, $r15
+; CHECK-NEXT:    cmoved.even $r8 ? $r11 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r15 ? $r8 = 0
-; CHECK-NEXT:    copyw $r15 = $r9
-; CHECK-NEXT:    make $r9 = -1
-; CHECK-NEXT:    cmoved.dnez $r10 ? $r6 = $r2
+; CHECK-NEXT:    cmoved.even $r9 ? $r10 = 0
+; CHECK-NEXT:    cmoved.dnez $r11 ? $r4 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r15 ? $r9 = 0
-; CHECK-NEXT:    cmoved.dnez $r8 ? $r4 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.dnez $r9 ? $r5 = $r1
+; CHECK-NEXT:    cmoved.dnez $r10 ? $r5 = $r1
+; CHECK-NEXT:    cmoved.dnez $r16 ? $r6 = $r2
 ; CHECK-NEXT:    copyd $r0 = $r4
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.dnez $r17 ? $r7 = $r3
 ; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    copyd $r2 = $r6
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r3 = $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -456,33 +451,27 @@ define <4 x double> @test_select_cc(<4 x double> %a, <4 x double> %b, <4 x doubl
 define <4 x float> @test_select_cc_f32_f32(<4 x float> %a, <4 x float> %b, <4 x double> %c, <4 x double> %d) #0 {
 ; CHECK-LABEL: test_select_cc_f32_f32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fcompd.une $r4 = $r4, $r8
 ; CHECK-NEXT:    fcompd.une $r5 = $r5, $r9
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r8 = $r4
-; CHECK-NEXT:    make $r4 = -1
-; CHECK-NEXT:    fcompd.une $r6 = $r6, $r10
+; CHECK-NEXT:    make $r9 = -1
+; CHECK-NEXT:    make $r35 = -1
 ; CHECK-NEXT:    fcompd.une $r7 = $r7, $r11
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r8 ? $r4 = 0
-; CHECK-NEXT:    copyw $r8 = $r5
-; CHECK-NEXT:    make $r5 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r8 ? $r5 = 0
-; CHECK-NEXT:    copyw $r8 = $r6
+; CHECK-NEXT:    cmoved.even $r5 ? $r9 = 0
+; CHECK-NEXT:    fcompd.une $r5 = $r6, $r10
 ; CHECK-NEXT:    make $r6 = -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r8 ? $r6 = 0
-; CHECK-NEXT:    copyw $r8 = $r7
-; CHECK-NEXT:    make $r7 = -1
-; CHECK-NEXT:    insf $r4 = $r5, 63, 32
+; CHECK-NEXT:    fcompd.une $r8 = $r4, $r8
+; CHECK-NEXT:    make $r4 = -1
+; CHECK-NEXT:    cmoved.even $r5 ? $r6 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r8 ? $r7 = 0
-; CHECK-NEXT:    cmovewp.even $r4 ? $r0 = $r2
+; CHECK-NEXT:    cmoved.even $r7 ? $r35 = 0
+; CHECK-NEXT:    cmoved.even $r8 ? $r4 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r6 = $r7, 63, 32
+; CHECK-NEXT:    insf $r6 = $r35, 63, 32
+; CHECK-NEXT:    insf $r4 = $r9, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r5 = $r6
+; CHECK-NEXT:    cmovewp.even $r4 ? $r0 = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmovewp.even $r5 ? $r1 = $r3
 ; CHECK-NEXT:    ret
@@ -496,31 +485,27 @@ define <4 x i1> @test_fcmp_une(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: test_fcmp_une:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompd.une $r3 = $r3, $r7
+; CHECK-NEXT:    make $r7 = -1
+; CHECK-NEXT:    fcompd.une $r2 = $r2, $r6
+; CHECK-NEXT:    make $r6 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r6 = 0
+; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompd.une $r1 = $r1, $r5
 ; CHECK-NEXT:    fcompd.une $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.une $r2 = $r2, $r6
-; CHECK-NEXT:    fcompd.une $r1 = $r1, $r5
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r6 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r6, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp une <4 x double> %a, %b
@@ -531,31 +516,27 @@ define <4 x i1> @test_fcmp_ueq(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: test_fcmp_ueq:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompd.ueq $r3 = $r3, $r7
+; CHECK-NEXT:    make $r7 = -1
+; CHECK-NEXT:    fcompd.ueq $r2 = $r2, $r6
+; CHECK-NEXT:    make $r6 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r6 = 0
+; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompd.ueq $r1 = $r1, $r5
 ; CHECK-NEXT:    fcompd.ueq $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.ueq $r2 = $r2, $r6
-; CHECK-NEXT:    fcompd.ueq $r1 = $r1, $r5
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r6 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r6, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp ueq <4 x double> %a, %b
@@ -566,31 +547,27 @@ define <4 x i1> @test_fcmp_ugt(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: test_fcmp_ugt:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompd.ult $r3 = $r7, $r3
+; CHECK-NEXT:    make $r7 = -1
+; CHECK-NEXT:    fcompd.ult $r2 = $r6, $r2
+; CHECK-NEXT:    make $r6 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r6 = 0
+; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompd.ult $r1 = $r5, $r1
 ; CHECK-NEXT:    fcompd.ult $r0 = $r4, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.ult $r2 = $r6, $r2
-; CHECK-NEXT:    fcompd.ult $r1 = $r5, $r1
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r6 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r6, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp ugt <4 x double> %a, %b
@@ -601,31 +578,27 @@ define <4 x i1> @test_fcmp_uge(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: test_fcmp_uge:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompd.uge $r3 = $r3, $r7
+; CHECK-NEXT:    make $r7 = -1
+; CHECK-NEXT:    fcompd.uge $r2 = $r2, $r6
+; CHECK-NEXT:    make $r6 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r6 = 0
+; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompd.uge $r1 = $r1, $r5
 ; CHECK-NEXT:    fcompd.uge $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.uge $r2 = $r2, $r6
-; CHECK-NEXT:    fcompd.uge $r1 = $r1, $r5
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r6 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r6, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp uge <4 x double> %a, %b
@@ -636,31 +609,27 @@ define <4 x i1> @test_fcmp_ult(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: test_fcmp_ult:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompd.ult $r3 = $r3, $r7
+; CHECK-NEXT:    make $r7 = -1
+; CHECK-NEXT:    fcompd.ult $r2 = $r2, $r6
+; CHECK-NEXT:    make $r6 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r6 = 0
+; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompd.ult $r1 = $r1, $r5
 ; CHECK-NEXT:    fcompd.ult $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.ult $r2 = $r2, $r6
-; CHECK-NEXT:    fcompd.ult $r1 = $r1, $r5
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r6 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r6, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp ult <4 x double> %a, %b
@@ -671,31 +640,27 @@ define <4 x i1> @test_fcmp_ule(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: test_fcmp_ule:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompd.uge $r3 = $r7, $r3
+; CHECK-NEXT:    make $r7 = -1
+; CHECK-NEXT:    fcompd.uge $r2 = $r6, $r2
+; CHECK-NEXT:    make $r6 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r6 = 0
+; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompd.uge $r1 = $r5, $r1
 ; CHECK-NEXT:    fcompd.uge $r0 = $r4, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.uge $r2 = $r6, $r2
-; CHECK-NEXT:    fcompd.uge $r1 = $r5, $r1
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r6 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r6, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp ule <4 x double> %a, %b
@@ -707,40 +672,37 @@ define <4 x i1> @test_fcmp_uno(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompd.ult $r8 = $r3, $r7
 ; CHECK-NEXT:    fcompd.uge $r3 = $r3, $r7
+; CHECK-NEXT:    make $r7 = -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompd.ult $r7 = $r2, $r6
-; CHECK-NEXT:    fcompd.uge $r2 = $r2, $r6
 ; CHECK-NEXT:    andw $r3 = $r3, $r8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompd.ult $r6 = $r1, $r5
+; CHECK-NEXT:    fcompd.ult $r8 = $r1, $r5
 ; CHECK-NEXT:    fcompd.uge $r1 = $r1, $r5
-; CHECK-NEXT:    andw $r2 = $r2, $r7
+; CHECK-NEXT:    make $r5 = -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompd.ult $r5 = $r0, $r4
-; CHECK-NEXT:    fcompd.uge $r0 = $r0, $r4
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    fcompd.ult $r3 = $r2, $r6
+; CHECK-NEXT:    andw $r1 = $r1, $r8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
+; CHECK-NEXT:    fcompd.uge $r6 = $r2, $r6
 ; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    andw $r1 = $r1, $r6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    andw $r0 = $r0, $r5
+; CHECK-NEXT:    andw $r3 = $r6, $r3
+; CHECK-NEXT:    fcompd.ult $r6 = $r0, $r4
+; CHECK-NEXT:    fcompd.uge $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    cmoved.even $r3 ? $r5 = 0
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    andw $r0 = $r0, $r6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r5 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r5, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp uno <4 x double> %a, %b
@@ -751,31 +713,27 @@ define <4 x i1> @test_fcmp_one(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: test_fcmp_one:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompd.one $r3 = $r3, $r7
+; CHECK-NEXT:    make $r7 = -1
+; CHECK-NEXT:    fcompd.one $r2 = $r2, $r6
+; CHECK-NEXT:    make $r6 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r6 = 0
+; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompd.one $r1 = $r1, $r5
 ; CHECK-NEXT:    fcompd.one $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.one $r2 = $r2, $r6
-; CHECK-NEXT:    fcompd.one $r1 = $r1, $r5
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r6 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r6, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp one <4 x double> %a, %b
@@ -786,31 +744,27 @@ define <4 x i1> @test_fcmp_oeq(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: test_fcmp_oeq:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompd.oeq $r3 = $r3, $r7
+; CHECK-NEXT:    make $r7 = -1
+; CHECK-NEXT:    fcompd.oeq $r2 = $r2, $r6
+; CHECK-NEXT:    make $r6 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r6 = 0
+; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompd.oeq $r1 = $r1, $r5
 ; CHECK-NEXT:    fcompd.oeq $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.oeq $r2 = $r2, $r6
-; CHECK-NEXT:    fcompd.oeq $r1 = $r1, $r5
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r6 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r6, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp oeq <4 x double> %a, %b
@@ -821,31 +775,27 @@ define <4 x i1> @test_fcmp_ogt(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: test_fcmp_ogt:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompd.olt $r3 = $r7, $r3
+; CHECK-NEXT:    make $r7 = -1
+; CHECK-NEXT:    fcompd.olt $r2 = $r6, $r2
+; CHECK-NEXT:    make $r6 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r6 = 0
+; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompd.olt $r1 = $r5, $r1
 ; CHECK-NEXT:    fcompd.olt $r0 = $r4, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.olt $r2 = $r6, $r2
-; CHECK-NEXT:    fcompd.olt $r1 = $r5, $r1
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r6 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r6, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp ogt <4 x double> %a, %b
@@ -856,31 +806,27 @@ define <4 x i1> @test_fcmp_oge(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: test_fcmp_oge:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompd.oge $r3 = $r3, $r7
+; CHECK-NEXT:    make $r7 = -1
+; CHECK-NEXT:    fcompd.oge $r2 = $r2, $r6
+; CHECK-NEXT:    make $r6 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r6 = 0
+; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompd.oge $r1 = $r1, $r5
 ; CHECK-NEXT:    fcompd.oge $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.oge $r2 = $r2, $r6
-; CHECK-NEXT:    fcompd.oge $r1 = $r1, $r5
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r6 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r6, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp oge <4 x double> %a, %b
@@ -891,31 +837,27 @@ define <4 x i1> @test_fcmp_olt(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: test_fcmp_olt:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompd.olt $r3 = $r3, $r7
+; CHECK-NEXT:    make $r7 = -1
+; CHECK-NEXT:    fcompd.olt $r2 = $r2, $r6
+; CHECK-NEXT:    make $r6 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r6 = 0
+; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompd.olt $r1 = $r1, $r5
 ; CHECK-NEXT:    fcompd.olt $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.olt $r2 = $r2, $r6
-; CHECK-NEXT:    fcompd.olt $r1 = $r1, $r5
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r6 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r6, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp olt <4 x double> %a, %b
@@ -926,31 +868,27 @@ define <4 x i1> @test_fcmp_ole(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: test_fcmp_ole:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompd.oge $r3 = $r7, $r3
+; CHECK-NEXT:    make $r7 = -1
+; CHECK-NEXT:    fcompd.oge $r2 = $r6, $r2
+; CHECK-NEXT:    make $r6 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r6 = 0
+; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompd.oge $r1 = $r5, $r1
 ; CHECK-NEXT:    fcompd.oge $r0 = $r4, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.oge $r2 = $r6, $r2
-; CHECK-NEXT:    fcompd.oge $r1 = $r5, $r1
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r6 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r6, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp ole <4 x double> %a, %b
@@ -962,40 +900,37 @@ define <4 x i1> @test_fcmp_ord(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompd.olt $r8 = $r3, $r7
 ; CHECK-NEXT:    fcompd.oge $r3 = $r3, $r7
+; CHECK-NEXT:    make $r7 = -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompd.olt $r7 = $r2, $r6
-; CHECK-NEXT:    fcompd.oge $r2 = $r2, $r6
 ; CHECK-NEXT:    orw $r3 = $r3, $r8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompd.olt $r6 = $r1, $r5
+; CHECK-NEXT:    fcompd.olt $r8 = $r1, $r5
 ; CHECK-NEXT:    fcompd.oge $r1 = $r1, $r5
-; CHECK-NEXT:    orw $r2 = $r2, $r7
+; CHECK-NEXT:    make $r5 = -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompd.olt $r5 = $r0, $r4
-; CHECK-NEXT:    fcompd.oge $r0 = $r0, $r4
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    fcompd.olt $r3 = $r2, $r6
+; CHECK-NEXT:    orw $r1 = $r1, $r8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
+; CHECK-NEXT:    fcompd.oge $r6 = $r2, $r6
 ; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    orw $r1 = $r1, $r6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    orw $r0 = $r0, $r5
+; CHECK-NEXT:    orw $r3 = $r6, $r3
+; CHECK-NEXT:    fcompd.olt $r6 = $r0, $r4
+; CHECK-NEXT:    fcompd.oge $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    cmoved.even $r3 ? $r5 = 0
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    orw $r0 = $r0, $r6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r5 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r5, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fcmp ord <4 x double> %a, %b
@@ -2638,31 +2573,27 @@ define <4 x i1> @fcmp_setoeq(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: fcmp_setoeq:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompd.oeq $r3 = $r3, $r7
+; CHECK-NEXT:    make $r7 = -1
+; CHECK-NEXT:    fcompd.oeq $r2 = $r2, $r6
+; CHECK-NEXT:    make $r6 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r6 = 0
+; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompd.oeq $r1 = $r1, $r5
 ; CHECK-NEXT:    fcompd.oeq $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.oeq $r2 = $r2, $r6
-; CHECK-NEXT:    fcompd.oeq $r1 = $r1, $r5
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r6 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r6, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2674,31 +2605,27 @@ define <4 x i1> @fcmp_setoeq_single(<4 x double> %a) #0 {
 ; CHECK-LABEL: fcmp_setoeq_single:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompd.oeq $r3 = $r3, $r3
+; CHECK-NEXT:    make $r4 = -1
 ; CHECK-NEXT:    fcompd.oeq $r2 = $r2, $r2
+; CHECK-NEXT:    make $r5 = -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
+; CHECK-NEXT:    cmoved.even $r3 ? $r4 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r5 = 0
+; CHECK-NEXT:    make $r2 = -1
 ; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fcompd.oeq $r1 = $r1, $r1
 ; CHECK-NEXT:    fcompd.oeq $r0 = $r0, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r5 = $r4, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r5, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2710,31 +2637,27 @@ define <4 x i1> @fcmp_setogt(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: fcmp_setogt:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompd.olt $r3 = $r7, $r3
+; CHECK-NEXT:    make $r7 = -1
+; CHECK-NEXT:    fcompd.olt $r2 = $r6, $r2
+; CHECK-NEXT:    make $r6 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r6 = 0
+; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompd.olt $r1 = $r5, $r1
 ; CHECK-NEXT:    fcompd.olt $r0 = $r4, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.olt $r2 = $r6, $r2
-; CHECK-NEXT:    fcompd.olt $r1 = $r5, $r1
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r6 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r6, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2757,31 +2680,27 @@ define <4 x i1> @fcmp_setoge(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: fcmp_setoge:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompd.oge $r3 = $r3, $r7
+; CHECK-NEXT:    make $r7 = -1
+; CHECK-NEXT:    fcompd.oge $r2 = $r2, $r6
+; CHECK-NEXT:    make $r6 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r6 = 0
+; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompd.oge $r1 = $r1, $r5
 ; CHECK-NEXT:    fcompd.oge $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.oge $r2 = $r2, $r6
-; CHECK-NEXT:    fcompd.oge $r1 = $r1, $r5
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r6 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r6, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2793,31 +2712,27 @@ define <4 x i1> @fcmp_setoge_single(<4 x double> %a) #0 {
 ; CHECK-LABEL: fcmp_setoge_single:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompd.oeq $r3 = $r3, $r3
+; CHECK-NEXT:    make $r4 = -1
 ; CHECK-NEXT:    fcompd.oeq $r2 = $r2, $r2
+; CHECK-NEXT:    make $r5 = -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
+; CHECK-NEXT:    cmoved.even $r3 ? $r4 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r5 = 0
+; CHECK-NEXT:    make $r2 = -1
 ; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fcompd.oeq $r1 = $r1, $r1
 ; CHECK-NEXT:    fcompd.oeq $r0 = $r0, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r5 = $r4, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r5, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2829,31 +2744,27 @@ define <4 x i1> @fcmp_setolt(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: fcmp_setolt:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompd.olt $r3 = $r3, $r7
+; CHECK-NEXT:    make $r7 = -1
+; CHECK-NEXT:    fcompd.olt $r2 = $r2, $r6
+; CHECK-NEXT:    make $r6 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r6 = 0
+; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompd.olt $r1 = $r1, $r5
 ; CHECK-NEXT:    fcompd.olt $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.olt $r2 = $r2, $r6
-; CHECK-NEXT:    fcompd.olt $r1 = $r1, $r5
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r6 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r6, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2876,31 +2787,27 @@ define <4 x i1> @fcmp_setole(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: fcmp_setole:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompd.oge $r3 = $r7, $r3
+; CHECK-NEXT:    make $r7 = -1
+; CHECK-NEXT:    fcompd.oge $r2 = $r6, $r2
+; CHECK-NEXT:    make $r6 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r6 = 0
+; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompd.oge $r1 = $r5, $r1
 ; CHECK-NEXT:    fcompd.oge $r0 = $r4, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.oge $r2 = $r6, $r2
-; CHECK-NEXT:    fcompd.oge $r1 = $r5, $r1
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r6 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r6, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2912,31 +2819,27 @@ define <4 x i1> @fcmp_setole_single(<4 x double> %a) #0 {
 ; CHECK-LABEL: fcmp_setole_single:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompd.oeq $r3 = $r3, $r3
+; CHECK-NEXT:    make $r4 = -1
 ; CHECK-NEXT:    fcompd.oeq $r2 = $r2, $r2
+; CHECK-NEXT:    make $r5 = -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
+; CHECK-NEXT:    cmoved.even $r3 ? $r4 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r5 = 0
+; CHECK-NEXT:    make $r2 = -1
 ; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fcompd.oeq $r1 = $r1, $r1
 ; CHECK-NEXT:    fcompd.oeq $r0 = $r0, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r5 = $r4, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r5, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2948,31 +2851,27 @@ define <4 x i1> @fcmp_setone(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: fcmp_setone:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompd.one $r3 = $r3, $r7
+; CHECK-NEXT:    make $r7 = -1
+; CHECK-NEXT:    fcompd.one $r2 = $r2, $r6
+; CHECK-NEXT:    make $r6 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r6 = 0
+; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompd.one $r1 = $r1, $r5
 ; CHECK-NEXT:    fcompd.one $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.one $r2 = $r2, $r6
-; CHECK-NEXT:    fcompd.one $r1 = $r1, $r5
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r6 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r6, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -2996,40 +2895,37 @@ define <4 x i1> @fcmp_setord(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompd.olt $r8 = $r3, $r7
 ; CHECK-NEXT:    fcompd.oge $r3 = $r3, $r7
+; CHECK-NEXT:    make $r7 = -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompd.olt $r7 = $r2, $r6
-; CHECK-NEXT:    fcompd.oge $r2 = $r2, $r6
 ; CHECK-NEXT:    orw $r3 = $r3, $r8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompd.olt $r6 = $r1, $r5
+; CHECK-NEXT:    fcompd.olt $r8 = $r1, $r5
 ; CHECK-NEXT:    fcompd.oge $r1 = $r1, $r5
-; CHECK-NEXT:    orw $r2 = $r2, $r7
+; CHECK-NEXT:    make $r5 = -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompd.olt $r5 = $r0, $r4
-; CHECK-NEXT:    fcompd.oge $r0 = $r0, $r4
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    fcompd.olt $r3 = $r2, $r6
+; CHECK-NEXT:    orw $r1 = $r1, $r8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
+; CHECK-NEXT:    fcompd.oge $r6 = $r2, $r6
 ; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    orw $r1 = $r1, $r6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    orw $r0 = $r0, $r5
+; CHECK-NEXT:    orw $r3 = $r6, $r3
+; CHECK-NEXT:    fcompd.olt $r6 = $r0, $r4
+; CHECK-NEXT:    fcompd.oge $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    cmoved.even $r3 ? $r5 = 0
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    orw $r0 = $r0, $r6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r5 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r5, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3041,31 +2937,27 @@ define <4 x i1> @fcmp_setord_single(<4 x double> %a) #0 {
 ; CHECK-LABEL: fcmp_setord_single:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompd.oeq $r3 = $r3, $r3
+; CHECK-NEXT:    make $r4 = -1
 ; CHECK-NEXT:    fcompd.oeq $r2 = $r2, $r2
+; CHECK-NEXT:    make $r5 = -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
+; CHECK-NEXT:    cmoved.even $r3 ? $r4 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r5 = 0
+; CHECK-NEXT:    make $r2 = -1
 ; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fcompd.oeq $r1 = $r1, $r1
 ; CHECK-NEXT:    fcompd.oeq $r0 = $r0, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r5 = $r4, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r5, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3078,40 +2970,37 @@ define <4 x i1> @fcmp_setuno(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompd.ult $r8 = $r3, $r7
 ; CHECK-NEXT:    fcompd.uge $r3 = $r3, $r7
+; CHECK-NEXT:    make $r7 = -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompd.ult $r7 = $r2, $r6
-; CHECK-NEXT:    fcompd.uge $r2 = $r2, $r6
 ; CHECK-NEXT:    andw $r3 = $r3, $r8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompd.ult $r6 = $r1, $r5
+; CHECK-NEXT:    fcompd.ult $r8 = $r1, $r5
 ; CHECK-NEXT:    fcompd.uge $r1 = $r1, $r5
-; CHECK-NEXT:    andw $r2 = $r2, $r7
+; CHECK-NEXT:    make $r5 = -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompd.ult $r5 = $r0, $r4
-; CHECK-NEXT:    fcompd.uge $r0 = $r0, $r4
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    fcompd.ult $r3 = $r2, $r6
+; CHECK-NEXT:    andw $r1 = $r1, $r8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
+; CHECK-NEXT:    fcompd.uge $r6 = $r2, $r6
 ; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    andw $r1 = $r1, $r6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    andw $r0 = $r0, $r5
+; CHECK-NEXT:    andw $r3 = $r6, $r3
+; CHECK-NEXT:    fcompd.ult $r6 = $r0, $r4
+; CHECK-NEXT:    fcompd.uge $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    cmoved.even $r3 ? $r5 = 0
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    andw $r0 = $r0, $r6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r5 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r5, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3123,31 +3012,27 @@ define <4 x i1> @fcmp_setuno_single(<4 x double> %a) #0 {
 ; CHECK-LABEL: fcmp_setuno_single:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompd.une $r3 = $r3, $r3
+; CHECK-NEXT:    make $r4 = -1
 ; CHECK-NEXT:    fcompd.une $r2 = $r2, $r2
+; CHECK-NEXT:    make $r5 = -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
+; CHECK-NEXT:    cmoved.even $r3 ? $r4 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r5 = 0
+; CHECK-NEXT:    make $r2 = -1
 ; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fcompd.une $r1 = $r1, $r1
 ; CHECK-NEXT:    fcompd.une $r0 = $r0, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r5 = $r4, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r5, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3159,31 +3044,27 @@ define <4 x i1> @fcmp_setueq(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: fcmp_setueq:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompd.ueq $r3 = $r3, $r7
+; CHECK-NEXT:    make $r7 = -1
+; CHECK-NEXT:    fcompd.ueq $r2 = $r2, $r6
+; CHECK-NEXT:    make $r6 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r6 = 0
+; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompd.ueq $r1 = $r1, $r5
 ; CHECK-NEXT:    fcompd.ueq $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.ueq $r2 = $r2, $r6
-; CHECK-NEXT:    fcompd.ueq $r1 = $r1, $r5
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r6 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r6, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3206,31 +3087,27 @@ define <4 x i1> @fcmp_setugt(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: fcmp_setugt:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompd.ult $r3 = $r7, $r3
+; CHECK-NEXT:    make $r7 = -1
+; CHECK-NEXT:    fcompd.ult $r2 = $r6, $r2
+; CHECK-NEXT:    make $r6 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r6 = 0
+; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompd.ult $r1 = $r5, $r1
 ; CHECK-NEXT:    fcompd.ult $r0 = $r4, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.ult $r2 = $r6, $r2
-; CHECK-NEXT:    fcompd.ult $r1 = $r5, $r1
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r6 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r6, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3242,31 +3119,27 @@ define <4 x i1> @fcmp_setugt_single(<4 x double> %a) #0 {
 ; CHECK-LABEL: fcmp_setugt_single:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompd.une $r3 = $r3, $r3
+; CHECK-NEXT:    make $r4 = -1
 ; CHECK-NEXT:    fcompd.une $r2 = $r2, $r2
+; CHECK-NEXT:    make $r5 = -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
+; CHECK-NEXT:    cmoved.even $r3 ? $r4 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r5 = 0
+; CHECK-NEXT:    make $r2 = -1
 ; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fcompd.une $r1 = $r1, $r1
 ; CHECK-NEXT:    fcompd.une $r0 = $r0, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r5 = $r4, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r5, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3278,31 +3151,27 @@ define <4 x i1> @fcmp_setuge(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: fcmp_setuge:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompd.uge $r3 = $r3, $r7
+; CHECK-NEXT:    make $r7 = -1
+; CHECK-NEXT:    fcompd.uge $r2 = $r2, $r6
+; CHECK-NEXT:    make $r6 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r6 = 0
+; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompd.uge $r1 = $r1, $r5
 ; CHECK-NEXT:    fcompd.uge $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.uge $r2 = $r2, $r6
-; CHECK-NEXT:    fcompd.uge $r1 = $r1, $r5
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r6 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r6, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3325,31 +3194,27 @@ define <4 x i1> @fcmp_setult(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: fcmp_setult:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompd.ult $r3 = $r3, $r7
+; CHECK-NEXT:    make $r7 = -1
+; CHECK-NEXT:    fcompd.ult $r2 = $r2, $r6
+; CHECK-NEXT:    make $r6 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r6 = 0
+; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompd.ult $r1 = $r1, $r5
 ; CHECK-NEXT:    fcompd.ult $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.ult $r2 = $r2, $r6
-; CHECK-NEXT:    fcompd.ult $r1 = $r1, $r5
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r6 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r6, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3361,31 +3226,27 @@ define <4 x i1> @fcmp_setult_single(<4 x double> %a) #0 {
 ; CHECK-LABEL: fcmp_setult_single:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompd.une $r3 = $r3, $r3
+; CHECK-NEXT:    make $r4 = -1
 ; CHECK-NEXT:    fcompd.une $r2 = $r2, $r2
+; CHECK-NEXT:    make $r5 = -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
+; CHECK-NEXT:    cmoved.even $r3 ? $r4 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r5 = 0
+; CHECK-NEXT:    make $r2 = -1
 ; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fcompd.une $r1 = $r1, $r1
 ; CHECK-NEXT:    fcompd.une $r0 = $r0, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r5 = $r4, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r5, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3397,31 +3258,27 @@ define <4 x i1> @fcmp_setule(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: fcmp_setule:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompd.uge $r3 = $r7, $r3
+; CHECK-NEXT:    make $r7 = -1
+; CHECK-NEXT:    fcompd.uge $r2 = $r6, $r2
+; CHECK-NEXT:    make $r6 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r6 = 0
+; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompd.uge $r1 = $r5, $r1
 ; CHECK-NEXT:    fcompd.uge $r0 = $r4, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.uge $r2 = $r6, $r2
-; CHECK-NEXT:    fcompd.uge $r1 = $r5, $r1
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r6 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r6, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3444,31 +3301,27 @@ define <4 x i1> @fcmp_setune(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: fcmp_setune:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompd.une $r3 = $r3, $r7
+; CHECK-NEXT:    make $r7 = -1
+; CHECK-NEXT:    fcompd.une $r2 = $r2, $r6
+; CHECK-NEXT:    make $r6 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r6 = 0
+; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompd.une $r1 = $r1, $r5
 ; CHECK-NEXT:    fcompd.une $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.une $r2 = $r2, $r6
-; CHECK-NEXT:    fcompd.une $r1 = $r1, $r5
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r6 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r6, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3480,31 +3333,27 @@ define <4 x i1> @fcmp_setune_single(<4 x double> %a) #0 {
 ; CHECK-LABEL: fcmp_setune_single:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompd.une $r3 = $r3, $r3
+; CHECK-NEXT:    make $r4 = -1
 ; CHECK-NEXT:    fcompd.une $r2 = $r2, $r2
+; CHECK-NEXT:    make $r5 = -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
+; CHECK-NEXT:    cmoved.even $r3 ? $r4 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r5 = 0
+; CHECK-NEXT:    make $r2 = -1
 ; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fcompd.une $r1 = $r1, $r1
 ; CHECK-NEXT:    fcompd.une $r0 = $r0, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r5 = $r4, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r5, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3516,31 +3365,27 @@ define <4 x i1> @fcmp_setoeq_fast(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: fcmp_setoeq_fast:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompd.oeq $r3 = $r3, $r7
+; CHECK-NEXT:    make $r7 = -1
+; CHECK-NEXT:    fcompd.oeq $r2 = $r2, $r6
+; CHECK-NEXT:    make $r6 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r6 = 0
+; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompd.oeq $r1 = $r1, $r5
 ; CHECK-NEXT:    fcompd.oeq $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.oeq $r2 = $r2, $r6
-; CHECK-NEXT:    fcompd.oeq $r1 = $r1, $r5
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r6 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r6, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3563,31 +3408,27 @@ define <4 x i1> @fcmp_setogt_fast(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: fcmp_setogt_fast:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompd.olt $r3 = $r7, $r3
+; CHECK-NEXT:    make $r7 = -1
+; CHECK-NEXT:    fcompd.olt $r2 = $r6, $r2
+; CHECK-NEXT:    make $r6 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r6 = 0
+; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompd.olt $r1 = $r5, $r1
 ; CHECK-NEXT:    fcompd.olt $r0 = $r4, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.olt $r2 = $r6, $r2
-; CHECK-NEXT:    fcompd.olt $r1 = $r5, $r1
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r6 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r6, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3610,31 +3451,27 @@ define <4 x i1> @fcmp_setoge_fast(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: fcmp_setoge_fast:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompd.oge $r3 = $r3, $r7
+; CHECK-NEXT:    make $r7 = -1
+; CHECK-NEXT:    fcompd.oge $r2 = $r2, $r6
+; CHECK-NEXT:    make $r6 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r6 = 0
+; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompd.oge $r1 = $r1, $r5
 ; CHECK-NEXT:    fcompd.oge $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.oge $r2 = $r2, $r6
-; CHECK-NEXT:    fcompd.oge $r1 = $r1, $r5
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r6 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r6, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3657,31 +3494,27 @@ define <4 x i1> @fcmp_setolt_fast(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: fcmp_setolt_fast:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompd.olt $r3 = $r3, $r7
+; CHECK-NEXT:    make $r7 = -1
+; CHECK-NEXT:    fcompd.olt $r2 = $r2, $r6
+; CHECK-NEXT:    make $r6 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r6 = 0
+; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompd.olt $r1 = $r1, $r5
 ; CHECK-NEXT:    fcompd.olt $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.olt $r2 = $r2, $r6
-; CHECK-NEXT:    fcompd.olt $r1 = $r1, $r5
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r6 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r6, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3704,31 +3537,27 @@ define <4 x i1> @fcmp_setole_fast(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: fcmp_setole_fast:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompd.oge $r3 = $r7, $r3
+; CHECK-NEXT:    make $r7 = -1
+; CHECK-NEXT:    fcompd.oge $r2 = $r6, $r2
+; CHECK-NEXT:    make $r6 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r6 = 0
+; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompd.oge $r1 = $r5, $r1
 ; CHECK-NEXT:    fcompd.oge $r0 = $r4, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.oge $r2 = $r6, $r2
-; CHECK-NEXT:    fcompd.oge $r1 = $r5, $r1
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r6 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r6, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3751,31 +3580,27 @@ define <4 x i1> @fcmp_setone_fast(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: fcmp_setone_fast:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompd.one $r3 = $r3, $r7
+; CHECK-NEXT:    make $r7 = -1
+; CHECK-NEXT:    fcompd.one $r2 = $r2, $r6
+; CHECK-NEXT:    make $r6 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r6 = 0
+; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompd.one $r1 = $r1, $r5
 ; CHECK-NEXT:    fcompd.one $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.one $r2 = $r2, $r6
-; CHECK-NEXT:    fcompd.one $r1 = $r1, $r5
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r6 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r6, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3799,40 +3624,37 @@ define <4 x i1> @fcmp_setord_fast(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompd.olt $r8 = $r3, $r7
 ; CHECK-NEXT:    fcompd.oge $r3 = $r3, $r7
+; CHECK-NEXT:    make $r7 = -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompd.olt $r7 = $r2, $r6
-; CHECK-NEXT:    fcompd.oge $r2 = $r2, $r6
 ; CHECK-NEXT:    orw $r3 = $r3, $r8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompd.olt $r6 = $r1, $r5
+; CHECK-NEXT:    fcompd.olt $r8 = $r1, $r5
 ; CHECK-NEXT:    fcompd.oge $r1 = $r1, $r5
-; CHECK-NEXT:    orw $r2 = $r2, $r7
+; CHECK-NEXT:    make $r5 = -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompd.olt $r5 = $r0, $r4
-; CHECK-NEXT:    fcompd.oge $r0 = $r0, $r4
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    fcompd.olt $r3 = $r2, $r6
+; CHECK-NEXT:    orw $r1 = $r1, $r8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
+; CHECK-NEXT:    fcompd.oge $r6 = $r2, $r6
 ; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    orw $r1 = $r1, $r6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    orw $r0 = $r0, $r5
+; CHECK-NEXT:    orw $r3 = $r6, $r3
+; CHECK-NEXT:    fcompd.olt $r6 = $r0, $r4
+; CHECK-NEXT:    fcompd.oge $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    cmoved.even $r3 ? $r5 = 0
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    orw $r0 = $r0, $r6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r5 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r5, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3844,31 +3666,27 @@ define <4 x i1> @fcmp_setord_single_fast(<4 x double> %a) #0 {
 ; CHECK-LABEL: fcmp_setord_single_fast:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompd.oeq $r3 = $r3, $r3
+; CHECK-NEXT:    make $r4 = -1
 ; CHECK-NEXT:    fcompd.oeq $r2 = $r2, $r2
+; CHECK-NEXT:    make $r5 = -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
+; CHECK-NEXT:    cmoved.even $r3 ? $r4 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r5 = 0
+; CHECK-NEXT:    make $r2 = -1
 ; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fcompd.oeq $r1 = $r1, $r1
 ; CHECK-NEXT:    fcompd.oeq $r0 = $r0, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r5 = $r4, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r5, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3881,40 +3699,37 @@ define <4 x i1> @fcmp_setuno_fast(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompd.ult $r8 = $r3, $r7
 ; CHECK-NEXT:    fcompd.uge $r3 = $r3, $r7
+; CHECK-NEXT:    make $r7 = -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompd.ult $r7 = $r2, $r6
-; CHECK-NEXT:    fcompd.uge $r2 = $r2, $r6
 ; CHECK-NEXT:    andw $r3 = $r3, $r8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompd.ult $r6 = $r1, $r5
+; CHECK-NEXT:    fcompd.ult $r8 = $r1, $r5
 ; CHECK-NEXT:    fcompd.uge $r1 = $r1, $r5
-; CHECK-NEXT:    andw $r2 = $r2, $r7
+; CHECK-NEXT:    make $r5 = -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompd.ult $r5 = $r0, $r4
-; CHECK-NEXT:    fcompd.uge $r0 = $r0, $r4
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    fcompd.ult $r3 = $r2, $r6
+; CHECK-NEXT:    andw $r1 = $r1, $r8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
+; CHECK-NEXT:    fcompd.uge $r6 = $r2, $r6
 ; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    andw $r1 = $r1, $r6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    andw $r0 = $r0, $r5
+; CHECK-NEXT:    andw $r3 = $r6, $r3
+; CHECK-NEXT:    fcompd.ult $r6 = $r0, $r4
+; CHECK-NEXT:    fcompd.uge $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    cmoved.even $r3 ? $r5 = 0
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    andw $r0 = $r0, $r6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r5 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r5, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3926,31 +3741,27 @@ define <4 x i1> @fcmp_setuno_single_fast(<4 x double> %a) #0 {
 ; CHECK-LABEL: fcmp_setuno_single_fast:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompd.une $r3 = $r3, $r3
+; CHECK-NEXT:    make $r4 = -1
 ; CHECK-NEXT:    fcompd.une $r2 = $r2, $r2
+; CHECK-NEXT:    make $r5 = -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
+; CHECK-NEXT:    cmoved.even $r3 ? $r4 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r5 = 0
+; CHECK-NEXT:    make $r2 = -1
 ; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fcompd.une $r1 = $r1, $r1
 ; CHECK-NEXT:    fcompd.une $r0 = $r0, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r5 = $r4, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r5, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -3962,31 +3773,27 @@ define <4 x i1> @fcmp_setueq_fast(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: fcmp_setueq_fast:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompd.oeq $r3 = $r3, $r7
+; CHECK-NEXT:    make $r7 = -1
+; CHECK-NEXT:    fcompd.oeq $r2 = $r2, $r6
+; CHECK-NEXT:    make $r6 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r6 = 0
+; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompd.oeq $r1 = $r1, $r5
 ; CHECK-NEXT:    fcompd.oeq $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.oeq $r2 = $r2, $r6
-; CHECK-NEXT:    fcompd.oeq $r1 = $r1, $r5
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r6 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r6, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4009,31 +3816,27 @@ define <4 x i1> @fcmp_setugt_fast(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: fcmp_setugt_fast:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompd.olt $r3 = $r7, $r3
+; CHECK-NEXT:    make $r7 = -1
+; CHECK-NEXT:    fcompd.olt $r2 = $r6, $r2
+; CHECK-NEXT:    make $r6 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r6 = 0
+; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompd.olt $r1 = $r5, $r1
 ; CHECK-NEXT:    fcompd.olt $r0 = $r4, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.olt $r2 = $r6, $r2
-; CHECK-NEXT:    fcompd.olt $r1 = $r5, $r1
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r6 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r6, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4056,31 +3859,27 @@ define <4 x i1> @fcmp_setuge_fast(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: fcmp_setuge_fast:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompd.oge $r3 = $r3, $r7
+; CHECK-NEXT:    make $r7 = -1
+; CHECK-NEXT:    fcompd.oge $r2 = $r2, $r6
+; CHECK-NEXT:    make $r6 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r6 = 0
+; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompd.oge $r1 = $r1, $r5
 ; CHECK-NEXT:    fcompd.oge $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.oge $r2 = $r2, $r6
-; CHECK-NEXT:    fcompd.oge $r1 = $r1, $r5
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r6 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r6, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4103,31 +3902,27 @@ define <4 x i1> @fcmp_setult_fast(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: fcmp_setult_fast:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompd.olt $r3 = $r3, $r7
+; CHECK-NEXT:    make $r7 = -1
+; CHECK-NEXT:    fcompd.olt $r2 = $r2, $r6
+; CHECK-NEXT:    make $r6 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r6 = 0
+; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompd.olt $r1 = $r1, $r5
 ; CHECK-NEXT:    fcompd.olt $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.olt $r2 = $r2, $r6
-; CHECK-NEXT:    fcompd.olt $r1 = $r1, $r5
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r6 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r6, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4150,31 +3945,27 @@ define <4 x i1> @fcmp_setule_fast(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: fcmp_setule_fast:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompd.oge $r3 = $r7, $r3
+; CHECK-NEXT:    make $r7 = -1
+; CHECK-NEXT:    fcompd.oge $r2 = $r6, $r2
+; CHECK-NEXT:    make $r6 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r6 = 0
+; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompd.oge $r1 = $r5, $r1
 ; CHECK-NEXT:    fcompd.oge $r0 = $r4, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.oge $r2 = $r6, $r2
-; CHECK-NEXT:    fcompd.oge $r1 = $r5, $r1
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r6 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r6, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -4197,31 +3988,27 @@ define <4 x i1> @fcmp_setune_fast(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: fcmp_setune_fast:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompd.one $r3 = $r3, $r7
+; CHECK-NEXT:    make $r7 = -1
+; CHECK-NEXT:    fcompd.one $r2 = $r2, $r6
+; CHECK-NEXT:    make $r6 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CHECK-NEXT:    cmoved.even $r2 ? $r6 = 0
+; CHECK-NEXT:    make $r2 = -1
+; CHECK-NEXT:    make $r3 = -1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompd.one $r1 = $r1, $r5
 ; CHECK-NEXT:    fcompd.one $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r4 = $r3
-; CHECK-NEXT:    make $r3 = -1
-; CHECK-NEXT:    fcompd.one $r2 = $r2, $r6
-; CHECK-NEXT:    fcompd.one $r1 = $r1, $r5
+; CHECK-NEXT:    cmoved.even $r1 ? $r3 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r3 = 0
-; CHECK-NEXT:    copyw $r4 = $r2
-; CHECK-NEXT:    make $r2 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r2 = 0
-; CHECK-NEXT:    copyw $r4 = $r1
-; CHECK-NEXT:    make $r1 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r1 = 0
-; CHECK-NEXT:    copyw $r4 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r6 = $r7, 15, 8
 ; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r4 ? $r0 = 0
+; CHECK-NEXT:    insf $r2 = $r6, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
