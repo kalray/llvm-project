@@ -17896,6 +17896,89 @@ static Value *KVX_emitTrunchBuiltin(CodeGenFunction &CGF, const CallExpr *E,
   return CGF.Builder.CreateTrunc(ArgVal, DestType, "conv");
 }
 
+static Value *KVX_emitShiftBuiltin(CodeGenFunction &CGF, const CallExpr *E,
+                                   unsigned int BuiltinID) {
+  int64_t ShiftIndexBits;
+  switch (BuiltinID) {
+  case KVX::BI__builtin_kvx_shiftfwp:
+  case KVX::BI__builtin_kvx_shiftfdp:
+  case KVX::BI__builtin_kvx_shiftwp:
+  case KVX::BI__builtin_kvx_shiftdp:
+    ShiftIndexBits = 1;
+    break;
+  case KVX::BI__builtin_kvx_shiftfhq:
+  case KVX::BI__builtin_kvx_shiftfwq:
+  case KVX::BI__builtin_kvx_shiftfdq:
+  case KVX::BI__builtin_kvx_shifthq:
+  case KVX::BI__builtin_kvx_shiftwq:
+  case KVX::BI__builtin_kvx_shiftdq:
+    ShiftIndexBits = 2;
+    break;
+  case KVX::BI__builtin_kvx_shiftfho:
+  case KVX::BI__builtin_kvx_shiftfwo:
+  case KVX::BI__builtin_kvx_shiftbo:
+  case KVX::BI__builtin_kvx_shiftho:
+  case KVX::BI__builtin_kvx_shiftwo:
+    ShiftIndexBits = 3;
+    break;
+  case KVX::BI__builtin_kvx_shiftfhx:
+  case KVX::BI__builtin_kvx_shiftbx:
+  case KVX::BI__builtin_kvx_shifthx:
+    ShiftIndexBits = 4;
+    break;
+  case KVX::BI__builtin_kvx_shiftbv:
+    ShiftIndexBits = 5;
+    break;
+  }
+
+  unsigned int MaxShiftIndex = (1 << ShiftIndexBits) - 1;
+
+  std::string ErrorMsg = "Unsigned immediate of ";
+  ErrorMsg += std::to_string(ShiftIndexBits);
+  ErrorMsg += " bits expected";
+
+  const Expr *ShiftIndexE = E->getArg(1);
+  if (!ShiftIndexE->isIntegerConstantExpr(CGF.getContext())) {
+    CGF.CGM.Error(ShiftIndexE->getBeginLoc(), ErrorMsg);
+    return nullptr;
+  }
+
+  uint64_t ShiftIndex =
+      ShiftIndexE->EvaluateKnownConstInt(CGF.getContext()).getZExtValue();
+  if (ShiftIndex > MaxShiftIndex) {
+    CGF.CGM.Error(ShiftIndexE->getBeginLoc(), ErrorMsg);
+    return nullptr;
+  }
+
+  const Expr *Input = E->getArg(0);
+  llvm::VectorType *VT = (llvm::VectorType *)CGF.ConvertType(Input->getType());
+  unsigned long VectorSize = VT->getElementCount().getValue();
+  Value *InputV = CGF.EmitScalarExpr(Input);
+
+  const Expr *Fill = E->getArg(2);
+  Value *FillV = CGF.EmitScalarExpr(Fill);
+
+  /* Create vector <FillV, undef, undef, ...> */
+  Value *FillVec = UndefValue::get(VT);
+  FillVec = CGF.Builder.CreateInsertElement(FillVec, FillV, (uint64_t)0);
+
+  /* Create mask vector */
+  SmallVector<Constant *, 16> MaskVector;
+  for (auto maskVal = VectorSize + ShiftIndex; maskVal < 2 * VectorSize;
+       maskVal++) {
+    MaskVector.push_back(ConstantInt::get(CGF.Int32Ty, maskVal));
+  }
+  for (uint64_t i = 0; i < ShiftIndex; i++) {
+    MaskVector.push_back(ConstantInt::get(CGF.Int32Ty, 0));
+  }
+  Value *MaskVec = ConstantVector::get(ArrayRef<Constant *>(MaskVector));
+
+  /* Generate shufflevector */
+  Value *OutputV = CGF.Builder.CreateShuffleVector(FillVec, InputV, MaskVec);
+
+  return OutputV;
+}
+
 static Value *KVX_emitNaryBuiltin(unsigned N, CodeGenFunction &CGF,
                                   const CallExpr *E, unsigned IntrinsicID,
                                   bool HasRounding = false,
@@ -20129,6 +20212,26 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_srsdqs:
     return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_srsd, 1, Int64Ty, 4,
                                  1, false, EmitScalarExpr(E->getArg(1)));
+  case KVX::BI__builtin_kvx_shiftbo:
+  case KVX::BI__builtin_kvx_shiftbx:
+  case KVX::BI__builtin_kvx_shiftbv:
+  case KVX::BI__builtin_kvx_shifthq:
+  case KVX::BI__builtin_kvx_shiftho:
+  case KVX::BI__builtin_kvx_shifthx:
+  case KVX::BI__builtin_kvx_shiftwp:
+  case KVX::BI__builtin_kvx_shiftwq:
+  case KVX::BI__builtin_kvx_shiftwo:
+  case KVX::BI__builtin_kvx_shiftdp:
+  case KVX::BI__builtin_kvx_shiftdq:
+  case KVX::BI__builtin_kvx_shiftfhq:
+  case KVX::BI__builtin_kvx_shiftfho:
+  case KVX::BI__builtin_kvx_shiftfhx:
+  case KVX::BI__builtin_kvx_shiftfwp:
+  case KVX::BI__builtin_kvx_shiftfwq:
+  case KVX::BI__builtin_kvx_shiftfwo:
+  case KVX::BI__builtin_kvx_shiftfdp:
+  case KVX::BI__builtin_kvx_shiftfdq:
+    return KVX_emitShiftBuiltin(*this, E, BuiltinID);
 /// TCA - GPR to TCA copy
 #define NARY_BUILTIN(ID, TYPES, MODE, ARGS)                                    \
   case KVX::BI__builtin_kvx_##ID:                                              \
