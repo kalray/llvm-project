@@ -584,7 +584,7 @@ multiclass SHIFT_PAT32<SDNode n, SDNode instr>
   defm : ZEFPat<(n i32:$r1, (i64 (zext i32:$val))), (instr SingleReg:$r1, SingleReg:$val)>;
 }
 multiclass SHIFT_PAT64<SDNode n, SDNode instr>
-{ 
+{
         def : Pat<(n i64:$r1,
                 (and (i64 (sext_inreg SingleReg:$val,i8)),(i64 0xffffffff))),(instr SingleReg:$r1, SingleReg:$val)>;
         def : Pat<(n i64:$r1,
@@ -1325,6 +1325,234 @@ def : Pat<(v4i64 (insertelt v4i64:$to, i64:$e, i64:$idx)),
             (CMOVEDrr (COMPDri10 SingleReg:$idx, 3, comparison_eq), (i64 (EXTRACT_SUBREG QuadReg:$to, sub_s3)), SingleReg:$e, scalarcond_odd),
             sub_s3)>;
 
+//===----------------------------------------------------------------------===//
+//  Vector Shift - Patterns
+//===----------------------------------------------------------------------===//
+
+// v8i8
+
+def : Pat<(v8i8 (build_vector
+                              (i32 (vector_extract v8i8:$v0, 1)),
+                              (i32 (vector_extract v8i8:$v0, 2)),
+                              (i32 (vector_extract v8i8:$v0, 3)),
+                              (i32 (vector_extract v8i8:$v0, 4)),
+                              (i32 (vector_extract v8i8:$v0, 5)),
+                              (i32 (vector_extract v8i8:$v0, 6)),
+                              (i32 (vector_extract v8i8:$v0, 7)), i32:$v1)),
+          (INSF (SRLDri SingleReg:$v0, 8), SingleReg:$v1, 63, 56)>;
+
+def : Pat<(v8i8 (build_vector
+                            (i32 (vector_extract v8i8:$v0, 2)),
+                            (i32 (vector_extract v8i8:$v0, 3)),
+                            (i32 (vector_extract v8i8:$v0, 4)),
+                            (i32 (vector_extract v8i8:$v0, 5)),
+                            (i32 (vector_extract v8i8:$v0, 6)),
+                            (i32 (vector_extract v8i8:$v0, 7)),
+                            i32:$v1, i32:$v1
+                            )),
+          (SBMM8ri64 // $v0 = HGFEDCBA, $v1 = X
+            (INSF SingleReg:$v0, SingleReg:$v1, 7, 0), // HGFEDCBX
+            0x0101804020100804) // XXHGFEDC
+          >;
+
+def : Pat<(v8i8 (build_vector
+                            (i32 (vector_extract v8i8:$v0, 3)),
+                            (i32 (vector_extract v8i8:$v0, 4)),
+                            (i32 (vector_extract v8i8:$v0, 5)),
+                            (i32 (vector_extract v8i8:$v0, 6)),
+                            (i32 (vector_extract v8i8:$v0, 7)),
+                            i32:$v1, i32:$v1, i32:$v1)),
+            (SBMM8ri64 // $v0 = HGFEDCBA, $v1 = X
+            (INSF SingleReg:$v0, SingleReg:$v1, 7, 0), // HGFEDCBX
+            0x0101018040201008) // XXXHGFED
+          >;
+
+def : Pat<(v8i8 (build_vector
+                            (i32 (vector_extract v8i8:$v0, 4)),
+                            (i32 (vector_extract v8i8:$v0, 5)),
+                            (i32 (vector_extract v8i8:$v0, 6)),
+                            (i32 (vector_extract v8i8:$v0, 7)),
+                            i32:$v1, i32:$v1, i32:$v1, i32:$v1)),
+            (SBMM8ri64 // $v0 = HGFEDCBA, $v1 = X
+            (INSF SingleReg:$v0, SingleReg:$v1, 7, 0), // HGFEDCBX
+            0x0101010180402010) // XXXXHGFE
+          >;
+
+def : Pat<(v8i8 (build_vector
+                            (i32 (vector_extract v8i8:$v0, 5)),
+                            (i32 (vector_extract v8i8:$v0, 6)),
+                            (i32 (vector_extract v8i8:$v0, 7)),
+                            i32:$v1, i32:$v1, i32:$v1, i32:$v1,
+                            i32:$v1)),
+            (SBMM8ri64 // $v0 = HGFEDCBA, $v1 = X
+            (INSF SingleReg:$v0, SingleReg:$v1, 7, 0), // HGFEDCBX
+            0x0101010101804020) // XXXXXHGF
+          >;
+
+def : Pat<(v8i8 (build_vector
+                            (i32 (vector_extract v8i8:$v0, 6)),
+                            (i32 (vector_extract v8i8:$v0, 7)),
+                            i32:$v1, i32:$v1, i32:$v1, i32:$v1,
+                            i32:$v1, i32:$v1)),
+            (SBMM8ri64 // $v0 = HGFEDCBA, $v1 = X
+            (INSF SingleReg:$v0, SingleReg:$v1, 7, 0), // HGFEDCBX
+            0x0101010101018040) // XXXXXXHG
+          >;
+
+def : Pat<(v8i8 (build_vector
+                            (i32 (vector_extract v8i8:$v0, 7)),
+                            i32:$v1, i32:$v1, i32:$v1, i32:$v1,
+                            i32:$v1, i32:$v1, i32:$v1)),
+            (SBMM8ri64 // $v0 = HGFEDCBA, $v1 = X
+            (INSF SingleReg:$v0, SingleReg:$v1, 7, 0), // HGFEDCBX
+            0x0101010101010180) // XXXXXXXH
+          >;
+
+def : Pat<(v8i8 (build_vector
+                            (i32 (vector_extract v8i8:$v0, 2)),
+                            (i32 (vector_extract v8i8:$v0, 3)),
+                            (i32 (vector_extract v8i8:$v0, 4)),
+                            (i32 (vector_extract v8i8:$v0, 5)),
+                            (i32 (vector_extract v8i8:$v0, 6)),
+                            (i32 (vector_extract v8i8:$v0, 7)),
+                            (i32 (vector_extract v8i8:$v1, 0)),
+                            (i32 (vector_extract v8i8:$v1, 1)))),
+          (INSF (SRLDri SingleReg:$v0, 16), SingleReg:$v1, 63, 48)>;
+
+def : Pat<(v8i8 (build_vector
+                            (i32 (vector_extract v8i8:$v0, 3)),
+                            (i32 (vector_extract v8i8:$v0, 4)),
+                            (i32 (vector_extract v8i8:$v0, 5)),
+                            (i32 (vector_extract v8i8:$v0, 6)),
+                            (i32 (vector_extract v8i8:$v0, 7)),
+                            (i32 (vector_extract v8i8:$v1, 0)),
+                            (i32 (vector_extract v8i8:$v1, 1)),
+                            (i32 (vector_extract v8i8:$v1, 2)))),
+          (INSF (SRLDri SingleReg:$v0, 24), SingleReg:$v1, 63, 40)>;
+
+def : Pat<(v8i8 (build_vector
+                            (i32 (vector_extract v8i8:$v0, 4)),
+                            (i32 (vector_extract v8i8:$v0, 5)),
+                            (i32 (vector_extract v8i8:$v0, 6)),
+                            (i32 (vector_extract v8i8:$v0, 7)),
+                            (i32 (vector_extract v8i8:$v1, 0)),
+                            (i32 (vector_extract v8i8:$v1, 1)),
+                            (i32 (vector_extract v8i8:$v1, 2)),
+                            (i32 (vector_extract v8i8:$v1, 3)))),
+          (INSF (SRLDri SingleReg:$v0, 32), SingleReg:$v1, 63, 32)>;
+
+def : Pat<(v8i8 (build_vector
+                            (i32 (vector_extract v8i8:$v0, 5)),
+                            (i32 (vector_extract v8i8:$v0, 6)),
+                            (i32 (vector_extract v8i8:$v0, 7)),
+                            (i32 (vector_extract v8i8:$v1, 0)),
+                            (i32 (vector_extract v8i8:$v1, 1)),
+                            (i32 (vector_extract v8i8:$v1, 2)),
+                            (i32 (vector_extract v8i8:$v1, 3)),
+                            (i32 (vector_extract v8i8:$v1, 4)))),
+          (INSF (SRLDri SingleReg:$v0, 40), SingleReg:$v1, 63, 24)>;
+
+def : Pat<(v8i8 (build_vector
+                            (i32 (vector_extract v8i8:$v0, 6)),
+                            (i32 (vector_extract v8i8:$v0, 7)),
+                            (i32 (vector_extract v8i8:$v1, 0)),
+                            (i32 (vector_extract v8i8:$v1, 1)),
+                            (i32 (vector_extract v8i8:$v1, 2)),
+                            (i32 (vector_extract v8i8:$v1, 3)),
+                            (i32 (vector_extract v8i8:$v1, 4)),
+                            (i32 (vector_extract v8i8:$v1, 5)))),
+          (INSF (SRLDri SingleReg:$v0, 48), SingleReg:$v1, 63, 16)>;
+
+def : Pat<(v8i8 (build_vector
+                            (i32 (vector_extract v8i8:$v0, 7)),
+                            (i32 (vector_extract v8i8:$v1, 0)),
+                            (i32 (vector_extract v8i8:$v1, 1)),
+                            (i32 (vector_extract v8i8:$v1, 2)),
+                            (i32 (vector_extract v8i8:$v1, 3)),
+                            (i32 (vector_extract v8i8:$v1, 4)),
+                            (i32 (vector_extract v8i8:$v1, 5)),
+                            (i32 (vector_extract v8i8:$v1, 6)))),
+          (INSF (SRLDri SingleReg:$v0, 56), SingleReg:$v1, 63, 8)>;
+
+
+// v4f16
+def : Pat<(v4f16 (build_vector (extractelt v4f16:$v0, 1),
+                               (extractelt v4f16:$v0, 2),
+                               (extractelt v4f16:$v0, 3), f16:$v1)),
+          (INSF (SRLDri SingleReg:$v0, 16), SingleReg:$v1, 63, 48)>;
+
+def : Pat<(v4f16 (build_vector
+                            (extractelt v4f16:$v0, 2),
+                            (extractelt v4f16:$v0, 3),
+                            f16:$v1, f16:$v1)),
+          (SBMM8ri64 // $v0 = HGFEDCBA, $v1 = YX
+            (INSF SingleReg:$v0, SingleReg:$v1, 15, 0), // HGFEDCYX
+            0x0201020180402010) // YXYXHGFE
+          >;
+
+def : Pat<(v4f16 (build_vector
+                            (extractelt v4f16:$v0, 3),
+                            f16:$v1, f16:$v1, f16:$v1)),
+          (SBMM8ri64 // $v0 = HGFEDCBA, $v1 = YX
+            (INSF SingleReg:$v0, SingleReg:$v1, 15, 0), // HGFEDCYX
+            0x0201020102018040) // YXYXYXHG
+          >;
+
+def : Pat<(v4f16 (build_vector (extractelt v4f16:$v0, 2),
+                               (extractelt v4f16:$v0, 3),
+                               (extractelt v4f16:$v1, 0),
+                               (extractelt v4f16:$v1, 1))),
+          (INSF (SRLDri SingleReg:$v0, 32), SingleReg:$v1, 63, 32)>;
+
+def : Pat<(v4f16 (build_vector (extractelt v4f16:$v0, 3),
+                               (extractelt v4f16:$v1, 0),
+                               (extractelt v4f16:$v1, 1),
+                               (extractelt v4f16:$v1, 2))),
+          (INSF (SRLDri SingleReg:$v0, 48), SingleReg:$v1, 63, 16)>;
+
+// Replicating value in vector
+def : Pat<(v4f16 (build_vector f16:$f0, f16:$f1, f16:$f1, f16:$f1)),
+          (SBMM8ri64 // $f0 = BA, $f1 = YX
+            (INSF SingleReg:$f0, SingleReg:$f1, 31, 16), // YXBA
+            0x0804080408040201)>; // YXYXYXBA
+
+def : Pat<(v4f16 (build_vector f16:$f0, f16:$f0, f16:$f0, f16:$f0)),
+          (SBMM8ri64 SingleReg:$f0, 0x0201020102010201)>;
+
+// v4i16
+def : Pat<(v4i16 (build_vector (i32 (vector_extract v4i16:$v0, 1)),
+                               (i32 (vector_extract v4i16:$v0, 2)),
+                               (i32 (vector_extract v4i16:$v0, 3)), i32:$v1)),
+          (INSF (SRLDri SingleReg:$v0, 16), SingleReg:$v1, 63, 48)>;
+
+def : Pat<(v4i16 (build_vector
+                            (i32 (vector_extract v4i16:$v0, 2)),
+                            (i32 (vector_extract v4i16:$v0, 3)),
+                            i32:$v1, i32:$v1)),
+          (SBMM8ri64 // $v0 = HGFEDCBA, $v1 = YX
+            (INSF SingleReg:$v0, SingleReg:$v1, 15, 0), // HGFEDCYX
+            0x0201020180402010) // YXYXHGFE
+          >;
+
+def : Pat<(v4i16 (build_vector
+                            (i32 (vector_extract v4i16:$v0, 3)),
+                            i32:$v1, i32:$v1, i32:$v1)),
+          (SBMM8ri64 // $v0 = HGFEDCBA, $v1 = YX
+            (INSF SingleReg:$v0, SingleReg:$v1, 15, 0), // HGFEDCYX
+            0x0201020102018040) // YXYXYXHG
+          >;
+
+def : Pat<(v4i16 (build_vector (i32 (vector_extract v4i16:$v0, 2)),
+                               (i32 (vector_extract v4i16:$v0, 3)),
+                               (i32 (vector_extract v4i16:$v1, 0)),
+                               (i32 (vector_extract v4i16:$v1, 1)))),
+          (INSF (SRLDri SingleReg:$v0, 32), SingleReg:$v1, 63, 32)>;
+
+def : Pat<(v4i16 (build_vector (i32 (vector_extract v4i16:$v0, 3)),
+                               (i32 (vector_extract v4i16:$v1, 0)),
+                               (i32 (vector_extract v4i16:$v1, 1)),
+                               (i32 (vector_extract v4i16:$v1, 2)))),
+          (INSF (SRLDri SingleReg:$v0, 48), SingleReg:$v1, 63, 16)>;
 
 //===----------------------------------------------------------------------===//
 //  Synthetic Instructions - Patterns

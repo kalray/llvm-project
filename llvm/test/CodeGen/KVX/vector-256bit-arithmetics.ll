@@ -1225,9 +1225,7 @@ define <16 x half> @mul_vv16f16_v16f16(<16 x half> %0, <16 x half> %1) {
 define <16 x half> @mul_v16f16_f16(<16 x half> %0, half %1) {
 ; CHECK-LABEL: mul_v16f16_f16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    insf $r4 = $r4, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r4 = $r4, 63, 32
+; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x201020102010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmulhq $r0 = $r4, $r0
 ; CHECK-NEXT:    ;;
@@ -1632,9 +1630,7 @@ define <16 x half> @add_v16f16_v16f16(<16 x half> %0, <16 x half> %1) {
 define <16 x half> @add_v16f16_f16(<16 x half> %0, half %1) {
 ; CHECK-LABEL: add_v16f16_f16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    insf $r4 = $r4, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r4 = $r4, 63, 32
+; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x201020102010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    faddhq $r0 = $r4, $r0
 ; CHECK-NEXT:    ;;
@@ -1670,9 +1666,7 @@ define <16 x half> @sub_v16f16_v16f16(<16 x half> %0, <16 x half> %1) {
 define <16 x half> @sub_v16f16_f16(<16 x half> %0, half %1) {
 ; CHECK-LABEL: sub_v16f16_f16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    insf $r4 = $r4, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r4 = $r4, 63, 32
+; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x201020102010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fsbfhq $r0 = $r4, $r0
 ; CHECK-NEXT:    ;;
@@ -4656,12 +4650,10 @@ define <16 x half> @p_mul_vv16f16_v16f16(<16 x half>* nocapture readonly %0, <16
 define <16 x half> @p_mul_v16f16_f16(<16 x half>* nocapture readonly %0, half* nocapture readonly %1) {
 ; CHECK-LABEL: p_mul_v16f16_f16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    lhz $r3 = 0[$r1]
+; CHECK-NEXT:    lhz $r1 = 0[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
-; CHECK-NEXT:    insf $r3 = $r3, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r3 = $r3, 63, 32
+; CHECK-NEXT:    sbmm8 $r3 = $r1, 0x201020102010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmulhq $r0 = $r4, $r3
 ; CHECK-NEXT:    ;;
@@ -5077,12 +5069,10 @@ define <16 x half> @p_add_v16f16_v16f16(<16 x half>* nocapture readonly %0, <16 
 define <16 x half> @p_add_v16f16_f16(<16 x half>* nocapture readonly %0, half* nocapture readonly %1) {
 ; CHECK-LABEL: p_add_v16f16_f16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    lhz $r3 = 0[$r1]
+; CHECK-NEXT:    lhz $r1 = 0[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
-; CHECK-NEXT:    insf $r3 = $r3, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r3 = $r3, 63, 32
+; CHECK-NEXT:    sbmm8 $r3 = $r1, 0x201020102010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    faddhq $r0 = $r4, $r3
 ; CHECK-NEXT:    ;;
