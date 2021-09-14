@@ -263,6 +263,26 @@ BUILTIN(__builtin_kvx_fsrsrw, "ff", "")
 BUILTIN(__builtin_kvx_fwidenlhw, "fUicC*", "")
 BUILTIN(__builtin_kvx_fwidenmhw, "fUicC*", "")
 
+BUILTIN(__builtin_kvx_shiftbo, "V8cV8cUic", "n")
+BUILTIN(__builtin_kvx_shiftbx, "V16cV16cUic", "n")
+BUILTIN(__builtin_kvx_shiftbv, "V32cV32cUic", "n")
+BUILTIN(__builtin_kvx_shifthq, "V4sV4sUis", "n")
+BUILTIN(__builtin_kvx_shiftho, "V8sV8sUis", "n")
+BUILTIN(__builtin_kvx_shifthx, "V16sV16sUis", "n")
+BUILTIN(__builtin_kvx_shiftwp, "V2iV2iUii", "n")
+BUILTIN(__builtin_kvx_shiftwq, "V4iV4iUii", "n")
+BUILTIN(__builtin_kvx_shiftwo, "V8iV8iUii", "n")
+BUILTIN(__builtin_kvx_shiftdp, "V2LiV2LiUiLi", "n")
+BUILTIN(__builtin_kvx_shiftdq, "V4LiV4LiUiLi", "n")
+BUILTIN(__builtin_kvx_shiftfhq, "V4xV4xUix", "n")
+BUILTIN(__builtin_kvx_shiftfho, "V8xV8xUix", "n")
+BUILTIN(__builtin_kvx_shiftfhx, "V16xV16xUix", "n")
+BUILTIN(__builtin_kvx_shiftfwp, "V2fV2fUif", "n")
+BUILTIN(__builtin_kvx_shiftfwq, "V4fV4fUif", "n")
+BUILTIN(__builtin_kvx_shiftfwo, "V8fV8fUif", "n")
+BUILTIN(__builtin_kvx_shiftfdp, "V2dV2dUid", "n")
+BUILTIN(__builtin_kvx_shiftfdq, "V4dV4dUid", "n")
+
 //===----------------------------------------------------------------------===//
 // ALU
 //===----------------------------------------------------------------------===//
