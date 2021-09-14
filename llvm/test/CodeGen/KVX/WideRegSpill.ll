@@ -81,17 +81,15 @@ define i32 @a() {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.3: # in Loop: Header=BB0_1 Depth=1
 ; CHECK-NEXT:    zxbd $r3 = $r3
+; CHECK-NEXT:    make $r5 = 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compw.eq $r4 = $r3, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r5 = $r4
-; CHECK-NEXT:    make $r4 = 1
+; CHECK-NEXT:    cmoved.even $r4 ? $r5 = 2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r5 ? $r4 = 2
+; CHECK-NEXT:    cmoved.weqz $r3 ? $r5 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r3 ? $r4 = 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r2 = $r4, $r2
+; CHECK-NEXT:    addw $r2 = $r5, $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addw $r2 = $r2, -3
 ; CHECK-NEXT:    ;;

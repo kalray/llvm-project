@@ -647,6 +647,52 @@ let Constraints = "@earlyclobber $scratch, $dst = $falsev" in
 def SELECTp : KVX_PSEUDO<(outs SingleReg:$dst, SingleReg:$scratch),
                          (ins SingleReg:$cmp, SingleReg:$truev, SingleReg:$falsev, ScalarcondMod:$cond),[]>;
 // TODO: i32 (select (i32 setcc:$v), -1, 0) should be a simple NEGW $v
+
+def : Pat<(i64 (select i32:$cc, i64:$t, Signed10:$f)),
+            (CMOVEDri10 SingleReg:$cc, SingleReg:$t, (trunc_imm_32 imm:$f), scalarcond_even)>;
+
+def : Pat<(i64 (select i32:$cc, Signed10:$t, i64:$f)),
+            (CMOVEDri10 SingleReg:$cc, SingleReg:$f, (trunc_imm_32 imm:$t), scalarcond_odd)>;
+
+def : Pat<(i64 (select i32:$cc, i64:$t, Signed37:$f)),
+            (CMOVEDri37 SingleReg:$cc, SingleReg:$t, (trunc_imm_32 imm:$f), scalarcond_even)>;
+
+def : Pat<(i64 (select i32:$cc, Signed37:$t, i64:$f)),
+            (CMOVEDri37 SingleReg:$cc, SingleReg:$f, (trunc_imm_32 imm:$t), scalarcond_odd)>;
+
+def : Pat<(i64 (select i32:$cc, i64:$t, Wrapped64:$f)),
+            (CMOVEDri64 SingleReg:$cc, SingleReg:$t, imm:$f, scalarcond_even)>;
+
+def : Pat<(i64 (select i32:$cc, Wrapped64:$t, i64:$f)),
+            (CMOVEDri64 SingleReg:$cc, SingleReg:$f, imm:$t, scalarcond_odd)>;
+
+def : Pat<(i32 (select i32:$cc, i32:$t, Signed10W:$f)),
+            (CMOVEDri10 SingleReg:$cc, SingleReg:$t, (imm32_to_imm64 imm:$f), scalarcond_even)>;
+
+def : Pat<(i32 (select i32:$cc, Signed10W:$t, i32:$f)),
+            (CMOVEDri10 SingleReg:$cc, SingleReg:$f, (imm32_to_imm64 imm:$t), scalarcond_odd)>;
+
+def : Pat<(i32 (select i32:$cc, i32:$t, Signed37W:$f)),
+            (CMOVEDri37 SingleReg:$cc, SingleReg:$t, (imm32_to_imm64 imm:$f), scalarcond_even)>;
+
+def : Pat<(f16 (select i32:$cc, fpimm:$t, f16:$f)),
+            (CMOVEDri37 SingleReg:$cc, SingleReg:$f, (fpimm_to_i64 fpimm:$t), scalarcond_odd)>;
+
+def : Pat<(f16 (select i32:$cc, f16:$t, fpimm:$f)),
+            (CMOVEDri37 SingleReg:$cc, SingleReg:$t, (fpimm_to_i64 fpimm:$f), scalarcond_even)>;
+
+def : Pat<(f32 (select i32:$cc, fpimm:$t, f32:$f)),
+            (CMOVEDri37 SingleReg:$cc, SingleReg:$f, (fpimm_to_i64 fpimm:$t), scalarcond_odd)>;
+
+def : Pat<(f32 (select i32:$cc, f32:$t, fpimm:$f)),
+            (CMOVEDri37 SingleReg:$cc, SingleReg:$t, (fpimm_to_i64 fpimm:$f), scalarcond_even)>;
+
+def : Pat<(f64 (select i32:$cc, fpimm:$t, f64:$f)),
+            (CMOVEDri64 SingleReg:$cc, SingleReg:$f, (fpimm_to_i64 fpimm:$t), scalarcond_odd)>;
+
+def : Pat<(f64 (select i32:$cc, f64:$t, fpimm:$f)),
+            (CMOVEDri64 SingleReg:$cc, SingleReg:$t, (fpimm_to_i64 fpimm:$f), scalarcond_even)>;
+
 multiclass SELECTCONDW<SDNode ntrue, SDNode nfalse, SDNode itrue, SDNode ifalse>
 {
         def : Pat<(select (i32 (seteq i32:$val, (i32 0))), ntrue, nfalse),

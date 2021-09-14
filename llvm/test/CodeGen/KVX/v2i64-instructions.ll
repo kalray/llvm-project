@@ -356,21 +356,17 @@ define <2 x i64> @test_select_cc(<2 x i64> %a, <2 x i64> %b, <2 x i64> %c, <2 x 
 ; CHECK-LABEL: test_select_cc:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compd.lt $r4 = $r4, $r6
+; CHECK-NEXT:    make $r8 = -1
+; CHECK-NEXT:    make $r6 = -1
 ; CHECK-NEXT:    compd.lt $r5 = $r5, $r7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r6 = $r4
-; CHECK-NEXT:    make $r4 = -1
+; CHECK-NEXT:    cmoved.even $r4 ? $r8 = 0
+; CHECK-NEXT:    cmoved.even $r5 ? $r6 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r6 ? $r4 = 0
-; CHECK-NEXT:    copyw $r6 = $r5
-; CHECK-NEXT:    make $r5 = -1
+; CHECK-NEXT:    cmoved.dnez $r8 ? $r2 = $r0
+; CHECK-NEXT:    cmoved.dnez $r6 ? $r3 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r6 ? $r5 = 0
-; CHECK-NEXT:    cmoved.dnez $r4 ? $r2 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.dnez $r5 ? $r3 = $r1
 ; CHECK-NEXT:    copyd $r0 = $r2
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -383,21 +379,17 @@ define <2 x i64> @test_select_cc_f32_f32(<2 x i64> %a, <2 x i64> %b, <2 x i64> %
 ; CHECK-LABEL: test_select_cc_f32_f32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compd.ltu $r4 = $r4, $r6
+; CHECK-NEXT:    make $r8 = -1
+; CHECK-NEXT:    make $r6 = -1
 ; CHECK-NEXT:    compd.ltu $r5 = $r5, $r7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r6 = $r4
-; CHECK-NEXT:    make $r4 = -1
+; CHECK-NEXT:    cmoved.even $r4 ? $r8 = 0
+; CHECK-NEXT:    cmoved.even $r5 ? $r6 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r6 ? $r4 = 0
-; CHECK-NEXT:    copyw $r6 = $r5
-; CHECK-NEXT:    make $r5 = -1
+; CHECK-NEXT:    cmoved.dnez $r8 ? $r2 = $r0
+; CHECK-NEXT:    cmoved.dnez $r6 ? $r3 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r6 ? $r5 = 0
-; CHECK-NEXT:    cmoved.dnez $r4 ? $r2 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.dnez $r5 ? $r3 = $r1
 ; CHECK-NEXT:    copyd $r0 = $r2
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -409,19 +401,17 @@ define <2 x i64> @test_select_cc_f32_f32(<2 x i64> %a, <2 x i64> %b, <2 x i64> %
 define <2 x i1> @test_icmp_ule(<2 x i64> %a, <2 x i64> %b) {
 ; CHECK-LABEL: test_icmp_ule:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    compd.leu $r1 = $r1, $r3
+; CHECK-NEXT:    compd.leu $r3 = $r1, $r3
+; CHECK-NEXT:    make $r4 = -1
+; CHECK-NEXT:    make $r1 = -1
 ; CHECK-NEXT:    compd.leu $r0 = $r0, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r2 = $r1
-; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    cmoved.even $r3 ? $r4 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r1 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
-; CHECK-NEXT:    copyw $r2 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r1 = $r4, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = icmp ule <2 x i64> %a, %b
@@ -431,19 +421,17 @@ define <2 x i1> @test_icmp_ule(<2 x i64> %a, <2 x i64> %b) {
 define <2 x i1> @test_icmp_slt(<2 x i64> %a, <2 x i64> %b) {
 ; CHECK-LABEL: test_icmp_slt:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    compd.lt $r1 = $r1, $r3
+; CHECK-NEXT:    compd.lt $r3 = $r1, $r3
+; CHECK-NEXT:    make $r4 = -1
+; CHECK-NEXT:    make $r1 = -1
 ; CHECK-NEXT:    compd.lt $r0 = $r0, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r2 = $r1
-; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    cmoved.even $r3 ? $r4 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r1 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
-; CHECK-NEXT:    copyw $r2 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r1 = $r4, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = icmp slt <2 x i64> %a, %b
@@ -453,19 +441,17 @@ define <2 x i1> @test_icmp_slt(<2 x i64> %a, <2 x i64> %b) {
 define <2 x i1> @test_icmp_ugt(<2 x i64> %a, <2 x i64> %b) {
 ; CHECK-LABEL: test_icmp_ugt:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    compd.gtu $r1 = $r1, $r3
+; CHECK-NEXT:    compd.gtu $r3 = $r1, $r3
+; CHECK-NEXT:    make $r4 = -1
+; CHECK-NEXT:    make $r1 = -1
 ; CHECK-NEXT:    compd.gtu $r0 = $r0, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r2 = $r1
-; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    cmoved.even $r3 ? $r4 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r1 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
-; CHECK-NEXT:    copyw $r2 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r1 = $r4, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = icmp ugt <2 x i64> %a, %b
@@ -475,19 +461,17 @@ define <2 x i1> @test_icmp_ugt(<2 x i64> %a, <2 x i64> %b) {
 define <2 x i1> @test_icmp_uge(<2 x i64> %a, <2 x i64> %b) {
 ; CHECK-LABEL: test_icmp_uge:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    compd.geu $r1 = $r1, $r3
+; CHECK-NEXT:    compd.geu $r3 = $r1, $r3
+; CHECK-NEXT:    make $r4 = -1
+; CHECK-NEXT:    make $r1 = -1
 ; CHECK-NEXT:    compd.geu $r0 = $r0, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r2 = $r1
-; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    cmoved.even $r3 ? $r4 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r1 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
-; CHECK-NEXT:    copyw $r2 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r1 = $r4, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = icmp uge <2 x i64> %a, %b
@@ -497,19 +481,17 @@ define <2 x i1> @test_icmp_uge(<2 x i64> %a, <2 x i64> %b) {
 define <2 x i1> @test_icmp_ult(<2 x i64> %a, <2 x i64> %b) {
 ; CHECK-LABEL: test_icmp_ult:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    compd.ltu $r1 = $r1, $r3
+; CHECK-NEXT:    compd.ltu $r3 = $r1, $r3
+; CHECK-NEXT:    make $r4 = -1
+; CHECK-NEXT:    make $r1 = -1
 ; CHECK-NEXT:    compd.ltu $r0 = $r0, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyw $r2 = $r1
-; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    cmoved.even $r3 ? $r4 = 0
+; CHECK-NEXT:    cmoved.even $r0 ? $r1 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r2 ? $r1 = 0
-; CHECK-NEXT:    copyw $r2 = $r0
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    insf $r1 = $r4, 15, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r2 ? $r0 = 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = icmp ult <2 x i64> %a, %b

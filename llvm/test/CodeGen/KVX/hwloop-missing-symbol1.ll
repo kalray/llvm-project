@@ -371,9 +371,9 @@ define i32 @main(i32 %argc, i8** nocapture readnone %argv)  {
 ; CHECK-NEXT:  .LBB1_9: # %for.cond10.preheader.i
 ; CHECK-NEXT:    # in Loop: Header=BB1_1 Depth=1
 ; CHECK-NEXT:    make $r0 = 1
+; CHECK-NEXT:    make $r1 = 121
 ; CHECK-NEXT:    make $r6 = 1
 ; CHECK-NEXT:    sh 0[$r25] = $r21
-; CHECK-NEXT:    make $r1 = x
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sh 24[$r25] = $r29
 ; CHECK-NEXT:    ;;
@@ -384,13 +384,16 @@ define i32 @main(i32 %argc, i8** nocapture readnone %argv)  {
 ; CHECK-NEXT:    make $r2 = 16
 ; CHECK-NEXT:    make $r3 = h
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sh 28[$r25] = $r31
+; CHECK-NEXT:    sh 22[$r25] = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sh 30[$r25] = $r20
+; CHECK-NEXT:    sh 28[$r25] = $r31
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sh 4[$r25] = $r0
 ; CHECK-NEXT:    make $r0 = 9
+; CHECK-NEXT:    make $r1 = x
 ; CHECK-NEXT:    make $r4 = 1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sh 30[$r25] = $r20
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sh 6[$r25] = $r0
 ; CHECK-NEXT:    make $r0 = 16
@@ -414,14 +417,11 @@ define i32 @main(i32 %argc, i8** nocapture readnone %argv)  {
 ; CHECK-NEXT:    make $r0 = 100
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sh 20[$r25] = $r0
-; CHECK-NEXT:    make $r0 = 121
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sh 22[$r25] = $r0
 ; CHECK-NEXT:    compd.ltu $r0 = $r19, 4
 ; CHECK-NEXT:    copyd $r5 = $r19
 ; CHECK-NEXT:    copyd $r7 = $r19
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r0 ? $r6 = 2
+; CHECK-NEXT:    cmoved.even $r0 ? $r6 = 2
 ; CHECK-NEXT:    make $r0 = y
 ; CHECK-NEXT:    call fircirc
 ; CHECK-NEXT:    ;;
