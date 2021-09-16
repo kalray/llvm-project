@@ -803,6 +803,28 @@ def : Pat<(v2f32 (build_vector
             (extractelt v2f32:$t2, 1),
             (fma (extractelt v2f32:$t4, 1), (extractelt v2f32:$t2, 0), (extractelt v2f32:$t6, 1))))),
           (FADDWPrr (FMULWCrr SingleReg:$t4, SingleReg:$t2, conjugate_, rounding_, silent_), SingleReg:$t6, conjugate_, rounding_, silent_)>;
+
+def : Pat<(v2f32
+            (fadd
+              (build_vector
+                (f32 (fma
+                  (extractelt v2f32:$t2, 0),
+                  (extractelt v2f32:$t4, 0),
+                  (fmul
+                    (extractelt v2f32:$t4, 1),
+                    (fneg (extractelt v2f32:$t2, 1))
+                  )
+              )),
+              (f32 (fma
+                  (extractelt v2f32:$t2, 0),
+                  (extractelt v2f32:$t4, 1),
+                  (fmul
+                    (extractelt v2f32:$t2, 1),
+                    (extractelt v2f32:$t4, 0)
+                  )
+              ))),
+              v2f32:$t6)),
+          (FADDWPrr (FMULWCrr SingleReg:$t4, SingleReg:$t2, conjugate_, rounding_, silent_), SingleReg:$t6, conjugate_, rounding_, silent_)>;
 // FMULWDC
 // Match the imaginary part from a v2f32 x v2f32 -> v2f64 pattern
 def : Pat<(f64

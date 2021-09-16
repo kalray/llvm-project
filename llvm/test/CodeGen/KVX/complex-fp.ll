@@ -1306,3 +1306,28 @@ define <2 x float> @fmulc_ri_neg_c(<2 x float> %0) {
   %5 = fsub fast <2 x float> %2, %4
   ret <2 x float> %5
 }
+
+declare float @llvm.fmuladd.f32(float, float, float)
+define <2 x float> @fmulc_acc(<2 x float> %0, <2 x float> %1, <2 x float> %2) {
+; CHECK-LABEL: fmulc_acc:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fmulwc $r0 = $r1, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    faddwp $r0 = $r0, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  entry:
+  %3 = extractelement <2 x float> %0, i64 0
+  %4 = extractelement <2 x float> %1, i64 0
+  %5 = extractelement <2 x float> %0, i64 1
+  %6 = extractelement <2 x float> %1, i64 1
+  %7 = fneg float %5
+  %8 = fmul float %6, %7
+  %9 = tail call float @llvm.fmuladd.f32(float %3, float %4, float %8)
+  %10 = insertelement <2 x float> undef, float %9, i32 0
+  %11 = fmul float %5, %4
+  %12 = tail call float @llvm.fmuladd.f32(float %3, float %6, float %11)
+  %13 = insertelement <2 x float> %10, float %12, i32 1
+  %14 = fadd <2 x float> %13, %2
+  ret <2 x float> %14
+}
