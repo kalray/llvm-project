@@ -8,7 +8,7 @@
 //===----------------------------------------------------------------------===//
 // TODO:
 // These instructions output two results and can't be selected at ISEL
-// DOT2SUWDP DOT2UWDP DOT2WDP DOT2WZP FDOT2WD FDOT2WDP FDOT2WZP FMULCWDC FMULWDC
+// DOT2SUWDP DOT2UWDP DOT2WDP DOT2WZP FDOT2WD FDOT2WDP FDOT2WZP FMULCWDC
 
 // Require builtins:
 // FSRSRWP IGET NOP RFE RSWAP SCALL

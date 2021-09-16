@@ -803,7 +803,49 @@ def : Pat<(v2f32 (build_vector
             (extractelt v2f32:$t2, 1),
             (fma (extractelt v2f32:$t4, 1), (extractelt v2f32:$t2, 0), (extractelt v2f32:$t6, 1))))),
           (FADDWPrr (FMULWCrr SingleReg:$t4, SingleReg:$t2, conjugate_, rounding_, silent_), SingleReg:$t6, conjugate_, rounding_, silent_)>;
+// FMULWDC
+// Match the imaginary part from a v2f32 x v2f32 -> v2f64 pattern
+def : Pat<(f64
+            (fma
+              (extractelt (v2f64 (fpextend v2f32:$t4)), 1),
+              (extractelt (v2f64 (fpextend v2f32:$t2)), 0),
+              (fmul
+                (extractelt (v2f64 (fpextend v2f32:$t4)), 0),
+                (extractelt (v2f64 (fpextend v2f32:$t2)), 1)
+              ))),
+          (EXTRACT_SUBREG (FMULWDCrr SingleReg:$t2, SingleReg:$t4, rounding_, silent_), sub_s1)>;
+// Match the real part from a v2f32 x v2f32 -> v2f64 pattern
+def : Pat<(f64
+            (fma
+              (extractelt (v2f64 (fpextend v2f32:$t4)), 0),
+              (extractelt (v2f64 (fpextend v2f32:$t2)), 0),
+              (fneg (fmul
+                (extractelt (v2f64 (fpextend v2f32:$t4)), 1),
+                (extractelt (v2f64 (fpextend v2f32:$t2)), 1)
+              )))),
+          (EXTRACT_SUBREG (FMULWDCrr SingleReg:$t2, SingleReg:$t4, rounding_, silent_), sub_s0)>;
 
+// Match the imaginary part using C complex code
+def : Pat<(f64
+            (fma
+              (f64 (fpextend (f32 (bitconvert (i32 (trunc (i64 (srl i64:$t4, (i64 32))))))))),
+              (f64 (fpextend (f32 (bitconvert (i32 (trunc i64:$t2)))))),
+              (f64 (fmul
+                (f64 (fpextend (f32 (bitconvert (i32 (trunc (i64 (srl i64:$t2, (i64 32))))))))),
+                (f64 (fpextend (f32 (bitconvert (i32 (trunc i64:$t4))))))
+          )))),
+          (EXTRACT_SUBREG (FMULWDCrr SingleReg:$t2, SingleReg:$t4, rounding_, silent_), sub_s1)>;
+
+// Match the real part a C complex code
+def : Pat<(f64
+            (fma
+              (f64 (fpextend (f32 (bitconvert (i32 (trunc i64:$t4)))))),
+              (f64 (fpextend (f32 (bitconvert (i32 (trunc i64:$t2)))))),
+              (f64 (fneg (fmul
+                (f64 (fpextend (f32 (bitconvert (i32 (trunc (i64 (srl i64:$t4, (i64 32))))))))),
+                (f64 (fpextend (f32 (bitconvert (i32 (trunc (i64 (srl i64:$t2, (i64 32)))))))))
+          ))))),
+          (EXTRACT_SUBREG (FMULWDCrr SingleReg:$t2, SingleReg:$t4, rounding_, silent_), sub_s0)>;
 // FMULWDP TODO: Add ri variants
 def : Pat<(fmul (v2f64 (fpextend v2f32:$rs1)), (v2f64 (fpextend v2f32:$rs2))),
           (FMULWDPrr SingleReg:$rs1, SingleReg:$rs2, rounding_, silent_)>;

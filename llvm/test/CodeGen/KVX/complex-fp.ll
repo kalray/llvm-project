@@ -267,21 +267,7 @@ define i64 @FMULWC(i64 %0, i64 %1) {
 define { i64, i64 } @FMULWDC(i64 %0, i64 %1) {
 ; CHECK-LABEL: FMULWDC:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srld $r2 = $r0, 32
-; CHECK-NEXT:    fwidenlwd $r3 = $r1
-; CHECK-NEXT:    srld $r4 = $r1, 32
-; CHECK-NEXT:    fwidenlwd $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlwd $r2 = $r2
-; CHECK-NEXT:    fwidenlwd $r4 = $r4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld $r1 = $r3, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmad $r1 = $r4, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld $r0 = $r3, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmsd $r0 = $r4, $r2
+; CHECK-NEXT:    fmulwdc $r0r1 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = trunc i64 %0 to i32
@@ -716,53 +702,6 @@ define i64 @FMULWC_2(i64 %0, i64 %1) {
   ret i64 %24
 }
 
-define { i64, i64 } @FMULWDC_2(i64 %0, i64 %1) {
-; CHECK-LABEL: FMULWDC_2:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    srld $r2 = $r0, 32
-; CHECK-NEXT:    fwidenlwd $r3 = $r1
-; CHECK-NEXT:    srld $r4 = $r1, 32
-; CHECK-NEXT:    fwidenlwd $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlwd $r2 = $r2
-; CHECK-NEXT:    fwidenlwd $r4 = $r4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld $r1 = $r2, $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmad $r1 = $r4, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld $r0 = $r3, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmsd $r0 = $r4, $r2
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
-  %3 = trunc i64 %0 to i32
-  %4 = bitcast i32 %3 to float
-  %5 = lshr i64 %0, 32
-  %6 = trunc i64 %5 to i32
-  %7 = bitcast i32 %6 to float
-  %8 = trunc i64 %1 to i32
-  %9 = bitcast i32 %8 to float
-  %10 = lshr i64 %1, 32
-  %11 = trunc i64 %10 to i32
-  %12 = bitcast i32 %11 to float
-  %13 = fpext float %4 to double
-  %14 = fpext float %7 to double
-  %15 = fpext float %9 to double
-  %16 = fpext float %12 to double
-  %17 = fmul fast double %16, %13
-  %18 = fmul fast double %14, %15
-  %19 = fadd fast double %17, %18
-  %20 = fmul fast double %15, %13
-  %21 = fmul fast double %16, %14
-  %22 = fsub fast double %20, %21
-  %23 = bitcast double %22 to i64
-  %24 = insertvalue { i64, i64 } undef, i64 %23, 0
-  %25 = bitcast double %19 to i64
-  %26 = insertvalue { i64, i64 } %24, i64 %25, 1
-  ret { i64, i64 } %26
-}
-
 define { i64, i64 } @FSBFCDC_2(i64 %0, i64 %1, i64 %2, i64 %3) {
 ; CHECK-LABEL: FSBFCDC_2:
 ; CHECK:       # %bb.0:
@@ -1035,22 +974,10 @@ define <2 x float> @FMULWC_3(<2 x float> %0, <2 x float> %1) {
   ret <2 x float> %14
 }
 
-define <2 x double> @FMULWDC_3(<2 x float> %0, <2 x float> %1) {
-; CHECK-LABEL: FMULWDC_3:
+define <2 x double> @FMULWDC_2(<2 x float> %0, <2 x float> %1) {
+; CHECK-LABEL: FMULWDC_2:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fwidenlwd $r4 = $r0
-; CHECK-NEXT:    fwidenlwd $r6 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenmwd $r3 = $r0
-; CHECK-NEXT:    fmuld $r2 = $r6, $r4
-; CHECK-NEXT:    fwidenmwd $r5 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld $r1 = $r6, $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmsd $r2 = $r5, $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmad $r1 = $r5, $r4
-; CHECK-NEXT:    copyd $r0 = $r2
+; CHECK-NEXT:    fmulwdc $r0r1 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = fpext <2 x float> %0 to <2 x double>
