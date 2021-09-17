@@ -53,7 +53,7 @@ define half @test_extract_3(<4 x half> %a) #0 {
 define half @test_extract_i(<4 x half> %a, i64 %idx) #0 {
 ; CHECK-LABEL: test_extract_i:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    sllw $r1 = $r1, 5
+; CHECK-NEXT:    sllw $r1 = $r1, 4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srld $r0 = $r0, $r1
 ; CHECK-NEXT:    ret

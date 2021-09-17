@@ -50,7 +50,7 @@ define half @fidx(<4 x half> %v, i32 %idx){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sxwd $r1 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sllw $r1 = $r1, 5
+; CHECK-NEXT:    sllw $r1 = $r1, 4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srld $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
