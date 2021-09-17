@@ -33,7 +33,7 @@ define float @test_extract_1(<2 x float> %a) #0 {
 define float @test_extract_i(<2 x float> %a, i64 %idx) #0 {
 ; CHECK-LABEL: test_extract_i:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    sllw $r1 = $r1, 6
+; CHECK-NEXT:    sllw $r1 = $r1, 5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srld $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
