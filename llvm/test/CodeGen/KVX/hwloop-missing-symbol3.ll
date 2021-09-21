@@ -35,7 +35,7 @@ define i32 @f()  {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r3 = $r1, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    clrf $r4 = $r3, 63, 3
+; CHECK-NEXT:    andd $r4 = $r3, 7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.deqz $r4 ? .LBB0_3
 ; CHECK-NEXT:    ;;
@@ -434,7 +434,7 @@ define i32 @g(i32 %h)  {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r4 = $r1, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    clrf $r4 = $r4, 63, 3
+; CHECK-NEXT:    andd $r4 = $r4, 7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.deqz $r4 ? .LBB1_31
 ; CHECK-NEXT:    ;;

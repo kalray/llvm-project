@@ -139,7 +139,7 @@ static void BuildCMOVED(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
         .addImm(CondMod);
   } break;
   default:
-    llvm_unreachable("Operator type not handled");
+    report_fatal_error("Operator type not handled");
     break;
   }
 }
@@ -303,7 +303,7 @@ unsigned getLOADOpcode(uint64_t Size, const MachineOperand MO) {
   case 8:
     return MO.isReg() ? KVX::LDrr : KVX::LDp;
   default:
-    llvm_unreachable("No LOAD Opcode for this Size");
+    report_fatal_error("No LOAD Opcode for this Size");
   }
 }
 
@@ -322,7 +322,7 @@ signed getACSWAPOpcode(uint64_t Size, const MachineOperand MO) {
                             ? KVX::ACSWAPDri10
                             : isInt<37>(MO.getImm()) ? KVX::ACSWAPDri37 : -1;
   default:
-    llvm_unreachable("No ACSWAP Opcode for this Size");
+    report_fatal_error("No ACSWAP Opcode for this Size");
   }
 }
 

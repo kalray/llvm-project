@@ -65,7 +65,11 @@ def isShiftMask : PatLeaf<(imm), [{
   return N->getAPIntValue().isShiftedMask();
 }]>;
 
-defm : ZEFPat<(and (srl i32:$v, Wrapped64:$shiftc), isShiftMask:$andm), (EXTFZWp SingleReg:$v, Wrapped32:$andm, Wrapped64:$shiftc)>;
+def isMask : PatLeaf<(imm), [{
+  return N->getAPIntValue().isMask();
+}]>;
+
+defm : ZEFPat<(and (srl i32:$v, Wrapped64:$shiftc), isMask:$andm), (EXTFZWp SingleReg:$v, Wrapped32:$andm, Wrapped64:$shiftc)>;
 
 //===----------------------------------------------------------------------===//
 //  Integer Instructions - Patterns
@@ -305,10 +309,10 @@ defm : VECADDXPAT<v2i32, (i32 3), ADDX8WPrr,  ADDX8WPri,  v2_splat, imm_vec_3bit
 defm : VECADDXPAT<v2i32, (i32 4), ADDX16WPrr, ADDX16WPri, v2_splat, imm_vec_4bit_splat_, imm_vec_4bit_splat_at, is_imm_vec_leq4bits>;
 
 // ANDD, CLRF
+def : Pat<(and i64:$rs1, Signed10:$rs2), (ANDDri10 SingleReg:$rs1, Signed10:$rs2)>;
 def : Pat<(and i64:$rs1, isNotShiftMask:$imm), (i64(CLRF SingleReg:$rs1, (notShiftMaskEnd $imm), (notShiftMaskStart $imm) ))>;
 def : Pat<(and i64:$rs1, isShiftMask:$imm), (CLRF SingleReg:$rs1, (ShiftMaskStart $imm), (ShiftMaskEnd $imm) )>;
 def : Pat<(and i64:$rs1, i64:$rs2), (ANDDrr SingleReg:$rs1, SingleReg:$rs2)>;
-def : Pat<(and i64:$rs1, Signed10:$rs2), (ANDDri10 SingleReg:$rs1, Signed10:$rs2)>;
 def : Pat<(and i64:$rs1, Signed37:$rs2), (ANDDri37 SingleReg:$rs1, Signed37:$rs2)>;
 def : Pat<(and i64:$rs1, Wrapped64:$rs2), (ANDDri64 SingleReg:$rs1, Wrapped64:$rs2)>;
 
@@ -580,7 +584,7 @@ def : Pat<(v2i64 (zext (v2i32 (build_vector
          )))))),
          (v2i64 (DOT2WZP PairedReg:$lhs, PairedReg:$rhs))>;
 // EXTF
-def : Pat<(and (srl i64:$v, Wrapped64:$shiftc), isShiftMask:$andm), (EXTFZDp SingleReg:$v, Wrapped64:$andm, Wrapped64:$shiftc)>;
+def : Pat<(and (srl i64:$v, Wrapped64:$shiftc), isMask:$andm), (EXTFZDp SingleReg:$v, Wrapped64:$andm, Wrapped64:$shiftc)>;
 
 // LANDD
 defm : ZEFPat<(and (i32 (setne i64:$v1, (i64 0))), (i32 (setne i64:$v2, (i64 0)))),
