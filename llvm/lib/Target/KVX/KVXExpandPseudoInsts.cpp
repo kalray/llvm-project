@@ -151,11 +151,11 @@ static bool expandGetInstr(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   MachineInstr &MI = *MBBI;
   DebugLoc DL = MI.getDebugLoc();
 
-  unsigned DestReg = MI.getOperand(0).getReg();
-  int64_t regNo = MI.getOperand(1).getImm();
+  Register DestReg = MI.getOperand(0).getReg();
+  int64_t RegNo = MI.getOperand(1).getImm();
 
   BuildMI(MBB, MBBI, DL, TII->get(KVX::GETss3), DestReg)
-      .addReg(KVX::SystemRegRegClass.getRegister(regNo));
+      .addReg(KVX::SystemRegRegClass.getRegister(RegNo));
 
   MI.eraseFromParent();
   return true;
@@ -425,7 +425,7 @@ static bool expandALOAD(unsigned int Opcode, const KVXInstrInfo *TII,
   MachineOperand Offset = MI.getOperand(2);
   Register Base = MI.getOperand(3).getReg();
   Register Value = MI.getOperand(4).getReg();
-
+  auto BaseState = getRegState(MI.getOperand(3));
   // .csloop
   //   load.u $fetch = $offset[$base]
   //   op $update = $value, $fetch            # value first for sbf instr
@@ -455,7 +455,13 @@ static bool expandALOAD(unsigned int Opcode, const KVXInstrInfo *TII,
   CSLoopMBB->addSuccessor(DoneMBB);
 
   DoneMBB->transferSuccessors(&MBB);
+  DoneMBB->addLiveIn(Fetch);
+  DoneMBB->sortUniqueLiveIns();
+
+  LLVM_DEBUG(dbgs() << "DoneMBB: "; DoneMBB->dump(); dbgs() << "--------\n");
   MBB.addSuccessor(CSLoopMBB);
+  for (auto LI : MBB.liveins())
+    CSLoopMBB->addLiveIn(LI);
 
   // Populate DoneMBB.
   //   copy $output = $fetch
@@ -483,23 +489,30 @@ static bool expandALOAD(unsigned int Opcode, const KVXInstrInfo *TII,
   //   acswap $offset[$base] = $update$fetch
   if (Offset.isReg())
     BuildMI(CSLoopMBB, DL, TII->get(ACSWAP), UpdateFetch)
-        .addReg(Offset.getReg())
-        .addReg(Base)
-        .addReg(UpdateFetch)
+        .addReg(Offset.getReg(), getRegState(Offset))
+        .addReg(Base, BaseState)
+        .addReg(UpdateFetch, RegState::InternalRead)
         .addImm(KVXMOD::DOSCALE_);
   else
     BuildMI(CSLoopMBB, DL, TII->get(ACSWAP), UpdateFetch)
         .addImm(Offset.getImm())
-        .addReg(Base)
+        .addReg(Base, BaseState)
         .addReg(UpdateFetch);
   //   cb.even $update ? .csloop
   BuildMI(CSLoopMBB, DL, TII->get(KVX::CB))
-      .addReg(Update)
+      .addReg(Update, RegState::Kill)
       .addMBB(CSLoopMBB)
       .addImm(KVXMOD::SCALARCOND_EVEN);
 
+  if (Offset.isReg())
+    CSLoopMBB->addLiveIn(Offset.getReg());
+  CSLoopMBB->addLiveIn(UpdateFetch);
+  CSLoopMBB->addLiveIn(Base);
+  CSLoopMBB->addLiveIn(Update);
+  CSLoopMBB->sortUniqueLiveIns();
   NextMBBI = MBB.end();
   MI.eraseFromParent();
+  LLVM_DEBUG(dbgs() << "Generated bb: "; CSLoopMBB->dump());
   return true;
 }
 
@@ -560,22 +573,27 @@ static bool expandATAS(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   //   lwz.u $fetch = $offset[$base]
   //   srlw $output = $fetch, $pos   # keep only the byte to test_and_set:
   //   andw $output = $output, 0xFF  #   ($fetch >> $pos) & 0xFF
-  //   cb.wnez $output ? .done       # the byte is already set
   //   sllw $mask = $value, $pos     # new value to set:
   //   orw $update = $fetch, $mask   #   $fetch | ($value << $pos)
+  //   cb.wnez $output ? .done       # the byte is already set
+  // .csloop2
   //   acswapw $offset[$base] = $update$fetch
   //   cb.even $update ? .csloop
   // .done
 
   // Create and link new MBBs.
   auto CSLoopMBB = MF->CreateMachineBasicBlock(MBB.getBasicBlock());
+  auto CSLoop2MBB = MF->CreateMachineBasicBlock(MBB.getBasicBlock());
   auto DoneMBB = MF->CreateMachineBasicBlock(MBB.getBasicBlock());
 
   MF->insert(++MBB.getIterator(), CSLoopMBB);
-  MF->insert(++CSLoopMBB->getIterator(), DoneMBB);
+  MF->insert(++CSLoopMBB->getIterator(), CSLoop2MBB);
+  MF->insert(++CSLoop2MBB->getIterator(), DoneMBB);
 
-  CSLoopMBB->addSuccessor(CSLoopMBB);
+  CSLoopMBB->addSuccessor(CSLoop2MBB);
   CSLoopMBB->addSuccessor(DoneMBB);
+  CSLoop2MBB->addSuccessor(CSLoopMBB);
+  CSLoop2MBB->addSuccessor(DoneMBB);
 
   DoneMBB->transferSuccessors(&MBB);
   MBB.addSuccessor(CSLoopMBB);
@@ -583,6 +601,11 @@ static bool expandATAS(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   // Populate DoneMBB.
   DoneMBB->splice(DoneMBB->end(), &MBB, MI, MBB.end());
   DoneMBB->setLabelMustBeEmitted();
+  DoneMBB->addLiveIn(Output);
+  LLVM_DEBUG(dbgs() << "DoneMBB: "; DoneMBB->dump(); dbgs() << "--------\n");
+
+  for (auto LI : MBB.liveins())
+    CSLoopMBB->addLiveIn(LI);
 
   // Populate MBB.
   if (MI.getOperand(5).isImm()) {
@@ -643,19 +666,35 @@ static bool expandATAS(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
       .addMBB(DoneMBB)
       .addImm(KVXMOD::SCALARCOND_WNEZ);
   //   acswapw $offset[$base] = $update$fetch
-  BuildMI(CSLoopMBB, DL, TII->get(KVX::ACSWAPWrr), UpdateFetch)
+  BuildMI(CSLoop2MBB, DL, TII->get(KVX::ACSWAPWrr), UpdateFetch)
       .addReg(Offset)
       .addReg(Base)
       .addReg(UpdateFetch)
       .addImm(KVXMOD::DOSCALE_);
   //   cb.even $update ? .csloop
-  BuildMI(CSLoopMBB, DL, TII->get(KVX::CB))
+  BuildMI(CSLoop2MBB, DL, TII->get(KVX::CB))
       .addReg(Update)
       .addMBB(CSLoopMBB)
       .addImm(KVXMOD::SCALARCOND_EVEN);
 
+  CSLoopMBB->addLiveIn(Offset);
+  CSLoop2MBB->addLiveIn(Offset);
+  CSLoopMBB->addLiveIn(UpdateFetch);
+  CSLoop2MBB->addLiveIn(UpdateFetch);
+  CSLoopMBB->addLiveIn(Base);
+  CSLoop2MBB->addLiveIn(Base);
+  CSLoop2MBB->addLiveIn(Update);
+  CSLoopMBB->addLiveIn(Fetch);
+  CSLoopMBB->addLiveIn(Pos);
+  CSLoopMBB->addLiveIn(Value);
+  CSLoop2MBB->addLiveIn(Output);
+  CSLoopMBB->sortUniqueLiveIns();
+  CSLoop2MBB->sortUniqueLiveIns();
   NextMBBI = MBB.end();
   MI.eraseFromParent();
+
+  LLVM_DEBUG(dbgs() << "Generated CSLoopMBB: "; CSLoopMBB->dump();
+             dbgs() << "--------\n");
   return true;
 }
 
@@ -698,6 +737,7 @@ static bool expandACMPSWAP(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   //   acswap $offset[$base] = $desired$expected  # try the compare and swap
   //   cb.odd $desired ? .pass                    # return $expected
   //                                              #   on success
+  // .csloop2
   //   load.u $output = $offset[$base]            # reload $expected value
   //                                              #   from memory on failure
   //                                              #   and retry if equal to
@@ -720,16 +760,20 @@ static bool expandACMPSWAP(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
 
   // Create and link new MBBs.
   auto CSLoopMBB = MF->CreateMachineBasicBlock(MBB.getBasicBlock());
+  auto CSLoop2MBB = MF->CreateMachineBasicBlock(MBB.getBasicBlock());
   auto PassMBB = MF->CreateMachineBasicBlock(MBB.getBasicBlock());
   auto DoneMBB = MF->CreateMachineBasicBlock(MBB.getBasicBlock());
 
   MF->insert(++MBB.getIterator(), CSLoopMBB);
-  MF->insert(++CSLoopMBB->getIterator(), PassMBB);
+  MF->insert(++CSLoopMBB->getIterator(), CSLoop2MBB);
+  MF->insert(++CSLoop2MBB->getIterator(), PassMBB);
   MF->insert(++PassMBB->getIterator(), DoneMBB);
 
-  CSLoopMBB->addSuccessor(CSLoopMBB);
+  CSLoopMBB->addSuccessor(CSLoop2MBB);
+  CSLoop2MBB->addSuccessor(CSLoopMBB);
+  CSLoop2MBB->addSuccessor(DoneMBB);
   CSLoopMBB->addSuccessor(PassMBB);
-  CSLoopMBB->addSuccessor(DoneMBB);
+  PassMBB->addSuccessor(DoneMBB);
 
   DoneMBB->transferSuccessors(&MBB);
   MBB.addSuccessor(CSLoopMBB);
@@ -741,9 +785,8 @@ static bool expandACMPSWAP(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   // Populate MBB.
   //   copy $expected = $compare                  # iff $compare isn't a valid
   //                                              #   PairedReg subreg
-  if (Desired != Swap || Expected != Compare) {
+  if (Desired != Swap || Expected != Compare)
     BuildMI(&MBB, DL, TII->get(COPY), Expected).addReg(Compare);
-  }
 
   // Populate CSLoopMBB.
   //   copy $desired = $swap                      # restore $desired in case
@@ -772,29 +815,29 @@ static bool expandACMPSWAP(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   //                                              #   and retry if equal to
   //                                              #   expected input
   if (Offset.isReg())
-    BuildMI(CSLoopMBB, DL, TII->get(LOAD), Output)
+    BuildMI(CSLoop2MBB, DL, TII->get(LOAD), Output)
         .addReg(Offset.getReg())
         .addReg(Base)
         .addImm(KVXMOD::VARIANT_U)
         .addImm(KVXMOD::DOSCALE_);
   else
-    BuildMI(CSLoopMBB, DL, TII->get(LOAD), Output)
+    BuildMI(CSLoop2MBB, DL, TII->get(LOAD), Output)
         .addImm(Offset.getImm())
         .addReg(Base)
         .addImm(KVXMOD::VARIANT_U);
   //   comp.eq $desired = $output, $expected      # desired use as temp reg
   //                                              #   for comp
-  BuildMI(CSLoopMBB, DL, TII->get(COMP), Desired)
+  BuildMI(CSLoop2MBB, DL, TII->get(COMP), Desired)
       .addReg(Output)
       .addReg(Expected)
       .addImm(KVXMOD::COMPARISON_EQ);
   //   cb.odd $desired ? .csloop
-  BuildMI(CSLoopMBB, DL, TII->get(KVX::CB))
+  BuildMI(CSLoop2MBB, DL, TII->get(KVX::CB))
       .addReg(Desired)
       .addMBB(CSLoopMBB)
       .addImm(KVXMOD::SCALARCOND_ODD);
   //   goto .done
-  BuildMI(CSLoopMBB, DL, TII->get(KVX::GOTO)).addMBB(DoneMBB);
+  BuildMI(CSLoop2MBB, DL, TII->get(KVX::GOTO)).addMBB(DoneMBB);
 
   // Populate PassMBB.
   //   copy $output = $expected                   # output contains expected
@@ -803,8 +846,29 @@ static bool expandACMPSWAP(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   PassMBB->setLabelMustBeEmitted();
   BuildMI(PassMBB, DL, TII->get(COPY), Output).addReg(Expected);
 
+  if (Offset.isReg()) {
+    CSLoop2MBB->addLiveIn(Offset.getReg());
+    CSLoopMBB->addLiveIn(Offset.getReg());
+  }
+  CSLoopMBB->addLiveIn(Swap);
+  CSLoop2MBB->addLiveIn(Base);
+  CSLoopMBB->addLiveIn(Base);
+  CSLoop2MBB->addLiveIn(Expected);
   NextMBBI = MBB.end();
   MI.eraseFromParent();
+  PassMBB->addLiveIn(Expected);
+  DoneMBB->addLiveIn(Output);
+  CSLoopMBB->sortUniqueLiveIns();
+  CSLoop2MBB->sortUniqueLiveIns();
+
+  LLVM_DEBUG(dbgs() << "Generated CSLoopMBB: "; CSLoopMBB->dump();
+             dbgs() << "--------\n");
+  LLVM_DEBUG(dbgs() << "Generated CSLoop2MBB: "; CSLoop2MBB->dump();
+             dbgs() << "--------\n");
+  LLVM_DEBUG(dbgs() << "Generated PassMBB: "; PassMBB->dump();
+             dbgs() << "--------\n");
+  LLVM_DEBUG(dbgs() << "Generated DoneMBB: "; DoneMBB->dump();
+             dbgs() << "--------\n");
   return true;
 }
 
