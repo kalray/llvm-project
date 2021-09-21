@@ -65,7 +65,7 @@ def isShiftMask : PatLeaf<(imm), [{
   return N->getAPIntValue().isShiftedMask();
 }]>;
 
-defm : ZEFPat<(and (srl i32:$v, Wrapped64:$shiftc), Wrapped32:$andm), (EXTFZWp SingleReg:$v, Wrapped32:$andm, Wrapped64:$shiftc)>;
+defm : ZEFPat<(and (srl i32:$v, Wrapped64:$shiftc), isShiftMask:$andm), (EXTFZWp SingleReg:$v, Wrapped32:$andm, Wrapped64:$shiftc)>;
 
 //===----------------------------------------------------------------------===//
 //  Integer Instructions - Patterns
@@ -580,7 +580,7 @@ def : Pat<(v2i64 (zext (v2i32 (build_vector
          )))))),
          (v2i64 (DOT2WZP PairedReg:$lhs, PairedReg:$rhs))>;
 // EXTF
-def : Pat<(and (srl i64:$v, Wrapped64:$shiftc), Wrapped64:$andm), (EXTFZDp SingleReg:$v, Wrapped64:$andm, Wrapped64:$shiftc)>;
+def : Pat<(and (srl i64:$v, Wrapped64:$shiftc), isShiftMask:$andm), (EXTFZDp SingleReg:$v, Wrapped64:$andm, Wrapped64:$shiftc)>;
 
 // LANDD
 defm : ZEFPat<(and (i32 (setne i64:$v1, (i64 0))), (i32 (setne i64:$v2, (i64 0)))),
