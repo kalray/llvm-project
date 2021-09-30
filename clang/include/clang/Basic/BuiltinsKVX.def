@@ -168,7 +168,6 @@ BUILTIN(__builtin_kvx_ffmswp, "V2fV2fV2fV2fcC*", "")
 BUILTIN(__builtin_kvx_ffmswc, "V2fV2fV2fV2fcC*", "")
 BUILTIN(__builtin_kvx_ffmswq, "V4fV4fV4fV4fcC*", "")
 BUILTIN(__builtin_kvx_ffmswcp, "V4fV4fV4fV4fcC*", "")
-BUILTIN(__builtin_kvx_finvw, "ffcC*", "")
 BUILTIN(__builtin_kvx_fixedd, "LidULicC*", "")
 BUILTIN(__builtin_kvx_fixeddp, "V2LiV2dULicC*", "")
 BUILTIN(__builtin_kvx_fixeddq, "V4LiV4dULicC*", "")
@@ -516,7 +515,6 @@ BUILTIN(__builtin_kvx_srsdps, "V2LiV2LiULi", "")
 BUILTIN(__builtin_kvx_srsdqs, "V4LiV4LiULi", "")
 BUILTIN(__builtin_kvx_stsud, "ULiULiULi", "")
 BUILTIN(__builtin_kvx_stsuw, "UiUiUi", "")
-NARY_BUILTIN(trunchbo, "V8cV8s", "n", 1)
 
 //===----------------------------------------------------------------------===//
 // TCA
