@@ -72,7 +72,7 @@ define internal i1 @atomic_flag_test_and_set_explicit(%struct.atomic_flag* %0, i
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.even $r2 ? .LBB2_2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.8:
+; CHECK-NEXT:  # %bb.9:
 ; CHECK-NEXT:    lbz $r1 = 19[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fence
@@ -81,7 +81,7 @@ define internal i1 @atomic_flag_test_and_set_explicit(%struct.atomic_flag* %0, i
 ; CHECK-NEXT:    sbfd $r7 = $r3, 0
 ; CHECK-NEXT:    slld $r3 = $r3, 3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB2_15: # =>This Inner Loop Header: Depth=1
+; CHECK-NEXT:  .LBB2_10: # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    lwz.u $r5 = $r7[$r0]
 ; CHECK-NEXT:    sllw $r6 = $r1, $r3
 ; CHECK-NEXT:    ;;
@@ -92,29 +92,28 @@ define internal i1 @atomic_flag_test_and_set_explicit(%struct.atomic_flag* %0, i
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.wnez $r2 ? .LBB2_17
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.16: # in Loop: Header=BB2_15 Depth=1
+; CHECK-NEXT:  # %bb.11: # in Loop: Header=BB2_10 Depth=1
 ; CHECK-NEXT:    acswapw $r7[$r0] = $r4r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.even $r4 ? .LBB2_15
+; CHECK-NEXT:    cb.even $r4 ? .LBB2_10
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB2_17: # Label of block must be emitted
-; CHECK-NEXT:    goto .LBB2_11
+; CHECK-NEXT:    goto .LBB2_17
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB2_4:
 ; CHECK-NEXT:    compw.eq $r2 = $r1, 4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.odd $r2 ? .LBB2_9
+; CHECK-NEXT:    cb.odd $r2 ? .LBB2_12
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.5:
 ; CHECK-NEXT:    compw.eq $r1 = $r1, 5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.even $r1 ? .LBB2_6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB2_9:
+; CHECK-NEXT:  .LBB2_12:
 ; CHECK-NEXT:    lbz $r1 = 19[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fence
-; CHECK-NEXT:    goto .LBB2_10
+; CHECK-NEXT:    goto .LBB2_13
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB2_2:
 ; CHECK-NEXT:    compw.eq $r1 = $r1, 3
@@ -124,13 +123,13 @@ define internal i1 @atomic_flag_test_and_set_explicit(%struct.atomic_flag* %0, i
 ; CHECK-NEXT:  # %bb.3:
 ; CHECK-NEXT:    lbz $r1 = 19[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB2_10:
+; CHECK-NEXT:  .LBB2_13:
 ; CHECK-NEXT:    andd $r3 = $r0, 3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfd $r7 = $r3, 0
 ; CHECK-NEXT:    slld $r3 = $r3, 3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB2_18: # =>This Inner Loop Header: Depth=1
+; CHECK-NEXT:  .LBB2_14: # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    lwz.u $r5 = $r7[$r0]
 ; CHECK-NEXT:    sllw $r6 = $r1, $r3
 ; CHECK-NEXT:    ;;
@@ -139,16 +138,22 @@ define internal i1 @atomic_flag_test_and_set_explicit(%struct.atomic_flag* %0, i
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    andw $r2 = $r2, 255
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.wnez $r2 ? .LBB2_20
+; CHECK-NEXT:    cb.wnez $r2 ? .LBB2_16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.19: # in Loop: Header=BB2_18 Depth=1
+; CHECK-NEXT:  # %bb.15: # in Loop: Header=BB2_14 Depth=1
 ; CHECK-NEXT:    acswapw $r7[$r0] = $r4r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.even $r4 ? .LBB2_18
+; CHECK-NEXT:    cb.even $r4 ? .LBB2_14
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB2_20: # Label of block must be emitted
+; CHECK-NEXT:  .LBB2_16: # Label of block must be emitted
 ; CHECK-NEXT:    fence
-; CHECK-NEXT:    goto .LBB2_11
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  .LBB2_17:
+; CHECK-NEXT:    sb 18[$r12] = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lbz $r0 = 18[$r12]
+; CHECK-NEXT:    addd $r12 = $r12, 32
+; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB2_6:
 ; CHECK-NEXT:    andd $r3 = $r0, 3
@@ -157,7 +162,7 @@ define internal i1 @atomic_flag_test_and_set_explicit(%struct.atomic_flag* %0, i
 ; CHECK-NEXT:    sbfd $r7 = $r3, 0
 ; CHECK-NEXT:    slld $r3 = $r3, 3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB2_12: # =>This Inner Loop Header: Depth=1
+; CHECK-NEXT:  .LBB2_7: # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    lwz.u $r5 = $r7[$r0]
 ; CHECK-NEXT:    sllw $r6 = $r1, $r3
 ; CHECK-NEXT:    ;;
@@ -166,20 +171,14 @@ define internal i1 @atomic_flag_test_and_set_explicit(%struct.atomic_flag* %0, i
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    andw $r2 = $r2, 255
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.wnez $r2 ? .LBB2_14
+; CHECK-NEXT:    cb.wnez $r2 ? .LBB2_17
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.13: # in Loop: Header=BB2_12 Depth=1
+; CHECK-NEXT:  # %bb.8: # in Loop: Header=BB2_7 Depth=1
 ; CHECK-NEXT:    acswapw $r7[$r0] = $r4r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.even $r4 ? .LBB2_12
+; CHECK-NEXT:    cb.even $r4 ? .LBB2_7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB2_14: # Label of block must be emitted
-; CHECK-NEXT:  .LBB2_11:
-; CHECK-NEXT:    sb 18[$r12] = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lbz $r0 = 18[$r12]
-; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ret
+; CHECK-NEXT:    goto .LBB2_17
 ; CHECK-NEXT:    ;;
   %3 = alloca %struct.atomic_flag*, align 8
   %4 = alloca i32, align 4

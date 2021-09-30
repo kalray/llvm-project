@@ -134,21 +134,20 @@ multiclass MC_05<string OpcStr> {
      !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
      [/* no straightforward pattern */]>;
   }
-  let Constraints = "$a4 = $a4o" in
+  let Constraints = "$a4in = $a4" in {
   def rrc : VARIANT_LSUCOND_REGISTERY_REGISTERW_REGISTERZ_SIMPLE
-    <(outs SingleReg:$a4o), (ins SingleReg:$a5, SingleReg:$a4, VariantMod:$a1, ScalarcondMod:$a2, SingleReg:$a3),
+    <(outs SingleReg:$a4), (ins SingleReg:$a5, VariantMod:$a1, ScalarcondMod:$a2, SingleReg:$a3, SingleReg:$a4in),
      !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = [$a5]"),
      [/* no straightforward pattern */]>;
-  let Constraints = "$a4 = $a4o" in
   def ri27c : VARIANT_LSUCOND_REGISTERY_REGISTERW_OFFSET27_REGISTERZ_DOUBLE
-    <(outs SingleReg:$a4o), (ins Signed27:$a5, SingleReg:$a6, SingleReg:$a4, VariantMod:$a1, ScalarcondMod:$a2, SingleReg:$a3),
+    <(outs SingleReg:$a4), (ins Signed27:$a5, SingleReg:$a6, VariantMod:$a1, ScalarcondMod:$a2, SingleReg:$a3, SingleReg:$a4in),
      !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = $a5[$a6]"),
      [/* no straightforward pattern */]>;
-  let Constraints = "$a4 = $a4o" in
   def ri54c : VARIANT_LSUCOND_REGISTERY_REGISTERW_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
-    <(outs SingleReg:$a4o), (ins Signed54:$a5, SingleReg:$a6, SingleReg:$a4, VariantMod:$a1, ScalarcondMod:$a2, SingleReg:$a3),
+    <(outs SingleReg:$a4), (ins Signed54:$a5, SingleReg:$a6, VariantMod:$a1, ScalarcondMod:$a2, SingleReg:$a3, SingleReg:$a4in),
      !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = $a5[$a6]"),
      [/* no straightforward pattern */]>;
+  }
   let isPredicable = 1 in
   def rr : VARIANT_DOSCALE_REGISTERW_REGISTERY_REGISTERZ_SIMPLE
     <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, VariantMod:$a1, DoscaleMod:$a2),
@@ -176,17 +175,17 @@ multiclass MC_06<string OpcStr> {
   }
   let Constraints = "$a4 = $a4o" in
   def rrc : VARIANT_LSUCOND_REGISTERY_REGISTERM_REGISTERZ_SIMPLE
-    <(outs PairedReg:$a4o), (ins SingleReg:$a5, PairedReg:$a4, VariantMod:$a1, ScalarcondMod:$a2, SingleReg:$a3),
+    <(outs PairedReg:$a4o), (ins SingleReg:$a5, VariantMod:$a1, ScalarcondMod:$a2, SingleReg:$a3, PairedReg:$a4),
      !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = [$a5]"),
      [/* no straightforward pattern */]>;
   let Constraints = "$a4 = $a4o" in
   def ri27c : VARIANT_LSUCOND_REGISTERY_REGISTERM_OFFSET27_REGISTERZ_DOUBLE
-    <(outs PairedReg:$a4o), (ins Signed27:$a5, SingleReg:$a6, PairedReg:$a4, VariantMod:$a1, ScalarcondMod:$a2, SingleReg:$a3),
+    <(outs PairedReg:$a4o), (ins Signed27:$a5, SingleReg:$a6, VariantMod:$a1, ScalarcondMod:$a2, SingleReg:$a3, PairedReg:$a4),
      !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = $a5[$a6]"),
      [/* no straightforward pattern */]>;
   let Constraints = "$a4 = $a4o" in
   def ri54c : VARIANT_LSUCOND_REGISTERY_REGISTERM_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
-    <(outs PairedReg:$a4o), (ins Signed54:$a5, SingleReg:$a6, PairedReg:$a4, VariantMod:$a1, ScalarcondMod:$a2, SingleReg:$a3),
+    <(outs PairedReg:$a4o), (ins Signed54:$a5, SingleReg:$a6, VariantMod:$a1, ScalarcondMod:$a2, SingleReg:$a3, PairedReg:$a4),
      !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = $a5[$a6]"),
      [/* no straightforward pattern */]>;
   let isPredicable = 1 in {
@@ -217,17 +216,17 @@ multiclass MC_07<string OpcStr> {
   }
   let Constraints = "$a4 = $a4o" in
   def rrc : VARIANT_LSUCOND_REGISTERY_REGISTERN_REGISTERZ_SIMPLE
-    <(outs QuadReg:$a4o), (ins SingleReg:$a5, QuadReg:$a4, VariantMod:$a1, ScalarcondMod:$a2, SingleReg:$a3),
+    <(outs QuadReg:$a4o), (ins SingleReg:$a5, VariantMod:$a1, ScalarcondMod:$a2, SingleReg:$a3, QuadReg:$a4),
      !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = [$a5]"),
      [/* no straightforward pattern */]>;
   let Constraints = "$a4 = $a4o" in
   def ri27c : VARIANT_LSUCOND_REGISTERY_REGISTERN_OFFSET27_REGISTERZ_DOUBLE
-    <(outs QuadReg:$a4o), (ins Signed27:$a5, SingleReg:$a6, QuadReg:$a4, VariantMod:$a1, ScalarcondMod:$a2, SingleReg:$a3),
+    <(outs QuadReg:$a4o), (ins Signed27:$a5, SingleReg:$a6, VariantMod:$a1, ScalarcondMod:$a2, SingleReg:$a3, QuadReg:$a4),
      !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = $a5[$a6]"),
      [/* no straightforward pattern */]>;
   let Constraints = "$a4 = $a4o" in
   def ri54c : VARIANT_LSUCOND_REGISTERY_REGISTERN_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
-    <(outs QuadReg:$a4o), (ins Signed54:$a5, SingleReg:$a6, QuadReg:$a4, VariantMod:$a1, ScalarcondMod:$a2, SingleReg:$a3),
+    <(outs QuadReg:$a4o), (ins Signed54:$a5, SingleReg:$a6, VariantMod:$a1, ScalarcondMod:$a2, SingleReg:$a3, QuadReg:$a4),
      !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = $a5[$a6]"),
      [/* no straightforward pattern */]>;
   let isPredicable = 1 in {
@@ -2430,7 +2429,7 @@ def CMOVEWP : SIMDCOND_REGISTERZ_REGISTERW_REGISTERY_SIMPLE
    "cmovewp$a1 $a2 ? $a3 = $a4",
    [/* no straightforward pattern */]>;
 
-let isAsCheapAsAMove = 1, isReMaterializable = 1, isMoveImm = 1 in
+let isAsCheapAsAMove = 1, isReMaterializable = 1, isMoveImm = 1, isPredicable = 1 in
 defm MAKE : MC_1D<"make">;
 
 defm PCREL : MC_1E<"pcrel">;
@@ -3326,6 +3325,7 @@ def FNARROWWHV : XROUNDING_SILENT2_REGISTERA_REGISTERBP_SIMPLE
    [/* no straightforward pattern */]>;
 }
 
+let isPredicable = 1 in
 def COPYD : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "copyd $a1 = $a2",

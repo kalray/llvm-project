@@ -140,7 +140,6 @@ public:
   bool addPreISel() override;
   void addPreSched2() override;
   void addPreEmitPass() override;
-  bool addILPOpts() override;
 };
 } // namespace
 
@@ -194,6 +193,8 @@ void KVXPassConfig::addPreRegAlloc() {
 
 void KVXPassConfig::addPreSched2() {
   addPass(createKVXExpandPseudoPass(KVX::PRE_SCHED2));
+  if (getOptLevel() != CodeGenOpt::None)
+    addPass(&IfConverterID);
 }
 
 void KVXPassConfig::addPreEmitPass() {
@@ -210,11 +211,6 @@ bool KVXPassConfig::addPreISel() {
     addPass(createKVXHardwareLoopsPreparePass());
   }
   return false;
-}
-
-bool KVXPassConfig::addILPOpts() {
-  addPass(&EarlyIfPredicatorID);
-  return true;
 }
 
 TargetTransformInfo
