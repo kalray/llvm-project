@@ -23,8 +23,6 @@
 // These instructions require i128 legalization
 // MADDDT MADDSUDT MADDUDT MADDUZDT MSBFDT MSBFSUDT MSBFUDT MSBFUZDT
 
-// Add conditional flavours for all load/stores/mem-atomics
-
 //===----------------------------------------------------------------------===//
 // Custom selection DAG type profile definitions.
 //===----------------------------------------------------------------------===//

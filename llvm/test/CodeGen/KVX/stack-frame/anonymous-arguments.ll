@@ -52,32 +52,32 @@ define i32 @add(i32 %n, ...) {
 ; FP-NONE-NEXT:    sd 8[$r12] = $r1
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    sd 0[$r12] = $r3
-; FP-NONE-NEXT:    cb.wlez $r0 ? .LBB0_1
+; FP-NONE-NEXT:    cb.wlez $r0 ? .LBB0_9
 ; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:  # %bb.2: # %for.body.preheader
+; FP-NONE-NEXT:  # %bb.1: # %for.body.preheader
 ; FP-NONE-NEXT:    addw $r1 = $r0, -1
 ; FP-NONE-NEXT:    ld $r4 = 0[$r12]
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    compw.ltu $r2 = $r1, 7
 ; FP-NONE-NEXT:    andw $r1 = $r0, 7
 ; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:    cb.even $r2 ? .LBB0_8
+; FP-NONE-NEXT:    cb.even $r2 ? .LBB0_7
 ; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:  # %bb.3:
+; FP-NONE-NEXT:  # %bb.2:
 ; FP-NONE-NEXT:    make $r0 = 0
-; FP-NONE-NEXT:    goto .LBB0_4
+; FP-NONE-NEXT:    goto .LBB0_3
 ; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:  .LBB0_1:
+; FP-NONE-NEXT:  .LBB0_9:
 ; FP-NONE-NEXT:    make $r0 = 0
 ; FP-NONE-NEXT:    addd $r12 = $r12, 96
 ; FP-NONE-NEXT:    ret
 ; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:  .LBB0_8: # %for.body.preheader.new
+; FP-NONE-NEXT:  .LBB0_7: # %for.body.preheader.new
 ; FP-NONE-NEXT:    sbfw $r2 = $r0, $r1
 ; FP-NONE-NEXT:    make $r0 = 0
 ; FP-NONE-NEXT:    copyd $r3 = $r4
 ; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:  .LBB0_9: # %for.body
+; FP-NONE-NEXT:  .LBB0_8: # %for.body
 ; FP-NONE-NEXT:    # =>This Inner Loop Header: Depth=1
 ; FP-NONE-NEXT:    addd $r4 = $r3, 8
 ; FP-NONE-NEXT:    addw $r2 = $r2, 8
@@ -130,15 +130,15 @@ define i32 @add(i32 %n, ...) {
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    addw $r0 = $r3, $r0
 ; FP-NONE-NEXT:    copyd $r3 = $r4
-; FP-NONE-NEXT:    cb.wnez $r2 ? .LBB0_9
+; FP-NONE-NEXT:    cb.wnez $r2 ? .LBB0_8
 ; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:  .LBB0_4: # %for.cond.cleanup.loopexit.unr-lcssa
-; FP-NONE-NEXT:    cb.weqz $r1 ? .LBB0_7
+; FP-NONE-NEXT:  .LBB0_3: # %for.cond.cleanup.loopexit.unr-lcssa
+; FP-NONE-NEXT:    cb.weqz $r1 ? .LBB0_6
 ; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:  # %bb.5: # %for.body.epil.preheader
+; FP-NONE-NEXT:  # %bb.4: # %for.body.epil.preheader
 ; FP-NONE-NEXT:    addd $r2 = $r4, 8
 ; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:  .LBB0_6: # %for.body.epil
+; FP-NONE-NEXT:  .LBB0_5: # %for.body.epil
 ; FP-NONE-NEXT:    # =>This Inner Loop Header: Depth=1
 ; FP-NONE-NEXT:    sd 0[$r12] = $r2
 ; FP-NONE-NEXT:    addw $r1 = $r1, -1
@@ -147,9 +147,9 @@ define i32 @add(i32 %n, ...) {
 ; FP-NONE-NEXT:    addd $r2 = $r2, 8
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    addw $r0 = $r3, $r0
-; FP-NONE-NEXT:    cb.wnez $r1 ? .LBB0_6
+; FP-NONE-NEXT:    cb.wnez $r1 ? .LBB0_5
 ; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:  .LBB0_7: # %for.cond.cleanup
+; FP-NONE-NEXT:  .LBB0_6: # %for.cond.cleanup
 ; FP-NONE-NEXT:    addd $r12 = $r12, 96
 ; FP-NONE-NEXT:    ret
 ; FP-NONE-NEXT:    ;;

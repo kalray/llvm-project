@@ -99,24 +99,24 @@ define i32 @hwloop3(i32 %n, i32* nocapture %b) nounwind {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.wlez $r2 ? .LBB2_1
+; CHECK-NEXT:    cb.wlez $r2 ? .LBB2_4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.2: # %for.body.preheader
+; CHECK-NEXT:  # %bb.1: # %for.body.preheader
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB2_3: # %for.body
+; CHECK-NEXT:  .LBB2_2: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    lwz $r3 = 0[$r1]
 ; CHECK-NEXT:    addw $r2 = $r2, -4
 ; CHECK-NEXT:    addd $r1 = $r1, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addw $r0 = $r3, $r0
-; CHECK-NEXT:    cb.wnez $r2 ? .LBB2_3
+; CHECK-NEXT:    cb.wnez $r2 ? .LBB2_2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.4: # %for.end
+; CHECK-NEXT:  # %bb.3: # %for.end
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB2_1:
+; CHECK-NEXT:  .LBB2_4:
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;

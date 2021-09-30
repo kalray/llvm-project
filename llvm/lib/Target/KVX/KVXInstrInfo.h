@@ -87,6 +87,13 @@ public:
                            BranchProbability Probability) const override;
   bool PredicateInstruction(MachineInstr &MI,
                             ArrayRef<MachineOperand> Pred) const override;
+
+  unsigned getInstSizeInBytes(const MachineInstr &MI) const override;
+  bool isProfitableToDupForIfCvt(MachineBasicBlock &MBB, unsigned NumCycles,
+                                 BranchProbability Probability) const override;
+
+  bool SubsumesPredicate(ArrayRef<MachineOperand> Pred1,
+                         ArrayRef<MachineOperand> Pred2) const override;
 };
 
 } // namespace llvm
