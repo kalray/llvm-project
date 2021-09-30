@@ -31,15 +31,6 @@ typedef float __attribute__((__vector_size__(8 * sizeof(float)))) v8f32;
 typedef double __attribute__((__vector_size__(2 * sizeof(double)))) v2f64;
 typedef double __attribute__((__vector_size__(4 * sizeof(double)))) v4f64;
 
-// CHECK-LABEL: @trunchbo(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[CONV:%.*]] = trunc <8 x i16> [[V:%.*]] to <8 x i8>
-// CHECK-NEXT:    ret <8 x i8> [[CONV]]
-//
-v8i8 trunchbo(v8i16 v) {
-  return __builtin_kvx_trunchbo(v);
-}
-
 // CHECK-LABEL: @ctzwp(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x i32> @llvm.kvx.ctzwp(<2 x i32> [[V:%.*]])

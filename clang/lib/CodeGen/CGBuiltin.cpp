@@ -17877,25 +17877,6 @@ static Value *KVX_emitRndintSatBuiltin(unsigned NumArgs, unsigned IntrinsicID,
   return CGF.Builder.CreateCall(CGF.CGM.getIntrinsic(IntrinsicID), Args);
 }
 
-static Value *KVX_emitTrunchBuiltin(CodeGenFunction &CGF, const CallExpr *E,
-                                    unsigned IntrinsicID) {
-  const Expr *Arg = E->getArg(0);
-  QualType ArgTy = Arg->getType();
-  Value *ArgVal = CGF.EmitScalarExpr(Arg);
-
-  auto *ExpectedArgType = llvm::FixedVectorType::get(CGF.Int16Ty, 8);
-  llvm::Type *ArgType = CGF.ConvertType(ArgTy);
-  if (ExpectedArgType != ArgType) {
-    CGF.CGM.Error(E->getArg(0)->getBeginLoc(),
-                  "Source type of kvx_trunchbo should be vector v8i16");
-    return nullptr;
-  }
-
-  auto *DestType = llvm::FixedVectorType::get(CGF.Int8Ty, 8);
-
-  return CGF.Builder.CreateTrunc(ArgVal, DestType, "conv");
-}
-
 static Value *KVX_emitShiftBuiltin(CodeGenFunction &CGF, const CallExpr *E,
                                    unsigned int BuiltinID) {
   int64_t ShiftIndexBits;
@@ -17983,13 +17964,6 @@ static Value *KVX_emitNaryBuiltin(unsigned N, CodeGenFunction &CGF,
                                   const CallExpr *E, unsigned IntrinsicID,
                                   bool HasRounding = false,
                                   bool HasSilent = false) {
-  switch (IntrinsicID) {
-  case Intrinsic::kvx_trunchbo:
-    return KVX_emitTrunchBuiltin(CGF, E, IntrinsicID);
-  default:
-    break;
-  }
-
   if (E->getNumArgs() != ((HasRounding || HasSilent ? 1 : 0) + N)) {
     CGF.CGM.Error(E->getBeginLoc(), "Incorrect number of arguments to builtin");
     return nullptr;
