@@ -7,10 +7,10 @@
 
 // CHECK-LABEL: @fn(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[A:%.*]] = load <16 x double>, <16 x double>* [[TMP0:%.*]], align 128, !tbaa !3
-// CHECK-NEXT:    [[B:%.*]] = load <16 x double>, <16 x double>* [[TMP1:%.*]], align 128, !tbaa !3
+// CHECK-NEXT:    [[A:%.*]] = load <16 x double>, <16 x double>* [[TMP0:%.*]], align 128, [[TBAA3:!tbaa !.*]]
+// CHECK-NEXT:    [[B:%.*]] = load <16 x double>, <16 x double>* [[TMP1:%.*]], align 128, [[TBAA3]]
 // CHECK-NEXT:    [[ADD:%.*]] = fadd <16 x double> [[A]], [[B]]
-// CHECK-NEXT:    store <16 x double> [[ADD]], <16 x double>* [[AGG_RESULT:%.*]], align 128, !tbaa !3
+// CHECK-NEXT:    store <16 x double> [[ADD]], <16 x double>* [[AGG_RESULT:%.*]], align 128, [[TBAA3]]
 // CHECK-NEXT:    ret void
 //
 double16 fn(double16 a, double16 b) {
