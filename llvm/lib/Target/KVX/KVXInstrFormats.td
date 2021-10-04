@@ -14,7 +14,7 @@
 
 
 def IsV1 : Predicate<"Subtarget->isV1()">;
-
+def IsV2 : Predicate<"Subtarget->isV2()">;
 
 class KVX_INSTRUCTION
   <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
@@ -1039,10 +1039,17 @@ class REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARY32X2
   <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
   : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
-// 6 insn(s):
-// FFMAWP, FFMSWP, FMULWP, FMULWC, FADDWP, FSBFWP
+// 7 insn(s):
+// FFDMDAW, FFMAWP, FFMSWP, FMULWP, FMULWC, FADDWP, FSBFWP
 let Size = 4 in
 class ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32X2
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
+
+// 1 insn:
+// FFDMDAWP
+let Size = 4 in
+class ROUNDING_SILENT_REGISTERW_REGISTERP_REGISTERQ_SIMPLE_BINARY32X2
   <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
   : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 

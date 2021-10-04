@@ -16,6 +16,9 @@ include "llvm/Target/Target.td"
 def FeatureV1 : SubtargetFeature<"v1", "IsV1", "true",
                                  "Enable V1 only instructions">;
 
+def FeatureV2 : SubtargetFeature<"v2", "IsV2", "true",
+                                 "Enable V2 only instructions">;
+
 //===----------------------------------------------------------------------===//
 //  Register Descriptions
 //===----------------------------------------------------------------------===//
@@ -100,4 +103,4 @@ def KVX : Target {
 //===----------------------------------------------------------------------===//
 
 def : ProcessorModel<"kv3-1", KVXSchedMachineModel, [FeatureV1]>;
-def : ProcessorModel<"kv3-2", KVXSchedMachineModel, []>;
+def : ProcessorModel<"kv3-2", KVXSchedMachineModel, [FeatureV2]>;
