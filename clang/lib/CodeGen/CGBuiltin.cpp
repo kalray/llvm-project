@@ -19412,7 +19412,7 @@ Value *CodeGenFunction::EmitRISCVBuiltinExpr(unsigned BuiltinID,
 }
 
 // Must keep these enums in sync with KVX.h
-enum ROUNDING {
+typedef enum ROUNDING {
   ROUNDING_RN,
   ROUNDING_RU,
   ROUNDING_RD,
@@ -19421,7 +19421,7 @@ enum ROUNDING {
   ROUNDING_RNZ,
   ROUNDING_RO,
   ROUNDING_
-};
+} rounding_t;
 
 enum SCALARCOND {
   SCALARCOND_DNEZ,
@@ -19783,15 +19783,91 @@ static Value *KVX_emitShiftBuiltin(CodeGenFunction &CGF, const CallExpr *E,
   return OutputV;
 }
 
+static bool KVX_checkNargs(unsigned N, CodeGenFunction &CGF, const CallExpr *E,
+                           bool HasSilent = false) {
+  if (E->getNumArgs() != ((HasSilent ? 1 : 0) + N)) {
+    CGF.CGM.Error(E->getBeginLoc(), "Incorrect number of arguments to builtin");
+    return false;
+  }
+  return true;
+}
+
+static constexpr const char *KVX_ERROR_INVALID_ROUNDING =
+    "invalid rounding modifier";
+static constexpr const char *KVX_ERROR_INVALID_SILENT =
+    "invalid silent modifier";
+
+typedef struct {
+  bool SilentMod;
+  rounding_t RoundingMod;
+  bool ConjugateMod;
+  bool IsValid;
+} float_mods_t;
+
+static float_mods_t KVX_getFloatModifiers(const CallExpr *E,
+                                          CodeGenFunction &CGF,
+                                          unsigned ArgIndex, bool HasRounding,
+                                          bool HasConjugate) {
+  const unsigned I = ArgIndex;
+
+  float_mods_t FloatMods = {false, ROUNDING_, false, true};
+  std::pair<StringRef, StringRef> Mods = {"", ""};
+
+  if (!E->isNullPointerConstant(CGF.getContext(),
+                                Expr::NPC_NeverValueDependent)) {
+    const auto *SL =
+        dyn_cast<clang::StringLiteral>(E->getArg(I)->IgnoreParenImpCasts());
+    Mods = SL->getString().split(".").second.split(".");
+  }
+
+  if (HasConjugate) {
+    int ConjugateMod = KVX_getConjugateModifier(Mods.first);
+    if (ConjugateMod != -1) {
+      Mods = Mods.second.split(".");
+      FloatMods.ConjugateMod = static_cast<bool>(ConjugateMod);
+    }
+  }
+
+  int RoundingMod = 0;
+  if (HasRounding) {
+    RoundingMod = KVX_getRoundingModifier(Mods.first);
+    if (RoundingMod != -1) {
+      Mods = Mods.second.split(".");
+      FloatMods.RoundingMod = static_cast<rounding_t>(RoundingMod);
+    }
+  }
+
+  int SilentMod = 0;
+  // Silent modifier and speculate modifier hold same options
+  SilentMod = KVX_getSpeculateModValue(Mods.first);
+  if (SilentMod == -1) {
+    if (RoundingMod == -1)
+      CGF.CGM.Error(E->getArg(I)->getBeginLoc(), KVX_ERROR_INVALID_ROUNDING);
+    CGF.CGM.Error(E->getArg(I)->getBeginLoc(), KVX_ERROR_INVALID_SILENT);
+    FloatMods.IsValid = false;
+    return FloatMods;
+  }
+  FloatMods.SilentMod = static_cast<bool>(SilentMod);
+
+  if (RoundingMod == -1)
+    RoundingMod = ROUNDING_;
+
+  if (Mods.second != "") {
+    CGF.CGM.Error(E->getArg(I)->getBeginLoc(), "invalid modifier string");
+    FloatMods.IsValid = false;
+    return FloatMods;
+  }
+
+  return FloatMods;
+}
+
 static Value *KVX_emitNaryBuiltin(unsigned N, CodeGenFunction &CGF,
                                   const CallExpr *E, unsigned IntrinsicID,
                                   bool HasRounding = false,
                                   bool HasSilent = false) {
   HasSilent |= HasRounding;
-  if (E->getNumArgs() != ((HasSilent ? 1 : 0) + N)) {
-    CGF.CGM.Error(E->getBeginLoc(), "Incorrect number of arguments to builtin");
+  if (!KVX_checkNargs(N, CGF, E, HasSilent))
     return nullptr;
-  }
 
   SmallVector<Value *, 4> Args;
   unsigned I = 0;
@@ -19803,38 +19879,14 @@ static Value *KVX_emitNaryBuiltin(unsigned N, CodeGenFunction &CGF,
     return CGF.Builder.CreateCall(Callee, Args);
   }
 
-  std::pair<StringRef, StringRef> Mods = {"", ""};
-  if (!E->isNullPointerConstant(CGF.getContext(),
-                                Expr::NPC_NeverValueDependent)) {
-    const auto *SL =
-        dyn_cast<clang::StringLiteral>(E->getArg(I)->IgnoreParenImpCasts());
-    Mods = SL->getString().split(".").second.split(".");
-  }
+  float_mods_t FloatMods = KVX_getFloatModifiers(E, CGF, I, HasRounding, true);
+  if (!FloatMods.IsValid)
+    return nullptr;
 
-  int ConjugateMod = KVX_getConjugateModifier(Mods.first);
-  if (ConjugateMod != -1)
-    Mods = Mods.second.split(".");
+  const auto RoundingMod = FloatMods.RoundingMod;
+  const auto SilentMod = FloatMods.SilentMod;
+  const auto ConjugateMod = FloatMods.ConjugateMod;
 
-  int RoundingMod = 0;
-  if (HasRounding) {
-    RoundingMod = KVX_getRoundingModifier(Mods.first);
-    if (RoundingMod != -1)
-      Mods = Mods.second.split(".");
-  }
-  int SilentMod = 0;
-  if (HasSilent) {
-    // Silent modifier and speculate modifier hold same options
-    SilentMod = KVX_getSpeculateModValue(Mods.first);
-    if (SilentMod == -1) {
-      if (RoundingMod == -1)
-        CGF.CGM.Error(E->getArg(I)->getBeginLoc(), "invalid rounding modifier");
-      CGF.CGM.Error(E->getArg(I)->getBeginLoc(), "invalid silent modifier");
-      return nullptr;
-    }
-
-    if (RoundingMod == -1)
-      RoundingMod = ROUNDING_;
-  }
   bool HasConjugateMod = ConjugateMod > 0;
   // Determine if the intrinsic has a conjugate modifier to set.
   switch (IntrinsicID) {
@@ -19870,11 +19922,6 @@ static Value *KVX_emitNaryBuiltin(unsigned N, CodeGenFunction &CGF,
                     "conjugate modifier not supported for this builtin");
   }
 
-  if (Mods.second != "") {
-    CGF.CGM.Error(E->getArg(I)->getBeginLoc(), "invalid modifier string");
-    return nullptr;
-  }
-
   if (HasRounding)
     Args.push_back(ConstantInt::get(CGF.IntTy, RoundingMod));
 
@@ -19906,28 +19953,11 @@ static Value *KVX_emitUnaryShiftingRoundingBuiltin(CodeGenFunction &CGF,
     CGF.CGM.Error(E->getArg(1)->getBeginLoc(),
                   "expects a 6-bit unsigned immediate in the second argument");
 
-  std::pair<StringRef, StringRef> Mods = {"", ""};
-  if (!E->isNullPointerConstant(CGF.getContext(),
-                                Expr::NPC_NeverValueDependent)) {
-    const auto *SL =
-        dyn_cast<clang::StringLiteral>(E->getArg(2)->IgnoreParenImpCasts());
-    Mods = SL->getString().split(".").second.split(".");
-  }
-  int Modifier = KVX_getRoundingModifier(Mods.first);
-  if (Modifier != -1)
-    Mods = Mods.second.split(".");
-
-  int SilentModifier = KVX_getSpeculateModValue(Mods.first);
-
-  if (SilentModifier == -1) {
-    if (Modifier == -1)
-      CGF.CGM.Error(E->getArg(2)->getBeginLoc(), "invalid rounding modifier");
-    CGF.CGM.Error(E->getArg(2)->getBeginLoc(), "invalid silent modifier");
+  float_mods_t FloatMods = KVX_getFloatModifiers(E, CGF, 2, true, false);
+  if (!FloatMods.IsValid)
     return nullptr;
-  }
-
-  if (Modifier == -1)
-    Modifier = ROUNDING_;
+  const auto SilentModifier = FloatMods.SilentMod;
+  const auto Modifier = FloatMods.RoundingMod;
 
   Value *Arg2 = ConstantInt::get(CGF.Int64Ty, ShiftValue);
   Value *Arg3 = ConstantInt::get(CGF.IntTy, Modifier);
@@ -20249,33 +20279,13 @@ static Value *KVX_emitVectorBuiltin(CodeGenFunction &CGF, const CallExpr *E,
   Value *ConjugateArg = NULL;
 
   if (Rounding) {
-    std::pair<StringRef, StringRef> Mods = {"", ""};
-    if (!E->isNullPointerConstant(CGF.getContext(),
-                                  Expr::NPC_NeverValueDependent)) {
-      const auto *SL = dyn_cast<clang::StringLiteral>(
-          E->getArg(NumOperands)->IgnoreParenImpCasts());
-      Mods = SL->getString().split(".").second.split(".");
-    }
-    int ConjugateMod = KVX_getConjugateModifier(Mods.first);
-    if (ConjugateMod != -1)
-      Mods = Mods.second.split(".");
-
-    int RoundingMod = KVX_getRoundingModifier(Mods.first);
-    if (RoundingMod != -1)
-      Mods = Mods.second.split(".");
-
-    int SilentMod = KVX_getSpeculateModValue(Mods.first);
-    if (SilentMod == -1) {
-      if (RoundingMod == -1)
-        CGF.CGM.Error(E->getArg(NumOperands)->getBeginLoc(),
-                      "invalid rounding modifier");
-      CGF.CGM.Error(E->getArg(NumOperands)->getBeginLoc(),
-                    "invalid silent modifier");
+    float_mods_t FloatMods =
+        KVX_getFloatModifiers(E, CGF, NumOperands, true, true);
+    if (!FloatMods.IsValid)
       return nullptr;
-    }
-
-    if (RoundingMod == -1)
-      RoundingMod = ROUNDING_;
+    const auto ConjugateMod = FloatMods.ConjugateMod;
+    const auto RoundingMod = FloatMods.RoundingMod;
+    const auto SilentMod = FloatMods.SilentMod;
 
     bool HasConjugateMod = ConjugateMod > 0;
     // Determine if the intrinsic has a conjugate modifier to set.
@@ -20381,30 +20391,11 @@ KVX_emitVectorShiftingBuiltin(CodeGenFunction &CGF, const CallExpr *E,
   }
   Value *ShiftArg = ConstantInt::get(CGF.Int64Ty, ShiftValue);
 
-  std::pair<StringRef, StringRef> Mods = {"", ""};
-  if (!E->isNullPointerConstant(CGF.getContext(),
-                                Expr::NPC_NeverValueDependent)) {
-    const auto *SL =
-        dyn_cast<clang::StringLiteral>(E->getArg(2)->IgnoreParenImpCasts());
-    Mods = SL->getString().split(".").second.split(".");
-  }
-
-  int Modifier = KVX_getRoundingModifier(Mods.first);
-
-  if (Modifier != -1)
-    Mods = Mods.second.split(".");
-
-  int SilentModifier = KVX_getSpeculateModValue(Mods.first);
-
-  if (SilentModifier == -1) {
-    if (Modifier == -1)
-      CGF.CGM.Error(E->getArg(2)->getBeginLoc(), "invalid rounding modifier");
-    CGF.CGM.Error(E->getArg(2)->getBeginLoc(), "invalid silent modifier");
+  float_mods_t FloatMods = KVX_getFloatModifiers(E, CGF, 2, true, false);
+  if (!FloatMods.IsValid)
     return nullptr;
-  }
-
-  if (Modifier == -1)
-    Modifier = ROUNDING_;
+  const auto Modifier = FloatMods.RoundingMod;
+  const auto SilentModifier = FloatMods.SilentMod;
 
   Value *ModifierArg = ConstantInt::get(CGF.IntTy, Modifier);
 
@@ -22103,6 +22094,89 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_srsdqs:
     return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_srsd, 1, Int64Ty, 4,
                                  1, false, EmitScalarExpr(E->getArg(1)));
+  case KVX::BI__builtin_kvx_ffdmdaw:
+    return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffdmdaw, true);
+  case KVX::BI__builtin_kvx_ffdmdawp:
+    return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffdmdawp, true);
+  case KVX::BI__builtin_kvx_ffdmdawq: {
+    constexpr unsigned NArgs = 3;
+    if (!KVX_checkNargs(NArgs, *this, E, true))
+      return nullptr;
+
+    float_mods_t FloatMods =
+        KVX_getFloatModifiers(E, *this, NArgs, true, false);
+    if (!FloatMods.IsValid)
+      return nullptr;
+    auto *const RoundingMod =
+        ConstantInt::get(this->IntTy, FloatMods.RoundingMod);
+    auto *const SilentMod = ConstantInt::get(this->IntTy, FloatMods.SilentMod);
+
+    /** This code computes the following:
+     * ASubvec[0] = vector(a[0], a[1], a[4], a[5]);
+     * ASubvec[1] = vector(a[2], a[3], a[6], a[7]);
+     * BSubvec[0] = vector(b[0], b[1], b[4], b[5]);
+     * BSubvec[1] = vector(b[2], b[3], b[6], b[7]);
+     * CSubvec[0] = vector(c[0], c[1]);
+     * CSubvec[1] = vector(c[2], c[3]);
+     * V0 = ffdmdawp(ASubvec[0], BSubvec[0], CSubvec[0]);
+     * V1 = ffdmdawp(ASubvec[1], BSubvec[1], CSubvec[1]);
+     * concatenate(V0, V1) // with a shufflevector
+     */
+    Value *A = this->EmitScalarExpr(E->getArg(0));
+    Value *B = this->EmitScalarExpr(E->getArg(1));
+    Value *C = this->EmitScalarExpr(E->getArg(2));
+
+    constexpr int VectorLength = 8;
+    constexpr int CVectorLength = VectorLength >> 1;
+    Value *AElt[VectorLength];
+    Value *BElt[VectorLength];
+    Value *CElt[CVectorLength];
+    for (int i = 0; i < VectorLength; i++) {
+      AElt[i] = this->Builder.CreateExtractElement(A, i);
+      BElt[i] = this->Builder.CreateExtractElement(B, i);
+      if (i < CVectorLength)
+        CElt[i] = this->Builder.CreateExtractElement(C, i);
+    }
+
+    llvm::Type *V4F32 = llvm::FixedVectorType::get(FloatTy, 4);
+    llvm::Type *V2F32 = llvm::FixedVectorType::get(FloatTy, 2);
+    Value *ASubvec[2] = {UndefValue::get(V4F32), UndefValue::get(V4F32)};
+    Value *BSubvec[2] = {UndefValue::get(V4F32), UndefValue::get(V4F32)};
+    Value *CSubvec[2] = {UndefValue::get(V2F32), UndefValue::get(V2F32)};
+
+    constexpr int SubvecLength = VectorLength >> 1;
+    constexpr int CSubvecLength = CVectorLength >> 1;
+    int SubvecIndices[2][SubvecLength] = {{0, 1, 4, 5}, {2, 3, 6, 7}};
+    for (int sv = 0; sv < 2; sv++) {
+      int InsertCount = 0;
+      for (int i : SubvecIndices[sv]) {
+        ASubvec[sv] = this->Builder.CreateInsertElement(ASubvec[sv], AElt[i],
+                                                        InsertCount);
+        BSubvec[sv] = this->Builder.CreateInsertElement(BSubvec[sv], BElt[i],
+                                                        InsertCount);
+        if (InsertCount < CSubvecLength)
+          CSubvec[sv] = this->Builder.CreateInsertElement(
+              CSubvec[sv], CElt[CSubvecLength * sv + InsertCount], InsertCount);
+
+        InsertCount++;
+      }
+    }
+
+    Value *Result[2];
+    Function *Callee = this->CGM.getIntrinsic(Intrinsic::kvx_ffdmdawp);
+    for (int sv = 0; sv < 2; sv++)
+      Result[sv] = this->Builder.CreateCall(
+          Callee,
+          {ASubvec[sv], BSubvec[sv], CSubvec[sv], RoundingMod, SilentMod});
+
+    constexpr int ResultVectorLength = CVectorLength;
+    SmallVector<Constant *, ResultVectorLength> MaskVector;
+    for (int i = 0; i < ResultVectorLength; i++)
+      MaskVector.push_back(ConstantInt::get(this->Int32Ty, i));
+    Value *MaskVec = ConstantVector::get(ArrayRef<Constant *>(MaskVector));
+
+    return this->Builder.CreateShuffleVector(Result[0], Result[1], MaskVec);
+  }
   case KVX::BI__builtin_kvx_shiftbo:
   case KVX::BI__builtin_kvx_shiftbx:
   case KVX::BI__builtin_kvx_shiftbv:

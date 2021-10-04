@@ -2589,6 +2589,22 @@ def FCDIVWP : SILENT2_REGISTERW_REGISTERP_SIMPLE
    "fcdivwp$a1 $a2 = $a3",
    [/* no straightforward pattern */]>;
 
+let Constraints = "$ad = $a2" in
+let Defs = [CS], Predicates = [IsV2] in
+def FFDMDAW : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32X2
+  <(outs SingleReg:$ad), (ins SingleReg:$a0, SingleReg:$a1, SingleReg:$a2, RoundingMod:$r, SilentMod:$s),
+   "ffdmdaw$r$s $ad = $a0, $a1",
+   [/* no straightforward pattern */],
+   MAU_AUXR>;
+
+let Constraints = "$ad = $a2" in
+let Defs = [CS], Predicates = [IsV2] in
+def FFDMDAWP : ROUNDING_SILENT_REGISTERW_REGISTERP_REGISTERQ_SIMPLE_BINARY32X2
+  <(outs SingleReg:$ad), (ins PairedReg:$a0, PairedReg:$a1, SingleReg:$a2, RoundingMod:$r, SilentMod:$s),
+   "ffdmdawp$r$s $ad = $a0, $a1",
+   [/* no straightforward pattern */],
+   MAU_AUXR>;
+
 def FMIND : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fmind $a1 = $a2, $a3",

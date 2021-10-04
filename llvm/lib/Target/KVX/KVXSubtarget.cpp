@@ -57,3 +57,4 @@ bool KVXSubtarget::enableSubRegLiveness() const {
 }
 bool KVXSubtarget::useAA() const { return (OptLevel != CodeGenOpt::None); }
 bool KVXSubtarget::isV1() const { return IsV1; }
+bool KVXSubtarget::isV2() const { return IsV2; }

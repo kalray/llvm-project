@@ -153,6 +153,11 @@ def int_kvx_ffmawd: Intrinsic<[llvm_double_ty], [llvm_float_ty, llvm_float_ty, l
 def int_kvx_ffmsw: Intrinsic<[llvm_float_ty], [llvm_float_ty, llvm_float_ty, llvm_float_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_ffmsd: Intrinsic<[llvm_double_ty], [llvm_double_ty, llvm_double_ty, llvm_double_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_ffmswd: Intrinsic<[llvm_double_ty], [llvm_float_ty, llvm_float_ty, llvm_double_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
+
+// Floating-Point Fused Dual-Multiply Dual-Add
+def int_kvx_ffdmdaw: Intrinsic<[llvm_float_ty], [llvm_v2f32_ty, llvm_v2f32_ty, llvm_float_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_ffdmdawp: Intrinsic<[llvm_v2f32_ty], [llvm_v4f32_ty, llvm_v4f32_ty, llvm_v2f32_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
+
 def int_kvx_fcdivw: Intrinsic<[llvm_float_ty], [llvm_float_ty, llvm_float_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_fcdivd: Intrinsic<[llvm_double_ty], [llvm_double_ty, llvm_double_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_fsdivw: Intrinsic<[llvm_float_ty], [llvm_float_ty, llvm_float_ty, llvm_i32_ty], [IntrNoMem]>;

@@ -30,6 +30,7 @@ class KVXSubtarget : public KVXGenSubtargetInfo {
   virtual void anchor();
 
   bool IsV1 = false;
+  bool IsV2 = false;
 
   CodeGenOpt::Level OptLevel;
   KVXFrameLowering FrameLowering;
@@ -73,6 +74,7 @@ public:
   bool enablePostRAScheduler() const override;
   bool enableMachineScheduler() const override;
   bool isV1() const;
+  bool isV2() const;
   bool useAA() const override;
 };
 } // namespace llvm

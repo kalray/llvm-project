@@ -262,6 +262,10 @@ BUILTIN(__builtin_kvx_fsrsrw, "ff", "")
 BUILTIN(__builtin_kvx_fwidenlhw, "fUicC*", "")
 BUILTIN(__builtin_kvx_fwidenmhw, "fUicC*", "")
 
+BUILTIN(__builtin_kvx_ffdmdaw, "fV2fV2ffcC*", "n")
+BUILTIN(__builtin_kvx_ffdmdawp, "V2fV4fV4fV2fcC*", "n")
+BUILTIN(__builtin_kvx_ffdmdawq, "V4fV8fV8fV4fcC*", "n")
+
 BUILTIN(__builtin_kvx_shiftbo, "V8cV8cUic", "n")
 BUILTIN(__builtin_kvx_shiftbx, "V16cV16cUic", "n")
 BUILTIN(__builtin_kvx_shiftbv, "V32cV32cUic", "n")
