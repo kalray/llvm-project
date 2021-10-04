@@ -17594,78 +17594,80 @@ Value *CodeGenFunction::EmitHexagonBuiltinExpr(unsigned BuiltinID,
   return nullptr;
 }
 
-static bool KVX_hasConjugateModifier(clang::ASTContext &Ctx,
-                                     const clang::Expr *E) {
-  if (E->isNullPointerConstant(Ctx, Expr::NPC_NeverValueDependent)) {
-    return false;
-  }
+// Must keep these enums in sync with KVX.h
+enum ROUNDING {
+  ROUNDING_RN,
+  ROUNDING_RU,
+  ROUNDING_RD,
+  ROUNDING_RZ,
+  ROUNDING_RNA,
+  ROUNDING_RNZ,
+  ROUNDING_RO,
+  ROUNDING_
+};
 
-  if (E->getStmtClass() == Stmt::StringLiteralClass) {
-    StringRef Str = cast<clang::StringLiteral>(E)->getString();
-    return Str.startswith(".c");
-  }
+enum SCALARCOND {
+  SCALARCOND_DNEZ,
+  SCALARCOND_DEQZ,
+  SCALARCOND_DLTZ,
+  SCALARCOND_DGEZ,
+  SCALARCOND_DLEZ,
+  SCALARCOND_DGTZ,
+  SCALARCOND_ODD,
+  SCALARCOND_EVEN,
+  SCALARCOND_WNEZ,
+  SCALARCOND_WEQZ,
+  SCALARCOND_WLTZ,
+  SCALARCOND_WGEZ,
+  SCALARCOND_WLEZ,
+  SCALARCOND_WGTZ
+};
 
-  return false;
+enum ROUNDINT {
+  ROUNDINT_RN,
+  ROUNDINT_RU,
+  ROUNDINT_RD,
+  ROUNDINT_RZ,
+  ROUNDINT_RHU
+};
+
+enum SATURATE { SATURATE_SAT, SATURATE_SATU };
+
+static int KVX_getConjugateModifier(const StringRef &Str) {
+  return llvm::StringSwitch<int>(Str).Case("", 0).Case("c", 1).Default(-1);
 }
 
-static int KVX_getSilentModifier(const clang::Expr *E) {
-  if (E->getStmtClass() == Stmt::StringLiteralClass) {
-    StringRef Str = cast<clang::StringLiteral>(E)->getString();
-
-    if (Str.endswith(".s"))
-      return 1;
-  }
-
-  return 0;
-}
-
-static int KVX_getRoundingModifier(clang::ASTContext &Ctx,
-                                   const clang::Expr *E) {
-  if (E->isNullPointerConstant(Ctx, Expr::NPC_NeverValueDependent)) {
-    return 7;
-  }
-  if (E->getStmtClass() == Stmt::StringLiteralClass) {
-    StringRef Str = cast<clang::StringLiteral>(E)->getString();
-    if (Str.startswith(".c"))
-      Str = Str.drop_front(2);
-    if (Str.endswith(".s"))
-      Str = Str.drop_back(2);
-    return llvm::StringSwitch<int>(Str)
-        .Case("", 7)
-        .CaseLower(".rn", 0)
-        .CaseLower(".ru", 1)
-        .CaseLower(".rd", 2)
-        .CaseLower(".rz", 3)
-        .Default(-1);
-  }
-
-  return -1;
+static int KVX_getRoundingModifier(const StringRef &Str) {
+  return llvm::StringSwitch<int>(Str)
+      .Case("", ROUNDING_)
+      .CaseLower("rn", ROUNDING_RN)
+      .CaseLower("ru", ROUNDING_RU)
+      .CaseLower("rd", ROUNDING_RD)
+      .CaseLower("rz", ROUNDING_RZ)
+      .Default(-1);
 }
 
 static int KVX_getScalarcondModValue(const StringRef &Str) {
   return StringSwitch<int>(Str)
-      .Case("dnez", 0)
-      .Case("deqz", 1)
-      .Case("dltz", 2)
-      .Case("dgez", 3)
-      .Case("dlez", 4)
-      .Case("dgtz", 5)
-      .Case("odd", 6)
-      .Case("even", 7)
-      .Case("wnez", 8)
-      .Case("weqz", 9)
-      .Case("wltz", 10)
-      .Case("wgez", 11)
-      .Case("wlez", 12)
-      .Case("wgtz", 13)
+      .Case("dnez", SCALARCOND_DNEZ)
+      .Case("deqz", SCALARCOND_DEQZ)
+      .Case("dltz", SCALARCOND_DLTZ)
+      .Case("dgez", SCALARCOND_DGEZ)
+      .Case("dlez", SCALARCOND_DLEZ)
+      .Case("dgtz", SCALARCOND_DGTZ)
+      .Case("odd", SCALARCOND_ODD)
+      .Case("even", SCALARCOND_EVEN)
+      .Case("wnez", SCALARCOND_WNEZ)
+      .Case("weqz", SCALARCOND_WEQZ)
+      .Case("wltz", SCALARCOND_WLTZ)
+      .Case("wgez", SCALARCOND_WGEZ)
+      .Case("wlez", SCALARCOND_WLEZ)
+      .Case("wgtz", SCALARCOND_WGTZ)
       .Default(-1);
 }
 
 static int KVX_getSpeculateModValue(const StringRef &Str) {
-  return StringSwitch<int>(Str)
-        .Case("", 0)
-        .Case("s", 1)
-        .Default(-1);
+  return StringSwitch<int>(Str).Case("", 0).Case("s", 1).Default(-1);
 }
 
 static Value *KVX_emit_swapvo(CodeGenFunction &CGF, const CallExpr *E) {
@@ -17774,18 +17776,9 @@ static Value *KVX_emitScaleNarrowBuiltin(unsigned NumMods, unsigned IntrinsicID,
   else
     Mods.first = Mods.second;
 
-  int Round = llvm::StringSwitch<int>(First)
-                  .Case("", 7)
-                  .CaseLower("rn", 0)
-                  .CaseLower("ru", 1)
-                  .CaseLower("rd", 2)
-                  .CaseLower("rz", 3)
-                  .Default(-1);
+  int Round = KVX_getRoundingModifier(First);
 
-  int Silent = llvm::StringSwitch<int>(Mods.first)
-                   .CaseLower("", 0)
-                   .CaseLower("s", 1)
-                   .Default(-1);
+  int Silent = KVX_getSpeculateModValue(Mods.first);
 
   int Rectify = 0;
   if (NumMods == 3) {
@@ -17846,15 +17839,15 @@ static Value *KVX_emitRndintSatBuiltin(unsigned NumArgs, unsigned IntrinsicID,
   }
   auto Mods = SL->getString().split(".").second.split(".");
   int RoundInt = llvm::StringSwitch<int>(Mods.first)
-                     .CaseLower("rn", 0)
-                     .CaseLower("ru", 1)
-                     .CaseLower("rd", 2)
-                     .CaseLower("rz", 3)
-                     .CaseLower("rhu", 4)
+                     .CaseLower("rn", ROUNDINT_RN)
+                     .CaseLower("ru", ROUNDINT_RU)
+                     .CaseLower("rd", ROUNDINT_RD)
+                     .CaseLower("rz", ROUNDINT_RZ)
+                     .CaseLower("rhu", ROUNDINT_RHU)
                      .Default(-1);
   int Saturation = llvm::StringSwitch<int>(Mods.second)
-                       .CaseLower("sat", 0)
-                       .CaseLower("satu", 1)
+                       .CaseLower("sat", SATURATE_SAT)
+                       .CaseLower("satu", SATURATE_SATU)
                        .Default(-1);
 
   if (RoundInt < 0 || Saturation < 0) {
@@ -17964,7 +17957,8 @@ static Value *KVX_emitNaryBuiltin(unsigned N, CodeGenFunction &CGF,
                                   const CallExpr *E, unsigned IntrinsicID,
                                   bool HasRounding = false,
                                   bool HasSilent = false) {
-  if (E->getNumArgs() != ((HasRounding || HasSilent ? 1 : 0) + N)) {
+  HasSilent |= HasRounding;
+  if (E->getNumArgs() != ((HasSilent ? 1 : 0) + N)) {
     CGF.CGM.Error(E->getBeginLoc(), "Incorrect number of arguments to builtin");
     return nullptr;
   }
@@ -17974,63 +17968,88 @@ static Value *KVX_emitNaryBuiltin(unsigned N, CodeGenFunction &CGF,
   while (I < N)
     Args.push_back(CGF.EmitScalarExpr(E->getArg(I++)));
 
-  bool HasConjugateMod = false;
+  if (!HasSilent) { // No modifiers
+    Function *Callee = CGF.CGM.getIntrinsic(IntrinsicID);
+    return CGF.Builder.CreateCall(Callee, Args);
+  }
 
+  std::pair<StringRef, StringRef> Mods = {"", ""};
+  if (!E->isNullPointerConstant(CGF.getContext(),
+                                Expr::NPC_NeverValueDependent)) {
+    const auto *SL =
+        dyn_cast<clang::StringLiteral>(E->getArg(I)->IgnoreParenImpCasts());
+    Mods = SL->getString().split(".").second.split(".");
+  }
+
+  int ConjugateMod = KVX_getConjugateModifier(Mods.first);
+  if (ConjugateMod != -1)
+    Mods = Mods.second.split(".");
+
+  int RoundingMod = 0;
   if (HasRounding) {
-    HasConjugateMod = KVX_hasConjugateModifier(
-        CGF.getContext(), E->getArg(I)->IgnoreParenImpCasts());
-
-    // Determine if the intrinsic has a conjugate modifier to set.
-    switch (IntrinsicID) {
-    case Intrinsic::kvx_faddwp:
-    case Intrinsic::kvx_faddwq:
-    case Intrinsic::kvx_fsbfwp:
-    case Intrinsic::kvx_fsbfwq:
-    case Intrinsic::kvx_fadddp:
-    case Intrinsic::kvx_fsbfdp:
-    case Intrinsic::kvx_fmulwc:
-    case Intrinsic::kvx_fmulwcp:
-    case Intrinsic::kvx_ffmawc:
-    case Intrinsic::kvx_ffmawcp:
-    case Intrinsic::kvx_ffmswc:
-    case Intrinsic::kvx_ffmswcp:
-      Args.push_back(ConstantInt::get(CGF.IntTy, HasConjugateMod ? 1 : 0));
-      break;
-    case Intrinsic::kvx_fmuldc:
-      if (HasConjugateMod)
-        IntrinsicID = Intrinsic::kvx_fmulcdc;
-      break;
-    case Intrinsic::kvx_ffmadc:
-      if (HasConjugateMod)
-        IntrinsicID = Intrinsic::kvx_ffmacdc;
-      break;
-    case Intrinsic::kvx_ffmsdc:
-      if (HasConjugateMod)
-        IntrinsicID = Intrinsic::kvx_ffmscdc;
-      break;
-    default:
-      if (HasConjugateMod)
-        CGF.CGM.Error(E->getArg(1)->getBeginLoc(),
-                      "conjugate modifier not supported for this builtin");
-    }
-
-    int RoundingModifier = KVX_getRoundingModifier(
-        CGF.getContext(), E->getArg(I)->IgnoreParenImpCasts());
-
-    if (RoundingModifier == -1) {
-      CGF.CGM.Error(E->getArg(I)->getBeginLoc(), "invalid rounding modifier");
+    RoundingMod = KVX_getRoundingModifier(Mods.first);
+    if (RoundingMod != -1)
+      Mods = Mods.second.split(".");
+  }
+  int SilentMod = 0;
+  if (HasSilent) {
+    // Silent modifier and speculate modifier hold same options
+    SilentMod = KVX_getSpeculateModValue(Mods.first);
+    if (SilentMod == -1) {
+      if (RoundingMod == -1)
+        CGF.CGM.Error(E->getArg(I)->getBeginLoc(), "invalid rounding modifier");
+      CGF.CGM.Error(E->getArg(I)->getBeginLoc(), "invalid silent modifier");
       return nullptr;
     }
 
-    Args.push_back(ConstantInt::get(CGF.IntTy, RoundingModifier));
+    if (RoundingMod == -1)
+      RoundingMod = ROUNDING_;
+  }
+  bool HasConjugateMod = ConjugateMod > 0;
+  // Determine if the intrinsic has a conjugate modifier to set.
+  switch (IntrinsicID) {
+  case Intrinsic::kvx_faddwp:
+  case Intrinsic::kvx_faddwq:
+  case Intrinsic::kvx_fsbfwp:
+  case Intrinsic::kvx_fsbfwq:
+  case Intrinsic::kvx_fadddp:
+  case Intrinsic::kvx_fsbfdp:
+  case Intrinsic::kvx_fmulwc:
+  case Intrinsic::kvx_fmulwcp:
+  case Intrinsic::kvx_ffmawc:
+  case Intrinsic::kvx_ffmawcp:
+  case Intrinsic::kvx_ffmswc:
+  case Intrinsic::kvx_ffmswcp:
+    Args.push_back(ConstantInt::get(CGF.IntTy, HasConjugateMod ? 1 : 0));
+    break;
+  case Intrinsic::kvx_fmuldc:
+    if (HasConjugateMod)
+      IntrinsicID = Intrinsic::kvx_fmulcdc;
+    break;
+  case Intrinsic::kvx_ffmadc:
+    if (HasConjugateMod)
+      IntrinsicID = Intrinsic::kvx_ffmacdc;
+    break;
+  case Intrinsic::kvx_ffmsdc:
+    if (HasConjugateMod)
+      IntrinsicID = Intrinsic::kvx_ffmscdc;
+    break;
+  default:
+    if (HasConjugateMod)
+      CGF.CGM.Error(E->getArg(1)->getBeginLoc(),
+                    "conjugate modifier not supported for this builtin");
   }
 
-  // HasRounding implies HasSilent
-  if (HasSilent || HasRounding) {
-    int SilentModifier =
-        KVX_getSilentModifier(E->getArg(I)->IgnoreParenImpCasts());
-    Args.push_back(ConstantInt::get(CGF.IntTy, SilentModifier));
+  if (Mods.second != "") {
+    CGF.CGM.Error(E->getArg(I)->getBeginLoc(), "invalid modifier string");
+    return nullptr;
   }
+
+  if (HasRounding)
+    Args.push_back(ConstantInt::get(CGF.IntTy, RoundingMod));
+
+  if (HasSilent)
+    Args.push_back(ConstantInt::get(CGF.IntTy, SilentMod));
 
   Function *Callee = CGF.CGM.getIntrinsic(IntrinsicID);
   return CGF.Builder.CreateCall(Callee, Args);
@@ -18057,19 +18076,34 @@ static Value *KVX_emitUnaryShiftingRoundingBuiltin(CodeGenFunction &CGF,
     CGF.CGM.Error(E->getArg(1)->getBeginLoc(),
                   "expects a 6-bit unsigned immediate in the second argument");
 
-  int Modifier = KVX_getRoundingModifier(CGF.getContext(),
-                                         E->getArg(2)->IgnoreParenImpCasts());
+  std::pair<StringRef, StringRef> Mods = {"", ""};
+  if (!E->isNullPointerConstant(CGF.getContext(),
+                                Expr::NPC_NeverValueDependent)) {
+    const auto *SL =
+        dyn_cast<clang::StringLiteral>(E->getArg(2)->IgnoreParenImpCasts());
+    Mods = SL->getString().split(".").second.split(".");
+  }
+  int Modifier = KVX_getRoundingModifier(Mods.first);
+  if (Modifier != -1)
+    Mods = Mods.second.split(".");
+
+  int SilentModifier = KVX_getSpeculateModValue(Mods.first);
+
+  if (SilentModifier == -1) {
+    if (Modifier == -1)
+      CGF.CGM.Error(E->getArg(2)->getBeginLoc(), "invalid rounding modifier");
+    CGF.CGM.Error(E->getArg(2)->getBeginLoc(), "invalid silent modifier");
+    return nullptr;
+  }
 
   if (Modifier == -1)
-    CGF.CGM.Error(E->getArg(2)->getBeginLoc(), "invalid rounding modifier");
+    Modifier = ROUNDING_;
 
   Value *Arg2 = ConstantInt::get(CGF.Int64Ty, ShiftValue);
   Value *Arg3 = ConstantInt::get(CGF.IntTy, Modifier);
 
   Function *Callee = CGF.CGM.getIntrinsic(IntrinsicID);
 
-  int SilentModifier =
-      KVX_getSilentModifier(E->getArg(2)->IgnoreParenImpCasts());
   Value *Arg4 = ConstantInt::get(CGF.IntTy, SilentModifier);
 
   return CGF.Builder.CreateCall(Callee, {Arg1, Arg2, Arg3, Arg4});
@@ -18358,17 +18392,40 @@ static Value *KVX_emitVectorBuiltin(CodeGenFunction &CGF, const CallExpr *E,
   for (unsigned Op = 0; Op < NumOperands; Op++)
     Operands.push_back(CGF.EmitScalarExpr(E->getArg(Op)));
 
-  bool HasConjugateMod = false;
-
   Value *ModifierArg = NULL;
   Value *SilentArg = NULL;
   Value *ConjugateArg = NULL;
 
   if (Rounding) {
+    std::pair<StringRef, StringRef> Mods = {"", ""};
+    if (!E->isNullPointerConstant(CGF.getContext(),
+                                  Expr::NPC_NeverValueDependent)) {
+      const auto *SL = dyn_cast<clang::StringLiteral>(
+          E->getArg(NumOperands)->IgnoreParenImpCasts());
+      Mods = SL->getString().split(".").second.split(".");
+    }
+    int ConjugateMod = KVX_getConjugateModifier(Mods.first);
+    if (ConjugateMod != -1)
+      Mods = Mods.second.split(".");
 
-    HasConjugateMod = KVX_hasConjugateModifier(
-        CGF.getContext(), E->getArg(NumOperands)->IgnoreParenImpCasts());
+    int RoundingMod = KVX_getRoundingModifier(Mods.first);
+    if (RoundingMod != -1)
+      Mods = Mods.second.split(".");
 
+    int SilentMod = KVX_getSpeculateModValue(Mods.first);
+    if (SilentMod == -1) {
+      if (RoundingMod == -1)
+        CGF.CGM.Error(E->getArg(NumOperands)->getBeginLoc(),
+                      "invalid rounding modifier");
+      CGF.CGM.Error(E->getArg(NumOperands)->getBeginLoc(),
+                    "invalid silent modifier");
+      return nullptr;
+    }
+
+    if (RoundingMod == -1)
+      RoundingMod = ROUNDING_;
+
+    bool HasConjugateMod = ConjugateMod > 0;
     // Determine if the intrinsic has a conjugate modifier to set.
     switch (IntrinsicID) {
     case Intrinsic::kvx_faddwq:
@@ -18398,18 +18455,9 @@ static Value *KVX_emitVectorBuiltin(CodeGenFunction &CGF, const CallExpr *E,
                       "conjugate modifier not supported for this builtin");
     }
 
-    int RoundingModifier = KVX_getRoundingModifier(
-        CGF.getContext(), E->getArg(NumOperands)->IgnoreParenImpCasts());
+    ModifierArg = ConstantInt::get(CGF.IntTy, RoundingMod);
 
-    if (RoundingModifier == -1)
-      CGF.CGM.Error(E->getArg(NumOperands)->getBeginLoc(),
-                    "invalid rounding modifier");
-
-    ModifierArg = ConstantInt::get(CGF.IntTy, RoundingModifier);
-
-    int SilentModifier =
-        KVX_getSilentModifier(E->getArg(2)->IgnoreParenImpCasts());
-    SilentArg = ConstantInt::get(CGF.IntTy, SilentModifier);
+    SilentArg = ConstantInt::get(CGF.IntTy, SilentMod);
   }
 
   Function *Callee = CGF.CGM.getIntrinsic(IntrinsicID);
@@ -18481,25 +18529,42 @@ KVX_emitVectorShiftingBuiltin(CodeGenFunction &CGF, const CallExpr *E,
   }
   Value *ShiftArg = ConstantInt::get(CGF.Int64Ty, ShiftValue);
 
-  int Modifier = KVX_getRoundingModifier(CGF.getContext(),
-                                         E->getArg(2)->IgnoreParenImpCasts());
+  std::pair<StringRef, StringRef> Mods = {"", ""};
+  if (!E->isNullPointerConstant(CGF.getContext(),
+                                Expr::NPC_NeverValueDependent)) {
+    const auto *SL =
+        dyn_cast<clang::StringLiteral>(E->getArg(2)->IgnoreParenImpCasts());
+    Mods = SL->getString().split(".").second.split(".");
+  }
+
+  int Modifier = KVX_getRoundingModifier(Mods.first);
+
+  if (Modifier != -1)
+    Mods = Mods.second.split(".");
+
+  int SilentModifier = KVX_getSpeculateModValue(Mods.first);
+
+  if (SilentModifier == -1) {
+    if (Modifier == -1)
+      CGF.CGM.Error(E->getArg(2)->getBeginLoc(), "invalid rounding modifier");
+    CGF.CGM.Error(E->getArg(2)->getBeginLoc(), "invalid silent modifier");
+    return nullptr;
+  }
 
   if (Modifier == -1)
-    CGF.CGM.Error(E->getArg(2)->getBeginLoc(), "invalid rounding modifier");
+    Modifier = ROUNDING_;
 
   Value *ModifierArg = ConstantInt::get(CGF.IntTy, Modifier);
 
-  int SilentModifier =
-      KVX_getSilentModifier(E->getArg(2)->IgnoreParenImpCasts());
   Value *SilentArg = ConstantInt::get(CGF.IntTy, SilentModifier);
 
   Function *Callee = CGF.CGM.getIntrinsic(IntrinsicID);
   Value *Result = UndefValue::get(OutputVecTy);
   for (uint64_t i = 0; i < VectorSize; i += SliceSize) {
     SmallVector<Value *, 4> SV;
-    if (SliceSize == 1) {
+    if (SliceSize == 1)
       SV.push_back(CGF.Builder.CreateExtractElement(V, i));
-    } else {
+    else {
       int Ind[64];
       for (unsigned j = 0; j < SliceSize; j++)
         Ind[j] = i + j;

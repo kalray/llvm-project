@@ -2,5 +2,5 @@
 // RUN: %clang_cc1 -triple kvx-kalray-cos -S -verify %s
 
 float xfail_ro(float a, float b) {
-  return __builtin_kvx_faddw(a, b, ".ro"); // expected-error {{invalid rounding modifier}} expected-error {{cannot compile this builtin function yet}}
+  return __builtin_kvx_faddw(a, b, ".ro"); // expected-error {{invalid rounding modifier}} expected-error {{invalid silent modifier}} expected-error {{cannot compile this builtin function yet}}
 }
