@@ -19,41 +19,29 @@ long abdd(long v1, long v2) {
   return __builtin_kvx_abdd(v1, v2);
 }
 
-// CHECK-LABEL: @addsw(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i32 @llvm.kvx.addsw(i32 [[V1:%.*]], i32 [[V2:%.*]])
-// CHECK-NEXT:    ret i32 [[TMP0]]
-//
-int addsw(int v1, int v2) {
-  return __builtin_kvx_addsw(v1, v2);
-}
+/**
+ * TODO Reintroduce addsw - addsd once string modifiers are there
+ */
 
-// CHECK-LABEL: @addsd(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.addsd(i64 [[V1:%.*]], i64 [[V2:%.*]])
-// CHECK-NEXT:    ret i64 [[TMP0]]
-//
-long addsd(long v1, long v2) {
-  return __builtin_kvx_addsd(v1, v2);
-}
+// int addsw(int v1, int v2) {
+//   return __builtin_kvx_addsw(v1, v2);
+// }
 
-// CHECK-LABEL: @sbfsw(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i32 @llvm.kvx.sbfsw(i32 [[V1:%.*]], i32 [[V2:%.*]])
-// CHECK-NEXT:    ret i32 [[TMP0]]
-//
-int sbfsw(int v1, int v2) {
-  return __builtin_kvx_sbfsw(v1, v2);
-}
+// long addsd(long v1, long v2) {
+//   return __builtin_kvx_addsd(v1, v2);
+// }
 
-// CHECK-LABEL: @sbfsd(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.sbfsd(i64 [[V1:%.*]], i64 [[V2:%.*]])
-// CHECK-NEXT:    ret i64 [[TMP0]]
-//
-long sbfsd(long v1, long v2) {
-  return __builtin_kvx_sbfsd(v1, v2);
-}
+/**
+ * TODO Reintroduce sbfsw - sbfsd once string modifiers are there
+ */
+
+// int sbfsw(int v1, int v2) {
+//   return __builtin_kvx_sbfsw(v1, v2);
+// }
+
+// long sbfsd(long v1, long v2) {
+//   return __builtin_kvx_sbfsd(v1, v2);
+// }
 
 // CHECK-LABEL: @adddc(
 // CHECK-NEXT:  entry:
@@ -100,86 +88,54 @@ int avgw(int v1, int v2) {
   return __builtin_kvx_avgw(v1, v2);
 }
 
-// CHECK-LABEL: @avguw(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i32 @llvm.kvx.avguw(i32 [[V1:%.*]], i32 [[V2:%.*]])
-// CHECK-NEXT:    ret i32 [[TMP0]]
-//
-unsigned int avguw(unsigned int v1, unsigned int v2) {
-  return __builtin_kvx_avguw(v1, v2);
-}
+/**
+ * TODO Reintroduce avguw - avgruw once string modifiers are there
+ */
 
-// CHECK-LABEL: @avgrw(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i32 @llvm.kvx.avgrw(i32 [[V1:%.*]], i32 [[V2:%.*]])
-// CHECK-NEXT:    ret i32 [[TMP0]]
-//
-int avgrw(int v1, int v2) {
-  return __builtin_kvx_avgrw(v1, v2);
-}
+// unsigned int avguw(unsigned int v1, unsigned int v2) {
+//   return __builtin_kvx_avguw(v1, v2);
+// }
 
-// CHECK-LABEL: @avgruw(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i32 @llvm.kvx.avgruw(i32 [[V1:%.*]], i32 [[V2:%.*]])
-// CHECK-NEXT:    ret i32 [[TMP0]]
-//
-unsigned int avgruw(int v1, int v2) {
-  return __builtin_kvx_avgruw(v1, v2);
-}
+// int avgrw(int v1, int v2) {
+//   return __builtin_kvx_avgrw(v1, v2);
+// }
 
-// CHECK-LABEL: @cbsd(
+// unsigned int avgruw(int v1, int v2) {
+//   return __builtin_kvx_avgruw(v1, v2);
+// }
+
+// CHECK-LABEL: @bitcntd(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.cbsd(i64 [[L:%.*]])
 // CHECK-NEXT:    ret i64 [[TMP0]]
 //
-long cbsd(long l) {
-  return __builtin_kvx_cbsd(l);
+long bitcntd(long l) {
+  return __builtin_kvx_bitcntd(l);
 }
 
-// CHECK-LABEL: @cbsw(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i32 @llvm.kvx.cbsw(i32 [[I:%.*]])
-// CHECK-NEXT:    ret i32 [[TMP0]]
-//
-int cbsw(int i) {
-  return __builtin_kvx_cbsw(i);
-}
+/**
+ * TODO Reintroduce cbsw - ctzw once string modifiers are there
+ */
 
-// CHECK-LABEL: @clzd(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.clzd(i64 [[L:%.*]])
-// CHECK-NEXT:    ret i64 [[TMP0]]
-//
-long clzd(long l) {
-  return __builtin_kvx_clzd(l);
-}
+// int cbsw(int i) {
+//   return __builtin_kvx_cbsw(i);
+// }
 
-// CHECK-LABEL: @clzw(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i32 @llvm.kvx.clzw(i32 [[I:%.*]])
-// CHECK-NEXT:    ret i32 [[TMP0]]
-//
-int clzw(int i) {
-  return __builtin_kvx_clzw(i);
-}
+// long clzd(long l) {
+//   return __builtin_kvx_clzd(l);
+// }
 
-// CHECK-LABEL: @ctzd(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.ctzd(i64 [[L:%.*]])
-// CHECK-NEXT:    ret i64 [[TMP0]]
-//
-long ctzd(long l) {
-  return __builtin_kvx_ctzd(l);
-}
+// int clzw(int i) {
+//   return __builtin_kvx_clzw(i);
+// }
 
-// CHECK-LABEL: @ctzw(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i32 @llvm.kvx.ctzw(i32 [[I:%.*]])
-// CHECK-NEXT:    ret i32 [[TMP0]]
-//
-int ctzw(int i) {
-  return __builtin_kvx_ctzw(i);
-}
+// long ctzd(long l) {
+//   return __builtin_kvx_ctzd(l);
+// }
+
+// int ctzw(int i) {
+//   return __builtin_kvx_ctzw(i);
+// }
 
 // CHECK-LABEL: @fabsw(
 // CHECK-NEXT:  entry:
@@ -327,15 +283,6 @@ double fmuld(double v1, double v2) {
   return __builtin_kvx_fmuld(v1, v2, ".rz");
 }
 
-// CHECK-LABEL: @fmulwd(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call double @llvm.kvx.fmulwd(float [[V1:%.*]], float [[V2:%.*]], i32 3, i32 0)
-// CHECK-NEXT:    ret double [[TMP0]]
-//
-double fmulwd(float v1, float v2) {
-  return __builtin_kvx_fmulwd(v1, v2, ".rz");
-}
-
 // CHECK-LABEL: @ffmaw(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.ffmaw(float [[A:%.*]], float [[B:%.*]], float [[C:%.*]], i32 3, i32 0)
@@ -354,13 +301,13 @@ double ffmad(double a, double b, double c) {
   return __builtin_kvx_ffmad(a, b, c, ".rz");
 }
 
-// CHECK-LABEL: @ffmawd(
+// CHECK-LABEL: @ffmaxwd(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call double @llvm.kvx.ffmawd(float [[A:%.*]], float [[B:%.*]], double [[C:%.*]], i32 3, i32 0)
 // CHECK-NEXT:    ret double [[TMP0]]
 //
-double ffmawd(float a, float b, double c) {
-  return __builtin_kvx_ffmawd(a, b, c, ".rz");
+double ffmaxwd(float a, float b, double c) {
+  return __builtin_kvx_ffmaxwd(a, b, c, ".rz");
 }
 
 // CHECK-LABEL: @ffmsw(
@@ -390,13 +337,13 @@ double ffmsd(double a, double b, double c) {
   return __builtin_kvx_ffmsd(a, b, c, ".rz");
 }
 
-// CHECK-LABEL: @ffmswd(
+// CHECK-LABEL: @ffmsxwd(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call double @llvm.kvx.ffmswd(float [[A:%.*]], float [[B:%.*]], double [[C:%.*]], i32 3, i32 0)
 // CHECK-NEXT:    ret double [[TMP0]]
 //
-double ffmswd(float a, float b, double c) {
-  return __builtin_kvx_ffmswd(a, b, c, ".rz");
+double ffmsxwd(float a, float b, double c) {
+  return __builtin_kvx_ffmsxwd(a, b, c, ".rz");
 }
 
 // CHECK-LABEL: @floatw(
@@ -606,16 +553,6 @@ long sbmmt8(long a, long b) {
   return __builtin_kvx_sbmmt8(a, b);
 }
 
-// CHECK-LABEL: @satd(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[CONV:%.*]] = zext i8 [[B:%.*]] to i32
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.satd(i64 [[V:%.*]], i32 [[CONV]])
-// CHECK-NEXT:    ret i64 [[TMP0]]
-//
-long satd(long v, unsigned char b) {
-  return __builtin_kvx_satd(v, b);
-}
-
 // CHECK-LABEL: @stsuw(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call i32 @llvm.kvx.stsuw(i32 [[X:%.*]], i32 [[Y:%.*]])
@@ -632,24 +569,6 @@ unsigned int stsuw(unsigned int x, unsigned int y) {
 //
 unsigned long stsud(unsigned long x, unsigned long y) {
   return __builtin_kvx_stsud(x, y);
-}
-
-// CHECK-LABEL: @fwidenlhw(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.fwidenlhw(i32 [[V:%.*]], i32 0)
-// CHECK-NEXT:    ret float [[TMP0]]
-//
-float fwidenlhw(unsigned int v) {
-  return __builtin_kvx_fwidenlhw(v, "");
-}
-
-// CHECK-LABEL: @fwidenmhw(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.fwidenmhw(i32 [[V:%.*]], i32 0)
-// CHECK-NEXT:    ret float [[TMP0]]
-//
-float fwidenmhw(unsigned int v) {
-  return __builtin_kvx_fwidenmhw(v, "");
 }
 
 // CHECK-LABEL: @fnarrowwh(

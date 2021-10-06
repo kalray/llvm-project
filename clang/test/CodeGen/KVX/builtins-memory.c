@@ -211,93 +211,52 @@ double ldf(void *p) {
 
 typedef char int8x8_t __attribute__((__vector_size__(8 * sizeof(char))));
 
-// CHECK-LABEL: @ldbo(
+// CHECK-LABEL: @lbo(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = bitcast i8* [[P:%.*]] to <8 x i8>*
 // CHECK-NEXT:    [[TMP1:%.*]] = addrspacecast <8 x i8>* [[TMP0]] to <8 x i8> addrspace(258)*
 // CHECK-NEXT:    [[TMP2:%.*]] = load volatile <8 x i8>, <8 x i8> addrspace(258)* [[TMP1]], align 8
 // CHECK-NEXT:    ret <8 x i8> [[TMP2]]
 //
-int8x8_t ldbo(void *p) {
-  return __builtin_kvx_ldbo(p, ".s", 1);
+int8x8_t lbo(void *p) {
+  return __builtin_kvx_lbo(p, ".s", 1);
 }
 
 typedef short int16x4_t __attribute__((__vector_size__(4 * sizeof(short))));
 
-// CHECK-LABEL: @ldhq(
+// CHECK-LABEL: @lhq(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = bitcast i8* [[P:%.*]] to <4 x i16>*
 // CHECK-NEXT:    [[TMP1:%.*]] = addrspacecast <4 x i16>* [[TMP0]] to <4 x i16> addrspace(258)*
 // CHECK-NEXT:    [[TMP2:%.*]] = load volatile <4 x i16>, <4 x i16> addrspace(258)* [[TMP1]], align 8
 // CHECK-NEXT:    ret <4 x i16> [[TMP2]]
 //
-int16x4_t ldhq(void *p) {
-  return __builtin_kvx_ldhq(p, ".s", 1);
+int16x4_t lhq(void *p) {
+  return __builtin_kvx_lhq(p, ".s", 1);
 }
 
 typedef int int32x2_t __attribute__((__vector_size__(2 * sizeof(int))));
 
-// CHECK-LABEL: @ldwp(
+// CHECK-LABEL: @lwp(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = bitcast i8* [[P:%.*]] to <2 x i32>*
 // CHECK-NEXT:    [[TMP1:%.*]] = addrspacecast <2 x i32>* [[TMP0]] to <2 x i32> addrspace(258)*
 // CHECK-NEXT:    [[TMP2:%.*]] = load volatile <2 x i32>, <2 x i32> addrspace(258)* [[TMP1]], align 8
 // CHECK-NEXT:    ret <2 x i32> [[TMP2]]
 //
-int32x2_t ldwp(void *p) {
-  return __builtin_kvx_ldwp(p, ".s", 1);
+int32x2_t lwp(void *p) {
+  return __builtin_kvx_lwp(p, ".s", 1);
 }
 
 typedef float float32x2_t __attribute__((__vector_size__(2 * sizeof(float))));
 
-// CHECK-LABEL: @ldfwp(
+// CHECK-LABEL: @lfwp(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = bitcast i8* [[P:%.*]] to <2 x float>*
 // CHECK-NEXT:    [[TMP1:%.*]] = addrspacecast <2 x float>* [[TMP0]] to <2 x float> addrspace(258)*
 // CHECK-NEXT:    [[TMP2:%.*]] = load volatile <2 x float>, <2 x float> addrspace(258)* [[TMP1]], align 8
 // CHECK-NEXT:    ret <2 x float> [[TMP2]]
 //
-float32x2_t ldfwp(void *p) {
-  return __builtin_kvx_ldfwp(p, ".s", 1);
-}
-
-// CHECK-LABEL: @sdbo(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = bitcast i8* [[P:%.*]] to <8 x i8>*
-// CHECK-NEXT:    store volatile <8 x i8> [[V:%.*]], <8 x i8>* [[TMP0]], align 8
-// CHECK-NEXT:    ret void
-//
-void sdbo(void *p, int8x8_t v) {
-  __builtin_kvx_sdbo(p, v, 1);
-}
-
-// CHECK-LABEL: @sdhq(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = bitcast i8* [[P:%.*]] to <4 x i16>*
-// CHECK-NEXT:    store volatile <4 x i16> [[V:%.*]], <4 x i16>* [[TMP0]], align 8
-// CHECK-NEXT:    ret void
-//
-void sdhq(void *p, int16x4_t v) {
-  __builtin_kvx_sdhq(p, v, 1);
-}
-
-// CHECK-LABEL: @sdwp(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = bitcast i8* [[P:%.*]] to <2 x i32>*
-// CHECK-NEXT:    store volatile <2 x i32> [[V:%.*]], <2 x i32>* [[TMP0]], align 8
-// CHECK-NEXT:    ret void
-//
-void sdwp(void *p, int32x2_t v) {
-  __builtin_kvx_sdwp(p, v, 1);
-}
-
-// CHECK-LABEL: @sdfwp(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = bitcast i8* [[P:%.*]] to <4 x i16>*
-// CHECK-NEXT:    [[TMP1:%.*]] = bitcast <2 x float> [[V:%.*]] to <4 x i16>
-// CHECK-NEXT:    store volatile <4 x i16> [[TMP1]], <4 x i16>* [[TMP0]], align 8
-// CHECK-NEXT:    ret void
-//
-void sdfwp(void *p, float32x2_t v) {
-  __builtin_kvx_sdhq(p, v, 1);
+float32x2_t lfwp(void *p) {
+  return __builtin_kvx_lfwp(p, ".s", 1);
 }
