@@ -166,7 +166,7 @@ defm: FMUL_DC<int_kvx_fmulcdc, FFMADrr, FFMSDrr>;
 
 multiclass FFM__DC<SDNode int_kvx_ffmop, SDNode FOP, SDNode FFMS, SDNode FFMA> {
   def: Pat<(int_kvx_ffmop v2f64:$v1, v2f64:$v2, v2f64:$v3, i32:$rounding, i32:$silent),
-    (FOP 
+    (FOP
       (v2f64 (REG_SEQUENCE PairedReg,
         (FFMS (FMULDrr (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_s0)), (f64 (EXTRACT_SUBREG PairedReg:$v2, sub_s0)), RoundingMod:$rounding, SilentMod:$silent),
               (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_s1)),
@@ -179,7 +179,7 @@ multiclass FFM__DC<SDNode int_kvx_ffmop, SDNode FOP, SDNode FFMS, SDNode FFMA> {
 
 multiclass FFM__CDC<SDNode int_kvx_ffmop, SDNode FOP, SDNode FFMS, SDNode FFMA> {
   def: Pat<(int_kvx_ffmop v2f64:$v1, v2f64:$v2, v2f64:$v3, i32:$rounding, i32:$silent),
-    (FOP 
+    (FOP
       (v2f64 (REG_SEQUENCE PairedReg,
         (FFMS (FMULDrr (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_s0)), (f64 (EXTRACT_SUBREG PairedReg:$v2, sub_s0)), RoundingMod:$rounding, SilentMod:$silent),
               (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_s1)),
@@ -254,8 +254,6 @@ def: Pat<(int_kvx_floatuwp v2i32:$i, i64:$shift, i32:$rounding, i32:$silent), (F
 def: Pat<(int_kvx_floatd i64:$i, i64:$shift, i32:$rounding, i32:$silent), (FLOATD SingleReg:$i, Unsigned6:$shift, RoundingMod:$rounding, SilentMod:$silent)>;
 def: Pat<(int_kvx_floatud i64:$i, i64:$shift, i32:$rounding, i32:$silent), (FLOATUD SingleReg:$i, Unsigned6:$shift, RoundingMod:$rounding, SilentMod:$silent)>;
 
-def: Pat<(int_kvx_fwidenlhw i32:$v, i32:$silent), (FWIDENLHW SingleReg:$v, SilentMod:$silent)>;
-def: Pat<(int_kvx_fwidenmhw i32:$v, i32:$silent), (FWIDENMHW SingleReg:$v, SilentMod:$silent)>;
 def: Pat<(int_kvx_fnarrowwh f32:$v, i32:$rounding, i32:$silent), (FNARROWWH SingleReg:$v, RoundingMod:$rounding, SilentMod:$silent)>;
 
 def: Pat<(int_kvx_satd i64:$v, i32:$b), (SATDrr SingleReg:$v, SingleReg:$b)>;

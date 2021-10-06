@@ -859,32 +859,6 @@ entry:
 
 declare i64 @llvm.kvx.stsud(i64, i64) #1
 
-define float @fwidenlhw(i32 %v){
-; CHECK-LABEL: fwidenlhw:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
-entry:
-  %0 = tail call float @llvm.kvx.fwidenlhw(i32 %v, i32 0)
-  ret float %0
-}
-
-declare float @llvm.kvx.fwidenlhw(i32, i32) #1
-
-define float @fwidenmhw(i32 %v){
-; CHECK-LABEL: fwidenmhw:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fwidenmhw $r0 = $r0
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
-entry:
-  %0 = tail call float @llvm.kvx.fwidenmhw(i32 %v, i32 0)
-  ret float %0
-}
-
-declare float @llvm.kvx.fwidenmhw(i32, i32) #1
-
 define i16 @fnarrowwh(float %v){
 ; CHECK-LABEL: fnarrowwh:
 ; CHECK:       # %bb.0: # %entry
