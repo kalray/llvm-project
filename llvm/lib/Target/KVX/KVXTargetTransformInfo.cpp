@@ -265,3 +265,14 @@ bool KVXTTIImpl::isLSRCostLess(TargetTransformInfo::LSRCost &C1,
          std::tie(C2.NumRegs, C2.Insns, C2.AddRecCost, C2.NumIVMuls,
                   C2.SetupCost, C2.NumBaseAdds, C2.ImmCost, C2.ScaleCost);
 }
+
+TargetTransformInfo::PopcntSupportKind
+KVXTTIImpl::getPopcntSupport(unsigned IntTyWidthInBit) const {
+  switch (IntTyWidthInBit) {
+  case 32:
+  case 64:
+    return TargetTransformInfo::PSK_FastHardware;
+  default:
+    return TargetTransformInfo::PSK_Software;
+  }
+}

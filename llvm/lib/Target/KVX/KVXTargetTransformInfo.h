@@ -58,6 +58,9 @@ public:
   unsigned getNumberOfRegisters(unsigned ClassID) const;
   unsigned getRegisterBitWidth(bool Vector) const { return 64; }
 
+  TargetTransformInfo::PopcntSupportKind
+  getPopcntSupport(unsigned IntTyWidthInBit) const;
+
 private:
   bool isHardwareLoopProfitableCheck(Loop *L, ScalarEvolution &SE);
 };
