@@ -197,7 +197,9 @@ define <2 x i16> @test_fma_imm(<2 x i16> %a, <2 x i16> %b) {
 ;
 ; V2-LABEL: test_fma_imm:
 ; V2:       # %bb.0:
-; V2-NEXT:    maddhq $r0 = $r1, 0x20005
+; V2-NEXT:    make $r2 = 0x20005
+; V2-NEXT:    ;;
+; V2-NEXT:    maddhq $r0 = $r1, $r2
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %m = mul <2 x i16> <i16 5, i16 2>, %b
@@ -214,7 +216,9 @@ define <2 x i16> @test_fma_imm_2(<2 x i16> %a, <2 x i16> %b) {
 ;
 ; V2-LABEL: test_fma_imm_2:
 ; V2:       # %bb.0:
-; V2-NEXT:    maddhq $r0 = $r1, 0x20001
+; V2-NEXT:    make $r2 = 0x20001
+; V2-NEXT:    ;;
+; V2-NEXT:    maddhq $r0 = $r1, $r2
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %m = mul <2 x i16> <i16 1, i16 2>, %b
