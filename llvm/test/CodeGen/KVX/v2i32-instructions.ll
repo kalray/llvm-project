@@ -207,7 +207,9 @@ define <2 x i32> @test_fma_imm(<2 x i32> %a, <2 x i32> %b) {
 ;
 ; V2-LABEL: test_fma_imm:
 ; V2:       # %bb.0:
-; V2-NEXT:    maddwp $r0 = $r1, 0x200000005
+; V2-NEXT:    make $r2 = 0x200000005
+; V2-NEXT:    ;;
+; V2-NEXT:    maddwp $r0 = $r1, $r2
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %m = mul <2 x i32> <i32 5, i32 2>, %b
@@ -224,7 +226,9 @@ define <2 x i32> @test_fma_imm_2(<2 x i32> %a, <2 x i32> %b) {
 ;
 ; V2-LABEL: test_fma_imm_2:
 ; V2:       # %bb.0:
-; V2-NEXT:    maddwp $r0 = $r1, 0x200000001
+; V2-NEXT:    make $r2 = 0x200000001
+; V2-NEXT:    ;;
+; V2-NEXT:    maddwp $r0 = $r1, $r2
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %m = mul <2 x i32> <i32 1, i32 2>, %b
