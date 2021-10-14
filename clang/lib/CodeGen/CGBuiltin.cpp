@@ -17667,6 +17667,13 @@ typedef enum {
   BITCOUNT_TZ = 3
 } bitcount_t;
 
+typedef enum {
+  SATURATE_INVALID = -1,
+  SATURATE_DEFAULT = 0,
+  SATURATE_SIGNED = 1,  // ".s"
+  SATURATE_UNSIGNED = 2 // ".us"
+} saturate_t;
+
 static int KVX_getConjugateModifier(const StringRef &Str) {
   return llvm::StringSwitch<int>(Str).Case("", 0).Case("c", 1).Default(-1);
 }
@@ -17716,6 +17723,14 @@ static bitcount_t KVX_getBitcountModifier(const StringRef &Str) {
       .Case(".ls", BITCOUNT_LS)
       .Case(".tz", BITCOUNT_TZ)
       .Default(BITCOUNT_INVALID);
+}
+
+static saturate_t KVX_getSaturateModifier(const StringRef &Str) {
+  return StringSwitch<saturate_t>(Str)
+      .Case("", SATURATE_DEFAULT)
+      .Case(".s", SATURATE_SIGNED)
+      .Case(".us", SATURATE_UNSIGNED)
+      .Default(SATURATE_INVALID);
 }
 
 static int KVX_getSpeculateModValue(const StringRef &Str) {
@@ -18598,6 +18613,53 @@ static Value *KVX_emitModBuiltin(CodeGenFunction &CGF, const CallExpr *E,
                                VectorSize, SliceSize);
 }
 
+static Value *KVX_emitIntAddBuiltin(CodeGenFunction &CGF, const CallExpr *E) {
+  constexpr int StringModOperand = 2;
+  const auto *SL = dyn_cast<clang::StringLiteral>(
+      E->getArg(StringModOperand)->IgnoreParenImpCasts());
+  auto Mods = SL->getString();
+
+  saturate_t SaturateMod = KVX_getSaturateModifier(Mods);
+  Intrinsic::IndependentIntrinsics SatIntrinsic;
+
+  const Expr *LHS = E->getArg(0);
+  Value *LHSv = CGF.EmitScalarExpr(LHS);
+  llvm::Type *LHSt = LHSv->getType();
+
+  const Expr *RHS = E->getArg(1);
+  Value *RHSv = CGF.EmitScalarExpr(RHS);
+
+  switch (SaturateMod) {
+  case SATURATE_DEFAULT: {
+    // Emit a regular add
+    const Expr *LHS = E->getArg(0);
+    Value *LHSv = CGF.EmitScalarExpr(LHS);
+    const Expr *RHS = E->getArg(1);
+    Value *RHSv = CGF.EmitScalarExpr(RHS);
+    return CGF.Builder.CreateAdd(LHSv, RHSv);
+  }
+  case SATURATE_SIGNED:
+    SatIntrinsic = Intrinsic::sadd_sat;
+    break;
+  case SATURATE_UNSIGNED:
+    SatIntrinsic = Intrinsic::uadd_sat;
+    break;
+  case SATURATE_INVALID:
+    CGF.CGM.Error(
+        E->getArg(StringModOperand)->getBeginLoc(),
+        "invalid saturate_t modifier, expected \"\", \".s\" or \".us\"");
+    return nullptr;
+  }
+
+  /* Emit saturated intrinsic, specialized with the type of LHS and RHS */
+#ifndef NDEBUG
+  llvm::Type *RHSt = RHSv->getType();
+  assert(LHSt == RHSt);
+#endif
+  Function *SatIntrinsicF = CGF.CGM.getIntrinsic(SatIntrinsic, {LHSt});
+  return CGF.Builder.CreateCall(SatIntrinsicF, {LHSv, RHSv});
+}
+
 typedef std::array<Intrinsic::KVXIntrinsics, AVERAGE_SIZE> average_intrinsics_t;
 
 static Value *KVX_emitIntAvgBuiltin(CodeGenFunction &CGF, const CallExpr *E,
@@ -19285,8 +19347,20 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_abdw);
   case KVX::BI__builtin_kvx_abdd:
     return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_abdd);
+  case KVX::BI__builtin_kvx_addbo:
+  case KVX::BI__builtin_kvx_addbx:
+  case KVX::BI__builtin_kvx_addbv:
+  case KVX::BI__builtin_kvx_addhq:
+  case KVX::BI__builtin_kvx_addho:
+  case KVX::BI__builtin_kvx_addhx:
+  case KVX::BI__builtin_kvx_addw:
+  case KVX::BI__builtin_kvx_addwp:
+  case KVX::BI__builtin_kvx_addwq:
+  case KVX::BI__builtin_kvx_addwo:
   case KVX::BI__builtin_kvx_addd:
-    return KVX_emitCarryBuiltin(*this, E, Intrinsic::kvx_addd);
+  case KVX::BI__builtin_kvx_adddp:
+  case KVX::BI__builtin_kvx_adddq:
+    return KVX_emitIntAddBuiltin(*this, E);
   case KVX::BI__builtin_kvx_sbfd:
     return KVX_emitCarryBuiltin(*this, E, Intrinsic::kvx_sbfd);
   case KVX::BI__builtin_kvx_fabsw:

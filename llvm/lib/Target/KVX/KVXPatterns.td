@@ -1388,6 +1388,78 @@ def : Pat<(cttz v4i32:$v),
           ))>;
 
 //===----------------------------------------------------------------------===//
+//  Signed Saturated Addition - Patterns
+//===----------------------------------------------------------------------===//
+
+// v8i8
+def : Pat<(saddsat v8i8:$v0, v8i8:$v1),
+          (ORDrr
+            (ANDDri64
+              (ADDSHQrr
+                (ANDDri64 SingleReg:$v0, 0xff00ff00ff00ff00),
+                (ANDDri64 SingleReg:$v1, 0xff00ff00ff00ff00)
+              ),
+              0xff00ff00ff00ff00
+            ),
+            (SRLHQSri
+              (ADDSHQrr
+                (SBMM8ri64 SingleReg:$v0, 0x4000200004000100),
+                (SBMM8ri64 SingleReg:$v1, 0x4000200004000100)
+              ),
+              8
+            )
+          )>;
+
+def : Pat<(uaddsat v8i8:$v0, v8i8:$v1),
+          (ORDrr
+            (SRLHQSri
+              (ORDrr
+                (COMPNHQ
+                  (ADDHQrr
+                    (SLLHQSri $v0, 8),
+                    (SLLHQSri $v1, 8)
+                  ),
+                  (SLLHQSri $v0, 8),
+                  comparison_ltu
+                ),
+                (ADDHQrr
+                  (SLLHQSri $v0, 8),
+                  (SLLHQSri $v1, 8)
+                )
+              ),
+              8
+            ),
+            (ANDDri64
+              (ORDrr
+                (COMPNHQ
+                  (ADDHQrr
+                    (ANDDri64 $v0, 0xff00ff00ff00ff00),
+                    (ANDDri64 $v1, 0xff00ff00ff00ff00)
+                  ),
+                  (ANDDri64 $v0, 0xff00ff00ff00ff00),
+                  comparison_ltu
+                ),
+                (ADDHQrr
+                  (ANDDri64 $v0, 0xff00ff00ff00ff00),
+                  (ANDDri64 $v1, 0xff00ff00ff00ff00)
+                )
+              ),
+              0xff00ff00ff00ff00
+            )
+          )>;
+
+// v2i32
+def : Pat<(uaddsat v2i32:$v0, v2i32:$v1),
+          (ORDrr
+            (COMPNWP
+              (ADDWPrr $v0, $v1),
+              $v0,
+              comparison_ltu
+            ),
+            (ADDWPrr $v0, $v1)
+          )>;
+
+//===----------------------------------------------------------------------===//
 //  Vector Shift - Patterns
 //===----------------------------------------------------------------------===//
 

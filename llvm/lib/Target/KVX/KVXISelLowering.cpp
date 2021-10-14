@@ -489,8 +489,11 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::DYNAMIC_STACKALLOC, MVT::i64,
                      hasStackLimitRegister() ? Custom : Expand);
 
-  for (auto I : {MVT::v2i16, MVT::v4i16, MVT::i32, MVT::v2i32, MVT::i64})
+  for (auto I :
+       {MVT::v2i16, MVT::v4i16, MVT::i32, MVT::v2i32, MVT::i64, MVT::v8i8})
     setOperationAction(ISD::SADDSAT, I, Legal);
+  setOperationAction(ISD::UADDSAT, MVT::v8i8, Legal);
+  setOperationAction(ISD::UADDSAT, MVT::v2i32, Legal);
 
   setTargetDAGCombine(ISD::MUL);
   setTargetDAGCombine(ISD::SRA);
