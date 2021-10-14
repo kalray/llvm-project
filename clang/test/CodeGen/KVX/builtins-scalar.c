@@ -43,23 +43,17 @@ long abdd(long v1, long v2) {
 //   return __builtin_kvx_sbfsd(v1, v2);
 // }
 
-// CHECK-LABEL: @adddc(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.addd(i64 [[V1:%.*]], i64 [[V2:%.*]], i32 1)
-// CHECK-NEXT:    ret i64 [[TMP0]]
-//
-long adddc(long v1, long v2) {
-  return __builtin_kvx_addd(v1, v2, ".c");
-}
+/**
+ * TODO Reintroduce adddc and adddci once Add with Carry is there
+ */
 
-// CHECK-LABEL: @adddci(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.addd(i64 [[V1:%.*]], i64 [[V2:%.*]], i32 2)
-// CHECK-NEXT:    ret i64 [[TMP0]]
-//
-long adddci(long v1, long v2) {
-  return __builtin_kvx_addd(v1, v2, ".ci");
-}
+// long adddc(long v1, long v2) {
+//   return __builtin_kvx_addd(v1, v2, ".c");
+// }
+
+// long adddci(long v1, long v2) {
+//   return __builtin_kvx_addd(v1, v2, ".ci");
+// }
 
 // CHECK-LABEL: @sbfdc(
 // CHECK-NEXT:  entry:
