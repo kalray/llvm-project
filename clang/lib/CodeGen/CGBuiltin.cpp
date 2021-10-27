@@ -17631,6 +17631,19 @@ enum ROUNDINT {
   ROUNDINT_RHU
 };
 
+typedef enum SIMDCOND {
+  SIMDCOND_INVALID = -1,
+  SIMDCOND_DEFAULT = 0,
+  SIMDCOND_NEZ = 0,
+  SIMDCOND_EQZ,
+  SIMDCOND_LTZ,
+  SIMDCOND_GEZ,
+  SIMDCOND_LEZ,
+  SIMDCOND_GTZ,
+  SIMDCOND_ODD,
+  SIMDCOND_EVEN
+} simdcond_t;
+
 enum SATURATE { SATURATE_SAT, SATURATE_SATU };
 
 static int KVX_getConjugateModifier(const StringRef &Str) {
@@ -18239,30 +18252,52 @@ static Value *KVX_emitCarryBuiltin(CodeGenFunction &CGF, const CallExpr *E,
                                 {V1, V2, ConstantInt::get(CGF.IntTy, Carry)});
 }
 
-static int KVX_getSimdCond(clang::ASTContext &Ctx, const clang::Expr *E) {
+static simdcond_t KVX_getSimdCond(clang::ASTContext &Ctx,
+                                  const clang::Expr *E) {
   if (E->isNullPointerConstant(Ctx, Expr::NPC_NeverValueDependent)) {
-    return 0;
+    return SIMDCOND_DEFAULT;
   }
-  int SimdCond = -1;
+  simdcond_t SimdCond = SIMDCOND_INVALID;
   if (E->getStmtClass() == Stmt::StringLiteralClass) {
 
     StringRef Str = cast<clang::StringLiteral>(E)->getString();
-    if (Str.empty())
-      SimdCond = 0;
-    else
-      SimdCond = llvm::StringSwitch<int>(Str)
-                     .CaseLower(".nez", 0)
-                     .CaseLower(".eqz", 1)
-                     .CaseLower(".ltz", 2)
-                     .CaseLower(".gez", 3)
-                     .CaseLower(".lez", 4)
-                     .CaseLower(".gtz", 5)
-                     .CaseLower(".odd", 6)
-                     .CaseLower(".even", 7)
-                     .Default(-1);
+    SimdCond = llvm::StringSwitch<simdcond_t>(Str)
+                   .Case("", SIMDCOND_DEFAULT)
+                   .CaseLower(".nez", SIMDCOND_NEZ)
+                   .CaseLower(".eqz", SIMDCOND_EQZ)
+                   .CaseLower(".ltz", SIMDCOND_LTZ)
+                   .CaseLower(".gez", SIMDCOND_GEZ)
+                   .CaseLower(".lez", SIMDCOND_LEZ)
+                   .CaseLower(".gtz", SIMDCOND_GTZ)
+                   .CaseLower(".odd", SIMDCOND_ODD)
+                   .CaseLower(".even", SIMDCOND_EVEN)
+                   .Default(SIMDCOND_INVALID);
   }
 
   return SimdCond;
+}
+
+static simdcond_t KVX_negateSimdCond(simdcond_t cond) {
+  switch (cond) {
+  case SIMDCOND_NEZ:
+    return SIMDCOND_EQZ;
+  case SIMDCOND_EQZ:
+    return SIMDCOND_NEZ;
+  case SIMDCOND_LTZ:
+    return SIMDCOND_GEZ;
+  case SIMDCOND_GEZ:
+    return SIMDCOND_LTZ;
+  case SIMDCOND_LEZ:
+    return SIMDCOND_GTZ;
+  case SIMDCOND_GTZ:
+    return SIMDCOND_LEZ;
+  case SIMDCOND_ODD:
+    return SIMDCOND_EVEN;
+  case SIMDCOND_EVEN:
+    return SIMDCOND_ODD;
+  case SIMDCOND_INVALID:
+    return SIMDCOND_INVALID;
+  }
 }
 
 static Value *KVX_emitTernarySimdCondBuiltin(CodeGenFunction &CGF,
@@ -18272,10 +18307,10 @@ static Value *KVX_emitTernarySimdCondBuiltin(CodeGenFunction &CGF,
   Value *Arg2 = CGF.EmitScalarExpr(E->getArg(1));
   Value *Arg3 = CGF.EmitScalarExpr(E->getArg(2));
 
-  int SimdCond =
-      KVX_getSimdCond(CGF.getContext(), E->getArg(3)->IgnoreParenImpCasts());
+  simdcond_t SimdCond = KVX_negateSimdCond(
+      KVX_getSimdCond(CGF.getContext(), E->getArg(3)->IgnoreParenImpCasts()));
 
-  if (SimdCond == -1)
+  if (SimdCond == SIMDCOND_INVALID)
     CGF.CGM.Error(E->getArg(3)->getBeginLoc(),
                   "invalid simd condition modifier");
 
@@ -18297,10 +18332,10 @@ static Value *KVX_emitDoubleVectorBuiltin(CodeGenFunction &CGF,
   auto *V2 = CGF.EmitScalarExpr(E->getArg(1));
   auto *C = CGF.EmitScalarExpr(E->getArg(2));
 
-  int SimdCond =
-      KVX_getSimdCond(CGF.getContext(), E->getArg(3)->IgnoreParenImpCasts());
+  simdcond_t SimdCond = KVX_negateSimdCond(
+      KVX_getSimdCond(CGF.getContext(), E->getArg(3)->IgnoreParenImpCasts()));
 
-  if (SimdCond == -1)
+  if (SimdCond == SIMDCOND_INVALID)
     CGF.CGM.Error(E->getArg(3)->getBeginLoc(),
                   "invalid simd condition modifier");
 
@@ -18343,9 +18378,9 @@ static Value *KVX_emitCondVectorBuiltin(CodeGenFunction &CGF, const CallExpr *E,
   auto *V2 = CGF.EmitScalarExpr(E->getArg(1));
   auto *C = CGF.EmitScalarExpr(E->getArg(2));
 
-  int SimdCond =
-      KVX_getSimdCond(CGF.getContext(), E->getArg(3)->IgnoreParenImpCasts());
-  if (SimdCond == -1)
+  simdcond_t SimdCond = KVX_negateSimdCond(
+      KVX_getSimdCond(CGF.getContext(), E->getArg(3)->IgnoreParenImpCasts()));
+  if (SimdCond == SIMDCOND_INVALID)
     CGF.CGM.Error(E->getArg(3)->getBeginLoc(),
                   "invalid simd condition modifier");
   Value *SCArg = ConstantInt::get(CGF.IntTy, SimdCond);
@@ -19421,10 +19456,10 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     Value *Arg2 = Builder.CreateBitCast(EmitScalarExpr(E->getArg(1)), V2i32Ty);
     Value *Arg3 = EmitScalarExpr(E->getArg(2));
 
-    int SimdCond =
-        KVX_getSimdCond(getContext(), E->getArg(3)->IgnoreParenImpCasts());
+    simdcond_t SimdCond = KVX_negateSimdCond(
+        KVX_getSimdCond(getContext(), E->getArg(3)->IgnoreParenImpCasts()));
 
-    if (SimdCond == -1)
+    if (SimdCond == SIMDCOND_INVALID)
       CGM.Error(E->getArg(3)->getBeginLoc(), "invalid simd condition modifier");
 
     Value *Arg4 = ConstantInt::get(IntTy, SimdCond);
