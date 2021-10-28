@@ -31,31 +31,6 @@ typedef float __attribute__((__vector_size__(8 * sizeof(float)))) v8f32;
 typedef double __attribute__((__vector_size__(2 * sizeof(double)))) v2f64;
 typedef double __attribute__((__vector_size__(4 * sizeof(double)))) v4f64;
 
-/**
- * TODO reintroduce ctzwp - clsws once string modifiers are there
- */
-
-// v2i32 ctzwp(v2i32 v) {
-//   return __builtin_kvx_ctzwp(v);
-// }
-
-// v2i32 clzwp(v2i32 v) {
-//   return __builtin_kvx_clzwp(v);
-// }
-
-// v2i32 clswp(v2i32 v) {
-//   return __builtin_kvx_clswp(v);
-// }
-
-// CHECK-LABEL: @bitcntwp(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x i32> @llvm.kvx.cbswp(<2 x i32> [[V:%.*]])
-// CHECK-NEXT:    ret <2 x i32> [[TMP0]]
-//
-v2i32 bitcntwp(v2i32 v) {
-  return __builtin_kvx_bitcntwp(v);
-}
-
 // CHECK-LABEL: @selecthq(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x i16> @llvm.kvx.cmovehq(<4 x i16> [[V1:%.*]], <4 x i16> [[V2:%.*]], <4 x i16> [[C:%.*]], i32 1)

@@ -193,6 +193,9 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::CTLZ, VT, Expand);
     setOperationAction(ISD::CTPOP, VT, Expand);
   }
+  setOperationAction(ISD::CTLZ, MVT::v4i32, Legal);
+  setOperationAction(ISD::CTTZ, MVT::v4i32, Legal);
+  setOperationAction(ISD::CTPOP, MVT::v4i32, Legal);
 
   for (auto VT :
        {MVT::v4i64, MVT::v2i64, MVT::v4i32, MVT::v8i8, MVT::v2i8, MVT::v4i8}) {
@@ -429,7 +432,6 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     setOperationPromotedToType(I, MVT::v2i16, MVT::v2i32);
     setOperationPromotedToType(I, MVT::v4i16, MVT::v4i32);
   }
-  setOperationAction(ISD::CTPOP, MVT::v4i32, Legal);
 
   for (auto I : {ISD::ABS, ISD::ADD, ISD::FP_TO_SINT, ISD::FP_TO_UINT, ISD::MUL,
                  ISD::SETCC, ISD::SINT_TO_FP, ISD::SMAX, ISD::SMIN, ISD::SUB,
