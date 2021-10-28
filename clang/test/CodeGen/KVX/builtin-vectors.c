@@ -159,7 +159,7 @@ v4i64 abddq(v4i64 a, v4i64 b) { return __builtin_kvx_abddq(a, b); }
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x i16> @llvm.kvx.avghq(<4 x i16> [[A:%.*]], <4 x i16> [[B:%.*]])
 // CHECK-NEXT:    ret <4 x i16> [[TMP0]]
 //
-v4i16 avghq(v4i16 a, v4i16 b) { return __builtin_kvx_avghq(a, b); }
+v4i16 avghq(v4i16 a, v4i16 b) { return __builtin_kvx_avghq(a, b, ""); }
 
 // CHECK-LABEL: @avgho(
 // CHECK-NEXT:  entry:
@@ -172,7 +172,7 @@ v4i16 avghq(v4i16 a, v4i16 b) { return __builtin_kvx_avghq(a, b); }
 // CHECK-NEXT:    [[TMP6:%.*]] = shufflevector <4 x i16> [[TMP2]], <4 x i16> [[TMP5]], <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
 // CHECK-NEXT:    ret <8 x i16> [[TMP6]]
 //
-v8i16 avgho(v8i16 a, v8i16 b) { return __builtin_kvx_avgho(a, b); }
+v8i16 avgho(v8i16 a, v8i16 b) { return __builtin_kvx_avgho(a, b, ""); }
 
 // CHECK-LABEL: @avghx(
 // CHECK-NEXT:  entry:
@@ -196,7 +196,7 @@ v8i16 avgho(v8i16 a, v8i16 b) { return __builtin_kvx_avgho(a, b); }
 // CHECK-NEXT:    ret <16 x i16> [[TMP16]]
 //
 v16i16 avghx(v16i16 a, v16i16 b) {
-  return __builtin_kvx_avghx(a, b);
+  return __builtin_kvx_avghx(a, b, "");
 }
 
 // CHECK-LABEL: @avgwp(
@@ -204,7 +204,7 @@ v16i16 avghx(v16i16 a, v16i16 b) {
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x i32> @llvm.kvx.avgwp(<2 x i32> [[A:%.*]], <2 x i32> [[B:%.*]])
 // CHECK-NEXT:    ret <2 x i32> [[TMP0]]
 //
-v2i32 avgwp(v2i32 a, v2i32 b) { return __builtin_kvx_avgwp(a, b); }
+v2i32 avgwp(v2i32 a, v2i32 b) { return __builtin_kvx_avgwp(a, b, ""); }
 
 // CHECK-LABEL: @avgwq(
 // CHECK-NEXT:  entry:
@@ -217,7 +217,7 @@ v2i32 avgwp(v2i32 a, v2i32 b) { return __builtin_kvx_avgwp(a, b); }
 // CHECK-NEXT:    [[TMP6:%.*]] = shufflevector <2 x i32> [[TMP2]], <2 x i32> [[TMP5]], <4 x i32> <i32 0, i32 1, i32 2, i32 3>
 // CHECK-NEXT:    ret <4 x i32> [[TMP6]]
 //
-v4i32 avgwq(v4i32 a, v4i32 b) { return __builtin_kvx_avgwq(a, b); }
+v4i32 avgwq(v4i32 a, v4i32 b) { return __builtin_kvx_avgwq(a, b, ""); }
 
 // CHECK-LABEL: @avgwo(
 // CHECK-NEXT:  entry:
@@ -240,63 +240,265 @@ v4i32 avgwq(v4i32 a, v4i32 b) { return __builtin_kvx_avgwq(a, b); }
 // CHECK-NEXT:    [[TMP16:%.*]] = shufflevector <8 x i32> [[TMP11]], <8 x i32> [[TMP15]], <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 8, i32 9>
 // CHECK-NEXT:    ret <8 x i32> [[TMP16]]
 //
-v8i32 avgwo(v8i32 a, v8i32 b) { return __builtin_kvx_avgwo(a, b); }
+v8i32 avgwo(v8i32 a, v8i32 b) { return __builtin_kvx_avgwo(a, b, ""); }
 
-/**
- * TODO: reintroduce avguhq to avgruwo tests once the string modifier is there
- */
+// CHECK-LABEL: @avguhq(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x i16> @llvm.kvx.avguhq(<4 x i16> [[A:%.*]], <4 x i16> [[B:%.*]])
+// CHECK-NEXT:    ret <4 x i16> [[TMP0]]
+//
+v4u16 avguhq(v4u16 a, v4u16 b) { return __builtin_kvx_avghq(a, b, ".u"); }
 
-// v4u16 avguhq(v4u16 a, v4u16 b) { return __builtin_kvx_avguhq(a, b); }
+// CHECK-LABEL: @avguho(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <8 x i16> [[A:%.*]], <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <8 x i16> [[B:%.*]], <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <4 x i16> @llvm.kvx.avguhq(<4 x i16> [[TMP0]], <4 x i16> [[TMP1]])
+// CHECK-NEXT:    [[TMP3:%.*]] = shufflevector <8 x i16> [[A]], <8 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+// CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <8 x i16> [[B]], <8 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+// CHECK-NEXT:    [[TMP5:%.*]] = tail call <4 x i16> @llvm.kvx.avguhq(<4 x i16> [[TMP3]], <4 x i16> [[TMP4]])
+// CHECK-NEXT:    [[TMP6:%.*]] = shufflevector <4 x i16> [[TMP2]], <4 x i16> [[TMP5]], <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+// CHECK-NEXT:    ret <8 x i16> [[TMP6]]
+//
+v8u16 avguho(v8u16 a, v8i16 b) { return __builtin_kvx_avgho(a, b, ".u"); }
 
-// v8u16 avguho(v8u16 a, v8i16 b) { return __builtin_kvx_avguho(a, b); }
+// CHECK-LABEL: @avguhx(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <16 x i16> [[A:%.*]], <16 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <16 x i16> [[B:%.*]], <16 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <4 x i16> @llvm.kvx.avguhq(<4 x i16> [[TMP0]], <4 x i16> [[TMP1]])
+// CHECK-NEXT:    [[TMP3:%.*]] = shufflevector <16 x i16> [[A]], <16 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+// CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <16 x i16> [[B]], <16 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+// CHECK-NEXT:    [[TMP5:%.*]] = tail call <4 x i16> @llvm.kvx.avguhq(<4 x i16> [[TMP3]], <4 x i16> [[TMP4]])
+// CHECK-NEXT:    [[TMP6:%.*]] = shufflevector <4 x i16> [[TMP2]], <4 x i16> [[TMP5]], <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
+// CHECK-NEXT:    [[TMP7:%.*]] = shufflevector <16 x i16> [[A]], <16 x i16> undef, <4 x i32> <i32 8, i32 9, i32 10, i32 11>
+// CHECK-NEXT:    [[TMP8:%.*]] = shufflevector <16 x i16> [[B]], <16 x i16> undef, <4 x i32> <i32 8, i32 9, i32 10, i32 11>
+// CHECK-NEXT:    [[TMP9:%.*]] = tail call <4 x i16> @llvm.kvx.avguhq(<4 x i16> [[TMP7]], <4 x i16> [[TMP8]])
+// CHECK-NEXT:    [[TMP10:%.*]] = shufflevector <4 x i16> [[TMP9]], <4 x i16> undef, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
+// CHECK-NEXT:    [[TMP11:%.*]] = shufflevector <16 x i16> [[TMP6]], <16 x i16> [[TMP10]], <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 16, i32 17, i32 18, i32 19, i32 undef, i32 undef, i32 undef, i32 undef>
+// CHECK-NEXT:    [[TMP12:%.*]] = shufflevector <16 x i16> [[A]], <16 x i16> undef, <4 x i32> <i32 12, i32 13, i32 14, i32 15>
+// CHECK-NEXT:    [[TMP13:%.*]] = shufflevector <16 x i16> [[B]], <16 x i16> undef, <4 x i32> <i32 12, i32 13, i32 14, i32 15>
+// CHECK-NEXT:    [[TMP14:%.*]] = tail call <4 x i16> @llvm.kvx.avguhq(<4 x i16> [[TMP12]], <4 x i16> [[TMP13]])
+// CHECK-NEXT:    [[TMP15:%.*]] = shufflevector <4 x i16> [[TMP14]], <4 x i16> undef, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
+// CHECK-NEXT:    [[TMP16:%.*]] = shufflevector <16 x i16> [[TMP11]], <16 x i16> [[TMP15]], <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 16, i32 17, i32 18, i32 19>
+// CHECK-NEXT:    ret <16 x i16> [[TMP16]]
+//
+v16u16 avguhx(v16u16 a, v16u16 b) { return __builtin_kvx_avghx(a, b, ".u"); }
 
-// v16u16 avguhx(v16u16 a, v16u16 b) {
-//   return __builtin_kvx_avguhx(a, b);
-// }
+// CHECK-LABEL: @avguwp(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x i32> @llvm.kvx.avguwp(<2 x i32> [[A:%.*]], <2 x i32> [[B:%.*]])
+// CHECK-NEXT:    ret <2 x i32> [[TMP0]]
+//
+v2u32 avguwp(v2u32 a, v2u32 b) { return __builtin_kvx_avgwp(a, b, ".u"); }
 
-// v2u32 avguwp(v2u32 a, v2u32 b) { return __builtin_kvx_avguwp(a, b); }
+// CHECK-LABEL: @avguwq(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <4 x i32> [[A:%.*]], <4 x i32> undef, <2 x i32> <i32 0, i32 1>
+// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <4 x i32> [[B:%.*]], <4 x i32> undef, <2 x i32> <i32 0, i32 1>
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <2 x i32> @llvm.kvx.avguwp(<2 x i32> [[TMP0]], <2 x i32> [[TMP1]])
+// CHECK-NEXT:    [[TMP3:%.*]] = shufflevector <4 x i32> [[A]], <4 x i32> undef, <2 x i32> <i32 2, i32 3>
+// CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <4 x i32> [[B]], <4 x i32> undef, <2 x i32> <i32 2, i32 3>
+// CHECK-NEXT:    [[TMP5:%.*]] = tail call <2 x i32> @llvm.kvx.avguwp(<2 x i32> [[TMP3]], <2 x i32> [[TMP4]])
+// CHECK-NEXT:    [[TMP6:%.*]] = shufflevector <2 x i32> [[TMP2]], <2 x i32> [[TMP5]], <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+// CHECK-NEXT:    ret <4 x i32> [[TMP6]]
+//
+v4u32 avguwq(v4u32 a, v4u32 b) { return __builtin_kvx_avgwq(a, b, ".u"); }
 
-// v4u32 avguwq(v4u32 a, v4u32 b) { return __builtin_kvx_avguwq(a, b); }
+// CHECK-LABEL: @avguwo(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <8 x i32> [[A:%.*]], <8 x i32> undef, <2 x i32> <i32 0, i32 1>
+// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <8 x i32> [[B:%.*]], <8 x i32> undef, <2 x i32> <i32 0, i32 1>
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <2 x i32> @llvm.kvx.avguwp(<2 x i32> [[TMP0]], <2 x i32> [[TMP1]])
+// CHECK-NEXT:    [[TMP3:%.*]] = shufflevector <8 x i32> [[A]], <8 x i32> undef, <2 x i32> <i32 2, i32 3>
+// CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <8 x i32> [[B]], <8 x i32> undef, <2 x i32> <i32 2, i32 3>
+// CHECK-NEXT:    [[TMP5:%.*]] = tail call <2 x i32> @llvm.kvx.avguwp(<2 x i32> [[TMP3]], <2 x i32> [[TMP4]])
+// CHECK-NEXT:    [[TMP6:%.*]] = shufflevector <2 x i32> [[TMP2]], <2 x i32> [[TMP5]], <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 undef, i32 undef, i32 undef, i32 undef>
+// CHECK-NEXT:    [[TMP7:%.*]] = shufflevector <8 x i32> [[A]], <8 x i32> undef, <2 x i32> <i32 4, i32 5>
+// CHECK-NEXT:    [[TMP8:%.*]] = shufflevector <8 x i32> [[B]], <8 x i32> undef, <2 x i32> <i32 4, i32 5>
+// CHECK-NEXT:    [[TMP9:%.*]] = tail call <2 x i32> @llvm.kvx.avguwp(<2 x i32> [[TMP7]], <2 x i32> [[TMP8]])
+// CHECK-NEXT:    [[TMP10:%.*]] = shufflevector <2 x i32> [[TMP9]], <2 x i32> undef, <8 x i32> <i32 0, i32 1, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
+// CHECK-NEXT:    [[TMP11:%.*]] = shufflevector <8 x i32> [[TMP6]], <8 x i32> [[TMP10]], <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 8, i32 9, i32 undef, i32 undef>
+// CHECK-NEXT:    [[TMP12:%.*]] = shufflevector <8 x i32> [[A]], <8 x i32> undef, <2 x i32> <i32 6, i32 7>
+// CHECK-NEXT:    [[TMP13:%.*]] = shufflevector <8 x i32> [[B]], <8 x i32> undef, <2 x i32> <i32 6, i32 7>
+// CHECK-NEXT:    [[TMP14:%.*]] = tail call <2 x i32> @llvm.kvx.avguwp(<2 x i32> [[TMP12]], <2 x i32> [[TMP13]])
+// CHECK-NEXT:    [[TMP15:%.*]] = shufflevector <2 x i32> [[TMP14]], <2 x i32> undef, <8 x i32> <i32 0, i32 1, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
+// CHECK-NEXT:    [[TMP16:%.*]] = shufflevector <8 x i32> [[TMP11]], <8 x i32> [[TMP15]], <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 8, i32 9>
+// CHECK-NEXT:    ret <8 x i32> [[TMP16]]
+//
+v8u32 avguwo(v8u32 a, v8u32 b) { return __builtin_kvx_avgwo(a, b, ".u"); }
 
-// v8u32 avguwo(v8u32 a, v8u32 b) { return __builtin_kvx_avguwo(a, b); }
+// CHECK-LABEL: @avgrhq(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x i16> @llvm.kvx.avgrhq(<4 x i16> [[A:%.*]], <4 x i16> [[B:%.*]])
+// CHECK-NEXT:    ret <4 x i16> [[TMP0]]
+//
+v4i16 avgrhq(v4i16 a, v4i16 b) { return __builtin_kvx_avghq(a, b, ".r"); }
 
-// v4i16 avgrhq(v4i16 a, v4i16 b) { return __builtin_kvx_avgrhq(a, b); }
+// CHECK-LABEL: @avgrho(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <8 x i16> [[A:%.*]], <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <8 x i16> [[B:%.*]], <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <4 x i16> @llvm.kvx.avgrhq(<4 x i16> [[TMP0]], <4 x i16> [[TMP1]])
+// CHECK-NEXT:    [[TMP3:%.*]] = shufflevector <8 x i16> [[A]], <8 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+// CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <8 x i16> [[B]], <8 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+// CHECK-NEXT:    [[TMP5:%.*]] = tail call <4 x i16> @llvm.kvx.avgrhq(<4 x i16> [[TMP3]], <4 x i16> [[TMP4]])
+// CHECK-NEXT:    [[TMP6:%.*]] = shufflevector <4 x i16> [[TMP2]], <4 x i16> [[TMP5]], <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+// CHECK-NEXT:    ret <8 x i16> [[TMP6]]
+//
+v8i16 avgrho(v8i16 a, v8i16 b) { return __builtin_kvx_avgho(a, b, ".r"); }
 
-// v8i16 avgrho(v8i16 a, v8i16 b) { return __builtin_kvx_avgrho(a, b); }
+// CHECK-LABEL: @avgrhx(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <16 x i16> [[A:%.*]], <16 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <16 x i16> [[B:%.*]], <16 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <4 x i16> @llvm.kvx.avgrhq(<4 x i16> [[TMP0]], <4 x i16> [[TMP1]])
+// CHECK-NEXT:    [[TMP3:%.*]] = shufflevector <16 x i16> [[A]], <16 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+// CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <16 x i16> [[B]], <16 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+// CHECK-NEXT:    [[TMP5:%.*]] = tail call <4 x i16> @llvm.kvx.avgrhq(<4 x i16> [[TMP3]], <4 x i16> [[TMP4]])
+// CHECK-NEXT:    [[TMP6:%.*]] = shufflevector <4 x i16> [[TMP2]], <4 x i16> [[TMP5]], <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
+// CHECK-NEXT:    [[TMP7:%.*]] = shufflevector <16 x i16> [[A]], <16 x i16> undef, <4 x i32> <i32 8, i32 9, i32 10, i32 11>
+// CHECK-NEXT:    [[TMP8:%.*]] = shufflevector <16 x i16> [[B]], <16 x i16> undef, <4 x i32> <i32 8, i32 9, i32 10, i32 11>
+// CHECK-NEXT:    [[TMP9:%.*]] = tail call <4 x i16> @llvm.kvx.avgrhq(<4 x i16> [[TMP7]], <4 x i16> [[TMP8]])
+// CHECK-NEXT:    [[TMP10:%.*]] = shufflevector <4 x i16> [[TMP9]], <4 x i16> undef, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
+// CHECK-NEXT:    [[TMP11:%.*]] = shufflevector <16 x i16> [[TMP6]], <16 x i16> [[TMP10]], <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 16, i32 17, i32 18, i32 19, i32 undef, i32 undef, i32 undef, i32 undef>
+// CHECK-NEXT:    [[TMP12:%.*]] = shufflevector <16 x i16> [[A]], <16 x i16> undef, <4 x i32> <i32 12, i32 13, i32 14, i32 15>
+// CHECK-NEXT:    [[TMP13:%.*]] = shufflevector <16 x i16> [[B]], <16 x i16> undef, <4 x i32> <i32 12, i32 13, i32 14, i32 15>
+// CHECK-NEXT:    [[TMP14:%.*]] = tail call <4 x i16> @llvm.kvx.avgrhq(<4 x i16> [[TMP12]], <4 x i16> [[TMP13]])
+// CHECK-NEXT:    [[TMP15:%.*]] = shufflevector <4 x i16> [[TMP14]], <4 x i16> undef, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
+// CHECK-NEXT:    [[TMP16:%.*]] = shufflevector <16 x i16> [[TMP11]], <16 x i16> [[TMP15]], <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 16, i32 17, i32 18, i32 19>
+// CHECK-NEXT:    ret <16 x i16> [[TMP16]]
+//
+v16i16 avgrhx(v16i16 a, v16i16 b) { return __builtin_kvx_avghx(a, b, ".r"); }
 
-// v16i16 avgrhx(v16i16 a, v16i16 b) {
-//   return __builtin_kvx_avgrhx(a, b);
-// }
+// CHECK-LABEL: @avgrwp(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x i32> @llvm.kvx.avgrwp(<2 x i32> [[A:%.*]], <2 x i32> [[B:%.*]])
+// CHECK-NEXT:    ret <2 x i32> [[TMP0]]
+//
+v2i32 avgrwp(v2i32 a, v2i32 b) { return __builtin_kvx_avgwp(a, b, ".r"); }
 
-// v2i32 avgrwp(v2i32 a, v2i32 b) { return __builtin_kvx_avgrwp(a, b); }
+// CHECK-LABEL: @avgrwq(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <4 x i32> [[A:%.*]], <4 x i32> undef, <2 x i32> <i32 0, i32 1>
+// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <4 x i32> [[B:%.*]], <4 x i32> undef, <2 x i32> <i32 0, i32 1>
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <2 x i32> @llvm.kvx.avgrwp(<2 x i32> [[TMP0]], <2 x i32> [[TMP1]])
+// CHECK-NEXT:    [[TMP3:%.*]] = shufflevector <4 x i32> [[A]], <4 x i32> undef, <2 x i32> <i32 2, i32 3>
+// CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <4 x i32> [[B]], <4 x i32> undef, <2 x i32> <i32 2, i32 3>
+// CHECK-NEXT:    [[TMP5:%.*]] = tail call <2 x i32> @llvm.kvx.avgrwp(<2 x i32> [[TMP3]], <2 x i32> [[TMP4]])
+// CHECK-NEXT:    [[TMP6:%.*]] = shufflevector <2 x i32> [[TMP2]], <2 x i32> [[TMP5]], <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+// CHECK-NEXT:    ret <4 x i32> [[TMP6]]
+//
+v4i32 avgrwq(v4i32 a, v4i32 b) { return __builtin_kvx_avgwq(a, b, ".r"); }
 
-// v4i32 avgrwq(v4i32 a, v4i32 b) { return __builtin_kvx_avgrwq(a, b); }
+// CHECK-LABEL: @avgrwo(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <8 x i32> [[A:%.*]], <8 x i32> undef, <2 x i32> <i32 0, i32 1>
+// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <8 x i32> [[B:%.*]], <8 x i32> undef, <2 x i32> <i32 0, i32 1>
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <2 x i32> @llvm.kvx.avgrwp(<2 x i32> [[TMP0]], <2 x i32> [[TMP1]])
+// CHECK-NEXT:    [[TMP3:%.*]] = shufflevector <8 x i32> [[A]], <8 x i32> undef, <2 x i32> <i32 2, i32 3>
+// CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <8 x i32> [[B]], <8 x i32> undef, <2 x i32> <i32 2, i32 3>
+// CHECK-NEXT:    [[TMP5:%.*]] = tail call <2 x i32> @llvm.kvx.avgrwp(<2 x i32> [[TMP3]], <2 x i32> [[TMP4]])
+// CHECK-NEXT:    [[TMP6:%.*]] = shufflevector <2 x i32> [[TMP2]], <2 x i32> [[TMP5]], <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 undef, i32 undef, i32 undef, i32 undef>
+// CHECK-NEXT:    [[TMP7:%.*]] = shufflevector <8 x i32> [[A]], <8 x i32> undef, <2 x i32> <i32 4, i32 5>
+// CHECK-NEXT:    [[TMP8:%.*]] = shufflevector <8 x i32> [[B]], <8 x i32> undef, <2 x i32> <i32 4, i32 5>
+// CHECK-NEXT:    [[TMP9:%.*]] = tail call <2 x i32> @llvm.kvx.avgrwp(<2 x i32> [[TMP7]], <2 x i32> [[TMP8]])
+// CHECK-NEXT:    [[TMP10:%.*]] = shufflevector <2 x i32> [[TMP9]], <2 x i32> undef, <8 x i32> <i32 0, i32 1, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
+// CHECK-NEXT:    [[TMP11:%.*]] = shufflevector <8 x i32> [[TMP6]], <8 x i32> [[TMP10]], <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 8, i32 9, i32 undef, i32 undef>
+// CHECK-NEXT:    [[TMP12:%.*]] = shufflevector <8 x i32> [[A]], <8 x i32> undef, <2 x i32> <i32 6, i32 7>
+// CHECK-NEXT:    [[TMP13:%.*]] = shufflevector <8 x i32> [[B]], <8 x i32> undef, <2 x i32> <i32 6, i32 7>
+// CHECK-NEXT:    [[TMP14:%.*]] = tail call <2 x i32> @llvm.kvx.avgrwp(<2 x i32> [[TMP12]], <2 x i32> [[TMP13]])
+// CHECK-NEXT:    [[TMP15:%.*]] = shufflevector <2 x i32> [[TMP14]], <2 x i32> undef, <8 x i32> <i32 0, i32 1, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
+// CHECK-NEXT:    [[TMP16:%.*]] = shufflevector <8 x i32> [[TMP11]], <8 x i32> [[TMP15]], <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 8, i32 9>
+// CHECK-NEXT:    ret <8 x i32> [[TMP16]]
+//
+v8i32 avgrwo(v8i32 a, v8i32 b) { return __builtin_kvx_avgwo(a, b, ".r"); }
 
-// v8i32 avgrwo(v8i32 a, v8i32 b) { return __builtin_kvx_avgrwo(a, b); }
+// CHECK-LABEL: @avgruhq(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x i16> @llvm.kvx.avgruhq(<4 x i16> [[A:%.*]], <4 x i16> [[B:%.*]])
+// CHECK-NEXT:    ret <4 x i16> [[TMP0]]
+//
+v4u16 avgruhq(v4u16 a, v4u16 b) { return __builtin_kvx_avghq(a, b, ".ru"); }
 
-// v4u16 avgruhq(v4u16 a, v4u16 b) {
-//   return __builtin_kvx_avgruhq(a, b);
-// }
+// CHECK-LABEL: @avgruho(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <8 x i16> [[A:%.*]], <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <8 x i16> [[B:%.*]], <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <4 x i16> @llvm.kvx.avgruhq(<4 x i16> [[TMP0]], <4 x i16> [[TMP1]])
+// CHECK-NEXT:    [[TMP3:%.*]] = shufflevector <8 x i16> [[A]], <8 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+// CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <8 x i16> [[B]], <8 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+// CHECK-NEXT:    [[TMP5:%.*]] = tail call <4 x i16> @llvm.kvx.avgruhq(<4 x i16> [[TMP3]], <4 x i16> [[TMP4]])
+// CHECK-NEXT:    [[TMP6:%.*]] = shufflevector <4 x i16> [[TMP2]], <4 x i16> [[TMP5]], <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+// CHECK-NEXT:    ret <8 x i16> [[TMP6]]
+//
+v8u16 avgruho(v8u16 a, v8u16 b) { return __builtin_kvx_avgho(a, b, ".ru"); }
 
-// v8u16 avgruho(v8u16 a, v8u16 b) {
-//   return __builtin_kvx_avgruho(a, b);
-// }
+// CHECK-LABEL: @avgruhx(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <16 x i16> [[A:%.*]], <16 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <16 x i16> [[B:%.*]], <16 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <4 x i16> @llvm.kvx.avgruhq(<4 x i16> [[TMP0]], <4 x i16> [[TMP1]])
+// CHECK-NEXT:    [[TMP3:%.*]] = shufflevector <16 x i16> [[A]], <16 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+// CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <16 x i16> [[B]], <16 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+// CHECK-NEXT:    [[TMP5:%.*]] = tail call <4 x i16> @llvm.kvx.avgruhq(<4 x i16> [[TMP3]], <4 x i16> [[TMP4]])
+// CHECK-NEXT:    [[TMP6:%.*]] = shufflevector <4 x i16> [[TMP2]], <4 x i16> [[TMP5]], <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
+// CHECK-NEXT:    [[TMP7:%.*]] = shufflevector <16 x i16> [[A]], <16 x i16> undef, <4 x i32> <i32 8, i32 9, i32 10, i32 11>
+// CHECK-NEXT:    [[TMP8:%.*]] = shufflevector <16 x i16> [[B]], <16 x i16> undef, <4 x i32> <i32 8, i32 9, i32 10, i32 11>
+// CHECK-NEXT:    [[TMP9:%.*]] = tail call <4 x i16> @llvm.kvx.avgruhq(<4 x i16> [[TMP7]], <4 x i16> [[TMP8]])
+// CHECK-NEXT:    [[TMP10:%.*]] = shufflevector <4 x i16> [[TMP9]], <4 x i16> undef, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
+// CHECK-NEXT:    [[TMP11:%.*]] = shufflevector <16 x i16> [[TMP6]], <16 x i16> [[TMP10]], <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 16, i32 17, i32 18, i32 19, i32 undef, i32 undef, i32 undef, i32 undef>
+// CHECK-NEXT:    [[TMP12:%.*]] = shufflevector <16 x i16> [[A]], <16 x i16> undef, <4 x i32> <i32 12, i32 13, i32 14, i32 15>
+// CHECK-NEXT:    [[TMP13:%.*]] = shufflevector <16 x i16> [[B]], <16 x i16> undef, <4 x i32> <i32 12, i32 13, i32 14, i32 15>
+// CHECK-NEXT:    [[TMP14:%.*]] = tail call <4 x i16> @llvm.kvx.avgruhq(<4 x i16> [[TMP12]], <4 x i16> [[TMP13]])
+// CHECK-NEXT:    [[TMP15:%.*]] = shufflevector <4 x i16> [[TMP14]], <4 x i16> undef, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
+// CHECK-NEXT:    [[TMP16:%.*]] = shufflevector <16 x i16> [[TMP11]], <16 x i16> [[TMP15]], <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 16, i32 17, i32 18, i32 19>
+// CHECK-NEXT:    ret <16 x i16> [[TMP16]]
+//
+v16u16 avgruhx(v16u16 a, v16u16 b) { return __builtin_kvx_avghx(a, b, ".ru"); }
 
-// v16u16 avgruhx(v16u16 a, v16u16 b) {
-//   return __builtin_kvx_avgruhx(a, b);
-// }
+// CHECK-LABEL: @avgruwp(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x i32> @llvm.kvx.avgruwp(<2 x i32> [[A:%.*]], <2 x i32> [[B:%.*]])
+// CHECK-NEXT:    ret <2 x i32> [[TMP0]]
+//
+v2u32 avgruwp(v2u32 a, v2u32 b) { return __builtin_kvx_avgwp(a, b, ".ru"); }
 
-// v2u32 avgruwp(v2u32 a, v2u32 b) {
-//   return __builtin_kvx_avgruwp(a, b);
-// }
+// CHECK-LABEL: @avgruwq(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <4 x i32> [[A:%.*]], <4 x i32> undef, <2 x i32> <i32 0, i32 1>
+// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <4 x i32> [[B:%.*]], <4 x i32> undef, <2 x i32> <i32 0, i32 1>
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <2 x i32> @llvm.kvx.avgruwp(<2 x i32> [[TMP0]], <2 x i32> [[TMP1]])
+// CHECK-NEXT:    [[TMP3:%.*]] = shufflevector <4 x i32> [[A]], <4 x i32> undef, <2 x i32> <i32 2, i32 3>
+// CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <4 x i32> [[B]], <4 x i32> undef, <2 x i32> <i32 2, i32 3>
+// CHECK-NEXT:    [[TMP5:%.*]] = tail call <2 x i32> @llvm.kvx.avgruwp(<2 x i32> [[TMP3]], <2 x i32> [[TMP4]])
+// CHECK-NEXT:    [[TMP6:%.*]] = shufflevector <2 x i32> [[TMP2]], <2 x i32> [[TMP5]], <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+// CHECK-NEXT:    ret <4 x i32> [[TMP6]]
+//
+v4u32 avgruwq(v4u32 a, v4u32 b) { return __builtin_kvx_avgwq(a, b, ".ru"); }
 
-// v4u32 avgruwq(v4u32 a, v4u32 b) {
-//   return __builtin_kvx_avgruwq(a, b);
-// }
-
-// v8u32 avgruwo(v8u32 a, v8u32 b) {
-//   return __builtin_kvx_avgruwo(a, b);
-// }
+// CHECK-LABEL: @avgruwo(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <8 x i32> [[A:%.*]], <8 x i32> undef, <2 x i32> <i32 0, i32 1>
+// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <8 x i32> [[B:%.*]], <8 x i32> undef, <2 x i32> <i32 0, i32 1>
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <2 x i32> @llvm.kvx.avgruwp(<2 x i32> [[TMP0]], <2 x i32> [[TMP1]])
+// CHECK-NEXT:    [[TMP3:%.*]] = shufflevector <8 x i32> [[A]], <8 x i32> undef, <2 x i32> <i32 2, i32 3>
+// CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <8 x i32> [[B]], <8 x i32> undef, <2 x i32> <i32 2, i32 3>
+// CHECK-NEXT:    [[TMP5:%.*]] = tail call <2 x i32> @llvm.kvx.avgruwp(<2 x i32> [[TMP3]], <2 x i32> [[TMP4]])
+// CHECK-NEXT:    [[TMP6:%.*]] = shufflevector <2 x i32> [[TMP2]], <2 x i32> [[TMP5]], <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 undef, i32 undef, i32 undef, i32 undef>
+// CHECK-NEXT:    [[TMP7:%.*]] = shufflevector <8 x i32> [[A]], <8 x i32> undef, <2 x i32> <i32 4, i32 5>
+// CHECK-NEXT:    [[TMP8:%.*]] = shufflevector <8 x i32> [[B]], <8 x i32> undef, <2 x i32> <i32 4, i32 5>
+// CHECK-NEXT:    [[TMP9:%.*]] = tail call <2 x i32> @llvm.kvx.avgruwp(<2 x i32> [[TMP7]], <2 x i32> [[TMP8]])
+// CHECK-NEXT:    [[TMP10:%.*]] = shufflevector <2 x i32> [[TMP9]], <2 x i32> undef, <8 x i32> <i32 0, i32 1, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
+// CHECK-NEXT:    [[TMP11:%.*]] = shufflevector <8 x i32> [[TMP6]], <8 x i32> [[TMP10]], <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 8, i32 9, i32 undef, i32 undef>
+// CHECK-NEXT:    [[TMP12:%.*]] = shufflevector <8 x i32> [[A]], <8 x i32> undef, <2 x i32> <i32 6, i32 7>
+// CHECK-NEXT:    [[TMP13:%.*]] = shufflevector <8 x i32> [[B]], <8 x i32> undef, <2 x i32> <i32 6, i32 7>
+// CHECK-NEXT:    [[TMP14:%.*]] = tail call <2 x i32> @llvm.kvx.avgruwp(<2 x i32> [[TMP12]], <2 x i32> [[TMP13]])
+// CHECK-NEXT:    [[TMP15:%.*]] = shufflevector <2 x i32> [[TMP14]], <2 x i32> undef, <8 x i32> <i32 0, i32 1, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
+// CHECK-NEXT:    [[TMP16:%.*]] = shufflevector <8 x i32> [[TMP11]], <8 x i32> [[TMP15]], <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 8, i32 9>
+// CHECK-NEXT:    ret <8 x i32> [[TMP16]]
+//
+v8u32 avgruwo(v8u32 a, v8u32 b) { return __builtin_kvx_avgwo(a, b, ".ru"); }
 
 /**
  * TODO: reintroduce addshq to addsdqs tests once saturation modifier is

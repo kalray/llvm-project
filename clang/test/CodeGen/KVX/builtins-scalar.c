@@ -85,24 +85,35 @@ long sbfdci(long v1, long v2) {
 // CHECK-NEXT:    ret i32 [[TMP0]]
 //
 int avgw(int v1, int v2) {
-  return __builtin_kvx_avgw(v1, v2);
+  return __builtin_kvx_avgw(v1, v2, "");
 }
 
-/**
- * TODO Reintroduce avguw - avgruw once string modifiers are there
- */
+// CHECK-LABEL: @avguw(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call i32 @llvm.kvx.avguw(i32 [[V1:%.*]], i32 [[V2:%.*]])
+// CHECK-NEXT:    ret i32 [[TMP0]]
+//
+unsigned int avguw(unsigned int v1, unsigned int v2) {
+  return __builtin_kvx_avgw(v1, v2, ".u");
+}
 
-// unsigned int avguw(unsigned int v1, unsigned int v2) {
-//   return __builtin_kvx_avguw(v1, v2);
-// }
+// CHECK-LABEL: @avgrw(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call i32 @llvm.kvx.avgrw(i32 [[V1:%.*]], i32 [[V2:%.*]])
+// CHECK-NEXT:    ret i32 [[TMP0]]
+//
+int avgrw(int v1, int v2) {
+  return __builtin_kvx_avgw(v1, v2, ".r");
+}
 
-// int avgrw(int v1, int v2) {
-//   return __builtin_kvx_avgrw(v1, v2);
-// }
-
-// unsigned int avgruw(int v1, int v2) {
-//   return __builtin_kvx_avgruw(v1, v2);
-// }
+// CHECK-LABEL: @avgruw(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call i32 @llvm.kvx.avgruw(i32 [[V1:%.*]], i32 [[V2:%.*]])
+// CHECK-NEXT:    ret i32 [[TMP0]]
+//
+unsigned int avgruw(int v1, int v2) {
+  return __builtin_kvx_avgw(v1, v2, ".ru");
+}
 
 // CHECK-LABEL: @bitcntd(
 // CHECK-NEXT:  entry:
