@@ -1370,6 +1370,24 @@ def : Pat<(v4i64 (insertelt v4i64:$to, i64:$e, i64:$idx)),
             sub_s3)>;
 
 //===----------------------------------------------------------------------===//
+//  Integer Bit Counting - Patterns
+//===----------------------------------------------------------------------===//
+
+// v4i32
+
+def : Pat<(ctlz v4i32:$v),
+          (v4i32 (REG_SEQUENCE PairedReg,
+            (CLZWP (v2i32 (EXTRACT_SUBREG PairedReg:$v, sub_s0))), sub_s0,
+            (CLZWP (v2i32 (EXTRACT_SUBREG PairedReg:$v, sub_s1))), sub_s1
+          ))>;
+
+def : Pat<(cttz v4i32:$v),
+          (v4i32 (REG_SEQUENCE PairedReg,
+            (CTZWP (v2i32 (EXTRACT_SUBREG PairedReg:$v, sub_s0))), sub_s0,
+            (CTZWP (v2i32 (EXTRACT_SUBREG PairedReg:$v, sub_s1))), sub_s1
+          ))>;
+
+//===----------------------------------------------------------------------===//
 //  Vector Shift - Patterns
 //===----------------------------------------------------------------------===//
 

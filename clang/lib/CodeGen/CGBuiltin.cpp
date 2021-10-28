@@ -17659,6 +17659,14 @@ typedef enum {
 
 constexpr unsigned AVERAGE_SIZE = AVERAGE_RU + 1;
 
+typedef enum {
+  BITCOUNT_INVALID = -1,
+  BITCOUNT_POP = 0,
+  BITCOUNT_LZ = 1,
+  BITCOUNT_LS = 2,
+  BITCOUNT_TZ = 3
+} bitcount_t;
+
 static int KVX_getConjugateModifier(const StringRef &Str) {
   return llvm::StringSwitch<int>(Str).Case("", 0).Case("c", 1).Default(-1);
 }
@@ -17699,6 +17707,15 @@ static average_t KVX_getAverageModifier(const StringRef &Str) {
       .Case(".u", AVERAGE_U)
       .Case(".ru", AVERAGE_RU)
       .Default(AVERAGE_INVALID);
+}
+
+static bitcount_t KVX_getBitcountModifier(const StringRef &Str) {
+  return StringSwitch<bitcount_t>(Str)
+      .Case("", BITCOUNT_POP)
+      .Case(".lz", BITCOUNT_LZ)
+      .Case(".ls", BITCOUNT_LS)
+      .Case(".tz", BITCOUNT_TZ)
+      .Default(BITCOUNT_INVALID);
 }
 
 static int KVX_getSpeculateModValue(const StringRef &Str) {
@@ -18568,21 +18585,32 @@ static Value *KVX_emitVectorBuiltin(CodeGenFunction &CGF, const CallExpr *E,
   return Result;
 }
 
+static Value *KVX_emitModBuiltin(CodeGenFunction &CGF, const CallExpr *E,
+                                 unsigned VectorSize, unsigned SliceSize,
+                                 IntegerType *ElementType,
+                                 Intrinsic::KVXIntrinsics Intrinsic,
+                                 int StringModOperand) {
+  if (VectorSize == SliceSize)
+    return KVX_emitNaryBuiltin(StringModOperand, CGF, E, Intrinsic, false,
+                               false, true);
+
+  return KVX_emitVectorBuiltin(CGF, E, Intrinsic, StringModOperand, ElementType,
+                               VectorSize, SliceSize);
+}
+
 typedef std::array<Intrinsic::KVXIntrinsics, AVERAGE_SIZE> average_intrinsics_t;
 
-static Value *KVX_emitIntAvgBuiltin(
-    CodeGenFunction &CGF, const CallExpr *E, unsigned VectorSize,
-    unsigned SliceSize, IntegerType *ElementType,
-    std::array<Intrinsic::KVXIntrinsics, AVERAGE_SIZE> Intrinsics) {
-
+static Value *KVX_emitIntAvgBuiltin(CodeGenFunction &CGF, const CallExpr *E,
+                                    unsigned VectorSize, unsigned SliceSize,
+                                    IntegerType *ElementType,
+                                    average_intrinsics_t AvgIntrinsics) {
   constexpr int StringModOperand = 2;
 
   const auto *SL = dyn_cast<clang::StringLiteral>(
       E->getArg(StringModOperand)->IgnoreParenImpCasts());
   auto Mods = SL->getString();
 
-  average_t AverageMod = AVERAGE_INVALID;
-  AverageMod = KVX_getAverageModifier(Mods);
+  average_t AverageMod = KVX_getAverageModifier(Mods);
   if (AverageMod == AVERAGE_INVALID) {
     CGF.CGM.Error(E->getArg(StringModOperand)->getBeginLoc(),
                   "invalid average_t modifier, expected \"\", \".r\", \".u\" "
@@ -18590,14 +18618,60 @@ static Value *KVX_emitIntAvgBuiltin(
     return nullptr;
   }
 
-  Intrinsic::KVXIntrinsics Intrinsic = Intrinsics[AverageMod];
+  auto Intrinsic = AvgIntrinsics[AverageMod];
+  return KVX_emitModBuiltin(CGF, E, VectorSize, SliceSize, ElementType,
+                            Intrinsic, StringModOperand);
+}
 
-  if (VectorSize == SliceSize)
-    return KVX_emitNaryBuiltin(StringModOperand, CGF, E, Intrinsic, false,
-                               false, true);
+static Value *KVX_emitBitcountBuiltin(CodeGenFunction &CGF, const CallExpr *E,
+                                      unsigned VectorSize, unsigned SliceSize,
+                                      IntegerType *ElementType,
+                                      Intrinsic::KVXIntrinsics LsIntrinsic) {
+  constexpr int StringModOperand = 1;
 
-  return KVX_emitVectorBuiltin(CGF, E, Intrinsic, StringModOperand, ElementType,
-                               VectorSize, SliceSize);
+  const auto *SL = dyn_cast<clang::StringLiteral>(
+      E->getArg(StringModOperand)->IgnoreParenImpCasts());
+  auto Mods = SL->getString();
+
+  Intrinsic::IndependentIntrinsics BcIntrinsic;
+  bitcount_t BitcountMod = KVX_getBitcountModifier(Mods);
+  bool NeedsIsZeroUndefFlag = false;
+
+  switch (BitcountMod) {
+  case BITCOUNT_LS:
+    return KVX_emitModBuiltin(CGF, E, VectorSize, SliceSize, ElementType,
+                              LsIntrinsic, StringModOperand);
+  case BITCOUNT_INVALID:
+    CGF.CGM.Error(E->getArg(StringModOperand)->getBeginLoc(),
+                  "invalid bitcount_t modifier, expected \"\", \".lz\", "
+                  "\".ls\" or \".tz\"");
+    return nullptr;
+  case BITCOUNT_POP:
+    BcIntrinsic = Intrinsic::ctpop;
+    break;
+  case BITCOUNT_LZ:
+    BcIntrinsic = Intrinsic::ctlz;
+    NeedsIsZeroUndefFlag = true;
+    break;
+  case BITCOUNT_TZ:
+    BcIntrinsic = Intrinsic::cttz;
+    NeedsIsZeroUndefFlag = true;
+    break;
+  }
+
+  /* Emit the specialized intrinsic */
+  const Expr *ValExpr = E->getArg(0);
+  Value *Val = CGF.EmitScalarExpr(ValExpr);
+  llvm::Type *ValType = Val->getType();
+  Function *BcIntrinsicF = CGF.CGM.getIntrinsic(BcIntrinsic, {ValType});
+
+  if (NeedsIsZeroUndefFlag) {
+    ConstantInt *IsZeroUndefFlag =
+        ConstantInt::get(CGF.Builder.getInt1Ty(), false);
+    return CGF.Builder.CreateCall(BcIntrinsicF, {Val, IsZeroUndefFlag});
+  }
+
+  return CGF.Builder.CreateCall(BcIntrinsicF, {Val});
 }
 
 static Value *
@@ -19025,30 +19099,33 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_fnegwp:
     return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_fnegwp);
 
-  case KVX::BI__builtin_kvx_bitcntd:
-    return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_cbsd);
-
-  case KVX::BI__builtin_kvx_bitcntdp:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_cbsd, 1, Int64Ty, 2,
-                                 1);
-
-  case KVX::BI__builtin_kvx_bitcntdq:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_cbsd, 1, Int64Ty, 4,
-                                 1);
-
   case KVX::BI__builtin_kvx_bitcntw:
-    return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_cbsw);
-
+    return KVX_emitBitcountBuiltin(*this, E, 1, 1, nullptr,
+                                   Intrinsic::kvx_clsw);
+  case KVX::BI__builtin_kvx_bitcntd:
+    VectorSize = 1;
+    goto bitcntd_common;
+  case KVX::BI__builtin_kvx_bitcntdp:
+    VectorSize = 2;
+    goto bitcntd_common;
+  case KVX::BI__builtin_kvx_bitcntdq:
+    VectorSize = 4;
+    goto bitcntd_common;
+  bitcntd_common:
+    return KVX_emitBitcountBuiltin(*this, E, VectorSize, 1, this->Int64Ty,
+                                   Intrinsic::kvx_clsd);
   case KVX::BI__builtin_kvx_bitcntwp:
-    return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_cbswp);
-
+    VectorSize = 2;
+    goto bitcntwp_common;
   case KVX::BI__builtin_kvx_bitcntwq:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_cbswp, 1, Int32Ty, 4,
-                                 2);
-
+    VectorSize = 4;
+    goto bitcntwp_common;
   case KVX::BI__builtin_kvx_bitcntwo:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_cbswp, 1, Int32Ty, 8,
-                                 2);
+    VectorSize = 8;
+    goto bitcntwp_common;
+  bitcntwp_common:
+    return KVX_emitBitcountBuiltin(*this, E, VectorSize, 2, this->Int32Ty,
+                                   Intrinsic::kvx_clswp);
 
   case KVX::BI__builtin_kvx_stsud:
     return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_stsud);

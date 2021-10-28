@@ -115,39 +115,6 @@ unsigned int avgruw(int v1, int v2) {
   return __builtin_kvx_avgw(v1, v2, ".ru");
 }
 
-// CHECK-LABEL: @bitcntd(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.cbsd(i64 [[L:%.*]])
-// CHECK-NEXT:    ret i64 [[TMP0]]
-//
-long bitcntd(long l) {
-  return __builtin_kvx_bitcntd(l);
-}
-
-/**
- * TODO Reintroduce cbsw - ctzw once string modifiers are there
- */
-
-// int cbsw(int i) {
-//   return __builtin_kvx_cbsw(i);
-// }
-
-// long clzd(long l) {
-//   return __builtin_kvx_clzd(l);
-// }
-
-// int clzw(int i) {
-//   return __builtin_kvx_clzw(i);
-// }
-
-// long ctzd(long l) {
-//   return __builtin_kvx_ctzd(l);
-// }
-
-// int ctzw(int i) {
-//   return __builtin_kvx_ctzw(i);
-// }
-
 // CHECK-LABEL: @fabsw(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.fabsw(float [[V:%.*]])
