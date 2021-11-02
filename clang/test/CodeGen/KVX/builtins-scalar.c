@@ -55,23 +55,17 @@ long abdd(long v1, long v2) {
 //   return __builtin_kvx_addd(v1, v2, ".ci");
 // }
 
-// CHECK-LABEL: @sbfdc(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.sbfd(i64 [[V1:%.*]], i64 [[V2:%.*]], i32 1)
-// CHECK-NEXT:    ret i64 [[TMP0]]
-//
-long sbfdc(long v1, long v2) {
-  return __builtin_kvx_sbfd(v1, v2, ".c");
-}
+/**
+ * TODO Reintroduce sbfdc and sbfdci once Sub with Carry is there
+ */
 
-// CHECK-LABEL: @sbfdci(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.sbfd(i64 [[V1:%.*]], i64 [[V2:%.*]], i32 2)
-// CHECK-NEXT:    ret i64 [[TMP0]]
-//
-long sbfdci(long v1, long v2) {
-  return __builtin_kvx_sbfd(v1, v2, ".ci");
-}
+// long sbfdc(long v1, long v2) {
+//   return __builtin_kvx_sbfd(v1, v2, ".c");
+// }
+
+// long sbfdci(long v1, long v2) {
+//   return __builtin_kvx_sbfd(v1, v2, ".ci");
+// }
 
 // CHECK-LABEL: @avgw(
 // CHECK-NEXT:  entry:
