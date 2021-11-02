@@ -18306,39 +18306,6 @@ static Value *KVX_emitStoreBuiltin(CodeGenFunction &CGF, const CallExpr *E,
   return Store;
 }
 
-static int KVX_getCarry(clang::ASTContext &Ctx, const clang::Expr *E) {
-  if (E->isNullPointerConstant(Ctx, Expr::NPC_NeverValueDependent)) {
-    return 0;
-  }
-  int Carry = -1;
-  if (E->getStmtClass() == Stmt::StringLiteralClass) {
-
-    StringRef Str = cast<clang::StringLiteral>(E)->getString();
-    if (Str.equals_lower(".c"))
-      Carry = 1;
-    else if (Str.equals_lower(".ci"))
-      Carry = 2;
-  }
-
-  return Carry;
-}
-
-static Value *KVX_emitCarryBuiltin(CodeGenFunction &CGF, const CallExpr *E,
-                                   unsigned IntrinsicID) {
-  int Carry =
-      KVX_getCarry(CGF.getContext(), E->getArg(2)->IgnoreParenImpCasts());
-  if (Carry == -1) {
-    CGF.CGM.Error(E->getArg(2)->getBeginLoc(),
-                  "invalid modifier (possible values: \".c\" or \"ci\")");
-  }
-  Value *V1 = CGF.EmitScalarExpr(E->getArg(0));
-  Value *V2 = CGF.EmitScalarExpr(E->getArg(1));
-
-  Function *Callee = CGF.CGM.getIntrinsic(IntrinsicID);
-  return CGF.Builder.CreateCall(Callee,
-                                {V1, V2, ConstantInt::get(CGF.IntTy, Carry)});
-}
-
 static simdcond_t KVX_getSimdCond(clang::ASTContext &Ctx,
                                   const clang::Expr *E) {
   if (E->isNullPointerConstant(Ctx, Expr::NPC_NeverValueDependent)) {
@@ -18613,7 +18580,9 @@ static Value *KVX_emitModBuiltin(CodeGenFunction &CGF, const CallExpr *E,
                                VectorSize, SliceSize);
 }
 
-static Value *KVX_emitIntAddBuiltin(CodeGenFunction &CGF, const CallExpr *E) {
+// isAdd == false -> it is an subtraction
+static Value *KVX_emitIntAddSubBuiltin(CodeGenFunction &CGF, const CallExpr *E,
+                                       bool isAdd) {
   constexpr int StringModOperand = 2;
   const auto *SL = dyn_cast<clang::StringLiteral>(
       E->getArg(StringModOperand)->IgnoreParenImpCasts());
@@ -18622,27 +18591,27 @@ static Value *KVX_emitIntAddBuiltin(CodeGenFunction &CGF, const CallExpr *E) {
   saturate_t SaturateMod = KVX_getSaturateModifier(Mods);
   Intrinsic::IndependentIntrinsics SatIntrinsic;
 
-  const Expr *LHS = E->getArg(0);
+  int LHSpos = isAdd ? 0 : 1;
+  int RHSpos = isAdd ? 1 : 0;
+
+  const Expr *LHS = E->getArg(LHSpos);
   Value *LHSv = CGF.EmitScalarExpr(LHS);
   llvm::Type *LHSt = LHSv->getType();
 
-  const Expr *RHS = E->getArg(1);
+  const Expr *RHS = E->getArg(RHSpos);
   Value *RHSv = CGF.EmitScalarExpr(RHS);
 
   switch (SaturateMod) {
   case SATURATE_DEFAULT: {
-    // Emit a regular add
-    const Expr *LHS = E->getArg(0);
-    Value *LHSv = CGF.EmitScalarExpr(LHS);
-    const Expr *RHS = E->getArg(1);
-    Value *RHSv = CGF.EmitScalarExpr(RHS);
-    return CGF.Builder.CreateAdd(LHSv, RHSv);
+    // Emit a regular add or sub
+    return isAdd ? CGF.Builder.CreateAdd(LHSv, RHSv)
+                 : CGF.Builder.CreateSub(LHSv, RHSv);
   }
   case SATURATE_SIGNED:
-    SatIntrinsic = Intrinsic::sadd_sat;
+    SatIntrinsic = isAdd ? Intrinsic::sadd_sat : Intrinsic::ssub_sat;
     break;
   case SATURATE_UNSIGNED:
-    SatIntrinsic = Intrinsic::uadd_sat;
+    SatIntrinsic = isAdd ? Intrinsic::uadd_sat : Intrinsic::usub_sat;
     break;
   case SATURATE_INVALID:
     CGF.CGM.Error(
@@ -18658,6 +18627,16 @@ static Value *KVX_emitIntAddBuiltin(CodeGenFunction &CGF, const CallExpr *E) {
 #endif
   Function *SatIntrinsicF = CGF.CGM.getIntrinsic(SatIntrinsic, {LHSt});
   return CGF.Builder.CreateCall(SatIntrinsicF, {LHSv, RHSv});
+}
+
+static inline Value *KVX_emitIntAddBuiltin(CodeGenFunction &CGF,
+                                           const CallExpr *E) {
+  return KVX_emitIntAddSubBuiltin(CGF, E, true);
+}
+
+static inline Value *KVX_emitIntSubBuiltin(CodeGenFunction &CGF,
+                                           const CallExpr *E) {
+  return KVX_emitIntAddSubBuiltin(CGF, E, false);
 }
 
 typedef std::array<Intrinsic::KVXIntrinsics, AVERAGE_SIZE> average_intrinsics_t;
@@ -19361,8 +19340,20 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_adddp:
   case KVX::BI__builtin_kvx_adddq:
     return KVX_emitIntAddBuiltin(*this, E);
+  case KVX::BI__builtin_kvx_sbfbo:
+  case KVX::BI__builtin_kvx_sbfbx:
+  case KVX::BI__builtin_kvx_sbfbv:
+  case KVX::BI__builtin_kvx_sbfhq:
+  case KVX::BI__builtin_kvx_sbfho:
+  case KVX::BI__builtin_kvx_sbfhx:
+  case KVX::BI__builtin_kvx_sbfw:
+  case KVX::BI__builtin_kvx_sbfwp:
+  case KVX::BI__builtin_kvx_sbfwq:
+  case KVX::BI__builtin_kvx_sbfwo:
   case KVX::BI__builtin_kvx_sbfd:
-    return KVX_emitCarryBuiltin(*this, E, Intrinsic::kvx_sbfd);
+  case KVX::BI__builtin_kvx_sbfdp:
+  case KVX::BI__builtin_kvx_sbfdq:
+    return KVX_emitIntSubBuiltin(*this, E);
   case KVX::BI__builtin_kvx_fabsw:
     return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_fabsw);
   case KVX::BI__builtin_kvx_fabsd:

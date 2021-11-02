@@ -495,6 +495,13 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::UADDSAT, MVT::v8i8, Legal);
   setOperationAction(ISD::UADDSAT, MVT::v2i32, Legal);
 
+  for (auto I :
+       {MVT::v8i8, MVT::v4i16, MVT::v2i32, MVT::i32, MVT::i64, MVT::v4i32})
+    setOperationAction(ISD::SSUBSAT, I, Legal);
+
+  for (auto I : {MVT::v8i8, MVT::v2i32, MVT::v4i32})
+    setOperationAction(ISD::USUBSAT, I, Legal);
+
   setTargetDAGCombine(ISD::MUL);
   setTargetDAGCombine(ISD::SRA);
   setTargetDAGCombine(ISD::STORE);

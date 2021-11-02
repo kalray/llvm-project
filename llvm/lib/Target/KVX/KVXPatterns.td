@@ -1388,10 +1388,11 @@ def : Pat<(cttz v4i32:$v),
           ))>;
 
 //===----------------------------------------------------------------------===//
-//  Signed Saturated Addition - Patterns
+//  Signed Saturated Addition/Subtraction - Patterns
 //===----------------------------------------------------------------------===//
 
-// v8i8
+/** saddsat */
+
 def : Pat<(saddsat v8i8:$v0, v8i8:$v1),
           (ORDrr
             (ANDDri64
@@ -1409,6 +1410,8 @@ def : Pat<(saddsat v8i8:$v0, v8i8:$v1),
               8
             )
           )>;
+
+/** uaddsat */
 
 def : Pat<(uaddsat v8i8:$v0, v8i8:$v1),
           (ORDrr
@@ -1448,7 +1451,6 @@ def : Pat<(uaddsat v8i8:$v0, v8i8:$v1),
             )
           )>;
 
-// v2i32
 def : Pat<(uaddsat v2i32:$v0, v2i32:$v1),
           (ORDrr
             (COMPNWP
@@ -1457,6 +1459,108 @@ def : Pat<(uaddsat v2i32:$v0, v2i32:$v1),
               comparison_ltu
             ),
             (ADDWPrr $v0, $v1)
+          )>;
+
+/** ssubsat */
+
+def : Pat<(ssubsat v8i8:$v0, v8i8:$v1),
+          (ORDrr
+            (ANDDri64
+              (SBFSHQrr
+                (ANDDri64 SingleReg:$v1, 0xff00ff00ff00ff00),
+                (ANDDri64 SingleReg:$v0, 0xff00ff00ff00ff00)
+              ),
+              0xff00ff00ff00ff00
+            ),
+            (SRLHQSri
+              (SBFSHQrr
+                (SBMM8ri64 SingleReg:$v1, 0x4000200004000100),
+                (SBMM8ri64 SingleReg:$v0, 0x4000200004000100)
+              ),
+              8
+            )
+          )>;
+
+def : Pat<(ssubsat v4i16:$v0, v4i16:$v1), (SBFSHQrr $v1, $v0)>;
+
+def : Pat<(ssubsat i32:$v0, i32:$v1), (SBFSWrr $v1, $v0)>;
+
+def : Pat<(ssubsat v2i32:$v0, v2i32:$v1), (SBFSWPrr $v1, $v0)>;
+
+def : Pat<(ssubsat v4i32:$v0, v4i32:$v1),
+          (REG_SEQUENCE PairedReg,
+            (SBFSWPrr (v2i32 (EXTRACT_SUBREG $v1, sub_s0)), (v2i32 (EXTRACT_SUBREG $v0, sub_s0))),
+            sub_s0,
+            (SBFSWPrr (v2i32 (EXTRACT_SUBREG $v1, sub_s1)), (v2i32 (EXTRACT_SUBREG $v0, sub_s1))),
+            sub_s1
+          )>;
+
+def : Pat<(ssubsat i64:$v0, i64:$v1), (SBFSDrr $v1, $v0)>;
+
+/** usubsat */
+
+def : Pat<(usubsat v8i8:$v0, v8i8:$v1),
+          (ORDrr
+            (SRLHQSri
+              (ANDDrr
+                (COMPNHQ
+                  (SBFHQrr
+                    (SLLHQSri $v1, 8),
+                    (SLLHQSri $v0, 8)
+                  ),
+                  (SLLHQSri $v0, 8),
+                  comparison_leu
+                ),
+                (SBFHQrr
+                  (SLLHQSri $v1, 8),
+                  (SLLHQSri $v0, 8)
+                )
+              ),
+              8
+            ),
+            (ANDDri64
+              (ANDDrr
+                (COMPNHQ
+                  (SBFHQrr
+                    (ANDDri64 $v1, 0xff00ff00ff00ff00),
+                    (ANDDri64 $v0, 0xff00ff00ff00ff00)
+                  ),
+                  (ANDDri64 $v0, 0xff00ff00ff00ff00),
+                  comparison_leu
+                ),
+                (SBFHQrr
+                  (ANDDri64 $v1, 0xff00ff00ff00ff00),
+                  (ANDDri64 $v0, 0xff00ff00ff00ff00)
+                )
+              ),
+              0xff00ff00ff00ff00
+            )
+          )>;
+
+def : Pat<(usubsat v2i32:$v0, v2i32:$v1),
+          (SBFWPrr
+            $v1,
+            (MAXUWPrr $v0, $v1)
+          )>;
+
+def : Pat<(usubsat v4i32:$v0, v4i32:$v1),
+          (REG_SEQUENCE PairedReg,
+            (SBFWPrr
+              (v2i32 (EXTRACT_SUBREG $v1, sub_s0)),
+              (MAXUWPrr
+                (v2i32 (EXTRACT_SUBREG $v0, sub_s0)),
+                (v2i32 (EXTRACT_SUBREG $v1, sub_s0))
+              )
+            ),
+            sub_s0,
+            (SBFWPrr
+              (v2i32 (EXTRACT_SUBREG $v1, sub_s1)),
+              (MAXUWPrr
+                (v2i32 (EXTRACT_SUBREG $v0, sub_s1)),
+                (v2i32 (EXTRACT_SUBREG $v1, sub_s1))
+              )
+            ),
+            sub_s1
           )>;
 
 //===----------------------------------------------------------------------===//
