@@ -11381,9 +11381,9 @@ public:
 //===----------------------------------------------------------------------===//
 
 namespace {
-class KVXABIInfo : public ABIInfo {
+class KVXABIInfo : public DefaultABIInfo {
 public:
-  KVXABIInfo(CodeGenTypes &CGT) : ABIInfo(CGT) {}
+  KVXABIInfo(CodeGenTypes &CGT) : DefaultABIInfo(CGT) {}
 
   void computeInfo(CGFunctionInfo &FI) const override;
 
@@ -11464,8 +11464,8 @@ private:
     llvm::Type *getType() const {
       if (Elems.size() == 1)
         return Elems.front();
-      else
-        return llvm::StructType::get(Context, Elems);
+
+      return llvm::StructType::get(Context, Elems);
     }
   };
 };
@@ -11531,6 +11531,11 @@ ABIArgInfo KVXABIInfo::classifyBigType(QualType Ty) const {
 ABIArgInfo KVXABIInfo::classifyType(QualType Ty) const {
   if (Ty->isVoidType())
     return ABIArgInfo::getIgnore();
+
+  // C++ non-trivially-copyable structures/classes are passed by
+  // reference
+  if (!Ty.isTriviallyCopyableType(getContext()))
+    return DefaultABIInfo::classifyArgumentType(Ty);
 
   // Treat an enum type as its underlying type.
   if (const EnumType *EnumTy = Ty->getAs<EnumType>())

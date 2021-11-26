@@ -488,8 +488,6 @@ TargetInfo *AllocateTarget(const llvm::Triple &Triple,
 
   case llvm::Triple::kvx:
     switch (os) {
-    case llvm::Triple::ClusterOS:
-      return new ClusterOSTargetInfo<KVXTargetInfo>(Triple, Opts);
     case llvm::Triple::KVXOSPorting:
       return new KVXOSPortingTargetInfo<KVXTargetInfo>(Triple, Opts);
     default:
