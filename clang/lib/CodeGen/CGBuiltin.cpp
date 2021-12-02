@@ -19814,7 +19814,9 @@ static float_mods_t KVX_getFloatModifiers(const CallExpr *E,
   std::pair<StringRef, StringRef> Mods = {"", ""};
 
   if (!E->isNullPointerConstant(CGF.getContext(),
-                                Expr::NPC_NeverValueDependent)) {
+                                Expr::NPC_NeverValueDependent) &&
+      !E->getArg(I)->isNullPointerConstant(CGF.getContext(),
+                                           Expr::NPC_NeverValueDependent)) {
     const auto *SL =
         dyn_cast<clang::StringLiteral>(E->getArg(I)->IgnoreParenImpCasts());
     Mods = SL->getString().split(".").second.split(".");

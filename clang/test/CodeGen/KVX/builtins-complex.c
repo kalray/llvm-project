@@ -20,6 +20,24 @@ v2f32 fmulwc(v2f32 a, v2f32 b) {
   return __builtin_kvx_fmulwc(a, b, ".rn");
 }
 
+// CHECK-LABEL: @fmulwc_nomod(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x float> @llvm.kvx.fmulwc(<2 x float> [[A:%.*]], <2 x float> [[B:%.*]], i32 0, i32 7, i32 0)
+// CHECK-NEXT:    ret <2 x float> [[TMP0]]
+//
+v2f32 fmulwc_nomod(v2f32 a, v2f32 b) {
+  return __builtin_kvx_fmulwc(a, b, "");
+}
+
+// CHECK-LABEL: @fmulwc_mod_0(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x float> @llvm.kvx.fmulwc(<2 x float> [[A:%.*]], <2 x float> [[B:%.*]], i32 0, i32 7, i32 0)
+// CHECK-NEXT:    ret <2 x float> [[TMP0]]
+//
+v2f32 fmulwc_mod_0(v2f32 a, v2f32 b) {
+  return __builtin_kvx_fmulwc(a, b, 0);
+}
+
 // CHECK-LABEL: @ffmawc(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x float> @llvm.kvx.ffmawc(<2 x float> [[A:%.*]], <2 x float> [[B:%.*]], <2 x float> [[C:%.*]], i32 0, i32 0, i32 0)
