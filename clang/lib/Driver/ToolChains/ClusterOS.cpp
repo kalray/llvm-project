@@ -24,7 +24,7 @@ using namespace clang;
 using namespace llvm::opt;
 
 // TODO: Obtain GCC internal paths dynamically by invoking gcc directly.
-#define KVX_CLUSTEROS_GCC_VERSION "9.4.1"
+#define KVX_CLUSTEROS_GCC_VERSION "10.3.1"
 
 void clusteros::Assembler::ConstructJob(Compilation &C, const JobAction &JA,
                                         const InputInfo &Output,
