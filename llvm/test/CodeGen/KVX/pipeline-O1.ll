@@ -130,6 +130,10 @@
 ; CHECK-NEXT: KVX pseudo instruction expansion pass
 ; CHECK-NEXT: MachineDominator Tree Construction
 ; CHECK-NEXT: Machine Natural Loop Construction
+; CHECK-NEXT: Machine Block Frequency Analysis
+; CHECK-NEXT: If Converter
+; CHECK-NEXT: MachineDominator Tree Construction
+; CHECK-NEXT: Machine Natural Loop Construction
 ; CHECK-NEXT: Post RA top-down list latency scheduler
 ; CHECK-NEXT: Analyze Machine Code For Garbage Collection
 ; CHECK-NEXT: Machine Block Frequency Analysis
