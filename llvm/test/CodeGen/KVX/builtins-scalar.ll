@@ -310,6 +310,21 @@ entry:
 
 declare double @llvm.kvx.fnegd(double) #1
 
+define half @fmaxh(half %0, half %1) {
+; CHECK-LABEL: fmaxh:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fmaxhq $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = insertelement <4 x half> undef, half %0, i64 0
+  %4 = insertelement <4 x half> undef, half %1, i64 0
+  %5 = tail call <4 x half> @llvm.kvx.fmaxhq(<4 x half> %3, <4 x half> %4)
+  %6 = extractelement <4 x half> %5, i64 0
+  ret half %6
+}
+
+declare <4 x half> @llvm.kvx.fmaxhq(<4 x half>, <4 x half>) #1
+
 define float @fmaxw(float %v1, float %v2){
 ; CHECK-LABEL: fmaxw:
 ; CHECK:       # %bb.0: # %entry
@@ -335,6 +350,21 @@ entry:
 }
 
 declare double @llvm.kvx.fmaxd(double, double) #1
+
+define half @fminh(half %0, half %1) {
+; CHECK-LABEL: fminh:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fminhq $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = insertelement <4 x half> undef, half %0, i64 0
+  %4 = insertelement <4 x half> undef, half %1, i64 0
+  %5 = tail call <4 x half> @llvm.kvx.fminhq(<4 x half> %3, <4 x half> %4)
+  %6 = extractelement <4 x half> %5, i64 0
+  ret half %6
+}
+
+declare <4 x half> @llvm.kvx.fminhq(<4 x half>, <4 x half>) #1
 
 define float @fminw(float %v1, float %v2){
 ; CHECK-LABEL: fminw:
@@ -445,6 +475,37 @@ entry:
 
 declare double @llvm.kvx.fsbfd(double, double, i32, i32) #1
 
+define half @fmulh_s(half %0, half %1) {
+; CHECK-LABEL: fmulh_s:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fmulhq.ru.s $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = insertelement <4 x half> undef, half %0, i64 0
+  %4 = insertelement <4 x half> undef, half %1, i64 0
+  %5 = tail call <4 x half> @llvm.kvx.fmulhq(<4 x half> %3, <4 x half> %4, i32 1, i32 1)
+  %6 = extractelement <4 x half> %5, i64 0
+  ret half %6
+}
+
+define half @fmulh(half %0, half %1) {
+; CHECK-LABEL: fmulh:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    zxhd $r1 = $r1
+; CHECK-NEXT:    zxhd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fmulhq.ru $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = insertelement <4 x half> undef, half %0, i64 0
+  %4 = insertelement <4 x half> undef, half %1, i64 0
+  %5 = tail call <4 x half> @llvm.kvx.fmulhq(<4 x half> %3, <4 x half> %4, i32 1, i32 0)
+  %6 = extractelement <4 x half> %5, i64 0
+  ret half %6
+}
+
+declare <4 x half> @llvm.kvx.fmulhq(<4 x half>, <4 x half>, i32, i32) #1
+
 define float @fmulw(float %v1, float %v2){
 ; CHECK-LABEL: fmulw:
 ; CHECK:       # %bb.0: # %entry
@@ -470,6 +531,41 @@ entry:
 }
 
 declare double @llvm.kvx.fmuld(double, double, i32, i32) #1
+
+define half @ffmah_s(half %0, half %1, half %2) {
+; CHECK-LABEL: ffmah_s:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    ffmahq.ru.s $r0 = $r1, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %4 = insertelement <4 x half> undef, half %0, i64 0
+  %5 = insertelement <4 x half> undef, half %1, i64 0
+  %6 = insertelement <4 x half> undef, half %2, i64 0
+  %7 = tail call <4 x half> @llvm.kvx.ffmahq(<4 x half> %4, <4 x half> %5, <4 x half> %6, i32 1, i32 1)
+  %8 = extractelement <4 x half> %7, i64 0
+  ret half %8
+}
+
+define half @ffmah(half %0, half %1, half %2) {
+; CHECK-LABEL: ffmah:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    zxhd $r1 = $r1
+; CHECK-NEXT:    zxhd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxhd $r2 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmahq.ru $r0 = $r1, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %4 = insertelement <4 x half> undef, half %0, i64 0
+  %5 = insertelement <4 x half> undef, half %1, i64 0
+  %6 = insertelement <4 x half> undef, half %2, i64 0
+  %7 = tail call <4 x half> @llvm.kvx.ffmahq(<4 x half> %4, <4 x half> %5, <4 x half> %6, i32 1, i32 0)
+  %8 = extractelement <4 x half> %7, i64 0
+  ret half %8
+}
+
+declare <4 x half> @llvm.kvx.ffmahq(<4 x half>, <4 x half>, <4 x half>, i32, i32) #1
 
 define double @fmulwd(float %v1, float %v2){
 ; CHECK-LABEL: fmulwd:
@@ -859,17 +955,27 @@ entry:
 
 declare i64 @llvm.kvx.stsud(i64, i64) #1
 
-define i16 @fnarrowwh(float %v){
+define half @fnarrowwh(float %0) {
 ; CHECK-LABEL: fnarrowwh:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fnarrowwh.rn $r0 = $r0
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fnarrowwh.ru.s $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-entry:
-  %0 = tail call i32 @llvm.kvx.fnarrowwh(float %v, i32 0, i32 0)
-  %conv = trunc i32 %0 to i16
-  ret i16 %conv
+  %2 = tail call half @llvm.kvx.fnarrowwh(float %0, i32 1, i32 1)
+  ret half %2
 }
 
-declare i32 @llvm.kvx.fnarrowwh(float, i32, i32) #1
+declare half @llvm.kvx.fnarrowwh(float, i32, i32) #1
+
+define float @fnarrowdw(double %0) {
+; CHECK-LABEL: fnarrowdw:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fnarrowdw.ru.s $r0 = $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = tail call float @llvm.kvx.fnarrowdw(double %0, i32 1, i32 1)
+  ret float %2
+}
+
+declare float @llvm.kvx.fnarrowdw(double, i32, i32) #1
 

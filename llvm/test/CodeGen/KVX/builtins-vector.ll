@@ -601,6 +601,65 @@ entry:
   ret <4 x double> %11
 }
 
+define <4 x half> @fmaxhq(<4 x half> %0, <4 x half> %1) {
+; CHECK-LABEL: fmaxhq:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fmaxhq $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = tail call <4 x half> @llvm.kvx.fmaxhq(<4 x half> %0, <4 x half> %1)
+  ret <4 x half> %3
+}
+
+declare <4 x half> @llvm.kvx.fmaxhq(<4 x half>, <4 x half>) #1
+
+define <8 x half> @fmaxho(<8 x half> %0, <8 x half> %1) {
+; CHECK-LABEL: fmaxho:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fmaxhq $r0 = $r0, $r2
+; CHECK-NEXT:    fmaxhq $r1 = $r1, $r3
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = shufflevector <8 x half> %0, <8 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  %4 = shufflevector <8 x half> %1, <8 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  %5 = tail call <4 x half> @llvm.kvx.fmaxhq(<4 x half> %3, <4 x half> %4)
+  %6 = shufflevector <8 x half> %0, <8 x half> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+  %7 = shufflevector <8 x half> %1, <8 x half> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+  %8 = tail call <4 x half> @llvm.kvx.fmaxhq(<4 x half> %6, <4 x half> %7)
+  %9 = shufflevector <4 x half> %5, <4 x half> %8, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+  ret <8 x half> %9
+}
+
+define <16 x half> @fmaxhx(<16 x half> %0, <16 x half> %1) {
+; CHECK-LABEL: fmaxhx:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fmaxhq $r0 = $r0, $r4
+; CHECK-NEXT:    fmaxhq $r1 = $r1, $r5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fmaxhq $r2 = $r2, $r6
+; CHECK-NEXT:    fmaxhq $r3 = $r3, $r7
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = shufflevector <16 x half> %0, <16 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  %4 = shufflevector <16 x half> %1, <16 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  %5 = tail call <4 x half> @llvm.kvx.fmaxhq(<4 x half> %3, <4 x half> %4)
+  %6 = shufflevector <16 x half> %0, <16 x half> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+  %7 = shufflevector <16 x half> %1, <16 x half> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+  %8 = tail call <4 x half> @llvm.kvx.fmaxhq(<4 x half> %6, <4 x half> %7)
+  %9 = shufflevector <4 x half> %5, <4 x half> %8, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
+  %10 = shufflevector <16 x half> %0, <16 x half> undef, <4 x i32> <i32 8, i32 9, i32 10, i32 11>
+  %11 = shufflevector <16 x half> %1, <16 x half> undef, <4 x i32> <i32 8, i32 9, i32 10, i32 11>
+  %12 = tail call <4 x half> @llvm.kvx.fmaxhq(<4 x half> %10, <4 x half> %11)
+  %13 = shufflevector <4 x half> %12, <4 x half> undef, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
+  %14 = shufflevector <16 x half> %9, <16 x half> %13, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 16, i32 17, i32 18, i32 19, i32 undef, i32 undef, i32 undef, i32 undef>
+  %15 = shufflevector <16 x half> %0, <16 x half> undef, <4 x i32> <i32 12, i32 13, i32 14, i32 15>
+  %16 = shufflevector <16 x half> %1, <16 x half> undef, <4 x i32> <i32 12, i32 13, i32 14, i32 15>
+  %17 = tail call <4 x half> @llvm.kvx.fmaxhq(<4 x half> %15, <4 x half> %16)
+  %18 = shufflevector <4 x half> %17, <4 x half> undef, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
+  %19 = shufflevector <16 x half> %14, <16 x half> %18, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 16, i32 17, i32 18, i32 19>
+  ret <16 x half> %19
+}
+
 define <2 x float> @fmaxwp(<2 x float> %v1, <2 x float> %v2){
 ; CHECK-LABEL: fmaxwp:
 ; CHECK:       # %bb.0: # %entry
@@ -710,6 +769,65 @@ entry:
   %14 = tail call double @llvm.kvx.fmaxd(double %12, double %13)
   %15 = insertelement <4 x double> %11, double %14, i64 3
   ret <4 x double> %15
+}
+
+define <4 x half> @fminhq(<4 x half> %0, <4 x half> %1) {
+; CHECK-LABEL: fminhq:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fminhq $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = tail call <4 x half> @llvm.kvx.fminhq(<4 x half> %0, <4 x half> %1)
+  ret <4 x half> %3
+}
+
+declare <4 x half> @llvm.kvx.fminhq(<4 x half>, <4 x half>) #1
+
+define <8 x half> @fminho(<8 x half> %0, <8 x half> %1) {
+; CHECK-LABEL: fminho:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fminhq $r0 = $r0, $r2
+; CHECK-NEXT:    fminhq $r1 = $r1, $r3
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = shufflevector <8 x half> %0, <8 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  %4 = shufflevector <8 x half> %1, <8 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  %5 = tail call <4 x half> @llvm.kvx.fminhq(<4 x half> %3, <4 x half> %4)
+  %6 = shufflevector <8 x half> %0, <8 x half> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+  %7 = shufflevector <8 x half> %1, <8 x half> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+  %8 = tail call <4 x half> @llvm.kvx.fminhq(<4 x half> %6, <4 x half> %7)
+  %9 = shufflevector <4 x half> %5, <4 x half> %8, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+  ret <8 x half> %9
+}
+
+define <16 x half> @fminhx(<16 x half> %0, <16 x half> %1) {
+; CHECK-LABEL: fminhx:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fminhq $r0 = $r0, $r4
+; CHECK-NEXT:    fminhq $r1 = $r1, $r5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fminhq $r2 = $r2, $r6
+; CHECK-NEXT:    fminhq $r3 = $r3, $r7
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = shufflevector <16 x half> %0, <16 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  %4 = shufflevector <16 x half> %1, <16 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  %5 = tail call <4 x half> @llvm.kvx.fminhq(<4 x half> %3, <4 x half> %4)
+  %6 = shufflevector <16 x half> %0, <16 x half> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+  %7 = shufflevector <16 x half> %1, <16 x half> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+  %8 = tail call <4 x half> @llvm.kvx.fminhq(<4 x half> %6, <4 x half> %7)
+  %9 = shufflevector <4 x half> %5, <4 x half> %8, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
+  %10 = shufflevector <16 x half> %0, <16 x half> undef, <4 x i32> <i32 8, i32 9, i32 10, i32 11>
+  %11 = shufflevector <16 x half> %1, <16 x half> undef, <4 x i32> <i32 8, i32 9, i32 10, i32 11>
+  %12 = tail call <4 x half> @llvm.kvx.fminhq(<4 x half> %10, <4 x half> %11)
+  %13 = shufflevector <4 x half> %12, <4 x half> undef, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
+  %14 = shufflevector <16 x half> %9, <16 x half> %13, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 16, i32 17, i32 18, i32 19, i32 undef, i32 undef, i32 undef, i32 undef>
+  %15 = shufflevector <16 x half> %0, <16 x half> undef, <4 x i32> <i32 12, i32 13, i32 14, i32 15>
+  %16 = shufflevector <16 x half> %1, <16 x half> undef, <4 x i32> <i32 12, i32 13, i32 14, i32 15>
+  %17 = tail call <4 x half> @llvm.kvx.fminhq(<4 x half> %15, <4 x half> %16)
+  %18 = shufflevector <4 x half> %17, <4 x half> undef, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
+  %19 = shufflevector <16 x half> %14, <16 x half> %18, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 16, i32 17, i32 18, i32 19>
+  ret <16 x half> %19
 }
 
 define <2 x float> @fminwp(<2 x float> %v1, <2 x float> %v2){
@@ -1121,6 +1239,68 @@ entry:
   ret <4 x double> %6
 }
 
+define <4 x half> @fmulhq(<4 x half> %0, <4 x half> %1) {
+; CHECK-LABEL: fmulhq:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fmulhq.ru.s $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = tail call <4 x half> @llvm.kvx.fmulhq(<4 x half> %0, <4 x half> %1, i32 1, i32 1)
+  ret <4 x half> %3
+}
+
+declare <4 x half> @llvm.kvx.fmulhq(<4 x half>, <4 x half>, i32, i32) #1
+
+define <8 x half> @fmulho(<8 x half> %0, <8 x half> %1) {
+; CHECK-LABEL: fmulho:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fmulhq.ru.s $r0 = $r0, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fmulhq.ru.s $r1 = $r1, $r3
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = shufflevector <8 x half> %0, <8 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  %4 = shufflevector <8 x half> %1, <8 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  %5 = tail call <4 x half> @llvm.kvx.fmulhq(<4 x half> %3, <4 x half> %4, i32 1, i32 1)
+  %6 = shufflevector <8 x half> %0, <8 x half> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+  %7 = shufflevector <8 x half> %1, <8 x half> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+  %8 = tail call <4 x half> @llvm.kvx.fmulhq(<4 x half> %6, <4 x half> %7, i32 1, i32 1)
+  %9 = shufflevector <4 x half> %5, <4 x half> %8, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+  ret <8 x half> %9
+}
+
+define <16 x half> @fmulhx(<16 x half> %0, <16 x half> %1) {
+; CHECK-LABEL: fmulhx:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fmulhq.ru.s $r0 = $r0, $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fmulhq.ru.s $r1 = $r1, $r5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fmulhq.ru.s $r2 = $r2, $r6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fmulhq.ru.s $r3 = $r3, $r7
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = shufflevector <16 x half> %0, <16 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  %4 = shufflevector <16 x half> %1, <16 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  %5 = tail call <4 x half> @llvm.kvx.fmulhq(<4 x half> %3, <4 x half> %4, i32 1, i32 1)
+  %6 = shufflevector <16 x half> %0, <16 x half> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+  %7 = shufflevector <16 x half> %1, <16 x half> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+  %8 = tail call <4 x half> @llvm.kvx.fmulhq(<4 x half> %6, <4 x half> %7, i32 1, i32 1)
+  %9 = shufflevector <4 x half> %5, <4 x half> %8, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
+  %10 = shufflevector <16 x half> %0, <16 x half> undef, <4 x i32> <i32 8, i32 9, i32 10, i32 11>
+  %11 = shufflevector <16 x half> %1, <16 x half> undef, <4 x i32> <i32 8, i32 9, i32 10, i32 11>
+  %12 = tail call <4 x half> @llvm.kvx.fmulhq(<4 x half> %10, <4 x half> %11, i32 1, i32 1)
+  %13 = shufflevector <4 x half> %12, <4 x half> undef, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
+  %14 = shufflevector <16 x half> %9, <16 x half> %13, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 16, i32 17, i32 18, i32 19, i32 undef, i32 undef, i32 undef, i32 undef>
+  %15 = shufflevector <16 x half> %0, <16 x half> undef, <4 x i32> <i32 12, i32 13, i32 14, i32 15>
+  %16 = shufflevector <16 x half> %1, <16 x half> undef, <4 x i32> <i32 12, i32 13, i32 14, i32 15>
+  %17 = tail call <4 x half> @llvm.kvx.fmulhq(<4 x half> %15, <4 x half> %16, i32 1, i32 1)
+  %18 = shufflevector <4 x half> %17, <4 x half> undef, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
+  %19 = shufflevector <16 x half> %14, <16 x half> %18, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 16, i32 17, i32 18, i32 19>
+  ret <16 x half> %19
+}
+
 define <2 x float> @fmulwp(<2 x float> %v1, <2 x float> %v2){
 ; CHECK-LABEL: fmulwp:
 ; CHECK:       # %bb.0: # %entry
@@ -1248,6 +1428,74 @@ entry:
 }
 
 declare <4 x float> @llvm.kvx.fmms212w(<2 x float>, <2 x float>, <4 x float>, i32, i32) #1
+
+define <4 x half> @ffmahq(<4 x half> %0, <4 x half> %1, <4 x half> %2) {
+; CHECK-LABEL: ffmahq:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    ffmahq.ru.s $r0 = $r1, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %4 = tail call <4 x half> @llvm.kvx.ffmahq(<4 x half> %0, <4 x half> %1, <4 x half> %2, i32 1, i32 1)
+  ret <4 x half> %4
+}
+
+declare <4 x half> @llvm.kvx.ffmahq(<4 x half>, <4 x half>, <4 x half>, i32, i32) #1
+
+define <8 x half> @ffmaho(<8 x half> %0, <8 x half> %1, <8 x half> %2) {
+; CHECK-LABEL: ffmaho:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    ffmahq.ru.s $r0 = $r2, $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmahq.ru.s $r1 = $r3, $r5
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %4 = shufflevector <8 x half> %0, <8 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  %5 = shufflevector <8 x half> %1, <8 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  %6 = shufflevector <8 x half> %2, <8 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  %7 = tail call <4 x half> @llvm.kvx.ffmahq(<4 x half> %4, <4 x half> %5, <4 x half> %6, i32 1, i32 1)
+  %8 = shufflevector <8 x half> %0, <8 x half> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+  %9 = shufflevector <8 x half> %1, <8 x half> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+  %10 = shufflevector <8 x half> %2, <8 x half> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+  %11 = tail call <4 x half> @llvm.kvx.ffmahq(<4 x half> %8, <4 x half> %9, <4 x half> %10, i32 1, i32 1)
+  %12 = shufflevector <4 x half> %7, <4 x half> %11, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+  ret <8 x half> %12
+}
+
+define <16 x half> @ffmahx(<16 x half> %0, <16 x half> %1, <16 x half> %2) {
+; CHECK-LABEL: ffmahx:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    ffmahq.ru.s $r0 = $r4, $r8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmahq.ru.s $r1 = $r5, $r9
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmahq.ru.s $r2 = $r6, $r10
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmahq.ru.s $r3 = $r7, $r11
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %4 = shufflevector <16 x half> %0, <16 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  %5 = shufflevector <16 x half> %1, <16 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  %6 = shufflevector <16 x half> %2, <16 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  %7 = tail call <4 x half> @llvm.kvx.ffmahq(<4 x half> %4, <4 x half> %5, <4 x half> %6, i32 1, i32 1)
+  %8 = shufflevector <16 x half> %0, <16 x half> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+  %9 = shufflevector <16 x half> %1, <16 x half> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+  %10 = shufflevector <16 x half> %2, <16 x half> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+  %11 = tail call <4 x half> @llvm.kvx.ffmahq(<4 x half> %8, <4 x half> %9, <4 x half> %10, i32 1, i32 1)
+  %12 = shufflevector <4 x half> %7, <4 x half> %11, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
+  %13 = shufflevector <16 x half> %0, <16 x half> undef, <4 x i32> <i32 8, i32 9, i32 10, i32 11>
+  %14 = shufflevector <16 x half> %1, <16 x half> undef, <4 x i32> <i32 8, i32 9, i32 10, i32 11>
+  %15 = shufflevector <16 x half> %2, <16 x half> undef, <4 x i32> <i32 8, i32 9, i32 10, i32 11>
+  %16 = tail call <4 x half> @llvm.kvx.ffmahq(<4 x half> %13, <4 x half> %14, <4 x half> %15, i32 1, i32 1)
+  %17 = shufflevector <4 x half> %16, <4 x half> undef, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
+  %18 = shufflevector <16 x half> %12, <16 x half> %17, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 16, i32 17, i32 18, i32 19, i32 undef, i32 undef, i32 undef, i32 undef>
+  %19 = shufflevector <16 x half> %0, <16 x half> undef, <4 x i32> <i32 12, i32 13, i32 14, i32 15>
+  %20 = shufflevector <16 x half> %1, <16 x half> undef, <4 x i32> <i32 12, i32 13, i32 14, i32 15>
+  %21 = shufflevector <16 x half> %2, <16 x half> undef, <4 x i32> <i32 12, i32 13, i32 14, i32 15>
+  %22 = tail call <4 x half> @llvm.kvx.ffmahq(<4 x half> %19, <4 x half> %20, <4 x half> %21, i32 1, i32 1)
+  %23 = shufflevector <4 x half> %22, <4 x half> undef, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
+  %24 = shufflevector <16 x half> %18, <16 x half> %23, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 16, i32 17, i32 18, i32 19>
+  ret <16 x half> %24
+}
 
 define <2 x float> @ffmawp(<2 x float> %v1, <2 x float> %v2, <2 x float> %v3){
 ; CHECK-LABEL: ffmawp:
@@ -1963,3 +2211,57 @@ entry:
   ret <4 x double> %13
 }
 
+define <4 x half> @fnarrowwhq(<4 x float> %0) {
+; CHECK-LABEL: fnarrowwhq:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fnarrowwhq.ru.s $r0 = $r0r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = tail call <4 x half> @llvm.kvx.fnarrowwhq(<4 x float> %0, i32 1, i32 1)
+  ret <4 x half> %2
+}
+
+declare <4 x half> @llvm.kvx.fnarrowwhq(<4 x float>, i32, i32) #1
+
+define <8 x half> @fnarrowwho(<8 x float> %0) {
+; CHECK-LABEL: fnarrowwho:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fnarrowwhq.ru.s $r0 = $r0r1
+; CHECK-NEXT:    fnarrowwhq.ru.s $r1 = $r2r3
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = shufflevector <8 x float> %0, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  %3 = tail call <4 x half> @llvm.kvx.fnarrowwhq(<4 x float> %2, i32 1, i32 1)
+  %4 = shufflevector <8 x float> %0, <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+  %5 = tail call <4 x half> @llvm.kvx.fnarrowwhq(<4 x float> %4, i32 1, i32 1)
+  %6 = shufflevector <4 x half> %3, <4 x half> %5, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+  ret <8 x half> %6
+}
+
+define <2 x float> @fnarrowdwp(<2 x double> %0) {
+; CHECK-LABEL: fnarrowdwp:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fnarrowdwp.ru.s $r0 = $r0r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = tail call <2 x float> @llvm.kvx.fnarrowdwp(<2 x double> %0, i32 1, i32 1)
+  ret <2 x float> %2
+}
+
+declare <2 x float> @llvm.kvx.fnarrowdwp(<2 x double>, i32, i32) #1
+
+define <4 x float> @fnarrowdwq(<4 x double> %0) {
+; CHECK-LABEL: fnarrowdwq:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fnarrowdwp.ru.s $r0 = $r0r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fnarrowdwp.ru.s $r1 = $r2r3
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = shufflevector <4 x double> %0, <4 x double> undef, <2 x i32> <i32 0, i32 1>
+  %3 = tail call <2 x float> @llvm.kvx.fnarrowdwp(<2 x double> %2, i32 1, i32 1)
+  %4 = shufflevector <4 x double> %0, <4 x double> undef, <2 x i32> <i32 2, i32 3>
+  %5 = tail call <2 x float> @llvm.kvx.fnarrowdwp(<2 x double> %4, i32 1, i32 1)
+  %6 = shufflevector <2 x float> %3, <2 x float> %5, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  ret <4 x float> %6
+}

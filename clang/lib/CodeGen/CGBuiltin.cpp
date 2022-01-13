@@ -18100,26 +18100,17 @@ static float_mods_t KVX_getFloatModifiers(const CallExpr *E,
   return FloatMods;
 }
 
-static Value *KVX_emitNaryBuiltin(unsigned N, CodeGenFunction &CGF,
-                                  const CallExpr *E, unsigned IntrinsicID,
-                                  bool HasRounding = false,
-                                  bool HasSilent = false,
-                                  bool BypassNumArgsCheck = false) {
-  HasSilent |= HasRounding;
-  if (!BypassNumArgsCheck && !KVX_checkNargs(N, CGF, E, HasSilent))
-    return nullptr;
-
-  SmallVector<Value *, 4> Args;
-  unsigned I = 0;
-  while (I < N)
-    Args.push_back(CGF.EmitScalarExpr(E->getArg(I++)));
-
+static Value *KVX_emitNaryBuiltinCore(unsigned N, CodeGenFunction &CGF,
+                                      const CallExpr *E, unsigned IntrinsicID,
+                                      SmallVector<Value *, 4> &Args,
+                                      bool HasRounding = false,
+                                      bool HasSilent = false) {
   if (!HasSilent) { // No modifiers
     Function *Callee = CGF.CGM.getIntrinsic(IntrinsicID);
     return CGF.Builder.CreateCall(Callee, Args);
   }
 
-  float_mods_t FloatMods = KVX_getFloatModifiers(E, CGF, I, HasRounding, true);
+  float_mods_t FloatMods = KVX_getFloatModifiers(E, CGF, N, HasRounding, true);
   if (!FloatMods.IsValid)
     return nullptr;
 
@@ -18170,6 +18161,49 @@ static Value *KVX_emitNaryBuiltin(unsigned N, CodeGenFunction &CGF,
 
   Function *Callee = CGF.CGM.getIntrinsic(IntrinsicID);
   return CGF.Builder.CreateCall(Callee, Args);
+}
+
+static Value *KVX_emitNaryBuiltin(unsigned N, CodeGenFunction &CGF,
+                                  const CallExpr *E, unsigned IntrinsicID,
+                                  bool HasRounding = false,
+                                  bool HasSilent = false,
+                                  bool BypassNumArgsCheck = false) {
+  HasSilent |= HasRounding;
+  if (!BypassNumArgsCheck && !KVX_checkNargs(N, CGF, E, HasSilent))
+    return nullptr;
+
+  SmallVector<Value *, 4> Args;
+  unsigned I = 0;
+  while (I < N)
+    Args.push_back(CGF.EmitScalarExpr(E->getArg(I++)));
+
+  return KVX_emitNaryBuiltinCore(N, CGF, E, IntrinsicID, Args, HasRounding,
+                                 HasSilent);
+}
+
+static Value *KVX_emitF16ScalarBuiltin(unsigned N, CodeGenFunction &CGF,
+                                       const CallExpr *E, unsigned IntrinsicID,
+                                       bool HasRounding = false,
+                                       bool HasSilent = false) {
+  HasSilent |= HasRounding;
+  if (!KVX_checkNargs(N, CGF, E, HasSilent))
+    return nullptr;
+
+  llvm::Type *V4F16 = llvm::FixedVectorType::get(CGF.HalfTy, 4);
+
+  SmallVector<Value *, 4> OutArgs;
+  for (unsigned i = 0; i < N; i++) {
+    Value *ArgVector = UndefValue::get(V4F16);
+    Value *InArg = CGF.EmitScalarExpr(E->getArg(i));
+    Value *Inserted =
+        CGF.Builder.CreateInsertElement(ArgVector, InArg, (uint64_t)0);
+    OutArgs.push_back(Inserted);
+  }
+
+  Value *VectorResult = KVX_emitNaryBuiltinCore(N, CGF, E, IntrinsicID, OutArgs,
+                                                HasRounding, HasSilent);
+
+  return CGF.Builder.CreateExtractElement(VectorResult, (uint64_t)0);
 }
 
 static Value *KVX_emitUnaryShiftingRoundingBuiltin(CodeGenFunction &CGF,
@@ -18469,13 +18503,17 @@ static Value *KVX_emitCondVectorBuiltin(CodeGenFunction &CGF, const CallExpr *E,
 
 static Value *KVX_emitVectorBuiltin(CodeGenFunction &CGF, const CallExpr *E,
                                     unsigned IntrinsicID, unsigned NumOperands,
-                                    llvm::Type *ElementType,
+                                    llvm::Type *InElementType,
                                     unsigned VectorSize, unsigned SliceSize,
                                     bool Rounding = false,
-                                    Value *Scalar = nullptr) {
+                                    Value *Scalar = nullptr,
+                                    llvm::Type *OutElementType = nullptr) {
 
-  auto *VecTy = llvm::FixedVectorType::get(ElementType, VectorSize);
-  Value *Undef = UndefValue::get(VecTy);
+  if (!OutElementType)
+    OutElementType = InElementType;
+
+  auto *InVecTy = llvm::FixedVectorType::get(InElementType, VectorSize);
+  Value *Undef = UndefValue::get(InVecTy);
 
   SmallVector<Value *, 3> Operands;
   for (unsigned Op = 0; Op < NumOperands; Op++)
@@ -18530,7 +18568,8 @@ static Value *KVX_emitVectorBuiltin(CodeGenFunction &CGF, const CallExpr *E,
   }
 
   Function *Callee = CGF.CGM.getIntrinsic(IntrinsicID);
-  Value *Result = UndefValue::get(VecTy);
+  auto *OutVecTy = llvm::FixedVectorType::get(OutElementType, VectorSize);
+  Value *Result = UndefValue::get(OutVecTy);
   for (uint64_t i = 0; i < VectorSize; i += SliceSize) {
     SmallVector<Value *, 3> SV;
     if (SliceSize == 1) {
@@ -19219,6 +19258,20 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_fmm212w:
     return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fmm212w, true);
 
+  case KVX::BI__builtin_kvx_ffmah:
+    return KVX_emitF16ScalarBuiltin(3, *this, E, Intrinsic::kvx_ffmahq, true);
+
+  case KVX::BI__builtin_kvx_ffmahq:
+    return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmahq, true);
+
+  case KVX::BI__builtin_kvx_ffmaho:
+    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_ffmahq, 3, HalfTy, 8,
+                                 4, true);
+
+  case KVX::BI__builtin_kvx_ffmahx:
+    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_ffmahq, 3, HalfTy, 16,
+                                 4, true);
+
   case KVX::BI__builtin_kvx_ffmawp:
     return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmawp, true);
 
@@ -19419,6 +19472,21 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_fnarrowwh:
     return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_fnarrowwh, true,
                                true);
+  case KVX::BI__builtin_kvx_fnarrowwhq:
+    return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_fnarrowwhq, true,
+                               true);
+  case KVX::BI__builtin_kvx_fnarrowwho:
+    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fnarrowwhq, 1,
+                                 FloatTy, 8, 4, true, nullptr, HalfTy);
+  case KVX::BI__builtin_kvx_fnarrowdw:
+    return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_fnarrowdw, true,
+                               true);
+  case KVX::BI__builtin_kvx_fnarrowdwp:
+    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fnarrowdwp, 1,
+                                 DoubleTy, 2, 2, true, nullptr, FloatTy);
+  case KVX::BI__builtin_kvx_fnarrowdwq:
+    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fnarrowdwp, 1,
+                                 DoubleTy, 4, 2, true, nullptr, FloatTy);
   case KVX::BI__builtin_kvx_selecthq:
     return KVX_emitTernarySimdCondBuiltin(*this, E, Intrinsic::kvx_cmovehq);
   case KVX::BI__builtin_kvx_selectho:
@@ -19497,6 +19565,16 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_fnegdq:
     return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fnegd, 1, DoubleTy, 4,
                                  1);
+  case KVX::BI__builtin_kvx_fmaxh:
+    return KVX_emitF16ScalarBuiltin(2, *this, E, Intrinsic::kvx_fmaxhq);
+  case KVX::BI__builtin_kvx_fmaxhq:
+    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fmaxhq);
+  case KVX::BI__builtin_kvx_fmaxho:
+    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fmaxhq, 2, HalfTy, 8,
+                                 4);
+  case KVX::BI__builtin_kvx_fmaxhx:
+    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fmaxhq, 2, HalfTy, 16,
+                                 4);
   case KVX::BI__builtin_kvx_fmaxwq:
     return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fmaxwp, 2, FloatTy, 4,
                                  2);
@@ -19512,6 +19590,16 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_fminwq:
     return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fminwp, 2, FloatTy, 4,
                                  2);
+  case KVX::BI__builtin_kvx_fminh:
+    return KVX_emitF16ScalarBuiltin(2, *this, E, Intrinsic::kvx_fminhq);
+  case KVX::BI__builtin_kvx_fminhq:
+    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fminhq);
+  case KVX::BI__builtin_kvx_fminho:
+    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fminhq, 2, HalfTy, 8,
+                                 4);
+  case KVX::BI__builtin_kvx_fminhx:
+    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fminhq, 2, HalfTy, 16,
+                                 4);
   case KVX::BI__builtin_kvx_fminwo:
     return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fminwp, 2, FloatTy, 8,
                                  2);
@@ -19533,6 +19621,16 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_fsbfdq:
     return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fsbfdp, 2, DoubleTy,
                                  4, 2, true);
+  case KVX::BI__builtin_kvx_fmulh:
+    return KVX_emitF16ScalarBuiltin(2, *this, E, Intrinsic::kvx_fmulhq, true);
+  case KVX::BI__builtin_kvx_fmulhq:
+    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fmulhq, true);
+  case KVX::BI__builtin_kvx_fmulho:
+    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fmulhq, 2, HalfTy, 8,
+                                 4, true);
+  case KVX::BI__builtin_kvx_fmulhx:
+    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fmulhq, 2, HalfTy, 16,
+                                 4, true);
   case KVX::BI__builtin_kvx_fmulwo:
     return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fmulwq, 2, FloatTy, 8,
                                  4, true);

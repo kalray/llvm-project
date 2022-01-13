@@ -303,6 +303,35 @@ entry:
   ret <4 x half> %vecinit3
 }
 
+define <4 x half> @bhalf4_undef(half %a) {
+; CHECK-LABEL: bhalf4_undef:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    zxhd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %vecinit = insertelement <4 x half> undef, half %a, i32 0
+  ret <4 x half> %vecinit
+}
+
+define <4 x half> @bhalf4_bbba(half %a, half %b) {
+; CHECK-LABEL: bhalf4_bbba:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    insf $r0 = $r1, 31, 16
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x804080408040201
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %vec0 = insertelement <4 x half> undef, half %a, i32 0
+  %vec1 = insertelement <4 x half> %vec0, half %b, i32 1
+  %vec2 = insertelement <4 x half> %vec1, half %b, i32 2
+  %vec3 = insertelement <4 x half> %vec2, half %b, i32 3
+  ret <4 x half> %vec3
+}
+
 define <4 x float> @bfloat4(float %a, float %b, float %c, float %d) {
 ; CHECK-LABEL: bfloat4:
 ; CHECK:       # %bb.0: # %entry

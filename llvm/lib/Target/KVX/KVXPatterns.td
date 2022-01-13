@@ -1811,6 +1811,9 @@ def : Pat<(v4f16 (build_vector f16:$f0, f16:$f1, f16:$f1, f16:$f1)),
             (INSF SingleReg:$f0, SingleReg:$f1, 31, 16), // YXBA
             0x0804080408040201)>; // YXYXYXBA
 
+def : Pat<(v4f16 (build_vector f16:$f0, (f16 undef), (f16 undef), (f16 undef))),
+          (ZXHD SingleReg:$f0)>;
+
 def : Pat<(v4f16 (build_vector f16:$f0, f16:$f0, f16:$f0, f16:$f0)),
           (SBMM8ri64 SingleReg:$f0, 0x0201020102010201)>;
 
