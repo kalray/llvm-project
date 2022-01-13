@@ -255,6 +255,9 @@ def: Pat<(int_kvx_floatd i64:$i, i64:$shift, i32:$rounding, i32:$silent), (FLOAT
 def: Pat<(int_kvx_floatud i64:$i, i64:$shift, i32:$rounding, i32:$silent), (FLOATUD SingleReg:$i, Unsigned6:$shift, RoundingMod:$rounding, SilentMod:$silent)>;
 
 def: Pat<(int_kvx_fnarrowwh f32:$v, i32:$rounding, i32:$silent), (FNARROWWH SingleReg:$v, RoundingMod:$rounding, SilentMod:$silent)>;
+def: Pat<(int_kvx_fnarrowwhq v4f32:$v, i32:$rounding, i32:$silent), (FNARROWWHQ PairedReg:$v, RoundingMod:$rounding, SilentMod:$silent)>;
+def: Pat<(int_kvx_fnarrowdw f64:$v, i32:$rounding, i32:$silent), (FNARROWDW SingleReg:$v, RoundingMod:$rounding, SilentMod:$silent)>;
+def: Pat<(int_kvx_fnarrowdwp v2f64:$v, i32:$rounding, i32:$silent), (FNARROWDWP PairedReg:$v, RoundingMod:$rounding, SilentMod:$silent)>;
 
 def: Pat<(int_kvx_satd i64:$v, i32:$b), (SATDrr SingleReg:$v, SingleReg:$b)>;
 def: Pat<(int_kvx_stsuw i32:$x, i32:$y), (STSUW SingleReg:$x, SingleReg:$y)>;
@@ -416,6 +419,36 @@ def: Pat<(int_kvx_cmoved i64:$v1, Signed10:$v2, i64:$c, i32:$sc), (CMOVEDri10 Si
 def: Pat<(int_kvx_cmoved i64:$v1, Signed37:$v2, i64:$c, i32:$sc), (CMOVEDri37 SingleReg:$c, SingleReg:$v1, Signed37:$v2, ScalarcondMod: $sc)>;
 def: Pat<(int_kvx_cmoved i64:$v1, Wrapped64:$v2, i64:$c, i32:$sc), (CMOVEDri37 SingleReg:$c, SingleReg:$v1, Wrapped64:$v2, ScalarcondMod: $sc)>;
 def: Pat<(int_kvx_cmoved i64:$v1, i64:$v2, i64:$c, i32:$sc), (CMOVEDrr SingleReg:$c, SingleReg:$v1, SingleReg:$v2, ScalarcondMod: $sc)>;
+
+// f16 patterns
+def: Pat<(int_kvx_fmulhq v4f16:$v1, v4f16:$v2, i32:$rounding, i32:$silent), (FMULHQrr SingleReg:$v1, SingleReg:$v2, RoundingMod:$rounding, SilentMod:$silent)>;
+def: Pat<(int_kvx_fmulhq (build_vector f16:$f1, (f16 undef), (f16 undef), (f16 undef)),
+                         (build_vector f16:$f2, (f16 undef), (f16 undef), (f16 undef)), i32:$rounding, (i32 1)),
+         (FMULHQrr SingleReg:$f1, SingleReg:$f2, RoundingMod:$rounding, 1)>;
+def: Pat<(int_kvx_fmulhq (build_vector f16:$f1, (f16 undef), (f16 undef), (f16 undef)),
+                         (build_vector f16:$f2, (f16 undef), (f16 undef), (f16 undef)), i32:$rounding, (i32 0)),
+         (FMULHQrr (ZXHD SingleReg:$f1), (ZXHD SingleReg:$f2), RoundingMod:$rounding, 0)>;
+
+def: Pat<(int_kvx_fmaxhq v4f16:$v1, v4f16:$v2), (FMAXHQ SingleReg:$v1, SingleReg:$v2)>;
+def: Pat<(int_kvx_fmaxhq (build_vector f16:$f1, (f16 undef), (f16 undef), (f16 undef)),
+                         (build_vector f16:$f2, (f16 undef), (f16 undef), (f16 undef))),
+         (FMAXHQ SingleReg:$f1, SingleReg:$f2)>;
+
+def: Pat<(int_kvx_fminhq v4f16:$v1, v4f16:$v2), (FMINHQ SingleReg:$v1, SingleReg:$v2)>;
+def: Pat<(int_kvx_fminhq (build_vector f16:$f1, (f16 undef), (f16 undef), (f16 undef)),
+                         (build_vector f16:$f2, (f16 undef), (f16 undef), (f16 undef))),
+         (FMINHQ SingleReg:$f1, SingleReg:$f2)>;
+
+def: Pat<(int_kvx_ffmahq v4f16:$v1, v4f16:$v2, v4f16:$v3, i32:$rounding, i32:$silent),
+  (v4f16 (FFMAHQrr SingleReg:$v1, SingleReg:$v2, SingleReg:$v3, RoundingMod:$rounding, SilentMod:$silent))>;
+def: Pat<(int_kvx_ffmahq (build_vector f16:$f1, (f16 undef), (f16 undef), (f16 undef)),
+                         (build_vector f16:$f2, (f16 undef), (f16 undef), (f16 undef)),
+                         (build_vector f16:$f3, (f16 undef), (f16 undef), (f16 undef)), i32:$rounding, (i32 1)),
+  (v4f16 (FFMAHQrr SingleReg:$f1, SingleReg:$f2, SingleReg:$f3, RoundingMod:$rounding, 1))>;
+def: Pat<(int_kvx_ffmahq (build_vector f16:$f1, (f16 undef), (f16 undef), (f16 undef)),
+                         (build_vector f16:$f2, (f16 undef), (f16 undef), (f16 undef)),
+                         (build_vector f16:$f3, (f16 undef), (f16 undef), (f16 undef)), i32:$rounding, (i32 0)),
+  (v4f16 (FFMAHQrr (ZXHD SingleReg:$f1), (ZXHD SingleReg:$f2), (ZXHD SingleReg:$f3), RoundingMod:$rounding, 0))>;
 
 //===----------------------------------------------------------------------===//
 // TCA - tightly-coupled accelerator

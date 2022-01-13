@@ -139,6 +139,18 @@ double fnegd(double v) {
   return __builtin_kvx_fnegd(v);
 }
 
+// CHECK-LABEL: @fmaxh(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = insertelement <4 x half> undef, half [[V1:%.*]], i64 0
+// CHECK-NEXT:    [[TMP1:%.*]] = insertelement <4 x half> undef, half [[V2:%.*]], i64 0
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <4 x half> @llvm.kvx.fmaxhq(<4 x half> [[TMP0]], <4 x half> [[TMP1]])
+// CHECK-NEXT:    [[TMP3:%.*]] = extractelement <4 x half> [[TMP2]], i64 0
+// CHECK-NEXT:    ret half [[TMP3]]
+//
+_Float16 fmaxh(_Float16 v1, _Float16 v2) {
+  return __builtin_kvx_fmaxh(v1, v2);
+}
+
 // CHECK-LABEL: @fmaxw(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.fmaxw(float [[V1:%.*]], float [[V2:%.*]])
@@ -155,6 +167,18 @@ float fmaxw(float v1, float v2) {
 //
 double fmaxd(double v1, double v2) {
   return __builtin_kvx_fmaxd(v1, v2);
+}
+
+// CHECK-LABEL: @fminh(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = insertelement <4 x half> undef, half [[V1:%.*]], i64 0
+// CHECK-NEXT:    [[TMP1:%.*]] = insertelement <4 x half> undef, half [[V2:%.*]], i64 0
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <4 x half> @llvm.kvx.fminhq(<4 x half> [[TMP0]], <4 x half> [[TMP1]])
+// CHECK-NEXT:    [[TMP3:%.*]] = extractelement <4 x half> [[TMP2]], i64 0
+// CHECK-NEXT:    ret half [[TMP3]]
+//
+_Float16 fminh(_Float16 v1, _Float16 v2) {
+  return __builtin_kvx_fminh(v1, v2);
 }
 
 // CHECK-LABEL: @fminw(
@@ -231,6 +255,18 @@ double fsbfd(double v1, double v2) {
   return __builtin_kvx_fsbfd(v1, v2, ".rz");
 }
 
+// CHECK-LABEL: @fmulh(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = insertelement <4 x half> undef, half [[A:%.*]], i64 0
+// CHECK-NEXT:    [[TMP1:%.*]] = insertelement <4 x half> undef, half [[B:%.*]], i64 0
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <4 x half> @llvm.kvx.fmulhq(<4 x half> [[TMP0]], <4 x half> [[TMP1]], i32 1, i32 1)
+// CHECK-NEXT:    [[TMP3:%.*]] = extractelement <4 x half> [[TMP2]], i64 0
+// CHECK-NEXT:    ret half [[TMP3]]
+//
+_Float16 fmulh(_Float16 a, _Float16 b){
+  return __builtin_kvx_fmulh(a, b, ".ru.s");
+}
+
 // CHECK-LABEL: @fmulw(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.fmulw(float [[V1:%.*]], float [[V2:%.*]], i32 3, i32 0)
@@ -247,6 +283,19 @@ float fmulw(float v1, float v2) {
 //
 double fmuld(double v1, double v2) {
   return __builtin_kvx_fmuld(v1, v2, ".rz");
+}
+
+// CHECK-LABEL: @ffmah(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = insertelement <4 x half> undef, half [[A:%.*]], i64 0
+// CHECK-NEXT:    [[TMP1:%.*]] = insertelement <4 x half> undef, half [[B:%.*]], i64 0
+// CHECK-NEXT:    [[TMP2:%.*]] = insertelement <4 x half> undef, half [[C:%.*]], i64 0
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <4 x half> @llvm.kvx.ffmahq(<4 x half> [[TMP0]], <4 x half> [[TMP1]], <4 x half> [[TMP2]], i32 1, i32 1)
+// CHECK-NEXT:    [[TMP4:%.*]] = extractelement <4 x half> [[TMP3]], i64 0
+// CHECK-NEXT:    ret half [[TMP4]]
+//
+_Float16 ffmah(_Float16 a, _Float16 b, _Float16 c){
+  return __builtin_kvx_ffmah(a, b, c, ".ru.s");
 }
 
 // CHECK-LABEL: @ffmaw(
@@ -539,10 +588,18 @@ unsigned long stsud(unsigned long x, unsigned long y) {
 
 // CHECK-LABEL: @fnarrowwh(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i32 @llvm.kvx.fnarrowwh(float [[V:%.*]], i32 7, i32 0)
-// CHECK-NEXT:    [[CONV:%.*]] = trunc i32 [[TMP0]] to i16
-// CHECK-NEXT:    ret i16 [[CONV]]
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call half @llvm.kvx.fnarrowwh(float [[V:%.*]], i32 1, i32 1)
+// CHECK-NEXT:    ret half [[TMP0]]
 //
-unsigned short fnarrowwh(float v) {
-  return __builtin_kvx_fnarrowwh(v, "");
+_Float16 fnarrowwh(float v) {
+  return __builtin_kvx_fnarrowwh(v, ".ru.s");
+}
+
+// CHECK-LABEL: @fnarrowdw(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.fnarrowdw(double [[V:%.*]], i32 1, i32 1)
+// CHECK-NEXT:    ret float [[TMP0]]
+//
+float fnarrowdw(double v) {
+  return __builtin_kvx_fnarrowdw(v, ".ru.s");
 }
