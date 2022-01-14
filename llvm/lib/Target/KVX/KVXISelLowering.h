@@ -32,6 +32,9 @@ enum NodeType : unsigned {
   BRCOND,
   CALL,
   COMP,
+  EH_SJLJ_LONGJMP,        // SjLj exception handling longjmp.
+  EH_SJLJ_SETJMP,         // SjLj exception handling setjump.
+  EH_SJLJ_SETUP_DISPATCH, // SjLj exception handling setup_dispatch.
   FENCE,
   GetSystemReg,
   JT,
@@ -223,6 +226,16 @@ private:
 
   SDValue LowerINTRINSIC_WO_CHAIN(SDValue Op, SelectionDAG &DAG,
                                   const KVXSubtarget *Subtarget) const;
+  MachineBasicBlock *
+  EmitInstrWithCustomInserter(MachineInstr &MI,
+                              MachineBasicBlock *MBB) const override;
+
+  MachineBasicBlock *emitEHSjLjLongJmp(MachineInstr &MI,
+                                       MachineBasicBlock *MBB) const;
+  MachineBasicBlock *emitEHSjLjSetJmp(MachineInstr &MI,
+                                      MachineBasicBlock *MBB) const;
+  MachineBasicBlock *emitEHSjLjSetupDispatch(MachineInstr &MI,
+                                             MachineBasicBlock *MBB) const;
 };
 
 } // namespace llvm
