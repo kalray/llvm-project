@@ -25,4 +25,5 @@ KVXMCAsmInfo::KVXMCAsmInfo(const Triple &TT) {
   DwarfRegNumForCFI = true;
   ExceptionsType = ExceptionHandling::DwarfCFI;
   UsesELFSectionDirectiveForBSS = true;
+  UsesCFIForDebug = true;
 }
