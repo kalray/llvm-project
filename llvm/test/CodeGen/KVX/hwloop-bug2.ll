@@ -27,18 +27,13 @@ define i32 @d() {
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    .cfi_register 67, 16
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -8
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
 ; CHECK-NEXT:    make $r0 = a
 ; CHECK-NEXT:    make $r18 = c
 ; CHECK-NEXT:    make $r2 = 0x7d0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 18, -16
-; CHECK-NEXT:    .cfi_offset 19, -24
 ; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    make $r19 = b
 ; CHECK-NEXT:    lws $r0 = 0[$r0]

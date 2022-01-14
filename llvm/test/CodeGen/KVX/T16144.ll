@@ -9,7 +9,6 @@ define dso_local i32 @a() {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    lwz $r0 = 28[$r12]
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
@@ -26,12 +25,9 @@ define internal i1 @atomic_flag_test_and_set(%struct.atomic_flag* %0) {
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    .cfi_register 67, 16
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    make $r1 = 5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -8
 ; CHECK-NEXT:    sd 16[$r12] = $r0
 ; CHECK-NEXT:    call atomic_flag_test_and_set_explicit
 ; CHECK-NEXT:    ;;
@@ -57,7 +53,6 @@ define internal i1 @atomic_flag_test_and_set_explicit(%struct.atomic_flag* %0, i
 ; CHECK-NEXT:    compw.gt $r3 = $r1, 3
 ; CHECK-NEXT:    make $r2 = 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 20[$r12] = $r1

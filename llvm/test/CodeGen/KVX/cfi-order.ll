@@ -53,11 +53,13 @@ define void @testuvec(<4 x i32>* nocapture readonly %A, <4 x i32>* nocapture rea
 ; CHECK-NEXT:    zxwd $r0 = $r22
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp2:
+; CHECK-NEXT:    #DEBUG_VALUE: testuvec:A <- [DW_OP_LLVM_entry_value 1] $r0
 ; CHECK-NEXT:    .loc 1 5 52 # cfi-order.c:5:52
 ; CHECK-NEXT:    zxwd $r1 = $r24
 ; CHECK-NEXT:    call __udivdi3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp3:
+; CHECK-NEXT:    #DEBUG_VALUE: testuvec:B <- [DW_OP_LLVM_entry_value 1] $r1
 ; CHECK-NEXT:    srld $r1 = $r24, 32
 ; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    srld $r0 = $r22, 32
@@ -162,11 +164,13 @@ define void @testsvec(<4 x i32>* nocapture readonly %A, <4 x i32>* nocapture rea
 ; CHECK-NEXT:    sxwd $r0 = $r22
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp7:
+; CHECK-NEXT:    #DEBUG_VALUE: testsvec:A <- [DW_OP_LLVM_entry_value 1] $r0
 ; CHECK-NEXT:    .loc 1 6 52 # cfi-order.c:6:52
 ; CHECK-NEXT:    sxwd $r1 = $r24
 ; CHECK-NEXT:    call __divdi3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp8:
+; CHECK-NEXT:    #DEBUG_VALUE: testsvec:B <- [DW_OP_LLVM_entry_value 1] $r1
 ; CHECK-NEXT:    srld $r1 = $r24, 32
 ; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    srld $r0 = $r22, 32

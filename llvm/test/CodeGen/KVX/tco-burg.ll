@@ -11,17 +11,12 @@ define void @reveachList(i8* (i8*)* nocapture %f, %struct.list* readonly %l){
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    .cfi_register 67, 16
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -8
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r19 = $r1
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 18, -16
-; CHECK-NEXT:    .cfi_offset 19, -24
 ; CHECK-NEXT:    cb.deqz $r19 ? .LBB0_1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.2: # %if.end

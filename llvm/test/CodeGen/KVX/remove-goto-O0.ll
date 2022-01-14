@@ -8,11 +8,8 @@ define i32 @factorial(i32 %v){
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    .cfi_register 67, 16
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -8
 ; CHECK-NEXT:    sw 20[$r12] = $r0
 ; CHECK-NEXT:    cb.wlez $r0 ? .LBB0_2
 ; CHECK-NEXT:    ;;
@@ -65,7 +62,6 @@ define i32 @f(){
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    sw 24[$r12] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB1_1: # %for.cond

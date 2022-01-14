@@ -294,12 +294,9 @@ define i32 @g(i32 %h)  {
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    .cfi_register 67, 16
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    make $r1 = e
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -8
 ; CHECK-NEXT:    ld $r1 = 0[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r2 = 0[$r1]

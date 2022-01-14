@@ -12,12 +12,9 @@ define i32 @main() local_unnamed_addr {
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    .cfi_register 67, 16
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    pcrel $r1 = @gotaddr()
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -8
 ; CHECK-NEXT:    pcrel $r0 = @gotaddr()
 ; CHECK-NEXT:    ld $r1 = @got( foo )[$r1]
 ; CHECK-NEXT:    ;;

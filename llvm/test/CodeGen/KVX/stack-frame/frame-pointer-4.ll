@@ -19,21 +19,14 @@ define dso_local i32 @f(i32 %sz) {
 ; FP-ALL-NEXT:    addd $r12 = $r12, -256
 ; FP-ALL-NEXT:    get $r16 = $ra
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    .cfi_def_cfa_offset 256
-; FP-ALL-NEXT:    .cfi_register 67, 16
 ; FP-ALL-NEXT:    sd 248[$r12] = $r16
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    .cfi_offset 67, -8
 ; FP-ALL-NEXT:    sd 240[$r12] = $r14
 ; FP-ALL-NEXT:    addd $r14 = $r12, 240
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    .cfi_offset 14, -16
-; FP-ALL-NEXT:    .cfi_def_cfa 14, 16
 ; FP-ALL-NEXT:    sq 224[$r12] = $r18r19
 ; FP-ALL-NEXT:    sxwd $r0 = $r0
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    .cfi_offset 18, -24
-; FP-ALL-NEXT:    .cfi_offset 19, -32
 ; FP-ALL-NEXT:    addd $r0 = $r0, 31
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    andd $r0 = $r0, -32

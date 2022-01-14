@@ -27,7 +27,6 @@ define i32 @add(i32 %n, ...) {
 ; FP-NONE:       # %bb.0: # %entry
 ; FP-NONE-NEXT:    addd $r12 = $r12, -96
 ; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:    .cfi_def_cfa_offset 96
 ; FP-NONE-NEXT:    sd 88[$r12] = $r11
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    sd 80[$r12] = $r10
@@ -159,16 +158,11 @@ define i32 @add(i32 %n, ...) {
 ; FP-ALL-NEXT:    addd $r12 = $r12, -128
 ; FP-ALL-NEXT:    get $r16 = $ra
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    .cfi_def_cfa_offset 128
-; FP-ALL-NEXT:    .cfi_register 67, 16
 ; FP-ALL-NEXT:    sd 32[$r12] = $r16
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    .cfi_offset 67, -96
 ; FP-ALL-NEXT:    sd 24[$r12] = $r14
 ; FP-ALL-NEXT:    addd $r14 = $r12, 24
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    .cfi_offset 14, -104
-; FP-ALL-NEXT:    .cfi_def_cfa 14, 104
 ; FP-ALL-NEXT:    sd 96[$r14] = $r11
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    sd 88[$r14] = $r10

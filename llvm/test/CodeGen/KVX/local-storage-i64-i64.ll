@@ -7,7 +7,6 @@ define void @f() {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -21,7 +20,6 @@ define void @g() {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;

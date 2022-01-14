@@ -8,7 +8,6 @@ define void @set(i32* nocapture %x, i32 %num){
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    cb.weqz $r1 ? .LBB0_2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:  # %bb.1: # %for.body.lr.ph
 ; CHECK-NEXT:    zxwd $r4 = $r1
 ; CHECK-NEXT:    make $r1 = 0

@@ -1071,6 +1071,7 @@ define i32 @fsum6_sum(i32 %first, i32 %second, ...) local_unnamed_addr #0 !dbg !
 ; CHECK-NEXT:    call other
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp86:
+; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:first <- [DW_OP_LLVM_entry_value 1] $r0
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args <- $r1
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:result <- $r18
 ; CHECK-NEXT:    .loc 1 302 15 # cfi-csr.c:302:15
@@ -1078,6 +1079,7 @@ define i32 @fsum6_sum(i32 %first, i32 %second, ...) local_unnamed_addr #0 !dbg !
 ; CHECK-NEXT:    addw $r18 = $r0, $r18
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp87:
+; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:second <- [DW_OP_LLVM_entry_value 1] $r1
 ; CHECK-NEXT:    addd $r2 = $r1, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp88:

@@ -19,7 +19,6 @@ define void @_Z1av() {
 ; CHECK-NEXT:    fence
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    copyd $r3 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_11:

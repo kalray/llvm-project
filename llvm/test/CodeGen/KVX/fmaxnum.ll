@@ -10,14 +10,11 @@ define half @fmaxh(half %a, half %b) {
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    .cfi_register 67, 16
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    fwidenlhw $r1 = $r1
 ; CHECK-NEXT:    call fmaxf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -8
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ;;
@@ -46,12 +43,9 @@ define float @fmaxw(float %a, float %b) {
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    .cfi_register 67, 16
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call fmaxf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -8
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
@@ -81,12 +75,9 @@ define double @fmaxd(double %a, double %b) {
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    .cfi_register 67, 16
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call fmax
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -8
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16

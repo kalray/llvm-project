@@ -336,15 +336,11 @@ define i32 @c()  {
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    .cfi_register 67, 16
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -8
 ; CHECK-NEXT:    sd 16[$r12] = $r18
 ; CHECK-NEXT:    call e
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 18, -16
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    call g
 ; CHECK-NEXT:    ;;

@@ -18,12 +18,16 @@ using namespace llvm;
 void KVXMCAsmInfo::anchor() {}
 
 KVXMCAsmInfo::KVXMCAsmInfo(const Triple &TT) {
-  CodePointerSize = CalleeSaveStackSlotSize = TT.isArch64Bit() ? 8 : 4;
+  CodePointerSize = TT.isArch64Bit() ? 8 : 4;
+  CalleeSaveStackSlotSize = 8;
   CommentString = "#";
-  SupportsDebugInformation = true;
   Data64bitsDirective = "\t.8byte\t";
   DwarfRegNumForCFI = true;
-  ExceptionsType = ExceptionHandling::DwarfCFI;
+  ExceptionsType = ExceptionHandling::None;
+  MaxInstLength = 12;
+  MinInstAlignment = 4;
+  SupportsDebugInformation = true;
+  UseIntegratedAssembler = false;
   UsesELFSectionDirectiveForBSS = true;
   UsesCFIForDebug = true;
 }

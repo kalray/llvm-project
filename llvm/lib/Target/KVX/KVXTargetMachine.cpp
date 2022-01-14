@@ -106,7 +106,7 @@ static Reloc::Model getEffectiveRelocModel(const Triple &TT,
 
 KVXTargetMachine::KVXTargetMachine(const Target &T, const Triple &TT,
                                    StringRef CPU, StringRef FS,
-                                   const TargetOptions &Options,
+                                   const TargetOptions &Opts,
                                    Optional<Reloc::Model> RM,
                                    Optional<CodeModel::Model> CM,
                                    CodeGenOpt::Level OL, bool JIT)
@@ -114,13 +114,14 @@ KVXTargetMachine::KVXTargetMachine(const Target &T, const Triple &TT,
                         "e-S256-p:64:64-i1:8-i8:8-i16:16-i32:32-i64:64-"
                         "v64:64-v128:128-v256:256-v512:256-v1024:256-"
                         "f16:16-f32:32-f64:64-a:0:64-m:e-n32:64",
-                        TT, KVX_MC::selectKVXCPU(CPU), FS, Options,
+                        TT, KVX_MC::selectKVXCPU(CPU), FS, Opts,
                         getEffectiveRelocModel(TT, RM),
                         getEffectiveCodeModel(CM, CodeModel::Small), OL),
       TLOF(std::make_unique<KVXELFTargetObjectFile>()) {
 
-  this->Options.DisableIntegratedAS = true;
-
+  Options.DisableIntegratedAS = true;
+  Options.BinutilsVersion = {2, 37};
+  setSupportsDebugEntryValues(true);
   initAsmInfo();
 }
 

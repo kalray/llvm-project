@@ -7,12 +7,9 @@ define float @sqrtf32(float %x) {
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    .cfi_register 67, 16
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call sqrtf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -8
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
@@ -42,12 +39,9 @@ define double @sqrtf64(double %x) {
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    .cfi_register 67, 16
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call sqrt
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -8
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
@@ -65,16 +59,11 @@ define <2 x float> @sqrtv2f32(<2 x float> %x) {
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    .cfi_register 67, 16
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -8
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 18, -16
-; CHECK-NEXT:    .cfi_offset 19, -24
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call sqrtf
 ; CHECK-NEXT:    ;;
@@ -102,19 +91,14 @@ define <2 x double> @sqrtv2f64(<2 x double> %x) {
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    .cfi_register 67, 16
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -8
 ; CHECK-NEXT:    sd 16[$r12] = $r20
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 20, -16
 ; CHECK-NEXT:    sd 8[$r12] = $r18
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    call sqrt
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 18, -24
 ; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    call sqrt

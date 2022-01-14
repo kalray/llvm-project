@@ -6,7 +6,6 @@ define i32 @dzerol() {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    dzerol 27[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r0 = 28[$r12]
@@ -27,7 +26,6 @@ define i32 @dinvall() {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    dinvall 27[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r0 = 28[$r12]
@@ -48,7 +46,6 @@ define i32 @dtouchl() {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    dtouchl 27[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r0 = 28[$r12]
@@ -69,7 +66,6 @@ define i32 @iinvals() {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    iinvals 27[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r0 = 28[$r12]
