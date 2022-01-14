@@ -1835,10 +1835,6 @@ SDValue KVXTargetLowering::lowerBUILD_VECTOR_V2_64bit(SDValue Op,
                                                        {SDOp1Val, ShiftedOp2}));
 }
 
-static bool eqOrUndef(SDValue V1, SDValue V2) {
-  return V1 == V2 || V1->isUndef() || V2->isUndef();
-}
-
 SDValue
 KVXTargetLowering::lowerBUILD_VECTOR_V4_128bit(SDValue Op,
                                                SelectionDAG &DAG) const {
@@ -1847,9 +1843,6 @@ KVXTargetLowering::lowerBUILD_VECTOR_V4_128bit(SDValue Op,
   SDValue V2 = Op.getOperand(1);
   SDValue V3 = Op.getOperand(2);
   SDValue V4 = Op.getOperand(3);
-
-  if (eqOrUndef(V1, V2) && eqOrUndef(V2, V3) && eqOrUndef(V3, V4))
-    return Op;
 
   EVT VT = Op.getValueType();
   LLVMContext &Ctx = *DAG.getContext();
@@ -2729,93 +2722,48 @@ bool KVXTargetLowering::shouldReplaceBy(SDNode *From, unsigned ToOpcode) const {
 // -----------------------------------------------------------------------------
 //        Namespace KVX_LOW
 // -----------------------------------------------------------------------------
-
-// If AllowRepeatExtend, then it is allowed to have immediate vectors that
-// repeat the first 64 bits.
-static uint64_t getImmVector(const llvm::BuildVectorSDNode *BV,
-                             const llvm::SelectionDAG *CurDag,
-                             unsigned long Negative = 0,
-                             bool AllowRepeatExtend = false) {
-  auto VT = BV->getValueType(0);
-  auto NumElts = VT.getVectorNumElements();
-  assert(NumElts == BV->getNumOperands() &&
-         "Build vector and vector with distinct number of operands!");
-
-  EVT ET = VT.getVectorElementType();
-  bool IsFP = ET.isFloatingPoint();
-  auto EltSize = ET.getSizeInBits();
-  auto NumEltsToScan = NumElts;
-  if (AllowRepeatExtend) {
-    const auto TotalSize = NumElts * EltSize;
-    if (TotalSize > 64) {
-      assert(TotalSize % 64 == 0 && "Extension should be multiple of 64-bits");
-      // e.g. for a 128-bit value, only return the first 64 bits
-      NumEltsToScan /= TotalSize / 64;
-    }
-  }
-  assert(NumEltsToScan * EltSize <= 64);
-
-/* Extra check that, when AllowRepeatExtend is ON, the first 64 bits are
- * indeed repeated. If we do not check this we risk emitting wrong immediate
- * vectors. */
-#ifndef NDEBUG
-  if (AllowRepeatExtend) {
-    std::vector<llvm::SDValue> BaseValues(NumEltsToScan);
-    for (unsigned I = 0; I < NumEltsToScan; I++)
-      BaseValues[I] = BV->getOperand(I);
-    for (unsigned I = NumEltsToScan; I < NumElts; I++)
-      assert(eqOrUndef(BaseValues[I % NumEltsToScan], BV->getOperand(I)) &&
-             "The extension is not a repetition of the first 64 bits");
-  }
-#endif
-
-  uint64_t EltMask = ~(((uint64_t)(-1)) << EltSize);
-  uint64_t V = 0;
-  unsigned long ShouldNegate = 1;
-  for (unsigned I = 0; I < NumEltsToScan || (AllowRepeatExtend && I < NumElts);
-       I++, ShouldNegate <<= 1) {
-    auto Op = BV->getOperand(I);
-    if (Op.isUndef())
-      continue;
-
-    auto RepeatI = I % NumEltsToScan;
-    auto RepeatShouldNegate = ShouldNegate >> (I / NumEltsToScan);
-
-    if (IsFP) {
-      auto FPv = cast<ConstantFPSDNode>(Op)->getValueAPF();
-      if (Negative & RepeatShouldNegate)
-        FPv.changeSign();
-
-      V |= (FPv.bitcastToAPInt().getZExtValue() & EltMask)
-           << (EltSize * RepeatI);
-    } else if (Negative & RepeatShouldNegate) {
-      V |= (-cast<ConstantSDNode>(Op)->getSExtValue() & EltMask)
-           << (EltSize * RepeatI);
-    } else {
-      V |= (cast<ConstantSDNode>(Op)->getSExtValue() & EltMask)
-           << (EltSize * RepeatI);
-    }
-  }
-
-  return V;
-}
-
 // Negative is a bitmask, telling which elements numbers must have
 // their value negated.
-SDValue KVX_LOW::buildImmVector(const llvm::SDNode &N,
-                                llvm::SelectionDAG &CurDag,
-                                unsigned long Negative,
-                                bool AllowRepeatExtend) {
+
+SDValue KVX_LOW::buildImmVector(llvm::SDNode &N, llvm::SelectionDAG &CurDag,
+                                bool IsFP, unsigned long Negative) {
+
   auto *BV = dyn_cast<BuildVectorSDNode>(&N);
   if (!BV)
     return SDValue();
 
   auto VT = N.getValueType(0);
-  auto VectorSize = VT.getSizeInBits();
-  auto OutSize = (AllowRepeatExtend && VectorSize > 64) ? 64 : VectorSize;
-  auto OutVT = MVT::getIntegerVT(OutSize);
+  auto NumElts = VT.getVectorNumElements();
+  assert(NumElts == BV->getNumOperands() &&
+         "Build vector and vector with distinct number of operands!");
 
-  uint64_t V = getImmVector(BV, &CurDag, Negative, AllowRepeatExtend);
+  auto EltSize = VT.getVectorElementType().getSizeInBits();
+  auto OutVT = MVT::getIntegerVT(VT.getSizeInBits());
+  assert(EltSize <= 64);
+  assert(NumElts * EltSize <= 64);
+  uint64_t EltMask = ~(((uint64_t)(-1)) << EltSize);
+  uint64_t V = 0;
+  unsigned long ShouldNegate = 1;
+  for (unsigned I = 0; I < NumElts; I++, ShouldNegate <<= 1) {
+    auto Op = BV->getOperand(I);
+    if (Op.isUndef())
+      continue;
+
+    if (IsFP) {
+      auto FPv = cast<ConstantFPSDNode>(Op)->getValueAPF();
+      if (Negative & ShouldNegate)
+        FPv.changeSign();
+
+      V |= (FPv.bitcastToAPInt().getZExtValue() & EltMask) << (EltSize * I);
+    } else if (Negative & ShouldNegate) {
+      V |= (-cast<ConstantSDNode>(Op)->getSExtValue() & EltMask)
+           << (EltSize * I);
+    } else {
+      V |= (cast<ConstantSDNode>(Op)->getSExtValue() & EltMask)
+           << (EltSize * I);
+    }
+  }
+
   return CurDag.getConstant(V, SDLoc(&N), OutVT, true);
 }
 
@@ -2876,57 +2824,6 @@ bool KVX_LOW::isImmVecOfLeqNbits(llvm::SDNode *N, llvm::SelectionDAG *CurDag,
     } else
       return false;
   }
-  return true;
-}
-
-llvm::SDValue KVX_LOW::extractSplatNode(const llvm::SDNode *N,
-                                        const llvm::SelectionDAG *CurDag) {
-  assert(isSplatBuildVec(N, CurDag) && "N is not a splat build vector");
-  const BuildVectorSDNode *BV = dyn_cast<BuildVectorSDNode>(N);
-
-  return BV->getOperand(0);
-}
-
-bool KVX_LOW::isSplatBuildVec(const llvm::SDNode *N,
-                              const llvm::SelectionDAG *CurDag,
-                              unsigned ImmSizeCheck) {
-  const BuildVectorSDNode *BV = dyn_cast<BuildVectorSDNode>(N);
-
-  assert(BV && "isSplatBuildVec called with a non-buildvector node");
-
-  /* We must check that it is either a v4f32 or a v4i32 because this predicate
-     is used in a pattern intended for v4f32 or v4i32, and yet it is still
-     called with v2f64 build_vector for unknown reason */
-  const auto VT = BV->getValueType(0);
-  if (VT != MVT::v4f32 && VT != MVT::v4i32)
-    return false;
-
-  bool DoConstantCheck = ImmSizeCheck > 0;
-  if (DoConstantCheck && !BV->isConstant())
-    return false;
-
-  /* Check that each operand is equal. Undef values are ignored. */
-  llvm::SDValue SplatVal;
-  bool FirstDefReached = false;
-  for (unsigned I = 1; I < BV->getNumOperands(); I++) {
-    auto CurVal = BV->getOperand(I);
-    if (CurVal.isUndef())
-      continue;
-    if (!FirstDefReached) {
-      SplatVal = CurVal;
-      FirstDefReached = true;
-    }
-    if (CurVal != SplatVal)
-      return false;
-  }
-
-  /* Check that the immediate encoding the build_vector fits in ImmSizeCheck */
-  if (DoConstantCheck) {
-    uint64_t V = getImmVector(BV, CurDag, 0, true);
-    if (!isUIntN(ImmSizeCheck, V))
-      return false;
-  }
-
   return true;
 }
 

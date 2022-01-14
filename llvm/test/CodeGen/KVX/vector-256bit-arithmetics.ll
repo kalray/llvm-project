@@ -986,9 +986,11 @@ define <8 x float> @mul_vv8f32_v8f32(<8 x float> %0, <8 x float> %1) {
 define <8 x float> @mul_v8f32_f32(<8 x float> %0, float %1) {
 ; CHECK-LABEL: mul_v8f32_f32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    insf $r4 = $r4, 63, 32
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r5 = $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r5 = $r5, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r4 = $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmulwq $r2r3 = $r4r5, $r2r3
 ; CHECK-NEXT:    ;;
@@ -998,9 +1000,11 @@ define <8 x float> @mul_v8f32_f32(<8 x float> %0, float %1) {
 ;
 ; V2-LABEL: mul_v8f32_f32:
 ; V2:       # %bb.0:
-; V2-NEXT:    insf $r4 = $r4, 63, 32
-; V2-NEXT:    ;;
 ; V2-NEXT:    copyd $r5 = $r4
+; V2-NEXT:    ;;
+; V2-NEXT:    insf $r5 = $r5, 63, 32
+; V2-NEXT:    ;;
+; V2-NEXT:    copyd $r4 = $r5
 ; V2-NEXT:    ;;
 ; V2-NEXT:    fmulwq $r2r3 = $r4r5, $r2r3
 ; V2-NEXT:    ;;
@@ -1446,9 +1450,11 @@ define <8 x float> @add_v8f32_v8f32(<8 x float> %0, <8 x float> %1) {
 define <8 x float> @add_v8f32_f32(<8 x float> %0, float %1) {
 ; CHECK-LABEL: add_v8f32_f32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    insf $r4 = $r4, 63, 32
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r5 = $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r5 = $r5, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r4 = $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    faddwq $r2r3 = $r4r5, $r2r3
 ; CHECK-NEXT:    ;;
@@ -1458,9 +1464,11 @@ define <8 x float> @add_v8f32_f32(<8 x float> %0, float %1) {
 ;
 ; V2-LABEL: add_v8f32_f32:
 ; V2:       # %bb.0:
-; V2-NEXT:    insf $r4 = $r4, 63, 32
-; V2-NEXT:    ;;
 ; V2-NEXT:    copyd $r5 = $r4
+; V2-NEXT:    ;;
+; V2-NEXT:    insf $r5 = $r5, 63, 32
+; V2-NEXT:    ;;
+; V2-NEXT:    copyd $r4 = $r5
 ; V2-NEXT:    ;;
 ; V2-NEXT:    faddwq $r2r3 = $r4r5, $r2r3
 ; V2-NEXT:    ;;
@@ -1504,9 +1512,11 @@ define <8 x float> @sub_v8f32_v8f32(<8 x float> %0, <8 x float> %1) {
 define <8 x float> @sub_v8f32_f32(<8 x float> %0, float %1) {
 ; CHECK-LABEL: sub_v8f32_f32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    insf $r4 = $r4, 63, 32
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r5 = $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r5 = $r5, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r4 = $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fsbfwq $r2r3 = $r4r5, $r2r3
 ; CHECK-NEXT:    ;;
@@ -1516,9 +1526,11 @@ define <8 x float> @sub_v8f32_f32(<8 x float> %0, float %1) {
 ;
 ; V2-LABEL: sub_v8f32_f32:
 ; V2:       # %bb.0:
-; V2-NEXT:    insf $r4 = $r4, 63, 32
-; V2-NEXT:    ;;
 ; V2-NEXT:    copyd $r5 = $r4
+; V2-NEXT:    ;;
+; V2-NEXT:    insf $r5 = $r5, 63, 32
+; V2-NEXT:    ;;
+; V2-NEXT:    copyd $r4 = $r5
 ; V2-NEXT:    ;;
 ; V2-NEXT:    fsbfwq $r2r3 = $r4r5, $r2r3
 ; V2-NEXT:    ;;
@@ -1591,9 +1603,11 @@ define <8 x i32> @mul_v8i32_v8i32(<8 x i32> %0, <8 x i32> %1) {
 define <8 x i32> @mul_v8i32_i32(<8 x i32> %0, i32 %1) {
 ; CHECK-LABEL: mul_v8i32_i32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    insf $r4 = $r4, 63, 32
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r5 = $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r5 = $r5, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r4 = $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mulwq $r2r3 = $r4r5, $r2r3
 ; CHECK-NEXT:    ;;
@@ -1603,9 +1617,11 @@ define <8 x i32> @mul_v8i32_i32(<8 x i32> %0, i32 %1) {
 ;
 ; V2-LABEL: mul_v8i32_i32:
 ; V2:       # %bb.0:
-; V2-NEXT:    insf $r4 = $r4, 63, 32
-; V2-NEXT:    ;;
 ; V2-NEXT:    copyd $r5 = $r4
+; V2-NEXT:    ;;
+; V2-NEXT:    insf $r5 = $r5, 63, 32
+; V2-NEXT:    ;;
+; V2-NEXT:    copyd $r4 = $r5
 ; V2-NEXT:    ;;
 ; V2-NEXT:    mulwq $r2r3 = $r4r5, $r2r3
 ; V2-NEXT:    ;;
@@ -2085,27 +2101,31 @@ define <8 x i32> @add_v8i32_v8i32(<8 x i32> %0, <8 x i32> %1) {
 define <8 x i32> @add_v8i32_i32(<8 x i32> %0, i32 %1) {
 ; CHECK-LABEL: add_v8i32_i32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    insf $r4 = $r4, 63, 32
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r5 = $r4
-; CHECK-NEXT:    addwp $r2 = $r4, $r2
-; CHECK-NEXT:    addwp $r0 = $r4, $r0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r5 = $r5, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r4 = $r5
 ; CHECK-NEXT:    addwp $r3 = $r5, $r3
 ; CHECK-NEXT:    addwp $r1 = $r5, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addwp $r2 = $r4, $r2
+; CHECK-NEXT:    addwp $r0 = $r4, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ;
 ; V2-LABEL: add_v8i32_i32:
 ; V2:       # %bb.0:
-; V2-NEXT:    insf $r4 = $r4, 63, 32
-; V2-NEXT:    ;;
 ; V2-NEXT:    copyd $r5 = $r4
-; V2-NEXT:    addwp $r2 = $r4, $r2
-; V2-NEXT:    addwp $r0 = $r4, $r0
 ; V2-NEXT:    ;;
+; V2-NEXT:    insf $r5 = $r5, 63, 32
+; V2-NEXT:    ;;
+; V2-NEXT:    copyd $r4 = $r5
 ; V2-NEXT:    addwp $r3 = $r5, $r3
 ; V2-NEXT:    addwp $r1 = $r5, $r1
+; V2-NEXT:    ;;
+; V2-NEXT:    addwp $r2 = $r4, $r2
+; V2-NEXT:    addwp $r0 = $r4, $r0
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %3 = insertelement <8 x i32> undef, i32 %1, i32 0
@@ -2139,27 +2159,31 @@ define <8 x i32> @sub_v8i32_v8i32(<8 x i32> %0, <8 x i32> %1) {
 define <8 x i32> @sub_v8i32_i32(<8 x i32> %0, i32 %1) {
 ; CHECK-LABEL: sub_v8i32_i32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    insf $r4 = $r4, 63, 32
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r5 = $r4
-; CHECK-NEXT:    sbfwp $r2 = $r4, $r2
-; CHECK-NEXT:    sbfwp $r0 = $r4, $r0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r5 = $r5, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r4 = $r5
 ; CHECK-NEXT:    sbfwp $r3 = $r5, $r3
 ; CHECK-NEXT:    sbfwp $r1 = $r5, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbfwp $r2 = $r4, $r2
+; CHECK-NEXT:    sbfwp $r0 = $r4, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ;
 ; V2-LABEL: sub_v8i32_i32:
 ; V2:       # %bb.0:
-; V2-NEXT:    insf $r4 = $r4, 63, 32
-; V2-NEXT:    ;;
 ; V2-NEXT:    copyd $r5 = $r4
-; V2-NEXT:    sbfwp $r2 = $r4, $r2
-; V2-NEXT:    sbfwp $r0 = $r4, $r0
 ; V2-NEXT:    ;;
+; V2-NEXT:    insf $r5 = $r5, 63, 32
+; V2-NEXT:    ;;
+; V2-NEXT:    copyd $r4 = $r5
 ; V2-NEXT:    sbfwp $r3 = $r5, $r3
 ; V2-NEXT:    sbfwp $r1 = $r5, $r1
+; V2-NEXT:    ;;
+; V2-NEXT:    sbfwp $r2 = $r4, $r2
+; V2-NEXT:    sbfwp $r0 = $r4, $r0
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %3 = insertelement <8 x i32> undef, i32 %1, i32 0
@@ -7451,31 +7475,31 @@ define <8 x float> @p_mul_vv8f32_v8f32(<8 x float>* nocapture readonly %0, <8 x 
 define <8 x float> @p_mul_v8f32_f32(<8 x float>* nocapture readonly %0, float* nocapture readonly %1) {
 ; CHECK-LABEL: p_mul_v8f32_f32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    lwz $r4 = 0[$r1]
+; CHECK-NEXT:    lwz $r1 = 0[$r1]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r0r1r2r3 = 0[$r0]
-; CHECK-NEXT:    insf $r4 = $r4, 63, 32
+; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
+; CHECK-NEXT:    insf $r1 = $r1, 63, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r5 = $r4
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulwq $r2r3 = $r2r3, $r4r5
+; CHECK-NEXT:    fmulwq $r2r3 = $r6r7, $r0r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulwq $r0r1 = $r0r1, $r4r5
+; CHECK-NEXT:    fmulwq $r0r1 = $r4r5, $r0r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ;
 ; V2-LABEL: p_mul_v8f32_f32:
 ; V2:       # %bb.0:
-; V2-NEXT:    lwz $r4 = 0[$r1]
+; V2-NEXT:    lwz $r1 = 0[$r1]
 ; V2-NEXT:    ;;
-; V2-NEXT:    lo $r0r1r2r3 = 0[$r0]
-; V2-NEXT:    insf $r4 = $r4, 63, 32
+; V2-NEXT:    lo $r4r5r6r7 = 0[$r0]
+; V2-NEXT:    insf $r1 = $r1, 63, 32
 ; V2-NEXT:    ;;
-; V2-NEXT:    copyd $r5 = $r4
+; V2-NEXT:    copyd $r0 = $r1
 ; V2-NEXT:    ;;
-; V2-NEXT:    fmulwq $r2r3 = $r2r3, $r4r5
+; V2-NEXT:    fmulwq $r2r3 = $r6r7, $r0r1
 ; V2-NEXT:    ;;
-; V2-NEXT:    fmulwq $r0r1 = $r0r1, $r4r5
+; V2-NEXT:    fmulwq $r0r1 = $r4r5, $r0r1
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %3 = load <8 x float>, <8 x float>* %0, align 32
@@ -7907,31 +7931,31 @@ define <8 x float> @p_add_v8f32_v8f32(<8 x float>* nocapture readonly %0, <8 x f
 define <8 x float> @p_add_v8f32_f32(<8 x float>* nocapture readonly %0, float* nocapture readonly %1) {
 ; CHECK-LABEL: p_add_v8f32_f32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    lwz $r4 = 0[$r1]
+; CHECK-NEXT:    lwz $r1 = 0[$r1]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r0r1r2r3 = 0[$r0]
-; CHECK-NEXT:    insf $r4 = $r4, 63, 32
+; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
+; CHECK-NEXT:    insf $r1 = $r1, 63, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r5 = $r4
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddwq $r2r3 = $r2r3, $r4r5
+; CHECK-NEXT:    faddwq $r2r3 = $r6r7, $r0r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddwq $r0r1 = $r0r1, $r4r5
+; CHECK-NEXT:    faddwq $r0r1 = $r4r5, $r0r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ;
 ; V2-LABEL: p_add_v8f32_f32:
 ; V2:       # %bb.0:
-; V2-NEXT:    lwz $r4 = 0[$r1]
+; V2-NEXT:    lwz $r1 = 0[$r1]
 ; V2-NEXT:    ;;
-; V2-NEXT:    lo $r0r1r2r3 = 0[$r0]
-; V2-NEXT:    insf $r4 = $r4, 63, 32
+; V2-NEXT:    lo $r4r5r6r7 = 0[$r0]
+; V2-NEXT:    insf $r1 = $r1, 63, 32
 ; V2-NEXT:    ;;
-; V2-NEXT:    copyd $r5 = $r4
+; V2-NEXT:    copyd $r0 = $r1
 ; V2-NEXT:    ;;
-; V2-NEXT:    faddwq $r2r3 = $r2r3, $r4r5
+; V2-NEXT:    faddwq $r2r3 = $r6r7, $r0r1
 ; V2-NEXT:    ;;
-; V2-NEXT:    faddwq $r0r1 = $r0r1, $r4r5
+; V2-NEXT:    faddwq $r0r1 = $r4r5, $r0r1
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %3 = load <8 x float>, <8 x float>* %0, align 32
@@ -8032,31 +8056,31 @@ define <8 x i32> @p_mul_v8i32_v8i32(<8 x i32>* nocapture readonly %0, <8 x i32>*
 define <8 x i32> @p_mul_v8i32_i32(<8 x i32>* nocapture readonly %0, i32* nocapture readonly %1) {
 ; CHECK-LABEL: p_mul_v8i32_i32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    lwz $r4 = 0[$r1]
+; CHECK-NEXT:    lwz $r1 = 0[$r1]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r0r1r2r3 = 0[$r0]
-; CHECK-NEXT:    insf $r4 = $r4, 63, 32
+; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
+; CHECK-NEXT:    insf $r1 = $r1, 63, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r5 = $r4
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mulwq $r2r3 = $r4r5, $r2r3
+; CHECK-NEXT:    mulwq $r2r3 = $r0r1, $r6r7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mulwq $r0r1 = $r4r5, $r0r1
+; CHECK-NEXT:    mulwq $r0r1 = $r0r1, $r4r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ;
 ; V2-LABEL: p_mul_v8i32_i32:
 ; V2:       # %bb.0:
-; V2-NEXT:    lwz $r4 = 0[$r1]
+; V2-NEXT:    lwz $r1 = 0[$r1]
 ; V2-NEXT:    ;;
-; V2-NEXT:    lo $r0r1r2r3 = 0[$r0]
-; V2-NEXT:    insf $r4 = $r4, 63, 32
+; V2-NEXT:    lo $r4r5r6r7 = 0[$r0]
+; V2-NEXT:    insf $r1 = $r1, 63, 32
 ; V2-NEXT:    ;;
-; V2-NEXT:    copyd $r5 = $r4
+; V2-NEXT:    copyd $r0 = $r1
 ; V2-NEXT:    ;;
-; V2-NEXT:    mulwq $r2r3 = $r4r5, $r2r3
+; V2-NEXT:    mulwq $r2r3 = $r0r1, $r6r7
 ; V2-NEXT:    ;;
-; V2-NEXT:    mulwq $r0r1 = $r4r5, $r0r1
+; V2-NEXT:    mulwq $r0r1 = $r0r1, $r4r5
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %3 = load <8 x i32>, <8 x i32>* %0, align 32
@@ -8556,33 +8580,33 @@ define <8 x i32> @p_add_v8i32_v8i32(<8 x i32>* nocapture readonly %0, <8 x i32>*
 define <8 x i32> @p_add_v8i32_i32(<8 x i32>* nocapture readonly %0, i32* nocapture readonly %1) {
 ; CHECK-LABEL: p_add_v8i32_i32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    lwz $r4 = 0[$r1]
+; CHECK-NEXT:    lwz $r5 = 0[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r0r1r2r3 = 0[$r0]
-; CHECK-NEXT:    insf $r4 = $r4, 63, 32
+; CHECK-NEXT:    insf $r5 = $r5, 63, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r5 = $r4
-; CHECK-NEXT:    addwp $r2 = $r4, $r2
-; CHECK-NEXT:    addwp $r0 = $r4, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r4 = $r5
 ; CHECK-NEXT:    addwp $r3 = $r5, $r3
 ; CHECK-NEXT:    addwp $r1 = $r5, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addwp $r2 = $r4, $r2
+; CHECK-NEXT:    addwp $r0 = $r4, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ;
 ; V2-LABEL: p_add_v8i32_i32:
 ; V2:       # %bb.0:
-; V2-NEXT:    lwz $r4 = 0[$r1]
+; V2-NEXT:    lwz $r5 = 0[$r1]
 ; V2-NEXT:    ;;
 ; V2-NEXT:    lo $r0r1r2r3 = 0[$r0]
-; V2-NEXT:    insf $r4 = $r4, 63, 32
+; V2-NEXT:    insf $r5 = $r5, 63, 32
 ; V2-NEXT:    ;;
-; V2-NEXT:    copyd $r5 = $r4
-; V2-NEXT:    addwp $r2 = $r4, $r2
-; V2-NEXT:    addwp $r0 = $r4, $r0
-; V2-NEXT:    ;;
+; V2-NEXT:    copyd $r4 = $r5
 ; V2-NEXT:    addwp $r3 = $r5, $r3
 ; V2-NEXT:    addwp $r1 = $r5, $r1
+; V2-NEXT:    ;;
+; V2-NEXT:    addwp $r2 = $r4, $r2
+; V2-NEXT:    addwp $r0 = $r4, $r0
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %3 = load <8 x i32>, <8 x i32>* %0, align 32

@@ -837,15 +837,15 @@ def imm32u_sub_1 : SDNodeXForm<imm, [{
 }]>;
 
 def build_imm_vec : SDNodeXForm<build_vector, [{
-  return KVX_LOW::buildImmVector(*N, *CurDAG);
-}]>;
-
-def build_imm_vec_rpt : SDNodeXForm<build_vector, [{
-  return KVX_LOW::buildImmVector(*N, *CurDAG, 0, true);
+  return KVX_LOW::buildImmVector(*N, *CurDAG, false);
 }]>;
 
 def build_imm_vec_neg : SDNodeXForm<build_vector, [{
-  return KVX_LOW::buildImmVector(*N, *CurDAG, -1);
+  return KVX_LOW::buildImmVector(*N, *CurDAG, false, -1);
+}]>;
+
+def build_fpimm_vec : SDNodeXForm<build_vector, [{
+  return KVX_LOW::buildImmVector(*N, *CurDAG, true);
 }]>;
 
 def build_fdot_imm : SDNodeXForm<build_vector, [{
@@ -868,12 +868,12 @@ def build_fdot_imm_swp_neg0 : SDNodeXForm<build_vector, [{
   return KVX_LOW::buildFdotImm(*N, *CurDAG, true, 1);
 }]>;
 
-def build_imm_vec_neg0 : SDNodeXForm<build_vector, [{
-  return KVX_LOW::buildImmVector(*N, *CurDAG, 1);
+def build_fpimm_vec_neg0 : SDNodeXForm<build_vector, [{
+  return KVX_LOW::buildImmVector(*N, *CurDAG, true, 1);
 }]>;
 
-def build_imm_vec_neg1 : SDNodeXForm<build_vector, [{
-  return KVX_LOW::buildImmVector(*N, *CurDAG, 2);
+def build_fpimm_vec_neg1 : SDNodeXForm<build_vector, [{
+  return KVX_LOW::buildImmVector(*N, *CurDAG, true, 2);
 }]>;
 
 def is_imm_vec : PatLeaf<(build_vector), [{
@@ -900,25 +900,6 @@ def is_imm_vec_leq4bits : PatLeaf<(build_vector), [{
    return KVX_LOW::isImmVecOfLeqNbits(N, CurDAG, 4);
 }], build_imm_vec>;
 
-def extract_splat_node : SDNodeXForm<build_vector, [{
-  return KVX_LOW::extractSplatNode(N, CurDAG);
-}]>;
-
-def is_splat_build_vec : PatLeaf<(build_vector), [{
-  return KVX_LOW::isSplatBuildVec(N, CurDAG);
-}], extract_splat_node>;
-
-def is_splat_build_vec_imm16 : PatLeaf<(build_vector), [{
-  return KVX_LOW::isSplatBuildVec(N, CurDAG, 16);
-}], build_imm_vec_rpt>;
-
-def is_splat_build_vec_imm43 : PatLeaf<(build_vector), [{
-  return KVX_LOW::isSplatBuildVec(N, CurDAG, 43);
-}], build_imm_vec_rpt>;
-
-def is_splat_build_vec_imm64 : PatLeaf<(build_vector), [{
-  return KVX_LOW::isSplatBuildVec(N, CurDAG, 64);
-}], build_imm_vec_rpt>;
 
 def is_imm_vec_kvx_splat32_ : PatLeaf<(build_vector), [{
    return KVX_LOW::isKVXSplat32ImmVec(N, CurDAG, false);
@@ -1253,44 +1234,6 @@ def : Pat<(v4i32 (trunc v4i64:$v)), (REG_SEQUENCE PairedReg,
                                             (i64 (EXTRACT_SUBREG QuadReg:$v, sub_s3)),
                                             63, 32),
                                       sub_s1)>;
-
-multiclass KVX_BUILD_SPLAT_VECTOR<ValueType vt, ValueType hvt, ValueType evt> {
-def : Pat<(vt is_splat_build_vec_imm16:$sbv),
-          (vt (REG_SEQUENCE PairedReg,
-            (hvt (MAKEi16 (build_imm_vec_rpt $sbv))),
-            sub_s0,
-            (hvt (MAKEi43 (build_imm_vec_rpt $sbv))),
-            sub_s1
-          ))>;
-
-def : Pat<(vt is_splat_build_vec_imm43:$sbv),
-          (vt (REG_SEQUENCE PairedReg,
-            (hvt (MAKEi43 (build_imm_vec_rpt $sbv))),
-            sub_s0,
-            (hvt (MAKEi64 (build_imm_vec_rpt $sbv))),
-            sub_s1
-          ))>;
-
-def : Pat<(vt is_splat_build_vec_imm64:$sbv),
-          (vt (REG_SEQUENCE PairedReg,
-            (hvt (MAKEi64 (build_imm_vec_rpt $sbv))),
-            sub_s0,
-            (hvt (MAKEi64 (build_imm_vec_rpt $sbv))),
-            sub_s1
-          ))>;
-
-def : Pat<(vt is_splat_build_vec:$sbv),
-          (vt (REG_SEQUENCE PairedReg,
-            (hvt (INSF (evt (extract_splat_node $sbv)), (evt (extract_splat_node $sbv)), 63, 32)),
-            sub_s0,
-            (hvt (INSF (evt (extract_splat_node $sbv)), (evt (extract_splat_node $sbv)), 63, 32)),
-            sub_s1
-          ))>;
-}
-
-// NOTE: is_splat_build_vec checks that the type is either v4f32 or v4i32
-defm: KVX_BUILD_SPLAT_VECTOR <v4f32, v2f32, f32>;
-defm: KVX_BUILD_SPLAT_VECTOR <v4i32, v2i32, i32>;
 
 // v2i8
 def : Pat<(i32 (vector_extract (v2i8 SingleReg:$v), 0)), (ZXBD SingleReg:$v)>;
@@ -1923,11 +1866,14 @@ def : Pat<(vt (select i32:$cc, is_imm_vec_ri37:$t, vt:$f)),
 
 // TODO: Test if using the pseudo select instructions to vectors up to 64 bits is possible
 // as they are optimized.
-foreach vt = [ v2i8, v2i16, v4i8, v2f16 ] in
+foreach vt = [ v2i8, v2i16, v4i8 ] in
 defm : CMOVE_ENTIRE_VEC_IMM<vt, CMOVEDri37, build_imm_vec>;
+defm : CMOVE_ENTIRE_VEC_IMM<v2f16, CMOVEDri37, build_fpimm_vec>;
 
-foreach vt = [ v2i32, v4i16, v8i8, v2f32, v4f16 ] in
+foreach vt = [ v2i32, v4i16, v8i8 ] in
 defm : CMOVE_ENTIRE_VEC_IMM<vt, CMOVEDri64, build_imm_vec>;
+foreach vt = [ v2f32, v4f16 ] in
+defm : CMOVE_ENTIRE_VEC_IMM<vt, CMOVEDri64, build_fpimm_vec>;
 
 foreach vt = [ v2i8, v2f16, v2i16, v2f32, v2i32, v4i8, v4f16, v4i16, v8i8 ] in {
       def : Pat<(vt (select i32:$cc, vt:$t, vt:$f)),
