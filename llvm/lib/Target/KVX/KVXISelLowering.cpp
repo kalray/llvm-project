@@ -17,6 +17,7 @@
 #include "KVXTargetMachine.h"
 #include "llvm/ADT/Statistic.h"
 #include "llvm/CodeGen/CallingConvLower.h"
+#include "llvm/CodeGen/MachineJumpTableInfo.h"
 #include "llvm/CodeGen/MachineModuleInfo.h"
 #include "llvm/Support/KnownBits.h"
 
@@ -90,7 +91,7 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
 
   setMinFunctionAlignment(Align(64));
   setPrefFunctionAlignment(Align(64));
-
+  setMinStackArgumentAlignment(Align(64));
   // TODO: VLIW allows better performances but not fully correct yet since
   // set/wfxm/wfxl builtins can be wrongly scheduled due to a SystemRegister
   // dependency issue, see T16482. Until we fix the VLIW scheduler to take into
@@ -505,6 +506,12 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
 
   setOperationAction(ISD::INTRINSIC_WO_CHAIN, MVT::Other, Custom);
 
+  setOperationAction(ISD::EH_SJLJ_LONGJMP, MVT::Other, Custom);
+  setOperationAction(ISD::EH_SJLJ_SETJMP, MVT::i32, Custom);
+  setOperationAction(ISD::EH_SJLJ_SETUP_DISPATCH, MVT::Other, Custom);
+  if (TM.Options.ExceptionModel == ExceptionHandling::SjLj)
+    setLibcallName(RTLIB::UNWIND_RESUME, "_Unwind_SjLj_Resume");
+
   setTargetDAGCombine(ISD::MUL);
   setTargetDAGCombine(ISD::SRA);
   setTargetDAGCombine(ISD::STORE);
@@ -521,35 +528,27 @@ EVT KVXTargetLowering::getSetCCResultType(const DataLayout &DL, LLVMContext &C,
 }
 
 const char *KVXTargetLowering::getTargetNodeName(unsigned Opcode) const {
+#define TARGET_NODE_CASE(NAME)                                                 \
+  case KVXISD::NAME:                                                           \
+    return "KVXISD::" #NAME;
+
   switch (Opcode) {
-  case KVXISD::RET:
-    return "KVX::RET";
-  case KVXISD::CALL:
-    return "KVX::CALL";
-  case KVXISD::AddrWrapper:
-    return "KVX::AddrWrapper";
-  case KVXISD::PICInternIndirection:
-    return "KVX::PICInternIndirection";
-  case KVXISD::PICExternIndirection:
-    return "KVX::PICExternIndirection";
-  case KVXISD::PICPCRelativeGOTAddr:
-    return "KVX::PICPCRelativeGOTAddr";
-  case KVXISD::TAIL:
-    return "KVX::TAIL";
-  case KVXISD::GetSystemReg:
-    return "KVX::GetSystemReg";
-  case KVXISD::COMP:
-    return "KVX::COMP";
-  case KVXISD::BRCOND:
-    return "KVX::BRCOND";
-  case KVXISD::FENCE:
-    return "KVX::FENCE";
-  case KVXISD::SEXT_MUL:
-    return "KVX::SEXT_MUL";
-  case KVXISD::SZEXT_MUL:
-    return "KVX::SZEXT_MUL";
-  case KVXISD::ZEXT_MUL:
-    return "KVX::ZEXT_MUL";
+    TARGET_NODE_CASE(RET)
+    TARGET_NODE_CASE(CALL)
+    TARGET_NODE_CASE(AddrWrapper)
+    TARGET_NODE_CASE(PICInternIndirection)
+    TARGET_NODE_CASE(PICExternIndirection)
+    TARGET_NODE_CASE(PICPCRelativeGOTAddr)
+    TARGET_NODE_CASE(TAIL)
+    TARGET_NODE_CASE(GetSystemReg)
+    TARGET_NODE_CASE(COMP)
+    TARGET_NODE_CASE(BRCOND)
+    TARGET_NODE_CASE(EH_SJLJ_LONGJMP)
+    TARGET_NODE_CASE(EH_SJLJ_SETUP_DISPATCH)
+    TARGET_NODE_CASE(FENCE)
+    TARGET_NODE_CASE(SEXT_MUL)
+    TARGET_NODE_CASE(SZEXT_MUL)
+    TARGET_NODE_CASE(ZEXT_MUL)
 
   default:
     return NULL;
@@ -1072,6 +1071,16 @@ SDValue KVXTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
   }
   case ISD::INTRINSIC_WO_CHAIN:
     return LowerINTRINSIC_WO_CHAIN(Op, DAG, &Subtarget);
+  case ISD::EH_SJLJ_LONGJMP:
+    return DAG.getNode(KVXISD::EH_SJLJ_LONGJMP, SDLoc(Op), MVT::Other,
+                       Op.getOperand(0), Op.getOperand(1));
+  case ISD::EH_SJLJ_SETJMP:
+    return DAG.getNode(KVXISD::EH_SJLJ_SETJMP, SDLoc(Op),
+                       DAG.getVTList(MVT::i32, MVT::Other), Op.getOperand(0),
+                       Op.getOperand(1));
+  case ISD::EH_SJLJ_SETUP_DISPATCH:
+    return DAG.getNode(KVXISD::EH_SJLJ_SETUP_DISPATCH, SDLoc(Op), MVT::Other,
+                       Op.getOperand(0));
   }
 }
 
@@ -2734,6 +2743,21 @@ bool KVXTargetLowering::shouldReplaceBy(SDNode *From, unsigned ToOpcode) const {
   }
 }
 
+MachineBasicBlock *
+KVXTargetLowering::EmitInstrWithCustomInserter(MachineInstr &MI,
+                                               MachineBasicBlock *BB) const {
+  switch (MI.getOpcode()) {
+  default:
+    report_fatal_error("Unexpected instr type to insert");
+  case KVX::KVX_eh_sjlj_setup_dispatch:
+    return emitEHSjLjSetupDispatch(MI, BB);
+  case KVX::KVX_eh_SjLj_LongJmp:
+    return emitEHSjLjLongJmp(MI, BB);
+  case KVX::KVX_eh_SjLj_SetJmp:
+    return emitEHSjLjSetJmp(MI, BB);
+  }
+}
+
 SDValue KVXTargetLowering::LowerINTRINSIC_WO_CHAIN(
     SDValue Op, SelectionDAG &DAG, const KVXSubtarget *Subtarget) const {
   unsigned IntNo = cast<ConstantSDNode>(Op.getOperand(0))->getZExtValue();
@@ -2761,6 +2785,381 @@ SDValue KVXTargetLowering::LowerINTRINSIC_WO_CHAIN(
     return DAG.getNode(KVXISD::AddrWrapper, DL, VT, DAG.getMCSymbol(S, PtrVT));
   }
   }
+}
+
+MachineBasicBlock *
+KVXTargetLowering::emitEHSjLjLongJmp(MachineInstr &MI,
+                                     MachineBasicBlock *MBB) const {
+  DebugLoc DL = MI.getDebugLoc();
+  MachineFunction *MF = MBB->getParent();
+  const TargetInstrInfo *TII = Subtarget.getInstrInfo();
+  MachineRegisterInfo &MRI = MF->getRegInfo();
+
+  // Memory Reference.
+  SmallVector<MachineMemOperand *, 2> MMOs(MI.memoperands_begin(),
+                                           MI.memoperands_end());
+  Register BufReg = MI.getOperand(0).getReg();
+  MachineInstrBuilder MIB;
+
+  Register FP = KVX::R14;
+  Register SP = KVX::R12;
+  // Reload IP.
+  Register LandingPad = MRI.createVirtualRegister(&KVX::SingleRegRegClass);
+  MIB = BuildMI(*MBB, MI, DL, TII->get(KVX::LDri10), LandingPad)
+            .addImm(8)
+            .addReg(BufReg)
+            .addImm(0)
+            .setMemRefs(MMOs);
+
+  // Reload FP.
+  MIB = BuildMI(*MBB, MI, DL, TII->get(KVX::LDri10), FP);
+  MIB.addImm(0);
+  MIB.addReg(BufReg);
+  MIB.addImm(0);
+  MIB.setMemRefs(MMOs);
+
+  // Reload SP.
+  MIB = BuildMI(*MBB, MI, DL, TII->get(KVX::LDri10), SP);
+  MIB.addImm(16);
+  MIB.add(MI.getOperand(0)); // we can preserve the kill flags here.
+  MIB.addImm(0);
+  MIB.setMemRefs(MMOs);
+
+  // Jump.
+  BuildMI(*MBB, MI, DL, TII->get(KVX::IGOTO))
+      .addReg(LandingPad, getKillRegState(true));
+
+  MI.eraseFromParent();
+  return MBB;
+}
+
+MachineBasicBlock *
+KVXTargetLowering::emitEHSjLjSetJmp(MachineInstr &MI,
+                                    MachineBasicBlock *MBB) const {
+  DebugLoc DL = MI.getDebugLoc();
+  MachineFunction *MF = MBB->getParent();
+  const TargetInstrInfo *TII = Subtarget.getInstrInfo();
+  MachineRegisterInfo &MRI = MF->getRegInfo();
+
+  const BasicBlock *BB = MBB->getBasicBlock();
+  MachineFunction::iterator I = ++MBB->getIterator();
+
+  // Memory Reference.
+  SmallVector<MachineMemOperand *, 2> MMOs(MI.memoperands_begin(),
+                                           MI.memoperands_end());
+  MachineBasicBlock *ThisMBB = MBB;
+  MachineBasicBlock *MainMBB = MF->CreateMachineBasicBlock(BB);
+  MachineBasicBlock *SinkMBB = MF->CreateMachineBasicBlock(BB);
+  MachineBasicBlock *RestoreMBB = MF->CreateMachineBasicBlock(BB);
+  MF->insert(I, MainMBB);
+  MF->insert(I, SinkMBB);
+  MF->push_back(RestoreMBB);
+  RestoreMBB->setHasAddressTaken();
+
+  // Transfer the remainder of BB and its successor edges to SinkMBB.
+  SinkMBB->splice(SinkMBB->begin(), MBB,
+                  std::next(MachineBasicBlock::iterator(MI)), MBB->end());
+  SinkMBB->transferSuccessorsAndUpdatePHIs(MBB);
+
+  // ThisMBB:
+  auto Instr = isPositionIndependent() ? KVX::PICPCREL : KVX::MAKEi64;
+  auto RestoreAddr = BuildMI(*MBB, MI, DL, TII->get(Instr),
+                             MRI.createVirtualRegister(&KVX::SingleRegRegClass))
+                         .addMBB(RestoreMBB);
+  // Store IP in buf[1].
+  auto MIB = BuildMI(*MBB, MI, DL, TII->get(KVX::SDri10))
+                 .addImm(8)
+                 .add(MI.getOperand(1)) // we can preserve the kill flags here.
+                 .addReg(RestoreAddr.getReg(0), getKillRegState(true))
+                 .setMemRefs(MMOs);
+
+  // This tells the compiler that all registers must be
+  // saved / restored before/after the SD instruction.
+  const KVXRegisterInfo *RegInfo = Subtarget.getRegisterInfo();
+  MIB.addRegMask(RegInfo->getNoPreservedMask());
+
+  ThisMBB->addSuccessor(MainMBB);
+  ThisMBB->addSuccessor(RestoreMBB);
+
+  const auto *RC = &KVX::SingleRegRegClass;
+  // MainMBB:
+  auto MainRet = BuildMI(MainMBB, DL, TII->get(KVX::MAKEi16),
+                         MRI.createVirtualRegister(RC))
+                     .addImm(0);
+  MainMBB->addSuccessor(SinkMBB);
+
+  // RestoreMBB:
+  auto RestRet = BuildMI(RestoreMBB, DL, TII->get(KVX::MAKEi16),
+                         MRI.createVirtualRegister(RC))
+                     .addImm(1);
+  BuildMI(RestoreMBB, DL, TII->get(KVX::GOTO)).addMBB(SinkMBB);
+  RestoreMBB->addSuccessor(SinkMBB);
+
+  // SinkMBB:
+  BuildMI(*SinkMBB, SinkMBB->begin(), DL, TII->get(KVX::PHI),
+          MI.getOperand(0).getReg())
+      .addReg(MainRet.getReg(0))
+      .addMBB(MainMBB)
+      .addReg(RestRet.getReg(0))
+      .addMBB(RestoreMBB);
+
+  MI.eraseFromParent();
+  return SinkMBB;
+}
+
+// Create the MBBs for the dispatch code like following:
+//
+// BB:
+//   Prepare DispatchBB address and store it to buf[1].
+//   ...
+//
+// DispatchBB:
+//   %s15 = GETGOT iff isPositionIndependent
+//   %callsite = load callsite
+//   CB %callsite > #size of callsites TrapBB
+//
+// DispContBB:
+//   %breg = address of jump table
+//   %npc = load and calculate next pc from %breg and %callsite
+//   GOTO %npc
+//
+// TrapBB:
+//   Call abort.
+//
+MachineBasicBlock *
+KVXTargetLowering::emitEHSjLjSetupDispatch(MachineInstr &MI,
+                                           MachineBasicBlock *BB) const {
+  MachineFunction *MF = BB->getParent();
+
+  // Get a mapping of the call site numbers to all of the landing pads they're
+  // associated with.
+  DenseMap<unsigned, SmallVector<MachineBasicBlock *, 2>> CallSiteNumToLPad;
+  unsigned MaxCSNum = 0;
+  for (auto &MBB : *MF) {
+    if (!MBB.isEHPad())
+      continue;
+
+    MCSymbol *Sym = nullptr;
+    for (const auto &MI : MBB) {
+      if (MI.isDebugInstr())
+        continue;
+
+      assert(MI.isEHLabel() && "expected EH_LABEL");
+      Sym = MI.getOperand(0).getMCSymbol();
+      break;
+    }
+
+    if (!MF->hasCallSiteLandingPad(Sym))
+      continue;
+
+    for (unsigned CSI : MF->getCallSiteLandingPad(Sym)) {
+      CallSiteNumToLPad[CSI].push_back(&MBB);
+      MaxCSNum = std::max(MaxCSNum, CSI);
+    }
+  }
+
+  // Get an ordered list of the machine basic blocks for the jump table.
+  std::vector<MachineBasicBlock *> LPadList;
+  SmallPtrSet<MachineBasicBlock *, 32> InvokeBBs;
+  LPadList.reserve(CallSiteNumToLPad.size());
+
+  for (unsigned CSI = 1; CSI <= MaxCSNum; ++CSI) {
+    for (auto &LP : CallSiteNumToLPad[CSI]) {
+      LPadList.push_back(LP);
+      InvokeBBs.insert(LP->pred_begin(), LP->pred_end());
+    }
+  }
+
+  assert(!LPadList.empty() &&
+         "No landing pad destinations for the dispatch jump table!");
+
+  // Create the MBBs for the dispatch code.
+  const TargetRegisterClass *RC = &KVX::SingleRegRegClass;
+  // Shove the dispatch's address into the return slot in the function context.
+  MachineBasicBlock *DispatchBB = MF->CreateMachineBasicBlock();
+  DispatchBB->setIsEHPad(true);
+
+  const KVXInstrInfo *TII = Subtarget.getInstrInfo();
+  const DebugLoc &DL = MI.getDebugLoc();
+  MachineBasicBlock *TrapBB = MF->CreateMachineBasicBlock();
+  BuildMI(TrapBB, DL, TII->get(KVX::ERROP));
+  DispatchBB->addSuccessor(TrapBB, BranchProbability::getZero());
+
+  MachineBasicBlock *DispContBB = MF->CreateMachineBasicBlock();
+  DispatchBB->addSuccessor(DispContBB, BranchProbability::getOne());
+
+  // Insert MBBs.
+  MF->push_back(DispatchBB);
+  MF->push_back(DispContBB);
+  MF->push_back(TrapBB);
+
+  // Insert code into the entry block that creates and registers the function
+  // context.
+  int FI = MF->getFrameInfo().getFunctionContextIndex();
+
+  MachineRegisterInfo &MRI = MF->getRegInfo();
+  // TODO: Check if needs doing different when positionIndependentCode is on.
+  Register LabelAddr = MRI.createVirtualRegister(RC);
+  BuildMI(*BB, MI, DL, TII->get(KVX::MAKEi64), LabelAddr).addMBB(DispatchBB);
+
+  MachineFrameInfo &MFI = MF->getFrameInfo();
+  // Store an address of DispatchBB to a given jmpbuf[1] where has next IC
+  // referenced by longjmp (throw) later.
+  static const int OffsetIC = 72;
+  MachineMemOperand *MMO = MF->getMachineMemOperand(
+      MachinePointerInfo::getFixedStack(*MF, FI, OffsetIC),
+      MachineMemOperand::MOStore, MFI.getObjectSize(FI),
+      MFI.getObjectAlign(FI));
+
+  BuildMI(*BB, MI, DL, TII->get(KVX::SDp))
+      .addImm(OffsetIC)
+      .addFrameIndex(FI)
+      .addMemOperand(MMO)
+      .addReg(LabelAddr, getKillRegState(true));
+
+  // Create the jump table and associated information
+  unsigned JTE = getJumpTableEncoding();
+  MachineJumpTableInfo *JTI = MF->getOrCreateJumpTableInfo(JTE);
+  JTI->createJumpTableIndex(LPadList);
+
+  const KVXRegisterInfo *RI = Subtarget.getRegisterInfo();
+  // Add a register mask with no preserved registers.  This results in all
+  // registers being marked as clobbered.
+  BuildMI(DispatchBB, DL, TII->get(KVX::NOP))
+      .addRegMask(RI->getNoPreservedMask());
+
+  // IReg is used as an index in a memory operand and therefore can't be SP
+  static const int OffsetCS = 8;
+  Register IReg = MRI.createVirtualRegister(RC);
+  MMO = MF->getMachineMemOperand(
+      MachinePointerInfo::getFixedStack(*MF, FI, OffsetCS),
+      MachineMemOperand::MOLoad, MFI.getObjectSize(FI), MFI.getObjectAlign(FI));
+
+  BuildMI(DispatchBB, DL, TII->get(KVX::LDp), IReg)
+      .addImm(OffsetCS)
+      .addFrameIndex(FI)
+      .addMemOperand(MMO)
+      .addImm(KVXMOD::VARIANT_);
+
+  auto CmpOpcode =
+      (LPadList.size() < (1 << 9))
+          ? KVX::COMPDri10
+          : (LPadList.size() < (1L << 36)) ? KVX::COMPDri37 : KVX::COMPDri64;
+
+  Register IReg2 = MRI.createVirtualRegister(RC);
+  BuildMI(DispatchBB, DL, TII->get(CmpOpcode), IReg2)
+      .addReg(IReg)
+      .addImm(LPadList.size())
+      .addImm(KVXMOD::COMPARISON_GTU);
+
+  BuildMI(DispatchBB, DL, TII->get(KVX::CB))
+      .addReg(IReg2, getKillRegState(false))
+      .addMBB(TrapBB)
+      .addImm(KVXMOD::SIMPLECOND_ODD);
+
+  // Now add the code that branches to the correct landing pad, obtained
+  // from a jump-table.
+  Register JT = MRI.createVirtualRegister(RC);
+
+  Register AddrIGOTO = MRI.createVirtualRegister(RC);
+  switch (getJumpTableEncoding()) {
+  default:
+    llvm_unreachable_internal("We don't use any other jump-table encoding.");
+  case MachineJumpTableInfo::EK_BlockAddress:
+    // 1st step, put the jump-table (JT) address in a register, to be used in a
+    // load.
+    BuildMI(DispContBB, DL, TII->get(KVX::MAKEi64), JT).addJumpTableIndex(0);
+    // Non-pic code, we just store the 64bit block address in the jump table.
+    BuildMI(DispContBB, DL, TII->get(KVX::LDrr), AddrIGOTO)
+        .addReg(IReg, getKillRegState(true))
+        .addReg(JT, getKillRegState(true))
+        .addImm(KVXMOD::VARIANT_)
+        .addImm(KVXMOD::DOSCALE_XS);
+    break;
+
+  case MachineJumpTableInfo::EK_LabelDifference32:
+    // pic code, the JT stores: (basic block address - JT address)
+    // Must do:
+    // pcrel $rA = @pcrel( .JumpTable ) == $rA = PC + .JumpTable
+    // lws.xs $rB = Index [$rA]
+    // AddrIGOTO = $rB + $rA
+
+    BuildMI(DispContBB, DL, TII->get(KVX::PICPCREL), JT).addJumpTableIndex(0);
+
+    Register OffsetBB = MRI.createVirtualRegister(RC);
+    BuildMI(DispContBB, DL, TII->get(KVX::LWSrr), OffsetBB)
+        .addReg(IReg, getKillRegState(true))
+        .addReg(JT, getKillRegState(true))
+        .addImm(KVXMOD::VARIANT_)
+        .addImm(KVXMOD::DOSCALE_XS);
+
+    BuildMI(DispContBB, DL, TII->get(KVX::ADDDrr), AddrIGOTO)
+        .addReg(JT)
+        .addReg(OffsetBB);
+    break;
+  }
+  BuildMI(DispContBB, DL, TII->get(KVX::IGOTO))
+      .addReg(AddrIGOTO, getKillRegState(true));
+
+  // Add the jump table entries as successors to the MBB.
+  SmallPtrSet<MachineBasicBlock *, 8> SeenMBBs;
+  for (auto &LP : LPadList)
+    if (SeenMBBs.insert(LP).second)
+      DispContBB->addSuccessor(LP);
+
+  // N.B. the order the invoke BBs are processed in doesn't matter here.
+  SmallVector<MachineBasicBlock *, 64> MBBLPads;
+  const MCPhysReg *SavedRegs = MF->getRegInfo().getCalleeSavedRegs();
+  for (MachineBasicBlock *MBB : InvokeBBs) {
+    // Remove the landing pad successor from the invoke block and replace it
+    // with the new dispatch block.
+    // Keep a copy of Successors since it's modified inside the loop.
+    SmallVector<MachineBasicBlock *, 8> Successors(MBB->succ_rbegin(),
+                                                   MBB->succ_rend());
+    // FIXME: Avoid quadratic complexity. Acceptable as number of exception
+    // handling landing pads are usually very small (number of catches for
+    // a try in C++).
+    for (auto *MBBS : Successors) {
+      if (MBBS->isEHPad()) {
+        MBB->removeSuccessor(MBBS);
+        MBBLPads.push_back(MBBS);
+      }
+    }
+
+    MBB->addSuccessor(DispatchBB);
+
+    // Find the invoke call and mark all of the callee-saved registers as
+    // 'implicit defined' so that they're spilled.  This prevents code from
+    // moving instructions to before the EH block, where they will never be
+    // executed.
+    for (auto &II : reverse(*MBB)) {
+      if (!II.isCall())
+        continue;
+
+      DenseMap<unsigned, bool> DefRegs;
+      for (auto &MOp : II.operands())
+        if (MOp.isReg())
+          DefRegs[MOp.getReg()] = true;
+
+      MachineInstrBuilder MIB(*MF, &II);
+      for (unsigned RegIdx = 0; SavedRegs[RegIdx]; ++RegIdx) {
+        unsigned Reg = SavedRegs[RegIdx];
+        if (!DefRegs[Reg])
+          MIB.addReg(Reg, RegState::ImplicitDefine | RegState::Dead);
+      }
+
+      break;
+    }
+  }
+
+  // Mark all former landing pads as non-landing pads.  The dispatch is the only
+  // landing pad now.
+  for (auto &LP : MBBLPads)
+    LP->setIsEHPad(false);
+
+  // The instruction is gone now.
+  MI.eraseFromParent();
+  return BB;
 }
 
 // -----------------------------------------------------------------------------

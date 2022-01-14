@@ -204,3 +204,7 @@ bool KVXRegisterInfo::isConstantPhysReg(MCRegister PhysReg) const {
 
   return false;
 }
+
+const uint32_t *KVXRegisterInfo::getNoPreservedMask() const {
+  return CSR_NoRegs_RegMask;
+}

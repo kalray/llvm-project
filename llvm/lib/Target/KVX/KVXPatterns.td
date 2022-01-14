@@ -1997,3 +1997,30 @@ def: Pat<(v1024i1 (build_vector)), (COPYZXp)>; // X12
 defm SUBD : MC_11<"subd">;
 
 def : Pat<(KVXWrapper i64:$imm),(MAKEi64 Wrapped64:$imm)>;
+
+def KVXeh_sjlj_longjmp: SDNode<"KVXISD::EH_SJLJ_LONGJMP",
+                              SDTypeProfile<0, 1, [SDTCisPtrTy<0>]>,
+                              [SDNPHasChain, SDNPSideEffect]>;
+
+def KVXeh_sjlj_setjmp: SDNode<"KVXISD::EH_SJLJ_SETJMP",
+                             SDTypeProfile<1, 1, [SDTCisInt<0>,
+                                                  SDTCisPtrTy<1>]>,
+                             [SDNPHasChain, SDNPSideEffect]>;
+
+def KVXeh_sjlj_setup_dispatch: SDNode<"KVXISD::EH_SJLJ_SETUP_DISPATCH",
+                                      SDTypeProfile<0, 0, []>,
+                                      [SDNPHasChain, SDNPSideEffect]>;
+
+let isBarrier = 1, hasSideEffects = 1, isCodeGenOnly = 1, usesCustomInserter = 1 in {
+def KVX_eh_sjlj_setup_dispatch: KVX_PSEUDO<(outs), (ins), [(KVXeh_sjlj_setup_dispatch)]>;
+
+
+let isTerminator = 1 in
+def KVX_eh_SjLj_LongJmp : KVX_PSEUDO<(outs), (ins SingleReg:$buf),
+                               [(KVXeh_sjlj_longjmp i64:$buf)]>;
+
+
+
+def KVX_eh_SjLj_SetJmp  : KVX_PSEUDO<(outs SingleReg:$dst), (ins SingleReg:$buf),
+                              [(set i32:$dst, (KVXeh_sjlj_setjmp i64:$buf))]>;
+}
