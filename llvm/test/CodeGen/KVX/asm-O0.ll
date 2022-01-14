@@ -7,7 +7,6 @@ define i64 @asm_clobber_single_none(<2 x i64> %v, i64 %A) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 64
 ; CHECK-NEXT:    sq 48[$r12] = $r0r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 40[$r12] = $r2
@@ -44,7 +43,6 @@ define i64 @asm_clobber_single_single(i64 %A) {
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    copyd $r1 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    sd 24[$r12] = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
@@ -74,7 +72,6 @@ define i8* @asm_clobber_single_pair(i8* %A) {
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    sd 24[$r12] = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
@@ -97,7 +94,6 @@ define i8* @asm_clobber_single_quad(i8* %A, i8* %B, i8* %C) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    copyd $r4 = $r1
 ; CHECK-NEXT:    ;;
@@ -131,7 +127,6 @@ define <2 x i64> @asm_clobber_double_single(<2 x i64> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    sq 16[$r12] = $r0r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lq $r2r3 = 16[$r12]
@@ -156,7 +151,6 @@ define <2 x i64> @asm_clobber_double_double(<2 x i64> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    sq 16[$r12] = $r0r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
@@ -178,7 +172,6 @@ define <2 x i64> @asm_clobber_double_quad(<2 x i64> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    sq 16[$r12] = $r0r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
@@ -201,13 +194,10 @@ define float @asm_clobber_multiple_quad(float %a, <2 x i64> %b, <4 x i64> %c) {
 ; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 64
-; CHECK-NEXT:    .cfi_register 67, 16
 ; CHECK-NEXT:    sd 56[$r12] = $r16
 ; CHECK-NEXT:    copyd $r7 = $r6
 ; CHECK-NEXT:    copyd $r9 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -8
 ; CHECK-NEXT:    sw 52[$r12] = $r0
 ; CHECK-NEXT:    copyd $r6 = $r5
 ; CHECK-NEXT:    copyd $r8 = $r1
@@ -270,7 +260,6 @@ define void @asm_clobber_quad_single(<4 x i64> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    so 0[$r12] = $r0r1r2r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
@@ -290,7 +279,6 @@ define <4 x i64> @asm_clobber_quad_double(<4 x i64> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    so 0[$r12] = $r0r1r2r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
@@ -313,7 +301,6 @@ define <4 x i64> @asm_clobber_quad_quad(<4 x i64> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    so 0[$r12] = $r0r1r2r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
@@ -335,7 +322,6 @@ define <4 x i64> @asm_clobber_quad_quad_use(<4 x i64> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    so 0[$r12] = $r0r1r2r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
@@ -357,7 +343,6 @@ define i64 @local_regs(i32 %a, i64 %b, i64 %c, i64 %d, i64 %e, i64 %f, i64 %g) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -128
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 128
 ; CHECK-NEXT:    sw 124[$r12] = $r0
 ; CHECK-NEXT:    zxwd $r7 = $r0
 ; CHECK-NEXT:    ;;

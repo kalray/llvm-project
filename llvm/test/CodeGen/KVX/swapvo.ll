@@ -13,14 +13,11 @@ define i32 @main() {
 ; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 64
-; CHECK-NEXT:    .cfi_register 67, 16
 ; CHECK-NEXT:    sd 56[$r12] = $r16
 ; CHECK-NEXT:    make $r5 = 1
 ; CHECK-NEXT:    make $r6 = 2
 ; CHECK-NEXT:    make $r7 = 3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -8
 ; CHECK-NEXT:    make $r3 = 4
 ; CHECK-NEXT:    make $r4 = 0
 ; CHECK-NEXT:    copyd $r0 = $r5

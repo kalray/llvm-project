@@ -74,22 +74,16 @@ define i32 @stackrealign1(){
 ; CHECK-NEXT:    addd $r12 = $r12, -256
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 256
-; CHECK-NEXT:    .cfi_register 67, 16
 ; CHECK-NEXT:    sd 248[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -8
 ; CHECK-NEXT:    sd 240[$r12] = $r14
 ; CHECK-NEXT:    addd $r14 = $r12, 240
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 14, -16
-; CHECK-NEXT:    .cfi_def_cfa 14, 16
 ; CHECK-NEXT:    sd 232[$r12] = $r31
 ; CHECK-NEXT:    andd $r31 = $r12, -128
 ; CHECK-NEXT:    make $r0 = 7
 ; CHECK-NEXT:    make $r1 = 0x4d2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 31, -24
 ; CHECK-NEXT:    sw 228[$r31] = $r0
 ; CHECK-NEXT:    addd $r0 = $r31, 228
 ; CHECK-NEXT:    ;;
@@ -137,21 +131,15 @@ define i32 @stackrealign2(i32 %n){
 ; CHECK-NEXT:    addd $r12 = $r12, -256
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 256
-; CHECK-NEXT:    .cfi_register 67, 16
 ; CHECK-NEXT:    sd 248[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -8
 ; CHECK-NEXT:    sd 240[$r12] = $r14
 ; CHECK-NEXT:    addd $r14 = $r12, 240
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 14, -16
-; CHECK-NEXT:    .cfi_def_cfa 14, 16
 ; CHECK-NEXT:    sd 232[$r12] = $r31
 ; CHECK-NEXT:    copyd $r1 = $r0
 ; CHECK-NEXT:    andd $r31 = $r12, -128
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 31, -24
 ; CHECK-NEXT:    sxwd $r0 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addx4d $r0 = $r0, 31
@@ -443,25 +431,18 @@ define i64 @stackrealign3(i32 %x){
 ; CHECK-NEXT:    addd $r12 = $r12, -640
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 640
-; CHECK-NEXT:    .cfi_register 67, 16
 ; CHECK-NEXT:    sd 632[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -8
 ; CHECK-NEXT:    sd 624[$r12] = $r14
 ; CHECK-NEXT:    addd $r14 = $r12, 624
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 14, -16
-; CHECK-NEXT:    .cfi_def_cfa 14, 16
 ; CHECK-NEXT:    sd 616[$r12] = $r31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 31, -24
 ; CHECK-NEXT:    sd 608[$r12] = $r18
 ; CHECK-NEXT:    andd $r31 = $r12, -128
 ; CHECK-NEXT:    make $r4 = 4
 ; CHECK-NEXT:    make $r5 = 3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 18, -32
 ; CHECK-NEXT:    make $r8 = 8
 ; CHECK-NEXT:    make $r6 = 2
 ; CHECK-NEXT:    make $r7 = 1
@@ -540,40 +521,21 @@ define i32 @stackrealign4(i32 %n){
 ; CHECK-NEXT:    addd $r12 = $r12, -512
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 512
-; CHECK-NEXT:    .cfi_register 67, 16
 ; CHECK-NEXT:    sd 504[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -8
 ; CHECK-NEXT:    sd 496[$r12] = $r14
 ; CHECK-NEXT:    addd $r14 = $r12, 496
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 14, -16
-; CHECK-NEXT:    .cfi_def_cfa 14, 16
 ; CHECK-NEXT:    so 464[$r12] = $r28r29r30r31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 28, -24
-; CHECK-NEXT:    .cfi_offset 29, -32
-; CHECK-NEXT:    .cfi_offset 30, -40
-; CHECK-NEXT:    .cfi_offset 31, -48
 ; CHECK-NEXT:    so 432[$r12] = $r24r25r26r27
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 24, -56
-; CHECK-NEXT:    .cfi_offset 25, -64
-; CHECK-NEXT:    .cfi_offset 26, -72
-; CHECK-NEXT:    .cfi_offset 27, -80
 ; CHECK-NEXT:    so 400[$r12] = $r20r21r22r23
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 20, -88
-; CHECK-NEXT:    .cfi_offset 21, -96
-; CHECK-NEXT:    .cfi_offset 22, -104
-; CHECK-NEXT:    .cfi_offset 23, -112
 ; CHECK-NEXT:    sq 384[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r8 = $r0
 ; CHECK-NEXT:    andd $r31 = $r12, -128
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 18, -120
-; CHECK-NEXT:    .cfi_offset 19, -128
 ; CHECK-NEXT:    sxwd $r0 = $r8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addx4d $r0 = $r0, 31

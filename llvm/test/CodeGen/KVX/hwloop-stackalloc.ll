@@ -52,17 +52,12 @@ define i32 @f(i32 %num){
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    .cfi_register 67, 16
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -8
 ; CHECK-NEXT:    sd 16[$r12] = $r14
 ; CHECK-NEXT:    addd $r14 = $r12, 16
 ; CHECK-NEXT:    addx4wd $r1 = $r0, 31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 14, -16
-; CHECK-NEXT:    .cfi_def_cfa 14, 16
 ; CHECK-NEXT:    andd $r1 = $r1, -32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfd $r1 = $r1, $r12

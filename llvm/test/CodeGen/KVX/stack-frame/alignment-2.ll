@@ -18,13 +18,10 @@ define i32 @h() {
 ; FP-NONE-NEXT:    addd $r12 = $r12, -96
 ; FP-NONE-NEXT:    get $r16 = $ra
 ; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:    .cfi_def_cfa_offset 96
-; FP-NONE-NEXT:    .cfi_register 67, 16
 ; FP-NONE-NEXT:    sd 88[$r12] = $r16
 ; FP-NONE-NEXT:    make $r0 = 0
 ; FP-NONE-NEXT:    make $r4 = 9
 ; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:    .cfi_offset 67, -8
 ; FP-NONE-NEXT:    copyd $r1 = $r0
 ; FP-NONE-NEXT:    copyd $r2 = $r0
 ; FP-NONE-NEXT:    copyd $r3 = $r0
@@ -51,18 +48,13 @@ define i32 @h() {
 ; FP-ALL-NEXT:    addd $r12 = $r12, -96
 ; FP-ALL-NEXT:    get $r16 = $ra
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    .cfi_def_cfa_offset 96
-; FP-ALL-NEXT:    .cfi_register 67, 16
 ; FP-ALL-NEXT:    sd 88[$r12] = $r16
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    .cfi_offset 67, -8
 ; FP-ALL-NEXT:    sd 80[$r12] = $r14
 ; FP-ALL-NEXT:    addd $r14 = $r12, 80
 ; FP-ALL-NEXT:    make $r0 = 0
 ; FP-ALL-NEXT:    make $r4 = 9
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    .cfi_offset 14, -16
-; FP-ALL-NEXT:    .cfi_def_cfa 14, 16
 ; FP-ALL-NEXT:    copyd $r1 = $r0
 ; FP-ALL-NEXT:    copyd $r2 = $r0
 ; FP-ALL-NEXT:    copyd $r3 = $r0

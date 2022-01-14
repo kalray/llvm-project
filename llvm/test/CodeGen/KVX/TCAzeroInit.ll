@@ -7,7 +7,6 @@ define void @zeroinit256() {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    # implicit-def: $a0
 ; CHECK-NEXT:  .LBB0_1: # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    lv $a0 = 0[$r12]
@@ -31,22 +30,16 @@ define void @zeroinit512() {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -192
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 192
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_register 67, 16
 ; CHECK-NEXT:    sd 184[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -8
 ; CHECK-NEXT:    sd 176[$r12] = $r14
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 14, -16
 ; CHECK-NEXT:    addd $r14 = $r12, 176
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa 14, 16
 ; CHECK-NEXT:    sd 168[$r12] = $r31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 31, -24
 ; CHECK-NEXT:    andd $r31 = $r12, -64
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    # implicit-def: $w0
@@ -78,22 +71,16 @@ define void @zeroinit1024() {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -384
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 384
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_register 67, 16
 ; CHECK-NEXT:    sd 376[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -8
 ; CHECK-NEXT:    sd 368[$r12] = $r14
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 14, -16
 ; CHECK-NEXT:    addd $r14 = $r12, 368
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa 14, 16
 ; CHECK-NEXT:    sd 360[$r12] = $r31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 31, -24
 ; CHECK-NEXT:    andd $r31 = $r12, -128
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    # implicit-def: $x0

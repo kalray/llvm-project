@@ -8,7 +8,6 @@ define void @f() {
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    make $r0 = 0x4d2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    sw 28[$r12] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP

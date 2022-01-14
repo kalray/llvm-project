@@ -8,22 +8,15 @@ define i32 @foo(i32 %n, i32 %m) {
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    .cfi_register 67, 16
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -8
 ; CHECK-NEXT:    sd 16[$r12] = $r14
 ; CHECK-NEXT:    addd $r14 = $r12, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 14, -16
-; CHECK-NEXT:    .cfi_def_cfa 14, 16
 ; CHECK-NEXT:    sq 0[$r12] = $r18r19
 ; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 18, -24
-; CHECK-NEXT:    .cfi_offset 19, -32
 ; CHECK-NEXT:    addx4d $r0 = $r0, 31
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    clrf $r0 = $r0, 4, 34

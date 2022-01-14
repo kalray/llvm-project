@@ -16,17 +16,12 @@ define dso_local i32 @testalloca(i32 %n) local_unnamed_addr  {
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    .cfi_register 67, 16
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -8
 ; CHECK-NEXT:    sd 16[$r12] = $r14
 ; CHECK-NEXT:    addd $r14 = $r12, 16
 ; CHECK-NEXT:    sxwd $r1 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 14, -16
-; CHECK-NEXT:    .cfi_def_cfa 14, 16
 ; CHECK-NEXT:    get $r2 = $sr
 ; CHECK-NEXT:    addx4d $r1 = $r1, 31
 ; CHECK-NEXT:    ;;
@@ -125,22 +120,16 @@ define dso_local i32 @testrealign() local_unnamed_addr  {
 ; CHECK-NEXT:    addd $r12 = $r12, -256
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 256
-; CHECK-NEXT:    .cfi_register 67, 16
 ; CHECK-NEXT:    sd 248[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -8
 ; CHECK-NEXT:    sd 240[$r12] = $r14
 ; CHECK-NEXT:    addd $r14 = $r12, 240
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 14, -16
-; CHECK-NEXT:    .cfi_def_cfa 14, 16
 ; CHECK-NEXT:    sd 232[$r12] = $r31
 ; CHECK-NEXT:    andd $r31 = $r12, -128
 ; CHECK-NEXT:    make $r0 = 7
 ; CHECK-NEXT:    make $r1 = 0x4d2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 31, -24
 ; CHECK-NEXT:    sw 228[$r31] = $r0
 ; CHECK-NEXT:    addd $r0 = $r31, 228
 ; CHECK-NEXT:    ;;

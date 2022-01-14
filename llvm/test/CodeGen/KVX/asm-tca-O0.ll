@@ -9,7 +9,6 @@ define void @asm_tca(i8* %v, i64 %A) {
 ; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    addd $r3 = $r1, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 128
 ; CHECK-NEXT:    sd 120[$r12] = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 112[$r12] = $r1
@@ -72,7 +71,6 @@ define void @asm_clobber_vec_vec(i64 %A) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -96
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 96
 ; CHECK-NEXT:    lv $a1 = 0[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 88[$r12] = $r0
@@ -101,7 +99,6 @@ define void @asm_clobber_vec_block(i64 %A) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -96
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 96
 ; CHECK-NEXT:    lv $a1 = 0[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 88[$r12] = $r0
@@ -131,7 +128,6 @@ define void @asm_clobber_wide_vec(<256 x i1>* %a) {
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    lv $a2 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
@@ -157,7 +153,6 @@ define void @asm_clobber_multiple_quad(<256 x i1>* %c, <256 x i1>* %b) {
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    copyd $r4 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    lv $a4 = 0[$r4]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r4
@@ -203,7 +198,6 @@ define <256 x i1>* @asm_clobber_quad_matrix(<256 x i1>* %a) {
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    lv $a4 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
@@ -231,7 +225,6 @@ define void @use_wide_reg(<512 x i1>* %w, <256 x i1>* %v) {
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    copyd $r4 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    sd 24[$r12] = $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 16[$r12] = $r1
@@ -274,7 +267,6 @@ define void @use_matrix_reg(<1024 x i1>* %x) {
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    copyd $r4 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    sd 24[$r12] = $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a7 = 96[$r4]

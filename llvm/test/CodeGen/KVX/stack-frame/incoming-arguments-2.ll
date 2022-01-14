@@ -19,33 +19,16 @@ define i32 @fn1(i32 %a, i32 %b, i32 %c, i32 %d, i32 %e, i32 %f, i32 %g, i32 %h, 
 ; FP-NONE-NEXT:    addd $r12 = $r12, -128
 ; FP-NONE-NEXT:    get $r16 = $ra
 ; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:    .cfi_def_cfa_offset 128
-; FP-NONE-NEXT:    .cfi_register 67, 16
 ; FP-NONE-NEXT:    sd 120[$r12] = $r16
 ; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:    .cfi_offset 67, -8
 ; FP-NONE-NEXT:    so 88[$r12] = $r28r29r30r31
 ; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:    .cfi_offset 28, -16
-; FP-NONE-NEXT:    .cfi_offset 29, -24
-; FP-NONE-NEXT:    .cfi_offset 30, -32
-; FP-NONE-NEXT:    .cfi_offset 31, -40
 ; FP-NONE-NEXT:    so 56[$r12] = $r24r25r26r27
 ; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:    .cfi_offset 24, -48
-; FP-NONE-NEXT:    .cfi_offset 25, -56
-; FP-NONE-NEXT:    .cfi_offset 26, -64
-; FP-NONE-NEXT:    .cfi_offset 27, -72
 ; FP-NONE-NEXT:    so 24[$r12] = $r20r21r22r23
 ; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:    .cfi_offset 20, -80
-; FP-NONE-NEXT:    .cfi_offset 21, -88
-; FP-NONE-NEXT:    .cfi_offset 22, -96
-; FP-NONE-NEXT:    .cfi_offset 23, -104
 ; FP-NONE-NEXT:    sq 8[$r12] = $r18r19
 ; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:    .cfi_offset 18, -112
-; FP-NONE-NEXT:    .cfi_offset 19, -120
 ; FP-NONE-NEXT:    lwz $r15 = 144[$r12]
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    sd 0[$r12] = $r15
@@ -116,38 +99,19 @@ define i32 @fn1(i32 %a, i32 %b, i32 %c, i32 %d, i32 %e, i32 %f, i32 %g, i32 %h, 
 ; FP-ALL-NEXT:    addd $r12 = $r12, -160
 ; FP-ALL-NEXT:    get $r16 = $ra
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    .cfi_def_cfa_offset 160
-; FP-ALL-NEXT:    .cfi_register 67, 16
 ; FP-ALL-NEXT:    sd 152[$r12] = $r16
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    .cfi_offset 67, -8
 ; FP-ALL-NEXT:    sd 144[$r12] = $r14
 ; FP-ALL-NEXT:    addd $r14 = $r12, 144
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    .cfi_offset 14, -16
-; FP-ALL-NEXT:    .cfi_def_cfa 14, 16
 ; FP-ALL-NEXT:    so 112[$r12] = $r28r29r30r31
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    .cfi_offset 28, -24
-; FP-ALL-NEXT:    .cfi_offset 29, -32
-; FP-ALL-NEXT:    .cfi_offset 30, -40
-; FP-ALL-NEXT:    .cfi_offset 31, -48
 ; FP-ALL-NEXT:    so 80[$r12] = $r24r25r26r27
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    .cfi_offset 24, -56
-; FP-ALL-NEXT:    .cfi_offset 25, -64
-; FP-ALL-NEXT:    .cfi_offset 26, -72
-; FP-ALL-NEXT:    .cfi_offset 27, -80
 ; FP-ALL-NEXT:    so 48[$r12] = $r20r21r22r23
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    .cfi_offset 20, -88
-; FP-ALL-NEXT:    .cfi_offset 21, -96
-; FP-ALL-NEXT:    .cfi_offset 22, -104
-; FP-ALL-NEXT:    .cfi_offset 23, -112
 ; FP-ALL-NEXT:    sq 32[$r12] = $r18r19
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    .cfi_offset 18, -120
-; FP-ALL-NEXT:    .cfi_offset 19, -128
 ; FP-ALL-NEXT:    lwz $r15 = 32[$r14]
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    sd -120[$r14] = $r15

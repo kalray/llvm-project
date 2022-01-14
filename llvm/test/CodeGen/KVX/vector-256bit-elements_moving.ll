@@ -711,7 +711,6 @@ define void @v2i64_concat_v4i64_unaligned2(i64* nocapture readonly %0){
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    lq $r4r5 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    lq $r6r7 = 64[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    so 0[$r12] = $r4r5r6r7

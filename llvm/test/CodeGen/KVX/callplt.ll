@@ -13,19 +13,12 @@ define i64 @foo(double*, double*, double*, { i32, [3 x i64], [3 x i64], [3 x i64
 ; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 64
-; CHECK-NEXT:    .cfi_register 67, 16
 ; CHECK-NEXT:    sd 56[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 67, -8
 ; CHECK-NEXT:    sq 40[$r12] = $r20r21
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 20, -16
-; CHECK-NEXT:    .cfi_offset 21, -24
 ; CHECK-NEXT:    sq 24[$r12] = $r18r19
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 18, -32
-; CHECK-NEXT:    .cfi_offset 19, -40
 ; CHECK-NEXT:    ld $r20 = 56[$r3]
 ; CHECK-NEXT:    copyd $r18 = $r4
 ; CHECK-NEXT:    ;;
