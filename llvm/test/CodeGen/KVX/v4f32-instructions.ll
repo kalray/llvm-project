@@ -126,8 +126,11 @@ define <4 x float> @test_fsub_fromimm(<4 x float> %a) #0 {
 define <4 x float> @test_fneg(<4 x float> %a) #0 {
 ; CHECK-LABEL: test_fneg:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fnegwp $r1 = $r1
-; CHECK-NEXT:    fnegwp $r0 = $r0
+; CHECK-NEXT:    make $r3 = 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r2 = $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fsbfwq $r0r1 = $r0r1, $r2r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fsub <4 x float> <float 0.0, float 0.0, float 0.0, float 0.0>, %a
