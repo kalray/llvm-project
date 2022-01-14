@@ -55,3 +55,7 @@ def PICPCREL : REGISTERW_EXTEND27_UPPER27_LOWER10_TRIPLE
   "pcrel $SingleReg = @pcrel( $Wrapped64 )",
   [(set (i64 SingleReg:$SingleReg), (PICKVXWrapper tblockaddress:$Wrapped64))],
   ALU_FULL_Y>;
+
+// SJLJ excpetion handling required
+def : Pat<(PICInternIndirection i64:$gotaddr, mcsym:$imm),
+          (PICINTERNINDIRECTION SingleReg:$gotaddr, Wrapped64:$imm)>;

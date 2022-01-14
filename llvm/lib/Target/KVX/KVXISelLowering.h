@@ -220,6 +220,9 @@ private:
   bool shouldFoldMaskToVariableShiftPair(SDValue VT) const override {
     return !VT.getValueType().isVector();
   }
+
+  SDValue LowerINTRINSIC_WO_CHAIN(SDValue Op, SelectionDAG &DAG,
+                                  const KVXSubtarget *Subtarget) const;
 };
 
 } // namespace llvm

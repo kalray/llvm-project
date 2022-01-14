@@ -1995,3 +1995,5 @@ def: Pat<(v1024i1 (build_vector)), (COPYZXp)>; // X12
 // instruction at eliminateFrameIndex(). Do not use it in any pattern!
 // TODO: Avoid this definition by using a pseudo instruction.
 defm SUBD : MC_11<"subd">;
+
+def : Pat<(KVXWrapper i64:$imm),(MAKEi64 Wrapped64:$imm)>;

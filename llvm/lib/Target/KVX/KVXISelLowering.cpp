@@ -17,6 +17,7 @@
 #include "KVXTargetMachine.h"
 #include "llvm/ADT/Statistic.h"
 #include "llvm/CodeGen/CallingConvLower.h"
+#include "llvm/CodeGen/MachineModuleInfo.h"
 #include "llvm/Support/KnownBits.h"
 
 using namespace llvm;
@@ -501,6 +502,8 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
 
   for (auto I : {MVT::v8i8, MVT::v2i32, MVT::v4i32})
     setOperationAction(ISD::USUBSAT, I, Legal);
+
+  setOperationAction(ISD::INTRINSIC_WO_CHAIN, MVT::Other, Custom);
 
   setTargetDAGCombine(ISD::MUL);
   setTargetDAGCombine(ISD::SRA);
@@ -1067,6 +1070,8 @@ SDValue KVXTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
       return Op;
     return SDValue();
   }
+  case ISD::INTRINSIC_WO_CHAIN:
+    return LowerINTRINSIC_WO_CHAIN(Op, DAG, &Subtarget);
   }
 }
 
@@ -2725,6 +2730,35 @@ bool KVXTargetLowering::shouldReplaceBy(SDNode *From, unsigned ToOpcode) const {
   case ISD::ROTL:
   case ISD::ROTR:
     return false;
+  }
+}
+
+SDValue KVXTargetLowering::LowerINTRINSIC_WO_CHAIN(
+    SDValue Op, SelectionDAG &DAG, const KVXSubtarget *Subtarget) const {
+  unsigned IntNo = cast<ConstantSDNode>(Op.getOperand(0))->getZExtValue();
+  MVT VT = Op.getSimpleValueType();
+  SDLoc DL(Op);
+  switch (IntNo) {
+  default:
+    return Op; // Don't interfere with other intrinsics.
+
+  case Intrinsic::eh_sjlj_lsda: {
+    MachineFunction &MF = DAG.getMachineFunction();
+    const TargetLowering &TLI = DAG.getTargetLoweringInfo();
+    MVT PtrVT = TLI.getPointerTy(DAG.getDataLayout());
+    auto &Context = MF.getMMI().getContext();
+    // Our lsda symbol name must match the (hard-coded) one that
+    // will be emmited by EHStreamer::emitExceptionTable()
+    MCSymbol *S = Context.getOrCreateSymbol(Twine("GCC_except_table") +
+                                            Twine(MF.getFunctionNumber()));
+
+    if (isPositionIndependent()) {
+      auto PcRel = DAG.getNode(KVXISD::PICPCRelativeGOTAddr, DL, PtrVT);
+      return DAG.getNode(KVXISD::PICInternIndirection, DL, VT, PcRel,
+                         DAG.getMCSymbol(S, PtrVT));
+    }
+    return DAG.getNode(KVXISD::AddrWrapper, DL, VT, DAG.getMCSymbol(S, PtrVT));
+  }
   }
 }
 
