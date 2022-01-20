@@ -225,14 +225,26 @@ private:
 } // namespace llvm
 
 namespace KVX_LOW {
-llvm::SDValue buildImmVector(llvm::SDNode &N, llvm::SelectionDAG &CurDag,
-                             bool IsFp = false, unsigned long Negative = 0);
+llvm::SDValue buildImmVector(const llvm::SDNode &N, llvm::SelectionDAG &CurDag,
+                             unsigned long Negative = 0,
+                             bool AllowRepeatExtend = false);
 
 llvm::SDValue buildFdotImm(llvm::SDNode &N, llvm::SelectionDAG &CurDag,
                            bool SwapLoHi = false, unsigned long Negative = 0);
 
+// N must be a splat build_vector, i.e. one that verifies isSplatBuildVec
+llvm::SDValue extractSplatNode(const llvm::SDNode *N,
+                               const llvm::SelectionDAG *CurDag);
+
 bool isImmVecOfLeqNbits(llvm::SDNode *N, llvm::SelectionDAG *CurDag,
                         unsigned short B);
+
+// Checks that N is a (build_vector x0 x1 ...) where x0 = x1 = ...
+// Additionally, if ImmSizeCheck > 0, it checks that:
+//   1) All operands are constant
+//   2) The immediate encoding the build_vector fits in ImmSizeCheck bits
+bool isSplatBuildVec(const llvm::SDNode *N, const llvm::SelectionDAG *CurDag,
+                     unsigned ImmSizeCheck = 0);
 
 bool isKVXSplat32ImmVec(llvm::SDNode *N, llvm::SelectionDAG *CurDag,
                         bool SplatAT);
