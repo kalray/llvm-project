@@ -157,7 +157,6 @@ public:
   bool DisableTailCalls;
   bool DisableUnrollLoops;
   bool CallGraphProfile;
-  bool EnableAJT;
   bool SLPVectorize;
   bool LoopVectorize;
   bool LoopsInterleaved;

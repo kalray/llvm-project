@@ -263,14 +263,6 @@ FunctionPass *createDFAJumpThreadingPass();
 
 //===----------------------------------------------------------------------===//
 //
-// AggressiveJumpThreading - This pass performs more aggressive 'jump threading'
-// than the JumpThreading pass. The pass can jump over loop heads.
-// As a result it can create unnatural loops.
-//
-FunctionPass *createAJTPass();
-
-//===----------------------------------------------------------------------===//
-//
 // CFGSimplification - Merge basic blocks, eliminate unreachable blocks,
 // simplify terminator instructions, convert switches to lookup tables, etc.
 //

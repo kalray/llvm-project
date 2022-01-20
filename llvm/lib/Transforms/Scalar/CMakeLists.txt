@@ -1,6 +1,5 @@
 add_llvm_component_library(LLVMScalarOpts
   ADCE.cpp
-  AJT.cpp
   AlignmentFromAssumptions.cpp
   AnnotationRemarks.cpp
   BDCE.cpp

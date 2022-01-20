@@ -181,10 +181,6 @@ cl::opt<AttributorRunOption> AttributorRun(
                clEnumValN(AttributorRunOption::NONE, "none",
                           "disable attributor runs")));
 
-cl::opt<bool> EnableAggressiveJumpThreading(
-    "aggressive-jump-threading", cl::init(false), cl::Hidden,
-    cl::desc("Enable the Aggressive Jump Threading Pass"));
-
 extern cl::opt<bool> EnableKnowledgeRetention;
 
 PassManagerBuilder::PassManagerBuilder() {
@@ -216,7 +212,6 @@ PassManagerBuilder::PassManagerBuilder() {
     PerformThinLTO = EnablePerformThinLTO;
     DivergentTarget = false;
     CallGraphProfile = true;
-    EnableAJT = EnableAggressiveJumpThreading;
 }
 
 PassManagerBuilder::~PassManagerBuilder() {
@@ -850,10 +845,6 @@ void PassManagerBuilder::populateModulePassManager(
   MPM.add(createVectorCombinePass());
 
   addExtensionsToPM(EP_Peephole, MPM);
-  if (EnableAJT) {
-    MPM.add(createAJTPass());
-    MPM.add(createCorrelatedValuePropagationPass());
-  }
   MPM.add(createInstructionCombiningPass());
 
   if (EnableUnrollAndJam && !DisableUnrollLoops) {
