@@ -163,11 +163,10 @@ define <4 x i32> @test_neg(<4 x i32> %a) #0 {
 ; CHECK-LABEL: test_neg:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r3 = 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r2 = $r3
-; CHECK-NEXT:    sbfwp $r1 = $r1, $r3
+; CHECK-NEXT:    make $r2 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfwp $r0 = $r0, $r2
+; CHECK-NEXT:    sbfwp $r1 = $r1, $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = sub <4 x i32> <i32 0, i32 0, i32 0, i32 0>, %a
