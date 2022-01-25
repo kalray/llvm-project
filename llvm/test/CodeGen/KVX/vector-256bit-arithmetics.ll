@@ -2346,12 +2346,9 @@ define <16 x half> @div_v16f16_v16f16(<16 x half> %0, <16 x half> %1) {
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowwh $r27 = $r0
-; CHECK-NEXT:    srlw $r0 = $r25, 16
-; CHECK-NEXT:    srlw $r1 = $r20, 16
+; CHECK-NEXT:    fwidenmhw $r0 = $r25
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
-; CHECK-NEXT:    fwidenlhw $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fwidenmhw $r1 = $r20
 ; CHECK-NEXT:    insf $r27 = $r26, 31, 16
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
@@ -2382,12 +2379,9 @@ define <16 x half> @div_v16f16_v16f16(<16 x half> %0, <16 x half> %1) {
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowwh $r26 = $r0
-; CHECK-NEXT:    srlw $r0 = $r24, 16
-; CHECK-NEXT:    srlw $r1 = $r23, 16
+; CHECK-NEXT:    fwidenmhw $r0 = $r24
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
-; CHECK-NEXT:    fwidenlhw $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fwidenmhw $r1 = $r23
 ; CHECK-NEXT:    insf $r26 = $r25, 31, 16
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
@@ -2418,12 +2412,9 @@ define <16 x half> @div_v16f16_v16f16(<16 x half> %0, <16 x half> %1) {
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowwh $r25 = $r0
-; CHECK-NEXT:    srlw $r0 = $r22, 16
-; CHECK-NEXT:    srlw $r1 = $r21, 16
+; CHECK-NEXT:    fwidenmhw $r0 = $r22
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
-; CHECK-NEXT:    fwidenlhw $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fwidenmhw $r1 = $r21
 ; CHECK-NEXT:    insf $r25 = $r24, 31, 16
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
@@ -2454,12 +2445,9 @@ define <16 x half> @div_v16f16_v16f16(<16 x half> %0, <16 x half> %1) {
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowwh $r24 = $r0
-; CHECK-NEXT:    srlw $r0 = $r19, 16
-; CHECK-NEXT:    srlw $r1 = $r18, 16
+; CHECK-NEXT:    fwidenmhw $r0 = $r19
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
-; CHECK-NEXT:    fwidenlhw $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fwidenmhw $r1 = $r18
 ; CHECK-NEXT:    insf $r24 = $r22, 31, 16
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
@@ -2542,12 +2530,9 @@ define <16 x half> @div_v16f16_v16f16(<16 x half> %0, <16 x half> %1) {
 ; V2-NEXT:    call __divsf3
 ; V2-NEXT:    ;;
 ; V2-NEXT:    fnarrowwh $r27 = $r0
-; V2-NEXT:    srlw $r0 = $r25, 16
-; V2-NEXT:    srlw $r1 = $r20, 16
+; V2-NEXT:    fwidenmhw $r0 = $r25
 ; V2-NEXT:    ;;
-; V2-NEXT:    fwidenlhw $r0 = $r0
-; V2-NEXT:    fwidenlhw $r1 = $r1
-; V2-NEXT:    ;;
+; V2-NEXT:    fwidenmhw $r1 = $r20
 ; V2-NEXT:    insf $r27 = $r26, 31, 16
 ; V2-NEXT:    call __divsf3
 ; V2-NEXT:    ;;
@@ -2578,12 +2563,9 @@ define <16 x half> @div_v16f16_v16f16(<16 x half> %0, <16 x half> %1) {
 ; V2-NEXT:    call __divsf3
 ; V2-NEXT:    ;;
 ; V2-NEXT:    fnarrowwh $r26 = $r0
-; V2-NEXT:    srlw $r0 = $r24, 16
-; V2-NEXT:    srlw $r1 = $r23, 16
+; V2-NEXT:    fwidenmhw $r0 = $r24
 ; V2-NEXT:    ;;
-; V2-NEXT:    fwidenlhw $r0 = $r0
-; V2-NEXT:    fwidenlhw $r1 = $r1
-; V2-NEXT:    ;;
+; V2-NEXT:    fwidenmhw $r1 = $r23
 ; V2-NEXT:    insf $r26 = $r25, 31, 16
 ; V2-NEXT:    call __divsf3
 ; V2-NEXT:    ;;
@@ -2614,12 +2596,9 @@ define <16 x half> @div_v16f16_v16f16(<16 x half> %0, <16 x half> %1) {
 ; V2-NEXT:    call __divsf3
 ; V2-NEXT:    ;;
 ; V2-NEXT:    fnarrowwh $r25 = $r0
-; V2-NEXT:    srlw $r0 = $r22, 16
-; V2-NEXT:    srlw $r1 = $r21, 16
+; V2-NEXT:    fwidenmhw $r0 = $r22
 ; V2-NEXT:    ;;
-; V2-NEXT:    fwidenlhw $r0 = $r0
-; V2-NEXT:    fwidenlhw $r1 = $r1
-; V2-NEXT:    ;;
+; V2-NEXT:    fwidenmhw $r1 = $r21
 ; V2-NEXT:    insf $r25 = $r24, 31, 16
 ; V2-NEXT:    call __divsf3
 ; V2-NEXT:    ;;
@@ -2650,12 +2629,9 @@ define <16 x half> @div_v16f16_v16f16(<16 x half> %0, <16 x half> %1) {
 ; V2-NEXT:    call __divsf3
 ; V2-NEXT:    ;;
 ; V2-NEXT:    fnarrowwh $r24 = $r0
-; V2-NEXT:    srlw $r0 = $r19, 16
-; V2-NEXT:    srlw $r1 = $r18, 16
+; V2-NEXT:    fwidenmhw $r0 = $r19
 ; V2-NEXT:    ;;
-; V2-NEXT:    fwidenlhw $r0 = $r0
-; V2-NEXT:    fwidenlhw $r1 = $r1
-; V2-NEXT:    ;;
+; V2-NEXT:    fwidenmhw $r1 = $r18
 ; V2-NEXT:    insf $r24 = $r22, 31, 16
 ; V2-NEXT:    call __divsf3
 ; V2-NEXT:    ;;
@@ -2733,10 +2709,9 @@ define <16 x half> @div_v16f16_f16(<16 x half> %0, half %1) {
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowwh $r24 = $r0
-; CHECK-NEXT:    srlw $r0 = $r22, 16
+; CHECK-NEXT:    fwidenmhw $r0 = $r22
 ; CHECK-NEXT:    copyd $r1 = $r19
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    insf $r24 = $r23, 31, 16
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
@@ -2763,10 +2738,9 @@ define <16 x half> @div_v16f16_f16(<16 x half> %0, half %1) {
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowwh $r24 = $r0
-; CHECK-NEXT:    srlw $r0 = $r21, 16
+; CHECK-NEXT:    fwidenmhw $r0 = $r21
 ; CHECK-NEXT:    copyd $r1 = $r19
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    insf $r24 = $r23, 31, 16
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
@@ -2793,10 +2767,9 @@ define <16 x half> @div_v16f16_f16(<16 x half> %0, half %1) {
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowwh $r24 = $r0
-; CHECK-NEXT:    srlw $r0 = $r20, 16
+; CHECK-NEXT:    fwidenmhw $r0 = $r20
 ; CHECK-NEXT:    copyd $r1 = $r19
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    insf $r24 = $r23, 31, 16
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
@@ -2823,10 +2796,9 @@ define <16 x half> @div_v16f16_f16(<16 x half> %0, half %1) {
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowwh $r24 = $r0
-; CHECK-NEXT:    srlw $r0 = $r18, 16
+; CHECK-NEXT:    fwidenmhw $r0 = $r18
 ; CHECK-NEXT:    copyd $r1 = $r19
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    insf $r24 = $r23, 31, 16
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
@@ -2899,10 +2871,9 @@ define <16 x half> @div_v16f16_f16(<16 x half> %0, half %1) {
 ; V2-NEXT:    call __divsf3
 ; V2-NEXT:    ;;
 ; V2-NEXT:    fnarrowwh $r24 = $r0
-; V2-NEXT:    srlw $r0 = $r22, 16
+; V2-NEXT:    fwidenmhw $r0 = $r22
 ; V2-NEXT:    copyd $r1 = $r19
 ; V2-NEXT:    ;;
-; V2-NEXT:    fwidenlhw $r0 = $r0
 ; V2-NEXT:    insf $r24 = $r23, 31, 16
 ; V2-NEXT:    call __divsf3
 ; V2-NEXT:    ;;
@@ -2929,10 +2900,9 @@ define <16 x half> @div_v16f16_f16(<16 x half> %0, half %1) {
 ; V2-NEXT:    call __divsf3
 ; V2-NEXT:    ;;
 ; V2-NEXT:    fnarrowwh $r24 = $r0
-; V2-NEXT:    srlw $r0 = $r21, 16
+; V2-NEXT:    fwidenmhw $r0 = $r21
 ; V2-NEXT:    copyd $r1 = $r19
 ; V2-NEXT:    ;;
-; V2-NEXT:    fwidenlhw $r0 = $r0
 ; V2-NEXT:    insf $r24 = $r23, 31, 16
 ; V2-NEXT:    call __divsf3
 ; V2-NEXT:    ;;
@@ -2959,10 +2929,9 @@ define <16 x half> @div_v16f16_f16(<16 x half> %0, half %1) {
 ; V2-NEXT:    call __divsf3
 ; V2-NEXT:    ;;
 ; V2-NEXT:    fnarrowwh $r24 = $r0
-; V2-NEXT:    srlw $r0 = $r20, 16
+; V2-NEXT:    fwidenmhw $r0 = $r20
 ; V2-NEXT:    copyd $r1 = $r19
 ; V2-NEXT:    ;;
-; V2-NEXT:    fwidenlhw $r0 = $r0
 ; V2-NEXT:    insf $r24 = $r23, 31, 16
 ; V2-NEXT:    call __divsf3
 ; V2-NEXT:    ;;
@@ -2989,10 +2958,9 @@ define <16 x half> @div_v16f16_f16(<16 x half> %0, half %1) {
 ; V2-NEXT:    call __divsf3
 ; V2-NEXT:    ;;
 ; V2-NEXT:    fnarrowwh $r24 = $r0
-; V2-NEXT:    srlw $r0 = $r18, 16
+; V2-NEXT:    fwidenmhw $r0 = $r18
 ; V2-NEXT:    copyd $r1 = $r19
 ; V2-NEXT:    ;;
-; V2-NEXT:    fwidenlhw $r0 = $r0
 ; V2-NEXT:    insf $r24 = $r23, 31, 16
 ; V2-NEXT:    call __divsf3
 ; V2-NEXT:    ;;
@@ -8798,12 +8766,9 @@ define <16 x half> @p_div_v16f16_v16f16(<16 x half>* nocapture readonly %0, <16 
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowwh $r19 = $r0
-; CHECK-NEXT:    srlw $r0 = $r20, 16
-; CHECK-NEXT:    srlw $r1 = $r24, 16
+; CHECK-NEXT:    fwidenmhw $r0 = $r20
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
-; CHECK-NEXT:    fwidenlhw $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fwidenmhw $r1 = $r24
 ; CHECK-NEXT:    insf $r19 = $r18, 31, 16
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
@@ -8834,12 +8799,9 @@ define <16 x half> @p_div_v16f16_v16f16(<16 x half>* nocapture readonly %0, <16 
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowwh $r20 = $r0
-; CHECK-NEXT:    srlw $r0 = $r21, 16
-; CHECK-NEXT:    srlw $r1 = $r25, 16
+; CHECK-NEXT:    fwidenmhw $r0 = $r21
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
-; CHECK-NEXT:    fwidenlhw $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fwidenmhw $r1 = $r25
 ; CHECK-NEXT:    insf $r20 = $r19, 31, 16
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
@@ -8870,12 +8832,9 @@ define <16 x half> @p_div_v16f16_v16f16(<16 x half>* nocapture readonly %0, <16 
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowwh $r21 = $r0
-; CHECK-NEXT:    srlw $r0 = $r22, 16
-; CHECK-NEXT:    srlw $r1 = $r26, 16
+; CHECK-NEXT:    fwidenmhw $r0 = $r22
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
-; CHECK-NEXT:    fwidenlhw $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fwidenmhw $r1 = $r26
 ; CHECK-NEXT:    insf $r21 = $r20, 31, 16
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
@@ -8906,12 +8865,9 @@ define <16 x half> @p_div_v16f16_v16f16(<16 x half>* nocapture readonly %0, <16 
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowwh $r22 = $r0
-; CHECK-NEXT:    srlw $r0 = $r23, 16
-; CHECK-NEXT:    srlw $r1 = $r27, 16
+; CHECK-NEXT:    fwidenmhw $r0 = $r23
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
-; CHECK-NEXT:    fwidenlhw $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fwidenmhw $r1 = $r27
 ; CHECK-NEXT:    insf $r22 = $r21, 31, 16
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
@@ -8993,12 +8949,9 @@ define <16 x half> @p_div_v16f16_v16f16(<16 x half>* nocapture readonly %0, <16 
 ; V2-NEXT:    call __divsf3
 ; V2-NEXT:    ;;
 ; V2-NEXT:    fnarrowwh $r19 = $r0
-; V2-NEXT:    srlw $r0 = $r20, 16
-; V2-NEXT:    srlw $r1 = $r24, 16
+; V2-NEXT:    fwidenmhw $r0 = $r20
 ; V2-NEXT:    ;;
-; V2-NEXT:    fwidenlhw $r0 = $r0
-; V2-NEXT:    fwidenlhw $r1 = $r1
-; V2-NEXT:    ;;
+; V2-NEXT:    fwidenmhw $r1 = $r24
 ; V2-NEXT:    insf $r19 = $r18, 31, 16
 ; V2-NEXT:    call __divsf3
 ; V2-NEXT:    ;;
@@ -9029,12 +8982,9 @@ define <16 x half> @p_div_v16f16_v16f16(<16 x half>* nocapture readonly %0, <16 
 ; V2-NEXT:    call __divsf3
 ; V2-NEXT:    ;;
 ; V2-NEXT:    fnarrowwh $r20 = $r0
-; V2-NEXT:    srlw $r0 = $r21, 16
-; V2-NEXT:    srlw $r1 = $r25, 16
+; V2-NEXT:    fwidenmhw $r0 = $r21
 ; V2-NEXT:    ;;
-; V2-NEXT:    fwidenlhw $r0 = $r0
-; V2-NEXT:    fwidenlhw $r1 = $r1
-; V2-NEXT:    ;;
+; V2-NEXT:    fwidenmhw $r1 = $r25
 ; V2-NEXT:    insf $r20 = $r19, 31, 16
 ; V2-NEXT:    call __divsf3
 ; V2-NEXT:    ;;
@@ -9065,12 +9015,9 @@ define <16 x half> @p_div_v16f16_v16f16(<16 x half>* nocapture readonly %0, <16 
 ; V2-NEXT:    call __divsf3
 ; V2-NEXT:    ;;
 ; V2-NEXT:    fnarrowwh $r21 = $r0
-; V2-NEXT:    srlw $r0 = $r22, 16
-; V2-NEXT:    srlw $r1 = $r26, 16
+; V2-NEXT:    fwidenmhw $r0 = $r22
 ; V2-NEXT:    ;;
-; V2-NEXT:    fwidenlhw $r0 = $r0
-; V2-NEXT:    fwidenlhw $r1 = $r1
-; V2-NEXT:    ;;
+; V2-NEXT:    fwidenmhw $r1 = $r26
 ; V2-NEXT:    insf $r21 = $r20, 31, 16
 ; V2-NEXT:    call __divsf3
 ; V2-NEXT:    ;;
@@ -9101,12 +9048,9 @@ define <16 x half> @p_div_v16f16_v16f16(<16 x half>* nocapture readonly %0, <16 
 ; V2-NEXT:    call __divsf3
 ; V2-NEXT:    ;;
 ; V2-NEXT:    fnarrowwh $r22 = $r0
-; V2-NEXT:    srlw $r0 = $r23, 16
-; V2-NEXT:    srlw $r1 = $r27, 16
+; V2-NEXT:    fwidenmhw $r0 = $r23
 ; V2-NEXT:    ;;
-; V2-NEXT:    fwidenlhw $r0 = $r0
-; V2-NEXT:    fwidenlhw $r1 = $r1
-; V2-NEXT:    ;;
+; V2-NEXT:    fwidenmhw $r1 = $r27
 ; V2-NEXT:    insf $r22 = $r21, 31, 16
 ; V2-NEXT:    call __divsf3
 ; V2-NEXT:    ;;
@@ -9188,10 +9132,9 @@ define <16 x half> @p_div_v16f16_f16(<16 x half>* nocapture readonly %0, half* n
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowwh $r24 = $r0
-; CHECK-NEXT:    srlw $r0 = $r20, 16
+; CHECK-NEXT:    fwidenmhw $r0 = $r20
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    insf $r24 = $r19, 31, 16
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
@@ -9218,10 +9161,9 @@ define <16 x half> @p_div_v16f16_f16(<16 x half>* nocapture readonly %0, half* n
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowwh $r24 = $r0
-; CHECK-NEXT:    srlw $r0 = $r21, 16
+; CHECK-NEXT:    fwidenmhw $r0 = $r21
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    insf $r24 = $r20, 31, 16
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
@@ -9248,10 +9190,9 @@ define <16 x half> @p_div_v16f16_f16(<16 x half>* nocapture readonly %0, half* n
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowwh $r24 = $r0
-; CHECK-NEXT:    srlw $r0 = $r22, 16
+; CHECK-NEXT:    fwidenmhw $r0 = $r22
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    insf $r24 = $r21, 31, 16
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
@@ -9278,10 +9219,9 @@ define <16 x half> @p_div_v16f16_f16(<16 x half>* nocapture readonly %0, half* n
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowwh $r24 = $r0
-; CHECK-NEXT:    srlw $r0 = $r23, 16
+; CHECK-NEXT:    fwidenmhw $r0 = $r23
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    insf $r24 = $r22, 31, 16
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
@@ -9354,10 +9294,9 @@ define <16 x half> @p_div_v16f16_f16(<16 x half>* nocapture readonly %0, half* n
 ; V2-NEXT:    call __divsf3
 ; V2-NEXT:    ;;
 ; V2-NEXT:    fnarrowwh $r24 = $r0
-; V2-NEXT:    srlw $r0 = $r20, 16
+; V2-NEXT:    fwidenmhw $r0 = $r20
 ; V2-NEXT:    copyd $r1 = $r18
 ; V2-NEXT:    ;;
-; V2-NEXT:    fwidenlhw $r0 = $r0
 ; V2-NEXT:    insf $r24 = $r19, 31, 16
 ; V2-NEXT:    call __divsf3
 ; V2-NEXT:    ;;
@@ -9384,10 +9323,9 @@ define <16 x half> @p_div_v16f16_f16(<16 x half>* nocapture readonly %0, half* n
 ; V2-NEXT:    call __divsf3
 ; V2-NEXT:    ;;
 ; V2-NEXT:    fnarrowwh $r24 = $r0
-; V2-NEXT:    srlw $r0 = $r21, 16
+; V2-NEXT:    fwidenmhw $r0 = $r21
 ; V2-NEXT:    copyd $r1 = $r18
 ; V2-NEXT:    ;;
-; V2-NEXT:    fwidenlhw $r0 = $r0
 ; V2-NEXT:    insf $r24 = $r20, 31, 16
 ; V2-NEXT:    call __divsf3
 ; V2-NEXT:    ;;
@@ -9414,10 +9352,9 @@ define <16 x half> @p_div_v16f16_f16(<16 x half>* nocapture readonly %0, half* n
 ; V2-NEXT:    call __divsf3
 ; V2-NEXT:    ;;
 ; V2-NEXT:    fnarrowwh $r24 = $r0
-; V2-NEXT:    srlw $r0 = $r22, 16
+; V2-NEXT:    fwidenmhw $r0 = $r22
 ; V2-NEXT:    copyd $r1 = $r18
 ; V2-NEXT:    ;;
-; V2-NEXT:    fwidenlhw $r0 = $r0
 ; V2-NEXT:    insf $r24 = $r21, 31, 16
 ; V2-NEXT:    call __divsf3
 ; V2-NEXT:    ;;
@@ -9444,10 +9381,9 @@ define <16 x half> @p_div_v16f16_f16(<16 x half>* nocapture readonly %0, half* n
 ; V2-NEXT:    call __divsf3
 ; V2-NEXT:    ;;
 ; V2-NEXT:    fnarrowwh $r24 = $r0
-; V2-NEXT:    srlw $r0 = $r23, 16
+; V2-NEXT:    fwidenmhw $r0 = $r23
 ; V2-NEXT:    copyd $r1 = $r18
 ; V2-NEXT:    ;;
-; V2-NEXT:    fwidenlhw $r0 = $r0
 ; V2-NEXT:    insf $r24 = $r22, 31, 16
 ; V2-NEXT:    call __divsf3
 ; V2-NEXT:    ;;

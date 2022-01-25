@@ -165,11 +165,8 @@ define <2 x half> @test_fdiv(<2 x half> %a, <2 x half> %b) #0 {
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlw $r0 = $r19, 16
-; CHECK-NEXT:    srlw $r1 = $r18, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
-; CHECK-NEXT:    fwidenlhw $r1 = $r1
+; CHECK-NEXT:    fwidenmhw $r0 = $r19
+; CHECK-NEXT:    fwidenmhw $r1 = $r18
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowwh $r20 = $r0
@@ -209,11 +206,8 @@ define <2 x half> @test_frem(<2 x half> %a, <2 x half> %b) #0 {
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlw $r0 = $r19, 16
-; CHECK-NEXT:    srlw $r1 = $r18, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
-; CHECK-NEXT:    fwidenlhw $r1 = $r1
+; CHECK-NEXT:    fwidenmhw $r0 = $r19
+; CHECK-NEXT:    fwidenmhw $r1 = $r18
 ; CHECK-NEXT:    call fmodf
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowwh $r20 = $r0
@@ -844,9 +838,7 @@ define <2 x half> @test_sqrt(<2 x half> %a) #0 {
 ; CHECK-NEXT:    sd 16[$r12] = $r18
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlw $r0 = $r18, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
+; CHECK-NEXT:    fwidenmhw $r0 = $r18
 ; CHECK-NEXT:    call sqrtf
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fwidenlhw $r1 = $r18
@@ -885,9 +877,7 @@ define <2 x half> @test_powi(<2 x half> %a, i32 %b) #0 {
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlw $r0 = $r19, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
+; CHECK-NEXT:    fwidenmhw $r0 = $r19
 ; CHECK-NEXT:    call __powisf2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowwh $r20 = $r0
@@ -923,9 +913,7 @@ define <2 x half> @test_sin(<2 x half> %a) #0 {
 ; CHECK-NEXT:    sd 16[$r12] = $r18
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlw $r0 = $r18, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
+; CHECK-NEXT:    fwidenmhw $r0 = $r18
 ; CHECK-NEXT:    call sinf
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fwidenlhw $r1 = $r18
@@ -961,9 +949,7 @@ define <2 x half> @test_cos(<2 x half> %a) #0 {
 ; CHECK-NEXT:    sd 16[$r12] = $r18
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlw $r0 = $r18, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
+; CHECK-NEXT:    fwidenmhw $r0 = $r18
 ; CHECK-NEXT:    call cosf
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fwidenlhw $r1 = $r18
@@ -1002,11 +988,8 @@ define <2 x half> @test_pow(<2 x half> %a, <2 x half> %b) #0 {
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlw $r0 = $r19, 16
-; CHECK-NEXT:    srlw $r1 = $r18, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
-; CHECK-NEXT:    fwidenlhw $r1 = $r1
+; CHECK-NEXT:    fwidenmhw $r0 = $r19
+; CHECK-NEXT:    fwidenmhw $r1 = $r18
 ; CHECK-NEXT:    call powf
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowwh $r20 = $r0
@@ -1043,9 +1026,7 @@ define <2 x half> @test_exp(<2 x half> %a) #0 {
 ; CHECK-NEXT:    sd 16[$r12] = $r18
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlw $r0 = $r18, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
+; CHECK-NEXT:    fwidenmhw $r0 = $r18
 ; CHECK-NEXT:    call expf
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fwidenlhw $r1 = $r18
@@ -1081,9 +1062,7 @@ define <2 x half> @test_exp2(<2 x half> %a) #0 {
 ; CHECK-NEXT:    sd 16[$r12] = $r18
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlw $r0 = $r18, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
+; CHECK-NEXT:    fwidenmhw $r0 = $r18
 ; CHECK-NEXT:    call exp2f
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fwidenlhw $r1 = $r18
@@ -1119,9 +1098,7 @@ define <2 x half> @test_log(<2 x half> %a) #0 {
 ; CHECK-NEXT:    sd 16[$r12] = $r18
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlw $r0 = $r18, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
+; CHECK-NEXT:    fwidenmhw $r0 = $r18
 ; CHECK-NEXT:    call logf
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fwidenlhw $r1 = $r18
@@ -1157,9 +1134,7 @@ define <2 x half> @test_log10(<2 x half> %a) #0 {
 ; CHECK-NEXT:    sd 16[$r12] = $r18
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlw $r0 = $r18, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
+; CHECK-NEXT:    fwidenmhw $r0 = $r18
 ; CHECK-NEXT:    call log10f
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fwidenlhw $r1 = $r18
@@ -1196,9 +1171,7 @@ define <2 x half> @test_log2(<2 x half> %a) #0 {
 ; CHECK-NEXT:    sd 16[$r12] = $r18
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlw $r0 = $r18, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
+; CHECK-NEXT:    fwidenmhw $r0 = $r18
 ; CHECK-NEXT:    call log2f
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fwidenlhw $r1 = $r18
@@ -1422,9 +1395,7 @@ define <2 x half> @test_floor(<2 x half> %a) #0 {
 ; CHECK-NEXT:    sd 16[$r12] = $r18
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlw $r0 = $r18, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
+; CHECK-NEXT:    fwidenmhw $r0 = $r18
 ; CHECK-NEXT:    call floorf
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fwidenlhw $r1 = $r18
@@ -1460,9 +1431,7 @@ define <2 x half> @test_ceil(<2 x half> %a) #0 {
 ; CHECK-NEXT:    sd 16[$r12] = $r18
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlw $r0 = $r18, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
+; CHECK-NEXT:    fwidenmhw $r0 = $r18
 ; CHECK-NEXT:    call ceilf
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fwidenlhw $r1 = $r18
@@ -1498,9 +1467,7 @@ define <2 x half> @test_trunc(<2 x half> %a) #0 {
 ; CHECK-NEXT:    sd 16[$r12] = $r18
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlw $r0 = $r18, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
+; CHECK-NEXT:    fwidenmhw $r0 = $r18
 ; CHECK-NEXT:    call truncf
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fwidenlhw $r1 = $r18
@@ -1536,9 +1503,7 @@ define <2 x half> @test_rint(<2 x half> %a) #0 {
 ; CHECK-NEXT:    sd 16[$r12] = $r18
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlw $r0 = $r18, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
+; CHECK-NEXT:    fwidenmhw $r0 = $r18
 ; CHECK-NEXT:    call rintf
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fwidenlhw $r1 = $r18
@@ -1574,9 +1539,7 @@ define <2 x half> @test_nearbyint(<2 x half> %a) #0 {
 ; CHECK-NEXT:    sd 16[$r12] = $r18
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlw $r0 = $r18, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
+; CHECK-NEXT:    fwidenmhw $r0 = $r18
 ; CHECK-NEXT:    call nearbyintf
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fwidenlhw $r1 = $r18
@@ -1612,9 +1575,7 @@ define <2 x half> @test_round(<2 x half> %a) #0 {
 ; CHECK-NEXT:    sd 16[$r12] = $r18
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlw $r0 = $r18, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
+; CHECK-NEXT:    fwidenmhw $r0 = $r18
 ; CHECK-NEXT:    call roundf
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fwidenlhw $r1 = $r18
@@ -2632,6 +2593,18 @@ entry:
   %0 = fcmp fast une <2 x half> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i16>
   ret <2 x i16> %1
+}
+
+define float @fwidenmhw(<2 x half> %v) #0 {
+; CHECK-LABEL: fwidenmhw:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fwidenmhw $r0 = $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %vecext = extractelement <2 x half> %v, i32 1
+  %conv = fpext half %vecext to float
+  ret float %conv
 }
 
 attributes #0 = { nounwind }
