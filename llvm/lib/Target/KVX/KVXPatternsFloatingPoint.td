@@ -965,6 +965,9 @@ def : Pat<(v4f32 (fpextend v4f16:$val)), (INSERT_SUBREG
                                            (INSERT_SUBREG (v4f32 (IMPLICIT_DEF)), (v2f32 (FWIDENLHWP SingleReg:$val, silent_)), sub_s0),
                                            (v2f32 (FWIDENMHWP SingleReg:$val, silent_)), sub_s1)>;
 
+foreach vt = [v2f16, v4f16] in
+  def : Pat<(f32 (fpextend (f16 (vector_extract vt:$v, 1)))), (FWIDENMHW SingleReg:$v, silent_)>;
+
 def : Pat<(v2f64 (fpextend v2f16:$val)),
           (v2f64 (REG_SEQUENCE PairedReg,
                   (FWIDENLWD (FWIDENLHWP SingleReg:$val, silent_), silent_), sub_s0,
