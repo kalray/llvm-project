@@ -103,6 +103,8 @@ public:
   bool DecodeTargetTypeFromStr(const char *&Str, const ASTContext &Context,
                                bool &AllowTypeModifiers,
                                QualType &Type) const override;
+
+  bool hasSjLjLowering() const override { return true; }
 };
 
 } // namespace targets
