@@ -23,7 +23,7 @@ KVXMCAsmInfo::KVXMCAsmInfo(const Triple &TT) {
   CommentString = "#";
   Data64bitsDirective = "\t.8byte\t";
   DwarfRegNumForCFI = true;
-  ExceptionsType = ExceptionHandling::None;
+  ExceptionsType = ExceptionHandling::SjLj;
   MaxInstLength = 12;
   MinInstAlignment = 4;
   SupportsDebugInformation = true;

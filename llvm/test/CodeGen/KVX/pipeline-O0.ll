@@ -24,6 +24,7 @@
 ; CHECK-NEXT: Expand reduction intrinsics
 ; CHECK-NEXT: Rewrite Symbols
 ; CHECK-NEXT: FunctionPass Manager
+; CHECK-NEXT: SJLJ Exception Handling preparation
 ; CHECK-NEXT: Exception handling preparation
 ; CHECK-NEXT: Safe Stack instrumentation pass
 ; CHECK-NEXT: Insert stack protectors

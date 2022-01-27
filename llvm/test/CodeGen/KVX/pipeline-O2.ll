@@ -53,6 +53,7 @@
 ; CHECK-NEXT: CodeGen Prepare
 ; CHECK-NEXT: Rewrite Symbols
 ; CHECK-NEXT: FunctionPass Manager
+; CHECK-NEXT: SJLJ Exception Handling preparation
 ; CHECK-NEXT: Dominator Tree Construction
 ; CHECK-NEXT: Exception handling preparation
 ; CHECK-NEXT: Safe Stack instrumentation pass

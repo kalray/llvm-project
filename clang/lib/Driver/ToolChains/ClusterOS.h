@@ -77,6 +77,19 @@ public:
     return llvm::DebuggerKind::GDB;
   }
 
+  UnwindLibType GetDefaultUnwindLibType() const override {
+    return ToolChain::UNW_Libgcc;
+  }
+
+  bool IsUnwindTablesDefault(const llvm::opt::ArgList &Args) const override {
+    return true;
+  }
+
+  llvm::ExceptionHandling
+  GetExceptionModel(const llvm::opt::ArgList &Args) const override {
+    return llvm::ExceptionHandling::SjLj;
+  }
+
   bool GCCInstallationIsValid() const;
   StringRef getGCCMultilibArch() const;
   StringRef getGCCVersion() const;
