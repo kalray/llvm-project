@@ -18102,7 +18102,7 @@ static float_mods_t KVX_getFloatModifiers(const CallExpr *E,
 
 static Value *KVX_emitNaryBuiltinCore(unsigned N, CodeGenFunction &CGF,
                                       const CallExpr *E, unsigned IntrinsicID,
-                                      SmallVector<Value *, 4> &Args,
+                                      SmallVector<Value *, 4> Args,
                                       bool HasRounding = false,
                                       bool HasSilent = false) {
   if (!HasSilent) { // No modifiers
@@ -18204,6 +18204,103 @@ static Value *KVX_emitF16ScalarBuiltin(unsigned N, CodeGenFunction &CGF,
                                                 HasRounding, HasSilent);
 
   return CGF.Builder.CreateExtractElement(VectorResult, (uint64_t)0);
+}
+
+static Value *KVX_emitWidenScalarBuiltin(CodeGenFunction &CGF,
+                                         const CallExpr *E,
+                                         unsigned IntrinsicID,
+                                         llvm::Type *EltType,
+                                         unsigned VectorLength) {
+  constexpr int N = 1;
+  constexpr bool HasSilent = true;
+  constexpr bool HasRounding = false;
+  if (!KVX_checkNargs(N, CGF, E, HasSilent))
+    return nullptr;
+
+  llvm::Type *VecType = llvm::FixedVectorType::get(EltType, VectorLength);
+  Value *ArgVector = UndefValue::get(VecType);
+  Value *InArg = CGF.EmitScalarExpr(E->getArg(0));
+  Value *Inserted =
+      CGF.Builder.CreateInsertElement(ArgVector, InArg, (uint64_t)0);
+  SmallVector<Value *, 4> OutArgs = {Inserted};
+
+  return KVX_emitNaryBuiltinCore(N, CGF, E, IntrinsicID, OutArgs, HasRounding,
+                                 HasSilent);
+}
+
+static Value *KVX_emitWidenScalarVectorCore(
+    CodeGenFunction &CGF, const CallExpr *E, Value *InArg,
+    unsigned IntrinsicIDLow, unsigned IntrinsicIDHigh, llvm::Type *InEltType,
+    llvm::Type *OutEltType, unsigned VectorLength, unsigned SliceLength) {
+
+  if (SliceLength == VectorLength) {
+    SmallVector<Value *, 4> OutArg = {InArg};
+
+    Value *OutValLow =
+        KVX_emitNaryBuiltinCore(1, CGF, E, IntrinsicIDLow, OutArg, false, true);
+    Value *OutValHigh = KVX_emitNaryBuiltinCore(1, CGF, E, IntrinsicIDHigh,
+                                                OutArg, false, true);
+
+    llvm::Type *OutVecType =
+        llvm::FixedVectorType::get(OutEltType, VectorLength);
+    Value *OutVec = UndefValue::get(OutVecType);
+
+    unsigned OutValLength = VectorLength / 2;
+    assert(OutValLength > 0 && "Wrong VectorLength argument");
+    for (unsigned i = 0; i < VectorLength; i++) {
+      Value *TakeFrom = (i < OutValLength) ? OutValLow : OutValHigh;
+      Value *ToInsert =
+          (OutValLength > 1)
+              ? CGF.Builder.CreateExtractElement(TakeFrom, i % OutValLength)
+              : TakeFrom;
+      OutVec = CGF.Builder.CreateInsertElement(OutVec, ToInsert, i);
+    }
+
+    return OutVec;
+  }
+
+  assert(VectorLength % SliceLength == 0 &&
+         "VectorLength should be a multiple of SliceLength");
+  llvm::Type *SliceVecType = llvm::FixedVectorType::get(InEltType, SliceLength);
+  llvm::Type *OutVecType = llvm::FixedVectorType::get(OutEltType, VectorLength);
+  Value *OutVec = UndefValue::get(OutVecType);
+  for (unsigned i = 0; i < VectorLength / SliceLength; i++) {
+    // Constructing the slice
+    Value *SliceVec = UndefValue::get(SliceVecType);
+    for (unsigned j = 0; j < SliceLength; j++) {
+      Value *Extracted =
+          CGF.Builder.CreateExtractElement(InArg, i * SliceLength + j);
+      SliceVec = CGF.Builder.CreateInsertElement(SliceVec, Extracted, j);
+    }
+
+    // Emitting builtin code to convert the slice
+    Value *SliceResult = KVX_emitWidenScalarVectorCore(
+        CGF, E, SliceVec, IntrinsicIDLow, IntrinsicIDHigh, InEltType,
+        OutEltType, SliceLength, SliceLength);
+
+    // Inserting the result in the final vector
+    for (unsigned j = 0; j < SliceLength; j++) {
+      Value *Extracted = CGF.Builder.CreateExtractElement(SliceResult, j);
+      OutVec = CGF.Builder.CreateInsertElement(OutVec, Extracted,
+                                               i * SliceLength + j);
+    }
+  }
+
+  return OutVec;
+}
+
+static Value *
+KVX_emitWidenScalarVector(CodeGenFunction &CGF, const CallExpr *E,
+                          unsigned IntrinsicIDLow, unsigned IntrinsicIDHigh,
+                          llvm::Type *InEltType, llvm::Type *OutEltType,
+                          unsigned VectorLength, unsigned SliceLength) {
+  if (!KVX_checkNargs(1, CGF, E, true))
+    return nullptr;
+
+  Value *InArg = CGF.EmitScalarExpr(E->getArg(0));
+  return KVX_emitWidenScalarVectorCore(CGF, E, InArg, IntrinsicIDLow,
+                                       IntrinsicIDHigh, InEltType, OutEltType,
+                                       VectorLength, SliceLength);
 }
 
 static Value *KVX_emitUnaryShiftingRoundingBuiltin(CodeGenFunction &CGF,
@@ -19727,6 +19824,28 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_fixedudq:
     return KVX_emitVectorShiftingBuiltin(*this, E, Intrinsic::kvx_fixedud,
                                          DoubleTy, Int64Ty, 4, 1);
+  case KVX::BI__builtin_kvx_fwidenwd:
+    return KVX_emitWidenScalarBuiltin(*this, E, Intrinsic::kvx_fwidenlwd,
+                                      FloatTy, 2);
+  case KVX::BI__builtin_kvx_fwidenwdp:
+    return KVX_emitWidenScalarVector(*this, E, Intrinsic::kvx_fwidenlwd,
+                                     Intrinsic::kvx_fwidenmwd, FloatTy,
+                                     DoubleTy, 2, 2);
+  case KVX::BI__builtin_kvx_fwidenwdq:
+    return KVX_emitWidenScalarVector(*this, E, Intrinsic::kvx_fwidenlwd,
+                                     Intrinsic::kvx_fwidenmwd, FloatTy,
+                                     DoubleTy, 4, 2);
+  case KVX::BI__builtin_kvx_fwidenhw:
+    return KVX_emitWidenScalarBuiltin(*this, E, Intrinsic::kvx_fwidenlhw,
+                                      HalfTy, 4);
+  case KVX::BI__builtin_kvx_fwidenhwq:
+    return KVX_emitWidenScalarVector(*this, E, Intrinsic::kvx_fwidenlhwp,
+                                     Intrinsic::kvx_fwidenmhwp, HalfTy, FloatTy,
+                                     4, 4);
+  case KVX::BI__builtin_kvx_fwidenhwo:
+    return KVX_emitWidenScalarVector(*this, E, Intrinsic::kvx_fwidenlhwp,
+                                     Intrinsic::kvx_fwidenmhwp, HalfTy, FloatTy,
+                                     8, 4);
   case KVX::BI__builtin_kvx_abdhq:
     return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_abdhq);
   case KVX::BI__builtin_kvx_abdho:

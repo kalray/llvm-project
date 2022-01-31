@@ -210,6 +210,12 @@ def int_kvx_fnarrowwhq: Intrinsic<[llvm_v4f16_ty], [llvm_v4f32_ty, llvm_i32_ty, 
 def int_kvx_fnarrowdw: Intrinsic<[llvm_float_ty], [llvm_double_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_fnarrowdwp: Intrinsic<[llvm_v2f32_ty], [llvm_v2f64_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
 
+def int_kvx_fwidenlwd: Intrinsic<[llvm_double_ty], [llvm_v2f32_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_fwidenmwd: Intrinsic<[llvm_double_ty], [llvm_v2f32_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_fwidenlhw: Intrinsic<[llvm_float_ty], [llvm_v4f16_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_fwidenlhwp: Intrinsic<[llvm_v2f32_ty], [llvm_v4f16_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_fwidenmhwp: Intrinsic<[llvm_v2f32_ty], [llvm_v4f16_ty, llvm_i32_ty], [IntrNoMem]>;
+
 def int_kvx_cmovehq : Intrinsic<[llvm_v4i16_ty], [llvm_v4i16_ty, llvm_v4i16_ty, llvm_v4i16_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_cmovewp : Intrinsic<[llvm_v2i32_ty], [llvm_v2i32_ty, llvm_v2i32_ty, llvm_v2i32_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_cmoved : Intrinsic<[llvm_i64_ty], [llvm_i64_ty, llvm_i64_ty, llvm_i64_ty, llvm_i32_ty], [IntrNoMem]>;
