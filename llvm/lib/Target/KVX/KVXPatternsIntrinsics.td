@@ -420,6 +420,17 @@ def: Pat<(int_kvx_cmoved i64:$v1, Signed37:$v2, i64:$c, i32:$sc), (CMOVEDri37 Si
 def: Pat<(int_kvx_cmoved i64:$v1, Wrapped64:$v2, i64:$c, i32:$sc), (CMOVEDri37 SingleReg:$c, SingleReg:$v1, Wrapped64:$v2, ScalarcondMod: $sc)>;
 def: Pat<(int_kvx_cmoved i64:$v1, i64:$v2, i64:$c, i32:$sc), (CMOVEDrr SingleReg:$c, SingleReg:$v1, SingleReg:$v2, ScalarcondMod: $sc)>;
 
+// widen patterns
+def: Pat<(int_kvx_fwidenmwd v2f32:$v, i32:$silent), (FWIDENMWD SingleReg:$v, SilentMod:$silent)>;
+def: Pat<(int_kvx_fwidenlhwp v4f16:$v, i32:$silent), (FWIDENLHWP SingleReg:$v, SilentMod:$silent)>;
+def: Pat<(int_kvx_fwidenmhwp v4f16:$v, i32:$silent), (FWIDENMHWP SingleReg:$v, SilentMod:$silent)>;
+
+def: Pat<(int_kvx_fwidenlhw v4f16:$v, i32:$silent), (FWIDENLHW SingleReg:$v, SilentMod:$silent)>;
+def: Pat<(int_kvx_fwidenlhw (build_vector f16:$f1, (f16 undef), (f16 undef), (f16 undef)), i32:$silent), (FWIDENLHW SingleReg:$f1, SilentMod:$silent)>;
+
+def: Pat<(int_kvx_fwidenlwd v2f32:$v, i32:$silent), (FWIDENLWD SingleReg:$v, SilentMod:$silent)>;
+def: Pat<(int_kvx_fwidenlwd (build_vector f32:$f1, (f32 undef)), i32:$silent), (FWIDENLWD SingleReg:$f1, SilentMod:$silent)>;
+
 // f16 patterns
 def: Pat<(int_kvx_fmulhq v4f16:$v1, v4f16:$v2, i32:$rounding, i32:$silent), (FMULHQrr SingleReg:$v1, SingleReg:$v2, RoundingMod:$rounding, SilentMod:$silent)>;
 def: Pat<(int_kvx_fmulhq (build_vector f16:$f1, (f16 undef), (f16 undef), (f16 undef)),
