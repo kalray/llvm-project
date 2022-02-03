@@ -2135,30 +2135,30 @@ defm SBFX8UWD : MC_13<"sbfx8uwd">;
 defm SBFX16UWD : MC_13<"sbfx16uwd">;
 
 let Defs = [CS], Uses = [CS] in
-def ADDDC : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+def ADDCD : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
-   "addd.c $a1 = $a2, $a3",
+   "addcd $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    ALU_FULL>;
 
 let Defs = [CS] in
-def SBFDC : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+def SBFCD : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
-   "sbfd.c $a1 = $a2, $a3",
+   "sbfcd $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    ALU_FULL>;
 
 let Defs = [CS], Uses = [CS] in
-def ADDDCI : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+def ADDCDI : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
-   "addd.ci $a1 = $a2, $a3",
+   "addcd.i $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    ALU_FULL>;
 
 let Defs = [CS] in
-def SBFDCI : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+def SBFCDI : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
-   "sbfd.ci $a1 = $a2, $a3",
+   "sbfcd.i $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    ALU_FULL>;
 

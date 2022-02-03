@@ -83,7 +83,7 @@ declare i64 @llvm.kvx.sbfsd(i64, i64) #1
 define i64 @adddc(i64 %v1, i64 %v2){
 ; CHECK-LABEL: adddc:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addd.c $r0 = $r0, $r1
+; CHECK-NEXT:    addcd $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -96,7 +96,7 @@ declare i64 @llvm.kvx.addd(i64, i64, i32) #1
 define i64 @adddci(i64 %v1, i64 %v2){
 ; CHECK-LABEL: adddci:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addd.ci $r0 = $r0, $r1
+; CHECK-NEXT:    addcd.i $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -107,7 +107,7 @@ entry:
 define i64 @sbfdc(i64 %v1, i64 %v2){
 ; CHECK-LABEL: sbfdc:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbfd.c $r0 = $r0, $r1
+; CHECK-NEXT:    sbfcd $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -120,7 +120,7 @@ declare i64 @llvm.kvx.sbfd(i64, i64, i32) #1
 define i64 @sbfdci(i64 %v1, i64 %v2){
 ; CHECK-LABEL: sbfdci:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbfd.ci $r0 = $r0, $r1
+; CHECK-NEXT:    sbfcd.i $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

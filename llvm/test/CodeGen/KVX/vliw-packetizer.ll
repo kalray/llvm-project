@@ -15,12 +15,12 @@ define i64 @rule3_c(i64 %a, i64 %b, i64 %c) {
 ; CHECK-NEXT:    set $cs = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP
-; CHECK-NEXT:    addd.c $r0 = $r1, $r2
+; CHECK-NEXT:    addcd $r0 = $r1, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ;
 ; RELAXED-LABEL: rule3_c:
-; RELAXED:         addd.c $r1 = $r1, $r2
+; RELAXED:         addcd $r1 = $r1, $r2
 ; RELAXED-NEXT:    ;;
 ; RELAXED-NEXT:    #APP
 ; RELAXED-NEXT:    set $cs = $r0
@@ -45,12 +45,12 @@ define i64 @rule3_ci(i64 %a, i64 %b, i64 %c) {
 ; CHECK-NEXT:    set $cs = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP
-; CHECK-NEXT:    addd.ci $r0 = $r1, $r2
+; CHECK-NEXT:    addcd.i $r0 = $r1, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ;
 ; RELAXED-LABEL: rule3_ci:
-; RELAXED:         addd.ci $r1 = $r1, $r2
+; RELAXED:         addcd.i $r1 = $r1, $r2
 ; RELAXED-NEXT:    ;;
 ; RELAXED-NEXT:    #APP
 ; RELAXED-NEXT:    set $cs = $r0
