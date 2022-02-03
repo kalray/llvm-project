@@ -28,6 +28,54 @@ entry:
 
 declare i64 @llvm.kvx.abdd(i64, i64) #1
 
+define i64 @addcd(i64 %v1, i64 %v2) {
+; CHECK-LABEL: addcd:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addcd $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = tail call i64 @llvm.kvx.addcd(i64 %v1, i64 %v2, i32 0)
+  ret i64 %0
+}
+
+declare i64 @llvm.kvx.addcd(i64, i64, i32) #1
+
+define i64 @addcdi(i64 %v1, i64 %v2) {
+; CHECK-LABEL: addcdi:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addcd.i $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = tail call i64 @llvm.kvx.addcd(i64 %v1, i64 %v2, i32 1)
+  ret i64 %0
+}
+
+define i64 @sbfcd(i64 %v1, i64 %v2) {
+; CHECK-LABEL: sbfcd:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    sbfcd $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = tail call i64 @llvm.kvx.sbfcd(i64 %v2, i64 %v1, i32 0)
+  ret i64 %0
+}
+
+declare i64 @llvm.kvx.sbfcd(i64, i64, i32) #1
+
+define i64 @sbfcdi(i64 %v1, i64 %v2) {
+; CHECK-LABEL: sbfcdi:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    sbfcd.i $r0 = $r1, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = tail call i64 @llvm.kvx.sbfcd(i64 %v2, i64 %v1, i32 1)
+  ret i64 %0
+}
+
 define i32 @addsw(i32 %v1, i32 %v2){
 ; CHECK-LABEL: addsw:
 ; CHECK:       # %bb.0: # %entry
@@ -79,54 +127,6 @@ entry:
 }
 
 declare i64 @llvm.kvx.sbfsd(i64, i64) #1
-
-define i64 @adddc(i64 %v1, i64 %v2){
-; CHECK-LABEL: adddc:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addcd $r0 = $r0, $r1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
-entry:
-  %0 = tail call i64 @llvm.kvx.addd(i64 %v1, i64 %v2, i32 1)
-  ret i64 %0
-}
-
-declare i64 @llvm.kvx.addd(i64, i64, i32) #1
-
-define i64 @adddci(i64 %v1, i64 %v2){
-; CHECK-LABEL: adddci:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addcd.i $r0 = $r0, $r1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
-entry:
-  %0 = tail call i64 @llvm.kvx.addd(i64 %v1, i64 %v2, i32 2)
-  ret i64 %0
-}
-
-define i64 @sbfdc(i64 %v1, i64 %v2){
-; CHECK-LABEL: sbfdc:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbfcd $r0 = $r0, $r1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
-entry:
-  %0 = tail call i64 @llvm.kvx.sbfd(i64 %v1, i64 %v2, i32 1)
-  ret i64 %0
-}
-
-declare i64 @llvm.kvx.sbfd(i64, i64, i32) #1
-
-define i64 @sbfdci(i64 %v1, i64 %v2){
-; CHECK-LABEL: sbfdci:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbfcd.i $r0 = $r0, $r1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
-entry:
-  %0 = tail call i64 @llvm.kvx.sbfd(i64 %v1, i64 %v2, i32 2)
-  ret i64 %0
-}
 
 define i32 @avgw(i32 %v1, i32 %v2){
 ; CHECK-LABEL: avgw:

@@ -31,13 +31,13 @@ define i64 @rule3_c(i64 %a, i64 %b, i64 %c) {
 ; RELAXED-NEXT:    ;;
 entry:
   tail call void asm sideeffect "set $$cs = $0", "r,~{$cs}"(i64 %a)
-  %0 = tail call i64 @llvm.kvx.addd(i64 %b, i64 %c, i32 1) ; 1 = "c"
+  %0 = tail call i64 @llvm.kvx.addcd(i64 %b, i64 %c, i32 0)
   ret i64 %0
 }
 
 declare void @llvm.kvx.set(i32, i64)
 
-declare i64 @llvm.kvx.addd(i64, i64, i32) #2
+declare i64 @llvm.kvx.addcd(i64, i64, i32) #2
 
 define i64 @rule3_ci(i64 %a, i64 %b, i64 %c) {
 ; CHECK-LABEL: rule3_ci:
@@ -61,7 +61,7 @@ define i64 @rule3_ci(i64 %a, i64 %b, i64 %c) {
 ; RELAXED-NEXT:    ;;
 entry:
   tail call void asm sideeffect "set $$cs = $0", "r,~{$cs}"(i64 %a)
-  %0 = tail call i64 @llvm.kvx.addd(i64 %b, i64 %c, i32 2) ; 2 = "ci"
+  %0 = tail call i64 @llvm.kvx.addcd(i64 %b, i64 %c, i32 1) ; 1 = ".i"
   ret i64 %0
 }
 
