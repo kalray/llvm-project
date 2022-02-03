@@ -17674,6 +17674,12 @@ typedef enum {
   SATURATE_UNSIGNED = 2 // ".us"
 } saturate_t;
 
+typedef enum {
+  CARRY_INVALID = -1,
+  CARRY_DEFAULT = 0, // "": Consumption and Production
+  CARRY_PRODONLY = 1 // ".i": Only Production
+} carry_t;
+
 static int KVX_getConjugateModifier(const StringRef &Str) {
   return llvm::StringSwitch<int>(Str).Case("", 0).Case("c", 1).Default(-1);
 }
@@ -17731,6 +17737,13 @@ static saturate_t KVX_getSaturateModifier(const StringRef &Str) {
       .Case(".s", SATURATE_SIGNED)
       .Case(".us", SATURATE_UNSIGNED)
       .Default(SATURATE_INVALID);
+}
+
+static carry_t KVX_getCarryInitModifier(const StringRef &Str) {
+  return StringSwitch<carry_t>(Str)
+      .Case("", CARRY_DEFAULT)
+      .Case(".i", CARRY_PRODONLY)
+      .Default(CARRY_INVALID);
 }
 
 static int KVX_getSpeculateModValue(const StringRef &Str) {
@@ -18775,6 +18788,43 @@ static inline Value *KVX_emitIntSubBuiltin(CodeGenFunction &CGF,
   return KVX_emitIntAddSubBuiltin(CGF, E, false);
 }
 
+static inline Value *KVX_emitAddSubCarryBuiltin(CodeGenFunction &CGF,
+                                                const CallExpr *E, bool isAdd) {
+  constexpr int StringModOperand = 2;
+  const auto *SL = dyn_cast<clang::StringLiteral>(
+      E->getArg(StringModOperand)->IgnoreParenImpCasts());
+  auto Mods = SL->getString();
+
+  carry_t CarryMod = KVX_getCarryInitModifier(Mods);
+  if (CarryMod == CARRY_INVALID) {
+    CGF.CGM.Error(E->getArg(1)->getBeginLoc(),
+                  "invalid carry_t modifier, expected \"\" or \".i\"");
+    return nullptr;
+  }
+
+  Value *CarryModVal = ConstantInt::get(CGF.IntTy, CarryMod);
+
+  int LHSpos = isAdd ? 0 : 1;
+  int RHSpos = isAdd ? 1 : 0;
+
+  const Expr *LHS = E->getArg(LHSpos);
+  Value *LHSv = CGF.EmitScalarExpr(LHS);
+
+  const Expr *RHS = E->getArg(RHSpos);
+  Value *RHSv = CGF.EmitScalarExpr(RHS);
+
+#ifndef NDEBUG
+  llvm::Type *LHSt = LHSv->getType();
+  llvm::Type *RHSt = RHSv->getType();
+  assert(LHSt == RHSt && LHSt == CGF.Int64Ty &&
+         "LHS and RHS types should be int64");
+#endif
+
+  auto IntrinsicID = isAdd ? Intrinsic::kvx_addcd : Intrinsic::kvx_sbfcd;
+  Function *Callee = CGF.CGM.getIntrinsic(IntrinsicID);
+  return CGF.Builder.CreateCall(Callee, {LHSv, RHSv, CarryModVal});
+}
+
 typedef std::array<Intrinsic::KVXIntrinsics, AVERAGE_SIZE> average_intrinsics_t;
 
 static Value *KVX_emitIntAvgBuiltin(CodeGenFunction &CGF, const CallExpr *E,
@@ -19476,6 +19526,10 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_abdw);
   case KVX::BI__builtin_kvx_abdd:
     return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_abdd);
+  case KVX::BI__builtin_kvx_addcd:
+    return KVX_emitAddSubCarryBuiltin(*this, E, true);
+  case KVX::BI__builtin_kvx_sbfcd:
+    return KVX_emitAddSubCarryBuiltin(*this, E, false);
   case KVX::BI__builtin_kvx_addbo:
   case KVX::BI__builtin_kvx_addbx:
   case KVX::BI__builtin_kvx_addbv:
