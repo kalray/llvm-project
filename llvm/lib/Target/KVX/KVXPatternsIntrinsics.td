@@ -282,11 +282,11 @@ def: Pat<(int_kvx_sbfswp v2i32:$v1, v2i32:$v2), (SBFSWPrr SingleReg:$v1, SingleR
 def: Pat<(int_kvx_sbfsw i32:$v1, i32:$v2), (SBFSWrr SingleReg:$v1, SingleReg:$v2)>;
 def: Pat<(int_kvx_sbfsd i64:$v1, i64:$v2), (SBFSDrr SingleReg:$v1, SingleReg:$v2)>;
 
-def: Pat<(int_kvx_addd i64:$v1, i64:$v2, 1), (ADDDC SingleReg:$v1, SingleReg:$v2)>;
-def: Pat<(int_kvx_addd i64:$v1, i64:$v2, 2), (ADDDCI SingleReg:$v1, SingleReg:$v2)>;
+def: Pat<(int_kvx_addd i64:$v1, i64:$v2, 1), (ADDCD SingleReg:$v1, SingleReg:$v2)>;
+def: Pat<(int_kvx_addd i64:$v1, i64:$v2, 2), (ADDCDI SingleReg:$v1, SingleReg:$v2)>;
 
-def: Pat<(int_kvx_sbfd i64:$v1, i64:$v2, 1), (SBFDC SingleReg:$v1, SingleReg:$v2)>;
-def: Pat<(int_kvx_sbfd i64:$v1, i64:$v2, 2), (SBFDCI SingleReg:$v1, SingleReg:$v2)>;
+def: Pat<(int_kvx_sbfd i64:$v1, i64:$v2, 1), (SBFCD SingleReg:$v1, SingleReg:$v2)>;
+def: Pat<(int_kvx_sbfd i64:$v1, i64:$v2, 2), (SBFCDI SingleReg:$v1, SingleReg:$v2)>;
 
 def: Pat<(int_kvx_avghq v4i16:$v1, v4i16:$v2), (AVGHQrr SingleReg:$v1, SingleReg:$v2)>;
 def: Pat<(int_kvx_avgw i32:$v1, i32:$v2), (AVGWrr SingleReg:$v1, SingleReg:$v2)>;
