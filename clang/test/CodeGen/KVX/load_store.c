@@ -91,14 +91,14 @@ void lo_4xdouble_rr_b(__bypass volatile v4f64_t *f, int c) {
   v4f64_t l = f[c];
 }
 
-// 4 x double vector load - speculative
+// 4 x double vector load - speculate
 // CHECK-LABEL: @lo_4xdouble_ri_s(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <4 x double>, <4 x double> addrspace(258)* [[F:%.*]], i64 -1
 // CHECK-NEXT:    [[TMP0:%.*]] = load volatile <4 x double>, <4 x double> addrspace(258)* [[ARRAYIDX]], align 32, [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
-void lo_4xdouble_ri_s(__speculative volatile v4f64_t *f) {
+void lo_4xdouble_ri_s(__speculate volatile v4f64_t *f) {
   v4f64_t l = f[-1];
 }
 
@@ -109,7 +109,7 @@ void lo_4xdouble_ri_s(__speculative volatile v4f64_t *f) {
 // CHECK-NEXT:    [[TMP0:%.*]] = load volatile <4 x double>, <4 x double> addrspace(258)* [[ARRAYIDX]], align 32, [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
-void lo_4xdouble_rr_s(__speculative volatile v4f64_t *f, int c) {
+void lo_4xdouble_rr_s(__speculate volatile v4f64_t *f, int c) {
   v4f64_t l = f[c];
 }
 
@@ -201,14 +201,14 @@ void lo_4xi64_rr_b(__bypass volatile v4i64_t *f, int c) {
   v4i64_t l = f[c];
 }
 
-// 4 x i64 vector load - speculative
+// 4 x i64 vector load - speculate
 // CHECK-LABEL: @lo_4xi64_ri_s(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <4 x i64>, <4 x i64> addrspace(258)* [[F:%.*]], i64 -1
 // CHECK-NEXT:    [[TMP0:%.*]] = load volatile <4 x i64>, <4 x i64> addrspace(258)* [[ARRAYIDX]], align 32, [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
-void lo_4xi64_ri_s(__speculative volatile v4i64_t *f) {
+void lo_4xi64_ri_s(__speculate volatile v4i64_t *f) {
   v4i64_t l = f[-1];
 }
 
@@ -219,6 +219,6 @@ void lo_4xi64_ri_s(__speculative volatile v4i64_t *f) {
 // CHECK-NEXT:    [[TMP0:%.*]] = load volatile <4 x i64>, <4 x i64> addrspace(258)* [[ARRAYIDX]], align 32, [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
-void lo_4xi64_rr_s(__speculative volatile v4i64_t *f, int c) {
+void lo_4xi64_rr_s(__speculate volatile v4i64_t *f, int c) {
   v4i64_t l = f[c];
 }

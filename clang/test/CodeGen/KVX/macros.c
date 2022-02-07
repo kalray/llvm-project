@@ -11,7 +11,7 @@
 // V1: #define __kvxarch_kv3_1 1
 // V2: #define __kvxarch_kv3_2 1
 // CHECK: __preload __attribute__((address_space(10)))
-// CHECK: __speculative __attribute__((address_space(11)))
+// CHECK: __speculate __attribute__((address_space(11)))
 
 void f(void) {
   return;
