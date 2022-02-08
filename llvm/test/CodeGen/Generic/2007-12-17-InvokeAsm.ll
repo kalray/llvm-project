@@ -1,6 +1,6 @@
 ; RUN: llc -no-integrated-as < %s
 
-; XFAIL: avr
+; XFAIL: kvx, avr
 
 define fastcc void @bc__support__high_resolution_time__initialize_clock_rate() personality i32 (...)* @__gxx_personality_v0 {
 entry:
