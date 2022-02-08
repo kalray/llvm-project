@@ -1,3 +1,5 @@
+; XFAIL: kvx
+; T18164
 ;; This test checks whether DW_AT_rank attribute accepts DIExpression.
 
 ; RUN: llc %s -mtriple=x86_64 -filetype=obj -o - | llvm-dwarfdump - | FileCheck %s

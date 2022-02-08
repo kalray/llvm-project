@@ -1,7 +1,8 @@
 ; RUN: llc -I %p/Inputs -filetype asm -o - %s | FileCheck %s
 ; UNSUPPORTED: -zos,nvptx
 ; REQUIRES: default_triple
-
+; XFAIL: kvx
+; kvx does not implement assembler parser yet.
 module asm ".include \22module.x\22"
 
 define void @f() {

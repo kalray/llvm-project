@@ -1,1 +1,2 @@
+# XFAIL: kvx
 RUN: llvm-mc -disassemble %s
