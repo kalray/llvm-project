@@ -2970,8 +2970,9 @@ KVXTargetLowering::emitEHSjLjSetupDispatch(MachineInstr &MI,
     }
   }
 
-  assert(!LPadList.empty() &&
-         "No landing pad destinations for the dispatch jump table!");
+  if (LPadList.empty())
+    report_fatal_error(
+        "No landing pad destinations for the dispatch jump table!");
 
   // Create the MBBs for the dispatch code.
   const TargetRegisterClass *RC = &KVX::SingleRegRegClass;
