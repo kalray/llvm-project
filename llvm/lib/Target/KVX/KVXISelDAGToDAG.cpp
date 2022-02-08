@@ -48,6 +48,9 @@ public:
   bool SelectAddrRR(SDValue Addr, SDValue &Index, SDValue &Base);
 
   MachineSDNode *buildMake(SDLoc &DL, SDNode *Imm, EVT VT) const;
+  bool SelectInlineAsmMemoryOperand(const SDValue &Op, unsigned ConstraintID,
+                                    std::vector<SDValue> &OutOps) override;
+
 #include "KVXGenDAGISel.inc"
 };
 
@@ -183,4 +186,50 @@ MachineSDNode *KVXDAGToDAGISel::buildMake(SDLoc &DL, SDNode *Imm,
 
 FunctionPass *llvm::createKVXISelDag(KVXTargetMachine &TM) {
   return new KVXDAGToDAGISel(TM);
+}
+
+bool KVXDAGToDAGISel::SelectInlineAsmMemoryOperand(
+    const SDValue &Op, unsigned ConstraintID, std::vector<SDValue> &OutOps) {
+  switch (ConstraintID) {
+  default:
+    break;
+
+    // From
+    // https://gcc.gnu.org/onlinedocs/gcc/Simple-Constraints.html#Simple-Constraints
+    // 'm'
+    // A memory operand is allowed, with any kind of address that the machine
+    // supports in general. Note that the letter used for the general memory
+    // constraint can be re-defined by a back end using the
+    // TARGET_MEM_CONSTRAINT macro.
+
+    // 'o'
+    //     A memory operand is allowed, but only if the address is offsettable.
+    //     This means that adding a small integer (actually, the width in bytes
+    //     of the operand, as determined by its machine mode) may be added to
+    //     the address and the result is also a valid memory address. For
+    //     example, an address which is constant is offsettable; so is an
+    //     address that is the sum of a register and a constant (as long as a
+    //     slightly larger constant is also within the range of address-offsets
+    //     supported by the machine); but an autoincrement or autodecrement
+    //     address is not offsettable. More complicated indirect/indexed
+    //     addresses may or may not be offsettable depending on the other
+    //     addressing modes that the machine supports. Note that in an output
+    //     operand which can be matched by another operand, the constraint
+    //     letter 'o' is valid only when accompanied by both '<' (if the target
+    //     machine has predecrement addressing) and '>' (if the target machine
+    //     has preincrement addressing).
+
+  case InlineAsm::Constraint_m:
+    // This allows to use memory operands in inline asm.
+    // No special treatment is required as it can live
+    // in any of our gpr registers.
+
+    // TODO: At the moment the memory operands such as
+    // N[X] will appear as N * elementSize + X, as kvx
+    // backen is not capable to interpret the inline asm.
+
+    OutOps.push_back(Op);
+    return false;
+  }
+  return true;
 }

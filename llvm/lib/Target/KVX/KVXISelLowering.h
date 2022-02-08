@@ -236,6 +236,8 @@ private:
                                       MachineBasicBlock *MBB) const;
   MachineBasicBlock *emitEHSjLjSetupDispatch(MachineInstr &MI,
                                              MachineBasicBlock *MBB) const;
+
+  unsigned getInlineAsmMemConstraint(StringRef ConstraintCode) const override;
 };
 
 } // namespace llvm
