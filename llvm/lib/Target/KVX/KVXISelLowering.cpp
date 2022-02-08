@@ -3162,6 +3162,15 @@ KVXTargetLowering::emitEHSjLjSetupDispatch(MachineInstr &MI,
   return BB;
 }
 
+unsigned
+KVXTargetLowering::getInlineAsmMemConstraint(StringRef ConstraintCode) const {
+  // A constraint m or `o` is the same in kvx
+  if (ConstraintCode == "o")
+    return InlineAsm::Constraint_m;
+
+  return TargetLowering::getInlineAsmMemConstraint(ConstraintCode);
+}
+
 // -----------------------------------------------------------------------------
 //        Namespace KVX_LOW
 // -----------------------------------------------------------------------------

@@ -101,19 +101,17 @@ bool KVXAsmPrinter::PrintAsmOperand(const MachineInstr *MI, unsigned OpNo,
 bool KVXAsmPrinter::PrintAsmMemoryOperand(const MachineInstr *MI, unsigned OpNo,
                                           const char *ExtraCode,
                                           raw_ostream &OS) {
+  if (ExtraCode)
+    return true;
 
-  if (!ExtraCode) {
-    const MachineOperand &MO = MI->getOperand(OpNo);
-    // For now, we only support register memory operands in registers and
-    // assume there is no addend
-    if (!MO.isReg())
-      return true;
+  const MachineOperand &MO = MI->getOperand(OpNo);
+  // For now, we only support register memory operands in registers and
+  // assume there is no addend
+  if (!MO.isReg())
+    return true;
 
-    OS << "0(" << KVXInstPrinter::getRegisterName(MO.getReg()) << ")";
-    return false;
-  }
-
-  return AsmPrinter::PrintAsmMemoryOperand(MI, OpNo, ExtraCode, OS);
+  OS << "0[" << KVXInstPrinter::getRegisterName(MO.getReg()) << "]";
+  return false;
 }
 
 void KVXAsmPrinter::emitDebugValue(const MCExpr *Value, unsigned Size) const {
