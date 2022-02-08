@@ -105,24 +105,20 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
     }
   }
 
+  ArgStringList CmdArgs;
+  AddLinkerInputs(CTC, Inputs, Args, CmdArgs, JA);
   const Arg *A = Args.getLastArg(options::OPT_rtlib_EQ);
   StringRef LibName = A ? A->getValue() : "compiler-rt";
 
   // Keep old behavior when using libgcc.
   if (LibName == "libgcc") {
     claimNoWarnArgs(Args);
-    ArgStringList CmdArgs;
 
     Args.AddAllArgValues(CmdArgs, options::OPT_Wa_COMMA,
                          options::OPT_Xassembler);
 
     CmdArgs.push_back("-o");
     CmdArgs.push_back(Output.getFilename());
-
-    // Group all input files
-    for (const auto &II : Inputs)
-      if (II.isFilename())
-        CmdArgs.push_back(II.getFilename());
 
     Args.AddAllArgs(CmdArgs, options::OPT_L, options::OPT_u);
 
@@ -173,7 +169,6 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
     assert(LibName == "compiler-rt" && "unsupported runtime library");
 
     claimNoWarnArgs(Args);
-    ArgStringList CmdArgs;
 
     CmdArgs.push_back("-o");
     CmdArgs.push_back(Output.getFilename());
@@ -201,8 +196,6 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
           CmdArgs.push_back(
               Args.MakeArgString(A.getSpelling() + std::string(A.getValue())));
         }
-      } else if (II.isFilename()) {
-        CmdArgs.push_back(II.getFilename());
       }
     }
 
