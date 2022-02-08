@@ -26,7 +26,8 @@ static bool LowerKVXMachineOperandToMCOperand(const MachineOperand &MO,
                                               MCOperand &MCOp, AsmPrinter &AP) {
   switch (MO.getType()) {
   default:
-    llvm_unreachable("unknown operand type");
+    errs() << "MachineOperand type #: " << (unsigned)(MO.getType()) << '\n';
+    report_fatal_error("Can't lower this operand type");
     break;
   case MachineOperand::MO_MachineBasicBlock:
     MCOp = MCOperand::createExpr(

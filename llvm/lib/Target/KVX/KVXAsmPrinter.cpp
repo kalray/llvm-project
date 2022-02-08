@@ -12,14 +12,39 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "InstPrinter/KVXInstPrinter.h"
 #include "KVX.h"
-#include "MCTargetDesc/KVXMCTargetDesc.h"
+
+#include "InstPrinter/KVXInstPrinter.h"
 #include "llvm/CodeGen/AsmPrinter.h"
 #include "llvm/MC/MCStreamer.h"
 #include "llvm/Support/TargetRegistry.h"
 
-#include "KVXAsmPrinter.h"
+namespace {
+using namespace llvm;
+class KVXAsmPrinter : public AsmPrinter {
+public:
+  explicit KVXAsmPrinter(TargetMachine &TM,
+                         std::unique_ptr<MCStreamer> Streamer)
+      : AsmPrinter(TM, std::move(Streamer)) {}
+
+  StringRef getPassName() const override { return "KVX Assembly Printer"; }
+
+  void emitInstruction(const MachineInstr *MI) override;
+
+  bool emitPseudoExpansionLowering(MCStreamer &OutStreamer,
+                                   const MachineInstr *MI);
+
+  bool PrintAsmOperand(const MachineInstr *MI, unsigned OpNo,
+                       const char *ExtraCode, raw_ostream &OS) override;
+  bool PrintAsmMemoryOperand(const MachineInstr *MI, unsigned OpNo,
+                             const char *ExtraCode, raw_ostream &OS) override;
+
+  void emitDebugValue(const MCExpr *Value, unsigned Size) const override;
+
+  void emitInlineAsmEnd(const MCSubtargetInfo &StartInfo,
+                        const MCSubtargetInfo *EndInfo) const override;
+};
+
 #include "KVXGenMCPseudoLowering.inc"
 
 void KVXAsmPrinter::emitInstruction(const MachineInstr *MI) {
@@ -39,8 +64,14 @@ void KVXAsmPrinter::emitInstruction(const MachineInstr *MI) {
     LowerKVXMachineInstrToMCInst(MI, TmpInst, *this);
     EmitToStreamer(*OutStreamer, TmpInst);
   }
-
-  OutStreamer->emitRawText(StringRef("\t;;\n"));
+  // TODO: Implement ELF object emitter.
+  // MC target streamer requires implementing both ASM writter
+  // as object file writer. KVX only really implements the ASM
+  // one, and the object writer is a dummy one that does nothing.
+  // To avoid test crashes dumping a stack trace, avoid
+  // using emitRawText when requested to emit object files.
+  if (OutStreamer->hasRawTextSupport())
+    OutStreamer->emitRawText(StringRef("\t;;\n"));
 }
 
 bool KVXAsmPrinter::PrintAsmOperand(const MachineInstr *MI, unsigned OpNo,
@@ -87,22 +118,23 @@ bool KVXAsmPrinter::PrintAsmMemoryOperand(const MachineInstr *MI, unsigned OpNo,
 
 void KVXAsmPrinter::emitDebugValue(const MCExpr *Value, unsigned Size) const {
   if (Value->getKind() == llvm::MCBinaryExpr::ExprKind::SymbolRef) {
-    switch (dyn_cast<MCSymbolRefExpr>(Value)->getKind()) {
+    auto V = dyn_cast<MCSymbolRefExpr>(Value)->getKind();
+    switch (V) {
     // Do not emit debug value for TLS data
     case MCSymbolRefExpr::VK_KVX_TLSLE:
       return;
     default:
-      break;
+      return AsmPrinter::emitDebugValue(Value, Size);
     }
   }
-
-  AsmPrinter::emitDebugValue(Value, Size);
 }
 
 void KVXAsmPrinter::emitInlineAsmEnd(const MCSubtargetInfo &StartInfo,
                                      const MCSubtargetInfo *EndInfo) const {
   OutStreamer->emitRawText(StringRef("\t;;\n"));
 }
+
+} // namespace
 
 extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeKVXAsmPrinter() {
   RegisterAsmPrinter<KVXAsmPrinter> X(getTheKVXTarget());

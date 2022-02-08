@@ -100,6 +100,7 @@ extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeKVXTargetMC() {
   TargetRegistry::RegisterMCSubtargetInfo(getTheKVXTarget(),
                                           createKVXMCSubtargetInfo);
   TargetRegistry::RegisterMCAsmBackend(getTheKVXTarget(), createKVXAsmBackend);
+  // This is a dummy RegisterMCCodeEmitter. Avoid functions it does not support.
   TargetRegistry::RegisterMCCodeEmitter(getTheKVXTarget(),
                                         createKVXMCCodeEmitter);
 }
