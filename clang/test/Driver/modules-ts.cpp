@@ -1,6 +1,6 @@
 // Check compiling a module interface to a .pcm file.
 //
-// RUN: %clang -fmodules-ts -x c++-module --precompile %s -o %t.pcm -v 2>&1 | FileCheck %s --check-prefix=CHECK-PRECOMPILE
+// RUN: %clang -target x86_64 -fmodules-ts -x c++-module --precompile %s -o %t.pcm -v 2>&1 | FileCheck %s --check-prefix=CHECK-PRECOMPILE
 //
 // CHECK-PRECOMPILE: -cc1 {{.*}} -emit-module-interface
 // CHECK-PRECOMPILE-SAME: -o {{.*}}.pcm
@@ -9,7 +9,7 @@
 
 // Check compiling a .pcm file to a .o file.
 //
-// RUN: %clang -fmodules-ts -fintegrated-as %t.pcm -c -o %t.pcm.o -v 2>&1 | FileCheck %s --check-prefix=CHECK-COMPILE
+// RUN: %clang -fmodules-ts -fintegrated-as -target x86_64 %t.pcm -c -o %t.pcm.o -v 2>&1 | FileCheck %s --check-prefix=CHECK-COMPILE
 //
 // CHECK-COMPILE: -cc1 {{.*}} -emit-obj
 // CHECK-COMPILE-SAME: -o {{.*}}.pcm.o
@@ -18,7 +18,7 @@
 
 // Check use of a .pcm file in another compilation.
 //
-// RUN: %clang -fmodules-ts -fmodule-file=%t.pcm -fintegrated-as -Dexport= %s -c -o %t.o -v 2>&1 | FileCheck %s --check-prefix=CHECK-USE
+// RUN: %clang -fmodules-ts -fmodule-file=%t.pcm -fintegrated-as -target x86_64 -Dexport= %s -c -o %t.o -v 2>&1 | FileCheck %s --check-prefix=CHECK-USE
 //
 // CHECK-USE: -cc1
 // CHECK-USE-SAME: -emit-obj
@@ -28,7 +28,7 @@
 
 // Check combining precompile and compile steps works.
 //
-// RUN: %clang -fmodules-ts -fintegrated-as -x c++-module %s -c -o %t.pcm.o -v 2>&1 | FileCheck %s --check-prefix=CHECK-PRECOMPILE --check-prefix=CHECK-COMPILE
+// RUN: %clang -fmodules-ts -fintegrated-as -target x86_64 -x c++-module %s -c -o %t.pcm.o -v 2>&1 | FileCheck %s --check-prefix=CHECK-PRECOMPILE --check-prefix=CHECK-COMPILE
 
 // Check that .cppm is treated as a module implicitly.
 // RUN: cp %s %t.cppm

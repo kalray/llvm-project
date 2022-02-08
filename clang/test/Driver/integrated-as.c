@@ -1,9 +1,9 @@
-// RUN: %clang -### -c -save-temps -integrated-as %s 2>&1 | FileCheck %s
+// RUN: %clang -### -target x86_64 -c -save-temps -integrated-as %s 2>&1 | FileCheck %s
 
 // CHECK: cc1as
 // CHECK: -mrelax-all
 
-// RUN: %clang -### -fintegrated-as -c -save-temps %s 2>&1 | FileCheck %s -check-prefix FIAS
+// RUN: %clang -### -fintegrated-as -target x86_64 -c -save-temps %s 2>&1 | FileCheck %s -check-prefix FIAS
 
 // FIAS: cc1as
 
