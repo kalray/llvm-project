@@ -1,3 +1,5 @@
+; XFAIL: kvx
+; T18164
 ; RUN: %llc_dwarf < %s -filetype=obj | llvm-dwarfdump -debug-info - | FileCheck %s
 
 ; Given the following source, ensure that the decl_line/file is correctly

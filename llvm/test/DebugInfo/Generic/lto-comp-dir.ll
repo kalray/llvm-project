@@ -1,4 +1,5 @@
-; RUN: %llc_dwarf < %s -filetype=obj | llvm-dwarfdump -debug-line - | FileCheck %s
+; T18164
+; RUNNOT: %llc_dwarf < %s -filetype=obj | llvm-dwarfdump -debug-line - | FileCheck %s
 ; RUN: %llc_dwarf < %s -filetype=asm | FileCheck --check-prefix=ASM %s
 
 ; If multiple line tables are emitted, one per CU, those line tables can

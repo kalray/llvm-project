@@ -1,3 +1,5 @@
+; XFAIL: kvx
+; T18164
 ;; This test checks whether DW_AT_rank attribute accepts constants.
 ;; constants are interally stored as DIExpression.
 

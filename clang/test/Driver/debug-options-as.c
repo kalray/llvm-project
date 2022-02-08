@@ -1,3 +1,4 @@
+// XFAIL: kvx
 // Check to make sure clang is somewhat picky about -g options.
 // (Delived from debug-options.c)
 // rdar://10383444

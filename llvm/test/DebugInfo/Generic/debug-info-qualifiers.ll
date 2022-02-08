@@ -1,3 +1,5 @@
+; XFAIL: kvx
+; T18164
 ; Test (r)value qualifiers on C++11 non-static member functions.
 ; Generated from tools/clang/test/CodeGenCXX/debug-info-qualifiers.cpp
 ;

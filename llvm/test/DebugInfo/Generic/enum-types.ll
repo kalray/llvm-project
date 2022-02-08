@@ -1,3 +1,5 @@
+; XFAIL: kvx
+; T18164
 ;
 ; RUN: %llc_dwarf -filetype=obj -O0 -dwarf-linkage-names=All < %s | llvm-dwarfdump -v -debug-info - | FileCheck %s
 

@@ -3,9 +3,10 @@
 
 ; RUN: %llc_dwarf -dwarf-version 4 -filetype=asm -o - %s | FileCheck %s --check-prefix=ASM-4
 ; RUN: %llc_dwarf -dwarf-version 5 -filetype=asm -o - %s | FileCheck %s --check-prefix=ASM-5
-; RUN: %llc_dwarf -dwarf-version 4 -filetype=obj -o %t4.o %s
+; FIXME: remove enforcing x86 target when kvx has object streamer implemented
+; RUN: %llc_dwarf --mtriple=x86_64 -dwarf-version 4 -filetype=obj -o %t4.o %s
 ; RUN: llvm-dwarfdump -debug-line %t4.o | FileCheck %s --check-prefixes=OBJ,OBJ-4
-; RUN: %llc_dwarf -dwarf-version 5 -filetype=obj -o %t5.o %s
+; RUN: %llc_dwarf --mtriple=x86_64 -dwarf-version 5 -filetype=obj -o %t5.o %s
 ; RUN: llvm-dwarfdump -debug-line %t5.o | FileCheck %s --check-prefixes=OBJ,OBJ-5
 
 ; ASM-4: .file 1 "/test{{.*[/\\]}}t1.h" source "11111111111111111111111111111111"

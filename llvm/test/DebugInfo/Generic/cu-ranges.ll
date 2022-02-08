@@ -1,3 +1,5 @@
+; XFAIL: kvx
+; T18164
 ; RUN: %llc_dwarf -O0 -filetype=obj %s -o %t
 ; RUN: llvm-dwarfdump -v %t | FileCheck %s
 
