@@ -72,9 +72,9 @@ typedef long __attribute__((__vector_size__(32))) v4i64_t;
 // CHECK-NEXT:    store volatile <1024 x i1> [[TMP54]], <1024 x i1>* [[M]], align 32, [[TBAA6]]
 // CHECK-NEXT:    ret <4 x i64> [[TMP44]]
 //
-v4i64_t test_tca_builtins(long a, long b, long c, long d, volatile __tca256 *v, volatile __tca512 *w, volatile __tca1024 *m) {
+v4i64_t test_tca_builtins(long a, long b, long c, long d, volatile __kvx_x256 *v, volatile __kvx_x512 *w, volatile __kvx_x1024 *m) {
   v4i64_t vt = {0, 1, 2, 3};
-  __tca256 lv, lv2, lv3;
+  __kvx_x256 lv, lv2, lv3;
   v[0] = __builtin_kvx_movetohi(v[0], 0, 1);
   v[0] = __builtin_kvx_movetolo(v[0], 3, 2);
   v[1] = __builtin_kvx_moveto(1, 2, 3, 4);
@@ -82,7 +82,7 @@ v4i64_t test_tca_builtins(long a, long b, long c, long d, volatile __tca256 *v, 
   vt = __builtin_kvx_movefo(lv);
   lv2 = __builtin_kvx_alignv(lv, v[0], 16);
   vt = __builtin_kvx_alignov(lv, lv2, 1);
-  __tca1024 lm = m[0];
+  __kvx_x1024 lm = m[0];
   lv = __builtin_kvx_convdhv0(lv, lm, ".RN.sat");
   lv = __builtin_kvx_convdhv1(lv, lm, ".Ru.satu");
   lv2 = __builtin_kvx_convdhv(lm, ".rhu.sat");
@@ -90,7 +90,7 @@ v4i64_t test_tca_builtins(long a, long b, long c, long d, volatile __tca256 *v, 
   lv2 = __builtin_kvx_convwbv1(lv2, lm, ".rd.satu");
   lv2 = __builtin_kvx_convwbv2(lv2, lm, ".rz.sat");
   lv2 = __builtin_kvx_convwbv3(lv2, lm, ".rhu.satu");
-  __tca512 lw = w[0];
+  __kvx_x512 lw = w[0];
   lv2 = __builtin_kvx_convwbv(lm, ".ru.sat");
   lv2 = __builtin_kvx_fmma242hw0(lv, lw, lv, lv2);
   lv = __builtin_kvx_fmma242hw1(lv2, lw, lv, lv2);

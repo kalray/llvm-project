@@ -22,14 +22,14 @@ typedef float    float8  __attribute__((vector_size(8 *  sizeof(float))));
 typedef double   double4 __attribute__((vector_size(4 *  sizeof(double))));
 
 // TCA opaque data types:
-typedef __tca256 tca256_t;   // Maps to a variable that is held in a VectorReg
-typedef __tca512 tca512_t;   // Maps to a variable that is held in a WideReg
-typedef __tca1024 tca1024_t; // Maps to a variable that is held in a MatrixReg
+typedef __kvx_x256 tca256_t;   // Maps to a variable that is held in a VectorReg
+typedef __kvx_x512 tca512_t;   // Maps to a variable that is held in a WideReg
+typedef __kvx_x1024 tca1024_t; // Maps to a variable that is held in a MatrixReg
 
 /// Tca registers layout:
-/// The base unit is a Vector Register (__tca256).
-/// The Wide Register (__tca512) is built with two Vector Registers.
-/// The Matrix Register (__tca1024) is built with four Vector Registers or two
+/// The base unit is a Vector Register (__kvx_x256).
+/// The Wide Register (__kvx_x512) is built with two Vector Registers.
+/// The Matrix Register (__kvx_x1024) is built with four Vector Registers or two
 /// Wide Registers.
 /// Every most significant half part of a matrix or wide can be addressed as
 /// the immediate smaller vector type Hi side. The least significant is the Lo
@@ -401,12 +401,12 @@ inline short16 __builtin_kvx_movefohx(tca256_t *v) {
 }
 
 /// Copy a 8 x int vector from the TCA to the core.
-inline int8 __builtin_kvx_movefowo(__tca256 *v) {
+inline int8 __builtin_kvx_movefowo(__kvx_x256 *v) {
   return (int8)__builtin_kvx_movefo(*v);
 }
 
 /// Copy a 4 x long vector from the TCA to the core.
-inline long4 __builtin_kvx_movefodq(__tca256 *v) {
+inline long4 __builtin_kvx_movefodq(__kvx_x256 *v) {
   return (long4)__builtin_kvx_movefo(*v);
 }
 
@@ -416,12 +416,12 @@ inline half16 __builtin_kvx_movefofhx(tca256_t *v) {
 }
 
 /// Copy a 8 x float vector from the TCA to the core.
-inline float8 __builtin_kvx_movefofwo(__tca256 *v) {
+inline float8 __builtin_kvx_movefofwo(__kvx_x256 *v) {
   return (float8)__builtin_kvx_movefo(*v);
 }
 
 /// Copy a 4 x double vector from the TCA to the core.
-inline double4 __builtin_kvx_movefofdq(__tca256 *v) {
+inline double4 __builtin_kvx_movefofdq(__kvx_x256 *v) {
   return (double4)__builtin_kvx_movefo(*v);
 }
 
@@ -429,7 +429,7 @@ inline double4 __builtin_kvx_movefofdq(__tca256 *v) {
 /// Output to the core.
 /// char32 = {V0, V1} >> 8 * sh.
 //  0 <= sh < 64. Shift number of bytes.
-inline char32 __builtin_kvx_alignobv(__tca256 *v0, __tca256 *v1,
+inline char32 __builtin_kvx_alignobv(__kvx_x256 *v0, __kvx_x256 *v1,
                                      unsigned long byteshift) {
   return (char32)__builtin_kvx_alignov(*v0, *v1, byteshift);
 }
@@ -438,7 +438,7 @@ inline char32 __builtin_kvx_alignobv(__tca256 *v0, __tca256 *v1,
 /// Output to the core.
 /// short16 = {V0, V1} >> 8 * sh.
 //  0 <= sh < 64. Shift number of bytes.
-inline short16 __builtin_kvx_alignohx(__tca256 *v0, __tca256 *v1,
+inline short16 __builtin_kvx_alignohx(__kvx_x256 *v0, __kvx_x256 *v1,
                                       unsigned long byteshift) {
   return (short16)__builtin_kvx_alignov(*v0, *v1, byteshift);
 }
@@ -447,7 +447,7 @@ inline short16 __builtin_kvx_alignohx(__tca256 *v0, __tca256 *v1,
 /// Output to the core.
 /// int8 = {V0, V1} >> 8 * sh.
 //  0 <= sh < 64. Shift number of bytes.
-inline int8 __builtin_kvx_alignowo(__tca256 *v0, __tca256 *v1,
+inline int8 __builtin_kvx_alignowo(__kvx_x256 *v0, __kvx_x256 *v1,
                                    unsigned long byteshift) {
   return (int8)__builtin_kvx_alignov(*v0, *v1, byteshift);
 }
@@ -456,7 +456,7 @@ inline int8 __builtin_kvx_alignowo(__tca256 *v0, __tca256 *v1,
 /// Output to the core.
 /// long4 = {V0, V1} >> 8 * sh.
 //  0 <= sh < 64. Shift number of bytes.
-inline long4 __builtin_kvx_alignodq(__tca256 *v0, __tca256 *v1,
+inline long4 __builtin_kvx_alignodq(__kvx_x256 *v0, __kvx_x256 *v1,
                                     unsigned long byteshift) {
   return (long4)__builtin_kvx_alignov(*v0, *v1, byteshift);
 }
@@ -465,7 +465,7 @@ inline long4 __builtin_kvx_alignodq(__tca256 *v0, __tca256 *v1,
 /// Output to the core.
 /// half16 = {V0, V1} >> 8 * sh.
 //  0 <= sh < 64. Shift number of bytes.
-inline half16 __builtin_kvx_alignofhx(__tca256 *v0, __tca256 *v1,
+inline half16 __builtin_kvx_alignofhx(__kvx_x256 *v0, __kvx_x256 *v1,
                                       unsigned long byteshift) {
   return (half16)__builtin_kvx_alignov(*v0, *v1, byteshift);
 }
@@ -474,7 +474,7 @@ inline half16 __builtin_kvx_alignofhx(__tca256 *v0, __tca256 *v1,
 /// Output to the core.
 /// float8 = {V0, V1} >> 8 * sh.
 //  0 <= sh < 64. Shift number of bytes.
-inline float8 __builtin_kvx_alignofwo(__tca256 *v0, __tca256 *v1,
+inline float8 __builtin_kvx_alignofwo(__kvx_x256 *v0, __kvx_x256 *v1,
                                       unsigned long byteshift) {
   return (float8)__builtin_kvx_alignov(*v0, *v1, byteshift);
 }
@@ -483,90 +483,90 @@ inline float8 __builtin_kvx_alignofwo(__tca256 *v0, __tca256 *v1,
 /// Output to the core.
 /// double4 = {V0, V1} >> 8 * sh.
 //  0 <= sh < 64. Shift number of bytes.
-inline double4 __builtin_kvx_alignofdq(__tca256 *v0, __tca256 *v1,
+inline double4 __builtin_kvx_alignofdq(__kvx_x256 *v0, __kvx_x256 *v1,
                                        unsigned long byteshift) {
   return (double4)__builtin_kvx_alignov(*v0, *v1, byteshift);
 }
 
 /// Copy a 32 x char vector from a core QuadRegister to the tca.
-inline __tca256 *__builtin_kvx_movetobv(char32 bv, __tca256 *v) {
+inline __kvx_x256 *__builtin_kvx_movetobv(char32 bv, __kvx_x256 *v) {
   *v = __builtin_kvx_moveoto(bv);
   return v;
 }
 
 /// Copy a 16 x short vector from a core QuadRegister to the tca.
-inline __tca256 *__builtin_kvx_movetohx(short16 hx, __tca256 *v) {
+inline __kvx_x256 *__builtin_kvx_movetohx(short16 hx, __kvx_x256 *v) {
   *v = __builtin_kvx_moveoto(hx);
   return v;
 }
 
 /// Copy a 8 x int vector from a core QuadRegister to the tca.
-inline __tca256 *__builtin_kvx_movetowo(int8 wo, __tca256 *v) {
+inline __kvx_x256 *__builtin_kvx_movetowo(int8 wo, __kvx_x256 *v) {
   *v = __builtin_kvx_moveoto(wo);
   return v;
 }
 
 /// Copy a 4 x long vector from a core QuadRegister to the tca.
-inline __tca256 *__builtin_kvx_movetodq(long4 dq, __tca256 *v) {
+inline __kvx_x256 *__builtin_kvx_movetodq(long4 dq, __kvx_x256 *v) {
   *v = __builtin_kvx_moveoto(dq);
   return v;
 }
 
 /// Copy a 16 x _Float16 vector from a core QuadRegister to the tca.
-inline __tca256 *__builtin_kvx_movetofhx(half16 fhx, __tca256 *v) {
+inline __kvx_x256 *__builtin_kvx_movetofhx(half16 fhx, __kvx_x256 *v) {
   *v = __builtin_kvx_moveoto(fhx);
   return v;
 }
 
 /// Copy a 8 x float vector from a core QuadRegister to the tca.
-inline __tca256 *__builtin_kvx_movetofo(float8 fo, __tca256 *v) {
+inline __kvx_x256 *__builtin_kvx_movetofo(float8 fo, __kvx_x256 *v) {
   *v = __builtin_kvx_moveoto(fo);
   return v;
 }
 
 /// Copy a 4 x double vector from a core QuadRegister to the tca.
-inline __tca256 *__builtin_kvx_movetofdq(double4 fdq, __tca256 *v) {
+inline __kvx_x256 *__builtin_kvx_movetofdq(double4 fdq, __kvx_x256 *v) {
   *v = __builtin_kvx_moveoto(fdq);
   return v;
 }
 
 /// Swap values of a tca256_t and a core QuadRegister holding a 32 x char
 /// vector.
-inline void __builtin_kvx_swapvobv(char32 *v0, __tca256 *v1) {
+inline void __builtin_kvx_swapvobv(char32 *v0, __kvx_x256 *v1) {
   __builtin_kvx_swapvo((long4 *)v0, v1);
 }
 
 /// Swap values of a tca256_t and a core QuadRegister holding a 16 x short
 /// vector.
-inline void __builtin_kvx_swapvohx(short16 *v0, __tca256 *v1) {
+inline void __builtin_kvx_swapvohx(short16 *v0, __kvx_x256 *v1) {
   __builtin_kvx_swapvo((long4 *)v0, v1);
 }
 
 /// Swap values of a tca256_t and a core QuadRegister holding a 8 x intvector.
-inline void __builtin_kvx_swapvowo(int8 *v0, __tca256 *v1) {
+inline void __builtin_kvx_swapvowo(int8 *v0, __kvx_x256 *v1) {
   __builtin_kvx_swapvo((long4 *)v0, v1);
 }
 
 /// Swap values of a tca256_t and a core QuadRegister holding a 4 x long vector.
-inline void __builtin_kvx_swapvodq(long4 *v0, __tca256 *v1) {
+inline void __builtin_kvx_swapvodq(long4 *v0, __kvx_x256 *v1) {
   __builtin_kvx_swapvo(v0, v1);
 }
 
 /// Swap values of a tca256_t and a core QuadRegister holding a 16 x _Float16
 /// vector.
-inline void __builtin_kvx_swapvofhx(half16 *v0, __tca256 *v1) {
+inline void __builtin_kvx_swapvofhx(half16 *v0, __kvx_x256 *v1) {
   __builtin_kvx_swapvo((long4 *)v0, v1);
 }
 
 /// Swap values of a tca256_t and a core QuadRegister holding a 16 x float
 /// vector.
-inline void __builtin_kvx_swapvofwo(float8 *v0, __tca256 *v1) {
+inline void __builtin_kvx_swapvofwo(float8 *v0, __kvx_x256 *v1) {
   __builtin_kvx_swapvo((long4 *)v0, v1);
 }
 
 /// Swap values of a tca256_t and a core QuadRegister holding a 16 x double
 /// vector.
-inline void __builtin_kvx_swapvofdq(double4 *v0, __tca256 *v1) {
+inline void __builtin_kvx_swapvofdq(double4 *v0, __kvx_x256 *v1) {
   __builtin_kvx_swapvo((long4 *)v0, v1);
 }
 

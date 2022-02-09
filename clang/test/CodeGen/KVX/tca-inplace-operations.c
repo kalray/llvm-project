@@ -52,8 +52,8 @@
 // O2-NEXT:    store <256 x i1> [[TMP5]], <256 x i1>* [[ARRAYIDX5]], align 32, [[TBAA2]]
 // O2-NEXT:    ret void
 //
-void convdhv(__tca256 *v, __tca1024 *m) {
-  __tca256 local;
+void convdhv(__kvx_x256 *v, __kvx_x1024 *m) {
+  __kvx_x256 local;
   local = __builtin_kvx_convdhv1(v[0], m[0], ".rn.sat");
   local = __builtin_kvx_convdhv0(local, m[0], ".rn.satu");
   v[1] = local;
@@ -131,8 +131,8 @@ void convdhv(__tca256 *v, __tca1024 *m) {
 // O2-NEXT:    store <256 x i1> [[TMP8]], <256 x i1>* [[ARRAYIDX9]], align 32, [[TBAA2]]
 // O2-NEXT:    ret void
 //
-void convwbv(__tca256 *v, __tca1024 *m) {
-  __tca256 local;
+void convwbv(__kvx_x256 *v, __kvx_x1024 *m) {
+  __kvx_x256 local;
   local = __builtin_kvx_convwbv1(v[0], m[0], ".rn.sat");
   local = __builtin_kvx_convwbv0(local, m[0], ".rn.satu");
   local = __builtin_kvx_convwbv2(local, m[0], ".rd.sat");
@@ -245,8 +245,8 @@ void convwbv(__tca256 *v, __tca1024 *m) {
 // O2-NEXT:    store <512 x i1> [[TMP9]], <512 x i1>* [[ARRAYIDX19]], align 32, [[TBAA8]]
 // O2-NEXT:    ret void
 //
-void fmma444hw(__tca256 *v, __tca512 *w) {
-  __tca256 local = v[0];
+void fmma444hw(__kvx_x256 *v, __kvx_x512 *w) {
+  __kvx_x256 local = v[0];
   local = __builtin_kvx_fmma242hw0(local, w[0], v[1], v[2]);
   local = __builtin_kvx_fmma242hw1(local, w[0], v[1], v[2]);
   v[1] = __builtin_kvx_fmma242hw2(local, w[0], v[1], v[2]);
@@ -294,7 +294,7 @@ void fmma444hw(__tca256 *v, __tca512 *w) {
 // O2-NEXT:    store <256 x i1> [[TMP2]], <256 x i1>* [[V]], align 32, [[TBAA2]]
 // O2-NEXT:    ret void
 //
-void test(__tca256 *v) {
+void test(__kvx_x256 *v) {
   long j[2] = {0, 1};
   v[0] = __builtin_kvx_movetohi(v[0], j[1], j[0]);
   v[0] = __builtin_kvx_movetolo(v[0], j[1], j[0]);
@@ -337,7 +337,7 @@ void test(__tca256 *v) {
 // O2-NEXT:    store <1024 x i1> [[TMP3]], <1024 x i1>* [[A0]], align 32, [[TBAA6]]
 // O2-NEXT:    ret void
 //
-void insertwm(__tca1024 *a0, __tca512 *a1) {
+void insertwm(__kvx_x1024 *a0, __kvx_x512 *a1) {
   a0[0] = __builtin_kvx_insertwm(a0[0], a1[0], 0);
   a0[0] = __builtin_kvx_insertwm(a0[0], a1[0], 1);
 }
@@ -401,7 +401,7 @@ void insertwm(__tca1024 *a0, __tca512 *a1) {
 // O2-NEXT:    store <1024 x i1> [[TMP5]], <1024 x i1>* [[A0]], align 32, [[TBAA6]]
 // O2-NEXT:    ret void
 //
-void insertvm(__tca1024 *a0, __tca256 *a1) {
+void insertvm(__kvx_x1024 *a0, __kvx_x256 *a1) {
   a0[0] = __builtin_kvx_insertvm(a0[0], a1[0], 0);
   a0[0] = __builtin_kvx_insertvm(a0[0], a1[0], 1);
   a0[0] = __builtin_kvx_insertvm(a0[0], a1[0], 2);
@@ -445,7 +445,7 @@ void insertvm(__tca1024 *a0, __tca256 *a1) {
 // O2-NEXT:    store <512 x i1> [[TMP3]], <512 x i1>* [[A0]], align 32, [[TBAA8]]
 // O2-NEXT:    ret void
 //
-void insertvw(__tca512 *a0, __tca256 *a1) {
+void insertvw(__kvx_x512 *a0, __kvx_x256 *a1) {
   a0[0] = __builtin_kvx_insertvw(a0[0], a1[0], 0);
   a0[0] = __builtin_kvx_insertvw(a0[0], a1[0], 1);
 }
@@ -482,7 +482,7 @@ void insertvw(__tca512 *a0, __tca256 *a1) {
 // O2-NEXT:    store <512 x i1> [[TMP2]], <512 x i1>* [[ARRAYIDX3]], align 32, [[TBAA8]]
 // O2-NEXT:    ret void
 //
-void movefmw(__tca512 *o, __tca1024 *a0) {
+void movefmw(__kvx_x512 *o, __kvx_x1024 *a0) {
   o[0] = __builtin_kvx_movefmw(a0[0], 0);
   o[1] = __builtin_kvx_movefmw(a0[0], 1);
 }
@@ -539,7 +539,7 @@ void movefmw(__tca512 *o, __tca1024 *a0) {
 // O2-NEXT:    store <256 x i1> [[TMP4]], <256 x i1>* [[ARRAYIDX7]], align 32, [[TBAA2]]
 // O2-NEXT:    ret void
 //
-void movefmv(__tca256 *o, __tca1024 *a0) {
+void movefmv(__kvx_x256 *o, __kvx_x1024 *a0) {
   o[0] = __builtin_kvx_movefmv(a0[0], 0);
   o[1] = __builtin_kvx_movefmv(a0[0], 1);
   o[2] = __builtin_kvx_movefmv(a0[0], 2);
@@ -578,7 +578,7 @@ void movefmv(__tca256 *o, __tca1024 *a0) {
 // O2-NEXT:    store <256 x i1> [[TMP2]], <256 x i1>* [[ARRAYIDX3]], align 32, [[TBAA2]]
 // O2-NEXT:    ret void
 //
-void movefwv(__tca256 *o, __tca512 *a0) {
+void movefwv(__kvx_x256 *o, __kvx_x512 *a0) {
   o[0] = __builtin_kvx_movefwv(a0[0], 0);
   o[1] = __builtin_kvx_movefwv(a0[0], 1);
 }
@@ -618,7 +618,7 @@ void movefwv(__tca256 *o, __tca512 *a0) {
 // O2-NEXT:    store <1024 x i1> [[TMP3]], <1024 x i1>* [[M:%.*]], align 32, [[TBAA6]]
 // O2-NEXT:    ret void
 //
-void buildfvm(__tca256 *a, __tca1024 *M) {
+void buildfvm(__kvx_x256 *a, __kvx_x1024 *M) {
   M[0] = __builtin_kvx_buildfvm(a[0], a[2], a[0], a[1]);
 }
 
@@ -663,7 +663,7 @@ void buildfvm(__tca256 *a, __tca1024 *M) {
 // O2-NEXT:    store <1024 x i1> [[TMP3]], <1024 x i1>* [[M]], align 32, [[TBAA6]]
 // O2-NEXT:    ret void
 //
-void buildfwm(__tca512 *a, __tca1024 *M) {
+void buildfwm(__kvx_x512 *a, __kvx_x1024 *M) {
   M[1] = __builtin_kvx_buildfwm(a[2], a[2]);
   M[0] = __builtin_kvx_buildfwm(a[2], a[1]);
 }
@@ -695,6 +695,6 @@ void buildfwm(__tca512 *a, __tca1024 *M) {
 // O2-NEXT:    store <512 x i1> [[TMP2]], <512 x i1>* [[W:%.*]], align 32, [[TBAA8]]
 // O2-NEXT:    ret void
 //
-void buildfvw(__tca256 *a, __tca512 *W) {
+void buildfvw(__kvx_x256 *a, __kvx_x512 *W) {
   W[0] = __builtin_kvx_buildfvw(a[0], a[2]);
 }

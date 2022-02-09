@@ -37,7 +37,7 @@ short16 movefohx(tca256_t *v){
 // CHECK-NEXT:    [[TMP4:%.*]] = bitcast <4 x i64> [[TMP3]] to <8 x i32>
 // CHECK-NEXT:    ret <8 x i32> [[TMP4]]
 //
-int8 movefowo(__tca256 *v){
+int8 movefowo(__kvx_x256 *v){
    return __builtin_kvx_movefowo(v);
 }
 
@@ -46,7 +46,7 @@ int8 movefowo(__tca256 *v){
 // CHECK-NEXT:    [[TMP3:%.*]] = tail call <4 x i64> @llvm.kvx.movefo(<256 x i1> [[TMP2]]) [[ATTR5]]
 // CHECK-NEXT:    ret <4 x i64> [[TMP3]]
 //
-long4 movefodq(__tca256 *v){
+long4 movefodq(__kvx_x256 *v){
    return __builtin_kvx_movefodq(v);
 }
 
@@ -66,7 +66,7 @@ half16 movefofhx(tca256_t *v){
 // CHECK-NEXT:    [[TMP4:%.*]] = bitcast <4 x i64> [[TMP3]] to <8 x float>
 // CHECK-NEXT:    ret <8 x float> [[TMP4]]
 //
-float8 movefofwo(__tca256 *v){
+float8 movefofwo(__kvx_x256 *v){
    return __builtin_kvx_movefofwo(v);
 }
 
@@ -76,7 +76,7 @@ float8 movefofwo(__tca256 *v){
 // CHECK-NEXT:    [[TMP4:%.*]] = bitcast <4 x i64> [[TMP3]] to <4 x double>
 // CHECK-NEXT:    ret <4 x double> [[TMP4]]
 //
-double4 movefofdq(__tca256 *v){
+double4 movefofdq(__kvx_x256 *v){
    return __builtin_kvx_movefofdq(v);
 }
 
@@ -87,7 +87,7 @@ double4 movefofdq(__tca256 *v){
 // CHECK-NEXT:    [[TMP7:%.*]] = bitcast <4 x i64> [[TMP6]] to <32 x i8>
 // CHECK-NEXT:    ret <32 x i8> [[TMP7]]
 //
-char32 alignobv(__tca256 *v0, __tca256 *v1, unsigned long byteshift){
+char32 alignobv(__kvx_x256 *v0, __kvx_x256 *v1, unsigned long byteshift){
     return __builtin_kvx_alignobv(v0, v1, byteshift);
 }
 
@@ -98,7 +98,7 @@ char32 alignobv(__tca256 *v0, __tca256 *v1, unsigned long byteshift){
 // CHECK-NEXT:    [[TMP7:%.*]] = bitcast <4 x i64> [[TMP6]] to <16 x i16>
 // CHECK-NEXT:    ret <16 x i16> [[TMP7]]
 //
-short16 alignohx(__tca256 *v0, __tca256 *v1, unsigned long byteshift){
+short16 alignohx(__kvx_x256 *v0, __kvx_x256 *v1, unsigned long byteshift){
     return __builtin_kvx_alignohx(v0, v1, byteshift);
 }
 
@@ -109,7 +109,7 @@ short16 alignohx(__tca256 *v0, __tca256 *v1, unsigned long byteshift){
 // CHECK-NEXT:    [[TMP7:%.*]] = bitcast <4 x i64> [[TMP6]] to <8 x i32>
 // CHECK-NEXT:    ret <8 x i32> [[TMP7]]
 //
-int8 alignowo(__tca256 *v0, __tca256 *v1, unsigned long byteshift){
+int8 alignowo(__kvx_x256 *v0, __kvx_x256 *v1, unsigned long byteshift){
     return __builtin_kvx_alignowo(v0, v1, byteshift);
 }
 
@@ -119,7 +119,7 @@ int8 alignowo(__tca256 *v0, __tca256 *v1, unsigned long byteshift){
 // CHECK-NEXT:    [[TMP6:%.*]] = tail call <4 x i64> @llvm.kvx.alignov(<256 x i1> [[TMP4]], <256 x i1> [[TMP5]], i64 [[TMP2:%.*]]) [[ATTR5]]
 // CHECK-NEXT:    ret <4 x i64> [[TMP6]]
 //
-long4 alignodq(__tca256 *v0, __tca256 *v1, unsigned long byteshift){
+long4 alignodq(__kvx_x256 *v0, __kvx_x256 *v1, unsigned long byteshift){
     return __builtin_kvx_alignodq(v0, v1, byteshift);
 }
 
@@ -130,7 +130,7 @@ long4 alignodq(__tca256 *v0, __tca256 *v1, unsigned long byteshift){
 // CHECK-NEXT:    [[TMP7:%.*]] = bitcast <4 x i64> [[TMP6]] to <16 x half>
 // CHECK-NEXT:    ret <16 x half> [[TMP7]]
 //
-half16 alignofhx(__tca256 *v0, __tca256 *v1, unsigned long byteshift){
+half16 alignofhx(__kvx_x256 *v0, __kvx_x256 *v1, unsigned long byteshift){
     return __builtin_kvx_alignofhx(v0, v1, byteshift);
 }
 
@@ -141,7 +141,7 @@ half16 alignofhx(__tca256 *v0, __tca256 *v1, unsigned long byteshift){
 // CHECK-NEXT:    [[TMP7:%.*]] = bitcast <4 x i64> [[TMP6]] to <8 x float>
 // CHECK-NEXT:    ret <8 x float> [[TMP7]]
 //
-float8 alignofwo(__tca256 *v0, __tca256 *v1, unsigned long byteshift){
+float8 alignofwo(__kvx_x256 *v0, __kvx_x256 *v1, unsigned long byteshift){
     return __builtin_kvx_alignofwo(v0, v1, byteshift);
 }
 
@@ -152,7 +152,7 @@ float8 alignofwo(__tca256 *v0, __tca256 *v1, unsigned long byteshift){
 // CHECK-NEXT:    [[TMP7:%.*]] = bitcast <4 x i64> [[TMP6]] to <4 x double>
 // CHECK-NEXT:    ret <4 x double> [[TMP7]]
 //
-double4 alignofdq(__tca256 *v0, __tca256 *v1, unsigned long byteshift){
+double4 alignofdq(__kvx_x256 *v0, __kvx_x256 *v1, unsigned long byteshift){
     return __builtin_kvx_alignofdq(v0, v1, byteshift);
 }
 
@@ -162,7 +162,7 @@ double4 alignofdq(__tca256 *v0, __tca256 *v1, unsigned long byteshift){
 // CHECK-NEXT:    store <256 x i1> [[TMP4]], <256 x i1>* [[TMP1:%.*]], align 32, [[TBAA2]]
 // CHECK-NEXT:    ret <256 x i1>* [[TMP1]]
 //
-__tca256 * movetobv(char32 bv, __tca256 *v){
+__kvx_x256 * movetobv(char32 bv, __kvx_x256 *v){
     return __builtin_kvx_movetobv(bv, v);
 }
 
@@ -172,7 +172,7 @@ __tca256 * movetobv(char32 bv, __tca256 *v){
 // CHECK-NEXT:    store <256 x i1> [[TMP4]], <256 x i1>* [[TMP1:%.*]], align 32, [[TBAA2]]
 // CHECK-NEXT:    ret <256 x i1>* [[TMP1]]
 //
-__tca256 *movetohx(short16 hx, __tca256 *v){
+__kvx_x256 *movetohx(short16 hx, __kvx_x256 *v){
     return __builtin_kvx_movetohx(hx, v);
 }
 
@@ -182,7 +182,7 @@ __tca256 *movetohx(short16 hx, __tca256 *v){
 // CHECK-NEXT:    store <256 x i1> [[TMP4]], <256 x i1>* [[TMP1:%.*]], align 32, [[TBAA2]]
 // CHECK-NEXT:    ret <256 x i1>* [[TMP1]]
 //
-__tca256 *movetowo(int8 wo, __tca256 *v){
+__kvx_x256 *movetowo(int8 wo, __kvx_x256 *v){
     return __builtin_kvx_movetowo(wo, v);
 }
 
@@ -191,7 +191,7 @@ __tca256 *movetowo(int8 wo, __tca256 *v){
 // CHECK-NEXT:    store <256 x i1> [[TMP3]], <256 x i1>* [[TMP1:%.*]], align 32, [[TBAA2]]
 // CHECK-NEXT:    ret <256 x i1>* [[TMP1]]
 //
-__tca256 *movetodq(long4 dq, __tca256 *v){
+__kvx_x256 *movetodq(long4 dq, __kvx_x256 *v){
     return __builtin_kvx_movetodq(dq, v);
 }
 
@@ -201,7 +201,7 @@ __tca256 *movetodq(long4 dq, __tca256 *v){
 // CHECK-NEXT:    store <256 x i1> [[TMP4]], <256 x i1>* [[TMP1:%.*]], align 32, [[TBAA2]]
 // CHECK-NEXT:    ret <256 x i1>* [[TMP1]]
 //
-__tca256 *movetofhx(half16 fhx, __tca256 *v){
+__kvx_x256 *movetofhx(half16 fhx, __kvx_x256 *v){
     return __builtin_kvx_movetofhx(fhx, v);
 }
 
@@ -211,7 +211,7 @@ __tca256 *movetofhx(half16 fhx, __tca256 *v){
 // CHECK-NEXT:    store <256 x i1> [[TMP4]], <256 x i1>* [[TMP1:%.*]], align 32, [[TBAA2]]
 // CHECK-NEXT:    ret <256 x i1>* [[TMP1]]
 //
-__tca256 *movetofo(float8 fo, __tca256 *v){
+__kvx_x256 *movetofo(float8 fo, __kvx_x256 *v){
     return __builtin_kvx_movetofo(fo, v);
 }
 
@@ -221,7 +221,7 @@ __tca256 *movetofo(float8 fo, __tca256 *v){
 // CHECK-NEXT:    store <256 x i1> [[TMP4]], <256 x i1>* [[TMP1:%.*]], align 32, [[TBAA2]]
 // CHECK-NEXT:    ret <256 x i1>* [[TMP1]]
 //
-__tca256 *movetofdq(double4 fdq, __tca256 *v){
+__kvx_x256 *movetofdq(double4 fdq, __kvx_x256 *v){
     return __builtin_kvx_movetofdq(fdq, v);
 }
 
@@ -236,7 +236,7 @@ __tca256 *movetofdq(double4 fdq, __tca256 *v){
 // CHECK-NEXT:    store <256 x i1> [[TMP8]], <256 x i1>* [[TMP1]], align 32
 // CHECK-NEXT:    ret void
 //
-void swapvobv(char32 *v0, __tca256 *v1){
+void swapvobv(char32 *v0, __kvx_x256 *v1){
     __builtin_kvx_swapvobv(v0, v1);
 }
 
@@ -251,7 +251,7 @@ void swapvobv(char32 *v0, __tca256 *v1){
 // CHECK-NEXT:    store <256 x i1> [[TMP8]], <256 x i1>* [[TMP1]], align 32
 // CHECK-NEXT:    ret void
 //
-void swapvohx(short16 *v0, __tca256 *v1){
+void swapvohx(short16 *v0, __kvx_x256 *v1){
     __builtin_kvx_swapvohx(v0, v1);
 }
 
@@ -266,7 +266,7 @@ void swapvohx(short16 *v0, __tca256 *v1){
 // CHECK-NEXT:    store <256 x i1> [[TMP8]], <256 x i1>* [[TMP1]], align 32
 // CHECK-NEXT:    ret void
 //
-void swapvowo(int8 *v0, __tca256 *v1){
+void swapvowo(int8 *v0, __kvx_x256 *v1){
     __builtin_kvx_swapvowo(v0, v1);
 }
 
@@ -280,7 +280,7 @@ void swapvowo(int8 *v0, __tca256 *v1){
 // CHECK-NEXT:    store <256 x i1> [[TMP7]], <256 x i1>* [[TMP1]], align 32
 // CHECK-NEXT:    ret void
 //
-void swapvodq(long4 *v0, __tca256 *v1){
+void swapvodq(long4 *v0, __kvx_x256 *v1){
     __builtin_kvx_swapvodq(v0, v1);
 }
 
@@ -295,7 +295,7 @@ void swapvodq(long4 *v0, __tca256 *v1){
 // CHECK-NEXT:    store <256 x i1> [[TMP8]], <256 x i1>* [[TMP1]], align 32
 // CHECK-NEXT:    ret void
 //
-void swapvofhx(half16 *v0, __tca256 *v1){
+void swapvofhx(half16 *v0, __kvx_x256 *v1){
     __builtin_kvx_swapvofhx(v0, v1);
 }
 
@@ -310,7 +310,7 @@ void swapvofhx(half16 *v0, __tca256 *v1){
 // CHECK-NEXT:    store <256 x i1> [[TMP8]], <256 x i1>* [[TMP1]], align 32
 // CHECK-NEXT:    ret void
 //
-void swapvofwo(float8 *v0, __tca256 *v1){
+void swapvofwo(float8 *v0, __kvx_x256 *v1){
     __builtin_kvx_swapvofwo(v0, v1);
 }
 
@@ -325,6 +325,6 @@ void swapvofwo(float8 *v0, __tca256 *v1){
 // CHECK-NEXT:    store <256 x i1> [[TMP8]], <256 x i1>* [[TMP1]], align 32
 // CHECK-NEXT:    ret void
 //
-void swapvofdq(double4 *v0, __tca256 *v1){
+void swapvofdq(double4 *v0, __kvx_x256 *v1){
     __builtin_kvx_swapvofdq(v0, v1);
 }

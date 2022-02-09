@@ -5,7 +5,7 @@
 // CHECK-NEXT:    ret i32 32
 //
 unsigned alignofV(){
-	return __alignof__(__tca256);
+	return __alignof__(__kvx_x256);
 }
 
 // CHECK-LABEL: @sizeofV(
@@ -13,7 +13,7 @@ unsigned alignofV(){
 // CHECK-NEXT:    ret i32 32
 //
 unsigned sizeofV(){
-	return sizeof(__tca256);
+	return sizeof(__kvx_x256);
 }
 
 // CHECK-LABEL: @alignofW(
@@ -21,7 +21,7 @@ unsigned sizeofV(){
 // CHECK-NEXT:    ret i32 32
 //
 unsigned alignofW(){
-	return __alignof__(__tca512);
+	return __alignof__(__kvx_x512);
 }
 
 // CHECK-LABEL: @sizeofW(
@@ -29,7 +29,7 @@ unsigned alignofW(){
 // CHECK-NEXT:    ret i32 64
 //
 unsigned sizeofW(){
-	return sizeof(__tca512);
+	return sizeof(__kvx_x512);
 }
 
 // CHECK-LABEL: @alignofM(
@@ -37,7 +37,7 @@ unsigned sizeofW(){
 // CHECK-NEXT:    ret i32 32
 //
 unsigned alignofM(){
-	return __alignof__(__tca1024);
+	return __alignof__(__kvx_x1024);
 }
 
 // CHECK-LABEL: @sizeofM(
@@ -45,5 +45,5 @@ unsigned alignofM(){
 // CHECK-NEXT:    ret i32 128
 //
 unsigned sizeofM(){
-	return sizeof(__tca1024);
+	return sizeof(__kvx_x1024);
 }
