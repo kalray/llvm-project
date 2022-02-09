@@ -25,10 +25,10 @@ define void @asm_tca(i8* %v, i64 %A) {
 ; CHECK-NEXT:    ;;
 entry:
   %add = add nsw i64 %A, 1
-  %0 = tail call { <256 x i1>, <256 x i1> } asm sideeffect "lv $0 = $3[$2]\0A\09;;\0A\09lv.s $1 = $4[$2]\0A\09;;", "=w,=w,r,r,r,~{$r0}"(i8* %v, i64 %A, i64 %add)
+  %0 = tail call { <256 x i1>, <256 x i1> } asm sideeffect "lv $0 = $3[$2]\0A\09;;\0A\09lv.s $1 = $4[$2]\0A\09;;", "=x,=x,r,r,r,~{$r0}"(i8* %v, i64 %A, i64 %add)
   %asmresult = extractvalue { <256 x i1>, <256 x i1> } %0, 0
   %asmresult1 = extractvalue { <256 x i1>, <256 x i1> } %0, 1
-  %1 = tail call <256 x i1> asm sideeffect "copyv $0 = $1\0A\09;;\0A\09sv 0[$3] = $2", "=w,w,w,r"(<256 x i1> %asmresult, <256 x i1> %asmresult1, i8* %v)
+  %1 = tail call <256 x i1> asm sideeffect "copyv $0 = $1\0A\09;;\0A\09sv 0[$3] = $2", "=x,x,x,r"(<256 x i1> %asmresult, <256 x i1> %asmresult1, i8* %v)
   ret void
 }
 
@@ -42,7 +42,7 @@ define void @asm_clobber_vec_vec(i64 %A) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <256 x i1> asm sideeffect "copyv $0 = $1", "=w,w,~{$a0}"(<256 x i1> undef)
+  %0 = tail call <256 x i1> asm sideeffect "copyv $0 = $1", "=x,x,~{$a0}"(<256 x i1> undef)
   ret void
 }
 
@@ -56,7 +56,7 @@ define void @asm_clobber_vec_block(i64 %A) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <256 x i1> asm sideeffect "copyv $0 = $1", "=w,w,~{$a0.hi}"(<256 x i1> undef)
+  %0 = tail call <256 x i1> asm sideeffect "copyv $0 = $1", "=x,x,~{$a0.hi}"(<256 x i1> undef)
   ret void
 }
 
@@ -73,7 +73,7 @@ define void @asm_clobber_wide_vec(<256 x i1>* nocapture readonly %a) {
 ; CHECK-NEXT:    ;;
 entry:
   %0 = load <256 x i1>, <256 x i1>* %a, align 32
-  tail call void asm sideeffect "copyv $0 = $0", "w,~{$r0r1r2r3},~{$a0a1}"(<256 x i1> %0)
+  tail call void asm sideeffect "copyv $0 = $0", "x,~{$r0r1r2r3},~{$a0a1}"(<256 x i1> %0)
   ret void
 }
 
@@ -98,7 +98,7 @@ define void @asm_clobber_multiple_quad(<256 x i1>* nocapture %c, <256 x i1>* noc
 ; CHECK-NEXT:    ;;
 entry:
   %0 = load <256 x i1>, <256 x i1>* %c, align 32
-  %1 = tail call { <256 x i1>, <256 x i1> } asm sideeffect "copyv $0 = $1\0A\09;;\0A\09copyv $1 = $0", "=w,=w,w,~{$r0r1r2r3},~{$a0a1a2a3}"(<256 x i1> %0)
+  %1 = tail call { <256 x i1>, <256 x i1> } asm sideeffect "copyv $0 = $1\0A\09;;\0A\09copyv $1 = $0", "=x,=x,x,~{$r0r1r2r3},~{$a0a1a2a3}"(<256 x i1> %0)
   %asmresult = extractvalue { <256 x i1>, <256 x i1> } %1, 0
   %asmresult3 = extractvalue { <256 x i1>, <256 x i1> } %1, 1
   store <256 x i1> %asmresult, <256 x i1>* %c, align 32
@@ -122,11 +122,11 @@ define <256 x i1>* @asm_clobber_quad_matrix(<256 x i1>* readonly returned %a) {
 ; CHECK-NEXT:    ;;
 entry:
   %0 = load <256 x i1>, <256 x i1>* %a, align 32
-  tail call void asm sideeffect "sv 0[$$r3] = $0", "w,~{$r0r1r2r3},~{$a0a1a2a3}"(<256 x i1> %0)
+  tail call void asm sideeffect "sv 0[$$r3] = $0", "x,~{$r0r1r2r3},~{$a0a1a2a3}"(<256 x i1> %0)
   ret <256 x i1>* %a
 }
 
-define void @use_wide_reg(<512 x i1>* nocapture %w, <256 x i1>* nocapture readonly %v) #1 {
+define void @use_wide_reg(<512 x i1>* nocapture %x, <256 x i1>* nocapture readonly %v) #1 {
 ; CHECK-LABEL: use_wide_reg:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    copyd $r4 = $r0
@@ -147,10 +147,10 @@ define void @use_wide_reg(<512 x i1>* nocapture %w, <256 x i1>* nocapture readon
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = load <512 x i1>, <512 x i1>* %w, align 32
+  %0 = load <512 x i1>, <512 x i1>* %x, align 32
   %1 = load <256 x i1>, <256 x i1>* %v, align 32
-  %2 = tail call <512 x i1> asm sideeffect "mma484bw $0 = $0, $1, $1", "=w,w,0,~{$r0r1r2r3},~{$a0a1a2a3}"(<256 x i1> %1, <512 x i1> %0)
-  store <512 x i1> %2, <512 x i1>* %w, align 32
+  %2 = tail call <512 x i1> asm sideeffect "mma484bw $0 = $0, $1, $1", "=x,x,0,~{$r0r1r2r3},~{$a0a1a2a3}"(<256 x i1> %1, <512 x i1> %0)
+  store <512 x i1> %2, <512 x i1>* %x, align 32
   ret void
 }
 
@@ -182,7 +182,7 @@ define void @use_matrix_reg(<1024 x i1>* nocapture %x) #2 {
 ; CHECK-NEXT:    ;;
 entry:
   %0 = load <1024 x i1>, <1024 x i1>* %x, align 128
-  %1 = tail call <1024 x i1> asm sideeffect "mt44d $0 = $0", "=w,0,~{$r0r1r2r3},~{$a0a1a2a3}"(<1024 x i1> %0)
+  %1 = tail call <1024 x i1> asm sideeffect "mt44d $0 = $0", "=x,0,~{$r0r1r2r3},~{$a0a1a2a3}"(<1024 x i1> %0)
   store <1024 x i1> %1, <1024 x i1>* %x, align 128
   ret void
 }

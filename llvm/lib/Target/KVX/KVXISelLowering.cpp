@@ -1626,7 +1626,7 @@ KVXTargetLowering::getRegForInlineAsmConstraint(const TargetRegisterInfo *TRI,
     default:
       return TargetLowering::getRegForInlineAsmConstraint(TRI, Constraint, VT);
     }
-  } else if (Constraint == "w") {
+  } else if (Constraint == "x") {
     switch (VT.SimpleTy) {
     case MVT::v64i1:
     case MVT::v128i1:
@@ -1676,7 +1676,7 @@ KVXTargetLowering::getRegForInlineAsmConstraint(const TargetRegisterInfo *TRI,
 
 TargetLowering::ConstraintType
 KVXTargetLowering::getConstraintType(StringRef Constraint) const {
-  if (Constraint == "w")
+  if (Constraint == "x")
     return C_RegisterClass;
 
   return TargetLowering::getConstraintType(Constraint);
