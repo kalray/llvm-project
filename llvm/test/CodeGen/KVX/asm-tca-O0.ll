@@ -53,7 +53,7 @@ entry:
   %1 = load i8*, i8** %v.addr, align 8
   %2 = load i64, i64* %A.addr, align 8
   %3 = load i64, i64* %B, align 8
-  %4 = call { <256 x i1>, <256 x i1> } asm sideeffect "lv $0 = $3[$2]\0A\09;;\0A\09lv.s $1 = $4[$2]\0A\09;;", "=w,=w,r,r,r,~{$r0}"(i8* %1, i64 %2, i64 %3)
+  %4 = call { <256 x i1>, <256 x i1> } asm sideeffect "lv $0 = $3[$2]\0A\09;;\0A\09lv.s $1 = $4[$2]\0A\09;;", "=x,=x,r,r,r,~{$r0}"(i8* %1, i64 %2, i64 %3)
   %asmresult = extractvalue { <256 x i1>, <256 x i1> } %4, 0
   %asmresult1 = extractvalue { <256 x i1>, <256 x i1> } %4, 1
   store <256 x i1> %asmresult, <256 x i1>* %out1, align 32
@@ -61,7 +61,7 @@ entry:
   %5 = load <256 x i1>, <256 x i1>* %out1, align 32
   %6 = load <256 x i1>, <256 x i1>* %out2, align 32
   %7 = load i8*, i8** %v.addr, align 8
-  %8 = call <256 x i1> asm sideeffect "copyv $0 = $1\0A\09;;\0A\09sv 0[$3] = $2", "=w,w,w,r"(<256 x i1> %5, <256 x i1> %6, i8* %7)
+  %8 = call <256 x i1> asm sideeffect "copyv $0 = $1\0A\09;;\0A\09sv 0[$3] = $2", "=x,x,x,r"(<256 x i1> %5, <256 x i1> %6, i8* %7)
   store <256 x i1> %8, <256 x i1>* %out3, align 32
   ret void
 }
@@ -89,7 +89,7 @@ entry:
   %tcav4i64 = alloca <256 x i1>, align 32
   store i64 %A, i64* %A.addr, align 8
   %0 = load <256 x i1>, <256 x i1>* %tcav4i64, align 32
-  %1 = call <256 x i1> asm sideeffect "copyv $0 = $1", "=w,w,~{$a0}"(<256 x i1> %0)
+  %1 = call <256 x i1> asm sideeffect "copyv $0 = $1", "=x,x,~{$a0}"(<256 x i1> %0)
   store <256 x i1> %1, <256 x i1>* %v4i64, align 32
   ret void
 }
@@ -117,7 +117,7 @@ entry:
   %tcav4i64 = alloca <256 x i1>, align 32
   store i64 %A, i64* %A.addr, align 8
   %0 = load <256 x i1>, <256 x i1>* %tcav4i64, align 32
-  %1 = call <256 x i1> asm sideeffect "copyv $0 = $1", "=w,w,~{$a0.hi}"(<256 x i1> %0)
+  %1 = call <256 x i1> asm sideeffect "copyv $0 = $1", "=x,x,~{$a0.hi}"(<256 x i1> %0)
   store <256 x i1> %1, <256 x i1>* %v4i64, align 32
   ret void
 }
@@ -143,7 +143,7 @@ entry:
   %0 = load <256 x i1>*, <256 x i1>** %a.addr, align 8
   %arrayidx = getelementptr inbounds <256 x i1>, <256 x i1>* %0, i64 0
   %1 = load <256 x i1>, <256 x i1>* %arrayidx, align 32
-  call void asm sideeffect "copyv $0 = $0", "w,~{$r0r1r2r3},~{$a0a1}"(<256 x i1> %1)
+  call void asm sideeffect "copyv $0 = $0", "x,~{$r0r1r2r3},~{$a0a1}"(<256 x i1> %1)
   ret void
 }
 
@@ -184,7 +184,7 @@ entry:
   %2 = load <256 x i1>*, <256 x i1>** %c.addr, align 8
   %arrayidx2 = getelementptr inbounds <256 x i1>, <256 x i1>* %2, i64 0
   %3 = load <256 x i1>, <256 x i1>* %arrayidx2, align 32
-  %4 = call { <256 x i1>, <256 x i1> } asm sideeffect "copyv $0 = $1\0A\09;;\0A\09copyv $1 = $0", "=w,=w,w,~{$r0r1r2r3},~{$a0a1a2a3}"(<256 x i1> %3)
+  %4 = call { <256 x i1>, <256 x i1> } asm sideeffect "copyv $0 = $1\0A\09;;\0A\09copyv $1 = $0", "=x,=x,x,~{$r0r1r2r3},~{$a0a1a2a3}"(<256 x i1> %3)
   %asmresult = extractvalue { <256 x i1>, <256 x i1> } %4, 0
   %asmresult3 = extractvalue { <256 x i1>, <256 x i1> } %4, 1
   store <256 x i1> %asmresult, <256 x i1>* %arrayidx, align 32
@@ -214,7 +214,7 @@ entry:
   %0 = load <256 x i1>*, <256 x i1>** %a.addr, align 8
   %arrayidx = getelementptr inbounds <256 x i1>, <256 x i1>* %0, i64 0
   %1 = load <256 x i1>, <256 x i1>* %arrayidx, align 32
-  call void asm sideeffect "sv 0[$$r3] = $0", "w,~{$r0r1r2r3},~{$a0a1a2a3}"(<256 x i1> %1)
+  call void asm sideeffect "sv 0[$$r3] = $0", "x,~{$r0r1r2r3},~{$a0a1a2a3}"(<256 x i1> %1)
   %2 = load <256 x i1>*, <256 x i1>** %a.addr, align 8
   ret <256 x i1>* %2
 }
@@ -256,7 +256,7 @@ entry:
   %2 = load <256 x i1>*, <256 x i1>** %v.addr, align 8
   %arrayidx1 = getelementptr inbounds <256 x i1>, <256 x i1>* %2, i64 0
   %3 = load <256 x i1>, <256 x i1>* %arrayidx1, align 32
-  %4 = call <512 x i1> asm sideeffect "mma484bw $0 = $0, $1, $1", "=w,w,0,~{$r0r1r2r3},~{$a0a1a2a3}"(<256 x i1> %3, <512 x i1> %1)
+  %4 = call <512 x i1> asm sideeffect "mma484bw $0 = $0, $1, $1", "=x,x,0,~{$r0r1r2r3},~{$a0a1a2a3}"(<256 x i1> %3, <512 x i1> %1)
   store <512 x i1> %4, <512 x i1>* %arrayidx, align 32
   ret void
 }
@@ -297,7 +297,7 @@ entry:
   %0 = load <1024 x i1>*, <1024 x i1>** %x.addr, align 8
   %arrayidx = getelementptr inbounds <1024 x i1>, <1024 x i1>* %0, i64 0
   %1 = load <1024 x i1>, <1024 x i1>* %arrayidx, align 128
-  %2 = call <1024 x i1> asm sideeffect "mt44d $0 = $0", "=w,0,~{$r0r1r2r3},~{$a0a1a2a3}"(<1024 x i1> %1)
+  %2 = call <1024 x i1> asm sideeffect "mt44d $0 = $0", "=x,0,~{$r0r1r2r3},~{$a0a1a2a3}"(<1024 x i1> %1)
   store <1024 x i1> %2, <1024 x i1>* %arrayidx, align 128
   ret void
 }

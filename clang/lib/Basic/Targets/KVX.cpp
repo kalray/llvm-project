@@ -260,7 +260,7 @@ ArrayRef<TargetInfo::GCCRegAlias> KVXTargetInfo::getGCCRegAliases() const {
 
 bool KVXTargetInfo::validateAsmConstraint(
     const char *&Name, TargetInfo::ConstraintInfo &Info) const {
-  if (*Name == 'w') { // TCA vector registers
+  if (*Name == 'x') { // TCA vector registers
     Info.setAllowsRegister();
     return true;
   }
