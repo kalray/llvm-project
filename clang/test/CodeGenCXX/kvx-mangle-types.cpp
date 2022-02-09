@@ -1,10 +1,10 @@
 // RUN: %clang_cc1 -triple kvx-kalray-cos -emit-llvm -o - %s | FileCheck %s
 
-// CHECK: _Z2f3Pu8__tca256
-void f3(__tca256 *vq) {}
+// CHECK: __kvx_x256
+void f3(__kvx_x256 *vq) {}
 
-// CHECK: _Z2f3Pu8__tca512
-void f3(__tca512 *vp) {}
+// CHECK: __kvx_x512
+void f3(__kvx_x512 *vp) {}
 
-// CHECK: _Z2f3Pu9__tca1024
-void f3(__tca1024 *vp) {}
+// CHECK: __kvx_x1024
+void f3(__kvx_x1024 *vp) {}

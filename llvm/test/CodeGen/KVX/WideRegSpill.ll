@@ -4,19 +4,19 @@
 ; From the c src:
 ; a() {
 ;   int b = 0;
-;   __tca256 c;
-;   __tca512 d = __builtin_kvx_buildfvw(c, c);
+;   __kvx_x256 c;
+;   __kvx_x512 d = __builtin_kvx_buildfvw(c, c);
 ;   for (int col;; col += 2) {
 ;     int e;
-;     __tca512 f, g;
-;     __tca1024 h;
-;     __tca256 i;
+;     __kvx_x512 f, g;
+;     __kvx_x1024 h;
+;     __kvx_x256 i;
 ; #pragma unroll 3
 ;     for (; e < b; ++e)
 ;       f = d;
 ;     h = __builtin_kvx_buildfwm(f, g);
 ;     i = __builtin_kvx_convwbv(h, ".rz.sat");
-;     *(__tca256 *)col = i;
+;     *(__kvx_x256 *)col = i;
 ;   }
 ; }
 target triple = "kvx-kalray-cos"

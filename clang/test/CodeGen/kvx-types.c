@@ -12,7 +12,7 @@
 // CHECK-NEXT:    ret void
 //
 void test_vector(void *ptr1, void *ptr2) {
-  __tca256 *inp = (__tca256 *)ptr1;
-  __tca256 *outp = (__tca256 *)ptr2;
+  __kvx_x256 *inp = (__kvx_x256 *)ptr1;
+  __kvx_x256 *outp = (__kvx_x256 *)ptr2;
   *(outp + 1) = *(inp + 2);
 }
