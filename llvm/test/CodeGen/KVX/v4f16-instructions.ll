@@ -3028,4 +3028,14 @@ entry:
   ret float %conv
 }
 
+define <4 x half> @concat (<2 x half> %a, <2 x half> %b) #0 {
+; CHECK-LABEL: concat:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    insf $r0 = $r1, 63, 32
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %v = shufflevector <2 x half> %a, <2 x half> %b, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  ret <4 x half> %v
+}
+
 attributes #0 = { nounwind }
