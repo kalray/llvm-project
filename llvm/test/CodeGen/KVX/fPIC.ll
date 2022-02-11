@@ -22,6 +22,24 @@ entry:
   ret i32 %mul
 }
 
+define weak i32 @weak() {
+; CHECK-LABEL: weak:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    pcrel $r1 = @gotaddr()
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r0 = @got( weak )[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r1 = @got( b )[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    igoto $r1
+; CHECK-NEXT:    ;;
+entry:
+  %call = tail call i32 bitcast (i32 (...)* @b to i32 (i32 (...)*)*)(i32 (...)* bitcast (i32 ()* @weak to i32 (...)*))
+  ret i32 undef
+}
+
+declare i32 @b(...)
+
 define i32 @main() {
 ; CHECK-LABEL: main:
 ; CHECK:       # %bb.0: # %entry

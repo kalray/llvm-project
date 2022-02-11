@@ -1337,6 +1337,7 @@ SDValue KVXTargetLowering::lowerGlobalAddress(SDValue Op,
     switch (LT) {
     case GlobalValue::AvailableExternallyLinkage:
     case GlobalValue::ExternalWeakLinkage:
+    case GlobalValue::WeakAnyLinkage:
     case GlobalValue::LinkOnceODRLinkage:
     case GlobalValue::CommonLinkage:
     case GlobalValue::ExternalLinkage: {
