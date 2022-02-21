@@ -21477,38 +21477,6 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_selectdq:
     return KVX_emitDoubleVectorBuiltin(*this, E, Intrinsic::kvx_cmoved, 4,
                                        false);
-  case KVX::BI__builtin_kvx_selectfwp: {
-    auto *V2i32Ty = llvm::FixedVectorType::get(Int32Ty, 2);
-    auto *V2f32Ty = llvm::FixedVectorType::get(FloatTy, 2);
-
-    Value *Arg1 = Builder.CreateBitCast(EmitScalarExpr(E->getArg(0)), V2i32Ty);
-    Value *Arg2 = Builder.CreateBitCast(EmitScalarExpr(E->getArg(1)), V2i32Ty);
-    Value *Arg3 = EmitScalarExpr(E->getArg(2));
-
-    simdcond_t SimdCond = KVX_negateSimdCond(
-        KVX_getSimdCond(getContext(), E->getArg(3)->IgnoreParenImpCasts()));
-
-    if (SimdCond == SIMDCOND_INVALID)
-      CGM.Error(E->getArg(3)->getBeginLoc(), "invalid simd condition modifier");
-
-    Value *Arg4 = ConstantInt::get(IntTy, SimdCond);
-
-    Function *Callee = CGM.getIntrinsic(Intrinsic::kvx_cmovewp);
-    return Builder.CreateBitCast(
-        Builder.CreateCall(Callee, {Arg1, Arg2, Arg3, Arg4}), V2f32Ty);
-  }
-  case KVX::BI__builtin_kvx_selectfwq:
-    return KVX_emitCondVectorBuiltin(*this, E, Intrinsic::kvx_cmovewp, FloatTy,
-                                     Int32Ty, 4, 2, true);
-  case KVX::BI__builtin_kvx_selectfwo:
-    return KVX_emitCondVectorBuiltin(*this, E, Intrinsic::kvx_cmovewp, FloatTy,
-                                     Int32Ty, 8, 2, true);
-  case KVX::BI__builtin_kvx_selectfdp:
-    return KVX_emitDoubleVectorBuiltin(*this, E, Intrinsic::kvx_cmoved, 2,
-                                       true);
-  case KVX::BI__builtin_kvx_selectfdq:
-    return KVX_emitDoubleVectorBuiltin(*this, E, Intrinsic::kvx_cmoved, 4,
-                                       true);
   case KVX::BI__builtin_kvx_fabswq:
     return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fabswp, 1, FloatTy, 4,
                                  2);
