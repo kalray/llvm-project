@@ -99,10 +99,10 @@ __kvx_x256 *asm_clobber_quad_matrix(__kvx_x256 *a) {
 
 // CHECK-LABEL: @use_wide_reg(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <512 x i1>, <512 x i1>* [[x:%.*]], align 32, [[TBAA13:!tbaa !.*]]
+// CHECK-NEXT:    [[TMP0:%.*]] = load <512 x i1>, <512 x i1>* [[X:%.*]], align 32, [[TBAA13:!tbaa !.*]]
 // CHECK-NEXT:    [[TMP1:%.*]] = load <256 x i1>, <256 x i1>* [[V:%.*]], align 32, [[TBAA6]]
 // CHECK-NEXT:    [[TMP2:%.*]] = tail call <512 x i1> asm sideeffect "mma484bw $0 = $0, $1, $1", "=x,x,0,~{$r0r1r2r3},~{$a0a1a2a3}"(<256 x i1> [[TMP1]], <512 x i1> [[TMP0]]) [[ATTR3]], !srcloc !15
-// CHECK-NEXT:    store <512 x i1> [[TMP2]], <512 x i1>* [[x]], align 32, [[TBAA13]]
+// CHECK-NEXT:    store <512 x i1> [[TMP2]], <512 x i1>* [[X]], align 32, [[TBAA13]]
 // CHECK-NEXT:    ret void
 //
 void use_wide_reg(__kvx_x512 *x, __kvx_x256 *v) {
