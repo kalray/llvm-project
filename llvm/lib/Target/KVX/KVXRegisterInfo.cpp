@@ -49,14 +49,14 @@ KVXRegisterInfo::getCalleeSavedRegs(const MachineFunction *MF) const {
 BitVector KVXRegisterInfo::getReservedRegs(const MachineFunction &MF) const {
   BitVector Reserved(getNumRegs());
 
+  // Reserve all system registers
+  for (auto Reg : KVX::SystemRegRegClass)
+    markSuperRegs(Reserved, Reg);
+
   // Use markSuperRegs to ensure any register aliases are also reserved
   markSuperRegs(Reserved, getSPReg());
   markSuperRegs(Reserved, KVX::R13);
   markSuperRegs(Reserved, getFPReg());
-  markSuperRegs(Reserved, KVX::RA);
-  markSuperRegs(Reserved, KVX::SR);
-  markSuperRegs(Reserved, KVX::CS);
-  markSuperRegs(Reserved, KVX::PCR);
 
   // Mark all Zero TCA registers as reserved.
   for (auto Reg :
