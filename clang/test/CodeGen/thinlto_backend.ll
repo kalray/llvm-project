@@ -1,6 +1,3 @@
-; T18251
-; T18251
-; XFAIL: kvx
 ; REQUIRES: x86-registered-target
 
 ; RUN: opt -module-summary -o %t1.o %s
