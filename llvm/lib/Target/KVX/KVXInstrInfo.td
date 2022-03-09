@@ -1495,13 +1495,11 @@ multiclass MC_30<string OpcStr> {
 //   defm FSBFW
 //   defm FMULW
 multiclass MC_31<string OpcStr> {
-  let Defs = [CS], Uses = [CS] in
   def ri : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE_BINARY32
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary32:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      MAU_X_FP>;
-  let Defs = [CS], Uses = [CS] in
   def rr : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32
     <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
@@ -2174,7 +2172,6 @@ def FABSD : REGISTERW_REGISTERZ_SIMPLE
    [(set f64:$a1, (fabs f64:$a2))],
    ALU_LITE>;
 
-let Defs = [CS] in
 def FSRECD : SILENT2_REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fsrecd$a1 $a2 = $a3",
@@ -2186,19 +2183,16 @@ def FSRSRD : REGISTERW_REGISTERZ_SIMPLE
    [/* no straightforward pattern */],
    ALU_LITE>;
 
-let Defs = [CS] in
 def FWIDENLWD : SILENT2_REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fwidenlwd$a1 $a2 = $a3",
    [/* no straightforward pattern */]>;
 
-let Defs = [CS] in
 def FWIDENMWD : SILENT2_REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fwidenmwd$a1 $a2 = $a3",
    [/* no straightforward pattern */]>;
 
-let Defs = [CS] in
 def FNARROWDW : ROUNDING2_SILENT2_REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a3), (ins SingleReg:$a4, RoundingMod:$a1, SilentMod:$a2),
    "fnarrowdw$a1$a2 $a3 = $a4",
@@ -2217,21 +2211,18 @@ def FABSW : REGISTERW_REGISTERZ_SIMPLE
    [(set f32:$a1, (fabs f32:$a2))],
    ALU_LITE>;
 
-let Defs = [CS] in
 def FRECW : ROUNDING2_SILENT2_REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a3), (ins SingleReg:$a4, RoundingMod:$a1, SilentMod:$a2),
    "frecw$a1$a2 $a3 = $a4",
    [/* no straightforward pattern */],
    SFU>;
 
-let Defs = [CS] in
 def FRSRW : ROUNDING2_SILENT2_REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a3), (ins SingleReg:$a4, RoundingMod:$a1, SilentMod:$a2),
    "frsrw$a1$a2 $a3 = $a4",
    [/* no straightforward pattern */],
    SFU>;
 
-let Defs = [CS] in
 def FSRECW : SILENT2_REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fsrecw$a1 $a2 = $a3",
@@ -2243,19 +2234,16 @@ def FSRSRW : REGISTERW_REGISTERZ_SIMPLE
    [/* no straightforward pattern */],
    ALU_LITE>;
 
-let Defs = [CS] in
 def FWIDENLHW : SILENT2_REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fwidenlhw$a1 $a2 = $a3",
    [/* no straightforward pattern */]>;
 
-let Defs = [CS] in
 def FWIDENMHW : SILENT2_REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fwidenmhw$a1 $a2 = $a3",
    [/* no straightforward pattern */]>;
 
-let Defs = [CS] in
 def FNARROWWH : ROUNDING2_SILENT2_REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a3), (ins SingleReg:$a4, RoundingMod:$a1, SilentMod:$a2),
    "fnarrowwh$a1$a2 $a3 = $a4",
@@ -2274,7 +2262,6 @@ def FABSWP : REGISTERW_REGISTERZ_SIMPLE
    [(set v2f32:$a1, (fabs v2f32:$a2))],
    ALU_LITE>;
 
-let Defs = [CS] in
 def FSRECWP : SILENT2_REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fsrecwp$a1 $a2 = $a3",
@@ -2286,19 +2273,16 @@ def FSRSRWP : REGISTERW_REGISTERZ_SIMPLE
    [/* no straightforward pattern */],
    ALU_LITE>;
 
-let Defs = [CS] in
 def FWIDENLHWP : SILENT2_REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fwidenlhwp$a1 $a2 = $a3",
    [/* no straightforward pattern */]>;
 
-let Defs = [CS] in
 def FWIDENMHWP : SILENT2_REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fwidenmhwp$a1 $a2 = $a3",
    [/* no straightforward pattern */]>;
 
-let Defs = [CS] in
 def FNARROWDWP : ROUNDING2_SILENT2_REGISTERW_REGISTERP_SIMPLE
   <(outs SingleReg:$a3), (ins PairedReg:$a4, RoundingMod:$a1, SilentMod:$a2),
    "fnarrowdwp$a1$a2 $a3 = $a4",
@@ -2317,7 +2301,6 @@ def FABSHQ : REGISTERW_REGISTERZ_SIMPLE
    [(set f16:$a1, (fabs f16:$a2))],
    ALU_LITE>;
 
-let Defs = [CS] in
 def FNARROWWHQ : ROUNDING2_SILENT2_REGISTERW_REGISTERP_SIMPLE
   <(outs SingleReg:$a3), (ins PairedReg:$a4, RoundingMod:$a1, SilentMod:$a2),
    "fnarrowwhq$a1$a2 $a3 = $a4",
@@ -2555,44 +2538,38 @@ def FCOMPNHQ : FLOATCOMP_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY16X4
    "fcompnhq$a1 $a2 = $a3, $a4",
    [/* no straightforward pattern */]>;
 
-let Defs = [CS] in
 def FSDIVD : SILENT2_REGISTERW_REGISTERP_SIMPLE
   <(outs SingleReg:$a2), (ins PairedReg:$a3, SilentMod:$a1),
    "fsdivd$a1 $a2 = $a3",
    [/* no straightforward pattern */]>;
 
-let Defs = [CS] in
 def FCDIVD : SILENT2_REGISTERW_REGISTERP_SIMPLE
   <(outs SingleReg:$a2), (ins PairedReg:$a3, SilentMod:$a1),
    "fcdivd$a1 $a2 = $a3",
    [/* no straightforward pattern */]>;
 
-let Defs = [CS] in
 def FSDIVW : SILENT2_REGISTERW_REGISTERP_SIMPLE
   <(outs SingleReg:$a2), (ins PairedReg:$a3, SilentMod:$a1),
    "fsdivw$a1 $a2 = $a3",
    [/* no straightforward pattern */]>;
 
-let Defs = [CS] in
 def FCDIVW : SILENT2_REGISTERW_REGISTERP_SIMPLE
   <(outs SingleReg:$a2), (ins PairedReg:$a3, SilentMod:$a1),
    "fcdivw$a1 $a2 = $a3",
    [/* no straightforward pattern */]>;
 
-let Defs = [CS] in
 def FSDIVWP : SILENT2_REGISTERW_REGISTERP_SIMPLE
   <(outs SingleReg:$a2), (ins PairedReg:$a3, SilentMod:$a1),
    "fsdivwp$a1 $a2 = $a3",
    [/* no straightforward pattern */]>;
 
-let Defs = [CS] in
 def FCDIVWP : SILENT2_REGISTERW_REGISTERP_SIMPLE
   <(outs SingleReg:$a2), (ins PairedReg:$a3, SilentMod:$a1),
    "fcdivwp$a1 $a2 = $a3",
    [/* no straightforward pattern */]>;
 
 let Constraints = "$ad = $a2" in
-let Defs = [CS], Predicates = [IsV2] in
+let Predicates = [IsV2] in
 def FFDMDAW : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32X2
   <(outs SingleReg:$ad), (ins SingleReg:$a0, SingleReg:$a1, SingleReg:$a2, RoundingMod:$r, SilentMod:$s),
    "ffdmdaw$r$s $ad = $a0, $a1",
@@ -2600,7 +2577,7 @@ def FFDMDAW : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32X2
    MAU_AUXR>;
 
 let Constraints = "$ad = $a2" in
-let Defs = [CS], Predicates = [IsV2] in
+let Predicates = [IsV2] in
 def FFDMDAWP : ROUNDING_SILENT_REGISTERW_REGISTERP_REGISTERQ_SIMPLE_BINARY32X2
   <(outs SingleReg:$ad), (ins PairedReg:$a0, PairedReg:$a1, SingleReg:$a2, RoundingMod:$r, SilentMod:$s),
    "ffdmdawp$r$s $ad = $a0, $a1",
