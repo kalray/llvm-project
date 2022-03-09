@@ -26,12 +26,12 @@ typedef __kvx_x256 tca256_t;   // Maps to a variable that is held in a VectorReg
 typedef __kvx_x512 tca512_t;   // Maps to a variable that is held in a WideReg
 typedef __kvx_x1024 tca1024_t; // Maps to a variable that is held in a MatrixReg
 
-/// Tca registers layout:
+/// TCA registers layout:
 /// The base unit is a Vector Register (__kvx_x256).
-/// The Wide Register (__kvx_x512) is built with two Vector Registers.
-/// The Matrix Register (__kvx_x1024) is built with four Vector Registers or two
+/// A Wide Register (__kvx_x512) is built with two Vector Registers.
+/// A Matrix Register (__kvx_x1024) is built with four Vector Registers or two
 /// Wide Registers.
-/// Every most significant half part of a matrix or wide can be addressed as
+/// Each most significant half part of a matrix or wide can be addressed as
 /// the immediate smaller vector type Hi side. The least significant is the Lo
 /// side.
 /// A wide register always starts in a pair numbered Vector Register.
@@ -46,7 +46,7 @@ typedef __kvx_x1024 tca1024_t; // Maps to a variable that is held in a MatrixReg
 /// |-vecReg3--|-vecReg2--|-vecReg1--|-vecReg0--|
 /// |-vecRegK--|-vecRegZ--|-vecRegY--|-vecRegX--|
 
-/// Modifer type [Accepted modifiers strings. A single dot '.' can be omitted.]
+/// Modifier type [Accepted modifier strings. A single dot '.' can be omitted.]
 /// Rectify: [. .relu]
 /// Roundint: [.rn .ru .rd .rz .rhu]
 /// Saturate: [.sat .satu]
@@ -129,35 +129,40 @@ typedef __kvx_x1024 tca1024_t; // Maps to a variable that is held in a MatrixReg
 /// Modifiers: Roundint, Saturate
 // tca256_t __builtin_kvx_convdhv (tca1024_t M, const char *mods);
 
-/// Trucante the first quarter (2x4) of a 4x8 matrix of integers M to a 2x4
+/// The behaviors of convwbv[0123]? depend on CS.XDROP
+/// The description of these functions are only valid if CS.XDROP==0
+/// If CS.XDROP != 0, these functions behave the same as their respective
+/// instructions.
+
+/// Truncate the first quarter (2x4) of a 4x8 matrix of integers M to a 2x4
 /// matrix of chars and write in the first quarter of vector V. If the assigned
 /// vector is not the input vector V, a copy of V is performed before to the
 /// output, as to preserve other quarters.
 /// Modifiers: Roundint, Saturate
 // tca256_t  __builtin_kvx_convwbv0 (tca256_t V, tca1024_t M, const char *mods);
 
-/// Trucante the second quarter (2x4) of a 4x8 matrix of integers M to a 2x4
+/// Truncate the second quarter (2x4) of a 4x8 matrix of integers M to a 2x4
 /// matrix of chars and write in the second quarter of vector V. If the assigned
 /// vector is not the input vector V, a copy of V is performed before to the
 /// output, as to preserve other quarters.
 /// Modifiers: Roundint, Saturate
 // tca256_t  __builtin_kvx_convwbv1 (tca256_t V, tca1024_t M, const char *mods);
 
-/// Trucante the third quarter (2x4) of a 4x8 matrix of integers to a 2x4 matrix
+/// Truncate the third quarter (2x4) of a 4x8 matrix of integers to a 2x4 matrix
 /// of chars and write in the third quarter of vector V.
 /// If the assigned vector is not the input vector V, a copy of V is performed
 /// before to the output, as to preserve other quarters.
 /// Modifiers: Roundint, Saturate
 // tca256_t  __builtin_kvx_convwbv2 (tca256_t V, tca1024_t M, const char *mods);
 
-/// Trucante the last quarter (2x4) of a 4x8 matrix of integers M to a 2x4
+/// Truncate the last quarter (2x4) of a 4x8 matrix of integers M to a 2x4
 /// matrix of chars and write in the last quarter of vector V. If the assigned
 /// vector is not the input vector V, a copy of V is performed before to the
 /// output, as to preserve other quarters.
 /// Modifiers: Roundint, Saturate
 // tca256_t  __builtin_kvx_convwbv3 (tca256_t V, tca1024_t M, const char *mods);
 
-/// Trucante the 4x8 matrix of integers M to a 4x8 matrix of chars.
+/// Truncate the 4x8 matrix of integers M to a 4x8 matrix of chars.
 /// Modifiers: Roundint, Saturate
 // tca256_t __builtin_kvx_convwbv (tca1024_t M, const char *mods);
 
@@ -165,7 +170,7 @@ typedef __kvx_x1024 tca1024_t; // Maps to a variable that is held in a MatrixReg
 /// and V0 a matrix of 2x4 floats.
 /// Add the first quarter (2x2) of W to the matrix multiply of V1 by the transposed (V2).
 /// Write the result into the first half of V0 and return the resulting 2x4 matrix V0.
-/// Makes V0 = {W[0] + V1 * T(V1), V0[1]}.
+/// Makes V0 = {W[0] + V1 * T(V2), V0[1]}.
 /// Returns V0.
 // tca256_t __builtin_kvx_fmma242hw0 (tca256_t V0,  tca512_t W,  tca256_t V1, tca256_t V2);
 
@@ -173,7 +178,7 @@ typedef __kvx_x1024 tca1024_t; // Maps to a variable that is held in a MatrixReg
 /// and V0 a matrix of 2x4 floats.
 /// Add the second quarter (2x2) of W to the matrix multiply of V1 by the transposed (V2).
 /// Write the result into the second half of V0 and return the resulting 2x4 matrix V0.
-/// Makes V0 = {V0[0], W[1] + V1 * T(V1)}.
+/// Makes V0 = {V0[0], W[1] + V1 * T(V2)}.
 /// Returns V0.
 // tca256_t __builtin_kvx_fmma242hw1 (tca256_t V0,  tca512_t W,  tca256_t V1, tca256_t V2);
 
@@ -181,27 +186,27 @@ typedef __kvx_x1024 tca1024_t; // Maps to a variable that is held in a MatrixReg
 /// and V0 a matrix of 2x4 floats.
 /// Add the third quarter (2x2) of W to the matrix multiply of V1 by the transposed (V2).
 /// Write the result into the first half of V0 and return the resulting 2x4 matrix V0.
-/// Makes V0 = {W[2] + V1 * T(V1), V0[1]}.
+/// Makes V0 = {W[2] + V1 * T(V2), V0[1]}.
 /// Returns V0.
 // tca256_t __builtin_kvx_fmma242hw2 (tca256_t V0,  tca512_t W,  tca256_t V1, tca256_t V2);
 
 /// Let W be a 4x4 matrix of floats, V1 and V2 be 2x4 matrixes of half floats
 /// and V0 a matrix of 2x4 floats.
-/// Add the forth quarter (2x2) of W to the matrix multiply of V1 by the transposed (V2).
+/// Add the fourth quarter (2x2) of W to the matrix multiply of V1 by the transposed (V2).
 /// Write the result into the second half of V0 and return the resulting 2x4 matrix V0.
-/// Makes V0 = {V0[0], W[3] + V1 * T(V1)}.
+/// Makes V0 = {V0[0], W[3] + V1 * T(V2)}.
 /// Returns V0.
 // tca256_t __builtin_kvx_fmma242hw3 (tca256_t V0,  tca512_t W,  tca256_t V1, tca256_t V2);
 
 /// Let W be a 4x4 matrix of floats, V0 and V1 be 2x4 matrixes of half floats.
-/// Add to each quarter of W the the matrix multiply of V0 by the transposed
+/// Add to each quarter of W the matrix multiply of V0 by the transposed
 /// (V1). W = W[0-3] + V0 X T(V1).
 // tca512_t __builtin_kvx_fmma444hw (tca512_t W, tca256_t V0, tca256_t V1);
 
 /// Let M be a 4x4 matrix of int64_t,
 /// V0 a 4x4 matrix of signed short and
-/// V1 a 4x8 matrix of char.
-/// V1' is the first half of V1, giving a 4x4 matrix of char.
+/// V1 a 4x8 matrix of signed char.
+/// V1' is the first half of V1, giving a 4x4 matrix of signed char.
 /// Returns the 4x4 matrix of int64_t = M + V0 x transposed (V1').
 // tca1024_t __builtin_kvx_mma444hbd0 (tca1024_t M, tca256_t V0, tca256_t V1);
 
@@ -344,7 +349,7 @@ typedef __kvx_x1024 tca1024_t; // Maps to a variable that is held in a MatrixReg
 /// Modifer: ScalarCond
 // tca256_t __builtin_kvx_lv_cond (tca256_t V, tca256_t *p, int64_t condition, const char *mods);
 
-/// Thinking as M being a 4x4 matrix of int64_t, this loads a 1x4 matrix of int64_t,
+/// Assuming M is a 4x4 matrix of int64_t, this loads a 1x4 matrix of int64_t,
 /// and transpose it into the `column` of M.
 // Load a 256-bit data:
 /// <----------------- 256-bit ----------------->
@@ -376,7 +381,7 @@ typedef __kvx_x1024 tca1024_t; // Maps to a variable that is held in a MatrixReg
 /// Modifer: SpeculateMod
 // tca1024_t __builtin_kvx_lvc (tca1024_t M, tca256_t *p, int32_t column, const char *mods);
 
-/// Thinking as M being a 4x4 matrix of int64_t, this conditionally loads a 1x4
+/// Assuming M is a 4x4 matrix of int64_t, this conditionally loads a 1x4
 /// matrix of int64_t, and transpose it into the `column` of M if (evaluated true
 /// (ScalarCond, condition)).
 /// Modifer: SpeculateMod, ScalarCond
