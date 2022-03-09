@@ -5,21 +5,22 @@ target triple = "kvx-kalray-cos"
 define void @c([512 x float]* %0, [512 x float]* %1, [768 x half]* %2, [512 x half]* %3) {
 ; CHECK-LABEL: c:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    mt44d $a0a1a2a3 = $a0a1a2a3
 ; CHECK-NEXT:    compd.ltu $r0 = $r0, 508
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_1: # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    copyv $a4 = $a0
+; CHECK-NEXT:    lv.c3 $a0a1a2a3 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyv $a5 = $a1
+; CHECK-NEXT:    fmma242hw0 $a0_lo = $a0a1, $a0, $a0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyv $a6 = $a2
+; CHECK-NEXT:    fmma242hw1 $a0_hi = $a0a1, $a0, $a0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyv $a7 = $a3
+; CHECK-NEXT:    fmma242hw2 $a0_lo = $a0a1, $a0, $a0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv.c3 $a4a5a6a7 = 0[$r0]
+; CHECK-NEXT:    fmma242hw3 $a0_hi = $a0a1, $a0, $a0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv.c3 $a4a5a6a7 = 0[$r0]
+; CHECK-NEXT:    lv.c3 $a0a1a2a3 = 0[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    mt44d $a0a1a2a3 = $a0a1a2a3
 ; CHECK-NEXT:    cb.odd $r0 ? .LBB0_1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.2:
