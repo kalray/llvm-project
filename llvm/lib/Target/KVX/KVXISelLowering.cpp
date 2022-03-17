@@ -445,8 +445,8 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
 
   if (!STI.isV1())
     for (auto I :
-         {ISD::ABS, ISD::ADD, ISD::SADDSAT, ISD::SMAX, ISD::SMIN, ISD::SHL,
-          ISD::SRA, ISD::SRL, ISD::SUB, ISD::UADDSAT, ISD::UMAX, ISD::UMIN})
+         {ISD::ABS, ISD::ADD, ISD::SADDSAT, ISD::SMAX, ISD::SMIN, ISD::SHL, ISD::SRA, ISD::SRL, ISD::SUB, ISD::UADDSAT,
+                   ISD::UMAX, ISD::UMIN, ISD::VSELECT})
       for (auto VT : {MVT::v2i8, MVT::v4i8, MVT::v8i8, MVT::v2i16, MVT::v4i16})
         setOperationAction(I, VT, Legal);
 
