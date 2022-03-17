@@ -98,6 +98,10 @@ def : Pat<(v4i16 (abs (sub (v4i16 (is_imm_vec_kvx_splat32_:$IMM)), v4i16:$rhs)))
 def : Pat<(v4i16 (abs (sub (v4i16 (is_imm_vec_kvx_splat32_at:$IMM)), v4i16:$rhs))), (v4i16 (ABDHQri SingleReg:$rhs, (build_imm_vec $IMM), splat32_at ) )>;
 def : Pat<(v4i16 (abs (sub v4i16:$lhs, v4i16:$rhs))), (v4i16 (ABDHQrr SingleReg:$rhs, SingleReg:$lhs))>;
 
+// ABDSW
+def : Pat<(i32 (trunc (i64 (umin (abs (sub Wrapped64W:$lhs, (sext (i32 SingleReg:$rhs)))), 2147483647)))), (i32 (ABDSWri SingleReg:$rhs, (trunc_imm_32 $lhs), splat32_))>, Requires<[IsV2]>;
+def : Pat<(i32 (trunc (i64 (umin (abs (sub (sext(i32 SingleReg:$lhs)), (sext (i32 SingleReg:$rhs)))), 2147483647)))), (i32 (ABDSWrr SingleReg:$rhs, SingleReg:$lhs))>, Requires<[IsV2]>;
+
 // ABDW
 def : Pat<(i32 (abs (sub imm:$lhs, i32:$rhs))), (i32 (ABDWri10 SingleReg:$rhs, Signed10W:$lhs))>;
 def : Pat<(i32 (abs (sub imm:$lhs, i32:$rhs))), (i32 (ABDWri37 SingleReg:$rhs, Wrapped32:$lhs))>;
