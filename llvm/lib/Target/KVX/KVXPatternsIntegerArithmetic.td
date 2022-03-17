@@ -619,14 +619,20 @@ multiclass COMP_Pat<SDNode Node, Comparison Mod, Comparison RevMod> {
   def : Pat<(i32 (Node i64:$lhs, (i64(sext i32:$rhs)))),
         (COMPWD SingleReg:$rhs, SingleReg:$lhs, RevMod)>;
 
+  // COMPND
+  def : Pat<(i64 (select (i32 (Node i64:$lhs, Wrapped64W:$rhs)), (i64 -1), (i64 0))),
+        (COMPNDri SingleReg:$lhs, (trunc_imm_32 imm:$rhs), Mod)>, Requires<[IsV2]>;
+  def : Pat<(i64 (select (i32 (Node i64:$lhs, i64:$rhs)), (i64 -1), (i64 0))),
+        (COMPNDrr SingleReg:$lhs, SingleReg:$rhs, Mod)>, Requires<[IsV2]>;
+
   // COMPNW
   def : Pat<(i32 (select (i32 (Node i32:$lhs, i32:$rhs)), (i32 -1), (i32 0))),
         (COMPNWrr SingleReg:$lhs, SingleReg:$rhs, Mod)>, Requires<[IsV2]>;
   def : Pat<(i32 (select (i32 (Node i32:$lhs, Wrapped32:$rhs)), (i32 -1), (i32 0))),
         (COMPNWri SingleReg:$lhs, Wrapped32:$rhs, Mod)>, Requires<[IsV2]>;
-  def : Pat<(i32 (select (i64 (Node (i64(zext i32:$lhs)), Unsigned64W:$rhs)), (i32 -1), (i32 0))),
+  def : Pat<(i32 (select (i32 (Node (i64(zext i32:$lhs)), Unsigned64W:$rhs)), (i32 -1), (i32 0))),
         (COMPNWri SingleReg:$lhs, (trunc_imm_32 imm:$rhs), Mod)>, Requires<[IsV2]>;
-  def : Pat<(i32 (select (i64 (Node (i64(sext i32:$lhs)), Wrapped64W:$rhs)), (i32 -1), (i32 0))),
+  def : Pat<(i32 (select (i32 (Node (i64(sext i32:$lhs)), Wrapped64W:$rhs)), (i32 -1), (i32 0))),
         (COMPNWri SingleReg:$lhs, (trunc_imm_32 imm:$rhs), Mod)>, Requires<[IsV2]>;
 
   defm : SELECT_COMP_PAT<Node, Mod, COMPWrr, COMPWri, i32, i32, NEGW, Wrapped32>;

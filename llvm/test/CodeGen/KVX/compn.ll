@@ -1231,3 +1231,625 @@ entry:
   %conv = sext i1 %cmp to i32
   ret i32 %conv
 }
+
+define i64 @foo_i64_i64_lt(i64 %a, i64 %b){
+; V1-LABEL: foo_i64_i64_lt:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    compd.lt $r0 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    negd $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: foo_i64_i64_lt:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    compnd.lt $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = icmp slt i64 %a, %b
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+define i64 @foo_i64_i64_le(i64 %a, i64 %b){
+; V1-LABEL: foo_i64_i64_le:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    compd.le $r0 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    negd $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: foo_i64_i64_le:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    compnd.le $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = icmp sle i64 %a, %b
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+define i64 @foo_i64_i64_gt(i64 %a, i64 %b){
+; V1-LABEL: foo_i64_i64_gt:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    compd.gt $r0 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    negd $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: foo_i64_i64_gt:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    compnd.gt $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = icmp sgt i64 %a, %b
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+define i64 @foo_i64_i64_ge(i64 %a, i64 %b){
+; V1-LABEL: foo_i64_i64_ge:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    compd.ge $r0 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    negd $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: foo_i64_i64_ge:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    compnd.ge $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = icmp sge i64 %a, %b
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+define i64 @foo_i64_i64_ltu(i64 %a, i64 %b){
+; V1-LABEL: foo_i64_i64_ltu:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    compd.ltu $r0 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    negd $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: foo_i64_i64_ltu:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    compnd.ltu $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = icmp ult i64 %a, %b
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+define i64 @foo_i64_i64_leu(i64 %a, i64 %b){
+; V1-LABEL: foo_i64_i64_leu:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    compd.leu $r0 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    negd $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: foo_i64_i64_leu:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    compnd.leu $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = icmp ule i64 %a, %b
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+define i64 @foo_i64_i64_gtu(i64 %a, i64 %b){
+; V1-LABEL: foo_i64_i64_gtu:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    compd.gtu $r0 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    negd $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: foo_i64_i64_gtu:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    compnd.gtu $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = icmp ugt i64 %a, %b
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+define i64 @foo_i64_i64_geu(i64 %a, i64 %b){
+; V1-LABEL: foo_i64_i64_geu:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    compd.geu $r0 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    negd $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: foo_i64_i64_geu:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    compnd.geu $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = icmp uge i64 %a, %b
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+define i64 @foo_i64_i64_eq(i64 %a, i64 %b){
+; V1-LABEL: foo_i64_i64_eq:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    compd.eq $r0 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    negd $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: foo_i64_i64_eq:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    compnd.eq $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = icmp eq i64 %a, %b
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+define i64 @foo_i64_i64_neq(i64 %a, i64 %b){
+; V1-LABEL: foo_i64_i64_neq:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    compd.ne $r0 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    negd $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: foo_i64_i64_neq:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    compnd.ne $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = icmp ne i64 %a, %b
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+
+define i64 @foo_i64_i64_lt_ri(i64 %a){
+; V1-LABEL: foo_i64_i64_lt_ri:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    compd.lt $r0 = $r0, 5
+; V1-NEXT:    ;;
+; V1-NEXT:    negd $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: foo_i64_i64_lt_ri:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    compnd.lt $r0 = $r0, 5
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = icmp slt i64 %a, 5
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+define i64 @foo_i64_i64_le_ri(i64 %a){
+; V1-LABEL: foo_i64_i64_le_ri:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    compd.lt $r0 = $r0, 6
+; V1-NEXT:    ;;
+; V1-NEXT:    negd $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: foo_i64_i64_le_ri:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    compnd.lt $r0 = $r0, 6
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = icmp sle i64 %a, 5
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+define i64 @foo_i64_i64_gt_ri(i64 %a){
+; V1-LABEL: foo_i64_i64_gt_ri:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    compd.gt $r0 = $r0, 5
+; V1-NEXT:    ;;
+; V1-NEXT:    negd $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: foo_i64_i64_gt_ri:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    compnd.gt $r0 = $r0, 5
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = icmp sgt i64 %a, 5
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+define i64 @foo_i64_i64_ge_ri(i64 %a){
+; V1-LABEL: foo_i64_i64_ge_ri:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    compd.gt $r0 = $r0, 4
+; V1-NEXT:    ;;
+; V1-NEXT:    negd $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: foo_i64_i64_ge_ri:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    compnd.gt $r0 = $r0, 4
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = icmp sge i64 %a, 5
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+define i64 @foo_i64_i64_ltu_ri(i64 %a){
+; V1-LABEL: foo_i64_i64_ltu_ri:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    compd.ltu $r0 = $r0, 5
+; V1-NEXT:    ;;
+; V1-NEXT:    negd $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: foo_i64_i64_ltu_ri:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    compnd.ltu $r0 = $r0, 5
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = icmp ult i64 %a, 5
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+define i64 @foo_i64_i64_leu_ri(i64 %a){
+; V1-LABEL: foo_i64_i64_leu_ri:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    compd.ltu $r0 = $r0, 6
+; V1-NEXT:    ;;
+; V1-NEXT:    negd $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: foo_i64_i64_leu_ri:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    compnd.ltu $r0 = $r0, 6
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = icmp ule i64 %a, 5
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+define i64 @foo_i64_i64_gtu_ri(i64 %a){
+; V1-LABEL: foo_i64_i64_gtu_ri:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    compd.gtu $r0 = $r0, 5
+; V1-NEXT:    ;;
+; V1-NEXT:    negd $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: foo_i64_i64_gtu_ri:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    compnd.gtu $r0 = $r0, 5
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = icmp ugt i64 %a, 5
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+define i64 @foo_i64_i64_geu_ri(i64 %a){
+; V1-LABEL: foo_i64_i64_geu_ri:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    compd.gtu $r0 = $r0, 4
+; V1-NEXT:    ;;
+; V1-NEXT:    negd $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: foo_i64_i64_geu_ri:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    compnd.gtu $r0 = $r0, 4
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = icmp uge i64 %a, 5
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+define i64 @foo_i64_i64_eq_ri(i64 %a){
+; V1-LABEL: foo_i64_i64_eq_ri:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    compd.eq $r0 = $r0, 5
+; V1-NEXT:    ;;
+; V1-NEXT:    negd $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: foo_i64_i64_eq_ri:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    compnd.eq $r0 = $r0, 5
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = icmp eq i64 %a, 5
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+define i64 @foo_i64_i64_neq_ri(i64 %a){
+; V1-LABEL: foo_i64_i64_neq_ri:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    compd.ne $r0 = $r0, 5
+; V1-NEXT:    ;;
+; V1-NEXT:    negd $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: foo_i64_i64_neq_ri:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    compnd.ne $r0 = $r0, 5
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = icmp ne i64 %a, 5
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+
+define i64 @foo_i64_i64_lt_ri_at(i64 %a){
+; V1-LABEL: foo_i64_i64_lt_ri_at:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    compd.lt $r0 = $r0, 0xbeef0000beef
+; V1-NEXT:    ;;
+; V1-NEXT:    negd $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: foo_i64_i64_lt_ri_at:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    make $r1 = 0xbeef0000beef
+; V2-NEXT:    ;;
+; V2-NEXT:    compnd.lt $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = icmp slt i64 %a, 209933706510063
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+define i64 @foo_i64_i64_le_ri_at(i64 %a){
+; V1-LABEL: foo_i64_i64_le_ri_at:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    compd.lt $r0 = $r0, 0xbeef0000bef0
+; V1-NEXT:    ;;
+; V1-NEXT:    negd $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: foo_i64_i64_le_ri_at:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    make $r1 = 0xbeef0000bef0
+; V2-NEXT:    ;;
+; V2-NEXT:    compnd.lt $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = icmp sle i64 %a, 209933706510063
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+define i64 @foo_i64_i64_gt_ri_at(i64 %a){
+; V1-LABEL: foo_i64_i64_gt_ri_at:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    compd.gt $r0 = $r0, 0xbeef0000beef
+; V1-NEXT:    ;;
+; V1-NEXT:    negd $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: foo_i64_i64_gt_ri_at:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    make $r1 = 0xbeef0000beef
+; V2-NEXT:    ;;
+; V2-NEXT:    compnd.gt $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = icmp sgt i64 %a, 209933706510063
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+define i64 @foo_i64_i64_ge_ri_at(i64 %a){
+; V1-LABEL: foo_i64_i64_ge_ri_at:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    compd.gt $r0 = $r0, 0xbeef0000beee
+; V1-NEXT:    ;;
+; V1-NEXT:    negd $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: foo_i64_i64_ge_ri_at:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    make $r1 = 0xbeef0000beee
+; V2-NEXT:    ;;
+; V2-NEXT:    compnd.gt $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = icmp sge i64 %a, 209933706510063
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+define i64 @foo_i64_i64_ltu_ri_at(i64 %a){
+; V1-LABEL: foo_i64_i64_ltu_ri_at:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    compd.ltu $r0 = $r0, 0xbeef0000beef
+; V1-NEXT:    ;;
+; V1-NEXT:    negd $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: foo_i64_i64_ltu_ri_at:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    make $r1 = 0xbeef0000beef
+; V2-NEXT:    ;;
+; V2-NEXT:    compnd.ltu $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = icmp ult i64 %a, 209933706510063
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+define i64 @foo_i64_i64_leu_ri_at(i64 %a){
+; V1-LABEL: foo_i64_i64_leu_ri_at:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    compd.ltu $r0 = $r0, 0xbeef0000bef0
+; V1-NEXT:    ;;
+; V1-NEXT:    negd $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: foo_i64_i64_leu_ri_at:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    make $r1 = 0xbeef0000bef0
+; V2-NEXT:    ;;
+; V2-NEXT:    compnd.ltu $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = icmp ule i64 %a, 209933706510063
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+define i64 @foo_i64_i64_gtu_ri_at(i64 %a){
+; V1-LABEL: foo_i64_i64_gtu_ri_at:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    compd.gtu $r0 = $r0, 0xbeef0000beef
+; V1-NEXT:    ;;
+; V1-NEXT:    negd $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: foo_i64_i64_gtu_ri_at:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    make $r1 = 0xbeef0000beef
+; V2-NEXT:    ;;
+; V2-NEXT:    compnd.gtu $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = icmp ugt i64 %a, 209933706510063
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+define i64 @foo_i64_i64_geu_ri_at(i64 %a){
+; V1-LABEL: foo_i64_i64_geu_ri_at:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    compd.gtu $r0 = $r0, 0xbeef0000beee
+; V1-NEXT:    ;;
+; V1-NEXT:    negd $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: foo_i64_i64_geu_ri_at:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    make $r1 = 0xbeef0000beee
+; V2-NEXT:    ;;
+; V2-NEXT:    compnd.gtu $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = icmp uge i64 %a, 209933706510063
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+define i64 @foo_i64_i64_eq_ri_at(i64 %a){
+; V1-LABEL: foo_i64_i64_eq_ri_at:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    compd.eq $r0 = $r0, 0xbeef0000beef
+; V1-NEXT:    ;;
+; V1-NEXT:    negd $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: foo_i64_i64_eq_ri_at:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    make $r1 = 0xbeef0000beef
+; V2-NEXT:    ;;
+; V2-NEXT:    compnd.eq $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = icmp eq i64 %a, 209933706510063
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+define i64 @foo_i64_i64_neq_ri_at(i64 %a){
+; V1-LABEL: foo_i64_i64_neq_ri_at:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    compd.ne $r0 = $r0, 0xbeef0000beef
+; V1-NEXT:    ;;
+; V1-NEXT:    negd $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: foo_i64_i64_neq_ri_at:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    make $r1 = 0xbeef0000beef
+; V2-NEXT:    ;;
+; V2-NEXT:    compnd.ne $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = icmp ne i64 %a, 209933706510063
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
