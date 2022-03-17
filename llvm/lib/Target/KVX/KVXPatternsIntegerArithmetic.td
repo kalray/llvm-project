@@ -1373,6 +1373,7 @@ defm : ZEFPat<(sub i32:$r1, (shl i32:$r2, sc)), (RRInstr SingleReg:$r2, SingleRe
 defm : ZEFPat<(sub Wrapped32:$r1, (shl i32:$r2, sc)), (RIInstr SingleReg:$r2, Wrapped32:$r1)>;
 }
 
+defm : SBFXWPAT<(i64 5), SBFX32Wrr, SBFX32Wri>, Requires<[IsV2]>;
 defm : SBFXWPAT<(i64 4), SBFX16Wrr, SBFX16Wri>;
 defm : SBFXWPAT<(i64 3), SBFX8Wrr, SBFX8Wri>;
 defm : SBFXWPAT<(i64 2), SBFX4Wrr, SBFX4Wri>;
