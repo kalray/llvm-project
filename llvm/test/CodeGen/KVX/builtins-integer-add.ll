@@ -644,15 +644,21 @@ define <2 x i32> @addwp_s(<2 x i32> %0, <2 x i32> %1) {
 declare <2 x i32> @llvm.sadd.sat.v2i32(<2 x i32>, <2 x i32>) #2
 
 define <2 x i32> @addwp_us(<2 x i32> %0, <2 x i32> %1) {
-; CHECK-LABEL: addwp_us:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    addwp $r1 = $r0, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    compnwp.ltu $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ord $r0 = $r0, $r1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: addwp_us:
+; V1:       # %bb.0:
+; V1-NEXT:    addwp $r1 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    compnwp.ltu $r0 = $r1, $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    ord $r0 = $r0, $r1
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: addwp_us:
+; V2:       # %bb.0:
+; V2-NEXT:    adduswp $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %3 = tail call <2 x i32> @llvm.uadd.sat.v2i32(<2 x i32> %0, <2 x i32> %1)
   ret <2 x i32> %3
 }
@@ -684,18 +690,25 @@ define <4 x i32> @addwq_s(<4 x i32> %0, <4 x i32> %1) {
 declare <4 x i32> @llvm.sadd.sat.v4i32(<4 x i32>, <4 x i32>) #2
 
 define <4 x i32> @addwq_us(<4 x i32> %0, <4 x i32> %1) {
-; CHECK-LABEL: addwq_us:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    addwp $r2 = $r0, $r2
-; CHECK-NEXT:    addwp $r3 = $r1, $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    compnwp.ltu $r0 = $r2, $r0
-; CHECK-NEXT:    compnwp.ltu $r1 = $r3, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ord $r0 = $r0, $r2
-; CHECK-NEXT:    ord $r1 = $r1, $r3
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: addwq_us:
+; V1:       # %bb.0:
+; V1-NEXT:    addwp $r2 = $r0, $r2
+; V1-NEXT:    addwp $r3 = $r1, $r3
+; V1-NEXT:    ;;
+; V1-NEXT:    compnwp.ltu $r0 = $r2, $r0
+; V1-NEXT:    compnwp.ltu $r1 = $r3, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    ord $r0 = $r0, $r2
+; V1-NEXT:    ord $r1 = $r1, $r3
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: addwq_us:
+; V2:       # %bb.0:
+; V2-NEXT:    adduswp $r0 = $r0, $r2
+; V2-NEXT:    adduswp $r1 = $r1, $r3
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %3 = tail call <4 x i32> @llvm.uadd.sat.v4i32(<4 x i32> %0, <4 x i32> %1)
   ret <4 x i32> %3
 }
@@ -732,24 +745,34 @@ define <8 x i32> @addwo_s(<8 x i32> %0, <8 x i32> %1) {
 declare <8 x i32> @llvm.sadd.sat.v8i32(<8 x i32>, <8 x i32>) #2
 
 define <8 x i32> @addwo_us(<8 x i32> %0, <8 x i32> %1) {
-; CHECK-LABEL: addwo_us:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    addwp $r4 = $r0, $r4
-; CHECK-NEXT:    addwp $r5 = $r1, $r5
-; CHECK-NEXT:    addwp $r6 = $r2, $r6
-; CHECK-NEXT:    addwp $r7 = $r3, $r7
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    compnwp.ltu $r0 = $r4, $r0
-; CHECK-NEXT:    compnwp.ltu $r1 = $r5, $r1
-; CHECK-NEXT:    compnwp.ltu $r2 = $r6, $r2
-; CHECK-NEXT:    compnwp.ltu $r3 = $r7, $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ord $r0 = $r0, $r4
-; CHECK-NEXT:    ord $r1 = $r1, $r5
-; CHECK-NEXT:    ord $r2 = $r2, $r6
-; CHECK-NEXT:    ord $r3 = $r3, $r7
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: addwo_us:
+; V1:       # %bb.0:
+; V1-NEXT:    addwp $r4 = $r0, $r4
+; V1-NEXT:    addwp $r5 = $r1, $r5
+; V1-NEXT:    addwp $r6 = $r2, $r6
+; V1-NEXT:    addwp $r7 = $r3, $r7
+; V1-NEXT:    ;;
+; V1-NEXT:    compnwp.ltu $r0 = $r4, $r0
+; V1-NEXT:    compnwp.ltu $r1 = $r5, $r1
+; V1-NEXT:    compnwp.ltu $r2 = $r6, $r2
+; V1-NEXT:    compnwp.ltu $r3 = $r7, $r3
+; V1-NEXT:    ;;
+; V1-NEXT:    ord $r0 = $r0, $r4
+; V1-NEXT:    ord $r1 = $r1, $r5
+; V1-NEXT:    ord $r2 = $r2, $r6
+; V1-NEXT:    ord $r3 = $r3, $r7
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: addwo_us:
+; V2:       # %bb.0:
+; V2-NEXT:    adduswp $r0 = $r0, $r4
+; V2-NEXT:    adduswp $r1 = $r1, $r5
+; V2-NEXT:    ;;
+; V2-NEXT:    adduswp $r2 = $r2, $r6
+; V2-NEXT:    adduswp $r3 = $r3, $r7
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %3 = tail call <8 x i32> @llvm.uadd.sat.v8i32(<8 x i32> %0, <8 x i32> %1)
   ret <8 x i32> %3
 }

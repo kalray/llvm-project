@@ -226,66 +226,92 @@ entry:
 }
 
 define <2 x i32> @uadd_satv2i32(<2 x i32> %a, <2 x i32> %b) {
-; CHECK-LABEL: uadd_satv2i32:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addwp $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    compnwp.ltu $r1 = $r0, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ord $r0 = $r1, $r0
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KVXV1-LABEL: uadd_satv2i32:
+; KVXV1:       # %bb.0: # %entry
+; KVXV1-NEXT:    addwp $r0 = $r1, $r0
+; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    compnwp.ltu $r1 = $r0, $r1
+; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ord $r0 = $r1, $r0
+; KVXV1-NEXT:    ret
+; KVXV1-NEXT:    ;;
+;
+; KVXV2-LABEL: uadd_satv2i32:
+; KVXV2:       # %bb.0: # %entry
+; KVXV2-NEXT:    adduswp $r0 = $r1, $r0
+; KVXV2-NEXT:    ret
+; KVXV2-NEXT:    ;;
 entry:
   %0 = tail call <2 x i32> @llvm.uadd.sat.v2i32(<2 x i32> %b, <2 x i32> %a)
   ret <2 x i32> %0
 }
 
 define <2 x i32> @uadd_satv2i32_ri_(<2 x i32> %a) {
-; CHECK-LABEL: uadd_satv2i32_ri_:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 15
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addwp $r1 = $r0, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    compnwp.ltu $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ord $r0 = $r0, $r1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KVXV1-LABEL: uadd_satv2i32_ri_:
+; KVXV1:       # %bb.0: # %entry
+; KVXV1-NEXT:    make $r1 = 15
+; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    addwp $r1 = $r0, $r1
+; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    compnwp.ltu $r0 = $r1, $r0
+; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ord $r0 = $r0, $r1
+; KVXV1-NEXT:    ret
+; KVXV1-NEXT:    ;;
+;
+; KVXV2-LABEL: uadd_satv2i32_ri_:
+; KVXV2:       # %bb.0: # %entry
+; KVXV2-NEXT:    adduswp $r0 = $r0, 15
+; KVXV2-NEXT:    ret
+; KVXV2-NEXT:    ;;
 entry:
   %0 = tail call <2 x i32> @llvm.uadd.sat.v2i32(<2 x i32> %a, <2 x i32> <i32 15, i32 0>)
   ret <2 x i32> %0
 }
 
 define <2 x i32> @uadd_satv2i32_ri_at(<2 x i32> %a) {
-; CHECK-LABEL: uadd_satv2i32_ri_at:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0xf0000000f
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addwp $r1 = $r0, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    compnwp.ltu $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ord $r0 = $r0, $r1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KVXV1-LABEL: uadd_satv2i32_ri_at:
+; KVXV1:       # %bb.0: # %entry
+; KVXV1-NEXT:    make $r1 = 0xf0000000f
+; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    addwp $r1 = $r0, $r1
+; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    compnwp.ltu $r0 = $r1, $r0
+; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ord $r0 = $r0, $r1
+; KVXV1-NEXT:    ret
+; KVXV1-NEXT:    ;;
+;
+; KVXV2-LABEL: uadd_satv2i32_ri_at:
+; KVXV2:       # %bb.0: # %entry
+; KVXV2-NEXT:    adduswp.@ $r0 = $r0, 15
+; KVXV2-NEXT:    ret
+; KVXV2-NEXT:    ;;
 entry:
   %0 = tail call <2 x i32> @llvm.uadd.sat.v2i32(<2 x i32> %a, <2 x i32> <i32 15, i32 15>)
   ret <2 x i32> %0
 }
 
 define <2 x i32> @uadd_satv2i32_rr(<2 x i32> %a) {
-; CHECK-LABEL: uadd_satv2i32_rr:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x1b58000002bc
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addwp $r1 = $r0, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    compnwp.ltu $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ord $r0 = $r0, $r1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KVXV1-LABEL: uadd_satv2i32_rr:
+; KVXV1:       # %bb.0: # %entry
+; KVXV1-NEXT:    make $r1 = 0x1b58000002bc
+; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    addwp $r1 = $r0, $r1
+; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    compnwp.ltu $r0 = $r1, $r0
+; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ord $r0 = $r0, $r1
+; KVXV1-NEXT:    ret
+; KVXV1-NEXT:    ;;
+;
+; KVXV2-LABEL: uadd_satv2i32_rr:
+; KVXV2:       # %bb.0: # %entry
+; KVXV2-NEXT:    make $r1 = 0x1b58000002bc
+; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    adduswp $r0 = $r0, $r1
+; KVXV2-NEXT:    ret
+; KVXV2-NEXT:    ;;
 entry:
   %0 = tail call <2 x i32> @llvm.uadd.sat.v2i32(<2 x i32> %a, <2 x i32> <i32 700, i32 7000>)
   ret <2 x i32> %0
@@ -393,18 +419,25 @@ entry:
 }
 
 define <4 x i32> @uadd_satv4i32(<4 x i32> %a, <4 x i32> %b) {
-; CHECK-LABEL: uadd_satv4i32:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addwp $r0 = $r2, $r0
-; CHECK-NEXT:    addwp $r1 = $r3, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    compnwp.ltu $r2 = $r0, $r2
-; CHECK-NEXT:    compnwp.ltu $r3 = $r1, $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ord $r0 = $r2, $r0
-; CHECK-NEXT:    ord $r1 = $r3, $r1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KVXV1-LABEL: uadd_satv4i32:
+; KVXV1:       # %bb.0: # %entry
+; KVXV1-NEXT:    addwp $r0 = $r2, $r0
+; KVXV1-NEXT:    addwp $r1 = $r3, $r1
+; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    compnwp.ltu $r2 = $r0, $r2
+; KVXV1-NEXT:    compnwp.ltu $r3 = $r1, $r3
+; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ord $r0 = $r2, $r0
+; KVXV1-NEXT:    ord $r1 = $r3, $r1
+; KVXV1-NEXT:    ret
+; KVXV1-NEXT:    ;;
+;
+; KVXV2-LABEL: uadd_satv4i32:
+; KVXV2:       # %bb.0: # %entry
+; KVXV2-NEXT:    adduswp $r0 = $r2, $r0
+; KVXV2-NEXT:    adduswp $r1 = $r3, $r1
+; KVXV2-NEXT:    ret
+; KVXV2-NEXT:    ;;
 entry:
   %0 = tail call <4 x i32> @llvm.uadd.sat.v4i32(<4 x i32> %b, <4 x i32> %a)
   ret <4 x i32> %0
