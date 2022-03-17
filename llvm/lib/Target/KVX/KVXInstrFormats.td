@@ -844,8 +844,7 @@ class COMPARISON_REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
   : KVX_INSTRUCTION <outs, ins, asmstr, pattern, ALU_TINY_Y>;
 
-// 6 insn(s):
-// COMPD, COMPW, COMPWD, COMPUWD, COMPNWP, COMPNHQ
+// COMPD, COMPW, COMPWD, COMPUWD, COMPNWP, COMPNBO, COMPNHQ
 let Size = 4 in
 class COMPARISON_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>

@@ -519,12 +519,7 @@ define <2 x i8> @test_select_cc(<2 x i8> %a, <2 x i8> %b, <2 x i8> %c, <2 x i8> 
 ;
 ; V2-LABEL: test_select_cc:
 ; V2:       # %bb.0:
-; V2-NEXT:    sxlbhq $r3 = $r3
-; V2-NEXT:    sxlbhq $r2 = $r2
-; V2-NEXT:    ;;
-; V2-NEXT:    compnhq.lt $r2 = $r2, $r3
-; V2-NEXT:    ;;
-; V2-NEXT:    sbmm8 $r2 = $r2, 0x401
+; V2-NEXT:    compnbo.lt $r2 = $r2, $r3
 ; V2-NEXT:    ;;
 ; V2-NEXT:    cmovebo.even $r2 ? $r0 = $r1
 ; V2-NEXT:    ret
@@ -557,13 +552,10 @@ define <2 x i64> @test_select_cc_f32_f32(<2 x i64> %a, <2 x i64> %b, <2 x i8> %c
 ;
 ; V2-LABEL: test_select_cc_f32_f32:
 ; V2:       # %bb.0:
-; V2-NEXT:    sbmm8 $r5 = $r5, 0x20001
-; V2-NEXT:    sbmm8 $r4 = $r4, 0x20001
+; V2-NEXT:    compnbo.ltu $r4 = $r4, $r5
 ; V2-NEXT:    ;;
-; V2-NEXT:    compnhq.ltu $r4 = $r4, $r5
-; V2-NEXT:    ;;
-; V2-NEXT:    extfs $r5 = $r4, 31, 16
-; V2-NEXT:    sxhd $r4 = $r4
+; V2-NEXT:    extfs $r5 = $r4, 15, 8
+; V2-NEXT:    sxbd $r4 = $r4
 ; V2-NEXT:    ;;
 ; V2-NEXT:    cmoved.dnez $r4 ? $r2 = $r0
 ; V2-NEXT:    cmoved.dnez $r5 ? $r3 = $r1
@@ -578,76 +570,106 @@ define <2 x i64> @test_select_cc_f32_f32(<2 x i64> %a, <2 x i64> %b, <2 x i8> %c
 }
 
 define <2 x i1> @test_icmp_ule(<2 x i8> %a, <2 x i8> %b) #0 {
-; ALL-LABEL: test_icmp_ule:
-; ALL:       # %bb.0:
-; ALL-NEXT:    sbmm8 $r1 = $r1, 0x20001
-; ALL-NEXT:    sbmm8 $r0 = $r0, 0x20001
-; ALL-NEXT:    ;;
-; ALL-NEXT:    compnhq.leu $r0 = $r0, $r1
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sbmm8 $r0 = $r0, 0x401
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; V1-LABEL: test_icmp_ule:
+; V1:       # %bb.0:
+; V1-NEXT:    sbmm8 $r1 = $r1, 0x20001
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x20001
+; V1-NEXT:    ;;
+; V1-NEXT:    compnhq.leu $r0 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x401
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: test_icmp_ule:
+; V2:       # %bb.0:
+; V2-NEXT:    compnbo.leu $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %r = icmp ule <2 x i8> %a, %b
   ret <2 x i1> %r
 }
 
 define <2 x i1> @test_icmp_slt(<2 x i8> %a, <2 x i8> %b) #0 {
-; ALL-LABEL: test_icmp_slt:
-; ALL:       # %bb.0:
-; ALL-NEXT:    sxlbhq $r1 = $r1
-; ALL-NEXT:    sxlbhq $r0 = $r0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    compnhq.lt $r0 = $r0, $r1
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sbmm8 $r0 = $r0, 0x401
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; V1-LABEL: test_icmp_slt:
+; V1:       # %bb.0:
+; V1-NEXT:    sxlbhq $r1 = $r1
+; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    compnhq.lt $r0 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x401
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: test_icmp_slt:
+; V2:       # %bb.0:
+; V2-NEXT:    compnbo.lt $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %r = icmp slt <2 x i8> %a, %b
   ret <2 x i1> %r
 }
 
 define <2 x i1> @test_icmp_ugt(<2 x i8> %a, <2 x i8> %b) #0 {
-; ALL-LABEL: test_icmp_ugt:
-; ALL:       # %bb.0:
-; ALL-NEXT:    sbmm8 $r1 = $r1, 0x20001
-; ALL-NEXT:    sbmm8 $r0 = $r0, 0x20001
-; ALL-NEXT:    ;;
-; ALL-NEXT:    compnhq.gtu $r0 = $r0, $r1
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sbmm8 $r0 = $r0, 0x401
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; V1-LABEL: test_icmp_ugt:
+; V1:       # %bb.0:
+; V1-NEXT:    sbmm8 $r1 = $r1, 0x20001
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x20001
+; V1-NEXT:    ;;
+; V1-NEXT:    compnhq.gtu $r0 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x401
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: test_icmp_ugt:
+; V2:       # %bb.0:
+; V2-NEXT:    compnbo.gtu $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %r = icmp ugt <2 x i8> %a, %b
   ret <2 x i1> %r
 }
 
 define <2 x i1> @test_icmp_uge(<2 x i8> %a, <2 x i8> %b) #0 {
-; ALL-LABEL: test_icmp_uge:
-; ALL:       # %bb.0:
-; ALL-NEXT:    sbmm8 $r1 = $r1, 0x20001
-; ALL-NEXT:    sbmm8 $r0 = $r0, 0x20001
-; ALL-NEXT:    ;;
-; ALL-NEXT:    compnhq.geu $r0 = $r0, $r1
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sbmm8 $r0 = $r0, 0x401
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; V1-LABEL: test_icmp_uge:
+; V1:       # %bb.0:
+; V1-NEXT:    sbmm8 $r1 = $r1, 0x20001
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x20001
+; V1-NEXT:    ;;
+; V1-NEXT:    compnhq.geu $r0 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x401
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: test_icmp_uge:
+; V2:       # %bb.0:
+; V2-NEXT:    compnbo.geu $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %r = icmp uge <2 x i8> %a, %b
   ret <2 x i1> %r
 }
 
 define <2 x i1> @test_icmp_ult(<2 x i8> %a, <2 x i8> %b) #0 {
-; ALL-LABEL: test_icmp_ult:
-; ALL:       # %bb.0:
-; ALL-NEXT:    sbmm8 $r1 = $r1, 0x20001
-; ALL-NEXT:    sbmm8 $r0 = $r0, 0x20001
-; ALL-NEXT:    ;;
-; ALL-NEXT:    compnhq.ltu $r0 = $r0, $r1
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sbmm8 $r0 = $r0, 0x401
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; V1-LABEL: test_icmp_ult:
+; V1:       # %bb.0:
+; V1-NEXT:    sbmm8 $r1 = $r1, 0x20001
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x20001
+; V1-NEXT:    ;;
+; V1-NEXT:    compnhq.ltu $r0 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x401
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: test_icmp_ult:
+; V2:       # %bb.0:
+; V2-NEXT:    compnbo.ltu $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %r = icmp ult <2 x i8> %a, %b
   ret <2 x i1> %r
 }
