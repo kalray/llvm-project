@@ -850,7 +850,7 @@ class COMPARISON_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
   : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
-// COMPW, COMPNW
+// COMPW, COMPNW, COMPND
 let Size = 8 in
 class COMPARISON_REGISTERW_REGISTERZ_UPPER27_LOWER5_DOUBLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>

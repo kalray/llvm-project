@@ -1039,6 +1039,7 @@ multiclass MC_1A<string OpcStr> {
 }
 
 // multiclass MC_1B is used by:
+//   defm COMPND
 //   defm COMPNW
 //   defm COMPW
 multiclass MC_1B<string OpcStr> {
@@ -2497,6 +2498,8 @@ defm SLSHQS : MC_18<"slshqs">;
 defm COMPD : MC_1A<"compd">;
 
 defm COMPW : MC_1B<"compw">;
+
+defm COMPND : MC_1B<"compnd">, Requires<[IsV2]>;
 
 defm COMPNW : MC_1B<"compnw">, Requires<[IsV2]>;
 
