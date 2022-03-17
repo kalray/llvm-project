@@ -1902,7 +1902,9 @@ defm ADDX8D : MC_17<"addx8d">;
 
 defm ADDX16D : MC_17<"addx16d">;
 
-defm SBFX2D : MC_16<"sbfx2d">;
+defm ADDX32D : MC_17<"addx32d">, Requires<[IsV2]>;
+
+defm SBFX2D : MC_17<"sbfx2d">;
 
 defm SBFX4D : MC_17<"sbfx4d">;
 
