@@ -722,15 +722,6 @@ multiclass MC_12<string OpcStr> {
 }
 
 // multiclass MC_13 is used by:
-//   defm ADDX2D
-//   defm ADDX4D
-//   defm ADDX8D
-//   defm ADDX16D
-//   defm SBFX2D
-//   defm SBFX4D
-//   defm SBFX8D
-//   defm SBFX16D
-//   defm SBFX32D
 //   defm ADDWD
 //   defm SBFWD
 //   defm ADDUWD
@@ -842,20 +833,21 @@ multiclass MC_15<string OpcStr> {
 }
 
 // multiclass MC_16 is used by:
-//   defm ADDWP
-//   defm SBFWP
-//   defm MINWP
-//   defm MINUWP
-//   defm MAXWP
-//   defm MAXUWP
 //   defm ADDBO
 //   defm ADDHQ
-//   defm SBFBO
-//   defm SBFHQ
-//   defm MINHQ
-//   defm MINUHQ
+//   defm ADDWP
+//   defm MAXBO
 //   defm MAXHQ
 //   defm MAXUHQ
+//   defm MAXUWP
+//   defm MAXWP
+//   defm MINHQ
+//   defm MINUHQ
+//   defm MINUWP
+//   defm MINWP
+//   defm SBFBO
+//   defm SBFHQ
+//   defm SBFWP
 multiclass MC_16<string OpcStr> {
   let isAsCheapAsAMove = 1 in
   def rr : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
@@ -876,14 +868,30 @@ multiclass MC_16<string OpcStr> {
 //   defm SBFCWC
 //   defm ADDSWP
 //   defm SBFSWP
+//   defm ADDX2D
 //   defm ADDX2WP
+//   defm ADDX4D
 //   defm ADDX4WP
+//   defm ADDX8D
 //   defm ADDX8WP
+//   defm ADDX16D
 //   defm ADDX16WP
+//   defm SBFSBO
+//   defm SBFUSBO
+//   defm SBFUSD
+//   defm SBFUSHQ
+//   defm SBFUSW
+//   defm SBFUSWP
+//   defm SBFX2D
 //   defm SBFX2WP
+//   defm SBFX4D
 //   defm SBFX4WP
+//   defm SBFX8D
 //   defm SBFX8WP
+//   defm SBFX16D
 //   defm SBFX16WP
+//   defm SBFX32D
+//   defm SBFX64D
 //   defm AVGWP
 //   defm AVGUWP
 //   defm AVGRWP
@@ -1886,23 +1894,25 @@ defm ADDSD : MC_12<"addsd">;
 
 defm SBFSD : MC_12<"sbfsd">;
 
-defm ADDX2D : MC_13<"addx2d">;
+defm ADDX2D : MC_17<"addx2d">;
 
-defm ADDX4D : MC_13<"addx4d">;
+defm ADDX4D : MC_17<"addx4d">;
 
-defm ADDX8D : MC_13<"addx8d">;
+defm ADDX8D : MC_17<"addx8d">;
 
-defm ADDX16D : MC_13<"addx16d">;
+defm ADDX16D : MC_17<"addx16d">;
 
-defm SBFX2D : MC_13<"sbfx2d">;
+defm SBFX2D : MC_16<"sbfx2d">;
 
-defm SBFX4D : MC_13<"sbfx4d">;
+defm SBFX4D : MC_17<"sbfx4d">;
 
-defm SBFX8D : MC_13<"sbfx8d">;
+defm SBFX8D : MC_17<"sbfx8d">;
 
-defm SBFX16D : MC_13<"sbfx16d">;
+defm SBFX16D : MC_17<"sbfx16d">;
 
-defm SBFX32D : MC_13<"sbfx32d">, Requires<[IsV2]>;
+defm SBFX32D : MC_17<"sbfx32d">, Requires<[IsV2]>;
+
+defm SBFX64D : MC_17<"sbfx64d">, Requires<[IsV2]>;
 
 let isAdd = 1 in
 defm ADDWD : MC_13<"addwd">;

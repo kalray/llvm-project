@@ -31,6 +31,9 @@ def Signed43 : Operand<i64>, ImmLeaf<i64, [{return isInt<43>(Imm);}]>;
 def Signed54 : Operand<i64>, ImmLeaf<i64, [{return isInt<54>(Imm);}]>;
 def Wrapped64 : Operand<i64>, ImmLeaf<i64, [{return isInt<64>(Imm);}]>;
 
+def SignedSplat32Imm : Operand<i64>, ImmLeaf<i64, [{return isInt<64>(Imm) && ( (unsigned long)(Imm << 32) == (Imm & 0xffffffff00000000) );}]>;
+def UnsignedSplat32Imm : Operand<i64>, ImmLeaf<i64, [{return ( (unsigned long)(Imm << 32) == (Imm & 0xffffffff00000000) );}]>;
+
 let PrintMethod = "printHexaBitsImm32" in {
 def Signed10W : Operand<i32>, ImmLeaf<i32, [{return isInt<10>(Imm);}]>;
 def Signed16W : Operand<i32>, ImmLeaf<i32, [{return isInt<16>(Imm);}]>;

@@ -92,28 +92,24 @@ entry:
 define i64 @f1imm(i64 %b){
 ; CHECK-LABEL: f1imm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x2dfdc1c35
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfx8d $r0 = $r0, $r1
+; CHECK-NEXT:    sbfx8d $r0 = $r0, 0x1beeeeef
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
   %shl = shl i64 %b, 3
-  %sub = sub nsw i64 12345678901, %shl
+  %sub = sub nsw i64 468643567, %shl
   ret i64 %sub
 }
 
 define i64 @f2imm(i64 %b){
 ; CHECK-LABEL: f2imm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x2dfdc1c35
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfx8d $r0 = $r0, $r1
+; CHECK-NEXT:    sbfx8d.@ $r0 = $r0, 0x1beeeeef
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
   %mul = shl nsw i64 %b, 3
-  %sub = sub nsw i64 12345678901, %mul
+  %sub = sub nsw i64 2012808794214428399, %mul
   ret i64 %sub
 }
 

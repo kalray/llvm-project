@@ -275,7 +275,8 @@ multiclass ADDXDPAT<SDNode sc, KVX_INSTRUCTION RRInstr, KVX_INSTRUCTION RIInstr>
 def : Pat<(add i64:$r1, (shl i64:$r2, sc)), (RRInstr SingleReg:$r2, SingleReg:$r1)>;
 def : Pat<(add (shl i64:$r2, sc), i64:$r1), (RRInstr SingleReg:$r2, SingleReg:$r1)>;
 
-def : Pat<(add (shl i64:$r2, sc), Wrapped64W:$r1), (RIInstr SingleReg:$r2, (trunc_imm_32 imm:$r1))>;
+def : Pat<(add (shl i64:$r2, sc), Wrapped64W:$r1), (RIInstr SingleReg:$r2, (trunc_imm_32 imm:$r1), splat32_)>;
+def : Pat<(add (shl i64:$r2, sc), SignedSplat32Imm:$r1), (RIInstr SingleReg:$r2, (trunc_imm_32 imm:$r1), splat32_at)>;
 }
 defm : ADDXDPAT<(i64 4), ADDX16Drr, ADDX16Dri>;
 defm : ADDXDPAT<(i64 3), ADDX8Drr, ADDX8Dri>;
@@ -1343,10 +1344,12 @@ def : Pat<(sub v4i32:$rs1, v4i32:$rs2),
 
 // SBFX*
 multiclass SBFXDPAT<SDNode sc, KVX_INSTRUCTION RRInstr, KVX_INSTRUCTION RIInstr> {
+def : Pat<(sub Wrapped64W:$r1, (shl i64:$r2, sc)), (RIInstr SingleReg:$r2, (trunc_imm_32 imm:$r1), splat32_)>;
+def : Pat<(sub SignedSplat32Imm:$r1, (shl i64:$r2, sc)), (RIInstr SingleReg:$r2, (trunc_imm_32 imm:$r1), splat32_at)>;
 def : Pat<(sub i64:$r1, (shl i64:$r2, sc)), (RRInstr SingleReg:$r2, SingleReg:$r1)>;
-def : Pat<(sub Wrapped64W:$r1, (shl i64:$r2, sc)), (RIInstr SingleReg:$r2, (trunc_imm_32 imm:$r1))>;
 }
 
+defm : SBFXDPAT<(i64 6), SBFX64Drr, SBFX64Dri>, Requires<[IsV2]>;
 defm : SBFXDPAT<(i64 5), SBFX32Drr, SBFX32Dri>, Requires<[IsV2]>;
 defm : SBFXDPAT<(i64 4), SBFX16Drr, SBFX16Dri>;
 defm : SBFXDPAT<(i64 3), SBFX8Drr, SBFX8Dri>;
