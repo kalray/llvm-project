@@ -47,44 +47,62 @@ define i8 @test_extract_i(<2 x i8> %a, i64 %idx) #0 {
 }
 
 define <2 x i8> @test_add(<2 x i8> %a, <2 x i8> %b) #0 {
-; ALL-LABEL: test_add:
-; ALL:       # %bb.0:
-; ALL-NEXT:    sxlbhq $r1 = $r1
-; ALL-NEXT:    sxlbhq $r0 = $r0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    addhq $r0 = $r0, $r1
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sbmm8 $r0 = $r0, 0x401
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; V1-LABEL: test_add:
+; V1:       # %bb.0:
+; V1-NEXT:    sxlbhq $r1 = $r1
+; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    addhq $r0 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x401
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: test_add:
+; V2:       # %bb.0:
+; V2-NEXT:    addbo $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %r = add <2 x i8> %a, %b
   ret <2 x i8> %r
 }
 
 define <2 x i8> @test_add_imm_0(<2 x i8> %a) #0 {
-; ALL-LABEL: test_add_imm_0:
-; ALL:       # %bb.0:
-; ALL-NEXT:    sxlbhq $r0 = $r0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    addhq $r0 = $r0, 0x20001
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sbmm8 $r0 = $r0, 0x401
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; V1-LABEL: test_add_imm_0:
+; V1:       # %bb.0:
+; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    addhq $r0 = $r0, 0x20001
+; V1-NEXT:    ;;
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x401
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: test_add_imm_0:
+; V2:       # %bb.0:
+; V2-NEXT:    addbo $r0 = $r0, 513
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %r = add <2 x i8> <i8 1, i8 2>, %a
   ret <2 x i8> %r
 }
 
 define <2 x i8> @test_add_imm_1(<2 x i8> %a) #0 {
-; ALL-LABEL: test_add_imm_1:
-; ALL:       # %bb.0:
-; ALL-NEXT:    sxlbhq $r0 = $r0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    addhq $r0 = $r0, 0x20001
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sbmm8 $r0 = $r0, 0x401
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; V1-LABEL: test_add_imm_1:
+; V1:       # %bb.0:
+; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    addhq $r0 = $r0, 0x20001
+; V1-NEXT:    ;;
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x401
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: test_add_imm_1:
+; V2:       # %bb.0:
+; V2-NEXT:    addbo $r0 = $r0, 513
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %r = add <2 x i8> %a, <i8 1, i8 2>
   ret <2 x i8> %r
 }
@@ -134,23 +152,37 @@ define <2 x i8> @test_sub_fromimm(<2 x i8> %a) #0 {
 
 
 define <2 x i8> @test_fma(<2 x i8> %a, <2 x i8> %b, <2 x i8> %c) #0 {
-; ALL-LABEL: test_fma:
-; ALL:       # %bb.0:
-; ALL-NEXT:    sxlbhq $r1 = $r1
-; ALL-NEXT:    sxlbhq $r0 = $r0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sxlbhq $r2 = $r2
-; ALL-NEXT:    ;;
-; ALL-NEXT:    maddhq $r0 = $r1, $r2
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sbmm8 $r0 = $r0, 0x401
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; V1-LABEL: test_fma:
+; V1:       # %bb.0:
+; V1-NEXT:    sxlbhq $r1 = $r1
+; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sxlbhq $r2 = $r2
+; V1-NEXT:    ;;
+; V1-NEXT:    maddhq $r0 = $r1, $r2
+; V1-NEXT:    ;;
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x401
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: test_fma:
+; V2:       # %bb.0:
+; V2-NEXT:    sxlbhq $r2 = $r2
+; V2-NEXT:    sxlbhq $r1 = $r1
+; V2-NEXT:    ;;
+; V2-NEXT:    mulhq $r1 = $r1, $r2
+; V2-NEXT:    ;;
+; V2-NEXT:    sbmm8 $r1 = $r1, 0x401
+; V2-NEXT:    ;;
+; V2-NEXT:    addbo $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %m = mul <2 x i8> %b, %c
   %ad = add <2 x i8> %a, %m
   ret <2 x i8> %ad
 }
 
+; TODO: V2 version is slower, need pattern for it
 define <2 x i8> @test_fma_imm(<2 x i8> %a, <2 x i8> %b) #0 {
 ; V1-LABEL: test_fma_imm:
 ; V1:       # %bb.0:
@@ -166,12 +198,13 @@ define <2 x i8> @test_fma_imm(<2 x i8> %a, <2 x i8> %b) #0 {
 ; V2-LABEL: test_fma_imm:
 ; V2:       # %bb.0:
 ; V2-NEXT:    sxlbhq $r1 = $r1
-; V2-NEXT:    sxlbhq $r0 = $r0
 ; V2-NEXT:    make $r2 = 0x20005
 ; V2-NEXT:    ;;
-; V2-NEXT:    maddhq $r0 = $r1, $r2
+; V2-NEXT:    mulhq $r1 = $r1, $r2
 ; V2-NEXT:    ;;
-; V2-NEXT:    sbmm8 $r0 = $r0, 0x401
+; V2-NEXT:    sbmm8 $r1 = $r1, 0x401
+; V2-NEXT:    ;;
+; V2-NEXT:    addbo $r0 = $r0, $r1
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %m = mul <2 x i8> <i8 5, i8 2>, %b
@@ -179,6 +212,7 @@ define <2 x i8> @test_fma_imm(<2 x i8> %a, <2 x i8> %b) #0 {
   ret <2 x i8> %ad
 }
 
+; TODO: V2 version is slower, need pattern for it
 define <2 x i8> @test_fma_imm_2(<2 x i8> %a, <2 x i8> %b) #0 {
 ; V1-LABEL: test_fma_imm_2:
 ; V1:       # %bb.0:
@@ -194,12 +228,13 @@ define <2 x i8> @test_fma_imm_2(<2 x i8> %a, <2 x i8> %b) #0 {
 ; V2-LABEL: test_fma_imm_2:
 ; V2:       # %bb.0:
 ; V2-NEXT:    sxlbhq $r1 = $r1
-; V2-NEXT:    sxlbhq $r0 = $r0
 ; V2-NEXT:    make $r2 = 0x20001
 ; V2-NEXT:    ;;
-; V2-NEXT:    maddhq $r0 = $r1, $r2
+; V2-NEXT:    mulhq $r1 = $r1, $r2
 ; V2-NEXT:    ;;
-; V2-NEXT:    sbmm8 $r0 = $r0, 0x401
+; V2-NEXT:    sbmm8 $r1 = $r1, 0x401
+; V2-NEXT:    ;;
+; V2-NEXT:    addbo $r0 = $r0, $r1
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %m = mul <2 x i8> <i8 1, i8 2>, %b
