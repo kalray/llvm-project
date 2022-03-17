@@ -600,15 +600,21 @@ define i32 @addw_s(i32 %0, i32 %1) {
 declare i32 @llvm.sadd.sat.i32(i32, i32) #2
 
 define i32 @addw_us(i32 %0, i32 %1) {
-; CHECK-LABEL: addw_us:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    notw $r2 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    minuw $r0 = $r0, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r0 = $r0, $r1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: addw_us:
+; V1:       # %bb.0:
+; V1-NEXT:    notw $r2 = $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    minuw $r0 = $r0, $r2
+; V1-NEXT:    ;;
+; V1-NEXT:    addw $r0 = $r0, $r1
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: addw_us:
+; V2:       # %bb.0:
+; V2-NEXT:    addusw $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %3 = tail call i32 @llvm.uadd.sat.i32(i32 %0, i32 %1)
   ret i32 %3
 }
