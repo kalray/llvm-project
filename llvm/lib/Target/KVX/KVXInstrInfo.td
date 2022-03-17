@@ -1120,6 +1120,7 @@ multiclass MC_1E<string OpcStr> {
 
 // multiclass MC_1F is used by:
 //   defm FCOMPW
+//   defm FCOMPNW
 multiclass MC_1F<string OpcStr> {
   def rr : FLOATCOMP_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32
     <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, FloatcompMod:$a1),
@@ -2649,6 +2650,8 @@ def CMOVEBO : SIMDCOND_REGISTERZ_REGISTERW_REGISTERY_SIMPLE
   <(outs SingleReg:$a3o), (ins SingleReg:$a2, SingleReg:$a3, SingleReg:$a4, SimplecondMod:$a1),
    "cmovebo$a1 $a2 ? $a3 = $a4",
    [/* no straightforward pattern */]>;
+
+defm FCOMPNW : MC_1F<"fcompnw">, Requires<[IsV2]>;
 
 defm FCOMPW : MC_1F<"fcompw">;
 

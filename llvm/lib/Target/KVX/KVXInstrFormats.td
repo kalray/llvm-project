@@ -911,16 +911,14 @@ class REGISTERW_EXTEND27_UPPER27_LOWER10_TRIPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
   : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
-// 1 insn(s):
-// FCOMPW
+// FCOMPW, FCOMPNW
 let Size = 4 in
 class FLOATCOMP_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32
   <dag outs, dag ins, string asmstr, list<dag> pattern>
   : KVX_INSTRUCTION <outs, ins, asmstr, pattern, ALU_LITE>;
 
-// 1 insn(s):
-// FCOMPW
-let Size = 8, Predicates = [IsV1] in
+// FCOMPW, FCOMPNW
+let Size = 8 in
 class FLOATCOMP_REGISTERW_REGISTERZ_UPPER27_LOWER5_DOUBLE_BINARY32
   <dag outs, dag ins, string asmstr, list<dag> pattern>
   : KVX_INSTRUCTION <outs, ins, asmstr, pattern, ALU_LITE_X>;
