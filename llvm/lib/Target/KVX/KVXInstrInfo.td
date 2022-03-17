@@ -776,6 +776,7 @@ multiclass MC_12<string OpcStr> {
 //   defm SBFX16UWD
 //   defm SBFX32UWD
 //   defm SBFX64UWD
+//   defm ABDSW
 multiclass MC_13<string OpcStr> {
   def rr : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
@@ -3533,3 +3534,5 @@ def ABSBO : REGISTERW_REGISTERZ_DOUBLE
 defm COPYV : MC_35<"copyv">;
 
 defm MOVEFO : MC_36<"movefo">;
+
+defm ABDSW : MC_16<"abdsw">;
