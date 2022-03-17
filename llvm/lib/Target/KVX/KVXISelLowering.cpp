@@ -211,11 +211,6 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::ROTL, MVT::v8i8, Custom);
   setOperationAction(ISD::ROTR, MVT::v8i8, Custom);
 
-  if (!STI.isV1())
-    for (auto VT : {MVT::v2i8, MVT::v4i8, MVT::v8i8})
-      for (auto I : {ISD::SHL, ISD::SRL, ISD::SRA})
-        setOperationAction(I, VT, Legal);
-
   for (auto VT : {MVT::v2f64, MVT::v2i64, MVT::v4f64, MVT::v4i64, MVT::v8i8})
     setOperationAction(ISD::SETCC, VT, Expand);
 
@@ -449,11 +444,10 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   }
 
   if (!STI.isV1())
-    for (auto I : {ISD::ABS, ISD::ADD, ISD::SUB}) {
-      setOperationAction(I, MVT::v2i8, Legal);
-      setOperationAction(I, MVT::v4i8, Legal);
-      setOperationAction(I, MVT::v8i8, Legal);
-    }
+    for (auto I : {ISD::ABS, ISD::ADD, ISD::SADDSAT, ISD::SHL, ISD::SRA,
+                   ISD::SRL, ISD::SUB})
+      for (auto VT : {MVT::v2i8, MVT::v4i8, MVT::v8i8})
+        setOperationAction(I, VT, Legal);
 
   for (auto I : {ISD::ABS, ISD::ADD, ISD::SUB})
     setOperationAction(I, MVT::v8i8, Legal);

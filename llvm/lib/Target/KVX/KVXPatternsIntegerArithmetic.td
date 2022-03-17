@@ -186,31 +186,49 @@ def : Pat<(add v4i16:$rs1, v4i16:$rs2), (ADDHQrr SingleReg:$rs1, SingleReg:$rs2)
 def : Pat<(sub v4i16:$rs1, (v4i16(is_imm_vec_kvx_splat32_:$IMM))), (ADDHQri SingleReg:$rs1, (build_imm_vec_neg $IMM), splat32_)>;
 def : Pat<(sub v4i16:$rs1, (v4i16(is_imm_vec_kvx_splat32_at:$IMM))), (ADDHQri SingleReg:$rs1, (build_imm_vec_neg $IMM), splat32_at)>;
 
-// ADDS WP/HQ
-def : Pat<(v2i16(saddsat v2i16:$v0, v2i16:$v1)), (ADDSHQrr SingleReg:$v0, SingleReg:$v1)>;
-def : Pat<(v4i16(saddsat v4i16:$v0, v4i16:$v1)), (ADDSHQrr SingleReg:$v0, SingleReg:$v1)>;
+// ADDSBO
+def : Pat<(v2i8(saddsat v2i8:$v0, (is_imm_vec:$IMM))),
+          (ADDSBOri SingleReg:$v0, (build_imm_vec $IMM), splat32_)>, Requires<[IsV2]>;
+def : Pat<(v2i8(saddsat v2i8:$v0, v2i8:$v1)), (ADDSBOrr SingleReg:$v0, SingleReg:$v1)>, Requires<[IsV2]>;
+
+def : Pat<(v4i8(saddsat v4i8:$v0, (v4i8(is_imm_vec:$IMM)) ) ),
+           (ADDSBOri SingleReg:$v0, (i32(trunc_imm_32 (i32(build_imm_vec $IMM)))), splat32_)>, Requires<[IsV2]>;
+def : Pat<(v4i8(saddsat v4i8:$v0, v4i8:$v1)), (ADDSBOrr SingleReg:$v0, SingleReg:$v1)>, Requires<[IsV2]>;
+
+def : Pat<(v8i8(saddsat v8i8:$v0, (v8i8(is_imm_vec_kvx_splat32_:$IMM)) ) ),
+           (ADDSBOri SingleReg:$v0, (i32(trunc_imm_32 (i32(build_imm_vec $IMM)))), splat32_)>, Requires<[IsV2]>;
+def : Pat<(v8i8(saddsat v8i8:$v0, (v8i8(is_imm_vec_kvx_splat32_at:$IMM)) ) ),
+           (ADDSBOri SingleReg:$v0, (i32(trunc_imm_32 (i32(build_imm_vec $IMM)))), splat32_at)>, Requires<[IsV2]>;
+def : Pat<(v8i8(saddsat v8i8:$v0, v8i8:$v1)), (ADDSBOrr SingleReg:$v0, SingleReg:$v1)>, Requires<[IsV2]>;
+
+// ADDSD
+def : Pat<(i64(saddsat i64:$v, Signed10:$i)), (ADDSDri10 SingleReg:$v, Signed10:$i)>;
+def : Pat<(i64(saddsat i64:$v, Signed37:$i)), (ADDSDri37 SingleReg:$v, Signed37:$i)>;
+def : Pat<(i64(saddsat i64:$v, Wrapped64:$i)), (ADDSDri64 SingleReg:$v, Wrapped64:$i)>;
+def : Pat<(i64(saddsat i64:$v0, i64:$v1)), (ADDSDrr SingleReg:$v0, SingleReg:$v1)>;
+
+// ADDSHQ
 def : Pat<(v2i16(saddsat v2i16:$v0, (is_imm_vec:$IMM))),
           (ADDSHQri SingleReg:$v0, (build_imm_vec $IMM), splat32_)>;
-def : Pat<(v4i16(saddsat v4i16:$v0, v4i16:$v1)),
-           (ADDSHQrr SingleReg:$v0, SingleReg:$v1)>;
+def : Pat<(v2i16(saddsat v2i16:$v0, v2i16:$v1)), (ADDSHQrr SingleReg:$v0, SingleReg:$v1)>;
+
 def : Pat<(v4i16(saddsat v4i16:$v0, (v4i16(is_imm_vec_kvx_splat32_:$IMM)) ) ),
            (ADDSHQri SingleReg:$v0, (i32(trunc_imm_32 (i32(build_imm_vec $IMM)))), splat32_)>;
 def : Pat<(v4i16(saddsat v4i16:$v0, (v4i16(is_imm_vec_kvx_splat32_at:$IMM)) ) ),
            (ADDSHQri SingleReg:$v0, (i32(trunc_imm_32 (i32(build_imm_vec $IMM)))), splat32_at)>;
+def : Pat<(v4i16(saddsat v4i16:$v0, v4i16:$v1)), (ADDSHQrr SingleReg:$v0, SingleReg:$v1)>;
 
+// ADDSW
 def : Pat<(i32(saddsat i32:$v, Wrapped32:$i)), (ADDSWri SingleReg:$v, Wrapped32:$i)>;
 def : Pat<(i32(saddsat i32:$v0, i32:$v1)), (ADDSWrr SingleReg:$v0, SingleReg:$v1)>;
+
+// ADDSWP
 def : Pat<(v2i32(saddsat v2i32:$v0, v2i32:$v1)), (ADDSWPrr SingleReg:$v0, SingleReg:$v1)>;
 def : Pat<(v2i32(saddsat v2i32:$v0, v2i32:$v1)), (ADDSWPrr SingleReg:$v0, SingleReg:$v1)>;
 def : Pat<(v2i32(saddsat v2i32:$v0, (v2i32 (build_vector (i32 Wrapped32:$i), (i32 0)) ))),
           (ADDSWPri SingleReg:$v0, (trunc_imm_32 imm:$i), splat32_)>;
 def : Pat<(v2i32(saddsat v2i32:$v0, (v2i32 (v2_splat (i32 Wrapped32:$i))))),
           (ADDSWPri SingleReg:$v0, (trunc_imm_32 imm:$i), splat32_at)>;
-
-def : Pat<(i64(saddsat i64:$v, Signed10:$i)), (ADDSDri10 SingleReg:$v, Signed10:$i)>;
-def : Pat<(i64(saddsat i64:$v, Signed37:$i)), (ADDSDri37 SingleReg:$v, Signed37:$i)>;
-def : Pat<(i64(saddsat i64:$v, Wrapped64:$i)), (ADDSDri64 SingleReg:$v, Wrapped64:$i)>;
-def : Pat<(i64(saddsat i64:$v0, i64:$v1)), (ADDSDrr SingleReg:$v0, SingleReg:$v1)>;
 
 def isZeroExtended : PatLeaf<(i64 SingleReg:$src), [{
   return KVX_LOW::isExtended(N, CurDAG, false);
