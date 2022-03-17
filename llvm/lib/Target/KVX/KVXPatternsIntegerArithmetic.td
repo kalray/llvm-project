@@ -1409,6 +1409,43 @@ def : Pat<(sub (v4i16(is_imm_vec_kvx_splat32_:$IMM)), v4i16:$rs1), (SBFHQri Sing
 def : Pat<(sub (v4i16(is_imm_vec_kvx_splat32_at:$IMM)), v4i16:$rs1), (SBFHQri SingleReg:$rs1, (build_imm_vec $IMM), splat32_at)>;
 def : Pat<(sub v4i16:$rs1, v4i16:$rs2), (SBFHQrr SingleReg:$rs2, SingleReg:$rs1)>;
 
+// SBFSD
+// TODO: ri variants change between v1 and v2
+def : Pat<(i64(ssubsat i64:$v1, i64:$v0)), (SBFSDrr SingleReg:$v0, SingleReg:$v1)>;
+
+// SBFSBO
+def : Pat<(v2i8(ssubsat (is_imm_vec:$IMM), v2i8:$v0)),
+          (SBFSBOri SingleReg:$v0, (build_imm_vec $IMM), splat32_)>, Requires<[IsV2]>;
+def : Pat<(v2i8(ssubsat v2i8:$v1, v2i8:$v0)), (SBFSBOrr SingleReg:$v0, SingleReg:$v1)>, Requires<[IsV2]>;
+
+def : Pat<(v4i8(ssubsat (v4i8(is_imm_vec:$IMM)), v4i8:$v0) ),
+           (SBFSBOri SingleReg:$v0, (i32(trunc_imm_32 (i32(build_imm_vec $IMM)))), splat32_)>, Requires<[IsV2]>;
+def : Pat<(v4i8(ssubsat v4i8:$v1, v4i8:$v0)), (SBFSBOrr SingleReg:$v0, SingleReg:$v1)>, Requires<[IsV2]>;
+
+def : Pat<(v8i8(ssubsat (v8i8(is_imm_vec_kvx_splat32_:$IMM)), v8i8:$v0) ),
+           (SBFSBOri SingleReg:$v0, (i32(trunc_imm_32 (i32(build_imm_vec $IMM)))), splat32_)>, Requires<[IsV2]>;
+def : Pat<(v8i8(ssubsat (v8i8(is_imm_vec_kvx_splat32_at:$IMM)), v8i8:$v0) ),
+           (SBFSBOri SingleReg:$v0, (i32(trunc_imm_32 (i32(build_imm_vec $IMM)))), splat32_at)>, Requires<[IsV2]>;
+def : Pat<(v8i8(ssubsat v8i8:$v1, v8i8:$v0)), (SBFSBOrr SingleReg:$v0, SingleReg:$v1)>, Requires<[IsV2]>;
+
+// SBFSHQ
+def : Pat<(ssubsat (v2i16(is_imm_vec:$IMM)), v2i16:$rs1), (SBFSHQri SingleReg:$rs1, (build_imm_vec $IMM), splat32_)>;
+def : Pat<(ssubsat v2i16:$rs1, v2i16:$rs2), (SBFSHQrr SingleReg:$rs2, SingleReg:$rs1)>;
+def : Pat<(ssubsat (v4i16(is_imm_vec_kvx_splat32_:$IMM)), v4i16:$rs1), (SBFSHQri SingleReg:$rs1, (build_imm_vec $IMM), splat32_)>;
+def : Pat<(ssubsat (v4i16(is_imm_vec_kvx_splat32_at:$IMM)), v4i16:$rs1), (SBFSHQri SingleReg:$rs1, (build_imm_vec $IMM), splat32_at)>;
+def : Pat<(ssubsat v4i16:$v0, v4i16:$v1), (SBFSHQrr SingleReg:$v1, SingleReg:$v0)>;
+
+// SBFSW
+def : Pat<(i32(ssubsat Wrapped32:$i, i32:$v)), (SBFSWri SingleReg:$v, Wrapped32:$i)>;
+def : Pat<(i32(ssubsat i32:$v1, i32:$v0)), (SBFSWrr SingleReg:$v0, SingleReg:$v1)>;
+
+// SBFSWP
+def : Pat<(v2i32(ssubsat (v2i32(is_imm_vec_kvx_splat32_:$IMM)), v2i32:$v0) ),
+           (SBFSWPri SingleReg:$v0, (i32(trunc_imm_32 (i32(build_imm_vec $IMM)))), splat32_)>;
+def : Pat<(v2i32(ssubsat (v2i32(is_imm_vec_kvx_splat32_at:$IMM)), v2i32:$v0) ),
+           (SBFSWPri SingleReg:$v0, (i32(trunc_imm_32 (i32(build_imm_vec $IMM)))), splat32_at)>;
+def : Pat<(v2i32(ssubsat v2i32:$v1, v2i32:$v0)), (SBFSWPrr SingleReg:$v0, SingleReg:$v1)>;
+
 // SBFUSBO
 def : Pat<(v2i8(usubsat (is_imm_vec:$IMM), v2i8:$v0)),
           (SBFUSBOri SingleReg:$v0, (build_imm_vec $IMM), splat32_)>, Requires<[IsV2]>;

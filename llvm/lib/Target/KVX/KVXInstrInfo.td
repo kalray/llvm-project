@@ -2146,6 +2146,8 @@ defm ADDSHQ : MC_17<"addshq">;
 defm ADDSBO : MC_17<"addsbo">, Requires<[IsV2]>;
 }
 
+defm SBFSBO : MC_17<"sbfsbo">;
+
 defm SBFSHQ : MC_17<"sbfshq">;
 
 defm ADDX2HQ : MC_17<"addx2hq">;

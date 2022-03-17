@@ -1550,12 +1550,6 @@ def : Pat<(ssubsat v8i8:$v0, v8i8:$v1),
             )
           )>;
 
-def : Pat<(ssubsat v4i16:$v0, v4i16:$v1), (SBFSHQrr $v1, $v0)>;
-
-def : Pat<(ssubsat i32:$v0, i32:$v1), (SBFSWrr $v1, $v0)>;
-
-def : Pat<(ssubsat v2i32:$v0, v2i32:$v1), (SBFSWPrr $v1, $v0)>;
-
 def : Pat<(ssubsat v4i32:$v0, v4i32:$v1),
           (REG_SEQUENCE PairedReg,
             (SBFSWPrr (v2i32 (EXTRACT_SUBREG $v1, sub_s0)), (v2i32 (EXTRACT_SUBREG $v0, sub_s0))),
@@ -1563,8 +1557,6 @@ def : Pat<(ssubsat v4i32:$v0, v4i32:$v1),
             (SBFSWPrr (v2i32 (EXTRACT_SUBREG $v1, sub_s1)), (v2i32 (EXTRACT_SUBREG $v0, sub_s1))),
             sub_s1
           )>;
-
-def : Pat<(ssubsat i64:$v0, i64:$v1), (SBFSDrr $v1, $v0)>;
 
 /** usubsat */
 
