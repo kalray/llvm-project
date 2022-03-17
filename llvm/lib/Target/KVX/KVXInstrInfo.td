@@ -851,10 +851,13 @@ multiclass MC_15<string OpcStr> {
 //   defm ADDWP
 //   defm MAXBO
 //   defm MAXHQ
+//   defm MAXUBO
 //   defm MAXUHQ
 //   defm MAXUWP
 //   defm MAXWP
+//   defm MINBO
 //   defm MINHQ
+//   defm MINUBO
 //   defm MINUHQ
 //   defm MINUWP
 //   defm MINWP
@@ -2106,11 +2109,19 @@ defm ABDBO : MC_17<"abdbo">, Requires<[IsV2]>;
 
 defm ABDHQ : MC_17<"abdhq">;
 
+defm MINBO : MC_16<"minbo">, Requires<[IsV2]>;
+
 defm MINHQ : MC_16<"minhq">;
+
+defm MINUBO : MC_16<"minubo">, Requires<[IsV2]>;
 
 defm MINUHQ : MC_16<"minuhq">;
 
+defm MAXBO : MC_16<"maxbo">, Requires<[IsV2]>;
+
 defm MAXHQ : MC_16<"maxhq">;
+
+defm MAXUBO : MC_16<"maxubo">, Requires<[IsV2]>;
 
 defm MAXUHQ : MC_16<"maxuhq">;
 

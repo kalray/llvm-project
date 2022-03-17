@@ -868,6 +868,21 @@ def : Pat<(smax i64:$v1, Signed10:$v2), (MAXDri10 SingleReg:$v1, Signed10:$v2)>;
 def : Pat<(smax i64:$v1, Signed37:$v2), (MAXDri37 SingleReg:$v1, Signed37:$v2)>;
 def : Pat<(smax i64:$v1, Wrapped64:$v2), (MAXDri64 SingleReg:$v1, Wrapped64:$v2)>;
 
+multiclass Word_RR_RIsplat_select_B <SDNode irnode, SDNode rinode, SDNode rrnode>
+{
+  foreach vt = [ v2i8, v4i8 ] in {
+  //v[24]i8
+  def : Pat<(irnode vt:$v1, (vt (is_imm_vec:$IMM))), (rinode SingleReg:$v1, (build_imm_vec $IMM), splat32_)>;
+  def : Pat<(irnode vt:$v1, vt:$v2), (rrnode SingleReg:$v1, SingleReg:$v2)>;
+  }
+  //v8i8
+  def : Pat<(irnode v8i8:$v1, (v8i8 (is_imm_vec_kvx_splat32_:$IMM))), (rinode SingleReg:$v1, (build_imm_vec $IMM), splat32_)>;
+  def : Pat<(irnode v8i8:$v1, (v8i8 (is_imm_vec_kvx_splat32_at:$IMM))), (rinode SingleReg:$v1, (build_imm_vec $IMM), splat32_at)>;
+  def : Pat<(irnode v8i8:$v1, v8i8:$v2), (rrnode SingleReg:$v1, SingleReg:$v2)>;
+}
+
+defm MAXBO : Word_RR_RIsplat_select_B<smax, MAXBOri, MAXBOrr>;
+
 multiclass Word_RR_RIsplat_select_H <SDNode irnode, SDNode rinode, SDNode rrnode>
 {
   //v2i16
@@ -887,6 +902,9 @@ def : Pat<(umax i64:$v1, i64:$v2), (MAXUDrr SingleReg:$v1, SingleReg:$v2)>;
 def : Pat<(umax i64:$v1, Signed10:$v2), (MAXUDri10 SingleReg:$v1, Signed10:$v2)>;
 def : Pat<(umax i64:$v1, Signed37:$v2), (MAXUDri37 SingleReg:$v1, Signed37:$v2)>;
 def : Pat<(umax i64:$v1, Wrapped64:$v2), (MAXUDri64 SingleReg:$v1, Wrapped64:$v2)>;
+
+// MAXUBO
+defm MAXUBO : Word_RR_RIsplat_select_B<umax, MAXUBOri, MAXUBOrr>;
 
 // MAXUHQ
 defm MAXUHQ : Word_RR_RIsplat_select_H<umax, MAXUHQri, MAXUHQrr>;
@@ -920,6 +938,9 @@ def : Pat<(smin i64:$v1, Signed10:$v2), (MINDri10 SingleReg:$v1, Signed10:$v2)>;
 def : Pat<(smin i64:$v1, Signed37:$v2), (MINDri37 SingleReg:$v1, Signed37:$v2)>;
 def : Pat<(smin i64:$v1, Wrapped64:$v2), (MINDri64 SingleReg:$v1, Wrapped64:$v2)>;
 
+// MINBO
+defm MINBO : Word_RR_RIsplat_select_B<smin, MINBOri, MINBOrr>;
+
 // MINHQ
 defm MINHQ : Word_RR_RIsplat_select_H<smin, MINHQri, MINHQrr>;
 
@@ -928,6 +949,9 @@ def : Pat<(umin i64:$v1, i64:$v2), (MINUDrr SingleReg:$v1, SingleReg:$v2)>;
 def : Pat<(umin i64:$v1, Signed10:$v2), (MINUDri10 SingleReg:$v1, Signed10:$v2)>;
 def : Pat<(umin i64:$v1, Signed37:$v2), (MINUDri37 SingleReg:$v1, Signed37:$v2)>;
 def : Pat<(umin i64:$v1, Wrapped64:$v2), (MINUDri64 SingleReg:$v1, Wrapped64:$v2)>;
+
+// MINUBO
+defm MINUBO : Word_RR_RIsplat_select_B<umin, MINUBOri, MINUBOrr>;
 
 // MINUHQ
 defm MINUHQ : Word_RR_RIsplat_select_H<umin, MINUHQri, MINUHQrr>;
