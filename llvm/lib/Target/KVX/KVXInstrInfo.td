@@ -2228,6 +2228,16 @@ defm SBFX32UWD : MC_13<"sbfx32uwd">, Requires<[IsV2]>;
 
 defm SBFX64UWD : MC_13<"sbfx64uwd">, Requires<[IsV2]>;
 
+defm SBFUSBO : MC_17<"sbfusbo">, Requires<[IsV2]>;
+
+defm SBFUSD : MC_17<"sbfusd">, Requires<[IsV2]>;
+
+defm SBFUSHQ : MC_17<"sbfushq">, Requires<[IsV2]>;
+
+defm SBFUSW : MC_17<"sbfusw">, Requires<[IsV2]>;
+
+defm SBFUSWP : MC_17<"sbfuswp">, Requires<[IsV2]>;
+
 let Defs = [CS], Uses = [CS] in
 def ADDCD : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
