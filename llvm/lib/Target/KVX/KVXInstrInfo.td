@@ -1039,6 +1039,7 @@ multiclass MC_1A<string OpcStr> {
 }
 
 // multiclass MC_1B is used by:
+//   defm COMPNW
 //   defm COMPW
 multiclass MC_1B<string OpcStr> {
   def rr : COMPARISON_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
@@ -2495,6 +2496,8 @@ defm SLSHQS : MC_18<"slshqs">;
 defm COMPD : MC_1A<"compd">;
 
 defm COMPW : MC_1B<"compw">;
+
+defm COMPNW : MC_1B<"compnw">, Requires<[IsV2]>;
 
 def COMPWD : COMPARISON_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, ComparisonMod:$a1),
