@@ -257,6 +257,11 @@ def : Pat<(v8i8(uaddsat v8i8:$v0, (v8i8(is_imm_vec_kvx_splat32_at:$IMM)) ) ),
            (ADDUSBOri SingleReg:$v0, (i32(trunc_imm_32 (i32(build_imm_vec $IMM)))), splat32_at)>, Requires<[IsV2]>;
 def : Pat<(v8i8(uaddsat v8i8:$v0, v8i8:$v1)), (ADDUSBOrr SingleReg:$v0, SingleReg:$v1)>, Requires<[IsV2]>;
 
+// ADDUSD
+def : Pat<(i64(uaddsat i64:$v, Wrapped64W:$i)), (ADDUSDri SingleReg:$v, (i32(trunc_imm_32 $i)), splat32_)>;
+def : Pat<(i64(uaddsat i64:$v, UnsignedSplat32Imm:$i)), (ADDUSDri SingleReg:$v, (i32(trunc_imm_32 $i)), splat32_at)>;
+def : Pat<(i64(uaddsat i64:$v0, i64:$v1)), (ADDUSDrr SingleReg:$v0, SingleReg:$v1)>;
+
 // ADDUSHQ
 def : Pat<(v2i16(uaddsat v2i16:$v0, (v2i16(is_imm_vec:$IMM)) ) ),
            (ADDUSHQri SingleReg:$v0, (i32(trunc_imm_32 (i32(build_imm_vec $IMM)))), splat32_)>, Requires<[IsV2]>;

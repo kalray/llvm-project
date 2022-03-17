@@ -773,15 +773,21 @@ define i64 @addd_s(i64 %0, i64 %1) {
 declare i64 @llvm.sadd.sat.i64(i64, i64) #2
 
 define i64 @saddd_us(i64 %0, i64 %1) {
-; CHECK-LABEL: saddd_us:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    notd $r2 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    minud $r0 = $r0, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, $r1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: saddd_us:
+; V1:       # %bb.0:
+; V1-NEXT:    notd $r2 = $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    minud $r0 = $r0, $r2
+; V1-NEXT:    ;;
+; V1-NEXT:    addd $r0 = $r0, $r1
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: saddd_us:
+; V2:       # %bb.0:
+; V2-NEXT:    addusd $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %3 = tail call i64 @llvm.uadd.sat.i64(i64 %0, i64 %1)
   ret i64 %3
 }
@@ -813,18 +819,25 @@ define <2 x i64> @adddp_s(<2 x i64> %0, <2 x i64> %1) {
 declare <2 x i64> @llvm.sadd.sat.v2i64(<2 x i64>, <2 x i64>) #2
 
 define <2 x i64> @adddp_us(<2 x i64> %0, <2 x i64> %1) {
-; CHECK-LABEL: adddp_us:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    notd $r4 = $r3
-; CHECK-NEXT:    notd $r5 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    minud $r1 = $r1, $r4
-; CHECK-NEXT:    minud $r0 = $r0, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r1 = $r1, $r3
-; CHECK-NEXT:    addd $r0 = $r0, $r2
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: adddp_us:
+; V1:       # %bb.0:
+; V1-NEXT:    notd $r4 = $r3
+; V1-NEXT:    notd $r5 = $r2
+; V1-NEXT:    ;;
+; V1-NEXT:    minud $r1 = $r1, $r4
+; V1-NEXT:    minud $r0 = $r0, $r5
+; V1-NEXT:    ;;
+; V1-NEXT:    addd $r1 = $r1, $r3
+; V1-NEXT:    addd $r0 = $r0, $r2
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: adddp_us:
+; V2:       # %bb.0:
+; V2-NEXT:    addusd $r1 = $r1, $r3
+; V2-NEXT:    addusd $r0 = $r0, $r2
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %3 = tail call <2 x i64> @llvm.uadd.sat.v2i64(<2 x i64> %0, <2 x i64> %1)
   ret <2 x i64> %3
 }
@@ -861,24 +874,34 @@ define <4 x i64> @adddq_s(<4 x i64> %0, <4 x i64> %1) {
 declare <4 x i64> @llvm.sadd.sat.v4i64(<4 x i64>, <4 x i64>) #2
 
 define <4 x i64> @adddq_us(<4 x i64> %0, <4 x i64> %1) {
-; CHECK-LABEL: adddq_us:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    notd $r8 = $r5
-; CHECK-NEXT:    notd $r9 = $r4
-; CHECK-NEXT:    notd $r10 = $r6
-; CHECK-NEXT:    notd $r11 = $r7
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    minud $r1 = $r1, $r8
-; CHECK-NEXT:    minud $r0 = $r0, $r9
-; CHECK-NEXT:    minud $r2 = $r2, $r10
-; CHECK-NEXT:    minud $r3 = $r3, $r11
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r1 = $r1, $r5
-; CHECK-NEXT:    addd $r0 = $r0, $r4
-; CHECK-NEXT:    addd $r2 = $r2, $r6
-; CHECK-NEXT:    addd $r3 = $r3, $r7
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: adddq_us:
+; V1:       # %bb.0:
+; V1-NEXT:    notd $r8 = $r5
+; V1-NEXT:    notd $r9 = $r4
+; V1-NEXT:    notd $r10 = $r6
+; V1-NEXT:    notd $r11 = $r7
+; V1-NEXT:    ;;
+; V1-NEXT:    minud $r1 = $r1, $r8
+; V1-NEXT:    minud $r0 = $r0, $r9
+; V1-NEXT:    minud $r2 = $r2, $r10
+; V1-NEXT:    minud $r3 = $r3, $r11
+; V1-NEXT:    ;;
+; V1-NEXT:    addd $r1 = $r1, $r5
+; V1-NEXT:    addd $r0 = $r0, $r4
+; V1-NEXT:    addd $r2 = $r2, $r6
+; V1-NEXT:    addd $r3 = $r3, $r7
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: adddq_us:
+; V2:       # %bb.0:
+; V2-NEXT:    addusd $r1 = $r1, $r5
+; V2-NEXT:    addusd $r0 = $r0, $r4
+; V2-NEXT:    ;;
+; V2-NEXT:    addusd $r2 = $r2, $r6
+; V2-NEXT:    addusd $r3 = $r3, $r7
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %3 = tail call <4 x i64> @llvm.uadd.sat.v4i64(<4 x i64> %0, <4 x i64> %1)
   ret <4 x i64> %3
 }

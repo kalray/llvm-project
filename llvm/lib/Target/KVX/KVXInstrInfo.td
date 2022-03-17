@@ -879,6 +879,7 @@ multiclass MC_16<string OpcStr> {
 }
 
 // multiclass MC_17 is used by:
+//   defm ADDUSD
 //   defm ABDWP
 //   defm ADDCWC
 //   defm SBFCWC
@@ -1911,6 +1912,9 @@ defm SBMMT8 : MC_12<"sbmmt8">;
 
 let isAdd = 1 in
 defm ADDSD : MC_12<"addsd">;
+
+let isAdd = 1 in
+defm ADDUSD : MC_17<"addusd">, Requires<[IsV2]>;
 
 defm SBFSD : MC_12<"sbfsd">;
 
