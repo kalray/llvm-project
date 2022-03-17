@@ -569,22 +569,35 @@ define <4 x i8> @test_select(<4 x i8> %a, <4 x i8> %b, i1 zeroext %c) #0 {
 }
 
 define <4 x i8> @test_select_cc(<4 x i8> %a, <4 x i8> %b, <4 x i8> %c, <4 x i8> %d) #0 {
-; ALL-LABEL: test_select_cc:
-; ALL:       # %bb.0:
-; ALL-NEXT:    sxlbhq $r3 = $r3
-; ALL-NEXT:    sxlbhq $r2 = $r2
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sbmm8 $r0 = $r0, 0x8000400020001
-; ALL-NEXT:    sbmm8 $r1 = $r1, 0x8000400020001
-; ALL-NEXT:    compnhq.lt $r2 = $r2, $r3
-; ALL-NEXT:    ;;
-; ALL-NEXT:    andd $r2 = $r2, 0xff00ff00ff00ff
-; ALL-NEXT:    ;;
-; ALL-NEXT:    cmovehq.even $r2 ? $r0 = $r1
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sbmm8 $r0 = $r0, 0x40100401
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; CV1-LABEL: test_select_cc:
+; CV1:       # %bb.0:
+; CV1-NEXT:    sxlbhq $r3 = $r3
+; CV1-NEXT:    sxlbhq $r2 = $r2
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sbmm8 $r0 = $r0, 0x8000400020001
+; CV1-NEXT:    sbmm8 $r1 = $r1, 0x8000400020001
+; CV1-NEXT:    compnhq.lt $r2 = $r2, $r3
+; CV1-NEXT:    ;;
+; CV1-NEXT:    andd $r2 = $r2, 0xff00ff00ff00ff
+; CV1-NEXT:    ;;
+; CV1-NEXT:    cmovehq.even $r2 ? $r0 = $r1
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: test_select_cc:
+; CV2:       # %bb.0:
+; CV2-NEXT:    sxlbhq $r3 = $r3
+; CV2-NEXT:    sxlbhq $r2 = $r2
+; CV2-NEXT:    ;;
+; CV2-NEXT:    compnhq.lt $r2 = $r2, $r3
+; CV2-NEXT:    ;;
+; CV2-NEXT:    sbmm8 $r2 = $r2, 0x40100401
+; CV2-NEXT:    ;;
+; CV2-NEXT:    cmovebo.even $r2 ? $r0 = $r1
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
   %cc = icmp slt <4 x i8> %c, %d
   %r = select <4 x i1> %cc, <4 x i8> %a, <4 x i8> %b
   ret <4 x i8> %r

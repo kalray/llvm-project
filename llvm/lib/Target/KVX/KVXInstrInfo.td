@@ -2614,6 +2614,12 @@ def CMOVEHQ : SIMDCOND_REGISTERZ_REGISTERW_REGISTERY_SIMPLE
    "cmovehq$a1 $a2 ? $a3 = $a4",
    [/* no straightforward pattern */]>;
 
+let Constraints = "$a3 = $a3o" in
+def CMOVEBO : SIMDCOND_REGISTERZ_REGISTERW_REGISTERY_SIMPLE
+  <(outs SingleReg:$a3o), (ins SingleReg:$a2, SingleReg:$a3, SingleReg:$a4, SimplecondMod:$a1),
+   "cmovebo$a1 $a2 ? $a3 = $a4",
+   [/* no straightforward pattern */]>;
+
 defm FCOMPW : MC_1F<"fcompw">;
 
 def FCOMPD : FLOATCOMP_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY64

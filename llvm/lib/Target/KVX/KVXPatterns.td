@@ -977,6 +977,10 @@ def : Pat<(vt (vselect ct:$c, vt:$true, vt:$false)),
           (vt (instRR SingleReg:$c, SingleReg:$true, SingleReg:$false, simplecond_even))>;
 }
 
+defm : KVX_VSELECT_SingleReg <v2i8, v2i8, CMOVEBO>;
+defm : KVX_VSELECT_SingleReg <v4i8, v4i8, CMOVEBO>;
+defm : KVX_VSELECT_SingleReg <v8i8, v8i8, CMOVEBO>;
+
 defm : KVX_VSELECT_SingleReg <v2f16, v2i16, CMOVEHQ>;
 defm : KVX_VSELECT_SingleReg <v2i16, v2i16, CMOVEHQ>;
 defm : KVX_VSELECT_SingleReg <v4f16, v4i16, CMOVEHQ>;

@@ -886,8 +886,7 @@ class SCALARCOND_REGISTERZ_REGISTERW_REGISTERY_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
   : KVX_INSTRUCTION <outs, ins, asmstr, pattern, ALU_LITE>;
 
-// 2 insn(s):
-// CMOVEWP, CMOVEHQ
+// CMOVEWP, CMOVEHQ, CMOVEBO
 let Size = 4 in
 class SIMDCOND_REGISTERZ_REGISTERW_REGISTERY_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
