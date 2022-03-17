@@ -6,10 +6,9 @@ target triple = "kvx-kalray-cos"
 define i32 @foo_i32_i32_lt(i32 %a, i32 %b){
 ; V1-LABEL: foo_i32_i32_lt:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    compw.lt $r1 = $r0, $r1
-; V1-NEXT:    make $r0 = 0xffffffff
+; V1-NEXT:    compw.lt $r0 = $r0, $r1
 ; V1-NEXT:    ;;
-; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    negw $r0 = $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -27,10 +26,9 @@ entry:
 define i32 @foo_i32_i32_le(i32 %a, i32 %b){
 ; V1-LABEL: foo_i32_i32_le:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    compw.le $r1 = $r0, $r1
-; V1-NEXT:    make $r0 = 0xffffffff
+; V1-NEXT:    compw.le $r0 = $r0, $r1
 ; V1-NEXT:    ;;
-; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    negw $r0 = $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -48,10 +46,9 @@ entry:
 define i32 @foo_i32_i32_gt(i32 %a, i32 %b){
 ; V1-LABEL: foo_i32_i32_gt:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    compw.gt $r1 = $r0, $r1
-; V1-NEXT:    make $r0 = 0xffffffff
+; V1-NEXT:    compw.gt $r0 = $r0, $r1
 ; V1-NEXT:    ;;
-; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    negw $r0 = $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -69,10 +66,9 @@ entry:
 define i32 @foo_i32_i32_ge(i32 %a, i32 %b){
 ; V1-LABEL: foo_i32_i32_ge:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    compw.ge $r1 = $r0, $r1
-; V1-NEXT:    make $r0 = 0xffffffff
+; V1-NEXT:    compw.ge $r0 = $r0, $r1
 ; V1-NEXT:    ;;
-; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    negw $r0 = $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -90,10 +86,9 @@ entry:
 define i32 @foo_i32_i32_ltu(i32 %a, i32 %b){
 ; V1-LABEL: foo_i32_i32_ltu:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    compw.ltu $r1 = $r0, $r1
-; V1-NEXT:    make $r0 = 0xffffffff
+; V1-NEXT:    compw.ltu $r0 = $r0, $r1
 ; V1-NEXT:    ;;
-; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    negw $r0 = $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -111,10 +106,9 @@ entry:
 define i32 @foo_i32_i32_leu(i32 %a, i32 %b){
 ; V1-LABEL: foo_i32_i32_leu:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    compw.leu $r1 = $r0, $r1
-; V1-NEXT:    make $r0 = 0xffffffff
+; V1-NEXT:    compw.leu $r0 = $r0, $r1
 ; V1-NEXT:    ;;
-; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    negw $r0 = $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -132,10 +126,9 @@ entry:
 define i32 @foo_i32_i32_gtu(i32 %a, i32 %b){
 ; V1-LABEL: foo_i32_i32_gtu:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    compw.gtu $r1 = $r0, $r1
-; V1-NEXT:    make $r0 = 0xffffffff
+; V1-NEXT:    compw.gtu $r0 = $r0, $r1
 ; V1-NEXT:    ;;
-; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    negw $r0 = $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -153,10 +146,9 @@ entry:
 define i32 @foo_i32_i32_geu(i32 %a, i32 %b){
 ; V1-LABEL: foo_i32_i32_geu:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    compw.geu $r1 = $r0, $r1
-; V1-NEXT:    make $r0 = 0xffffffff
+; V1-NEXT:    compw.geu $r0 = $r0, $r1
 ; V1-NEXT:    ;;
-; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    negw $r0 = $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -174,10 +166,9 @@ entry:
 define i32 @foo_i32_i32_eq(i32 %a, i32 %b){
 ; V1-LABEL: foo_i32_i32_eq:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    compw.eq $r1 = $r0, $r1
-; V1-NEXT:    make $r0 = 0xffffffff
+; V1-NEXT:    compw.eq $r0 = $r0, $r1
 ; V1-NEXT:    ;;
-; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    negw $r0 = $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -195,10 +186,9 @@ entry:
 define i32 @foo_i32_i32_neq(i32 %a, i32 %b){
 ; V1-LABEL: foo_i32_i32_neq:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    compw.ne $r1 = $r0, $r1
-; V1-NEXT:    make $r0 = 0xffffffff
+; V1-NEXT:    compw.ne $r0 = $r0, $r1
 ; V1-NEXT:    ;;
-; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    negw $r0 = $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -216,10 +206,9 @@ entry:
 define i64 @foo_i64_i32_lt(i32 %a, i32 %b){
 ; CHECK-LABEL: foo_i64_i32_lt:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    compw.lt $r1 = $r0, $r1
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    compw.lt $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.even $r1 ? $r0 = 0
+; CHECK-NEXT:    negd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -231,10 +220,9 @@ entry:
 define i64 @foo_i64_i32_le(i32 %a, i32 %b){
 ; CHECK-LABEL: foo_i64_i32_le:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    compw.le $r1 = $r0, $r1
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    compw.le $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.even $r1 ? $r0 = 0
+; CHECK-NEXT:    negd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -246,10 +234,9 @@ entry:
 define i64 @foo_i64_i32_gt(i32 %a, i32 %b){
 ; CHECK-LABEL: foo_i64_i32_gt:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    compw.gt $r1 = $r0, $r1
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    compw.gt $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.even $r1 ? $r0 = 0
+; CHECK-NEXT:    negd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -261,10 +248,9 @@ entry:
 define i64 @foo_i64_i32_ge(i32 %a, i32 %b){
 ; CHECK-LABEL: foo_i64_i32_ge:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    compw.ge $r1 = $r0, $r1
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    compw.ge $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.even $r1 ? $r0 = 0
+; CHECK-NEXT:    negd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -276,10 +262,9 @@ entry:
 define i64 @foo_i64_i32_ltu(i32 %a, i32 %b){
 ; CHECK-LABEL: foo_i64_i32_ltu:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    compw.ltu $r1 = $r0, $r1
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    compw.ltu $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.even $r1 ? $r0 = 0
+; CHECK-NEXT:    negd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -291,10 +276,9 @@ entry:
 define i64 @foo_i64_i32_leu(i32 %a, i32 %b){
 ; CHECK-LABEL: foo_i64_i32_leu:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    compw.leu $r1 = $r0, $r1
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    compw.leu $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.even $r1 ? $r0 = 0
+; CHECK-NEXT:    negd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -306,10 +290,9 @@ entry:
 define i64 @foo_i64_i32_gtu(i32 %a, i32 %b){
 ; CHECK-LABEL: foo_i64_i32_gtu:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    compw.gtu $r1 = $r0, $r1
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    compw.gtu $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.even $r1 ? $r0 = 0
+; CHECK-NEXT:    negd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -321,10 +304,9 @@ entry:
 define i64 @foo_i64_i32_geu(i32 %a, i32 %b){
 ; CHECK-LABEL: foo_i64_i32_geu:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    compw.geu $r1 = $r0, $r1
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    compw.geu $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.even $r1 ? $r0 = 0
+; CHECK-NEXT:    negd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -336,10 +318,9 @@ entry:
 define i64 @foo_i64_i32_eq(i32 %a, i32 %b){
 ; CHECK-LABEL: foo_i64_i32_eq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    compw.eq $r1 = $r0, $r1
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    compw.eq $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.even $r1 ? $r0 = 0
+; CHECK-NEXT:    negd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -351,10 +332,9 @@ entry:
 define i64 @foo_i64_i32_neq(i32 %a, i32 %b){
 ; CHECK-LABEL: foo_i64_i32_neq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    compw.ne $r1 = $r0, $r1
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    compw.ne $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.even $r1 ? $r0 = 0
+; CHECK-NEXT:    negd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -366,10 +346,9 @@ entry:
 define i32 @foo_i32_f32_lt(float %a, float %b){
 ; V1-LABEL: foo_i32_f32_lt:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    fcompw.olt $r1 = $r0, $r1
-; V1-NEXT:    make $r0 = 0xffffffff
+; V1-NEXT:    fcompw.olt $r0 = $r0, $r1
 ; V1-NEXT:    ;;
-; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    negw $r0 = $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -387,10 +366,9 @@ entry:
 define i32 @foo_i32_f32_le(float %a, float %b){
 ; V1-LABEL: foo_i32_f32_le:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    fcompw.oge $r1 = $r1, $r0
-; V1-NEXT:    make $r0 = 0xffffffff
+; V1-NEXT:    fcompw.oge $r0 = $r1, $r0
 ; V1-NEXT:    ;;
-; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    negw $r0 = $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -408,10 +386,9 @@ entry:
 define i32 @foo_i32_f32_gt(float %a, float %b){
 ; V1-LABEL: foo_i32_f32_gt:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    fcompw.olt $r1 = $r1, $r0
-; V1-NEXT:    make $r0 = 0xffffffff
+; V1-NEXT:    fcompw.olt $r0 = $r1, $r0
 ; V1-NEXT:    ;;
-; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    negw $r0 = $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -429,10 +406,9 @@ entry:
 define i32 @foo_i32_f32_ge(float %a, float %b){
 ; V1-LABEL: foo_i32_f32_ge:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    fcompw.oge $r1 = $r0, $r1
-; V1-NEXT:    make $r0 = 0xffffffff
+; V1-NEXT:    fcompw.oge $r0 = $r0, $r1
 ; V1-NEXT:    ;;
-; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    negw $r0 = $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -450,10 +426,9 @@ entry:
 define i32 @foo_i32_f32_eq(float %a, float %b){
 ; V1-LABEL: foo_i32_f32_eq:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    fcompw.oeq $r1 = $r0, $r1
-; V1-NEXT:    make $r0 = 0xffffffff
+; V1-NEXT:    fcompw.oeq $r0 = $r0, $r1
 ; V1-NEXT:    ;;
-; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    negw $r0 = $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -471,10 +446,9 @@ entry:
 define i32 @foo_i32_f32_neq(float %a, float %b){
 ; V1-LABEL: foo_i32_f32_neq:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    fcompw.une $r1 = $r0, $r1
-; V1-NEXT:    make $r0 = 0xffffffff
+; V1-NEXT:    fcompw.une $r0 = $r0, $r1
 ; V1-NEXT:    ;;
-; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    negw $r0 = $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -616,10 +590,9 @@ entry:
 define i32 @foo_i32_i32_lt_ri(i32 %a){
 ; V1-LABEL: foo_i32_i32_lt_ri:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    compw.lt $r1 = $r0, 5
-; V1-NEXT:    make $r0 = 0xffffffff
+; V1-NEXT:    compw.lt $r0 = $r0, 5
 ; V1-NEXT:    ;;
-; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    negw $r0 = $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -637,10 +610,9 @@ entry:
 define i32 @foo_i32_i32_le_ri(i32 %a){
 ; V1-LABEL: foo_i32_i32_le_ri:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    compw.lt $r1 = $r0, 6
-; V1-NEXT:    make $r0 = 0xffffffff
+; V1-NEXT:    compw.lt $r0 = $r0, 6
 ; V1-NEXT:    ;;
-; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    negw $r0 = $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -658,10 +630,9 @@ entry:
 define i32 @foo_i32_i32_gt_ri(i32 %a){
 ; V1-LABEL: foo_i32_i32_gt_ri:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    compw.gt $r1 = $r0, 5
-; V1-NEXT:    make $r0 = 0xffffffff
+; V1-NEXT:    compw.gt $r0 = $r0, 5
 ; V1-NEXT:    ;;
-; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    negw $r0 = $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -679,10 +650,9 @@ entry:
 define i32 @foo_i32_i32_ge_ri(i32 %a){
 ; V1-LABEL: foo_i32_i32_ge_ri:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    compw.gt $r1 = $r0, 4
-; V1-NEXT:    make $r0 = 0xffffffff
+; V1-NEXT:    compw.gt $r0 = $r0, 4
 ; V1-NEXT:    ;;
-; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    negw $r0 = $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -700,10 +670,9 @@ entry:
 define i32 @foo_i32_i32_ltu_ri(i32 %a){
 ; V1-LABEL: foo_i32_i32_ltu_ri:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    compw.ltu $r1 = $r0, 5
-; V1-NEXT:    make $r0 = 0xffffffff
+; V1-NEXT:    compw.ltu $r0 = $r0, 5
 ; V1-NEXT:    ;;
-; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    negw $r0 = $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -721,10 +690,9 @@ entry:
 define i32 @foo_i32_i32_leu_ri(i32 %a){
 ; V1-LABEL: foo_i32_i32_leu_ri:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    compw.ltu $r1 = $r0, 6
-; V1-NEXT:    make $r0 = 0xffffffff
+; V1-NEXT:    compw.ltu $r0 = $r0, 6
 ; V1-NEXT:    ;;
-; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    negw $r0 = $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -742,10 +710,9 @@ entry:
 define i32 @foo_i32_i32_gtu_ri(i32 %a){
 ; V1-LABEL: foo_i32_i32_gtu_ri:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    compw.gtu $r1 = $r0, 5
-; V1-NEXT:    make $r0 = 0xffffffff
+; V1-NEXT:    compw.gtu $r0 = $r0, 5
 ; V1-NEXT:    ;;
-; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    negw $r0 = $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -763,10 +730,9 @@ entry:
 define i32 @foo_i32_i32_geu_ri(i32 %a){
 ; V1-LABEL: foo_i32_i32_geu_ri:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    compw.gtu $r1 = $r0, 4
-; V1-NEXT:    make $r0 = 0xffffffff
+; V1-NEXT:    compw.gtu $r0 = $r0, 4
 ; V1-NEXT:    ;;
-; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    negw $r0 = $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -784,10 +750,9 @@ entry:
 define i32 @foo_i32_i32_eq_ri(i32 %a){
 ; V1-LABEL: foo_i32_i32_eq_ri:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    compw.eq $r1 = $r0, 5
-; V1-NEXT:    make $r0 = 0xffffffff
+; V1-NEXT:    compw.eq $r0 = $r0, 5
 ; V1-NEXT:    ;;
-; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    negw $r0 = $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -805,10 +770,9 @@ entry:
 define i32 @foo_i32_i32_neq_ri(i32 %a){
 ; V1-LABEL: foo_i32_i32_neq_ri:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    compw.ne $r1 = $r0, 5
-; V1-NEXT:    make $r0 = 0xffffffff
+; V1-NEXT:    compw.ne $r0 = $r0, 5
 ; V1-NEXT:    ;;
-; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    negw $r0 = $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -826,10 +790,9 @@ entry:
 define i64 @foo_i64_i32_lt_ri(i32 %a){
 ; CHECK-LABEL: foo_i64_i32_lt_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    compw.lt $r1 = $r0, 5
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    compw.lt $r0 = $r0, 5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.even $r1 ? $r0 = 0
+; CHECK-NEXT:    negd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -841,10 +804,9 @@ entry:
 define i64 @foo_i64_i32_le_ri(i32 %a){
 ; CHECK-LABEL: foo_i64_i32_le_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    compw.lt $r1 = $r0, 6
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    compw.lt $r0 = $r0, 6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.even $r1 ? $r0 = 0
+; CHECK-NEXT:    negd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -856,10 +818,9 @@ entry:
 define i64 @foo_i64_i32_gt_ri(i32 %a){
 ; CHECK-LABEL: foo_i64_i32_gt_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    compw.gt $r1 = $r0, 5
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    compw.gt $r0 = $r0, 5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.even $r1 ? $r0 = 0
+; CHECK-NEXT:    negd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -871,10 +832,9 @@ entry:
 define i64 @foo_i64_i32_ge_ri(i32 %a){
 ; CHECK-LABEL: foo_i64_i32_ge_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    compw.gt $r1 = $r0, 4
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    compw.gt $r0 = $r0, 4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.even $r1 ? $r0 = 0
+; CHECK-NEXT:    negd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -886,10 +846,9 @@ entry:
 define i64 @foo_i64_i32_ltu_ri(i32 %a){
 ; CHECK-LABEL: foo_i64_i32_ltu_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    compw.ltu $r1 = $r0, 5
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    compw.ltu $r0 = $r0, 5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.even $r1 ? $r0 = 0
+; CHECK-NEXT:    negd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -901,10 +860,9 @@ entry:
 define i64 @foo_i64_i32_leu_ri(i32 %a){
 ; CHECK-LABEL: foo_i64_i32_leu_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    compw.ltu $r1 = $r0, 6
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    compw.ltu $r0 = $r0, 6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.even $r1 ? $r0 = 0
+; CHECK-NEXT:    negd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -916,10 +874,9 @@ entry:
 define i64 @foo_i64_i32_gtu_ri(i32 %a){
 ; CHECK-LABEL: foo_i64_i32_gtu_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    compw.gtu $r1 = $r0, 5
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    compw.gtu $r0 = $r0, 5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.even $r1 ? $r0 = 0
+; CHECK-NEXT:    negd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -931,10 +888,9 @@ entry:
 define i64 @foo_i64_i32_geu_ri(i32 %a){
 ; CHECK-LABEL: foo_i64_i32_geu_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    compw.gtu $r1 = $r0, 4
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    compw.gtu $r0 = $r0, 4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.even $r1 ? $r0 = 0
+; CHECK-NEXT:    negd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -946,10 +902,9 @@ entry:
 define i64 @foo_i64_i32_eq_ri(i32 %a){
 ; CHECK-LABEL: foo_i64_i32_eq_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    compw.eq $r1 = $r0, 5
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    compw.eq $r0 = $r0, 5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.even $r1 ? $r0 = 0
+; CHECK-NEXT:    negd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -961,10 +916,9 @@ entry:
 define i64 @foo_i64_i32_neq_ri(i32 %a){
 ; CHECK-LABEL: foo_i64_i32_neq_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    compw.ne $r1 = $r0, 5
-; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    compw.ne $r0 = $r0, 5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.even $r1 ? $r0 = 0
+; CHECK-NEXT:    negd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -976,10 +930,9 @@ entry:
 define i32 @foo_i32_f32_lt_ri(float %a){
 ; V1-LABEL: foo_i32_f32_lt_ri:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    fcompw.olt $r1 = $r0, 0x40a00000
-; V1-NEXT:    make $r0 = 0xffffffff
+; V1-NEXT:    fcompw.olt $r0 = $r0, 0x40a00000
 ; V1-NEXT:    ;;
-; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    negw $r0 = $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -999,10 +952,9 @@ define i32 @foo_i32_f32_le_ri(float %a){
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    make $r1 = 0x40a00000
 ; V1-NEXT:    ;;
-; V1-NEXT:    fcompw.oge $r1 = $r1, $r0
-; V1-NEXT:    make $r0 = 0xffffffff
+; V1-NEXT:    fcompw.oge $r0 = $r1, $r0
 ; V1-NEXT:    ;;
-; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    negw $r0 = $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -1024,10 +976,9 @@ define i32 @foo_i32_f32_gt_ri(float %a){
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    make $r1 = 0x40a00000
 ; V1-NEXT:    ;;
-; V1-NEXT:    fcompw.olt $r1 = $r1, $r0
-; V1-NEXT:    make $r0 = 0xffffffff
+; V1-NEXT:    fcompw.olt $r0 = $r1, $r0
 ; V1-NEXT:    ;;
-; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    negw $r0 = $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -1047,10 +998,9 @@ entry:
 define i32 @foo_i32_f32_ge_ri(float %a){
 ; V1-LABEL: foo_i32_f32_ge_ri:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    fcompw.oge $r1 = $r0, 0x40a00000
-; V1-NEXT:    make $r0 = 0xffffffff
+; V1-NEXT:    fcompw.oge $r0 = $r0, 0x40a00000
 ; V1-NEXT:    ;;
-; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    negw $r0 = $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -1068,10 +1018,9 @@ entry:
 define i32 @foo_i32_f32_eq_ri(float %a){
 ; V1-LABEL: foo_i32_f32_eq_ri:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    fcompw.oeq $r1 = $r0, 0x40a00000
-; V1-NEXT:    make $r0 = 0xffffffff
+; V1-NEXT:    fcompw.oeq $r0 = $r0, 0x40a00000
 ; V1-NEXT:    ;;
-; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    negw $r0 = $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -1089,10 +1038,9 @@ entry:
 define i32 @foo_i32_f32_neq_ri(float %a){
 ; V1-LABEL: foo_i32_f32_neq_ri:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    fcompw.une $r1 = $r0, 0x40a00000
-; V1-NEXT:    make $r0 = 0xffffffff
+; V1-NEXT:    fcompw.une $r0 = $r0, 0x40a00000
 ; V1-NEXT:    ;;
-; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    negw $r0 = $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -1239,3 +1187,47 @@ entry:
   ret i64 %conv1
 }
 
+
+define i64 @foo_i32_i64_gt(i32 %a, i32 %b){
+; CHECK-LABEL: foo_i32_i64_gt:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    compw.gt $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    negd $r0 = $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %cmp = icmp sgt i32 %a, %b
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+define i64 @foo_i32_i64_lt_ri(i32 %a){
+; CHECK-LABEL: foo_i32_i64_lt_ri:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    compw.lt $r0 = $r0, 5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    negd $r0 = $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %cmp = icmp slt i32 %a, 5
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+define i32 @foo_i32_f64_lt(double %a){
+; CHECK-LABEL: foo_i32_f64_lt:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r1 = 0x4014000000000000
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fcompd.olt $r0 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    negw $r0 = $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %cmp = fcmp olt double %a, 5.0
+  %conv = sext i1 %cmp to i32
+  ret i32 %conv
+}

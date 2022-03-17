@@ -532,6 +532,15 @@ def : Pat<(v4i32(ctpop v4i32:$v0)),
             (CBSWP(v2i32(EXTRACT_SUBREG PairedReg:$v0, sub_s1))),
             sub_s1)>;
 
+
+multiclass SELECT_COMP_PAT<SDNode Comp, Comparison Mod, KVX_INSTRUCTION COMPrr, KVX_INSTRUCTION COMPri, ValueType SelectVT, ValueType CompareVT, KVX_INSTRUCTION NEG, Operand RIOp> {
+  def : Pat<(SelectVT (select (i32 (Comp CompareVT:$r, RIOp:$imm)), (SelectVT -1), (SelectVT 0))),
+        (NEG (COMPri SingleReg:$r, RIOp:$imm, Mod))>;
+
+  def : Pat<(SelectVT (select (i32 (Comp CompareVT:$lhs, CompareVT:$rhs)), (SelectVT -1), (SelectVT 0))),
+        (NEG (COMPrr SingleReg:$lhs, SingleReg:$rhs, Mod))>;
+}
+
 multiclass COMP_Pat<SDNode Node, Comparison Mod, Comparison RevMod> {
   // COMPD
   def : Pat<(i32 (Node i64:$lhs, i64:$rhs)),
@@ -609,6 +618,7 @@ multiclass COMP_Pat<SDNode Node, Comparison Mod, Comparison RevMod> {
 
   def : Pat<(i32 (Node i64:$lhs, (i64(sext i32:$rhs)))),
         (COMPWD SingleReg:$rhs, SingleReg:$lhs, RevMod)>;
+
   // COMPNW
   def : Pat<(i32 (select (i32 (Node i32:$lhs, i32:$rhs)), (i32 -1), (i32 0))),
         (COMPNWrr SingleReg:$lhs, SingleReg:$rhs, Mod)>, Requires<[IsV2]>;
@@ -618,6 +628,26 @@ multiclass COMP_Pat<SDNode Node, Comparison Mod, Comparison RevMod> {
         (COMPNWri SingleReg:$lhs, (trunc_imm_32 imm:$rhs), Mod)>, Requires<[IsV2]>;
   def : Pat<(i32 (select (i64 (Node (i64(sext i32:$lhs)), Wrapped64W:$rhs)), (i32 -1), (i32 0))),
         (COMPNWri SingleReg:$lhs, (trunc_imm_32 imm:$rhs), Mod)>, Requires<[IsV2]>;
+
+  defm : SELECT_COMP_PAT<Node, Mod, COMPWrr, COMPWri, i32, i32, NEGW, Wrapped32>;
+  // COMPW + NEGW
+  def : Pat<(i32 (select (i64 (Node (i64(zext i32:$lhs)), Unsigned64W:$rhs)), (i32 -1), (i32 0))),
+        (NEGW (COMPWri SingleReg:$lhs, (trunc_imm_32 imm:$rhs), Mod))>;
+  def : Pat<(i32 (select (i64 (Node (i64(sext i32:$lhs)), Wrapped64W:$rhs)), (i32 -1), (i32 0))),
+        (NEGW (COMPWri SingleReg:$lhs, (trunc_imm_32 imm:$rhs), Mod))>;
+
+  // COMPW + NEGD
+  defm : SELECT_COMP_PAT<Node, Mod, COMPWrr, COMPWri, i64, i32, NEGD, Wrapped32>;
+
+  // COMPD + NEGD
+  defm : SELECT_COMP_PAT<Node, Mod, COMPDrr, COMPDri10, i64, i64, NEGD, Signed10>, Requires<[IsV1]>;
+  defm : SELECT_COMP_PAT<Node, Mod, COMPDrr, COMPDri37, i64, i64, NEGD, Signed37>, Requires<[IsV1]>;
+  defm : SELECT_COMP_PAT<Node, Mod, COMPDrr, COMPDri64, i64, i64, NEGD, Wrapped64>, Requires<[IsV1]>;
+
+  // COMPD + NEGW
+  defm : SELECT_COMP_PAT<Node, Mod, COMPDrr, COMPDri10, i32, i64, NEGW, Signed10>, Requires<[IsV1]>;
+  defm : SELECT_COMP_PAT<Node, Mod, COMPDrr, COMPDri37, i32, i64, NEGW, Signed37>, Requires<[IsV1]>;
+  defm : SELECT_COMP_PAT<Node, Mod, COMPDrr, COMPDri64, i32, i64, NEGW, Wrapped64>, Requires<[IsV1]>;
 }
 
 defm : COMP_Pat<seteq,   comparison_eq, comparison_eq>;
