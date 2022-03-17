@@ -114,13 +114,19 @@ entry:
 }
 
 define i64 @f7(i64 %a, i32 %b){
-; CHECK-LABEL: f7:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sllw $r1 = $r1, 5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addwd $r0 = $r1, $r0
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: f7:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    sllw $r1 = $r1, 5
+; V1-NEXT:    ;;
+; V1-NEXT:    addwd $r0 = $r1, $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: f7:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    addx32wd $r0 = $r1, $r0
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
 entry:
   %shl = shl i32 %b, 5
   %conv = sext i32 %shl to i64
@@ -129,13 +135,19 @@ entry:
 }
 
 define i64 @f8(i64 %a, i32 %b){
-; CHECK-LABEL: f8:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sllw $r1 = $r1, 5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addwd $r0 = $r1, $r0
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: f8:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    sllw $r1 = $r1, 5
+; V1-NEXT:    ;;
+; V1-NEXT:    addwd $r0 = $r1, $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: f8:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    addx32wd $r0 = $r1, $r0
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
 entry:
   %shl = shl i32 %b, 5
   %conv = sext i32 %shl to i64
@@ -254,15 +266,21 @@ entry:
 }
 
 define i64 @f7imm(i32 %b){
-; CHECK-LABEL: f7imm:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sllw $r0 = $r0, 5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, 0xffffffffffffa460
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: f7imm:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    sllw $r0 = $r0, 5
+; V1-NEXT:    ;;
+; V1-NEXT:    sxwd $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    addd $r0 = $r0, 0xffffffffffffa460
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: f7imm:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    addx32wd $r0 = $r0, 0xffffa460
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
 entry:
   %shl = shl i32 %b, 5
   %conv = sext i32 %shl to i64
@@ -271,15 +289,21 @@ entry:
 }
 
 define i64 @f8imm(i32 %b){
-; CHECK-LABEL: f8imm:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sllw $r0 = $r0, 5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, 0xffffffffffffa460
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: f8imm:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    sllw $r0 = $r0, 5
+; V1-NEXT:    ;;
+; V1-NEXT:    sxwd $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    addd $r0 = $r0, 0xffffffffffffa460
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: f8imm:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    addx32wd $r0 = $r0, 0xffffa460
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
 entry:
   %shl = shl i32 %b, 5
   %conv = sext i32 %shl to i64
