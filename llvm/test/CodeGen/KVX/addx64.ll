@@ -44,13 +44,19 @@ entry:
 }
 
 define i32 @f3(i32 %a, i32 %b){
-; CHECK-LABEL: f3:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sllw $r1 = $r1, 6
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r0 = $r1, $r0
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: f3:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    sllw $r1 = $r1, 6
+; V1-NEXT:    ;;
+; V1-NEXT:    addw $r0 = $r1, $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: f3:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    addx64w $r0 = $r1, $r0
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
 entry:
   %shl = shl i32 %b, 6
   %add = add nsw i32 %shl, %a
@@ -58,13 +64,19 @@ entry:
 }
 
 define i32 @f4(i32 %a, i32 %b){
-; CHECK-LABEL: f4:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sllw $r1 = $r1, 6
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r0 = $r1, $r0
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: f4:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    sllw $r1 = $r1, 6
+; V1-NEXT:    ;;
+; V1-NEXT:    addw $r0 = $r1, $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: f4:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    addx64w $r0 = $r1, $r0
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
 entry:
   %shl = shl i32 %b, 6
   %add = add nsw i32 %shl, %a
@@ -172,13 +184,19 @@ entry:
 }
 
 define i32 @f3imm(i32 %b){
-; CHECK-LABEL: f3imm:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sllw $r0 = $r0, 6
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r0 = $r0, 0xffffa460
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: f3imm:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    sllw $r0 = $r0, 6
+; V1-NEXT:    ;;
+; V1-NEXT:    addw $r0 = $r0, 0xffffa460
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: f3imm:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    addx64w $r0 = $r0, 0xffffa460
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
 entry:
   %shl = shl i32 %b, 6
   %add = add nsw i32 %shl, -23456
@@ -186,13 +204,19 @@ entry:
 }
 
 define i32 @f4imm(i32 %b){
-; CHECK-LABEL: f4imm:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sllw $r0 = $r0, 6
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r0 = $r0, 0xffffa460
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: f4imm:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    sllw $r0 = $r0, 6
+; V1-NEXT:    ;;
+; V1-NEXT:    addw $r0 = $r0, 0xffffa460
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: f4imm:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    addx64w $r0 = $r0, 0xffffa460
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
 entry:
   %shl = shl i32 %b, 6
   %sub = add nsw i32 %shl, -23456

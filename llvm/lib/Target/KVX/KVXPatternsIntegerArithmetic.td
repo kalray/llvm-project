@@ -302,6 +302,7 @@ defm : ZEFPat<(add (shl i32:$r2, sc), i32:$r1), (RRInstr SingleReg:$r2, SingleRe
 
 defm : ZEFPat<(add (shl i32:$r2, sc), Wrapped32:$r1), (RIInstr SingleReg:$r2, Wrapped32:$r1)>;
 }
+defm : ADDXWPAT<(i64 6), ADDX64Wrr, ADDX64Wri>, Requires<[IsV2]>;
 defm : ADDXWPAT<(i64 5), ADDX32Wrr, ADDX32Wri>, Requires<[IsV2]>;
 defm : ADDXWPAT<(i64 4), ADDX16Wrr, ADDX16Wri>;
 defm : ADDXWPAT<(i64 3), ADDX8Wrr, ADDX8Wri>;
