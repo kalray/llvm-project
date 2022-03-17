@@ -3454,6 +3454,12 @@ def NEGHQ : REGISTERW_REGISTERZ_DOUBLE
    [(set v4i16:$a1, (vineg v4i16:$a2))],
    ALU_TINY_X>;
 
+def NEGBO : REGISTERW_REGISTERZ_DOUBLE
+  <(outs SingleReg:$a1), (ins SingleReg:$a2),
+   "negbo $a1 = $a2",
+   [(set v8i8:$a1, (vineg v8i8:$a2))],
+   ALU_TINY_X>, Requires<[IsV2]>;
+
 def ABSHQ : REGISTERW_REGISTERZ_DOUBLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "abshq $a1 = $a2",
