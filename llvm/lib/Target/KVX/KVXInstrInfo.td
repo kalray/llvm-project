@@ -2493,6 +2493,12 @@ def COMPNWP : COMPARISON_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
    [/* no straightforward pattern */],
    ALU_TINY>;
 
+def COMPNBO : COMPARISON_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+  <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, ComparisonMod:$a1),
+   "compnbo$a1 $a2 = $a3, $a4",
+   [/* no straightforward pattern */],
+   ALU_TINY>, Requires<[IsV2]>;
+
 def COMPNHQ : COMPARISON_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, ComparisonMod:$a1),
    "compnhq$a1 $a2 = $a3, $a4",

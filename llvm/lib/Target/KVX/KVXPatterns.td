@@ -797,6 +797,7 @@ def : Pat<(i1 (trunc i8:$param)),   (COPY SingleReg:$param)>;
 // TODO: Legalize splat_vector and replace all custom splats using build_vector
 def v2_splat : PatFrag<(ops node:$i), (build_vector node:$i, node:$i)>;
 def v2_splat_1 : PatFrags<(ops), [(v2_splat (i32 1)), (v2_splat (i64 1))]>;
+def v2_splat_7 : PatFrags<(ops), [(v2_splat (i32 7)), (v2_splat (i64 7))]>;
 def v2_splat_15 : PatFrags<(ops), [(v2_splat (i32 15)), (v2_splat (i64 15))]>;
 def v2_splat_31 : PatFrags<(ops), [(v2_splat (i32 31)), (v2_splat (i64 31))]>;
 
@@ -805,9 +806,12 @@ def v3_splat_1 : PatFrags<(ops), [(v3_splat (i32 1)), (v3_splat (i64 1))]>;
 
 def v4_splat : PatFrag<(ops node:$i), (build_vector node:$i, node:$i, node:$i, node:$i)>;
 def v4_splat_1 : PatFrags<(ops), [(v4_splat (i32 1)), (v4_splat (i64 1))]>;
+def v4_splat_7 : PatFrags<(ops), [(v4_splat (i32 7)), (v4_splat (i64 7))]>;
 def v4_splat_15 : PatFrags<(ops), [(v4_splat (i32 15)), (v4_splat (i64 15))]>;
 
 def v8_splat : PatFrag<(ops node:$i), (build_vector node:$i, node:$i, node:$i, node:$i, node:$i, node:$i, node:$i, node:$i)>;
+def v8_splat_1 : PatFrags<(ops), [(v8_splat (i32 1)), (v8_splat (i64 1))]>;
+def v8_splat_7 : PatFrags<(ops), [(v8_splat (i32 7)), (v8_splat (i64 7))]>;
 
 def ZEXT_VEC2_SETCC_Pat : PatFrags<(ops node:$lhs, node:$rhs),
         [(or node:$lhs, node:$rhs), (and (or node:$lhs, node:$rhs), v2_splat_1)]>;

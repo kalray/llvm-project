@@ -443,13 +443,6 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     setOperationPromotedToType(I, MVT::v8i8, MVT::v8i16);
   }
 
-  if (!STI.isV1())
-    for (auto I :
-         {ISD::ABS, ISD::ADD, ISD::SADDSAT, ISD::SMAX, ISD::SMIN, ISD::SHL, ISD::SRA, ISD::SRL, ISD::SUB, ISD::UADDSAT,
-                   ISD::UMAX, ISD::UMIN, ISD::VSELECT})
-      for (auto VT : {MVT::v2i8, MVT::v4i8, MVT::v8i8, MVT::v2i16, MVT::v4i16})
-        setOperationAction(I, VT, Legal);
-
   for (auto I : {ISD::ABS, ISD::ADD, ISD::SUB})
     setOperationAction(I, MVT::v8i8, Legal);
 
@@ -464,6 +457,14 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::ADD, MVT::v2i64, Custom);
   setOperationAction(ISD::SUB, MVT::v2i64, Custom);
   setOperationAction(ISD::ATOMIC_FENCE, MVT::Other, Custom);
+
+  if (!STI.isV1())
+    for (auto I : {ISD::ABS, ISD::ADD, ISD::SADDSAT, ISD::SETCC, ISD::SMAX,
+                   ISD::SMIN, ISD::SHL, ISD::SRA, ISD::SRL, ISD::SUB,
+                   ISD::UADDSAT, ISD::UMAX, ISD::UMIN, ISD::VSELECT})
+      for (auto VT : {MVT::v2i8, MVT::v4i8, MVT::v8i8, MVT::v2i16, MVT::v4i16})
+        setOperationAction(I, VT, Legal);
+
   // NOTE: We could use ACSWAPW instruction with some shifts and masks to
   // support custom lowering of i8 and i16 operations. See ASWAPp for i8.
   for (auto VT : {MVT::i32, MVT::i64}) {

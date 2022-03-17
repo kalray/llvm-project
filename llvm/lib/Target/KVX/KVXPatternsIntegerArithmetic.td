@@ -528,7 +528,23 @@ multiclass COMP_Pat<SDNode Node, Comparison Mod, Comparison RevMod> {
   def : Pat<(i32 (Node i64:$lhs, Wrapped64:$rhs)),
         (COMPDri64 SingleReg:$lhs, Wrapped64:$rhs, Mod)>;
 
-  //COMPNHQ
+  //COMPNBO
+  def : Pat<(v2i8 (Node v2i8:$lhs, v2i8:$rhs)),
+        (COMPNBO SingleReg:$lhs, SingleReg:$rhs, Mod)>, Requires<[IsV2]>;
+  def : Pat<(sra (shl (v2i8 (Node v2i8:$lhs, v2i8:$rhs)), (v2i8 v2_splat_7)), (v2i8 v2_splat_7)),
+        (COMPNBO SingleReg:$lhs, SingleReg:$rhs, Mod)>, Requires<[IsV2]>;
+
+  def : Pat<(v4i8 (Node v4i8:$lhs, v4i8:$rhs)),
+        (COMPNBO SingleReg:$lhs, SingleReg:$rhs, Mod)>, Requires<[IsV2]>;
+  def : Pat<(sra (shl (v4i8 (Node v4i8:$lhs, v4i8:$rhs)), (v4i8 v4_splat_7)), (v4i8 v4_splat_7)),
+        (COMPNBO SingleReg:$lhs, SingleReg:$rhs, Mod)>, Requires<[IsV2]>;
+
+  def : Pat<(v8i8 (Node v8i8:$lhs, v8i8:$rhs)),
+        (COMPNBO SingleReg:$lhs, SingleReg:$rhs, Mod)>, Requires<[IsV2]>;
+  def : Pat<(sra (shl (v8i8 (Node v8i8:$lhs, v8i8:$rhs)), (v8i8 v8_splat_7)), (v8i8 v8_splat_7)),
+        (COMPNBO SingleReg:$lhs, SingleReg:$rhs, Mod)>, Requires<[IsV2]>;
+
+//COMPNHQ
   def : Pat<(v4i16 (Node v4i16:$lhs, v4i16:$rhs)),
         (COMPNHQ SingleReg:$lhs, SingleReg:$rhs, Mod)>;
   def : Pat<(sra (shl (v4i16 (Node v4i16:$lhs, v4i16:$rhs)), (v4i16 v4_splat_15)), (v4i16 v4_splat_15)),
