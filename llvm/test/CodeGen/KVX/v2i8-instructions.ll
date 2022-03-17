@@ -797,65 +797,89 @@ define <2 x i8> @nandw_v2i8_ri37_2(<2 x i8> %0) {
   ret <2 x i8> %3
 }
 
-define  <2 x i8> @v2_maxhq_rr_i8(<2 x i8> %a, <2 x i8> %b) {
-; ALL-LABEL: v2_maxhq_rr_i8:
-; ALL:       # %bb.0: # %entry
-; ALL-NEXT:    sxlbhq $r1 = $r1
-; ALL-NEXT:    sxlbhq $r0 = $r0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    maxhq $r0 = $r0, $r1
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sbmm8 $r0 = $r0, 0x401
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+define  <2 x i8> @v2_maxbo_rr_i8(<2 x i8> %a, <2 x i8> %b) {
+; V1-LABEL: v2_maxbo_rr_i8:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    sxlbhq $r1 = $r1
+; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    maxhq $r0 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x401
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: v2_maxbo_rr_i8:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    maxbo $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
 entry:
   %0 = call <2 x i8> @llvm.smax.v2i8(<2 x i8> %a, <2 x i8> %b)
   ret <2 x i8> %0
 }
 
-define  <2 x i8> @v2_minhq_rr_i8(<2 x i8> %a, <2 x i8> %b) {
-; ALL-LABEL: v2_minhq_rr_i8:
-; ALL:       # %bb.0: # %entry
-; ALL-NEXT:    sxlbhq $r1 = $r1
-; ALL-NEXT:    sxlbhq $r0 = $r0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    minhq $r0 = $r0, $r1
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sbmm8 $r0 = $r0, 0x401
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+define  <2 x i8> @v2_minbo_rr_i8(<2 x i8> %a, <2 x i8> %b) {
+; V1-LABEL: v2_minbo_rr_i8:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    sxlbhq $r1 = $r1
+; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    minhq $r0 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x401
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: v2_minbo_rr_i8:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    minbo $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
 entry:
   %0 = call <2 x i8> @llvm.smin.v2i8(<2 x i8> %a, <2 x i8> %b)
   ret <2 x i8> %0
 }
 
-define  <2 x i8> @v2_umaxhq_rr_i8(<2 x i8> %a, <2 x i8> %b) {
-; ALL-LABEL: v2_umaxhq_rr_i8:
-; ALL:       # %bb.0: # %entry
-; ALL-NEXT:    sbmm8 $r1 = $r1, 0x20001
-; ALL-NEXT:    sbmm8 $r0 = $r0, 0x20001
-; ALL-NEXT:    ;;
-; ALL-NEXT:    maxuhq $r0 = $r0, $r1
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sbmm8 $r0 = $r0, 0x401
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+define  <2 x i8> @v2_umaxbo_rr_i8(<2 x i8> %a, <2 x i8> %b) {
+; V1-LABEL: v2_umaxbo_rr_i8:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    sbmm8 $r1 = $r1, 0x20001
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x20001
+; V1-NEXT:    ;;
+; V1-NEXT:    maxuhq $r0 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x401
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: v2_umaxbo_rr_i8:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    maxubo $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
 entry:
   %0 = call <2 x i8> @llvm.umax.v2i8(<2 x i8> %a, <2 x i8> %b)
   ret <2 x i8> %0
 }
 
-define  <2 x i8> @v2_uminhq_rr_i8(<2 x i8> %a, <2 x i8> %b) {
-; ALL-LABEL: v2_uminhq_rr_i8:
-; ALL:       # %bb.0: # %entry
-; ALL-NEXT:    sbmm8 $r1 = $r1, 0x20001
-; ALL-NEXT:    sbmm8 $r0 = $r0, 0x20001
-; ALL-NEXT:    ;;
-; ALL-NEXT:    minuhq $r0 = $r0, $r1
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sbmm8 $r0 = $r0, 0x401
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+define  <2 x i8> @v2_uminbo_rr_i8(<2 x i8> %a, <2 x i8> %b) {
+; V1-LABEL: v2_uminbo_rr_i8:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    sbmm8 $r1 = $r1, 0x20001
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x20001
+; V1-NEXT:    ;;
+; V1-NEXT:    minuhq $r0 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x401
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: v2_uminbo_rr_i8:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    minubo $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
 entry:
   %0 = call <2 x i8> @llvm.umin.v2i8(<2 x i8> %a, <2 x i8> %b)
   ret <2 x i8> %0
