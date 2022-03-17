@@ -273,7 +273,7 @@ define <2 x i8> @test_neg(<2 x i8> %a) #0 {
 ;
 ; V2-LABEL: test_neg:
 ; V2:       # %bb.0:
-; V2-NEXT:    sbfbo $r0 = $r0, 0
+; V2-NEXT:    negbo $r0 = $r0
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %r = sub <2 x i8> <i8 0, i8 0>, %a

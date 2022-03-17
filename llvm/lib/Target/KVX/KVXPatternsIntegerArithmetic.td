@@ -1089,7 +1089,7 @@ foreach vtype = [ v2i32, v4i16, v8i8 ] in {
     def : Pat<(vnot (and vtype:$rs1, vtype:$rs2)), (NANDDrr SingleReg:$rs1, SingleReg:$rs2)>;
 }
 
-// // NANDW
+// NANDW
 def : Pat<(i32 (or (not i32:$r), (i32 Signed10W:$i))), (NANDWri10 SingleReg:$r, (get_not_imm $i) )>;
 def : Pat<(i32 (or (not i32:$r), (i32 Wrapped32:$i))), (NANDWri37 SingleReg:$r, (get_not_imm $i) )>;
 def : Pat<(not (and i32:$rs1, i32:$rs2)), (NANDWrr SingleReg:$rs1, SingleReg:$rs2)>;
@@ -1099,6 +1099,10 @@ foreach vtype = [ v2i8, v4i8, v2i16 ] in {
     def : Pat<(vnot (and vtype:$r, (vtype (is_imm_vec:$IMM)))), (NANDWri37 SingleReg:$r, (build_imm_vec $IMM))>;
     def : Pat<(vnot (and vtype:$rs1, vtype:$rs2)), (NANDWrr SingleReg:$rs1, SingleReg:$rs2)>;
 }
+
+// NEGBO
+foreach vt = [ v2i8, v4i8 ] in
+def : Pat<(vineg vt:$v), (NEGBO SingleReg:$v)>, Requires<[IsV2]>;
 
 // NXOR ri variants are not easy, as they become a single xor
 // NXORD

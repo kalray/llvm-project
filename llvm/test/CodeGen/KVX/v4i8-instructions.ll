@@ -291,7 +291,7 @@ define <4 x i8> @test_neg(<4 x i8> %a) #0 {
 ;
 ; CV2-LABEL: test_neg:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    sbfbo $r0 = $r0, 0
+; CV2-NEXT:    negbo $r0 = $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
   %r = sub <4 x i8> <i8 0, i8 0, i8 0, i8 0>, %a
