@@ -278,6 +278,7 @@ def : Pat<(add (shl i64:$r2, sc), i64:$r1), (RRInstr SingleReg:$r2, SingleReg:$r
 def : Pat<(add (shl i64:$r2, sc), Wrapped64W:$r1), (RIInstr SingleReg:$r2, (trunc_imm_32 imm:$r1), splat32_)>;
 def : Pat<(add (shl i64:$r2, sc), SignedSplat32Imm:$r1), (RIInstr SingleReg:$r2, (trunc_imm_32 imm:$r1), splat32_at)>;
 }
+defm : ADDXDPAT<(i64 5), ADDX32Drr, ADDX32Dri>, Requires<[IsV2]>;
 defm : ADDXDPAT<(i64 4), ADDX16Drr, ADDX16Dri>;
 defm : ADDXDPAT<(i64 3), ADDX8Drr, ADDX8Dri>;
 defm : ADDXDPAT<(i64 2), ADDX4Drr, ADDX4Dri>;
