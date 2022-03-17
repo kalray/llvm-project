@@ -849,6 +849,7 @@ multiclass MC_15<string OpcStr> {
 //   defm MAXUWP
 //   defm ADDBO
 //   defm ADDHQ
+//   defm SBFBO
 //   defm SBFHQ
 //   defm MINHQ
 //   defm MINUHQ
@@ -2049,6 +2050,8 @@ defm ADDHQ : MC_16<"addhq">;
 
 let isAdd = 1 in
 defm ADDBO : MC_16<"addbo">, Requires<[IsV2]>;
+
+defm SBFBO : MC_16<"sbfbo">, Requires<[IsV2]>;
 
 defm SBFHQ : MC_16<"sbfhq">;
 

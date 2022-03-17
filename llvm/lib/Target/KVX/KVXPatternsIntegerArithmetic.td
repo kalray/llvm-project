@@ -146,13 +146,17 @@ def : Pat<(add i64:$rs1, Wrapped64:$rs2), (ADDDri64 SingleReg:$rs1, Wrapped64:$r
 
 // ADDBO
 def : Pat<(add v2i8:$rs1, (v2i8(is_imm_vec:$IMM))), (ADDBOri SingleReg:$rs1, (build_imm_vec $IMM), splat32_)>, Requires<[IsV2]>;
+def : Pat<(sub v2i8:$rs1, (v2i8(is_imm_vec:$IMM))), (ADDBOri SingleReg:$rs1, (build_imm_vec_neg $IMM), splat32_)>, Requires<[IsV2]>;
 def : Pat<(add v2i8:$rs1, v2i8:$rs2), (ADDBOrr SingleReg:$rs1, SingleReg:$rs2)>, Requires<[IsV2]>;
 
 def : Pat<(add v4i8:$rs1, (v4i8(is_imm_vec:$IMM))), (ADDBOri SingleReg:$rs1, (build_imm_vec $IMM), splat32_)>, Requires<[IsV2]>;
+def : Pat<(sub v4i8:$rs1, (v4i8(is_imm_vec:$IMM))), (ADDBOri SingleReg:$rs1, (build_imm_vec_neg $IMM), splat32_)>, Requires<[IsV2]>;
 def : Pat<(add v4i8:$rs1, v4i8:$rs2), (ADDBOrr SingleReg:$rs1, SingleReg:$rs2)>, Requires<[IsV2]>;
 
 def : Pat<(add v8i8:$rs1, (v8i8(is_imm_vec_kvx_splat32_:$IMM))), (ADDBOri SingleReg:$rs1, (build_imm_vec $IMM), splat32_)>, Requires<[IsV2]>;
 def : Pat<(add v8i8:$rs1, (v8i8(is_imm_vec_kvx_splat32_at:$IMM))), (ADDBOri SingleReg:$rs1, (build_imm_vec $IMM), splat32_at)>, Requires<[IsV2]>;
+def : Pat<(sub v8i8:$rs1, (v8i8(is_imm_vec_kvx_splat32_:$IMM))), (ADDBOri SingleReg:$rs1, (build_imm_vec_neg $IMM), splat32_)>, Requires<[IsV2]>;
+def : Pat<(sub v8i8:$rs1, (v8i8(is_imm_vec_kvx_splat32_at:$IMM))), (ADDBOri SingleReg:$rs1, (build_imm_vec_neg $IMM), splat32_at)>, Requires<[IsV2]>;
 def : Pat<(add v8i8:$rs1, v8i8:$rs2), (ADDBOrr SingleReg:$rs1, SingleReg:$rs2)>, Requires<[IsV2]>;
 
 // ADDHQ
@@ -1255,6 +1259,15 @@ def : Pat<(sub i64:$rs1, i64:$rs2), (SBFDrr SingleReg:$rs2, SingleReg:$rs1)>;
 def : Pat<(sub Signed10:$rs1, i64:$rs2), (SBFDri10 SingleReg:$rs2, Signed10:$rs1)>;
 def : Pat<(sub Signed37:$rs1, i64:$rs2), (SBFDri37 SingleReg:$rs2, Signed37:$rs1)>;
 def : Pat<(sub Wrapped64:$rs1, i64:$rs2), (SBFDri64 SingleReg:$rs2, Wrapped64:$rs1)>;
+
+// SBFBO
+def : Pat<(sub (v2i8(is_imm_vec:$IMM)), v2i8:$rs1), (SBFBOri SingleReg:$rs1, (build_imm_vec $IMM), splat32_)>, Requires<[IsV2]>;
+def : Pat<(sub v2i8:$rs1, v2i8:$rs2), (SBFBOrr SingleReg:$rs2, SingleReg:$rs1)>, Requires<[IsV2]>;
+def : Pat<(sub (v4i8(is_imm_vec:$IMM)), v4i8:$rs1), (SBFBOri SingleReg:$rs1, (build_imm_vec $IMM), splat32_)>, Requires<[IsV2]>;
+def : Pat<(sub v4i8:$rs1, v4i8:$rs2), (SBFBOrr SingleReg:$rs2, SingleReg:$rs1)>, Requires<[IsV2]>;
+def : Pat<(sub (v8i8(is_imm_vec_kvx_splat32_:$IMM)), v8i8:$rs1), (SBFBOri SingleReg:$rs1, (build_imm_vec $IMM), splat32_)>, Requires<[IsV2]>;
+def : Pat<(sub (v8i8(is_imm_vec_kvx_splat32_at:$IMM)), v8i8:$rs1), (SBFBOri SingleReg:$rs1, (build_imm_vec $IMM), splat32_at)>, Requires<[IsV2]>;
+def : Pat<(sub v8i8:$rs1, v8i8:$rs2), (SBFBOrr SingleReg:$rs2, SingleReg:$rs1)>, Requires<[IsV2]>;
 
 // SBFHQ
 def : Pat<(sub (v2i16(is_imm_vec:$IMM)), v2i16:$rs1), (SBFHQri SingleReg:$rs1, (build_imm_vec $IMM), splat32_)>;

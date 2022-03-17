@@ -443,11 +443,12 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     setOperationPromotedToType(I, MVT::v8i8, MVT::v8i16);
   }
 
-  if (!STI.isV1()) {
-    setOperationAction(ISD::ADD, MVT::v2i8, Legal);
-    setOperationAction(ISD::ADD, MVT::v4i8, Legal);
-    setOperationAction(ISD::ADD, MVT::v8i8, Legal);
-  }
+  if (!STI.isV1())
+    for (auto I : {ISD::ADD, ISD::SUB}) {
+      setOperationAction(I, MVT::v2i8, Legal);
+      setOperationAction(I, MVT::v4i8, Legal);
+      setOperationAction(I, MVT::v8i8, Legal);
+    }
 
   for (auto I : {ISD::ABS, ISD::ADD, ISD::SUB})
     setOperationAction(I, MVT::v8i8, Legal);

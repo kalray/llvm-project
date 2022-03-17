@@ -318,75 +318,99 @@ define <8 x i8> @test_add_imm_1(<8 x i8> %a) #0 {
 }
 
 define <8 x i8> @test_sub(<8 x i8> %a, <8 x i8> %b) #0 {
-; ALL-LABEL: test_sub:
-; ALL:       # %bb.0:
-; ALL-NEXT:    ord $r2 = $r0, 0x8080808080808080
-; ALL-NEXT:    nxord $r0 = $r0, $r1
-; ALL-NEXT:    andd $r3 = $r1, 0x7f7f7f7f7f7f7f7f
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sbfd $r1 = $r3, $r2
-; ALL-NEXT:    andd $r0 = $r0, 0x8080808080808080
-; ALL-NEXT:    ;;
-; ALL-NEXT:    xord $r0 = $r0, $r1
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; CV1-LABEL: test_sub:
+; CV1:       # %bb.0:
+; CV1-NEXT:    ord $r2 = $r0, 0x8080808080808080
+; CV1-NEXT:    nxord $r0 = $r0, $r1
+; CV1-NEXT:    andd $r3 = $r1, 0x7f7f7f7f7f7f7f7f
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sbfd $r1 = $r3, $r2
+; CV1-NEXT:    andd $r0 = $r0, 0x8080808080808080
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xord $r0 = $r0, $r1
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: test_sub:
+; CV2:       # %bb.0:
+; CV2-NEXT:    sbfbo $r0 = $r1, $r0
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
   %r = sub <8 x i8> %a, %b
   ret <8 x i8> %r
 }
 
 define <8 x i8> @test_sub_imm(<8 x i8> %a) #0 {
-; ALL-LABEL: test_sub_imm:
-; ALL:       # %bb.0:
-; ALL-NEXT:    make $r1 = 0x201020102010201
-; ALL-NEXT:    ord $r2 = $r0, 0x8080808080808080
-; ALL-NEXT:    ;;
-; ALL-NEXT:    nxord $r0 = $r0, $r1
-; ALL-NEXT:    andd $r3 = $r1, 0x7f7f7f7f7f7f7f7f
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sbfd $r1 = $r3, $r2
-; ALL-NEXT:    andd $r0 = $r0, 0x8080808080808080
-; ALL-NEXT:    ;;
-; ALL-NEXT:    xord $r0 = $r0, $r1
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; CV1-LABEL: test_sub_imm:
+; CV1:       # %bb.0:
+; CV1-NEXT:    make $r1 = 0x201020102010201
+; CV1-NEXT:    ord $r2 = $r0, 0x8080808080808080
+; CV1-NEXT:    ;;
+; CV1-NEXT:    nxord $r0 = $r0, $r1
+; CV1-NEXT:    andd $r3 = $r1, 0x7f7f7f7f7f7f7f7f
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sbfd $r1 = $r3, $r2
+; CV1-NEXT:    andd $r0 = $r0, 0x8080808080808080
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xord $r0 = $r0, $r1
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: test_sub_imm:
+; CV2:       # %bb.0:
+; CV2-NEXT:    addbo.@ $r0 = $r0, 0xfefffeff
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
   %r = sub <8 x i8> %a, <i8 1, i8 2, i8 1, i8 2, i8 1, i8 2, i8 1, i8 2>
   ret <8 x i8> %r
 }
 
 define <8 x i8> @test_sub_fromimm(<8 x i8> %a) #0 {
-; ALL-LABEL: test_sub_fromimm:
-; ALL:       # %bb.0:
-; ALL-NEXT:    make $r1 = 0x201020102010201
-; ALL-NEXT:    andd $r3 = $r0, 0x7f7f7f7f7f7f7f7f
-; ALL-NEXT:    ;;
-; ALL-NEXT:    nxord $r0 = $r1, $r0
-; ALL-NEXT:    ord $r2 = $r1, 0x8080808080808080
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sbfd $r1 = $r3, $r2
-; ALL-NEXT:    andd $r0 = $r0, 0x8080808080808080
-; ALL-NEXT:    ;;
-; ALL-NEXT:    xord $r0 = $r0, $r1
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; CV1-LABEL: test_sub_fromimm:
+; CV1:       # %bb.0:
+; CV1-NEXT:    make $r1 = 0x201020102010201
+; CV1-NEXT:    andd $r3 = $r0, 0x7f7f7f7f7f7f7f7f
+; CV1-NEXT:    ;;
+; CV1-NEXT:    nxord $r0 = $r1, $r0
+; CV1-NEXT:    ord $r2 = $r1, 0x8080808080808080
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sbfd $r1 = $r3, $r2
+; CV1-NEXT:    andd $r0 = $r0, 0x8080808080808080
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xord $r0 = $r0, $r1
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: test_sub_fromimm:
+; CV2:       # %bb.0:
+; CV2-NEXT:    sbfbo.@ $r0 = $r0, 0x2010201
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
   %r = sub <8 x i8> <i8 1, i8 2, i8 1, i8 2, i8 1, i8 2, i8 1, i8 2>, %a
   ret <8 x i8> %r
 }
 
 define <8 x i8> @test_neg(<8 x i8> %a) #0 {
-; ALL-LABEL: test_neg:
-; ALL:       # %bb.0:
-; ALL-NEXT:    make $r1 = 0
-; ALL-NEXT:    andd $r3 = $r0, 0x7f7f7f7f7f7f7f7f
-; ALL-NEXT:    ;;
-; ALL-NEXT:    nxord $r0 = $r1, $r0
-; ALL-NEXT:    ord $r2 = $r1, 0x8080808080808080
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sbfd $r1 = $r3, $r2
-; ALL-NEXT:    andd $r0 = $r0, 0x8080808080808080
-; ALL-NEXT:    ;;
-; ALL-NEXT:    xord $r0 = $r0, $r1
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; CV1-LABEL: test_neg:
+; CV1:       # %bb.0:
+; CV1-NEXT:    make $r1 = 0
+; CV1-NEXT:    andd $r3 = $r0, 0x7f7f7f7f7f7f7f7f
+; CV1-NEXT:    ;;
+; CV1-NEXT:    nxord $r0 = $r1, $r0
+; CV1-NEXT:    ord $r2 = $r1, 0x8080808080808080
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sbfd $r1 = $r3, $r2
+; CV1-NEXT:    andd $r0 = $r0, 0x8080808080808080
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xord $r0 = $r0, $r1
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: test_neg:
+; CV2:       # %bb.0:
+; CV2-NEXT:    sbfbo $r0 = $r0, 0
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
   %r = sub <8 x i8> <i8 0, i8 0, i8 0, i8 0, i8 0, i8 0, i8 0, i8 0>, %a
   ret <8 x i8> %r
 }
@@ -917,32 +941,52 @@ define <8 x i8> @test_insertelement(<8 x i8> %a, i8 %x, i64 %p) #0 {
 }
 
 define <8 x i8> @mulsub(<8 x i8> %a, <8 x i8> %b, <8 x i8> %c) #0 {
-; ALL-LABEL: mulsub:
-; ALL:       # %bb.0:
-; ALL-NEXT:    sxmbhq $r3 = $r2
-; ALL-NEXT:    sxmbhq $r4 = $r1
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sxlbhq $r2 = $r2
-; ALL-NEXT:    sxlbhq $r1 = $r1
-; ALL-NEXT:    mulhq $r3 = $r4, $r3
-; ALL-NEXT:    ;;
-; ALL-NEXT:    mulhq $r1 = $r1, $r2
-; ALL-NEXT:    sbmm8 $r2 = $r3, 0x40100401
-; ALL-NEXT:    ord $r3 = $r0, 0x8080808080808080
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sbmm8 $r1 = $r1, 0x40100401
-; ALL-NEXT:    ;;
-; ALL-NEXT:    insf $r1 = $r2, 63, 32
-; ALL-NEXT:    ;;
-; ALL-NEXT:    nxord $r0 = $r0, $r1
-; ALL-NEXT:    andd $r2 = $r1, 0x7f7f7f7f7f7f7f7f
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sbfd $r1 = $r2, $r3
-; ALL-NEXT:    andd $r0 = $r0, 0x8080808080808080
-; ALL-NEXT:    ;;
-; ALL-NEXT:    xord $r0 = $r0, $r1
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; CV1-LABEL: mulsub:
+; CV1:       # %bb.0:
+; CV1-NEXT:    sxmbhq $r3 = $r2
+; CV1-NEXT:    sxmbhq $r4 = $r1
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sxlbhq $r2 = $r2
+; CV1-NEXT:    sxlbhq $r1 = $r1
+; CV1-NEXT:    mulhq $r3 = $r4, $r3
+; CV1-NEXT:    ;;
+; CV1-NEXT:    mulhq $r1 = $r1, $r2
+; CV1-NEXT:    sbmm8 $r2 = $r3, 0x40100401
+; CV1-NEXT:    ord $r3 = $r0, 0x8080808080808080
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sbmm8 $r1 = $r1, 0x40100401
+; CV1-NEXT:    ;;
+; CV1-NEXT:    insf $r1 = $r2, 63, 32
+; CV1-NEXT:    ;;
+; CV1-NEXT:    nxord $r0 = $r0, $r1
+; CV1-NEXT:    andd $r2 = $r1, 0x7f7f7f7f7f7f7f7f
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sbfd $r1 = $r2, $r3
+; CV1-NEXT:    andd $r0 = $r0, 0x8080808080808080
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xord $r0 = $r0, $r1
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: mulsub:
+; CV2:       # %bb.0:
+; CV2-NEXT:    sxmbhq $r3 = $r2
+; CV2-NEXT:    sxmbhq $r4 = $r1
+; CV2-NEXT:    ;;
+; CV2-NEXT:    sxlbhq $r2 = $r2
+; CV2-NEXT:    sxlbhq $r1 = $r1
+; CV2-NEXT:    mulhq $r3 = $r4, $r3
+; CV2-NEXT:    ;;
+; CV2-NEXT:    mulhq $r1 = $r1, $r2
+; CV2-NEXT:    sbmm8 $r2 = $r3, 0x40100401
+; CV2-NEXT:    ;;
+; CV2-NEXT:    sbmm8 $r1 = $r1, 0x40100401
+; CV2-NEXT:    ;;
+; CV2-NEXT:    insf $r1 = $r2, 63, 32
+; CV2-NEXT:    ;;
+; CV2-NEXT:    sbfbo $r0 = $r1, $r0
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
   %mul = mul <8 x i8> %b, %c
   %sub = sub <8 x i8> %a, %mul
   ret <8 x i8> %sub

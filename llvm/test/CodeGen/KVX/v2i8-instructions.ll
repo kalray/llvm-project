@@ -108,44 +108,62 @@ define <2 x i8> @test_add_imm_1(<2 x i8> %a) #0 {
 }
 
 define <2 x i8> @test_sub(<2 x i8> %a, <2 x i8> %b) #0 {
-; ALL-LABEL: test_sub:
-; ALL:       # %bb.0:
-; ALL-NEXT:    sxlbhq $r0 = $r0
-; ALL-NEXT:    sxlbhq $r1 = $r1
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sbfhq $r0 = $r1, $r0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sbmm8 $r0 = $r0, 0x401
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; V1-LABEL: test_sub:
+; V1:       # %bb.0:
+; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    sxlbhq $r1 = $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    sbfhq $r0 = $r1, $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x401
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: test_sub:
+; V2:       # %bb.0:
+; V2-NEXT:    sbfbo $r0 = $r1, $r0
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %r = sub <2 x i8> %a, %b
   ret <2 x i8> %r
 }
 
 define <2 x i8> @test_sub_imm(<2 x i8> %a) #0 {
-; ALL-LABEL: test_sub_imm:
-; ALL:       # %bb.0:
-; ALL-NEXT:    sxlbhq $r0 = $r0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    addhq $r0 = $r0, 0xfffeffff
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sbmm8 $r0 = $r0, 0x401
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; V1-LABEL: test_sub_imm:
+; V1:       # %bb.0:
+; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    addhq $r0 = $r0, 0xfffeffff
+; V1-NEXT:    ;;
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x401
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: test_sub_imm:
+; V2:       # %bb.0:
+; V2-NEXT:    addbo $r0 = $r0, -257
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %r = sub <2 x i8> %a, <i8 1, i8 2>
   ret <2 x i8> %r
 }
 
 define <2 x i8> @test_sub_fromimm(<2 x i8> %a) #0 {
-; ALL-LABEL: test_sub_fromimm:
-; ALL:       # %bb.0:
-; ALL-NEXT:    sxlbhq $r0 = $r0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sbfhq $r0 = $r0, 0x20001
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sbmm8 $r0 = $r0, 0x401
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; V1-LABEL: test_sub_fromimm:
+; V1:       # %bb.0:
+; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sbfhq $r0 = $r0, 0x20001
+; V1-NEXT:    ;;
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x401
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: test_sub_fromimm:
+; V2:       # %bb.0:
+; V2-NEXT:    sbfbo $r0 = $r0, 513
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %r = sub <2 x i8> <i8 1, i8 2>, %a
   ret <2 x i8> %r
 }
@@ -243,15 +261,21 @@ define <2 x i8> @test_fma_imm_2(<2 x i8> %a, <2 x i8> %b) #0 {
 }
 
 define <2 x i8> @test_neg(<2 x i8> %a) #0 {
-; ALL-LABEL: test_neg:
-; ALL:       # %bb.0:
-; ALL-NEXT:    sxlbhq $r0 = $r0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    neghq $r0 = $r0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sbmm8 $r0 = $r0, 0x401
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; V1-LABEL: test_neg:
+; V1:       # %bb.0:
+; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    neghq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x401
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: test_neg:
+; V2:       # %bb.0:
+; V2-NEXT:    sbfbo $r0 = $r0, 0
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %r = sub <2 x i8> <i8 0, i8 0>, %a
   ret <2 x i8> %r
 }
@@ -683,18 +707,31 @@ define <2 x i8> @test_insertelement(<2 x i8> %a, i8 %x, i64 %p) #0 {
 }
 
 define <2 x i8> @mulsub(<2 x i8> %a, <2 x i8> %b, <2 x i8> %c) #0 {
-; ALL-LABEL: mulsub:
-; ALL:       # %bb.0:
-; ALL-NEXT:    sxlbhq $r1 = $r1
-; ALL-NEXT:    sxlbhq $r0 = $r0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sxlbhq $r2 = $r2
-; ALL-NEXT:    ;;
-; ALL-NEXT:    msbfhq $r0 = $r1, $r2
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sbmm8 $r0 = $r0, 0x401
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; V1-LABEL: mulsub:
+; V1:       # %bb.0:
+; V1-NEXT:    sxlbhq $r1 = $r1
+; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sxlbhq $r2 = $r2
+; V1-NEXT:    ;;
+; V1-NEXT:    msbfhq $r0 = $r1, $r2
+; V1-NEXT:    ;;
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x401
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: mulsub:
+; V2:       # %bb.0:
+; V2-NEXT:    sxlbhq $r2 = $r2
+; V2-NEXT:    sxlbhq $r1 = $r1
+; V2-NEXT:    ;;
+; V2-NEXT:    mulhq $r1 = $r1, $r2
+; V2-NEXT:    ;;
+; V2-NEXT:    sbmm8 $r1 = $r1, 0x401
+; V2-NEXT:    ;;
+; V2-NEXT:    sbfbo $r0 = $r1, $r0
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %mul = mul <2 x i8> %b, %c
   %sub = sub <2 x i8> %a, %mul
   ret <2 x i8> %sub
