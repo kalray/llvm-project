@@ -84,13 +84,19 @@ entry:
 }
 
 define i64 @f5(i64 %a, i32 %b){
-; CHECK-LABEL: f5:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sllw $r1 = $r1, 6
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    adduwd $r0 = $r1, $r0
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: f5:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    sllw $r1 = $r1, 6
+; V1-NEXT:    ;;
+; V1-NEXT:    adduwd $r0 = $r1, $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: f5:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    addx64uwd $r0 = $r1, $r0
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
 entry:
   %shl = shl i32 %b, 6
   %conv = zext i32 %shl to i64
@@ -99,13 +105,19 @@ entry:
 }
 
 define i64 @f6(i64 %a, i32 %b){
-; CHECK-LABEL: f6:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sllw $r1 = $r1, 6
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    adduwd $r0 = $r1, $r0
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: f6:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    sllw $r1 = $r1, 6
+; V1-NEXT:    ;;
+; V1-NEXT:    adduwd $r0 = $r1, $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: f6:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    addx64uwd $r0 = $r1, $r0
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
 entry:
   %shl = shl i32 %b, 6
   %conv = zext i32 %shl to i64
@@ -236,13 +248,19 @@ entry:
 }
 
 define i64 @f5imm(i32 %b){
-; CHECK-LABEL: f5imm:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sllw $r0 = $r0, 6
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, 0x1e240
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: f5imm:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    sllw $r0 = $r0, 6
+; V1-NEXT:    ;;
+; V1-NEXT:    addd $r0 = $r0, 0x1e240
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: f5imm:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    addx64uwd $r0 = $r0, 0x1e240
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
 entry:
   %shl = shl i32 %b, 6
   %conv = zext i32 %shl to i64
@@ -251,13 +269,19 @@ entry:
 }
 
 define i64 @f6imm(i32 %b){
-; CHECK-LABEL: f6imm:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sllw $r0 = $r0, 6
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, 0x1e240
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: f6imm:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    sllw $r0 = $r0, 6
+; V1-NEXT:    ;;
+; V1-NEXT:    addd $r0 = $r0, 0x1e240
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: f6imm:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    addx64uwd $r0 = $r0, 0x1e240
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
 entry:
   %shl = shl i32 %b, 6
   %conv = zext i32 %shl to i64

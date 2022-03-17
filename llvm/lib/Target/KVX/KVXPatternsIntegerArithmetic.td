@@ -291,6 +291,7 @@ def : Pat<(add (i64 (zext (shl i32:$r2, sc))), i64:$r1), (RRInstr SingleReg:$r2,
 
 def : Pat<(add (i64 (zext (shl i32:$r2, sc))), Wrapped64W:$r1), (RIInstr SingleReg:$r2, (trunc_imm_32 imm:$r1))>;
 }
+defm : ADDXUWDPAT<(i64 6), ADDX64UWDrr, ADDX64UWDri>, Requires<[IsV2]>;
 defm : ADDXUWDPAT<(i64 5), ADDX32UWDrr, ADDX32UWDri>, Requires<[IsV2]>;
 defm : ADDXUWDPAT<(i64 4), ADDX16UWDrr, ADDX16UWDri>;
 defm : ADDXUWDPAT<(i64 3), ADDX8UWDrr, ADDX8UWDri>;
