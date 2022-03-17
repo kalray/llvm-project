@@ -461,8 +461,8 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   if (!STI.isV1())
     for (auto I :
          {ISD::ABS, ISD::ADD, ISD::SADDSAT, ISD::SETCC, ISD::SMAX, ISD::SMIN,
-          ISD::SHL, ISD::SRA, ISD::SRL, ISD::SUB, ISD::UADDSAT, ISD::UMAX,
-          ISD::UMIN, ISD::USUBSAT, ISD::VSELECT})
+          ISD::SHL, ISD::SRA, ISD::SRL, ISD::SSUBSAT, ISD::SUB, ISD::UADDSAT,
+          ISD::UMAX, ISD::UMIN, ISD::USUBSAT, ISD::VSELECT})
       for (auto VT : {MVT::i32, MVT::i64, MVT::v2i8, MVT::v2i16, MVT::v2i32,
                       MVT::v4i8, MVT::v4i16, MVT::v8i8})
         setOperationAction(I, VT, Legal);
@@ -507,8 +507,8 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::UADDSAT, MVT::v8i8, Legal);
   setOperationAction(ISD::UADDSAT, MVT::v2i32, Legal);
 
-  for (auto I :
-       {MVT::v8i8, MVT::v4i16, MVT::v2i32, MVT::i32, MVT::i64, MVT::v4i32})
+  for (auto I : {MVT::v8i8, MVT::v4i16, MVT::v2i16, MVT::v2i32, MVT::i32,
+                 MVT::i64, MVT::v4i32})
     setOperationAction(ISD::SSUBSAT, I, Legal);
 
   for (auto I : {MVT::v8i8, MVT::v2i32, MVT::v4i32})
