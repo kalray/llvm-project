@@ -459,11 +459,14 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::ATOMIC_FENCE, MVT::Other, Custom);
 
   if (!STI.isV1())
-    for (auto I : {ISD::ABS, ISD::ADD, ISD::SADDSAT, ISD::SETCC, ISD::SMAX,
-                   ISD::SMIN, ISD::SHL, ISD::SRA, ISD::SRL, ISD::SUB,
-                   ISD::UADDSAT, ISD::UMAX, ISD::UMIN, ISD::VSELECT})
-      for (auto VT : {MVT::v2i8, MVT::v4i8, MVT::v8i8, MVT::v2i16, MVT::v4i16,
-                      MVT::i32, MVT::i64})
+    for (auto I :
+         {ISD::ABS, ISD::ADD, ISD::SADDSAT, ISD::SETCC, ISD::SMAX, ISD::SMIN,
+          ISD::SHL, ISD::SRA, ISD::SRL, ISD::SUB, ISD::UADDSAT, ISD::UMAX,
+          ISD::UMIN, ISD::VSELECT})
+      for (auto VT : {MVT::i32, MVT::i64,
+                      MVT::v2i8, MVT::v2i16, MVT::v2i32,
+                      MVT::v4i8, MVT::v4i16,
+                      MVT::v8i8})
         setOperationAction(I, VT, Legal);
 
   // NOTE: We could use ACSWAPW instruction with some shifts and masks to

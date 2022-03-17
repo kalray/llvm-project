@@ -881,6 +881,7 @@ multiclass MC_16<string OpcStr> {
 // multiclass MC_17 is used by:
 //   defm ADDUSD
 //   defm ADDUSW
+//   defm ADDUSWP
 //   defm ABDWP
 //   defm ADDCWC
 //   defm SBFCWC
@@ -1915,8 +1916,11 @@ let isAdd = 1 in
 defm ADDSD : MC_12<"addsd">;
 
 let isAdd = 1 in {
+defm ADDUSBO : MC_17<"addusbo">, Requires<[IsV2]>;
 defm ADDUSD : MC_17<"addusd">, Requires<[IsV2]>;
+defm ADDUSHQ : MC_17<"addushq">, Requires<[IsV2]>;
 defm ADDUSW : MC_17<"addusw">, Requires<[IsV2]>;
+defm ADDUSWP : MC_17<"adduswp">, Requires<[IsV2]>;
 }
 
 defm SBFSD : MC_12<"sbfsd">;
@@ -2140,8 +2144,6 @@ defm SBFCHCP : MC_17<"sbfchcp">;
 let isAdd = 1 in {
 defm ADDSHQ : MC_17<"addshq">;
 defm ADDSBO : MC_17<"addsbo">, Requires<[IsV2]>;
-defm ADDUSBO : MC_17<"addusbo">, Requires<[IsV2]>;
-defm ADDUSHQ : MC_17<"addushq">, Requires<[IsV2]>;
 }
 
 defm SBFSHQ : MC_17<"sbfshq">;
