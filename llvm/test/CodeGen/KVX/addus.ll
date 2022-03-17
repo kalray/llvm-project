@@ -4,28 +4,40 @@
 target triple = "kvx-kalray-cos"
 
 define i32 @uadd_sat32(i32 %a, i32 %b) {
-; CHECK-LABEL: uadd_sat32:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    notw $r2 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    minuw $r1 = $r1, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r0 = $r1, $r0
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KVXV1-LABEL: uadd_sat32:
+; KVXV1:       # %bb.0: # %entry
+; KVXV1-NEXT:    notw $r2 = $r0
+; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    minuw $r1 = $r1, $r2
+; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    addw $r0 = $r1, $r0
+; KVXV1-NEXT:    ret
+; KVXV1-NEXT:    ;;
+;
+; KVXV2-LABEL: uadd_sat32:
+; KVXV2:       # %bb.0: # %entry
+; KVXV2-NEXT:    addusw $r0 = $r1, $r0
+; KVXV2-NEXT:    ret
+; KVXV2-NEXT:    ;;
 entry:
   %0 = tail call i32 @llvm.uadd.sat.i32(i32 %b, i32 %a)
   ret i32 %0
 }
 
 define i32 @uadd_sat32_ri(i32 %a) {
-; CHECK-LABEL: uadd_sat32_ri:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    minuw $r0 = $r0, 0xffff3535
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r0 = $r0, 0xcaca
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KVXV1-LABEL: uadd_sat32_ri:
+; KVXV1:       # %bb.0: # %entry
+; KVXV1-NEXT:    minuw $r0 = $r0, 0xffff3535
+; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    addw $r0 = $r0, 0xcaca
+; KVXV1-NEXT:    ret
+; KVXV1-NEXT:    ;;
+;
+; KVXV2-LABEL: uadd_sat32_ri:
+; KVXV2:       # %bb.0: # %entry
+; KVXV2-NEXT:    addusw $r0 = $r0, 0xcaca
+; KVXV2-NEXT:    ret
+; KVXV2-NEXT:    ;;
 entry:
   %0 = tail call i32 @llvm.uadd.sat.i32(i32 %a, i32 51914)
   ret i32 %0
@@ -33,36 +45,58 @@ entry:
 
 ; TODO: This could be addshq, but i16 is not legal.
 define signext i16 @uadd_sat16(i16 signext %a, i16 signext %b) {
-; CHECK-LABEL: uadd_sat16:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    zxhd $r0 = $r0
-; CHECK-NEXT:    zxhd $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    minuw $r0 = $r0, 0xffff
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxhd $r0 = $r0
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KVXV1-LABEL: uadd_sat16:
+; KVXV1:       # %bb.0: # %entry
+; KVXV1-NEXT:    zxhd $r0 = $r0
+; KVXV1-NEXT:    zxhd $r1 = $r1
+; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    addw $r0 = $r1, $r0
+; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    minuw $r0 = $r0, 0xffff
+; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    sxhd $r0 = $r0
+; KVXV1-NEXT:    ret
+; KVXV1-NEXT:    ;;
+;
+; KVXV2-LABEL: uadd_sat16:
+; KVXV2:       # %bb.0: # %entry
+; KVXV2-NEXT:    sllw $r0 = $r0, 16
+; KVXV2-NEXT:    sllw $r1 = $r1, 16
+; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    addusw $r0 = $r1, $r0
+; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    sraw $r0 = $r0, 16
+; KVXV2-NEXT:    ret
+; KVXV2-NEXT:    ;;
 entry:
   %0 = tail call i16 @llvm.uadd.sat.i16(i16 %b, i16 %a)
   ret i16 %0
 }
 
 define signext i8 @uadd_sat8(i8 signext %a, i8 signext %b) {
-; CHECK-LABEL: uadd_sat8:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    zxbd $r0 = $r0
-; CHECK-NEXT:    zxbd $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    minuw $r0 = $r0, 255
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxbd $r0 = $r0
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KVXV1-LABEL: uadd_sat8:
+; KVXV1:       # %bb.0: # %entry
+; KVXV1-NEXT:    zxbd $r0 = $r0
+; KVXV1-NEXT:    zxbd $r1 = $r1
+; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    addw $r0 = $r1, $r0
+; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    minuw $r0 = $r0, 255
+; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    sxbd $r0 = $r0
+; KVXV1-NEXT:    ret
+; KVXV1-NEXT:    ;;
+;
+; KVXV2-LABEL: uadd_sat8:
+; KVXV2:       # %bb.0: # %entry
+; KVXV2-NEXT:    sllw $r0 = $r0, 24
+; KVXV2-NEXT:    sllw $r1 = $r1, 24
+; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    addusw $r0 = $r1, $r0
+; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    sraw $r0 = $r0, 24
+; KVXV2-NEXT:    ret
+; KVXV2-NEXT:    ;;
 entry:
   %0 = tail call i8 @llvm.uadd.sat.i8(i8 %b, i8 %a)
   ret i8 %0
@@ -412,16 +446,24 @@ entry:
 }
 
 define i32 @uadd_sat32_ext16(i32 %a, i16 %b) {
-; CHECK-LABEL: uadd_sat32_ext16:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sxhd $r1 = $r1
-; CHECK-NEXT:    notw $r2 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    minuw $r1 = $r1, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r0 = $r1, $r0
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KVXV1-LABEL: uadd_sat32_ext16:
+; KVXV1:       # %bb.0: # %entry
+; KVXV1-NEXT:    sxhd $r1 = $r1
+; KVXV1-NEXT:    notw $r2 = $r0
+; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    minuw $r1 = $r1, $r2
+; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    addw $r0 = $r1, $r0
+; KVXV1-NEXT:    ret
+; KVXV1-NEXT:    ;;
+;
+; KVXV2-LABEL: uadd_sat32_ext16:
+; KVXV2:       # %bb.0: # %entry
+; KVXV2-NEXT:    sxhd $r1 = $r1
+; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    addusw $r0 = $r1, $r0
+; KVXV2-NEXT:    ret
+; KVXV2-NEXT:    ;;
 entry:
   %0 = sext i16 %b to i32
   %1 = tail call i32 @llvm.uadd.sat.i32(i32 %0, i32 %a)
@@ -450,17 +492,25 @@ entry:
 }
 
 define i64 @uadd_sat32_notrunc(i32 %a, i32 %b) {
-; CHECK-LABEL: uadd_sat32_notrunc:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    notw $r2 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    minuw $r1 = $r1, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r0 = $r0
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KVXV1-LABEL: uadd_sat32_notrunc:
+; KVXV1:       # %bb.0: # %entry
+; KVXV1-NEXT:    notw $r2 = $r0
+; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    minuw $r1 = $r1, $r2
+; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    addw $r0 = $r1, $r0
+; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    sxwd $r0 = $r0
+; KVXV1-NEXT:    ret
+; KVXV1-NEXT:    ;;
+;
+; KVXV2-LABEL: uadd_sat32_notrunc:
+; KVXV2:       # %bb.0: # %entry
+; KVXV2-NEXT:    addusw $r0 = $r1, $r0
+; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    sxwd $r0 = $r0
+; KVXV2-NEXT:    ret
+; KVXV2-NEXT:    ;;
 entry:
   %0 = tail call i32 @llvm.uadd.sat.i32(i32 %b, i32 %a)
   %spec.store.select8 = sext i32 %0 to i64

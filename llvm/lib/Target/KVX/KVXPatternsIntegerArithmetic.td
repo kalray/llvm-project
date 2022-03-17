@@ -273,6 +273,9 @@ def : Pat<(v4i16(uaddsat v4i16:$v0, (v4i16(is_imm_vec_kvx_splat32_at:$IMM)) ) ),
            (ADDUSHQri SingleReg:$v0, (i32(trunc_imm_32 (i32(build_imm_vec $IMM)))), splat32_at)>, Requires<[IsV2]>;
 def : Pat<(v4i16(uaddsat v4i16:$v0, v4i16:$v1)), (ADDUSHQrr SingleReg:$v0, SingleReg:$v1)>, Requires<[IsV2]>;
 
+// ADDUSW
+def : Pat<(i32(uaddsat i32:$v, Wrapped32:$i)), (ADDUSWri SingleReg:$v, Wrapped32:$i, splat32_)>;
+def : Pat<(i32(uaddsat i32:$v0, i32:$v1)), (ADDUSWrr SingleReg:$v0, SingleReg:$v1)>;
 
 // ADDUWD
 // TODO: Add ri variant
