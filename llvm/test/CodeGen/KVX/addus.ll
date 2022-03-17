@@ -69,56 +69,103 @@ entry:
 }
 
 define signext i64 @uadd_sat64(i64 signext %a, i64 signext %b) {
-; CHECK-LABEL: uadd_sat64:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    notd $r2 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    minud $r1 = $r1, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r1, $r0
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KVXV1-LABEL: uadd_sat64:
+; KVXV1:       # %bb.0: # %entry
+; KVXV1-NEXT:    notd $r2 = $r0
+; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    minud $r1 = $r1, $r2
+; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    addd $r0 = $r1, $r0
+; KVXV1-NEXT:    ret
+; KVXV1-NEXT:    ;;
+;
+; KVXV2-LABEL: uadd_sat64:
+; KVXV2:       # %bb.0: # %entry
+; KVXV2-NEXT:    addusd $r0 = $r1, $r0
+; KVXV2-NEXT:    ret
+; KVXV2-NEXT:    ;;
 entry:
   %0 = tail call i64 @llvm.uadd.sat.i64(i64 %b, i64 %a)
   ret i64 %0
 }
 
 define signext i64 @uadd_sat64_ri10(i64 signext %a) {
-; CHECK-LABEL: uadd_sat64_ri10:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    minud $r0 = $r0, 511
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ord $r0 = $r0, -512
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KVXV1-LABEL: uadd_sat64_ri10:
+; KVXV1:       # %bb.0: # %entry
+; KVXV1-NEXT:    minud $r0 = $r0, 511
+; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ord $r0 = $r0, -512
+; KVXV1-NEXT:    ret
+; KVXV1-NEXT:    ;;
+;
+; KVXV2-LABEL: uadd_sat64_ri10:
+; KVXV2:       # %bb.0: # %entry
+; KVXV2-NEXT:    addusd $r0 = $r0, -512
+; KVXV2-NEXT:    ret
+; KVXV2-NEXT:    ;;
 entry:
   %0 = tail call i64 @llvm.uadd.sat.i64(i64 %a, i64 -512)
   ret i64 %0
 }
 
 define signext i64 @uadd_sat64_ri37(i64 signext %a) {
-; CHECK-LABEL: uadd_sat64_ri37:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    minud $r0 = $r0, 0xffffffe000000000
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, 0x1fffffffff
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KVXV1-LABEL: uadd_sat64_ri37:
+; KVXV1:       # %bb.0: # %entry
+; KVXV1-NEXT:    minud $r0 = $r0, 0xffffffe000000000
+; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    addd $r0 = $r0, 0x1fffffffff
+; KVXV1-NEXT:    ret
+; KVXV1-NEXT:    ;;
+;
+; KVXV2-LABEL: uadd_sat64_ri37:
+; KVXV2:       # %bb.0: # %entry
+; KVXV2-NEXT:    make $r1 = 0x1fffffffff
+; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    addusd $r0 = $r0, $r1
+; KVXV2-NEXT:    ret
+; KVXV2-NEXT:    ;;
 entry:
   %0 = tail call i64 @llvm.uadd.sat.i64(i64 %a, i64 137438953471)
   ret i64 %0
 }
 
 define signext i64 @uadd_sat64_ri64(i64 signext %a) {
-; CHECK-LABEL: uadd_sat64_ri64:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    minud $r0 = $r0, -9223372036854775808
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, 0x7fffffffffffffff
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KVXV1-LABEL: uadd_sat64_ri64:
+; KVXV1:       # %bb.0: # %entry
+; KVXV1-NEXT:    minud $r0 = $r0, -9223372036854775808
+; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    addd $r0 = $r0, 0x7fffffffffffffff
+; KVXV1-NEXT:    ret
+; KVXV1-NEXT:    ;;
+;
+; KVXV2-LABEL: uadd_sat64_ri64:
+; KVXV2:       # %bb.0: # %entry
+; KVXV2-NEXT:    make $r1 = 0x7fffffffffffffff
+; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    addusd $r0 = $r0, $r1
+; KVXV2-NEXT:    ret
+; KVXV2-NEXT:    ;;
 entry:
   %0 = tail call i64 @llvm.uadd.sat.i64(i64 %a, i64 9223372036854775807)
+  ret i64 %0
+}
+
+define signext i64 @uadd_sat64_ri_at(i64 signext %a) {
+; KVXV1-LABEL: uadd_sat64_ri_at:
+; KVXV1:       # %bb.0: # %entry
+; KVXV1-NEXT:    minud $r0 = $r0, 0xe4111110e4111110
+; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    addd $r0 = $r0, 0x1beeeeef1beeeeef
+; KVXV1-NEXT:    ret
+; KVXV1-NEXT:    ;;
+;
+; KVXV2-LABEL: uadd_sat64_ri_at:
+; KVXV2:       # %bb.0: # %entry
+; KVXV2-NEXT:    addusd.@ $r0 = $r0, 0x1beeeeef
+; KVXV2-NEXT:    ret
+; KVXV2-NEXT:    ;;
+entry:
+  %0 = tail call i64 @llvm.uadd.sat.i64(i64 %a, i64 2012808794214428399)
   ret i64 %0
 }
 
