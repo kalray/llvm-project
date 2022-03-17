@@ -1433,9 +1433,93 @@ def : Pat<(Op v4i16:$v0, v4i16:$v1),
                   47, 0)>;
 }
 
+multiclass BOShiftScalarOps <SDNode Op, KVX_INSTRUCTION RI, KVX_INSTRUCTION RR>
+{
+def : Pat<(Op v2i8:$v, (v2i8 ( v2_splat (i32 imm:$i)))), (RI SingleReg:$v, (mod_8_imm_64 imm:$i))>;
+def : Pat<(Op v2i8:$v0, (v2i8 ( v2_splat i32:$v1))), (RR SingleReg:$v0, SingleReg:$v1)>;
+def : Pat<(Op v4i8:$v, (v4i8 ( v4_splat (i32 imm:$i)))), (RI SingleReg:$v, (mod_8_imm_64 imm:$i))>;
+def : Pat<(Op v4i8:$v0, (v4i8 ( v4_splat i32:$v1))), (RR SingleReg:$v0, SingleReg:$v1)>;
+def : Pat<(Op v8i8:$v, (v8i8 ( v8_splat (i32 imm:$i)))), (RI SingleReg:$v, (mod_8_imm_64 imm:$i))>;
+def : Pat<(Op v8i8:$v0, (v8i8 ( v8_splat i32:$v1))), (RR SingleReg:$v0, SingleReg:$v1)>;
+
+def : Pat<(Op v4i8:$v, (v4i8 ( v3_splat (i32 imm:$i)))), (RI SingleReg:$v, (mod_8_imm_64 imm:$i))>;
+def : Pat<(Op v4i8:$v0, (v4i8 (v3_splat i32:$v1))), (RR SingleReg:$v0, SingleReg:$v1)>;
+
+def : Pat<(Op v2i8:$v, (v2i8 ( build_vector (i32 imm:$i0), (i32 imm:$i1)))),
+      (INSF (RI SingleReg:$v, (mod_8_imm_64 imm:$i1)), (RI SingleReg:$v, (mod_8_imm_64 imm:$i0)), 7, 0)>;
+
+def : Pat<(Op v2i8:$v, (v2i8 ( build_vector (i32 i32:$s0), (i32 i32:$s1)))),
+      (INSF (RR SingleReg:$v, SingleReg:$s1), (RR SingleReg:$v, SingleReg:$s0), 7, 0)>;
+
+def : Pat<(Op v2i8:$v0, v2i8:$v1),
+      (INSF(RR SingleReg:$v0, (EXTFZ SingleReg:$v1, 10, 8)), (RR SingleReg:$v0, SingleReg:$v1), 7, 0) >;
+
+// We can detect when some immediates are the same, and avoid all insf operations.
+def : Pat<(Op v4i8:$v, (v4i8 ( build_vector (i32 imm:$i0), (i32 imm:$i1), (i32 imm:$i2), (i32 undef)))),
+                  (INSF (RI SingleReg:$v, (mod_8_imm_64 imm:$i2)),
+                        (INSF (RI SingleReg:$v, (mod_8_imm_64 imm:$i1)),
+                              (RI SingleReg:$v, (mod_8_imm_64 imm:$i0)),
+                              7, 0),
+                        15, 0)>;
+
+def : Pat<(Op v4i8:$v, (v4i8 ( build_vector (i32 i32:$s0), (i32 i32:$s1), (i32 i32:$s2), (i32 undef)))),
+            (INSF (RR SingleReg:$v, SingleReg:$s2),
+                        (INSF (RR SingleReg:$v, SingleReg:$s1),
+                              (RR SingleReg:$v, SingleReg:$s0),
+                              7, 0),
+                        15, 0)>;
+
+def : Pat<(Op v4i8:$v, (v4i8 ( build_vector (i32 imm:$i0), (i32 imm:$i1), (i32 imm:$i2), (i32 imm:$i3)))),
+            (INSF (RI SingleReg:$v, (mod_8_imm_64 imm:$i3)),
+                  (INSF (RI SingleReg:$v, (mod_8_imm_64 imm:$i2)),
+                        (INSF (RI SingleReg:$v, (mod_8_imm_64 imm:$i1)),
+                              (RI SingleReg:$v, (mod_8_imm_64 imm:$i0)),
+                              7, 0),
+                        15, 0),
+                  23, 0)>;
+
+def : Pat<(Op v4i8:$v, (v4i8 ( build_vector (i32 i32:$s0), (i32 i32:$s1), (i32 i32:$s2), (i32 i32:$s3)))),
+            (INSF (RR SingleReg:$v, SingleReg:$s3),
+                  (INSF (RR SingleReg:$v, SingleReg:$s2),
+                        (INSF (RR SingleReg:$v, SingleReg:$s1),
+                              (RR SingleReg:$v, SingleReg:$s0),
+                              7, 0),
+                        15, 0),
+                  23, 0)>;
+
+def : Pat<(Op v4i8:$v0, v4i8:$v1),
+            (INSF (RR SingleReg:$v0, (EXTFZ SingleReg:$v1, 26, 24)),
+                  (INSF (RR SingleReg:$v0, (EXTFZ SingleReg:$v1, 18, 16)),
+                        (INSF (RR SingleReg:$v0, (EXTFZ SingleReg:$v1, 10, 8)),
+                              (RR SingleReg:$v0, $v1),
+                              7, 0),
+                        15, 0),
+                  23, 0)>;
+
+def : Pat<(Op v8i8:$v0, v8i8:$v1),
+            (INSF (RR SingleReg:$v0, (EXTFZ SingleReg:$v1, 58, 56)),
+                  (INSF (RR SingleReg:$v0, (EXTFZ SingleReg:$v1, 50, 48)),
+                        (INSF (RR SingleReg:$v0, (EXTFZ SingleReg:$v1, 42, 40)),
+                              (INSF (RR SingleReg:$v0, (EXTFZ SingleReg:$v1, 34, 32)),
+                                    (INSF (RR SingleReg:$v0, (EXTFZ SingleReg:$v1, 26, 24)),
+                                          (INSF (RR SingleReg:$v0, (EXTFZ SingleReg:$v1, 18, 16)),
+                                                (INSF (RR SingleReg:$v0, (EXTFZ SingleReg:$v1, 10, 8)),
+                                                      (RR SingleReg:$v0, $v1),
+                                                7, 0),
+                                          15, 0),
+                                    23, 0),
+                              31, 0),
+                        39, 0),
+                  47, 0),
+            55, 0)>;
+}
+
 // SLLD
 def : Pat<(shl i64:$rs1, i64:$rs2), (SLLDrr SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(shl i64:$rs1, Unsigned6:$rs2), (SLLDri SingleReg:$rs1, Unsigned6:$rs2)>;
+
+// SLLBOS
+defm : BOShiftScalarOps<shl, SLLBOSri, SLLBOSrr>, Requires<[IsV2]>;
 
 // SLLHQS
 defm : HQShiftScalarOps<shl, SLLHQSri, SLLHQSrr>;
@@ -1451,6 +1535,9 @@ defm : WPShiftScalarOps<shl, SLLWPSri, SLLWPSrr, SLLWri, SLLWrr>;
 def : Pat<(sra i64:$rs1, i64:$rs2), (SRADrr SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(sra i64:$rs1, Unsigned6:$rs2), (SRADri SingleReg:$rs1, Unsigned6:$rs2)>;
 
+// SRABOS
+defm : BOShiftScalarOps<sra, SRABOSri, SRABOSrr>, Requires<[IsV2]>;
+
 // SRAHQS
 defm : HQShiftScalarOps<sra, SRAHQSri, SRAHQSrr>;
 
@@ -1464,6 +1551,9 @@ defm : WPShiftScalarOps<sra, SRAWPSri, SRAWPSrr, SRAWri, SRAWrr>;
 // SRLD
 def : Pat<(srl i64:$rs1, i64:$rs2), (SRLDrr SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(srl i64:$rs1, Unsigned6:$rs2), (SRLDri SingleReg:$rs1, Unsigned6:$rs2)>;
+
+// SRLBOS
+defm : BOShiftScalarOps<srl, SRLBOSri, SRLBOSrr>, Requires<[IsV2]>;
 
 // SRLHQS
 defm : HQShiftScalarOps<srl, SRLHQSri, SRLHQSrr>;

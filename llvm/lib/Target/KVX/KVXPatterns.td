@@ -820,6 +820,10 @@ def get_not_imm : SDNodeXForm<imm, [{
 }]>;
 
 
+def mod_8_imm_64 : SDNodeXForm<imm, [{
+  return CurDAG->getTargetConstant(N->getZExtValue() % 8, SDLoc(N), MVT::i64);
+}]>;
+
 def mod_16_imm_64 : SDNodeXForm<imm, [{
   return CurDAG->getTargetConstant(N->getZExtValue() % 16, SDLoc(N), MVT::i64);
 }]>;

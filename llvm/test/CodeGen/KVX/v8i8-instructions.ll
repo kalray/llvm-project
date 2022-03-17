@@ -1092,20 +1092,26 @@ entry:
 }
 
 define <8 x i8> @shl(<8 x i8> %v, i32 %s) {
-; ALL-LABEL: shl:
-; ALL:       # %bb.0: # %entry
-; ALL-NEXT:    andd $r2 = $r0, 0xff00ff00ff00ff
-; ALL-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
-; ALL-NEXT:    ;;
-; ALL-NEXT:    slld $r0 = $r0, $r1
-; ALL-NEXT:    slld $r2 = $r2, $r1
-; ALL-NEXT:    ;;
-; ALL-NEXT:    andd $r1 = $r2, 0xff00ff00ff00ff
-; ALL-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
-; ALL-NEXT:    ;;
-; ALL-NEXT:    ord $r0 = $r0, $r1
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; CV1-LABEL: shl:
+; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    andd $r2 = $r0, 0xff00ff00ff00ff
+; CV1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
+; CV1-NEXT:    ;;
+; CV1-NEXT:    slld $r0 = $r0, $r1
+; CV1-NEXT:    slld $r2 = $r2, $r1
+; CV1-NEXT:    ;;
+; CV1-NEXT:    andd $r1 = $r2, 0xff00ff00ff00ff
+; CV1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
+; CV1-NEXT:    ;;
+; CV1-NEXT:    ord $r0 = $r0, $r1
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: shl:
+; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    sllbos $r0 = $r0, $r1
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
 entry:
   %0 = trunc i32 %s to i8
   %1 = insertelement <8 x i8> undef, i8 %0, i32 0
@@ -1115,20 +1121,26 @@ entry:
 }
 
 define <8 x i8> @lsr(<8 x i8> %v, i32 %s) {
-; ALL-LABEL: lsr:
-; ALL:       # %bb.0: # %entry
-; ALL-NEXT:    andd $r2 = $r0, 0xff00ff00ff00ff
-; ALL-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
-; ALL-NEXT:    ;;
-; ALL-NEXT:    srld $r0 = $r0, $r1
-; ALL-NEXT:    srld $r2 = $r2, $r1
-; ALL-NEXT:    ;;
-; ALL-NEXT:    andd $r1 = $r2, 0xff00ff00ff00ff
-; ALL-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
-; ALL-NEXT:    ;;
-; ALL-NEXT:    ord $r0 = $r0, $r1
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; CV1-LABEL: lsr:
+; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    andd $r2 = $r0, 0xff00ff00ff00ff
+; CV1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
+; CV1-NEXT:    ;;
+; CV1-NEXT:    srld $r0 = $r0, $r1
+; CV1-NEXT:    srld $r2 = $r2, $r1
+; CV1-NEXT:    ;;
+; CV1-NEXT:    andd $r1 = $r2, 0xff00ff00ff00ff
+; CV1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
+; CV1-NEXT:    ;;
+; CV1-NEXT:    ord $r0 = $r0, $r1
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: lsr:
+; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    srlbos $r0 = $r0, $r1
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
 entry:
   %0 = trunc i32 %s to i8
   %1 = insertelement <8 x i8> undef, i8 %0, i32 0
