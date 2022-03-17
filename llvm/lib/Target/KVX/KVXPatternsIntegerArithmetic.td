@@ -1369,6 +1369,7 @@ multiclass SBFXUWDPAT<SDNode sc, KVX_INSTRUCTION RRInstr, KVX_INSTRUCTION RIInst
 def : Pat<(sub i64:$r1, (i64 (zext (shl i32:$r2, sc))) ), (RRInstr SingleReg:$r2, SingleReg:$r1)>;
 def : Pat<(sub Wrapped64W:$r1, (i64 (zext (shl i32:$r2, sc))) ), (RIInstr SingleReg:$r2, (trunc_imm_32 imm:$r1))>;
 }
+defm : SBFXUWDPAT<(i64 6), SBFX64UWDrr, SBFX64UWDri>, Requires<[IsV2]>;
 defm : SBFXUWDPAT<(i64 5), SBFX32UWDrr, SBFX32UWDri>, Requires<[IsV2]>;
 defm : SBFXUWDPAT<(i64 4), SBFX16UWDrr, SBFX16UWDri>;
 defm : SBFXUWDPAT<(i64 3), SBFX8UWDrr, SBFX8UWDri>;
