@@ -772,6 +772,7 @@ multiclass MC_12<string OpcStr> {
 //   defm SBFX4UWD
 //   defm SBFX8UWD
 //   defm SBFX16UWD
+//   defm SBFX32UWD
 multiclass MC_13<string OpcStr> {
   def rr : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
@@ -2190,6 +2191,8 @@ defm SBFX4UWD : MC_13<"sbfx4uwd">;
 defm SBFX8UWD : MC_13<"sbfx8uwd">;
 
 defm SBFX16UWD : MC_13<"sbfx16uwd">;
+
+defm SBFX32UWD : MC_13<"sbfx32uwd">, Requires<[IsV2]>;
 
 let Defs = [CS], Uses = [CS] in
 def ADDCD : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
