@@ -876,6 +876,8 @@ multiclass MC_16<string OpcStr> {
 //   defm ADDX8WP
 //   defm ADDX16D
 //   defm ADDX16WP
+//   defm ADDX32D
+//   defm ADDX64D
 //   defm SBFSBO
 //   defm SBFUSBO
 //   defm SBFUSD
@@ -1903,6 +1905,8 @@ defm ADDX8D : MC_17<"addx8d">;
 defm ADDX16D : MC_17<"addx16d">;
 
 defm ADDX32D : MC_17<"addx32d">, Requires<[IsV2]>;
+
+defm ADDX64D : MC_17<"addx64d">, Requires<[IsV2]>;
 
 defm SBFX2D : MC_17<"sbfx2d">;
 
