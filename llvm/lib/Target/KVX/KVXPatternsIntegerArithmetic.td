@@ -1347,6 +1347,7 @@ def : Pat<(sub i64:$r1, (shl i64:$r2, sc)), (RRInstr SingleReg:$r2, SingleReg:$r
 def : Pat<(sub Wrapped64W:$r1, (shl i64:$r2, sc)), (RIInstr SingleReg:$r2, (trunc_imm_32 imm:$r1))>;
 }
 
+defm : SBFXDPAT<(i64 5), SBFX32Drr, SBFX32Dri>, Requires<[IsV2]>;
 defm : SBFXDPAT<(i64 4), SBFX16Drr, SBFX16Dri>;
 defm : SBFXDPAT<(i64 3), SBFX8Drr, SBFX8Dri>;
 defm : SBFXDPAT<(i64 2), SBFX4Drr, SBFX4Dri>;

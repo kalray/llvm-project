@@ -730,6 +730,7 @@ multiclass MC_12<string OpcStr> {
 //   defm SBFX4D
 //   defm SBFX8D
 //   defm SBFX16D
+//   defm SBFX32D
 //   defm ADDWD
 //   defm SBFWD
 //   defm ADDUWD
@@ -1900,6 +1901,8 @@ defm SBFX4D : MC_13<"sbfx4d">;
 defm SBFX8D : MC_13<"sbfx8d">;
 
 defm SBFX16D : MC_13<"sbfx16d">;
+
+defm SBFX32D : MC_13<"sbfx32d">, Requires<[IsV2]>;
 
 let isAdd = 1 in
 defm ADDWD : MC_13<"addwd">;
