@@ -446,7 +446,7 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   if (!STI.isV1())
     for (auto I : {ISD::ABS, ISD::ADD, ISD::SADDSAT, ISD::SHL, ISD::SRA,
                    ISD::SRL, ISD::SUB, ISD::UADDSAT})
-      for (auto VT : {MVT::v2i8, MVT::v4i8, MVT::v8i8})
+      for (auto VT : {MVT::v2i8, MVT::v4i8, MVT::v8i8, MVT::v2i16, MVT::v4i16})
         setOperationAction(I, VT, Legal);
 
   for (auto I : {ISD::ABS, ISD::ADD, ISD::SUB})
@@ -2316,7 +2316,8 @@ SDValue KVXTargetLowering::lowerATOMIC_LOAD_OP(SDValue Op,
 }
 
 static SDValue combineSRA(SDNode *N, SelectionDAG &DAG) {
-  if (N->getSimpleValueType(0).SimpleTy != MVT::i64)
+  if (!N->getValueType(0).isSimple() ||
+      N->getSimpleValueType(0).SimpleTy != MVT::i64)
     return SDValue();
 
   auto Op0 = N->getOperand(0);

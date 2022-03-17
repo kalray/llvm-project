@@ -442,15 +442,21 @@ define <4 x i16> @addhq_s(<4 x i16> %0, <4 x i16> %1) {
 declare <4 x i16> @llvm.sadd.sat.v4i16(<4 x i16>, <4 x i16>) #2
 
 define <4 x i16> @addhq_us(<4 x i16> %0, <4 x i16> %1) {
-; CHECK-LABEL: addhq_us:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    notd $r2 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    minuhq $r0 = $r0, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addhq $r0 = $r0, $r1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: addhq_us:
+; V1:       # %bb.0:
+; V1-NEXT:    notd $r2 = $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    minuhq $r0 = $r0, $r2
+; V1-NEXT:    ;;
+; V1-NEXT:    addhq $r0 = $r0, $r1
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: addhq_us:
+; V2:       # %bb.0:
+; V2-NEXT:    addushq $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %3 = tail call <4 x i16> @llvm.uadd.sat.v4i16(<4 x i16> %0, <4 x i16> %1)
   ret <4 x i16> %3
 }
@@ -482,18 +488,25 @@ define <8 x i16> @addho_s(<8 x i16> %0, <8 x i16> %1) {
 declare <8 x i16> @llvm.sadd.sat.v8i16(<8 x i16>, <8 x i16>) #2
 
 define <8 x i16> @addho_us(<8 x i16> %0, <8 x i16> %1) {
-; CHECK-LABEL: addho_us:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    notd $r4 = $r2
-; CHECK-NEXT:    notd $r5 = $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    minuhq $r0 = $r0, $r4
-; CHECK-NEXT:    minuhq $r1 = $r1, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addhq $r0 = $r0, $r2
-; CHECK-NEXT:    addhq $r1 = $r1, $r3
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: addho_us:
+; V1:       # %bb.0:
+; V1-NEXT:    notd $r4 = $r2
+; V1-NEXT:    notd $r5 = $r3
+; V1-NEXT:    ;;
+; V1-NEXT:    minuhq $r0 = $r0, $r4
+; V1-NEXT:    minuhq $r1 = $r1, $r5
+; V1-NEXT:    ;;
+; V1-NEXT:    addhq $r0 = $r0, $r2
+; V1-NEXT:    addhq $r1 = $r1, $r3
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: addho_us:
+; V2:       # %bb.0:
+; V2-NEXT:    addushq $r0 = $r0, $r2
+; V2-NEXT:    addushq $r1 = $r1, $r3
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %3 = tail call <8 x i16> @llvm.uadd.sat.v8i16(<8 x i16> %0, <8 x i16> %1)
   ret <8 x i16> %3
 }
@@ -530,24 +543,34 @@ define <16 x i16> @addhx_s(<16 x i16> %0, <16 x i16> %1) {
 declare <16 x i16> @llvm.sadd.sat.v16i16(<16 x i16>, <16 x i16>) #2
 
 define <16 x i16> @addhx_us(<16 x i16> %0, <16 x i16> %1) {
-; CHECK-LABEL: addhx_us:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    notd $r8 = $r4
-; CHECK-NEXT:    notd $r9 = $r5
-; CHECK-NEXT:    notd $r10 = $r6
-; CHECK-NEXT:    notd $r11 = $r7
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    minuhq $r0 = $r0, $r8
-; CHECK-NEXT:    minuhq $r1 = $r1, $r9
-; CHECK-NEXT:    minuhq $r2 = $r2, $r10
-; CHECK-NEXT:    minuhq $r3 = $r3, $r11
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addhq $r0 = $r0, $r4
-; CHECK-NEXT:    addhq $r1 = $r1, $r5
-; CHECK-NEXT:    addhq $r2 = $r2, $r6
-; CHECK-NEXT:    addhq $r3 = $r3, $r7
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: addhx_us:
+; V1:       # %bb.0:
+; V1-NEXT:    notd $r8 = $r4
+; V1-NEXT:    notd $r9 = $r5
+; V1-NEXT:    notd $r10 = $r6
+; V1-NEXT:    notd $r11 = $r7
+; V1-NEXT:    ;;
+; V1-NEXT:    minuhq $r0 = $r0, $r8
+; V1-NEXT:    minuhq $r1 = $r1, $r9
+; V1-NEXT:    minuhq $r2 = $r2, $r10
+; V1-NEXT:    minuhq $r3 = $r3, $r11
+; V1-NEXT:    ;;
+; V1-NEXT:    addhq $r0 = $r0, $r4
+; V1-NEXT:    addhq $r1 = $r1, $r5
+; V1-NEXT:    addhq $r2 = $r2, $r6
+; V1-NEXT:    addhq $r3 = $r3, $r7
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: addhx_us:
+; V2:       # %bb.0:
+; V2-NEXT:    addushq $r0 = $r0, $r4
+; V2-NEXT:    addushq $r1 = $r1, $r5
+; V2-NEXT:    ;;
+; V2-NEXT:    addushq $r2 = $r2, $r6
+; V2-NEXT:    addushq $r3 = $r3, $r7
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %3 = tail call <16 x i16> @llvm.uadd.sat.v16i16(<16 x i16> %0, <16 x i16> %1)
   ret <16 x i16> %3
 }

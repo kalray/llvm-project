@@ -211,71 +211,101 @@ entry:
 }
 
 define <2 x i16> @uadd_satv2i16(<2 x i16> %a, <2 x i16> %b) {
-; CHECK-LABEL: uadd_satv2i16:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    notw $r2 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    minuhq $r1 = $r1, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addhq $r0 = $r1, $r0
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KVXV1-LABEL: uadd_satv2i16:
+; KVXV1:       # %bb.0: # %entry
+; KVXV1-NEXT:    notw $r2 = $r0
+; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    minuhq $r1 = $r1, $r2
+; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    addhq $r0 = $r1, $r0
+; KVXV1-NEXT:    ret
+; KVXV1-NEXT:    ;;
+;
+; KVXV2-LABEL: uadd_satv2i16:
+; KVXV2:       # %bb.0: # %entry
+; KVXV2-NEXT:    addushq $r0 = $r1, $r0
+; KVXV2-NEXT:    ret
+; KVXV2-NEXT:    ;;
 entry:
   %0 = tail call <2 x i16> @llvm.uadd.sat.v2i16(<2 x i16> %b, <2 x i16> %a)
   ret <2 x i16> %0
 }
 
 define <2 x i16> @uadd_satv2i16_ri(<2 x i16> %a) {
-; CHECK-LABEL: uadd_satv2i16_ri:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    minuhq $r0 = $r0, 0xfffefffe
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addhq $r0 = $r0, 0x10001
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KVXV1-LABEL: uadd_satv2i16_ri:
+; KVXV1:       # %bb.0: # %entry
+; KVXV1-NEXT:    minuhq $r0 = $r0, 0xfffefffe
+; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    addhq $r0 = $r0, 0x10001
+; KVXV1-NEXT:    ret
+; KVXV1-NEXT:    ;;
+;
+; KVXV2-LABEL: uadd_satv2i16_ri:
+; KVXV2:       # %bb.0: # %entry
+; KVXV2-NEXT:    addushq $r0 = $r0, 0x10001
+; KVXV2-NEXT:    ret
+; KVXV2-NEXT:    ;;
 entry:
   %0 = tail call <2 x i16> @llvm.uadd.sat.v2i16(<2 x i16> %a, <2 x i16> <i16 1, i16 1>)
   ret <2 x i16> %0
 }
 
 define <4 x i16> @uadd_satv4i16(<4 x i16> %a, <4 x i16> %b) {
-; CHECK-LABEL: uadd_satv4i16:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    notd $r2 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    minuhq $r1 = $r1, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addhq $r0 = $r1, $r0
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KVXV1-LABEL: uadd_satv4i16:
+; KVXV1:       # %bb.0: # %entry
+; KVXV1-NEXT:    notd $r2 = $r0
+; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    minuhq $r1 = $r1, $r2
+; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    addhq $r0 = $r1, $r0
+; KVXV1-NEXT:    ret
+; KVXV1-NEXT:    ;;
+;
+; KVXV2-LABEL: uadd_satv4i16:
+; KVXV2:       # %bb.0: # %entry
+; KVXV2-NEXT:    addushq $r0 = $r1, $r0
+; KVXV2-NEXT:    ret
+; KVXV2-NEXT:    ;;
 entry:
   %0 = tail call <4 x i16> @llvm.uadd.sat.v4i16(<4 x i16> %b, <4 x i16> %a)
   ret <4 x i16> %0
 }
 
 define <4 x i16> @uadd_satv4i16_ri_(<4 x i16> %a) {
-; CHECK-LABEL: uadd_satv4i16_ri_:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0xfffffffff61709e7
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    minuhq $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addhq $r0 = $r0, 0x9e8f618
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KVXV1-LABEL: uadd_satv4i16_ri_:
+; KVXV1:       # %bb.0: # %entry
+; KVXV1-NEXT:    make $r1 = 0xfffffffff61709e7
+; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    minuhq $r0 = $r0, $r1
+; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    addhq $r0 = $r0, 0x9e8f618
+; KVXV1-NEXT:    ret
+; KVXV1-NEXT:    ;;
+;
+; KVXV2-LABEL: uadd_satv4i16_ri_:
+; KVXV2:       # %bb.0: # %entry
+; KVXV2-NEXT:    addushq $r0 = $r0, 0x9e8f618
+; KVXV2-NEXT:    ret
+; KVXV2-NEXT:    ;;
 entry:
   %0 = tail call <4 x i16> @llvm.uadd.sat.v4i16(<4 x i16> %a, <4 x i16> <i16 63000, i16 -63000, i16 0, i16 0>)
   ret <4 x i16> %0
 }
 
 define <4 x i16> @uadd_satv4i16_ri_at(<4 x i16> %a) {
-; CHECK-LABEL: uadd_satv4i16_ri_at:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    minuhq.@ $r0 = $r0, 0xf61709e7
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addhq.@ $r0 = $r0, 0x9e8f618
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KVXV1-LABEL: uadd_satv4i16_ri_at:
+; KVXV1:       # %bb.0: # %entry
+; KVXV1-NEXT:    minuhq.@ $r0 = $r0, 0xf61709e7
+; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    addhq.@ $r0 = $r0, 0x9e8f618
+; KVXV1-NEXT:    ret
+; KVXV1-NEXT:    ;;
+;
+; KVXV2-LABEL: uadd_satv4i16_ri_at:
+; KVXV2:       # %bb.0: # %entry
+; KVXV2-NEXT:    addushq.@ $r0 = $r0, 0x9e8f618
+; KVXV2-NEXT:    ret
+; KVXV2-NEXT:    ;;
 entry:
   %0 = tail call <4 x i16> @llvm.uadd.sat.v4i16(<4 x i16> %a, <4 x i16> <i16 63000, i16 -63000, i16 63000, i16 -63000>)
   ret <4 x i16> %0
