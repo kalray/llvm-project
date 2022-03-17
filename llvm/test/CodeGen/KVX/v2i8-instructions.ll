@@ -653,15 +653,21 @@ define <2 x i64> @test_sext_2xi64(<2 x i8> %a) #0 {
 declare <2 x i8> @llvm.abs.v2i8(<2 x i8>, i1) #0
 
 define <2 x i8> @test_abs(<2 x i8> %a) #0 {
-; ALL-LABEL: test_abs:
-; ALL:       # %bb.0:
-; ALL-NEXT:    sxlbhq $r0 = $r0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    abshq $r0 = $r0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sbmm8 $r0 = $r0, 0x401
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; V1-LABEL: test_abs:
+; V1:       # %bb.0:
+; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    abshq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x401
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: test_abs:
+; V2:       # %bb.0:
+; V2-NEXT:    absbo $r0 = $r0
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %r = call <2 x i8> @llvm.abs.v2i8(<2 x i8> %a, i1 false)
   ret <2 x i8> %r
 }
@@ -853,6 +859,62 @@ define  <2 x i8> @v2_uminhq_rr_i8(<2 x i8> %a, <2 x i8> %b) {
 entry:
   %0 = call <2 x i8> @llvm.umin.v2i8(<2 x i8> %a, <2 x i8> %b)
   ret <2 x i8> %0
+}
+
+define <2 x i8> @abdbo_rr(<2 x i8> %a, <2 x i8> %b) {
+; V1-LABEL: abdbo_rr:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    sxlbhq $r1 = $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    sbfhq $r0 = $r1, $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x401
+; V1-NEXT:    ;;
+; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    abshq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x401
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: abdbo_rr:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    abdbo $r0 = $r1, $r0
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %sub = sub nsw <2 x i8> %a, %b
+  %0 = tail call <2 x i8> @llvm.abs.v2i8(<2 x i8> %sub, i1 true)
+  ret <2 x i8> %0
+}
+
+define <2 x i8> @abdbo_ri(<2 x i8> %0) {
+; V1-LABEL: abdbo_ri:
+; V1:       # %bb.0:
+; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sbfhq $r0 = $r0, 0x10000f
+; V1-NEXT:    ;;
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x401
+; V1-NEXT:    ;;
+; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    abshq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x401
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: abdbo_ri:
+; V2:       # %bb.0:
+; V2-NEXT:    abdbo $r0 = $r0, 0x100f
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+  %2 = sub nsw <2 x i8> <i8 15, i8 16>, %0
+  %3 = tail call <2 x i8> @llvm.abs.v2i8(<2 x i8> %2, i1 true)
+  ret <2 x i8> %3
 }
 
 declare <2 x i8> @llvm.smax.v2i8(<2 x i8> %a, <2 x i8> %b)

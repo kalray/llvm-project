@@ -891,6 +891,7 @@ multiclass MC_16<string OpcStr> {
 //   defm LNANDWP
 //   defm LORWP
 //   defm LNORWP
+//   defm ABDBO
 //   defm ABDHQ
 //   defm ADDCHCP
 //   defm SBFCHCP
@@ -2057,6 +2058,8 @@ defm ADDBO : MC_16<"addbo">, Requires<[IsV2]>;
 defm SBFBO : MC_16<"sbfbo">, Requires<[IsV2]>;
 
 defm SBFHQ : MC_16<"sbfhq">;
+
+defm ABDBO : MC_17<"abdbo">, Requires<[IsV2]>;
 
 defm ABDHQ : MC_17<"abdhq">;
 
@@ -3456,6 +3459,12 @@ def ABSHQ : REGISTERW_REGISTERZ_DOUBLE
    "abshq $a1 = $a2",
    [(set v4i16:$a1, (abs v4i16:$a2))],
    ALU_LITE_X>;
+
+def ABSBO : REGISTERW_REGISTERZ_DOUBLE
+  <(outs SingleReg:$a1), (ins SingleReg:$a2),
+   "absbo $a1 = $a2",
+   [(set v8i8:$a1, (abs v8i8:$a2))],
+   ALU_TINY_X>, Requires<[IsV2]>;
 
 defm COPYV : MC_35<"copyv">;
 

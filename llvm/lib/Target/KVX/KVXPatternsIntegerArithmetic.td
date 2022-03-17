@@ -81,6 +81,15 @@ def : Pat<(i64 (abs (sub imm:$lhs, i64:$rhs))), (i64 (ABDDri37 SingleReg:$rhs, S
 def : Pat<(i64 (abs (sub imm:$lhs, i64:$rhs))), (i64 (ABDDri64 SingleReg:$rhs, Wrapped64:$lhs))>;
 def : Pat<(i64 (abs (sub i64:$lhs, i64:$rhs))), (i64 (ABDDrr SingleReg:$rhs, SingleReg:$lhs))>;
 
+// ABDBO
+def : Pat<(v2i8 (abs (sub (v2i8 (is_imm_vec:$IMM)), v2i8:$rhs))), (v2i8 (ABDBOri SingleReg:$rhs, (build_imm_vec $IMM), splat32_ ) )>, Requires<[IsV2]>;
+def : Pat<(v2i8 (abs (sub v2i8:$lhs, v2i8:$rhs))), (v2i8 (ABDBOrr SingleReg:$rhs, SingleReg:$lhs))>, Requires<[IsV2]>;
+def : Pat<(v4i8 (abs (sub (v4i8 (is_imm_vec_kvx_splat32_:$IMM)), v4i8:$rhs))), (v4i8 (ABDBOri SingleReg:$rhs, (build_imm_vec $IMM), splat32_ ) )>, Requires<[IsV2]>;
+def : Pat<(v4i8 (abs (sub v4i8:$lhs, v4i8:$rhs))), (v4i8 (ABDBOrr SingleReg:$rhs, SingleReg:$lhs))>, Requires<[IsV2]>;
+def : Pat<(v8i8 (abs (sub (v8i8 (is_imm_vec_kvx_splat32_:$IMM)), v8i8:$rhs))), (v8i8 (ABDBOri SingleReg:$rhs, (build_imm_vec $IMM), splat32_ ) )>, Requires<[IsV2]>;
+def : Pat<(v8i8 (abs (sub (v8i8 (is_imm_vec_kvx_splat32_at:$IMM)), v8i8:$rhs))), (v8i8 (ABDBOri SingleReg:$rhs, (build_imm_vec $IMM), splat32_at ) )>, Requires<[IsV2]>;
+def : Pat<(v8i8 (abs (sub v8i8:$lhs, v8i8:$rhs))), (v8i8 (ABDBOrr SingleReg:$rhs, SingleReg:$lhs))>, Requires<[IsV2]>;
+
 // ABDHQ
 def : Pat<(v2i16 (abs (sub (v2i16 (is_imm_vec:$IMM)), v2i16:$rhs))), (v2i16 (ABDHQri SingleReg:$rhs, (build_imm_vec $IMM), splat32_ ) )>;
 def : Pat<(v2i16 (abs (sub v2i16:$lhs, v2i16:$rhs))), (v2i16 (ABDHQrr SingleReg:$rhs, SingleReg:$lhs))>;
@@ -101,6 +110,13 @@ def : Pat<(v2i32 (abs (sub v2i32:$lhs, v2i32:$rhs))), (v2i32 (ABDWPrr SingleReg:
 
 // ABSD
 def : Pat<(smax i64:$v, (i64 (ineg i64:$v))), (ABSD SingleReg:$v)>;
+
+// ABSBO
+def : Pat<(abs v2i8:$v), (ABSBO SingleReg:$v)>, Requires<[IsV2]>;
+def : Pat<(smax v2i8:$v, (v2i8 (vineg v2i8:$v))), (ABSBO SingleReg:$v)>, Requires<[IsV2]>;
+def : Pat<(abs v4i8:$v), (ABSBO SingleReg:$v)>, Requires<[IsV2]>;
+def : Pat<(smax v4i8:$v, (v4i8 (vineg v4i8:$v))), (ABSBO SingleReg:$v)>, Requires<[IsV2]>;
+def : Pat<(smax v8i8:$v, (v8i8 (vineg v8i8:$v))), (ABSBO SingleReg:$v)>, Requires<[IsV2]>;
 
 // ABSHQ
 def : Pat<(abs v2i16:$v), (ABSHQ SingleReg:$v)>;

@@ -863,20 +863,26 @@ define <8 x i32> @test_sext_2xi64(<8 x i8> %a) #0 {
 declare <8 x i8> @llvm.abs.v8i8(<8 x i8>, i1) #0
 
 define <8 x i8> @test_abs(<8 x i8> %a) #0 {
-; ALL-LABEL: test_abs:
-; ALL:       # %bb.0:
-; ALL-NEXT:    sxmbhq $r1 = $r0
-; ALL-NEXT:    sxlbhq $r0 = $r0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    abshq $r1 = $r1
-; ALL-NEXT:    abshq $r0 = $r0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sbmm8 $r1 = $r1, 0x40100401
-; ALL-NEXT:    sbmm8 $r0 = $r0, 0x40100401
-; ALL-NEXT:    ;;
-; ALL-NEXT:    insf $r0 = $r1, 32, 63
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; CV1-LABEL: test_abs:
+; CV1:       # %bb.0:
+; CV1-NEXT:    sxmbhq $r1 = $r0
+; CV1-NEXT:    sxlbhq $r0 = $r0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    abshq $r1 = $r1
+; CV1-NEXT:    abshq $r0 = $r0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sbmm8 $r1 = $r1, 0x40100401
+; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
+; CV1-NEXT:    ;;
+; CV1-NEXT:    insf $r0 = $r1, 32, 63
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: test_abs:
+; CV2:       # %bb.0:
+; CV2-NEXT:    absbo $r0 = $r0
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
   %r = call <8 x i8> @llvm.abs.v8i8(<8 x i8> %a, i1 false)
   ret <8 x i8> %r
 }
@@ -1203,6 +1209,116 @@ entry:
   %shl = shl <8 x i8> %v, %sh_prom3
   %or = or <8 x i8> %shl, %shr
   ret <8 x i8> %or
+}
+
+define <8 x i8> @abdbo_rr(<8 x i8> %a, <8 x i8> %b) {
+; CV1-LABEL: abdbo_rr:
+; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    ord $r2 = $r0, 0x8080808080808080
+; CV1-NEXT:    nxord $r0 = $r0, $r1
+; CV1-NEXT:    andd $r3 = $r1, 0x7f7f7f7f7f7f7f7f
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sbfd $r1 = $r3, $r2
+; CV1-NEXT:    andd $r0 = $r0, 0x8080808080808080
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xord $r0 = $r0, $r1
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sxmbhq $r1 = $r0
+; CV1-NEXT:    sxlbhq $r0 = $r0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    abshq $r1 = $r1
+; CV1-NEXT:    abshq $r0 = $r0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sbmm8 $r1 = $r1, 0x40100401
+; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
+; CV1-NEXT:    ;;
+; CV1-NEXT:    insf $r0 = $r1, 32, 63
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: abdbo_rr:
+; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    abdbo $r0 = $r1, $r0
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
+entry:
+  %sub = sub nsw <8 x i8> %a, %b
+  %0 = tail call <8 x i8> @llvm.abs.v8i8(<8 x i8> %sub, i1 true)
+  ret <8 x i8> %0
+}
+
+define <8 x i8> @abdbo_ri_(<8 x i8> %0) {
+; CV1-LABEL: abdbo_ri_:
+; CV1:       # %bb.0:
+; CV1-NEXT:    make $r1 = 0x100f100f
+; CV1-NEXT:    andd $r3 = $r0, 0x7f7f7f7f7f7f7f7f
+; CV1-NEXT:    ;;
+; CV1-NEXT:    nxord $r0 = $r1, $r0
+; CV1-NEXT:    ord $r2 = $r1, 0x8080808080808080
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sbfd $r1 = $r3, $r2
+; CV1-NEXT:    andd $r0 = $r0, 0x8080808080808080
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xord $r0 = $r0, $r1
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sxmbhq $r1 = $r0
+; CV1-NEXT:    sxlbhq $r0 = $r0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    abshq $r1 = $r1
+; CV1-NEXT:    abshq $r0 = $r0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sbmm8 $r1 = $r1, 0x40100401
+; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
+; CV1-NEXT:    ;;
+; CV1-NEXT:    insf $r0 = $r1, 32, 63
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: abdbo_ri_:
+; CV2:       # %bb.0:
+; CV2-NEXT:    abdbo $r0 = $r0, 0x100f100f
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
+  %2 = sub nsw <8 x i8> <i8 15, i8 16, i8 15, i8 16, i8 0, i8 0, i8 0, i8 0>, %0
+  %3 = tail call <8 x i8> @llvm.abs.v8i8(<8 x i8> %2, i1 true)
+  ret <8 x i8> %3
+}
+
+define <8 x i8> @abdbo_ri_at(<8 x i8> %0) {
+; CV1-LABEL: abdbo_ri_at:
+; CV1:       # %bb.0:
+; CV1-NEXT:    make $r1 = 0x100f100f100f100f
+; CV1-NEXT:    andd $r3 = $r0, 0x7f7f7f7f7f7f7f7f
+; CV1-NEXT:    ;;
+; CV1-NEXT:    nxord $r0 = $r1, $r0
+; CV1-NEXT:    ord $r2 = $r1, 0x8080808080808080
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sbfd $r1 = $r3, $r2
+; CV1-NEXT:    andd $r0 = $r0, 0x8080808080808080
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xord $r0 = $r0, $r1
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sxmbhq $r1 = $r0
+; CV1-NEXT:    sxlbhq $r0 = $r0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    abshq $r1 = $r1
+; CV1-NEXT:    abshq $r0 = $r0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sbmm8 $r1 = $r1, 0x40100401
+; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
+; CV1-NEXT:    ;;
+; CV1-NEXT:    insf $r0 = $r1, 32, 63
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: abdbo_ri_at:
+; CV2:       # %bb.0:
+; CV2-NEXT:    abdbo.@ $r0 = $r0, 0x100f100f
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
+  %2 = sub nsw <8 x i8> <i8 15, i8 16, i8 15, i8 16, i8 15, i8 16, i8 15, i8 16>, %0
+  %3 = tail call <8 x i8> @llvm.abs.v8i8(<8 x i8> %2, i1 true)
+  ret <8 x i8> %3
 }
 
 attributes #0 = { nounwind }

@@ -449,7 +449,7 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   }
 
   if (!STI.isV1())
-    for (auto I : {ISD::ADD, ISD::SUB}) {
+    for (auto I : {ISD::ABS, ISD::ADD, ISD::SUB}) {
       setOperationAction(I, MVT::v2i8, Legal);
       setOperationAction(I, MVT::v4i8, Legal);
       setOperationAction(I, MVT::v8i8, Legal);
