@@ -920,6 +920,7 @@ multiclass MC_16<string OpcStr> {
 //   defm ADDCHCP
 //   defm SBFCHCP
 //   defm ADDSBO
+//   defm ADDUSBO
 //   defm ADDSHQ
 //   defm SBFSHQ
 //   defm ADDX2HQ
@@ -2120,6 +2121,7 @@ defm SBFCHCP : MC_17<"sbfchcp">;
 let isAdd = 1 in {
 defm ADDSHQ : MC_17<"addshq">;
 defm ADDSBO : MC_17<"addsbo">, Requires<[IsV2]>;
+defm ADDUSBO : MC_17<"addusbo">, Requires<[IsV2]>;
 }
 
 defm SBFSHQ : MC_17<"sbfshq">;

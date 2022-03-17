@@ -242,6 +242,22 @@ def isSignExtended : PatLeaf<(i64 SingleReg:$src), [{
   return KVX_LOW::isExtended(N, CurDAG, true);
 }]>;
 
+// ADDUSBO
+def : Pat<(v2i8(uaddsat v2i8:$v0, (is_imm_vec:$IMM))),
+          (ADDUSBOri SingleReg:$v0, (build_imm_vec $IMM), splat32_)>, Requires<[IsV2]>;
+def : Pat<(v2i8(uaddsat v2i8:$v0, v2i8:$v1)), (ADDUSBOrr SingleReg:$v0, SingleReg:$v1)>, Requires<[IsV2]>;
+
+def : Pat<(v4i8(uaddsat v4i8:$v0, (v4i8(is_imm_vec:$IMM)) ) ),
+           (ADDUSBOri SingleReg:$v0, (i32(trunc_imm_32 (i32(build_imm_vec $IMM)))), splat32_)>, Requires<[IsV2]>;
+def : Pat<(v4i8(uaddsat v4i8:$v0, v4i8:$v1)), (ADDUSBOrr SingleReg:$v0, SingleReg:$v1)>, Requires<[IsV2]>;
+
+def : Pat<(v8i8(uaddsat v8i8:$v0, (v8i8(is_imm_vec_kvx_splat32_:$IMM)) ) ),
+           (ADDUSBOri SingleReg:$v0, (i32(trunc_imm_32 (i32(build_imm_vec $IMM)))), splat32_)>, Requires<[IsV2]>;
+def : Pat<(v8i8(uaddsat v8i8:$v0, (v8i8(is_imm_vec_kvx_splat32_at:$IMM)) ) ),
+           (ADDUSBOri SingleReg:$v0, (i32(trunc_imm_32 (i32(build_imm_vec $IMM)))), splat32_at)>, Requires<[IsV2]>;
+def : Pat<(v8i8(uaddsat v8i8:$v0, v8i8:$v1)), (ADDUSBOrr SingleReg:$v0, SingleReg:$v1)>, Requires<[IsV2]>;
+
+
 // ADDUWD
 // TODO: Add ri variant
 def : Pat<(i64(add i64:$v0, (zext i32:$v1))), (ADDUWDrr SingleReg:$v1, SingleReg:$v0)>;
