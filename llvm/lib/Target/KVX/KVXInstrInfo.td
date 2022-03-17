@@ -941,8 +941,11 @@ multiclass MC_17<string OpcStr> {
 //   defm ROLWPS
 //   defm RORWPS
 //   defm SRSHQS
+//   defm SLLBOS
 //   defm SLLHQS
+//   defm SRABOS
 //   defm SRAHQS
+//   defm SRBOQS
 //   defm SRLHQS
 //   defm SLSHQS
 multiclass MC_18<string OpcStr> {
@@ -2377,9 +2380,15 @@ defm RORWPS : MC_18<"rorwps">;
 
 defm SRSHQS : MC_18<"srshqs">;
 
+defm SLLBOS : MC_18<"sllbos">, Requires<[IsV2]>;
+
 defm SLLHQS : MC_18<"sllhqs">;
 
+defm SRABOS : MC_18<"srabos">, Requires<[IsV2]>;
+
 defm SRAHQS : MC_18<"srahqs">;
+
+defm SRLBOS : MC_18<"srlbos">, Requires<[IsV2]>;
 
 defm SRLHQS : MC_18<"srlhqs">;
 
