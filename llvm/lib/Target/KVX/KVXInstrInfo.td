@@ -930,13 +930,21 @@ multiclass MC_16<string OpcStr> {
 //   defm ADDUSHQ
 //   defm ADDSHQ
 //   defm SBFSHQ
+//   defm ADDX2BO
 //   defm ADDX2HQ
+//   defm ADDX4BO
 //   defm ADDX4HQ
+//   defm ADDX8BO
 //   defm ADDX8HQ
+//   defm ADDX16BO
 //   defm ADDX16HQ
+//   defm SBFX2BO
 //   defm SBFX2HQ
+//   defm SBFX4BO
 //   defm SBFX4HQ
+//   defm SBFX8BO
 //   defm SBFX8HQ
+//   defm SBFX16BO
 //   defm SBFX16HQ
 //   defm AVGHQ
 //   defm AVGUHQ
@@ -2153,19 +2161,35 @@ defm SBFSBO : MC_17<"sbfsbo">;
 
 defm SBFSHQ : MC_17<"sbfshq">;
 
+defm ADDX2BO : MC_17<"addx2bo">, Requires<[IsV2]>;
+
 defm ADDX2HQ : MC_17<"addx2hq">;
+
+defm ADDX4BO : MC_17<"addx4bo">, Requires<[IsV2]>;
 
 defm ADDX4HQ : MC_17<"addx4hq">;
 
+defm ADDX8BO : MC_17<"addx8bo">, Requires<[IsV2]>;
+
 defm ADDX8HQ : MC_17<"addx8hq">;
+
+defm ADDX16BO : MC_17<"addx16bo">, Requires<[IsV2]>;
 
 defm ADDX16HQ : MC_17<"addx16hq">;
 
+defm SBFX2BO : MC_17<"sbfx2bo">, Requires<[IsV2]>;
+
 defm SBFX2HQ : MC_17<"sbfx2hq">;
+
+defm SBFX4BO : MC_17<"sbfx4bo">, Requires<[IsV2]>;
 
 defm SBFX4HQ : MC_17<"sbfx4hq">;
 
+defm SBFX8BO : MC_17<"sbfx8bo">, Requires<[IsV2]>;
+
 defm SBFX8HQ : MC_17<"sbfx8hq">;
+
+defm SBFX16BO : MC_17<"sbfx16bo">, Requires<[IsV2]>;
 
 defm SBFX16HQ : MC_17<"sbfx16hq">;
 

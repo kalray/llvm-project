@@ -370,38 +370,45 @@ defm : ADDXWDPAT<(i64 3), ADDX8WDrr, ADDX8WDri>;
 defm : ADDXWDPAT<(i64 2), ADDX4WDrr, ADDX4WDri>;
 defm : ADDXWDPAT<(i64 1), ADDX2WDrr, ADDX2WDri>;
 
-multiclass v2i16_ADDXPAT<SDNode sc, KVX_INSTRUCTION RR, KVX_INSTRUCTION RI, PatLeaf VC> {
-def : Pat<(v2i16(add (shl v2i16:$v, (v2i16(v2_splat sc))), (v2i16(is_imm_vec:$IMM)))),
+multiclass ADDXPAT_HalfSReg<ValueType vt, SDNode sc, KVX_INSTRUCTION RR, KVX_INSTRUCTION RI, PatLeaf VC> {
+def : Pat<(vt(add (shl vt:$v, (vt(v2_splat sc))), (vt(is_imm_vec:$IMM)))),
           (RI $v, (build_imm_vec $IMM), splat32_)>;
-def : Pat<(v2i16(or (shl v2i16:$v, (v2i16(v2_splat sc))), (v2i16(VC:$IMM)))),
+def : Pat<(vt(or (shl vt:$v, (vt(v2_splat sc))), (vt(VC:$IMM)))),
           (RI $v, (build_imm_vec $IMM), splat32_)>;
-def : Pat<(v2i16(add v2i16:$v0, (shl v2i16:$v1, (v2i16(v2_splat sc))))), (RR SingleReg:$v1, SingleReg:$v0)>;
-def : Pat<(v2i16(or (VC:$IMM), (shl v2i16:$v, (v2i16(v2_splat sc))))), (RR SingleReg:$v, SingleReg:$IMM)>;
-def : Pat<(v2i16(sub (shl v2i16:$v, (v2i16(v2_splat sc))), (v2i16(is_imm_vec:$IMM)))),
+def : Pat<(vt(sub (shl vt:$v, (vt(v2_splat sc))), (vt(is_imm_vec:$IMM)))),
           (RI $v, (build_imm_vec_neg $IMM), splat32_)>;
+def : Pat<(vt(add vt:$v0, (shl vt:$v1, (vt(v2_splat sc))))), (RR SingleReg:$v1, SingleReg:$v0)>;
 }
-defm : v2i16_ADDXPAT<(i32 1), ADDX2HQrr,  ADDX2HQri,  is_imm_vec_leq1bit>;
-defm : v2i16_ADDXPAT<(i32 2), ADDX4HQrr,  ADDX4HQri,  is_imm_vec_leq2bits>;
-defm : v2i16_ADDXPAT<(i32 3), ADDX8HQrr,  ADDX8HQri,  is_imm_vec_leq3bits>;
-defm : v2i16_ADDXPAT<(i32 4), ADDX16HQrr, ADDX16HQri, is_imm_vec_leq4bits>;
+foreach vt = [v2i8, v4i8] in {
+defm : ADDXPAT_HalfSReg<vt, (i32 1), ADDX2BOrr,  ADDX2BOri,  is_imm_vec_leq1bit>, Requires<[IsV2]>;
+defm : ADDXPAT_HalfSReg<vt, (i32 2), ADDX4BOrr,  ADDX4BOri,  is_imm_vec_leq2bits>, Requires<[IsV2]>;
+defm : ADDXPAT_HalfSReg<vt, (i32 3), ADDX8BOrr,  ADDX8BOri,  is_imm_vec_leq3bits>, Requires<[IsV2]>;
+defm : ADDXPAT_HalfSReg<vt, (i32 4), ADDX16BOrr, ADDX16BOri, is_imm_vec_leq4bits>, Requires<[IsV2]>;
+}
+
+defm : ADDXPAT_HalfSReg<v2i16, (i32 1), ADDX2HQrr,  ADDX2HQri,  is_imm_vec_leq1bit>;
+defm : ADDXPAT_HalfSReg<v2i16, (i32 2), ADDX4HQrr,  ADDX4HQri,  is_imm_vec_leq2bits>;
+defm : ADDXPAT_HalfSReg<v2i16, (i32 3), ADDX8HQrr,  ADDX8HQri,  is_imm_vec_leq3bits>;
+defm : ADDXPAT_HalfSReg<v2i16, (i32 4), ADDX16HQrr, ADDX16HQri, is_imm_vec_leq4bits>;
 
 multiclass VECADDXPAT<ValueType vt, SDNode sc, KVX_INSTRUCTION RR, KVX_INSTRUCTION RI, PatFrag v_splat, PatLeaf VC_, PatLeaf VC_at, PatLeaf VC_rr> {
-def : Pat<(vt(add (shl vt:$v, (vt(v_splat sc))), (vt(is_imm_vec_kvx_splat32_:$IMM)))),
-          (RI $v, (build_imm_vec $IMM), splat32_)>;
-def : Pat<(vt(or (shl vt:$v, (vt(v_splat sc))), (vt(VC_:$IMM)))),
-          (RI $v, (build_imm_vec $IMM), splat32_)>;
-def : Pat<(vt(add (shl vt:$v, (vt(v_splat sc))), (vt(is_imm_vec_kvx_splat32_at:$IMM)))),
-          (RI $v, (build_imm_vec $IMM), splat32_at)>;
-def : Pat<(vt(or (shl vt:$v, (vt(v_splat sc))), (vt(VC_at:$IMM)))),
-          (RI $v, (build_imm_vec $IMM), splat32_at)>;
+def : Pat<(vt(add (shl vt:$v, (vt(v_splat sc))), (vt(is_imm_vec_kvx_splat32_:$IMM)))), (RI $v, (build_imm_vec $IMM), splat32_)>;
+def : Pat<(vt(or (shl vt:$v, (vt(v_splat sc))), (vt(VC_:$IMM)))), (RI $v, (build_imm_vec $IMM), splat32_)>;
+def : Pat<(vt(sub (shl vt:$v, (vt(v_splat sc))), (vt(is_imm_vec_kvx_splat32_:$IMM)))), (RI $v, (build_imm_vec_neg $IMM), splat32_)>;
+
+def : Pat<(vt(add (shl vt:$v, (vt(v_splat sc))), (vt(is_imm_vec_kvx_splat32_at:$IMM)))), (RI $v, (build_imm_vec $IMM), splat32_at)>;
+def : Pat<(vt(or (shl vt:$v, (vt(v_splat sc))), (vt(VC_at:$IMM)))), (RI $v, (build_imm_vec $IMM), splat32_at)>;
+def : Pat<(vt(sub (shl vt:$v, (vt(v_splat sc))), (vt(is_imm_vec_kvx_splat32_at:$IMM)))), (RI $v, (build_imm_vec_neg $IMM), splat32_at)>;
 
 def : Pat<(vt(add vt:$v0, (shl vt:$v1, (vt(v_splat sc))))), (RR SingleReg:$v1, SingleReg:$v0)>;
 def : Pat<(vt(or (VC_rr:$IMM), (shl vt:$v, (vt(v_splat sc))))), (RR SingleReg:$v, $IMM)>;
-def : Pat<(vt(sub (shl vt:$v, (vt(v_splat sc))), (vt(is_imm_vec_kvx_splat32_:$IMM)))),
-          (RI $v, (build_imm_vec_neg $IMM), splat32_)>;
-def : Pat<(vt(sub (shl vt:$v, (vt(v_splat sc))), (vt(is_imm_vec_kvx_splat32_at:$IMM)))),
-          (RI $v, (build_imm_vec_neg $IMM), splat32_at)>;
 }
+
+defm : VECADDXPAT<v8i8, (i32 1), ADDX2BOrr,  ADDX2BOri,  v8_splat, imm_vec_1bit_splat_, imm_vec_1bit_splat_at, is_imm_vec_leq1bit>, Requires<[IsV2]>;
+defm : VECADDXPAT<v8i8, (i32 2), ADDX4BOrr,  ADDX4BOri,  v8_splat, imm_vec_2bit_splat_, imm_vec_2bit_splat_at, is_imm_vec_leq2bits>, Requires<[IsV2]>;
+defm : VECADDXPAT<v8i8, (i32 3), ADDX8BOrr,  ADDX8BOri,  v8_splat, imm_vec_3bit_splat_, imm_vec_3bit_splat_at, is_imm_vec_leq3bits>, Requires<[IsV2]>;
+defm : VECADDXPAT<v8i8, (i32 4), ADDX16BOrr, ADDX16BOri, v8_splat, imm_vec_4bit_splat_, imm_vec_4bit_splat_at, is_imm_vec_leq4bits>, Requires<[IsV2]>;
+
 defm : VECADDXPAT<v4i16, (i32 1), ADDX2HQrr,  ADDX2HQri,  v4_splat, imm_vec_1bit_splat_, imm_vec_1bit_splat_at, is_imm_vec_leq1bit>;
 defm : VECADDXPAT<v4i16, (i32 2), ADDX4HQrr,  ADDX4HQri,  v4_splat, imm_vec_2bit_splat_, imm_vec_2bit_splat_at, is_imm_vec_leq2bits>;
 defm : VECADDXPAT<v4i16, (i32 3), ADDX8HQrr,  ADDX8HQri,  v4_splat, imm_vec_3bit_splat_, imm_vec_3bit_splat_at, is_imm_vec_leq3bits>;
@@ -1610,15 +1617,23 @@ defm : SBFXWDPAT<(i64 3), SBFX8WDrr, SBFX8WDri>;
 defm : SBFXWDPAT<(i64 2), SBFX4WDrr, SBFX4WDri>;
 defm : SBFXWDPAT<(i64 1), SBFX2WDrr, SBFX2WDri>;
 
-multiclass v2i16_SBFXPAT<SDNode sc, KVX_INSTRUCTION RR, KVX_INSTRUCTION RI, PatLeaf VC> {
-def : Pat<(v2i16(sub (v2i16(is_imm_vec:$IMM)), (shl v2i16:$v, (v2i16(v2_splat sc))))),
+multiclass SBFXPAT_HalfSReg<ValueType vt, SDNode sc, KVX_INSTRUCTION RR, KVX_INSTRUCTION RI, PatLeaf VC> {
+def : Pat<(vt(sub (vt(is_imm_vec:$IMM)), (shl vt:$v, (vt(v2_splat sc))))),
           (RI $v, (build_imm_vec $IMM), splat32_)>;
-def : Pat<(v2i16(sub v2i16:$v0, (shl v2i16:$v1, (v2i16(v2_splat sc))))), (RR SingleReg:$v1, SingleReg:$v0)>;
+def : Pat<(vt(sub vt:$v0, (shl vt:$v1, (vt(v2_splat sc))))), (RR SingleReg:$v1, SingleReg:$v0)>;
 }
-defm : v2i16_SBFXPAT<(i32 1), SBFX2HQrr,  SBFX2HQri,  is_imm_vec_leq1bit>;
-defm : v2i16_SBFXPAT<(i32 2), SBFX4HQrr,  SBFX4HQri,  is_imm_vec_leq2bits>;
-defm : v2i16_SBFXPAT<(i32 3), SBFX8HQrr,  SBFX8HQri,  is_imm_vec_leq3bits>;
-defm : v2i16_SBFXPAT<(i32 4), SBFX16HQrr, SBFX16HQri, is_imm_vec_leq4bits>;
+
+foreach vt = [ v2i8, v4i8 ] in {
+defm : SBFXPAT_HalfSReg<vt, (i32 1), SBFX2BOrr,  SBFX2BOri,  is_imm_vec_leq1bit>, Requires<[IsV2]>;
+defm : SBFXPAT_HalfSReg<vt, (i32 2), SBFX4BOrr,  SBFX4BOri,  is_imm_vec_leq2bits>, Requires<[IsV2]>;
+defm : SBFXPAT_HalfSReg<vt, (i32 3), SBFX8BOrr,  SBFX8BOri,  is_imm_vec_leq3bits>, Requires<[IsV2]>;
+defm : SBFXPAT_HalfSReg<vt, (i32 4), SBFX16BOrr, SBFX16BOri, is_imm_vec_leq4bits>, Requires<[IsV2]>;
+}
+
+defm : SBFXPAT_HalfSReg<v2i16, (i32 1), SBFX2HQrr,  SBFX2HQri,  is_imm_vec_leq1bit>;
+defm : SBFXPAT_HalfSReg<v2i16, (i32 2), SBFX4HQrr,  SBFX4HQri,  is_imm_vec_leq2bits>;
+defm : SBFXPAT_HalfSReg<v2i16, (i32 3), SBFX8HQrr,  SBFX8HQri,  is_imm_vec_leq3bits>;
+defm : SBFXPAT_HalfSReg<v2i16, (i32 4), SBFX16HQrr, SBFX16HQri, is_imm_vec_leq4bits>;
 
 multiclass VECSBFXPAT<ValueType vt, SDNode sc, KVX_INSTRUCTION RR, KVX_INSTRUCTION RI, PatFrag v_splat> {
 def : Pat<(vt(sub (vt(is_imm_vec_kvx_splat32_:$IMM)), (shl vt:$v, (vt(v_splat sc))) )),
@@ -1627,6 +1642,11 @@ def : Pat<(vt(sub (vt(is_imm_vec_kvx_splat32_at:$IMM)), (shl vt:$v, (vt(v_splat 
           (RI $v, (build_imm_vec $IMM), splat32_at)>;
 def : Pat<(vt(sub vt:$v0, (shl vt:$v1, (vt(v_splat sc))))), (RR SingleReg:$v1, SingleReg:$v0)>;
 }
+defm : VECSBFXPAT<v8i8, (i32 1), SBFX2BOrr,  SBFX2BOri,  v8_splat>, Requires<[IsV2]>;
+defm : VECSBFXPAT<v8i8, (i32 2), SBFX4BOrr,  SBFX4BOri,  v8_splat>, Requires<[IsV2]>;
+defm : VECSBFXPAT<v8i8, (i32 3), SBFX8BOrr,  SBFX8BOri,  v8_splat>, Requires<[IsV2]>;
+defm : VECSBFXPAT<v8i8, (i32 4), SBFX16BOrr, SBFX16BOri, v8_splat>, Requires<[IsV2]>;
+
 defm : VECSBFXPAT<v4i16, (i32 1), SBFX2HQrr,  SBFX2HQri,  v4_splat>;
 defm : VECSBFXPAT<v4i16, (i32 2), SBFX4HQrr,  SBFX4HQri,  v4_splat>;
 defm : VECSBFXPAT<v4i16, (i32 3), SBFX8HQrr,  SBFX8HQri,  v4_splat>;
