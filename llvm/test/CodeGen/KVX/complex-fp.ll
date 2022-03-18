@@ -1122,21 +1122,9 @@ define <2 x float> @fmulc_ri_neg1(<2 x float> %0) {
 ;
 ; CV2-LABEL: fmulc_ri_neg1:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    make $r2 = 0x3f7b14be
-; CV2-NEXT:    srad $r3 = $r0, 32
-; CV2-NEXT:    make $r4 = 0x3e47c5c2
+; CV2-NEXT:    make $r1 = 0x3e47c5c2bf7b14be
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    fmulw $r1 = $r0, $r2
-; CV2-NEXT:    ;;
-; CV2-NEXT:    fmulw $r2 = $r3, $r2
-; CV2-NEXT:    ;;
-; CV2-NEXT:    ffmaw $r1 = $r3, $r4
-; CV2-NEXT:    ;;
-; CV2-NEXT:    ffmsw $r2 = $r0, $r4
-; CV2-NEXT:    ;;
-; CV2-NEXT:    insf $r1 = $r2, 63, 32
-; CV2-NEXT:    ;;
-; CV2-NEXT:    copyd $r0 = $r1
+; CV2-NEXT:    fmulwc $r0 = $r0, $r1
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
   %2 = extractelement <2 x float> %0, i64 1
@@ -1161,21 +1149,9 @@ define <2 x float> @fmulc_ri_2_neg1(<2 x float> %0) {
 ;
 ; CV2-LABEL: fmulc_ri_2_neg1:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    srad $r2 = $r0, 32
-; CV2-NEXT:    make $r3 = 0x3e47c5c2
-; CV2-NEXT:    make $r4 = 0x3f7b14be
+; CV2-NEXT:    make $r1 = 0xbe47c5c23f7b14be
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    fmulw $r1 = $r2, $r3
-; CV2-NEXT:    ;;
-; CV2-NEXT:    fmulw $r2 = $r2, $r4
-; CV2-NEXT:    ;;
-; CV2-NEXT:    ffmaw $r1 = $r0, $r4
-; CV2-NEXT:    ;;
-; CV2-NEXT:    ffmsw $r2 = $r0, $r3
-; CV2-NEXT:    ;;
-; CV2-NEXT:    insf $r1 = $r2, 63, 32
-; CV2-NEXT:    ;;
-; CV2-NEXT:    copyd $r0 = $r1
+; CV2-NEXT:    fmulwc $r0 = $r0, $r1
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
   %2 = extractelement <2 x float> %0, i64 0
@@ -1200,21 +1176,9 @@ define <2 x float> @fmulc_ri(<2 x float> %0) {
 ;
 ; CV2-LABEL: fmulc_ri:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    make $r2 = 0x3f7b14be
-; CV2-NEXT:    make $r3 = 0x3e47c5c2
+; CV2-NEXT:    make $r1 = 0x3e47c5c23f7b14be
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    fmulw $r1 = $r0, $r2
-; CV2-NEXT:    ;;
-; CV2-NEXT:    fmulw $r4 = $r0, $r3
-; CV2-NEXT:    srad $r0 = $r0, 32
-; CV2-NEXT:    ;;
-; CV2-NEXT:    ffmsw $r1 = $r0, $r3
-; CV2-NEXT:    ;;
-; CV2-NEXT:    ffmaw $r4 = $r0, $r2
-; CV2-NEXT:    ;;
-; CV2-NEXT:    insf $r1 = $r4, 63, 32
-; CV2-NEXT:    ;;
-; CV2-NEXT:    copyd $r0 = $r1
+; CV2-NEXT:    fmulwc $r0 = $r0, $r1
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
   %2 = extractelement <2 x float> %0, i64 0
@@ -1239,21 +1203,9 @@ define <2 x float> @fmulc_ri_c(<2 x float> %0) {
 ;
 ; CV2-LABEL: fmulc_ri_c:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    make $r2 = 0x3f7b14be
-; CV2-NEXT:    make $r3 = 0x3e47c5c2
+; CV2-NEXT:    make $r1 = 0x3e47c5c23f7b14be
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    fmulw $r1 = $r0, $r2
-; CV2-NEXT:    ;;
-; CV2-NEXT:    fmulw $r4 = $r0, $r3
-; CV2-NEXT:    srad $r0 = $r0, 32
-; CV2-NEXT:    ;;
-; CV2-NEXT:    ffmaw $r1 = $r0, $r3
-; CV2-NEXT:    ;;
-; CV2-NEXT:    ffmsw $r4 = $r0, $r2
-; CV2-NEXT:    ;;
-; CV2-NEXT:    insf $r1 = $r4, 63, 32
-; CV2-NEXT:    ;;
-; CV2-NEXT:    copyd $r0 = $r1
+; CV2-NEXT:    fmulwc $r0 = $r0, $r1
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
   %2 = extractelement <2 x float> %0, i64 1

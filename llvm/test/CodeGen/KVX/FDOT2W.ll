@@ -84,13 +84,9 @@ define float @DOT2W_ri_1(<2 x float> %0) {
 ;
 ; V2-LABEL: DOT2W_ri_1:
 ; V2:       # %bb.0:
-; V2-NEXT:    make $r1 = 0x3f333333447fc000
+; V2-NEXT:    make $r1 = 0x3f333333c47fc000
 ; V2-NEXT:    ;;
-; V2-NEXT:    fmulwp $r0 = $r0, $r1
-; V2-NEXT:    ;;
-; V2-NEXT:    srad $r1 = $r0, 32
-; V2-NEXT:    ;;
-; V2-NEXT:    fsbfw $r0 = $r0, $r1
+; V2-NEXT:    fdot2w $r0 = $r0, $r1
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %2 = fmul fast <2 x float> %0, <float 1.023000e+03, float 0x3FE6666660000000>
@@ -109,13 +105,9 @@ define float @DOT2W_ri_2(<2 x float> %0) {
 ;
 ; V2-LABEL: DOT2W_ri_2:
 ; V2:       # %bb.0:
-; V2-NEXT:    make $r1 = 0x3f333333447fc000
+; V2-NEXT:    make $r1 = 0xbf333333447fc000
 ; V2-NEXT:    ;;
-; V2-NEXT:    fmulwp $r0 = $r0, $r1
-; V2-NEXT:    ;;
-; V2-NEXT:    srad $r1 = $r0, 32
-; V2-NEXT:    ;;
-; V2-NEXT:    fsbfw $r0 = $r1, $r0
+; V2-NEXT:    fdot2w $r0 = $r0, $r1
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %2 = fmul fast <2 x float> %0, <float 1.023000e+03, float 0x3FE6666660000000>
@@ -134,15 +126,9 @@ define float @DOT2W_ri_3(i64 %0) {
 ;
 ; V2-LABEL: DOT2W_ri_3:
 ; V2:       # %bb.0:
-; V2-NEXT:    srld $r1 = $r0, 32
-; V2-NEXT:    make $r2 = 0x3f333333
+; V2-NEXT:    make $r1 = 0x3f333333447fc000
 ; V2-NEXT:    ;;
-; V2-NEXT:    fmulw $r1 = $r1, $r2
-; V2-NEXT:    make $r2 = 0x447fc000
-; V2-NEXT:    ;;
-; V2-NEXT:    ffmaw $r1 = $r0, $r2
-; V2-NEXT:    ;;
-; V2-NEXT:    copyd $r0 = $r1
+; V2-NEXT:    fdot2w $r0 = $r0, $r1
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %2 = trunc i64 %0 to i32
@@ -165,15 +151,9 @@ define float @DOT2W_ri_4(i64 %0) {
 ;
 ; V2-LABEL: DOT2W_ri_4:
 ; V2:       # %bb.0:
-; V2-NEXT:    make $r1 = 0xc47fc000
-; V2-NEXT:    make $r2 = 0x3f333333
+; V2-NEXT:    make $r1 = 0x3f333333c47fc000
 ; V2-NEXT:    ;;
-; V2-NEXT:    fmulw $r1 = $r0, $r1
-; V2-NEXT:    srld $r0 = $r0, 32
-; V2-NEXT:    ;;
-; V2-NEXT:    ffmaw $r1 = $r0, $r2
-; V2-NEXT:    ;;
-; V2-NEXT:    copyd $r0 = $r1
+; V2-NEXT:    fdot2w $r0 = $r0, $r1
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %2 = trunc i64 %0 to i32

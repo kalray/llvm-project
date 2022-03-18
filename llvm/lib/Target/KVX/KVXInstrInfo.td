@@ -1411,7 +1411,8 @@ multiclass MC_2AM<string OpcStr> {
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary32x2:$a3, ConjugateMod:$a4),
      !strconcat (OpcStr, "$a4 $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     MAU_Y_FP>;
+     MAU_Y_FP>, Requires<[IsV1]>;
+
   def rr : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32X2
     <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, ConjugateMod:$a6, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a6$a1$a2 $a3 = $a4, $a5"),
