@@ -480,6 +480,27 @@ void KVXInstPrinter::printSplat32Mod(const MCInst *MI, unsigned OpNo,
   }
 }
 
+void KVXInstPrinter::printTransposeMod(const MCInst *MI, unsigned OpNo,
+                                       raw_ostream &O) {
+  const MCOperand &MO = MI->getOperand(OpNo);
+  int Transpose = MO.getImm();
+  switch (Transpose) {
+  case 0: // NormalNormal
+    break;
+  case 1: // TransposedNormal
+    O << ".tn";
+    break;
+  case 2: // NormalTransposed
+    O << ".nt";
+    break;
+  case 3: // TransposedTransposed
+    O << ".tt";
+    break;
+  default:
+    report_fatal_error("illegal transpose modifier");
+  }
+}
+
 void KVXInstPrinter::printConjugateMod(const MCInst *MI, unsigned OpNo,
                                        raw_ostream &O) {
   const MCOperand &MO = MI->getOperand(OpNo);

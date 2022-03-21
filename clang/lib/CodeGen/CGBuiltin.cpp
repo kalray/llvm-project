@@ -19420,7 +19420,8 @@ typedef enum ROUNDING {
   ROUNDING_RNA,
   ROUNDING_RNZ,
   ROUNDING_RO,
-  ROUNDING_
+  ROUNDING_CS,
+  ROUNDING_INVALID = -1
 } rounding_t;
 
 enum SCALARCOND {
@@ -19501,14 +19502,14 @@ static int KVX_getConjugateModifier(const StringRef &Str) {
   return llvm::StringSwitch<int>(Str).Case("", 0).Case("c", 1).Default(-1);
 }
 
-static int KVX_getRoundingModifier(const StringRef &Str) {
-  return llvm::StringSwitch<int>(Str)
-      .Case("", ROUNDING_)
+static rounding_t KVX_getRoundingModifier(const StringRef &Str) {
+  return llvm::StringSwitch<rounding_t>(Str)
+      .Case("", ROUNDING_CS)
       .CaseLower("rn", ROUNDING_RN)
       .CaseLower("ru", ROUNDING_RU)
       .CaseLower("rd", ROUNDING_RD)
       .CaseLower("rz", ROUNDING_RZ)
-      .Default(-1);
+      .Default(ROUNDING_INVALID);
 }
 
 static int KVX_getScalarcondModValue(const StringRef &Str) {
@@ -19565,6 +19566,24 @@ static carry_t KVX_getCarryInitModifier(const StringRef &Str) {
 
 static int KVX_getSpeculateModValue(const StringRef &Str) {
   return StringSwitch<int>(Str).Case("", 0).Case("s", 1).Default(-1);
+}
+
+typedef enum MATRIX_TRANSPOSE : signed char {
+  MTRANSPOSE_NN = 0, // normal normal
+  MTRANSPOSE_TN = 1, // transpose normal
+  MTRANSPOSE_NT = 2, // normal transpose
+  MTRANSPOSE_TT = 3, // transpose transpose
+  MTRANSPOSE_INVALID = 4
+} matrix_transpose_t;
+
+static matrix_transpose_t KVX_getMatrixTransposeModifier(const StringRef &Str) {
+  return llvm::StringSwitch<matrix_transpose_t>(Str)
+      .Case("", MTRANSPOSE_NN)
+      .CaseLower("nn", MTRANSPOSE_NN)
+      .CaseLower("tn", MTRANSPOSE_TN)
+      .CaseLower("nt", MTRANSPOSE_NT)
+      .CaseLower("tt", MTRANSPOSE_TT)
+      .Default(MTRANSPOSE_INVALID);
 }
 
 static Value *KVX_emit_swapvo(CodeGenFunction &CGF, const CallExpr *E) {
@@ -19851,8 +19870,8 @@ static Value *KVX_emitShiftBuiltin(CodeGenFunction &CGF, const CallExpr *E,
 }
 
 static bool KVX_checkNargs(unsigned N, CodeGenFunction &CGF, const CallExpr *E,
-                           bool HasSilent = false) {
-  if (E->getNumArgs() != ((HasSilent ? 1 : 0) + N)) {
+                           bool HasModifierStr = false) {
+  if (E->getNumArgs() != ((HasModifierStr ? 1 : 0) + N)) {
     CGF.CGM.Error(E->getBeginLoc(), "Incorrect number of arguments to builtin");
     return false;
   }
@@ -19871,23 +19890,24 @@ typedef struct {
   bool IsValid;
 } float_mods_t;
 
-static float_mods_t KVX_getFloatModifiers(const CallExpr *E,
-                                          CodeGenFunction &CGF,
-                                          unsigned ArgIndex, bool HasRounding,
-                                          bool HasConjugate) {
-  const unsigned I = ArgIndex;
-
-  float_mods_t FloatMods = {false, ROUNDING_, false, true};
-  std::pair<StringRef, StringRef> Mods = {"", ""};
-
+static StringRef KVX_getModStr(CodeGenFunction &CGF, const CallExpr *E,
+                               const unsigned N) {
   if (!E->isNullPointerConstant(CGF.getContext(),
                                 Expr::NPC_NeverValueDependent) &&
-      !E->getArg(I)->isNullPointerConstant(CGF.getContext(),
-                                           Expr::NPC_NeverValueDependent)) {
-    const auto *SL =
-        dyn_cast<clang::StringLiteral>(E->getArg(I)->IgnoreParenImpCasts());
-    Mods = SL->getString().split(".").second.split(".");
-  }
+      !E->getArg(N)->isNullPointerConstant(CGF.getContext(),
+                                           Expr::NPC_NeverValueDependent))
+    return dyn_cast<clang::StringLiteral>(E->getArg(N)->IgnoreParenImpCasts())
+        ->getString();
+  return "";
+}
+
+static float_mods_t KVX_getFloatModifiers(CodeGenFunction &CGF,
+                                          const SourceLocation SL,
+                                          StringRef ModStr, bool HasRounding,
+                                          bool HasConjugate) {
+
+  float_mods_t FloatMods = {false, ROUNDING_CS, false, true};
+  std::pair<StringRef, StringRef> Mods = ModStr.split(".");
 
   if (HasConjugate) {
     int ConjugateMod = KVX_getConjugateModifier(Mods.first);
@@ -19897,10 +19917,10 @@ static float_mods_t KVX_getFloatModifiers(const CallExpr *E,
     }
   }
 
-  int RoundingMod = 0;
+  rounding_t RoundingMod = ROUNDING_INVALID;
   if (HasRounding) {
     RoundingMod = KVX_getRoundingModifier(Mods.first);
-    if (RoundingMod != -1) {
+    if (RoundingMod != ROUNDING_INVALID) {
       Mods = Mods.second.split(".");
       FloatMods.RoundingMod = static_cast<rounding_t>(RoundingMod);
     }
@@ -19910,24 +19930,121 @@ static float_mods_t KVX_getFloatModifiers(const CallExpr *E,
   // Silent modifier and speculate modifier hold same options
   SilentMod = KVX_getSpeculateModValue(Mods.first);
   if (SilentMod == -1) {
-    if (RoundingMod == -1)
-      CGF.CGM.Error(E->getArg(I)->getBeginLoc(), KVX_ERROR_INVALID_ROUNDING);
-    CGF.CGM.Error(E->getArg(I)->getBeginLoc(), KVX_ERROR_INVALID_SILENT);
+    if (HasRounding && RoundingMod == ROUNDING_INVALID)
+      CGF.CGM.Error(SL, KVX_ERROR_INVALID_ROUNDING);
+
+    CGF.CGM.Error(SL, KVX_ERROR_INVALID_SILENT);
     FloatMods.IsValid = false;
     return FloatMods;
   }
   FloatMods.SilentMod = static_cast<bool>(SilentMod);
 
-  if (RoundingMod == -1)
-    RoundingMod = ROUNDING_;
+  if (RoundingMod == ROUNDING_INVALID)
+    RoundingMod = ROUNDING_CS;
 
   if (Mods.second != "") {
-    CGF.CGM.Error(E->getArg(I)->getBeginLoc(), "invalid modifier string");
+    CGF.CGM.Error(SL, "invalid modifier string");
     FloatMods.IsValid = false;
     return FloatMods;
   }
 
   return FloatMods;
+}
+
+enum KVX_ACCUMULATE : unsigned char { ACC_NO, ACC_ADD, ACC_SUB };
+
+static Value *KVX_emitMatrixMultiply(CodeGenFunction &CGF,
+                                     const llvm::Type *ElType, unsigned Lines,
+                                     unsigned InnerLineCols, unsigned Cols,
+                                     const CallExpr *E,
+                                     const KVX_ACCUMULATE Acc,
+                                     const unsigned KVXIntID) {
+
+  bool HasRounding = ElType->isFloatingPointTy();
+  unsigned Nargs = 2 + (Acc != ACC_NO);
+
+  if (!KVX_checkNargs(Nargs, CGF, E, true))
+    return nullptr;
+
+  StringRef ModsStr = KVX_getModStr(CGF, E, Nargs);
+  std::pair<StringRef, StringRef> Mods = ModsStr.split(".").second.split(".");
+
+  auto MTM = KVX_getMatrixTransposeModifier(Mods.first);
+  float_mods_t FloatMods;
+  bool ValidModifier = MTM != MTRANSPOSE_INVALID;
+
+  if (!HasRounding) {
+    if (!ValidModifier)
+      CGF.CGM.Error(E->getArg(Nargs)->getBeginLoc(),
+                    "Invalid matrix transpose modifier.");
+  } else {
+    if (ValidModifier)
+      ModsStr = Mods.second;
+
+    else // if fp mods pass, already leave matrix transpose in the right value
+      MTM = MTRANSPOSE_NN;
+
+    FloatMods = KVX_getFloatModifiers(CGF, E->getArg(Nargs)->getBeginLoc(),
+                                      ModsStr, HasRounding, true);
+
+    if (!FloatMods.IsValid) {
+      if (!ValidModifier)
+        CGF.CGM.Error(E->getArg(Nargs)->getBeginLoc(),
+                      "Invalid matrix transpose modifier.");
+      return nullptr;
+    }
+  }
+
+  Value *LHSMM = CGF.EmitScalarExpr(E->getArg(0));
+  Value *RHSMM = CGF.EmitScalarExpr(E->getArg(1));
+
+  Value *LHSACC = nullptr;
+  if (Acc != ACC_NO)
+    LHSACC = CGF.EmitScalarExpr(E->getArg(2));
+
+  // If we use the default rounding and silent modifiers, we don't need
+  // to use the kvx specific builtins, we can use generic int.matrix.*
+  if ((!FloatMods.SilentMod) && (FloatMods.RoundingMod == ROUNDING_CS)) {
+    MatrixBuilder<CGBuilderTy> MB(CGF.Builder);
+
+    static_assert((MTRANSPOSE_TN ^ MTRANSPOSE_NT) == MTRANSPOSE_TT &&
+                      (MTRANSPOSE_TN & MTRANSPOSE_NT) == MTRANSPOSE_NN,
+                  "matrix_transpose_t values should be bitflags");
+    if (MTM & MTRANSPOSE_TN)
+      LHSMM = MB.CreateMatrixTranspose(LHSMM, Lines, InnerLineCols);
+
+    if (MTM & MTRANSPOSE_NT)
+      RHSMM = MB.CreateMatrixTranspose(RHSMM, InnerLineCols, Cols);
+
+    Value *MM =
+        MB.CreateMatrixMultiply(LHSMM, RHSMM, Lines, InnerLineCols, Cols);
+
+    if (Acc == ACC_ADD) {
+      CGF.Builder.getFastMathFlags().setFast(true);
+      return MB.CreateAdd(LHSACC, MM);
+    }
+
+    if (Acc == ACC_SUB) {
+      CGF.Builder.getFastMathFlags().setFast(true);
+      return MB.CreateSub(LHSACC, MM);
+    }
+
+    return MM;
+  }
+
+  SmallVector<Value *, 8> Args;
+  Args.push_back(LHSMM);
+  Args.push_back(RHSMM);
+
+  if (LHSACC != nullptr)
+    Args.push_back(LHSACC);
+
+  Args.push_back(ConstantInt::get(CGF.IntTy, MTM)); // Matrix transpose
+  Args.push_back(ConstantInt::get(CGF.IntTy, FloatMods.RoundingMod));
+  Args.push_back(ConstantInt::get(CGF.IntTy, FloatMods.SilentMod));
+
+  Function *Callee = CGF.CGM.getIntrinsic(KVXIntID);
+  return CGF.Builder.CreateCall(Callee, Args);
 }
 
 static Value *KVX_emitNaryBuiltinCore(unsigned N, CodeGenFunction &CGF,
@@ -19940,7 +20057,11 @@ static Value *KVX_emitNaryBuiltinCore(unsigned N, CodeGenFunction &CGF,
     return CGF.Builder.CreateCall(Callee, Args);
   }
 
-  float_mods_t FloatMods = KVX_getFloatModifiers(E, CGF, N, HasRounding, true);
+  StringRef ModStr = KVX_getModStr(CGF, E, N);
+  float_mods_t FloatMods =
+      KVX_getFloatModifiers(CGF, E->getArg(N)->getBeginLoc(),
+                            ModStr.split(".").second, HasRounding, true);
+
   if (!FloatMods.IsValid)
     return nullptr;
 
@@ -20154,7 +20275,10 @@ static Value *KVX_emitUnaryShiftingRoundingBuiltin(CodeGenFunction &CGF,
     CGF.CGM.Error(E->getArg(1)->getBeginLoc(),
                   "expects a 6-bit unsigned immediate in the second argument");
 
-  float_mods_t FloatMods = KVX_getFloatModifiers(E, CGF, 2, true, false);
+  StringRef ModStr = KVX_getModStr(CGF, E, 2);
+  float_mods_t FloatMods = KVX_getFloatModifiers(
+      CGF, E->getArg(2)->getBeginLoc(), ModStr.split(".").second, true, false);
+
   if (!FloatMods.IsValid)
     return nullptr;
   const auto SilentModifier = FloatMods.SilentMod;
@@ -20451,8 +20575,11 @@ static Value *KVX_emitVectorBuiltin(CodeGenFunction &CGF, const CallExpr *E,
   Value *ConjugateArg = NULL;
 
   if (Rounding) {
+    StringRef ModStr = KVX_getModStr(CGF, E, NumOperands);
     float_mods_t FloatMods =
-        KVX_getFloatModifiers(E, CGF, NumOperands, true, true);
+        KVX_getFloatModifiers(CGF, E->getArg(NumOperands)->getBeginLoc(),
+                              ModStr.split(".").second, true, true);
+
     if (!FloatMods.IsValid)
       return nullptr;
     const auto ConjugateMod = FloatMods.ConjugateMod;
@@ -20749,9 +20876,13 @@ KVX_emitVectorShiftingBuiltin(CodeGenFunction &CGF, const CallExpr *E,
   }
   Value *ShiftArg = ConstantInt::get(CGF.Int64Ty, ShiftValue);
 
-  float_mods_t FloatMods = KVX_getFloatModifiers(E, CGF, 2, true, false);
+  StringRef ModStr = KVX_getModStr(CGF, E, 2);
+  float_mods_t FloatMods = KVX_getFloatModifiers(
+      CGF, E->getArg(2)->getBeginLoc(), ModStr, true, true);
+
   if (!FloatMods.IsValid)
     return nullptr;
+
   const auto Modifier = FloatMods.RoundingMod;
   const auto SilentModifier = FloatMods.SilentMod;
 
@@ -21221,6 +21352,18 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
 
   case KVX::BI__builtin_kvx_fmm212w:
     return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fmm212w, true);
+
+  case KVX::BI__builtin_kvx_fmm222w:
+    return KVX_emitMatrixMultiply(*this, FloatTy, 2, 2, 2, E, ACC_NO,
+                                  Intrinsic::kvx_fmm222w);
+
+  case KVX::BI__builtin_kvx_fmma222w:
+    return KVX_emitMatrixMultiply(*this, FloatTy, 2, 2, 2, E, ACC_ADD,
+                                  Intrinsic::kvx_fmma222w);
+
+  case KVX::BI__builtin_kvx_fmms222w:
+    return KVX_emitMatrixMultiply(*this, FloatTy, 2, 2, 2, E, ACC_SUB,
+                                  Intrinsic::kvx_fmms222w);
 
   case KVX::BI__builtin_kvx_ffmah:
     return KVX_emitF16ScalarBuiltin(3, *this, E, Intrinsic::kvx_ffmahq, true);
@@ -21894,10 +22037,13 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     if (!KVX_checkNargs(NArgs, *this, E, true))
       return nullptr;
 
-    float_mods_t FloatMods =
-        KVX_getFloatModifiers(E, *this, NArgs, true, false);
+    StringRef ModStr = KVX_getModStr(*this, E, NArgs);
+    float_mods_t FloatMods = KVX_getFloatModifiers(
+        *this, E->getArg(NArgs)->getBeginLoc(), ModStr, true, true);
+
     if (!FloatMods.IsValid)
       return nullptr;
+
     auto *const RoundingMod =
         ConstantInt::get(this->IntTy, FloatMods.RoundingMod);
     auto *const SilentMod = ConstantInt::get(this->IntTy, FloatMods.SilentMod);

@@ -1118,6 +1118,12 @@ class ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
   : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
+// FMM222W, FMMA222W, FMMS222W
+let Size = 4 in
+class ROUNDING_SILENT_TRANSPOSE_REGISTERM_REGISTERO_REGISTERP
+  <dag outs, dag ins, string asmstr, InstrItinClass itin, list<dag> pattern = []>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>, Requires<[IsV2]>;
+
 // 1 insn(s):
 // COPYO
 let Size = 4 in
