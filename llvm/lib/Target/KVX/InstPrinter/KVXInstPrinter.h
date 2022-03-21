@@ -78,6 +78,7 @@ public:
 
   void printSplat32Mod(const MCInst *MI, unsigned OpNo, raw_ostream &O);
   void printConjugateMod(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printTransposeMod(const MCInst *MI, unsigned OpNo, raw_ostream &O);
 
   template <int Threshold = 1024>
   void printHexaBitsImm32(const MCInst *MI, unsigned OpNo, raw_ostream &O);

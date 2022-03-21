@@ -512,11 +512,11 @@ def: Pat<(int_kvx_insertvm v1024i1:$a0, v256i1:$a1, m_sub_v_imm_check:$pos),
 def: Pat<(int_kvx_insertvw v512i1:$a0, v256i1:$a1, w_sub_v_imm_check:$pos),
     (INSERT_SUBREG WideReg:$a0, VectorReg:$a1, (w_sub_v_imm_value imm:$pos))>;
 def: Pat<(int_kvx_movefmw v1024i1:$a0, sub_w_imm_check:$pos),
-    (EXTRACT_SUBREG MatrixReg:$a0, (sub_w_imm_value imm:$pos))>;
+    (v512i1(EXTRACT_SUBREG MatrixReg:$a0, (sub_w_imm_value imm:$pos)))>;
 def: Pat<(int_kvx_movefmv v1024i1:$a0, m_sub_v_imm_check:$pos),
-    (EXTRACT_SUBREG MatrixReg:$a0, (m_sub_v_imm_value imm:$pos))>;
+    (v256i1(EXTRACT_SUBREG MatrixReg:$a0, (m_sub_v_imm_value imm:$pos)))>;
 def: Pat<(int_kvx_movefwv v512i1:$a0, w_sub_v_imm_check:$pos),
-    (EXTRACT_SUBREG WideReg:$a0, (w_sub_v_imm_value imm:$pos))>;
+    (v256i1(EXTRACT_SUBREG WideReg:$a0, (w_sub_v_imm_value imm:$pos)))>;
 
 def: Pat<(int_kvx_buildfvm v256i1:$v0, v256i1:$v1, v256i1:$v2, v256i1:$v3),
             (REG_SEQUENCE MatrixReg,
@@ -646,9 +646,9 @@ def: Pat<(int_kvx_mma444hbd1 MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4), (MMA4
 def: Pat<(int_kvx_mma484hbd MatrixReg:$a2, WideReg:$a3, VectorReg:$a4),
          (MMA444HBD1
             (MMA444HBD0 $a2,
-              (EXTRACT_SUBREG $a3, sub_v0),
+              (v256i1(EXTRACT_SUBREG $a3, sub_v0)),
               $a4),
-            (EXTRACT_SUBREG $a3, sub_v1),
+            (v256i1(EXTRACT_SUBREG $a3, sub_v1)),
             $a4)>;
 
 def: Pat<(int_kvx_mma444hd MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4), (MMA444HD $a2, $a3, $a4)>;
@@ -657,9 +657,9 @@ def: Pat<(int_kvx_mma444suhbd1 MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4), (MM
 def: Pat<(int_kvx_mma484suhbd MatrixReg:$a2, WideReg:$a3, VectorReg:$a4),
          (MMA444SUHBD1
             (MMA444SUHBD0 $a2,
-              (EXTRACT_SUBREG $a3, sub_v0),
+              (v256i1(EXTRACT_SUBREG $a3, sub_v0)),
               $a4),
-            (EXTRACT_SUBREG $a3, sub_v1),
+            (v256i1(EXTRACT_SUBREG $a3, sub_v1)),
             $a4)>;
 
 def: Pat<(int_kvx_mma444suhd MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4), (MMA444SUHD $a2, $a3, $a4)>;
@@ -668,9 +668,9 @@ def: Pat<(int_kvx_mma444uhbd1 MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4), (MMA
 def: Pat<(int_kvx_mma484uhbd MatrixReg:$a2, WideReg:$a3, VectorReg:$a4),
          (MMA444UHBD1
             (MMA444UHBD0 $a2,
-              (EXTRACT_SUBREG $a3, sub_v0),
+              (v256i1(EXTRACT_SUBREG $a3, sub_v0)),
               $a4),
-            (EXTRACT_SUBREG $a3, sub_v1),
+            (v256i1(EXTRACT_SUBREG $a3, sub_v1)),
             $a4)>;
 
 def: Pat<(int_kvx_mma444uhd MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4), (MMA444UHD $a2, $a3, $a4)>;
@@ -679,9 +679,9 @@ def: Pat<(int_kvx_mma444ushbd1 MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4), (MM
 def: Pat<(int_kvx_mma484ushbd MatrixReg:$a2, WideReg:$a3, VectorReg:$a4),
          (MMA444USHBD1
             (MMA444USHBD0 $a2,
-              (EXTRACT_SUBREG $a3, sub_v0),
+              (v256i1(EXTRACT_SUBREG $a3, sub_v0)),
               $a4),
-            (EXTRACT_SUBREG $a3, sub_v1),
+            (v256i1(EXTRACT_SUBREG $a3, sub_v1)),
             $a4)>;
 
 def: Pat<(int_kvx_mma444ushd MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4), (MMA444USHD $a2, $a3, $a4)>;
@@ -695,3 +695,238 @@ def: Pat<(int_kvx_mt44d MatrixReg:$a1), (MT44D $a1)>;
 // TCA conversion intrinsics
 def: Pat<(int_kvx_fscalewv VectorReg:$a5, i32:$a1, i32:$a2, i32:$a3), (FSCALEWV $a5, RoundingMod:$a1, SilentMod:$a2, RectifyMod:$a3)>;
 def: Pat<(int_kvx_fnarrowwhv WideReg:$a4, i32:$a1, i32:$a2), (FNARROWWHV $a4, RoundingMod:$a1, SilentMod:$a2)>;
+
+// TODO: T18719 We could have generic C code patterns, but that requires changing how we lower
+// vector_shuffle/build_vector for v4f32 vectors.
+// FMM222
+def : Pat<(v4f32 (int_matrix_multiply v4f32:$LHS, v4f32:$RHS, 2, 2, 2)),
+          (v4f32 (FMM222W PairedReg:$LHS, PairedReg:$RHS, transpose_nn, rounding_, silent_))>, Requires<[IsV2]>;
+
+def : Pat<(v4f32 (int_matrix_multiply (v4f32 (int_matrix_transpose v4f32:$LHS, 2, 2)), v4f32:$RHS, 2, 2, 2)),
+          (v4f32 (FMM222W PairedReg:$LHS, PairedReg:$RHS, transpose_tn, rounding_, silent_))>, Requires<[IsV2]>;
+
+def : Pat<(v4f32 (int_matrix_multiply v4f32:$LHS, (v4f32 (int_matrix_transpose v4f32:$RHS, 2, 2)), 2, 2, 2)),
+          (v4f32 (FMM222W PairedReg:$LHS, PairedReg:$RHS, transpose_nt, rounding_, silent_))>, Requires<[IsV2]>;
+
+def : Pat<(v4f32 (int_matrix_multiply (v4f32 (int_matrix_transpose v4f32:$LHS, 2, 2)), (v4f32 (int_matrix_transpose v4f32:$RHS, 2, 2)), 2, 2, 2)),
+          (v4f32 (FMM222W PairedReg:$LHS, PairedReg:$RHS, transpose_tt, rounding_, silent_))>, Requires<[IsV2]>;
+
+def : Pat<(int_kvx_fmm222w v4f32:$LHS, v4f32:$RHS, i32:$t, i32:$r, i32:$s),
+          (FMM222W PairedReg:$LHS, PairedReg:$RHS, TransposeMod:$t, RoundingMod:$r, SilentMod:$s)>, Requires<[IsV2]>;
+
+// FMMA222, FMMS222
+multiclass FMMAS222W <SDNode Node, KVX_INSTRUCTION Op, SDNode KVX_Int> {
+def : Pat<(Node v4f32:$ACC, (int_matrix_multiply v4f32:$LHS, v4f32:$RHS, 2, 2, 2)),
+          (Op PairedReg:$LHS, PairedReg:$RHS, PairedReg:$ACC, transpose_nn, rounding_, silent_)>;
+
+def : Pat<(Node v4f32:$ACC, (int_matrix_multiply (v4f32 (int_matrix_transpose v4f32:$LHS, 2, 2)), v4f32:$RHS, 2, 2, 2)),
+          (Op PairedReg:$LHS, PairedReg:$RHS, PairedReg:$ACC, transpose_tn, rounding_, silent_)>;
+
+def : Pat<(Node v4f32:$ACC, (int_matrix_multiply (v4f32 (int_matrix_transpose v4f32:$LHS, 2, 2)), (v4f32 (int_matrix_transpose v4f32:$RHS, 2, 2)), 2, 2, 2)),
+          (Op PairedReg:$LHS, PairedReg:$RHS, PairedReg:$ACC, transpose_tt, rounding_, silent_)>;
+
+def : Pat<(Node v4f32:$ACC, (int_matrix_multiply v4f32:$LHS, (v4f32 (int_matrix_transpose v4f32:$RHS, 2, 2)), 2, 2, 2)),
+          (Op PairedReg:$LHS, PairedReg:$RHS, PairedReg:$ACC, transpose_nt, rounding_, silent_)>;
+
+def : Pat<(KVX_Int v4f32:$LHS, v4f32:$RHS, v4f32:$ACC, i32:$t, i32:$r, i32:$s),
+          (Op PairedReg:$LHS, PairedReg:$RHS, PairedReg:$ACC, TransposeMod:$t, RoundingMod:$r, SilentMod:$s)>;
+}
+
+defm : FMMAS222W<faddcont, FMMA222W, int_kvx_fmma222w>, Requires<[IsV2]>;
+defm : FMMAS222W<fsubcont, FMMS222W, int_kvx_fmms222w>, Requires<[IsV2]>;
+
+// ----------------------- To fix START  -----------------------
+// FIXME: These patterns below should not exits, the front-end should be able
+//        to detect march version and generate the correct code from there.
+//        However or front-end sub-arch selection is not implemented somehow
+//        that we can detect it.
+// FMM222_CV1
+// nn
+def : Pat<(v4f32 (int_matrix_multiply v4f32:$LHS, v4f32:$RHS, 2, 2, 2)),
+          (FMMA212W
+            (FMM212W
+              (INSF (v2f32(EXTRACT_SUBREG $LHS, sub_s0)), (v2f32(EXTRACT_SUBREG $LHS, sub_s1)), 63, 32),
+              (v2f32(EXTRACT_SUBREG $RHS, sub_s0)),
+              rounding_, silent_
+            ),
+            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $LHS, sub_s0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $LHS, sub_s1)), -4294967296)),
+            (v2f32(EXTRACT_SUBREG $RHS, sub_s1)),
+            rounding_, silent_)>, Requires<[IsV1]>;
+def : Pat<(int_kvx_fmm222w v4f32:$LHS, v4f32:$RHS, 0, i32:$r, i32:$s),
+          (FMMA212W
+            (FMM212W
+              (INSF (v2f32(EXTRACT_SUBREG $LHS, sub_s0)), (v2f32(EXTRACT_SUBREG $LHS, sub_s1)), 63, 32),
+              (v2f32(EXTRACT_SUBREG $RHS, sub_s0)),
+              RoundingMod:$r, SilentMod:$s
+            ),
+            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $LHS, sub_s0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $LHS, sub_s1)), -4294967296)),
+            (v2f32(EXTRACT_SUBREG $RHS, sub_s1)),
+            RoundingMod:$r, SilentMod:$s)>, Requires<[IsV1]>;
+
+
+// tn
+def : Pat<(v4f32 (int_matrix_multiply (v4f32 (int_matrix_transpose v4f32:$LHS, 2, 2)), v4f32:$RHS, 2, 2, 2)),
+          (FMMA212W
+            (FMM212W
+              (v2f32(EXTRACT_SUBREG $LHS, sub_s0)),
+              (v2f32(EXTRACT_SUBREG $RHS, sub_s0)),
+              rounding_, silent_
+            ),
+            (v2f32(EXTRACT_SUBREG $LHS, sub_s1)),
+            (v2f32(EXTRACT_SUBREG $RHS, sub_s1)),
+            rounding_, silent_)>, Requires<[IsV1]>;
+def : Pat<(int_kvx_fmm222w v4f32:$LHS, v4f32:$RHS, 1, i32:$r, i32:$s),
+          (FMMA212W
+            (FMM212W
+              (v2f32(EXTRACT_SUBREG $LHS, sub_s0)),
+              (v2f32(EXTRACT_SUBREG $RHS, sub_s0)),
+              RoundingMod:$r, SilentMod:$s
+            ),
+            (v2f32(EXTRACT_SUBREG $LHS, sub_s1)),
+            (v2f32(EXTRACT_SUBREG $RHS, sub_s1)),
+            RoundingMod:$r, SilentMod:$s)>, Requires<[IsV1]>;
+// nt
+def : Pat<(v4f32 (int_matrix_multiply v4f32:$LHS, (v4f32 (int_matrix_transpose v4f32:$RHS, 2, 2)), 2, 2, 2)),
+          (FMMA212W
+            (FMM212W
+              (INSF (v2f32(EXTRACT_SUBREG $LHS, sub_s0)), (v2f32(EXTRACT_SUBREG $LHS, sub_s1)), 63, 32),
+              (INSF (v2f32(EXTRACT_SUBREG $RHS, sub_s0)), (v2f32(EXTRACT_SUBREG $RHS, sub_s1)), 63, 32),
+              rounding_, silent_
+            ),
+            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $LHS, sub_s0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $LHS, sub_s1)), -4294967296)),
+            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $RHS, sub_s0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $RHS, sub_s1)), -4294967296)),
+            rounding_, silent_)>, Requires<[IsV1]>;
+def : Pat<(int_kvx_fmm222w v4f32:$LHS, v4f32:$RHS, 2, i32:$r, i32:$s),
+          (FMMA212W
+            (FMM212W
+              (INSF (v2f32(EXTRACT_SUBREG $LHS, sub_s0)), (v2f32(EXTRACT_SUBREG $LHS, sub_s1)), 63, 32),
+              (INSF (v2f32(EXTRACT_SUBREG $RHS, sub_s0)), (v2f32(EXTRACT_SUBREG $RHS, sub_s1)), 63, 32),
+              RoundingMod:$r, SilentMod:$s
+            ),
+            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $LHS, sub_s0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $LHS, sub_s1)), -4294967296)),
+            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $RHS, sub_s0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $RHS, sub_s1)), -4294967296)),
+            RoundingMod:$r, SilentMod:$s)>, Requires<[IsV1]>;
+// tt
+def : Pat<(v4f32 (int_matrix_multiply (v4f32 (int_matrix_transpose v4f32:$LHS, 2, 2)), (v4f32 (int_matrix_transpose v4f32:$RHS, 2, 2)), 2, 2, 2)),
+          (FMMA212W
+            (FMM212W
+              (v2f32(EXTRACT_SUBREG $LHS, sub_s0)),
+              (INSF (v2f32(EXTRACT_SUBREG $RHS, sub_s0)), (v2f32(EXTRACT_SUBREG $RHS, sub_s1)), 63, 32),
+              rounding_, silent_
+            ),
+            (v2f32(EXTRACT_SUBREG $LHS, sub_s1)),
+            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $RHS, sub_s0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $RHS, sub_s1)), -4294967296)),
+            rounding_, silent_)>, Requires<[IsV1]>;
+def : Pat<(int_kvx_fmm222w v4f32:$LHS, v4f32:$RHS, 3, i32:$r, i32:$s),
+          (FMMA212W
+            (FMM212W
+              (v2f32(EXTRACT_SUBREG $LHS, sub_s0)),
+              (INSF (v2f32(EXTRACT_SUBREG $RHS, sub_s0)), (v2f32(EXTRACT_SUBREG $RHS, sub_s1)), 63, 32),
+              RoundingMod:$r, SilentMod:$s
+            ),
+            (v2f32(EXTRACT_SUBREG $LHS, sub_s1)),
+            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $RHS, sub_s0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $RHS, sub_s1)), -4294967296)),
+            RoundingMod:$r, SilentMod:$s)>, Requires<[IsV1]>;
+
+// FMMA222_CV1, FMMS222_CV1
+multiclass FMMAS222W_CV1 <SDNode Node, KVX_INSTRUCTION Op, SDNode KVX_Int> {
+def : Pat<(Node v4f32:$ACC, (int_matrix_multiply v4f32:$LHS, v4f32:$RHS, 2, 2, 2)),
+          (Op
+            (Op
+              PairedReg:$ACC,
+              (INSF (v2f32(EXTRACT_SUBREG $LHS, sub_s0)), (v2f32(EXTRACT_SUBREG $LHS, sub_s1)), 63, 32),
+              (v2f32(EXTRACT_SUBREG $RHS, sub_s0)),
+              rounding_, silent_
+            ),
+            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $LHS, sub_s0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $LHS, sub_s1)), -4294967296)),
+            (v2f32(EXTRACT_SUBREG $RHS, sub_s1)),
+            rounding_, silent_)>;
+
+def : Pat<(KVX_Int v4f32:$LHS, v4f32:$RHS, v4f32:$ACC, 0, i32:$r, i32:$s),
+          (Op
+            (Op
+              PairedReg:$ACC,
+              (INSF (v2f32(EXTRACT_SUBREG $LHS, sub_s0)), (v2f32(EXTRACT_SUBREG $LHS, sub_s1)), 63, 32),
+              (v2f32(EXTRACT_SUBREG $RHS, sub_s0)),
+              RoundingMod:$r, SilentMod:$s
+            ),
+            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $LHS, sub_s0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $LHS, sub_s1)), -4294967296)),
+            (v2f32(EXTRACT_SUBREG $RHS, sub_s1)),
+            RoundingMod:$r, SilentMod:$s)>;
+
+def : Pat<(Node v4f32:$ACC, (int_matrix_multiply (v4f32 (int_matrix_transpose v4f32:$LHS, 2, 2)), v4f32:$RHS, 2, 2, 2)),
+          (Op
+            (Op
+              PairedReg:$ACC,
+              (v2f32(EXTRACT_SUBREG $LHS, sub_s0)),
+              (v2f32(EXTRACT_SUBREG $RHS, sub_s0)),
+              rounding_, silent_
+            ),
+            (v2f32(EXTRACT_SUBREG $LHS, sub_s1)),
+            (v2f32(EXTRACT_SUBREG $RHS, sub_s1)),
+            rounding_, silent_)>;
+
+def : Pat<(KVX_Int v4f32:$LHS, v4f32:$RHS, v4f32:$ACC, 1, i32:$r, i32:$s),
+          (Op
+            (Op
+              PairedReg:$ACC,
+              (v2f32(EXTRACT_SUBREG $LHS, sub_s0)),
+              (v2f32(EXTRACT_SUBREG $RHS, sub_s0)),
+              RoundingMod:$r, SilentMod:$s
+            ),
+            (v2f32(EXTRACT_SUBREG $LHS, sub_s1)),
+            (v2f32(EXTRACT_SUBREG $RHS, sub_s1)),
+            RoundingMod:$r, SilentMod:$s)>;
+
+def : Pat<(Node v4f32:$ACC, (int_matrix_multiply v4f32:$LHS, (v4f32 (int_matrix_transpose v4f32:$RHS, 2, 2)), 2, 2, 2)),
+          (Op
+            (Op
+              PairedReg:$ACC,
+              (INSF (v2f32(EXTRACT_SUBREG $LHS, sub_s0)), (v2f32(EXTRACT_SUBREG $LHS, sub_s1)), 63, 32),
+              (INSF (v2f32(EXTRACT_SUBREG $RHS, sub_s0)), (v2f32(EXTRACT_SUBREG $RHS, sub_s1)), 63, 32),
+              rounding_, silent_
+            ),
+            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $LHS, sub_s0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $LHS, sub_s1)), -4294967296)),
+            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $RHS, sub_s0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $RHS, sub_s1)), -4294967296)),
+            rounding_, silent_)>;
+
+def : Pat<(KVX_Int v4f32:$LHS, v4f32:$RHS, v4f32:$ACC, 2, i32:$r, i32:$s),
+          (Op
+            (Op
+              PairedReg:$ACC,
+              (INSF (v2f32(EXTRACT_SUBREG $LHS, sub_s0)), (v2f32(EXTRACT_SUBREG $LHS, sub_s1)), 63, 32),
+              (INSF (v2f32(EXTRACT_SUBREG $RHS, sub_s0)), (v2f32(EXTRACT_SUBREG $RHS, sub_s1)), 63, 32),
+              RoundingMod:$r, SilentMod:$s
+            ),
+            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $LHS, sub_s0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $LHS, sub_s1)), -4294967296)),
+            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $RHS, sub_s0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $RHS, sub_s1)), -4294967296)),
+            RoundingMod:$r, SilentMod:$s)>;
+
+def : Pat<(Node v4f32:$ACC, (int_matrix_multiply (v4f32 (int_matrix_transpose v4f32:$LHS, 2, 2)), (v4f32 (int_matrix_transpose v4f32:$RHS, 2, 2)), 2, 2, 2)),
+          (Op
+            (Op
+              PairedReg:$ACC,
+              (v2f32(EXTRACT_SUBREG $LHS, sub_s0)),
+              (INSF (v2f32(EXTRACT_SUBREG $RHS, sub_s0)), (v2f32(EXTRACT_SUBREG $RHS, sub_s1)), 63, 32),
+              rounding_, silent_
+            ),
+            (v2f32(EXTRACT_SUBREG $LHS, sub_s1)),
+            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $RHS, sub_s0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $RHS, sub_s1)), -4294967296)),
+            rounding_, silent_)>;
+
+def : Pat<(KVX_Int v4f32:$LHS, v4f32:$RHS, v4f32:$ACC, 3, i32:$r, i32:$s),
+          (Op
+            (Op
+              PairedReg:$ACC,
+              (v2f32(EXTRACT_SUBREG $LHS, sub_s0)),
+              (INSF (v2f32(EXTRACT_SUBREG $RHS, sub_s0)), (v2f32(EXTRACT_SUBREG $RHS, sub_s1)), 63, 32),
+              RoundingMod:$r, SilentMod:$s
+            ),
+            (v2f32(EXTRACT_SUBREG $LHS, sub_s1)),
+            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $RHS, sub_s0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $RHS, sub_s1)), -4294967296)),
+            RoundingMod:$r, SilentMod:$s)>;
+}
+
+defm : FMMAS222W_CV1<faddcont, FMMA212W, int_kvx_fmma222w>, Requires<[IsV1]>;
+defm : FMMAS222W_CV1<fsubcont, FMMS212W, int_kvx_fmms222w>, Requires<[IsV1]>;
+// ----------------------- To fix END  -----------------------

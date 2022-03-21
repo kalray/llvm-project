@@ -121,3 +121,9 @@ def splat32_at : Splat32<1>;
 class Conjugate<int N> : PatLeaf<(i32 N)>;
 def conjugate_ : Conjugate<0>;
 def conjugate_c : Conjugate<1>;
+
+class Transpose<int N> : PatLeaf<(i32 N)>;
+def transpose_nn : Transpose<0>;
+def transpose_tn : Transpose<1>;
+def transpose_nt : Transpose<2>;
+def transpose_tt : Transpose<3>;

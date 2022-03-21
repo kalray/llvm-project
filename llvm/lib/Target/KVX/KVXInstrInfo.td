@@ -1655,6 +1655,23 @@ multiclass MC_36<string OpcStr> {
      [/* no straightforward pattern */]>;
 }
 
+// def FMM222W
+class FP_PairedReg_PairedReg_PairedReg_Transp_Round_Silent <string OpcStr, InstrItinClass It>
+: ROUNDING_SILENT_TRANSPOSE_REGISTERM_REGISTERO_REGISTERP
+    <(outs PairedReg:$M), (ins PairedReg:$O, PairedReg:$P, TransposeMod:$t, RoundingMod:$r, SilentMod:$s),
+     !strconcat (OpcStr, "$t$r$s $M = $O, $P"), It>
+{}
+
+// def FMMA222W
+// def FMMS222W
+class FP_PairedReg_PairedReg_PairedReg_Transp_Round_Silent_Accumulate <string OpcStr, InstrItinClass It>
+: ROUNDING_SILENT_TRANSPOSE_REGISTERM_REGISTERO_REGISTERP
+    <(outs PairedReg:$M_Out), (ins PairedReg:$O, PairedReg:$P, PairedReg:$M_In, TransposeMod:$t, RoundingMod:$r, SilentMod:$s),
+     !strconcat (OpcStr, "$t$r$s $M_Out = $O, $P"), It>
+{
+  let Constraints = "$M_Out = $M_In";
+}
+
 
 def AWAIT : SIMPLE
   <(outs), (ins),
@@ -3218,6 +3235,7 @@ defm FMULCWDC : MC_2C<"fmulcwdc">;
 let isAdd = 1 in
 defm FADDD : MC_29<"faddd">;
 
+let isAdd = 1 in
 defm FADDWP : MC_2AM<"faddwp">;
 
 let isAdd = 1 in
@@ -3618,3 +3636,12 @@ defm COPYV : MC_35<"copyv">;
 defm MOVEFO : MC_36<"movefo">;
 
 defm ABDSW : MC_16<"abdsw">;
+
+def FMM222W : FP_PairedReg_PairedReg_PairedReg_Transp_Round_Silent
+  <"fmm222w", MAU_FP>;
+
+def FMMA222W : FP_PairedReg_PairedReg_PairedReg_Transp_Round_Silent_Accumulate
+  <"fmma222w", MAU_AUXR_FP>;
+
+def FMMS222W : FP_PairedReg_PairedReg_PairedReg_Transp_Round_Silent_Accumulate
+  <"fmms222w", MAU_AUXR_FP>;
