@@ -12437,7 +12437,7 @@ private:
   bool CheckPPCMMAType(QualType Type, SourceLocation TypeLoc);
 
   bool SemaBuiltinElementwiseMath(CallExpr *TheCall);
-  bool SemaBuiltinElementwiseMathOneArg(CallExpr *TheCall);
+  bool PrepareBuiltinElementwiseMathOneArgCall(CallExpr *TheCall);
   bool SemaBuiltinReduceMath(CallExpr *TheCall);
 
   // Matrix builtin handling.
