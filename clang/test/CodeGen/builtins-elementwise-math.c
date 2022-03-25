@@ -11,7 +11,7 @@ bar b;
 void test_builtin_elementwise_abs(float f1, float f2, double d1, double d2,
                                   float4 vf1, float4 vf2, si8 vi1, si8 vi2,
                                   long long int i1, long long int i2, short si) {
-  // CHECK-LABEL: define void @test_builtin_elementwise_abs(
+  // CHECK-LABEL: define dso_local void @test_builtin_elementwise_abs(
   // CHECK:      [[F1:%.+]] = load float, float* %f1.addr, align 4
   // CHECK-NEXT:  call float @llvm.fabs.f32(float [[F1]])
   f2 = __builtin_elementwise_abs(f1);
@@ -55,7 +55,7 @@ void test_builtin_elementwise_max(float f1, float f2, double d1, double d2,
                                   float4 vf1, float4 vf2, long long int i1,
                                   long long int i2, si8 vi1, si8 vi2,
                                   unsigned u1, unsigned u2, u4 vu1, u4 vu2) {
-  // CHECK-LABEL: define void @test_builtin_elementwise_max(
+  // CHECK-LABEL: define dso_local void @test_builtin_elementwise_max(
   // CHECK:      [[F1:%.+]] = load float, float* %f1.addr, align 4
   // CHECK-NEXT: [[F2:%.+]] = load float, float* %f2.addr, align 4
   // CHECK-NEXT:  call float @llvm.maxnum.f32(float %0, float %1)
@@ -123,7 +123,7 @@ void test_builtin_elementwise_min(float f1, float f2, double d1, double d2,
                                   float4 vf1, float4 vf2, long long int i1,
                                   long long int i2, si8 vi1, si8 vi2,
                                   unsigned u1, unsigned u2, u4 vu1, u4 vu2) {
-  // CHECK-LABEL: define void @test_builtin_elementwise_min(
+  // CHECK-LABEL: define dso_local void @test_builtin_elementwise_min(
   // CHECK:      [[F1:%.+]] = load float, float* %f1.addr, align 4
   // CHECK-NEXT: [[F2:%.+]] = load float, float* %f2.addr, align 4
   // CHECK-NEXT:  call float @llvm.minnum.f32(float %0, float %1)
@@ -193,7 +193,7 @@ void test_builtin_elementwise_min(float f1, float f2, double d1, double d2,
 void test_builtin_elementwise_ceil(float f1, float f2, double d1, double d2,
                                    float4 vf1, float4 vf2, si8 vi1, si8 vi2,
                                    long long int i1, long long int i2, short si) {
-  // CHECK-LABEL: define void @test_builtin_elementwise_ceil(
+  // CHECK-LABEL: define dso_local void @test_builtin_elementwise_ceil(
   // CHECK:      [[F1:%.+]] = load float, float* %f1.addr, align 4
   // CHECK-NEXT:  call float @llvm.ceil.f32(float [[F1]])
   f2 = __builtin_elementwise_ceil(f1);
@@ -209,7 +209,7 @@ void test_builtin_elementwise_ceil(float f1, float f2, double d1, double d2,
 
 void test_builtin_elementwise_floor(float f1, float f2, double d1, double d2,
                                     float4 vf1, float4 vf2) {
-  // CHECK-LABEL: define void @test_builtin_elementwise_floor(
+  // CHECK-LABEL: define dso_local void @test_builtin_elementwise_floor(
   // CHECK:      [[F1:%.+]] = load float, float* %f1.addr, align 4
   // CHECK-NEXT:  call float @llvm.floor.f32(float [[F1]])
   f2 = __builtin_elementwise_floor(f1);
@@ -225,7 +225,7 @@ void test_builtin_elementwise_floor(float f1, float f2, double d1, double d2,
 
 void test_builtin_elementwise_roundeven(float f1, float f2, double d1, double d2,
                                         float4 vf1, float4 vf2) {
-  // CHECK-LABEL: define void @test_builtin_elementwise_roundeven(
+  // CHECK-LABEL: define dso_local void @test_builtin_elementwise_roundeven(
   // CHECK:      [[F1:%.+]] = load float, float* %f1.addr, align 4
   // CHECK-NEXT:  call float @llvm.roundeven.f32(float [[F1]])
   f2 = __builtin_elementwise_roundeven(f1);
@@ -241,7 +241,7 @@ void test_builtin_elementwise_roundeven(float f1, float f2, double d1, double d2
 
 void test_builtin_elementwise_trunc(float f1, float f2, double d1, double d2,
                                     float4 vf1, float4 vf2) {
-  // CHECK-LABEL: define void @test_builtin_elementwise_trunc(
+  // CHECK-LABEL: define dso_local void @test_builtin_elementwise_trunc(
   // CHECK:      [[F1:%.+]] = load float, float* %f1.addr, align 4
   // CHECK-NEXT:  call float @llvm.trunc.f32(float [[F1]])
   f2 = __builtin_elementwise_trunc(f1);

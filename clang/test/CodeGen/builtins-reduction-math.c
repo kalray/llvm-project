@@ -7,7 +7,7 @@ typedef unsigned int u4 __attribute__((ext_vector_type(4)));
 __attribute__((address_space(1))) float4 vf1_as_one;
 
 void test_builtin_reduce_max(float4 vf1, si8 vi1, u4 vu1) {
-  // CHECK-LABEL: define void @test_builtin_reduce_max(
+  // CHECK-LABEL: define dso_local void @test_builtin_reduce_max(
   // CHECK:      [[VF1:%.+]] = load <4 x float>, <4 x float>* %vf1.addr, align 16
   // CHECK-NEXT: call float @llvm.vector.reduce.fmax.v4f32(<4 x float> [[VF1]])
   float r1 = __builtin_reduce_max(vf1);
@@ -33,7 +33,7 @@ void test_builtin_reduce_max(float4 vf1, si8 vi1, u4 vu1) {
 }
 
 void test_builtin_reduce_min(float4 vf1, si8 vi1, u4 vu1) {
-  // CHECK-LABEL: define void @test_builtin_reduce_min(
+  // CHECK-LABEL: define dso_local void @test_builtin_reduce_min(
   // CHECK:      [[VF1:%.+]] = load <4 x float>, <4 x float>* %vf1.addr, align 16
   // CHECK-NEXT: call float @llvm.vector.reduce.fmin.v4f32(<4 x float> [[VF1]])
   float r1 = __builtin_reduce_min(vf1);
