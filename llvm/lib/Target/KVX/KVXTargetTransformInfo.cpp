@@ -20,6 +20,10 @@
 using namespace llvm;
 #define DEBUG_TYPE "KVXTTI"
 
+static cl::opt<unsigned> MinHwLoopTripCount(
+    "min-hwloop-trip-count", cl::Hidden, cl::init(5),
+    cl::desc("Set the minimum trip count for a profitable hardware loop"));
+
 bool KVXTTIImpl::isLoweredToCall(const CallInst &CI) {
   if (const Function *F = CI.getCalledFunction()) {
     if (!F->isIntrinsic())
@@ -100,6 +104,22 @@ bool KVXTTIImpl::isHardwareLoopProfitableCheck(Loop *L, ScalarEvolution &SE) {
 
   if (SE.getUnsignedRangeMax(TripCountSCEV).getBitWidth() > 64)
     return false;
+
+  // Avoid hardware loops if tripcount is known at compile time and is less or
+  // equal than 5 in which case a conventional loop using a compare and a branch
+  // instruction would cost less than a loopdo instruction which takes 5 cycles
+  // to initialize
+  if ((TripCountSCEV->getSCEVType() == scConstant) &&
+      (!cast<SCEVConstant>(TripCountSCEV)
+            ->getValue()
+            ->uge(MinHwLoopTripCount))) {
+    LLVM_DEBUG(dbgs() << "This loop has a Trip Count smaller than "
+                      << MinHwLoopTripCount
+                      << ". It will "
+                         "not be profitable to make a hardware loop of it : "
+                      << *TripCountSCEV << ".\n");
+    return false;
+  }
 
   // Avoid hardware loops if there is a call inside
   auto MaybeCall = [this](Instruction &I) {
