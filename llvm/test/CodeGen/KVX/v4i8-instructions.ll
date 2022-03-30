@@ -1108,6 +1108,57 @@ define <4 x i8> @abdbo_ri(<4 x i8> %0) {
   ret <4 x i8> %3
 }
 
+define <4 x i8> @add_splat_const_op1(<4 x i8> %vx) #0 {
+; CV1-LABEL: add_splat_const_op1:
+; CV1:       # %bb.0:
+; CV1-NEXT:    sxlbhq $r0 = $r0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    addhq.@ $r0 = $r0, 0x2a002a
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sbmm8 $r0 = $r0, 0x1010101
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: add_splat_const_op1:
+; CV2:       # %bb.0:
+; CV2-NEXT:    addbo $r0 = $r0, 0x2a2a2a2a
+; CV2-NEXT:    ;;
+; CV2-NEXT:    sbmm8 $r0 = $r0, 0x1010101
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
+  %splatx = shufflevector <4 x i8> %vx, <4 x i8> undef, <4 x i32> zeroinitializer
+  %r = add <4 x i8> %splatx, <i8 42, i8 42, i8 42, i8 42>
+  ret <4 x i8> %r
+}
+
+define <4 x i8> @add_splat_splat(<4 x i8> %vx, <4 x i8> %vy) #0 {
+; CV1-LABEL: add_splat_splat:
+; CV1:       # %bb.0:
+; CV1-NEXT:    sxlbhq $r1 = $r1
+; CV1-NEXT:    sxlbhq $r0 = $r0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    addhq $r0 = $r0, $r1
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sbmm8 $r0 = $r0, 0x1010101
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: add_splat_splat:
+; CV2:       # %bb.0:
+; CV2-NEXT:    addbo $r0 = $r0, $r1
+; CV2-NEXT:    ;;
+; CV2-NEXT:    sbmm8 $r0 = $r0, 0x1010101
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
+  %splatx = shufflevector <4 x i8> %vx, <4 x i8> undef, <4 x i32> zeroinitializer
+  %splaty = shufflevector <4 x i8> %vy, <4 x i8> undef, <4 x i32> zeroinitializer
+  %r = add <4 x i8> %splatx, %splaty
+  ret <4 x i8> %r
+}
 declare <4 x i8> @llvm.smax.v4i8(<4 x i8> %a, <4 x i8> %b)
 declare <4 x i8> @llvm.smin.v4i8(<4 x i8> %a, <4 x i8> %b)
 declare <4 x i8> @llvm.umax.v4i8(<4 x i8> %a, <4 x i8> %b)

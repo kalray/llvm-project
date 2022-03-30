@@ -1068,6 +1068,11 @@ def : Pat<(v4i16 (build_vector i32:$v0, i32:$v1, i32:$v2, (i32 undef))),
           (INSF (INSF SingleReg:$v0, SingleReg:$v1, 31, 16), SingleReg:$v2, 47, 32)>;
 
 // v4i8
+def : Pat<(v4i8 (v4_splat i32:$v)),
+          (SBMM8ri64 SingleReg:$v, 0x01010101)>;
+def : Pat<(v4i8 (v4_splat (i32 (vector_extract v4i8:$v, 0)))),
+          (SBMM8ri64 SingleReg:$v, 0x01010101)>;
+
 def : Pat<(v4i8 (is_imm_vec:$IMM)), (MAKEi43 (build_imm_vec $IMM))>;
 def : Pat<(v4i8 (build_vector i32:$v0, i32:$v1, i32:$v2, i32:$v3)),
           (INSF (INSF SingleReg:$v0, SingleReg:$v1, 15, 8), (INSF SingleReg:$v2, SingleReg:$v3, 15, 8), 31, 16)>;

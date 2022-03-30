@@ -1715,4 +1715,24 @@ declare <4 x i16> @llvm.smin.v4i16(<4 x i16> %a, <4 x i16> %b)
 declare <4 x i16> @llvm.umax.v4i16(<4 x i16> %a, <4 x i16> %b)
 declare <4 x i16> @llvm.umin.v4i16(<4 x i16> %a, <4 x i16> %b)
 
+define <4 x i16> @add_splat_const_op1(<4 x i16> %vx) #0 {
+; CHECK-LABEL: add_splat_const_op1:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    addhq.@ $r0 = $r0, 0x2a002a
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x201020102010201
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+;
+; V2-LABEL: add_splat_const_op1:
+; V2:       # %bb.0:
+; V2-NEXT:    addhq.@ $r0 = $r0, 0x2a002a
+; V2-NEXT:    ;;
+; V2-NEXT:    sbmm8 $r0 = $r0, 0x201020102010201
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+  %splatx = shufflevector <4 x i16> %vx, <4 x i16> undef, <4 x i32> zeroinitializer
+  %r = add <4 x i16> %splatx, <i16 42, i16 42, i16 42, i16 42>
+  ret <4 x i16> %r
+}
 attributes #0 = { nounwind }
