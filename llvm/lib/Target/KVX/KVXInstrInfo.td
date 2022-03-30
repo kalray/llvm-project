@@ -846,6 +846,7 @@ multiclass MC_15<string OpcStr> {
 }
 
 // multiclass MC_16 is used by:
+//   defm ABDSBO
 //   defm ADDBO
 //   defm ADDHQ
 //   defm ADDWP
@@ -3635,7 +3636,13 @@ defm COPYV : MC_35<"copyv">;
 
 defm MOVEFO : MC_36<"movefo">;
 
-defm ABDSW : MC_16<"abdsw">;
+// TODO: Marking as commutable should allow patterns to
+// match rhs or lhs immediates, but that does not seem
+// to work as it does with isAdd attribute.
+let isCommutable = 1 in {
+defm ABDSBO : MC_16<"abdsbo">, Requires<[IsV2]>;
+defm ABDSW  : MC_16<"abdsw">,  Requires<[IsV2]>;
+}
 
 def FMM222W : FP_PairedReg_PairedReg_PairedReg_Transp_Round_Silent
   <"fmm222w", MAU_FP>;

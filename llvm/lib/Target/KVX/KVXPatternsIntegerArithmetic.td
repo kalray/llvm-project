@@ -98,6 +98,18 @@ def : Pat<(v4i16 (abs (sub (v4i16 (is_imm_vec_kvx_splat32_:$IMM)), v4i16:$rhs)))
 def : Pat<(v4i16 (abs (sub (v4i16 (is_imm_vec_kvx_splat32_at:$IMM)), v4i16:$rhs))), (v4i16 (ABDHQri SingleReg:$rhs, (build_imm_vec $IMM), splat32_at ) )>;
 def : Pat<(v4i16 (abs (sub v4i16:$lhs, v4i16:$rhs))), (v4i16 (ABDHQrr SingleReg:$rhs, SingleReg:$lhs))>;
 
+// ABDSBO
+foreach vt = [v2i8, v4i8] in {
+def : Pat<(vt (abs (ssubsat (vt (is_imm_vec_kvx_splat32_:$IMM)), vt:$rhs))), (vt (ABDSBOri SingleReg:$rhs, (build_imm_vec $IMM), splat32_ ) )>, Requires<[IsV2]>;
+def : Pat<(vt (abs (ssubsat vt:$rhs, (vt (is_imm_vec_kvx_splat32_:$IMM))))), (vt (ABDSBOri SingleReg:$rhs, (build_imm_vec $IMM), splat32_ ) )>, Requires<[IsV2]>;
+def : Pat<(vt (abs (ssubsat vt:$rhs, vt:$lhs))), (vt(ABDSBOrr SingleReg:$rhs, SingleReg:$lhs))>, Requires<[IsV2]>;
+}
+def : Pat<(v8i8 (abs (ssubsat v8i8:$lhs, (v8i8 (is_imm_vec_kvx_splat32_:$IMM))))), (v8i8 (ABDSBOri SingleReg:$lhs, (build_imm_vec $IMM), splat32_ ) )>, Requires<[IsV2]>;
+def : Pat<(v8i8 (abs (ssubsat (v8i8 (is_imm_vec_kvx_splat32_:$IMM)), v8i8:$rhs))), (v8i8 (ABDSBOri SingleReg:$rhs, (build_imm_vec $IMM), splat32_ ) )>, Requires<[IsV2]>;
+def : Pat<(v8i8 (abs (ssubsat v8i8:$lhs,  (v8i8 (is_imm_vec_kvx_splat32_at:$IMM))))), (v8i8 (ABDSBOri SingleReg:$lhs, (build_imm_vec $IMM), splat32_at ) )>, Requires<[IsV2]>;
+def : Pat<(v8i8 (abs (ssubsat (v8i8 (is_imm_vec_kvx_splat32_at:$IMM)), v8i8:$rhs))), (v8i8 (ABDSBOri SingleReg:$rhs, (build_imm_vec $IMM), splat32_at ) )>, Requires<[IsV2]>;
+def : Pat<(v8i8 (abs (ssubsat v8i8:$rhs, v8i8:$lhs))), (v8i8(ABDSBOrr SingleReg:$rhs, SingleReg:$lhs))>, Requires<[IsV2]>;
+
 // ABDSW
 def : Pat<(i32 (trunc (i64 (umin (abs (sub Wrapped64W:$lhs, (sext (i32 SingleReg:$rhs)))), 2147483647)))), (i32 (ABDSWri SingleReg:$rhs, (trunc_imm_32 $lhs), splat32_))>, Requires<[IsV2]>;
 def : Pat<(i32 (trunc (i64 (umin (abs (sub (sext(i32 SingleReg:$lhs)), (sext (i32 SingleReg:$rhs)))), 2147483647)))), (i32 (ABDSWrr SingleReg:$rhs, SingleReg:$lhs))>, Requires<[IsV2]>;

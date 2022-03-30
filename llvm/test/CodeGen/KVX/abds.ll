@@ -5,6 +5,15 @@ target triple = "kvx-kalray-cos"
 
 declare i64 @llvm.abs.i64(i64, i1 immarg)
 
+declare <8 x i8> @llvm.abs.v8i8(<8 x i8>, i1)
+declare <8 x i8> @llvm.ssub.sat.v8i8(<8 x i8>, <8 x i8>)
+
+declare <4 x i8> @llvm.abs.v4i8(<4 x i8>, i1)
+declare <4 x i8> @llvm.ssub.sat.v4i8(<4 x i8>, <4 x i8>)
+
+declare <2 x i8> @llvm.abs.v2i8(<2 x i8>, i1)
+declare <2 x i8> @llvm.ssub.sat.v2i8(<2 x i8>, <2 x i8>)
+
 define i32 @ABDSWrr(i32 %0, i32 %1) {
 ; V1-LABEL: ABDSWrr:
 ; V1:       # %bb.0:
@@ -55,4 +64,439 @@ define i32 @ABDSWri(i32 %0) {
   %6 = select i1 %5, i64 %4, i64 2147483647
   %7 = trunc i64 %6 to i32
   ret i32 %7
+}
+
+define <8 x i8> @v8i8abds_rr(<8 x i8> %0, <8 x i8> %1) #0 {
+; V1-LABEL: v8i8abds_rr:
+; V1:       # %bb.0:
+; V1-NEXT:    sbmm8 $r2 = $r0, 0x4000200004000100
+; V1-NEXT:    sbmm8 $r3 = $r1, 0x4000200004000100
+; V1-NEXT:    ;;
+; V1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
+; V1-NEXT:    andd $r1 = $r1, 0xff00ff00ff00ff00
+; V1-NEXT:    ;;
+; V1-NEXT:    sbfshq $r0 = $r1, $r0
+; V1-NEXT:    sbfshq $r2 = $r3, $r2
+; V1-NEXT:    ;;
+; V1-NEXT:    srlhqs $r1 = $r2, 8
+; V1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
+; V1-NEXT:    ;;
+; V1-NEXT:    ord $r0 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    sxmbhq $r1 = $r0
+; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    abshq $r1 = $r1
+; V1-NEXT:    abshq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sbmm8 $r1 = $r1, 0x40100401
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
+; V1-NEXT:    ;;
+; V1-NEXT:    insf $r0 = $r1, 32, 63
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: v8i8abds_rr:
+; V2:       # %bb.0:
+; V2-NEXT:    abdsbo $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+  %3 = tail call <8 x i8> @llvm.ssub.sat.v8i8(<8 x i8> %0, <8 x i8> %1)
+  %4 = tail call <8 x i8> @llvm.abs.v8i8(<8 x i8> %3, i1 false)
+  ret <8 x i8> %4
+}
+
+define <8 x i8> @v8i8abds_ri_(<8 x i8> %0) #0 {
+; V1-LABEL: v8i8abds_ri_:
+; V1:       # %bb.0:
+; V1-NEXT:    make $r1 = 0x1004ff01
+; V1-NEXT:    sbmm8 $r2 = $r0, 0x4000200004000100
+; V1-NEXT:    ;;
+; V1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
+; V1-NEXT:    sbmm8 $r3 = $r1, 0x4000200004000100
+; V1-NEXT:    ;;
+; V1-NEXT:    andd $r1 = $r1, 0xff00ff00ff00ff00
+; V1-NEXT:    ;;
+; V1-NEXT:    sbfshq $r0 = $r1, $r0
+; V1-NEXT:    sbfshq $r2 = $r3, $r2
+; V1-NEXT:    ;;
+; V1-NEXT:    srlhqs $r1 = $r2, 8
+; V1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
+; V1-NEXT:    ;;
+; V1-NEXT:    ord $r0 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    sxmbhq $r1 = $r0
+; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    abshq $r1 = $r1
+; V1-NEXT:    abshq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sbmm8 $r1 = $r1, 0x40100401
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
+; V1-NEXT:    ;;
+; V1-NEXT:    insf $r0 = $r1, 32, 63
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: v8i8abds_ri_:
+; V2:       # %bb.0:
+; V2-NEXT:    abdsbo $r0 = $r0, 0x1004ff01
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+  %2 = tail call <8 x i8> @llvm.ssub.sat.v8i8(<8 x i8> %0, <8 x i8> <i8 1, i8 -1, i8 4, i8 16, i8 0, i8 0, i8 0, i8 0>)
+  %3 = tail call <8 x i8> @llvm.abs.v8i8(<8 x i8> %2, i1 false)
+  ret <8 x i8> %3
+}
+
+define <8 x i8> @v8i8abds_ri_at(<8 x i8> %0) #0 {
+; V1-LABEL: v8i8abds_ri_at:
+; V1:       # %bb.0:
+; V1-NEXT:    make $r1 = 0x1004ff011004ff01
+; V1-NEXT:    sbmm8 $r2 = $r0, 0x4000200004000100
+; V1-NEXT:    ;;
+; V1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
+; V1-NEXT:    sbmm8 $r3 = $r1, 0x4000200004000100
+; V1-NEXT:    ;;
+; V1-NEXT:    andd $r1 = $r1, 0xff00ff00ff00ff00
+; V1-NEXT:    ;;
+; V1-NEXT:    sbfshq $r0 = $r1, $r0
+; V1-NEXT:    sbfshq $r2 = $r3, $r2
+; V1-NEXT:    ;;
+; V1-NEXT:    srlhqs $r1 = $r2, 8
+; V1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
+; V1-NEXT:    ;;
+; V1-NEXT:    ord $r0 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    sxmbhq $r1 = $r0
+; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    abshq $r1 = $r1
+; V1-NEXT:    abshq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sbmm8 $r1 = $r1, 0x40100401
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
+; V1-NEXT:    ;;
+; V1-NEXT:    insf $r0 = $r1, 32, 63
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: v8i8abds_ri_at:
+; V2:       # %bb.0:
+; V2-NEXT:    abdsbo.@ $r0 = $r0, 0x1004ff01
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+  %2 = tail call <8 x i8> @llvm.ssub.sat.v8i8(<8 x i8> %0, <8 x i8> <i8 1, i8 -1, i8 4, i8 16, i8 1, i8 -1, i8 4, i8 16>)
+  %3 = tail call <8 x i8> @llvm.abs.v8i8(<8 x i8> %2, i1 false)
+  ret <8 x i8> %3
+}
+
+define <8 x i8> @v8i8abds_ri_at_2(<8 x i8> %0) #0 {
+; V1-LABEL: v8i8abds_ri_at_2:
+; V1:       # %bb.0:
+; V1-NEXT:    make $r1 = 0x1004ff011004ff01
+; V1-NEXT:    sbmm8 $r3 = $r0, 0x4000200004000100
+; V1-NEXT:    ;;
+; V1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
+; V1-NEXT:    sbmm8 $r2 = $r1, 0x4000200004000100
+; V1-NEXT:    ;;
+; V1-NEXT:    andd $r1 = $r1, 0xff00ff00ff00ff00
+; V1-NEXT:    ;;
+; V1-NEXT:    sbfshq $r0 = $r0, $r1
+; V1-NEXT:    sbfshq $r2 = $r3, $r2
+; V1-NEXT:    ;;
+; V1-NEXT:    srlhqs $r1 = $r2, 8
+; V1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
+; V1-NEXT:    ;;
+; V1-NEXT:    ord $r0 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    sxmbhq $r1 = $r0
+; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    abshq $r1 = $r1
+; V1-NEXT:    abshq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sbmm8 $r1 = $r1, 0x40100401
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
+; V1-NEXT:    ;;
+; V1-NEXT:    insf $r0 = $r1, 32, 63
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: v8i8abds_ri_at_2:
+; V2:       # %bb.0:
+; V2-NEXT:    abdsbo.@ $r0 = $r0, 0x1004ff01
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+  %2 = tail call <8 x i8> @llvm.ssub.sat.v8i8(<8 x i8> <i8 1, i8 -1, i8 4, i8 16, i8 1, i8 -1, i8 4, i8 16>, <8 x i8> %0)
+  %3 = tail call <8 x i8> @llvm.abs.v8i8(<8 x i8> %2, i1 false)
+  ret <8 x i8> %3
+}
+
+define <4 x i8> @v4i8abds_rr(<4 x i8> %0, <4 x i8> %1) {
+; V1-LABEL: v4i8abds_rr:
+; V1:       # %bb.0:
+; V1-NEXT:    srlw $r2 = $r0, 24
+; V1-NEXT:    srlw $r3 = $r1, 24
+; V1-NEXT:    extfz $r4 = $r0, 23, 16
+; V1-NEXT:    extfz $r6 = $r0, 15, 8
+; V1-NEXT:    ;;
+; V1-NEXT:    extfz $r5 = $r1, 23, 16
+; V1-NEXT:    extfz $r7 = $r1, 15, 8
+; V1-NEXT:    zxbd $r0 = $r0
+; V1-NEXT:    zxbd $r1 = $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    sllw $r2 = $r2, 24
+; V1-NEXT:    sllw $r3 = $r3, 24
+; V1-NEXT:    sllw $r4 = $r4, 24
+; V1-NEXT:    sllw $r6 = $r6, 24
+; V1-NEXT:    ;;
+; V1-NEXT:    sllw $r5 = $r5, 24
+; V1-NEXT:    sllw $r7 = $r7, 24
+; V1-NEXT:    sllw $r0 = $r0, 24
+; V1-NEXT:    sllw $r1 = $r1, 24
+; V1-NEXT:    ;;
+; V1-NEXT:    sbfsw $r2 = $r3, $r2
+; V1-NEXT:    sbfsw $r0 = $r1, $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sbfsw $r3 = $r5, $r4
+; V1-NEXT:    sbfsw $r4 = $r7, $r6
+; V1-NEXT:    sraw $r1 = $r2, 24
+; V1-NEXT:    ;;
+; V1-NEXT:    sraw $r2 = $r3, 24
+; V1-NEXT:    sraw $r0 = $r0, 24
+; V1-NEXT:    sraw $r3 = $r4, 24
+; V1-NEXT:    ;;
+; V1-NEXT:    insf $r2 = $r1, 15, 8
+; V1-NEXT:    insf $r0 = $r3, 15, 8
+; V1-NEXT:    ;;
+; V1-NEXT:    insf $r0 = $r2, 31, 16
+; V1-NEXT:    ;;
+; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    abshq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: v4i8abds_rr:
+; V2:       # %bb.0:
+; V2-NEXT:    abdsbo $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+  %3 = tail call <4 x i8> @llvm.ssub.sat.v4i8(<4 x i8> %0, <4 x i8> %1)
+  %4 = tail call <4 x i8> @llvm.abs.v4i8(<4 x i8> %3, i1 false)
+  ret <4 x i8> %4
+}
+
+define <4 x i8> @v4i8abds_ri_(<4 x i8> %0) {
+; V1-LABEL: v4i8abds_ri_:
+; V1:       # %bb.0:
+; V1-NEXT:    srlw $r1 = $r0, 24
+; V1-NEXT:    extfz $r2 = $r0, 23, 16
+; V1-NEXT:    extfz $r3 = $r0, 15, 8
+; V1-NEXT:    zxbd $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    make $r4 = 0x10000000
+; V1-NEXT:    make $r5 = 0x4000000
+; V1-NEXT:    make $r6 = 0xff000000
+; V1-NEXT:    make $r7 = 0x1000000
+; V1-NEXT:    ;;
+; V1-NEXT:    sllw $r1 = $r1, 24
+; V1-NEXT:    sllw $r2 = $r2, 24
+; V1-NEXT:    sllw $r3 = $r3, 24
+; V1-NEXT:    sllw $r0 = $r0, 24
+; V1-NEXT:    ;;
+; V1-NEXT:    sbfsw $r1 = $r4, $r1
+; V1-NEXT:    sbfsw $r2 = $r5, $r2
+; V1-NEXT:    ;;
+; V1-NEXT:    sbfsw $r3 = $r6, $r3
+; V1-NEXT:    sbfsw $r0 = $r7, $r0
+; V1-NEXT:    sraw $r1 = $r1, 24
+; V1-NEXT:    sraw $r2 = $r2, 24
+; V1-NEXT:    ;;
+; V1-NEXT:    sraw $r3 = $r3, 24
+; V1-NEXT:    sraw $r0 = $r0, 24
+; V1-NEXT:    insf $r2 = $r1, 15, 8
+; V1-NEXT:    ;;
+; V1-NEXT:    insf $r0 = $r3, 15, 8
+; V1-NEXT:    ;;
+; V1-NEXT:    insf $r0 = $r2, 31, 16
+; V1-NEXT:    ;;
+; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    abshq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: v4i8abds_ri_:
+; V2:       # %bb.0:
+; V2-NEXT:    abdsbo $r0 = $r0, 0x1004ff01
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+  %2 = tail call <4 x i8> @llvm.ssub.sat.v4i8(<4 x i8> %0, <4 x i8> <i8 1, i8 -1, i8 4, i8 16>)
+  %3 = tail call <4 x i8> @llvm.abs.v4i8(<4 x i8> %2, i1 false)
+  ret <4 x i8> %3
+}
+
+define <4 x i8> @v4i8abds_ri_2(<4 x i8> %0) {
+; V1-LABEL: v4i8abds_ri_2:
+; V1:       # %bb.0:
+; V1-NEXT:    srlw $r1 = $r0, 24
+; V1-NEXT:    extfz $r2 = $r0, 23, 16
+; V1-NEXT:    extfz $r3 = $r0, 15, 8
+; V1-NEXT:    zxbd $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sllw $r1 = $r1, 24
+; V1-NEXT:    sllw $r2 = $r2, 24
+; V1-NEXT:    sllw $r3 = $r3, 24
+; V1-NEXT:    sllw $r0 = $r0, 24
+; V1-NEXT:    ;;
+; V1-NEXT:    sbfsw $r1 = $r1, 0x10000000
+; V1-NEXT:    sbfsw $r2 = $r2, 0x4000000
+; V1-NEXT:    ;;
+; V1-NEXT:    sbfsw $r3 = $r3, 0xff000000
+; V1-NEXT:    sbfsw $r0 = $r0, 0x1000000
+; V1-NEXT:    sraw $r1 = $r1, 24
+; V1-NEXT:    sraw $r2 = $r2, 24
+; V1-NEXT:    ;;
+; V1-NEXT:    sraw $r3 = $r3, 24
+; V1-NEXT:    sraw $r0 = $r0, 24
+; V1-NEXT:    insf $r2 = $r1, 15, 8
+; V1-NEXT:    ;;
+; V1-NEXT:    insf $r0 = $r3, 15, 8
+; V1-NEXT:    ;;
+; V1-NEXT:    insf $r0 = $r2, 31, 16
+; V1-NEXT:    ;;
+; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    abshq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: v4i8abds_ri_2:
+; V2:       # %bb.0:
+; V2-NEXT:    abdsbo $r0 = $r0, 0x1004ff01
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+  %2 = tail call <4 x i8> @llvm.ssub.sat.v4i8(<4 x i8> <i8 1, i8 -1, i8 4, i8 16>, <4 x i8> %0)
+  %3 = tail call <4 x i8> @llvm.abs.v4i8(<4 x i8> %2, i1 false)
+  ret <4 x i8> %3
+}
+
+define <2 x i8> @v2i8abds_rr(<2 x i8> %0, <2 x i8> %1) {
+; V1-LABEL: v2i8abds_rr:
+; V1:       # %bb.0:
+; V1-NEXT:    extfz $r2 = $r0, 15, 8
+; V1-NEXT:    extfz $r3 = $r1, 15, 8
+; V1-NEXT:    zxbd $r0 = $r0
+; V1-NEXT:    zxbd $r1 = $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    sllw $r2 = $r2, 24
+; V1-NEXT:    sllw $r3 = $r3, 24
+; V1-NEXT:    sllw $r0 = $r0, 24
+; V1-NEXT:    sllw $r1 = $r1, 24
+; V1-NEXT:    ;;
+; V1-NEXT:    sbfsw $r0 = $r1, $r0
+; V1-NEXT:    sbfsw $r2 = $r3, $r2
+; V1-NEXT:    ;;
+; V1-NEXT:    sraw $r1 = $r2, 24
+; V1-NEXT:    sraw $r0 = $r0, 24
+; V1-NEXT:    ;;
+; V1-NEXT:    insf $r0 = $r1, 15, 8
+; V1-NEXT:    ;;
+; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    abshq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x401
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: v2i8abds_rr:
+; V2:       # %bb.0:
+; V2-NEXT:    abdsbo $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+  %3 = tail call <2 x i8> @llvm.ssub.sat.v2i8(<2 x i8> %0, <2 x i8> %1)
+  %4 = tail call <2 x i8> @llvm.abs.v2i8(<2 x i8> %3, i1 false)
+  ret <2 x i8> %4
+}
+
+define <2 x i8> @v2i8abds_ri_(<2 x i8> %0) {
+; V1-LABEL: v2i8abds_ri_:
+; V1:       # %bb.0:
+; V1-NEXT:    extfz $r1 = $r0, 15, 8
+; V1-NEXT:    zxbd $r0 = $r0
+; V1-NEXT:    make $r2 = 0xff000000
+; V1-NEXT:    make $r3 = 0x1000000
+; V1-NEXT:    ;;
+; V1-NEXT:    sllw $r1 = $r1, 24
+; V1-NEXT:    sllw $r0 = $r0, 24
+; V1-NEXT:    ;;
+; V1-NEXT:    sbfsw $r1 = $r2, $r1
+; V1-NEXT:    sbfsw $r0 = $r3, $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sraw $r1 = $r1, 24
+; V1-NEXT:    sraw $r0 = $r0, 24
+; V1-NEXT:    ;;
+; V1-NEXT:    insf $r0 = $r1, 15, 8
+; V1-NEXT:    ;;
+; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    abshq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x401
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: v2i8abds_ri_:
+; V2:       # %bb.0:
+; V2-NEXT:    abdsbo $r0 = $r0, -255
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+  %2 = tail call <2 x i8> @llvm.ssub.sat.v2i8(<2 x i8> %0, <2 x i8> <i8 1, i8 -1>)
+  %3 = tail call <2 x i8> @llvm.abs.v2i8(<2 x i8> %2, i1 false)
+  ret <2 x i8> %3
+}
+
+define <2 x i8> @v2i8abds_ri_at(<2 x i8> %0) {
+; V1-LABEL: v2i8abds_ri_at:
+; V1:       # %bb.0:
+; V1-NEXT:    extfz $r1 = $r0, 15, 8
+; V1-NEXT:    zxbd $r0 = $r0
+; V1-NEXT:    make $r2 = 0xff000000
+; V1-NEXT:    make $r3 = 0x1000000
+; V1-NEXT:    ;;
+; V1-NEXT:    sllw $r1 = $r1, 24
+; V1-NEXT:    sllw $r0 = $r0, 24
+; V1-NEXT:    ;;
+; V1-NEXT:    sbfsw $r1 = $r2, $r1
+; V1-NEXT:    sbfsw $r0 = $r3, $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sraw $r1 = $r1, 24
+; V1-NEXT:    sraw $r0 = $r0, 24
+; V1-NEXT:    ;;
+; V1-NEXT:    insf $r0 = $r1, 15, 8
+; V1-NEXT:    ;;
+; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    abshq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x401
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: v2i8abds_ri_at:
+; V2:       # %bb.0:
+; V2-NEXT:    abdsbo $r0 = $r0, -255
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+  %2 = tail call <2 x i8> @llvm.ssub.sat.v2i8(<2 x i8> %0, <2 x i8> <i8 1, i8 -1>)
+  %3 = tail call <2 x i8> @llvm.abs.v2i8(<2 x i8> %2, i1 false)
+  ret <2 x i8> %3
 }
