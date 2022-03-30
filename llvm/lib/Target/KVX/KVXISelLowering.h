@@ -238,6 +238,8 @@ private:
                                              MachineBasicBlock *MBB) const;
 
   unsigned getInlineAsmMemConstraint(StringRef ConstraintCode) const override;
+
+  bool isExtractVecEltCheap(EVT VT, unsigned Index) const override;
 };
 
 } // namespace llvm

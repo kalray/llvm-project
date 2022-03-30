@@ -3184,6 +3184,18 @@ KVXTargetLowering::getInlineAsmMemConstraint(StringRef ConstraintCode) const {
   return TargetLowering::getInlineAsmMemConstraint(ConstraintCode);
 }
 
+bool KVXTargetLowering::isExtractVecEltCheap(EVT VT, unsigned Index) const {
+  EVT ElVt = VT.getScalarType();
+  switch (ElVt.getSimpleVT().SimpleTy) {
+  case MVT::i8:
+  case MVT::i16:
+    return false;
+  default:
+    break;
+  }
+  auto EltSz = VT.getScalarType().getSizeInBits();
+  return (Index * EltSz % 64 == 0);
+}
 // -----------------------------------------------------------------------------
 //        Namespace KVX_LOW
 // -----------------------------------------------------------------------------
