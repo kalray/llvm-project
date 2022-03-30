@@ -776,7 +776,6 @@ multiclass MC_12<string OpcStr> {
 //   defm SBFX16UWD
 //   defm SBFX32UWD
 //   defm SBFX64UWD
-//   defm ABDSW
 multiclass MC_13<string OpcStr> {
   def rr : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
@@ -865,6 +864,9 @@ multiclass MC_15<string OpcStr> {
 //   defm SBFBO
 //   defm SBFHQ
 //   defm SBFWP
+//   defm ABDSBO
+//   defm ABDSW
+//   defm ABDSWP
 multiclass MC_16<string OpcStr> {
   let isAsCheapAsAMove = 1 in
   def rr : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
@@ -3642,6 +3644,7 @@ defm MOVEFO : MC_36<"movefo">;
 let isCommutable = 1 in {
 defm ABDSBO : MC_16<"abdsbo">, Requires<[IsV2]>;
 defm ABDSW  : MC_16<"abdsw">,  Requires<[IsV2]>;
+defm ABDSWP : MC_16<"abdswp">, Requires<[IsV2]>;
 }
 
 def FMM222W : FP_PairedReg_PairedReg_PairedReg_Transp_Round_Silent
