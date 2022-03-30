@@ -2713,4 +2713,20 @@ entry:
   ret <2 x i1> %0
 }
 
+define <2 x double> @add_splat_const_op1(<2 x double> %vx) #0 {
+; CHECK-LABEL: add_splat_const_op1:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    make $r2 = 0x4045000000000000
+; CHECK-NEXT:    copyd $r1 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r3 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fadddp $r0r1 = $r0r1, $r2r3
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %splatx = shufflevector <2 x double> %vx, <2 x double> undef, <2 x i32> zeroinitializer
+  %r = fadd <2 x double> %splatx, <double 42.0, double 42.0>
+  ret <2 x double> %r
+}
+
 attributes #0 = { nounwind }

@@ -2120,22 +2120,22 @@ define <32 x i8> @mul_v32i8_v32i8(<32 x i8> %0, <32 x i8> %1) {
 define <32 x i8> @mul_v32i8_i8(<32 x i8> %0, i8 %1) {
 ; CHECK-LABEL: mul_v32i8_i8:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    insf $r4 = $r4, 15, 8
+; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x1010101
 ; CHECK-NEXT:    sxmbhq $r5 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxmbhq $r6 = $r1
 ; CHECK-NEXT:    sxmbhq $r7 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r4 = $r4, 31, 16
+; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x8000400020001
 ; CHECK-NEXT:    sxmbhq $r8 = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxlbhq $r0 = $r0
 ; CHECK-NEXT:    sxlbhq $r1 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x8000400020001
 ; CHECK-NEXT:    sxlbhq $r2 = $r2
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxlbhq $r3 = $r3
+; CHECK-NEXT:    mulhq $r5 = $r4, $r5
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mulhq $r0 = $r4, $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mulhq $r1 = $r4, $r1
@@ -2145,26 +2145,25 @@ define <32 x i8> @mul_v32i8_i8(<32 x i8> %0, i8 %1) {
 ; CHECK-NEXT:    mulhq $r3 = $r4, $r3
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mulhq $r5 = $r4, $r5
+; CHECK-NEXT:    mulhq $r6 = $r4, $r6
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x40100401
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mulhq $r6 = $r4, $r6
-; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x40100401
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mulhq $r7 = $r4, $r7
-; CHECK-NEXT:    sbmm8 $r3 = $r3, 0x40100401
+; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x40100401
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mulhq $r8 = $r4, $r8
 ; CHECK-NEXT:    sbmm8 $r4 = $r5, 0x40100401
+; CHECK-NEXT:    sbmm8 $r3 = $r3, 0x40100401
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r5 = $r6, 0x40100401
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r6 = $r7, 0x40100401
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r4, 63, 32
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r7 = $r8, 0x40100401
-; CHECK-NEXT:    insf $r1 = $r5, 63, 32
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r1 = $r5, 63, 32
 ; CHECK-NEXT:    insf $r2 = $r6, 63, 32
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r3 = $r7, 63, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -5441,48 +5440,45 @@ define <32 x i8> @p_mul_v32i8_i8(<32 x i8>* nocapture readonly %0, i8* nocapture
 ; CHECK-NEXT:    lbz $r1 = 0[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
-; CHECK-NEXT:    insf $r1 = $r1, 15, 8
+; CHECK-NEXT:    sbmm8 $r0 = $r1, 0x1010101
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxmbhq $r8 = $r7
-; CHECK-NEXT:    sxmbhq $r0 = $r4
+; CHECK-NEXT:    sxmbhq $r1 = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r1, 31, 16
-; CHECK-NEXT:    sxlbhq $r2 = $r4
+; CHECK-NEXT:    sbmm8 $r2 = $r0, 0x8000400020001
+; CHECK-NEXT:    sxlbhq $r0 = $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxmbhq $r3 = $r5
 ; CHECK-NEXT:    sxlbhq $r4 = $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x8000400020001
 ; CHECK-NEXT:    sxmbhq $r5 = $r6
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxlbhq $r6 = $r6
+; CHECK-NEXT:    mulhq $r0 = $r2, $r0
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxlbhq $r7 = $r7
-; CHECK-NEXT:    mulhq $r0 = $r1, $r0
+; CHECK-NEXT:    mulhq $r1 = $r2, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mulhq $r3 = $r1, $r3
+; CHECK-NEXT:    mulhq $r3 = $r2, $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mulhq $r2 = $r1, $r2
+; CHECK-NEXT:    mulhq $r4 = $r2, $r4
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mulhq $r4 = $r1, $r4
-; CHECK-NEXT:    sbmm8 $r9 = $r0, 0x40100401
+; CHECK-NEXT:    mulhq $r5 = $r2, $r5
+; CHECK-NEXT:    sbmm8 $r9 = $r1, 0x40100401
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mulhq $r5 = $r1, $r5
+; CHECK-NEXT:    mulhq $r6 = $r2, $r6
 ; CHECK-NEXT:    sbmm8 $r10 = $r3, 0x40100401
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mulhq $r7 = $r1, $r7
-; CHECK-NEXT:    sbmm8 $r0 = $r2, 0x40100401
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mulhq $r6 = $r1, $r6
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mulhq $r8 = $r1, $r8
+; CHECK-NEXT:    mulhq $r7 = $r2, $r7
 ; CHECK-NEXT:    sbmm8 $r1 = $r4, 0x40100401
-; CHECK-NEXT:    sbmm8 $r4 = $r5, 0x40100401
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r3 = $r7, 0x40100401
 ; CHECK-NEXT:    insf $r0 = $r9, 63, 32
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    mulhq $r8 = $r2, $r8
+; CHECK-NEXT:    sbmm8 $r4 = $r5, 0x40100401
 ; CHECK-NEXT:    sbmm8 $r2 = $r6, 0x40100401
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r1 = $r10, 63, 32
+; CHECK-NEXT:    sbmm8 $r3 = $r7, 0x40100401
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r5 = $r8, 0x40100401
 ; CHECK-NEXT:    insf $r2 = $r4, 63, 32

@@ -1581,4 +1581,25 @@ declare <2 x i16> @llvm.smin.v2i16(<2 x i16> %a, <2 x i16> %b)
 declare <2 x i16> @llvm.umax.v2i16(<2 x i16> %a, <2 x i16> %b)
 declare <2 x i16> @llvm.umin.v2i16(<2 x i16> %a, <2 x i16> %b)
 
+define <2 x i16> @add_splat_const_op1_v2f64(<2 x i16> %vx) #0 {
+; CHECK-LABEL: add_splat_const_op1_v2f64:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    addhq $r0 = $r0, 0x2a002a
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r0, 31, 16
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+;
+; V2-LABEL: add_splat_const_op1_v2f64:
+; V2:       # %bb.0:
+; V2-NEXT:    addhq $r0 = $r0, 0x2a002a
+; V2-NEXT:    ;;
+; V2-NEXT:    insf $r0 = $r0, 31, 16
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+  %splatx = shufflevector <2 x i16> %vx, <2 x i16> undef, <2 x i32> zeroinitializer
+  %r = add <2 x i16> %splatx, <i16 42, i16 42>
+  ret <2 x i16> %r
+}
+
 attributes #0 = { nounwind }
