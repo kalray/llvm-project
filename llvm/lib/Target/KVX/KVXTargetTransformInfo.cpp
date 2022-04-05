@@ -120,7 +120,6 @@ bool KVXTTIImpl::isHardwareLoopProfitableCheck(Loop *L, ScalarEvolution &SE) {
                       << *TripCountSCEV << ".\n");
     return false;
   }
-
   // Avoid hardware loops if there is a call inside
   auto MaybeCall = [this](Instruction &I) {
     LLVM_DEBUG(dbgs() << "Looking at inst: " << I << ".\n");
@@ -183,23 +182,32 @@ bool KVXTTIImpl::isHardwareLoopProfitableCheck(Loop *L, ScalarEvolution &SE) {
   };
 
   // Scan the instructions to see if there's any that we know will turn into a
-  // call or if this loop is already a hardware loop.
-  auto ScanLoop = [&](Loop *L) {
+  // call or if this loop is already a hardware loop  or if the number of
+  // instructions in the loop are too few.
+  auto ScanLoop = [&](Loop *L, bool TestMinLoopSize) {
+    int Count = 0;
     for (auto *BB : L->getBlocks()) {
       for (auto &I : *BB) {
+        // Count Non debug, Non Pseudo and Non PHI instructions
+        if (!I.isDebugOrPseudoInst() && (I.getOpcode() != Instruction::PHI))
+          Count++;
         if (MaybeCall(I) || IsHardwareLoopIntrinsic(I))
           return false;
       }
     }
-    return true;
+    if (Count <= 3) {
+      LLVM_DEBUG(dbgs() << "Empty loop detected. Would be inefficient to "
+                           "optimize to a hardware loop\n");
+    }
+    return (Count > 3) || !TestMinLoopSize;
   };
 
   // Visit inner loops.
   for (auto *Inner : *L)
-    if (!ScanLoop(Inner))
+    if (!ScanLoop(Inner, false))
       return false;
 
-  if (!ScanLoop(L))
+  if (!ScanLoop(L, true))
     return false;
 
   if (!L->getUniqueExitBlock())
