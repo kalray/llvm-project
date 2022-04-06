@@ -867,6 +867,7 @@ multiclass MC_15<string OpcStr> {
 //   defm ABDSBO
 //   defm ABDSW
 //   defm ABDSWP
+//   defm ABDSD
 multiclass MC_16<string OpcStr> {
   let isAsCheapAsAMove = 1 in
   def rr : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
@@ -3684,3 +3685,4 @@ defm SLUSD : MC_18<"slusd">, Requires<[IsV2]>;
 defm SLUSHQS : MC_18<"slushqs">, Requires<[IsV2]>;
 defm SLUSW : MC_18<"slusw">, Requires<[IsV2]>;
 defm SLUSWPS : MC_18<"sluswps">, Requires<[IsV2]>;
+defm ABDSD : MC_16<"abdsd">, Requires<[IsV2]>;
