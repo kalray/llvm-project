@@ -103,14 +103,14 @@ def : Pat<(vt (abs (ssubsat vt:$lhs, (vt (is_imm_vec_kvx_splat32_:$IMM))))), (vt
 def : Pat<(vt (abs (ssubsat (vt (is_imm_vec_kvx_splat32_:$IMM)), vt:$rhs))), (vt (ri SingleReg:$rhs, (build_imm_vec $IMM), splat32_ ) )>, Requires<[IsV2]>;
 def : Pat<(vt (abs (ssubsat vt:$lhs,  (vt (is_imm_vec_kvx_splat32_at:$IMM))))), (vt (ri SingleReg:$lhs, (build_imm_vec $IMM), splat32_at ) )>, Requires<[IsV2]>;
 def : Pat<(vt (abs (ssubsat (vt (is_imm_vec_kvx_splat32_at:$IMM)), vt:$rhs))), (vt (ri SingleReg:$rhs, (build_imm_vec $IMM), splat32_at ) )>, Requires<[IsV2]>;
-def : Pat<(vt (abs (ssubsat vt:$rhs, vt:$lhs))), (vt(rr SingleReg:$rhs, SingleReg:$lhs))>, Requires<[IsV2]>;
+def : Pat<(vt (abs (ssubsat vt:$lhs, vt:$rhs))), (vt(rr SingleReg:$rhs, SingleReg:$lhs))>, Requires<[IsV2]>;
 }
 
 // ABDSBO
 foreach vt = [v2i8, v4i8] in {
 def : Pat<(vt (abs (ssubsat (vt (is_imm_vec_kvx_splat32_:$IMM)), vt:$rhs))), (vt (ABDSBOri SingleReg:$rhs, (build_imm_vec $IMM), splat32_ ) )>, Requires<[IsV2]>;
-def : Pat<(vt (abs (ssubsat vt:$rhs, (vt (is_imm_vec_kvx_splat32_:$IMM))))), (vt (ABDSBOri SingleReg:$rhs, (build_imm_vec $IMM), splat32_ ) )>, Requires<[IsV2]>;
-def : Pat<(vt (abs (ssubsat vt:$rhs, vt:$lhs))), (vt(ABDSBOrr SingleReg:$rhs, SingleReg:$lhs))>, Requires<[IsV2]>;
+def : Pat<(vt (abs (ssubsat vt:$lhs, (vt (is_imm_vec_kvx_splat32_:$IMM))))), (vt (ABDSBOri SingleReg:$lhs, (build_imm_vec $IMM), splat32_ ) )>, Requires<[IsV2]>;
+def : Pat<(vt (abs (ssubsat vt:$lhs, vt:$rhs))), (vt(ABDSBOrr SingleReg:$lhs, SingleReg:$rhs))>, Requires<[IsV2]>;
 }
 
 defm : ABDS_64bit<v8i8, ABDSBOrr, ABDSBOri>;
@@ -126,8 +126,17 @@ def : Pat<(i64(abs(ssubsat i64:$lhs, i64:$rhs))),
           (ABDSDrr SingleReg:$rhs, SingleReg:$lhs)>, Requires<[IsV2]>;
 
 // ABDSW
-def : Pat<(i32 (trunc (i64 (umin (abs (sub Wrapped64W:$lhs, (sext (i32 SingleReg:$rhs)))), i64_i32_max)))), (i32 (ABDSWri SingleReg:$rhs, (trunc_imm_32 $lhs), splat32_))>, Requires<[IsV2]>;
-def : Pat<(i32 (trunc (i64 (umin (abs (sub (sext(i32 SingleReg:$lhs)), (sext (i32 SingleReg:$rhs)))), i64_i32_max)))), (i32 (ABDSWrr SingleReg:$rhs, SingleReg:$lhs))>, Requires<[IsV2]>;
+def : Pat<(i32 (trunc (i64 (umin (abs (sub Wrapped64W:$lhs, (sext (i32 SingleReg:$rhs)))), i64_i32_max)))),
+          (i32 (ABDSWri SingleReg:$rhs, (trunc_imm_32 $lhs), splat32_))>, Requires<[IsV2]>;
+
+def : Pat<(i32 (trunc (i64 (umin (abs (sub (sext(i32 SingleReg:$lhs)), (sext (i32 SingleReg:$rhs)))), i64_i32_max)))),
+          (i32 (ABDSWrr SingleReg:$rhs, SingleReg:$lhs))>, Requires<[IsV2]>;
+
+def : Pat<(i32 (abs (ssubsat i32:$lhs, Wrapped32:$rhs))),
+          (i32 (ABDSWri SingleReg:$rhs, Wrapped32:$lhs, splat32_ ) )>, Requires<[IsV2]>;
+
+def : Pat<(i32 (abs (ssubsat i32:$lhs, i32:$rhs))),
+          (i32 (ABDSWrr SingleReg:$rhs, SingleReg:$lhs))>, Requires<[IsV2]>;
 
 // ABDSWP
 defm : ABDS_64bit<v2i32, ABDSWPrr, ABDSWPri>;
