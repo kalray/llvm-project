@@ -69,6 +69,52 @@ define i32 @ABDSWri(i32 %0) {
   ret i32 %7
 }
 
+
+define i64 @abdsd_builtins(i64 %0, i64 %1) {
+; V1-LABEL: abdsd_builtins:
+; V1:       # %bb.0:
+; V1-NEXT:    sbfsd $r0 = $r1, $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    absd $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: abdsd_builtins:
+; V2:       # %bb.0:
+; V2-NEXT:    abdsd $r0 = $r1, $r0
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+  %3 = tail call i64 @llvm.ssub.sat.i64(i64 %0, i64 %1)
+  %4 = tail call i64 @llvm.abs.i64(i64 %3, i1 false)
+  ret i64 %4
+}
+
+declare i64 @llvm.ssub.sat.i64(i64, i64)
+
+define i32 @abdsw_builtins(i32 %0, i32 %1) {
+; V1-LABEL: abdsw_builtins:
+; V1:       # %bb.0:
+; V1-NEXT:    sbfsw $r0 = $r1, $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    absw $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: abdsw_builtins:
+; V2:       # %bb.0:
+; V2-NEXT:    abdsw $r0 = $r1, $r0
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+  %3 = tail call i32 @llvm.ssub.sat.i32(i32 %0, i32 %1)
+  %4 = tail call i32 @llvm.abs.i32(i32 %3, i1 false)
+  ret i32 %4
+}
+
+declare i32 @llvm.ssub.sat.i32(i32, i32)
+
+declare i32 @llvm.abs.i32(i32, i1 immarg)
+
+
 define <8 x i8> @v8i8abds_rr(<8 x i8> %0, <8 x i8> %1) #0 {
 ; V1-LABEL: v8i8abds_rr:
 ; V1:       # %bb.0:
@@ -101,7 +147,7 @@ define <8 x i8> @v8i8abds_rr(<8 x i8> %0, <8 x i8> %1) #0 {
 ;
 ; V2-LABEL: v8i8abds_rr:
 ; V2:       # %bb.0:
-; V2-NEXT:    abdsbo $r0 = $r0, $r1
+; V2-NEXT:    abdsbo $r0 = $r1, $r0
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %3 = tail call <8 x i8> @llvm.ssub.sat.v8i8(<8 x i8> %0, <8 x i8> %1)
@@ -595,7 +641,7 @@ define <2 x i32> @v2i32abds_rr(<2 x i32> %0, <2 x i32> %1) {
 ;
 ; V2-LABEL: v2i32abds_rr:
 ; V2:       # %bb.0:
-; V2-NEXT:    abdswp $r0 = $r0, $r1
+; V2-NEXT:    abdswp $r0 = $r1, $r0
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %3 = tail call <2 x i32> @llvm.ssub.sat.v2i32(<2 x i32> %0, <2 x i32> %1)
@@ -621,8 +667,6 @@ define i64 @abdsd(i64 %0, i64 %1) {
   %4 = tail call i64 @llvm.abs.i64(i64 %3, i1 false)
   ret i64 %4
 }
-
-declare i64 @llvm.ssub.sat.i64(i64, i64)
 
 define i64 @abdsd_ri10(i64 %0, i64 %1) {
 ; V1-LABEL: abdsd_ri10:
