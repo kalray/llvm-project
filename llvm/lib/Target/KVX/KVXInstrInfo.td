@@ -949,9 +949,13 @@ multiclass MC_16<string OpcStr> {
 //   defm SBFX8HQ
 //   defm SBFX16BO
 //   defm SBFX16HQ
+//   defm AVGBO
 //   defm AVGHQ
+//   defm AVGRBO
 //   defm AVGUHQ
+//   defm AVGRBO
 //   defm AVGRHQ
+//   defm AVGRUBO
 //   defm AVGRUHQ
 //   defm LANDHQ
 //   defm LNANDHQ
@@ -2214,11 +2218,19 @@ defm SBFX16BO : MC_17<"sbfx16bo">, Requires<[IsV2]>;
 
 defm SBFX16HQ : MC_17<"sbfx16hq">;
 
+defm AVGBO : MC_17<"avgbo">, Requires<[IsV2]>;
+
 defm AVGHQ : MC_17<"avghq">;
+
+defm AVGUBO : MC_17<"avgubo">, Requires<[IsV2]>;
 
 defm AVGUHQ : MC_17<"avguhq">;
 
+defm AVGRBO : MC_17<"avgrbo">, Requires<[IsV2]>;
+
 defm AVGRHQ : MC_17<"avgrhq">;
+
+defm AVGRUBO : MC_17<"avgrubo">, Requires<[IsV2]>;
 
 defm AVGRUHQ : MC_17<"avgruhq">;
 

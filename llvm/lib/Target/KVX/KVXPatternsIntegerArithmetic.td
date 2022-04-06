@@ -482,31 +482,86 @@ foreach vtype = [ v2i8, v4i8, v2i16 ] in {
     def : Pat<(and vtype:$rs1, vtype:$rs2), (ANDWrr SingleReg:$rs1, SingleReg:$rs2)>;
 }
 
+//                        VectorType,   vector_splat_1,  signed avg rr,      signed avg ri,      signed avgr rr
+multiclass AVG_leq_32bits<ValueType vt, PatFrag splat_1, KVX_INSTRUCTION rr, KVX_INSTRUCTION ri, KVX_INSTRUCTION Rrr> {
+def : Pat<(sra ( add vt:$v, (vt (is_imm_vec_ri37:$IMM))), (vt (splat_1))),
+          (ri SingleReg:$v, (i32 (build_imm_vec $IMM) ), splat32_)>;
+
+def : Pat<(sra ( add vt:$v0, vt:$v1 ), (vt (splat_1))),
+          (rr SingleReg:$v1, SingleReg:$v0)>;
+
+def : Pat<(sra ( add ( add vt:$v0, vt:$v1 ), (vt (splat_1)) ), (vt (splat_1))),
+          (Rrr SingleReg:$v1, SingleReg:$v0)>;
+}
+
+//                        VectorType,   vector_splat_1,  signed avg rr,      signed avg ri,      signed avgr rr
+multiclass AVG_64bits <ValueType vt, PatFrag splat_1, KVX_INSTRUCTION rr, KVX_INSTRUCTION ri, KVX_INSTRUCTION Rrr> {
+def : Pat<(sra ( add vt:$v, (vt (is_imm_vec_kvx_splat32_:$IMM) ) ), (vt (splat_1))),
+          (ri SingleReg:$v, (i32 (build_imm_vec $IMM)), splat32_)>;
+
+def : Pat<(sra ( add vt:$v, (vt (is_imm_vec_kvx_splat32_at:$IMM) ) ), (vt (splat_1))),
+          (ri SingleReg:$v, (i32 (build_imm_vec $IMM)), splat32_at)>;
+
+def : Pat<(sra ( add vt:$v0, vt:$v1 ), (vt (splat_1))),
+          (rr SingleReg:$v1, SingleReg:$v0)>;
+
+def : Pat<(sra ( add ( add vt:$v0, vt:$v1 ), (vt (splat_1))), (vt (splat_1))),
+          (Rrr SingleReg:$v1, SingleReg:$v0)>;
+}
+
+// AVGBO / AVGRBO
+// v2i8
+defm : AVG_leq_32bits <v2i8, v2_splat_1, AVGBOrr, AVGBOri, AVGRBOrr>, Requires<[IsV2]>;
+// v4i8
+defm : AVG_leq_32bits <v4i8, v4_splat_1, AVGBOrr, AVGBOri, AVGRBOrr>, Requires<[IsV2]>;
+// v8i8
+defm : AVG_64bits <v8i8, v8_splat_1, AVGBOrr, AVGBOri, AVGRBOrr>, Requires<[IsV2]>;
+
 // AVGHQ / AVGRHQ
 // v2i16
-def : Pat<(sra ( add v2i16:$v, (v2i16 (build_vector:$IMM (i32 imm), (i32 imm))) ) , (v2i16 (v2_splat_1))), (AVGHQri SingleReg:$v, (i32 (build_imm_vec $IMM) ), splat32_)>;
-def : Pat<(sra ( add v2i16:$v0, v2i16:$v1 ), (v2i16 (v2_splat_1))), (AVGHQrr SingleReg:$v1, SingleReg:$v0)>;
-
-def : Pat<(sra ( add ( add v2i16:$v0, v2i16:$v1 ), (v2i16 (v2_splat_1)) ), (v2i16 (v2_splat_1))), (AVGRHQrr SingleReg:$v1, SingleReg:$v0)>;
-
+defm : AVG_leq_32bits<v2i16, v2_splat_1, AVGHQrr, AVGHQri, AVGRHQrr>;
 // v4i16
-def : Pat<(sra ( add v4i16:$v, (v4i16 (build_vector:$IMM (i32 imm), (i32 imm), (i32 0), (i32 0)) ) ), (v4i16 (v4_splat_1))), (AVGHQri SingleReg:$v, (i32 (build_imm_vec $IMM)), splat32_)>;
-def : Pat<(sra ( add v4i16:$v, (v4i16 (build_vector:$IMM (i32 imm:$i0), (i32 imm:$i1), (i32 imm:$i0), (i32 imm:$i1)) ) ), (v4i16 (v4_splat_1))), (AVGHQri SingleReg:$v, (i32 (build_imm_vec $IMM)), splat32_at)>;
-def : Pat<(sra ( add v4i16:$v0, v4i16:$v1 ), (v4i16 (v4_splat_1))), (AVGHQrr SingleReg:$v1, SingleReg:$v0)>;
+defm : AVG_64bits<v4i16, v4_splat_1, AVGHQrr, AVGHQri, AVGRHQrr>;
 
-def : Pat<(sra ( add ( add v4i16:$v0, v4i16:$v1 ), (v4i16 (v4_splat_1))), (v4i16 (v4_splat_1))), (AVGRHQrr SingleReg:$v1, SingleReg:$v0)>;
+//                        VectorType,   vector_splat_1,  unsigned avg rr,     unsigned avg ri,    unsigned avgr rr
+multiclass AVGU_leq_32bits<ValueType vt, PatFrag splat_1, KVX_INSTRUCTION rr, KVX_INSTRUCTION ri, KVX_INSTRUCTION Rrr> {
+def : Pat<(srl ( nuwadd vt:$v, (vt (is_imm_vec_ri37:$IMM) ) ), (vt (splat_1))),
+          (ri SingleReg:$v, (build_imm_vec $IMM), splat32_)>;
+
+def : Pat<(srl ( nuwadd vt:$v0, vt:$v1 ), (vt (splat_1))),
+          (rr SingleReg:$v1, SingleReg:$v0)>;
+
+def : Pat<(srl ( nuwadd ( nuwadd vt:$v0, vt:$v1 ), (vt (splat_1)) ), (vt (splat_1))),
+          (Rrr SingleReg:$v1, SingleReg:$v0)>;
+}
+
+multiclass AVGU_64bits <ValueType vt, PatFrag splat_1, KVX_INSTRUCTION rr, KVX_INSTRUCTION ri, KVX_INSTRUCTION Rrr> {
+def : Pat<(srl ( nuwadd vt:$v, (vt (is_imm_vec_kvx_splat32_:$IMM) ) ),
+          (vt (splat_1))), (ri SingleReg:$v, (i32 (build_imm_vec $IMM)), splat32_)>;
+
+def : Pat<(srl ( nuwadd vt:$v, (vt (is_imm_vec_kvx_splat32_at:$IMM) ) ),
+          (vt (splat_1))), (ri SingleReg:$v, (i32 (build_imm_vec $IMM)), splat32_at)>;
+
+def : Pat<(srl ( nuwadd vt:$v0, vt:$v1 ), (vt (splat_1))),
+          (rr SingleReg:$v1, SingleReg:$v0)>;
+
+def : Pat<(srl ( nuwadd ( nuwadd vt:$v0, vt:$v1 ), (vt (splat_1))), (vt (splat_1))),
+          (Rrr SingleReg:$v1, SingleReg:$v0)>;
+}
+
+// AVGUBO / AVGRUBO
+// v2i8
+defm : AVGU_leq_32bits<v2i8, v2_splat_1, AVGUBOrr, AVGUBOri, AVGRUBOrr>, Requires<[IsV2]>;
+// v4i8
+defm : AVGU_leq_32bits<v4i8, v4_splat_1, AVGUBOrr, AVGUBOri, AVGRUBOrr>, Requires<[IsV2]>;
+// v8i8
+defm : AVGU_64bits<v8i8, v8_splat_1, AVGUBOrr, AVGUBOri, AVGRUBOrr>, Requires<[IsV2]>;
 
 // AVGUHQ / AVGRUHQ
-def : Pat<(srl ( nuwadd v2i16:$v, (v2i16 (build_vector:$IMM (i32 imm), (i32 imm)) ) ) , (v2i16 (v2_splat_1))), (AVGUHQri SingleReg:$v, (build_imm_vec $IMM), splat32_)>;
-def : Pat<(srl ( nuwadd v2i16:$v0, v2i16:$v1 ), (v2i16 (v2_splat_1))), (AVGUHQrr SingleReg:$v1, SingleReg:$v0)>;
-
-def : Pat<(srl ( nuwadd ( nuwadd v2i16:$v0, v2i16:$v1 ), (v2i16 (v2_splat_1)) ), (v2i16 (v2_splat_1))), (AVGRUHQrr SingleReg:$v1, SingleReg:$v0)>;
-
-def : Pat<(srl ( nuwadd v4i16:$v, (v4i16 (build_vector:$IMM (i32 imm), (i32 imm), (i32 0), (i32 0)) ) ), (v4i16 (v4_splat_1))), (AVGUHQri SingleReg:$v, (i32 (build_imm_vec $IMM)), splat32_)>;
-def : Pat<(srl ( nuwadd v4i16:$v, (v4i16 (build_vector:$IMM (i32 imm:$i0), (i32 imm:$i1), (i32 imm:$i0), (i32 imm:$i1)) ) ), (v4i16 (v4_splat_1))), (AVGUHQri SingleReg:$v, (i32 (build_imm_vec $IMM)), splat32_at)>;
-def : Pat<(srl ( nuwadd v4i16:$v0, v4i16:$v1 ), (v4i16 (v4_splat_1))), (AVGUHQrr SingleReg:$v1, SingleReg:$v0)>;
-
-def : Pat<(srl ( nuwadd ( nuwadd v4i16:$v0, v4i16:$v1 ), (v4i16 (v4_splat_1))), (v4i16 (v4_splat_1))), (AVGRUHQrr SingleReg:$v1, SingleReg:$v0)>;
+// v2i16
+defm : AVGU_leq_32bits<v2i16, v2_splat_1, AVGUHQrr, AVGUHQri, AVGRUHQrr>;
+// v4i16
+defm : AVGU_64bits<v4i16, v4_splat_1, AVGUHQrr, AVGUHQri, AVGRUHQrr>;
 
 // AVGUW / AVGRUW
 def : Pat<(srl  (nuwadd i32:$v0, Wrapped32:$v1), (i64 1)), (AVGUWri SingleReg:$v0, Wrapped32:$v1)>;
