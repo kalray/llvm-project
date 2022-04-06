@@ -1354,6 +1354,18 @@ foreach vtype = [ v2i8, v4i8, v2i16 ] in {
 foreach vt = [ v2i8, v4i8 ] in
 def : Pat<(vineg vt:$v), (NEGBO SingleReg:$v)>, Requires<[IsV2]>;
 
+// NEGHQ - v4i16 pattern in instruction definition
+def : Pat<(vineg v2i16:$v), (NEGHQ SingleReg:$v)>;
+
+// NEGSBO - v8i8 pattern in instruction definition
+foreach vt = [v2i8, v4i8] in
+def : Pat<(vineg_ssat vt:$v),
+          (NEGSBO SingleReg:$v)>, Requires<[IsV2]>;
+
+// NEGSHQ - v4i16 pattern in instruction definition
+def : Pat<(vineg_ssat v2i16:$v),
+          (NEGSHQ SingleReg:$v)>, Requires<[IsV2]>;
+
 // NXOR ri variants are not easy, as they become a single xor
 // NXORD
 def : Pat<(xor (xor i64:$rs1, i64:$rs2), (i64 -1)), (NXORDrr SingleReg:$rs1, SingleReg:$rs2)>;
@@ -1657,8 +1669,12 @@ defm : ZEFPat<(sub Signed10W:$rs1, i32:$rs2), (SBFWri10 SingleReg:$rs2, Signed10
 defm : ZEFPat<(sub Signed37W:$rs1, i32:$rs2), (SBFWri37 SingleReg:$rs2, Signed37W:$rs1)>;
 
 // SBFWP
-def : Pat<(sub (v2i32 (build_vector (i32 Wrapped32:$i), (i32 0))), v2i32:$r), (SBFWPri SingleReg:$r, Wrapped32:$i, splat32_)>;
-def : Pat<(sub (v2i32 (v2_splat (i32 Wrapped32:$i))), v2i32:$r), (SBFWPri SingleReg:$r, Wrapped32:$i, splat32_at)>;
+def : Pat<(sub (v2i32 (v2i32(is_imm_vec_kvx_splat32_:$IMM))), v2i32:$r),
+          (SBFWPri SingleReg:$r, (i32(trunc_imm_32 (i32(build_imm_vec $IMM)))), splat32_)>;
+
+def : Pat<(sub (v2i32(is_imm_vec_kvx_splat32_at:$IMM)), v2i32:$r),
+          (SBFWPri SingleReg:$r, (i32(trunc_imm_32 (i32(build_imm_vec $IMM)))), splat32_at)>;
+
 def : Pat<(sub v2i32:$rs1, v2i32:$rs2), (SBFWPrr SingleReg:$rs2, SingleReg:$rs1)>;
 
 def : Pat<(sub v4i32:$rs1, v4i32:$rs2),
