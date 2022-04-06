@@ -1865,14 +1865,6 @@ def : Pat<(v4i16 (build_vector (i32 (vector_extract v4i16:$v0, 3)),
 //  Synthetic Instructions - Patterns
 //===----------------------------------------------------------------------===//
 
-// NEGD, see KVXInstrInfo.td
-// NEGHQ, see KVXInstrInfo.td for v4i16
-def : Pat<(vineg v2i16:$v), (NEGHQ SingleReg:$v)>;
-
-// NEGW, see KVXInstrInfo.td
-// NEGWP, see KVXInstrInfo.td
-def : Pat<(sub (v2i32 (v2_splat (i32 0))), v2i32:$r), (NEGWP SingleReg:$r)>;
-
 // NOTW, see KVXInstrInfo.td for i32
 def : Pat<(vnot v2i16:$v), (NOTW SingleReg:$v)>;
 def : Pat<(vnot v4i8:$v), (NOTW SingleReg:$v)>;

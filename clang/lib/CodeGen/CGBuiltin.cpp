@@ -19037,6 +19037,35 @@ static inline Value *KVX_emitIntSubBuiltin(CodeGenFunction &CGF,
   return KVX_emitIntAddSubBuiltin(CGF, E, false);
 }
 
+static inline Value *KVX_emitIntNegBuiltin(CodeGenFunction &CGF,
+                                           const CallExpr *E) {
+  constexpr int StringModOperand = 1;
+  const auto *SL = dyn_cast<clang::StringLiteral>(
+      E->getArg(StringModOperand)->IgnoreParenImpCasts());
+  auto Mods = SL->getString();
+
+  int SaturateMod = KVX_getSpeculateModValue(Mods.split(".").second);
+
+  const Expr *EV = E->getArg(0);
+  Value *V = CGF.EmitScalarExpr(EV);
+
+  switch (SaturateMod) {
+  case 0:
+    return CGF.Builder.CreateNeg(V, "neg");
+
+  case 1: {
+    auto *VT = V->getType();
+
+    return CGF.Builder.CreateBinaryIntrinsic(
+        Intrinsic::ssub_sat, Constant::getNullValue(VT), V, nullptr, "neg.sat");
+  }
+  default:
+    CGF.CGM.Error(E->getArg(StringModOperand)->getBeginLoc(),
+                  "invalid saturate_t modifier, expected \"\", \".s\"");
+  }
+  return nullptr;
+}
+
 static inline Value *KVX_emitAddSubCarryBuiltin(CodeGenFunction &CGF,
                                                 const CallExpr *E, bool isAdd) {
   constexpr int StringModOperand = 2;
@@ -19823,6 +19852,20 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_sbfdp:
   case KVX::BI__builtin_kvx_sbfdq:
     return KVX_emitIntSubBuiltin(*this, E);
+  case KVX::BI__builtin_kvx_negbo:
+  case KVX::BI__builtin_kvx_negbx:
+  case KVX::BI__builtin_kvx_negbv:
+  case KVX::BI__builtin_kvx_neghq:
+  case KVX::BI__builtin_kvx_negho:
+  case KVX::BI__builtin_kvx_neghx:
+  case KVX::BI__builtin_kvx_negw:
+  case KVX::BI__builtin_kvx_negwp:
+  case KVX::BI__builtin_kvx_negwq:
+  case KVX::BI__builtin_kvx_negwo:
+  case KVX::BI__builtin_kvx_negd:
+  case KVX::BI__builtin_kvx_negdp:
+  case KVX::BI__builtin_kvx_negdq:
+    return KVX_emitIntNegBuiltin(*this, E);
   case KVX::BI__builtin_kvx_fabsw:
     return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_fabsw);
   case KVX::BI__builtin_kvx_fabsd:

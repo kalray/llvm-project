@@ -3686,3 +3686,23 @@ defm SLUSHQS : MC_18<"slushqs">, Requires<[IsV2]>;
 defm SLUSW : MC_18<"slusw">, Requires<[IsV2]>;
 defm SLUSWPS : MC_18<"sluswps">, Requires<[IsV2]>;
 defm ABDSD : MC_16<"abdsd">, Requires<[IsV2]>;
+
+def NEGSBO : REGISTERW_REGISTERZ_SIMPLE
+  <(outs SingleReg:$o), (ins SingleReg:$i),
+   "negsbo $o = $i", [(set v8i8:$o, (vineg_ssat v8i8:$i))], ALU_LITE_X>, Requires<[IsV2]>;
+
+def NEGSD : REGISTERW_REGISTERZ_SIMPLE
+  <(outs SingleReg:$o), (ins SingleReg:$i),
+  "negsd $o = $i", [(set i64:$o, (ssubsat 0, i64:$i))], ALU_LITE_X>, Requires<[IsV2]>;
+
+def NEGSHQ : REGISTERW_REGISTERZ_SIMPLE
+  <(outs SingleReg:$o), (ins SingleReg:$i),
+   "negshq $o = $i", [(set v4i16:$o, (vineg_ssat v4i16:$i))], ALU_LITE_X>, Requires<[IsV2]>;
+
+def NEGSW : REGISTERW_REGISTERZ_SIMPLE
+  <(outs SingleReg:$o), (ins SingleReg:$i),
+  "negsw $o = $i", [(set i32:$o, (ssubsat 0, i32:$i))], ALU_LITE_X>, Requires<[IsV2]>;
+
+def NEGSWP : REGISTERW_REGISTERZ_SIMPLE
+  <(outs SingleReg:$o), (ins SingleReg:$i),
+   "negswp $o = $i", [(set v2i32:$o, (vineg_ssat v2i32:$i))], ALU_LITE_X>, Requires<[IsV2]>;
