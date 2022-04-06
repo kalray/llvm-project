@@ -602,3 +602,123 @@ define <2 x i32> @v2i32abds_rr(<2 x i32> %0, <2 x i32> %1) {
   %4 = tail call <2 x i32> @llvm.abs.v2i32(<2 x i32> %3, i1 false)
   ret <2 x i32> %4
 }
+
+define i64 @abdsd(i64 %0, i64 %1) {
+; V1-LABEL: abdsd:
+; V1:       # %bb.0:
+; V1-NEXT:    sbfsd $r0 = $r1, $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    absd $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: abdsd:
+; V2:       # %bb.0:
+; V2-NEXT:    abdsd $r0 = $r1, $r0
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+  %3 = tail call i64 @llvm.ssub.sat.i64(i64 %0, i64 %1)
+  %4 = tail call i64 @llvm.abs.i64(i64 %3, i1 false)
+  ret i64 %4
+}
+
+declare i64 @llvm.ssub.sat.i64(i64, i64)
+
+define i64 @abdsd_ri10(i64 %0, i64 %1) {
+; V1-LABEL: abdsd_ri10:
+; V1:       # %bb.0:
+; V1-NEXT:    sbfsd $r0 = $r0, 171
+; V1-NEXT:    ;;
+; V1-NEXT:    absd $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: abdsd_ri10:
+; V2:       # %bb.0:
+; V2-NEXT:    abdsd $r0 = $r0, 171
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+  %3 = tail call i64 @llvm.ssub.sat.i64(i64 171, i64 %0)
+  %4 = tail call i64 @llvm.abs.i64(i64 %3, i1 false)
+  ret i64 %4
+}
+
+define i64 @abdsd_ri_37(i64 %0, i64 %1) {
+; V1-LABEL: abdsd_ri_37:
+; V1:       # %bb.0:
+; V1-NEXT:    sbfsd $r0 = $r0, 0x1deadbeef
+; V1-NEXT:    ;;
+; V1-NEXT:    absd $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: abdsd_ri_37:
+; V2:       # %bb.0:
+; V2-NEXT:    make $r1 = 0x1deadbeef
+; V2-NEXT:    ;;
+; V2-NEXT:    abdsd $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+  %3 = tail call i64 @llvm.ssub.sat.i64(i64 8030895855, i64 %0)
+  %4 = tail call i64 @llvm.abs.i64(i64 %3, i1 false)
+  ret i64 %4
+}
+
+define i64 @abdsd_ri64(i64 %0, i64 %1) {
+; V1-LABEL: abdsd_ri64:
+; V1:       # %bb.0:
+; V1-NEXT:    sbfsd $r0 = $r0, 0x1dadbeefdeadbeef
+; V1-NEXT:    ;;
+; V1-NEXT:    absd $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: abdsd_ri64:
+; V2:       # %bb.0:
+; V2-NEXT:    make $r1 = 0x1dadbeefdeadbeef
+; V2-NEXT:    ;;
+; V2-NEXT:    abdsd $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+  %3 = tail call i64 @llvm.ssub.sat.i64(i64 2138575335513243375, i64 %0)
+  %4 = tail call i64 @llvm.abs.i64(i64 %3, i1 false)
+  ret i64 %4
+}
+
+define i64 @abdsd_ri(i64 %0, i64 %1) {
+; V1-LABEL: abdsd_ri:
+; V1:       # %bb.0:
+; V1-NEXT:    sbfsd $r0 = $r0, 0xdeadbeef
+; V1-NEXT:    ;;
+; V1-NEXT:    absd $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: abdsd_ri:
+; V2:       # %bb.0:
+; V2-NEXT:    abdsd $r0 = $r0, 0xdeadbeef
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+  %3 = tail call i64 @llvm.ssub.sat.i64(i64 3735928559, i64 %0)
+  %4 = tail call i64 @llvm.abs.i64(i64 %3, i1 false)
+  ret i64 %4
+}
+
+define i64 @abdsd_ri_at(i64 %0, i64 %1) {
+; V1-LABEL: abdsd_ri_at:
+; V1:       # %bb.0:
+; V1-NEXT:    sbfsd $r0 = $r0, 0xdeadbeefdeadbeef
+; V1-NEXT:    ;;
+; V1-NEXT:    absd $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: abdsd_ri_at:
+; V2:       # %bb.0:
+; V2-NEXT:    abdsd.@ $r0 = $r0, 0xdeadbeef
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+  %3 = tail call i64 @llvm.ssub.sat.i64(i64 -2401053088876216593, i64 %0)
+  %4 = tail call i64 @llvm.abs.i64(i64 %3, i1 false)
+  ret i64 %4
+}
