@@ -70,55 +70,106 @@ entry:
   ret i64 %0
 }
 
-define signext i64 @usub_sat64_ri(i64 signext %a) {
-; CHECK-LABEL: usub_sat64_ri:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = -512
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfsd $r0 = $r0, $r1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+define signext i64 @usub_sat64_ri10(i64 signext %a) {
+; KVXV1-LABEL: usub_sat64_ri10:
+; KVXV1:       # %bb.0: # %entry
+; KVXV1-NEXT:    sbfsd $r0 = $r0, -512
+; KVXV1-NEXT:    ret
+; KVXV1-NEXT:    ;;
+;
+; KVXV2-LABEL: usub_sat64_ri10:
+; KVXV2:       # %bb.0: # %entry
+; KVXV2-NEXT:    make $r1 = -512
+; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    sbfsd $r0 = $r0, $r1
+; KVXV2-NEXT:    ret
+; KVXV2-NEXT:    ;;
 entry:
   %0 = tail call i64 @llvm.ssub.sat.i64(i64 -512, i64 %a)
   ret i64 %0
 }
 
 define signext i64 @usub_sat64_ri37(i64 signext %a) {
-; CHECK-LABEL: usub_sat64_ri37:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x1fffffffff
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfsd $r0 = $r0, $r1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KVXV1-LABEL: usub_sat64_ri37:
+; KVXV1:       # %bb.0: # %entry
+; KVXV1-NEXT:    sbfsd $r0 = $r0, 0x1fffffffff
+; KVXV1-NEXT:    ret
+; KVXV1-NEXT:    ;;
+;
+; KVXV2-LABEL: usub_sat64_ri37:
+; KVXV2:       # %bb.0: # %entry
+; KVXV2-NEXT:    make $r1 = 0x1fffffffff
+; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    sbfsd $r0 = $r0, $r1
+; KVXV2-NEXT:    ret
+; KVXV2-NEXT:    ;;
 entry:
   %0 = tail call i64 @llvm.ssub.sat.i64(i64 137438953471, i64 %a)
   ret i64 %0
 }
 
 define signext i64 @usub_sat64_ri64(i64 signext %a) {
-; CHECK-LABEL: usub_sat64_ri64:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x7fffffffffffffff
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfsd $r0 = $r0, $r1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KVXV1-LABEL: usub_sat64_ri64:
+; KVXV1:       # %bb.0: # %entry
+; KVXV1-NEXT:    sbfsd $r0 = $r0, 0x7fffffffffffffff
+; KVXV1-NEXT:    ret
+; KVXV1-NEXT:    ;;
+;
+; KVXV2-LABEL: usub_sat64_ri64:
+; KVXV2:       # %bb.0: # %entry
+; KVXV2-NEXT:    make $r1 = 0x7fffffffffffffff
+; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    sbfsd $r0 = $r0, $r1
+; KVXV2-NEXT:    ret
+; KVXV2-NEXT:    ;;
 entry:
   %0 = tail call i64 @llvm.ssub.sat.i64(i64 9223372036854775807, i64 %a)
   ret i64 %0
 }
 
-define signext i64 @usub_sat64_ri_at(i64 signext %a) {
-; CHECK-LABEL: usub_sat64_ri_at:
+define signext i64 @usub_sat64_ri(i64 signext %a) {
+; CHECK-LABEL: usub_sat64_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x1beeeeef1beeeeef
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfsd $r0 = $r0, $r1
+; CHECK-NEXT:    sbfsd $r0 = $r0, 0x51f41fff
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call i64 @llvm.ssub.sat.i64(i64 2012808794214428399, i64 %a)
+  %0 = tail call i64 @llvm.ssub.sat.i64(i64 1374953471, i64 %a)
+  ret i64 %0
+}
+
+define signext i64 @usub_sat64_not_ri(i64 signext %a) {
+; KVXV1-LABEL: usub_sat64_not_ri:
+; KVXV1:       # %bb.0: # %entry
+; KVXV1-NEXT:    sbfsd $r0 = $r0, 0xfffffffff5926c01
+; KVXV1-NEXT:    ret
+; KVXV1-NEXT:    ;;
+;
+; KVXV2-LABEL: usub_sat64_not_ri:
+; KVXV2:       # %bb.0: # %entry
+; KVXV2-NEXT:    make $r1 = 0xfffffffff5926c01
+; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    sbfsd $r0 = $r0, $r1
+; KVXV2-NEXT:    ret
+; KVXV2-NEXT:    ;;
+entry:
+  %0 = tail call i64 @llvm.ssub.sat.i64(i64 -174953471, i64 %a)
+  ret i64 %0
+}
+define signext i64 @usub_sat64_ri_at(i64 signext %a) {
+; KVXV1-LABEL: usub_sat64_ri_at:
+; KVXV1:       # %bb.0: # %entry
+; KVXV1-NEXT:    sbfsd $r0 = $r0, 0xdeadbeefdeadbeef
+; KVXV1-NEXT:    ret
+; KVXV1-NEXT:    ;;
+;
+; KVXV2-LABEL: usub_sat64_ri_at:
+; KVXV2:       # %bb.0: # %entry
+; KVXV2-NEXT:    sbfsd.@ $r0 = $r0, 0xdeadbeef
+; KVXV2-NEXT:    ret
+; KVXV2-NEXT:    ;;
+entry:
+  %0 = tail call i64 @llvm.ssub.sat.i64(i64 16045690984833335023, i64 %a)
   ret i64 %0
 }
 
