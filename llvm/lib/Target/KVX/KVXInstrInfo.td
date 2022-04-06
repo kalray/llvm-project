@@ -1966,6 +1966,10 @@ defm ADDUSWP : MC_17<"adduswp">, Requires<[IsV2]>;
 }
 
 defm SBFSD : MC_12<"sbfsd">;
+def SBFSDri : SPLAT32_REGISTERW_REGISTERZ_UPPER27_LOWER5_DOUBLE
+    <(outs SingleReg:$out), (ins SingleReg:$rhs, Wrapped32:$lhs, Splat32Mod:$s),
+    "sbfsd$s $out = $rhs, $lhs",
+     [], ALU_LITE_X>, Requires<[IsV2]>;
 
 defm ADDX2D : MC_17<"addx2d">;
 

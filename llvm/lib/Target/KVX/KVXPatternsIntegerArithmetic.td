@@ -1537,8 +1537,26 @@ def : Pat<(sub (v4i16(is_imm_vec_kvx_splat32_at:$IMM)), v4i16:$rs1), (SBFHQri Si
 def : Pat<(sub v4i16:$rs1, v4i16:$rs2), (SBFHQrr SingleReg:$rs2, SingleReg:$rs1)>;
 
 // SBFSD
-// TODO: ri variants change between v1 and v2
-def : Pat<(i64(ssubsat i64:$v1, i64:$v0)), (SBFSDrr SingleReg:$v0, SingleReg:$v1)>;
+// v1 immediate allows sext to i64
+def : Pat<(i64(ssubsat Signed10:$im, i64:$r)),
+          (SBFSDri10 SingleReg:$r, Signed10:$im)>, Requires<[IsV1]>;
+
+def : Pat<(i64(ssubsat Signed37:$im, i64:$r)),
+          (SBFSDri37 SingleReg:$r, Signed37:$im)>, Requires<[IsV1]>;
+
+def : Pat<(i64(ssubsat Wrapped64:$im, i64:$r)),
+          (SBFSDri64 SingleReg:$r, Wrapped64:$im)>, Requires<[IsV1]>;
+
+// v2 immediates
+def : Pat<(i64(ssubsat Unsigned64W:$lhs, i64:$rhs)),
+          (SBFSDri SingleReg:$rhs, (i32(trunc_imm_32 $lhs)), splat32_)>, Requires<[IsV2]>;
+
+def : Pat<(i64(ssubsat UnsignedSplat32Imm:$lhs, i64:$rhs)),
+          (SBFSDri SingleReg:$rhs, (i32(trunc_imm_32 $lhs)), splat32_at)>, Requires<[IsV2]>;
+
+// rr
+def : Pat<(i64(ssubsat i64:$lhs, i64:$rhs)),
+          (SBFSDrr SingleReg:$rhs, SingleReg:$lhs)>;
 
 // SBFSBO
 def : Pat<(v2i8(ssubsat (is_imm_vec:$IMM), v2i8:$v0)),
