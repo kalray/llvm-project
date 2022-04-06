@@ -116,8 +116,8 @@ def : Pat<(vt (abs (ssubsat vt:$rhs, vt:$lhs))), (vt(ABDSBOrr SingleReg:$rhs, Si
 defm : ABDS_64bit<v8i8, ABDSBOrr, ABDSBOri>;
 
 // ABDSW
-def : Pat<(i32 (trunc (i64 (umin (abs (sub Wrapped64W:$lhs, (sext (i32 SingleReg:$rhs)))), 2147483647)))), (i32 (ABDSWri SingleReg:$rhs, (trunc_imm_32 $lhs), splat32_))>, Requires<[IsV2]>;
-def : Pat<(i32 (trunc (i64 (umin (abs (sub (sext(i32 SingleReg:$lhs)), (sext (i32 SingleReg:$rhs)))), 2147483647)))), (i32 (ABDSWrr SingleReg:$rhs, SingleReg:$lhs))>, Requires<[IsV2]>;
+def : Pat<(i32 (trunc (i64 (umin (abs (sub Wrapped64W:$lhs, (sext (i32 SingleReg:$rhs)))), i64_i32_max)))), (i32 (ABDSWri SingleReg:$rhs, (trunc_imm_32 $lhs), splat32_))>, Requires<[IsV2]>;
+def : Pat<(i32 (trunc (i64 (umin (abs (sub (sext(i32 SingleReg:$lhs)), (sext (i32 SingleReg:$rhs)))), i64_i32_max)))), (i32 (ABDSWrr SingleReg:$rhs, SingleReg:$lhs))>, Requires<[IsV2]>;
 
 // ABDSWP
 defm : ABDS_64bit<v2i32, ABDSWPrr, ABDSWPri>;
@@ -1478,8 +1478,8 @@ def : Pat<(i64( smin (smax i64:$v, -32768), 32767 )), (SATDH SingleReg:$v)>;
 def : Pat<(i64( smax (smin i64:$v, 32767), -32768 )), (SATDH SingleReg:$v)>;
 
 // SATDW
-def : Pat<(i64( smin (smax i64:$v, -2147483648), 2147483647 )), (SATDW SingleReg:$v)>;
-def : Pat<(i64( smax (smin i64:$v, 2147483647), -2147483648 )), (SATDW SingleReg:$v)>;
+def : Pat<(i64( smin (smax i64:$v, i64_i32_min), i64_i32_max )), (SATDW SingleReg:$v)>;
+def : Pat<(i64( smax (smin i64:$v, i64_i32_max), i64_i32_min )), (SATDW SingleReg:$v)>;
 } // let Requires<[IsV1]>
 
 // SBFCHCP TODO: add ri variants
@@ -1891,6 +1891,58 @@ defm : ZEFPat<(shl i32:$rs1, Unsigned6:$rs2), (SLLWri SingleReg:$rs1, Unsigned6:
 
 // SLLWPS
 defm : WPShiftScalarOps<shl, SLLWPSri, SLLWPSrr, SLLWri, SLLWrr>;
+
+// SLSBOS
+defm : BOShiftScalarOps<sshlsat, SLSBOSri, SLSBOSrr>, Requires<[IsV2]>;
+
+// SLSD
+def : Pat<(i64 (sshlsat i64:$r, Unsigned6:$im)),
+          (SLSDri SingleReg:$r, Unsigned6:$im)>;
+
+def : Pat<(i64 (sshlsat i64:$rs1, i64:$rs2)),
+          (SLSDrr SingleReg:$rs1, SingleReg:$rs2)>;
+
+// SLSHQS
+defm : HQShiftScalarOps<sshlsat, SLSHQSri, SLSHQSrr>;
+
+// SLSW
+defm : ZEFPat<(i32 (sshlsat i32:$r, Unsigned6W:$im)),
+              (SLSWri SingleReg:$r, (imm32_to_imm64 imm:$im))>;
+
+defm : ZEFPat<(i32 (sshlsat i32:$rs1, i32:$rs2)),
+              (SLSWrr SingleReg:$rs1, SingleReg:$rs2)>;
+
+// SLSWPS
+defm: WPShiftScalarOps<sshlsat, SLSWPSri, SLSWPSrr, SLSWri, SLSWrr>;
+
+// SLUSBOS
+defm : BOShiftScalarOps<ushlsat, SLUSBOSri, SLUSBOSrr>, Requires<[IsV2]>;
+
+// SLUSD
+def : Pat<(i64 (ushlsat i64:$r, Unsigned6:$im)),
+          (SLUSDri SingleReg:$r, Unsigned6:$im)>, Requires<[IsV2]>;
+
+def : Pat<(i64 (ushlsat i64:$rs1, i64:$rs2)),
+          (SLUSDrr SingleReg:$rs1, SingleReg:$rs2)>, Requires<[IsV2]>;
+
+// SLUSHQS
+defm : HQShiftScalarOps<ushlsat, SLUSHQSri, SLUSHQSrr>;
+
+// SLUSW
+defm : ZEFPat<(i32 (ushlsat i32:$r, Unsigned6W:$im)),
+              (SLUSWri SingleReg:$r, (imm32_to_imm64 imm:$im))>, Requires<[IsV2]>;
+
+defm : ZEFPat<(i32 (ushlsat i32:$rs1, i32:$rs2)),
+              (SLUSWrr SingleReg:$rs1, SingleReg:$rs2)>, Requires<[IsV2]>;
+
+defm : ZEFPat<(i32 (ushlsat i32:$r, Unsigned6W:$im)),
+              (MINUDri37 (SLLDri (ZXWD SingleReg:$r), (imm32_to_imm64 imm:$im)), i64_ui32_max)>;
+
+defm : ZEFPat<(i32 (ushlsat i32:$rs1, i32:$rs2)),
+              (MINUDri37 (SLLDrr (ZXWD SingleReg:$rs1), SingleReg:$rs2), i64_ui32_max)>;
+
+// SLUSWPS
+defm: WPShiftScalarOps<ushlsat, SLUSWPSri, SLUSWPSrr, SLUSWri, SLUSWrr>, Requires<[IsV2]>;
 
 // SRAD
 def : Pat<(sra i64:$rs1, i64:$rs2), (SRADrr SingleReg:$rs1, SingleReg:$rs2)>;

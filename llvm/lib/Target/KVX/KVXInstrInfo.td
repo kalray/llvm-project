@@ -997,6 +997,12 @@ multiclass MC_17<string OpcStr> {
 //   defm SRBOQS
 //   defm SRLHQS
 //   defm SLSHQS
+//   defm SLSBOS
+//   defm SLUSBOS
+//   defm SLUSD
+//   defm SLUSW
+//   defm SLUSWPS
+//   defm SLUSHQS
 multiclass MC_18<string OpcStr> {
   def rr : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
@@ -3667,3 +3673,10 @@ def FMMA222W : FP_PairedReg_PairedReg_PairedReg_Transp_Round_Silent_Accumulate
 
 def FMMS222W : FP_PairedReg_PairedReg_PairedReg_Transp_Round_Silent_Accumulate
   <"fmms222w", MAU_AUXR_FP>;
+
+defm SLSBOS : MC_18<"slsbos">, Requires<[IsV2]>;
+defm SLUSBOS : MC_18<"slusbos">, Requires<[IsV2]>;
+defm SLUSD : MC_18<"slusd">, Requires<[IsV2]>;
+defm SLUSHQS : MC_18<"slushqs">, Requires<[IsV2]>;
+defm SLUSW : MC_18<"slusw">, Requires<[IsV2]>;
+defm SLUSWPS : MC_18<"sluswps">, Requires<[IsV2]>;

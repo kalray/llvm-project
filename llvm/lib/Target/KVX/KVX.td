@@ -64,7 +64,7 @@ def get_fpimm_16 : SDNodeXForm<fpimm, [{
 
 
 def KVXInstrInfo : InstrInfo;
-
+include "KVXConstants.td"
 include "KVXInstrInfo.td"
 include "KVXInstrInfoMan.td"
 include "KVXPatterns.td"
