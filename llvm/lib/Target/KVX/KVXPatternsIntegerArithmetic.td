@@ -759,14 +759,14 @@ multiclass COMP_Pat<SDNode Node, Comparison Mod, Comparison RevMod> {
 
 defm : COMP_Pat<seteq,   comparison_eq, comparison_eq>;
 defm : COMP_Pat<setne,   comparison_ne, comparison_ne>;
-defm : COMP_Pat<setugt,  comparison_gtu, comparison_leu>;
-defm : COMP_Pat<setuge,  comparison_geu, comparison_ltu>;
-defm : COMP_Pat<setult,  comparison_ltu, comparison_geu>;
-defm : COMP_Pat<setule,  comparison_leu, comparison_gtu>;
-defm : COMP_Pat<setgt,   comparison_gt, comparison_le>;
-defm : COMP_Pat<setge,   comparison_ge, comparison_lt>;
-defm : COMP_Pat<setlt,   comparison_lt, comparison_ge>;
-defm : COMP_Pat<setle,   comparison_le, comparison_gt>;
+defm : COMP_Pat<setugt,  comparison_gtu, comparison_ltu>;
+defm : COMP_Pat<setuge,  comparison_geu, comparison_leu>;
+defm : COMP_Pat<setult,  comparison_ltu, comparison_gtu>;
+defm : COMP_Pat<setule,  comparison_leu, comparison_geu>;
+defm : COMP_Pat<setgt,   comparison_gt, comparison_lt>;
+defm : COMP_Pat<setge,   comparison_ge, comparison_le>;
+defm : COMP_Pat<setlt,   comparison_lt, comparison_gt>;
+defm : COMP_Pat<setle,   comparison_le, comparison_ge>;
 
 // TODO: add ri variants
 multiclass DOT2_RR_SingleReg<SDNode ExtMul, KVX_INSTRUCTION RR> {
