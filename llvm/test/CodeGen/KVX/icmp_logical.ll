@@ -1417,7 +1417,7 @@ entry:
 define i1 @set_ugt_i64_rr_i32ext_rv(i64 %a, i32 %b){
 ; CHECK-LABEL: set_ugt_i64_rr_i32ext_rv:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    compuwd.leu $r0 = $r1, $r0
+; CHECK-NEXT:    compuwd.ltu $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1453,7 +1453,7 @@ entry:
 define i1 @set_uge_i64_rr_i32ext_rv(i64 %a, i32 %b){
 ; CHECK-LABEL: set_uge_i64_rr_i32ext_rv:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    compuwd.ltu $r0 = $r1, $r0
+; CHECK-NEXT:    compuwd.leu $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1489,7 +1489,7 @@ entry:
 define i1 @set_ult_i64_rr_i32ext_rv(i64 %a, i32 %b){
 ; CHECK-LABEL: set_ult_i64_rr_i32ext_rv:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    compuwd.geu $r0 = $r1, $r0
+; CHECK-NEXT:    compuwd.gtu $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1525,7 +1525,7 @@ entry:
 define i1 @set_ule_i64_rr_i32ext_rv(i64 %a, i32 %b){
 ; CHECK-LABEL: set_ule_i64_rr_i32ext_rv:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    compuwd.gtu $r0 = $r1, $r0
+; CHECK-NEXT:    compuwd.geu $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1561,7 +1561,7 @@ entry:
 define i1 @set_sgt_i64_rr_i32ext_rv(i64 %a, i32 %b){
 ; CHECK-LABEL: set_sgt_i64_rr_i32ext_rv:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    compuwd.le $r0 = $r1, $r0
+; CHECK-NEXT:    compuwd.lt $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1597,7 +1597,7 @@ entry:
 define i1 @set_sge_i64_rr_i32ext_rv(i64 %a, i32 %b){
 ; CHECK-LABEL: set_sge_i64_rr_i32ext_rv:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    compuwd.lt $r0 = $r1, $r0
+; CHECK-NEXT:    compuwd.le $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1633,7 +1633,7 @@ entry:
 define i1 @set_slt_i64_rr_i32ext_rv(i64 %a, i32 %b){
 ; CHECK-LABEL: set_slt_i64_rr_i32ext_rv:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    compuwd.ge $r0 = $r1, $r0
+; CHECK-NEXT:    compuwd.gt $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1669,7 +1669,7 @@ entry:
 define i1 @set_sle_i64_rr_i32ext_rv(i64 %a, i32 %b){
 ; CHECK-LABEL: set_sle_i64_rr_i32ext_rv:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    compuwd.gt $r0 = $r1, $r0
+; CHECK-NEXT:    compuwd.ge $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
