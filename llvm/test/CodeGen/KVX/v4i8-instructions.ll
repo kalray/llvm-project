@@ -1165,3 +1165,133 @@ declare <4 x i8> @llvm.umax.v4i8(<4 x i8> %a, <4 x i8> %b)
 declare <4 x i8> @llvm.umin.v4i8(<4 x i8> %a, <4 x i8> %b)
 
 attributes #0 = { nounwind }
+
+define <4 x i8> @test_div_4(<4 x i8> %a, <4 x i8> %b) #0 {
+; CV1-LABEL: test_div_4:
+; CV1:       # %bb.0:
+; CV1-NEXT:    srlw $r1 = $r0, 24
+; CV1-NEXT:    extfz $r2 = $r0, 23, 16
+; CV1-NEXT:    extfz $r3 = $r0, 15, 8
+; CV1-NEXT:    zxbd $r4 = $r0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sxlbhq $r0 = $r0
+; CV1-NEXT:    sxbd $r1 = $r1
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sxbd $r2 = $r2
+; CV1-NEXT:    sxbd $r3 = $r3
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sxbd $r4 = $r4
+; CV1-NEXT:    extfz $r1 = $r1, 14, 13
+; CV1-NEXT:    ;;
+; CV1-NEXT:    extfz $r2 = $r2, 14, 13
+; CV1-NEXT:    extfz $r3 = $r3, 14, 13
+; CV1-NEXT:    ;;
+; CV1-NEXT:    extfz $r4 = $r4, 14, 13
+; CV1-NEXT:    insf $r2 = $r1, 15, 8
+; CV1-NEXT:    ;;
+; CV1-NEXT:    insf $r4 = $r3, 15, 8
+; CV1-NEXT:    ;;
+; CV1-NEXT:    insf $r4 = $r2, 31, 16
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sxlbhq $r1 = $r4
+; CV1-NEXT:    ;;
+; CV1-NEXT:    addhq $r0 = $r0, $r1
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
+; CV1-NEXT:    ;;
+; CV1-NEXT:    srlw $r1 = $r0, 24
+; CV1-NEXT:    extfz $r2 = $r0, 23, 16
+; CV1-NEXT:    extfz $r3 = $r0, 15, 8
+; CV1-NEXT:    zxbd $r0 = $r0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sxbd $r1 = $r1
+; CV1-NEXT:    sxbd $r2 = $r2
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sxbd $r3 = $r3
+; CV1-NEXT:    sxbd $r0 = $r0
+; CV1-NEXT:    sraw $r1 = $r1, 2
+; CV1-NEXT:    sraw $r2 = $r2, 2
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sraw $r3 = $r3, 2
+; CV1-NEXT:    sraw $r0 = $r0, 2
+; CV1-NEXT:    insf $r2 = $r1, 15, 8
+; CV1-NEXT:    ;;
+; CV1-NEXT:    insf $r0 = $r3, 15, 8
+; CV1-NEXT:    ;;
+; CV1-NEXT:    insf $r0 = $r2, 31, 16
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: test_div_4:
+; CV2:       # %bb.0:
+; CV2-NEXT:    srsbos $r0 = $r0, 2
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
+  %r = sdiv <4 x i8> %a, <i8 4, i8 4, i8 4, i8 4>
+  ret <4 x i8> %r
+}
+
+define <4 x i8> @test_div_32(<4 x i8> %a, <4 x i8> %b) #0 {
+; CV1-LABEL: test_div_32:
+; CV1:       # %bb.0:
+; CV1-NEXT:    srlw $r1 = $r0, 24
+; CV1-NEXT:    extfz $r2 = $r0, 23, 16
+; CV1-NEXT:    extfz $r3 = $r0, 15, 8
+; CV1-NEXT:    zxbd $r4 = $r0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sxlbhq $r0 = $r0
+; CV1-NEXT:    sxbd $r1 = $r1
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sxbd $r2 = $r2
+; CV1-NEXT:    sxbd $r3 = $r3
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sxbd $r4 = $r4
+; CV1-NEXT:    extfz $r1 = $r1, 14, 10
+; CV1-NEXT:    ;;
+; CV1-NEXT:    extfz $r2 = $r2, 14, 10
+; CV1-NEXT:    extfz $r3 = $r3, 14, 10
+; CV1-NEXT:    ;;
+; CV1-NEXT:    extfz $r4 = $r4, 14, 10
+; CV1-NEXT:    insf $r2 = $r1, 15, 8
+; CV1-NEXT:    ;;
+; CV1-NEXT:    insf $r4 = $r3, 15, 8
+; CV1-NEXT:    ;;
+; CV1-NEXT:    insf $r4 = $r2, 31, 16
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sxlbhq $r1 = $r4
+; CV1-NEXT:    ;;
+; CV1-NEXT:    addhq $r0 = $r0, $r1
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
+; CV1-NEXT:    ;;
+; CV1-NEXT:    srlw $r1 = $r0, 24
+; CV1-NEXT:    extfz $r2 = $r0, 23, 16
+; CV1-NEXT:    extfz $r3 = $r0, 15, 8
+; CV1-NEXT:    zxbd $r0 = $r0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sxbd $r1 = $r1
+; CV1-NEXT:    sxbd $r2 = $r2
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sxbd $r3 = $r3
+; CV1-NEXT:    sxbd $r0 = $r0
+; CV1-NEXT:    sraw $r1 = $r1, 5
+; CV1-NEXT:    sraw $r2 = $r2, 5
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sraw $r3 = $r3, 5
+; CV1-NEXT:    sraw $r0 = $r0, 5
+; CV1-NEXT:    insf $r2 = $r1, 15, 8
+; CV1-NEXT:    ;;
+; CV1-NEXT:    insf $r0 = $r3, 15, 8
+; CV1-NEXT:    ;;
+; CV1-NEXT:    insf $r0 = $r2, 31, 16
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: test_div_32:
+; CV2:       # %bb.0:
+; CV2-NEXT:    srsbos $r0 = $r0, 5
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
+  %r = sdiv <4 x i8> %a, <i8 32, i8 32, i8 32, i8 32>
+  ret <4 x i8> %r
+}

@@ -981,3 +981,196 @@ declare <2 x i8> @llvm.smin.v2i8(<2 x i8> %a, <2 x i8> %b)
 declare <2 x i8> @llvm.umax.v2i8(<2 x i8> %a, <2 x i8> %b)
 declare <2 x i8> @llvm.umin.v2i8(<2 x i8> %a, <2 x i8> %b)
 attributes #0 = { nounwind }
+
+define <2 x i8> @test_div_4(<2 x i8> %a, <2 x i8> %b) #0 {
+; V1-LABEL: test_div_4:
+; V1:       # %bb.0:
+; V1-NEXT:    extfz $r1 = $r0, 15, 8
+; V1-NEXT:    zxbd $r2 = $r0
+; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sxbd $r1 = $r1
+; V1-NEXT:    sxbd $r2 = $r2
+; V1-NEXT:    ;;
+; V1-NEXT:    extfz $r1 = $r1, 14, 13
+; V1-NEXT:    extfz $r2 = $r2, 14, 13
+; V1-NEXT:    ;;
+; V1-NEXT:    insf $r2 = $r1, 15, 8
+; V1-NEXT:    ;;
+; V1-NEXT:    sxlbhq $r1 = $r2
+; V1-NEXT:    ;;
+; V1-NEXT:    addhq $r0 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x401
+; V1-NEXT:    ;;
+; V1-NEXT:    extfz $r1 = $r0, 15, 8
+; V1-NEXT:    zxbd $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sxbd $r1 = $r1
+; V1-NEXT:    sxbd $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sraw $r1 = $r1, 2
+; V1-NEXT:    sraw $r0 = $r0, 2
+; V1-NEXT:    ;;
+; V1-NEXT:    insf $r0 = $r1, 15, 8
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: test_div_4:
+; V2:       # %bb.0:
+; V2-NEXT:    srsbos $r0 = $r0, 2
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+  %r = sdiv <2 x i8> %a, <i8 4, i8 4>
+  ret <2 x i8> %r
+}
+
+define <2 x i8> @test_div_32(<2 x i8> %a, <2 x i8> %b) #0 {
+; V1-LABEL: test_div_32:
+; V1:       # %bb.0:
+; V1-NEXT:    extfz $r1 = $r0, 15, 8
+; V1-NEXT:    zxbd $r2 = $r0
+; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sxbd $r1 = $r1
+; V1-NEXT:    sxbd $r2 = $r2
+; V1-NEXT:    ;;
+; V1-NEXT:    extfz $r1 = $r1, 14, 10
+; V1-NEXT:    extfz $r2 = $r2, 14, 10
+; V1-NEXT:    ;;
+; V1-NEXT:    insf $r2 = $r1, 15, 8
+; V1-NEXT:    ;;
+; V1-NEXT:    sxlbhq $r1 = $r2
+; V1-NEXT:    ;;
+; V1-NEXT:    addhq $r0 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x401
+; V1-NEXT:    ;;
+; V1-NEXT:    extfz $r1 = $r0, 15, 8
+; V1-NEXT:    zxbd $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sxbd $r1 = $r1
+; V1-NEXT:    sxbd $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sraw $r1 = $r1, 5
+; V1-NEXT:    sraw $r0 = $r0, 5
+; V1-NEXT:    ;;
+; V1-NEXT:    insf $r0 = $r1, 15, 8
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: test_div_32:
+; V2:       # %bb.0:
+; V2-NEXT:    srsbos $r0 = $r0, 5
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+  %r = sdiv <2 x i8> %a, <i8 32, i8 32>
+  ret <2 x i8> %r
+}
+
+
+define <2 x i8> @test_div_neg64(<2 x i8> %a, <2 x i8> %b) #0 {
+; V1-LABEL: test_div_neg64:
+; V1:       # %bb.0:
+; V1-NEXT:    extfz $r1 = $r0, 15, 8
+; V1-NEXT:    zxbd $r2 = $r0
+; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sxbd $r1 = $r1
+; V1-NEXT:    sxbd $r2 = $r2
+; V1-NEXT:    ;;
+; V1-NEXT:    extfz $r1 = $r1, 14, 9
+; V1-NEXT:    extfz $r2 = $r2, 14, 9
+; V1-NEXT:    ;;
+; V1-NEXT:    insf $r2 = $r1, 15, 8
+; V1-NEXT:    ;;
+; V1-NEXT:    sxlbhq $r1 = $r2
+; V1-NEXT:    ;;
+; V1-NEXT:    addhq $r0 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x401
+; V1-NEXT:    ;;
+; V1-NEXT:    extfz $r1 = $r0, 15, 8
+; V1-NEXT:    zxbd $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sxbd $r1 = $r1
+; V1-NEXT:    sxbd $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sraw $r1 = $r1, 6
+; V1-NEXT:    sraw $r0 = $r0, 6
+; V1-NEXT:    ;;
+; V1-NEXT:    insf $r0 = $r1, 15, 8
+; V1-NEXT:    ;;
+; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    neghq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x401
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: test_div_neg64:
+; V2:       # %bb.0:
+; V2-NEXT:    srsbos $r0 = $r0, 6
+; V2-NEXT:    ;;
+; V2-NEXT:    negbo $r0 = $r0
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+  %r = sdiv <2 x i8> %a, <i8 -64, i8 -64>
+  ret <2 x i8> %r
+}
+
+define <2 x i8> @test_div_notsrs(<2 x i8> %a, <2 x i8> %b) {
+; V1-LABEL: test_div_notsrs:
+; V1:       # %bb.0:
+; V1-NEXT:    extfz $r1 = $r0, 15, 8
+; V1-NEXT:    zxbd $r2 = $r0
+; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sxbd $r1 = $r1
+; V1-NEXT:    sxbd $r2 = $r2
+; V1-NEXT:    ;;
+; V1-NEXT:    extfz $r1 = $r1, 14, 11
+; V1-NEXT:    extfz $r2 = $r2, 14, 10
+; V1-NEXT:    ;;
+; V1-NEXT:    insf $r2 = $r1, 15, 8
+; V1-NEXT:    ;;
+; V1-NEXT:    sxlbhq $r1 = $r2
+; V1-NEXT:    ;;
+; V1-NEXT:    addhq $r0 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x401
+; V1-NEXT:    ;;
+; V1-NEXT:    extfz $r1 = $r0, 15, 8
+; V1-NEXT:    zxbd $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sxbd $r1 = $r1
+; V1-NEXT:    sxbd $r0 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sraw $r1 = $r1, 4
+; V1-NEXT:    sraw $r0 = $r0, 5
+; V1-NEXT:    ;;
+; V1-NEXT:    insf $r0 = $r1, 15, 8
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: test_div_notsrs:
+; V2:       # %bb.0:
+; V2-NEXT:    srabos $r1 = $r0, 7
+; V2-NEXT:    ;;
+; V2-NEXT:    srlbos $r2 = $r1, 3
+; V2-NEXT:    srlbos $r1 = $r1, 4
+; V2-NEXT:    ;;
+; V2-NEXT:    insf $r1 = $r2, 7, 0
+; V2-NEXT:    ;;
+; V2-NEXT:    addbo $r0 = $r0, $r1
+; V2-NEXT:    ;;
+; V2-NEXT:    srabos $r1 = $r0, 5
+; V2-NEXT:    srabos $r0 = $r0, 4
+; V2-NEXT:    ;;
+; V2-NEXT:    insf $r0 = $r1, 7, 0
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+  %r = sdiv <2 x i8> %a, <i8 32, i8 16>
+  ret <2 x i8> %r
+}

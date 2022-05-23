@@ -47,11 +47,13 @@ def KVXJT_PCREL: SDNode<"KVXISD::JT_PCREL", SDTKVXJTPcrel>;
 def KVXFence: SDNode<"KVXISD::FENCE", SDTNone, [SDNPHasChain, SDNPSideEffect]>;
 
 def SDT_KVX_X_YY : SDTypeProfile<1, 2, [SDTCisInt<0>, SDTCisSameAs<2, 1>, SDTCisInt<2>]>;
+def SDT_KVX_X_XY : SDTypeProfile<1, 2, [SDTCisSameAs<1, 0>, SDTCisInt<1>, SDTCisInt<2>]>;
 
 def KVX_sext_mul  :  SDNode<"KVXISD::SEXT_MUL", SDT_KVX_X_YY, []>;
 def KVX_szext_mul  :  SDNode<"KVXISD::SZEXT_MUL", SDT_KVX_X_YY, []>;
 def KVX_zext_mul :  SDNode<"KVXISD::ZEXT_MUL", SDT_KVX_X_YY, []>;
-
+def KVX_srs   : SDNode<"KVXISD::SRS",    SDT_KVX_X_XY, []>;
+def KVX_srsneg: SDNode<"KVXISD::SRSNEG", SDT_KVX_X_XY, []>;
 //===----------------------------------------------------------------------===//
 // Selection DAG patterns using custom DAG nodes.
 //===----------------------------------------------------------------------===//

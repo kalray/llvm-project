@@ -48,6 +48,8 @@ enum NodeType : unsigned {
   PICPCRelativeGOTAddr,
   RET,
   TAIL,
+  SRS,
+  SRSNEG,
 };
 } // namespace KVXISD
 
@@ -240,6 +242,9 @@ private:
   unsigned getInlineAsmMemConstraint(StringRef ConstraintCode) const override;
 
   bool isExtractVecEltCheap(EVT VT, unsigned Index) const override;
+
+  SDValue BuildSDIVPow2(SDNode *N, const APInt &Divisor, SelectionDAG &DAG,
+                        SmallVectorImpl<SDNode *> &Created) const override;
 };
 
 } // namespace llvm
