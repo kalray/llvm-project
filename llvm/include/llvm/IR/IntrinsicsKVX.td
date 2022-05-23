@@ -235,82 +235,89 @@ def int_kvx_fconjdc : Intrinsic<[llvm_v2f64_ty], [llvm_v2f64_ty], [IntrNoMem]>;
 // TCA - tightly-coupled accelerator
 //===----------------------------------------------------------------------===//
 // Move from GRP to TCA registers
-def int_kvx_movetolo: Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_i64_ty, llvm_i64_ty], [IntrNoMem]>;
-def int_kvx_movetohi: Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_i64_ty, llvm_i64_ty], [IntrNoMem]>;
-def int_kvx_moveto: Intrinsic<[llvm_v256i1_ty], [llvm_i64_ty, llvm_i64_ty, llvm_i64_ty, llvm_i64_ty], [IntrNoMem]>;
-def int_kvx_moveoto: Intrinsic<[llvm_v256i1_ty], [llvm_v4i64_ty], [IntrNoMem]>;
+def int_kvx_xmovetolo: Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_i64_ty, llvm_i64_ty], [IntrNoMem]>;
+def int_kvx_xmovetohi: Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_i64_ty, llvm_i64_ty], [IntrNoMem]>;
+def int_kvx_xmoveto: Intrinsic<[llvm_v256i1_ty], [llvm_i64_ty, llvm_i64_ty, llvm_i64_ty, llvm_i64_ty], [IntrNoMem]>;
+def int_kvx_xmoveoto: Intrinsic<[llvm_v256i1_ty], [llvm_v4i64_ty], [IntrNoMem]>;
 
 // Move from TCA registers to GPR
-def int_kvx_movefo: Intrinsic<[llvm_v4i64_ty], [llvm_v256i1_ty], [IntrNoMem]>;
+def int_kvx_xmovefo: Intrinsic<[llvm_v4i64_ty], [llvm_v256i1_ty], [IntrNoMem]>;
 
 // Load / Store vector
-def int_kvx_lv_cond: Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_ptr_ty, llvm_i64_ty, llvm_i32_ty, llvm_i32_ty], [IntrReadMem]>;
-def int_kvx_lvc: Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty], [IntrReadMem]>;
-def int_kvx_lvc_cond: Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_ptr_ty, llvm_i32_ty, llvm_i64_ty, llvm_i32_ty, llvm_i32_ty], [IntrReadMem]>;
-def int_kvx_sv_cond: Intrinsic<[], [llvm_ptr_ty, llvm_v256i1_ty, llvm_i64_ty, llvm_i32_ty], [IntrWriteMem]>;
+def int_kvx_xloadc256: Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_ptr_ty, llvm_i64_ty, llvm_i32_ty, llvm_i32_ty], [IntrReadMem]>;
+def int_kvx_xload1024q: Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty], [IntrReadMem]>;
+def int_kvx_xloadc1024q: Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_ptr_ty, llvm_i64_ty, llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrReadMem]>;
+def int_kvx_xstorec256: Intrinsic<[], [llvm_v256i1_ty, llvm_ptr_ty, llvm_i64_ty, llvm_i32_ty], [IntrWriteMem]>;
 // atomic register copy/shift operations
-def int_kvx_swapvo : Intrinsic<[llvm_v4i64_ty, llvm_v256i1_ty], [llvm_v4i64_ty, llvm_v256i1_ty], [IntrNoMem]>;
-def int_kvx_alignov : Intrinsic<[llvm_v4i64_ty], [llvm_v256i1_ty, llvm_v256i1_ty, llvm_i64_ty], [IntrNoMem]>;
-def int_kvx_alignv : Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_v256i1_ty, llvm_i64_ty], [IntrNoMem]>;
+def int_kvx_xswapvo : Intrinsic<[llvm_v4i64_ty, llvm_v256i1_ty], [llvm_v4i64_ty, llvm_v256i1_ty], [IntrNoMem]>;
+def int_kvx_xaccess512o : Intrinsic<[llvm_v4i64_ty], [llvm_v512i1_ty, llvm_i64_ty], [IntrNoMem]>;
+def int_kvx_xalign512o : Intrinsic<[llvm_v256i1_ty], [llvm_v512i1_ty, llvm_i64_ty], [IntrNoMem]>;
 
 // Matrix / Wide sub-registers manipulation
-def int_kvx_insertwm : Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_v512i1_ty, llvm_i32_ty], [IntrNoMem]>;
-def int_kvx_insertvm : Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_v256i1_ty, llvm_i32_ty], [IntrNoMem]>;
-def int_kvx_insertvw : Intrinsic<[llvm_v512i1_ty],  [llvm_v512i1_ty, llvm_v256i1_ty, llvm_i32_ty], [IntrNoMem]>;
-def int_kvx_movefmw : Intrinsic<[llvm_v512i1_ty], [llvm_v1024i1_ty, llvm_i32_ty], [IntrNoMem]>;
-def int_kvx_movefmv : Intrinsic<[llvm_v256i1_ty], [llvm_v1024i1_ty, llvm_i32_ty], [IntrNoMem]>;
-def int_kvx_movefwv : Intrinsic<[llvm_v256i1_ty], [llvm_v512i1_ty, llvm_i32_ty], [IntrNoMem]>;
-def int_kvx_buildfvm : Intrinsic<[llvm_v1024i1_ty], [llvm_v256i1_ty, llvm_v256i1_ty, llvm_v256i1_ty, llvm_v256i1_ty], [IntrNoMem]>;
-def int_kvx_buildfwm : Intrinsic<[llvm_v1024i1_ty], [llvm_v512i1_ty, llvm_v512i1_ty], [IntrNoMem]>;
-def int_kvx_buildfvw : Intrinsic<[llvm_v512i1_ty], [llvm_v256i1_ty, llvm_v256i1_ty], [IntrNoMem]>;
+def int_kvx_xinsertwm : Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_v512i1_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_xinsertvm : Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_v256i1_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_xinsertvw : Intrinsic<[llvm_v512i1_ty],  [llvm_v512i1_ty, llvm_v256i1_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_xmovefmw : Intrinsic<[llvm_v512i1_ty], [llvm_v1024i1_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_xmovefmv : Intrinsic<[llvm_v256i1_ty], [llvm_v1024i1_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_xmovefwv : Intrinsic<[llvm_v256i1_ty], [llvm_v512i1_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_xbuildfvm : Intrinsic<[llvm_v1024i1_ty], [llvm_v256i1_ty, llvm_v256i1_ty, llvm_v256i1_ty, llvm_v256i1_ty], [IntrNoMem]>;
+def int_kvx_xbuildfwm : Intrinsic<[llvm_v1024i1_ty], [llvm_v512i1_ty, llvm_v512i1_ty], [IntrNoMem]>;
+def int_kvx_xbuildfvw : Intrinsic<[llvm_v512i1_ty], [llvm_v256i1_ty, llvm_v256i1_ty], [IntrNoMem]>;
 
 // TCA arithmetic intrinsics
 class KVX_TCA_Inplace<list<LLVMType> args>
     : Intrinsic<[llvm_v256i1_ty], !listconcat([llvm_v256i1_ty], args), [IntrReadMem]>;
 
 class KVX_TCA_convd : KVX_TCA_Inplace<[llvm_v1024i1_ty, llvm_i32_ty, llvm_i32_ty]>;
-def int_kvx_convdhv0 : KVX_TCA_convd;
-def int_kvx_convdhv1 : KVX_TCA_convd;
-def int_kvx_convdhv : Intrinsic<[llvm_v256i1_ty], [llvm_v1024i1_ty, llvm_i32_ty, llvm_i32_ty], [IntrReadMem]>;
+def int_kvx_xconvdhv0 : KVX_TCA_convd;
+def int_kvx_xconvdhv1 : KVX_TCA_convd;
+def int_kvx_xconvdhv : Intrinsic<[llvm_v256i1_ty], [llvm_v1024i1_ty, llvm_i32_ty, llvm_i32_ty], [IntrReadMem]>;
 
-def int_kvx_convwbv0 : KVX_TCA_convd;
-def int_kvx_convwbv1 : KVX_TCA_convd;
-def int_kvx_convwbv2 : KVX_TCA_convd;
-def int_kvx_convwbv3 : KVX_TCA_convd;
-def int_kvx_convwbv : Intrinsic<[llvm_v256i1_ty], [llvm_v1024i1_ty, llvm_i32_ty, llvm_i32_ty], [IntrReadMem]>;
+def int_kvx_xconvwbv0 : KVX_TCA_convd;
+def int_kvx_xconvwbv1 : KVX_TCA_convd;
+def int_kvx_xconvwbv2 : KVX_TCA_convd;
+def int_kvx_xconvwbv3 : KVX_TCA_convd;
+def int_kvx_xconvwbv : Intrinsic<[llvm_v256i1_ty], [llvm_v1024i1_ty, llvm_i32_ty, llvm_i32_ty], [IntrReadMem]>;
 
 class KVX_TCA_fmma : KVX_TCA_Inplace<[llvm_v512i1_ty, llvm_v256i1_ty, llvm_v256i1_ty]>;
-def int_kvx_fmma242hw0 : KVX_TCA_fmma;
-def int_kvx_fmma242hw1 : KVX_TCA_fmma;
-def int_kvx_fmma242hw2 : KVX_TCA_fmma;
-def int_kvx_fmma242hw3 : KVX_TCA_fmma;
-def int_kvx_fmma444hw : Intrinsic<[llvm_v512i1_ty], [llvm_v512i1_ty, llvm_v256i1_ty, llvm_v256i1_ty], [IntrReadMem]>;
+def int_kvx_xfmma242hw0 : KVX_TCA_fmma;
+def int_kvx_xfmma242hw1 : KVX_TCA_fmma;
+def int_kvx_xfmma242hw2 : KVX_TCA_fmma;
+def int_kvx_xfmma242hw3 : KVX_TCA_fmma;
+def int_kvx_xfmma444hw : Intrinsic<[llvm_v512i1_ty], [llvm_v512i1_ty, llvm_v256i1_ty, llvm_v256i1_ty], [IntrReadMem]>;
 
 class KVX_TCA_Ternary<list<LLVMType> args>
     : Intrinsic<args, !listconcat(args, [llvm_v256i1_ty], [llvm_v256i1_ty]), [IntrReadMem]>;
-def int_kvx_mma444hbd0 : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
-def int_kvx_mma444hbd1 : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
-def int_kvx_mma484hbd : Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_v512i1_ty, llvm_v256i1_ty], [IntrReadMem]>;
-def int_kvx_mma444hd : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
-def int_kvx_mma444suhbd0 : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
-def int_kvx_mma444suhbd1 : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
-def int_kvx_mma484suhbd : Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_v512i1_ty, llvm_v256i1_ty], [IntrReadMem]>;
-def int_kvx_mma444suhd : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
-def int_kvx_mma444uhbd0 : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
-def int_kvx_mma444uhbd1 : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
-def int_kvx_mma484uhbd : Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_v512i1_ty, llvm_v256i1_ty], [IntrReadMem]>;
-def int_kvx_mma444uhd : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
-def int_kvx_mma444ushbd0 : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
-def int_kvx_mma444ushbd1 : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
-def int_kvx_mma484ushbd : Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_v512i1_ty, llvm_v256i1_ty], [IntrReadMem]>;
-def int_kvx_mma444ushd : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
-def int_kvx_mma484bw : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
-def int_kvx_mma484subw : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
-def int_kvx_mma484ubw : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
-def int_kvx_mma484usbw : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
+def int_kvx_xmma444hbd0 : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
+def int_kvx_xmma444hbd1 : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
+def int_kvx_xmma484hbd : Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_v512i1_ty, llvm_v256i1_ty], [IntrReadMem]>;
+def int_kvx_xmma444hd : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
+def int_kvx_xmma444suhbd0 : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
+def int_kvx_xmma444suhbd1 : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
+def int_kvx_xmma484suhbd : Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_v512i1_ty, llvm_v256i1_ty], [IntrReadMem]>;
+def int_kvx_xmma444suhd : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
+def int_kvx_xmma444uhbd0 : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
+def int_kvx_xmma444uhbd1 : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
+def int_kvx_xmma484uhbd : Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_v512i1_ty, llvm_v256i1_ty], [IntrReadMem]>;
+def int_kvx_xmma444uhd : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
+def int_kvx_xmma444ushbd0 : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
+def int_kvx_xmma444ushbd1 : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
+def int_kvx_xmma484ushbd : Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_v512i1_ty, llvm_v256i1_ty], [IntrReadMem]>;
+def int_kvx_xmma444ushd : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
+def int_kvx_xmma484bw : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
+def int_kvx_xmma484subw : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
+def int_kvx_xmma484ubw : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
+def int_kvx_xmma484usbw : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
 
-def int_kvx_mt44d : Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty], [IntrReadMem]>;
+def int_kvx_xmt44d : Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty], [IntrReadMem]>;
 // fscalewv is not inplace, but has same args pattern
-def int_kvx_fscalewv : Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrHasSideEffects]>;
-def int_kvx_fnarrowwhv : Intrinsic<[llvm_v256i1_ty], [llvm_v512i1_ty, llvm_i32_ty, llvm_i32_ty], [IntrHasSideEffects]>;
+def int_kvx_xfscalewv : Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrHasSideEffects]>;
+def int_kvx_xfnarrowwhv : Intrinsic<[llvm_v256i1_ty], [llvm_v512i1_ty, llvm_i32_ty, llvm_i32_ty], [IntrHasSideEffects]>;
+
+//===----------------------------------------------------------------------===//
+// ACB 4.8 TCA intrinsics. Should remove them in ACB 4.10
+//===----------------------------------------------------------------------===//
+def int_kvx_alignov : Intrinsic<[llvm_v4i64_ty], [llvm_v256i1_ty, llvm_v256i1_ty, llvm_i64_ty], [IntrNoMem]>;
+def int_kvx_alignv : Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_v256i1_ty, llvm_i64_ty], [IntrNoMem]>;
+def int_kvx_sv_cond: Intrinsic<[], [llvm_ptr_ty, llvm_v256i1_ty, llvm_i64_ty, llvm_i32_ty], [IntrWriteMem]>;
 }  // TargetPrefix = "kvx"

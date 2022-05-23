@@ -5,7 +5,7 @@
 ; a() {
 ;   int b = 0;
 ;   __kvx_x256 c;
-;   __kvx_x512 d = __builtin_kvx_buildfvw(c, c);
+;   __kvx_x512 d = __builtin_kvx_xbuildfvw(c, c);
 ;   for (int col;; col += 2) {
 ;     int e;
 ;     __kvx_x512 f, g;
@@ -14,8 +14,8 @@
 ; #pragma unroll 3
 ;     for (; e < b; ++e)
 ;       f = d;
-;     h = __builtin_kvx_buildfwm(f, g);
-;     i = __builtin_kvx_convwbv(h, ".rz.sat");
+;     h = __builtin_kvx_xbuildfwm(f, g);
+;     i = __builtin_kvx_xconvwbv(h, ".rz.sat");
 ;     *(__kvx_x256 *)col = i;
 ;   }
 ; }
@@ -103,7 +103,7 @@ define i32 @a() {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    goto .LBB0_5
 ; CHECK-NEXT:    ;;
-  %1 = tail call <512 x i1> @llvm.kvx.buildfvw(<256 x i1> undef, <256 x i1> undef)
+  %1 = tail call <512 x i1> @llvm.kvx.xbuildfvw(<256 x i1> undef, <256 x i1> undef)
   br label %2
 
 2:
@@ -137,16 +137,16 @@ define i32 @a() {
 
 25:
   %26 = phi <512 x i1> [ %14, %2 ], [ %1, %21 ]
-  %27 = tail call <1024 x i1> @llvm.kvx.buildfwm(<512 x i1> %26, <512 x i1> undef)
-  %28 = tail call <256 x i1> @llvm.kvx.convwbv(<1024 x i1> %27, i32 3, i32 0)
+  %27 = tail call <1024 x i1> @llvm.kvx.xbuildfwm(<512 x i1> %26, <512 x i1> undef)
+  %28 = tail call <256 x i1> @llvm.kvx.xconvwbv(<1024 x i1> %27, i32 3, i32 0)
   %29 = inttoptr i64 %3 to <256 x i1>*
   store <256 x i1> %28, <256 x i1>* %29, align 32
   %30 = add i64 %3, 2
   br label %2
 }
 
-declare <512 x i1> @llvm.kvx.buildfvw(<256 x i1>, <256 x i1>)
+declare <512 x i1> @llvm.kvx.xbuildfvw(<256 x i1>, <256 x i1>)
 
-declare <1024 x i1> @llvm.kvx.buildfwm(<512 x i1>, <512 x i1>)
+declare <1024 x i1> @llvm.kvx.xbuildfwm(<512 x i1>, <512 x i1>)
 
-declare <256 x i1> @llvm.kvx.convwbv(<1024 x i1>, i32, i32)
+declare <256 x i1> @llvm.kvx.xconvwbv(<1024 x i1>, i32, i32)

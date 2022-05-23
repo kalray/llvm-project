@@ -22,9 +22,11 @@
 //===----------------------------------------------------------------------===//
 // BCU
 //===----------------------------------------------------------------------===//
-#if defined(BUILTIN) && !defined(NARY_BUILTIN)
+#if defined(BUILTIN) && !defined(NARY_BUILTIN) && !defined(NARY_BUILTIN_4_8)
 #   define NARY_BUILTIN(ID, TYPES, MODE, NARGS) BUILTIN(__builtin_kvx_##ID, TYPES, MODE)
-#elif defined(NARY_BUILTIN) && !defined(BUILTIN)
+#   define NARY_BUILTIN_4_8(ID_4_8, ID_INT, TYPES, MODE, NARGS, STR_4_8, STR_4_9) \
+           NARY_BUILTIN(ID_4_8, TYPES, MODE, NARGS)
+#elif defined(NARY_BUILTIN) && defined(NARY_BUILTIN_4_8) && !defined(BUILTIN)
 #   define BUILTIN(ID, TYPES, ATTRS)
 #endif
 
@@ -415,85 +417,178 @@ BUILTIN(__builtin_kvx_stsuw, "UiUiUi", "")
 //===----------------------------------------------------------------------===//
 // TCA
 //===----------------------------------------------------------------------===//
-NARY_BUILTIN(movetohi, "Tt256Tt256LiLi", "n", 3)
-NARY_BUILTIN(movetolo, "Tt256Tt256LiLi", "n", 3)
-NARY_BUILTIN(moveto, "Tt256LiLiLiLi", "n", 4)
-NARY_BUILTIN(moveoto, "Tt256V4Li", "n", 1)
+NARY_BUILTIN(xmovetohi, "Tx256Tx256LiLi", "n", 3)
+NARY_BUILTIN(xmovetolo, "Tx256Tx256LiLi", "n", 3)
+NARY_BUILTIN(xmoveto, "Tx256LiLiLiLi", "n", 4)
+NARY_BUILTIN(xmoveoto, "Tx256V4Li", "n", 1)
 
-NARY_BUILTIN(movefo, "V4LiTt256", "n", 1)
+NARY_BUILTIN(xmovefo, "V4LiTx256", "n", 1)
 
-NARY_BUILTIN(insertwm, "Tt1024Tt1024Tt512Ui", "n", 3)
-NARY_BUILTIN(insertvm, "Tt1024Tt1024Tt256Ui", "n", 3)
-NARY_BUILTIN(insertvw, "Tt512Tt512Tt256Ui", "n", 3)
+NARY_BUILTIN(xinsertwm, "Tx1024Tx1024Tx512Ui", "n", 3)
+NARY_BUILTIN(xinsertvm, "Tx1024Tx1024Tx256Ui", "n", 3)
+NARY_BUILTIN(xinsertvw, "Tx512Tx512Tx256Ui", "n", 3)
 
-NARY_BUILTIN(movefmw, "Tt512Tt1024Ui", "n", 2)
-NARY_BUILTIN(movefmv, "Tt256Tt1024Ui", "n", 2)
-NARY_BUILTIN(movefwv, "Tt256Tt512Ui", "n", 2)
+NARY_BUILTIN(xmovefmw, "Tx512Tx1024Ui", "n", 2)
+NARY_BUILTIN(xmovefmv, "Tx256Tx1024Ui", "n", 2)
+NARY_BUILTIN(xmovefwv, "Tx256Tx512Ui", "n", 2)
 
-NARY_BUILTIN(buildfvm, "Tt1024Tt256Tt256Tt256Tt256", "n", 4)
-NARY_BUILTIN(buildfwm, "Tt1024Tt512Tt512", "n", 2)
-NARY_BUILTIN(buildfvw, "Tt512Tt256Tt256", "n", 2)
+NARY_BUILTIN(xbuildfvm, "Tx1024Tx256Tx256Tx256Tx256", "n", 4)
+NARY_BUILTIN(xbuildfwm, "Tx1024Tx512Tx512", "n", 2)
+NARY_BUILTIN(xbuildfvw, "Tx512Tx256Tx256", "n", 2)
 
-NARY_BUILTIN(alignov, "V4LiTt256Tt256Li", "n", 3)
-NARY_BUILTIN(alignv, "Tt256Tt256Tt256Li", "n", 3)
+NARY_BUILTIN(xaccess512o, "V4LiTx512Li", "n", 2)
+NARY_BUILTIN(xalign512o, "Tx256Tx512Li", "n", 2)
 
-BUILTIN(__builtin_kvx_lv, "Tt256v*cC*", "n")
-BUILTIN(__builtin_kvx_lv_cond, "Tt256Tt256&v*LicC*", "n")
-BUILTIN(__builtin_kvx_lvc, "Tt1024Tt1024&v*UicC*", "n")
-BUILTIN(__builtin_kvx_lvc_cond, "Tt1024Tt1024&v*UiLicC*", "n")
-BUILTIN(__builtin_kvx_sv, "vv*Tt256", "n")
-BUILTIN(__builtin_kvx_sv_cond, "vv*Tt256LicC*", "n")
+BUILTIN(__builtin_kvx_xload256, "Tx256v*cC*", "n")
+BUILTIN(__builtin_kvx_xloadc256, "Tx256Tx256&v*LicC*", "n")
+BUILTIN(__builtin_kvx_xload1024q0, "Tx1024Tx1024&v*cC*", "n")
+BUILTIN(__builtin_kvx_xload1024q1, "Tx1024Tx1024&v*cC*", "n")
+BUILTIN(__builtin_kvx_xload1024q2, "Tx1024Tx1024&v*cC*", "n")
+BUILTIN(__builtin_kvx_xload1024q3, "Tx1024Tx1024&v*cC*", "n")
+BUILTIN(__builtin_kvx_xloadc1024q0, "Tx1024Tx1024&v*LicC*", "n")
+BUILTIN(__builtin_kvx_xloadc1024q1, "Tx1024Tx1024&v*LicC*", "n")
+BUILTIN(__builtin_kvx_xloadc1024q2, "Tx1024Tx1024&v*LicC*", "n")
+BUILTIN(__builtin_kvx_xloadc1024q3, "Tx1024Tx1024&v*LicC*", "n")
+BUILTIN(__builtin_kvx_xstore256, "vTx256v*", "n")
+BUILTIN(__builtin_kvx_xstorec256, "vTx256v*LicC*", "n")
 
-BUILTIN(__builtin_kvx_swapvo, "vV4Li*Tt256*", "n")
+BUILTIN(__builtin_kvx_xswap256, "V4LiTx256*V4Li", "n")
 
-BUILTIN(__builtin_kvx_convdhv0, "Tt256Tt256Tt1024cC*", "n")
-BUILTIN(__builtin_kvx_convdhv1, "Tt256Tt256Tt1024cC*", "n")
-BUILTIN(__builtin_kvx_convdhv,  "Tt256Tt1024cC*", "n")
+BUILTIN(__builtin_kvx_xconvdhv0, "Tx256Tx256Tx1024cC*", "n")
+BUILTIN(__builtin_kvx_xconvdhv1, "Tx256Tx256Tx1024cC*", "n")
+BUILTIN(__builtin_kvx_xconvdhv,  "Tx256Tx1024cC*", "n")
 
-BUILTIN(__builtin_kvx_convwbv0, "Tt256Tt256Tt1024cC*", "n")
-BUILTIN(__builtin_kvx_convwbv1, "Tt256Tt256Tt1024cC*", "n")
-BUILTIN(__builtin_kvx_convwbv2, "Tt256Tt256Tt1024cC*", "n")
-BUILTIN(__builtin_kvx_convwbv3, "Tt256Tt256Tt1024cC*", "n")
-BUILTIN(__builtin_kvx_convwbv,  "Tt256Tt1024cC*", "n")
+BUILTIN(__builtin_kvx_xconvwbv0, "Tx256Tx256Tx1024cC*", "n")
+BUILTIN(__builtin_kvx_xconvwbv1, "Tx256Tx256Tx1024cC*", "n")
+BUILTIN(__builtin_kvx_xconvwbv2, "Tx256Tx256Tx1024cC*", "n")
+BUILTIN(__builtin_kvx_xconvwbv3, "Tx256Tx256Tx1024cC*", "n")
+BUILTIN(__builtin_kvx_xconvwbv,  "Tx256Tx1024cC*", "n")
 
-NARY_BUILTIN(fmma242hw0, "Tt256Tt256Tt512Tt256Tt256", "n", 4)
-NARY_BUILTIN(fmma242hw1, "Tt256Tt256Tt512Tt256Tt256", "n", 4)
-NARY_BUILTIN(fmma242hw2, "Tt256Tt256Tt512Tt256Tt256", "n", 4)
-NARY_BUILTIN(fmma242hw3, "Tt256Tt256Tt512Tt256Tt256", "n", 4)
-NARY_BUILTIN(fmma444hw,  "Tt512Tt512Tt256Tt256", "n", 3)
+NARY_BUILTIN(xfmma242hw0, "Tx256Tx256Tx512Tx256Tx256", "n", 4)
+NARY_BUILTIN(xfmma242hw1, "Tx256Tx256Tx512Tx256Tx256", "n", 4)
+NARY_BUILTIN(xfmma242hw2, "Tx256Tx256Tx512Tx256Tx256", "n", 4)
+NARY_BUILTIN(xfmma242hw3, "Tx256Tx256Tx512Tx256Tx256", "n", 4)
+NARY_BUILTIN(xfmma444hw,  "Tx512Tx512Tx256Tx256", "n", 3)
 
-NARY_BUILTIN(mma444hbd0, "Tt1024Tt1024Tt256Tt256", "n", 3)
-NARY_BUILTIN(mma444hbd1, "Tt1024Tt1024Tt256Tt256", "n", 3)
-NARY_BUILTIN(mma484hbd, "Tt1024Tt1024Tt512Tt256", "n", 3)
+NARY_BUILTIN(xmma444hbd0, "Tx1024Tx1024Tx256Tx256", "n", 3)
+NARY_BUILTIN(xmma444hbd1, "Tx1024Tx1024Tx256Tx256", "n", 3)
+NARY_BUILTIN(xmma484hbd, "Tx1024Tx1024Tx512Tx256", "n", 3)
 
-NARY_BUILTIN(mma444hd, "Tt1024Tt1024Tt256Tt256", "n", 3)
+NARY_BUILTIN(xmma444hd, "Tx1024Tx1024Tx256Tx256", "n", 3)
 
-NARY_BUILTIN(mma444suhbd0, "Tt1024Tt1024Tt256Tt256", "n", 3)
-NARY_BUILTIN(mma444suhbd1, "Tt1024Tt1024Tt256Tt256", "n", 3)
-NARY_BUILTIN(mma484suhbd, "Tt1024Tt1024Tt512Tt256", "n", 3)
+NARY_BUILTIN(xmma444suhbd0, "Tx1024Tx1024Tx256Tx256", "n", 3)
+NARY_BUILTIN(xmma444suhbd1, "Tx1024Tx1024Tx256Tx256", "n", 3)
+NARY_BUILTIN(xmma484suhbd, "Tx1024Tx1024Tx512Tx256", "n", 3)
 
-NARY_BUILTIN(mma444suhd, "Tt1024Tt1024Tt256Tt256", "n", 3)
+NARY_BUILTIN(xmma444suhd, "Tx1024Tx1024Tx256Tx256", "n", 3)
 
-NARY_BUILTIN(mma444uhbd0, "Tt1024Tt1024Tt256Tt256", "n", 3)
-NARY_BUILTIN(mma444uhbd1, "Tt1024Tt1024Tt256Tt256", "n", 3)
-NARY_BUILTIN(mma484uhbd, "Tt1024Tt1024Tt512Tt256", "n", 3)
+NARY_BUILTIN(xmma444uhbd0, "Tx1024Tx1024Tx256Tx256", "n", 3)
+NARY_BUILTIN(xmma444uhbd1, "Tx1024Tx1024Tx256Tx256", "n", 3)
+NARY_BUILTIN(xmma484uhbd, "Tx1024Tx1024Tx512Tx256", "n", 3)
 
-NARY_BUILTIN(mma444uhd, "Tt1024Tt1024Tt256Tt256", "n", 3)
+NARY_BUILTIN(xmma444uhd, "Tx1024Tx1024Tx256Tx256", "n", 3)
 
-NARY_BUILTIN(mma444ushbd0, "Tt1024Tt1024Tt256Tt256", "n", 3)
-NARY_BUILTIN(mma444ushbd1, "Tt1024Tt1024Tt256Tt256", "n", 3)
-NARY_BUILTIN(mma484ushbd, "Tt1024Tt1024Tt512Tt256", "n", 3)
+NARY_BUILTIN(xmma444ushbd0, "Tx1024Tx1024Tx256Tx256", "n", 3)
+NARY_BUILTIN(xmma444ushbd1, "Tx1024Tx1024Tx256Tx256", "n", 3)
+NARY_BUILTIN(xmma484ushbd, "Tx1024Tx1024Tx512Tx256", "n", 3)
 
-NARY_BUILTIN(mma444ushd, "Tt1024Tt1024Tt256Tt256", "n", 3)
+NARY_BUILTIN(xmma444ushd, "Tx1024Tx1024Tx256Tx256", "n", 3)
 
-NARY_BUILTIN(mma484bw, "Tt512Tt512Tt256Tt256", "n", 3)
-NARY_BUILTIN(mma484subw, "Tt512Tt512Tt256Tt256", "n", 3)
-NARY_BUILTIN(mma484ubw, "Tt512Tt512Tt256Tt256", "n", 3)
-NARY_BUILTIN(mma484usbw, "Tt512Tt512Tt256Tt256", "n", 3)
+NARY_BUILTIN(xmma484bw, "Tx512Tx512Tx256Tx256", "n", 3)
+NARY_BUILTIN(xmma484subw, "Tx512Tx512Tx256Tx256", "n", 3)
+NARY_BUILTIN(xmma484ubw, "Tx512Tx512Tx256Tx256", "n", 3)
+NARY_BUILTIN(xmma484usbw, "Tx512Tx512Tx256Tx256", "n", 3)
 
-NARY_BUILTIN(mt44d, "Tt1024Tt1024", "n", 1)
+NARY_BUILTIN(xmt44d, "Tx1024Tx1024", "n", 1)
 
-BUILTIN(__builtin_kvx_fscalewv, "Tt256Tt256cC*", "n")
-BUILTIN(__builtin_kvx_fnarrowwhv, "Tt256Tt512cC*", "n")
+BUILTIN(__builtin_kvx_xfscalewv, "Tx256Tx256cC*", "n")
+BUILTIN(__builtin_kvx_xfnarrowwhv, "Tx256Tx512cC*", "n")
+
+//===----------------------------------------------------------------------===//
+// TCA ACB 4.8 builtins - to remove in ACB 4.10
+//===----------------------------------------------------------------------===//
+
+NARY_BUILTIN_4_8(movetohi, xmovetohi, "Tx256Tx256LiLi", "n", 3, "movetohi", "xmovetohi")
+NARY_BUILTIN_4_8(movetolo, xmovetolo, "Tx256Tx256LiLi", "n", 3, "movetolo", "xmovetolo")
+NARY_BUILTIN_4_8(moveto, xmoveto, "Tx256LiLiLiLi", "n", 4, "moveto", "xmoveto")
+NARY_BUILTIN_4_8(moveoto, xmoveoto, "Tx256V4Li", "n", 1, "moveoto", "xmoveoto")
+
+NARY_BUILTIN_4_8(movefo, xmovefo, "V4LiTx256", "n", 1, "movefo", "xmovefo")
+
+NARY_BUILTIN_4_8(insertwm, xinsertwm, "Tx1024Tx1024Tx512Ui", "n", 3, "insertwm", "xinsertwm")
+NARY_BUILTIN_4_8(insertvm, xinsertvm, "Tx1024Tx1024Tx256Ui", "n", 3, "insertvm", "xinsertvm")
+NARY_BUILTIN_4_8(insertvw, xinsertvw, "Tx512Tx512Tx256Ui", "n", 3, "insertvw", "xinsertvw")
+
+NARY_BUILTIN_4_8(movefmw, xmovefmw, "Tx512Tx1024Ui", "n", 2, "movefmw", "xmovefmw")
+NARY_BUILTIN_4_8(movefmv, xmovefmv, "Tx256Tx1024Ui", "n", 2, "movefmv", "xmovefmv")
+NARY_BUILTIN_4_8(movefwv, xmovefwv, "Tx256Tx512Ui", "n", 2, "movefwv", "xmovefwv")
+
+NARY_BUILTIN_4_8(buildfvm, xbuildfvm, "Tx1024Tx256Tx256Tx256Tx256", "n", 4, "buildfvm", "xbuildfvm")
+NARY_BUILTIN_4_8(buildfwm, xbuildfwm, "Tx1024Tx512Tx512", "n", 2, "buildfwm", "xbuildfwm")
+NARY_BUILTIN_4_8(buildfvw, xbuildfvw, "Tx512Tx256Tx256", "n", 2, "buildfvw", "xbuildfvw")
+
+NARY_BUILTIN_4_8(alignov, alignov, "V4LiTx256Tx256Li", "n", 3, "alignov", "xaccess512o")
+NARY_BUILTIN_4_8(alignv, alignv, "Tx256Tx256Tx256Li", "n", 3, "alignv", "xalign512o")
+
+BUILTIN(__builtin_kvx_lv, "Tx256v*cC*", "n")
+BUILTIN(__builtin_kvx_lv_cond, "Tx256Tx256&v*LicC*", "n")
+BUILTIN(__builtin_kvx_lvc, "Tx1024Tx1024&v*UicC*", "n")
+BUILTIN(__builtin_kvx_lvc_cond, "Tx1024Tx1024&v*UiLicC*", "n")
+BUILTIN(__builtin_kvx_sv, "vv*Tx256", "n")
+BUILTIN(__builtin_kvx_sv_cond, "vv*Tx256LicC*", "n")
+
+BUILTIN(__builtin_kvx_swapvo, "vV4Li*Tx256*", "n")
+
+BUILTIN(__builtin_kvx_convdhv0, "Tx256Tx256Tx1024cC*", "n")
+BUILTIN(__builtin_kvx_convdhv1, "Tx256Tx256Tx1024cC*", "n")
+BUILTIN(__builtin_kvx_convdhv,  "Tx256Tx1024cC*", "n")
+
+BUILTIN(__builtin_kvx_convwbv0, "Tx256Tx256Tx1024cC*", "n")
+BUILTIN(__builtin_kvx_convwbv1, "Tx256Tx256Tx1024cC*", "n")
+BUILTIN(__builtin_kvx_convwbv2, "Tx256Tx256Tx1024cC*", "n")
+BUILTIN(__builtin_kvx_convwbv3, "Tx256Tx256Tx1024cC*", "n")
+BUILTIN(__builtin_kvx_convwbv,  "Tx256Tx1024cC*", "n")
+
+NARY_BUILTIN_4_8(fmma242hw0, xfmma242hw0, "Tx256Tx256Tx512Tx256Tx256", "n", 4, "fmma242hw0", "xfmma242hw0")
+NARY_BUILTIN_4_8(fmma242hw1, xfmma242hw1, "Tx256Tx256Tx512Tx256Tx256", "n", 4, "fmma242hw1", "xfmma242hw1")
+NARY_BUILTIN_4_8(fmma242hw2, xfmma242hw2, "Tx256Tx256Tx512Tx256Tx256", "n", 4, "fmma242hw2", "xfmma242hw2")
+NARY_BUILTIN_4_8(fmma242hw3, xfmma242hw3, "Tx256Tx256Tx512Tx256Tx256", "n", 4, "fmma242hw3", "xfmma242hw3")
+NARY_BUILTIN_4_8(fmma444hw, xfmma444hw,   "Tx512Tx512Tx256Tx256", "n", 3, "fmma444hw", "xfmma444hw")
+
+NARY_BUILTIN_4_8(mma444hbd0, xmma444hbd0, "Tx1024Tx1024Tx256Tx256", "n", 3, "mma444hbd0", "xmma444hbd0")
+NARY_BUILTIN_4_8(mma444hbd1, xmma444hbd1, "Tx1024Tx1024Tx256Tx256", "n", 3, "mma444hbd1", "xmma444hbd1")
+NARY_BUILTIN_4_8(mma484hbd, xmma484hbd, "Tx1024Tx1024Tx512Tx256", "n", 3, "mma484hbd", "xmma484hbd")
+
+NARY_BUILTIN_4_8(mma444hd, xmma444hd, "Tx1024Tx1024Tx256Tx256", "n", 3, "mma444hd", "xmma444hd")
+
+NARY_BUILTIN_4_8(mma444suhbd0, xmma444suhbd0, "Tx1024Tx1024Tx256Tx256", "n", 3, "mma444suhbd0", "xmma444suhbd0")
+NARY_BUILTIN_4_8(mma444suhbd1, xmma444suhbd1, "Tx1024Tx1024Tx256Tx256", "n", 3, "mma444suhbd1", "xmma444suhbd1")
+NARY_BUILTIN_4_8(mma484suhbd, xmma484suhbd, "Tx1024Tx1024Tx512Tx256", "n", 3, "mma484suhbd", "xmma484suhbd")
+
+NARY_BUILTIN_4_8(mma444suhd, xmma444suhd, "Tx1024Tx1024Tx256Tx256", "n", 3, "mma444suhd", "xmma444suhd")
+
+NARY_BUILTIN_4_8(mma444uhbd0, xmma444uhbd0, "Tx1024Tx1024Tx256Tx256", "n", 3, "mma444uhbd0", "xmma444uhbd0")
+NARY_BUILTIN_4_8(mma444uhbd1, xmma444uhbd1, "Tx1024Tx1024Tx256Tx256", "n", 3, "mma444uhbd1", "xmma444uhbd1")
+NARY_BUILTIN_4_8(mma484uhbd, xmma484uhbd, "Tx1024Tx1024Tx512Tx256", "n", 3, "mma484uhbd", "xmma484uhbd")
+
+NARY_BUILTIN_4_8(mma444uhd, xmma444uhd, "Tx1024Tx1024Tx256Tx256", "n", 3, "mma444uhd", "xmma444uhd")
+
+NARY_BUILTIN_4_8(mma444ushbd0, xmma444ushbd0, "Tx1024Tx1024Tx256Tx256", "n", 3, "mma444ushbd0", "xmma444ushbd0")
+NARY_BUILTIN_4_8(mma444ushbd1, xmma444ushbd1, "Tx1024Tx1024Tx256Tx256", "n", 3, "mma444ushbd1", "xmma444ushbd1")
+NARY_BUILTIN_4_8(mma484ushbd, xmma484ushbd, "Tx1024Tx1024Tx512Tx256", "n", 3, "mma484ushbd", "xmma484ushbd")
+
+NARY_BUILTIN_4_8(mma444ushd, xmma444ushd, "Tx1024Tx1024Tx256Tx256", "n", 3, "mma444ushd", "xmma444ushd")
+
+NARY_BUILTIN_4_8(mma484bw, xmma484bw, "Tx512Tx512Tx256Tx256", "n", 3, "mma484bw", "xmma484bw")
+NARY_BUILTIN_4_8(mma484subw, xmma484subw, "Tx512Tx512Tx256Tx256", "n", 3, "mma484subw", "xmma484subw")
+NARY_BUILTIN_4_8(mma484ubw, xmma484ubw, "Tx512Tx512Tx256Tx256", "n", 3, "mma484ubw", "xmma484ubw")
+NARY_BUILTIN_4_8(mma484usbw, xmma484usbw, "Tx512Tx512Tx256Tx256", "n", 3, "mma484usbw", "xmma484usbw")
+
+NARY_BUILTIN_4_8(mt44d, xmt44d, "Tx1024Tx1024", "n", 1, "mt44d", "xmt44d")
+
+BUILTIN(__builtin_kvx_fscalewv, "Tx256Tx256cC*", "n")
+BUILTIN(__builtin_kvx_fnarrowwhv, "Tx256Tx512cC*", "n")
+
 #undef BUILTIN
 #undef NARY_BUILTIN
+#undef NARY_BUILTIN_4_8

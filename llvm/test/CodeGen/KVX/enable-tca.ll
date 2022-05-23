@@ -84,10 +84,10 @@ define void @foo(i8* nocapture %0, float* nocapture %1) {
 %6 = fadd float %5, 4.200000e+01
 store float %6, float* %1, align 4
 tail call void asm sideeffect "wfxm $$pcr, $0", "r,~{$pcr}"(i64 4503599627370496)
-%7 = tail call <1024 x i1> @llvm.kvx.mt44d(<1024 x i1> %4)
+%7 = tail call <1024 x i1> @llvm.kvx.xmt44d(<1024 x i1> %4)
 tail call void asm sideeffect "wfxm $$pcr, $0", "r,~{$pcr}"(i64 1048576)
 store <1024 x i1> %7, <1024 x i1>* %3, align 32
 ret void
 }
 
-declare <1024 x i1> @llvm.kvx.mt44d(<1024 x i1>)
+declare <1024 x i1> @llvm.kvx.xmt44d(<1024 x i1>)

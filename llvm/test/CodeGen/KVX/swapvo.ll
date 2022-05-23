@@ -58,16 +58,16 @@ define i32 @main() {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <256 x i1> @llvm.kvx.moveoto(<4 x i64> <i64 0, i64 1, i64 2, i64 3>)
-  %1 = tail call { <4 x i64>, <256 x i1> } @llvm.kvx.swapvo(<4 x i64> <i64 1, i64 2, i64 3, i64 4>, <256 x i1> undef)
+  %0 = tail call <256 x i1> @llvm.kvx.xmoveoto(<4 x i64> <i64 0, i64 1, i64 2, i64 3>)
+  %1 = tail call { <4 x i64>, <256 x i1> } @llvm.kvx.xswapvo(<4 x i64> <i64 1, i64 2, i64 3, i64 4>, <256 x i1> undef)
   %2 = extractvalue { <4 x i64>, <256 x i1> } %1, 1
-  %3 = tail call <4 x i64> @llvm.kvx.movefo(<256 x i1> %0)
+  %3 = tail call <4 x i64> @llvm.kvx.xmovefo(<256 x i1> %0)
   %vecext = extractelement <4 x i64> %3, i32 0
   %vecext1 = extractelement <4 x i64> %3, i32 1
   %vecext2 = extractelement <4 x i64> %3, i32 2
   %vecext3 = extractelement <4 x i64> %3, i32 3
   %call = tail call i32 (i8*, ...) @printf(i8* nonnull dereferenceable(1) getelementptr inbounds ([44 x i8], [44 x i8]* @.str, i64 0, i64 0), i64 %vecext, i64 %vecext1, i64 %vecext2, i64 %vecext3)
-  %4 = tail call <4 x i64> @llvm.kvx.movefo(<256 x i1> %2)
+  %4 = tail call <4 x i64> @llvm.kvx.xmovefo(<256 x i1> %2)
   %vecext4 = extractelement <4 x i64> %4, i32 0
   %vecext5 = extractelement <4 x i64> %4, i32 1
   %vecext6 = extractelement <4 x i64> %4, i32 2
@@ -75,7 +75,7 @@ entry:
   %call8 = tail call i32 (i8*, ...) @printf(i8* nonnull dereferenceable(1) getelementptr inbounds ([44 x i8], [44 x i8]* @.str.1, i64 0, i64 0), i64 %vecext4, i64 %vecext5, i64 %vecext6, i64 %vecext7)
   ret i32 0
 }
-declare <256 x i1> @llvm.kvx.moveoto(<4 x i64>)
-declare { <4 x i64>, <256 x i1> } @llvm.kvx.swapvo(<4 x i64>, <256 x i1>)
-declare <4 x i64> @llvm.kvx.movefo(<256 x i1>)
+declare <256 x i1> @llvm.kvx.xmoveoto(<4 x i64>)
+declare { <4 x i64>, <256 x i1> } @llvm.kvx.xswapvo(<4 x i64>, <256 x i1>)
+declare <4 x i64> @llvm.kvx.xmovefo(<256 x i1>)
 declare i32 @printf(i8* nocapture readonly, ...)

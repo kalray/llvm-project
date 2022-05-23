@@ -332,7 +332,7 @@ bool KVXTargetInfo::DecodeTargetTypeFromStr(const char *&Str,
                                             bool &AllowTypeModifiers,
                                             QualType &Type) const {
   switch (*Str++) {
-  case 't': { // TCA vector type, should be of size 256, 512 or 1024
+  case 'x': { // TCA vector type, should be of size 256, 512 or 1024
     AllowTypeModifiers = true;
     char *End;
     unsigned Size = strtoul(Str, &End, 10);

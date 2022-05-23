@@ -12,6 +12,8 @@ typedef int __attribute__((__vector_size__(8 * sizeof(int)))) v8i32;
 
 typedef long __attribute__((__vector_size__(2 * sizeof(long)))) v2i64;
 typedef long __attribute__((__vector_size__(4 * sizeof(long)))) v4i64;
+typedef long __attribute__((__vector_size__(8 * sizeof(long)))) v8i64;
+typedef long __attribute__((__vector_size__(16 * sizeof(long)))) v16i64;
 
 typedef unsigned int __attribute__((__vector_size__(2 * sizeof(unsigned int))))
 v2u32;

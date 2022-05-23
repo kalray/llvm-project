@@ -13,7 +13,7 @@ void foo(tca256_t *v){
 
 // CHECK-LABEL: @movefobv(
 // CHECK-NEXT:    [[TMP2:%.*]] = load <256 x i1>, <256 x i1>* [[TMP0:%.*]], align 32, [[TBAA2]]
-// CHECK-NEXT:    [[TMP3:%.*]] = tail call <4 x i64> @llvm.kvx.movefo(<256 x i1> [[TMP2]]) [[ATTR5:#.*]]
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <4 x i64> @llvm.kvx.xmovefo(<256 x i1> [[TMP2]]) [[ATTR5:#.*]]
 // CHECK-NEXT:    [[TMP4:%.*]] = bitcast <4 x i64> [[TMP3]] to <32 x i8>
 // CHECK-NEXT:    ret <32 x i8> [[TMP4]]
 //
@@ -23,7 +23,7 @@ char32 movefobv(tca256_t *v){
 
 // CHECK-LABEL: @movefohx(
 // CHECK-NEXT:    [[TMP2:%.*]] = load <256 x i1>, <256 x i1>* [[TMP0:%.*]], align 32, [[TBAA2]]
-// CHECK-NEXT:    [[TMP3:%.*]] = tail call <4 x i64> @llvm.kvx.movefo(<256 x i1> [[TMP2]]) [[ATTR5]]
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <4 x i64> @llvm.kvx.xmovefo(<256 x i1> [[TMP2]]) [[ATTR5]]
 // CHECK-NEXT:    [[TMP4:%.*]] = bitcast <4 x i64> [[TMP3]] to <16 x i16>
 // CHECK-NEXT:    ret <16 x i16> [[TMP4]]
 //
@@ -33,7 +33,7 @@ short16 movefohx(tca256_t *v){
 
 // CHECK-LABEL: @movefowo(
 // CHECK-NEXT:    [[TMP2:%.*]] = load <256 x i1>, <256 x i1>* [[TMP0:%.*]], align 32, [[TBAA2]]
-// CHECK-NEXT:    [[TMP3:%.*]] = tail call <4 x i64> @llvm.kvx.movefo(<256 x i1> [[TMP2]]) [[ATTR5]]
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <4 x i64> @llvm.kvx.xmovefo(<256 x i1> [[TMP2]]) [[ATTR5]]
 // CHECK-NEXT:    [[TMP4:%.*]] = bitcast <4 x i64> [[TMP3]] to <8 x i32>
 // CHECK-NEXT:    ret <8 x i32> [[TMP4]]
 //
@@ -43,7 +43,7 @@ int8 movefowo(__kvx_x256 *v){
 
 // CHECK-LABEL: @movefodq(
 // CHECK-NEXT:    [[TMP2:%.*]] = load <256 x i1>, <256 x i1>* [[TMP0:%.*]], align 32, [[TBAA2]]
-// CHECK-NEXT:    [[TMP3:%.*]] = tail call <4 x i64> @llvm.kvx.movefo(<256 x i1> [[TMP2]]) [[ATTR5]]
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <4 x i64> @llvm.kvx.xmovefo(<256 x i1> [[TMP2]]) [[ATTR5]]
 // CHECK-NEXT:    ret <4 x i64> [[TMP3]]
 //
 long4 movefodq(__kvx_x256 *v){
@@ -52,7 +52,7 @@ long4 movefodq(__kvx_x256 *v){
 
 // CHECK-LABEL: @movefofhx(
 // CHECK-NEXT:    [[TMP2:%.*]] = load <256 x i1>, <256 x i1>* [[TMP0:%.*]], align 32, [[TBAA2]]
-// CHECK-NEXT:    [[TMP3:%.*]] = tail call <4 x i64> @llvm.kvx.movefo(<256 x i1> [[TMP2]]) [[ATTR5]]
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <4 x i64> @llvm.kvx.xmovefo(<256 x i1> [[TMP2]]) [[ATTR5]]
 // CHECK-NEXT:    [[TMP4:%.*]] = bitcast <4 x i64> [[TMP3]] to <16 x half>
 // CHECK-NEXT:    ret <16 x half> [[TMP4]]
 //
@@ -62,7 +62,7 @@ half16 movefofhx(tca256_t *v){
 
 // CHECK-LABEL: @movefofwo(
 // CHECK-NEXT:    [[TMP2:%.*]] = load <256 x i1>, <256 x i1>* [[TMP0:%.*]], align 32, [[TBAA2]]
-// CHECK-NEXT:    [[TMP3:%.*]] = tail call <4 x i64> @llvm.kvx.movefo(<256 x i1> [[TMP2]]) [[ATTR5]]
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <4 x i64> @llvm.kvx.xmovefo(<256 x i1> [[TMP2]]) [[ATTR5]]
 // CHECK-NEXT:    [[TMP4:%.*]] = bitcast <4 x i64> [[TMP3]] to <8 x float>
 // CHECK-NEXT:    ret <8 x float> [[TMP4]]
 //
@@ -72,7 +72,7 @@ float8 movefofwo(__kvx_x256 *v){
 
 // CHECK-LABEL: @movefofdq(
 // CHECK-NEXT:    [[TMP2:%.*]] = load <256 x i1>, <256 x i1>* [[TMP0:%.*]], align 32, [[TBAA2]]
-// CHECK-NEXT:    [[TMP3:%.*]] = tail call <4 x i64> @llvm.kvx.movefo(<256 x i1> [[TMP2]]) [[ATTR5]]
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <4 x i64> @llvm.kvx.xmovefo(<256 x i1> [[TMP2]]) [[ATTR5]]
 // CHECK-NEXT:    [[TMP4:%.*]] = bitcast <4 x i64> [[TMP3]] to <4 x double>
 // CHECK-NEXT:    ret <4 x double> [[TMP4]]
 //
@@ -158,7 +158,7 @@ double4 alignofdq(__kvx_x256 *v0, __kvx_x256 *v1, unsigned long byteshift){
 
 // CHECK-LABEL: @movetobv(
 // CHECK-NEXT:    [[TMP3:%.*]] = bitcast <32 x i8> [[TMP0:%.*]] to <4 x i64>
-// CHECK-NEXT:    [[TMP4:%.*]] = tail call <256 x i1> @llvm.kvx.moveoto(<4 x i64> [[TMP3]]) [[ATTR5]]
+// CHECK-NEXT:    [[TMP4:%.*]] = tail call <256 x i1> @llvm.kvx.xmoveoto(<4 x i64> [[TMP3]]) [[ATTR5]]
 // CHECK-NEXT:    store <256 x i1> [[TMP4]], <256 x i1>* [[TMP1:%.*]], align 32, [[TBAA2]]
 // CHECK-NEXT:    ret <256 x i1>* [[TMP1]]
 //
@@ -168,7 +168,7 @@ __kvx_x256 * movetobv(char32 bv, __kvx_x256 *v){
 
 // CHECK-LABEL: @movetohx(
 // CHECK-NEXT:    [[TMP3:%.*]] = bitcast <16 x i16> [[TMP0:%.*]] to <4 x i64>
-// CHECK-NEXT:    [[TMP4:%.*]] = tail call <256 x i1> @llvm.kvx.moveoto(<4 x i64> [[TMP3]]) [[ATTR5]]
+// CHECK-NEXT:    [[TMP4:%.*]] = tail call <256 x i1> @llvm.kvx.xmoveoto(<4 x i64> [[TMP3]]) [[ATTR5]]
 // CHECK-NEXT:    store <256 x i1> [[TMP4]], <256 x i1>* [[TMP1:%.*]], align 32, [[TBAA2]]
 // CHECK-NEXT:    ret <256 x i1>* [[TMP1]]
 //
@@ -178,7 +178,7 @@ __kvx_x256 *movetohx(short16 hx, __kvx_x256 *v){
 
 // CHECK-LABEL: @movetowo(
 // CHECK-NEXT:    [[TMP3:%.*]] = bitcast <8 x i32> [[TMP0:%.*]] to <4 x i64>
-// CHECK-NEXT:    [[TMP4:%.*]] = tail call <256 x i1> @llvm.kvx.moveoto(<4 x i64> [[TMP3]]) [[ATTR5]]
+// CHECK-NEXT:    [[TMP4:%.*]] = tail call <256 x i1> @llvm.kvx.xmoveoto(<4 x i64> [[TMP3]]) [[ATTR5]]
 // CHECK-NEXT:    store <256 x i1> [[TMP4]], <256 x i1>* [[TMP1:%.*]], align 32, [[TBAA2]]
 // CHECK-NEXT:    ret <256 x i1>* [[TMP1]]
 //
@@ -187,7 +187,7 @@ __kvx_x256 *movetowo(int8 wo, __kvx_x256 *v){
 }
 
 // CHECK-LABEL: @movetodq(
-// CHECK-NEXT:    [[TMP3:%.*]] = tail call <256 x i1> @llvm.kvx.moveoto(<4 x i64> [[TMP0:%.*]]) [[ATTR5]]
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <256 x i1> @llvm.kvx.xmoveoto(<4 x i64> [[TMP0:%.*]]) [[ATTR5]]
 // CHECK-NEXT:    store <256 x i1> [[TMP3]], <256 x i1>* [[TMP1:%.*]], align 32, [[TBAA2]]
 // CHECK-NEXT:    ret <256 x i1>* [[TMP1]]
 //
@@ -197,7 +197,7 @@ __kvx_x256 *movetodq(long4 dq, __kvx_x256 *v){
 
 // CHECK-LABEL: @movetofhx(
 // CHECK-NEXT:    [[TMP3:%.*]] = bitcast <16 x half> [[TMP0:%.*]] to <4 x i64>
-// CHECK-NEXT:    [[TMP4:%.*]] = tail call <256 x i1> @llvm.kvx.moveoto(<4 x i64> [[TMP3]]) [[ATTR5]]
+// CHECK-NEXT:    [[TMP4:%.*]] = tail call <256 x i1> @llvm.kvx.xmoveoto(<4 x i64> [[TMP3]]) [[ATTR5]]
 // CHECK-NEXT:    store <256 x i1> [[TMP4]], <256 x i1>* [[TMP1:%.*]], align 32, [[TBAA2]]
 // CHECK-NEXT:    ret <256 x i1>* [[TMP1]]
 //
@@ -207,7 +207,7 @@ __kvx_x256 *movetofhx(half16 fhx, __kvx_x256 *v){
 
 // CHECK-LABEL: @movetofo(
 // CHECK-NEXT:    [[TMP3:%.*]] = bitcast <8 x float> [[TMP0:%.*]] to <4 x i64>
-// CHECK-NEXT:    [[TMP4:%.*]] = tail call <256 x i1> @llvm.kvx.moveoto(<4 x i64> [[TMP3]]) [[ATTR5]]
+// CHECK-NEXT:    [[TMP4:%.*]] = tail call <256 x i1> @llvm.kvx.xmoveoto(<4 x i64> [[TMP3]]) [[ATTR5]]
 // CHECK-NEXT:    store <256 x i1> [[TMP4]], <256 x i1>* [[TMP1:%.*]], align 32, [[TBAA2]]
 // CHECK-NEXT:    ret <256 x i1>* [[TMP1]]
 //
@@ -217,7 +217,7 @@ __kvx_x256 *movetofo(float8 fo, __kvx_x256 *v){
 
 // CHECK-LABEL: @movetofdq(
 // CHECK-NEXT:    [[TMP3:%.*]] = bitcast <4 x double> [[TMP0:%.*]] to <4 x i64>
-// CHECK-NEXT:    [[TMP4:%.*]] = tail call <256 x i1> @llvm.kvx.moveoto(<4 x i64> [[TMP3]]) [[ATTR5]]
+// CHECK-NEXT:    [[TMP4:%.*]] = tail call <256 x i1> @llvm.kvx.xmoveoto(<4 x i64> [[TMP3]]) [[ATTR5]]
 // CHECK-NEXT:    store <256 x i1> [[TMP4]], <256 x i1>* [[TMP1:%.*]], align 32, [[TBAA2]]
 // CHECK-NEXT:    ret <256 x i1>* [[TMP1]]
 //
@@ -226,14 +226,14 @@ __kvx_x256 *movetofdq(double4 fdq, __kvx_x256 *v){
 }
 
 // CHECK-LABEL: @swapvobv(
-// CHECK-NEXT:    [[TMP3:%.*]] = bitcast <32 x i8>* [[TMP0:%.*]] to <4 x i64>*
-// CHECK-NEXT:    [[TMP4:%.*]] = load <4 x i64>, <4 x i64>* [[TMP3]], align 32
-// CHECK-NEXT:    [[TMP5:%.*]] = load <256 x i1>, <256 x i1>* [[TMP1:%.*]], align 32
-// CHECK-NEXT:    [[TMP6:%.*]] = tail call { <4 x i64>, <256 x i1> } @llvm.kvx.swapvo(<4 x i64> [[TMP4]], <256 x i1> [[TMP5]]) [[ATTR5]]
-// CHECK-NEXT:    [[TMP7:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP6]], 0
-// CHECK-NEXT:    store <4 x i64> [[TMP7]], <4 x i64>* [[TMP3]], align 32
-// CHECK-NEXT:    [[TMP8:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP6]], 1
-// CHECK-NEXT:    store <256 x i1> [[TMP8]], <256 x i1>* [[TMP1]], align 32
+// CHECK-NEXT:    [[TMP3:%.*]] = load <256 x i1>, <256 x i1>* [[TMP1:%.*]], align 32
+// CHECK-NEXT:    [[TMP4:%.*]] = bitcast <32 x i8>* [[TMP0:%.*]] to <4 x i64>*
+// CHECK-NEXT:    [[TMP5:%.*]] = load <4 x i64>, <4 x i64>* [[TMP4]], align 32
+// CHECK-NEXT:    [[TMP6:%.*]] = tail call { <4 x i64>, <256 x i1> } @llvm.kvx.xswapvo(<4 x i64> [[TMP5]], <256 x i1> [[TMP3]]) [[ATTR5]]
+// CHECK-NEXT:    [[TMP7:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP6]], 1
+// CHECK-NEXT:    store <256 x i1> [[TMP7]], <256 x i1>* [[TMP1]], align 32
+// CHECK-NEXT:    [[TMP8:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP6]], 0
+// CHECK-NEXT:    store <4 x i64> [[TMP8]], <4 x i64>* [[TMP4]], align 32
 // CHECK-NEXT:    ret void
 //
 void swapvobv(char32 *v0, __kvx_x256 *v1){
@@ -241,14 +241,14 @@ void swapvobv(char32 *v0, __kvx_x256 *v1){
 }
 
 // CHECK-LABEL: @swapvohx(
-// CHECK-NEXT:    [[TMP3:%.*]] = bitcast <16 x i16>* [[TMP0:%.*]] to <4 x i64>*
-// CHECK-NEXT:    [[TMP4:%.*]] = load <4 x i64>, <4 x i64>* [[TMP3]], align 32
-// CHECK-NEXT:    [[TMP5:%.*]] = load <256 x i1>, <256 x i1>* [[TMP1:%.*]], align 32
-// CHECK-NEXT:    [[TMP6:%.*]] = tail call { <4 x i64>, <256 x i1> } @llvm.kvx.swapvo(<4 x i64> [[TMP4]], <256 x i1> [[TMP5]]) [[ATTR5]]
-// CHECK-NEXT:    [[TMP7:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP6]], 0
-// CHECK-NEXT:    store <4 x i64> [[TMP7]], <4 x i64>* [[TMP3]], align 32
-// CHECK-NEXT:    [[TMP8:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP6]], 1
-// CHECK-NEXT:    store <256 x i1> [[TMP8]], <256 x i1>* [[TMP1]], align 32
+// CHECK-NEXT:    [[TMP3:%.*]] = load <256 x i1>, <256 x i1>* [[TMP1:%.*]], align 32
+// CHECK-NEXT:    [[TMP4:%.*]] = bitcast <16 x i16>* [[TMP0:%.*]] to <4 x i64>*
+// CHECK-NEXT:    [[TMP5:%.*]] = load <4 x i64>, <4 x i64>* [[TMP4]], align 32
+// CHECK-NEXT:    [[TMP6:%.*]] = tail call { <4 x i64>, <256 x i1> } @llvm.kvx.xswapvo(<4 x i64> [[TMP5]], <256 x i1> [[TMP3]]) [[ATTR5]]
+// CHECK-NEXT:    [[TMP7:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP6]], 1
+// CHECK-NEXT:    store <256 x i1> [[TMP7]], <256 x i1>* [[TMP1]], align 32
+// CHECK-NEXT:    [[TMP8:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP6]], 0
+// CHECK-NEXT:    store <4 x i64> [[TMP8]], <4 x i64>* [[TMP4]], align 32
 // CHECK-NEXT:    ret void
 //
 void swapvohx(short16 *v0, __kvx_x256 *v1){
@@ -256,14 +256,14 @@ void swapvohx(short16 *v0, __kvx_x256 *v1){
 }
 
 // CHECK-LABEL: @swapvowo(
-// CHECK-NEXT:    [[TMP3:%.*]] = bitcast <8 x i32>* [[TMP0:%.*]] to <4 x i64>*
-// CHECK-NEXT:    [[TMP4:%.*]] = load <4 x i64>, <4 x i64>* [[TMP3]], align 32
-// CHECK-NEXT:    [[TMP5:%.*]] = load <256 x i1>, <256 x i1>* [[TMP1:%.*]], align 32
-// CHECK-NEXT:    [[TMP6:%.*]] = tail call { <4 x i64>, <256 x i1> } @llvm.kvx.swapvo(<4 x i64> [[TMP4]], <256 x i1> [[TMP5]]) [[ATTR5]]
-// CHECK-NEXT:    [[TMP7:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP6]], 0
-// CHECK-NEXT:    store <4 x i64> [[TMP7]], <4 x i64>* [[TMP3]], align 32
-// CHECK-NEXT:    [[TMP8:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP6]], 1
-// CHECK-NEXT:    store <256 x i1> [[TMP8]], <256 x i1>* [[TMP1]], align 32
+// CHECK-NEXT:    [[TMP3:%.*]] = load <256 x i1>, <256 x i1>* [[TMP1:%.*]], align 32
+// CHECK-NEXT:    [[TMP4:%.*]] = bitcast <8 x i32>* [[TMP0:%.*]] to <4 x i64>*
+// CHECK-NEXT:    [[TMP5:%.*]] = load <4 x i64>, <4 x i64>* [[TMP4]], align 32
+// CHECK-NEXT:    [[TMP6:%.*]] = tail call { <4 x i64>, <256 x i1> } @llvm.kvx.xswapvo(<4 x i64> [[TMP5]], <256 x i1> [[TMP3]]) [[ATTR5]]
+// CHECK-NEXT:    [[TMP7:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP6]], 1
+// CHECK-NEXT:    store <256 x i1> [[TMP7]], <256 x i1>* [[TMP1]], align 32
+// CHECK-NEXT:    [[TMP8:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP6]], 0
+// CHECK-NEXT:    store <4 x i64> [[TMP8]], <4 x i64>* [[TMP4]], align 32
 // CHECK-NEXT:    ret void
 //
 void swapvowo(int8 *v0, __kvx_x256 *v1){
@@ -271,13 +271,13 @@ void swapvowo(int8 *v0, __kvx_x256 *v1){
 }
 
 // CHECK-LABEL: @swapvodq(
-// CHECK-NEXT:    [[TMP3:%.*]] = load <4 x i64>, <4 x i64>* [[TMP0:%.*]], align 32
-// CHECK-NEXT:    [[TMP4:%.*]] = load <256 x i1>, <256 x i1>* [[TMP1:%.*]], align 32
-// CHECK-NEXT:    [[TMP5:%.*]] = tail call { <4 x i64>, <256 x i1> } @llvm.kvx.swapvo(<4 x i64> [[TMP3]], <256 x i1> [[TMP4]]) [[ATTR5]]
-// CHECK-NEXT:    [[TMP6:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP5]], 0
-// CHECK-NEXT:    store <4 x i64> [[TMP6]], <4 x i64>* [[TMP0]], align 32
-// CHECK-NEXT:    [[TMP7:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP5]], 1
-// CHECK-NEXT:    store <256 x i1> [[TMP7]], <256 x i1>* [[TMP1]], align 32
+// CHECK-NEXT:    [[TMP3:%.*]] = load <256 x i1>, <256 x i1>* [[TMP1:%.*]], align 32
+// CHECK-NEXT:    [[TMP4:%.*]] = load <4 x i64>, <4 x i64>* [[TMP0:%.*]], align 32
+// CHECK-NEXT:    [[TMP5:%.*]] = tail call { <4 x i64>, <256 x i1> } @llvm.kvx.xswapvo(<4 x i64> [[TMP4]], <256 x i1> [[TMP3]]) [[ATTR5]]
+// CHECK-NEXT:    [[TMP6:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP5]], 1
+// CHECK-NEXT:    store <256 x i1> [[TMP6]], <256 x i1>* [[TMP1]], align 32
+// CHECK-NEXT:    [[TMP7:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP5]], 0
+// CHECK-NEXT:    store <4 x i64> [[TMP7]], <4 x i64>* [[TMP0]], align 32
 // CHECK-NEXT:    ret void
 //
 void swapvodq(long4 *v0, __kvx_x256 *v1){
@@ -285,14 +285,14 @@ void swapvodq(long4 *v0, __kvx_x256 *v1){
 }
 
 // CHECK-LABEL: @swapvofhx(
-// CHECK-NEXT:    [[TMP3:%.*]] = bitcast <16 x half>* [[TMP0:%.*]] to <4 x i64>*
-// CHECK-NEXT:    [[TMP4:%.*]] = load <4 x i64>, <4 x i64>* [[TMP3]], align 32
-// CHECK-NEXT:    [[TMP5:%.*]] = load <256 x i1>, <256 x i1>* [[TMP1:%.*]], align 32
-// CHECK-NEXT:    [[TMP6:%.*]] = tail call { <4 x i64>, <256 x i1> } @llvm.kvx.swapvo(<4 x i64> [[TMP4]], <256 x i1> [[TMP5]]) [[ATTR5]]
-// CHECK-NEXT:    [[TMP7:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP6]], 0
-// CHECK-NEXT:    store <4 x i64> [[TMP7]], <4 x i64>* [[TMP3]], align 32
-// CHECK-NEXT:    [[TMP8:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP6]], 1
-// CHECK-NEXT:    store <256 x i1> [[TMP8]], <256 x i1>* [[TMP1]], align 32
+// CHECK-NEXT:    [[TMP3:%.*]] = load <256 x i1>, <256 x i1>* [[TMP1:%.*]], align 32
+// CHECK-NEXT:    [[TMP4:%.*]] = bitcast <16 x half>* [[TMP0:%.*]] to <4 x i64>*
+// CHECK-NEXT:    [[TMP5:%.*]] = load <4 x i64>, <4 x i64>* [[TMP4]], align 32
+// CHECK-NEXT:    [[TMP6:%.*]] = tail call { <4 x i64>, <256 x i1> } @llvm.kvx.xswapvo(<4 x i64> [[TMP5]], <256 x i1> [[TMP3]]) [[ATTR5]]
+// CHECK-NEXT:    [[TMP7:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP6]], 1
+// CHECK-NEXT:    store <256 x i1> [[TMP7]], <256 x i1>* [[TMP1]], align 32
+// CHECK-NEXT:    [[TMP8:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP6]], 0
+// CHECK-NEXT:    store <4 x i64> [[TMP8]], <4 x i64>* [[TMP4]], align 32
 // CHECK-NEXT:    ret void
 //
 void swapvofhx(half16 *v0, __kvx_x256 *v1){
@@ -300,14 +300,14 @@ void swapvofhx(half16 *v0, __kvx_x256 *v1){
 }
 
 // CHECK-LABEL: @swapvofwo(
-// CHECK-NEXT:    [[TMP3:%.*]] = bitcast <8 x float>* [[TMP0:%.*]] to <4 x i64>*
-// CHECK-NEXT:    [[TMP4:%.*]] = load <4 x i64>, <4 x i64>* [[TMP3]], align 32
-// CHECK-NEXT:    [[TMP5:%.*]] = load <256 x i1>, <256 x i1>* [[TMP1:%.*]], align 32
-// CHECK-NEXT:    [[TMP6:%.*]] = tail call { <4 x i64>, <256 x i1> } @llvm.kvx.swapvo(<4 x i64> [[TMP4]], <256 x i1> [[TMP5]]) [[ATTR5]]
-// CHECK-NEXT:    [[TMP7:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP6]], 0
-// CHECK-NEXT:    store <4 x i64> [[TMP7]], <4 x i64>* [[TMP3]], align 32
-// CHECK-NEXT:    [[TMP8:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP6]], 1
-// CHECK-NEXT:    store <256 x i1> [[TMP8]], <256 x i1>* [[TMP1]], align 32
+// CHECK-NEXT:    [[TMP3:%.*]] = load <256 x i1>, <256 x i1>* [[TMP1:%.*]], align 32
+// CHECK-NEXT:    [[TMP4:%.*]] = bitcast <8 x float>* [[TMP0:%.*]] to <4 x i64>*
+// CHECK-NEXT:    [[TMP5:%.*]] = load <4 x i64>, <4 x i64>* [[TMP4]], align 32
+// CHECK-NEXT:    [[TMP6:%.*]] = tail call { <4 x i64>, <256 x i1> } @llvm.kvx.xswapvo(<4 x i64> [[TMP5]], <256 x i1> [[TMP3]]) [[ATTR5]]
+// CHECK-NEXT:    [[TMP7:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP6]], 1
+// CHECK-NEXT:    store <256 x i1> [[TMP7]], <256 x i1>* [[TMP1]], align 32
+// CHECK-NEXT:    [[TMP8:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP6]], 0
+// CHECK-NEXT:    store <4 x i64> [[TMP8]], <4 x i64>* [[TMP4]], align 32
 // CHECK-NEXT:    ret void
 //
 void swapvofwo(float8 *v0, __kvx_x256 *v1){
@@ -315,14 +315,14 @@ void swapvofwo(float8 *v0, __kvx_x256 *v1){
 }
 
 // CHECK-LABEL: @swapvofdq(
-// CHECK-NEXT:    [[TMP3:%.*]] = bitcast <4 x double>* [[TMP0:%.*]] to <4 x i64>*
-// CHECK-NEXT:    [[TMP4:%.*]] = load <4 x i64>, <4 x i64>* [[TMP3]], align 32
-// CHECK-NEXT:    [[TMP5:%.*]] = load <256 x i1>, <256 x i1>* [[TMP1:%.*]], align 32
-// CHECK-NEXT:    [[TMP6:%.*]] = tail call { <4 x i64>, <256 x i1> } @llvm.kvx.swapvo(<4 x i64> [[TMP4]], <256 x i1> [[TMP5]]) [[ATTR5]]
-// CHECK-NEXT:    [[TMP7:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP6]], 0
-// CHECK-NEXT:    store <4 x i64> [[TMP7]], <4 x i64>* [[TMP3]], align 32
-// CHECK-NEXT:    [[TMP8:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP6]], 1
-// CHECK-NEXT:    store <256 x i1> [[TMP8]], <256 x i1>* [[TMP1]], align 32
+// CHECK-NEXT:    [[TMP3:%.*]] = load <256 x i1>, <256 x i1>* [[TMP1:%.*]], align 32
+// CHECK-NEXT:    [[TMP4:%.*]] = bitcast <4 x double>* [[TMP0:%.*]] to <4 x i64>*
+// CHECK-NEXT:    [[TMP5:%.*]] = load <4 x i64>, <4 x i64>* [[TMP4]], align 32
+// CHECK-NEXT:    [[TMP6:%.*]] = tail call { <4 x i64>, <256 x i1> } @llvm.kvx.xswapvo(<4 x i64> [[TMP5]], <256 x i1> [[TMP3]]) [[ATTR5]]
+// CHECK-NEXT:    [[TMP7:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP6]], 1
+// CHECK-NEXT:    store <256 x i1> [[TMP7]], <256 x i1>* [[TMP1]], align 32
+// CHECK-NEXT:    [[TMP8:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP6]], 0
+// CHECK-NEXT:    store <4 x i64> [[TMP8]], <4 x i64>* [[TMP4]], align 32
 // CHECK-NEXT:    ret void
 //
 void swapvofdq(double4 *v0, __kvx_x256 *v1){
