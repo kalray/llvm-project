@@ -951,8 +951,6 @@ define <4 x i64> @test_tca_builtins(i64 %a, i64 %b, i64 %c, i64 %d, <256 x i1>* 
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv.c2.odd $r0 ? $a0a1a2a3 = [$r1]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 0[$r4] = $a4
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv.even $r33 ? [$r2] = $a4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 32[$r5] = $a7
