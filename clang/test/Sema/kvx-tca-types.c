@@ -342,7 +342,7 @@ tca256_t globaltca256_t; // expected-error {{invalid use of KVX TCA type}}
 void test256Local(int *ptr, unsigned char vc) {
   __kvx_x256 *Vecp = (__kvx_x256 *)ptr;
   __kvx_x256 Vec1 = *Vecp;
-  __kvx_x256 Vec2 = __builtin_kvx_moveto(vc, vc, vc, 1);
+  __kvx_x256 Vec2 = __builtin_kvx_xmoveto(vc, vc, vc, 1);
   *Vecp = Vec2;
 }
 

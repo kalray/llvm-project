@@ -27,12 +27,12 @@ define void @a() {
 
 14:
   %15 = phi <512 x i1> [ %11, %1 ], [ zeroinitializer, %13 ]
-  %16 = tail call <1024 x i1> @llvm.kvx.buildfwm(<512 x i1> %15, <512 x i1> undef)
-  %17 = tail call <256 x i1> @llvm.kvx.convwbv(<1024 x i1> %16, i32 3, i32 0)
+  %16 = tail call <1024 x i1> @llvm.kvx.xbuildfwm(<512 x i1> %15, <512 x i1> undef)
+  %17 = tail call <256 x i1> @llvm.kvx.xconvwbv(<1024 x i1> %16, i32 3, i32 0)
   store <256 x i1> %17, <256 x i1>* undef, align 32
   br label %1
 }
 
-declare <1024 x i1> @llvm.kvx.buildfwm(<512 x i1>, <512 x i1>)
+declare <1024 x i1> @llvm.kvx.xbuildfwm(<512 x i1>, <512 x i1>)
 
-declare <256 x i1> @llvm.kvx.convwbv(<1024 x i1>, i32, i32)
+declare <256 x i1> @llvm.kvx.xconvwbv(<1024 x i1>, i32, i32)

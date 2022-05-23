@@ -26,13 +26,13 @@ define void @test_lvc(<1024 x i1>* nocapture readonly %0, i8* %1, <1024 x i1>* n
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
   %5 = load <1024 x i1>, <1024 x i1>* %0, align 32
-  %6 = tail call <1024 x i1> @llvm.kvx.lvc(<1024 x i1> %5, i8* %1, i32 2, i32 0)
+  %6 = tail call <1024 x i1> @llvm.kvx.xload1024q(<1024 x i1> %5, i8* %1, i32 2, i32 0)
   %7 = load <1024 x i1>, <1024 x i1>* %0, align 32
-  %8 = tail call <1024 x i1> @llvm.kvx.lvc(<1024 x i1> %7, i8* %1, i32 2, i32 0)
+  %8 = tail call <1024 x i1> @llvm.kvx.xload1024q(<1024 x i1> %7, i8* %1, i32 2, i32 0)
   store <1024 x i1> %6, <1024 x i1>* %2, align 32
   store <1024 x i1> %8, <1024 x i1>* %2, align 32
   ret void
 }
 
-declare <1024 x i1> @llvm.kvx.lvc(<1024 x i1>, i8*, i32, i32)
+declare <1024 x i1> @llvm.kvx.xload1024q(<1024 x i1>, i8*, i32, i32)
 
