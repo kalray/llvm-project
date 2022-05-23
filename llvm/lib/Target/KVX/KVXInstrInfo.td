@@ -1004,6 +1004,7 @@ multiclass MC_17<string OpcStr> {
 //   defm SLUSW
 //   defm SLUSWPS
 //   defm SLUSHQS
+//   defm SRSBOS
 multiclass MC_18<string OpcStr> {
   def rr : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
@@ -2546,6 +2547,8 @@ defm SLSWPS : MC_18<"slswps">;
 defm ROLWPS : MC_18<"rolwps">;
 
 defm RORWPS : MC_18<"rorwps">;
+
+defm SRSBOS : MC_18<"srsbos">, Requires<[IsV2]>;
 
 defm SRSHQS : MC_18<"srshqs">;
 

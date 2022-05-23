@@ -56,10 +56,9 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     : TargetLowering(TM), Subtarget(STI) {
   setBooleanContents(ZeroOrOneBooleanContent);
 
-  if (!STI.isV1())
+  if (!Subtarget.isV1())
     setBooleanVectorContents(ZeroOrNegativeOneBooleanContent);
 
-  (void)Subtarget;
   // set up the register classes
   addRegisterClass(MVT::i32, &KVX::SingleRegRegClass);
   addRegisterClass(MVT::i64, &KVX::SingleRegRegClass);
@@ -85,7 +84,7 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   initializeTCARegisters();
 
   // Compute derived properties from the register classes
-  computeRegisterProperties(STI.getRegisterInfo());
+  computeRegisterProperties(Subtarget.getRegisterInfo());
 
   setStackPointerRegisterToSaveRestore(getSPReg());
 
@@ -463,7 +462,7 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
 
   setOperationAction(ISD::USHLSAT, MVT::i32, Legal);
 
-  if (!STI.isV1())
+  if (!Subtarget.isV1())
     for (auto I : {ISD::ABS, ISD::ADD, ISD::SADDSAT, ISD::SETCC, ISD::SMAX,
                    ISD::SMIN, ISD::SHL, ISD::SRA, ISD::SRL, ISD::SSHLSAT,
                    ISD::SSUBSAT, ISD::SUB, ISD::UADDSAT, ISD::UMAX, ISD::UMIN,
@@ -564,7 +563,8 @@ const char *KVXTargetLowering::getTargetNodeName(unsigned Opcode) const {
     TARGET_NODE_CASE(SEXT_MUL)
     TARGET_NODE_CASE(SZEXT_MUL)
     TARGET_NODE_CASE(ZEXT_MUL)
-
+    TARGET_NODE_CASE(SRS)
+    TARGET_NODE_CASE(SRSNEG)
   default:
     return NULL;
   }
@@ -3201,6 +3201,64 @@ bool KVXTargetLowering::isExtractVecEltCheap(EVT VT, unsigned Index) const {
   auto EltSz = VT.getScalarType().getSizeInBits();
   return (Index * EltSz % 64 == 0);
 }
+
+// BuildSDIVPow2 can be called by different SDIV alike functions.
+// Only say we know how to generate optimimal code for SDIV.
+SDValue
+KVXTargetLowering::BuildSDIVPow2(SDNode *N, const APInt &Divisor,
+                                 SelectionDAG &DAG,
+                                 SmallVectorImpl<SDNode *> &Created) const {
+  if (N->getOpcode() != ISD::SDIV || !N->getValueType(0).isSimple())
+    return TargetLowering::BuildSDIVPow2(N, Divisor, DAG, Created);
+
+  switch (N->getSimpleValueType(0).SimpleTy) {
+  case MVT::v2i8:
+  case MVT::v4i8:
+  case MVT::v8i8:
+    if (Subtarget.isV1())
+      return TargetLowering::BuildSDIVPow2(N, Divisor, DAG, Created);
+    LLVM_FALLTHROUGH;
+  case MVT::v2i16:
+  case MVT::v4i16:
+  case MVT::v2i32:
+  case MVT::i32:
+  case MVT::i64:
+    break;
+  default:
+    return TargetLowering::BuildSDIVPow2(N, Divisor, DAG, Created);
+  }
+
+  // We can use SRS* instructions
+  SDValue Div = N->getOperand(1);
+  if (N->getSimpleValueType(0).isVector()) {
+    auto *BV = dyn_cast<BuildVectorSDNode>(Div.getNode());
+
+    if (!BV)
+      return SDValue();
+
+    Div = BV->getSplatValue();
+
+    if (!Div)
+      return SDValue();
+  }
+
+  // If dividing MIN_VALUE, we don't perform this, as the
+  // compiler will optimise it (if not optimized before).
+  if (Divisor.isAllOnesValue())
+    return SDValue();
+
+  SDLoc Loc(N);
+  auto Opcode = Divisor.isNegative() ? KVXISD::SRSNEG : KVXISD::SRS;
+  auto SRSCst =
+      DAG.getConstant(Divisor.abs().countTrailingZeros(), Loc, MVT::i64);
+  auto SRSVal =
+      DAG.getNode(Opcode, Loc, N->getValueType(0), N->getOperand(0), SRSCst);
+  Created.push_back(SRSCst.getNode());
+  Created.push_back(SRSVal.getNode());
+
+  return SRSVal;
+}
+
 // -----------------------------------------------------------------------------
 //        Namespace KVX_LOW
 // -----------------------------------------------------------------------------

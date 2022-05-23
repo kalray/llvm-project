@@ -2038,6 +2038,33 @@ defm : ZEFPat<(srl i32:$rs1, Unsigned6:$rs2), (SRLWri SingleReg:$rs1, Unsigned6:
 // SRLWPS
 defm : WPShiftScalarOps<srl, SRLWPSri, SRLWPSrr, SRLWri, SRLWrr>;
 
+multiclass SRS <ValueType vt, KVX_INSTRUCTION I, KVX_INSTRUCTION NEG> {
+      def : Pat<(vt (KVX_srs vt:$r, Unsigned6:$im)),
+                (I SingleReg:$r, Unsigned6:$im)>;
+
+      def : Pat<(vt (KVX_srsneg vt:$r, Unsigned6:$im)),
+                (NEG (I SingleReg:$r, Unsigned6:$im))>;
+}
+
+// SRSBOS
+foreach vt = [v2i8, v4i8, v8i8] in {
+defm : SRS <vt, SRSBOSri, NEGBO>, Requires<[IsV2]>;
+}
+
+// SRSD
+defm : SRS <i64, SRSDri, NEGD>;
+
+// SRSHQS
+foreach vt = [v2i16, v4i16] in {
+defm : SRS <vt, SRSHQSri, NEGHQ>;
+}
+
+// SRSW
+defm : SRS <i32, SRSWri, NEGW>;
+
+// SRSWPS
+defm : SRS <v2i32, SRSWPSri, NEGWP>;
+
 // SXLBHQ
 def : Pat<(v2i16(sanyext v2i8:$v)), (SXLBHQ $v)>;
 def : Pat<(v2i16(zext v2i8:$v)), (SBMM8ri37 $v, 0x020001)>;
