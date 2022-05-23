@@ -2780,6 +2780,9 @@ def FFMSWQ : ROUNDING_SILENT_TERNARY_AUXR_FP<"ffmswq", PairedReg, PairedReg>;
 
 def FFDMDAW : ROUNDING_SILENT_TERNARY_AUXR_FP<"ffdmdaw", SingleReg, SingleReg>;
 def FFDMDAWP : ROUNDING_SILENT_TERNARY_AUXR_FP<"ffdmdawp", SingleReg, PairedReg>;
+
+def FFDMDSW : ROUNDING_SILENT_TERNARY_AUXR_FP<"ffdmdsw", SingleReg, SingleReg>;
+def FFDMDSWP : ROUNDING_SILENT_TERNARY_AUXR_FP<"ffdmdswp", SingleReg, PairedReg>;
 }
 
 def FMIND : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
