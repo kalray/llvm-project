@@ -3,20 +3,9 @@
 ; RUN: llc -mcpu=kv3-2 -O2 -o - %s | FileCheck %s --check-prefixes=ALL
 target triple = "kvx-kalray-cos"
 
-; FIXME - the instructions below are needlessly repeated
 define void @test_lvc(<1024 x i1>* nocapture readonly %0, i8* %1, <1024 x i1>* nocapture %2, <1024 x i1>* nocapture readnone %3) {
 ; ALL-LABEL: test_lvc:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    lv $a3 = 96[$r0]
-; ALL-NEXT:    ;;
-; ALL-NEXT:    lv $a2 = 64[$r0]
-; ALL-NEXT:    ;;
-; ALL-NEXT:    lv $a1 = 32[$r0]
-; ALL-NEXT:    ;;
-; ALL-NEXT:    lv $a0 = 0[$r0]
-; ALL-NEXT:    ;;
-; ALL-NEXT:    lv.c2 $a0a1a2a3 = 0[$r1]
-; ALL-NEXT:    ;;
 ; ALL-NEXT:    lv $a3 = 96[$r0]
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    lv $a2 = 64[$r0]

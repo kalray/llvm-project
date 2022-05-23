@@ -2,14 +2,12 @@
 ; RUN: llc -o - %s | FileCheck %s
 target triple = "kvx-kalray-cos"
 
-define void @c([512 x float]* %0, [512 x float]* %1, [768 x half]* %2, [512 x half]* %3) {
+define void @c([512 x float]* %0, [512 x float]* %1, [768 x half]* %2, [512 x half]* %3, <256 x i1>* %ptr) {
 ; CHECK-LABEL: c:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compd.ltu $r0 = $r0, 508
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_1: # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    lv.c3 $a0a1a2a3 = 0[$r0]
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmma242hw0 $a0_lo = $a0a1, $a0, $a0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmma242hw1 $a0_hi = $a0a1, $a0, $a0
@@ -21,6 +19,8 @@ define void @c([512 x float]* %0, [512 x float]* %1, [768 x half]* %2, [512 x ha
 ; CHECK-NEXT:    lv.c3 $a0a1a2a3 = 0[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mt44d $a0a1a2a3 = $a0a1a2a3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 0[$r4] = $a0
 ; CHECK-NEXT:    cb.odd $r0 ? .LBB0_1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.2:
@@ -50,6 +50,7 @@ define void @c([512 x float]* %0, [512 x float]* %1, [768 x half]* %2, [512 x ha
 18:
   %19 = tail call <1024 x i1> @llvm.kvx.mt44d(<1024 x i1> undef)
   %20 = tail call <256 x i1> @llvm.kvx.movefmv(<1024 x i1> %19, i32 0)
+  store <256 x i1> %20, <256 x i1>* %ptr, align 32
   %21 = icmp ult i64 undef, 508
   br i1 %21, label %6, label %22
 

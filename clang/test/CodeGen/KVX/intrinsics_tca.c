@@ -54,22 +54,19 @@ typedef long __attribute__((__vector_size__(32))) v4i64_t;
 // CHECK-NEXT:    [[TMP44:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP43]], 0
 // CHECK-NEXT:    [[TMP45:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP43]], 1
 // CHECK-NEXT:    [[TMP46:%.*]] = call <256 x i1> @llvm.kvx.fscalewv(<256 x i1> [[TMP45]], i32 7, i32 0, i32 1)
-// CHECK-NEXT:    [[ARRAYIDX8:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 3
-// CHECK-NEXT:    [[TMP47:%.*]] = bitcast <256 x i1>* [[ARRAYIDX8]] to i8*
-// CHECK-NEXT:    [[TMP48:%.*]] = call <256 x i1> @llvm.kvx.lv.cond(<256 x i1> [[TMP46]], i8* nonnull [[TMP47]], i64 [[A:%.*]], i32 1, i32 7)
-// CHECK-NEXT:    [[TMP49:%.*]] = addrspacecast <256 x i1>* [[V]] to <256 x i1> addrspace(258)*
-// CHECK-NEXT:    [[TMP50:%.*]] = load <256 x i1>, <256 x i1> addrspace(258)* [[TMP49]], align 32
+// CHECK-NEXT:    [[TMP47:%.*]] = addrspacecast <256 x i1>* [[V]] to <256 x i1> addrspace(258)*
+// CHECK-NEXT:    [[TMP48:%.*]] = load <256 x i1>, <256 x i1> addrspace(258)* [[TMP47]], align 32
 // CHECK-NEXT:    [[ARRAYIDX9:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 4
-// CHECK-NEXT:    [[TMP51:%.*]] = bitcast <256 x i1>* [[ARRAYIDX9]] to i8*
-// CHECK-NEXT:    [[TMP52:%.*]] = call <1024 x i1> @llvm.kvx.lvc(<1024 x i1> [[TMP39]], i8* nonnull [[TMP51]], i32 3, i32 1)
+// CHECK-NEXT:    [[TMP49:%.*]] = bitcast <256 x i1>* [[ARRAYIDX9]] to i8*
+// CHECK-NEXT:    [[TMP50:%.*]] = call <1024 x i1> @llvm.kvx.lvc(<1024 x i1> [[TMP39]], i8* nonnull [[TMP49]], i32 3, i32 1)
 // CHECK-NEXT:    [[ARRAYIDX10:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 5
-// CHECK-NEXT:    [[TMP53:%.*]] = bitcast <256 x i1>* [[ARRAYIDX10]] to i8*
-// CHECK-NEXT:    [[TMP54:%.*]] = call <1024 x i1> @llvm.kvx.lvc.cond(<1024 x i1> [[TMP52]], i8* nonnull [[TMP53]], i32 2, i64 [[A]], i32 0, i32 6)
-// CHECK-NEXT:    store <256 x i1> [[TMP50]], <256 x i1>* [[V]], align 32
-// CHECK-NEXT:    [[TMP55:%.*]] = bitcast <256 x i1>* [[ARRAYIDX4]] to i8*
-// CHECK-NEXT:    call void @llvm.kvx.sv.cond(i8* nonnull [[TMP55]], <256 x i1> [[TMP50]], i64 1, i32 7)
+// CHECK-NEXT:    [[TMP51:%.*]] = bitcast <256 x i1>* [[ARRAYIDX10]] to i8*
+// CHECK-NEXT:    [[TMP52:%.*]] = call <1024 x i1> @llvm.kvx.lvc.cond(<1024 x i1> [[TMP50]], i8* nonnull [[TMP51]], i32 2, i64 [[A:%.*]], i32 0, i32 6)
+// CHECK-NEXT:    store <256 x i1> [[TMP48]], <256 x i1>* [[V]], align 32
+// CHECK-NEXT:    [[TMP53:%.*]] = bitcast <256 x i1>* [[ARRAYIDX4]] to i8*
+// CHECK-NEXT:    call void @llvm.kvx.sv.cond(i8* nonnull [[TMP53]], <256 x i1> [[TMP48]], i64 1, i32 7)
 // CHECK-NEXT:    store volatile <512 x i1> [[TMP38]], <512 x i1>* [[W]], align 32, [[TBAA8]]
-// CHECK-NEXT:    store volatile <1024 x i1> [[TMP54]], <1024 x i1>* [[M]], align 32, [[TBAA6]]
+// CHECK-NEXT:    store volatile <1024 x i1> [[TMP52]], <1024 x i1>* [[M]], align 32, [[TBAA6]]
 // CHECK-NEXT:    ret <4 x i64> [[TMP44]]
 //
 v4i64_t test_tca_builtins(long a, long b, long c, long d, volatile __kvx_x256 *v, volatile __kvx_x512 *w, volatile __kvx_x1024 *m) {
