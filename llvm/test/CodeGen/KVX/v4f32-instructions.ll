@@ -1492,16 +1492,25 @@ define <4 x float> @test_log2(<4 x float> %a) #0 {
 }
 
 define <4 x float> @test_fma(<4 x float> %a, <4 x float> %b, <4 x float> %c) #0 {
-; CHECK-LABEL: test_fma:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    ffmawp $r4 = $r0, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmawp $r5 = $r1, $r3
-; CHECK-NEXT:    copyd $r0 = $r4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r5
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KV3_1-LABEL: test_fma:
+; KV3_1:       # %bb.0:
+; KV3_1-NEXT:    ffmawp $r4 = $r0, $r2
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ffmawp $r5 = $r1, $r3
+; KV3_1-NEXT:    copyd $r0 = $r4
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    copyd $r1 = $r5
+; KV3_1-NEXT:    ret
+; KV3_1-NEXT:    ;;
+;
+; KV3_2-LABEL: test_fma:
+; KV3_2:       # %bb.0:
+; KV3_2-NEXT:    ffmawq $r4r5 = $r0r1, $r2r3
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    copyd $r0 = $r4
+; KV3_2-NEXT:    copyd $r1 = $r5
+; KV3_2-NEXT:    ret
+; KV3_2-NEXT:    ;;
   %r = call <4 x float> @llvm.fma.v4f32(<4 x float> %a, <4 x float> %b, <4 x float> %c)
   ret <4 x float> %r
 }
@@ -2058,16 +2067,25 @@ define <4 x float> @test_round(<4 x float> %a) #0 {
 }
 
 define <4 x float> @test_fmuladd(<4 x float> %a, <4 x float> %b, <4 x float> %c) #0 {
-; CHECK-LABEL: test_fmuladd:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    ffmawp $r4 = $r0, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmawp $r5 = $r1, $r3
-; CHECK-NEXT:    copyd $r0 = $r4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r5
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KV3_1-LABEL: test_fmuladd:
+; KV3_1:       # %bb.0:
+; KV3_1-NEXT:    ffmawp $r4 = $r0, $r2
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ffmawp $r5 = $r1, $r3
+; KV3_1-NEXT:    copyd $r0 = $r4
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    copyd $r1 = $r5
+; KV3_1-NEXT:    ret
+; KV3_1-NEXT:    ;;
+;
+; KV3_2-LABEL: test_fmuladd:
+; KV3_2:       # %bb.0:
+; KV3_2-NEXT:    ffmawq $r4r5 = $r0r1, $r2r3
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    copyd $r0 = $r4
+; KV3_2-NEXT:    copyd $r1 = $r5
+; KV3_2-NEXT:    ret
+; KV3_2-NEXT:    ;;
   %r = call <4 x float> @llvm.fmuladd.v4f32(<4 x float> %a, <4 x float> %b, <4 x float> %c)
   ret <4 x float> %r
 }
@@ -3587,3 +3605,22 @@ entry:
 }
 
 attributes #0 = { nounwind }
+
+define <4 x float> @fms(<4 x float>, <4 x float>, <4 x float>) {
+; KV3_1-LABEL: fms:
+; KV3_1:       # %bb.0:
+; KV3_1-NEXT:    ffmswp $r1 = $r5, $r3
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ffmswp $r0 = $r4, $r2
+; KV3_1-NEXT:    ret
+; KV3_1-NEXT:    ;;
+;
+; KV3_2-LABEL: fms:
+; KV3_2:       # %bb.0:
+; KV3_2-NEXT:    ffmswq $r0r1 = $r4r5, $r2r3
+; KV3_2-NEXT:    ret
+; KV3_2-NEXT:    ;;
+  %4 = fmul fast <4 x float> %2, %1
+  %5 = fsub fast <4 x float> %0, %4
+  ret <4 x float> %5
+}

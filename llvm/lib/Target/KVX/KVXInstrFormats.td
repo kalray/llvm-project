@@ -1038,17 +1038,9 @@ class REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARY32X2
   <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
   : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
-// 7 insn(s):
-// FFDMDAW, FFMAWP, FFMSWP, FMULWP, FMULWC, FADDWP, FSBFWP
+// FFMAWP, FFMSWP, FMULWP, FMULWC, FADDWP, FSBFWP
 let Size = 4 in
 class ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32X2
-  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
-
-// 1 insn:
-// FFDMDAWP
-let Size = 4 in
-class ROUNDING_SILENT_REGISTERW_REGISTERP_REGISTERQ_SIMPLE_BINARY32X2
   <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
   : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
@@ -1100,6 +1092,15 @@ let Size = 4 in
 class ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
   : KVX_INSTRUCTION <outs, ins, asmstr, pattern, MAU_AUXR_FP>;
+
+let Size = 4, Constraints = "$out = $acc" in
+class ROUNDING_SILENT_TERNARY_AUXR_FP <string OpcStr, RegisterClass RC_OUT, RegisterClass RC_IN>
+  : KVX_INSTRUCTION <
+    (outs RC_OUT:$out),
+    (ins RC_OUT:$acc, RC_IN:$lhs, RC_IN:$rhs, RoundingMod:$r, SilentMod:$s),
+    !strconcat (OpcStr, "$r$s $out = $lhs, $rhs"),
+    [],
+    MAU_AUXR_FP>;
 
 // 9 insn(s):
 // FFMAHW, FFMAW, FFMSHW, FFMSW, FADDW, FSBFW, FMULHW, FMULW, FDOT2W
