@@ -845,7 +845,6 @@ multiclass MC_15<string OpcStr> {
 }
 
 // multiclass MC_16 is used by:
-//   defm ABDSBO
 //   defm ADDBO
 //   defm ADDHQ
 //   defm ADDWP
@@ -864,10 +863,6 @@ multiclass MC_15<string OpcStr> {
 //   defm SBFBO
 //   defm SBFHQ
 //   defm SBFWP
-//   defm ABDSBO
-//   defm ABDSW
-//   defm ABDSWP
-//   defm ABDSD
 multiclass MC_16<string OpcStr> {
   let isAsCheapAsAMove = 1 in
   def rr : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
@@ -927,6 +922,11 @@ multiclass MC_16<string OpcStr> {
 //   defm LNORWP
 //   defm ABDBO
 //   defm ABDHQ
+//   defm ABDSBO
+//   defm ABDSHQ
+//   defm ABDSD
+//   defm ABDSW
+//   defm ABDSWP
 //   defm ADDCHCP
 //   defm SBFCHCP
 //   defm ADDSBO
@@ -3665,9 +3665,11 @@ defm MOVEFO : MC_36<"movefo">;
 // match rhs or lhs immediates, but that does not seem
 // to work as it does with isAdd attribute.
 let isCommutable = 1 in {
-defm ABDSBO : MC_16<"abdsbo">, Requires<[IsV2]>;
-defm ABDSW  : MC_16<"abdsw">,  Requires<[IsV2]>;
-defm ABDSWP : MC_16<"abdswp">, Requires<[IsV2]>;
+defm ABDSBO : MC_17<"abdsbo">, Requires<[IsV2]>;
+defm ABDSHQ : MC_17<"abdshq">, Requires<[IsV2]>;
+defm ABDSW  : MC_17<"abdsw">,  Requires<[IsV2]>;
+defm ABDSWP : MC_17<"abdswp">, Requires<[IsV2]>;
+defm ABDSD : MC_17<"abdsd">, Requires<[IsV2]>;
 }
 
 def FMM222W : FP_PairedReg_PairedReg_PairedReg_Transp_Round_Silent
@@ -3685,7 +3687,6 @@ defm SLUSD : MC_18<"slusd">, Requires<[IsV2]>;
 defm SLUSHQS : MC_18<"slushqs">, Requires<[IsV2]>;
 defm SLUSW : MC_18<"slusw">, Requires<[IsV2]>;
 defm SLUSWPS : MC_18<"sluswps">, Requires<[IsV2]>;
-defm ABDSD : MC_16<"abdsd">, Requires<[IsV2]>;
 
 def NEGSBO : REGISTERW_REGISTERZ_SIMPLE
   <(outs SingleReg:$o), (ins SingleReg:$i),

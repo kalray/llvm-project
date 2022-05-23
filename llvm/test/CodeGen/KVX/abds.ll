@@ -14,6 +14,12 @@ declare <4 x i8> @llvm.ssub.sat.v4i8(<4 x i8>, <4 x i8>)
 declare <2 x i8> @llvm.abs.v2i8(<2 x i8>, i1)
 declare <2 x i8> @llvm.ssub.sat.v2i8(<2 x i8>, <2 x i8>)
 
+declare <4 x i16> @llvm.abs.v4i16(<4 x i16>, i1)
+declare <4 x i16> @llvm.ssub.sat.v4i16(<4 x i16>, <4 x i16>)
+
+declare <2 x i16> @llvm.abs.v2i16(<2 x i16>, i1)
+declare <2 x i16> @llvm.ssub.sat.v2i16(<2 x i16>, <2 x i16>)
+
 declare <2 x i32> @llvm.abs.v2i32(<2 x i32>, i1)
 declare <2 x i32> @llvm.ssub.sat.v2i32(<2 x i32>, <2 x i32>)
 
@@ -765,4 +771,104 @@ define i64 @abdsd_ri_at(i64 %0, i64 %1) {
   %3 = tail call i64 @llvm.ssub.sat.i64(i64 -2401053088876216593, i64 %0)
   %4 = tail call i64 @llvm.abs.i64(i64 %3, i1 false)
   ret i64 %4
+}
+
+
+define <4 x i16> @v4i16abds_rr(<4 x i16> %0, <4 x i16> %1) {
+; V1-LABEL: v4i16abds_rr:
+; V1:       # %bb.0:
+; V1-NEXT:    sbfshq $r0 = $r1, $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    abshq $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: v4i16abds_rr:
+; V2:       # %bb.0:
+; V2-NEXT:    abdshq $r0 = $r1, $r0
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+  %3 = tail call <4 x i16> @llvm.ssub.sat.v4i16(<4 x i16> %0, <4 x i16> %1)
+  %4 = tail call <4 x i16> @llvm.abs.v4i16(<4 x i16> %3, i1 false)
+  ret <4 x i16> %4
+}
+
+define <4 x i16> @v4i16abds_ri_(<4 x i16> %0) {
+; V1-LABEL: v4i16abds_ri_:
+; V1:       # %bb.0:
+; V1-NEXT:    make $r1 = 0xffff0001
+; V1-NEXT:    ;;
+; V1-NEXT:    sbfshq $r0 = $r1, $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    abshq $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: v4i16abds_ri_:
+; V2:       # %bb.0:
+; V2-NEXT:    abdshq $r0 = $r0, 0xffff0001
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+  %2 = tail call <4 x i16> @llvm.ssub.sat.v4i16(<4 x i16> %0, <4 x i16> <i16 1, i16 -1, i16 0, i16 0>)
+  %3 = tail call <4 x i16> @llvm.abs.v4i16(<4 x i16> %2, i1 false)
+  ret <4 x i16> %3
+}
+
+define <4 x i16> @v4i16abds_ri_at(<4 x i16> %0) {
+; V1-LABEL: v4i16abds_ri_at:
+; V1:       # %bb.0:
+; V1-NEXT:    sbfshq.@ $r0 = $r0, 0x100004
+; V1-NEXT:    ;;
+; V1-NEXT:    abshq $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: v4i16abds_ri_at:
+; V2:       # %bb.0:
+; V2-NEXT:    abdshq.@ $r0 = $r0, 0x100004
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+  %2 = tail call <4 x i16> @llvm.ssub.sat.v4i16(<4 x i16> <i16 4, i16 16, i16 4, i16 16>, <4 x i16> %0)
+  %3 = tail call <4 x i16> @llvm.abs.v4i16(<4 x i16> %2, i1 false)
+  ret <4 x i16> %3
+}
+
+define <2 x i16> @v2i16abds_rr(<2 x i16> %0, <2 x i16> %1) {
+; V1-LABEL: v2i16abds_rr:
+; V1:       # %bb.0:
+; V1-NEXT:    sbfshq $r0 = $r1, $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    abshq $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: v2i16abds_rr:
+; V2:       # %bb.0:
+; V2-NEXT:    abdshq $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+  %3 = tail call <2 x i16> @llvm.ssub.sat.v2i16(<2 x i16> %0, <2 x i16> %1)
+  %4 = tail call <2 x i16> @llvm.abs.v2i16(<2 x i16> %3, i1 false)
+  ret <2 x i16> %4
+}
+
+define <2 x i16> @v2i16abds_ri_(<2 x i16> %0) {
+; V1-LABEL: v2i16abds_ri_:
+; V1:       # %bb.0:
+; V1-NEXT:    make $r1 = 0xffffffffffff0001
+; V1-NEXT:    ;;
+; V1-NEXT:    sbfshq $r0 = $r1, $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    abshq $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: v2i16abds_ri_:
+; V2:       # %bb.0:
+; V2-NEXT:    abdshq $r0 = $r0, 0xffff0001
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+  %2 = tail call <2 x i16> @llvm.ssub.sat.v2i16(<2 x i16> %0, <2 x i16> <i16 1, i16 -1>)
+  %3 = tail call <2 x i16> @llvm.abs.v2i16(<2 x i16> %2, i1 false)
+  ret <2 x i16> %3
 }

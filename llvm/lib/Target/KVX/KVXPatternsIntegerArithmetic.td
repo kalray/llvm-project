@@ -115,6 +115,13 @@ def : Pat<(vt (abs (ssubsat vt:$lhs, vt:$rhs))), (vt(ABDSBOrr SingleReg:$lhs, Si
 
 defm : ABDS_64bit<v8i8, ABDSBOrr, ABDSBOri>;
 
+// ABDSHQ
+def : Pat<(v2i16 (abs (ssubsat (v2i16 (is_imm_vec_kvx_splat32_:$IMM)), v2i16:$rhs))), (v2i16 (ABDSHQri SingleReg:$rhs, (build_imm_vec $IMM), splat32_ ) )>, Requires<[IsV2]>;
+def : Pat<(v2i16 (abs (ssubsat v2i16:$lhs, (v2i16 (is_imm_vec_kvx_splat32_:$IMM))))), (v2i16 (ABDSHQri SingleReg:$lhs, (build_imm_vec $IMM), splat32_ ) )>, Requires<[IsV2]>;
+def : Pat<(v2i16 (abs (ssubsat v2i16:$lhs, v2i16:$rhs))), (v2i16(ABDSHQrr SingleReg:$lhs, SingleReg:$rhs))>, Requires<[IsV2]>;
+
+defm : ABDS_64bit<v4i16, ABDSHQrr, ABDSHQri>;
+
 // ABDSD
 def : Pat<(i64(abs (ssubsat Unsigned64W:$lhs, i64:$rhs))),
           (ABDSDri SingleReg:$rhs, (i32(trunc_imm_32 $lhs)), splat32_)>, Requires<[IsV2]>;
