@@ -2774,21 +2774,13 @@ def FCDIVWP : SILENT2_REGISTERW_REGISTERP_SIMPLE
    "fcdivwp$a1 $a2 = $a3",
    [/* no straightforward pattern */]>;
 
-let Constraints = "$ad = $a2" in
-let Predicates = [IsV2] in
-def FFDMDAW : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32X2
-  <(outs SingleReg:$ad), (ins SingleReg:$a0, SingleReg:$a1, SingleReg:$a2, RoundingMod:$r, SilentMod:$s),
-   "ffdmdaw$r$s $ad = $a0, $a1",
-   [/* no straightforward pattern */],
-   MAU_AUXR>;
+let Predicates = [IsV2] in {
+def FFMAWQ : ROUNDING_SILENT_TERNARY_AUXR_FP<"ffmawq", PairedReg, PairedReg>;
+def FFMSWQ : ROUNDING_SILENT_TERNARY_AUXR_FP<"ffmswq", PairedReg, PairedReg>;
 
-let Constraints = "$ad = $a2" in
-let Predicates = [IsV2] in
-def FFDMDAWP : ROUNDING_SILENT_REGISTERW_REGISTERP_REGISTERQ_SIMPLE_BINARY32X2
-  <(outs SingleReg:$ad), (ins PairedReg:$a0, PairedReg:$a1, SingleReg:$a2, RoundingMod:$r, SilentMod:$s),
-   "ffdmdawp$r$s $ad = $a0, $a1",
-   [/* no straightforward pattern */],
-   MAU_AUXR>;
+def FFDMDAW : ROUNDING_SILENT_TERNARY_AUXR_FP<"ffdmdaw", SingleReg, SingleReg>;
+def FFDMDAWP : ROUNDING_SILENT_TERNARY_AUXR_FP<"ffdmdawp", SingleReg, PairedReg>;
+}
 
 def FMIND : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
@@ -3346,14 +3338,14 @@ def FMMA212W : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a3o), (ins PairedReg:$a3, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fmma212w$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */],
-   MAU_AUXR>;
+   MAU_AUXR_FP>;
 
 let Constraints = "$a3 = $a3o" in
 def FMMS212W : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a3o), (ins PairedReg:$a3, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fmms212w$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */],
-   MAU_AUXR>;
+   MAU_AUXR_FP>;
 
 def FMM212W : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE
   <(outs PairedReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),

@@ -106,10 +106,16 @@ multiclass FFM___<SDNode Intrinsic, SDNode Opcode, ValueType OperandTy, ValueTyp
               (DataTy (EXTRACT_SUBREG PairedReg:$v2, sub_s1)), RoundingMod:$rounding, SilentMod:$silent), sub_s1))>;
 }
 
-defm: FFM___<int_kvx_ffmawq, FFMAWPrr, v4f32, v2f32>;
-defm: FFM___<int_kvx_ffmswq, FFMSWPrr, v4f32, v2f32>;
+defm: FFM___<int_kvx_ffmawq, FFMAWPrr, v4f32, v2f32>, Requires<[IsV1]>;
+defm: FFM___<int_kvx_ffmswq, FFMSWPrr, v4f32, v2f32>, Requires<[IsV1]>;
 defm: FFM___<int_kvx_ffmadp, FFMADrr, v2f64, f64>;
 defm: FFM___<int_kvx_ffmsdp, FFMSDrr, v2f64, f64>;
+
+def: Pat<(int_kvx_ffmswq v4f32:$v1, v4f32:$v2, v4f32:$v3, i32:$r, i32:$s),
+         (v4f32(FFMSWQ PairedReg:$v3, PairedReg:$v2, PairedReg:$v1, RoundingMod:$r, SilentMod:$s))>, Requires<[IsV2]>;
+
+def: Pat<(int_kvx_ffmawq v4f32:$v1, v4f32:$v2, v4f32:$v3, i32:$r, i32:$s),
+         (v4f32(FFMAWQ PairedReg:$v1, PairedReg:$v2, PairedReg:$v3, RoundingMod:$r, SilentMod:$s))>, Requires<[IsV2]>;
 
 def: Pat<(int_kvx_ffdmdaw v2f32:$v0, v2f32:$v1, f32:$v2, i32:$rounding, i32:$silent),
           (FADDWrr
@@ -118,7 +124,7 @@ def: Pat<(int_kvx_ffdmdaw v2f32:$v0, v2f32:$v1, f32:$v2, i32:$rounding, i32:$sil
           )>, Requires<[IsV1]>;
 
 def: Pat<(int_kvx_ffdmdaw v2f32:$v0, v2f32:$v1, f32:$v2, i32:$rounding, i32:$silent),
-          (FFDMDAW $v0, $v1, $v2, RoundingMod:$rounding, SilentMod:$silent)>, Requires<[IsV2]>;
+          (FFDMDAW $v2, $v0, $v1, RoundingMod:$rounding, SilentMod:$silent)>, Requires<[IsV2]>;
 
 def: Pat<(int_kvx_ffdmdawp v4f32:$v0, v4f32:$v1, v2f32:$v2, i32:$rounding, i32:$silent),
           (FFMAWPrr
@@ -132,7 +138,7 @@ def: Pat<(int_kvx_ffdmdawp v4f32:$v0, v4f32:$v1, v2f32:$v2, i32:$rounding, i32:$
           )>, Requires<[IsV1]>;
 
 def: Pat<(int_kvx_ffdmdawp v4f32:$v0, v4f32:$v1, v2f32:$v2, i32:$rounding, i32:$silent),
-          (FFDMDAWP $v0, $v1, $v2, RoundingMod:$rounding, SilentMod:$silent)>, Requires<[IsV2]>;
+          (FFDMDAWP $v2, $v0, $v1, RoundingMod:$rounding, SilentMod:$silent)>, Requires<[IsV2]>;
 
 def: Pat<(int_kvx_ffmawp v2f32:$v1, v2f32:$v2, v2f32:$v3, i32:$rounding, i32:$silent), (FFMAWPrr SingleReg:$v3, SingleReg:$v1, SingleReg:$v2, RoundingMod:$rounding, SilentMod:$silent)>;
 def: Pat<(int_kvx_ffmswp v2f32:$v1, v2f32:$v2, v2f32:$v3, i32:$rounding, i32:$silent), (FFMSWPrr SingleReg:$v3, SingleReg:$v1, SingleReg:$v2, RoundingMod:$rounding, SilentMod:$silent)>;

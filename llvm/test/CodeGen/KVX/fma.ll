@@ -477,18 +477,21 @@ entry:
 }
 
 define <4 x float> @fmawp_x2(<4 x float> %a, <4 x float> %b, <4 x float> %c) {
-; ALL-LABEL: fmawp_x2:
-; ALL:       # %bb.0:
-; ALL-NEXT:    copyd $r1 = $r5
-; ALL-NEXT:    copyd $r0 = $r4
-; ALL-NEXT:    ;;
-; ALL-NEXT:    ffmawp $r1 = $r1, $r3
-; ALL-NEXT:    ;;
-; ALL-NEXT:    ffmawp $r0 = $r0, $r2
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; KV1-LABEL: fmawp_x2:
+; KV1:       # %bb.0:
+; KV1-NEXT:    ffmawp $r1 = $r5, $r3
+; KV1-NEXT:    ;;
+; KV1-NEXT:    ffmawp $r0 = $r4, $r2
+; KV1-NEXT:    ret
+; KV1-NEXT:    ;;
+;
+; KV2-LABEL: fmawp_x2:
+; KV2:       # %bb.0:
+; KV2-NEXT:    ffmawq $r0r1 = $r4r5, $r2r3
+; KV2-NEXT:    ret
+; KV2-NEXT:    ;;
   %1 = fmul fast <4 x float> %c, %b
-  %2 = fadd fast <4 x float> %1, %c
+  %2 = fadd fast <4 x float> %a, %1
 ret <4 x float> %2
 }
 
@@ -506,39 +509,45 @@ ret <4 x float> %2
 }
 
 define <4 x float> @fmawp_x2_int(<4 x float> %a, <4 x float> %b, <4 x float> %c) {
-; ALL-LABEL: fmawp_x2_int:
-; ALL:       # %bb.0:
-; ALL-NEXT:    ffmawp $r4 = $r0, $r2
-; ALL-NEXT:    ;;
-; ALL-NEXT:    ffmawp $r5 = $r1, $r3
-; ALL-NEXT:    copyd $r0 = $r4
-; ALL-NEXT:    ;;
-; ALL-NEXT:    copyd $r1 = $r5
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
-  %res = call <4 x float> @llvm.fma.v4f32(<4 x float> %a, <4 x float> %b, <4 x float> %c)
+; KV1-LABEL: fmawp_x2_int:
+; KV1:       # %bb.0:
+; KV1-NEXT:    ffmawp $r1 = $r3, $r5
+; KV1-NEXT:    ;;
+; KV1-NEXT:    ffmawp $r0 = $r2, $r4
+; KV1-NEXT:    ret
+; KV1-NEXT:    ;;
+;
+; KV2-LABEL: fmawp_x2_int:
+; KV2:       # %bb.0:
+; KV2-NEXT:    ffmawq $r0r1 = $r2r3, $r4r5
+; KV2-NEXT:    ret
+; KV2-NEXT:    ;;
+  %res = call <4 x float> @llvm.fma.v4f32(<4 x float> %b, <4 x float> %c, <4 x float> %a)
   ret <4 x float> %res
 }
 
 define <8 x float> @fmawp_x4(<8 x float> %a, <8 x float> %b, <8 x float> %c) {
-; ALL-LABEL: fmawp_x4:
-; ALL:       # %bb.0:
-; ALL-NEXT:    copyd $r3 = $r11
-; ALL-NEXT:    copyd $r2 = $r10
-; ALL-NEXT:    copyd $r1 = $r9
-; ALL-NEXT:    copyd $r0 = $r8
-; ALL-NEXT:    ;;
-; ALL-NEXT:    ffmawp $r3 = $r3, $r7
-; ALL-NEXT:    ;;
-; ALL-NEXT:    ffmawp $r2 = $r2, $r6
-; ALL-NEXT:    ;;
-; ALL-NEXT:    ffmawp $r1 = $r1, $r5
-; ALL-NEXT:    ;;
-; ALL-NEXT:    ffmawp $r0 = $r0, $r4
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; KV1-LABEL: fmawp_x4:
+; KV1:       # %bb.0:
+; KV1-NEXT:    ffmawp $r3 = $r11, $r7
+; KV1-NEXT:    ;;
+; KV1-NEXT:    ffmawp $r2 = $r10, $r6
+; KV1-NEXT:    ;;
+; KV1-NEXT:    ffmawp $r1 = $r9, $r5
+; KV1-NEXT:    ;;
+; KV1-NEXT:    ffmawp $r0 = $r8, $r4
+; KV1-NEXT:    ret
+; KV1-NEXT:    ;;
+;
+; KV2-LABEL: fmawp_x4:
+; KV2:       # %bb.0:
+; KV2-NEXT:    ffmawq $r2r3 = $r10r11, $r6r7
+; KV2-NEXT:    ;;
+; KV2-NEXT:    ffmawq $r0r1 = $r8r9, $r4r5
+; KV2-NEXT:    ret
+; KV2-NEXT:    ;;
 %1 = fmul fast <8 x float> %c, %b
-%2 = fadd fast <8 x float> %1, %c
+%2 = fadd fast <8 x float> %1, %a
 ret <8 x float> %2
 }
 
@@ -560,34 +569,43 @@ ret <8 x float> %2
 }
 
 define <8 x float> @int_fmawp_x4(<8 x float> %a, <8 x float> %b, <8 x float> %c) {
-; ALL-LABEL: int_fmawp_x4:
-; ALL:       # %bb.0:
-; ALL-NEXT:    ffmawp $r8 = $r0, $r4
-; ALL-NEXT:    ;;
-; ALL-NEXT:    ffmawp $r11 = $r3, $r7
-; ALL-NEXT:    ;;
-; ALL-NEXT:    ffmawp $r10 = $r2, $r6
-; ALL-NEXT:    ;;
-; ALL-NEXT:    ffmawp $r9 = $r1, $r5
-; ALL-NEXT:    copyd $r0 = $r8
-; ALL-NEXT:    ;;
-; ALL-NEXT:    copyd $r1 = $r9
-; ALL-NEXT:    copyd $r2 = $r10
-; ALL-NEXT:    copyd $r3 = $r11
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
-  %res = call <8 x float> @llvm.fma.v8f32(<8 x float> %a, <8 x float> %b, <8 x float> %c)
+; KV1-LABEL: int_fmawp_x4:
+; KV1:       # %bb.0:
+; KV1-NEXT:    ffmawp $r3 = $r7, $r11
+; KV1-NEXT:    ;;
+; KV1-NEXT:    ffmawp $r2 = $r6, $r10
+; KV1-NEXT:    ;;
+; KV1-NEXT:    ffmawp $r1 = $r5, $r9
+; KV1-NEXT:    ;;
+; KV1-NEXT:    ffmawp $r0 = $r4, $r8
+; KV1-NEXT:    ret
+; KV1-NEXT:    ;;
+;
+; KV2-LABEL: int_fmawp_x4:
+; KV2:       # %bb.0:
+; KV2-NEXT:    ffmawq $r2r3 = $r6r7, $r10r11
+; KV2-NEXT:    ;;
+; KV2-NEXT:    ffmawq $r0r1 = $r4r5, $r8r9
+; KV2-NEXT:    ret
+; KV2-NEXT:    ;;
+  %res = call <8 x float> @llvm.fma.v8f32(<8 x float> %b, <8 x float> %c, <8 x float> %a)
   ret <8 x float> %res
 }
 
 define <4 x float> @fmswp_x2(<4 x float> %a, <4 x float> %b, <4 x float> %c) {
-; ALL-LABEL: fmswp_x2:
-; ALL:       # %bb.0:
-; ALL-NEXT:    ffmswp $r1 = $r5, $r3
-; ALL-NEXT:    ;;
-; ALL-NEXT:    ffmswp $r0 = $r4, $r2
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; KV1-LABEL: fmswp_x2:
+; KV1:       # %bb.0:
+; KV1-NEXT:    ffmswp $r1 = $r5, $r3
+; KV1-NEXT:    ;;
+; KV1-NEXT:    ffmswp $r0 = $r4, $r2
+; KV1-NEXT:    ret
+; KV1-NEXT:    ;;
+;
+; KV2-LABEL: fmswp_x2:
+; KV2:       # %bb.0:
+; KV2-NEXT:    ffmswq $r0r1 = $r4r5, $r2r3
+; KV2-NEXT:    ret
+; KV2-NEXT:    ;;
   %1 = fmul fast <4 x float> %c, %b
   %2 = fsub fast <4 x float> %a, %1
   ret <4 x float> %2
@@ -607,41 +625,44 @@ ret <4 x float> %2
 }
 
 define <8 x float> @fmswp_x4(<8 x float> %a, <8 x float> %b, <8 x float> %c) {
-; ALL-LABEL: fmswp_x4:
-; ALL:       # %bb.0:
-; ALL-NEXT:    fnegwp $r3 = $r11
-; ALL-NEXT:    fnegwp $r2 = $r10
-; ALL-NEXT:    ;;
-; ALL-NEXT:    fnegwp $r1 = $r9
-; ALL-NEXT:    fnegwp $r0 = $r8
-; ALL-NEXT:    ffmawp $r3 = $r11, $r7
-; ALL-NEXT:    ;;
-; ALL-NEXT:    ffmawp $r2 = $r10, $r6
-; ALL-NEXT:    ;;
-; ALL-NEXT:    ffmawp $r1 = $r9, $r5
-; ALL-NEXT:    ;;
-; ALL-NEXT:    ffmawp $r0 = $r8, $r4
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; KV1-LABEL: fmswp_x4:
+; KV1:       # %bb.0:
+; KV1-NEXT:    ffmswp $r3 = $r11, $r7
+; KV1-NEXT:    ;;
+; KV1-NEXT:    ffmswp $r2 = $r10, $r6
+; KV1-NEXT:    ;;
+; KV1-NEXT:    ffmswp $r1 = $r9, $r5
+; KV1-NEXT:    ;;
+; KV1-NEXT:    ffmswp $r0 = $r8, $r4
+; KV1-NEXT:    ret
+; KV1-NEXT:    ;;
+;
+; KV2-LABEL: fmswp_x4:
+; KV2:       # %bb.0:
+; KV2-NEXT:    ffmswq $r2r3 = $r10r11, $r6r7
+; KV2-NEXT:    ;;
+; KV2-NEXT:    ffmswq $r0r1 = $r8r9, $r4r5
+; KV2-NEXT:    ret
+; KV2-NEXT:    ;;
 %1 = fmul fast <8 x float> %c, %b
-%2 = fsub fast <8 x float> %1, %c
+%2 = fsub fast <8 x float> %a, %1
 ret <8 x float> %2
 }
 
 define <8 x float> @not_fmswp_x4(<8 x float> %a, <8 x float> %b, <8 x float> %c) {
 ; ALL-LABEL: not_fmswp_x4:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    fmulwq $r0r1 = $r10r11, $r6r7
+; ALL-NEXT:    fmulwq $r6r7 = $r10r11, $r6r7
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    fmulwq $r4r5 = $r8r9, $r4r5
 ; ALL-NEXT:    ;;
-; ALL-NEXT:    fsbfwq $r2r3 = $r10r11, $r0r1
+; ALL-NEXT:    fsbfwq $r2r3 = $r2r3, $r6r7
 ; ALL-NEXT:    ;;
-; ALL-NEXT:    fsbfwq $r0r1 = $r8r9, $r4r5
+; ALL-NEXT:    fsbfwq $r0r1 = $r0r1, $r4r5
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
 %1 = fmul <8 x float> %c, %b
-%2 = fsub <8 x float> %1, %c
+%2 = fsub <8 x float> %1, %a
 ret <8 x float> %2
 }
 

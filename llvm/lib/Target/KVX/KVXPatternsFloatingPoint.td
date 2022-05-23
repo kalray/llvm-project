@@ -475,6 +475,9 @@ def : Pat<(v2f16 (fma v2f16:$rx, v2f16:$ry, v2f16:$rz)), (FFMAHQrr (ZXWD SingleR
 def : Pat<(v4f16 (fma v4f16:$rx, (v4f16 (is_imm_vec:$IMM)), v4f16:$rz)), (FFMAHQri SingleReg:$rz, SingleReg:$rx, (build_imm_vec $IMM))>, Requires<[IsV1]>;
 def : Pat<(v4f16 (fma v4f16:$rx, v4f16:$ry, v4f16:$rz)), (FFMAHQrr SingleReg:$rz, SingleReg:$rx, SingleReg:$ry, rounding_, silent_)>;
 
+def : Pat<(v4f32 (fma v4f32:$lhs, v4f32:$rhs, v4f32:$acc)),
+          (FFMAWQ PairedReg:$acc, PairedReg:$lhs, PairedReg:$rhs, rounding_, silent_)>, Requires<[IsV2]>;
+
 // TODO: Add ri variants
 def : Pat<(v4f32 (fma v4f32:$rx, v4f32:$ry, v4f32:$rz)),
           (REG_SEQUENCE PairedReg,
@@ -517,17 +520,20 @@ def : Pat <(v2f32 (fsubcont v2f32:$r0, (fmulcont v2f32:$r2, v2f32:$r1))), (FFMSW
 def : Pat <(v2f16 (fsubcont v2f16:$r0, (fmulcont v2f16:$r2, v2f16:$r1))), (FFMSHQrr (ZXWD SingleReg:$r0), (ZXWD SingleReg:$r1), (ZXWD SingleReg:$r2), rounding_, silent_)>;
 def : Pat <(v4f16 (fsubcont v4f16:$r0, (fmulcont v4f16:$r2, v4f16:$r1))), (FFMSHQrr SingleReg:$r0, SingleReg:$r1, SingleReg:$r2, rounding_, silent_)>;
 
-multiclass FFMSPAT<ValueType vt, KVX_INSTRUCTION FMS, KVX_INSTRUCTION MUL> {
-def : Pat<(vt (fma (vfneg vt:$rx), vt:$ry, vt:$rz)), (FMS SingleReg:$rz, SingleReg:$rx, SingleReg:$ry, rounding_, silent_)>;
+multiclass FFMSPAT<ValueType vt, KVX_INSTRUCTION FMS, KVX_INSTRUCTION MUL, RegisterClass RC> {
+def : Pat<(vt (fma (vfneg vt:$rx), vt:$ry, vt:$rz)),
+          (FMS RC:$rz, RC:$rx, RC:$ry, rounding_, silent_)>;
+
 def : Pat<(vt (fma vt:$rx, vt:$ry, (fneg (fmul vt:$rz, vt:$ra)))),
-      (FMS (MUL vt:$rx, vt:$ry, rounding_, silent_), SingleReg:$rz, SingleReg:$ra, rounding_, silent_)>;
+          (FMS (MUL vt:$rx, vt:$ry, rounding_, silent_), RC:$rz, RC:$ra, rounding_, silent_)>;
 }
-defm : FFMSPAT<f16, FFMSHQrr, FMULHQrr>;
-defm : FFMSPAT<f32, FFMSWrr, FMULWrr>;
-defm : FFMSPAT<f64, FFMSDrr, FMULDrr>;
-defm : FFMSPAT<v2f32, FFMSWPrr, FMULWPrr>;
-defm : FFMSPAT<v2f16, FFMSHQrr, FMULHQrr>;
-defm : FFMSPAT<v4f16, FFMSHQrr, FMULHQrr>;
+defm : FFMSPAT<f16, FFMSHQrr, FMULHQrr, SingleReg>;
+defm : FFMSPAT<f32, FFMSWrr, FMULWrr, SingleReg>;
+defm : FFMSPAT<f64, FFMSDrr, FMULDrr, SingleReg>;
+defm : FFMSPAT<v2f32, FFMSWPrr, FMULWPrr, SingleReg>;
+defm : FFMSPAT<v2f16, FFMSHQrr, FMULHQrr, SingleReg>;
+defm : FFMSPAT<v4f16, FFMSHQrr, FMULHQrr, SingleReg>;
+defm : FFMSPAT<v4f32, FFMSWQ, FMULWQ, PairedReg>, Requires<[IsV2]>;
 
 // FFMSWDP
 // TODO: Add ri variants
