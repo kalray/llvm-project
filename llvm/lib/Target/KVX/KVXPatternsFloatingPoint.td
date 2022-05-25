@@ -443,6 +443,11 @@ defm : FDOT2WRR_FFDMAW<FDOT2Wrr>, Requires<[IsV1]>;
 defm : FDOT2WRR_FFDMAW<FFDMAW>, Requires<[IsV2]>;
 
 let Predicates = [IsV2] in {
+// FFDMAWP
+def : Pat<(v2f32 (faddcont
+          (extract_subvector (fmulcont v4f32:$lhs, v4f32:$rhs), (i64 0)),
+          (extract_subvector (fmulcont v4f32:$lhs, v4f32:$rhs), (i64 2)))),
+         (FFDMAWP PairedReg:$lhs, PairedReg:$rhs, rounding_, silent_)>;
 // FFDMDAW
 def : Pat<(f32 (faddcont
           (faddcont
