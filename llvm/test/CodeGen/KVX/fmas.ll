@@ -581,3 +581,25 @@ define <2 x float> @ffdmsawp2(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
   %8 = fsub fast <2 x float> %6, %7
   ret <2 x float> %8
 }
+
+define <2 x float> @ffdmawp(<4 x float> %0, <4 x float> %1) {
+; KV1-LABEL: ffdmawp:
+; KV1:       # %bb.0: # %entry
+; KV1-NEXT:    fmulwq $r0r1 = $r0r1, $r2r3
+; KV1-NEXT:    ;;
+; KV1-NEXT:    faddwp $r0 = $r0, $r1
+; KV1-NEXT:    ret
+; KV1-NEXT:    ;;
+;
+; KV2-LABEL: ffdmawp:
+; KV2:       # %bb.0: # %entry
+; KV2-NEXT:    ffdmawp $r0 = $r0r1, $r2r3
+; KV2-NEXT:    ret
+; KV2-NEXT:    ;;
+  entry:
+  %2 = fmul fast <4 x float> %0, %1
+  %3 = shufflevector <4 x float> %2, <4 x float> undef, <2 x i32> <i32 0, i32 1>
+  %4 = shufflevector <4 x float> %2, <4 x float> undef, <2 x i32> <i32 2, i32 3>
+  %5 = fadd fast <2 x float> %3, %4
+  ret <2 x float> %5
+}
