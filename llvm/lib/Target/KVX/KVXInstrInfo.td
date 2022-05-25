@@ -2778,6 +2778,9 @@ let Predicates = [IsV2] in {
 def FFDMAW : ROUNDING_SILENT_BINOP_MAU_FP<"ffdmaw", SingleReg, SingleReg>;
 def FFDMAWP: ROUNDING_SILENT_BINOP_MAU_FP<"ffdmawp", SingleReg, PairedReg>;
 
+def FFDMSW : ROUNDING_SILENT_BINOP_MAU_FP<"ffdmsw", SingleReg, SingleReg>;
+def FFDMSWP: ROUNDING_SILENT_BINOP_MAU_FP<"ffdmswp", SingleReg, PairedReg>;
+
 def FFMAWQ : ROUNDING_SILENT_TERNARY_AUXR_FP<"ffmawq", PairedReg, PairedReg>;
 def FFMSWQ : ROUNDING_SILENT_TERNARY_AUXR_FP<"ffmswq", PairedReg, PairedReg>;
 

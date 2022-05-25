@@ -448,6 +448,7 @@ def : Pat<(v2f32 (faddcont
           (extract_subvector (fmulcont v4f32:$lhs, v4f32:$rhs), (i64 0)),
           (extract_subvector (fmulcont v4f32:$lhs, v4f32:$rhs), (i64 2)))),
          (FFDMAWP PairedReg:$lhs, PairedReg:$rhs, rounding_, silent_)>;
+
 // FFDMDAW
 def : Pat<(f32 (faddcont
           (faddcont
@@ -616,6 +617,18 @@ def : Pat<(v2f32 (fsubcont
             (extract_subvector (fmulcont v4f32:$lhs, v4f32:$rhs), (i64 2))),
           (extract_subvector (fmulcont v4f32:$lhs, v4f32:$rhs), (i64 0)))),
          (FFDMSAWP SingleReg:$acc, PairedReg:$lhs, PairedReg:$rhs, rounding_, silent_)>;
+
+// FFDMSW
+def : Pat<(f32 (fsubcont
+          (extractelt (fmulcont v2f32:$lhs, v2f32:$rhs), (i64 0)),
+          (extractelt (fmulcont v2f32:$lhs, v2f32:$rhs), (i64 1)))),
+         (FFDMSW SingleReg:$lhs, SingleReg:$rhs, rounding_, silent_)>;
+
+// FFDMSWP
+def : Pat<(v2f32 (fsubcont
+          (extract_subvector (fmulcont v4f32:$lhs, v4f32:$rhs), (i64 0)),
+          (extract_subvector (fmulcont v4f32:$lhs, v4f32:$rhs), (i64 2)))),
+         (FFDMSWP PairedReg:$lhs, PairedReg:$rhs, rounding_, silent_)>;
 }
 
 // FFMA
