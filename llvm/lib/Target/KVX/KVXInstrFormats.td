@@ -1102,6 +1102,15 @@ class ROUNDING_SILENT_TERNARY_AUXR_FP <string OpcStr, RegisterClass RC_OUT, Regi
     [],
     MAU_AUXR_FP>;
 
+let Size = 4 in
+class ROUNDING_SILENT_BINOP_MAU_FP<string OpcStr, RegisterClass RC_OUT, RegisterClass RC_IN>
+    : KVX_INSTRUCTION <
+     (outs RC_OUT:$o),
+     (ins RC_IN:$lhs, RC_IN:$rhs, RoundingMod:$r, SilentMod:$s),
+     !strconcat (OpcStr, "$r$s $o = $lhs, $rhs"),
+     [/* no straightforward pattern */],
+     MAU_FP>;
+
 // 9 insn(s):
 // FFMAHW, FFMAW, FFMSHW, FFMSW, FADDW, FSBFW, FMULHW, FMULW, FDOT2W
 let Size = 8, Predicates = [IsV1] in
