@@ -5,11 +5,17 @@
 target triple = "kvx-kalray-cos"
 
 define float @DOT2W_rr_1(<2 x float> %0, <2 x float> %1) {
-; CHECK-LABEL: DOT2W_rr_1:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    fdot2w $r0 = $r0, $r1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: DOT2W_rr_1:
+; V1:       # %bb.0:
+; V1-NEXT:    fdot2w $r0 = $r0, $r1
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: DOT2W_rr_1:
+; V2:       # %bb.0:
+; V2-NEXT:    ffdmaw $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %3 = fmul fast <2 x float> %0, %1
   %4 = extractelement <2 x float> %3, i32 0
   %5 = extractelement <2 x float> %3, i32 1
@@ -18,11 +24,17 @@ define float @DOT2W_rr_1(<2 x float> %0, <2 x float> %1) {
 }
 
 define float @DOT2W_rr_2(i64 %0, i64 %1) {
-; CHECK-LABEL: DOT2W_rr_2:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    fdot2w $r0 = $r0, $r1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: DOT2W_rr_2:
+; V1:       # %bb.0:
+; V1-NEXT:    fdot2w $r0 = $r0, $r1
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: DOT2W_rr_2:
+; V2:       # %bb.0:
+; V2-NEXT:    ffdmaw $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %3 = trunc i64 %0 to i32
   %4 = bitcast i32 %3 to float
   %5 = lshr i64 %0, 32
@@ -40,11 +52,17 @@ define float @DOT2W_rr_2(i64 %0, i64 %1) {
 }
 
 define float @DOT2W_rr_3(<2 x float> %0, i64 %1) {
-; CHECK-LABEL: DOT2W_rr_3:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    fdot2w $r0 = $r1, $r0
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: DOT2W_rr_3:
+; V1:       # %bb.0:
+; V1-NEXT:    fdot2w $r0 = $r1, $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: DOT2W_rr_3:
+; V2:       # %bb.0:
+; V2-NEXT:    ffdmaw $r0 = $r1, $r0
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %3 = lshr i64 %1, 32
   %4 = insertelement <2 x i64> poison, i64 %1, i32 0
   %5 = insertelement <2 x i64> %4, i64 %3, i32 1
@@ -58,11 +76,17 @@ define float @DOT2W_rr_3(<2 x float> %0, i64 %1) {
 }
 
 define float @DOT2W_rr_4(i64 %0, <2 x float> %1) {
-; CHECK-LABEL: DOT2W_rr_4:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    fdot2w $r0 = $r0, $r1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: DOT2W_rr_4:
+; V1:       # %bb.0:
+; V1-NEXT:    fdot2w $r0 = $r0, $r1
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: DOT2W_rr_4:
+; V2:       # %bb.0:
+; V2-NEXT:    ffdmaw $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %3 = lshr i64 %0, 32
   %4 = insertelement <2 x i64> poison, i64 %0, i32 0
   %5 = insertelement <2 x i64> %4, i64 %3, i32 1
@@ -86,7 +110,7 @@ define float @DOT2W_ri_1(<2 x float> %0) {
 ; V2:       # %bb.0:
 ; V2-NEXT:    make $r1 = 0x3f333333c47fc000
 ; V2-NEXT:    ;;
-; V2-NEXT:    fdot2w $r0 = $r0, $r1
+; V2-NEXT:    ffdmaw $r0 = $r0, $r1
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %2 = fmul fast <2 x float> %0, <float 1.023000e+03, float 0x3FE6666660000000>
@@ -107,7 +131,7 @@ define float @DOT2W_ri_2(<2 x float> %0) {
 ; V2:       # %bb.0:
 ; V2-NEXT:    make $r1 = 0xbf333333447fc000
 ; V2-NEXT:    ;;
-; V2-NEXT:    fdot2w $r0 = $r0, $r1
+; V2-NEXT:    ffdmaw $r0 = $r0, $r1
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %2 = fmul fast <2 x float> %0, <float 1.023000e+03, float 0x3FE6666660000000>
@@ -128,7 +152,7 @@ define float @DOT2W_ri_3(i64 %0) {
 ; V2:       # %bb.0:
 ; V2-NEXT:    make $r1 = 0x3f333333447fc000
 ; V2-NEXT:    ;;
-; V2-NEXT:    fdot2w $r0 = $r0, $r1
+; V2-NEXT:    ffdmaw $r0 = $r0, $r1
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %2 = trunc i64 %0 to i32
@@ -153,7 +177,7 @@ define float @DOT2W_ri_4(i64 %0) {
 ; V2:       # %bb.0:
 ; V2-NEXT:    make $r1 = 0x3f333333c47fc000
 ; V2-NEXT:    ;;
-; V2-NEXT:    fdot2w $r0 = $r0, $r1
+; V2-NEXT:    ffdmaw $r0 = $r0, $r1
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %2 = trunc i64 %0 to i32
@@ -178,7 +202,7 @@ define float @DOT2W_ri_10_5(<2 x float> %0) {
 ; V2:       # %bb.0:
 ; V2-NEXT:    make $r1 = 0x3f333333447fc000
 ; V2-NEXT:    ;;
-; V2-NEXT:    fdot2w $r0 = $r0, $r1
+; V2-NEXT:    ffdmaw $r0 = $r0, $r1
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %2 = fmul fast <2 x float> %0, <float 1.023000e+03, float 0x3FE6666660000000>

@@ -2775,6 +2775,8 @@ def FCDIVWP : SILENT2_REGISTERW_REGISTERP_SIMPLE
    [/* no straightforward pattern */]>;
 
 let Predicates = [IsV2] in {
+def FFDMAW : ROUNDING_SILENT_BINOP_MAU_FP<"ffdmaw", SingleReg, SingleReg>;
+
 def FFMAWQ : ROUNDING_SILENT_TERNARY_AUXR_FP<"ffmawq", PairedReg, PairedReg>;
 def FFMSWQ : ROUNDING_SILENT_TERNARY_AUXR_FP<"ffmswq", PairedReg, PairedReg>;
 
