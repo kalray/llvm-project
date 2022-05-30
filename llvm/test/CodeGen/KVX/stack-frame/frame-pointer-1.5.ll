@@ -18,8 +18,8 @@ define dso_local i32 @test(i32 %x) {
 ; FP-ALL-NEXT:    sd 24[$r12] = $r16
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    sd 16[$r12] = $r14
-; FP-ALL-NEXT:    addd $r14 = $r12, 16
 ; FP-ALL-NEXT:    copyd $r1 = $r0
+; FP-ALL-NEXT:    addd $r14 = $r12, 16
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    addd $r12 = $r14, -16
 ; FP-ALL-NEXT:    ;;

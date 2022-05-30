@@ -466,8 +466,8 @@ entry:
 define i64 @foo_i64_f32_lt(float %a, float %b){
 ; CHECK-LABEL: foo_i64_f32_lt:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fcompw.olt $r1 = $r0, $r1
 ; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    fcompw.olt $r1 = $r0, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.even $r1 ? $r0 = 0
 ; CHECK-NEXT:    ret
@@ -481,8 +481,8 @@ entry:
 define i64 @foo_i64_f32_le(float %a, float %b){
 ; CHECK-LABEL: foo_i64_f32_le:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fcompw.oge $r1 = $r1, $r0
 ; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    fcompw.oge $r1 = $r1, $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.even $r1 ? $r0 = 0
 ; CHECK-NEXT:    ret
@@ -496,8 +496,8 @@ entry:
 define i64 @foo_i64_f32_gt(float %a, float %b){
 ; CHECK-LABEL: foo_i64_f32_gt:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fcompw.olt $r1 = $r1, $r0
 ; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    fcompw.olt $r1 = $r1, $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.even $r1 ? $r0 = 0
 ; CHECK-NEXT:    ret
@@ -511,8 +511,8 @@ entry:
 define i64 @foo_i64_f32_ge(float %a, float %b){
 ; CHECK-LABEL: foo_i64_f32_ge:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fcompw.oge $r1 = $r0, $r1
 ; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    fcompw.oge $r1 = $r0, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.even $r1 ? $r0 = 0
 ; CHECK-NEXT:    ret
@@ -526,8 +526,8 @@ entry:
 define i64 @foo_i64_f32_eq(float %a, float %b){
 ; CHECK-LABEL: foo_i64_f32_eq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fcompw.oeq $r1 = $r0, $r1
 ; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    fcompw.oeq $r1 = $r0, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.even $r1 ? $r0 = 0
 ; CHECK-NEXT:    ret
@@ -541,8 +541,8 @@ entry:
 define i64 @foo_i64_f32_neq(float %a, float %b){
 ; CHECK-LABEL: foo_i64_f32_neq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fcompw.une $r1 = $r0, $r1
 ; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    fcompw.une $r1 = $r0, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.even $r1 ? $r0 = 0
 ; CHECK-NEXT:    ret
@@ -558,8 +558,8 @@ define i32 @foo_i32_f16_eq(half %a, half %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.une $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r1 = $r0, 1
 ; CHECK-NEXT:    make $r0 = 0xffffffff
+; CHECK-NEXT:    andw $r1 = $r0, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.even $r1 ? $r0 = 0
 ; CHECK-NEXT:    ret
@@ -575,8 +575,8 @@ define i64 @foo_i64_f16_eq(half %a, half %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.une $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r1 = $r0, 1
 ; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    andw $r1 = $r0, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.even $r1 ? $r0 = 0
 ; CHECK-NEXT:    ret
@@ -1058,8 +1058,8 @@ entry:
 define i64 @foo_i64_f32_lt_ri(float %a){
 ; CHECK-LABEL: foo_i64_f32_lt_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fcompw.olt $r1 = $r0, 0x40a00000
 ; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    fcompw.olt $r1 = $r0, 0x40a00000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.even $r1 ? $r0 = 0
 ; CHECK-NEXT:    ret
@@ -1075,8 +1075,8 @@ define i64 @foo_i64_f32_le_ri(float %a){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r1 = 0x40a00000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompw.oge $r1 = $r1, $r0
 ; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    fcompw.oge $r1 = $r1, $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.even $r1 ? $r0 = 0
 ; CHECK-NEXT:    ret
@@ -1092,8 +1092,8 @@ define i64 @foo_i64_f32_gt_ri(float %a){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r1 = 0x40a00000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompw.olt $r1 = $r1, $r0
 ; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    fcompw.olt $r1 = $r1, $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.even $r1 ? $r0 = 0
 ; CHECK-NEXT:    ret
@@ -1107,8 +1107,8 @@ entry:
 define i64 @foo_i64_f32_ge_ri(float %a){
 ; CHECK-LABEL: foo_i64_f32_ge_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fcompw.oge $r1 = $r0, 0x40a00000
 ; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    fcompw.oge $r1 = $r0, 0x40a00000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.even $r1 ? $r0 = 0
 ; CHECK-NEXT:    ret
@@ -1122,8 +1122,8 @@ entry:
 define i64 @foo_i64_f32_eq_ri(float %a){
 ; CHECK-LABEL: foo_i64_f32_eq_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fcompw.oeq $r1 = $r0, 0x40a00000
 ; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    fcompw.oeq $r1 = $r0, 0x40a00000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.even $r1 ? $r0 = 0
 ; CHECK-NEXT:    ret
@@ -1137,8 +1137,8 @@ entry:
 define i64 @foo_i64_f32_neq_ri(float %a){
 ; CHECK-LABEL: foo_i64_f32_neq_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fcompw.une $r1 = $r0, 0x40a00000
 ; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    fcompw.une $r1 = $r0, 0x40a00000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.even $r1 ? $r0 = 0
 ; CHECK-NEXT:    ret
@@ -1156,8 +1156,8 @@ define i32 @foo_i32_f16_eq_ri(half %a){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fcompnhq.une $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r1 = $r0, 1
 ; CHECK-NEXT:    make $r0 = 0xffffffff
+; CHECK-NEXT:    andw $r1 = $r0, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.even $r1 ? $r0 = 0
 ; CHECK-NEXT:    ret
@@ -1175,8 +1175,8 @@ define i64 @foo_i64_f16_eq_ri(half %a){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fcompnhq.une $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r1 = $r0, 1
 ; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    andw $r1 = $r0, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.even $r1 ? $r0 = 0
 ; CHECK-NEXT:    ret

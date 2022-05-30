@@ -21,8 +21,8 @@ define i32 @main() local_unnamed_addr {
 ; CHECK-NEXT:    addd $r0 = $r0, @gotoff( .L.str )
 ; CHECK-NEXT:    call printf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32

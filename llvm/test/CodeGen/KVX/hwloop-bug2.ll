@@ -31,12 +31,12 @@ define i32 @d() {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
 ; CHECK-NEXT:    make $r0 = a
-; CHECK-NEXT:    make $r18 = c
 ; CHECK-NEXT:    make $r2 = 0x7d0
+; CHECK-NEXT:    make $r18 = c
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lws $r0 = 0[$r0]
 ; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    make $r19 = b
-; CHECK-NEXT:    lws $r0 = 0[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 0[$r18] = $r0
 ; CHECK-NEXT:    ;;
@@ -44,8 +44,8 @@ define i32 @d() {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_2: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    lwz.xs $r2 = $r1[$r0]
 ; CHECK-NEXT:    addd $r1 = $r1, 1
+; CHECK-NEXT:    lwz.xs $r2 = $r1[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 0[$r19] = $r2
 ; CHECK-NEXT:    ;;

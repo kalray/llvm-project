@@ -24,8 +24,8 @@ define i64 @signal_fence(i64 %0) {
 define i64 @atomicrmw_i64_xchg(i64* %ptr, i64 %c, i64 %s) {
 ; CHECK-LABEL: atomicrmw_i64_xchg:
 ; CHECK:       .LBB2_1:
-; CHECK-NEXT:    ld.u $r3 = 0[$r0]
 ; CHECK-NEXT:    copyd $r2 = $r1
+; CHECK-NEXT:    ld.u $r3 = 0[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    acswapd 0[$r0] = $r2r3
 ; CHECK-NEXT:    ;;
@@ -42,8 +42,8 @@ define i64 @atomicrmw_i64_xchg(i64* %ptr, i64 %c, i64 %s) {
 define i32 @atomicrmw_i32_xchg(i32* %ptr, i32 %c, i32 %s) {
 ; CHECK-LABEL: atomicrmw_i32_xchg:
 ; CHECK:       .LBB3_1:
-; CHECK-NEXT:    lwz.u $r3 = 0[$r0]
 ; CHECK-NEXT:    copyw $r2 = $r1
+; CHECK-NEXT:    lwz.u $r3 = 0[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    acswapw 0[$r0] = $r2r3
 ; CHECK-NEXT:    ;;
@@ -64,14 +64,14 @@ define i64 @atomicrmw_i64_xchg_as(i64 addrspace(1)* %ptr, i64 %c, i64 %s) {
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
+; CHECK-NEXT:    make $r0 = 5
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    make $r0 = 5
 ; CHECK-NEXT:    call __kvx_atomic_global_in
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB4_1:
-; CHECK-NEXT:    ld.u $r1 = 0[$r19]
 ; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    ld.u $r1 = 0[$r19]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    acswapd 0[$r19] = $r0r1
 ; CHECK-NEXT:    ;;
@@ -81,8 +81,8 @@ define i64 @atomicrmw_i64_xchg_as(i64 addrspace(1)* %ptr, i64 %c, i64 %s) {
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    call __kvx_atomic_global_out
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
+; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
@@ -97,12 +97,12 @@ define i64 @atomicrmw_i64_xchg_as(i64 addrspace(1)* %ptr, i64 %c, i64 %s) {
 
 define i8 @atomic_test_and_set(i8* %ptr) {
 ; CHECK-LABEL: atomic_test_and_set:
-; CHECK:         fence
+; CHECK:         make $r1 = 1
 ; CHECK-NEXT:    andd $r3 = $r0, 3
-; CHECK-NEXT:    make $r1 = 1
+; CHECK-NEXT:    fence
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfd $r7 = $r3, 0
 ; CHECK-NEXT:    slld $r3 = $r3, 3
+; CHECK-NEXT:    sbfd $r7 = $r3, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB5_1:
 ; CHECK-NEXT:    lwz.u $r5 = $r7[$r0]
@@ -136,8 +136,8 @@ define i8 @atomic_test_and_set(i8* %ptr) {
 ; Tests for atomic_cmp_swap operations
 define i64 @cmpxchg_i64(i64* %ptr, i64 %c, i64 %s) {
 ; CHECK-LABEL: cmpxchg_i64:
-; CHECK:         fence
-; CHECK-NEXT:    copyd $r5 = $r1
+; CHECK:         copyd $r5 = $r1
+; CHECK-NEXT:    fence
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB6_1:
 ; CHECK-NEXT:    copyd $r4 = $r2
@@ -198,8 +198,8 @@ define i32 @atomic_load_i32(i32 addrspace(1)*%ptr) {
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 16[$r12] = $r18
-; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    make $r0 = 5
+; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    call __kvx_atomic_global_in
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r0 = 5
@@ -242,13 +242,13 @@ define void @atomic_store_i64(i64 addrspace(1)* %ptr, i64 %l) {
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
+; CHECK-NEXT:    make $r0 = 3
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    make $r0 = 3
 ; CHECK-NEXT:    call __kvx_atomic_global_in
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r0 = 3
 ; CHECK-NEXT:    sd 0[$r19] = $r18
+; CHECK-NEXT:    make $r0 = 3
 ; CHECK-NEXT:    call __kvx_atomic_global_out
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
@@ -394,9 +394,9 @@ define i64 @atomicrmw_i64_sub_global_as(i64 addrspace(1)*%src, i64 %b) {
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
+; CHECK-NEXT:    make $r0 = 3
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    make $r0 = 3
 ; CHECK-NEXT:    call __kvx_atomic_global_in
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB18_1:
@@ -412,8 +412,8 @@ define i64 @atomicrmw_i64_sub_global_as(i64 addrspace(1)*%src, i64 %b) {
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    call __kvx_atomic_global_out
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
+; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
@@ -430,8 +430,8 @@ define i64 @atomicrmw_i64_sub_global_as(i64 addrspace(1)*%src, i64 %b) {
 ; Test for immediates that doesn't hold on 37 bits
 define i64 @bigimm(i64* %0, i64 %1) {
 ; CHECK-LABEL: bigimm:
-; CHECK:         fence
-; CHECK-NEXT:    addd $r0 = $r0, 0x40000000000
+; CHECK:         addd $r0 = $r0, 0x40000000000
+; CHECK-NEXT:    fence
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB19_1:
 ; CHECK-NEXT:    ld.u $r3 = 0[$r0]

@@ -39,18 +39,18 @@ define dso_local i32 @f(i32 %sz) {
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    sbfd $r19 = $r0, $r12
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    copyd $r12 = $r19
 ; FP-ALL-NEXT:    copyd $r0 = $r18
 ; FP-ALL-NEXT:    addd $r1 = $r14, -144
 ; FP-ALL-NEXT:    copyd $r2 = $r19
+; FP-ALL-NEXT:    copyd $r12 = $r19
 ; FP-ALL-NEXT:    call g
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    lwz $r0 = 0[$r18]
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    lwz $r1 = -144[$r14]
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    lwz $r2 = 0[$r19]
 ; FP-ALL-NEXT:    addw $r0 = $r1, $r0
+; FP-ALL-NEXT:    lwz $r2 = 0[$r19]
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    addw $r0 = $r0, $r2
 ; FP-ALL-NEXT:    addd $r12 = $r14, -240

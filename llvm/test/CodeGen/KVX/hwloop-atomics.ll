@@ -5,14 +5,14 @@ target triple = "kvx-kalray-cos"
 define void @set(i32* nocapture %x, i32 %num){
 ; CHECK-LABEL: set:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    cb.weqz $r1 ? .LBB0_2
+; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %for.body.lr.ph
-; CHECK-NEXT:    zxwd $r4 = $r1
 ; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    make $r2 = 4
 ; CHECK-NEXT:    make $r3 = 16
+; CHECK-NEXT:    zxwd $r4 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r4, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;
@@ -34,9 +34,9 @@ define void @set(i32* nocapture %x, i32 %num){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.5: # %for.body
 ; CHECK-NEXT:    # in Loop: Header=BB0_3 Depth=1
-; CHECK-NEXT:    copyw $r4 = $r7
 ; CHECK-NEXT:    sw.xs $r1[$r0] = $r3
 ; CHECK-NEXT:    addd $r1 = $r1, 1
+; CHECK-NEXT:    copyw $r4 = $r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .__LOOPDO_0_END_:
 ; CHECK-NEXT:  .LBB0_2: # %for.cond.cleanup

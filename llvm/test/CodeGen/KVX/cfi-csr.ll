@@ -1103,8 +1103,8 @@ define i32 @fsum6_sum(i32 %first, i32 %second, ...) local_unnamed_addr #0 !dbg !
 ; CHECK-NEXT:    ld $r0 = -24[$r14]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 306 3 is_stmt 0 # cfi-csr.c:306:3
-; CHECK-NEXT:    addd $r1 = $r0, 8
 ; CHECK-NEXT:    addw $r0 = $r18, -1
+; CHECK-NEXT:    addd $r1 = $r0, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp91:
 ; CHECK-NEXT:  .LBB8_3: # %while.cond4
@@ -1119,8 +1119,8 @@ define i32 @fsum6_sum(i32 %first, i32 %second, ...) local_unnamed_addr #0 !dbg !
 ; CHECK-NEXT:  .Ltmp92:
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:v <- $r2
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:result <- [DW_OP_plus_uconst 2, DW_OP_stack_value] $r0
-; CHECK-NEXT:    lwz $r2 = -8[$r1]
 ; CHECK-NEXT:    addd $r1 = $r1, 8
+; CHECK-NEXT:    lwz $r2 = -8[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp93:
 ; CHECK-NEXT:    .loc 1 306 3 # cfi-csr.c:306:3

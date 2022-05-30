@@ -18,12 +18,13 @@ define void @f(i32* nocapture %x, i32 %state) {
 
 ; ALL-NEXT:    ;;
 
-; CHECK-NEXT:    ld.xs $r2 = $r1[$r2]
 ; PIC-NEXT:    lws.xs $r1 = $r1[$r2]
 ; PIC-NEXT:    ;;
-; PIC-NEXT:    addwd $r2 = $r1, $r2
 
 ; ALL-NEXT:    make $r1 = 1
+; CHECK-NEXT:    ld.xs $r2 = $r1[$r2]
+; PIC-NEXT:    addwd $r2 = $r1, $r2
+
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    igoto $r2
 ; ALL-NEXT:    ;;

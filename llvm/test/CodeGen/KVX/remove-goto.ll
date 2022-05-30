@@ -20,8 +20,8 @@ define %struct.list_head_s* @core_list_reverse(%struct.list_head_s* %list){
 ; CHECK-NEXT:    ld $r0 = 0[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 0[$r1] = $r2
-; CHECK-NEXT:    copyd $r2 = $r1
 ; CHECK-NEXT:    cb.dnez $r0 ? .LBB0_2
+; CHECK-NEXT:    copyd $r2 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.3: # %while.end
 ; CHECK-NEXT:    copyd $r0 = $r1

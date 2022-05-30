@@ -3151,8 +3151,8 @@ entry:
 define void @sllhxs(<16 x i16> %a, i32 %b) {
 ; CHECK-LABEL: sllhxs:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    zxwd $r4 = $r4
+; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sllhqs $r0 = $r0, $r4
 ; CHECK-NEXT:    sllhqs $r1 = $r1, $r4
@@ -3194,9 +3194,9 @@ declare void @llvm.lifetime.end.p0i8(i64 immarg, i8* nocapture) #6
 define void @sllhxsimm(<16 x i16> %a) {
 ; CHECK-LABEL: sllhxsimm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    sllhqs $r0 = $r0, 3
 ; CHECK-NEXT:    sllhqs $r1 = $r1, 3
+; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sllhqs $r2 = $r2, 3
 ; CHECK-NEXT:    sllhqs $r3 = $r3, 3
@@ -3230,8 +3230,8 @@ entry:
 define void @sllwps(<2 x i32> %a, i32 %b) {
 ; CHECK-LABEL: sllwps:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sllwps $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
@@ -3255,8 +3255,8 @@ declare <2 x i32> @llvm.kvx.sllwps(<2 x i32>, i64)
 define void @sllwpsimm(<2 x i32> %a) {
 ; CHECK-LABEL: sllwpsimm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    sllwps $r0 = $r0, 3
+; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
@@ -3853,8 +3853,8 @@ entry:
 define void @srahxs(<16 x i16> %a, i32 %b) {
 ; CHECK-LABEL: srahxs:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    zxwd $r4 = $r4
+; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srahqs $r0 = $r0, $r4
 ; CHECK-NEXT:    srahqs $r1 = $r1, $r4
@@ -3892,9 +3892,9 @@ entry:
 define void @srahxsimm(<16 x i16> %a) {
 ; CHECK-LABEL: srahxsimm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    srahqs $r0 = $r0, 3
 ; CHECK-NEXT:    srahqs $r1 = $r1, 3
+; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srahqs $r2 = $r2, 3
 ; CHECK-NEXT:    srahqs $r3 = $r3, 3

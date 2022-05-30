@@ -16,8 +16,8 @@ define void @InitDataSet(i32 %m, i16* nocapture %x, i32 %n, i16* nocapture %h) {
 ; CHECK-NEXT:    cb.wlez $r0 ? .LBB0_1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.2: # %for.body.preheader
-; CHECK-NEXT:    zxwd $r5 = $r0
 ; CHECK-NEXT:    make $r4 = 0
+; CHECK-NEXT:    zxwd $r5 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r5, .__LOOPDO_5_END_
 ; CHECK-NEXT:    ;;
@@ -62,9 +62,9 @@ define void @InitDataSet(i32 %m, i16* nocapture %x, i32 %n, i16* nocapture %h) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srld $r0 = $r0, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r8 = $r0, 1
 ; CHECK-NEXT:    adduwd $r0 = $r6, $r5
 ; CHECK-NEXT:    addx2d $r6 = $r6, $r1
+; CHECK-NEXT:    addd $r8 = $r0, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r8, .__LOOPDO_4_END_
 ; CHECK-NEXT:    ;;
@@ -84,8 +84,8 @@ define void @InitDataSet(i32 %m, i16* nocapture %x, i32 %n, i16* nocapture %h) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfd $r4 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r5 = $r4, 1
 ; CHECK-NEXT:    make $r4 = 0xdead
+; CHECK-NEXT:    addd $r5 = $r4, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r5, .__LOOPDO_3_END_
 ; CHECK-NEXT:    ;;
@@ -147,9 +147,9 @@ define void @InitDataSet(i32 %m, i16* nocapture %x, i32 %n, i16* nocapture %h) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srld $r0 = $r0, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r6 = $r0, 1
 ; CHECK-NEXT:    adduwd $r0 = $r4, $r2
 ; CHECK-NEXT:    addx2d $r4 = $r4, $r3
+; CHECK-NEXT:    addd $r6 = $r0, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r6, .__LOOPDO_1_END_
 ; CHECK-NEXT:    ;;
@@ -169,8 +169,8 @@ define void @InitDataSet(i32 %m, i16* nocapture %x, i32 %n, i16* nocapture %h) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfd $r1 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r2 = $r1, 1
 ; CHECK-NEXT:    make $r1 = 0xbeef
+; CHECK-NEXT:    addd $r2 = $r1, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r2, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;
@@ -351,10 +351,10 @@ define i32 @c()  {
 ; CHECK-NEXT:    cb.wlez $r18 ? .LBB1_6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %for.cond3.preheader.preheader
-; CHECK-NEXT:    zxwd $r5 = $r18
 ; CHECK-NEXT:    sxwd $r0 = $r0
 ; CHECK-NEXT:    make $r3 = g
 ; CHECK-NEXT:    make $r4 = b
+; CHECK-NEXT:    zxwd $r5 = $r18
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r5, .__LOOPDO_6_END_
 ; CHECK-NEXT:    ;;

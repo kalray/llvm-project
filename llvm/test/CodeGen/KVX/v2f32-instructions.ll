@@ -173,13 +173,13 @@ define <2 x float> @test_fdiv(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-NEXT:    srad $r1 = $r18, 32
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r20, 63, 32
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
+; CHECK-NEXT:    insf $r0 = $r20, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r20 = 16[$r12]
 ; CHECK-NEXT:    ;;
@@ -212,13 +212,13 @@ define <2 x float> @test_frem(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-NEXT:    srad $r1 = $r18, 32
 ; CHECK-NEXT:    call fmodf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    call fmodf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r20, 63, 32
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
+; CHECK-NEXT:    insf $r0 = $r20, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r20 = 16[$r12]
 ; CHECK-NEXT:    ;;
@@ -275,8 +275,8 @@ define <2 x float> @test_call_flipped(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r2
 ; CHECK-NEXT:    call test_callee
@@ -295,8 +295,8 @@ define <2 x float> @test_call_flipped(<2 x float> %a, <2 x float> %b) #0 {
 define <2 x float> @test_tailcall_flipped(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-LABEL: test_tailcall_flipped:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r2
 ; CHECK-NEXT:    goto test_callee
@@ -333,8 +333,8 @@ define <2 x double> @test_select_cc_f32_f32(<2 x double> %a, <2 x double> %b, <2
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.une $r4 = $r4, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfs $r5 = $r4, 63, 32
 ; CHECK-NEXT:    sxwd $r4 = $r4
+; CHECK-NEXT:    extfs $r5 = $r4, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.dnez $r4 ? $r2 = $r0
 ; CHECK-NEXT:    cmoved.dnez $r5 ? $r3 = $r1
@@ -423,8 +423,8 @@ define <2 x i1> @test_fcmp_ule(<2 x float> %a, <2 x float> %b) #0 {
 define <2 x i1> @test_fcmp_uno(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-LABEL: test_fcmp_uno:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fcompnwp.ult $r2 = $r0, $r1
 ; CHECK-NEXT:    fcompnwp.uge $r0 = $r0, $r1
+; CHECK-NEXT:    fcompnwp.ult $r2 = $r0, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    andd $r0 = $r0, $r2
 ; CHECK-NEXT:    ;;
@@ -510,8 +510,8 @@ define <2 x i1> @test_fcmp_ole(<2 x float> %a, <2 x float> %b) #0 {
 define <2 x i1> @test_fcmp_ord(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-LABEL: test_fcmp_ord:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fcompnwp.olt $r2 = $r0, $r1
 ; CHECK-NEXT:    fcompnwp.oge $r0 = $r0, $r1
+; CHECK-NEXT:    fcompnwp.olt $r2 = $r0, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r0 = $r0, $r2
 ; CHECK-NEXT:    ;;
@@ -535,8 +535,8 @@ define <2 x i32> @test_fptosi_i32(<2 x float> %a) #0 {
 define <2 x i64> @test_fptosi_i64(<2 x float> %a) #0 {
 ; CHECK-LABEL: test_fptosi_i64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fwidenmwd $r1 = $r0
 ; CHECK-NEXT:    fwidenlwd $r0 = $r0
+; CHECK-NEXT:    fwidenmwd $r1 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedd.rz $r1 = $r1, 0
 ; CHECK-NEXT:    ;;
@@ -560,8 +560,8 @@ define <2 x i32> @test_fptoui_2xi32(<2 x float> %a) #0 {
 define <2 x i64> @test_fptoui_2xi64(<2 x float> %a) #0 {
 ; CHECK-LABEL: test_fptoui_2xi64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fwidenmwd $r1 = $r0
 ; CHECK-NEXT:    fwidenlwd $r0 = $r0
+; CHECK-NEXT:    fwidenmwd $r1 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedud.rz $r1 = $r1, 0
 ; CHECK-NEXT:    ;;
@@ -638,16 +638,16 @@ define <2 x float> @test_uitofp_2xi64(<2 x i64> %a) #0 {
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
-; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    call __floatundisf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    call __floatundisf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r19, 63, 32
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
+; CHECK-NEXT:    insf $r0 = $r19, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
@@ -679,16 +679,16 @@ define <2 x float> @test_sitofp_2xi64(<2 x i64> %a) #0 {
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
-; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    call __floatdisf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    call __floatdisf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r19, 63, 32
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
+; CHECK-NEXT:    insf $r0 = $r19, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
@@ -744,8 +744,8 @@ define <2 x float> @test_fptrunc_2xdouble(<2 x double> %a) #0 {
 define <2 x double> @test_fpext_2xdouble(<2 x float> %a) #0 {
 ; CHECK-LABEL: test_fpext_2xdouble:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fwidenmwd $r1 = $r0
 ; CHECK-NEXT:    fwidenlwd $r0 = $r0
+; CHECK-NEXT:    fwidenmwd $r1 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fpext <2 x float> %a to <2 x double>
@@ -807,12 +807,12 @@ define <2 x float> @test_sqrt(<2 x float> %a) #0 {
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call sqrtf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    call sqrtf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r19, 63, 32
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
+; CHECK-NEXT:    insf $r0 = $r19, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
@@ -842,13 +842,13 @@ define <2 x float> @test_powi(<2 x float> %a, i32 %b) #0 {
 ; CHECK-NEXT:    srad $r0 = $r19, 32
 ; CHECK-NEXT:    call __powisf2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    call __powisf2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r20, 63, 32
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
+; CHECK-NEXT:    insf $r0 = $r20, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r20 = 16[$r12]
 ; CHECK-NEXT:    ;;
@@ -877,12 +877,12 @@ define <2 x float> @test_sin(<2 x float> %a) #0 {
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call sinf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    call sinf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r19, 63, 32
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
+; CHECK-NEXT:    insf $r0 = $r19, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
@@ -909,12 +909,12 @@ define <2 x float> @test_cos(<2 x float> %a) #0 {
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call cosf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    call cosf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r19, 63, 32
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
+; CHECK-NEXT:    insf $r0 = $r19, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
@@ -945,13 +945,13 @@ define <2 x float> @test_pow(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-NEXT:    srad $r1 = $r18, 32
 ; CHECK-NEXT:    call powf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    call powf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r20, 63, 32
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
+; CHECK-NEXT:    insf $r0 = $r20, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r20 = 16[$r12]
 ; CHECK-NEXT:    ;;
@@ -980,12 +980,12 @@ define <2 x float> @test_exp(<2 x float> %a) #0 {
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call expf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    call expf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r19, 63, 32
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
+; CHECK-NEXT:    insf $r0 = $r19, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
@@ -1012,12 +1012,12 @@ define <2 x float> @test_exp2(<2 x float> %a) #0 {
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call exp2f
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    call exp2f
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r19, 63, 32
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
+; CHECK-NEXT:    insf $r0 = $r19, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
@@ -1044,12 +1044,12 @@ define <2 x float> @test_log(<2 x float> %a) #0 {
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call logf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    call logf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r19, 63, 32
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
+; CHECK-NEXT:    insf $r0 = $r19, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
@@ -1076,12 +1076,12 @@ define <2 x float> @test_log10(<2 x float> %a) #0 {
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call log10f
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    call log10f
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r19, 63, 32
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
+; CHECK-NEXT:    insf $r0 = $r19, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
@@ -1108,12 +1108,12 @@ define <2 x float> @test_log2(<2 x float> %a) #0 {
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call log2f
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    call log2f
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r19, 63, 32
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
+; CHECK-NEXT:    insf $r0 = $r19, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
@@ -1166,13 +1166,13 @@ define <2 x float> @test_minnum(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-NEXT:    srad $r1 = $r18, 32
 ; CHECK-NEXT:    call fminf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    call fminf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r20, 63, 32
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
+; CHECK-NEXT:    insf $r0 = $r20, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r20 = 16[$r12]
 ; CHECK-NEXT:    ;;
@@ -1215,13 +1215,13 @@ define <2 x float> @test_maxnum(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-NEXT:    srad $r1 = $r18, 32
 ; CHECK-NEXT:    call fmaxf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    call fmaxf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r20, 63, 32
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
+; CHECK-NEXT:    insf $r0 = $r20, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r20 = 16[$r12]
 ; CHECK-NEXT:    ;;
@@ -1249,8 +1249,8 @@ define <2 x float> @test_maxnum_fast(<2 x float> %a, <2 x float> %b) #0 {
 define <2 x float> @test_copysign(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-LABEL: test_copysign:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    andd $r1 = $r1, 0x8000000080000000
 ; CHECK-NEXT:    fabswp $r0 = $r0
+; CHECK-NEXT:    andd $r1 = $r1, 0x8000000080000000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -1262,8 +1262,8 @@ define <2 x float> @test_copysign(<2 x float> %a, <2 x float> %b) #0 {
 define <2 x float> @test_copysign_v2f16(<2 x float> %a, <2 x half> %b) #0 {
 ; CHECK-LABEL: test_copysign_v2f16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    andw $r1 = $r1, 0x80008000
 ; CHECK-NEXT:    fabswp $r0 = $r0
+; CHECK-NEXT:    andw $r1 = $r1, 0x80008000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x800000002000000
 ; CHECK-NEXT:    ;;
@@ -1278,9 +1278,9 @@ define <2 x float> @test_copysign_v2f16(<2 x float> %a, <2 x half> %b) #0 {
 define <2 x float> @test_copysign_v2f64(<2 x double> %b, <2 x float> %a) #0 {
 ; CHECK-LABEL: test_copysign_v2f64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srld $r3 = $r0, 63
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    srld $r1 = $r1, 63
+; CHECK-NEXT:    srld $r3 = $r0, 63
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r3, 31, 31
 ; CHECK-NEXT:    ;;
@@ -1295,13 +1295,13 @@ define <2 x float> @test_copysign_v2f64(<2 x double> %b, <2 x float> %a) #0 {
 define <2 x double> @test_copysign_extended(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-LABEL: test_copysign_extended:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    andd $r1 = $r1, 0x8000000080000000
 ; CHECK-NEXT:    fabswp $r0 = $r0
+; CHECK-NEXT:    andd $r1 = $r1, 0x8000000080000000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenmwd $r1 = $r0
 ; CHECK-NEXT:    fwidenlwd $r0 = $r0
+; CHECK-NEXT:    fwidenmwd $r1 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <2 x float> @llvm.copysign.v2f32(<2 x float> %a, <2 x float> %b)
@@ -1323,12 +1323,12 @@ define <2 x float> @test_floor(<2 x float> %a) #0 {
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call floorf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    call floorf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r19, 63, 32
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
+; CHECK-NEXT:    insf $r0 = $r19, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
@@ -1355,12 +1355,12 @@ define <2 x float> @test_ceil(<2 x float> %a) #0 {
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call ceilf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    call ceilf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r19, 63, 32
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
+; CHECK-NEXT:    insf $r0 = $r19, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
@@ -1387,12 +1387,12 @@ define <2 x float> @test_trunc(<2 x float> %a) #0 {
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call truncf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    call truncf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r19, 63, 32
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
+; CHECK-NEXT:    insf $r0 = $r19, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
@@ -1419,12 +1419,12 @@ define <2 x float> @test_rint(<2 x float> %a) #0 {
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call rintf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    call rintf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r19, 63, 32
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
+; CHECK-NEXT:    insf $r0 = $r19, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
@@ -1451,12 +1451,12 @@ define <2 x float> @test_nearbyint(<2 x float> %a) #0 {
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call nearbyintf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    call nearbyintf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r19, 63, 32
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
+; CHECK-NEXT:    insf $r0 = $r19, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
@@ -1483,12 +1483,12 @@ define <2 x float> @test_round(<2 x float> %a) #0 {
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call roundf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    call roundf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r19, 63, 32
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
+; CHECK-NEXT:    insf $r0 = $r19, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
@@ -1546,8 +1546,8 @@ define <2 x float> @test_insertelement1(<2 x float> %a, float %x) #0 {
 define <2 x float> @test_insertelement(<2 x float> %a, float %x, i64 %p) #0 {
 ; CHECK-LABEL: test_insertelement:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    copyd $r3 = $r0
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 32
+; CHECK-NEXT:    copyd $r3 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r3 = $r1, 31, 0
 ; CHECK-NEXT:    ;;
@@ -1641,8 +1641,8 @@ entry:
 define <2 x float> @shuffle_v2float_1_3(<2 x float> %0, <2 x float> %1) #0 {
 ; CHECK-LABEL: shuffle_v2float_1_3:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    srad $r1 = $r1, 32
 ; CHECK-NEXT:    srad $r0 = $r0, 32
+; CHECK-NEXT:    srad $r1 = $r1, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 32
 ; CHECK-NEXT:    ret
@@ -1668,8 +1668,8 @@ entry:
 define <2 x float> @shuffle_v2float_2_1(<2 x float> %0, <2 x float> %1) #0 {
 ; CHECK-LABEL: shuffle_v2float_2_1:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    srad $r2 = $r0, 32
 ; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    srad $r2 = $r0, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r2, 63, 32
 ; CHECK-NEXT:    ret
@@ -1719,8 +1719,8 @@ entry:
 define <2 x float> @shuffle_v2float_3_1(<2 x float> %0, <2 x float> %1) #0 {
 ; CHECK-LABEL: shuffle_v2float_3_1:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    srad $r2 = $r0, 32
 ; CHECK-NEXT:    srad $r0 = $r1, 32
+; CHECK-NEXT:    srad $r2 = $r0, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r2, 63, 32
 ; CHECK-NEXT:    ret
@@ -1929,8 +1929,8 @@ entry:
 define <2 x i32> @fcmp_setord(<2 x float> %a, <2 x float> %b) #0 {
 ; KV3_1-LABEL: fcmp_setord:
 ; KV3_1:       # %bb.0: # %entry
-; KV3_1-NEXT:    fcompnwp.olt $r2 = $r0, $r1
 ; KV3_1-NEXT:    fcompnwp.oge $r0 = $r0, $r1
+; KV3_1-NEXT:    fcompnwp.olt $r2 = $r0, $r1
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    ord $r0 = $r0, $r2
 ; KV3_1-NEXT:    ;;
@@ -1942,8 +1942,8 @@ define <2 x i32> @fcmp_setord(<2 x float> %a, <2 x float> %b) #0 {
 ;
 ; KV3_2-LABEL: fcmp_setord:
 ; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    fcompnwp.olt $r2 = $r0, $r1
 ; KV3_2-NEXT:    fcompnwp.oge $r0 = $r0, $r1
+; KV3_2-NEXT:    fcompnwp.olt $r2 = $r0, $r1
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:    ord $r0 = $r0, $r2
 ; KV3_2-NEXT:    ret
@@ -1979,8 +1979,8 @@ entry:
 define <2 x i32> @fcmp_setuno(<2 x float> %a, <2 x float> %b) #0 {
 ; KV3_1-LABEL: fcmp_setuno:
 ; KV3_1:       # %bb.0: # %entry
-; KV3_1-NEXT:    fcompnwp.ult $r2 = $r0, $r1
 ; KV3_1-NEXT:    fcompnwp.uge $r0 = $r0, $r1
+; KV3_1-NEXT:    fcompnwp.ult $r2 = $r0, $r1
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    andd $r0 = $r0, $r2
 ; KV3_1-NEXT:    ;;
@@ -1992,8 +1992,8 @@ define <2 x i32> @fcmp_setuno(<2 x float> %a, <2 x float> %b) #0 {
 ;
 ; KV3_2-LABEL: fcmp_setuno:
 ; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    fcompnwp.ult $r2 = $r0, $r1
 ; KV3_2-NEXT:    fcompnwp.uge $r0 = $r0, $r1
+; KV3_2-NEXT:    fcompnwp.ult $r2 = $r0, $r1
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:    andd $r0 = $r0, $r2
 ; KV3_2-NEXT:    ret
@@ -2347,8 +2347,8 @@ entry:
 define <2 x i32> @fcmp_setord_fast(<2 x float> %a, <2 x float> %b) #0 {
 ; KV3_1-LABEL: fcmp_setord_fast:
 ; KV3_1:       # %bb.0: # %entry
-; KV3_1-NEXT:    fcompnwp.olt $r2 = $r0, $r1
 ; KV3_1-NEXT:    fcompnwp.oge $r0 = $r0, $r1
+; KV3_1-NEXT:    fcompnwp.olt $r2 = $r0, $r1
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    ord $r0 = $r0, $r2
 ; KV3_1-NEXT:    ;;
@@ -2360,8 +2360,8 @@ define <2 x i32> @fcmp_setord_fast(<2 x float> %a, <2 x float> %b) #0 {
 ;
 ; KV3_2-LABEL: fcmp_setord_fast:
 ; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    fcompnwp.olt $r2 = $r0, $r1
 ; KV3_2-NEXT:    fcompnwp.oge $r0 = $r0, $r1
+; KV3_2-NEXT:    fcompnwp.olt $r2 = $r0, $r1
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:    ord $r0 = $r0, $r2
 ; KV3_2-NEXT:    ret
@@ -2397,8 +2397,8 @@ entry:
 define <2 x i32> @fcmp_setuno_fast(<2 x float> %a, <2 x float> %b) #0 {
 ; KV3_1-LABEL: fcmp_setuno_fast:
 ; KV3_1:       # %bb.0: # %entry
-; KV3_1-NEXT:    fcompnwp.ult $r2 = $r0, $r1
 ; KV3_1-NEXT:    fcompnwp.uge $r0 = $r0, $r1
+; KV3_1-NEXT:    fcompnwp.ult $r2 = $r0, $r1
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    andd $r0 = $r0, $r2
 ; KV3_1-NEXT:    ;;
@@ -2410,8 +2410,8 @@ define <2 x i32> @fcmp_setuno_fast(<2 x float> %a, <2 x float> %b) #0 {
 ;
 ; KV3_2-LABEL: fcmp_setuno_fast:
 ; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    fcompnwp.ult $r2 = $r0, $r1
 ; KV3_2-NEXT:    fcompnwp.uge $r0 = $r0, $r1
+; KV3_2-NEXT:    fcompnwp.ult $r2 = $r0, $r1
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:    andd $r0 = $r0, $r2
 ; KV3_2-NEXT:    ret

@@ -59,8 +59,8 @@ if.end:                                           ; preds = %if.then, %entry
 define i32 @f(){
 ; CHECK-LABEL: f:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 24[$r12] = $r0
 ; CHECK-NEXT:    ;;

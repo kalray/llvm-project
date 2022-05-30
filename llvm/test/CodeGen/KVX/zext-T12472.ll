@@ -33,9 +33,9 @@ define i32 @__strncmp(i8* nocapture readonly %s1, i8* nocapture readonly %s2, i3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_5: # %if.end11
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    lbz $r4 = 1[$r0]
 ; CHECK-NEXT:    addd $r0 = $r0, 1
 ; CHECK-NEXT:    addd $r2 = $r1, 1
+; CHECK-NEXT:    lbz $r4 = 1[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.weqz $r4 ? .LBB0_12
 ; CHECK-NEXT:    ;;
@@ -48,8 +48,8 @@ define i32 @__strncmp(i8* nocapture readonly %s1, i8* nocapture readonly %s2, i3
 ; CHECK-NEXT:    lbz $r1 = 1[$r1]
 ; CHECK-NEXT:    addw $r3 = $r3, -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    compw.eq $r4 = $r4, $r1
 ; CHECK-NEXT:    copyd $r1 = $r2
+; CHECK-NEXT:    compw.eq $r4 = $r4, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.odd $r4 ? .LBB0_5
 ; CHECK-NEXT:    ;;

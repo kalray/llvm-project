@@ -101,8 +101,8 @@ define i8 @h() local_unnamed_addr #0 !dbg !28 {
 ; CHECK-NEXT:    #DEBUG_VALUE: h:b <- [DW_OP_LLVM_fragment 16 8] -3
 ; CHECK-NEXT:    #DEBUG_VALUE: h:b <- [DW_OP_LLVM_fragment 24 8] -4
 ; CHECK-NEXT:    sd 16[$r12] = $r14
-; CHECK-NEXT:    addd $r14 = $r12, 16
 ; CHECK-NEXT:    make $r0 = 236
+; CHECK-NEXT:    addd $r14 = $r12, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 14, -16
 ; CHECK-NEXT:    .cfi_def_cfa 14, 16

@@ -5,8 +5,8 @@ target triple = "kvx-kalray-cos"
 define half @mul_f16_f16(half %0, half %1) {
 ; CHECK-LABEL: mul_f16_f16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    zxhd $r1 = $r1
 ; CHECK-NEXT:    zxhd $r0 = $r0
+; CHECK-NEXT:    zxhd $r1 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmulhq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -18,8 +18,8 @@ define half @mul_f16_f16(half %0, half %1) {
 define <2 x half> @mul_v2f16_v2f16(<2 x half> %0, <2 x half> %1) {
 ; CHECK-LABEL: mul_v2f16_v2f16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    zxwd $r1 = $r1
 ; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    zxwd $r1 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmulhq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret

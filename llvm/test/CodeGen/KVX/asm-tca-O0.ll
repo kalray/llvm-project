@@ -5,9 +5,9 @@ target triple = "kvx-kalray-cos"
 define void @asm_tca(i8* %v, i64 %A) {
 ; CHECK-LABEL: asm_tca:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addd $r12 = $r12, -128
 ; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    addd $r3 = $r1, 1
+; CHECK-NEXT:    addd $r12 = $r12, -128
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 120[$r12] = $r2
 ; CHECK-NEXT:    ;;
@@ -125,8 +125,8 @@ entry:
 define void @asm_clobber_wide_vec(<256 x i1>* %a) {
 ; CHECK-LABEL: asm_clobber_wide_vec:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    lv $a2 = 0[$r0]
+; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    ;;
@@ -150,8 +150,8 @@ entry:
 define void @asm_clobber_multiple_quad(<256 x i1>* %c, <256 x i1>* %b) {
 ; CHECK-LABEL: asm_clobber_multiple_quad:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    copyd $r4 = $r0
+; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a4 = 0[$r4]
 ; CHECK-NEXT:    ;;
@@ -195,8 +195,8 @@ entry:
 define <256 x i1>* @asm_clobber_quad_matrix(<256 x i1>* %a) {
 ; CHECK-LABEL: asm_clobber_quad_matrix:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    lv $a4 = 0[$r0]
+; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    ;;
@@ -222,8 +222,8 @@ entry:
 define void @use_wide_reg(<512 x i1>* %w, <256 x i1>* %v) {
 ; CHECK-LABEL: use_wide_reg:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    copyd $r4 = $r0
+; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r4
 ; CHECK-NEXT:    ;;
@@ -264,8 +264,8 @@ entry:
 define void @use_matrix_reg(<1024 x i1>* %x) {
 ; CHECK-LABEL: use_matrix_reg:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    copyd $r4 = $r0
+; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r4
 ; CHECK-NEXT:    ;;

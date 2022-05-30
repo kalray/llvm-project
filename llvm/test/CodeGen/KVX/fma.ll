@@ -85,8 +85,8 @@ define <2 x float> @ffmawp(<2 x float> %a, <2 x float> %b, <2 x float> %c) {
 define half @ffmaf16(half %a, half %b, half %c) {
 ; ALL-LABEL: ffmaf16:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    zxhd $r3 = $r0
 ; ALL-NEXT:    zxhd $r0 = $r2
+; ALL-NEXT:    zxhd $r3 = $r0
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    zxhd $r1 = $r1
 ; ALL-NEXT:    ;;
@@ -100,8 +100,8 @@ define half @ffmaf16(half %a, half %b, half %c) {
 define half @ffmahq_v1_rr(half %a, half %b, half %c) {
 ; ALL-LABEL: ffmahq_v1_rr:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    zxhd $r1 = $r1
 ; ALL-NEXT:    zxhd $r0 = $r0
+; ALL-NEXT:    zxhd $r1 = $r1
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    zxhd $r2 = $r2
 ; ALL-NEXT:    ;;
@@ -116,8 +116,8 @@ define half @ffmahq_v1_rr(half %a, half %b, half %c) {
 define half @ffmahq_v1_ri(half %a, half %b) {
 ; KV1-LABEL: ffmahq_v1_ri:
 ; KV1:       # %bb.0:
-; KV1-NEXT:    zxhd $r1 = $r1
 ; KV1-NEXT:    zxhd $r0 = $r0
+; KV1-NEXT:    zxhd $r1 = $r1
 ; KV1-NEXT:    ;;
 ; KV1-NEXT:    ffmahq $r0 = $r1, 0x4300
 ; KV1-NEXT:    ret
@@ -125,8 +125,8 @@ define half @ffmahq_v1_ri(half %a, half %b) {
 ;
 ; KV2-LABEL: ffmahq_v1_ri:
 ; KV2:       # %bb.0:
-; KV2-NEXT:    zxhd $r1 = $r1
 ; KV2-NEXT:    zxhd $r0 = $r0
+; KV2-NEXT:    zxhd $r1 = $r1
 ; KV2-NEXT:    make $r2 = 0x4300
 ; KV2-NEXT:    ;;
 ; KV2-NEXT:    ffmahq $r0 = $r1, $r2
@@ -140,9 +140,9 @@ define half @ffmahq_v1_ri(half %a, half %b) {
 define <2 x half> @ffmahq1(<2 x half> %a, <2 x half> %b, <2 x half> %c) {
 ; ALL-LABEL: ffmahq1:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    zxwd $r3 = $r0
 ; ALL-NEXT:    zxwd $r0 = $r2
 ; ALL-NEXT:    zxwd $r1 = $r1
+; ALL-NEXT:    zxwd $r3 = $r0
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    ffmahq $r0 = $r3, $r1
 ; ALL-NEXT:    ret
@@ -168,8 +168,8 @@ define <2 x double> @ffmav2f64(<2 x double> %a, <2 x double> %b, <2 x double> %c
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    ffmad $r4 = $r0, $r2
 ; ALL-NEXT:    ;;
-; ALL-NEXT:    ffmad $r5 = $r1, $r3
 ; ALL-NEXT:    copyd $r0 = $r4
+; ALL-NEXT:    ffmad $r5 = $r1, $r3
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    copyd $r1 = $r5
 ; ALL-NEXT:    ret
@@ -796,8 +796,8 @@ entry:
 define <2 x half> @fmshq_v2_ri(<2 x half> %a, <2 x half> %b) {
 ; KV1-LABEL: fmshq_v2_ri:
 ; KV1:       # %bb.0: # %entry
-; KV1-NEXT:    zxwd $r1 = $r1
 ; KV1-NEXT:    zxwd $r0 = $r0
+; KV1-NEXT:    zxwd $r1 = $r1
 ; KV1-NEXT:    ;;
 ; KV1-NEXT:    ffmahq $r0 = $r1, 0x5fd0bc00
 ; KV1-NEXT:    ret
@@ -805,8 +805,8 @@ define <2 x half> @fmshq_v2_ri(<2 x half> %a, <2 x half> %b) {
 ;
 ; KV2-LABEL: fmshq_v2_ri:
 ; KV2:       # %bb.0: # %entry
-; KV2-NEXT:    zxwd $r1 = $r1
 ; KV2-NEXT:    zxwd $r0 = $r0
+; KV2-NEXT:    zxwd $r1 = $r1
 ; KV2-NEXT:    make $r2 = 0x5fd0bc00
 ; KV2-NEXT:    ;;
 ; KV2-NEXT:    ffmahq $r0 = $r1, $r2
@@ -821,8 +821,8 @@ entry:
 define <2 x half> @fmahq_v2_ri(<2 x half> %a, <2 x half> %b) {
 ; KV1-LABEL: fmahq_v2_ri:
 ; KV1:       # %bb.0: # %entry
-; KV1-NEXT:    zxwd $r1 = $r1
 ; KV1-NEXT:    zxwd $r0 = $r0
+; KV1-NEXT:    zxwd $r1 = $r1
 ; KV1-NEXT:    ;;
 ; KV1-NEXT:    ffmahq $r0 = $r1, 0xffffffffdfd03c00
 ; KV1-NEXT:    ret
@@ -830,8 +830,8 @@ define <2 x half> @fmahq_v2_ri(<2 x half> %a, <2 x half> %b) {
 ;
 ; KV2-LABEL: fmahq_v2_ri:
 ; KV2:       # %bb.0: # %entry
-; KV2-NEXT:    zxwd $r1 = $r1
 ; KV2-NEXT:    zxwd $r0 = $r0
+; KV2-NEXT:    zxwd $r1 = $r1
 ; KV2-NEXT:    make $r2 = 0xffffffffdfd03c00
 ; KV2-NEXT:    ;;
 ; KV2-NEXT:    ffmahq $r0 = $r1, $r2
@@ -858,8 +858,8 @@ entry:
 define half @fmshq_v1_ri(half %a, half %b) {
 ; KV1-LABEL: fmshq_v1_ri:
 ; KV1:       # %bb.0: # %entry
-; KV1-NEXT:    zxhd $r1 = $r1
 ; KV1-NEXT:    zxhd $r0 = $r0
+; KV1-NEXT:    zxhd $r1 = $r1
 ; KV1-NEXT:    ;;
 ; KV1-NEXT:    ffmahq $r0 = $r1, 0xdfd0
 ; KV1-NEXT:    ret
@@ -867,8 +867,8 @@ define half @fmshq_v1_ri(half %a, half %b) {
 ;
 ; KV2-LABEL: fmshq_v1_ri:
 ; KV2:       # %bb.0: # %entry
-; KV2-NEXT:    zxhd $r1 = $r1
 ; KV2-NEXT:    zxhd $r0 = $r0
+; KV2-NEXT:    zxhd $r1 = $r1
 ; KV2-NEXT:    make $r2 = 0xdfd0
 ; KV2-NEXT:    ;;
 ; KV2-NEXT:    ffmahq $r0 = $r1, $r2
@@ -883,8 +883,8 @@ entry:
 define half @fmahq_v1_ri(half %a, half %b) {
 ; KV1-LABEL: fmahq_v1_ri:
 ; KV1:       # %bb.0: # %entry
-; KV1-NEXT:    zxhd $r1 = $r1
 ; KV1-NEXT:    zxhd $r0 = $r0
+; KV1-NEXT:    zxhd $r1 = $r1
 ; KV1-NEXT:    ;;
 ; KV1-NEXT:    ffmahq $r0 = $r1, 0x5fd0
 ; KV1-NEXT:    ret
@@ -892,8 +892,8 @@ define half @fmahq_v1_ri(half %a, half %b) {
 ;
 ; KV2-LABEL: fmahq_v1_ri:
 ; KV2:       # %bb.0: # %entry
-; KV2-NEXT:    zxhd $r1 = $r1
 ; KV2-NEXT:    zxhd $r0 = $r0
+; KV2-NEXT:    zxhd $r1 = $r1
 ; KV2-NEXT:    make $r2 = 0x5fd0
 ; KV2-NEXT:    ;;
 ; KV2-NEXT:    ffmahq $r0 = $r1, $r2

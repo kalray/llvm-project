@@ -230,17 +230,17 @@ define <4 x i16> @test_div(<4 x i16> %a, <4 x i16> %b) #0 {
 ; ALL-NEXT:    sxwd $r1 = $r1
 ; ALL-NEXT:    call __divdi3
 ; ALL-NEXT:    ;;
+; ALL-NEXT:    extfs $r0 = $r19, 47, 32
 ; ALL-NEXT:    extfs $r1 = $r18, 47, 32
 ; ALL-NEXT:    copyd $r20 = $r0
-; ALL-NEXT:    extfs $r0 = $r19, 47, 32
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    sxwd $r0 = $r0
 ; ALL-NEXT:    sxwd $r1 = $r1
 ; ALL-NEXT:    call __divdi3
 ; ALL-NEXT:    ;;
-; ALL-NEXT:    copyd $r21 = $r0
 ; ALL-NEXT:    extfs $r0 = $r19, 31, 16
 ; ALL-NEXT:    extfs $r1 = $r18, 31, 16
+; ALL-NEXT:    copyd $r21 = $r0
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    sxwd $r0 = $r0
 ; ALL-NEXT:    sxwd $r1 = $r1
@@ -248,19 +248,19 @@ define <4 x i16> @test_div(<4 x i16> %a, <4 x i16> %b) #0 {
 ; ALL-NEXT:    insf $r21 = $r20, 31, 16
 ; ALL-NEXT:    call __divdi3
 ; ALL-NEXT:    ;;
+; ALL-NEXT:    sxhd $r0 = $r19
 ; ALL-NEXT:    sxhd $r1 = $r18
 ; ALL-NEXT:    copyd $r20 = $r0
-; ALL-NEXT:    sxhd $r0 = $r19
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    sxwd $r0 = $r0
 ; ALL-NEXT:    sxwd $r1 = $r1
 ; ALL-NEXT:    call __divdi3
 ; ALL-NEXT:    ;;
-; ALL-NEXT:    insf $r0 = $r20, 31, 16
 ; ALL-NEXT:    lq $r18r19 = 24[$r12]
+; ALL-NEXT:    insf $r0 = $r20, 31, 16
 ; ALL-NEXT:    ;;
-; ALL-NEXT:    insf $r0 = $r21, 63, 32
 ; ALL-NEXT:    lq $r20r21 = 40[$r12]
+; ALL-NEXT:    insf $r0 = $r21, 63, 32
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    ld $r16 = 56[$r12]
 ; ALL-NEXT:    ;;
@@ -294,17 +294,17 @@ define <4 x i16> @test_rem(<4 x i16> %a, <4 x i16> %b) #0 {
 ; ALL-NEXT:    sxwd $r1 = $r1
 ; ALL-NEXT:    call __moddi3
 ; ALL-NEXT:    ;;
+; ALL-NEXT:    extfs $r0 = $r19, 47, 32
 ; ALL-NEXT:    extfs $r1 = $r18, 47, 32
 ; ALL-NEXT:    copyd $r20 = $r0
-; ALL-NEXT:    extfs $r0 = $r19, 47, 32
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    sxwd $r0 = $r0
 ; ALL-NEXT:    sxwd $r1 = $r1
 ; ALL-NEXT:    call __moddi3
 ; ALL-NEXT:    ;;
-; ALL-NEXT:    copyd $r21 = $r0
 ; ALL-NEXT:    extfs $r0 = $r19, 31, 16
 ; ALL-NEXT:    extfs $r1 = $r18, 31, 16
+; ALL-NEXT:    copyd $r21 = $r0
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    sxwd $r0 = $r0
 ; ALL-NEXT:    sxwd $r1 = $r1
@@ -312,19 +312,19 @@ define <4 x i16> @test_rem(<4 x i16> %a, <4 x i16> %b) #0 {
 ; ALL-NEXT:    insf $r21 = $r20, 31, 16
 ; ALL-NEXT:    call __moddi3
 ; ALL-NEXT:    ;;
+; ALL-NEXT:    sxhd $r0 = $r19
 ; ALL-NEXT:    sxhd $r1 = $r18
 ; ALL-NEXT:    copyd $r20 = $r0
-; ALL-NEXT:    sxhd $r0 = $r19
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    sxwd $r0 = $r0
 ; ALL-NEXT:    sxwd $r1 = $r1
 ; ALL-NEXT:    call __moddi3
 ; ALL-NEXT:    ;;
-; ALL-NEXT:    insf $r0 = $r20, 31, 16
 ; ALL-NEXT:    lq $r18r19 = 24[$r12]
+; ALL-NEXT:    insf $r0 = $r20, 31, 16
 ; ALL-NEXT:    ;;
-; ALL-NEXT:    insf $r0 = $r21, 63, 32
 ; ALL-NEXT:    lq $r20r21 = 40[$r12]
+; ALL-NEXT:    insf $r0 = $r21, 63, 32
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    ld $r16 = 56[$r12]
 ; ALL-NEXT:    ;;
@@ -379,8 +379,8 @@ define <4 x i16> @test_call_flipped(<4 x i16> %a, <4 x i16> %b) #0 {
 ; ALL-NEXT:    get $r16 = $ra
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    sd 24[$r12] = $r16
-; ALL-NEXT:    copyd $r2 = $r0
 ; ALL-NEXT:    copyd $r0 = $r1
+; ALL-NEXT:    copyd $r2 = $r0
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    copyd $r1 = $r2
 ; ALL-NEXT:    call test_callee
@@ -400,8 +400,8 @@ define <4 x i16> @test_call_flipped(<4 x i16> %a, <4 x i16> %b) #0 {
 define <4 x i16> @test_tailcall_flipped(<4 x i16> %a, <4 x i16> %b) {
 ; ALL-LABEL: test_tailcall_flipped:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    copyd $r2 = $r0
 ; ALL-NEXT:    copyd $r0 = $r1
+; ALL-NEXT:    copyd $r2 = $r0
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    copyd $r1 = $r2
 ; ALL-NEXT:    goto test_callee
@@ -438,16 +438,16 @@ define <4 x i64> @test_select_cc_f32_f32(<4 x i64> %a, <4 x i64> %b, <4 x i16> %
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    compnhq.ltu $r8 = $r8, $r9
 ; ALL-NEXT:    ;;
+; ALL-NEXT:    srlw $r8 = $r8, 16
 ; ALL-NEXT:    srld $r9 = $r8, 48
 ; ALL-NEXT:    extfz $r10 = $r8, 47, 32
 ; ALL-NEXT:    zxhd $r11 = $r8
-; ALL-NEXT:    srlw $r8 = $r8, 16
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    sxhd $r9 = $r9
 ; ALL-NEXT:    sxhd $r10 = $r10
 ; ALL-NEXT:    ;;
-; ALL-NEXT:    sxhd $r11 = $r11
 ; ALL-NEXT:    sxhd $r8 = $r8
+; ALL-NEXT:    sxhd $r11 = $r11
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    cmoved.dnez $r10 ? $r6 = $r2
 ; ALL-NEXT:    cmoved.dnez $r9 ? $r7 = $r3
@@ -539,8 +539,8 @@ define <4 x i8> @trunc_to_v4i8(<4 x i16> %a) {
 define <4 x i8> @trunc_to_v4i8_buildvector(i32 %arg1, i32 %arg2, i32 %arg3, i32 %arg4) {
 ; ALL-LABEL: trunc_to_v4i8_buildvector:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    insf $r2 = $r3, 15, 8
 ; ALL-NEXT:    insf $r0 = $r1, 15, 8
+; ALL-NEXT:    insf $r2 = $r3, 15, 8
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    insf $r0 = $r2, 31, 16
 ; ALL-NEXT:    ret
@@ -641,12 +641,12 @@ define <4 x i16> @test_insertelement3(<4 x i16> %a, i16 %x) {
 define <4 x i16> @test_insertelement(<4 x i16> %a, i16 %x, i64 %p) {
 ; ALL-LABEL: test_insertelement:
 ; ALL:       # %bb.0:
+; ALL-NEXT:    insf $r1 = $r1, 31, 16
 ; ALL-NEXT:    insf $r2 = $r2, 31, 16
 ; ALL-NEXT:    make $r3 = 0x3000200010000
-; ALL-NEXT:    insf $r1 = $r1, 31, 16
 ; ALL-NEXT:    ;;
-; ALL-NEXT:    insf $r2 = $r2, 63, 32
 ; ALL-NEXT:    insf $r1 = $r1, 63, 32
+; ALL-NEXT:    insf $r2 = $r2, 63, 32
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    compnhq.eq $r2 = $r3, $r2
 ; ALL-NEXT:    ;;

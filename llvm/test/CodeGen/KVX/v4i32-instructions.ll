@@ -66,8 +66,8 @@ define <4 x i32> @test_fma_imm(<4 x i32> %a, <4 x i32> %b) #0 {
 define i32 @test_extract_i(<4 x i32> %a, i64 %idx) #0 {
 ; CHECK-LABEL: test_extract_i:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srlw $r3 = $r2, 1
 ; CHECK-NEXT:    andw $r2 = $r2, 1
+; CHECK-NEXT:    srlw $r3 = $r2, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.odd $r3 ? $r0 = $r1
 ; CHECK-NEXT:    sllw $r1 = $r2, 5
@@ -82,8 +82,8 @@ define i32 @test_extract_i(<4 x i32> %a, i64 %idx) #0 {
 define <4 x i32> @test_add(<4 x i32> %a, <4 x i32> %b) #0 {
 ; CHECK-LABEL: test_add:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addwp $r1 = $r1, $r3
 ; CHECK-NEXT:    addwp $r0 = $r0, $r2
+; CHECK-NEXT:    addwp $r1 = $r1, $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = add <4 x i32> %a, %b
@@ -95,8 +95,8 @@ define <4 x i32> @test_add_imm_0(<4 x i32> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r3 = 0x200000001
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r2 = $r3
 ; CHECK-NEXT:    addwp $r1 = $r1, $r3
+; CHECK-NEXT:    copyd $r2 = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addwp $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
@@ -110,8 +110,8 @@ define <4 x i32> @test_add_imm_1(<4 x i32> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r3 = 0x200000001
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r2 = $r3
 ; CHECK-NEXT:    addwp $r1 = $r1, $r3
+; CHECK-NEXT:    copyd $r2 = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addwp $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
@@ -136,8 +136,8 @@ define <4 x i32> @test_sub_imm(<4 x i32> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r3 = 0x200000001
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r2 = $r3
 ; CHECK-NEXT:    sbfwp $r1 = $r3, $r1
+; CHECK-NEXT:    copyd $r2 = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfwp $r0 = $r2, $r0
 ; CHECK-NEXT:    ret
@@ -151,8 +151,8 @@ define <4 x i32> @test_sub_fromimm(<4 x i32> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r3 = 0x200000001
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r2 = $r3
 ; CHECK-NEXT:    sbfwp $r1 = $r1, $r3
+; CHECK-NEXT:    copyd $r2 = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfwp $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
@@ -164,8 +164,8 @@ define <4 x i32> @test_sub_fromimm(<4 x i32> %a) #0 {
 define <4 x i32> @test_neg(<4 x i32> %a) #0 {
 ; CHECK-LABEL: test_neg:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r3 = 0
 ; CHECK-NEXT:    make $r2 = 0
+; CHECK-NEXT:    make $r3 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfwp $r0 = $r0, $r2
 ; CHECK-NEXT:    sbfwp $r1 = $r1, $r3
@@ -215,37 +215,37 @@ define <4 x i32> @test_div(<4 x i32> %a, <4 x i32> %b) #0 {
 ; CHECK-NEXT:    copyd $r19 = $r2
 ; CHECK-NEXT:    copyd $r20 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r21 = $r0
 ; CHECK-NEXT:    srad $r0 = $r20, 32
 ; CHECK-NEXT:    srad $r1 = $r18, 32
+; CHECK-NEXT:    copyd $r21 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxwd $r0 = $r0
 ; CHECK-NEXT:    sxwd $r1 = $r1
 ; CHECK-NEXT:    call __divdi3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r22 = $r0
 ; CHECK-NEXT:    sxwd $r0 = $r20
 ; CHECK-NEXT:    sxwd $r1 = $r18
+; CHECK-NEXT:    copyd $r22 = $r0
 ; CHECK-NEXT:    call __divdi3
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srad $r0 = $r21, 32
 ; CHECK-NEXT:    srad $r1 = $r19, 32
 ; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    srad $r0 = $r21, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxwd $r0 = $r0
 ; CHECK-NEXT:    sxwd $r1 = $r1
 ; CHECK-NEXT:    call __divdi3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    sxwd $r0 = $r21
 ; CHECK-NEXT:    sxwd $r1 = $r19
+; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    call __divdi3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r18 = $r22, 63, 32
 ; CHECK-NEXT:    insf $r0 = $r20, 63, 32
+; CHECK-NEXT:    insf $r18 = $r22, 63, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    lq $r18r19 = 16[$r12]
+; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lq $r20r21 = 32[$r12]
 ; CHECK-NEXT:    ;;
@@ -279,37 +279,37 @@ define <4 x i32> @test_rem(<4 x i32> %a, <4 x i32> %b) #0 {
 ; CHECK-NEXT:    copyd $r19 = $r2
 ; CHECK-NEXT:    copyd $r20 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r21 = $r0
 ; CHECK-NEXT:    srad $r0 = $r20, 32
 ; CHECK-NEXT:    srad $r1 = $r18, 32
+; CHECK-NEXT:    copyd $r21 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxwd $r0 = $r0
 ; CHECK-NEXT:    sxwd $r1 = $r1
 ; CHECK-NEXT:    call __moddi3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r22 = $r0
 ; CHECK-NEXT:    sxwd $r0 = $r20
 ; CHECK-NEXT:    sxwd $r1 = $r18
+; CHECK-NEXT:    copyd $r22 = $r0
 ; CHECK-NEXT:    call __moddi3
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srad $r0 = $r21, 32
 ; CHECK-NEXT:    srad $r1 = $r19, 32
 ; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    srad $r0 = $r21, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxwd $r0 = $r0
 ; CHECK-NEXT:    sxwd $r1 = $r1
 ; CHECK-NEXT:    call __moddi3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    sxwd $r0 = $r21
 ; CHECK-NEXT:    sxwd $r1 = $r19
+; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    call __moddi3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r18 = $r22, 63, 32
 ; CHECK-NEXT:    insf $r0 = $r20, 63, 32
+; CHECK-NEXT:    insf $r18 = $r22, 63, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    lq $r18r19 = 16[$r12]
+; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lq $r20r21 = 32[$r12]
 ; CHECK-NEXT:    ;;
@@ -368,9 +368,9 @@ define <4 x i32> @test_call_flipped(<4 x i32> %a, <4 x i32> %b) #0 {
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r16
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    copyd $r4 = $r1
 ; CHECK-NEXT:    copyd $r5 = $r0
-; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    copyd $r2 = $r5
@@ -391,10 +391,10 @@ define <4 x i32> @test_call_flipped(<4 x i32> %a, <4 x i32> %b) #0 {
 define <4 x i32> @test_tailcall_flipped(<4 x i32> %a, <4 x i32> %b) #0 {
 ; CHECK-LABEL: test_tailcall_flipped:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    copyd $r4 = $r1
-; CHECK-NEXT:    copyd $r5 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    copyd $r1 = $r3
+; CHECK-NEXT:    copyd $r4 = $r1
+; CHECK-NEXT:    copyd $r5 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r2 = $r5
 ; CHECK-NEXT:    copyd $r3 = $r4
@@ -407,8 +407,8 @@ define <4 x i32> @test_tailcall_flipped(<4 x i32> %a, <4 x i32> %b) #0 {
 define <4 x i32> @test_select(<4 x i32> %a, <4 x i32> %b, i1 zeroext %c) #0 {
 ; CHECK-LABEL: test_select:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    cmoved.even $r4 ? $r1 = $r3
 ; CHECK-NEXT:    cmoved.even $r4 ? $r0 = $r2
+; CHECK-NEXT:    cmoved.even $r4 ? $r1 = $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = select i1 %c, <4 x i32> %a, <4 x i32> %b
@@ -418,11 +418,11 @@ define <4 x i32> @test_select(<4 x i32> %a, <4 x i32> %b, i1 zeroext %c) #0 {
 define <4 x i32> @test_select_cc(<4 x i32> %a, <4 x i32> %b, <4 x i32> %c, <4 x i32> %d) #0 {
 ; CHECK-LABEL: test_select_cc:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    compnwp.lt $r5 = $r5, $r7
 ; CHECK-NEXT:    compnwp.lt $r4 = $r4, $r6
+; CHECK-NEXT:    compnwp.lt $r5 = $r5, $r7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmovewp.even $r5 ? $r1 = $r3
 ; CHECK-NEXT:    cmovewp.even $r4 ? $r0 = $r2
+; CHECK-NEXT:    cmovewp.even $r5 ? $r1 = $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %cc = icmp slt <4 x i32> %c, %d
@@ -433,13 +433,13 @@ define <4 x i32> @test_select_cc(<4 x i32> %a, <4 x i32> %b, <4 x i32> %c, <4 x 
 define <4 x i64> @test_select_cc_f32_f32(<4 x i64> %a, <4 x i64> %b, <4 x i32> %c, <4 x i32> %d) #0 {
 ; CHECK-LABEL: test_select_cc_f32_f32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    compnwp.ltu $r9 = $r9, $r11
 ; CHECK-NEXT:    compnwp.ltu $r8 = $r8, $r10
+; CHECK-NEXT:    compnwp.ltu $r9 = $r9, $r11
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sxwd $r8 = $r8
+; CHECK-NEXT:    sxwd $r9 = $r9
 ; CHECK-NEXT:    srld $r10 = $r9, 32
 ; CHECK-NEXT:    srld $r11 = $r8, 32
-; CHECK-NEXT:    sxwd $r9 = $r9
-; CHECK-NEXT:    sxwd $r8 = $r8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxwd $r10 = $r10
 ; CHECK-NEXT:    sxwd $r11 = $r11
@@ -447,9 +447,9 @@ define <4 x i64> @test_select_cc_f32_f32(<4 x i64> %a, <4 x i64> %b, <4 x i32> %
 ; CHECK-NEXT:    cmoved.dnez $r8 ? $r4 = $r0
 ; CHECK-NEXT:    cmoved.dnez $r9 ? $r6 = $r2
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r4
 ; CHECK-NEXT:    cmoved.dnez $r11 ? $r5 = $r1
 ; CHECK-NEXT:    cmoved.dnez $r10 ? $r7 = $r3
-; CHECK-NEXT:    copyd $r0 = $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    copyd $r2 = $r6
@@ -464,11 +464,11 @@ define <4 x i64> @test_select_cc_f32_f32(<4 x i64> %a, <4 x i64> %b, <4 x i32> %
 define <4 x i1> @test_icmp_ule(<4 x i32> %a, <4 x i32> %b) #0 {
 ; CHECK-LABEL: test_icmp_ule:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    compnwp.leu $r1 = $r1, $r3
 ; CHECK-NEXT:    compnwp.leu $r0 = $r0, $r2
+; CHECK-NEXT:    compnwp.leu $r1 = $r1, $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x1001
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x1001
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 16
 ; CHECK-NEXT:    ret
@@ -480,11 +480,11 @@ define <4 x i1> @test_icmp_ule(<4 x i32> %a, <4 x i32> %b) #0 {
 define <4 x i1> @test_icmp_slt(<4 x i32> %a, <4 x i32> %b) #0 {
 ; CHECK-LABEL: test_icmp_slt:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    compnwp.lt $r1 = $r1, $r3
 ; CHECK-NEXT:    compnwp.lt $r0 = $r0, $r2
+; CHECK-NEXT:    compnwp.lt $r1 = $r1, $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x1001
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x1001
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 16
 ; CHECK-NEXT:    ret
@@ -496,11 +496,11 @@ define <4 x i1> @test_icmp_slt(<4 x i32> %a, <4 x i32> %b) #0 {
 define <4 x i1> @test_icmp_ugt(<4 x i32> %a, <4 x i32> %b) #0 {
 ; CHECK-LABEL: test_icmp_ugt:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    compnwp.gtu $r1 = $r1, $r3
 ; CHECK-NEXT:    compnwp.gtu $r0 = $r0, $r2
+; CHECK-NEXT:    compnwp.gtu $r1 = $r1, $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x1001
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x1001
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 16
 ; CHECK-NEXT:    ret
@@ -512,11 +512,11 @@ define <4 x i1> @test_icmp_ugt(<4 x i32> %a, <4 x i32> %b) #0 {
 define <4 x i1> @test_icmp_uge(<4 x i32> %a, <4 x i32> %b) #0 {
 ; CHECK-LABEL: test_icmp_uge:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    compnwp.geu $r1 = $r1, $r3
 ; CHECK-NEXT:    compnwp.geu $r0 = $r0, $r2
+; CHECK-NEXT:    compnwp.geu $r1 = $r1, $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x1001
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x1001
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 16
 ; CHECK-NEXT:    ret
@@ -528,11 +528,11 @@ define <4 x i1> @test_icmp_uge(<4 x i32> %a, <4 x i32> %b) #0 {
 define <4 x i1> @test_icmp_ult(<4 x i32> %a, <4 x i32> %b) #0 {
 ; CHECK-LABEL: test_icmp_ult:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    compnwp.ltu $r1 = $r1, $r3
 ; CHECK-NEXT:    compnwp.ltu $r0 = $r0, $r2
+; CHECK-NEXT:    compnwp.ltu $r1 = $r1, $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x1001
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x1001
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 16
 ; CHECK-NEXT:    ret
@@ -544,15 +544,15 @@ define <4 x i1> @test_icmp_ult(<4 x i32> %a, <4 x i32> %b) #0 {
 define <4 x i64> @test_sext_2xi64(<4 x i32> %a) #0 {
 ; CHECK-LABEL: test_sext_2xi64:
 ; CHECK:       # %bb.0:
+; CHECK-NEXT:    sxwd $r0 = $r0
 ; CHECK-NEXT:    srad $r2 = $r0, 32
 ; CHECK-NEXT:    srad $r3 = $r1, 32
-; CHECK-NEXT:    sxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r5 = $r2
 ; CHECK-NEXT:    sxwd $r2 = $r1
+; CHECK-NEXT:    sxwd $r5 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r3 = $r3
 ; CHECK-NEXT:    copyd $r1 = $r5
+; CHECK-NEXT:    sxwd $r3 = $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = sext <4 x i32> %a to <4 x i64>
@@ -564,10 +564,10 @@ declare <4 x i32> @llvm.abs.v4i32(<4 x i32>, i1) #0
 define <4 x i32> @test_abs(<4 x i32> %a) #0 {
 ; CHECK-LABEL: test_abs:
 ; CHECK:       # %bb.0:
+; CHECK-NEXT:    absw $r0 = $r0
+; CHECK-NEXT:    absw $r1 = $r1
 ; CHECK-NEXT:    srad $r2 = $r1, 32
 ; CHECK-NEXT:    srad $r3 = $r0, 32
-; CHECK-NEXT:    absw $r1 = $r1
-; CHECK-NEXT:    absw $r0 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    absw $r2 = $r2
 ; CHECK-NEXT:    absw $r3 = $r3
@@ -623,16 +623,16 @@ define <4 x i32> @test_insertelement3(<4 x i32> %a, i32 %x) #0 {
 define <4 x i32> @test_insertelement(<4 x i32> %a, i32 %x, i64 %p) #0 {
 ; CHECK-LABEL: test_insertelement:
 ; CHECK:       # %bb.0:
+; CHECK-NEXT:    insf $r2 = $r2, 63, 31
 ; CHECK-NEXT:    insf $r3 = $r3, 63, 31
 ; CHECK-NEXT:    make $r4 = 0x300000002
 ; CHECK-NEXT:    make $r5 = 0x100000000
-; CHECK-NEXT:    insf $r2 = $r2, 63, 31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    compnwp.eq $r4 = $r4, $r3
 ; CHECK-NEXT:    compnwp.eq $r3 = $r5, $r3
+; CHECK-NEXT:    compnwp.eq $r4 = $r4, $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmovewp.eqz $r4 ? $r1 = $r2
 ; CHECK-NEXT:    cmovewp.eqz $r3 ? $r0 = $r2
+; CHECK-NEXT:    cmovewp.eqz $r4 ? $r1 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %i = insertelement <4 x i32> %a, i32 %x, i64 %p
@@ -642,8 +642,8 @@ define <4 x i32> @test_insertelement(<4 x i32> %a, i32 %x, i64 %p) #0 {
 define <4 x i8> @trunc_to_v4i8(<4 x i32> %a) {
 ; CHECK-LABEL: trunc_to_v4i8:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x1001
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x1001
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 16
 ; CHECK-NEXT:    ret
@@ -655,8 +655,8 @@ define <4 x i8> @trunc_to_v4i8(<4 x i32> %a) {
 define <4 x i8> @trunc_to_v4i8_buildvector(i32 %arg1, i32 %arg2, i32 %arg3, i32 %arg4) {
 ; CHECK-LABEL: trunc_to_v4i8_buildvector:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r2, 31, 16
 ; CHECK-NEXT:    ret
@@ -681,8 +681,8 @@ define <4 x i32> @concat(<2 x i32> %a, <2 x i32> %b){
 define <4 x i32> @revconcat(<2 x i32> %b, <2 x i32> %a){
 ; CHECK-LABEL: revconcat:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r2
 ; CHECK-NEXT:    ret
@@ -865,13 +865,13 @@ define <4 x i32> @test_div_4(<4 x i32> %a, <4 x i32> %b) #0 {
 ; CHECK-NEXT:    insf $r4 = $r2, 63, 32
 ; CHECK-NEXT:    insf $r5 = $r3, 63, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addwp $r1 = $r1, $r5
 ; CHECK-NEXT:    addwp $r0 = $r0, $r4
+; CHECK-NEXT:    addwp $r1 = $r1, $r5
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sraw $r0 = $r0, 2
+; CHECK-NEXT:    sraw $r1 = $r1, 2
 ; CHECK-NEXT:    srld $r2 = $r1, 32
 ; CHECK-NEXT:    srld $r3 = $r0, 32
-; CHECK-NEXT:    sraw $r1 = $r1, 2
-; CHECK-NEXT:    sraw $r0 = $r0, 2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sraw $r2 = $r2, 2
 ; CHECK-NEXT:    sraw $r3 = $r3, 2
@@ -903,13 +903,13 @@ define <4 x i32> @test_div_32(<4 x i32> %a, <4 x i32> %b) #0 {
 ; CHECK-NEXT:    insf $r4 = $r2, 63, 32
 ; CHECK-NEXT:    insf $r5 = $r3, 63, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addwp $r1 = $r1, $r5
 ; CHECK-NEXT:    addwp $r0 = $r0, $r4
+; CHECK-NEXT:    addwp $r1 = $r1, $r5
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sraw $r0 = $r0, 5
+; CHECK-NEXT:    sraw $r1 = $r1, 5
 ; CHECK-NEXT:    srld $r2 = $r1, 32
 ; CHECK-NEXT:    srld $r3 = $r0, 32
-; CHECK-NEXT:    sraw $r1 = $r1, 5
-; CHECK-NEXT:    sraw $r0 = $r0, 5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sraw $r2 = $r2, 5
 ; CHECK-NEXT:    sraw $r3 = $r3, 5

@@ -218,8 +218,8 @@ entry:
 define <4 x float> @fconjwcp(<4 x float> %a) {
 ; CHECK-LABEL: fconjwcp:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fnegd $r1 = $r1
 ; CHECK-NEXT:    fnegd $r0 = $r0
+; CHECK-NEXT:    fnegd $r1 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -418,11 +418,11 @@ entry:
 define <8 x float> @fconjwcq(<8 x float> %a) local_unnamed_addr #3 {
 ; CHECK-LABEL: fconjwcq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fnegd $r1 = $r1
 ; CHECK-NEXT:    fnegd $r0 = $r0
+; CHECK-NEXT:    fnegd $r1 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnegd $r3 = $r3
 ; CHECK-NEXT:    fnegd $r2 = $r2
+; CHECK-NEXT:    fnegd $r3 = $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -603,8 +603,8 @@ define <4 x double> @fmuldcp(<4 x double> %a, <4 x double> %b) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmsd.rn $r0 = $r1, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmsd.rn $r2 = $r3, $r7
 ; CHECK-NEXT:    copyd $r1 = $r9
+; CHECK-NEXT:    ffmsd.rn $r2 = $r3, $r7
 ; CHECK-NEXT:    copyd $r3 = $r11
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -713,8 +713,8 @@ define <4 x double> @fmulcdcp(<4 x double> %a, <4 x double> %b) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad.rn $r0 = $r1, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmad.rn $r2 = $r3, $r7
 ; CHECK-NEXT:    copyd $r1 = $r9
+; CHECK-NEXT:    ffmad.rn $r2 = $r3, $r7
 ; CHECK-NEXT:    copyd $r3 = $r11
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;

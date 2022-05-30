@@ -18,8 +18,8 @@ define i32 @ia(i32 %x, i32 %y)  {
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r20 = $r18
 ; CHECK-NEXT:    sxwd $r0 = $r19
+; CHECK-NEXT:    sxwd $r20 = $r18
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r20
 ; CHECK-NEXT:    call __moddi3
@@ -35,9 +35,9 @@ define i32 @ia(i32 %x, i32 %y)  {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_2: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    addw $r19 = $r19, 1
 ; CHECK-NEXT:    sw 0[$r21] = $r0
 ; CHECK-NEXT:    copyd $r1 = $r20
+; CHECK-NEXT:    addw $r19 = $r19, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxwd $r0 = $r19
 ; CHECK-NEXT:    call __moddi3

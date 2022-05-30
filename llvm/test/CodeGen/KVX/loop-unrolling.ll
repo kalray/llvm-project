@@ -9,10 +9,10 @@ define void @loop_unrolling(i32* nocapture %t){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_1: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
+; CHECK-NEXT:    sw 0[$r0] = $r1
 ; CHECK-NEXT:    ord $r2 = $r1, 1
 ; CHECK-NEXT:    ord $r3 = $r1, 2
 ; CHECK-NEXT:    ord $r4 = $r1, 7
-; CHECK-NEXT:    sw 0[$r0] = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 4[$r0] = $r2
 ; CHECK-NEXT:    ord $r2 = $r1, 3
@@ -24,8 +24,8 @@ define void @loop_unrolling(i32* nocapture %t){
 ; CHECK-NEXT:    ord $r2 = $r1, 5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 16[$r0] = $r3
-; CHECK-NEXT:    ord $r3 = $r1, 6
 ; CHECK-NEXT:    addd $r1 = $r1, 8
+; CHECK-NEXT:    ord $r3 = $r1, 6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 20[$r0] = $r2
 ; CHECK-NEXT:    ;;

@@ -101,8 +101,8 @@ declare <2 x i32> @llvm.cttz.v2i32(<2 x i32>, i1 immarg) #1
 define <4 x i32> @cbswq(<4 x i32> %0) {
 ; CHECK-LABEL: cbswq:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    cbswp $r1 = $r1
 ; CHECK-NEXT:    cbswp $r0 = $r0
+; CHECK-NEXT:    cbswp $r1 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = tail call <4 x i32> @llvm.ctpop.v4i32(<4 x i32> %0)
@@ -114,8 +114,8 @@ declare <4 x i32> @llvm.ctpop.v4i32(<4 x i32>) #1
 define <4 x i32> @clzwq(<4 x i32> %0) {
 ; CHECK-LABEL: clzwq:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    clzwp $r1 = $r1
 ; CHECK-NEXT:    clzwp $r0 = $r0
+; CHECK-NEXT:    clzwp $r1 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = tail call <4 x i32> @llvm.ctlz.v4i32(<4 x i32> %0, i1 false)
@@ -142,8 +142,8 @@ define <4 x i32> @clswq(<4 x i32> %0) {
 define <4 x i32> @ctzwq(<4 x i32> %0) {
 ; CHECK-LABEL: ctzwq:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ctzwp $r1 = $r1
 ; CHECK-NEXT:    ctzwp $r0 = $r0
+; CHECK-NEXT:    ctzwp $r1 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = tail call <4 x i32> @llvm.cttz.v4i32(<4 x i32> %0, i1 false)
@@ -155,11 +155,11 @@ declare <4 x i32> @llvm.cttz.v4i32(<4 x i32>, i1 immarg) #1
 define <8 x i32> @cbswo(<8 x i32> %0) {
 ; CHECK-LABEL: cbswo:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    cbswp $r3 = $r3
 ; CHECK-NEXT:    cbswp $r2 = $r2
+; CHECK-NEXT:    cbswp $r3 = $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cbswp $r1 = $r1
 ; CHECK-NEXT:    cbswp $r0 = $r0
+; CHECK-NEXT:    cbswp $r1 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = tail call <8 x i32> @llvm.ctpop.v8i32(<8 x i32> %0)
@@ -171,11 +171,11 @@ declare <8 x i32> @llvm.ctpop.v8i32(<8 x i32>) #1
 define <8 x i32> @clzwo(<8 x i32> %0) {
 ; CHECK-LABEL: clzwo:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    clzwp $r3 = $r3
 ; CHECK-NEXT:    clzwp $r2 = $r2
+; CHECK-NEXT:    clzwp $r3 = $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    clzwp $r1 = $r1
 ; CHECK-NEXT:    clzwp $r0 = $r0
+; CHECK-NEXT:    clzwp $r1 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = tail call <8 x i32> @llvm.ctlz.v8i32(<8 x i32> %0, i1 false)
@@ -213,11 +213,11 @@ define <8 x i32> @clswo(<8 x i32> %0) {
 define <8 x i32> @ctzwo(<8 x i32> %0) {
 ; CHECK-LABEL: ctzwo:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ctzwp $r3 = $r3
 ; CHECK-NEXT:    ctzwp $r2 = $r2
+; CHECK-NEXT:    ctzwp $r3 = $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ctzwp $r1 = $r1
 ; CHECK-NEXT:    ctzwp $r0 = $r0
+; CHECK-NEXT:    ctzwp $r1 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = tail call <8 x i32> @llvm.cttz.v8i32(<8 x i32> %0, i1 false)

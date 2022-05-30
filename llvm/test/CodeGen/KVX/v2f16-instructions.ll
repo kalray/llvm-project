@@ -46,8 +46,8 @@ define half @test_extract_i(<2 x half> %a, i64 %idx) #0 {
 define <2 x half> @test_fadd(<2 x half> %a, <2 x half> %b) #0 {
 ; CHECK-LABEL: test_fadd:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    zxwd $r1 = $r1
 ; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    zxwd $r1 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    faddhq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -166,8 +166,8 @@ define <2 x half> @test_fneg(<2 x half> %a) #0 {
 define <2 x half> @test_fmul(<2 x half> %a, <2 x half> %b) #0 {
 ; CHECK-LABEL: test_fmul:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    zxwd $r1 = $r1
 ; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    zxwd $r1 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmulhq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -215,14 +215,14 @@ define <2 x half> @test_fdiv(<2 x half> %a, <2 x half> %b) #0 {
 ; CHECK-NEXT:    fwidenmhw $r1 = $r18
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowwh $r20 = $r0
 ; CHECK-NEXT:    fwidenlhw $r0 = $r19
+; CHECK-NEXT:    fnarrowwh $r20 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fwidenlhw $r1 = $r18
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
+; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r20, 31, 16
 ; CHECK-NEXT:    ld $r20 = 16[$r12]
@@ -256,14 +256,14 @@ define <2 x half> @test_frem(<2 x half> %a, <2 x half> %b) #0 {
 ; CHECK-NEXT:    fwidenmhw $r1 = $r18
 ; CHECK-NEXT:    call fmodf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowwh $r20 = $r0
 ; CHECK-NEXT:    fwidenlhw $r0 = $r19
+; CHECK-NEXT:    fnarrowwh $r20 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fwidenlhw $r1 = $r18
 ; CHECK-NEXT:    call fmodf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
+; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r20, 31, 16
 ; CHECK-NEXT:    ld $r20 = 16[$r12]
@@ -321,8 +321,8 @@ define <2 x half> @test_call_flipped(<2 x half> %a, <2 x half> %b) #0 {
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r2
 ; CHECK-NEXT:    call test_callee
@@ -341,8 +341,8 @@ define <2 x half> @test_call_flipped(<2 x half> %a, <2 x half> %b) #0 {
 define <2 x half> @test_tailcall_flipped(<2 x half> %a, <2 x half> %b) #0 {
 ; CHECK-LABEL: test_tailcall_flipped:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r2
 ; CHECK-NEXT:    goto test_callee
@@ -479,8 +479,8 @@ define <2 x i1> @test_fcmp_ule(<2 x half> %a, <2 x half> %b) #0 {
 define <2 x i1> @test_fcmp_uno(<2 x half> %a, <2 x half> %b) #0 {
 ; CHECK-LABEL: test_fcmp_uno:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fcompnhq.ult $r2 = $r0, $r1
 ; CHECK-NEXT:    fcompnhq.uge $r0 = $r0, $r1
+; CHECK-NEXT:    fcompnhq.ult $r2 = $r0, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    andw $r0 = $r0, $r2
 ; CHECK-NEXT:    ;;
@@ -566,8 +566,8 @@ define <2 x i1> @test_fcmp_ole(<2 x half> %a, <2 x half> %b) #0 {
 define <2 x i1> @test_fcmp_ord(<2 x half> %a, <2 x half> %b) #0 {
 ; CHECK-LABEL: test_fcmp_ord:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fcompnhq.olt $r2 = $r0, $r1
 ; CHECK-NEXT:    fcompnhq.oge $r0 = $r0, $r1
+; CHECK-NEXT:    fcompnhq.olt $r2 = $r0, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    orw $r0 = $r0, $r2
 ; CHECK-NEXT:    ;;
@@ -609,8 +609,8 @@ define <2 x i64> @test_fptosi_i64(<2 x half> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fwidenlhwp $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenmwd $r1 = $r0
 ; CHECK-NEXT:    fwidenlwd $r0 = $r0
+; CHECK-NEXT:    fwidenmwd $r1 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedd.rz $r1 = $r1, 0
 ; CHECK-NEXT:    ;;
@@ -652,8 +652,8 @@ define <2 x i64> @test_fptoui_2xi64(<2 x half> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fwidenlhwp $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenmwd $r1 = $r0
 ; CHECK-NEXT:    fwidenlwd $r0 = $r0
+; CHECK-NEXT:    fwidenmwd $r1 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedud.rz $r1 = $r1, 0
 ; CHECK-NEXT:    ;;
@@ -749,9 +749,9 @@ define <2 x half> @test_sitofp_2xi64(<2 x i64> %a) #0 {
 define <2 x half> @test_uitofp_2xi32_fadd(<2 x i32> %a, <2 x half> %b) #0 {
 ; CHECK-LABEL: test_uitofp_2xi32_fadd:
 ; CHECK:       # %bb.0:
+; CHECK-NEXT:    zxwd $r1 = $r1
 ; CHECK-NEXT:    floatuwp.rn $r2 = $r0, 0
 ; CHECK-NEXT:    make $r3 = 0
-; CHECK-NEXT:    zxwd $r1 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowwhq.rn $r0 = $r2r3
 ; CHECK-NEXT:    ;;
@@ -768,9 +768,9 @@ define <2 x half> @test_uitofp_2xi32_fadd(<2 x i32> %a, <2 x half> %b) #0 {
 define <2 x half> @test_sitofp_2xi32_fadd(<2 x i32> %a, <2 x half> %b) #0 {
 ; CHECK-LABEL: test_sitofp_2xi32_fadd:
 ; CHECK:       # %bb.0:
+; CHECK-NEXT:    zxwd $r1 = $r1
 ; CHECK-NEXT:    floatwp.rn $r2 = $r0, 0
 ; CHECK-NEXT:    make $r3 = 0
-; CHECK-NEXT:    zxwd $r1 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowwhq.rn $r0 = $r2r3
 ; CHECK-NEXT:    ;;
@@ -824,8 +824,8 @@ define <2 x double> @test_fpext_2xdouble(<2 x half> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fwidenlhwp $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenmwd $r1 = $r0
 ; CHECK-NEXT:    fwidenlwd $r0 = $r0
+; CHECK-NEXT:    fwidenmwd $r1 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fpext <2 x half> %a to <2 x double>
@@ -926,13 +926,13 @@ define <2 x half> @test_powi(<2 x half> %a, i32 %b) #0 {
 ; CHECK-NEXT:    fwidenmhw $r0 = $r19
 ; CHECK-NEXT:    call __powisf2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowwh $r20 = $r0
 ; CHECK-NEXT:    fwidenlhw $r0 = $r19
 ; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    fnarrowwh $r20 = $r0
 ; CHECK-NEXT:    call __powisf2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
+; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r20, 31, 16
 ; CHECK-NEXT:    ld $r20 = 16[$r12]
@@ -1038,14 +1038,14 @@ define <2 x half> @test_pow(<2 x half> %a, <2 x half> %b) #0 {
 ; CHECK-NEXT:    fwidenmhw $r1 = $r18
 ; CHECK-NEXT:    call powf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowwh $r20 = $r0
 ; CHECK-NEXT:    fwidenlhw $r0 = $r19
+; CHECK-NEXT:    fnarrowwh $r20 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fwidenlhw $r1 = $r18
 ; CHECK-NEXT:    call powf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
+; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r20, 31, 16
 ; CHECK-NEXT:    ld $r20 = 16[$r12]
@@ -1245,9 +1245,9 @@ define <2 x half> @test_log2(<2 x half> %a) #0 {
 define <2 x half> @test_fma(<2 x half> %a, <2 x half> %b, <2 x half> %c) #0 {
 ; CHECK-LABEL: test_fma:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    zxwd $r3 = $r0
 ; CHECK-NEXT:    zxwd $r0 = $r2
 ; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    zxwd $r3 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmahq $r0 = $r3, $r1
 ; CHECK-NEXT:    ret
@@ -1284,19 +1284,19 @@ define <2 x half> @test_minnum(<2 x half> %a, <2 x half> %b) #0 {
 ; CHECK-NEXT:    srad $r1 = $r18, 32
 ; CHECK-NEXT:    call fminf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    call fminf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r20, 63, 32
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
+; CHECK-NEXT:    insf $r0 = $r20, 63, 32
 ; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r20 = 16[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    fnarrowwhq $r0 = $r0r1
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
@@ -1335,19 +1335,19 @@ define <2 x half> @test_maxnum(<2 x half> %a, <2 x half> %b) #0 {
 ; CHECK-NEXT:    srad $r1 = $r18, 32
 ; CHECK-NEXT:    call fmaxf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    call fmaxf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r20, 63, 32
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
+; CHECK-NEXT:    insf $r0 = $r20, 63, 32
 ; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r20 = 16[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    fnarrowwhq $r0 = $r0r1
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
@@ -1371,8 +1371,8 @@ define <2 x half> @test_maxnum_fast(<2 x half> %a, <2 x half> %b) #0 {
 define <2 x half> @test_copysign(<2 x half> %a, <2 x half> %b) #0 {
 ; CHECK-LABEL: test_copysign:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    andw $r1 = $r1, 0x80008000
 ; CHECK-NEXT:    andw $r0 = $r0, 0x7fff7fff
+; CHECK-NEXT:    andw $r1 = $r1, 0x80008000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    orw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -1384,8 +1384,8 @@ define <2 x half> @test_copysign(<2 x half> %a, <2 x half> %b) #0 {
 define <2 x half> @test_copysign_v2f32(<2 x half> %a, <2 x float> %b) #0 {
 ; CHECK-LABEL: test_copysign_v2f32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x80000800
 ; CHECK-NEXT:    andw $r0 = $r0, 0x7fff7fff
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x80000800
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    andw $r1 = $r1, 0x80008000
 ; CHECK-NEXT:    ;;
@@ -1400,9 +1400,9 @@ define <2 x half> @test_copysign_v2f32(<2 x half> %a, <2 x float> %b) #0 {
 define <2 x half> @test_copysign_v2f64(<2 x double> %b, <2 x half> %a) #0 {
 ; CHECK-LABEL: test_copysign_v2f64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srld $r3 = $r0, 63
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    srld $r1 = $r1, 63
+; CHECK-NEXT:    srld $r3 = $r0, 63
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r3, 15, 15
 ; CHECK-NEXT:    ;;
@@ -1417,8 +1417,8 @@ define <2 x half> @test_copysign_v2f64(<2 x double> %b, <2 x half> %a) #0 {
 define <2 x float> @test_copysign_extended(<2 x half> %a, <2 x half> %b) #0 {
 ; CHECK-LABEL: test_copysign_extended:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    andw $r1 = $r1, 0x80008000
 ; CHECK-NEXT:    andw $r0 = $r0, 0x7fff7fff
+; CHECK-NEXT:    andw $r1 = $r1, 0x80008000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    orw $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
@@ -1649,9 +1649,9 @@ define <2 x half> @test_round(<2 x half> %a) #0 {
 define <2 x half> @test_fmuladd(<2 x half> %a, <2 x half> %b, <2 x half> %c) #0 {
 ; CHECK-LABEL: test_fmuladd:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    zxwd $r3 = $r0
 ; CHECK-NEXT:    zxwd $r0 = $r2
 ; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    zxwd $r3 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmahq $r0 = $r3, $r1
 ; CHECK-NEXT:    ret
@@ -1693,8 +1693,8 @@ define <2 x half> @test_insertelement1(<2 x half> %a, half %x) #0 {
 define <2 x half> @test_insertelement(<2 x half> %a, half %x, i64 %p) #0 {
 ; CHECK-LABEL: test_insertelement:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    copyd $r3 = $r0
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 16
+; CHECK-NEXT:    copyd $r3 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r3 = $r1, 15, 0
 ; CHECK-NEXT:    ;;
@@ -1788,8 +1788,8 @@ entry:
 define <2 x half> @shuffle_v2half_1_3(<2 x half> %0, <2 x half> %1) #0 {
 ; CHECK-LABEL: shuffle_v2half_1_3:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    srlw $r1 = $r1, 16
 ; CHECK-NEXT:    srlw $r0 = $r0, 16
+; CHECK-NEXT:    srlw $r1 = $r1, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 16
 ; CHECK-NEXT:    ret
@@ -1815,8 +1815,8 @@ entry:
 define <2 x half> @shuffle_v2half_2_1(<2 x half> %0, <2 x half> %1) #0 {
 ; CHECK-LABEL: shuffle_v2half_2_1:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    srlw $r2 = $r0, 16
 ; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    srlw $r2 = $r0, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r2, 31, 16
 ; CHECK-NEXT:    ret
@@ -1868,8 +1868,8 @@ entry:
 define <2 x half> @shuffle_v2half_3_1(<2 x half> %0, <2 x half> %1) #0 {
 ; CHECK-LABEL: shuffle_v2half_3_1:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    srlw $r2 = $r0, 16
 ; CHECK-NEXT:    srlw $r0 = $r1, 16
+; CHECK-NEXT:    srlw $r2 = $r0, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r2, 31, 16
 ; CHECK-NEXT:    ret
@@ -2078,8 +2078,8 @@ entry:
 define <2 x i16> @fcmp_setord(<2 x half> %a, <2 x half> %b) #0 {
 ; KV3_1-LABEL: fcmp_setord:
 ; KV3_1:       # %bb.0: # %entry
-; KV3_1-NEXT:    fcompnhq.olt $r2 = $r0, $r1
 ; KV3_1-NEXT:    fcompnhq.oge $r0 = $r0, $r1
+; KV3_1-NEXT:    fcompnhq.olt $r2 = $r0, $r1
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    orw $r0 = $r0, $r2
 ; KV3_1-NEXT:    ;;
@@ -2091,8 +2091,8 @@ define <2 x i16> @fcmp_setord(<2 x half> %a, <2 x half> %b) #0 {
 ;
 ; KV3_2-LABEL: fcmp_setord:
 ; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    fcompnhq.olt $r2 = $r0, $r1
 ; KV3_2-NEXT:    fcompnhq.oge $r0 = $r0, $r1
+; KV3_2-NEXT:    fcompnhq.olt $r2 = $r0, $r1
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:    orw $r0 = $r0, $r2
 ; KV3_2-NEXT:    ret
@@ -2128,8 +2128,8 @@ entry:
 define <2 x i16> @fcmp_setuno(<2 x half> %a, <2 x half> %b) #0 {
 ; KV3_1-LABEL: fcmp_setuno:
 ; KV3_1:       # %bb.0: # %entry
-; KV3_1-NEXT:    fcompnhq.ult $r2 = $r0, $r1
 ; KV3_1-NEXT:    fcompnhq.uge $r0 = $r0, $r1
+; KV3_1-NEXT:    fcompnhq.ult $r2 = $r0, $r1
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    andw $r0 = $r0, $r2
 ; KV3_1-NEXT:    ;;
@@ -2141,8 +2141,8 @@ define <2 x i16> @fcmp_setuno(<2 x half> %a, <2 x half> %b) #0 {
 ;
 ; KV3_2-LABEL: fcmp_setuno:
 ; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    fcompnhq.ult $r2 = $r0, $r1
 ; KV3_2-NEXT:    fcompnhq.uge $r0 = $r0, $r1
+; KV3_2-NEXT:    fcompnhq.ult $r2 = $r0, $r1
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:    andw $r0 = $r0, $r2
 ; KV3_2-NEXT:    ret
@@ -2496,8 +2496,8 @@ entry:
 define <2 x i16> @fcmp_setord_fast(<2 x half> %a, <2 x half> %b) #0 {
 ; KV3_1-LABEL: fcmp_setord_fast:
 ; KV3_1:       # %bb.0: # %entry
-; KV3_1-NEXT:    fcompnhq.olt $r2 = $r0, $r1
 ; KV3_1-NEXT:    fcompnhq.oge $r0 = $r0, $r1
+; KV3_1-NEXT:    fcompnhq.olt $r2 = $r0, $r1
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    orw $r0 = $r0, $r2
 ; KV3_1-NEXT:    ;;
@@ -2509,8 +2509,8 @@ define <2 x i16> @fcmp_setord_fast(<2 x half> %a, <2 x half> %b) #0 {
 ;
 ; KV3_2-LABEL: fcmp_setord_fast:
 ; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    fcompnhq.olt $r2 = $r0, $r1
 ; KV3_2-NEXT:    fcompnhq.oge $r0 = $r0, $r1
+; KV3_2-NEXT:    fcompnhq.olt $r2 = $r0, $r1
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:    orw $r0 = $r0, $r2
 ; KV3_2-NEXT:    ret
@@ -2546,8 +2546,8 @@ entry:
 define <2 x i16> @fcmp_setuno_fast(<2 x half> %a, <2 x half> %b) #0 {
 ; KV3_1-LABEL: fcmp_setuno_fast:
 ; KV3_1:       # %bb.0: # %entry
-; KV3_1-NEXT:    fcompnhq.ult $r2 = $r0, $r1
 ; KV3_1-NEXT:    fcompnhq.uge $r0 = $r0, $r1
+; KV3_1-NEXT:    fcompnhq.ult $r2 = $r0, $r1
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    andw $r0 = $r0, $r2
 ; KV3_1-NEXT:    ;;
@@ -2559,8 +2559,8 @@ define <2 x i16> @fcmp_setuno_fast(<2 x half> %a, <2 x half> %b) #0 {
 ;
 ; KV3_2-LABEL: fcmp_setuno_fast:
 ; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    fcompnhq.ult $r2 = $r0, $r1
 ; KV3_2-NEXT:    fcompnhq.uge $r0 = $r0, $r1
+; KV3_2-NEXT:    fcompnhq.ult $r2 = $r0, $r1
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:    andw $r0 = $r0, $r2
 ; KV3_2-NEXT:    ret

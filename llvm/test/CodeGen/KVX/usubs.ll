@@ -45,8 +45,8 @@ entry:
 define signext i16 @usub_sat16(i16 signext %a, i16 signext %b) {
 ; KVXV1-LABEL: usub_sat16:
 ; KVXV1:       # %bb.0: # %entry
-; KVXV1-NEXT:    zxhd $r2 = $r0
 ; KVXV1-NEXT:    zxhd $r1 = $r1
+; KVXV1-NEXT:    zxhd $r2 = $r0
 ; KVXV1-NEXT:    ;;
 ; KVXV1-NEXT:    maxuw $r1 = $r1, $r2
 ; KVXV1-NEXT:    ;;
@@ -58,8 +58,8 @@ define signext i16 @usub_sat16(i16 signext %a, i16 signext %b) {
 ;
 ; KVXV2-LABEL: usub_sat16:
 ; KVXV2:       # %bb.0: # %entry
-; KVXV2-NEXT:    sllw $r1 = $r1, 16
 ; KVXV2-NEXT:    sllw $r0 = $r0, 16
+; KVXV2-NEXT:    sllw $r1 = $r1, 16
 ; KVXV2-NEXT:    ;;
 ; KVXV2-NEXT:    sbfusw $r0 = $r0, $r1
 ; KVXV2-NEXT:    ;;
@@ -75,8 +75,8 @@ entry:
 define signext i8 @usub_sat8(i8 signext %a, i8 signext %b) {
 ; KVXV1-LABEL: usub_sat8:
 ; KVXV1:       # %bb.0: # %entry
-; KVXV1-NEXT:    zxbd $r2 = $r0
 ; KVXV1-NEXT:    zxbd $r1 = $r1
+; KVXV1-NEXT:    zxbd $r2 = $r0
 ; KVXV1-NEXT:    ;;
 ; KVXV1-NEXT:    maxuw $r1 = $r1, $r2
 ; KVXV1-NEXT:    ;;
@@ -88,8 +88,8 @@ define signext i8 @usub_sat8(i8 signext %a, i8 signext %b) {
 ;
 ; KVXV2-LABEL: usub_sat8:
 ; KVXV2:       # %bb.0: # %entry
-; KVXV2-NEXT:    sllw $r1 = $r1, 24
 ; KVXV2-NEXT:    sllw $r0 = $r0, 24
+; KVXV2-NEXT:    sllw $r1 = $r1, 24
 ; KVXV2-NEXT:    ;;
 ; KVXV2-NEXT:    sbfusw $r0 = $r0, $r1
 ; KVXV2-NEXT:    ;;
@@ -404,11 +404,11 @@ entry:
 define <4 x i32> @usub_satv4i32(<4 x i32> %a, <4 x i32> %b) {
 ; CHECK-LABEL: usub_satv4i32:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    maxuwp $r3 = $r3, $r1
 ; CHECK-NEXT:    maxuwp $r2 = $r2, $r0
+; CHECK-NEXT:    maxuwp $r3 = $r3, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfwp $r1 = $r1, $r3
 ; CHECK-NEXT:    sbfwp $r0 = $r0, $r2
+; CHECK-NEXT:    sbfwp $r1 = $r1, $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -443,21 +443,21 @@ entry:
 define <2 x i8> @usub_satv2i8(<2 x i8> %a, <2 x i8> %b) {
 ; KVXV1-LABEL: usub_satv2i8:
 ; KVXV1:       # %bb.0: # %entry
+; KVXV1-NEXT:    zxbd $r0 = $r0
+; KVXV1-NEXT:    zxbd $r1 = $r1
 ; KVXV1-NEXT:    extfz $r2 = $r0, 15, 8
 ; KVXV1-NEXT:    extfz $r3 = $r1, 15, 8
+; KVXV1-NEXT:    ;;
 ; KVXV1-NEXT:    zxbd $r0 = $r0
 ; KVXV1-NEXT:    zxbd $r1 = $r1
-; KVXV1-NEXT:    ;;
 ; KVXV1-NEXT:    zxbd $r2 = $r2
 ; KVXV1-NEXT:    zxbd $r3 = $r3
-; KVXV1-NEXT:    zxbd $r0 = $r0
-; KVXV1-NEXT:    zxbd $r1 = $r1
 ; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    maxuw $r3 = $r3, $r2
 ; KVXV1-NEXT:    maxuw $r1 = $r1, $r0
+; KVXV1-NEXT:    maxuw $r3 = $r3, $r2
 ; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    sbfw $r2 = $r2, $r3
 ; KVXV1-NEXT:    sbfw $r0 = $r0, $r1
+; KVXV1-NEXT:    sbfw $r2 = $r2, $r3
 ; KVXV1-NEXT:    ;;
 ; KVXV1-NEXT:    insf $r0 = $r2, 15, 8
 ; KVXV1-NEXT:    ret
@@ -476,17 +476,17 @@ entry:
 define <2 x i8> @usub_satv2i8_ri(<2 x i8> %a) {
 ; KVXV1-LABEL: usub_satv2i8_ri:
 ; KVXV1:       # %bb.0: # %entry
+; KVXV1-NEXT:    zxbd $r0 = $r0
 ; KVXV1-NEXT:    extfz $r1 = $r0, 15, 8
-; KVXV1-NEXT:    zxbd $r0 = $r0
 ; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    zxbd $r1 = $r1
 ; KVXV1-NEXT:    zxbd $r0 = $r0
+; KVXV1-NEXT:    zxbd $r1 = $r1
 ; KVXV1-NEXT:    ;;
 ; KVXV1-NEXT:    maxuw $r2 = $r1, 1
 ; KVXV1-NEXT:    maxuw $r3 = $r0, 1
 ; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    sbfw $r1 = $r1, $r2
 ; KVXV1-NEXT:    sbfw $r0 = $r0, $r3
+; KVXV1-NEXT:    sbfw $r1 = $r1, $r2
 ; KVXV1-NEXT:    ;;
 ; KVXV1-NEXT:    insf $r0 = $r1, 15, 8
 ; KVXV1-NEXT:    ret
@@ -510,33 +510,33 @@ define <4 x i8> @usub_satv4i8(<4 x i8> %a, <4 x i8> %b) {
 ; KVXV1-NEXT:    extfz $r4 = $r0, 23, 16
 ; KVXV1-NEXT:    extfz $r6 = $r0, 15, 8
 ; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    extfz $r5 = $r1, 23, 16
-; KVXV1-NEXT:    extfz $r7 = $r1, 15, 8
 ; KVXV1-NEXT:    zxbd $r0 = $r0
 ; KVXV1-NEXT:    zxbd $r1 = $r1
+; KVXV1-NEXT:    extfz $r5 = $r1, 23, 16
+; KVXV1-NEXT:    extfz $r7 = $r1, 15, 8
 ; KVXV1-NEXT:    ;;
 ; KVXV1-NEXT:    zxbd $r2 = $r2
 ; KVXV1-NEXT:    zxbd $r3 = $r3
 ; KVXV1-NEXT:    zxbd $r4 = $r4
 ; KVXV1-NEXT:    zxbd $r6 = $r6
 ; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    zxbd $r5 = $r5
-; KVXV1-NEXT:    zxbd $r7 = $r7
 ; KVXV1-NEXT:    zxbd $r0 = $r0
 ; KVXV1-NEXT:    zxbd $r1 = $r1
+; KVXV1-NEXT:    zxbd $r5 = $r5
+; KVXV1-NEXT:    zxbd $r7 = $r7
 ; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    maxuw $r3 = $r3, $r2
 ; KVXV1-NEXT:    maxuw $r1 = $r1, $r0
+; KVXV1-NEXT:    maxuw $r3 = $r3, $r2
 ; KVXV1-NEXT:    maxuw $r5 = $r5, $r4
 ; KVXV1-NEXT:    maxuw $r7 = $r7, $r6
 ; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    sbfw $r0 = $r0, $r1
 ; KVXV1-NEXT:    sbfw $r2 = $r2, $r3
 ; KVXV1-NEXT:    sbfw $r3 = $r4, $r5
 ; KVXV1-NEXT:    sbfw $r4 = $r6, $r7
-; KVXV1-NEXT:    sbfw $r0 = $r0, $r1
 ; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    insf $r3 = $r2, 15, 8
 ; KVXV1-NEXT:    insf $r0 = $r4, 15, 8
+; KVXV1-NEXT:    insf $r3 = $r2, 15, 8
 ; KVXV1-NEXT:    ;;
 ; KVXV1-NEXT:    insf $r0 = $r3, 31, 16
 ; KVXV1-NEXT:    ret
@@ -555,21 +555,21 @@ entry:
 define <4 x i8> @usub_satv4i8_ri(<4 x i8> %a) {
 ; KVXV1-LABEL: usub_satv4i8_ri:
 ; KVXV1:       # %bb.0: # %entry
+; KVXV1-NEXT:    zxbd $r0 = $r0
 ; KVXV1-NEXT:    extfz $r1 = $r0, 23, 16
-; KVXV1-NEXT:    zxbd $r0 = $r0
 ; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    zxbd $r1 = $r1
 ; KVXV1-NEXT:    zxbd $r0 = $r0
+; KVXV1-NEXT:    zxbd $r1 = $r1
 ; KVXV1-NEXT:    ;;
 ; KVXV1-NEXT:    maxuw $r2 = $r1, 129
 ; KVXV1-NEXT:    maxuw $r3 = $r0, 127
 ; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    sbfw $r0 = $r0, $r3
 ; KVXV1-NEXT:    sbfw $r1 = $r1, $r2
 ; KVXV1-NEXT:    make $r2 = 0
-; KVXV1-NEXT:    sbfw $r0 = $r0, $r3
 ; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    insf $r1 = $r2, 15, 8
 ; KVXV1-NEXT:    insf $r0 = $r2, 15, 8
+; KVXV1-NEXT:    insf $r1 = $r2, 15, 8
 ; KVXV1-NEXT:    ;;
 ; KVXV1-NEXT:    insf $r0 = $r1, 31, 16
 ; KVXV1-NEXT:    ret
@@ -588,22 +588,22 @@ entry:
 define <8 x i8> @usub_satv8i8(<8 x i8> %a, <8 x i8> %b) {
 ; KVXV1-LABEL: usub_satv8i8:
 ; KVXV1:       # %bb.0: # %entry
+; KVXV1-NEXT:    sllhqs $r0 = $r0, 8
+; KVXV1-NEXT:    sllhqs $r1 = $r1, 8
 ; KVXV1-NEXT:    andd $r2 = $r1, 0xff00ff00ff00ff00
 ; KVXV1-NEXT:    andd $r3 = $r0, 0xff00ff00ff00ff00
-; KVXV1-NEXT:    sllhqs $r1 = $r1, 8
-; KVXV1-NEXT:    sllhqs $r0 = $r0, 8
 ; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    sbfhq $r3 = $r3, $r2
 ; KVXV1-NEXT:    sbfhq $r0 = $r0, $r1
+; KVXV1-NEXT:    sbfhq $r3 = $r3, $r2
 ; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    compnhq.leu $r2 = $r3, $r2
 ; KVXV1-NEXT:    compnhq.leu $r1 = $r0, $r1
+; KVXV1-NEXT:    compnhq.leu $r2 = $r3, $r2
 ; KVXV1-NEXT:    ;;
 ; KVXV1-NEXT:    andd $r0 = $r1, $r0
 ; KVXV1-NEXT:    andd $r2 = $r2, $r3
 ; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    andd $r1 = $r2, 0xff00ff00ff00ff00
 ; KVXV1-NEXT:    srlhqs $r0 = $r0, 8
+; KVXV1-NEXT:    andd $r1 = $r2, 0xff00ff00ff00ff00
 ; KVXV1-NEXT:    ;;
 ; KVXV1-NEXT:    ord $r0 = $r0, $r1
 ; KVXV1-NEXT:    ret
@@ -622,24 +622,24 @@ entry:
 define <8 x i8> @usub_satv8i8_ri_(<8 x i8> %a) {
 ; KVXV1-LABEL: usub_satv8i8_ri_:
 ; KVXV1:       # %bb.0: # %entry
+; KVXV1-NEXT:    sllhqs $r0 = $r0, 8
 ; KVXV1-NEXT:    make $r1 = 0x81007f
 ; KVXV1-NEXT:    andd $r3 = $r0, 0xff00ff00ff00ff00
-; KVXV1-NEXT:    sllhqs $r0 = $r0, 8
 ; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    andd $r2 = $r1, 0xff00ff00ff00ff00
 ; KVXV1-NEXT:    sllhqs $r1 = $r1, 8
+; KVXV1-NEXT:    andd $r2 = $r1, 0xff00ff00ff00ff00
 ; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    sbfhq $r3 = $r3, $r2
 ; KVXV1-NEXT:    sbfhq $r0 = $r0, $r1
+; KVXV1-NEXT:    sbfhq $r3 = $r3, $r2
 ; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    compnhq.leu $r2 = $r3, $r2
 ; KVXV1-NEXT:    compnhq.leu $r1 = $r0, $r1
+; KVXV1-NEXT:    compnhq.leu $r2 = $r3, $r2
 ; KVXV1-NEXT:    ;;
 ; KVXV1-NEXT:    andd $r0 = $r1, $r0
 ; KVXV1-NEXT:    andd $r2 = $r2, $r3
 ; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    andd $r1 = $r2, 0xff00ff00ff00ff00
 ; KVXV1-NEXT:    srlhqs $r0 = $r0, 8
+; KVXV1-NEXT:    andd $r1 = $r2, 0xff00ff00ff00ff00
 ; KVXV1-NEXT:    ;;
 ; KVXV1-NEXT:    ord $r0 = $r0, $r1
 ; KVXV1-NEXT:    ret
@@ -658,24 +658,24 @@ entry:
 define <8 x i8> @usub_satv8i8_ri_at(<8 x i8> %a) {
 ; KVXV1-LABEL: usub_satv8i8_ri_at:
 ; KVXV1:       # %bb.0: # %entry
+; KVXV1-NEXT:    sllhqs $r0 = $r0, 8
 ; KVXV1-NEXT:    make $r1 = 0x81007f0081007f
 ; KVXV1-NEXT:    andd $r3 = $r0, 0xff00ff00ff00ff00
-; KVXV1-NEXT:    sllhqs $r0 = $r0, 8
 ; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    andd $r2 = $r1, 0xff00ff00ff00ff00
 ; KVXV1-NEXT:    sllhqs $r1 = $r1, 8
+; KVXV1-NEXT:    andd $r2 = $r1, 0xff00ff00ff00ff00
 ; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    sbfhq $r3 = $r3, $r2
 ; KVXV1-NEXT:    sbfhq $r0 = $r0, $r1
+; KVXV1-NEXT:    sbfhq $r3 = $r3, $r2
 ; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    compnhq.leu $r2 = $r3, $r2
 ; KVXV1-NEXT:    compnhq.leu $r1 = $r0, $r1
+; KVXV1-NEXT:    compnhq.leu $r2 = $r3, $r2
 ; KVXV1-NEXT:    ;;
 ; KVXV1-NEXT:    andd $r0 = $r1, $r0
 ; KVXV1-NEXT:    andd $r2 = $r2, $r3
 ; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    andd $r1 = $r2, 0xff00ff00ff00ff00
 ; KVXV1-NEXT:    srlhqs $r0 = $r0, 8
+; KVXV1-NEXT:    andd $r1 = $r2, 0xff00ff00ff00ff00
 ; KVXV1-NEXT:    ;;
 ; KVXV1-NEXT:    ord $r0 = $r0, $r1
 ; KVXV1-NEXT:    ret

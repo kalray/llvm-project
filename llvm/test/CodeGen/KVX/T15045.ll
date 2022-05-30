@@ -15,9 +15,9 @@ target triple = "kvx-kalray-cos"
 
 define void @_Z1av() {
 ; CHECK-LABEL: _Z1av:
-; CHECK:         addd $r12 = $r12, -32
+; CHECK:         make $r0 = 0
+; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    fence
-; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r3 = $r0
 ; CHECK-NEXT:    ;;
@@ -45,8 +45,8 @@ define void @_Z1av() {
 ; CHECK-NEXT:  .LBB0_2:
 ; CHECK-NEXT:    ld $r1 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fence
 ; CHECK-NEXT:    copyd $r3 = $r0
+; CHECK-NEXT:    fence
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_15:
 ; CHECK-NEXT:    copyd $r2 = $r0
@@ -75,8 +75,8 @@ define void @_Z1av() {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r1 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fence
 ; CHECK-NEXT:    copyd $r3 = $r0
+; CHECK-NEXT:    fence
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_19:
 ; CHECK-NEXT:    copyd $r2 = $r0
@@ -101,8 +101,8 @@ define void @_Z1av() {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r1 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fence
 ; CHECK-NEXT:    copyd $r3 = $r0
+; CHECK-NEXT:    fence
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_23:
 ; CHECK-NEXT:    copyd $r2 = $r0
@@ -127,8 +127,8 @@ define void @_Z1av() {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r1 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fence
 ; CHECK-NEXT:    copyd $r3 = $r0
+; CHECK-NEXT:    fence
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_27:
 ; CHECK-NEXT:    copyd $r2 = $r0
@@ -153,8 +153,8 @@ define void @_Z1av() {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r1 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fence
 ; CHECK-NEXT:    copyd $r3 = $r0
+; CHECK-NEXT:    fence
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_31:
 ; CHECK-NEXT:    copyd $r2 = $r0
@@ -179,8 +179,8 @@ define void @_Z1av() {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r1 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fence
 ; CHECK-NEXT:    copyd $r3 = $r0
+; CHECK-NEXT:    fence
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_35:
 ; CHECK-NEXT:    copyd $r2 = $r0
@@ -205,8 +205,8 @@ define void @_Z1av() {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r1 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fence
 ; CHECK-NEXT:    copyd $r3 = $r0
+; CHECK-NEXT:    fence
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_39:
 ; CHECK-NEXT:    copyd $r2 = $r0
@@ -231,8 +231,8 @@ define void @_Z1av() {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r1 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fence
 ; CHECK-NEXT:    copyd $r3 = $r0
+; CHECK-NEXT:    fence
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_43:
 ; CHECK-NEXT:    copyd $r2 = $r0

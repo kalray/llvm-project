@@ -9,9 +9,9 @@ target triple = "kvx-kalray-cos"
 define i32 @hwloop1() nounwind {
 ; CHECK-LABEL: hwloop1:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r2 = 10
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    make $r1 = a
+; CHECK-NEXT:    make $r2 = 10
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r2, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;
@@ -47,15 +47,15 @@ define i32 @hwloop2(i32 %n, i32* nocapture %b) nounwind {
 ; CHECK-NEXT:    cb.wlez $r0 ? .LBB1_1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.3: # %for.body.preheader
-; CHECK-NEXT:    zxwd $r2 = $r0
 ; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    zxwd $r2 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r2, .__LOOPDO_1_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB1_4: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    lwz $r2 = 0[$r1]
 ; CHECK-NEXT:    addd $r1 = $r1, 4
+; CHECK-NEXT:    lwz $r2 = 0[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addw $r0 = $r2, $r0
 ; CHECK-NEXT:    ;;
@@ -106,9 +106,9 @@ define i32 @hwloop3(i32 %n, i32* nocapture %b) nounwind {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB2_2: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    lwz $r3 = 0[$r1]
-; CHECK-NEXT:    addw $r2 = $r2, -4
 ; CHECK-NEXT:    addd $r1 = $r1, 16
+; CHECK-NEXT:    addw $r2 = $r2, -4
+; CHECK-NEXT:    lwz $r3 = 0[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addw $r0 = $r3, $r0
 ; CHECK-NEXT:    cb.wnez $r2 ? .LBB2_2
@@ -153,8 +153,8 @@ define i32 @hwloop4(i32 %n, i32* nocapture %b) nounwind {
 ; CHECK-NEXT:    cb.wlez $r0 ? .LBB3_3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %for.body.preheader
-; CHECK-NEXT:    zxwd $r2 = $r0
 ; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    zxwd $r2 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r2, .__LOOPDO_2_END_
 ; CHECK-NEXT:    ;;
@@ -195,8 +195,8 @@ for.end:
 define void @hwloop5(i32* nocapture %a, i32* nocapture %res) nounwind {
 ; CHECK-LABEL: hwloop5:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r3 = 100
 ; CHECK-NEXT:    make $r2 = 0
+; CHECK-NEXT:    make $r3 = 100
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r3, .__LOOPDO_3_END_
 ; CHECK-NEXT:    ;;

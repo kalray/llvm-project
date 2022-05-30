@@ -9,8 +9,8 @@ define i32 @load8to32(i8* nocapture readonly %0) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lbz.u $r0 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fence
 ; CHECK-NEXT:    sxbd $r0 = $r0
+; CHECK-NEXT:    fence
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = load atomic i8, i8* %0 seq_cst, align 1
@@ -25,8 +25,8 @@ define i16 @load8to16(i8* nocapture readonly %0) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lbz.u $r0 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fence
 ; CHECK-NEXT:    sxbd $r0 = $r0
+; CHECK-NEXT:    fence
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = load atomic i8, i8* %0 seq_cst, align 1
@@ -41,8 +41,8 @@ define i64 @load8to64(i8* nocapture readonly %0) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lbz.u $r0 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fence
 ; CHECK-NEXT:    sxbd $r0 = $r0
+; CHECK-NEXT:    fence
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = load atomic i8, i8* %0 seq_cst, align 1
@@ -57,8 +57,8 @@ define i32 @load16to32(i16* nocapture readonly %0) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lhz.u $r0 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fence
 ; CHECK-NEXT:    sxhd $r0 = $r0
+; CHECK-NEXT:    fence
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = load atomic i16, i16* %0 seq_cst, align 2
@@ -73,8 +73,8 @@ define i64 @load16to64(i16* nocapture readonly %0) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lhz.u $r0 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fence
 ; CHECK-NEXT:    sxhd $r0 = $r0
+; CHECK-NEXT:    fence
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = load atomic i16, i16* %0 seq_cst, align 2

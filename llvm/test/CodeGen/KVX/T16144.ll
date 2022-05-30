@@ -49,9 +49,9 @@ define internal i1 @atomic_flag_test_and_set(%struct.atomic_flag* %0) {
 define internal i1 @atomic_flag_test_and_set_explicit(%struct.atomic_flag* %0, i32 %1) {
 ; CHECK-LABEL: atomic_flag_test_and_set_explicit:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    compw.gt $r3 = $r1, 3
 ; CHECK-NEXT:    make $r2 = 1
+; CHECK-NEXT:    compw.gt $r3 = $r1, 3
+; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    ;;
@@ -70,11 +70,11 @@ define internal i1 @atomic_flag_test_and_set_explicit(%struct.atomic_flag* %0, i
 ; CHECK-NEXT:  # %bb.9:
 ; CHECK-NEXT:    lbz $r1 = 19[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fence
 ; CHECK-NEXT:    andd $r3 = $r0, 3
+; CHECK-NEXT:    fence
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfd $r7 = $r3, 0
 ; CHECK-NEXT:    slld $r3 = $r3, 3
+; CHECK-NEXT:    sbfd $r7 = $r3, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB2_10: # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    lwz.u $r5 = $r7[$r0]
@@ -107,8 +107,8 @@ define internal i1 @atomic_flag_test_and_set_explicit(%struct.atomic_flag* %0, i
 ; CHECK-NEXT:  .LBB2_12:
 ; CHECK-NEXT:    lbz $r1 = 19[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fence
 ; CHECK-NEXT:    goto .LBB2_13
+; CHECK-NEXT:    fence
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB2_2:
 ; CHECK-NEXT:    compw.eq $r1 = $r1, 3
@@ -121,8 +121,8 @@ define internal i1 @atomic_flag_test_and_set_explicit(%struct.atomic_flag* %0, i
 ; CHECK-NEXT:  .LBB2_13:
 ; CHECK-NEXT:    andd $r3 = $r0, 3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfd $r7 = $r3, 0
 ; CHECK-NEXT:    slld $r3 = $r3, 3
+; CHECK-NEXT:    sbfd $r7 = $r3, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB2_14: # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    lwz.u $r5 = $r7[$r0]
@@ -151,11 +151,11 @@ define internal i1 @atomic_flag_test_and_set_explicit(%struct.atomic_flag* %0, i
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB2_6:
-; CHECK-NEXT:    andd $r3 = $r0, 3
 ; CHECK-NEXT:    lbz $r1 = 19[$r12]
+; CHECK-NEXT:    andd $r3 = $r0, 3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfd $r7 = $r3, 0
 ; CHECK-NEXT:    slld $r3 = $r3, 3
+; CHECK-NEXT:    sbfd $r7 = $r3, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB2_7: # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    lwz.u $r5 = $r7[$r0]

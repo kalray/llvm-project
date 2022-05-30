@@ -559,11 +559,11 @@ define void @sto_cc(<4 x i64> %0, <4 x i64>* nocapture %1, i64 %2) {
 define <2 x i64> @select_inputs_paired(<2 x i64>* %0, <2 x i64> %1, <2 x i64> %a, i32 %2) {
 ; CHECK-LABEL: select_inputs_paired:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    copyd $r7 = $r4
-; CHECK-NEXT:    copyd $r9 = $r2
-; CHECK-NEXT:    copyd $r6 = $r3
-; CHECK-NEXT:    copyd $r8 = $r1
 ; CHECK-NEXT:    cb.weqz $r5 ? .LBB28_2
+; CHECK-NEXT:    copyd $r6 = $r3
+; CHECK-NEXT:    copyd $r7 = $r4
+; CHECK-NEXT:    copyd $r8 = $r1
+; CHECK-NEXT:    copyd $r9 = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1:
 ; CHECK-NEXT:    sq 0[$r0] = $r8r9
@@ -590,16 +590,16 @@ define <2 x i64> @select_inputs_paired(<2 x i64>* %0, <2 x i64> %1, <2 x i64> %a
 define <4 x i64> @select_inputs_quad(<4 x i64>* %0, <4 x i64> %1, <4 x i64> %a, i32 %2) {
 ; CHECK-LABEL: select_inputs_quad:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    copyd $r35 = $r8
-; CHECK-NEXT:    copyd $r39 = $r4
 ; CHECK-NEXT:    copyd $r34 = $r7
+; CHECK-NEXT:    copyd $r35 = $r8
 ; CHECK-NEXT:    copyd $r38 = $r3
+; CHECK-NEXT:    copyd $r39 = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r33 = $r6
-; CHECK-NEXT:    copyd $r37 = $r2
-; CHECK-NEXT:    copyd $r32 = $r5
-; CHECK-NEXT:    copyd $r36 = $r1
 ; CHECK-NEXT:    cb.weqz $r9 ? .LBB29_2
+; CHECK-NEXT:    copyd $r32 = $r5
+; CHECK-NEXT:    copyd $r33 = $r6
+; CHECK-NEXT:    copyd $r36 = $r1
+; CHECK-NEXT:    copyd $r37 = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1:
 ; CHECK-NEXT:    so 0[$r0] = $r36r37r38r39

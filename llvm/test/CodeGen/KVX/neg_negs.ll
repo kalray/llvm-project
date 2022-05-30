@@ -12,8 +12,8 @@ define <8 x i8> @negbo(<8 x i8> %0) {
 ; CV1-NEXT:    nxord $r0 = $r1, $r0
 ; CV1-NEXT:    ord $r2 = $r1, 0x8080808080808080
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sbfd $r1 = $r3, $r2
 ; CV1-NEXT:    andd $r0 = $r0, 0x8080808080808080
+; CV1-NEXT:    sbfd $r1 = $r3, $r2
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xord $r0 = $r0, $r1
 ; CV1-NEXT:    ret
@@ -42,8 +42,8 @@ define <8 x i8> @negbos(<8 x i8> %0) {
 ; CV1-NEXT:    sbfshq $r0 = $r0, $r1
 ; CV1-NEXT:    sbfshq $r2 = $r3, $r2
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    srlhqs $r1 = $r2, 8
 ; CV1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
+; CV1-NEXT:    srlhqs $r1 = $r2, 8
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    ord $r0 = $r0, $r1
 ; CV1-NEXT:    ret
@@ -66,15 +66,15 @@ define <8 x i16> @negbx(<8 x i16> %0) {
 ; CV1-NEXT:    make $r2 = 0
 ; CV1-NEXT:    andd $r4 = $r0, 0x7f7f7f7f7f7f7f7f
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    andd $r5 = $r1, 0x7f7f7f7f7f7f7f7f
 ; CV1-NEXT:    nxord $r0 = $r2, $r0
 ; CV1-NEXT:    nxord $r1 = $r2, $r1
 ; CV1-NEXT:    ord $r3 = $r2, 0x8080808080808080
+; CV1-NEXT:    andd $r5 = $r1, 0x7f7f7f7f7f7f7f7f
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sbfd $r2 = $r4, $r3
 ; CV1-NEXT:    andd $r0 = $r0, 0x8080808080808080
-; CV1-NEXT:    sbfd $r3 = $r5, $r3
 ; CV1-NEXT:    andd $r1 = $r1, 0x8080808080808080
+; CV1-NEXT:    sbfd $r2 = $r4, $r3
+; CV1-NEXT:    sbfd $r3 = $r5, $r3
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xord $r0 = $r0, $r2
 ; CV1-NEXT:    xord $r1 = $r1, $r3
@@ -99,8 +99,8 @@ define <8 x i16> @negbxs(<8 x i16> %0) {
 ; CV1-NEXT:    make $r2 = 0
 ; CV1-NEXT:    sbmm8 $r4 = $r0, 0x4000200004000100
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sbmm8 $r5 = $r1, 0x4000200004000100
 ; CV1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
+; CV1-NEXT:    sbmm8 $r5 = $r1, 0x4000200004000100
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    andd $r1 = $r1, 0xff00ff00ff00ff00
 ; CV1-NEXT:    sbmm8 $r3 = $r2, 0x4000200004000100
@@ -110,10 +110,10 @@ define <8 x i16> @negbxs(<8 x i16> %0) {
 ; CV1-NEXT:    sbfshq $r0 = $r0, $r2
 ; CV1-NEXT:    sbfshq $r1 = $r1, $r2
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sbfshq $r4 = $r4, $r3
-; CV1-NEXT:    sbfshq $r3 = $r5, $r3
 ; CV1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
 ; CV1-NEXT:    andd $r1 = $r1, 0xff00ff00ff00ff00
+; CV1-NEXT:    sbfshq $r3 = $r5, $r3
+; CV1-NEXT:    sbfshq $r4 = $r4, $r3
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    srlhqs $r2 = $r4, 8
 ; CV1-NEXT:    srlhqs $r3 = $r3, 8
@@ -146,14 +146,14 @@ define <8 x i32> @negbv(<8 x i32> %0) {
 ; CV1-NEXT:    andd $r7 = $r1, 0x7f7f7f7f7f7f7f7f
 ; CV1-NEXT:    andd $r8 = $r2, 0x7f7f7f7f7f7f7f7f
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    andd $r9 = $r3, 0x7f7f7f7f7f7f7f7f
 ; CV1-NEXT:    nxord $r0 = $r4, $r0
 ; CV1-NEXT:    nxord $r1 = $r4, $r1
 ; CV1-NEXT:    nxord $r2 = $r4, $r2
+; CV1-NEXT:    andd $r9 = $r3, 0x7f7f7f7f7f7f7f7f
 ; CV1-NEXT:    ;;
+; CV1-NEXT:    andd $r0 = $r0, 0x8080808080808080
 ; CV1-NEXT:    nxord $r3 = $r4, $r3
 ; CV1-NEXT:    ord $r6 = $r4, 0x8080808080808080
-; CV1-NEXT:    andd $r0 = $r0, 0x8080808080808080
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    andd $r1 = $r1, 0x8080808080808080
 ; CV1-NEXT:    andd $r2 = $r2, 0x8080808080808080
@@ -163,10 +163,10 @@ define <8 x i32> @negbv(<8 x i32> %0) {
 ; CV1-NEXT:    sbfd $r5 = $r7, $r6
 ; CV1-NEXT:    sbfd $r7 = $r8, $r6
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sbfd $r6 = $r9, $r6
 ; CV1-NEXT:    xord $r0 = $r0, $r4
 ; CV1-NEXT:    xord $r1 = $r1, $r5
 ; CV1-NEXT:    xord $r2 = $r2, $r7
+; CV1-NEXT:    sbfd $r6 = $r9, $r6
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xord $r3 = $r3, $r6
 ; CV1-NEXT:    ret
@@ -193,8 +193,8 @@ define <8 x i32> @negbvs(<8 x i32> %0) {
 ; CV1-NEXT:    make $r4 = 0
 ; CV1-NEXT:    sbmm8 $r5 = $r0, 0x4000200004000100
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sbmm8 $r7 = $r1, 0x4000200004000100
 ; CV1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
+; CV1-NEXT:    sbmm8 $r7 = $r1, 0x4000200004000100
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    sbmm8 $r8 = $r2, 0x4000200004000100
 ; CV1-NEXT:    sbmm8 $r9 = $r3, 0x4000200004000100
@@ -202,33 +202,33 @@ define <8 x i32> @negbvs(<8 x i32> %0) {
 ; CV1-NEXT:    andd $r1 = $r1, 0xff00ff00ff00ff00
 ; CV1-NEXT:    andd $r2 = $r2, 0xff00ff00ff00ff00
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sbmm8 $r6 = $r4, 0x4000200004000100
 ; CV1-NEXT:    andd $r4 = $r4, 0xff00ff00ff00ff00
+; CV1-NEXT:    sbmm8 $r6 = $r4, 0x4000200004000100
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    andd $r3 = $r3, 0xff00ff00ff00ff00
 ; CV1-NEXT:    sbfshq $r0 = $r0, $r4
 ; CV1-NEXT:    sbfshq $r1 = $r1, $r4
+; CV1-NEXT:    andd $r3 = $r3, 0xff00ff00ff00ff00
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    sbfshq $r2 = $r2, $r4
 ; CV1-NEXT:    sbfshq $r3 = $r3, $r4
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sbfshq $r5 = $r5, $r6
-; CV1-NEXT:    sbfshq $r7 = $r7, $r6
 ; CV1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
 ; CV1-NEXT:    andd $r1 = $r1, 0xff00ff00ff00ff00
+; CV1-NEXT:    sbfshq $r5 = $r5, $r6
+; CV1-NEXT:    sbfshq $r7 = $r7, $r6
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sbfshq $r8 = $r8, $r6
-; CV1-NEXT:    sbfshq $r6 = $r9, $r6
 ; CV1-NEXT:    andd $r2 = $r2, 0xff00ff00ff00ff00
 ; CV1-NEXT:    andd $r3 = $r3, 0xff00ff00ff00ff00
+; CV1-NEXT:    sbfshq $r6 = $r9, $r6
+; CV1-NEXT:    sbfshq $r8 = $r8, $r6
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    srlhqs $r4 = $r5, 8
 ; CV1-NEXT:    srlhqs $r5 = $r7, 8
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    srlhqs $r7 = $r8, 8
-; CV1-NEXT:    srlhqs $r6 = $r6, 8
 ; CV1-NEXT:    ord $r0 = $r0, $r4
 ; CV1-NEXT:    ord $r1 = $r1, $r5
+; CV1-NEXT:    srlhqs $r6 = $r6, 8
+; CV1-NEXT:    srlhqs $r7 = $r8, 8
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    ord $r2 = $r2, $r7
 ; CV1-NEXT:    ord $r3 = $r3, $r6
@@ -410,8 +410,8 @@ declare <2 x i32> @llvm.ssub.sat.v2i32(<2 x i32>, <2 x i32>)
 define <4 x i32> @negwq(<4 x i32> %0) {
 ; ALL-LABEL: negwq:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    make $r3 = 0
 ; ALL-NEXT:    make $r2 = 0
+; ALL-NEXT:    make $r3 = 0
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    sbfwp $r0 = $r0, $r2
 ; ALL-NEXT:    sbfwp $r1 = $r1, $r3
@@ -424,11 +424,11 @@ define <4 x i32> @negwq(<4 x i32> %0) {
 define <4 x i32> @negwqs(<4 x i32> %0) {
 ; ALL-LABEL: negwqs:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    make $r3 = 0
 ; ALL-NEXT:    make $r2 = 0
+; ALL-NEXT:    make $r3 = 0
 ; ALL-NEXT:    ;;
-; ALL-NEXT:    sbfswp $r1 = $r1, $r3
 ; ALL-NEXT:    sbfswp $r0 = $r0, $r2
+; ALL-NEXT:    sbfswp $r1 = $r1, $r3
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
   %2 = tail call <4 x i32> @llvm.ssub.sat.v4i32(<4 x i32> zeroinitializer, <4 x i32> %0)
@@ -440,13 +440,13 @@ declare <4 x i32> @llvm.ssub.sat.v4i32(<4 x i32>, <4 x i32>)
 define <8 x i32> @negwo(<8 x i32> %0) {
 ; ALL-LABEL: negwo:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    make $r5 = 0
 ; ALL-NEXT:    make $r4 = 0
+; ALL-NEXT:    make $r5 = 0
 ; ALL-NEXT:    ;;
-; ALL-NEXT:    sbfwp $r2 = $r2, $r4
-; ALL-NEXT:    sbfwp $r3 = $r3, $r5
 ; ALL-NEXT:    sbfwp $r0 = $r0, $r4
 ; ALL-NEXT:    sbfwp $r1 = $r1, $r5
+; ALL-NEXT:    sbfwp $r2 = $r2, $r4
+; ALL-NEXT:    sbfwp $r3 = $r3, $r5
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
   %2 = sub <8 x i32> zeroinitializer, %0
@@ -456,14 +456,14 @@ define <8 x i32> @negwo(<8 x i32> %0) {
 define <8 x i32> @negwos(<8 x i32> %0) {
 ; ALL-LABEL: negwos:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    make $r5 = 0
 ; ALL-NEXT:    make $r4 = 0
+; ALL-NEXT:    make $r5 = 0
 ; ALL-NEXT:    ;;
-; ALL-NEXT:    sbfswp $r3 = $r3, $r5
 ; ALL-NEXT:    sbfswp $r2 = $r2, $r4
+; ALL-NEXT:    sbfswp $r3 = $r3, $r5
 ; ALL-NEXT:    ;;
-; ALL-NEXT:    sbfswp $r1 = $r1, $r5
 ; ALL-NEXT:    sbfswp $r0 = $r0, $r4
+; ALL-NEXT:    sbfswp $r1 = $r1, $r5
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
   %2 = tail call <8 x i32> @llvm.ssub.sat.v8i32(<8 x i32> zeroinitializer, <8 x i32> %0)

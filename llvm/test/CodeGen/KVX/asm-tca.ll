@@ -5,8 +5,8 @@ target triple = "kvx-kalray-cos"
 define void @asm_tca(i8* %v, i64 %A) {
 ; CHECK-LABEL: asm_tca:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addd $r3 = $r1, 1
 ; CHECK-NEXT:    copyd $r2 = $r0
+; CHECK-NEXT:    addd $r3 = $r1, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    lv $a0 = $r1[$r2]

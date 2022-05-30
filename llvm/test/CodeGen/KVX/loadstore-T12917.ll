@@ -21,8 +21,8 @@ define i32 @f(){
 ; CHECK-NEXT:    make $r16 = c
 ; CHECK-NEXT:    make $r17 = 4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r36 = b
 ; CHECK-NEXT:    lo $r8r9r10r11 = 0[$r0]
+; CHECK-NEXT:    make $r36 = b
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r32r33r34r35 = 0[$r8]
 ; CHECK-NEXT:    ;;

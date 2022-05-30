@@ -83,8 +83,8 @@ entry:
 define <2 x double> @f64x4_extract_elements_10(<4 x double> %0) {
 ; CHECK-LABEL: f64x4_extract_elements_10:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r2
 ; CHECK-NEXT:    ret
@@ -97,8 +97,8 @@ entry:
 define <2 x double> @f64x4_extract_elements_23(<4 x double> %0) {
 ; CHECK-LABEL: f64x4_extract_elements_23:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    copyd $r0 = $r2
+; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -175,8 +175,8 @@ entry:
 define <2 x i64> @i64x4_extract_elements_10(<4 x i64> %0) {
 ; CHECK-LABEL: i64x4_extract_elements_10:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r2
 ; CHECK-NEXT:    ret
@@ -189,8 +189,8 @@ entry:
 define <2 x i64> @i64x4_extract_elements_23(<4 x i64> %0) {
 ; CHECK-LABEL: i64x4_extract_elements_23:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    copyd $r0 = $r2
+; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -274,8 +274,8 @@ entry:
 define <4 x double> @f64x4_insert_elements_01(<4 x double> %0, double %1, double %2) {
 ; CHECK-LABEL: f64x4_insert_elements_01:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    copyd $r0 = $r4
+; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -314,8 +314,8 @@ entry:
 define <4 x double> @f64x4_insert_elements_23(<4 x double> %0, double %1, double %2) {
 ; CHECK-LABEL: f64x4_insert_elements_23:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    copyd $r3 = $r5
 ; CHECK-NEXT:    copyd $r2 = $r4
+; CHECK-NEXT:    copyd $r3 = $r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -412,8 +412,8 @@ entry:
 define <4 x i64> @i64x4_insert_elements_01(<4 x i64> %0, i64 %1, i64 %2) {
 ; CHECK-LABEL: i64x4_insert_elements_01:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    copyd $r0 = $r4
+; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -452,8 +452,8 @@ entry:
 define <4 x i64> @i64x4_insert_elements_23(<4 x i64> %0, i64 %1, i64 %2) {
 ; CHECK-LABEL: i64x4_insert_elements_23:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    copyd $r3 = $r5
 ; CHECK-NEXT:    copyd $r2 = $r4
+; CHECK-NEXT:    copyd $r3 = $r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -491,8 +491,8 @@ entry:
 define <4 x i64> @i64x4_insert_elements_12(<4 x i64> %0, i64 %1, i64 %2) {
 ; CHECK-LABEL: i64x4_insert_elements_12:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    copyd $r2 = $r5
 ; CHECK-NEXT:    copyd $r1 = $r4
+; CHECK-NEXT:    copyd $r2 = $r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -534,8 +534,8 @@ entry:
 define void @v4i64_upper_half_extract_unaligned(i32 %i, <4 x i64> %0,  <2 x i64> * %1){
 ; CHECK-LABEL: v4i64_upper_half_extract_unaligned:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    copyd $r1 = $r4
 ; CHECK-NEXT:    copyd $r0 = $r3
+; CHECK-NEXT:    copyd $r1 = $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 0[$r5] = $r0r1
 ; CHECK-NEXT:    ret
@@ -708,8 +708,8 @@ entry:
 define void @v2i64_concat_v4i64_unaligned2(i64* nocapture readonly %0){
 ; CHECK-LABEL: v2i64_concat_v4i64_unaligned2:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    lq $r4r5 = 0[$r0]
+; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lq $r6r7 = 64[$r0]
 ; CHECK-NEXT:    ;;

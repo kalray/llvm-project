@@ -8,8 +8,8 @@ define i32* @f(i32 %s, i32 %c){
 ; CHECK-LABEL: f:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = x
-; CHECK-NEXT:    make $r2 = 126
 ; CHECK-NEXT:    make $r1 = 0
+; CHECK-NEXT:    make $r2 = 126
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r0 = 0[$r0]
 ; CHECK-NEXT:    ;;
@@ -17,9 +17,9 @@ define i32* @f(i32 %s, i32 %c){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_2: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
+; CHECK-NEXT:    addd $r1 = $r1, 4
 ; CHECK-NEXT:    addx4d $r2 = $r1, $r0
 ; CHECK-NEXT:    addd $r3 = $r1, 0xfffffc18
-; CHECK-NEXT:    addd $r1 = $r1, 4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 0xfffffffffffff060[$r2] = $r3
 ; CHECK-NEXT:    ;;
@@ -48,8 +48,8 @@ define i32* @g(i32 %s, i32 %c){
 ; CHECK-LABEL: g:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = x
-; CHECK-NEXT:    make $r2 = 125
 ; CHECK-NEXT:    make $r1 = 0
+; CHECK-NEXT:    make $r2 = 125
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r0 = 0[$r0]
 ; CHECK-NEXT:    ;;
@@ -57,9 +57,9 @@ define i32* @g(i32 %s, i32 %c){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB1_2: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
+; CHECK-NEXT:    addd $r1 = $r1, 4
 ; CHECK-NEXT:    addx4d $r2 = $r1, $r0
 ; CHECK-NEXT:    addd $r3 = $r1, 0xfffffc18
-; CHECK-NEXT:    addd $r1 = $r1, 4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 0xfffffffffffff060[$r2] = $r3
 ; CHECK-NEXT:    ;;

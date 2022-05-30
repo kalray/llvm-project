@@ -19,8 +19,8 @@ define i64 @foo(double*, double*, double*, { i32, [3 x i64], [3 x i64], [3 x i64
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 24[$r12] = $r18r19
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r20 = 56[$r3]
 ; CHECK-NEXT:    copyd $r18 = $r4
+; CHECK-NEXT:    ld $r20 = 56[$r3]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r21 = 32[$r3]
 ; CHECK-NEXT:    call get_x
@@ -32,8 +32,8 @@ define i64 @foo(double*, double*, double*, { i32, [3 x i64], [3 x i64], [3 x i64
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    maddd $r21 = $r20, $r18
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r21, $r19
 ; CHECK-NEXT:    lq $r18r19 = 24[$r12]
+; CHECK-NEXT:    addd $r0 = $r21, $r19
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lq $r20r21 = 40[$r12]
 ; CHECK-NEXT:    ;;

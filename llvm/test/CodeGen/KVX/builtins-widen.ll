@@ -18,8 +18,8 @@ declare float @llvm.kvx.fwidenlhw(<4 x half>, i32) #1
 define <4 x float> @fwidenhwq(<4 x half> %0) {
 ; CHECK-LABEL: fwidenhwq:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fwidenlhwp.s $r2 = $r0
 ; CHECK-NEXT:    fwidenmhwp.s $r1 = $r0
+; CHECK-NEXT:    fwidenlhwp.s $r2 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
@@ -40,10 +40,10 @@ define <8 x float> @fwidenhwo(<8 x half> %0) {
 ; CHECK-NEXT:    fwidenlhwp.s $r4 = $r0
 ; CHECK-NEXT:    fwidenmhwp.s $r5 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlhwp.s $r2 = $r1
-; CHECK-NEXT:    fwidenmhwp.s $r3 = $r1
 ; CHECK-NEXT:    copyd $r0 = $r4
 ; CHECK-NEXT:    copyd $r1 = $r5
+; CHECK-NEXT:    fwidenlhwp.s $r2 = $r1
+; CHECK-NEXT:    fwidenmhwp.s $r3 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = shufflevector <8 x half> %0, <8 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
@@ -76,8 +76,8 @@ declare double @llvm.kvx.fwidenlwd(<2 x float>, i32) #1
 define <2 x double> @fwidenwdp(<2 x float> %0) {
 ; CHECK-LABEL: fwidenwdp:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fwidenlwd.s $r2 = $r0
 ; CHECK-NEXT:    fwidenmwd.s $r1 = $r0
+; CHECK-NEXT:    fwidenlwd.s $r2 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
@@ -97,10 +97,10 @@ define <4 x double> @fwidenwdq(<4 x float> %0) {
 ; CHECK-NEXT:    fwidenlwd.s $r4 = $r0
 ; CHECK-NEXT:    fwidenmwd.s $r5 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fwidenlwd.s $r2 = $r1
-; CHECK-NEXT:    fwidenmwd.s $r3 = $r1
 ; CHECK-NEXT:    copyd $r0 = $r4
 ; CHECK-NEXT:    copyd $r1 = $r5
+; CHECK-NEXT:    fwidenlwd.s $r2 = $r1
+; CHECK-NEXT:    fwidenmwd.s $r3 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = shufflevector <4 x float> %0, <4 x float> undef, <2 x i32> <i32 0, i32 1>

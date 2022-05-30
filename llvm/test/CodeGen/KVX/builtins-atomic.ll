@@ -5,8 +5,8 @@ target triple = "kvx-kalray-cos"
 define i32 @acswapw(i32* %p, i32 %a, i32 %b){
 ; CHECK-LABEL: acswapw:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    copyd $r3 = $r2
 ; CHECK-NEXT:    copyd $r2 = $r1
+; CHECK-NEXT:    copyd $r3 = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    acswapw 0[$r0] = $r2r3
 ; CHECK-NEXT:    ;;
@@ -24,8 +24,8 @@ declare i32 @llvm.kvx.acswapw(i8*, i32, i32) #1
 define i64 @acswapd(i32* %p, i64 %a, i64 %b){
 ; CHECK-LABEL: acswapd:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    copyd $r3 = $r2
 ; CHECK-NEXT:    copyd $r2 = $r1
+; CHECK-NEXT:    copyd $r3 = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    acswapd 0[$r0] = $r2r3
 ; CHECK-NEXT:    ;;
