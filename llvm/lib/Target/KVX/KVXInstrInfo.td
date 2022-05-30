@@ -2725,6 +2725,7 @@ def CMOVEBO : SIMDCOND_REGISTERZ_REGISTERW_REGISTERY_SIMPLE
    "cmovebo$a1 $a2 ? $a3 = $a4",
    [/* no straightforward pattern */]>;
 
+let Itinerary = ALU_TINY in
 defm FCOMPNW : MC_1F<"fcompnw">, Requires<[IsV2]>;
 
 defm FCOMPW : MC_1F<"fcompw">;
@@ -2733,6 +2734,12 @@ def FCOMPD : FLOATCOMP_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY64
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, FloatcompMod:$a1),
    "fcompd$a1 $a2 = $a3, $a4",
    [/* no straightforward pattern */]>;
+
+def FCOMPND : KVX_INSTRUCTION
+  <(outs SingleReg:$r), (ins SingleReg:$lhs, SingleReg:$rhs, FloatcompMod:$m),
+   "fcompnd$m $r = $lhs, $rhs",
+   [/* no straightforward pattern */],
+   ALU_TINY>, Requires<[IsV2]>;
 
 def FCOMPNWP : FLOATCOMP_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32X2
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, FloatcompMod:$a1),

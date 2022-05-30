@@ -157,7 +157,26 @@ multiclass FCOMP<SDNode SetCC, Floatcomp Cmp, bit SwapOperands> {
     !if(SwapOperands,
      (NEGW (FCOMPD SingleReg:$ry, SingleReg:$rz, Cmp)),
      (NEGW (FCOMPD SingleReg:$rz, SingleReg:$ry, Cmp))
-    )>;
+    )>, Requires<[IsV1]>;
+
+  // FCOMPND
+  def : Pat<(select (i32 (SetCC f64:$rz, f64:$ry)), (i32 -1), (i32 0)),
+    !if(SwapOperands,
+     (FCOMPND SingleReg:$ry, SingleReg:$rz, Cmp),
+     (FCOMPND SingleReg:$rz, SingleReg:$ry, Cmp)
+    )>, Requires<[IsV2]>;
+
+  def : Pat<(i64 (select (i32 (SetCC f64:$rz, f64:$ry)), (i64 -1), (i64 0))),
+    !if(SwapOperands,
+     (FCOMPND SingleReg:$ry, SingleReg:$rz, Cmp),
+     (FCOMPND SingleReg:$rz, SingleReg:$ry, Cmp)
+    )>, Requires<[IsV2]>;
+
+  def : Pat<(i64 (sext (select (i32 (SetCC f64:$rz, f64:$ry)), (i32 -1), (i32 0)))),
+    !if(SwapOperands,
+     (FCOMPND SingleReg:$ry, SingleReg:$rz, Cmp),
+     (FCOMPND SingleReg:$rz, SingleReg:$ry, Cmp)
+    )>, Requires<[IsV2]>;
 }
 
 // Ordered comparisons
