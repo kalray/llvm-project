@@ -28,8 +28,8 @@ define i32 @f_setjmp() {
 
 ; PIC-NEXT:    pcrel $r0 = @gotaddr()
 ; PIC-NEXT:    ;;
-; PIC-NEXT:    pcrel $r1 = @pcrel( .LBB0_3 )
 ; PIC-NEXT:    ld $r0 = @got( buf )[$r0]
+; PIC-NEXT:    pcrel $r1 = @pcrel( .LBB0_3 )
 
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 8[$r0] = $r1

@@ -5,8 +5,8 @@ target triple = "kvx-kalray-cos"
 define void @f() {
 ; CHECK-LABEL: f:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    make $r0 = 0x4d2
+; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 28[$r12] = $r0
 ; CHECK-NEXT:    ;;

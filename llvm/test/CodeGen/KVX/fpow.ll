@@ -59,13 +59,13 @@ define <2 x float> @powv2f32(<2 x float> %x, <2 x float> %y) {
 ; CHECK-NEXT:    srad $r1 = $r18, 32
 ; CHECK-NEXT:    call powf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    call powf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r20, 63, 32
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
+; CHECK-NEXT:    insf $r0 = $r20, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r20 = 16[$r12]
 ; CHECK-NEXT:    ;;
@@ -91,20 +91,20 @@ define <2 x double> @powv2f64(<2 x double> %x, <2 x double> %y) {
 ; CHECK-NEXT:    sd 16[$r12] = $r21
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 0[$r12] = $r18r19
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    copyd $r18 = $r2
 ; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    call pow
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r21 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    copyd $r21 = $r0
 ; CHECK-NEXT:    call pow
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r21
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
+; CHECK-NEXT:    copyd $r1 = $r21
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r21 = 16[$r12]
 ; CHECK-NEXT:    ;;

@@ -5,8 +5,8 @@
 define dso_local i32 @testalloca(i32 %n) local_unnamed_addr  {
 ; CHECK-LABEL: testalloca:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    get $r17 = $sr
 ; CHECK-NEXT:    addd $r16 = $r12, -32
+; CHECK-NEXT:    get $r17 = $sr
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfd $r16 = $r16, $r17
 ; CHECK-NEXT:    ;;
@@ -19,11 +19,11 @@ define dso_local i32 @testalloca(i32 %n) local_unnamed_addr  {
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 16[$r12] = $r14
-; CHECK-NEXT:    addd $r14 = $r12, 16
 ; CHECK-NEXT:    sxwd $r1 = $r0
+; CHECK-NEXT:    addd $r14 = $r12, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    get $r2 = $sr
 ; CHECK-NEXT:    addx4d $r1 = $r1, 31
+; CHECK-NEXT:    get $r2 = $sr
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    andd $r1 = $r1, -32
 ; CHECK-NEXT:    ;;
@@ -33,8 +33,8 @@ define dso_local i32 @testalloca(i32 %n) local_unnamed_addr  {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.dgtz $r2 ? .LBB0_5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r12 = $r1
 ; CHECK-NEXT:    cb.wlez $r0 ? .LBB0_4
+; CHECK-NEXT:    copyd $r12 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.2: # %for.body.preheader
 ; CHECK-NEXT:    zxwd $r2 = $r0
@@ -109,8 +109,8 @@ declare void @llvm.lifetime.end.p0i8(i64 immarg, i8* nocapture)
 define dso_local i32 @testrealign() local_unnamed_addr  {
 ; CHECK-LABEL: testrealign:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    get $r17 = $sr
 ; CHECK-NEXT:    addd $r16 = $r12, -256
+; CHECK-NEXT:    get $r17 = $sr
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfd $r16 = $r16, $r17
 ; CHECK-NEXT:    ;;
@@ -126,9 +126,9 @@ define dso_local i32 @testrealign() local_unnamed_addr  {
 ; CHECK-NEXT:    addd $r14 = $r12, 240
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 232[$r12] = $r31
-; CHECK-NEXT:    andd $r31 = $r12, -128
 ; CHECK-NEXT:    make $r0 = 7
 ; CHECK-NEXT:    make $r1 = 0x4d2
+; CHECK-NEXT:    andd $r31 = $r12, -128
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 228[$r31] = $r0
 ; CHECK-NEXT:    addd $r0 = $r31, 228

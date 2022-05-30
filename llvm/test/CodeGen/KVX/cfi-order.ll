@@ -60,22 +60,22 @@ define void @testuvec(<4 x i32>* nocapture readonly %A, <4 x i32>* nocapture rea
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp3:
 ; CHECK-NEXT:    #DEBUG_VALUE: testuvec:B <- [DW_OP_LLVM_entry_value 1] $r1
+; CHECK-NEXT:    srld $r0 = $r22, 32
 ; CHECK-NEXT:    srld $r1 = $r24, 32
 ; CHECK-NEXT:    copyd $r20 = $r0
-; CHECK-NEXT:    srld $r0 = $r22, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    zxwd $r1 = $r1
 ; CHECK-NEXT:    call __udivdi3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r20 = $r0, 63, 32
 ; CHECK-NEXT:    zxwd $r0 = $r23
 ; CHECK-NEXT:    zxwd $r1 = $r25
+; CHECK-NEXT:    insf $r20 = $r0, 63, 32
 ; CHECK-NEXT:    call __udivdi3
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srld $r0 = $r23, 32
 ; CHECK-NEXT:    srld $r1 = $r25, 32
 ; CHECK-NEXT:    copyd $r21 = $r0
-; CHECK-NEXT:    srld $r0 = $r23, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    zxwd $r1 = $r1
@@ -171,23 +171,23 @@ define void @testsvec(<4 x i32>* nocapture readonly %A, <4 x i32>* nocapture rea
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp8:
 ; CHECK-NEXT:    #DEBUG_VALUE: testsvec:B <- [DW_OP_LLVM_entry_value 1] $r1
+; CHECK-NEXT:    srld $r0 = $r22, 32
 ; CHECK-NEXT:    srld $r1 = $r24, 32
 ; CHECK-NEXT:    copyd $r20 = $r0
-; CHECK-NEXT:    srld $r0 = $r22, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxwd $r0 = $r0
 ; CHECK-NEXT:    sxwd $r1 = $r1
 ; CHECK-NEXT:    call __divdi3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r20 = $r0, 63, 32
 ; CHECK-NEXT:    sxwd $r0 = $r23
+; CHECK-NEXT:    insf $r20 = $r0, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxwd $r1 = $r25
 ; CHECK-NEXT:    call __divdi3
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srld $r0 = $r23, 32
 ; CHECK-NEXT:    srld $r1 = $r25, 32
 ; CHECK-NEXT:    copyd $r21 = $r0
-; CHECK-NEXT:    srld $r0 = $r23, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxwd $r0 = $r0
 ; CHECK-NEXT:    sxwd $r1 = $r1
@@ -254,8 +254,8 @@ define i32 @f() local_unnamed_addr #1 !dbg !47 {
 ; CHECK-NEXT:    #DEBUG_VALUE: f:S1 <- undef
 ; CHECK-NEXT:    #DEBUG_VALUE: f:S2 <- undef
 ; CHECK-NEXT:    sd 16[$r12] = $r14
-; CHECK-NEXT:    addd $r14 = $r12, 16
 ; CHECK-NEXT:    make $r0 = 8
+; CHECK-NEXT:    addd $r14 = $r12, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 14, -16
 ; CHECK-NEXT:    .cfi_def_cfa 14, 16

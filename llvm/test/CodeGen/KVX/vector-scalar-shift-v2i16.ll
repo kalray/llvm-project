@@ -16,8 +16,8 @@ entry:
 define <2 x i16> @not_sri_v2i16(<2 x i16> %a){
 ; CHECK-LABEL: not_sri_v2i16:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    srahqs $r1 = $r0, 2
 ; CHECK-NEXT:    srahqs $r0 = $r0, 3
+; CHECK-NEXT:    srahqs $r1 = $r0, 2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 0
 ; CHECK-NEXT:    ret
@@ -41,8 +41,8 @@ entry:
 define <2 x i16> @not_uri_v2i16(<2 x i16> %a){
 ; CHECK-LABEL: not_uri_v2i16:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    srlhqs $r1 = $r0, 2
 ; CHECK-NEXT:    srlhqs $r0 = $r0, 3
+; CHECK-NEXT:    srlhqs $r1 = $r0, 2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 0
 ; CHECK-NEXT:    ret
@@ -66,8 +66,8 @@ entry:
 define <2 x i16> @not_sli_v2i16(<2 x i16> %a){
 ; CHECK-LABEL: not_sli_v2i16:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sllhqs $r1 = $r0, 1
 ; CHECK-NEXT:    sllhqs $r0 = $r0, 3
+; CHECK-NEXT:    sllhqs $r1 = $r0, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 0
 ; CHECK-NEXT:    ret
@@ -94,8 +94,8 @@ entry:
 define <2 x i16> @not_srr_v2i16(<2 x i16> %a, <2 x i16> %b){
 ; CHECK-LABEL: not_srr_v2i16:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    extfz $r2 = $r1, 19, 16
 ; CHECK-NEXT:    srahqs $r1 = $r0, $r1
+; CHECK-NEXT:    extfz $r2 = $r1, 19, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srahqs $r0 = $r0, $r2
 ; CHECK-NEXT:    ;;
@@ -123,8 +123,8 @@ entry:
 define <2 x i16> @not_urr_v2i16(<2 x i16> %a, <2 x i16> %b){
 ; CHECK-LABEL: not_urr_v2i16:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    extfz $r2 = $r1, 19, 16
 ; CHECK-NEXT:    srlhqs $r1 = $r0, $r1
+; CHECK-NEXT:    extfz $r2 = $r1, 19, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srlhqs $r0 = $r0, $r2
 ; CHECK-NEXT:    ;;
@@ -152,8 +152,8 @@ entry:
 define <2 x i16> @not_slr_v2i16(<2 x i16> %a, <2 x i16> %b){
 ; CHECK-LABEL: not_slr_v2i16:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    extfz $r2 = $r1, 19, 16
 ; CHECK-NEXT:    sllhqs $r1 = $r0, $r1
+; CHECK-NEXT:    extfz $r2 = $r1, 19, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sllhqs $r0 = $r0, $r2
 ; CHECK-NEXT:    ;;

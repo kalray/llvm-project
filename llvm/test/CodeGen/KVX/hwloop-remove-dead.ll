@@ -22,8 +22,8 @@ define void @matrix_add_const(i32 %N, i16* nocapture %A, i16 %val){
 ; CHECK-NEXT:  .LBB0_3: # %for.body3
 ; CHECK-NEXT:    # Parent Loop BB0_2 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
-; CHECK-NEXT:    zxwd $r7 = $r6
 ; CHECK-NEXT:    addw $r6 = $r6, 1
+; CHECK-NEXT:    zxwd $r7 = $r6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lhz.xs $r8 = $r7[$r1]
 ; CHECK-NEXT:    ;;
@@ -34,8 +34,8 @@ define void @matrix_add_const(i32 %N, i16* nocapture %A, i16 %val){
 ; CHECK-NEXT:  .__LOOPDO_0_END_:
 ; CHECK-NEXT:  # %bb.4: # %for.inc7
 ; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    addw $r5 = $r5, 1
 ; CHECK-NEXT:    addw $r4 = $r4, $r0
+; CHECK-NEXT:    addw $r5 = $r5, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compw.ne $r6 = $r5, $r0
 ; CHECK-NEXT:    ;;

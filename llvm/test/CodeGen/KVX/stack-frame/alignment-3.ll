@@ -38,9 +38,9 @@ define i32 @f(i32 %sz) {
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    andd $r18 = $r0, -128
 ; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:    copyd $r12 = $r18
-; FP-NONE-NEXT:    addd $r1 = $r31, 128
 ; FP-NONE-NEXT:    copyd $r0 = $r18
+; FP-NONE-NEXT:    addd $r1 = $r31, 128
+; FP-NONE-NEXT:    copyd $r12 = $r18
 ; FP-NONE-NEXT:    call g
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    lwz $r0 = 0[$r18]
@@ -84,9 +84,9 @@ define i32 @f(i32 %sz) {
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    andd $r18 = $r0, -128
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    copyd $r12 = $r18
-; FP-ALL-NEXT:    addd $r1 = $r31, 128
 ; FP-ALL-NEXT:    copyd $r0 = $r18
+; FP-ALL-NEXT:    addd $r1 = $r31, 128
+; FP-ALL-NEXT:    copyd $r12 = $r18
 ; FP-ALL-NEXT:    call g
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    lwz $r0 = 0[$r18]

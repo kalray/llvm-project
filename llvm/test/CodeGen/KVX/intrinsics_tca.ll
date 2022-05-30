@@ -11,8 +11,8 @@ define void @test_movetohi(i64 %a, i64 %b, <256 x i1>* %p0, <256 x i1>* %p1) {
 ; CHECK-NEXT:    lv $a1 = 0[$r3]
 ; CHECK-NEXT:    movetq $a0_hi = $r1, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    movetq $a1_hi = $r0, $r1
 ; CHECK-NEXT:    sv 0[$r2] = $a0
+; CHECK-NEXT:    movetq $a1_hi = $r0, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 0[$r3] = $a1
 ; CHECK-NEXT:    ret
@@ -36,8 +36,8 @@ define void @test_movetolo(i64 %a, i64 %b, <256 x i1>* %p0, <256 x i1>* %p1) {
 ; CHECK-NEXT:    lv $a1 = 0[$r3]
 ; CHECK-NEXT:    movetq $a0_lo = $r1, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    movetq $a1_lo = $r0, $r1
 ; CHECK-NEXT:    sv 0[$r2] = $a0
+; CHECK-NEXT:    movetq $a1_lo = $r0, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 0[$r3] = $a1
 ; CHECK-NEXT:    ret
@@ -74,9 +74,9 @@ define void @test_moveto(i64 %a, i64 %b, i64 %c, i64 %d, <256 x i1>* %p0, <256 x
 ; CHECK-NEXT:    movetq $a0_lo = $r2, $r3
 ; CHECK-NEXT:    movetq $a0_hi = $r0, $r1
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 0[$r4] = $a0
 ; CHECK-NEXT:    movetq $a1_lo = $r1, $r0
 ; CHECK-NEXT:    movetq $a1_hi = $r3, $r2
-; CHECK-NEXT:    sv 0[$r4] = $a0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 0[$r5] = $a1
 ; CHECK-NEXT:    ret
@@ -803,14 +803,14 @@ define <4 x i64> @test_tca_builtins(i64 %0, i64 %1, i64 %2, i64 %3, <256 x i1>* 
 ; CHECK-LABEL: test_tca_builtins:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lv $a0 = 0[$r4]
-; CHECK-NEXT:    make $r33 = 1
 ; CHECK-NEXT:    make $r32 = 0
+; CHECK-NEXT:    make $r33 = 1
 ; CHECK-NEXT:    make $r34 = 2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r35 = 3
+; CHECK-NEXT:    movetq $a0_hi = $r32, $r33
 ; CHECK-NEXT:    make $r1 = 4
 ; CHECK-NEXT:    addd $r2 = $r4, 32
-; CHECK-NEXT:    movetq $a0_hi = $r32, $r33
+; CHECK-NEXT:    make $r35 = 3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 0[$r4] = $a0
 ; CHECK-NEXT:    ;;
@@ -818,10 +818,10 @@ define <4 x i64> @test_tca_builtins(i64 %0, i64 %1, i64 %2, i64 %3, <256 x i1>* 
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    movetq $a0_lo = $r35, $r34
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    movetq $a1_lo = $r35, $r1
-; CHECK-NEXT:    addd $r1 = $r4, 96
 ; CHECK-NEXT:    sv 0[$r4] = $a0
+; CHECK-NEXT:    movetq $a1_lo = $r35, $r1
 ; CHECK-NEXT:    movetq $a1_hi = $r33, $r34
+; CHECK-NEXT:    addd $r1 = $r4, 96
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 32[$r4] = $a1
 ; CHECK-NEXT:    ;;
@@ -839,11 +839,11 @@ define <4 x i64> @test_tca_builtins(i64 %0, i64 %1, i64 %2, i64 %3, <256 x i1>* 
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    alignv $a5 = $a4, $a5, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    aligno $r8r9r10r11 = $a4, $a5, 1
 ; CHECK-NEXT:    convdhv0.rn.sat $a4_lo = $a0a1a2a3
+; CHECK-NEXT:    aligno $r8r9r10r11 = $a4, $a5, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    convdhv1.ru.satu $a4_hi = $a0a1a2a3
 ; CHECK-NEXT:    lv $a7 = 32[$r5]
+; CHECK-NEXT:    convdhv1.ru.satu $a4_hi = $a0a1a2a3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a6 = 0[$r5]
 ; CHECK-NEXT:    convwbv0.ru.sat $a5_x = $a0a1a2a3
@@ -852,8 +852,8 @@ define <4 x i64> @test_tca_builtins(i64 %0, i64 %1, i64 %2, i64 %3, <256 x i1>* 
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    convwbv2.ru.sat $a5_z = $a0a1a2a3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    convwbv3.ru.sat $a5_t = $a0a1a2a3
 ; CHECK-NEXT:    copyv $a8 = $a4
+; CHECK-NEXT:    convwbv3.ru.sat $a5_t = $a0a1a2a3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmma242hw0 $a8_lo = $a6a7, $a8, $a5
 ; CHECK-NEXT:    ;;
@@ -933,9 +933,9 @@ define <4 x i64> @test_tca_builtins(i64 %0, i64 %1, i64 %2, i64 %3, <256 x i1>* 
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fscalewv.rn.relu $a4 = $a4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    movefo $r8r9r10r11 = $a4
 ; CHECK-NEXT:    movetq $a4_lo = $r8, $r9
 ; CHECK-NEXT:    movetq $a4_hi = $r10, $r11
+; CHECK-NEXT:    movefo $r8r9r10r11 = $a4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fscalewv.relu $a4 = $a4
 ; CHECK-NEXT:    ;;
@@ -944,8 +944,8 @@ define <4 x i64> @test_tca_builtins(i64 %0, i64 %1, i64 %2, i64 %3, <256 x i1>* 
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv.s $a4 = 0[$r4]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv.c3.s $a0a1a2a3 = 0[$r1]
 ; CHECK-NEXT:    addd $r1 = $r4, 160
+; CHECK-NEXT:    lv.c3.s $a0a1a2a3 = 0[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv.c2.odd $r0 ? $a0a1a2a3 = [$r1]
 ; CHECK-NEXT:    ;;
@@ -1184,8 +1184,8 @@ define void @fmma444hw(<256 x i1>* nocapture %v, <512 x i1>* nocapture %w) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyv $a1 = $a0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmma242hw3 $a1_hi = $a2a3, $a5, $a4
 ; CHECK-NEXT:    sv 0[$r0] = $a0
+; CHECK-NEXT:    fmma242hw3 $a1_hi = $a2a3, $a5, $a4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 64[$r0] = $a1
 ; CHECK-NEXT:    ;;
@@ -1235,8 +1235,8 @@ define void @test(<256 x i1>* nocapture %v) {
 ; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    make $r2 = 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    movetq $a0_hi = $r2, $r1
 ; CHECK-NEXT:    movetq $a0_lo = $r2, $r1
+; CHECK-NEXT:    movetq $a0_hi = $r2, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 0[$r0] = $a0
 ; CHECK-NEXT:    ret
@@ -1486,8 +1486,8 @@ declare <1024 x i1> @llvm.kvx.xbuildfvm(<256 x i1>, <256 x i1>, <256 x i1>, <256
 define void @buildfwm(<512 x i1>* nocapture readonly %a, <1024 x i1>* nocapture %M) {
 ; CHECK-LABEL: buildfwm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addd $r2 = $r0, 128
 ; CHECK-NEXT:    addd $r0 = $r0, 64
+; CHECK-NEXT:    addd $r2 = $r0, 128
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a1 = 32[$r2]
 ; CHECK-NEXT:    ;;

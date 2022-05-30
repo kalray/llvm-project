@@ -50,8 +50,8 @@ define i64 @f_2_pairpack(){
 ; CHECK-NEXT:    lq $r18r19 = 0[$r0]
 ; CHECK-NEXT:    call foo
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r19, $r18
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
+; CHECK-NEXT:    addd $r0 = $r19, $r18
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
@@ -86,8 +86,8 @@ define i64 @f_3_pairpack(){
 ; CHECK-NEXT:    ld $r20 = 16[$r0]
 ; CHECK-NEXT:    call foo
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r19, $r18
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
+; CHECK-NEXT:    addd $r0 = $r19, $r18
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r0 = $r0, $r20
 ; CHECK-NEXT:    ld $r20 = 16[$r12]
@@ -127,8 +127,8 @@ define i64 @f_4_quadpack(){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r0 = $r0, $r22
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, $r23
 ; CHECK-NEXT:    lo $r20r21r22r23 = 24[$r12]
+; CHECK-NEXT:    addd $r0 = $r0, $r23
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 56[$r12]
 ; CHECK-NEXT:    ;;
@@ -225,8 +225,8 @@ define i64 @f_6_1quad1pairpack(){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r0 = $r0, $r18
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, $r19
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
+; CHECK-NEXT:    addd $r0 = $r0, $r19
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r20r21r22r23 = 24[$r12]
 ; CHECK-NEXT:    ;;
@@ -303,8 +303,8 @@ define i64 @f_14_3quad1pairpack(){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r0 = $r0, $r18
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, $r19
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
+; CHECK-NEXT:    addd $r0 = $r0, $r19
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r20r21r22r23 = 24[$r12]
 ; CHECK-NEXT:    ;;
@@ -406,8 +406,8 @@ define i64 @f_15_3quad1pairpack(){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r0 = $r0, $r18
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, $r19
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
+; CHECK-NEXT:    addd $r0 = $r0, $r19
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r20r21r22r23 = 24[$r12]
 ; CHECK-NEXT:    ;;

@@ -25,9 +25,9 @@ define i32 @debug_sanity(i32* nocapture %p, i32 %a, i32 %b, i32 %c, i32 %d) !dbg
 ; CHECK-NEXT:    .cfi_offset 20, -16
 ; CHECK-NEXT:  .Ltmp0:
 ; CHECK-NEXT:    sq 0[$r12] = $r18r19
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp1:
 ; CHECK-NEXT:    .cfi_offset 18, -24
@@ -46,8 +46,8 @@ define i32 @debug_sanity(i32* nocapture %p, i32 %a, i32 %b, i32 %c, i32 %d) !dbg
 ; CHECK-NEXT:    sxwd $r1 = $r18
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 7 8 is_stmt 0
-; CHECK-NEXT:    sw.xs $r1[$r19] = $r0
 ; CHECK-NEXT:    copyd $r0 = $r20
+; CHECK-NEXT:    sw.xs $r1[$r19] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 8 3 is_stmt 1
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]

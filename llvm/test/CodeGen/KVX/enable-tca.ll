@@ -25,8 +25,8 @@ define void @foo(i8* nocapture %0, float* nocapture %1) {
 ; NORMAL-NEXT:    wfxm $pcr, $r3
 ; NORMAL-NEXT:    ;;
 ; NORMAL-NEXT:    #NO_APP
-; NORMAL-NEXT:    mt44d $a0a1a2a3 = $a0a1a2a3
 ; NORMAL-NEXT:    make $r1 = 0x100000
+; NORMAL-NEXT:    mt44d $a0a1a2a3 = $a0a1a2a3
 ; NORMAL-NEXT:    ;;
 ; NORMAL-NEXT:    #APP
 ; NORMAL-NEXT:    wfxm $pcr, $r1
@@ -62,8 +62,8 @@ define void @foo(i8* nocapture %0, float* nocapture %1) {
 ; VLIW-NEXT:    wfxm $pcr, $r3
 ; VLIW-NEXT:    ;;
 ; VLIW-NEXT:    #NO_APP
-; VLIW-NEXT:    mt44d $a0a1a2a3 = $a0a1a2a3
 ; VLIW-NEXT:    make $r1 = 0x100000
+; VLIW-NEXT:    mt44d $a0a1a2a3 = $a0a1a2a3
 ; VLIW-NEXT:    ;;
 ; VLIW-NEXT:    #APP
 ; VLIW-NEXT:    wfxm $pcr, $r1

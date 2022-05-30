@@ -23,8 +23,8 @@ define i32 @foo(i32 %n, i32 %m) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfd $r19 = $r0, $r12
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r12 = $r19
 ; CHECK-NEXT:    copyd $r0 = $r19
+; CHECK-NEXT:    copyd $r12 = $r19
 ; CHECK-NEXT:    call bar
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxwd $r0 = $r18

@@ -125,10 +125,10 @@ define float @ffdmdsw_3(float %0, <2 x float> %1, <2 x float> %2) {
 define <2 x float> @ffdmdawp(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 ; KV1-LABEL: ffdmdawp:
 ; KV1:       # %bb.0:
-; KV1-NEXT:    copyd $r5 = $r4
-; KV1-NEXT:    copyd $r7 = $r2
 ; KV1-NEXT:    copyd $r4 = $r3
+; KV1-NEXT:    copyd $r5 = $r4
 ; KV1-NEXT:    copyd $r6 = $r1
+; KV1-NEXT:    copyd $r7 = $r2
 ; KV1-NEXT:    ;;
 ; KV1-NEXT:    fmulwq $r2r3 = $r4r5, $r6r7
 ; KV1-NEXT:    ;;
@@ -140,10 +140,10 @@ define <2 x float> @ffdmdawp(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 ;
 ; KV2-LABEL: ffdmdawp:
 ; KV2:       # %bb.0:
-; KV2-NEXT:    copyd $r5 = $r4
-; KV2-NEXT:    copyd $r7 = $r2
 ; KV2-NEXT:    copyd $r4 = $r3
+; KV2-NEXT:    copyd $r5 = $r4
 ; KV2-NEXT:    copyd $r6 = $r1
+; KV2-NEXT:    copyd $r7 = $r2
 ; KV2-NEXT:    ;;
 ; KV2-NEXT:    ffdmdawp $r0 = $r4r5, $r6r7
 ; KV2-NEXT:    ret
@@ -159,10 +159,10 @@ define <2 x float> @ffdmdawp(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 define <2 x float> @ffdmdawp2(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 ; KV1-LABEL: ffdmdawp2:
 ; KV1:       # %bb.0:
-; KV1-NEXT:    copyd $r5 = $r4
-; KV1-NEXT:    copyd $r7 = $r2
 ; KV1-NEXT:    copyd $r4 = $r3
+; KV1-NEXT:    copyd $r5 = $r4
 ; KV1-NEXT:    copyd $r6 = $r1
+; KV1-NEXT:    copyd $r7 = $r2
 ; KV1-NEXT:    ;;
 ; KV1-NEXT:    fmulwq $r2r3 = $r4r5, $r6r7
 ; KV1-NEXT:    ;;
@@ -174,10 +174,10 @@ define <2 x float> @ffdmdawp2(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 ;
 ; KV2-LABEL: ffdmdawp2:
 ; KV2:       # %bb.0:
-; KV2-NEXT:    copyd $r5 = $r4
-; KV2-NEXT:    copyd $r7 = $r2
 ; KV2-NEXT:    copyd $r4 = $r3
+; KV2-NEXT:    copyd $r5 = $r4
 ; KV2-NEXT:    copyd $r6 = $r1
+; KV2-NEXT:    copyd $r7 = $r2
 ; KV2-NEXT:    ;;
 ; KV2-NEXT:    ffdmdawp $r0 = $r4r5, $r6r7
 ; KV2-NEXT:    ret
@@ -193,10 +193,10 @@ define <2 x float> @ffdmdawp2(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 define <2 x float> @ffdmdswp(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 ; KV1-LABEL: ffdmdswp:
 ; KV1:       # %bb.0:
-; KV1-NEXT:    copyd $r5 = $r4
-; KV1-NEXT:    copyd $r7 = $r2
 ; KV1-NEXT:    copyd $r4 = $r3
+; KV1-NEXT:    copyd $r5 = $r4
 ; KV1-NEXT:    copyd $r6 = $r1
+; KV1-NEXT:    copyd $r7 = $r2
 ; KV1-NEXT:    ;;
 ; KV1-NEXT:    fmulwq $r2r3 = $r4r5, $r6r7
 ; KV1-NEXT:    ;;
@@ -208,10 +208,10 @@ define <2 x float> @ffdmdswp(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 ;
 ; KV2-LABEL: ffdmdswp:
 ; KV2:       # %bb.0:
-; KV2-NEXT:    copyd $r5 = $r4
-; KV2-NEXT:    copyd $r7 = $r2
 ; KV2-NEXT:    copyd $r4 = $r3
+; KV2-NEXT:    copyd $r5 = $r4
 ; KV2-NEXT:    copyd $r6 = $r1
+; KV2-NEXT:    copyd $r7 = $r2
 ; KV2-NEXT:    ;;
 ; KV2-NEXT:    ffdmdswp $r0 = $r4r5, $r6r7
 ; KV2-NEXT:    ret
@@ -227,10 +227,10 @@ define <2 x float> @ffdmdswp(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 define <2 x float> @ffdmdswp2(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 ; KV1-LABEL: ffdmdswp2:
 ; KV1:       # %bb.0:
-; KV1-NEXT:    copyd $r5 = $r4
-; KV1-NEXT:    copyd $r7 = $r2
 ; KV1-NEXT:    copyd $r4 = $r3
+; KV1-NEXT:    copyd $r5 = $r4
 ; KV1-NEXT:    copyd $r6 = $r1
+; KV1-NEXT:    copyd $r7 = $r2
 ; KV1-NEXT:    ;;
 ; KV1-NEXT:    fmulwq $r2r3 = $r4r5, $r6r7
 ; KV1-NEXT:    ;;
@@ -242,10 +242,10 @@ define <2 x float> @ffdmdswp2(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 ;
 ; KV2-LABEL: ffdmdswp2:
 ; KV2:       # %bb.0:
-; KV2-NEXT:    copyd $r5 = $r4
-; KV2-NEXT:    copyd $r7 = $r2
 ; KV2-NEXT:    copyd $r4 = $r3
+; KV2-NEXT:    copyd $r5 = $r4
 ; KV2-NEXT:    copyd $r6 = $r1
+; KV2-NEXT:    copyd $r7 = $r2
 ; KV2-NEXT:    ;;
 ; KV2-NEXT:    ffdmdswp $r0 = $r4r5, $r6r7
 ; KV2-NEXT:    ret
@@ -261,10 +261,10 @@ define <2 x float> @ffdmdswp2(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 define <2 x float> @ffdmdswp3(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 ; KV1-LABEL: ffdmdswp3:
 ; KV1:       # %bb.0:
-; KV1-NEXT:    copyd $r5 = $r4
-; KV1-NEXT:    copyd $r7 = $r2
 ; KV1-NEXT:    copyd $r4 = $r3
+; KV1-NEXT:    copyd $r5 = $r4
 ; KV1-NEXT:    copyd $r6 = $r1
+; KV1-NEXT:    copyd $r7 = $r2
 ; KV1-NEXT:    ;;
 ; KV1-NEXT:    fmulwq $r2r3 = $r4r5, $r6r7
 ; KV1-NEXT:    ;;
@@ -276,10 +276,10 @@ define <2 x float> @ffdmdswp3(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 ;
 ; KV2-LABEL: ffdmdswp3:
 ; KV2:       # %bb.0:
-; KV2-NEXT:    copyd $r5 = $r4
-; KV2-NEXT:    copyd $r7 = $r2
 ; KV2-NEXT:    copyd $r4 = $r3
+; KV2-NEXT:    copyd $r5 = $r4
 ; KV2-NEXT:    copyd $r6 = $r1
+; KV2-NEXT:    copyd $r7 = $r2
 ; KV2-NEXT:    ;;
 ; KV2-NEXT:    ffdmdswp $r0 = $r4r5, $r6r7
 ; KV2-NEXT:    ret
@@ -449,10 +449,10 @@ define float @ffdmsaw3(float %0, <2 x float> %1, <2 x float> %2) {
 define <2 x float> @ffdmaswp(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 ; KV1-LABEL: ffdmaswp:
 ; KV1:       # %bb.0:
-; KV1-NEXT:    copyd $r5 = $r4
-; KV1-NEXT:    copyd $r7 = $r2
 ; KV1-NEXT:    copyd $r4 = $r3
+; KV1-NEXT:    copyd $r5 = $r4
 ; KV1-NEXT:    copyd $r6 = $r1
+; KV1-NEXT:    copyd $r7 = $r2
 ; KV1-NEXT:    ;;
 ; KV1-NEXT:    fmulwq $r2r3 = $r4r5, $r6r7
 ; KV1-NEXT:    ;;
@@ -464,10 +464,10 @@ define <2 x float> @ffdmaswp(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 ;
 ; KV2-LABEL: ffdmaswp:
 ; KV2:       # %bb.0:
-; KV2-NEXT:    copyd $r5 = $r4
-; KV2-NEXT:    copyd $r7 = $r2
 ; KV2-NEXT:    copyd $r4 = $r3
+; KV2-NEXT:    copyd $r5 = $r4
 ; KV2-NEXT:    copyd $r6 = $r1
+; KV2-NEXT:    copyd $r7 = $r2
 ; KV2-NEXT:    ;;
 ; KV2-NEXT:    ffdmaswp $r0 = $r4r5, $r6r7
 ; KV2-NEXT:    ret
@@ -483,10 +483,10 @@ define <2 x float> @ffdmaswp(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 define <2 x float> @ffdmaswp2(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 ; KV1-LABEL: ffdmaswp2:
 ; KV1:       # %bb.0:
-; KV1-NEXT:    copyd $r5 = $r4
-; KV1-NEXT:    copyd $r7 = $r2
 ; KV1-NEXT:    copyd $r4 = $r3
+; KV1-NEXT:    copyd $r5 = $r4
 ; KV1-NEXT:    copyd $r6 = $r1
+; KV1-NEXT:    copyd $r7 = $r2
 ; KV1-NEXT:    ;;
 ; KV1-NEXT:    fmulwq $r2r3 = $r4r5, $r6r7
 ; KV1-NEXT:    ;;
@@ -498,10 +498,10 @@ define <2 x float> @ffdmaswp2(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 ;
 ; KV2-LABEL: ffdmaswp2:
 ; KV2:       # %bb.0:
-; KV2-NEXT:    copyd $r5 = $r4
-; KV2-NEXT:    copyd $r7 = $r2
 ; KV2-NEXT:    copyd $r4 = $r3
+; KV2-NEXT:    copyd $r5 = $r4
 ; KV2-NEXT:    copyd $r6 = $r1
+; KV2-NEXT:    copyd $r7 = $r2
 ; KV2-NEXT:    ;;
 ; KV2-NEXT:    ffdmaswp $r0 = $r4r5, $r6r7
 ; KV2-NEXT:    ret
@@ -517,10 +517,10 @@ define <2 x float> @ffdmaswp2(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 define <2 x float> @ffdmsawp(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 ; KV1-LABEL: ffdmsawp:
 ; KV1:       # %bb.0:
-; KV1-NEXT:    copyd $r5 = $r4
-; KV1-NEXT:    copyd $r7 = $r2
 ; KV1-NEXT:    copyd $r4 = $r3
+; KV1-NEXT:    copyd $r5 = $r4
 ; KV1-NEXT:    copyd $r6 = $r1
+; KV1-NEXT:    copyd $r7 = $r2
 ; KV1-NEXT:    ;;
 ; KV1-NEXT:    fmulwq $r2r3 = $r4r5, $r6r7
 ; KV1-NEXT:    ;;
@@ -532,10 +532,10 @@ define <2 x float> @ffdmsawp(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 ;
 ; KV2-LABEL: ffdmsawp:
 ; KV2:       # %bb.0:
-; KV2-NEXT:    copyd $r5 = $r4
-; KV2-NEXT:    copyd $r7 = $r2
 ; KV2-NEXT:    copyd $r4 = $r3
+; KV2-NEXT:    copyd $r5 = $r4
 ; KV2-NEXT:    copyd $r6 = $r1
+; KV2-NEXT:    copyd $r7 = $r2
 ; KV2-NEXT:    ;;
 ; KV2-NEXT:    ffdmsawp $r0 = $r4r5, $r6r7
 ; KV2-NEXT:    ret
@@ -551,10 +551,10 @@ define <2 x float> @ffdmsawp(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 define <2 x float> @ffdmsawp2(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 ; KV1-LABEL: ffdmsawp2:
 ; KV1:       # %bb.0:
-; KV1-NEXT:    copyd $r5 = $r4
-; KV1-NEXT:    copyd $r7 = $r2
 ; KV1-NEXT:    copyd $r4 = $r3
+; KV1-NEXT:    copyd $r5 = $r4
 ; KV1-NEXT:    copyd $r6 = $r1
+; KV1-NEXT:    copyd $r7 = $r2
 ; KV1-NEXT:    ;;
 ; KV1-NEXT:    fmulwq $r2r3 = $r4r5, $r6r7
 ; KV1-NEXT:    ;;
@@ -566,10 +566,10 @@ define <2 x float> @ffdmsawp2(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 ;
 ; KV2-LABEL: ffdmsawp2:
 ; KV2:       # %bb.0:
-; KV2-NEXT:    copyd $r5 = $r4
-; KV2-NEXT:    copyd $r7 = $r2
 ; KV2-NEXT:    copyd $r4 = $r3
+; KV2-NEXT:    copyd $r5 = $r4
 ; KV2-NEXT:    copyd $r6 = $r1
+; KV2-NEXT:    copyd $r7 = $r2
 ; KV2-NEXT:    ;;
 ; KV2-NEXT:    ffdmsawp $r0 = $r4r5, $r6r7
 ; KV2-NEXT:    ret

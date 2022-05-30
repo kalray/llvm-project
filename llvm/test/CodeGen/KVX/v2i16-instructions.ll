@@ -210,16 +210,16 @@ define <2 x i16> @test_div(<2 x i16> %a, <2 x i16> %b) #0 {
 ; ALL-NEXT:    sxwd $r1 = $r1
 ; ALL-NEXT:    call __divdi3
 ; ALL-NEXT:    ;;
+; ALL-NEXT:    sxhd $r0 = $r19
 ; ALL-NEXT:    sxhd $r1 = $r18
 ; ALL-NEXT:    copyd $r20 = $r0
-; ALL-NEXT:    sxhd $r0 = $r19
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    sxwd $r0 = $r0
 ; ALL-NEXT:    sxwd $r1 = $r1
 ; ALL-NEXT:    call __divdi3
 ; ALL-NEXT:    ;;
-; ALL-NEXT:    insf $r0 = $r20, 31, 16
 ; ALL-NEXT:    lq $r18r19 = 0[$r12]
+; ALL-NEXT:    insf $r0 = $r20, 31, 16
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    ld $r20 = 16[$r12]
 ; ALL-NEXT:    ;;
@@ -255,16 +255,16 @@ define <2 x i16> @test_rem(<2 x i16> %a, <2 x i16> %b) #0 {
 ; ALL-NEXT:    sxwd $r1 = $r1
 ; ALL-NEXT:    call __moddi3
 ; ALL-NEXT:    ;;
+; ALL-NEXT:    sxhd $r0 = $r19
 ; ALL-NEXT:    sxhd $r1 = $r18
 ; ALL-NEXT:    copyd $r20 = $r0
-; ALL-NEXT:    sxhd $r0 = $r19
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    sxwd $r0 = $r0
 ; ALL-NEXT:    sxwd $r1 = $r1
 ; ALL-NEXT:    call __moddi3
 ; ALL-NEXT:    ;;
-; ALL-NEXT:    insf $r0 = $r20, 31, 16
 ; ALL-NEXT:    lq $r18r19 = 0[$r12]
+; ALL-NEXT:    insf $r0 = $r20, 31, 16
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    ld $r20 = 16[$r12]
 ; ALL-NEXT:    ;;
@@ -322,8 +322,8 @@ define <2 x i16> @test_call_flipped(<2 x i16> %a, <2 x i16> %b) #0 {
 ; ALL-NEXT:    get $r16 = $ra
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    sd 24[$r12] = $r16
-; ALL-NEXT:    copyd $r2 = $r0
 ; ALL-NEXT:    copyd $r0 = $r1
+; ALL-NEXT:    copyd $r2 = $r0
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    copyd $r1 = $r2
 ; ALL-NEXT:    call test_callee
@@ -342,8 +342,8 @@ define <2 x i16> @test_call_flipped(<2 x i16> %a, <2 x i16> %b) #0 {
 define <2 x i16> @test_tailcall_flipped(<2 x i16> %a, <2 x i16> %b) {
 ; ALL-LABEL: test_tailcall_flipped:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    copyd $r2 = $r0
 ; ALL-NEXT:    copyd $r0 = $r1
+; ALL-NEXT:    copyd $r2 = $r0
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    copyd $r1 = $r2
 ; ALL-NEXT:    goto test_callee
@@ -380,8 +380,8 @@ define <2 x i64> @test_select_cc_f32_f32(<2 x i64> %a, <2 x i64> %b, <2 x i16> %
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    compnhq.ltu $r4 = $r4, $r5
 ; ALL-NEXT:    ;;
-; ALL-NEXT:    extfs $r5 = $r4, 31, 16
 ; ALL-NEXT:    sxhd $r4 = $r4
+; ALL-NEXT:    extfs $r5 = $r4, 31, 16
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    cmoved.dnez $r4 ? $r2 = $r0
 ; ALL-NEXT:    cmoved.dnez $r5 ? $r3 = $r1
@@ -458,8 +458,8 @@ define <2 x i1> @test_icmp_ult(<2 x i16> %a, <2 x i16> %b) {
 define <2 x i64> @test_sext_2xi64(<2 x i16> %a) {
 ; ALL-LABEL: test_sext_2xi64:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    extfs $r1 = $r0, 31, 16
 ; ALL-NEXT:    sxhd $r0 = $r0
+; ALL-NEXT:    extfs $r1 = $r0, 31, 16
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
   %r = sext <2 x i16> %a to <2 x i64>
@@ -502,8 +502,8 @@ define <2 x i16> @test_insertelement1(<2 x i16> %a, i16 %x) {
 define <2 x i16> @test_insertelement(<2 x i16> %a, i16 %x, i64 %p) {
 ; ALL-LABEL: test_insertelement:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    copyd $r3 = $r0
 ; ALL-NEXT:    insf $r0 = $r1, 31, 16
+; ALL-NEXT:    copyd $r3 = $r0
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    insf $r3 = $r1, 15, 0
 ; ALL-NEXT:    ;;
@@ -570,8 +570,8 @@ entry:
 define <2 x i16> @shuffle_v2i16_0_3(<2 x i16> %0, <2 x i16> %1) {
 ; ALL-LABEL: shuffle_v2i16_0_3:
 ; ALL:       # %bb.0: # %entry
-; ALL-NEXT:    srlw $r1 = $r1, 16
 ; ALL-NEXT:    zxhd $r0 = $r0
+; ALL-NEXT:    srlw $r1 = $r1, 16
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    insf $r0 = $r1, 31, 16
 ; ALL-NEXT:    ret
@@ -606,8 +606,8 @@ entry:
 define <2 x i16> @shuffle_v2i16_1_2(<2 x i16> %0, <2 x i16> %1) {
 ; ALL-LABEL: shuffle_v2i16_1_2:
 ; ALL:       # %bb.0: # %entry
-; ALL-NEXT:    zxhd $r1 = $r1
 ; ALL-NEXT:    srlw $r0 = $r0, 16
+; ALL-NEXT:    zxhd $r1 = $r1
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    insf $r0 = $r1, 31, 16
 ; ALL-NEXT:    ret
@@ -620,8 +620,8 @@ entry:
 define <2 x i16> @shuffle_v2i16_1_3(<2 x i16> %0, <2 x i16> %1) {
 ; ALL-LABEL: shuffle_v2i16_1_3:
 ; ALL:       # %bb.0: # %entry
-; ALL-NEXT:    srlw $r1 = $r1, 16
 ; ALL-NEXT:    srlw $r0 = $r0, 16
+; ALL-NEXT:    srlw $r1 = $r1, 16
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    insf $r0 = $r1, 31, 16
 ; ALL-NEXT:    ret
@@ -647,8 +647,8 @@ entry:
 define <2 x i16> @shuffle_v2i16_2_1(<2 x i16> %0, <2 x i16> %1) {
 ; ALL-LABEL: shuffle_v2i16_2_1:
 ; ALL:       # %bb.0: # %entry
-; ALL-NEXT:    srlw $r2 = $r0, 16
 ; ALL-NEXT:    zxhd $r0 = $r1
+; ALL-NEXT:    srlw $r2 = $r0, 16
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    insf $r0 = $r2, 31, 16
 ; ALL-NEXT:    ret
@@ -685,8 +685,8 @@ entry:
 define <2 x i16> @shuffle_v2i16_3_0(<2 x i16> %0, <2 x i16> %1) {
 ; ALL-LABEL: shuffle_v2i16_3_0:
 ; ALL:       # %bb.0: # %entry
-; ALL-NEXT:    zxhd $r2 = $r0
 ; ALL-NEXT:    srlw $r0 = $r1, 16
+; ALL-NEXT:    zxhd $r2 = $r0
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    insf $r0 = $r2, 31, 16
 ; ALL-NEXT:    ret
@@ -699,8 +699,8 @@ entry:
 define <2 x i16> @shuffle_v2i16_3_1(<2 x i16> %0, <2 x i16> %1) {
 ; ALL-LABEL: shuffle_v2i16_3_1:
 ; ALL:       # %bb.0: # %entry
-; ALL-NEXT:    srlw $r2 = $r0, 16
 ; ALL-NEXT:    srlw $r0 = $r1, 16
+; ALL-NEXT:    srlw $r2 = $r0, 16
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    insf $r0 = $r2, 31, 16
 ; ALL-NEXT:    ret
@@ -1078,15 +1078,15 @@ define <2 x i16> @test_div_notsrs(<2 x i16> %a, <2 x i16> %b) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    srahqs $r1 = $r0, 15
 ; ALL-NEXT:    ;;
-; ALL-NEXT:    srlhqs $r2 = $r1, 11
 ; ALL-NEXT:    srlhqs $r1 = $r1, 12
+; ALL-NEXT:    srlhqs $r2 = $r1, 11
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    insf $r1 = $r2, 15, 0
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    addhq $r0 = $r0, $r1
 ; ALL-NEXT:    ;;
-; ALL-NEXT:    srahqs $r1 = $r0, 5
 ; ALL-NEXT:    srahqs $r0 = $r0, 4
+; ALL-NEXT:    srahqs $r1 = $r0, 5
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    insf $r0 = $r1, 15, 0
 ; ALL-NEXT:    ret

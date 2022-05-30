@@ -13,12 +13,12 @@ define float @f1rn(float %x) {
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    call sinf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    call cosf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddw $r0 = $r19, $r0
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
+; CHECK-NEXT:    faddw $r0 = $r19, $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
@@ -45,12 +45,12 @@ define float @f1(float %x) {
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    call sinf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    call cosf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddw $r0 = $r19, $r0
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
+; CHECK-NEXT:    faddw $r0 = $r19, $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
@@ -77,12 +77,12 @@ define double @f2rn(double %x) {
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    call sin
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    call cos
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddd $r0 = $r19, $r0
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
+; CHECK-NEXT:    faddd $r0 = $r19, $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
@@ -109,12 +109,12 @@ define double @f2(double %x) {
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    call sin
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    call cos
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddd $r0 = $r19, $r0
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
+; CHECK-NEXT:    faddd $r0 = $r19, $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;

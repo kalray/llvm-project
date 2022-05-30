@@ -40,8 +40,8 @@ entry:
 define i64 @asm_clobber_single_single(i64 %A) {
 ; CHECK-LABEL: asm_clobber_single_single:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    copyd $r1 = $r0
+; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r1
 ; CHECK-NEXT:    ;;
@@ -69,8 +69,8 @@ entry:
 define i8* @asm_clobber_single_pair(i8* %A) {
 ; CHECK-LABEL: asm_clobber_single_pair:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    copyd $r2 = $r0
+; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r2
 ; CHECK-NEXT:    ;;
@@ -203,8 +203,8 @@ define float @asm_clobber_multiple_quad(float %a, <2 x i64> %b, <4 x i64> %c) {
 ; CHECK-NEXT:    copyd $r8 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 32[$r12] = $r8r9
-; CHECK-NEXT:    copyd $r5 = $r4
 ; CHECK-NEXT:    copyd $r4 = $r3
+; CHECK-NEXT:    copyd $r5 = $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    so 0[$r12] = $r4r5r6r7
 ; CHECK-NEXT:    ;;
@@ -212,8 +212,8 @@ define float @asm_clobber_multiple_quad(float %a, <2 x i64> %b, <4 x i64> %c) {
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    lq $r0r1 = 32[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r2 = 0[$r12]
 ; CHECK-NEXT:    addd $r0 = $r0, $r1
+; CHECK-NEXT:    ld $r2 = 0[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r0 = $r0, $r2
 ; CHECK-NEXT:    call __floatdisf

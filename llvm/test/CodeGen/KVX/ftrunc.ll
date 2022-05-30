@@ -55,12 +55,12 @@ define <2 x float> @truncv2f32(<2 x float> %x) {
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call truncf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    call truncf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r19, 63, 32
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
+; CHECK-NEXT:    insf $r0 = $r19, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
@@ -87,12 +87,12 @@ define <2 x double> @truncv2f64(<2 x double> %x) {
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    call trunc
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    call trunc
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r20
+; CHECK-NEXT:    copyd $r1 = $r0
 ; CHECK-NEXT:    ld $r18 = 8[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r20 = 16[$r12]

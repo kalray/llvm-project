@@ -74,8 +74,8 @@ entry:
 define <2 x i64> @asm_clobber_double_single(<2 x i64> returned %a) {
 ; CHECK-LABEL: asm_clobber_double_single:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    copyd $r3 = $r1
 ; CHECK-NEXT:    copyd $r2 = $r0
+; CHECK-NEXT:    copyd $r3 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    #NO_APP
@@ -228,10 +228,10 @@ entry:
 define i64 @local_regs(i32 %a, i64 %b, i64 %c, i64 %d, i64 %e, i64 %f, i64 %g){
 ; CHECK-LABEL: local_regs:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    copyd $r7 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    copyd $r1 = $r2
 ; CHECK-NEXT:    copyd $r2 = $r3
+; CHECK-NEXT:    copyd $r7 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r3 = $r4
 ; CHECK-NEXT:    copyd $r4 = $r5

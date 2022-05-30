@@ -51,8 +51,8 @@ define linkonce_odr void @_ZN1fILi16EEC2Ev(%struct.f* %0) comdat align 2 {
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    call _ZN1aC2Ev
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r19 = $r19, -1
 ; CHECK-NEXT:    addd $r18 = $r18, 1
+; CHECK-NEXT:    addd $r19 = $r19, -1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.dnez $r19 ? .LBB1_1
 ; CHECK-NEXT:    ;;

@@ -13,8 +13,8 @@ define half @fminh(half %a, half %b) {
 ; CHECK-NEXT:    fwidenlhw $r1 = $r1
 ; CHECK-NEXT:    call fminf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32

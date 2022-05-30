@@ -38,17 +38,17 @@ define i64 @clzd(i64 %a) {
 define <2 x i16> @ctlzv2i16(<2 x i16> %a) {
 ; CHECK-LABEL: ctlzv2i16:
 ; CHECK:       # %bb.0:
+; CHECK-NEXT:    zxhd $r0 = $r0
 ; CHECK-NEXT:    srlw $r1 = $r0, 16
-; CHECK-NEXT:    zxhd $r0 = $r0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxhd $r0 = $r0
 ; CHECK-NEXT:    zxhd $r1 = $r1
-; CHECK-NEXT:    zxhd $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    clzw $r1 = $r1
 ; CHECK-NEXT:    clzw $r0 = $r0
+; CHECK-NEXT:    clzw $r1 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r1 = $r1, -16
 ; CHECK-NEXT:    addw $r0 = $r0, -16
+; CHECK-NEXT:    addw $r1 = $r1, -16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 16
 ; CHECK-NEXT:    ret

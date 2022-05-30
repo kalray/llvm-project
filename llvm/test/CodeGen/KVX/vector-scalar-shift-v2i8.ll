@@ -7,14 +7,14 @@ target triple = "kvx-kalray-cos"
 define <2 x i8> @sri_v2i8(<2 x i8> %a){
 ; CV1-LABEL: sri_v2i8:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    extfz $r1 = $r0, 15, 8
 ; CV1-NEXT:    zxbd $r0 = $r0
+; CV1-NEXT:    extfz $r1 = $r0, 15, 8
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sxbd $r1 = $r1
 ; CV1-NEXT:    sxbd $r0 = $r0
+; CV1-NEXT:    sxbd $r1 = $r1
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sraw $r1 = $r1, 3
 ; CV1-NEXT:    sraw $r0 = $r0, 3
+; CV1-NEXT:    sraw $r1 = $r1, 3
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    insf $r0 = $r1, 15, 8
 ; CV1-NEXT:    ret
@@ -33,14 +33,14 @@ entry:
 define <2 x i8> @not_sri_v2i8(<2 x i8> %a){
 ; CV1-LABEL: not_sri_v2i8:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    extfz $r1 = $r0, 15, 8
 ; CV1-NEXT:    zxbd $r0 = $r0
+; CV1-NEXT:    extfz $r1 = $r0, 15, 8
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sxbd $r1 = $r1
 ; CV1-NEXT:    sxbd $r0 = $r0
+; CV1-NEXT:    sxbd $r1 = $r1
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sraw $r1 = $r1, 3
 ; CV1-NEXT:    sraw $r0 = $r0, 2
+; CV1-NEXT:    sraw $r1 = $r1, 3
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    insf $r0 = $r1, 15, 8
 ; CV1-NEXT:    ret
@@ -48,8 +48,8 @@ define <2 x i8> @not_sri_v2i8(<2 x i8> %a){
 ;
 ; CV2-LABEL: not_sri_v2i8:
 ; CV2:       # %bb.0: # %entry
-; CV2-NEXT:    srabos $r1 = $r0, 2
 ; CV2-NEXT:    srabos $r0 = $r0, 3
+; CV2-NEXT:    srabos $r1 = $r0, 2
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r0 = $r1, 7, 0
 ; CV2-NEXT:    ret
@@ -62,14 +62,14 @@ entry:
 define <2 x i8> @uri_v2i8(<2 x i8> %a){
 ; CV1-LABEL: uri_v2i8:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    extfz $r1 = $r0, 15, 8
 ; CV1-NEXT:    zxbd $r0 = $r0
+; CV1-NEXT:    extfz $r1 = $r0, 15, 8
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    andw $r1 = $r1, 248
 ; CV1-NEXT:    andw $r0 = $r0, 248
+; CV1-NEXT:    andw $r1 = $r1, 248
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    srlw $r1 = $r1, 3
 ; CV1-NEXT:    srlw $r0 = $r0, 3
+; CV1-NEXT:    srlw $r1 = $r1, 3
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    insf $r0 = $r1, 15, 8
 ; CV1-NEXT:    ret
@@ -88,14 +88,14 @@ entry:
 define <2 x i8> @not_uri_v2i8(<2 x i8> %a){
 ; CV1-LABEL: not_uri_v2i8:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    extfz $r1 = $r0, 15, 8
 ; CV1-NEXT:    zxbd $r0 = $r0
+; CV1-NEXT:    extfz $r1 = $r0, 15, 8
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    andw $r1 = $r1, 248
 ; CV1-NEXT:    andw $r0 = $r0, 252
+; CV1-NEXT:    andw $r1 = $r1, 248
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    srlw $r1 = $r1, 3
 ; CV1-NEXT:    srlw $r0 = $r0, 2
+; CV1-NEXT:    srlw $r1 = $r1, 3
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    insf $r0 = $r1, 15, 8
 ; CV1-NEXT:    ret
@@ -103,8 +103,8 @@ define <2 x i8> @not_uri_v2i8(<2 x i8> %a){
 ;
 ; CV2-LABEL: not_uri_v2i8:
 ; CV2:       # %bb.0: # %entry
-; CV2-NEXT:    srlbos $r1 = $r0, 2
 ; CV2-NEXT:    srlbos $r0 = $r0, 3
+; CV2-NEXT:    srlbos $r1 = $r0, 2
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r0 = $r1, 7, 0
 ; CV2-NEXT:    ret
@@ -117,11 +117,11 @@ entry:
 define <2 x i8> @sli_v2i8(<2 x i8> %a){
 ; CV1-LABEL: sli_v2i8:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    extfz $r1 = $r0, 15, 8
 ; CV1-NEXT:    zxbd $r0 = $r0
+; CV1-NEXT:    extfz $r1 = $r0, 15, 8
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sllw $r1 = $r1, 3
 ; CV1-NEXT:    sllw $r0 = $r0, 3
+; CV1-NEXT:    sllw $r1 = $r1, 3
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    insf $r0 = $r1, 15, 8
 ; CV1-NEXT:    ret
@@ -140,11 +140,11 @@ entry:
 define <2 x i8> @not_sli_v2i8(<2 x i8> %a){
 ; CV1-LABEL: not_sli_v2i8:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    extfz $r1 = $r0, 15, 8
 ; CV1-NEXT:    zxbd $r0 = $r0
+; CV1-NEXT:    extfz $r1 = $r0, 15, 8
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sllw $r1 = $r1, 3
 ; CV1-NEXT:    sllw $r0 = $r0, 1
+; CV1-NEXT:    sllw $r1 = $r1, 3
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    insf $r0 = $r1, 15, 8
 ; CV1-NEXT:    ret
@@ -152,8 +152,8 @@ define <2 x i8> @not_sli_v2i8(<2 x i8> %a){
 ;
 ; CV2-LABEL: not_sli_v2i8:
 ; CV2:       # %bb.0: # %entry
-; CV2-NEXT:    sllbos $r1 = $r0, 1
 ; CV2-NEXT:    sllbos $r0 = $r0, 3
+; CV2-NEXT:    sllbos $r1 = $r0, 1
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r0 = $r1, 7, 0
 ; CV2-NEXT:    ret
@@ -167,14 +167,14 @@ entry:
 define <2 x i8> @srr_v2i8(<2 x i8> %a, i8 %c){
 ; CV1-LABEL: srr_v2i8:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    extfz $r2 = $r0, 15, 8
 ; CV1-NEXT:    zxbd $r0 = $r0
+; CV1-NEXT:    extfz $r2 = $r0, 15, 8
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sxbd $r2 = $r2
 ; CV1-NEXT:    sxbd $r0 = $r0
+; CV1-NEXT:    sxbd $r2 = $r2
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sraw $r2 = $r2, $r1
 ; CV1-NEXT:    sraw $r0 = $r0, $r1
+; CV1-NEXT:    sraw $r2 = $r2, $r1
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    insf $r0 = $r2, 15, 8
 ; CV1-NEXT:    ret
@@ -195,16 +195,16 @@ entry:
 define <2 x i8> @not_srr_v2i8(<2 x i8> %a, <2 x i8> %b){
 ; CV1-LABEL: not_srr_v2i8:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    extfz $r2 = $r0, 15, 8
 ; CV1-NEXT:    zxbd $r0 = $r0
-; CV1-NEXT:    extfz $r3 = $r1, 15, 8
 ; CV1-NEXT:    zxbd $r1 = $r1
+; CV1-NEXT:    extfz $r2 = $r0, 15, 8
+; CV1-NEXT:    extfz $r3 = $r1, 15, 8
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sxbd $r2 = $r2
 ; CV1-NEXT:    sxbd $r0 = $r0
+; CV1-NEXT:    sxbd $r2 = $r2
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sraw $r2 = $r2, $r3
 ; CV1-NEXT:    sraw $r0 = $r0, $r1
+; CV1-NEXT:    sraw $r2 = $r2, $r3
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    insf $r0 = $r2, 15, 8
 ; CV1-NEXT:    ret
@@ -212,8 +212,8 @@ define <2 x i8> @not_srr_v2i8(<2 x i8> %a, <2 x i8> %b){
 ;
 ; CV2-LABEL: not_srr_v2i8:
 ; CV2:       # %bb.0: # %entry
-; CV2-NEXT:    extfz $r2 = $r1, 10, 8
 ; CV2-NEXT:    srabos $r1 = $r0, $r1
+; CV2-NEXT:    extfz $r2 = $r1, 10, 8
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    srabos $r0 = $r0, $r2
 ; CV2-NEXT:    ;;
@@ -228,14 +228,14 @@ entry:
 define <2 x i8> @urr_v2i8(<2 x i8> %a, i8 %c){
 ; CV1-LABEL: urr_v2i8:
 ; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    zxbd $r0 = $r0
 ; CV1-NEXT:    extfz $r2 = $r0, 15, 8
-; CV1-NEXT:    zxbd $r0 = $r0
 ; CV1-NEXT:    ;;
+; CV1-NEXT:    zxbd $r0 = $r0
 ; CV1-NEXT:    zxbd $r2 = $r2
-; CV1-NEXT:    zxbd $r0 = $r0
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    srlw $r2 = $r2, $r1
 ; CV1-NEXT:    srlw $r0 = $r0, $r1
+; CV1-NEXT:    srlw $r2 = $r2, $r1
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    insf $r0 = $r2, 15, 8
 ; CV1-NEXT:    ret
@@ -256,16 +256,16 @@ entry:
 define <2 x i8> @not_urr_v2i8(<2 x i8> %a, <2 x i8> %b){
 ; CV1-LABEL: not_urr_v2i8:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    extfz $r2 = $r0, 15, 8
 ; CV1-NEXT:    zxbd $r0 = $r0
-; CV1-NEXT:    extfz $r3 = $r1, 15, 8
 ; CV1-NEXT:    zxbd $r1 = $r1
+; CV1-NEXT:    extfz $r2 = $r0, 15, 8
+; CV1-NEXT:    extfz $r3 = $r1, 15, 8
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    zxbd $r2 = $r2
 ; CV1-NEXT:    zxbd $r0 = $r0
+; CV1-NEXT:    zxbd $r2 = $r2
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    srlw $r2 = $r2, $r3
 ; CV1-NEXT:    srlw $r0 = $r0, $r1
+; CV1-NEXT:    srlw $r2 = $r2, $r3
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    insf $r0 = $r2, 15, 8
 ; CV1-NEXT:    ret
@@ -273,8 +273,8 @@ define <2 x i8> @not_urr_v2i8(<2 x i8> %a, <2 x i8> %b){
 ;
 ; CV2-LABEL: not_urr_v2i8:
 ; CV2:       # %bb.0: # %entry
-; CV2-NEXT:    extfz $r2 = $r1, 10, 8
 ; CV2-NEXT:    srlbos $r1 = $r0, $r1
+; CV2-NEXT:    extfz $r2 = $r1, 10, 8
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    srlbos $r0 = $r0, $r2
 ; CV2-NEXT:    ;;
@@ -289,11 +289,11 @@ entry:
 define <2 x i8> @slr_v2i8(<2 x i8> %a, i8 %c){
 ; CV1-LABEL: slr_v2i8:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    extfz $r2 = $r0, 15, 8
 ; CV1-NEXT:    zxbd $r0 = $r0
+; CV1-NEXT:    extfz $r2 = $r0, 15, 8
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sllw $r2 = $r2, $r1
 ; CV1-NEXT:    sllw $r0 = $r0, $r1
+; CV1-NEXT:    sllw $r2 = $r2, $r1
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    insf $r0 = $r2, 15, 8
 ; CV1-NEXT:    ret
@@ -314,13 +314,13 @@ entry:
 define <2 x i8> @not_slr_v2i8(<2 x i8> %a, <2 x i8> %b){
 ; CV1-LABEL: not_slr_v2i8:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    extfz $r2 = $r0, 15, 8
-; CV1-NEXT:    extfz $r3 = $r1, 15, 8
 ; CV1-NEXT:    zxbd $r0 = $r0
 ; CV1-NEXT:    zxbd $r1 = $r1
+; CV1-NEXT:    extfz $r2 = $r0, 15, 8
+; CV1-NEXT:    extfz $r3 = $r1, 15, 8
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sllw $r2 = $r2, $r3
 ; CV1-NEXT:    sllw $r0 = $r0, $r1
+; CV1-NEXT:    sllw $r2 = $r2, $r3
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    insf $r0 = $r2, 15, 8
 ; CV1-NEXT:    ret
@@ -328,8 +328,8 @@ define <2 x i8> @not_slr_v2i8(<2 x i8> %a, <2 x i8> %b){
 ;
 ; CV2-LABEL: not_slr_v2i8:
 ; CV2:       # %bb.0: # %entry
-; CV2-NEXT:    extfz $r2 = $r1, 10, 8
 ; CV2-NEXT:    sllbos $r1 = $r0, $r1
+; CV2-NEXT:    extfz $r2 = $r1, 10, 8
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    sllbos $r0 = $r0, $r2
 ; CV2-NEXT:    ;;

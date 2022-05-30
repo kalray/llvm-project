@@ -77,8 +77,8 @@ entry:
 define <2 x i32> @ashiftR_imm_vec(<2 x i32> %a){
 ; CHECK-LABEL: ashiftR_imm_vec:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sraw $r1 = $r0, 2
 ; CHECK-NEXT:    srawps $r0 = $r0, 3
+; CHECK-NEXT:    sraw $r1 = $r0, 2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 0
 ; CHECK-NEXT:    ret
@@ -91,8 +91,8 @@ entry:
 define <2 x i32> @lshiftR_imm_vec(<2 x i32> %a){
 ; CHECK-LABEL: lshiftR_imm_vec:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    srlw $r1 = $r0, 3
 ; CHECK-NEXT:    srlwps $r0 = $r0, 2
+; CHECK-NEXT:    srlw $r1 = $r0, 3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 0
 ; CHECK-NEXT:    ret
@@ -105,8 +105,8 @@ entry:
 define <2 x i32> @shiftL_imm_vec(<2 x i32> %a){
 ; CHECK-LABEL: shiftL_imm_vec:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sllw $r1 = $r0, 0
 ; CHECK-NEXT:    sllwps $r0 = $r0, 3
+; CHECK-NEXT:    sllw $r1 = $r0, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 0
 ; CHECK-NEXT:    ret
@@ -119,8 +119,8 @@ entry:
 define <2 x i32> @ashiftR_vec(<2 x i32> %a, <2 x i32> %c){
 ; CHECK-LABEL: ashiftR_vec:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    extfz $r2 = $r1, 36, 32
 ; CHECK-NEXT:    sraw $r1 = $r0, $r1
+; CHECK-NEXT:    extfz $r2 = $r1, 36, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srawps $r0 = $r0, $r2
 ; CHECK-NEXT:    ;;
@@ -135,8 +135,8 @@ entry:
 define <2 x i32> @lshiftR_vec(<2 x i32> %a, <2 x i32> %c){
 ; CHECK-LABEL: lshiftR_vec:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    extfz $r2 = $r1, 36, 32
 ; CHECK-NEXT:    srlw $r1 = $r0, $r1
+; CHECK-NEXT:    extfz $r2 = $r1, 36, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srlwps $r0 = $r0, $r2
 ; CHECK-NEXT:    ;;
@@ -151,8 +151,8 @@ entry:
 define <2 x i32> @shiftL_vec(<2 x i32> %a, <2 x i32> %c){
 ; CHECK-LABEL: shiftL_vec:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    extfz $r2 = $r1, 36, 32
 ; CHECK-NEXT:    sllw $r1 = $r0, $r1
+; CHECK-NEXT:    extfz $r2 = $r1, 36, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sllwps $r0 = $r0, $r2
 ; CHECK-NEXT:    ;;
@@ -215,8 +215,8 @@ entry:
 define <2 x i32> @not_rol_i32x2_ri(<2 x i32> %in) {
 ; CHECK-LABEL: not_rol_i32x2_ri:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    rolw $r1 = $r0, 23
 ; CHECK-NEXT:    rolwps $r0 = $r0, 13
+; CHECK-NEXT:    rolw $r1 = $r0, 23
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 0
 ; CHECK-NEXT:    ret
@@ -230,8 +230,8 @@ define <2 x i32> @not_rol_i32x2_ri(<2 x i32> %in) {
 define <2 x i32> @not_rol_i32x2_rr(<2 x i32> %in, <2 x i32> %l) {
 ; CHECK-LABEL: not_rol_i32x2_rr:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    extfz $r2 = $r1, 36, 32
 ; CHECK-NEXT:    rolw $r1 = $r0, $r1
+; CHECK-NEXT:    extfz $r2 = $r1, 36, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    rolwps $r0 = $r0, $r2
 ; CHECK-NEXT:    ;;
@@ -248,8 +248,8 @@ define <2 x i32> @not_rol_i32x2_rr(<2 x i32> %in, <2 x i32> %l) {
 define <2 x i32> @not_ror_i32x2_rr(<2 x i32> %in, <2 x i32> %r) {
 ; CHECK-LABEL: not_ror_i32x2_rr:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    extfz $r2 = $r1, 36, 32
 ; CHECK-NEXT:    rorw $r1 = $r0, $r1
+; CHECK-NEXT:    extfz $r2 = $r1, 36, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    rorwps $r0 = $r0, $r2
 ; CHECK-NEXT:    ;;

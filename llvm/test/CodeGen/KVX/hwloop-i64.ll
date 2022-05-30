@@ -9,17 +9,17 @@ target triple = "kvx-kalray-cos"
 define i32 @f0(i32* nocapture %a0) #0 {
 ; CHECK-LABEL: f0:
 ; CHECK:       # %bb.0: # %b0
-; CHECK-NEXT:    copyd $r1 = $r0
-; CHECK-NEXT:    make $r3 = 8
-; CHECK-NEXT:    make $r2 = 0
 ; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    copyd $r1 = $r0
+; CHECK-NEXT:    make $r2 = 0
+; CHECK-NEXT:    make $r3 = 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r3, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_1: # %b1
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    lwz.xs $r3 = $r2[$r1]
 ; CHECK-NEXT:    addd $r2 = $r2, 1
+; CHECK-NEXT:    lwz.xs $r3 = $r2[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addw $r0 = $r3, $r0
 ; CHECK-NEXT:    ;;
@@ -48,17 +48,17 @@ b2:                                               ; preds = %b1
 define i32 @f1(i32* nocapture %a0) #0 {
 ; CHECK-LABEL: f1:
 ; CHECK:       # %bb.0: # %b0
-; CHECK-NEXT:    copyd $r1 = $r0
-; CHECK-NEXT:    make $r3 = 8
-; CHECK-NEXT:    make $r2 = 0
 ; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    copyd $r1 = $r0
+; CHECK-NEXT:    make $r2 = 0
+; CHECK-NEXT:    make $r3 = 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r3, .__LOOPDO_1_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB1_1: # %b1
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    lwz.xs $r3 = $r2[$r1]
 ; CHECK-NEXT:    addd $r2 = $r2, 1
+; CHECK-NEXT:    lwz.xs $r3 = $r2[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addw $r0 = $r3, $r0
 ; CHECK-NEXT:    ;;
@@ -87,17 +87,17 @@ b2:                                               ; preds = %b1
 define i32 @f2(i32* nocapture %a0) #0 {
 ; CHECK-LABEL: f2:
 ; CHECK:       # %bb.0: # %b0
-; CHECK-NEXT:    copyd $r1 = $r0
-; CHECK-NEXT:    make $r3 = 8
-; CHECK-NEXT:    make $r2 = 0
 ; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    copyd $r1 = $r0
+; CHECK-NEXT:    make $r2 = 0
+; CHECK-NEXT:    make $r3 = 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r3, .__LOOPDO_2_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB2_1: # %b1
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    lwz.xs $r3 = $r2[$r1]
 ; CHECK-NEXT:    addd $r2 = $r2, 1
+; CHECK-NEXT:    lwz.xs $r3 = $r2[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addw $r0 = $r3, $r0
 ; CHECK-NEXT:    ;;

@@ -13,8 +13,8 @@ define void @InitDataSet(i32 %m, i16* nocapture %x, i32 %n, i16* nocapture %h)  
 ; CHECK-NEXT:    cb.wlez $r0 ? .LBB0_1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.2: # %for.body.preheader
-; CHECK-NEXT:    zxwd $r5 = $r0
 ; CHECK-NEXT:    make $r4 = 0
+; CHECK-NEXT:    zxwd $r5 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r5, .__LOOPDO_5_END_
 ; CHECK-NEXT:    ;;
@@ -59,9 +59,9 @@ define void @InitDataSet(i32 %m, i16* nocapture %x, i32 %n, i16* nocapture %h)  
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srld $r0 = $r0, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r8 = $r0, 1
 ; CHECK-NEXT:    adduwd $r0 = $r6, $r5
 ; CHECK-NEXT:    addx2d $r6 = $r6, $r1
+; CHECK-NEXT:    addd $r8 = $r0, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r8, .__LOOPDO_4_END_
 ; CHECK-NEXT:    ;;
@@ -81,8 +81,8 @@ define void @InitDataSet(i32 %m, i16* nocapture %x, i32 %n, i16* nocapture %h)  
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfd $r4 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r5 = $r4, 1
 ; CHECK-NEXT:    make $r4 = 0xdead
+; CHECK-NEXT:    addd $r5 = $r4, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r5, .__LOOPDO_3_END_
 ; CHECK-NEXT:    ;;
@@ -144,9 +144,9 @@ define void @InitDataSet(i32 %m, i16* nocapture %x, i32 %n, i16* nocapture %h)  
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srld $r0 = $r0, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r6 = $r0, 1
 ; CHECK-NEXT:    adduwd $r0 = $r4, $r2
 ; CHECK-NEXT:    addx2d $r4 = $r4, $r3
+; CHECK-NEXT:    addd $r6 = $r0, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r6, .__LOOPDO_1_END_
 ; CHECK-NEXT:    ;;
@@ -166,8 +166,8 @@ define void @InitDataSet(i32 %m, i16* nocapture %x, i32 %n, i16* nocapture %h)  
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfd $r1 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r2 = $r1, 1
 ; CHECK-NEXT:    make $r1 = 0xbeef
+; CHECK-NEXT:    addd $r2 = $r1, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r2, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;
@@ -332,20 +332,20 @@ define i32 @main(i32 %argc, i8** nocapture readnone %argv)  {
 ; CHECK-NEXT:    make $r0 = .L.str
 ; CHECK-NEXT:    call BENCH_START
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r18 = $r12, 5
 ; CHECK-NEXT:    make $r21 = 0
 ; CHECK-NEXT:    make $r22 = 256
 ; CHECK-NEXT:    make $r23 = x
-; CHECK-NEXT:    addd $r18 = $r12, 5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r24 = 0xdead
 ; CHECK-NEXT:    make $r25 = h
 ; CHECK-NEXT:    make $r29 = 144
 ; CHECK-NEXT:    make $r30 = 169
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r31 = 196
 ; CHECK-NEXT:    make $r20 = 225
 ; CHECK-NEXT:    make $r26 = 0xffffffffdeaddead
 ; CHECK-NEXT:    make $r27 = x
+; CHECK-NEXT:    make $r31 = 196
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r19 = 0
 ; CHECK-NEXT:    make $r28 = 1
@@ -353,10 +353,10 @@ define i32 @main(i32 %argc, i8** nocapture readnone %argv)  {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB1_9: # %for.cond10.preheader.i
 ; CHECK-NEXT:    # in Loop: Header=BB1_1 Depth=1
-; CHECK-NEXT:    make $r0 = 1
-; CHECK-NEXT:    make $r6 = 1
 ; CHECK-NEXT:    sh 0[$r25] = $r21
+; CHECK-NEXT:    make $r0 = 1
 ; CHECK-NEXT:    make $r1 = x
+; CHECK-NEXT:    make $r6 = 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sh 24[$r25] = $r29
 ; CHECK-NEXT:    make $r2 = 16
@@ -404,17 +404,17 @@ define i32 @main(i32 %argc, i8** nocapture readnone %argv)  {
 ; CHECK-NEXT:    copyd $r5 = $r19
 ; CHECK-NEXT:    copyd $r7 = $r19
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.even $r0 ? $r6 = 2
 ; CHECK-NEXT:    make $r0 = y
+; CHECK-NEXT:    cmoved.even $r0 ? $r6 = 2
 ; CHECK-NEXT:    call fircirc
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r0 = .L.str
 ; CHECK-NEXT:    call BENCH_STOP
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r19 = $r19, 1
-; CHECK-NEXT:    addw $r28 = $r28, 1
 ; CHECK-NEXT:    addd $r22 = $r22, -1
 ; CHECK-NEXT:    addd $r27 = $r27, 2
+; CHECK-NEXT:    addw $r28 = $r28, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compd.ne $r0 = $r19, 8
 ; CHECK-NEXT:    ;;
@@ -451,8 +451,8 @@ define i32 @main(i32 %argc, i8** nocapture readnone %argv)  {
 ; CHECK-NEXT:  .__LOOPDO_8_END_:
 ; CHECK-NEXT:  .LBB1_3: # %for.body4.preheader.i
 ; CHECK-NEXT:    # in Loop: Header=BB1_1 Depth=1
-; CHECK-NEXT:    sbfd $r1 = $r19, 256
 ; CHECK-NEXT:    copyd $r0 = $r19
+; CHECK-NEXT:    sbfd $r1 = $r19, 256
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compd.gtu $r2 = $r1, 1
 ; CHECK-NEXT:    ;;
@@ -468,8 +468,8 @@ define i32 @main(i32 %argc, i8** nocapture readnone %argv)  {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srld $r0 = $r0, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r4 = $r0, 1
 ; CHECK-NEXT:    addd $r0 = $r19, $r2
+; CHECK-NEXT:    addd $r4 = $r0, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r4, .__LOOPDO_9_END_
 ; CHECK-NEXT:    ;;
@@ -503,8 +503,8 @@ define i32 @main(i32 %argc, i8** nocapture readnone %argv)  {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB1_10: # %for.body19.preheader
 ; CHECK-NEXT:    make $r18 = 8
-; CHECK-NEXT:    make $r22 = 0
 ; CHECK-NEXT:    addd $r19 = $r12, 5
+; CHECK-NEXT:    make $r22 = 0
 ; CHECK-NEXT:    make $r23 = x
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r24 = 0xffffffffdeaddead
@@ -512,10 +512,10 @@ define i32 @main(i32 %argc, i8** nocapture readnone %argv)  {
 ; CHECK-NEXT:    make $r28 = 169
 ; CHECK-NEXT:    make $r29 = 196
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r30 = 225
-; CHECK-NEXT:    make $r31 = 0
 ; CHECK-NEXT:    make $r20 = 16
 ; CHECK-NEXT:    make $r21 = 9
+; CHECK-NEXT:    make $r30 = 225
+; CHECK-NEXT:    make $r31 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB1_11: # %for.body19
 ; CHECK-NEXT:    # =>This Loop Header: Depth=1
@@ -526,15 +526,15 @@ define i32 @main(i32 %argc, i8** nocapture readnone %argv)  {
 ; CHECK-NEXT:    compw.gtu $r2 = $r21, 9
 ; CHECK-NEXT:    copyd $r3 = $r21
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfd $r1 = $r1, 492
 ; CHECK-NEXT:    srld $r0 = $r0, 32
+; CHECK-NEXT:    sbfd $r1 = $r1, 492
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srld $r1 = $r1, 2
 ; CHECK-NEXT:    srlw $r0 = $r0, 3
+; CHECK-NEXT:    srld $r1 = $r1, 2
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    slld $r2 = $r31, 4
 ; CHECK-NEXT:    cmoved.wnez $r2 ? $r3 = $r0
 ; CHECK-NEXT:    addd $r26 = $r1, 1
-; CHECK-NEXT:    slld $r2 = $r31, 4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addw $r0 = $r3, 48
 ; CHECK-NEXT:    ord $r27 = $r2, 8
@@ -572,10 +572,10 @@ define i32 @main(i32 %argc, i8** nocapture readnone %argv)  {
 ; CHECK-NEXT:  .__LOOPDO_7_END_:
 ; CHECK-NEXT:  # %bb.16: # %for.cond10.preheader.i88
 ; CHECK-NEXT:    # in Loop: Header=BB1_11 Depth=1
-; CHECK-NEXT:    make $r0 = 1
 ; CHECK-NEXT:    sh 0[$r25] = $r22
-; CHECK-NEXT:    srlw $r6 = $r18, 3
+; CHECK-NEXT:    make $r0 = 1
 ; CHECK-NEXT:    make $r1 = x
+; CHECK-NEXT:    srlw $r6 = $r18, 3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sh 26[$r25] = $r28
 ; CHECK-NEXT:    make $r2 = 16
@@ -620,17 +620,17 @@ define i32 @main(i32 %argc, i8** nocapture readnone %argv)  {
 ; CHECK-NEXT:    make $r0 = 144
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sh 24[$r25] = $r0
-; CHECK-NEXT:    copyd $r5 = $r18
 ; CHECK-NEXT:    make $r0 = y
+; CHECK-NEXT:    copyd $r5 = $r18
 ; CHECK-NEXT:    copyd $r7 = $r18
 ; CHECK-NEXT:    call fircirc
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r0 = .L.str
 ; CHECK-NEXT:    call BENCH_STOP
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r21 = $r21, 1
 ; CHECK-NEXT:    addd $r18 = $r18, 16
 ; CHECK-NEXT:    addd $r20 = $r20, 32
+; CHECK-NEXT:    addw $r21 = $r21, 1
 ; CHECK-NEXT:    addd $r31 = $r31, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compw.ne $r0 = $r21, 13

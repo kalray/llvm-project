@@ -72,14 +72,14 @@ define <2 x i64> @ctpopv2i64(<2 x i64> %a) {
 define <4 x i16> @ctpop4i16(<4 x i16> %a) {
 ; CHECK-LABEL: ctpop4i16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    sbmm8 $r1 = $r0, 0x804000002010
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x80400000201
+; CHECK-NEXT:    sbmm8 $r1 = $r0, 0x804000002010
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cbswp $r1 = $r1
 ; CHECK-NEXT:    cbswp $r0 = $r0
+; CHECK-NEXT:    cbswp $r1 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x20100201
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x20100201
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x20100201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 32
 ; CHECK-NEXT:    ret
@@ -91,8 +91,8 @@ define <4 x i16> @ctpop4i16(<4 x i16> %a) {
 define <4 x i32> @cbswpx2(<4 x i32> %a) {
 ; CHECK-LABEL: cbswpx2:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    cbswp $r1 = $r1
 ; CHECK-NEXT:    cbswp $r0 = $r0
+; CHECK-NEXT:    cbswp $r1 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %res = call <4 x i32> @llvm.ctpop.v4i32(<4 x i32> %a)

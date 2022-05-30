@@ -27,8 +27,8 @@ define half @add_f16_i(half %0) {
 define half @add_f16_f16(half %0, half %1) {
 ; CHECK-LABEL: add_f16_f16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    zxhd $r1 = $r1
 ; CHECK-NEXT:    zxhd $r0 = $r0
+; CHECK-NEXT:    zxhd $r1 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    faddhq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -61,8 +61,8 @@ define <2 x half> @add_v2f16_i(<2 x half> %0) {
 define <2 x half> @add_v2f16_v2f16(<2 x half> %0, <2 x half> %1) {
 ; CHECK-LABEL: add_v2f16_v2f16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    zxwd $r1 = $r1
 ; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    zxwd $r1 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    faddhq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret

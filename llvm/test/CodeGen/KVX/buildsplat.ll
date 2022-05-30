@@ -9,8 +9,8 @@ target triple = "kvx-kalray-cos"
 define <4 x float> @test_buildsplat_float16(<4 x float> %a) #0 {
 ; ALL-LABEL: test_buildsplat_float16:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    make $r3 = 0
 ; ALL-NEXT:    make $r2 = 0
+; ALL-NEXT:    make $r3 = 0
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    fmulwq $r0r1 = $r0r1, $r2r3
 ; ALL-NEXT:    ret
@@ -27,8 +27,8 @@ define <4 x float> @test_buildsplat_float16(<4 x float> %a) #0 {
 define <4 x float> @test_buildsplat_float43(<4 x float> %a) #0 {
 ; ALL-LABEL: test_buildsplat_float43:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    make $r3 = 0x100000001
 ; ALL-NEXT:    make $r2 = 0x100000001
+; ALL-NEXT:    make $r3 = 0x100000001
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    fmulwq $r0r1 = $r0r1, $r2r3
 ; ALL-NEXT:    ret

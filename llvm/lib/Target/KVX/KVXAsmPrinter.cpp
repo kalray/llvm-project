@@ -18,6 +18,7 @@
 #include "llvm/CodeGen/AsmPrinter.h"
 #include "llvm/MC/MCStreamer.h"
 #include "llvm/Support/TargetRegistry.h"
+#include "llvm/Support/raw_ostream.h"
 
 namespace {
 using namespace llvm;
@@ -46,19 +47,78 @@ public:
 };
 
 #include "KVXGenMCPseudoLowering.inc"
+static inline bool sortStr(const MCInst &Lhs, const MCInst &Rhs) {
+  // Sort them in a string comparison manner
+  std::string LhsStr, RhsStr;
+  raw_string_ostream LhsStream(LhsStr), RhsStream(RhsStr);
+  Lhs.print(LhsStream);
+  Rhs.print(RhsStream);
+  return strcmp(LhsStr.c_str(), RhsStr.c_str()) <= 0;
+}
+
+bool comparePairs(const MCInst &Lhs, const MCInst &Rhs) {
+  // Put `ret` at the end
+  if (Lhs.getOpcode() == KVX::RET)
+    return false;
+
+  if (Rhs.getOpcode() == KVX::RET)
+    return true;
+
+  // Instructions without operands at the end
+  if (Lhs.getNumOperands() == 0) {
+    if (Rhs.getNumOperands() == 0)
+      return sortStr(Lhs, Rhs);
+    return false;
+  }
+  if (Rhs.getNumOperands() == 0)
+    return true;
+
+  // Immediates before regs
+  if (Lhs.getOperand(0).isImm()) {
+    if (Rhs.getOperand(0).isImm()) {
+      if (Lhs.getOperand(0).getImm() == Rhs.getOperand(0).getImm())
+        return sortStr(Lhs, Rhs);
+      return Lhs.getOperand(0).getImm() < Rhs.getOperand(0).getImm();
+    }
+    return true;
+  }
+  if (Rhs.getOperand(0).isImm())
+    return false;
+
+  // Sort by first operand register
+  if (Lhs.getOperand(0).isReg()) {
+    if (Rhs.getOperand(0).isReg()) {
+      if (Lhs.getOperand(0).getReg() == Rhs.getOperand(0).getReg())
+        return sortStr(Lhs, Rhs);
+
+      return Lhs.getOperand(0).getReg() < Rhs.getOperand(0).getReg();
+    }
+    return true;
+  }
+  if (Rhs.getOperand(0).isReg())
+    return false;
+
+  return sortStr(Lhs, Rhs);
+}
 
 void KVXAsmPrinter::emitInstruction(const MachineInstr *MI) {
   // Do any auto-generated pseudo lowerings.
   if (emitPseudoExpansionLowering(*OutStreamer, MI))
     return;
 
+  SmallVector<MCInst, 8> Bundle;
   if (MI->isBundle()) {
+    // Sort instructions in bundle.
     for (auto MII = ++MI->getIterator();
          MII != MI->getParent()->instr_end() && MII->isInsideBundle(); ++MII) {
       MCInst TmpInst;
       LowerKVXMachineInstrToMCInst(&*MII, TmpInst, *this);
-      EmitToStreamer(*OutStreamer, TmpInst);
+      Bundle.push_back(TmpInst);
     }
+    std::sort(Bundle.begin(), Bundle.end(), comparePairs);
+
+    for (MCInst &I : Bundle)
+      EmitToStreamer(*OutStreamer, I);
   } else {
     MCInst TmpInst;
     LowerKVXMachineInstrToMCInst(MI, TmpInst, *this);

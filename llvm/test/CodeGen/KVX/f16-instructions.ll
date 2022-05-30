@@ -38,8 +38,8 @@ define half @test_ret_const() #0 {
 define half @test_fadd(half %a, half %b) #0 {
 ; CHECK-LABEL: test_fadd:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    zxhd $r1 = $r1
 ; CHECK-NEXT:    zxhd $r0 = $r0
+; CHECK-NEXT:    zxhd $r1 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    faddhq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -51,8 +51,8 @@ define half @test_fadd(half %a, half %b) #0 {
 define <1 x half> @test_fadd_v1f16(<1 x half> %a, <1 x half> %b) #0 {
 ; CHECK-LABEL: test_fadd_v1f16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    zxhd $r1 = $r1
 ; CHECK-NEXT:    zxhd $r0 = $r0
+; CHECK-NEXT:    zxhd $r1 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    faddhq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -129,8 +129,8 @@ define half @test_fneg(half %a) #0 {
 define half @test_fmul(half %a, half %b) #0 {
 ; CHECK-LABEL: test_fmul:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    zxhd $r1 = $r1
 ; CHECK-NEXT:    zxhd $r0 = $r0
+; CHECK-NEXT:    zxhd $r1 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmulhq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -171,8 +171,8 @@ define half @test_fdiv(half %a, half %b) #0 {
 ; CHECK-NEXT:    fwidenlhw $r1 = $r1
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
@@ -194,8 +194,8 @@ define half @test_frem(half %a, half %b) #0 {
 ; CHECK-NEXT:    fwidenlhw $r1 = $r1
 ; CHECK-NEXT:    call fmodf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
@@ -268,8 +268,8 @@ define half @test_call_flipped(half %a, half %b) #0 {
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r2
 ; CHECK-NEXT:    call test_callee
@@ -288,8 +288,8 @@ define half @test_call_flipped(half %a, half %b) #0 {
 define half @test_tailcall_flipped(half %a, half %b) #0 {
 ; CHECK-LABEL: test_tailcall_flipped:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r2
 ; CHECK-NEXT:    goto test_callee
@@ -435,8 +435,8 @@ define i1 @test_fcmp_ule(half %a, half %b) #0 {
 define i1 @test_fcmp_uno(half %a, half %b) #0 {
 ; CHECK-LABEL: test_fcmp_uno:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fcompnhq.ult $r2 = $r0, $r1
 ; CHECK-NEXT:    fcompnhq.uge $r0 = $r0, $r1
+; CHECK-NEXT:    fcompnhq.ult $r2 = $r0, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    andw $r0 = $r0, $r2
 ; CHECK-NEXT:    ;;
@@ -524,8 +524,8 @@ define i1 @test_fcmp_ole(half %a, half %b) #0 {
 define i1 @test_fcmp_ord(half %a, half %b) #0 {
 ; CHECK-LABEL: test_fcmp_ord:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fcompnhq.olt $r2 = $r0, $r1
 ; CHECK-NEXT:    fcompnhq.oge $r0 = $r0, $r1
+; CHECK-NEXT:    fcompnhq.olt $r2 = $r0, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    orw $r0 = $r0, $r2
 ; CHECK-NEXT:    ;;
@@ -584,9 +584,9 @@ define half @test_phi(half* %p1) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB36_1: # %loop
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
+; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    copyd $r19 = $r20
 ; CHECK-NEXT:    lhz $r20 = 0[$r18]
-; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    call test_dummy
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    andw $r0 = $r0, 1
@@ -594,8 +594,8 @@ define half @test_phi(half* %p1) #0 {
 ; CHECK-NEXT:    cb.wnez $r0 ? .LBB36_1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.2: # %return
-; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
+; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r20 = 16[$r12]
 ; CHECK-NEXT:    ;;
@@ -848,8 +848,8 @@ define half @test_sqrt(half %a) #0 {
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    call sqrtf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
@@ -870,8 +870,8 @@ define half @test_powi(half %a, i32 %b) #0 {
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    call __powisf2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
@@ -892,8 +892,8 @@ define half @test_sin(half %a) #0 #1 {
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    call sinf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
@@ -914,8 +914,8 @@ define half @test_cos(half %a) #0 #1 {
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    call cosf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
@@ -937,8 +937,8 @@ define half @test_pow(half %a, half %b) #0 {
 ; CHECK-NEXT:    fwidenlhw $r1 = $r1
 ; CHECK-NEXT:    call powf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
@@ -959,8 +959,8 @@ define half @test_exp(half %a) #0 {
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    call expf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
@@ -981,8 +981,8 @@ define half @test_exp2(half %a) #0 {
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    call exp2f
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
@@ -1003,8 +1003,8 @@ define half @test_log(half %a) #0 {
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    call logf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
@@ -1025,8 +1025,8 @@ define half @test_log10(half %a) #0 {
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    call log10f
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
@@ -1047,8 +1047,8 @@ define half @test_log2(half %a) #0 {
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    call log2f
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
@@ -1062,8 +1062,8 @@ define half @test_log2(half %a) #0 {
 define half @test_fma(half %a, half %b, half %c) #0 {
 ; CHECK-LABEL: test_fma:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    zxhd $r3 = $r0
 ; CHECK-NEXT:    zxhd $r0 = $r2
+; CHECK-NEXT:    zxhd $r3 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    zxhd $r1 = $r1
 ; CHECK-NEXT:    ;;
@@ -1095,8 +1095,8 @@ define half @test_minnum(half %a, half %b) #0 {
 ; CHECK-NEXT:    fwidenlhw $r1 = $r1
 ; CHECK-NEXT:    call fminf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
@@ -1128,8 +1128,8 @@ define half @test_maxnum(half %a, half %b) #0 {
 ; CHECK-NEXT:    fwidenlhw $r1 = $r1
 ; CHECK-NEXT:    call fmaxf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
@@ -1213,8 +1213,8 @@ define half @test_floor(half %a) #0 {
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    call floorf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
@@ -1235,8 +1235,8 @@ define half @test_ceil(half %a) #0 {
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    call ceilf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
@@ -1257,8 +1257,8 @@ define half @test_trunc(half %a) #0 {
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    call truncf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
@@ -1279,8 +1279,8 @@ define half @test_rint(half %a) #0 {
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    call rintf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
@@ -1301,8 +1301,8 @@ define half @test_nearbyint(half %a) #0 {
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    call nearbyintf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
@@ -1323,8 +1323,8 @@ define half @test_round(half %a) #0 {
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    call roundf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
@@ -1338,8 +1338,8 @@ define half @test_round(half %a) #0 {
 define half @test_fmuladd(half %a, half %b, half %c) #0 {
 ; CHECK-LABEL: test_fmuladd:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    zxhd $r3 = $r0
 ; CHECK-NEXT:    zxhd $r0 = $r2
+; CHECK-NEXT:    zxhd $r3 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    zxhd $r1 = $r1
 ; CHECK-NEXT:    ;;
@@ -1515,8 +1515,8 @@ entry:
 define i32 @fcmp_setord(half %a, half %b) #0 {
 ; CHECK-LABEL: fcmp_setord:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fcompnhq.olt $r2 = $r0, $r1
 ; CHECK-NEXT:    fcompnhq.oge $r0 = $r0, $r1
+; CHECK-NEXT:    fcompnhq.olt $r2 = $r0, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    orw $r0 = $r0, $r2
 ; CHECK-NEXT:    ;;
@@ -1546,8 +1546,8 @@ entry:
 define i32 @fcmp_setuno(half %a, half %b) #0 {
 ; CHECK-LABEL: fcmp_setuno:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fcompnhq.ult $r2 = $r0, $r1
 ; CHECK-NEXT:    fcompnhq.uge $r0 = $r0, $r1
+; CHECK-NEXT:    fcompnhq.ult $r2 = $r0, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    andw $r0 = $r0, $r2
 ; CHECK-NEXT:    ;;
@@ -1895,8 +1895,8 @@ entry:
 define i32 @fcmp_setord_fast(half %a, half %b) #0 {
 ; CHECK-LABEL: fcmp_setord_fast:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fcompnhq.olt $r2 = $r0, $r1
 ; CHECK-NEXT:    fcompnhq.oge $r0 = $r0, $r1
+; CHECK-NEXT:    fcompnhq.olt $r2 = $r0, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    orw $r0 = $r0, $r2
 ; CHECK-NEXT:    ;;
@@ -1926,8 +1926,8 @@ entry:
 define i32 @fcmp_setuno_fast(half %a, half %b) #0 {
 ; CHECK-LABEL: fcmp_setuno_fast:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fcompnhq.ult $r2 = $r0, $r1
 ; CHECK-NEXT:    fcompnhq.uge $r0 = $r0, $r1
+; CHECK-NEXT:    fcompnhq.ult $r2 = $r0, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    andw $r0 = $r0, $r2
 ; CHECK-NEXT:    ;;

@@ -18,8 +18,8 @@ define void @foo(){
 ; CHECK-NEXT:    make $r0 = 0xfffffffff8f9fafb
 ; CHECK-NEXT:    call bar4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    make $r0 = 0xf4f5f6f7f8f9fafb
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32

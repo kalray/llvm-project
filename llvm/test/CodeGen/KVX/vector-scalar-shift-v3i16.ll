@@ -93,8 +93,8 @@ entry:
 define <3 x i16> @lshiftR_imm_vec(<3 x i16> %a){
 ; CHECK-LABEL: lshiftR_imm_vec:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    srlhqs $r1 = $r0, 3
 ; CHECK-NEXT:    srlhqs $r0 = $r0, 2
+; CHECK-NEXT:    srlhqs $r1 = $r0, 3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 0
 ; CHECK-NEXT:    ;;
@@ -111,8 +111,8 @@ entry:
 define <3 x i16> @shiftL_imm_vec(<3 x i16> %a){
 ; CHECK-LABEL: shiftL_imm_vec:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sllhqs $r1 = $r0, 8
 ; CHECK-NEXT:    sllhqs $r0 = $r0, 3
+; CHECK-NEXT:    sllhqs $r1 = $r0, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    ;;
@@ -132,8 +132,8 @@ define <3 x i16> @ashiftR_vec(<3 x i16> %a, <3 x i16> %c){
 ; CHECK-NEXT:    extfz $r2 = $r1, 19, 16
 ; CHECK-NEXT:    srahqs $r3 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r4 = $r1, 35, 32
 ; CHECK-NEXT:    extfz $r1 = $r1, 51, 48
+; CHECK-NEXT:    extfz $r4 = $r1, 35, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srahqs $r2 = $r0, $r2
 ; CHECK-NEXT:    ;;
@@ -157,8 +157,8 @@ define <3 x i16> @lshiftR_vec(<3 x i16> %a, <3 x i16> %c){
 ; CHECK-NEXT:    extfz $r2 = $r1, 19, 16
 ; CHECK-NEXT:    srlhqs $r3 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r4 = $r1, 35, 32
 ; CHECK-NEXT:    extfz $r1 = $r1, 51, 48
+; CHECK-NEXT:    extfz $r4 = $r1, 35, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srlhqs $r2 = $r0, $r2
 ; CHECK-NEXT:    ;;
@@ -182,8 +182,8 @@ define <3 x i16> @shiftL_vec(<3 x i16> %a, <3 x i16> %c){
 ; CHECK-NEXT:    extfz $r2 = $r1, 19, 16
 ; CHECK-NEXT:    sllhqs $r3 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r4 = $r1, 35, 32
 ; CHECK-NEXT:    extfz $r1 = $r1, 51, 48
+; CHECK-NEXT:    extfz $r4 = $r1, 35, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sllhqs $r2 = $r0, $r2
 ; CHECK-NEXT:    ;;

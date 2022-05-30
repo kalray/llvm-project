@@ -10,8 +10,8 @@ define <8 x i8> @eq(<8 x i8> %a, <8 x i8> %b){
 ; CV1-NEXT:    sbmm8 $r2 = $r1, 0x80004000200010
 ; CV1-NEXT:    sbmm8 $r3 = $r0, 0x80004000200010
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sbmm8 $r1 = $r1, 0x8000400020001
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x8000400020001
+; CV1-NEXT:    sbmm8 $r1 = $r1, 0x8000400020001
 ; CV1-NEXT:    compnhq.eq $r2 = $r3, $r2
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    compnhq.eq $r0 = $r0, $r1
@@ -21,14 +21,14 @@ define <8 x i8> @eq(<8 x i8> %a, <8 x i8> %b){
 ; CV1-NEXT:    srlw $r1 = $r2, 24
 ; CV1-NEXT:    extfz $r3 = $r2, 23, 16
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    extfz $r4 = $r2, 15, 8
 ; CV1-NEXT:    zxbd $r2 = $r2
+; CV1-NEXT:    extfz $r4 = $r2, 15, 8
 ; CV1-NEXT:    srlw $r5 = $r0, 24
 ; CV1-NEXT:    extfz $r6 = $r0, 23, 16
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    extfz $r7 = $r0, 15, 8
 ; CV1-NEXT:    zxbd $r0 = $r0
 ; CV1-NEXT:    extfs $r1 = $r1, 0, 0
+; CV1-NEXT:    extfz $r7 = $r0, 15, 8
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    extfs $r3 = $r3, 0, 0
 ; CV1-NEXT:    extfs $r4 = $r4, 0, 0
@@ -71,8 +71,8 @@ define <8 x i8> @neq(<8 x i8> %a, <8 x i8> %b){
 ; CV1-NEXT:    sbmm8 $r2 = $r1, 0x80004000200010
 ; CV1-NEXT:    sbmm8 $r3 = $r0, 0x80004000200010
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sbmm8 $r1 = $r1, 0x8000400020001
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x8000400020001
+; CV1-NEXT:    sbmm8 $r1 = $r1, 0x8000400020001
 ; CV1-NEXT:    compnhq.ne $r2 = $r3, $r2
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    compnhq.ne $r0 = $r0, $r1
@@ -82,14 +82,14 @@ define <8 x i8> @neq(<8 x i8> %a, <8 x i8> %b){
 ; CV1-NEXT:    srlw $r1 = $r2, 24
 ; CV1-NEXT:    extfz $r3 = $r2, 23, 16
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    extfz $r4 = $r2, 15, 8
 ; CV1-NEXT:    zxbd $r2 = $r2
+; CV1-NEXT:    extfz $r4 = $r2, 15, 8
 ; CV1-NEXT:    srlw $r5 = $r0, 24
 ; CV1-NEXT:    extfz $r6 = $r0, 23, 16
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    extfz $r7 = $r0, 15, 8
 ; CV1-NEXT:    zxbd $r0 = $r0
 ; CV1-NEXT:    extfs $r1 = $r1, 0, 0
+; CV1-NEXT:    extfz $r7 = $r0, 15, 8
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    extfs $r3 = $r3, 0, 0
 ; CV1-NEXT:    extfs $r4 = $r4, 0, 0
@@ -132,8 +132,8 @@ define <8 x i8> @gt(<8 x i8> %a, <8 x i8> %b){
 ; CV1-NEXT:    sxmbhq $r2 = $r1
 ; CV1-NEXT:    sxmbhq $r3 = $r0
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sxlbhq $r1 = $r1
 ; CV1-NEXT:    sxlbhq $r0 = $r0
+; CV1-NEXT:    sxlbhq $r1 = $r1
 ; CV1-NEXT:    compnhq.gt $r2 = $r3, $r2
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    compnhq.gt $r0 = $r0, $r1
@@ -143,14 +143,14 @@ define <8 x i8> @gt(<8 x i8> %a, <8 x i8> %b){
 ; CV1-NEXT:    srlw $r1 = $r2, 24
 ; CV1-NEXT:    extfz $r3 = $r2, 23, 16
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    extfz $r4 = $r2, 15, 8
 ; CV1-NEXT:    zxbd $r2 = $r2
+; CV1-NEXT:    extfz $r4 = $r2, 15, 8
 ; CV1-NEXT:    srlw $r5 = $r0, 24
 ; CV1-NEXT:    extfz $r6 = $r0, 23, 16
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    extfz $r7 = $r0, 15, 8
 ; CV1-NEXT:    zxbd $r0 = $r0
 ; CV1-NEXT:    extfs $r1 = $r1, 0, 0
+; CV1-NEXT:    extfz $r7 = $r0, 15, 8
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    extfs $r3 = $r3, 0, 0
 ; CV1-NEXT:    extfs $r4 = $r4, 0, 0
@@ -193,8 +193,8 @@ define <8 x i8> @lt(<8 x i8> %a, <8 x i8> %b){
 ; CV1-NEXT:    sxmbhq $r2 = $r1
 ; CV1-NEXT:    sxmbhq $r3 = $r0
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sxlbhq $r1 = $r1
 ; CV1-NEXT:    sxlbhq $r0 = $r0
+; CV1-NEXT:    sxlbhq $r1 = $r1
 ; CV1-NEXT:    compnhq.lt $r2 = $r3, $r2
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    compnhq.lt $r0 = $r0, $r1
@@ -204,14 +204,14 @@ define <8 x i8> @lt(<8 x i8> %a, <8 x i8> %b){
 ; CV1-NEXT:    srlw $r1 = $r2, 24
 ; CV1-NEXT:    extfz $r3 = $r2, 23, 16
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    extfz $r4 = $r2, 15, 8
 ; CV1-NEXT:    zxbd $r2 = $r2
+; CV1-NEXT:    extfz $r4 = $r2, 15, 8
 ; CV1-NEXT:    srlw $r5 = $r0, 24
 ; CV1-NEXT:    extfz $r6 = $r0, 23, 16
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    extfz $r7 = $r0, 15, 8
 ; CV1-NEXT:    zxbd $r0 = $r0
 ; CV1-NEXT:    extfs $r1 = $r1, 0, 0
+; CV1-NEXT:    extfz $r7 = $r0, 15, 8
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    extfs $r3 = $r3, 0, 0
 ; CV1-NEXT:    extfs $r4 = $r4, 0, 0
@@ -254,8 +254,8 @@ define <8 x i8> @gte(<8 x i8> %a, <8 x i8> %b){
 ; CV1-NEXT:    sxmbhq $r2 = $r1
 ; CV1-NEXT:    sxmbhq $r3 = $r0
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sxlbhq $r1 = $r1
 ; CV1-NEXT:    sxlbhq $r0 = $r0
+; CV1-NEXT:    sxlbhq $r1 = $r1
 ; CV1-NEXT:    compnhq.ge $r2 = $r3, $r2
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    compnhq.ge $r0 = $r0, $r1
@@ -265,14 +265,14 @@ define <8 x i8> @gte(<8 x i8> %a, <8 x i8> %b){
 ; CV1-NEXT:    srlw $r1 = $r2, 24
 ; CV1-NEXT:    extfz $r3 = $r2, 23, 16
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    extfz $r4 = $r2, 15, 8
 ; CV1-NEXT:    zxbd $r2 = $r2
+; CV1-NEXT:    extfz $r4 = $r2, 15, 8
 ; CV1-NEXT:    srlw $r5 = $r0, 24
 ; CV1-NEXT:    extfz $r6 = $r0, 23, 16
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    extfz $r7 = $r0, 15, 8
 ; CV1-NEXT:    zxbd $r0 = $r0
 ; CV1-NEXT:    extfs $r1 = $r1, 0, 0
+; CV1-NEXT:    extfz $r7 = $r0, 15, 8
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    extfs $r3 = $r3, 0, 0
 ; CV1-NEXT:    extfs $r4 = $r4, 0, 0
@@ -315,8 +315,8 @@ define <8 x i8> @lte(<8 x i8> %a, <8 x i8> %b){
 ; CV1-NEXT:    sxmbhq $r2 = $r1
 ; CV1-NEXT:    sxmbhq $r3 = $r0
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sxlbhq $r1 = $r1
 ; CV1-NEXT:    sxlbhq $r0 = $r0
+; CV1-NEXT:    sxlbhq $r1 = $r1
 ; CV1-NEXT:    compnhq.le $r2 = $r3, $r2
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    compnhq.le $r0 = $r0, $r1
@@ -326,14 +326,14 @@ define <8 x i8> @lte(<8 x i8> %a, <8 x i8> %b){
 ; CV1-NEXT:    srlw $r1 = $r2, 24
 ; CV1-NEXT:    extfz $r3 = $r2, 23, 16
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    extfz $r4 = $r2, 15, 8
 ; CV1-NEXT:    zxbd $r2 = $r2
+; CV1-NEXT:    extfz $r4 = $r2, 15, 8
 ; CV1-NEXT:    srlw $r5 = $r0, 24
 ; CV1-NEXT:    extfz $r6 = $r0, 23, 16
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    extfz $r7 = $r0, 15, 8
 ; CV1-NEXT:    zxbd $r0 = $r0
 ; CV1-NEXT:    extfs $r1 = $r1, 0, 0
+; CV1-NEXT:    extfz $r7 = $r0, 15, 8
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    extfs $r3 = $r3, 0, 0
 ; CV1-NEXT:    extfs $r4 = $r4, 0, 0
@@ -373,26 +373,26 @@ entry:
 define <4 x i8> @v2_eq(<4 x i8> %a, <4 x i8> %b){
 ; CV1-LABEL: v2_eq:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    sbmm8 $r1 = $r1, 0x8000400020001
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x8000400020001
+; CV1-NEXT:    sbmm8 $r1 = $r1, 0x8000400020001
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    compnhq.eq $r0 = $r0, $r1
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CV1-NEXT:    ;;
+; CV1-NEXT:    zxbd $r0 = $r0
 ; CV1-NEXT:    srlw $r1 = $r0, 24
 ; CV1-NEXT:    extfz $r2 = $r0, 23, 16
 ; CV1-NEXT:    extfz $r3 = $r0, 15, 8
-; CV1-NEXT:    zxbd $r0 = $r0
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    extfs $r1 = $r1, 0, 0
 ; CV1-NEXT:    extfs $r2 = $r2, 0, 0
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    extfs $r3 = $r3, 0, 0
 ; CV1-NEXT:    extfs $r0 = $r0, 0, 0
+; CV1-NEXT:    extfs $r3 = $r3, 0, 0
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    insf $r2 = $r1, 15, 8
 ; CV1-NEXT:    insf $r0 = $r3, 15, 8
+; CV1-NEXT:    insf $r2 = $r1, 15, 8
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    insf $r0 = $r2, 31, 16
 ; CV1-NEXT:    ret
@@ -412,26 +412,26 @@ entry:
 define <4 x i8> @v2_neq(<4 x i8> %a, <4 x i8> %b){
 ; CV1-LABEL: v2_neq:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    sbmm8 $r1 = $r1, 0x8000400020001
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x8000400020001
+; CV1-NEXT:    sbmm8 $r1 = $r1, 0x8000400020001
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    compnhq.ne $r0 = $r0, $r1
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CV1-NEXT:    ;;
+; CV1-NEXT:    zxbd $r0 = $r0
 ; CV1-NEXT:    srlw $r1 = $r0, 24
 ; CV1-NEXT:    extfz $r2 = $r0, 23, 16
 ; CV1-NEXT:    extfz $r3 = $r0, 15, 8
-; CV1-NEXT:    zxbd $r0 = $r0
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    extfs $r1 = $r1, 0, 0
 ; CV1-NEXT:    extfs $r2 = $r2, 0, 0
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    extfs $r3 = $r3, 0, 0
 ; CV1-NEXT:    extfs $r0 = $r0, 0, 0
+; CV1-NEXT:    extfs $r3 = $r3, 0, 0
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    insf $r2 = $r1, 15, 8
 ; CV1-NEXT:    insf $r0 = $r3, 15, 8
+; CV1-NEXT:    insf $r2 = $r1, 15, 8
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    insf $r0 = $r2, 31, 16
 ; CV1-NEXT:    ret
@@ -451,26 +451,26 @@ entry:
 define <4 x i8> @v2_gt(<4 x i8> %a, <4 x i8> %b){
 ; CV1-LABEL: v2_gt:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    sxlbhq $r1 = $r1
 ; CV1-NEXT:    sxlbhq $r0 = $r0
+; CV1-NEXT:    sxlbhq $r1 = $r1
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    compnhq.gt $r0 = $r0, $r1
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CV1-NEXT:    ;;
+; CV1-NEXT:    zxbd $r0 = $r0
 ; CV1-NEXT:    srlw $r1 = $r0, 24
 ; CV1-NEXT:    extfz $r2 = $r0, 23, 16
 ; CV1-NEXT:    extfz $r3 = $r0, 15, 8
-; CV1-NEXT:    zxbd $r0 = $r0
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    extfs $r1 = $r1, 0, 0
 ; CV1-NEXT:    extfs $r2 = $r2, 0, 0
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    extfs $r3 = $r3, 0, 0
 ; CV1-NEXT:    extfs $r0 = $r0, 0, 0
+; CV1-NEXT:    extfs $r3 = $r3, 0, 0
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    insf $r2 = $r1, 15, 8
 ; CV1-NEXT:    insf $r0 = $r3, 15, 8
+; CV1-NEXT:    insf $r2 = $r1, 15, 8
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    insf $r0 = $r2, 31, 16
 ; CV1-NEXT:    ret
@@ -490,26 +490,26 @@ entry:
 define <4 x i8> @v2_lt(<4 x i8> %a, <4 x i8> %b){
 ; CV1-LABEL: v2_lt:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    sxlbhq $r1 = $r1
 ; CV1-NEXT:    sxlbhq $r0 = $r0
+; CV1-NEXT:    sxlbhq $r1 = $r1
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    compnhq.lt $r0 = $r0, $r1
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CV1-NEXT:    ;;
+; CV1-NEXT:    zxbd $r0 = $r0
 ; CV1-NEXT:    srlw $r1 = $r0, 24
 ; CV1-NEXT:    extfz $r2 = $r0, 23, 16
 ; CV1-NEXT:    extfz $r3 = $r0, 15, 8
-; CV1-NEXT:    zxbd $r0 = $r0
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    extfs $r1 = $r1, 0, 0
 ; CV1-NEXT:    extfs $r2 = $r2, 0, 0
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    extfs $r3 = $r3, 0, 0
 ; CV1-NEXT:    extfs $r0 = $r0, 0, 0
+; CV1-NEXT:    extfs $r3 = $r3, 0, 0
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    insf $r2 = $r1, 15, 8
 ; CV1-NEXT:    insf $r0 = $r3, 15, 8
+; CV1-NEXT:    insf $r2 = $r1, 15, 8
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    insf $r0 = $r2, 31, 16
 ; CV1-NEXT:    ret
@@ -529,26 +529,26 @@ entry:
 define <4 x i8> @v2_gte(<4 x i8> %a, <4 x i8> %b){
 ; CV1-LABEL: v2_gte:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    sxlbhq $r1 = $r1
 ; CV1-NEXT:    sxlbhq $r0 = $r0
+; CV1-NEXT:    sxlbhq $r1 = $r1
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    compnhq.ge $r0 = $r0, $r1
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CV1-NEXT:    ;;
+; CV1-NEXT:    zxbd $r0 = $r0
 ; CV1-NEXT:    srlw $r1 = $r0, 24
 ; CV1-NEXT:    extfz $r2 = $r0, 23, 16
 ; CV1-NEXT:    extfz $r3 = $r0, 15, 8
-; CV1-NEXT:    zxbd $r0 = $r0
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    extfs $r1 = $r1, 0, 0
 ; CV1-NEXT:    extfs $r2 = $r2, 0, 0
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    extfs $r3 = $r3, 0, 0
 ; CV1-NEXT:    extfs $r0 = $r0, 0, 0
+; CV1-NEXT:    extfs $r3 = $r3, 0, 0
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    insf $r2 = $r1, 15, 8
 ; CV1-NEXT:    insf $r0 = $r3, 15, 8
+; CV1-NEXT:    insf $r2 = $r1, 15, 8
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    insf $r0 = $r2, 31, 16
 ; CV1-NEXT:    ret
@@ -568,26 +568,26 @@ entry:
 define <4 x i8> @v2_lte(<4 x i8> %a, <4 x i8> %b){
 ; CV1-LABEL: v2_lte:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    sxlbhq $r1 = $r1
 ; CV1-NEXT:    sxlbhq $r0 = $r0
+; CV1-NEXT:    sxlbhq $r1 = $r1
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    compnhq.le $r0 = $r0, $r1
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CV1-NEXT:    ;;
+; CV1-NEXT:    zxbd $r0 = $r0
 ; CV1-NEXT:    srlw $r1 = $r0, 24
 ; CV1-NEXT:    extfz $r2 = $r0, 23, 16
 ; CV1-NEXT:    extfz $r3 = $r0, 15, 8
-; CV1-NEXT:    zxbd $r0 = $r0
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    extfs $r1 = $r1, 0, 0
 ; CV1-NEXT:    extfs $r2 = $r2, 0, 0
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    extfs $r3 = $r3, 0, 0
 ; CV1-NEXT:    extfs $r0 = $r0, 0, 0
+; CV1-NEXT:    extfs $r3 = $r3, 0, 0
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    insf $r2 = $r1, 15, 8
 ; CV1-NEXT:    insf $r0 = $r3, 15, 8
+; CV1-NEXT:    insf $r2 = $r1, 15, 8
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    insf $r0 = $r2, 31, 16
 ; CV1-NEXT:    ret
@@ -612,8 +612,8 @@ define <8 x i8> @azext(<8 x i8> %a, <8 x i8> %b){
 ; CV1-NEXT:    sbmm8 $r2 = $r1, 0x80004000200010
 ; CV1-NEXT:    sbmm8 $r3 = $r0, 0x80004000200010
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sbmm8 $r1 = $r1, 0x8000400020001
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x8000400020001
+; CV1-NEXT:    sbmm8 $r1 = $r1, 0x8000400020001
 ; CV1-NEXT:    compnhq.eq $r2 = $r3, $r2
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    compnhq.eq $r0 = $r0, $r1

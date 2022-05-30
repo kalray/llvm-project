@@ -355,8 +355,8 @@ entry:
 define i64 @madduwdi16(i64 %a, i16 %b, i16 %c)  {
 ; CHECK-LABEL: madduwdi16:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    zxhd $r2 = $r2
 ; CHECK-NEXT:    zxhd $r1 = $r1
+; CHECK-NEXT:    zxhd $r2 = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    madduwd $r0 = $r2, $r1
 ; CHECK-NEXT:    ret
@@ -364,8 +364,8 @@ define i64 @madduwdi16(i64 %a, i16 %b, i16 %c)  {
 ;
 ; V2-LABEL: madduwdi16:
 ; V2:       # %bb.0: # %entry
-; V2-NEXT:    zxhd $r2 = $r2
 ; V2-NEXT:    zxhd $r1 = $r1
+; V2-NEXT:    zxhd $r2 = $r2
 ; V2-NEXT:    ;;
 ; V2-NEXT:    madduwd $r0 = $r2, $r1
 ; V2-NEXT:    ret
@@ -661,8 +661,8 @@ entry:
 define i64 @maddwdi16(i64 %a, i16 %b, i16 %c)  {
 ; CHECK-LABEL: maddwdi16:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sxhd $r2 = $r2
 ; CHECK-NEXT:    sxhd $r1 = $r1
+; CHECK-NEXT:    sxhd $r2 = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    maddwd $r0 = $r2, $r1
 ; CHECK-NEXT:    ret
@@ -670,8 +670,8 @@ define i64 @maddwdi16(i64 %a, i16 %b, i16 %c)  {
 ;
 ; V2-LABEL: maddwdi16:
 ; V2:       # %bb.0: # %entry
-; V2-NEXT:    sxhd $r2 = $r2
 ; V2-NEXT:    sxhd $r1 = $r1
+; V2-NEXT:    sxhd $r2 = $r2
 ; V2-NEXT:    ;;
 ; V2-NEXT:    maddwd $r0 = $r2, $r1
 ; V2-NEXT:    ret

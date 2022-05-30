@@ -18,19 +18,19 @@ define i32 @main() {
 ; CHECK-NEXT:    make $r6 = 2
 ; CHECK-NEXT:    make $r7 = 3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r3 = 4
-; CHECK-NEXT:    make $r4 = 0
 ; CHECK-NEXT:    copyd $r0 = $r5
 ; CHECK-NEXT:    copyd $r1 = $r6
+; CHECK-NEXT:    make $r3 = 4
+; CHECK-NEXT:    make $r4 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r2 = $r7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    movefo $r0r1r2r3 = $a0
 ; CHECK-NEXT:    movetq $a0_lo = $r0, $r1
 ; CHECK-NEXT:    movetq $a0_hi = $r2, $r3
+; CHECK-NEXT:    movefo $r0r1r2r3 = $a0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r0 = .L.str
 ; CHECK-NEXT:    sv 0[$r12] = $a0
+; CHECK-NEXT:    make $r0 = .L.str
 ; CHECK-NEXT:    copyd $r1 = $r4
 ; CHECK-NEXT:    copyd $r2 = $r5
 ; CHECK-NEXT:    ;;
@@ -49,8 +49,8 @@ define i32 @main() {
 ; CHECK-NEXT:    copyd $r4 = $r7
 ; CHECK-NEXT:    call printf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 56[$r12]
 ; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    ld $r16 = 56[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 64

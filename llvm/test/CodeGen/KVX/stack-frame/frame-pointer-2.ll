@@ -33,9 +33,9 @@ define dso_local i32 @test(i32 %sz, i32 %x) {
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    sbfd $r18 = $r0, $r12
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    copyd $r12 = $r18
 ; FP-ALL-NEXT:    copyd $r0 = $r1
 ; FP-ALL-NEXT:    copyd $r1 = $r18
+; FP-ALL-NEXT:    copyd $r12 = $r18
 ; FP-ALL-NEXT:    call g1
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    lwz $r0 = 0[$r18]

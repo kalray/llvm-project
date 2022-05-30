@@ -324,21 +324,21 @@ entry:
 define <2 x i8> @sadd_satv2i8(<2 x i8> %a, <2 x i8> %b) {
 ; KVXV1-LABEL: sadd_satv2i8:
 ; KVXV1:       # %bb.0: # %entry
-; KVXV1-NEXT:    extfz $r2 = $r0, 15, 8
-; KVXV1-NEXT:    extfz $r3 = $r1, 15, 8
 ; KVXV1-NEXT:    zxbd $r0 = $r0
 ; KVXV1-NEXT:    zxbd $r1 = $r1
+; KVXV1-NEXT:    extfz $r2 = $r0, 15, 8
+; KVXV1-NEXT:    extfz $r3 = $r1, 15, 8
 ; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    sllw $r2 = $r2, 24
-; KVXV1-NEXT:    sllw $r3 = $r3, 24
 ; KVXV1-NEXT:    sllw $r0 = $r0, 24
 ; KVXV1-NEXT:    sllw $r1 = $r1, 24
+; KVXV1-NEXT:    sllw $r2 = $r2, 24
+; KVXV1-NEXT:    sllw $r3 = $r3, 24
 ; KVXV1-NEXT:    ;;
 ; KVXV1-NEXT:    addsw $r0 = $r1, $r0
 ; KVXV1-NEXT:    addsw $r2 = $r3, $r2
 ; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    sraw $r1 = $r2, 24
 ; KVXV1-NEXT:    sraw $r0 = $r0, 24
+; KVXV1-NEXT:    sraw $r1 = $r2, 24
 ; KVXV1-NEXT:    ;;
 ; KVXV1-NEXT:    insf $r0 = $r1, 15, 8
 ; KVXV1-NEXT:    ret
@@ -357,17 +357,17 @@ entry:
 define <2 x i8> @sadd_satv2i8_ri(<2 x i8> %a) {
 ; KVXV1-LABEL: sadd_satv2i8_ri:
 ; KVXV1:       # %bb.0: # %entry
-; KVXV1-NEXT:    extfz $r1 = $r0, 15, 8
 ; KVXV1-NEXT:    zxbd $r0 = $r0
+; KVXV1-NEXT:    extfz $r1 = $r0, 15, 8
 ; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    sllw $r1 = $r1, 24
 ; KVXV1-NEXT:    sllw $r0 = $r0, 24
+; KVXV1-NEXT:    sllw $r1 = $r1, 24
 ; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    addsw $r1 = $r1, 0x1000000
 ; KVXV1-NEXT:    addsw $r0 = $r0, 0x1000000
+; KVXV1-NEXT:    addsw $r1 = $r1, 0x1000000
 ; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    sraw $r1 = $r1, 24
 ; KVXV1-NEXT:    sraw $r0 = $r0, 24
+; KVXV1-NEXT:    sraw $r1 = $r1, 24
 ; KVXV1-NEXT:    ;;
 ; KVXV1-NEXT:    insf $r0 = $r1, 15, 8
 ; KVXV1-NEXT:    ret
@@ -391,34 +391,34 @@ define <4 x i8> @sadd_satv4i8(<4 x i8> %a, <4 x i8> %b) {
 ; KVXV1-NEXT:    extfz $r4 = $r0, 23, 16
 ; KVXV1-NEXT:    extfz $r6 = $r0, 15, 8
 ; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    extfz $r5 = $r1, 23, 16
-; KVXV1-NEXT:    extfz $r7 = $r1, 15, 8
 ; KVXV1-NEXT:    zxbd $r0 = $r0
 ; KVXV1-NEXT:    zxbd $r1 = $r1
+; KVXV1-NEXT:    extfz $r5 = $r1, 23, 16
+; KVXV1-NEXT:    extfz $r7 = $r1, 15, 8
 ; KVXV1-NEXT:    ;;
 ; KVXV1-NEXT:    sllw $r2 = $r2, 24
 ; KVXV1-NEXT:    sllw $r3 = $r3, 24
 ; KVXV1-NEXT:    sllw $r4 = $r4, 24
 ; KVXV1-NEXT:    sllw $r6 = $r6, 24
 ; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    sllw $r5 = $r5, 24
-; KVXV1-NEXT:    sllw $r7 = $r7, 24
 ; KVXV1-NEXT:    sllw $r0 = $r0, 24
 ; KVXV1-NEXT:    sllw $r1 = $r1, 24
+; KVXV1-NEXT:    sllw $r5 = $r5, 24
+; KVXV1-NEXT:    sllw $r7 = $r7, 24
 ; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    addsw $r2 = $r3, $r2
 ; KVXV1-NEXT:    addsw $r0 = $r1, $r0
+; KVXV1-NEXT:    addsw $r2 = $r3, $r2
 ; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    sraw $r1 = $r2, 24
 ; KVXV1-NEXT:    addsw $r3 = $r5, $r4
 ; KVXV1-NEXT:    addsw $r4 = $r7, $r6
-; KVXV1-NEXT:    sraw $r1 = $r2, 24
 ; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    sraw $r2 = $r3, 24
 ; KVXV1-NEXT:    sraw $r0 = $r0, 24
+; KVXV1-NEXT:    sraw $r2 = $r3, 24
 ; KVXV1-NEXT:    sraw $r3 = $r4, 24
 ; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    insf $r2 = $r1, 15, 8
 ; KVXV1-NEXT:    insf $r0 = $r3, 15, 8
+; KVXV1-NEXT:    insf $r2 = $r1, 15, 8
 ; KVXV1-NEXT:    ;;
 ; KVXV1-NEXT:    insf $r0 = $r2, 31, 16
 ; KVXV1-NEXT:    ret
@@ -437,10 +437,10 @@ entry:
 define <4 x i8> @sadd_satv4i8_ri(<4 x i8> %a) {
 ; KVXV1-LABEL: sadd_satv4i8_ri:
 ; KVXV1:       # %bb.0: # %entry
+; KVXV1-NEXT:    extfz $r0 = $r0, 15, 8
 ; KVXV1-NEXT:    extfz $r1 = $r0, 23, 16
 ; KVXV1-NEXT:    zxbd $r2 = $r0
 ; KVXV1-NEXT:    srlw $r3 = $r0, 24
-; KVXV1-NEXT:    extfz $r0 = $r0, 15, 8
 ; KVXV1-NEXT:    ;;
 ; KVXV1-NEXT:    sllw $r1 = $r1, 24
 ; KVXV1-NEXT:    sllw $r2 = $r2, 24
@@ -450,11 +450,11 @@ define <4 x i8> @sadd_satv4i8_ri(<4 x i8> %a) {
 ; KVXV1-NEXT:    addsw $r1 = $r1, 0x80000000
 ; KVXV1-NEXT:    addsw $r2 = $r2, 0x7f000000
 ; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    sraw $r1 = $r1, 24
 ; KVXV1-NEXT:    sraw $r0 = $r2, 24
+; KVXV1-NEXT:    sraw $r1 = $r1, 24
 ; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    insf $r1 = $r3, 15, 8
 ; KVXV1-NEXT:    insf $r0 = $r4, 15, 8
+; KVXV1-NEXT:    insf $r1 = $r3, 15, 8
 ; KVXV1-NEXT:    ;;
 ; KVXV1-NEXT:    insf $r0 = $r1, 31, 16
 ; KVXV1-NEXT:    ret
@@ -482,8 +482,8 @@ define <8 x i8> @sadd_satv8i8(<8 x i8> %a, <8 x i8> %b) {
 ; KVXV1-NEXT:    addshq $r0 = $r1, $r0
 ; KVXV1-NEXT:    addshq $r2 = $r3, $r2
 ; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    srlhqs $r1 = $r2, 8
 ; KVXV1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
+; KVXV1-NEXT:    srlhqs $r1 = $r2, 8
 ; KVXV1-NEXT:    ;;
 ; KVXV1-NEXT:    ord $r0 = $r0, $r1
 ; KVXV1-NEXT:    ret
@@ -513,8 +513,8 @@ define <8 x i8> @sadd_satv8i8_ri_(<8 x i8> %a) {
 ; KVXV1-NEXT:    addshq $r0 = $r0, $r1
 ; KVXV1-NEXT:    addshq $r2 = $r3, $r2
 ; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    srlhqs $r1 = $r2, 8
 ; KVXV1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
+; KVXV1-NEXT:    srlhqs $r1 = $r2, 8
 ; KVXV1-NEXT:    ;;
 ; KVXV1-NEXT:    ord $r0 = $r0, $r1
 ; KVXV1-NEXT:    ret
@@ -544,8 +544,8 @@ define <8 x i8> @sadd_satv8i8_ri_at(<8 x i8> %a) {
 ; KVXV1-NEXT:    addshq $r0 = $r0, $r1
 ; KVXV1-NEXT:    addshq $r2 = $r3, $r2
 ; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    srlhqs $r1 = $r2, 8
 ; KVXV1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
+; KVXV1-NEXT:    srlhqs $r1 = $r2, 8
 ; KVXV1-NEXT:    ;;
 ; KVXV1-NEXT:    ord $r0 = $r0, $r1
 ; KVXV1-NEXT:    ret

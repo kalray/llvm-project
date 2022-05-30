@@ -5,8 +5,8 @@ target triple = "kvx-kalray-cos"
 define i32 @f(i32 %a){
 ; CHECK-LABEL: f:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    copyw $r1 = $r0
 ; CHECK-NEXT:    make $r0 = 5
+; CHECK-NEXT:    copyw $r1 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.wlez $r1 ? $r0 = 7
 ; CHECK-NEXT:    ret
@@ -62,15 +62,15 @@ define <4 x half> @f_Select32PAT(<4 x half> %x, <4 x half> %y){
 ; CHECK-NEXT:    fcompnhq.olt $r8 = $r0, $r1
 ; CHECK-NEXT:    fcompnhq.olt $r9 = $r2, $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompnhq.olt $r10 = $r4, $r5
-; CHECK-NEXT:    fcompnhq.olt $r11 = $r6, $r7
 ; CHECK-NEXT:    andw $r8 = $r8, 1
 ; CHECK-NEXT:    andw $r9 = $r9, 1
+; CHECK-NEXT:    fcompnhq.olt $r10 = $r4, $r5
+; CHECK-NEXT:    fcompnhq.olt $r11 = $r6, $r7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r10 = $r10, 1
-; CHECK-NEXT:    andw $r11 = $r11, 1
 ; CHECK-NEXT:    cmoved.wnez $r8 ? $r0 = $r1
 ; CHECK-NEXT:    cmoved.wnez $r9 ? $r2 = $r3
+; CHECK-NEXT:    andw $r10 = $r10, 1
+; CHECK-NEXT:    andw $r11 = $r11, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.wnez $r10 ? $r4 = $r5
 ; CHECK-NEXT:    cmoved.wnez $r11 ? $r6 = $r7
@@ -122,8 +122,8 @@ entry:
 define <2 x float> @f_select_cc_v2f32(i32 %c, i32 %c2, <2 x float> %a, <2 x float> %b){
 ; CHECK-LABEL: f_select_cc_v2f32:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    compw.gt $r1 = $r0, $r1
 ; CHECK-NEXT:    copyd $r0 = $r2
+; CHECK-NEXT:    compw.gt $r1 = $r0, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.even $r1 ? $r0 = $r3
 ; CHECK-NEXT:    ret

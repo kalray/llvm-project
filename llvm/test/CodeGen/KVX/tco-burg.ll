@@ -14,14 +14,14 @@ define void @reveachList(i8* (i8*)* nocapture %f, %struct.list* readonly %l){
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
-; CHECK-NEXT:    copyd $r19 = $r1
 ; CHECK-NEXT:    copyd $r18 = $r0
+; CHECK-NEXT:    copyd $r19 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.deqz $r19 ? .LBB0_1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.2: # %if.end
-; CHECK-NEXT:    ld $r1 = 8[$r19]
 ; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    ld $r1 = 8[$r19]
 ; CHECK-NEXT:    call reveachList
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r0 = 0[$r19]

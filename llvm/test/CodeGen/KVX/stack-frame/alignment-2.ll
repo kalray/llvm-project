@@ -28,9 +28,9 @@ define i32 @h() {
 ; FP-NONE-NEXT:    copyd $r5 = $r0
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    so 32[$r12] = $r0r1r2r3
+; FP-NONE-NEXT:    addd $r0 = $r12, 0
 ; FP-NONE-NEXT:    copyd $r6 = $r0
 ; FP-NONE-NEXT:    copyd $r7 = $r0
-; FP-NONE-NEXT:    addd $r0 = $r12, 0
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    so 0[$r12] = $r4r5r6r7
 ; FP-NONE-NEXT:    call i
@@ -51,9 +51,9 @@ define i32 @h() {
 ; FP-ALL-NEXT:    sd 88[$r12] = $r16
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    sd 80[$r12] = $r14
-; FP-ALL-NEXT:    addd $r14 = $r12, 80
 ; FP-ALL-NEXT:    make $r0 = 0
 ; FP-ALL-NEXT:    make $r4 = 9
+; FP-ALL-NEXT:    addd $r14 = $r12, 80
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    copyd $r1 = $r0
 ; FP-ALL-NEXT:    copyd $r2 = $r0
@@ -61,9 +61,9 @@ define i32 @h() {
 ; FP-ALL-NEXT:    copyd $r5 = $r0
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    so -48[$r14] = $r0r1r2r3
+; FP-ALL-NEXT:    addd $r0 = $r14, -80
 ; FP-ALL-NEXT:    copyd $r6 = $r0
 ; FP-ALL-NEXT:    copyd $r7 = $r0
-; FP-ALL-NEXT:    addd $r0 = $r14, -80
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    so -80[$r14] = $r4r5r6r7
 ; FP-ALL-NEXT:    call i
