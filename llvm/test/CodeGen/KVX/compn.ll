@@ -1217,15 +1217,23 @@ entry:
 }
 
 define i32 @foo_i32_f64_lt(double %a){
-; CHECK-LABEL: foo_i32_f64_lt:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x4014000000000000
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompd.olt $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    negw $r0 = $r0
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: foo_i32_f64_lt:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    make $r1 = 0x4014000000000000
+; V1-NEXT:    ;;
+; V1-NEXT:    fcompd.olt $r0 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    negw $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: foo_i32_f64_lt:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    make $r1 = 0x4014000000000000
+; V2-NEXT:    ;;
+; V2-NEXT:    fcompnd.olt $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
 entry:
   %cmp = fcmp olt double %a, 5.0
   %conv = sext i1 %cmp to i32
@@ -1851,5 +1859,698 @@ define i64 @foo_i64_i64_neq_ri_at(i64 %a){
 entry:
   %cmp = icmp ne i64 %a, 209933706510063
   %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+define i32 @fcompnd_oeq(double %a, double %b){
+; V1-LABEL: fcompnd_oeq:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    fcompd.oeq $r0 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    negw $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: fcompnd_oeq:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    fcompnd.oeq $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = fcmp oeq double %a, %b
+  %conv = sext i1 %cmp to i32
+  ret i32 %conv
+}
+
+define i32 @fcompnd_ogt(double %a, double %b){
+; V1-LABEL: fcompnd_ogt:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    fcompd.olt $r0 = $r1, $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    negw $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: fcompnd_ogt:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    fcompnd.olt $r0 = $r1, $r0
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = fcmp ogt double %a, %b
+  %conv = sext i1 %cmp to i32
+  ret i32 %conv
+}
+
+define i32 @fcompnd_oge(double %a, double %b){
+; V1-LABEL: fcompnd_oge:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    fcompd.oge $r0 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    negw $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: fcompnd_oge:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    fcompnd.oge $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = fcmp oge double %a, %b
+  %conv = sext i1 %cmp to i32
+  ret i32 %conv
+}
+
+define i32 @fcompnd_olt(double %a, double %b){
+; V1-LABEL: fcompnd_olt:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    fcompd.olt $r0 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    negw $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: fcompnd_olt:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    fcompnd.olt $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = fcmp olt double %a, %b
+  %conv = sext i1 %cmp to i32
+  ret i32 %conv
+}
+
+define i32 @fcompnd_ole(double %a, double %b){
+; V1-LABEL: fcompnd_ole:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    fcompd.oge $r0 = $r1, $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    negw $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: fcompnd_ole:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    fcompnd.oge $r0 = $r1, $r0
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = fcmp ole double %a, %b
+  %conv = sext i1 %cmp to i32
+  ret i32 %conv
+}
+
+define i32 @fcompnd_ueq(double %a, double %b){
+; V1-LABEL: fcompnd_ueq:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    fcompd.ueq $r0 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    negw $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: fcompnd_ueq:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    fcompnd.ueq $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = fcmp ueq double %a, %b
+  %conv = sext i1 %cmp to i32
+  ret i32 %conv
+}
+
+define i32 @fcompnd_ugt(double %a, double %b){
+; V1-LABEL: fcompnd_ugt:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    fcompd.ult $r0 = $r1, $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    negw $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: fcompnd_ugt:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    fcompnd.ult $r0 = $r1, $r0
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = fcmp ugt double %a, %b
+  %conv = sext i1 %cmp to i32
+  ret i32 %conv
+}
+
+define i32 @fcompnd_uge(double %a, double %b){
+; V1-LABEL: fcompnd_uge:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    fcompd.uge $r0 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    negw $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: fcompnd_uge:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    fcompnd.uge $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = fcmp uge double %a, %b
+  %conv = sext i1 %cmp to i32
+  ret i32 %conv
+}
+
+define i32 @fcompnd_ult(double %a, double %b){
+; V1-LABEL: fcompnd_ult:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    fcompd.ult $r0 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    negw $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: fcompnd_ult:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    fcompnd.ult $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = fcmp ult double %a, %b
+  %conv = sext i1 %cmp to i32
+  ret i32 %conv
+}
+
+define i32 @fcompnd_ule(double %a, double %b){
+; V1-LABEL: fcompnd_ule:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    fcompd.uge $r0 = $r1, $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    negw $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: fcompnd_ule:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    fcompnd.uge $r0 = $r1, $r0
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = fcmp ule double %a, %b
+  %conv = sext i1 %cmp to i32
+  ret i32 %conv
+}
+
+define i32 @fcompnd_une(double %a, double %b){
+; V1-LABEL: fcompnd_une:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    fcompd.une $r0 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    negw $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: fcompnd_une:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    fcompnd.une $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = fcmp une double %a, %b
+  %conv = sext i1 %cmp to i32
+  ret i32 %conv
+}
+
+define i64 @fcompnd_oeq_i64(double %a, double %b){
+; V1-LABEL: fcompnd_oeq_i64:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    make $r0 = -1
+; V1-NEXT:    fcompd.oeq $r1 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: fcompnd_oeq_i64:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    fcompnd.oeq $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = fcmp oeq double %a, %b
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+define i64 @fcompnd_ogt_i64(double %a, double %b){
+; V1-LABEL: fcompnd_ogt_i64:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    make $r0 = -1
+; V1-NEXT:    fcompd.olt $r1 = $r1, $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: fcompnd_ogt_i64:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    fcompnd.olt $r0 = $r1, $r0
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = fcmp ogt double %a, %b
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+define i64 @fcompnd_oge_i64(double %a, double %b){
+; V1-LABEL: fcompnd_oge_i64:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    make $r0 = -1
+; V1-NEXT:    fcompd.oge $r1 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: fcompnd_oge_i64:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    fcompnd.oge $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = fcmp oge double %a, %b
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+define i64 @fcompnd_olt_i64(double %a, double %b){
+; V1-LABEL: fcompnd_olt_i64:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    make $r0 = -1
+; V1-NEXT:    fcompd.olt $r1 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: fcompnd_olt_i64:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    fcompnd.olt $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = fcmp olt double %a, %b
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+define i64 @fcompnd_ole_i64(double %a, double %b){
+; V1-LABEL: fcompnd_ole_i64:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    make $r0 = -1
+; V1-NEXT:    fcompd.oge $r1 = $r1, $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: fcompnd_ole_i64:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    fcompnd.oge $r0 = $r1, $r0
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = fcmp ole double %a, %b
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+define i64 @fcompnd_ueq_i64(double %a, double %b){
+; V1-LABEL: fcompnd_ueq_i64:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    make $r0 = -1
+; V1-NEXT:    fcompd.ueq $r1 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: fcompnd_ueq_i64:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    fcompnd.ueq $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = fcmp ueq double %a, %b
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+define i64 @fcompnd_ugt_i64(double %a, double %b){
+; V1-LABEL: fcompnd_ugt_i64:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    make $r0 = -1
+; V1-NEXT:    fcompd.ult $r1 = $r1, $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: fcompnd_ugt_i64:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    fcompnd.ult $r0 = $r1, $r0
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = fcmp ugt double %a, %b
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+define i64 @fcompnd_uge_i64(double %a, double %b){
+; V1-LABEL: fcompnd_uge_i64:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    make $r0 = -1
+; V1-NEXT:    fcompd.uge $r1 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: fcompnd_uge_i64:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    fcompnd.uge $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = fcmp uge double %a, %b
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+define i64 @fcompnd_ult_i64(double %a, double %b){
+; V1-LABEL: fcompnd_ult_i64:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    make $r0 = -1
+; V1-NEXT:    fcompd.ult $r1 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: fcompnd_ult_i64:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    fcompnd.ult $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = fcmp ult double %a, %b
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+define i64 @fcompnd_ule_i64(double %a, double %b){
+; V1-LABEL: fcompnd_ule_i64:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    make $r0 = -1
+; V1-NEXT:    fcompd.uge $r1 = $r1, $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: fcompnd_ule_i64:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    fcompnd.uge $r0 = $r1, $r0
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = fcmp ule double %a, %b
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+define i64 @fcompnd_une_i64(double %a, double %b){
+; V1-LABEL: fcompnd_une_i64:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    make $r0 = -1
+; V1-NEXT:    fcompd.une $r1 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: fcompnd_une_i64:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    fcompnd.une $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = fcmp une double %a, %b
+  %conv = sext i1 %cmp to i64
+  ret i64 %conv
+}
+
+define i64 @fcompnd_oeq_i32_i64(double %a, double %b){
+; V1-LABEL: fcompnd_oeq_i32_i64:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    make $r0 = -1
+; V1-NEXT:    fcompd.oeq $r1 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: fcompnd_oeq_i32_i64:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    fcompnd.oeq $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = fcmp oeq double %a, %b
+  %conv0 = sext i1 %cmp to i32
+  %conv = sext i32 %conv0 to i64
+  ret i64 %conv
+}
+
+define i64 @fcompnd_ogt_i32_i64(double %a, double %b){
+; V1-LABEL: fcompnd_ogt_i32_i64:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    make $r0 = -1
+; V1-NEXT:    fcompd.olt $r1 = $r1, $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: fcompnd_ogt_i32_i64:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    fcompnd.olt $r0 = $r1, $r0
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = fcmp ogt double %a, %b
+  %conv0 = sext i1 %cmp to i32
+  %conv = sext i32 %conv0 to i64
+  ret i64 %conv
+}
+
+define i64 @fcompnd_oge_i32_i64(double %a, double %b){
+; V1-LABEL: fcompnd_oge_i32_i64:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    make $r0 = -1
+; V1-NEXT:    fcompd.oge $r1 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: fcompnd_oge_i32_i64:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    fcompnd.oge $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = fcmp oge double %a, %b
+  %conv0 = sext i1 %cmp to i32
+  %conv = sext i32 %conv0 to i64
+  ret i64 %conv
+}
+
+define i64 @fcompnd_olt_i32_i64(double %a, double %b){
+; V1-LABEL: fcompnd_olt_i32_i64:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    make $r0 = -1
+; V1-NEXT:    fcompd.olt $r1 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: fcompnd_olt_i32_i64:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    fcompnd.olt $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = fcmp olt double %a, %b
+  %conv0 = sext i1 %cmp to i32
+  %conv = sext i32 %conv0 to i64
+  ret i64 %conv
+}
+
+define i64 @fcompnd_ole_i32_i64(double %a, double %b){
+; V1-LABEL: fcompnd_ole_i32_i64:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    make $r0 = -1
+; V1-NEXT:    fcompd.oge $r1 = $r1, $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: fcompnd_ole_i32_i64:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    fcompnd.oge $r0 = $r1, $r0
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = fcmp ole double %a, %b
+  %conv0 = sext i1 %cmp to i32
+  %conv = sext i32 %conv0 to i64
+  ret i64 %conv
+}
+
+define i64 @fcompnd_ueq_i32_i64(double %a, double %b){
+; V1-LABEL: fcompnd_ueq_i32_i64:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    make $r0 = -1
+; V1-NEXT:    fcompd.ueq $r1 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: fcompnd_ueq_i32_i64:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    fcompnd.ueq $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = fcmp ueq double %a, %b
+  %conv0 = sext i1 %cmp to i32
+  %conv = sext i32 %conv0 to i64
+  ret i64 %conv
+}
+
+define i64 @fcompnd_ugt_i32_i64(double %a, double %b){
+; V1-LABEL: fcompnd_ugt_i32_i64:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    make $r0 = -1
+; V1-NEXT:    fcompd.ult $r1 = $r1, $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: fcompnd_ugt_i32_i64:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    fcompnd.ult $r0 = $r1, $r0
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = fcmp ugt double %a, %b
+  %conv0 = sext i1 %cmp to i32
+  %conv = sext i32 %conv0 to i64
+  ret i64 %conv
+}
+
+define i64 @fcompnd_uge_i32_i64(double %a, double %b){
+; V1-LABEL: fcompnd_uge_i32_i64:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    make $r0 = -1
+; V1-NEXT:    fcompd.uge $r1 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: fcompnd_uge_i32_i64:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    fcompnd.uge $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = fcmp uge double %a, %b
+  %conv0 = sext i1 %cmp to i32
+  %conv = sext i32 %conv0 to i64
+  ret i64 %conv
+}
+
+define i64 @fcompnd_ult_i32_i64(double %a, double %b){
+; V1-LABEL: fcompnd_ult_i32_i64:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    make $r0 = -1
+; V1-NEXT:    fcompd.ult $r1 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: fcompnd_ult_i32_i64:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    fcompnd.ult $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = fcmp ult double %a, %b
+  %conv0 = sext i1 %cmp to i32
+  %conv = sext i32 %conv0 to i64
+  ret i64 %conv
+}
+
+define i64 @fcompnd_ule_i32_i64(double %a, double %b){
+; V1-LABEL: fcompnd_ule_i32_i64:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    make $r0 = -1
+; V1-NEXT:    fcompd.uge $r1 = $r1, $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: fcompnd_ule_i32_i64:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    fcompnd.uge $r0 = $r1, $r0
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = fcmp ule double %a, %b
+  %conv0 = sext i1 %cmp to i32
+  %conv = sext i32 %conv0 to i64
+  ret i64 %conv
+}
+
+define i64 @fcompnd_une_i32_i64(double %a, double %b){
+; V1-LABEL: fcompnd_une_i32_i64:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    make $r0 = -1
+; V1-NEXT:    fcompd.une $r1 = $r0, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    cmoved.even $r1 ? $r0 = 0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: fcompnd_une_i32_i64:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    fcompnd.une $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+entry:
+  %cmp = fcmp une double %a, %b
+  %conv0 = sext i1 %cmp to i32
+  %conv = sext i32 %conv0 to i64
   ret i64 %conv
 }
