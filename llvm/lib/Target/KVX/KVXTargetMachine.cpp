@@ -129,7 +129,11 @@ namespace {
 class KVXPassConfig : public TargetPassConfig {
 public:
   KVXPassConfig(KVXTargetMachine &TM, PassManagerBase &PM)
-      : TargetPassConfig(TM, PM) {}
+      : TargetPassConfig(TM, PM) {
+    if (!DisableLOOPDO) {
+      disablePass(&EarlyTailDuplicateID);
+    }
+  }
 
   KVXTargetMachine &getKVXTargetMachine() const {
     return getTM<KVXTargetMachine>();
