@@ -29,34 +29,40 @@ define i32 @d() {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sq 8[$r12] = $r18r19
+; CHECK-NEXT:    sd 16[$r12] = $r20
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sq 0[$r12] = $r18r19
 ; CHECK-NEXT:    make $r0 = a
-; CHECK-NEXT:    make $r2 = 0x7d0
 ; CHECK-NEXT:    make $r18 = c
+; CHECK-NEXT:    make $r19 = 0x7d0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lws $r0 = 0[$r0]
-; CHECK-NEXT:    make $r1 = 0
-; CHECK-NEXT:    make $r19 = b
+; CHECK-NEXT:    make $r20 = b
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 0[$r18] = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    loopdo $r2, .__LOOPDO_0_END_
+; CHECK-NEXT:  .LBB0_1: # %for.cond
+; CHECK-NEXT:    # =>This Loop Header: Depth=1
+; CHECK-NEXT:    # Child Loop BB0_3 Depth 2
+; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_2: # %for.body
-; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
+; CHECK-NEXT:    loopdo $r19, .__LOOPDO_0_END_
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  .LBB0_3: # %for.body
+; CHECK-NEXT:    # Parent Loop BB0_1 Depth=1
+; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
 ; CHECK-NEXT:    addd $r1 = $r1, 1
 ; CHECK-NEXT:    lwz.xs $r2 = $r1[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 0[$r19] = $r2
+; CHECK-NEXT:    sw 0[$r20] = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .__LOOPDO_0_END_:
-; CHECK-NEXT:  # %bb.1: # %for.cond.cleanup
-; CHECK-NEXT:    # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:  # %bb.2: # %for.cond.cleanup
+; CHECK-NEXT:    # in Loop: Header=BB0_1 Depth=1
 ; CHECK-NEXT:    call f
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r0 = 0[$r18]
-; CHECK-NEXT:    make $r1 = 0
-; CHECK-NEXT:    goto .LBB0_2
+; CHECK-NEXT:    goto .LBB0_1
 ; CHECK-NEXT:    ;;
 entry:
   %0 = load i32, i32* @a, align 4
