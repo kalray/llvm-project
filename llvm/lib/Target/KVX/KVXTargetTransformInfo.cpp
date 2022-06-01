@@ -16,6 +16,8 @@
 #include "llvm/IR/IntrinsicsKVX.h"
 #include "llvm/Support/CommandLine.h"
 #include "llvm/Support/Debug.h"
+#include "llvm/Support/ErrorHandling.h"
+#include "llvm/Transforms/Utils/UnrollLoop.h"
 
 using namespace llvm;
 #define DEBUG_TYPE "KVXTTI"
@@ -223,6 +225,9 @@ bool KVXTTIImpl::isHardwareLoopProfitableCheck(Loop *L, ScalarEvolution &SE) {
   if (!CanFallThroughToExit)
     return false;
 
+  if (MDNode *LoopID = L->getLoopID())
+    return !GetUnrollMetadata(LoopID, "llvm.loop.remainder");
+
   LLVM_DEBUG(dbgs() << "Can be optimized to a hardware loop.\n");
   return true;
 }
@@ -246,7 +251,7 @@ void KVXTTIImpl::getUnrollingPreferences(Loop *L, ScalarEvolution &SE,
   UP.UnrollRemainder = true;
   UP.Force = true;
 }
-
+bool KVXTTIImpl::shouldAddRemainderMetaData() { return true; }
 bool KVXTTIImpl::isHardwareLoopProfitable(Loop *L, ScalarEvolution &SE,
                                           AssumptionCache &AC,
                                           TargetLibraryInfo *LibInfo,

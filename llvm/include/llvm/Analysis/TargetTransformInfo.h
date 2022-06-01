@@ -525,6 +525,8 @@ public:
   bool isHardwareLoopProfitable(Loop *L, ScalarEvolution &SE,
                                 AssumptionCache &AC, TargetLibraryInfo *LibInfo,
                                 HardwareLoopInfo &HWLoopInfo) const;
+  // Flag loop as vectorization remainder.
+  bool shouldAddRemainderMetaData();
 
   /// Query the target whether it would be prefered to create a predicated
   /// vector loop, which can avoid the need to emit a scalar epilogue loop.
@@ -1560,6 +1562,7 @@ public:
                                         AssumptionCache &AC,
                                         TargetLibraryInfo *LibInfo,
                                         HardwareLoopInfo &HWLoopInfo) = 0;
+  virtual bool shouldAddRemainderMetaData() = 0;
   virtual bool preferPredicateOverEpilogue(Loop *L, LoopInfo *LI,
                                            ScalarEvolution &SE,
                                            AssumptionCache &AC,
@@ -1940,6 +1943,10 @@ public:
                                 HardwareLoopInfo &HWLoopInfo) override {
     return Impl.isHardwareLoopProfitable(L, SE, AC, LibInfo, HWLoopInfo);
   }
+  bool shouldAddRemainderMetaData() override {
+    return Impl.shouldAddRemainderMetaData();
+  }
+
   bool preferPredicateOverEpilogue(Loop *L, LoopInfo *LI, ScalarEvolution &SE,
                                    AssumptionCache &AC, TargetLibraryInfo *TLI,
                                    DominatorTree *DT,
