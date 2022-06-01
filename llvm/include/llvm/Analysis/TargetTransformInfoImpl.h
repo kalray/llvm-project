@@ -140,6 +140,7 @@ public:
                                 HardwareLoopInfo &HWLoopInfo) const {
     return false;
   }
+  bool shouldAddRemainderMetaData() { return false; }
 
   bool preferPredicateOverEpilogue(Loop *L, LoopInfo *LI, ScalarEvolution &SE,
                                    AssumptionCache &AC, TargetLibraryInfo *TLI,

@@ -49,6 +49,7 @@ public:
   bool isHardwareLoopProfitable(Loop *L, ScalarEvolution &SE,
                                 AssumptionCache &AC, TargetLibraryInfo *LibInfo,
                                 HardwareLoopInfo &HWLoopInfo);
+  bool shouldAddRemainderMetaData();
   bool isLoweredToCall(const Function *F);
   bool isLoweredToCall(const CallInst &CI);
   bool isLSRCostLess(TargetTransformInfo::LSRCost &C1,

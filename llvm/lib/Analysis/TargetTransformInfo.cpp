@@ -325,6 +325,9 @@ bool TargetTransformInfo::isHardwareLoopProfitable(
     TargetLibraryInfo *LibInfo, HardwareLoopInfo &HWLoopInfo) const {
   return TTIImpl->isHardwareLoopProfitable(L, SE, AC, LibInfo, HWLoopInfo);
 }
+bool TargetTransformInfo::shouldAddRemainderMetaData() {
+  return TTIImpl->shouldAddRemainderMetaData();
+}
 
 bool TargetTransformInfo::preferPredicateOverEpilogue(
     Loop *L, LoopInfo *LI, ScalarEvolution &SE, AssumptionCache &AC,
