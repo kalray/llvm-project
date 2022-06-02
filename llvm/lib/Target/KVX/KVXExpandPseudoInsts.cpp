@@ -1045,6 +1045,55 @@ static bool expandCopyZ(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   return true;
 }
 
+static bool prefixLoopEndWithNop(const KVXInstrInfo *TII,
+                                 MachineBasicBlock &MBB,
+                                 MachineBasicBlock::iterator MBBI) {
+  // If the loop_end position is not the first instruction of the basic block,
+  // we don't have to look at predecessor blocks
+  if (MBB.getFirstNonDebugInstr() != MBBI) {
+    auto *PreviousInstr = MBBI->getPrevNode();
+    if (PreviousInstr->isBranch()) {
+      DEBUG_WITH_TYPE("hardware-loops",
+                      dbgs()
+                          << "Must emit a NOP instruction before the label.\n");
+      BuildMI(MBB, MBBI, MBBI->getDebugLoc(), TII->get(KVX::NOP));
+      return true; // we return because a nop has already been added
+    }
+    return false;
+  }
+  // If the block has more than a predecessor, there's necessarily a branch to
+  // it, so a nop is needed.
+  if (MBB.pred_size() > 1) {
+    DEBUG_WITH_TYPE(
+        "hardware-loops",
+        dbgs() << "Must emit a NOP instruction before the label.\n");
+    BuildMI(MBB, MBBI, MBBI->getDebugLoc(), TII->get(KVX::NOP));
+    return true; // we return because a nop has already been added
+  }
+  // If the block has a single predecessor and it's a fallthrough, we check the
+  // last instruction of this block to decide if a nop is needed
+  auto *PredBB = *MBB.pred_begin();
+  // If the block is empty or only has debug instructions
+  if (PredBB->getLastNonDebugInstr() == PredBB->end()) {
+    DEBUG_WITH_TYPE(
+        "hardware-loops",
+        dbgs() << "Must emit a NOP instruction before the label.\n");
+    BuildMI(MBB, MBBI, MBBI->getDebugLoc(), TII->get(KVX::NOP));
+    return true; // we return because a nop has already been added
+  }
+  auto LastInstInPred = PredBB->getLastNonDebugInstr();
+  // we need a nop if single predecessors doesn't fallthrough, or if it falls
+  // through but it's last instruction is a branch
+  if (PredBB->getFallThrough() != &MBB || LastInstInPred->isBranch()) {
+    DEBUG_WITH_TYPE(
+        "hardware-loops",
+        dbgs() << "Must emit a NOP instruction before the label.\n");
+    BuildMI(MBB, MBBI, MBBI->getDebugLoc(), TII->get(KVX::NOP));
+    return true; // we return because a nop has already been added
+  }
+  return false; // no nop was needed
+}
+
 static bool expandENDLOOP(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
                           MachineBasicBlock::iterator MBBI) {
 
@@ -1413,6 +1462,15 @@ bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
   case KVX::SWAPVOp:
   case KVX::BUNDLE:
     return expandSWAPVOp(TII, MBB, MBBI);
+  // Must expand LOOPDO_END label to add NOP if last bundle is a branch
+  // instruction. This is done after PRE_EMIT when all CFG optimizations have
+  // been run.
+  case TargetOpcode::EH_LABEL: {
+    if (MBBI->getOperand(0).getMCSymbol()->getName().contains(".__LOOPDO_")) {
+      return prefixLoopEndWithNop(TII, MBB, MBBI);
+    }
+    return false;
+  }
   default:
     return false;
   }
