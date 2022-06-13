@@ -131,12 +131,16 @@ define float @asm_clobber_multiple_quad(float %a, <2 x i64> %b, <4 x i64> %c){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 16[$r12] = $r18
 ; CHECK-NEXT:    copyd $r4 = $r3
-; CHECK-NEXT:    addd $r5 = $r1, $r2
+; CHECK-NEXT:    copyd $r5 = $r2
+; CHECK-NEXT:    copyd $r6 = $r1
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    #NO_APP
-; CHECK-NEXT:    addd $r0 = $r5, $r4
+; CHECK-NEXT:    addd $r0 = $r6, $r5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r0 = $r0, $r4
 ; CHECK-NEXT:    call __floatdisf
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    faddw $r0 = $r0, $r18
@@ -228,17 +232,19 @@ entry:
 define i64 @local_regs(i32 %a, i64 %b, i64 %c, i64 %d, i64 %e, i64 %f, i64 %g){
 ; CHECK-LABEL: local_regs:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    copyd $r1 = $r2
-; CHECK-NEXT:    copyd $r2 = $r3
-; CHECK-NEXT:    copyd $r7 = $r0
+; CHECK-NEXT:    copyd $r7 = $r1
+; CHECK-NEXT:    copyd $r8 = $r0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r7
+; CHECK-NEXT:    copyd $r2 = $r3
 ; CHECK-NEXT:    copyd $r3 = $r4
 ; CHECK-NEXT:    copyd $r4 = $r5
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r5 = $r6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
-; CHECK-NEXT:    scall $r7
+; CHECK-NEXT:    scall $r8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP

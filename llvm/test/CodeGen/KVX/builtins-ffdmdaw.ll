@@ -74,15 +74,15 @@ define <4 x float> @ffdmdawq(<8 x float> %a, <8 x float> %b, <4 x float> %c) {
 ;
 ; V2-LABEL: ffdmdawq:
 ; V2:       # %bb.0: # %entry
+; V2-NEXT:    copyd $r5 = $r2
 ; V2-NEXT:    copyd $r6 = $r5
 ; V2-NEXT:    copyd $r10 = $r4
 ; V2-NEXT:    copyd $r11 = $r6
-; V2-NEXT:    copyd $r17 = $r2
 ; V2-NEXT:    ;;
 ; V2-NEXT:    copyd $r2 = $r1
-; V2-NEXT:    copyd $r16 = $r0
+; V2-NEXT:    copyd $r4 = $r0
 ; V2-NEXT:    ;;
-; V2-NEXT:    ffdmdawp $r8 = $r16r17, $r10r11
+; V2-NEXT:    ffdmdawp $r8 = $r4r5, $r10r11
 ; V2-NEXT:    ;;
 ; V2-NEXT:    copyd $r0 = $r8
 ; V2-NEXT:    ffdmdawp $r9 = $r2r3, $r6r7
@@ -126,15 +126,15 @@ define <4 x float> @ffdmdawq_rn_s(<8 x float> %a, <8 x float> %b, <4 x float> %c
 ;
 ; V2-LABEL: ffdmdawq_rn_s:
 ; V2:       # %bb.0: # %entry
+; V2-NEXT:    copyd $r5 = $r2
 ; V2-NEXT:    copyd $r6 = $r5
 ; V2-NEXT:    copyd $r10 = $r4
 ; V2-NEXT:    copyd $r11 = $r6
-; V2-NEXT:    copyd $r17 = $r2
 ; V2-NEXT:    ;;
 ; V2-NEXT:    copyd $r2 = $r1
-; V2-NEXT:    copyd $r16 = $r0
+; V2-NEXT:    copyd $r4 = $r0
 ; V2-NEXT:    ;;
-; V2-NEXT:    ffdmdawp.rn.s $r8 = $r16r17, $r10r11
+; V2-NEXT:    ffdmdawp.rn.s $r8 = $r4r5, $r10r11
 ; V2-NEXT:    ;;
 ; V2-NEXT:    copyd $r0 = $r8
 ; V2-NEXT:    ffdmdawp.rn.s $r9 = $r2r3, $r6r7
