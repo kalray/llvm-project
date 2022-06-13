@@ -642,10 +642,11 @@ entry:
 define <2 x i32> @shuffle_v2i32_2_1(<2 x i32> %0, <2 x i32> %1) {
 ; ALL-LABEL: shuffle_v2i32_2_1:
 ; ALL:       # %bb.0: # %entry
-; ALL-NEXT:    copyd $r0 = $r1
-; ALL-NEXT:    srad $r2 = $r0, 32
+; ALL-NEXT:    srad $r0 = $r0, 32
 ; ALL-NEXT:    ;;
-; ALL-NEXT:    insf $r0 = $r2, 63, 32
+; ALL-NEXT:    insf $r1 = $r0, 63, 32
+; ALL-NEXT:    ;;
+; ALL-NEXT:    copyd $r0 = $r1
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
 entry:

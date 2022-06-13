@@ -1440,16 +1440,15 @@ define <4 x i8> @subx2_i8x4_rr(<4 x i8> %a, <4 x i8> %b) {
 ; V1-NEXT:    extfz $r3 = $r1, 23, 16
 ; V1-NEXT:    extfz $r4 = $r1, 15, 8
 ; V1-NEXT:    ;;
-; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    sllw $r1 = $r1, 1
 ; V1-NEXT:    sllw $r2 = $r2, 1
 ; V1-NEXT:    sllw $r3 = $r3, 1
 ; V1-NEXT:    sllw $r4 = $r4, 1
 ; V1-NEXT:    ;;
-; V1-NEXT:    sllw $r1 = $r1, 1
+; V1-NEXT:    insf $r1 = $r4, 15, 8
 ; V1-NEXT:    insf $r3 = $r2, 15, 8
 ; V1-NEXT:    ;;
-; V1-NEXT:    insf $r1 = $r4, 15, 8
-; V1-NEXT:    ;;
+; V1-NEXT:    sxlbhq $r0 = $r0
 ; V1-NEXT:    insf $r1 = $r3, 31, 16
 ; V1-NEXT:    ;;
 ; V1-NEXT:    sxlbhq $r1 = $r1
@@ -1479,16 +1478,15 @@ define <4 x i8> @subx2_u8x4_rr(<4 x i8> %a, <4 x i8> %b) {
 ; V1-NEXT:    extfz $r3 = $r1, 23, 16
 ; V1-NEXT:    extfz $r4 = $r1, 15, 8
 ; V1-NEXT:    ;;
-; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    sllw $r1 = $r1, 1
 ; V1-NEXT:    sllw $r2 = $r2, 1
 ; V1-NEXT:    sllw $r3 = $r3, 1
 ; V1-NEXT:    sllw $r4 = $r4, 1
 ; V1-NEXT:    ;;
-; V1-NEXT:    sllw $r1 = $r1, 1
+; V1-NEXT:    insf $r1 = $r4, 15, 8
 ; V1-NEXT:    insf $r3 = $r2, 15, 8
 ; V1-NEXT:    ;;
-; V1-NEXT:    insf $r1 = $r4, 15, 8
-; V1-NEXT:    ;;
+; V1-NEXT:    sxlbhq $r0 = $r0
 ; V1-NEXT:    insf $r1 = $r3, 31, 16
 ; V1-NEXT:    ;;
 ; V1-NEXT:    sxlbhq $r1 = $r1
@@ -1654,16 +1652,15 @@ define <4 x i8> @subx4_i8x4_rr(<4 x i8> %a, <4 x i8> %b) {
 ; V1-NEXT:    extfz $r3 = $r1, 23, 16
 ; V1-NEXT:    extfz $r4 = $r1, 15, 8
 ; V1-NEXT:    ;;
-; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    sllw $r1 = $r1, 2
 ; V1-NEXT:    sllw $r2 = $r2, 2
 ; V1-NEXT:    sllw $r3 = $r3, 2
 ; V1-NEXT:    sllw $r4 = $r4, 2
 ; V1-NEXT:    ;;
-; V1-NEXT:    sllw $r1 = $r1, 2
+; V1-NEXT:    insf $r1 = $r4, 15, 8
 ; V1-NEXT:    insf $r3 = $r2, 15, 8
 ; V1-NEXT:    ;;
-; V1-NEXT:    insf $r1 = $r4, 15, 8
-; V1-NEXT:    ;;
+; V1-NEXT:    sxlbhq $r0 = $r0
 ; V1-NEXT:    insf $r1 = $r3, 31, 16
 ; V1-NEXT:    ;;
 ; V1-NEXT:    sxlbhq $r1 = $r1
@@ -1693,16 +1690,15 @@ define <4 x i8> @subx4_u8x4_rr(<4 x i8> %a, <4 x i8> %b) {
 ; V1-NEXT:    extfz $r3 = $r1, 23, 16
 ; V1-NEXT:    extfz $r4 = $r1, 15, 8
 ; V1-NEXT:    ;;
-; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    sllw $r1 = $r1, 2
 ; V1-NEXT:    sllw $r2 = $r2, 2
 ; V1-NEXT:    sllw $r3 = $r3, 2
 ; V1-NEXT:    sllw $r4 = $r4, 2
 ; V1-NEXT:    ;;
-; V1-NEXT:    sllw $r1 = $r1, 2
+; V1-NEXT:    insf $r1 = $r4, 15, 8
 ; V1-NEXT:    insf $r3 = $r2, 15, 8
 ; V1-NEXT:    ;;
-; V1-NEXT:    insf $r1 = $r4, 15, 8
-; V1-NEXT:    ;;
+; V1-NEXT:    sxlbhq $r0 = $r0
 ; V1-NEXT:    insf $r1 = $r3, 31, 16
 ; V1-NEXT:    ;;
 ; V1-NEXT:    sxlbhq $r1 = $r1
@@ -1868,16 +1864,15 @@ define <4 x i8> @subx8_i8x4_rr(<4 x i8> %a, <4 x i8> %b) {
 ; V1-NEXT:    extfz $r3 = $r1, 23, 16
 ; V1-NEXT:    extfz $r4 = $r1, 15, 8
 ; V1-NEXT:    ;;
-; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    sllw $r1 = $r1, 3
 ; V1-NEXT:    sllw $r2 = $r2, 3
 ; V1-NEXT:    sllw $r3 = $r3, 3
 ; V1-NEXT:    sllw $r4 = $r4, 3
 ; V1-NEXT:    ;;
-; V1-NEXT:    sllw $r1 = $r1, 3
+; V1-NEXT:    insf $r1 = $r4, 15, 8
 ; V1-NEXT:    insf $r3 = $r2, 15, 8
 ; V1-NEXT:    ;;
-; V1-NEXT:    insf $r1 = $r4, 15, 8
-; V1-NEXT:    ;;
+; V1-NEXT:    sxlbhq $r0 = $r0
 ; V1-NEXT:    insf $r1 = $r3, 31, 16
 ; V1-NEXT:    ;;
 ; V1-NEXT:    sxlbhq $r1 = $r1
@@ -1907,16 +1902,15 @@ define <4 x i8> @subx8_u8x4_rr(<4 x i8> %a, <4 x i8> %b) {
 ; V1-NEXT:    extfz $r3 = $r1, 23, 16
 ; V1-NEXT:    extfz $r4 = $r1, 15, 8
 ; V1-NEXT:    ;;
-; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    sllw $r1 = $r1, 3
 ; V1-NEXT:    sllw $r2 = $r2, 3
 ; V1-NEXT:    sllw $r3 = $r3, 3
 ; V1-NEXT:    sllw $r4 = $r4, 3
 ; V1-NEXT:    ;;
-; V1-NEXT:    sllw $r1 = $r1, 3
+; V1-NEXT:    insf $r1 = $r4, 15, 8
 ; V1-NEXT:    insf $r3 = $r2, 15, 8
 ; V1-NEXT:    ;;
-; V1-NEXT:    insf $r1 = $r4, 15, 8
-; V1-NEXT:    ;;
+; V1-NEXT:    sxlbhq $r0 = $r0
 ; V1-NEXT:    insf $r1 = $r3, 31, 16
 ; V1-NEXT:    ;;
 ; V1-NEXT:    sxlbhq $r1 = $r1
@@ -2082,16 +2076,15 @@ define <4 x i8> @subx16_i8x4_rr(<4 x i8> %a, <4 x i8> %b) {
 ; V1-NEXT:    extfz $r3 = $r1, 23, 16
 ; V1-NEXT:    extfz $r4 = $r1, 15, 8
 ; V1-NEXT:    ;;
-; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    sllw $r1 = $r1, 4
 ; V1-NEXT:    sllw $r2 = $r2, 4
 ; V1-NEXT:    sllw $r3 = $r3, 4
 ; V1-NEXT:    sllw $r4 = $r4, 4
 ; V1-NEXT:    ;;
-; V1-NEXT:    sllw $r1 = $r1, 4
+; V1-NEXT:    insf $r1 = $r4, 15, 8
 ; V1-NEXT:    insf $r3 = $r2, 15, 8
 ; V1-NEXT:    ;;
-; V1-NEXT:    insf $r1 = $r4, 15, 8
-; V1-NEXT:    ;;
+; V1-NEXT:    sxlbhq $r0 = $r0
 ; V1-NEXT:    insf $r1 = $r3, 31, 16
 ; V1-NEXT:    ;;
 ; V1-NEXT:    sxlbhq $r1 = $r1
@@ -2121,16 +2114,15 @@ define <4 x i8> @subx16_u8x4_rr(<4 x i8> %a, <4 x i8> %b) {
 ; V1-NEXT:    extfz $r3 = $r1, 23, 16
 ; V1-NEXT:    extfz $r4 = $r1, 15, 8
 ; V1-NEXT:    ;;
-; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    sllw $r1 = $r1, 4
 ; V1-NEXT:    sllw $r2 = $r2, 4
 ; V1-NEXT:    sllw $r3 = $r3, 4
 ; V1-NEXT:    sllw $r4 = $r4, 4
 ; V1-NEXT:    ;;
-; V1-NEXT:    sllw $r1 = $r1, 4
+; V1-NEXT:    insf $r1 = $r4, 15, 8
 ; V1-NEXT:    insf $r3 = $r2, 15, 8
 ; V1-NEXT:    ;;
-; V1-NEXT:    insf $r1 = $r4, 15, 8
-; V1-NEXT:    ;;
+; V1-NEXT:    sxlbhq $r0 = $r0
 ; V1-NEXT:    insf $r1 = $r3, 31, 16
 ; V1-NEXT:    ;;
 ; V1-NEXT:    sxlbhq $r1 = $r1

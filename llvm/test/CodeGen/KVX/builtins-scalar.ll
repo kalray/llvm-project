@@ -549,10 +549,10 @@ define half @ffmah_s(half %0, half %1, half %2) {
 define half @ffmah(half %0, half %1, half %2) {
 ; CHECK-LABEL: ffmah:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    zxhd $r0 = $r0
 ; CHECK-NEXT:    zxhd $r1 = $r1
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    zxhd $r2 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxhd $r0 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmahq.ru $r0 = $r1, $r2
 ; CHECK-NEXT:    ret

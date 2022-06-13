@@ -380,13 +380,13 @@ define <4 x double> @test_select_cc_f32_f32(<4 x double> %a, <4 x double> %b, <4
 ; CHECK-NEXT:    sxwd $r11 = $r11
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.dnez $r8 ? $r4 = $r0
-; CHECK-NEXT:    cmoved.dnez $r9 ? $r6 = $r2
+; CHECK-NEXT:    cmoved.dnez $r11 ? $r5 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r4
-; CHECK-NEXT:    cmoved.dnez $r11 ? $r5 = $r1
+; CHECK-NEXT:    copyd $r1 = $r5
+; CHECK-NEXT:    cmoved.dnez $r9 ? $r6 = $r2
 ; CHECK-NEXT:    cmoved.dnez $r10 ? $r7 = $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    copyd $r2 = $r6
 ; CHECK-NEXT:    copyd $r3 = $r7
 ; CHECK-NEXT:    ret
@@ -925,9 +925,9 @@ define <4 x float> @test_fptrunc_2xdouble(<4 x double> %a) #0 {
 ; CHECK-NEXT:    fnarrowdw $r2 = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowdw $r1 = $r1
+; CHECK-NEXT:    insf $r2 = $r3, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowdw $r0 = $r0
-; CHECK-NEXT:    insf $r2 = $r3, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 32
 ; CHECK-NEXT:    copyd $r1 = $r2

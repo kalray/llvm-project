@@ -53,17 +53,17 @@ define <4 x i32> @test0(<4 x i32> %0, i8 %1) #1 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sxbd $r2 = $r2
 ; CHECK-NEXT:    make $r3 = 0x300000002
-; CHECK-NEXT:    make $r4 = 0x100000000
+; CHECK-NEXT:    make $r4 = 0xfffffffb
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r2 = $r2, 63, 31
-; CHECK-NEXT:    make $r5 = 0xfffffffb
+; CHECK-NEXT:    insf $r4 = $r4, 63, 31
+; CHECK-NEXT:    make $r5 = 0x100000000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    compnwp.eq $r2 = $r4, $r2
+; CHECK-NEXT:    compnwp.eq $r2 = $r5, $r2
 ; CHECK-NEXT:    compnwp.eq $r3 = $r3, $r2
-; CHECK-NEXT:    insf $r5 = $r5, 63, 31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmovewp.eqz $r2 ? $r0 = $r5
-; CHECK-NEXT:    cmovewp.eqz $r3 ? $r1 = $r5
+; CHECK-NEXT:    cmovewp.eqz $r2 ? $r0 = $r4
+; CHECK-NEXT:    cmovewp.eqz $r3 ? $r1 = $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = insertelement <4 x i32> %0, i32 -5, i8 %1

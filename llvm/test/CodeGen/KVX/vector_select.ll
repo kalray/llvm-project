@@ -149,33 +149,33 @@ define void @test_v8_select(<8 x i8> * %m, <8 x i8> * %n){
 ; CHECK-LABEL: test_v8_select:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ld $r2 = 0[$r0]
-; CHECK-NEXT:    make $r4 = 0
-; CHECK-NEXT:    make $r6 = -1
+; CHECK-NEXT:    make $r3 = 0
+; CHECK-NEXT:    make $r4 = -1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r1 = 0[$r1]
 ; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x8000400020001
-; CHECK-NEXT:    sbmm8 $r3 = $r2, 0x80004000200010
+; CHECK-NEXT:    sbmm8 $r5 = $r2, 0x80004000200010
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    compnhq.eq $r4 = $r2, $r4
-; CHECK-NEXT:    sxmbhq $r5 = $r1
+; CHECK-NEXT:    compnhq.eq $r3 = $r2, $r3
+; CHECK-NEXT:    sxmbhq $r6 = $r1
 ; CHECK-NEXT:    sxlbhq $r7 = $r1
-; CHECK-NEXT:    compnhq.eq $r8 = $r3, $r4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    compnhq.gt $r5 = $r5, $r6
-; CHECK-NEXT:    compnhq.gt $r6 = $r7, $r6
+; CHECK-NEXT:    compnhq.eq $r8 = $r5, $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x8000400020001
-; CHECK-NEXT:    andd $r4 = $r4, $r6
-; CHECK-NEXT:    andd $r5 = $r8, $r5
-; CHECK-NEXT:    sbmm8 $r6 = $r1, 0x80004000200010
+; CHECK-NEXT:    compnhq.gt $r4 = $r7, $r4
+; CHECK-NEXT:    compnhq.gt $r6 = $r6, $r4
+; CHECK-NEXT:    sbmm8 $r7 = $r1, 0x80004000200010
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r4 = $r4, 0xff00ff00ff00ff
-; CHECK-NEXT:    andd $r5 = $r5, 0xff00ff00ff00ff
+; CHECK-NEXT:    andd $r3 = $r3, $r4
+; CHECK-NEXT:    andd $r6 = $r8, $r6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmovehq.even $r4 ? $r2 = $r1
-; CHECK-NEXT:    cmovehq.even $r5 ? $r3 = $r6
+; CHECK-NEXT:    andd $r3 = $r3, 0xff00ff00ff00ff
+; CHECK-NEXT:    andd $r4 = $r6, 0xff00ff00ff00ff
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r1 = $r3, 0x40100401
+; CHECK-NEXT:    cmovehq.even $r3 ? $r2 = $r1
+; CHECK-NEXT:    cmovehq.even $r4 ? $r5 = $r7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbmm8 $r1 = $r5, 0x40100401
 ; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x40100401
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r2 = $r1, 63, 32
@@ -197,62 +197,62 @@ define void @test_v16_select(<16 x i8> * %m, <16 x i8> * %n){
 ; CHECK-LABEL: test_v16_select:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lq $r2r3 = 0[$r0]
-; CHECK-NEXT:    make $r6 = 0
-; CHECK-NEXT:    make $r7 = -1
+; CHECK-NEXT:    make $r9 = -1
+; CHECK-NEXT:    make $r15 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lq $r4r5 = 0[$r1]
-; CHECK-NEXT:    sbmm8 $r1 = $r3, 0x8000400020001
+; CHECK-NEXT:    sbmm8 $r1 = $r2, 0x8000400020001
+; CHECK-NEXT:    sbmm8 $r6 = $r3, 0x8000400020001
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x80004000200010
+; CHECK-NEXT:    sxlbhq $r10 = $r5
+; CHECK-NEXT:    compnhq.eq $r17 = $r6, $r15
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r3 = $r3, 0x80004000200010
+; CHECK-NEXT:    sxlbhq $r7 = $r4
+; CHECK-NEXT:    compnhq.gt $r10 = $r10, $r9
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxlbhq $r8 = $r5
-; CHECK-NEXT:    sxmbhq $r9 = $r5
-; CHECK-NEXT:    compnhq.eq $r10 = $r1, $r6
-; CHECK-NEXT:    compnhq.eq $r11 = $r3, $r6
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    compnhq.gt $r8 = $r8, $r7
-; CHECK-NEXT:    compnhq.gt $r9 = $r9, $r7
-; CHECK-NEXT:    sbmm8 $r15 = $r2, 0x80004000200010
-; CHECK-NEXT:    sxmbhq $r16 = $r4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x8000400020001
-; CHECK-NEXT:    andd $r8 = $r10, $r8
-; CHECK-NEXT:    andd $r9 = $r11, $r9
-; CHECK-NEXT:    sxlbhq $r17 = $r4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    compnhq.eq $r6 = $r2, $r6
-; CHECK-NEXT:    compnhq.gt $r7 = $r17, $r7
-; CHECK-NEXT:    compnhq.eq $r10 = $r15, $r6
-; CHECK-NEXT:    compnhq.gt $r11 = $r16, $r7
+; CHECK-NEXT:    sxmbhq $r8 = $r4
+; CHECK-NEXT:    andd $r10 = $r17, $r10
+; CHECK-NEXT:    sxmbhq $r11 = $r5
+; CHECK-NEXT:    compnhq.eq $r32 = $r3, $r15
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r5 = $r5, 0x8000400020001
+; CHECK-NEXT:    compnhq.gt $r11 = $r11, $r9
 ; CHECK-NEXT:    sbmm8 $r16 = $r5, 0x80004000200010
+; CHECK-NEXT:    compnhq.eq $r17 = $r1, $r15
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r6 = $r6, $r7
-; CHECK-NEXT:    andd $r8 = $r8, 0xff00ff00ff00ff
-; CHECK-NEXT:    andd $r9 = $r9, 0xff00ff00ff00ff
-; CHECK-NEXT:    andd $r10 = $r10, $r11
+; CHECK-NEXT:    compnhq.gt $r7 = $r7, $r9
+; CHECK-NEXT:    compnhq.gt $r8 = $r8, $r9
+; CHECK-NEXT:    andd $r10 = $r10, 0xff00ff00ff00ff
+; CHECK-NEXT:    compnhq.eq $r15 = $r2, $r15
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmovehq.even $r8 ? $r1 = $r5
-; CHECK-NEXT:    cmovehq.even $r9 ? $r3 = $r16
-; CHECK-NEXT:    andd $r5 = $r10, 0xff00ff00ff00ff
-; CHECK-NEXT:    andd $r6 = $r6, 0xff00ff00ff00ff
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r1 = $r4, 0x80004000200010
-; CHECK-NEXT:    sbmm8 $r7 = $r1, 0x40100401
+; CHECK-NEXT:    andd $r5 = $r15, $r8
+; CHECK-NEXT:    cmovehq.even $r10 ? $r6 = $r5
+; CHECK-NEXT:    andd $r7 = $r17, $r7
+; CHECK-NEXT:    andd $r11 = $r32, $r11
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x8000400020001
-; CHECK-NEXT:    cmovehq.even $r5 ? $r15 = $r1
+; CHECK-NEXT:    sbmm8 $r33 = $r4, 0x80004000200010
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmovehq.even $r6 ? $r2 = $r4
+; CHECK-NEXT:    andd $r5 = $r5, 0xff00ff00ff00ff
+; CHECK-NEXT:    sbmm8 $r9 = $r6, 0x40100401
+; CHECK-NEXT:    andd $r11 = $r11, 0xff00ff00ff00ff
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmovehq.even $r5 ? $r2 = $r33
+; CHECK-NEXT:    cmovehq.even $r11 ? $r3 = $r16
+; CHECK-NEXT:    andd $r6 = $r7, 0xff00ff00ff00ff
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmovehq.even $r6 ? $r1 = $r4
 ; CHECK-NEXT:    sbmm8 $r3 = $r3, 0x40100401
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r1 = $r15, 0x40100401
-; CHECK-NEXT:    sbmm8 $r6 = $r2, 0x40100401
+; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x40100401
+; CHECK-NEXT:    sbmm8 $r8 = $r1, 0x40100401
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r6 = $r1, 63, 32
-; CHECK-NEXT:    insf $r7 = $r3, 63, 32
+; CHECK-NEXT:    insf $r8 = $r2, 63, 32
+; CHECK-NEXT:    insf $r9 = $r3, 63, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sq 0[$r0] = $r6r7
+; CHECK-NEXT:    sq 0[$r0] = $r8r9
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %v1 = load <16 x i8>, <16 x i8>* %m, align 16
@@ -269,112 +269,110 @@ define void @test_v32_select(<32 x i8> * %m, <32 x i8> * %n){
 ; CHECK-LABEL: test_v32_select:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lo $r8r9r10r11 = 0[$r0]
-; CHECK-NEXT:    make $r16 = 0
-; CHECK-NEXT:    make $r33 = -1
+; CHECK-NEXT:    make $r15 = 0
+; CHECK-NEXT:    make $r17 = -1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r1]
 ; CHECK-NEXT:    sbmm8 $r9 = $r9, 0x80004000200010
-; CHECK-NEXT:    sbmm8 $r15 = $r9, 0x8000400020001
+; CHECK-NEXT:    sbmm8 $r16 = $r9, 0x8000400020001
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxlbhq $r34 = $r5
-; CHECK-NEXT:    sxmbhq $r35 = $r5
+; CHECK-NEXT:    sxmbhq $r32 = $r5
+; CHECK-NEXT:    compnhq.eq $r34 = $r9, $r15
+; CHECK-NEXT:    sxlbhq $r35 = $r5
+; CHECK-NEXT:    compnhq.eq $r37 = $r16, $r15
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r1 = $r11, 0x8000400020001
-; CHECK-NEXT:    sbmm8 $r2 = $r11, 0x80004000200010
-; CHECK-NEXT:    compnhq.eq $r38 = $r15, $r16
-; CHECK-NEXT:    compnhq.eq $r39 = $r9, $r16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r11 = $r8, 0x8000400020001
-; CHECK-NEXT:    sxlbhq $r32 = $r4
-; CHECK-NEXT:    compnhq.gt $r34 = $r34, $r33
-; CHECK-NEXT:    compnhq.gt $r35 = $r35, $r33
+; CHECK-NEXT:    sbmm8 $r1 = $r11, 0x80004000200010
+; CHECK-NEXT:    sbmm8 $r2 = $r11, 0x8000400020001
+; CHECK-NEXT:    compnhq.gt $r32 = $r32, $r17
+; CHECK-NEXT:    compnhq.gt $r35 = $r35, $r17
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r8 = $r8, 0x80004000200010
-; CHECK-NEXT:    andd $r34 = $r38, $r34
-; CHECK-NEXT:    andd $r35 = $r39, $r35
-; CHECK-NEXT:    sxmbhq $r36 = $r4
+; CHECK-NEXT:    sbmm8 $r11 = $r8, 0x8000400020001
+; CHECK-NEXT:    andd $r32 = $r34, $r32
+; CHECK-NEXT:    andd $r35 = $r37, $r35
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r3 = $r10, 0x8000400020001
-; CHECK-NEXT:    compnhq.gt $r32 = $r32, $r33
-; CHECK-NEXT:    compnhq.eq $r39 = $r11, $r16
-; CHECK-NEXT:    compnhq.eq $r42 = $r8, $r16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r32 = $r39, $r32
-; CHECK-NEXT:    andd $r34 = $r34, 0xff00ff00ff00ff
-; CHECK-NEXT:    compnhq.gt $r36 = $r36, $r33
-; CHECK-NEXT:    sxlbhq $r43 = $r6
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxlbhq $r17 = $r7
-; CHECK-NEXT:    sbmm8 $r37 = $r5, 0x80004000200010
+; CHECK-NEXT:    andd $r32 = $r32, 0xff00ff00ff00ff
+; CHECK-NEXT:    sxlbhq $r34 = $r4
+; CHECK-NEXT:    compnhq.eq $r37 = $r11, $r15
+; CHECK-NEXT:    sbmm8 $r38 = $r5, 0x80004000200010
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r5 = $r5, 0x8000400020001
 ; CHECK-NEXT:    andd $r35 = $r35, 0xff00ff00ff00ff
-; CHECK-NEXT:    andd $r36 = $r42, $r36
-; CHECK-NEXT:    compnhq.eq $r42 = $r3, $r16
+; CHECK-NEXT:    sxmbhq $r39 = $r4
+; CHECK-NEXT:    compnhq.eq $r40 = $r8, $r15
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r10 = $r10, 0x80004000200010
-; CHECK-NEXT:    sbmm8 $r41 = $r6, 0x80004000200010
-; CHECK-NEXT:    compnhq.gt $r43 = $r43, $r33
+; CHECK-NEXT:    cmovehq.even $r32 ? $r9 = $r38
+; CHECK-NEXT:    cmovehq.even $r35 ? $r16 = $r5
+; CHECK-NEXT:    compnhq.gt $r32 = $r34, $r17
+; CHECK-NEXT:    compnhq.gt $r39 = $r39, $r17
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxmbhq $r6 = $r6
-; CHECK-NEXT:    andd $r32 = $r32, 0xff00ff00ff00ff
-; CHECK-NEXT:    sbmm8 $r38 = $r6, 0x8000400020001
+; CHECK-NEXT:    sbmm8 $r5 = $r16, 0x40100401
+; CHECK-NEXT:    sbmm8 $r9 = $r9, 0x40100401
+; CHECK-NEXT:    andd $r16 = $r40, $r39
+; CHECK-NEXT:    andd $r32 = $r37, $r32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxmbhq $r5 = $r7
-; CHECK-NEXT:    cmovehq.even $r34 ? $r15 = $r5
-; CHECK-NEXT:    compnhq.eq $r34 = $r1, $r16
-; CHECK-NEXT:    compnhq.eq $r39 = $r10, $r16
+; CHECK-NEXT:    sbmm8 $r3 = $r10, 0x8000400020001
+; CHECK-NEXT:    andd $r16 = $r16, 0xff00ff00ff00ff
+; CHECK-NEXT:    sxlbhq $r36 = $r6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r5 = $r9, 63, 32
+; CHECK-NEXT:    andd $r9 = $r32, 0xff00ff00ff00ff
+; CHECK-NEXT:    sbmm8 $r35 = $r4, 0x80004000200010
+; CHECK-NEXT:    compnhq.eq $r37 = $r3, $r15
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r4 = $r4, 0x8000400020001
-; CHECK-NEXT:    compnhq.gt $r6 = $r6, $r33
-; CHECK-NEXT:    sbmm8 $r40 = $r4, 0x80004000200010
+; CHECK-NEXT:    sbmm8 $r10 = $r10, 0x80004000200010
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmovehq.even $r35 ? $r9 = $r37
-; CHECK-NEXT:    andd $r35 = $r36, 0xff00ff00ff00ff
-; CHECK-NEXT:    andd $r36 = $r42, $r43
-; CHECK-NEXT:    sbmm8 $r37 = $r15, 0x40100401
+; CHECK-NEXT:    cmovehq.even $r16 ? $r8 = $r35
+; CHECK-NEXT:    compnhq.eq $r32 = $r10, $r15
+; CHECK-NEXT:    sxmbhq $r34 = $r6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    compnhq.gt $r4 = $r17, $r33
-; CHECK-NEXT:    compnhq.gt $r5 = $r5, $r33
-; CHECK-NEXT:    cmovehq.even $r32 ? $r11 = $r4
-; CHECK-NEXT:    compnhq.eq $r15 = $r2, $r16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r6 = $r39, $r6
-; CHECK-NEXT:    cmovehq.even $r35 ? $r8 = $r40
-; CHECK-NEXT:    sbmm8 $r9 = $r9, 0x40100401
-; CHECK-NEXT:    andd $r16 = $r36, 0xff00ff00ff00ff
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmovehq.even $r16 ? $r3 = $r38
-; CHECK-NEXT:    andd $r4 = $r34, $r4
-; CHECK-NEXT:    andd $r5 = $r15, $r5
-; CHECK-NEXT:    sbmm8 $r36 = $r11, 0x40100401
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r5 = $r5, 0xff00ff00ff00ff
-; CHECK-NEXT:    andd $r6 = $r6, 0xff00ff00ff00ff
 ; CHECK-NEXT:    sbmm8 $r8 = $r8, 0x40100401
+; CHECK-NEXT:    compnhq.gt $r9 = $r36, $r17
+; CHECK-NEXT:    cmovehq.even $r9 ? $r11 = $r4
+; CHECK-NEXT:    compnhq.gt $r34 = $r34, $r17
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r4 = $r4, 0xff00ff00ff00ff
-; CHECK-NEXT:    insf $r37 = $r9, 63, 32
-; CHECK-NEXT:    sbmm8 $r38 = $r3, 0x40100401
+; CHECK-NEXT:    sbmm8 $r4 = $r11, 0x40100401
+; CHECK-NEXT:    andd $r9 = $r37, $r9
+; CHECK-NEXT:    andd $r11 = $r32, $r34
+; CHECK-NEXT:    sxlbhq $r33 = $r7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r3 = $r7, 0x80004000200010
+; CHECK-NEXT:    andd $r11 = $r11, 0xff00ff00ff00ff
+; CHECK-NEXT:    sxmbhq $r16 = $r7
+; CHECK-NEXT:    sbmm8 $r32 = $r6, 0x80004000200010
+; CHECK-NEXT:    compnhq.eq $r34 = $r2, $r15
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r4 = $r8, 63, 32
+; CHECK-NEXT:    sbmm8 $r6 = $r6, 0x8000400020001
+; CHECK-NEXT:    andd $r8 = $r9, 0xff00ff00ff00ff
+; CHECK-NEXT:    compnhq.eq $r9 = $r1, $r15
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmovehq.even $r8 ? $r3 = $r6
+; CHECK-NEXT:    compnhq.gt $r8 = $r33, $r17
+; CHECK-NEXT:    cmovehq.even $r11 ? $r10 = $r32
+; CHECK-NEXT:    compnhq.gt $r15 = $r16, $r17
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andd $r3 = $r9, $r15
+; CHECK-NEXT:    sbmm8 $r6 = $r3, 0x40100401
+; CHECK-NEXT:    andd $r8 = $r34, $r8
+; CHECK-NEXT:    sbmm8 $r9 = $r7, 0x80004000200010
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    andd $r3 = $r3, 0xff00ff00ff00ff
+; CHECK-NEXT:    andd $r8 = $r8, 0xff00ff00ff00ff
+; CHECK-NEXT:    sbmm8 $r10 = $r10, 0x40100401
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmovehq.even $r3 ? $r1 = $r9
 ; CHECK-NEXT:    sbmm8 $r7 = $r7, 0x8000400020001
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmovehq.even $r5 ? $r2 = $r3
-; CHECK-NEXT:    cmovehq.even $r6 ? $r10 = $r41
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x40100401
+; CHECK-NEXT:    cmovehq.even $r8 ? $r2 = $r7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmovehq.even $r4 ? $r1 = $r7
-; CHECK-NEXT:    sbmm8 $r6 = $r10, 0x40100401
+; CHECK-NEXT:    insf $r6 = $r10, 63, 32
+; CHECK-NEXT:    sbmm8 $r7 = $r2, 0x40100401
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x40100401
-; CHECK-NEXT:    insf $r36 = $r8, 63, 32
+; CHECK-NEXT:    insf $r7 = $r1, 63, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r38 = $r6, 63, 32
-; CHECK-NEXT:    sbmm8 $r39 = $r1, 0x40100401
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r39 = $r2, 63, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    so 0[$r0] = $r36r37r38r39
+; CHECK-NEXT:    so 0[$r0] = $r4r5r6r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %v1 = load <32 x i8>, <32 x i8>* %m, align 32

@@ -1764,42 +1764,43 @@ define <8 x i8> @avg_v8i8(<8 x i8> %a, <8 x i8> %b) {
 ; KV3_1-NEXT:    extfz $r1 = $r0, 55, 48
 ; KV3_1-NEXT:    srld $r2 = $r0, 56
 ; KV3_1-NEXT:    extfz $r3 = $r0, 47, 40
-; KV3_1-NEXT:    srlw $r7 = $r0, 24
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    extfz $r4 = $r0, 39, 32
-; KV3_1-NEXT:    extfz $r5 = $r0, 23, 16
-; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    zxbd $r0 = $r0
 ; KV3_1-NEXT:    sxbd $r2 = $r2
-; KV3_1-NEXT:    extfz $r6 = $r0, 15, 8
+; KV3_1-NEXT:    extfz $r4 = $r0, 39, 32
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    sxbd $r1 = $r1
-; KV3_1-NEXT:    sxbd $r3 = $r3
-; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    sraw $r2 = $r2, 1
-; KV3_1-NEXT:    sxbd $r4 = $r4
-; KV3_1-NEXT:    sxbd $r7 = $r7
+; KV3_1-NEXT:    sxbd $r3 = $r3
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    sraw $r1 = $r1, 1
 ; KV3_1-NEXT:    sraw $r3 = $r3, 1
+; KV3_1-NEXT:    sxbd $r4 = $r4
+; KV3_1-NEXT:    extfz $r5 = $r0, 23, 16
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    insf $r1 = $r2, 15, 8
+; KV3_1-NEXT:    srlw $r2 = $r0, 24
+; KV3_1-NEXT:    sraw $r4 = $r4, 1
 ; KV3_1-NEXT:    sxbd $r5 = $r5
-; KV3_1-NEXT:    sxbd $r6 = $r6
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    zxbd $r0 = $r0
+; KV3_1-NEXT:    extfz $r3 = $r0, 15, 8
+; KV3_1-NEXT:    insf $r4 = $r3, 15, 8
+; KV3_1-NEXT:    sraw $r5 = $r5, 1
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    sxbd $r2 = $r2
+; KV3_1-NEXT:    sxbd $r3 = $r3
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    sxbd $r0 = $r0
-; KV3_1-NEXT:    sraw $r4 = $r4, 1
-; KV3_1-NEXT:    sraw $r5 = $r5, 1
-; KV3_1-NEXT:    sraw $r7 = $r7, 1
+; KV3_1-NEXT:    sraw $r2 = $r2, 1
+; KV3_1-NEXT:    sraw $r3 = $r3, 1
+; KV3_1-NEXT:    insf $r4 = $r1, 31, 16
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    sraw $r0 = $r0, 1
-; KV3_1-NEXT:    insf $r1 = $r2, 15, 8
-; KV3_1-NEXT:    insf $r4 = $r3, 15, 8
-; KV3_1-NEXT:    sraw $r6 = $r6, 1
+; KV3_1-NEXT:    insf $r5 = $r2, 15, 8
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    insf $r0 = $r6, 15, 8
-; KV3_1-NEXT:    insf $r5 = $r7, 15, 8
+; KV3_1-NEXT:    insf $r0 = $r3, 15, 8
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    insf $r0 = $r5, 31, 16
-; KV3_1-NEXT:    insf $r4 = $r1, 31, 16
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    insf $r0 = $r4, 63, 32
 ; KV3_1-NEXT:    ret
@@ -1833,42 +1834,43 @@ define <8 x i8> @avg_v8i8_ri_(<8 x i8> %a) {
 ; KV3_1-NEXT:    extfz $r1 = $r0, 55, 48
 ; KV3_1-NEXT:    srld $r2 = $r0, 56
 ; KV3_1-NEXT:    extfz $r3 = $r0, 47, 40
-; KV3_1-NEXT:    srlw $r7 = $r0, 24
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    extfz $r4 = $r0, 39, 32
-; KV3_1-NEXT:    extfz $r5 = $r0, 23, 16
-; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    zxbd $r0 = $r0
 ; KV3_1-NEXT:    sxbd $r2 = $r2
-; KV3_1-NEXT:    extfz $r6 = $r0, 15, 8
+; KV3_1-NEXT:    extfz $r4 = $r0, 39, 32
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    sxbd $r1 = $r1
-; KV3_1-NEXT:    sxbd $r3 = $r3
-; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    sraw $r2 = $r2, 1
-; KV3_1-NEXT:    sxbd $r4 = $r4
-; KV3_1-NEXT:    sxbd $r7 = $r7
+; KV3_1-NEXT:    sxbd $r3 = $r3
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    sraw $r1 = $r1, 1
 ; KV3_1-NEXT:    sraw $r3 = $r3, 1
+; KV3_1-NEXT:    sxbd $r4 = $r4
+; KV3_1-NEXT:    extfz $r5 = $r0, 23, 16
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    insf $r1 = $r2, 15, 8
+; KV3_1-NEXT:    srlw $r2 = $r0, 24
+; KV3_1-NEXT:    sraw $r4 = $r4, 1
 ; KV3_1-NEXT:    sxbd $r5 = $r5
-; KV3_1-NEXT:    sxbd $r6 = $r6
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    zxbd $r0 = $r0
+; KV3_1-NEXT:    extfz $r3 = $r0, 15, 8
+; KV3_1-NEXT:    insf $r4 = $r3, 15, 8
+; KV3_1-NEXT:    sraw $r5 = $r5, 1
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    sxbd $r2 = $r2
+; KV3_1-NEXT:    sxbd $r3 = $r3
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    sxbd $r0 = $r0
-; KV3_1-NEXT:    sraw $r4 = $r4, 1
-; KV3_1-NEXT:    sraw $r5 = $r5, 1
-; KV3_1-NEXT:    sraw $r7 = $r7, 1
+; KV3_1-NEXT:    sraw $r2 = $r2, 1
+; KV3_1-NEXT:    sraw $r3 = $r3, 1
+; KV3_1-NEXT:    insf $r4 = $r1, 31, 16
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    sraw $r0 = $r0, 1
-; KV3_1-NEXT:    insf $r1 = $r2, 15, 8
-; KV3_1-NEXT:    insf $r4 = $r3, 15, 8
-; KV3_1-NEXT:    sraw $r6 = $r6, 1
+; KV3_1-NEXT:    insf $r5 = $r2, 15, 8
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    insf $r0 = $r6, 15, 8
-; KV3_1-NEXT:    insf $r5 = $r7, 15, 8
+; KV3_1-NEXT:    insf $r0 = $r3, 15, 8
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    insf $r0 = $r5, 31, 16
-; KV3_1-NEXT:    insf $r4 = $r1, 31, 16
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    insf $r0 = $r4, 63, 32
 ; KV3_1-NEXT:    ret
@@ -1902,42 +1904,43 @@ define <8 x i8> @avg_v8i8_ri_at(<8 x i8> %a) {
 ; KV3_1-NEXT:    extfz $r1 = $r0, 55, 48
 ; KV3_1-NEXT:    srld $r2 = $r0, 56
 ; KV3_1-NEXT:    extfz $r3 = $r0, 47, 40
-; KV3_1-NEXT:    srlw $r7 = $r0, 24
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    extfz $r4 = $r0, 39, 32
-; KV3_1-NEXT:    extfz $r5 = $r0, 23, 16
-; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    zxbd $r0 = $r0
 ; KV3_1-NEXT:    sxbd $r2 = $r2
-; KV3_1-NEXT:    extfz $r6 = $r0, 15, 8
+; KV3_1-NEXT:    extfz $r4 = $r0, 39, 32
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    sxbd $r1 = $r1
-; KV3_1-NEXT:    sxbd $r3 = $r3
-; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    sraw $r2 = $r2, 1
-; KV3_1-NEXT:    sxbd $r4 = $r4
-; KV3_1-NEXT:    sxbd $r7 = $r7
+; KV3_1-NEXT:    sxbd $r3 = $r3
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    sraw $r1 = $r1, 1
 ; KV3_1-NEXT:    sraw $r3 = $r3, 1
+; KV3_1-NEXT:    sxbd $r4 = $r4
+; KV3_1-NEXT:    extfz $r5 = $r0, 23, 16
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    insf $r1 = $r2, 15, 8
+; KV3_1-NEXT:    srlw $r2 = $r0, 24
+; KV3_1-NEXT:    sraw $r4 = $r4, 1
 ; KV3_1-NEXT:    sxbd $r5 = $r5
-; KV3_1-NEXT:    sxbd $r6 = $r6
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    zxbd $r0 = $r0
+; KV3_1-NEXT:    extfz $r3 = $r0, 15, 8
+; KV3_1-NEXT:    insf $r4 = $r3, 15, 8
+; KV3_1-NEXT:    sraw $r5 = $r5, 1
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    sxbd $r2 = $r2
+; KV3_1-NEXT:    sxbd $r3 = $r3
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    sxbd $r0 = $r0
-; KV3_1-NEXT:    sraw $r4 = $r4, 1
-; KV3_1-NEXT:    sraw $r5 = $r5, 1
-; KV3_1-NEXT:    sraw $r7 = $r7, 1
+; KV3_1-NEXT:    sraw $r2 = $r2, 1
+; KV3_1-NEXT:    sraw $r3 = $r3, 1
+; KV3_1-NEXT:    insf $r4 = $r1, 31, 16
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    sraw $r0 = $r0, 1
-; KV3_1-NEXT:    insf $r1 = $r2, 15, 8
-; KV3_1-NEXT:    insf $r4 = $r3, 15, 8
-; KV3_1-NEXT:    sraw $r6 = $r6, 1
+; KV3_1-NEXT:    insf $r5 = $r2, 15, 8
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    insf $r0 = $r6, 15, 8
-; KV3_1-NEXT:    insf $r5 = $r7, 15, 8
+; KV3_1-NEXT:    insf $r0 = $r3, 15, 8
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    insf $r0 = $r5, 31, 16
-; KV3_1-NEXT:    insf $r4 = $r1, 31, 16
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    insf $r0 = $r4, 63, 32
 ; KV3_1-NEXT:    ret
@@ -1979,42 +1982,43 @@ define <8 x i8> @ravg_v8i8(<8 x i8> %a, <8 x i8> %b) {
 ; KV3_1-NEXT:    extfz $r1 = $r0, 55, 48
 ; KV3_1-NEXT:    srld $r2 = $r0, 56
 ; KV3_1-NEXT:    extfz $r3 = $r0, 47, 40
-; KV3_1-NEXT:    srlw $r7 = $r0, 24
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    extfz $r4 = $r0, 39, 32
-; KV3_1-NEXT:    extfz $r5 = $r0, 23, 16
-; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    zxbd $r0 = $r0
 ; KV3_1-NEXT:    sxbd $r2 = $r2
-; KV3_1-NEXT:    extfz $r6 = $r0, 15, 8
+; KV3_1-NEXT:    extfz $r4 = $r0, 39, 32
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    sxbd $r1 = $r1
-; KV3_1-NEXT:    sxbd $r3 = $r3
-; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    sraw $r2 = $r2, 1
-; KV3_1-NEXT:    sxbd $r4 = $r4
-; KV3_1-NEXT:    sxbd $r7 = $r7
+; KV3_1-NEXT:    sxbd $r3 = $r3
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    sraw $r1 = $r1, 1
 ; KV3_1-NEXT:    sraw $r3 = $r3, 1
+; KV3_1-NEXT:    sxbd $r4 = $r4
+; KV3_1-NEXT:    extfz $r5 = $r0, 23, 16
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    insf $r1 = $r2, 15, 8
+; KV3_1-NEXT:    srlw $r2 = $r0, 24
+; KV3_1-NEXT:    sraw $r4 = $r4, 1
 ; KV3_1-NEXT:    sxbd $r5 = $r5
-; KV3_1-NEXT:    sxbd $r6 = $r6
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    zxbd $r0 = $r0
+; KV3_1-NEXT:    extfz $r3 = $r0, 15, 8
+; KV3_1-NEXT:    insf $r4 = $r3, 15, 8
+; KV3_1-NEXT:    sraw $r5 = $r5, 1
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    sxbd $r2 = $r2
+; KV3_1-NEXT:    sxbd $r3 = $r3
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    sxbd $r0 = $r0
-; KV3_1-NEXT:    sraw $r4 = $r4, 1
-; KV3_1-NEXT:    sraw $r5 = $r5, 1
-; KV3_1-NEXT:    sraw $r7 = $r7, 1
+; KV3_1-NEXT:    sraw $r2 = $r2, 1
+; KV3_1-NEXT:    sraw $r3 = $r3, 1
+; KV3_1-NEXT:    insf $r4 = $r1, 31, 16
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    sraw $r0 = $r0, 1
-; KV3_1-NEXT:    insf $r1 = $r2, 15, 8
-; KV3_1-NEXT:    insf $r4 = $r3, 15, 8
-; KV3_1-NEXT:    sraw $r6 = $r6, 1
+; KV3_1-NEXT:    insf $r5 = $r2, 15, 8
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    insf $r0 = $r6, 15, 8
-; KV3_1-NEXT:    insf $r5 = $r7, 15, 8
+; KV3_1-NEXT:    insf $r0 = $r3, 15, 8
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    insf $r0 = $r5, 31, 16
-; KV3_1-NEXT:    insf $r4 = $r1, 31, 16
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    insf $r0 = $r4, 63, 32
 ; KV3_1-NEXT:    ret
@@ -2049,42 +2053,43 @@ define <8 x i8> @ravg_v8i8_ri_at(<8 x i8> %a) {
 ; KV3_1-NEXT:    extfz $r1 = $r0, 55, 48
 ; KV3_1-NEXT:    srld $r2 = $r0, 56
 ; KV3_1-NEXT:    extfz $r3 = $r0, 47, 40
-; KV3_1-NEXT:    srlw $r7 = $r0, 24
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    extfz $r4 = $r0, 39, 32
-; KV3_1-NEXT:    extfz $r5 = $r0, 23, 16
-; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    zxbd $r0 = $r0
 ; KV3_1-NEXT:    sxbd $r2 = $r2
-; KV3_1-NEXT:    extfz $r6 = $r0, 15, 8
+; KV3_1-NEXT:    extfz $r4 = $r0, 39, 32
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    sxbd $r1 = $r1
-; KV3_1-NEXT:    sxbd $r3 = $r3
-; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    sraw $r2 = $r2, 1
-; KV3_1-NEXT:    sxbd $r4 = $r4
-; KV3_1-NEXT:    sxbd $r7 = $r7
+; KV3_1-NEXT:    sxbd $r3 = $r3
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    sraw $r1 = $r1, 1
 ; KV3_1-NEXT:    sraw $r3 = $r3, 1
+; KV3_1-NEXT:    sxbd $r4 = $r4
+; KV3_1-NEXT:    extfz $r5 = $r0, 23, 16
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    insf $r1 = $r2, 15, 8
+; KV3_1-NEXT:    srlw $r2 = $r0, 24
+; KV3_1-NEXT:    sraw $r4 = $r4, 1
 ; KV3_1-NEXT:    sxbd $r5 = $r5
-; KV3_1-NEXT:    sxbd $r6 = $r6
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    zxbd $r0 = $r0
+; KV3_1-NEXT:    extfz $r3 = $r0, 15, 8
+; KV3_1-NEXT:    insf $r4 = $r3, 15, 8
+; KV3_1-NEXT:    sraw $r5 = $r5, 1
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    sxbd $r2 = $r2
+; KV3_1-NEXT:    sxbd $r3 = $r3
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    sxbd $r0 = $r0
-; KV3_1-NEXT:    sraw $r4 = $r4, 1
-; KV3_1-NEXT:    sraw $r5 = $r5, 1
-; KV3_1-NEXT:    sraw $r7 = $r7, 1
+; KV3_1-NEXT:    sraw $r2 = $r2, 1
+; KV3_1-NEXT:    sraw $r3 = $r3, 1
+; KV3_1-NEXT:    insf $r4 = $r1, 31, 16
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    sraw $r0 = $r0, 1
-; KV3_1-NEXT:    insf $r1 = $r2, 15, 8
-; KV3_1-NEXT:    insf $r4 = $r3, 15, 8
-; KV3_1-NEXT:    sraw $r6 = $r6, 1
+; KV3_1-NEXT:    insf $r5 = $r2, 15, 8
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    insf $r0 = $r6, 15, 8
-; KV3_1-NEXT:    insf $r5 = $r7, 15, 8
+; KV3_1-NEXT:    insf $r0 = $r3, 15, 8
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    insf $r0 = $r5, 31, 16
-; KV3_1-NEXT:    insf $r4 = $r1, 31, 16
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    insf $r0 = $r4, 63, 32
 ; KV3_1-NEXT:    ret

@@ -15,26 +15,26 @@ define dso_local void @matrix_mul_const(i32 %0, i32* nocapture %1, i16* nocaptur
 ; CHECK-NEXT:  # %bb.1:
 ; CHECK-NEXT:    sxhd $r3 = $r3
 ; CHECK-NEXT:    zxwd $r4 = $r0
-; CHECK-NEXT:    make $r7 = 0
-; CHECK-NEXT:    compw.ltu $r8 = $r0, 2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    clrf $r5 = $r4, 0, 31
-; CHECK-NEXT:    copyd $r9 = $r3
+; CHECK-NEXT:    make $r6 = 0
 ; CHECK-NEXT:    make $r16 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r6 = $r5, -2
+; CHECK-NEXT:    clrf $r5 = $r4, 0, 31
+; CHECK-NEXT:    addd $r8 = $r4, -1
+; CHECK-NEXT:    copyd $r9 = $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r7 = $r5, -2
 ; CHECK-NEXT:    insf $r9 = $r9, 63, 32
+; CHECK-NEXT:    compd.gtu $r11 = $r8, 0xffffffff
 ; CHECK-NEXT:    compd.eq $r15 = $r5, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r6 = $r4, -1
-; CHECK-NEXT:    srld $r10 = $r6, 1
+; CHECK-NEXT:    compw.ltu $r7 = $r0, 2
+; CHECK-NEXT:    srld $r10 = $r7, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r10 = $r10, 1
-; CHECK-NEXT:    compd.gtu $r11 = $r6, 0xffffffff
 ; CHECK-NEXT:    goto .LBB0_2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_10: # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    addw $r7 = $r7, $r0
+; CHECK-NEXT:    addw $r6 = $r6, $r0
 ; CHECK-NEXT:    addw $r16 = $r16, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compw.ne $r17 = $r16, $r0
@@ -44,12 +44,12 @@ define dso_local void @matrix_mul_const(i32 %0, i32* nocapture %1, i16* nocaptur
 ; CHECK-NEXT:  .LBB0_2: # =>This Loop Header: Depth=1
 ; CHECK-NEXT:    # Child Loop BB0_6 Depth 2
 ; CHECK-NEXT:    # Child Loop BB0_9 Depth 2
-; CHECK-NEXT:    cb.even $r8 ? .LBB0_3
+; CHECK-NEXT:    cb.even $r7 ? .LBB0_3
 ; CHECK-NEXT:    make $r32 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_8: # in Loop: Header=BB0_2 Depth=1
 ; CHECK-NEXT:    sbfd $r17 = $r32, $r4
-; CHECK-NEXT:    addw $r32 = $r7, $r32
+; CHECK-NEXT:    addw $r32 = $r6, $r32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_9: # Parent Loop BB0_2 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
@@ -72,7 +72,7 @@ define dso_local void @matrix_mul_const(i32 %0, i32* nocapture %1, i16* nocaptur
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    notw $r17 = $r17
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    compw.ltu $r17 = $r17, $r6
+; CHECK-NEXT:    compw.ltu $r17 = $r17, $r8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.odd $r17 ? .LBB0_8
 ; CHECK-NEXT:    ;;
@@ -81,7 +81,7 @@ define dso_local void @matrix_mul_const(i32 %0, i32* nocapture %1, i16* nocaptur
 ; CHECK-NEXT:    make $r32 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.5: # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    copyd $r17 = $r7
+; CHECK-NEXT:    copyd $r17 = $r6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r10, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;

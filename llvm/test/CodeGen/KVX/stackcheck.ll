@@ -127,14 +127,14 @@ define dso_local i32 @testrealign() local_unnamed_addr  {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 232[$r12] = $r31
 ; CHECK-NEXT:    make $r0 = 7
-; CHECK-NEXT:    make $r1 = 0x4d2
 ; CHECK-NEXT:    andd $r31 = $r12, -128
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 228[$r31] = $r0
-; CHECK-NEXT:    addd $r0 = $r31, 228
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 128[$r31] = $r1
+; CHECK-NEXT:    make $r0 = 0x4d2
 ; CHECK-NEXT:    addd $r1 = $r31, 128
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw 128[$r31] = $r0
+; CHECK-NEXT:    addd $r0 = $r31, 228
 ; CHECK-NEXT:    call other
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r12 = $r14, -240

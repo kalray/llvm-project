@@ -8,12 +8,12 @@ define internal fastcc void @init_array(double* nocapture %alpha, double* nocapt
 ; CHECK-LABEL: init_array:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r4 = 0x40dfa70000000000
-; CHECK-NEXT:    make $r5 = 0x40a0960000000000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 0[$r0] = $r4
-; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    make $r0 = 0x40a0960000000000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 0[$r1] = $r5
+; CHECK-NEXT:    sd 0[$r1] = $r0
+; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    make $r1 = 4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_1: # %for.cond1.preheader

@@ -55,10 +55,10 @@ define i8 @test_extract_3(<4 x i8> %a) #0 {
 define <4 x i8> @test_fma(<4 x i8> %a, <4 x i8> %b, <4 x i8> %c) #0 {
 ; CV1-LABEL: test_fma:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    sxlbhq $r0 = $r0
 ; CV1-NEXT:    sxlbhq $r1 = $r1
-; CV1-NEXT:    ;;
 ; CV1-NEXT:    sxlbhq $r2 = $r2
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sxlbhq $r0 = $r0
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    maddhq $r0 = $r1, $r2
 ; CV1-NEXT:    ;;
@@ -375,9 +375,9 @@ define <4 x i8> @test_div(<4 x i8> %a, <4 x i8> %b) #0 {
 ; ALL-NEXT:    sxbd $r1 = $r1
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    sxwd $r0 = $r0
-; ALL-NEXT:    insf $r21 = $r20, 15, 8
-; ALL-NEXT:    ;;
 ; ALL-NEXT:    sxwd $r1 = $r1
+; ALL-NEXT:    ;;
+; ALL-NEXT:    insf $r21 = $r20, 15, 8
 ; ALL-NEXT:    call __divdi3
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    zxbd $r0 = $r19
@@ -452,9 +452,9 @@ define <4 x i8> @test_rem(<4 x i8> %a, <4 x i8> %b) #0 {
 ; ALL-NEXT:    sxbd $r1 = $r1
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    sxwd $r0 = $r0
-; ALL-NEXT:    insf $r21 = $r20, 15, 8
-; ALL-NEXT:    ;;
 ; ALL-NEXT:    sxwd $r1 = $r1
+; ALL-NEXT:    ;;
+; ALL-NEXT:    insf $r21 = $r20, 15, 8
 ; ALL-NEXT:    call __moddi3
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    zxbd $r0 = $r19
@@ -608,10 +608,10 @@ define <4 x i64> @test_select_cc_f32_f32(<4 x i64> %a, <4 x i64> %b, <4 x i8> %c
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    sbmm8 $r8 = $r8, 0x40100401
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    extfz $r8 = $r8, 15, 8
+; CV1-NEXT:    zxbd $r8 = $r8
 ; CV1-NEXT:    srlw $r9 = $r8, 24
 ; CV1-NEXT:    extfz $r10 = $r8, 23, 16
-; CV1-NEXT:    zxbd $r11 = $r8
+; CV1-NEXT:    extfz $r11 = $r8, 15, 8
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    sxbd $r9 = $r9
 ; CV1-NEXT:    sxbd $r10 = $r10
@@ -619,14 +619,14 @@ define <4 x i64> @test_select_cc_f32_f32(<4 x i64> %a, <4 x i64> %b, <4 x i8> %c
 ; CV1-NEXT:    sxbd $r8 = $r8
 ; CV1-NEXT:    sxbd $r11 = $r11
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    cmoved.dnez $r10 ? $r6 = $r2
-; CV1-NEXT:    cmoved.dnez $r9 ? $r7 = $r3
-; CV1-NEXT:    ;;
-; CV1-NEXT:    cmoved.dnez $r11 ? $r4 = $r0
-; CV1-NEXT:    cmoved.dnez $r8 ? $r5 = $r1
+; CV1-NEXT:    cmoved.dnez $r8 ? $r4 = $r0
+; CV1-NEXT:    cmoved.dnez $r11 ? $r5 = $r1
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    copyd $r0 = $r4
 ; CV1-NEXT:    copyd $r1 = $r5
+; CV1-NEXT:    cmoved.dnez $r10 ? $r6 = $r2
+; CV1-NEXT:    cmoved.dnez $r9 ? $r7 = $r3
+; CV1-NEXT:    ;;
 ; CV1-NEXT:    copyd $r2 = $r6
 ; CV1-NEXT:    copyd $r3 = $r7
 ; CV1-NEXT:    ret
@@ -647,14 +647,14 @@ define <4 x i64> @test_select_cc_f32_f32(<4 x i64> %a, <4 x i64> %b, <4 x i8> %c
 ; CV2-NEXT:    sxbd $r8 = $r8
 ; CV2-NEXT:    sxbd $r11 = $r11
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    cmoved.dnez $r10 ? $r6 = $r2
-; CV2-NEXT:    cmoved.dnez $r9 ? $r7 = $r3
-; CV2-NEXT:    ;;
 ; CV2-NEXT:    cmoved.dnez $r11 ? $r4 = $r0
 ; CV2-NEXT:    cmoved.dnez $r8 ? $r5 = $r1
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    copyd $r0 = $r4
 ; CV2-NEXT:    copyd $r1 = $r5
+; CV2-NEXT:    cmoved.dnez $r10 ? $r6 = $r2
+; CV2-NEXT:    cmoved.dnez $r9 ? $r7 = $r3
+; CV2-NEXT:    ;;
 ; CV2-NEXT:    copyd $r2 = $r6
 ; CV2-NEXT:    copyd $r3 = $r7
 ; CV2-NEXT:    ret
@@ -857,9 +857,9 @@ define <4 x i8> @test_insertelement(<4 x i8> %a, i8 %x, i64 %p) #0 {
 ; ALL-NEXT:    addd $r12 = $r12, -32
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    sw 28[$r12] = $r0
-; ALL-NEXT:    addd $r3 = $r12, 28
+; ALL-NEXT:    addd $r0 = $r12, 28
 ; ALL-NEXT:    ;;
-; ALL-NEXT:    sb $r2[$r3] = $r1
+; ALL-NEXT:    sb $r2[$r0] = $r1
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    lwz $r0 = 28[$r12]
 ; ALL-NEXT:    addd $r12 = $r12, 32
@@ -872,10 +872,10 @@ define <4 x i8> @test_insertelement(<4 x i8> %a, i8 %x, i64 %p) #0 {
 define <4 x i8> @mulsub(<4 x i8> %a, <4 x i8> %b, <4 x i8> %c) #0 {
 ; CV1-LABEL: mulsub:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    sxlbhq $r0 = $r0
 ; CV1-NEXT:    sxlbhq $r1 = $r1
-; CV1-NEXT:    ;;
 ; CV1-NEXT:    sxlbhq $r2 = $r2
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sxlbhq $r0 = $r0
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    msbfhq $r0 = $r1, $r2
 ; CV1-NEXT:    ;;
@@ -1174,23 +1174,22 @@ define <4 x i8> @test_div_4(<4 x i8> %a, <4 x i8> %b) #0 {
 ; CV1-NEXT:    extfz $r3 = $r0, 15, 8
 ; CV1-NEXT:    zxbd $r4 = $r0
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sxlbhq $r0 = $r0
 ; CV1-NEXT:    sxbd $r1 = $r1
-; CV1-NEXT:    ;;
 ; CV1-NEXT:    sxbd $r2 = $r2
-; CV1-NEXT:    sxbd $r3 = $r3
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    extfz $r1 = $r1, 14, 13
+; CV1-NEXT:    sxbd $r3 = $r3
 ; CV1-NEXT:    sxbd $r4 = $r4
 ; CV1-NEXT:    ;;
+; CV1-NEXT:    extfz $r1 = $r1, 14, 13
 ; CV1-NEXT:    extfz $r2 = $r2, 14, 13
-; CV1-NEXT:    extfz $r3 = $r3, 14, 13
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    insf $r2 = $r1, 15, 8
+; CV1-NEXT:    extfz $r3 = $r3, 14, 13
 ; CV1-NEXT:    extfz $r4 = $r4, 14, 13
 ; CV1-NEXT:    ;;
+; CV1-NEXT:    insf $r2 = $r1, 15, 8
 ; CV1-NEXT:    insf $r4 = $r3, 15, 8
 ; CV1-NEXT:    ;;
+; CV1-NEXT:    sxlbhq $r0 = $r0
 ; CV1-NEXT:    insf $r4 = $r2, 31, 16
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    sxlbhq $r1 = $r4
@@ -1239,23 +1238,22 @@ define <4 x i8> @test_div_32(<4 x i8> %a, <4 x i8> %b) #0 {
 ; CV1-NEXT:    extfz $r3 = $r0, 15, 8
 ; CV1-NEXT:    zxbd $r4 = $r0
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sxlbhq $r0 = $r0
 ; CV1-NEXT:    sxbd $r1 = $r1
-; CV1-NEXT:    ;;
 ; CV1-NEXT:    sxbd $r2 = $r2
-; CV1-NEXT:    sxbd $r3 = $r3
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    extfz $r1 = $r1, 14, 10
+; CV1-NEXT:    sxbd $r3 = $r3
 ; CV1-NEXT:    sxbd $r4 = $r4
 ; CV1-NEXT:    ;;
+; CV1-NEXT:    extfz $r1 = $r1, 14, 10
 ; CV1-NEXT:    extfz $r2 = $r2, 14, 10
-; CV1-NEXT:    extfz $r3 = $r3, 14, 10
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    insf $r2 = $r1, 15, 8
+; CV1-NEXT:    extfz $r3 = $r3, 14, 10
 ; CV1-NEXT:    extfz $r4 = $r4, 14, 10
 ; CV1-NEXT:    ;;
+; CV1-NEXT:    insf $r2 = $r1, 15, 8
 ; CV1-NEXT:    insf $r4 = $r3, 15, 8
 ; CV1-NEXT:    ;;
+; CV1-NEXT:    sxlbhq $r0 = $r0
 ; CV1-NEXT:    insf $r4 = $r2, 31, 16
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    sxlbhq $r1 = $r4

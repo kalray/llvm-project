@@ -85,10 +85,10 @@ define <2 x float> @ffmawp(<2 x float> %a, <2 x float> %b, <2 x float> %c) {
 define half @ffmaf16(half %a, half %b, half %c) {
 ; ALL-LABEL: ffmaf16:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    zxhd $r0 = $r2
+; ALL-NEXT:    zxhd $r1 = $r1
 ; ALL-NEXT:    zxhd $r3 = $r0
 ; ALL-NEXT:    ;;
-; ALL-NEXT:    zxhd $r1 = $r1
+; ALL-NEXT:    zxhd $r0 = $r2
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    ffmahq $r0 = $r3, $r1
 ; ALL-NEXT:    ret
@@ -100,10 +100,10 @@ define half @ffmaf16(half %a, half %b, half %c) {
 define half @ffmahq_v1_rr(half %a, half %b, half %c) {
 ; ALL-LABEL: ffmahq_v1_rr:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    zxhd $r0 = $r0
 ; ALL-NEXT:    zxhd $r1 = $r1
-; ALL-NEXT:    ;;
 ; ALL-NEXT:    zxhd $r2 = $r2
+; ALL-NEXT:    ;;
+; ALL-NEXT:    zxhd $r0 = $r0
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    ffmahq $r0 = $r1, $r2
 ; ALL-NEXT:    ret

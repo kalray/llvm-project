@@ -170,66 +170,66 @@ list<InstrItinData> ItinList = [
   >,
   InstrItinData<ALU_TINY, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>,
-    ], [3, 2, 2], [], 1
+    ], [2, 2, 2], [], 1
   >,
   InstrItinData<ALU_TINY_X, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>,
-    ], [3, 2, 2], [], 2
+    ], [2, 2, 2], [], 2
   >,
   InstrItinData<ALU_TINY_Y, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
-    ], [3, 2, 2], [], 3
+    ], [2, 2, 2], [], 3
   >,
   InstrItinData<ALU_LITE, [
     InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
-    ], [3, 2, 2], [], 1
+    ], [2, 2, 2], [], 1
   >,
   InstrItinData<ALU_LITE_X, [
     InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
-    ], [3, 2, 2], [], 2
+    ], [2, 2, 2], [], 2
   >,
   InstrItinData<ALU_LITE_Y, [
     InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
-    ], [3, 2, 2], [], 3
+    ], [2, 2, 2], [], 3
   >,
   InstrItinData<ALU_LITE_CRWL, [
     InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [CRWL_FU]>
-    ], [3, 2, 2], [], 1
+    ], [2, 2, 2], [], 1
   >,
   InstrItinData<ALU_LITE_CRWH, [
     InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [CRWH_FU]>
-    ], [3, 2, 2], [], 1
+    ], [2, 2, 2], [], 1
   >,
   InstrItinData<ALU_FULL, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
     InstrStage<1, [FULL_FU]>
-  ], [3, 2, 2], [], 1
+  ], [2, 2, 2], [], 1
   >,
   InstrItinData<SFU, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
     InstrStage<1, [FULL_FU]>
-  ], [13, 2, 2], [], 1
+  ], [12, 2, 2], [], 1
   >,
   InstrItinData<ALU_FULL_X, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
     InstrStage<1, [FULL_FU]>
-    ], [3, 2, 2], [], 2
+    ], [2, 2, 2], [], 2
   >,
   InstrItinData<ALU_FULL_Y, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
     InstrStage<1, [FULL_FU]>
-    ], [3, 2, 2], [], 3
+    ], [2, 2, 2], [], 3
   >,
   InstrItinData<BCU, [
     InstrStage<1, [BCU_FU]> // TODO: branch penalty not modeled
@@ -240,14 +240,14 @@ list<InstrItinData> ItinList = [
     InstrStage<1, [CRRP_FU], 0>,
     InstrStage<1, [CRWL_FU], 0>,
     InstrStage<1, [CRWH_FU]>
-    ], [5, 2, 2], [], 1
+    ], [4, 2, 2], [], 1
   >,
   InstrItinData<BCU_TINY_AUXW_CRRP, [
     InstrStage<1, [BCU_FU], 0>,
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [AUXW_FU], 0>,
     InstrStage<1, [CRRP_FU]>
-    ], [5, 2, 2], [], 1
+    ], [4, 2, 2], [], 1
   >,
   // TODO : need to split this class into several to handle bypasses finely
   // (SFRs have no bypasses but GPRs do)
@@ -260,15 +260,15 @@ list<InstrItinData> ItinList = [
     InstrStage<1, [NOP0_FU, NOP1_FU, NOP2_FU, NOP3_FU], 0>,
     InstrStage<1, [NOP0_FU, NOP1_FU, NOP2_FU, NOP3_FU], 0>,
     InstrStage<1, [NOP0_FU, NOP1_FU, NOP2_FU, NOP3_FU]>
-    ], [3, 2, 2], [], 1
+    ], [2, 2, 2], [], 1
   >,
   InstrItinData<TCA, [
     InstrStage<1, [TCA_FU]>
-    ], [5, 2, 2], [], 1
+    ], [4, 2, 2], [], 1
   >,
   InstrItinData<TCA_FP16, [
     InstrStage<1, [TCA_FU]>
-    ], [7, 2, 2], [], 1
+    ], [6, 2, 2], [], 1
   >,
   // NOTE : stores have up to 5 operands
   InstrItinData<LSU_STORE, [
@@ -369,175 +369,175 @@ list<InstrItinData> ItinList = [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU], 0>,
     InstrStage<1, [AUXW_FU]>
-    ], [4, 2, 2, 2, 2, 2], [], 1
+    ], [3, 2, 2, 2, 2, 2], [], 1
   >,
   InstrItinData<LSU_AUXW_X_ALCLR, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU], 0>,
     InstrStage<1, [AUXW_FU]>
-    ], [4, 2, 2, 2, 2, 2], [], 2
+    ], [3, 2, 2, 2, 2, 2], [], 2
   >,
   InstrItinData<LSU_AUXW_Y_ALCLR, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU], 0>,
     InstrStage<1, [AUXW_FU]>
-    ], [4, 2, 2, 2, 2, 2], [], 3
+    ], [3, 2, 2, 2, 2, 2], [], 3
   >,
   InstrItinData<LSU_LOAD, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU]>
-    ], [5, 2, 2, 2, 2, 2], [], 1
+    ], [4, 2, 2, 2, 2, 2], [], 1
   >,
   InstrItinData<LSU_X_LOAD, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU]>
-    ], [5, 2, 2, 2, 2, 2], [], 2
+    ], [4, 2, 2, 2, 2, 2], [], 2
   >,
   InstrItinData<LSU_Y_LOAD, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU]>
-    ], [5, 2, 2, 2, 2, 2], [], 3
+    ], [4, 2, 2, 2, 2, 2], [], 3
   >,
   InstrItinData<LSU_CRRP_LOAD, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU], 0>,
     InstrStage<1, [CRRP_FU]>
-    ], [5, 2, 2, 2, 2, 2], [], 1
+    ], [4, 2, 2, 2, 2, 2], [], 1
   >,
   InstrItinData<LSU_CRRP_X_LOAD, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU], 0>,
     InstrStage<1, [CRRP_FU]>
-    ], [5, 2, 2, 2, 2, 2], [], 2
+    ], [4, 2, 2, 2, 2, 2], [], 2
   >,
   InstrItinData<LSU_CRRP_Y_LOAD, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU], 0>,
     InstrStage<1, [CRRP_FU]>
-    ], [5, 2, 2, 2, 2, 2], [], 3
+    ], [4, 2, 2, 2, 2, 2], [], 3
   >,
   InstrItinData<LSU_AUXR_LOAD, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU], 0>,
     InstrStage<1, [AUXR_FU]>
-    ], [5, 2, 2, 2, 2, 2], [], 1
+    ], [4, 2, 2, 2, 2, 2], [], 1
   >,
   InstrItinData<LSU_AUXR_X_LOAD, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU], 0>,
     InstrStage<1, [AUXR_FU]>
-    ], [5, 2, 2, 2, 2, 2], [], 2
+    ], [4, 2, 2, 2, 2, 2], [], 2
   >,
   InstrItinData<LSU_AUXR_Y_LOAD, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU], 0>,
     InstrStage<1, [AUXR_FU]>
-    ], [5, 2, 2, 2, 2, 2], [], 3
+    ], [4, 2, 2, 2, 2, 2], [], 3
   >,
   InstrItinData<LSU_AUXW_LOAD, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU], 0>,
     InstrStage<1, [AUXW_FU]>
-    ], [5, 2, 2, 2, 2, 2], [], 1
+    ], [4, 2, 2, 2, 2, 2], [], 1
   >,
   InstrItinData<LSU_AUXW_X_LOAD, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU], 0>,
     InstrStage<1, [AUXW_FU]>
-    ], [5, 2, 2, 2, 2, 2], [], 2
+    ], [4, 2, 2, 2, 2, 2], [], 2
   >,
   InstrItinData<LSU_AUXW_Y_LOAD, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU], 0>,
     InstrStage<1, [AUXW_FU]>
-    ], [5, 2, 2, 2, 2, 2], [], 3
+    ], [4, 2, 2, 2, 2, 2], [], 3
   >,
   InstrItinData<LSU_AUXR_AUXW_LOAD, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU], 0>,
     InstrStage<1, [AUXR_FU], 0>,
     InstrStage<1, [AUXW_FU]>
-    ], [5, 2, 2, 2, 2, 2], [], 1
+    ], [4, 2, 2, 2, 2, 2], [], 1
   >,
   InstrItinData<LSU_AUXR_AUXW_X_LOAD, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU], 0>,
     InstrStage<1, [AUXR_FU], 0>,
     InstrStage<1, [AUXW_FU]>
-    ], [5, 2, 2, 2, 2, 2], [], 2
+    ], [4, 2, 2, 2, 2, 2], [], 2
   >,
   InstrItinData<LSU_AUXR_AUXW_Y_LOAD, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LSU_FU], 0>,
     InstrStage<1, [AUXR_FU], 0>,
     InstrStage<1, [AUXW_FU]>
-    ], [5, 2, 2, 2, 2, 2], [], 3
+    ], [4, 2, 2, 2, 2, 2], [], 3
   >,
   InstrItinData<MAU, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [MAU_FU]>
-    ], [4, 2, 2], [], 1
+    ], [3, 2, 2], [], 1
   >,
   InstrItinData<MAU_FP, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [MAU_FU]>
-    ], [6, 2, 2], [], 1
+    ], [5, 2, 2], [], 1
   >,
   InstrItinData<MAU_X, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [MAU_FU]>
-    ], [4, 2, 2], [], 2
+    ], [3, 2, 2], [], 2
   >,
   InstrItinData<MAU_X_FP, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [MAU_FU]>
-    ], [6, 2, 2], [], 2
+    ], [5, 2, 2], [], 2
   >,
   InstrItinData<MAU_Y, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [MAU_FU]>
-    ], [4, 2, 2], [], 3
+    ], [3, 2, 2], [], 3
   >,
   InstrItinData<MAU_Y_FP, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [MAU_FU]>
-    ], [6, 2, 2], [], 3
+    ], [5, 2, 2], [], 3
   >,
   InstrItinData<MAU_AUXR, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [MAU_FU], 0>,
     InstrStage<1, [AUXR_FU]>
-    ], [4, 2, 2], [], 1
+    ], [3, 2, 2], [], 1
   >,
   InstrItinData<MAU_AUXR_X, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [MAU_FU], 0>,
     InstrStage<1, [AUXR_FU]>
-    ], [4, 2, 2], [], 2
+    ], [3, 2, 2], [], 2
   >,
   InstrItinData<MAU_AUXR_Y, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [MAU_FU], 0>,
     InstrStage<1, [AUXR_FU]>
-    ], [4, 2, 2], [], 3
+    ], [3, 2, 2], [], 3
   >,
   InstrItinData<MAU_AUXR_FP, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [MAU_FU], 0>,
     InstrStage<1, [AUXR_FU]>
-    ], [6, 2, 2], [], 1
+    ], [5, 2, 2], [], 1
   >,
   InstrItinData<MAU_AUXR_X_FP, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [MAU_FU], 0>,
     InstrStage<1, [AUXR_FU]>
-    ], [6, 2, 2], [], 2
+    ], [5, 2, 2], [], 2
   >,
   InstrItinData<MAU_AUXR_Y_FP, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [MAU_FU], 0>,
     InstrStage<1, [AUXR_FU]>
-    ], [6, 2, 2], [], 3
+    ], [5, 2, 2], [], 3
   >,
   // TODO : add OperandLatencies here as well
   // We need to expand SWAPVOp pseudos after packetizer. To correctly schedule/bundle them,
@@ -556,7 +556,7 @@ list<InstrItinData> ItinList = [
     InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<3, [AUXW_FU], 0>,
     InstrStage<3, [CRRP_FU]>
-  ], [3, 5, 2, 2], [], 3>
+  ], [2, 4, 2, 2], [], 3>
 ];
 }
 

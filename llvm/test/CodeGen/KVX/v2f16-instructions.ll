@@ -1293,9 +1293,9 @@ define <2 x half> @test_minnum(<2 x half> %a, <2 x half> %b) #0 {
 ; CHECK-NEXT:    insf $r0 = $r20, 63, 32
 ; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fnarrowwhq $r0 = $r0r1
 ; CHECK-NEXT:    ld $r20 = 16[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowwhq $r0 = $r0r1
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
@@ -1344,9 +1344,9 @@ define <2 x half> @test_maxnum(<2 x half> %a, <2 x half> %b) #0 {
 ; CHECK-NEXT:    insf $r0 = $r20, 63, 32
 ; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fnarrowwhq $r0 = $r0r1
 ; CHECK-NEXT:    ld $r20 = 16[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowwhq $r0 = $r0r1
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
@@ -1816,10 +1816,11 @@ entry:
 define <2 x half> @shuffle_v2half_2_1(<2 x half> %0, <2 x half> %1) #0 {
 ; CHECK-LABEL: shuffle_v2half_2_1:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    copyd $r0 = $r1
-; CHECK-NEXT:    srlw $r2 = $r0, 16
+; CHECK-NEXT:    srlw $r0 = $r0, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 16
+; CHECK-NEXT:    insf $r1 = $r0, 31, 16
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
