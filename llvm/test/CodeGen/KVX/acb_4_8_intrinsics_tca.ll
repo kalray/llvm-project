@@ -18,13 +18,13 @@ define <4 x i64> @test_tca_builtins(i64 %0, i64 %1, i64 %2, i64 %3, <256 x i1>* 
 ; CHECK-NEXT:    sv 0[$r4] = $a0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a0 = 0[$r4]
+; CHECK-NEXT:    movetq $a1_lo = $r35, $r1
+; CHECK-NEXT:    addd $r1 = $r4, 128
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    movetq $a0_lo = $r35, $r34
+; CHECK-NEXT:    movetq $a1_hi = $r33, $r34
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 0[$r4] = $a0
-; CHECK-NEXT:    movetq $a1_lo = $r35, $r1
-; CHECK-NEXT:    movetq $a1_hi = $r33, $r34
-; CHECK-NEXT:    addd $r1 = $r4, 128
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 32[$r4] = $a1
 ; CHECK-NEXT:    ;;

@@ -123,9 +123,9 @@ define <4 x i8> @bchar4_0(i8 %a, i8 %b, i8 %c) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r3 = 4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r3, 15, 8
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r2 = $r3, 15, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r2, 31, 16
 ; CHECK-NEXT:    ;;
@@ -143,9 +143,9 @@ define <4 x i8> @bchar4_1(i8 %a, i8 %b, i8 %c) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r3 = 4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r3 = $r2, 15, 8
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r3 = $r2, 15, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r3, 31, 16
 ; CHECK-NEXT:    ;;
@@ -266,9 +266,9 @@ define <4 x i16> @bshort4_0(i16 %a, i16 %b, i16 %c) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r3 = 4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r3, 31, 16
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 16
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r2 = $r3, 31, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r2, 63, 32
 ; CHECK-NEXT:    ;;
@@ -286,9 +286,9 @@ define <4 x i16> @bshort4_1(i16 %a, i16 %b, i16 %c) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r3 = 4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r3 = $r2, 31, 16
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 16
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r3 = $r2, 31, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r3, 63, 32
 ; CHECK-NEXT:    ;;
@@ -449,9 +449,9 @@ define <4 x i32> @bint4_2(i32 %a, i32 %b, i32 %c) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r3 = 4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r3, 63, 32
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r1 = $r2, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r3, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -467,9 +467,9 @@ define <4 x i32> @bint4_3(i32 %a, i32 %b, i32 %c) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r3 = 4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r3 = $r0, 63, 32
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r1 = $r2, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r3 = $r0, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r3
 ; CHECK-NEXT:    ;;
@@ -570,15 +570,11 @@ entry:
 define <4 x i64> @blong4_2(i64 %a, i64 %b, i64 %c) {
 ; CHECK-LABEL: blong4_2:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    copyd $r3 = $r1
+; CHECK-NEXT:    copyd $r3 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r2 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r1 = 4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r4 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r2 = $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r3 = $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -592,17 +588,17 @@ entry:
 define <4 x i64> @blong4_3(i64 %a, i64 %b, i64 %c) {
 ; CHECK-LABEL: blong4_3:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    copyd $r3 = $r0
+; CHECK-NEXT:    copyd $r3 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r0 = 4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r4 = $r2
+; CHECK-NEXT:    copyd $r4 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r2 = $r1
+; CHECK-NEXT:    copyd $r1 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r3 = $r4
+; CHECK-NEXT:    copyd $r2 = $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -761,9 +757,9 @@ define <4 x half> @bhalf4_0(half %a, half %b, half %c) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r3 = 0x4400
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r2 = $r3, 31, 16
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 16
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r2 = $r3, 31, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r2, 63, 32
 ; CHECK-NEXT:    ;;
@@ -781,9 +777,9 @@ define <4 x half> @bhalf4_1(half %a, half %b, half %c) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r3 = 0x4400
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r3 = $r2, 31, 16
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 16
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r3 = $r2, 31, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r3, 63, 32
 ; CHECK-NEXT:    ;;
@@ -944,9 +940,9 @@ define <4 x float> @bfloat4_2(float %a, float %b, float %c) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r3 = 0x40800000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r3, 63, 32
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r1 = $r2, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r3, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -962,9 +958,9 @@ define <4 x float> @bfloat4_3(float %a, float %b, float %c) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r3 = 0x40800000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r3 = $r0, 63, 32
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r1 = $r2, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r3 = $r0, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r3
 ; CHECK-NEXT:    ;;
@@ -1065,15 +1061,11 @@ entry:
 define <4 x double> @bdouble4_2(double %a, double %b, double %c) {
 ; CHECK-LABEL: bdouble4_2:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    copyd $r3 = $r1
+; CHECK-NEXT:    copyd $r3 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r2 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r1 = 0x4010000000000000
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r4 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r2 = $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r3 = $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -1087,17 +1079,17 @@ entry:
 define <4 x double> @bdouble4_3(double %a, double %b, double %c) {
 ; CHECK-LABEL: bdouble4_3:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    copyd $r3 = $r0
+; CHECK-NEXT:    copyd $r3 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r0 = 0x4010000000000000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r4 = $r2
+; CHECK-NEXT:    copyd $r4 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r2 = $r1
+; CHECK-NEXT:    copyd $r1 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r3 = $r4
+; CHECK-NEXT:    copyd $r2 = $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;

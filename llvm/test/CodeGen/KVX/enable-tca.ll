@@ -49,9 +49,9 @@ define void @foo(i8* nocapture %0, float* nocapture %1) {
 ; VLIW-NEXT:    lv $a3 = 96[$r0]
 ; VLIW-NEXT:    ;;
 ; VLIW-NEXT:    lv $a2 = 64[$r0]
-; VLIW-NEXT:    faddw $r2 = $r2, 0x42280000
 ; VLIW-NEXT:    ;;
 ; VLIW-NEXT:    lv $a1 = 32[$r0]
+; VLIW-NEXT:    faddw $r2 = $r2, 0x42280000
 ; VLIW-NEXT:    ;;
 ; VLIW-NEXT:    lv $a0 = 0[$r0]
 ; VLIW-NEXT:    make $r3 = 0x10000000000000

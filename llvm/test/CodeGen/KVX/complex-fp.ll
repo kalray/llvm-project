@@ -72,12 +72,12 @@ define { i64, i64 } @FADDCWCP(i64 %0, i64 %1, i64 %2, i64 %3) {
 ; CHECK-NEXT:    faddw $r1 = $r3, $r1
 ; CHECK-NEXT:    srld $r6 = $r3, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfw $r4 = $r5, $r4
+; CHECK-NEXT:    fsbfw $r3 = $r5, $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    zxwd $r1 = $r1
 ; CHECK-NEXT:    fsbfw $r2 = $r6, $r2
-; CHECK-NEXT:    slld $r3 = $r4, 32
+; CHECK-NEXT:    slld $r3 = $r3, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r0 = $r3, $r0
 ; CHECK-NEXT:    slld $r2 = $r2, 32
@@ -495,12 +495,12 @@ define { i64, i64 } @FADDCWCP_2(i64 %0, i64 %1, i64 %2, i64 %3) {
 ; CHECK-NEXT:    faddw $r1 = $r3, $r1
 ; CHECK-NEXT:    srld $r6 = $r3, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfw $r4 = $r5, $r4
+; CHECK-NEXT:    fsbfw $r3 = $r5, $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    zxwd $r1 = $r1
 ; CHECK-NEXT:    fsbfw $r2 = $r6, $r2
-; CHECK-NEXT:    slld $r3 = $r4, 32
+; CHECK-NEXT:    slld $r3 = $r3, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r0 = $r3, $r0
 ; CHECK-NEXT:    slld $r2 = $r2, 32
@@ -612,16 +612,16 @@ define { i64, i64 } @FMULCWDC_2(i64 %0, i64 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srld $r1 = $r1, 32
 ; CHECK-NEXT:    srld $r2 = $r0, 32
-; CHECK-NEXT:    fwidenlwd $r4 = $r1
+; CHECK-NEXT:    fwidenlwd $r3 = $r1
 ; CHECK-NEXT:    fwidenlwd $r5 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld $r0 = $r4, $r5
+; CHECK-NEXT:    fmuld $r0 = $r3, $r5
 ; CHECK-NEXT:    fwidenlwd $r1 = $r1
-; CHECK-NEXT:    fwidenlwd $r3 = $r2
+; CHECK-NEXT:    fwidenlwd $r4 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld $r2 = $r3, $r4
+; CHECK-NEXT:    fmuld $r2 = $r4, $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmad $r0 = $r1, $r3
+; CHECK-NEXT:    ffmad $r0 = $r1, $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmsd $r2 = $r1, $r5
 ; CHECK-NEXT:    ;;
@@ -1032,19 +1032,19 @@ define <4 x float> @FSBFCWCP_3(<4 x float> %0, <4 x float> %1) {
 ; CHECK-LABEL: FSBFCWCP_3:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srad $r4 = $r0, 32
-; CHECK-NEXT:    srad $r5 = $r1, 32
-; CHECK-NEXT:    copyd $r7 = $r1
+; CHECK-NEXT:    copyd $r5 = $r1
+; CHECK-NEXT:    srad $r6 = $r1, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnegw $r4 = $r4
-; CHECK-NEXT:    insf $r7 = $r1, 31, 0
+; CHECK-NEXT:    insf $r5 = $r1, 31, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r4, 63, 32
-; CHECK-NEXT:    fnegw $r1 = $r5
+; CHECK-NEXT:    fnegw $r1 = $r6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r6 = $r0
-; CHECK-NEXT:    insf $r7 = $r1, 63, 32
+; CHECK-NEXT:    copyd $r4 = $r0
+; CHECK-NEXT:    insf $r5 = $r1, 63, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfwq $r0r1 = $r2r3, $r6r7
+; CHECK-NEXT:    fsbfwq $r0r1 = $r2r3, $r4r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = extractelement <4 x float> %0, i32 1

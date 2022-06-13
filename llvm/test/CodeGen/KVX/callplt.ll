@@ -18,8 +18,8 @@ define i64 @foo(double*, double*, double*, { i32, [3 x i64], [3 x i64], [3 x i64
 ; CHECK-NEXT:    sq 40[$r12] = $r20r21
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 24[$r12] = $r18r19
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r18 = $r4
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r20 = 56[$r3]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r21 = 32[$r3]

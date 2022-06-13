@@ -1720,12 +1720,12 @@ define <4 x float> @test_copysign_v4f64(<4 x float> %a, <4 x double> %b) #0 {
 ; CHECK-NEXT:    copyd $r7 = $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srld $r2 = $r6, 63
-; CHECK-NEXT:    srld $r3 = $r5, 63
-; CHECK-NEXT:    srld $r4 = $r4, 63
+; CHECK-NEXT:    srld $r3 = $r4, 63
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r4, 31, 31
+; CHECK-NEXT:    insf $r0 = $r3, 31, 31
 ; CHECK-NEXT:    insf $r1 = $r2, 31, 31
 ; CHECK-NEXT:    srld $r2 = $r7, 63
+; CHECK-NEXT:    srld $r3 = $r5, 63
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r3, 63, 63
 ; CHECK-NEXT:    insf $r1 = $r2, 63, 63

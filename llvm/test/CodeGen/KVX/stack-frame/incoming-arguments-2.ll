@@ -29,28 +29,27 @@ define i32 @fn1(i32 %a, i32 %b, i32 %c, i32 %d, i32 %e, i32 %f, i32 %g, i32 %h, 
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    sq 8[$r12] = $r18r19
 ; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:    lwz $r15 = 144[$r12]
-; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:    sd 0[$r12] = $r15
-; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:    copyd $r18 = $r11
+; FP-NONE-NEXT:    sd 0[$r12] = $r11
 ; FP-NONE-NEXT:    copyd $r19 = $r10
 ; FP-NONE-NEXT:    copyd $r20 = $r9
-; FP-NONE-NEXT:    lwz $r31 = 136[$r12]
-; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    copyd $r21 = $r8
+; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    copyd $r22 = $r7
 ; FP-NONE-NEXT:    copyd $r23 = $r6
 ; FP-NONE-NEXT:    copyd $r24 = $r5
-; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    copyd $r25 = $r4
+; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    copyd $r26 = $r3
 ; FP-NONE-NEXT:    copyd $r27 = $r2
 ; FP-NONE-NEXT:    copyd $r28 = $r1
+; FP-NONE-NEXT:    copyd $r29 = $r0
+; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    lwz $r30 = 144[$r12]
+; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    lwz $r31 = 136[$r12]
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    copyd $r1 = $r27
-; FP-NONE-NEXT:    copyd $r29 = $r0
-; FP-NONE-NEXT:    lwz $r30 = 128[$r12]
+; FP-NONE-NEXT:    lwz $r18 = 128[$r12]
 ; FP-NONE-NEXT:    call fn3
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    addw $r0 = $r28, $r29
@@ -74,18 +73,19 @@ define i32 @fn1(i32 %a, i32 %b, i32 %c, i32 %d, i32 %e, i32 %f, i32 %g, i32 %h, 
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    addw $r0 = $r0, $r19
 ; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    addw $r0 = $r0, $r1
+; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    lq $r18r19 = 8[$r12]
 ; FP-NONE-NEXT:    addw $r0 = $r0, $r18
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    lo $r20r21r22r23 = 24[$r12]
-; FP-NONE-NEXT:    addw $r0 = $r0, $r30
+; FP-NONE-NEXT:    addw $r0 = $r0, $r31
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    lo $r24r25r26r27 = 56[$r12]
-; FP-NONE-NEXT:    addw $r0 = $r0, $r31
+; FP-NONE-NEXT:    addw $r0 = $r0, $r30
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    lo $r28r29r30r31 = 88[$r12]
 ; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:    addw $r0 = $r0, $r1
 ; FP-NONE-NEXT:    ld $r16 = 120[$r12]
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    set $ra = $r16
@@ -112,28 +112,27 @@ define i32 @fn1(i32 %a, i32 %b, i32 %c, i32 %d, i32 %e, i32 %f, i32 %g, i32 %h, 
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    sq 32[$r12] = $r18r19
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    lwz $r15 = 32[$r14]
-; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    sd -120[$r14] = $r15
-; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    copyd $r18 = $r11
+; FP-ALL-NEXT:    sd -120[$r14] = $r11
 ; FP-ALL-NEXT:    copyd $r19 = $r10
 ; FP-ALL-NEXT:    copyd $r20 = $r9
-; FP-ALL-NEXT:    lwz $r31 = 24[$r14]
-; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    copyd $r21 = $r8
+; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    copyd $r22 = $r7
 ; FP-ALL-NEXT:    copyd $r23 = $r6
 ; FP-ALL-NEXT:    copyd $r24 = $r5
-; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    copyd $r25 = $r4
+; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    copyd $r26 = $r3
 ; FP-ALL-NEXT:    copyd $r27 = $r2
 ; FP-ALL-NEXT:    copyd $r28 = $r1
+; FP-ALL-NEXT:    copyd $r29 = $r0
+; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    lwz $r30 = 32[$r14]
+; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    lwz $r31 = 24[$r14]
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    copyd $r1 = $r27
-; FP-ALL-NEXT:    copyd $r29 = $r0
-; FP-ALL-NEXT:    lwz $r30 = 16[$r14]
+; FP-ALL-NEXT:    lwz $r18 = 16[$r14]
 ; FP-ALL-NEXT:    call fn3
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    addw $r0 = $r28, $r29
@@ -157,13 +156,13 @@ define i32 @fn1(i32 %a, i32 %b, i32 %c, i32 %d, i32 %e, i32 %f, i32 %g, i32 %h, 
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    addw $r0 = $r0, $r19
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    addw $r0 = $r0, $r18
+; FP-ALL-NEXT:    addw $r0 = $r0, $r1
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    addw $r0 = $r0, $r30
+; FP-ALL-NEXT:    addw $r0 = $r0, $r18
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    addw $r0 = $r0, $r31
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    addw $r0 = $r0, $r1
+; FP-ALL-NEXT:    addw $r0 = $r0, $r30
 ; FP-ALL-NEXT:    addd $r12 = $r14, -144
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    lq $r18r19 = 32[$r12]
