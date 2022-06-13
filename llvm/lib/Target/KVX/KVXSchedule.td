@@ -138,9 +138,20 @@ def SWAPVO : InstrItinClass;
 
 def KVXItinList {
 list<InstrItinData> ItinList = [
+  // ALL reserves all resources to ensure nothing else gets scheduled
   InstrItinData<ALL, [
-    // This itineray is empty, it consumes all resources. This is checked by KVXPacketizer.
-  ]>,
+    InstrStage<1, [TINY0_FU], 0>,
+    InstrStage<1, [TINY1_FU], 0>,
+    InstrStage<1, [TINY2_FU], 0>,
+    InstrStage<1, [TINY3_FU], 0>,
+    InstrStage<1, [BCU_FU], 0>,
+    InstrStage<1, [TCA_FU], 0>,
+    InstrStage<1, [NOP0_FU], 0>,
+    InstrStage<1, [NOP1_FU], 0>,
+    InstrStage<1, [NOP2_FU], 0>,
+    InstrStage<1, [NOP3_FU], 0>,
+    ]
+  >,
   InstrItinData<ALU_NOP, [
     InstrStage<1, [NOP0_FU, NOP1_FU, NOP2_FU, NOP3_FU]>
     ]

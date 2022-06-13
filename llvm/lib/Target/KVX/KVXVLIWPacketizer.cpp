@@ -150,7 +150,6 @@ bool KVXPacketizerList::isSoloInstruction(const MachineInstr &MI) {
   } else {
     switch (MI.getOpcode()) {
     default:
-      Solo = MI.getDesc().getSchedClass() == KVX::Sched::ALL;
       break;
     case KVX::SETrst3:
     case KVX::SETrsa:
