@@ -21,20 +21,20 @@ define void @loop_unrolling(i32* nocapture %t){
 ; CHECK-NEXT:    ord $r3 = $r1, 5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 12[$r0] = $r4
-; CHECK-NEXT:    ord $r4 = $r1, 6
+; CHECK-NEXT:    ord $r4 = $r1, 7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 16[$r0] = $r2
 ; CHECK-NEXT:    addd $r1 = $r1, 8
-; CHECK-NEXT:    ord $r2 = $r1, 7
+; CHECK-NEXT:    ord $r2 = $r1, 6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 20[$r0] = $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 24[$r0] = $r4
-; CHECK-NEXT:    compd.eq $r3 = $r1, 1024
+; CHECK-NEXT:    sw 24[$r0] = $r2
+; CHECK-NEXT:    compd.eq $r2 = $r1, 1024
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 28[$r0] = $r2
+; CHECK-NEXT:    sw 28[$r0] = $r4
 ; CHECK-NEXT:    addd $r0 = $r0, 32
-; CHECK-NEXT:    cb.even $r3 ? .LBB0_1
+; CHECK-NEXT:    cb.even $r2 ? .LBB0_1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.2: # %for.cond.cleanup
 ; CHECK-NEXT:    ret
