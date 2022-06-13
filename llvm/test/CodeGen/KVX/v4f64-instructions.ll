@@ -1854,9 +1854,9 @@ define <4 x double> @test_log2(<4 x double> %a) #0 {
 define <4 x double> @test_fma(<4 x double> %a, <4 x double> %b, <4 x double> %c) #0 {
 ; CHECK-LABEL: test_fma:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ffmad $r8 = $r0, $r4
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad $r9 = $r1, $r5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmad $r8 = $r0, $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad $r10 = $r2, $r6
 ; CHECK-NEXT:    ;;
@@ -2464,9 +2464,9 @@ define <4 x double> @test_round(<4 x double> %a) #0 {
 define <4 x double> @test_fmuladd(<4 x double> %a, <4 x double> %b, <4 x double> %c) #0 {
 ; CHECK-LABEL: test_fmuladd:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ffmad $r8 = $r0, $r4
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad $r9 = $r1, $r5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmad $r8 = $r0, $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad $r10 = $r2, $r6
 ; CHECK-NEXT:    ;;

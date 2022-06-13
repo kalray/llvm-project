@@ -647,12 +647,12 @@ define <4 x i32> @test_fptosi_i32(<4 x float> %a) #0 {
 define <4 x i64> @test_fptosi_i64(<4 x float> %a) #0 {
 ; CHECK-LABEL: test_fptosi_i64:
 ; CHECK:       # %bb.0:
+; CHECK-NEXT:    fwidenlwd $r1 = $r1
 ; CHECK-NEXT:    fwidenmwd $r2 = $r1
-; CHECK-NEXT:    fwidenmwd $r4 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fwidenlwd $r0 = $r0
-; CHECK-NEXT:    fwidenlwd $r1 = $r1
 ; CHECK-NEXT:    fixedd.rz $r3 = $r2, 0
+; CHECK-NEXT:    fwidenmwd $r4 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedd.rz $r2 = $r1, 0
 ; CHECK-NEXT:    ;;
@@ -680,12 +680,12 @@ define <4 x i32> @test_fptoui_2xi32(<4 x float> %a) #0 {
 define <4 x i64> @test_fptoui_2xi64(<4 x float> %a) #0 {
 ; CHECK-LABEL: test_fptoui_2xi64:
 ; CHECK:       # %bb.0:
+; CHECK-NEXT:    fwidenlwd $r1 = $r1
 ; CHECK-NEXT:    fwidenmwd $r2 = $r1
-; CHECK-NEXT:    fwidenmwd $r4 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fwidenlwd $r0 = $r0
-; CHECK-NEXT:    fwidenlwd $r1 = $r1
 ; CHECK-NEXT:    fixedud.rz $r3 = $r2, 0
+; CHECK-NEXT:    fwidenmwd $r4 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedud.rz $r2 = $r1, 0
 ; CHECK-NEXT:    ;;
@@ -1494,11 +1494,11 @@ define <4 x float> @test_log2(<4 x float> %a) #0 {
 define <4 x float> @test_fma(<4 x float> %a, <4 x float> %b, <4 x float> %c) #0 {
 ; KV3_1-LABEL: test_fma:
 ; KV3_1:       # %bb.0:
+; KV3_1-NEXT:    ffmawp $r5 = $r1, $r3
+; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    ffmawp $r4 = $r0, $r2
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    copyd $r0 = $r4
-; KV3_1-NEXT:    ffmawp $r5 = $r1, $r3
-; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    copyd $r1 = $r5
 ; KV3_1-NEXT:    ret
 ; KV3_1-NEXT:    ;;
@@ -2069,11 +2069,11 @@ define <4 x float> @test_round(<4 x float> %a) #0 {
 define <4 x float> @test_fmuladd(<4 x float> %a, <4 x float> %b, <4 x float> %c) #0 {
 ; KV3_1-LABEL: test_fmuladd:
 ; KV3_1:       # %bb.0:
+; KV3_1-NEXT:    ffmawp $r5 = $r1, $r3
+; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    ffmawp $r4 = $r0, $r2
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    copyd $r0 = $r4
-; KV3_1-NEXT:    ffmawp $r5 = $r1, $r3
-; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    copyd $r1 = $r5
 ; KV3_1-NEXT:    ret
 ; KV3_1-NEXT:    ;;

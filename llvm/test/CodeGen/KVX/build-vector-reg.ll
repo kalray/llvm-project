@@ -93,9 +93,9 @@ entry:
 define <4 x i32> @bint4(i32 %a, i32 %b, i32 %c, i32 %d) {
 ; CHECK-LABEL: bint4:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    insf $r0 = $r1, 63, 32
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r2 = $r3, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r2
 ; CHECK-NEXT:    ;;
@@ -156,17 +156,17 @@ entry:
 define <8 x i16> @bshort8(i16 %a, i16 %b, i16 %c, i16 %d, i16 %e, i16 %f, i16 %g, i16 %h) {
 ; CHECK-LABEL: bshort8:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    insf $r2 = $r3, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 31, 16
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r6 = $r7, 31, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r4 = $r5, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 63, 32
+; CHECK-NEXT:    insf $r2 = $r3, 31, 16
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 31, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r4 = $r6, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r2, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r4
 ; CHECK-NEXT:    ;;
@@ -187,13 +187,13 @@ entry:
 define <8 x i32> @bint8(i32 %a, i32 %b, i32 %c, i32 %d, i32 %e, i32 %f, i32 %g, i32 %h) {
 ; CHECK-LABEL: bint8:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    insf $r0 = $r1, 63, 32
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r2 = $r3, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r4 = $r5, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r6 = $r7, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r2
 ; CHECK-NEXT:    ;;
@@ -218,14 +218,14 @@ entry:
 define void @blong8(<8 x i64>* noalias nocapture sret(<8 x i64>) %agg.result, i64 %a, i64 %b, i64 %c, i64 %d, i64 %e, i64 %f, i64 %g, i64 %h) {
 ; CHECK-LABEL: blong8:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    # kill: def $r7 killed $r7 killed $q4 def $q4
 ; CHECK-NEXT:    # kill: def $r3 killed $r3 killed $q0 def $q0
-; CHECK-NEXT:    # kill: def $r6 killed $r6 killed $q4 def $q4
+; CHECK-NEXT:    # kill: def $r7 killed $r7 killed $q4 def $q4
 ; CHECK-NEXT:    # kill: def $r2 killed $r2 killed $q0 def $q0
-; CHECK-NEXT:    # kill: def $r5 killed $r5 killed $q4 def $q4
+; CHECK-NEXT:    # kill: def $r6 killed $r6 killed $q4 def $q4
 ; CHECK-NEXT:    # kill: def $r1 killed $r1 killed $q0 def $q0
-; CHECK-NEXT:    # kill: def $r4 killed $r4 killed $q4 def $q4
+; CHECK-NEXT:    # kill: def $r5 killed $r5 killed $q4 def $q4
 ; CHECK-NEXT:    # kill: def $r0 killed $r0 killed $q0 def $q0
+; CHECK-NEXT:    # kill: def $r4 killed $r4 killed $q4 def $q4
 ; CHECK-NEXT:    so 32[$r15] = $r4r5r6r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    so 0[$r15] = $r0r1r2r3
@@ -335,9 +335,9 @@ entry:
 define <4 x float> @bfloat4(float %a, float %b, float %c, float %d) {
 ; CHECK-LABEL: bfloat4:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    insf $r0 = $r1, 63, 32
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r2 = $r3, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r2
 ; CHECK-NEXT:    ;;
@@ -367,17 +367,17 @@ entry:
 define <8 x half> @bhalf8(half %a, half %b, half %c, half %d, half %e, half %f, half %g, half %h) {
 ; CHECK-LABEL: bhalf8:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    insf $r2 = $r3, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 31, 16
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r6 = $r7, 31, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r4 = $r5, 31, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 63, 32
+; CHECK-NEXT:    insf $r2 = $r3, 31, 16
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 31, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r4 = $r6, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r2, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r4
 ; CHECK-NEXT:    ;;
@@ -398,13 +398,13 @@ entry:
 define <8 x float> @bfloat8(float %a, float %b, float %c, float %d, float %e, float %f, float %g, float %h) {
 ; CHECK-LABEL: bfloat8:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    insf $r0 = $r1, 63, 32
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r2 = $r3, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r4 = $r5, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r6 = $r7, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r0 = $r1, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r2
 ; CHECK-NEXT:    ;;
@@ -429,14 +429,14 @@ entry:
 define void @bdouble8(<8 x double>* noalias nocapture sret(<8 x double>) %agg.result, double %a, double %b, double %c, double %d, double %e, double %f, double %g, double %h) {
 ; CHECK-LABEL: bdouble8:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    # kill: def $r7 killed $r7 killed $q4 def $q4
 ; CHECK-NEXT:    # kill: def $r3 killed $r3 killed $q0 def $q0
-; CHECK-NEXT:    # kill: def $r6 killed $r6 killed $q4 def $q4
+; CHECK-NEXT:    # kill: def $r7 killed $r7 killed $q4 def $q4
 ; CHECK-NEXT:    # kill: def $r2 killed $r2 killed $q0 def $q0
-; CHECK-NEXT:    # kill: def $r5 killed $r5 killed $q4 def $q4
+; CHECK-NEXT:    # kill: def $r6 killed $r6 killed $q4 def $q4
 ; CHECK-NEXT:    # kill: def $r1 killed $r1 killed $q0 def $q0
-; CHECK-NEXT:    # kill: def $r4 killed $r4 killed $q4 def $q4
+; CHECK-NEXT:    # kill: def $r5 killed $r5 killed $q4 def $q4
 ; CHECK-NEXT:    # kill: def $r0 killed $r0 killed $q0 def $q0
+; CHECK-NEXT:    # kill: def $r4 killed $r4 killed $q4 def $q4
 ; CHECK-NEXT:    so 32[$r15] = $r4r5r6r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    so 0[$r15] = $r0r1r2r3

@@ -2524,35 +2524,35 @@ define <8 x i8> @not_addx2_i8x8_rr(<8 x i8> %a, <8 x i8> %b) {
 ; V2-NEXT:    make $r2 = 0x101010101010102
 ; V2-NEXT:    ;;
 ; V2-NEXT:    extfz $r3 = $r2, 10, 8
-; V2-NEXT:    extfz $r5 = $r2, 18, 16
+; V2-NEXT:    sllbos $r4 = $r0, $r2
 ; V2-NEXT:    ;;
 ; V2-NEXT:    sllbos $r3 = $r0, $r3
-; V2-NEXT:    sllbos $r4 = $r0, $r2
+; V2-NEXT:    extfz $r5 = $r2, 18, 16
 ; V2-NEXT:    ;;
 ; V2-NEXT:    insf $r3 = $r4, 7, 0
 ; V2-NEXT:    sllbos $r5 = $r0, $r5
 ; V2-NEXT:    ;;
 ; V2-NEXT:    extfz $r4 = $r2, 26, 24
+; V2-NEXT:    ;;
+; V2-NEXT:    sllbos $r4 = $r0, $r4
 ; V2-NEXT:    insf $r5 = $r3, 15, 0
 ; V2-NEXT:    ;;
 ; V2-NEXT:    extfz $r3 = $r2, 34, 32
-; V2-NEXT:    sllbos $r4 = $r0, $r4
-; V2-NEXT:    ;;
 ; V2-NEXT:    insf $r4 = $r5, 23, 0
-; V2-NEXT:    extfz $r5 = $r2, 42, 40
 ; V2-NEXT:    ;;
 ; V2-NEXT:    sllbos $r3 = $r0, $r3
-; V2-NEXT:    sllbos $r5 = $r0, $r5
+; V2-NEXT:    extfz $r5 = $r2, 42, 40
 ; V2-NEXT:    ;;
 ; V2-NEXT:    insf $r3 = $r4, 31, 0
-; V2-NEXT:    extfz $r4 = $r2, 50, 48
+; V2-NEXT:    sllbos $r5 = $r0, $r5
 ; V2-NEXT:    ;;
 ; V2-NEXT:    extfz $r2 = $r2, 58, 56
+; V2-NEXT:    extfz $r4 = $r2, 50, 48
+; V2-NEXT:    ;;
+; V2-NEXT:    sllbos $r3 = $r0, $r4
 ; V2-NEXT:    insf $r5 = $r3, 39, 0
 ; V2-NEXT:    ;;
 ; V2-NEXT:    sllbos $r0 = $r0, $r2
-; V2-NEXT:    sllbos $r3 = $r0, $r4
-; V2-NEXT:    ;;
 ; V2-NEXT:    insf $r3 = $r5, 47, 0
 ; V2-NEXT:    ;;
 ; V2-NEXT:    insf $r0 = $r3, 55, 0
@@ -3340,35 +3340,35 @@ define <8 x i8> @not_addx4_i8x8_rr(<8 x i8> %a, <8 x i8> %b) {
 ; V2-NEXT:    make $r2 = 0x102020202020202
 ; V2-NEXT:    ;;
 ; V2-NEXT:    extfz $r3 = $r2, 10, 8
-; V2-NEXT:    extfz $r5 = $r2, 18, 16
+; V2-NEXT:    sllbos $r4 = $r0, $r2
 ; V2-NEXT:    ;;
 ; V2-NEXT:    sllbos $r3 = $r0, $r3
-; V2-NEXT:    sllbos $r4 = $r0, $r2
+; V2-NEXT:    extfz $r5 = $r2, 18, 16
 ; V2-NEXT:    ;;
 ; V2-NEXT:    insf $r3 = $r4, 7, 0
 ; V2-NEXT:    sllbos $r5 = $r0, $r5
 ; V2-NEXT:    ;;
 ; V2-NEXT:    extfz $r4 = $r2, 26, 24
+; V2-NEXT:    ;;
+; V2-NEXT:    sllbos $r4 = $r0, $r4
 ; V2-NEXT:    insf $r5 = $r3, 15, 0
 ; V2-NEXT:    ;;
 ; V2-NEXT:    extfz $r3 = $r2, 34, 32
-; V2-NEXT:    sllbos $r4 = $r0, $r4
-; V2-NEXT:    ;;
 ; V2-NEXT:    insf $r4 = $r5, 23, 0
-; V2-NEXT:    extfz $r5 = $r2, 42, 40
 ; V2-NEXT:    ;;
 ; V2-NEXT:    sllbos $r3 = $r0, $r3
-; V2-NEXT:    sllbos $r5 = $r0, $r5
+; V2-NEXT:    extfz $r5 = $r2, 42, 40
 ; V2-NEXT:    ;;
 ; V2-NEXT:    insf $r3 = $r4, 31, 0
-; V2-NEXT:    extfz $r4 = $r2, 50, 48
+; V2-NEXT:    sllbos $r5 = $r0, $r5
 ; V2-NEXT:    ;;
 ; V2-NEXT:    extfz $r2 = $r2, 58, 56
+; V2-NEXT:    extfz $r4 = $r2, 50, 48
+; V2-NEXT:    ;;
+; V2-NEXT:    sllbos $r3 = $r0, $r4
 ; V2-NEXT:    insf $r5 = $r3, 39, 0
 ; V2-NEXT:    ;;
 ; V2-NEXT:    sllbos $r0 = $r0, $r2
-; V2-NEXT:    sllbos $r3 = $r0, $r4
-; V2-NEXT:    ;;
 ; V2-NEXT:    insf $r3 = $r5, 47, 0
 ; V2-NEXT:    ;;
 ; V2-NEXT:    insf $r0 = $r3, 55, 0
@@ -4156,35 +4156,35 @@ define <8 x i8> @not_addx8_i8x8_rr(<8 x i8> %a, <8 x i8> %b) {
 ; V2-NEXT:    make $r2 = 0x102030303030303
 ; V2-NEXT:    ;;
 ; V2-NEXT:    extfz $r3 = $r2, 10, 8
-; V2-NEXT:    extfz $r5 = $r2, 18, 16
+; V2-NEXT:    sllbos $r4 = $r0, $r2
 ; V2-NEXT:    ;;
 ; V2-NEXT:    sllbos $r3 = $r0, $r3
-; V2-NEXT:    sllbos $r4 = $r0, $r2
+; V2-NEXT:    extfz $r5 = $r2, 18, 16
 ; V2-NEXT:    ;;
 ; V2-NEXT:    insf $r3 = $r4, 7, 0
 ; V2-NEXT:    sllbos $r5 = $r0, $r5
 ; V2-NEXT:    ;;
 ; V2-NEXT:    extfz $r4 = $r2, 26, 24
+; V2-NEXT:    ;;
+; V2-NEXT:    sllbos $r4 = $r0, $r4
 ; V2-NEXT:    insf $r5 = $r3, 15, 0
 ; V2-NEXT:    ;;
 ; V2-NEXT:    extfz $r3 = $r2, 34, 32
-; V2-NEXT:    sllbos $r4 = $r0, $r4
-; V2-NEXT:    ;;
 ; V2-NEXT:    insf $r4 = $r5, 23, 0
-; V2-NEXT:    extfz $r5 = $r2, 42, 40
 ; V2-NEXT:    ;;
 ; V2-NEXT:    sllbos $r3 = $r0, $r3
-; V2-NEXT:    sllbos $r5 = $r0, $r5
+; V2-NEXT:    extfz $r5 = $r2, 42, 40
 ; V2-NEXT:    ;;
 ; V2-NEXT:    insf $r3 = $r4, 31, 0
-; V2-NEXT:    extfz $r4 = $r2, 50, 48
+; V2-NEXT:    sllbos $r5 = $r0, $r5
 ; V2-NEXT:    ;;
 ; V2-NEXT:    extfz $r2 = $r2, 58, 56
+; V2-NEXT:    extfz $r4 = $r2, 50, 48
+; V2-NEXT:    ;;
+; V2-NEXT:    sllbos $r3 = $r0, $r4
 ; V2-NEXT:    insf $r5 = $r3, 39, 0
 ; V2-NEXT:    ;;
 ; V2-NEXT:    sllbos $r0 = $r0, $r2
-; V2-NEXT:    sllbos $r3 = $r0, $r4
-; V2-NEXT:    ;;
 ; V2-NEXT:    insf $r3 = $r5, 47, 0
 ; V2-NEXT:    ;;
 ; V2-NEXT:    insf $r0 = $r3, 55, 0
@@ -4972,35 +4972,35 @@ define <8 x i8> @not_addx16_i8x8_rr(<8 x i8> %a, <8 x i8> %b) {
 ; V2-NEXT:    make $r2 = 0x102040404040404
 ; V2-NEXT:    ;;
 ; V2-NEXT:    extfz $r3 = $r2, 10, 8
-; V2-NEXT:    extfz $r5 = $r2, 18, 16
+; V2-NEXT:    sllbos $r4 = $r0, $r2
 ; V2-NEXT:    ;;
 ; V2-NEXT:    sllbos $r3 = $r0, $r3
-; V2-NEXT:    sllbos $r4 = $r0, $r2
+; V2-NEXT:    extfz $r5 = $r2, 18, 16
 ; V2-NEXT:    ;;
 ; V2-NEXT:    insf $r3 = $r4, 7, 0
 ; V2-NEXT:    sllbos $r5 = $r0, $r5
 ; V2-NEXT:    ;;
 ; V2-NEXT:    extfz $r4 = $r2, 26, 24
+; V2-NEXT:    ;;
+; V2-NEXT:    sllbos $r4 = $r0, $r4
 ; V2-NEXT:    insf $r5 = $r3, 15, 0
 ; V2-NEXT:    ;;
 ; V2-NEXT:    extfz $r3 = $r2, 34, 32
-; V2-NEXT:    sllbos $r4 = $r0, $r4
-; V2-NEXT:    ;;
 ; V2-NEXT:    insf $r4 = $r5, 23, 0
-; V2-NEXT:    extfz $r5 = $r2, 42, 40
 ; V2-NEXT:    ;;
 ; V2-NEXT:    sllbos $r3 = $r0, $r3
-; V2-NEXT:    sllbos $r5 = $r0, $r5
+; V2-NEXT:    extfz $r5 = $r2, 42, 40
 ; V2-NEXT:    ;;
 ; V2-NEXT:    insf $r3 = $r4, 31, 0
-; V2-NEXT:    extfz $r4 = $r2, 50, 48
+; V2-NEXT:    sllbos $r5 = $r0, $r5
 ; V2-NEXT:    ;;
 ; V2-NEXT:    extfz $r2 = $r2, 58, 56
+; V2-NEXT:    extfz $r4 = $r2, 50, 48
+; V2-NEXT:    ;;
+; V2-NEXT:    sllbos $r3 = $r0, $r4
 ; V2-NEXT:    insf $r5 = $r3, 39, 0
 ; V2-NEXT:    ;;
 ; V2-NEXT:    sllbos $r0 = $r0, $r2
-; V2-NEXT:    sllbos $r3 = $r0, $r4
-; V2-NEXT:    ;;
 ; V2-NEXT:    insf $r3 = $r5, 47, 0
 ; V2-NEXT:    ;;
 ; V2-NEXT:    insf $r0 = $r3, 55, 0

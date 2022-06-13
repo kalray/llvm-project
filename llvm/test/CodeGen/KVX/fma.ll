@@ -166,11 +166,11 @@ define <4 x half> @ffmahq(<4 x half> %a, <4 x half> %b, <4 x half> %c) {
 define <2 x double> @ffmav2f64(<2 x double> %a, <2 x double> %b, <2 x double> %c) {
 ; ALL-LABEL: ffmav2f64:
 ; ALL:       # %bb.0:
+; ALL-NEXT:    ffmad $r5 = $r1, $r3
+; ALL-NEXT:    ;;
 ; ALL-NEXT:    ffmad $r4 = $r0, $r2
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    copyd $r0 = $r4
-; ALL-NEXT:    ffmad $r5 = $r1, $r3
-; ALL-NEXT:    ;;
 ; ALL-NEXT:    copyd $r1 = $r5
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;

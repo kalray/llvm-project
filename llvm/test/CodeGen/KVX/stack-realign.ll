@@ -664,26 +664,28 @@ define i32 @stackrealign4(i32 %n){
 ; CHECK-NEXT:    make $r3 = g1
 ; CHECK-NEXT:    make $r4 = g2
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw 256[$r31] = $r2
 ; CHECK-NEXT:    make $r6 = g4
 ; CHECK-NEXT:    make $r7 = g5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r9 = g7
-; CHECK-NEXT:    make $r10 = g8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 256[$r31] = $r2
+; CHECK-NEXT:    lwz $r0 = 0[$r3]
 ; CHECK-NEXT:    make $r2 = g3
+; CHECK-NEXT:    make $r9 = g7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    make $r10 = g8
 ; CHECK-NEXT:    make $r15 = g10
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r0 = 0[$r3]
 ; CHECK-NEXT:    make $r16 = g11
 ; CHECK-NEXT:    make $r32 = g13
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r33 = g14
 ; CHECK-NEXT:    make $r35 = g16
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 248[$r31] = $r0
 ; CHECK-NEXT:    make $r36 = g17
 ; CHECK-NEXT:    make $r38 = g19
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lwz $r0 = 0[$r4]
 ; CHECK-NEXT:    make $r39 = g20
 ; CHECK-NEXT:    make $r41 = g22
 ; CHECK-NEXT:    ;;
@@ -696,52 +698,46 @@ define i32 @stackrealign4(i32 %n){
 ; CHECK-NEXT:    make $r47 = g29
 ; CHECK-NEXT:    make $r49 = g31
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 240[$r31] = $r0
 ; CHECK-NEXT:    make $r50 = g32
 ; CHECK-NEXT:    make $r52 = g34
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 248[$r31] = $r0
+; CHECK-NEXT:    lwz $r0 = 0[$r2]
 ; CHECK-NEXT:    make $r53 = g35
 ; CHECK-NEXT:    make $r55 = g37
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r0 = 0[$r4]
+; CHECK-NEXT:    make $r2 = g6
 ; CHECK-NEXT:    make $r56 = g38
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r58 = g40
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r59 = g41
-; CHECK-NEXT:    make $r61 = g43
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r18 = g46
+; CHECK-NEXT:    make $r61 = g43
 ; CHECK-NEXT:    make $r62 = g44
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r19 = g47
-; CHECK-NEXT:    make $r21 = g49
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r22 = g50
-; CHECK-NEXT:    make $r24 = g52
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r25 = g53
-; CHECK-NEXT:    make $r27 = g55
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r28 = g56
-; CHECK-NEXT:    make $r30 = g58
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r1 = g59
-; CHECK-NEXT:    make $r34 = g61
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 240[$r31] = $r0
-; CHECK-NEXT:    make $r11 = g65
-; CHECK-NEXT:    make $r40 = g63
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r0 = 0[$r2]
-; CHECK-NEXT:    make $r2 = g6
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 232[$r31] = $r0
+; CHECK-NEXT:    make $r18 = g46
+; CHECK-NEXT:    make $r19 = g47
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r0 = 0[$r6]
+; CHECK-NEXT:    make $r21 = g49
+; CHECK-NEXT:    make $r22 = g50
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    make $r24 = g52
+; CHECK-NEXT:    make $r25 = g53
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    make $r27 = g55
+; CHECK-NEXT:    make $r28 = g56
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    make $r1 = g59
+; CHECK-NEXT:    make $r30 = g58
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 224[$r31] = $r0
+; CHECK-NEXT:    make $r34 = g61
+; CHECK-NEXT:    make $r40 = g63
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r0 = 0[$r7]
+; CHECK-NEXT:    make $r11 = g65
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 216[$r31] = $r0
 ; CHECK-NEXT:    ;;

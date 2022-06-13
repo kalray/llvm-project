@@ -215,47 +215,47 @@ define <8 x i16> @test_fshl_v8i16(<8 x i16> %a, <8 x i16> %b) {
 ; CHECK-NEXT:    extfz $r10 = $r5, 19, 16
 ; CHECK-NEXT:    srlhqs $r15 = $r0, $r2
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    extfz $r6 = $r2, 35, 32
 ; CHECK-NEXT:    insf $r7 = $r6, 15, 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sllhqs $r8 = $r0, $r8
 ; CHECK-NEXT:    srlhqs $r11 = $r0, $r11
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r6 = $r2, 35, 32
-; CHECK-NEXT:    sllhqs $r8 = $r0, $r8
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    extfz $r2 = $r2, 51, 48
-; CHECK-NEXT:    insf $r11 = $r15, 15, 0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srlhqs $r6 = $r0, $r6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r11 = $r15, 15, 0
 ; CHECK-NEXT:    extfz $r15 = $r3, 19, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sllhqs $r4 = $r0, $r4
-; CHECK-NEXT:    insf $r8 = $r7, 31, 0
+; CHECK-NEXT:    sllhqs $r9 = $r1, $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srlhqs $r0 = $r0, $r2
+; CHECK-NEXT:    sllhqs $r10 = $r1, $r10
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r6 = $r11, 31, 0
+; CHECK-NEXT:    insf $r8 = $r7, 31, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srlhqs $r2 = $r1, $r3
 ; CHECK-NEXT:    srlhqs $r7 = $r1, $r15
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sllhqs $r9 = $r1, $r5
+; CHECK-NEXT:    extfz $r11 = $r5, 35, 32
 ; CHECK-NEXT:    extfz $r15 = $r3, 35, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sllhqs $r10 = $r1, $r10
-; CHECK-NEXT:    extfz $r11 = $r5, 35, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r5 = $r5, 51, 48
 ; CHECK-NEXT:    insf $r7 = $r2, 15, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sllhqs $r2 = $r1, $r11
 ; CHECK-NEXT:    insf $r10 = $r9, 15, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r3 = $r3, 51, 48
+; CHECK-NEXT:    sllhqs $r2 = $r1, $r11
 ; CHECK-NEXT:    srlhqs $r9 = $r1, $r15
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    extfz $r3 = $r3, 51, 48
+; CHECK-NEXT:    extfz $r5 = $r5, 51, 48
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r2 = $r10, 31, 0
-; CHECK-NEXT:    sllhqs $r5 = $r1, $r5
+; CHECK-NEXT:    insf $r9 = $r7, 31, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srlhqs $r1 = $r1, $r3
-; CHECK-NEXT:    insf $r9 = $r7, 31, 0
+; CHECK-NEXT:    sllhqs $r5 = $r1, $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r6, 47, 0
 ; CHECK-NEXT:    insf $r4 = $r8, 47, 0
@@ -282,44 +282,44 @@ define <16 x i16> @test_fshl_v16i16(<16 x i16> %a, <16 x i16> %b) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    andd $r4 = $r4, 0xf000f000f000f
 ; CHECK-NEXT:    neghq $r5 = $r5
+; CHECK-NEXT:    sllhqs $r9 = $r0, $r8
 ; CHECK-NEXT:    extfz $r10 = $r8, 19, 16
-; CHECK-NEXT:    extfz $r15 = $r8, 35, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    andd $r5 = $r5, 0xf000f000f000f
-; CHECK-NEXT:    sllhqs $r9 = $r0, $r8
-; CHECK-NEXT:    extfz $r32 = $r11, 19, 16
+; CHECK-NEXT:    extfz $r8 = $r8, 51, 48
+; CHECK-NEXT:    extfz $r15 = $r8, 35, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    extfz $r17 = $r4, 19, 16
 ; CHECK-NEXT:    srlhqs $r33 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r8 = $r8, 51, 48
 ; CHECK-NEXT:    sllhqs $r10 = $r0, $r10
+; CHECK-NEXT:    extfz $r32 = $r11, 19, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sllhqs $r16 = $r1, $r11
 ; CHECK-NEXT:    srlhqs $r17 = $r0, $r17
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    extfz $r9 = $r11, 35, 32
 ; CHECK-NEXT:    insf $r10 = $r9, 15, 0
-; CHECK-NEXT:    sllhqs $r32 = $r1, $r32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r17 = $r33, 15, 0
 ; CHECK-NEXT:    extfz $r33 = $r4, 35, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    extfz $r4 = $r4, 51, 48
-; CHECK-NEXT:    extfz $r9 = $r11, 35, 32
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sllhqs $r15 = $r0, $r15
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sllhqs $r8 = $r0, $r8
 ; CHECK-NEXT:    srlhqs $r33 = $r0, $r33
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srlhqs $r0 = $r0, $r4
-; CHECK-NEXT:    sllhqs $r8 = $r0, $r8
+; CHECK-NEXT:    sllhqs $r32 = $r1, $r32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    extfz $r4 = $r5, 19, 16
 ; CHECK-NEXT:    insf $r15 = $r10, 31, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r10 = $r11, 51, 48
+; CHECK-NEXT:    sllhqs $r9 = $r1, $r9
 ; CHECK-NEXT:    insf $r32 = $r16, 15, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sllhqs $r9 = $r1, $r9
+; CHECK-NEXT:    extfz $r10 = $r11, 51, 48
 ; CHECK-NEXT:    srlhqs $r11 = $r1, $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srlhqs $r4 = $r1, $r4
@@ -343,39 +343,39 @@ define <16 x i16> @test_fshl_v16i16(<16 x i16> %a, <16 x i16> %b) {
 ; CHECK-NEXT:    srlhqs $r1 = $r1, $r5
 ; CHECK-NEXT:    insf $r15 = $r4, 31, 0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sllhqs $r4 = $r2, $r11
 ; CHECK-NEXT:    sllhqs $r5 = $r2, $r9
-; CHECK-NEXT:    extfz $r9 = $r11, 35, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r1 = $r15, 47, 0
-; CHECK-NEXT:    sllhqs $r4 = $r2, $r11
+; CHECK-NEXT:    extfz $r9 = $r11, 35, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sllhqs $r9 = $r2, $r9
-; CHECK-NEXT:    srlhqs $r15 = $r2, $r6
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ord $r1 = $r10, $r1
 ; CHECK-NEXT:    extfz $r4 = $r6, 19, 16
 ; CHECK-NEXT:    insf $r5 = $r4, 15, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r6 = $r6, 51, 48
-; CHECK-NEXT:    extfz $r16 = $r6, 35, 32
+; CHECK-NEXT:    ord $r1 = $r10, $r1
+; CHECK-NEXT:    sllhqs $r9 = $r2, $r9
+; CHECK-NEXT:    srlhqs $r15 = $r2, $r6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srlhqs $r4 = $r2, $r4
-; CHECK-NEXT:    insf $r9 = $r5, 31, 0
+; CHECK-NEXT:    extfz $r16 = $r6, 35, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    extfz $r5 = $r11, 51, 48
 ; CHECK-NEXT:    andd $r7 = $r7, 0xf000f000f000f
+; CHECK-NEXT:    insf $r9 = $r5, 31, 0
 ; CHECK-NEXT:    neghq $r11 = $r7
-; CHECK-NEXT:    insf $r33 = $r17, 31, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r4 = $r15, 15, 0
-; CHECK-NEXT:    andd $r11 = $r11, 0xf000f000f000f
 ; CHECK-NEXT:    srlhqs $r15 = $r2, $r16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srlhqs $r2 = $r2, $r6
-; CHECK-NEXT:    sllhqs $r5 = $r2, $r5
+; CHECK-NEXT:    extfz $r6 = $r6, 51, 48
+; CHECK-NEXT:    andd $r11 = $r11, 0xf000f000f000f
+; CHECK-NEXT:    insf $r33 = $r17, 31, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    extfz $r4 = $r7, 19, 16
+; CHECK-NEXT:    sllhqs $r5 = $r2, $r5
 ; CHECK-NEXT:    insf $r15 = $r4, 31, 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srlhqs $r2 = $r2, $r6
+; CHECK-NEXT:    extfz $r4 = $r7, 19, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r33, 47, 0
 ; CHECK-NEXT:    extfz $r6 = $r11, 19, 16
@@ -384,16 +384,16 @@ define <16 x i16> @test_fshl_v16i16(<16 x i16> %a, <16 x i16> %b) {
 ; CHECK-NEXT:    sllhqs $r16 = $r3, $r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r0 = $r8, $r0
-; CHECK-NEXT:    srlhqs $r17 = $r3, $r11
-; CHECK-NEXT:    extfz $r32 = $r7, 35, 32
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srlhqs $r6 = $r3, $r6
+; CHECK-NEXT:    srlhqs $r17 = $r3, $r11
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    extfz $r32 = $r7, 35, 32
 ; CHECK-NEXT:    extfz $r33 = $r11, 35, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r4 = $r16, 15, 0
-; CHECK-NEXT:    sllhqs $r16 = $r3, $r32
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r6 = $r17, 15, 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sllhqs $r16 = $r3, $r32
 ; CHECK-NEXT:    srlhqs $r17 = $r3, $r33
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    extfz $r7 = $r7, 51, 48

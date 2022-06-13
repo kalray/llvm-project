@@ -592,9 +592,9 @@ define <4 x i64> @blong4_3(i64 %a, i64 %b, i64 %c) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r0 = 4
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r4 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    make $r0 = 4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r2
 ; CHECK-NEXT:    ;;
@@ -614,11 +614,11 @@ define <4 x i64> @blong4_4(i64 %a, i64 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r4 = $r1
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r0 = 4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r3 = 4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r4 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r2
 ; CHECK-NEXT:    ;;
@@ -1083,9 +1083,9 @@ define <4 x double> @bdouble4_3(double %a, double %b, double %c) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r0 = 0x4010000000000000
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r4 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    make $r0 = 0x4010000000000000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r2
 ; CHECK-NEXT:    ;;
@@ -1105,11 +1105,11 @@ define <4 x double> @bdouble4_4(double %a, double %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r4 = $r1
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r0 = 0x4010000000000000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r3 = 0x4010000000000000
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r4 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r2
 ; CHECK-NEXT:    ;;

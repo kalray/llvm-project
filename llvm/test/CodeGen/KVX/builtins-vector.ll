@@ -1516,11 +1516,11 @@ declare <2 x float> @llvm.kvx.ffmawp(<2 x float>, <2 x float>, <2 x float>, i32,
 define <4 x float> @ffmawq(<4 x float> %v1, <4 x float> %v2, <4 x float> %v3){
 ; CV1-LABEL: ffmawq:
 ; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    ffmawp.rn $r5 = $r1, $r3
+; CV1-NEXT:    ;;
 ; CV1-NEXT:    ffmawp.rn $r4 = $r0, $r2
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    copyd $r0 = $r4
-; CV1-NEXT:    ffmawp.rn $r5 = $r1, $r3
-; CV1-NEXT:    ;;
 ; CV1-NEXT:    copyd $r1 = $r5
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;;
@@ -1540,9 +1540,9 @@ declare <4 x float> @llvm.kvx.ffmawq(<4 x float>, <4 x float>, <4 x float>, i32,
 define <8 x float> @ffmawo(<8 x float> %v1, <8 x float> %v2, <8 x float> %v3){
 ; CV1-LABEL: ffmawo:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    ffmawp.rn $r8 = $r0, $r4
-; CV1-NEXT:    ;;
 ; CV1-NEXT:    ffmawp.rn $r9 = $r1, $r5
+; CV1-NEXT:    ;;
+; CV1-NEXT:    ffmawp.rn $r8 = $r0, $r4
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    ffmawp.rn $r11 = $r3, $r7
 ; CV1-NEXT:    ;;
@@ -1578,11 +1578,11 @@ entry:
 define <2 x double> @ffmadp(<2 x double> %v1, <2 x double> %v2, <2 x double> %v3){
 ; CHECK-LABEL: ffmadp:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    ffmad.rn $r5 = $r1, $r3
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad.rn $r4 = $r0, $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r4
-; CHECK-NEXT:    ffmad.rn $r5 = $r1, $r3
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -1596,9 +1596,9 @@ declare <2 x double> @llvm.kvx.ffmadp(<2 x double>, <2 x double>, <2 x double>, 
 define <4 x double> @ffmadq(<4 x double> %v1, <4 x double> %v2, <4 x double> %v3){
 ; CHECK-LABEL: ffmadq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    ffmad.rn $r8 = $r0, $r4
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad.rn $r9 = $r1, $r5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmad.rn $r8 = $r0, $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad.rn $r11 = $r3, $r7
 ; CHECK-NEXT:    ;;
@@ -1641,11 +1641,11 @@ declare <2 x float> @llvm.kvx.ffmswp(<2 x float>, <2 x float>, <2 x float>, i32,
 define <4 x float> @ffmswq(<4 x float> %v1, <4 x float> %v2, <4 x float> %v3){
 ; CV1-LABEL: ffmswq:
 ; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    ffmswp.rn $r5 = $r1, $r3
+; CV1-NEXT:    ;;
 ; CV1-NEXT:    ffmswp.rn $r4 = $r0, $r2
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    copyd $r0 = $r4
-; CV1-NEXT:    ffmswp.rn $r5 = $r1, $r3
-; CV1-NEXT:    ;;
 ; CV1-NEXT:    copyd $r1 = $r5
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;;
@@ -1668,9 +1668,9 @@ declare <4 x float> @llvm.kvx.ffmswq(<4 x float>, <4 x float>, <4 x float>, i32,
 define <8 x float> @ffmswo(<8 x float> %v1, <8 x float> %v2, <8 x float> %v3){
 ; CV1-LABEL: ffmswo:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    ffmswp.rn $r8 = $r0, $r4
-; CV1-NEXT:    ;;
 ; CV1-NEXT:    ffmswp.rn $r9 = $r1, $r5
+; CV1-NEXT:    ;;
+; CV1-NEXT:    ffmswp.rn $r8 = $r0, $r4
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    ffmswp.rn $r11 = $r3, $r7
 ; CV1-NEXT:    ;;
@@ -1711,11 +1711,11 @@ entry:
 define <2 x double> @ffmsdp(<2 x double> %v1, <2 x double> %v2, <2 x double> %v3){
 ; CHECK-LABEL: ffmsdp:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    ffmsd.rn $r5 = $r1, $r3
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmsd.rn $r4 = $r0, $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r4
-; CHECK-NEXT:    ffmsd.rn $r5 = $r1, $r3
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -1729,9 +1729,9 @@ declare <2 x double> @llvm.kvx.ffmsdp(<2 x double>, <2 x double>, <2 x double>, 
 define <4 x double> @ffmsdq(<4 x double> %v1, <4 x double> %v2, <4 x double> %v3){
 ; CHECK-LABEL: ffmsdq:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    ffmsd.rn $r8 = $r0, $r4
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmsd.rn $r9 = $r1, $r5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmsd.rn $r8 = $r0, $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmsd.rn $r11 = $r3, $r7
 ; CHECK-NEXT:    ;;
