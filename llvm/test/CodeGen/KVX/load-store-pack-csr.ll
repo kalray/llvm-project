@@ -410,9 +410,9 @@ define i64 @f_15_3quad1pairpack(){
 ; CHECK-NEXT:    addd $r0 = $r0, $r19
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r20r21r22r23 = 24[$r12]
+; CHECK-NEXT:    addd $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r24r25r26r27 = 56[$r12]
-; CHECK-NEXT:    addd $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r28r29r30r31 = 88[$r12]
 ; CHECK-NEXT:    ;;

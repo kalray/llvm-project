@@ -413,11 +413,11 @@ define i32 @g(i32 %h)  {
 ; CHECK-NEXT:  .LBB1_11: # %while.cond.preheader
 ; CHECK-NEXT:    compw.ge $r3 = $r3, $r0
 ; CHECK-NEXT:    make $r4 = e
-; CHECK-NEXT:    make $r5 = c
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 0[$r4] = $r2
+; CHECK-NEXT:    make $r2 = c
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r2 = 0[$r5]
+; CHECK-NEXT:    ld $r2 = 0[$r2]
 ; CHECK-NEXT:    cb.odd $r3 ? .LBB1_18
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB1_12: # %while.body.lr.ph

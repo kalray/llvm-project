@@ -1062,10 +1062,10 @@ define half @test_log2(half %a) #0 {
 define half @test_fma(half %a, half %b, half %c) #0 {
 ; CHECK-LABEL: test_fma:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    zxhd $r0 = $r2
+; CHECK-NEXT:    zxhd $r1 = $r1
 ; CHECK-NEXT:    zxhd $r3 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxhd $r1 = $r1
+; CHECK-NEXT:    zxhd $r0 = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmahq $r0 = $r3, $r1
 ; CHECK-NEXT:    ret
@@ -1338,10 +1338,10 @@ define half @test_round(half %a) #0 {
 define half @test_fmuladd(half %a, half %b, half %c) #0 {
 ; CHECK-LABEL: test_fmuladd:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    zxhd $r0 = $r2
+; CHECK-NEXT:    zxhd $r1 = $r1
 ; CHECK-NEXT:    zxhd $r3 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxhd $r1 = $r1
+; CHECK-NEXT:    zxhd $r0 = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmahq $r0 = $r3, $r1
 ; CHECK-NEXT:    ret

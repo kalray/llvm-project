@@ -197,14 +197,14 @@ define <2 x i8> @not_srr_v2i8(<2 x i8> %a, <2 x i8> %b){
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    zxbd $r0 = $r0
 ; CV1-NEXT:    zxbd $r1 = $r1
-; CV1-NEXT:    extfz $r2 = $r0, 15, 8
-; CV1-NEXT:    extfz $r3 = $r1, 15, 8
+; CV1-NEXT:    extfz $r2 = $r1, 15, 8
+; CV1-NEXT:    extfz $r3 = $r0, 15, 8
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    sxbd $r0 = $r0
-; CV1-NEXT:    sxbd $r2 = $r2
+; CV1-NEXT:    sxbd $r3 = $r3
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    sraw $r0 = $r0, $r1
-; CV1-NEXT:    sraw $r2 = $r2, $r3
+; CV1-NEXT:    sraw $r2 = $r3, $r2
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    insf $r0 = $r2, 15, 8
 ; CV1-NEXT:    ret

@@ -839,7 +839,6 @@ define <4 x i64> @test_tca_builtins(i64 %0, i64 %1, i64 %2, i64 %3, <256 x i1>* 
 ; CHECK-NEXT:    addd $r8 = $r4, 96
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    alignv $a5 = $a4, $a5, 16
-; CHECK-NEXT:    addd $r10 = $r4, 128
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    convdhv0.rn.sat $a4_lo = $a0a1a2a3
 ; CHECK-NEXT:    aligno $r0r1r2r3 = $a4, $a5, 1
@@ -942,12 +941,13 @@ define <4 x i64> @test_tca_builtins(i64 %0, i64 %1, i64 %2, i64 %3, <256 x i1>* 
 ; CHECK-NEXT:    fscalewv.relu $a4 = $a4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv.s.even $r7 ? $a4 = [$r8]
-; CHECK-NEXT:    addd $r8 = $r4, 160
+; CHECK-NEXT:    addd $r8 = $r4, 128
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv.s $a4 = 0[$r4]
-; CHECK-NEXT:    addd $r4 = $r4, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv.c3.s $a0a1a2a3 = 0[$r10]
+; CHECK-NEXT:    addd $r4 = $r4, 32
+; CHECK-NEXT:    addd $r8 = $r4, 160
+; CHECK-NEXT:    lv.c3.s $a0a1a2a3 = 0[$r8]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv.c2.odd $r7 ? $a0a1a2a3 = [$r8]
 ; CHECK-NEXT:    ;;
@@ -1159,7 +1159,6 @@ define void @fmma444hw(<256 x i1>* nocapture %v, <512 x i1>* nocapture %w) {
 ; CHECK-LABEL: fmma444hw:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lv $a0 = 0[$r0]
-; CHECK-NEXT:    addd $r2 = $r1, 64
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a3 = 32[$r1]
 ; CHECK-NEXT:    ;;
@@ -1184,10 +1183,11 @@ define void @fmma444hw(<256 x i1>* nocapture %v, <512 x i1>* nocapture %w) {
 ; CHECK-NEXT:    sv 0[$r0] = $a0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 64[$r0] = $a1
+; CHECK-NEXT:    addd $r0 = $r1, 64
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a3 = 32[$r2]
+; CHECK-NEXT:    lv $a3 = 32[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a2 = 0[$r2]
+; CHECK-NEXT:    lv $a2 = 0[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmma242hw0 $a0_lo = $a2a3, $a1, $a5
 ; CHECK-NEXT:    ;;
@@ -1395,13 +1395,13 @@ define void @movefmv(<256 x i1>* nocapture %o, <1024 x i1>* nocapture readonly %
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a0 = 0[$r1]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 96[$r0] = $a3
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 64[$r0] = $a2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 32[$r0] = $a1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 0[$r0] = $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 96[$r0] = $a3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

@@ -163,16 +163,16 @@ define <32 x i8> @shiftbv_one(<32 x i8> %v, i8 %b) {
 ; CHECK-NEXT:    srld $r0 = $r0, 8
 ; CHECK-NEXT:    srld $r1 = $r1, 8
 ; CHECK-NEXT:    zxbd $r5 = $r1
-; CHECK-NEXT:    zxbd $r6 = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r5, 63, 56
 ; CHECK-NEXT:    srld $r2 = $r2, 8
+; CHECK-NEXT:    zxbd $r5 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r1 = $r5, 63, 56
 ; CHECK-NEXT:    srld $r3 = $r3, 8
-; CHECK-NEXT:    zxbd $r7 = $r3
+; CHECK-NEXT:    zxbd $r5 = $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r6, 63, 56
-; CHECK-NEXT:    insf $r2 = $r7, 63, 56
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r2 = $r5, 63, 56
 ; CHECK-NEXT:    insf $r3 = $r4, 63, 56
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -189,15 +189,14 @@ define <32 x i8> @shiftbv_two(<32 x i8> %v, i8 %b) {
 ; CHECK-NEXT:    srld $r5 = $r2, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r3 = $r4, 7, 0
-; CHECK-NEXT:    srld $r4 = $r1, 16
 ; CHECK-NEXT:    insf $r5 = $r3, 63, 48
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 48
-; CHECK-NEXT:    insf $r4 = $r2, 63, 48
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r4
-; CHECK-NEXT:    copyd $r2 = $r5
+; CHECK-NEXT:    srld $r1 = $r1, 16
 ; CHECK-NEXT:    sbmm8 $r3 = $r3, 0x101804020100804
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r1 = $r2, 63, 48
+; CHECK-NEXT:    copyd $r2 = $r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -213,15 +212,14 @@ define <32 x i8> @shiftbv_three(<32 x i8> %v, i8 %b) {
 ; CHECK-NEXT:    srld $r5 = $r2, 24
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r3 = $r4, 7, 0
-; CHECK-NEXT:    srld $r4 = $r1, 24
 ; CHECK-NEXT:    insf $r5 = $r3, 63, 40
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 40
-; CHECK-NEXT:    insf $r4 = $r2, 63, 40
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r4
-; CHECK-NEXT:    copyd $r2 = $r5
+; CHECK-NEXT:    srld $r1 = $r1, 24
 ; CHECK-NEXT:    sbmm8 $r3 = $r3, 0x101018040201008
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r1 = $r2, 63, 40
+; CHECK-NEXT:    copyd $r2 = $r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -281,16 +279,16 @@ define <16 x i16> @shifthx_one(<16 x i16> %v, i16 %b) {
 ; CHECK-NEXT:    srld $r0 = $r0, 16
 ; CHECK-NEXT:    srld $r1 = $r1, 16
 ; CHECK-NEXT:    zxhd $r5 = $r1
-; CHECK-NEXT:    zxhd $r6 = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r5, 63, 48
 ; CHECK-NEXT:    srld $r2 = $r2, 16
+; CHECK-NEXT:    zxhd $r5 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r1 = $r5, 63, 48
 ; CHECK-NEXT:    srld $r3 = $r3, 16
-; CHECK-NEXT:    zxhd $r7 = $r3
+; CHECK-NEXT:    zxhd $r5 = $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r6, 63, 48
-; CHECK-NEXT:    insf $r2 = $r7, 63, 48
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r2 = $r5, 63, 48
 ; CHECK-NEXT:    insf $r3 = $r4, 63, 48
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -307,15 +305,14 @@ define <16 x i16> @shifthx_two(<16 x i16> %v, i16 %b) {
 ; CHECK-NEXT:    srld $r5 = $r2, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r3 = $r4, 15, 0
-; CHECK-NEXT:    srld $r4 = $r1, 32
 ; CHECK-NEXT:    insf $r5 = $r3, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 32
-; CHECK-NEXT:    insf $r4 = $r2, 63, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r4
-; CHECK-NEXT:    copyd $r2 = $r5
+; CHECK-NEXT:    srld $r1 = $r1, 32
 ; CHECK-NEXT:    sbmm8 $r3 = $r3, 0x201020180402010
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r1 = $r2, 63, 32
+; CHECK-NEXT:    copyd $r2 = $r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -331,15 +328,14 @@ define <16 x i16> @shifthx_three(<16 x i16> %v, i16 %b) {
 ; CHECK-NEXT:    srld $r5 = $r2, 48
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r3 = $r4, 15, 0
-; CHECK-NEXT:    srld $r4 = $r1, 48
 ; CHECK-NEXT:    insf $r5 = $r3, 63, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 16
-; CHECK-NEXT:    insf $r4 = $r2, 63, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r4
-; CHECK-NEXT:    copyd $r2 = $r5
+; CHECK-NEXT:    srld $r1 = $r1, 48
 ; CHECK-NEXT:    sbmm8 $r3 = $r3, 0x201020102018040
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r1 = $r2, 63, 16
+; CHECK-NEXT:    copyd $r2 = $r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -392,10 +388,10 @@ define <8 x i32> @shiftwo_one(<8 x i32> %v, i32 %b) {
 ; CHECK-NEXT:    insf $r6 = $r3, 31, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x804020180402010
-; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x804020180402010
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r2 = $r6, 0x804020180402010
 ; CHECK-NEXT:    copyd $r3 = $r5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x804020180402010
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -577,18 +573,16 @@ define <16 x half> @shiftfhx_one(<16 x half> %v, half %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    srld $r0 = $r0, 16
 ; CHECK-NEXT:    srld $r5 = $r1, 16
-; CHECK-NEXT:    srld $r6 = $r2, 16
-; CHECK-NEXT:    srld $r7 = $r3, 16
+; CHECK-NEXT:    srld $r6 = $r3, 16
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srld $r2 = $r2, 16
 ; CHECK-NEXT:    insf $r5 = $r2, 63, 48
-; CHECK-NEXT:    insf $r6 = $r3, 63, 48
+; CHECK-NEXT:    insf $r6 = $r4, 63, 48
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 48
 ; CHECK-NEXT:    copyd $r1 = $r5
-; CHECK-NEXT:    copyd $r2 = $r6
-; CHECK-NEXT:    insf $r7 = $r4, 63, 48
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r3 = $r7
+; CHECK-NEXT:    insf $r2 = $r3, 63, 48
+; CHECK-NEXT:    copyd $r3 = $r6
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -604,15 +598,14 @@ define <16 x half> @shiftfhx_two(<16 x half> %v, half %b) {
 ; CHECK-NEXT:    srld $r5 = $r2, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r3 = $r4, 15, 0
-; CHECK-NEXT:    srld $r4 = $r1, 32
 ; CHECK-NEXT:    insf $r5 = $r3, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 32
-; CHECK-NEXT:    insf $r4 = $r2, 63, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r4
-; CHECK-NEXT:    copyd $r2 = $r5
+; CHECK-NEXT:    srld $r1 = $r1, 32
 ; CHECK-NEXT:    sbmm8 $r3 = $r3, 0x201020180402010
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r1 = $r2, 63, 32
+; CHECK-NEXT:    copyd $r2 = $r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -691,10 +684,12 @@ define <4 x float> @shiftfwq_last(<4 x float> %v, float %b) {
 ; CHECK-LABEL: shiftfwq_last:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    srad $r0 = $r1, 32
-; CHECK-NEXT:    copyd $r1 = $r2
+; CHECK-NEXT:    copyd $r3 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 63, 32
-; CHECK-NEXT:    insf $r1 = $r1, 63, 32
+; CHECK-NEXT:    insf $r0 = $r3, 63, 32
+; CHECK-NEXT:    insf $r3 = $r3, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -715,10 +710,10 @@ define <8 x float> @shiftfwo_one(<8 x float> %v, float %b) {
 ; CHECK-NEXT:    insf $r6 = $r3, 31, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x804020180402010
-; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x804020180402010
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r2 = $r6, 0x804020180402010
 ; CHECK-NEXT:    copyd $r3 = $r5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x804020180402010
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

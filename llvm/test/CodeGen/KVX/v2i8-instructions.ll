@@ -172,10 +172,10 @@ define <2 x i8> @test_sub_fromimm(<2 x i8> %a) #0 {
 define <2 x i8> @test_fma(<2 x i8> %a, <2 x i8> %b, <2 x i8> %c) #0 {
 ; V1-LABEL: test_fma:
 ; V1:       # %bb.0:
-; V1-NEXT:    sxlbhq $r0 = $r0
 ; V1-NEXT:    sxlbhq $r1 = $r1
-; V1-NEXT:    ;;
 ; V1-NEXT:    sxlbhq $r2 = $r2
+; V1-NEXT:    ;;
+; V1-NEXT:    sxlbhq $r0 = $r0
 ; V1-NEXT:    ;;
 ; V1-NEXT:    maddhq $r0 = $r1, $r2
 ; V1-NEXT:    ;;
@@ -735,9 +735,9 @@ define <2 x i8> @test_insertelement(<2 x i8> %a, i8 %x, i64 %p) #0 {
 ; ALL-NEXT:    addd $r12 = $r12, -32
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    sh 30[$r12] = $r0
-; ALL-NEXT:    addd $r3 = $r12, 30
+; ALL-NEXT:    addd $r0 = $r12, 30
 ; ALL-NEXT:    ;;
-; ALL-NEXT:    sb $r2[$r3] = $r1
+; ALL-NEXT:    sb $r2[$r0] = $r1
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    lhz $r0 = 30[$r12]
 ; ALL-NEXT:    addd $r12 = $r12, 32
@@ -750,10 +750,10 @@ define <2 x i8> @test_insertelement(<2 x i8> %a, i8 %x, i64 %p) #0 {
 define <2 x i8> @mulsub(<2 x i8> %a, <2 x i8> %b, <2 x i8> %c) #0 {
 ; V1-LABEL: mulsub:
 ; V1:       # %bb.0:
-; V1-NEXT:    sxlbhq $r0 = $r0
 ; V1-NEXT:    sxlbhq $r1 = $r1
-; V1-NEXT:    ;;
 ; V1-NEXT:    sxlbhq $r2 = $r2
+; V1-NEXT:    ;;
+; V1-NEXT:    sxlbhq $r0 = $r0
 ; V1-NEXT:    ;;
 ; V1-NEXT:    msbfhq $r0 = $r1, $r2
 ; V1-NEXT:    ;;

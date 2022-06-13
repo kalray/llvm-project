@@ -57,10 +57,10 @@ define float @cholesky(%struct.loops_params_s* nocapture readonly %0) local_unna
 ; CHECK-NEXT:    sxwd $r7 = $r3
 ; CHECK-NEXT:    sxwd $r8 = $r7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addx4d $r9 = $r6, $r1
+; CHECK-NEXT:    addx4d $r8 = $r6, $r2
 ; CHECK-NEXT:    addx4d $r10 = $r8, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addx4d $r8 = $r6, $r2
+; CHECK-NEXT:    addx4d $r9 = $r6, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_4: # Parent Loop BB0_1 Depth=1
 ; CHECK-NEXT:    # Parent Loop BB0_2 Depth=2

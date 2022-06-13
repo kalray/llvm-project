@@ -1669,10 +1669,11 @@ entry:
 define <2 x float> @shuffle_v2float_2_1(<2 x float> %0, <2 x float> %1) #0 {
 ; CHECK-LABEL: shuffle_v2float_2_1:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    copyd $r0 = $r1
-; CHECK-NEXT:    srad $r2 = $r0, 32
+; CHECK-NEXT:    srad $r0 = $r0, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 63, 32
+; CHECK-NEXT:    insf $r1 = $r0, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

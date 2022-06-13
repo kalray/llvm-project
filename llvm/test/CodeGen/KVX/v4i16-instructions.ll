@@ -449,14 +449,14 @@ define <4 x i64> @test_select_cc_f32_f32(<4 x i64> %a, <4 x i64> %b, <4 x i16> %
 ; ALL-NEXT:    sxhd $r8 = $r8
 ; ALL-NEXT:    sxhd $r11 = $r11
 ; ALL-NEXT:    ;;
-; ALL-NEXT:    cmoved.dnez $r10 ? $r6 = $r2
-; ALL-NEXT:    cmoved.dnez $r9 ? $r7 = $r3
-; ALL-NEXT:    ;;
 ; ALL-NEXT:    cmoved.dnez $r11 ? $r4 = $r0
 ; ALL-NEXT:    cmoved.dnez $r8 ? $r5 = $r1
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    copyd $r0 = $r4
 ; ALL-NEXT:    copyd $r1 = $r5
+; ALL-NEXT:    cmoved.dnez $r10 ? $r6 = $r2
+; ALL-NEXT:    cmoved.dnez $r9 ? $r7 = $r3
+; ALL-NEXT:    ;;
 ; ALL-NEXT:    copyd $r2 = $r6
 ; ALL-NEXT:    copyd $r3 = $r7
 ; ALL-NEXT:    ret
