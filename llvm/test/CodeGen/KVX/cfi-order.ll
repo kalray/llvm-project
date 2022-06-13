@@ -11,7 +11,6 @@ define void @testuvec(<4 x i32>* nocapture readonly %A, <4 x i32>* nocapture rea
 ; CHECK-NEXT:    .cfi_startproc
 ; CHECK-NEXT:  # %bb.0: # %entry
 ; CHECK-NEXT:    #DEBUG_VALUE: testuvec:A <- $r0
-; CHECK-NEXT:    #DEBUG_VALUE: testuvec:A <- $r0
 ; CHECK-NEXT:    #DEBUG_VALUE: testuvec:B <- $r1
 ; CHECK-NEXT:    #DEBUG_VALUE: testuvec:R <- $r2
 ; CHECK-NEXT:    addd $r12 = $r12, -96
@@ -19,7 +18,6 @@ define void @testuvec(<4 x i32>* nocapture readonly %A, <4 x i32>* nocapture rea
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 96
 ; CHECK-NEXT:    .cfi_register 67, 16
-; CHECK-NEXT:    .loc 1 5 49 prologue_end # cfi-order.c:5:49
 ; CHECK-NEXT:    sd 88[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 67, -8
@@ -38,16 +36,18 @@ define void @testuvec(<4 x i32>* nocapture readonly %A, <4 x i32>* nocapture rea
 ; CHECK-NEXT:    .cfi_offset 21, -48
 ; CHECK-NEXT:    .cfi_offset 22, -56
 ; CHECK-NEXT:    .cfi_offset 23, -64
-; CHECK-NEXT:    sd 24[$r12] = $r18
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 18, -72
 ; CHECK-NEXT:  .Ltmp0:
 ; CHECK-NEXT:    #DEBUG_VALUE: testuvec:R <- $r18
 ; CHECK-NEXT:    #DEBUG_VALUE: testuvec:B <- $r1
-; CHECK-NEXT:    lq $r22r23 = 0[$r0]
+; CHECK-NEXT:    #DEBUG_VALUE: testuvec:A <- $r0
+; CHECK-NEXT:    sd 24[$r12] = $r18
 ; CHECK-NEXT:    copyd $r18 = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp1:
+; CHECK-NEXT:    .cfi_offset 18, -72
+; CHECK-NEXT:    .loc 1 5 49 prologue_end # cfi-order.c:5:49
+; CHECK-NEXT:    lq $r22r23 = 0[$r0]
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 5 54 is_stmt 0 # cfi-order.c:5:54
 ; CHECK-NEXT:    lq $r24r25 = 0[$r1]
 ; CHECK-NEXT:    zxwd $r0 = $r22
@@ -122,7 +122,6 @@ define void @testsvec(<4 x i32>* nocapture readonly %A, <4 x i32>* nocapture rea
 ; CHECK-NEXT:    .cfi_startproc
 ; CHECK-NEXT:  # %bb.0: # %entry
 ; CHECK-NEXT:    #DEBUG_VALUE: testsvec:A <- $r0
-; CHECK-NEXT:    #DEBUG_VALUE: testsvec:A <- $r0
 ; CHECK-NEXT:    #DEBUG_VALUE: testsvec:B <- $r1
 ; CHECK-NEXT:    #DEBUG_VALUE: testsvec:R <- $r2
 ; CHECK-NEXT:    addd $r12 = $r12, -96
@@ -130,7 +129,6 @@ define void @testsvec(<4 x i32>* nocapture readonly %A, <4 x i32>* nocapture rea
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 96
 ; CHECK-NEXT:    .cfi_register 67, 16
-; CHECK-NEXT:    .loc 1 6 49 prologue_end # cfi-order.c:6:49
 ; CHECK-NEXT:    sd 88[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 67, -8
@@ -149,16 +147,18 @@ define void @testsvec(<4 x i32>* nocapture readonly %A, <4 x i32>* nocapture rea
 ; CHECK-NEXT:    .cfi_offset 21, -48
 ; CHECK-NEXT:    .cfi_offset 22, -56
 ; CHECK-NEXT:    .cfi_offset 23, -64
-; CHECK-NEXT:    sd 24[$r12] = $r18
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 18, -72
 ; CHECK-NEXT:  .Ltmp5:
 ; CHECK-NEXT:    #DEBUG_VALUE: testsvec:R <- $r18
 ; CHECK-NEXT:    #DEBUG_VALUE: testsvec:B <- $r1
-; CHECK-NEXT:    lq $r22r23 = 0[$r0]
+; CHECK-NEXT:    #DEBUG_VALUE: testsvec:A <- $r0
+; CHECK-NEXT:    sd 24[$r12] = $r18
 ; CHECK-NEXT:    copyd $r18 = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp6:
+; CHECK-NEXT:    .cfi_offset 18, -72
+; CHECK-NEXT:    .loc 1 6 49 prologue_end # cfi-order.c:6:49
+; CHECK-NEXT:    lq $r22r23 = 0[$r0]
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 6 54 is_stmt 0 # cfi-order.c:6:54
 ; CHECK-NEXT:    lq $r24r25 = 0[$r1]
 ; CHECK-NEXT:    sxwd $r0 = $r22

@@ -65,7 +65,8 @@ define i32 @fn(i32* nocapture readonly %a) {
 ; FP-NONE-NEXT:    sw 0[$r12] = $r15
 ; FP-NONE-NEXT:    call add
 ; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:    lwz $r15 = 0[$r18]
+; FP-NONE-NEXT:    lwz $r0 = 0[$r18]
+; FP-NONE-NEXT:    copyd $r19 = $r0
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    lwz $r1 = 8[$r18]
 ; FP-NONE-NEXT:    ;;
@@ -89,15 +90,13 @@ define i32 @fn(i32* nocapture readonly %a) {
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    lwz $r11 = 48[$r18]
 ; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:    lwz $r16 = 52[$r18]
-; FP-NONE-NEXT:    copyd $r19 = $r0
+; FP-NONE-NEXT:    lwz $r15 = 52[$r18]
 ; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:    lwz $r0 = 56[$r18]
+; FP-NONE-NEXT:    lwz $r16 = 56[$r18]
 ; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:    sw 8[$r12] = $r0
+; FP-NONE-NEXT:    sw 8[$r12] = $r16
 ; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:    sw 0[$r12] = $r16
-; FP-NONE-NEXT:    copyd $r0 = $r15
+; FP-NONE-NEXT:    sw 0[$r12] = $r15
 ; FP-NONE-NEXT:    call add
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    lq $r18r19 = 40[$r12]
@@ -162,8 +161,9 @@ define i32 @fn(i32* nocapture readonly %a) {
 ; FP-ALL-NEXT:    sw 0[$r12] = $r15
 ; FP-ALL-NEXT:    call add
 ; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    lwz $r0 = 0[$r18]
 ; FP-ALL-NEXT:    addd $r12 = $r12, 32
-; FP-ALL-NEXT:    lwz $r15 = 0[$r18]
+; FP-ALL-NEXT:    copyd $r19 = $r0
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    lwz $r1 = 8[$r18]
 ; FP-ALL-NEXT:    ;;
@@ -187,16 +187,14 @@ define i32 @fn(i32* nocapture readonly %a) {
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    lwz $r11 = 48[$r18]
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    lwz $r16 = 52[$r18]
-; FP-ALL-NEXT:    copyd $r19 = $r0
+; FP-ALL-NEXT:    lwz $r15 = 52[$r18]
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    lwz $r0 = 56[$r18]
 ; FP-ALL-NEXT:    addd $r12 = $r12, -32
+; FP-ALL-NEXT:    lwz $r16 = 56[$r18]
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    sw 8[$r12] = $r0
+; FP-ALL-NEXT:    sw 8[$r12] = $r16
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    sw 0[$r12] = $r16
-; FP-ALL-NEXT:    copyd $r0 = $r15
+; FP-ALL-NEXT:    sw 0[$r12] = $r15
 ; FP-ALL-NEXT:    call add
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    addw $r0 = $r0, $r19

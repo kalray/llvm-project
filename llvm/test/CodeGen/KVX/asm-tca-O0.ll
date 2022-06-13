@@ -150,15 +150,15 @@ entry:
 define void @asm_clobber_multiple_quad(<256 x i1>* %c, <256 x i1>* %b) {
 ; CHECK-LABEL: asm_clobber_multiple_quad:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    copyd $r4 = $r0
+; CHECK-NEXT:    copyd $r4 = $r1
+; CHECK-NEXT:    copyd $r5 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a4 = 0[$r4]
+; CHECK-NEXT:    lv $a4 = 0[$r5]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r4
-; CHECK-NEXT:    copyd $r5 = $r1
+; CHECK-NEXT:    sd 24[$r12] = $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 16[$r12] = $r5
+; CHECK-NEXT:    sd 16[$r12] = $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    copyv $a4 = $a5
@@ -166,9 +166,9 @@ define void @asm_clobber_multiple_quad(<256 x i1>* %c, <256 x i1>* %b) {
 ; CHECK-NEXT:    copyv $a5 = $a4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP
-; CHECK-NEXT:    sv 0[$r4] = $a4
+; CHECK-NEXT:    sv 0[$r5] = $a4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 0[$r5] = $a5
+; CHECK-NEXT:    sv 0[$r4] = $a5
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;

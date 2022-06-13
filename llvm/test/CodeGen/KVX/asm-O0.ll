@@ -7,9 +7,9 @@ define i64 @asm_clobber_single_none(<2 x i64> %v, i64 %A) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sq 48[$r12] = $r0r1
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 40[$r12] = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sq 48[$r12] = $r0r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    movetq $r4r5 = $r0, $r1
@@ -92,10 +92,10 @@ entry:
 define i8* @asm_clobber_single_quad(i8* %A, i8* %B, i8* %C) {
 ; CHECK-LABEL: asm_clobber_single_quad:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    copyd $r4 = $r1
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r0
-; CHECK-NEXT:    copyd $r4 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 16[$r12] = $r4
 ; CHECK-NEXT:    ;;

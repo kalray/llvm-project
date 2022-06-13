@@ -14,6 +14,7 @@
 #include "KVXSubtarget.h"
 #include "KVX.h"
 #include "KVXFrameLowering.h"
+#include "llvm/CodeGen/MachineScheduler.h"
 #include "llvm/Support/TargetRegistry.h"
 
 using namespace llvm;
@@ -44,6 +45,17 @@ KVXSubtarget::KVXSubtarget(const Triple &TT, StringRef CPU,
       RegInfo(getHwMode()), TLInfo(TM, *this),
       InstrItins(getInstrItineraryForCPU(KVX_MC::selectKVXCPU(CPU))) {
   assert(InstrItins.Itineraries != nullptr && "InstrItins not initialized");
+}
+
+void KVXSubtarget::overrideSchedPolicy(MachineSchedPolicy &Policy,
+                                       unsigned NumRegionInstrs) const {
+  // Enable bidirectional scheduling
+  Policy.OnlyTopDown = false;
+  Policy.OnlyBottomUp = false;
+
+  // Always activate ShouldTrackPressure, as its heuristics may decrease
+  // register pressure without impacting latency.
+  Policy.ShouldTrackPressure = true;
 }
 
 bool KVXSubtarget::enableAdvancedRASplitCost() const {

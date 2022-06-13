@@ -349,27 +349,27 @@ define <4 x i8> @ashiftR_rr_vec(<4 x i8> %a, <4 x i8> %b){
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    zxbd $r0 = $r0
 ; CV1-NEXT:    srlw $r2 = $r0, 24
-; CV1-NEXT:    extfz $r3 = $r0, 23, 16
-; CV1-NEXT:    extfz $r5 = $r0, 15, 8
+; CV1-NEXT:    extfz $r4 = $r0, 23, 16
+; CV1-NEXT:    extfz $r6 = $r0, 15, 8
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    zxbd $r1 = $r1
-; CV1-NEXT:    extfz $r4 = $r1, 23, 16
-; CV1-NEXT:    extfz $r6 = $r1, 15, 8
+; CV1-NEXT:    extfz $r3 = $r1, 23, 16
+; CV1-NEXT:    extfz $r5 = $r1, 15, 8
 ; CV1-NEXT:    srlw $r7 = $r1, 24
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sxbd $r2 = $r2
-; CV1-NEXT:    sxbd $r3 = $r3
-; CV1-NEXT:    ;;
 ; CV1-NEXT:    sxbd $r0 = $r0
-; CV1-NEXT:    sraw $r2 = $r2, $r7
-; CV1-NEXT:    sraw $r3 = $r3, $r4
-; CV1-NEXT:    sxbd $r5 = $r5
+; CV1-NEXT:    sxbd $r2 = $r2
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    sraw $r0 = $r0, $r1
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    sraw $r4 = $r5, $r6
+; CV1-NEXT:    sraw $r2 = $r2, $r7
+; CV1-NEXT:    sxbd $r4 = $r4
+; CV1-NEXT:    sxbd $r6 = $r6
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sraw $r3 = $r4, $r3
+; CV1-NEXT:    sraw $r4 = $r6, $r5
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    insf $r0 = $r4, 15, 8
+; CV1-NEXT:    insf $r3 = $r2, 15, 8
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    insf $r0 = $r3, 31, 16
 ; CV1-NEXT:    ret

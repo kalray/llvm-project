@@ -1049,11 +1049,11 @@ define i32 @fsum6_sum(i32 %first, i32 %second, ...) local_unnamed_addr #0 !dbg !
 ; CHECK-NEXT:  .Ltmp83:
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args2 <- [DW_OP_constu 120, DW_OP_minus, DW_OP_deref] $r14
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args <- [DW_OP_constu 112, DW_OP_minus, DW_OP_deref] $r14
+; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:second <- $r1
+; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:first <- $r0
 ; CHECK-NEXT:    .loc 1 300 3 is_stmt 1 # cfi-csr.c:300:3
 ; CHECK-NEXT:    sd -24[$r14] = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:second <- $r1
-; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:first <- $r0
 ; CHECK-NEXT:  .Ltmp84:
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:v <- $r2
 ; CHECK-NEXT:    .loc 1 302 15 # cfi-csr.c:302:15
