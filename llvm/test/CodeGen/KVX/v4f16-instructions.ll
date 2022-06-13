@@ -769,12 +769,12 @@ define <4 x i64> @test_fptosi_i64(<4 x half> %a) #0 {
 ; CHECK-NEXT:    fwidenlhwp $r0 = $r0
 ; CHECK-NEXT:    fwidenmhwp $r1 = $r0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fwidenlwd $r1 = $r1
 ; CHECK-NEXT:    fwidenmwd $r2 = $r1
-; CHECK-NEXT:    fwidenmwd $r4 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fwidenlwd $r0 = $r0
-; CHECK-NEXT:    fwidenlwd $r1 = $r1
 ; CHECK-NEXT:    fixedd.rz $r3 = $r2, 0
+; CHECK-NEXT:    fwidenmwd $r4 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedd.rz $r2 = $r1, 0
 ; CHECK-NEXT:    ;;
@@ -828,12 +828,12 @@ define <4 x i64> @test_fptoui_4xi64(<4 x half> %a) #0 {
 ; CHECK-NEXT:    fwidenlhwp $r0 = $r0
 ; CHECK-NEXT:    fwidenmhwp $r1 = $r0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fwidenlwd $r1 = $r1
 ; CHECK-NEXT:    fwidenmwd $r2 = $r1
-; CHECK-NEXT:    fwidenmwd $r4 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fwidenlwd $r0 = $r0
-; CHECK-NEXT:    fwidenlwd $r1 = $r1
 ; CHECK-NEXT:    fixedud.rz $r3 = $r2, 0
+; CHECK-NEXT:    fwidenmwd $r4 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedud.rz $r2 = $r1, 0
 ; CHECK-NEXT:    ;;

@@ -618,21 +618,21 @@ define <4 x i8> @uadd_satv4i8(<4 x i8> %a, <4 x i8> %b) {
 ; KVXV1-NEXT:    srlw $r2 = $r0, 24
 ; KVXV1-NEXT:    srlw $r3 = $r1, 24
 ; KVXV1-NEXT:    extfz $r4 = $r0, 23, 16
-; KVXV1-NEXT:    extfz $r6 = $r0, 15, 8
+; KVXV1-NEXT:    extfz $r5 = $r1, 23, 16
 ; KVXV1-NEXT:    ;;
 ; KVXV1-NEXT:    zxbd $r0 = $r0
 ; KVXV1-NEXT:    zxbd $r1 = $r1
-; KVXV1-NEXT:    extfz $r5 = $r1, 23, 16
+; KVXV1-NEXT:    extfz $r6 = $r0, 15, 8
 ; KVXV1-NEXT:    extfz $r7 = $r1, 15, 8
 ; KVXV1-NEXT:    ;;
 ; KVXV1-NEXT:    zxbd $r2 = $r2
 ; KVXV1-NEXT:    zxbd $r3 = $r3
 ; KVXV1-NEXT:    zxbd $r4 = $r4
-; KVXV1-NEXT:    zxbd $r6 = $r6
+; KVXV1-NEXT:    zxbd $r5 = $r5
 ; KVXV1-NEXT:    ;;
 ; KVXV1-NEXT:    zxbd $r0 = $r0
 ; KVXV1-NEXT:    zxbd $r1 = $r1
-; KVXV1-NEXT:    zxbd $r5 = $r5
+; KVXV1-NEXT:    zxbd $r6 = $r6
 ; KVXV1-NEXT:    zxbd $r7 = $r7
 ; KVXV1-NEXT:    ;;
 ; KVXV1-NEXT:    addw $r0 = $r1, $r0

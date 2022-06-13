@@ -74,6 +74,7 @@ public:
   bool enableSubRegLiveness() const override;
   bool enableMachineSchedDefaultSched() const override;
   bool enablePostRAScheduler() const override;
+  bool enablePostRAMachineScheduler() const override;
   bool enableMachineScheduler() const override;
   bool isV1() const;
   bool isV2() const;

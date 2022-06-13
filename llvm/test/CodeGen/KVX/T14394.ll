@@ -14,15 +14,15 @@
 define <4 x float> @select_cc(i32 %0, <4 x float> %1, <4 x float> %2) {
 ; CHECK-LABEL: select_cc:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    compw.gt $r0 = $r0, 0
+; CHECK-NEXT:    copyd $r2 = $r1
 ; CHECK-NEXT:    copyd $r3 = $r2
 ; CHECK-NEXT:    copyd $r4 = $r3
 ; CHECK-NEXT:    copyd $r5 = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r2 = $r1
-; CHECK-NEXT:    cmoved.even $r0 ? $r3 = $r5
+; CHECK-NEXT:    compw.gt $r0 = $r0, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cmoved.even $r0 ? $r2 = $r4
+; CHECK-NEXT:    cmoved.even $r0 ? $r3 = $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    copyd $r1 = $r3

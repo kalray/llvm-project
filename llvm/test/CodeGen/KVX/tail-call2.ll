@@ -58,7 +58,11 @@ define i32 @f(i32 %a1, i32 %a2, i32 %a3, i32 %a4, i32 %a5, i32 %a6, i32 %a7, i32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addw $r7 = $r23, $r24
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    make $r10 = z
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addw $r7 = $r7, $r22
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lwz $r25 = 0[$r10]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addw $r7 = $r7, $r3
 ; CHECK-NEXT:    ;;
@@ -80,11 +84,7 @@ define i32 @f(i32 %a1, i32 %a2, i32 %a3, i32 %a4, i32 %a5, i32 %a6, i32 %a7, i32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addw $r7 = $r7, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r10 = z
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addw $r7 = $r7, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r25 = 0[$r10]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addw $r7 = $r7, $r5
 ; CHECK-NEXT:    ;;

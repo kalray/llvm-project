@@ -16,6 +16,7 @@
 #include "KVXTargetObjectFile.h"
 #include "KVXTargetTransformInfo.h"
 #include "llvm/ADT/STLExtras.h"
+#include "llvm/CodeGen/MachineScheduler.h"
 #include "llvm/CodeGen/Passes.h"
 #include "llvm/CodeGen/TargetLoweringObjectFileImpl.h"
 #include "llvm/CodeGen/TargetPassConfig.h"
@@ -133,12 +134,16 @@ public:
     if (!DisableLOOPDO) {
       disablePass(&EarlyTailDuplicateID);
     }
+    if (TM.getOptLevel() != CodeGenOpt::None)
+      substitutePass(&PostRASchedulerID, &PostMachineSchedulerID);
   }
 
   KVXTargetMachine &getKVXTargetMachine() const {
     return getTM<KVXTargetMachine>();
   }
 
+  ScheduleDAGInstrs *
+  createPostMachineScheduler(MachineSchedContext *C) const override;
   void addIRPasses() override;
   bool addInstSelector() override;
   void addPreRegAlloc() override;
@@ -173,6 +178,11 @@ KVXTargetMachine::getSubtargetImpl(const Function &F) const {
 
 TargetPassConfig *KVXTargetMachine::createPassConfig(PassManagerBase &PM) {
   return new KVXPassConfig(*this, PM);
+}
+
+ScheduleDAGInstrs *
+KVXPassConfig::createPostMachineScheduler(MachineSchedContext *C) const {
+  return createGenericSchedPostRA(C);
 }
 
 void KVXPassConfig::addIRPasses() {

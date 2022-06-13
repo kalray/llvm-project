@@ -64,6 +64,7 @@ bool KVXSubtarget::enableAdvancedRASplitCost() const {
 bool KVXSubtarget::enableMachineScheduler() const { return true; }
 bool KVXSubtarget::enableMachineSchedDefaultSched() const { return false; }
 bool KVXSubtarget::enablePostRAScheduler() const { return true; }
+bool KVXSubtarget::enablePostRAMachineScheduler() const { return true; }
 bool KVXSubtarget::enableSubRegLiveness() const {
   return OptLevel > CodeGenOpt::Less;
 }

@@ -285,35 +285,35 @@ define <8 x i8> @ashiftR_imm_vec(<8 x i8> %a){
 ; CV2-NEXT:    make $r1 = 0x203030402030304
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    extfz $r2 = $r1, 10, 8
-; CV2-NEXT:    extfz $r4 = $r1, 18, 16
+; CV2-NEXT:    srabos $r3 = $r0, $r1
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    srabos $r2 = $r0, $r2
-; CV2-NEXT:    srabos $r3 = $r0, $r1
+; CV2-NEXT:    extfz $r4 = $r1, 18, 16
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r2 = $r3, 7, 0
 ; CV2-NEXT:    srabos $r4 = $r0, $r4
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    extfz $r3 = $r1, 26, 24
+; CV2-NEXT:    ;;
+; CV2-NEXT:    srabos $r3 = $r0, $r3
 ; CV2-NEXT:    insf $r4 = $r2, 15, 0
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    extfz $r2 = $r1, 34, 32
-; CV2-NEXT:    srabos $r3 = $r0, $r3
-; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r3 = $r4, 23, 0
-; CV2-NEXT:    extfz $r4 = $r1, 42, 40
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    srabos $r2 = $r0, $r2
-; CV2-NEXT:    srabos $r4 = $r0, $r4
+; CV2-NEXT:    extfz $r4 = $r1, 42, 40
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r2 = $r3, 31, 0
-; CV2-NEXT:    extfz $r3 = $r1, 50, 48
+; CV2-NEXT:    srabos $r4 = $r0, $r4
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    extfz $r1 = $r1, 58, 56
+; CV2-NEXT:    extfz $r3 = $r1, 50, 48
+; CV2-NEXT:    ;;
+; CV2-NEXT:    srabos $r2 = $r0, $r3
 ; CV2-NEXT:    insf $r4 = $r2, 39, 0
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    srabos $r0 = $r0, $r1
-; CV2-NEXT:    srabos $r2 = $r0, $r3
-; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r2 = $r4, 47, 0
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r0 = $r2, 55, 0
@@ -375,35 +375,35 @@ define <8 x i8> @lshiftR_imm_vec(<8 x i8> %a){
 ; CV2-NEXT:    make $r1 = 0x203030404030102
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    extfz $r2 = $r1, 10, 8
-; CV2-NEXT:    extfz $r4 = $r1, 18, 16
+; CV2-NEXT:    srlbos $r3 = $r0, $r1
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    srlbos $r2 = $r0, $r2
-; CV2-NEXT:    srlbos $r3 = $r0, $r1
+; CV2-NEXT:    extfz $r4 = $r1, 18, 16
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r2 = $r3, 7, 0
 ; CV2-NEXT:    srlbos $r4 = $r0, $r4
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    extfz $r3 = $r1, 26, 24
+; CV2-NEXT:    ;;
+; CV2-NEXT:    srlbos $r3 = $r0, $r3
 ; CV2-NEXT:    insf $r4 = $r2, 15, 0
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    extfz $r2 = $r1, 34, 32
-; CV2-NEXT:    srlbos $r3 = $r0, $r3
-; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r3 = $r4, 23, 0
-; CV2-NEXT:    extfz $r4 = $r1, 42, 40
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    srlbos $r2 = $r0, $r2
-; CV2-NEXT:    srlbos $r4 = $r0, $r4
+; CV2-NEXT:    extfz $r4 = $r1, 42, 40
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r2 = $r3, 31, 0
-; CV2-NEXT:    extfz $r3 = $r1, 50, 48
+; CV2-NEXT:    srlbos $r4 = $r0, $r4
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    extfz $r1 = $r1, 58, 56
+; CV2-NEXT:    extfz $r3 = $r1, 50, 48
+; CV2-NEXT:    ;;
+; CV2-NEXT:    srlbos $r2 = $r0, $r3
 ; CV2-NEXT:    insf $r4 = $r2, 39, 0
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    srlbos $r0 = $r0, $r1
-; CV2-NEXT:    srlbos $r2 = $r0, $r3
-; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r2 = $r4, 47, 0
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r0 = $r2, 55, 0
@@ -455,35 +455,35 @@ define <8 x i8> @shiftL_imm_vec(<8 x i8> %a){
 ; CV2-NEXT:    make $r1 = 0x203030405030303
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    extfz $r2 = $r1, 10, 8
-; CV2-NEXT:    extfz $r4 = $r1, 18, 16
+; CV2-NEXT:    sllbos $r3 = $r0, $r1
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    sllbos $r2 = $r0, $r2
-; CV2-NEXT:    sllbos $r3 = $r0, $r1
+; CV2-NEXT:    extfz $r4 = $r1, 18, 16
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r2 = $r3, 7, 0
 ; CV2-NEXT:    sllbos $r4 = $r0, $r4
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    extfz $r3 = $r1, 26, 24
+; CV2-NEXT:    ;;
+; CV2-NEXT:    sllbos $r3 = $r0, $r3
 ; CV2-NEXT:    insf $r4 = $r2, 15, 0
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    extfz $r2 = $r1, 34, 32
-; CV2-NEXT:    sllbos $r3 = $r0, $r3
-; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r3 = $r4, 23, 0
-; CV2-NEXT:    extfz $r4 = $r1, 42, 40
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    sllbos $r2 = $r0, $r2
-; CV2-NEXT:    sllbos $r4 = $r0, $r4
+; CV2-NEXT:    extfz $r4 = $r1, 42, 40
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r2 = $r3, 31, 0
-; CV2-NEXT:    extfz $r3 = $r1, 50, 48
+; CV2-NEXT:    sllbos $r4 = $r0, $r4
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    extfz $r1 = $r1, 58, 56
+; CV2-NEXT:    extfz $r3 = $r1, 50, 48
+; CV2-NEXT:    ;;
+; CV2-NEXT:    sllbos $r2 = $r0, $r3
 ; CV2-NEXT:    insf $r4 = $r2, 39, 0
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    sllbos $r0 = $r0, $r1
-; CV2-NEXT:    sllbos $r2 = $r0, $r3
-; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r2 = $r4, 47, 0
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r0 = $r2, 55, 0
@@ -508,16 +508,16 @@ define <8 x i8> @ashiftR_rr_vec(<8 x i8> %a, <8 x i8> %b){
 ; CV1-NEXT:    srld $r16 = $r1, 56
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    extfz $r0 = $r0, 15, 8
-; CV1-NEXT:    sxbd $r2 = $r2
+; CV1-NEXT:    extfz $r3 = $r1, 55, 48
 ; CV1-NEXT:    srlw $r32 = $r1, 24
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    extfz $r3 = $r1, 55, 48
+; CV1-NEXT:    sxbd $r2 = $r2
 ; CV1-NEXT:    sxbd $r4 = $r4
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sraw $r2 = $r2, $r16
 ; CV1-NEXT:    sxbd $r5 = $r5
 ; CV1-NEXT:    extfz $r7 = $r1, 47, 40
 ; CV1-NEXT:    ;;
+; CV1-NEXT:    sraw $r2 = $r2, $r16
 ; CV1-NEXT:    sraw $r3 = $r4, $r3
 ; CV1-NEXT:    sxbd $r6 = $r6
 ; CV1-NEXT:    extfz $r9 = $r1, 39, 32
@@ -555,35 +555,35 @@ define <8 x i8> @ashiftR_rr_vec(<8 x i8> %a, <8 x i8> %b){
 ; CV2-LABEL: ashiftR_rr_vec:
 ; CV2:       # %bb.0: # %entry
 ; CV2-NEXT:    extfz $r2 = $r1, 10, 8
-; CV2-NEXT:    extfz $r4 = $r1, 18, 16
+; CV2-NEXT:    srabos $r3 = $r0, $r1
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    srabos $r2 = $r0, $r2
-; CV2-NEXT:    srabos $r3 = $r0, $r1
+; CV2-NEXT:    extfz $r4 = $r1, 18, 16
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r2 = $r3, 7, 0
 ; CV2-NEXT:    srabos $r4 = $r0, $r4
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    extfz $r3 = $r1, 26, 24
+; CV2-NEXT:    ;;
+; CV2-NEXT:    srabos $r3 = $r0, $r3
 ; CV2-NEXT:    insf $r4 = $r2, 15, 0
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    extfz $r2 = $r1, 34, 32
-; CV2-NEXT:    srabos $r3 = $r0, $r3
-; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r3 = $r4, 23, 0
-; CV2-NEXT:    extfz $r4 = $r1, 42, 40
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    srabos $r2 = $r0, $r2
-; CV2-NEXT:    srabos $r4 = $r0, $r4
+; CV2-NEXT:    extfz $r4 = $r1, 42, 40
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r2 = $r3, 31, 0
-; CV2-NEXT:    extfz $r3 = $r1, 50, 48
+; CV2-NEXT:    srabos $r4 = $r0, $r4
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    extfz $r1 = $r1, 58, 56
+; CV2-NEXT:    extfz $r3 = $r1, 50, 48
+; CV2-NEXT:    ;;
+; CV2-NEXT:    srabos $r2 = $r0, $r3
 ; CV2-NEXT:    insf $r4 = $r2, 39, 0
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    srabos $r0 = $r0, $r1
-; CV2-NEXT:    srabos $r2 = $r0, $r3
-; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r2 = $r4, 47, 0
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r0 = $r2, 55, 0
@@ -619,13 +619,13 @@ define <8 x i8> @lshiftR_rr_vec(<8 x i8> %a, <8 x i8> %b){
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    zxbd $r8 = $r8
 ; CV1-NEXT:    zxbd $r9 = $r9
+; CV1-NEXT:    zxbd $r10 = $r10
 ; CV1-NEXT:    extfz $r17 = $r1, 23, 16
-; CV1-NEXT:    extfz $r32 = $r1, 15, 8
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    zxbd $r0 = $r0
 ; CV1-NEXT:    zxbd $r1 = $r1
-; CV1-NEXT:    zxbd $r10 = $r10
 ; CV1-NEXT:    zxbd $r15 = $r15
+; CV1-NEXT:    extfz $r32 = $r1, 15, 8
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    srlw $r2 = $r2, $r6
 ; CV1-NEXT:    srlw $r3 = $r4, $r3
@@ -653,35 +653,35 @@ define <8 x i8> @lshiftR_rr_vec(<8 x i8> %a, <8 x i8> %b){
 ; CV2-LABEL: lshiftR_rr_vec:
 ; CV2:       # %bb.0: # %entry
 ; CV2-NEXT:    extfz $r2 = $r1, 10, 8
-; CV2-NEXT:    extfz $r4 = $r1, 18, 16
+; CV2-NEXT:    srlbos $r3 = $r0, $r1
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    srlbos $r2 = $r0, $r2
-; CV2-NEXT:    srlbos $r3 = $r0, $r1
+; CV2-NEXT:    extfz $r4 = $r1, 18, 16
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r2 = $r3, 7, 0
 ; CV2-NEXT:    srlbos $r4 = $r0, $r4
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    extfz $r3 = $r1, 26, 24
+; CV2-NEXT:    ;;
+; CV2-NEXT:    srlbos $r3 = $r0, $r3
 ; CV2-NEXT:    insf $r4 = $r2, 15, 0
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    extfz $r2 = $r1, 34, 32
-; CV2-NEXT:    srlbos $r3 = $r0, $r3
-; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r3 = $r4, 23, 0
-; CV2-NEXT:    extfz $r4 = $r1, 42, 40
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    srlbos $r2 = $r0, $r2
-; CV2-NEXT:    srlbos $r4 = $r0, $r4
+; CV2-NEXT:    extfz $r4 = $r1, 42, 40
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r2 = $r3, 31, 0
-; CV2-NEXT:    extfz $r3 = $r1, 50, 48
+; CV2-NEXT:    srlbos $r4 = $r0, $r4
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    extfz $r1 = $r1, 58, 56
+; CV2-NEXT:    extfz $r3 = $r1, 50, 48
+; CV2-NEXT:    ;;
+; CV2-NEXT:    srlbos $r2 = $r0, $r3
 ; CV2-NEXT:    insf $r4 = $r2, 39, 0
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    srlbos $r0 = $r0, $r1
-; CV2-NEXT:    srlbos $r2 = $r0, $r3
-; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r2 = $r4, 47, 0
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r0 = $r2, 55, 0
@@ -741,35 +741,35 @@ define <8 x i8> @shiftL_rr_vec(<8 x i8> %a, <8 x i8> %b){
 ; CV2-LABEL: shiftL_rr_vec:
 ; CV2:       # %bb.0: # %entry
 ; CV2-NEXT:    extfz $r2 = $r1, 10, 8
-; CV2-NEXT:    extfz $r4 = $r1, 18, 16
+; CV2-NEXT:    sllbos $r3 = $r0, $r1
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    sllbos $r2 = $r0, $r2
-; CV2-NEXT:    sllbos $r3 = $r0, $r1
+; CV2-NEXT:    extfz $r4 = $r1, 18, 16
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r2 = $r3, 7, 0
 ; CV2-NEXT:    sllbos $r4 = $r0, $r4
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    extfz $r3 = $r1, 26, 24
+; CV2-NEXT:    ;;
+; CV2-NEXT:    sllbos $r3 = $r0, $r3
 ; CV2-NEXT:    insf $r4 = $r2, 15, 0
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    extfz $r2 = $r1, 34, 32
-; CV2-NEXT:    sllbos $r3 = $r0, $r3
-; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r3 = $r4, 23, 0
-; CV2-NEXT:    extfz $r4 = $r1, 42, 40
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    sllbos $r2 = $r0, $r2
-; CV2-NEXT:    sllbos $r4 = $r0, $r4
+; CV2-NEXT:    extfz $r4 = $r1, 42, 40
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r2 = $r3, 31, 0
-; CV2-NEXT:    extfz $r3 = $r1, 50, 48
+; CV2-NEXT:    sllbos $r4 = $r0, $r4
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    extfz $r1 = $r1, 58, 56
+; CV2-NEXT:    extfz $r3 = $r1, 50, 48
+; CV2-NEXT:    ;;
+; CV2-NEXT:    sllbos $r2 = $r0, $r3
 ; CV2-NEXT:    insf $r4 = $r2, 39, 0
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    sllbos $r0 = $r0, $r1
-; CV2-NEXT:    sllbos $r2 = $r0, $r3
-; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r2 = $r4, 47, 0
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r0 = $r2, 55, 0
