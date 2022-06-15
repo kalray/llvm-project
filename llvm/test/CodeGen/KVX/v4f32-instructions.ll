@@ -920,17 +920,10 @@ define <4 x float> @test_sitofp_2xi32_fadd(<4 x i32> %a, <4 x float> %b) #0 {
 define <4 x float> @test_fptrunc_2xdouble(<4 x double> %a) #0 {
 ; CHECK-LABEL: test_fptrunc_2xdouble:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fnarrowdw $r3 = $r3
+; CHECK-NEXT:    fnarrowdwp $r3 = $r2r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowdw $r2 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowdw $r1 = $r1
-; CHECK-NEXT:    insf $r2 = $r3, 63, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowdw $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 63, 32
-; CHECK-NEXT:    copyd $r1 = $r2
+; CHECK-NEXT:    fnarrowdwp $r0 = $r0r1
+; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptrunc <4 x double> %a to <4 x float>

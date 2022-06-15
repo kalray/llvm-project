@@ -1217,6 +1217,12 @@ def : Pat<(v2f16 (fpround v2f64:$val)), (v2f16 (FNARROWWHQ (v4f32 (REG_SEQUENCE 
 
 def : Pat<(v2f32 (fpround v2f64:$val)), (FNARROWDWP PairedReg:$val, rounding_, silent_)>;
 
+def : Pat<(v4f32 (fpround v4f64:$val)),
+          (REG_SEQUENCE PairedReg,
+            (FNARROWDWP (EXTRACT_SUBREG QuadReg:$val, sub_p0), rounding_, silent_), sub_s0,
+            (FNARROWDWP (EXTRACT_SUBREG QuadReg:$val, sub_p1), rounding_, silent_), sub_s1
+          )>;
+
 def : Pat<(v4f16 (fpround v4f32:$val)), (FNARROWWHQ PairedReg:$val, rounding_, silent_)>;
 
 def : Pat<(v4f16 (fpround v4f64:$val)), (FNARROWWHQ (REG_SEQUENCE PairedReg,

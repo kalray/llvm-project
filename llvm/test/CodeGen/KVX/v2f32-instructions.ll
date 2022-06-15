@@ -730,11 +730,7 @@ define <2 x float> @test_sitofp_2xi32_fadd(<2 x i32> %a, <2 x float> %b) #0 {
 define <2 x float> @test_fptrunc_2xdouble(<2 x double> %a) #0 {
 ; CHECK-LABEL: test_fptrunc_2xdouble:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fnarrowdw $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowdw $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 63, 32
+; CHECK-NEXT:    fnarrowdwp $r0 = $r0r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fptrunc <2 x double> %a to <2 x float>
