@@ -208,31 +208,25 @@ bool KVXPacketizerList::isLegalToPacketizeTogether(SUnit *SUI, SUnit *SUJ) {
     return false;
   }
 
-  bool Legal = false;
-
   // Not legal if MI is a successor of MJ.
-  if (SUJ->isSucc(SUI)) {
-    // Except if the dependency latency is 0.
-    unsigned CumulatedLatency = 0;
+  if (!SUJ->isSucc(SUI))
+    return true;
 
-    for (const SDep &Succ : SUJ->Succs)
-      // Ignore WAW dependencies.
-      if (Succ.getSUnit() == SUI &&
-          (!MI.isCall() || Succ.getKind() == SDep::Data))
-        CumulatedLatency += Succ.getLatency();
+  // Except if the dependency latency is 0.
+  unsigned CumulatedLatency = 0;
 
-    if (!CumulatedLatency)
-      Legal = true;
-    else
-      LLVM_DEBUG(dbgs() << PASS_NAME
-                        << ": not legal because MI is a successor of MJ"
-                        << '\n';);
+  for (const SDep &Succ : SUJ->Succs)
+    // Ignore WAW dependencies.
+    if (Succ.getSUnit() == SUI &&
+        (!MI.isCall() || Succ.getKind() == SDep::Data))
+      CumulatedLatency += Succ.getLatency();
 
-  } else {
-    Legal = true;
-  }
+  if (!CumulatedLatency)
+    return true;
 
-  return Legal;
+  LLVM_DEBUG(dbgs() << PASS_NAME
+                    << ": not legal because MI is a successor of MJ\n");
+  return false;
 }
 
 // CFIInstruction and debug related instructions must be moved out the bundle

@@ -20,7 +20,6 @@
 #include "llvm/Support/TargetRegistry.h"
 #include "llvm/Support/raw_ostream.h"
 
-namespace {
 using namespace llvm;
 class KVXAsmPrinter : public AsmPrinter {
 public:
@@ -191,8 +190,6 @@ void KVXAsmPrinter::emitInlineAsmEnd(const MCSubtargetInfo &StartInfo,
                                      const MCSubtargetInfo *EndInfo) const {
   OutStreamer->emitRawText(StringRef("\t;;\n"));
 }
-
-} // namespace
 
 extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeKVXAsmPrinter() {
   RegisterAsmPrinter<KVXAsmPrinter> X(getTheKVXTarget());
