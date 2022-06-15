@@ -287,7 +287,7 @@ unsigned KVXTTIImpl::getInliningThresholdMultiplier() const {
 unsigned KVXTTIImpl::getNumberOfRegisters(unsigned ClassID) const { return 64; }
 
 bool KVXTTIImpl::isLSRCostLess(TargetTransformInfo::LSRCost &C1,
-                               TargetTransformInfo::LSRCost &C2) {
+                               TargetTransformInfo::LSRCost &C2) const {
   // Care first for num-regs then number of inst.
   // Care last for ImmCost and scale.
   // TODO: Check if NumRegs really matches the actual use of registers.

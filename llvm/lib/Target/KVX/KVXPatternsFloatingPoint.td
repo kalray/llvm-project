@@ -11,14 +11,14 @@ def DefaultShift : PatLeaf<(i64 0)>;
 
 // Store
 defm : StorePat<store, f16, SingleReg, 1, SHp, SHri10,  SHri37,  SHri64, SHrr>;
-defm : StorePatNode<truncstoref16, f32, SingleReg, 1, SHp, SHri10,  SHri37,  SHri64, SHrr,
+defm : StorePatNode<truncstoref16, f32, 1, SHp, SHri10,  SHri37,  SHri64, SHrr,
                     (FNARROWWH SingleReg:$val, rounding_, silent_)>;
-defm : StorePatNode<truncstoref16, f64, SingleReg, 1, SHp, SHri10,  SHri37,  SHri64, SHrr,
+defm : StorePatNode<truncstoref16, f64, 1, SHp, SHri10,  SHri37,  SHri64, SHrr,
                     (FNARROWWH (FNARROWDW SingleReg:$val, rounding_, silent_),
                       rounding_, silent_)>;
 
 defm : StorePat<store, f32, SingleReg, 2, SWp, SWri10,  SWri37,  SWri64, SWrr>;
-defm : StorePatNode<truncstoref32, f64, SingleReg, 2, SWp, SWri10,  SWri37,  SWri64, SWrr,
+defm : StorePatNode<truncstoref32, f64, 2, SWp, SWri10,  SWri37,  SWri64, SWrr,
                     (FNARROWDW SingleReg:$val, rounding_, silent_)>;
 defm : StorePat<store, v2f16, SingleReg, 2, SWp, SWri10,  SWri37,  SWri64, SWrr>;
 
@@ -92,7 +92,7 @@ def : Pat<(v4f64 (fadd v4f64:$rs1, v4f64:$rs2)),
             sub_p1))>;
 
 // FCOMP
-multiclass FCOMP<SDNode SetCC, Floatcomp Cmp, bit SwapOperands> {
+multiclass FCOMP<PatFrag SetCC, Floatcomp Cmp, bit SwapOperands> {
   defm : ZAext_And1_Pat<(i32 (SetCC f16:$rz, f16:$ry)),
     !if(SwapOperands,
      (ANDWri10 (FCOMPNHQ SingleReg:$ry, SingleReg:$rz, Cmp), 1),
@@ -220,7 +220,7 @@ def : Pat<(i32 (seto f32:$rz, Binary32:$imm)), (ORDrr (FCOMPWri SingleReg:$rz, B
 def : Pat<(i32 (setuo f32:$rz, Binary32:$imm)), (ANDDrr (FCOMPWri SingleReg:$rz, Binary32:$imm, floatcomp_uge), (FCOMPWri SingleReg:$rz, Binary32:$imm, floatcomp_ult))>;
 
 
-multiclass COMP_FPat<SDNode Node, Floatcomp Cmp, bit SWAP> {
+multiclass COMP_FPat<PatFrag Node, Floatcomp Cmp, bit SWAP> {
   def : Pat<(v2i16 (Node v2f16:$rz, v2f16:$ry)),
     !if(SWAP, (FCOMPNHQ SingleReg:$ry, SingleReg:$rz, Cmp), (FCOMPNHQ SingleReg:$rz, SingleReg:$ry, Cmp))>;
   def : Pat<(sra (shl (v2i16 (Node v2f16:$rz, v2f16:$ry)), (v2i16 v2_splat_15)), (v2i16 v2_splat_15)),
@@ -767,7 +767,7 @@ def : Pat<(v4f32 (fma (vfneg v4f32:$rx), v4f32:$ry, v4f32:$rz)),
             sub_s1)>;
 
 
-multiclass FFMS_EXPAND_PAT<ValueType vt, ValueType small_vt, KVX_INSTRUCTION FMS, KVXRegister OutRegType> {
+multiclass FFMS_EXPAND_PAT<ValueType vt, ValueType small_vt, KVX_INSTRUCTION FMS, RegisterClass OutRegType> {
   def : Pat<(vt (fma (fneg  (vt (fpextend small_vt:$r1))), (vt (fpextend small_vt:$r2)), vt:$r0)),
             (FMS OutRegType:$r0, SingleReg:$r1, SingleReg:$r2, rounding_, silent_)>;
 

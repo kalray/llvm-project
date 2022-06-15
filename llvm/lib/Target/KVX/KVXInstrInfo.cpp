@@ -484,11 +484,9 @@ bool KVXInstrInfo::analyzeBranch(MachineBasicBlock &MBB,
   // Handle a single unconditional branch.
   if (NumTerminators == 1 && I->getDesc().isUnconditionalBranch()) {
     LLVM_DEBUG(dbgs() << "Single unconditional branch: " << *I << ".\n");
-    if (I->getOpcode() == KVX::TAIL) {
-      TBB = &MBB; // not used
-      Cond.push_back(I->getOperand(0));
-      return false;
-    }
+    if (I->getOpcode() == KVX::TAIL)
+      return true;
+
     TBB = I->getOperand(0).getMBB();
     return false;
   }
