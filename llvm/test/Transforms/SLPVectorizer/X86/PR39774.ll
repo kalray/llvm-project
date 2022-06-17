@@ -33,10 +33,6 @@ define void @Test(i32) {
 ;
 ; FORCE_REDUCTION-LABEL: @Test(
 ; FORCE_REDUCTION-NEXT:  entry:
-; FORCE_REDUCTION-NEXT:    [[TMP1:%.*]] = insertelement <8 x i32> poison, i32 [[TMP0:%.*]], i32 0
-; FORCE_REDUCTION-NEXT:    [[SHUFFLE7:%.*]] = shufflevector <8 x i32> [[TMP1]], <8 x i32> poison, <8 x i32> zeroinitializer
-; FORCE_REDUCTION-NEXT:    [[TMP2:%.*]] = insertelement <16 x i32> poison, i32 [[TMP0]], i32 0
-; FORCE_REDUCTION-NEXT:    [[SHUFFLE6:%.*]] = shufflevector <16 x i32> [[TMP2]], <16 x i32> poison, <16 x i32> zeroinitializer
 ; FORCE_REDUCTION-NEXT:    br label [[LOOP:%.*]]
 ; FORCE_REDUCTION:       loop:
 ; FORCE_REDUCTION-NEXT:    [[TMP3:%.*]] = phi <2 x i32> [ [[TMP10:%.*]], [[LOOP]] ], [ zeroinitializer, [[ENTRY:%.*]] ]

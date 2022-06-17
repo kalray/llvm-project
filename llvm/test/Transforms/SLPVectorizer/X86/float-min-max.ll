@@ -20,9 +20,9 @@ define i1 @test(float* %p1, float* %p2, i8* %p3, i1 %c) #0 {
 ; CHECK-NEXT:    [[CONFLICT_RDX:%.*]] = or i1 [[FOUND_CONFLICT]], [[C]]
 ; CHECK-NEXT:    [[BOUND042:%.*]] = icmp ugt i8* [[P3]], [[UMIN3334]]
 ; CHECK-NEXT:    [[FOUND_CONFLICT44:%.*]] = and i1 [[BOUND042]], [[C]]
-; CHECK-NEXT:    [[CONFLICT_RDX45:%.*]] = or i1 [[CONFLICT_RDX]], [[FOUND_CONFLICT44]]
-; CHECK-NEXT:    [[CONFLICT_RDX49:%.*]] = or i1 [[CONFLICT_RDX45]], [[C]]
-; CHECK-NEXT:    ret i1 [[CONFLICT_RDX49]]
+; CHECK-NEXT:    [[OP_RDX:%.*]] = or i1 [[C]], [[FOUND_CONFLICT]]
+; CHECK-NEXT:    [[OP_RDX1:%.*]] = or i1 [[OP_RDX]], [[FOUND_CONFLICT44]]
+; CHECK-NEXT:    ret i1 [[OP_RDX1]]
 ;
   %scevgep21 = getelementptr float, float* %p1, i32 0
   %l0 = icmp ult float* %p2, %scevgep21

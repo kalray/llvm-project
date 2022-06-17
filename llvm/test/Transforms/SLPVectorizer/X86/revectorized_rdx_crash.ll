@@ -35,7 +35,7 @@ define void @test() {
 ; CHECK-NEXT:    [[OP_RDX4:%.*]] = add i32 [[TMP6]], [[OP_RDX3]]
 ; CHECK-NEXT:    br label [[IF_END]]
 ; CHECK:       if.end:
-; CHECK-NEXT:    [[R:%.*]] = phi i32 [ [[OP_RDX4]], [[FOR_COND_PREHEADER]] ], [ undef, [[ENTRY:%.*]] ]
+; CHECK-NEXT:    [[R:%.*]] = phi i32 [ [[OP_RDX1]], [[FOR_COND_PREHEADER]] ], [ undef, [[ENTRY:%.*]] ]
 ; CHECK-NEXT:    ret void
 ;
 entry:

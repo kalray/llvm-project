@@ -6,11 +6,9 @@ define i16 @test() {
 ; CHECK-NEXT:  entry:
 ; CHECK-NEXT:    [[A:%.*]] = getelementptr [1000 x i64], ptr null, i64 0, i64 5
 ; CHECK-NEXT:    [[A1:%.*]] = getelementptr [1000 x i64], ptr null, i64 0, i64 6
-; CHECK-NEXT:    [[A2:%.*]] = getelementptr [1000 x i64], ptr null, i64 0, i64 7
-; CHECK-NEXT:    [[A3:%.*]] = getelementptr [1000 x i64], ptr null, i64 0, i64 8
 ; CHECK-NEXT:    br label [[WHILE:%.*]]
 ; CHECK:       while:
-; CHECK-NEXT:    [[PH:%.*]] = phi i64 [ 0, [[ENTRY:%.*]] ], [ [[OP_RDX12:%.*]], [[WHILE]] ]
+; CHECK-NEXT:    [[PH:%.*]] = phi i64 [ 0, [[ENTRY:%.*]] ], [ [[OP_RDX25:%.*]], [[WHILE]] ]
 ; CHECK-NEXT:    [[TMP0:%.*]] = load i64, ptr null, align 8
 ; CHECK-NEXT:    [[TMP1:%.*]] = load <2 x i64>, ptr [[A2]], align 8
 ; CHECK-NEXT:    [[SHUFFLE:%.*]] = shufflevector <2 x i64> [[TMP1]], <2 x i64> poison, <4 x i32> <i32 0, i32 0, i32 0, i32 1>
