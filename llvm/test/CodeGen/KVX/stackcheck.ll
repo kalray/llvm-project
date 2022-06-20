@@ -33,22 +33,23 @@ define dso_local i32 @testalloca(i32 %n) local_unnamed_addr  {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.dgtz $r2 ? .LBB0_5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.wlez $r0 ? .LBB0_3
+; CHECK-NEXT:    cb.wlez $r0 ? .LBB0_4
 ; CHECK-NEXT:    copyd $r12 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.2: # %for.body.preheader
-; CHECK-NEXT:    make $r2 = 0
-; CHECK-NEXT:    zxwd $r3 = $r0
+; CHECK-NEXT:    zxwd $r2 = $r0
+; CHECK-NEXT:    make $r3 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    loopdo $r3, .__LOOPDO_0_END_
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_4: # %for.body
+; CHECK-NEXT:  .LBB0_3: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    sw.xs $r2[$r1] = $r2
-; CHECK-NEXT:    addd $r2 = $r2, 1
+; CHECK-NEXT:    sw.xs $r3[$r1] = $r3
+; CHECK-NEXT:    addd $r3 = $r3, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .__LOOPDO_0_END_:
-; CHECK-NEXT:  .LBB0_3: # %for.cond.cleanup
+; CHECK-NEXT:    compd.eq $r4 = $r2, $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cb.even $r4 ? .LBB0_3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  .LBB0_4: # %for.cond.cleanup
 ; CHECK-NEXT:    addw $r0 = $r0, -2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxwd $r0 = $r0
