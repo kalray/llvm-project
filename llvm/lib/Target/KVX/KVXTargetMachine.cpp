@@ -28,7 +28,7 @@
 using namespace llvm;
 
 static cl::opt<bool>
-    DisableLOOPDO("disable-kvx-hwloops", cl::Hidden, cl::init(false),
+    DisableLOOPDO("disable-kvx-hwloops", cl::Hidden, cl::init(true),
                   cl::desc("Disable Hardware Loops for KVX target"));
 
 static cl::opt<bool>
