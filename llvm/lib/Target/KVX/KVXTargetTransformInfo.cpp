@@ -145,8 +145,9 @@ bool KVXTTIImpl::isHardwareLoopProfitableCheck(Loop *L, ScalarEvolution &SE) {
     default:
       break;
     case Instruction::FDiv:
-      return (!I.isFast()) || (I.getType()->getScalarSizeInBits() == 64);
     case Instruction::FRem:
+      return (!I.hasAllowReciprocal()) ||
+             (I.getType()->getScalarSizeInBits() == 64);
     case Instruction::AtomicCmpXchg:
       return cast<AtomicCmpXchgInst>(I).getPointerAddressSpace() == 1;
     case Instruction::AtomicRMW:
