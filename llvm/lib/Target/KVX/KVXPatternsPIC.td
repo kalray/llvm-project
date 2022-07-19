@@ -18,7 +18,7 @@ def PICPCRELGOTADDR : REGISTERW_EXTEND27_UPPER27_LOWER10_TRIPLE
   <(outs SingleReg:$gotaddr), (ins ),
    "pcrel $gotaddr = @gotaddr()",
    [(set (i64 SingleReg:$gotaddr), (PICPCRelativeGOTAddr ))],
-   ALU_FULL>;
+   ALU_FULL_Y>;
 
 def PICINTERNINDIRECTION : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
   <(outs SingleReg:$symaddr), (ins SingleReg:$gotaddr, Wrapped64:$gotoff),
