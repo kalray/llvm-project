@@ -645,10 +645,10 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_2-NEXT:    copyd $r24 = $r0
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:    fcompnd.olt $r0 = $r24, $r30
-; KV3_2-NEXT:    cmoved.even $r1 ? $r2 = 0
 ; KV3_2-NEXT:    fcompd.oge $r3 = $r24, $r23
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:    cmoved.even $r3 ? $r0 = 0
+; KV3_2-NEXT:    cmoved.even $r1 ? $r2 = 0
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:    insf $r0 = $r2, 15, 8
 ; KV3_2-NEXT:    ;;
