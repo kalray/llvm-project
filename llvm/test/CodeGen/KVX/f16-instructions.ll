@@ -166,6 +166,7 @@ define half @test_fdiv(half %a, half %b) #0 {
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    fwidenlhw $r1 = $r1
 ; CHECK-NEXT:    addd $r12 = $r12, -32
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r16
@@ -189,6 +190,7 @@ define half @test_frem(half %a, half %b) #0 {
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    fwidenlhw $r1 = $r1
 ; CHECK-NEXT:    addd $r12 = $r12, -32
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r16
@@ -932,6 +934,7 @@ define half @test_pow(half %a, half %b) #0 {
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    fwidenlhw $r1 = $r1
 ; CHECK-NEXT:    addd $r12 = $r12, -32
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r16
@@ -1090,6 +1093,7 @@ define half @test_minnum(half %a, half %b) #0 {
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    fwidenlhw $r1 = $r1
 ; CHECK-NEXT:    addd $r12 = $r12, -32
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r16
@@ -1123,6 +1127,7 @@ define half @test_maxnum(half %a, half %b) #0 {
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    fwidenlhw $r1 = $r1
 ; CHECK-NEXT:    addd $r12 = $r12, -32
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r16

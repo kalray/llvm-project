@@ -12,6 +12,7 @@ define i32 @f_setjmp() {
 ; CHECK-NEXT:    make $r0 = buf
 ; CHECK-NEXT:    make $r1 = .LBB0_3
 ; CHECK-NEXT:    addd $r12 = $r12, -128
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 120[$r12] = $r16
