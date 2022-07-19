@@ -65,8 +65,9 @@ define <4 x float> @ffdmdawq(<8 x float> %a, <8 x float> %b, <4 x float> %c) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmawp $r8 = $r5, $r11
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r8
 ; CHECK-NEXT:    ffmawp $r9 = $r3, $r7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r9
 ; CHECK-NEXT:    ret
@@ -84,8 +85,9 @@ define <4 x float> @ffdmdawq(<8 x float> %a, <8 x float> %b, <4 x float> %c) {
 ; V2-NEXT:    ;;
 ; V2-NEXT:    ffdmdawp $r8 = $r4r5, $r10r11
 ; V2-NEXT:    ;;
-; V2-NEXT:    copyd $r0 = $r8
 ; V2-NEXT:    ffdmdawp $r9 = $r2r3, $r6r7
+; V2-NEXT:    ;;
+; V2-NEXT:    copyd $r0 = $r8
 ; V2-NEXT:    ;;
 ; V2-NEXT:    copyd $r1 = $r9
 ; V2-NEXT:    ret
@@ -117,8 +119,9 @@ define <4 x float> @ffdmdawq_rn_s(<8 x float> %a, <8 x float> %b, <4 x float> %c
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmawp.rn.s $r8 = $r5, $r11
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r8
 ; CHECK-NEXT:    ffmawp.rn.s $r9 = $r3, $r7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r9
 ; CHECK-NEXT:    ret
@@ -136,8 +139,9 @@ define <4 x float> @ffdmdawq_rn_s(<8 x float> %a, <8 x float> %b, <4 x float> %c
 ; V2-NEXT:    ;;
 ; V2-NEXT:    ffdmdawp.rn.s $r8 = $r4r5, $r10r11
 ; V2-NEXT:    ;;
-; V2-NEXT:    copyd $r0 = $r8
 ; V2-NEXT:    ffdmdawp.rn.s $r9 = $r2r3, $r6r7
+; V2-NEXT:    ;;
+; V2-NEXT:    copyd $r0 = $r8
 ; V2-NEXT:    ;;
 ; V2-NEXT:    copyd $r1 = $r9
 ; V2-NEXT:    ret

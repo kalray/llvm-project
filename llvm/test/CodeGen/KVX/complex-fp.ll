@@ -31,8 +31,9 @@ define i64 @FADDCWC(i64 %0, i64 %1) {
 ; CHECK-NEXT:    srld $r2 = $r0, 32
 ; CHECK-NEXT:    srld $r3 = $r1, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    fsbfw $r1 = $r3, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    slld $r1 = $r1, 32
 ; CHECK-NEXT:    ;;
@@ -74,12 +75,15 @@ define { i64, i64 } @FADDCWCP(i64 %0, i64 %1, i64 %2, i64 %3) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    faddw $r1 = $r3, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r0 = $r0
-; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    slld $r2 = $r2, 32
 ; CHECK-NEXT:    fsbfw $r3 = $r5, $r4
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    slld $r2 = $r2, 32
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r0 = $r2, $r0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    slld $r3 = $r3, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r1 = $r3, $r1
@@ -137,8 +141,9 @@ define i64 @FMULCWC(i64 %0, i64 %1) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmaw $r4 = $r1, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r1 = $r4
 ; CHECK-NEXT:    ffmsw $r3 = $r1, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r1 = $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    slld $r0 = $r3, 32
 ; CHECK-NEXT:    ;;
@@ -231,8 +236,9 @@ define i64 @FMULWC(i64 %0, i64 %1) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmsw $r4 = $r1, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r1 = $r4
 ; CHECK-NEXT:    ffmaw $r3 = $r1, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r1 = $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    slld $r0 = $r3, 32
 ; CHECK-NEXT:    ;;
@@ -303,6 +309,7 @@ define { i64, i64 } @FSBFCDC(i64 %0, i64 %1, i64 %2, i64 %3) {
 ; CHECK-NEXT:    faddd $r1 = $r3, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fsbfd $r0 = $r2, $r0
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xord $r1 = $r1, -9223372036854775808
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -327,8 +334,9 @@ define i64 @FSBFCWC(i64 %0, i64 %1) {
 ; CHECK-NEXT:    srld $r2 = $r0, 32
 ; CHECK-NEXT:    srld $r3 = $r1, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    faddw $r2 = $r3, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xorw $r1 = $r2, 0x80000000
 ; CHECK-NEXT:    ;;
@@ -372,16 +380,19 @@ define { i64, i64 } @FSBFCWCP(i64 %0, i64 %1, i64 %2, i64 %3) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    faddw $r2 = $r6, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    fsbfw $r1 = $r3, $r1
-; CHECK-NEXT:    xorw $r2 = $r2, 0x80000000
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xorw $r3 = $r4, 0x80000000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    slld $r2 = $r2, 32
+; CHECK-NEXT:    xorw $r2 = $r2, 0x80000000
 ; CHECK-NEXT:    slld $r3 = $r3, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r0 = $r3, $r0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    slld $r2 = $r2, 32
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r1 = $r2, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -456,8 +467,9 @@ define i64 @FADDCWC_2(i64 %0, i64 %1) {
 ; CHECK-NEXT:    srld $r2 = $r0, 32
 ; CHECK-NEXT:    srld $r3 = $r1, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    fsbfw $r1 = $r3, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    slld $r1 = $r1, 32
 ; CHECK-NEXT:    ;;
@@ -498,12 +510,15 @@ define { i64, i64 } @FADDCWCP_2(i64 %0, i64 %1, i64 %2, i64 %3) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    faddw $r1 = $r3, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r0 = $r0
-; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    slld $r2 = $r2, 32
 ; CHECK-NEXT:    fsbfw $r3 = $r5, $r4
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    slld $r2 = $r2, 32
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r0 = $r2, $r0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    slld $r3 = $r3, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r1 = $r3, $r1
@@ -566,8 +581,9 @@ define i64 @FMULCWC_2(i64 %0, i64 %1) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad $r4 = $r1, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowdw $r0 = $r4
 ; CHECK-NEXT:    ffmsd $r3 = $r1, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fnarrowdw $r0 = $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    fnarrowdw $r1 = $r3
@@ -667,8 +683,9 @@ define i64 @FMULWC_2(i64 %0, i64 %1) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmsw $r4 = $r1, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r1 = $r4
 ; CHECK-NEXT:    ffmaw $r3 = $r1, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r1 = $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    slld $r0 = $r3, 32
 ; CHECK-NEXT:    ;;
@@ -706,6 +723,7 @@ define { i64, i64 } @FSBFCDC_2(i64 %0, i64 %1, i64 %2, i64 %3) {
 ; CHECK-NEXT:    faddd $r1 = $r3, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fsbfd $r0 = $r2, $r0
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xord $r1 = $r1, -9223372036854775808
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -730,8 +748,9 @@ define i64 @FSBFCWC_2(i64 %0, i64 %1) {
 ; CHECK-NEXT:    srld $r2 = $r0, 32
 ; CHECK-NEXT:    srld $r3 = $r1, 32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    faddw $r2 = $r3, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xorw $r1 = $r2, 0x80000000
 ; CHECK-NEXT:    ;;
@@ -775,16 +794,19 @@ define { i64, i64 } @FSBFCWCP_2(i64 %0, i64 %1, i64 %2, i64 %3) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    faddw $r2 = $r6, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    fsbfw $r1 = $r3, $r1
-; CHECK-NEXT:    xorw $r2 = $r2, 0x80000000
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xorw $r3 = $r4, 0x80000000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    slld $r2 = $r2, 32
+; CHECK-NEXT:    xorw $r2 = $r2, 0x80000000
 ; CHECK-NEXT:    slld $r3 = $r3, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r0 = $r3, $r0
+; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    slld $r2 = $r2, 32
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r1 = $r2, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -931,6 +953,7 @@ define <2 x double> @FMULCWDC_3(<2 x float> %0, <2 x float> %1) {
 ; CHECK-NEXT:    ffmsd $r2 = $r6, $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad $r0 = $r6, $r4
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;

@@ -473,8 +473,9 @@ define <4 x i64> @mul_add_v4i64_v4i64(<4 x i64> %0, <4 x i64> %1, <4 x i64> %2) 
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r8
 ; CHECK-NEXT:    copyd $r1 = $r9
-; CHECK-NEXT:    copyd $r2 = $r10
 ; CHECK-NEXT:    maddd $r11 = $r7, $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r2 = $r10
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r3 = $r11
 ; CHECK-NEXT:    ret
@@ -936,6 +937,7 @@ define <8 x i32> @div_v8i32_i32(<8 x i32> %0, i32 %1) {
 ; CHECK-NEXT:    sq 64[$r12] = $r24r25
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    so 32[$r12] = $r20r21r22r23
+; CHECK-NEXT:    sxwd $r22 = $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 16[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r3
@@ -943,11 +945,10 @@ define <8 x i32> @div_v8i32_i32(<8 x i32> %0, i32 %1) {
 ; CHECK-NEXT:    copyd $r20 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srad $r0 = $r18, 32
+; CHECK-NEXT:    copyd $r1 = $r22
 ; CHECK-NEXT:    copyd $r21 = $r0
-; CHECK-NEXT:    sxwd $r22 = $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxwd $r0 = $r0
-; CHECK-NEXT:    copyd $r1 = $r22
 ; CHECK-NEXT:    call __divdi3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxwd $r0 = $r18
@@ -1165,13 +1166,13 @@ define <16 x half> @div_v16f16_v16f16(<16 x half> %0, <16 x half> %1) {
 ; CHECK-NEXT:    copyd $r22 = $r2
 ; CHECK-NEXT:    copyd $r24 = $r1
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srld $r1 = $r20, 48
 ; CHECK-NEXT:    copyd $r25 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srld $r0 = $r25, 48
-; CHECK-NEXT:    srld $r1 = $r20, 48
+; CHECK-NEXT:    fwidenlhw $r1 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
-; CHECK-NEXT:    fwidenlhw $r1 = $r1
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srld $r0 = $r25, 32
@@ -1335,13 +1336,13 @@ define <16 x half> @div_v16f16_f16(<16 x half> %0, half %1) {
 ; CHECK-NEXT:    copyd $r20 = $r2
 ; CHECK-NEXT:    copyd $r21 = $r1
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fwidenlhw $r19 = $r4
 ; CHECK-NEXT:    copyd $r22 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srld $r0 = $r22, 48
-; CHECK-NEXT:    fwidenlhw $r19 = $r4
+; CHECK-NEXT:    copyd $r1 = $r19
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
-; CHECK-NEXT:    copyd $r1 = $r19
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srld $r0 = $r22, 32
@@ -1631,13 +1632,13 @@ define <16 x i16> @div_v16i16_v16i16(<16 x i16> %0, <16 x i16> %1) {
 ; CHECK-NEXT:    copyd $r23 = $r2
 ; CHECK-NEXT:    copyd $r24 = $r1
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srad $r1 = $r20, 48
 ; CHECK-NEXT:    copyd $r25 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srad $r0 = $r25, 48
-; CHECK-NEXT:    srad $r1 = $r20, 48
+; CHECK-NEXT:    sxwd $r1 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxwd $r0 = $r0
-; CHECK-NEXT:    sxwd $r1 = $r1
 ; CHECK-NEXT:    call __divdi3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    extfs $r0 = $r25, 47, 32
@@ -2048,8 +2049,9 @@ define <16 x i16> @mul_add_v16i16_v16i16(<16 x i16> %0, <16 x i16> %1, <16 x i16
 ; CHECK-NEXT:    maddhq $r10 = $r6, $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r9
-; CHECK-NEXT:    copyd $r2 = $r10
 ; CHECK-NEXT:    maddhq $r11 = $r7, $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r2 = $r10
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r3 = $r11
 ; CHECK-NEXT:    ret
@@ -2194,16 +2196,16 @@ define <32 x i8> @div_v32i8_v32i8(<32 x i8> %0, <32 x i8> %1) {
 ; CHECK-NEXT:    copyd $r22 = $r2
 ; CHECK-NEXT:    copyd $r24 = $r1
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srld $r1 = $r20, 56
 ; CHECK-NEXT:    copyd $r25 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srld $r0 = $r25, 56
-; CHECK-NEXT:    srld $r1 = $r20, 56
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxbd $r0 = $r0
 ; CHECK-NEXT:    sxbd $r1 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r0 = $r0
+; CHECK-NEXT:    sxbd $r0 = $r0
 ; CHECK-NEXT:    sxwd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sxwd $r0 = $r0
 ; CHECK-NEXT:    call __divdi3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    extfz $r0 = $r25, 55, 48
@@ -2638,16 +2640,16 @@ define <32 x i8> @div_v32i8_i8(<32 x i8> %0, i8 %1) {
 ; CHECK-NEXT:    copyd $r21 = $r2
 ; CHECK-NEXT:    copyd $r22 = $r1
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sxbd $r1 = $r4
 ; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srld $r0 = $r20, 56
-; CHECK-NEXT:    sxbd $r1 = $r4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxbd $r0 = $r0
 ; CHECK-NEXT:    sxwd $r19 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r0 = $r0
+; CHECK-NEXT:    sxbd $r0 = $r0
 ; CHECK-NEXT:    copyd $r1 = $r19
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sxwd $r0 = $r0
 ; CHECK-NEXT:    call __divdi3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    extfz $r0 = $r20, 55, 48
@@ -3386,6 +3388,7 @@ define <4 x double> @p_div_v4f64_v4f64(<4 x double>* nocapture readonly %0, <4 x
 ; CHECK-NEXT:    lo $r20r21r22r23 = 0[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r24r25r26r27 = 0[$r1]
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r21
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r25
@@ -3442,8 +3445,9 @@ define <4 x double> @p_div_v4f64_f64(<4 x double>* nocapture readonly %0, double
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r20r21r22r23 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r21
 ; CHECK-NEXT:    ld $r18 = 0[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r21
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    call __divdf3
@@ -3511,6 +3515,7 @@ define <4 x double> @p_add_v4f64_f64(<4 x double>* nocapture readonly %0, double
 ; CHECK-NEXT:    ld $r4 = 0[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r0r1r2r3 = 0[$r0]
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r5 = $r4
 ; CHECK-NEXT:    copyd $r6 = $r4
 ; CHECK-NEXT:    copyd $r7 = $r4
@@ -3626,6 +3631,7 @@ define <4 x i64> @p_div_v4i64_v4i64(<4 x i64>* nocapture readonly %0, <4 x i64>*
 ; CHECK-NEXT:    lo $r20r21r22r23 = 0[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r24r25r26r27 = 0[$r1]
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r21
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r25
@@ -3682,8 +3688,9 @@ define <4 x i64> @p_div_v4i64_i64(<4 x i64>* nocapture readonly %0, i64* nocaptu
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r20r21r22r23 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r21
 ; CHECK-NEXT:    ld $r18 = 0[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r21
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    call __divdi3
@@ -3825,6 +3832,7 @@ define <8 x float> @p_mul_v8f32_f32(<8 x float>* nocapture readonly %0, float* n
 ; CHECK-NEXT:    lwz $r4 = 0[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r0r1r2r3 = 0[$r0]
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r4 = $r4, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r5 = $r4
@@ -3859,6 +3867,7 @@ define <8 x float> @p_div_v8f32_v8f32(<8 x float>* nocapture readonly %0, <8 x f
 ; CHECK-NEXT:    lo $r20r21r22r23 = 0[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r24r25r26r27 = 0[$r1]
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srld $r0 = $r23, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srld $r1 = $r27, 32
@@ -3945,8 +3954,9 @@ define <8 x float> @p_div_v8f32_f32(<8 x float>* nocapture readonly %0, float* n
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r20r21r22r23 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srld $r0 = $r23, 32
 ; CHECK-NEXT:    lwz $r18 = 0[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srld $r0 = $r23, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    call __divsf3
@@ -4042,6 +4052,7 @@ define <8 x float> @p_add_v8f32_f32(<8 x float>* nocapture readonly %0, float* n
 ; CHECK-NEXT:    lwz $r4 = 0[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r0r1r2r3 = 0[$r0]
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r4 = $r4, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r5 = $r4
@@ -4116,6 +4127,7 @@ define <8 x i32> @p_mul_v8i32_i32(<8 x i32>* nocapture readonly %0, i32* nocaptu
 ; CHECK-NEXT:    lwz $r4 = 0[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r0r1r2r3 = 0[$r0]
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r4 = $r4, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r5 = $r4
@@ -4152,6 +4164,7 @@ define <8 x i32> @p_div_v8i32_v8i32(<8 x i32>* nocapture readonly %0, <8 x i32>*
 ; CHECK-NEXT:    lo $r28r29r30r31 = 0[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r20r21r22r23 = 0[$r1]
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxwd $r0 = $r31
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxwd $r1 = $r23
@@ -4253,8 +4266,9 @@ define <8 x i32> @p_div_v8i32_i32(<8 x i32>* nocapture readonly %0, i32* nocaptu
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r28r29r30r31 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r0 = $r31
 ; CHECK-NEXT:    lws $r18 = 0[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sxwd $r0 = $r31
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    call __divdi3
@@ -4360,6 +4374,7 @@ define <8 x i32> @p_add_v8i32_i32(<8 x i32>* nocapture readonly %0, i32* nocaptu
 ; CHECK-NEXT:    lwz $r4 = 0[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r0r1r2r3 = 0[$r0]
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r4 = $r4, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addwp $r0 = $r4, $r0
@@ -4436,6 +4451,7 @@ define <16 x half> @p_mul_v16f16_f16(<16 x half>* nocapture readonly %0, half* n
 ; CHECK-NEXT:    lhz $r1 = 0[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r3 = $r1, 0x201020102010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmulhq $r0 = $r4, $r3
@@ -4474,6 +4490,7 @@ define <16 x half> @p_div_v16f16_v16f16(<16 x half>* nocapture readonly %0, <16 
 ; CHECK-NEXT:    lo $r20r21r22r23 = 0[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r24r25r26r27 = 0[$r1]
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srld $r0 = $r20, 48
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
@@ -4647,6 +4664,7 @@ define <16 x half> @p_div_v16f16_f16(<16 x half>* nocapture readonly %0, half* n
 ; CHECK-NEXT:    lo $r20r21r22r23 = 0[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lhz $r0 = 0[$r1]
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srld $r1 = $r20, 48
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fwidenlhw $r0 = $r1
@@ -4817,6 +4835,7 @@ define <16 x half> @p_add_v16f16_f16(<16 x half>* nocapture readonly %0, half* n
 ; CHECK-NEXT:    lhz $r1 = 0[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r3 = $r1, 0x201020102010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    faddhq $r0 = $r4, $r3
@@ -4844,6 +4863,7 @@ define <16 x half> @p_mul_add_v16f16_v16f16(<16 x half>* nocapture readonly %0, 
 ; CHECK-NEXT:    lo $r8r9r10r11 = 0[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r32r33r34r35 = 0[$r2]
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmulhq $r0 = $r5, $r9
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmulhq $r1 = $r4, $r8
@@ -4905,6 +4925,7 @@ define <16 x i16> @p_mul_v16i16_i16(<16 x i16>* nocapture readonly %0, i16* noca
 ; CHECK-NEXT:    lhz $r1 = 0[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r3 = $r1, 0x201020102010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mulhq $r0 = $r3, $r4
@@ -4945,6 +4966,7 @@ define <16 x i16> @p_div_v16i16_v16i16(<16 x i16>* nocapture readonly %0, <16 x 
 ; CHECK-NEXT:    lo $r24r25r26r27 = 0[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r28r29r30r31 = 0[$r1]
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srad $r0 = $r24, 48
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxwd $r0 = $r0
@@ -5139,8 +5161,9 @@ define <16 x i16> @p_div_v16i16_i16(<16 x i16>* nocapture readonly %0, i16* noca
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r24r25r26r27 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r0 = $r24, 48
 ; CHECK-NEXT:    lhs $r18 = 0[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srad $r0 = $r24, 48
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxwd $r0 = $r0
 ; CHECK-NEXT:    copyd $r1 = $r18
@@ -5317,6 +5340,7 @@ define <16 x i16> @p_add_v16i16_i16(<16 x i16>* nocapture readonly %0, i16* noca
 ; CHECK-NEXT:    lhz $r1 = 0[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r3 = $r1, 0x201020102010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addhq $r0 = $r3, $r4
@@ -5373,6 +5397,7 @@ define <32 x i8> @p_mul_v32i8_v32i8(<32 x i8>* nocapture readonly %0, <32 x i8>*
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r0r1r2r3 = 0[$r1]
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxlbhq $r5 = $r5
 ; CHECK-NEXT:    sxmbhq $r10 = $r5
 ; CHECK-NEXT:    ;;
@@ -5436,6 +5461,7 @@ define <32 x i8> @p_mul_v32i8_i8(<32 x i8>* nocapture readonly %0, i8* nocapture
 ; CHECK-NEXT:    lbz $r1 = 0[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r0 = $r1, 0x1010101
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxmbhq $r1 = $r4
@@ -5471,9 +5497,10 @@ define <32 x i8> @p_mul_v32i8_i8(<32 x i8>* nocapture readonly %0, i8* nocapture
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r2 = $r6, 0x40100401
 ; CHECK-NEXT:    mulhq $r4 = $r2, $r7
-; CHECK-NEXT:    sbmm8 $r6 = $r8, 0x40100401
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r2 = $r5, 63, 32
+; CHECK-NEXT:    sbmm8 $r6 = $r8, 0x40100401
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r3 = $r4, 0x40100401
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r3 = $r6, 63, 32
@@ -5506,6 +5533,7 @@ define <32 x i8> @p_div_v32i8_v32i8(<32 x i8>* nocapture readonly %0, <32 x i8>*
 ; CHECK-NEXT:    lo $r24r25r26r27 = 0[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r28r29r30r31 = 0[$r1]
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srld $r0 = $r24, 56
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxbd $r0 = $r0
@@ -5951,8 +5979,9 @@ define <32 x i8> @p_div_v32i8_i8(<32 x i8>* nocapture readonly %0, i8* nocapture
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r24r25r26r27 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srld $r0 = $r24, 56
 ; CHECK-NEXT:    lbs $r18 = 0[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srld $r0 = $r24, 56
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxbd $r0 = $r0
 ; CHECK-NEXT:    copyd $r1 = $r18
@@ -6303,6 +6332,7 @@ define <32 x i8> @p_add_v32i8_v32i8(<32 x i8>* nocapture readonly %0, <32 x i8>*
 ; V1-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; V1-NEXT:    ;;
 ; V1-NEXT:    lo $r0r1r2r3 = 0[$r1]
+; V1-NEXT:    ;;
 ; V1-NEXT:    andd $r8 = $r4, 0x7f7f7f7f7f7f7f7f
 ; V1-NEXT:    andd $r10 = $r5, 0x7f7f7f7f7f7f7f7f
 ; V1-NEXT:    ;;
@@ -6360,6 +6390,7 @@ define <32 x i8> @p_add_v32i8_i8(<32 x i8>* nocapture readonly %0, i8* nocapture
 ; V1-NEXT:    lbz $r1 = 0[$r1]
 ; V1-NEXT:    ;;
 ; V1-NEXT:    lo $r4r5r6r7 = 0[$r0]
+; V1-NEXT:    ;;
 ; V1-NEXT:    sbmm8 $r0 = $r1, 0x101010101010101
 ; V1-NEXT:    ;;
 ; V1-NEXT:    andd $r1 = $r4, 0x7f7f7f7f7f7f7f7f
@@ -6396,6 +6427,7 @@ define <32 x i8> @p_add_v32i8_i8(<32 x i8>* nocapture readonly %0, i8* nocapture
 ; V2-NEXT:    lbz $r1 = 0[$r1]
 ; V2-NEXT:    ;;
 ; V2-NEXT:    lo $r4r5r6r7 = 0[$r0]
+; V2-NEXT:    ;;
 ; V2-NEXT:    sbmm8 $r3 = $r1, 0x101010101010101
 ; V2-NEXT:    ;;
 ; V2-NEXT:    addbo $r0 = $r3, $r4
@@ -6420,6 +6452,7 @@ define <32 x i8> @p_mul_add_v32i8_v32i8(<32 x i8>* nocapture readonly %0, <32 x 
 ; V1-NEXT:    lo $r8r9r10r11 = 0[$r1]
 ; V1-NEXT:    ;;
 ; V1-NEXT:    lo $r32r33r34r35 = 0[$r2]
+; V1-NEXT:    ;;
 ; V1-NEXT:    sxmbhq $r0 = $r7
 ; V1-NEXT:    sxmbhq $r15 = $r4
 ; V1-NEXT:    ;;
@@ -6516,6 +6549,7 @@ define <32 x i8> @p_mul_add_v32i8_v32i8(<32 x i8>* nocapture readonly %0, <32 x 
 ; V2-NEXT:    lo $r4r5r6r7 = 0[$r1]
 ; V2-NEXT:    ;;
 ; V2-NEXT:    lo $r32r33r34r35 = 0[$r2]
+; V2-NEXT:    ;;
 ; V2-NEXT:    sxmbhq $r0 = $r11
 ; V2-NEXT:    sxmbhq $r15 = $r8
 ; V2-NEXT:    ;;
@@ -6596,9 +6630,9 @@ define <4 x i64> @fbnsigned_long_4__division_imm(<4 x i64> %a) {
 ; V1-NEXT:    ;;
 ; V1-NEXT:    so 32[$r12] = $r0r1r2r3
 ; V1-NEXT:    muldt $r6r7 = $r0, 0x5555555555555556
-; V1-NEXT:    srld $r4 = $r5, 63
 ; V1-NEXT:    ;;
 ; V1-NEXT:    muldt $r8r9 = $r2, 0x5555555555555556
+; V1-NEXT:    srld $r4 = $r5, 63
 ; V1-NEXT:    ;;
 ; V1-NEXT:    muldt $r10r11 = $r3, 0x5555555555555556
 ; V1-NEXT:    srld $r4 = $r7, 63
@@ -6606,9 +6640,10 @@ define <4 x i64> @fbnsigned_long_4__division_imm(<4 x i64> %a) {
 ; V1-NEXT:    ;;
 ; V1-NEXT:    adduwd $r4 = $r4, $r7
 ; V1-NEXT:    srld $r6 = $r9, 63
-; V1-NEXT:    srld $r7 = $r11, 63
 ; V1-NEXT:    ;;
 ; V1-NEXT:    adduwd $r6 = $r6, $r9
+; V1-NEXT:    srld $r7 = $r11, 63
+; V1-NEXT:    ;;
 ; V1-NEXT:    adduwd $r7 = $r7, $r11
 ; V1-NEXT:    ;;
 ; V1-NEXT:    so 0[$r12] = $r4r5r6r7
@@ -6640,9 +6675,10 @@ define <4 x i64> @fbnsigned_long_4__division_imm(<4 x i64> %a) {
 ; V2-NEXT:    ;;
 ; V2-NEXT:    adduwd $r4 = $r6, $r9
 ; V2-NEXT:    srld $r6 = $r11, 63
-; V2-NEXT:    srld $r7 = $r17, 63
 ; V2-NEXT:    ;;
 ; V2-NEXT:    adduwd $r6 = $r6, $r11
+; V2-NEXT:    srld $r7 = $r17, 63
+; V2-NEXT:    ;;
 ; V2-NEXT:    adduwd $r7 = $r7, $r17
 ; V2-NEXT:    ;;
 ; V2-NEXT:    so 0[$r12] = $r4r5r6r7

@@ -317,6 +317,7 @@ declare void @llvm.lifetime.end.p0i8(i64 immarg, i8* nocapture)
 define i32 @main(i32 %argc, i8** nocapture readnone %argv)  {
 ; CHECK-LABEL: main:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = .L.str
 ; CHECK-NEXT:    addd $r12 = $r12, -128
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
@@ -329,7 +330,6 @@ define i32 @main(i32 %argc, i8** nocapture readnone %argv)  {
 ; CHECK-NEXT:    so 24[$r12] = $r20r21r22r23
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
-; CHECK-NEXT:    make $r0 = .L.str
 ; CHECK-NEXT:    call BENCH_START
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r18 = $r12, 5

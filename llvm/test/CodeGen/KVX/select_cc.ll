@@ -168,6 +168,7 @@ define void @test_select_wide_reg(<512 x i1> * %V, i1 %cc){
 ; CHECK-NEXT:    lv $a3 = 32[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a2 = 0[$r0]
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    alignv $a3 = $a3, $a0, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    alignv $a0 = $a2, $a1, $r1
@@ -205,9 +206,10 @@ define void @test_select_matrix_reg(<1024 x i1> * %V, i1 %cc){
 ; CHECK-NEXT:    lv $a6 = 64[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a5 = 32[$r0]
-; CHECK-NEXT:    alignv $a7 = $a7, $a0, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a0 = 0[$r0]
+; CHECK-NEXT:    alignv $a7 = $a7, $a0, $r1
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    alignv $a6 = $a6, $a1, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    alignv $a1 = $a5, $a2, $r1

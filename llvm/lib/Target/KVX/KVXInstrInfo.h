@@ -71,6 +71,10 @@ public:
                             const MachineBasicBlock *MBB,
                             const MachineFunction &MF) const override;
 
+  bool isSchedulingBoundaryPostRA(const MachineInstr &MI,
+                                  const MachineBasicBlock *MBB,
+                                  const MachineFunction &MF) const override;
+
   MachineBasicBlock *getBranchDestBlock(const MachineInstr &MI) const override;
 
   bool isPredicable(const MachineInstr &MI) const override;
@@ -96,6 +100,9 @@ public:
 
   bool SubsumesPredicate(ArrayRef<MachineOperand> Pred1,
                          ArrayRef<MachineOperand> Pred2) const override;
+
+  bool isProlog(const MachineInstr *MI) const;
+  bool isEpilog(const MachineInstr *MI) const;
 };
 
 } // namespace llvm

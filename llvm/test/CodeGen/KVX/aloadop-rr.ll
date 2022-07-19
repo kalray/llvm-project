@@ -18,8 +18,9 @@ define void @foo32() {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r0 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    slld $r1 = $r1, 2
 ; CHECK-NEXT:    fence
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    slld $r1 = $r1, 2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_1: # %entry
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
@@ -55,8 +56,9 @@ define void @foo64() {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r0 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    slld $r1 = $r1, 3
 ; CHECK-NEXT:    fence
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    slld $r1 = $r1, 3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB1_1: # %entry
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1

@@ -8,14 +8,14 @@ target triple = "kvx-kalray-cos"
 define i32 @main(i32 %0, i8** nocapture readnone %1) local_unnamed_addr {
 ; CHECK-LABEL: main:
 ; CHECK:       # %bb.0:
+; CHECK-NEXT:    make $r0 = 0x2710
+; CHECK-NEXT:    make $r1 = 8
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
-; CHECK-NEXT:    make $r0 = 0x2710
-; CHECK-NEXT:    make $r1 = 8
 ; CHECK-NEXT:    call polybench_alloc_data
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r0 = 0x2710

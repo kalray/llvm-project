@@ -368,10 +368,10 @@ define <4 x i32> @test_call_flipped(<4 x i32> %a, <4 x i32> %b) #0 {
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    copyd $r4 = $r1
 ; CHECK-NEXT:    copyd $r5 = $r0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    copyd $r2 = $r5
 ; CHECK-NEXT:    copyd $r3 = $r4

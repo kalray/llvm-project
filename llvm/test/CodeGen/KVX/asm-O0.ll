@@ -212,8 +212,9 @@ define float @asm_clobber_multiple_quad(float %a, <2 x i64> %b, <4 x i64> %c) {
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    lq $r0r1 = 32[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r0, $r1
 ; CHECK-NEXT:    ld $r2 = 0[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r0 = $r0, $r2
 ; CHECK-NEXT:    call __floatdisf
@@ -342,10 +343,10 @@ define i64 @local_regs(i32 %a, i64 %b, i64 %c, i64 %d, i64 %e, i64 %f, i64 %g) {
 ; CHECK-LABEL: local_regs:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    copyd $r7 = $r1
+; CHECK-NEXT:    zxwd $r8 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, -128
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 124[$r12] = $r0
-; CHECK-NEXT:    zxwd $r8 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 112[$r12] = $r7
 ; CHECK-NEXT:    ;;

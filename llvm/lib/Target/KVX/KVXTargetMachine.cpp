@@ -13,6 +13,7 @@
 
 #include "KVXTargetMachine.h"
 #include "KVX.h"
+#include "KVXPostScheduler.h"
 #include "KVXTargetObjectFile.h"
 #include "KVXTargetTransformInfo.h"
 #include "llvm/ADT/STLExtras.h"
@@ -32,8 +33,8 @@ static cl::opt<bool>
                   cl::desc("Disable Hardware Loops for KVX target"));
 
 static cl::opt<bool>
-DisableBundling("disable-kvx-bundling", cl::Hidden,
-                cl::desc("Disable Bundling Pass for KVX target"));
+    ForceDisableBundling("disable-kvx-bundling", cl::Hidden,
+                         cl::desc("Disable Bundling Pass for KVX target"));
 
 static cl::opt<bool> DisableLoadStorePacking(
     "disable-kvx-loadstore-packing", cl::Hidden, cl::init(true),
@@ -135,7 +136,7 @@ public:
       disablePass(&EarlyTailDuplicateID);
     }
     if (TM.getOptLevel() != CodeGenOpt::None)
-      substitutePass(&PostRASchedulerID, &PostMachineSchedulerID);
+      disablePass(&PostRASchedulerID);
   }
 
   KVXTargetMachine &getKVXTargetMachine() const {
@@ -182,7 +183,14 @@ TargetPassConfig *KVXTargetMachine::createPassConfig(PassManagerBase &PM) {
 
 ScheduleDAGInstrs *
 KVXPassConfig::createPostMachineScheduler(MachineSchedContext *C) const {
-  return createGenericSchedPostRA(C);
+  // Disable bundling at -O0 and -O1
+  bool DisableBundling =
+      ForceDisableBundling || getOptLevel() <= CodeGenOpt::Less;
+  if (DisableBundling)
+    return new KVXScheduleDAGMI(C, std::make_unique<PostGenericScheduler>(C),
+                                /*RemoveKillFlags=*/true, true);
+  return new KVXScheduleDAGMI(C, std::make_unique<KVXPostScheduler>(C),
+                              /*RemoveKillFlags=*/true, false);
 }
 
 void KVXPassConfig::addIRPasses() {
@@ -214,8 +222,8 @@ void KVXPassConfig::addPreSched2() {
 
 void KVXPassConfig::addPreEmitPass() {
   addPass(createKVXExpandPseudoPass(KVX::PRE_BUNDLE));
-  if ((getOptLevel() >= CodeGenOpt::Default) && (!DisableBundling))
-    addPass(createKVXPacketizerPass());
+  if (getOptLevel() != CodeGenOpt::None)
+    addPass(&PostMachineSchedulerID);
 
   addPass(createKVXExpandPseudoPass(KVX::PRE_EMIT));
 }

@@ -24,20 +24,20 @@ target triple = "kvx-kalray-cos"
 define i32 @d() {
 ; CHECK-LABEL: d:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = a
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 16[$r12] = $r20
+; CHECK-NEXT:    make $r20 = b
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 0[$r12] = $r18r19
-; CHECK-NEXT:    make $r0 = a
 ; CHECK-NEXT:    make $r18 = c
 ; CHECK-NEXT:    make $r19 = 0x7d0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lws $r0 = 0[$r0]
-; CHECK-NEXT:    make $r20 = b
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 0[$r18] = $r0
 ; CHECK-NEXT:    ;;

@@ -303,10 +303,10 @@ define <4 x float> @test_call_flipped(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    copyd $r4 = $r1
 ; CHECK-NEXT:    copyd $r5 = $r0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    copyd $r2 = $r5
 ; CHECK-NEXT:    copyd $r3 = $r4
@@ -704,6 +704,7 @@ define <4 x i16> @test_fptosi_i16(<4 x float> %a) #0 {
 ; CHECK-NEXT:    fixedwp.rz $r1 = $r1, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedwp.rz $r0 = $r0, 0
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x20100201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x20100201
@@ -721,6 +722,7 @@ define <4 x i16> @test_fptoui_i16(<4 x float> %a) #0 {
 ; CHECK-NEXT:    fixeduwp.rz $r1 = $r1, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixeduwp.rz $r0 = $r0, 0
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x20100201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x20100201
@@ -738,6 +740,7 @@ define <4 x i8> @test_fptosi_i8(<4 x float> %a) #0 {
 ; CHECK-NEXT:    fixedwp.rz $r1 = $r1, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedwp.rz $r0 = $r0, 0
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x1001
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
@@ -755,6 +758,7 @@ define <4 x i8> @test_fptoui_i8(<4 x float> %a) #0 {
 ; CHECK-NEXT:    fixeduwp.rz $r1 = $r1, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixeduwp.rz $r0 = $r0, 0
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x1001
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
@@ -1544,10 +1548,10 @@ define <4 x float> @test_minnum(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK-NEXT:    copyd $r19 = $r2
 ; CHECK-NEXT:    copyd $r20 = $r1
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srad $r1 = $r19, 32
 ; CHECK-NEXT:    copyd $r21 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srad $r0 = $r21, 32
-; CHECK-NEXT:    srad $r1 = $r19, 32
 ; CHECK-NEXT:    call fminf
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r21
@@ -1615,10 +1619,10 @@ define <4 x float> @test_maxnum(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK-NEXT:    copyd $r19 = $r2
 ; CHECK-NEXT:    copyd $r20 = $r1
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    srad $r1 = $r19, 32
 ; CHECK-NEXT:    copyd $r21 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    srad $r0 = $r21, 32
-; CHECK-NEXT:    srad $r1 = $r19, 32
 ; CHECK-NEXT:    call fmaxf
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r21

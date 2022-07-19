@@ -71,6 +71,7 @@ target triple = "kvx-kalray-cos"
 define i32 @stackrealign1(){
 ; CHECK-LABEL: stackrealign1:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 7
 ; CHECK-NEXT:    addd $r12 = $r12, -256
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
@@ -80,7 +81,6 @@ define i32 @stackrealign1(){
 ; CHECK-NEXT:    addd $r14 = $r12, 240
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 232[$r12] = $r31
-; CHECK-NEXT:    make $r0 = 7
 ; CHECK-NEXT:    andd $r31 = $r12, -128
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 228[$r31] = $r0
@@ -148,8 +148,9 @@ define i32 @stackrealign2(i32 %n){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfd $r0 = $r0, $r12
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.wlez $r1 ? .LBB1_13
 ; CHECK-NEXT:    copyd $r12 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cb.wlez $r1 ? .LBB1_13
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %for.body.preheader
 ; CHECK-NEXT:    make $r3 = 0
@@ -428,44 +429,42 @@ declare i32 @other2(i32*, i32, i32*) #2
 define i64 @stackrealign3(i32 %x){
 ; CHECK-LABEL: stackrealign3:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r1 = 3
 ; CHECK-NEXT:    addd $r12 = $r12, -640
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 632[$r12] = $r16
+; CHECK-NEXT:    make $r2 = 2
+; CHECK-NEXT:    make $r3 = 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 624[$r12] = $r14
-; CHECK-NEXT:    addd $r14 = $r12, 624
+; CHECK-NEXT:    make $r4 = 8
+; CHECK-NEXT:    make $r5 = 7
+; CHECK-NEXT:    make $r8 = 12
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 616[$r12] = $r31
+; CHECK-NEXT:    make $r9 = 11
+; CHECK-NEXT:    andd $r31 = $r12, -128
+; CHECK-NEXT:    make $r32 = 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 608[$r12] = $r18
 ; CHECK-NEXT:    make $r0 = 4
-; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    andd $r31 = $r12, -128
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r1 = 3
-; CHECK-NEXT:    make $r2 = 2
-; CHECK-NEXT:    make $r3 = 1
 ; CHECK-NEXT:    addd $r15 = $r31, 128
+; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    so 480[$r31] = $r0r1r2r3
 ; CHECK-NEXT:    addd $r0 = $r31, 380
 ; CHECK-NEXT:    addd $r1 = $r31, 384
-; CHECK-NEXT:    make $r4 = 8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r5 = 7
-; CHECK-NEXT:    make $r8 = 12
-; CHECK-NEXT:    make $r9 = 11
-; CHECK-NEXT:    make $r32 = 16
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r6 = 6
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r7 = 5
 ; CHECK-NEXT:    make $r10 = 10
 ; CHECK-NEXT:    make $r33 = 15
+; CHECK-NEXT:    make $r34 = 14
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    so 448[$r31] = $r4r5r6r7
 ; CHECK-NEXT:    make $r11 = 9
-; CHECK-NEXT:    make $r34 = 14
+; CHECK-NEXT:    addd $r14 = $r12, 624
 ; CHECK-NEXT:    make $r35 = 13
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    so 416[$r31] = $r8r9r10r11
@@ -527,6 +526,7 @@ define i32 @stackrealign4(i32 %n){
 ; CHECK-NEXT:    addd $r14 = $r12, 496
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    so 464[$r12] = $r28r29r30r31
+; CHECK-NEXT:    andd $r31 = $r12, -128
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    so 432[$r12] = $r24r25r26r27
 ; CHECK-NEXT:    ;;
@@ -534,7 +534,6 @@ define i32 @stackrealign4(i32 %n){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 384[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r8 = $r0
-; CHECK-NEXT:    andd $r31 = $r12, -128
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxwd $r0 = $r8
 ; CHECK-NEXT:    ;;
@@ -544,8 +543,9 @@ define i32 @stackrealign4(i32 %n){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfd $r0 = $r0, $r12
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.wlez $r8 ? .LBB3_13
 ; CHECK-NEXT:    copyd $r12 = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cb.wlez $r8 ? .LBB3_13
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %for.body.preheader
 ; CHECK-NEXT:    make $r3 = 0
@@ -675,48 +675,49 @@ define i32 @stackrealign4(i32 %n){
 ; CHECK-NEXT:    make $r16 = g11
 ; CHECK-NEXT:    make $r32 = g13
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 248[$r31] = $r1
 ; CHECK-NEXT:    make $r34 = g15
 ; CHECK-NEXT:    make $r36 = g17
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r1 = 0[$r2]
+; CHECK-NEXT:    sd 248[$r31] = $r1
 ; CHECK-NEXT:    make $r38 = g19
 ; CHECK-NEXT:    make $r40 = g21
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lwz $r1 = 0[$r2]
 ; CHECK-NEXT:    make $r2 = g4
 ; CHECK-NEXT:    make $r42 = g23
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r43 = g25
 ; CHECK-NEXT:    make $r45 = g27
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 240[$r31] = $r1
 ; CHECK-NEXT:    make $r47 = g29
 ; CHECK-NEXT:    make $r49 = g31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r1 = 0[$r5]
+; CHECK-NEXT:    sd 240[$r31] = $r1
 ; CHECK-NEXT:    make $r51 = g33
 ; CHECK-NEXT:    make $r53 = g35
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lwz $r1 = 0[$r5]
 ; CHECK-NEXT:    make $r55 = g37
 ; CHECK-NEXT:    make $r57 = g39
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r59 = g41
 ; CHECK-NEXT:    make $r61 = g43
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 232[$r31] = $r1
 ; CHECK-NEXT:    make $r19 = g47
 ; CHECK-NEXT:    make $r63 = g45
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r1 = 0[$r2]
+; CHECK-NEXT:    sd 232[$r31] = $r1
 ; CHECK-NEXT:    make $r21 = g49
 ; CHECK-NEXT:    make $r23 = g51
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lwz $r1 = 0[$r2]
 ; CHECK-NEXT:    make $r2 = g6
 ; CHECK-NEXT:    make $r25 = g53
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 224[$r31] = $r1
 ; CHECK-NEXT:    make $r27 = g55
 ; CHECK-NEXT:    make $r29 = g57
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 224[$r31] = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r1 = 0[$r7]
 ; CHECK-NEXT:    ;;

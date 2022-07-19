@@ -123,8 +123,9 @@ define i32 @add(i32 %n, ...) {
 ; FP-NONE-NEXT:    sd 0[$r12] = $r5
 ; FP-NONE-NEXT:    addw $r1 = $r6, $r1
 ; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:    addw $r1 = $r7, $r1
 ; FP-NONE-NEXT:    lwz $r4 = 56[$r4]
+; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    addw $r1 = $r7, $r1
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    addw $r1 = $r4, $r1
 ; FP-NONE-NEXT:    cb.wnez $r3 ? .LBB0_9
@@ -261,8 +262,9 @@ define i32 @add(i32 %n, ...) {
 ; FP-ALL-NEXT:    sd -8[$r14] = $r5
 ; FP-ALL-NEXT:    addw $r1 = $r6, $r1
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    addw $r1 = $r7, $r1
 ; FP-ALL-NEXT:    lwz $r4 = 56[$r4]
+; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    addw $r1 = $r7, $r1
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    addw $r1 = $r4, $r1
 ; FP-ALL-NEXT:    cb.wnez $r3 ? .LBB0_9

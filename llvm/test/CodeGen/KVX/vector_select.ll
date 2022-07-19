@@ -8,6 +8,7 @@ define void @test_v1_select(<1 x i8> * %m, <1 x i8> * %n){
 ; CHECK-NEXT:    lbz $r2 = 0[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lbs $r1 = 0[$r1]
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compw.eq $r3 = $r2, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compw.gt $r4 = $r1, -1
@@ -37,6 +38,7 @@ define void @test_v2_select(<2 x i8> * %m, <2 x i8> * %n){
 ; CHECK-NEXT:    make $r5 = -1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lhz $r1 = 0[$r1]
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x20001
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x20001
@@ -74,6 +76,7 @@ define void @test_v3_select(<3 x i8> * %m, <3 x i8> * %n){
 ; CHECK-NEXT:    make $r4 = 0xffffffffffff
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r1 = 0[$r1]
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x8000400020001
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x8000400020001
@@ -116,6 +119,7 @@ define void @test_v4_select(<4 x i8> * %m, <4 x i8> * %n){
 ; CHECK-NEXT:    make $r5 = -1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r1 = 0[$r1]
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x8000400020001
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x8000400020001
@@ -153,6 +157,7 @@ define void @test_v8_select(<8 x i8> * %m, <8 x i8> * %n){
 ; CHECK-NEXT:    make $r4 = -1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r1 = 0[$r1]
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x8000400020001
 ; CHECK-NEXT:    sbmm8 $r5 = $r2, 0x80004000200010
 ; CHECK-NEXT:    ;;
@@ -201,6 +206,7 @@ define void @test_v16_select(<16 x i8> * %m, <16 x i8> * %n){
 ; CHECK-NEXT:    make $r15 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lq $r4r5 = 0[$r1]
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r1 = $r2, 0x8000400020001
 ; CHECK-NEXT:    sbmm8 $r6 = $r3, 0x8000400020001
 ; CHECK-NEXT:    ;;
@@ -273,6 +279,7 @@ define void @test_v32_select(<32 x i8> * %m, <32 x i8> * %n){
 ; CHECK-NEXT:    make $r17 = -1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r1]
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r9 = $r9, 0x80004000200010
 ; CHECK-NEXT:    sbmm8 $r16 = $r9, 0x8000400020001
 ; CHECK-NEXT:    ;;

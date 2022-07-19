@@ -13,28 +13,27 @@ define dso_local i32 @testalloca(i32 %n) local_unnamed_addr  {
 ; CHECK-NEXT:    cb.dgtz $r16 ? .LBB0_5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %entry
+; CHECK-NEXT:    sxwd $r1 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r16
+; CHECK-NEXT:    addx4d $r1 = $r1, 31
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 16[$r12] = $r14
-; CHECK-NEXT:    sxwd $r1 = $r0
-; CHECK-NEXT:    addd $r14 = $r12, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addx4d $r1 = $r1, 31
+; CHECK-NEXT:    andd $r1 = $r1, -32
 ; CHECK-NEXT:    get $r2 = $sr
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r1 = $r1, -32
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfd $r1 = $r1, $r12
+; CHECK-NEXT:    addd $r14 = $r12, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfd $r2 = $r1, $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.dgtz $r2 ? .LBB0_5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.wlez $r0 ? .LBB0_3
 ; CHECK-NEXT:    copyd $r12 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cb.wlez $r0 ? .LBB0_3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.2: # %for.body.preheader
 ; CHECK-NEXT:    make $r2 = 0
@@ -116,6 +115,7 @@ define dso_local i32 @testrealign() local_unnamed_addr  {
 ; CHECK-NEXT:    cb.dgtz $r16 ? .LBB1_2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %entry
+; CHECK-NEXT:    make $r0 = 7
 ; CHECK-NEXT:    addd $r12 = $r12, -256
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
@@ -125,7 +125,6 @@ define dso_local i32 @testrealign() local_unnamed_addr  {
 ; CHECK-NEXT:    addd $r14 = $r12, 240
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 232[$r12] = $r31
-; CHECK-NEXT:    make $r0 = 7
 ; CHECK-NEXT:    andd $r31 = $r12, -128
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 228[$r31] = $r0

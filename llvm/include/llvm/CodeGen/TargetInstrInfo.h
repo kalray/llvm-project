@@ -1461,6 +1461,13 @@ public:
                                     const MachineBasicBlock *MBB,
                                     const MachineFunction &MF) const;
 
+  /// isSchedulingBoundary specialized for PostRA Machine Scheduler
+  virtual bool isSchedulingBoundaryPostRA(const MachineInstr &MI,
+                                          const MachineBasicBlock *MBB,
+                                          const MachineFunction &MF) const {
+    return isSchedulingBoundary(MI, MBB, MF);
+  }
+
   /// For VLIW architectures, returns true if the instruction should be
   /// scheduled at a different cycle than other instructions of the region.
   virtual bool isSoloInstruction(const MachineInstr &MI) const { return false; }

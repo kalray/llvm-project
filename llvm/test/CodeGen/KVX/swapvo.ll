@@ -10,11 +10,11 @@ target triple = "kvx-kalray-cos"
 define i32 @main() {
 ; CHECK-LABEL: main:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r5 = 1
 ; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 56[$r12] = $r16
-; CHECK-NEXT:    make $r5 = 1
 ; CHECK-NEXT:    make $r6 = 2
 ; CHECK-NEXT:    make $r7 = 3
 ; CHECK-NEXT:    ;;
@@ -28,12 +28,13 @@ define i32 @main() {
 ; CHECK-NEXT:    movefo $r0r1r2r3 = $a0
 ; CHECK-NEXT:    make $r4 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 0[$r12] = $a0
 ; CHECK-NEXT:    make $r0 = .L.str
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 0[$r12] = $a0
 ; CHECK-NEXT:    copyd $r1 = $r4
 ; CHECK-NEXT:    copyd $r2 = $r5
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r3 = $r6
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r4 = $r7
 ; CHECK-NEXT:    call printf
 ; CHECK-NEXT:    ;;

@@ -15,16 +15,16 @@ target triple = "kvx-kalray-cos"
 define i32 @h() {
 ; FP-NONE-LABEL: h:
 ; FP-NONE:       # %bb.0: # %entry
+; FP-NONE-NEXT:    make $r0 = 0
 ; FP-NONE-NEXT:    addd $r12 = $r12, -96
 ; FP-NONE-NEXT:    get $r16 = $ra
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    sd 88[$r12] = $r16
-; FP-NONE-NEXT:    make $r0 = 0
-; FP-NONE-NEXT:    make $r4 = 9
-; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    copyd $r1 = $r0
 ; FP-NONE-NEXT:    copyd $r2 = $r0
+; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    copyd $r3 = $r0
+; FP-NONE-NEXT:    make $r4 = 9
 ; FP-NONE-NEXT:    copyd $r5 = $r0
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    so 32[$r12] = $r0r1r2r3
@@ -45,18 +45,18 @@ define i32 @h() {
 ;
 ; FP-ALL-LABEL: h:
 ; FP-ALL:       # %bb.0: # %entry
+; FP-ALL-NEXT:    make $r0 = 0
 ; FP-ALL-NEXT:    addd $r12 = $r12, -96
 ; FP-ALL-NEXT:    get $r16 = $ra
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    sd 88[$r12] = $r16
+; FP-ALL-NEXT:    make $r4 = 9
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    sd 80[$r12] = $r14
-; FP-ALL-NEXT:    make $r0 = 0
-; FP-ALL-NEXT:    make $r4 = 9
-; FP-ALL-NEXT:    addd $r14 = $r12, 80
-; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    copyd $r1 = $r0
 ; FP-ALL-NEXT:    copyd $r2 = $r0
+; FP-ALL-NEXT:    addd $r14 = $r12, 80
+; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    copyd $r3 = $r0
 ; FP-ALL-NEXT:    copyd $r5 = $r0
 ; FP-ALL-NEXT:    ;;

@@ -63,6 +63,7 @@ define <8 x i8> @test_fma(<8 x i8> %a, <8 x i8> %b, <8 x i8> %c) #0 {
 ; CV1-NEXT:    mulhq $r3 = $r4, $r3
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    mulhq $r1 = $r1, $r2
+; CV1-NEXT:    ;;
 ; CV1-NEXT:    sbmm8 $r2 = $r3, 0x40100401
 ; CV1-NEXT:    andd $r3 = $r0, 0x7f7f7f7f7f7f7f7f
 ; CV1-NEXT:    ;;
@@ -90,6 +91,7 @@ define <8 x i8> @test_fma(<8 x i8> %a, <8 x i8> %b, <8 x i8> %c) #0 {
 ; CV2-NEXT:    mulhq $r3 = $r4, $r3
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    mulhq $r1 = $r1, $r2
+; CV2-NEXT:    ;;
 ; CV2-NEXT:    sbmm8 $r2 = $r3, 0x40100401
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    sbmm8 $r1 = $r1, 0x40100401
@@ -114,8 +116,9 @@ define <8 x i8> @test_fma_imm(<8 x i8> %a, <8 x i8> %b) #0 {
 ; CV1-NEXT:    mulhq $r2 = $r2, $r3
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    mulhq $r1 = $r1, $r3
-; CV1-NEXT:    sbmm8 $r2 = $r2, 0x40100401
 ; CV1-NEXT:    andd $r3 = $r0, 0x7f7f7f7f7f7f7f7f
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sbmm8 $r2 = $r2, 0x40100401
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    sbmm8 $r1 = $r1, 0x40100401
 ; CV1-NEXT:    ;;
@@ -140,6 +143,7 @@ define <8 x i8> @test_fma_imm(<8 x i8> %a, <8 x i8> %b) #0 {
 ; CV2-NEXT:    mulhq $r2 = $r2, $r3
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    mulhq $r1 = $r1, $r3
+; CV2-NEXT:    ;;
 ; CV2-NEXT:    sbmm8 $r2 = $r2, 0x40100401
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    sbmm8 $r1 = $r1, 0x40100401
@@ -165,8 +169,9 @@ define <8 x i8> @test_fma_imm_2(<8 x i8> %a, <8 x i8> %b) #0 {
 ; CV1-NEXT:    mulhq $r2 = $r2, $r3
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    mulhq $r1 = $r1, $r3
-; CV1-NEXT:    sbmm8 $r2 = $r2, 0x40100401
 ; CV1-NEXT:    andd $r3 = $r0, 0x7f7f7f7f7f7f7f7f
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sbmm8 $r2 = $r2, 0x40100401
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    sbmm8 $r1 = $r1, 0x40100401
 ; CV1-NEXT:    ;;
@@ -191,6 +196,7 @@ define <8 x i8> @test_fma_imm_2(<8 x i8> %a, <8 x i8> %b) #0 {
 ; CV2-NEXT:    mulhq $r2 = $r2, $r3
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    mulhq $r1 = $r1, $r3
+; CV2-NEXT:    ;;
 ; CV2-NEXT:    sbmm8 $r2 = $r2, 0x40100401
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    sbmm8 $r1 = $r1, 0x40100401
@@ -426,6 +432,7 @@ define <8 x i8> @test_mul(<8 x i8> %a, <8 x i8> %b) #0 {
 ; ALL-NEXT:    mulhq $r2 = $r3, $r2
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    mulhq $r0 = $r0, $r1
+; ALL-NEXT:    ;;
 ; ALL-NEXT:    sbmm8 $r1 = $r2, 0x40100401
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    sbmm8 $r0 = $r0, 0x40100401
@@ -454,6 +461,7 @@ define <8 x i8> @test_mul_2(<8 x i8> %a, <8 x i8> %b, <8 x i8> %c) #0 {
 ; ALL-NEXT:    mulhq $r2 = $r3, $r4
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    mulhq $r0 = $r0, $r1
+; ALL-NEXT:    ;;
 ; ALL-NEXT:    sbmm8 $r1 = $r2, 0x40100401
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    sbmm8 $r0 = $r0, 0x40100401
@@ -981,6 +989,7 @@ define <8 x i8> @mulsub(<8 x i8> %a, <8 x i8> %b, <8 x i8> %c) #0 {
 ; CV1-NEXT:    mulhq $r3 = $r4, $r3
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    mulhq $r1 = $r1, $r2
+; CV1-NEXT:    ;;
 ; CV1-NEXT:    sbmm8 $r2 = $r3, 0x40100401
 ; CV1-NEXT:    ord $r3 = $r0, 0x8080808080808080
 ; CV1-NEXT:    ;;
@@ -1008,6 +1017,7 @@ define <8 x i8> @mulsub(<8 x i8> %a, <8 x i8> %b, <8 x i8> %c) #0 {
 ; CV2-NEXT:    mulhq $r3 = $r4, $r3
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    mulhq $r1 = $r1, $r2
+; CV2-NEXT:    ;;
 ; CV2-NEXT:    sbmm8 $r2 = $r3, 0x40100401
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    sbmm8 $r1 = $r1, 0x40100401

@@ -37,6 +37,7 @@ define i32 @f(){
 ; CHECK-NEXT:    make $r16 = b
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 0[$r16] = $r17
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.weqz $r15 ? .LBB0_2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %if.then

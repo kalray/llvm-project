@@ -9,6 +9,8 @@
 define i32 @f_setjmp() {
 ; CHECK-LABEL: f_setjmp:
 ; CHECK:       # %bb.0:
+; CHECK-NEXT:    make $r0 = buf
+; CHECK-NEXT:    make $r1 = .LBB0_3
 ; CHECK-NEXT:    addd $r12 = $r12, -128
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
@@ -23,8 +25,6 @@ define i32 @f_setjmp() {
 ; CHECK-NEXT:    so 16[$r12] = $r20r21r22r23
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 0[$r12] = $r18r19
-; CHECK-NEXT:    make $r0 = buf
-; CHECK-NEXT:    make $r1 = .LBB0_3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 8[$r0] = $r1
 ; CHECK-NEXT:    ;;
@@ -56,6 +56,7 @@ define i32 @f_setjmp() {
 ;
 ; PIC-LABEL: f_setjmp:
 ; PIC:       # %bb.0:
+; PIC-NEXT:    pcrel $r1 = @pcrel( .LBB0_3 )
 ; PIC-NEXT:    addd $r12 = $r12, -128
 ; PIC-NEXT:    get $r16 = $ra
 ; PIC-NEXT:    ;;
@@ -73,7 +74,6 @@ define i32 @f_setjmp() {
 ; PIC-NEXT:    pcrel $r0 = @gotaddr()
 ; PIC-NEXT:    ;;
 ; PIC-NEXT:    ld $r0 = @got( buf )[$r0]
-; PIC-NEXT:    pcrel $r1 = @pcrel( .LBB0_3 )
 ; PIC-NEXT:    ;;
 ; PIC-NEXT:    sd 8[$r0] = $r1
 ; PIC-NEXT:    ;;

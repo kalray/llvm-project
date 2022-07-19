@@ -131,10 +131,9 @@
 ; CHECK-NEXT: Machine Natural Loop Construction
 ; CHECK-NEXT: Machine Block Frequency Analysis
 ; CHECK-NEXT: If Converter
+; CHECK-NEXT: Analyze Machine Code For Garbage Collection
 ; CHECK-NEXT: MachineDominator Tree Construction
 ; CHECK-NEXT: Machine Natural Loop Construction
-; CHECK-NEXT: PostRA Machine Instruction Scheduler
-; CHECK-NEXT: Analyze Machine Code For Garbage Collection
 ; CHECK-NEXT: Machine Block Frequency Analysis
 ; CHECK-NEXT: MachinePostDominator Tree Construction
 ; CHECK-NEXT: Branch Probability Basic Block Placement
@@ -142,6 +141,9 @@
 ; CHECK-NEXT: Insert XRay ops
 ; CHECK-NEXT: Implement the 'patchable-function' attribute
 ; CHECK-NEXT: KVX pseudo instruction expansion pass
+; CHECK-NEXT: MachineDominator Tree Construction
+; CHECK-NEXT: Machine Natural Loop Construction
+; CHECK-NEXT: PostRA Machine Instruction Scheduler
 ; CHECK-NEXT: KVX pseudo instruction expansion pass
 ; CHECK-NEXT: Contiguously Lay Out Funclets
 ; CHECK-NEXT: StackMap Liveness Analysis

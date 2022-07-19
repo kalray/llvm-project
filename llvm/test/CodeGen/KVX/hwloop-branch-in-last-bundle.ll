@@ -71,9 +71,9 @@ define float @cholesky(%struct.loops_params_s* nocapture readonly %0) local_unna
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r16 = 0[$r9]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulw $r11 = $r11, $r15
 ; CHECK-NEXT:    lwz $r17 = 4[$r9]
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fmulw $r11 = $r11, $r15
 ; CHECK-NEXT:    lwz $r15 = 4[$r8]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmulw $r15 = $r15, $r17
@@ -83,9 +83,9 @@ define float @cholesky(%struct.loops_params_s* nocapture readonly %0) local_unna
 ; CHECK-NEXT:    fsbfw $r11 = $r15, $r11
 ; CHECK-NEXT:    addd $r15 = $r6, 2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 4[$r10] = $r11
 ; CHECK-NEXT:    compd.lt $r15 = $r15, $r7
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw 4[$r10] = $r11
 ; CHECK-NEXT:    cb.even $r15 ? .LBB0_5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.8: # in Loop: Header=BB0_4 Depth=3
@@ -95,9 +95,9 @@ define float @cholesky(%struct.loops_params_s* nocapture readonly %0) local_unna
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r16 = 8[$r9]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulw $r11 = $r11, $r15
 ; CHECK-NEXT:    lwz $r17 = 12[$r9]
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fmulw $r11 = $r11, $r15
 ; CHECK-NEXT:    lwz $r15 = 12[$r8]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmulw $r15 = $r15, $r17
@@ -107,9 +107,9 @@ define float @cholesky(%struct.loops_params_s* nocapture readonly %0) local_unna
 ; CHECK-NEXT:    fsbfw $r11 = $r15, $r11
 ; CHECK-NEXT:    addd $r15 = $r6, 4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 8[$r10] = $r11
 ; CHECK-NEXT:    compd.ge $r15 = $r15, $r7
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw 8[$r10] = $r11
 ; CHECK-NEXT:    cb.odd $r15 ? .LBB0_5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.9: # in Loop: Header=BB0_4 Depth=3
@@ -119,9 +119,9 @@ define float @cholesky(%struct.loops_params_s* nocapture readonly %0) local_unna
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r16 = 16[$r9]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulw $r11 = $r11, $r15
 ; CHECK-NEXT:    lwz $r17 = 20[$r9]
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fmulw $r11 = $r11, $r15
 ; CHECK-NEXT:    lwz $r15 = 20[$r8]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmulw $r15 = $r15, $r17
@@ -131,9 +131,9 @@ define float @cholesky(%struct.loops_params_s* nocapture readonly %0) local_unna
 ; CHECK-NEXT:    fsbfw $r11 = $r15, $r11
 ; CHECK-NEXT:    addd $r15 = $r6, 6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 12[$r10] = $r11
 ; CHECK-NEXT:    compd.ge $r15 = $r15, $r7
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw 12[$r10] = $r11
 ; CHECK-NEXT:    cb.odd $r15 ? .LBB0_5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.10: # in Loop: Header=BB0_4 Depth=3
@@ -143,9 +143,9 @@ define float @cholesky(%struct.loops_params_s* nocapture readonly %0) local_unna
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r16 = 24[$r9]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulw $r11 = $r11, $r15
 ; CHECK-NEXT:    lwz $r17 = 28[$r9]
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fmulw $r11 = $r11, $r15
 ; CHECK-NEXT:    lwz $r15 = 28[$r8]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmulw $r15 = $r15, $r17
@@ -155,9 +155,9 @@ define float @cholesky(%struct.loops_params_s* nocapture readonly %0) local_unna
 ; CHECK-NEXT:    fsbfw $r11 = $r15, $r11
 ; CHECK-NEXT:    addd $r15 = $r6, 8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 16[$r10] = $r11
 ; CHECK-NEXT:    compd.ge $r15 = $r15, $r7
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw 16[$r10] = $r11
 ; CHECK-NEXT:    cb.odd $r15 ? .LBB0_5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.11: # in Loop: Header=BB0_4 Depth=3
@@ -167,9 +167,9 @@ define float @cholesky(%struct.loops_params_s* nocapture readonly %0) local_unna
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r16 = 32[$r9]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulw $r11 = $r11, $r15
 ; CHECK-NEXT:    lwz $r17 = 36[$r9]
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fmulw $r11 = $r11, $r15
 ; CHECK-NEXT:    lwz $r15 = 36[$r8]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmulw $r15 = $r15, $r17
@@ -179,9 +179,9 @@ define float @cholesky(%struct.loops_params_s* nocapture readonly %0) local_unna
 ; CHECK-NEXT:    fsbfw $r11 = $r15, $r11
 ; CHECK-NEXT:    addd $r15 = $r6, 10
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 20[$r10] = $r11
 ; CHECK-NEXT:    compd.ge $r15 = $r15, $r7
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw 20[$r10] = $r11
 ; CHECK-NEXT:    cb.odd $r15 ? .LBB0_5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.12: # in Loop: Header=BB0_4 Depth=3
@@ -191,9 +191,9 @@ define float @cholesky(%struct.loops_params_s* nocapture readonly %0) local_unna
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r16 = 40[$r9]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulw $r11 = $r11, $r15
 ; CHECK-NEXT:    lwz $r17 = 44[$r9]
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fmulw $r11 = $r11, $r15
 ; CHECK-NEXT:    lwz $r15 = 44[$r8]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmulw $r15 = $r15, $r17
@@ -203,9 +203,9 @@ define float @cholesky(%struct.loops_params_s* nocapture readonly %0) local_unna
 ; CHECK-NEXT:    fsbfw $r11 = $r15, $r11
 ; CHECK-NEXT:    addd $r15 = $r6, 12
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 24[$r10] = $r11
 ; CHECK-NEXT:    compd.ge $r15 = $r15, $r7
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw 24[$r10] = $r11
 ; CHECK-NEXT:    cb.odd $r15 ? .LBB0_5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.13: # in Loop: Header=BB0_4 Depth=3
@@ -215,9 +215,9 @@ define float @cholesky(%struct.loops_params_s* nocapture readonly %0) local_unna
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r16 = 48[$r9]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulw $r11 = $r11, $r15
 ; CHECK-NEXT:    lwz $r17 = 52[$r9]
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fmulw $r11 = $r11, $r15
 ; CHECK-NEXT:    lwz $r15 = 52[$r8]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmulw $r15 = $r15, $r17
@@ -227,9 +227,9 @@ define float @cholesky(%struct.loops_params_s* nocapture readonly %0) local_unna
 ; CHECK-NEXT:    fsbfw $r11 = $r15, $r11
 ; CHECK-NEXT:    addd $r15 = $r6, 14
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 28[$r10] = $r11
 ; CHECK-NEXT:    compd.ge $r15 = $r15, $r7
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw 28[$r10] = $r11
 ; CHECK-NEXT:    cb.odd $r15 ? .LBB0_5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.14: # in Loop: Header=BB0_4 Depth=3
@@ -241,10 +241,10 @@ define float @cholesky(%struct.loops_params_s* nocapture readonly %0) local_unna
 ; CHECK-NEXT:    lwz $r16 = 56[$r9]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r9 = $r9, 64
-; CHECK-NEXT:    fmulw $r11 = $r11, $r15
 ; CHECK-NEXT:    lwz $r17 = 60[$r9]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r8 = $r8, 64
+; CHECK-NEXT:    fmulw $r11 = $r11, $r15
 ; CHECK-NEXT:    lwz $r15 = 60[$r8]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmulw $r15 = $r15, $r17

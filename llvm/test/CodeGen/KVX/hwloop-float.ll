@@ -20,23 +20,28 @@ define void @f32(float* nocapture %0) {
 ; CHECK-NEXT:    sxwd $r5 = $r5
 ; CHECK-NEXT:    fixedw.rz $r7 = $r2, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddw $r4 = $r3, 0x3f800000
 ; CHECK-NEXT:    sw.xs $r5[$r0] = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    faddw $r4 = $r3, 0x3f800000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxwd $r1 = $r7
 ; CHECK-NEXT:    fixedw.rz $r8 = $r3, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw.xs $r1[$r0] = $r2
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    faddw $r6 = $r4, 0x3f800000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxwd $r1 = $r8
 ; CHECK-NEXT:    fixedw.rz $r9 = $r4, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw.xs $r1[$r0] = $r3
-; CHECK-NEXT:    sxwd $r1 = $r9
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedw.rz $r10 = $r6, 0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sxwd $r1 = $r9
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw.xs $r1[$r0] = $r4
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxwd $r1 = $r10
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw.xs $r1[$r0] = $r6
@@ -100,23 +105,28 @@ define void @f64(double* nocapture %0) {
 ; CHECK-NEXT:    sxwd $r5 = $r5
 ; CHECK-NEXT:    fixedd.rz $r7 = $r2, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddd $r4 = $r3, 0x3ff0000000000000
 ; CHECK-NEXT:    sd.xs $r5[$r0] = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    faddd $r4 = $r3, 0x3ff0000000000000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxwd $r1 = $r7
 ; CHECK-NEXT:    fixedd.rz $r8 = $r3, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd.xs $r1[$r0] = $r2
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    faddd $r6 = $r4, 0x3ff0000000000000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxwd $r1 = $r8
 ; CHECK-NEXT:    fixedd.rz $r9 = $r4, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd.xs $r1[$r0] = $r3
-; CHECK-NEXT:    sxwd $r1 = $r9
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedd.rz $r10 = $r6, 0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sxwd $r1 = $r9
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd.xs $r1[$r0] = $r4
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxwd $r1 = $r10
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd.xs $r1[$r0] = $r6
