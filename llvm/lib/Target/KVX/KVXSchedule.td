@@ -233,7 +233,7 @@ list<InstrItinData> ItinList = [
   >,
   InstrItinData<BCU, [
     InstrStage<1, [BCU_FU]> // TODO: branch penalty not modeled
-    ], [], [], 1
+    ], [1], [], 1
   >,
   InstrItinData<BCU_CRRP_CRWL_CRWH, [
     InstrStage<1, [BCU_FU], 0>,

@@ -250,14 +250,14 @@ define float @cholesky(%struct.loops_params_s* nocapture readonly %0) local_unna
 ; CHECK-NEXT:    fmulw $r15 = $r15, $r17
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fsbfw $r11 = $r11, $r16
-; CHECK-NEXT:    compd.lt $r16 = $r6, $r7
+; CHECK-NEXT:    addd $r16 = $r10, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fsbfw $r11 = $r15, $r11
-; CHECK-NEXT:    addd $r15 = $r10, 32
+; CHECK-NEXT:    compd.lt $r15 = $r6, $r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 32[$r10] = $r11
-; CHECK-NEXT:    copyd $r10 = $r15
-; CHECK-NEXT:    cb.odd $r16 ? .LBB0_4
+; CHECK-NEXT:    copyd $r10 = $r16
+; CHECK-NEXT:    cb.odd $r15 ? .LBB0_4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    goto .LBB0_5
 ; CHECK-NEXT:    ;;

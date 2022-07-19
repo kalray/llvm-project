@@ -52,10 +52,10 @@ define internal i1 @atomic_flag_test_and_set_explicit(%struct.atomic_flag* %0, i
 ; CHECK-NEXT:    make $r2 = 1
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sb 19[$r12] = $r2
 ; CHECK-NEXT:    compw.gt $r2 = $r1, 3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 20[$r12] = $r1
 ; CHECK-NEXT:    cb.odd $r2 ? .LBB2_4

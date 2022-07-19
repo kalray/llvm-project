@@ -209,6 +209,7 @@ define void @_pocl_kernel_math_kernel_nohwloop_fdiv_half( half %a, half %b, i64 
 ; CHECK-NEXT:    addd $r22 = $r22, -1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sh.xs $r19[$r18] = $r0
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.dnez $r22 ? .LBB3_1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.2: # %math_kernel.exit
