@@ -7,11 +7,11 @@ target triple = "kvx-kalray-cos"
 define i32 @foo(i32 %a){
 ; CHECK-LABEL: foo:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r2 = global
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    make $r2 = global
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r1 = 0[$r2]
 ; CHECK-NEXT:    ;;

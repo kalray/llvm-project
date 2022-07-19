@@ -342,18 +342,18 @@ define <4 x double> @test_call_flipped(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    copyd $r8 = $r3
 ; CHECK-NEXT:    copyd $r9 = $r2
-; CHECK-NEXT:    copyd $r10 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r4
 ; CHECK-NEXT:    copyd $r1 = $r5
-; CHECK-NEXT:    copyd $r2 = $r6
+; CHECK-NEXT:    copyd $r10 = $r1
 ; CHECK-NEXT:    copyd $r11 = $r0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r2 = $r6
 ; CHECK-NEXT:    copyd $r3 = $r7
 ; CHECK-NEXT:    copyd $r4 = $r11
 ; CHECK-NEXT:    copyd $r5 = $r10
-; CHECK-NEXT:    copyd $r6 = $r9
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r6 = $r9
 ; CHECK-NEXT:    copyd $r7 = $r8
 ; CHECK-NEXT:    call test_callee
 ; CHECK-NEXT:    ;;
@@ -415,11 +415,11 @@ define <4 x double> @test_select_cc(<4 x double> %a, <4 x double> %b, <4 x doubl
 ; CHECK-NEXT:    ld $r17 = 8[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fcompd.une $r10 = $r10, $r15
-; CHECK-NEXT:    fcompd.une $r11 = $r11, $r16
 ; CHECK-NEXT:    make $r15 = -1
 ; CHECK-NEXT:    ld $r32 = 0[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r10 = -1
+; CHECK-NEXT:    fcompd.une $r11 = $r11, $r16
 ; CHECK-NEXT:    cmoved.even $r10 ? $r15 = 0
 ; CHECK-NEXT:    make $r16 = -1
 ; CHECK-NEXT:    ;;
@@ -948,6 +948,7 @@ define <4 x i32> @test_fptosi_i32(<4 x double> %a) #0 {
 ; CHECK-NEXT:    fixedd.rz $r1 = $r1, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedd.rz $r0 = $r0, 0
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r3 = $r4, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 32
@@ -984,6 +985,7 @@ define <4 x i32> @test_fptoui_2xi32(<4 x double> %a) #0 {
 ; CHECK-NEXT:    fixedud.rz $r1 = $r1, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedud.rz $r0 = $r0, 0
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r3 = $r4, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 32
@@ -1021,6 +1023,7 @@ define <4 x i16> @test_fptosi_i16(<4 x double> %a) #0 {
 ; CHECK-NEXT:    fixedd.rz $r1 = $r1, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedd.rz $r0 = $r0, 0
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r5 = $r3, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 32
@@ -1045,6 +1048,7 @@ define <4 x i16> @test_fptoui_i16(<4 x double> %a) #0 {
 ; CHECK-NEXT:    fixedud.rz $r1 = $r1, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedud.rz $r0 = $r0, 0
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r5 = $r3, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 32
@@ -1069,6 +1073,7 @@ define <4 x i8> @test_fptosi_i8(<4 x double> %a) #0 {
 ; CHECK-NEXT:    fixedd.rz $r1 = $r1, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedd.rz $r0 = $r0, 0
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r5 = $r3, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 32
@@ -1093,6 +1098,7 @@ define <4 x i8> @test_fptoui_i8(<4 x double> %a) #0 {
 ; CHECK-NEXT:    fixedud.rz $r1 = $r1, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedud.rz $r0 = $r0, 0
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r5 = $r3, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 32
@@ -1120,8 +1126,9 @@ define <4 x double> @test_uitofp_2xi32(<4 x i32> %a) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    floatud.rn $r2 = $r2, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    floatud.rn $r3 = $r1, 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = uitofp <4 x i32> %a to <4 x double>
@@ -1158,8 +1165,9 @@ define <4 x double> @test_sitofp_2xi32(<4 x i32> %a) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    floatd.rn $r2 = $r2, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    floatd.rn $r3 = $r1, 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = sitofp <4 x i32> %a to <4 x double>
@@ -1867,10 +1875,12 @@ define <4 x double> @test_fma(<4 x double> %a, <4 x double> %b, <4 x double> %c)
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad $r10 = $r2, $r6
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmad $r11 = $r3, $r7
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r8
 ; CHECK-NEXT:    copyd $r1 = $r9
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r2 = $r10
-; CHECK-NEXT:    ffmad $r11 = $r3, $r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r3 = $r11
 ; CHECK-NEXT:    ret
@@ -2478,10 +2488,12 @@ define <4 x double> @test_fmuladd(<4 x double> %a, <4 x double> %b, <4 x double>
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad $r10 = $r2, $r6
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmad $r11 = $r3, $r7
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r8
 ; CHECK-NEXT:    copyd $r1 = $r9
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r2 = $r10
-; CHECK-NEXT:    ffmad $r11 = $r3, $r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r3 = $r11
 ; CHECK-NEXT:    ret

@@ -22,11 +22,11 @@ define dso_local i32 @a() {
 define internal i1 @atomic_flag_test_and_set(%struct.atomic_flag* %0) {
 ; CHECK-LABEL: atomic_flag_test_and_set:
 ; CHECK:       # %bb.0:
+; CHECK-NEXT:    make $r1 = 5
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    make $r1 = 5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 16[$r12] = $r0
 ; CHECK-NEXT:    call atomic_flag_test_and_set_explicit

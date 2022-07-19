@@ -445,6 +445,7 @@ define <2 x double> @fmuldc(<2 x double> %a, <2 x double> %b) {
 ; CHECK-NEXT:    ffmad.rn $r5 = $r1, $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmsd.rn $r0 = $r1, $r3
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -513,6 +514,7 @@ define <2 x double> @fmulcdc(<2 x double> %a, <2 x double> %b) {
 ; CHECK-NEXT:    ffmsd.rn $r5 = $r1, $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad.rn $r0 = $r1, $r3
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -603,8 +605,10 @@ define <4 x double> @fmuldcp(<4 x double> %a, <4 x double> %b) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmsd.rn $r0 = $r1, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r9
 ; CHECK-NEXT:    ffmsd.rn $r2 = $r3, $r7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r1 = $r9
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r3 = $r11
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -713,8 +717,10 @@ define <4 x double> @fmulcdcp(<4 x double> %a, <4 x double> %b) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad.rn $r0 = $r1, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r9
 ; CHECK-NEXT:    ffmad.rn $r2 = $r3, $r7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r1 = $r9
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r3 = $r11
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;

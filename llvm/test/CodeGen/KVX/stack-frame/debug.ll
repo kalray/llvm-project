@@ -11,6 +11,7 @@ define i32 @square(i32 %0) {
 ; FP-NONE-NEXT:    addd $r12 = $r12, -32
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    sw 28[$r12] = $r0
+; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    copyd $r0 = $r1
 ; FP-NONE-NEXT:    addd $r12 = $r12, 32
 ; FP-NONE-NEXT:    ret
@@ -22,9 +23,9 @@ define i32 @square(i32 %0) {
 ; FP-ALL-NEXT:    get $r16 = $ra
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    sd 24[$r12] = $r16
+; FP-ALL-NEXT:    mulw $r1 = $r0, $r0
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    sd 16[$r12] = $r14
-; FP-ALL-NEXT:    mulw $r1 = $r0, $r0
 ; FP-ALL-NEXT:    addd $r14 = $r12, 16
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    sw -4[$r14] = $r0

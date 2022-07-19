@@ -1546,9 +1546,10 @@ define <8 x float> @ffmawo(<8 x float> %v1, <8 x float> %v2, <8 x float> %v3){
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    ffmawp.rn $r11 = $r3, $r7
 ; CV1-NEXT:    ;;
+; CV1-NEXT:    ffmawp.rn $r10 = $r2, $r6
+; CV1-NEXT:    ;;
 ; CV1-NEXT:    copyd $r0 = $r8
 ; CV1-NEXT:    copyd $r1 = $r9
-; CV1-NEXT:    ffmawp.rn $r10 = $r2, $r6
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    copyd $r2 = $r10
 ; CV1-NEXT:    copyd $r3 = $r11
@@ -1602,9 +1603,10 @@ define <4 x double> @ffmadq(<4 x double> %v1, <4 x double> %v2, <4 x double> %v3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad.rn $r11 = $r3, $r7
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmad.rn $r10 = $r2, $r6
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r8
 ; CHECK-NEXT:    copyd $r1 = $r9
-; CHECK-NEXT:    ffmad.rn $r10 = $r2, $r6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r2 = $r10
 ; CHECK-NEXT:    copyd $r3 = $r11
@@ -1674,9 +1676,10 @@ define <8 x float> @ffmswo(<8 x float> %v1, <8 x float> %v2, <8 x float> %v3){
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    ffmswp.rn $r11 = $r3, $r7
 ; CV1-NEXT:    ;;
+; CV1-NEXT:    ffmswp.rn $r10 = $r2, $r6
+; CV1-NEXT:    ;;
 ; CV1-NEXT:    copyd $r0 = $r8
 ; CV1-NEXT:    copyd $r1 = $r9
-; CV1-NEXT:    ffmswp.rn $r10 = $r2, $r6
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    copyd $r2 = $r10
 ; CV1-NEXT:    copyd $r3 = $r11
@@ -1688,6 +1691,7 @@ define <8 x float> @ffmswo(<8 x float> %v1, <8 x float> %v2, <8 x float> %v3){
 ; CV2-NEXT:    ffmswq.rn $r8r9 = $r4r5, $r0r1
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    ffmswq.rn $r10r11 = $r6r7, $r2r3
+; CV2-NEXT:    ;;
 ; CV2-NEXT:    copyd $r0 = $r8
 ; CV2-NEXT:    copyd $r1 = $r9
 ; CV2-NEXT:    ;;
@@ -1735,9 +1739,10 @@ define <4 x double> @ffmsdq(<4 x double> %v1, <4 x double> %v2, <4 x double> %v3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmsd.rn $r11 = $r3, $r7
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmsd.rn $r10 = $r2, $r6
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r8
 ; CHECK-NEXT:    copyd $r1 = $r9
-; CHECK-NEXT:    ffmsd.rn $r10 = $r2, $r6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r2 = $r10
 ; CHECK-NEXT:    copyd $r3 = $r11

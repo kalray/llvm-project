@@ -7,13 +7,13 @@ target triple = "kvx-kalray-cos"
 define i64 @f_1_nopack(){
 ; CHECK-LABEL: f_1_nopack:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = v
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 16[$r12] = $r18
-; CHECK-NEXT:    make $r0 = v
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r18 = 0[$r0]
 ; CHECK-NEXT:    call foo
@@ -39,13 +39,13 @@ declare void @foo(...) #1
 define i64 @f_2_pairpack(){
 ; CHECK-LABEL: f_2_pairpack:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = v
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
-; CHECK-NEXT:    make $r0 = v
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lq $r18r19 = 0[$r0]
 ; CHECK-NEXT:    call foo
@@ -71,6 +71,7 @@ entry:
 define i64 @f_3_pairpack(){
 ; CHECK-LABEL: f_3_pairpack:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = v
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
@@ -79,7 +80,6 @@ define i64 @f_3_pairpack(){
 ; CHECK-NEXT:    sd 16[$r12] = $r20
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 0[$r12] = $r18r19
-; CHECK-NEXT:    make $r0 = v
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lq $r18r19 = 0[$r0]
 ; CHECK-NEXT:    ;;
@@ -112,13 +112,13 @@ entry:
 define i64 @f_4_quadpack(){
 ; CHECK-LABEL: f_4_quadpack:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = v
 ; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 56[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    so 24[$r12] = $r20r21r22r23
-; CHECK-NEXT:    make $r0 = v
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r20r21r22r23 = 0[$r0]
 ; CHECK-NEXT:    call foo
@@ -152,6 +152,7 @@ entry:
 define i64 @f_5_quadpack(){
 ; CHECK-LABEL: f_5_quadpack:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = v
 ; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
@@ -160,7 +161,6 @@ define i64 @f_5_quadpack(){
 ; CHECK-NEXT:    so 24[$r12] = $r20r21r22r23
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 16[$r12] = $r18
-; CHECK-NEXT:    make $r0 = v
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r20r21r22r23 = 0[$r0]
 ; CHECK-NEXT:    ;;
@@ -202,6 +202,7 @@ entry:
 define i64 @f_6_1quad1pairpack(){
 ; CHECK-LABEL: f_6_1quad1pairpack:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = v
 ; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
@@ -210,7 +211,6 @@ define i64 @f_6_1quad1pairpack(){
 ; CHECK-NEXT:    so 24[$r12] = $r20r21r22r23
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
-; CHECK-NEXT:    make $r0 = v
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r20r21r22r23 = 0[$r0]
 ; CHECK-NEXT:    ;;
@@ -256,6 +256,7 @@ entry:
 define i64 @f_14_3quad1pairpack(){
 ; CHECK-LABEL: f_14_3quad1pairpack:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = v
 ; CHECK-NEXT:    addd $r12 = $r12, -128
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
@@ -268,7 +269,6 @@ define i64 @f_14_3quad1pairpack(){
 ; CHECK-NEXT:    so 24[$r12] = $r20r21r22r23
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
-; CHECK-NEXT:    make $r0 = v
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r20r21r22r23 = 0[$r0]
 ; CHECK-NEXT:    ;;
@@ -354,6 +354,7 @@ entry:
 define i64 @f_15_3quad1pairpack(){
 ; CHECK-LABEL: f_15_3quad1pairpack:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = v
 ; CHECK-NEXT:    addd $r12 = $r12, -128
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
@@ -366,7 +367,6 @@ define i64 @f_15_3quad1pairpack(){
 ; CHECK-NEXT:    so 24[$r12] = $r20r21r22r23
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
-; CHECK-NEXT:    make $r0 = v
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r20r21r22r23 = 0[$r0]
 ; CHECK-NEXT:    ;;

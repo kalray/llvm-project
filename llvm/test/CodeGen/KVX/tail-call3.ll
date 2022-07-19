@@ -17,9 +17,9 @@ define %struct.Y @f(i64 %x.coerce0, i64 %x.coerce1, i64 %x.coerce2, i64 %x.coerc
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r1 = 64[$r12]
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r19 = $r0, 10
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r1 = 64[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r15 = 72[$r12]
 ; CHECK-NEXT:    ;;

@@ -9,17 +9,18 @@
 define void @f_longjump() noreturn {
 ; CHECK-LABEL: f_longjump:
 ; CHECK:       # %bb.0:
+; CHECK-NEXT:    make $r0 = buf
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r14
-; CHECK-NEXT:    make $r0 = buf
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r1 = 8[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r14 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    igoto $r1
 ; CHECK-NEXT:    ld $r12 = 16[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    igoto $r1
 ; CHECK-NEXT:    ;;
 ;
 ; PIC-LABEL: f_longjump:
@@ -35,8 +36,9 @@ define void @f_longjump() noreturn {
 ; PIC-NEXT:    ;;
 ; PIC-NEXT:    ld $r14 = 0[$r0]
 ; PIC-NEXT:    ;;
-; PIC-NEXT:    igoto $r1
 ; PIC-NEXT:    ld $r12 = 16[$r0]
+; PIC-NEXT:    ;;
+; PIC-NEXT:    igoto $r1
 ; PIC-NEXT:    ;;
 
 

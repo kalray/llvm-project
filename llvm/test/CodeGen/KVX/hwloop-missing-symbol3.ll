@@ -291,11 +291,11 @@ for.body.for.body_crit_edge.prol.6:
 define i32 @g(i32 %h)  {
 ; CHECK-LABEL: g:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r1 = e
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    make $r1 = e
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r1 = 0[$r1]
 ; CHECK-NEXT:    ;;

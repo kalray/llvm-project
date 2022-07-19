@@ -49,21 +49,20 @@ for.body:
 define i32 @f(i32 %num){
 ; CHECK-LABEL: f:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addx4wd $r1 = $r0, 31
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 16[$r12] = $r14
-; CHECK-NEXT:    addx4wd $r1 = $r0, 31
-; CHECK-NEXT:    addd $r14 = $r12, 16
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    andd $r1 = $r1, -32
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 16[$r12] = $r14
 ; CHECK-NEXT:    sbfd $r1 = $r1, $r12
+; CHECK-NEXT:    addd $r14 = $r12, 16
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r12 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.weqz $r0 ? .LBB1_6
-; CHECK-NEXT:    copyd $r12 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %for.body.preheader.i
 ; CHECK-NEXT:    make $r2 = 0
@@ -86,9 +85,10 @@ define i32 @f(i32 %num){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfd $r2 = $r2, $r12
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r12 = $r2
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r4 = 0
 ; CHECK-NEXT:    sllw $r5 = $r0, 1
-; CHECK-NEXT:    copyd $r12 = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r5, .__LOOPDO_2_END_
 ; CHECK-NEXT:    ;;
@@ -116,9 +116,10 @@ define i32 @f(i32 %num){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r5 = 0[$r2]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r0 = $r3, $r0
 ; CHECK-NEXT:    addd $r2 = $r2, 4
 ; CHECK-NEXT:    lwz.xs $r6 = $r4[$r2]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addw $r0 = $r3, $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addw $r0 = $r0, $r5
 ; CHECK-NEXT:    ;;

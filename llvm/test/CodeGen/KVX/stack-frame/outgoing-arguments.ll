@@ -161,8 +161,9 @@ define i32 @fn(i32* nocapture readonly %a) {
 ; FP-ALL-NEXT:    sw 0[$r12] = $r15
 ; FP-ALL-NEXT:    call add
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    lwz $r0 = 0[$r18]
 ; FP-ALL-NEXT:    addd $r12 = $r12, 32
+; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    lwz $r0 = 0[$r18]
 ; FP-ALL-NEXT:    copyd $r19 = $r0
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    lwz $r1 = 8[$r18]
@@ -197,9 +198,9 @@ define i32 @fn(i32* nocapture readonly %a) {
 ; FP-ALL-NEXT:    sw 0[$r12] = $r15
 ; FP-ALL-NEXT:    call add
 ; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    addw $r0 = $r0, $r19
 ; FP-ALL-NEXT:    addd $r12 = $r12, 32
 ; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    addw $r0 = $r0, $r19
 ; FP-ALL-NEXT:    addd $r12 = $r14, -16
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    lq $r18r19 = 0[$r12]

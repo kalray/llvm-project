@@ -13,8 +13,8 @@ define void @f() local_unnamed_addr #0 !dbg !7 {
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    .cfi_register 67, 16
+; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    .loc 1 12 1 prologue_end # cfi.c:12:1
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
@@ -22,8 +22,8 @@ define void @f() local_unnamed_addr #0 !dbg !7 {
 ; CHECK-NEXT:    sd 16[$r12] = $r14
 ; CHECK-NEXT:    addd $r14 = $r12, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 14, -16
 ; CHECK-NEXT:    .cfi_def_cfa 14, 16
+; CHECK-NEXT:    .cfi_offset 14, -16
 ; CHECK-NEXT:    addd $r12 = $r14, -16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r14 = 16[$r12]
@@ -49,8 +49,8 @@ define void @g() local_unnamed_addr #0 !dbg !20 {
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    .cfi_register 67, 16
+; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    .loc 1 22 1 prologue_end # cfi.c:22:1
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
@@ -58,8 +58,8 @@ define void @g() local_unnamed_addr #0 !dbg !20 {
 ; CHECK-NEXT:    sd 16[$r12] = $r14
 ; CHECK-NEXT:    addd $r14 = $r12, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 14, -16
 ; CHECK-NEXT:    .cfi_def_cfa 14, 16
+; CHECK-NEXT:    .cfi_offset 14, -16
 ; CHECK-NEXT:    addd $r12 = $r14, -16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r14 = 16[$r12]
@@ -82,15 +82,21 @@ define i8 @h() local_unnamed_addr #0 !dbg !28 {
 ; CHECK-NEXT:    .loc 1 24 0 # cfi.c:24:0
 ; CHECK-NEXT:    .cfi_startproc
 ; CHECK-NEXT:  # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = 236
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    .cfi_register 67, 16
+; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    .loc 1 0 0 prologue_end # cfi.c:0:0
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 67, -8
+; CHECK-NEXT:    sd 16[$r12] = $r14
+; CHECK-NEXT:    addd $r14 = $r12, 16
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_def_cfa 14, 16
+; CHECK-NEXT:    .cfi_offset 14, -16
 ; CHECK-NEXT:  .Ltmp2:
 ; CHECK-NEXT:    #DEBUG_VALUE: h:a <- [DW_OP_LLVM_fragment 0 8] -1
 ; CHECK-NEXT:    #DEBUG_VALUE: h:a <- [DW_OP_LLVM_fragment 8 8] -2
@@ -100,12 +106,6 @@ define i8 @h() local_unnamed_addr #0 !dbg !28 {
 ; CHECK-NEXT:    #DEBUG_VALUE: h:b <- [DW_OP_LLVM_fragment 8 8] -2
 ; CHECK-NEXT:    #DEBUG_VALUE: h:b <- [DW_OP_LLVM_fragment 16 8] -3
 ; CHECK-NEXT:    #DEBUG_VALUE: h:b <- [DW_OP_LLVM_fragment 24 8] -4
-; CHECK-NEXT:    sd 16[$r12] = $r14
-; CHECK-NEXT:    make $r0 = 236
-; CHECK-NEXT:    addd $r14 = $r12, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_offset 14, -16
-; CHECK-NEXT:    .cfi_def_cfa 14, 16
 ; CHECK-NEXT:    .loc 1 33 3 # cfi.c:33:3
 ; CHECK-NEXT:    addd $r12 = $r14, -16
 ; CHECK-NEXT:    ;;

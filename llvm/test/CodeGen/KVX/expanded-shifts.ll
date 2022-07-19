@@ -5,11 +5,11 @@ target triple = "kvx-kalray-cos"
 define i128 @shl(i128 %i, i32 %s) {
 ; CHECK-LABEL: shl:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    call __ashlti3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
@@ -28,11 +28,11 @@ entry:
 define i128 @sra(i128 %i, i32 %s) {
 ; CHECK-LABEL: sra:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    call __ashrti3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
@@ -51,11 +51,11 @@ entry:
 define i128 @srl(i128 %i, i32 %s) {
 ; CHECK-LABEL: srl:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    call __lshrti3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]

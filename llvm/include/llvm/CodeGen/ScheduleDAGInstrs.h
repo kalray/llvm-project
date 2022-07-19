@@ -308,6 +308,10 @@ namespace llvm {
     /// Called when the scheduler has finished scheduling the current region.
     virtual void exitRegion();
 
+    /// Tells whether scheduling should skip regions made of a single
+    /// non-terminator instruction.
+    virtual bool skipSingleInstrRegions() { return true; }
+
     /// Builds SUnits for the current region.
     /// If \p RPTracker is non-null, compute register pressure as a side effect.
     /// The DAG builder is an efficient place to do it because it already visits

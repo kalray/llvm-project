@@ -699,6 +699,7 @@ define <2 x half> @test_uitofp_2xi64(<2 x i64> %a) #0 {
 ; CHECK-NEXT:    floatud.rn $r1 = $r1, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    floatud.rn $r0 = $r0, 0
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowdw.rn $r1 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowdw.rn $r0 = $r0
@@ -732,6 +733,7 @@ define <2 x half> @test_sitofp_2xi64(<2 x i64> %a) #0 {
 ; CHECK-NEXT:    floatd.rn $r1 = $r1, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    floatd.rn $r0 = $r0, 0
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowdw.rn $r1 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowdw.rn $r0 = $r0

@@ -11,8 +11,9 @@ define void @test_movetohi(i64 %a, i64 %b, <256 x i1>* %p0, <256 x i1>* %p1) {
 ; CHECK-NEXT:    lv $a1 = 0[$r3]
 ; CHECK-NEXT:    movetq $a0_hi = $r1, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 0[$r2] = $a0
 ; CHECK-NEXT:    movetq $a1_hi = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 0[$r2] = $a0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 0[$r3] = $a1
 ; CHECK-NEXT:    ret
@@ -36,8 +37,9 @@ define void @test_movetolo(i64 %a, i64 %b, <256 x i1>* %p0, <256 x i1>* %p1) {
 ; CHECK-NEXT:    lv $a1 = 0[$r3]
 ; CHECK-NEXT:    movetq $a0_lo = $r1, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 0[$r2] = $a0
 ; CHECK-NEXT:    movetq $a1_lo = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 0[$r2] = $a0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 0[$r3] = $a1
 ; CHECK-NEXT:    ret

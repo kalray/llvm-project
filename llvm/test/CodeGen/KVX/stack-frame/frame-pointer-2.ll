@@ -16,26 +16,24 @@ target triple = "kvx-kalray-cos"
 define dso_local i32 @test(i32 %sz, i32 %x) {
 ; FP-ALL-LABEL: test:
 ; FP-ALL:       # %bb.0: # %entry
+; FP-ALL-NEXT:    sxwd $r0 = $r0
 ; FP-ALL-NEXT:    addd $r12 = $r12, -32
 ; FP-ALL-NEXT:    get $r16 = $ra
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    sd 24[$r12] = $r16
+; FP-ALL-NEXT:    addd $r0 = $r0, 31
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    sd 16[$r12] = $r14
+; FP-ALL-NEXT:    andd $r0 = $r0, -32
 ; FP-ALL-NEXT:    addd $r14 = $r12, 16
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    sd 8[$r12] = $r18
-; FP-ALL-NEXT:    sxwd $r0 = $r0
-; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    addd $r0 = $r0, 31
-; FP-ALL-NEXT:    ;;
-; FP-ALL-NEXT:    andd $r0 = $r0, -32
-; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    sbfd $r18 = $r0, $r12
+; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    copyd $r12 = $r18
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    copyd $r0 = $r1
 ; FP-ALL-NEXT:    copyd $r1 = $r18
-; FP-ALL-NEXT:    copyd $r12 = $r18
 ; FP-ALL-NEXT:    call g1
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    lwz $r0 = 0[$r18]

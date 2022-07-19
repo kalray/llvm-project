@@ -603,6 +603,32 @@ bool KVXInstrInfo::reverseBranchCondition(
   return false;
 }
 
+bool KVXInstrInfo::isProlog(const MachineInstr *MI) const {
+  if (MI->getFlag(MachineInstr::FrameSetup)) {
+    switch (MI->getOpcode()) {
+    case KVX::ADDDri10:
+    case KVX::ADDDri37:
+    case KVX::ADDDri64:
+      if (MI->getOperand(0).getReg() == KVX::R12) // SP
+        return true;
+    }
+  }
+  return false;
+}
+
+bool KVXInstrInfo::isEpilog(const MachineInstr *MI) const {
+  if (MI->getFlag(MachineInstr::FrameDestroy)) {
+    switch (MI->getOpcode()) {
+    case KVX::ADDDri10:
+    case KVX::ADDDri37:
+    case KVX::ADDDri64:
+      if (MI->getOperand(1).getReg() == KVX::R12) // SP
+        return true;
+    }
+  }
+  return false;
+}
+
 bool KVXInstrInfo::isSoloInstruction(const MachineInstr &MI) const {
   if (MI.isKill() || MI.isImplicitDef() || MI.isInlineAsm() ||
       MI.isDebugInstr() || MI.isCFIInstruction() || MI.isLabel() ||
@@ -642,6 +668,17 @@ bool KVXInstrInfo::isSchedulingBoundary(const MachineInstr &MI,
     break;
   }
   return TargetInstrInfo::isSchedulingBoundary(MI, MBB, MF);
+}
+
+bool KVXInstrInfo::isSchedulingBoundaryPostRA(const MachineInstr &MI,
+                                              const MachineBasicBlock *MBB,
+                                              const MachineFunction &MF) const {
+  // Relax scheduling boundary for epilog and prolog.
+  // This is required to have bundling at the beginning and end of functions.
+  if (isProlog(&MI) || isEpilog(&MI))
+    return false;
+
+  return TargetInstrInfo::isSchedulingBoundaryPostRA(MI, MBB, MF);
 }
 
 MachineBasicBlock *

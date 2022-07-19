@@ -291,8 +291,9 @@ define i64 @MULCWC(i64 %0, i64 %1) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    maddd $r4 = $r1, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r1 = $r4
 ; CHECK-NEXT:    msbfd $r3 = $r2, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r1 = $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    slld $r0 = $r3, 32
 ; CHECK-NEXT:    ;;
@@ -327,8 +328,9 @@ define %"struct.std::complex.1" @MULCWDC(i64 %0, i64 %1) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    msbfwd $r2 = $r3, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    maddwd $r1 = $r3, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = and i64 %1, -4294967296
@@ -362,6 +364,7 @@ define i64 @MULWC(i64 %0, i64 %1) {
 ; CHECK-NEXT:    msbfuwd $r3 = $r2, $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    maddd $r0 = $r4, $r1
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    zxwd $r1 = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    slld $r0 = $r0, 32
@@ -394,8 +397,9 @@ define %"struct.std::complex.1" @MULWDC(i64 %0, i64 %1) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    msbfwd $r2 = $r4, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    maddwd $r3 = $r1, $r5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    ret
@@ -585,8 +589,9 @@ define i64 @MULCWC_2(i64 %0, i64 %1) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedd.rz $r0 = $r4, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    fixedd.rz $r1 = $r3, 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    slld $r1 = $r1, 32
 ; CHECK-NEXT:    ;;
@@ -628,8 +633,9 @@ define { i64, i64 } @MULCWDC_2(i64 %0, i64 %1) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    dot2wd $r1 = $r1, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    msbfwd $r2 = $r3, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r2
 ; CHECK-NEXT:    ret
@@ -663,6 +669,7 @@ define i64 @MULWC_2(i64 %0, i64 %1) {
 ; CHECK-NEXT:    msbfuwd $r3 = $r2, $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    maddd $r0 = $r4, $r1
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    zxwd $r1 = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    slld $r0 = $r0, 32
@@ -695,8 +702,9 @@ define { i64, i64 } @MULWDC_2(i64 %0, i64 %1) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    msbfwd $r2 = $r4, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    maddwd $r3 = $r1, $r5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    ret
@@ -849,8 +857,9 @@ define <2 x i64> @MULCWDC_3(<2 x i32> %0, <2 x i32> %1) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    maddd $r2 = $r3, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    msbfd $r1 = $r6, $r5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = sext <2 x i32> %0 to <2 x i64>
@@ -917,8 +926,9 @@ define <2 x i64> @MULWDC_3(<2 x i32> %0, <2 x i32> %1) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    msbfd $r2 = $r3, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    maddd $r1 = $r6, $r5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = sext <2 x i32> %0 to <2 x i64>
