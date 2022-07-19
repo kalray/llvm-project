@@ -10,24 +10,24 @@ target triple = "kvx-kalray-cos"
 define void @foo32() {
 ; CHECK-LABEL: foo32:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = a
-; CHECK-NEXT:    make $r1 = b
+; CHECK-NEXT:    make $r0 = b
+; CHECK-NEXT:    make $r1 = a
+; CHECK-NEXT:    make $r2 = 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r1 = 0[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r0 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    slld $r0 = $r0, 2
-; CHECK-NEXT:    ld $r1 = 0[$r1]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r2 = 0
+; CHECK-NEXT:    slld $r1 = $r1, 2
 ; CHECK-NEXT:    fence
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_1: # %entry
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    lwz.u $r5 = $r0[$r1]
+; CHECK-NEXT:    lwz.u $r5 = $r1[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    orw $r4 = $r2, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    acswapw $r0[$r1] = $r4r5
+; CHECK-NEXT:    acswapw $r1[$r0] = $r4r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.even $r4 ? .LBB0_1
 ; CHECK-NEXT:    ;;
@@ -47,24 +47,24 @@ entry:
 define void @foo64() {
 ; CHECK-LABEL: foo64:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = a
-; CHECK-NEXT:    make $r1 = c
+; CHECK-NEXT:    make $r0 = c
+; CHECK-NEXT:    make $r1 = a
+; CHECK-NEXT:    make $r2 = 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r1 = 0[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r0 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    slld $r0 = $r0, 3
-; CHECK-NEXT:    ld $r1 = 0[$r1]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r2 = 0
+; CHECK-NEXT:    slld $r1 = $r1, 3
 ; CHECK-NEXT:    fence
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB1_1: # %entry
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    ld.u $r5 = $r0[$r1]
+; CHECK-NEXT:    ld.u $r5 = $r1[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r4 = $r2, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    acswapd $r0[$r1] = $r4r5
+; CHECK-NEXT:    acswapd $r1[$r0] = $r4r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.even $r4 ? .LBB1_1
 ; CHECK-NEXT:    ;;

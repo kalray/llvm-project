@@ -69,12 +69,11 @@ define internal i1 @atomic_flag_test_and_set_explicit(%struct.atomic_flag* %0, i
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.9:
 ; CHECK-NEXT:    lbz $r1 = 19[$r12]
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    andd $r3 = $r0, 3
-; CHECK-NEXT:    fence
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    slld $r3 = $r3, 3
 ; CHECK-NEXT:    sbfd $r7 = $r3, 0
+; CHECK-NEXT:    fence
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB2_10: # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    lwz.u $r5 = $r7[$r0]

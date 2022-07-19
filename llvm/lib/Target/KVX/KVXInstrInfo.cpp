@@ -607,7 +607,6 @@ bool KVXInstrInfo::isSchedulingBoundary(const MachineInstr &MI,
                                         const MachineBasicBlock *MBB,
                                         const MachineFunction &MF) const {
   switch (MI.getOpcode()) {
-  case KVX::FENCE:
   case KVX::ENDLOOP:
   case KVX::LOOPDO:
   case TargetOpcode::EH_LABEL:
