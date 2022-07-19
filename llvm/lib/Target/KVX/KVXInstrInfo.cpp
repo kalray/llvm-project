@@ -603,6 +603,33 @@ bool KVXInstrInfo::reverseBranchCondition(
   return false;
 }
 
+bool KVXInstrInfo::isSoloInstruction(const MachineInstr &MI) const {
+  if (MI.isKill() || MI.isImplicitDef() || MI.isInlineAsm() ||
+      MI.isDebugInstr() || MI.isCFIInstruction() || MI.isLabel() ||
+      MI.isBundle())
+    return true;
+
+  switch (MI.getOpcode()) {
+  case KVX::SETrst3:
+  case KVX::SETrsa:
+  case KVX::SETrsra:
+  case KVX::SETrst4:
+  case KVX::WFXLrst2:
+  case KVX::WFXLrsa:
+  case KVX::WFXLrst4:
+  case KVX::WFXMrst2:
+  case KVX::WFXMrsa:
+  case KVX::WFXMrst4:
+    // SET, WFXL, and WFXM instructions have to be alone in a
+    // bundle if they write an AloneReg register.
+    if (KVX::AloneRegRegClass.contains(MI.getOperand(0).getReg()))
+      return true;
+    break;
+  }
+
+  return false;
+}
+
 bool KVXInstrInfo::isSchedulingBoundary(const MachineInstr &MI,
                                         const MachineBasicBlock *MBB,
                                         const MachineFunction &MF) const {

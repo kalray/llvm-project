@@ -1461,6 +1461,10 @@ public:
                                     const MachineBasicBlock *MBB,
                                     const MachineFunction &MF) const;
 
+  /// For VLIW architectures, returns true if the instruction should be
+  /// scheduled at a different cycle than other instructions of the region.
+  virtual bool isSoloInstruction(const MachineInstr &MI) const { return false; }
+
   /// Measure the specified inline asm to determine an approximation of its
   /// length.
   virtual unsigned getInlineAsmLength(

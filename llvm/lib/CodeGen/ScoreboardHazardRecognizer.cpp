@@ -79,6 +79,7 @@ ScoreboardHazardRecognizer::ScoreboardHazardRecognizer(
 
 void ScoreboardHazardRecognizer::Reset() {
   IssueCount = 0;
+  HasSoloInstruction = false;
   RequiredScoreboard.reset();
   ReservedScoreboard.reset();
 }
@@ -106,11 +107,18 @@ bool ScoreboardHazardRecognizer::atIssueLimit() const {
   if (IssueWidth == 0)
     return false;
 
+  if (HasSoloInstruction)
+    return true;
+
   return IssueCount == IssueWidth;
 }
 
 ScheduleHazardRecognizer::HazardType
 ScoreboardHazardRecognizer::getHazardType(SUnit *SU, int Stalls) {
+  if (HasSoloInstruction ||
+      (IssueCount > 0 && DAG->TII->isSoloInstruction(*SU->getInstr())))
+    return Hazard;
+
   if (!ItinData || ItinData->isEmpty())
     return NoHazard;
 
@@ -170,6 +178,9 @@ ScoreboardHazardRecognizer::getHazardType(SUnit *SU, int Stalls) {
 }
 
 void ScoreboardHazardRecognizer::EmitInstruction(SUnit *SU) {
+  if (DAG->TII->isSoloInstruction(*SU->getInstr()))
+    HasSoloInstruction = true;
+
   if (!ItinData || ItinData->isEmpty())
     return;
 
@@ -229,12 +240,14 @@ void ScoreboardHazardRecognizer::EmitInstruction(SUnit *SU) {
 
 void ScoreboardHazardRecognizer::AdvanceCycle() {
   IssueCount = 0;
+  HasSoloInstruction = false;
   ReservedScoreboard[0] = 0; ReservedScoreboard.advance();
   RequiredScoreboard[0] = 0; RequiredScoreboard.advance();
 }
 
 void ScoreboardHazardRecognizer::RecedeCycle() {
   IssueCount = 0;
+  HasSoloInstruction = false;
   ReservedScoreboard[ReservedScoreboard.getDepth()-1] = 0;
   ReservedScoreboard.recede();
   RequiredScoreboard[RequiredScoreboard.getDepth()-1] = 0;
