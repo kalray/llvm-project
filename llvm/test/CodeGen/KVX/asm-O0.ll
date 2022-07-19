@@ -370,11 +370,11 @@ define i64 @local_regs(i32 %a, i64 %b, i64 %c, i64 %d, i64 %e, i64 %f, i64 %g) {
 ; CHECK-NEXT:    sd 32[$r12] = $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r6
-; CHECK-NEXT:    copyd $r0 = $r7
 ; CHECK-NEXT:    copyd $r1 = $r2
 ; CHECK-NEXT:    copyd $r2 = $r3
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r3 = $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r7
 ; CHECK-NEXT:    copyd $r4 = $r5
 ; CHECK-NEXT:    copyd $r5 = $r6
 ; CHECK-NEXT:    ;;

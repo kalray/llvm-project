@@ -101,6 +101,9 @@ class ScoreboardHazardRecognizer : public ScheduleHazardRecognizer {
   /// IssueCount - Count instructions issued in this cycle.
   unsigned IssueCount = 0;
 
+  /// HasSoloInstruction - True if a solo instruction was issued this cycle
+  bool HasSoloInstruction = false;
+
   Scoreboard ReservedScoreboard;
   Scoreboard RequiredScoreboard;
 

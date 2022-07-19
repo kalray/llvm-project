@@ -7,7 +7,6 @@ define void @foo(i8* nocapture %0, float* nocapture %1) {
 ; NORMAL-LABEL: foo:
 ; NORMAL:       # %bb.0:
 ; NORMAL-NEXT:    lv $a3 = 96[$r0]
-; NORMAL-NEXT:    make $r3 = 0x10000000000000
 ; NORMAL-NEXT:    ;;
 ; NORMAL-NEXT:    lv $a2 = 64[$r0]
 ; NORMAL-NEXT:    ;;
@@ -20,9 +19,10 @@ define void @foo(i8* nocapture %0, float* nocapture %1) {
 ; NORMAL-NEXT:    faddw $r2 = $r2, 0x42280000
 ; NORMAL-NEXT:    ;;
 ; NORMAL-NEXT:    sw 0[$r1] = $r2
+; NORMAL-NEXT:    make $r1 = 0x10000000000000
 ; NORMAL-NEXT:    ;;
 ; NORMAL-NEXT:    #APP
-; NORMAL-NEXT:    wfxm $pcr, $r3
+; NORMAL-NEXT:    wfxm $pcr, $r1
 ; NORMAL-NEXT:    ;;
 ; NORMAL-NEXT:    #NO_APP
 ; NORMAL-NEXT:    make $r1 = 0x100000
@@ -57,12 +57,12 @@ define void @foo(i8* nocapture %0, float* nocapture %1) {
 ; VLIW-NEXT:    lv $a0 = 0[$r0]
 ; VLIW-NEXT:    ;;
 ; VLIW-NEXT:    sw 0[$r1] = $r2
+; VLIW-NEXT:    make $r1 = 0x100000
 ; VLIW-NEXT:    ;;
 ; VLIW-NEXT:    #APP
 ; VLIW-NEXT:    wfxm $pcr, $r3
 ; VLIW-NEXT:    ;;
 ; VLIW-NEXT:    #NO_APP
-; VLIW-NEXT:    make $r1 = 0x100000
 ; VLIW-NEXT:    mt44d $a0a1a2a3 = $a0a1a2a3
 ; VLIW-NEXT:    ;;
 ; VLIW-NEXT:    #APP
