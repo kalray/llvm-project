@@ -68,8 +68,6 @@
 ; CHECK-NEXT: Lazy Block Frequency Analysis
 ; CHECK-NEXT: KVX DAG->DAG Pattern Instruction Selection
 ; CHECK-NEXT: Finalize ISel and expand pseudo-instructions
-; CHECK-NEXT: Lazy Machine Block Frequency Analysis
-; CHECK-NEXT: Early Tail Duplication
 ; CHECK-NEXT: Optimize machine instruction PHIs
 ; CHECK-NEXT: Slot index numbering
 ; CHECK-NEXT: Merge disjoint stack slots
