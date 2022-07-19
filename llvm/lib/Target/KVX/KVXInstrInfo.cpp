@@ -13,7 +13,9 @@
 
 #include "KVXInstrInfo.h"
 #include "KVX.h"
+#include "KVXHazardRecognizer.h"
 #include "KVXTargetMachine.h"
+#include "MCTargetDesc/KVXMCTargetDesc.h"
 #include "llvm/ADT/STLExtras.h"
 #include "llvm/ADT/SmallVector.h"
 #include "llvm/CodeGen/MachineFrameInfo.h"
@@ -366,6 +368,12 @@ DFAPacketizer *
 KVXInstrInfo::CreateTargetScheduleState(const TargetSubtargetInfo &STI) const {
   const InstrItineraryData *II = STI.getInstrItineraryData();
   return static_cast<const KVXSubtarget &>(STI).createDFAPacketizer(II);
+}
+
+ScheduleHazardRecognizer *
+KVXInstrInfo::CreateTargetMIHazardRecognizer(const InstrItineraryData *II,
+                                             const ScheduleDAGMI *DAG) const {
+  return new KVXHazardRecognizer(II, (const ScheduleDAG *)DAG);
 }
 
 static bool parseCondBranch(MachineInstr &LastInst, MachineBasicBlock *&Target,

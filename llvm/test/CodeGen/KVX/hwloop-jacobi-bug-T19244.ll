@@ -11,6 +11,7 @@ define i32 @main(i32 %0, i8** nocapture readnone %1) local_unnamed_addr {
 ; CHECK-NEXT:    make $r0 = 0x2710
 ; CHECK-NEXT:    make $r1 = 8
 ; CHECK-NEXT:    addd $r12 = $r12, -32
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r16

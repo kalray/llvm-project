@@ -134,6 +134,26 @@ ScoreboardHazardRecognizer::getHazardType(SUnit *SU, int Stalls) {
     return NoHazard;
   }
   unsigned idx = MCID->getSchedClass();
+
+  bool ShouldUpdateReserved = false, ShouldUpdateRequired = false;
+  if (shouldUpdateBetweenStages()) {
+    for (const InstrStage *IS = ItinData->beginStage(idx),
+                          *E = ItinData->endStage(idx);
+         IS != E; ++IS) {
+      if (IS->getReservationKind() == InstrStage::Required)
+        ShouldUpdateRequired = true;
+      else
+        ShouldUpdateReserved = true;
+    }
+  }
+
+  Scoreboard ReservedScoreboardSnap, RequiredScoreboardSnap;
+  if (ShouldUpdateReserved)
+    ReservedScoreboardSnap.copyFrom(ReservedScoreboard);
+  if (ShouldUpdateRequired)
+    RequiredScoreboardSnap.copyFrom(RequiredScoreboard);
+
+  HazardType RetHazard = NoHazard;
   for (const InstrStage *IS = ItinData->beginStage(idx),
          *E = ItinData->endStage(idx); IS != E; ++IS) {
     // We must find one of the stage's units free for every cycle the
@@ -166,7 +186,21 @@ ScoreboardHazardRecognizer::getHazardType(SUnit *SU, int Stalls) {
       if (!freeUnits) {
         LLVM_DEBUG(dbgs() << "*** Hazard in cycle +" << StageCycle << ", ");
         LLVM_DEBUG(DAG->dumpNode(*SU));
-        return Hazard;
+        RetHazard = Hazard;
+        break;
+      }
+
+      if (shouldUpdateBetweenStages()) {
+        InstrStage::FuncUnits freeUnit = 0;
+        do {
+          freeUnit = freeUnits;
+          freeUnits = freeUnit & (freeUnit - 1);
+        } while (freeUnits);
+
+        if (IS->getReservationKind() == InstrStage::Required)
+          RequiredScoreboard[cycle + i] |= freeUnit;
+        else
+          ReservedScoreboard[cycle + i] |= freeUnit;
       }
     }
 
@@ -174,7 +208,13 @@ ScoreboardHazardRecognizer::getHazardType(SUnit *SU, int Stalls) {
     cycle += IS->getNextCycles();
   }
 
-  return NoHazard;
+  // Get back to the state before checking the hazard
+  if (ShouldUpdateReserved)
+    ReservedScoreboard.copyFrom(ReservedScoreboardSnap);
+  if (ShouldUpdateRequired)
+    RequiredScoreboard.copyFrom(RequiredScoreboardSnap);
+
+  return RetHazard;
 }
 
 void ScoreboardHazardRecognizer::EmitInstruction(SUnit *SU) {
