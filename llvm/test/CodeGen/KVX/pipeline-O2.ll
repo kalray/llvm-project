@@ -56,6 +56,14 @@
 ; CHECK-NEXT: SJLJ Exception Handling preparation
 ; CHECK-NEXT: Dominator Tree Construction
 ; CHECK-NEXT: Exception handling preparation
+; CHECK-NEXT: Dominator Tree Construction
+; CHECK-NEXT: Natural Loop Information
+; CHECK-NEXT: Scalar Evolution Analysis
+; CHECK-NEXT: Lazy Branch Probability Analysis
+; CHECK-NEXT: Lazy Block Frequency Analysis
+; CHECK-NEXT: Optimization Remark Emitter
+; CHECK-NEXT: Hardware Loop Insertion
+; CHECK-NEXT: KVX Hardware loops Prepare
 ; CHECK-NEXT: Safe Stack instrumentation pass
 ; CHECK-NEXT: Insert stack protectors
 ; CHECK-NEXT: Module Verifier
@@ -69,8 +77,6 @@
 ; CHECK-NEXT: Lazy Block Frequency Analysis
 ; CHECK-NEXT: KVX DAG->DAG Pattern Instruction Selection
 ; CHECK-NEXT: Finalize ISel and expand pseudo-instructions
-; CHECK-NEXT: Lazy Machine Block Frequency Analysis
-; CHECK-NEXT: Early Tail Duplication
 ; CHECK-NEXT: Optimize machine instruction PHIs
 ; CHECK-NEXT: Slot index numbering
 ; CHECK-NEXT: Merge disjoint stack slots
@@ -88,6 +94,9 @@
 ; CHECK-NEXT: Peephole Optimizations
 ; CHECK-NEXT: Remove dead machine instructions
 ; CHECK-NEXT: KVX pseudo instruction expansion pass
+; CHECK-NEXT: MachineDominator Tree Construction
+; CHECK-NEXT: Machine Natural Loop Construction
+; CHECK-NEXT: KVX Hardware loops
 ; CHECK-NEXT: Detect Dead Lanes
 ; CHECK-NEXT: Process Implicit Definitions
 ; CHECK-NEXT: Remove unreachable machine basic blocks
