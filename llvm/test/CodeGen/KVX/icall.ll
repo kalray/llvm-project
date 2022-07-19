@@ -74,12 +74,12 @@ define i32 @badfunc(i32 %0, i32 %1, i32 %2, i32 %3, i16* nocapture %4, i32 %5) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.21: # in Loop: Header=BB0_4 Depth=1
 ; CHECK-NEXT:    addw $r3 = $r19, -2
-; CHECK-NEXT:    addd $r6 = $r18, $r0
+; CHECK-NEXT:    addd $r7 = $r18, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sh 2[$r6] = $r5
-; CHECK-NEXT:    compw.ltu $r7 = $r3, 2
+; CHECK-NEXT:    sh 2[$r7] = $r5
+; CHECK-NEXT:    compw.ltu $r6 = $r3, 2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.odd $r7 ? .LBB0_7
+; CHECK-NEXT:    cb.odd $r6 ? .LBB0_7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.22: # in Loop: Header=BB0_4 Depth=1
 ; CHECK-NEXT:    lhz $r5 = 4[$r4]
@@ -88,12 +88,12 @@ define i32 @badfunc(i32 %0, i32 %1, i32 %2, i32 %3, i16* nocapture %4, i32 %5) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.23: # in Loop: Header=BB0_4 Depth=1
 ; CHECK-NEXT:    addw $r3 = $r19, -3
-; CHECK-NEXT:    addd $r6 = $r18, $r0
+; CHECK-NEXT:    addd $r7 = $r18, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sh 4[$r6] = $r5
-; CHECK-NEXT:    compw.ltu $r7 = $r3, 2
+; CHECK-NEXT:    sh 4[$r7] = $r5
+; CHECK-NEXT:    compw.ltu $r6 = $r3, 2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.odd $r7 ? .LBB0_8
+; CHECK-NEXT:    cb.odd $r6 ? .LBB0_8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.24: # in Loop: Header=BB0_4 Depth=1
 ; CHECK-NEXT:    lhz $r5 = 6[$r4]
@@ -102,12 +102,12 @@ define i32 @badfunc(i32 %0, i32 %1, i32 %2, i32 %3, i16* nocapture %4, i32 %5) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.25: # in Loop: Header=BB0_4 Depth=1
 ; CHECK-NEXT:    addw $r3 = $r19, -4
-; CHECK-NEXT:    addd $r6 = $r18, $r0
+; CHECK-NEXT:    addd $r7 = $r18, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sh 6[$r6] = $r5
-; CHECK-NEXT:    compw.ltu $r7 = $r3, 2
+; CHECK-NEXT:    sh 6[$r7] = $r5
+; CHECK-NEXT:    compw.ltu $r6 = $r3, 2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.odd $r7 ? .LBB0_9
+; CHECK-NEXT:    cb.odd $r6 ? .LBB0_9
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.26: # in Loop: Header=BB0_4 Depth=1
 ; CHECK-NEXT:    lhz $r3 = 8[$r4]
@@ -117,13 +117,13 @@ define i32 @badfunc(i32 %0, i32 %1, i32 %2, i32 %3, i16* nocapture %4, i32 %5) {
 ; CHECK-NEXT:  # %bb.27: # in Loop: Header=BB0_4 Depth=1
 ; CHECK-NEXT:    addd $r0 = $r0, 10
 ; CHECK-NEXT:    addd $r1 = $r1, 10
-; CHECK-NEXT:    addd $r4 = $r18, $r0
+; CHECK-NEXT:    addd $r5 = $r18, $r0
 ; CHECK-NEXT:    addw $r19 = $r19, -5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sh 8[$r4] = $r3
-; CHECK-NEXT:    compw.gtu $r5 = $r19, 1
+; CHECK-NEXT:    sh 8[$r5] = $r3
+; CHECK-NEXT:    compw.gtu $r4 = $r19, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.odd $r5 ? .LBB0_4
+; CHECK-NEXT:    cb.odd $r4 ? .LBB0_4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.10: # %..loopexit1_crit_edge
 ; CHECK-NEXT:    addd $r18 = $r18, $r0

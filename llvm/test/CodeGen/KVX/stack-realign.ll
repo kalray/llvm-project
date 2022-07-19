@@ -197,6 +197,7 @@ define i32 @stackrealign2(i32 %n){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 28[$r6] = $r7
 ; CHECK-NEXT:    addd $r6 = $r6, 32
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.dnez $r8 ? .LBB1_3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.4: # %for.cond.cleanup.loopexit.unr-lcssa.loopexit
@@ -206,47 +207,48 @@ define i32 @stackrealign2(i32 %n){
 ; CHECK-NEXT:    cb.deqz $r2 ? .LBB1_13
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.6: # %for.body.epil
-; CHECK-NEXT:    sbfw $r4 = $r3, $r1
-; CHECK-NEXT:    compd.ne $r5 = $r2, 1
+; CHECK-NEXT:    compd.ne $r4 = $r2, 1
+; CHECK-NEXT:    sbfw $r5 = $r3, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw.xs $r3[$r0] = $r4
-; CHECK-NEXT:    cb.even $r5 ? .LBB1_13
+; CHECK-NEXT:    sw.xs $r3[$r0] = $r5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cb.even $r4 ? .LBB1_13
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.7: # %for.body.epil.1
 ; CHECK-NEXT:    addd $r4 = $r3, 1
-; CHECK-NEXT:    compd.eq $r6 = $r2, 2
+; CHECK-NEXT:    compd.eq $r5 = $r2, 2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfw $r5 = $r4, $r1
+; CHECK-NEXT:    sbfw $r6 = $r4, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw.xs $r4[$r0] = $r5
-; CHECK-NEXT:    cb.odd $r6 ? .LBB1_13
+; CHECK-NEXT:    sw.xs $r4[$r0] = $r6
+; CHECK-NEXT:    cb.odd $r5 ? .LBB1_13
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.8: # %for.body.epil.2
 ; CHECK-NEXT:    addd $r4 = $r3, 2
-; CHECK-NEXT:    compd.eq $r6 = $r2, 3
+; CHECK-NEXT:    compd.eq $r5 = $r2, 3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfw $r5 = $r4, $r1
+; CHECK-NEXT:    sbfw $r6 = $r4, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw.xs $r4[$r0] = $r5
-; CHECK-NEXT:    cb.odd $r6 ? .LBB1_13
+; CHECK-NEXT:    sw.xs $r4[$r0] = $r6
+; CHECK-NEXT:    cb.odd $r5 ? .LBB1_13
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.9: # %for.body.epil.3
 ; CHECK-NEXT:    addd $r4 = $r3, 3
-; CHECK-NEXT:    compd.eq $r6 = $r2, 4
+; CHECK-NEXT:    compd.eq $r5 = $r2, 4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfw $r5 = $r4, $r1
+; CHECK-NEXT:    sbfw $r6 = $r4, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw.xs $r4[$r0] = $r5
-; CHECK-NEXT:    cb.odd $r6 ? .LBB1_13
+; CHECK-NEXT:    sw.xs $r4[$r0] = $r6
+; CHECK-NEXT:    cb.odd $r5 ? .LBB1_13
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.10: # %for.body.epil.4
 ; CHECK-NEXT:    addd $r4 = $r3, 4
-; CHECK-NEXT:    compd.eq $r6 = $r2, 5
+; CHECK-NEXT:    compd.eq $r5 = $r2, 5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfw $r5 = $r4, $r1
+; CHECK-NEXT:    sbfw $r6 = $r4, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw.xs $r4[$r0] = $r5
-; CHECK-NEXT:    cb.odd $r6 ? .LBB1_13
+; CHECK-NEXT:    sw.xs $r4[$r0] = $r6
+; CHECK-NEXT:    cb.odd $r5 ? .LBB1_13
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.11: # %for.body.epil.5
 ; CHECK-NEXT:    compd.eq $r2 = $r2, 6
@@ -592,6 +594,7 @@ define i32 @stackrealign4(i32 %n){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 28[$r6] = $r1
 ; CHECK-NEXT:    addd $r6 = $r6, 32
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.dnez $r7 ? .LBB3_3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.4: # %for.cond.cleanup.loopexit.unr-lcssa.loopexit
@@ -601,47 +604,48 @@ define i32 @stackrealign4(i32 %n){
 ; CHECK-NEXT:    cb.deqz $r2 ? .LBB3_13
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.6: # %for.body.epil
-; CHECK-NEXT:    sbfw $r4 = $r3, $r8
-; CHECK-NEXT:    compd.ne $r5 = $r2, 1
+; CHECK-NEXT:    compd.ne $r4 = $r2, 1
+; CHECK-NEXT:    sbfw $r5 = $r3, $r8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw.xs $r3[$r0] = $r4
-; CHECK-NEXT:    cb.even $r5 ? .LBB3_13
+; CHECK-NEXT:    sw.xs $r3[$r0] = $r5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cb.even $r4 ? .LBB3_13
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.7: # %for.body.epil.1
 ; CHECK-NEXT:    addd $r1 = $r3, 1
-; CHECK-NEXT:    compd.eq $r5 = $r2, 2
+; CHECK-NEXT:    compd.eq $r4 = $r2, 2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfw $r4 = $r1, $r8
+; CHECK-NEXT:    sbfw $r5 = $r1, $r8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw.xs $r1[$r0] = $r4
-; CHECK-NEXT:    cb.odd $r5 ? .LBB3_13
+; CHECK-NEXT:    sw.xs $r1[$r0] = $r5
+; CHECK-NEXT:    cb.odd $r4 ? .LBB3_13
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.8: # %for.body.epil.2
 ; CHECK-NEXT:    addd $r1 = $r3, 2
-; CHECK-NEXT:    compd.eq $r5 = $r2, 3
+; CHECK-NEXT:    compd.eq $r4 = $r2, 3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfw $r4 = $r1, $r8
+; CHECK-NEXT:    sbfw $r5 = $r1, $r8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw.xs $r1[$r0] = $r4
-; CHECK-NEXT:    cb.odd $r5 ? .LBB3_13
+; CHECK-NEXT:    sw.xs $r1[$r0] = $r5
+; CHECK-NEXT:    cb.odd $r4 ? .LBB3_13
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.9: # %for.body.epil.3
 ; CHECK-NEXT:    addd $r1 = $r3, 3
-; CHECK-NEXT:    compd.eq $r5 = $r2, 4
+; CHECK-NEXT:    compd.eq $r4 = $r2, 4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfw $r4 = $r1, $r8
+; CHECK-NEXT:    sbfw $r5 = $r1, $r8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw.xs $r1[$r0] = $r4
-; CHECK-NEXT:    cb.odd $r5 ? .LBB3_13
+; CHECK-NEXT:    sw.xs $r1[$r0] = $r5
+; CHECK-NEXT:    cb.odd $r4 ? .LBB3_13
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.10: # %for.body.epil.4
 ; CHECK-NEXT:    addd $r1 = $r3, 4
-; CHECK-NEXT:    compd.eq $r5 = $r2, 5
+; CHECK-NEXT:    compd.eq $r4 = $r2, 5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfw $r4 = $r1, $r8
+; CHECK-NEXT:    sbfw $r5 = $r1, $r8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw.xs $r1[$r0] = $r4
-; CHECK-NEXT:    cb.odd $r5 ? .LBB3_13
+; CHECK-NEXT:    sw.xs $r1[$r0] = $r5
+; CHECK-NEXT:    cb.odd $r4 ? .LBB3_13
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.11: # %for.body.epil.5
 ; CHECK-NEXT:    addd $r1 = $r3, 5
