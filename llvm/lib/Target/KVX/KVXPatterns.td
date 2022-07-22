@@ -918,15 +918,15 @@ def is_splat_build_vec : PatLeaf<(build_vector), [{
   return KVX_LOW::isSplatBuildVec(N, CurDAG);
 }], extract_splat_node>;
 
-def is_splat_build_vec_imm16 : PatLeaf<(build_vector), [{
+def is_splat_build_vec_signed16 : PatLeaf<(build_vector), [{
   return KVX_LOW::isSplatBuildVec(N, CurDAG, 16);
 }], build_imm_vec_rpt>;
 
-def is_splat_build_vec_imm43 : PatLeaf<(build_vector), [{
+def is_splat_build_vec_signed43 : PatLeaf<(build_vector), [{
   return KVX_LOW::isSplatBuildVec(N, CurDAG, 43);
 }], build_imm_vec_rpt>;
 
-def is_splat_build_vec_imm64 : PatLeaf<(build_vector), [{
+def is_splat_build_vec_signed64 : PatLeaf<(build_vector), [{
   return KVX_LOW::isSplatBuildVec(N, CurDAG, 64);
 }], build_imm_vec_rpt>;
 
@@ -1274,7 +1274,7 @@ def : Pat<(v4i32 (trunc v4i64:$v)), (REG_SEQUENCE PairedReg,
                                       sub_s1)>;
 
 multiclass KVX_BUILD_SPLAT_VECTOR<ValueType vt, ValueType hvt, ValueType evt> {
-def : Pat<(vt is_splat_build_vec_imm16:$sbv),
+def : Pat<(vt is_splat_build_vec_signed16:$sbv),
           (vt (REG_SEQUENCE PairedReg,
             (hvt (MAKEi16 (build_imm_vec_rpt $sbv))),
             sub_s0,
@@ -1282,7 +1282,7 @@ def : Pat<(vt is_splat_build_vec_imm16:$sbv),
             sub_s1
           ))>;
 
-def : Pat<(vt is_splat_build_vec_imm43:$sbv),
+def : Pat<(vt is_splat_build_vec_signed43:$sbv),
           (vt (REG_SEQUENCE PairedReg,
             (hvt (MAKEi43 (build_imm_vec_rpt $sbv))),
             sub_s0,
@@ -1290,7 +1290,7 @@ def : Pat<(vt is_splat_build_vec_imm43:$sbv),
             sub_s1
           ))>;
 
-def : Pat<(vt is_splat_build_vec_imm64:$sbv),
+def : Pat<(vt is_splat_build_vec_signed64:$sbv),
           (vt (REG_SEQUENCE PairedReg,
             (hvt (MAKEi64 (build_imm_vec_rpt $sbv))),
             sub_s0,

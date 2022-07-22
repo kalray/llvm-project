@@ -3422,7 +3422,7 @@ llvm::SDValue KVX_LOW::extractSplatNode(const llvm::SDNode *N,
 
 bool KVX_LOW::isSplatBuildVec(const llvm::SDNode *N,
                               const llvm::SelectionDAG *CurDag,
-                              unsigned ImmSizeCheck) {
+                              unsigned MakeImmSizeCheck) {
   const BuildVectorSDNode *BV = dyn_cast<BuildVectorSDNode>(N);
 
   assert(BV && "isSplatBuildVec called with a non-buildvector node");
@@ -3434,7 +3434,7 @@ bool KVX_LOW::isSplatBuildVec(const llvm::SDNode *N,
   if (VT != MVT::v4f32 && VT != MVT::v4i32)
     return false;
 
-  bool DoConstantCheck = ImmSizeCheck > 0;
+  bool DoConstantCheck = MakeImmSizeCheck > 0;
   if (DoConstantCheck && !BV->isConstant())
     return false;
 
@@ -3454,7 +3454,7 @@ bool KVX_LOW::isSplatBuildVec(const llvm::SDNode *N,
   /* Check that the immediate encoding the build_vector fits in ImmSizeCheck */
   if (DoConstantCheck) {
     uint64_t V = getImmVector(BV, CurDag, 0, true);
-    if (!isUIntN(ImmSizeCheck, V))
+    if (!isIntN(MakeImmSizeCheck, V)) // MAKE immediate is always signed
       return false;
   }
 
