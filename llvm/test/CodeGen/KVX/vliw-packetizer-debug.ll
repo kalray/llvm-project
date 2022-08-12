@@ -36,27 +36,22 @@ define i32 @debug_sanity(i32* nocapture %p, i32 %a, i32 %b, i32 %c, i32 %d) !dbg
 ; CHECK-NEXT:    .loc 1 6 23 is_stmt 0
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    addx2w $r20 = $r2, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .Ltmp1:
-; CHECK-NEXT:    .loc 1 7 16 is_stmt 1
 ; CHECK-NEXT:    call debug_sanity_extfn
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .Ltmp2:
-; CHECK-NEXT:    .loc 1 7 14 is_stmt 0
+; CHECK-NEXT:    .loc 1 7 14 is_stmt 1
 ; CHECK-NEXT:    addw $r0 = $r0, $r20
 ; CHECK-NEXT:    sxwd $r1 = $r18
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .loc 1 7 8
+; CHECK-NEXT:    .loc 1 7 8 is_stmt 0
 ; CHECK-NEXT:    copyd $r0 = $r20
 ; CHECK-NEXT:    sw.xs $r1[$r19] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 8 3 is_stmt 1
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .Ltmp3:
+; CHECK-NEXT:  .Ltmp1:
 ; CHECK-NEXT:    ld $r20 = 16[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .Ltmp4:
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
@@ -64,7 +59,7 @@ define i32 @debug_sanity(i32* nocapture %p, i32 %a, i32 %b, i32 %c, i32 %d) !dbg
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .Ltmp5:
+; CHECK-NEXT:  .Ltmp2:
 entry:
   call void @llvm.dbg.value(metadata i32* %p, metadata !13, metadata !DIExpression()), !dbg !19
   call void @llvm.dbg.value(metadata i32 %a, metadata !14, metadata !DIExpression()), !dbg !19
