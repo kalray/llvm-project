@@ -34,24 +34,38 @@ namespace llvm {
 //                             KVXPostPacketizer
 // ========================================================================== //
 
-static inline bool canBundleWith(std::vector<MachineInstr *> Packet,
-                                 MachineInstr *ExitMI,
-                                 const TargetInstrInfo *TII,
-                                 const TargetRegisterInfo *TRI,
-                                 DFAPacketizer *ResourceTracker, SUnit *ExitSU,
-                                 unsigned LastCycle) {
-  // ExitMI and ExitSU->getInstr() may not be the same if the terminator is
-  // solo. Indeed, some solo instructions such as DBG_VALUE and DBG_LABEL do
-  // not have a SU attached.
-  // If that is the case we skip the bundling.
+// Returns the distance between the last instruction of the Packet and the
+// terminator. Distance == 0 -> terminator should not be bundled.
+static inline int canBundleWith(std::vector<MachineInstr *> Packet,
+                                MachineInstr *ExitMI,
+                                const TargetInstrInfo *TII,
+                                const TargetRegisterInfo *TRI,
+                                DFAPacketizer *ResourceTracker, SUnit *ExitSU,
+                                unsigned LastCycle) {
+  int Distance = 1;
+
+  // Skip DBG_VALUE and DBG_LABEL until the terminator is reached
+  auto ExitII = ExitMI->getIterator();
+  while (ExitSU->getInstr() != nullptr && // the ExitSU exists
+         &*ExitII != ExitSU->getInstr() &&
+         (ExitII->isDebugValue() | ExitII->isDebugLabel())) {
+    ++ExitII;
+    ++Distance;
+  }
+  ExitMI = &*ExitII;
+  assert(ExitSU->getInstr() == nullptr || ExitMI == ExitSU->getInstr());
+
+  // At this point, ExitSU is not guaranteed to have an attached instruction.
+  // Indeed, some solo instructions such as DBG_VALUE do not have
+  // a SU attached. So we use ExitMI in the test below.
   if (TII->isSoloInstruction(*ExitMI)) {
     KDEBUG("Cannot bundle terminator: is a solo instruction");
     return false;
   }
 
-  // From now on, we may assume that ExitMI and ExitSU->getInstr() are the same
-  assert(ExitSU != nullptr);
-  assert(ExitMI == ExitSU->getInstr());
+  // Instructions that are not solo have a SU attached. So from now on, we can
+  // use ExitSU directly.
+  assert(ExitSU->getInstr() != nullptr);
 
   // Check for side effects
   if (ExitMI->getDesc().hasUnmodeledSideEffects()) {
@@ -122,7 +136,8 @@ static inline bool canBundleWith(std::vector<MachineInstr *> Packet,
     return false;
   }
 
-  return true;
+  assert(Distance > 0);
+  return Distance;
 }
 
 #ifndef NDEBUG
@@ -235,7 +250,7 @@ void KVXPostPacketizer::runOnPacket(std::vector<MachineInstr *> &Packet,
 #endif
 
   if (TerminatorExists) {
-    // Try bundling the terminator
+    // Try bundling the instruction after the last instruction of the packet
     MachineInstr *MITerminator = &*std::next(MILastIter);
 #ifndef NDEBUG
     MachineInstr *ExitMI = ExitSU->getInstr();
@@ -246,9 +261,26 @@ void KVXPostPacketizer::runOnPacket(std::vector<MachineInstr *> &Packet,
       KDEBUG("No ExitSU");
     }
 #endif
-    if (canBundleWith(Packet, MITerminator, TII, TRI, ResourceTracker, ExitSU,
-                      LastCycle))
+    if (int Distance = canBundleWith(Packet, MITerminator, TII, TRI,
+                                     ResourceTracker, ExitSU, LastCycle)) {
+      // Bundling is authorized. Remove all the DEBUG_VALUE between the last
+      // instruction of the packet and the ExitSU. Place all DEBUG_LABEL to
+      // the start of the bundle.
+      auto PacketStart = Packet.front()->getIterator();
+      int DebugCount = Distance - 1;
+      if (DebugCount > 0) {
+        for (auto II = MITerminator->getIterator(), NII = std::next(II);
+             DebugCount > 0; DebugCount--, II = NII) {
+          NII = std::next(II);
+          MachineInstr *MII = &*II;
+          assert(MII->isDebugValue() || MII->isDebugLabel());
+          MBB->remove(MII);
+          if (MII->isDebugLabel())
+            MBB->insert(PacketStart, MII);
+        }
+      }
       MILastIter++;
+    }
   }
 
   finalizeBundle(*MBB, MIFirstIter, std::next(MILastIter));
@@ -389,7 +421,14 @@ void KVXScheduleDAGMI::finishBlock() {
       continue;
     }
 
-    // We should not place CFI instructions inside a bundle.
+    auto II = Attach->getIterator();
+    while (II->isBundledWithSucc())
+      II++;
+
+    // Do not place CFI after basic block terminator
+    if (II->isTerminator())
+      continue;
+
     MBB->insertAfterBundle(Attach->getIterator(), CFI);
   }
 
