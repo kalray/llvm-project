@@ -154,7 +154,10 @@ def: Pat<(int_kvx_fmulwcp v4f32:$v1, v4f32:$v2, i32:$conjugate, i32:$rounding, i
      (FMULWCrr (v2f32 (EXTRACT_SUBREG PairedReg:$v1, sub_s0)),
                (v2f32 (EXTRACT_SUBREG PairedReg:$v2, sub_s0)), ConjugateMod:$conjugate, RoundingMod:$rounding, SilentMod:$silent), sub_s0,
      (FMULWCrr (v2f32 (EXTRACT_SUBREG PairedReg:$v1, sub_s1)),
-               (v2f32 (EXTRACT_SUBREG PairedReg:$v2, sub_s1)), ConjugateMod:$conjugate, RoundingMod:$rounding, SilentMod:$silent), sub_s1))>;
+               (v2f32 (EXTRACT_SUBREG PairedReg:$v2, sub_s1)), ConjugateMod:$conjugate, RoundingMod:$rounding, SilentMod:$silent), sub_s1))>, Requires<[IsV1]>;
+
+def: Pat<(int_kvx_fmulwcp v4f32:$v1, v4f32:$v2, i32:$conjugate, i32:$rounding, i32:$silent),
+  (v4f32 (FMULWCP PairedReg:$v1, PairedReg:$v2, ConjugateMod:$conjugate, RoundingMod:$rounding, SilentMod:$silent))>, Requires<[IsV2]>;
 
 multiclass FMUL_DC<Intrinsic int_kvx_fmul, KVX_INSTRUCTION FFMS, KVX_INSTRUCTION FFMA> {
   def: Pat<(int_kvx_fmul v2f64:$v1, v2f64:$v2, i32:$rounding, i32:$silent),

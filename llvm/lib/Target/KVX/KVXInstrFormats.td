@@ -1086,7 +1086,7 @@ class ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE_BINARY16X4
   <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
   : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
-// 7 insn(s):
+// FIXME: Some of these intructions do not use AUXR in cv2
 // FMULWQ, FADDDP, FADDWQ, FSBFDP, FSBFWQ, FDOT2WZP, FDOT2WDP
 let Size = 4 in
 class ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE
@@ -1108,6 +1108,14 @@ class ROUNDING_SILENT_BINOP_MAU_FP<string OpcStr, RegisterClass RC_OUT, Register
      (outs RC_OUT:$o),
      (ins RC_IN:$lhs, RC_IN:$rhs, RoundingMod:$r, SilentMod:$s),
      !strconcat (OpcStr, "$r$s $o = $lhs, $rhs"),
+     [/* no straightforward pattern */],
+     MAU_FP>;
+
+class CONJ_ROUNDING_SILENT_BINOP_MAU_FP<string OpcStr, RegisterClass RC_OUT, RegisterClass RC_IN>
+    : KVX_INSTRUCTION <
+     (outs RC_OUT:$o),
+     (ins RC_IN:$lhs, RC_IN:$rhs, ConjugateMod:$c, RoundingMod:$r, SilentMod:$s),
+     !strconcat (OpcStr, "$c$r$s $o = $lhs, $rhs"),
      [/* no straightforward pattern */],
      MAU_FP>;
 

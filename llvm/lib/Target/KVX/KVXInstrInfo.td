@@ -2802,6 +2802,8 @@ def FFDMASWP : ROUNDING_SILENT_TERNARY_AUXR_FP<"ffdmaswp", SingleReg, PairedReg>
 
 def FFDMSAW : ROUNDING_SILENT_TERNARY_AUXR_FP<"ffdmsaw", SingleReg, SingleReg>;
 def FFDMSAWP : ROUNDING_SILENT_TERNARY_AUXR_FP<"ffdmsawp", SingleReg, PairedReg>;
+
+def FMULWCP : CONJ_ROUNDING_SILENT_BINOP_MAU_FP<"fmulwcp", PairedReg, PairedReg>;
 }
 
 def FMIND : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
