@@ -46,8 +46,8 @@ define dso_local void @no_hwloop(i32* nocapture %0, i32* nocapture readonly %1) 
 define dso_local void @hwloop(i32* nocapture %0, i32* nocapture readonly %1) local_unnamed_addr #0 {
 ; CHECK-LABEL: hwloop:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r3 = 5
 ; CHECK-NEXT:    make $r2 = 0
+; CHECK-NEXT:    make $r3 = 5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r3, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;

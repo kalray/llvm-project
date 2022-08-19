@@ -502,6 +502,7 @@ NARY_BUILTIN(xmma484usbw, "Tx512Tx512Tx256Tx256", "n", 3)
 NARY_BUILTIN(xmt44d, "Tx1024Tx1024", "n", 1)
 
 BUILTIN(__builtin_kvx_xfscalewv, "Tx256Tx256cC*", "n")
+BUILTIN(__builtin_kvx_xfscalewo, "Tx256Tx256icC*", "n")
 BUILTIN(__builtin_kvx_xfnarrowwhv, "Tx256Tx512cC*", "n")
 
 //===----------------------------------------------------------------------===//
