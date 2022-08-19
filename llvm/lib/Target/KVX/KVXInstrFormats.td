@@ -1103,13 +1103,17 @@ class ROUNDING_SILENT_TERNARY_AUXR_FP <string OpcStr, RegisterClass RC_OUT, Regi
     MAU_AUXR_FP>;
 
 let Size = 4 in
-class ROUNDING_SILENT_BINOP_MAU_FP<string OpcStr, RegisterClass RC_OUT, RegisterClass RC_IN>
+class ROUNDING_SILENT_BINOP<string Opcode, RegisterClass RC_OUT, RegisterClass RC_LHS, RegisterClass RC_RHS, InstrItinClass Itin, list<dag> Patt = []>
     : KVX_INSTRUCTION <
      (outs RC_OUT:$o),
-     (ins RC_IN:$lhs, RC_IN:$rhs, RoundingMod:$r, SilentMod:$s),
-     !strconcat (OpcStr, "$r$s $o = $lhs, $rhs"),
-     [/* no straightforward pattern */],
-     MAU_FP>;
+     (ins RC_LHS:$lhs, RC_RHS:$rhs, RoundingMod:$r, SilentMod:$s),
+     !strconcat (Opcode, "$r$s $o = $lhs, $rhs"),
+     Patt,
+     Itin>;
+
+class ROUNDING_SILENT_BINOP_MAU_FP<string OpcStr, RegisterClass RC_OUT, RegisterClass RC_IN>
+    : ROUNDING_SILENT_BINOP <OpcStr, RC_OUT, RC_IN, RC_IN, MAU_FP>;
+
 
 class CONJ_ROUNDING_SILENT_BINOP_MAU_FP<string OpcStr, RegisterClass RC_OUT, RegisterClass RC_IN>
     : KVX_INSTRUCTION <
