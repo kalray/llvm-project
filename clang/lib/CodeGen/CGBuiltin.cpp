@@ -20623,6 +20623,8 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     return KVX_emitScaleNarrowBuiltin(3, Intrinsic::kvx_xfscalewv, *this, E);
   case KVX::BI__builtin_kvx_xfscalewo:
     return KVX_emitScaleNarrowBuiltin(2, Intrinsic::kvx_xfscalewo, *this, E, 3);
+  case KVX::BI__builtin_kvx_xffma44hw:
+    return KVX_emitScaleNarrowBuiltin(2, Intrinsic::kvx_xffma44hw, *this, E, 4);
   case KVX::BI__builtin_kvx_fnarrowwhv:
     KVX_emitDeprecatedWarning_4_8(CGM, E, "fnarrowwhv", "xfnarrowwhv");
     [[clang::fallthrough]];

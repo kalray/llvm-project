@@ -28,3 +28,22 @@ void xfscalewo_test(__kvx_x256 *v, int s) {
 void xclampwo_test(__kvx_x256 *v) {
   v[0] = __builtin_kvx_xclampwo(v[0], v[0], v[0]);
 }
+
+// CHECK-LABEL: @xffma44hw_test(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[TMP1:%.*]] = load <512 x i1>, <512 x i1>* [[ACC:%.*]], align 32, [[TBAA6:!tbaa !.*]]
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <512 x i1> @llvm.kvx.xffma44hw(<512 x i1> [[TMP1]], <256 x i1> [[TMP0]], <256 x i1> [[TMP0]], i32 7, i32 0)
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <512 x i1> @llvm.kvx.xffma44hw(<512 x i1> [[TMP2]], <256 x i1> [[TMP0]], <256 x i1> [[TMP0]], i32 7, i32 1)
+// CHECK-NEXT:    [[TMP4:%.*]] = tail call <512 x i1> @llvm.kvx.xffma44hw(<512 x i1> [[TMP3]], <256 x i1> [[TMP0]], <256 x i1> [[TMP0]], i32 0, i32 0)
+// CHECK-NEXT:    [[TMP5:%.*]] = tail call <512 x i1> @llvm.kvx.xffma44hw(<512 x i1> [[TMP4]], <256 x i1> [[TMP0]], <256 x i1> [[TMP0]], i32 3, i32 1)
+// CHECK-NEXT:    store <512 x i1> [[TMP5]], <512 x i1>* [[ACC]], align 32, [[TBAA6]]
+// CHECK-NEXT:    ret void
+//
+void xffma44hw_test(__kvx_x512 *acc, __kvx_x256 *v) {
+  __kvx_x256 l = v[0];
+  __kvx_x512 r = __builtin_kvx_xffma44hw(acc[0], l, l, "");
+  r = __builtin_kvx_xffma44hw(r, l, l, ".s");
+  r = __builtin_kvx_xffma44hw(r, l, l, ".rn");
+  acc[0] = __builtin_kvx_xffma44hw(r, l, l, ".rz.s");
+}
