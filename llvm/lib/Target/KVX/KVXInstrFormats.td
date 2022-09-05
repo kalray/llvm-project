@@ -1111,6 +1111,14 @@ class TERNARY<string Opcode, RegisterClass RC_OUT, RegisterClass RC_LHS, Registe
      Patt,
      Itin>;
 
+let Size = 4, Constraints = "$o = $a" in
+class ROUNDING_SILENT_TERNARY <string Opcode, RegisterClass RC_OUT, RegisterClass RC_LHS, RegisterClass RC_RHS, InstrItinClass Itin, list<dag> Patt = []>
+    : KVX_INSTRUCTION <
+     (outs RC_OUT:$o),
+     (ins RC_OUT:$a, RC_LHS:$lhs, RC_RHS:$rhs, RoundingMod:$r, SilentMod:$s),
+     !strconcat (Opcode, "$r$s $o = $lhs, $rhs"),
+     Patt,
+     Itin>;
 
 let Size = 4 in
 class ROUNDING_SILENT_BINOP<string Opcode, RegisterClass RC_OUT, RegisterClass RC_LHS, RegisterClass RC_RHS, InstrItinClass Itin, list<dag> Patt = []>

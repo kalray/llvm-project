@@ -2810,6 +2810,9 @@ def XFSCALEWO : ROUNDING_SILENT_BINOP<"xfscalewo", VectorReg, VectorReg, SingleR
 
 def XCLAMPWO : TERNARY<"xclampwo", VectorReg, VectorReg, VectorReg, TCA,
                 [(set v256i1:$o, (int_kvx_xclampwo v256i1:$a, v256i1:$lhs, v256i1:$rhs))]>;
+
+def XFFMA44HW : ROUNDING_SILENT_TERNARY<"xffma44hw", WideReg, VectorReg, VectorReg, TCA_FP16,
+                [(set v512i1:$o, (int_kvx_xffma44hw v512i1:$a, v256i1:$lhs, v256i1:$rhs, RoundingMod:$r, SilentMod:$s))]>;
 }
 
 def FMIND : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
