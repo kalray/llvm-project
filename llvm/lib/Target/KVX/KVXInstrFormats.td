@@ -1102,6 +1102,16 @@ class ROUNDING_SILENT_TERNARY_AUXR_FP <string OpcStr, RegisterClass RC_OUT, Regi
     [],
     MAU_AUXR_FP>;
 
+let Size = 4, Constraints = "$o = $a" in
+class TERNARY<string Opcode, RegisterClass RC_OUT, RegisterClass RC_LHS, RegisterClass RC_RHS, InstrItinClass Itin, list<dag> Patt = []>
+    : KVX_INSTRUCTION <
+     (outs RC_OUT:$o),
+     (ins RC_OUT:$a, RC_LHS:$lhs, RC_RHS:$rhs),
+     !strconcat (Opcode, " $o = $lhs, $rhs"),
+     Patt,
+     Itin>;
+
+
 let Size = 4 in
 class ROUNDING_SILENT_BINOP<string Opcode, RegisterClass RC_OUT, RegisterClass RC_LHS, RegisterClass RC_RHS, InstrItinClass Itin, list<dag> Patt = []>
     : KVX_INSTRUCTION <

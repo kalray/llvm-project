@@ -2807,6 +2807,9 @@ def FMULWCP : CONJ_ROUNDING_SILENT_BINOP_MAU_FP<"fmulwcp", PairedReg, PairedReg>
 
 def XFSCALEWO : ROUNDING_SILENT_BINOP<"xfscalewo", VectorReg, VectorReg, SingleReg, BCU_CRRP_CRWL_CRWH,
                 [(set v256i1:$o, (int_kvx_xfscalewo v256i1:$lhs, i32:$rhs, RoundingMod:$r, SilentMod:$s ))]>;
+
+def XCLAMPWO : TERNARY<"xclampwo", VectorReg, VectorReg, VectorReg, TCA,
+                [(set v256i1:$o, (int_kvx_xclampwo v256i1:$a, v256i1:$lhs, v256i1:$rhs))]>;
 }
 
 def FMIND : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
