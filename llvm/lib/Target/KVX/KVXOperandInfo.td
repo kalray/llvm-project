@@ -143,3 +143,11 @@ def Binary64 : Operand<f64>, FPImmLeaf<f64, [{
 def TransposeMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 3);}]> {
   let PrintMethod = "printTransposeMod";
 }
+
+def BoolcasMod : Operand<i32>, ImmLeaf<i32, [{return (Imm == 0) || (Imm == 1);}]> {
+  let PrintMethod = "printBoolcasMod";
+}
+
+def CoherencyMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 2);}]> {
+  let PrintMethod = "printCoherencyMod";
+}

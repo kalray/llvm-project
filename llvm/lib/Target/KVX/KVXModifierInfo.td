@@ -127,3 +127,12 @@ def transpose_nn : Transpose<0>;
 def transpose_tn : Transpose<1>;
 def transpose_nt : Transpose<2>;
 def transpose_tt : Transpose<3>;
+
+class Boolcas<int N> : PatLeaf<(i32 N)>;
+def boolcas_v : Boolcas<0>;
+def boolcas_ : Boolcas<1>;
+
+class Coherency<int N> : PatLeaf<(i32 N)>;
+def coherency_ : Coherency<0>;
+def coherency_g : Coherency<1>;
+def coherency_s : Coherency<2>;

@@ -308,21 +308,56 @@ unsigned getLOADOpcode(uint64_t Size, const MachineOperand MO) {
 }
 
 // Return acswap opcode used by atomic operations.
-signed getACSWAPOpcode(uint64_t Size, const MachineOperand MO) {
+signed getACSWAPOpcode(uint64_t Size, const MachineOperand MO, bool IsCV1) {
+  // When CV1:
   // Return -1 if MO is an immediate that doesn't fit in a 37-bit integer.
-  switch (Size) {
-  case 4:
-    return MO.isReg() ? KVX::ACSWAPWrr
-                      : isInt<10>(MO.getImm())
-                            ? KVX::ACSWAPWri10
-                            : isInt<37>(MO.getImm()) ? KVX::ACSWAPWri37 : -1;
-  case 8:
-    return MO.isReg() ? KVX::ACSWAPDrr
-                      : isInt<10>(MO.getImm())
-                            ? KVX::ACSWAPDri10
-                            : isInt<37>(MO.getImm()) ? KVX::ACSWAPDri37 : -1;
-  default:
-    report_fatal_error("No ACSWAP Opcode for this Size");
+  // When CV2:
+  // Return -1 if MO is an immediate not fitting in 54 bits
+  // Return -2 if MO is a register
+  if (IsCV1) {
+    switch (Size) {
+    case 4:
+      return MO.isReg() ? KVX::ACSWAPWrr
+                        : isInt<10>(MO.getImm())
+                              ? KVX::ACSWAPWri10
+                              : isInt<37>(MO.getImm()) ? KVX::ACSWAPWri37 : -1;
+    case 8:
+      return MO.isReg() ? KVX::ACSWAPDrr
+                        : isInt<10>(MO.getImm())
+                              ? KVX::ACSWAPDri10
+                              : isInt<37>(MO.getImm()) ? KVX::ACSWAPDri37 : -1;
+    default:
+      report_fatal_error("No ACSWAP Opcode for this Size");
+    }
+  } else {
+    int ACSWAPrr, ACSWAPri27, ACSWAPri54;
+    switch (Size) {
+    case 4:
+      ACSWAPrr = KVX::ACSWAPWrr_cv2;
+      ACSWAPri27 = KVX::ACSWAPWrri27_cv2;
+      ACSWAPri54 = KVX::ACSWAPWrri54_cv2;
+      break;
+    case 8:
+      ACSWAPrr = KVX::ACSWAPDrr_cv2;
+      ACSWAPri27 = KVX::ACSWAPDrri27_cv2;
+      ACSWAPri54 = KVX::ACSWAPDrri54_cv2;
+      break;
+    default:
+      report_fatal_error("No ACSWAP Opcode for this Size");
+    }
+
+    if (MO.isReg())
+      return -2;
+
+    int64_t Imm = MO.getImm();
+    if (Imm == 0)
+      return ACSWAPrr;
+    if (isInt<27>(Imm))
+      return ACSWAPri27;
+    if (isInt<54>(Imm))
+      return ACSWAPri54;
+
+    return -1;
   }
 }
 
@@ -333,7 +368,8 @@ signed getACSWAPOpcodeModifyAddr(const KVXInstrInfo *TII,
                                  MachineBasicBlock::iterator MBBI, DebugLoc DL,
                                  MachineOperand &Offset, Register Base,
                                  uint64_t Size, const MachineOperand MO) {
-  signed ACSWAP = getACSWAPOpcode(Size, Offset);
+  bool IsV1 = TII->getSubtarget().isV1();
+  signed ACSWAP = getACSWAPOpcode(Size, Offset, IsV1);
 
   if (ACSWAP == -1) {
     // Offset is an immediate that doesn't fit in a 37-bit integer. Simply
@@ -345,7 +381,14 @@ signed getACSWAPOpcodeModifyAddr(const KVXInstrInfo *TII,
         .addReg(Base)
         .addImm(Offset.getImm());
     Offset.setImm(0);
-    ACSWAP = getACSWAPOpcode(Size, Offset);
+    ACSWAP = getACSWAPOpcode(Size, Offset, IsV1);
+  } else if (ACSWAP == -2) {
+    // Offset is a register. Do the same as above, but with the rr format
+    BuildMI(MBB, MBBI, DL, TII->get(KVX::ADDDrr), Base)
+        .addReg(Base)
+        .addReg(Offset.getReg());
+    auto ZeroOffset = MachineOperand::CreateImm(0);
+    ACSWAP = getACSWAPOpcode(Size, ZeroOffset, IsV1);
   }
 
   return ACSWAP;
@@ -470,34 +513,61 @@ static bool expandALOAD(unsigned int Opcode, const KVXInstrInfo *TII,
 
   // Populate CSLoopMBB.
   //   load.u $fetch = $offset[$base]
-  if (Offset.isReg())
+  if (Offset.isReg() && TII->getSubtarget().isV1())
     BuildMI(CSLoopMBB, DL, TII->get(LOAD), Fetch)
         .addReg(Offset.getReg())
         .addReg(Base)
         .addImm(KVXMOD::VARIANT_U)
         .addImm(KVXMOD::DOSCALE_);
-  else
+  else if (Offset.isReg() && !TII->getSubtarget().isV1()) {
+    // the offset already got added in Base by getACSWAPOpcodeModifyAddr
+    auto ZeroImm = MachineOperand::CreateImm(0);
+    LOAD = getLOADOpcode(MOSize, ZeroImm);
+    BuildMI(CSLoopMBB, DL, TII->get(LOAD), Fetch)
+        .addImm(ZeroImm.getImm())
+        .addReg(Base)
+        .addImm(KVXMOD::VARIANT_U);
+  } else {
+    assert(Offset.isImm());
     BuildMI(CSLoopMBB, DL, TII->get(LOAD), Fetch)
         .addImm(Offset.getImm())
         .addReg(Base)
         .addImm(KVXMOD::VARIANT_U);
+  }
   //   op $update = $value, $fetch (or just equal to $value for KVX::ASWAPp)
   if (Opcode != KVX::ASWAPp)
     BuildMI(CSLoopMBB, DL, TII->get(OP), Update).addReg(Value).addReg(Fetch);
   else
     BuildMI(CSLoopMBB, DL, TII->get(OP), Update).addReg(Value);
-  //   acswap $offset[$base] = $update$fetch
-  if (Offset.isReg())
-    BuildMI(CSLoopMBB, DL, TII->get(ACSWAP), UpdateFetch)
-        .addReg(Offset.getReg(), getRegState(Offset))
-        .addReg(Base, BaseState)
-        .addReg(UpdateFetch, RegState::InternalRead)
-        .addImm(KVXMOD::DOSCALE_);
-  else
-    BuildMI(CSLoopMBB, DL, TII->get(ACSWAP), UpdateFetch)
-        .addImm(Offset.getImm())
-        .addReg(Base, BaseState)
-        .addReg(UpdateFetch);
+  if (TII->getSubtarget().isV1()) {
+    //   acswap $offset[$base] = $update$fetch
+    if (Offset.isReg())
+      BuildMI(CSLoopMBB, DL, TII->get(ACSWAP), UpdateFetch)
+          .addReg(Offset.getReg(), getRegState(Offset))
+          .addReg(Base, BaseState)
+          .addReg(UpdateFetch, RegState::InternalRead)
+          .addImm(KVXMOD::DOSCALE_);
+    else
+      BuildMI(CSLoopMBB, DL, TII->get(ACSWAP), UpdateFetch)
+          .addImm(Offset.getImm())
+          .addReg(Base, BaseState)
+          .addReg(UpdateFetch);
+  } else {
+    //  acswap $update, $offset[$base] = $update$fetch
+    int64_t Imm = Offset.isImm() ? Offset.getImm() : 0;
+    auto I = BuildMI(CSLoopMBB, DL, TII->get(ACSWAP), Update);
+    if (Imm != 0) {
+      assert(
+          ACSWAP == KVX::ACSWAPWrri27_cv2 || ACSWAP == KVX::ACSWAPWrri54_cv2 ||
+          ACSWAP == KVX::ACSWAPDrri27_cv2 || ACSWAP == KVX::ACSWAPDrri54_cv2);
+      I.addImm(Imm);
+    } else
+      assert(ACSWAP == KVX::ACSWAPWrr_cv2 || ACSWAP == KVX::ACSWAPDrr_cv2);
+    I.addReg(Base)
+        .addReg(UpdateFetch)
+        .addImm(KVXMOD::BOOLCAS_V)
+        .addImm(KVXMOD::COHERENCY_);
+  }
   //   cb.even $update ? .csloop
   BuildMI(CSLoopMBB, DL, TII->get(KVX::CB))
       .addReg(Update, RegState::Kill)
@@ -561,6 +631,7 @@ static bool expandATAS(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   Register Offset = MI.getOperand(5).isReg() ? MI.getOperand(5).getReg()
                                              : MI.getOperand(4).getReg();
 
+  // CV1 code:
   //   addd $pos = $base, $offset    # iff $offset != 0
   //   andd $pos = $pos, 3           # find the place of the byte to
   //                                 #   test_and_set in the memory word
@@ -578,6 +649,28 @@ static bool expandATAS(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   //   cb.wnez $output ? .done       # the byte is already set
   // .csloop2
   //   acswapw $offset[$base] = $update$fetch
+  //   cb.even $update ? .csloop
+  // .done
+
+  // CV2 code:
+  //   addd $pos = $base, $offset    # iff $offset != 0
+  //   andd $pos = $pos, 3           # find the place of the byte to
+  //                                 #   test_and_set in the memory word
+  //                                 #   ($pos is 0, 1, 2, or 3)
+  //   sbfd $offset = $pos, $offset  # the address of the memory word
+  //                                 #   containing the byte is
+  //                                 #   ($base + $offset - $pos)
+  //   slld $pos = $pos, 3           # $pos in bits: $pos * 8
+  //   addd $base = $base, $offset   # for lack of $reg[$reg] format in acswap
+  // .csloop
+  //   lwz.u $fetch = 0[$base]
+  //   srlw $output = $fetch, $pos   # keep only the byte to test_and_set:
+  //   andw $output = $output, 0xFF  #   ($fetch >> $pos) & 0xFF
+  //   sllw $mask = $value, $pos     # new value to set:
+  //   orw $update = $fetch, $mask   #   $fetch | ($value << $pos)
+  //   cb.wnez $output ? .done       # the byte is already set
+  // .csloop2
+  //   acswapw $update, [$base] = $update$fetch
   //   cb.even $update ? .csloop
   // .done
 
@@ -636,16 +729,27 @@ static bool expandATAS(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   } else {
     BuildMI(&MBB, DL, TII->get(KVX::SBFDrr), Offset).addReg(Pos).addReg(Offset);
   }
+  if (!TII->getSubtarget().isV1()) {
+    // addd $base = $base, $offset   # no $reg[$reg] format in acswap, so we
+    //                               # have to calculate it ourselves
+    BuildMI(&MBB, DL, TII->get(KVX::ADDDrr), Base).addReg(Base).addReg(Offset);
+  }
   //   slld $pos = $pos, 3           # $pos in bits: $pos * 8
   BuildMI(&MBB, DL, TII->get(KVX::SLLDri), Pos).addReg(Pos).addImm(3);
 
   // Populate CSLoopMBB (insns have been manually scheduled).
   //   lwz.u $fetch = $offset[$base]
-  BuildMI(CSLoopMBB, DL, TII->get(KVX::LWZrr), Fetch)
-      .addReg(Offset)
-      .addReg(Base)
-      .addImm(KVXMOD::VARIANT_U)
-      .addImm(KVXMOD::DOSCALE_);
+  if (TII->getSubtarget().isV1())
+    BuildMI(CSLoopMBB, DL, TII->get(KVX::LWZrr), Fetch)
+        .addReg(Offset)
+        .addReg(Base)
+        .addImm(KVXMOD::VARIANT_U)
+        .addImm(KVXMOD::DOSCALE_);
+  else // Offset is already added in Base
+    BuildMI(CSLoopMBB, DL, TII->get(KVX::LWZp), Fetch)
+        .addImm(0)
+        .addReg(Base)
+        .addImm(KVXMOD::VARIANT_U);
   //   srlw $output = $fetch, $pos   # keep only the byte to test_and_set:
   BuildMI(CSLoopMBB, DL, TII->get(KVX::SRLWrr), Output)
       .addReg(Fetch)
@@ -665,12 +769,20 @@ static bool expandATAS(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
       .addReg(Output)
       .addMBB(DoneMBB)
       .addImm(KVXMOD::SCALARCOND_WNEZ);
-  //   acswapw $offset[$base] = $update$fetch
-  BuildMI(CSLoop2MBB, DL, TII->get(KVX::ACSWAPWrr), UpdateFetch)
-      .addReg(Offset)
-      .addReg(Base)
-      .addReg(UpdateFetch)
-      .addImm(KVXMOD::DOSCALE_);
+  if (TII->getSubtarget().isV1())
+    //   acswapw $offset[$base] = $update$fetch
+    BuildMI(CSLoop2MBB, DL, TII->get(KVX::ACSWAPWrr), UpdateFetch)
+        .addReg(Offset)
+        .addReg(Base)
+        .addReg(UpdateFetch)
+        .addImm(KVXMOD::DOSCALE_);
+  else
+    //   acswapw $update, [$base] = $update$fetch
+    BuildMI(CSLoop2MBB, DL, TII->get(KVX::ACSWAPWrr_cv2), Update)
+        .addReg(Base)
+        .addReg(UpdateFetch)
+        .addImm(KVXMOD::BOOLCAS_V)
+        .addImm(KVXMOD::COHERENCY_);
   //   cb.even $update ? .csloop
   BuildMI(CSLoop2MBB, DL, TII->get(KVX::CB))
       .addReg(Update)
@@ -792,18 +904,41 @@ static bool expandACMPSWAP(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   //   copy $desired = $swap                      # restore $desired in case
   //                                              #   of loop
   BuildMI(CSLoopMBB, DL, TII->get(COPY), Desired).addReg(Swap);
-  //   acswap $offset[$base] = $desired$expected  # try the compare and swap
-  if (Offset.isReg())
-    BuildMI(CSLoopMBB, DL, TII->get(ACSWAP), DesiredExpected)
-        .addReg(Offset.getReg())
-        .addReg(Base)
-        .addReg(DesiredExpected)
-        .addImm(KVXMOD::DOSCALE_);
-  else
-    BuildMI(CSLoopMBB, DL, TII->get(ACSWAP), DesiredExpected)
-        .addImm(Offset.getImm())
-        .addReg(Base)
-        .addReg(DesiredExpected);
+  if (TII->getSubtarget().isV1()) {
+    //  acswap $offset[$base] = $desired$expected # try the compare and swap
+    if (Offset.isReg())
+      BuildMI(CSLoopMBB, DL, TII->get(ACSWAP), DesiredExpected)
+          .addReg(Offset.getReg())
+          .addReg(Base)
+          .addReg(DesiredExpected)
+          .addImm(KVXMOD::DOSCALE_);
+    else
+      BuildMI(CSLoopMBB, DL, TII->get(ACSWAP), DesiredExpected)
+          .addImm(Offset.getImm())
+          .addReg(Base)
+          .addReg(DesiredExpected);
+  } else {
+    //  acswap $desired, $offset[$base] = $desired$expected
+    int64_t Imm = Offset.getImm() ? Offset.getImm() : 0;
+    if (Imm == 0) {
+      assert(ACSWAP == KVX::ACSWAPWrr_cv2 || ACSWAP == KVX::ACSWAPDrr_cv2);
+      BuildMI(CSLoopMBB, DL, TII->get(ACSWAP), Desired)
+          .addReg(Base)
+          .addReg(DesiredExpected)
+          .addImm(KVXMOD::BOOLCAS_V)
+          .addImm(KVXMOD::COHERENCY_);
+    } else {
+      assert(
+          ACSWAP == KVX::ACSWAPWrri27_cv2 || ACSWAP == KVX::ACSWAPWrri54_cv2 ||
+          ACSWAP == KVX::ACSWAPDrri27_cv2 || ACSWAP == KVX::ACSWAPDrri54_cv2);
+      BuildMI(CSLoopMBB, DL, TII->get(ACSWAP), Desired)
+          .addImm(Imm)
+          .addReg(Base)
+          .addReg(DesiredExpected)
+          .addImm(KVXMOD::BOOLCAS_V)
+          .addImm(KVXMOD::COHERENCY_);
+    }
+  }
   //   cb.odd $desired ? .pass                    # return $expected on
   //                                              #   success
   BuildMI(CSLoopMBB, DL, TII->get(KVX::CB))
@@ -814,17 +949,27 @@ static bool expandACMPSWAP(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   //                                              #   from memory on failure
   //                                              #   and retry if equal to
   //                                              #   expected input
-  if (Offset.isReg())
+  if (Offset.isReg() && TII->getSubtarget().isV1())
     BuildMI(CSLoop2MBB, DL, TII->get(LOAD), Output)
         .addReg(Offset.getReg())
         .addReg(Base)
         .addImm(KVXMOD::VARIANT_U)
         .addImm(KVXMOD::DOSCALE_);
-  else
+  else if (Offset.isReg() && !TII->getSubtarget().isV1()) {
+    // the offset already got added in Base by getACSWAPOpcodeModifyAddr
+    auto ZeroImm = MachineOperand::CreateImm(0);
+    LOAD = getLOADOpcode(MOSize, ZeroImm);
+    BuildMI(CSLoop2MBB, DL, TII->get(LOAD), Output)
+        .addImm(ZeroImm.getImm())
+        .addReg(Base)
+        .addImm(KVXMOD::VARIANT_U);
+  } else {
+    assert(Offset.isImm());
     BuildMI(CSLoop2MBB, DL, TII->get(LOAD), Output)
         .addImm(Offset.getImm())
         .addReg(Base)
         .addImm(KVXMOD::VARIANT_U);
+  }
   //   comp.eq $desired = $output, $expected      # desired use as temp reg
   //                                              #   for comp
   BuildMI(CSLoop2MBB, DL, TII->get(COMP), Desired)
