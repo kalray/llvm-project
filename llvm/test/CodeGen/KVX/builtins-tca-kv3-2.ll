@@ -30,3 +30,22 @@ entry:
 }
 
 declare <256 x i1> @llvm.kvx.xfscalewo(<256 x i1>, i32, i32, i32)
+
+define void @xclampwo_test(<256 x i1>* nocapture %v) {
+; CHECK-LABEL: xclampwo_test:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    lv $a0 = 0[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xclampwo $a0 = $a0, $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 0[$r0] = $a0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %0 = load <256 x i1>, <256 x i1>* %v
+  %1 = tail call <256 x i1> @llvm.kvx.xclampwo(<256 x i1> %0, <256 x i1> %0, <256 x i1> %0)
+  store <256 x i1> %1, <256 x i1>* %v
+  ret void
+}
+
+declare <256 x i1> @llvm.kvx.xclampwo(<256 x i1>, <256 x i1>, <256 x i1>)

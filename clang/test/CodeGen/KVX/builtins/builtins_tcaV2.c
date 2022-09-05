@@ -17,3 +17,14 @@ void xfscalewo_test(__kvx_x256 *v, int s) {
   r = __builtin_kvx_xfscalewo(r, s, ".rn");
   v[0] = __builtin_kvx_xfscalewo(r, s, ".rn.s");
 }
+
+// CHECK-LABEL: @xclampwo_test(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <256 x i1> @llvm.kvx.xclampwo(<256 x i1> [[TMP0]], <256 x i1> [[TMP0]], <256 x i1> [[TMP0]])
+// CHECK-NEXT:    store <256 x i1> [[TMP1]], <256 x i1>* [[V]], align 32, [[TBAA2]]
+// CHECK-NEXT:    ret void
+//
+void xclampwo_test(__kvx_x256 *v) {
+  v[0] = __builtin_kvx_xclampwo(v[0], v[0], v[0]);
+}

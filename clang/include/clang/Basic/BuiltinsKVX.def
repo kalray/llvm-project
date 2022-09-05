@@ -505,6 +505,7 @@ BUILTIN(__builtin_kvx_xfscalewv, "Tx256Tx256cC*", "n")
 BUILTIN(__builtin_kvx_xfscalewo, "Tx256Tx256icC*", "n")
 BUILTIN(__builtin_kvx_xfnarrowwhv, "Tx256Tx512cC*", "n")
 
+NARY_BUILTIN(xclampwo, "Tx256Tx256Tx256Tx256", "n", 3)
 //===----------------------------------------------------------------------===//
 // TCA ACB 4.8 builtins - to remove in ACB 4.10
 //===----------------------------------------------------------------------===//

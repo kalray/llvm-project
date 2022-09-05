@@ -309,6 +309,8 @@ def int_kvx_xmma484subw : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
 def int_kvx_xmma484ubw : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
 def int_kvx_xmma484usbw : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
 
+def int_kvx_xclampwo : KVX_TCA_Ternary<[llvm_v256i1_ty]>;
+
 def int_kvx_xmt44d : Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty], [IntrReadMem]>;
 // fscalewv is not inplace, but has same args pattern
 def int_kvx_xfscalewv : Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrHasSideEffects]>;
