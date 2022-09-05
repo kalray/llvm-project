@@ -520,6 +520,26 @@ multiclass MC_0D<string OpcStr> {
      !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
      [/* no straightforward pattern */],
      LSU_AUXR_AUXW_Y_LOAD>;
+
+  // CV2 formats.
+  let Size = 4 in
+  def rr_cv2 : KVX_INSTRUCTION
+    <(outs SingleReg:$regout), (ins SingleReg:$addr, PairedReg:$regin, BoolcasMod:$bcm, CoherencyMod:$com),
+     !strconcat (OpcStr, "$bcm$com $regout, [$addr] = $regin"),
+     [/* no straightforward pattern */],
+     LSU_AUXR_AUXW_LOAD>;
+  let Size = 8 in
+  def rri27_cv2 : KVX_INSTRUCTION
+    <(outs SingleReg:$regout), (ins Signed27:$off, SingleReg:$addr, PairedReg:$regin, BoolcasMod:$bcm, CoherencyMod:$com),
+     !strconcat(OpcStr, "$bcm$com $regout, $off[$addr] = $regin"),
+     [/* no straightforward pattern */],
+     LSU_AUXR_AUXW_X_LOAD>;
+  let Size = 12 in
+  def rri54_cv2 : KVX_INSTRUCTION
+    <(outs SingleReg:$regout), (ins Signed54:$off, SingleReg:$addr, PairedReg:$regin, BoolcasMod:$bcm, CoherencyMod:$com),
+     !strconcat(OpcStr, "$bcm$com $regout, $off[$addr] = $regin"),
+     [/* no straightforward pattern */],
+     LSU_AUXR_AUXW_Y_LOAD>;
 }
 
 // multiclass MC_0E is used by:

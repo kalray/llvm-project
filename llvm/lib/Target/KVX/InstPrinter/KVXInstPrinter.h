@@ -80,6 +80,9 @@ public:
   void printConjugateMod(const MCInst *MI, unsigned OpNo, raw_ostream &O);
   void printTransposeMod(const MCInst *MI, unsigned OpNo, raw_ostream &O);
 
+  void printBoolcasMod(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printCoherencyMod(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+
   template <int Threshold = 1024>
   void printHexaBitsImm32(const MCInst *MI, unsigned OpNo, raw_ostream &O);
 };

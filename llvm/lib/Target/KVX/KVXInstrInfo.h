@@ -109,6 +109,8 @@ public:
 
   bool isProlog(const MachineInstr *MI) const;
   bool isEpilog(const MachineInstr *MI) const;
+
+  const KVXSubtarget &getSubtarget() const;
 };
 
 } // namespace llvm

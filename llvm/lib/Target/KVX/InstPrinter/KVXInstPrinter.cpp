@@ -514,6 +514,35 @@ void KVXInstPrinter::printConjugateMod(const MCInst *MI, unsigned OpNo,
   }
 }
 
+void KVXInstPrinter::printBoolcasMod(const MCInst *MI, unsigned OpNo,
+                                     raw_ostream &O) {
+  const MCOperand &MO = MI->getOperand(OpNo);
+  int Variant = MO.getImm();
+  switch (Variant) {
+  case 0:
+    O << ".v";
+    break;
+  case 1:
+    break;
+  }
+}
+
+void KVXInstPrinter::printCoherencyMod(const MCInst *MI, unsigned OpNo,
+                                       raw_ostream &O) {
+  const MCOperand &MO = MI->getOperand(OpNo);
+  int Variant = MO.getImm();
+  switch (Variant) {
+  case 0:
+    break;
+  case 1:
+    O << ".g";
+    break;
+  case 2:
+    O << ".s";
+    break;
+  }
+}
+
 // Emits 32-bits integer litteral values.
 //
 // Use the hexadecimal bit representation when the absolute value is above a

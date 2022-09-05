@@ -58,11 +58,31 @@ def: Pat<(int_kvx_sbmmt8 SingleReg:$r, SingleReg:$r2), (SBMMT8rr SingleReg:$r, S
 
 def: Pat<(int_kvx_acswapw i64:$addr, i32:$update, i32:$expect), (i32 (EXTRACT_SUBREG
   (v2i64 (ACSWAPWri10 (i64 0), SingleReg:$addr, (INSERT_SUBREG (INSERT_SUBREG (v2i64 (IMPLICIT_DEF)),
-    SingleReg:$update, sub_s0), SingleReg:$expect, sub_s1))), sub_s0))>;
+    SingleReg:$update, sub_s0), SingleReg:$expect, sub_s1))), sub_s0))>, Requires<[IsV1]>;
 
 def: Pat<(int_kvx_acswapd i64:$addr, i64:$update, i64:$expect), (i64 (EXTRACT_SUBREG
   (v2i64 (ACSWAPDri10 (i64 0), SingleReg:$addr, (INSERT_SUBREG (INSERT_SUBREG (v2i64 (IMPLICIT_DEF)),
-    SingleReg:$update, sub_s0), SingleReg:$expect, sub_s1))), sub_s0))>;
+    SingleReg:$update, sub_s0), SingleReg:$expect, sub_s1))), sub_s0))>, Requires<[IsV1]>;
+
+def: Pat<(int_kvx_acswapw i64:$addr, i32:$update, i32:$expect), (i32
+  (ACSWAPWrr_cv2 SingleReg:$addr,
+    (INSERT_SUBREG (INSERT_SUBREG (v2i64 (IMPLICIT_DEF)), SingleReg:$update, sub_s0), SingleReg:$expect, sub_s1),
+    boolcas_v, coherency_))>, Requires<[IsV2]>;
+
+def: Pat<(int_kvx_acswapd i64:$addr, i64:$update, i64:$expect), (i64
+  (ACSWAPDrr_cv2 SingleReg:$addr,
+    (INSERT_SUBREG (INSERT_SUBREG (v2i64 (IMPLICIT_DEF)), SingleReg:$update, sub_s0), SingleReg:$expect, sub_s1),
+    boolcas_v, coherency_))>, Requires<[IsV2]>;
+
+def: Pat<(int_kvx_acswapw_cv2 i64:$addr, i32:$update, i32:$expect, BoolcasMod:$bcm, CoherencyMod:$cm), (i32
+  (ACSWAPWrr_cv2 SingleReg:$addr,
+    (INSERT_SUBREG (INSERT_SUBREG (v2i64 (IMPLICIT_DEF)), SingleReg:$update, sub_s0), SingleReg:$expect, sub_s1),
+    BoolcasMod:$bcm, CoherencyMod:$cm))>, Requires<[IsV2]>;
+
+def: Pat<(int_kvx_acswapd_cv2 i64:$addr, i64:$update, i64:$expect, BoolcasMod:$bcm, CoherencyMod:$cm), (i64
+  (ACSWAPDrr_cv2 SingleReg:$addr,
+    (INSERT_SUBREG (INSERT_SUBREG (v2i64 (IMPLICIT_DEF)), SingleReg:$update, sub_s0), SingleReg:$expect, sub_s1),
+    BoolcasMod:$bcm, CoherencyMod:$cm))>, Requires<[IsV2]>;
 
 def: Pat<(int_kvx_alclrw i64:$addr), (ALCLRWri10 (i64 0), SingleReg:$addr)>;
 def: Pat<(int_kvx_alclrd i64:$addr), (ALCLRDri10 (i64 0), SingleReg:$addr)>;

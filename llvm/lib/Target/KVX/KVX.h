@@ -145,6 +145,10 @@ enum SPLAT32 {
   SPLAT32_AT
 };
 
+enum COHERENCY { COHERENCY_, COHERENCY_G, COHERENCY_S };
+
+enum BOOLCAS { BOOLCAS_V, BOOLCAS_ };
+
 } // namespace KVXMOD
 
 namespace KVX {

@@ -1295,3 +1295,5 @@ bool KVXInstrInfo::SubsumesPredicate(ArrayRef<MachineOperand> Pred1,
     return false;
   }
 }
+
+const KVXSubtarget &KVXInstrInfo::getSubtarget() const { return Subtarget; }

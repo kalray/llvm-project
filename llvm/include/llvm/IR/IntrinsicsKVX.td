@@ -27,6 +27,9 @@ def int_kvx_get : Intrinsic<[llvm_i64_ty], [llvm_i32_ty], []>;
 def int_kvx_acswapw: Intrinsic<[llvm_i32_ty], [llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty], []>;
 def int_kvx_acswapd: Intrinsic<[llvm_i64_ty], [llvm_ptr_ty, llvm_i64_ty, llvm_i64_ty], []>;
 
+def int_kvx_acswapw_cv2: Intrinsic<[llvm_i32_ty], [llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], []>;
+def int_kvx_acswapd_cv2: Intrinsic<[llvm_i64_ty], [llvm_ptr_ty, llvm_i64_ty, llvm_i64_ty, llvm_i32_ty, llvm_i32_ty], []>;
+
 def int_kvx_alclrw: Intrinsic<[llvm_i32_ty], [llvm_ptr_ty], []>;
 def int_kvx_alclrd: Intrinsic<[llvm_i64_ty], [llvm_ptr_ty], []>;
 
