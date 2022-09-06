@@ -510,6 +510,7 @@ BUILTIN(__builtin_kvx_xfnarrowwhv, "Tx256Tx512cC*", "n")
 
 NARY_BUILTIN(xclampwo, "Tx256Tx256Tx256Tx256", "n", 3)
 BUILTIN(__builtin_kvx_xffma44hw, "Tx512Tx512Tx256Tx256cC*", "n")
+BUILTIN(__builtin_kvx_xfmma484hw, "Tx512Tx512Tx512Tx512cC*", "n")
 BUILTIN(__builtin_kvx_xfscalewo, "Tx256Tx256icC*", "n")
 
 //===----------------------------------------------------------------------===//
