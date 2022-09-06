@@ -114,7 +114,7 @@ def main():
       raw_tool_output = common.invoke_tool(ti.args.opt_binary, opt_args, 
                                            ti.path)
       builder.process_run_line(common.OPT_FUNCTION_RE, common.scrub_body,
-              raw_tool_output, prefixes)
+              raw_tool_output, prefixes, False)
 
     func_dict = builder.finish_and_get_func_dict()
     is_in_function = False

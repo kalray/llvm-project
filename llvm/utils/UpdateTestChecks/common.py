@@ -234,7 +234,7 @@ class function_body(object):
     self.extrascrub = extra
     self.args_and_sig = args_and_sig
     self.attrs = attrs
-  def is_same_except_arg_names(self, extrascrub, args_and_sig, attrs):
+  def is_same_except_arg_names(self, extrascrub, args_and_sig, attrs, is_asm):
     arg_names = set()
     def drop_arg_names(match):
         arg_names.add(match.group(3))
@@ -249,6 +249,11 @@ class function_body(object):
     ans1 = IR_VALUE_RE.sub(drop_arg_names, args_and_sig)
     if ans0 != ans1:
         return False
+    if is_asm:
+        # Check without replacements, the replacements are not applied to the
+        # body for asm checks.
+        return self.extrascrub == extrascrub
+
     es0 = IR_VALUE_RE.sub(repl_arg_names, self.extrascrub)
     es1 = IR_VALUE_RE.sub(repl_arg_names, extrascrub)
     es0 = SCRUB_IR_COMMENT_RE.sub(r'', es0)
@@ -278,8 +283,8 @@ class FunctionTestBuilder:
 
   def func_order(self):
     return self._func_order
-  
-  def process_run_line(self, function_re, scrubber, raw_tool_output, prefixes):
+
+  def process_run_line(self, function_re, scrubber, raw_tool_output, prefixes, is_asm):
     for m in function_re.finditer(raw_tool_output):
       if not m:
         continue
@@ -319,7 +324,8 @@ class FunctionTestBuilder:
                 self._func_dict[prefix][func].is_same_except_arg_names(
                 scrubbed_extra,
                 args_and_sig,
-                attrs)):
+                attrs,
+                is_asm)):
               self._func_dict[prefix][func].scrub = scrubbed_extra
               self._func_dict[prefix][func].args_and_sig = args_and_sig
               continue
@@ -341,7 +347,7 @@ class FunctionTestBuilder:
     # all instances of the prefix. Effectively, this prefix is unused and should
     # be removed.
     for prefix in self._func_dict:
-      if (self._func_dict[prefix] and 
+      if (self._func_dict[prefix] and
           (not [fct for fct in self._func_dict[prefix]
                 if self._func_dict[prefix][fct] is not None])):
         yield prefix
