@@ -83,3 +83,34 @@ define void @xffma44hw_test(<512 x i1>* nocapture %0, <256 x i1>* nocapture read
 }
 
 declare <512 x i1> @llvm.kvx.xffma44hw(<512 x i1>, <256 x i1>, <256 x i1>, i32, i32)
+
+define void @xfmma484hw_test(<512 x i1>* nocapture %0) {
+; CHECK-LABEL: xfmma484hw_test:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    lv $a1 = 32[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv $a0 = 0[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xfmma484hw $a0a1 = $a0a1, $a0a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xfmma484hw.s $a0a1 = $a0a1, $a0a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xfmma484hw.rn $a0a1 = $a0a1, $a0a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xfmma484hw.rz.s $a0a1 = $a0a1, $a0a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 32[$r0] = $a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 0[$r0] = $a0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = load <512 x i1>, <512 x i1>* %0
+  %3 = tail call <512 x i1> @llvm.kvx.xfmma484hw(<512 x i1> %2, <512 x i1> %2, <512 x i1> %2, i32 7, i32 0)
+  %4 = tail call <512 x i1> @llvm.kvx.xfmma484hw(<512 x i1> %3, <512 x i1> %3, <512 x i1> %3, i32 7, i32 1)
+  %5 = tail call <512 x i1> @llvm.kvx.xfmma484hw(<512 x i1> %4, <512 x i1> %4, <512 x i1> %4, i32 0, i32 0)
+  %6 = tail call <512 x i1> @llvm.kvx.xfmma484hw(<512 x i1> %5, <512 x i1> %5, <512 x i1> %5, i32 3, i32 1)
+  store <512 x i1> %6, <512 x i1>* %0
+  ret void
+}
+
+declare <512 x i1> @llvm.kvx.xfmma484hw(<512 x i1>, <512 x i1>, <512 x i1>, i32, i32)

@@ -47,3 +47,20 @@ void xffma44hw_test(__kvx_x512 *acc, __kvx_x256 *v) {
   r = __builtin_kvx_xffma44hw(r, l, l, ".rn");
   acc[0] = __builtin_kvx_xffma44hw(r, l, l, ".rz.s");
 }
+
+// CHECK-LABEL: @xfmma484hw_test(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = load <512 x i1>, <512 x i1>* [[ACC:%.*]], align 32, [[TBAA6]]
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <512 x i1> @llvm.kvx.xfmma484hw(<512 x i1> [[TMP0]], <512 x i1> [[TMP0]], <512 x i1> [[TMP0]], i32 7, i32 0)
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <512 x i1> @llvm.kvx.xfmma484hw(<512 x i1> [[TMP1]], <512 x i1> [[TMP1]], <512 x i1> [[TMP1]], i32 7, i32 1)
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <512 x i1> @llvm.kvx.xfmma484hw(<512 x i1> [[TMP2]], <512 x i1> [[TMP2]], <512 x i1> [[TMP2]], i32 0, i32 0)
+// CHECK-NEXT:    [[TMP4:%.*]] = tail call <512 x i1> @llvm.kvx.xfmma484hw(<512 x i1> [[TMP3]], <512 x i1> [[TMP3]], <512 x i1> [[TMP3]], i32 3, i32 1)
+// CHECK-NEXT:    store <512 x i1> [[TMP4]], <512 x i1>* [[ACC]], align 32, [[TBAA6]]
+// CHECK-NEXT:    ret void
+//
+void xfmma484hw_test(__kvx_x512 *acc) {
+  __kvx_x512 r = __builtin_kvx_xfmma484hw(acc[0], acc[0], acc[0], "");
+  r = __builtin_kvx_xfmma484hw(r, r, r, ".s");
+  r = __builtin_kvx_xfmma484hw(r, r, r, ".rn");
+  acc[0] = __builtin_kvx_xfmma484hw(r, r, r, ".rz.s");
+}
