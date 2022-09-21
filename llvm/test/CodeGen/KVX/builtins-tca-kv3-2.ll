@@ -212,3 +212,33 @@ define void @xmaddifwo_test(<256 x i1>* nocapture %0) {
 }
 
 declare <256 x i1> @llvm.kvx.xmaddifwo(<256 x i1>, <256 x i1>, <256 x i1>, i32, i32)
+
+define void @xmaddsu44bw_test(<512 x i1>* nocapture %0, <256 x i1>* nocapture readonly %1) {
+; CHECK-LABEL: xmaddsu44bw_test:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    lv $a1 = 32[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv $a0 = 0[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv $a2 = 0[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xmaddsu44bw0 $a0a1 = $a2, $a2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xmaddsu44bw1 $a0a1 = $a2, $a2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 32[$r0] = $a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 0[$r0] = $a0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = load <512 x i1>, <512 x i1>* %0
+  %4 = load <256 x i1>, <256 x i1>* %1
+  %5 = tail call <512 x i1> @llvm.kvx.xmaddsu44bw0(<512 x i1> %3, <256 x i1> %4, <256 x i1> %4)
+  %6 = tail call <512 x i1> @llvm.kvx.xmaddsu44bw1(<512 x i1> %5, <256 x i1> %4, <256 x i1> %4)
+  store <512 x i1> %6, <512 x i1>* %0
+  ret void
+}
+
+declare <512 x i1> @llvm.kvx.xmaddsu44bw0(<512 x i1>, <256 x i1>, <256 x i1>)
+
+declare <512 x i1> @llvm.kvx.xmaddsu44bw1(<512 x i1>, <256 x i1>, <256 x i1>)

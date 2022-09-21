@@ -329,6 +329,8 @@ def int_kvx_xfscalewo : Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_i32_ty
 def int_kvx_xmaddifwo : Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_v256i1_ty, llvm_v256i1_ty, llvm_i32_ty, llvm_i32_ty], [IntrHasSideEffects]>;
 def int_kvx_xmadd44bw0 : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
 def int_kvx_xmadd44bw1 : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
+def int_kvx_xmaddsu44bw0 : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
+def int_kvx_xmaddsu44bw1 : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
 
 //===----------------------------------------------------------------------===//
 // ACB 4.8 TCA intrinsics. Should remove them in ACB 4.10
