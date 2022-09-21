@@ -333,6 +333,10 @@ def int_kvx_xmaddsu44bw0 : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
 def int_kvx_xmaddsu44bw1 : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
 def int_kvx_xmaddu44bw0 : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
 def int_kvx_xmaddu44bw1 : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
+def int_kvx_xmma4164bw : Intrinsic<[llvm_v512i1_ty], [llvm_v512i1_ty, llvm_v512i1_ty, llvm_v512i1_ty], [IntrReadMem]>;
+def int_kvx_xmmasu4164bw : Intrinsic<[llvm_v512i1_ty], [llvm_v512i1_ty, llvm_v512i1_ty, llvm_v512i1_ty], [IntrReadMem]>;
+def int_kvx_xmmau4164bw  : Intrinsic<[llvm_v512i1_ty], [llvm_v512i1_ty, llvm_v512i1_ty, llvm_v512i1_ty], [IntrReadMem]>;
+def int_kvx_xmmaus4164bw  : Intrinsic<[llvm_v512i1_ty], [llvm_v512i1_ty, llvm_v512i1_ty, llvm_v512i1_ty], [IntrReadMem]>;
 
 //===----------------------------------------------------------------------===//
 // ACB 4.8 TCA intrinsics. Should remove them in ACB 4.10

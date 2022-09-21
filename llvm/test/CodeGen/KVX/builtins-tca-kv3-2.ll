@@ -272,3 +272,40 @@ define void @xmaddu44bw_test(<512 x i1>* nocapture %0, <256 x i1>* nocapture rea
 declare <512 x i1> @llvm.kvx.xmaddu44bw0(<512 x i1>, <256 x i1>, <256 x i1>)
 
 declare <512 x i1> @llvm.kvx.xmaddu44bw1(<512 x i1>, <256 x i1>, <256 x i1>)
+
+define void @xmma4164bw_test(<512 x i1>* nocapture %0) {
+; CHECK-LABEL: xmma4164bw_test:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    lv $a1 = 32[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv $a0 = 0[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xmma4164bw $a0a1 = $a0a1, $a0a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xmmasu4164bw $a0a1 = $a0a1, $a0a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xmmau4164bw $a0a1 = $a0a1, $a0a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xmmaus4164bw $a0a1 = $a0a1, $a0a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 32[$r0] = $a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 0[$r0] = $a0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = load <512 x i1>, <512 x i1>* %0
+  %3 = tail call <512 x i1> @llvm.kvx.xmma4164bw(<512 x i1> %2, <512 x i1> %2, <512 x i1> %2)
+  %4 = tail call <512 x i1> @llvm.kvx.xmmasu4164bw(<512 x i1> %3, <512 x i1> %3, <512 x i1> %3)
+  %5 = tail call <512 x i1> @llvm.kvx.xmmau4164bw(<512 x i1> %4, <512 x i1> %4, <512 x i1> %4)
+  %6 = tail call <512 x i1> @llvm.kvx.xmmaus4164bw(<512 x i1> %5, <512 x i1> %5, <512 x i1> %5)
+  store <512 x i1> %6, <512 x i1>* %0
+  ret void
+}
+
+declare <512 x i1> @llvm.kvx.xmma4164bw(<512 x i1>, <512 x i1>, <512 x i1>)
+
+declare <512 x i1> @llvm.kvx.xmmasu4164bw(<512 x i1>, <512 x i1>, <512 x i1>)
+
+declare <512 x i1> @llvm.kvx.xmmau4164bw(<512 x i1>, <512 x i1>, <512 x i1>)
+
+declare <512 x i1> @llvm.kvx.xmmaus4164bw(<512 x i1>, <512 x i1>, <512 x i1>)
