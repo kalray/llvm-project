@@ -203,3 +203,36 @@ void xmsbfifwo_test(__kvx_x256 *v) {
   v[0] = __builtin_kvx_xmsbfifwo(r, r, r, ".rz.s");
 }
 
+// CHECK-LABEL: @xsx48bw_test(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <1024 x i1> @llvm.kvx.xsx48bw(<256 x i1> [[TMP0]])
+// CHECK-NEXT:    store <1024 x i1> [[TMP1]], <1024 x i1>* [[M:%.*]], align 32, [[TBAA8:!tbaa !.*]]
+// CHECK-NEXT:    ret void
+//
+void xsx48bw_test(__kvx_x1024 *m, __kvx_x256 *v) {
+  m[0] = __builtin_kvx_xsx48bw(v[0]);
+}
+
+// CHECK-LABEL: @xzx48bw_test(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <1024 x i1> @llvm.kvx.xzx48bw(<256 x i1> [[TMP0]])
+// CHECK-NEXT:    store <1024 x i1> [[TMP1]], <1024 x i1>* [[M:%.*]], align 32, [[TBAA8]]
+// CHECK-NEXT:    ret void
+//
+void xzx48bw_test(__kvx_x1024 *m, __kvx_x256 *v) {
+  m[0] = __builtin_kvx_xzx48bw(v[0]);
+}
+
+// CHECK-LABEL: @xtrunc48wb_test(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = load <1024 x i1>, <1024 x i1>* [[M:%.*]], align 32, [[TBAA8]]
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <256 x i1> @llvm.kvx.xtrunc48wb(<1024 x i1> [[TMP0]])
+// CHECK-NEXT:    store <256 x i1> [[TMP1]], <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
+// CHECK-NEXT:    ret void
+//
+void xtrunc48wb_test(__kvx_x1024 *m, __kvx_x256 *v) {
+  v[0] = __builtin_kvx_xtrunc48wb(m[0]);
+}
+

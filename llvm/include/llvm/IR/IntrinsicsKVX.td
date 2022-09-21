@@ -341,6 +341,9 @@ def int_kvx_xmma484bw : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
 def int_kvx_xmmasu484bw : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
 def int_kvx_xmmau484bw : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
 def int_kvx_xmmaus484bw : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
+def int_kvx_xsx48bw : Intrinsic<[llvm_v1024i1_ty], [llvm_v256i1_ty], [IntrReadMem]>;
+def int_kvx_xzx48bw : Intrinsic<[llvm_v1024i1_ty], [llvm_v256i1_ty], [IntrReadMem]>;
+def int_kvx_xtrunc48wb : Intrinsic<[llvm_v256i1_ty], [llvm_v1024i1_ty], [IntrReadMem]>;
 
 //===----------------------------------------------------------------------===//
 // ACB 4.8 TCA intrinsics. Should remove them in ACB 4.10
