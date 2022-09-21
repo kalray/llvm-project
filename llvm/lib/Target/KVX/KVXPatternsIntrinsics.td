@@ -566,14 +566,14 @@ def: Pat<(int_kvx_xbuildfvw v256i1:$v0, v256i1:$v1),
 
 // Vector conditional load
 // TODO: Allow all addressing modes.
-def : Pat<(v256i1(int_kvx_xloadc256 VectorReg:$io, SingleReg:$base, SingleReg:$cond, SpeculateMod:$spec, ScalarcondMod:$scac)),
-         (LVrrc SingleReg:$base, VectorReg:$io, SpeculateMod:$spec, ScalarcondMod:$scac, SingleReg:$cond)>;
+def : Pat<(v256i1(int_kvx_xloadc256 VectorReg:$z, SingleReg:$mem, SingleReg:$val, SpeculateMod:$mod0, ScalarcondMod:$cond)),
+         (LVrrc SingleReg:$mem, SpeculateMod:$mod0, VectorReg:$z, ScalarcondMod:$cond, SingleReg:$val)>;
 
 def : Pat<(v1024i1(int_kvx_xload1024q v1024i1:$io, SingleReg:$base, ColumnMod:$a1, SpeculateMod:$spec)),
-         (LVmri10cs MatrixReg:$io, (i64 0), SingleReg:$base, ColumnMod:$a1, SpeculateMod:$spec)>;
+         (LVri10cs (i64 0), SingleReg:$base, ColumnMod:$a1, SpeculateMod:$spec, MatrixReg:$io)>;
 
-def : Pat<(v1024i1(int_kvx_xloadc1024q MatrixReg:$io, SingleReg:$base, SingleReg:$cond, ColumnMod:$a1, SpeculateMod:$spec, ScalarcondMod:$scac)),
-         (LVmrrccs MatrixReg:$io, SingleReg:$cond, SingleReg:$base, ColumnMod:$a1, SpeculateMod:$spec, ScalarcondMod:$scac)>;
+def : Pat<(v1024i1(int_kvx_xloadc1024q MatrixReg:$z, SingleReg:$mem, SingleReg:$val, ColumnMod:$mod0, SpeculateMod:$mod1, ScalarcondMod:$cond)),
+         (LVrrccs SingleReg:$mem, ColumnMod:$mod0, SpeculateMod:$mod1, MatrixReg:$z, ScalarcondMod:$cond, SingleReg:$val)>;
 
 def : Pat<(int_kvx_xstorec256 VectorReg:$val, i64:$base, i64:$cond, ScalarcondMod:$scac),
           (SVrrc SingleReg:$base, VectorReg:$val, ScalarcondMod:$scac, SingleReg:$cond)>;

@@ -39,7 +39,7 @@ defm : StorePat<atomicstore64, i64, SingleReg, 3, SDp, SDri10,  SDri37,  SDri64,
 
 
 // ATOMIC RMW
-let Constraints = "@earlyclobber $pr" in {
+let Constraints = "@earlyclobber $pr", mayLoad = 1, mayStore = 1 in {
   def ALOADADDp  : KVX_PSEUDO<(outs SingleReg:$res, PairedReg:$pr), (ins AddrRR:$addr, SingleReg:$op), []>;
   def ALOADSUBp  : KVX_PSEUDO<(outs SingleReg:$res, PairedReg:$pr), (ins AddrRR:$addr, SingleReg:$op), []>;
   def ALOADANDp  : KVX_PSEUDO<(outs SingleReg:$res, PairedReg:$pr), (ins AddrRR:$addr, SingleReg:$op), []>;
@@ -53,15 +53,15 @@ let Constraints = "@earlyclobber $pr" in {
 }
 
 // ATOMIC_CMP_SWAP
-let Constraints = "@earlyclobber $res,@earlyclobber $pr" in
+let Constraints = "@earlyclobber $res,@earlyclobber $pr", mayLoad = 1, mayStore = 1 in
 def ACMPSWAPp  : KVX_PSEUDO<(outs SingleReg:$res, PairedReg:$pr),
                             (ins AddrRR:$addr, SingleReg:$op1, SingleReg:$op2), []>;
-let Constraints = "@earlyclobber $res,@earlyclobber $pr,@earlyclobber $sr1,@earlyclobber $sr2,@earlyclobber $sr3" in
+let Constraints = "@earlyclobber $res,@earlyclobber $pr,@earlyclobber $sr1,@earlyclobber $sr2,@earlyclobber $sr3", mayLoad = 1, mayStore = 1 in
 def ATASp : KVX_PSEUDO<(outs SingleReg:$res, PairedReg:$pr, SingleReg:$sr1, SingleReg:$sr2, SingleReg:$sr3),
                        (ins AddrRR:$addr, SingleReg:$op), []>;
 
 // ATOMIC_SWAP
-let Constraints = "@earlyclobber $pr" in
+let Constraints = "@earlyclobber $pr", mayLoad = 1, mayStore = 1 in
 def ASWAPp     : KVX_PSEUDO<(outs SingleReg:$res, PairedReg:$pr), (ins AddrRR:$addr, SingleReg:$op), []>;
 
 def : Pat<(atomic_load_add_32 AddrRR:$addr, i32:$val), (ALOADADDp AddrRR:$addr, SingleReg:$val)>;
