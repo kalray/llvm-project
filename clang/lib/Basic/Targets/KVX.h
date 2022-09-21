@@ -68,6 +68,7 @@ public:
     resetDataLayout("e-S256-p:64:64-i1:8-i8:8-i16:16-i32:32-i64:64-"
                     "v64:64-v128:128-v256:256-v512:256-v1024:256-"
                     "f16:16-f32:32-f64:64-a:0:64-m:e-n32:64");
+    CPU = "kv3-1"; // Set the default cpu as kv3-1
   }
 
   void adjust(LangOptions &Opts) override;
@@ -98,6 +99,8 @@ public:
 
   bool isValidCPUName(StringRef Name) const override;
   bool setCPU(const std::string &Name) override;
+  bool validateCpuIs(StringRef Name) const override { return CPU == Name; };
+  StringRef getCPUstr() const override { return CPU; }
 
   void fillValidCPUList(SmallVectorImpl<StringRef> &Values) const override;
   bool DecodeTargetTypeFromStr(const char *&Str, const ASTContext &Context,

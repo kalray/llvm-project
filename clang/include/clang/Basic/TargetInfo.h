@@ -1275,6 +1275,9 @@ public:
   // argument.
   virtual bool validateCpuIs(StringRef Name) const { return false; }
 
+  // Obtain the defined cpu name string.
+  virtual StringRef getCPUstr() const { return "None"; }
+
   // Validate a cpu_dispatch/cpu_specific CPU option, which is a different list
   // from cpu_is, since it checks via features rather than CPUs directly.
   virtual bool validateCPUSpecificCPUDispatch(StringRef Name) const {

@@ -65,9 +65,9 @@ def : Pat<(KVXBRCond i64:$lhs, bb:$dst, i32:$mod),
 
 
 def : Pat<(KVXComp i32:$lhs, i32:$rhs, i32:$mod),
-            (COMPWrr SingleReg:$lhs, SingleReg:$rhs, ScalarcondMod:$mod)>;
+            (COMPWrr SingleReg:$lhs, SingleReg:$rhs, ComparisonMod:$mod)>;
 def : Pat<(KVXComp i32:$lhs, Wrapped32:$rhs, i32:$mod),
-            (COMPWri SingleReg:$lhs, Wrapped32:$rhs, ScalarcondMod:$mod)>;
+            (COMPWri SingleReg:$lhs, Wrapped32:$rhs, ComparisonMod:$mod)>;
 def : Pat<(KVXComp i64:$lhs, Signed10:$rhs, i32:$mod),
             (COMPDri10 SingleReg:$lhs, Signed10:$rhs, ComparisonMod:$mod)>;
 def : Pat<(KVXComp i64:$lhs, Signed37:$rhs, i32:$mod),
