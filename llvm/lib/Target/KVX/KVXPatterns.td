@@ -94,11 +94,16 @@ def AddrRR : Operand<iPTR>, ComplexPattern<iPTR, 2, "SelectAddrRR", [], []> {
 //===----------------------------------------------------------------------===//
 // Pseudo instructions patterns.
 //===----------------------------------------------------------------------===//
-
+let mayLoad = 1, mayStore = 1 in {
 def DINVALLp : KVX_PSEUDO<(outs), (ins AddrRR:$addr), []>;
+}
+let mayLoad = 1 in {
 def DTOUCHLp : KVX_PSEUDO<(outs), (ins AddrRR:$addr), []>;
+}
+let mayStore = 1 in {
 def DZEROLp : KVX_PSEUDO<(outs), (ins AddrRR:$addr), []>;
-def IINVALSp : KVX_PSEUDO<(outs), (ins AddrRR:$addr), []>;
+def I1INVALSp : KVX_PSEUDO<(outs), (ins AddrRR:$addr), []>;
+}
 let Constraints = "$output = $newsp" in
 def SPCHECKp : KVX_PSEUDO<(outs SingleReg:$output), (ins SingleReg:$newsp, SingleReg:$check), []>;
 

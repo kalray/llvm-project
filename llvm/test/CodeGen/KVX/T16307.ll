@@ -61,12 +61,12 @@ call void @llvm.kvx.dtouchl(i8* %arraydecay)
 ret i32 %0
 }
 
-define i32 @iinvals() {
-; CHECK-LABEL: iinvals:
+define i32 @i1invals() {
+; CHECK-LABEL: i1invals:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    iinvals 27[$r12]
+; CHECK-NEXT:    i1invals 27[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r0 = 28[$r12]
 ; CHECK-NEXT:    addd $r12 = $r12, 32
@@ -76,7 +76,7 @@ entry:
 %retval = alloca i32, align 4
 %b = alloca [1 x i8], align 1
 %arraydecay = getelementptr inbounds [1 x i8], [1 x i8]* %b, i64 0, i64 0
-call void @llvm.kvx.iinvals(i8* %arraydecay)
+call void @llvm.kvx.i1invals(i8* %arraydecay)
 %0 = load i32, i32* %retval, align 4
 ret i32 %0
 }
@@ -84,4 +84,4 @@ ret i32 %0
 declare void @llvm.kvx.dzerol(i8*)
 declare void @llvm.kvx.dinvall(i8*)
 declare void @llvm.kvx.dtouchl(i8*)
-declare void @llvm.kvx.iinvals(i8*)
+declare void @llvm.kvx.i1invals(i8*)

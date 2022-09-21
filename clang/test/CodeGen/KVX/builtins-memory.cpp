@@ -46,22 +46,22 @@ void fence(void) {
   __builtin_kvx_fence();
 }
 
-// CHECK-LABEL: @_Z6iinvalv(
+// CHECK-LABEL: @_Z7i1invalv(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    tail call void @llvm.kvx.iinval()
+// CHECK-NEXT:    tail call void @llvm.kvx.i1inval()
 // CHECK-NEXT:    ret void
 //
-void iinval(void) {
-  __builtin_kvx_iinval();
+void i1inval(void) {
+  __builtin_kvx_i1inval();
 }
 
-// CHECK-LABEL: @_Z7iinvalsPc(
+// CHECK-LABEL: @_Z8i1invalsPc(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    tail call void @llvm.kvx.iinvals(i8* [[P:%.*]])
+// CHECK-NEXT:    tail call void @llvm.kvx.i1invals(i8* [[P:%.*]])
 // CHECK-NEXT:    ret void
 //
-void iinvals(char *p) {
-  __builtin_kvx_iinvals(p);
+void i1invals(char *p) {
+  __builtin_kvx_i1invals(p);
 }
 
 // CHECK-LABEL: @_Z9tlbdinvalv(

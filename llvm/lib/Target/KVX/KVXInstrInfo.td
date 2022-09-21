@@ -1906,8 +1906,8 @@ defm DINVALL : MC_10<"dinvall">;
 let mayStore = 1 in
 defm DZEROL : MC_10<"dzerol">;
 
-let hasSideEffects = 1 in
-defm IINVALS : MC_10<"iinvals">;
+let hasSideEffects = 1, mayLoad = 0, mayStore = 0 in
+defm I1INVALS : MC_10<"i1invals">;
 
 let hasSideEffects = 1 in
 def DINVAL : SIMPLE
@@ -1916,9 +1916,9 @@ def DINVAL : SIMPLE
    [/* no straightforward pattern */],
    LSU_LOAD>;
 
-def IINVAL : SIMPLE
+def I1INVAL : SIMPLE
   <(outs), (ins),
-   "iinval",
+   "i1inval",
    [/* no straightforward pattern */],
    LSU_LOAD>;
 

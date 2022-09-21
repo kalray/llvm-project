@@ -14,11 +14,6 @@
 
 // The format of this database matches clang/Basic/Builtins.def.
 
-// This file was automatically generated,
-//   *DO NOT EDIT*,
-//   please contact code owner.
-// Last generated: 2020-06-20 21:47:17.938548.
-
 //===----------------------------------------------------------------------===//
 // BCU
 //===----------------------------------------------------------------------===//
@@ -62,8 +57,8 @@ BUILTIN(__builtin_kvx_dinval, "v", "")
 BUILTIN(__builtin_kvx_dtouchl, "vvC*", "")
 BUILTIN(__builtin_kvx_dzerol, "vvC*", "") // deprecated
 BUILTIN(__builtin_kvx_fence, "v", "")
-BUILTIN(__builtin_kvx_iinvals, "vvC*", "")
-BUILTIN(__builtin_kvx_iinval, "v", "")
+BUILTIN(__builtin_kvx_i1invals, "vvC*", "")
+BUILTIN(__builtin_kvx_i1inval, "v", "")
 BUILTIN(__builtin_kvx_lbs, "LivC*cC*b", "")
 BUILTIN(__builtin_kvx_lbz, "LivC*cC*b", "")
 BUILTIN(__builtin_kvx_lbo, "V8cvC*cC*b", "")

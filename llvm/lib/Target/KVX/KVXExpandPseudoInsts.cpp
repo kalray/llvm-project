@@ -194,11 +194,11 @@ static bool expandCacheInstruction(const KVXInstrInfo *TII,
                  : GetImmOpCode(MI.getOperand(0).getImm(), KVX::DZEROLri10,
                                 KVX::DZEROLri37, KVX::DZEROLri64);
     break;
-  case KVX::IINVALSp:
+  case KVX::I1INVALSp:
     OpCode = OffsetIsReg
-                 ? KVX::IINVALSrr
-                 : GetImmOpCode(MI.getOperand(0).getImm(), KVX::IINVALSri10,
-                                KVX::IINVALSri37, KVX::IINVALSri64);
+                 ? KVX::I1INVALSrr
+                 : GetImmOpCode(MI.getOperand(0).getImm(), KVX::I1INVALSri10,
+                                KVX::I1INVALSri37, KVX::I1INVALSri64);
     break;
   default:
     report_fatal_error("Cache instruction not supported");
@@ -1578,7 +1578,7 @@ bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
   case KVX::DINVALLp:
   case KVX::DTOUCHLp:
   case KVX::DZEROLp:
-  case KVX::IINVALSp:
+  case KVX::I1INVALSp:
     return expandCacheInstruction(TII, MBB, MBBI);
   case KVX::COPYZAp:
   case KVX::COPYZWp:

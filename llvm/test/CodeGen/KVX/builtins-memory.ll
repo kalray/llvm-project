@@ -67,31 +67,31 @@ entry:
 
 declare void @llvm.kvx.fence() #1
 
-define void @iinval(){
-; CHECK-LABEL: iinval:
+define void @i1inval(){
+; CHECK-LABEL: i1inval:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    iinval
+; CHECK-NEXT:    i1inval
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  tail call void @llvm.kvx.iinval()
+  tail call void @llvm.kvx.i1inval()
   ret void
 }
 
-declare void @llvm.kvx.iinval() #1
+declare void @llvm.kvx.i1inval() #1
 
-define void @iinvals(i8* %p){
-; CHECK-LABEL: iinvals:
+define void @i1invals(i8* %p){
+; CHECK-LABEL: i1invals:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    iinvals 0[$r0]
+; CHECK-NEXT:    i1invals 0[$r0]
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  tail call void @llvm.kvx.iinvals(i8* %p)
+  tail call void @llvm.kvx.i1invals(i8* %p)
   ret void
 }
 
-declare void @llvm.kvx.iinvals(i8*) #1
+declare void @llvm.kvx.i1invals(i8*) #1
 
 define void @tlbdinval(){
 ; CHECK-LABEL: tlbdinval:

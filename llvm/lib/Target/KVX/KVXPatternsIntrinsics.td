@@ -3,7 +3,7 @@ def: Pat<(int_kvx_barrier), (BARRIER)>;
 def: Pat<(int_kvx_dinval), (DINVAL)>;
 def: Pat<(int_kvx_errop), (ERROP)>;
 def: Pat<(int_kvx_fence), (FENCE)>;
-def: Pat<(int_kvx_iinval), (IINVAL)>;
+def: Pat<(int_kvx_i1inval), (I1INVAL)>;
 def: Pat<(int_kvx_sleep), (SLEEP)>;
 def: Pat<(int_kvx_stop), (STOP)>;
 def: Pat<(int_kvx_tlbdinval), (TLBDINVAL)>;
@@ -38,7 +38,7 @@ def: Pat<(int_kvx_waitit i64:$r), (WAITIT SingleReg:$r)>;
 def: Pat<(int_kvx_dinvall AddrRR:$addr), (DINVALLp AddrRR:$addr)>;
 def: Pat<(int_kvx_dtouchl AddrRR:$addr), (DTOUCHLp AddrRR:$addr)>;
 def: Pat<(int_kvx_dzerol AddrRR:$addr), (DZEROLp AddrRR:$addr)>;
-def: Pat<(int_kvx_iinvals AddrRR:$addr), (IINVALSp AddrRR:$addr)>;
+def: Pat<(int_kvx_i1invals AddrRR:$addr), (I1INVALSp AddrRR:$addr)>;
 
 // remove unecessary sign extension
 def: Pat<(int_kvx_sbmm8 (sext_inreg i64:$v, i16), (i64 0x0201020102010201)), (SBMM8ri64 SingleReg:$v, (i64 0x0201020102010201))>;
