@@ -376,3 +376,75 @@ define void @xmsbfifwo_test(<256 x i1>* nocapture %0) {
 }
 
 declare <256 x i1> @llvm.kvx.xmsbfifwo(<256 x i1>, <256 x i1>, <256 x i1>, i32, i32)
+
+define void @xsx48bw_test(<1024 x i1>* nocapture %0, <256 x i1>* nocapture readonly %1) {
+; CHECK-LABEL: xsx48bw_test:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    lv $a0 = 0[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xsx48bw $a0a1a2a3 = $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 96[$r0] = $a3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 64[$r0] = $a2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 32[$r0] = $a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 0[$r0] = $a0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = load <256 x i1>, <256 x i1>* %1
+  %4 = tail call <1024 x i1> @llvm.kvx.xsx48bw(<256 x i1> %3)
+  store <1024 x i1> %4, <1024 x i1>* %0
+  ret void
+}
+
+declare <1024 x i1> @llvm.kvx.xsx48bw(<256 x i1>)
+
+define void @xzx48bw_test(<1024 x i1>* nocapture %0, <256 x i1>* nocapture readonly %1) {
+; CHECK-LABEL: xzx48bw_test:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    lv $a0 = 0[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xzx48bw $a0a1a2a3 = $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 96[$r0] = $a3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 64[$r0] = $a2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 32[$r0] = $a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 0[$r0] = $a0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = load <256 x i1>, <256 x i1>* %1
+  %4 = tail call <1024 x i1> @llvm.kvx.xzx48bw(<256 x i1> %3)
+  store <1024 x i1> %4, <1024 x i1>* %0
+  ret void
+}
+
+declare <1024 x i1> @llvm.kvx.xzx48bw(<256 x i1>)
+
+define void @xtrunc48wb_test(<1024 x i1>* nocapture readonly %0, <256 x i1>* nocapture %1) {
+; CHECK-LABEL: xtrunc48wb_test:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    lv $a3 = 96[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv $a2 = 64[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv $a1 = 32[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv $a0 = 0[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xtrunc48wb $a0 = $a0a1a2a3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 0[$r1] = $a0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = load <1024 x i1>, <1024 x i1>* %0
+  %4 = tail call <256 x i1> @llvm.kvx.xtrunc48wb(<1024 x i1> %3)
+  store <256 x i1> %4, <256 x i1>* %1
+  ret void
+}
+
+declare <256 x i1> @llvm.kvx.xtrunc48wb(<1024 x i1>)
