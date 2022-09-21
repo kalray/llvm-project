@@ -64,3 +64,29 @@ void xfmma484hw_test(__kvx_x512 *acc) {
   r = __builtin_kvx_xfmma484hw(r, r, r, ".rn");
   acc[0] = __builtin_kvx_xfmma484hw(r, r, r, ".rz.s");
 }
+
+// CHECK-LABEL: @xfnarrow44wh_test(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = load <512 x i1>, <512 x i1>* [[W:%.*]], align 32, [[TBAA6]]
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <256 x i1> @llvm.kvx.xfnarrow44wh(<512 x i1> [[TMP0]], i32 7, i32 0)
+// CHECK-NEXT:    store <256 x i1> [[TMP1]], <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[TMP2:%.*]] = load <512 x i1>, <512 x i1>* [[W]], align 32, [[TBAA6]]
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <256 x i1> @llvm.kvx.xfnarrow44wh(<512 x i1> [[TMP2]], i32 7, i32 1)
+// CHECK-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 1
+// CHECK-NEXT:    store <256 x i1> [[TMP3]], <256 x i1>* [[ARRAYIDX3]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[TMP4:%.*]] = load <512 x i1>, <512 x i1>* [[W]], align 32, [[TBAA6]]
+// CHECK-NEXT:    [[TMP5:%.*]] = tail call <256 x i1> @llvm.kvx.xfnarrow44wh(<512 x i1> [[TMP4]], i32 3, i32 0)
+// CHECK-NEXT:    [[ARRAYIDX5:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 2
+// CHECK-NEXT:    store <256 x i1> [[TMP5]], <256 x i1>* [[ARRAYIDX5]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[TMP6:%.*]] = load <512 x i1>, <512 x i1>* [[W]], align 32, [[TBAA6]]
+// CHECK-NEXT:    [[TMP7:%.*]] = tail call <256 x i1> @llvm.kvx.xfnarrow44wh(<512 x i1> [[TMP6]], i32 1, i32 1)
+// CHECK-NEXT:    [[ARRAYIDX7:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 3
+// CHECK-NEXT:    store <256 x i1> [[TMP7]], <256 x i1>* [[ARRAYIDX7]], align 32, [[TBAA2]]
+// CHECK-NEXT:    ret void
+//
+void xfnarrow44wh_test(__kvx_x256 *v, __kvx_x512 *w) {
+  v[0] = __builtin_kvx_xfnarrow44wh(w[0], "");
+  v[1] = __builtin_kvx_xfnarrow44wh(w[0], ".s");
+  v[2] = __builtin_kvx_xfnarrow44wh(w[0], ".rz");
+  v[3] = __builtin_kvx_xfnarrow44wh(w[0], ".ru.s");
+}

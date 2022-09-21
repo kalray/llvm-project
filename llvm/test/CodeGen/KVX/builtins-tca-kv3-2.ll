@@ -114,3 +114,44 @@ define void @xfmma484hw_test(<512 x i1>* nocapture %0) {
 }
 
 declare <512 x i1> @llvm.kvx.xfmma484hw(<512 x i1>, <512 x i1>, <512 x i1>, i32, i32)
+
+define void @xfnarrow44wh_test(<256 x i1>* nocapture %0, <512 x i1>* nocapture readonly %1) {
+; CHECK-LABEL: xfnarrow44wh_test:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    lv $a1 = 32[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv $a0 = 0[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xfnarrow44wh $a2 = $a0a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 0[$r0] = $a2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xfnarrow44wh.s $a2 = $a0a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 32[$r0] = $a2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xfnarrow44wh.rz $a2 = $a0a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 64[$r0] = $a2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xfnarrow44wh.ru.s $a0 = $a0a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 96[$r0] = $a0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = load <512 x i1>, <512 x i1>* %1
+  %4 = tail call <256 x i1> @llvm.kvx.xfnarrow44wh(<512 x i1> %3, i32 7, i32 0)
+  store <256 x i1> %4, <256 x i1>* %0
+  %5 = tail call <256 x i1> @llvm.kvx.xfnarrow44wh(<512 x i1> %3, i32 7, i32 1)
+  %6 = getelementptr inbounds <256 x i1>, <256 x i1>* %0, i64 1
+  store <256 x i1> %5, <256 x i1>* %6
+  %7 = tail call <256 x i1> @llvm.kvx.xfnarrow44wh(<512 x i1> %3, i32 3, i32 0)
+  %8 = getelementptr inbounds <256 x i1>, <256 x i1>* %0, i64 2
+  store <256 x i1> %7, <256 x i1>* %8
+  %9 = tail call <256 x i1> @llvm.kvx.xfnarrow44wh(<512 x i1> %3, i32 1, i32 1)
+  %10 = getelementptr inbounds <256 x i1>, <256 x i1>* %0, i64 3
+  store <256 x i1> %9, <256 x i1>* %10
+  ret void
+}
+
+declare <256 x i1> @llvm.kvx.xfnarrow44wh(<512 x i1>, i32, i32)

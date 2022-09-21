@@ -316,7 +316,6 @@ def int_kvx_xmma484usbw : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
 def int_kvx_xmt44d : Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty], [IntrReadMem]>;
 // fscalewv is not inplace, but has same args pattern
 def int_kvx_xfscalewv : Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrHasSideEffects]>;
-def int_kvx_xfscalewo : Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrHasSideEffects]>;
 
 //===----------------------------------------------------------------------===//
 // KV3 V2 TCA intrinsics
@@ -325,6 +324,8 @@ def int_kvx_xclampwo : KVX_TCA_Ternary<[llvm_v256i1_ty]>;
 def int_kvx_xffma44hw : Intrinsic<[llvm_v512i1_ty], [llvm_v512i1_ty, llvm_v256i1_ty, llvm_v256i1_ty, llvm_i32_ty, llvm_i32_ty], [IntrHasSideEffects]>;
 def int_kvx_xfmma484hw : Intrinsic<[llvm_v512i1_ty], [llvm_v512i1_ty, llvm_v512i1_ty, llvm_v512i1_ty, llvm_i32_ty, llvm_i32_ty], [IntrHasSideEffects]>;
 def int_kvx_xfnarrowwhv : Intrinsic<[llvm_v256i1_ty], [llvm_v512i1_ty, llvm_i32_ty, llvm_i32_ty], [IntrHasSideEffects]>;
+def int_kvx_xfnarrow44wh : Intrinsic<[llvm_v256i1_ty], [llvm_v512i1_ty, llvm_i32_ty, llvm_i32_ty], [IntrHasSideEffects]>;
+def int_kvx_xfscalewo : Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrHasSideEffects]>;
 
 //===----------------------------------------------------------------------===//
 // ACB 4.8 TCA intrinsics. Should remove them in ACB 4.10
