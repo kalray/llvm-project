@@ -90,3 +90,17 @@ void xfnarrow44wh_test(__kvx_x256 *v, __kvx_x512 *w) {
   v[2] = __builtin_kvx_xfnarrow44wh(w[0], ".rz");
   v[3] = __builtin_kvx_xfnarrow44wh(w[0], ".ru.s");
 }
+
+// CHECK-LABEL: @xmadd44bw_test(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = load <512 x i1>, <512 x i1>* [[W:%.*]], align 32, [[TBAA6]]
+// CHECK-NEXT:    [[TMP1:%.*]] = load <256 x i1>, <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <512 x i1> @llvm.kvx.xmadd44bw0(<512 x i1> [[TMP0]], <256 x i1> [[TMP1]], <256 x i1> [[TMP1]])
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <512 x i1> @llvm.kvx.xmadd44bw1(<512 x i1> [[TMP2]], <256 x i1> [[TMP1]], <256 x i1> [[TMP1]])
+// CHECK-NEXT:    store <512 x i1> [[TMP3]], <512 x i1>* [[W]], align 32, [[TBAA6]]
+// CHECK-NEXT:    ret void
+//
+void xmadd44bw_test(__kvx_x256 *v, __kvx_x512 *w) {
+  __kvx_x512 r = __builtin_kvx_xmadd44bw0(w[0], v[0], v[0]);
+  w[0] = __builtin_kvx_xmadd44bw1(r, v[0], v[0]);
+}

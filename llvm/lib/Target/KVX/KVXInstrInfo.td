@@ -2839,6 +2839,12 @@ def XFMMA484HW : ROUNDING_SILENT_TERNARY<"xfmma484hw", WideReg, WideReg, WideReg
 
 def XFNARROW44WH : ROUNDING_SILENT_UNARY<"xfnarrow44wh", VectorReg, WideReg, BCU_CRRP_CRWL_CRWH,
                 [(set v256i1:$o, (int_kvx_xfnarrow44wh v512i1:$i, RoundingMod:$r, SilentMod:$s ))]>;
+
+def XMADD44BW0 : TERNARY<"xmadd44bw0", WideReg, VectorReg, VectorReg, TCA,
+                [(set v512i1:$o, (int_kvx_xmadd44bw0 v512i1:$a, v256i1:$lhs, v256i1:$rhs))]>;
+
+def XMADD44BW1 : TERNARY<"xmadd44bw1", WideReg, VectorReg, VectorReg, TCA,
+                [(set v512i1:$o, (int_kvx_xmadd44bw1 v512i1:$a, v256i1:$lhs, v256i1:$rhs))]>;
 }
 
 def FMIND : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
