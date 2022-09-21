@@ -2899,6 +2899,15 @@ def XTRUNC48WB : UNARY<"xtrunc48wb", VectorReg, MatrixReg, TCA,
 
 def XMT44D : UNARY<"xmt44d", MatrixReg, MatrixReg, TCA,
                 [(set v1024i1:$o, (int_kvx_xmt44d v1024i1:$i))]>;
+
+def DFLUSHSW : CACHE_OP<"dflushsw", SingleReg, LSU_STORE,
+                [(int_kvx_dflushsw i64:$way, i64:$set, CacheLevelMod:$c)]>;
+
+def DINVALSW : CACHE_OP<"dinvalsw", SingleReg, LSU_STORE,
+                [(int_kvx_dinvalsw i64:$way, i64:$set, CacheLevelMod:$c)]>;
+
+def DPURGESW : CACHE_OP<"dpurgesw", SingleReg, LSU_STORE,
+                [(int_kvx_dpurgesw i64:$way, i64:$set, CacheLevelMod:$c)]>;
 }
 
 def FMIND : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
