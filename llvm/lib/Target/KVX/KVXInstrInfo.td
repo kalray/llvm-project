@@ -2848,6 +2848,12 @@ def XMADD44BW1 : TERNARY<"xmadd44bw1", WideReg, VectorReg, VectorReg, TCA,
 
 def XMADDIFWO : ROUNDING_SILENT_TERNARY<"xmaddifwo", VectorReg, VectorReg, VectorReg, TCA,
                 [(set v256i1:$o, (int_kvx_xmaddifwo v256i1:$a, v256i1:$lhs, v256i1:$rhs, RoundingMod:$r, SilentMod:$s))]>;
+
+def XMADDSU44BW0 : TERNARY<"xmaddsu44bw0", WideReg, VectorReg, VectorReg, TCA,
+                [(set v512i1:$o, (int_kvx_xmaddsu44bw0 v512i1:$a, v256i1:$lhs, v256i1:$rhs))]>;
+
+def XMADDSU44BW1 : TERNARY<"xmaddsu44bw1", WideReg, VectorReg, VectorReg, TCA,
+                [(set v512i1:$o, (int_kvx_xmaddsu44bw1 v512i1:$a, v256i1:$lhs, v256i1:$rhs))]>;
 }
 
 def FMIND : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
