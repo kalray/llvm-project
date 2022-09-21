@@ -2884,6 +2884,9 @@ def XMMAU484BW : TERNARY<"xmmau484bw", WideReg, VectorReg, VectorReg, TCA,
 
 def XMMAUS484BW : TERNARY<"xmmaus484bw", WideReg, VectorReg, VectorReg, TCA,
                 [(set v512i1:$o, (int_kvx_xmmaus484bw v512i1:$a, v256i1:$lhs, v256i1:$rhs))]>;
+
+def XMSBFIFWO : ROUNDING_SILENT_TERNARY<"xmsbfifwo", VectorReg, VectorReg, VectorReg, TCA,
+                [(set v256i1:$o, (int_kvx_xmsbfifwo v256i1:$a, v256i1:$lhs, v256i1:$rhs, RoundingMod:$r, SilentMod:$s))]>;
 }
 
 def FMIND : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
