@@ -20621,6 +20621,8 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     [[clang::fallthrough]];
   case KVX::BI__builtin_kvx_xfscalewv:
     return KVX_emitScaleNarrowBuiltin(3, Intrinsic::kvx_xfscalewv, *this, E);
+  case KVX::BI__builtin_kvx_xfnarrow44wh:
+    return KVX_emitScaleNarrowBuiltin(2, Intrinsic::kvx_xfnarrow44wh, *this, E);
   case KVX::BI__builtin_kvx_xfscalewo:
     return KVX_emitScaleNarrowBuiltin(2, Intrinsic::kvx_xfscalewo, *this, E, 3);
   case KVX::BI__builtin_kvx_xffma44hw:
