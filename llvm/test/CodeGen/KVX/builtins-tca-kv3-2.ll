@@ -349,3 +349,30 @@ declare <512 x i1> @llvm.kvx.xmmasu484bw(<512 x i1>, <256 x i1>, <256 x i1>)
 declare <512 x i1> @llvm.kvx.xmmau484bw(<512 x i1>, <256 x i1>, <256 x i1>)
 
 declare <512 x i1> @llvm.kvx.xmmaus484bw(<512 x i1>, <256 x i1>, <256 x i1>)
+
+define void @xmsbfifwo_test(<256 x i1>* nocapture %0) {
+; CHECK-LABEL: xmsbfifwo_test:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    lv $a0 = 0[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xmsbfifwo $a0 = $a0, $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xmsbfifwo.s $a0 = $a0, $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xmsbfifwo.rn $a0 = $a0, $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xmsbfifwo.rz.s $a0 = $a0, $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 0[$r0] = $a0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = load <256 x i1>, <256 x i1>* %0
+  %3 = tail call <256 x i1> @llvm.kvx.xmsbfifwo(<256 x i1> %2, <256 x i1> %2, <256 x i1> %2, i32 7, i32 0)
+  %4 = tail call <256 x i1> @llvm.kvx.xmsbfifwo(<256 x i1> %3, <256 x i1> %3, <256 x i1> %3, i32 7, i32 1)
+  %5 = tail call <256 x i1> @llvm.kvx.xmsbfifwo(<256 x i1> %4, <256 x i1> %4, <256 x i1> %4, i32 0, i32 0)
+  %6 = tail call <256 x i1> @llvm.kvx.xmsbfifwo(<256 x i1> %5, <256 x i1> %5, <256 x i1> %5, i32 3, i32 1)
+  store <256 x i1> %6, <256 x i1>* %0
+  ret void
+}
+
+declare <256 x i1> @llvm.kvx.xmsbfifwo(<256 x i1>, <256 x i1>, <256 x i1>, i32, i32)
