@@ -904,6 +904,8 @@ bool KVXInstrInfo::PredicateInstruction(MachineInstr &MI,
          "Can't predicate an already predicated instruction");
   unsigned Oprrc, Opri27c, Opri54c;
   bool IsRR = false;
+  bool IsInplace = false;
+
   switch (MI.getOpcode()) {
   default:
     return false;
@@ -975,15 +977,16 @@ bool KVXInstrInfo::PredicateInstruction(MachineInstr &MI,
     Opri27c = KVX::LQri27c;
     Opri54c = KVX::LQri54c;
     break;
-  case KVX::LVmrrcs:
+  case KVX::LVrrcs:
     IsRR = true;
     LLVM_FALLTHROUGH;
-  case KVX::LVmri10cs:
-  case KVX::LVmri37cs:
-  case KVX::LVmri64cs:
-    Oprrc = KVX::LVmrrcs;
-    Opri27c = KVX::LVmri27ccs;
-    Opri54c = KVX::LVmri54ccs;
+  case KVX::LVri10cs:
+  case KVX::LVri37cs:
+  case KVX::LVri64cs:
+    IsInplace = true;
+    Oprrc = KVX::LVrrccs;
+    Opri27c = KVX::LVri27ccs;
+    Opri54c = KVX::LVri54ccs;
     break;
   case KVX::LVrr:
     IsRR = true;
@@ -994,16 +997,6 @@ bool KVXInstrInfo::PredicateInstruction(MachineInstr &MI,
     Oprrc = KVX::LVrrc;
     Opri27c = KVX::LVri27c;
     Opri54c = KVX::LVri54c;
-    break;
-  case KVX::LVrrcs:
-    IsRR = true;
-    LLVM_FALLTHROUGH;
-  case KVX::LVri10cs:
-  case KVX::LVri37cs:
-  case KVX::LVri64cs:
-    Oprrc = KVX::LVrrccs;
-    Opri27c = KVX::LVri27ccs;
-    Opri54c = KVX::LVri54ccs;
     break;
   case KVX::LWSrr:
     IsRR = true;
@@ -1174,7 +1167,7 @@ bool KVXInstrInfo::PredicateInstruction(MachineInstr &MI,
   // yet which is the register containing the value if we do not perform
   // the operation (load e.g). To avoid the machine verifier, we do set it
   // as undef.
-  if (MI.mayLoad()) {
+  if (MI.mayLoad() && !IsInplace) {
     MachineRegisterInfo &MRI = MI.getParent()->getParent()->getRegInfo();
     Register R = MI.getOperand(0).getReg();
     if (R.isVirtual()) {
@@ -1183,14 +1176,14 @@ bool KVXInstrInfo::PredicateInstruction(MachineInstr &MI,
       BuildMI(*MI.getParent(), MI, MI.getDebugLoc(), get(KVX::IMPLICIT_DEF),
               VR);
       MachineInstrBuilder(*MI.getParent()->getParent(), MI)
+          .addReg(VR, RegState::Undef)
           .addImm(Pred[2].getImm())
-          .addReg(Pred[1].getReg())
-          .addReg(VR, RegState::Undef);
+          .addReg(Pred[1].getReg());
     } else {
       MachineInstrBuilder(*MI.getParent()->getParent(), MI)
+          .addReg(R, RegState::InternalRead)
           .addImm(Pred[2].getImm())
-          .addReg(Pred[1].getReg())
-          .addReg(R, RegState::InternalRead);
+          .addReg(Pred[1].getReg());
     }
   } else {
     MachineInstrBuilder(*MI.getParent()->getParent(), MI)

@@ -15,11 +15,6 @@
 // Instruction format superclass
 //===----------------------------------------------------------------------===//
 
-// This file was automatically generated,
-//   *DO NOT EDIT*,
-//   please contact code owner.
-// Last generated: 2020-09-16 15:58:51.230203.
-
 include "KVXOperandInfo.td"
 include "KVXInstrFormats.td"
 
@@ -107,330 +102,6 @@ multiclass MC_04<string OpcStr> {
   def ss3 : REGISTERZ_SYSTEMS3_SIMPLE
     <(outs SingleReg:$a1o, SystemReg:$a2o), (ins SingleReg:$a1, SystemReg:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
-     [/* no straightforward pattern */]>;
-}
-
-// multiclass MC_05 is used by:
-//   defm LBZ
-//   defm LBS
-//   defm LHZ
-//   defm LHS
-//   defm LWZ
-//   defm LWS
-//   defm LD
-let mayLoad = 1 in
-multiclass MC_05<string OpcStr> {
-  let isPredicable = 1 in {
-  def ri10 : VARIANT_REGISTERW_SIGNED10_REGISTERZ_SIMPLE
-    <(outs SingleReg:$a2), (ins Signed10:$a3, SingleReg:$a4, VariantMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
-     [/* no straightforward pattern */]>;
-  def ri37 : VARIANT_REGISTERW_UPPER27_LOWER10_REGISTERZ_DOUBLE
-    <(outs SingleReg:$a2), (ins Signed37:$a3, SingleReg:$a4, VariantMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
-     [/* no straightforward pattern */]>;
-  def ri64 : VARIANT_REGISTERW_EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
-    <(outs SingleReg:$a2), (ins Wrapped64:$a3, SingleReg:$a4, VariantMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
-     [/* no straightforward pattern */]>;
-  }
-  let Constraints = "$a4in = $a4" in {
-  def rrc : VARIANT_LSUCOND_REGISTERY_REGISTERW_REGISTERZ_SIMPLE
-    <(outs SingleReg:$a4), (ins SingleReg:$a5, VariantMod:$a1, ScalarcondMod:$a2, SingleReg:$a3, SingleReg:$a4in),
-     !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = [$a5]"),
-     [/* no straightforward pattern */]>;
-  def ri27c : VARIANT_LSUCOND_REGISTERY_REGISTERW_OFFSET27_REGISTERZ_DOUBLE
-    <(outs SingleReg:$a4), (ins Signed27:$a5, SingleReg:$a6, VariantMod:$a1, ScalarcondMod:$a2, SingleReg:$a3, SingleReg:$a4in),
-     !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = $a5[$a6]"),
-     [/* no straightforward pattern */]>;
-  def ri54c : VARIANT_LSUCOND_REGISTERY_REGISTERW_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
-    <(outs SingleReg:$a4), (ins Signed54:$a5, SingleReg:$a6, VariantMod:$a1, ScalarcondMod:$a2, SingleReg:$a3, SingleReg:$a4in),
-     !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = $a5[$a6]"),
-     [/* no straightforward pattern */]>;
-  }
-  let isPredicable = 1 in
-  def rr : VARIANT_DOSCALE_REGISTERW_REGISTERY_REGISTERZ_SIMPLE
-    <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, VariantMod:$a1, DoscaleMod:$a2),
-     !strconcat (OpcStr, "$a1$a2 $a3 = $a4[$a5]"),
-     [/* no straightforward pattern */]>;
-}
-
-// multiclass MC_06 is used by:
-//   defm LQ
-let mayLoad = 1 in
-multiclass MC_06<string OpcStr> {
-  let isPredicable = 1 in {
-  def ri10 : VARIANT_REGISTERM_SIGNED10_REGISTERZ_SIMPLE
-    <(outs PairedReg:$a2), (ins Signed10:$a3, SingleReg:$a4, VariantMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
-     [/* no straightforward pattern */]>;
-  def ri37 : VARIANT_REGISTERM_UPPER27_LOWER10_REGISTERZ_DOUBLE
-    <(outs PairedReg:$a2), (ins Signed37:$a3, SingleReg:$a4, VariantMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
-     [/* no straightforward pattern */]>;
-  def ri64 : VARIANT_REGISTERM_EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
-    <(outs PairedReg:$a2), (ins Wrapped64:$a3, SingleReg:$a4, VariantMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
-     [/* no straightforward pattern */]>;
-  }
-  let Constraints = "$a4 = $a4o" in
-  def rrc : VARIANT_LSUCOND_REGISTERY_REGISTERM_REGISTERZ_SIMPLE
-    <(outs PairedReg:$a4o), (ins SingleReg:$a5, VariantMod:$a1, ScalarcondMod:$a2, SingleReg:$a3, PairedReg:$a4),
-     !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = [$a5]"),
-     [/* no straightforward pattern */]>;
-  let Constraints = "$a4 = $a4o" in
-  def ri27c : VARIANT_LSUCOND_REGISTERY_REGISTERM_OFFSET27_REGISTERZ_DOUBLE
-    <(outs PairedReg:$a4o), (ins Signed27:$a5, SingleReg:$a6, VariantMod:$a1, ScalarcondMod:$a2, SingleReg:$a3, PairedReg:$a4),
-     !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = $a5[$a6]"),
-     [/* no straightforward pattern */]>;
-  let Constraints = "$a4 = $a4o" in
-  def ri54c : VARIANT_LSUCOND_REGISTERY_REGISTERM_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
-    <(outs PairedReg:$a4o), (ins Signed54:$a5, SingleReg:$a6, VariantMod:$a1, ScalarcondMod:$a2, SingleReg:$a3, PairedReg:$a4),
-     !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = $a5[$a6]"),
-     [/* no straightforward pattern */]>;
-  let isPredicable = 1 in {
-  def rr : VARIANT_DOSCALE_REGISTERM_REGISTERY_REGISTERZ_SIMPLE
-    <(outs PairedReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, VariantMod:$a1, DoscaleMod:$a2),
-     !strconcat (OpcStr, "$a1$a2 $a3 = $a4[$a5]"),
-     [/* no straightforward pattern */]>;
-  }
-}
-
-// multiclass MC_07 is used by:
-//   defm LO
-let mayLoad = 1 in
-multiclass MC_07<string OpcStr> {
-  let isPredicable = 1 in {
-  def ri10 : VARIANT_REGISTERN_SIGNED10_REGISTERZ_SIMPLE
-    <(outs QuadReg:$a2), (ins Signed10:$a3, SingleReg:$a4, VariantMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
-     [/* no straightforward pattern */]>;
-  def ri37 : VARIANT_REGISTERN_UPPER27_LOWER10_REGISTERZ_DOUBLE
-    <(outs QuadReg:$a2), (ins Signed37:$a3, SingleReg:$a4, VariantMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
-     [/* no straightforward pattern */]>;
-  def ri64 : VARIANT_REGISTERN_EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
-    <(outs QuadReg:$a2), (ins Wrapped64:$a3, SingleReg:$a4, VariantMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
-     [/* no straightforward pattern */]>;
-  }
-  let Constraints = "$a4 = $a4o" in
-  def rrc : VARIANT_LSUCOND_REGISTERY_REGISTERN_REGISTERZ_SIMPLE
-    <(outs QuadReg:$a4o), (ins SingleReg:$a5, VariantMod:$a1, ScalarcondMod:$a2, SingleReg:$a3, QuadReg:$a4),
-     !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = [$a5]"),
-     [/* no straightforward pattern */]>;
-  let Constraints = "$a4 = $a4o" in
-  def ri27c : VARIANT_LSUCOND_REGISTERY_REGISTERN_OFFSET27_REGISTERZ_DOUBLE
-    <(outs QuadReg:$a4o), (ins Signed27:$a5, SingleReg:$a6, VariantMod:$a1, ScalarcondMod:$a2, SingleReg:$a3, QuadReg:$a4),
-     !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = $a5[$a6]"),
-     [/* no straightforward pattern */]>;
-  let Constraints = "$a4 = $a4o" in
-  def ri54c : VARIANT_LSUCOND_REGISTERY_REGISTERN_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
-    <(outs QuadReg:$a4o), (ins Signed54:$a5, SingleReg:$a6, VariantMod:$a1, ScalarcondMod:$a2, SingleReg:$a3, QuadReg:$a4),
-     !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = $a5[$a6]"),
-     [/* no straightforward pattern */]>;
-  let isPredicable = 1 in {
-  def rr : VARIANT_DOSCALE_REGISTERN_REGISTERY_REGISTERZ_SIMPLE
-    <(outs QuadReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, VariantMod:$a1, DoscaleMod:$a2),
-     !strconcat (OpcStr, "$a1$a2 $a3 = $a4[$a5]"),
-     [/* no straightforward pattern */]>;
-  }
-}
-
-// multiclass MC_08 is used by:
-//   defm LV
-let mayLoad = 1 in
-multiclass MC_08<string OpcStr> {
-  let isPredicable = 1 in {
-  def ri10 : SPECULATE_REGISTERA_SIGNED10_REGISTERZ_SIMPLE
-    <(outs VectorReg:$a2), (ins Signed10:$a3, SingleReg:$a4, SpeculateMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
-     [/* no straightforward pattern */]>;
-  def ri37 : SPECULATE_REGISTERA_UPPER27_LOWER10_REGISTERZ_DOUBLE
-    <(outs VectorReg:$a2), (ins Signed37:$a3, SingleReg:$a4, SpeculateMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
-     [/* no straightforward pattern */]>;
-  def ri64 : SPECULATE_REGISTERA_EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
-    <(outs VectorReg:$a2), (ins Wrapped64:$a3, SingleReg:$a4, SpeculateMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
-     [/* no straightforward pattern */]>;
-  }
-  let Constraints = "$a4 = $a4o" in
-  def rrc : SPECULATE_LSUCOND_REGISTERY_REGISTERA_REGISTERZ_SIMPLE
-    <(outs VectorReg:$a4o), (ins SingleReg:$a5, VectorReg:$a4, SpeculateMod:$a1, ScalarcondMod:$a2, SingleReg:$a3),
-     !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = [$a5]"),
-     [/* no straightforward pattern */]>;
-  let Constraints = "$a4 = $a4o" in
-  def ri27c : SPECULATE_LSUCOND_REGISTERY_REGISTERA_OFFSET27_REGISTERZ_DOUBLE
-    <(outs VectorReg:$a4o), (ins Signed27:$a5, SingleReg:$a6, VectorReg:$a4, SpeculateMod:$a1, ScalarcondMod:$a2, SingleReg:$a3),
-     !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = $a5[$a6]"),
-     [/* no straightforward pattern */]>;
-  let Constraints = "$a4 = $a4o" in
-  def ri54c : SPECULATE_LSUCOND_REGISTERY_REGISTERA_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
-    <(outs VectorReg:$a4o), (ins Signed54:$a5, SingleReg:$a6, VectorReg:$a4, SpeculateMod:$a1, ScalarcondMod:$a2, SingleReg:$a3),
-     !strconcat (OpcStr, "$a1$a2 $a3 ? $a4 = $a5[$a6]"),
-     [/* no straightforward pattern */]>;
-  let isPredicable = 1 in {
-  def rr : SPECULATE_DOSCALE_REGISTERA_REGISTERY_REGISTERZ_SIMPLE
-    <(outs VectorReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, SpeculateMod:$a1, DoscaleMod:$a2),
-     !strconcat (OpcStr, "$a1$a2 $a3 = $a4[$a5]"),
-     [/* no straightforward pattern */]>;
-  def ri10cs : COLUMN_SPECULATE_REGISTERAQ_SIGNED10_REGISTERZ_SIMPLE
-    <(outs MatrixReg:$a3), (ins Signed10:$a4, SingleReg:$a5, ColumnMod:$a1, SpeculateMod:$a2),
-     !strconcat (OpcStr, "$a1$a2 $a3 = $a4[$a5]"),
-     [/* no straightforward pattern */]>;
-  def ri37cs : COLUMN_SPECULATE_REGISTERAQ_UPPER27_LOWER10_REGISTERZ_DOUBLE
-    <(outs MatrixReg:$a3), (ins Signed37:$a4, SingleReg:$a5, ColumnMod:$a1, SpeculateMod:$a2),
-     !strconcat (OpcStr, "$a1$a2 $a3 = $a4[$a5]"),
-     [/* no straightforward pattern */]>;
-  def ri64cs : COLUMN_SPECULATE_REGISTERAQ_EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
-    <(outs MatrixReg:$a3), (ins Wrapped64:$a4, SingleReg:$a5, ColumnMod:$a1, SpeculateMod:$a2),
-     !strconcat (OpcStr, "$a1$a2 $a3 = $a4[$a5]"),
-     [/* no straightforward pattern */]>;
-  }
-  def rrccs : COLUMN_SPECULATE_LSUCOND_REGISTERY_REGISTERAQ_REGISTERZ_SIMPLE
-    <(outs MatrixReg:$a5), (ins SingleReg:$a6, ColumnMod:$a1, SpeculateMod:$a2, ScalarcondMod:$a3, SingleReg:$a4),
-     !strconcat (OpcStr, "$a1$a2$a3 $a4 ? $a5 = [$a6]"),
-     [/* no straightforward pattern */]>;
-  def ri27ccs : COLUMN_SPECULATE_LSUCOND_REGISTERY_REGISTERAQ_OFFSET27_REGISTERZ_DOUBLE
-    <(outs MatrixReg:$a5), (ins Signed27:$a6, SingleReg:$a7, ColumnMod:$a1, SpeculateMod:$a2, ScalarcondMod:$a3, SingleReg:$a4),
-     !strconcat (OpcStr, "$a1$a2$a3 $a4 ? $a5 = $a6[$a7]"),
-     [/* no straightforward pattern */]>;
-  def ri54ccs : COLUMN_SPECULATE_LSUCOND_REGISTERY_REGISTERAQ_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
-    <(outs MatrixReg:$a5), (ins Signed54:$a6, SingleReg:$a7, ColumnMod:$a1, SpeculateMod:$a2, ScalarcondMod:$a3, SingleReg:$a4),
-     !strconcat (OpcStr, "$a1$a2$a3 $a4 ? $a5 = $a6[$a7]"),
-     [/* no straightforward pattern */]>;
-  let isPredicable = 1 in {
-  def rrcs : COLUMN_SPECULATE_DOSCALE_REGISTERAQ_REGISTERY_REGISTERZ_SIMPLE
-    <(outs MatrixReg:$a4), (ins SingleReg:$a5, SingleReg:$a6, ColumnMod:$a1, SpeculateMod:$a2, DoscaleMod:$a3),
-     !strconcat (OpcStr, "$a1$a2$a3 $a4 = $a5[$a6]"),
-     [/* no straightforward pattern */]>;
-  }
-}
-
-// multiclass MC_09 is used by:
-//   defm SB
-//   defm SH
-//   defm SW
-//   defm SD
-let mayStore = 1 in
-multiclass MC_09<string OpcStr> {
-  let isPredicable = 1 in {
-  def ri10 : SIGNED10_REGISTERZ_REGISTERT_SIMPLE
-    <(outs), (ins Signed10:$a1, SingleReg:$a2, SingleReg:$a3),
-     !strconcat (OpcStr, " $a1[$a2] = $a3"),
-     [/* no straightforward pattern */],
-     LSU_AUXR_STORE>;
-  def ri37 : UPPER27_LOWER10_REGISTERZ_REGISTERT_DOUBLE
-    <(outs), (ins Signed37:$a1, SingleReg:$a2, SingleReg:$a3),
-     !strconcat (OpcStr, " $a1[$a2] = $a3"),
-     [/* no straightforward pattern */],
-     LSU_AUXR_X_STORE>;
-  def ri64 : EXTEND27_UPPER27_LOWER10_REGISTERZ_REGISTERT_TRIPLE
-    <(outs), (ins Wrapped64:$a1, SingleReg:$a2, SingleReg:$a3),
-     !strconcat (OpcStr, " $a1[$a2] = $a3"),
-     [/* no straightforward pattern */],
-     LSU_AUXR_Y_STORE>;
-  def rr : DOSCALE_REGISTERY_REGISTERZ_REGISTERT_SIMPLE
-    <(outs), (ins SingleReg:$a2, SingleReg:$a3, SingleReg:$a4, DoscaleMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2[$a3] = $a4"),
-     [/* no straightforward pattern */],
-     LSU_AUXR_STORE>;
-  }
-  def rrc : LSUCOND_REGISTERY_REGISTERZ_REGISTERT_SIMPLE
-    <(outs), (ins SingleReg:$a3, SingleReg:$a4, ScalarcondMod:$a1, SingleReg:$a2),
-     !strconcat (OpcStr, "$a1 $a2 ? [$a3] = $a4"),
-     [/* no straightforward pattern */],
-     LSU_AUXR_STORE>;
-
-  def ri27c : LSUCOND_REGISTERY_OFFSET27_REGISTERZ_REGISTERT_DOUBLE
-    <(outs), (ins Signed27:$a3, SingleReg:$a4, SingleReg:$a5, ScalarcondMod:$a1, SingleReg:$a2),
-     !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
-     [/* no straightforward pattern */],
-     LSU_AUXR_X_STORE>;
-  def ri54c : LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_REGISTERT_TRIPLE
-    <(outs), (ins Signed54:$a3, SingleReg:$a4, SingleReg:$a5, ScalarcondMod:$a1, SingleReg:$a2),
-     !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
-     [/* no straightforward pattern */],
-     LSU_AUXR_Y_STORE>;
-}
-
-// multiclass MC_0A is used by:
-//   defm SQ
-let mayStore = 1 in
-multiclass MC_0A<string OpcStr> {
-  let isPredicable = 1 in {
-  def ri10 : SIGNED10_REGISTERZ_REGISTERU_SIMPLE
-    <(outs), (ins Signed10:$a1, SingleReg:$a2, PairedReg:$a3),
-     !strconcat (OpcStr, " $a1[$a2] = $a3"),
-     [/* no straightforward pattern */],
-     LSU_AUXR_STORE>;
-  def ri37 : UPPER27_LOWER10_REGISTERZ_REGISTERU_DOUBLE
-    <(outs), (ins Signed37:$a1, SingleReg:$a2, PairedReg:$a3),
-     !strconcat (OpcStr, " $a1[$a2] = $a3"),
-     [/* no straightforward pattern */],
-     LSU_AUXR_X_STORE>;
-  def ri64 : EXTEND27_UPPER27_LOWER10_REGISTERZ_REGISTERU_TRIPLE
-    <(outs), (ins Wrapped64:$a1, SingleReg:$a2, PairedReg:$a3),
-     !strconcat (OpcStr, " $a1[$a2] = $a3"),
-     [/* no straightforward pattern */],
-     LSU_AUXR_Y_STORE>;
-  def rr : DOSCALE_REGISTERY_REGISTERZ_REGISTERU_SIMPLE
-    <(outs), (ins SingleReg:$a2, SingleReg:$a3, PairedReg:$a4, DoscaleMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2[$a3] = $a4"),
-     [/* no straightforward pattern */],
-     LSU_AUXR_STORE>;
-  }
-  def rrc : LSUCOND_REGISTERY_REGISTERZ_REGISTERU_SIMPLE
-    <(outs), (ins SingleReg:$a3, PairedReg:$a4, ScalarcondMod:$a1, SingleReg:$a2),
-     !strconcat (OpcStr, "$a1 $a2 ? [$a3] = $a4"),
-     [/* no straightforward pattern */],
-     LSU_AUXR_STORE>;
-  def ri27c : LSUCOND_REGISTERY_OFFSET27_REGISTERZ_REGISTERU_DOUBLE
-    <(outs), (ins Signed27:$a3, SingleReg:$a4, PairedReg:$a5, ScalarcondMod:$a1, SingleReg:$a2),
-     !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
-     [/* no straightforward pattern */],
-     LSU_AUXR_X_STORE>;
-  def ri54c : LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_REGISTERU_TRIPLE
-    <(outs), (ins Signed54:$a3, SingleReg:$a4, PairedReg:$a5, ScalarcondMod:$a1, SingleReg:$a2),
-     !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
-     [/* no straightforward pattern */],
-     LSU_AUXR_Y_STORE>;
-}
-
-// multiclass MC_0B is used by:
-//   defm SO
-let mayStore = 1 in
-multiclass MC_0B<string OpcStr> {
-  let isPredicable = 1 in {
-  def ri10 : SIGNED10_REGISTERZ_REGISTERV_SIMPLE
-    <(outs), (ins Signed10:$a1, SingleReg:$a2, QuadReg:$a3),
-     !strconcat (OpcStr, " $a1[$a2] = $a3"),
-     [/* no straightforward pattern */]>;
-  def ri37 : UPPER27_LOWER10_REGISTERZ_REGISTERV_DOUBLE
-    <(outs), (ins Signed37:$a1, SingleReg:$a2, QuadReg:$a3),
-     !strconcat (OpcStr, " $a1[$a2] = $a3"),
-     [/* no straightforward pattern */]>;
-  def ri64 : EXTEND27_UPPER27_LOWER10_REGISTERZ_REGISTERV_TRIPLE
-    <(outs), (ins Wrapped64:$a1, SingleReg:$a2, QuadReg:$a3),
-     !strconcat (OpcStr, " $a1[$a2] = $a3"),
-     [/* no straightforward pattern */]>;
-  def rr : DOSCALE_REGISTERY_REGISTERZ_REGISTERV_SIMPLE
-    <(outs), (ins SingleReg:$a2, SingleReg:$a3, QuadReg:$a4, DoscaleMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2[$a3] = $a4"),
-     [/* no straightforward pattern */]>;
-  }
-  def rrc : LSUCOND_REGISTERY_REGISTERZ_REGISTERV_SIMPLE
-    <(outs), (ins SingleReg:$a3, QuadReg:$a4, ScalarcondMod:$a1, SingleReg:$a2),
-     !strconcat (OpcStr, "$a1 $a2 ? [$a3] = $a4"),
-     [/* no straightforward pattern */]>;
-  def ri27c : LSUCOND_REGISTERY_OFFSET27_REGISTERZ_REGISTERV_DOUBLE
-    <(outs), (ins Signed27:$a3, SingleReg:$a4, QuadReg:$a5, ScalarcondMod:$a1, SingleReg:$a2),
-     !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
-     [/* no straightforward pattern */]>;
-  def ri54c : LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_REGISTERV_TRIPLE
-    <(outs), (ins Signed54:$a3, SingleReg:$a4, QuadReg:$a5, ScalarcondMod:$a1, SingleReg:$a2),
-     !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
      [/* no straightforward pattern */]>;
 }
 
@@ -638,7 +309,7 @@ multiclass MC_0F<string OpcStr> {
 //   defm DTOUCHL
 //   defm DINVALL
 //   defm DZEROL
-//   defm IINVALS
+//   defm I1INVALS
 multiclass MC_10<string OpcStr> {
   let isPredicable = 1 in {
   def ri10 : SIGNED10_REGISTERZ_SIMPLE
@@ -1851,37 +1522,37 @@ def CB : BRANCHCOND_REGISTERZ_PCREL17_SIMPLE
    "cb$a1 $a2 ? $a3",
    [/* no straightforward pattern */]>;
 
-defm LBZ : MC_05<"lbz">;
+defm LBZ : MC_LOADS<"lbz", SingleReg>;
 
-defm LBS : MC_05<"lbs">;
+defm LBS : MC_LOADS<"lbs", SingleReg>;
 
-defm LHZ : MC_05<"lhz">;
+defm LHZ : MC_LOADS<"lhz", SingleReg>;
 
-defm LHS : MC_05<"lhs">;
+defm LHS : MC_LOADS<"lhs", SingleReg>;
 
-defm LWZ : MC_05<"lwz">;
+defm LWZ : MC_LOADS<"lwz", SingleReg>;
 
-defm LWS : MC_05<"lws">;
+defm LWS : MC_LOADS<"lws", SingleReg>;
 
-defm LD : MC_05<"ld">;
+defm LD : MC_LOADS<"ld", SingleReg>;
 
-defm LQ : MC_06<"lq">;
+defm LQ : MC_LOADS<"lq", PairedReg>;
 
-defm LO : MC_07<"lo">;
+defm LO : MC_LOADS<"lo", QuadReg>;
 
-defm LV : MC_08<"lv">;
+defm LV : MC_LV<"lv">;
 
-defm SB : MC_09<"sb">;
+defm SB : MC_STORES<"sb", SingleReg>;
 
-defm SH : MC_09<"sh">;
+defm SH : MC_STORES<"sh", SingleReg>;
 
-defm SW : MC_09<"sw">;
+defm SW : MC_STORES<"sw", SingleReg>;
 
-defm SD : MC_09<"sd">;
+defm SD : MC_STORES<"sd", SingleReg>;
 
-defm SQ : MC_0A<"sq">;
+defm SQ : MC_STORES<"sq", PairedReg>;
 
-defm SO : MC_0B<"so">;
+defm SO : MC_STORES<"so", QuadReg>;
 
 defm SV : MC_0C<"sv">;
 
