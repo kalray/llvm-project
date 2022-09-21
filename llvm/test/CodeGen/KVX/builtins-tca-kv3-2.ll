@@ -448,3 +448,33 @@ define void @xtrunc48wb_test(<1024 x i1>* nocapture readonly %0, <256 x i1>* noc
 }
 
 declare <256 x i1> @llvm.kvx.xtrunc48wb(<1024 x i1>)
+
+define void @xmt44d_test(<1024 x i1>* nocapture %0) {
+; CHECK-LABEL: xmt44d_test:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    lv $a3 = 96[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv $a2 = 64[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv $a1 = 32[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv $a0 = 0[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xmt44d $a0a1a2a3 = $a0a1a2a3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 96[$r0] = $a3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 64[$r0] = $a2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 32[$r0] = $a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 0[$r0] = $a0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = load <1024 x i1>, <1024 x i1>* %0
+  %3 = tail call <1024 x i1> @llvm.kvx.xmt44d(<1024 x i1> %2)
+  store <1024 x i1> %3, <1024 x i1>* %0
+  ret void
+}
+
+declare <1024 x i1> @llvm.kvx.xmt44d(<1024 x i1>)

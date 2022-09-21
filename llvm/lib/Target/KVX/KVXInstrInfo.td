@@ -2896,6 +2896,9 @@ def XZX48BW : UNARY<"xzx48bw", MatrixReg, VectorReg, TCA,
 
 def XTRUNC48WB : UNARY<"xtrunc48wb", VectorReg, MatrixReg, TCA,
                 [(set v256i1:$o, (int_kvx_xtrunc48wb v1024i1:$i))]>;
+
+def XMT44D : UNARY<"xmt44d", MatrixReg, MatrixReg, TCA,
+                [(set v1024i1:$o, (int_kvx_xmt44d v1024i1:$i))]>;
 }
 
 def FMIND : REGISTERW_REGISTERZ_REGISTERY_SIMPLE

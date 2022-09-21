@@ -719,7 +719,7 @@ def: Pat<(int_kvx_xmma484subw WideReg:$a2, VectorReg:$a3, VectorReg:$a4), (MMA48
 def: Pat<(int_kvx_xmma484ubw WideReg:$a2, VectorReg:$a3, VectorReg:$a4), (MMA484UBW $a2, $a3, $a4)>;
 def: Pat<(int_kvx_xmma484usbw WideReg:$a2, VectorReg:$a3, VectorReg:$a4), (MMA484USBW $a2, $a3, $a4)>;
 
-def: Pat<(int_kvx_xmt44d MatrixReg:$a1), (MT44D $a1)>;
+def: Pat<(int_kvx_xmt44d MatrixReg:$a1), (MT44D $a1)>, Requires<[IsV1]>;
 
 // TCA conversion intrinsics
 def: Pat<(int_kvx_xfscalewv VectorReg:$a5, i32:$a1, i32:$a2, i32:$a3), (FSCALEWV $a5, RoundingMod:$a1, SilentMod:$a2, RectifyMod:$a3)>;

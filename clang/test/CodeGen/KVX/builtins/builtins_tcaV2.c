@@ -236,3 +236,13 @@ void xtrunc48wb_test(__kvx_x1024 *m, __kvx_x256 *v) {
   v[0] = __builtin_kvx_xtrunc48wb(m[0]);
 }
 
+// CHECK-LABEL: @xmt44d_test(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = load <1024 x i1>, <1024 x i1>* [[M:%.*]], align 32, [[TBAA8]]
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <1024 x i1> @llvm.kvx.xmt44d(<1024 x i1> [[TMP0]])
+// CHECK-NEXT:    store <1024 x i1> [[TMP1]], <1024 x i1>* [[M]], align 32, [[TBAA8]]
+// CHECK-NEXT:    ret void
+//
+void xmt44d_test(__kvx_x1024 *m) {
+  m[0] = __builtin_kvx_xmt44d(m[0]);
+}
