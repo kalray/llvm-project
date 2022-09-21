@@ -45,7 +45,7 @@ class KVX_PSEUDO_W_SCHEDINFO
 
 // 16 insn(s):
 // AWAIT, SLEEP, STOP, BARRIER, TLBREAD, TLBPROBE, TLBWRITE, TLBDINVAL,
-// TLBIINVAL, ERROP, RET, RFE, DINVAL, IINVAL, FENCE, NOP
+// TLBIINVAL, ERROP, RET, RFE, DINVAL, I1INVAL, FENCE, NOP
 let Size = 4 in
 class SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
@@ -640,49 +640,49 @@ class LSUCOND_REGISTERY_REGISTERW_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
   : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_Y_ALCLR>;
 
 // 4 insn(s):
-// DTOUCHL, DINVALL, DZEROL, IINVALS
+// DTOUCHL, DINVALL, DZEROL, I1INVALS
 let Size = 4 in
 class SIGNED10_REGISTERZ_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
   : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_LOAD>;
 
 // 4 insn(s):
-// DTOUCHL, DINVALL, DZEROL, IINVALS
+// DTOUCHL, DINVALL, DZEROL, I1INVALS
 let Size = 8 in
 class UPPER27_LOWER10_REGISTERZ_DOUBLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
   : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_X_LOAD>;
 
 // 4 insn(s):
-// DTOUCHL, DINVALL, DZEROL, IINVALS
+// DTOUCHL, DINVALL, DZEROL, I1INVALS
 let Size = 12 in
 class EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
   : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_Y_LOAD>;
 
 // 4 insn(s):
-// DTOUCHL, DINVALL, DZEROL, IINVALS
+// DTOUCHL, DINVALL, DZEROL, I1INVALS
 let Size = 4 in
 class REGISTERY_REGISTERZ_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
   : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_LOAD>;
 
 // 4 insn(s):
-// DTOUCHL, DINVALL, DZEROL, IINVALS
+// DTOUCHL, DINVALL, DZEROL, I1INVALS
 let Size = 4 in
 class LSUCOND_REGISTERY_REGISTERZ_SIMPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
   : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_LOAD>;
 
 // 4 insn(s):
-// DTOUCHL, DINVALL, DZEROL, IINVALS
+// DTOUCHL, DINVALL, DZEROL, I1INVALS
 let Size = 8 in
 class LSUCOND_REGISTERY_OFFSET27_REGISTERZ_DOUBLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>
   : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_X_LOAD>;
 
 // 4 insn(s):
-// DTOUCHL, DINVALL, DZEROL, IINVALS
+// DTOUCHL, DINVALL, DZEROL, I1INVALS
 let Size = 12 in
 class LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern>

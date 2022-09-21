@@ -19409,7 +19409,7 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_dinval:
   case KVX::BI__builtin_kvx_errop:
   case KVX::BI__builtin_kvx_fence:
-  case KVX::BI__builtin_kvx_iinval:
+  case KVX::BI__builtin_kvx_i1inval:
   case KVX::BI__builtin_kvx_sleep:
   case KVX::BI__builtin_kvx_stop:
   case KVX::BI__builtin_kvx_tlbdinval:
@@ -19435,8 +19435,8 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     case KVX::BI__builtin_kvx_fence:
       IDD = Intrinsic::kvx_fence;
       break;
-    case KVX::BI__builtin_kvx_iinval:
-      IDD = Intrinsic::kvx_iinval;
+    case KVX::BI__builtin_kvx_i1inval:
+      IDD = Intrinsic::kvx_i1inval;
       break;
     case KVX::BI__builtin_kvx_sleep:
       IDD = Intrinsic::kvx_sleep;
@@ -19706,8 +19706,8 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_dinvall:
   case KVX::BI__builtin_kvx_dtouchl:
   case KVX::BI__builtin_kvx_dzerol:
-  case KVX::BI__builtin_kvx_iinvals: {
-    Value* Addr = EmitScalarExpr(E->getArg(0));
+  case KVX::BI__builtin_kvx_i1invals: {
+    Value *Addr = EmitScalarExpr(E->getArg(0));
 
     unsigned IDD;
     switch (BuiltinID) {
@@ -19725,8 +19725,8 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
           << "__builtin_kvx_dzerol is deprecated and shouldn't be used";
       break;
     }
-    case KVX::BI__builtin_kvx_iinvals:
-      IDD = Intrinsic::kvx_iinvals;
+    case KVX::BI__builtin_kvx_i1invals:
+      IDD = Intrinsic::kvx_i1invals;
       break;
     default:
       llvm_unreachable("missing KVX load intrinsics");
