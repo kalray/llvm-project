@@ -17729,6 +17729,8 @@ typedef enum ROUNDING {
   ROUNDING_INVALID = -1
 } rounding_t;
 
+typedef enum CACHELEVEL { CACHE_L1, CACHE_L2, CACHE_INVALID = -1 } cachelevel_t;
+
 enum SCALARCOND {
   SCALARCOND_DNEZ,
   SCALARCOND_DEQZ,
@@ -17815,6 +17817,14 @@ static rounding_t KVX_getRoundingModifier(const StringRef &Str) {
       .CaseLower("rd", ROUNDING_RD)
       .CaseLower("rz", ROUNDING_RZ)
       .Default(ROUNDING_INVALID);
+}
+
+static cachelevel_t KVX_getCacheLevelModifier(const StringRef &Str) {
+  return llvm::StringSwitch<cachelevel_t>(Str)
+      .Case("", CACHE_L1)
+      .CaseLower("l1", CACHE_L1)
+      .CaseLower("l2", CACHE_L2)
+      .Default(CACHE_INVALID);
 }
 
 static int KVX_getScalarcondModValue(const StringRef &Str) {
@@ -17930,6 +17940,46 @@ static Value *KVX_emit_xswap256(CodeGenFunction &CGF, const CallExpr *E,
     return S;
   }
   return CGF.Builder.CreateExtractValue(R, 0);
+}
+
+static Value *KVX_emitCacheModOp(unsigned IntrinsicID, CodeGenFunction &CGF,
+                                 const CallExpr *E) {
+  if (E->getNumArgs() != 3) {
+    CGF.CGM.Error(E->getBeginLoc(), "Incorrect number of arguments to builtin");
+    return nullptr;
+  }
+
+  const unsigned V = 2;
+  SmallVector<Value *, 4> Args;
+
+  for (unsigned I = 0; I < V; I++)
+    Args.push_back(CGF.EmitScalarExpr(E->getArg(I)));
+
+  const clang::Expr *ModifierString = E->getArg(V)->IgnoreParenImpCasts();
+  if (ModifierString->isNullPointerConstant(CGF.getContext(),
+                                            Expr::NPC_NeverValueDependent)) {
+    CGF.CGM.Error(E->getArg(V)->getBeginLoc(),
+                  "Must define cache level modifier.");
+    return nullptr;
+  }
+
+  const auto *SL = dyn_cast<clang::StringLiteral>(ModifierString);
+  if (!SL) {
+    CGF.CGM.Error(E->getArg(V)->getBeginLoc(),
+                  "Modifiers must be a string as \".l1\" or \".l2\".");
+    return nullptr;
+  }
+  auto Mods = SL->getString().split(".");
+
+  cachelevel_t Cache = KVX_getCacheLevelModifier(Mods.second);
+  if (Cache == CACHE_INVALID)
+    CGF.CGM.Error(E->getArg(V)->getBeginLoc(),
+                  "Invalid cache level modifer, should be one of: "
+                  "\"\", \".\", \".l1\", \".l2\"");
+
+  Args.push_back(ConstantInt::get(CGF.IntTy, (int)(Cache)));
+
+  return CGF.Builder.CreateCall(CGF.CGM.getIntrinsic(IntrinsicID), Args);
 }
 
 static Value *KVX_emit_xload_store(unsigned PositionMods, bool IsCond,
@@ -20713,6 +20763,12 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_swapvo:
     KVX_emitDeprecatedWarning_4_8(CGM, E, "swapvo", "xswap256");
     return KVX_emit_xswap256(*this, E, true);
+  case KVX::BI__builtin_kvx_dflushsw:
+    return KVX_emitCacheModOp(Intrinsic::kvx_dflushsw, *this, E);
+  case KVX::BI__builtin_kvx_dinvalsw:
+    return KVX_emitCacheModOp(Intrinsic::kvx_dinvalsw, *this, E);
+  case KVX::BI__builtin_kvx_dpurgesw:
+    return KVX_emitCacheModOp(Intrinsic::kvx_dpurgesw, *this, E);
   }
   return nullptr;
 }

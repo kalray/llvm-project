@@ -560,3 +560,13 @@ void KVXInstPrinter::printHexaBitsImm32(const MCInst *MI, unsigned OpNo,
     O << formatHex(i);
   }
 }
+
+void KVXInstPrinter::printCacheLevelMod(const MCInst *MI, unsigned OpNo,
+                                        raw_ostream &O) {
+  uint32_t I = MI->getOperand(OpNo).getImm();
+
+  if (I > 1)
+    report_fatal_error("Invalid cache level value.");
+
+  O << ((I != 0) ? ".l2" : ".l1");
+}

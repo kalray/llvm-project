@@ -85,6 +85,8 @@ public:
 
   template <int Threshold = 1024>
   void printHexaBitsImm32(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+
+  void printCacheLevelMod(const MCInst *MI, unsigned OpNo, raw_ostream &O);
 };
 } // namespace llvm
 

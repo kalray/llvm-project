@@ -1147,6 +1147,15 @@ class ROUNDING_SILENT_BINOP<string Opcode, RegisterClass RC_OUT, RegisterClass R
      Patt,
      Itin>;
 
+let Size = 4 in
+class CACHE_OP<string Opcode, RegisterClass RC, InstrItinClass Itin, list<dag> Patt = []>
+    : KVX_INSTRUCTION <
+     (outs),
+     (ins RC:$way, RC:$set, CacheLevelMod:$c),
+     !strconcat (Opcode, "$c $set, $way"),
+     Patt,
+     Itin>;
+
 class ROUNDING_SILENT_BINOP_MAU_FP<string OpcStr, RegisterClass RC_OUT, RegisterClass RC_IN>
     : ROUNDING_SILENT_BINOP <OpcStr, RC_OUT, RC_IN, RC_IN, MAU_FP>;
 
