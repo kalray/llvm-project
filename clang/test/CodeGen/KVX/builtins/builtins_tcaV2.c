@@ -166,3 +166,22 @@ void xmma4164bw_test(__kvx_x512 *w) {
   r =  __builtin_kvx_xmmau4164bw(r, r, r);
   w[0] =  __builtin_kvx_xmmaus4164bw(r, r, r);
 }
+
+// CHECK-LABEL: @xmma484bw_test(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[TMP1:%.*]] = load <512 x i1>, <512 x i1>* [[W:%.*]], align 32, [[TBAA6]]
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <512 x i1> @llvm.kvx.xmma484bw(<512 x i1> [[TMP1]], <256 x i1> [[TMP0]], <256 x i1> [[TMP0]])
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <512 x i1> @llvm.kvx.xmmasu484bw(<512 x i1> [[TMP2]], <256 x i1> [[TMP0]], <256 x i1> [[TMP0]])
+// CHECK-NEXT:    [[TMP4:%.*]] = tail call <512 x i1> @llvm.kvx.xmmau484bw(<512 x i1> [[TMP3]], <256 x i1> [[TMP0]], <256 x i1> [[TMP0]])
+// CHECK-NEXT:    [[TMP5:%.*]] = tail call <512 x i1> @llvm.kvx.xmmaus484bw(<512 x i1> [[TMP4]], <256 x i1> [[TMP0]], <256 x i1> [[TMP0]])
+// CHECK-NEXT:    store <512 x i1> [[TMP5]], <512 x i1>* [[W]], align 32, [[TBAA6]]
+// CHECK-NEXT:    ret void
+//
+void xmma484bw_test(__kvx_x512 *w, __kvx_x256 *v) {
+  __kvx_x256 c = v[0];
+  __kvx_x512 r =  __builtin_kvx_xmma484bw(w[0], c, c);
+  r =  __builtin_kvx_xmmasu484bw(r, c, c);
+  r =  __builtin_kvx_xmmau484bw(r, c, c);
+  w[0] =  __builtin_kvx_xmmaus484bw(r, c, c);
+}

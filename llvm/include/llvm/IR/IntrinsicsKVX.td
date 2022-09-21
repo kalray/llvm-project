@@ -307,7 +307,6 @@ def int_kvx_xmma444ushbd0 : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
 def int_kvx_xmma444ushbd1 : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
 def int_kvx_xmma484ushbd : Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_v512i1_ty, llvm_v256i1_ty], [IntrReadMem]>;
 def int_kvx_xmma444ushd : KVX_TCA_Ternary<[llvm_v1024i1_ty]>;
-def int_kvx_xmma484bw : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
 def int_kvx_xmma484subw : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
 def int_kvx_xmma484ubw : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
 def int_kvx_xmma484usbw : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
@@ -337,6 +336,10 @@ def int_kvx_xmma4164bw : Intrinsic<[llvm_v512i1_ty], [llvm_v512i1_ty, llvm_v512i
 def int_kvx_xmmasu4164bw : Intrinsic<[llvm_v512i1_ty], [llvm_v512i1_ty, llvm_v512i1_ty, llvm_v512i1_ty], [IntrReadMem]>;
 def int_kvx_xmmau4164bw  : Intrinsic<[llvm_v512i1_ty], [llvm_v512i1_ty, llvm_v512i1_ty, llvm_v512i1_ty], [IntrReadMem]>;
 def int_kvx_xmmaus4164bw  : Intrinsic<[llvm_v512i1_ty], [llvm_v512i1_ty, llvm_v512i1_ty, llvm_v512i1_ty], [IntrReadMem]>;
+def int_kvx_xmma484bw : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
+def int_kvx_xmmasu484bw : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
+def int_kvx_xmmau484bw : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
+def int_kvx_xmmaus484bw : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
 
 //===----------------------------------------------------------------------===//
 // ACB 4.8 TCA intrinsics. Should remove them in ACB 4.10

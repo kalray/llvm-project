@@ -2872,6 +2872,18 @@ def XMMAU4164BW : TERNARY<"xmmau4164bw", WideReg, WideReg, WideReg, TCA,
 
 def XMMAUS4164BW : TERNARY<"xmmaus4164bw", WideReg, WideReg, WideReg, TCA,
                 [(set v512i1:$o, (int_kvx_xmmaus4164bw v512i1:$a, v512i1:$lhs, v512i1:$rhs))]>;
+
+def XMMA484BW : TERNARY<"xmma484bw", WideReg, VectorReg, VectorReg, TCA,
+                [(set v512i1:$o, (int_kvx_xmma484bw v512i1:$a, v256i1:$lhs, v256i1:$rhs))]>;
+
+def XMMASU484BW : TERNARY<"xmmasu484bw", WideReg, VectorReg, VectorReg, TCA,
+                [(set v512i1:$o, (int_kvx_xmmasu484bw v512i1:$a, v256i1:$lhs, v256i1:$rhs))]>;
+
+def XMMAU484BW : TERNARY<"xmmau484bw", WideReg, VectorReg, VectorReg, TCA,
+                [(set v512i1:$o, (int_kvx_xmmau484bw v512i1:$a, v256i1:$lhs, v256i1:$rhs))]>;
+
+def XMMAUS484BW : TERNARY<"xmmaus484bw", WideReg, VectorReg, VectorReg, TCA,
+                [(set v512i1:$o, (int_kvx_xmmaus484bw v512i1:$a, v256i1:$lhs, v256i1:$rhs))]>;
 }
 
 def FMIND : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
