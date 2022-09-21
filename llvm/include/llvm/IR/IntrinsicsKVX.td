@@ -331,6 +331,8 @@ def int_kvx_xmadd44bw0 : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
 def int_kvx_xmadd44bw1 : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
 def int_kvx_xmaddsu44bw0 : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
 def int_kvx_xmaddsu44bw1 : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
+def int_kvx_xmaddu44bw0 : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
+def int_kvx_xmaddu44bw1 : KVX_TCA_Ternary<[llvm_v512i1_ty]>;
 
 //===----------------------------------------------------------------------===//
 // ACB 4.8 TCA intrinsics. Should remove them in ACB 4.10
