@@ -498,8 +498,6 @@ NARY_BUILTIN(xmma484subw, "Tx512Tx512Tx256Tx256", "n", 3)
 NARY_BUILTIN(xmma484ubw, "Tx512Tx512Tx256Tx256", "n", 3)
 NARY_BUILTIN(xmma484usbw, "Tx512Tx512Tx256Tx256", "n", 3)
 
-NARY_BUILTIN(xmt44d, "Tx1024Tx1024", "n", 1)
-
 BUILTIN(__builtin_kvx_xfscalewv, "Tx256Tx256cC*", "n")
 BUILTIN(__builtin_kvx_xfnarrowwhv, "Tx256Tx512cC*", "n")
 
@@ -522,6 +520,7 @@ NARY_BUILTIN(xmma484bw, "Tx512Tx512Tx256Tx256", "n", 3)
 NARY_BUILTIN(xmmasu484bw, "Tx512Tx512Tx256Tx256", "n", 3)
 NARY_BUILTIN(xmmau484bw, "Tx512Tx512Tx256Tx256", "n", 3)
 NARY_BUILTIN(xmmaus484bw, "Tx512Tx512Tx256Tx256", "n", 3)
+NARY_BUILTIN(xmt44d, "Tx1024Tx1024", "n", 1)
 NARY_BUILTIN(xsx48bw, "Tx1024Tx256", "n", 1)
 NARY_BUILTIN(xzx48bw, "Tx1024Tx256", "n", 1)
 NARY_BUILTIN(xtrunc48wb, "Tx256Tx1024", "n", 1)
