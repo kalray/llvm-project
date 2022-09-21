@@ -424,13 +424,13 @@ NARY_BUILTIN(xmoveoto, "Tx256V4Li", "n", 1)
 
 NARY_BUILTIN(xmovefo, "V4LiTx256", "n", 1)
 
-NARY_BUILTIN(xinsertwm, "Tx1024Tx1024Tx512Ui", "n", 3)
-NARY_BUILTIN(xinsertvm, "Tx1024Tx1024Tx256Ui", "n", 3)
-NARY_BUILTIN(xinsertvw, "Tx512Tx512Tx256Ui", "n", 3)
+NARY_BUILTIN(xinsertwm, "Tx1024Tx1024Tx512IUi", "n", 3)
+NARY_BUILTIN(xinsertvm, "Tx1024Tx1024Tx256IUi", "n", 3)
+NARY_BUILTIN(xinsertvw, "Tx512Tx512Tx256IUi", "n", 3)
 
-NARY_BUILTIN(xmovefmw, "Tx512Tx1024Ui", "n", 2)
-NARY_BUILTIN(xmovefmv, "Tx256Tx1024Ui", "n", 2)
-NARY_BUILTIN(xmovefwv, "Tx256Tx512Ui", "n", 2)
+NARY_BUILTIN(xmovefmw, "Tx512Tx1024IUi", "n", 2)
+NARY_BUILTIN(xmovefmv, "Tx256Tx1024IUi", "n", 2)
+NARY_BUILTIN(xmovefwv, "Tx256Tx512IUi", "n", 2)
 
 NARY_BUILTIN(xbuildfvm, "Tx1024Tx256Tx256Tx256Tx256", "n", 4)
 NARY_BUILTIN(xbuildfwm, "Tx1024Tx512Tx512", "n", 2)
@@ -545,13 +545,13 @@ NARY_BUILTIN_4_8(moveoto, xmoveoto, "Tx256V4Li", "n", 1, "moveoto", "xmoveoto")
 
 NARY_BUILTIN_4_8(movefo, xmovefo, "V4LiTx256", "n", 1, "movefo", "xmovefo")
 
-NARY_BUILTIN_4_8(insertwm, xinsertwm, "Tx1024Tx1024Tx512Ui", "n", 3, "insertwm", "xinsertwm")
-NARY_BUILTIN_4_8(insertvm, xinsertvm, "Tx1024Tx1024Tx256Ui", "n", 3, "insertvm", "xinsertvm")
-NARY_BUILTIN_4_8(insertvw, xinsertvw, "Tx512Tx512Tx256Ui", "n", 3, "insertvw", "xinsertvw")
+NARY_BUILTIN_4_8(insertwm, xinsertwm, "Tx1024Tx1024Tx512IUi", "n", 3, "insertwm", "xinsertwm")
+NARY_BUILTIN_4_8(insertvm, xinsertvm, "Tx1024Tx1024Tx256IUi", "n", 3, "insertvm", "xinsertvm")
+NARY_BUILTIN_4_8(insertvw, xinsertvw, "Tx512Tx512Tx256IUi", "n", 3, "insertvw", "xinsertvw")
 
-NARY_BUILTIN_4_8(movefmw, xmovefmw, "Tx512Tx1024Ui", "n", 2, "movefmw", "xmovefmw")
-NARY_BUILTIN_4_8(movefmv, xmovefmv, "Tx256Tx1024Ui", "n", 2, "movefmv", "xmovefmv")
-NARY_BUILTIN_4_8(movefwv, xmovefwv, "Tx256Tx512Ui", "n", 2, "movefwv", "xmovefwv")
+NARY_BUILTIN_4_8(movefmw, xmovefmw, "Tx512Tx1024IUi", "n", 2, "movefmw", "xmovefmw")
+NARY_BUILTIN_4_8(movefmv, xmovefmv, "Tx256Tx1024IUi", "n", 2, "movefmv", "xmovefmv")
+NARY_BUILTIN_4_8(movefwv, xmovefwv, "Tx256Tx512IUi", "n", 2, "movefwv", "xmovefwv")
 
 NARY_BUILTIN_4_8(buildfvm, xbuildfvm, "Tx1024Tx256Tx256Tx256Tx256", "n", 4, "buildfvm", "xbuildfvm")
 NARY_BUILTIN_4_8(buildfwm, xbuildfwm, "Tx1024Tx512Tx512", "n", 2, "buildfwm", "xbuildfwm")

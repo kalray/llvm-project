@@ -7,3 +7,7 @@ typedef half __attribute__((__vector_size__(4 * sizeof(half)))) v4f16;
 v4f16 xfail_shiftfhq_neg(v4f16 v, int t, half b){
     return __builtin_kvx_shiftfhq(v, t, b); // expected-error {{Unsigned immediate of 2 bits expected}} expected-error {{cannot compile this builtin function yet}}
 }
+
+void d(__kvx_x512 *a, __kvx_x256 *b, __kvx_x512 *e, int c) {
+  *e = __builtin_kvx_insertvw(*a, *b, c); // expected-error {{argument to '__builtin_kvx_insertvw' must be a constant integer}}
+}
