@@ -105,42 +105,6 @@ multiclass MC_04<string OpcStr> {
      [/* no straightforward pattern */]>;
 }
 
-// multiclass MC_0C is used by:
-//   defm SV
-let mayStore = 1 in
-multiclass MC_0C<string OpcStr> {
-  let isPredicable = 1 in {
-  def ri10 : SIGNED10_REGISTERZ_REGISTERE_SIMPLE
-    <(outs), (ins Signed10:$a1, SingleReg:$a2, VectorReg:$a3),
-     !strconcat (OpcStr, " $a1[$a2] = $a3"),
-     [/* no straightforward pattern */]>;
-  def ri37 : UPPER27_LOWER10_REGISTERZ_REGISTERE_DOUBLE
-    <(outs), (ins Signed37:$a1, SingleReg:$a2, VectorReg:$a3),
-     !strconcat (OpcStr, " $a1[$a2] = $a3"),
-     [/* no straightforward pattern */]>;
-  def ri64 : EXTEND27_UPPER27_LOWER10_REGISTERZ_REGISTERE_TRIPLE
-    <(outs), (ins Wrapped64:$a1, SingleReg:$a2, VectorReg:$a3),
-     !strconcat (OpcStr, " $a1[$a2] = $a3"),
-     [/* no straightforward pattern */]>;
-  def rr : DOSCALE_REGISTERY_REGISTERZ_REGISTERE_SIMPLE
-    <(outs), (ins SingleReg:$a2, SingleReg:$a3, VectorReg:$a4, DoscaleMod:$a1),
-     !strconcat (OpcStr, "$a1 $a2[$a3] = $a4"),
-     [/* no straightforward pattern */]>;
-  }
-  def rrc : LSUCOND_REGISTERY_REGISTERZ_REGISTERE_SIMPLE
-    <(outs), (ins SingleReg:$a3, VectorReg:$a4, ScalarcondMod:$a1, SingleReg:$a2),
-     !strconcat (OpcStr, "$a1 $a2 ? [$a3] = $a4"),
-     [/* no straightforward pattern */]>;
-  def ri27c : LSUCOND_REGISTERY_OFFSET27_REGISTERZ_REGISTERE_DOUBLE
-    <(outs), (ins Signed27:$a3, SingleReg:$a4, VectorReg:$a5, ScalarcondMod:$a1, SingleReg:$a2),
-     !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
-     [/* no straightforward pattern */]>;
-  def ri54c : LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_REGISTERE_TRIPLE
-    <(outs), (ins Signed54:$a3, SingleReg:$a4, VectorReg:$a5, ScalarcondMod:$a1, SingleReg:$a2),
-     !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
-     [/* no straightforward pattern */]>;
-}
-
 // multiclass MC_0D is used by:
 //   defm ACSWAPW
 //   defm ACSWAPD
@@ -1540,7 +1504,7 @@ defm LQ : MC_LOADS<"lq", PairedReg>;
 
 defm LO : MC_LOADS<"lo", QuadReg>;
 
-defm LV : MC_LV<"lv">;
+defm LV : MC_LV<"lv">, Requires<[IsV1]>;
 
 defm SB : MC_STORES<"sb", SingleReg>;
 
@@ -1554,7 +1518,7 @@ defm SQ : MC_STORES<"sq", PairedReg>;
 
 defm SO : MC_STORES<"so", QuadReg>;
 
-defm SV : MC_0C<"sv">;
+defm SV : MC_SV<"sv">, Requires<[IsV1]>;
 
 defm ACSWAPW : MC_0D<"acswapw">;
 

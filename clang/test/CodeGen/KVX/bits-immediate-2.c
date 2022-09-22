@@ -9,5 +9,5 @@ v4f16 xfail_shiftfhq_neg(v4f16 v, int t, half b){
 }
 
 void d(__kvx_x512 *a, __kvx_x256 *b, __kvx_x512 *e, int c) {
-  *e = __builtin_kvx_insertvw(*a, *b, c); // expected-error {{argument to '__builtin_kvx_insertvw' must be a constant integer}}
+  *e = __builtin_kvx_xinsertvw(*a, *b, c); // expected-error {{argument to '__builtin_kvx_xinsertvw' must be a constant integer}}
 }

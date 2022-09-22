@@ -795,33 +795,32 @@ define void @test_fnarrowwhv(<256 x i1>* %p0){
 }
 
 
-declare <256 x i1> @llvm.kvx.xloadc256(<256 x i1>, i8*, i64, i32, i32)
-declare <1024 x i1> @llvm.kvx.xload1024q(<1024 x i1>, i8*, i32, i32)
-declare <1024 x i1> @llvm.kvx.xloadc1024q(<1024 x i1>, i8*, i64, i32, i32, i32)
-declare { <4 x i64>, <256 x i1> } @llvm.kvx.xswapvo(<4 x i64>, <256 x i1>) #2
-declare void @llvm.kvx.xstorec256(<256 x i1>, i8*, i64, i32) #3
+declare <256 x i1> @llvm.kvx.lv.cond(<256 x i1>, i8*, i64, i32, i32)
+declare <1024 x i1> @llvm.kvx.lvc(<1024 x i1>, i8*, i32, i32)
+declare <1024 x i1> @llvm.kvx.lvc.cond(<1024 x i1>, i8*, i64, i32, i32, i32)
+declare { <4 x i64>, <256 x i1> } @llvm.kvx.xswap256(<4 x i64>, <256 x i1>) #2
+declare void @llvm.kvx.sv.cond(i8*, <256 x i1>, i64, i32) #3
 
 ; Test generated from clang's intrinsics_tca.c
 define <4 x i64> @test_tca_builtins(i64 %0, i64 %1, i64 %2, i64 %3, <256 x i1>* %4, <512 x i1>* %5, <1024 x i1>* %6) {
 ; CHECK-LABEL: test_tca_builtins:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lv $a0 = 0[$r4]
-; CHECK-NEXT:    copyd $r7 = $r0
-; CHECK-NEXT:    make $r8 = 0
-; CHECK-NEXT:    make $r9 = 1
+; CHECK-NEXT:    make $r32 = 0
+; CHECK-NEXT:    make $r33 = 1
+; CHECK-NEXT:    make $r34 = 2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    movetq $a0_hi = $r8, $r9
-; CHECK-NEXT:    make $r0 = 4
-; CHECK-NEXT:    make $r10 = 2
-; CHECK-NEXT:    make $r11 = 3
+; CHECK-NEXT:    movetq $a0_hi = $r32, $r33
+; CHECK-NEXT:    make $r1 = 4
+; CHECK-NEXT:    make $r35 = 3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 0[$r4] = $a0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a0 = 0[$r4]
-; CHECK-NEXT:    movetq $a1_lo = $r11, $r0
+; CHECK-NEXT:    movetq $a1_lo = $r35, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    movetq $a0_lo = $r11, $r10
-; CHECK-NEXT:    movetq $a1_hi = $r9, $r10
+; CHECK-NEXT:    movetq $a0_lo = $r35, $r34
+; CHECK-NEXT:    movetq $a1_hi = $r33, $r34
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 0[$r4] = $a0
 ; CHECK-NEXT:    ;;
@@ -836,14 +835,13 @@ define <4 x i64> @test_tca_builtins(i64 %0, i64 %1, i64 %2, i64 %3, <256 x i1>* 
 ; CHECK-NEXT:    lv $a1 = 32[$r6]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a0 = 0[$r6]
-; CHECK-NEXT:    movetq $a4_lo = $r8, $r9
-; CHECK-NEXT:    movetq $a4_hi = $r10, $r11
-; CHECK-NEXT:    addd $r8 = $r4, 96
+; CHECK-NEXT:    movetq $a4_lo = $r32, $r33
+; CHECK-NEXT:    movetq $a4_hi = $r34, $r35
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    alignv $a5 = $a4, $a5, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    convdhv0.rn.sat $a4_lo = $a0a1a2a3
-; CHECK-NEXT:    aligno $r0r1r2r3 = $a4, $a5, 1
+; CHECK-NEXT:    aligno $r8r9r10r11 = $a4, $a5, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a7 = 32[$r5]
 ; CHECK-NEXT:    convdhv1.ru.satu $a4_hi = $a0a1a2a3
@@ -936,24 +934,21 @@ define <4 x i64> @test_tca_builtins(i64 %0, i64 %1, i64 %2, i64 %3, <256 x i1>* 
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fscalewv.rn.relu $a4 = $a4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    movetq $a4_lo = $r0, $r1
-; CHECK-NEXT:    movetq $a4_hi = $r2, $r3
-; CHECK-NEXT:    movefo $r0r1r2r3 = $a4
+; CHECK-NEXT:    movetq $a4_lo = $r8, $r9
+; CHECK-NEXT:    movetq $a4_hi = $r10, $r11
+; CHECK-NEXT:    movefo $r8r9r10r11 = $a4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fscalewv.relu $a4 = $a4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv.s.even $r7 ? $a4 = [$r8]
-; CHECK-NEXT:    addd $r8 = $r4, 128
+; CHECK-NEXT:    lv.s.even $r0 ? $a4 = 96[$r4]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv.s $a4 = 0[$r4]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r4 = $r4, 32
-; CHECK-NEXT:    addd $r8 = $r4, 160
-; CHECK-NEXT:    lv.c3.s $a0a1a2a3 = 0[$r8]
+; CHECK-NEXT:    lv.c3.s $a0a1a2a3 = 128[$r4]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv.c2.odd $r7 ? $a0a1a2a3 = [$r8]
+; CHECK-NEXT:    lv.c2.odd $r0 ? $a0a1a2a3 = 160[$r4]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv.even $r9 ? [$r4] = $a4
+; CHECK-NEXT:    sv.even $r33 ? 32[$r4] = $a4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 32[$r5] = $a7
 ; CHECK-NEXT:    ;;
@@ -966,6 +961,11 @@ define <4 x i64> @test_tca_builtins(i64 %0, i64 %1, i64 %2, i64 %3, <256 x i1>* 
 ; CHECK-NEXT:    sv 32[$r6] = $a1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 0[$r6] = $a0
+; CHECK-NEXT:    copyd $r0 = $r8
+; CHECK-NEXT:    copyd $r1 = $r9
+; CHECK-NEXT:    copyd $r2 = $r10
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r3 = $r11
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %8 = load volatile <256 x i1>, <256 x i1>* %4, align 32
@@ -1017,24 +1017,24 @@ define <4 x i64> @test_tca_builtins(i64 %0, i64 %1, i64 %2, i64 %3, <256 x i1>* 
   %51 = tail call <256 x i1> @llvm.kvx.xfscalewv(<256 x i1> %27, i32 7, i32 0, i32 0)
   %52 = tail call <256 x i1> @llvm.kvx.xfnarrowwhv(<512 x i1> %49, i32 0, i32 1)
   %53 = tail call <256 x i1> @llvm.kvx.xfscalewv(<256 x i1> %51, i32 0, i32 0, i32 1)
-  %54 = tail call { <4 x i64>, <256 x i1> } @llvm.kvx.xswapvo(<4 x i64> %19, <256 x i1> %53)
+  %54 = tail call { <4 x i64>, <256 x i1> } @llvm.kvx.xswap256(<4 x i64> %19, <256 x i1> %53)
   %55 = extractvalue { <4 x i64>, <256 x i1> } %54, 1
   %56 = extractvalue { <4 x i64>, <256 x i1> } %54, 0
   %57 = tail call <256 x i1> @llvm.kvx.xfscalewv(<256 x i1> %55, i32 7, i32 0, i32 1)
   %58 = getelementptr inbounds <256 x i1>, <256 x i1>* %4, i64 3
   %59 = bitcast <256 x i1>* %58 to i8*
-  %60 = tail call <256 x i1> @llvm.kvx.xloadc256(<256 x i1> %57, i8* nonnull %59, i64 %0, i32 1, i32 7)
+  %60 = tail call <256 x i1> @llvm.kvx.lv.cond(<256 x i1> %57, i8* nonnull %59, i64 %0, i32 1, i32 7)
   %61 = addrspacecast <256 x i1>* %4 to <256 x i1> addrspace(258)*
   %62 = load <256 x i1>, <256 x i1> addrspace(258)* %61, align 32
   %63 = getelementptr inbounds <256 x i1>, <256 x i1>* %4, i64 4
   %64 = bitcast <256 x i1>* %63 to i8*
-  %65 = tail call <1024 x i1> @llvm.kvx.xload1024q(<1024 x i1> %50, i8* nonnull %64, i32 3, i32 1)
+  %65 = tail call <1024 x i1> @llvm.kvx.lvc(<1024 x i1> %50, i8* nonnull %64, i32 3, i32 1)
   %66 = getelementptr inbounds <256 x i1>, <256 x i1>* %4, i64 5
   %67 = bitcast <256 x i1>* %66 to i8*
-  %68 = tail call <1024 x i1> @llvm.kvx.xloadc1024q(<1024 x i1> %65, i8* nonnull %67, i64 %0, i32 2, i32 0, i32 6)
+  %68 = tail call <1024 x i1> @llvm.kvx.lvc.cond(<1024 x i1> %65, i8* nonnull %67, i64 %0, i32 2, i32 0, i32 6)
   store <256 x i1> %62, <256 x i1>* %4, align 32
   %69 = bitcast <256 x i1>* %13 to i8*
-  tail call void @llvm.kvx.xstorec256(<256 x i1> %62, i8* nonnull %69, i64 1, i32 7)
+  tail call void @llvm.kvx.sv.cond(i8* nonnull %69, <256 x i1> %62, i64 1, i32 7)
   store volatile <512 x i1> %49, <512 x i1>* %5, align 32
   store volatile <1024 x i1> %68, <1024 x i1>* %6, align 32
   ret <4 x i64> %56

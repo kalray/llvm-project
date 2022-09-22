@@ -284,34 +284,34 @@ let mayLoad = 1 in
 {
 def LBSp : KVX_PSEUDO_W_SCHEDINFO<
         (outs SingleReg:$out),
-        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), [], LSU_AUXW_LOAD>;
+        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), [], LSU_AUXW_Y_LOAD>;
 def LBZp : KVX_PSEUDO_W_SCHEDINFO<
         (outs SingleReg:$out),
-        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), [], LSU_AUXW_LOAD>;
+        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), [], LSU_AUXW_Y_LOAD>;
 def LHSp : KVX_PSEUDO_W_SCHEDINFO<
         (outs SingleReg:$out),
-        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), [], LSU_AUXW_LOAD>;
+        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), [], LSU_AUXW_Y_LOAD>;
 def LHZp : KVX_PSEUDO_W_SCHEDINFO<
         (outs SingleReg:$out),
-        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), [], LSU_AUXW_LOAD>;
+        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), [], LSU_AUXW_Y_LOAD>;
 def LWSp : KVX_PSEUDO_W_SCHEDINFO<
         (outs SingleReg:$out),
-        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), [], LSU_AUXW_LOAD>;
+        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), [], LSU_AUXW_Y_LOAD>;
 def LWZp : KVX_PSEUDO_W_SCHEDINFO<
         (outs SingleReg:$out),
-        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), [], LSU_AUXW_LOAD>;
+        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), [], LSU_AUXW_Y_LOAD>;
 def LDp : KVX_PSEUDO_W_SCHEDINFO<
         (outs SingleReg:$out),
-        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), [], LSU_AUXW_LOAD>;
+        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), [], LSU_AUXW_Y_LOAD>;
 def LQp : KVX_PSEUDO_W_SCHEDINFO<
         (outs PairedReg:$out),
-        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), [], LSU_AUXW_LOAD>;
+        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), [], LSU_AUXW_Y_LOAD>;
 def LOp : KVX_PSEUDO_W_SCHEDINFO<
         (outs QuadReg:$out),
-        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), [], LSU_AUXW_LOAD>;
+        (ins Wrapped64:$offset, SingleReg:$base, VariantMod:$var), [], LSU_AUXW_Y_LOAD>;
 def LVp : KVX_PSEUDO_W_SCHEDINFO<
         (outs VectorReg:$out),
-        (ins Wrapped64:$offset, SingleReg:$base, SpeculateMod:$var), [], LSU_LOAD>;
+        (ins Wrapped64:$offset, SingleReg:$base, SpeculateMod:$var), [], LSU_Y_LOAD>;
 
 def LWIDEp : KVX_PSEUDO<
         (outs WideReg:$out),
@@ -356,11 +356,13 @@ multiclass LoadPatRI<PatFrag LoadOp, ValueType vt, KVX_PSEUDO_W_SCHEDINFO pinst,
   def : Pat<(vt (LoadOp:$LD (IsOrAdd AddrFI:$base, Wrapped64:$offset))),
             (pinst Wrapped64:$offset, SingleReg:$base, (get_mem_mod $LD))>;
   def : Pat<(vt (LoadOp:$LD (add SingleReg:$base, Signed10:$offset))),
-            (ri10 Wrapped64:$offset, SingleReg:$base, (get_mem_mod $LD))>;
+            (ri10 Signed10:$offset, SingleReg:$base, (get_mem_mod $LD))>;
   def : Pat<(vt (LoadOp:$LD (add SingleReg:$base, Signed37:$offset))),
-            (ri37 Wrapped64:$offset, SingleReg:$base, (get_mem_mod $LD))>;
+            (ri37 Signed37:$offset, SingleReg:$base, (get_mem_mod $LD))>;
   def : Pat<(vt (LoadOp:$LD (add SingleReg:$base, Wrapped64:$offset))),
             (ri64 Wrapped64:$offset, SingleReg:$base, (get_mem_mod $LD))>;
+  def : Pat<(vt (LoadOp:$LD SingleReg:$base)),
+            (ri10 0, SingleReg:$base, (get_mem_mod $LD))>;
 }
 
 multiclass LoadPatRR<PatFrag LoadOp, ValueType vt, KVX_INSTRUCTION rr> {
@@ -437,7 +439,7 @@ defm : LoadPat<load, v2i64, 4, LQp, LQri10, LQri37, LQri64, LQrr>;
 defm : LoadPat<load, v4i32, 4, LQp, LQri10, LQri37, LQri64, LQrr>;
 
 defm : LoadPat<load, v4i64, 5, LOp, LOri10, LOri37, LOri64, LOrr>;
-defm : LoadPat<load, v256i1, 5, LVp, LVri10, LVri37, LVri64, LVrr>;
+defm : LoadPat<load, v256i1, 5, LVp, LVri10, LVri37, LVri64, LVrr>, Requires<[IsV1]>;
 
 def : Pat<(v512i1 (load SingleReg:$base)),
           (v512i1 (REG_SEQUENCE WideReg,
