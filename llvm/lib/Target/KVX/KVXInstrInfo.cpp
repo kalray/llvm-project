@@ -146,54 +146,73 @@ void KVXInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
   }
 
   // Between TCA registers
-  if (KVX::VectorRegRegClass.contains(DstReg)) {
-    if (KVX::VectorRegERegClass.contains(SrcReg) ||
-        KVX::ZeroVectorRegERegClass.contains(SrcReg)) {
-      LLVM_DEBUG(dbgs() << "It is a TCA VectorRegE copyvre.\n");
-      BuildMI(MBB, MBBI, DL, get(KVX::COPYVre), DstReg)
+  if (!Subtarget.isV1()) {
+    if (KVX::MatrixRegRegClass.contains(SrcReg, DstReg)) {
+      BuildMI(MBB, MBBI, DL, get(KVX::XCOPYV), DstReg)
+          .addReg(SrcReg, getKillRegState(KillSrc))
+          .addImm(0);
+      return;
+    }
+    if (KVX::WideRegRegClass.contains(SrcReg, DstReg)) {
+      BuildMI(MBB, MBBI, DL, get(KVX::XCOPYX), DstReg)
+          .addReg(SrcReg, getKillRegState(KillSrc))
+          .addImm(0);
+      return;
+    }
+    if (KVX::VectorRegRegClass.contains(SrcReg, DstReg)) {
+      BuildMI(MBB, MBBI, DL, get(KVX::XCOPYO), DstReg)
           .addReg(SrcReg, getKillRegState(KillSrc));
       return;
     }
-    if (KVX::VectorRegORegClass.contains(SrcReg) ||
-        KVX::ZeroVectorRegORegClass.contains(SrcReg)) {
-      LLVM_DEBUG(dbgs() << "It is a TCA VectorRegO copyvro.\n");
-      BuildMI(MBB, MBBI, DL, get(KVX::COPYVro), DstReg)
-          .addReg(SrcReg, getKillRegState(KillSrc));
-      return;
+  } else {
+    if (KVX::VectorRegRegClass.contains(DstReg)) {
+      if (KVX::VectorRegERegClass.contains(SrcReg) ||
+          KVX::ZeroVectorRegERegClass.contains(SrcReg)) {
+        LLVM_DEBUG(dbgs() << "It is a TCA VectorRegE copyvre.\n");
+        BuildMI(MBB, MBBI, DL, get(KVX::COPYVre), DstReg)
+            .addReg(SrcReg, getKillRegState(KillSrc));
+        return;
+      }
+      if (KVX::VectorRegORegClass.contains(SrcReg) ||
+          KVX::ZeroVectorRegORegClass.contains(SrcReg)) {
+        LLVM_DEBUG(dbgs() << "It is a TCA VectorRegO copyvro.\n");
+        BuildMI(MBB, MBBI, DL, get(KVX::COPYVro), DstReg)
+            .addReg(SrcReg, getKillRegState(KillSrc));
+        return;
+      }
     }
-  }
 
-  if (KVX::WideRegRegClass.contains(DstReg) &&
-      (KVX::WideRegRegClass.contains(SrcReg) ||
-       KVX::ZeroWideRegRegClass.contains(SrcReg))) {
-    LLVM_DEBUG(dbgs() << "It is a TCA WideReg, use 2x copyv.\n");
+    if (KVX::WideRegRegClass.contains(DstReg) &&
+        (KVX::WideRegRegClass.contains(SrcReg) ||
+         KVX::ZeroWideRegRegClass.contains(SrcReg))) {
+      LLVM_DEBUG(dbgs() << "It is a TCA WideReg, use 2x copyv.\n");
 
-    auto Src = TRI->getSubReg(SrcReg, KVX::sub_v0);
-    auto Dst = TRI->getSubReg(DstReg, KVX::sub_v0);
-    BuildMI(MBB, MBBI, DL, get(KVX::COPYVre), Dst)
-        .addReg(Src, getKillRegState(KillSrc));
-    Src = TRI->getSubReg(SrcReg, KVX::sub_v1);
-    Dst = TRI->getSubReg(DstReg, KVX::sub_v1);
-    BuildMI(MBB, MBBI, DL, get(KVX::COPYVro), Dst)
-        .addReg(Src, getKillRegState(KillSrc));
-    return;
-  }
-
-  if (KVX::MatrixRegRegClass.contains(DstReg) &&
-      (KVX::MatrixRegRegClass.contains(SrcReg) ||
-       KVX::ZeroMatrixRegRegClass.contains(SrcReg))) {
-    LLVM_DEBUG(dbgs() << "It is a TCA MatrixReg, use 4x copyv.\n");
-    auto VecType = KVX::COPYVre;
-    for (auto SubVec : {KVX::sub_v0, KVX::sub_v1, KVX::sub_v2, KVX::sub_v3}) {
-      auto Src = TRI->getSubReg(SrcReg, SubVec);
-      auto Dst = TRI->getSubReg(DstReg, SubVec);
-      BuildMI(MBB, MBBI, DL, get(VecType), Dst)
+      auto Src = TRI->getSubReg(SrcReg, KVX::sub_v0);
+      auto Dst = TRI->getSubReg(DstReg, KVX::sub_v0);
+      BuildMI(MBB, MBBI, DL, get(KVX::COPYVre), Dst)
           .addReg(Src, getKillRegState(KillSrc));
-      VecType = VecType == KVX::COPYVre ? KVX::COPYVro : KVX::COPYVre;
+      Src = TRI->getSubReg(SrcReg, KVX::sub_v1);
+      Dst = TRI->getSubReg(DstReg, KVX::sub_v1);
+      BuildMI(MBB, MBBI, DL, get(KVX::COPYVro), Dst)
+          .addReg(Src, getKillRegState(KillSrc));
+      return;
     }
-    return;
-  }
 
+    if (KVX::MatrixRegRegClass.contains(DstReg) &&
+        (KVX::MatrixRegRegClass.contains(SrcReg) ||
+         KVX::ZeroMatrixRegRegClass.contains(SrcReg))) {
+      LLVM_DEBUG(dbgs() << "It is a TCA MatrixReg, use 4x copyv.\n");
+      auto VecType = KVX::COPYVre;
+      for (auto SubVec : {KVX::sub_v0, KVX::sub_v1, KVX::sub_v2, KVX::sub_v3}) {
+        auto Src = TRI->getSubReg(SrcReg, SubVec);
+        auto Dst = TRI->getSubReg(DstReg, SubVec);
+        BuildMI(MBB, MBBI, DL, get(VecType), Dst)
+            .addReg(Src, getKillRegState(KillSrc));
+        VecType = VecType == KVX::COPYVre ? KVX::COPYVro : KVX::COPYVre;
+      }
+      return;
+    }
+  }
   report_fatal_error("Don't know how to handle register copy from (" +
                      TRI->getRegAsmName(SrcReg.id()) + ") to (" +
                      TRI->getRegAsmName(DstReg.id()) + ").\n");

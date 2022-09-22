@@ -176,3 +176,11 @@ def LsumaskMaskMod : Operand<i32>, ImmLeaf<i32, [{return (4 <= Imm) && (Imm <= 7
 def ChannelMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 1);}]> {
   let PrintMethod = "printChannelMod";
 }
+
+def ShuffleVMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 1);}]> {
+  let PrintMethod = "printShuffleVMod";
+}
+
+def ShuffleXMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 3);}]> {
+  let PrintMethod = "printShuffleXMod";
+}

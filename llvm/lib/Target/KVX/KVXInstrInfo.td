@@ -2557,6 +2557,14 @@ defm XSENDO : I <"xsendo", ALU_TINY_CRRP, [VectorReg], [ChannelMod], [], [], [],
 let AsmString = "xsendrecvo$mod0$mod1 $op0, $r", hasSideEffects = 1, mayLoad = ?, mayStore = ? in
 defm XSENDRECVO : I <"xsendrecvo", ALU_TINY_CRRP_CRWL_CRWH, [VectorReg], [ChannelMod, ChannelMod], [], [], [VectorReg], 0,
                   [(set v256i1:$r, (int_kvx_xsendrecvo v256i1:$op0, ChannelMod:$mod0, ChannelMod:$mod1))]>;
+
+let isMoveReg = 1 in {
+defm XCOPYO : I<"xcopyo", BCU_CRRP_CRWL_CRWH, [VectorReg], [], [], [], [VectorReg]>;
+defm XCOPYV : I<"xcopyv", TCA, [MatrixReg], [ShuffleVMod], [], [], [MatrixReg], 0,
+                [(set v1024i1:$r, (int_kvx_xcopyv v1024i1:$op0, ShuffleVMod:$mod0))]>;
+defm XCOPYX : I<"xcopyx", TCA, [WideReg], [ShuffleXMod], [], [], [WideReg], 0,
+                [(set v512i1:$r, (int_kvx_xcopyx v512i1:$op0, ShuffleXMod:$mod0))]>;
+}
 }
 
 def FMIND : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
@@ -3429,7 +3437,7 @@ def ABSBO : REGISTERW_REGISTERZ_DOUBLE
    [(set v8i8:$a1, (abs v8i8:$a2))],
    ALU_TINY_X>, Requires<[IsV2]>;
 
-defm COPYV : MC_35<"copyv">;
+defm COPYV : MC_35<"copyv">, Requires<[IsV1]>;
 
 defm MOVEFO : MC_36<"movefo">;
 
