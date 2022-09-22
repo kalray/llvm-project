@@ -315,6 +315,8 @@ def int_kvx_sv_cond: Intrinsic<[], [llvm_ptr_ty, llvm_v256i1_ty, llvm_i64_ty, ll
 // KV3 V2 TCA intrinsics
 //===----------------------------------------------------------------------===//
 def int_kvx_xclampwo : KVX_TCA_Ternary<[llvm_v256i1_ty]>;
+def int_kvx_xcopyv: Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_xcopyx: Intrinsic<[llvm_v512i1_ty], [llvm_v512i1_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_xffma44hw : Intrinsic<[llvm_v512i1_ty], [llvm_v256i1_ty, llvm_v256i1_ty, llvm_v512i1_ty, llvm_i32_ty, llvm_i32_ty], [IntrHasSideEffects]>;
 def int_kvx_xfmma484hw : Intrinsic<[llvm_v512i1_ty], [llvm_v512i1_ty, llvm_v512i1_ty, llvm_v512i1_ty, llvm_i32_ty, llvm_i32_ty], [IntrHasSideEffects]>;
 def int_kvx_xfnarrow44wh : Intrinsic<[llvm_v256i1_ty], [llvm_v512i1_ty, llvm_i32_ty, llvm_i32_ty], [IntrHasSideEffects]>;

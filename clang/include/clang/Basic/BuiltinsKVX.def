@@ -537,6 +537,9 @@ KVX_BUILTIN(xsendo, "vTx256cC*", "", 2, "kv3-2", KVX_SCHANNEL)
 KVX_BUILTIN(xrecvo, "Tx256cC*", "", 1, "kv3-2", KVX_RCHANNEL)
 KVX_BUILTIN(xsendrecvo, "Tx256Tx256cC*", "", 2, "kv3-2", KVX_SCHANNEL, KVX_RCHANNEL)
 
-#undef BUILTIN
-#undef NARY_BUILTIN
+KVX_BUILTIN(xcopyv, "Tx1024Tx1024cC*", "n", 2, "kv3-2", KVX_SHUFFLEV)
+KVX_BUILTIN(xcopyx, "Tx512Tx512cC*", "n", 2, "kv3-2", KVX_SHUFFLEX)
+
 #undef KVX_BUILTIN
+#undef NARY_BUILTIN
+#undef BUILTIN

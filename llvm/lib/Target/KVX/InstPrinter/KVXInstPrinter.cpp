@@ -631,3 +631,36 @@ void KVXInstPrinter::printChannelMod(const MCInst *MI, unsigned OpNo,
 
   O << ((I != 0) ? ".f" : ".b");
 }
+
+void KVXInstPrinter::printShuffleVMod(const MCInst *MI, unsigned OpNo,
+                                      raw_ostream &O) {
+  uint32_t I = MI->getOperand(OpNo).getImm();
+  if (I > 1)
+    report_fatal_error("Invalid ShuffleXMod value to print.");
+
+  if (!I)
+    return;
+
+  O << ".td";
+}
+
+void KVXInstPrinter::printShuffleXMod(const MCInst *MI, unsigned OpNo,
+                                      raw_ostream &O) {
+  uint32_t I = MI->getOperand(OpNo).getImm();
+
+  switch (I) {
+  case 0:
+    break;
+  case 1:
+    O << ".zd";
+    break;
+  case 2:
+    O << ".ud";
+    break;
+  case 3:
+    O << ".tq";
+    break;
+  default:
+    report_fatal_error("Invalid ShuffleXMod value to print.");
+  }
+}
