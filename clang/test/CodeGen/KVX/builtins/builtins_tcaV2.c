@@ -46,8 +46,8 @@ void xffma44hw_test(__kvx_x512 *acc, __kvx_x256 *v) {
   __kvx_x256 l = v[0];
   __kvx_x512 r = __builtin_kvx_xffma44hw(l, l, acc[0], "");
   r = __builtin_kvx_xffma44hw(l, l, r, ".s");
-  r = __builtin_kvx_xffma44hw(l, l, r, ".rn");
-  acc[0] = __builtin_kvx_xffma44hw(l, l, r, ".rz.s");
+  r = __builtin_kvx_xffma44hw(l, l, r, ".rN");
+  acc[0] = __builtin_kvx_xffma44hw(l, l, r, ".Rz.S");
 }
 
 // CHECK-LABEL: @xfmma484hw_test(
