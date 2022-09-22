@@ -15,3 +15,14 @@ class i64_const<int N> : PatLeaf<(i64 N)>;
 def i64_i32_max : i64_const<2147483647>;
 def i64_i32_min : i64_const<-2147483648>;
 def i64_ui32_max : i64_const<4294967295>;
+
+class UnSignMod<int N> : PatLeaf<(i32 N)>;
+def UnSignMod_S  : UnSignMod<0>;
+def UnSignMod_SU : UnSignMod<1>;
+def UnSignMod_U  : UnSignMod<2>;
+def UnSignMod_US : UnSignMod<3>;
+
+class ExtendMul<int N> : PatLeaf<(i32 N)>;
+def ExtendMul_S  : ExtendMul<0>;
+def ExtendMul_SU : ExtendMul<1>;
+def ExtendMul_U  : ExtendMul<2>;
