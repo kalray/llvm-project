@@ -884,3 +884,96 @@ define void @xloadStore1024(<1024 x i1> addrspace(256)* %0) {
   store volatile <1024 x i1> %3, <1024 x i1> addrspace(256)* %0
   ret void
 }
+
+define void @xsendo(<256 x i1>* nocapture readonly %0) {
+; CHECK-LABEL: xsendo:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    xlo $a0 = 0[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xsendo.f $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xlo $a0 = 0[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xsendo.b $a0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = load <256 x i1>, <256 x i1>* %0
+  tail call void @llvm.kvx.xsendo(<256 x i1> %2, i32 1)
+  %3 = load <256 x i1>, <256 x i1>* %0
+  tail call void @llvm.kvx.xsendo(<256 x i1> %3, i32 0)
+  ret void
+}
+
+declare void @llvm.kvx.xsendo(<256 x i1>, i32)
+
+define void @xrecvo(<256 x i1>* nocapture %0) {
+; CHECK-LABEL: xrecvo:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    xrecvo.f $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xrecvo.b $a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 0[$r0] = $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 32[$r0] = $a1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = tail call <256 x i1> @llvm.kvx.xrecvo(i32 1)
+  store <256 x i1> %2, <256 x i1>* %0
+  %3 = tail call <256 x i1> @llvm.kvx.xrecvo(i32 0)
+  %4 = getelementptr inbounds <256 x i1>, <256 x i1>* %0, i64 1
+  store <256 x i1> %3, <256 x i1>* %4
+  ret void
+}
+
+declare <256 x i1> @llvm.kvx.xrecvo(i32)
+
+define void @xsendrecvo(<256 x i1>* nocapture %0) {
+; CHECK-LABEL: xsendrecvo:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    xlo $a0 = 0[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xsendrecvo.f.f $a0, $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xlo $a1 = 32[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 64[$r0] = $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xsendrecvo.b.f $a1, $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xlo $a1 = 0[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 128[$r0] = $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xsendrecvo.f.b $a1, $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xlo $a1 = 32[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 96[$r0] = $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xsendrecvo.b.b $a1, $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 160[$r0] = $a0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = load <256 x i1>, <256 x i1>* %0
+  %3 = tail call <256 x i1> @llvm.kvx.xsendrecvo(<256 x i1> %2, i32 1, i32 1)
+  %4 = getelementptr inbounds <256 x i1>, <256 x i1>* %0, i64 2
+  store <256 x i1> %3, <256 x i1>* %4
+  %5 = getelementptr inbounds <256 x i1>, <256 x i1>* %0, i64 1
+  %6 = load <256 x i1>, <256 x i1>* %5
+  %7 = tail call <256 x i1> @llvm.kvx.xsendrecvo(<256 x i1> %6, i32 0, i32 1)
+  %8 = getelementptr inbounds <256 x i1>, <256 x i1>* %0, i64 4
+  store <256 x i1> %7, <256 x i1>* %8
+  %9 = load <256 x i1>, <256 x i1>* %0
+  %10 = tail call <256 x i1> @llvm.kvx.xsendrecvo(<256 x i1> %9, i32 1, i32 0)
+  %11 = getelementptr inbounds <256 x i1>, <256 x i1>* %0, i64 3
+  store <256 x i1> %10, <256 x i1>* %11
+  %12 = load <256 x i1>, <256 x i1>* %5
+  %13 = tail call <256 x i1> @llvm.kvx.xsendrecvo(<256 x i1> %12, i32 0, i32 0)
+  %14 = getelementptr inbounds <256 x i1>, <256 x i1>* %0, i64 5
+  store <256 x i1> %13, <256 x i1>* %14
+  ret void
+}
+
+declare <256 x i1> @llvm.kvx.xsendrecvo(<256 x i1>, i32, i32)

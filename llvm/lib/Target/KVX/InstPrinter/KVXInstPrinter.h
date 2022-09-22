@@ -89,6 +89,8 @@ public:
   void printHexaBitsImm32(const MCInst *MI, unsigned OpNo, raw_ostream &O);
 
   void printCacheLevelMod(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+
+  void printChannelMod(const MCInst *MI, unsigned OpNo, raw_ostream &O);
 };
 } // namespace llvm
 

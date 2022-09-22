@@ -461,3 +461,58 @@ void xloadStore512(volatile __speculate __kvx_x512 *v) {
 void xloadStore1024(volatile __bypass __kvx_x1024 *v) {
   v[0] = v[1];
 }
+
+// CHECK-LABEL: @xsendo(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
+// CHECK-NEXT:    tail call void @llvm.kvx.xsendo(<256 x i1> [[TMP0]], i32 1) [[ATTR1:#.*]]
+// CHECK-NEXT:    [[TMP1:%.*]] = load <256 x i1>, <256 x i1>* [[V]], align 32, [[TBAA2]]
+// CHECK-NEXT:    tail call void @llvm.kvx.xsendo(<256 x i1> [[TMP1]], i32 0) [[ATTR1]]
+// CHECK-NEXT:    ret void
+//
+void xsendo(__kvx_x256 *v) {
+  __builtin_kvx_xsendo(*v, ".b");
+  __builtin_kvx_xsendo(*v, ".f");
+}
+
+// CHECK-LABEL: @xrecvo(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <256 x i1> @llvm.kvx.xrecvo(i32 1) [[ATTR1]]
+// CHECK-NEXT:    store <256 x i1> [[TMP0]], <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <256 x i1> @llvm.kvx.xrecvo(i32 0) [[ATTR1]]
+// CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 1
+// CHECK-NEXT:    store <256 x i1> [[TMP1]], <256 x i1>* [[ARRAYIDX]], align 32, [[TBAA2]]
+// CHECK-NEXT:    ret void
+//
+void xrecvo(__kvx_x256 *v) {
+  *v = __builtin_kvx_xrecvo(".b");
+  v[1] = __builtin_kvx_xrecvo(".f");
+}
+
+// CHECK-LABEL: @xsendrecvo(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <256 x i1> @llvm.kvx.xsendrecvo(<256 x i1> [[TMP0]], i32 1, i32 1) [[ATTR1]]
+// CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 2
+// CHECK-NEXT:    store <256 x i1> [[TMP1]], <256 x i1>* [[ARRAYIDX]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 1
+// CHECK-NEXT:    [[TMP2:%.*]] = load <256 x i1>, <256 x i1>* [[ARRAYIDX1]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <256 x i1> @llvm.kvx.xsendrecvo(<256 x i1> [[TMP2]], i32 0, i32 1) [[ATTR1]]
+// CHECK-NEXT:    [[ARRAYIDX2:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 4
+// CHECK-NEXT:    store <256 x i1> [[TMP3]], <256 x i1>* [[ARRAYIDX2]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[TMP4:%.*]] = load <256 x i1>, <256 x i1>* [[V]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[TMP5:%.*]] = tail call <256 x i1> @llvm.kvx.xsendrecvo(<256 x i1> [[TMP4]], i32 1, i32 0) [[ATTR1]]
+// CHECK-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 3
+// CHECK-NEXT:    store <256 x i1> [[TMP5]], <256 x i1>* [[ARRAYIDX3]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[TMP6:%.*]] = load <256 x i1>, <256 x i1>* [[ARRAYIDX1]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[TMP7:%.*]] = tail call <256 x i1> @llvm.kvx.xsendrecvo(<256 x i1> [[TMP6]], i32 0, i32 0) [[ATTR1]]
+// CHECK-NEXT:    [[ARRAYIDX5:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 5
+// CHECK-NEXT:    store <256 x i1> [[TMP7]], <256 x i1>* [[ARRAYIDX5]], align 32, [[TBAA2]]
+// CHECK-NEXT:    ret void
+//
+void xsendrecvo(__kvx_x256 *v) {
+  v[2] = __builtin_kvx_xsendrecvo(*v, ".b.b");
+  v[4] = __builtin_kvx_xsendrecvo(v[1], ".f.b");
+  v[3] = __builtin_kvx_xsendrecvo(*v, ".b.f");
+  v[5] = __builtin_kvx_xsendrecvo(v[1], ".f.f");
+}

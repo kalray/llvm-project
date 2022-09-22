@@ -106,6 +106,10 @@ def LSU_AUXW_Y_ALCLR : InstrItinClass;
 
 def XSWAP256 : InstrItinClass;
 
+def ALU_TINY_CRRP : InstrItinClass;
+def ALU_TINY_CRRP_CRWL_CRWH : InstrItinClass;
+def ALU_TINY_CRWL_CRWH : InstrItinClass;
+
 defvar ALL_ITIN_CLASSES = [
   ALL, BCU, BCU_TINY_TINY_MAU_XNOP, BCU_CRRP_CRWL_CRWH, BCU_TINY_AUXW_CRRP,
   TCA, TCA_FP16,
@@ -125,6 +129,7 @@ defvar ALL_ITIN_CLASSES = [
   LSU_AUXW_LOAD, LSU_AUXW_X_LOAD, LSU_AUXW_Y_LOAD,
   LSU_AUXR_AUXW_LOAD, LSU_AUXR_AUXW_X_LOAD, LSU_AUXR_AUXW_Y_LOAD,
   LSU_AUXW_ALCLR, LSU_AUXW_X_ALCLR, LSU_AUXW_Y_ALCLR,
+  ALU_TINY_CRRP, ALU_TINY_CRRP_CRWL_CRWH, ALU_TINY_CRWL_CRWH,
 ];
 
 /**
@@ -539,7 +544,26 @@ list<InstrItinData> ItinList = [
     InstrStage<1, [AUXR_FU]>
     ], [5, 2, 2], [], 3
   >,
-  // TODO : add OperandLatencies here as well
+  InstrItinData<ALU_TINY_CRRP, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [CRRP_FU]>
+    ], [2], [], 1
+  >,
+  InstrItinData<ALU_TINY_CRRP_CRWL_CRWH, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [CRRP_FU], 0>,
+    InstrStage<1, [CRWL_FU], 0>,
+    InstrStage<1, [CRWH_FU]>
+    ], [3, 2], [], 1
+  >,
+  InstrItinData<ALU_TINY_CRWL_CRWH, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [CRWL_FU], 0>,
+    InstrStage<1, [CRWH_FU]>
+    ], [3], [], 1
+  >,
+
+// TODO : add OperandLatencies here as well
   // We need to expand XSWAP256p pseudos after packetizer. To correctly schedule/bundle them,
   // we need a dedicated scheduling itinerary for it.
   InstrItinData<XSWAP256, [
@@ -657,6 +681,9 @@ defvar MAU_RT = MAU_RU;
 
 defvar MAU_AUXR_RT = MAU_RU # AUXR_RU;
 
+defvar ALU_TINY_CRRP_CRWL_CRWH_RT = TINY_RU # CRRP_RU # CRWL_RU # CRWH_RU;
+defvar ALU_TINY_CRRP_RT = TINY_RU # CRRP_RU;
+defvar ALU_TINY_CRWL_CRWH_RT = TINY_RU # CRWL_RU # CRWH_RU;
 // Dedicated reservation table forXSWAP256: moveto + moveto + movefo
 defvar XSWAP256_RT = ALU_LITE_CRWL_RT # ALU_LITE_CRWH_RT # BCU_TINY_AUXW_CRRP_RT;
 
@@ -816,6 +843,10 @@ defm: KVXItinWriteRes<MAU_Y_FP, mau_fp_lat, MAU_RT, 3, MAU_Y_FP_SRW>;
 defm: KVXItinWriteRes<MAU_AUXR_FP, mau_fp_lat, MAU_AUXR_RT, 1, MAU_AUXR_FP_SRW>;
 defm: KVXItinWriteRes<MAU_AUXR_X_FP, mau_fp_lat, MAU_AUXR_RT, 2, MAU_AUXR_X_FP_SRW>;
 defm: KVXItinWriteRes<MAU_AUXR_Y_FP, mau_fp_lat, MAU_AUXR_RT, 3, MAU_AUXR_Y_FP_SRW>;
+
+defm: KVXItinWriteRes<ALU_TINY_CRRP_CRWL_CRWH, /* latency */ 2, ALU_TINY_CRRP_CRWL_CRWH_RT, 1 /* issue width */, ALU_TINY_CRRP_CRWL_CRWH_SRW>;
+defm: KVXItinWriteRes<ALU_TINY_CRRP, /* latency */ 2, ALU_TINY_CRRP_RT, 1 /* issue width */, ALU_TINY_CRRP_SRW>;
+defm: KVXItinWriteRes<ALU_TINY_CRWL_CRWH, /* latency */ 2, ALU_TINY_CRWL_CRWH_RT, 1 /* issue width */, ALU_TINY_CRWL_CRWH_SRW>;
 
 def CopyI : SchedWrite;
 let SchedModel = KVXSchedMachineModel in {

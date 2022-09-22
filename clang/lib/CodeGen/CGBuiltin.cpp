@@ -18392,6 +18392,8 @@ struct KvxModifier : StringMap<int> {
 
 static const KvxModifier KVX_CACHELEVEL({{"l1", 0}, {"l2", 1}});
 
+static const KvxModifier KVX_RCHANNEL({{"f", 0}, {"b", 1}});
+
 static const KvxModifier
     KVX_COLUMN({{"c0", 0}, {"c1", 1}, {"c2", 2}, {"c3", 3}});
 
@@ -18426,6 +18428,8 @@ static const KvxModifier
     KVX_QINDEX({{"q0", 0}, {"q1", 1}, {"q2", 2}, {"q3", 3}});
 
 static const KvxModifier KVX_SCALARCOND = KVX_LSUCOND;
+
+static const KvxModifier KVX_SCHANNEL = KVX_RCHANNEL;
 
 static const KvxModifier KVX_SILENT({{"", 0}, {"s", 1}});
 
