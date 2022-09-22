@@ -246,3 +246,91 @@ void xtrunc48wb_test(__kvx_x1024 *m, __kvx_x256 *v) {
 void xmt44d_test(__kvx_x1024 *m) {
   m[0] = __builtin_kvx_xmt44d(m[0]);
 }
+
+// CHECK-LABEL: @xload256(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V:%.*]], i64 1
+// CHECK-NEXT:    [[TMP0:%.*]] = bitcast <256 x i1>* [[ARRAYIDX]] to i8*
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <256 x i1> @llvm.kvx.xload256(i8* nonnull [[TMP0]], i32 0)
+// CHECK-NEXT:    store <256 x i1> [[TMP1]], <256 x i1>* [[V]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[ARRAYIDX2:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 3
+// CHECK-NEXT:    [[TMP2:%.*]] = bitcast <256 x i1>* [[ARRAYIDX2]] to i8*
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <256 x i1> @llvm.kvx.xload256(i8* nonnull [[TMP2]], i32 1)
+// CHECK-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 2
+// CHECK-NEXT:    store <256 x i1> [[TMP3]], <256 x i1>* [[ARRAYIDX3]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[TMP4:%.*]] = tail call <256 x i1> @llvm.kvx.xload256(i8* nonnull [[TMP2]], i32 2)
+// CHECK-NEXT:    store <256 x i1> [[TMP4]], <256 x i1>* [[ARRAYIDX3]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[TMP5:%.*]] = bitcast <256 x i1>* [[ARRAYIDX3]] to i8*
+// CHECK-NEXT:    [[TMP6:%.*]] = tail call <256 x i1> @llvm.kvx.xload256(i8* nonnull [[TMP5]], i32 3)
+// CHECK-NEXT:    store <256 x i1> [[TMP6]], <256 x i1>* [[V]], align 32, [[TBAA2]]
+// CHECK-NEXT:    ret void
+//
+void xload256(__kvx_x256 *v) {
+  v[0] = __builtin_kvx_xload256(&v[1], "");
+  v[2] = __builtin_kvx_xload256(&v[3], ".s");
+  v[2] = __builtin_kvx_xload256(&v[3], ".u");
+  v[0] = __builtin_kvx_xload256(&v[2], ".us");
+}
+
+// CHECK-LABEL: @xloadc256(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V:%.*]], i64 1
+// CHECK-NEXT:    [[TMP0:%.*]] = bitcast <256 x i1>* [[ARRAYIDX]] to i8*
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <256 x i1> @llvm.kvx.xloadc256(<256 x i1> undef, i8* nonnull [[TMP0]], i64 [[X:%.*]], i32 0, i32 4)
+// CHECK-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 3
+// CHECK-NEXT:    [[TMP2:%.*]] = bitcast <256 x i1>* [[ARRAYIDX1]] to i8*
+// CHECK-NEXT:    [[TOBOOL_NOT:%.*]] = icmp eq i64 [[X]], 0
+// CHECK-NEXT:    [[CONV:%.*]] = zext i1 [[TOBOOL_NOT]] to i64
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <256 x i1> @llvm.kvx.xloadc256(<256 x i1> [[TMP1]], i8* nonnull [[TMP2]], i64 [[CONV]], i32 1, i32 5)
+// CHECK-NEXT:    [[TMP4:%.*]] = tail call <256 x i1> @llvm.kvx.xloadc256(<256 x i1> [[TMP3]], i8* nonnull [[TMP2]], i64 0, i32 2, i32 6)
+// CHECK-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 2
+// CHECK-NEXT:    [[TMP5:%.*]] = bitcast <256 x i1>* [[ARRAYIDX3]] to i8*
+// CHECK-NEXT:    [[TMP6:%.*]] = tail call <256 x i1> @llvm.kvx.xloadc256(<256 x i1> [[TMP4]], i8* nonnull [[TMP5]], i64 1, i32 3, i32 7)
+// CHECK-NEXT:    store <256 x i1> [[TMP6]], <256 x i1>* [[V]], align 32, [[TBAA2]]
+// CHECK-NEXT:    ret void
+//
+void xloadc256(__kvx_x256 *v, long x) {
+  __kvx_x256 c;
+  c = __builtin_kvx_xloadc256(c, &v[1], x, ".mt");
+  c = __builtin_kvx_xloadc256(c, &v[3], !x, ".s.mf");
+  c = __builtin_kvx_xloadc256(c, &v[3], 0, ".u.mtc");
+  v[0] = __builtin_kvx_xloadc256(c, &v[2], 1, ".us.mfc");
+}
+
+// CHECK-LABEL: @xloads1024(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = bitcast <1024 x i1>* [[M:%.*]] to i8*
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <1024 x i1> @llvm.kvx.xloads1024(<1024 x i1> undef, i8* [[TMP0]], i32 0, i32 0)
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <1024 x i1> @llvm.kvx.xloads1024(<1024 x i1> [[TMP1]], i8* [[TMP0]], i32 0, i32 1)
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <1024 x i1> @llvm.kvx.xloads1024(<1024 x i1> [[TMP2]], i8* [[TMP0]], i32 1, i32 2)
+// CHECK-NEXT:    [[TMP4:%.*]] = tail call <1024 x i1> @llvm.kvx.xloads1024(<1024 x i1> [[TMP3]], i8* [[TMP0]], i32 3, i32 3)
+// CHECK-NEXT:    store <1024 x i1> [[TMP4]], <1024 x i1>* [[M]], align 32, [[TBAA8]]
+// CHECK-NEXT:    ret void
+//
+void xloads1024(__kvx_x1024 *m) {
+  __kvx_x1024 l;
+  l = __builtin_kvx_xloads1024(l, &m[0], ".q0");
+  l = __builtin_kvx_xloads1024(l, &m[0], "..q1");
+  l = __builtin_kvx_xloads1024(l, &m[0], ".s.q2");
+  m[0] = __builtin_kvx_xloads1024(l, &m[0], ".us.q3");
+}
+
+// CHECK-LABEL: @xloadsc1024(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = bitcast <1024 x i1>* [[M:%.*]] to i8*
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <1024 x i1> @llvm.kvx.xloadsc1024(<1024 x i1> undef, i8* [[TMP0]], i64 [[X:%.*]], i32 0, i32 4, i32 0)
+// CHECK-NEXT:    [[TOBOOL_NOT:%.*]] = icmp eq i64 [[X]], 0
+// CHECK-NEXT:    [[CONV:%.*]] = zext i1 [[TOBOOL_NOT]] to i64
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <1024 x i1> @llvm.kvx.xloadsc1024(<1024 x i1> [[TMP1]], i8* [[TMP0]], i64 [[CONV]], i32 1, i32 5, i32 1)
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <1024 x i1> @llvm.kvx.xloadsc1024(<1024 x i1> [[TMP2]], i8* [[TMP0]], i64 0, i32 2, i32 6, i32 2)
+// CHECK-NEXT:    [[TMP4:%.*]] = tail call <1024 x i1> @llvm.kvx.xloadsc1024(<1024 x i1> [[TMP3]], i8* [[TMP0]], i64 1, i32 3, i32 7, i32 3)
+// CHECK-NEXT:    store <1024 x i1> [[TMP4]], <1024 x i1>* [[M]], align 32, [[TBAA8]]
+// CHECK-NEXT:    ret void
+//
+void xloadsc1024(__kvx_x1024 *m, long x) {
+  __kvx_x1024 l;
+  l = __builtin_kvx_xloadsc1024(l, &m[0], x, ".mt.q0");
+  l = __builtin_kvx_xloadsc1024(l, &m[0], !x, ".s.mf.q1");
+  l = __builtin_kvx_xloadsc1024(l, &m[0], 0, ".u.mtc.q2");
+  m[0] = __builtin_kvx_xloadsc1024(l, &m[0], 1, ".us.mfc.q3");
+}

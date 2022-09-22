@@ -18548,6 +18548,18 @@ static const KvxModifier KVX_LSUCOND({{"dnez", 0},
                                       {"wlez", 12},
                                       {"wgtz", 13}});
 
+static const KvxModifier KVX_LSUMASK({{"dnez", 0},
+                                      {"deqz", 1},
+                                      {"wnez", 2},
+                                      {"weqz", 3},
+                                      {"mt", 4},
+                                      {"mf", 5},
+                                      {"mtc", 6},
+                                      {"mfc", 7}});
+
+static const KvxModifier
+    KVX_QINDEX({{"q0", 0}, {"q1", 1}, {"q2", 2}, {"q3", 3}});
+
 static const KvxModifier KVX_SPECULATE({{"", 0}, {"s", 1}});
 
 static const KvxModifier KVX_VARIANT({{"", 0}, {"s", 1}, {"u", 2}, {"us", 3}});
@@ -18620,16 +18632,8 @@ static Value *KVX_emit(const unsigned NumArgs, CodeGenFunction &CGF,
   bool HasMods = !Modifiers.empty();
   SmallVector<Value *, 4> Args;
 
-  bool Volatile = false;
-  for (unsigned I = 0; I < (NumArgs - HasMods); ++I) {
-    if (E->getArg(I)->IgnoreImpCasts()->getType()->isPointerType()) {
-      QualType PtrTy = E->getArg(I)->IgnoreImpCasts()->getType();
-      Volatile |= PtrTy->castAs<clang::PointerType>()
-                      ->getPointeeType()
-                      .isVolatileQualified();
-    }
+  for (unsigned I = 0; I < (NumArgs - HasMods); ++I)
     Args.push_back(CGF.EmitScalarExpr(E->getArg(I)));
-  }
 
   Function *Callee = CGM.getIntrinsic(IntrinsicID);
   if (!HasMods)

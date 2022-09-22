@@ -355,10 +355,61 @@ void KVXInstPrinter::printSilentMod(const MCInst *MI, unsigned OpNo,
   }
 }
 
+// Hack, we use the VARIANT modifier (0..3) at codegen to detect
+// addrspace, and we filter the speculate modifier from it.
 void KVXInstPrinter::printSpeculateMod(const MCInst *MI, unsigned OpNo,
                                        raw_ostream &O) {
-  // Can use silent mode: 0 = normal = "" / 1 = speculative = ".s"
-  printSilentMod(MI, OpNo, O);
+  const MCOperand &MO = MI->getOperand(OpNo);
+  int Silent = MO.getImm();
+  if (Silent > 3)
+    report_fatal_error("illegal silent mode");
+
+  if (Silent & 1)
+    O << ".s";
+}
+
+void KVXInstPrinter::printQindexMod(const MCInst *MI, unsigned OpNo,
+                                    raw_ostream &O) {
+  const MCOperand &MO = MI->getOperand(OpNo);
+  unsigned Q = MO.getImm();
+  if (Q > 3)
+    report_fatal_error("illegal qindex value.");
+
+  O << ".q" << Q;
+}
+
+void KVXInstPrinter::printLsumaskMod(const MCInst *MI, unsigned OpNo,
+                                     raw_ostream &O) {
+  const MCOperand &MO = MI->getOperand(OpNo);
+  unsigned M = MO.getImm();
+  switch (M) {
+  case 0:
+    O << ".dnez";
+    return;
+  case 1:
+    O << ".deqz";
+    return;
+  case 2:
+    O << ".wnez";
+    return;
+  case 3:
+    O << ".weqz";
+    return;
+  case 4:
+    O << ".mt";
+    return;
+  case 5:
+    O << ".mf";
+    return;
+  case 6:
+    O << ".mtc";
+    return;
+  case 7:
+    O << ".mfc";
+    return;
+  default:
+    report_fatal_error("illegal lsumask value.");
+  }
 }
 
 void KVXInstPrinter::printColumnMod(const MCInst *MI, unsigned OpNo,

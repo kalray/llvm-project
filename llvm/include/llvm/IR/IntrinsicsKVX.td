@@ -260,6 +260,12 @@ def int_kvx_lvc_cond: Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_ptr_ty
 def int_kvx_sv: Intrinsic<[], [llvm_ptr_ty, llvm_v256i1_ty], [IntrWriteMem]>;
 def int_kvx_sv_cond: Intrinsic<[], [llvm_ptr_ty, llvm_v256i1_ty, llvm_i64_ty, llvm_i32_ty], [IntrWriteMem]>;
 
+// TCA CV2
+def int_kvx_xload256: Intrinsic<[llvm_v256i1_ty], [llvm_ptr_ty, llvm_i32_ty], [IntrReadMem]>;
+def int_kvx_xloadc256: Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_ptr_ty, llvm_i64_ty, llvm_i32_ty, llvm_i32_ty], [IntrReadMem]>;
+def int_kvx_xloads1024: Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty], [IntrReadMem]>;
+def int_kvx_xloadsc1024: Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_ptr_ty, llvm_i64_ty, llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrReadMem]>;
+
 def int_kvx_xstorec256: Intrinsic<[], [llvm_v256i1_ty, llvm_ptr_ty, llvm_i64_ty, llvm_i32_ty], [IntrWriteMem]>;
 // atomic register copy/shift operations
 def int_kvx_xswap256 : Intrinsic<[llvm_v4i64_ty, llvm_v256i1_ty], [llvm_v4i64_ty, llvm_v256i1_ty], [IntrNoMem]>;

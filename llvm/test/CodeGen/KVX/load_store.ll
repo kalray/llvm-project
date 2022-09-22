@@ -267,6 +267,36 @@ entry:
   ret void
 }
 
+define void @lv_sv_space256(<256 x i1> addrspace(256)* %0, i64 %1) {
+; CHECK-LABEL: lv_sv_space256:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    lv.xs $a0 = $r1[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 0[$r0] = $a0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %2 = getelementptr inbounds <256 x i1>, <256 x i1> addrspace(256)* %0, i64 %1
+  %3 = load volatile <256 x i1>, <256 x i1> addrspace(256)* %2, align 32
+  store volatile <256 x i1> %3, <256 x i1>addrspace(256)* %0, align 32
+  ret void
+}
+
+define void @lv_sv_space257(<256 x i1> addrspace(257)* %0, i64 %1) {
+; CHECK-LABEL: lv_sv_space257:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    lv.s.xs $a0 = $r1[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 0[$r0] = $a0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %2 = getelementptr inbounds <256 x i1>, <256 x i1> addrspace(257)* %0, i64 %1
+  %3 = load volatile <256 x i1>, <256 x i1> addrspace(257)* %2, align 32
+  store volatile <256 x i1> %3, <256 x i1>addrspace(257)* %0, align 32
+  ret void
+}
+
 define void @lv_sv(<256 x i1> * %0, i64 %1) {
 ; CHECK-LABEL: lv_sv:
 ; CHECK:       # %bb.0: # %entry
@@ -810,5 +840,167 @@ define void @storeulong2(<2 x i64> %v, <2 x i64>* nocapture %p) {
 entry:
   %arrayidx = getelementptr inbounds <2 x i64>, <2 x i64>* %p, i64 1
   store <2 x i64> %v, <2 x i64>* %arrayidx, align 16
+  ret void
+}
+
+define void @lv_sv_space256_512(<512 x i1> addrspace(256)* %0, i64 %1) {
+; CHECK-LABEL: lv_sv_space256_512:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    slld $r1 = $r1, 6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r1 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv $a1 = 32[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv $a0 = 0[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 32[$r0] = $a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 0[$r0] = $a0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %2 = getelementptr inbounds <512 x i1>, <512 x i1> addrspace(256)* %0, i64 %1
+  %3 = load volatile <512 x i1>, <512 x i1> addrspace(256)* %2, align 32
+  store volatile <512 x i1> %3, <512 x i1>addrspace(256)* %0, align 32
+  ret void
+}
+
+define void @lv_sv_space257_512(<512 x i1> addrspace(257)* %0, i64 %1) {
+; CHECK-LABEL: lv_sv_space257_512:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    slld $r1 = $r1, 6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r1 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv.s $a1 = 32[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv.s $a0 = 0[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 32[$r0] = $a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 0[$r0] = $a0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %2 = getelementptr inbounds <512 x i1>, <512 x i1> addrspace(257)* %0, i64 %1
+  %3 = load volatile <512 x i1>, <512 x i1> addrspace(257)* %2, align 32
+  store volatile <512 x i1> %3, <512 x i1>addrspace(257)* %0, align 32
+  ret void
+}
+
+define void @lv_sv_space258_512(<512 x i1> addrspace(258)* %0, i64 %1) {
+; CHECK-LABEL: lv_sv_space258_512:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    slld $r1 = $r1, 6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r1 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv.s $a1 = 32[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv.s $a0 = 0[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 32[$r0] = $a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 0[$r0] = $a0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %2 = getelementptr inbounds <512 x i1>, <512 x i1> addrspace(258)* %0, i64 %1
+  %3 = load volatile <512 x i1>, <512 x i1> addrspace(258)* %2, align 32
+  store volatile <512 x i1> %3, <512 x i1>addrspace(258)* %0, align 32
+  ret void
+}
+
+define void @lv_sv_space256_1024(<1024 x i1> addrspace(256)* %0, i64 %1) {
+; CHECK-LABEL: lv_sv_space256_1024:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    slld $r1 = $r1, 7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r1 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv $a3 = 96[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv $a2 = 64[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv $a1 = 32[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv $a0 = 0[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 96[$r0] = $a3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 64[$r0] = $a2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 32[$r0] = $a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 0[$r0] = $a0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %2 = getelementptr inbounds <1024 x i1>, <1024 x i1> addrspace(256)* %0, i64 %1
+  %3 = load volatile <1024 x i1>, <1024 x i1> addrspace(256)* %2, align 32
+  store volatile <1024 x i1> %3, <1024 x i1>addrspace(256)* %0, align 32
+  ret void
+}
+
+define void @lv_sv_space257_1024(<1024 x i1> addrspace(257)* %0, i64 %1) {
+; CHECK-LABEL: lv_sv_space257_1024:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    slld $r1 = $r1, 7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r1 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv.s $a3 = 96[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv.s $a2 = 64[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv.s $a1 = 32[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv.s $a0 = 0[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 96[$r0] = $a3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 64[$r0] = $a2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 32[$r0] = $a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 0[$r0] = $a0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %2 = getelementptr inbounds <1024 x i1>, <1024 x i1> addrspace(257)* %0, i64 %1
+  %3 = load volatile <1024 x i1>, <1024 x i1> addrspace(257)* %2, align 32
+  store volatile <1024 x i1> %3, <1024 x i1>addrspace(257)* %0, align 32
+  ret void
+}
+
+define void @lv_sv_space258_1024(<1024 x i1> addrspace(258)* %0, i64 %1) {
+; CHECK-LABEL: lv_sv_space258_1024:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    slld $r1 = $r1, 7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addd $r1 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv.s $a3 = 96[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv.s $a2 = 64[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv.s $a1 = 32[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lv.s $a0 = 0[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 96[$r0] = $a3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 64[$r0] = $a2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 32[$r0] = $a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 0[$r0] = $a0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+entry:
+  %2 = getelementptr inbounds <1024 x i1>, <1024 x i1> addrspace(258)* %0, i64 %1
+  %3 = load volatile <1024 x i1>, <1024 x i1> addrspace(258)* %2, align 32
+  store volatile <1024 x i1> %3, <1024 x i1>addrspace(258)* %0, align 32
   ret void
 }
