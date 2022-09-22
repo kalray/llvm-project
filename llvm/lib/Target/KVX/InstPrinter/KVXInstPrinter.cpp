@@ -621,3 +621,13 @@ void KVXInstPrinter::printCacheLevelMod(const MCInst *MI, unsigned OpNo,
 
   O << ((I != 0) ? ".l2" : ".l1");
 }
+
+void KVXInstPrinter::printChannelMod(const MCInst *MI, unsigned OpNo,
+                                     raw_ostream &O) {
+  uint32_t I = MI->getOperand(OpNo).getImm();
+
+  if (I > 1)
+    report_fatal_error("Invalid channel value.");
+
+  O << ((I != 0) ? ".f" : ".b");
+}

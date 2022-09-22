@@ -533,6 +533,10 @@ KVX_BUILTIN(xloadsc1024, "Tx1024Tx1024&vCD*LiCcC*", "n", 4, "kv3-2", KVX_VARIANT
 KVX_BUILTIN(xstore256, "vTx256vCD*", "n", 2, "kv3-2", )
 KVX_BUILTIN(xstorec256, "vTx256vCD*LicC*", "n", 4, "kv3-2", KVX_LSUMASK)
 
+KVX_BUILTIN(xsendo, "vTx256cC*", "", 2, "kv3-2", KVX_SCHANNEL)
+KVX_BUILTIN(xrecvo, "Tx256cC*", "", 1, "kv3-2", KVX_RCHANNEL)
+KVX_BUILTIN(xsendrecvo, "Tx256Tx256cC*", "", 2, "kv3-2", KVX_SCHANNEL, KVX_RCHANNEL)
+
 #undef BUILTIN
 #undef NARY_BUILTIN
 #undef KVX_BUILTIN
