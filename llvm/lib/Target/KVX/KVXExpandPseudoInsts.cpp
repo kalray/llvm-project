@@ -1314,17 +1314,17 @@ static bool expandENDLOOP(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   return true;
 }
 
-static bool expandSWAPVOp(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
-                          MachineBasicBlock::iterator MBBI) {
-  bool StandAlone = MBBI->getOpcode() == KVX::SWAPVOp;
+static bool expandXSWAP256p(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
+                            MachineBasicBlock::iterator MBBI) {
+  bool StandAlone = MBBI->getOpcode() == KVX::XSWAP256p;
   assert((StandAlone || MBBI->getOpcode() == KVX::BUNDLE) &&
          "Unexpected pseudo");
   auto I = MBBI->getIterator();
   MachineBasicBlock::iterator InsertHere = MBBI;
-  if (!StandAlone) { // Search if we have a swapvo inside
+  if (!StandAlone) { // Search if we have a xswap256 inside
     auto E = MBBI->getParent()->instr_end();
     while (++I != E && I->isInsideBundle())
-      if (I->isPseudo() && I->getOpcode() == KVX::SWAPVOp)
+      if (I->isPseudo() && I->getOpcode() == KVX::XSWAP256p)
         break;
     if (I == E || !I->isInsideBundle())
       return false;
@@ -1344,13 +1344,13 @@ static bool expandSWAPVOp(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   unsigned MOVEFO = KVX::MOVEFOro;
 
   if (!KVX::QuadRegRegClass.contains(R))
-    report_fatal_error("First register of SWAPVOp (" + RName +
+    report_fatal_error("First register of XSWAP256p (" + RName +
                        "is not a QuadReg.");
 
   if (KVX::VectorRegERegClass.contains(V))
     MOVEFO = KVX::MOVEFOre;
   else if (!KVX::VectorRegORegClass.contains(V))
-    report_fatal_error("Second register of SWAPVOp (" + VName +
+    report_fatal_error("Second register of XSWAP256p (" + VName +
                        ") is not a VectorReg.");
 
   auto V_hi = TRI->getSubReg(V, KVX::sub_b1);
@@ -1604,9 +1604,9 @@ bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
     return false;
 
   switch (MBBI->getOpcode()) {
-  case KVX::SWAPVOp:
+  case KVX::XSWAP256p:
   case KVX::BUNDLE:
-    return expandSWAPVOp(TII, MBB, MBBI);
+    return expandXSWAP256p(TII, MBB, MBBI);
   // Must expand LOOPDO_END label to add NOP if last bundle is a branch
   // instruction. This is done after PRE_EMIT when all CFG optimizations have
   // been run.

@@ -59,7 +59,7 @@ define i32 @main() {
 ; CHECK-NEXT:    ;;
 entry:
   %0 = tail call <256 x i1> @llvm.kvx.xmoveoto(<4 x i64> <i64 0, i64 1, i64 2, i64 3>)
-  %1 = tail call { <4 x i64>, <256 x i1> } @llvm.kvx.xswapvo(<4 x i64> <i64 1, i64 2, i64 3, i64 4>, <256 x i1> undef)
+  %1 = tail call { <4 x i64>, <256 x i1> } @llvm.kvx.xswap256(<4 x i64> <i64 1, i64 2, i64 3, i64 4>, <256 x i1> undef)
   %2 = extractvalue { <4 x i64>, <256 x i1> } %1, 1
   %3 = tail call <4 x i64> @llvm.kvx.xmovefo(<256 x i1> %0)
   %vecext = extractelement <4 x i64> %3, i32 0
@@ -76,6 +76,6 @@ entry:
   ret i32 0
 }
 declare <256 x i1> @llvm.kvx.xmoveoto(<4 x i64>)
-declare { <4 x i64>, <256 x i1> } @llvm.kvx.xswapvo(<4 x i64>, <256 x i1>)
+declare { <4 x i64>, <256 x i1> } @llvm.kvx.xswap256(<4 x i64>, <256 x i1>)
 declare <4 x i64> @llvm.kvx.xmovefo(<256 x i1>)
 declare i32 @printf(i8* nocapture readonly, ...)

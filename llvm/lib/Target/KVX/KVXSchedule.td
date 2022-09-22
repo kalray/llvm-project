@@ -104,7 +104,7 @@ def LSU_AUXW_ALCLR : InstrItinClass;
 def LSU_AUXW_X_ALCLR : InstrItinClass;
 def LSU_AUXW_Y_ALCLR : InstrItinClass;
 
-def SWAPVO : InstrItinClass;
+def XSWAP256 : InstrItinClass;
 
 defvar ALL_ITIN_CLASSES = [
   ALL, BCU, BCU_TINY_TINY_MAU_XNOP, BCU_CRRP_CRWL_CRWH, BCU_TINY_AUXW_CRRP,
@@ -540,9 +540,9 @@ list<InstrItinData> ItinList = [
     ], [5, 2, 2], [], 3
   >,
   // TODO : add OperandLatencies here as well
-  // We need to expand SWAPVOp pseudos after packetizer. To correctly schedule/bundle them,
+  // We need to expand XSWAP256p pseudos after packetizer. To correctly schedule/bundle them,
   // we need a dedicated scheduling itinerary for it.
-  InstrItinData<SWAPVO, [
+  InstrItinData<XSWAP256, [
     // moveto E == ALU_LITE_CRWL
     InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
@@ -657,15 +657,15 @@ defvar MAU_RT = MAU_RU;
 
 defvar MAU_AUXR_RT = MAU_RU # AUXR_RU;
 
-// Dedicated reservation table for SWAPVO: moveto + moveto + movefo
-defvar SWAPVO_RT = ALU_LITE_CRWL_RT # ALU_LITE_CRWH_RT # BCU_TINY_AUXW_CRRP_RT;
+// Dedicated reservation table forXSWAP256: moveto + moveto + movefo
+defvar XSWAP256_RT = ALU_LITE_CRWL_RT # ALU_LITE_CRWH_RT # BCU_TINY_AUXW_CRRP_RT;
 
 foreach itinClass = ALL_ITIN_CLASSES in {
   def itinClass # _SRW: SchedWrite;
 }
 
-def SWAPVO_SRW1: SchedWrite;
-def SWAPVO_SRW2: SchedWrite;
+def XSWAP256_SRW1: SchedWrite;
+def XSWAP256_SRW2: SchedWrite;
 
 // Custom class to make the writeLatency explicit, and specify that we have
 // a fully pipelined model.
@@ -685,18 +685,18 @@ multiclass KVXItinWriteRes <InstrItinClass itinClass, int writeLatency,
     def _IRW: ItinRW<[srw], [itinClass]>;
 }
 
-// Handling SWAPVO separately
+// Handling XSWAP256 separately
 let SchedModel = KVXSchedMachineModel in {
   let ResourceCycles = []<int> in {
     let Latency = 1 in
     let NumMicroOps = 1 in // arbitrary cut in 1+2
-      def SWAPVO_WR1: WriteRes<SWAPVO_SRW1, SWAPVO_RT>; // 1st operand
+      def XSWAP256_WR1: WriteRes<XSWAP256_SRW1,XSWAP256_RT>; // 1st operand
     let Latency = 3 in
     let NumMicroOps = 2 in
       // Note: all resources are consumed by 1st operand
-      def SWAPVO_WR2: WriteRes<SWAPVO_SRW2, []>; // 2nd operand
+      def XSWAP256_WR2: WriteRes<XSWAP256_SRW2, []>; // 2nd operand
   }
-  def SWAPVO_IRW: ItinRW<[SWAPVO_SRW1, SWAPVO_SRW2], [SWAPVO]>;
+  def XSWAP256_IRW: ItinRW<[XSWAP256_SRW1,XSWAP256_SRW2], [XSWAP256]>;
 }
 
 /* Binding itinerary classes to reservation table + write latency */

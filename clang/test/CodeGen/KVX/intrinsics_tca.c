@@ -52,21 +52,21 @@ typedef long __attribute__((__vector_size__(32))) v4i64_t;
 // CHECK-NEXT:    [[TMP42:%.*]] = call <256 x i1> @llvm.kvx.xfscalewv(<256 x i1> [[TMP18]], i32 7, i32 0, i32 0)
 // CHECK-NEXT:    [[TMP43:%.*]] = call <256 x i1> @llvm.kvx.xfnarrowwhv(<512 x i1> [[TMP40]], i32 0, i32 1)
 // CHECK-NEXT:    [[TMP44:%.*]] = call <256 x i1> @llvm.kvx.xfscalewv(<256 x i1> [[TMP42]], i32 0, i32 0, i32 1)
-// CHECK-NEXT:    [[TMP45:%.*]] = call { <4 x i64>, <256 x i1> } @llvm.kvx.xswapvo(<4 x i64> [[TMP10]], <256 x i1> [[TMP44]])
+// CHECK-NEXT:    [[TMP45:%.*]] = call { <4 x i64>, <256 x i1> } @llvm.kvx.xswap256(<4 x i64> [[TMP10]], <256 x i1> [[TMP44]])
 // CHECK-NEXT:    [[TMP46:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP45]], 1
 // CHECK-NEXT:    [[TMP47:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP45]], 0
 // CHECK-NEXT:    [[TMP48:%.*]] = call <256 x i1> @llvm.kvx.xfscalewv(<256 x i1> [[TMP46]], i32 7, i32 0, i32 1)
-// CHECK-NEXT:    [[TMP49:%.*]] = addrspacecast <256 x i1>* [[V]] to <256 x i1> addrspace(258)*
-// CHECK-NEXT:    [[TMP50:%.*]] = load <256 x i1>, <256 x i1> addrspace(258)* [[TMP49]], align 32
+// CHECK-NEXT:    [[TMP49:%.*]] = bitcast <256 x i1>* [[V]] to i8*
+// CHECK-NEXT:    [[TMP50:%.*]] = call <256 x i1> @llvm.kvx.lv(i8* nonnull [[TMP49]], i32 1)
 // CHECK-NEXT:    [[ARRAYIDX9:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 4
 // CHECK-NEXT:    [[TMP51:%.*]] = bitcast <256 x i1>* [[ARRAYIDX9]] to i8*
-// CHECK-NEXT:    [[TMP52:%.*]] = call <1024 x i1> @llvm.kvx.xload1024q(<1024 x i1> [[TMP41]], i8* nonnull [[TMP51]], i32 3, i32 1)
+// CHECK-NEXT:    [[TMP52:%.*]] = call <1024 x i1> @llvm.kvx.lvc(<1024 x i1> [[TMP41]], i8* nonnull [[TMP51]], i32 0, i32 1)
 // CHECK-NEXT:    [[ARRAYIDX10:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 5
 // CHECK-NEXT:    [[TMP53:%.*]] = bitcast <256 x i1>* [[ARRAYIDX10]] to i8*
-// CHECK-NEXT:    [[TMP54:%.*]] = call <1024 x i1> @llvm.kvx.xloadc1024q(<1024 x i1> [[TMP52]], i8* nonnull [[TMP53]], i64 [[A:%.*]], i32 2, i32 0, i32 6)
-// CHECK-NEXT:    store <256 x i1> [[TMP50]], <256 x i1>* [[V]], align 32
+// CHECK-NEXT:    [[TMP54:%.*]] = call <1024 x i1> @llvm.kvx.lvc.cond(<1024 x i1> [[TMP52]], i8* nonnull [[TMP53]], i64 [[A:%.*]], i32 0, i32 0, i32 6)
+// CHECK-NEXT:    call void @llvm.kvx.sv(i8* nonnull [[TMP49]], <256 x i1> [[TMP50]])
 // CHECK-NEXT:    [[TMP55:%.*]] = bitcast <256 x i1>* [[ARRAYIDX4]] to i8*
-// CHECK-NEXT:    call void @llvm.kvx.xstorec256(<256 x i1> [[TMP50]], i8* nonnull [[TMP55]], i64 1, i32 7)
+// CHECK-NEXT:    call void @llvm.kvx.sv.cond(i8* nonnull [[TMP55]], <256 x i1> [[TMP50]], i64 1, i32 7)
 // CHECK-NEXT:    store volatile <512 x i1> [[TMP40]], <512 x i1>* [[W]], align 32, [[TBAA8]]
 // CHECK-NEXT:    store volatile <1024 x i1> [[TMP54]], <1024 x i1>* [[M]], align 32, [[TBAA6]]
 // CHECK-NEXT:    ret <4 x i64> [[TMP47]]
@@ -124,12 +124,12 @@ v4i64_t test_tca_builtins(long a, long b, long c, long d, volatile __kvx_x256 *v
   lv = __builtin_kvx_xfscalewv(lv, ".rn..relu");
   vt = __builtin_kvx_xswap256(&lv, vt);
   lv = __builtin_kvx_xfscalewv(lv, "...relu");
-  lv = __builtin_kvx_xloadc256(lv, &v[3], a, ".us.even");
-  lv2 = __builtin_kvx_xload256(v, ".us");
-  lm = __builtin_kvx_xload1024q3(lm, &v[4], ".us");
-  lm = __builtin_kvx_xloadc1024q2(lm, &v[5], a, ".u.odd");
-  __builtin_kvx_xstore256(lv2, &v[0]);
-  __builtin_kvx_xstorec256(lv2, &v[1], 1, ".even");
+  lv = __builtin_kvx_lv_cond(lv, &v[3], a, ".s.even");
+  lv2 = __builtin_kvx_lv(v, ".s");
+  lm = __builtin_kvx_lvc(lm, &v[4], ".c0.s");
+  lm = __builtin_kvx_lvc_cond(lm, &v[5], a, ".c0.odd");
+  __builtin_kvx_sv(&v[0], lv2);
+  __builtin_kvx_sv_cond(&v[1], lv2, 1, ".even");
   w[0] = lw;
   m[0] = lm;
   return vt;

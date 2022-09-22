@@ -204,24 +204,67 @@ multiclass MC_STORES<string OpcStr, RegisterClass RC> {
 }
 
 multiclass MC_LV<string OpcStr> {
-  defm ri10  : I <OpcStr, LSU_LOAD, [], [SpeculateMod], [Signed10, SingleReg], [], [VectorReg]>;
-  defm ri37  : I <OpcStr, LSU_X_LOAD, [], [SpeculateMod], [Signed37, SingleReg], [], [VectorReg]>;
-  defm ri64  : I <OpcStr, LSU_Y_LOAD, [], [SpeculateMod], [Signed37, SingleReg], [], [VectorReg]>;
-
+  defm ri10  : I <OpcStr, LSU_LOAD, [], [SpeculateMod], [Signed10, SingleReg], [], [VectorReg], 0,
+                  [(set v256i1:$r, (int_kvx_lv  (add SingleReg:$mem, Signed10:$off), SpeculateMod:$mod0))]>;
+  defm ri37  : I <OpcStr, LSU_X_LOAD, [], [SpeculateMod], [Signed37, SingleReg], [], [VectorReg], 0,
+                  [(set v256i1:$r, (int_kvx_lv  (add SingleReg:$mem, Signed37:$off), SpeculateMod:$mod0))]>;
+  defm ri64  : I <OpcStr, LSU_Y_LOAD, [], [SpeculateMod], [Signed37, SingleReg], [], [VectorReg], 0,
+                  [(set v256i1:$r, (int_kvx_lv  (add SingleReg:$mem, Wrapped64:$off), SpeculateMod:$mod0))]>;
   defm rr    : I <OpcStr, LSU_LOAD, [], [SpeculateMod, DoscaleMod], [SingleReg, SingleReg], [], [VectorReg]>;
-  defm rrc   : I <OpcStr, LSU_LOAD, [], [SpeculateMod], [SingleReg], [ScalarcondMod, SingleReg], [VectorReg]>;
-  defm ri27c : I <OpcStr, LSU_X_LOAD, [], [SpeculateMod], [Signed27, SingleReg], [ScalarcondMod, SingleReg], [VectorReg]>;
-  defm ri54c : I <OpcStr, LSU_Y_LOAD, [], [SpeculateMod], [Signed54, SingleReg], [ScalarcondMod, SingleReg], [VectorReg]>;
 
-  defm ri10cs : I <OpcStr, LSU_LOAD, [], [ColumnMod, SpeculateMod], [Signed10, SingleReg], [], [MatrixReg], 1>;
-  defm ri37cs : I <OpcStr, LSU_X_LOAD, [], [ColumnMod, SpeculateMod], [Signed37, SingleReg], [], [MatrixReg], 1>;
-  defm ri64cs : I <OpcStr, LSU_Y_LOAD, [], [ColumnMod, SpeculateMod], [Wrapped64, SingleReg], [], [MatrixReg], 1>;
+  defm ri27c : I <OpcStr, LSU_X_LOAD, [], [SpeculateMod], [Signed27, SingleReg], [ScalarcondMod, SingleReg], [VectorReg], 1,
+                  [(set v256i1:$r, (int_kvx_lv_cond VectorReg:$z, (add SingleReg:$mem, Signed27:$off),
+                                    i64:$val, SpeculateMod:$mod0, ScalarcondMod:$cond))]>;
+  defm ri54c : I <OpcStr, LSU_Y_LOAD, [], [SpeculateMod], [Signed54, SingleReg], [ScalarcondMod, SingleReg], [VectorReg], 1,
+                  [(set v256i1:$r, (int_kvx_lv_cond VectorReg:$z, (add SingleReg:$mem, Signed54:$off),
+                                    i64:$val, SpeculateMod:$mod0, ScalarcondMod:$cond))]>;
+  defm rrc   : I <OpcStr, LSU_LOAD, [], [SpeculateMod], [SingleReg], [ScalarcondMod, SingleReg], [VectorReg], 1,
+                  [(set v256i1:$r, (int_kvx_lv_cond VectorReg:$z, SingleReg:$mem,
+                                    i64:$val, SpeculateMod:$mod0, ScalarcondMod:$cond))]>;
 
+  defm ri10cs : I <OpcStr, LSU_LOAD, [], [ColumnMod, SpeculateMod], [Signed10, SingleReg], [], [MatrixReg], 1,
+                  [(set v1024i1:$r, (int_kvx_lvc MatrixReg:$z, (add SingleReg:$mem, Signed10:$off),
+                                    ColumnMod:$mod0, SpeculateMod:$mod1))]>;
+  defm ri37cs : I <OpcStr, LSU_X_LOAD, [], [ColumnMod, SpeculateMod], [Signed37, SingleReg], [], [MatrixReg], 1,
+                  [(set v1024i1:$r, (int_kvx_lvc MatrixReg:$z, (add SingleReg:$mem, Signed37:$off),
+                                    ColumnMod:$mod0, SpeculateMod:$mod1))]>;
+  defm ri64cs : I <OpcStr, LSU_Y_LOAD, [], [ColumnMod, SpeculateMod], [Wrapped64, SingleReg], [], [MatrixReg], 1,
+                  [(set v1024i1:$r, (int_kvx_lvc MatrixReg:$z, (add SingleReg:$mem, Wrapped64:$off),
+                                    ColumnMod:$mod0, SpeculateMod:$mod1))]>;
   defm rrcs : I <OpcStr, LSU_LOAD, [], [ColumnMod, SpeculateMod, DoscaleMod], [SingleReg, SingleReg], [], [MatrixReg], 1>;
+
+  defm ri27ccs : I <OpcStr, LSU_X_LOAD, [], [ColumnMod, SpeculateMod], [Signed27, SingleReg], [ScalarcondMod, SingleReg], [MatrixReg], 1,
+                  [(set v1024i1:$r, (int_kvx_lvc_cond MatrixReg:$z, (add SingleReg:$mem, Signed27:$off),
+                                    i64:$val, ColumnMod:$mod0, SpeculateMod:$mod1, ScalarcondMod:$cond))]>;
+
+  defm ri54ccs : I <OpcStr, LSU_Y_LOAD, [], [ColumnMod, SpeculateMod], [Signed54, SingleReg], [ScalarcondMod, SingleReg], [MatrixReg], 1,
+                  [(set v1024i1:$r, (int_kvx_lvc_cond v1024i1:$z, (add SingleReg:$mem, Signed54:$off),
+                                    i64:$val, ColumnMod:$mod0, SpeculateMod:$mod1, ScalarcondMod:$cond))]>;
   defm rrccs : I <OpcStr, LSU_LOAD, [], [ColumnMod, SpeculateMod], [SingleReg], [ScalarcondMod, SingleReg], [MatrixReg]>;
-  defm ri27ccs : I <OpcStr, LSU_X_LOAD, [], [ColumnMod, SpeculateMod], [Signed27, SingleReg], [ScalarcondMod, SingleReg], [MatrixReg]>;
-  defm ri54ccs : I <OpcStr, LSU_Y_LOAD, [], [ColumnMod, SpeculateMod], [Signed54, SingleReg], [ScalarcondMod, SingleReg], [MatrixReg]>;
 }
+
+multiclass MC_SV <string OpcStr> {
+  defm ri10 : I <OpcStr, LSU_CRRP_STORE, [VectorReg], [], [Signed10, SingleReg], [], [], 0,
+                 [(int_kvx_sv  (add i64:$mem, Signed10:$off), v256i1:$op0)]>;
+
+  defm ri37 : I <OpcStr, LSU_CRRP_X_STORE, [VectorReg], [], [Signed10, SingleReg], [], [], 0,
+                 [(int_kvx_sv  (add i64:$mem, Signed37:$off), v256i1:$op0)]>;
+
+  defm ri64 : I <OpcStr, LSU_CRRP_Y_STORE, [VectorReg], [], [Signed10, SingleReg], [], [], 0,
+                 [(int_kvx_sv  (add i64:$mem, Wrapped64:$off), v256i1:$op0)]>;
+
+  defm rr : I <OpcStr, LSU_CRRP_STORE, [VectorReg], [DoscaleMod], [SingleReg, SingleReg]>;
+
+  defm ri27c : I <OpcStr, LSU_CRRP_X_STORE, [VectorReg], [], [Signed27, SingleReg], [ScalarcondMod, SingleReg], [], 0,
+                 [(int_kvx_sv_cond  (add i64:$mem, Signed27:$off), v256i1:$op0, i64:$val, ScalarcondMod:$cond)]>;
+
+  defm ri54c : I <OpcStr, LSU_CRRP_Y_STORE, [VectorReg], [], [Signed54, SingleReg], [ScalarcondMod, SingleReg], [], 0,
+                 [(int_kvx_sv_cond  (add i64:$mem, Signed54:$off), v256i1:$op0, i64:$val, ScalarcondMod:$cond)]>;
+
+  defm rrc : I <OpcStr, LSU_CRRP_STORE, [VectorReg], [], [SingleReg], [ScalarcondMod, SingleReg], [], 0,
+                 [(int_kvx_sv_cond  i64:$mem, v256i1:$op0, i64:$val, ScalarcondMod:$cond)]>;
+}
+
 class KVX_INSTRUCTION
   <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
   : Instruction {
@@ -453,55 +496,6 @@ let Size = 12 in
 class LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_REGISTERU_TRIPLE
   <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
   : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
-
-// 1 insn(s):
-// SV
-let Size = 4 in
-class SIGNED10_REGISTERZ_REGISTERE_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_CRRP_STORE>;
-
-// 1 insn(s):
-// SV
-let Size = 8 in
-class UPPER27_LOWER10_REGISTERZ_REGISTERE_DOUBLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_CRRP_X_STORE>;
-
-// 1 insn(s):
-// SV
-let Size = 12 in
-class EXTEND27_UPPER27_LOWER10_REGISTERZ_REGISTERE_TRIPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_CRRP_Y_STORE>;
-
-// 1 insn(s):
-// SV
-let Size = 4 in
-class DOSCALE_REGISTERY_REGISTERZ_REGISTERE_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_CRRP_STORE>;
-
-// 1 insn(s):
-// SV
-let Size = 4 in
-class LSUCOND_REGISTERY_REGISTERZ_REGISTERE_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_CRRP_STORE>;
-
-// 1 insn(s):
-// SV
-let Size = 8 in
-class LSUCOND_REGISTERY_OFFSET27_REGISTERZ_REGISTERE_DOUBLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_CRRP_X_STORE>;
-
-// 1 insn(s):
-// SV
-let Size = 12 in
-class LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_REGISTERE_TRIPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_CRRP_Y_STORE>;
 
 // 2 insn(s):
 // ALCLRW, ALCLRD

@@ -15,7 +15,7 @@ def: Pat<(int_kvx_tlbwrite), (TLBWRITE)>;
 def GETp : KVX_PSEUDO_W_SCHEDINFO<(outs SingleReg:$dst), (ins Sysnumber:$param), [], BCU>;
 
 let Constraints = "$vIn = $vOut, $qIn = $qOut" in
-def SWAPVOp : KVX_PSEUDO_W_SCHEDINFO<(outs QuadReg:$qOut, VectorReg:$vOut), (ins QuadReg:$qIn, VectorReg:$vIn),[], SWAPVO>;
+def XSWAP256p : KVX_PSEUDO_W_SCHEDINFO<(outs QuadReg:$qOut, VectorReg:$vOut), (ins QuadReg:$qIn, VectorReg:$vIn),[], XSWAP256>;
 
 // Intermediary step from IR -> loopdo
 let hasSideEffects = 1, isNotDuplicable=1, hasNoSchedulingInfo = 1, Defs = [LC,LE,LS] in
@@ -564,23 +564,27 @@ def: Pat<(int_kvx_xbuildfvw v256i1:$v0, v256i1:$v1),
                 (v256i1 VectorReg:$v0), (i32 sub_v0),
                 (v256i1 VectorReg:$v1), (i32 sub_v1))>;
 
-// Vector conditional load
-// TODO: Allow all addressing modes.
-def : Pat<(v256i1(int_kvx_xloadc256 VectorReg:$z, SingleReg:$mem, SingleReg:$val, SpeculateMod:$mod0, ScalarcondMod:$cond)),
-         (LVrrc SingleReg:$mem, SpeculateMod:$mod0, VectorReg:$z, ScalarcondMod:$cond, SingleReg:$val)>;
+def : Pat<(v256i1(int_kvx_lv (add i64:$mem, (shl i64:$off, (i64 8))), SpeculateMod:$mod0)),
+          (LVrr SingleReg:$off, SingleReg:$mem, SpeculateMod:$mod0, 1)>;
 
-def : Pat<(v1024i1(int_kvx_xload1024q v1024i1:$io, SingleReg:$base, ColumnMod:$a1, SpeculateMod:$spec)),
-         (LVri10cs (i64 0), SingleReg:$base, ColumnMod:$a1, SpeculateMod:$spec, MatrixReg:$io)>;
+def : Pat<(v256i1(int_kvx_lv (add i64:$mem, i64:$off), SpeculateMod:$mod0)),
+          (LVrr SingleReg:$off, SingleReg:$mem, SpeculateMod:$mod0, 0)>;
 
-def : Pat<(v1024i1(int_kvx_xloadc1024q MatrixReg:$z, SingleReg:$mem, SingleReg:$val, ColumnMod:$mod0, SpeculateMod:$mod1, ScalarcondMod:$cond)),
-         (LVrrccs SingleReg:$mem, ColumnMod:$mod0, SpeculateMod:$mod1, MatrixReg:$z, ScalarcondMod:$cond, SingleReg:$val)>;
+def : Pat<(v256i1(int_kvx_lv i64:$mem, SpeculateMod:$mod0)),
+          (LVri10 0, SingleReg:$mem, SpeculateMod:$mod0)>;
 
-def : Pat<(int_kvx_xstorec256 VectorReg:$val, i64:$base, i64:$cond, ScalarcondMod:$scac),
-          (SVrrc SingleReg:$base, VectorReg:$val, ScalarcondMod:$scac, SingleReg:$cond)>;
+def : Pat<(v1024i1(int_kvx_lvc MatrixReg:$z, (add i64:$mem, (shl i64:$off, (i64 8))), ColumnMod:$mod0, SpeculateMod:$mod1)),
+          (LVrrcs SingleReg:$off, SingleReg:$mem, ColumnMod:$mod0, SpeculateMod:$mod1, 1, MatrixReg:$z)>;
+
+def : Pat<(v1024i1(int_kvx_lvc MatrixReg:$z, (add i64:$mem, i64:$off), ColumnMod:$mod0, SpeculateMod:$mod1)),
+          (LVrrcs SingleReg:$off, SingleReg:$mem, ColumnMod:$mod0, SpeculateMod:$mod1, 0, MatrixReg:$z)>;
+
+def : Pat<(v1024i1(int_kvx_lvc MatrixReg:$z, i64:$mem, ColumnMod:$mod0, SpeculateMod:$mod1)),
+          (LVri10cs 0, SingleReg:$mem, ColumnMod:$mod0, SpeculateMod:$mod1, MatrixReg:$z)>;
 
 // atomic register copy/shift operations
-def: Pat<(int_kvx_xswapvo QuadReg:$r, VectorReg:$v),
-         (SWAPVOp QuadReg:$r, VectorReg:$v)>;
+def: Pat<(int_kvx_xswap256 QuadReg:$r, VectorReg:$v),
+         (XSWAP256p QuadReg:$r, VectorReg:$v)>;
 
 def: Pat<(int_kvx_xaccess512o WideReg:$a2a3, Unsigned6:$a4), (ALIGNOreroi (EXTRACT_SUBREG WideReg:$a2a3, sub_v0), (EXTRACT_SUBREG WideReg:$a2a3, sub_v1), Unsigned6:$a4)>;
 def: Pat<(int_kvx_xaccess512o WideReg:$a2a3, Unsigned6:$a4), (ALIGNOrorei (EXTRACT_SUBREG WideReg:$a2a3, sub_v0), (EXTRACT_SUBREG WideReg:$a2a3, sub_v1), Unsigned6:$a4)>;
@@ -960,9 +964,6 @@ defm : FMMAS222W_CV1<faddcont, FMMA212W, int_kvx_fmma222w>, Requires<[IsV1]>;
 defm : FMMAS222W_CV1<fsubcont, FMMS212W, int_kvx_fmms222w>, Requires<[IsV1]>;
 // ----------------------- To fix END  -----------------------
 
-//===----------------------------------------------------------------------===//
-// ACB 4.8 TCA intrinsics. Should remove them in ACB 4.10
-//===----------------------------------------------------------------------===//
 def: Pat<(int_kvx_alignov VectorRegE:$a2, VectorRegO:$a3, Unsigned6:$a4), (ALIGNOreroi $a2, $a3, Unsigned6:$a4)>;
 def: Pat<(int_kvx_alignov VectorRegO:$a2, VectorRegE:$a3, Unsigned6:$a4), (ALIGNOrorei $a2, $a3, Unsigned6:$a4)>;
 def: Pat<(int_kvx_alignov VectorRegE:$a2, VectorRegO:$a3, SingleReg:$a4), (ALIGNOreror $a2, $a3, $a4)>;
@@ -972,6 +973,3 @@ def: Pat<(int_kvx_alignv VectorRegE:$a2, VectorRegO:$a3, Unsigned6:$a4), (ALIGNV
 def: Pat<(int_kvx_alignv VectorRegO:$a2, VectorRegE:$a3, Unsigned6:$a4), (ALIGNVrorei $a2, $a3, Unsigned6:$a4)>;
 def: Pat<(int_kvx_alignv VectorRegE:$a2, VectorRegO:$a3, SingleReg:$a4), (ALIGNVreror $a2, $a3, $a4)>;
 def: Pat<(int_kvx_alignv VectorRegO:$a2, VectorRegE:$a3, SingleReg:$a4), (ALIGNVrorer $a2, $a3, $a4)>;
-
-def : Pat<(int_kvx_sv_cond i64:$base, VectorReg:$val, i64:$cond, ScalarcondMod:$scac),
-          (SVrrc SingleReg:$base, VectorReg:$val, ScalarcondMod:$scac, SingleReg:$cond)>;

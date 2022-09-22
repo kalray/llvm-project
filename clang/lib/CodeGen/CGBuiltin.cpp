@@ -17904,41 +17904,28 @@ static matrix_transpose_t KVX_getMatrixTransposeModifier(const StringRef &Str) {
       .Default(MTRANSPOSE_INVALID);
 }
 
-static Value *KVX_emit_xswap256(CodeGenFunction &CGF, const CallExpr *E,
-                                bool ACB_4_8_isSwapvo = false) {
+static Value *KVX_emit_xswap256(CodeGenFunction &CGF, const CallExpr *E) {
   if (E->getNumArgs() != 2) {
-    CGF.CGM.Error(E->getBeginLoc(), "swapfwo expects two arguments.");
+    CGF.CGM.Error(E->getBeginLoc(), "xswap256 expects two arguments.");
     return nullptr;
   }
 
-  int TCAPos = ACB_4_8_isSwapvo ? 1 : 0;
-  int GPRPos = ACB_4_8_isSwapvo ? 0 : 1;
+  const int TCAPos = 0;
+  const int GPRPos = 1;
 
   Address AddrTCA = CGF.EmitPointerWithAlignment(E->getArg(TCAPos));
   Value *TCAval = CGF.Builder.CreateLoad(AddrTCA);
 
-  Value *GPRval;
-  Address *AddrGPR;
-  if (ACB_4_8_isSwapvo) {
-    AddrGPR = new Address(CGF.EmitPointerWithAlignment(E->getArg(GPRPos)));
-    GPRval = CGF.Builder.CreateLoad(*AddrGPR);
-  } else
-    GPRval = CGF.EmitScalarExpr(E->getArg(GPRPos));
+  Value *GPRval = CGF.EmitScalarExpr(E->getArg(GPRPos));
 
   SmallVector<Value *, 4> Args;
   Args.push_back(GPRval);
   Args.push_back(TCAval);
 
-  auto *R = CGF.Builder.CreateCall(CGF.CGM.getIntrinsic(Intrinsic::kvx_xswapvo),
-                                   Args);
+  auto *R = CGF.Builder.CreateCall(
+      CGF.CGM.getIntrinsic(Intrinsic::kvx_xswap256), Args);
   CGF.Builder.CreateStore(CGF.Builder.CreateExtractValue(R, 1), AddrTCA);
 
-  if (ACB_4_8_isSwapvo) {
-    auto *S =
-        CGF.Builder.CreateStore(CGF.Builder.CreateExtractValue(R, 0), *AddrGPR);
-    delete AddrGPR;
-    return S;
-  }
   return CGF.Builder.CreateExtractValue(R, 0);
 }
 
@@ -17986,8 +17973,7 @@ static Value *KVX_emit_xload_store(unsigned PositionMods, bool IsCond,
                                    unsigned IntrinsicID, CodeGenFunction &CGF,
                                    const CallExpr *E,
                                    bool EnforceUPrefix = false, int Column = -1,
-                                   int ACB_4_8_ColumnPos = -1) {
-  bool isLvc = ACB_4_8_ColumnPos >= 0;
+                                   bool isLvc = false) {
   unsigned NumArgs = E->getNumArgs();
   if (NumArgs != PositionMods + 1) {
     CGF.CGM.Error(E->getBeginLoc(), "Incorrect number of arguments to builtin");
@@ -17996,9 +17982,7 @@ static Value *KVX_emit_xload_store(unsigned PositionMods, bool IsCond,
   SmallVector<Value *, 8> Args;
 
   for (unsigned I = 0; I < PositionMods; I++) {
-    // Column mod is given explicitly in ACB 4.8. Must skip it as we handle
-    // it separately in ACB 4.9.
-    if (isLvc && I == (unsigned)ACB_4_8_ColumnPos)
+    if (isLvc)
       continue;
     Args.push_back(CGF.EmitScalarExpr(E->getArg(I)));
   }
@@ -18530,6 +18514,161 @@ static Value *KVX_emitNaryBuiltinCore(unsigned N, CodeGenFunction &CGF,
   return CGF.Builder.CreateCall(Callee, Args);
 }
 
+struct KvxModifier : StringMap<int> {
+  static const int INVALID_MODIFIER = -1;
+  inline int getModifierValue(const StringRef &M) const {
+    const auto V = find(M);
+    return (V == end()) ? INVALID_MODIFIER : V->second;
+  }
+
+  KvxModifier(const std::vector<std::pair<StringRef, int>> Vals) {
+    for (const auto &V : Vals)
+      insert(V);
+  }
+};
+
+static const KvxModifier
+    KVX_COLUMN({{"c0", 0}, {"c1", 1}, {"c2", 2}, {"c3", 3}});
+
+static const KvxModifier
+    KVX_ROUNDING({{"", 7}, {"rn", 0}, {"r1", 1}, {"rd", 2}, {"rz", 3}});
+
+static const KvxModifier KVX_LSUCOND({{"dnez", 0},
+                                      {"deqz", 1},
+                                      {"dltz", 2},
+                                      {"dgez", 3},
+                                      {"dlez", 4},
+                                      {"dgtz", 5},
+                                      {"odd", 6},
+                                      {"even", 7},
+                                      {"wnez", 8},
+                                      {"weqz", 9},
+                                      {"wltz", 10},
+                                      {"wgez", 11},
+                                      {"wlez", 12},
+                                      {"wgtz", 13}});
+
+static const KvxModifier KVX_SPECULATE({{"", 0}, {"s", 1}});
+
+static const KvxModifier KVX_VARIANT({{"", 0}, {"s", 1}, {"u", 2}, {"us", 3}});
+
+static const KvxModifier
+    KvxLdStAddrSpaceMod({{".u", 256}, {".us", 257}, {".s", 258}});
+
+typedef const std::vector<KvxModifier> KvxModifiers;
+
+static void KVX_emitInvalidIntrinsicForCPU(CodeGenModule &CGM,
+                                           const CallExpr *E,
+                                           const llvm::StringRef &cpus,
+                                           const llvm::StringRef &cpu) {
+  unsigned diagID =
+      CGM.getDiags().getCustomDiagID(DiagnosticsEngine::Warning, "%0");
+  std::string Err = "This builtin is restricted to use with the cpu(s) '" +
+                    cpus.str() +
+                    "' where the module is being compiled to: " + cpu.str();
+  CGM.getDiags().Report(E->getBeginLoc(), diagID) << Err;
+  // << "This builtin is restricted to use with the cpu(s) '" << cpus.str()
+  // << "' where the module is being compiled to: " << cpu.str();
+}
+
+void KVX_ModifierError(CodeGenModule &CGM, const KvxModifiers &Modifiers,
+                       const SourceLocation &Loc) {
+  std::string ErrorM = "This builtin accept a modifier string composed by:";
+  for (const auto &Mod : Modifiers) {
+    ErrorM += " [";
+    std::string InnerPrefix = "";
+    if (Mod.getModifierValue("") != KvxModifier::INVALID_MODIFIER) {
+      ErrorM += "''";
+      InnerPrefix = ", ";
+    }
+    for (const auto &Map : Mod) {
+      ErrorM += InnerPrefix + "'." + Map.first().str() + "'";
+      InnerPrefix = ", ";
+    }
+    ErrorM += "]";
+    if (*Modifiers.rbegin() != Mod)
+      ErrorM += ",";
+  }
+  CGM.Error(Loc, ErrorM);
+}
+
+static Value *KVX_emit(const unsigned NumArgs, CodeGenFunction &CGF,
+                       const CallExpr *E, const unsigned IntrinsicID,
+                       KvxModifiers &Modifiers, const StringRef &CPUSstr) {
+
+  // Double check the number of arguments, including the modifier string.
+  if (E->getNumArgs() != NumArgs) {
+    CGF.CGM.Error(E->getBeginLoc(), "Incorrect number of arguments to builtin");
+    return nullptr;
+  }
+
+  const auto &Target = CGF.getTarget();
+  auto &CGM = CGF.CGM;
+  if (!CPUSstr.empty()) {
+    auto CPU = CPUSstr.split(" ");
+    bool isInvalid = true;
+    for (; isInvalid && (CPU.first != ""); CPU = CPU.second.split(" "))
+      isInvalid = !Target.validateCpuIs(CPU.first);
+
+    if (isInvalid) {
+      KVX_emitInvalidIntrinsicForCPU(CGM, E, CPUSstr, Target.getCPUstr());
+      return nullptr;
+    }
+  }
+
+  // If it has KVX modifiers, we must treat them.
+  bool HasMods = !Modifiers.empty();
+  SmallVector<Value *, 4> Args;
+
+  bool Volatile = false;
+  for (unsigned I = 0; I < (NumArgs - HasMods); ++I) {
+    if (E->getArg(I)->IgnoreImpCasts()->getType()->isPointerType()) {
+      QualType PtrTy = E->getArg(I)->IgnoreImpCasts()->getType();
+      Volatile |= PtrTy->castAs<clang::PointerType>()
+                      ->getPointeeType()
+                      .isVolatileQualified();
+    }
+    Args.push_back(CGF.EmitScalarExpr(E->getArg(I)));
+  }
+
+  Function *Callee = CGM.getIntrinsic(IntrinsicID);
+  if (!HasMods)
+    return CGF.Builder.CreateCall(Callee, Args);
+
+  const auto ModPos = NumArgs - 1;
+  auto ModTokens = KVX_getModStr(CGF, E, ModPos).split(".");
+  if (!ModTokens.first.empty()) {
+    CGF.CGM.Error(E->getArg(ModPos)->getBeginLoc(),
+                  "All modifiers should either be empty or start with '.'");
+    return nullptr;
+  }
+
+  ModTokens = ModTokens.second.split(".");
+
+  for (const auto &Mod : Modifiers) {
+    int ModVal = Mod.getModifierValue(ModTokens.first);
+
+    if (ModVal == KvxModifier::INVALID_MODIFIER) {
+      int DefaultVal = Mod.getModifierValue("");
+      if (DefaultVal == KvxModifier::INVALID_MODIFIER) {
+        KVX_ModifierError(CGF.CGM, Modifiers, E->getArg(ModPos)->getBeginLoc());
+        return nullptr;
+      }
+      ModVal = DefaultVal;
+    } else
+      ModTokens = ModTokens.second.split(".");
+
+    Args.push_back(ConstantInt::get(CGF.IntTy, ModVal));
+  }
+
+  if (!ModTokens.first.empty()) {
+    KVX_ModifierError(CGF.CGM, Modifiers, E->getArg(ModPos)->getBeginLoc());
+    return nullptr;
+  }
+
+  return CGF.Builder.CreateCall(Callee, Args);
+}
+
 static Value *KVX_emitNaryBuiltin(unsigned N, CodeGenFunction &CGF,
                                   const CallExpr *E, unsigned IntrinsicID,
                                   bool HasRounding = false,
@@ -18710,34 +18849,19 @@ static Value *KVX_emitUnaryShiftingRoundingBuiltin(CodeGenFunction &CGF,
   return CGF.Builder.CreateCall(Callee, {Arg1, Arg2, Arg3, Arg4});
 }
 
-// TODO - remove IsACB_4_8 in ACB 4.10
 static int KVX_getLoadAS(clang::ASTContext &Ctx, const clang::Expr *E,
-                         bool IsSpec, bool IsACB_4_8 = false) {
+                         const KvxModifier &Mod) {
   if (E->isNullPointerConstant(Ctx, Expr::NPC_NeverValueDependent))
     return 0;
 
   if (E->getStmtClass() != Stmt::StringLiteralClass)
     return -1;
 
-  StringRef Str = cast<clang::StringLiteral>(E)->getString();
+  const StringRef Str = cast<clang::StringLiteral>(E)->getString();
   if (Str.empty())
     return 0;
 
-  if (IsSpec) {
-    if (IsACB_4_8)
-      return llvm::StringSwitch<int>(Str).Case("", 0).Case(".s", 258).Default(
-          -1);
-    return llvm::StringSwitch<int>(Str)
-        .Case(".u", 0)
-        .CaseLower(".us", 258)
-        .Default(-1);
-  }
-
-  return llvm::StringSwitch<int>(Str)
-              .CaseLower(".u", 256)
-              .CaseLower(".us", 257)
-              .CaseLower(".s", 258)
-              .Default(-1);
+  return Mod.getModifierValue(Str);
 }
 
 static bool KVX_isVolatile(CodeGenFunction &CGF, const CallExpr *E) {
@@ -18752,23 +18876,32 @@ static bool KVX_isVolatile(CodeGenFunction &CGF, const CallExpr *E) {
     CGF.CGM.Error(E->getArg(2)->getBeginLoc(), "is not a bool immediate value");
 
   QualType PtrTy = E->getArg(0)->IgnoreImpCasts()->getType();
-  Volatile +=
-    PtrTy->castAs<clang::PointerType>()->getPointeeType().isVolatileQualified();
+  Volatile |= PtrTy->castAs<clang::PointerType>()
+                  ->getPointeeType()
+                  .isVolatileQualified();
 
   return Volatile;
 }
 
-static Value *KVX_emitLoadBuiltin(CodeGenFunction &CGF, const CallExpr *E,
-                                  llvm::Type *DataType, bool isLV = false,
-                                  bool isACB_4_8 = false) {
-  int AS = KVX_getLoadAS(CGF.getContext(), E->getArg(1)->IgnoreParenImpCasts(),
-                         isLV, isACB_4_8);
-  if (AS == -1)
+static Value *
+KVX_emitLoadBuiltin(CodeGenFunction &CGF, const CallExpr *E,
+                    llvm::Type *DataType,
+                    const KvxModifier &Mod = KvxLdStAddrSpaceMod) {
+  if (E->getNumArgs() < 2 || E->getNumArgs() > 3) {
+    CGF.CGM.Error(E->getBeginLoc(),
+                  "This buildin accept 2 or 3 arguments:\n\t(void * ptr, "
+                  "\"modifierString\"[ bool isVolatile]");
+    return nullptr;
+  }
+  int AS =
+      KVX_getLoadAS(CGF.getContext(), E->getArg(1)->IgnoreParenImpCasts(), Mod);
+
+  if (AS == KvxModifier::INVALID_MODIFIER)
     CGF.CGM.Error(E->getArg(1)->getBeginLoc(), "invalid value");
 
   Address Addr = CGF.EmitPointerWithAlignment(E->getArg(0));
 
-  bool Volatile = !isLV && KVX_isVolatile(CGF, E);
+  bool Volatile = KVX_isVolatile(CGF, E);
   llvm::Type *ASType = DataType->getPointerTo(AS);
 
   auto AddrCast = CGF.Builder.CreatePointerBitCastOrAddrSpaceCast(Addr, ASType);
@@ -19377,18 +19510,6 @@ KVX_emitVectorShiftingBuiltin(CodeGenFunction &CGF, const CallExpr *E,
   return Result;
 }
 
-static void KVX_emitDeprecatedWarning_4_8(CodeGenModule &CGM, const CallExpr *E,
-                                          std::string name_4_8,
-                                          std::string name_4_9) {
-  unsigned diagID =
-      CGM.getDiags().getCustomDiagID(DiagnosticsEngine::Warning, "%0");
-  CGM.getDiags().Report(E->getBeginLoc(), diagID)
-      << "__builtin_kvx_" + name_4_8 +
-             " is deprecated since ACB 4.9 and should not be used." +
-             " Its support will be dropped in ACB 4.10." +
-             " Please use __builtin_kvx_" + name_4_9 + " instead.";
-}
-
 Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
                                            const CallExpr *E) {
   unsigned VectorSize;
@@ -19402,69 +19523,6 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
 
     Function *Callee = CGM.getIntrinsic(Intrinsic::kvx_get);
     return Builder.CreateCall(Callee, {Reg});
-  }
-
-  case KVX::BI__builtin_kvx_await:
-  case KVX::BI__builtin_kvx_barrier:
-  case KVX::BI__builtin_kvx_dinval:
-  case KVX::BI__builtin_kvx_errop:
-  case KVX::BI__builtin_kvx_fence:
-  case KVX::BI__builtin_kvx_i1inval:
-  case KVX::BI__builtin_kvx_sleep:
-  case KVX::BI__builtin_kvx_stop:
-  case KVX::BI__builtin_kvx_tlbdinval:
-  case KVX::BI__builtin_kvx_tlbiinval:
-  case KVX::BI__builtin_kvx_tlbprobe:
-  case KVX::BI__builtin_kvx_tlbread:
-  case KVX::BI__builtin_kvx_tlbwrite: {
-    unsigned IDD;
-
-    switch (BuiltinID) {
-    case KVX::BI__builtin_kvx_await:
-      IDD = Intrinsic::kvx_await;
-      break;
-    case KVX::BI__builtin_kvx_barrier:
-      IDD = Intrinsic::kvx_barrier;
-      break;
-    case KVX::BI__builtin_kvx_dinval:
-      IDD = Intrinsic::kvx_dinval;
-      break;
-    case KVX::BI__builtin_kvx_errop:
-      IDD = Intrinsic::kvx_errop;
-      break;
-    case KVX::BI__builtin_kvx_fence:
-      IDD = Intrinsic::kvx_fence;
-      break;
-    case KVX::BI__builtin_kvx_i1inval:
-      IDD = Intrinsic::kvx_i1inval;
-      break;
-    case KVX::BI__builtin_kvx_sleep:
-      IDD = Intrinsic::kvx_sleep;
-      break;
-    case KVX::BI__builtin_kvx_stop:
-      IDD = Intrinsic::kvx_stop;
-      break;
-    case KVX::BI__builtin_kvx_tlbdinval:
-      IDD = Intrinsic::kvx_tlbdinval;
-      break;
-    case KVX::BI__builtin_kvx_tlbiinval:
-      IDD = Intrinsic::kvx_tlbiinval;
-      break;
-    case KVX::BI__builtin_kvx_tlbprobe:
-      IDD = Intrinsic::kvx_tlbprobe;
-      break;
-    case KVX::BI__builtin_kvx_tlbread:
-      IDD = Intrinsic::kvx_tlbread;
-      break;
-    case KVX::BI__builtin_kvx_tlbwrite:
-      IDD = Intrinsic::kvx_tlbwrite;
-      break;
-    default:
-      llvm_unreachable("missing KVX intrinsics");
-    }
-
-    Function *Callee = CGM.getIntrinsic(IDD);
-    return Builder.CreateCall(Callee, {});
   }
 
   case KVX::BI__builtin_kvx_waitit:
@@ -20620,55 +20678,35 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
 #define NARY_BUILTIN(ID, TYPES, MODE, ARGS)                                    \
   case KVX::BI__builtin_kvx_##ID:                                              \
     return KVX_emitNaryBuiltin(ARGS, *this, E, Intrinsic::kvx_##ID);
-#define NARY_BUILTIN_4_8(ID_4_8, ID_INT, TYPES, MODE, ARGS, STR_4_8, STR_4_9)  \
-  case KVX::BI__builtin_kvx_##ID_4_8:                                          \
-    KVX_emitDeprecatedWarning_4_8(CGM, E, STR_4_8, STR_4_9);                   \
-    return KVX_emitNaryBuiltin(ARGS, *this, E, Intrinsic::kvx_##ID_INT);
+#define NARY_BUILTIN(ID, TYPES, MODE, ARGS)                                    \
+  case KVX::BI__builtin_kvx_##ID:                                              \
+    return KVX_emitNaryBuiltin(ARGS, *this, E, Intrinsic::kvx_##ID);
+#define KVX_BUILTIN(ID, TYPES, MODE, NARGS, CPUS, ...)                         \
+  case KVX::BI__builtin_kvx_##ID: {                                            \
+    const auto IDVal = Intrinsic::kvx_##ID;                                    \
+    const StringRef CPUSstr(CPUS);                                             \
+    KvxModifiers KvxMods = {__VA_ARGS__};                                      \
+    return KVX_emit(NARGS, *this, E, IDVal, KvxMods, CPUSstr);                 \
+  }
+
 #include "clang/Basic/BuiltinsKVX.def"
 
-  case KVX::BI__builtin_kvx_convdhv0:
-    KVX_emitDeprecatedWarning_4_8(CGM, E, "convdhv0", "xconvdhv0");
-    [[clang::fallthrough]];
   case KVX::BI__builtin_kvx_xconvdhv0:
     return KVX_emitRndintSatBuiltin(2, Intrinsic::kvx_xconvdhv0, *this, E);
-  case KVX::BI__builtin_kvx_convdhv1:
-    KVX_emitDeprecatedWarning_4_8(CGM, E, "convdhv1", "xconvdhv1");
-    [[clang::fallthrough]];
   case KVX::BI__builtin_kvx_xconvdhv1:
     return KVX_emitRndintSatBuiltin(2, Intrinsic::kvx_xconvdhv1, *this, E);
-  case KVX::BI__builtin_kvx_convwbv0:
-    KVX_emitDeprecatedWarning_4_8(CGM, E, "convwbv0", "xconvwbv0");
-    [[clang::fallthrough]];
   case KVX::BI__builtin_kvx_xconvwbv0:
     return KVX_emitRndintSatBuiltin(2, Intrinsic::kvx_xconvwbv0, *this, E);
-  case KVX::BI__builtin_kvx_convwbv1:
-    KVX_emitDeprecatedWarning_4_8(CGM, E, "convwbv1", "xconvwbv1");
-    [[clang::fallthrough]];
   case KVX::BI__builtin_kvx_xconvwbv1:
     return KVX_emitRndintSatBuiltin(2, Intrinsic::kvx_xconvwbv1, *this, E);
-  case KVX::BI__builtin_kvx_convwbv2:
-    KVX_emitDeprecatedWarning_4_8(CGM, E, "convwbv2", "xconvwbv2");
-    [[clang::fallthrough]];
   case KVX::BI__builtin_kvx_xconvwbv2:
     return KVX_emitRndintSatBuiltin(2, Intrinsic::kvx_xconvwbv2, *this, E);
-  case KVX::BI__builtin_kvx_convwbv3:
-    KVX_emitDeprecatedWarning_4_8(CGM, E, "convwbv3", "xconvwbv3");
-    [[clang::fallthrough]];
   case KVX::BI__builtin_kvx_xconvwbv3:
     return KVX_emitRndintSatBuiltin(2, Intrinsic::kvx_xconvwbv3, *this, E);
-  case KVX::BI__builtin_kvx_convdhv:
-    KVX_emitDeprecatedWarning_4_8(CGM, E, "convdhv", "xconvdhv");
-    [[clang::fallthrough]];
   case KVX::BI__builtin_kvx_xconvdhv:
     return KVX_emitRndintSatBuiltin(1, Intrinsic::kvx_xconvdhv, *this, E);
-  case KVX::BI__builtin_kvx_convwbv:
-    KVX_emitDeprecatedWarning_4_8(CGM, E, "convwbv", "xconvwbv");
-    [[clang::fallthrough]];
   case KVX::BI__builtin_kvx_xconvwbv:
     return KVX_emitRndintSatBuiltin(1, Intrinsic::kvx_xconvwbv, *this, E);
-  case KVX::BI__builtin_kvx_fscalewv:
-    KVX_emitDeprecatedWarning_4_8(CGM, E, "fscalewv", "xfscalewv");
-    [[clang::fallthrough]];
   case KVX::BI__builtin_kvx_xfscalewv:
     return KVX_emitScaleNarrowBuiltin(3, Intrinsic::kvx_xfscalewv, *this, E);
   case KVX::BI__builtin_kvx_xfnarrow44wh:
@@ -20684,85 +20722,16 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     return KVX_emitScaleNarrowBuiltin(2, Intrinsic::kvx_xmaddifwo, *this, E, 4);
   case KVX::BI__builtin_kvx_xmsbfifwo:
     return KVX_emitScaleNarrowBuiltin(2, Intrinsic::kvx_xmsbfifwo, *this, E, 4);
-  case KVX::BI__builtin_kvx_fnarrowwhv:
-    KVX_emitDeprecatedWarning_4_8(CGM, E, "fnarrowwhv", "xfnarrowwhv");
-    [[clang::fallthrough]];
   case KVX::BI__builtin_kvx_xfnarrowwhv:
     return KVX_emitScaleNarrowBuiltin(2, Intrinsic::kvx_xfnarrowwhv, *this, E);
-  case KVX::BI__builtin_kvx_lv:
-    KVX_emitDeprecatedWarning_4_8(CGM, E, "lv", "xload256");
-    return KVX_emitLoadBuiltin(
-        *this, E, llvm::FixedVectorType::get(Builder.getInt1Ty(), 256), true,
-        true);
-  case KVX::BI__builtin_kvx_xload256:
-    return KVX_emitLoadBuiltin(
-        *this, E, llvm::FixedVectorType::get(Builder.getInt1Ty(), 256), true);
   case KVX::BI__builtin_kvx_xstore256:
     return KVX_emitXStoreBuiltin(
         *this, E, llvm::FixedVectorType::get(Builder.getInt1Ty(), 256));
-  case KVX::BI__builtin_kvx_sv:
-    KVX_emitDeprecatedWarning_4_8(CGM, E, "sv", "xstore256");
-    return KVX_emitXStoreBuiltin(
-        *this, E, llvm::FixedVectorType::get(Builder.getInt1Ty(), 256), true);
-  case KVX::BI__builtin_kvx_lv_cond:
-    KVX_emitDeprecatedWarning_4_8(CGM, E, "lv_cond", "xloadc256");
-    return KVX_emit_xload_store(3, true, Intrinsic::kvx_xloadc256, *this, E,
-                                false, -1);
-  case KVX::BI__builtin_kvx_xloadc256:
-    return KVX_emit_xload_store(3, true, Intrinsic::kvx_xloadc256, *this, E,
-                                true, -1);
-  case KVX::BI__builtin_kvx_lvc: {
-    KVX_emitDeprecatedWarning_4_8(CGM, E, "lvc", "xload256q[0123]");
-    constexpr int ColumnPos = 2;
-    auto *CL = cast<clang::IntegerLiteral>(
-        E->getArg(ColumnPos)->IgnoreParenImpCasts());
-    int Column = CL->getValue().getZExtValue();
-    return KVX_emit_xload_store(3, false, Intrinsic::kvx_xload1024q, *this, E,
-                                false, Column, ColumnPos);
-  }
-  case KVX::BI__builtin_kvx_xload1024q0:
-    return KVX_emit_xload_store(2, false, Intrinsic::kvx_xload1024q, *this, E,
-                                true, 0);
-  case KVX::BI__builtin_kvx_xload1024q1:
-    return KVX_emit_xload_store(2, false, Intrinsic::kvx_xload1024q, *this, E,
-                                true, 1);
-  case KVX::BI__builtin_kvx_xload1024q2:
-    return KVX_emit_xload_store(2, false, Intrinsic::kvx_xload1024q, *this, E,
-                                true, 2);
-  case KVX::BI__builtin_kvx_xload1024q3:
-    return KVX_emit_xload_store(2, false, Intrinsic::kvx_xload1024q, *this, E,
-                                true, 3);
-  case KVX::BI__builtin_kvx_lvc_cond: {
-    KVX_emitDeprecatedWarning_4_8(CGM, E, "lvc_cond", "xloadc256q[0123]");
-    constexpr int ColumnPos = 2;
-    auto *CL = cast<clang::IntegerLiteral>(
-        E->getArg(ColumnPos)->IgnoreParenImpCasts());
-    int Column = CL->getValue().getZExtValue();
-    return KVX_emit_xload_store(4, true, Intrinsic::kvx_xloadc1024q, *this, E,
-                                false, Column, ColumnPos);
-  }
-  case KVX::BI__builtin_kvx_xloadc1024q0:
-    return KVX_emit_xload_store(3, true, Intrinsic::kvx_xloadc1024q, *this, E,
-                                true, 0);
-  case KVX::BI__builtin_kvx_xloadc1024q1:
-    return KVX_emit_xload_store(3, true, Intrinsic::kvx_xloadc1024q, *this, E,
-                                true, 1);
-  case KVX::BI__builtin_kvx_xloadc1024q2:
-    return KVX_emit_xload_store(3, true, Intrinsic::kvx_xloadc1024q, *this, E,
-                                true, 2);
-  case KVX::BI__builtin_kvx_xloadc1024q3:
-    return KVX_emit_xload_store(3, true, Intrinsic::kvx_xloadc1024q, *this, E,
-                                true, 3);
-  case KVX::BI__builtin_kvx_sv_cond:
-    KVX_emitDeprecatedWarning_4_8(CGM, E, "sv_cond", "xstorec256");
-    return KVX_emit_xload_store(3, true, Intrinsic::kvx_sv_cond, *this, E);
+
   case KVX::BI__builtin_kvx_xstorec256:
     return KVX_emit_xload_store(3, true, Intrinsic::kvx_xstorec256, *this, E);
   case KVX::BI__builtin_kvx_xswap256:
     return KVX_emit_xswap256(*this, E);
-  case KVX::BI__builtin_kvx_swapvo:
-    KVX_emitDeprecatedWarning_4_8(CGM, E, "swapvo", "xswap256");
-    return KVX_emit_xswap256(*this, E, true);
   case KVX::BI__builtin_kvx_dflushsw:
     return KVX_emitCacheModOp(Intrinsic::kvx_dflushsw, *this, E);
   case KVX::BI__builtin_kvx_dinvalsw:
