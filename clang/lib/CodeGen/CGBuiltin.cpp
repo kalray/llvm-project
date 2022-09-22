@@ -17819,33 +17819,6 @@ static rounding_t KVX_getRoundingModifier(const StringRef &Str) {
       .Default(ROUNDING_INVALID);
 }
 
-static cachelevel_t KVX_getCacheLevelModifier(const StringRef &Str) {
-  return llvm::StringSwitch<cachelevel_t>(Str)
-      .Case("", CACHE_L1)
-      .CaseLower("l1", CACHE_L1)
-      .CaseLower("l2", CACHE_L2)
-      .Default(CACHE_INVALID);
-}
-
-static int KVX_getScalarcondModValue(const StringRef &Str) {
-  return StringSwitch<int>(Str)
-      .Case("dnez", SCALARCOND_DNEZ)
-      .Case("deqz", SCALARCOND_DEQZ)
-      .Case("dltz", SCALARCOND_DLTZ)
-      .Case("dgez", SCALARCOND_DGEZ)
-      .Case("dlez", SCALARCOND_DLEZ)
-      .Case("dgtz", SCALARCOND_DGTZ)
-      .Case("odd", SCALARCOND_ODD)
-      .Case("even", SCALARCOND_EVEN)
-      .Case("wnez", SCALARCOND_WNEZ)
-      .Case("weqz", SCALARCOND_WEQZ)
-      .Case("wltz", SCALARCOND_WLTZ)
-      .Case("wgez", SCALARCOND_WGEZ)
-      .Case("wlez", SCALARCOND_WLEZ)
-      .Case("wgtz", SCALARCOND_WGTZ)
-      .Default(-1);
-}
-
 static average_t KVX_getAverageModifier(const StringRef &Str) {
   return StringSwitch<average_t>(Str)
       .Case("", AVERAGE_DEFAULT)
@@ -17927,116 +17900,6 @@ static Value *KVX_emit_xswap256(CodeGenFunction &CGF, const CallExpr *E) {
   CGF.Builder.CreateStore(CGF.Builder.CreateExtractValue(R, 1), AddrTCA);
 
   return CGF.Builder.CreateExtractValue(R, 0);
-}
-
-static Value *KVX_emitCacheModOp(unsigned IntrinsicID, CodeGenFunction &CGF,
-                                 const CallExpr *E) {
-  if (E->getNumArgs() != 3) {
-    CGF.CGM.Error(E->getBeginLoc(), "Incorrect number of arguments to builtin");
-    return nullptr;
-  }
-
-  const unsigned V = 2;
-  SmallVector<Value *, 4> Args;
-
-  for (unsigned I = 0; I < V; I++)
-    Args.push_back(CGF.EmitScalarExpr(E->getArg(I)));
-
-  const clang::Expr *ModifierString = E->getArg(V)->IgnoreParenImpCasts();
-  if (ModifierString->isNullPointerConstant(CGF.getContext(),
-                                            Expr::NPC_NeverValueDependent)) {
-    CGF.CGM.Error(E->getArg(V)->getBeginLoc(),
-                  "Must define cache level modifier.");
-    return nullptr;
-  }
-
-  const auto *SL = dyn_cast<clang::StringLiteral>(ModifierString);
-  if (!SL) {
-    CGF.CGM.Error(E->getArg(V)->getBeginLoc(),
-                  "Modifiers must be a string as \".l1\" or \".l2\".");
-    return nullptr;
-  }
-  auto Mods = SL->getString().split(".");
-
-  cachelevel_t Cache = KVX_getCacheLevelModifier(Mods.second);
-  if (Cache == CACHE_INVALID)
-    CGF.CGM.Error(E->getArg(V)->getBeginLoc(),
-                  "Invalid cache level modifer, should be one of: "
-                  "\"\", \".\", \".l1\", \".l2\"");
-
-  Args.push_back(ConstantInt::get(CGF.IntTy, (int)(Cache)));
-
-  return CGF.Builder.CreateCall(CGF.CGM.getIntrinsic(IntrinsicID), Args);
-}
-
-static Value *KVX_emit_xload_store(unsigned PositionMods, bool IsCond,
-                                   unsigned IntrinsicID, CodeGenFunction &CGF,
-                                   const CallExpr *E,
-                                   bool EnforceUPrefix = false, int Column = -1,
-                                   bool isLvc = false) {
-  unsigned NumArgs = E->getNumArgs();
-  if (NumArgs != PositionMods + 1) {
-    CGF.CGM.Error(E->getBeginLoc(), "Incorrect number of arguments to builtin");
-    return nullptr;
-  }
-  SmallVector<Value *, 8> Args;
-
-  for (unsigned I = 0; I < PositionMods; I++) {
-    if (isLvc)
-      continue;
-    Args.push_back(CGF.EmitScalarExpr(E->getArg(I)));
-  }
-
-  if (Column >= 0) {
-    assert(Column < 4 && "Wrong Column argument");
-    Args.push_back(ConstantInt::get(CGF.IntTy, Column));
-  }
-
-  const auto *SL = dyn_cast<clang::StringLiteral>(
-      E->getArg(PositionMods)->IgnoreParenImpCasts());
-  if (!SL) {
-    CGF.CGM.Error(E->getArg(PositionMods)->getBeginLoc(),
-                  "It is required a modifier string.");
-    return nullptr;
-  }
-
-  // We always have Speculate Modifier.
-  // Scalar Condition Modifier depends in being a conditional
-  // load.
-  auto Mods = SL->getString().split(".");
-
-  if (IntrinsicID != Intrinsic::kvx_xstorec256 &&
-      IntrinsicID != Intrinsic::kvx_sv_cond) {
-    Mods = Mods.second.split(".");
-    int Speculate = KVX_getSpeculateModValue(Mods.first, EnforceUPrefix);
-    if (Speculate == -1) {
-      std::string ErrorMsg =
-          EnforceUPrefix
-              ? "Expected to start with an uncached speculate modifier: "
-                "'.u' or '.us'"
-              : "Expected to start with a speculate modifier: '' or '.' or "
-                "'.s'";
-      CGF.CGM.Error(E->getArg(PositionMods)->getExprLoc(), ErrorMsg);
-      return nullptr;
-    }
-    Args.push_back(ConstantInt::get(CGF.IntTy, Speculate));
-  }
-
-  if (IsCond) {
-    auto SecondMod = KVX_getScalarcondModValue(Mods.second);
-    if (SecondMod == -1) {
-      CGF.CGM.Error(E->getArg(PositionMods - 1)->getExprLoc(),
-                    "A conditional load argument was used.");
-      CGF.CGM.Error(
-          E->getArg(PositionMods)->getExprLoc(),
-          "Expected a conditional comparison modifier: [.dnez .deqz .dltz "
-          ".dgez .dlez .dgtz .odd .even .wnez .weqz .wltz .wgez .wlez .wgtz]");
-      return nullptr;
-    }
-    Args.push_back(ConstantInt::get(CGF.IntTy, SecondMod));
-  }
-
-  return CGF.Builder.CreateCall(CGF.CGM.getIntrinsic(IntrinsicID), Args);
 }
 
 static Value *KVX_emitScaleNarrowBuiltin(unsigned NumMods, unsigned IntrinsicID,
@@ -18527,6 +18390,8 @@ struct KvxModifier : StringMap<int> {
   }
 };
 
+static const KvxModifier KVX_CACHELEVEL({{"l1", 0}, {"l2", 1}});
+
 static const KvxModifier
     KVX_COLUMN({{"c0", 0}, {"c1", 1}, {"c2", 2}, {"c3", 3}});
 
@@ -18929,34 +18794,6 @@ KVX_emitLoadBuiltin(CodeGenFunction &CGF, const CallExpr *E,
   Load->setAlignment(AlignmentInBytes);
 
   return Load;
-}
-
-static Value *KVX_emitXStoreBuiltin(CodeGenFunction &CGF, const CallExpr *E,
-                                    llvm::Type *DataType,
-                                    bool ACB_4_8_swapArgs = false) {
-  int ValPos = ACB_4_8_swapArgs ? 1 : 0;
-  int AddrPos = ACB_4_8_swapArgs ? 0 : 1;
-  Address Addr = CGF.EmitPointerWithAlignment(E->getArg(AddrPos));
-
-  bool Volatile = (E->getNumArgs() >= 3) && KVX_isVolatile(CGF, E);
-  auto AddrCast = CGF.Builder.CreatePointerBitCastOrAddrSpaceCast(
-      Addr, DataType->getPointerTo());
-  auto *Store = CGF.Builder.CreateStore(CGF.EmitScalarExpr(E->getArg(ValPos)),
-                                        AddrCast, Volatile);
-  Align AlignmentInBytes;
-  if (DataType->isVectorTy())
-    AlignmentInBytes =
-        CGF.CGM.getContext()
-            .toCharUnitsFromBits(DataType->getScalarSizeInBits() *
-                llvm::cast<llvm::FixedVectorType>(DataType)->getNumElements())
-            .getAsAlign();
-  else
-    AlignmentInBytes = CGF.CGM.getContext()
-                           .toCharUnitsFromBits(DataType->getScalarSizeInBits())
-                           .getAsAlign();
-  Store->setAlignment(AlignmentInBytes);
-
-  return Store;
 }
 
 static simdcond_t KVX_getSimdCond(clang::ASTContext &Ctx,
@@ -20730,20 +20567,8 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     return KVX_emitScaleNarrowBuiltin(2, Intrinsic::kvx_xmsbfifwo, *this, E, 4);
   case KVX::BI__builtin_kvx_xfnarrowwhv:
     return KVX_emitScaleNarrowBuiltin(2, Intrinsic::kvx_xfnarrowwhv, *this, E);
-  case KVX::BI__builtin_kvx_xstore256:
-    return KVX_emitXStoreBuiltin(
-        *this, E, llvm::FixedVectorType::get(Builder.getInt1Ty(), 256));
-
-  case KVX::BI__builtin_kvx_xstorec256:
-    return KVX_emit_xload_store(3, true, Intrinsic::kvx_xstorec256, *this, E);
   case KVX::BI__builtin_kvx_xswap256:
     return KVX_emit_xswap256(*this, E);
-  case KVX::BI__builtin_kvx_dflushsw:
-    return KVX_emitCacheModOp(Intrinsic::kvx_dflushsw, *this, E);
-  case KVX::BI__builtin_kvx_dinvalsw:
-    return KVX_emitCacheModOp(Intrinsic::kvx_dinvalsw, *this, E);
-  case KVX::BI__builtin_kvx_dpurgesw:
-    return KVX_emitCacheModOp(Intrinsic::kvx_dpurgesw, *this, E);
   }
   return nullptr;
 }

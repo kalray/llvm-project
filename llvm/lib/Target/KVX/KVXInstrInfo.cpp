@@ -1098,6 +1098,16 @@ bool KVXInstrInfo::PredicateInstruction(MachineInstr &MI,
     Opri27c = KVX::SVri27c;
     Opri54c = KVX::SVri54c;
     break;
+  case KVX::XSOrr:
+    IsRR = true;
+    LLVM_FALLTHROUGH;
+  case KVX::XSOri10:
+  case KVX::XSOri37:
+  case KVX::XSOri64:
+    Oprrc = KVX::XSOrrc;
+    Opri27c = KVX::XSOri27c;
+    Opri54c = KVX::XSOri54c;
+    break;
   case KVX::SWrr:
     IsRR = true;
     LLVM_FALLTHROUGH;

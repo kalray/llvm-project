@@ -1517,11 +1517,17 @@ bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
   case KVX::SOp:
     return expandStore(TII, MBB, MBBI, KVX::SOri10, KVX::SOri37, KVX::SOri64);
   case KVX::SVp:
-    return expandStore(TII, MBB, MBBI, KVX::SVri10, KVX::SVri37, KVX::SVri64);
+    if (((const KVXSubtarget *)(&MBB.getParent()->getSubtarget()))->isV1())
+      return expandStore(TII, MBB, MBBI, KVX::SVri10, KVX::SVri37, KVX::SVri64);
+    return expandStore(TII, MBB, MBBI, KVX::XSOri10, KVX::XSOri37,
+                       KVX::XSOri64);
   case KVX::SWIDEp:
   case KVX::SMATRIXp:
-    return expandWideMatrixLoadsStores(TII, MBB, MBBI, KVX::SVri10, KVX::SVri37,
-                                       KVX::SVri64, true);
+    if (((const KVXSubtarget *)(&MBB.getParent()->getSubtarget()))->isV1())
+      return expandWideMatrixLoadsStores(TII, MBB, MBBI, KVX::SVri10,
+                                         KVX::SVri37, KVX::SVri64, true);
+    return expandWideMatrixLoadsStores(TII, MBB, MBBI, KVX::XSOri10,
+                                       KVX::XSOri37, KVX::XSOri64, true);
   case KVX::LBSp:
     return expandLoad(TII, MBB, MBBI, KVX::LBSri10, KVX::LBSri37, KVX::LBSri64);
   case KVX::LBZp:

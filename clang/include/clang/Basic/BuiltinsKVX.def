@@ -456,9 +456,6 @@ NARY_BUILTIN(xbuildfvw, "Tx512Tx256Tx256", "n", 2)
 NARY_BUILTIN(xaccess512o, "V4LiTx512Li", "n", 2)
 NARY_BUILTIN(xalign512o, "Tx256Tx512Li", "n", 2)
 
-BUILTIN(__builtin_kvx_xstore256, "vTx256vCD*", "n")
-BUILTIN(__builtin_kvx_xstorec256, "vTx256vCD*LicC*", "n")
-
 BUILTIN(__builtin_kvx_xswap256, "V4LiTx256*V4Li", "n")
 
 BUILTIN(__builtin_kvx_xconvdhv0, "Tx256Tx256Tx1024cC*", "n")
@@ -517,17 +514,26 @@ BUILTIN(__builtin_kvx_xfnarrow44wh, "Tx256Tx512cC*", "n")
 BUILTIN(__builtin_kvx_xfscalewo, "Tx256Tx256icC*", "n")
 BUILTIN(__builtin_kvx_xmaddifwo, "Tx256Tx256Tx256Tx256cC*", "n")
 BUILTIN(__builtin_kvx_xmsbfifwo, "Tx256Tx256Tx256Tx256cC*", "n")
-BUILTIN(__builtin_kvx_dflushsw, "vULiULiCc*", "n")
-BUILTIN(__builtin_kvx_dinvalsw, "vULiULiCc*", "n")
-BUILTIN(__builtin_kvx_dpurgesw, "vULiULiCc*", "n")
+KVX_BUILTIN(dflushsw, "vULiULicC*", "n", 3, "kv3-2", KVX_CACHELEVEL)
+KVX_BUILTIN(dinvalsw, "vULiULicC*", "n", 3, "kv3-2", KVX_CACHELEVEL)
+KVX_BUILTIN(dpurgesw, "vULiULicC*", "n", 3, "kv3-2", KVX_CACHELEVEL)
 
 BUILTIN(__builtin_kvx_fscalewv, "Tx256Tx256cC*", "n")
 BUILTIN(__builtin_kvx_fnarrowwhv, "Tx256Tx512cC*", "n")
 
 KVX_BUILTIN(xload256, "Tx256vCD*cC*", "n", 2, "kv3-2", KVX_VARIANT)
 KVX_BUILTIN(xloadc256, "Tx256Tx256&vCD*LiCcC*", "n", 4, "kv3-2", KVX_VARIANT, KVX_LSUMASK)
+KVX_BUILTIN(xload512, "Tx512vCD*cC*", "n", 2, "kv3-2", KVX_VARIANT)
+KVX_BUILTIN(xloadc512, "Tx512Tx512&vCD*LiCcC*", "n", 4, "kv3-2", KVX_VARIANT, KVX_LSUMASK)
+KVX_BUILTIN(xload1024, "Tx1024vCD*cC*", "n", 2, "kv3-2", KVX_VARIANT)
+KVX_BUILTIN(xloadc1024, "Tx1024Tx1024&vCD*V4icC*", "n", 4, "kv3-2", KVX_VARIANT, KVX_LSUMASK)
 KVX_BUILTIN(xloads1024, "Tx1024Tx1024&vCD*cC*", "n", 3, "kv3-2", KVX_VARIANT, KVX_QINDEX)
 KVX_BUILTIN(xloadsc1024, "Tx1024Tx1024&vCD*LiCcC*", "n", 4, "kv3-2", KVX_VARIANT, KVX_LSUMASK, KVX_QINDEX)
+
+KVX_BUILTIN(xstore256, "vTx256vCD*", "n", 2, "kv3-2", )
+KVX_BUILTIN(xstorec256, "vTx256vCD*LicC*", "n", 4, "kv3-2", KVX_LSUMASK)
+KVX_BUILTIN(xstores1024, "vTx1024vCD*cC*", "n", 3, "kv3-2", KVX_QINDEX)
+KVX_BUILTIN(xstoresc1024, "vTx1024vCD*LicC*", "n", 4, "kv3-2", KVX_LSUMASK, KVX_QINDEX)
 
 #undef BUILTIN
 #undef NARY_BUILTIN
