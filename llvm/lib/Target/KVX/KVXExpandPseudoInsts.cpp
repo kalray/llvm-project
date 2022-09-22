@@ -1485,6 +1485,7 @@ bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
   if (Stage < KVX::PRE_SCHED2)
     return false;
 
+  const auto &Subtarget = TII->getSubtarget();
   switch (MBBI->getOpcode()) {
   case KVX::SELECTp:
     return expandSELECT(TII, MBB, MBBI);
@@ -1540,11 +1541,16 @@ bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
   case KVX::LOp:
     return expandLoad(TII, MBB, MBBI, KVX::LOri10, KVX::LOri37, KVX::LOri64);
   case KVX::LVp:
-    return expandLoad(TII, MBB, MBBI, KVX::LVri10, KVX::LVri37, KVX::LVri64);
+    if (Subtarget.isV1())
+      return expandLoad(TII, MBB, MBBI, KVX::LVri10, KVX::LVri37, KVX::LVri64);
+    return expandLoad(TII, MBB, MBBI, KVX::XLOri10, KVX::XLOri37, KVX::XLOri64);
   case KVX::LWIDEp:
   case KVX::LMATRIXp:
-    return expandWideMatrixLoadsStores(TII, MBB, MBBI, KVX::LVri10, KVX::LVri37,
-                                       KVX::LVri64, false);
+    if (Subtarget.isV1())
+      return expandWideMatrixLoadsStores(TII, MBB, MBBI, KVX::LVri10,
+                                         KVX::LVri37, KVX::LVri64, false);
+    return expandWideMatrixLoadsStores(TII, MBB, MBBI, KVX::XLOri10,
+                                       KVX::XLOri37, KVX::XLOri64, false);
   case KVX::EXTFZWp:
     return expandEXTFZ(TII, MBB, MBBI, true);
   case KVX::EXTFZDp:

@@ -90,7 +90,8 @@ def VariantMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 3);}]
   let PrintMethod = "printVariantMod";
 }
 
-def SpeculateMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 1);}]> {
+// Hack: We use the silent modifier to allow using address spaces to set speculate
+def SpeculateMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 3);}]> {
   let PrintMethod = "printSpeculateMod";
 }
 
@@ -154,4 +155,12 @@ def CoherencyMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 2);
 
 def CacheLevelMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 1);}]> {
   let PrintMethod = "printCacheLevelMod";
+}
+
+def QindexMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 3);}]> {
+  let PrintMethod = "printQindexMod";
+}
+
+def LsumaskMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 7);}]> {
+  let PrintMethod = "printLsumaskMod";
 }

@@ -439,18 +439,20 @@ defm : LoadPat<load, v2i64, 4, LQp, LQri10, LQri37, LQri64, LQrr>;
 defm : LoadPat<load, v4i32, 4, LQp, LQri10, LQri37, LQri64, LQrr>;
 
 defm : LoadPat<load, v4i64, 5, LOp, LOri10, LOri37, LOri64, LOrr>;
-defm : LoadPat<load, v256i1, 5, LVp, LVri10, LVri37, LVri64, LVrr>, Requires<[IsV1]>;
 
-def : Pat<(v512i1 (load SingleReg:$base)),
+defm : LoadPat<load, v256i1, 5, LVp, LVri10, LVri37, LVri64, LVrr>, Requires<[IsV1]>;
+defm : LoadPat<load, v256i1, 5, LVp, XLOri10, XLOri37, XLOri64, XLOrr>, Requires<[IsV2]>;
+
+def : Pat<(v512i1 (load:$LD SingleReg:$base)),
           (v512i1 (REG_SEQUENCE WideReg,
-                    (LVp (i64 32), SingleReg:$base, speculate_),  sub_v1,
-                    (LVp (i64 0), SingleReg:$base, speculate_),  sub_v0))>;
-def : Pat<(v1024i1 (load SingleReg:$base)),
+                    (LVp (i64 32), SingleReg:$base, (get_mem_mod $LD)),  sub_v1,
+                    (LVp (i64 0), SingleReg:$base, (get_mem_mod $LD)),  sub_v0))>;
+def : Pat<(v1024i1 (load:$LD SingleReg:$base)),
           (v1024i1 (REG_SEQUENCE MatrixReg,
-                    (LVp (i64 96), SingleReg:$base, speculate_), sub_v3,
-                    (LVp (i64 64), SingleReg:$base, speculate_), sub_v2,
-                    (LVp (i64 32), SingleReg:$base, speculate_), sub_v1,
-                    (LVp (i64 0), SingleReg:$base, speculate_),  sub_v0))>;
+                    (LVp (i64 96), SingleReg:$base, (get_mem_mod $LD)), sub_v3,
+                    (LVp (i64 64), SingleReg:$base, (get_mem_mod $LD)), sub_v2,
+                    (LVp (i64 32), SingleReg:$base, (get_mem_mod $LD)), sub_v1,
+                    (LVp (i64 0), SingleReg:$base, (get_mem_mod $LD)),  sub_v0))>;
 
 
 //===----------------------------------------------------------------------===//

@@ -56,13 +56,16 @@ def IsV2 : Predicate<"Subtarget->isV2()">;
 multiclass I <string asm,
          InstrItinClass itin,
          list<DAGOperand> Ops = [],
-         list<DAGOperand> Mods = [],
+         list<DAGOperand> ModsAll = [],
          list<DAGOperand> MemOps = [],
          list<DAGOperand> CC = [],
          list<DAGOperand> Out = [],
          bit InPlace = 0,
          list<dag> pat = []> {
 
+    // Filter out Qindex for generating the asm string from Mods and keep it in the dag
+    defvar Mods = !filter(i, ModsAll, !not(!eq(i, QindexMod)));
+    defvar Qindex = !filter(i, ModsAll, !eq(i, QindexMod));
     defvar EmptyList = []<string>;
     defvar EmptyOutDag = !dag(outs, []<DAGOperand>, []<string>);
     defvar EmptyInDag = !dag(ins, []<DAGOperand>, []<string>);
@@ -72,9 +75,9 @@ multiclass I <string asm,
     if MemOpsTst then {
       def : KVX_Error<!strconcat("Can't handle instructions with ", !cast<string>(!size(MemOps)), " memory operands.")>;
     }
-    defvar ModifsTst = !gt(!size(Mods), 3);
+    defvar ModifsTst = !gt(!size(ModsAll), 3);
     if ModifsTst then {
-      def : KVX_Error<!strconcat("Can't handle instructions with ", !cast<string>(!size(Mods)), " modifiers.")>;
+      def : KVX_Error<!strconcat("Can't handle instructions with ", !cast<string>(!size(ModsAll)), " modifiers.")>;
     }
 
     defvar OutTst = !gt(!size(Out), 1);
@@ -111,10 +114,10 @@ multiclass I <string asm,
                           !eq(!size(Ops), 2): !dag(ins, Ops, ["op0", "op1"]),
                           !eq(!size(Ops), 3): !dag(ins, Ops, ["op0", "op1", "op2"]));
 
-    defvar ModsDag = !cond(!empty(Mods): EmptyInDag,
-                           !eq(!size(Mods), 1): !dag(ins, Mods, ["mod0"]),
-                           !eq(!size(Mods), 2): !dag(ins, Mods, ["mod0", "mod1"]),
-                           !eq(!size(Mods), 3): !dag(ins, Mods, ["mod0", "mod1", "mod2"]));
+    defvar ModsDag = !cond(!empty(ModsAll): EmptyInDag,
+                           !eq(!size(ModsAll), 1): !dag(ins, ModsAll, ["mod0"]),
+                           !eq(!size(ModsAll), 2): !dag(ins, ModsAll, ["mod0", "mod1"]),
+                           !eq(!size(ModsAll), 3): !dag(ins, ModsAll, ["mod0", "mod1", "mod2"]));
 
     defvar InOutDag = !cond(!and(!not(!empty(Out)), !or(InPlace, !not(!empty(CC)))): !dag(ins, Out, ["z"]<string>),
                             true : EmptyInDag);
@@ -129,8 +132,8 @@ multiclass I <string asm,
                       !eq(!size(Mods), 2): "$mod0$mod1",
                       !eq(!size(Mods), 3): "$mod0$mod1$mod2");
 
-    defvar CCstr = !cond(!empty(CC): "",
-                         true: "$cond $val ?");
+    defvar QindexStr = !if(!empty(Qindex), "", "$mod" # !cast<string>(!size(Mods)));
+    defvar CC_Qindex_str = !if(!empty(CC), QindexStr, "$cond" # QindexStr # " $val ?");
 
     defvar OutStr = !cond(!empty(Out) : "",
                           true : " $r");
@@ -153,8 +156,8 @@ multiclass I <string asm,
 
     defvar CanPredicate = !and(!empty(CC), !not(!empty(MemOps)));
     // Should we add an inplace register in the input dag?
-    defvar AsmStr = !cond( !eq(WritesMem, 0) : !strconcat(asm, ModsStr, CCstr, OutStr, " =", MemOpStr, OpsStr),
-                           !eq(WritesMem, 1) : !strconcat(asm, ModsStr, CCstr, OutStr, MemOpStr, " =", OpsStr));
+    defvar AsmStr = !cond( !eq(WritesMem, 0) : !strconcat(asm, ModsStr, CC_Qindex_str, OutStr, " =", MemOpStr, OpsStr),
+                           !eq(WritesMem, 1) : !strconcat(asm, ModsStr, CC_Qindex_str, OutStr, MemOpStr, " =", OpsStr));
 
     defvar ItirName = !cast<string>(itin);
     defvar InstSz = !cond(!ne(ItirName, !subst("_Y_", "", ItirName)): 12,
@@ -241,6 +244,54 @@ multiclass MC_LV<string OpcStr> {
                   [(set v1024i1:$r, (int_kvx_lvc_cond v1024i1:$z, (add SingleReg:$mem, Signed54:$off),
                                     i64:$val, ColumnMod:$mod0, SpeculateMod:$mod1, ScalarcondMod:$cond))]>;
   defm rrccs : I <OpcStr, LSU_LOAD, [], [ColumnMod, SpeculateMod], [SingleReg], [ScalarcondMod, SingleReg], [MatrixReg]>;
+}
+
+multiclass MC_XLO <string OpcStr = "xlo"> {
+  //xlovariant registerA = signed10[registerZ]
+  defm ri10 : I <OpcStr, LSU_LOAD, [], [VariantMod], [Signed10, SingleReg], [], [VectorReg], 0,
+                [(set v256i1:$r, (int_kvx_xload256 (add i64:$mem, Signed10:$off), VariantMod:$mod0))]>;
+  //xlovariant registerA = upper27 lower10[registerZ]
+  defm ri37 : I <OpcStr, LSU_X_LOAD, [], [VariantMod], [Signed37, SingleReg], [], [VectorReg], 0,
+                [(set v256i1:$r, (int_kvx_xload256 (add i64:$mem, Signed37:$off), VariantMod:$mod0))]>;
+  //xlovariant registerA = extend27 upper27 lower10[registerZ]
+  defm ri64 : I <OpcStr, LSU_Y_LOAD, [], [VariantMod], [Wrapped64, SingleReg], [], [VectorReg], 0,
+                [(set v256i1:$r, (int_kvx_xload256 (add i64:$mem, Wrapped64:$off), VariantMod:$mod0))]>;
+
+  //xlovariantqindex registerAq = signed10[registerZ]
+  defm ri10q : I <OpcStr, LSU_LOAD, [], [VariantMod, QindexMod], [Signed10, SingleReg], [], [MatrixReg], 1,
+                [(set v1024i1:$r, (int_kvx_xloads1024 v1024i1:$z, (add i64:$mem, Signed10:$off), VariantMod:$mod0, QindexMod:$mod1))]>;
+  //xlovariantqindex registerAq = upper27 lower10[registerZ]
+  defm ri37q : I <OpcStr, LSU_X_LOAD, [], [VariantMod, QindexMod], [Signed37, SingleReg], [], [MatrixReg], 1,
+                [(set v1024i1:$r, (int_kvx_xloads1024 v1024i1:$z, (add i64:$mem, Signed37:$off), VariantMod:$mod0, QindexMod:$mod1))]>;
+  //xlovariantqindex registerAq = extend27 upper27 lower10[registerZ]
+  defm ri64q : I <OpcStr, LSU_Y_LOAD, [], [VariantMod, QindexMod], [Wrapped64, SingleReg], [], [MatrixReg], 1,
+                [(set v1024i1:$r, (int_kvx_xloads1024 v1024i1:$z, (add i64:$mem, Wrapped64:$off), VariantMod:$mod0, QindexMod:$mod1))]>;
+
+  //xlovariantlsumask registerY? registerA = [registerZ]
+  defm rrc    : I <OpcStr, LSU_LOAD, [], [VariantMod], [SingleReg], [LsumaskMod, SingleReg], [VectorReg], 1,
+                  [(set v256i1:$r, (int_kvx_xloadc256 v256i1:$z, i64:$mem, i64:$val, VariantMod:$mod0, LsumaskMod:$cond))]>;
+  //xlovariantlsumask registerY? registerA = offset27[registerZ]
+  defm ri27c : I <OpcStr, LSU_X_LOAD, [], [VariantMod], [Signed27, SingleReg], [LsumaskMod, SingleReg], [VectorReg], 1,
+                  [(set v256i1:$r, (int_kvx_xloadc256 v256i1:$z, (add i64:$mem, Signed27:$off), i64:$val, VariantMod:$mod0, LsumaskMod:$cond))]>;
+  //xlovariantlsumask registerY? registerA = extend27 offset27[registerZ]
+  defm ri54c : I <OpcStr, LSU_Y_LOAD, [], [VariantMod], [Signed54, SingleReg], [LsumaskMod, SingleReg], [VectorReg], 1,
+                  [(set v256i1:$r, (int_kvx_xloadc256 v256i1:$z, (add i64:$mem, Signed54:$off), i64:$val, VariantMod:$mod0, LsumaskMod:$cond))]>;
+
+  //xlovariantlsumaskqindex registerY? registerAq = [registerZ]
+  defm rrcq    : I <OpcStr, LSU_LOAD, [], [VariantMod, QindexMod], [SingleReg], [LsumaskMod, SingleReg], [MatrixReg], 1,
+                  [(set v1024i1:$r, (int_kvx_xloadsc1024 v1024i1:$z, i64:$mem, i64:$val, VariantMod:$mod0, LsumaskMod:$cond, QindexMod:$mod1))]>;
+  //xlovariantlsumaskqindex registerY? registerAq = offset27[registerZ]
+  defm ri27cq : I <OpcStr, LSU_X_LOAD, [], [VariantMod, QindexMod], [Signed27, SingleReg], [LsumaskMod, SingleReg], [MatrixReg], 1,
+                    [(set v1024i1:$r, (int_kvx_xloadsc1024 v1024i1:$z, (add i64:$mem, Signed27:$off), i64:$val, VariantMod:$mod0, LsumaskMod:$cond, QindexMod:$mod1))]>;
+  //xlovariantlsumaskqindex registerY? registerAq = extend27 offset27[registerZ]
+  defm ri54cq : I <OpcStr, LSU_Y_LOAD, [], [VariantMod, QindexMod], [Signed54, SingleReg], [LsumaskMod, SingleReg], [MatrixReg], 1,
+                    [(set v1024i1:$r, (int_kvx_xloadsc1024 v1024i1:$z, (add i64:$mem, Signed54:$off), i64:$val, VariantMod:$mod0, LsumaskMod:$cond, QindexMod:$mod1))]>;
+
+  // Missing 21 definitions that require the TCA buffer here
+  // xlovariantdoscale registerA = registerY[registerZ]
+  defm rr     : I <OpcStr, LSU_LOAD, [], [VariantMod, DoscaleMod], [SingleReg, SingleReg], [], [VectorReg]>;
+  // //xlovariantdoscaleqindex registerAq = registerY[registerZ]
+  defm rrq    : I <OpcStr, LSU_LOAD, [], [VariantMod, DoscaleMod, QindexMod], [SingleReg, SingleReg], [], [MatrixReg], 1>;
 }
 
 multiclass MC_SV <string OpcStr> {

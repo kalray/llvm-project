@@ -563,8 +563,8 @@ def: Pat<(int_kvx_xbuildfvw v256i1:$v0, v256i1:$v1),
             (REG_SEQUENCE WideReg,
                 (v256i1 VectorReg:$v0), (i32 sub_v0),
                 (v256i1 VectorReg:$v1), (i32 sub_v1))>;
-
-def : Pat<(v256i1(int_kvx_lv (add i64:$mem, (shl i64:$off, (i64 8))), SpeculateMod:$mod0)),
+let Predicates = [IsV1] in {
+def : Pat<(v256i1(int_kvx_lv (add i64:$mem, (shl i64:$off, (i64 5))), SpeculateMod:$mod0)),
           (LVrr SingleReg:$off, SingleReg:$mem, SpeculateMod:$mod0, 1)>;
 
 def : Pat<(v256i1(int_kvx_lv (add i64:$mem, i64:$off), SpeculateMod:$mod0)),
@@ -573,7 +573,7 @@ def : Pat<(v256i1(int_kvx_lv (add i64:$mem, i64:$off), SpeculateMod:$mod0)),
 def : Pat<(v256i1(int_kvx_lv i64:$mem, SpeculateMod:$mod0)),
           (LVri10 0, SingleReg:$mem, SpeculateMod:$mod0)>;
 
-def : Pat<(v1024i1(int_kvx_lvc MatrixReg:$z, (add i64:$mem, (shl i64:$off, (i64 8))), ColumnMod:$mod0, SpeculateMod:$mod1)),
+def : Pat<(v1024i1(int_kvx_lvc MatrixReg:$z, (add i64:$mem, (shl i64:$off, (i64 5))), ColumnMod:$mod0, SpeculateMod:$mod1)),
           (LVrrcs SingleReg:$off, SingleReg:$mem, ColumnMod:$mod0, SpeculateMod:$mod1, 1, MatrixReg:$z)>;
 
 def : Pat<(v1024i1(int_kvx_lvc MatrixReg:$z, (add i64:$mem, i64:$off), ColumnMod:$mod0, SpeculateMod:$mod1)),
@@ -581,6 +581,7 @@ def : Pat<(v1024i1(int_kvx_lvc MatrixReg:$z, (add i64:$mem, i64:$off), ColumnMod
 
 def : Pat<(v1024i1(int_kvx_lvc MatrixReg:$z, i64:$mem, ColumnMod:$mod0, SpeculateMod:$mod1)),
           (LVri10cs 0, SingleReg:$mem, ColumnMod:$mod0, SpeculateMod:$mod1, MatrixReg:$z)>;
+}
 
 // atomic register copy/shift operations
 def: Pat<(int_kvx_xswap256 QuadReg:$r, VectorReg:$v),
@@ -973,3 +974,23 @@ def: Pat<(int_kvx_alignv VectorRegE:$a2, VectorRegO:$a3, Unsigned6:$a4), (ALIGNV
 def: Pat<(int_kvx_alignv VectorRegO:$a2, VectorRegE:$a3, Unsigned6:$a4), (ALIGNVrorei $a2, $a3, Unsigned6:$a4)>;
 def: Pat<(int_kvx_alignv VectorRegE:$a2, VectorRegO:$a3, SingleReg:$a4), (ALIGNVreror $a2, $a3, $a4)>;
 def: Pat<(int_kvx_alignv VectorRegO:$a2, VectorRegE:$a3, SingleReg:$a4), (ALIGNVrorer $a2, $a3, $a4)>;
+
+let Predicates = [IsV2] in {
+def: Pat<(int_kvx_xload256 (add i64:$mem, (shl i64:$off, (i64 5))), VariantMod:$mod0),
+         (XLOrr SingleReg:$off, SingleReg:$mem, VariantMod:$mod0,  /*doscale*/ 1)>;
+
+def: Pat<(int_kvx_xload256 (add i64:$mem, i64:$off), VariantMod:$mod0),
+         (XLOrr SingleReg:$off, SingleReg:$mem, VariantMod:$mod0,  /*doscale*/ 0)>;
+
+def: Pat<(int_kvx_xload256 i64:$mem, VariantMod:$mod0),
+         (XLOri10 0, SingleReg:$mem, VariantMod:$mod0)>;
+
+def: Pat<(int_kvx_xloads1024 v1024i1:$z, (add i64:$mem, (shl i64:$off, (i64 5))), VariantMod:$mod0, QindexMod:$mod1),
+         (XLOrrq SingleReg:$off, SingleReg:$mem, VariantMod:$mod0, /*doscale*/ 1, QindexMod:$mod1, MatrixReg:$z)>;
+
+def: Pat<(int_kvx_xloads1024 v1024i1:$z, (add i64:$mem, i64:$off), VariantMod:$mod0, QindexMod:$mod1),
+         (XLOrrq SingleReg:$off, SingleReg:$mem, VariantMod:$mod0, /*doscale*/ 0, QindexMod:$mod1, MatrixReg:$z)>;
+
+def: Pat<(int_kvx_xloads1024 v1024i1:$z, i64:$mem, VariantMod:$mod0, QindexMod:$mod1),
+         (XLOri10q 0, SingleReg:$mem, VariantMod:$mod0, QindexMod:$mod1, MatrixReg:$z)>;
+}

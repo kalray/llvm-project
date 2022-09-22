@@ -67,6 +67,8 @@ public:
   void printRoundingMod(const MCInst *MI, unsigned OpNo, raw_ostream &O);
   void printSilentMod(const MCInst *MI, unsigned OpNo, raw_ostream &O);
   void printSpeculateMod(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printQindexMod(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printLsumaskMod(const MCInst *MI, unsigned OpNo, raw_ostream &O);
   void printColumnMod(const MCInst *MI, unsigned OpNo, raw_ostream &O);
   void printFloatcompMod(const MCInst *MI, unsigned OpNo, raw_ostream &O);
 

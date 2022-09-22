@@ -1506,6 +1506,8 @@ defm LO : MC_LOADS<"lo", QuadReg>;
 
 defm LV : MC_LV<"lv">, Requires<[IsV1]>;
 
+defm XLO : MC_XLO, Requires<[IsV2]>;
+
 defm SB : MC_STORES<"sb", SingleReg>;
 
 defm SH : MC_STORES<"sh", SingleReg>;
