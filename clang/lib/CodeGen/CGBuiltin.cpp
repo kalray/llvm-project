@@ -18380,7 +18380,7 @@ static Value *KVX_emitNaryBuiltinCore(unsigned N, CodeGenFunction &CGF,
 struct KvxModifier : StringMap<int> {
   static const int INVALID_MODIFIER = -1;
   inline int getModifierValue(const StringRef &M) const {
-    const auto V = find(M);
+    const auto V = find(M.lower());
     return (V == end()) ? INVALID_MODIFIER : V->second;
   }
 
