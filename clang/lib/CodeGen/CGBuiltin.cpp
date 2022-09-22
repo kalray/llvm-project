@@ -20255,12 +20255,16 @@ static const KvxModifier KVX_LSUMASK({{"dnez", 0},
 static const KvxModifier
     KVX_QINDEX({{"q0", 0}, {"q1", 1}, {"q2", 2}, {"q3", 3}});
 
-static const KvxModifier KVX_SPECULATE({{"", 0}, {"s", 1}});
+static const KvxModifier KVX_SCALARCOND = KVX_LSUCOND;
+
+static const KvxModifier KVX_SILENT({{"", 0}, {"s", 1}});
+
+static const KvxModifier KVX_SPECULATE = KVX_SILENT;
 
 static const KvxModifier KVX_VARIANT({{"", 0}, {"s", 1}, {"u", 2}, {"us", 3}});
 
-static const KvxModifier
-    KvxLdStAddrSpaceMod({{".u", 256}, {".us", 257}, {".s", 258}});
+static const KvxModifier KvxLdStAddrSpaceMod(
+    {{"", 0}, {".", 0}, {".u", 256}, {".us", 257}, {".s", 258}});
 
 typedef const std::vector<KvxModifier> KvxModifiers;
 
@@ -20274,8 +20278,6 @@ static void KVX_emitInvalidIntrinsicForCPU(CodeGenModule &CGM,
                     cpus.str() +
                     "' where the module is being compiled to: " + cpu.str();
   CGM.getDiags().Report(E->getBeginLoc(), diagID) << Err;
-  // << "This builtin is restricted to use with the cpu(s) '" << cpus.str()
-  // << "' where the module is being compiled to: " << cpu.str();
 }
 
 void KVX_ModifierError(CodeGenModule &CGM, const KvxModifiers &Modifiers,
@@ -20302,7 +20304,6 @@ void KVX_ModifierError(CodeGenModule &CGM, const KvxModifiers &Modifiers,
 static Value *KVX_emit(const unsigned NumArgs, CodeGenFunction &CGF,
                        const CallExpr *E, const unsigned IntrinsicID,
                        KvxModifiers &Modifiers, const StringRef &CPUSstr) {
-
   // Double check the number of arguments, including the modifier string.
   if (E->getNumArgs() != NumArgs) {
     CGF.CGM.Error(E->getBeginLoc(), "Incorrect number of arguments to builtin");
@@ -20557,8 +20558,6 @@ static int KVX_getLoadAS(clang::ASTContext &Ctx, const clang::Expr *E,
     return -1;
 
   const StringRef Str = cast<clang::StringLiteral>(E)->getString();
-  if (Str.empty())
-    return 0;
 
   return Mod.getModifierValue(Str);
 }
@@ -22412,8 +22411,6 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     return KVX_emitScaleNarrowBuiltin(2, Intrinsic::kvx_xfnarrow44wh, *this, E);
   case KVX::BI__builtin_kvx_xfscalewo:
     return KVX_emitScaleNarrowBuiltin(2, Intrinsic::kvx_xfscalewo, *this, E, 3);
-  case KVX::BI__builtin_kvx_xffma44hw:
-    return KVX_emitScaleNarrowBuiltin(2, Intrinsic::kvx_xffma44hw, *this, E, 4);
   case KVX::BI__builtin_kvx_xfmma484hw:
     return KVX_emitScaleNarrowBuiltin(2, Intrinsic::kvx_xfmma484hw, *this, E,
                                       4);
