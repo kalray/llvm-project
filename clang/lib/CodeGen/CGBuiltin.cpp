@@ -20443,7 +20443,8 @@ static int KVX_getLoadAS(clang::ASTContext &Ctx, const clang::Expr *E,
 
 static bool KVX_isVolatile(CodeGenFunction &CGF, const CallExpr *E) {
   bool Volatile = false;
-  auto *VolatileExpr = E->getArg(2)->IgnoreParenImpCasts();
+  if (E->getNumArgs() == 3) {
+    auto *VolatileExpr = E->getArg(2)->IgnoreParenImpCasts();
 
   if (VolatileExpr->getStmtClass() == Stmt::IntegerLiteralClass)
     Volatile = cast<clang::IntegerLiteral>(VolatileExpr)->getValue().getZExtValue() != 0;
@@ -20451,7 +20452,7 @@ static bool KVX_isVolatile(CodeGenFunction &CGF, const CallExpr *E) {
     Volatile = cast<clang::CXXBoolLiteralExpr>(VolatileExpr)->getValue();
   else
     CGF.CGM.Error(E->getArg(2)->getBeginLoc(), "is not a bool immediate value");
-
+  }
   QualType PtrTy = E->getArg(0)->IgnoreImpCasts()->getType();
   Volatile |= PtrTy->castAs<clang::PointerType>()
                   ->getPointeeType()

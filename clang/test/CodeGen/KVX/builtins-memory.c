@@ -161,7 +161,7 @@ long lhs(void *p) {
 // CHECK-NEXT:    ret i32 [[TMP2]]
 //
 unsigned int lwz(void *p) {
-  return __builtin_kvx_lwz(p, ".u", 0);
+  return __builtin_kvx_lwz(p, ".u");
 }
 
 // CHECK-LABEL: @lws(
