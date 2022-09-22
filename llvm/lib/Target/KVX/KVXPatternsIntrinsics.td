@@ -581,6 +581,9 @@ def : Pat<(v1024i1(int_kvx_lvc MatrixReg:$z, (add i64:$mem, i64:$off), ColumnMod
 
 def : Pat<(v1024i1(int_kvx_lvc MatrixReg:$z, i64:$mem, ColumnMod:$mod0, SpeculateMod:$mod1)),
           (LVri10cs 0, SingleReg:$mem, ColumnMod:$mod0, SpeculateMod:$mod1, MatrixReg:$z)>;
+
+def : Pat<(int_kvx_sv  i64:$mem, v256i1:$op0),
+          (SVri10 0, SingleReg:$mem, VectorReg:$op0)>;
 }
 
 // atomic register copy/shift operations
@@ -675,9 +678,9 @@ def: Pat<(int_kvx_xfmma444hw WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
             sub_v1)>;
 
 // TCA arithmetic intrinsics
-def: Pat<(int_kvx_xmma444hbd0 MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4), (MMA444HBD0 $a2, $a3, $a4)>;
-def: Pat<(int_kvx_xmma444hbd1 MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4), (MMA444HBD1 $a2, $a3, $a4)>;
-def: Pat<(int_kvx_xmma484hbd MatrixReg:$a2, WideReg:$a3, VectorReg:$a4),
+def: Pat<(int_kvx_xmma444hbd0 VectorReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_S), (MMA444HBD0 $a2, $a3, $a4)>;
+def: Pat<(int_kvx_xmma444hbd1 VectorReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_S), (MMA444HBD1 $a2, $a3, $a4)>;
+def: Pat<(int_kvx_xmma484hbd WideReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_S),
          (MMA444HBD1
             (MMA444HBD0 $a2,
               (v256i1(EXTRACT_SUBREG $a3, sub_v0)),
@@ -685,10 +688,10 @@ def: Pat<(int_kvx_xmma484hbd MatrixReg:$a2, WideReg:$a3, VectorReg:$a4),
             (v256i1(EXTRACT_SUBREG $a3, sub_v1)),
             $a4)>;
 
-def: Pat<(int_kvx_xmma444hd MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4), (MMA444HD $a2, $a3, $a4)>;
-def: Pat<(int_kvx_xmma444suhbd0 MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4), (MMA444SUHBD0 $a2, $a3, $a4)>;
-def: Pat<(int_kvx_xmma444suhbd1 MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4), (MMA444SUHBD1 $a2, $a3, $a4)>;
-def: Pat<(int_kvx_xmma484suhbd MatrixReg:$a2, WideReg:$a3, VectorReg:$a4),
+def: Pat<(int_kvx_xmma444hd VectorReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_S), (MMA444HD $a2, $a3, $a4)>;
+def: Pat<(int_kvx_xmma444hbd0 VectorReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_SU), (MMA444SUHBD0 $a2, $a3, $a4)>;
+def: Pat<(int_kvx_xmma444hbd1 VectorReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_SU), (MMA444SUHBD1 $a2, $a3, $a4)>;
+def: Pat<(int_kvx_xmma484hbd WideReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_SU),
          (MMA444SUHBD1
             (MMA444SUHBD0 $a2,
               (v256i1(EXTRACT_SUBREG $a3, sub_v0)),
@@ -696,10 +699,10 @@ def: Pat<(int_kvx_xmma484suhbd MatrixReg:$a2, WideReg:$a3, VectorReg:$a4),
             (v256i1(EXTRACT_SUBREG $a3, sub_v1)),
             $a4)>;
 
-def: Pat<(int_kvx_xmma444suhd MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4), (MMA444SUHD $a2, $a3, $a4)>;
-def: Pat<(int_kvx_xmma444uhbd0 MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4), (MMA444UHBD0 $a2, $a3, $a4)>;
-def: Pat<(int_kvx_xmma444uhbd1 MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4), (MMA444UHBD1 $a2, $a3, $a4)>;
-def: Pat<(int_kvx_xmma484uhbd MatrixReg:$a2, WideReg:$a3, VectorReg:$a4),
+def: Pat<(int_kvx_xmma444hd VectorReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_SU), (MMA444SUHD $a2, $a3, $a4)>;
+def: Pat<(int_kvx_xmma444hbd0 VectorReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_U), (MMA444UHBD0 $a2, $a3, $a4)>;
+def: Pat<(int_kvx_xmma444hbd1 VectorReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_U), (MMA444UHBD1 $a2, $a3, $a4)>;
+def: Pat<(int_kvx_xmma484hbd WideReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_U),
          (MMA444UHBD1
             (MMA444UHBD0 $a2,
               (v256i1(EXTRACT_SUBREG $a3, sub_v0)),
@@ -707,10 +710,10 @@ def: Pat<(int_kvx_xmma484uhbd MatrixReg:$a2, WideReg:$a3, VectorReg:$a4),
             (v256i1(EXTRACT_SUBREG $a3, sub_v1)),
             $a4)>;
 
-def: Pat<(int_kvx_xmma444uhd MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4), (MMA444UHD $a2, $a3, $a4)>;
-def: Pat<(int_kvx_xmma444ushbd0 MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4), (MMA444USHBD0 $a2, $a3, $a4)>;
-def: Pat<(int_kvx_xmma444ushbd1 MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4), (MMA444USHBD1 $a2, $a3, $a4)>;
-def: Pat<(int_kvx_xmma484ushbd MatrixReg:$a2, WideReg:$a3, VectorReg:$a4),
+def: Pat<(int_kvx_xmma444hd VectorReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_U), (MMA444UHD $a2, $a3, $a4)>;
+def: Pat<(int_kvx_xmma444hbd0 VectorReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_US), (MMA444USHBD0 $a2, $a3, $a4)>;
+def: Pat<(int_kvx_xmma444hbd1 VectorReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_US), (MMA444USHBD1 $a2, $a3, $a4)>;
+def: Pat<(int_kvx_xmma484hbd WideReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_US),
          (MMA444USHBD1
             (MMA444USHBD0 $a2,
               (v256i1(EXTRACT_SUBREG $a3, sub_v0)),
@@ -718,11 +721,11 @@ def: Pat<(int_kvx_xmma484ushbd MatrixReg:$a2, WideReg:$a3, VectorReg:$a4),
             (v256i1(EXTRACT_SUBREG $a3, sub_v1)),
             $a4)>;
 
-def: Pat<(int_kvx_xmma444ushd MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4), (MMA444USHD $a2, $a3, $a4)>;
-def: Pat<(int_kvx_xmma484bw WideReg:$a2, VectorReg:$a3, VectorReg:$a4), (MMA484BW $a2, $a3, $a4)>, Requires<[IsV1]>;
-def: Pat<(int_kvx_xmma484subw WideReg:$a2, VectorReg:$a3, VectorReg:$a4), (MMA484SUBW $a2, $a3, $a4)>;
-def: Pat<(int_kvx_xmma484ubw WideReg:$a2, VectorReg:$a3, VectorReg:$a4), (MMA484UBW $a2, $a3, $a4)>;
-def: Pat<(int_kvx_xmma484usbw WideReg:$a2, VectorReg:$a3, VectorReg:$a4), (MMA484USBW $a2, $a3, $a4)>;
+def: Pat<(int_kvx_xmma444hd VectorReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_US), (MMA444USHD $a2, $a3, $a4)>;
+def: Pat<(int_kvx_xmma484bw VectorReg:$a3, VectorReg:$a4, WideReg:$a2, UnSignMod_S), (MMA484BW $a2, $a3, $a4)>, Requires<[IsV1]>;
+def: Pat<(int_kvx_xmma484bw VectorReg:$a3, VectorReg:$a4, WideReg:$a2, UnSignMod_SU), (MMA484SUBW $a2, $a3, $a4)>, Requires<[IsV1]>;
+def: Pat<(int_kvx_xmma484bw VectorReg:$a3, VectorReg:$a4, WideReg:$a2, UnSignMod_U), (MMA484UBW $a2, $a3, $a4)>, Requires<[IsV1]>;
+def: Pat<(int_kvx_xmma484bw VectorReg:$a3, VectorReg:$a4, WideReg:$a2, UnSignMod_US), (MMA484USBW $a2, $a3, $a4)>, Requires<[IsV1]>;
 
 def: Pat<(int_kvx_xmt44d MatrixReg:$a1), (MT44D $a1)>, Requires<[IsV1]>;
 

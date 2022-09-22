@@ -18568,8 +18568,13 @@ static const KvxModifier KVX_SPECULATE = KVX_SILENT;
 
 static const KvxModifier KVX_VARIANT({{"", 0}, {"s", 1}, {"u", 2}, {"us", 3}});
 
+const KvxModifier KvxExtendMul({{"", 0}, {"s", 0}, {"su", 1}, {"u", 2}});
+
 static const KvxModifier KvxLdStAddrSpaceMod(
     {{"", 0}, {".", 0}, {".u", 256}, {".us", 257}, {".s", 258}});
+
+const KvxModifier
+    KvxUnSignMod({{"", 0}, {"s", 0}, {"su", 1}, {"u", 2}, {"us", 3}});
 
 typedef const std::vector<KvxModifier> KvxModifiers;
 

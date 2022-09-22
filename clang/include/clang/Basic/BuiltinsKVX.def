@@ -477,37 +477,10 @@ NARY_BUILTIN(xfmma242hw2, "Tx256Tx256Tx512Tx256Tx256", "n", 4)
 NARY_BUILTIN(xfmma242hw3, "Tx256Tx256Tx512Tx256Tx256", "n", 4)
 NARY_BUILTIN(xfmma444hw,  "Tx512Tx512Tx256Tx256", "n", 3)
 
-NARY_BUILTIN(xmma444hbd0, "Tx1024Tx1024Tx256Tx256", "n", 3)
-NARY_BUILTIN(xmma444hbd1, "Tx1024Tx1024Tx256Tx256", "n", 3)
-NARY_BUILTIN(xmma484hbd, "Tx1024Tx1024Tx512Tx256", "n", 3)
-
-NARY_BUILTIN(xmma444hd, "Tx1024Tx1024Tx256Tx256", "n", 3)
-
-NARY_BUILTIN(xmma444suhbd0, "Tx1024Tx1024Tx256Tx256", "n", 3)
-NARY_BUILTIN(xmma444suhbd1, "Tx1024Tx1024Tx256Tx256", "n", 3)
-NARY_BUILTIN(xmma484suhbd, "Tx1024Tx1024Tx512Tx256", "n", 3)
-
-NARY_BUILTIN(xmma444suhd, "Tx1024Tx1024Tx256Tx256", "n", 3)
-
-NARY_BUILTIN(xmma444uhbd0, "Tx1024Tx1024Tx256Tx256", "n", 3)
-NARY_BUILTIN(xmma444uhbd1, "Tx1024Tx1024Tx256Tx256", "n", 3)
-NARY_BUILTIN(xmma484uhbd, "Tx1024Tx1024Tx512Tx256", "n", 3)
-
-NARY_BUILTIN(xmma444uhd, "Tx1024Tx1024Tx256Tx256", "n", 3)
-
-NARY_BUILTIN(xmma444ushbd0, "Tx1024Tx1024Tx256Tx256", "n", 3)
-NARY_BUILTIN(xmma444ushbd1, "Tx1024Tx1024Tx256Tx256", "n", 3)
-NARY_BUILTIN(xmma484ushbd, "Tx1024Tx1024Tx512Tx256", "n", 3)
-
-NARY_BUILTIN(xmma444ushd, "Tx1024Tx1024Tx256Tx256", "n", 3)
-
-KVX_BUILTIN(xmma484subw, "Tx512Tx512Tx256Tx256", "n", 3, "", )
-KVX_BUILTIN(xmma484ubw, "Tx512Tx512Tx256Tx256", "n", 3, "", )
-KVX_BUILTIN(xmma484usbw, "Tx512Tx512Tx256Tx256", "n", 3, "", )
-KVX_BUILTIN(xmma484bw, "Tx512Tx512Tx256Tx256", "n", 3, "", )
-KVX_BUILTIN(xmmasu484bw, "Tx512Tx512Tx256Tx256", "n", 3, "", )
-KVX_BUILTIN(xmmau484bw, "Tx512Tx512Tx256Tx256", "n", 3, "", )
-KVX_BUILTIN(xmmaus484bw, "Tx512Tx512Tx256Tx256", "n", 3, "", )
+KVX_BUILTIN(xmma444hbd0, "Tx1024Tx256Tx256Tx1024cC*", "n", 4, "", KvxUnSignMod)
+KVX_BUILTIN(xmma444hbd1, "Tx1024Tx256Tx256Tx1024cC*", "n", 4, "", KvxUnSignMod)
+KVX_BUILTIN(xmma484hbd, "Tx1024Tx512Tx256Tx1024cC*", "n", 4, "", KvxUnSignMod)
+KVX_BUILTIN(xmma484bw, "Tx512Tx256Tx256Tx512cC*", "n", 4, "", KvxUnSignMod)
 KVX_BUILTIN(xmt44d, "Tx1024Tx1024", "n", 1, "", )
 
 BUILTIN(__builtin_kvx_xfscalewv, "Tx256Tx256cC*", "n")
@@ -525,22 +498,16 @@ KVX_BUILTIN(lvc_cond, "Tx1024Tx1024&vCD*LicC*", "n", 4, "kv3-1", KVX_COLUMN, KVX
 KVX_BUILTIN(sv, "vvCD*Tx256", "n", 2, "kv3-1", )
 KVX_BUILTIN(sv_cond, "vvCD*Tx256LiCcC*", "n", 4, "kv3-1", KVX_LSUCOND)
 
+KVX_BUILTIN(xmma444hd, "Tx1024Tx256Tx256Tx1024cC*", "n", 4, "kv3-1", KvxUnSignMod)
 
 //===----------------------------------------------------------------------===//
 // KV3 V2 TCA builtins
 //===----------------------------------------------------------------------===//
 
 KVX_BUILTIN(xclampwo, "Tx256Tx256Tx256Tx256", "n", 3, "kv3-2", )
-KVX_BUILTIN(xmadd44bw0, "Tx512Tx512Tx256Tx256", "n", 3, "kv3-2", )
-KVX_BUILTIN(xmadd44bw1, "Tx512Tx512Tx256Tx256", "n", 3, "kv3-2", )
-KVX_BUILTIN(xmaddsu44bw0, "Tx512Tx512Tx256Tx256", "n", 3, "kv3-2", )
-KVX_BUILTIN(xmaddsu44bw1, "Tx512Tx512Tx256Tx256", "n", 3, "kv3-2", )
-KVX_BUILTIN(xmaddu44bw0, "Tx512Tx512Tx256Tx256", "n", 3, "kv3-2", )
-KVX_BUILTIN(xmaddu44bw1, "Tx512Tx512Tx256Tx256", "n", 3, "kv3-2", )
-KVX_BUILTIN(xmma4164bw, "Tx512Tx512Tx512Tx512", "n", 3, "kv3-2", )
-KVX_BUILTIN(xmmasu4164bw, "Tx512Tx512Tx512Tx512", "n", 3, "kv3-2", )
-KVX_BUILTIN(xmmau4164bw, "Tx512Tx512Tx512Tx512", "n", 3, "kv3-2", )
-KVX_BUILTIN(xmmaus4164bw, "Tx512Tx512Tx512Tx512", "n", 3, "kv3-2", )
+KVX_BUILTIN(xmadd44bw0, "Tx512Tx256Tx256Tx512cC*", "n", 4, "kv3-2", KvxExtendMul)
+KVX_BUILTIN(xmadd44bw1, "Tx512Tx256Tx256Tx512cC*", "n", 4, "kv3-2", KvxExtendMul)
+KVX_BUILTIN(xmma4164bw, "Tx512Tx512Tx512Tx512cC*", "n", 4, "kv3-2", KvxUnSignMod)
 KVX_BUILTIN(xsx48bw, "Tx1024Tx256", "n", 1, "kv3-2", )
 KVX_BUILTIN(xzx48bw, "Tx1024Tx256", "n", 1, "kv3-2", )
 KVX_BUILTIN(xtrunc48wb, "Tx256Tx1024", "n", 1, "kv3-2", )
