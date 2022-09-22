@@ -1522,6 +1522,8 @@ defm SO : MC_STORES<"so", QuadReg>;
 
 defm SV : MC_SV<"sv">, Requires<[IsV1]>;
 
+defm XSO : MC_XSO, Requires<[IsV2]>;
+
 defm ACSWAPW : MC_0D<"acswapw">;
 
 defm ACSWAPD : MC_0D<"acswapd">;

@@ -996,4 +996,76 @@ def: Pat<(int_kvx_xloads1024 v1024i1:$z, (add i64:$mem, i64:$off), VariantMod:$m
 
 def: Pat<(int_kvx_xloads1024 v1024i1:$z, i64:$mem, VariantMod:$mod0, QindexMod:$mod1),
          (XLOri10q 0, SingleReg:$mem, VariantMod:$mod0, QindexMod:$mod1, MatrixReg:$z)>;
-}
+
+def: Pat<(int_kvx_xload512 i64:$mem, VariantMod:$mod0),
+         (REG_SEQUENCE WideReg,
+            (XLOri10 0, SingleReg:$mem, VariantMod:$mod0),
+            sub_v0,
+            (XLOri10 32, SingleReg:$mem, VariantMod:$mod0),
+            sub_v1)>;
+
+def: Pat<(int_kvx_xload1024 i64:$mem, VariantMod:$mod0),
+         (REG_SEQUENCE MatrixReg,
+            (XLOri10 0, SingleReg:$mem, VariantMod:$mod0),
+            sub_v0,
+            (XLOri10 32, SingleReg:$mem, VariantMod:$mod0),
+            sub_v1,
+            (XLOri10 64, SingleReg:$mem, VariantMod:$mod0),
+            sub_v2,
+            (XLOri10 96, SingleReg:$mem, VariantMod:$mod0),
+            sub_v3)>;
+
+def: Pat<(int_kvx_xloadc512 v512i1:$z, i64:$mem, i64:$val, i32:$mod0, LsumaskScalarMod:$cond),
+         (REG_SEQUENCE WideReg,
+            (XLOrrc SingleReg:$mem, VariantMod:$mod0, (v256i1 (EXTRACT_SUBREG WideReg:$z, sub_v0)), LsumaskScalarMod:$cond, SingleReg:$val),
+            sub_v0,
+            (XLOri27c 32, SingleReg:$mem, VariantMod:$mod0, (v256i1 (EXTRACT_SUBREG WideReg:$z, sub_v1)), LsumaskScalarMod:$cond, SingleReg:$val),
+            sub_v1)>;
+
+def: Pat<(int_kvx_xloadc512 v512i1:$z, i64:$mem, i64:$val, i32:$mod0, LsumaskMaskMod:$cond),
+         (REG_SEQUENCE WideReg,
+            (XLOrrc SingleReg:$mem, VariantMod:$mod0, (v256i1 (EXTRACT_SUBREG WideReg:$z, sub_v0)), LsumaskMaskMod:$cond, SingleReg:$val),
+            sub_v0,
+            (XLOri27c 32, SingleReg:$mem, VariantMod:$mod0, (v256i1 (EXTRACT_SUBREG WideReg:$z, sub_v1)), LsumaskMaskMod:$cond, (SRLDri SingleReg:$val, (i64 32))),
+            sub_v1)>;
+
+def: Pat<(int_kvx_xloadc1024 v1024i1:$z, i64:$mem, v4i32:$val, i32:$mod0, LsumaskScalarMod:$cond),
+         (REG_SEQUENCE MatrixReg,
+            (XLOrrc SingleReg:$mem, VariantMod:$mod0, (v256i1 (EXTRACT_SUBREG MatrixReg:$z, sub_v0)), LsumaskScalarMod:$cond, (i64 (EXTRACT_SUBREG PairedReg:$val, sub_s0))),
+            sub_v0,
+            (XLOri27c 32, SingleReg:$mem, VariantMod:$mod0, (v256i1 (EXTRACT_SUBREG MatrixReg:$z, sub_v1)), LsumaskScalarMod:$cond, (i64 (EXTRACT_SUBREG PairedReg:$val, sub_s0))),
+            sub_v1,
+            (XLOri27c 64, SingleReg:$mem, VariantMod:$mod0, (v256i1 (EXTRACT_SUBREG MatrixReg:$z, sub_v1)), LsumaskScalarMod:$cond, (i64 (EXTRACT_SUBREG PairedReg:$val, sub_s0))),
+            sub_v2,
+            (XLOri27c 96, SingleReg:$mem, VariantMod:$mod0, (v256i1 (EXTRACT_SUBREG MatrixReg:$z, sub_v1)), LsumaskScalarMod:$cond, (i64 (EXTRACT_SUBREG PairedReg:$val, sub_s0))),
+            sub_v3)>;
+
+def: Pat<(int_kvx_xloadc1024 v1024i1:$z, i64:$mem, v4i32:$val, i32:$mod0, LsumaskMaskMod:$cond),
+         (REG_SEQUENCE MatrixReg,
+            (XLOrrc SingleReg:$mem, VariantMod:$mod0, (v256i1 (EXTRACT_SUBREG MatrixReg:$z, sub_v0)), LsumaskMaskMod:$cond, (i64 (EXTRACT_SUBREG PairedReg:$val, sub_s0))),
+            sub_v0,
+            (XLOri27c 32, SingleReg:$mem, VariantMod:$mod0, (v256i1 (EXTRACT_SUBREG MatrixReg:$z, sub_v1)), LsumaskMaskMod:$cond, (SRLDri (i64 (EXTRACT_SUBREG PairedReg:$val, sub_s0)), 32)),
+            sub_v1,
+            (XLOri27c 64, SingleReg:$mem, VariantMod:$mod0, (v256i1 (EXTRACT_SUBREG MatrixReg:$z, sub_v1)), LsumaskMaskMod:$cond, (i64 (EXTRACT_SUBREG PairedReg:$val, sub_s1))),
+            sub_v2,
+            (XLOri27c 96, SingleReg:$mem, VariantMod:$mod0, (v256i1 (EXTRACT_SUBREG MatrixReg:$z, sub_v1)), LsumaskMaskMod:$cond, (SRLDri (i64 (EXTRACT_SUBREG PairedReg:$val, sub_s1)), 32)),
+            sub_v3)>;
+
+def : Pat<(int_kvx_xstore256  v256i1:$op0, i64:$mem),
+          (XSOri10 0, SingleReg:$mem, VectorReg:$op0)>;
+
+def : Pat<(int_kvx_xstores1024 v1024i1:$op0, i64:$mem, QindexMod:$mod0),
+          (XSOri10q 0, i64:$mem, MatrixReg:$op0, QindexMod:$mod0)>;
+
+def: Pat<(int_kvx_xstore256 v256i1:$op0, (add i64:$mem, (shl i64:$off, (i64 5)))),
+         (XSOrr SingleReg:$off, SingleReg:$mem, VectorReg:$op0, /*doscale*/ 1)>;
+
+def: Pat<(int_kvx_xstore256 v256i1:$op0, (add i64:$mem, i64:$off)),
+         (XSOrr SingleReg:$off, SingleReg:$mem, VectorReg:$op0, /*doscale*/ 0)>;
+
+def : Pat<(int_kvx_xstores1024 MatrixReg:$op0, (add i64:$mem, (shl i64:$off, (i64 5))), QindexMod:$mod1),
+          (XSOrrq SingleReg:$off, SingleReg:$mem, MatrixReg:$op0, /*doscale*/ 1, QindexMod:$mod1)>;
+
+def : Pat<(int_kvx_xstores1024 MatrixReg:$op0, (add i64:$mem, i64:$off), QindexMod:$mod1),
+          (XSOrrq SingleReg:$off, SingleReg:$mem, MatrixReg:$op0, /*doscale*/ 0, QindexMod:$mod1)>;
+} // let Predicates = [IsV2]

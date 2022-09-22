@@ -30,7 +30,7 @@ define void @zeroinit256() {
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    copyv $a0 = $a48
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    sv 0[$r12] = $a0
+; CV2-NEXT:    xso 0[$r12] = $a0
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    goto .LBB0_1
 ; CV2-NEXT:    ;;
@@ -102,9 +102,9 @@ define void @zeroinit512() {
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    copyv $a1 = $a51
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    sv 64[$r31] = $a0
+; CV2-NEXT:    xso 64[$r31] = $a0
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    sv 96[$r31] = $a1
+; CV2-NEXT:    xso 96[$r31] = $a1
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    goto .LBB1_1
 ; CV2-NEXT:    ;;
@@ -196,13 +196,13 @@ define void @zeroinit1024() {
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    copyv $a3 = $a51
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    sv 128[$r31] = $a0
+; CV2-NEXT:    xso 128[$r31] = $a0
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    sv 160[$r31] = $a1
+; CV2-NEXT:    xso 160[$r31] = $a1
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    sv 192[$r31] = $a2
+; CV2-NEXT:    xso 192[$r31] = $a2
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    sv 224[$r31] = $a3
+; CV2-NEXT:    xso 224[$r31] = $a3
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    goto .LBB2_1
 ; CV2-NEXT:    ;;

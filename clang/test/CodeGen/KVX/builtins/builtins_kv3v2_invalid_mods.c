@@ -6,10 +6,5 @@ void dflushsw(unsigned long w, unsigned long s) {
   __builtin_kvx_dflushsw(w, s, ".s");
   __builtin_kvx_dflushsw(w, s, ".l2.l1");
 }
-// CHECK: {{.*}}builtins_kv3v2_invalid_mods.c:4:32: error: Must define cache level modifier.
-// CHECK-NEXT:   __builtin_kvx_dflushsw(w, s, 0);
 
-// CHECK: {{.*}}builtins_kv3v2_invalid_mods.c:4:3: error: cannot compile this builtin function yet
-// CHECK-NEXT:   __builtin_kvx_dflushsw(w, s, 0);
-
-// ; CHECK-COUNT-3: {{.*}} Invalid cache level modifer, should be one of: "", ".", ".l1", ".l2"
+// ; CHECK-COUNT-4: {{.*}}This builtin accept a modifier string composed by: ['.l1', '.l2']

@@ -164,3 +164,11 @@ def QindexMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 3);}]>
 def LsumaskMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 7);}]> {
   let PrintMethod = "printLsumaskMod";
 }
+
+def LsumaskScalarMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 3);}]> {
+  let PrintMethod = "printLsumaskMod";
+}
+
+def LsumaskMaskMod : Operand<i32>, ImmLeaf<i32, [{return (4 <= Imm) && (Imm <= 7);}]> {
+  let PrintMethod = "printLsumaskMod";
+}

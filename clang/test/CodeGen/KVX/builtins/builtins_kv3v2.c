@@ -4,14 +4,10 @@
 // CHECK-LABEL: @dflushsw(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    tail call void @llvm.kvx.dflushsw(i64 [[W:%.*]], i64 [[S:%.*]], i32 0)
-// CHECK-NEXT:    tail call void @llvm.kvx.dflushsw(i64 [[W]], i64 [[S]], i32 0)
-// CHECK-NEXT:    tail call void @llvm.kvx.dflushsw(i64 [[W]], i64 [[S]], i32 0)
 // CHECK-NEXT:    tail call void @llvm.kvx.dflushsw(i64 [[W]], i64 [[S]], i32 1)
 // CHECK-NEXT:    ret void
 //
 void dflushsw(unsigned long w, unsigned long s) {
-  __builtin_kvx_dflushsw(w, s, "");
-  __builtin_kvx_dflushsw(w, s, ".");
   __builtin_kvx_dflushsw(w, s, ".l1");
   __builtin_kvx_dflushsw(w, s, ".l2");
 }
@@ -19,14 +15,10 @@ void dflushsw(unsigned long w, unsigned long s) {
 // CHECK-LABEL: @dinvalsw(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    tail call void @llvm.kvx.dinvalsw(i64 [[W:%.*]], i64 [[S:%.*]], i32 0)
-// CHECK-NEXT:    tail call void @llvm.kvx.dinvalsw(i64 [[W]], i64 [[S]], i32 0)
-// CHECK-NEXT:    tail call void @llvm.kvx.dinvalsw(i64 [[W]], i64 [[S]], i32 0)
 // CHECK-NEXT:    tail call void @llvm.kvx.dinvalsw(i64 [[W]], i64 [[S]], i32 1)
 // CHECK-NEXT:    ret void
 //
 void dinvalsw(unsigned long w, unsigned long s) {
-  __builtin_kvx_dinvalsw(w, s, "");
-  __builtin_kvx_dinvalsw(w, s, ".");
   __builtin_kvx_dinvalsw(w, s, ".l1");
   __builtin_kvx_dinvalsw(w, s, ".l2");
 }
@@ -34,14 +26,10 @@ void dinvalsw(unsigned long w, unsigned long s) {
 // CHECK-LABEL: @dpurgesw(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    tail call void @llvm.kvx.dpurgesw(i64 [[W:%.*]], i64 [[S:%.*]], i32 0)
-// CHECK-NEXT:    tail call void @llvm.kvx.dpurgesw(i64 [[W]], i64 [[S]], i32 0)
-// CHECK-NEXT:    tail call void @llvm.kvx.dpurgesw(i64 [[W]], i64 [[S]], i32 0)
 // CHECK-NEXT:    tail call void @llvm.kvx.dpurgesw(i64 [[W]], i64 [[S]], i32 1)
 // CHECK-NEXT:    ret void
 //
 void dpurgesw(unsigned long w, unsigned long s) {
-  __builtin_kvx_dpurgesw(w, s, "");
-  __builtin_kvx_dpurgesw(w, s, ".");
   __builtin_kvx_dpurgesw(w, s, ".l1");
   __builtin_kvx_dpurgesw(w, s, ".l2");
 }

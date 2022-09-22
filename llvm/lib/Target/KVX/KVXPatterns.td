@@ -575,7 +575,9 @@ defm : StorePat<store, v2i64, PairedReg, 4, SQp, SQri10,  SQri37,  SQri64, SQrr>
 defm : StorePat<store, v4i32, PairedReg, 4, SQp, SQri10,  SQri37,  SQri64, SQrr>;
 
 defm : StorePat<store, v4i64, QuadReg, 5, SOp, SOri10,  SOri37,  SOri64, SOrr>;
-defm : StorePat<store, v256i1,VectorReg,5, SVp, SVri10,  SVri37,  SVri64, SVrr>;
+defm : StorePat<store, v256i1,VectorReg,5, SVp, SVri10,  SVri37,  SVri64, SVrr>, Requires<[IsV1]>;
+defm : StorePat<store, v256i1,VectorReg,5, SVp, XSOri10,  XSOri37,  XSOri64, XSOrr>, Requires<[IsV2]>;
+
 // sign extend optimizations
 def : Pat<(and SingleReg:$val,(i64 0xffffffff)), (ZXWD SingleReg:$val)>;
 def : Pat<(and SingleReg:$val,(i32 0xffff)), (ZXHD SingleReg:$val)>;
