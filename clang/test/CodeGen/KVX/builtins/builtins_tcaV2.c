@@ -429,28 +429,6 @@ void xstorec256( __kvx_x256 *v, void *p, long c) {
   __builtin_kvx_xstorec256(*v, p, 1, ".mt");
 }
 
-// CHECK-LABEL: @xstores1024(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <1024 x i1>, <1024 x i1>* [[V:%.*]], align 32, [[TBAA8]]
-// CHECK-NEXT:    tail call void @llvm.kvx.xstores1024(<1024 x i1> [[TMP0]], i8* [[P:%.*]], i32 1)
-// CHECK-NEXT:    ret void
-//
-void xstores1024( __kvx_x1024 *v, void *p) {
-  __builtin_kvx_xstores1024(*v, p, ".q1");
-}
-
-// CHECK-LABEL: @xstoresc1024(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <1024 x i1>, <1024 x i1>* [[V:%.*]], align 32, [[TBAA8]]
-// CHECK-NEXT:    tail call void @llvm.kvx.xstoresc1024(<1024 x i1> [[TMP0]], i8* [[P:%.*]], i64 1, i32 0, i32 3)
-// CHECK-NEXT:    ret void
-//
-void xstoresc1024( __kvx_x1024 *v, void *p) {
-  __builtin_kvx_xstoresc1024(*v, p, 1, ".dnez.q3");
-}
-
-//
-
 // CHECK-LABEL: @xloadStore256(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1> addrspace(257)* [[V:%.*]], i64 1

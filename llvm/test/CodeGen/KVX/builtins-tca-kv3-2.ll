@@ -822,48 +822,6 @@ define void @xstorec256(<256 x i1>* nocapture readonly %0, i8* %1, i64 %2) {
 
 declare void @llvm.kvx.xstorec256(<256 x i1>, i8*, i64, i32)
 
-define void @xstores1024(<1024 x i1>* nocapture readonly %0, i8* %1) {
-; CHECK-LABEL: xstores1024:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    xlo $a3 = 96[$r0]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xlo $a2 = 64[$r0]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xlo $a1 = 32[$r0]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xlo $a0 = 0[$r0]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso.q1 0[$r1] = $a0a1a2a3
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
-  %3 = load <1024 x i1>, <1024 x i1>* %0
-  tail call void @llvm.kvx.xstores1024(<1024 x i1> %3, i8* %1, i32 1)
-  ret void
-}
-
-declare void @llvm.kvx.xstores1024(<1024 x i1>, i8*, i32)
-
-define void @xstoresc1024(<1024 x i1>* nocapture readonly %0, i8* %1) {
-; CHECK-LABEL: xstoresc1024:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    xlo $a3 = 96[$r0]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xlo $a2 = 64[$r0]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xlo $a1 = 32[$r0]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xlo $a0 = 0[$r0]
-; CHECK-NEXT:    make $r0 = 1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso.dnez.q3 $r0 ? [$r1] = $a0a1a2a3
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
-  %3 = load <1024 x i1>, <1024 x i1>* %0
-  tail call void @llvm.kvx.xstoresc1024(<1024 x i1> %3, i8* %1, i64 1, i32 0, i32 3)
-  ret void
-}
-
-declare void @llvm.kvx.xstoresc1024(<1024 x i1>, i8*, i64, i32, i32)
 
 define void @xloadStore256(<256 x i1> addrspace(257)* %0) {
 ; CHECK-LABEL: xloadStore256:
