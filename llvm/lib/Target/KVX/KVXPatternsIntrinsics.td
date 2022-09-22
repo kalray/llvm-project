@@ -1054,18 +1054,9 @@ def: Pat<(int_kvx_xloadc1024 v1024i1:$z, i64:$mem, v4i32:$val, i32:$mod0, Lsumas
 def : Pat<(int_kvx_xstore256  v256i1:$op0, i64:$mem),
           (XSOri10 0, SingleReg:$mem, VectorReg:$op0)>;
 
-def : Pat<(int_kvx_xstores1024 v1024i1:$op0, i64:$mem, QindexMod:$mod0),
-          (XSOri10q 0, i64:$mem, MatrixReg:$op0, QindexMod:$mod0)>;
-
 def: Pat<(int_kvx_xstore256 v256i1:$op0, (add i64:$mem, (shl i64:$off, (i64 5)))),
          (XSOrr SingleReg:$off, SingleReg:$mem, VectorReg:$op0, /*doscale*/ 1)>;
 
 def: Pat<(int_kvx_xstore256 v256i1:$op0, (add i64:$mem, i64:$off)),
          (XSOrr SingleReg:$off, SingleReg:$mem, VectorReg:$op0, /*doscale*/ 0)>;
-
-def : Pat<(int_kvx_xstores1024 MatrixReg:$op0, (add i64:$mem, (shl i64:$off, (i64 5))), QindexMod:$mod1),
-          (XSOrrq SingleReg:$off, SingleReg:$mem, MatrixReg:$op0, /*doscale*/ 1, QindexMod:$mod1)>;
-
-def : Pat<(int_kvx_xstores1024 MatrixReg:$op0, (add i64:$mem, i64:$off), QindexMod:$mod1),
-          (XSOrrq SingleReg:$off, SingleReg:$mem, MatrixReg:$op0, /*doscale*/ 0, QindexMod:$mod1)>;
 } // let Predicates = [IsV2]

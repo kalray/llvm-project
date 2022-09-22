@@ -327,16 +327,6 @@ multiclass MC_XSO <string OpcStr = "xso"> {
   defm ri64 : I <OpcStr, LSU_Y_STORE, [VectorReg], [], [Wrapped64, SingleReg], [], [], 0,
                 [(int_kvx_xstore256 v256i1:$op0, (add i64:$mem, Wrapped64:$off))]>;
 
-  // xsoqindex signed10[registerZ] = registerEq
-  defm ri10q : I <OpcStr, LSU_CRRP_STORE, [MatrixReg], [QindexMod], [Signed10, SingleReg], [], [], 0,
-                [(int_kvx_xstores1024 v1024i1:$op0, (add i64:$mem, Signed10:$off), QindexMod:$mod0)]>;
-  // xsoqindex registerAq = upper27 lower10[registerZ]
-  defm ri37q : I <OpcStr, LSU_CRRP_X_STORE, [MatrixReg], [QindexMod], [Signed37, SingleReg], [], [], 0,
-                [(int_kvx_xstores1024 v1024i1:$op0, (add i64:$mem, Signed37:$off), QindexMod:$mod0)]>;
-  // xsoqindex registerAq = extend27 upper27 lower10[registerZ]
-  defm ri64q : I <OpcStr, LSU_CRRP_Y_STORE, [MatrixReg], [QindexMod], [Wrapped64, SingleReg], [], [], 0,
-                [(int_kvx_xstores1024 v1024i1:$op0, (add i64:$mem, Wrapped64:$off), QindexMod:$mod0)]>;
-
   // xsolsumask registerY? [registerZ] = registerE
   defm rrc    : I <OpcStr, LSU_CRRP_STORE, [VectorReg], [], [SingleReg], [LsumaskMod, SingleReg], [], 0,
                   [(int_kvx_xstorec256 v256i1:$op0, i64:$mem, i64:$val, LsumaskMod:$cond)]>;
@@ -347,21 +337,8 @@ multiclass MC_XSO <string OpcStr = "xso"> {
   defm ri54c : I <OpcStr, LSU_CRRP_Y_STORE, [VectorReg], [], [Signed54, SingleReg], [LsumaskMod, SingleReg], [], 0,
                   [(int_kvx_xstorec256 v256i1:$op0, (add i64:$mem, Signed54:$off), i64:$val, LsumaskMod:$cond)]>;
 
-  // xsoqindexlsumask registerY? [registerZ] = registerEq
-  defm rrcq    : I <OpcStr, LSU_CRRP_STORE, [MatrixReg], [QindexMod], [SingleReg], [LsumaskMod, SingleReg], [], 0,
-                  [(int_kvx_xstoresc1024 v1024i1:$op0, i64:$mem, i64:$val, LsumaskMod:$cond, QindexMod:$mod0)]>;
-  // xsoqindexlsumask registerY? extend27 offset27[registerZ] = registerEq
-  defm ri27cq : I <OpcStr, LSU_CRRP_X_STORE, [MatrixReg], [QindexMod], [Signed27, SingleReg], [LsumaskMod, SingleReg], [], 0,
-                  [(int_kvx_xstoresc1024 v1024i1:$op0, (add i64:$mem, Signed27:$off), i64:$val, LsumaskMod:$cond, QindexMod:$mod0)]>;
-  // xsoqindexlsumask registerY? extend27 offset27[registerZ] = registerEq
-  defm ri54cq : I <OpcStr, LSU_CRRP_Y_STORE, [MatrixReg], [QindexMod], [Signed54, SingleReg], [LsumaskMod, SingleReg], [], 0,
-                  [(int_kvx_xstoresc1024 v1024i1:$op0, (add i64:$mem, Signed54:$off), i64:$val, LsumaskMod:$cond, QindexMod:$mod0)]>;
-
   // xsodoscale registerY[registerZ] = registerE
   defm rr     : I <OpcStr, LSU_CRRP_STORE, [VectorReg], [DoscaleMod], [SingleReg, SingleReg], [], []>;
-
-  // xsoqindexdoscale registerY[registerZ] = registerEq
-  defm rrq    : I <OpcStr, LSU_CRRP_STORE, [MatrixReg], [DoscaleMod, QindexMod], [SingleReg, SingleReg]>;
 }
 
 class KVX_INSTRUCTION
