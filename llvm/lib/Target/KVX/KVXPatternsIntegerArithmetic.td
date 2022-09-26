@@ -252,10 +252,16 @@ def : Pat<(v8i8(saddsat v8i8:$v0, (v8i8(is_imm_vec_kvx_splat32_at:$IMM)) ) ),
 def : Pat<(v8i8(saddsat v8i8:$v0, v8i8:$v1)), (ADDSBOrr SingleReg:$v0, SingleReg:$v1)>, Requires<[IsV2]>;
 
 // ADDSD
-def : Pat<(i64(saddsat i64:$v, Signed10:$i)), (ADDSDri10 SingleReg:$v, Signed10:$i)>;
-def : Pat<(i64(saddsat i64:$v, Signed37:$i)), (ADDSDri37 SingleReg:$v, Signed37:$i)>;
-def : Pat<(i64(saddsat i64:$v, Wrapped64:$i)), (ADDSDri64 SingleReg:$v, Wrapped64:$i)>;
+def : Pat<(i64(saddsat i64:$v, Signed10:$i)), (ADDSDri10 SingleReg:$v, Signed10:$i)>, Requires<[IsV1]>;
+def : Pat<(i64(saddsat i64:$v, Signed37:$i)), (ADDSDri37 SingleReg:$v, Signed37:$i)>, Requires<[IsV1]>;
+def : Pat<(i64(saddsat i64:$v, Wrapped64:$i)), (ADDSDri64 SingleReg:$v, Wrapped64:$i)>, Requires<[IsV1]>;
 def : Pat<(i64(saddsat i64:$v0, i64:$v1)), (ADDSDrr SingleReg:$v0, SingleReg:$v1)>;
+
+// v2 immediates
+def : Pat<(i64(saddsat i64:$v, Unsigned64W:$i)),
+          (ADDSDri_cv2 SingleReg:$v, (i32(trunc_imm_32 $i)), splat32_)>, Requires<[IsV2]>;
+def : Pat<(i64(saddsat i64:$v, UnsignedSplat32Imm:$i)),
+          (ADDSDri_cv2 SingleReg:$v, (i32(trunc_imm_32 $i)), splat32_at)>, Requires<[IsV2]>;
 
 // ADDSHQ
 def : Pat<(v2i16(saddsat v2i16:$v0, (is_imm_vec:$IMM))),
@@ -1587,10 +1593,10 @@ def : Pat<(i64(ssubsat Wrapped64:$im, i64:$r)),
 
 // v2 immediates
 def : Pat<(i64(ssubsat Unsigned64W:$lhs, i64:$rhs)),
-          (SBFSDri SingleReg:$rhs, (i32(trunc_imm_32 $lhs)), splat32_)>, Requires<[IsV2]>;
+          (SBFSDri_cv2 SingleReg:$rhs, (i32(trunc_imm_32 $lhs)), splat32_)>, Requires<[IsV2]>;
 
 def : Pat<(i64(ssubsat UnsignedSplat32Imm:$lhs, i64:$rhs)),
-          (SBFSDri SingleReg:$rhs, (i32(trunc_imm_32 $lhs)), splat32_at)>, Requires<[IsV2]>;
+          (SBFSDri_cv2 SingleReg:$rhs, (i32(trunc_imm_32 $lhs)), splat32_at)>, Requires<[IsV2]>;
 
 // rr
 def : Pat<(i64(ssubsat i64:$lhs, i64:$rhs)),
