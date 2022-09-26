@@ -911,23 +911,21 @@ define <32 x i8> @srs_v32i8(<32 x i8> %0) {
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    srabos $r4 = $r0, 7
 ; CV2-NEXT:    srabos $r5 = $r1, 7
-; CV2-NEXT:    ;;
-; CV2-NEXT:    srlbos $r4 = $r4, 3
-; CV2-NEXT:    srlbos $r5 = $r5, 3
-; CV2-NEXT:    ;;
-; CV2-NEXT:    addbo $r0 = $r0, $r4
-; CV2-NEXT:    addbo $r1 = $r1, $r5
 ; CV2-NEXT:    srabos $r6 = $r2, 7
 ; CV2-NEXT:    srabos $r7 = $r3, 7
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    srlbos $r4 = $r6, 3
-; CV2-NEXT:    srlbos $r5 = $r7, 3
+; CV2-NEXT:    srlbos $r4 = $r4, 3
+; CV2-NEXT:    srlbos $r5 = $r5, 3
+; CV2-NEXT:    srlbos $r6 = $r6, 3
+; CV2-NEXT:    srlbos $r7 = $r7, 3
+; CV2-NEXT:    ;;
+; CV2-NEXT:    addbo $r0 = $r0, $r4
+; CV2-NEXT:    addbo $r1 = $r1, $r5
+; CV2-NEXT:    addbo $r2 = $r2, $r6
+; CV2-NEXT:    addbo $r3 = $r3, $r7
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    srabos $r0 = $r0, 5
 ; CV2-NEXT:    srabos $r1 = $r1, 5
-; CV2-NEXT:    addbo $r2 = $r2, $r4
-; CV2-NEXT:    addbo $r3 = $r3, $r5
-; CV2-NEXT:    ;;
 ; CV2-NEXT:    srabos $r2 = $r2, 5
 ; CV2-NEXT:    srabos $r3 = $r3, 5
 ; CV2-NEXT:    ret
