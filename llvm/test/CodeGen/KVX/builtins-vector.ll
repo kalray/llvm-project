@@ -92,15 +92,24 @@ entry:
 }
 
 define <16 x i16> @selecthx(<16 x i16> %v1, <16 x i16> %v2, <16 x i16> %c){
-; CHECK-LABEL: selecthx:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    cmovehq.nez $r8 ? $r0 = $r4
-; CHECK-NEXT:    cmovehq.nez $r9 ? $r1 = $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmovehq.nez $r10 ? $r2 = $r6
-; CHECK-NEXT:    cmovehq.nez $r11 ? $r3 = $r7
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CV1-LABEL: selecthx:
+; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    cmovehq.nez $r8 ? $r0 = $r4
+; CV1-NEXT:    cmovehq.nez $r9 ? $r1 = $r5
+; CV1-NEXT:    ;;
+; CV1-NEXT:    cmovehq.nez $r10 ? $r2 = $r6
+; CV1-NEXT:    cmovehq.nez $r11 ? $r3 = $r7
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: selecthx:
+; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    cmovehq.nez $r8 ? $r0 = $r4
+; CV2-NEXT:    cmovehq.nez $r9 ? $r1 = $r5
+; CV2-NEXT:    cmovehq.nez $r10 ? $r2 = $r6
+; CV2-NEXT:    cmovehq.nez $r11 ? $r3 = $r7
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
 entry:
   %0 = shufflevector <16 x i16> %v1, <16 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %1 = shufflevector <16 x i16> %v2, <16 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
@@ -160,15 +169,24 @@ entry:
 }
 
 define <8 x i32> @selectwo(<8 x i32> %v1, <8 x i32> %v2, <8 x i32> %c){
-; CHECK-LABEL: selectwo:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    cmovewp.nez $r8 ? $r0 = $r4
-; CHECK-NEXT:    cmovewp.nez $r9 ? $r1 = $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmovewp.nez $r10 ? $r2 = $r6
-; CHECK-NEXT:    cmovewp.nez $r11 ? $r3 = $r7
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CV1-LABEL: selectwo:
+; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    cmovewp.nez $r8 ? $r0 = $r4
+; CV1-NEXT:    cmovewp.nez $r9 ? $r1 = $r5
+; CV1-NEXT:    ;;
+; CV1-NEXT:    cmovewp.nez $r10 ? $r2 = $r6
+; CV1-NEXT:    cmovewp.nez $r11 ? $r3 = $r7
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: selectwo:
+; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    cmovewp.nez $r8 ? $r0 = $r4
+; CV2-NEXT:    cmovewp.nez $r9 ? $r1 = $r5
+; CV2-NEXT:    cmovewp.nez $r10 ? $r2 = $r6
+; CV2-NEXT:    cmovewp.nez $r11 ? $r3 = $r7
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
 entry:
   %0 = shufflevector <8 x i32> %v1, <8 x i32> undef, <2 x i32> <i32 0, i32 1>
   %1 = shufflevector <8 x i32> %v2, <8 x i32> undef, <2 x i32> <i32 0, i32 1>
@@ -218,15 +236,24 @@ entry:
 declare i64 @llvm.kvx.cmoved(i64, i64, i64, i32) #1
 
 define <4 x i64> @selectdq(<4 x i64> %v1, <4 x i64> %v2, <4 x i64> %c){
-; CHECK-LABEL: selectdq:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    cmoved.dnez $r8 ? $r0 = $r4
-; CHECK-NEXT:    cmoved.dnez $r9 ? $r1 = $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.dnez $r10 ? $r2 = $r6
-; CHECK-NEXT:    cmoved.dnez $r11 ? $r3 = $r7
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CV1-LABEL: selectdq:
+; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    cmoved.dnez $r8 ? $r0 = $r4
+; CV1-NEXT:    cmoved.dnez $r9 ? $r1 = $r5
+; CV1-NEXT:    ;;
+; CV1-NEXT:    cmoved.dnez $r10 ? $r2 = $r6
+; CV1-NEXT:    cmoved.dnez $r11 ? $r3 = $r7
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: selectdq:
+; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    cmoved.dnez $r8 ? $r0 = $r4
+; CV2-NEXT:    cmoved.dnez $r9 ? $r1 = $r5
+; CV2-NEXT:    cmoved.dnez $r10 ? $r2 = $r6
+; CV2-NEXT:    cmoved.dnez $r11 ? $r3 = $r7
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
 entry:
   %0 = extractelement <4 x i64> %v1, i64 0
   %1 = extractelement <4 x i64> %v2, i64 0
@@ -292,15 +319,24 @@ entry:
 }
 
 define <8 x float> @selectfwo(<8 x float> %v1, <8 x float> %v2, <8 x i32> %c){
-; CHECK-LABEL: selectfwo:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    cmovewp.nez $r8 ? $r0 = $r4
-; CHECK-NEXT:    cmovewp.nez $r9 ? $r1 = $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmovewp.nez $r10 ? $r2 = $r6
-; CHECK-NEXT:    cmovewp.nez $r11 ? $r3 = $r7
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CV1-LABEL: selectfwo:
+; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    cmovewp.nez $r8 ? $r0 = $r4
+; CV1-NEXT:    cmovewp.nez $r9 ? $r1 = $r5
+; CV1-NEXT:    ;;
+; CV1-NEXT:    cmovewp.nez $r10 ? $r2 = $r6
+; CV1-NEXT:    cmovewp.nez $r11 ? $r3 = $r7
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: selectfwo:
+; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    cmovewp.nez $r8 ? $r0 = $r4
+; CV2-NEXT:    cmovewp.nez $r9 ? $r1 = $r5
+; CV2-NEXT:    cmovewp.nez $r10 ? $r2 = $r6
+; CV2-NEXT:    cmovewp.nez $r11 ? $r3 = $r7
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
 entry:
   %0 = shufflevector <8 x float> %v1, <8 x float> undef, <2 x i32> <i32 0, i32 1>
   %1 = shufflevector <8 x float> %v2, <8 x float> undef, <2 x i32> <i32 0, i32 1>
@@ -364,15 +400,24 @@ entry:
 }
 
 define <4 x double> @selectfdq(<4 x double> %v1, <4 x double> %v2, <4 x i64> %c){
-; CHECK-LABEL: selectfdq:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    cmoved.dnez $r8 ? $r0 = $r4
-; CHECK-NEXT:    cmoved.dnez $r9 ? $r1 = $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.dnez $r10 ? $r2 = $r6
-; CHECK-NEXT:    cmoved.dnez $r11 ? $r3 = $r7
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CV1-LABEL: selectfdq:
+; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    cmoved.dnez $r8 ? $r0 = $r4
+; CV1-NEXT:    cmoved.dnez $r9 ? $r1 = $r5
+; CV1-NEXT:    ;;
+; CV1-NEXT:    cmoved.dnez $r10 ? $r2 = $r6
+; CV1-NEXT:    cmoved.dnez $r11 ? $r3 = $r7
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: selectfdq:
+; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    cmoved.dnez $r8 ? $r0 = $r4
+; CV2-NEXT:    cmoved.dnez $r9 ? $r1 = $r5
+; CV2-NEXT:    cmoved.dnez $r10 ? $r2 = $r6
+; CV2-NEXT:    cmoved.dnez $r11 ? $r3 = $r7
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
 entry:
   %bc = bitcast <4 x double> %v1 to <4 x i64>
   %0 = extractelement <4 x i64> %bc, i64 0
@@ -433,15 +478,24 @@ entry:
 }
 
 define <8 x float> @fabswo(<8 x float> %v){
-; CHECK-LABEL: fabswo:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fabswp $r0 = $r0
-; CHECK-NEXT:    fabswp $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fabswp $r2 = $r2
-; CHECK-NEXT:    fabswp $r3 = $r3
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CV1-LABEL: fabswo:
+; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    fabswp $r0 = $r0
+; CV1-NEXT:    fabswp $r1 = $r1
+; CV1-NEXT:    ;;
+; CV1-NEXT:    fabswp $r2 = $r2
+; CV1-NEXT:    fabswp $r3 = $r3
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: fabswo:
+; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    fabswp $r0 = $r0
+; CV2-NEXT:    fabswp $r1 = $r1
+; CV2-NEXT:    fabswp $r2 = $r2
+; CV2-NEXT:    fabswp $r3 = $r3
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
 entry:
   %0 = shufflevector <8 x float> %v, <8 x float> undef, <2 x i32> <i32 0, i32 1>
   %1 = tail call <2 x float> @llvm.kvx.fabswp(<2 x float> %0)
@@ -479,15 +533,24 @@ entry:
 declare double @llvm.kvx.fabsd(double) #1
 
 define <4 x double> @fabsdq(<4 x double> %v){
-; CHECK-LABEL: fabsdq:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fabsd $r0 = $r0
-; CHECK-NEXT:    fabsd $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fabsd $r2 = $r2
-; CHECK-NEXT:    fabsd $r3 = $r3
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CV1-LABEL: fabsdq:
+; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    fabsd $r0 = $r0
+; CV1-NEXT:    fabsd $r1 = $r1
+; CV1-NEXT:    ;;
+; CV1-NEXT:    fabsd $r2 = $r2
+; CV1-NEXT:    fabsd $r3 = $r3
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: fabsdq:
+; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    fabsd $r0 = $r0
+; CV2-NEXT:    fabsd $r1 = $r1
+; CV2-NEXT:    fabsd $r2 = $r2
+; CV2-NEXT:    fabsd $r3 = $r3
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
 entry:
   %0 = extractelement <4 x double> %v, i64 0
   %1 = tail call double @llvm.kvx.fabsd(double %0)
@@ -534,15 +597,24 @@ entry:
 }
 
 define <8 x float> @fnegwo(<8 x float> %v){
-; CHECK-LABEL: fnegwo:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fnegwp $r0 = $r0
-; CHECK-NEXT:    fnegwp $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnegwp $r2 = $r2
-; CHECK-NEXT:    fnegwp $r3 = $r3
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CV1-LABEL: fnegwo:
+; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    fnegwp $r0 = $r0
+; CV1-NEXT:    fnegwp $r1 = $r1
+; CV1-NEXT:    ;;
+; CV1-NEXT:    fnegwp $r2 = $r2
+; CV1-NEXT:    fnegwp $r3 = $r3
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: fnegwo:
+; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    fnegwp $r0 = $r0
+; CV2-NEXT:    fnegwp $r1 = $r1
+; CV2-NEXT:    fnegwp $r2 = $r2
+; CV2-NEXT:    fnegwp $r3 = $r3
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
 entry:
   %0 = shufflevector <8 x float> %v, <8 x float> undef, <2 x i32> <i32 0, i32 1>
   %1 = tail call <2 x float> @llvm.kvx.fnegwp(<2 x float> %0)
@@ -580,15 +652,24 @@ entry:
 declare double @llvm.kvx.fnegd(double) #1
 
 define <4 x double> @fnegdq(<4 x double> %v){
-; CHECK-LABEL: fnegdq:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fnegd $r0 = $r0
-; CHECK-NEXT:    fnegd $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnegd $r2 = $r2
-; CHECK-NEXT:    fnegd $r3 = $r3
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CV1-LABEL: fnegdq:
+; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    fnegd $r0 = $r0
+; CV1-NEXT:    fnegd $r1 = $r1
+; CV1-NEXT:    ;;
+; CV1-NEXT:    fnegd $r2 = $r2
+; CV1-NEXT:    fnegd $r3 = $r3
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: fnegdq:
+; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    fnegd $r0 = $r0
+; CV2-NEXT:    fnegd $r1 = $r1
+; CV2-NEXT:    fnegd $r2 = $r2
+; CV2-NEXT:    fnegd $r3 = $r3
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
 entry:
   %0 = extractelement <4 x double> %v, i64 0
   %1 = tail call double @llvm.kvx.fnegd(double %0)
@@ -635,15 +716,24 @@ define <8 x half> @fmaxho(<8 x half> %0, <8 x half> %1) {
 }
 
 define <16 x half> @fmaxhx(<16 x half> %0, <16 x half> %1) {
-; CHECK-LABEL: fmaxhx:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    fmaxhq $r0 = $r0, $r4
-; CHECK-NEXT:    fmaxhq $r1 = $r1, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmaxhq $r2 = $r2, $r6
-; CHECK-NEXT:    fmaxhq $r3 = $r3, $r7
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CV1-LABEL: fmaxhx:
+; CV1:       # %bb.0:
+; CV1-NEXT:    fmaxhq $r0 = $r0, $r4
+; CV1-NEXT:    fmaxhq $r1 = $r1, $r5
+; CV1-NEXT:    ;;
+; CV1-NEXT:    fmaxhq $r2 = $r2, $r6
+; CV1-NEXT:    fmaxhq $r3 = $r3, $r7
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: fmaxhx:
+; CV2:       # %bb.0:
+; CV2-NEXT:    fmaxhq $r0 = $r0, $r4
+; CV2-NEXT:    fmaxhq $r1 = $r1, $r5
+; CV2-NEXT:    fmaxhq $r2 = $r2, $r6
+; CV2-NEXT:    fmaxhq $r3 = $r3, $r7
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
   %3 = shufflevector <16 x half> %0, <16 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %4 = shufflevector <16 x half> %1, <16 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %5 = tail call <4 x half> @llvm.kvx.fmaxhq(<4 x half> %3, <4 x half> %4)
@@ -694,15 +784,24 @@ entry:
 }
 
 define <8 x float> @fmaxwo(<8 x float> %v1, <8 x float> %v2){
-; CHECK-LABEL: fmaxwo:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmaxwp $r0 = $r0, $r4
-; CHECK-NEXT:    fmaxwp $r1 = $r1, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmaxwp $r2 = $r2, $r6
-; CHECK-NEXT:    fmaxwp $r3 = $r3, $r7
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CV1-LABEL: fmaxwo:
+; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    fmaxwp $r0 = $r0, $r4
+; CV1-NEXT:    fmaxwp $r1 = $r1, $r5
+; CV1-NEXT:    ;;
+; CV1-NEXT:    fmaxwp $r2 = $r2, $r6
+; CV1-NEXT:    fmaxwp $r3 = $r3, $r7
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: fmaxwo:
+; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    fmaxwp $r0 = $r0, $r4
+; CV2-NEXT:    fmaxwp $r1 = $r1, $r5
+; CV2-NEXT:    fmaxwp $r2 = $r2, $r6
+; CV2-NEXT:    fmaxwp $r3 = $r3, $r7
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
 entry:
   %0 = shufflevector <8 x float> %v1, <8 x float> undef, <2 x i32> <i32 0, i32 1>
   %1 = shufflevector <8 x float> %v2, <8 x float> undef, <2 x i32> <i32 0, i32 1>
@@ -746,15 +845,24 @@ entry:
 declare double @llvm.kvx.fmaxd(double, double) #1
 
 define <4 x double> @fmaxdq(<4 x double> %v1, <4 x double> %v2){
-; CHECK-LABEL: fmaxdq:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmaxd $r0 = $r0, $r4
-; CHECK-NEXT:    fmaxd $r1 = $r1, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmaxd $r2 = $r2, $r6
-; CHECK-NEXT:    fmaxd $r3 = $r3, $r7
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CV1-LABEL: fmaxdq:
+; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    fmaxd $r0 = $r0, $r4
+; CV1-NEXT:    fmaxd $r1 = $r1, $r5
+; CV1-NEXT:    ;;
+; CV1-NEXT:    fmaxd $r2 = $r2, $r6
+; CV1-NEXT:    fmaxd $r3 = $r3, $r7
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: fmaxdq:
+; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    fmaxd $r0 = $r0, $r4
+; CV2-NEXT:    fmaxd $r1 = $r1, $r5
+; CV2-NEXT:    fmaxd $r2 = $r2, $r6
+; CV2-NEXT:    fmaxd $r3 = $r3, $r7
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
 entry:
   %0 = extractelement <4 x double> %v1, i64 0
   %1 = extractelement <4 x double> %v2, i64 0
@@ -805,15 +913,24 @@ define <8 x half> @fminho(<8 x half> %0, <8 x half> %1) {
 }
 
 define <16 x half> @fminhx(<16 x half> %0, <16 x half> %1) {
-; CHECK-LABEL: fminhx:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    fminhq $r0 = $r0, $r4
-; CHECK-NEXT:    fminhq $r1 = $r1, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fminhq $r2 = $r2, $r6
-; CHECK-NEXT:    fminhq $r3 = $r3, $r7
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CV1-LABEL: fminhx:
+; CV1:       # %bb.0:
+; CV1-NEXT:    fminhq $r0 = $r0, $r4
+; CV1-NEXT:    fminhq $r1 = $r1, $r5
+; CV1-NEXT:    ;;
+; CV1-NEXT:    fminhq $r2 = $r2, $r6
+; CV1-NEXT:    fminhq $r3 = $r3, $r7
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: fminhx:
+; CV2:       # %bb.0:
+; CV2-NEXT:    fminhq $r0 = $r0, $r4
+; CV2-NEXT:    fminhq $r1 = $r1, $r5
+; CV2-NEXT:    fminhq $r2 = $r2, $r6
+; CV2-NEXT:    fminhq $r3 = $r3, $r7
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
   %3 = shufflevector <16 x half> %0, <16 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %4 = shufflevector <16 x half> %1, <16 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %5 = tail call <4 x half> @llvm.kvx.fminhq(<4 x half> %3, <4 x half> %4)
@@ -866,15 +983,24 @@ entry:
 }
 
 define <8 x float> @fminwo(<8 x float> %v1, <8 x float> %v2){
-; CHECK-LABEL: fminwo:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fminwp $r0 = $r0, $r4
-; CHECK-NEXT:    fminwp $r1 = $r1, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fminwp $r2 = $r2, $r6
-; CHECK-NEXT:    fminwp $r3 = $r3, $r7
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CV1-LABEL: fminwo:
+; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    fminwp $r0 = $r0, $r4
+; CV1-NEXT:    fminwp $r1 = $r1, $r5
+; CV1-NEXT:    ;;
+; CV1-NEXT:    fminwp $r2 = $r2, $r6
+; CV1-NEXT:    fminwp $r3 = $r3, $r7
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: fminwo:
+; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    fminwp $r0 = $r0, $r4
+; CV2-NEXT:    fminwp $r1 = $r1, $r5
+; CV2-NEXT:    fminwp $r2 = $r2, $r6
+; CV2-NEXT:    fminwp $r3 = $r3, $r7
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
 entry:
   %0 = shufflevector <8 x float> %v1, <8 x float> undef, <2 x i32> <i32 0, i32 1>
   %1 = shufflevector <8 x float> %v2, <8 x float> undef, <2 x i32> <i32 0, i32 1>
@@ -918,15 +1044,24 @@ entry:
 declare double @llvm.kvx.fmind(double, double) #1
 
 define <4 x double> @fmindq(<4 x double> %v1, <4 x double> %v2){
-; CHECK-LABEL: fmindq:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmind $r0 = $r0, $r4
-; CHECK-NEXT:    fmind $r1 = $r1, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmind $r2 = $r2, $r6
-; CHECK-NEXT:    fmind $r3 = $r3, $r7
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CV1-LABEL: fmindq:
+; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    fmind $r0 = $r0, $r4
+; CV1-NEXT:    fmind $r1 = $r1, $r5
+; CV1-NEXT:    ;;
+; CV1-NEXT:    fmind $r2 = $r2, $r6
+; CV1-NEXT:    fmind $r3 = $r3, $r7
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: fmindq:
+; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    fmind $r0 = $r0, $r4
+; CV2-NEXT:    fmind $r1 = $r1, $r5
+; CV2-NEXT:    fmind $r2 = $r2, $r6
+; CV2-NEXT:    fmind $r3 = $r3, $r7
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
 entry:
   %0 = extractelement <4 x double> %v1, i64 0
   %1 = extractelement <4 x double> %v2, i64 0

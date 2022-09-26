@@ -447,15 +447,24 @@ entry:
 
 
 define <8 x float> @fconjwcq(<8 x float> %a) local_unnamed_addr #3 {
-; CHECK-LABEL: fconjwcq:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fnegd $r0 = $r0
-; CHECK-NEXT:    fnegd $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnegd $r2 = $r2
-; CHECK-NEXT:    fnegd $r3 = $r3
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KVCV1-LABEL: fconjwcq:
+; KVCV1:       # %bb.0: # %entry
+; KVCV1-NEXT:    fnegd $r0 = $r0
+; KVCV1-NEXT:    fnegd $r1 = $r1
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    fnegd $r2 = $r2
+; KVCV1-NEXT:    fnegd $r3 = $r3
+; KVCV1-NEXT:    ret
+; KVCV1-NEXT:    ;;
+;
+; KVCV2-LABEL: fconjwcq:
+; KVCV2:       # %bb.0: # %entry
+; KVCV2-NEXT:    fnegd $r0 = $r0
+; KVCV2-NEXT:    fnegd $r1 = $r1
+; KVCV2-NEXT:    fnegd $r2 = $r2
+; KVCV2-NEXT:    fnegd $r3 = $r3
+; KVCV2-NEXT:    ret
+; KVCV2-NEXT:    ;;
 entry:
   %0 = shufflevector <8 x float> %a, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %1 = tail call <4 x float> @llvm.kvx.fconjwcp(<4 x float> %0)

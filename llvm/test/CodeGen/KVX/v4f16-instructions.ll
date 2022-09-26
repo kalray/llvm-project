@@ -884,35 +884,65 @@ define <4 x half> @test_uitofp_4xi32(<4 x i32> %a) #0 {
 
 ; Could use vector fnarrow variants
 define <4 x half> @test_uitofp_4xi64(<4 x i64> %a) #0 {
-; CHECK-LABEL: test_uitofp_4xi64:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    floatud.rn $r3 = $r3, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatud.rn $r2 = $r2, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatud.rn $r1 = $r1, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatud.rn $r0 = $r0, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowdw.rn $r3 = $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowdw.rn $r2 = $r2
-; CHECK-NEXT:    fnarrowwh.rn $r3 = $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowdw.rn $r1 = $r1
-; CHECK-NEXT:    fnarrowwh.rn $r2 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowdw.rn $r0 = $r0
-; CHECK-NEXT:    fnarrowwh.rn $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowwh.rn $r0 = $r0
-; CHECK-NEXT:    insf $r2 = $r3, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 63, 32
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KV3_1-LABEL: test_uitofp_4xi64:
+; KV3_1:       # %bb.0:
+; KV3_1-NEXT:    floatud.rn $r3 = $r3, 0
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    floatud.rn $r2 = $r2, 0
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    floatud.rn $r1 = $r1, 0
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    floatud.rn $r0 = $r0, 0
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    fnarrowdw.rn $r3 = $r3
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    fnarrowdw.rn $r2 = $r2
+; KV3_1-NEXT:    fnarrowwh.rn $r3 = $r3
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    fnarrowdw.rn $r1 = $r1
+; KV3_1-NEXT:    fnarrowwh.rn $r2 = $r2
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    fnarrowdw.rn $r0 = $r0
+; KV3_1-NEXT:    fnarrowwh.rn $r1 = $r1
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    fnarrowwh.rn $r0 = $r0
+; KV3_1-NEXT:    insf $r2 = $r3, 31, 16
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    insf $r0 = $r1, 31, 16
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    insf $r0 = $r2, 63, 32
+; KV3_1-NEXT:    ret
+; KV3_1-NEXT:    ;;
+;
+; KV3_2-LABEL: test_uitofp_4xi64:
+; KV3_2:       # %bb.0:
+; KV3_2-NEXT:    floatud.rn $r3 = $r3, 0
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    floatud.rn $r2 = $r2, 0
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    floatud.rn $r1 = $r1, 0
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    floatud.rn $r0 = $r0, 0
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    fnarrowdw.rn $r3 = $r3
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    fnarrowdw.rn $r2 = $r2
+; KV3_2-NEXT:    fnarrowwh.rn $r3 = $r3
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    fnarrowdw.rn $r1 = $r1
+; KV3_2-NEXT:    fnarrowwh.rn $r2 = $r2
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    fnarrowdw.rn $r0 = $r0
+; KV3_2-NEXT:    fnarrowwh.rn $r1 = $r1
+; KV3_2-NEXT:    insf $r2 = $r3, 31, 16
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    fnarrowwh.rn $r0 = $r0
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    insf $r0 = $r1, 31, 16
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    insf $r0 = $r2, 63, 32
+; KV3_2-NEXT:    ret
+; KV3_2-NEXT:    ;;
   %r = uitofp <4 x i64> %a to <4 x half>
   ret <4 x half> %r
 }
@@ -932,35 +962,65 @@ define <4 x half> @test_sitofp_4xi32(<4 x i32> %a) #0 {
 }
 
 define <4 x half> @test_sitofp_4xi64(<4 x i64> %a) #0 {
-; CHECK-LABEL: test_sitofp_4xi64:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    floatd.rn $r3 = $r3, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatd.rn $r2 = $r2, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatd.rn $r1 = $r1, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatd.rn $r0 = $r0, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowdw.rn $r3 = $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowdw.rn $r2 = $r2
-; CHECK-NEXT:    fnarrowwh.rn $r3 = $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowdw.rn $r1 = $r1
-; CHECK-NEXT:    fnarrowwh.rn $r2 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowdw.rn $r0 = $r0
-; CHECK-NEXT:    fnarrowwh.rn $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowwh.rn $r0 = $r0
-; CHECK-NEXT:    insf $r2 = $r3, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 63, 32
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KV3_1-LABEL: test_sitofp_4xi64:
+; KV3_1:       # %bb.0:
+; KV3_1-NEXT:    floatd.rn $r3 = $r3, 0
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    floatd.rn $r2 = $r2, 0
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    floatd.rn $r1 = $r1, 0
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    floatd.rn $r0 = $r0, 0
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    fnarrowdw.rn $r3 = $r3
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    fnarrowdw.rn $r2 = $r2
+; KV3_1-NEXT:    fnarrowwh.rn $r3 = $r3
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    fnarrowdw.rn $r1 = $r1
+; KV3_1-NEXT:    fnarrowwh.rn $r2 = $r2
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    fnarrowdw.rn $r0 = $r0
+; KV3_1-NEXT:    fnarrowwh.rn $r1 = $r1
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    fnarrowwh.rn $r0 = $r0
+; KV3_1-NEXT:    insf $r2 = $r3, 31, 16
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    insf $r0 = $r1, 31, 16
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    insf $r0 = $r2, 63, 32
+; KV3_1-NEXT:    ret
+; KV3_1-NEXT:    ;;
+;
+; KV3_2-LABEL: test_sitofp_4xi64:
+; KV3_2:       # %bb.0:
+; KV3_2-NEXT:    floatd.rn $r3 = $r3, 0
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    floatd.rn $r2 = $r2, 0
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    floatd.rn $r1 = $r1, 0
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    floatd.rn $r0 = $r0, 0
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    fnarrowdw.rn $r3 = $r3
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    fnarrowdw.rn $r2 = $r2
+; KV3_2-NEXT:    fnarrowwh.rn $r3 = $r3
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    fnarrowdw.rn $r1 = $r1
+; KV3_2-NEXT:    fnarrowwh.rn $r2 = $r2
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    fnarrowdw.rn $r0 = $r0
+; KV3_2-NEXT:    fnarrowwh.rn $r1 = $r1
+; KV3_2-NEXT:    insf $r2 = $r3, 31, 16
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    fnarrowwh.rn $r0 = $r0
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    insf $r0 = $r1, 31, 16
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    insf $r0 = $r2, 63, 32
+; KV3_2-NEXT:    ret
+; KV3_2-NEXT:    ;;
   %r = sitofp <4 x i64> %a to <4 x half>
   ret <4 x half> %r
 }

@@ -1066,16 +1066,26 @@ define half @test_log2(half %a) #0 {
 }
 
 define half @test_fma(half %a, half %b, half %c) #0 {
-; CHECK-LABEL: test_fma:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    zxhd $r1 = $r1
-; CHECK-NEXT:    zxhd $r3 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxhd $r0 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmahq $r0 = $r3, $r1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KV3_1-LABEL: test_fma:
+; KV3_1:       # %bb.0:
+; KV3_1-NEXT:    zxhd $r1 = $r1
+; KV3_1-NEXT:    zxhd $r3 = $r0
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    zxhd $r0 = $r2
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ffmahq $r0 = $r3, $r1
+; KV3_1-NEXT:    ret
+; KV3_1-NEXT:    ;;
+;
+; KV3_2-LABEL: test_fma:
+; KV3_2:       # %bb.0:
+; KV3_2-NEXT:    zxhd $r0 = $r2
+; KV3_2-NEXT:    zxhd $r1 = $r1
+; KV3_2-NEXT:    zxhd $r3 = $r0
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ffmahq $r0 = $r3, $r1
+; KV3_2-NEXT:    ret
+; KV3_2-NEXT:    ;;
   %r = call half @llvm.fma.f16(half %a, half %b, half %c)
   ret half %r
 }
@@ -1344,16 +1354,26 @@ define half @test_round(half %a) #0 {
 }
 
 define half @test_fmuladd(half %a, half %b, half %c) #0 {
-; CHECK-LABEL: test_fmuladd:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    zxhd $r1 = $r1
-; CHECK-NEXT:    zxhd $r3 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxhd $r0 = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmahq $r0 = $r3, $r1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KV3_1-LABEL: test_fmuladd:
+; KV3_1:       # %bb.0:
+; KV3_1-NEXT:    zxhd $r1 = $r1
+; KV3_1-NEXT:    zxhd $r3 = $r0
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    zxhd $r0 = $r2
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ffmahq $r0 = $r3, $r1
+; KV3_1-NEXT:    ret
+; KV3_1-NEXT:    ;;
+;
+; KV3_2-LABEL: test_fmuladd:
+; KV3_2:       # %bb.0:
+; KV3_2-NEXT:    zxhd $r0 = $r2
+; KV3_2-NEXT:    zxhd $r1 = $r1
+; KV3_2-NEXT:    zxhd $r3 = $r0
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ffmahq $r0 = $r3, $r1
+; KV3_2-NEXT:    ret
+; KV3_2-NEXT:    ;;
   %r = call half @llvm.fmuladd.f16(half %a, half %b, half %c)
   ret half %r
 }

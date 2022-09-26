@@ -374,44 +374,64 @@ multiclass MC_11<string OpcStr> {
      ALU_TINY_Y>;
 }
 
-// multiclass MC_12 is used by:
+// multiclass MC_12_SWITCH is used by:
 //   defm ABDD
 //   defm SBMM8
 //   defm SBMMT8
 //   defm ADDSD
 //   defm SBFSD
-multiclass MC_12<string OpcStr> {
+multiclass MC_12_SWITCH<string OpcStr> {
+  def rr : KVX_INSTRUCTION
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
+     !strconcat (OpcStr, " $a1 = $a2, $a3"),
+     [/* no straightforward pattern */],
+     ALU_SWITCH_LITE_TINY>;
+  def ri10 : KVX_INSTRUCTION
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10:$a3),
+     !strconcat (OpcStr, " $a1 = $a2, $a3"),
+     [/* no straightforward pattern */],
+     ALU_SWITCH_LITE_TINY>;
+  def ri37 : KVX_INSTRUCTION_X
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37:$a3),
+     !strconcat (OpcStr, " $a1 = $a2, $a3"),
+     [/* no straightforward pattern */],
+     ALU_SWITCH_LITE_TINY_X>;
+  def ri64 : KVX_INSTRUCTION_Y
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped64:$a3),
+     !strconcat (OpcStr, " $a1 = $a2, $a3"),
+     [/* no straightforward pattern */],
+     ALU_SWITCH_LITE_TINY_Y>;
+}
+
+// multiclass MC_13 is used by:
+//   defm LANDD
+//   defm LNANDD
+//   defm LORD
+//   defm LNORD
+//   defm LANDW
+//   defm LNANDW
+//   defm LORW
+//   defm LNORW
+//   defm SBFX32WD
+//   defm SBFX64WD
+multiclass MC_13<string OpcStr> {
   def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      ALU_LITE>;
-  def ri10 : KVX_INSTRUCTION
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10:$a3),
-     !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [/* no straightforward pattern */],
-     ALU_LITE>;
-  def ri37 : KVX_INSTRUCTION_X
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37:$a3),
+  def ri : KVX_INSTRUCTION_Y
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped32:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      ALU_LITE_X>;
-  def ri64 : KVX_INSTRUCTION_Y
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped64:$a3),
-     !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [/* no straightforward pattern */],
-     ALU_LITE_Y>;
 }
 
-// multiclass MC_13 is used by:
+// multiclass MC_13_SWITCH is used by:
 //   defm ADDWD
 //   defm SBFWD
 //   defm ADDUWD
 //   defm SBFUWD
-//   defm LANDD
-//   defm LNANDD
-//   defm LORD
-//   defm LNORD
 //   defm ADDSW
 //   defm SBFSW
 //   defm ADDX2W
@@ -422,26 +442,18 @@ multiclass MC_12<string OpcStr> {
 //   defm SBFX4W
 //   defm SBFX8W
 //   defm SBFX16W
-//   defm SBFX32W
-//   defm SBFX64W
-//   defm AVGW
-//   defm AVGUW
-//   defm AVGRW
-//   defm AVGRUW
-//   defm LANDW
-//   defm LNANDW
-//   defm LORW
-//   defm LNORW
 //   defm ADDX2WD
 //   defm ADDX4WD
 //   defm ADDX8WD
 //   defm ADDX16WD
+//   defm AVGRW
+//   defm AVGRUW
+//   defm AVGUW
+//   defm AVGW
 //   defm SBFX2WD
 //   defm SBFX4WD
 //   defm SBFX8WD
 //   defm SBFX16WD
-//   defm SBFX32WD
-//   defm SBFX64WD
 //   defm ADDX2UWD
 //   defm ADDX4UWD
 //   defm ADDX8UWD
@@ -450,19 +462,17 @@ multiclass MC_12<string OpcStr> {
 //   defm SBFX4UWD
 //   defm SBFX8UWD
 //   defm SBFX16UWD
-//   defm SBFX32UWD
-//   defm SBFX64UWD
-multiclass MC_13<string OpcStr> {
+multiclass MC_13_SWITCH<string OpcStr> {
   def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     ALU_LITE>;
+     ALU_SWITCH_LITE_TINY>;
   def ri : KVX_INSTRUCTION_X
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped32:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     ALU_LITE_X>;
+     ALU_SWITCH_LITE_TINY_X>;
 }
 
 // multiclass MC_13_TINY is used by:
@@ -472,6 +482,10 @@ multiclass MC_13<string OpcStr> {
 //   defm ADDX64UWD
 //   defm ADDX64W
 //   defm ADDX64WD
+//   defm SBFX32W
+//   defm SBFX64W
+//   defm SBFX32UWD
+//   defm SBFX64UWD
 multiclass MC_13_TINY<string OpcStr> {
   let isAsCheapAsAMove = 1 in
     def rr : KVX_INSTRUCTION
@@ -528,23 +542,65 @@ multiclass MC_15<string OpcStr> {
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10W:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     ALU_LITE>;
+     ALU_SWITCH_LITE_TINY>;
   def ri37 : KVX_INSTRUCTION_X
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37W:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     ALU_LITE_X>;
+     ALU_SWITCH_LITE_TINY_X>;
+  def rr : KVX_INSTRUCTION
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
+     !strconcat (OpcStr, " $a1 = $a2, $a3"),
+     [/* no straightforward pattern */],
+     ALU_SWITCH_LITE_TINY>;
+}
+
+// multiclass MC_17 is used by:
+//   defm ADDCWC
+//   defm SBFCWC
+//   defm SBFSBO
+//   defm LANDWP
+//   defm LNANDWP
+//   defm LORWP
+//   defm LNORWP
+//   defm ABDSBO
+//   defm ABDSHQ
+//   defm ABDSD
+//   defm ABDSW
+//   defm ABDSWP
+//   defm ADDCHCP
+//   defm SBFCHCP
+//   defm AVGBO
+//   defm AVGUBO
+//   defm AVGRBO
+//   defm AVGRUBO
+//   defm LANDHQ
+//   defm LNANDHQ
+//   defm LORHQ
+//   defm LNORHQ
+multiclass MC_17<string OpcStr> {
   def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      ALU_LITE>;
+  def ri : KVX_INSTRUCTION_X
+    <(outs SingleReg:$a2), (ins SingleReg:$a3, Wrapped32:$a4, Splat32Mod:$a1),
+     !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
+     [/* no straightforward pattern */],
+     ALU_LITE_X>;
 }
 
-// multiclass MC_16 is used by:
+// multiclass MC_17_TINY is used by:
 //   defm ABDBO
 //   defm ADDBO
 //   defm ADDHQ
+//   defm ADDSBO
+//   defm ADDUSBO
+//   defm ADDUSD
+//   defm ADDUSHQ
+//   defm ADDUSW
+//   defm ADDUSWP
 //   defm ADDWP
 //   defm ADDX2BO
 //   defm ADDX16BO
@@ -566,8 +622,19 @@ multiclass MC_15<string OpcStr> {
 //   defm MINWP
 //   defm SBFBO
 //   defm SBFHQ
+//   defm SBFUSBO
+//   defm SBFUSD
+//   defm SBFUSHQ
+//   defm SBFUSW
+//   defm SBFUSWP
 //   defm SBFWP
-multiclass MC_16<string OpcStr> {
+//   defm SBFX2BO
+//   defm SBFX4BO
+//   defm SBFX8BO
+//   defm SBFX16BO
+//   defm SBFX32D
+//   defm SBFX64D
+multiclass MC_17_TINY<string OpcStr> {
   let isAsCheapAsAMove = 1 in
   def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
@@ -581,13 +648,10 @@ multiclass MC_16<string OpcStr> {
      ALU_TINY_X>;
 }
 
-// multiclass MC_17 is used by:
-//   defm ADDUSD
-//   defm ADDUSW
-//   defm ADDUSWP
+// multiclass MC_17_SWITCH is used by:
+//   defm ABDHQ
 //   defm ABDWP
-//   defm ADDCWC
-//   defm SBFCWC
+//   defm ADDSHQ
 //   defm ADDSWP
 //   defm SBFSWP
 //   defm ADDX2D
@@ -598,78 +662,37 @@ multiclass MC_16<string OpcStr> {
 //   defm ADDX8WP
 //   defm ADDX16D
 //   defm ADDX16WP
-//   defm SBFSBO
-//   defm SBFUSBO
-//   defm SBFUSD
-//   defm SBFUSHQ
-//   defm SBFUSW
-//   defm SBFUSWP
+//   defm AVGHQ
+//   defm AVGRHQ
+//   defm AVGRUHQ
+//   defm AVGRUWP
+//   defm AVGRWP
+//   defm AVGUHQ
+//   defm AVGUWP
+//   defm AVGWP
 //   defm SBFX2D
 //   defm SBFX2WP
 //   defm SBFX4D
-//   defm SBFX4WP
-//   defm SBFX8D
-//   defm SBFX8WP
-//   defm SBFX16D
-//   defm SBFX16WP
-//   defm SBFX32D
-//   defm SBFX64D
-//   defm AVGWP
-//   defm AVGUWP
-//   defm AVGRWP
-//   defm AVGRUWP
-//   defm LANDWP
-//   defm LNANDWP
-//   defm LORWP
-//   defm LNORWP
-//   defm ABDHQ
-//   defm ABDSBO
-//   defm ABDSHQ
-//   defm ABDSD
-//   defm ABDSW
-//   defm ABDSWP
-//   defm ADDCHCP
-//   defm SBFCHCP
-//   defm ADDSBO
-//   defm ADDUSBO
-//   defm ADDUSHQ
-//   defm ADDSHQ
 //   defm SBFSHQ
 //   defm ADDX2HQ
 //   defm ADDX4HQ
 //   defm ADDX8HQ
 //   defm ADDX16HQ
-//   defm SBFX2BO
 //   defm SBFX2HQ
-//   defm SBFX4BO
 //   defm SBFX4HQ
-//   defm SBFX8BO
 //   defm SBFX8HQ
-//   defm SBFX16BO
 //   defm SBFX16HQ
-//   defm AVGBO
-//   defm AVGUBO
-//   defm AVGHQ
-//   defm AVGRBO
-//   defm AVGUHQ
-//   defm AVGRHQ
-//   defm AVGRUBO
-//   defm AVGRUHQ
-//   defm LANDHQ
-//   defm LNANDHQ
-//   defm LORHQ
-//   defm LNORHQ
-multiclass MC_17<string OpcStr> {
+multiclass MC_17_SWITCH<string OpcStr> {
   def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     ALU_LITE>;
+     ALU_SWITCH_LITE_TINY>;
   def ri : KVX_INSTRUCTION_X
     <(outs SingleReg:$a2), (ins SingleReg:$a3, Wrapped32:$a4, Splat32Mod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
      [/* no straightforward pattern */],
-     ALU_LITE_X>;
+     ALU_SWITCH_LITE_TINY_X>;
 }
 
 // multiclass MC_18 is used by:
@@ -681,17 +704,11 @@ multiclass MC_17<string OpcStr> {
 //   defm ROLW
 //   defm RORW
 //   defm SRSWPS
-//   defm SLLWPS
-//   defm SRAWPS
-//   defm SRLWPS
 //   defm SLSWPS
 //   defm ROLWPS
 //   defm RORWPS
 //   defm SRSHQS
-//   defm SLLHQS
-//   defm SRAHQS
 //   defm SRBOQS
-//   defm SRLHQS
 //   defm SLSHQS
 //   defm SLSBOS
 //   defm SLUSBOS
@@ -713,7 +730,7 @@ multiclass MC_18<string OpcStr> {
      ALU_LITE>;
 }
 
-// multiclass MC_19 is used by:
+// multiclass MC_18_TINY is used by:
 //   defm SLLD
 //   defm SRAD
 //   defm SRLD
@@ -724,7 +741,7 @@ multiclass MC_18<string OpcStr> {
 //   defm SLLBOS
 //   defm SRLBOS
 let isAsCheapAsAMove = 1 in
-multiclass MC_19<string OpcStr> {
+multiclass MC_18_TINY<string OpcStr> {
   def ri : KVX_INSTRUCTION
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Unsigned6:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
@@ -735,6 +752,26 @@ multiclass MC_19<string OpcStr> {
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      ALU_TINY>;
+}
+
+// multiclass MC_18_SWITCH is used by:
+//   defm SRAHQS
+//   defm SLLWPS
+//   defm SRAWPS
+//   defm SRLWPS
+//   defm SLLHQS
+//   defm SRLHQS
+multiclass MC_18_SWITCH<string OpcStr> {
+  def ri : KVX_INSTRUCTION
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Unsigned6:$a3),
+     !strconcat (OpcStr, " $a1 = $a2, $a3"),
+     [/* no straightforward pattern */],
+     ALU_SWITCH_LITE_TINY>;
+  def rr : KVX_INSTRUCTION
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
+     !strconcat (OpcStr, " $a1 = $a2, $a3"),
+     [/* no straightforward pattern */],
+     ALU_SWITCH_LITE_TINY>;
 }
 
 // multiclass MC_1A is used by:
@@ -787,24 +824,24 @@ multiclass MC_1C<string OpcStr> {
     <(outs SingleReg:$a3o), (ins SingleReg:$a2, SingleReg:$a3, Signed10:$a4, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? $a3 = $a4"),
      [/* no straightforward pattern */],
-     ALU_LITE>;
+     ALU_SWITCH_LITE_TINY>;
   def ri37 : KVX_INSTRUCTION_X
     <(outs SingleReg:$a3o), (ins SingleReg:$a2, SingleReg:$a3, Signed37:$a4, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? $a3 = $a4"),
      [/* no straightforward pattern */],
-     ALU_LITE_X>;
+     ALU_SWITCH_LITE_TINY_X>;
   def ri64 : KVX_INSTRUCTION_Y
     <(outs SingleReg:$a3o), (ins SingleReg:$a2, SingleReg:$a3, Wrapped64:$a4, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? $a3 = $a4"),
      [/* no straightforward pattern */],
-     ALU_LITE_Y>;
+     ALU_SWITCH_LITE_TINY_Y>;
   }
   let Constraints = "$a3 = $a3o", isMoveReg = 1 in
   def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a3o), (ins SingleReg:$a2, SingleReg:$a3, SingleReg:$a4, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? $a3 = $a4"),
      [/* no straightforward pattern */],
-     ALU_LITE>;
+     ALU_SWITCH_LITE_TINY>;
 }
 
 // multiclass MC_1D is used by:
@@ -855,12 +892,12 @@ multiclass MC_1F<string OpcStr> {
     <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, FloatcompMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
      [/* no straightforward pattern */],
-     ALU_LITE>;
+     ALU_SWITCH_LITE_TINY>;
   def ri : KVX_INSTRUCTION_X
     <(outs SingleReg:$a2), (ins SingleReg:$a3, Binary32:$a4, FloatcompMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
      [/* no straightforward pattern */],
-     ALU_LITE_X>;
+     ALU_SWITCH_LITE_TINY_X>;
 }
 
 // multiclass MC_20 is used by:
@@ -1648,14 +1685,14 @@ def STSUD : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "stsud $a1 = $a2, $a3",
    [/* no straightforward pattern */],
-   ALU_LITE>;
+   ALU_SWITCH_LITE_TINY>;
 
 let isAdd = 1 in
 defm ADDD : MC_11<"addd">;
 
 defm SBFD : MC_11<"sbfd">;
 
-defm ABDD : MC_12<"abdd">;
+defm ABDD : MC_12_SWITCH<"abdd">;
 
 defm MIND : MC_11<"mind">;
 
@@ -1681,60 +1718,60 @@ defm ANDND : MC_11<"andnd">;
 
 defm ORND : MC_11<"ornd">;
 
-defm SBMM8 : MC_12<"sbmm8">;
+defm SBMM8 : MC_12_SWITCH<"sbmm8">;
 
-defm SBMMT8 : MC_12<"sbmmt8">;
+defm SBMMT8 : MC_12_SWITCH<"sbmmt8">;
 
 let isAdd = 1 in
-defm ADDSD : MC_12<"addsd">;
+defm ADDSD : MC_12_SWITCH<"addsd">;
 
 let isAdd = 1 in {
-defm ADDUSBO : MC_17<"addusbo">, Requires<[IsV2]>;
-defm ADDUSD : MC_17<"addusd">, Requires<[IsV2]>;
-defm ADDUSHQ : MC_17<"addushq">, Requires<[IsV2]>;
-defm ADDUSW : MC_17<"addusw">, Requires<[IsV2]>;
-defm ADDUSWP : MC_17<"adduswp">, Requires<[IsV2]>;
+defm ADDUSBO : MC_17_TINY<"addusbo">, Requires<[IsV2]>;
+defm ADDUSD : MC_17_TINY<"addusd">, Requires<[IsV2]>;
+defm ADDUSHQ : MC_17_TINY<"addushq">, Requires<[IsV2]>;
+defm ADDUSW : MC_17_TINY<"addusw">, Requires<[IsV2]>;
+defm ADDUSWP : MC_17_TINY<"adduswp">, Requires<[IsV2]>;
 }
 
-defm SBFSD : MC_12<"sbfsd">;
+defm SBFSD : MC_12_SWITCH<"sbfsd">;
 def SBFSDri : KVX_INSTRUCTION_X
     <(outs SingleReg:$out), (ins SingleReg:$rhs, Wrapped32:$lhs, Splat32Mod:$s),
     "sbfsd$s $out = $rhs, $lhs",
-     [], ALU_LITE_X>, Requires<[IsV2]>;
+     [], ALU_TINY_X>, Requires<[IsV2]>;
 
-defm ADDX2D : MC_17<"addx2d">;
+defm ADDX2D : MC_17_SWITCH<"addx2d">;
 
-defm ADDX4D : MC_17<"addx4d">;
+defm ADDX4D : MC_17_SWITCH<"addx4d">;
 
-defm ADDX8D : MC_17<"addx8d">;
+defm ADDX8D : MC_17_SWITCH<"addx8d">;
 
-defm ADDX16D : MC_17<"addx16d">;
+defm ADDX16D : MC_17_SWITCH<"addx16d">;
 
-defm ADDX32D : MC_16<"addx32d">, Requires<[IsV2]>;
+defm ADDX32D : MC_17_TINY<"addx32d">, Requires<[IsV2]>;
 
-defm ADDX64D : MC_16<"addx64d">, Requires<[IsV2]>;
+defm ADDX64D : MC_17_TINY<"addx64d">, Requires<[IsV2]>;
 
-defm SBFX2D : MC_17<"sbfx2d">;
+defm SBFX2D : MC_17_SWITCH<"sbfx2d">;
 
-defm SBFX4D : MC_17<"sbfx4d">;
+defm SBFX4D : MC_17_SWITCH<"sbfx4d">;
 
-defm SBFX8D : MC_17<"sbfx8d">;
+defm SBFX8D : MC_17_SWITCH<"sbfx8d">;
 
-defm SBFX16D : MC_17<"sbfx16d">;
+defm SBFX16D : MC_17_SWITCH<"sbfx16d">;
 
-defm SBFX32D : MC_17<"sbfx32d">, Requires<[IsV2]>;
+defm SBFX32D : MC_17_TINY<"sbfx32d">, Requires<[IsV2]>;
 
-defm SBFX64D : MC_17<"sbfx64d">, Requires<[IsV2]>;
-
-let isAdd = 1 in
-defm ADDWD : MC_13<"addwd">;
-
-defm SBFWD : MC_13<"sbfwd">;
+defm SBFX64D : MC_17_TINY<"sbfx64d">, Requires<[IsV2]>;
 
 let isAdd = 1 in
-defm ADDUWD : MC_13<"adduwd">;
+defm ADDWD : MC_13_SWITCH<"addwd">;
 
-defm SBFUWD : MC_13<"sbfuwd">;
+defm SBFWD : MC_13_SWITCH<"sbfwd">;
+
+let isAdd = 1 in
+defm ADDUWD : MC_13_SWITCH<"adduwd">;
+
+defm SBFUWD : MC_13_SWITCH<"sbfuwd">;
 
 defm LANDD : MC_13<"landd">;
 
@@ -1748,7 +1785,7 @@ def STSUW : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "stsuw $a1 = $a2, $a3",
    [/* no straightforward pattern */],
-   ALU_LITE>;
+   ALU_SWITCH_LITE_TINY>;
 
 let isAdd = 1 in
 defm ADDW : MC_14<"addw">;
@@ -1782,41 +1819,41 @@ defm ANDNW : MC_14<"andnw">;
 defm ORNW : MC_14<"ornw">;
 
 let isAdd = 1 in
-defm ADDSW : MC_13<"addsw">;
+defm ADDSW : MC_13_SWITCH<"addsw">;
 
-defm SBFSW : MC_13<"sbfsw">;
+defm SBFSW : MC_13_SWITCH<"sbfsw">;
 
-defm ADDX2W : MC_13<"addx2w">;
+defm ADDX2W : MC_13_SWITCH<"addx2w">;
 
-defm ADDX4W : MC_13<"addx4w">;
+defm ADDX4W : MC_13_SWITCH<"addx4w">;
 
-defm ADDX8W : MC_13<"addx8w">;
+defm ADDX8W : MC_13_SWITCH<"addx8w">;
 
-defm ADDX16W : MC_13<"addx16w">;
+defm ADDX16W : MC_13_SWITCH<"addx16w">;
 
 defm ADDX32W : MC_13_TINY<"addx32w">, Requires<[IsV2]>;
 
 defm ADDX64W : MC_13_TINY<"addx64w">, Requires<[IsV2]>;
 
-defm SBFX2W : MC_13<"sbfx2w">;
+defm SBFX2W : MC_13_SWITCH<"sbfx2w">;
 
-defm SBFX4W : MC_13<"sbfx4w">;
+defm SBFX4W : MC_13_SWITCH<"sbfx4w">;
 
-defm SBFX8W : MC_13<"sbfx8w">;
+defm SBFX8W : MC_13_SWITCH<"sbfx8w">;
 
-defm SBFX16W : MC_13<"sbfx16w">;
+defm SBFX16W : MC_13_SWITCH<"sbfx16w">;
 
-defm SBFX32W : MC_13<"sbfx32w">, Requires<[IsV2]>;
+defm SBFX32W : MC_13_TINY<"sbfx32w">, Requires<[IsV2]>;
 
-defm SBFX64W : MC_13<"sbfx64w">, Requires<[IsV2]>;
+defm SBFX64W : MC_13_TINY<"sbfx64w">, Requires<[IsV2]>;
 
-defm AVGW : MC_13<"avgw">;
+defm AVGW : MC_13_SWITCH<"avgw">;
 
-defm AVGUW : MC_13<"avguw">;
+defm AVGUW : MC_13_SWITCH<"avguw">;
 
-defm AVGRW : MC_13<"avgrw">;
+defm AVGRW : MC_13_SWITCH<"avgrw">;
 
-defm AVGRUW : MC_13<"avgruw">;
+defm AVGRUW : MC_13_SWITCH<"avgruw">;
 
 defm LANDW : MC_13<"landw">;
 
@@ -1827,19 +1864,19 @@ defm LORW : MC_13<"lorw">;
 defm LNORW : MC_13<"lnorw">;
 
 let isAdd = 1 in
-defm ADDWP : MC_16<"addwp">;
+defm ADDWP : MC_17_TINY<"addwp">;
 
-defm SBFWP : MC_16<"sbfwp">;
+defm SBFWP : MC_17_TINY<"sbfwp">;
 
-defm ABDWP : MC_17<"abdwp">;
+defm ABDWP : MC_17_SWITCH<"abdwp">;
 
-defm MINWP : MC_16<"minwp">;
+defm MINWP : MC_17_TINY<"minwp">;
 
-defm MINUWP : MC_16<"minuwp">;
+defm MINUWP : MC_17_TINY<"minuwp">;
 
-defm MAXWP : MC_16<"maxwp">;
+defm MAXWP : MC_17_TINY<"maxwp">;
 
-defm MAXUWP : MC_16<"maxuwp">;
+defm MAXUWP : MC_17_TINY<"maxuwp">;
 
 let isAdd = 1 in
 defm ADDCWC : MC_17<"addcwc">;
@@ -1847,33 +1884,33 @@ defm ADDCWC : MC_17<"addcwc">;
 defm SBFCWC : MC_17<"sbfcwc">;
 
 let isAdd = 1 in
-defm ADDSWP : MC_17<"addswp">;
+defm ADDSWP : MC_17_SWITCH<"addswp">;
 
-defm SBFSWP : MC_17<"sbfswp">;
+defm SBFSWP : MC_17_SWITCH<"sbfswp">;
 
-defm ADDX2WP : MC_17<"addx2wp">;
+defm ADDX2WP : MC_17_SWITCH<"addx2wp">;
 
-defm ADDX4WP : MC_17<"addx4wp">;
+defm ADDX4WP : MC_17_SWITCH<"addx4wp">;
 
-defm ADDX8WP : MC_17<"addx8wp">;
+defm ADDX8WP : MC_17_SWITCH<"addx8wp">;
 
-defm ADDX16WP : MC_17<"addx16wp">;
+defm ADDX16WP : MC_17_SWITCH<"addx16wp">;
 
-defm SBFX2WP : MC_17<"sbfx2wp">;
+defm SBFX2WP : MC_17_SWITCH<"sbfx2wp">;
 
-defm SBFX4WP : MC_17<"sbfx4wp">;
+defm SBFX4WP : MC_17_SWITCH<"sbfx4wp">;
 
-defm SBFX8WP : MC_17<"sbfx8wp">;
+defm SBFX8WP : MC_17_SWITCH<"sbfx8wp">;
 
-defm SBFX16WP : MC_17<"sbfx16wp">;
+defm SBFX16WP : MC_17_SWITCH<"sbfx16wp">;
 
-defm AVGWP : MC_17<"avgwp">;
+defm AVGWP : MC_17_SWITCH<"avgwp">;
 
-defm AVGUWP : MC_17<"avguwp">;
+defm AVGUWP : MC_17_SWITCH<"avguwp">;
 
-defm AVGRWP : MC_17<"avgrwp">;
+defm AVGRWP : MC_17_SWITCH<"avgrwp">;
 
-defm AVGRUWP : MC_17<"avgruwp">;
+defm AVGRUWP : MC_17_SWITCH<"avgruwp">;
 
 defm LANDWP : MC_17<"landwp">;
 
@@ -1884,34 +1921,34 @@ defm LORWP : MC_17<"lorwp">;
 defm LNORWP : MC_17<"lnorwp">;
 
 let isAdd = 1 in
-defm ADDHQ : MC_16<"addhq">;
+defm ADDHQ : MC_17_TINY<"addhq">;
 
 let isAdd = 1 in
-defm ADDBO : MC_16<"addbo">, Requires<[IsV2]>;
+defm ADDBO : MC_17_TINY<"addbo">, Requires<[IsV2]>;
 
-defm SBFBO : MC_16<"sbfbo">, Requires<[IsV2]>;
+defm SBFBO : MC_17_TINY<"sbfbo">, Requires<[IsV2]>;
 
-defm SBFHQ : MC_16<"sbfhq">;
+defm SBFHQ : MC_17_TINY<"sbfhq">;
 
-defm ABDBO : MC_16<"abdbo">, Requires<[IsV2]>;
+defm ABDBO : MC_17_TINY<"abdbo">, Requires<[IsV2]>;
 
-defm ABDHQ : MC_17<"abdhq">;
+defm ABDHQ : MC_17_SWITCH<"abdhq">;
 
-defm MINBO : MC_16<"minbo">, Requires<[IsV2]>;
+defm MINBO : MC_17_TINY<"minbo">, Requires<[IsV2]>;
 
-defm MINHQ : MC_16<"minhq">;
+defm MINHQ : MC_17_TINY<"minhq">;
 
-defm MINUBO : MC_16<"minubo">, Requires<[IsV2]>;
+defm MINUBO : MC_17_TINY<"minubo">, Requires<[IsV2]>;
 
-defm MINUHQ : MC_16<"minuhq">;
+defm MINUHQ : MC_17_TINY<"minuhq">;
 
-defm MAXBO : MC_16<"maxbo">, Requires<[IsV2]>;
+defm MAXBO : MC_17_TINY<"maxbo">, Requires<[IsV2]>;
 
-defm MAXHQ : MC_16<"maxhq">;
+defm MAXHQ : MC_17_TINY<"maxhq">;
 
-defm MAXUBO : MC_16<"maxubo">, Requires<[IsV2]>;
+defm MAXUBO : MC_17_TINY<"maxubo">, Requires<[IsV2]>;
 
-defm MAXUHQ : MC_16<"maxuhq">;
+defm MAXUHQ : MC_17_TINY<"maxuhq">;
 
 let isAdd = 1 in
 defm ADDCHCP : MC_17<"addchcp">;
@@ -1919,61 +1956,61 @@ defm ADDCHCP : MC_17<"addchcp">;
 defm SBFCHCP : MC_17<"sbfchcp">;
 
 let isAdd = 1 in {
-defm ADDSHQ : MC_17<"addshq">;
-defm ADDSBO : MC_17<"addsbo">, Requires<[IsV2]>;
+defm ADDSHQ : MC_17_SWITCH<"addshq">;
+defm ADDSBO : MC_17_TINY<"addsbo">, Requires<[IsV2]>;
 }
 
 defm SBFSBO : MC_17<"sbfsbo">;
 
-defm SBFSHQ : MC_17<"sbfshq">;
+defm SBFSHQ : MC_17_SWITCH<"sbfshq">;
 
-defm ADDX2BO : MC_16<"addx2bo">, Requires<[IsV2]>;
+defm ADDX2BO : MC_17_TINY<"addx2bo">, Requires<[IsV2]>;
 
-defm ADDX2HQ : MC_17<"addx2hq">;
+defm ADDX2HQ : MC_17_SWITCH<"addx2hq">;
 
-defm ADDX4BO : MC_16<"addx4bo">, Requires<[IsV2]>;
+defm ADDX4BO : MC_17_TINY<"addx4bo">, Requires<[IsV2]>;
 
-defm ADDX4HQ : MC_17<"addx4hq">;
+defm ADDX4HQ : MC_17_SWITCH<"addx4hq">;
 
-defm ADDX8BO : MC_16<"addx8bo">, Requires<[IsV2]>;
+defm ADDX8BO : MC_17_TINY<"addx8bo">, Requires<[IsV2]>;
 
-defm ADDX8HQ : MC_17<"addx8hq">;
+defm ADDX8HQ : MC_17_SWITCH<"addx8hq">;
 
-defm ADDX16BO : MC_16<"addx16bo">, Requires<[IsV2]>;
+defm ADDX16BO : MC_17_TINY<"addx16bo">, Requires<[IsV2]>;
 
-defm ADDX16HQ : MC_17<"addx16hq">;
+defm ADDX16HQ : MC_17_SWITCH<"addx16hq">;
 
-defm SBFX2BO : MC_17<"sbfx2bo">, Requires<[IsV2]>;
+defm SBFX2BO : MC_17_TINY<"sbfx2bo">, Requires<[IsV2]>;
 
-defm SBFX2HQ : MC_17<"sbfx2hq">;
+defm SBFX2HQ : MC_17_SWITCH<"sbfx2hq">;
 
-defm SBFX4BO : MC_17<"sbfx4bo">, Requires<[IsV2]>;
+defm SBFX4BO : MC_17_TINY<"sbfx4bo">, Requires<[IsV2]>;
 
-defm SBFX4HQ : MC_17<"sbfx4hq">;
+defm SBFX4HQ : MC_17_SWITCH<"sbfx4hq">;
 
-defm SBFX8BO : MC_17<"sbfx8bo">, Requires<[IsV2]>;
+defm SBFX8BO : MC_17_TINY<"sbfx8bo">, Requires<[IsV2]>;
 
-defm SBFX8HQ : MC_17<"sbfx8hq">;
+defm SBFX8HQ : MC_17_SWITCH<"sbfx8hq">;
 
-defm SBFX16BO : MC_17<"sbfx16bo">, Requires<[IsV2]>;
+defm SBFX16BO : MC_17_TINY<"sbfx16bo">, Requires<[IsV2]>;
 
-defm SBFX16HQ : MC_17<"sbfx16hq">;
+defm SBFX16HQ : MC_17_SWITCH<"sbfx16hq">;
 
 defm AVGBO : MC_17<"avgbo">, Requires<[IsV2]>;
 
-defm AVGHQ : MC_17<"avghq">;
+defm AVGHQ : MC_17_SWITCH<"avghq">;
 
 defm AVGUBO : MC_17<"avgubo">, Requires<[IsV2]>;
 
-defm AVGUHQ : MC_17<"avguhq">;
+defm AVGUHQ : MC_17_SWITCH<"avguhq">;
 
 defm AVGRBO : MC_17<"avgrbo">, Requires<[IsV2]>;
 
-defm AVGRHQ : MC_17<"avgrhq">;
+defm AVGRHQ : MC_17_SWITCH<"avgrhq">;
 
 defm AVGRUBO : MC_17<"avgrubo">, Requires<[IsV2]>;
 
-defm AVGRUHQ : MC_17<"avgruhq">;
+defm AVGRUHQ : MC_17_SWITCH<"avgruhq">;
 
 defm LANDHQ : MC_17<"landhq">;
 
@@ -1983,63 +2020,63 @@ defm LORHQ : MC_17<"lorhq">;
 
 defm LNORHQ : MC_17<"lnorhq">;
 
-defm ADDX2WD : MC_13<"addx2wd">;
+defm ADDX2WD : MC_13_SWITCH<"addx2wd">;
 
-defm ADDX4WD : MC_13<"addx4wd">;
+defm ADDX4WD : MC_13_SWITCH<"addx4wd">;
 
-defm ADDX8WD : MC_13<"addx8wd">;
+defm ADDX8WD : MC_13_SWITCH<"addx8wd">;
 
-defm ADDX16WD : MC_13<"addx16wd">;
+defm ADDX16WD : MC_13_SWITCH<"addx16wd">;
 
 defm ADDX32WD : MC_13_TINY<"addx32wd">, Requires<[IsV2]>;
 
 defm ADDX64WD : MC_13_TINY<"addx64wd">, Requires<[IsV2]>;
 
-defm SBFX2WD : MC_13<"sbfx2wd">;
+defm SBFX2WD : MC_13_SWITCH<"sbfx2wd">;
 
-defm SBFX4WD : MC_13<"sbfx4wd">;
+defm SBFX4WD : MC_13_SWITCH<"sbfx4wd">;
 
-defm SBFX8WD : MC_13<"sbfx8wd">;
+defm SBFX8WD : MC_13_SWITCH<"sbfx8wd">;
 
-defm SBFX16WD : MC_13<"sbfx16wd">;
+defm SBFX16WD : MC_13_SWITCH<"sbfx16wd">;
 
 defm SBFX32WD : MC_13<"sbfx32wd">, Requires<[IsV2]>;
 
 defm SBFX64WD : MC_13<"sbfx64wd">, Requires<[IsV2]>;
 
-defm ADDX2UWD : MC_13<"addx2uwd">;
+defm ADDX2UWD : MC_13_SWITCH<"addx2uwd">;
 
-defm ADDX4UWD : MC_13<"addx4uwd">;
+defm ADDX4UWD : MC_13_SWITCH<"addx4uwd">;
 
-defm ADDX8UWD : MC_13<"addx8uwd">;
+defm ADDX8UWD : MC_13_SWITCH<"addx8uwd">;
 
-defm ADDX16UWD : MC_13<"addx16uwd">;
+defm ADDX16UWD : MC_13_SWITCH<"addx16uwd">;
 
 defm ADDX32UWD : MC_13_TINY<"addx32uwd">, Requires<[IsV2]>;
 
 defm ADDX64UWD : MC_13_TINY<"addx64uwd">, Requires<[IsV2]>;
 
-defm SBFX2UWD : MC_13<"sbfx2uwd">;
+defm SBFX2UWD : MC_13_SWITCH<"sbfx2uwd">;
 
-defm SBFX4UWD : MC_13<"sbfx4uwd">;
+defm SBFX4UWD : MC_13_SWITCH<"sbfx4uwd">;
 
-defm SBFX8UWD : MC_13<"sbfx8uwd">;
+defm SBFX8UWD : MC_13_SWITCH<"sbfx8uwd">;
 
-defm SBFX16UWD : MC_13<"sbfx16uwd">;
+defm SBFX16UWD : MC_13_SWITCH<"sbfx16uwd">;
 
-defm SBFX32UWD : MC_13<"sbfx32uwd">, Requires<[IsV2]>;
+defm SBFX32UWD : MC_13_TINY<"sbfx32uwd">, Requires<[IsV2]>;
 
-defm SBFX64UWD : MC_13<"sbfx64uwd">, Requires<[IsV2]>;
+defm SBFX64UWD : MC_13_TINY<"sbfx64uwd">, Requires<[IsV2]>;
 
-defm SBFUSBO : MC_17<"sbfusbo">, Requires<[IsV2]>;
+defm SBFUSBO : MC_17_TINY<"sbfusbo">, Requires<[IsV2]>;
 
-defm SBFUSD : MC_17<"sbfusd">, Requires<[IsV2]>;
+defm SBFUSD : MC_17_TINY<"sbfusd">, Requires<[IsV2]>;
 
-defm SBFUSHQ : MC_17<"sbfushq">, Requires<[IsV2]>;
+defm SBFUSHQ : MC_17_TINY<"sbfushq">, Requires<[IsV2]>;
 
-defm SBFUSW : MC_17<"sbfusw">, Requires<[IsV2]>;
+defm SBFUSW : MC_17_TINY<"sbfusw">, Requires<[IsV2]>;
 
-defm SBFUSWP : MC_17<"sbfuswp">, Requires<[IsV2]>;
+defm SBFUSWP : MC_17_TINY<"sbfuswp">, Requires<[IsV2]>;
 
 let Defs = [CS], Uses = [CS] in
 def ADDCD : KVX_INSTRUCTION
@@ -2073,13 +2110,13 @@ def FNEGD : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fnegd $a1 = $a2",
    [(set f64:$a1, (fneg f64:$a2))],
-   ALU_LITE>;
+   ALU_SWITCH_LITE_TINY>;
 
 def FABSD : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fabsd $a1 = $a2",
    [(set f64:$a1, (fabs f64:$a2))],
-   ALU_LITE>;
+   ALU_SWITCH_LITE_TINY>;
 
 def FSRECD : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
@@ -2115,13 +2152,13 @@ def FNEGW : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fnegw $a1 = $a2",
    [(set f32:$a1, (fneg f32:$a2))],
-   ALU_LITE>;
+   ALU_SWITCH_LITE_TINY>;
 
 def FABSW : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fabsw $a1 = $a2",
    [(set f32:$a1, (fabs f32:$a2))],
-   ALU_LITE>;
+   ALU_SWITCH_LITE_TINY>;
 
 def FRECW : KVX_INSTRUCTION
   <(outs SingleReg:$a3), (ins SingleReg:$a4, RoundingMod:$a1, SilentMod:$a2),
@@ -2169,13 +2206,13 @@ def FNEGWP : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fnegwp $a1 = $a2",
    [(set v2f32:$a1, (fneg v2f32:$a2))],
-   ALU_LITE>;
+   ALU_SWITCH_LITE_TINY>;
 
 def FABSWP : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fabswp $a1 = $a2",
    [(set v2f32:$a1, (fabs v2f32:$a2))],
-   ALU_LITE>;
+   ALU_SWITCH_LITE_TINY>;
 
 def FSRECWP : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
@@ -2211,13 +2248,13 @@ def FNEGHQ : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fneghq $a1 = $a2",
    [(set v4f16:$a1, (fneg v4f16:$a2))],
-   ALU_LITE>;
+   ALU_SWITCH_LITE_TINY>;
 
 def FABSHQ : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fabshq $a1 = $a2",
    [(set f16:$a1, (fabs f16:$a2))],
-   ALU_LITE>;
+   ALU_SWITCH_LITE_TINY>;
 
 def FNARROWWHQ : KVX_INSTRUCTION
   <(outs SingleReg:$a3), (ins PairedReg:$a4, RoundingMod:$a1, SilentMod:$a2),
@@ -2230,45 +2267,45 @@ def INSF : KVX_INSTRUCTION
   <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, Unsigned6:$a3, Unsigned6:$a4),
    "insf $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
-   ALU_LITE>;
+   ALU_SWITCH_LITE_TINY>;
 
 def EXTFZ : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, Unsigned6:$a3, Unsigned6:$a4),
    "extfz $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
-   ALU_LITE>;
+   ALU_SWITCH_LITE_TINY>;
 
 def EXTFS : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, Unsigned6:$a3, Unsigned6:$a4),
    "extfs $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
-   ALU_LITE>;
+   ALU_SWITCH_LITE_TINY>;
 
 def CLRF : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, Unsigned6:$a3, Unsigned6:$a4),
    "clrf $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
-   ALU_LITE>;
+   ALU_SWITCH_LITE_TINY>;
 
 defm SATD : MC_18<"satd">;
 
 defm SRSD : MC_18<"srsd">;
 
-defm SLLD : MC_19<"slld">;
+defm SLLD : MC_18_TINY<"slld">;
 
-defm SRAD : MC_19<"srad">;
+defm SRAD : MC_18_TINY<"srad">;
 
-defm SRLD : MC_19<"srld">;
+defm SRLD : MC_18_TINY<"srld">;
 
 defm SLSD : MC_18<"slsd">;
 
 defm SRSW : MC_18<"srsw">;
 
-defm SLLW : MC_19<"sllw">;
+defm SLLW : MC_18_TINY<"sllw">;
 
-defm SRAW : MC_19<"sraw">;
+defm SRAW : MC_18_TINY<"sraw">;
 
-defm SRLW : MC_19<"srlw">;
+defm SRLW : MC_18_TINY<"srlw">;
 
 defm SLSW : MC_18<"slsw">;
 
@@ -2278,11 +2315,11 @@ defm RORW : MC_18<"rorw">;
 
 defm SRSWPS : MC_18<"srswps">;
 
-defm SLLWPS : MC_18<"sllwps">;
+defm SLLWPS : MC_18_SWITCH<"sllwps">;
 
-defm SRAWPS : MC_18<"srawps">;
+defm SRAWPS : MC_18_SWITCH<"srawps">;
 
-defm SRLWPS : MC_18<"srlwps">;
+defm SRLWPS : MC_18_SWITCH<"srlwps">;
 
 defm SLSWPS : MC_18<"slswps">;
 
@@ -2294,17 +2331,17 @@ defm SRSBOS : MC_18<"srsbos">, Requires<[IsV2]>;
 
 defm SRSHQS : MC_18<"srshqs">;
 
-defm SLLBOS : MC_19<"sllbos">, Requires<[IsV2]>;
+defm SLLBOS : MC_18_TINY<"sllbos">, Requires<[IsV2]>;
 
-defm SLLHQS : MC_18<"sllhqs">;
+defm SLLHQS : MC_18_SWITCH<"sllhqs">;
 
-defm SRABOS : MC_19<"srabos">, Requires<[IsV2]>;
+defm SRABOS : MC_18_TINY<"srabos">, Requires<[IsV2]>;
 
-defm SRAHQS : MC_18<"srahqs">;
+defm SRAHQS : MC_18_SWITCH<"srahqs">;
 
-defm SRLBOS : MC_19<"srlbos">, Requires<[IsV2]>;
+defm SRLBOS : MC_18_TINY<"srlbos">, Requires<[IsV2]>;
 
-defm SRLHQS : MC_18<"srlhqs">;
+defm SRLHQS : MC_18_SWITCH<"srlhqs">;
 
 defm SLSHQS : MC_18<"slshqs">;
 
@@ -2320,13 +2357,13 @@ def COMPWD : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, ComparisonMod:$a1),
    "compwd$a1 $a2 = $a3, $a4",
    [/* no straightforward pattern */],
-   ALU_LITE>;
+   ALU_SWITCH_LITE_TINY>;
 
 def COMPUWD : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, ComparisonMod:$a1),
    "compuwd$a1 $a2 = $a3, $a4",
    [/* no straightforward pattern */],
-   ALU_LITE>;
+   ALU_SWITCH_LITE_TINY>;
 
 def COMPNWP : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, ComparisonMod:$a1),
@@ -2353,7 +2390,7 @@ def CMOVEWP : KVX_INSTRUCTION
   <(outs SingleReg:$a3o), (ins SingleReg:$a2, SingleReg:$a3, SingleReg:$a4, SimplecondMod:$a1),
    "cmovewp$a1 $a2 ? $a3 = $a4",
    [/* no straightforward pattern */],
-   ALU_LITE>;
+   ALU_SWITCH_LITE_TINY>;
 
 let isAsCheapAsAMove = 1, isReMaterializable = 1, isMoveImm = 1, isPredicable = 1 in
 defm MAKE : MC_1D<"make">;
@@ -2436,32 +2473,32 @@ def SXLHWP : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "sxlhwp $a1 = $a2",
    [/* no straightforward pattern */],
-   ALU_LITE>;
+   ALU_SWITCH_LITE_TINY>;
 
 def SXMHWP : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "sxmhwp $a1 = $a2",
    [/* no straightforward pattern */],
-   ALU_LITE>;
+   ALU_SWITCH_LITE_TINY>;
 
 def SXLBHQ : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "sxlbhq $a1 = $a2",
    [/* no straightforward pattern */],
-   ALU_LITE>;
+   ALU_SWITCH_LITE_TINY>;
 
 def SXMBHQ : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "sxmbhq $a1 = $a2",
    [/* no straightforward pattern */],
-   ALU_LITE>;
+   ALU_SWITCH_LITE_TINY>;
 
 let Constraints = "$a3 = $a3o" in
 def CMOVEHQ : KVX_INSTRUCTION
   <(outs SingleReg:$a3o), (ins SingleReg:$a2, SingleReg:$a3, SingleReg:$a4, SimplecondMod:$a1),
    "cmovehq$a1 $a2 ? $a3 = $a4",
    [/* no straightforward pattern */],
-   ALU_LITE>;
+   ALU_SWITCH_LITE_TINY>;
 
 let Constraints = "$a3 = $a3o" in
 def CMOVEBO : KVX_INSTRUCTION
@@ -2479,7 +2516,7 @@ def FCOMPD : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, FloatcompMod:$a1),
    "fcompd$a1 $a2 = $a3, $a4",
    [/* no straightforward pattern */],
-   ALU_LITE>;
+   ALU_SWITCH_LITE_TINY>;
 
 def FCOMPND : KVX_INSTRUCTION
   <(outs SingleReg:$r), (ins SingleReg:$lhs, SingleReg:$rhs, FloatcompMod:$m),
@@ -2491,13 +2528,13 @@ def FCOMPNWP : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, FloatcompMod:$a1),
    "fcompnwp$a1 $a2 = $a3, $a4",
    [/* no straightforward pattern */],
-   ALU_LITE>;
+   ALU_SWITCH_LITE_TINY>;
 
 def FCOMPNHQ : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, FloatcompMod:$a1),
    "fcompnhq$a1 $a2 = $a3, $a4",
    [/* no straightforward pattern */],
-   ALU_LITE>;
+   ALU_SWITCH_LITE_TINY>;
 
 def FSDIVD : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins PairedReg:$a3, SilentMod:$a1),
@@ -2683,49 +2720,49 @@ def FMIND : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fmind $a1 = $a2, $a3",
    [(set f64:$a1, (fminnum f64:$a2, f64:$a3))],
-   ALU_LITE>;
+   ALU_SWITCH_LITE_TINY>;
 
 def FMAXD : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fmaxd $a1 = $a2, $a3",
    [(set f64:$a1, (fmaxnum f64:$a2, f64:$a3))],
-   ALU_LITE>;
+   ALU_SWITCH_LITE_TINY>;
 
 def FMINW : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fminw $a1 = $a2, $a3",
    [(set f32:$a1, (fminnum f32:$a2, f32:$a3))],
-   ALU_LITE>;
+   ALU_SWITCH_LITE_TINY>;
 
 def FMAXW : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fmaxw $a1 = $a2, $a3",
    [(set f32:$a1, (fmaxnum f32:$a2, f32:$a3))],
-   ALU_LITE>;
+   ALU_SWITCH_LITE_TINY>;
 
 def FMINWP : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fminwp $a1 = $a2, $a3",
    [(set v2f32:$a1, (fminnum v2f32:$a2, v2f32:$a3))],
-   ALU_LITE>;
+   ALU_SWITCH_LITE_TINY>;
 
 def FMAXWP : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fmaxwp $a1 = $a2, $a3",
    [(set v2f32:$a1, (fmaxnum v2f32:$a2, v2f32:$a3))],
-   ALU_LITE>;
+   ALU_SWITCH_LITE_TINY>;
 
 def FMINHQ : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fminhq $a1 = $a2, $a3",
    [(set v4f16:$a1, (fminnum v4f16:$a2, v4f16:$a3))],
-   ALU_LITE>;
+   ALU_SWITCH_LITE_TINY>;
 
 def FMAXHQ : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fmaxhq $a1 = $a2, $a3",
    [(set v4f16:$a1, (fmaxnum v4f16:$a2, v4f16:$a3))],
-   ALU_LITE>;
+   ALU_SWITCH_LITE_TINY>;
 
 def FLOATD : KVX_INSTRUCTION
   <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
@@ -2962,31 +2999,31 @@ def DOT2WDP : KVX_INSTRUCTION
   <(outs PairedReg:$a1), (ins PairedReg:$a2, PairedReg:$a3),
    "dot2wdp $a1 = $a2, $a3",
    [/* no straightforward pattern */],
-   MAU_AUXR>;
+   MAU_SWITCH_AUXR_EMPTY>;
 
 def DOT2UWDP : KVX_INSTRUCTION
   <(outs PairedReg:$a1), (ins PairedReg:$a2, PairedReg:$a3),
    "dot2uwdp $a1 = $a2, $a3",
    [/* no straightforward pattern */],
-   MAU_AUXR>;
+   MAU_SWITCH_AUXR_EMPTY>;
 
 def DOT2SUWDP : KVX_INSTRUCTION
   <(outs PairedReg:$a1), (ins PairedReg:$a2, PairedReg:$a3),
    "dot2suwdp $a1 = $a2, $a3",
    [/* no straightforward pattern */],
-   MAU_AUXR>;
+   MAU_SWITCH_AUXR_EMPTY>;
 
 def MULWQ : KVX_INSTRUCTION
   <(outs PairedReg:$a1), (ins PairedReg:$a2, PairedReg:$a3),
    "mulwq $a1 = $a2, $a3",
    [(set v4i32:$a1, (mul v4i32:$a2, v4i32:$a3))],
-   MAU_AUXR>;
+   MAU_SWITCH_AUXR_EMPTY>;
 
 def DOT2WZP : KVX_INSTRUCTION
   <(outs PairedReg:$a1), (ins PairedReg:$a2, PairedReg:$a3),
    "dot2wzp $a1 = $a2, $a3",
    [/* no straightforward pattern */],
-   MAU_AUXR>;
+   MAU_SWITCH_AUXR_EMPTY>;
 
 defm MULWP : MC_22<"mulwp">;
 
@@ -3160,7 +3197,7 @@ def FMULWQ : KVX_INSTRUCTION
   <(outs PairedReg:$a3), (ins PairedReg:$a4, PairedReg:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fmulwq$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */],
-   MAU_AUXR_FP>;
+   MAU_SWITCH_AUXR_EMPTY_FP>;
 
 defm FMULWC : MC_2AM<"fmulwc">;
 
@@ -3181,13 +3218,13 @@ def FADDDP : KVX_INSTRUCTION
   <(outs PairedReg:$a3), (ins PairedReg:$a4, PairedReg:$a5, ConjugateMod:$a6, RoundingMod:$a1, SilentMod:$a2),
    "fadddp$a6$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */],
-   MAU_AUXR_FP>;
+   MAU_SWITCH_AUXR_EMPTY_FP>;
 
 def FADDWQ : KVX_INSTRUCTION
   <(outs PairedReg:$a3), (ins PairedReg:$a4, PairedReg:$a5, ConjugateMod:$a6, RoundingMod:$a1, SilentMod:$a2),
    "faddwq$a6$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */],
-   MAU_AUXR_FP>;
+   MAU_SWITCH_AUXR_EMPTY_FP>;
 
 defm FSBFD : MC_29<"fsbfd">;
 
@@ -3199,13 +3236,13 @@ def FSBFDP : KVX_INSTRUCTION
   <(outs PairedReg:$a3), (ins PairedReg:$a4, PairedReg:$a5, ConjugateMod:$a6, RoundingMod:$a1, SilentMod:$a2),
    "fsbfdp$a6$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */],
-   MAU_AUXR_FP>;
+   MAU_SWITCH_AUXR_EMPTY_FP>;
 
 def FSBFWQ : KVX_INSTRUCTION
   <(outs PairedReg:$a3), (ins PairedReg:$a4, PairedReg:$a5, ConjugateMod:$a6, RoundingMod:$a1, SilentMod:$a2),
    "fsbfwq$a6$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */],
-   MAU_AUXR_FP>;
+   MAU_SWITCH_AUXR_EMPTY_FP>;
 
 defm FFMAHW : MC_2E_2<"ffmahw">;
 
@@ -3246,13 +3283,13 @@ def FDOT2WZP : KVX_INSTRUCTION
   <(outs PairedReg:$a3), (ins PairedReg:$a4, PairedReg:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fdot2wzp$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */],
-   MAU_AUXR_FP>;
+   MAU_SWITCH_AUXR_EMPTY_FP>;
 
 def FDOT2WDP : KVX_INSTRUCTION
   <(outs PairedReg:$a3), (ins PairedReg:$a4, PairedReg:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fdot2wdp$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */],
-   MAU_AUXR_FP>;
+   MAU_SWITCH_AUXR_EMPTY_FP>;
 
 let Constraints = "$a3 = $a3o" in
 def FMMA212W : KVX_INSTRUCTION
@@ -3493,7 +3530,7 @@ def ABSD : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "absd $a1 = $a2",
    [(set i64:$a1, (abs i64:$a2))],
-   ALU_LITE>;
+   ALU_SWITCH_LITE_TINY>;
 
 def ZXBD : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
@@ -3505,19 +3542,19 @@ def SXBD : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "sxbd $a1 = $a2",
    [(set i64:$a1, (sext i8:$a2))],
-   ALU_LITE>;
+   ALU_SWITCH_LITE_TINY>;
 
 def ZXHD : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "zxhd $a1 = $a2",
    [(set i64:$a1, (zext i16:$a2))],
-   ALU_LITE>;
+   ALU_SWITCH_LITE_TINY>;
 
 def SXHD : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "sxhd $a1 = $a2",
    [(set i64:$a1, (sext i16:$a2))],
-   ALU_LITE>;
+   ALU_SWITCH_LITE_TINY>;
 
 def ZXWD : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
@@ -3529,7 +3566,7 @@ def SXWD : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "sxwd $a1 = $a2",
    [(set i64:$a1, (sext i32:$a2))],
-   ALU_LITE>;
+   ALU_SWITCH_LITE_TINY>;
 
 def SATDH : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
@@ -3565,7 +3602,7 @@ def ABSW : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "absw $a1 = $a2",
    [(set i32:$a1, (abs i32:$a2))],
-   ALU_LITE>;
+   ALU_SWITCH_LITE_TINY>;
 
 def NEGWP : KVX_INSTRUCTION_X
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
@@ -3577,7 +3614,7 @@ def ABSWP : KVX_INSTRUCTION_X
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "abswp $a1 = $a2",
    [(set v2i32:$a1, (abs v2i32:$a2))],
-   ALU_LITE_X>;
+   ALU_SWITCH_LITE_TINY_X>;
 
 def NEGHQ : KVX_INSTRUCTION_X
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
@@ -3595,7 +3632,7 @@ def ABSHQ : KVX_INSTRUCTION_X
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "abshq $a1 = $a2",
    [(set v4i16:$a1, (abs v4i16:$a2))],
-   ALU_LITE_X>;
+   ALU_SWITCH_LITE_TINY_X>;
 
 def ABSBO : KVX_INSTRUCTION_X
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
@@ -3634,22 +3671,22 @@ defm SLUSHQS : MC_18<"slushqs">, Requires<[IsV2]>;
 defm SLUSW : MC_18<"slusw">, Requires<[IsV2]>;
 defm SLUSWPS : MC_18<"sluswps">, Requires<[IsV2]>;
 
-def NEGSBO : KVX_INSTRUCTION
+def NEGSBO : KVX_INSTRUCTION_X
   <(outs SingleReg:$o), (ins SingleReg:$i),
-   "negsbo $o = $i", [(set v8i8:$o, (vineg_ssat v8i8:$i))], ALU_LITE_X>, Requires<[IsV2]>;
+   "negsbo $o = $i", [(set v8i8:$o, (vineg_ssat v8i8:$i))], ALU_TINY_X>, Requires<[IsV2]>;
 
-def NEGSD : KVX_INSTRUCTION
+def NEGSD : KVX_INSTRUCTION_X
   <(outs SingleReg:$o), (ins SingleReg:$i),
-  "negsd $o = $i", [(set i64:$o, (ssubsat 0, i64:$i))], ALU_LITE_X>, Requires<[IsV2]>;
+  "negsd $o = $i", [(set i64:$o, (ssubsat 0, i64:$i))], ALU_TINY_X>, Requires<[IsV2]>;
 
-def NEGSHQ : KVX_INSTRUCTION
+def NEGSHQ : KVX_INSTRUCTION_X
   <(outs SingleReg:$o), (ins SingleReg:$i),
-   "negshq $o = $i", [(set v4i16:$o, (vineg_ssat v4i16:$i))], ALU_LITE_X>, Requires<[IsV2]>;
+   "negshq $o = $i", [(set v4i16:$o, (vineg_ssat v4i16:$i))], ALU_TINY_X>, Requires<[IsV2]>;
 
-def NEGSW : KVX_INSTRUCTION
+def NEGSW : KVX_INSTRUCTION_X
   <(outs SingleReg:$o), (ins SingleReg:$i),
-  "negsw $o = $i", [(set i32:$o, (ssubsat 0, i32:$i))], ALU_LITE_X>, Requires<[IsV2]>;
+  "negsw $o = $i", [(set i32:$o, (ssubsat 0, i32:$i))], ALU_TINY_X>, Requires<[IsV2]>;
 
-def NEGSWP : KVX_INSTRUCTION
+def NEGSWP : KVX_INSTRUCTION_X
   <(outs SingleReg:$o), (ins SingleReg:$i),
-   "negswp $o = $i", [(set v2i32:$o, (vineg_ssat v2i32:$i))], ALU_LITE_X>, Requires<[IsV2]>;
+   "negswp $o = $i", [(set v2i32:$o, (vineg_ssat v2i32:$i))], ALU_TINY_X>, Requires<[IsV2]>;

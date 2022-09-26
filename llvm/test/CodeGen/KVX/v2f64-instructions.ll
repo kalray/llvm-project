@@ -550,25 +550,44 @@ define <2 x i1> @test_fcmp_ule(<2 x double> %a, <2 x double> %b) #0 {
 }
 
 define <2 x i1> @test_fcmp_uno(<2 x double> %a, <2 x double> %b) #0 {
-; CHECK-LABEL: test_fcmp_uno:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    fcompd.uge $r1 = $r1, $r3
-; CHECK-NEXT:    fcompd.ult $r4 = $r1, $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r0 = -1
-; CHECK-NEXT:    andw $r1 = $r1, $r4
-; CHECK-NEXT:    fcompd.uge $r2 = $r0, $r2
-; CHECK-NEXT:    fcompd.ult $r3 = $r0, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r2 = $r2, $r3
-; CHECK-NEXT:    make $r4 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.even $r2 ? $r0 = 0
-; CHECK-NEXT:    cmoved.even $r1 ? $r4 = 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r4, 15, 8
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CV1-LABEL: test_fcmp_uno:
+; CV1:       # %bb.0:
+; CV1-NEXT:    fcompd.uge $r1 = $r1, $r3
+; CV1-NEXT:    fcompd.ult $r4 = $r1, $r3
+; CV1-NEXT:    ;;
+; CV1-NEXT:    make $r0 = -1
+; CV1-NEXT:    andw $r1 = $r1, $r4
+; CV1-NEXT:    fcompd.uge $r2 = $r0, $r2
+; CV1-NEXT:    fcompd.ult $r3 = $r0, $r2
+; CV1-NEXT:    ;;
+; CV1-NEXT:    andw $r2 = $r2, $r3
+; CV1-NEXT:    make $r4 = -1
+; CV1-NEXT:    ;;
+; CV1-NEXT:    cmoved.even $r2 ? $r0 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r4 = 0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    insf $r0 = $r4, 15, 8
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: test_fcmp_uno:
+; CV2:       # %bb.0:
+; CV2-NEXT:    fcompd.uge $r1 = $r1, $r3
+; CV2-NEXT:    fcompd.uge $r2 = $r0, $r2
+; CV2-NEXT:    fcompd.ult $r3 = $r0, $r2
+; CV2-NEXT:    fcompd.ult $r4 = $r1, $r3
+; CV2-NEXT:    ;;
+; CV2-NEXT:    make $r0 = -1
+; CV2-NEXT:    andw $r1 = $r1, $r4
+; CV2-NEXT:    andw $r2 = $r2, $r3
+; CV2-NEXT:    make $r4 = -1
+; CV2-NEXT:    ;;
+; CV2-NEXT:    cmoved.even $r2 ? $r0 = 0
+; CV2-NEXT:    cmoved.even $r1 ? $r4 = 0
+; CV2-NEXT:    ;;
+; CV2-NEXT:    insf $r0 = $r4, 15, 8
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
   %r = fcmp uno <2 x double> %a, %b
   ret <2 x i1> %r
 }
@@ -748,25 +767,44 @@ define <2 x i1> @test_fcmp_ole(<2 x double> %a, <2 x double> %b) #0 {
 }
 
 define <2 x i1> @test_fcmp_ord(<2 x double> %a, <2 x double> %b) #0 {
-; CHECK-LABEL: test_fcmp_ord:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    fcompd.oge $r1 = $r1, $r3
-; CHECK-NEXT:    fcompd.olt $r4 = $r1, $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r0 = -1
-; CHECK-NEXT:    orw $r1 = $r1, $r4
-; CHECK-NEXT:    fcompd.oge $r2 = $r0, $r2
-; CHECK-NEXT:    fcompd.olt $r3 = $r0, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    orw $r2 = $r2, $r3
-; CHECK-NEXT:    make $r4 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.even $r2 ? $r0 = 0
-; CHECK-NEXT:    cmoved.even $r1 ? $r4 = 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r4, 15, 8
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CV1-LABEL: test_fcmp_ord:
+; CV1:       # %bb.0:
+; CV1-NEXT:    fcompd.oge $r1 = $r1, $r3
+; CV1-NEXT:    fcompd.olt $r4 = $r1, $r3
+; CV1-NEXT:    ;;
+; CV1-NEXT:    make $r0 = -1
+; CV1-NEXT:    orw $r1 = $r1, $r4
+; CV1-NEXT:    fcompd.oge $r2 = $r0, $r2
+; CV1-NEXT:    fcompd.olt $r3 = $r0, $r2
+; CV1-NEXT:    ;;
+; CV1-NEXT:    orw $r2 = $r2, $r3
+; CV1-NEXT:    make $r4 = -1
+; CV1-NEXT:    ;;
+; CV1-NEXT:    cmoved.even $r2 ? $r0 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r4 = 0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    insf $r0 = $r4, 15, 8
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: test_fcmp_ord:
+; CV2:       # %bb.0:
+; CV2-NEXT:    fcompd.oge $r1 = $r1, $r3
+; CV2-NEXT:    fcompd.oge $r2 = $r0, $r2
+; CV2-NEXT:    fcompd.olt $r3 = $r0, $r2
+; CV2-NEXT:    fcompd.olt $r4 = $r1, $r3
+; CV2-NEXT:    ;;
+; CV2-NEXT:    make $r0 = -1
+; CV2-NEXT:    orw $r1 = $r1, $r4
+; CV2-NEXT:    orw $r2 = $r2, $r3
+; CV2-NEXT:    make $r4 = -1
+; CV2-NEXT:    ;;
+; CV2-NEXT:    cmoved.even $r2 ? $r0 = 0
+; CV2-NEXT:    cmoved.even $r1 ? $r4 = 0
+; CV2-NEXT:    ;;
+; CV2-NEXT:    insf $r0 = $r4, 15, 8
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
   %r = fcmp ord <2 x double> %a, %b
   ret <2 x i1> %r
 }
@@ -2114,25 +2152,44 @@ entry:
 }
 
 define <2 x i1> @fcmp_setord(<2 x double> %a, <2 x double> %b) #0 {
-; CHECK-LABEL: fcmp_setord:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fcompd.oge $r1 = $r1, $r3
-; CHECK-NEXT:    fcompd.olt $r4 = $r1, $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r0 = -1
-; CHECK-NEXT:    orw $r1 = $r1, $r4
-; CHECK-NEXT:    fcompd.oge $r2 = $r0, $r2
-; CHECK-NEXT:    fcompd.olt $r3 = $r0, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    orw $r2 = $r2, $r3
-; CHECK-NEXT:    make $r4 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.even $r2 ? $r0 = 0
-; CHECK-NEXT:    cmoved.even $r1 ? $r4 = 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r4, 15, 8
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CV1-LABEL: fcmp_setord:
+; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    fcompd.oge $r1 = $r1, $r3
+; CV1-NEXT:    fcompd.olt $r4 = $r1, $r3
+; CV1-NEXT:    ;;
+; CV1-NEXT:    make $r0 = -1
+; CV1-NEXT:    orw $r1 = $r1, $r4
+; CV1-NEXT:    fcompd.oge $r2 = $r0, $r2
+; CV1-NEXT:    fcompd.olt $r3 = $r0, $r2
+; CV1-NEXT:    ;;
+; CV1-NEXT:    orw $r2 = $r2, $r3
+; CV1-NEXT:    make $r4 = -1
+; CV1-NEXT:    ;;
+; CV1-NEXT:    cmoved.even $r2 ? $r0 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r4 = 0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    insf $r0 = $r4, 15, 8
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: fcmp_setord:
+; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    fcompd.oge $r1 = $r1, $r3
+; CV2-NEXT:    fcompd.oge $r2 = $r0, $r2
+; CV2-NEXT:    fcompd.olt $r3 = $r0, $r2
+; CV2-NEXT:    fcompd.olt $r4 = $r1, $r3
+; CV2-NEXT:    ;;
+; CV2-NEXT:    make $r0 = -1
+; CV2-NEXT:    orw $r1 = $r1, $r4
+; CV2-NEXT:    orw $r2 = $r2, $r3
+; CV2-NEXT:    make $r4 = -1
+; CV2-NEXT:    ;;
+; CV2-NEXT:    cmoved.even $r2 ? $r0 = 0
+; CV2-NEXT:    cmoved.even $r1 ? $r4 = 0
+; CV2-NEXT:    ;;
+; CV2-NEXT:    insf $r0 = $r4, 15, 8
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
 entry:
   %0 = fcmp ord <2 x double> %a, %b
   ret <2 x i1> %0
@@ -2160,25 +2217,44 @@ entry:
 }
 
 define <2 x i1> @fcmp_setuno(<2 x double> %a, <2 x double> %b) #0 {
-; CHECK-LABEL: fcmp_setuno:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fcompd.uge $r1 = $r1, $r3
-; CHECK-NEXT:    fcompd.ult $r4 = $r1, $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r0 = -1
-; CHECK-NEXT:    andw $r1 = $r1, $r4
-; CHECK-NEXT:    fcompd.uge $r2 = $r0, $r2
-; CHECK-NEXT:    fcompd.ult $r3 = $r0, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r2 = $r2, $r3
-; CHECK-NEXT:    make $r4 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.even $r2 ? $r0 = 0
-; CHECK-NEXT:    cmoved.even $r1 ? $r4 = 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r4, 15, 8
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CV1-LABEL: fcmp_setuno:
+; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    fcompd.uge $r1 = $r1, $r3
+; CV1-NEXT:    fcompd.ult $r4 = $r1, $r3
+; CV1-NEXT:    ;;
+; CV1-NEXT:    make $r0 = -1
+; CV1-NEXT:    andw $r1 = $r1, $r4
+; CV1-NEXT:    fcompd.uge $r2 = $r0, $r2
+; CV1-NEXT:    fcompd.ult $r3 = $r0, $r2
+; CV1-NEXT:    ;;
+; CV1-NEXT:    andw $r2 = $r2, $r3
+; CV1-NEXT:    make $r4 = -1
+; CV1-NEXT:    ;;
+; CV1-NEXT:    cmoved.even $r2 ? $r0 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r4 = 0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    insf $r0 = $r4, 15, 8
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: fcmp_setuno:
+; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    fcompd.uge $r1 = $r1, $r3
+; CV2-NEXT:    fcompd.uge $r2 = $r0, $r2
+; CV2-NEXT:    fcompd.ult $r3 = $r0, $r2
+; CV2-NEXT:    fcompd.ult $r4 = $r1, $r3
+; CV2-NEXT:    ;;
+; CV2-NEXT:    make $r0 = -1
+; CV2-NEXT:    andw $r1 = $r1, $r4
+; CV2-NEXT:    andw $r2 = $r2, $r3
+; CV2-NEXT:    make $r4 = -1
+; CV2-NEXT:    ;;
+; CV2-NEXT:    cmoved.even $r2 ? $r0 = 0
+; CV2-NEXT:    cmoved.even $r1 ? $r4 = 0
+; CV2-NEXT:    ;;
+; CV2-NEXT:    insf $r0 = $r4, 15, 8
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
 entry:
   %0 = fcmp uno <2 x double> %a, %b
   ret <2 x i1> %0
@@ -2764,25 +2840,44 @@ entry:
 }
 
 define <2 x i1> @fcmp_setord_fast(<2 x double> %a, <2 x double> %b) #0 {
-; CHECK-LABEL: fcmp_setord_fast:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fcompd.oge $r1 = $r1, $r3
-; CHECK-NEXT:    fcompd.olt $r4 = $r1, $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r0 = -1
-; CHECK-NEXT:    orw $r1 = $r1, $r4
-; CHECK-NEXT:    fcompd.oge $r2 = $r0, $r2
-; CHECK-NEXT:    fcompd.olt $r3 = $r0, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    orw $r2 = $r2, $r3
-; CHECK-NEXT:    make $r4 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.even $r2 ? $r0 = 0
-; CHECK-NEXT:    cmoved.even $r1 ? $r4 = 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r4, 15, 8
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CV1-LABEL: fcmp_setord_fast:
+; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    fcompd.oge $r1 = $r1, $r3
+; CV1-NEXT:    fcompd.olt $r4 = $r1, $r3
+; CV1-NEXT:    ;;
+; CV1-NEXT:    make $r0 = -1
+; CV1-NEXT:    orw $r1 = $r1, $r4
+; CV1-NEXT:    fcompd.oge $r2 = $r0, $r2
+; CV1-NEXT:    fcompd.olt $r3 = $r0, $r2
+; CV1-NEXT:    ;;
+; CV1-NEXT:    orw $r2 = $r2, $r3
+; CV1-NEXT:    make $r4 = -1
+; CV1-NEXT:    ;;
+; CV1-NEXT:    cmoved.even $r2 ? $r0 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r4 = 0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    insf $r0 = $r4, 15, 8
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: fcmp_setord_fast:
+; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    fcompd.oge $r1 = $r1, $r3
+; CV2-NEXT:    fcompd.oge $r2 = $r0, $r2
+; CV2-NEXT:    fcompd.olt $r3 = $r0, $r2
+; CV2-NEXT:    fcompd.olt $r4 = $r1, $r3
+; CV2-NEXT:    ;;
+; CV2-NEXT:    make $r0 = -1
+; CV2-NEXT:    orw $r1 = $r1, $r4
+; CV2-NEXT:    orw $r2 = $r2, $r3
+; CV2-NEXT:    make $r4 = -1
+; CV2-NEXT:    ;;
+; CV2-NEXT:    cmoved.even $r2 ? $r0 = 0
+; CV2-NEXT:    cmoved.even $r1 ? $r4 = 0
+; CV2-NEXT:    ;;
+; CV2-NEXT:    insf $r0 = $r4, 15, 8
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
 entry:
   %0 = fcmp fast ord <2 x double> %a, %b
   ret <2 x i1> %0
@@ -2810,25 +2905,44 @@ entry:
 }
 
 define <2 x i1> @fcmp_setuno_fast(<2 x double> %a, <2 x double> %b) #0 {
-; CHECK-LABEL: fcmp_setuno_fast:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fcompd.uge $r1 = $r1, $r3
-; CHECK-NEXT:    fcompd.ult $r4 = $r1, $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r0 = -1
-; CHECK-NEXT:    andw $r1 = $r1, $r4
-; CHECK-NEXT:    fcompd.uge $r2 = $r0, $r2
-; CHECK-NEXT:    fcompd.ult $r3 = $r0, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r2 = $r2, $r3
-; CHECK-NEXT:    make $r4 = -1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.even $r2 ? $r0 = 0
-; CHECK-NEXT:    cmoved.even $r1 ? $r4 = 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r4, 15, 8
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CV1-LABEL: fcmp_setuno_fast:
+; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    fcompd.uge $r1 = $r1, $r3
+; CV1-NEXT:    fcompd.ult $r4 = $r1, $r3
+; CV1-NEXT:    ;;
+; CV1-NEXT:    make $r0 = -1
+; CV1-NEXT:    andw $r1 = $r1, $r4
+; CV1-NEXT:    fcompd.uge $r2 = $r0, $r2
+; CV1-NEXT:    fcompd.ult $r3 = $r0, $r2
+; CV1-NEXT:    ;;
+; CV1-NEXT:    andw $r2 = $r2, $r3
+; CV1-NEXT:    make $r4 = -1
+; CV1-NEXT:    ;;
+; CV1-NEXT:    cmoved.even $r2 ? $r0 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r4 = 0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    insf $r0 = $r4, 15, 8
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: fcmp_setuno_fast:
+; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    fcompd.uge $r1 = $r1, $r3
+; CV2-NEXT:    fcompd.uge $r2 = $r0, $r2
+; CV2-NEXT:    fcompd.ult $r3 = $r0, $r2
+; CV2-NEXT:    fcompd.ult $r4 = $r1, $r3
+; CV2-NEXT:    ;;
+; CV2-NEXT:    make $r0 = -1
+; CV2-NEXT:    andw $r1 = $r1, $r4
+; CV2-NEXT:    andw $r2 = $r2, $r3
+; CV2-NEXT:    make $r4 = -1
+; CV2-NEXT:    ;;
+; CV2-NEXT:    cmoved.even $r2 ? $r0 = 0
+; CV2-NEXT:    cmoved.even $r1 ? $r4 = 0
+; CV2-NEXT:    ;;
+; CV2-NEXT:    insf $r0 = $r4, 15, 8
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
 entry:
   %0 = fcmp fast uno <2 x double> %a, %b
   ret <2 x i1> %0

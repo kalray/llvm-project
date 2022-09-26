@@ -37,6 +37,7 @@ def CRWL_FU : FuncUnit;
 def CRWH_FU : FuncUnit;
 foreach I = 0-3 in def NOP#I#_FU : FuncUnit;
 
+// Itineraries shared between CV1 and CV2
 def ALL : InstrItinClass;
 def BCU : InstrItinClass;
 def BCU_TINY_TINY_MAU_XNOP : InstrItinClass;
@@ -111,11 +112,25 @@ def XSWAP256 : InstrItinClass;
 def ALU_TINY_CRRP : InstrItinClass;
 def ALU_TINY_CRRP_CRWL_CRWH : InstrItinClass;
 def ALU_TINY_CRWL_CRWH : InstrItinClass;
+// Switch-itineraries for instructions whose reservation tables changes
+// between CV1 and CV2
+// Format: NAME_SWITCH_CV1VALUE_CV2VALUE
+
+def ALU_SWITCH_LITE_TINY : InstrItinClass;
+def ALU_SWITCH_LITE_TINY_X : InstrItinClass;
+def ALU_SWITCH_LITE_TINY_Y : InstrItinClass;
+def MAU_SWITCH_AUXR_EMPTY : InstrItinClass;
+def MAU_SWITCH_AUXR_EMPTY_X : InstrItinClass;
+def MAU_SWITCH_AUXR_EMPTY_Y : InstrItinClass;
+def MAU_SWITCH_AUXR_EMPTY_FP : InstrItinClass;
+def MAU_SWITCH_AUXR_EMPTY_X_FP : InstrItinClass;
+def MAU_SWITCH_AUXR_EMPTY_Y_FP : InstrItinClass;
 
 defvar ALL_ITIN_CLASSES = [
   ALL, BCU, BCU_TINY_TINY_MAU_XNOP, BCU_CRRP_CRWL_CRWH, BCU_TINY_AUXW_CRRP,
   TCA, TCA_FP16,
   ALU_NOP, ALU_TINY, ALU_TINY_X, ALU_TINY_Y,
+  ALU_SWITCH_LITE_TINY, ALU_SWITCH_LITE_TINY_X, ALU_SWITCH_LITE_TINY_Y,
   ALU_LITE, ALU_LITE_X, ALU_LITE_Y, ALU_LITE_CRWL, ALU_LITE_CRWH,
   ALU_FULL, SFU, ALU_FULL_X, ALU_FULL_Y,
   MAU, MAU_FP, MAU_X, MAU_X_FP, MAU_Y, MAU_Y_FP,
@@ -132,6 +147,8 @@ defvar ALL_ITIN_CLASSES = [
   LSU_AUXR_AUXW_LOAD, LSU_AUXR_AUXW_X_LOAD, LSU_AUXR_AUXW_Y_LOAD,
   LSU_AUXW_ALCLR, LSU_AUXW_X_ALCLR, LSU_AUXW_Y_ALCLR,
   ALU_TINY_CRRP, ALU_TINY_CRRP_CRWL_CRWH, ALU_TINY_CRWL_CRWH,
+  MAU_SWITCH_AUXR_EMPTY, MAU_SWITCH_AUXR_EMPTY_X, MAU_SWITCH_AUXR_EMPTY_Y,
+  MAU_SWITCH_AUXR_EMPTY_FP, MAU_SWITCH_AUXR_EMPTY_X_FP, MAU_SWITCH_AUXR_EMPTY_Y_FP
 ];
 
 /**
@@ -155,8 +172,145 @@ defvar ALL_ITIN_CLASSES = [
  *  benefit from a bypass mechanism. We also model this.
  */
 
+/* Commented definition example:
+ *  InstrItinData<ALU_LITE_X_, [ // itinerary name
+ *    InstrStage<1, [LITE0_FU, LITE1_FU], 0>, // one LITE
+ *    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]> // one TINY
+ *    ]
+ *    , [2, 2, 2] // [(writeop_stage - 1), (readop1_stage), (readopt2_stage), ...]
+ *    , [] // bypasses. None in our case (for now): we model them with readops
+ *    , 2 // number of micro-ops, i.e. the number of consumed ISSUE resources
+ *  >,
+ *
+ * In our implementation, the stages are 1 for ID, 2 for RR, 3 for E1, etc..
+ * Be careful that the stage for write operands must be decremented:
+ *   2 for E1, 3 for E2, etc..
+ *
+ * Indeed, the latency between two instructions is given by the following
+ * formula in LLVM code: writeop_cycle - readop_cycle + 1
+ * See getOperandLatency() in MCInstrItineraries.h for details
+ *
+ * Thus, if a [4, 2] instruction (writes at E3, reads at RR)
+ * writes a register used by a [2, 1] instruction (writes at E1, reads at ID)
+ * Then the latency is going to be 4 - 1 + 1 = 4 cycles
+ *
+ * Additional note: all operand latencies should be given. If an instruction has
+ * 1 write operand and 4 read operands, then the list should contain 5 elements.
+ * In the absence of a write operand, the read operands are assumed to be at the
+ * start of the list; hence, the operand list for a CB is [1] (reads at ID)
+**/
+
 def KVXItinList {
-list<InstrItinData> ItinList = [
+list<InstrItinData> CV1Switch = [
+  // ALU_LITE -> ALU_TINY
+  InstrItinData<ALU_SWITCH_LITE_TINY, [
+    InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
+    ], [2, 2, 2], [], 1
+  >,
+  InstrItinData<ALU_SWITCH_LITE_TINY_X, [
+    InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
+    ], [2, 2, 2], [], 2
+  >,
+  InstrItinData<ALU_SWITCH_LITE_TINY_Y, [
+    InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
+    ], [2, 2, 2], [], 3
+  >,
+
+  // MAU + AUXR -> MAU, int
+  InstrItinData<MAU_SWITCH_AUXR_EMPTY, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [MAU_FU], 0>,
+    InstrStage<1, [AUXR_FU], 0>
+    ], [3, 2, 2], [], 1
+  >,
+  InstrItinData<MAU_SWITCH_AUXR_EMPTY_X, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [MAU_FU], 0>,
+    InstrStage<1, [AUXR_FU], 0>
+    ], [3, 2, 2], [], 2
+  >,
+  InstrItinData<MAU_SWITCH_AUXR_EMPTY_Y, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [MAU_FU], 0>,
+    InstrStage<1, [AUXR_FU], 0>
+    ], [3, 2, 2], [], 3
+  >,
+
+  // MAU + AUXR -> MAU, float
+  InstrItinData<MAU_SWITCH_AUXR_EMPTY_FP, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [MAU_FU], 0>,
+    InstrStage<1, [AUXR_FU], 0>
+    ], [5, 2, 2], [], 1
+  >,
+  InstrItinData<MAU_SWITCH_AUXR_EMPTY_X_FP, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [MAU_FU], 0>,
+    InstrStage<1, [AUXR_FU], 0>
+    ], [5, 2, 2], [], 2
+  >,
+  InstrItinData<MAU_SWITCH_AUXR_EMPTY_Y_FP, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [MAU_FU], 0>,
+    InstrStage<1, [AUXR_FU], 0>
+    ], [5, 2, 2], [], 3
+  >,
+];
+
+list<InstrItinData> CV2Switch = [
+  // ALU_LITE -> ALU_TINY
+  InstrItinData<ALU_SWITCH_LITE_TINY, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
+    ], [2, 2, 2], [], 1
+  >,
+  InstrItinData<ALU_SWITCH_LITE_TINY_X, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
+    ], [2, 2, 2], [], 2
+  >,
+  InstrItinData<ALU_SWITCH_LITE_TINY_Y, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
+    ], [2, 2, 2], [], 3
+  >,
+
+  // MAU + AUXR -> MAU, int
+    InstrItinData<MAU_SWITCH_AUXR_EMPTY, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [MAU_FU], 0>,
+    ], [3, 2, 2], [], 1
+  >,
+  InstrItinData<MAU_SWITCH_AUXR_EMPTY_X, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [MAU_FU], 0>,
+    ], [3, 2, 2], [], 2
+  >,
+  InstrItinData<MAU_SWITCH_AUXR_EMPTY_Y, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [MAU_FU], 0>,
+    ], [3, 2, 2], [], 3
+  >,
+
+  // MAU + AUXR -> MAU, FP
+  InstrItinData<MAU_SWITCH_AUXR_EMPTY_FP, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [MAU_FU], 0>,
+    ], [5, 2, 2], [], 1
+  >,
+  InstrItinData<MAU_SWITCH_AUXR_EMPTY_X_FP, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [MAU_FU], 0>,
+    ], [5, 2, 2], [], 2
+  >,
+  InstrItinData<MAU_SWITCH_AUXR_EMPTY_Y_FP, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [MAU_FU], 0>,
+    ], [5, 2, 2], [], 3
+  >,
+];
+
+list<InstrItinData> Common = [
   // ALL reserves all resources to ensure nothing else gets scheduled
   InstrItinData<ALL, [
     InstrStage<1, [TINY0_FU], 0>,
@@ -586,33 +740,42 @@ list<InstrItinData> ItinList = [
 ];
 }
 
-
-def KVXItineraries:
-  ProcessorItineraries<[
-    TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU,
-    LITE0_FU, LITE1_FU,
-    FULL_FU,
-    LSU_FU,
-    MAU_FU,
-    BCU_FU,
-    TCA_FU,
-    AUXR_FU,
-    AUXW_FU,
-    CRRP_FU,
-    CRWL_FU,
-    CRWH_FU,
-    NOP0_FU, NOP1_FU, NOP2_FU, NOP3_FU
-  ], [], KVXItinList.ItinList>;
-
-def KVXSchedMachineModel : SchedMachineModel {
-  let Itineraries = KVXItineraries;
-  let MicroOpBufferSize = 0; // VLIW In-order
-  let IssueWidth = 8; // 8 ISSUE resources
-  let LoadLatency = 5; // Cycles to access L1$, (23 cycles if miss)
-  let PostRAScheduler = 1;
-  let CompleteModel = 1;
-  let MispredictPenalty = 0;
+multiclass KVX_ITINERARIES<list<InstrItinData> ItinList> {
+  def Itineraries:
+    ProcessorItineraries<[
+      TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU,
+      LITE0_FU, LITE1_FU,
+      FULL_FU,
+      LSU_FU,
+      MAU_FU,
+      BCU_FU,
+      TCA_FU,
+      AUXR_FU,
+      AUXW_FU,
+      CRRP_FU,
+      CRWL_FU,
+      CRWH_FU,
+      NOP0_FU, NOP1_FU, NOP2_FU, NOP3_FU
+    ], [], ItinList>;
 }
+
+defm KVXCV1: KVX_ITINERARIES<KVXItinList.Common # KVXItinList.CV1Switch>;
+defm KVXCV2: KVX_ITINERARIES<KVXItinList.Common # KVXItinList.CV2Switch>;
+
+multiclass KVX_SCHED_MACHINE_MODEL<ProcessorItineraries Itin> {
+  def SchedMachineModel: SchedMachineModel {
+    let Itineraries = Itin;
+    let MicroOpBufferSize = 0; // VLIW In-order
+    let IssueWidth = 8; // 8 ISSUE resources
+    let LoadLatency = 5; // Cycles to access L1$, (23 cycles if miss)
+    let PostRAScheduler = 1;
+    let CompleteModel = 1;
+    let MispredictPenalty = 0;
+  }
+}
+
+defm KVXCV1: KVX_SCHED_MACHINE_MODEL<KVXCV1Itineraries>;
+defm KVXCV2: KVX_SCHED_MACHINE_MODEL<KVXCV2Itineraries>;
 
 //===-- ProcResources --===//
 
@@ -627,81 +790,6 @@ def KVXSchedMachineModel : SchedMachineModel {
 // modeled by LLVM. If we were to rely only on WriteRes entries, we would see
 // invalid bundles {GET, TINY, TINY, TINY}.
 
-let BufferSize = 0 in // we want in-order
-let SchedModel = KVXSchedMachineModel in // binding to our machine model
-class KVXProcResource<int num> : ProcResource<num>;
-
-def TINY_PR: KVXProcResource<4>;
-def LITE_PR: KVXProcResource<2>;
-def FULL_PR: KVXProcResource<1>;
-def LSU_PR: KVXProcResource<1>;
-def MAU_PR: KVXProcResource<1>;
-def BCU_PR: KVXProcResource<1>;
-def TCA_PR: KVXProcResource<1>;
-def AUXR_PR: KVXProcResource<1>;
-def AUXW_PR: KVXProcResource<1>;
-def CRRP_PR: KVXProcResource<1>;
-def CRWL_PR: KVXProcResource<1>;
-def CRWH_PR: KVXProcResource<1>;
-def NOP_PR: KVXProcResource<4>;
-
-/* Reservation table definitions */
-// TODO - the definition of XNOP_RU is inaccurate, as LLVM interprets it as
-//        NOP_PR being used for 4 cycles
-defvar XNOP_RU = [NOP_PR, NOP_PR, NOP_PR, NOP_PR];
-
-defvar NOP_RU = [NOP_PR];
-defvar TINY_RU = [TINY_PR];
-defvar LITE_RU = [LITE_PR, TINY_PR];
-defvar FULL_RU = [FULL_PR, LITE_PR, TINY_PR];
-defvar CRWL_RU = [CRWL_PR];
-defvar CRWH_RU = [CRWH_PR];
-defvar CRRP_RU = [CRRP_PR];
-defvar AUXR_RU = [AUXR_PR];
-defvar AUXW_RU = [AUXW_PR];
-defvar BCU_RU = [BCU_PR];
-defvar MAU_RU = [MAU_PR, TINY_PR];
-defvar TCA_RU = [TCA_PR];
-defvar LSU_RU = [LSU_PR, TINY_PR];
-
-// The actual tables, as defined in the VLIWCore documentation
-defvar ALU_NOP_RT = NOP_RU;
-
-defvar ALU_TINY_RT = TINY_RU;
-defvar ALU_LITE_RT = LITE_RU;
-
-defvar ALU_LITE_CRWL_RT = LITE_RU # CRWL_RU;
-defvar ALU_LITE_CRWH_RT = LITE_RU # CRWH_RU;
-
-defvar ALU_FULL_RT = FULL_RU;
-
-defvar BCU_RT = BCU_RU;
-defvar BCU_CRRP_CRWL_CRWH_RT = BCU_RU # CRRP_RU # CRWL_RU # CRWH_RU;
-defvar BCU_TINY_AUXW_CRRP_RT = BCU_RU # TINY_RU # AUXW_RU # CRRP_RU;
-defvar BCU_TINY_TINY_MAU_XNOP_RT = BCU_RU # TINY_RU # MAU_RU # XNOP_RU;
-
-defvar TCA_RT = TCA_RU;
-
-defvar LSU_RT = LSU_RU;
-
-defvar LSU_CRRP_RT = LSU_RU # CRRP_RU;
-
-defvar LSU_AUXR_RT = LSU_RU # AUXR_RU;
-
-defvar LSU_AUXW_RT = LSU_RU # AUXW_RU;
-
-defvar LSU_AUXR_AUXW_RT = LSU_RU # AUXW_RU # AUXR_RU;
-
-defvar MAU_RT = MAU_RU;
-
-defvar MAU_AUXR_RT = MAU_RU # AUXR_RU;
-
-defvar ALU_TINY_CRRP_CRWL_CRWH_RT = TINY_RU # CRRP_RU # CRWL_RU # CRWH_RU;
-defvar ALU_TINY_CRRP_RT = TINY_RU # CRRP_RU;
-defvar ALU_TINY_CRWL_CRWH_RT = TINY_RU # CRWL_RU # CRWH_RU;
-// Dedicated reservation table forXSWAP256: moveto + moveto + movefo
-defvar XSWAP256_RT = ALU_LITE_CRWL_RT # ALU_LITE_CRWH_RT # BCU_TINY_AUXW_CRRP_RT;
-
 foreach itinClass = ALL_ITIN_CLASSES in {
   def itinClass # _SRW: SchedWrite;
 }
@@ -709,140 +797,304 @@ foreach itinClass = ALL_ITIN_CLASSES in {
 def XSWAP256_SRW1: SchedWrite;
 def XSWAP256_SRW2: SchedWrite;
 
+let BufferSize = 0 in // we want in-order
+class KVXProcResource<SchedMachineModel m, int num> : ProcResource<num> {
+  let SchedModel = m; // binding to our machine model
+}
+
 // Custom class to specify that we have a fully pipelined model.
-let SchedModel = KVXSchedMachineModel in
-class KVXWriteRes<SchedWrite write, list<ProcResource> resources>
+class KVXWriteRes<SchedMachineModel model, SchedWrite write, list<ProcResource> resources>
   : WriteRes<write, resources> {
+  let SchedModel = model;
   let ResourceCycles = []<int>; // our processor is fully pipelined
 }
 
-multiclass KVXItinWriteRes <InstrItinClass itinClass,
+multiclass KVXItinWriteRes <SchedMachineModel model, InstrItinClass itinClass,
                             list<ProcResource> resources, int issueWidth,
                             SchedWrite srw> {
   let NumMicroOps = issueWidth in
-    def _WR: KVXWriteRes<srw, resources>;
-  let SchedModel = KVXSchedMachineModel in
+    def _WR: KVXWriteRes<model, srw, resources>;
+  let SchedModel = model in
     def _IRW: ItinRW<[srw], [itinClass]>;
 }
 
-// Handling XSWAP256 separately
-let SchedModel = KVXSchedMachineModel in {
-  let ResourceCycles = []<int> in {
-    let NumMicroOps = 1 in // arbitrary cut in 1+2
-      def XSWAP256_WR1: WriteRes<XSWAP256_SRW1, XSWAP256_RT>; // 1st operand
-    let NumMicroOps = 2 in
-      // Note: all resources are consumed by 1st operand
-      def XSWAP256_WR2: WriteRes<XSWAP256_SRW2, []>; // 2nd operand
-  }
-  def XSWAP256_IRW: ItinRW<[XSWAP256_SRW1,XSWAP256_SRW2], [XSWAP256]>;
+foreach m = [KVXCV1SchedMachineModel, KVXCV2SchedMachineModel] in {
+  def TINY_PR_#m: KVXProcResource<m, 4>;
+  def LITE_PR_#m: KVXProcResource<m, 2>;
+  def FULL_PR_#m: KVXProcResource<m, 1>;
+  def LSU_PR_#m: KVXProcResource<m, 1>;
+  def MAU_PR_#m: KVXProcResource<m, 1>;
+  def BCU_PR_#m: KVXProcResource<m, 1>;
+  def TCA_PR_#m: KVXProcResource<m, 1>;
+  def AUXR_PR_#m: KVXProcResource<m, 1>;
+  def AUXW_PR_#m: KVXProcResource<m, 1>;
+  def CRRP_PR_#m: KVXProcResource<m, 1>;
+  def CRWL_PR_#m: KVXProcResource<m, 1>;
+  def CRWH_PR_#m: KVXProcResource<m, 1>;
+  def NOP_PR_#m: KVXProcResource<m, 4>;
+
+  def CopyI_#m : SchedWrite;
 }
 
-defm: KVXItinWriteRes<ALL, [], 8, ALL_SRW>;
-defm: KVXItinWriteRes<ALU_NOP, ALU_NOP_RT, 1, ALU_NOP_SRW>;
+foreach m = [KVXCV1SchedMachineModel, KVXCV2SchedMachineModel] in {
+  defvar IS_CV1 = !eq(m, KVXCV1SchedMachineModel);
+  defvar IS_CV2 = !eq(m, KVXCV2SchedMachineModel);
+  defvar NOP_PRM = !cond(IS_CV1 : NOP_PR_KVXCV1SchedMachineModel, IS_CV2 : NOP_PR_KVXCV2SchedMachineModel);
+  defvar TINY_PRM = !cond(IS_CV1 : TINY_PR_KVXCV1SchedMachineModel, IS_CV2 : TINY_PR_KVXCV2SchedMachineModel);
+  defvar LITE_PRM = !cond(IS_CV1 : LITE_PR_KVXCV1SchedMachineModel, IS_CV2 : LITE_PR_KVXCV2SchedMachineModel);
+  defvar FULL_PRM = !cond(IS_CV1 : FULL_PR_KVXCV1SchedMachineModel, IS_CV2 : FULL_PR_KVXCV2SchedMachineModel);
+  defvar CRWL_PRM = !cond(IS_CV1 : CRWL_PR_KVXCV1SchedMachineModel, IS_CV2 : CRWL_PR_KVXCV2SchedMachineModel);
+  defvar CRWH_PRM = !cond(IS_CV1 : CRWH_PR_KVXCV1SchedMachineModel, IS_CV2 : CRWH_PR_KVXCV2SchedMachineModel);
+  defvar CRRP_PRM = !cond(IS_CV1 : CRRP_PR_KVXCV1SchedMachineModel, IS_CV2 : CRRP_PR_KVXCV2SchedMachineModel);
+  defvar AUXR_PRM = !cond(IS_CV1 : AUXR_PR_KVXCV1SchedMachineModel, IS_CV2 : AUXR_PR_KVXCV2SchedMachineModel);
+  defvar AUXW_PRM = !cond(IS_CV1 : AUXW_PR_KVXCV1SchedMachineModel, IS_CV2 : AUXW_PR_KVXCV2SchedMachineModel);
+  defvar BCU_PRM = !cond(IS_CV1 : BCU_PR_KVXCV1SchedMachineModel, IS_CV2 : BCU_PR_KVXCV2SchedMachineModel);
+  defvar MAU_PRM = !cond(IS_CV1 : MAU_PR_KVXCV1SchedMachineModel, IS_CV2 : MAU_PR_KVXCV2SchedMachineModel);
+  defvar TCA_PRM = !cond(IS_CV1 : TCA_PR_KVXCV1SchedMachineModel, IS_CV2 : TCA_PR_KVXCV2SchedMachineModel);
+  defvar LSU_PRM = !cond(IS_CV1 : LSU_PR_KVXCV1SchedMachineModel, IS_CV2 : LSU_PR_KVXCV2SchedMachineModel);
 
-defm: KVXItinWriteRes<ALU_TINY, ALU_TINY_RT, 1, ALU_TINY_SRW>;
-defm: KVXItinWriteRes<ALU_TINY_X, ALU_TINY_RT, 2, ALU_TINY_X_SRW>;
-defm: KVXItinWriteRes<ALU_TINY_Y, ALU_TINY_RT, 3, ALU_TINY_Y_SRW>;
+  /* Reservation table definitions */
+  // TODO - the definition of XNOP_RU is inaccurate, as LLVM interprets it as
+  //        NOP_PR being used for 4 cycles
+  defvar XNOP_RU = [NOP_PRM, NOP_PRM, NOP_PRM, NOP_PRM];
 
-defm: KVXItinWriteRes<ALU_LITE, ALU_LITE_RT, 1, ALU_LITE_SRW>;
-defm: KVXItinWriteRes<ALU_LITE_X, ALU_LITE_RT, 2, ALU_LITE_X_SRW>;
-defm: KVXItinWriteRes<ALU_LITE_Y, ALU_LITE_RT, 3, ALU_LITE_Y_SRW>;
+  defvar NOP_RU = [NOP_PRM];
+  defvar TINY_RU = [TINY_PRM];
+  defvar LITE_RU = [LITE_PRM, TINY_PRM];
+  defvar FULL_RU = [FULL_PRM, LITE_PRM, TINY_PRM];
+  defvar CRWL_RU = [CRWL_PRM];
+  defvar CRWH_RU = [CRWH_PRM];
+  defvar CRRP_RU = [CRRP_PRM];
+  defvar AUXR_RU = [AUXR_PRM];
+  defvar AUXW_RU = [AUXW_PRM];
+  defvar BCU_RU = [BCU_PRM];
+  defvar MAU_RU = [MAU_PRM, TINY_PRM];
+  defvar TCA_RU = [TCA_PRM];
+  defvar LSU_RU = [LSU_PRM, TINY_PRM];
 
-defm: KVXItinWriteRes<ALU_LITE_CRWL, ALU_LITE_CRWL_RT, 1, ALU_LITE_CRWL_SRW>;
-defm: KVXItinWriteRes<ALU_LITE_CRWH, ALU_LITE_CRWH_RT, 1, ALU_LITE_CRWH_SRW>;
+  // The actual tables, as defined in the VLIWCore documentation
+  defvar ALU_NOP_RT = NOP_RU;
 
-defm: KVXItinWriteRes<ALU_FULL, ALU_FULL_RT, 1, ALU_FULL_SRW>;
-defm: KVXItinWriteRes<ALU_FULL_X, ALU_FULL_RT, 2, ALU_FULL_X_SRW>;
-defm: KVXItinWriteRes<ALU_FULL_Y, ALU_FULL_RT, 3, ALU_FULL_Y_SRW>;
-defm: KVXItinWriteRes<SFU, ALU_FULL_RT, 1, SFU_SRW>;
+  defvar ALU_TINY_RT = TINY_RU;
+  defvar ALU_LITE_RT = LITE_RU;
 
-defm: KVXItinWriteRes<BCU, BCU_RT, 1, BCU_SRW>;
-defm: KVXItinWriteRes<BCU_CRRP_CRWL_CRWH, BCU_CRRP_CRWL_CRWH_RT,
-                      1, BCU_CRRP_CRWL_CRWH_SRW>;
-defm: KVXItinWriteRes<BCU_TINY_AUXW_CRRP, BCU_TINY_AUXW_CRRP_RT,
-                      1, BCU_TINY_AUXW_CRRP_SRW>;
-/* TODO: SFRs do not have bypasses, GPRs do. The operand should have a negative
- * ReadAdvance */
-defm: KVXItinWriteRes<BCU_TINY_TINY_MAU_XNOP, BCU_TINY_TINY_MAU_XNOP_RT,
-                      1, BCU_TINY_TINY_MAU_XNOP_SRW>;
+  defvar ALU_LITE_CRWL_RT = LITE_RU # CRWL_RU;
+  defvar ALU_LITE_CRWH_RT = LITE_RU # CRWH_RU;
 
-defm: KVXItinWriteRes<TCA, TCA_RT, 1, TCA_SRW>;
-defm: KVXItinWriteRes<TCA_FP16, TCA_RT, 1, TCA_FP16_SRW>;
+  defvar ALU_FULL_RT = FULL_RU;
 
-defm: KVXItinWriteRes<LSU_STORE, LSU_RT, 1, LSU_STORE_SRW>;
-defm: KVXItinWriteRes<LSU_X_STORE, LSU_RT, 2, LSU_X_STORE_SRW>;
-defm: KVXItinWriteRes<LSU_Y_STORE, LSU_RT, 3, LSU_Y_STORE_SRW>;
+  defvar BCU_RT = BCU_RU;
+  defvar BCU_CRRP_CRWL_CRWH_RT = BCU_RU # CRRP_RU # CRWL_RU # CRWH_RU;
+  defvar BCU_TINY_AUXW_CRRP_RT = BCU_RU # TINY_RU # AUXW_RU # CRRP_RU;
+  defvar BCU_TINY_TINY_MAU_XNOP_RT = BCU_RU # TINY_RU # MAU_RU # XNOP_RU;
 
-defm: KVXItinWriteRes<LSU_CRRP_STORE, LSU_CRRP_RT, 1, LSU_CRRP_STORE_SRW>;
-defm: KVXItinWriteRes<LSU_CRRP_X_STORE, LSU_CRRP_RT, 2, LSU_CRRP_X_STORE_SRW>;
-defm: KVXItinWriteRes<LSU_CRRP_Y_STORE, LSU_CRRP_RT, 3, LSU_CRRP_Y_STORE_SRW>;
+  defvar TCA_RT = TCA_RU;
 
-defm: KVXItinWriteRes<LSU_AUXR_STORE, LSU_AUXR_RT, 1, LSU_AUXR_STORE_SRW>;
-defm: KVXItinWriteRes<LSU_AUXR_X_STORE, LSU_AUXR_RT, 2, LSU_AUXR_X_STORE_SRW>;
-defm: KVXItinWriteRes<LSU_AUXR_Y_STORE, LSU_AUXR_RT, 3, LSU_AUXR_Y_STORE_SRW>;
+  defvar LSU_RT = LSU_RU;
 
-defm: KVXItinWriteRes<LSU_AUXW_STORE, LSU_AUXW_RT, 1, LSU_AUXW_STORE_SRW>;
-defm: KVXItinWriteRes<LSU_AUXW_X_STORE, LSU_AUXW_RT, 2, LSU_AUXW_X_STORE_SRW>;
-defm: KVXItinWriteRes<LSU_AUXW_Y_STORE, LSU_AUXW_RT, 3, LSU_AUXW_Y_STORE_SRW>;
+  defvar LSU_CRRP_RT = LSU_RU # CRRP_RU;
 
-defm: KVXItinWriteRes<LSU_AUXR_AUXW_STORE, LSU_AUXR_AUXW_RT, 1,
-                      LSU_AUXR_AUXW_STORE_SRW>;
-defm: KVXItinWriteRes<LSU_AUXR_AUXW_X_STORE, LSU_AUXR_AUXW_RT, 2,
-                      LSU_AUXR_AUXW_X_STORE_SRW>;
-defm: KVXItinWriteRes<LSU_AUXR_AUXW_Y_STORE, LSU_AUXR_AUXW_RT, 3,
-                      LSU_AUXR_AUXW_Y_STORE_SRW>;
+  defvar LSU_AUXR_RT = LSU_RU # AUXR_RU;
 
-defm: KVXItinWriteRes<LSU_AUXW_ALCLR, LSU_AUXW_RT, 1, LSU_AUXW_ALCLR_SRW>;
-defm: KVXItinWriteRes<LSU_AUXW_X_ALCLR, LSU_AUXW_RT, 2, LSU_AUXW_X_ALCLR_SRW>;
-defm: KVXItinWriteRes<LSU_AUXW_Y_ALCLR, LSU_AUXW_RT, 3, LSU_AUXW_Y_ALCLR_SRW>;
+  defvar ALU_TINY_CRRP_CRWL_CRWH_RT = TINY_RU # CRRP_RU # CRWL_RU # CRWH_RU;
+  defvar ALU_TINY_CRRP_RT = TINY_RU # CRRP_RU;
+  defvar ALU_TINY_CRWL_CRWH_RT = TINY_RU # CRWL_RU # CRWH_RU;
+// Dedicated reservation table forXSWAP256: moveto + moveto + movefo
+  defvar LSU_AUXW_RT = LSU_RU # AUXW_RU;
 
-defm: KVXItinWriteRes<LSU_LOAD, LSU_RT, 1, LSU_LOAD_SRW>;
-defm: KVXItinWriteRes<LSU_X_LOAD, LSU_RT, 2, LSU_X_LOAD_SRW>;
-defm: KVXItinWriteRes<LSU_Y_LOAD, LSU_RT, 3, LSU_Y_LOAD_SRW>;
+  defvar LSU_AUXR_AUXW_RT = LSU_RU # AUXW_RU # AUXR_RU;
 
-defm: KVXItinWriteRes<LSU_CRRP_LOAD, LSU_CRRP_RT, 1, LSU_CRRP_LOAD_SRW>;
-defm: KVXItinWriteRes<LSU_CRRP_X_LOAD, LSU_CRRP_RT, 2, LSU_CRRP_X_LOAD_SRW>;
-defm: KVXItinWriteRes<LSU_CRRP_Y_LOAD, LSU_CRRP_RT, 3, LSU_CRRP_Y_LOAD_SRW>;
+  defvar MAU_RT = MAU_RU;
 
-defm: KVXItinWriteRes<LSU_AUXR_LOAD, LSU_AUXR_RT, 1, LSU_AUXR_LOAD_SRW>;
-defm: KVXItinWriteRes<LSU_AUXR_X_LOAD, LSU_AUXR_RT, 2, LSU_AUXR_X_LOAD_SRW>;
-defm: KVXItinWriteRes<LSU_AUXR_Y_LOAD, LSU_AUXR_RT, 3, LSU_AUXR_Y_LOAD_SRW>;
+  defvar MAU_AUXR_RT = MAU_RU # AUXR_RU;
 
-defm: KVXItinWriteRes<LSU_AUXW_LOAD, LSU_AUXW_RT, 1, LSU_AUXW_LOAD_SRW>;
-defm: KVXItinWriteRes<LSU_AUXW_X_LOAD, LSU_AUXW_RT, 2, LSU_AUXW_X_LOAD_SRW>;
-defm: KVXItinWriteRes<LSU_AUXW_Y_LOAD, LSU_AUXW_RT, 3, LSU_AUXW_Y_LOAD_SRW>;
+  // Dedicated reservation table for XSWAP256: moveto + moveto + movefo
+  defvar XSWAP256_RT = ALU_LITE_CRWL_RT # ALU_LITE_CRWH_RT # BCU_TINY_AUXW_CRRP_RT;
 
-defm: KVXItinWriteRes<LSU_AUXR_AUXW_LOAD, LSU_AUXR_AUXW_RT, 1,
-                      LSU_AUXR_AUXW_LOAD_SRW>;
-defm: KVXItinWriteRes<LSU_AUXR_AUXW_X_LOAD, LSU_AUXR_AUXW_RT, 2,
-                      LSU_AUXR_AUXW_X_LOAD_SRW>;
-defm: KVXItinWriteRes<LSU_AUXR_AUXW_Y_LOAD, LSU_AUXR_AUXW_RT, 3,
-                      LSU_AUXR_AUXW_Y_LOAD_SRW>;
+  // Handling XSWAP256 separately
+  let SchedModel = m in {
+    let ResourceCycles = []<int> in {
+      let NumMicroOps = 1 in // arbitrary cut in 1+2
+        def XSWAP256_WR1#m: WriteRes<XSWAP256_SRW1, XSWAP256_RT>; // 1st operand
+      let NumMicroOps = 2 in
+        // Note: all resources are consumed by 1st operand
+        def XSWAP256_WR2#m: WriteRes<XSWAP256_SRW2, []>; // 2nd operand
+    }
+    def XSWAP256_IRW#m: ItinRW<[XSWAP256_SRW1, XSWAP256_SRW2], [XSWAP256]>;
+  }
 
-defm: KVXItinWriteRes<MAU, MAU_RT, 1, MAU_SRW>;
-defm: KVXItinWriteRes<MAU_X, MAU_RT, 2, MAU_X_SRW>;
-defm: KVXItinWriteRes<MAU_Y, MAU_RT, 3, MAU_Y_SRW>;
+// === Mappings for the CV1/CV2 invariant itinerary classes ===
 
-defm: KVXItinWriteRes<MAU_AUXR, MAU_AUXR_RT, 1, MAU_AUXR_SRW>;
-defm: KVXItinWriteRes<MAU_AUXR_X, MAU_AUXR_RT, 2, MAU_AUXR_X_SRW>;
-defm: KVXItinWriteRes<MAU_AUXR_Y, MAU_AUXR_RT, 3, MAU_AUXR_Y_SRW>;
+  defm ALL#m: KVXItinWriteRes<m, ALL, [], 8, ALL_SRW>;
+  defm ALU_NOP#m: KVXItinWriteRes<m, ALU_NOP, ALU_NOP_RT, 1, ALU_NOP_SRW>;
 
-defm: KVXItinWriteRes<MAU_FP, MAU_RT, 1, MAU_FP_SRW>;
-defm: KVXItinWriteRes<MAU_X_FP, MAU_RT, 2, MAU_X_FP_SRW>;
-defm: KVXItinWriteRes<MAU_Y_FP, MAU_RT, 3, MAU_Y_FP_SRW>;
+  defm ALU_TINY#m: KVXItinWriteRes<m, ALU_TINY, ALU_TINY_RT, 1, ALU_TINY_SRW>;
+  defm ALU_TINY_X#m: KVXItinWriteRes<m, ALU_TINY_X, ALU_TINY_RT, 2, ALU_TINY_X_SRW>;
+  defm ALU_TINY_Y#m: KVXItinWriteRes<m, ALU_TINY_Y, ALU_TINY_RT, 3, ALU_TINY_Y_SRW>;
 
-defm: KVXItinWriteRes<MAU_AUXR_FP, MAU_AUXR_RT, 1, MAU_AUXR_FP_SRW>;
-defm: KVXItinWriteRes<MAU_AUXR_X_FP, MAU_AUXR_RT, 2, MAU_AUXR_X_FP_SRW>;
-defm: KVXItinWriteRes<MAU_AUXR_Y_FP, MAU_AUXR_RT, 3, MAU_AUXR_Y_FP_SRW>;
+  defm ALU_LITE#m: KVXItinWriteRes<m, ALU_LITE, ALU_LITE_RT, 1, ALU_LITE_SRW>;
+  defm ALU_LITE_X#m: KVXItinWriteRes<m, ALU_LITE_X, ALU_LITE_RT, 2, ALU_LITE_X_SRW>;
+  defm ALU_LITE_Y#m: KVXItinWriteRes<m, ALU_LITE_Y, ALU_LITE_RT, 3, ALU_LITE_Y_SRW>;
 
-defm: KVXItinWriteRes<ALU_TINY_CRRP_CRWL_CRWH, ALU_TINY_CRRP_CRWL_CRWH_RT, 1 /* issue width */, ALU_TINY_CRRP_CRWL_CRWH_SRW>;
-defm: KVXItinWriteRes<ALU_TINY_CRRP, ALU_TINY_CRRP_RT, 1 /* issue width */, ALU_TINY_CRRP_SRW>;
-defm: KVXItinWriteRes<ALU_TINY_CRWL_CRWH, ALU_TINY_CRWL_CRWH_RT, 1 /* issue width */, ALU_TINY_CRWL_CRWH_SRW>;
+  defm ALU_LITE_CRWL#m: KVXItinWriteRes<m, ALU_LITE_CRWL, ALU_LITE_CRWL_RT, 1, ALU_LITE_CRWL_SRW>;
+  defm ALU_LITE_CRWH#m: KVXItinWriteRes<m, ALU_LITE_CRWH, ALU_LITE_CRWH_RT, 1, ALU_LITE_CRWH_SRW>;
 
-def CopyI : SchedWrite;
-let SchedModel = KVXSchedMachineModel in {
-  // CopyI is expanded to ADDD -> ALU_TINY reservation table
-  let NumMicroOps = 1 in
-    def : KVXWriteRes<CopyI, ALU_TINY_RT>;
-  def : InstRW<[CopyI], (instrs COPY)>;
+  defm ALU_FULL#m: KVXItinWriteRes<m, ALU_FULL, ALU_FULL_RT, 1, ALU_FULL_SRW>;
+  defm ALU_FULL_X#m: KVXItinWriteRes<m, ALU_FULL_X, ALU_FULL_RT, 2, ALU_FULL_X_SRW>;
+  defm ALU_FULL_Y#m: KVXItinWriteRes<m, ALU_FULL_Y, ALU_FULL_RT, 3, ALU_FULL_Y_SRW>;
+  defm SFU#m: KVXItinWriteRes<m, SFU, ALU_FULL_RT, 1, SFU_SRW>;
+
+  defm BCU#m: KVXItinWriteRes<m, BCU, BCU_RT, 1, BCU_SRW>;
+  defm BCU_CRRP_CRWL_CRWH#m:
+    KVXItinWriteRes<m, BCU_CRRP_CRWL_CRWH, BCU_CRRP_CRWL_CRWH_RT,
+                    1, BCU_CRRP_CRWL_CRWH_SRW>;
+  defm BCU_TINY_AUXW_CRRP#m:
+    KVXItinWriteRes<m, BCU_TINY_AUXW_CRRP, BCU_TINY_AUXW_CRRP_RT,
+                    1, BCU_TINY_AUXW_CRRP_SRW>;
+  /* TODO: SFRs do not have bypasses, GPRs do. The operand should have a negative
+  * ReadAdvance */
+  defm BCU_TINY_TINY_MAU_XNOP#m:
+    KVXItinWriteRes<m, BCU_TINY_TINY_MAU_XNOP, BCU_TINY_TINY_MAU_XNOP_RT,
+                    1, BCU_TINY_TINY_MAU_XNOP_SRW>;
+
+  defm TCA#m: KVXItinWriteRes<m, TCA, TCA_RT, 1, TCA_SRW>;
+  defm TCA_FP16#m: KVXItinWriteRes<m, TCA_FP16, TCA_RT, 1, TCA_FP16_SRW>;
+
+  defm LSU_STORE#m: KVXItinWriteRes<m, LSU_STORE, LSU_RT, 1, LSU_STORE_SRW>;
+  defm LSU_X_STORE#m: KVXItinWriteRes<m, LSU_X_STORE, LSU_RT, 2, LSU_X_STORE_SRW>;
+  defm LSU_Y_STORE#m: KVXItinWriteRes<m, LSU_Y_STORE, LSU_RT, 3, LSU_Y_STORE_SRW>;
+
+  defm LSU_CRRP_STORE#m: KVXItinWriteRes<m, LSU_CRRP_STORE, LSU_CRRP_RT, 1, LSU_CRRP_STORE_SRW>;
+  defm LSU_CRRP_X_STORE#m: KVXItinWriteRes<m, LSU_CRRP_X_STORE, LSU_CRRP_RT, 2, LSU_CRRP_X_STORE_SRW>;
+  defm LSU_CRRP_Y_STORE#m: KVXItinWriteRes<m, LSU_CRRP_Y_STORE, LSU_CRRP_RT, 3, LSU_CRRP_Y_STORE_SRW>;
+
+  defm LSU_AUXR_STORE#m: KVXItinWriteRes<m, LSU_AUXR_STORE, LSU_AUXR_RT, 1, LSU_AUXR_STORE_SRW>;
+  defm LSU_AUXR_X_STORE#m: KVXItinWriteRes<m, LSU_AUXR_X_STORE, LSU_AUXR_RT, 2, LSU_AUXR_X_STORE_SRW>;
+  defm LSU_AUXR_Y_STORE#m: KVXItinWriteRes<m, LSU_AUXR_Y_STORE, LSU_AUXR_RT, 3, LSU_AUXR_Y_STORE_SRW>;
+
+  defm LSU_AUXW_STORE#m: KVXItinWriteRes<m, LSU_AUXW_STORE, LSU_AUXW_RT, 1, LSU_AUXW_STORE_SRW>;
+  defm LSU_AUXW_X_STORE#m: KVXItinWriteRes<m, LSU_AUXW_X_STORE, LSU_AUXW_RT, 2, LSU_AUXW_X_STORE_SRW>;
+  defm LSU_AUXW_Y_STORE#m: KVXItinWriteRes<m, LSU_AUXW_Y_STORE, LSU_AUXW_RT, 3, LSU_AUXW_Y_STORE_SRW>;
+
+  defm LSU_AUXR_AUXW_STORE#m:
+    KVXItinWriteRes<m, LSU_AUXR_AUXW_STORE, LSU_AUXR_AUXW_RT, 1,
+                    LSU_AUXR_AUXW_STORE_SRW>;
+  defm LSU_AUXR_AUXW_X_STORE#m:
+    KVXItinWriteRes<m, LSU_AUXR_AUXW_X_STORE, LSU_AUXR_AUXW_RT, 2,
+                    LSU_AUXR_AUXW_X_STORE_SRW>;
+  defm LSU_AUXR_AUXW_Y_STORE#m:
+    KVXItinWriteRes<m, LSU_AUXR_AUXW_Y_STORE, LSU_AUXR_AUXW_RT, 3,
+                    LSU_AUXR_AUXW_Y_STORE_SRW>;
+
+  defm LSU_AUXW_ALCLR#m: KVXItinWriteRes<m, LSU_AUXW_ALCLR, LSU_AUXW_RT, 1, LSU_AUXW_ALCLR_SRW>;
+  defm LSU_AUXW_X_ALCLR#m: KVXItinWriteRes<m, LSU_AUXW_X_ALCLR, LSU_AUXW_RT, 2, LSU_AUXW_X_ALCLR_SRW>;
+  defm LSU_AUXW_Y_ALCLR#m: KVXItinWriteRes<m, LSU_AUXW_Y_ALCLR, LSU_AUXW_RT, 3, LSU_AUXW_Y_ALCLR_SRW>;
+
+  defm LSU_LOAD#m: KVXItinWriteRes<m, LSU_LOAD, LSU_RT, 1, LSU_LOAD_SRW>;
+  defm LSU_X_LOAD#m: KVXItinWriteRes<m, LSU_X_LOAD, LSU_RT, 2, LSU_X_LOAD_SRW>;
+  defm LSU_Y_LOAD#m: KVXItinWriteRes<m, LSU_Y_LOAD, LSU_RT, 3, LSU_Y_LOAD_SRW>;
+
+  defm LSU_CRRP_LOAD#m: KVXItinWriteRes<m, LSU_CRRP_LOAD, LSU_CRRP_RT, 1, LSU_CRRP_LOAD_SRW>;
+  defm LSU_CRRP_X_LOAD#m: KVXItinWriteRes<m, LSU_CRRP_X_LOAD, LSU_CRRP_RT, 2, LSU_CRRP_X_LOAD_SRW>;
+  defm LSU_CRRP_Y_LOAD#m: KVXItinWriteRes<m, LSU_CRRP_Y_LOAD, LSU_CRRP_RT, 3, LSU_CRRP_Y_LOAD_SRW>;
+
+  defm LSU_AUXR_LOAD#m: KVXItinWriteRes<m, LSU_AUXR_LOAD, LSU_AUXR_RT, 1, LSU_AUXR_LOAD_SRW>;
+  defm LSU_AUXR_X_LOAD#m: KVXItinWriteRes<m, LSU_AUXR_X_LOAD, LSU_AUXR_RT, 2, LSU_AUXR_X_LOAD_SRW>;
+  defm LSU_AUXR_Y_LOAD#m: KVXItinWriteRes<m, LSU_AUXR_Y_LOAD, LSU_AUXR_RT, 3, LSU_AUXR_Y_LOAD_SRW>;
+
+  defm LSU_AUXW_LOAD#m: KVXItinWriteRes<m, LSU_AUXW_LOAD, LSU_AUXW_RT, 1, LSU_AUXW_LOAD_SRW>;
+  defm LSU_AUXW_X_LOAD#m: KVXItinWriteRes<m, LSU_AUXW_X_LOAD, LSU_AUXW_RT, 2, LSU_AUXW_X_LOAD_SRW>;
+  defm LSU_AUXW_Y_LOAD#m: KVXItinWriteRes<m, LSU_AUXW_Y_LOAD, LSU_AUXW_RT, 3, LSU_AUXW_Y_LOAD_SRW>;
+
+  defm LSU_AUXR_AUXW_LOAD#m:
+    KVXItinWriteRes<m, LSU_AUXR_AUXW_LOAD, LSU_AUXR_AUXW_RT, 1,
+                    LSU_AUXR_AUXW_LOAD_SRW>;
+  defm LSU_AUXR_AUXW_X_LOAD#m:
+    KVXItinWriteRes<m, LSU_AUXR_AUXW_X_LOAD, LSU_AUXR_AUXW_RT, 2,
+                    LSU_AUXR_AUXW_X_LOAD_SRW>;
+  defm LSU_AUXR_AUXW_Y_LOAD#m:
+    KVXItinWriteRes<m, LSU_AUXR_AUXW_Y_LOAD, LSU_AUXR_AUXW_RT, 3,
+                    LSU_AUXR_AUXW_Y_LOAD_SRW>;
+
+  defm MAU#m: KVXItinWriteRes<m, MAU, MAU_RT, 1, MAU_SRW>;
+  defm MAU_X#m: KVXItinWriteRes<m, MAU_X, MAU_RT, 2, MAU_X_SRW>;
+  defm MAU_Y#m: KVXItinWriteRes<m, MAU_Y, MAU_RT, 3, MAU_Y_SRW>;
+
+  defm MAU_AUXR#m: KVXItinWriteRes<m, MAU_AUXR, MAU_AUXR_RT, 1, MAU_AUXR_SRW>;
+  defm MAU_AUXR_X#m: KVXItinWriteRes<m, MAU_AUXR_X, MAU_AUXR_RT, 2, MAU_AUXR_X_SRW>;
+  defm MAU_AUXR_Y#m: KVXItinWriteRes<m, MAU_AUXR_Y, MAU_AUXR_RT, 3, MAU_AUXR_Y_SRW>;
+
+  defm MAU_FP#m: KVXItinWriteRes<m, MAU_FP, MAU_RT, 1, MAU_FP_SRW>;
+  defm MAU_X_FP#m: KVXItinWriteRes<m, MAU_X_FP, MAU_RT, 2, MAU_X_FP_SRW>;
+  defm MAU_Y_FP#m: KVXItinWriteRes<m, MAU_Y_FP, MAU_RT, 3, MAU_Y_FP_SRW>;
+
+  defm MAU_AUXR_FP#m: KVXItinWriteRes<m, MAU_AUXR_FP, MAU_AUXR_RT, 1, MAU_AUXR_FP_SRW>;
+  defm MAU_AUXR_X_FP#m: KVXItinWriteRes<m, MAU_AUXR_X_FP, MAU_AUXR_RT, 2, MAU_AUXR_X_FP_SRW>;
+  defm MAU_AUXR_Y_FP#m: KVXItinWriteRes<m, MAU_AUXR_Y_FP, MAU_AUXR_RT, 3, MAU_AUXR_Y_FP_SRW>;
+
+  defvar CopyIM = !cond(
+    IS_CV1 : CopyI_KVXCV1SchedMachineModel,
+    IS_CV2 : CopyI_KVXCV2SchedMachineModel
+  );
+  let SchedModel = m in {
+    // CopyI is expanded to ADDD -> ALU_TINY reservation table
+    let NumMicroOps = 1 in
+      def : KVXWriteRes<m, CopyIM, ALU_TINY_RT>;
+    def : InstRW<[CopyIM], (instrs COPY)>;
+  }
+
+  // === Mappings for the CV1/CV2 switch itinerary classes ===
+
+  if IS_CV1 then {
+    // ALU_LITE -> ALU_TINY
+    defm: KVXItinWriteRes<m, ALU_SWITCH_LITE_TINY, ALU_LITE_RT, 1,
+                          ALU_SWITCH_LITE_TINY_SRW>;
+    defm: KVXItinWriteRes<m, ALU_SWITCH_LITE_TINY_X, ALU_LITE_RT, 2,
+                          ALU_SWITCH_LITE_TINY_X_SRW>;
+    defm: KVXItinWriteRes<m, ALU_SWITCH_LITE_TINY_Y, ALU_LITE_RT, 3,
+                          ALU_SWITCH_LITE_TINY_Y_SRW>;
+
+    // MAU + AUXR -> MAU, int
+    defm: KVXItinWriteRes<m, MAU_SWITCH_AUXR_EMPTY, MAU_AUXR_RT, 1,
+                          MAU_SWITCH_AUXR_EMPTY_SRW>;
+    defm: KVXItinWriteRes<m, MAU_SWITCH_AUXR_EMPTY_X, MAU_AUXR_RT, 2,
+                          MAU_SWITCH_AUXR_EMPTY_X_SRW>;
+    defm: KVXItinWriteRes<m, MAU_SWITCH_AUXR_EMPTY_Y, MAU_AUXR_RT, 3,
+                          MAU_SWITCH_AUXR_EMPTY_Y_SRW>;
+
+    // MAU + AUXR -> MAU, float
+    defm: KVXItinWriteRes<m, MAU_SWITCH_AUXR_EMPTY_FP, MAU_AUXR_RT, 1,
+                          MAU_SWITCH_AUXR_EMPTY_FP_SRW>;
+    defm: KVXItinWriteRes<m, MAU_SWITCH_AUXR_EMPTY_X_FP, MAU_AUXR_RT, 2,
+                          MAU_SWITCH_AUXR_EMPTY_X_FP_SRW>;
+    defm: KVXItinWriteRes<m, MAU_SWITCH_AUXR_EMPTY_Y_FP, MAU_AUXR_RT, 3,
+                          MAU_SWITCH_AUXR_EMPTY_Y_FP_SRW>;
+  } else {
+    // ALU_LITE -> ALU_TINY
+    defm: KVXItinWriteRes<m, ALU_SWITCH_LITE_TINY, ALU_TINY_RT, 1,
+                          ALU_SWITCH_LITE_TINY_SRW>;
+    defm: KVXItinWriteRes<m, ALU_SWITCH_LITE_TINY_X, ALU_TINY_RT, 2,
+                          ALU_SWITCH_LITE_TINY_X_SRW>;
+    defm: KVXItinWriteRes<m, ALU_SWITCH_LITE_TINY_Y, ALU_TINY_RT, 3,
+                          ALU_SWITCH_LITE_TINY_Y_SRW>;
+
+    // MAU + AUXR -> MAU, int
+    defm: KVXItinWriteRes<m, MAU_SWITCH_AUXR_EMPTY, MAU_RT, 1,
+                          MAU_SWITCH_AUXR_EMPTY_SRW>;
+    defm: KVXItinWriteRes<m, MAU_SWITCH_AUXR_EMPTY_X, MAU_RT, 2,
+                          MAU_SWITCH_AUXR_EMPTY_X_SRW>;
+    defm: KVXItinWriteRes<m, MAU_SWITCH_AUXR_EMPTY_Y, MAU_RT, 3,
+                          MAU_SWITCH_AUXR_EMPTY_Y_SRW>;
+
+    // MAU + AUXR -> MAU, float
+    defm: KVXItinWriteRes<m, MAU_SWITCH_AUXR_EMPTY_FP, MAU_RT, 1,
+                          MAU_SWITCH_AUXR_EMPTY_FP_SRW>;
+    defm: KVXItinWriteRes<m, MAU_SWITCH_AUXR_EMPTY_X_FP, MAU_RT, 2,
+                          MAU_SWITCH_AUXR_EMPTY_X_FP_SRW>;
+    defm: KVXItinWriteRes<m, MAU_SWITCH_AUXR_EMPTY_Y_FP, MAU_RT, 3,
+                          MAU_SWITCH_AUXR_EMPTY_Y_FP_SRW>;
+    defm: KVXItinWriteRes<m, ALU_TINY_CRRP_CRWL_CRWH, ALU_TINY_CRRP_CRWL_CRWH_RT, 1 /* issue width */, ALU_TINY_CRRP_CRWL_CRWH_SRW>;
+    defm: KVXItinWriteRes<m, ALU_TINY_CRRP, ALU_TINY_CRRP_RT, 1 /* issue width */, ALU_TINY_CRRP_SRW>;
+    defm: KVXItinWriteRes<m, ALU_TINY_CRWL_CRWH, ALU_TINY_CRWL_CRWH_RT, 1 /* issue width */, ALU_TINY_CRWL_CRWH_SRW>;
+  }
 }

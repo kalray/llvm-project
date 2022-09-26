@@ -379,11 +379,11 @@ define <4 x i8> @ashiftR_rr_vec(<4 x i8> %a, <4 x i8> %b){
 ;
 ; CV2-LABEL: ashiftR_rr_vec:
 ; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    extfz $r1 = $r1, 26, 24
 ; CV2-NEXT:    extfz $r2 = $r1, 10, 8
 ; CV2-NEXT:    srabos $r3 = $r0, $r1
 ; CV2-NEXT:    extfz $r4 = $r1, 18, 16
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    extfz $r1 = $r1, 26, 24
 ; CV2-NEXT:    srabos $r2 = $r0, $r2
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    srabos $r0 = $r0, $r1
@@ -432,11 +432,11 @@ define <4 x i8> @lshiftR_rr_vec(<4 x i8> %a, <4 x i8> %b){
 ;
 ; CV2-LABEL: lshiftR_rr_vec:
 ; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    extfz $r1 = $r1, 26, 24
 ; CV2-NEXT:    extfz $r2 = $r1, 10, 8
 ; CV2-NEXT:    srlbos $r3 = $r0, $r1
 ; CV2-NEXT:    extfz $r4 = $r1, 18, 16
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    extfz $r1 = $r1, 26, 24
 ; CV2-NEXT:    srlbos $r2 = $r0, $r2
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    srlbos $r0 = $r0, $r1
@@ -480,11 +480,11 @@ define <4 x i8> @shiftL_rr_vec(<4 x i8> %a, <4 x i8> %b){
 ;
 ; CV2-LABEL: shiftL_rr_vec:
 ; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    extfz $r1 = $r1, 26, 24
 ; CV2-NEXT:    extfz $r2 = $r1, 10, 8
 ; CV2-NEXT:    sllbos $r3 = $r0, $r1
 ; CV2-NEXT:    extfz $r4 = $r1, 18, 16
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    extfz $r1 = $r1, 26, 24
 ; CV2-NEXT:    sllbos $r2 = $r0, $r2
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    sllbos $r0 = $r0, $r1

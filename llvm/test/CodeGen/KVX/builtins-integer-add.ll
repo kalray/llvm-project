@@ -322,7 +322,6 @@ define <32 x i8> @addbv_s(<32 x i8> %0, <32 x i8> %1) {
 ; V2:       # %bb.0:
 ; V2-NEXT:    addsbo $r0 = $r0, $r4
 ; V2-NEXT:    addsbo $r1 = $r1, $r5
-; V2-NEXT:    ;;
 ; V2-NEXT:    addsbo $r2 = $r2, $r6
 ; V2-NEXT:    addsbo $r3 = $r3, $r7
 ; V2-NEXT:    ret
@@ -407,7 +406,6 @@ define <32 x i8> @addbv_us(<32 x i8> %0, <32 x i8> %1) {
 ; V2:       # %bb.0:
 ; V2-NEXT:    addusbo $r0 = $r0, $r4
 ; V2-NEXT:    addusbo $r1 = $r1, $r5
-; V2-NEXT:    ;;
 ; V2-NEXT:    addusbo $r2 = $r2, $r6
 ; V2-NEXT:    addusbo $r3 = $r3, $r7
 ; V2-NEXT:    ret
@@ -526,15 +524,24 @@ define <16 x i16> @addhx(<16 x i16> %0, <16 x i16> %1) {
 }
 
 define <16 x i16> @addhx_s(<16 x i16> %0, <16 x i16> %1) {
-; CHECK-LABEL: addhx_s:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    addshq $r0 = $r0, $r4
-; CHECK-NEXT:    addshq $r1 = $r1, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addshq $r2 = $r2, $r6
-; CHECK-NEXT:    addshq $r3 = $r3, $r7
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: addhx_s:
+; V1:       # %bb.0:
+; V1-NEXT:    addshq $r0 = $r0, $r4
+; V1-NEXT:    addshq $r1 = $r1, $r5
+; V1-NEXT:    ;;
+; V1-NEXT:    addshq $r2 = $r2, $r6
+; V1-NEXT:    addshq $r3 = $r3, $r7
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: addhx_s:
+; V2:       # %bb.0:
+; V2-NEXT:    addshq $r0 = $r0, $r4
+; V2-NEXT:    addshq $r1 = $r1, $r5
+; V2-NEXT:    addshq $r2 = $r2, $r6
+; V2-NEXT:    addshq $r3 = $r3, $r7
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %3 = tail call <16 x i16> @llvm.sadd.sat.v16i16(<16 x i16> %0, <16 x i16> %1)
   ret <16 x i16> %3
 }
@@ -565,7 +572,6 @@ define <16 x i16> @addhx_us(<16 x i16> %0, <16 x i16> %1) {
 ; V2:       # %bb.0:
 ; V2-NEXT:    addushq $r0 = $r0, $r4
 ; V2-NEXT:    addushq $r1 = $r1, $r5
-; V2-NEXT:    ;;
 ; V2-NEXT:    addushq $r2 = $r2, $r6
 ; V2-NEXT:    addushq $r3 = $r3, $r7
 ; V2-NEXT:    ret
@@ -728,15 +734,24 @@ define <8 x i32> @addwo(<8 x i32> %0, <8 x i32> %1) {
 }
 
 define <8 x i32> @addwo_s(<8 x i32> %0, <8 x i32> %1) {
-; CHECK-LABEL: addwo_s:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    addswp $r0 = $r0, $r4
-; CHECK-NEXT:    addswp $r1 = $r1, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addswp $r2 = $r2, $r6
-; CHECK-NEXT:    addswp $r3 = $r3, $r7
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: addwo_s:
+; V1:       # %bb.0:
+; V1-NEXT:    addswp $r0 = $r0, $r4
+; V1-NEXT:    addswp $r1 = $r1, $r5
+; V1-NEXT:    ;;
+; V1-NEXT:    addswp $r2 = $r2, $r6
+; V1-NEXT:    addswp $r3 = $r3, $r7
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: addwo_s:
+; V2:       # %bb.0:
+; V2-NEXT:    addswp $r0 = $r0, $r4
+; V2-NEXT:    addswp $r1 = $r1, $r5
+; V2-NEXT:    addswp $r2 = $r2, $r6
+; V2-NEXT:    addswp $r3 = $r3, $r7
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %3 = tail call <8 x i32> @llvm.sadd.sat.v8i32(<8 x i32> %0, <8 x i32> %1)
   ret <8 x i32> %3
 }
@@ -767,7 +782,6 @@ define <8 x i32> @addwo_us(<8 x i32> %0, <8 x i32> %1) {
 ; V2:       # %bb.0:
 ; V2-NEXT:    adduswp $r0 = $r0, $r4
 ; V2-NEXT:    adduswp $r1 = $r1, $r5
-; V2-NEXT:    ;;
 ; V2-NEXT:    adduswp $r2 = $r2, $r6
 ; V2-NEXT:    adduswp $r3 = $r3, $r7
 ; V2-NEXT:    ret
@@ -886,15 +900,24 @@ define <4 x i64> @adddq(<4 x i64> %0, <4 x i64> %1) {
 }
 
 define <4 x i64> @adddq_s(<4 x i64> %0, <4 x i64> %1) {
-; CHECK-LABEL: adddq_s:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    addsd $r0 = $r0, $r4
-; CHECK-NEXT:    addsd $r1 = $r1, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addsd $r2 = $r2, $r6
-; CHECK-NEXT:    addsd $r3 = $r3, $r7
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: adddq_s:
+; V1:       # %bb.0:
+; V1-NEXT:    addsd $r0 = $r0, $r4
+; V1-NEXT:    addsd $r1 = $r1, $r5
+; V1-NEXT:    ;;
+; V1-NEXT:    addsd $r2 = $r2, $r6
+; V1-NEXT:    addsd $r3 = $r3, $r7
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: adddq_s:
+; V2:       # %bb.0:
+; V2-NEXT:    addsd $r0 = $r0, $r4
+; V2-NEXT:    addsd $r1 = $r1, $r5
+; V2-NEXT:    addsd $r2 = $r2, $r6
+; V2-NEXT:    addsd $r3 = $r3, $r7
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %3 = tail call <4 x i64> @llvm.sadd.sat.v4i64(<4 x i64> %0, <4 x i64> %1)
   ret <4 x i64> %3
 }
@@ -925,7 +948,6 @@ define <4 x i64> @adddq_us(<4 x i64> %0, <4 x i64> %1) {
 ; V2:       # %bb.0:
 ; V2-NEXT:    addusd $r0 = $r0, $r4
 ; V2-NEXT:    addusd $r1 = $r1, $r5
-; V2-NEXT:    ;;
 ; V2-NEXT:    addusd $r2 = $r2, $r6
 ; V2-NEXT:    addusd $r3 = $r3, $r7
 ; V2-NEXT:    ret
