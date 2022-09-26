@@ -2,6 +2,10 @@
 ; RUN: llc -mcpu=kv3-1 -O0 -o - %s | FileCheck %s --check-prefix=CV1
 ; RUN: llc -mcpu=kv3-2 -O0 -o - %s | FileCheck %s --check-prefix=CV2
 ; FIXME: cv2 has no zero tca registers
+
+; RUN: clang -O0 -c -o /dev/null %s
+; RUN: clang -O0 -march=kv3-2 -c -o /dev/null %s
+
 target triple = "kvx-kalray-cos"
 
 define void @zeroinit256() {

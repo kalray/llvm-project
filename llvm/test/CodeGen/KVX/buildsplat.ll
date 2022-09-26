@@ -2,6 +2,9 @@
 ; RUN: llc -stop-before=early-tailduplication -O2 -o - %s | FileCheck %s
 ; RUN: llc -o - %s -O2 | FileCheck %s --check-prefixes=ALL
 ; RUN: llc -mcpu=kv3-2 -o - %s -O2 | FileCheck %s --check-prefixes=ALL
+; RUN: clang -c -o /dev/null %s
+; RUN: clang -march=kv3-2 -c -o /dev/null %s
+
 target triple = "kvx-kalray-cos"
 
 ; CHECK: MAKEi43 0

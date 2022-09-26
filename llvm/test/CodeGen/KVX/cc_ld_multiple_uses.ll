@@ -1,5 +1,6 @@
 ; RUN: llc -verify-machineinstrs %s -o /dev/null
 ; Not breaking the compiler is good enough.
+
 target triple = "kvx-kalray-cos"
 
 %struct.vorbis_look_psy = type { i32, %struct.vorbis_info_psy*, float***, float**, float*, i64*, i64*, i64, i64, i32, i32, i64 }

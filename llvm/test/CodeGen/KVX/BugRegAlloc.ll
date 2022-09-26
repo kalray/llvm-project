@@ -1,6 +1,8 @@
 ; REQUIRES: asserts
 ; RUN: llc -O3 -o - %s | FileCheck %s
+; RUN: clang -O3 -c -o /dev/null %s
 ; CHECK: End function
+
 target triple = "kvx-kalray-cos"
 
 define void @a() {

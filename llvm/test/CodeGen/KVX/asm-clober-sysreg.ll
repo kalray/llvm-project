@@ -1,5 +1,6 @@
 ; RUN: llc -stop-before=greedy -o - %s | FileCheck %s
 ; CHECK:  implicit-def early-clobber $cs
+
 target triple = "kvx-kalray-cos"
 
 define void @foo(i64 %0) {

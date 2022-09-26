@@ -1,4 +1,6 @@
 ; RUN: llc -disable-kvx-hwloops=false -O2 -o - %s | FileCheck %s
+; RUN: clang -O2 -c -o /dev/null %s -mllvm -disable-kvx-hwloops=false
+
 target triple = "kvx-kalray-cos"
 
 ; CHECK: loopdo
