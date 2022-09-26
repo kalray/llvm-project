@@ -835,9 +835,9 @@ defm: KVXItinWriteRes<MAU_AUXR_FP, MAU_AUXR_RT, 1, MAU_AUXR_FP_SRW>;
 defm: KVXItinWriteRes<MAU_AUXR_X_FP, MAU_AUXR_RT, 2, MAU_AUXR_X_FP_SRW>;
 defm: KVXItinWriteRes<MAU_AUXR_Y_FP, MAU_AUXR_RT, 3, MAU_AUXR_Y_FP_SRW>;
 
-defm: KVXItinWriteRes<ALU_TINY_CRRP_CRWL_CRWH, /* latency */ 2, ALU_TINY_CRRP_CRWL_CRWH_RT, 1 /* issue width */, ALU_TINY_CRRP_CRWL_CRWH_SRW>;
-defm: KVXItinWriteRes<ALU_TINY_CRRP, /* latency */ 2, ALU_TINY_CRRP_RT, 1 /* issue width */, ALU_TINY_CRRP_SRW>;
-defm: KVXItinWriteRes<ALU_TINY_CRWL_CRWH, /* latency */ 2, ALU_TINY_CRWL_CRWH_RT, 1 /* issue width */, ALU_TINY_CRWL_CRWH_SRW>;
+defm: KVXItinWriteRes<ALU_TINY_CRRP_CRWL_CRWH, ALU_TINY_CRRP_CRWL_CRWH_RT, 1 /* issue width */, ALU_TINY_CRRP_CRWL_CRWH_SRW>;
+defm: KVXItinWriteRes<ALU_TINY_CRRP, ALU_TINY_CRRP_RT, 1 /* issue width */, ALU_TINY_CRRP_SRW>;
+defm: KVXItinWriteRes<ALU_TINY_CRWL_CRWH, ALU_TINY_CRWL_CRWH_RT, 1 /* issue width */, ALU_TINY_CRWL_CRWH_SRW>;
 
 def CopyI : SchedWrite;
 let SchedModel = KVXSchedMachineModel in {
