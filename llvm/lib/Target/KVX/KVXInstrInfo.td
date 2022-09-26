@@ -366,12 +366,12 @@ multiclass MC_11<string OpcStr> {
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     ALU_TINY_X>;
+     ALU_TINY_X_>;
   def ri64 : KVX_INSTRUCTION_Y
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     ALU_TINY_Y>;
+     ALU_TINY_Y_>;
 }
 
 // multiclass MC_12_SWITCH is used by:
@@ -395,12 +395,12 @@ multiclass MC_12_SWITCH<string OpcStr> {
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     ALU_SWITCH_LITE_TINY_X>;
+     ALU_SWITCH_LITE_TINY_X_>;
   def ri64 : KVX_INSTRUCTION_Y
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     ALU_SWITCH_LITE_TINY_Y>;
+     ALU_SWITCH_LITE_TINY_Y_>;
 }
 
 // multiclass MC_13 is used by:
@@ -424,7 +424,7 @@ multiclass MC_13<string OpcStr> {
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped32:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     ALU_LITE_X>;
+     ALU_LITE_X_>;
 }
 
 // multiclass MC_13_SWITCH is used by:
@@ -472,7 +472,7 @@ multiclass MC_13_SWITCH<string OpcStr> {
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped32:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     ALU_SWITCH_LITE_TINY_X>;
+     ALU_SWITCH_LITE_TINY_X_>;
 }
 
 // multiclass MC_13_TINY is used by:
@@ -497,7 +497,7 @@ multiclass MC_13_TINY<string OpcStr> {
       <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped32:$a3),
       !strconcat (OpcStr, " $a1 = $a2, $a3"),
       [/* no straightforward pattern */],
-      ALU_TINY_X>;
+      ALU_TINY_X_>;
 }
 
 // multiclass MC_14 is used by:
@@ -526,7 +526,7 @@ multiclass MC_14<string OpcStr> {
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37W:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     ALU_TINY_X>;
+     ALU_TINY_X_>;
   let isAsCheapAsAMove = 1 in
   def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
@@ -547,7 +547,7 @@ multiclass MC_15<string OpcStr> {
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37W:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     ALU_SWITCH_LITE_TINY_X>;
+     ALU_SWITCH_LITE_TINY_X_>;
   def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
@@ -588,7 +588,7 @@ multiclass MC_17<string OpcStr> {
     <(outs SingleReg:$a2), (ins SingleReg:$a3, Wrapped32:$a4, Splat32Mod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
      [/* no straightforward pattern */],
-     ALU_LITE_X>;
+     ALU_LITE_X_>;
 }
 
 // multiclass MC_17_TINY is used by:
@@ -645,7 +645,7 @@ multiclass MC_17_TINY<string OpcStr> {
     <(outs SingleReg:$a2), (ins SingleReg:$a3, Wrapped32:$a4, Splat32Mod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
      [/* no straightforward pattern */],
-     ALU_TINY_X>;
+     ALU_TINY_X_>;
 }
 
 // multiclass MC_17_SWITCH is used by:
@@ -692,7 +692,7 @@ multiclass MC_17_SWITCH<string OpcStr> {
     <(outs SingleReg:$a2), (ins SingleReg:$a3, Wrapped32:$a4, Splat32Mod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
      [/* no straightforward pattern */],
-     ALU_SWITCH_LITE_TINY_X>;
+     ALU_SWITCH_LITE_TINY_X_>;
 }
 
 // multiclass MC_18 is used by:
@@ -786,12 +786,12 @@ multiclass MC_1A<string OpcStr> {
     <(outs SingleReg:$a2), (ins SingleReg:$a3, Signed37:$a4, ComparisonMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
      [/* no straightforward pattern */],
-     ALU_TINY_X>;
+     ALU_TINY_X_>;
   def ri64 : KVX_INSTRUCTION_Y
     <(outs SingleReg:$a2), (ins SingleReg:$a3, Wrapped64:$a4, ComparisonMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
      [/* no straightforward pattern */],
-     ALU_TINY_Y>;
+     ALU_TINY_Y_>;
   def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, ComparisonMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
@@ -813,7 +813,7 @@ multiclass MC_1B<string OpcStr> {
     <(outs SingleReg:$a2), (ins SingleReg:$a3, Wrapped32:$a4, ComparisonMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
      [/* no straightforward pattern */],
-     ALU_TINY_X>;
+     ALU_TINY_X_>;
 }
 
 // multiclass MC_1C is used by:
@@ -829,12 +829,12 @@ multiclass MC_1C<string OpcStr> {
     <(outs SingleReg:$a3o), (ins SingleReg:$a2, SingleReg:$a3, Signed37:$a4, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? $a3 = $a4"),
      [/* no straightforward pattern */],
-     ALU_SWITCH_LITE_TINY_X>;
+     ALU_SWITCH_LITE_TINY_X_>;
   def ri64 : KVX_INSTRUCTION_Y
     <(outs SingleReg:$a3o), (ins SingleReg:$a2, SingleReg:$a3, Wrapped64:$a4, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? $a3 = $a4"),
      [/* no straightforward pattern */],
-     ALU_SWITCH_LITE_TINY_Y>;
+     ALU_SWITCH_LITE_TINY_Y_>;
   }
   let Constraints = "$a3 = $a3o", isMoveReg = 1 in
   def rr : KVX_INSTRUCTION
@@ -856,12 +856,12 @@ multiclass MC_1D<string OpcStr> {
     <(outs SingleReg:$a1), (ins Signed43:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
      [/* no straightforward pattern */],
-     ALU_TINY_X>;
+     ALU_TINY_X_>;
   def i64 : KVX_INSTRUCTION_Y
     <(outs SingleReg:$a1), (ins Wrapped64:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
      [/* no straightforward pattern */],
-     ALU_TINY_Y>;
+     ALU_TINY_Y_>;
 }
 
 // multiclass MC_1E is used by:
@@ -876,12 +876,12 @@ multiclass MC_1E<string OpcStr> {
     <(outs SingleReg:$a1), (ins Signed43:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
      [/* no straightforward pattern */],
-     ALU_FULL_X>;
+     ALU_FULL_X_>;
   def i64 : KVX_INSTRUCTION_Y
     <(outs SingleReg:$a1), (ins Wrapped64:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
      [/* no straightforward pattern */],
-     ALU_FULL_Y>;
+     ALU_FULL_Y_>;
 }
 
 // multiclass MC_1F is used by:
@@ -897,7 +897,7 @@ multiclass MC_1F<string OpcStr> {
     <(outs SingleReg:$a2), (ins SingleReg:$a3, Binary32:$a4, FloatcompMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
      [/* no straightforward pattern */],
-     ALU_SWITCH_LITE_TINY_X>;
+     ALU_SWITCH_LITE_TINY_X_>;
 }
 
 // multiclass MC_20 is used by:
@@ -916,13 +916,13 @@ multiclass MC_20<string OpcStr> {
     <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, Signed37:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     MAU_AUXR_X>;
+     MAU_AUXR_X_>;
   let Constraints = "$a1 = $a1o" in
   def ri64 : KVX_INSTRUCTION_Y
     <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, Wrapped64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     MAU_AUXR_Y>;
+     MAU_AUXR_Y_>;
   let Constraints = "$a1 = $a1o" in
   def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, SingleReg:$a3),
@@ -948,13 +948,13 @@ multiclass MC_21<string OpcStr> {
     <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, Signed37:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     MAU_AUXR_X>;
+     MAU_AUXR_X_>;
   let Constraints = "$a1 = $a1o" in
   def ri64 : KVX_INSTRUCTION_Y
     <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, Wrapped64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     MAU_AUXR_Y>;
+     MAU_AUXR_Y_>;
   let Constraints = "$a1 = $a1o" in
   def rr : KVX_INSTRUCTION
     <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
@@ -982,12 +982,12 @@ multiclass MC_22<string OpcStr> {
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     MAU_X>;
+     MAU_X_>;
   def ri64 : KVX_INSTRUCTION_Y
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     MAU_Y>;
+     MAU_Y_>;
   def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
@@ -1010,12 +1010,12 @@ multiclass MC_23<string OpcStr> {
     <(outs PairedReg:$a1), (ins SingleReg:$a2, Signed37:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     MAU_X>;
+     MAU_X_>;
   def ri64 : KVX_INSTRUCTION_Y
     <(outs PairedReg:$a1), (ins SingleReg:$a2, Wrapped64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     MAU_Y>;
+     MAU_Y_>;
   def rr : KVX_INSTRUCTION
     <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
@@ -1048,7 +1048,7 @@ multiclass MC_24<string OpcStr> {
     <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, Wrapped32:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     MAU_AUXR_X>;
+     MAU_AUXR_X_>;
 }
 
 // multiclass MC_25 is used by:
@@ -1066,7 +1066,7 @@ multiclass MC_25<string OpcStr> {
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped32:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     MAU_X>;
+     MAU_X_>;
 }
 
 // multiclass MC_26 is used by:
@@ -1737,7 +1737,7 @@ defm SBFSD : MC_12_SWITCH<"sbfsd">;
 def SBFSDri : KVX_INSTRUCTION_X
     <(outs SingleReg:$out), (ins SingleReg:$rhs, Wrapped32:$lhs, Splat32Mod:$s),
     "sbfsd$s $out = $rhs, $lhs",
-     [], ALU_TINY_X>, Requires<[IsV2]>;
+     [], ALU_TINY_X_>, Requires<[IsV2]>;
 
 defm ADDX2D : MC_17_SWITCH<"addx2d">;
 
@@ -3608,37 +3608,37 @@ def NEGWP : KVX_INSTRUCTION_X
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "negwp $a1 = $a2",
    [(set v2i32:$a1, (vineg v2i32:$a2))],
-   ALU_TINY_X>;
+   ALU_TINY_X_>;
 
 def ABSWP : KVX_INSTRUCTION_X
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "abswp $a1 = $a2",
    [(set v2i32:$a1, (abs v2i32:$a2))],
-   ALU_SWITCH_LITE_TINY_X>;
+   ALU_SWITCH_LITE_TINY_X_>;
 
 def NEGHQ : KVX_INSTRUCTION_X
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "neghq $a1 = $a2",
    [(set v4i16:$a1, (vineg v4i16:$a2))],
-   ALU_TINY_X>;
+   ALU_TINY_X_>;
 
 def NEGBO : KVX_INSTRUCTION_X
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "negbo $a1 = $a2",
    [(set v8i8:$a1, (vineg v8i8:$a2))],
-   ALU_TINY_X>, Requires<[IsV2]>;
+   ALU_TINY_X_>, Requires<[IsV2]>;
 
 def ABSHQ : KVX_INSTRUCTION_X
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "abshq $a1 = $a2",
    [(set v4i16:$a1, (abs v4i16:$a2))],
-   ALU_SWITCH_LITE_TINY_X>;
+   ALU_SWITCH_LITE_TINY_X_>;
 
 def ABSBO : KVX_INSTRUCTION_X
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "absbo $a1 = $a2",
    [(set v8i8:$a1, (abs v8i8:$a2))],
-   ALU_TINY_X>, Requires<[IsV2]>;
+   ALU_TINY_X_>, Requires<[IsV2]>;
 
 defm COPYV : MC_35<"copyv">, Requires<[IsV1]>;
 
@@ -3673,20 +3673,20 @@ defm SLUSWPS : MC_18<"sluswps">, Requires<[IsV2]>;
 
 def NEGSBO : KVX_INSTRUCTION_X
   <(outs SingleReg:$o), (ins SingleReg:$i),
-   "negsbo $o = $i", [(set v8i8:$o, (vineg_ssat v8i8:$i))], ALU_TINY_X>, Requires<[IsV2]>;
+   "negsbo $o = $i", [(set v8i8:$o, (vineg_ssat v8i8:$i))], ALU_TINY_X_>, Requires<[IsV2]>;
 
 def NEGSD : KVX_INSTRUCTION_X
   <(outs SingleReg:$o), (ins SingleReg:$i),
-  "negsd $o = $i", [(set i64:$o, (ssubsat 0, i64:$i))], ALU_TINY_X>, Requires<[IsV2]>;
+  "negsd $o = $i", [(set i64:$o, (ssubsat 0, i64:$i))], ALU_TINY_X_>, Requires<[IsV2]>;
 
 def NEGSHQ : KVX_INSTRUCTION_X
   <(outs SingleReg:$o), (ins SingleReg:$i),
-   "negshq $o = $i", [(set v4i16:$o, (vineg_ssat v4i16:$i))], ALU_TINY_X>, Requires<[IsV2]>;
+   "negshq $o = $i", [(set v4i16:$o, (vineg_ssat v4i16:$i))], ALU_TINY_X_>, Requires<[IsV2]>;
 
 def NEGSW : KVX_INSTRUCTION_X
   <(outs SingleReg:$o), (ins SingleReg:$i),
-  "negsw $o = $i", [(set i32:$o, (ssubsat 0, i32:$i))], ALU_TINY_X>, Requires<[IsV2]>;
+  "negsw $o = $i", [(set i32:$o, (ssubsat 0, i32:$i))], ALU_TINY_X_>, Requires<[IsV2]>;
 
 def NEGSWP : KVX_INSTRUCTION_X
   <(outs SingleReg:$o), (ins SingleReg:$i),
-   "negswp $o = $i", [(set v2i32:$o, (vineg_ssat v2i32:$i))], ALU_TINY_X>, Requires<[IsV2]>;
+   "negswp $o = $i", [(set v2i32:$o, (vineg_ssat v2i32:$i))], ALU_TINY_X_>, Requires<[IsV2]>;

@@ -16,12 +16,12 @@ multiclass MC_1Em<string OpcStr> {
     <(outs SingleReg:$a1), (ins Signed43:$a2),
      !strconcat (OpcStr, " $a1 = @pcrel( $a2 )"),
      [/* no straightforward pattern */],
-     ALU_FULL_X>;
+     ALU_FULL_X_>;
   def i64 : KVX_INSTRUCTION_Y
     <(outs SingleReg:$a1), (ins Wrapped64:$a2),
      !strconcat (OpcStr, " $a1 = @pcrel( $a2 )"),
      [/* no straightforward pattern */],
-     ALU_FULL_Y>;
+     ALU_FULL_Y_>;
 }
 
 defm PCRELm : MC_1Em<"pcrel">;

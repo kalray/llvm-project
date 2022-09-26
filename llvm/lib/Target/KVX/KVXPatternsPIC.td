@@ -18,7 +18,7 @@ def PICPCRELGOTADDR : KVX_INSTRUCTION_Y
   <(outs SingleReg:$gotaddr), (ins ),
    "pcrel $gotaddr = @gotaddr()",
    [(set (i64 SingleReg:$gotaddr), (PICPCRelativeGOTAddr ))],
-   ALU_FULL_Y>;
+   ALU_FULL_Y_>;
 
 def PICINTERNINDIRECTION : KVX_INSTRUCTION_Y
   <(outs SingleReg:$symaddr), (ins SingleReg:$gotaddr, Wrapped64:$gotoff),
@@ -26,10 +26,10 @@ def PICINTERNINDIRECTION : KVX_INSTRUCTION_Y
    [(set (i64 SingleReg:$symaddr),
          (PICInternIndirection (i64 SingleReg:$gotaddr),
                                (i64 tglobaladdr:$gotoff)))],
-   ALU_TINY_Y>;
+   ALU_TINY_Y_>;
 
 def PCRELGOTADDR : KVX_INSTRUCTION_Y
-    <(outs SingleReg:$addr), (ins), "pcrel $addr = @gotaddr()", [], ALU_FULL_Y>;
+    <(outs SingleReg:$addr), (ins), "pcrel $addr = @gotaddr()", [], ALU_FULL_Y_>;
 
 def PICEXTERNINDIRECTION : KVX_INSTRUCTION_Y
     <(outs SingleReg:$addr), (ins SingleReg:$gotaddr, Wrapped64:$gotoff),
@@ -55,7 +55,7 @@ def PICPCREL : KVX_INSTRUCTION_Y
   <(outs SingleReg:$SingleReg), (ins Wrapped64:$Wrapped64),
   "pcrel $SingleReg = @pcrel( $Wrapped64 )",
   [(set (i64 SingleReg:$SingleReg), (PICKVXWrapper tblockaddress:$Wrapped64))],
-  ALU_FULL_Y>;
+  ALU_FULL_Y_>;
 
 // SJLJ excpetion handling required
 def : Pat<(PICInternIndirection i64:$gotaddr, mcsym:$imm),
