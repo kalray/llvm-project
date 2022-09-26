@@ -1166,7 +1166,7 @@ def : Pat<(f64
                 (extractelt (v2f64 (fpextend v2f32:$t4)), 0),
                 (extractelt (v2f64 (fpextend v2f32:$t2)), 1)
               ))),
-          (f64(EXTRACT_SUBREG (FMULWDCrr SingleReg:$t2, SingleReg:$t4, rounding_, silent_), sub_s1))>;
+          (f64(EXTRACT_SUBREG (FMULWDCrr SingleReg:$t2, SingleReg:$t4, rounding_, silent_), sub_s1))>, Requires<[IsV1]>;
 // Match the real part from a v2f32 x v2f32 -> v2f64 pattern
 def : Pat<(f64
             (fma
@@ -1176,7 +1176,7 @@ def : Pat<(f64
                 (extractelt (v2f64 (fpextend v2f32:$t4)), 1),
                 (extractelt (v2f64 (fpextend v2f32:$t2)), 1)
               )))),
-          (f64(EXTRACT_SUBREG (FMULWDCrr SingleReg:$t2, SingleReg:$t4, rounding_, silent_), sub_s0))>;
+          (f64(EXTRACT_SUBREG (FMULWDCrr SingleReg:$t2, SingleReg:$t4, rounding_, silent_), sub_s0))>, Requires<[IsV1]>;
 
 // Match the imaginary part using C complex code
 def : Pat<(f64
@@ -1187,7 +1187,7 @@ def : Pat<(f64
                 (f64 (fpextend (f32 (bitconvert (i32 (trunc (i64 (srl i64:$t2, (i64 32))))))))),
                 (f64 (fpextend (f32 (bitconvert (i32 (trunc i64:$t4))))))
           )))),
-          (f64(EXTRACT_SUBREG (FMULWDCrr SingleReg:$t2, SingleReg:$t4, rounding_, silent_), sub_s1))>;
+          (f64(EXTRACT_SUBREG (FMULWDCrr SingleReg:$t2, SingleReg:$t4, rounding_, silent_), sub_s1))>, Requires<[IsV1]>;
 
 // Match the real part a C complex code
 def : Pat<(f64
@@ -1198,7 +1198,7 @@ def : Pat<(f64
                 (f64 (fpextend (f32 (bitconvert (i32 (trunc (i64 (srl i64:$t4, (i64 32))))))))),
                 (f64 (fpextend (f32 (bitconvert (i32 (trunc (i64 (srl i64:$t2, (i64 32)))))))))
           ))))),
-          (f64(EXTRACT_SUBREG (FMULWDCrr SingleReg:$t2, SingleReg:$t4, rounding_, silent_), sub_s0))>;
+          (f64(EXTRACT_SUBREG (FMULWDCrr SingleReg:$t2, SingleReg:$t4, rounding_, silent_), sub_s0))>, Requires<[IsV1]>;
 // FMULWDP TODO: Add ri variants
 def : Pat<(fmul (v2f64 (fpextend v2f32:$rs1)), (v2f64 (fpextend v2f32:$rs2))),
           (FMULWDPrr SingleReg:$rs1, SingleReg:$rs2, rounding_, silent_)>;
