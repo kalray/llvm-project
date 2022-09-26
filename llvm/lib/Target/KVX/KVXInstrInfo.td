@@ -378,8 +378,6 @@ multiclass MC_11<string OpcStr> {
 //   defm ABDD
 //   defm SBMM8
 //   defm SBMMT8
-//   defm ADDSD
-//   defm SBFSD
 multiclass MC_12_SWITCH<string OpcStr> {
   def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
@@ -401,6 +399,42 @@ multiclass MC_12_SWITCH<string OpcStr> {
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      ALU_SWITCH_LITE_TINY_Y_>;
+}
+
+// multiclass ADD_SBF_SD_FAMILY is used by:
+//   defm ADDSD
+//   defm SBFSD
+multiclass ADD_SBF_SD_FAMILY<string OpcStr> {
+  // Common
+  def rr : KVX_INSTRUCTION
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
+     !strconcat (OpcStr, " $a1 = $a2, $a3"),
+     [/* no straightforward pattern */],
+     ALU_SWITCH_LITE_TINY>;
+
+  // Only CV1
+  def ri10 : KVX_INSTRUCTION
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10:$a3),
+     !strconcat (OpcStr, " $a1 = $a2, $a3"),
+     [/* no straightforward pattern */],
+     ALU_LITE>, Requires<[IsV1]>;
+  def ri37 : KVX_INSTRUCTION_X
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37:$a3),
+     !strconcat (OpcStr, " $a1 = $a2, $a3"),
+     [/* no straightforward pattern */],
+     ALU_LITE_X_>, Requires<[IsV1]>;
+  def ri64 : KVX_INSTRUCTION_Y
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped64:$a3),
+     !strconcat (OpcStr, " $a1 = $a2, $a3"),
+     [/* no straightforward pattern */],
+     ALU_LITE_Y_>, Requires<[IsV1]>;
+
+  // Only CV2
+  def ri_cv2 : KVX_INSTRUCTION_X
+    <(outs SingleReg:$a2), (ins SingleReg:$a3, Wrapped32:$a4, Splat32Mod:$a1),
+     !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
+     [/* no straightforward pattern */],
+     ALU_TINY_X_>, Requires<[IsV2]>;
 }
 
 // multiclass MC_13 is used by:
@@ -1723,7 +1757,7 @@ defm SBMM8 : MC_12_SWITCH<"sbmm8">;
 defm SBMMT8 : MC_12_SWITCH<"sbmmt8">;
 
 let isAdd = 1 in
-defm ADDSD : MC_12_SWITCH<"addsd">;
+defm ADDSD : ADD_SBF_SD_FAMILY<"addsd">;
 
 let isAdd = 1 in {
 defm ADDUSBO : MC_17_TINY<"addusbo">, Requires<[IsV2]>;
@@ -1733,11 +1767,7 @@ defm ADDUSW : MC_17_TINY<"addusw">, Requires<[IsV2]>;
 defm ADDUSWP : MC_17_TINY<"adduswp">, Requires<[IsV2]>;
 }
 
-defm SBFSD : MC_12_SWITCH<"sbfsd">;
-def SBFSDri : KVX_INSTRUCTION_X
-    <(outs SingleReg:$out), (ins SingleReg:$rhs, Wrapped32:$lhs, Splat32Mod:$s),
-    "sbfsd$s $out = $rhs, $lhs",
-     [], ALU_TINY_X_>, Requires<[IsV2]>;
+defm SBFSD : ADD_SBF_SD_FAMILY<"sbfsd">;
 
 defm ADDX2D : MC_17_SWITCH<"addx2d">;
 
