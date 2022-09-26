@@ -179,49 +179,82 @@ entry:
 }
 
 define <8 x i32> @sext_8xi8_8xi32(<8 x i8> %a){
-; CHECK-LABEL: sext_8xi8_8xi32:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sxlbhq $r0 = $r0
-; CHECK-NEXT:    sxmbhq $r1 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxlhwp $r2 = $r1
-; CHECK-NEXT:    sxmhwp $r3 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxlhwp $r0 = $r0
-; CHECK-NEXT:    sxmhwp $r1 = $r0
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CV1-LABEL: sext_8xi8_8xi32:
+; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    sxlbhq $r0 = $r0
+; CV1-NEXT:    sxmbhq $r1 = $r0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sxlhwp $r2 = $r1
+; CV1-NEXT:    sxmhwp $r3 = $r1
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sxlhwp $r0 = $r0
+; CV1-NEXT:    sxmhwp $r1 = $r0
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: sext_8xi8_8xi32:
+; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    sxlbhq $r0 = $r0
+; CV2-NEXT:    sxmbhq $r1 = $r0
+; CV2-NEXT:    ;;
+; CV2-NEXT:    sxlhwp $r0 = $r0
+; CV2-NEXT:    sxmhwp $r1 = $r0
+; CV2-NEXT:    sxlhwp $r2 = $r1
+; CV2-NEXT:    sxmhwp $r3 = $r1
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
 entry:
   %ext = sext <8 x i8> %a to <8 x i32>
   ret <8 x i32> %ext
 }
 
 define <8 x i32> @zext_8xi8_8xi32(<8 x i8> %a){
-; CHECK-LABEL: zext_8xi8_8xi32:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r2 = $r0, 0x2000000010
-; CHECK-NEXT:    sbmm8 $r3 = $r0, 0x8000000040
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x200000001
-; CHECK-NEXT:    sbmm8 $r1 = $r0, 0x800000004
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CV1-LABEL: zext_8xi8_8xi32:
+; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    sbmm8 $r2 = $r0, 0x2000000010
+; CV1-NEXT:    sbmm8 $r3 = $r0, 0x8000000040
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sbmm8 $r0 = $r0, 0x200000001
+; CV1-NEXT:    sbmm8 $r1 = $r0, 0x800000004
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: zext_8xi8_8xi32:
+; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    sbmm8 $r1 = $r0, 0x800000004
+; CV2-NEXT:    sbmm8 $r2 = $r0, 0x2000000010
+; CV2-NEXT:    sbmm8 $r3 = $r0, 0x8000000040
+; CV2-NEXT:    ;;
+; CV2-NEXT:    sbmm8 $r0 = $r0, 0x200000001
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
 entry:
   %ext = zext <8 x i8> %a to <8 x i32>
   ret <8 x i32> %ext
 }
 
 define <8 x i32> @sext_8xi16_8xi32(<8 x i16> %a){
-; CHECK-LABEL: sext_8xi16_8xi32:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sxlhwp $r2 = $r1
-; CHECK-NEXT:    sxlhwp $r4 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r4
-; CHECK-NEXT:    sxmhwp $r1 = $r0
-; CHECK-NEXT:    sxmhwp $r3 = $r1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CV1-LABEL: sext_8xi16_8xi32:
+; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    sxlhwp $r2 = $r1
+; CV1-NEXT:    sxlhwp $r4 = $r0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    copyd $r0 = $r4
+; CV1-NEXT:    sxmhwp $r1 = $r0
+; CV1-NEXT:    sxmhwp $r3 = $r1
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: sext_8xi16_8xi32:
+; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    sxmhwp $r1 = $r0
+; CV2-NEXT:    sxlhwp $r2 = $r1
+; CV2-NEXT:    sxmhwp $r3 = $r1
+; CV2-NEXT:    sxlhwp $r4 = $r0
+; CV2-NEXT:    ;;
+; CV2-NEXT:    copyd $r0 = $r4
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
 entry:
   %ext = sext <8 x i16> %a to <8 x i32>
   ret <8 x i32> %ext

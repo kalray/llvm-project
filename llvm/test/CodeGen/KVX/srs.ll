@@ -957,31 +957,55 @@ define <8 x i16> @srs_v8i16(<8 x i16> %0) {
 }
 
 define <16 x i16> @srs_v16i16(<16 x i16> %0) {
-; ALL-LABEL: srs_v16i16:
-; ALL:       # %bb.0:
-; ALL-NEXT:    srahqs $r4 = $r0, 15
-; ALL-NEXT:    srahqs $r5 = $r1, 15
-; ALL-NEXT:    ;;
-; ALL-NEXT:    srlhqs $r4 = $r4, 12
-; ALL-NEXT:    srlhqs $r5 = $r5, 12
-; ALL-NEXT:    ;;
-; ALL-NEXT:    addhq $r0 = $r0, $r4
-; ALL-NEXT:    addhq $r1 = $r1, $r5
-; ALL-NEXT:    srahqs $r6 = $r2, 15
-; ALL-NEXT:    srahqs $r7 = $r3, 15
-; ALL-NEXT:    ;;
-; ALL-NEXT:    srlhqs $r4 = $r6, 12
-; ALL-NEXT:    srlhqs $r5 = $r7, 12
-; ALL-NEXT:    ;;
-; ALL-NEXT:    srahqs $r0 = $r0, 4
-; ALL-NEXT:    srahqs $r1 = $r1, 4
-; ALL-NEXT:    addhq $r2 = $r2, $r4
-; ALL-NEXT:    addhq $r3 = $r3, $r5
-; ALL-NEXT:    ;;
-; ALL-NEXT:    srahqs $r2 = $r2, 4
-; ALL-NEXT:    srahqs $r3 = $r3, 4
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; CV1-LABEL: srs_v16i16:
+; CV1:       # %bb.0:
+; CV1-NEXT:    srahqs $r4 = $r0, 15
+; CV1-NEXT:    srahqs $r5 = $r1, 15
+; CV1-NEXT:    ;;
+; CV1-NEXT:    srlhqs $r4 = $r4, 12
+; CV1-NEXT:    srlhqs $r5 = $r5, 12
+; CV1-NEXT:    ;;
+; CV1-NEXT:    addhq $r0 = $r0, $r4
+; CV1-NEXT:    addhq $r1 = $r1, $r5
+; CV1-NEXT:    srahqs $r6 = $r2, 15
+; CV1-NEXT:    srahqs $r7 = $r3, 15
+; CV1-NEXT:    ;;
+; CV1-NEXT:    srlhqs $r4 = $r6, 12
+; CV1-NEXT:    srlhqs $r5 = $r7, 12
+; CV1-NEXT:    ;;
+; CV1-NEXT:    srahqs $r0 = $r0, 4
+; CV1-NEXT:    srahqs $r1 = $r1, 4
+; CV1-NEXT:    addhq $r2 = $r2, $r4
+; CV1-NEXT:    addhq $r3 = $r3, $r5
+; CV1-NEXT:    ;;
+; CV1-NEXT:    srahqs $r2 = $r2, 4
+; CV1-NEXT:    srahqs $r3 = $r3, 4
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: srs_v16i16:
+; CV2:       # %bb.0:
+; CV2-NEXT:    srahqs $r4 = $r0, 15
+; CV2-NEXT:    srahqs $r5 = $r1, 15
+; CV2-NEXT:    srahqs $r6 = $r2, 15
+; CV2-NEXT:    srahqs $r7 = $r3, 15
+; CV2-NEXT:    ;;
+; CV2-NEXT:    srlhqs $r4 = $r4, 12
+; CV2-NEXT:    srlhqs $r5 = $r5, 12
+; CV2-NEXT:    srlhqs $r6 = $r6, 12
+; CV2-NEXT:    srlhqs $r7 = $r7, 12
+; CV2-NEXT:    ;;
+; CV2-NEXT:    addhq $r0 = $r0, $r4
+; CV2-NEXT:    addhq $r1 = $r1, $r5
+; CV2-NEXT:    addhq $r2 = $r2, $r6
+; CV2-NEXT:    addhq $r3 = $r3, $r7
+; CV2-NEXT:    ;;
+; CV2-NEXT:    srahqs $r0 = $r0, 4
+; CV2-NEXT:    srahqs $r1 = $r1, 4
+; CV2-NEXT:    srahqs $r2 = $r2, 4
+; CV2-NEXT:    srahqs $r3 = $r3, 4
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
   %2 = sdiv <16 x i16> %0, <i16 16, i16 16, i16 16, i16 16, i16 16, i16 16, i16 16, i16 16, i16 16, i16 16, i16 16, i16 16, i16 16, i16 16, i16 16, i16 16>
   ret <16 x i16> %2
 }

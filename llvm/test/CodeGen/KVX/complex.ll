@@ -82,24 +82,24 @@ define i64 @ADDCHCP(i64 %0, i64 %1) {
 ; V2-LABEL: ADDCHCP:
 ; V2:       # %bb.0:
 ; V2-NEXT:    clrf $r2 = $r1, 31, 47
-; V2-NEXT:    clrf $r3 = $r0, 15, 31
-; V2-NEXT:    addd $r4 = $r1, $r0
+; V2-NEXT:    addd $r3 = $r1, $r0
+; V2-NEXT:    clrf $r4 = $r0, 47, 0
 ; V2-NEXT:    ;;
-; V2-NEXT:    addd $r0 = $r2, $r0
-; V2-NEXT:    clrf $r4 = $r4, 63, 16
-; V2-NEXT:    clrf $r5 = $r0, 47, 0
+; V2-NEXT:    clrf $r0 = $r0, 15, 31
+; V2-NEXT:    addd $r2 = $r2, $r0
+; V2-NEXT:    clrf $r3 = $r3, 63, 16
+; V2-NEXT:    sbfd $r4 = $r4, $r1
 ; V2-NEXT:    ;;
-; V2-NEXT:    clrf $r0 = $r0, 31, 47
-; V2-NEXT:    sbfd $r1 = $r3, $r1
-; V2-NEXT:    sbfd $r2 = $r5, $r1
+; V2-NEXT:    sbfd $r0 = $r0, $r1
+; V2-NEXT:    clrf $r2 = $r2, 31, 47
+; V2-NEXT:    clrf $r4 = $r4, 47, 0
 ; V2-NEXT:    ;;
-; V2-NEXT:    ord $r0 = $r0, $r4
-; V2-NEXT:    clrf $r1 = $r1, 15, 31
-; V2-NEXT:    clrf $r2 = $r2, 47, 0
+; V2-NEXT:    clrf $r0 = $r0, 15, 31
+; V2-NEXT:    ord $r1 = $r2, $r3
 ; V2-NEXT:    ;;
-; V2-NEXT:    ord $r0 = $r0, $r2
+; V2-NEXT:    ord $r1 = $r1, $r4
 ; V2-NEXT:    ;;
-; V2-NEXT:    ord $r0 = $r0, $r1
+; V2-NEXT:    ord $r0 = $r1, $r0
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %3 = and i64 %0, 4294901760
@@ -188,20 +188,20 @@ define i64 @SBFCHCP(i64 %0, i64 %1) {
 ; V2:       # %bb.0:
 ; V2-NEXT:    clrf $r2 = $r0, 31, 47
 ; V2-NEXT:    clrf $r3 = $r0, 47, 0
-; V2-NEXT:    sbfd $r5 = $r0, $r1
+; V2-NEXT:    sbfd $r4 = $r0, $r1
+; V2-NEXT:    clrf $r5 = $r1, 15, 31
 ; V2-NEXT:    ;;
+; V2-NEXT:    adduwd $r0 = $r5, $r0
 ; V2-NEXT:    addd $r1 = $r3, $r1
 ; V2-NEXT:    sbfd $r2 = $r2, $r1
-; V2-NEXT:    clrf $r3 = $r5, 63, 16
-; V2-NEXT:    clrf $r4 = $r1, 15, 31
+; V2-NEXT:    clrf $r3 = $r4, 63, 16
 ; V2-NEXT:    ;;
+; V2-NEXT:    clrf $r0 = $r0, 15, 31
 ; V2-NEXT:    clrf $r1 = $r1, 47, 0
 ; V2-NEXT:    clrf $r2 = $r2, 31, 47
 ; V2-NEXT:    ;;
-; V2-NEXT:    adduwd $r0 = $r4, $r0
 ; V2-NEXT:    ord $r2 = $r2, $r3
 ; V2-NEXT:    ;;
-; V2-NEXT:    clrf $r0 = $r0, 15, 31
 ; V2-NEXT:    ord $r1 = $r2, $r1
 ; V2-NEXT:    ;;
 ; V2-NEXT:    ord $r0 = $r1, $r0
@@ -434,22 +434,22 @@ define i64 @ADDCHCP_2(i64 %0, i64 %1) {
 ; V2-LABEL: ADDCHCP_2:
 ; V2:       # %bb.0:
 ; V2-NEXT:    clrf $r2 = $r0, 31, 47
-; V2-NEXT:    clrf $r3 = $r1, 15, 31
-; V2-NEXT:    addd $r4 = $r0, $r1
+; V2-NEXT:    addd $r3 = $r0, $r1
+; V2-NEXT:    clrf $r4 = $r1, 47, 0
 ; V2-NEXT:    ;;
-; V2-NEXT:    addd $r1 = $r2, $r1
-; V2-NEXT:    clrf $r4 = $r4, 63, 16
-; V2-NEXT:    clrf $r5 = $r1, 47, 0
+; V2-NEXT:    clrf $r1 = $r1, 15, 31
+; V2-NEXT:    addd $r2 = $r2, $r1
+; V2-NEXT:    clrf $r3 = $r3, 63, 16
+; V2-NEXT:    sbfd $r4 = $r4, $r0
 ; V2-NEXT:    ;;
-; V2-NEXT:    sbfd $r0 = $r3, $r0
-; V2-NEXT:    clrf $r1 = $r1, 31, 47
-; V2-NEXT:    sbfd $r2 = $r5, $r0
+; V2-NEXT:    sbfd $r0 = $r1, $r0
+; V2-NEXT:    clrf $r2 = $r2, 31, 47
+; V2-NEXT:    clrf $r4 = $r4, 47, 0
 ; V2-NEXT:    ;;
 ; V2-NEXT:    clrf $r0 = $r0, 15, 31
-; V2-NEXT:    ord $r1 = $r1, $r4
-; V2-NEXT:    clrf $r2 = $r2, 47, 0
+; V2-NEXT:    ord $r1 = $r2, $r3
 ; V2-NEXT:    ;;
-; V2-NEXT:    ord $r1 = $r1, $r2
+; V2-NEXT:    ord $r1 = $r1, $r4
 ; V2-NEXT:    ;;
 ; V2-NEXT:    ord $r0 = $r1, $r0
 ; V2-NEXT:    ret
@@ -501,29 +501,53 @@ define i64 @ADDCWC_2(i64 %0, i64 %1) {
 }
 
 define i64 @SBFCHCP_2(i64 %0, i64 %1) {
-; CHECK-LABEL: SBFCHCP_2:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    clrf $r2 = $r1, 31, 47
-; CHECK-NEXT:    sbfd $r4 = $r1, $r0
-; CHECK-NEXT:    clrf $r5 = $r0, 47, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r1 = $r5, $r1
-; CHECK-NEXT:    sbfd $r2 = $r2, $r0
-; CHECK-NEXT:    clrf $r3 = $r1, 15, 31
-; CHECK-NEXT:    clrf $r4 = $r4, 63, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    clrf $r1 = $r1, 47, 0
-; CHECK-NEXT:    clrf $r2 = $r2, 31, 47
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    adduwd $r0 = $r3, $r0
-; CHECK-NEXT:    ord $r2 = $r2, $r4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    clrf $r0 = $r0, 15, 31
-; CHECK-NEXT:    ord $r1 = $r2, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ord $r0 = $r1, $r0
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: SBFCHCP_2:
+; V1:       # %bb.0:
+; V1-NEXT:    clrf $r2 = $r1, 31, 47
+; V1-NEXT:    sbfd $r4 = $r1, $r0
+; V1-NEXT:    clrf $r5 = $r0, 47, 0
+; V1-NEXT:    ;;
+; V1-NEXT:    addd $r1 = $r5, $r1
+; V1-NEXT:    sbfd $r2 = $r2, $r0
+; V1-NEXT:    clrf $r3 = $r1, 15, 31
+; V1-NEXT:    clrf $r4 = $r4, 63, 16
+; V1-NEXT:    ;;
+; V1-NEXT:    clrf $r1 = $r1, 47, 0
+; V1-NEXT:    clrf $r2 = $r2, 31, 47
+; V1-NEXT:    ;;
+; V1-NEXT:    adduwd $r0 = $r3, $r0
+; V1-NEXT:    ord $r2 = $r2, $r4
+; V1-NEXT:    ;;
+; V1-NEXT:    clrf $r0 = $r0, 15, 31
+; V1-NEXT:    ord $r1 = $r2, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    ord $r0 = $r1, $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: SBFCHCP_2:
+; V2:       # %bb.0:
+; V2-NEXT:    clrf $r2 = $r1, 31, 47
+; V2-NEXT:    sbfd $r3 = $r1, $r0
+; V2-NEXT:    clrf $r4 = $r0, 47, 0
+; V2-NEXT:    clrf $r5 = $r1, 15, 31
+; V2-NEXT:    ;;
+; V2-NEXT:    adduwd $r0 = $r5, $r0
+; V2-NEXT:    addd $r1 = $r4, $r1
+; V2-NEXT:    sbfd $r2 = $r2, $r0
+; V2-NEXT:    clrf $r3 = $r3, 63, 16
+; V2-NEXT:    ;;
+; V2-NEXT:    clrf $r0 = $r0, 15, 31
+; V2-NEXT:    clrf $r1 = $r1, 47, 0
+; V2-NEXT:    clrf $r2 = $r2, 31, 47
+; V2-NEXT:    ;;
+; V2-NEXT:    ord $r2 = $r2, $r3
+; V2-NEXT:    ;;
+; V2-NEXT:    ord $r1 = $r2, $r1
+; V2-NEXT:    ;;
+; V2-NEXT:    ord $r0 = $r1, $r0
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %3 = and i64 %1, 4294901760
   %4 = sub i64 %0, %1
   %5 = and i64 %0, -281474976710656
@@ -847,24 +871,43 @@ define <2 x i32> @MULCWC_3(<2 x i32> %0, <2 x i32> %1) {
 }
 
 define <2 x i64> @MULCWDC_3(<2 x i32> %0, <2 x i32> %1) {
-; CHECK-LABEL: MULCWDC_3:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    sxwd $r4 = $r0
-; CHECK-NEXT:    sxwd $r6 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    muld $r2 = $r6, $r4
-; CHECK-NEXT:    extfs $r3 = $r1, 63, 32
-; CHECK-NEXT:    extfs $r5 = $r0, 63, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    muld $r1 = $r3, $r4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    maddd $r2 = $r3, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    msbfd $r1 = $r6, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r2
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: MULCWDC_3:
+; V1:       # %bb.0:
+; V1-NEXT:    sxwd $r4 = $r0
+; V1-NEXT:    sxwd $r6 = $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    muld $r2 = $r6, $r4
+; V1-NEXT:    extfs $r3 = $r1, 63, 32
+; V1-NEXT:    extfs $r5 = $r0, 63, 32
+; V1-NEXT:    ;;
+; V1-NEXT:    muld $r1 = $r3, $r4
+; V1-NEXT:    ;;
+; V1-NEXT:    maddd $r2 = $r3, $r5
+; V1-NEXT:    ;;
+; V1-NEXT:    msbfd $r1 = $r6, $r5
+; V1-NEXT:    ;;
+; V1-NEXT:    copyd $r0 = $r2
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: MULCWDC_3:
+; V2:       # %bb.0:
+; V2-NEXT:    extfs $r3 = $r1, 63, 32
+; V2-NEXT:    sxwd $r4 = $r0
+; V2-NEXT:    extfs $r5 = $r0, 63, 32
+; V2-NEXT:    sxwd $r6 = $r1
+; V2-NEXT:    ;;
+; V2-NEXT:    muld $r2 = $r6, $r4
+; V2-NEXT:    ;;
+; V2-NEXT:    muld $r1 = $r3, $r4
+; V2-NEXT:    ;;
+; V2-NEXT:    maddd $r2 = $r3, $r5
+; V2-NEXT:    ;;
+; V2-NEXT:    msbfd $r1 = $r6, $r5
+; V2-NEXT:    ;;
+; V2-NEXT:    copyd $r0 = $r2
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %3 = sext <2 x i32> %0 to <2 x i64>
   %4 = sext <2 x i32> %1 to <2 x i64>
   %5 = extractelement <2 x i64> %3, i32 0
@@ -916,24 +959,43 @@ define <2 x i32> @MULWC_3(<2 x i32> %0, <2 x i32> %1) {
 }
 
 define <2 x i64> @MULWDC_3(<2 x i32> %0, <2 x i32> %1) {
-; CHECK-LABEL: MULWDC_3:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    sxwd $r4 = $r0
-; CHECK-NEXT:    sxwd $r6 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    muld $r2 = $r6, $r4
-; CHECK-NEXT:    extfs $r3 = $r1, 63, 32
-; CHECK-NEXT:    extfs $r5 = $r0, 63, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    muld $r1 = $r3, $r4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    msbfd $r2 = $r3, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    maddd $r1 = $r6, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r2
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: MULWDC_3:
+; V1:       # %bb.0:
+; V1-NEXT:    sxwd $r4 = $r0
+; V1-NEXT:    sxwd $r6 = $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    muld $r2 = $r6, $r4
+; V1-NEXT:    extfs $r3 = $r1, 63, 32
+; V1-NEXT:    extfs $r5 = $r0, 63, 32
+; V1-NEXT:    ;;
+; V1-NEXT:    muld $r1 = $r3, $r4
+; V1-NEXT:    ;;
+; V1-NEXT:    msbfd $r2 = $r3, $r5
+; V1-NEXT:    ;;
+; V1-NEXT:    maddd $r1 = $r6, $r5
+; V1-NEXT:    ;;
+; V1-NEXT:    copyd $r0 = $r2
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: MULWDC_3:
+; V2:       # %bb.0:
+; V2-NEXT:    extfs $r3 = $r1, 63, 32
+; V2-NEXT:    sxwd $r4 = $r0
+; V2-NEXT:    extfs $r5 = $r0, 63, 32
+; V2-NEXT:    sxwd $r6 = $r1
+; V2-NEXT:    ;;
+; V2-NEXT:    muld $r2 = $r6, $r4
+; V2-NEXT:    ;;
+; V2-NEXT:    muld $r1 = $r3, $r4
+; V2-NEXT:    ;;
+; V2-NEXT:    msbfd $r2 = $r3, $r5
+; V2-NEXT:    ;;
+; V2-NEXT:    maddd $r1 = $r6, $r5
+; V2-NEXT:    ;;
+; V2-NEXT:    copyd $r0 = $r2
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %3 = sext <2 x i32> %0 to <2 x i64>
   %4 = sext <2 x i32> %1 to <2 x i64>
   %5 = extractelement <2 x i64> %3, i32 0

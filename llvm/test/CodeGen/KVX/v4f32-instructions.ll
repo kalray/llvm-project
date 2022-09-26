@@ -369,31 +369,56 @@ define <4 x float> @test_select_cc(<4 x float> %a, <4 x float> %b, <4 x float> %
 }
 
 define <4 x double> @test_select_cc_f32_f32(<4 x double> %a, <4 x double> %b, <4 x float> %c, <4 x float> %d) #0 {
-; CHECK-LABEL: test_select_cc_f32_f32:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    fcompnwp.une $r8 = $r8, $r10
-; CHECK-NEXT:    fcompnwp.une $r9 = $r9, $r11
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r8 = $r8
-; CHECK-NEXT:    sxwd $r9 = $r9
-; CHECK-NEXT:    srld $r10 = $r9, 32
-; CHECK-NEXT:    srld $r11 = $r8, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r10 = $r10
-; CHECK-NEXT:    sxwd $r11 = $r11
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.dnez $r8 ? $r4 = $r0
-; CHECK-NEXT:    cmoved.dnez $r11 ? $r5 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r4
-; CHECK-NEXT:    copyd $r1 = $r5
-; CHECK-NEXT:    cmoved.dnez $r9 ? $r6 = $r2
-; CHECK-NEXT:    cmoved.dnez $r10 ? $r7 = $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r2 = $r6
-; CHECK-NEXT:    copyd $r3 = $r7
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KV3_1-LABEL: test_select_cc_f32_f32:
+; KV3_1:       # %bb.0:
+; KV3_1-NEXT:    fcompnwp.une $r8 = $r8, $r10
+; KV3_1-NEXT:    fcompnwp.une $r9 = $r9, $r11
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    sxwd $r8 = $r8
+; KV3_1-NEXT:    sxwd $r9 = $r9
+; KV3_1-NEXT:    srld $r10 = $r9, 32
+; KV3_1-NEXT:    srld $r11 = $r8, 32
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    sxwd $r10 = $r10
+; KV3_1-NEXT:    sxwd $r11 = $r11
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    cmoved.dnez $r8 ? $r4 = $r0
+; KV3_1-NEXT:    cmoved.dnez $r11 ? $r5 = $r1
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    copyd $r0 = $r4
+; KV3_1-NEXT:    copyd $r1 = $r5
+; KV3_1-NEXT:    cmoved.dnez $r9 ? $r6 = $r2
+; KV3_1-NEXT:    cmoved.dnez $r10 ? $r7 = $r3
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    copyd $r2 = $r6
+; KV3_1-NEXT:    copyd $r3 = $r7
+; KV3_1-NEXT:    ret
+; KV3_1-NEXT:    ;;
+;
+; KV3_2-LABEL: test_select_cc_f32_f32:
+; KV3_2:       # %bb.0:
+; KV3_2-NEXT:    fcompnwp.une $r8 = $r8, $r10
+; KV3_2-NEXT:    fcompnwp.une $r9 = $r9, $r11
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    sxwd $r8 = $r8
+; KV3_2-NEXT:    sxwd $r9 = $r9
+; KV3_2-NEXT:    srld $r10 = $r9, 32
+; KV3_2-NEXT:    srld $r11 = $r8, 32
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    cmoved.dnez $r8 ? $r4 = $r0
+; KV3_2-NEXT:    cmoved.dnez $r9 ? $r6 = $r2
+; KV3_2-NEXT:    sxwd $r10 = $r10
+; KV3_2-NEXT:    sxwd $r11 = $r11
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    copyd $r0 = $r4
+; KV3_2-NEXT:    cmoved.dnez $r11 ? $r5 = $r1
+; KV3_2-NEXT:    cmoved.dnez $r10 ? $r7 = $r3
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    copyd $r1 = $r5
+; KV3_2-NEXT:    copyd $r2 = $r6
+; KV3_2-NEXT:    copyd $r3 = $r7
+; KV3_2-NEXT:    ret
+; KV3_2-NEXT:    ;;
   %cc = fcmp une <4 x float> %c, %d
   %r = select <4 x i1> %cc, <4 x double> %a, <4 x double> %b
   ret <4 x double> %r
@@ -496,23 +521,40 @@ define <4 x i1> @test_fcmp_ule(<4 x float> %a, <4 x float> %b) #0 {
 }
 
 define <4 x i1> @test_fcmp_uno(<4 x float> %a, <4 x float> %b) #0 {
-; CHECK-LABEL: test_fcmp_uno:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    fcompnwp.uge $r1 = $r1, $r3
-; CHECK-NEXT:    fcompnwp.ult $r4 = $r1, $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompnwp.uge $r0 = $r0, $r2
-; CHECK-NEXT:    andd $r1 = $r1, $r4
-; CHECK-NEXT:    fcompnwp.ult $r3 = $r0, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, $r3
-; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x1001
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 31, 16
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KV3_1-LABEL: test_fcmp_uno:
+; KV3_1:       # %bb.0:
+; KV3_1-NEXT:    fcompnwp.uge $r1 = $r1, $r3
+; KV3_1-NEXT:    fcompnwp.ult $r4 = $r1, $r3
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    fcompnwp.uge $r0 = $r0, $r2
+; KV3_1-NEXT:    andd $r1 = $r1, $r4
+; KV3_1-NEXT:    fcompnwp.ult $r3 = $r0, $r2
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    andd $r0 = $r0, $r3
+; KV3_1-NEXT:    sbmm8 $r1 = $r1, 0x1001
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    sbmm8 $r0 = $r0, 0x1001
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    insf $r0 = $r1, 31, 16
+; KV3_1-NEXT:    ret
+; KV3_1-NEXT:    ;;
+;
+; KV3_2-LABEL: test_fcmp_uno:
+; KV3_2:       # %bb.0:
+; KV3_2-NEXT:    fcompnwp.uge $r0 = $r0, $r2
+; KV3_2-NEXT:    fcompnwp.uge $r1 = $r1, $r3
+; KV3_2-NEXT:    fcompnwp.ult $r3 = $r0, $r2
+; KV3_2-NEXT:    fcompnwp.ult $r4 = $r1, $r3
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    andd $r0 = $r0, $r3
+; KV3_2-NEXT:    andd $r1 = $r1, $r4
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    sbmm8 $r0 = $r0, 0x1001
+; KV3_2-NEXT:    sbmm8 $r1 = $r1, 0x1001
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    insf $r0 = $r1, 31, 16
+; KV3_2-NEXT:    ret
+; KV3_2-NEXT:    ;;
   %r = fcmp uno <4 x float> %a, %b
   ret <4 x i1> %r
 }
@@ -614,23 +656,40 @@ define <4 x i1> @test_fcmp_ole(<4 x float> %a, <4 x float> %b) #0 {
 }
 
 define <4 x i1> @test_fcmp_ord(<4 x float> %a, <4 x float> %b) #0 {
-; CHECK-LABEL: test_fcmp_ord:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    fcompnwp.oge $r1 = $r1, $r3
-; CHECK-NEXT:    fcompnwp.olt $r4 = $r1, $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompnwp.oge $r0 = $r0, $r2
-; CHECK-NEXT:    ord $r1 = $r1, $r4
-; CHECK-NEXT:    fcompnwp.olt $r3 = $r0, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ord $r0 = $r0, $r3
-; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x1001
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 31, 16
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KV3_1-LABEL: test_fcmp_ord:
+; KV3_1:       # %bb.0:
+; KV3_1-NEXT:    fcompnwp.oge $r1 = $r1, $r3
+; KV3_1-NEXT:    fcompnwp.olt $r4 = $r1, $r3
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    fcompnwp.oge $r0 = $r0, $r2
+; KV3_1-NEXT:    ord $r1 = $r1, $r4
+; KV3_1-NEXT:    fcompnwp.olt $r3 = $r0, $r2
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ord $r0 = $r0, $r3
+; KV3_1-NEXT:    sbmm8 $r1 = $r1, 0x1001
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    sbmm8 $r0 = $r0, 0x1001
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    insf $r0 = $r1, 31, 16
+; KV3_1-NEXT:    ret
+; KV3_1-NEXT:    ;;
+;
+; KV3_2-LABEL: test_fcmp_ord:
+; KV3_2:       # %bb.0:
+; KV3_2-NEXT:    fcompnwp.oge $r0 = $r0, $r2
+; KV3_2-NEXT:    fcompnwp.oge $r1 = $r1, $r3
+; KV3_2-NEXT:    fcompnwp.olt $r3 = $r0, $r2
+; KV3_2-NEXT:    fcompnwp.olt $r4 = $r1, $r3
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ord $r0 = $r0, $r3
+; KV3_2-NEXT:    ord $r1 = $r1, $r4
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    sbmm8 $r0 = $r0, 0x1001
+; KV3_2-NEXT:    sbmm8 $r1 = $r1, 0x1001
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    insf $r0 = $r1, 31, 16
+; KV3_2-NEXT:    ret
+; KV3_2-NEXT:    ;;
   %r = fcmp ord <4 x float> %a, %b
   ret <4 x i1> %r
 }
@@ -2489,14 +2548,13 @@ define <4 x i32> @fcmp_setord(<4 x float> %a, <4 x float> %b) #0 {
 ;
 ; KV3_2-LABEL: fcmp_setord:
 ; KV3_2:       # %bb.0: # %entry
+; KV3_2-NEXT:    fcompnwp.oge $r0 = $r0, $r2
 ; KV3_2-NEXT:    fcompnwp.oge $r1 = $r1, $r3
+; KV3_2-NEXT:    fcompnwp.olt $r3 = $r0, $r2
 ; KV3_2-NEXT:    fcompnwp.olt $r4 = $r1, $r3
 ; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    fcompnwp.oge $r0 = $r0, $r2
-; KV3_2-NEXT:    ord $r1 = $r1, $r4
-; KV3_2-NEXT:    fcompnwp.olt $r3 = $r0, $r2
-; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:    ord $r0 = $r0, $r3
+; KV3_2-NEXT:    ord $r1 = $r1, $r4
 ; KV3_2-NEXT:    ret
 ; KV3_2-NEXT:    ;;
 entry:
@@ -2563,14 +2621,13 @@ define <4 x i32> @fcmp_setuno(<4 x float> %a, <4 x float> %b) #0 {
 ;
 ; KV3_2-LABEL: fcmp_setuno:
 ; KV3_2:       # %bb.0: # %entry
+; KV3_2-NEXT:    fcompnwp.uge $r0 = $r0, $r2
 ; KV3_2-NEXT:    fcompnwp.uge $r1 = $r1, $r3
+; KV3_2-NEXT:    fcompnwp.ult $r3 = $r0, $r2
 ; KV3_2-NEXT:    fcompnwp.ult $r4 = $r1, $r3
 ; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    fcompnwp.uge $r0 = $r0, $r2
-; KV3_2-NEXT:    andd $r1 = $r1, $r4
-; KV3_2-NEXT:    fcompnwp.ult $r3 = $r0, $r2
-; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:    andd $r0 = $r0, $r3
+; KV3_2-NEXT:    andd $r1 = $r1, $r4
 ; KV3_2-NEXT:    ret
 ; KV3_2-NEXT:    ;;
 entry:
@@ -3219,14 +3276,13 @@ define <4 x i32> @fcmp_setord_fast(<4 x float> %a, <4 x float> %b) #0 {
 ;
 ; KV3_2-LABEL: fcmp_setord_fast:
 ; KV3_2:       # %bb.0: # %entry
+; KV3_2-NEXT:    fcompnwp.oge $r0 = $r0, $r2
 ; KV3_2-NEXT:    fcompnwp.oge $r1 = $r1, $r3
+; KV3_2-NEXT:    fcompnwp.olt $r3 = $r0, $r2
 ; KV3_2-NEXT:    fcompnwp.olt $r4 = $r1, $r3
 ; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    fcompnwp.oge $r0 = $r0, $r2
-; KV3_2-NEXT:    ord $r1 = $r1, $r4
-; KV3_2-NEXT:    fcompnwp.olt $r3 = $r0, $r2
-; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:    ord $r0 = $r0, $r3
+; KV3_2-NEXT:    ord $r1 = $r1, $r4
 ; KV3_2-NEXT:    ret
 ; KV3_2-NEXT:    ;;
 entry:
@@ -3293,14 +3349,13 @@ define <4 x i32> @fcmp_setuno_fast(<4 x float> %a, <4 x float> %b) #0 {
 ;
 ; KV3_2-LABEL: fcmp_setuno_fast:
 ; KV3_2:       # %bb.0: # %entry
+; KV3_2-NEXT:    fcompnwp.uge $r0 = $r0, $r2
 ; KV3_2-NEXT:    fcompnwp.uge $r1 = $r1, $r3
+; KV3_2-NEXT:    fcompnwp.ult $r3 = $r0, $r2
 ; KV3_2-NEXT:    fcompnwp.ult $r4 = $r1, $r3
 ; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    fcompnwp.uge $r0 = $r0, $r2
-; KV3_2-NEXT:    andd $r1 = $r1, $r4
-; KV3_2-NEXT:    fcompnwp.ult $r3 = $r0, $r2
-; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:    andd $r0 = $r0, $r3
+; KV3_2-NEXT:    andd $r1 = $r1, $r4
 ; KV3_2-NEXT:    ret
 ; KV3_2-NEXT:    ;;
 entry:

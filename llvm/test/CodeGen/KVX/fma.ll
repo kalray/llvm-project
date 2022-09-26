@@ -87,31 +87,51 @@ define <2 x float> @ffmawp(<2 x float> %a, <2 x float> %b, <2 x float> %c) {
 }
 
 define half @ffmaf16(half %a, half %b, half %c) {
-; ALL-LABEL: ffmaf16:
-; ALL:       # %bb.0:
-; ALL-NEXT:    zxhd $r1 = $r1
-; ALL-NEXT:    zxhd $r3 = $r0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    zxhd $r0 = $r2
-; ALL-NEXT:    ;;
-; ALL-NEXT:    ffmahq $r0 = $r3, $r1
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; KV1-LABEL: ffmaf16:
+; KV1:       # %bb.0:
+; KV1-NEXT:    zxhd $r1 = $r1
+; KV1-NEXT:    zxhd $r3 = $r0
+; KV1-NEXT:    ;;
+; KV1-NEXT:    zxhd $r0 = $r2
+; KV1-NEXT:    ;;
+; KV1-NEXT:    ffmahq $r0 = $r3, $r1
+; KV1-NEXT:    ret
+; KV1-NEXT:    ;;
+;
+; KV2-LABEL: ffmaf16:
+; KV2:       # %bb.0:
+; KV2-NEXT:    zxhd $r0 = $r2
+; KV2-NEXT:    zxhd $r1 = $r1
+; KV2-NEXT:    zxhd $r3 = $r0
+; KV2-NEXT:    ;;
+; KV2-NEXT:    ffmahq $r0 = $r3, $r1
+; KV2-NEXT:    ret
+; KV2-NEXT:    ;;
   %res = call half @llvm.fma.f16(half %a, half %b, half %c)
   ret half %res
 }
 
 define half @ffmahq_v1_rr(half %a, half %b, half %c) {
-; ALL-LABEL: ffmahq_v1_rr:
-; ALL:       # %bb.0:
-; ALL-NEXT:    zxhd $r1 = $r1
-; ALL-NEXT:    zxhd $r2 = $r2
-; ALL-NEXT:    ;;
-; ALL-NEXT:    zxhd $r0 = $r0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    ffmahq $r0 = $r1, $r2
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; KV1-LABEL: ffmahq_v1_rr:
+; KV1:       # %bb.0:
+; KV1-NEXT:    zxhd $r1 = $r1
+; KV1-NEXT:    zxhd $r2 = $r2
+; KV1-NEXT:    ;;
+; KV1-NEXT:    zxhd $r0 = $r0
+; KV1-NEXT:    ;;
+; KV1-NEXT:    ffmahq $r0 = $r1, $r2
+; KV1-NEXT:    ret
+; KV1-NEXT:    ;;
+;
+; KV2-LABEL: ffmahq_v1_rr:
+; KV2:       # %bb.0:
+; KV2-NEXT:    zxhd $r0 = $r0
+; KV2-NEXT:    zxhd $r1 = $r1
+; KV2-NEXT:    zxhd $r2 = $r2
+; KV2-NEXT:    ;;
+; KV2-NEXT:    ffmahq $r0 = $r1, $r2
+; KV2-NEXT:    ret
+; KV2-NEXT:    ;;
   %mul = fmul fast half %b, %c
   %add = fadd fast half %mul, %a
   ret half %add

@@ -103,5 +103,5 @@ def KVX : Target {
 //  Processors Supported
 //===----------------------------------------------------------------------===//
 
-def : ProcessorModel<"kv3-1", KVXSchedMachineModel, [FeatureV1]>;
-def : ProcessorModel<"kv3-2", KVXSchedMachineModel, [FeatureV2]>;
+def : ProcessorModel<"kv3-1", KVXCV1SchedMachineModel, [FeatureV1]>;
+def : ProcessorModel<"kv3-2", KVXCV2SchedMachineModel, [FeatureV2]>;

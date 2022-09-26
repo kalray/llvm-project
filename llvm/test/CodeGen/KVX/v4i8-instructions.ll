@@ -336,154 +336,296 @@ define <4 x i8> @test_mul_2(<4 x i8> %a, <4 x i8> %b, <4 x i8> %c) #0 {
 }
 
 define <4 x i8> @test_div(<4 x i8> %a, <4 x i8> %b) #0 {
-; ALL-LABEL: test_div:
-; ALL:       # %bb.0:
-; ALL-NEXT:    addd $r12 = $r12, -64
-; ALL-NEXT:    get $r16 = $ra
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sd 56[$r12] = $r16
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sq 40[$r12] = $r20r21
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sq 24[$r12] = $r18r19
-; ALL-NEXT:    copyd $r18 = $r1
-; ALL-NEXT:    copyd $r19 = $r0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    srlw $r0 = $r19, 24
-; ALL-NEXT:    srlw $r1 = $r18, 24
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sxbd $r0 = $r0
-; ALL-NEXT:    sxbd $r1 = $r1
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sxwd $r0 = $r0
-; ALL-NEXT:    sxwd $r1 = $r1
-; ALL-NEXT:    call __divdi3
-; ALL-NEXT:    ;;
-; ALL-NEXT:    extfz $r0 = $r19, 23, 16
-; ALL-NEXT:    extfz $r1 = $r18, 23, 16
-; ALL-NEXT:    copyd $r20 = $r0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sxbd $r0 = $r0
-; ALL-NEXT:    sxbd $r1 = $r1
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sxwd $r0 = $r0
-; ALL-NEXT:    sxwd $r1 = $r1
-; ALL-NEXT:    call __divdi3
-; ALL-NEXT:    ;;
-; ALL-NEXT:    extfz $r0 = $r19, 15, 8
-; ALL-NEXT:    extfz $r1 = $r18, 15, 8
-; ALL-NEXT:    copyd $r21 = $r0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sxbd $r0 = $r0
-; ALL-NEXT:    sxbd $r1 = $r1
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sxwd $r0 = $r0
-; ALL-NEXT:    sxwd $r1 = $r1
-; ALL-NEXT:    ;;
-; ALL-NEXT:    insf $r21 = $r20, 15, 8
-; ALL-NEXT:    call __divdi3
-; ALL-NEXT:    ;;
-; ALL-NEXT:    zxbd $r0 = $r19
-; ALL-NEXT:    zxbd $r1 = $r18
-; ALL-NEXT:    copyd $r20 = $r0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sxbd $r0 = $r0
-; ALL-NEXT:    sxbd $r1 = $r1
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sxwd $r0 = $r0
-; ALL-NEXT:    sxwd $r1 = $r1
-; ALL-NEXT:    call __divdi3
-; ALL-NEXT:    ;;
-; ALL-NEXT:    lq $r18r19 = 24[$r12]
-; ALL-NEXT:    insf $r0 = $r20, 15, 8
-; ALL-NEXT:    ;;
-; ALL-NEXT:    lq $r20r21 = 40[$r12]
-; ALL-NEXT:    insf $r0 = $r21, 31, 16
-; ALL-NEXT:    ;;
-; ALL-NEXT:    ld $r16 = 56[$r12]
-; ALL-NEXT:    ;;
-; ALL-NEXT:    set $ra = $r16
-; ALL-NEXT:    addd $r12 = $r12, 64
-; ALL-NEXT:    ;;
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; CV1-LABEL: test_div:
+; CV1:       # %bb.0:
+; CV1-NEXT:    addd $r12 = $r12, -64
+; CV1-NEXT:    get $r16 = $ra
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sd 56[$r12] = $r16
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sq 40[$r12] = $r20r21
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sq 24[$r12] = $r18r19
+; CV1-NEXT:    copyd $r18 = $r1
+; CV1-NEXT:    copyd $r19 = $r0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    srlw $r0 = $r19, 24
+; CV1-NEXT:    srlw $r1 = $r18, 24
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sxbd $r0 = $r0
+; CV1-NEXT:    sxbd $r1 = $r1
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sxwd $r0 = $r0
+; CV1-NEXT:    sxwd $r1 = $r1
+; CV1-NEXT:    call __divdi3
+; CV1-NEXT:    ;;
+; CV1-NEXT:    extfz $r0 = $r19, 23, 16
+; CV1-NEXT:    extfz $r1 = $r18, 23, 16
+; CV1-NEXT:    copyd $r20 = $r0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sxbd $r0 = $r0
+; CV1-NEXT:    sxbd $r1 = $r1
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sxwd $r0 = $r0
+; CV1-NEXT:    sxwd $r1 = $r1
+; CV1-NEXT:    call __divdi3
+; CV1-NEXT:    ;;
+; CV1-NEXT:    extfz $r0 = $r19, 15, 8
+; CV1-NEXT:    extfz $r1 = $r18, 15, 8
+; CV1-NEXT:    copyd $r21 = $r0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sxbd $r0 = $r0
+; CV1-NEXT:    sxbd $r1 = $r1
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sxwd $r0 = $r0
+; CV1-NEXT:    sxwd $r1 = $r1
+; CV1-NEXT:    ;;
+; CV1-NEXT:    insf $r21 = $r20, 15, 8
+; CV1-NEXT:    call __divdi3
+; CV1-NEXT:    ;;
+; CV1-NEXT:    zxbd $r0 = $r19
+; CV1-NEXT:    zxbd $r1 = $r18
+; CV1-NEXT:    copyd $r20 = $r0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sxbd $r0 = $r0
+; CV1-NEXT:    sxbd $r1 = $r1
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sxwd $r0 = $r0
+; CV1-NEXT:    sxwd $r1 = $r1
+; CV1-NEXT:    call __divdi3
+; CV1-NEXT:    ;;
+; CV1-NEXT:    lq $r18r19 = 24[$r12]
+; CV1-NEXT:    insf $r0 = $r20, 15, 8
+; CV1-NEXT:    ;;
+; CV1-NEXT:    lq $r20r21 = 40[$r12]
+; CV1-NEXT:    insf $r0 = $r21, 31, 16
+; CV1-NEXT:    ;;
+; CV1-NEXT:    ld $r16 = 56[$r12]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    set $ra = $r16
+; CV1-NEXT:    addd $r12 = $r12, 64
+; CV1-NEXT:    ;;
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: test_div:
+; CV2:       # %bb.0:
+; CV2-NEXT:    addd $r12 = $r12, -64
+; CV2-NEXT:    get $r16 = $ra
+; CV2-NEXT:    ;;
+; CV2-NEXT:    sd 56[$r12] = $r16
+; CV2-NEXT:    ;;
+; CV2-NEXT:    sq 40[$r12] = $r20r21
+; CV2-NEXT:    ;;
+; CV2-NEXT:    sq 24[$r12] = $r18r19
+; CV2-NEXT:    copyd $r18 = $r1
+; CV2-NEXT:    copyd $r19 = $r0
+; CV2-NEXT:    ;;
+; CV2-NEXT:    srlw $r0 = $r19, 24
+; CV2-NEXT:    srlw $r1 = $r18, 24
+; CV2-NEXT:    ;;
+; CV2-NEXT:    sxbd $r0 = $r0
+; CV2-NEXT:    sxbd $r1 = $r1
+; CV2-NEXT:    ;;
+; CV2-NEXT:    sxwd $r0 = $r0
+; CV2-NEXT:    sxwd $r1 = $r1
+; CV2-NEXT:    call __divdi3
+; CV2-NEXT:    ;;
+; CV2-NEXT:    extfz $r0 = $r19, 23, 16
+; CV2-NEXT:    extfz $r1 = $r18, 23, 16
+; CV2-NEXT:    copyd $r20 = $r0
+; CV2-NEXT:    ;;
+; CV2-NEXT:    sxbd $r0 = $r0
+; CV2-NEXT:    sxbd $r1 = $r1
+; CV2-NEXT:    ;;
+; CV2-NEXT:    sxwd $r0 = $r0
+; CV2-NEXT:    sxwd $r1 = $r1
+; CV2-NEXT:    call __divdi3
+; CV2-NEXT:    ;;
+; CV2-NEXT:    extfz $r0 = $r19, 15, 8
+; CV2-NEXT:    extfz $r1 = $r18, 15, 8
+; CV2-NEXT:    copyd $r21 = $r0
+; CV2-NEXT:    ;;
+; CV2-NEXT:    sxbd $r0 = $r0
+; CV2-NEXT:    sxbd $r1 = $r1
+; CV2-NEXT:    insf $r21 = $r20, 15, 8
+; CV2-NEXT:    ;;
+; CV2-NEXT:    sxwd $r0 = $r0
+; CV2-NEXT:    sxwd $r1 = $r1
+; CV2-NEXT:    call __divdi3
+; CV2-NEXT:    ;;
+; CV2-NEXT:    zxbd $r0 = $r19
+; CV2-NEXT:    zxbd $r1 = $r18
+; CV2-NEXT:    copyd $r20 = $r0
+; CV2-NEXT:    ;;
+; CV2-NEXT:    sxbd $r0 = $r0
+; CV2-NEXT:    sxbd $r1 = $r1
+; CV2-NEXT:    ;;
+; CV2-NEXT:    sxwd $r0 = $r0
+; CV2-NEXT:    sxwd $r1 = $r1
+; CV2-NEXT:    call __divdi3
+; CV2-NEXT:    ;;
+; CV2-NEXT:    lq $r18r19 = 24[$r12]
+; CV2-NEXT:    insf $r0 = $r20, 15, 8
+; CV2-NEXT:    ;;
+; CV2-NEXT:    lq $r20r21 = 40[$r12]
+; CV2-NEXT:    insf $r0 = $r21, 31, 16
+; CV2-NEXT:    ;;
+; CV2-NEXT:    ld $r16 = 56[$r12]
+; CV2-NEXT:    ;;
+; CV2-NEXT:    set $ra = $r16
+; CV2-NEXT:    addd $r12 = $r12, 64
+; CV2-NEXT:    ;;
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
   %r = sdiv <4 x i8> %a, %b
   ret <4 x i8> %r
 }
 
 ; TODO: Eliminate duplicate sxwd after a sxbd
 define <4 x i8> @test_rem(<4 x i8> %a, <4 x i8> %b) #0 {
-; ALL-LABEL: test_rem:
-; ALL:       # %bb.0:
-; ALL-NEXT:    addd $r12 = $r12, -64
-; ALL-NEXT:    get $r16 = $ra
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sd 56[$r12] = $r16
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sq 40[$r12] = $r20r21
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sq 24[$r12] = $r18r19
-; ALL-NEXT:    copyd $r18 = $r1
-; ALL-NEXT:    copyd $r19 = $r0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    srlw $r0 = $r19, 24
-; ALL-NEXT:    srlw $r1 = $r18, 24
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sxbd $r0 = $r0
-; ALL-NEXT:    sxbd $r1 = $r1
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sxwd $r0 = $r0
-; ALL-NEXT:    sxwd $r1 = $r1
-; ALL-NEXT:    call __moddi3
-; ALL-NEXT:    ;;
-; ALL-NEXT:    extfz $r0 = $r19, 23, 16
-; ALL-NEXT:    extfz $r1 = $r18, 23, 16
-; ALL-NEXT:    copyd $r20 = $r0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sxbd $r0 = $r0
-; ALL-NEXT:    sxbd $r1 = $r1
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sxwd $r0 = $r0
-; ALL-NEXT:    sxwd $r1 = $r1
-; ALL-NEXT:    call __moddi3
-; ALL-NEXT:    ;;
-; ALL-NEXT:    extfz $r0 = $r19, 15, 8
-; ALL-NEXT:    extfz $r1 = $r18, 15, 8
-; ALL-NEXT:    copyd $r21 = $r0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sxbd $r0 = $r0
-; ALL-NEXT:    sxbd $r1 = $r1
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sxwd $r0 = $r0
-; ALL-NEXT:    sxwd $r1 = $r1
-; ALL-NEXT:    ;;
-; ALL-NEXT:    insf $r21 = $r20, 15, 8
-; ALL-NEXT:    call __moddi3
-; ALL-NEXT:    ;;
-; ALL-NEXT:    zxbd $r0 = $r19
-; ALL-NEXT:    zxbd $r1 = $r18
-; ALL-NEXT:    copyd $r20 = $r0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sxbd $r0 = $r0
-; ALL-NEXT:    sxbd $r1 = $r1
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sxwd $r0 = $r0
-; ALL-NEXT:    sxwd $r1 = $r1
-; ALL-NEXT:    call __moddi3
-; ALL-NEXT:    ;;
-; ALL-NEXT:    lq $r18r19 = 24[$r12]
-; ALL-NEXT:    insf $r0 = $r20, 15, 8
-; ALL-NEXT:    ;;
-; ALL-NEXT:    lq $r20r21 = 40[$r12]
-; ALL-NEXT:    insf $r0 = $r21, 31, 16
-; ALL-NEXT:    ;;
-; ALL-NEXT:    ld $r16 = 56[$r12]
-; ALL-NEXT:    ;;
-; ALL-NEXT:    set $ra = $r16
-; ALL-NEXT:    addd $r12 = $r12, 64
-; ALL-NEXT:    ;;
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; CV1-LABEL: test_rem:
+; CV1:       # %bb.0:
+; CV1-NEXT:    addd $r12 = $r12, -64
+; CV1-NEXT:    get $r16 = $ra
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sd 56[$r12] = $r16
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sq 40[$r12] = $r20r21
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sq 24[$r12] = $r18r19
+; CV1-NEXT:    copyd $r18 = $r1
+; CV1-NEXT:    copyd $r19 = $r0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    srlw $r0 = $r19, 24
+; CV1-NEXT:    srlw $r1 = $r18, 24
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sxbd $r0 = $r0
+; CV1-NEXT:    sxbd $r1 = $r1
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sxwd $r0 = $r0
+; CV1-NEXT:    sxwd $r1 = $r1
+; CV1-NEXT:    call __moddi3
+; CV1-NEXT:    ;;
+; CV1-NEXT:    extfz $r0 = $r19, 23, 16
+; CV1-NEXT:    extfz $r1 = $r18, 23, 16
+; CV1-NEXT:    copyd $r20 = $r0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sxbd $r0 = $r0
+; CV1-NEXT:    sxbd $r1 = $r1
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sxwd $r0 = $r0
+; CV1-NEXT:    sxwd $r1 = $r1
+; CV1-NEXT:    call __moddi3
+; CV1-NEXT:    ;;
+; CV1-NEXT:    extfz $r0 = $r19, 15, 8
+; CV1-NEXT:    extfz $r1 = $r18, 15, 8
+; CV1-NEXT:    copyd $r21 = $r0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sxbd $r0 = $r0
+; CV1-NEXT:    sxbd $r1 = $r1
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sxwd $r0 = $r0
+; CV1-NEXT:    sxwd $r1 = $r1
+; CV1-NEXT:    ;;
+; CV1-NEXT:    insf $r21 = $r20, 15, 8
+; CV1-NEXT:    call __moddi3
+; CV1-NEXT:    ;;
+; CV1-NEXT:    zxbd $r0 = $r19
+; CV1-NEXT:    zxbd $r1 = $r18
+; CV1-NEXT:    copyd $r20 = $r0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sxbd $r0 = $r0
+; CV1-NEXT:    sxbd $r1 = $r1
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sxwd $r0 = $r0
+; CV1-NEXT:    sxwd $r1 = $r1
+; CV1-NEXT:    call __moddi3
+; CV1-NEXT:    ;;
+; CV1-NEXT:    lq $r18r19 = 24[$r12]
+; CV1-NEXT:    insf $r0 = $r20, 15, 8
+; CV1-NEXT:    ;;
+; CV1-NEXT:    lq $r20r21 = 40[$r12]
+; CV1-NEXT:    insf $r0 = $r21, 31, 16
+; CV1-NEXT:    ;;
+; CV1-NEXT:    ld $r16 = 56[$r12]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    set $ra = $r16
+; CV1-NEXT:    addd $r12 = $r12, 64
+; CV1-NEXT:    ;;
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: test_rem:
+; CV2:       # %bb.0:
+; CV2-NEXT:    addd $r12 = $r12, -64
+; CV2-NEXT:    get $r16 = $ra
+; CV2-NEXT:    ;;
+; CV2-NEXT:    sd 56[$r12] = $r16
+; CV2-NEXT:    ;;
+; CV2-NEXT:    sq 40[$r12] = $r20r21
+; CV2-NEXT:    ;;
+; CV2-NEXT:    sq 24[$r12] = $r18r19
+; CV2-NEXT:    copyd $r18 = $r1
+; CV2-NEXT:    copyd $r19 = $r0
+; CV2-NEXT:    ;;
+; CV2-NEXT:    srlw $r0 = $r19, 24
+; CV2-NEXT:    srlw $r1 = $r18, 24
+; CV2-NEXT:    ;;
+; CV2-NEXT:    sxbd $r0 = $r0
+; CV2-NEXT:    sxbd $r1 = $r1
+; CV2-NEXT:    ;;
+; CV2-NEXT:    sxwd $r0 = $r0
+; CV2-NEXT:    sxwd $r1 = $r1
+; CV2-NEXT:    call __moddi3
+; CV2-NEXT:    ;;
+; CV2-NEXT:    extfz $r0 = $r19, 23, 16
+; CV2-NEXT:    extfz $r1 = $r18, 23, 16
+; CV2-NEXT:    copyd $r20 = $r0
+; CV2-NEXT:    ;;
+; CV2-NEXT:    sxbd $r0 = $r0
+; CV2-NEXT:    sxbd $r1 = $r1
+; CV2-NEXT:    ;;
+; CV2-NEXT:    sxwd $r0 = $r0
+; CV2-NEXT:    sxwd $r1 = $r1
+; CV2-NEXT:    call __moddi3
+; CV2-NEXT:    ;;
+; CV2-NEXT:    extfz $r0 = $r19, 15, 8
+; CV2-NEXT:    extfz $r1 = $r18, 15, 8
+; CV2-NEXT:    copyd $r21 = $r0
+; CV2-NEXT:    ;;
+; CV2-NEXT:    sxbd $r0 = $r0
+; CV2-NEXT:    sxbd $r1 = $r1
+; CV2-NEXT:    insf $r21 = $r20, 15, 8
+; CV2-NEXT:    ;;
+; CV2-NEXT:    sxwd $r0 = $r0
+; CV2-NEXT:    sxwd $r1 = $r1
+; CV2-NEXT:    call __moddi3
+; CV2-NEXT:    ;;
+; CV2-NEXT:    zxbd $r0 = $r19
+; CV2-NEXT:    zxbd $r1 = $r18
+; CV2-NEXT:    copyd $r20 = $r0
+; CV2-NEXT:    ;;
+; CV2-NEXT:    sxbd $r0 = $r0
+; CV2-NEXT:    sxbd $r1 = $r1
+; CV2-NEXT:    ;;
+; CV2-NEXT:    sxwd $r0 = $r0
+; CV2-NEXT:    sxwd $r1 = $r1
+; CV2-NEXT:    call __moddi3
+; CV2-NEXT:    ;;
+; CV2-NEXT:    lq $r18r19 = 24[$r12]
+; CV2-NEXT:    insf $r0 = $r20, 15, 8
+; CV2-NEXT:    ;;
+; CV2-NEXT:    lq $r20r21 = 40[$r12]
+; CV2-NEXT:    insf $r0 = $r21, 31, 16
+; CV2-NEXT:    ;;
+; CV2-NEXT:    ld $r16 = 56[$r12]
+; CV2-NEXT:    ;;
+; CV2-NEXT:    set $ra = $r16
+; CV2-NEXT:    addd $r12 = $r12, 64
+; CV2-NEXT:    ;;
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
   %r = srem <4 x i8> %a, %b
   ret <4 x i8> %r
 }
@@ -644,20 +786,18 @@ define <4 x i64> @test_select_cc_f32_f32(<4 x i64> %a, <4 x i64> %b, <4 x i8> %c
 ; CV2-NEXT:    extfz $r10 = $r8, 23, 16
 ; CV2-NEXT:    zxbd $r11 = $r8
 ; CV2-NEXT:    ;;
+; CV2-NEXT:    sxbd $r8 = $r8
 ; CV2-NEXT:    sxbd $r9 = $r9
 ; CV2-NEXT:    sxbd $r10 = $r10
-; CV2-NEXT:    ;;
-; CV2-NEXT:    sxbd $r8 = $r8
 ; CV2-NEXT:    sxbd $r11 = $r11
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    cmoved.dnez $r11 ? $r4 = $r0
 ; CV2-NEXT:    cmoved.dnez $r8 ? $r5 = $r1
-; CV2-NEXT:    ;;
-; CV2-NEXT:    copyd $r0 = $r4
-; CV2-NEXT:    copyd $r1 = $r5
 ; CV2-NEXT:    cmoved.dnez $r10 ? $r6 = $r2
 ; CV2-NEXT:    cmoved.dnez $r9 ? $r7 = $r3
 ; CV2-NEXT:    ;;
+; CV2-NEXT:    copyd $r0 = $r4
+; CV2-NEXT:    copyd $r1 = $r5
 ; CV2-NEXT:    copyd $r2 = $r6
 ; CV2-NEXT:    copyd $r3 = $r7
 ; CV2-NEXT:    ret
@@ -773,20 +913,34 @@ define <4 x i1> @test_icmp_ult(<4 x i8> %a, <4 x i8> %b) #0 {
 }
 
 define <4 x i64> @test_sext_2xi64(<4 x i8> %a) #0 {
-; ALL-LABEL: test_sext_2xi64:
-; ALL:       # %bb.0:
-; ALL-NEXT:    zxbd $r1 = $r0
-; ALL-NEXT:    extfz $r2 = $r0, 15, 8
-; ALL-NEXT:    extfz $r3 = $r0, 23, 16
-; ALL-NEXT:    srlw $r4 = $r0, 24
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sxbd $r0 = $r1
-; ALL-NEXT:    sxbd $r1 = $r2
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sxbd $r2 = $r3
-; ALL-NEXT:    sxbd $r3 = $r4
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; CV1-LABEL: test_sext_2xi64:
+; CV1:       # %bb.0:
+; CV1-NEXT:    zxbd $r1 = $r0
+; CV1-NEXT:    extfz $r2 = $r0, 15, 8
+; CV1-NEXT:    extfz $r3 = $r0, 23, 16
+; CV1-NEXT:    srlw $r4 = $r0, 24
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sxbd $r0 = $r1
+; CV1-NEXT:    sxbd $r1 = $r2
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sxbd $r2 = $r3
+; CV1-NEXT:    sxbd $r3 = $r4
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: test_sext_2xi64:
+; CV2:       # %bb.0:
+; CV2-NEXT:    zxbd $r1 = $r0
+; CV2-NEXT:    extfz $r2 = $r0, 15, 8
+; CV2-NEXT:    extfz $r3 = $r0, 23, 16
+; CV2-NEXT:    srlw $r4 = $r0, 24
+; CV2-NEXT:    ;;
+; CV2-NEXT:    sxbd $r0 = $r1
+; CV2-NEXT:    sxbd $r1 = $r2
+; CV2-NEXT:    sxbd $r2 = $r3
+; CV2-NEXT:    sxbd $r3 = $r4
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
   %r = sext <4 x i8> %a to <4 x i64>
   ret <4 x i64> %r
 }

@@ -56,37 +56,69 @@ entry:
 }
 
 define <4 x half> @f_Select32PAT(<4 x half> %x, <4 x half> %y){
-; CHECK-LABEL: f_Select32PAT:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    srlw $r3 = $r0, 16
-; CHECK-NEXT:    srlw $r4 = $r1, 16
-; CHECK-NEXT:    srld $r5 = $r0, 32
-; CHECK-NEXT:    srld $r6 = $r1, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fcompnhq.olt $r2 = $r0, $r1
-; CHECK-NEXT:    fcompnhq.olt $r7 = $r3, $r4
-; CHECK-NEXT:    srld $r8 = $r0, 48
-; CHECK-NEXT:    srld $r9 = $r1, 48
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andw $r2 = $r2, 1
-; CHECK-NEXT:    andw $r7 = $r7, 1
-; CHECK-NEXT:    fcompnhq.olt $r10 = $r5, $r6
-; CHECK-NEXT:    fcompnhq.olt $r11 = $r8, $r9
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r2 ? $r0 = $r1
-; CHECK-NEXT:    cmoved.wnez $r7 ? $r3 = $r4
-; CHECK-NEXT:    andw $r10 = $r10, 1
-; CHECK-NEXT:    andw $r11 = $r11, 1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r10 ? $r5 = $r6
-; CHECK-NEXT:    cmoved.wnez $r11 ? $r8 = $r9
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r3, 31, 16
-; CHECK-NEXT:    insf $r5 = $r8, 31, 16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r5, 63, 32
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CV1-LABEL: f_Select32PAT:
+; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    srlw $r3 = $r0, 16
+; CV1-NEXT:    srlw $r4 = $r1, 16
+; CV1-NEXT:    srld $r5 = $r0, 32
+; CV1-NEXT:    srld $r6 = $r1, 32
+; CV1-NEXT:    ;;
+; CV1-NEXT:    fcompnhq.olt $r2 = $r0, $r1
+; CV1-NEXT:    fcompnhq.olt $r7 = $r3, $r4
+; CV1-NEXT:    srld $r8 = $r0, 48
+; CV1-NEXT:    srld $r9 = $r1, 48
+; CV1-NEXT:    ;;
+; CV1-NEXT:    andw $r2 = $r2, 1
+; CV1-NEXT:    andw $r7 = $r7, 1
+; CV1-NEXT:    fcompnhq.olt $r10 = $r5, $r6
+; CV1-NEXT:    fcompnhq.olt $r11 = $r8, $r9
+; CV1-NEXT:    ;;
+; CV1-NEXT:    cmoved.wnez $r2 ? $r0 = $r1
+; CV1-NEXT:    cmoved.wnez $r7 ? $r3 = $r4
+; CV1-NEXT:    andw $r10 = $r10, 1
+; CV1-NEXT:    andw $r11 = $r11, 1
+; CV1-NEXT:    ;;
+; CV1-NEXT:    cmoved.wnez $r10 ? $r5 = $r6
+; CV1-NEXT:    cmoved.wnez $r11 ? $r8 = $r9
+; CV1-NEXT:    ;;
+; CV1-NEXT:    insf $r0 = $r3, 31, 16
+; CV1-NEXT:    insf $r5 = $r8, 31, 16
+; CV1-NEXT:    ;;
+; CV1-NEXT:    insf $r0 = $r5, 63, 32
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: f_Select32PAT:
+; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    srlw $r3 = $r0, 16
+; CV2-NEXT:    srlw $r4 = $r1, 16
+; CV2-NEXT:    srld $r5 = $r0, 32
+; CV2-NEXT:    srld $r6 = $r1, 32
+; CV2-NEXT:    ;;
+; CV2-NEXT:    fcompnhq.olt $r2 = $r0, $r1
+; CV2-NEXT:    srld $r7 = $r0, 48
+; CV2-NEXT:    srld $r8 = $r1, 48
+; CV2-NEXT:    fcompnhq.olt $r9 = $r3, $r4
+; CV2-NEXT:    ;;
+; CV2-NEXT:    andw $r2 = $r2, 1
+; CV2-NEXT:    andw $r9 = $r9, 1
+; CV2-NEXT:    fcompnhq.olt $r10 = $r5, $r6
+; CV2-NEXT:    fcompnhq.olt $r11 = $r7, $r8
+; CV2-NEXT:    ;;
+; CV2-NEXT:    cmoved.wnez $r2 ? $r0 = $r1
+; CV2-NEXT:    cmoved.wnez $r9 ? $r3 = $r4
+; CV2-NEXT:    andw $r10 = $r10, 1
+; CV2-NEXT:    andw $r11 = $r11, 1
+; CV2-NEXT:    ;;
+; CV2-NEXT:    insf $r0 = $r3, 31, 16
+; CV2-NEXT:    cmoved.wnez $r10 ? $r5 = $r6
+; CV2-NEXT:    cmoved.wnez $r11 ? $r7 = $r8
+; CV2-NEXT:    ;;
+; CV2-NEXT:    insf $r5 = $r7, 31, 16
+; CV2-NEXT:    ;;
+; CV2-NEXT:    insf $r0 = $r5, 63, 32
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
 entry:
   %vecext = extractelement <4 x half> %x, i32 0
   %vecext1 = extractelement <4 x half> %y, i32 0

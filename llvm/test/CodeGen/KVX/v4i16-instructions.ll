@@ -213,129 +213,247 @@ define <4 x i16> @test_mul_2(<4 x i16> %a, <4 x i16> %b, <4 x i16> %c) {
 }
 
 define <4 x i16> @test_div(<4 x i16> %a, <4 x i16> %b) #0 {
-; ALL-LABEL: test_div:
-; ALL:       # %bb.0:
-; ALL-NEXT:    addd $r12 = $r12, -64
-; ALL-NEXT:    get $r16 = $ra
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sd 56[$r12] = $r16
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sq 40[$r12] = $r20r21
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sq 24[$r12] = $r18r19
-; ALL-NEXT:    copyd $r18 = $r1
-; ALL-NEXT:    copyd $r19 = $r0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    srad $r0 = $r19, 48
-; ALL-NEXT:    srad $r1 = $r18, 48
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sxwd $r0 = $r0
-; ALL-NEXT:    sxwd $r1 = $r1
-; ALL-NEXT:    call __divdi3
-; ALL-NEXT:    ;;
-; ALL-NEXT:    extfs $r0 = $r19, 47, 32
-; ALL-NEXT:    extfs $r1 = $r18, 47, 32
-; ALL-NEXT:    copyd $r20 = $r0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sxwd $r0 = $r0
-; ALL-NEXT:    sxwd $r1 = $r1
-; ALL-NEXT:    call __divdi3
-; ALL-NEXT:    ;;
-; ALL-NEXT:    extfs $r0 = $r19, 31, 16
-; ALL-NEXT:    extfs $r1 = $r18, 31, 16
-; ALL-NEXT:    copyd $r21 = $r0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sxwd $r0 = $r0
-; ALL-NEXT:    sxwd $r1 = $r1
-; ALL-NEXT:    ;;
-; ALL-NEXT:    insf $r21 = $r20, 31, 16
-; ALL-NEXT:    call __divdi3
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sxhd $r0 = $r19
-; ALL-NEXT:    sxhd $r1 = $r18
-; ALL-NEXT:    copyd $r20 = $r0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sxwd $r0 = $r0
-; ALL-NEXT:    sxwd $r1 = $r1
-; ALL-NEXT:    call __divdi3
-; ALL-NEXT:    ;;
-; ALL-NEXT:    lq $r18r19 = 24[$r12]
-; ALL-NEXT:    insf $r0 = $r20, 31, 16
-; ALL-NEXT:    ;;
-; ALL-NEXT:    lq $r20r21 = 40[$r12]
-; ALL-NEXT:    insf $r0 = $r21, 63, 32
-; ALL-NEXT:    ;;
-; ALL-NEXT:    ld $r16 = 56[$r12]
-; ALL-NEXT:    ;;
-; ALL-NEXT:    set $ra = $r16
-; ALL-NEXT:    addd $r12 = $r12, 64
-; ALL-NEXT:    ;;
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; V1-LABEL: test_div:
+; V1:       # %bb.0:
+; V1-NEXT:    addd $r12 = $r12, -64
+; V1-NEXT:    get $r16 = $ra
+; V1-NEXT:    ;;
+; V1-NEXT:    sd 56[$r12] = $r16
+; V1-NEXT:    ;;
+; V1-NEXT:    sq 40[$r12] = $r20r21
+; V1-NEXT:    ;;
+; V1-NEXT:    sq 24[$r12] = $r18r19
+; V1-NEXT:    copyd $r18 = $r1
+; V1-NEXT:    copyd $r19 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    srad $r0 = $r19, 48
+; V1-NEXT:    srad $r1 = $r18, 48
+; V1-NEXT:    ;;
+; V1-NEXT:    sxwd $r0 = $r0
+; V1-NEXT:    sxwd $r1 = $r1
+; V1-NEXT:    call __divdi3
+; V1-NEXT:    ;;
+; V1-NEXT:    extfs $r0 = $r19, 47, 32
+; V1-NEXT:    extfs $r1 = $r18, 47, 32
+; V1-NEXT:    copyd $r20 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sxwd $r0 = $r0
+; V1-NEXT:    sxwd $r1 = $r1
+; V1-NEXT:    call __divdi3
+; V1-NEXT:    ;;
+; V1-NEXT:    extfs $r0 = $r19, 31, 16
+; V1-NEXT:    extfs $r1 = $r18, 31, 16
+; V1-NEXT:    copyd $r21 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sxwd $r0 = $r0
+; V1-NEXT:    sxwd $r1 = $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    insf $r21 = $r20, 31, 16
+; V1-NEXT:    call __divdi3
+; V1-NEXT:    ;;
+; V1-NEXT:    sxhd $r0 = $r19
+; V1-NEXT:    sxhd $r1 = $r18
+; V1-NEXT:    copyd $r20 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sxwd $r0 = $r0
+; V1-NEXT:    sxwd $r1 = $r1
+; V1-NEXT:    call __divdi3
+; V1-NEXT:    ;;
+; V1-NEXT:    lq $r18r19 = 24[$r12]
+; V1-NEXT:    insf $r0 = $r20, 31, 16
+; V1-NEXT:    ;;
+; V1-NEXT:    lq $r20r21 = 40[$r12]
+; V1-NEXT:    insf $r0 = $r21, 63, 32
+; V1-NEXT:    ;;
+; V1-NEXT:    ld $r16 = 56[$r12]
+; V1-NEXT:    ;;
+; V1-NEXT:    set $ra = $r16
+; V1-NEXT:    addd $r12 = $r12, 64
+; V1-NEXT:    ;;
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: test_div:
+; V2:       # %bb.0:
+; V2-NEXT:    addd $r12 = $r12, -64
+; V2-NEXT:    get $r16 = $ra
+; V2-NEXT:    ;;
+; V2-NEXT:    sd 56[$r12] = $r16
+; V2-NEXT:    ;;
+; V2-NEXT:    sq 40[$r12] = $r20r21
+; V2-NEXT:    ;;
+; V2-NEXT:    sq 24[$r12] = $r18r19
+; V2-NEXT:    copyd $r18 = $r1
+; V2-NEXT:    copyd $r19 = $r0
+; V2-NEXT:    ;;
+; V2-NEXT:    srad $r0 = $r19, 48
+; V2-NEXT:    srad $r1 = $r18, 48
+; V2-NEXT:    ;;
+; V2-NEXT:    sxwd $r0 = $r0
+; V2-NEXT:    sxwd $r1 = $r1
+; V2-NEXT:    call __divdi3
+; V2-NEXT:    ;;
+; V2-NEXT:    extfs $r0 = $r19, 47, 32
+; V2-NEXT:    extfs $r1 = $r18, 47, 32
+; V2-NEXT:    copyd $r20 = $r0
+; V2-NEXT:    ;;
+; V2-NEXT:    sxwd $r0 = $r0
+; V2-NEXT:    sxwd $r1 = $r1
+; V2-NEXT:    call __divdi3
+; V2-NEXT:    ;;
+; V2-NEXT:    extfs $r0 = $r19, 31, 16
+; V2-NEXT:    extfs $r1 = $r18, 31, 16
+; V2-NEXT:    copyd $r21 = $r0
+; V2-NEXT:    ;;
+; V2-NEXT:    sxwd $r0 = $r0
+; V2-NEXT:    sxwd $r1 = $r1
+; V2-NEXT:    insf $r21 = $r20, 31, 16
+; V2-NEXT:    call __divdi3
+; V2-NEXT:    ;;
+; V2-NEXT:    sxhd $r0 = $r19
+; V2-NEXT:    sxhd $r1 = $r18
+; V2-NEXT:    copyd $r20 = $r0
+; V2-NEXT:    ;;
+; V2-NEXT:    sxwd $r0 = $r0
+; V2-NEXT:    sxwd $r1 = $r1
+; V2-NEXT:    call __divdi3
+; V2-NEXT:    ;;
+; V2-NEXT:    lq $r18r19 = 24[$r12]
+; V2-NEXT:    insf $r0 = $r20, 31, 16
+; V2-NEXT:    ;;
+; V2-NEXT:    lq $r20r21 = 40[$r12]
+; V2-NEXT:    insf $r0 = $r21, 63, 32
+; V2-NEXT:    ;;
+; V2-NEXT:    ld $r16 = 56[$r12]
+; V2-NEXT:    ;;
+; V2-NEXT:    set $ra = $r16
+; V2-NEXT:    addd $r12 = $r12, 64
+; V2-NEXT:    ;;
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %r = sdiv <4 x i16> %a, %b
   ret <4 x i16> %r
 }
 
 define <4 x i16> @test_rem(<4 x i16> %a, <4 x i16> %b) #0 {
-; ALL-LABEL: test_rem:
-; ALL:       # %bb.0:
-; ALL-NEXT:    addd $r12 = $r12, -64
-; ALL-NEXT:    get $r16 = $ra
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sd 56[$r12] = $r16
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sq 40[$r12] = $r20r21
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sq 24[$r12] = $r18r19
-; ALL-NEXT:    copyd $r18 = $r1
-; ALL-NEXT:    copyd $r19 = $r0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    srad $r0 = $r19, 48
-; ALL-NEXT:    srad $r1 = $r18, 48
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sxwd $r0 = $r0
-; ALL-NEXT:    sxwd $r1 = $r1
-; ALL-NEXT:    call __moddi3
-; ALL-NEXT:    ;;
-; ALL-NEXT:    extfs $r0 = $r19, 47, 32
-; ALL-NEXT:    extfs $r1 = $r18, 47, 32
-; ALL-NEXT:    copyd $r20 = $r0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sxwd $r0 = $r0
-; ALL-NEXT:    sxwd $r1 = $r1
-; ALL-NEXT:    call __moddi3
-; ALL-NEXT:    ;;
-; ALL-NEXT:    extfs $r0 = $r19, 31, 16
-; ALL-NEXT:    extfs $r1 = $r18, 31, 16
-; ALL-NEXT:    copyd $r21 = $r0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sxwd $r0 = $r0
-; ALL-NEXT:    sxwd $r1 = $r1
-; ALL-NEXT:    ;;
-; ALL-NEXT:    insf $r21 = $r20, 31, 16
-; ALL-NEXT:    call __moddi3
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sxhd $r0 = $r19
-; ALL-NEXT:    sxhd $r1 = $r18
-; ALL-NEXT:    copyd $r20 = $r0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sxwd $r0 = $r0
-; ALL-NEXT:    sxwd $r1 = $r1
-; ALL-NEXT:    call __moddi3
-; ALL-NEXT:    ;;
-; ALL-NEXT:    lq $r18r19 = 24[$r12]
-; ALL-NEXT:    insf $r0 = $r20, 31, 16
-; ALL-NEXT:    ;;
-; ALL-NEXT:    lq $r20r21 = 40[$r12]
-; ALL-NEXT:    insf $r0 = $r21, 63, 32
-; ALL-NEXT:    ;;
-; ALL-NEXT:    ld $r16 = 56[$r12]
-; ALL-NEXT:    ;;
-; ALL-NEXT:    set $ra = $r16
-; ALL-NEXT:    addd $r12 = $r12, 64
-; ALL-NEXT:    ;;
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; V1-LABEL: test_rem:
+; V1:       # %bb.0:
+; V1-NEXT:    addd $r12 = $r12, -64
+; V1-NEXT:    get $r16 = $ra
+; V1-NEXT:    ;;
+; V1-NEXT:    sd 56[$r12] = $r16
+; V1-NEXT:    ;;
+; V1-NEXT:    sq 40[$r12] = $r20r21
+; V1-NEXT:    ;;
+; V1-NEXT:    sq 24[$r12] = $r18r19
+; V1-NEXT:    copyd $r18 = $r1
+; V1-NEXT:    copyd $r19 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    srad $r0 = $r19, 48
+; V1-NEXT:    srad $r1 = $r18, 48
+; V1-NEXT:    ;;
+; V1-NEXT:    sxwd $r0 = $r0
+; V1-NEXT:    sxwd $r1 = $r1
+; V1-NEXT:    call __moddi3
+; V1-NEXT:    ;;
+; V1-NEXT:    extfs $r0 = $r19, 47, 32
+; V1-NEXT:    extfs $r1 = $r18, 47, 32
+; V1-NEXT:    copyd $r20 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sxwd $r0 = $r0
+; V1-NEXT:    sxwd $r1 = $r1
+; V1-NEXT:    call __moddi3
+; V1-NEXT:    ;;
+; V1-NEXT:    extfs $r0 = $r19, 31, 16
+; V1-NEXT:    extfs $r1 = $r18, 31, 16
+; V1-NEXT:    copyd $r21 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sxwd $r0 = $r0
+; V1-NEXT:    sxwd $r1 = $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    insf $r21 = $r20, 31, 16
+; V1-NEXT:    call __moddi3
+; V1-NEXT:    ;;
+; V1-NEXT:    sxhd $r0 = $r19
+; V1-NEXT:    sxhd $r1 = $r18
+; V1-NEXT:    copyd $r20 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sxwd $r0 = $r0
+; V1-NEXT:    sxwd $r1 = $r1
+; V1-NEXT:    call __moddi3
+; V1-NEXT:    ;;
+; V1-NEXT:    lq $r18r19 = 24[$r12]
+; V1-NEXT:    insf $r0 = $r20, 31, 16
+; V1-NEXT:    ;;
+; V1-NEXT:    lq $r20r21 = 40[$r12]
+; V1-NEXT:    insf $r0 = $r21, 63, 32
+; V1-NEXT:    ;;
+; V1-NEXT:    ld $r16 = 56[$r12]
+; V1-NEXT:    ;;
+; V1-NEXT:    set $ra = $r16
+; V1-NEXT:    addd $r12 = $r12, 64
+; V1-NEXT:    ;;
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: test_rem:
+; V2:       # %bb.0:
+; V2-NEXT:    addd $r12 = $r12, -64
+; V2-NEXT:    get $r16 = $ra
+; V2-NEXT:    ;;
+; V2-NEXT:    sd 56[$r12] = $r16
+; V2-NEXT:    ;;
+; V2-NEXT:    sq 40[$r12] = $r20r21
+; V2-NEXT:    ;;
+; V2-NEXT:    sq 24[$r12] = $r18r19
+; V2-NEXT:    copyd $r18 = $r1
+; V2-NEXT:    copyd $r19 = $r0
+; V2-NEXT:    ;;
+; V2-NEXT:    srad $r0 = $r19, 48
+; V2-NEXT:    srad $r1 = $r18, 48
+; V2-NEXT:    ;;
+; V2-NEXT:    sxwd $r0 = $r0
+; V2-NEXT:    sxwd $r1 = $r1
+; V2-NEXT:    call __moddi3
+; V2-NEXT:    ;;
+; V2-NEXT:    extfs $r0 = $r19, 47, 32
+; V2-NEXT:    extfs $r1 = $r18, 47, 32
+; V2-NEXT:    copyd $r20 = $r0
+; V2-NEXT:    ;;
+; V2-NEXT:    sxwd $r0 = $r0
+; V2-NEXT:    sxwd $r1 = $r1
+; V2-NEXT:    call __moddi3
+; V2-NEXT:    ;;
+; V2-NEXT:    extfs $r0 = $r19, 31, 16
+; V2-NEXT:    extfs $r1 = $r18, 31, 16
+; V2-NEXT:    copyd $r21 = $r0
+; V2-NEXT:    ;;
+; V2-NEXT:    sxwd $r0 = $r0
+; V2-NEXT:    sxwd $r1 = $r1
+; V2-NEXT:    insf $r21 = $r20, 31, 16
+; V2-NEXT:    call __moddi3
+; V2-NEXT:    ;;
+; V2-NEXT:    sxhd $r0 = $r19
+; V2-NEXT:    sxhd $r1 = $r18
+; V2-NEXT:    copyd $r20 = $r0
+; V2-NEXT:    ;;
+; V2-NEXT:    sxwd $r0 = $r0
+; V2-NEXT:    sxwd $r1 = $r1
+; V2-NEXT:    call __moddi3
+; V2-NEXT:    ;;
+; V2-NEXT:    lq $r18r19 = 24[$r12]
+; V2-NEXT:    insf $r0 = $r20, 31, 16
+; V2-NEXT:    ;;
+; V2-NEXT:    lq $r20r21 = 40[$r12]
+; V2-NEXT:    insf $r0 = $r21, 63, 32
+; V2-NEXT:    ;;
+; V2-NEXT:    ld $r16 = 56[$r12]
+; V2-NEXT:    ;;
+; V2-NEXT:    set $ra = $r16
+; V2-NEXT:    addd $r12 = $r12, 64
+; V2-NEXT:    ;;
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %r = srem <4 x i16> %a, %b
   ret <4 x i16> %r
 }
@@ -437,33 +555,59 @@ define <4 x i16> @test_select_cc(<4 x i16> %a, <4 x i16> %b, <4 x i16> %c, <4 x 
 }
 
 define <4 x i64> @test_select_cc_f32_f32(<4 x i64> %a, <4 x i64> %b, <4 x i16> %c, <4 x i16> %d) {
-; ALL-LABEL: test_select_cc_f32_f32:
-; ALL:       # %bb.0:
-; ALL-NEXT:    compnhq.ltu $r8 = $r8, $r9
-; ALL-NEXT:    ;;
-; ALL-NEXT:    srlw $r8 = $r8, 16
-; ALL-NEXT:    srld $r9 = $r8, 48
-; ALL-NEXT:    extfz $r10 = $r8, 47, 32
-; ALL-NEXT:    zxhd $r11 = $r8
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sxhd $r9 = $r9
-; ALL-NEXT:    sxhd $r10 = $r10
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sxhd $r8 = $r8
-; ALL-NEXT:    sxhd $r11 = $r11
-; ALL-NEXT:    ;;
-; ALL-NEXT:    cmoved.dnez $r11 ? $r4 = $r0
-; ALL-NEXT:    cmoved.dnez $r8 ? $r5 = $r1
-; ALL-NEXT:    ;;
-; ALL-NEXT:    copyd $r0 = $r4
-; ALL-NEXT:    copyd $r1 = $r5
-; ALL-NEXT:    cmoved.dnez $r10 ? $r6 = $r2
-; ALL-NEXT:    cmoved.dnez $r9 ? $r7 = $r3
-; ALL-NEXT:    ;;
-; ALL-NEXT:    copyd $r2 = $r6
-; ALL-NEXT:    copyd $r3 = $r7
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; V1-LABEL: test_select_cc_f32_f32:
+; V1:       # %bb.0:
+; V1-NEXT:    compnhq.ltu $r8 = $r8, $r9
+; V1-NEXT:    ;;
+; V1-NEXT:    srlw $r8 = $r8, 16
+; V1-NEXT:    srld $r9 = $r8, 48
+; V1-NEXT:    extfz $r10 = $r8, 47, 32
+; V1-NEXT:    zxhd $r11 = $r8
+; V1-NEXT:    ;;
+; V1-NEXT:    sxhd $r9 = $r9
+; V1-NEXT:    sxhd $r10 = $r10
+; V1-NEXT:    ;;
+; V1-NEXT:    sxhd $r8 = $r8
+; V1-NEXT:    sxhd $r11 = $r11
+; V1-NEXT:    ;;
+; V1-NEXT:    cmoved.dnez $r11 ? $r4 = $r0
+; V1-NEXT:    cmoved.dnez $r8 ? $r5 = $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    copyd $r0 = $r4
+; V1-NEXT:    copyd $r1 = $r5
+; V1-NEXT:    cmoved.dnez $r10 ? $r6 = $r2
+; V1-NEXT:    cmoved.dnez $r9 ? $r7 = $r3
+; V1-NEXT:    ;;
+; V1-NEXT:    copyd $r2 = $r6
+; V1-NEXT:    copyd $r3 = $r7
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: test_select_cc_f32_f32:
+; V2:       # %bb.0:
+; V2-NEXT:    compnhq.ltu $r8 = $r8, $r9
+; V2-NEXT:    ;;
+; V2-NEXT:    srlw $r8 = $r8, 16
+; V2-NEXT:    srld $r9 = $r8, 48
+; V2-NEXT:    extfz $r10 = $r8, 47, 32
+; V2-NEXT:    zxhd $r11 = $r8
+; V2-NEXT:    ;;
+; V2-NEXT:    sxhd $r8 = $r8
+; V2-NEXT:    sxhd $r9 = $r9
+; V2-NEXT:    sxhd $r10 = $r10
+; V2-NEXT:    sxhd $r11 = $r11
+; V2-NEXT:    ;;
+; V2-NEXT:    cmoved.dnez $r11 ? $r4 = $r0
+; V2-NEXT:    cmoved.dnez $r8 ? $r5 = $r1
+; V2-NEXT:    cmoved.dnez $r10 ? $r6 = $r2
+; V2-NEXT:    cmoved.dnez $r9 ? $r7 = $r3
+; V2-NEXT:    ;;
+; V2-NEXT:    copyd $r0 = $r4
+; V2-NEXT:    copyd $r1 = $r5
+; V2-NEXT:    copyd $r2 = $r6
+; V2-NEXT:    copyd $r3 = $r7
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %cc = icmp ult <4 x i16> %c, %d
   %r = select <4 x i1> %cc, <4 x i64> %a, <4 x i64> %b
   ret <4 x i64> %r
@@ -571,20 +715,34 @@ define <4 x i16> @concat(<2 x i16> %a, <2 x i16> %b){
 }
 
 define <4 x i64> @test_sext_2xi64(<4 x i16> %a) {
-; ALL-LABEL: test_sext_2xi64:
-; ALL:       # %bb.0:
-; ALL-NEXT:    zxhd $r1 = $r0
-; ALL-NEXT:    srlw $r2 = $r0, 16
-; ALL-NEXT:    extfz $r3 = $r0, 47, 32
-; ALL-NEXT:    srld $r4 = $r0, 48
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sxhd $r0 = $r1
-; ALL-NEXT:    sxhd $r1 = $r2
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sxhd $r2 = $r3
-; ALL-NEXT:    sxhd $r3 = $r4
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; V1-LABEL: test_sext_2xi64:
+; V1:       # %bb.0:
+; V1-NEXT:    zxhd $r1 = $r0
+; V1-NEXT:    srlw $r2 = $r0, 16
+; V1-NEXT:    extfz $r3 = $r0, 47, 32
+; V1-NEXT:    srld $r4 = $r0, 48
+; V1-NEXT:    ;;
+; V1-NEXT:    sxhd $r0 = $r1
+; V1-NEXT:    sxhd $r1 = $r2
+; V1-NEXT:    ;;
+; V1-NEXT:    sxhd $r2 = $r3
+; V1-NEXT:    sxhd $r3 = $r4
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: test_sext_2xi64:
+; V2:       # %bb.0:
+; V2-NEXT:    zxhd $r1 = $r0
+; V2-NEXT:    srlw $r2 = $r0, 16
+; V2-NEXT:    extfz $r3 = $r0, 47, 32
+; V2-NEXT:    srld $r4 = $r0, 48
+; V2-NEXT:    ;;
+; V2-NEXT:    sxhd $r0 = $r1
+; V2-NEXT:    sxhd $r1 = $r2
+; V2-NEXT:    sxhd $r2 = $r3
+; V2-NEXT:    sxhd $r3 = $r4
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %r = sext <4 x i16> %a to <4 x i64>
   ret <4 x i64> %r
 }

@@ -425,7 +425,6 @@ define <32 x i8> @sbfbv_us(<32 x i8> %0, <32 x i8> %1) {
 ; V2:       # %bb.0:
 ; V2-NEXT:    sbfusbo $r0 = $r0, $r4
 ; V2-NEXT:    sbfusbo $r1 = $r1, $r5
-; V2-NEXT:    ;;
 ; V2-NEXT:    sbfusbo $r2 = $r2, $r6
 ; V2-NEXT:    sbfusbo $r3 = $r3, $r7
 ; V2-NEXT:    ret
@@ -529,15 +528,24 @@ define <16 x i16> @sbfhx(<16 x i16> %0, <16 x i16> %1) {
 }
 
 define <16 x i16> @sbfhx_s(<16 x i16> %0, <16 x i16> %1) {
-; CHECK-LABEL: sbfhx_s:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    sbfshq $r0 = $r0, $r4
-; CHECK-NEXT:    sbfshq $r1 = $r1, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfshq $r2 = $r2, $r6
-; CHECK-NEXT:    sbfshq $r3 = $r3, $r7
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: sbfhx_s:
+; V1:       # %bb.0:
+; V1-NEXT:    sbfshq $r0 = $r0, $r4
+; V1-NEXT:    sbfshq $r1 = $r1, $r5
+; V1-NEXT:    ;;
+; V1-NEXT:    sbfshq $r2 = $r2, $r6
+; V1-NEXT:    sbfshq $r3 = $r3, $r7
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: sbfhx_s:
+; V2:       # %bb.0:
+; V2-NEXT:    sbfshq $r0 = $r0, $r4
+; V2-NEXT:    sbfshq $r1 = $r1, $r5
+; V2-NEXT:    sbfshq $r2 = $r2, $r6
+; V2-NEXT:    sbfshq $r3 = $r3, $r7
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %3 = tail call <16 x i16> @llvm.ssub.sat.v16i16(<16 x i16> %1, <16 x i16> %0)
   ret <16 x i16> %3
 }
@@ -561,7 +569,6 @@ define <16 x i16> @sbfhx_us(<16 x i16> %0, <16 x i16> %1) {
 ; V2:       # %bb.0:
 ; V2-NEXT:    sbfushq $r0 = $r0, $r4
 ; V2-NEXT:    sbfushq $r1 = $r1, $r5
-; V2-NEXT:    ;;
 ; V2-NEXT:    sbfushq $r2 = $r2, $r6
 ; V2-NEXT:    sbfushq $r3 = $r3, $r7
 ; V2-NEXT:    ret
@@ -696,15 +703,24 @@ define <8 x i32> @sbfwo(<8 x i32> %0, <8 x i32> %1) {
 }
 
 define <8 x i32> @sbfwo_s(<8 x i32> %0, <8 x i32> %1) {
-; CHECK-LABEL: sbfwo_s:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    sbfswp $r2 = $r2, $r6
-; CHECK-NEXT:    sbfswp $r3 = $r3, $r7
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfswp $r0 = $r0, $r4
-; CHECK-NEXT:    sbfswp $r1 = $r1, $r5
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: sbfwo_s:
+; V1:       # %bb.0:
+; V1-NEXT:    sbfswp $r2 = $r2, $r6
+; V1-NEXT:    sbfswp $r3 = $r3, $r7
+; V1-NEXT:    ;;
+; V1-NEXT:    sbfswp $r0 = $r0, $r4
+; V1-NEXT:    sbfswp $r1 = $r1, $r5
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: sbfwo_s:
+; V2:       # %bb.0:
+; V2-NEXT:    sbfswp $r0 = $r0, $r4
+; V2-NEXT:    sbfswp $r1 = $r1, $r5
+; V2-NEXT:    sbfswp $r2 = $r2, $r6
+; V2-NEXT:    sbfswp $r3 = $r3, $r7
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %3 = tail call <8 x i32> @llvm.ssub.sat.v8i32(<8 x i32> %1, <8 x i32> %0)
   ret <8 x i32> %3
 }
@@ -822,15 +838,24 @@ define <4 x i64> @sbfdq(<4 x i64> %0, <4 x i64> %1) {
 }
 
 define <4 x i64> @sbfdq_s(<4 x i64> %0, <4 x i64> %1) {
-; CHECK-LABEL: sbfdq_s:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    sbfsd $r0 = $r0, $r4
-; CHECK-NEXT:    sbfsd $r1 = $r1, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfsd $r2 = $r2, $r6
-; CHECK-NEXT:    sbfsd $r3 = $r3, $r7
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: sbfdq_s:
+; V1:       # %bb.0:
+; V1-NEXT:    sbfsd $r0 = $r0, $r4
+; V1-NEXT:    sbfsd $r1 = $r1, $r5
+; V1-NEXT:    ;;
+; V1-NEXT:    sbfsd $r2 = $r2, $r6
+; V1-NEXT:    sbfsd $r3 = $r3, $r7
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: sbfdq_s:
+; V2:       # %bb.0:
+; V2-NEXT:    sbfsd $r0 = $r0, $r4
+; V2-NEXT:    sbfsd $r1 = $r1, $r5
+; V2-NEXT:    sbfsd $r2 = $r2, $r6
+; V2-NEXT:    sbfsd $r3 = $r3, $r7
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %3 = tail call <4 x i64> @llvm.ssub.sat.v4i64(<4 x i64> %1, <4 x i64> %0)
   ret <4 x i64> %3
 }
@@ -854,7 +879,6 @@ define <4 x i64> @sbfdq_us(<4 x i64> %0, <4 x i64> %1) {
 ; V2:       # %bb.0:
 ; V2-NEXT:    sbfusd $r0 = $r0, $r4
 ; V2-NEXT:    sbfusd $r1 = $r1, $r5
-; V2-NEXT:    ;;
 ; V2-NEXT:    sbfusd $r2 = $r2, $r6
 ; V2-NEXT:    sbfusd $r3 = $r3, $r7
 ; V2-NEXT:    ret

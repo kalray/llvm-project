@@ -238,9 +238,9 @@ define <8 x i32> @negbvs(<8 x i32> %0) {
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    negsbo $r0 = $r0
 ; CV2-NEXT:    negsbo $r1 = $r1
-; CV2-NEXT:    ;;
 ; CV2-NEXT:    negsbo $r2 = $r2
 ; CV2-NEXT:    negsbo $r3 = $r3
+; CV2-NEXT:    ;;
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
   %2 = bitcast <8 x i32> %0 to <32 x i8>
@@ -339,9 +339,9 @@ define <16 x i16> @neghxs(<16 x i16> %0) {
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    negshq $r0 = $r0
 ; CV2-NEXT:    negshq $r1 = $r1
-; CV2-NEXT:    ;;
 ; CV2-NEXT:    negshq $r2 = $r2
 ; CV2-NEXT:    negshq $r3 = $r3
+; CV2-NEXT:    ;;
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
   %2 = tail call <16 x i16> @llvm.ssub.sat.v16i16(<16 x i16> zeroinitializer, <16 x i16> %0)
@@ -453,18 +453,30 @@ define <8 x i32> @negwo(<8 x i32> %0) {
 }
 
 define <8 x i32> @negwos(<8 x i32> %0) {
-; ALL-LABEL: negwos:
-; ALL:       # %bb.0:
-; ALL-NEXT:    make $r4 = 0
-; ALL-NEXT:    make $r5 = 0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sbfswp $r2 = $r2, $r4
-; ALL-NEXT:    sbfswp $r3 = $r3, $r5
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sbfswp $r0 = $r0, $r4
-; ALL-NEXT:    sbfswp $r1 = $r1, $r5
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; CV1-LABEL: negwos:
+; CV1:       # %bb.0:
+; CV1-NEXT:    make $r4 = 0
+; CV1-NEXT:    make $r5 = 0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sbfswp $r2 = $r2, $r4
+; CV1-NEXT:    sbfswp $r3 = $r3, $r5
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sbfswp $r0 = $r0, $r4
+; CV1-NEXT:    sbfswp $r1 = $r1, $r5
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: negwos:
+; CV2:       # %bb.0:
+; CV2-NEXT:    make $r4 = 0
+; CV2-NEXT:    make $r5 = 0
+; CV2-NEXT:    ;;
+; CV2-NEXT:    sbfswp $r0 = $r0, $r4
+; CV2-NEXT:    sbfswp $r1 = $r1, $r5
+; CV2-NEXT:    sbfswp $r2 = $r2, $r4
+; CV2-NEXT:    sbfswp $r3 = $r3, $r5
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
   %2 = tail call <8 x i32> @llvm.ssub.sat.v8i32(<8 x i32> zeroinitializer, <8 x i32> %0)
   ret <8 x i32> %2
 }
@@ -558,9 +570,9 @@ define <4 x i64> @negdqs(<4 x i64> %0) {
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    negsd $r0 = $r0
 ; CV2-NEXT:    negsd $r1 = $r1
-; CV2-NEXT:    ;;
 ; CV2-NEXT:    negsd $r2 = $r2
 ; CV2-NEXT:    negsd $r3 = $r3
+; CV2-NEXT:    ;;
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
   %2 = tail call <4 x i64> @llvm.ssub.sat.v4i64(<4 x i64> zeroinitializer, <4 x i64> %0)

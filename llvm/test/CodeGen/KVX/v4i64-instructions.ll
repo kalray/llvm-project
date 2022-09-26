@@ -436,15 +436,24 @@ define <4 x i64> @test_tailcall_flipped(<4 x i64> %a, <4 x i64> %b) #0 {
 }
 
 define <4 x i64> @test_select(<4 x i64> %a, <4 x i64> %b, i1 zeroext %c) #0 {
-; CHECK-LABEL: test_select:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    cmoved.even $r8 ? $r2 = $r6
-; CHECK-NEXT:    cmoved.even $r8 ? $r3 = $r7
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.even $r8 ? $r0 = $r4
-; CHECK-NEXT:    cmoved.even $r8 ? $r1 = $r5
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CV1-LABEL: test_select:
+; CV1:       # %bb.0:
+; CV1-NEXT:    cmoved.even $r8 ? $r2 = $r6
+; CV1-NEXT:    cmoved.even $r8 ? $r3 = $r7
+; CV1-NEXT:    ;;
+; CV1-NEXT:    cmoved.even $r8 ? $r0 = $r4
+; CV1-NEXT:    cmoved.even $r8 ? $r1 = $r5
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: test_select:
+; CV2:       # %bb.0:
+; CV2-NEXT:    cmoved.even $r8 ? $r0 = $r4
+; CV2-NEXT:    cmoved.even $r8 ? $r1 = $r5
+; CV2-NEXT:    cmoved.even $r8 ? $r2 = $r6
+; CV2-NEXT:    cmoved.even $r8 ? $r3 = $r7
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
   %r = select i1 %c, <4 x i64> %a, <4 x i64> %b
   ret <4 x i64> %r
 }
@@ -773,15 +782,24 @@ define <4 x i1> @test_icmp_ult(<4 x i64> %a, <4 x i64> %b) #0 {
 declare <4 x i64> @llvm.abs.v4i64(<4 x i64>, i1) #0
 
 define <4 x i64> @test_abs(<4 x i64> %a) #0 {
-; CHECK-LABEL: test_abs:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    absd $r0 = $r0
-; CHECK-NEXT:    absd $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    absd $r2 = $r2
-; CHECK-NEXT:    absd $r3 = $r3
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CV1-LABEL: test_abs:
+; CV1:       # %bb.0:
+; CV1-NEXT:    absd $r0 = $r0
+; CV1-NEXT:    absd $r1 = $r1
+; CV1-NEXT:    ;;
+; CV1-NEXT:    absd $r2 = $r2
+; CV1-NEXT:    absd $r3 = $r3
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: test_abs:
+; CV2:       # %bb.0:
+; CV2-NEXT:    absd $r0 = $r0
+; CV2-NEXT:    absd $r1 = $r1
+; CV2-NEXT:    absd $r2 = $r2
+; CV2-NEXT:    absd $r3 = $r3
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
   %r = call <4 x i64> @llvm.abs.v4i64(<4 x i64> %a, i1 false)
   ret <4 x i64> %r
 }
@@ -827,20 +845,34 @@ define <4 x i64> @test_insertelement3(<4 x i64> %a, i64 %x) #0 {
 }
 
 define <4 x i64> @test_insertelement(<4 x i64> %a, i64 %x, i64 %p) #0 {
-; CHECK-LABEL: test_insertelement:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    compd.eq $r6 = $r5, 3
-; CHECK-NEXT:    compd.eq $r7 = $r5, 2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.odd $r7 ? $r2 = $r4
-; CHECK-NEXT:    cmoved.odd $r6 ? $r3 = $r4
-; CHECK-NEXT:    compd.eq $r5 = $r5, 0
-; CHECK-NEXT:    compd.eq $r6 = $r5, 1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.odd $r5 ? $r0 = $r4
-; CHECK-NEXT:    cmoved.odd $r6 ? $r1 = $r4
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CV1-LABEL: test_insertelement:
+; CV1:       # %bb.0:
+; CV1-NEXT:    compd.eq $r6 = $r5, 3
+; CV1-NEXT:    compd.eq $r7 = $r5, 2
+; CV1-NEXT:    ;;
+; CV1-NEXT:    cmoved.odd $r7 ? $r2 = $r4
+; CV1-NEXT:    cmoved.odd $r6 ? $r3 = $r4
+; CV1-NEXT:    compd.eq $r5 = $r5, 0
+; CV1-NEXT:    compd.eq $r6 = $r5, 1
+; CV1-NEXT:    ;;
+; CV1-NEXT:    cmoved.odd $r5 ? $r0 = $r4
+; CV1-NEXT:    cmoved.odd $r6 ? $r1 = $r4
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: test_insertelement:
+; CV2:       # %bb.0:
+; CV2-NEXT:    compd.eq $r5 = $r5, 0
+; CV2-NEXT:    compd.eq $r6 = $r5, 3
+; CV2-NEXT:    compd.eq $r7 = $r5, 2
+; CV2-NEXT:    compd.eq $r8 = $r5, 1
+; CV2-NEXT:    ;;
+; CV2-NEXT:    cmoved.odd $r5 ? $r0 = $r4
+; CV2-NEXT:    cmoved.odd $r8 ? $r1 = $r4
+; CV2-NEXT:    cmoved.odd $r7 ? $r2 = $r4
+; CV2-NEXT:    cmoved.odd $r6 ? $r3 = $r4
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
   %i = insertelement <4 x i64> %a, i64 %x, i64 %p
   ret <4 x i64> %i
 }
