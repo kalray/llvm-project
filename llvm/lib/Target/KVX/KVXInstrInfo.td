@@ -781,7 +781,6 @@ multiclass MC_1B<string OpcStr> {
 
 // multiclass MC_1C is used by:
 //   defm CMOVED
-let isAsCheapAsAMove = 1 in
 multiclass MC_1C<string OpcStr> {
   let Constraints = "$a3 = $a3o", isMoveImm = 1, isReMaterializable = 1 in {
   def ri10 : KVX_INSTRUCTION
