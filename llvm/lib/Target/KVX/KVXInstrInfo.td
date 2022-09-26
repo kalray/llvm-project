@@ -3201,7 +3201,7 @@ def FMULWQ : KVX_INSTRUCTION
 
 defm FMULWC : MC_2AM<"fmulwc">;
 
-defm FMULWDC : MC_2C<"fmulwdc">;
+defm FMULWDC : MC_2C<"fmulwdc">, Requires<[IsV1]>;
 
 defm FMULCWDC : MC_2C<"fmulcwdc">;
 

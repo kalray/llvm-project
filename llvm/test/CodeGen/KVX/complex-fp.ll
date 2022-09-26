@@ -2,9 +2,7 @@
 ; RUN: llc -o - %s | FileCheck %s --check-prefixes=CHECK,CV1
 ; RUN: llc -mcpu=kv3-2 -o - %s | FileCheck %s --check-prefixes=CHECK,CV2
 ; RUN: clang -c -o /dev/null %s
-
-; Assembly broken, cf T19976
-; FIXME: clang -march=kv3-2 -c -o /dev/null %s
+; RUN: clang -march=kv3-2 -c -o /dev/null %s
 
 target triple = "kvx-kalray-cos"
 
@@ -276,11 +274,32 @@ define i64 @FMULWC(i64 %0, i64 %1) {
 }
 
 define { i64, i64 } @FMULWDC(i64 %0, i64 %1) {
-; CHECK-LABEL: FMULWDC:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    fmulwdc $r0r1 = $r0, $r1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CV1-LABEL: FMULWDC:
+; CV1:       # %bb.0:
+; CV1-NEXT:    fmulwdc $r0r1 = $r0, $r1
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: FMULWDC:
+; CV2:       # %bb.0:
+; CV2-NEXT:    srld $r1 = $r1, 32
+; CV2-NEXT:    srld $r2 = $r0, 32
+; CV2-NEXT:    fwidenlwd $r3 = $r1
+; CV2-NEXT:    fwidenlwd $r5 = $r0
+; CV2-NEXT:    ;;
+; CV2-NEXT:    fmuld $r0 = $r3, $r5
+; CV2-NEXT:    fwidenlwd $r1 = $r1
+; CV2-NEXT:    fwidenlwd $r4 = $r2
+; CV2-NEXT:    ;;
+; CV2-NEXT:    fmuld $r2 = $r3, $r4
+; CV2-NEXT:    ;;
+; CV2-NEXT:    ffmsd $r0 = $r1, $r4
+; CV2-NEXT:    ;;
+; CV2-NEXT:    ffmad $r2 = $r1, $r5
+; CV2-NEXT:    ;;
+; CV2-NEXT:    copyd $r1 = $r2
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
   %3 = trunc i64 %0 to i32
   %4 = bitcast i32 %3 to float
   %5 = lshr i64 %0, 32
@@ -1001,11 +1020,30 @@ define <2 x float> @FMULWC_3(<2 x float> %0, <2 x float> %1) {
 }
 
 define <2 x double> @FMULWDC_2(<2 x float> %0, <2 x float> %1) {
-; CHECK-LABEL: FMULWDC_2:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    fmulwdc $r0r1 = $r0, $r1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CV1-LABEL: FMULWDC_2:
+; CV1:       # %bb.0:
+; CV1-NEXT:    fmulwdc $r0r1 = $r0, $r1
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: FMULWDC_2:
+; CV2:       # %bb.0:
+; CV2-NEXT:    fwidenlwd $r2 = $r1
+; CV2-NEXT:    fwidenlwd $r4 = $r0
+; CV2-NEXT:    ;;
+; CV2-NEXT:    fmuld $r0 = $r2, $r4
+; CV2-NEXT:    fwidenmwd $r1 = $r1
+; CV2-NEXT:    fwidenmwd $r3 = $r0
+; CV2-NEXT:    ;;
+; CV2-NEXT:    fmuld $r2 = $r2, $r3
+; CV2-NEXT:    ;;
+; CV2-NEXT:    ffmsd $r0 = $r1, $r3
+; CV2-NEXT:    ;;
+; CV2-NEXT:    ffmad $r2 = $r1, $r4
+; CV2-NEXT:    ;;
+; CV2-NEXT:    copyd $r1 = $r2
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
   %3 = fpext <2 x float> %0 to <2 x double>
   %4 = fpext <2 x float> %1 to <2 x double>
   %5 = extractelement <2 x double> %3, i32 0
