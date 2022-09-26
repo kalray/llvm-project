@@ -42,7 +42,8 @@ let Defs=[RA], isCall=1 in
 def CALLPLT : PCREL27_SIMPLE
   <(outs), (ins Pcrel27:$pcreladdr),
    "call $pcreladdr",
-   [/* no direct match, see Call pattern below */]>;
+   [/* no direct match, see Call pattern below */],
+   BCU>;
 
 
 // Do not indirect symbols for function calls (loader will)

@@ -195,7 +195,8 @@ let isCall = 1, isBarrier = 1, isBranch = 1, isTerminator = 1, isReturn = 1, Use
 def TAIL : PCREL27_SIMPLE
   <(outs), (ins Pcrel27:$a1),
    "goto $a1",
-   [ ]>;
+   [ ],
+   BCU>;
 
 let isCall = 1, isBarrier = 1, isBranch = 1, isIndirectBranch = 1, isTerminator = 1, isReturn = 1, Uses = [R12] in
 def ITAIL : REGISTERZ_SIMPLE
@@ -215,7 +216,8 @@ def GetSystemReg : SDNode <"KVXISD::GetSystemReg", SDTypeProfile<1, 1, [SDTCisSa
 def GETSYSTEMREG : REGISTERZ_SYSTEMS2_SIMPLE
   <(outs SingleReg:$dst), (ins SystemReg:$sr),
    "get $dst = $sr",
-   [(set (i64 SingleReg:$dst), (GetSystemReg SystemReg:$sr))]>;
+   [(set (i64 SingleReg:$dst), (GetSystemReg SystemReg:$sr))],
+   BCU_TINY_TINY_MAU_XNOP>;
 
 //
 // Function return

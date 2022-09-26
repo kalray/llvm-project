@@ -388,92 +388,92 @@ class REGISTERZ_SIMPLE
 // SCALL
 let Size = 4 in
 class SYSNUMBER_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, ALL>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 1 insn(s):
 // LOOPDO
 let Size = 4 in
 class REGISTERZ_PCREL17_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, ALL>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 2 insn(s):
 // WFXL, WFXM
 let Size = 4 in
 class SYSTEMT2_REGISTERZ_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, BCU>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 3 insn(s):
 // WFXL, WFXM, SET
 let Size = 4 in
 class SYSTEMALONE_REGISTERZ_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, ALL>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 3 insn(s):
 // WFXL, WFXM, SET
 let Size = 4 in
 class SYSTEMT4_REGISTERZ_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, BCU>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 1 insn(s):
 // GET
 let Size = 4 in
 class REGISTERZ_SYSTEMS2_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, BCU_TINY_TINY_MAU_XNOP>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 2 insn(s):
 // GET, RSWAP
 let Size = 4 in
 class REGISTERZ_SYSTEMS3_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, BCU_TINY_TINY_MAU_XNOP>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 1 insn(s):
 // SET
 let Size = 4 in
 class SYSTEMT3_REGISTERZ_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, BCU>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 1 insn(s):
 // SET
 let Size = 4 in
 class SYSTEMRA_REGISTERZ_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, BCU>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 1 insn(s):
 // RSWAP
 let Size = 4 in
 class REGISTERZ_SYSTEMS4_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
   : KVX_INSTRUCTION <outs, ins, asmstr, pattern, BCU_TINY_TINY_MAU_XNOP>;
 
 // 1 insn(s):
 // RSWAP
 let Size = 4 in
 class REGISTERZ_SYSTEMALONE_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, ALL>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 2 insn(s):
 // GOTO, CALL
 let Size = 4 in
 class PCREL27_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, BCU>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 1 insn(s):
 // CB
 let Size = 4 in
 class BRANCHCOND_REGISTERZ_PCREL17_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, BCU>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 6 insn(s):
 // ALADDW, ALADDD
@@ -577,99 +577,99 @@ class LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_REGISTERU_TRIPLE
 // ALCLRW, ALCLRD
 let Size = 4 in
 class REGISTERW_SIGNED10_REGISTERZ_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_ALCLR>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 2 insn(s):
 // ALCLRW, ALCLRD
 let Size = 8 in
 class REGISTERW_UPPER27_LOWER10_REGISTERZ_DOUBLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_X_ALCLR>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 2 insn(s):
 // ALCLRW, ALCLRD
 let Size = 12 in
 class REGISTERW_EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_Y_ALCLR>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 2 insn(s):
 // ALCLRW, ALCLRD
 let Size = 4 in
 class DOSCALE_REGISTERW_REGISTERY_REGISTERZ_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_ALCLR>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 2 insn(s):
 // ALCLRW, ALCLRD
 let Size = 4 in
 class LSUCOND_REGISTERY_REGISTERW_REGISTERZ_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_ALCLR>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 2 insn(s):
 // ALCLRW, ALCLRD
 let Size = 8 in
 class LSUCOND_REGISTERY_REGISTERW_OFFSET27_REGISTERZ_DOUBLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_X_ALCLR>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 2 insn(s):
 // ALCLRW, ALCLRD
 let Size = 12 in
 class LSUCOND_REGISTERY_REGISTERW_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXW_Y_ALCLR>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 4 insn(s):
 // DTOUCHL, DINVALL, DZEROL, I1INVALS
 let Size = 4 in
 class SIGNED10_REGISTERZ_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_LOAD>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 4 insn(s):
 // DTOUCHL, DINVALL, DZEROL, I1INVALS
 let Size = 8 in
 class UPPER27_LOWER10_REGISTERZ_DOUBLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_X_LOAD>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 4 insn(s):
 // DTOUCHL, DINVALL, DZEROL, I1INVALS
 let Size = 12 in
 class EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_Y_LOAD>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 4 insn(s):
 // DTOUCHL, DINVALL, DZEROL, I1INVALS
 let Size = 4 in
 class REGISTERY_REGISTERZ_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_LOAD>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 4 insn(s):
 // DTOUCHL, DINVALL, DZEROL, I1INVALS
 let Size = 4 in
 class LSUCOND_REGISTERY_REGISTERZ_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_LOAD>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 4 insn(s):
 // DTOUCHL, DINVALL, DZEROL, I1INVALS
 let Size = 8 in
 class LSUCOND_REGISTERY_OFFSET27_REGISTERZ_DOUBLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_X_LOAD>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 4 insn(s):
 // DTOUCHL, DINVALL, DZEROL, I1INVALS
 let Size = 12 in
 class LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_Y_LOAD>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // STSUD, ADDD, SBFD, ABDD, MIND, MINUD, MAXD, MAXUD, ANDD, NANDD, ORD, NORD,
 // XORD, NXORD, ANDND, ORND, SBMM8, SBMMT8, ADDSD, ADDUSD, ADDUSW, ADDUSWP, SBFSD, ADDX2D, ADDX4D,
@@ -777,8 +777,8 @@ class REGISTERW_REGISTERZ_SIMPLE
 // FWIDENLHWP, FWIDENMHWP
 let Size = 4 in
 class SILENT2_REGISTERW_REGISTERZ_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, ALU_LITE>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 4 insn(s):
 // FNARROWDW, FRECW, FRSRW, FNARROWWH
@@ -798,8 +798,8 @@ class ROUNDING2_SILENT2_REGISTERW_REGISTERP_SIMPLE
 // INSF, EXTFZ, EXTFS, CLRF
 let Size = 4 in
 class REGISTERW_REGISTERZ_STOPBIT2_STOPBIT4_STARTBIT_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, ALU_LITE>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 25 insn(s):
 // SATD, SRSD, SLLD, SRAD, SRLD, SLSD, SRSW, SLLW, SRAW, SRLW, SLSW, ROLW,
@@ -815,22 +815,22 @@ class REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE
 // COMPD
 let Size = 4 in
 class COMPARISON_REGISTERW_REGISTERZ_SIGNED10_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, ALU_TINY>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 1 insn(s):
 // COMPD
 let Size = 8 in
 class COMPARISON_REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, ALU_TINY_X>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 1 insn(s):
 // COMPD
 let Size = 12 in
 class COMPARISON_REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, ALU_TINY_Y>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // COMPD, COMPW, COMPWD, COMPUWD, COMPNWP, COMPNBO, COMPNHQ, COMPNW
 let Size = 4 in
@@ -841,42 +841,42 @@ class COMPARISON_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
 // COMPW, COMPNW, COMPND
 let Size = 8 in
 class COMPARISON_REGISTERW_REGISTERZ_UPPER27_LOWER5_DOUBLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, ALU_TINY_X>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 1 insn(s):
 // CMOVED
 let Size = 4 in
 class SCALARCOND_REGISTERZ_REGISTERW_SIGNED10_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, ALU_LITE>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 1 insn(s):
 // CMOVED
 let Size = 8 in
 class SCALARCOND_REGISTERZ_REGISTERW_UPPER27_LOWER10_DOUBLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, ALU_LITE_X>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 1 insn(s):
 // CMOVED
 let Size = 12 in
 class SCALARCOND_REGISTERZ_REGISTERW_EXTEND27_UPPER27_LOWER10_TRIPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, ALU_LITE_Y>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 1 insn(s):
 // CMOVED
 let Size = 4 in
 class SCALARCOND_REGISTERZ_REGISTERW_REGISTERY_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, ALU_LITE>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // CMOVEWP, CMOVEHQ, CMOVEBO
 let Size = 4 in
 class SIMDCOND_REGISTERZ_REGISTERW_REGISTERY_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, ALU_LITE>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 2 insn(s):
 // MAKE, PCREL
@@ -902,63 +902,63 @@ class REGISTERW_EXTEND27_UPPER27_LOWER10_TRIPLE
 // FCOMPW, FCOMPNW
 let Size = 4 in
 class FLOATCOMP_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, ALU_LITE>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // FCOMPW, FCOMPNW
 let Size = 8 in
 class FLOATCOMP_REGISTERW_REGISTERZ_UPPER27_LOWER5_DOUBLE_BINARY32
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, ALU_LITE_X>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 1 insn(s):
 // FCOMPD
 let Size = 4 in
 class FLOATCOMP_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY64
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, ALU_LITE>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 1 insn(s):
 // FCOMPNWP
 let Size = 4 in
 class FLOATCOMP_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32X2
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, ALU_LITE>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 1 insn(s):
 // FCOMPNHQ
 let Size = 4 in
 class FLOATCOMP_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY16X4
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, ALU_LITE>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 6 insn(s):
 // FSDIVD, FCDIVD, FSDIVW, FCDIVW, FSDIVWP, FCDIVWP
 let Size = 4 in
 class SILENT2_REGISTERW_REGISTERP_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, ALU_LITE>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 4 insn(s):
 // FLOATD, FLOATUD, FIXEDD, FIXEDUD
 let Size = 4 in
 class ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE_BINARY64
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, MAU_FP>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 4 insn(s):
 // FLOATWP, FLOATUWP, FIXEDWP, FIXEDUWP
 let Size = 4 in
 class ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE_BINARY32X2
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, MAU_FP>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 4 insn(s):
 // FLOATW, FLOATUW, FIXEDW, FIXEDUW
 let Size = 4 in
 class ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE_BINARY32
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, MAU_FP>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 40 insn(s):
 // MADDHWQ, MSBFHWQ, MADDUHWQ, MSBFUHWQ, MADDSUHWQ, MSBFSUHWQ, MADDDT,
@@ -997,8 +997,8 @@ class REGISTERM_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
 // DOT2WDP, DOT2UWDP, DOT2SUWDP, MULWQ, DOT2WZP
 let Size = 4 in
 class REGISTERM_REGISTERP_REGISTERO_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, MAU_AUXR>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 9 insn(s):
 // FFMAD, FFMSD, FMULD, FADDD, FSBFD, FFMAWD, FFMSWD, FMULWD, FDOT2WD
@@ -1073,17 +1073,17 @@ class ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE_BINARY16X4
 // FMULWQ, FADDDP, FADDWQ, FSBFDP, FSBFWQ, FDOT2WZP, FDOT2WDP
 let Size = 4 in
 class ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, MAU_AUXR_FP>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 let Size = 4, Constraints = "$out = $acc" in
-class ROUNDING_SILENT_TERNARY_AUXR_FP <string OpcStr, RegisterClass RC_OUT, RegisterClass RC_IN>
+class ROUNDING_SILENT_TERNARY_AUXR_FP <string OpcStr, RegisterClass RC_OUT, RegisterClass RC_IN, InstrItinClass itin>
   : KVX_INSTRUCTION <
     (outs RC_OUT:$out),
     (ins RC_OUT:$acc, RC_IN:$lhs, RC_IN:$rhs, RoundingMod:$r, SilentMod:$s),
     !strconcat (OpcStr, "$r$s $out = $lhs, $rhs"),
     [],
-    MAU_AUXR_FP>;
+    itin>;
 
 let Size = 4, Constraints = "$o = $a" in
 class TERNARY<string Opcode, RegisterClass RC_OUT, RegisterClass RC_LHS, RegisterClass RC_RHS, InstrItinClass Itin, list<dag> Patt = []>
@@ -1139,17 +1139,17 @@ class CACHE_OP<string Opcode, RegisterClass RC, InstrItinClass Itin, list<dag> P
      Patt,
      Itin>;
 
-class ROUNDING_SILENT_BINOP_MAU_FP<string OpcStr, RegisterClass RC_OUT, RegisterClass RC_IN>
-    : ROUNDING_SILENT_BINOP <OpcStr, RC_OUT, RC_IN, RC_IN, MAU_FP>;
+class ROUNDING_SILENT_BINOP_FFDM<string OpcStr, RegisterClass RC_OUT, RegisterClass RC_IN, InstrItinClass itin>
+    : ROUNDING_SILENT_BINOP <OpcStr, RC_OUT, RC_IN, RC_IN, itin>;
 
 
-class CONJ_ROUNDING_SILENT_BINOP_MAU_FP<string OpcStr, RegisterClass RC_OUT, RegisterClass RC_IN>
+class CONJ_ROUNDING_SILENT_BINOP<string OpcStr, RegisterClass RC_OUT, RegisterClass RC_IN, InstrItinClass itin>
     : KVX_INSTRUCTION <
      (outs RC_OUT:$o),
      (ins RC_IN:$lhs, RC_IN:$rhs, ConjugateMod:$c, RoundingMod:$r, SilentMod:$s),
      !strconcat (OpcStr, "$c$r$s $o = $lhs, $rhs"),
      [/* no straightforward pattern */],
-     MAU_FP>;
+     itin>;
 
 // 9 insn(s):
 // FFMAHW, FFMAW, FFMSHW, FFMSW, FADDW, FSBFW, FMULHW, FMULW, FDOT2W
@@ -1182,92 +1182,92 @@ class ROUNDING_SILENT_TRANSPOSE_REGISTERM_REGISTERO_REGISTERP
 // COPYO
 let Size = 4 in
 class REGISTERN_REGISTERQ_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, LSU_AUXR_AUXW_LOAD>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 1 insn(s):
 // MOVETQ
 let Size = 4 in
 class REGISTERAL_REGISTERZ_REGISTERY_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, ALU_LITE_CRWL>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 1 insn(s):
 // MOVETQ
 let Size = 4 in
 class REGISTERAH_REGISTERZ_REGISTERY_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, ALU_LITE_CRWH>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 1 insn(s):
 // ALIGNO
 let Size = 4 in
 class REGISTERN_REGISTERBE_REGISTERCO_BYTESHIFT_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, BCU_TINY_AUXW_CRRP>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 1 insn(s):
 // ALIGNO
 let Size = 4 in
 class REGISTERN_REGISTERBO_REGISTERCE_BYTESHIFT_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, BCU_TINY_AUXW_CRRP>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 1 insn(s):
 // ALIGNO
 let Size = 4 in
 class REGISTERN_REGISTERBE_REGISTERCO_REGISTERZ_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, BCU_TINY_AUXW_CRRP>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 1 insn(s):
 // ALIGNO
 let Size = 4 in
 class REGISTERN_REGISTERBO_REGISTERCE_REGISTERZ_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, BCU_TINY_AUXW_CRRP>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 1 insn(s):
 // ALIGNV
 let Size = 4 in
 class REGISTERA_REGISTERBE_REGISTERCO_BYTESHIFT_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, BCU_CRRP_CRWL_CRWH>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 1 insn(s):
 // ALIGNV
 let Size = 4 in
 class REGISTERA_REGISTERBO_REGISTERCE_BYTESHIFT_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, BCU_CRRP_CRWL_CRWH>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 1 insn(s):
 // ALIGNV
 let Size = 4 in
 class REGISTERA_REGISTERBE_REGISTERCO_REGISTERZ_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, BCU_CRRP_CRWL_CRWH>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 1 insn(s):
 // ALIGNV
 let Size = 4 in
 class REGISTERA_REGISTERBO_REGISTERCE_REGISTERZ_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, BCU_CRRP_CRWL_CRWH>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 1 insn(s):
 // MT44D
 let Size = 4 in
 class REGISTERAQ_REGISTERBQ_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, TCA>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 4 insn(s):
 // MMA484BW, MMA484UBW, MMA484SUBW, MMA484USBW
 let Size = 4 in
 class REGISTERAP_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, TCA>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 12 insn(s):
 // MMA444HBD0, MMA444UHBD0, MMA444SUHBD0, MMA444USHBD0, MMA444HBD1,
@@ -1275,92 +1275,92 @@ class REGISTERAP_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
 // MMA444USHD
 let Size = 4 in
 class REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, TCA>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 1 insn(s):
 // FMMA242HW0
 let Size = 4 in
 class REGISTERA0_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, TCA_FP16>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 1 insn(s):
 // FMMA242HW1
 let Size = 4 in
 class REGISTERA1_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, TCA_FP16>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 1 insn(s):
 // FMMA242HW2
 let Size = 4 in
 class REGISTERA2_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, TCA_FP16>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 1 insn(s):
 // FMMA242HW3
 let Size = 4 in
 class REGISTERA3_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, TCA_FP16>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 1 insn(s):
 // CONVDHV0
 let Size = 4 in
 class ROUNDINT_SATURATE_REGISTERAL_REGISTERBQ_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, TCA>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 1 insn(s):
 // CONVDHV1
 let Size = 4 in
 class ROUNDINT_SATURATE_REGISTERAH_REGISTERBQ_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, TCA>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 1 insn(s):
 // CONVWBV0
 let Size = 4 in
 class ROUNDINT_SATURATE_REGISTERAX_REGISTERBQ_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, TCA>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 1 insn(s):
 // CONVWBV1
 let Size = 4 in
 class ROUNDINT_SATURATE_REGISTERAY_REGISTERBQ_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, TCA>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 1 insn(s):
 // CONVWBV2
 let Size = 4 in
 class ROUNDINT_SATURATE_REGISTERAZ_REGISTERBQ_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, TCA>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 1 insn(s):
 // CONVWBV3
 let Size = 4 in
 class ROUNDINT_SATURATE_REGISTERAT_REGISTERBQ_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, TCA>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 1 insn(s):
 // FSCALEWV
 let Size = 4 in
 class XROUNDING_SILENT2_RECTIFY_REGISTERA_REGISTERB_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, TCA>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 1 insn(s):
 // FNARROWWHV
 let Size = 4 in
 class XROUNDING_SILENT2_REGISTERA_REGISTERBP_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, TCA>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 4 insn(s):
 // NEGWP, ABSWP, NEGHQ, ABSBO, ABSHQ
@@ -1373,27 +1373,27 @@ class REGISTERW_REGISTERZ_DOUBLE
 // COPYV
 let Size = 4 in
 class REGISTERA_REGISTERBE_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, BCU_CRRP_CRWL_CRWH>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 1 insn(s):
 // COPYV
 let Size = 4 in
 class REGISTERA_REGISTERBO_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, BCU_CRRP_CRWL_CRWH>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 1 insn(s):
 // MOVEFO
 let Size = 4 in
 class REGISTERN_REGISTERBE_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, BCU_TINY_AUXW_CRRP>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
 // 1 insn(s):
 // MOVEFO
 let Size = 4 in
 class REGISTERN_REGISTERBO_SIMPLE
-  <dag outs, dag ins, string asmstr, list<dag> pattern>
-  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, BCU_TINY_AUXW_CRRP>;
+  <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin>
+  : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin>;
 
