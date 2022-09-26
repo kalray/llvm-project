@@ -1,5 +1,5 @@
-; RUN: llc < %s -mtriple=kvx -exception-model sjlj | FileCheck --check-prefixes=CHECK,ALL %s
-; RUN: llc < %s -mtriple=kvx -relocation-model=pic -exception-model sjlj | FileCheck --check-prefixes=PIC,ALL %s
+; RUN: llc -o - %s -mtriple=kvx -exception-model sjlj | FileCheck --check-prefixes=CHECK,ALL %s
+; RUN: llc -o - %s -mtriple=kvx -relocation-model=pic -exception-model sjlj | FileCheck --check-prefixes=PIC,ALL %s
 
 define i8* @test_lsda() {
 ; ALL-LABEL: test_lsda:

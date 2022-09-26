@@ -1,4 +1,4 @@
-; RUN: llc < %s -O2 | FileCheck %s
+; RUN: llc -o - %s -O2 | FileCheck %s
 target triple = "kvx-kalray-cos"
 
 ; CHECK: .globl  foo
