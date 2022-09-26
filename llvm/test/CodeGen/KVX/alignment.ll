@@ -1,4 +1,6 @@
 ; RUN: llc -o - %s -O2 | FileCheck %s
+; RUN: clang -O2 -c -o /dev/null %s
+
 target triple = "kvx-kalray-cos"
 
 ; CHECK: .globl  foo

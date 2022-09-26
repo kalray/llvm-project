@@ -1,5 +1,6 @@
 ; RUN: llc -verify-machineinstrs %s -o /dev/null
 ; Not breaking the compiler is good enough.
+
 target triple = "kvx-kalray-cos"
 
 %struct._reent.13.42.71.1782.1811.1956 = type { i32, %struct.__sFILE.5.34.63.1774.1803.1948*, %struct.__sFILE.5.34.63.1774.1803.1948*, %struct.__sFILE.5.34.63.1774.1803.1948*, i32, [25 x i8], i32, %struct.__locale_t.6.35.64.1775.1804.1949*, i32, void (%struct._reent.13.42.71.1782.1811.1956*)*, %struct._Bigint.7.36.65.1776.1805.1950*, i32, %struct._Bigint.7.36.65.1776.1805.1950*, %struct._Bigint.7.36.65.1776.1805.1950**, i32, i8*, %union.anon.1.9.38.67.1778.1807.1952, %struct._atexit.11.40.69.1780.1809.1954*, %struct._atexit.11.40.69.1780.1809.1954, void (i32)**, %struct._glue.12.41.70.1781.1810.1955, [8 x i8], [3 x %struct.__sFILE.5.34.63.1774.1803.1948] }
