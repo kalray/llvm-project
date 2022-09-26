@@ -264,7 +264,7 @@ def MAKETLS : KVX_INSTRUCTION_Y
   <(outs SingleReg:$SingleReg), (ins Wrapped64:$imm),
   "make $SingleReg = @tlsle( $imm )",
   [],
-  ALU_TINY_Y>;
+  ALU_TINY_Y_>;
 
 // MAKE patterns disabled - selection is done in code
 /*

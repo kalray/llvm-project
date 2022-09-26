@@ -47,26 +47,26 @@ def TCA : InstrItinClass;
 def TCA_FP16 : InstrItinClass;
 def ALU_NOP : InstrItinClass;
 def ALU_TINY : InstrItinClass;
-def ALU_TINY_X : InstrItinClass;
-def ALU_TINY_Y : InstrItinClass;
+def ALU_TINY_X_ : InstrItinClass;
+def ALU_TINY_Y_ : InstrItinClass;
 def ALU_LITE : InstrItinClass;
-def ALU_LITE_X : InstrItinClass;
-def ALU_LITE_Y : InstrItinClass;
+def ALU_LITE_X_ : InstrItinClass;
+def ALU_LITE_Y_ : InstrItinClass;
 def ALU_LITE_CRWL : InstrItinClass;
 def ALU_LITE_CRWH : InstrItinClass;
 def ALU_FULL : InstrItinClass;
 def SFU : InstrItinClass;
-def ALU_FULL_X : InstrItinClass;
-def ALU_FULL_Y : InstrItinClass;
+def ALU_FULL_X_ : InstrItinClass;
+def ALU_FULL_Y_ : InstrItinClass;
 def MAU : InstrItinClass;
 def MAU_FP : InstrItinClass;
-def MAU_X : InstrItinClass;
+def MAU_X_ : InstrItinClass;
 def MAU_X_FP : InstrItinClass;
-def MAU_Y : InstrItinClass;
+def MAU_Y_ : InstrItinClass;
 def MAU_Y_FP : InstrItinClass;
 def MAU_AUXR : InstrItinClass;
-def MAU_AUXR_X : InstrItinClass;
-def MAU_AUXR_Y : InstrItinClass;
+def MAU_AUXR_X_ : InstrItinClass;
+def MAU_AUXR_Y_ : InstrItinClass;
 def MAU_AUXR_FP : InstrItinClass;
 def MAU_AUXR_X_FP : InstrItinClass;
 def MAU_AUXR_Y_FP : InstrItinClass;
@@ -112,16 +112,16 @@ def XSWAP256 : InstrItinClass;
 def ALU_TINY_CRRP : InstrItinClass;
 def ALU_TINY_CRRP_CRWL_CRWH : InstrItinClass;
 def ALU_TINY_CRWL_CRWH : InstrItinClass;
-// Switch-itineraries for instructions whose reservation tables changes
+// Switch-itineraries for instructions whose reservation table changes
 // between CV1 and CV2
 // Format: NAME_SWITCH_CV1VALUE_CV2VALUE
 
 def ALU_SWITCH_LITE_TINY : InstrItinClass;
-def ALU_SWITCH_LITE_TINY_X : InstrItinClass;
-def ALU_SWITCH_LITE_TINY_Y : InstrItinClass;
+def ALU_SWITCH_LITE_TINY_X_ : InstrItinClass;
+def ALU_SWITCH_LITE_TINY_Y_ : InstrItinClass;
 def MAU_SWITCH_AUXR_EMPTY : InstrItinClass;
-def MAU_SWITCH_AUXR_EMPTY_X : InstrItinClass;
-def MAU_SWITCH_AUXR_EMPTY_Y : InstrItinClass;
+def MAU_SWITCH_AUXR_EMPTY_X_ : InstrItinClass;
+def MAU_SWITCH_AUXR_EMPTY_Y_ : InstrItinClass;
 def MAU_SWITCH_AUXR_EMPTY_FP : InstrItinClass;
 def MAU_SWITCH_AUXR_EMPTY_X_FP : InstrItinClass;
 def MAU_SWITCH_AUXR_EMPTY_Y_FP : InstrItinClass;
@@ -129,12 +129,12 @@ def MAU_SWITCH_AUXR_EMPTY_Y_FP : InstrItinClass;
 defvar ALL_ITIN_CLASSES = [
   ALL, BCU, BCU_TINY_TINY_MAU_XNOP, BCU_CRRP_CRWL_CRWH, BCU_TINY_AUXW_CRRP,
   TCA, TCA_FP16,
-  ALU_NOP, ALU_TINY, ALU_TINY_X, ALU_TINY_Y,
-  ALU_SWITCH_LITE_TINY, ALU_SWITCH_LITE_TINY_X, ALU_SWITCH_LITE_TINY_Y,
-  ALU_LITE, ALU_LITE_X, ALU_LITE_Y, ALU_LITE_CRWL, ALU_LITE_CRWH,
-  ALU_FULL, SFU, ALU_FULL_X, ALU_FULL_Y,
-  MAU, MAU_FP, MAU_X, MAU_X_FP, MAU_Y, MAU_Y_FP,
-  MAU_AUXR, MAU_AUXR_X, MAU_AUXR_Y, MAU_AUXR_FP, MAU_AUXR_X_FP, MAU_AUXR_Y_FP,
+  ALU_NOP, ALU_TINY, ALU_TINY_X_, ALU_TINY_Y_,
+  ALU_SWITCH_LITE_TINY, ALU_SWITCH_LITE_TINY_X_, ALU_SWITCH_LITE_TINY_Y_,
+  ALU_LITE, ALU_LITE_X_, ALU_LITE_Y_, ALU_LITE_CRWL, ALU_LITE_CRWH,
+  ALU_FULL, SFU, ALU_FULL_X_, ALU_FULL_Y_,
+  MAU, MAU_FP, MAU_X_, MAU_X_FP, MAU_Y_, MAU_Y_FP,
+  MAU_AUXR, MAU_AUXR_X_, MAU_AUXR_Y_, MAU_AUXR_FP, MAU_AUXR_X_FP, MAU_AUXR_Y_FP,
   LSU_STORE, LSU_X_STORE, LSU_Y_STORE,
   LSU_CRRP_STORE, LSU_CRRP_X_STORE, LSU_CRRP_Y_STORE,
   LSU_AUXR_STORE, LSU_AUXR_X_STORE, LSU_AUXR_Y_STORE,
@@ -147,7 +147,7 @@ defvar ALL_ITIN_CLASSES = [
   LSU_AUXR_AUXW_LOAD, LSU_AUXR_AUXW_X_LOAD, LSU_AUXR_AUXW_Y_LOAD,
   LSU_AUXW_ALCLR, LSU_AUXW_X_ALCLR, LSU_AUXW_Y_ALCLR,
   ALU_TINY_CRRP, ALU_TINY_CRRP_CRWL_CRWH, ALU_TINY_CRWL_CRWH,
-  MAU_SWITCH_AUXR_EMPTY, MAU_SWITCH_AUXR_EMPTY_X, MAU_SWITCH_AUXR_EMPTY_Y,
+  MAU_SWITCH_AUXR_EMPTY, MAU_SWITCH_AUXR_EMPTY_X_, MAU_SWITCH_AUXR_EMPTY_Y_,
   MAU_SWITCH_AUXR_EMPTY_FP, MAU_SWITCH_AUXR_EMPTY_X_FP, MAU_SWITCH_AUXR_EMPTY_Y_FP
 ];
 
@@ -208,12 +208,12 @@ list<InstrItinData> CV1Switch = [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
     ], [2, 2, 2], [], 1
   >,
-  InstrItinData<ALU_SWITCH_LITE_TINY_X, [
+  InstrItinData<ALU_SWITCH_LITE_TINY_X_, [
     InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
     ], [2, 2, 2], [], 2
   >,
-  InstrItinData<ALU_SWITCH_LITE_TINY_Y, [
+  InstrItinData<ALU_SWITCH_LITE_TINY_Y_, [
     InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
     ], [2, 2, 2], [], 3
@@ -226,13 +226,13 @@ list<InstrItinData> CV1Switch = [
     InstrStage<1, [AUXR_FU], 0>
     ], [3, 2, 2], [], 1
   >,
-  InstrItinData<MAU_SWITCH_AUXR_EMPTY_X, [
+  InstrItinData<MAU_SWITCH_AUXR_EMPTY_X_, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [MAU_FU], 0>,
     InstrStage<1, [AUXR_FU], 0>
     ], [3, 2, 2], [], 2
   >,
-  InstrItinData<MAU_SWITCH_AUXR_EMPTY_Y, [
+  InstrItinData<MAU_SWITCH_AUXR_EMPTY_Y_, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [MAU_FU], 0>,
     InstrStage<1, [AUXR_FU], 0>
@@ -266,11 +266,11 @@ list<InstrItinData> CV2Switch = [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
     ], [2, 2, 2], [], 1
   >,
-  InstrItinData<ALU_SWITCH_LITE_TINY_X, [
+  InstrItinData<ALU_SWITCH_LITE_TINY_X_, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
     ], [2, 2, 2], [], 2
   >,
-  InstrItinData<ALU_SWITCH_LITE_TINY_Y, [
+  InstrItinData<ALU_SWITCH_LITE_TINY_Y_, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
     ], [2, 2, 2], [], 3
   >,
@@ -281,12 +281,12 @@ list<InstrItinData> CV2Switch = [
     InstrStage<1, [MAU_FU], 0>,
     ], [3, 2, 2], [], 1
   >,
-  InstrItinData<MAU_SWITCH_AUXR_EMPTY_X, [
+  InstrItinData<MAU_SWITCH_AUXR_EMPTY_X_, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [MAU_FU], 0>,
     ], [3, 2, 2], [], 2
   >,
-  InstrItinData<MAU_SWITCH_AUXR_EMPTY_Y, [
+  InstrItinData<MAU_SWITCH_AUXR_EMPTY_Y_, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [MAU_FU], 0>,
     ], [3, 2, 2], [], 3
@@ -333,11 +333,11 @@ list<InstrItinData> Common = [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>,
     ], [2, 2, 2], [], 1
   >,
-  InstrItinData<ALU_TINY_X, [
+  InstrItinData<ALU_TINY_X_, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>,
     ], [2, 2, 2], [], 2
   >,
-  InstrItinData<ALU_TINY_Y, [
+  InstrItinData<ALU_TINY_Y_, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
     ], [2, 2, 2], [], 3
   >,
@@ -346,12 +346,12 @@ list<InstrItinData> Common = [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
     ], [2, 2, 2], [], 1
   >,
-  InstrItinData<ALU_LITE_X, [
+  InstrItinData<ALU_LITE_X_, [
     InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
     ], [2, 2, 2], [], 2
   >,
-  InstrItinData<ALU_LITE_Y, [
+  InstrItinData<ALU_LITE_Y_, [
     InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
     ], [2, 2, 2], [], 3
@@ -380,13 +380,13 @@ list<InstrItinData> Common = [
     InstrStage<1, [FULL_FU]>
   ], [12, 2, 2], [], 1
   >,
-  InstrItinData<ALU_FULL_X, [
+  InstrItinData<ALU_FULL_X_, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
     InstrStage<1, [FULL_FU]>
     ], [2, 2, 2], [], 2
   >,
-  InstrItinData<ALU_FULL_Y, [
+  InstrItinData<ALU_FULL_Y_, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
     InstrStage<1, [FULL_FU]>
@@ -644,7 +644,7 @@ list<InstrItinData> Common = [
     InstrStage<1, [MAU_FU]>
     ], [5, 2, 2], [], 1
   >,
-  InstrItinData<MAU_X, [
+  InstrItinData<MAU_X_, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [MAU_FU]>
     ], [3, 2, 2], [], 2
@@ -654,7 +654,7 @@ list<InstrItinData> Common = [
     InstrStage<1, [MAU_FU]>
     ], [5, 2, 2], [], 2
   >,
-  InstrItinData<MAU_Y, [
+  InstrItinData<MAU_Y_, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [MAU_FU]>
     ], [3, 2, 2], [], 3
@@ -670,13 +670,13 @@ list<InstrItinData> Common = [
     InstrStage<1, [AUXR_FU]>
     ], [3, 2, 2], [], 1
   >,
-  InstrItinData<MAU_AUXR_X, [
+  InstrItinData<MAU_AUXR_X_, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [MAU_FU], 0>,
     InstrStage<1, [AUXR_FU]>
     ], [3, 2, 2], [], 2
   >,
-  InstrItinData<MAU_AUXR_Y, [
+  InstrItinData<MAU_AUXR_Y_, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [MAU_FU], 0>,
     InstrStage<1, [AUXR_FU]>
@@ -929,19 +929,19 @@ foreach m = [KVXCV1SchedMachineModel, KVXCV2SchedMachineModel] in {
   defm ALU_NOP#m: KVXItinWriteRes<m, ALU_NOP, ALU_NOP_RT, 1, ALU_NOP_SRW>;
 
   defm ALU_TINY#m: KVXItinWriteRes<m, ALU_TINY, ALU_TINY_RT, 1, ALU_TINY_SRW>;
-  defm ALU_TINY_X#m: KVXItinWriteRes<m, ALU_TINY_X, ALU_TINY_RT, 2, ALU_TINY_X_SRW>;
-  defm ALU_TINY_Y#m: KVXItinWriteRes<m, ALU_TINY_Y, ALU_TINY_RT, 3, ALU_TINY_Y_SRW>;
+  defm ALU_TINY_X_#m: KVXItinWriteRes<m, ALU_TINY_X_, ALU_TINY_RT, 2, ALU_TINY_X__SRW>;
+  defm ALU_TINY_Y_#m: KVXItinWriteRes<m, ALU_TINY_Y_, ALU_TINY_RT, 3, ALU_TINY_Y__SRW>;
 
   defm ALU_LITE#m: KVXItinWriteRes<m, ALU_LITE, ALU_LITE_RT, 1, ALU_LITE_SRW>;
-  defm ALU_LITE_X#m: KVXItinWriteRes<m, ALU_LITE_X, ALU_LITE_RT, 2, ALU_LITE_X_SRW>;
-  defm ALU_LITE_Y#m: KVXItinWriteRes<m, ALU_LITE_Y, ALU_LITE_RT, 3, ALU_LITE_Y_SRW>;
+  defm ALU_LITE_X_#m: KVXItinWriteRes<m, ALU_LITE_X_, ALU_LITE_RT, 2, ALU_LITE_X__SRW>;
+  defm ALU_LITE_Y_#m: KVXItinWriteRes<m, ALU_LITE_Y_, ALU_LITE_RT, 3, ALU_LITE_Y__SRW>;
 
   defm ALU_LITE_CRWL#m: KVXItinWriteRes<m, ALU_LITE_CRWL, ALU_LITE_CRWL_RT, 1, ALU_LITE_CRWL_SRW>;
   defm ALU_LITE_CRWH#m: KVXItinWriteRes<m, ALU_LITE_CRWH, ALU_LITE_CRWH_RT, 1, ALU_LITE_CRWH_SRW>;
 
   defm ALU_FULL#m: KVXItinWriteRes<m, ALU_FULL, ALU_FULL_RT, 1, ALU_FULL_SRW>;
-  defm ALU_FULL_X#m: KVXItinWriteRes<m, ALU_FULL_X, ALU_FULL_RT, 2, ALU_FULL_X_SRW>;
-  defm ALU_FULL_Y#m: KVXItinWriteRes<m, ALU_FULL_Y, ALU_FULL_RT, 3, ALU_FULL_Y_SRW>;
+  defm ALU_FULL_X_#m: KVXItinWriteRes<m, ALU_FULL_X_, ALU_FULL_RT, 2, ALU_FULL_X__SRW>;
+  defm ALU_FULL_Y_#m: KVXItinWriteRes<m, ALU_FULL_Y_, ALU_FULL_RT, 3, ALU_FULL_Y__SRW>;
   defm SFU#m: KVXItinWriteRes<m, SFU, ALU_FULL_RT, 1, SFU_SRW>;
 
   defm BCU#m: KVXItinWriteRes<m, BCU, BCU_RT, 1, BCU_SRW>;
@@ -1017,12 +1017,12 @@ foreach m = [KVXCV1SchedMachineModel, KVXCV2SchedMachineModel] in {
                     LSU_AUXR_AUXW_Y_LOAD_SRW>;
 
   defm MAU#m: KVXItinWriteRes<m, MAU, MAU_RT, 1, MAU_SRW>;
-  defm MAU_X#m: KVXItinWriteRes<m, MAU_X, MAU_RT, 2, MAU_X_SRW>;
-  defm MAU_Y#m: KVXItinWriteRes<m, MAU_Y, MAU_RT, 3, MAU_Y_SRW>;
+  defm MAU_X_#m: KVXItinWriteRes<m, MAU_X_, MAU_RT, 2, MAU_X__SRW>;
+  defm MAU_Y_#m: KVXItinWriteRes<m, MAU_Y_, MAU_RT, 3, MAU_Y__SRW>;
 
   defm MAU_AUXR#m: KVXItinWriteRes<m, MAU_AUXR, MAU_AUXR_RT, 1, MAU_AUXR_SRW>;
-  defm MAU_AUXR_X#m: KVXItinWriteRes<m, MAU_AUXR_X, MAU_AUXR_RT, 2, MAU_AUXR_X_SRW>;
-  defm MAU_AUXR_Y#m: KVXItinWriteRes<m, MAU_AUXR_Y, MAU_AUXR_RT, 3, MAU_AUXR_Y_SRW>;
+  defm MAU_AUXR_X_#m: KVXItinWriteRes<m, MAU_AUXR_X_, MAU_AUXR_RT, 2, MAU_AUXR_X__SRW>;
+  defm MAU_AUXR_Y_#m: KVXItinWriteRes<m, MAU_AUXR_Y_, MAU_AUXR_RT, 3, MAU_AUXR_Y__SRW>;
 
   defm MAU_FP#m: KVXItinWriteRes<m, MAU_FP, MAU_RT, 1, MAU_FP_SRW>;
   defm MAU_X_FP#m: KVXItinWriteRes<m, MAU_X_FP, MAU_RT, 2, MAU_X_FP_SRW>;
@@ -1049,18 +1049,18 @@ foreach m = [KVXCV1SchedMachineModel, KVXCV2SchedMachineModel] in {
     // ALU_LITE -> ALU_TINY
     defm: KVXItinWriteRes<m, ALU_SWITCH_LITE_TINY, ALU_LITE_RT, 1,
                           ALU_SWITCH_LITE_TINY_SRW>;
-    defm: KVXItinWriteRes<m, ALU_SWITCH_LITE_TINY_X, ALU_LITE_RT, 2,
-                          ALU_SWITCH_LITE_TINY_X_SRW>;
-    defm: KVXItinWriteRes<m, ALU_SWITCH_LITE_TINY_Y, ALU_LITE_RT, 3,
-                          ALU_SWITCH_LITE_TINY_Y_SRW>;
+    defm: KVXItinWriteRes<m, ALU_SWITCH_LITE_TINY_X_, ALU_LITE_RT, 2,
+                          ALU_SWITCH_LITE_TINY_X__SRW>;
+    defm: KVXItinWriteRes<m, ALU_SWITCH_LITE_TINY_Y_, ALU_LITE_RT, 3,
+                          ALU_SWITCH_LITE_TINY_Y__SRW>;
 
     // MAU + AUXR -> MAU, int
     defm: KVXItinWriteRes<m, MAU_SWITCH_AUXR_EMPTY, MAU_AUXR_RT, 1,
                           MAU_SWITCH_AUXR_EMPTY_SRW>;
-    defm: KVXItinWriteRes<m, MAU_SWITCH_AUXR_EMPTY_X, MAU_AUXR_RT, 2,
-                          MAU_SWITCH_AUXR_EMPTY_X_SRW>;
-    defm: KVXItinWriteRes<m, MAU_SWITCH_AUXR_EMPTY_Y, MAU_AUXR_RT, 3,
-                          MAU_SWITCH_AUXR_EMPTY_Y_SRW>;
+    defm: KVXItinWriteRes<m, MAU_SWITCH_AUXR_EMPTY_X_, MAU_AUXR_RT, 2,
+                          MAU_SWITCH_AUXR_EMPTY_X__SRW>;
+    defm: KVXItinWriteRes<m, MAU_SWITCH_AUXR_EMPTY_Y_, MAU_AUXR_RT, 3,
+                          MAU_SWITCH_AUXR_EMPTY_Y__SRW>;
 
     // MAU + AUXR -> MAU, float
     defm: KVXItinWriteRes<m, MAU_SWITCH_AUXR_EMPTY_FP, MAU_AUXR_RT, 1,
@@ -1073,18 +1073,18 @@ foreach m = [KVXCV1SchedMachineModel, KVXCV2SchedMachineModel] in {
     // ALU_LITE -> ALU_TINY
     defm: KVXItinWriteRes<m, ALU_SWITCH_LITE_TINY, ALU_TINY_RT, 1,
                           ALU_SWITCH_LITE_TINY_SRW>;
-    defm: KVXItinWriteRes<m, ALU_SWITCH_LITE_TINY_X, ALU_TINY_RT, 2,
-                          ALU_SWITCH_LITE_TINY_X_SRW>;
-    defm: KVXItinWriteRes<m, ALU_SWITCH_LITE_TINY_Y, ALU_TINY_RT, 3,
-                          ALU_SWITCH_LITE_TINY_Y_SRW>;
+    defm: KVXItinWriteRes<m, ALU_SWITCH_LITE_TINY_X_, ALU_TINY_RT, 2,
+                          ALU_SWITCH_LITE_TINY_X__SRW>;
+    defm: KVXItinWriteRes<m, ALU_SWITCH_LITE_TINY_Y_, ALU_TINY_RT, 3,
+                          ALU_SWITCH_LITE_TINY_Y__SRW>;
 
     // MAU + AUXR -> MAU, int
     defm: KVXItinWriteRes<m, MAU_SWITCH_AUXR_EMPTY, MAU_RT, 1,
                           MAU_SWITCH_AUXR_EMPTY_SRW>;
-    defm: KVXItinWriteRes<m, MAU_SWITCH_AUXR_EMPTY_X, MAU_RT, 2,
-                          MAU_SWITCH_AUXR_EMPTY_X_SRW>;
-    defm: KVXItinWriteRes<m, MAU_SWITCH_AUXR_EMPTY_Y, MAU_RT, 3,
-                          MAU_SWITCH_AUXR_EMPTY_Y_SRW>;
+    defm: KVXItinWriteRes<m, MAU_SWITCH_AUXR_EMPTY_X_, MAU_RT, 2,
+                          MAU_SWITCH_AUXR_EMPTY_X__SRW>;
+    defm: KVXItinWriteRes<m, MAU_SWITCH_AUXR_EMPTY_Y_, MAU_RT, 3,
+                          MAU_SWITCH_AUXR_EMPTY_Y__SRW>;
 
     // MAU + AUXR -> MAU, float
     defm: KVXItinWriteRes<m, MAU_SWITCH_AUXR_EMPTY_FP, MAU_RT, 1,
