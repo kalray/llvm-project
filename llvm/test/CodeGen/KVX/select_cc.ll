@@ -318,15 +318,16 @@ define void @test_select_matrix_reg(<1024 x i1> * %V, i1 %cc){
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    xlo $a5 = 32[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a4 = 0[$r0]
+; CV2-NEXT:    xlo $a0 = 0[$r0]
 ; CV2-NEXT:    alignv $a7 = $a7, $a0, $r1
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    alignv $a6 = $a6, $a1, $r1
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    alignv $a1 = $a5, $a2, $r1
 ; CV2-NEXT:    ;;
+; CV2-NEXT:    alignv $a0 = $a0, $a3, $r1
+; CV2-NEXT:    ;;
 ; CV2-NEXT:    xso 96[$r0] = $a7
-; CV2-NEXT:    alignv $a0 = $a4, $a3, $r1
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    xso 64[$r0] = $a6
 ; CV2-NEXT:    ;;

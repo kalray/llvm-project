@@ -318,13 +318,13 @@ multiclass MC_SV <string OpcStr> {
 
 multiclass MC_XSO <string OpcStr = "xso"> {
   // xso signed10[registerZ] = registerE
-  defm ri10 : I <OpcStr, LSU_STORE, [VectorReg], [], [Signed10, SingleReg], [], [], 0,
+  defm ri10 : I <OpcStr, LSU_CRRP_STORE, [VectorReg], [], [Signed10, SingleReg], [], [], 0,
                 [(int_kvx_xstore256 v256i1:$op0, (add i64:$mem, Signed10:$off))]>;
   // xso upper27 lower10[registerZ] = registerE
-  defm ri37 : I <OpcStr, LSU_X_STORE, [VectorReg], [], [Signed37, SingleReg], [], [], 0,
+  defm ri37 : I <OpcStr, LSU_CRRP_X_STORE, [VectorReg], [], [Signed37, SingleReg], [], [], 0,
                 [(int_kvx_xstore256 v256i1:$op0, (add i64:$mem, Signed37:$off))]>;
   // xso extend27 upper27 lower10[registerZ] = registerE
-  defm ri64 : I <OpcStr, LSU_Y_STORE, [VectorReg], [], [Wrapped64, SingleReg], [], [], 0,
+  defm ri64 : I <OpcStr, LSU_CRRP_Y_STORE, [VectorReg], [], [Wrapped64, SingleReg], [], [], 0,
                 [(int_kvx_xstore256 v256i1:$op0, (add i64:$mem, Wrapped64:$off))]>;
 
   // xsolsumask registerY? [registerZ] = registerE
