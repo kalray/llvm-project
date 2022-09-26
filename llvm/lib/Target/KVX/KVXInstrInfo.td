@@ -418,8 +418,6 @@ multiclass MC_12<string OpcStr> {
 //   defm ADDX4W
 //   defm ADDX8W
 //   defm ADDX16W
-//   defm ADDX32W
-//   defm ADDX64W
 //   defm SBFX2W
 //   defm SBFX4W
 //   defm SBFX8W
@@ -438,8 +436,6 @@ multiclass MC_12<string OpcStr> {
 //   defm ADDX4WD
 //   defm ADDX8WD
 //   defm ADDX16WD
-//   defm ADDX32WD
-//   defm ADDX64WD
 //   defm SBFX2WD
 //   defm SBFX4WD
 //   defm SBFX8WD
@@ -450,8 +446,6 @@ multiclass MC_12<string OpcStr> {
 //   defm ADDX4UWD
 //   defm ADDX8UWD
 //   defm ADDX16UWD
-//   defm ADDX32UWD
-//   defm ADDX64UWD
 //   defm SBFX2UWD
 //   defm SBFX4UWD
 //   defm SBFX8UWD
@@ -469,6 +463,27 @@ multiclass MC_13<string OpcStr> {
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      ALU_LITE_X>;
+}
+
+// multiclass MC_13_TINY is used by:
+//   defm ADDX32UWD
+//   defm ADDX32W
+//   defm ADDX32WD
+//   defm ADDX64UWD
+//   defm ADDX64W
+//   defm ADDX64WD
+multiclass MC_13_TINY<string OpcStr> {
+  let isAsCheapAsAMove = 1 in
+    def rr : KVX_INSTRUCTION
+      <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
+      !strconcat (OpcStr, " $a1 = $a2, $a3"),
+      [/* no straightforward pattern */],
+      ALU_TINY>;
+    def ri : KVX_INSTRUCTION_Y
+      <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped32:$a3),
+      !strconcat (OpcStr, " $a1 = $a2, $a3"),
+      [/* no straightforward pattern */],
+      ALU_TINY_X>;
 }
 
 // multiclass MC_14 is used by:
@@ -527,9 +542,16 @@ multiclass MC_15<string OpcStr> {
 }
 
 // multiclass MC_16 is used by:
+//   defm ABDBO
 //   defm ADDBO
 //   defm ADDHQ
 //   defm ADDWP
+//   defm ADDX2BO
+//   defm ADDX16BO
+//   defm ADDX32D
+//   defm ADDX4BO
+//   defm ADDX64D
+//   defm ADDX8BO
 //   defm MAXBO
 //   defm MAXHQ
 //   defm MAXUBO
@@ -576,8 +598,6 @@ multiclass MC_16<string OpcStr> {
 //   defm ADDX8WP
 //   defm ADDX16D
 //   defm ADDX16WP
-//   defm ADDX32D
-//   defm ADDX64D
 //   defm SBFSBO
 //   defm SBFUSBO
 //   defm SBFUSD
@@ -602,7 +622,6 @@ multiclass MC_16<string OpcStr> {
 //   defm LNANDWP
 //   defm LORWP
 //   defm LNORWP
-//   defm ABDBO
 //   defm ABDHQ
 //   defm ABDSBO
 //   defm ABDSHQ
@@ -616,13 +635,9 @@ multiclass MC_16<string OpcStr> {
 //   defm ADDUSHQ
 //   defm ADDSHQ
 //   defm SBFSHQ
-//   defm ADDX2BO
 //   defm ADDX2HQ
-//   defm ADDX4BO
 //   defm ADDX4HQ
-//   defm ADDX8BO
 //   defm ADDX8HQ
-//   defm ADDX16BO
 //   defm ADDX16HQ
 //   defm SBFX2BO
 //   defm SBFX2HQ
@@ -633,10 +648,10 @@ multiclass MC_16<string OpcStr> {
 //   defm SBFX16BO
 //   defm SBFX16HQ
 //   defm AVGBO
+//   defm AVGUBO
 //   defm AVGHQ
 //   defm AVGRBO
 //   defm AVGUHQ
-//   defm AVGRBO
 //   defm AVGRHQ
 //   defm AVGRUBO
 //   defm AVGRUHQ
@@ -673,9 +688,7 @@ multiclass MC_17<string OpcStr> {
 //   defm ROLWPS
 //   defm RORWPS
 //   defm SRSHQS
-//   defm SLLBOS
 //   defm SLLHQS
-//   defm SRABOS
 //   defm SRAHQS
 //   defm SRBOQS
 //   defm SRLHQS
@@ -707,6 +720,9 @@ multiclass MC_18<string OpcStr> {
 //   defm SLLW
 //   defm SRAW
 //   defm SRLW
+//   defm SRABOS
+//   defm SLLBOS
+//   defm SRLBOS
 let isAsCheapAsAMove = 1 in
 multiclass MC_19<string OpcStr> {
   def ri : KVX_INSTRUCTION
@@ -1695,9 +1711,9 @@ defm ADDX8D : MC_17<"addx8d">;
 
 defm ADDX16D : MC_17<"addx16d">;
 
-defm ADDX32D : MC_17<"addx32d">, Requires<[IsV2]>;
+defm ADDX32D : MC_16<"addx32d">, Requires<[IsV2]>;
 
-defm ADDX64D : MC_17<"addx64d">, Requires<[IsV2]>;
+defm ADDX64D : MC_16<"addx64d">, Requires<[IsV2]>;
 
 defm SBFX2D : MC_17<"sbfx2d">;
 
@@ -1779,9 +1795,9 @@ defm ADDX8W : MC_13<"addx8w">;
 
 defm ADDX16W : MC_13<"addx16w">;
 
-defm ADDX32W : MC_13<"addx32w">, Requires<[IsV2]>;
+defm ADDX32W : MC_13_TINY<"addx32w">, Requires<[IsV2]>;
 
-defm ADDX64W : MC_13<"addx64w">, Requires<[IsV2]>;
+defm ADDX64W : MC_13_TINY<"addx64w">, Requires<[IsV2]>;
 
 defm SBFX2W : MC_13<"sbfx2w">;
 
@@ -1878,7 +1894,7 @@ defm SBFBO : MC_16<"sbfbo">, Requires<[IsV2]>;
 
 defm SBFHQ : MC_16<"sbfhq">;
 
-defm ABDBO : MC_17<"abdbo">, Requires<[IsV2]>;
+defm ABDBO : MC_16<"abdbo">, Requires<[IsV2]>;
 
 defm ABDHQ : MC_17<"abdhq">;
 
@@ -1912,19 +1928,19 @@ defm SBFSBO : MC_17<"sbfsbo">;
 
 defm SBFSHQ : MC_17<"sbfshq">;
 
-defm ADDX2BO : MC_17<"addx2bo">, Requires<[IsV2]>;
+defm ADDX2BO : MC_16<"addx2bo">, Requires<[IsV2]>;
 
 defm ADDX2HQ : MC_17<"addx2hq">;
 
-defm ADDX4BO : MC_17<"addx4bo">, Requires<[IsV2]>;
+defm ADDX4BO : MC_16<"addx4bo">, Requires<[IsV2]>;
 
 defm ADDX4HQ : MC_17<"addx4hq">;
 
-defm ADDX8BO : MC_17<"addx8bo">, Requires<[IsV2]>;
+defm ADDX8BO : MC_16<"addx8bo">, Requires<[IsV2]>;
 
 defm ADDX8HQ : MC_17<"addx8hq">;
 
-defm ADDX16BO : MC_17<"addx16bo">, Requires<[IsV2]>;
+defm ADDX16BO : MC_16<"addx16bo">, Requires<[IsV2]>;
 
 defm ADDX16HQ : MC_17<"addx16hq">;
 
@@ -1976,9 +1992,9 @@ defm ADDX8WD : MC_13<"addx8wd">;
 
 defm ADDX16WD : MC_13<"addx16wd">;
 
-defm ADDX32WD : MC_13<"addx32wd">, Requires<[IsV2]>;
+defm ADDX32WD : MC_13_TINY<"addx32wd">, Requires<[IsV2]>;
 
-defm ADDX64WD : MC_13<"addx64wd">, Requires<[IsV2]>;
+defm ADDX64WD : MC_13_TINY<"addx64wd">, Requires<[IsV2]>;
 
 defm SBFX2WD : MC_13<"sbfx2wd">;
 
@@ -2000,9 +2016,9 @@ defm ADDX8UWD : MC_13<"addx8uwd">;
 
 defm ADDX16UWD : MC_13<"addx16uwd">;
 
-defm ADDX32UWD : MC_13<"addx32uwd">, Requires<[IsV2]>;
+defm ADDX32UWD : MC_13_TINY<"addx32uwd">, Requires<[IsV2]>;
 
-defm ADDX64UWD : MC_13<"addx64uwd">, Requires<[IsV2]>;
+defm ADDX64UWD : MC_13_TINY<"addx64uwd">, Requires<[IsV2]>;
 
 defm SBFX2UWD : MC_13<"sbfx2uwd">;
 
@@ -2279,15 +2295,15 @@ defm SRSBOS : MC_18<"srsbos">, Requires<[IsV2]>;
 
 defm SRSHQS : MC_18<"srshqs">;
 
-defm SLLBOS : MC_18<"sllbos">, Requires<[IsV2]>;
+defm SLLBOS : MC_19<"sllbos">, Requires<[IsV2]>;
 
 defm SLLHQS : MC_18<"sllhqs">;
 
-defm SRABOS : MC_18<"srabos">, Requires<[IsV2]>;
+defm SRABOS : MC_19<"srabos">, Requires<[IsV2]>;
 
 defm SRAHQS : MC_18<"srahqs">;
 
-defm SRLBOS : MC_18<"srlbos">, Requires<[IsV2]>;
+defm SRLBOS : MC_19<"srlbos">, Requires<[IsV2]>;
 
 defm SRLHQS : MC_18<"srlhqs">;
 
