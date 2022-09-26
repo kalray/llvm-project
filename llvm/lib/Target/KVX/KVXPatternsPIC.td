@@ -14,13 +14,13 @@ def PICPCRelativeGOTAddr : SDNode<"KVXISD::PICPCRelativeGOTAddr", SDTUNDEF>;
 def PICKVXWrapper : SDNode<"KVXISD::PICAddrWrapper", SDTKVXWrapper>;
 
 
-def PICPCRELGOTADDR : REGISTERW_EXTEND27_UPPER27_LOWER10_TRIPLE
+def PICPCRELGOTADDR : KVX_INSTRUCTION_Y
   <(outs SingleReg:$gotaddr), (ins ),
    "pcrel $gotaddr = @gotaddr()",
    [(set (i64 SingleReg:$gotaddr), (PICPCRelativeGOTAddr ))],
    ALU_FULL_Y>;
 
-def PICINTERNINDIRECTION : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
+def PICINTERNINDIRECTION : KVX_INSTRUCTION_Y
   <(outs SingleReg:$symaddr), (ins SingleReg:$gotaddr, Wrapped64:$gotoff),
    "addd $symaddr = $gotaddr, @gotoff( $gotoff )",
    [(set (i64 SingleReg:$symaddr),
@@ -28,10 +28,10 @@ def PICINTERNINDIRECTION : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
                                (i64 tglobaladdr:$gotoff)))],
    ALU_TINY_Y>;
 
-def PCRELGOTADDR : REGISTERW_EXTEND27_UPPER27_LOWER10_TRIPLE
+def PCRELGOTADDR : KVX_INSTRUCTION_Y
     <(outs SingleReg:$addr), (ins), "pcrel $addr = @gotaddr()", [], ALU_FULL_Y>;
 
-def PICEXTERNINDIRECTION : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
+def PICEXTERNINDIRECTION : KVX_INSTRUCTION_Y
     <(outs SingleReg:$addr), (ins SingleReg:$gotaddr, Wrapped64:$gotoff),
     "ld $addr = @got( $gotoff )[$gotaddr]", [], LSU_AUXW_Y_LOAD>;
 
@@ -39,7 +39,7 @@ def : Pat<(i64 (PICExternIndirection (i64 tglobaladdr:$gotoff))),
   (PICEXTERNINDIRECTION (PCRELGOTADDR), Pcrel27:$gotoff)>;
 
 let Defs=[RA], isCall=1 in
-def CALLPLT : PCREL27_SIMPLE
+def CALLPLT : KVX_INSTRUCTION
   <(outs), (ins Pcrel27:$pcreladdr),
    "call $pcreladdr",
    [/* no direct match, see Call pattern below */],
@@ -51,7 +51,7 @@ def CALLPLT : PCREL27_SIMPLE
 def : Pat<(Call (PICExternIndirection (i64 tglobaladdr:$gotoff))),
           (CALLPLT Pcrel27:$gotoff)>;
 
-def PICPCREL : REGISTERW_EXTEND27_UPPER27_LOWER10_TRIPLE
+def PICPCREL : KVX_INSTRUCTION_Y
   <(outs SingleReg:$SingleReg), (ins Wrapped64:$Wrapped64),
   "pcrel $SingleReg = @pcrel( $Wrapped64 )",
   [(set (i64 SingleReg:$SingleReg), (PICKVXWrapper tblockaddress:$Wrapped64))],

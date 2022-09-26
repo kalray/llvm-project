@@ -22,12 +22,12 @@ include "KVXInstrFormats.td"
 // multiclass MC_00 is used by:
 //   defm SCALL
 multiclass MC_00<string OpcStr> {
-  def r : REGISTERZ_SIMPLE
+  def r : KVX_INSTRUCTION
     <(outs), (ins SingleReg:$a1),
      !strconcat (OpcStr, " $a1"),
      [/* no straightforward pattern */],
      ALL>;
-  def s : SYSNUMBER_SIMPLE
+  def s : KVX_INSTRUCTION
     <(outs), (ins Sysnumber:$a1),
      !strconcat (OpcStr, " $a1"),
      [/* no straightforward pattern */],
@@ -38,17 +38,17 @@ multiclass MC_00<string OpcStr> {
 //   defm WFXL
 //   defm WFXM
 multiclass MC_01<string OpcStr> {
-  def rst2 : SYSTEMT2_REGISTERZ_SIMPLE
+  def rst2 : KVX_INSTRUCTION
     <(outs OnlyfxReg:$a1), (ins SingleReg:$a2),
      !strconcat (OpcStr, " $a1, $a2"),
      [/* no straightforward pattern */],
      BCU>;
-  def rsa : SYSTEMALONE_REGISTERZ_SIMPLE
+  def rsa : KVX_INSTRUCTION
     <(outs AloneReg:$a1), (ins SingleReg:$a2),
      !strconcat (OpcStr, " $a1, $a2"),
      [/* no straightforward pattern */],
      ALL>;
-  def rst4 : SYSTEMT4_REGISTERZ_SIMPLE
+  def rst4 : KVX_INSTRUCTION
     <(outs SystemReg:$a1), (ins SingleReg:$a2),
      !strconcat (OpcStr, " $a1, $a2"),
      [/* no straightforward pattern */],
@@ -58,12 +58,12 @@ multiclass MC_01<string OpcStr> {
 // multiclass MC_02 is used by:
 //   defm GET
 multiclass MC_02<string OpcStr> {
-  def ss2 : REGISTERZ_SYSTEMS2_SIMPLE
+  def ss2 : KVX_INSTRUCTION
     <(outs SingleReg:$a1), (ins OnlygetReg:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
      [/* no straightforward pattern */],
      BCU_TINY_TINY_MAU_XNOP>;
-  def ss3 : REGISTERZ_SYSTEMS3_SIMPLE
+  def ss3 : KVX_INSTRUCTION
     <(outs SingleReg:$a1), (ins SystemReg:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
      [/* no straightforward pattern */],
@@ -73,22 +73,22 @@ multiclass MC_02<string OpcStr> {
 // multiclass MC_03 is used by:
 //   defm SET
 multiclass MC_03<string OpcStr> {
-  def rst3 : SYSTEMT3_REGISTERZ_SIMPLE
+  def rst3 : KVX_INSTRUCTION
     <(outs OnlysetReg:$a1), (ins SingleReg:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
      [/* no straightforward pattern */],
      BCU>;
-  def rsa : SYSTEMALONE_REGISTERZ_SIMPLE
+  def rsa : KVX_INSTRUCTION
     <(outs AloneReg:$a1), (ins SingleReg:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
      [/* no straightforward pattern */],
      ALL>;
-  def rsra : SYSTEMRA_REGISTERZ_SIMPLE
+  def rsra : KVX_INSTRUCTION
     <(outs OnlyraReg:$a1), (ins SingleReg:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
      [/* no straightforward pattern */],
      BCU>;
-  def rst4 : SYSTEMT4_REGISTERZ_SIMPLE
+  def rst4 : KVX_INSTRUCTION
     <(outs SystemReg:$a1), (ins SingleReg:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
      [/* no straightforward pattern */],
@@ -99,19 +99,19 @@ multiclass MC_03<string OpcStr> {
 //   defm RSWAP
 multiclass MC_04<string OpcStr> {
   let Constraints = "$a1 = $a1o, $a2 = $a2o" in
-  def ss4 : REGISTERZ_SYSTEMS4_SIMPLE
+  def ss4 : KVX_INSTRUCTION
     <(outs SingleReg:$a1o, OnlyswapReg:$a2o), (ins SingleReg:$a1, OnlyswapReg:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
      [/* no straightforward pattern */],
      BCU_TINY_TINY_MAU_XNOP>;
   let Constraints = "$a1 = $a1o, $a2 = $a2o" in
-  def sa : REGISTERZ_SYSTEMALONE_SIMPLE
+  def sa : KVX_INSTRUCTION
     <(outs SingleReg:$a1o, AloneReg:$a2o), (ins SingleReg:$a1, AloneReg:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
      [/* no straightforward pattern */],
      ALL>;
   let Constraints = "$a1 = $a1o, $a2 = $a2o" in
-  def ss3 : REGISTERZ_SYSTEMS3_SIMPLE
+  def ss3 : KVX_INSTRUCTION
     <(outs SingleReg:$a1o, SystemReg:$a2o), (ins SingleReg:$a1, SystemReg:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
      [/* no straightforward pattern */],
@@ -126,44 +126,44 @@ let mayLoad = 1, mayStore = 1 in
 multiclass MC_0D<string OpcStr> {
   let isPredicable = 1 in {
   let Constraints = "$a3 = $a3o" in
-  def ri10 : SIGNED10_REGISTERZ_REGISTERU_SIMPLE
+  def ri10 : KVX_INSTRUCTION
     <(outs PairedReg:$a3o), (ins Signed10:$a1, SingleReg:$a2, PairedReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [/* no straightforward pattern */],
      LSU_AUXR_AUXW_LOAD>;
   let Constraints = "$a3 = $a3o" in
-  def ri37 : UPPER27_LOWER10_REGISTERZ_REGISTERU_DOUBLE
+  def ri37 : KVX_INSTRUCTION_X
     <(outs PairedReg:$a3o), (ins Signed37:$a1, SingleReg:$a2, PairedReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [/* no straightforward pattern */],
      LSU_AUXR_AUXW_X_LOAD>;
   let Constraints = "$a3 = $a3o" in
-  def ri64 : EXTEND27_UPPER27_LOWER10_REGISTERZ_REGISTERU_TRIPLE
+  def ri64 : KVX_INSTRUCTION_Y
     <(outs PairedReg:$a3o), (ins Wrapped64:$a1, SingleReg:$a2, PairedReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [/* no straightforward pattern */],
      LSU_AUXR_AUXW_Y_LOAD>;
   let Constraints = "$a4 = $a4o" in
-  def rr : DOSCALE_REGISTERY_REGISTERZ_REGISTERU_SIMPLE
+  def rr : KVX_INSTRUCTION
     <(outs PairedReg:$a4o), (ins SingleReg:$a2, SingleReg:$a3, PairedReg:$a4, DoscaleMod:$a1),
      !strconcat (OpcStr, "$a1 $a2[$a3] = $a4"),
      [/* no straightforward pattern */],
      LSU_AUXR_AUXW_LOAD>;
   }
   let Constraints = "$a4 = $a4o" in
-  def rrc : LSUCOND_REGISTERY_REGISTERZ_REGISTERU_SIMPLE
+  def rrc : KVX_INSTRUCTION
     <(outs PairedReg:$a4o), (ins SingleReg:$a3, PairedReg:$a4, ScalarcondMod:$a1, SingleReg:$a2),
      !strconcat (OpcStr, "$a1 $a2 ? [$a3] = $a4"),
      [/* no straightforward pattern */],
      LSU_AUXR_AUXW_LOAD>;
   let Constraints = "$a5 = $a5o" in
-  def ri27c : LSUCOND_REGISTERY_OFFSET27_REGISTERZ_REGISTERU_DOUBLE
+  def ri27c : KVX_INSTRUCTION_X
     <(outs PairedReg:$a5o), (ins Signed27:$a3, SingleReg:$a4, PairedReg:$a5, ScalarcondMod:$a1, SingleReg:$a2),
      !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
      [/* no straightforward pattern */],
      LSU_AUXR_AUXW_X_LOAD>;
   let Constraints = "$a5 = $a5o" in
-  def ri54c : LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_REGISTERU_TRIPLE
+  def ri54c : KVX_INSTRUCTION_Y
     <(outs PairedReg:$a5o), (ins Signed54:$a3, SingleReg:$a4, PairedReg:$a5, ScalarcondMod:$a1, SingleReg:$a2),
      !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
      [/* no straightforward pattern */],
@@ -196,41 +196,41 @@ multiclass MC_0D<string OpcStr> {
 let mayLoad = 1, mayStore = 1 in
 multiclass MC_0E<string OpcStr> {
   let isPredicable = 1 in {
-  def ri10 : REGISTERW_SIGNED10_REGISTERZ_SIMPLE
+  def ri10 : KVX_INSTRUCTION
     <(outs SingleReg:$a1), (ins Signed10:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2[$a3]"),
      [/* no straightforward pattern */],
      LSU_AUXW_ALCLR>;
-  def ri37 : REGISTERW_UPPER27_LOWER10_REGISTERZ_DOUBLE
+  def ri37 : KVX_INSTRUCTION_X
     <(outs SingleReg:$a1), (ins Signed37:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2[$a3]"),
      [/* no straightforward pattern */],
      LSU_AUXW_X_ALCLR>;
-  def ri64 : REGISTERW_EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
+  def ri64 : KVX_INSTRUCTION_Y
     <(outs SingleReg:$a1), (ins Wrapped64:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2[$a3]"),
      [/* no straightforward pattern */],
      LSU_AUXW_Y_ALCLR>;
-  def rr : DOSCALE_REGISTERW_REGISTERY_REGISTERZ_SIMPLE
+  def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, DoscaleMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
      [/* no straightforward pattern */],
      LSU_AUXW_ALCLR>;
   }
   let Constraints = "$a3 = $a3o" in
-  def rrc : LSUCOND_REGISTERY_REGISTERW_REGISTERZ_SIMPLE
+  def rrc : KVX_INSTRUCTION
     <(outs SingleReg:$a3o), (ins SingleReg:$a4, SingleReg:$a3, ScalarcondMod:$a1, SingleReg:$a2),
      !strconcat (OpcStr, "$a1 $a2 ? $a3 = [$a4]"),
      [/* no straightforward pattern */],
      LSU_AUXW_ALCLR>;
   let Constraints = "$a3 = $a3o" in
-  def ri27c : LSUCOND_REGISTERY_REGISTERW_OFFSET27_REGISTERZ_DOUBLE
+  def ri27c : KVX_INSTRUCTION_X
     <(outs SingleReg:$a3o), (ins Signed27:$a4, SingleReg:$a5, SingleReg:$a3, ScalarcondMod:$a1, SingleReg:$a2),
      !strconcat (OpcStr, "$a1 $a2 ? $a3 = $a4[$a5]"),
      [/* no straightforward pattern */],
      LSU_AUXW_X_ALCLR>;
   let Constraints = "$a3 = $a3o" in
-  def ri54c : LSUCOND_REGISTERY_REGISTERW_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
+  def ri54c : KVX_INSTRUCTION_Y
     <(outs SingleReg:$a3o), (ins Signed54:$a4, SingleReg:$a5, SingleReg:$a3, ScalarcondMod:$a1, SingleReg:$a2),
      !strconcat (OpcStr, "$a1 $a2 ? $a3 = $a4[$a5]"),
      [/* no straightforward pattern */],
@@ -245,44 +245,44 @@ let mayLoad = 1, mayStore = 1 in
 multiclass MC_0F<string OpcStr> {
   let isPredicable = 1 in {
   let Constraints = "$a3 = $a3o" in
-  def ri10 : SIGNED10_REGISTERZ_REGISTERT_SIMPLE
+  def ri10 : KVX_INSTRUCTION
     <(outs SingleReg:$a3o), (ins Signed10:$a1, SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [/* no straightforward pattern */],
      LSU_AUXR_AUXW_LOAD>;
   let Constraints = "$a3 = $a3o" in
-  def ri37 : UPPER27_LOWER10_REGISTERZ_REGISTERT_DOUBLE
+  def ri37 : KVX_INSTRUCTION_X
     <(outs SingleReg:$a3o), (ins Signed37:$a1, SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [/* no straightforward pattern */],
      LSU_AUXR_AUXW_X_LOAD>;
   let Constraints = "$a3 = $a3o" in
-  def ri64 : EXTEND27_UPPER27_LOWER10_REGISTERZ_REGISTERT_TRIPLE
+  def ri64 : KVX_INSTRUCTION_Y
     <(outs SingleReg:$a3o), (ins Wrapped64:$a1, SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [/* no straightforward pattern */],
      LSU_AUXR_AUXW_Y_LOAD>;
   let Constraints = "$a4 = $a4o" in
-  def rr : DOSCALE_REGISTERY_REGISTERZ_REGISTERT_SIMPLE
+  def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a4o), (ins SingleReg:$a2, SingleReg:$a3, SingleReg:$a4, DoscaleMod:$a1),
      !strconcat (OpcStr, "$a1 $a2[$a3] = $a4"),
      [/* no straightforward pattern */],
      LSU_AUXR_AUXW_LOAD>;
   }
   let Constraints = "$a4 = $a4o" in
-  def rrc : LSUCOND_REGISTERY_REGISTERZ_REGISTERT_SIMPLE
+  def rrc : KVX_INSTRUCTION
     <(outs SingleReg:$a4o), (ins SingleReg:$a3, SingleReg:$a4, ScalarcondMod:$a1, SingleReg:$a2),
      !strconcat (OpcStr, "$a1 $a2 ? [$a3] = $a4"),
      [/* no straightforward pattern */],
      LSU_AUXR_AUXW_LOAD>;
   let Constraints = "$a5 = $a5o" in
-  def ri27c : LSUCOND_REGISTERY_OFFSET27_REGISTERZ_REGISTERT_DOUBLE
+  def ri27c : KVX_INSTRUCTION_X
     <(outs SingleReg:$a5o), (ins Signed27:$a3, SingleReg:$a4, SingleReg:$a5, ScalarcondMod:$a1, SingleReg:$a2),
      !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
      [/* no straightforward pattern */],
      LSU_AUXR_AUXW_X_LOAD>;
   let Constraints = "$a5 = $a5o" in
-  def ri54c : LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_REGISTERT_TRIPLE
+  def ri54c : KVX_INSTRUCTION_Y
     <(outs SingleReg:$a5o), (ins Signed54:$a3, SingleReg:$a4, SingleReg:$a5, ScalarcondMod:$a1, SingleReg:$a2),
      !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4] = $a5"),
      [/* no straightforward pattern */],
@@ -296,38 +296,38 @@ multiclass MC_0F<string OpcStr> {
 //   defm I1INVALS
 multiclass MC_10<string OpcStr> {
   let isPredicable = 1 in {
-  def ri10 : SIGNED10_REGISTERZ_SIMPLE
+  def ri10 : KVX_INSTRUCTION
     <(outs), (ins Signed10:$a1, SingleReg:$a2),
      !strconcat (OpcStr, " $a1[$a2]"),
      [/* no straightforward pattern */],
      LSU_LOAD>;
-  def ri37 : UPPER27_LOWER10_REGISTERZ_DOUBLE
+  def ri37 : KVX_INSTRUCTION_X
     <(outs), (ins Signed37:$a1, SingleReg:$a2),
      !strconcat (OpcStr, " $a1[$a2]"),
      [/* no straightforward pattern */],
      LSU_X_LOAD>;
-  def ri64 : EXTEND27_UPPER27_LOWER10_REGISTERZ_TRIPLE
+  def ri64 : KVX_INSTRUCTION_Y
     <(outs), (ins Wrapped64:$a1, SingleReg:$a2),
      !strconcat (OpcStr, " $a1[$a2]"),
      [/* no straightforward pattern */],
      LSU_Y_LOAD>;
-  def rr : REGISTERY_REGISTERZ_SIMPLE
+  def rr : KVX_INSTRUCTION
     <(outs), (ins SingleReg:$a1, SingleReg:$a2),
      !strconcat (OpcStr, " $a1[$a2]"),
      [/* no straightforward pattern */],
      LSU_LOAD>;
   }
-  def rrc : LSUCOND_REGISTERY_REGISTERZ_SIMPLE
+  def rrc : KVX_INSTRUCTION
     <(outs), (ins SingleReg:$a3, ScalarcondMod:$a1, SingleReg:$a2),
      !strconcat (OpcStr, "$a1 $a2 ? [$a3]"),
      [/* no straightforward pattern */],
      LSU_LOAD>;
-  def ri27c : LSUCOND_REGISTERY_OFFSET27_REGISTERZ_DOUBLE
+  def ri27c : KVX_INSTRUCTION_X
     <(outs), (ins Signed27:$a3, SingleReg:$a4, ScalarcondMod:$a1, SingleReg:$a2),
      !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4]"),
      [/* no straightforward pattern */],
      LSU_X_LOAD>;
-  def ri54c : LSUCOND_REGISTERY_EXTEND27_OFFSET27_REGISTERZ_TRIPLE
+  def ri54c : KVX_INSTRUCTION_Y
     <(outs), (ins Signed54:$a3, SingleReg:$a4, ScalarcondMod:$a1, SingleReg:$a2),
      !strconcat (OpcStr, "$a1 $a2 ? $a3[$a4]"),
      [/* no straightforward pattern */],
@@ -351,23 +351,23 @@ multiclass MC_10<string OpcStr> {
 //   defm ORND
 multiclass MC_11<string OpcStr> {
   let isAsCheapAsAMove = 1 in
-  def rr : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+  def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      ALU_TINY>;
   let isAsCheapAsAMove = 1 in
-  def ri10 : REGISTERW_REGISTERZ_SIGNED10_SIMPLE
+  def ri10 : KVX_INSTRUCTION
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      ALU_TINY>;
-  def ri37 : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
+  def ri37 : KVX_INSTRUCTION_X
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      ALU_TINY_X>;
-  def ri64 : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
+  def ri64 : KVX_INSTRUCTION_Y
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
@@ -381,22 +381,22 @@ multiclass MC_11<string OpcStr> {
 //   defm ADDSD
 //   defm SBFSD
 multiclass MC_12<string OpcStr> {
-  def rr : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+  def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      ALU_LITE>;
-  def ri10 : REGISTERW_REGISTERZ_SIGNED10_SIMPLE
+  def ri10 : KVX_INSTRUCTION
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      ALU_LITE>;
-  def ri37 : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
+  def ri37 : KVX_INSTRUCTION_X
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      ALU_LITE_X>;
-  def ri64 : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
+  def ri64 : KVX_INSTRUCTION_Y
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
@@ -459,12 +459,12 @@ multiclass MC_12<string OpcStr> {
 //   defm SBFX32UWD
 //   defm SBFX64UWD
 multiclass MC_13<string OpcStr> {
-  def rr : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+  def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      ALU_LITE>;
-  def ri : REGISTERW_REGISTERZ_UPPER27_LOWER5_DOUBLE
+  def ri : KVX_INSTRUCTION_X
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped32:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
@@ -488,18 +488,18 @@ multiclass MC_13<string OpcStr> {
 //   defm ORNW
 multiclass MC_14<string OpcStr> {
   let isAsCheapAsAMove = 1 in
-  def ri10 : REGISTERW_REGISTERZ_SIGNED10_SIMPLE
+  def ri10 : KVX_INSTRUCTION
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10W:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      ALU_TINY>;
-  def ri37 : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
+  def ri37 : KVX_INSTRUCTION_X
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37W:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      ALU_TINY_X>;
   let isAsCheapAsAMove = 1 in
-  def rr : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+  def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
@@ -509,17 +509,17 @@ multiclass MC_14<string OpcStr> {
 // multiclass MC_15 is used by:
 //   defm ABDW
 multiclass MC_15<string OpcStr> {
-  def ri10 : REGISTERW_REGISTERZ_SIGNED10_SIMPLE
+  def ri10 : KVX_INSTRUCTION
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10W:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      ALU_LITE>;
-  def ri37 : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
+  def ri37 : KVX_INSTRUCTION_X
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37W:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      ALU_LITE_X>;
-  def rr : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+  def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
@@ -547,12 +547,12 @@ multiclass MC_15<string OpcStr> {
 //   defm SBFWP
 multiclass MC_16<string OpcStr> {
   let isAsCheapAsAMove = 1 in
-  def rr : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+  def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      ALU_TINY>;
-  def ri : SPLAT32_REGISTERW_REGISTERZ_UPPER27_LOWER5_DOUBLE
+  def ri : KVX_INSTRUCTION_X
     <(outs SingleReg:$a2), (ins SingleReg:$a3, Wrapped32:$a4, Splat32Mod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
      [/* no straightforward pattern */],
@@ -645,12 +645,12 @@ multiclass MC_16<string OpcStr> {
 //   defm LORHQ
 //   defm LNORHQ
 multiclass MC_17<string OpcStr> {
-  def rr : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+  def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      ALU_LITE>;
-  def ri : SPLAT32_REGISTERW_REGISTERZ_UPPER27_LOWER5_DOUBLE
+  def ri : KVX_INSTRUCTION_X
     <(outs SingleReg:$a2), (ins SingleReg:$a3, Wrapped32:$a4, Splat32Mod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
      [/* no straightforward pattern */],
@@ -688,12 +688,12 @@ multiclass MC_17<string OpcStr> {
 //   defm SLUSHQS
 //   defm SRSBOS
 multiclass MC_18<string OpcStr> {
-  def rr : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+  def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      ALU_LITE>;
-  def ri : REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE
+  def ri : KVX_INSTRUCTION
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Unsigned6:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
@@ -709,12 +709,12 @@ multiclass MC_18<string OpcStr> {
 //   defm SRLW
 let isAsCheapAsAMove = 1 in
 multiclass MC_19<string OpcStr> {
-  def ri : REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE
+  def ri : KVX_INSTRUCTION
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Unsigned6:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      ALU_TINY>;
-  def rr : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+  def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
@@ -724,22 +724,22 @@ multiclass MC_19<string OpcStr> {
 // multiclass MC_1A is used by:
 //   defm COMPD
 multiclass MC_1A<string OpcStr> {
-  def ri10 : COMPARISON_REGISTERW_REGISTERZ_SIGNED10_SIMPLE
+  def ri10 : KVX_INSTRUCTION
     <(outs SingleReg:$a2), (ins SingleReg:$a3, Signed10:$a4, ComparisonMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
      [/* no straightforward pattern */],
      ALU_TINY>;
-  def ri37 : COMPARISON_REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
+  def ri37 : KVX_INSTRUCTION_X
     <(outs SingleReg:$a2), (ins SingleReg:$a3, Signed37:$a4, ComparisonMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
      [/* no straightforward pattern */],
      ALU_TINY_X>;
-  def ri64 : COMPARISON_REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
+  def ri64 : KVX_INSTRUCTION_Y
     <(outs SingleReg:$a2), (ins SingleReg:$a3, Wrapped64:$a4, ComparisonMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
      [/* no straightforward pattern */],
      ALU_TINY_Y>;
-  def rr : COMPARISON_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+  def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, ComparisonMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
      [/* no straightforward pattern */],
@@ -751,12 +751,12 @@ multiclass MC_1A<string OpcStr> {
 //   defm COMPNW
 //   defm COMPW
 multiclass MC_1B<string OpcStr> {
-  def rr : COMPARISON_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+  def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, ComparisonMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
      [/* no straightforward pattern */],
      ALU_TINY>;
-  def ri : COMPARISON_REGISTERW_REGISTERZ_UPPER27_LOWER5_DOUBLE
+  def ri : KVX_INSTRUCTION_X
     <(outs SingleReg:$a2), (ins SingleReg:$a3, Wrapped32:$a4, ComparisonMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
      [/* no straightforward pattern */],
@@ -768,24 +768,24 @@ multiclass MC_1B<string OpcStr> {
 let isAsCheapAsAMove = 1 in
 multiclass MC_1C<string OpcStr> {
   let Constraints = "$a3 = $a3o", isMoveImm = 1, isReMaterializable = 1 in {
-  def ri10 : SCALARCOND_REGISTERZ_REGISTERW_SIGNED10_SIMPLE
+  def ri10 : KVX_INSTRUCTION
     <(outs SingleReg:$a3o), (ins SingleReg:$a2, SingleReg:$a3, Signed10:$a4, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? $a3 = $a4"),
      [/* no straightforward pattern */],
      ALU_LITE>;
-  def ri37 : SCALARCOND_REGISTERZ_REGISTERW_UPPER27_LOWER10_DOUBLE
+  def ri37 : KVX_INSTRUCTION_X
     <(outs SingleReg:$a3o), (ins SingleReg:$a2, SingleReg:$a3, Signed37:$a4, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? $a3 = $a4"),
      [/* no straightforward pattern */],
      ALU_LITE_X>;
-  def ri64 : SCALARCOND_REGISTERZ_REGISTERW_EXTEND27_UPPER27_LOWER10_TRIPLE
+  def ri64 : KVX_INSTRUCTION_Y
     <(outs SingleReg:$a3o), (ins SingleReg:$a2, SingleReg:$a3, Wrapped64:$a4, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? $a3 = $a4"),
      [/* no straightforward pattern */],
      ALU_LITE_Y>;
   }
   let Constraints = "$a3 = $a3o", isMoveReg = 1 in
-  def rr : SCALARCOND_REGISTERZ_REGISTERW_REGISTERY_SIMPLE
+  def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a3o), (ins SingleReg:$a2, SingleReg:$a3, SingleReg:$a4, ScalarcondMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 ? $a3 = $a4"),
      [/* no straightforward pattern */],
@@ -795,17 +795,17 @@ multiclass MC_1C<string OpcStr> {
 // multiclass MC_1D is used by:
 //   defm MAKE
 multiclass MC_1D<string OpcStr> {
-  def i16 : REGISTERW_SIGNED16_SIMPLE
+  def i16 : KVX_INSTRUCTION
     <(outs SingleReg:$a1), (ins Signed16:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
      [/* no straightforward pattern */],
      ALU_TINY>;
-  def i43 : REGISTERW_EXTEND6_UPPER27_LOWER10_DOUBLE
+  def i43 : KVX_INSTRUCTION_X
     <(outs SingleReg:$a1), (ins Signed43:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
      [/* no straightforward pattern */],
      ALU_TINY_X>;
-  def i64 : REGISTERW_EXTEND27_UPPER27_LOWER10_TRIPLE
+  def i64 : KVX_INSTRUCTION_Y
     <(outs SingleReg:$a1), (ins Wrapped64:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
      [/* no straightforward pattern */],
@@ -815,17 +815,17 @@ multiclass MC_1D<string OpcStr> {
 // multiclass MC_1E is used by:
 //   defm PCREL
 multiclass MC_1E<string OpcStr> {
-  def i16 : REGISTERW_SIGNED16_SIMPLE
+  def i16 : KVX_INSTRUCTION
     <(outs SingleReg:$a1), (ins Signed16:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
      [/* no straightforward pattern */],
      ALU_FULL>;
-  def i43 : REGISTERW_EXTEND6_UPPER27_LOWER10_DOUBLE
+  def i43 : KVX_INSTRUCTION_X
     <(outs SingleReg:$a1), (ins Signed43:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
      [/* no straightforward pattern */],
      ALU_FULL_X>;
-  def i64 : REGISTERW_EXTEND27_UPPER27_LOWER10_TRIPLE
+  def i64 : KVX_INSTRUCTION_Y
     <(outs SingleReg:$a1), (ins Wrapped64:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
      [/* no straightforward pattern */],
@@ -836,12 +836,12 @@ multiclass MC_1E<string OpcStr> {
 //   defm FCOMPW
 //   defm FCOMPNW
 multiclass MC_1F<string OpcStr> {
-  def rr : FLOATCOMP_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32
+  def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, FloatcompMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
      [/* no straightforward pattern */],
      ALU_LITE>;
-  def ri : FLOATCOMP_REGISTERW_REGISTERZ_UPPER27_LOWER5_DOUBLE_BINARY32
+  def ri : KVX_INSTRUCTION_X
     <(outs SingleReg:$a2), (ins SingleReg:$a3, Binary32:$a4, FloatcompMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
      [/* no straightforward pattern */],
@@ -854,25 +854,25 @@ multiclass MC_1F<string OpcStr> {
 //   defm MADDHQ
 multiclass MC_20<string OpcStr> {
   let Constraints = "$a1 = $a1o" in
-  def ri10 : REGISTERW_REGISTERZ_SIGNED10_SIMPLE
+  def ri10 : KVX_INSTRUCTION
     <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, Signed10:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      MAU_AUXR>;
   let Constraints = "$a1 = $a1o" in
-  def ri37 : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
+  def ri37 : KVX_INSTRUCTION_X
     <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, Signed37:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      MAU_AUXR_X>;
   let Constraints = "$a1 = $a1o" in
-  def ri64 : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
+  def ri64 : KVX_INSTRUCTION_Y
     <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, Wrapped64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      MAU_AUXR_Y>;
   let Constraints = "$a1 = $a1o" in
-  def rr : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+  def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
@@ -886,25 +886,25 @@ multiclass MC_20<string OpcStr> {
 //   defm MADDUZDT
 multiclass MC_21<string OpcStr> {
   let Constraints = "$a1 = $a1o" in
-  def ri10 : REGISTERM_REGISTERZ_SIGNED10_SIMPLE
+  def ri10 : KVX_INSTRUCTION
     <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, Signed10:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      MAU_AUXR>;
   let Constraints = "$a1 = $a1o" in
-  def ri37 : REGISTERM_REGISTERZ_UPPER27_LOWER10_DOUBLE
+  def ri37 : KVX_INSTRUCTION_X
     <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, Signed37:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      MAU_AUXR_X>;
   let Constraints = "$a1 = $a1o" in
-  def ri64 : REGISTERM_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
+  def ri64 : KVX_INSTRUCTION_Y
     <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, Wrapped64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      MAU_AUXR_Y>;
   let Constraints = "$a1 = $a1o" in
-  def rr : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+  def rr : KVX_INSTRUCTION
     <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
@@ -921,22 +921,22 @@ multiclass MC_21<string OpcStr> {
 //   defm MULHQ
 //   defm MULWC
 multiclass MC_22<string OpcStr> {
-  def ri10 : REGISTERW_REGISTERZ_SIGNED10_SIMPLE
+  def ri10 : KVX_INSTRUCTION
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      MAU>;
-  def ri37 : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE
+  def ri37 : KVX_INSTRUCTION_X
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      MAU_X>;
-  def ri64 : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
+  def ri64 : KVX_INSTRUCTION_Y
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      MAU_Y>;
-  def rr : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+  def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
@@ -949,22 +949,22 @@ multiclass MC_22<string OpcStr> {
 //   defm MULSUDT
 //   defm CMULDT
 multiclass MC_23<string OpcStr> {
-  def ri10 : REGISTERM_REGISTERZ_SIGNED10_SIMPLE
+  def ri10 : KVX_INSTRUCTION
     <(outs PairedReg:$a1), (ins SingleReg:$a2, Signed10:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      MAU>;
-  def ri37 : REGISTERM_REGISTERZ_UPPER27_LOWER10_DOUBLE
+  def ri37 : KVX_INSTRUCTION_X
     <(outs PairedReg:$a1), (ins SingleReg:$a2, Signed37:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      MAU_X>;
-  def ri64 : REGISTERM_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE
+  def ri64 : KVX_INSTRUCTION_Y
     <(outs PairedReg:$a1), (ins SingleReg:$a2, Wrapped64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      MAU_Y>;
-  def rr : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+  def rr : KVX_INSTRUCTION
     <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
@@ -986,13 +986,13 @@ multiclass MC_23<string OpcStr> {
 //   defm MSBFW
 multiclass MC_24<string OpcStr> {
   let Constraints = "$a1 = $a1o" in
-  def rr : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+  def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      MAU_AUXR>;
   let Constraints = "$a1 = $a1o" in
-  def ri : REGISTERW_REGISTERZ_UPPER27_LOWER5_DOUBLE
+  def ri : KVX_INSTRUCTION_X
     <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, Wrapped32:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
@@ -1005,12 +1005,12 @@ multiclass MC_24<string OpcStr> {
 //   defm MULSUWD
 //   defm MULW
 multiclass MC_25<string OpcStr> {
-  def rr : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+  def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      MAU>;
-  def ri : REGISTERW_REGISTERZ_UPPER27_LOWER5_DOUBLE
+  def ri : KVX_INSTRUCTION_X
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped32:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
@@ -1024,13 +1024,13 @@ multiclass MC_25<string OpcStr> {
 //   defm FFMSWD
 multiclass MC_26<string OpcStr> {
   let Constraints = "$a1 = $a1o" in
-  def ri : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARY64
+  def ri : KVX_INSTRUCTION_CV1_Y
     <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, Binary64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      MAU_AUXR_Y_FP>;
   let Constraints = "$a3 = $a3o" in
-  def rr : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY64
+  def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a3o), (ins SingleReg:$a3, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
      [/* no straightforward pattern */],
@@ -1042,13 +1042,13 @@ multiclass MC_26<string OpcStr> {
 //   defm FFMSWP
 multiclass MC_27<string OpcStr> {
   let Constraints = "$a1 = $a1o" in
-  def ri : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARY32X2
+  def ri : KVX_INSTRUCTION_CV1_Y
     <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, Binary32x2:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      MAU_AUXR_Y_FP>;
   let Constraints = "$a3 = $a3o" in
-  def rr : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32X2
+  def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a3o), (ins SingleReg:$a3, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
      [/* no straightforward pattern */],
@@ -1060,13 +1060,13 @@ multiclass MC_27<string OpcStr> {
 //   defm FFMSHQ
 multiclass MC_28<string OpcStr> {
   let Constraints = "$a1 = $a1o" in
-  def ri : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARY16X4
+  def ri : KVX_INSTRUCTION_CV1_Y
     <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, Binary16x4:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      MAU_AUXR_Y_FP>;
   let Constraints = "$a3 = $a3o" in
-  def rr : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY16X4
+  def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a3o), (ins SingleReg:$a3, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
      [/* no straightforward pattern */],
@@ -1080,12 +1080,12 @@ multiclass MC_28<string OpcStr> {
 //   defm FMULWD
 //   defm FDOT2WD
 multiclass MC_29<string OpcStr> {
-  def ri : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARY64
+  def ri : KVX_INSTRUCTION_CV1_Y
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      MAU_Y_FP>;
-  def rr : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY64
+  def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
      [/* no straightforward pattern */],
@@ -1096,12 +1096,12 @@ multiclass MC_29<string OpcStr> {
 //   defm FDOT2W
 //   defm FMULWP
 multiclass MC_2A<string OpcStr> {
-  def ri : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARY32X2
+  def ri : KVX_INSTRUCTION_CV1_Y
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary32x2:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      MAU_Y_FP>;
-  def rr : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32X2
+  def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
      [/* no straightforward pattern */],
@@ -1114,13 +1114,13 @@ multiclass MC_2A<string OpcStr> {
 //   defm FMULWC
 //   defm FSBFWP
 multiclass MC_2AM<string OpcStr> {
-  def ri : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARY32X2
+  def ri : KVX_INSTRUCTION_CV1_Y
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary32x2:$a3, ConjugateMod:$a4),
      !strconcat (OpcStr, "$a4 $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      MAU_Y_FP>, Requires<[IsV1]>;
 
-  def rr : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32X2
+  def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, ConjugateMod:$a6, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a6$a1$a2 $a3 = $a4, $a5"),
      [/* no straightforward pattern */],
@@ -1132,12 +1132,12 @@ multiclass MC_2AM<string OpcStr> {
 //   defm FADDHQ
 //   defm FSBFHQ
 multiclass MC_2B<string OpcStr> {
-  def ri : REGISTERW_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARY16X4
+  def ri : KVX_INSTRUCTION_CV1_Y
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary16x4:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      MAU_Y_FP>;
-  def rr : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY16X4
+  def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
      [/* no straightforward pattern */],
@@ -1149,12 +1149,12 @@ multiclass MC_2B<string OpcStr> {
 //   defm FMULWDC
 //   defm FMULCWDC
 multiclass MC_2C<string OpcStr> {
-  def ri : REGISTERM_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARY32X2
+  def ri : KVX_INSTRUCTION_CV1_Y
     <(outs PairedReg:$a1), (ins SingleReg:$a2, Binary32x2:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      MAU_Y_FP>;
-  def rr : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE_BINARY32X2
+  def rr : KVX_INSTRUCTION
     <(outs PairedReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
      [/* no straightforward pattern */],
@@ -1164,12 +1164,12 @@ multiclass MC_2C<string OpcStr> {
 // multiclass MC_2D is used by:
 //   defm FMULHWQ
 multiclass MC_2D<string OpcStr> {
-  def ri : REGISTERM_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARY16X4
+  def ri : KVX_INSTRUCTION_CV1_Y
     <(outs PairedReg:$a1), (ins SingleReg:$a2, Binary16x4:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      MAU_Y_FP>;
-  def rr : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE_BINARY16X4
+  def rr : KVX_INSTRUCTION
     <(outs PairedReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
      [/* no straightforward pattern */],
@@ -1181,13 +1181,13 @@ multiclass MC_2D<string OpcStr> {
 //   defm FFMSW
 multiclass MC_2E<string OpcStr> {
   let Constraints = "$a1 = $a1o" in
-  def ri : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE_BINARY32
+  def ri : KVX_INSTRUCTION_CV1_X
     <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, Binary32:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      MAU_AUXR_X_FP>;
   let Constraints = "$a3 = $a3o" in
-  def rr : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32
+  def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a3o), (ins SingleReg:$a3, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
      [/* no straightforward pattern */],
@@ -1199,13 +1199,13 @@ multiclass MC_2E<string OpcStr> {
 //   defm FFMSHW
 multiclass MC_2E_2<string OpcStr> {
   let Constraints = "$a1 = $a1o" in
-  def ri : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE_BINARY32
+  def ri : KVX_INSTRUCTION_CV1_X
     <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, Binary32:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      MAU_AUXR_X_FP>;
   let Constraints = "$a3 = $a3o" in
-  def rr : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32
+  def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a3o), (ins SingleReg:$a3, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
      [/* no straightforward pattern */],
@@ -1217,13 +1217,13 @@ multiclass MC_2E_2<string OpcStr> {
 //   defm FFMSWDP
 multiclass MC_2F<string OpcStr> {
   let Constraints = "$a1 = $a1o" in
-  def ri : REGISTERM_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARY32X2
+  def ri : KVX_INSTRUCTION_CV1_Y
     <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, Binary32x2:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      MAU_AUXR_Y_FP>;
   let Constraints = "$a3 = $a3o" in
-  def rr : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE_BINARY32X2
+  def rr : KVX_INSTRUCTION
     <(outs PairedReg:$a3o), (ins PairedReg:$a3, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
      [/* no straightforward pattern */],
@@ -1235,13 +1235,13 @@ multiclass MC_2F<string OpcStr> {
 //   defm FFMSHWQ
 multiclass MC_30<string OpcStr> {
   let Constraints = "$a1 = $a1o" in
-  def ri : REGISTERM_REGISTERZ_EXTEND27_UPPER27_LOWER10_TRIPLE_BINARY16X4
+  def ri : KVX_INSTRUCTION_CV1_Y
     <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, Binary16x4:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      MAU_AUXR_Y_FP>;
   let Constraints = "$a3 = $a3o" in
-  def rr : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE_BINARY16X4
+  def rr : KVX_INSTRUCTION
     <(outs PairedReg:$a3o), (ins PairedReg:$a3, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
      [/* no straightforward pattern */],
@@ -1253,12 +1253,12 @@ multiclass MC_30<string OpcStr> {
 //   defm FSBFW
 //   defm FMULW
 multiclass MC_31<string OpcStr> {
-  def ri : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE_BINARY32
+  def ri : KVX_INSTRUCTION_CV1_X
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary32:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      MAU_X_FP>;
-  def rr : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32
+  def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
      [/* no straightforward pattern */],
@@ -1268,12 +1268,12 @@ multiclass MC_31<string OpcStr> {
 // multiclass MC_31_2 is used by:
 //   defm FMULHW
 multiclass MC_31_2<string OpcStr> {
-  def ri : REGISTERW_REGISTERZ_UPPER27_LOWER10_DOUBLE_BINARY32
+  def ri : KVX_INSTRUCTION_CV1_X
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary32:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      MAU_X_FP>;
-  def rr : ROUNDING_SILENT_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32
+  def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
      [/* no straightforward pattern */],
@@ -1283,12 +1283,12 @@ multiclass MC_31_2<string OpcStr> {
 // multiclass MC_32 is used by:
 //   defm MOVETQ
 multiclass MC_32<string OpcStr> {
-  def rrbe : REGISTERAL_REGISTERZ_REGISTERY_SIMPLE
+  def rrbe : KVX_INSTRUCTION
     <(outs BlockRegE:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      ALU_LITE_CRWL>;
-  def rrbo : REGISTERAH_REGISTERZ_REGISTERY_SIMPLE
+  def rrbo : KVX_INSTRUCTION
     <(outs BlockRegO:$a1), (ins SingleReg:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
@@ -1298,22 +1298,22 @@ multiclass MC_32<string OpcStr> {
 // multiclass MC_33 is used by:
 //   defm ALIGNO
 multiclass MC_33<string OpcStr> {
-  def reroi : REGISTERN_REGISTERBE_REGISTERCO_BYTESHIFT_SIMPLE
+  def reroi : KVX_INSTRUCTION
     <(outs QuadReg:$a1), (ins VectorRegE:$a2, VectorRegO:$a3, Unsigned6:$a4),
      !strconcat (OpcStr, " $a1 = $a2, $a3, $a4"),
      [/* no straightforward pattern */],
      BCU_TINY_AUXW_CRRP>;
-  def rorei : REGISTERN_REGISTERBO_REGISTERCE_BYTESHIFT_SIMPLE
+  def rorei : KVX_INSTRUCTION
     <(outs QuadReg:$a1), (ins VectorRegO:$a2, VectorRegE:$a3, Unsigned6:$a4),
      !strconcat (OpcStr, " $a1 = $a2, $a3, $a4"),
      [/* no straightforward pattern */],
      BCU_TINY_AUXW_CRRP>;
-  def reror : REGISTERN_REGISTERBE_REGISTERCO_REGISTERZ_SIMPLE
+  def reror : KVX_INSTRUCTION
     <(outs QuadReg:$a1), (ins VectorRegE:$a2, VectorRegO:$a3, SingleReg:$a4),
      !strconcat (OpcStr, " $a1 = $a2, $a3, $a4"),
      [/* no straightforward pattern */],
      BCU_TINY_AUXW_CRRP>;
-  def rorer : REGISTERN_REGISTERBO_REGISTERCE_REGISTERZ_SIMPLE
+  def rorer : KVX_INSTRUCTION
     <(outs QuadReg:$a1), (ins VectorRegO:$a2, VectorRegE:$a3, SingleReg:$a4),
      !strconcat (OpcStr, " $a1 = $a2, $a3, $a4"),
      [/* no straightforward pattern */],
@@ -1323,22 +1323,22 @@ multiclass MC_33<string OpcStr> {
 // multiclass MC_34 is used by:
 //   defm ALIGNV
 multiclass MC_34<string OpcStr> {
-  def reroi : REGISTERA_REGISTERBE_REGISTERCO_BYTESHIFT_SIMPLE
+  def reroi : KVX_INSTRUCTION
     <(outs VectorReg:$a1), (ins VectorRegE:$a2, VectorRegO:$a3, Unsigned6:$a4),
      !strconcat (OpcStr, " $a1 = $a2, $a3, $a4"),
      [/* no straightforward pattern */],
      BCU_CRRP_CRWL_CRWH>;
-  def rorei : REGISTERA_REGISTERBO_REGISTERCE_BYTESHIFT_SIMPLE
+  def rorei : KVX_INSTRUCTION
     <(outs VectorReg:$a1), (ins VectorRegO:$a2, VectorRegE:$a3, Unsigned6:$a4),
      !strconcat (OpcStr, " $a1 = $a2, $a3, $a4"),
      [/* no straightforward pattern */],
      BCU_CRRP_CRWL_CRWH>;
-  def reror : REGISTERA_REGISTERBE_REGISTERCO_REGISTERZ_SIMPLE
+  def reror : KVX_INSTRUCTION
     <(outs VectorReg:$a1), (ins VectorRegE:$a2, VectorRegO:$a3, SingleReg:$a4),
      !strconcat (OpcStr, " $a1 = $a2, $a3, $a4"),
      [/* no straightforward pattern */],
      BCU_CRRP_CRWL_CRWH>;
-  def rorer : REGISTERA_REGISTERBO_REGISTERCE_REGISTERZ_SIMPLE
+  def rorer : KVX_INSTRUCTION
     <(outs VectorReg:$a1), (ins VectorRegO:$a2, VectorRegE:$a3, SingleReg:$a4),
      !strconcat (OpcStr, " $a1 = $a2, $a3, $a4"),
      [/* no straightforward pattern */],
@@ -1349,12 +1349,12 @@ multiclass MC_34<string OpcStr> {
 //   defm COPYV
 let isMoveReg = 1 in
 multiclass MC_35<string OpcStr> {
-  def re : REGISTERA_REGISTERBE_SIMPLE
+  def re : KVX_INSTRUCTION
     <(outs VectorReg:$a1), (ins VectorRegE:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
      [/* no straightforward pattern */],
      BCU_CRRP_CRWL_CRWH>;
-  def ro : REGISTERA_REGISTERBO_SIMPLE
+  def ro : KVX_INSTRUCTION
     <(outs VectorReg:$a1), (ins VectorRegO:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
      [/* no straightforward pattern */],
@@ -1364,12 +1364,12 @@ multiclass MC_35<string OpcStr> {
 // multiclass MC_36 is used by:
 //   defm MOVEFO
 multiclass MC_36<string OpcStr> {
-  def re : REGISTERN_REGISTERBE_SIMPLE
+  def re : KVX_INSTRUCTION
     <(outs QuadReg:$a1), (ins VectorRegE:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
      [/* no straightforward pattern */],
      BCU_TINY_AUXW_CRRP>;
-  def ro : REGISTERN_REGISTERBO_SIMPLE
+  def ro : KVX_INSTRUCTION
     <(outs QuadReg:$a1), (ins VectorRegO:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
      [/* no straightforward pattern */],
@@ -1378,104 +1378,104 @@ multiclass MC_36<string OpcStr> {
 
 // def FMM222W
 class FP_PairedReg_PairedReg_PairedReg_Transp_Round_Silent <string OpcStr, InstrItinClass It>
-: ROUNDING_SILENT_TRANSPOSE_REGISTERM_REGISTERO_REGISTERP
+: KVX_INSTRUCTION_CV2
     <(outs PairedReg:$M), (ins PairedReg:$O, PairedReg:$P, TransposeMod:$t, RoundingMod:$r, SilentMod:$s),
-     !strconcat (OpcStr, "$t$r$s $M = $O, $P"), It>
+     !strconcat (OpcStr, "$t$r$s $M = $O, $P"), [], It>
 {}
 
 // def FMMA222W
 // def FMMS222W
 class FP_PairedReg_PairedReg_PairedReg_Transp_Round_Silent_Accumulate <string OpcStr, InstrItinClass It>
-: ROUNDING_SILENT_TRANSPOSE_REGISTERM_REGISTERO_REGISTERP
+: KVX_INSTRUCTION_CV2
     <(outs PairedReg:$M_Out), (ins PairedReg:$O, PairedReg:$P, PairedReg:$M_In, TransposeMod:$t, RoundingMod:$r, SilentMod:$s),
-     !strconcat (OpcStr, "$t$r$s $M_Out = $O, $P"), It>
+     !strconcat (OpcStr, "$t$r$s $M_Out = $O, $P"), [], It>
 {
   let Constraints = "$M_Out = $M_In";
 }
 
 
-def AWAIT : SIMPLE
+def AWAIT : KVX_INSTRUCTION
   <(outs), (ins),
    "await",
    [/* no straightforward pattern */],
    ALL>;
 
-def SLEEP : SIMPLE
+def SLEEP : KVX_INSTRUCTION
   <(outs), (ins),
    "sleep",
    [/* no straightforward pattern */],
    ALL>;
 
-def STOP : SIMPLE
+def STOP : KVX_INSTRUCTION
   <(outs), (ins),
    "stop",
    [/* no straightforward pattern */],
    ALL>;
 
-def BARRIER : SIMPLE
+def BARRIER : KVX_INSTRUCTION
   <(outs), (ins),
    "barrier",
    [/* no straightforward pattern */],
    ALL>;
 
-def TLBREAD : SIMPLE
+def TLBREAD : KVX_INSTRUCTION
   <(outs), (ins),
    "tlbread",
    [/* no straightforward pattern */],
    ALL>;
 
-def TLBPROBE : SIMPLE
+def TLBPROBE : KVX_INSTRUCTION
   <(outs), (ins),
    "tlbprobe",
    [/* no straightforward pattern */],
    ALL>;
 
-def TLBWRITE : SIMPLE
+def TLBWRITE : KVX_INSTRUCTION
   <(outs), (ins),
    "tlbwrite",
    [/* no straightforward pattern */],
    ALL>;
 
-def TLBDINVAL : SIMPLE
+def TLBDINVAL : KVX_INSTRUCTION
   <(outs), (ins),
    "tlbdinval",
    [/* no straightforward pattern */],
    ALL>;
 
-def TLBIINVAL : SIMPLE
+def TLBIINVAL : KVX_INSTRUCTION
   <(outs), (ins),
    "tlbiinval",
    [/* no straightforward pattern */],
    ALL>;
 
-def ERROP : SIMPLE
+def ERROP : KVX_INSTRUCTION
   <(outs), (ins),
    "errop",
    [/* no straightforward pattern */],
    ALL>;
 
 let Uses = [RA], isBarrier = 1, isReturn = 1, isTerminator = 1 in
-def RET : SIMPLE
+def RET : KVX_INSTRUCTION
   <(outs), (ins),
    "ret",
    [/* no straightforward pattern */],
    BCU>;
 
-def RFE : SIMPLE
+def RFE : KVX_INSTRUCTION
   <(outs), (ins),
    "rfe",
    [/* no straightforward pattern */],
    ALL>;
 
 let isBarrier = 1, isBranch = 1, isIndirectBranch = 1, isTerminator = 1 in
-def IGOTO : REGISTERZ_SIMPLE
+def IGOTO : KVX_INSTRUCTION
   <(outs), (ins SingleReg:$a1),
    "igoto $a1",
    [(brind i64:$a1)],
    BCU>;
 
 let Defs = [RA], isCall = 1, isIndirectBranch = 1 in
-def ICALL : REGISTERZ_SIMPLE
+def ICALL : KVX_INSTRUCTION
   <(outs), (ins SingleReg:$a1),
    "icall $a1",
    [/* no straightforward pattern */],
@@ -1484,7 +1484,7 @@ def ICALL : REGISTERZ_SIMPLE
 defm SCALL : MC_00<"scall">;
 
 let isTerminator=1, hasSideEffects=1, isNotDuplicable=1, Defs = [LC,LE,LS] in
-def LOOPDO : REGISTERZ_PCREL17_SIMPLE
+def LOOPDO : KVX_INSTRUCTION
   <(outs), (ins SingleReg:$a1, Pcrel17:$a2),
    "loopdo $a1, $a2",
    [/* no straightforward pattern */],
@@ -1497,7 +1497,7 @@ defm WFXM : MC_01<"wfxm">;
 defm GET : MC_02<"get">;
 
 let Constraints = "$a1 = $a1o" in
-def IGET : REGISTERZ_SIMPLE
+def IGET : KVX_INSTRUCTION
   <(outs SingleReg:$a1o), (ins SingleReg:$a1),
    "iget $a1",
    [/* no straightforward pattern */],
@@ -1508,34 +1508,34 @@ defm SET : MC_03<"set">;
 defm RSWAP : MC_04<"rswap">;
 
 let Constraints = "$a1 = $a1o" in
-def WAITIT : REGISTERZ_SIMPLE
+def WAITIT : KVX_INSTRUCTION
   <(outs SingleReg:$a1o), (ins SingleReg:$a1),
    "waitit $a1",
    [/* no straightforward pattern */],
    BCU_TINY_TINY_MAU_XNOP>;
 
-def SYNCGROUP : REGISTERZ_SIMPLE
+def SYNCGROUP : KVX_INSTRUCTION
   <(outs), (ins SingleReg:$a1),
    "syncgroup $a1",
    [/* no straightforward pattern */],
    BCU>;
 
 let isBarrier = 1, isBranch = 1, isTerminator = 1 in
-def GOTO : PCREL27_SIMPLE
+def GOTO : KVX_INSTRUCTION
   <(outs), (ins Pcrel27:$a1),
    "goto $a1",
    [(br bb:$a1)],
    BCU>;
 
 let Defs = [RA], isCall = 1 in
-def CALL : PCREL27_SIMPLE
+def CALL : KVX_INSTRUCTION
   <(outs), (ins Pcrel27:$a1),
    "call $a1",
    [/* no straightforward pattern */],
    BCU>;
 
 let isBranch = 1, isTerminator = 1 in
-def CB : BRANCHCOND_REGISTERZ_PCREL17_SIMPLE
+def CB : KVX_INSTRUCTION
   <(outs), (ins SingleReg:$a2, Pcrel17:$a3, ScalarcondMod:$a1),
    "cb$a1 $a2 ? $a3",
    [/* no straightforward pattern */],
@@ -1604,32 +1604,32 @@ let hasSideEffects = 1, mayLoad = 0, mayStore = 0 in
 defm I1INVALS : MC_10<"i1invals">;
 
 let hasSideEffects = 1 in
-def DINVAL : SIMPLE
+def DINVAL : KVX_INSTRUCTION
   <(outs), (ins),
    "dinval",
    [/* no straightforward pattern */],
    LSU_LOAD>;
 
-def I1INVAL : SIMPLE
+def I1INVAL : KVX_INSTRUCTION
   <(outs), (ins),
    "i1inval",
    [/* no straightforward pattern */],
    LSU_LOAD>;
 
 let hasSideEffects = 1 in
-def FENCE : SIMPLE
+def FENCE : KVX_INSTRUCTION
   <(outs), (ins),
    "fence",
    [/* no straightforward pattern */],
    LSU_LOAD>;
 
-def NOP : SIMPLE
+def NOP : KVX_INSTRUCTION
   <(outs), (ins),
    "nop",
    [/* no straightforward pattern */],
    ALU_NOP>;
 
-def STSUD : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+def STSUD : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "stsud $a1 = $a2, $a3",
    [/* no straightforward pattern */],
@@ -1682,7 +1682,7 @@ defm ADDUSWP : MC_17<"adduswp">, Requires<[IsV2]>;
 }
 
 defm SBFSD : MC_12<"sbfsd">;
-def SBFSDri : SPLAT32_REGISTERW_REGISTERZ_UPPER27_LOWER5_DOUBLE
+def SBFSDri : KVX_INSTRUCTION_X
     <(outs SingleReg:$out), (ins SingleReg:$rhs, Wrapped32:$lhs, Splat32Mod:$s),
     "sbfsd$s $out = $rhs, $lhs",
      [], ALU_LITE_X>, Requires<[IsV2]>;
@@ -1729,7 +1729,7 @@ defm LORD : MC_13<"lord">;
 
 defm LNORD : MC_13<"lnord">;
 
-def STSUW : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+def STSUW : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "stsuw $a1 = $a2, $a3",
    [/* no straightforward pattern */],
@@ -2027,209 +2027,209 @@ defm SBFUSW : MC_17<"sbfusw">, Requires<[IsV2]>;
 defm SBFUSWP : MC_17<"sbfuswp">, Requires<[IsV2]>;
 
 let Defs = [CS], Uses = [CS] in
-def ADDCD : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+def ADDCD : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "addcd $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    ALU_FULL>;
 
 let Defs = [CS] in
-def SBFCD : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+def SBFCD : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "sbfcd $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    ALU_FULL>;
 
 let Defs = [CS], Uses = [CS] in
-def ADDCDI : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+def ADDCDI : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "addcd.i $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    ALU_FULL>;
 
 let Defs = [CS] in
-def SBFCDI : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+def SBFCDI : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "sbfcd.i $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    ALU_FULL>;
 
-def FNEGD : REGISTERW_REGISTERZ_SIMPLE
+def FNEGD : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fnegd $a1 = $a2",
    [(set f64:$a1, (fneg f64:$a2))],
    ALU_LITE>;
 
-def FABSD : REGISTERW_REGISTERZ_SIMPLE
+def FABSD : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fabsd $a1 = $a2",
    [(set f64:$a1, (fabs f64:$a2))],
    ALU_LITE>;
 
-def FSRECD : SILENT2_REGISTERW_REGISTERZ_SIMPLE
+def FSRECD : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fsrecd$a1 $a2 = $a3",
    [/* no straightforward pattern */],
    ALU_LITE>;
 
-def FSRSRD : REGISTERW_REGISTERZ_SIMPLE
+def FSRSRD : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fsrsrd $a1 = $a2",
    [/* no straightforward pattern */],
    ALU_LITE>;
 
-def FWIDENLWD : SILENT2_REGISTERW_REGISTERZ_SIMPLE
+def FWIDENLWD : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fwidenlwd$a1 $a2 = $a3",
    [/* no straightforward pattern */],
    ALU_LITE>;
 
-def FWIDENMWD : SILENT2_REGISTERW_REGISTERZ_SIMPLE
+def FWIDENMWD : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fwidenmwd$a1 $a2 = $a3",
    [/* no straightforward pattern */],
    ALU_LITE>;
 
-def FNARROWDW : ROUNDING2_SILENT2_REGISTERW_REGISTERZ_SIMPLE
+def FNARROWDW : KVX_INSTRUCTION
   <(outs SingleReg:$a3), (ins SingleReg:$a4, RoundingMod:$a1, SilentMod:$a2),
    "fnarrowdw$a1$a2 $a3 = $a4",
    [/* no straightforward pattern */],
    ALU_FULL>;
 
-def FNEGW : REGISTERW_REGISTERZ_SIMPLE
+def FNEGW : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fnegw $a1 = $a2",
    [(set f32:$a1, (fneg f32:$a2))],
    ALU_LITE>;
 
-def FABSW : REGISTERW_REGISTERZ_SIMPLE
+def FABSW : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fabsw $a1 = $a2",
    [(set f32:$a1, (fabs f32:$a2))],
    ALU_LITE>;
 
-def FRECW : ROUNDING2_SILENT2_REGISTERW_REGISTERZ_SIMPLE
+def FRECW : KVX_INSTRUCTION
   <(outs SingleReg:$a3), (ins SingleReg:$a4, RoundingMod:$a1, SilentMod:$a2),
    "frecw$a1$a2 $a3 = $a4",
    [/* no straightforward pattern */],
    SFU>;
 
-def FRSRW : ROUNDING2_SILENT2_REGISTERW_REGISTERZ_SIMPLE
+def FRSRW : KVX_INSTRUCTION
   <(outs SingleReg:$a3), (ins SingleReg:$a4, RoundingMod:$a1, SilentMod:$a2),
    "frsrw$a1$a2 $a3 = $a4",
    [/* no straightforward pattern */],
    SFU>;
 
-def FSRECW : SILENT2_REGISTERW_REGISTERZ_SIMPLE
+def FSRECW : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fsrecw$a1 $a2 = $a3",
    [/* no straightforward pattern */],
    ALU_LITE>;
 
-def FSRSRW : REGISTERW_REGISTERZ_SIMPLE
+def FSRSRW : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fsrsrw $a1 = $a2",
    [/* no straightforward pattern */],
    ALU_LITE>;
 
-def FWIDENLHW : SILENT2_REGISTERW_REGISTERZ_SIMPLE
+def FWIDENLHW : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fwidenlhw$a1 $a2 = $a3",
    [/* no straightforward pattern */],
    ALU_LITE>;
 
-def FWIDENMHW : SILENT2_REGISTERW_REGISTERZ_SIMPLE
+def FWIDENMHW : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fwidenmhw$a1 $a2 = $a3",
    [/* no straightforward pattern */],
    ALU_LITE>;
 
-def FNARROWWH : ROUNDING2_SILENT2_REGISTERW_REGISTERZ_SIMPLE
+def FNARROWWH : KVX_INSTRUCTION
   <(outs SingleReg:$a3), (ins SingleReg:$a4, RoundingMod:$a1, SilentMod:$a2),
    "fnarrowwh$a1$a2 $a3 = $a4",
    [/* no straightforward pattern */],
    ALU_LITE>;
 
-def FNEGWP : REGISTERW_REGISTERZ_SIMPLE
+def FNEGWP : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fnegwp $a1 = $a2",
    [(set v2f32:$a1, (fneg v2f32:$a2))],
    ALU_LITE>;
 
-def FABSWP : REGISTERW_REGISTERZ_SIMPLE
+def FABSWP : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fabswp $a1 = $a2",
    [(set v2f32:$a1, (fabs v2f32:$a2))],
    ALU_LITE>;
 
-def FSRECWP : SILENT2_REGISTERW_REGISTERZ_SIMPLE
+def FSRECWP : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fsrecwp$a1 $a2 = $a3",
    [/* no straightforward pattern */],
    ALU_LITE>;
 
-def FSRSRWP : REGISTERW_REGISTERZ_SIMPLE
+def FSRSRWP : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fsrsrwp $a1 = $a2",
    [/* no straightforward pattern */],
    ALU_LITE>;
 
-def FWIDENLHWP : SILENT2_REGISTERW_REGISTERZ_SIMPLE
+def FWIDENLHWP : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fwidenlhwp$a1 $a2 = $a3",
    [/* no straightforward pattern */],
    ALU_LITE>;
 
-def FWIDENMHWP : SILENT2_REGISTERW_REGISTERZ_SIMPLE
+def FWIDENMHWP : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fwidenmhwp$a1 $a2 = $a3",
    [/* no straightforward pattern */],
    ALU_LITE>;
 
-def FNARROWDWP : ROUNDING2_SILENT2_REGISTERW_REGISTERP_SIMPLE
+def FNARROWDWP : KVX_INSTRUCTION
   <(outs SingleReg:$a3), (ins PairedReg:$a4, RoundingMod:$a1, SilentMod:$a2),
    "fnarrowdwp$a1$a2 $a3 = $a4",
    [/* no straightforward pattern */],
    ALU_FULL>;
 
-def FNEGHQ : REGISTERW_REGISTERZ_SIMPLE
+def FNEGHQ : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fneghq $a1 = $a2",
    [(set v4f16:$a1, (fneg v4f16:$a2))],
    ALU_LITE>;
 
-def FABSHQ : REGISTERW_REGISTERZ_SIMPLE
+def FABSHQ : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fabshq $a1 = $a2",
    [(set f16:$a1, (fabs f16:$a2))],
    ALU_LITE>;
 
-def FNARROWWHQ : ROUNDING2_SILENT2_REGISTERW_REGISTERP_SIMPLE
+def FNARROWWHQ : KVX_INSTRUCTION
   <(outs SingleReg:$a3), (ins PairedReg:$a4, RoundingMod:$a1, SilentMod:$a2),
    "fnarrowwhq$a1$a2 $a3 = $a4",
    [/* no straightforward pattern */],
    ALU_LITE>;
 
 let Constraints = "$a1 = $a1o" in
-def INSF : REGISTERW_REGISTERZ_STOPBIT2_STOPBIT4_STARTBIT_SIMPLE
+def INSF : KVX_INSTRUCTION
   <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, Unsigned6:$a3, Unsigned6:$a4),
    "insf $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
    ALU_LITE>;
 
-def EXTFZ : REGISTERW_REGISTERZ_STOPBIT2_STOPBIT4_STARTBIT_SIMPLE
+def EXTFZ : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, Unsigned6:$a3, Unsigned6:$a4),
    "extfz $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
    ALU_LITE>;
 
-def EXTFS : REGISTERW_REGISTERZ_STOPBIT2_STOPBIT4_STARTBIT_SIMPLE
+def EXTFS : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, Unsigned6:$a3, Unsigned6:$a4),
    "extfs $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
    ALU_LITE>;
 
-def CLRF : REGISTERW_REGISTERZ_STOPBIT2_STOPBIT4_STARTBIT_SIMPLE
+def CLRF : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, Unsigned6:$a3, Unsigned6:$a4),
    "clrf $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
@@ -2301,31 +2301,31 @@ defm COMPND : MC_1B<"compnd">, Requires<[IsV2]>;
 
 defm COMPNW : MC_1B<"compnw">, Requires<[IsV2]>;
 
-def COMPWD : COMPARISON_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+def COMPWD : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, ComparisonMod:$a1),
    "compwd$a1 $a2 = $a3, $a4",
    [/* no straightforward pattern */],
    ALU_LITE>;
 
-def COMPUWD : COMPARISON_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+def COMPUWD : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, ComparisonMod:$a1),
    "compuwd$a1 $a2 = $a3, $a4",
    [/* no straightforward pattern */],
    ALU_LITE>;
 
-def COMPNWP : COMPARISON_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+def COMPNWP : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, ComparisonMod:$a1),
    "compnwp$a1 $a2 = $a3, $a4",
    [/* no straightforward pattern */],
    ALU_TINY>;
 
-def COMPNBO : COMPARISON_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+def COMPNBO : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, ComparisonMod:$a1),
    "compnbo$a1 $a2 = $a3, $a4",
    [/* no straightforward pattern */],
    ALU_TINY>, Requires<[IsV2]>;
 
-def COMPNHQ : COMPARISON_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+def COMPNHQ : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, ComparisonMod:$a1),
    "compnhq$a1 $a2 = $a3, $a4",
    [/* no straightforward pattern */],
@@ -2334,7 +2334,7 @@ def COMPNHQ : COMPARISON_REGISTERW_REGISTERZ_REGISTERY_SIMPLE
 defm CMOVED : MC_1C<"cmoved">;
 
 let Constraints = "$a3 = $a3o" in
-def CMOVEWP : SIMDCOND_REGISTERZ_REGISTERW_REGISTERY_SIMPLE
+def CMOVEWP : KVX_INSTRUCTION
   <(outs SingleReg:$a3o), (ins SingleReg:$a2, SingleReg:$a3, SingleReg:$a4, SimplecondMod:$a1),
    "cmovewp$a1 $a2 ? $a3 = $a4",
    [/* no straightforward pattern */],
@@ -2345,111 +2345,111 @@ defm MAKE : MC_1D<"make">;
 
 defm PCREL : MC_1E<"pcrel">;
 
-def CLZW : REGISTERW_REGISTERZ_SIMPLE
+def CLZW : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "clzw $a1 = $a2",
    [(set i32:$a1, (ctlz i32:$a2))],
    ALU_LITE>;
 
-def CLSW : REGISTERW_REGISTERZ_SIMPLE
+def CLSW : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "clsw $a1 = $a2",
    [/* no straightforward pattern */],
    ALU_LITE>;
 
-def CBSW : REGISTERW_REGISTERZ_SIMPLE
+def CBSW : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "cbsw $a1 = $a2",
    [(set i32:$a1, (ctpop i32:$a2))],
    ALU_LITE>;
 
-def CTZW : REGISTERW_REGISTERZ_SIMPLE
+def CTZW : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "ctzw $a1 = $a2",
    [(set i32:$a1, (cttz i32:$a2))],
    ALU_LITE>;
 
-def CLZD : REGISTERW_REGISTERZ_SIMPLE
+def CLZD : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "clzd $a1 = $a2",
    [(set i64:$a1, (ctlz i64:$a2))],
    ALU_LITE>;
 
-def CLSD : REGISTERW_REGISTERZ_SIMPLE
+def CLSD : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "clsd $a1 = $a2",
    [/* no straightforward pattern */],
    ALU_LITE>;
 
-def CBSD : REGISTERW_REGISTERZ_SIMPLE
+def CBSD : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "cbsd $a1 = $a2",
    [(set i64:$a1, (ctpop i64:$a2))],
    ALU_LITE>;
 
-def CTZD : REGISTERW_REGISTERZ_SIMPLE
+def CTZD : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "ctzd $a1 = $a2",
    [(set i64:$a1, (cttz i64:$a2))],
    ALU_LITE>;
 
-def CLZWP : REGISTERW_REGISTERZ_SIMPLE
+def CLZWP : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "clzwp $a1 = $a2",
    [(set v2i32:$a1, (ctlz v2i32:$a2))],
    ALU_LITE>;
 
-def CLSWP : REGISTERW_REGISTERZ_SIMPLE
+def CLSWP : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "clswp $a1 = $a2",
    [/* no straightforward pattern */],
    ALU_LITE>;
 
-def CBSWP : REGISTERW_REGISTERZ_SIMPLE
+def CBSWP : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "cbswp $a1 = $a2",
    [(set v2i32:$a1, (ctpop v2i32:$a2))],
    ALU_LITE>;
 
-def CTZWP : REGISTERW_REGISTERZ_SIMPLE
+def CTZWP : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "ctzwp $a1 = $a2",
    [(set v2i32:$a1, (cttz v2i32:$a2))],
    ALU_LITE>;
 
-def SXLHWP : REGISTERW_REGISTERZ_SIMPLE
+def SXLHWP : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "sxlhwp $a1 = $a2",
    [/* no straightforward pattern */],
    ALU_LITE>;
 
-def SXMHWP : REGISTERW_REGISTERZ_SIMPLE
+def SXMHWP : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "sxmhwp $a1 = $a2",
    [/* no straightforward pattern */],
    ALU_LITE>;
 
-def SXLBHQ : REGISTERW_REGISTERZ_SIMPLE
+def SXLBHQ : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "sxlbhq $a1 = $a2",
    [/* no straightforward pattern */],
    ALU_LITE>;
 
-def SXMBHQ : REGISTERW_REGISTERZ_SIMPLE
+def SXMBHQ : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "sxmbhq $a1 = $a2",
    [/* no straightforward pattern */],
    ALU_LITE>;
 
 let Constraints = "$a3 = $a3o" in
-def CMOVEHQ : SIMDCOND_REGISTERZ_REGISTERW_REGISTERY_SIMPLE
+def CMOVEHQ : KVX_INSTRUCTION
   <(outs SingleReg:$a3o), (ins SingleReg:$a2, SingleReg:$a3, SingleReg:$a4, SimplecondMod:$a1),
    "cmovehq$a1 $a2 ? $a3 = $a4",
    [/* no straightforward pattern */],
    ALU_LITE>;
 
 let Constraints = "$a3 = $a3o" in
-def CMOVEBO : SIMDCOND_REGISTERZ_REGISTERW_REGISTERY_SIMPLE
+def CMOVEBO : KVX_INSTRUCTION
   <(outs SingleReg:$a3o), (ins SingleReg:$a2, SingleReg:$a3, SingleReg:$a4, SimplecondMod:$a1),
    "cmovebo$a1 $a2 ? $a3 = $a4",
    [/* no straightforward pattern */],
@@ -2460,7 +2460,7 @@ defm FCOMPNW : MC_1F<"fcompnw">, Requires<[IsV2]>;
 
 defm FCOMPW : MC_1F<"fcompw">;
 
-def FCOMPD : FLOATCOMP_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY64
+def FCOMPD : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, FloatcompMod:$a1),
    "fcompd$a1 $a2 = $a3, $a4",
    [/* no straightforward pattern */],
@@ -2472,53 +2472,70 @@ def FCOMPND : KVX_INSTRUCTION
    [/* no straightforward pattern */],
    ALU_LITE>, Requires<[IsV2]>;
 
-def FCOMPNWP : FLOATCOMP_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY32X2
+def FCOMPNWP : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, FloatcompMod:$a1),
    "fcompnwp$a1 $a2 = $a3, $a4",
    [/* no straightforward pattern */],
    ALU_LITE>;
 
-def FCOMPNHQ : FLOATCOMP_REGISTERW_REGISTERZ_REGISTERY_SIMPLE_BINARY16X4
+def FCOMPNHQ : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, FloatcompMod:$a1),
    "fcompnhq$a1 $a2 = $a3, $a4",
    [/* no straightforward pattern */],
    ALU_LITE>;
 
-def FSDIVD : SILENT2_REGISTERW_REGISTERP_SIMPLE
+def FSDIVD : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins PairedReg:$a3, SilentMod:$a1),
    "fsdivd$a1 $a2 = $a3",
    [/* no straightforward pattern */],
    ALU_LITE>;
 
-def FCDIVD : SILENT2_REGISTERW_REGISTERP_SIMPLE
+def FCDIVD : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins PairedReg:$a3, SilentMod:$a1),
    "fcdivd$a1 $a2 = $a3",
    [/* no straightforward pattern */],
    ALU_LITE>;
 
-def FSDIVW : SILENT2_REGISTERW_REGISTERP_SIMPLE
+def FSDIVW : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins PairedReg:$a3, SilentMod:$a1),
    "fsdivw$a1 $a2 = $a3",
    [/* no straightforward pattern */],
    ALU_LITE>;
 
-def FCDIVW : SILENT2_REGISTERW_REGISTERP_SIMPLE
+def FCDIVW : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins PairedReg:$a3, SilentMod:$a1),
    "fcdivw$a1 $a2 = $a3",
    [/* no straightforward pattern */],
    ALU_LITE>;
 
-def FSDIVWP : SILENT2_REGISTERW_REGISTERP_SIMPLE
+def FSDIVWP : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins PairedReg:$a3, SilentMod:$a1),
    "fsdivwp$a1 $a2 = $a3",
    [/* no straightforward pattern */],
    ALU_LITE>;
 
-def FCDIVWP : SILENT2_REGISTERW_REGISTERP_SIMPLE
+def FCDIVWP : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins PairedReg:$a3, SilentMod:$a1),
    "fcdivwp$a1 $a2 = $a3",
    [/* no straightforward pattern */],
    ALU_LITE>;
+
+let Constraints = "$out = $acc" in
+class FFM_FAMILY_ACC <string OpcStr, RegisterClass RC_OUT, RegisterClass RC_IN, InstrItinClass itin>
+  : KVX_INSTRUCTION <
+    (outs RC_OUT:$out),
+    (ins RC_OUT:$acc, RC_IN:$lhs, RC_IN:$rhs, RoundingMod:$r, SilentMod:$s),
+    !strconcat (OpcStr, "$r$s $out = $lhs, $rhs"),
+    [],
+    itin>;
+
+class FFM_FAMILY<string OpcStr, RegisterClass RC_OUT, RegisterClass RC_IN, InstrItinClass itin>
+    : KVX_INSTRUCTION <
+     (outs RC_OUT:$o),
+     (ins RC_IN:$lhs, RC_IN:$rhs, RoundingMod:$r, SilentMod:$s),
+     !strconcat (OpcStr, "$r$s $o = $lhs, $rhs"),
+     [/* no straightforward pattern */],
+     itin>;
 
 let Predicates = [IsV2] in {
 def FFDMAW : ROUNDING_SILENT_BINOP_FFDM<"ffdmaw", SingleReg, SingleReg, MAU_FP>;
@@ -2527,17 +2544,17 @@ def FFDMAWP: ROUNDING_SILENT_BINOP_FFDM<"ffdmawp", SingleReg, PairedReg, MAU_FP>
 def FFDMSW : ROUNDING_SILENT_BINOP_FFDM<"ffdmsw", SingleReg, SingleReg, MAU_FP>;
 def FFDMSWP: ROUNDING_SILENT_BINOP_FFDM<"ffdmswp", SingleReg, PairedReg, MAU_FP>;
 
-def FFMAWQ : ROUNDING_SILENT_TERNARY_AUXR_FP<"ffmawq", PairedReg, PairedReg, MAU_AUXR_FP>;
-def FFMSWQ : ROUNDING_SILENT_TERNARY_AUXR_FP<"ffmswq", PairedReg, PairedReg, MAU_AUXR_FP>;
+def FFMAWQ : FFM_FAMILY_ACC<"ffmawq", PairedReg, PairedReg, MAU_AUXR_FP>;
+def FFMSWQ : FFM_FAMILY_ACC<"ffmswq", PairedReg, PairedReg, MAU_AUXR_FP>;
 
-def FFDMDAW : ROUNDING_SILENT_TERNARY_AUXR_FP<"ffdmdaw", SingleReg, SingleReg, MAU_AUXR_FP>;
-def FFDMDAWP : ROUNDING_SILENT_TERNARY_AUXR_FP<"ffdmdawp", SingleReg, PairedReg, MAU_AUXR_FP>;
+def FFDMDAW : FFM_FAMILY_ACC<"ffdmdaw", SingleReg, SingleReg, MAU_AUXR_FP>;
+def FFDMDAWP : FFM_FAMILY_ACC<"ffdmdawp", SingleReg, PairedReg, MAU_AUXR_FP>;
 
-def FFDMDSW : ROUNDING_SILENT_TERNARY_AUXR_FP<"ffdmdsw", SingleReg, SingleReg, MAU_AUXR_FP>;
-def FFDMDSWP : ROUNDING_SILENT_TERNARY_AUXR_FP<"ffdmdswp", SingleReg, PairedReg, MAU_AUXR_FP>;
+def FFDMDSW : FFM_FAMILY_ACC<"ffdmdsw", SingleReg, SingleReg, MAU_AUXR_FP>;
+def FFDMDSWP : FFM_FAMILY_ACC<"ffdmdswp", SingleReg, PairedReg, MAU_AUXR_FP>;
 
-def FFDMASW : ROUNDING_SILENT_TERNARY_AUXR_FP<"ffdmasw", SingleReg, SingleReg, MAU_AUXR_FP>;
-def FFDMASWP : ROUNDING_SILENT_TERNARY_AUXR_FP<"ffdmaswp", SingleReg, PairedReg, MAU_AUXR_FP>;
+def FFDMASW : FFM_FAMILY_ACC<"ffdmasw", SingleReg, SingleReg, MAU_AUXR_FP>;
+def FFDMASWP : FFM_FAMILY_ACC<"ffdmaswp", SingleReg, PairedReg, MAU_AUXR_FP>;
 
 def FFDMSAW : ROUNDING_SILENT_TERNARY_AUXR_FP<"ffdmsaw", SingleReg, SingleReg, MAU_AUXR_FP>;
 def FFDMSAWP : ROUNDING_SILENT_TERNARY_AUXR_FP<"ffdmsawp", SingleReg, PairedReg, MAU_AUXR_FP>;
@@ -2647,121 +2664,121 @@ defm XCOPYX : I<"xcopyx", TCA, [WideReg], [ShuffleXMod], [], [], [WideReg], 0,
 }
 }
 
-def FMIND : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+def FMIND : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fmind $a1 = $a2, $a3",
    [(set f64:$a1, (fminnum f64:$a2, f64:$a3))],
    ALU_LITE>;
 
-def FMAXD : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+def FMAXD : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fmaxd $a1 = $a2, $a3",
    [(set f64:$a1, (fmaxnum f64:$a2, f64:$a3))],
    ALU_LITE>;
 
-def FMINW : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+def FMINW : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fminw $a1 = $a2, $a3",
    [(set f32:$a1, (fminnum f32:$a2, f32:$a3))],
    ALU_LITE>;
 
-def FMAXW : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+def FMAXW : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fmaxw $a1 = $a2, $a3",
    [(set f32:$a1, (fmaxnum f32:$a2, f32:$a3))],
    ALU_LITE>;
 
-def FMINWP : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+def FMINWP : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fminwp $a1 = $a2, $a3",
    [(set v2f32:$a1, (fminnum v2f32:$a2, v2f32:$a3))],
    ALU_LITE>;
 
-def FMAXWP : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+def FMAXWP : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fmaxwp $a1 = $a2, $a3",
    [(set v2f32:$a1, (fmaxnum v2f32:$a2, v2f32:$a3))],
    ALU_LITE>;
 
-def FMINHQ : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+def FMINHQ : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fminhq $a1 = $a2, $a3",
    [(set v4f16:$a1, (fminnum v4f16:$a2, v4f16:$a3))],
    ALU_LITE>;
 
-def FMAXHQ : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+def FMAXHQ : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fmaxhq $a1 = $a2, $a3",
    [(set v4f16:$a1, (fmaxnum v4f16:$a2, v4f16:$a3))],
    ALU_LITE>;
 
-def FLOATD : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE_BINARY64
+def FLOATD : KVX_INSTRUCTION
   <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
    "floatd$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */],
    MAU_FP>;
 
-def FLOATWP : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE_BINARY32X2
+def FLOATWP : KVX_INSTRUCTION
   <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
    "floatwp$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */],
    MAU_FP>;
 
-def FLOATW : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE_BINARY32
+def FLOATW : KVX_INSTRUCTION
   <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
    "floatw$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */],
    MAU_FP>;
 
-def FLOATUD : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE_BINARY64
+def FLOATUD : KVX_INSTRUCTION
   <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
    "floatud$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */],
    MAU_FP>;
 
-def FLOATUWP : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE_BINARY32X2
+def FLOATUWP : KVX_INSTRUCTION
   <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
    "floatuwp$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */],
    MAU_FP>;
 
-def FLOATUW : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE_BINARY32
+def FLOATUW : KVX_INSTRUCTION
   <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
    "floatuw$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */],
    MAU_FP>;
 
-def FIXEDD : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE_BINARY64
+def FIXEDD : KVX_INSTRUCTION
   <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fixedd$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */],
    MAU_FP>;
 
-def FIXEDWP : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE_BINARY32X2
+def FIXEDWP : KVX_INSTRUCTION
   <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fixedwp$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */],
    MAU_FP>;
 
-def FIXEDW : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE_BINARY32
+def FIXEDW : KVX_INSTRUCTION
   <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fixedw$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */],
    MAU_FP>;
 
-def FIXEDUD : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE_BINARY64
+def FIXEDUD : KVX_INSTRUCTION
   <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fixedud$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */],
    MAU_FP>;
 
-def FIXEDUWP : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE_BINARY32X2
+def FIXEDUWP : KVX_INSTRUCTION
   <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fixeduwp$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */],
    MAU_FP>;
 
-def FIXEDUW : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE_BINARY32
+def FIXEDUW : KVX_INSTRUCTION
   <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fixeduw$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */],
@@ -2770,7 +2787,7 @@ def FIXEDUW : ROUNDING_SILENT_REGISTERW_REGISTERZ_UNSIGNED6_SIMPLE_BINARY32
 defm MADDD : MC_20<"maddd">;
 
 let Constraints = "$a1 = $a1o" in
-def MSBFD : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+def MSBFD : KVX_INSTRUCTION
   <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "msbfd $a1 = $a2, $a3",
    [(set i64:$a1o, (sub i64:$a1, (mul i64:$a2, i64:$a3)))],
@@ -2779,7 +2796,7 @@ def MSBFD : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
 defm MADDWP : MC_20<"maddwp">;
 
 let Constraints = "$a1 = $a1o" in
-def MSBFWP : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+def MSBFWP : KVX_INSTRUCTION
   <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "msbfwp $a1 = $a2, $a3",
    [/* no straightforward pattern */],
@@ -2788,49 +2805,49 @@ def MSBFWP : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
 defm MADDHQ : MC_20<"maddhq">;
 
 let Constraints = "$a1 = $a1o" in
-def MSBFHQ : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+def MSBFHQ : KVX_INSTRUCTION
   <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "msbfhq $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    MAU_AUXR>;
 
 let Constraints = "$a1 = $a1o" in
-def MADDHWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def MADDHWQ : KVX_INSTRUCTION
   <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "maddhwq $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    MAU_AUXR>;
 
 let Constraints = "$a1 = $a1o" in
-def MSBFHWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def MSBFHWQ : KVX_INSTRUCTION
   <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "msbfhwq $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    MAU_AUXR>;
 
 let Constraints = "$a1 = $a1o" in
-def MADDUHWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def MADDUHWQ : KVX_INSTRUCTION
   <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "madduhwq $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    MAU_AUXR>;
 
 let Constraints = "$a1 = $a1o" in
-def MSBFUHWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def MSBFUHWQ : KVX_INSTRUCTION
   <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "msbfuhwq $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    MAU_AUXR>;
 
 let Constraints = "$a1 = $a1o" in
-def MADDSUHWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def MADDSUHWQ : KVX_INSTRUCTION
   <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "maddsuhwq $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    MAU_AUXR>;
 
 let Constraints = "$a1 = $a1o" in
-def MSBFSUHWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def MSBFSUHWQ : KVX_INSTRUCTION
   <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "msbfsuhwq $a1 = $a2, $a3",
    [/* no straightforward pattern */],
@@ -2845,28 +2862,28 @@ defm MADDSUDT : MC_21<"maddsudt">;
 defm MADDUZDT : MC_21<"madduzdt">;
 
 let Constraints = "$a1 = $a1o" in
-def MSBFDT : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def MSBFDT : KVX_INSTRUCTION
   <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "msbfdt $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    MAU_AUXR>;
 
 let Constraints = "$a1 = $a1o" in
-def MSBFUDT : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def MSBFUDT : KVX_INSTRUCTION
   <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "msbfudt $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    MAU_AUXR>;
 
 let Constraints = "$a1 = $a1o" in
-def MSBFSUDT : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def MSBFSUDT : KVX_INSTRUCTION
   <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "msbfsudt $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    MAU_AUXR>;
 
 let Constraints = "$a1 = $a1o" in
-def MSBFUZDT : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def MSBFUZDT : KVX_INSTRUCTION
   <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "msbfuzdt $a1 = $a2, $a3",
    [/* no straightforward pattern */],
@@ -2883,28 +2900,28 @@ defm MULSUDT : MC_23<"mulsudt">;
 defm CMULDT : MC_23<"cmuldt">;
 
 let Constraints = "$a1 = $a1o" in
-def CMULXDT : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def CMULXDT : KVX_INSTRUCTION
   <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "cmulxdt $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    MAU_AUXR>;
 
 let Constraints = "$a1 = $a1o" in
-def CMULGLXDT : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def CMULGLXDT : KVX_INSTRUCTION
   <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "cmulglxdt $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    MAU_AUXR>;
 
 let Constraints = "$a1 = $a1o" in
-def CMULGMXDT : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def CMULGMXDT : KVX_INSTRUCTION
   <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "cmulgmxdt $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    MAU_AUXR>;
 
 let Constraints = "$a1 = $a1o" in
-def CMULGHXDT : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def CMULGHXDT : KVX_INSTRUCTION
   <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "cmulghxdt $a1 = $a2, $a3",
    [/* no straightforward pattern */],
@@ -2926,31 +2943,31 @@ defm DOT2SUWD : MC_22<"dot2suwd">;
 
 defm DOT2W : MC_22<"dot2w">;
 
-def DOT2WDP : REGISTERM_REGISTERP_REGISTERO_SIMPLE
+def DOT2WDP : KVX_INSTRUCTION
   <(outs PairedReg:$a1), (ins PairedReg:$a2, PairedReg:$a3),
    "dot2wdp $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    MAU_AUXR>;
 
-def DOT2UWDP : REGISTERM_REGISTERP_REGISTERO_SIMPLE
+def DOT2UWDP : KVX_INSTRUCTION
   <(outs PairedReg:$a1), (ins PairedReg:$a2, PairedReg:$a3),
    "dot2uwdp $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    MAU_AUXR>;
 
-def DOT2SUWDP : REGISTERM_REGISTERP_REGISTERO_SIMPLE
+def DOT2SUWDP : KVX_INSTRUCTION
   <(outs PairedReg:$a1), (ins PairedReg:$a2, PairedReg:$a3),
    "dot2suwdp $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    MAU_AUXR>;
 
-def MULWQ : REGISTERM_REGISTERP_REGISTERO_SIMPLE
+def MULWQ : KVX_INSTRUCTION
   <(outs PairedReg:$a1), (ins PairedReg:$a2, PairedReg:$a3),
    "mulwq $a1 = $a2, $a3",
    [(set v4i32:$a1, (mul v4i32:$a2, v4i32:$a3))],
    MAU_AUXR>;
 
-def DOT2WZP : REGISTERM_REGISTERP_REGISTERO_SIMPLE
+def DOT2WZP : KVX_INSTRUCTION
   <(outs PairedReg:$a1), (ins PairedReg:$a2, PairedReg:$a3),
    "dot2wzp $a1 = $a2, $a3",
    [/* no straightforward pattern */],
@@ -2962,37 +2979,37 @@ defm MULHQ : MC_22<"mulhq">;
 
 defm MULWC : MC_22<"mulwc">;
 
-def MULCWC : REGISTERW_REGISTERZ_REGISTERY_SIMPLE
+def MULCWC : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "mulcwc $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    MAU>;
 
-def MULWDC : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def MULWDC : KVX_INSTRUCTION
   <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "mulwdc $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    MAU>;
 
-def MULCWDC : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def MULCWDC : KVX_INSTRUCTION
   <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "mulcwdc $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    MAU>;
 
-def MULHWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def MULHWQ : KVX_INSTRUCTION
   <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "mulhwq $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    MAU>;
 
-def MULUHWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def MULUHWQ : KVX_INSTRUCTION
   <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "muluhwq $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    MAU>;
 
-def MULSUHWQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def MULSUHWQ : KVX_INSTRUCTION
   <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "mulsuhwq $a1 = $a2, $a3",
    [/* no straightforward pattern */],
@@ -3023,80 +3040,80 @@ defm MULSUWD : MC_25<"mulsuwd">;
 defm MULW : MC_25<"mulw">;
 
 let Constraints = "$a1 = $a1o" in
-def MADDWDP : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def MADDWDP : KVX_INSTRUCTION
   <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "maddwdp $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    MAU_AUXR>;
 
 let Constraints = "$a1 = $a1o" in
-def MADDUWDP : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def MADDUWDP : KVX_INSTRUCTION
   <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "madduwdp $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    MAU_AUXR>;
 
 let Constraints = "$a1 = $a1o" in
-def MADDSUWDP : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def MADDSUWDP : KVX_INSTRUCTION
   <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "maddsuwdp $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    MAU_AUXR>;
 
 let Constraints = "$a1 = $a1o" in
-def MMA212W : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def MMA212W : KVX_INSTRUCTION
   <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "mma212w $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    MAU_AUXR>;
 
 let Constraints = "$a1 = $a1o" in
-def MSBFWDP : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def MSBFWDP : KVX_INSTRUCTION
   <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "msbfwdp $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    MAU_AUXR>;
 
 let Constraints = "$a1 = $a1o" in
-def MSBFUWDP : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def MSBFUWDP : KVX_INSTRUCTION
   <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "msbfuwdp $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    MAU_AUXR>;
 
 let Constraints = "$a1 = $a1o" in
-def MSBFSUWDP : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def MSBFSUWDP : KVX_INSTRUCTION
   <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "msbfsuwdp $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    MAU_AUXR>;
 
 let Constraints = "$a1 = $a1o" in
-def MMS212W : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def MMS212W : KVX_INSTRUCTION
   <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "mms212w $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    MAU_AUXR>;
 
-def MULWDP : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def MULWDP : KVX_INSTRUCTION
   <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "mulwdp $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    MAU>;
 
-def MULUWDP : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def MULUWDP : KVX_INSTRUCTION
   <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "muluwdp $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    MAU>;
 
-def MULSUWDP : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def MULSUWDP : KVX_INSTRUCTION
   <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "mulsuwdp $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    MAU>;
 
-def MM212W : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def MM212W : KVX_INSTRUCTION
   <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "mm212w $a1 = $a2, $a3",
    [/* no straightforward pattern */],
@@ -3124,7 +3141,7 @@ defm FMULWDP : MC_2C<"fmulwdp">;
 
 defm FMULHWQ : MC_2D<"fmulhwq">;
 
-def FMULWQ : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE
+def FMULWQ : KVX_INSTRUCTION
   <(outs PairedReg:$a3), (ins PairedReg:$a4, PairedReg:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fmulwq$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */],
@@ -3145,13 +3162,13 @@ defm FADDWP : MC_2AM<"faddwp">;
 let isAdd = 1 in
 defm FADDHQ : MC_2B<"faddhq">;
 
-def FADDDP : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE
+def FADDDP : KVX_INSTRUCTION
   <(outs PairedReg:$a3), (ins PairedReg:$a4, PairedReg:$a5, ConjugateMod:$a6, RoundingMod:$a1, SilentMod:$a2),
    "fadddp$a6$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */],
    MAU_AUXR_FP>;
 
-def FADDWQ : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE
+def FADDWQ : KVX_INSTRUCTION
   <(outs PairedReg:$a3), (ins PairedReg:$a4, PairedReg:$a5, ConjugateMod:$a6, RoundingMod:$a1, SilentMod:$a2),
    "faddwq$a6$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */],
@@ -3163,13 +3180,13 @@ defm FSBFWP : MC_2AM<"fsbfwp">;
 
 defm FSBFHQ : MC_2B<"fsbfhq">;
 
-def FSBFDP : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE
+def FSBFDP : KVX_INSTRUCTION
   <(outs PairedReg:$a3), (ins PairedReg:$a4, PairedReg:$a5, ConjugateMod:$a6, RoundingMod:$a1, SilentMod:$a2),
    "fsbfdp$a6$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */],
    MAU_AUXR_FP>;
 
-def FSBFWQ : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE
+def FSBFWQ : KVX_INSTRUCTION
   <(outs PairedReg:$a3), (ins PairedReg:$a4, PairedReg:$a5, ConjugateMod:$a6, RoundingMod:$a1, SilentMod:$a2),
    "fsbfwq$a6$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */],
@@ -3210,47 +3227,47 @@ defm FDOT2W : MC_2A<"fdot2w">;
 
 defm FDOT2WD : MC_29<"fdot2wd">;
 
-def FDOT2WZP : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE
+def FDOT2WZP : KVX_INSTRUCTION
   <(outs PairedReg:$a3), (ins PairedReg:$a4, PairedReg:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fdot2wzp$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */],
    MAU_AUXR_FP>;
 
-def FDOT2WDP : ROUNDING_SILENT_REGISTERM_REGISTERP_REGISTERO_SIMPLE
+def FDOT2WDP : KVX_INSTRUCTION
   <(outs PairedReg:$a3), (ins PairedReg:$a4, PairedReg:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fdot2wdp$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */],
    MAU_AUXR_FP>;
 
 let Constraints = "$a3 = $a3o" in
-def FMMA212W : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def FMMA212W : KVX_INSTRUCTION
   <(outs PairedReg:$a3o), (ins PairedReg:$a3, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fmma212w$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */],
    MAU_AUXR_FP>;
 
 let Constraints = "$a3 = $a3o" in
-def FMMS212W : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def FMMS212W : KVX_INSTRUCTION
   <(outs PairedReg:$a3o), (ins PairedReg:$a3, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fmms212w$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */],
    MAU_AUXR_FP>;
 
-def FMM212W : ROUNDING_SILENT_REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def FMM212W : KVX_INSTRUCTION
   <(outs PairedReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fmm212w$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */],
    MAU>;
 
 let isMoveReg = 1 in
-def COPYQ : REGISTERM_REGISTERZ_REGISTERY_SIMPLE
+def COPYQ : KVX_INSTRUCTION
   <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "copyq $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    MAU>;
 
 let isMoveReg = 1 in
-def COPYO : REGISTERN_REGISTERQ_SIMPLE
+def COPYO : KVX_INSTRUCTION
   <(outs QuadReg:$a1), (ins QuadReg:$a2),
    "copyo $a1 = $a2",
    [/* no straightforward pattern */],
@@ -3263,175 +3280,175 @@ defm ALIGNO : MC_33<"aligno">;
 defm ALIGNV : MC_34<"alignv">;
 
 let Uses = [PCR] in {
-def MT44D : REGISTERAQ_REGISTERBQ_SIMPLE
+def MT44D : KVX_INSTRUCTION
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2),
    "mt44d $a1 = $a2",
    [/* no straightforward pattern */],
    TCA>;
 
-def MMA484BW : REGISTERAP_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
+def MMA484BW : KVX_INSTRUCTION
   <(outs WideReg:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma484bw $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
    TCA>;
 
-def MMA484UBW : REGISTERAP_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
+def MMA484UBW : KVX_INSTRUCTION
   <(outs WideReg:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma484ubw $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
    TCA>;
 
-def MMA484SUBW : REGISTERAP_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
+def MMA484SUBW : KVX_INSTRUCTION
   <(outs WideReg:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma484subw $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
    TCA>;
 
-def MMA484USBW : REGISTERAP_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
+def MMA484USBW : KVX_INSTRUCTION
   <(outs WideReg:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma484usbw $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
    TCA>;
 
-def MMA444HBD0 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
+def MMA444HBD0 : KVX_INSTRUCTION
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma444hbd0 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
    TCA>;
 
-def MMA444UHBD0 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
+def MMA444UHBD0 : KVX_INSTRUCTION
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma444uhbd0 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
    TCA>;
 
-def MMA444SUHBD0 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
+def MMA444SUHBD0 : KVX_INSTRUCTION
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma444suhbd0 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
    TCA>;
 
-def MMA444USHBD0 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
+def MMA444USHBD0 : KVX_INSTRUCTION
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma444ushbd0 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
    TCA>;
 
-def MMA444HBD1 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
+def MMA444HBD1 : KVX_INSTRUCTION
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma444hbd1 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
    TCA>;
 
-def MMA444UHBD1 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
+def MMA444UHBD1 : KVX_INSTRUCTION
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma444uhbd1 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
    TCA>;
 
-def MMA444SUHBD1 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
+def MMA444SUHBD1 : KVX_INSTRUCTION
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma444suhbd1 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
    TCA>;
 
-def MMA444USHBD1 : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
+def MMA444USHBD1 : KVX_INSTRUCTION
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma444ushbd1 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
    TCA>;
 
-def MMA444HD : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
+def MMA444HD : KVX_INSTRUCTION
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma444hd $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
    TCA>;
 
-def MMA444UHD : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
+def MMA444UHD : KVX_INSTRUCTION
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma444uhd $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
    TCA>;
 
-def MMA444SUHD : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
+def MMA444SUHD : KVX_INSTRUCTION
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma444suhd $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
    TCA>;
 
-def MMA444USHD : REGISTERAQ_REGISTERBQ_REGISTERC_REGISTERD_SIMPLE
+def MMA444USHD : KVX_INSTRUCTION
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma444ushd $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
    TCA>;
 
-def FMMA242HW0 : REGISTERA0_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
+def FMMA242HW0 : KVX_INSTRUCTION
   <(outs BlockReg0M4:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "fmma242hw0 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
    TCA_FP16>;
 
-def FMMA242HW1 : REGISTERA1_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
+def FMMA242HW1 : KVX_INSTRUCTION
   <(outs BlockReg1M4:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "fmma242hw1 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
    TCA_FP16>;
 
-def FMMA242HW2 : REGISTERA2_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
+def FMMA242HW2 : KVX_INSTRUCTION
   <(outs BlockReg2M4:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "fmma242hw2 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
    TCA_FP16>;
 
-def FMMA242HW3 : REGISTERA3_REGISTERBP_REGISTERC_REGISTERD_SIMPLE
+def FMMA242HW3 : KVX_INSTRUCTION
   <(outs BlockReg3M4:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "fmma242hw3 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
    TCA_FP16>;
 
-def CONVDHV0 : ROUNDINT_SATURATE_REGISTERAL_REGISTERBQ_SIMPLE
+def CONVDHV0 : KVX_INSTRUCTION
   <(outs BlockRegE:$a3), (ins MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2),
    "convdhv0$a1$a2 $a3 = $a4",
    [/* no straightforward pattern */],
    TCA>;
 
-def CONVDHV1 : ROUNDINT_SATURATE_REGISTERAH_REGISTERBQ_SIMPLE
+def CONVDHV1 : KVX_INSTRUCTION
   <(outs BlockRegO:$a3), (ins MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2),
    "convdhv1$a1$a2 $a3 = $a4",
    [/* no straightforward pattern */],
    TCA>;
 
-def CONVWBV0 : ROUNDINT_SATURATE_REGISTERAX_REGISTERBQ_SIMPLE
+def CONVWBV0 : KVX_INSTRUCTION
   <(outs CoproReg0M4:$a3), (ins MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2),
    "convwbv0$a1$a2 $a3 = $a4",
    [/* no straightforward pattern */],
    TCA>;
 
-def CONVWBV1 : ROUNDINT_SATURATE_REGISTERAY_REGISTERBQ_SIMPLE
+def CONVWBV1 : KVX_INSTRUCTION
   <(outs CoproReg1M4:$a3), (ins MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2),
    "convwbv1$a1$a2 $a3 = $a4",
    [/* no straightforward pattern */],
    TCA>;
 
-def CONVWBV2 : ROUNDINT_SATURATE_REGISTERAZ_REGISTERBQ_SIMPLE
+def CONVWBV2 : KVX_INSTRUCTION
   <(outs CoproReg2M4:$a3), (ins MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2),
    "convwbv2$a1$a2 $a3 = $a4",
    [/* no straightforward pattern */],
    TCA>;
 
-def CONVWBV3 : ROUNDINT_SATURATE_REGISTERAT_REGISTERBQ_SIMPLE
+def CONVWBV3 : KVX_INSTRUCTION
   <(outs CoproReg3M4:$a3), (ins MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2),
    "convwbv3$a1$a2 $a3 = $a4",
    [/* no straightforward pattern */],
    TCA>;
 
-def FSCALEWV : XROUNDING_SILENT2_RECTIFY_REGISTERA_REGISTERB_SIMPLE
+def FSCALEWV : KVX_INSTRUCTION
   <(outs VectorReg:$a4), (ins VectorReg:$a5, RoundingMod:$a1, SilentMod:$a2, RectifyMod:$a3),
    "fscalewv$a1$a2$a3 $a4 = $a5",
    [/* no straightforward pattern */],
    TCA>;
 
-def FNARROWWHV : XROUNDING_SILENT2_REGISTERA_REGISTERBP_SIMPLE
+def FNARROWWHV : KVX_INSTRUCTION
   <(outs VectorReg:$a3), (ins WideReg:$a4, RoundingMod:$a1, SilentMod:$a2),
    "fnarrowwhv$a1$a2 $a3 = $a4",
    [/* no straightforward pattern */],
@@ -3439,133 +3456,133 @@ def FNARROWWHV : XROUNDING_SILENT2_REGISTERA_REGISTERBP_SIMPLE
 }
 
 let isPredicable = 1 in
-def COPYD : REGISTERW_REGISTERZ_SIMPLE
+def COPYD : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "copyd $a1 = $a2",
    [/* no straightforward pattern */],
    ALU_TINY>;
 
-def NOTD : REGISTERW_REGISTERZ_SIMPLE
+def NOTD : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "notd $a1 = $a2",
    [(set i64:$a1, (not i64:$a2))],
    ALU_TINY>;
 
-def NEGD : REGISTERW_REGISTERZ_SIMPLE
+def NEGD : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "negd $a1 = $a2",
    [(set i64:$a1, (ineg i64:$a2))],
    ALU_TINY>;
 
-def ABSD : REGISTERW_REGISTERZ_SIMPLE
+def ABSD : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "absd $a1 = $a2",
    [(set i64:$a1, (abs i64:$a2))],
    ALU_LITE>;
 
-def ZXBD : REGISTERW_REGISTERZ_SIMPLE
+def ZXBD : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "zxbd $a1 = $a2",
    [(set i64:$a1, (zext i8:$a2))],
    ALU_TINY>;
 
-def SXBD : REGISTERW_REGISTERZ_SIMPLE
+def SXBD : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "sxbd $a1 = $a2",
    [(set i64:$a1, (sext i8:$a2))],
    ALU_LITE>;
 
-def ZXHD : REGISTERW_REGISTERZ_SIMPLE
+def ZXHD : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "zxhd $a1 = $a2",
    [(set i64:$a1, (zext i16:$a2))],
    ALU_LITE>;
 
-def SXHD : REGISTERW_REGISTERZ_SIMPLE
+def SXHD : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "sxhd $a1 = $a2",
    [(set i64:$a1, (sext i16:$a2))],
    ALU_LITE>;
 
-def ZXWD : REGISTERW_REGISTERZ_SIMPLE
+def ZXWD : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "zxwd $a1 = $a2",
    [(set i64:$a1, (zext i32:$a2))],
    ALU_TINY>;
 
-def SXWD : REGISTERW_REGISTERZ_SIMPLE
+def SXWD : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "sxwd $a1 = $a2",
    [(set i64:$a1, (sext i32:$a2))],
    ALU_LITE>;
 
-def SATDH : REGISTERW_REGISTERZ_SIMPLE
+def SATDH : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "satdh $a1 = $a2",
    [/* no straightforward pattern */],
    ALU_LITE>;
 
-def SATDW : REGISTERW_REGISTERZ_SIMPLE
+def SATDW : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "satdw $a1 = $a2",
    [/* no straightforward pattern */],
    ALU_LITE>;
 
-def COPYW : REGISTERW_REGISTERZ_SIMPLE
+def COPYW : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "copyw $a1 = $a2",
    [/* no straightforward pattern */],
    ALU_TINY>;
 
-def NOTW : REGISTERW_REGISTERZ_SIMPLE
+def NOTW : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "notw $a1 = $a2",
    [(set i32:$a1, (not i32:$a2))],
    ALU_TINY>;
 
-def NEGW : REGISTERW_REGISTERZ_SIMPLE
+def NEGW : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "negw $a1 = $a2",
    [(set i32:$a1, (ineg i32:$a2))],
    ALU_TINY>;
 
-def ABSW : REGISTERW_REGISTERZ_SIMPLE
+def ABSW : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "absw $a1 = $a2",
    [(set i32:$a1, (abs i32:$a2))],
    ALU_LITE>;
 
-def NEGWP : REGISTERW_REGISTERZ_DOUBLE
+def NEGWP : KVX_INSTRUCTION_X
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "negwp $a1 = $a2",
    [(set v2i32:$a1, (vineg v2i32:$a2))],
    ALU_TINY_X>;
 
-def ABSWP : REGISTERW_REGISTERZ_DOUBLE
+def ABSWP : KVX_INSTRUCTION_X
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "abswp $a1 = $a2",
    [(set v2i32:$a1, (abs v2i32:$a2))],
    ALU_LITE_X>;
 
-def NEGHQ : REGISTERW_REGISTERZ_DOUBLE
+def NEGHQ : KVX_INSTRUCTION_X
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "neghq $a1 = $a2",
    [(set v4i16:$a1, (vineg v4i16:$a2))],
    ALU_TINY_X>;
 
-def NEGBO : REGISTERW_REGISTERZ_DOUBLE
+def NEGBO : KVX_INSTRUCTION_X
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "negbo $a1 = $a2",
    [(set v8i8:$a1, (vineg v8i8:$a2))],
    ALU_TINY_X>, Requires<[IsV2]>;
 
-def ABSHQ : REGISTERW_REGISTERZ_DOUBLE
+def ABSHQ : KVX_INSTRUCTION_X
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "abshq $a1 = $a2",
    [(set v4i16:$a1, (abs v4i16:$a2))],
    ALU_LITE_X>;
 
-def ABSBO : REGISTERW_REGISTERZ_DOUBLE
+def ABSBO : KVX_INSTRUCTION_X
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "absbo $a1 = $a2",
    [(set v8i8:$a1, (abs v8i8:$a2))],
@@ -3602,22 +3619,22 @@ defm SLUSHQS : MC_18<"slushqs">, Requires<[IsV2]>;
 defm SLUSW : MC_18<"slusw">, Requires<[IsV2]>;
 defm SLUSWPS : MC_18<"sluswps">, Requires<[IsV2]>;
 
-def NEGSBO : REGISTERW_REGISTERZ_SIMPLE
+def NEGSBO : KVX_INSTRUCTION
   <(outs SingleReg:$o), (ins SingleReg:$i),
    "negsbo $o = $i", [(set v8i8:$o, (vineg_ssat v8i8:$i))], ALU_LITE_X>, Requires<[IsV2]>;
 
-def NEGSD : REGISTERW_REGISTERZ_SIMPLE
+def NEGSD : KVX_INSTRUCTION
   <(outs SingleReg:$o), (ins SingleReg:$i),
   "negsd $o = $i", [(set i64:$o, (ssubsat 0, i64:$i))], ALU_LITE_X>, Requires<[IsV2]>;
 
-def NEGSHQ : REGISTERW_REGISTERZ_SIMPLE
+def NEGSHQ : KVX_INSTRUCTION
   <(outs SingleReg:$o), (ins SingleReg:$i),
    "negshq $o = $i", [(set v4i16:$o, (vineg_ssat v4i16:$i))], ALU_LITE_X>, Requires<[IsV2]>;
 
-def NEGSW : REGISTERW_REGISTERZ_SIMPLE
+def NEGSW : KVX_INSTRUCTION
   <(outs SingleReg:$o), (ins SingleReg:$i),
   "negsw $o = $i", [(set i32:$o, (ssubsat 0, i32:$i))], ALU_LITE_X>, Requires<[IsV2]>;
 
-def NEGSWP : REGISTERW_REGISTERZ_SIMPLE
+def NEGSWP : KVX_INSTRUCTION
   <(outs SingleReg:$o), (ins SingleReg:$i),
    "negswp $o = $i", [(set v2i32:$o, (vineg_ssat v2i32:$i))], ALU_LITE_X>, Requires<[IsV2]>;

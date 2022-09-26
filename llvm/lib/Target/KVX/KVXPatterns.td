@@ -192,14 +192,14 @@ defm : BITCAST<v4f64, v4i64, QuadReg>;
 
 
 let isCall = 1, isBarrier = 1, isBranch = 1, isTerminator = 1, isReturn = 1, Uses = [R12] in
-def TAIL : PCREL27_SIMPLE
+def TAIL : KVX_INSTRUCTION
   <(outs), (ins Pcrel27:$a1),
    "goto $a1",
    [ ],
    BCU>;
 
 let isCall = 1, isBarrier = 1, isBranch = 1, isIndirectBranch = 1, isTerminator = 1, isReturn = 1, Uses = [R12] in
-def ITAIL : REGISTERZ_SIMPLE
+def ITAIL : KVX_INSTRUCTION
   <(outs), (ins SingleReg:$a1),
    "igoto $a1",
    [ ],
@@ -213,7 +213,7 @@ def KVXWrapper : SDNode<"KVXISD::AddrWrapper", SDTKVXWrapper>;
 def Tail : SDNode <"KVXISD::TAIL", SDTKVXTail, [SDNPHasChain, SDNPOptInGlue, SDNPOutGlue, SDNPVariadic]>;
 
 def GetSystemReg : SDNode <"KVXISD::GetSystemReg", SDTypeProfile<1, 1, [SDTCisSameAs<0, 1>]>>;
-def GETSYSTEMREG : REGISTERZ_SYSTEMS2_SIMPLE
+def GETSYSTEMREG : KVX_INSTRUCTION
   <(outs SingleReg:$dst), (ins SystemReg:$sr),
    "get $dst = $sr",
    [(set (i64 SingleReg:$dst), (GetSystemReg SystemReg:$sr))],
@@ -260,7 +260,7 @@ def ADJCALLSTACKUP : KVX_PSEUDO<(outs), (ins i32imm:$amt1, i32imm:$amt2),
                             [(callseq_end timm:$amt1, timm:$amt2)], "ADJCALLSTACKUP">;
 } // Defs = [R12], Uses = [R12]
 
-def MAKETLS : REGISTERW_EXTEND27_UPPER27_LOWER10_TRIPLE
+def MAKETLS : KVX_INSTRUCTION_Y
   <(outs SingleReg:$SingleReg), (ins Wrapped64:$imm),
   "make $SingleReg = @tlsle( $imm )",
   [],
