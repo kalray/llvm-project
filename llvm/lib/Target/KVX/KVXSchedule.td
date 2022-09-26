@@ -21,6 +21,8 @@
 // scheduling if one model says there is not enough resource). All other
 // schedulers (ScheduleDAG, PostRATDList, Packetizer) rely on itineraries.
 
+//===-- Itineraries --===//
+
 foreach I = 0-3 in def TINY#I#_FU : FuncUnit;
 foreach I = 0-1 in def LITE#I#_FU : FuncUnit;
 def FULL_FU : FuncUnit;
@@ -612,6 +614,19 @@ def KVXSchedMachineModel : SchedMachineModel {
   let MispredictPenalty = 0;
 }
 
+//===-- ProcResources --===//
+
+// Using ProcResources unlock some MachineScheduler heuristics counting
+// critical resources such as RES-DEMAND.
+//
+// The scheduler still uses the latencies given by the itineraries, so there is
+// no need to specify them below.
+//
+// Note that the below model is not sufficient for our architecture:
+// instructions using multiple resources of the same kind are incorrectly
+// modeled by LLVM. If we were to rely only on WriteRes entries, we would see
+// invalid bundles {GET, TINY, TINY, TINY}.
+
 let BufferSize = 0 in // we want in-order
 let SchedModel = KVXSchedMachineModel in // binding to our machine model
 class KVXProcResource<int num> : ProcResource<num>;
@@ -694,20 +709,18 @@ foreach itinClass = ALL_ITIN_CLASSES in {
 def XSWAP256_SRW1: SchedWrite;
 def XSWAP256_SRW2: SchedWrite;
 
-// Custom class to make the writeLatency explicit, and specify that we have
-// a fully pipelined model.
+// Custom class to specify that we have a fully pipelined model.
 let SchedModel = KVXSchedMachineModel in
-class KVXWriteRes<SchedWrite write, int writeLatency, list<ProcResource> resources>
+class KVXWriteRes<SchedWrite write, list<ProcResource> resources>
   : WriteRes<write, resources> {
-  let Latency = writeLatency;
   let ResourceCycles = []<int>; // our processor is fully pipelined
 }
 
-multiclass KVXItinWriteRes <InstrItinClass itinClass, int writeLatency,
+multiclass KVXItinWriteRes <InstrItinClass itinClass,
                             list<ProcResource> resources, int issueWidth,
                             SchedWrite srw> {
   let NumMicroOps = issueWidth in
-    def _WR: KVXWriteRes<srw, writeLatency, resources>;
+    def _WR: KVXWriteRes<srw, resources>;
   let SchedModel = KVXSchedMachineModel in
     def _IRW: ItinRW<[srw], [itinClass]>;
 }
@@ -715,10 +728,8 @@ multiclass KVXItinWriteRes <InstrItinClass itinClass, int writeLatency,
 // Handling XSWAP256 separately
 let SchedModel = KVXSchedMachineModel in {
   let ResourceCycles = []<int> in {
-    let Latency = 1 in
     let NumMicroOps = 1 in // arbitrary cut in 1+2
-      def XSWAP256_WR1: WriteRes<XSWAP256_SRW1,XSWAP256_RT>; // 1st operand
-    let Latency = 3 in
+      def XSWAP256_WR1: WriteRes<XSWAP256_SRW1, XSWAP256_RT>; // 1st operand
     let NumMicroOps = 2 in
       // Note: all resources are consumed by 1st operand
       def XSWAP256_WR2: WriteRes<XSWAP256_SRW2, []>; // 2nd operand
@@ -726,123 +737,103 @@ let SchedModel = KVXSchedMachineModel in {
   def XSWAP256_IRW: ItinRW<[XSWAP256_SRW1,XSWAP256_SRW2], [XSWAP256]>;
 }
 
-/* Binding itinerary classes to reservation table + write latency */
-/* TODO: for now, this is regardless of the operand. It is possible to further
- * customize it with a per-operand model.
- * TODO: once we get rid of itineraries, we could directly
- * bind an instruction to its write latency and its resource table.
- * This will also allow us to have a more precise model, as this one is not
- * accurate everywhere (e.g. SET instruction)
- */
-defvar alu_lat = 1;
-defvar sfu_lat = 11; // TODO - is it really 11?
-defvar bcu_tca_lat = 3; // BCU instructions writing to TCA reg
-defvar bcu_lat = 1;
-defvar tca_int_lat = 3;
-defvar tca_fp_lat = 5;
-defvar store_lat = 1;
-defvar load_lat = 3; // assuming L1 cache hit
-defvar alclr_lat = 2;
-defvar mau_int_lat = 2;
-defvar mau_fp_lat = 4;
+defm: KVXItinWriteRes<ALL, [], 8, ALL_SRW>;
+defm: KVXItinWriteRes<ALU_NOP, ALU_NOP_RT, 1, ALU_NOP_SRW>;
 
-defm: KVXItinWriteRes<ALL, alu_lat, [], 8, ALL_SRW>; // we rely on NumMicroOps=8
-defm: KVXItinWriteRes<ALU_NOP, alu_lat, ALU_NOP_RT, 1, ALU_NOP_SRW>;
+defm: KVXItinWriteRes<ALU_TINY, ALU_TINY_RT, 1, ALU_TINY_SRW>;
+defm: KVXItinWriteRes<ALU_TINY_X, ALU_TINY_RT, 2, ALU_TINY_X_SRW>;
+defm: KVXItinWriteRes<ALU_TINY_Y, ALU_TINY_RT, 3, ALU_TINY_Y_SRW>;
 
-defm: KVXItinWriteRes<ALU_TINY, alu_lat, ALU_TINY_RT, 1, ALU_TINY_SRW>;
-defm: KVXItinWriteRes<ALU_TINY_X, alu_lat, ALU_TINY_RT, 2, ALU_TINY_X_SRW>;
-defm: KVXItinWriteRes<ALU_TINY_Y, alu_lat, ALU_TINY_RT, 3, ALU_TINY_Y_SRW>;
+defm: KVXItinWriteRes<ALU_LITE, ALU_LITE_RT, 1, ALU_LITE_SRW>;
+defm: KVXItinWriteRes<ALU_LITE_X, ALU_LITE_RT, 2, ALU_LITE_X_SRW>;
+defm: KVXItinWriteRes<ALU_LITE_Y, ALU_LITE_RT, 3, ALU_LITE_Y_SRW>;
 
-defm: KVXItinWriteRes<ALU_LITE, alu_lat, ALU_LITE_RT, 1, ALU_LITE_SRW>;
-defm: KVXItinWriteRes<ALU_LITE_X, alu_lat, ALU_LITE_RT, 2, ALU_LITE_X_SRW>;
-defm: KVXItinWriteRes<ALU_LITE_Y, alu_lat, ALU_LITE_RT, 3, ALU_LITE_Y_SRW>;
+defm: KVXItinWriteRes<ALU_LITE_CRWL, ALU_LITE_CRWL_RT, 1, ALU_LITE_CRWL_SRW>;
+defm: KVXItinWriteRes<ALU_LITE_CRWH, ALU_LITE_CRWH_RT, 1, ALU_LITE_CRWH_SRW>;
 
-defm: KVXItinWriteRes<ALU_LITE_CRWL, alu_lat, ALU_LITE_CRWL_RT, 1, ALU_LITE_CRWL_SRW>;
-defm: KVXItinWriteRes<ALU_LITE_CRWH, alu_lat, ALU_LITE_CRWH_RT, 1, ALU_LITE_CRWH_SRW>;
+defm: KVXItinWriteRes<ALU_FULL, ALU_FULL_RT, 1, ALU_FULL_SRW>;
+defm: KVXItinWriteRes<ALU_FULL_X, ALU_FULL_RT, 2, ALU_FULL_X_SRW>;
+defm: KVXItinWriteRes<ALU_FULL_Y, ALU_FULL_RT, 3, ALU_FULL_Y_SRW>;
+defm: KVXItinWriteRes<SFU, ALU_FULL_RT, 1, SFU_SRW>;
 
-defm: KVXItinWriteRes<ALU_FULL, alu_lat, ALU_FULL_RT, 1, ALU_FULL_SRW>;
-defm: KVXItinWriteRes<ALU_FULL_X, alu_lat, ALU_FULL_RT, 2, ALU_FULL_X_SRW>;
-defm: KVXItinWriteRes<ALU_FULL_Y, alu_lat, ALU_FULL_RT, 3, ALU_FULL_Y_SRW>;
-defm: KVXItinWriteRes<SFU, sfu_lat, ALU_FULL_RT, 1, SFU_SRW>;
-
-defm: KVXItinWriteRes<BCU, bcu_lat, BCU_RT, 1, BCU_SRW>;
-defm: KVXItinWriteRes<BCU_CRRP_CRWL_CRWH, bcu_tca_lat, BCU_CRRP_CRWL_CRWH_RT,
+defm: KVXItinWriteRes<BCU, BCU_RT, 1, BCU_SRW>;
+defm: KVXItinWriteRes<BCU_CRRP_CRWL_CRWH, BCU_CRRP_CRWL_CRWH_RT,
                       1, BCU_CRRP_CRWL_CRWH_SRW>;
-defm: KVXItinWriteRes<BCU_TINY_AUXW_CRRP, bcu_tca_lat, BCU_TINY_AUXW_CRRP_RT,
+defm: KVXItinWriteRes<BCU_TINY_AUXW_CRRP, BCU_TINY_AUXW_CRRP_RT,
                       1, BCU_TINY_AUXW_CRRP_SRW>;
 /* TODO: SFRs do not have bypasses, GPRs do. The operand should have a negative
  * ReadAdvance */
-defm: KVXItinWriteRes<BCU_TINY_TINY_MAU_XNOP, bcu_lat, BCU_TINY_TINY_MAU_XNOP_RT,
+defm: KVXItinWriteRes<BCU_TINY_TINY_MAU_XNOP, BCU_TINY_TINY_MAU_XNOP_RT,
                       1, BCU_TINY_TINY_MAU_XNOP_SRW>;
 
-defm: KVXItinWriteRes<TCA, tca_int_lat, TCA_RT, 1, TCA_SRW>;
-defm: KVXItinWriteRes<TCA_FP16, tca_fp_lat, TCA_RT, 1, TCA_FP16_SRW>;
+defm: KVXItinWriteRes<TCA, TCA_RT, 1, TCA_SRW>;
+defm: KVXItinWriteRes<TCA_FP16, TCA_RT, 1, TCA_FP16_SRW>;
 
-defm: KVXItinWriteRes<LSU_STORE, store_lat, LSU_RT, 1, LSU_STORE_SRW>;
-defm: KVXItinWriteRes<LSU_X_STORE, store_lat, LSU_RT, 2, LSU_X_STORE_SRW>;
-defm: KVXItinWriteRes<LSU_Y_STORE, store_lat, LSU_RT, 3, LSU_Y_STORE_SRW>;
+defm: KVXItinWriteRes<LSU_STORE, LSU_RT, 1, LSU_STORE_SRW>;
+defm: KVXItinWriteRes<LSU_X_STORE, LSU_RT, 2, LSU_X_STORE_SRW>;
+defm: KVXItinWriteRes<LSU_Y_STORE, LSU_RT, 3, LSU_Y_STORE_SRW>;
 
-defm: KVXItinWriteRes<LSU_CRRP_STORE, store_lat, LSU_CRRP_RT, 1, LSU_CRRP_STORE_SRW>;
-defm: KVXItinWriteRes<LSU_CRRP_X_STORE, store_lat, LSU_CRRP_RT, 2, LSU_CRRP_X_STORE_SRW>;
-defm: KVXItinWriteRes<LSU_CRRP_Y_STORE, store_lat, LSU_CRRP_RT, 3, LSU_CRRP_Y_STORE_SRW>;
+defm: KVXItinWriteRes<LSU_CRRP_STORE, LSU_CRRP_RT, 1, LSU_CRRP_STORE_SRW>;
+defm: KVXItinWriteRes<LSU_CRRP_X_STORE, LSU_CRRP_RT, 2, LSU_CRRP_X_STORE_SRW>;
+defm: KVXItinWriteRes<LSU_CRRP_Y_STORE, LSU_CRRP_RT, 3, LSU_CRRP_Y_STORE_SRW>;
 
-defm: KVXItinWriteRes<LSU_AUXR_STORE, store_lat, LSU_AUXR_RT, 1, LSU_AUXR_STORE_SRW>;
-defm: KVXItinWriteRes<LSU_AUXR_X_STORE, store_lat, LSU_AUXR_RT, 2, LSU_AUXR_X_STORE_SRW>;
-defm: KVXItinWriteRes<LSU_AUXR_Y_STORE, store_lat, LSU_AUXR_RT, 3, LSU_AUXR_Y_STORE_SRW>;
+defm: KVXItinWriteRes<LSU_AUXR_STORE, LSU_AUXR_RT, 1, LSU_AUXR_STORE_SRW>;
+defm: KVXItinWriteRes<LSU_AUXR_X_STORE, LSU_AUXR_RT, 2, LSU_AUXR_X_STORE_SRW>;
+defm: KVXItinWriteRes<LSU_AUXR_Y_STORE, LSU_AUXR_RT, 3, LSU_AUXR_Y_STORE_SRW>;
 
-defm: KVXItinWriteRes<LSU_AUXW_STORE, store_lat, LSU_AUXW_RT, 1, LSU_AUXW_STORE_SRW>;
-defm: KVXItinWriteRes<LSU_AUXW_X_STORE, store_lat, LSU_AUXW_RT, 2, LSU_AUXW_X_STORE_SRW>;
-defm: KVXItinWriteRes<LSU_AUXW_Y_STORE, store_lat, LSU_AUXW_RT, 3, LSU_AUXW_Y_STORE_SRW>;
+defm: KVXItinWriteRes<LSU_AUXW_STORE, LSU_AUXW_RT, 1, LSU_AUXW_STORE_SRW>;
+defm: KVXItinWriteRes<LSU_AUXW_X_STORE, LSU_AUXW_RT, 2, LSU_AUXW_X_STORE_SRW>;
+defm: KVXItinWriteRes<LSU_AUXW_Y_STORE, LSU_AUXW_RT, 3, LSU_AUXW_Y_STORE_SRW>;
 
-defm: KVXItinWriteRes<LSU_AUXR_AUXW_STORE, store_lat, LSU_AUXR_AUXW_RT, 1,
+defm: KVXItinWriteRes<LSU_AUXR_AUXW_STORE, LSU_AUXR_AUXW_RT, 1,
                       LSU_AUXR_AUXW_STORE_SRW>;
-defm: KVXItinWriteRes<LSU_AUXR_AUXW_X_STORE, store_lat, LSU_AUXR_AUXW_RT, 2,
+defm: KVXItinWriteRes<LSU_AUXR_AUXW_X_STORE, LSU_AUXR_AUXW_RT, 2,
                       LSU_AUXR_AUXW_X_STORE_SRW>;
-defm: KVXItinWriteRes<LSU_AUXR_AUXW_Y_STORE, store_lat, LSU_AUXR_AUXW_RT, 3,
+defm: KVXItinWriteRes<LSU_AUXR_AUXW_Y_STORE, LSU_AUXR_AUXW_RT, 3,
                       LSU_AUXR_AUXW_Y_STORE_SRW>;
 
-defm: KVXItinWriteRes<LSU_AUXW_ALCLR, alclr_lat, LSU_AUXW_RT, 1, LSU_AUXW_ALCLR_SRW>;
-defm: KVXItinWriteRes<LSU_AUXW_X_ALCLR, alclr_lat, LSU_AUXW_RT, 2, LSU_AUXW_X_ALCLR_SRW>;
-defm: KVXItinWriteRes<LSU_AUXW_Y_ALCLR, alclr_lat, LSU_AUXW_RT, 3, LSU_AUXW_Y_ALCLR_SRW>;
+defm: KVXItinWriteRes<LSU_AUXW_ALCLR, LSU_AUXW_RT, 1, LSU_AUXW_ALCLR_SRW>;
+defm: KVXItinWriteRes<LSU_AUXW_X_ALCLR, LSU_AUXW_RT, 2, LSU_AUXW_X_ALCLR_SRW>;
+defm: KVXItinWriteRes<LSU_AUXW_Y_ALCLR, LSU_AUXW_RT, 3, LSU_AUXW_Y_ALCLR_SRW>;
 
-defm: KVXItinWriteRes<LSU_LOAD, load_lat, LSU_RT, 1, LSU_LOAD_SRW>;
-defm: KVXItinWriteRes<LSU_X_LOAD, load_lat, LSU_RT, 2, LSU_X_LOAD_SRW>;
-defm: KVXItinWriteRes<LSU_Y_LOAD, load_lat, LSU_RT, 3, LSU_Y_LOAD_SRW>;
+defm: KVXItinWriteRes<LSU_LOAD, LSU_RT, 1, LSU_LOAD_SRW>;
+defm: KVXItinWriteRes<LSU_X_LOAD, LSU_RT, 2, LSU_X_LOAD_SRW>;
+defm: KVXItinWriteRes<LSU_Y_LOAD, LSU_RT, 3, LSU_Y_LOAD_SRW>;
 
-defm: KVXItinWriteRes<LSU_CRRP_LOAD, load_lat, LSU_CRRP_RT, 1, LSU_CRRP_LOAD_SRW>;
-defm: KVXItinWriteRes<LSU_CRRP_X_LOAD, load_lat, LSU_CRRP_RT, 2, LSU_CRRP_X_LOAD_SRW>;
-defm: KVXItinWriteRes<LSU_CRRP_Y_LOAD, load_lat, LSU_CRRP_RT, 3, LSU_CRRP_Y_LOAD_SRW>;
+defm: KVXItinWriteRes<LSU_CRRP_LOAD, LSU_CRRP_RT, 1, LSU_CRRP_LOAD_SRW>;
+defm: KVXItinWriteRes<LSU_CRRP_X_LOAD, LSU_CRRP_RT, 2, LSU_CRRP_X_LOAD_SRW>;
+defm: KVXItinWriteRes<LSU_CRRP_Y_LOAD, LSU_CRRP_RT, 3, LSU_CRRP_Y_LOAD_SRW>;
 
-defm: KVXItinWriteRes<LSU_AUXR_LOAD, load_lat, LSU_AUXR_RT, 1, LSU_AUXR_LOAD_SRW>;
-defm: KVXItinWriteRes<LSU_AUXR_X_LOAD, load_lat, LSU_AUXR_RT, 2, LSU_AUXR_X_LOAD_SRW>;
-defm: KVXItinWriteRes<LSU_AUXR_Y_LOAD, load_lat, LSU_AUXR_RT, 3, LSU_AUXR_Y_LOAD_SRW>;
+defm: KVXItinWriteRes<LSU_AUXR_LOAD, LSU_AUXR_RT, 1, LSU_AUXR_LOAD_SRW>;
+defm: KVXItinWriteRes<LSU_AUXR_X_LOAD, LSU_AUXR_RT, 2, LSU_AUXR_X_LOAD_SRW>;
+defm: KVXItinWriteRes<LSU_AUXR_Y_LOAD, LSU_AUXR_RT, 3, LSU_AUXR_Y_LOAD_SRW>;
 
-defm: KVXItinWriteRes<LSU_AUXW_LOAD, load_lat, LSU_AUXW_RT, 1, LSU_AUXW_LOAD_SRW>;
-defm: KVXItinWriteRes<LSU_AUXW_X_LOAD, load_lat, LSU_AUXW_RT, 2, LSU_AUXW_X_LOAD_SRW>;
-defm: KVXItinWriteRes<LSU_AUXW_Y_LOAD, load_lat, LSU_AUXW_RT, 3, LSU_AUXW_Y_LOAD_SRW>;
+defm: KVXItinWriteRes<LSU_AUXW_LOAD, LSU_AUXW_RT, 1, LSU_AUXW_LOAD_SRW>;
+defm: KVXItinWriteRes<LSU_AUXW_X_LOAD, LSU_AUXW_RT, 2, LSU_AUXW_X_LOAD_SRW>;
+defm: KVXItinWriteRes<LSU_AUXW_Y_LOAD, LSU_AUXW_RT, 3, LSU_AUXW_Y_LOAD_SRW>;
 
-defm: KVXItinWriteRes<LSU_AUXR_AUXW_LOAD, load_lat, LSU_AUXR_AUXW_RT, 1,
+defm: KVXItinWriteRes<LSU_AUXR_AUXW_LOAD, LSU_AUXR_AUXW_RT, 1,
                       LSU_AUXR_AUXW_LOAD_SRW>;
-defm: KVXItinWriteRes<LSU_AUXR_AUXW_X_LOAD, load_lat, LSU_AUXR_AUXW_RT, 2,
+defm: KVXItinWriteRes<LSU_AUXR_AUXW_X_LOAD, LSU_AUXR_AUXW_RT, 2,
                       LSU_AUXR_AUXW_X_LOAD_SRW>;
-defm: KVXItinWriteRes<LSU_AUXR_AUXW_Y_LOAD, load_lat, LSU_AUXR_AUXW_RT, 3,
+defm: KVXItinWriteRes<LSU_AUXR_AUXW_Y_LOAD, LSU_AUXR_AUXW_RT, 3,
                       LSU_AUXR_AUXW_Y_LOAD_SRW>;
 
-defm: KVXItinWriteRes<MAU, mau_int_lat, MAU_RT, 1, MAU_SRW>;
-defm: KVXItinWriteRes<MAU_X, mau_int_lat, MAU_RT, 2, MAU_X_SRW>;
-defm: KVXItinWriteRes<MAU_Y, mau_int_lat, MAU_RT, 3, MAU_Y_SRW>;
+defm: KVXItinWriteRes<MAU, MAU_RT, 1, MAU_SRW>;
+defm: KVXItinWriteRes<MAU_X, MAU_RT, 2, MAU_X_SRW>;
+defm: KVXItinWriteRes<MAU_Y, MAU_RT, 3, MAU_Y_SRW>;
 
-defm: KVXItinWriteRes<MAU_AUXR, mau_int_lat, MAU_AUXR_RT, 1, MAU_AUXR_SRW>;
-defm: KVXItinWriteRes<MAU_AUXR_X, mau_int_lat, MAU_AUXR_RT, 2, MAU_AUXR_X_SRW>;
-defm: KVXItinWriteRes<MAU_AUXR_Y, mau_int_lat, MAU_AUXR_RT, 3, MAU_AUXR_Y_SRW>;
+defm: KVXItinWriteRes<MAU_AUXR, MAU_AUXR_RT, 1, MAU_AUXR_SRW>;
+defm: KVXItinWriteRes<MAU_AUXR_X, MAU_AUXR_RT, 2, MAU_AUXR_X_SRW>;
+defm: KVXItinWriteRes<MAU_AUXR_Y, MAU_AUXR_RT, 3, MAU_AUXR_Y_SRW>;
 
-defm: KVXItinWriteRes<MAU_FP, mau_fp_lat, MAU_RT, 1, MAU_FP_SRW>;
-defm: KVXItinWriteRes<MAU_X_FP, mau_fp_lat, MAU_RT, 2, MAU_X_FP_SRW>;
-defm: KVXItinWriteRes<MAU_Y_FP, mau_fp_lat, MAU_RT, 3, MAU_Y_FP_SRW>;
+defm: KVXItinWriteRes<MAU_FP, MAU_RT, 1, MAU_FP_SRW>;
+defm: KVXItinWriteRes<MAU_X_FP, MAU_RT, 2, MAU_X_FP_SRW>;
+defm: KVXItinWriteRes<MAU_Y_FP, MAU_RT, 3, MAU_Y_FP_SRW>;
 
-defm: KVXItinWriteRes<MAU_AUXR_FP, mau_fp_lat, MAU_AUXR_RT, 1, MAU_AUXR_FP_SRW>;
-defm: KVXItinWriteRes<MAU_AUXR_X_FP, mau_fp_lat, MAU_AUXR_RT, 2, MAU_AUXR_X_FP_SRW>;
-defm: KVXItinWriteRes<MAU_AUXR_Y_FP, mau_fp_lat, MAU_AUXR_RT, 3, MAU_AUXR_Y_FP_SRW>;
+defm: KVXItinWriteRes<MAU_AUXR_FP, MAU_AUXR_RT, 1, MAU_AUXR_FP_SRW>;
+defm: KVXItinWriteRes<MAU_AUXR_X_FP, MAU_AUXR_RT, 2, MAU_AUXR_X_FP_SRW>;
+defm: KVXItinWriteRes<MAU_AUXR_Y_FP, MAU_AUXR_RT, 3, MAU_AUXR_Y_FP_SRW>;
 
 defm: KVXItinWriteRes<ALU_TINY_CRRP_CRWL_CRWH, /* latency */ 2, ALU_TINY_CRRP_CRWL_CRWH_RT, 1 /* issue width */, ALU_TINY_CRRP_CRWL_CRWH_SRW>;
 defm: KVXItinWriteRes<ALU_TINY_CRRP, /* latency */ 2, ALU_TINY_CRRP_RT, 1 /* issue width */, ALU_TINY_CRRP_SRW>;
@@ -852,6 +843,6 @@ def CopyI : SchedWrite;
 let SchedModel = KVXSchedMachineModel in {
   // CopyI is expanded to ADDD -> ALU_TINY reservation table
   let NumMicroOps = 1 in
-    def : KVXWriteRes<CopyI, 1, ALU_TINY_RT>;
+    def : KVXWriteRes<CopyI, ALU_TINY_RT>;
   def : InstRW<[CopyI], (instrs COPY)>;
 }
