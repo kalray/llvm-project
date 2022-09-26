@@ -1,4 +1,4 @@
-; RUN: llc < %s | FileCheck %s
+; RUN: llc -o - %s | FileCheck %s
 ; CHECK-LABEL: foo:
 ; CHECK:              .cfi_sections .debug_frame
 ; CHECK-NEXT:         .cfi_startproc
