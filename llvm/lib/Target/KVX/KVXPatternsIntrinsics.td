@@ -407,6 +407,31 @@ def: Pat<(int_kvx_minud i64:$v1, Signed10:$v2) ,(MINUDri10 SingleReg:$v1, Signed
 def: Pat<(int_kvx_minud i64:$v1, Signed37:$v2) ,(MINUDri37 SingleReg:$v1, Signed37:$v2)>;
 def: Pat<(int_kvx_minud i64:$v1, Wrapped64:$v2) ,(MINUDri64 SingleReg:$v1, Wrapped64:$v2)>;
 
+multiclass INT_MADDDT_FAMILY <Intrinsic int_madddt, bit isSub=0> {
+  defvar rr = !cond(isSub:!cast<Instruction>(NAME),
+                    !not(isSub):!cast<Instruction>(NAME # rr));
+  def: Pat<(int_madddt v2i64:$acc, i64:$a, i64:$b), (rr PairedReg:$acc, SingleReg:$a, SingleReg:$b)>;
+  if !not(isSub) then {
+    defvar ri10 = !cast<Instruction>(NAME # ri10);
+    defvar ri37 = !cast<Instruction>(NAME # ri37);
+    defvar ri64 = !cast<Instruction>(NAME # ri64);
+    let Predicates = [IsV1] in {
+      def: Pat<(int_madddt v2i64:$acc, i64:$a, Signed10:$b), (ri10 PairedReg:$acc, SingleReg:$a, Signed10:$b)>;
+      def: Pat<(int_madddt v2i64:$acc, i64:$a, Signed37:$b), (ri37 PairedReg:$acc, SingleReg:$a, Signed37:$b)>;
+      def: Pat<(int_madddt v2i64:$acc, i64:$a, Wrapped64:$b), (ri64 PairedReg:$acc, SingleReg:$a, Wrapped64:$b)>;
+    }
+  }
+}
+
+defm MADDDT: INT_MADDDT_FAMILY<int_kvx_madddt>;
+defm MADDSUDT: INT_MADDDT_FAMILY<int_kvx_maddsudt>;
+defm MADDUDT: INT_MADDDT_FAMILY<int_kvx_maddudt>;
+defm MADDUZDT: INT_MADDDT_FAMILY<int_kvx_madduzdt>;
+defm MSBFDT: INT_MADDDT_FAMILY<int_kvx_msbfdt, /*isSub*/ 1>;
+defm MSBFSUDT: INT_MADDDT_FAMILY<int_kvx_msbfsudt, /*isSub*/ 1>;
+defm MSBFUDT: INT_MADDDT_FAMILY<int_kvx_msbfudt, /*isSub*/ 1>;
+defm MSBFUZDT: INT_MADDDT_FAMILY<int_kvx_msbfuzdt, /*isSub*/ 1>;
+
 def: Pat<(int_kvx_slld i64:$v, i64:$s), (SLLDrr SingleReg:$v, SingleReg:$s)>;
 def: Pat<(int_kvx_slld i64:$v, Unsigned6:$s), (SLLDri SingleReg:$v, Unsigned6:$s)>;
 def: Pat<(int_kvx_sllhqs v4i16:$v, i64:$s), (SLLHQSrr SingleReg:$v, SingleReg:$s)>;

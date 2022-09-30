@@ -973,19 +973,19 @@ multiclass MC_21<string OpcStr> {
     <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, Signed10:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     MAU_AUXR>;
+     MAU_AUXR>, Requires<[IsV1]>;
   let Constraints = "$a1 = $a1o" in
   def ri37 : KVX_INSTRUCTION_X
     <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, Signed37:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     MAU_AUXR_X_>;
+     MAU_AUXR_X_>, Requires<[IsV1]>;
   let Constraints = "$a1 = $a1o" in
   def ri64 : KVX_INSTRUCTION_Y
     <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, Wrapped64:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
-     MAU_AUXR_Y_>;
+     MAU_AUXR_Y_>, Requires<[IsV1]>;
   let Constraints = "$a1 = $a1o" in
   def rr : KVX_INSTRUCTION
     <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),

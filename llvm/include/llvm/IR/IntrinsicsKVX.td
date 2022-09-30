@@ -177,6 +177,7 @@ def int_kvx_fsrecw: Intrinsic<[llvm_float_ty], [llvm_float_ty, llvm_i32_ty], [In
 def int_kvx_fsrecd: Intrinsic<[llvm_double_ty], [llvm_double_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_fsrsrw: Intrinsic<[llvm_float_ty], [llvm_float_ty], [IntrNoMem]>;
 def int_kvx_fsrsrd: Intrinsic<[llvm_double_ty], [llvm_double_ty], [IntrNoMem]>;
+
 def int_kvx_maxhq: Intrinsic<[llvm_v4i16_ty], [llvm_v4i16_ty, llvm_v4i16_ty], [IntrNoMem]>;
 def int_kvx_maxw: Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_maxwp: Intrinsic<[llvm_v2i32_ty], [llvm_v2i32_ty, llvm_v2i32_ty], [IntrNoMem]>;
@@ -193,6 +194,16 @@ def int_kvx_minuhq: Intrinsic<[llvm_v4i16_ty], [llvm_v4i16_ty, llvm_v4i16_ty], [
 def int_kvx_minuw: Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_minuwp: Intrinsic<[llvm_v2i32_ty], [llvm_v2i32_ty, llvm_v2i32_ty], [IntrNoMem]>;
 def int_kvx_minud: Intrinsic<[llvm_i64_ty], [llvm_i64_ty, llvm_i64_ty], [IntrNoMem]>;
+
+def int_kvx_madddt: Intrinsic<[llvm_v2i64_ty], [llvm_v2i64_ty, llvm_i64_ty, llvm_i64_ty], [IntrNoMem]>;
+def int_kvx_maddsudt: Intrinsic<[llvm_v2i64_ty], [llvm_v2i64_ty, llvm_i64_ty, llvm_i64_ty], [IntrNoMem]>;
+def int_kvx_maddudt: Intrinsic<[llvm_v2i64_ty], [llvm_v2i64_ty, llvm_i64_ty, llvm_i64_ty], [IntrNoMem]>;
+def int_kvx_madduzdt: Intrinsic<[llvm_v2i64_ty], [llvm_v2i64_ty, llvm_i64_ty, llvm_i64_ty], [IntrNoMem]>;
+def int_kvx_msbfdt: Intrinsic<[llvm_v2i64_ty], [llvm_v2i64_ty, llvm_i64_ty, llvm_i64_ty], [IntrNoMem]>;
+def int_kvx_msbfsudt: Intrinsic<[llvm_v2i64_ty], [llvm_v2i64_ty, llvm_i64_ty, llvm_i64_ty], [IntrNoMem]>;
+def int_kvx_msbfudt: Intrinsic<[llvm_v2i64_ty], [llvm_v2i64_ty, llvm_i64_ty, llvm_i64_ty], [IntrNoMem]>;
+def int_kvx_msbfuzdt: Intrinsic<[llvm_v2i64_ty], [llvm_v2i64_ty, llvm_i64_ty, llvm_i64_ty], [IntrNoMem]>;
+
 def int_kvx_sbmm8 : Intrinsic<[llvm_i64_ty], [llvm_i64_ty, llvm_i64_ty], [IntrNoMem]>;
 def int_kvx_sbmmt8 : Intrinsic<[llvm_i64_ty], [llvm_i64_ty, llvm_i64_ty], [IntrNoMem]>;
 def int_kvx_satd : Intrinsic<[llvm_i64_ty], [llvm_i64_ty, llvm_i32_ty], [IntrNoMem]>;
