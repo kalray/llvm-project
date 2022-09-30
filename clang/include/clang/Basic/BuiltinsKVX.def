@@ -281,6 +281,16 @@ BUILTIN(__builtin_kvx_ffdmdaw, "fV2fV2ffcC*", "n")
 BUILTIN(__builtin_kvx_ffdmdawp, "V2fV4fV4fV2fcC*", "n")
 BUILTIN(__builtin_kvx_ffdmdawq, "V4fV8fV8fV4fcC*", "n")
 
+// The 8 builtins below are only for LLVM
+KVX_BUILTIN(madddt, "V2OiV2OiOiOi", "n", 3, "", )
+KVX_BUILTIN(maddsudt, "V2OiV2OiOiUOi", "n", 3, "", )
+KVX_BUILTIN(maddudt, "V2UOiV2UOiUOiUOi", "n", 3, "", )
+KVX_BUILTIN(madduzdt, "V2UOiV2UOiUOiUOi", "n", 3, "", )
+KVX_BUILTIN(msbfdt, "V2OiV2OiOiOi", "n", 3, "", )
+KVX_BUILTIN(msbfsudt, "V2OiV2OiUOiOi", "n", 3, "", )
+KVX_BUILTIN(msbfudt, "V2UOiV2UOiUOiUOi", "n", 3, "", )
+KVX_BUILTIN(msbfuzdt, "V2UOiV2UOiUOiUOi", "n", 3, "", )
+
 BUILTIN(__builtin_kvx_shiftbo, "V8cV8cUic", "n")
 BUILTIN(__builtin_kvx_shiftbx, "V16cV16cUic", "n")
 BUILTIN(__builtin_kvx_shiftbv, "V32cV32cUic", "n")
