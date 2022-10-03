@@ -498,3 +498,12 @@ multiclass CV2_ATOMIC_STORE <string Opc, Intrinsic Int, ValueType VT,  RegisterC
   defm ri54 : I</*asm=*/Opc, /*itin=*/LSU_AUXR_Y_STORE, /*Ops=*/[RC], /*Mods=*/[CoherencyMod], /*MemOps=*/[Signed54, SingleReg], /*CC=*/[], /*Out=*/[], /*InPlace=*/0,
   /*pattern=*/ [(Int (add i64:$mem, Signed54:$off), VT:$op0, CoherencyMod:$mod0)]>;
 }
+
+multiclass XSPLATDO_MC <string Opc = "xsplatdo"> {
+  defm i16: I</*asm=*/Opc, /*itin=*/ALU_TINY_CRWL_CRWH, /*Ops=*/[Signed16], /*Mods=*/[], /*MemOps=*/[], /*CC=*/[], /*Out=*/[VectorReg], /*InPlace=*/0,
+  /*pattern=*/ [(set v256i1:$r, (int_kvx_xsplatdo Signed10:$op0))]>;
+  defm i43: I</*asm=*/Opc, /*itin=*/ALU_TINY_CRWL_CRWH_X_, /*Ops=*/[Signed43], /*Mods=*/[], /*MemOps=*/[], /*CC=*/[], /*Out=*/[VectorReg], /*InPlace=*/0,
+  /*pattern=*/ [(set v256i1:$r, (int_kvx_xsplatdo Signed37:$op0))]>;
+  defm i64: I</*asm=*/Opc, /*itin=*/ALU_TINY_CRWL_CRWH_Y_, /*Ops=*/[Wrapped64], /*Mods=*/[], /*MemOps=*/[], /*CC=*/[], /*Out=*/[VectorReg], /*InPlace=*/0,
+  /*pattern=*/ [(set v256i1:$r, (int_kvx_xsplatdo Wrapped64:$op0))]>;
+}
