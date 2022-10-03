@@ -3736,4 +3736,11 @@ defm ALW : CV2_ATOMIC_LOAD<"alw", int_kvx_alw, i32>;
 defm ALD : CV2_ATOMIC_LOAD<"ald", int_kvx_ald, i64>;
 defm ASW : CV2_ATOMIC_STORE<"asw", int_kvx_asw, i32>;
 defm ASD : CV2_ATOMIC_STORE<"asd", int_kvx_asd, i64>;
+
+let isCommutable = true in {
+defm XFMAXHX: I</*asm=*/"xfmaxhx", /*itin=*/TCA_FP16, /*Ops=*/[VectorReg, VectorReg], /*Mods=*/[], /*MemOps=*/[], /*CC=*/[], /*Out=*/[VectorReg], /*InPlace=*/0,
+  /*pattern=*/ [(set v256i1:$r, (int_kvx_xfmaxhx VectorReg:$op0, VectorReg:$op1))]>;
+defm XFMINHX: I</*asm=*/"xfminhx", /*itin=*/TCA_FP16, /*Ops=*/[VectorReg, VectorReg], /*Mods=*/[], /*MemOps=*/[], /*CC=*/[], /*Out=*/[VectorReg], /*InPlace=*/0,
+  /*pattern=*/ [(set v256i1:$r, (int_kvx_xfminhx VectorReg:$op0, VectorReg:$op1))]>;
+}
 }

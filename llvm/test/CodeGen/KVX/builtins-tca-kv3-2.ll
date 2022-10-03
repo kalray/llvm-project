@@ -1063,3 +1063,31 @@ define void @xcopyx(<512 x i1>* nocapture %0) {
 }
 
 declare <512 x i1> @llvm.kvx.xcopyx(<512 x i1>, i32)
+
+define void @xfminmaxhx(<256 x i1>* nocapture %0) {
+; CHECK-LABEL: xfminmaxhx:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    xlo $a0 = 0[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xlo $a1 = 32[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xfmaxhx $a1 = $a0, $a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xfminhx $a0 = $a1, $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 0[$r0] = $a0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = load <256 x i1>, <256 x i1>* %0
+  %3 = getelementptr inbounds <256 x i1>, <256 x i1>* %0, i64 1
+  %4 = load <256 x i1>, <256 x i1>* %3
+  %5 = tail call <256 x i1> @llvm.kvx.xfmaxhx(<256 x i1> %2, <256 x i1> %4)
+  %6 = tail call <256 x i1> @llvm.kvx.xfminhx(<256 x i1> %5, <256 x i1> %2)
+  store <256 x i1> %6, <256 x i1>* %0
+  ret void
+}
+
+declare <256 x i1> @llvm.kvx.xfmaxhx(<256 x i1>, <256 x i1>)
+
+declare <256 x i1> @llvm.kvx.xfminhx(<256 x i1>, <256 x i1>)
+

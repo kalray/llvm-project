@@ -556,3 +556,17 @@ void xcopyx(__kvx_x512 *v) {
   v[3] = __builtin_kvx_xcopyx(*v, ".ud");
   v[4] = __builtin_kvx_xcopyx(*v, ".TQ");
 }
+
+// CHECK-LABEL: @xfminmaxhx(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 1
+// CHECK-NEXT:    [[TMP1:%.*]] = load <256 x i1>, <256 x i1>* [[ARRAYIDX1]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <256 x i1> @llvm.kvx.xfmaxhx(<256 x i1> [[TMP0]], <256 x i1> [[TMP1]])
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <256 x i1> @llvm.kvx.xfminhx(<256 x i1> [[TMP2]], <256 x i1> [[TMP0]])
+// CHECK-NEXT:    store <256 x i1> [[TMP3]], <256 x i1>* [[V]], align 32, [[TBAA2]]
+// CHECK-NEXT:    ret void
+//
+void xfminmaxhx(__kvx_x256 *v) {
+  v[0] = __builtin_kvx_xfminhx(__builtin_kvx_xfmaxhx(v[0], v[1]), v[0]);
+}
