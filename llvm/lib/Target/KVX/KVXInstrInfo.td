@@ -3751,4 +3751,10 @@ defm XSPLATOX: I</*asm=*/"xsplatox", /*itin=*/TCA, /*Ops=*/[VectorReg], /*Mods=*
 }
 
 defm XSPLATDO: XSPLATDO_MC;
+
+let hasSideEffects = 1, mayLoad = ?, mayStore = ? in {
+defm DPURGEL: DCACHE_MC <"dpurgel", int_kvx_dpurgel>;
+defm DFLUSHL: DCACHE_MC <"dflushl", int_kvx_dflushl>;
+}
+
 }

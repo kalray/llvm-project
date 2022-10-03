@@ -526,3 +526,106 @@ define void @asd_g(i64* %0, i64 %1) {
   ret void
 }
 
+define void @dpurgel(<8 x i64>* %0, i64 %1) {
+; CHECK-LABEL: dpurgel:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    addd $r12 = $r12, -32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 24[$r12] = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 16[$r12] = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    dpurgel 0[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r0 = 24[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r1 = 16[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    dpurgel.xs $r1[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r0 = 24[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    dpurgel 320[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r0 = 24[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    dpurgel 0x10000[$r0]
+; CHECK-NEXT:    addd $r12 = $r12, 32
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = alloca <8 x i64>*
+  %4 = alloca i64
+  store <8 x i64>* %0, <8 x i64>** %3
+  store i64 %1, i64* %4
+  %5 = load <8 x i64>*, <8 x i64>** %3
+  %6 = bitcast <8 x i64>* %5 to i8*
+  call void @llvm.kvx.dpurgel(i8* %6)
+  %7 = load <8 x i64>*, <8 x i64>** %3
+  %8 = load i64, i64* %4
+  %9 = getelementptr inbounds <8 x i64>, <8 x i64>* %7, i64 %8
+  %10 = bitcast <8 x i64>* %9 to i8*
+  call void @llvm.kvx.dpurgel(i8* %10)
+  %11 = load <8 x i64>*, <8 x i64>** %3
+  %12 = getelementptr inbounds <8 x i64>, <8 x i64>* %11, i64 5
+  %13 = bitcast <8 x i64>* %12 to i8*
+  call void @llvm.kvx.dpurgel(i8* %13)
+  %14 = load <8 x i64>*, <8 x i64>** %3
+  %15 = getelementptr inbounds <8 x i64>, <8 x i64>* %14, i64 1024
+  %16 = bitcast <8 x i64>* %15 to i8*
+  call void @llvm.kvx.dpurgel(i8* %16)
+  ret void
+}
+
+declare void @llvm.kvx.dpurgel(i8*)
+
+define void @dflushl(<8 x i64>* %0, i64 %1) {
+; CHECK-LABEL: dflushl:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    addd $r12 = $r12, -32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 24[$r12] = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 16[$r12] = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    dflushl 0[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r0 = 24[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r1 = 16[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    dflushl.xs $r1[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r0 = 24[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    dflushl 320[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r0 = 24[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    dflushl 0x10000[$r0]
+; CHECK-NEXT:    addd $r12 = $r12, 32
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = alloca <8 x i64>*
+  %4 = alloca i64
+  store <8 x i64>* %0, <8 x i64>** %3
+  store i64 %1, i64* %4
+  %5 = load <8 x i64>*, <8 x i64>** %3
+  %6 = bitcast <8 x i64>* %5 to i8*
+  call void @llvm.kvx.dflushl(i8* %6)
+  %7 = load <8 x i64>*, <8 x i64>** %3
+  %8 = load i64, i64* %4
+  %9 = getelementptr inbounds <8 x i64>, <8 x i64>* %7, i64 %8
+  %10 = bitcast <8 x i64>* %9 to i8*
+  call void @llvm.kvx.dflushl(i8* %10)
+  %11 = load <8 x i64>*, <8 x i64>** %3
+  %12 = getelementptr inbounds <8 x i64>, <8 x i64>* %11, i64 5
+  %13 = bitcast <8 x i64>* %12 to i8*
+  call void @llvm.kvx.dflushl(i8* %13)
+  %14 = load <8 x i64>*, <8 x i64>** %3
+  %15 = getelementptr inbounds <8 x i64>, <8 x i64>* %14, i64 1024
+  %16 = bitcast <8 x i64>* %15 to i8*
+  call void @llvm.kvx.dflushl(i8* %16)
+  ret void
+}
+
+declare void @llvm.kvx.dflushl(i8*)

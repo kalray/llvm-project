@@ -431,3 +431,50 @@ void asd_ri54(long *p, long v) {
 void asd_g(long *p, long v) {
   return __builtin_kvx_asd(p, v, ".g");
 }
+
+//
+typedef long long8 __attribute__ ((vector_size (sizeof(long) * 8)));
+
+// CHECK-LABEL: @dpurgel(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = bitcast <8 x i64>* [[W:%.*]] to i8*
+// CHECK-NEXT:    tail call void @llvm.kvx.dpurgel(i8* [[TMP0]])
+// CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <8 x i64>, <8 x i64>* [[W]], i64 [[P:%.*]]
+// CHECK-NEXT:    [[TMP1:%.*]] = bitcast <8 x i64>* [[ARRAYIDX]] to i8*
+// CHECK-NEXT:    tail call void @llvm.kvx.dpurgel(i8* [[TMP1]])
+// CHECK-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <8 x i64>, <8 x i64>* [[W]], i64 5
+// CHECK-NEXT:    [[TMP2:%.*]] = bitcast <8 x i64>* [[ARRAYIDX1]] to i8*
+// CHECK-NEXT:    tail call void @llvm.kvx.dpurgel(i8* nonnull [[TMP2]])
+// CHECK-NEXT:    [[ARRAYIDX2:%.*]] = getelementptr inbounds <8 x i64>, <8 x i64>* [[W]], i64 1024
+// CHECK-NEXT:    [[TMP3:%.*]] = bitcast <8 x i64>* [[ARRAYIDX2]] to i8*
+// CHECK-NEXT:    tail call void @llvm.kvx.dpurgel(i8* nonnull [[TMP3]])
+// CHECK-NEXT:    ret void
+//
+void dpurgel(long8 *w, long p) {
+  __builtin_kvx_dpurgel(w);
+  __builtin_kvx_dpurgel(&w[p]);
+  __builtin_kvx_dpurgel(&w[5]);
+  __builtin_kvx_dpurgel(&w[1024]);
+}
+
+// CHECK-LABEL: @dflushl(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = bitcast <8 x i64>* [[W:%.*]] to i8*
+// CHECK-NEXT:    tail call void @llvm.kvx.dflushl(i8* [[TMP0]])
+// CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <8 x i64>, <8 x i64>* [[W]], i64 [[P:%.*]]
+// CHECK-NEXT:    [[TMP1:%.*]] = bitcast <8 x i64>* [[ARRAYIDX]] to i8*
+// CHECK-NEXT:    tail call void @llvm.kvx.dflushl(i8* [[TMP1]])
+// CHECK-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <8 x i64>, <8 x i64>* [[W]], i64 5
+// CHECK-NEXT:    [[TMP2:%.*]] = bitcast <8 x i64>* [[ARRAYIDX1]] to i8*
+// CHECK-NEXT:    tail call void @llvm.kvx.dflushl(i8* nonnull [[TMP2]])
+// CHECK-NEXT:    [[ARRAYIDX2:%.*]] = getelementptr inbounds <8 x i64>, <8 x i64>* [[W]], i64 1024
+// CHECK-NEXT:    [[TMP3:%.*]] = bitcast <8 x i64>* [[ARRAYIDX2]] to i8*
+// CHECK-NEXT:    tail call void @llvm.kvx.dflushl(i8* nonnull [[TMP3]])
+// CHECK-NEXT:    ret void
+//
+void dflushl(long8 *w, long p) {
+  __builtin_kvx_dflushl(w);
+  __builtin_kvx_dflushl(&w[p]);
+  __builtin_kvx_dflushl(&w[5]);
+  __builtin_kvx_dflushl(&w[1024]);
+}

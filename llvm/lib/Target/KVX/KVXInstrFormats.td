@@ -157,10 +157,10 @@ multiclass I <string asm,
     defvar MemOperation = !and(!empty(Out), !empty(Ops));
     defvar ReadsMem = !or(!not(!or(!empty(MemOps), !empty(Out), MemOperation)), IsAtomicSwap);
     defvar WritesMem = !or(!xor(!xor(ReadsMem, !not(!empty(MemOps))), MemOperation), IsAtomicSwap);
-
     defvar CanPredicate = !and(!empty(CC), !not(!empty(MemOps)));
     // Should we add an inplace register in the input dag?
     defvar AsmStr = !cond( IsAtomicSwap : !strconcat(asm, ModsStr, CC_Qindex_str, OutStr, ", ", MemOpStr, " =", OpsStr),
+                           MemOperation : !strconcat(asm, ModsStr, CC_Qindex_str, MemOpStr),
                            !eq(WritesMem, 0) : !strconcat(asm, ModsStr, CC_Qindex_str, OutStr, " =", MemOpStr, OpsStr),
                            !eq(WritesMem, 1) : !strconcat(asm, ModsStr, CC_Qindex_str, OutStr, MemOpStr, " =", OpsStr));
 
@@ -506,4 +506,19 @@ multiclass XSPLATDO_MC <string Opc = "xsplatdo"> {
   /*pattern=*/ [(set v256i1:$r, (int_kvx_xsplatdo Signed37:$op0))]>;
   defm i64: I</*asm=*/Opc, /*itin=*/ALU_TINY_CRWL_CRWH_Y_, /*Ops=*/[Wrapped64], /*Mods=*/[], /*MemOps=*/[], /*CC=*/[], /*Out=*/[VectorReg], /*InPlace=*/0,
   /*pattern=*/ [(set v256i1:$r, (int_kvx_xsplatdo Wrapped64:$op0))]>;
+}
+
+//   defm DPURGEL
+//   defm DFLUSHL
+multiclass DCACHE_MC<string Opc, Intrinsic Int> {
+  defm ri10 : I</*asm=*/Opc, /*itin=*/LSU_AUXW_LOAD, /*Ops=*/[], /*Mods=*/[], /*MemOps=*/[Signed10, SingleReg],
+  /*CC=*/[], /*Out=*/[], /*InPlace=*/0, /*pattern=*/ [(Int (add i64:$mem, Signed10:$off))]>;
+
+  defm ri37 : I</*asm=*/Opc, /*itin=*/LSU_AUXW_X_LOAD, /*Ops=*/[], /*Mods=*/[], /*MemOps=*/[Signed37, SingleReg],
+  /*CC=*/[], /*Out=*/[], /*InPlace=*/0, /*pattern=*/ [(Int (add i64:$mem, Signed37:$off))]>;
+
+  defm ri64 : I</*asm=*/Opc, /*itin=*/LSU_AUXW_Y_LOAD, /*Ops=*/[], /*Mods=*/[], /*MemOps=*/[Wrapped64, SingleReg],
+  /*CC=*/[], /*Out=*/[], /*InPlace=*/0, /*pattern=*/ [(Int (add i64:$mem, Wrapped64:$off))]>;
+
+  defm rr : I</*asm=*/Opc, /*itin=*/LSU_AUXW_LOAD, /*Ops=*/[], /*Mods=*/[DoscaleMod], /*MemOps=*/[SingleReg, SingleReg]>;
 }
