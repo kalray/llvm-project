@@ -30,17 +30,13 @@ entry:
 
 declare i32 @llvm.kvx.clsw(i32) #1
 
-define void @errop(){
-; CHECK-LABEL: errop:
-; CHECK:       # %bb.0: # %entry
+define void @foo() {
+; CHECK-LABEL: foo:
+; CHECK:       # %bb.0:
 ; CHECK-NEXT:    errop
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
-entry:
   tail call void @llvm.kvx.errop()
-  ret void
+  unreachable
 }
 
-declare void @llvm.kvx.errop() #3
-
+declare void @llvm.kvx.errop()

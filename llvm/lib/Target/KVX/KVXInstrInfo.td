@@ -1538,10 +1538,11 @@ def TLBIINVAL : KVX_INSTRUCTION
    [/* no straightforward pattern */],
    ALL>;
 
+let isTrap = 1, isTerminator = 1 in
 def ERROP : KVX_INSTRUCTION
   <(outs), (ins),
    "errop",
-   [/* no straightforward pattern */],
+   [(int_kvx_errop)],
    ALL>;
 
 let Uses = [RA], isBarrier = 1, isReturn = 1, isTerminator = 1 in
