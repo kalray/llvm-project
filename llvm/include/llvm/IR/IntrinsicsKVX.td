@@ -243,9 +243,18 @@ def int_kvx_fconjwc : Intrinsic<[llvm_v2f32_ty], [llvm_v2f32_ty], [IntrNoMem]>;
 def int_kvx_fconjwcp : Intrinsic<[llvm_v4f32_ty], [llvm_v4f32_ty], [IntrNoMem]>;
 def int_kvx_fconjdc : Intrinsic<[llvm_v2f64_ty], [llvm_v2f64_ty], [IntrNoMem]>;
 
+//===----------------------------------------------------------------------===//
+// KVX Coolidge V2 builtins
+//===----------------------------------------------------------------------===//
+
 def int_kvx_dflushsw : Intrinsic<[], [llvm_i64_ty, llvm_i64_ty, llvm_i32_ty], [IntrArgMemOnly]>;
 def int_kvx_dinvalsw : Intrinsic<[], [llvm_i64_ty, llvm_i64_ty, llvm_i32_ty], [IntrArgMemOnly]>;
 def int_kvx_dpurgesw : Intrinsic<[], [llvm_i64_ty, llvm_i64_ty, llvm_i32_ty], [IntrArgMemOnly]>;
+
+def int_kvx_alw: Intrinsic<[llvm_i32_ty], [llvm_ptr_ty, llvm_i32_ty], [IntrReadMem]>;
+def int_kvx_ald: Intrinsic<[llvm_i64_ty], [llvm_ptr_ty, llvm_i32_ty], [IntrReadMem]>;
+def int_kvx_asw: Intrinsic<[], [llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty], [IntrWriteMem]>;
+def int_kvx_asd: Intrinsic<[], [llvm_ptr_ty, llvm_i64_ty, llvm_i32_ty], [IntrWriteMem]>;
 
 //===----------------------------------------------------------------------===//
 // TCA - tightly-coupled accelerator
@@ -326,6 +335,8 @@ def int_kvx_xclampwo : KVX_TCA_Ternary<[llvm_v256i1_ty]>;
 def int_kvx_xcopyv: Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_xcopyx: Intrinsic<[llvm_v512i1_ty], [llvm_v512i1_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_xffma44hw : Intrinsic<[llvm_v512i1_ty], [llvm_v256i1_ty, llvm_v256i1_ty, llvm_v512i1_ty, llvm_i32_ty, llvm_i32_ty], [IntrHasSideEffects]>;
+def int_kvx_xfmaxhx : Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_v256i1_ty], [IntrNoMem]>;
+def int_kvx_xfminhx : Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_v256i1_ty], [IntrNoMem]>;
 def int_kvx_xfmma484hw : Intrinsic<[llvm_v512i1_ty], [llvm_v512i1_ty, llvm_v512i1_ty, llvm_v512i1_ty, llvm_i32_ty, llvm_i32_ty], [IntrHasSideEffects]>;
 def int_kvx_xfnarrow44wh : Intrinsic<[llvm_v256i1_ty], [llvm_v512i1_ty, llvm_i32_ty, llvm_i32_ty], [IntrHasSideEffects]>;
 def int_kvx_xfnarrowwhv : Intrinsic<[llvm_v256i1_ty], [llvm_v512i1_ty, llvm_i32_ty, llvm_i32_ty], [IntrHasSideEffects]>;
@@ -352,11 +363,6 @@ def int_kvx_xstorec256: Intrinsic<[], [llvm_v256i1_ty, llvm_ptr_ty, llvm_i64_ty,
 def int_kvx_xsx48bw : Intrinsic<[llvm_v1024i1_ty], [llvm_v256i1_ty], [IntrReadMem]>;
 def int_kvx_xtrunc48wb : Intrinsic<[llvm_v256i1_ty], [llvm_v1024i1_ty], [IntrReadMem]>;
 def int_kvx_xzx48bw : Intrinsic<[llvm_v1024i1_ty], [llvm_v256i1_ty], [IntrReadMem]>;
-
-def int_kvx_alw: Intrinsic<[llvm_i32_ty], [llvm_ptr_ty, llvm_i32_ty], [IntrReadMem]>;
-def int_kvx_ald: Intrinsic<[llvm_i64_ty], [llvm_ptr_ty, llvm_i32_ty], [IntrReadMem]>;
-def int_kvx_asw: Intrinsic<[], [llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty], [IntrWriteMem]>;
-def int_kvx_asd: Intrinsic<[], [llvm_ptr_ty, llvm_i64_ty, llvm_i32_ty], [IntrWriteMem]>;
 
 //===----------------------------------------------------------------------===//
 // ACB 4.8 TCA intrinsics. Should remove them in ACB 4.10
