@@ -3749,4 +3749,6 @@ defm XSPLATOV: I</*asm=*/"xsplatov", /*itin=*/TCA, /*Ops=*/[VectorReg], /*Mods=*
 defm XSPLATOX: I</*asm=*/"xsplatox", /*itin=*/TCA, /*Ops=*/[VectorReg], /*Mods=*/[ShuffleXMod], /*MemOps=*/[], /*CC=*/[], /*Out=*/[WideReg], /*InPlace=*/0,
   /*pattern=*/ [(set v512i1:$r, (int_kvx_xsplatox v256i1:$op0, ShuffleXMod:$mod0))]>;
 }
+
+defm XSPLATDO: XSPLATDO_MC;
 }

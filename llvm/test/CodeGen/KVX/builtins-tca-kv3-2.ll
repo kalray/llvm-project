@@ -1173,3 +1173,30 @@ define void @xsplatox(<512 x i1>* nocapture %0, <256 x i1>* nocapture readonly %
 
 declare <512 x i1> @llvm.kvx.xsplatox(<256 x i1>, i32)
 
+define void @xsplatdo(<256 x i1>* nocapture %0) {
+; CHECK-LABEL: xsplatdo:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    xsplatdo $a0 = 511
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xsplatdo $a1 = 0x1fffffffff
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 0[$r0] = $a0
+; CHECK-NEXT:    xsplatdo $a0 = 0x18ffffffff9c
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 32[$r0] = $a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 64[$r0] = $a0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = tail call <256 x i1> @llvm.kvx.xsplatdo(i64 511)
+  store <256 x i1> %2, <256 x i1>* %0
+  %3 = tail call <256 x i1> @llvm.kvx.xsplatdo(i64 137438953471)
+  %4 = getelementptr inbounds <256 x i1>, <256 x i1>* %0, i64 1
+  store <256 x i1> %3, <256 x i1>* %4
+  %5 = tail call <256 x i1> @llvm.kvx.xsplatdo(i64 27487790694300)
+  %6 = getelementptr inbounds <256 x i1>, <256 x i1>* %0, i64 2
+  store <256 x i1> %5, <256 x i1>* %6
+  ret void
+}
+
+declare <256 x i1> @llvm.kvx.xsplatdo(i64)

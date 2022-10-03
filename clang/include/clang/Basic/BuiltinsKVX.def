@@ -563,6 +563,8 @@ KVX_BUILTIN(xfminhx, "Tx256Tx256Tx256", "n", 2, "kv3-2", )
 
 KVX_BUILTIN(xsplatov, "Tx1024Tx256cC*", "n", 2, "kv3-2", KVX_SHUFFLEV)
 KVX_BUILTIN(xsplatox, "Tx512Tx256cC*", "n", 2, "kv3-2", KVX_SHUFFLEX)
+KVX_BUILTIN(xsplatdo, "Tx256LIi", "n", 1, "kv3-2", )
+
 #undef KVX_BUILTIN
 #undef NARY_BUILTIN
 #undef BUILTIN

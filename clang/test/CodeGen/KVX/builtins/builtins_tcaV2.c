@@ -608,3 +608,21 @@ void xsplatox(__kvx_x512 *v, __kvx_x256 *c) {
   v[2] = __builtin_kvx_xsplatox(*c, ".ud");
   v[3] = __builtin_kvx_xsplatox(*c, ".tq");
 }
+
+// CHECK-LABEL: @xsplatdo(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <256 x i1> @llvm.kvx.xsplatdo(i64 511)
+// CHECK-NEXT:    store <256 x i1> [[TMP0]], <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <256 x i1> @llvm.kvx.xsplatdo(i64 137438953471)
+// CHECK-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 1
+// CHECK-NEXT:    store <256 x i1> [[TMP1]], <256 x i1>* [[ARRAYIDX1]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <256 x i1> @llvm.kvx.xsplatdo(i64 27487790694300)
+// CHECK-NEXT:    [[ARRAYIDX2:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 2
+// CHECK-NEXT:    store <256 x i1> [[TMP2]], <256 x i1>* [[ARRAYIDX2]], align 32, [[TBAA2]]
+// CHECK-NEXT:    ret void
+//
+void xsplatdo(__kvx_x256 *v) {
+  v[0] = __builtin_kvx_xsplatdo(511);
+  v[1] = __builtin_kvx_xsplatdo(137438953471);
+  v[2] = __builtin_kvx_xsplatdo(27487790694300);
+}

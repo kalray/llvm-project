@@ -114,6 +114,8 @@ def XSWAP256 : InstrItinClass;
 def ALU_TINY_CRRP : InstrItinClass;
 def ALU_TINY_CRRP_CRWL_CRWH : InstrItinClass;
 def ALU_TINY_CRWL_CRWH : InstrItinClass;
+def ALU_TINY_CRWL_CRWH_X_ : InstrItinClass;
+def ALU_TINY_CRWL_CRWH_Y_ : InstrItinClass;
 // Switch-itineraries for instructions whose reservation table changes
 // between CV1 and CV2
 // Format: NAME_SWITCH_CV1VALUE_CV2VALUE
@@ -149,6 +151,7 @@ defvar ALL_ITIN_CLASSES = [
   LSU_AUXR_AUXW_LOAD, LSU_AUXR_AUXW_X_LOAD, LSU_AUXR_AUXW_Y_LOAD,
   LSU_AUXW_ALCLR, LSU_AUXW_X_ALCLR, LSU_AUXW_Y_ALCLR,
   ALU_TINY_CRRP, ALU_TINY_CRRP_CRWL_CRWH, ALU_TINY_CRWL_CRWH,
+  ALU_TINY_CRWL_CRWH_X_, ALU_TINY_CRWL_CRWH_Y_,
   MAU_SWITCH_AUXR_EMPTY, MAU_SWITCH_AUXR_EMPTY_X_, MAU_SWITCH_AUXR_EMPTY_Y_,
   MAU_SWITCH_AUXR_EMPTY_FP, MAU_SWITCH_AUXR_EMPTY_X_FP, MAU_SWITCH_AUXR_EMPTY_Y_FP
 ];
@@ -730,6 +733,18 @@ list<InstrItinData> Common = [
     InstrStage<1, [CRWH_FU]>
     ], [3], [], 1
   >,
+  InstrItinData<ALU_TINY_CRWL_CRWH_X_, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [CRWL_FU], 0>,
+    InstrStage<1, [CRWH_FU]>
+    ], [3], [], 2
+  >,
+  InstrItinData<ALU_TINY_CRWL_CRWH_Y_, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [CRWL_FU], 0>,
+    InstrStage<1, [CRWH_FU]>
+    ], [3], [], 3
+  >,
 
 // TODO : add OperandLatencies here as well
   // We need to expand XSWAP256p pseudos after packetizer. To correctly schedule/bundle them,
@@ -1115,5 +1130,7 @@ foreach m = [KVXCV1SchedMachineModel, KVXCV2SchedMachineModel] in {
     defm: KVXItinWriteRes<m, ALU_TINY_CRRP_CRWL_CRWH, ALU_TINY_CRRP_CRWL_CRWH_RT, 1 /* issue width */, ALU_TINY_CRRP_CRWL_CRWH_SRW>;
     defm: KVXItinWriteRes<m, ALU_TINY_CRRP, ALU_TINY_CRRP_RT, 1 /* issue width */, ALU_TINY_CRRP_SRW>;
     defm: KVXItinWriteRes<m, ALU_TINY_CRWL_CRWH, ALU_TINY_CRWL_CRWH_RT, 1 /* issue width */, ALU_TINY_CRWL_CRWH_SRW>;
+    defm: KVXItinWriteRes<m, ALU_TINY_CRWL_CRWH_X_, ALU_TINY_CRWL_CRWH_RT, 2 /* issue width */, ALU_TINY_CRWL_CRWH_X__SRW>;
+    defm: KVXItinWriteRes<m, ALU_TINY_CRWL_CRWH_Y_, ALU_TINY_CRWL_CRWH_RT, 3 /* issue width */, ALU_TINY_CRWL_CRWH_Y__SRW>;
   }
 }
