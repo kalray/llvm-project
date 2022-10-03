@@ -1139,3 +1139,27 @@ define <2 x i32> @test_div_32(<2 x i32> %a, <2 x i32> %b) #0 {
   %r = sdiv <2 x i32> %a, <i32 32, i32 32>
   ret <2 x i32> %r
 }
+
+define <2 x i32> @sxlhwp(<4 x i16> %0) {
+; ALL-LABEL: sxlhwp:
+; ALL:       # %bb.0:
+; ALL-NEXT:    sxlhwp $r0 = $r0
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;;
+  %2 = tail call <2 x i32> @llvm.kvx.sxlhwp(<4 x i16> %0)
+  ret <2 x i32> %2
+}
+
+declare <2 x i32> @llvm.kvx.sxlhwp(<4 x i16>)
+
+define <2 x i32> @sxmhwp(<4 x i16> %0) {
+; ALL-LABEL: sxmhwp:
+; ALL:       # %bb.0:
+; ALL-NEXT:    sxmhwp $r0 = $r0
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;;
+  %2 = tail call <2 x i32> @llvm.kvx.sxmhwp(<4 x i16> %0)
+  ret <2 x i32> %2
+}
+
+declare <2 x i32> @llvm.kvx.sxmhwp(<4 x i16>)

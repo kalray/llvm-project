@@ -261,29 +261,27 @@ define void @test_v8_select(<8 x i8> * %m, <8 x i8> * %n){
 ; CV2-LABEL: test_v8_select:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    ld $r2 = 0[$r0]
-; CV2-NEXT:    make $r3 = 0
+; CV2-NEXT:    make $r4 = 0
 ; CV2-NEXT:    make $r6 = -1
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    ld $r1 = 0[$r1]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    zxwd $r2 = $r2
-; CV2-NEXT:    srld $r4 = $r2, 32
+; CV2-NEXT:    srld $r3 = $r2, 32
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    zxwd $r1 = $r1
-; CV2-NEXT:    compnbo.eq $r3 = $r2, $r3
+; CV2-NEXT:    compnbo.eq $r4 = $r2, $r4
 ; CV2-NEXT:    srld $r5 = $r1, 32
-; CV2-NEXT:    compnbo.eq $r7 = $r4, $r3
+; CV2-NEXT:    compnbo.eq $r7 = $r3, $r4
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    compnbo.gt $r6 = $r1, $r6
 ; CV2-NEXT:    compnbo.gt $r8 = $r5, $r6
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    andw $r3 = $r3, $r6
+; CV2-NEXT:    andw $r4 = $r4, $r6
 ; CV2-NEXT:    andw $r6 = $r7, $r8
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    cmovebo.even $r3 ? $r2 = $r1
-; CV2-NEXT:    cmovebo.even $r6 ? $r4 = $r5
+; CV2-NEXT:    cmovebo.even $r4 ? $r2 = $r1
+; CV2-NEXT:    cmovebo.even $r6 ? $r3 = $r5
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    insf $r2 = $r4, 63, 32
+; CV2-NEXT:    insf $r2 = $r3, 63, 32
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    sd 0[$r0] = $r2
 ; CV2-NEXT:    ret

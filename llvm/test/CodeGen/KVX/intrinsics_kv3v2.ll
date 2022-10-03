@@ -629,3 +629,51 @@ define void @dflushl(<8 x i64>* %0, i64 %1) {
 }
 
 declare void @llvm.kvx.dflushl(i8*)
+
+define <4 x i16> @zxlbhq(<8 x i8> %0) {
+; CHECK-LABEL: zxlbhq:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    zxlbhq $r0 = $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = tail call <4 x i16> @llvm.kvx.zxlbhq(<8 x i8> %0)
+  ret <4 x i16> %2
+}
+
+declare <4 x i16> @llvm.kvx.zxlbhq(<8 x i8>)
+
+define <4 x i16> @zxmbhq(<8 x i8> %0) {
+; CHECK-LABEL: zxmbhq:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    zxmbhq $r0 = $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = tail call <4 x i16> @llvm.kvx.zxmbhq(<8 x i8> %0)
+  ret <4 x i16> %2
+}
+
+declare <4 x i16> @llvm.kvx.zxmbhq(<8 x i8>)
+
+define <2 x i32> @zxlhwp(<4 x i16> %0) {
+; CHECK-LABEL: zxlhwp:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    zxlhwp $r0 = $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = tail call <2 x i32> @llvm.kvx.zxlhwp(<4 x i16> %0)
+  ret <2 x i32> %2
+}
+
+declare <2 x i32> @llvm.kvx.zxlhwp(<4 x i16>)
+
+define <2 x i32> @zxmhwp(<4 x i16> %0) {
+; CHECK-LABEL: zxmhwp:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    zxmhwp $r0 = $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = tail call <2 x i32> @llvm.kvx.zxmhwp(<4 x i16> %0)
+  ret <2 x i32> %2
+}
+
+declare <2 x i32> @llvm.kvx.zxmhwp(<4 x i16>)

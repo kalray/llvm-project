@@ -2076,20 +2076,29 @@ defm : SRS <i32, SRSWri, NEGW>;
 // SRSWPS
 defm : SRS <v2i32, SRSWPSri, NEGWP>;
 
-// SXLBHQ
+// SXLBHQ,  ZXLBHQ
 def : Pat<(v2i16(sanyext v2i8:$v)), (SXLBHQ $v)>;
 def : Pat<(v2i16(zext v2i8:$v)), (SBMM8ri37 $v, 0x020001)>;
 
 def : Pat<(v4i16(sanyext v4i8:$v)), (SXLBHQ $v)>;
-def : Pat<(v4i16(zext v4i8:$v)), (SBMM8ri64 $v, 0x08000400020001)>;
-def : Pat<(v4i16(sanyext (v4i8( extract_subvector v8i8:$v, (i64 0))))), (SXLBHQ $v)>;
-def : Pat<(v4i16(zext (v4i8( extract_subvector v8i8:$v, (i64 0))))), (SBMM8ri64 $v, 0x08000400020001)>;
+def : Pat<(v4i16(zext v4i8:$v)),
+          (SBMM8ri64 $v, 0x08000400020001)>, Requires<[IsV1]>;
 
-// SXLHWP
+def : Pat<(v4i16(zext v4i8:$v)),
+          (ZXLBHQ $v)>, Requires<[IsV2]>;
+
+def : Pat<(v4i16(sanyext (v4i8( extract_subvector v8i8:$v, (i64 0))))), (SXLBHQ $v)>;
+
+def : Pat<(v4i16(zext (v4i8( extract_subvector v8i8:$v, (i64 0))))),
+          (SBMM8ri64 $v, 0x08000400020001)>, Requires<[IsV1]>;
+
+// SXLHWP ZXLHWP
 def : Pat<(v2i32(sext v2i8:$v)), (SXLHWP(SXLBHQ $v))>;
 def : Pat<(v2i32(zanyext v2i8:$v)), (SBMM8ri37 $v, 0x200000001)>;
 def : Pat<(v2i32(sanyext v2i16:$v)), (SXLHWP $v)>;
-def : Pat<(v2i32(zext v2i16:$v)), (SBMM8ri64 $v, 0x80400000201)>;
+
+def : Pat<(v2i32(zext v2i16:$v)),
+          (SBMM8ri64 $v, 0x80400000201)>, Requires<[IsV1]>;
 
 // SXLHWP + SXLBHQ + SXMHWP + SXMBHQ
 def : Pat<(v4i32(sext (v4i8( extract_subvector v8i8:$v, (i64 4))))), (REG_SEQUENCE PairedReg, (SXLHWP(SXMBHQ $v)), sub_s0, (SXMHWP(SXMBHQ $v)), sub_s1)>;
@@ -2105,11 +2114,18 @@ def : Pat<(v4i32(zanyext v4i8:$v)), (REG_SEQUENCE PairedReg, (SBMM8ri37 $v, 0x20
                                                           (SBMM8ri37 $v, 0x800000004), sub_s1)>;
 
 def : Pat<(v4i32(sanyext v4i16:$v)), (REG_SEQUENCE PairedReg, (SXMHWP $v), sub_s1, (SXLHWP $v), sub_s0)>;
-def : Pat<(v4i32(zext v4i16:$v)), (REG_SEQUENCE PairedReg, (SBMM8ri64 $v, 0x80400000201), sub_s0,
-                                                           (SBMM8ri64 $v, 0x804000002010), sub_s1)>;
+
+def : Pat<(v4i32(zext v4i16:$v)),
+          (REG_SEQUENCE PairedReg, (SBMM8ri64 $v, 0x80400000201), sub_s0,
+                                   (SBMM8ri64 $v, 0x804000002010), sub_s1)>, Requires<[IsV1]>;
+
+def : Pat<(v4i32(zext v4i16:$v)),
+          (REG_SEQUENCE PairedReg, (ZXLHWP $v), sub_s0, (ZXMHWP $v), sub_s1)>, Requires<[IsV2]>;
+
 // SXMBHQ
 def : Pat<(v4i16(sanyext (v4i8( extract_subvector v8i8:$v, (i64 4))))), (SXMBHQ $v)>;
-def : Pat<(v4i16(zext (v4i8( extract_subvector v8i8:$v, (i64 4))))), (SBMM8ri64 $v, 0x80004000200010)>;
+def : Pat<(v4i16(zext (v4i8( extract_subvector v8i8:$v, (i64 4))))),
+          (SBMM8ri64 $v, 0x80004000200010)>, Requires<[IsV1]>;
 
 // XORD
 def : Pat<(xor i64:$rs1, i64:$rs2), (XORDrr SingleReg:$rs1, SingleReg:$rs2)>;

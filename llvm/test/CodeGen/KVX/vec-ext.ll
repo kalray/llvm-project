@@ -40,11 +40,17 @@ entry:
 }
 
 define <4 x i16> @zext_4xi8_4xi16(<4 x i8> %a){
-; CHECK-LABEL: zext_4xi8_4xi16:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x8000400020001
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CV1-LABEL: zext_4xi8_4xi16:
+; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    sbmm8 $r0 = $r0, 0x8000400020001
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: zext_4xi8_4xi16:
+; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    zxlbhq $r0 = $r0
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
 entry:
   %ext = zext <4 x i8> %a to <4 x i16>
   ret <4 x i16> %ext
@@ -128,23 +134,36 @@ entry:
 }
 
 define <2 x i32> @zext_2xi16_2xi32(<2 x i16> %a){
-; CHECK-LABEL: zext_2xi16_2xi32:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x80400000201
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CV1-LABEL: zext_2xi16_2xi32:
+; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    sbmm8 $r0 = $r0, 0x80400000201
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: zext_2xi16_2xi32:
+; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    zxlhwp $r0 = $r0
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
 entry:
   %ext = zext <2 x i16> %a to <2 x i32>
   ret <2 x i32> %ext
 }
 
 define <4 x i32> @zext_4xi16_4xi32(<4 x i16> %a){
-; CHECK-LABEL: zext_4xi16_4xi32:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x80400000201
-; CHECK-NEXT:    sbmm8 $r1 = $r0, 0x804000002010
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CV1-LABEL: zext_4xi16_4xi32:
+; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    sbmm8 $r0 = $r0, 0x80400000201
+; CV1-NEXT:    sbmm8 $r1 = $r0, 0x804000002010
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: zext_4xi16_4xi32:
+; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    zxlhwp $r0 = $r0
+; CV2-NEXT:    zxmhwp $r1 = $r0
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
 entry:
   %ext = zext <4 x i16> %a to <4 x i32>
   ret <4 x i32> %ext
@@ -165,14 +184,21 @@ entry:
 }
 
 define <8 x i16> @zext_8xi8_8xi16(<8 x i8> %a){
-; CHECK-LABEL: zext_8xi8_8xi16:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r1 = $r0, 0x80004000200010
-; CHECK-NEXT:    sbmm8 $r2 = $r0, 0x8000400020001
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r2
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CV1-LABEL: zext_8xi8_8xi16:
+; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    sbmm8 $r1 = $r0, 0x80004000200010
+; CV1-NEXT:    sbmm8 $r2 = $r0, 0x8000400020001
+; CV1-NEXT:    ;;
+; CV1-NEXT:    copyd $r0 = $r2
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: zext_8xi8_8xi16:
+; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    zxlbhq $r0 = $r0
+; CV2-NEXT:    zxmbhq $r1 = $r0
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
 entry:
   %ext = zext <8 x i8> %a to <8 x i16>
   ret <8 x i16> %ext
@@ -261,15 +287,24 @@ entry:
 }
 
 define <8 x i32> @zext_8xi16_8xi32(<8 x i16> %a){
-; CHECK-LABEL: zext_8xi16_8xi32:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r2 = $r1, 0x80400000201
-; CHECK-NEXT:    sbmm8 $r3 = $r1, 0x804000002010
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x80400000201
-; CHECK-NEXT:    sbmm8 $r1 = $r0, 0x804000002010
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CV1-LABEL: zext_8xi16_8xi32:
+; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    sbmm8 $r2 = $r1, 0x80400000201
+; CV1-NEXT:    sbmm8 $r3 = $r1, 0x804000002010
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sbmm8 $r0 = $r0, 0x80400000201
+; CV1-NEXT:    sbmm8 $r1 = $r0, 0x804000002010
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: zext_8xi16_8xi32:
+; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    zxlhwp $r0 = $r0
+; CV2-NEXT:    zxmhwp $r1 = $r0
+; CV2-NEXT:    zxlhwp $r2 = $r1
+; CV2-NEXT:    zxmhwp $r3 = $r1
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
 entry:
   %ext = zext <8 x i16> %a to <8 x i32>
   ret <8 x i32> %ext
@@ -277,6 +312,7 @@ entry:
 
 ; vNi1 arguments are not allowed, so they are promoted to
 ; vNi8. It seems all these below could be done much better.
+; CV2 this is a single compnbo.ne a, 0
 define <2 x i8> @sext_2xi1_2xi8(<2 x i1> %a){
 ; CV1-LABEL: sext_2xi1_2xi8:
 ; CV1:       # %bb.0: # %entry
@@ -302,6 +338,7 @@ entry:
   ret <2 x i8> %ext
 }
 
+; CV2 this is a single compnbo.ne a, 0
 define <4 x i8> @sext_4xi1_4xi8(<4 x i1> %a){
 ; CV1-LABEL: sext_4xi1_4xi8:
 ; CV1:       # %bb.0: # %entry
@@ -335,7 +372,6 @@ entry:
   ret <4 x i8> %ext
 }
 
-; i1 is passed as an i8, these should be an AND
 define <2 x i8> @zext_2xi1_2xi8(<2 x i1> %a){
 ; CHECK-LABEL: zext_2xi1_2xi8:
 ; CHECK:       # %bb.0: # %entry
@@ -358,7 +394,7 @@ entry:
   ret <4 x i8> %ext
 }
 
-
+; CV2 this is sxlbhq(compnbo.ne a, 0)
 define <2 x i16> @sext_2xi1_2xi16(<2 x i1> %a){
 ; CHECK-LABEL: sext_2xi1_2xi16:
 ; CHECK:       # %bb.0: # %entry
@@ -374,6 +410,7 @@ entry:
   ret <2 x i16> %ext
 }
 
+; CV2 this is sxlbhq(compnbo.ne a, 0)
 define <4 x i16> @sext_4xi1_4xi16(<4 x i1> %a){
 ; CHECK-LABEL: sext_4xi1_4xi16:
 ; CHECK:       # %bb.0: # %entry
@@ -389,8 +426,6 @@ entry:
   ret <4 x i16> %ext
 }
 
-; This one should like the above, replacing
-; sra by a srl
 define <2 x i16> @zext_2xi1_2xi16(<2 x i1> %a){
 ; CHECK-LABEL: zext_2xi1_2xi16:
 ; CHECK:       # %bb.0: # %entry
@@ -405,19 +440,28 @@ entry:
 }
 
 define <4 x i16> @zext_4xi1_4xi16(<4 x i1> %a){
-; CHECK-LABEL: zext_4xi1_4xi16:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    andw $r0 = $r0, 0x1010101
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x8000400020001
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CV1-LABEL: zext_4xi1_4xi16:
+; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    andw $r0 = $r0, 0x1010101
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sbmm8 $r0 = $r0, 0x8000400020001
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: zext_4xi1_4xi16:
+; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    andw $r0 = $r0, 0x1010101
+; CV2-NEXT:    ;;
+; CV2-NEXT:    zxlbhq $r0 = $r0
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
 entry:
   %ext = zext <4 x i1> %a to <4 x i16>
   ret <4 x i16> %ext
 }
 
 
+; This should be an sbmm8(and a, 257)
 define <2 x i32> @sext_2xi1_2xi32(<2 x i1> %a){
 ; CHECK-LABEL: sext_2xi1_2xi32:
 ; CHECK:       # %bb.0: # %entry
@@ -506,4 +550,92 @@ define { i64, i64, i64, i64 } @T16772(<8 x i8> %0, <2 x i32> %1) {
   %12 = insertvalue { i64, i64, i64, i64 } %10, i64 %11, 2
   %13 = insertvalue { i64, i64, i64, i64 } %12, i64 4427232494243328127, 3
   ret { i64, i64, i64, i64 } %13
+}
+
+; TODO: We can't match these below as i16 is not legal
+define <2 x i32> @sextupper16to32(<4 x i16> %0) {
+; CHECK-LABEL: sextupper16to32:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    srad $r0 = $r0, 48
+; CHECK-NEXT:    extfs $r1 = $r0, 47, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    insf $r1 = $r0, 63, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = extractelement <4 x i16> %0, i32 2
+  %3 = sext i16 %2 to i32
+  %4 = insertelement <2 x i32> undef, i32 %3, i32 0
+  %5 = extractelement <4 x i16> %0, i32 3
+  %6 = sext i16 %5 to i32
+  %7 = insertelement <2 x i32> %4, i32 %6, i32 1
+  ret <2 x i32> %7
+}
+
+define <2 x i32> @sextupper16to32_2(<4 x i16> %0) {
+; CHECK-LABEL: sextupper16to32_2:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    addd $r12 = $r12, -32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 24[$r12] = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lwz $r0 = 28[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sxlhwp $r0 = $r0
+; CHECK-NEXT:    addd $r12 = $r12, 32
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = shufflevector <4 x i16> %0, <4 x i16> undef, <2 x i32> <i32 2, i32 3>
+  %3 = sext <2 x i16> %2 to <2 x i32>
+  ret <2 x i32> %3
+}
+
+
+define <2 x i16> @zextupper16to32(<4 x i8> %0) {
+; CHECK-LABEL: zextupper16to32:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    srlw $r0 = $r0, 16
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x20001
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = extractelement <4 x i8> %0, i32 2
+  %3 = zext i8 %2 to i16
+  %4 = insertelement <2 x i16> undef, i16 %3, i32 0
+  %5 = extractelement <4 x i8> %0, i32 3
+  %6 = zext i8 %5 to i16
+  %7 = insertelement <2 x i16> %4, i16 %6, i32 1
+  ret <2 x i16> %7
+}
+
+define <2 x i32> @zextupper16to32_2(<4 x i16> %0) {
+; CV1-LABEL: zextupper16to32_2:
+; CV1:       # %bb.0:
+; CV1-NEXT:    addd $r12 = $r12, -32
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sd 24[$r12] = $r0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    lwz $r0 = 28[$r12]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sbmm8 $r0 = $r0, 0x80400000201
+; CV1-NEXT:    addd $r12 = $r12, 32
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: zextupper16to32_2:
+; CV2:       # %bb.0:
+; CV2-NEXT:    addd $r12 = $r12, -32
+; CV2-NEXT:    ;;
+; CV2-NEXT:    sd 24[$r12] = $r0
+; CV2-NEXT:    ;;
+; CV2-NEXT:    lwz $r0 = 28[$r12]
+; CV2-NEXT:    ;;
+; CV2-NEXT:    zxlhwp $r0 = $r0
+; CV2-NEXT:    addd $r12 = $r12, 32
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
+  %2 = shufflevector <4 x i16> %0, <4 x i16> undef, <2 x i32> <i32 2, i32 3>
+  %3 = zext <2 x i16> %2 to <2 x i32>
+  ret <2 x i32> %3
 }

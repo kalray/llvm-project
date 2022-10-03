@@ -2943,7 +2943,7 @@ define <32 x i8> @mul_v32i8_i8(<32 x i8> %0, i8 %1) {
 ; V2-NEXT:    ;;
 ; V2-NEXT:    sxlbhq $r1 = $r1
 ; V2-NEXT:    sxlbhq $r2 = $r2
-; V2-NEXT:    sbmm8 $r4 = $r4, 0x8000400020001
+; V2-NEXT:    zxlbhq $r4 = $r4
 ; V2-NEXT:    sxmbhq $r7 = $r2
 ; V2-NEXT:    ;;
 ; V2-NEXT:    sxlbhq $r3 = $r3
@@ -7518,7 +7518,7 @@ define <32 x i8> @p_mul_v32i8_i8(<32 x i8>* nocapture readonly %0, i8* nocapture
 ; V2-NEXT:    ;;
 ; V2-NEXT:    sbmm8 $r0 = $r1, 0x1010101
 ; V2-NEXT:    ;;
-; V2-NEXT:    sbmm8 $r0 = $r0, 0x8000400020001
+; V2-NEXT:    zxlbhq $r0 = $r0
 ; V2-NEXT:    sxmbhq $r1 = $r4
 ; V2-NEXT:    sxlbhq $r2 = $r4
 ; V2-NEXT:    sxmbhq $r3 = $r5

@@ -1097,3 +1097,27 @@ define <2 x i16> @test_div_notsrs(<2 x i16> %a, <2 x i16> %b) {
   %r = sdiv <2 x i16> %a, <i16 32, i16 16>
   ret <2 x i16> %r
 }
+
+define <4 x i16> @sxlbhq(<8 x i8> %0) {
+; ALL-LABEL: sxlbhq:
+; ALL:       # %bb.0:
+; ALL-NEXT:    sxlbhq $r0 = $r0
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;;
+  %2 = tail call <4 x i16> @llvm.kvx.sxlbhq(<8 x i8> %0)
+  ret <4 x i16> %2
+}
+
+declare <4 x i16> @llvm.kvx.sxlbhq(<8 x i8>)
+
+define <4 x i16> @sxmbhq(<8 x i8> %0) {
+; ALL-LABEL: sxmbhq:
+; ALL:       # %bb.0:
+; ALL-NEXT:    sxmbhq $r0 = $r0
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;;
+  %2 = tail call <4 x i16> @llvm.kvx.sxmbhq(<8 x i8> %0)
+  ret <4 x i16> %2
+}
+
+declare <4 x i16> @llvm.kvx.sxmbhq(<8 x i8>)
