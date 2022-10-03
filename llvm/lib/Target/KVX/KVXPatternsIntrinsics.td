@@ -56,33 +56,75 @@ def: Pat<(int_kvx_sbmmt8 SingleReg:$r, Signed37:$r2), (SBMMT8ri37 SingleReg:$r, 
 def: Pat<(int_kvx_sbmmt8 SingleReg:$r, Wrapped64:$r2), (SBMMT8ri64 SingleReg:$r, Wrapped64:$r2)>;
 def: Pat<(int_kvx_sbmmt8 SingleReg:$r, SingleReg:$r2), (SBMMT8rr SingleReg:$r, SingleReg:$r2)>;
 
-def: Pat<(int_kvx_acswapw i64:$addr, i32:$update, i32:$expect), (i32 (EXTRACT_SUBREG
-  (v2i64 (ACSWAPWri10 (i64 0), SingleReg:$addr, (INSERT_SUBREG (INSERT_SUBREG (v2i64 (IMPLICIT_DEF)),
-    SingleReg:$update, sub_s0), SingleReg:$expect, sub_s1))), sub_s0))>, Requires<[IsV1]>;
+multiclass ACSWAP_V1_ri<Intrinsic Int, ValueType Vt, Instruction riI, Operand riO> {
+  def: Pat<(Vt(Int (add i64:$addr, riO:$off), Vt:$update, Vt:$expect, 0, 0)),
+           (Vt (EXTRACT_SUBREG (v2i64
+             (riI riO:$off, SingleReg:$addr,
+             (v2i64 (REG_SEQUENCE PairedReg,
+               SingleReg:$update, sub_s0,
+               SingleReg:$expect, sub_s1)
+             ))), sub_s0))>, Requires<[IsV1]>;
+}
 
-def: Pat<(int_kvx_acswapd i64:$addr, i64:$update, i64:$expect), (i64 (EXTRACT_SUBREG
-  (v2i64 (ACSWAPDri10 (i64 0), SingleReg:$addr, (INSERT_SUBREG (INSERT_SUBREG (v2i64 (IMPLICIT_DEF)),
-    SingleReg:$update, sub_s0), SingleReg:$expect, sub_s1))), sub_s0))>, Requires<[IsV1]>;
+multiclass ACSWAP_V1<Intrinsic Int, ValueType Vt, Instruction ri10, Instruction ri37, Instruction ri64, Instruction rr, int scale> {
+  defm  : ACSWAP_V1_ri<Int, Vt, ri10, Signed10>;
+  defm : ACSWAP_V1_ri<Int, Vt, ri37, Signed37>;
+  defm : ACSWAP_V1_ri<Int, Vt, ri64, Wrapped64>;
+  def : Pat<(Vt(Int i64:$addr, Vt:$update, Vt:$expect, 0, 0)),
+               (Vt (EXTRACT_SUBREG (v2i64
+                   (ri10 (i64 0), SingleReg:$addr,
+                   (v2i64 (REG_SEQUENCE PairedReg,
+                           SingleReg:$update, sub_s0,
+                           SingleReg:$expect, sub_s1)
+                    ))), sub_s0))>, Requires<[IsV1]>;
 
-def: Pat<(int_kvx_acswapw i64:$addr, i32:$update, i32:$expect), (i32
-  (ACSWAPWrr_cv2 SingleReg:$addr,
-    (INSERT_SUBREG (INSERT_SUBREG (v2i64 (IMPLICIT_DEF)), SingleReg:$update, sub_s0), SingleReg:$expect, sub_s1),
-    boolcas_v, coherency_))>, Requires<[IsV2]>;
+  def : Pat<(Vt(Int (add i64:$addr, i64:$off), Vt:$update, Vt:$expect, 0, 0)),
+              (Vt (EXTRACT_SUBREG (v2i64
+                (rr SingleReg:$off, SingleReg:$addr,
+                (v2i64 (REG_SEQUENCE PairedReg,
+                  SingleReg:$update, sub_s0,
+                  SingleReg:$expect, sub_s1)
+                ), (i32 0))), sub_s0))>, Requires<[IsV1]>;
 
-def: Pat<(int_kvx_acswapd i64:$addr, i64:$update, i64:$expect), (i64
-  (ACSWAPDrr_cv2 SingleReg:$addr,
-    (INSERT_SUBREG (INSERT_SUBREG (v2i64 (IMPLICIT_DEF)), SingleReg:$update, sub_s0), SingleReg:$expect, sub_s1),
-    boolcas_v, coherency_))>, Requires<[IsV2]>;
+  def : Pat<(Vt(Int (add i64:$addr, (shl i64:$off, (i64 scale))), Vt:$update, Vt:$expect, 0, 0)),
+            (Vt (EXTRACT_SUBREG (v2i64
+              (rr SingleReg:$off, SingleReg:$addr,
+              (v2i64 (REG_SEQUENCE PairedReg,
+                SingleReg:$update, sub_s0,
+                SingleReg:$expect, sub_s1)
+              ), (i32 1))), sub_s0))>, Requires<[IsV1]>;
+}
+let Predicates = [IsV1] in {
+defm : ACSWAP_V1<int_kvx_acswapw, i32, ACSWAPWri10, ACSWAPWri37, ACSWAPWri64, ACSWAPWrr, 2>;
+defm : ACSWAP_V1<int_kvx_acswapd, i64, ACSWAPDri10, ACSWAPDri37, ACSWAPDri64, ACSWAPDrr, 3>;
+} // V1
 
-def: Pat<(int_kvx_acswapw_cv2 i64:$addr, i32:$update, i32:$expect, BoolcasMod:$bcm, CoherencyMod:$cm), (i32
-  (ACSWAPWrr_cv2 SingleReg:$addr,
-    (INSERT_SUBREG (INSERT_SUBREG (v2i64 (IMPLICIT_DEF)), SingleReg:$update, sub_s0), SingleReg:$expect, sub_s1),
-    BoolcasMod:$bcm, CoherencyMod:$cm))>, Requires<[IsV2]>;
 
-def: Pat<(int_kvx_acswapd_cv2 i64:$addr, i64:$update, i64:$expect, BoolcasMod:$bcm, CoherencyMod:$cm), (i64
-  (ACSWAPDrr_cv2 SingleReg:$addr,
-    (INSERT_SUBREG (INSERT_SUBREG (v2i64 (IMPLICIT_DEF)), SingleReg:$update, sub_s0), SingleReg:$expect, sub_s1),
-    BoolcasMod:$bcm, CoherencyMod:$cm))>, Requires<[IsV2]>;
+multiclass ACSWAP_V2_ri<Intrinsic Int, ValueType Vt, Instruction riI, Operand riO, RegisterClass D, RegisterClass S, ValueType VVt, SubRegIndex i0, SubRegIndex i1> {
+  def: Pat<(Vt(Int (add i64:$addr, riO:$off), Vt:$update, Vt:$expect, BoolcasMod:$bcm, CoherencyMod:$cm)),
+           (Vt (riI riO:$off, SingleReg:$addr,
+                (VVt (REG_SEQUENCE D,
+                  S:$update, i0,
+                  S:$expect, i1)
+                ), BoolcasMod:$bcm, CoherencyMod:$cm))>, Requires<[IsV2]>;
+}
+
+multiclass ACSWAP_V2<Intrinsic Int, ValueType Vt, Instruction ri27, Instruction ri54, Instruction r, RegisterClass D = PairedReg, RegisterClass S = SingleReg, ValueType VVt = v2i64, SubRegIndex i0 = sub_s0, SubRegIndex i1 = sub_s1> {
+  defm : ACSWAP_V2_ri<Int, Vt, ri27, Signed27, D, S, VVt, i0, i1>;
+  defm : ACSWAP_V2_ri<Int, Vt, ri54, Signed54, D, S, VVt, i0, i1>;
+  def: Pat<(Vt(Int i64:$addr, Vt:$update, Vt:$expect, BoolcasMod:$bcm, CoherencyMod:$cm)),
+           (Vt (r SingleReg:$addr,
+                (VVt (REG_SEQUENCE D,
+                  S:$update, i0,
+                  S:$expect, i1)
+                ), BoolcasMod:$bcm, CoherencyMod:$cm))>, Requires<[IsV2]>;
+}
+
+let Predicates = [IsV2] in {
+defm : ACSWAP_V2<int_kvx_acswapw, i32, ACSWAPWri27, ACSWAPWri54, ACSWAPWr>;
+defm : ACSWAP_V2<int_kvx_acswapd, i64, ACSWAPDri27, ACSWAPDri54, ACSWAPDr>;
+defm : ACSWAP_V2<int_kvx_acswapq, v2i64, ACSWAPQri27, ACSWAPQri54, ACSWAPQr, QuadReg, PairedReg, v4i64, sub_p0, sub_p1>;
+}
 
 def: Pat<(int_kvx_alclrw i64:$addr), (ALCLRWri10 (i64 0), SingleReg:$addr)>;
 def: Pat<(int_kvx_alclrd i64:$addr), (ALCLRDri10 (i64 0), SingleReg:$addr)>;

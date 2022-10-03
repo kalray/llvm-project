@@ -68,8 +68,9 @@ BUILTIN(__builtin_kvx_wfxm, "vUiULi", "n")
 // LSU
 //===----------------------------------------------------------------------===//
 
-BUILTIN(__builtin_kvx_acswapd, "LivD*LiLi", "n")
-BUILTIN(__builtin_kvx_acswapw, "ivD*ii", "n")
+BUILTIN(__builtin_kvx_acswapd, "LivD*LiLi.", "n")
+BUILTIN(__builtin_kvx_acswapw, "ivD*ii.", "n")
+KVX_BUILTIN(acswapq, "V2LivD*V2LiV2LicC*", "n", 4, "kv3-2", KVX_BOOLCAS, KVX_COHERENCY)
 BUILTIN(__builtin_kvx_aladdd, "ULivD*ULi", "n")
 BUILTIN(__builtin_kvx_aladdw, "UivD*Ui", "n")
 BUILTIN(__builtin_kvx_alclrd, "LivD*", "n")

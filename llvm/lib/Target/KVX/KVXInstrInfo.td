@@ -118,6 +118,15 @@ multiclass MC_04<string OpcStr> {
      BCU_TINY_TINY_MAU_XNOP>;
 }
 
+
+multiclass ACSWAPQ_MC <string Opc = "acswapq"> {
+  defm r : I </*asm=*/Opc, /*itin=*/LSU_AUXR_AUXW_LOAD, /*Ops=*/[QuadReg], /*Mods=*/[BoolcasMod, CoherencyMod],
+              /*MemOps=*/[SingleReg], /*CC=*/[], /*Out=*/[PairedReg], /*inplace =*/ 0, /*pattern =*/ [], /*IsAtomicSwap = */ 1>;
+  defm ri27 : I </*asm=*/Opc, /*itin=*/LSU_AUXR_AUXW_X_LOAD, /*Ops=*/[QuadReg], /*Mods=*/[BoolcasMod, CoherencyMod],
+                 /*MemOps=*/[Signed27, SingleReg], /*CC=*/[], /*Out=*/[PairedReg], /*inplace =*/ 0, /*pattern =*/ [], /*IsAtomicSwap = */ 1>;
+  defm ri54 : I </*asm=*/Opc, /*itin=*/LSU_AUXR_AUXW_Y_LOAD, /*Ops=*/[QuadReg], /*Mods=*/[BoolcasMod, CoherencyMod],
+                 /*MemOps=*/[Signed54, SingleReg], /*CC=*/[], /*Out=*/[PairedReg], /*inplace =*/ 0, /*pattern =*/ [], /*IsAtomicSwap = */ 1>;
+}
 // multiclass MC_0D is used by:
 //   defm ACSWAPW
 //   defm ACSWAPD
@@ -170,17 +179,17 @@ multiclass MC_0D<string OpcStr> {
      LSU_AUXR_AUXW_Y_LOAD>;
 
   // CV2 formats.
-  def rr_cv2 : KVX_INSTRUCTION
+  def r : KVX_INSTRUCTION
     <(outs SingleReg:$regout), (ins SingleReg:$addr, PairedReg:$regin, BoolcasMod:$bcm, CoherencyMod:$com),
      !strconcat (OpcStr, "$bcm$com $regout, [$addr] = $regin"),
      [/* no straightforward pattern */],
      LSU_AUXR_AUXW_LOAD>;
-  def rri27_cv2 : KVX_INSTRUCTION_X
+  def ri27 : KVX_INSTRUCTION_X
     <(outs SingleReg:$regout), (ins Signed27:$off, SingleReg:$addr, PairedReg:$regin, BoolcasMod:$bcm, CoherencyMod:$com),
      !strconcat(OpcStr, "$bcm$com $regout, $off[$addr] = $regin"),
      [/* no straightforward pattern */],
      LSU_AUXR_AUXW_X_LOAD>;
-  def rri54_cv2 : KVX_INSTRUCTION_Y
+  def ri54 : KVX_INSTRUCTION_Y
     <(outs SingleReg:$regout), (ins Signed54:$off, SingleReg:$addr, PairedReg:$regin, BoolcasMod:$bcm, CoherencyMod:$com),
      !strconcat(OpcStr, "$bcm$com $regout, $off[$addr] = $regin"),
      [/* no straightforward pattern */],
@@ -1663,6 +1672,8 @@ defm XSO : MC_XSO, Requires<[IsV2]>;
 defm ACSWAPW : MC_0D<"acswapw">;
 
 defm ACSWAPD : MC_0D<"acswapd">;
+
+defm ACSWAPQ : ACSWAPQ_MC, Requires<[IsV2]>;
 
 defm ALCLRW : MC_0E<"alclrw">;
 

@@ -18390,7 +18390,11 @@ struct KvxModifier : StringMap<int> {
   }
 };
 
+static const KvxModifier KVX_BOOLCAS({{"", 1}, {"v", 0}});
+
 static const KvxModifier KVX_CACHELEVEL({{"l1", 0}, {"l2", 1}});
+
+static const KvxModifier KVX_COHERENCY({{"", 0}, {"g", 1}, {"s", 2}});
 
 static const KvxModifier KVX_RCHANNEL({{"f", 0}, {"b", 1}});
 
@@ -19371,6 +19375,8 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
                                            const CallExpr *E) {
   unsigned VectorSize;
 
+  const auto &Target = getTarget();
+
   switch (BuiltinID) {
   case KVX::BI__builtin_kvx_get: {
     SourceLocation Loc = E->getExprLoc();
@@ -19528,30 +19534,32 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     return CI;
   }
 
+  case KVX::BI__builtin_kvx_acswapd:
   case KVX::BI__builtin_kvx_acswapw: {
-    SourceLocation Loc = E->getExprLoc();
-    Value *Addr = Builder.CreateBitCast(EmitScalarExpr(E->getArg(0)), Int8PtrTy);
-    Value *Update =
-        EmitScalarConversion(EmitScalarExpr(E->getArg(1)),
-                             E->getArg(1)->getType(), getContext().IntTy, Loc);
-    Value *Expect =
-        EmitScalarConversion(EmitScalarExpr(E->getArg(2)),
-                           E->getArg(2)->getType(), getContext().IntTy, Loc);
-    Function *Callee = CGM.getIntrinsic(Intrinsic::kvx_acswapw);
-    return Builder.CreateCall(Callee, {Addr, Update, Expect});
-  }
+    if (!(E->getNumArgs() == 3 ||
+          (E->getNumArgs() == 4 && (Target.getCPUstr() != "kv3-1"))))
+      CGM.Error(E->getBeginLoc(), "Incorrect number of arguments to builtin");
 
-  case KVX::BI__builtin_kvx_acswapd: {
+    Intrinsic::KVXIntrinsics Intr = (BuiltinID == KVX::BI__builtin_kvx_acswapw)
+                                        ? Intrinsic::kvx_acswapw
+                                        : Intrinsic::kvx_acswapd;
+    const auto Type = (BuiltinID == KVX::BI__builtin_kvx_acswapw)
+                          ? getContext().IntTy
+                          : getContext().LongTy;
+    if (E->getNumArgs() == 4)
+      return KVX_emit(4, *this, E, Intr, {KVX_BOOLCAS, KVX_COHERENCY}, "");
+
     SourceLocation Loc = E->getExprLoc();
-    Value *Addr = Builder.CreateBitCast(EmitScalarExpr(E->getArg(0)), Int8PtrTy);
-    Value *Update =
-        EmitScalarConversion(EmitScalarExpr(E->getArg(1)),
-                             E->getArg(1)->getType(), getContext().LongTy, Loc);
-    Value *Expect =
-        EmitScalarConversion(EmitScalarExpr(E->getArg(2)),
-                           E->getArg(2)->getType(), getContext().LongTy, Loc);
-    Function *Callee = CGM.getIntrinsic(Intrinsic::kvx_acswapd);
-    return Builder.CreateCall(Callee, {Addr, Update, Expect});
+    Value *Addr =
+        Builder.CreateBitCast(EmitScalarExpr(E->getArg(0)), Int8PtrTy);
+    Value *Update = EmitScalarConversion(EmitScalarExpr(E->getArg(1)),
+                                         E->getArg(1)->getType(), Type, Loc);
+    Value *Expect = EmitScalarConversion(EmitScalarExpr(E->getArg(2)),
+                                         E->getArg(2)->getType(), Type, Loc);
+
+    Function *Callee = CGM.getIntrinsic(Intr);
+    auto *const Zero = ConstantInt::get(IntTy, 0);
+    return Builder.CreateCall(Callee, {Addr, Update, Expect, Zero, Zero});
   }
 
   case KVX::BI__builtin_kvx_alclrw: {
