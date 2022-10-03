@@ -54,6 +54,8 @@ def ALU_LITE_X_ : InstrItinClass;
 def ALU_LITE_Y_ : InstrItinClass;
 def ALU_LITE_CRWL : InstrItinClass;
 def ALU_LITE_CRWH : InstrItinClass;
+def ALU_TINY_CRWL : InstrItinClass;
+def ALU_TINY_CRWH : InstrItinClass;
 def ALU_FULL : InstrItinClass;
 def SFU : InstrItinClass;
 def ALU_FULL_X_ : InstrItinClass;
@@ -131,7 +133,7 @@ defvar ALL_ITIN_CLASSES = [
   TCA, TCA_FP16,
   ALU_NOP, ALU_TINY, ALU_TINY_X_, ALU_TINY_Y_,
   ALU_SWITCH_LITE_TINY, ALU_SWITCH_LITE_TINY_X_, ALU_SWITCH_LITE_TINY_Y_,
-  ALU_LITE, ALU_LITE_X_, ALU_LITE_Y_, ALU_LITE_CRWL, ALU_LITE_CRWH,
+  ALU_LITE, ALU_LITE_X_, ALU_LITE_Y_, ALU_LITE_CRWL, ALU_LITE_CRWH, ALU_TINY_CRWL, ALU_TINY_CRWH,
   ALU_FULL, SFU, ALU_FULL_X_, ALU_FULL_Y_,
   MAU, MAU_FP, MAU_X_, MAU_X_FP, MAU_Y_, MAU_Y_FP,
   MAU_AUXR, MAU_AUXR_X_, MAU_AUXR_Y_, MAU_AUXR_FP, MAU_AUXR_X_FP, MAU_AUXR_Y_FP,
@@ -364,6 +366,16 @@ list<InstrItinData> Common = [
   >,
   InstrItinData<ALU_LITE_CRWH, [
     InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [CRWH_FU]>
+    ], [2, 2, 2], [], 1
+  >,
+  InstrItinData<ALU_TINY_CRWL, [
+    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
+    InstrStage<1, [CRWL_FU]>
+    ], [2, 2, 2], [], 1
+  >,
+  InstrItinData<ALU_TINY_CRWH, [
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [CRWH_FU]>
     ], [2, 2, 2], [], 1
@@ -723,11 +735,11 @@ list<InstrItinData> Common = [
   // We need to expand XSWAP256p pseudos after packetizer. To correctly schedule/bundle them,
   // we need a dedicated scheduling itinerary for it.
   InstrItinData<XSWAP256, [
-    // moveto E == ALU_LITE_CRWL
+    // movetq E == ALU_LITE_CRWL
     InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [CRWL_FU], 0>,
-    // moveto O == ALU_LITE_CRWH
+    // movetq O == ALU_LITE_CRWH
     InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
     InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<1, [CRWH_FU], 0>,
@@ -881,6 +893,9 @@ foreach m = [KVXCV1SchedMachineModel, KVXCV2SchedMachineModel] in {
   defvar ALU_LITE_CRWL_RT = LITE_RU # CRWL_RU;
   defvar ALU_LITE_CRWH_RT = LITE_RU # CRWH_RU;
 
+  defvar ALU_TINY_CRWL_RT = TINY_RU # CRWL_RU;
+  defvar ALU_TINY_CRWH_RT = TINY_RU # CRWH_RU;
+
   defvar ALU_FULL_RT = FULL_RU;
 
   defvar BCU_RT = BCU_RU;
@@ -908,6 +923,7 @@ foreach m = [KVXCV1SchedMachineModel, KVXCV2SchedMachineModel] in {
 
   defvar MAU_AUXR_RT = MAU_RU # AUXR_RU;
 
+  // TODO: In cv2 the two LITE instructions are TINY.
   // Dedicated reservation table for XSWAP256: moveto + moveto + movefo
   defvar XSWAP256_RT = ALU_LITE_CRWL_RT # ALU_LITE_CRWH_RT # BCU_TINY_AUXW_CRRP_RT;
 
@@ -938,6 +954,9 @@ foreach m = [KVXCV1SchedMachineModel, KVXCV2SchedMachineModel] in {
 
   defm ALU_LITE_CRWL#m: KVXItinWriteRes<m, ALU_LITE_CRWL, ALU_LITE_CRWL_RT, 1, ALU_LITE_CRWL_SRW>;
   defm ALU_LITE_CRWH#m: KVXItinWriteRes<m, ALU_LITE_CRWH, ALU_LITE_CRWH_RT, 1, ALU_LITE_CRWH_SRW>;
+
+  defm ALU_TINY_CRWL#m: KVXItinWriteRes<m, ALU_TINY_CRWL, ALU_TINY_CRWL_RT, 1, ALU_TINY_CRWL_SRW>;
+  defm ALU_TINY_CRWH#m: KVXItinWriteRes<m, ALU_TINY_CRWH, ALU_TINY_CRWH_RT, 1, ALU_TINY_CRWH_SRW>;
 
   defm ALU_FULL#m: KVXItinWriteRes<m, ALU_FULL, ALU_FULL_RT, 1, ALU_FULL_SRW>;
   defm ALU_FULL_X_#m: KVXItinWriteRes<m, ALU_FULL_X_, ALU_FULL_RT, 2, ALU_FULL_X__SRW>;

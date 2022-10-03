@@ -51,3 +51,18 @@ entry:
 }
 
 declare void @llvm.kvx.dpurgesw(i64, i64, i32)
+
+declare <4 x i64> @llvm.kvx.xmovefo(<256 x i1>)
+define <4 x i64> @test_movefo(<256 x i1>* %p0){
+; CHECK-LABEL: test_movefo:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    xlo $a0 = 0[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xmovefo $r0r1r2r3 = $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %v0 = load <256 x i1>, <256 x i1>* %p0
+  %v1 = tail call <4 x i64> @llvm.kvx.xmovefo(<256 x i1> %v0)
+  ret <4 x i64> %v1
+}

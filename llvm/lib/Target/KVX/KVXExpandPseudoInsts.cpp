@@ -1336,22 +1336,25 @@ static bool expandXSWAP256p(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   const KVXRegisterInfo *TRI =
       (const KVXRegisterInfo *)MF->getSubtarget().getRegisterInfo();
 
+  const auto &Subtarget = TII->getSubtarget();
   DebugLoc DL = MI.getDebugLoc();
   Register R = MI.getOperand(0).getReg();
   Register V = MI.getOperand(1).getReg();
   auto RName = TRI->getRegAsmName(R.id());
   auto VName = TRI->getRegAsmName(V.id());
-  unsigned MOVEFO = KVX::MOVEFOro;
+  unsigned MOVEFO = Subtarget.isV1() ? KVX::MOVEFOro : KVX::XMOVEFO;
 
   if (!KVX::QuadRegRegClass.contains(R))
     report_fatal_error("First register of XSWAP256p (" + RName +
                        "is not a QuadReg.");
 
-  if (KVX::VectorRegERegClass.contains(V))
-    MOVEFO = KVX::MOVEFOre;
-  else if (!KVX::VectorRegORegClass.contains(V))
-    report_fatal_error("Second register of XSWAP256p (" + VName +
-                       ") is not a VectorReg.");
+  if (Subtarget.isV1()) {
+    if (KVX::VectorRegERegClass.contains(V))
+      MOVEFO = KVX::MOVEFOre;
+    else if (!KVX::VectorRegORegClass.contains(V))
+      report_fatal_error("Second register of XSWAP256p (" + VName +
+                         ") is not a VectorReg.");
+  }
 
   auto V_hi = TRI->getSubReg(V, KVX::sub_b1);
   auto V_lo = TRI->getSubReg(V, KVX::sub_b0);
@@ -1359,6 +1362,9 @@ static bool expandXSWAP256p(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   auto R1 = TRI->getSubReg(R, KVX::sub_s1);
   auto R2 = TRI->getSubReg(R, KVX::sub_s2);
   auto R3 = TRI->getSubReg(R, KVX::sub_s3);
+
+  unsigned E = Subtarget.isV1() ? KVX::MOVETQrrbe : KVX::XMOVETQrrbe;
+  unsigned O = Subtarget.isV1() ? KVX::MOVETQrrbo : KVX::XMOVETQrrbo;
   if (StandAlone) {
     LLVM_DEBUG(
         dbgs() << "Adding bundle to perform Vector QuadReg swap of registers: "
@@ -1367,11 +1373,11 @@ static bool expandXSWAP256p(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   }
   auto &I2 = BuildMI(MBB, InsertHere, DL, TII->get(MOVEFO), R)
                  .addReg(V, RegState::Kill);
-  auto &I3 = BuildMI(MBB, InsertHere, DL, TII->get(KVX::MOVETQrrbe), V_lo)
+  auto &I3 = BuildMI(MBB, InsertHere, DL, TII->get(E), V_lo)
                  .addReg(R0, RegState::Kill)
                  .addReg(R1, RegState::Kill);
   I2->bundleWithPred();
-  auto &I4 = BuildMI(MBB, InsertHere, DL, TII->get(KVX::MOVETQrrbo), V_hi)
+  auto &I4 = BuildMI(MBB, InsertHere, DL, TII->get(O), V_hi)
                  .addReg(R2, RegState::Kill)
                  .addReg(R3, RegState::Kill);
   I3->bundleWithPred();

@@ -269,7 +269,7 @@ void fmma444hw(__kvx_x256 *v, __kvx_x512 *w) {
 // O0-NEXT:    [[TMP3:%.*]] = load i64, i64* [[ARRAYIDX1]], align 8
 // O0-NEXT:    [[ARRAYIDX2:%.*]] = getelementptr inbounds [2 x i64], [2 x i64]* [[J]], i64 0, i64 0
 // O0-NEXT:    [[TMP4:%.*]] = load i64, i64* [[ARRAYIDX2]], align 8
-// O0-NEXT:    [[TMP5:%.*]] = call <256 x i1> @llvm.kvx.xmovetohi(<256 x i1> [[TMP2]], i64 [[TMP3]], i64 [[TMP4]])
+// O0-NEXT:    [[TMP5:%.*]] = call <256 x i1> @llvm.kvx.xmovetq(<256 x i1> [[TMP2]], i64 [[TMP3]], i64 [[TMP4]], i32 1)
 // O0-NEXT:    [[TMP6:%.*]] = load <256 x i1>*, <256 x i1>** [[V_ADDR]], align 8
 // O0-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[TMP6]], i64 0
 // O0-NEXT:    store <256 x i1> [[TMP5]], <256 x i1>* [[ARRAYIDX3]], align 32
@@ -280,7 +280,7 @@ void fmma444hw(__kvx_x256 *v, __kvx_x512 *w) {
 // O0-NEXT:    [[TMP9:%.*]] = load i64, i64* [[ARRAYIDX5]], align 8
 // O0-NEXT:    [[ARRAYIDX6:%.*]] = getelementptr inbounds [2 x i64], [2 x i64]* [[J]], i64 0, i64 0
 // O0-NEXT:    [[TMP10:%.*]] = load i64, i64* [[ARRAYIDX6]], align 8
-// O0-NEXT:    [[TMP11:%.*]] = call <256 x i1> @llvm.kvx.xmovetolo(<256 x i1> [[TMP8]], i64 [[TMP9]], i64 [[TMP10]])
+// O0-NEXT:    [[TMP11:%.*]] = call <256 x i1> @llvm.kvx.xmovetq(<256 x i1> [[TMP8]], i64 [[TMP9]], i64 [[TMP10]], i32 0)
 // O0-NEXT:    [[TMP12:%.*]] = load <256 x i1>*, <256 x i1>** [[V_ADDR]], align 8
 // O0-NEXT:    [[ARRAYIDX7:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[TMP12]], i64 0
 // O0-NEXT:    store <256 x i1> [[TMP11]], <256 x i1>* [[ARRAYIDX7]], align 32
@@ -289,15 +289,15 @@ void fmma444hw(__kvx_x256 *v, __kvx_x512 *w) {
 // O2-LABEL: @test(
 // O2-NEXT:  entry:
 // O2-NEXT:    [[TMP0:%.*]] = load <256 x i1>, <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
-// O2-NEXT:    [[TMP1:%.*]] = call <256 x i1> @llvm.kvx.xmovetohi(<256 x i1> [[TMP0]], i64 1, i64 0)
-// O2-NEXT:    [[TMP2:%.*]] = call <256 x i1> @llvm.kvx.xmovetolo(<256 x i1> [[TMP1]], i64 1, i64 0)
+// O2-NEXT:    [[TMP1:%.*]] = call <256 x i1> @llvm.kvx.xmovetq(<256 x i1> [[TMP0]], i64 1, i64 0, i32 1)
+// O2-NEXT:    [[TMP2:%.*]] = call <256 x i1> @llvm.kvx.xmovetq(<256 x i1> [[TMP1]], i64 1, i64 0, i32 0)
 // O2-NEXT:    store <256 x i1> [[TMP2]], <256 x i1>* [[V]], align 32, [[TBAA2]]
 // O2-NEXT:    ret void
 //
 void test(__kvx_x256 *v) {
   long j[2] = {0, 1};
-  v[0] = __builtin_kvx_xmovetohi(v[0], j[1], j[0]);
-  v[0] = __builtin_kvx_xmovetolo(v[0], j[1], j[0]);
+  v[0] = __builtin_kvx_xmovetq(v[0], j[1], j[0], ".h1");
+  v[0] = __builtin_kvx_xmovetq(v[0], j[1], j[0], ".h0");
 }
 
 // O0-LABEL: @insertwm(

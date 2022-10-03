@@ -253,8 +253,7 @@ def int_kvx_dpurgesw : Intrinsic<[], [llvm_i64_ty, llvm_i64_ty, llvm_i32_ty], [I
 // TCA - tightly-coupled accelerator
 //===----------------------------------------------------------------------===//
 // Move from GRP to TCA registers
-def int_kvx_xmovetolo: Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_i64_ty, llvm_i64_ty], [IntrNoMem]>;
-def int_kvx_xmovetohi: Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_i64_ty, llvm_i64_ty], [IntrNoMem]>;
+def int_kvx_xmovetq: Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_i64_ty, llvm_i64_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_xmoveto: Intrinsic<[llvm_v256i1_ty], [llvm_i64_ty, llvm_i64_ty, llvm_i64_ty, llvm_i64_ty], [IntrNoMem]>;
 def int_kvx_xmoveoto: Intrinsic<[llvm_v256i1_ty], [llvm_v4i64_ty], [IntrNoMem]>;
 

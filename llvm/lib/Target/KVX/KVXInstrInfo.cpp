@@ -70,27 +70,40 @@ void KVXInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
     return;
   }
   // TCA registers to GPR
-  if (KVX::QuadRegRegClass.contains(DstReg)) {
-    if (KVX::VectorRegERegClass.contains(SrcReg)) {
-      LLVM_DEBUG(dbgs() << "It is a TCA VectorRegE to GPR QuadReg movefore.\n");
-      BuildMI(MBB, MBBI, DL, get(KVX::MOVEFOre), DstReg)
+  if (!Subtarget.isV1()) {
+    if (KVX::QuadRegRegClass.contains(DstReg) &&
+        KVX::VectorRegRegClass.contains(SrcReg)) {
+      LLVM_DEBUG(dbgs() << "It is a TCA VectorReg to GPR QuadReg xmovefo.\n");
+      BuildMI(MBB, MBBI, DL, get(KVX::XMOVEFO), DstReg)
           .addReg(SrcReg, getKillRegState(KillSrc));
       return;
     }
-    if (KVX::VectorRegORegClass.contains(SrcReg)) {
-      LLVM_DEBUG(dbgs() << "It is a TCA VectorRegE to GPR QuadReg moveforo.\n");
-      BuildMI(MBB, MBBI, DL, get(KVX::MOVEFOro), DstReg)
-          .addReg(SrcReg, getKillRegState(KillSrc));
-      return;
+  } else {
+    if (KVX::QuadRegRegClass.contains(DstReg)) {
+      if (KVX::VectorRegERegClass.contains(SrcReg)) {
+        LLVM_DEBUG(
+            dbgs() << "It is a TCA VectorRegE to GPR QuadReg movefore.\n");
+        BuildMI(MBB, MBBI, DL, get(KVX::MOVEFOre), DstReg)
+            .addReg(SrcReg, getKillRegState(KillSrc));
+        return;
+      }
+      if (KVX::VectorRegORegClass.contains(SrcReg)) {
+        LLVM_DEBUG(
+            dbgs() << "It is a TCA VectorRegE to GPR QuadReg moveforo.\n");
+        BuildMI(MBB, MBBI, DL, get(KVX::MOVEFOro), DstReg)
+            .addReg(SrcReg, getKillRegState(KillSrc));
+        return;
+      }
     }
   }
-
   // GPR registers to TCA
   if (KVX::PairedRegRegClass.contains(SrcReg)) {
     if (KVX::BlockRegERegClass.contains(DstReg)) {
       LLVM_DEBUG(
           dbgs() << "It is a GPR PairedReg to TCA BlockRegE movetqrrbe.\n");
-      BuildMI(MBB, MBBI, DL, get(KVX::MOVETQrrbe), DstReg)
+      BuildMI(MBB, MBBI, DL,
+              get(Subtarget.isV1() ? KVX::MOVETQrrbe : KVX::XMOVETQrrbe),
+              DstReg)
           .addReg(TRI->getSubReg(SrcReg, KVX::sub_s0), getKillRegState(KillSrc))
           .addReg(TRI->getSubReg(SrcReg, KVX::sub_s1),
                   getKillRegState(KillSrc));
@@ -100,7 +113,9 @@ void KVXInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
     if (KVX::BlockRegORegClass.contains(SrcReg)) {
       LLVM_DEBUG(
           dbgs() << "It is a GPR PairedReg to TCA BlockRegO movetqrrbo.\n");
-      BuildMI(MBB, MBBI, DL, get(KVX::MOVETQrrbo), DstReg)
+      BuildMI(MBB, MBBI, DL,
+              get(Subtarget.isV1() ? KVX::MOVETQrrbo : KVX::XMOVETQrrbo),
+              DstReg)
           .addReg(TRI->getSubReg(SrcReg, KVX::sub_s0), getKillRegState(KillSrc))
           .addReg(TRI->getSubReg(SrcReg, KVX::sub_s1),
                   getKillRegState(KillSrc));
@@ -123,10 +138,12 @@ void KVXInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
       report_fatal_error("One of these are not a BlockReg: (" +
                          TRI->getRegAsmName(SubReg1.id()) + ", " +
                          TRI->getRegAsmName(SubReg2.id()) + ").\n");
-    BuildMI(MBB, MBBI, DL, get(KVX::MOVETQrrbe), SubReg1)
+    BuildMI(MBB, MBBI, DL,
+            get(Subtarget.isV1() ? KVX::MOVETQrrbe : KVX::XMOVETQrrbe), SubReg1)
         .addReg(TRI->getSubReg(SrcReg, KVX::sub_s0), getKillRegState(KillSrc))
         .addReg(TRI->getSubReg(SrcReg, KVX::sub_s1), getKillRegState(KillSrc));
-    BuildMI(MBB, MBBI, DL, get(KVX::MOVETQrrbo), SubReg2)
+    BuildMI(MBB, MBBI, DL,
+            get(Subtarget.isV1() ? KVX::MOVETQrrbo : KVX::XMOVETQrrbo), SubReg2)
         .addReg(TRI->getSubReg(SrcReg, KVX::sub_s2), getKillRegState(KillSrc))
         .addReg(TRI->getSubReg(SrcReg, KVX::sub_s3), getKillRegState(KillSrc));
     return;
