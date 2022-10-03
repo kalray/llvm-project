@@ -294,10 +294,6 @@ define i32 @g(i32 %h)  {
 ; CHECK-LABEL: g:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r1 = e
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r1 = 0[$r1]
 ; CHECK-NEXT:    ;;
@@ -526,11 +522,6 @@ define i32 @g(i32 %h)  {
 ; CHECK-NEXT:    cb.deqz $r2 ? .LBB1_35
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB1_19: # %if.end
-; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB1_24: # %while.body.prol.5
@@ -552,7 +543,7 @@ define i32 @g(i32 %h)  {
 ; CHECK-NEXT:    goto .LBB1_15
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB1_35: # %if.then
-; CHECK-NEXT:    call abort
+; CHECK-NEXT:    errop
 ; CHECK-NEXT:    ;;
 entry:
   %0 = load i32*, i32** @e, align 8

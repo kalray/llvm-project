@@ -105,6 +105,8 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
 
   initializeTCALowering();
 
+  setOperationAction(ISD::TRAP, MVT::Other, Legal);
+
   setOperationAction(ISD::SDIV, MVT::i32, Promote);
   setOperationAction(ISD::SDIVREM, MVT::i32, Promote);
   setOperationAction(ISD::SREM, MVT::i32, Promote);
