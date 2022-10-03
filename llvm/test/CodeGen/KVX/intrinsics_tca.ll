@@ -6,7 +6,7 @@
 
 target triple = "kvx-kalray-cos"
 
-declare <256 x i1> @llvm.kvx.xmovetohi(<256 x i1>, i64, i64)
+declare <256 x i1> @llvm.kvx.xmovetq(<256 x i1>, i64, i64, i32)
 define void @test_movetohi(i64 %a, i64 %b, <256 x i1>* %p0, <256 x i1>* %p1) {
 ; CHECK-LABEL: test_movetohi:
 ; CHECK:       # %bb.0: # %entry
@@ -25,14 +25,13 @@ define void @test_movetohi(i64 %a, i64 %b, <256 x i1>* %p0, <256 x i1>* %p1) {
 entry:
   %v0 = load <256 x i1>, <256 x i1>* %p0
   %v1 = load <256 x i1>, <256 x i1>* %p1
-  %v2 = tail call <256 x i1> @llvm.kvx.xmovetohi(<256 x i1> %v1, i64 %a, i64 %b)
-  %v3 = tail call <256 x i1> @llvm.kvx.xmovetohi(<256 x i1> %v0, i64 %b, i64 %a)
+  %v2 = tail call <256 x i1> @llvm.kvx.xmovetq(<256 x i1> %v1, i64 %a, i64 %b, i32 1)
+  %v3 = tail call <256 x i1> @llvm.kvx.xmovetq(<256 x i1> %v0, i64 %b, i64 %a, i32 1)
   store <256 x i1> %v3, <256 x i1>* %p0, align 32
   store <256 x i1> %v2, <256 x i1>* %p1, align 32
   ret void
 }
 
-declare <256 x i1> @llvm.kvx.xmovetolo(<256 x i1>, i64, i64)
 define void @test_movetolo(i64 %a, i64 %b, <256 x i1>* %p0, <256 x i1>* %p1) {
 ; CHECK-LABEL: test_movetolo:
 ; CHECK:       # %bb.0: # %entry
@@ -51,8 +50,8 @@ define void @test_movetolo(i64 %a, i64 %b, <256 x i1>* %p0, <256 x i1>* %p1) {
 entry:
   %v0 = load <256 x i1>, <256 x i1>* %p0
   %v1 = load <256 x i1>, <256 x i1>* %p1
-  %v2 = tail call <256 x i1> @llvm.kvx.xmovetolo(<256 x i1> %v1, i64 %a, i64 %b)
-  %v3 = tail call <256 x i1> @llvm.kvx.xmovetolo(<256 x i1> %v0, i64 %b, i64 %a)
+  %v2 = tail call <256 x i1> @llvm.kvx.xmovetq(<256 x i1> %v1, i64 %a, i64 %b, i32 0)
+  %v3 = tail call <256 x i1> @llvm.kvx.xmovetq(<256 x i1> %v0, i64 %b, i64 %a, i32 0)
   store <256 x i1> %v3, <256 x i1>* %p0, align 32
   store <256 x i1> %v2, <256 x i1>* %p1, align 32
   ret void
@@ -67,8 +66,8 @@ define void @test_movetohilo(i64 %a, i64 %b, i64 %c, i64 %d, <256 x i1>* %p0) {
 ; CHECK-NEXT:    sv 0[$r4] = $a0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %v1 = tail call <256 x i1> @llvm.kvx.xmovetolo(<256 x i1> undef, i64 %a, i64 %b)
-  %v2 = tail call <256 x i1> @llvm.kvx.xmovetohi(<256 x i1> %v1, i64 %c, i64 %d)
+  %v1 = tail call <256 x i1> @llvm.kvx.xmovetq(<256 x i1> undef, i64 %a, i64 %b, i32 0)
+  %v2 = tail call <256 x i1> @llvm.kvx.xmovetq(<256 x i1> %v1, i64 %c, i64 %d, i32 1)
   store <256 x i1> %v2, <256 x i1>* %p0, align 32
   ret void
 }
@@ -78,11 +77,10 @@ define void @test_moveto(i64 %a, i64 %b, i64 %c, i64 %d, <256 x i1>* %p0, <256 x
 ; CHECK-LABEL: test_moveto:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    movetq $a0_lo = $r2, $r3
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    movetq $a0_hi = $r0, $r1
-; CHECK-NEXT:    movetq $a1_lo = $r1, $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 0[$r4] = $a0
+; CHECK-NEXT:    movetq $a1_lo = $r1, $r0
 ; CHECK-NEXT:    movetq $a1_hi = $r3, $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 0[$r5] = $a1
@@ -800,16 +798,19 @@ define <4 x i64> @test_tca_builtins(i64 %0, i64 %1, i64 %2, i64 %3, <256 x i1>* 
 ; CHECK-NEXT:    make $r34 = 2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    movetq $a0_hi = $r32, $r33
+; CHECK-NEXT:    movetq $a4_lo = $r32, $r33
 ; CHECK-NEXT:    make $r1 = 4
 ; CHECK-NEXT:    make $r35 = 3
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    movetq $a1_lo = $r35, $r1
+; CHECK-NEXT:    movetq $a1_hi = $r33, $r34
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 0[$r4] = $a0
+; CHECK-NEXT:    movetq $a4_hi = $r34, $r35
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a0 = 0[$r4]
-; CHECK-NEXT:    movetq $a1_lo = $r35, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    movetq $a0_lo = $r35, $r34
-; CHECK-NEXT:    movetq $a1_hi = $r33, $r34
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 0[$r4] = $a0
 ; CHECK-NEXT:    ;;
@@ -822,15 +823,13 @@ define <4 x i64> @test_tca_builtins(i64 %0, i64 %1, i64 %2, i64 %3, <256 x i1>* 
 ; CHECK-NEXT:    lv $a2 = 64[$r6]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a1 = 32[$r6]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a0 = 0[$r6]
-; CHECK-NEXT:    movetq $a4_lo = $r32, $r33
-; CHECK-NEXT:    movetq $a4_hi = $r34, $r35
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    alignv $a5 = $a4, $a5, 16
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    convdhv0.rn.sat $a4_lo = $a0a1a2a3
+; CHECK-NEXT:    lv $a0 = 0[$r6]
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    aligno $r8r9r10r11 = $a4, $a5, 1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    convdhv0.rn.sat $a4_lo = $a0a1a2a3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a7 = 32[$r5]
 ; CHECK-NEXT:    convdhv1.ru.satu $a4_hi = $a0a1a2a3
@@ -958,10 +957,10 @@ define <4 x i64> @test_tca_builtins(i64 %0, i64 %1, i64 %2, i64 %3, <256 x i1>* 
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %8 = load volatile <256 x i1>, <256 x i1>* %4
-  %9 = tail call <256 x i1> @llvm.kvx.xmovetohi(<256 x i1> %8, i64 0, i64 1)
+  %9 = tail call <256 x i1> @llvm.kvx.xmovetq(<256 x i1> %8, i64 0, i64 1, i32 1)
   store volatile <256 x i1> %9, <256 x i1>* %4
   %10 = load volatile <256 x i1>, <256 x i1>* %4
-  %11 = tail call <256 x i1> @llvm.kvx.xmovetolo(<256 x i1> %10, i64 3, i64 2)
+  %11 = tail call <256 x i1> @llvm.kvx.xmovetq(<256 x i1> %10, i64 3, i64 2, i32 0)
   store volatile <256 x i1> %11, <256 x i1>* %4
   %12 = tail call <256 x i1> @llvm.kvx.xmoveto(i64 1, i64 2, i64 3, i64 4)
   %13 = getelementptr inbounds <256 x i1>, <256 x i1>* %4, i64 1
@@ -1227,8 +1226,8 @@ define void @test(<256 x i1>* nocapture %v) {
 ; CHECK-NEXT:    ;;
 entry:
   %0 = load <256 x i1>, <256 x i1>* %v, align 32
-  %1 = tail call <256 x i1> @llvm.kvx.xmovetohi(<256 x i1> %0, i64 1, i64 0)
-  %2 = tail call <256 x i1> @llvm.kvx.xmovetolo(<256 x i1> %1, i64 1, i64 0)
+  %1 = tail call <256 x i1> @llvm.kvx.xmovetq(<256 x i1> %0, i64 1, i64 0, i32 1)
+  %2 = tail call <256 x i1> @llvm.kvx.xmovetq(<256 x i1> %1, i64 1, i64 0, i32 0)
   store <256 x i1> %2, <256 x i1>* %v, align 32
   ret void
 }

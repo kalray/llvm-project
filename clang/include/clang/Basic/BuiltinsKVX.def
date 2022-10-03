@@ -444,8 +444,7 @@ BUILTIN(__builtin_kvx_stsuw, "UiUiUi", "n")
 //===----------------------------------------------------------------------===//
 // TCA
 //===----------------------------------------------------------------------===//
-NARY_BUILTIN(xmovetohi, "Tx256Tx256LiLi", "n", 3)
-NARY_BUILTIN(xmovetolo, "Tx256Tx256LiLi", "n", 3)
+KVX_BUILTIN(xmovetq, "Tx256Tx256LiLicC*", "n", 4, "", KvxHindex)
 NARY_BUILTIN(xmoveto, "Tx256LiLiLiLi", "n", 4)
 NARY_BUILTIN(xmoveoto, "Tx256V4Li", "n", 1)
 

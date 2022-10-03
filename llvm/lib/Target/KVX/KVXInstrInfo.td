@@ -1363,21 +1363,6 @@ multiclass MC_31_2<string OpcStr> {
      MAU_FP>;
 }
 
-// multiclass MC_32 is used by:
-//   defm MOVETQ
-multiclass MC_32<string OpcStr> {
-  def rrbe : KVX_INSTRUCTION
-    <(outs BlockRegE:$a1), (ins SingleReg:$a2, SingleReg:$a3),
-     !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [/* no straightforward pattern */],
-     ALU_LITE_CRWL>;
-  def rrbo : KVX_INSTRUCTION
-    <(outs BlockRegO:$a1), (ins SingleReg:$a2, SingleReg:$a3),
-     !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [/* no straightforward pattern */],
-     ALU_LITE_CRWH>;
-}
-
 // multiclass MC_33 is used by:
 //   defm ALIGNO
 multiclass MC_33<string OpcStr> {
@@ -3352,7 +3337,9 @@ def COPYO : KVX_INSTRUCTION
    [/* no straightforward pattern */],
    LSU_AUXR_AUXW_LOAD>;
 
-defm MOVETQ : MC_32<"movetq">;
+defm MOVETQ : MC_XMOVETQ<"movetq", ALU_LITE_CRWL, ALU_LITE_CRWH>, Requires<[IsV1]>;
+
+defm XMOVETQ : MC_XMOVETQ<"xmovetq", ALU_TINY_CRWL, ALU_TINY_CRWH>, Requires<[IsV2]>;
 
 defm ALIGNO : MC_33<"aligno">;
 
@@ -3669,7 +3656,10 @@ def ABSBO : KVX_INSTRUCTION_X
 
 defm COPYV : MC_35<"copyv">, Requires<[IsV1]>;
 
-defm MOVEFO : MC_36<"movefo">;
+let isMoveReg = 1 in {
+defm MOVEFO : MC_36<"movefo">, Requires<[IsV1]>;
+defm XMOVEFO : I <"xmovefo", BCU_TINY_AUXW_CRRP, [VectorReg], [],[],[], [QuadReg]>, Requires<[IsV2]>;
+}
 
 // TODO: Marking as commutable should allow patterns to
 // match rhs or lhs immediates, but that does not seem

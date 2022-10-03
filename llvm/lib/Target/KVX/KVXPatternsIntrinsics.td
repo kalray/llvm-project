@@ -527,10 +527,10 @@ def MOVETOHIp : KVX_PSEUDO<(outs VectorReg:$vOut), (ins VectorReg:$vIn, SingleRe
 def MOVETOLOp : KVX_PSEUDO<(outs VectorReg:$vOut), (ins VectorReg:$vIn, SingleReg:$z, SingleReg:$y), []>;
 }
 
-def: Pat<(int_kvx_xmovetohi v256i1:$o, i64:$z, i64:$y),
+def: Pat<(int_kvx_xmovetq v256i1:$o, i64:$z, i64:$y, (i32 1)),
             (MOVETOHIp VectorReg:$o, SingleReg:$z, SingleReg:$y)>;
 
-def: Pat<(int_kvx_xmovetolo v256i1:$o, i64:$z, i64:$y),
+def: Pat<(int_kvx_xmovetq v256i1:$o, i64:$z, i64:$y, (i32 0)),
             (MOVETOLOp VectorReg:$o, SingleReg:$z, SingleReg:$y)>;
 
 def: Pat<(int_kvx_xmoveto i64:$z, i64:$y, i64:$x, i64:$w),

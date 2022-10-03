@@ -470,3 +470,8 @@ class KVX_INSTRUCTION_CV2
   : KVX_INSTRUCTION <outs, ins, asmstr, pattern, itin> {
     let Predicates = [IsV2];
   }
+
+multiclass MC_XMOVETQ<string OpcStr, InstrItinClass L, InstrItinClass H> {
+  defm rrbe : I <OpcStr, L, [SingleReg, SingleReg], [], [], [], [BlockRegE]>;
+  defm rrbo : I <OpcStr, H, [SingleReg, SingleReg], [], [], [], [BlockRegO]>;
+}
