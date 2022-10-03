@@ -1447,40 +1447,47 @@ define <2 x double> @test_fabs(<2 x double> %a) #0 {
 }
 
 define <2 x double> @test_minnum(<2 x double> %a, <2 x double> %b) #0 {
-; CHECK-LABEL: test_minnum:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 16[$r12] = $r21
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sq 0[$r12] = $r18r19
-; CHECK-NEXT:    copyd $r0 = $r1
-; CHECK-NEXT:    copyd $r18 = $r2
-; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r3
-; CHECK-NEXT:    call fmin
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r19
-; CHECK-NEXT:    copyd $r1 = $r18
-; CHECK-NEXT:    copyd $r21 = $r0
-; CHECK-NEXT:    call fmin
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lq $r18r19 = 0[$r12]
-; CHECK-NEXT:    copyd $r1 = $r21
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r21 = 16[$r12]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CV1-LABEL: test_minnum:
+; CV1:       # %bb.0:
+; CV1-NEXT:    addd $r12 = $r12, -32
+; CV1-NEXT:    get $r16 = $ra
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sd 24[$r12] = $r16
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sd 16[$r12] = $r21
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sq 0[$r12] = $r18r19
+; CV1-NEXT:    copyd $r0 = $r1
+; CV1-NEXT:    copyd $r18 = $r2
+; CV1-NEXT:    copyd $r19 = $r0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    copyd $r1 = $r3
+; CV1-NEXT:    call fmin
+; CV1-NEXT:    ;;
+; CV1-NEXT:    copyd $r0 = $r19
+; CV1-NEXT:    copyd $r1 = $r18
+; CV1-NEXT:    copyd $r21 = $r0
+; CV1-NEXT:    call fmin
+; CV1-NEXT:    ;;
+; CV1-NEXT:    lq $r18r19 = 0[$r12]
+; CV1-NEXT:    copyd $r1 = $r21
+; CV1-NEXT:    ;;
+; CV1-NEXT:    ld $r21 = 16[$r12]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    ld $r16 = 24[$r12]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    set $ra = $r16
+; CV1-NEXT:    addd $r12 = $r12, 32
+; CV1-NEXT:    ;;
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: test_minnum:
+; CV2:       # %bb.0:
+; CV2-NEXT:    fmind $r0 = $r0, $r2
+; CV2-NEXT:    fmind $r1 = $r1, $r3
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
   %r = call <2 x double> @llvm.minnum.v2f64(<2 x double> %a, <2 x double> %b)
   ret <2 x double> %r
 }
@@ -1503,40 +1510,47 @@ define <2 x double> @test_minnum_fast(<2 x double> %a, <2 x double> %b) #0 {
 }
 
 define <2 x double> @test_maxnum(<2 x double> %a, <2 x double> %b) #0 {
-; CHECK-LABEL: test_maxnum:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 16[$r12] = $r21
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sq 0[$r12] = $r18r19
-; CHECK-NEXT:    copyd $r0 = $r1
-; CHECK-NEXT:    copyd $r18 = $r2
-; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r3
-; CHECK-NEXT:    call fmax
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r19
-; CHECK-NEXT:    copyd $r1 = $r18
-; CHECK-NEXT:    copyd $r21 = $r0
-; CHECK-NEXT:    call fmax
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lq $r18r19 = 0[$r12]
-; CHECK-NEXT:    copyd $r1 = $r21
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r21 = 16[$r12]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CV1-LABEL: test_maxnum:
+; CV1:       # %bb.0:
+; CV1-NEXT:    addd $r12 = $r12, -32
+; CV1-NEXT:    get $r16 = $ra
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sd 24[$r12] = $r16
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sd 16[$r12] = $r21
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sq 0[$r12] = $r18r19
+; CV1-NEXT:    copyd $r0 = $r1
+; CV1-NEXT:    copyd $r18 = $r2
+; CV1-NEXT:    copyd $r19 = $r0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    copyd $r1 = $r3
+; CV1-NEXT:    call fmax
+; CV1-NEXT:    ;;
+; CV1-NEXT:    copyd $r0 = $r19
+; CV1-NEXT:    copyd $r1 = $r18
+; CV1-NEXT:    copyd $r21 = $r0
+; CV1-NEXT:    call fmax
+; CV1-NEXT:    ;;
+; CV1-NEXT:    lq $r18r19 = 0[$r12]
+; CV1-NEXT:    copyd $r1 = $r21
+; CV1-NEXT:    ;;
+; CV1-NEXT:    ld $r21 = 16[$r12]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    ld $r16 = 24[$r12]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    set $ra = $r16
+; CV1-NEXT:    addd $r12 = $r12, 32
+; CV1-NEXT:    ;;
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: test_maxnum:
+; CV2:       # %bb.0:
+; CV2-NEXT:    fmaxd $r0 = $r0, $r2
+; CV2-NEXT:    fmaxd $r1 = $r1, $r3
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
   %r = call <2 x double> @llvm.maxnum.v2f64(<2 x double> %a, <2 x double> %b)
   ret <2 x double> %r
 }

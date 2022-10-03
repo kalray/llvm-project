@@ -1751,62 +1751,68 @@ define <4 x half> @test_fabs(<4 x half> %a) #0 {
 }
 
 define <4 x half> @test_minnum(<4 x half> %a, <4 x half> %b) #0 {
-; CHECK-LABEL: test_minnum:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -64
-; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 56[$r12] = $r16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 48[$r12] = $r22
-; CHECK-NEXT:    fwidenlhwp $r22 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sq 32[$r12] = $r20r21
-; CHECK-NEXT:    fwidenmhwp $r21 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sq 16[$r12] = $r18r19
-; CHECK-NEXT:    srld $r1 = $r22, 32
-; CHECK-NEXT:    fwidenlhwp $r18 = $r0
-; CHECK-NEXT:    fwidenmhwp $r19 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srld $r0 = $r18, 32
-; CHECK-NEXT:    call fminf
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r18
-; CHECK-NEXT:    copyd $r1 = $r22
-; CHECK-NEXT:    copyd $r20 = $r0
-; CHECK-NEXT:    call fminf
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srld $r0 = $r21, 32
-; CHECK-NEXT:    srld $r1 = $r19, 32
-; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r18 = $r20, 63, 32
-; CHECK-NEXT:    call fminf
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r21
-; CHECK-NEXT:    copyd $r1 = $r19
-; CHECK-NEXT:    copyd $r20 = $r0
-; CHECK-NEXT:    call fminf
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r19 = $r20, 63, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lq $r18r19 = 16[$r12]
-; CHECK-NEXT:    fnarrowwhq $r0 = $r18r19
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lq $r20r21 = 32[$r12]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r22 = 48[$r12]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 56[$r12]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 64
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KV3_1-LABEL: test_minnum:
+; KV3_1:       # %bb.0:
+; KV3_1-NEXT:    addd $r12 = $r12, -64
+; KV3_1-NEXT:    get $r16 = $ra
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    sd 56[$r12] = $r16
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    sd 48[$r12] = $r22
+; KV3_1-NEXT:    fwidenlhwp $r22 = $r1
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    sq 32[$r12] = $r20r21
+; KV3_1-NEXT:    fwidenmhwp $r21 = $r0
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    sq 16[$r12] = $r18r19
+; KV3_1-NEXT:    srld $r1 = $r22, 32
+; KV3_1-NEXT:    fwidenlhwp $r18 = $r0
+; KV3_1-NEXT:    fwidenmhwp $r19 = $r1
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    srld $r0 = $r18, 32
+; KV3_1-NEXT:    call fminf
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    copyd $r0 = $r18
+; KV3_1-NEXT:    copyd $r1 = $r22
+; KV3_1-NEXT:    copyd $r20 = $r0
+; KV3_1-NEXT:    call fminf
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    srld $r0 = $r21, 32
+; KV3_1-NEXT:    srld $r1 = $r19, 32
+; KV3_1-NEXT:    copyd $r18 = $r0
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    insf $r18 = $r20, 63, 32
+; KV3_1-NEXT:    call fminf
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    copyd $r0 = $r21
+; KV3_1-NEXT:    copyd $r1 = $r19
+; KV3_1-NEXT:    copyd $r20 = $r0
+; KV3_1-NEXT:    call fminf
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    copyd $r19 = $r0
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    insf $r19 = $r20, 63, 32
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    lq $r18r19 = 16[$r12]
+; KV3_1-NEXT:    fnarrowwhq $r0 = $r18r19
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    lq $r20r21 = 32[$r12]
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ld $r22 = 48[$r12]
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ld $r16 = 56[$r12]
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    set $ra = $r16
+; KV3_1-NEXT:    addd $r12 = $r12, 64
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ret
+; KV3_1-NEXT:    ;;
+;
+; KV3_2-LABEL: test_minnum:
+; KV3_2:       # %bb.0:
+; KV3_2-NEXT:    fminhq $r0 = $r0, $r1
+; KV3_2-NEXT:    ret
+; KV3_2-NEXT:    ;;
   %r = call <4 x half> @llvm.minnum.v4f16(<4 x half> %a, <4 x half> %b)
   ret <4 x half> %r
 }
@@ -1822,62 +1828,68 @@ define <4 x half> @test_minnum_fast(<4 x half> %a, <4 x half> %b) #0 {
 }
 
 define <4 x half> @test_maxnum(<4 x half> %a, <4 x half> %b) #0 {
-; CHECK-LABEL: test_maxnum:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -64
-; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 56[$r12] = $r16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 48[$r12] = $r22
-; CHECK-NEXT:    fwidenlhwp $r22 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sq 32[$r12] = $r20r21
-; CHECK-NEXT:    fwidenmhwp $r21 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sq 16[$r12] = $r18r19
-; CHECK-NEXT:    srld $r1 = $r22, 32
-; CHECK-NEXT:    fwidenlhwp $r18 = $r0
-; CHECK-NEXT:    fwidenmhwp $r19 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srld $r0 = $r18, 32
-; CHECK-NEXT:    call fmaxf
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r18
-; CHECK-NEXT:    copyd $r1 = $r22
-; CHECK-NEXT:    copyd $r20 = $r0
-; CHECK-NEXT:    call fmaxf
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srld $r0 = $r21, 32
-; CHECK-NEXT:    srld $r1 = $r19, 32
-; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r18 = $r20, 63, 32
-; CHECK-NEXT:    call fmaxf
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r21
-; CHECK-NEXT:    copyd $r1 = $r19
-; CHECK-NEXT:    copyd $r20 = $r0
-; CHECK-NEXT:    call fmaxf
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r19 = $r20, 63, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lq $r18r19 = 16[$r12]
-; CHECK-NEXT:    fnarrowwhq $r0 = $r18r19
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lq $r20r21 = 32[$r12]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r22 = 48[$r12]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r16 = 56[$r12]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 64
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KV3_1-LABEL: test_maxnum:
+; KV3_1:       # %bb.0:
+; KV3_1-NEXT:    addd $r12 = $r12, -64
+; KV3_1-NEXT:    get $r16 = $ra
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    sd 56[$r12] = $r16
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    sd 48[$r12] = $r22
+; KV3_1-NEXT:    fwidenlhwp $r22 = $r1
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    sq 32[$r12] = $r20r21
+; KV3_1-NEXT:    fwidenmhwp $r21 = $r0
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    sq 16[$r12] = $r18r19
+; KV3_1-NEXT:    srld $r1 = $r22, 32
+; KV3_1-NEXT:    fwidenlhwp $r18 = $r0
+; KV3_1-NEXT:    fwidenmhwp $r19 = $r1
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    srld $r0 = $r18, 32
+; KV3_1-NEXT:    call fmaxf
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    copyd $r0 = $r18
+; KV3_1-NEXT:    copyd $r1 = $r22
+; KV3_1-NEXT:    copyd $r20 = $r0
+; KV3_1-NEXT:    call fmaxf
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    srld $r0 = $r21, 32
+; KV3_1-NEXT:    srld $r1 = $r19, 32
+; KV3_1-NEXT:    copyd $r18 = $r0
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    insf $r18 = $r20, 63, 32
+; KV3_1-NEXT:    call fmaxf
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    copyd $r0 = $r21
+; KV3_1-NEXT:    copyd $r1 = $r19
+; KV3_1-NEXT:    copyd $r20 = $r0
+; KV3_1-NEXT:    call fmaxf
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    copyd $r19 = $r0
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    insf $r19 = $r20, 63, 32
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    lq $r18r19 = 16[$r12]
+; KV3_1-NEXT:    fnarrowwhq $r0 = $r18r19
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    lq $r20r21 = 32[$r12]
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ld $r22 = 48[$r12]
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ld $r16 = 56[$r12]
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    set $ra = $r16
+; KV3_1-NEXT:    addd $r12 = $r12, 64
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ret
+; KV3_1-NEXT:    ;;
+;
+; KV3_2-LABEL: test_maxnum:
+; KV3_2:       # %bb.0:
+; KV3_2-NEXT:    fmaxhq $r0 = $r0, $r1
+; KV3_2-NEXT:    ret
+; KV3_2-NEXT:    ;;
   %r = call <4 x half> @llvm.maxnum.v4f16(<4 x half> %a, <4 x half> %b)
   ret <4 x half> %r
 }
