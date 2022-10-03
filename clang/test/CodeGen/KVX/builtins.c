@@ -4,7 +4,7 @@
 // CHECK-LABEL: @errop(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    tail call void @llvm.kvx.errop()
-// CHECK-NEXT:    ret void
+// CHECK-NEXT:    unreachable
 //
 void errop(void) {
   __builtin_kvx_errop();

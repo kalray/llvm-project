@@ -49,7 +49,7 @@
 //===----------------------------------------------------------------------===//
 KVX_BUILTIN(await, "v", "n", 0, "", )
 KVX_BUILTIN(barrier, "v", "n", 0, "", )
-KVX_BUILTIN(errop, "v", "n", 0, "", )
+KVX_BUILTIN(errop, "v", "r", 0, "", )
 BUILTIN(__builtin_kvx_get, "OiUi", "n")
 BUILTIN(__builtin_kvx_set, "vUiOi", "n")
 KVX_BUILTIN(sleep, "v", "n", 0, "", )
