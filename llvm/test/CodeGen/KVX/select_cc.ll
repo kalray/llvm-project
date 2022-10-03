@@ -2,9 +2,9 @@
 ; RUN: llc -O2 -mcpu=kv3-1 -o - %s | FileCheck --check-prefixes=CHECK,CV1 %s
 ; RUN: llc -O2 -mcpu=kv3-2 -o - %s | FileCheck --check-prefixes=CHECK,CV2 %s
 ; RUN: clang -O2 -c -o /dev/null %s
+; RUN: clang -O2 -march=kv3-2 -c -o /dev/null %s
 
 ; Assembly broken, cf T19977
-; FIXME: clang -O2 -march=kv3-2 -c -o /dev/null %s
 
 target triple = "kvx-kalray-cos"
 
@@ -173,172 +173,27 @@ entry:
   ret <2 x float> %cond
 }
 
-define void @test_select_vector_reg(<256 x i1> * %V, i1 %cc){
-; CV1-LABEL: test_select_vector_reg:
-; CV1:       # %bb.0:
-; CV1-NEXT:    lv $a1 = 0[$r0]
-; CV1-NEXT:    andw $r1 = $r1, 1
-; CV1-NEXT:    ;;
-; CV1-NEXT:    lv $a0 = 0[$r0]
-; CV1-NEXT:    sllw $r1 = $r1, 6
-; CV1-NEXT:    ;;
-; CV1-NEXT:    alignv $a0 = $a0, $a1, $r1
-; CV1-NEXT:    ;;
-; CV1-NEXT:    sv 0[$r0] = $a0
-; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
-;
-; CV2-LABEL: test_select_vector_reg:
-; CV2:       # %bb.0:
-; CV2-NEXT:    xlo $a1 = 0[$r0]
-; CV2-NEXT:    andw $r1 = $r1, 1
-; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a0 = 0[$r0]
-; CV2-NEXT:    sllw $r1 = $r1, 6
-; CV2-NEXT:    ;;
-; CV2-NEXT:    alignv $a0 = $a0, $a1, $r1
-; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 0[$r0] = $a0
-; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
-  %v0 = load volatile <256 x i1>, <256 x i1>* %V, align 32
-  %v1 = load volatile <256 x i1>, <256 x i1>* %V, align 32
-  %v3 = select i1 %cc, <256 x i1> %v0, <256 x i1> %v1
-  store volatile <256 x i1> %v3, <256 x i1>* %V, align 32
-  ret void
-}
+; Fixme: Do select for tca v2
+; define void @test_select_vector_reg(<256 x i1> * %V, i1 %cc){
+;   %v0 = load volatile <256 x i1>, <256 x i1>* %V, align 32
+;   %v1 = load volatile <256 x i1>, <256 x i1>* %V, align 32
+;   %v3 = select i1 %cc, <256 x i1> %v0, <256 x i1> %v1
+;   store volatile <256 x i1> %v3, <256 x i1>* %V, align 32
+;   ret void
+; }
 
-define void @test_select_wide_reg(<512 x i1> * %V, i1 %cc){
-; CV1-LABEL: test_select_wide_reg:
-; CV1:       # %bb.0:
-; CV1-NEXT:    lv $a0 = 32[$r0]
-; CV1-NEXT:    andw $r1 = $r1, 1
-; CV1-NEXT:    ;;
-; CV1-NEXT:    lv $a1 = 0[$r0]
-; CV1-NEXT:    sllw $r1 = $r1, 6
-; CV1-NEXT:    ;;
-; CV1-NEXT:    lv $a3 = 32[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    lv $a2 = 0[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    alignv $a3 = $a3, $a0, $r1
-; CV1-NEXT:    ;;
-; CV1-NEXT:    alignv $a0 = $a2, $a1, $r1
-; CV1-NEXT:    ;;
-; CV1-NEXT:    sv 32[$r0] = $a3
-; CV1-NEXT:    ;;
-; CV1-NEXT:    sv 0[$r0] = $a0
-; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
-;
-; CV2-LABEL: test_select_wide_reg:
-; CV2:       # %bb.0:
-; CV2-NEXT:    xlo $a0 = 32[$r0]
-; CV2-NEXT:    andw $r1 = $r1, 1
-; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a1 = 0[$r0]
-; CV2-NEXT:    sllw $r1 = $r1, 6
-; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a3 = 32[$r0]
-; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a2 = 0[$r0]
-; CV2-NEXT:    ;;
-; CV2-NEXT:    alignv $a3 = $a3, $a0, $r1
-; CV2-NEXT:    ;;
-; CV2-NEXT:    alignv $a0 = $a2, $a1, $r1
-; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 32[$r0] = $a3
-; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 0[$r0] = $a0
-; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
-  %v0 = load volatile <512 x i1>, <512 x i1>* %V, align 32
-  %v1 = load volatile <512 x i1>, <512 x i1>* %V, align 32
-  %v3 = select i1 %cc, <512 x i1> %v0, <512 x i1> %v1
-  store volatile <512 x i1> %v3, <512 x i1>* %V, align 32
-  ret void
-}
+; define void @test_select_wide_reg(<512 x i1> * %V, i1 %cc){
+;   %v0 = load volatile <512 x i1>, <512 x i1>* %V, align 32
+;   %v1 = load volatile <512 x i1>, <512 x i1>* %V, align 32
+;   %v3 = select i1 %cc, <512 x i1> %v0, <512 x i1> %v1
+;   store volatile <512 x i1> %v3, <512 x i1>* %V, align 32
+;   ret void
+; }
 
-; TODO: Wide and load matrix should be expanded
-; before scheduling when possible, to allow lv
-; and alignv on the same bundle
-define void @test_select_matrix_reg(<1024 x i1> * %V, i1 %cc){
-; CV1-LABEL: test_select_matrix_reg:
-; CV1:       # %bb.0:
-; CV1-NEXT:    lv $a0 = 96[$r0]
-; CV1-NEXT:    andw $r1 = $r1, 1
-; CV1-NEXT:    ;;
-; CV1-NEXT:    lv $a1 = 64[$r0]
-; CV1-NEXT:    sllw $r1 = $r1, 6
-; CV1-NEXT:    ;;
-; CV1-NEXT:    lv $a2 = 32[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    lv $a3 = 0[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    lv $a7 = 96[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    lv $a6 = 64[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    lv $a5 = 32[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    lv $a0 = 0[$r0]
-; CV1-NEXT:    alignv $a7 = $a7, $a0, $r1
-; CV1-NEXT:    ;;
-; CV1-NEXT:    alignv $a6 = $a6, $a1, $r1
-; CV1-NEXT:    ;;
-; CV1-NEXT:    alignv $a1 = $a5, $a2, $r1
-; CV1-NEXT:    ;;
-; CV1-NEXT:    alignv $a0 = $a0, $a3, $r1
-; CV1-NEXT:    ;;
-; CV1-NEXT:    sv 96[$r0] = $a7
-; CV1-NEXT:    ;;
-; CV1-NEXT:    sv 64[$r0] = $a6
-; CV1-NEXT:    ;;
-; CV1-NEXT:    sv 32[$r0] = $a1
-; CV1-NEXT:    ;;
-; CV1-NEXT:    sv 0[$r0] = $a0
-; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
-;
-; CV2-LABEL: test_select_matrix_reg:
-; CV2:       # %bb.0:
-; CV2-NEXT:    xlo $a0 = 96[$r0]
-; CV2-NEXT:    andw $r1 = $r1, 1
-; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a1 = 64[$r0]
-; CV2-NEXT:    sllw $r1 = $r1, 6
-; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a2 = 32[$r0]
-; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a3 = 0[$r0]
-; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a7 = 96[$r0]
-; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a6 = 64[$r0]
-; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a5 = 32[$r0]
-; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a0 = 0[$r0]
-; CV2-NEXT:    alignv $a7 = $a7, $a0, $r1
-; CV2-NEXT:    ;;
-; CV2-NEXT:    alignv $a6 = $a6, $a1, $r1
-; CV2-NEXT:    ;;
-; CV2-NEXT:    alignv $a1 = $a5, $a2, $r1
-; CV2-NEXT:    ;;
-; CV2-NEXT:    alignv $a0 = $a0, $a3, $r1
-; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 96[$r0] = $a7
-; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 64[$r0] = $a6
-; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 32[$r0] = $a1
-; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 0[$r0] = $a0
-; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
-  %v0 = load volatile <1024 x i1>, <1024 x i1>* %V, align 32
-  %v1 = load volatile <1024 x i1>, <1024 x i1>* %V, align 32
-  %v3 = select i1 %cc, <1024 x i1> %v0, <1024 x i1> %v1
-  store volatile <1024 x i1> %v3, <1024 x i1>* %V, align 32
-  ret void
-}
+; define void @test_select_matrix_reg(<1024 x i1> * %V, i1 %cc){
+;   %v0 = load volatile <1024 x i1>, <1024 x i1>* %V, align 32
+;   %v1 = load volatile <1024 x i1>, <1024 x i1>* %V, align 32
+;   %v3 = select i1 %cc, <1024 x i1> %v0, <1024 x i1> %v1
+;   store volatile <1024 x i1> %v3, <1024 x i1>* %V, align 32
+;   ret void
+; }

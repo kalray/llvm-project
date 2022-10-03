@@ -101,7 +101,7 @@ let mayLoad = 1 in {
 def DTOUCHLp : KVX_PSEUDO<(outs), (ins AddrRR:$addr), []>;
 }
 let mayStore = 1 in {
-def DZEROLp : KVX_PSEUDO<(outs), (ins AddrRR:$addr), []>;
+def DZEROLp : KVX_PSEUDO<(outs), (ins AddrRR:$addr), []>, Requires<[IsV1]>;
 def I1INVALSp : KVX_PSEUDO<(outs), (ins AddrRR:$addr), []>;
 }
 let Constraints = "$output = $newsp" in
@@ -740,20 +740,20 @@ multiclass SELECTCONDW<dag ntrue, dag nfalse, dag itrue, dag ifalse>
 // or rore. Perhaps this should be a pseudo and the correct instruction
 // chosen after reg-alloc?
 def : Pat <(select i32:$cc, v256i1:$truev, v256i1:$falsev),
-           (ALIGNVreror VectorReg:$falsev, VectorReg:$truev, (SLLWri SingleReg:$cc, 6))>;
+           (ALIGNVreror VectorReg:$falsev, VectorReg:$truev, (SLLWri SingleReg:$cc, 6))>, Requires<[IsV1]>;
 
 def : Pat <(select i32:$cc, v512i1:$truev, v512i1:$falsev),
            (REG_SEQUENCE WideReg,
            (ALIGNVreror (v256i1 (EXTRACT_SUBREG WideReg:$falsev, sub_v0)), (v256i1 (EXTRACT_SUBREG WideReg:$truev, sub_v0)), (SLLWri SingleReg:$cc, 6)), sub_v0,
            (ALIGNVrorer (v256i1 (EXTRACT_SUBREG WideReg:$falsev, sub_v1)), (v256i1 (EXTRACT_SUBREG WideReg:$truev, sub_v1)), (SLLWri SingleReg:$cc, 6)), sub_v1
-           )>;
+           )>, Requires<[IsV1]>;
 def : Pat <(select i32:$cc, v1024i1:$truev, v1024i1:$falsev),
            (REG_SEQUENCE MatrixReg,
            (ALIGNVreror (v256i1 (EXTRACT_SUBREG MatrixReg:$falsev, sub_v0)), (v256i1 (EXTRACT_SUBREG MatrixReg:$truev, sub_v0)), (SLLWri SingleReg:$cc, 6)), sub_v0,
            (ALIGNVrorer (v256i1 (EXTRACT_SUBREG MatrixReg:$falsev, sub_v1)), (v256i1 (EXTRACT_SUBREG MatrixReg:$truev, sub_v1)), (SLLWri SingleReg:$cc, 6)), sub_v1,
            (ALIGNVreror (v256i1 (EXTRACT_SUBREG MatrixReg:$falsev, sub_v2)), (v256i1 (EXTRACT_SUBREG MatrixReg:$truev, sub_v2)), (SLLWri SingleReg:$cc, 6)), sub_v2,
            (ALIGNVrorer (v256i1 (EXTRACT_SUBREG MatrixReg:$falsev, sub_v3)), (v256i1 (EXTRACT_SUBREG MatrixReg:$truev, sub_v3)), (SLLWri SingleReg:$cc, 6)), sub_v3
-           )>;
+           )>, Requires<[IsV1]>;
 
 defm : SELECTCONDW<(i32 i32:$truev), (i32 i32:$falsev), (i32 Wrapped32:$truev), (i32 Wrapped32:$falsev)>;
 defm : SELECTCONDW<(i64 i64:$truev), (i64 i64:$falsev), (i64 Wrapped64:$truev), (i64 Wrapped64:$falsev)>;
@@ -996,9 +996,9 @@ def : Pat<(vt (vselect ct:$c, vt:$true, vt:$false)),
           (vt (instRR SingleReg:$c, SingleReg:$true, SingleReg:$false, simplecond_even))>;
 }
 
-defm : KVX_VSELECT_SingleReg <v2i8, v2i8, CMOVEBO>;
-defm : KVX_VSELECT_SingleReg <v4i8, v4i8, CMOVEBO>;
-defm : KVX_VSELECT_SingleReg <v8i8, v8i8, CMOVEBO>;
+defm : KVX_VSELECT_SingleReg <v2i8, v2i8, CMOVEBO>, Requires<[IsV2]>;
+defm : KVX_VSELECT_SingleReg <v4i8, v4i8, CMOVEBO>, Requires<[IsV2]>;
+defm : KVX_VSELECT_SingleReg <v8i8, v8i8, CMOVEBO>, Requires<[IsV2]>;
 
 defm : KVX_VSELECT_SingleReg <v2f16, v2i16, CMOVEHQ>;
 defm : KVX_VSELECT_SingleReg <v2i16, v2i16, CMOVEHQ>;
