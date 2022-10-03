@@ -588,9 +588,12 @@ void KVXInstPrinter::printCoherencyMod(const MCInst *MI, unsigned OpNo,
   case 1:
     O << ".g";
     break;
-  case 2:
-    O << ".s";
-    break;
+  default:
+    report_fatal_error("Invalid CoherencyMod value to print.");
+    // System is not possible at the moment.
+    // case 2:
+    //   O << ".s";
+    //   break;
   }
 }
 

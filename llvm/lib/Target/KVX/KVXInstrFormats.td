@@ -480,3 +480,12 @@ multiclass MC_XMOVETQ<string OpcStr, InstrItinClass L, InstrItinClass H> {
   defm rrbe : I <OpcStr, L, [SingleReg, SingleReg], [], [], [], [BlockRegE]>;
   defm rrbo : I <OpcStr, H, [SingleReg, SingleReg], [], [], [], [BlockRegO]>;
 }
+
+multiclass CV2_ATOMIC_LOAD <string Opc, Intrinsic Int, ValueType VT,  RegisterClass RC = SingleReg> {
+  defm r : I</*asm=*/Opc, /*itin=*/LSU_AUXW_LOAD, /*Ops=*/[], /*Mods=*/[CoherencyMod], /*MemOps=*/[SingleReg], /*CC=*/[], /*Out=*/[RC], /*InPlace=*/0,
+  /*pattern=*/ [(set VT:$r, (Int i64:$mem, CoherencyMod:$mod0))]>;
+  defm ri27 : I</*asm=*/Opc, /*itin=*/LSU_AUXW_X_LOAD, /*Ops=*/[], /*Mods=*/[CoherencyMod], /*MemOps=*/[Signed27, SingleReg], /*CC=*/[], /*Out=*/[RC], /*InPlace=*/0,
+  /*pattern=*/ [(set VT:$r, (Int (add i64:$mem, Signed27:$off), CoherencyMod:$mod0))]>;
+  defm ri54 : I</*asm=*/Opc, /*itin=*/LSU_AUXW_Y_LOAD, /*Ops=*/[], /*Mods=*/[CoherencyMod], /*MemOps=*/[Signed54, SingleReg], /*CC=*/[], /*Out=*/[RC], /*InPlace=*/0,
+  /*pattern=*/ [(set VT:$r, (Int (add i64:$mem, Signed54:$off), CoherencyMod:$mod0))]>;
+}

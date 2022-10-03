@@ -3730,3 +3730,8 @@ def NEGSW : KVX_INSTRUCTION_X
 def NEGSWP : KVX_INSTRUCTION_X
   <(outs SingleReg:$o), (ins SingleReg:$i),
    "negswp $o = $i", [(set v2i32:$o, (vineg_ssat v2i32:$i))], ALU_TINY_X_>, Requires<[IsV2]>;
+
+let Predicates = [IsV2] in {
+defm ALW : CV2_ATOMIC_LOAD<"alw", int_kvx_alw, i32>;
+defm ALD : CV2_ATOMIC_LOAD<"ald", int_kvx_ald, i64>;
+}

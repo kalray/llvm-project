@@ -125,9 +125,6 @@ Hexagon_mem_memsisisi_Intrinsic<"circ_stb">;
 def int_hexagon_prefetch :
 Hexagon_Intrinsic<"HEXAGON_prefetch", [], [llvm_ptr_ty], []>;
 
-def llvm_ptr32_ty : LLVMPointerType<llvm_i32_ty>;
-def llvm_ptr64_ty : LLVMPointerType<llvm_i64_ty>;
-
 // Mark locked loads as read/write to prevent any accidental reordering.
 def int_hexagon_L2_loadw_locked :
 Hexagon_Intrinsic<"HEXAGON_L2_loadw_locked", [llvm_i32_ty], [llvm_ptr32_ty],
