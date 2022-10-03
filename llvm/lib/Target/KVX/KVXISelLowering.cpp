@@ -152,8 +152,8 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setTruncStoreAction(MVT::v4i32, MVT::v4i16, Expand);
   setTruncStoreAction(MVT::v4i32, MVT::v4i8, Expand);
 
-  setOperationAction(ISD::EXTRACT_SUBVECTOR, MVT::v2i16, Expand);
-  setOperationAction(ISD::EXTRACT_SUBVECTOR, MVT::v2f16, Expand);
+  setOperationAction(ISD::EXTRACT_SUBVECTOR, MVT::v2i16, Legal);
+  setOperationAction(ISD::EXTRACT_SUBVECTOR, MVT::v2f16, Legal);
 
   setOperationAction(ISD::SIGN_EXTEND, MVT::v4i64, Expand);
   setOperationAction(ISD::ANY_EXTEND, MVT::v4i64, Expand);

@@ -552,16 +552,10 @@ define { i64, i64, i64, i64 } @T16772(<8 x i8> %0, <2 x i32> %1) {
   ret { i64, i64, i64, i64 } %13
 }
 
-; TODO: We can't match these below as i16 is not legal
 define <2 x i32> @sextupper16to32(<4 x i16> %0) {
 ; CHECK-LABEL: sextupper16to32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r0 = $r0, 48
-; CHECK-NEXT:    extfs $r1 = $r0, 47, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r0, 63, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    sxmhwp $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = extractelement <4 x i16> %0, i32 2
@@ -576,14 +570,7 @@ define <2 x i32> @sextupper16to32(<4 x i16> %0) {
 define <2 x i32> @sextupper16to32_2(<4 x i16> %0) {
 ; CHECK-LABEL: sextupper16to32_2:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r0 = 28[$r12]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxlhwp $r0 = $r0
-; CHECK-NEXT:    addd $r12 = $r12, 32
+; CHECK-NEXT:    sxmhwp $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = shufflevector <4 x i16> %0, <4 x i16> undef, <2 x i32> <i32 2, i32 3>
@@ -612,27 +599,13 @@ define <2 x i16> @zextupper16to32(<4 x i8> %0) {
 define <2 x i32> @zextupper16to32_2(<4 x i16> %0) {
 ; CV1-LABEL: zextupper16to32_2:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    addd $r12 = $r12, -32
-; CV1-NEXT:    ;;
-; CV1-NEXT:    sd 24[$r12] = $r0
-; CV1-NEXT:    ;;
-; CV1-NEXT:    lwz $r0 = 28[$r12]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    sbmm8 $r0 = $r0, 0x80400000201
-; CV1-NEXT:    addd $r12 = $r12, 32
+; CV1-NEXT:    sbmm8 $r0 = $r0, 0x804000002010
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;;
 ;
 ; CV2-LABEL: zextupper16to32_2:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    addd $r12 = $r12, -32
-; CV2-NEXT:    ;;
-; CV2-NEXT:    sd 24[$r12] = $r0
-; CV2-NEXT:    ;;
-; CV2-NEXT:    lwz $r0 = 28[$r12]
-; CV2-NEXT:    ;;
-; CV2-NEXT:    zxlhwp $r0 = $r0
-; CV2-NEXT:    addd $r12 = $r12, 32
+; CV2-NEXT:    zxmhwp $r0 = $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
   %2 = shufflevector <4 x i16> %0, <4 x i16> undef, <2 x i32> <i32 2, i32 3>
