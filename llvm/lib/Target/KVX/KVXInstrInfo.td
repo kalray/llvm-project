@@ -3742,5 +3742,11 @@ defm XFMAXHX: I</*asm=*/"xfmaxhx", /*itin=*/TCA_FP16, /*Ops=*/[VectorReg, Vector
   /*pattern=*/ [(set v256i1:$r, (int_kvx_xfmaxhx VectorReg:$op0, VectorReg:$op1))]>;
 defm XFMINHX: I</*asm=*/"xfminhx", /*itin=*/TCA_FP16, /*Ops=*/[VectorReg, VectorReg], /*Mods=*/[], /*MemOps=*/[], /*CC=*/[], /*Out=*/[VectorReg], /*InPlace=*/0,
   /*pattern=*/ [(set v256i1:$r, (int_kvx_xfminhx VectorReg:$op0, VectorReg:$op1))]>;
+
+defm XSPLATOV: I</*asm=*/"xsplatov", /*itin=*/TCA, /*Ops=*/[VectorReg], /*Mods=*/[ShuffleVMod], /*MemOps=*/[], /*CC=*/[], /*Out=*/[MatrixReg], /*InPlace=*/0,
+  /*pattern=*/ [(set v1024i1:$r, (int_kvx_xsplatov v256i1:$op0, ShuffleVMod:$mod0))]>;
+
+defm XSPLATOX: I</*asm=*/"xsplatox", /*itin=*/TCA, /*Ops=*/[VectorReg], /*Mods=*/[ShuffleXMod], /*MemOps=*/[], /*CC=*/[], /*Out=*/[WideReg], /*InPlace=*/0,
+  /*pattern=*/ [(set v512i1:$r, (int_kvx_xsplatox v256i1:$op0, ShuffleXMod:$mod0))]>;
 }
 }

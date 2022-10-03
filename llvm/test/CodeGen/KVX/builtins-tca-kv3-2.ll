@@ -1091,3 +1091,85 @@ declare <256 x i1> @llvm.kvx.xfmaxhx(<256 x i1>, <256 x i1>)
 
 declare <256 x i1> @llvm.kvx.xfminhx(<256 x i1>, <256 x i1>)
 
+define void @xsplatov(<1024 x i1>* nocapture %0, <256 x i1>* nocapture readonly %1) {
+; CHECK-LABEL: xsplatov:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    xlo $a0 = 0[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xsplatov $a4a5a6a7 = $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xsplatov.td $a0a1a2a3 = $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 96[$r0] = $a7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 64[$r0] = $a6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 32[$r0] = $a5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 0[$r0] = $a4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 224[$r0] = $a3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 192[$r0] = $a2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 160[$r0] = $a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 128[$r0] = $a0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = load <256 x i1>, <256 x i1>* %1
+  %4 = tail call <1024 x i1> @llvm.kvx.xsplatov(<256 x i1> %3, i32 0)
+  store <1024 x i1> %4, <1024 x i1>* %0
+  %5 = tail call <1024 x i1> @llvm.kvx.xsplatov(<256 x i1> %3, i32 1)
+  %6 = getelementptr inbounds <1024 x i1>, <1024 x i1>* %0, i64 1
+  store <1024 x i1> %5, <1024 x i1>* %6
+  ret void
+}
+
+declare <1024 x i1> @llvm.kvx.xsplatov(<256 x i1>, i32)
+
+define void @xsplatox(<512 x i1>* nocapture %0, <256 x i1>* nocapture readonly %1) {
+; CHECK-LABEL: xsplatox:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    xlo $a0 = 0[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xsplatox $a2a3 = $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xsplatox.zd $a4a5 = $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 32[$r0] = $a3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 0[$r0] = $a2
+; CHECK-NEXT:    xsplatox.ud $a2a3 = $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 96[$r0] = $a5
+; CHECK-NEXT:    xsplatox.tq $a0a1 = $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 64[$r0] = $a4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 160[$r0] = $a3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 128[$r0] = $a2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 224[$r0] = $a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 192[$r0] = $a0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = load <256 x i1>, <256 x i1>* %1
+  %4 = tail call <512 x i1> @llvm.kvx.xsplatox(<256 x i1> %3, i32 0)
+  store <512 x i1> %4, <512 x i1>* %0
+  %5 = tail call <512 x i1> @llvm.kvx.xsplatox(<256 x i1> %3, i32 1)
+  %6 = getelementptr inbounds <512 x i1>, <512 x i1>* %0, i64 1
+  store <512 x i1> %5, <512 x i1>* %6
+  %7 = tail call <512 x i1> @llvm.kvx.xsplatox(<256 x i1> %3, i32 2)
+  %8 = getelementptr inbounds <512 x i1>, <512 x i1>* %0, i64 2
+  store <512 x i1> %7, <512 x i1>* %8
+  %9 = tail call <512 x i1> @llvm.kvx.xsplatox(<256 x i1> %3, i32 3)
+  %10 = getelementptr inbounds <512 x i1>, <512 x i1>* %0, i64 3
+  store <512 x i1> %9, <512 x i1>* %10
+  ret void
+}
+
+declare <512 x i1> @llvm.kvx.xsplatox(<256 x i1>, i32)
+

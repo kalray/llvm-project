@@ -570,3 +570,41 @@ void xcopyx(__kvx_x512 *v) {
 void xfminmaxhx(__kvx_x256 *v) {
   v[0] = __builtin_kvx_xfminhx(__builtin_kvx_xfmaxhx(v[0], v[1]), v[0]);
 }
+
+// CHECK-LABEL: @xsplatov(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, <256 x i1>* [[C:%.*]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <1024 x i1> @llvm.kvx.xsplatov(<256 x i1> [[TMP0]], i32 0)
+// CHECK-NEXT:    store <1024 x i1> [[TMP1]], <1024 x i1>* [[V:%.*]], align 32, [[TBAA8]]
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <1024 x i1> @llvm.kvx.xsplatov(<256 x i1> [[TMP0]], i32 1)
+// CHECK-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <1024 x i1>, <1024 x i1>* [[V]], i64 1
+// CHECK-NEXT:    store <1024 x i1> [[TMP2]], <1024 x i1>* [[ARRAYIDX1]], align 32, [[TBAA8]]
+// CHECK-NEXT:    ret void
+//
+void xsplatov(__kvx_x1024 *v, __kvx_x256 *c) {
+  v[0] = __builtin_kvx_xsplatov(*c, "");
+  v[1] = __builtin_kvx_xsplatov(*c, ".td");
+}
+
+// CHECK-LABEL: @xsplatox(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, <256 x i1>* [[C:%.*]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <512 x i1> @llvm.kvx.xsplatox(<256 x i1> [[TMP0]], i32 0)
+// CHECK-NEXT:    store <512 x i1> [[TMP1]], <512 x i1>* [[V:%.*]], align 32, [[TBAA6]]
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <512 x i1> @llvm.kvx.xsplatox(<256 x i1> [[TMP0]], i32 1)
+// CHECK-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[V]], i64 1
+// CHECK-NEXT:    store <512 x i1> [[TMP2]], <512 x i1>* [[ARRAYIDX1]], align 32, [[TBAA6]]
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <512 x i1> @llvm.kvx.xsplatox(<256 x i1> [[TMP0]], i32 2)
+// CHECK-NEXT:    [[ARRAYIDX2:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[V]], i64 2
+// CHECK-NEXT:    store <512 x i1> [[TMP3]], <512 x i1>* [[ARRAYIDX2]], align 32, [[TBAA6]]
+// CHECK-NEXT:    [[TMP4:%.*]] = tail call <512 x i1> @llvm.kvx.xsplatox(<256 x i1> [[TMP0]], i32 3)
+// CHECK-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[V]], i64 3
+// CHECK-NEXT:    store <512 x i1> [[TMP4]], <512 x i1>* [[ARRAYIDX3]], align 32, [[TBAA6]]
+// CHECK-NEXT:    ret void
+//
+void xsplatox(__kvx_x512 *v, __kvx_x256 *c) {
+  v[0] = __builtin_kvx_xsplatox(*c, "");
+  v[1] = __builtin_kvx_xsplatox(*c, ".zd");
+  v[2] = __builtin_kvx_xsplatox(*c, ".ud");
+  v[3] = __builtin_kvx_xsplatox(*c, ".tq");
+}
