@@ -256,6 +256,9 @@ def int_kvx_ald: Intrinsic<[llvm_i64_ty], [llvm_ptr_ty, llvm_i32_ty], [IntrReadM
 def int_kvx_asw: Intrinsic<[], [llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty], [IntrWriteMem]>;
 def int_kvx_asd: Intrinsic<[], [llvm_ptr_ty, llvm_i64_ty, llvm_i32_ty], [IntrWriteMem]>;
 
+def int_kvx_dpurgel : Intrinsic<[], [llvm_ptr_ty], [IntrArgMemOnly]>;
+def int_kvx_dflushl : Intrinsic<[], [llvm_ptr_ty], [IntrArgMemOnly]>;
+
 //===----------------------------------------------------------------------===//
 // TCA - tightly-coupled accelerator
 //===----------------------------------------------------------------------===//

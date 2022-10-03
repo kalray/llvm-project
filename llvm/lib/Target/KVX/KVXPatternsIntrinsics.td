@@ -1143,4 +1143,23 @@ def: Pat<(int_kvx_xstore256 v256i1:$op0, (add i64:$mem, (shl i64:$off, (i64 5)))
 
 def: Pat<(int_kvx_xstore256 v256i1:$op0, (add i64:$mem, i64:$off)),
          (XSOrr SingleReg:$off, SingleReg:$mem, VectorReg:$op0, /*doscale*/ 0)>;
+
+def: Pat<(int_kvx_dpurgel i64:$mem),
+         (DPURGELri10 0, SingleReg:$mem)>;
+
+def: Pat<(int_kvx_dpurgel (add i64:$mem, i64:$off)),
+         (DPURGELrr SingleReg:$off, SingleReg:$mem, 0)>;
+
+def: Pat<(int_kvx_dpurgel (add i64:$mem, (shl i64:$off, (i64 6)))),
+         (DPURGELrr SingleReg:$off, SingleReg:$mem, 1)>;
+
+def: Pat<(int_kvx_dflushl i64:$mem),
+         (DFLUSHLri10 0, SingleReg:$mem)>;
+
+def: Pat<(int_kvx_dflushl (add i64:$mem, i64:$off)),
+         (DFLUSHLrr SingleReg:$off, SingleReg:$mem, 0)>;
+
+def: Pat<(int_kvx_dflushl (add i64:$mem, (shl i64:$off, (i64 6)))),
+         (DFLUSHLrr SingleReg:$off, SingleReg:$mem, 1)>;
+
 } // let Predicates = [IsV2]

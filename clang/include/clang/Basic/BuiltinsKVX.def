@@ -450,6 +450,12 @@ KVX_BUILTIN(alw, "ivC*cC*", "n", 2, "kv3-2", KVX_COHERENCY)
 KVX_BUILTIN(asd, "vv*LicC*", "n", 3, "kv3-2", KVX_COHERENCY)
 KVX_BUILTIN(asw, "vv*icC*", "n", 3, "kv3-2", KVX_COHERENCY)
 
+KVX_BUILTIN(dflushsw, "vULiULicC*", "n", 3, "kv3-2", KVX_CACHELEVEL)
+KVX_BUILTIN(dinvalsw, "vULiULicC*", "n", 3, "kv3-2", KVX_CACHELEVEL)
+KVX_BUILTIN(dpurgesw, "vULiULicC*", "n", 3, "kv3-2", KVX_CACHELEVEL)
+
+KVX_BUILTIN(dpurgel, "vvC*", "n", 1, "kv3-2", )
+KVX_BUILTIN(dflushl, "vvC*", "n", 1, "kv3-2", )
 //===----------------------------------------------------------------------===//
 // TCA
 //===----------------------------------------------------------------------===//
@@ -532,9 +538,6 @@ BUILTIN(__builtin_kvx_xfnarrow44wh, "Tx256Tx512cC*", "n")
 BUILTIN(__builtin_kvx_xfscalewo, "Tx256Tx256icC*", "n")
 BUILTIN(__builtin_kvx_xmaddifwo, "Tx256Tx256Tx256Tx256cC*", "n")
 BUILTIN(__builtin_kvx_xmsbfifwo, "Tx256Tx256Tx256Tx256cC*", "n")
-KVX_BUILTIN(dflushsw, "vULiULicC*", "n", 3, "kv3-2", KVX_CACHELEVEL)
-KVX_BUILTIN(dinvalsw, "vULiULicC*", "n", 3, "kv3-2", KVX_CACHELEVEL)
-KVX_BUILTIN(dpurgesw, "vULiULicC*", "n", 3, "kv3-2", KVX_CACHELEVEL)
 
 BUILTIN(__builtin_kvx_fscalewv, "Tx256Tx256cC*", "n")
 BUILTIN(__builtin_kvx_fnarrowwhv, "Tx256Tx512cC*", "n")
