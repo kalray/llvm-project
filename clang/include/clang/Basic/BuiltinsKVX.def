@@ -447,6 +447,8 @@ BUILTIN(__builtin_kvx_stsuw, "UiUiUi", "n")
 //===----------------------------------------------------------------------===//
 KVX_BUILTIN(ald, "LivC*cC*", "n", 2, "kv3-2", KVX_COHERENCY)
 KVX_BUILTIN(alw, "ivC*cC*", "n", 2, "kv3-2", KVX_COHERENCY)
+KVX_BUILTIN(asd, "vv*LicC*", "n", 3, "kv3-2", KVX_COHERENCY)
+KVX_BUILTIN(asw, "vv*icC*", "n", 3, "kv3-2", KVX_COHERENCY)
 
 //===----------------------------------------------------------------------===//
 // TCA

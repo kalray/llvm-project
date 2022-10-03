@@ -489,3 +489,12 @@ multiclass CV2_ATOMIC_LOAD <string Opc, Intrinsic Int, ValueType VT,  RegisterCl
   defm ri54 : I</*asm=*/Opc, /*itin=*/LSU_AUXW_Y_LOAD, /*Ops=*/[], /*Mods=*/[CoherencyMod], /*MemOps=*/[Signed54, SingleReg], /*CC=*/[], /*Out=*/[RC], /*InPlace=*/0,
   /*pattern=*/ [(set VT:$r, (Int (add i64:$mem, Signed54:$off), CoherencyMod:$mod0))]>;
 }
+
+multiclass CV2_ATOMIC_STORE <string Opc, Intrinsic Int, ValueType VT,  RegisterClass RC = SingleReg> {
+  defm r : I</*asm=*/Opc, /*itin=*/LSU_AUXR_STORE, /*Ops=*/[RC], /*Mods=*/[CoherencyMod], /*MemOps=*/[SingleReg], /*CC=*/[], /*Out=*/[], /*InPlace=*/0,
+  /*pattern=*/ [(Int i64:$mem, VT:$op0, CoherencyMod:$mod0)]>;
+  defm ri27 : I</*asm=*/Opc, /*itin=*/LSU_AUXR_X_STORE, /*Ops=*/[RC], /*Mods=*/[CoherencyMod], /*MemOps=*/[Signed27, SingleReg], /*CC=*/[], /*Out=*/[], /*InPlace=*/0,
+  /*pattern=*/ [(Int (add i64:$mem, Signed27:$off), VT:$op0, CoherencyMod:$mod0)]>;
+  defm ri54 : I</*asm=*/Opc, /*itin=*/LSU_AUXR_Y_STORE, /*Ops=*/[RC], /*Mods=*/[CoherencyMod], /*MemOps=*/[Signed54, SingleReg], /*CC=*/[], /*Out=*/[], /*InPlace=*/0,
+  /*pattern=*/ [(Int (add i64:$mem, Signed54:$off), VT:$op0, CoherencyMod:$mod0)]>;
+}

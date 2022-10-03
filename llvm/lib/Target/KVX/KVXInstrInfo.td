@@ -3734,4 +3734,6 @@ def NEGSWP : KVX_INSTRUCTION_X
 let Predicates = [IsV2] in {
 defm ALW : CV2_ATOMIC_LOAD<"alw", int_kvx_alw, i32>;
 defm ALD : CV2_ATOMIC_LOAD<"ald", int_kvx_ald, i64>;
+defm ASW : CV2_ATOMIC_STORE<"asw", int_kvx_asw, i32>;
+defm ASD : CV2_ATOMIC_STORE<"asd", int_kvx_asd, i64>;
 }

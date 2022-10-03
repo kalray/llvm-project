@@ -406,3 +406,123 @@ define i64 @ald_g(i64* readonly %0) {
   ret i64 %3
 }
 
+define void @asw(i32* %0, i32 %1) {
+; CHECK-LABEL: asw:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    asw [$r0] = $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = bitcast i32* %0 to i8*
+  tail call void @llvm.kvx.asw(i8* %3, i32 %1, i32 0)
+  ret void
+}
+
+declare void @llvm.kvx.asw(i8*, i32, i32)
+
+define void @asw_ri10(i32* %0, i32 %1) {
+; CHECK-LABEL: asw_ri10:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    asw 4[$r0] = $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = getelementptr inbounds i32, i32* %0, i64 1
+  %4 = bitcast i32* %3 to i8*
+  tail call void @llvm.kvx.asw(i8* nonnull %4, i32 %1, i32 0)
+  ret void
+}
+
+define void @asw_ri27(i32* %0, i32 %1) {
+; CHECK-LABEL: asw_ri27:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    asw 0xfa0[$r0] = $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = getelementptr inbounds i32, i32* %0, i64 1000
+  %4 = bitcast i32* %3 to i8*
+  tail call void @llvm.kvx.asw(i8* nonnull %4, i32 %1, i32 0)
+  ret void
+}
+
+define void @asw_ri54(i32* %0, i32 %1) {
+; CHECK-LABEL: asw_ri54:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    asw 0x861c46800[$r0] = $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = getelementptr inbounds i32, i32* %0, i64 9000000000
+  %4 = bitcast i32* %3 to i8*
+  tail call void @llvm.kvx.asw(i8* nonnull %4, i32 %1, i32 0)
+  ret void
+}
+
+define void @asw_g(i32* %0, i32 %1) {
+; CHECK-LABEL: asw_g:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    asw.g [$r0] = $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = bitcast i32* %0 to i8*
+  tail call void @llvm.kvx.asw(i8* %3, i32 %1, i32 1)
+  ret void
+}
+
+define void @asd(i64* %0, i64 %1) {
+; CHECK-LABEL: asd:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    asd [$r0] = $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = bitcast i64* %0 to i8*
+  tail call void @llvm.kvx.asd(i8* %3, i64 %1, i32 0)
+  ret void
+}
+
+declare void @llvm.kvx.asd(i8*, i64, i32)
+
+define void @asd_ri10(i64* %0, i64 %1) {
+; CHECK-LABEL: asd_ri10:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    asd 8[$r0] = $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = getelementptr inbounds i64, i64* %0, i64 1
+  %4 = bitcast i64* %3 to i8*
+  tail call void @llvm.kvx.asd(i8* nonnull %4, i64 %1, i32 0)
+  ret void
+}
+
+define void @asd_ri27(i64* %0, i64 %1) {
+; CHECK-LABEL: asd_ri27:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    asd 0x1f40[$r0] = $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = getelementptr inbounds i64, i64* %0, i64 1000
+  %4 = bitcast i64* %3 to i8*
+  tail call void @llvm.kvx.asd(i8* nonnull %4, i64 %1, i32 0)
+  ret void
+}
+
+define void @asd_ri54(i64* %0, i64 %1) {
+; CHECK-LABEL: asd_ri54:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    asd 0x10c388d000[$r0] = $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = getelementptr inbounds i64, i64* %0, i64 9000000000
+  %4 = bitcast i64* %3 to i8*
+  tail call void @llvm.kvx.asd(i8* nonnull %4, i64 %1, i32 0)
+  ret void
+}
+
+define void @asd_g(i64* %0, i64 %1) {
+; CHECK-LABEL: asd_g:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    asd.g [$r0] = $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = bitcast i64* %0 to i8*
+  tail call void @llvm.kvx.asd(i8* %3, i64 %1, i32 1)
+  ret void
+}
+
