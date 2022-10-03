@@ -1101,25 +1101,31 @@ define half @test_fabs(half %a) #0 {
 }
 
 define half @test_minnum(half %a, half %b) #0 {
-; CHECK-LABEL: test_minnum:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
-; CHECK-NEXT:    fwidenlhw $r1 = $r1
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    call fminf
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowwh $r0 = $r0
-; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KV3_1-LABEL: test_minnum:
+; KV3_1:       # %bb.0:
+; KV3_1-NEXT:    fwidenlhw $r0 = $r0
+; KV3_1-NEXT:    fwidenlhw $r1 = $r1
+; KV3_1-NEXT:    addd $r12 = $r12, -32
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    get $r16 = $ra
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    sd 24[$r12] = $r16
+; KV3_1-NEXT:    call fminf
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    fnarrowwh $r0 = $r0
+; KV3_1-NEXT:    ld $r16 = 24[$r12]
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    set $ra = $r16
+; KV3_1-NEXT:    addd $r12 = $r12, 32
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ret
+; KV3_1-NEXT:    ;;
+;
+; KV3_2-LABEL: test_minnum:
+; KV3_2:       # %bb.0:
+; KV3_2-NEXT:    fminhq $r0 = $r0, $r1
+; KV3_2-NEXT:    ret
+; KV3_2-NEXT:    ;;
   %r = call half @llvm.minnum.f16(half %a, half %b)
   ret half %r
 }
@@ -1135,25 +1141,31 @@ define half @test_minnum_fast(half %a, half %b) #0 {
 }
 
 define half @test_maxnum(half %a, half %b) #0 {
-; CHECK-LABEL: test_maxnum:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
-; CHECK-NEXT:    fwidenlhw $r1 = $r1
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    call fmaxf
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowwh $r0 = $r0
-; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KV3_1-LABEL: test_maxnum:
+; KV3_1:       # %bb.0:
+; KV3_1-NEXT:    fwidenlhw $r0 = $r0
+; KV3_1-NEXT:    fwidenlhw $r1 = $r1
+; KV3_1-NEXT:    addd $r12 = $r12, -32
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    get $r16 = $ra
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    sd 24[$r12] = $r16
+; KV3_1-NEXT:    call fmaxf
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    fnarrowwh $r0 = $r0
+; KV3_1-NEXT:    ld $r16 = 24[$r12]
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    set $ra = $r16
+; KV3_1-NEXT:    addd $r12 = $r12, 32
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ret
+; KV3_1-NEXT:    ;;
+;
+; KV3_2-LABEL: test_maxnum:
+; KV3_2:       # %bb.0:
+; KV3_2-NEXT:    fmaxhq $r0 = $r0, $r1
+; KV3_2-NEXT:    ret
+; KV3_2-NEXT:    ;;
   %r = call half @llvm.maxnum.f16(half %a, half %b)
   ret half %r
 }

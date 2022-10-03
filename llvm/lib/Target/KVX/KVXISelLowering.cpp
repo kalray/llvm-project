@@ -1048,7 +1048,7 @@ SDValue KVXTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
       return SDValue();
   case ISD::FMINNUM:
   case ISD::FMAXNUM: {
-    if (Op.getNode()->getFlags().hasNoNaNs())
+    if (Op.getNode()->getFlags().hasNoNaNs() || !Subtarget.isV1())
       return Op;
 
     switch (Op.getValueType().getSimpleVT().SimpleTy) {
