@@ -37,7 +37,7 @@ def: Pat<(int_kvx_waitit i64:$r), (WAITIT SingleReg:$r)>;
 
 def: Pat<(int_kvx_dinvall AddrRR:$addr), (DINVALLp AddrRR:$addr)>;
 def: Pat<(int_kvx_dtouchl AddrRR:$addr), (DTOUCHLp AddrRR:$addr)>;
-def: Pat<(int_kvx_dzerol AddrRR:$addr), (DZEROLp AddrRR:$addr)>;
+def: Pat<(int_kvx_dzerol AddrRR:$addr), (DZEROLp AddrRR:$addr)>, Requires<[IsV1]>;
 def: Pat<(int_kvx_i1invals AddrRR:$addr), (I1INVALSp AddrRR:$addr)>;
 
 // remove unecessary sign extension
@@ -615,15 +615,15 @@ def : Pat<(int_kvx_sv  i64:$mem, v256i1:$op0),
 def: Pat<(int_kvx_xswap256 QuadReg:$r, VectorReg:$v),
          (XSWAP256p QuadReg:$r, VectorReg:$v)>;
 
-def: Pat<(int_kvx_xaccess512o WideReg:$a2a3, Unsigned6:$a4), (ALIGNOreroi (EXTRACT_SUBREG WideReg:$a2a3, sub_v0), (EXTRACT_SUBREG WideReg:$a2a3, sub_v1), Unsigned6:$a4)>;
-def: Pat<(int_kvx_xaccess512o WideReg:$a2a3, Unsigned6:$a4), (ALIGNOrorei (EXTRACT_SUBREG WideReg:$a2a3, sub_v0), (EXTRACT_SUBREG WideReg:$a2a3, sub_v1), Unsigned6:$a4)>;
-def: Pat<(int_kvx_xaccess512o WideReg:$a2a3, SingleReg:$a4), (ALIGNOreror (EXTRACT_SUBREG WideReg:$a2a3, sub_v0), (EXTRACT_SUBREG WideReg:$a2a3, sub_v1), $a4)>;
-def: Pat<(int_kvx_xaccess512o WideReg:$a2a3, SingleReg:$a4), (ALIGNOrorer (EXTRACT_SUBREG WideReg:$a2a3, sub_v0), (EXTRACT_SUBREG WideReg:$a2a3, sub_v1), $a4)>;
+def: Pat<(int_kvx_xaccess512o WideReg:$a2a3, Unsigned6:$a4), (ALIGNOreroi (EXTRACT_SUBREG WideReg:$a2a3, sub_v0), (EXTRACT_SUBREG WideReg:$a2a3, sub_v1), Unsigned6:$a4)>, Requires<[IsV1]>;
+def: Pat<(int_kvx_xaccess512o WideReg:$a2a3, Unsigned6:$a4), (ALIGNOrorei (EXTRACT_SUBREG WideReg:$a2a3, sub_v0), (EXTRACT_SUBREG WideReg:$a2a3, sub_v1), Unsigned6:$a4)>, Requires<[IsV1]>;
+def: Pat<(int_kvx_xaccess512o WideReg:$a2a3, SingleReg:$a4), (ALIGNOreror (EXTRACT_SUBREG WideReg:$a2a3, sub_v0), (EXTRACT_SUBREG WideReg:$a2a3, sub_v1), $a4)>, Requires<[IsV1]>;
+def: Pat<(int_kvx_xaccess512o WideReg:$a2a3, SingleReg:$a4), (ALIGNOrorer (EXTRACT_SUBREG WideReg:$a2a3, sub_v0), (EXTRACT_SUBREG WideReg:$a2a3, sub_v1), $a4)>, Requires<[IsV1]>;
 
-def: Pat<(int_kvx_xalign512o WideReg:$a2a3, Unsigned6:$a4), (ALIGNVreroi (EXTRACT_SUBREG WideReg:$a2a3, sub_v0), (EXTRACT_SUBREG WideReg:$a2a3, sub_v1), Unsigned6:$a4)>;
-def: Pat<(int_kvx_xalign512o WideReg:$a2a3, Unsigned6:$a4), (ALIGNVrorei (EXTRACT_SUBREG WideReg:$a2a3, sub_v0), (EXTRACT_SUBREG WideReg:$a2a3, sub_v1), Unsigned6:$a4)>;
-def: Pat<(int_kvx_xalign512o WideReg:$a2a3, SingleReg:$a4), (ALIGNVreror (EXTRACT_SUBREG WideReg:$a2a3, sub_v0), (EXTRACT_SUBREG WideReg:$a2a3, sub_v1), $a4)>;
-def: Pat<(int_kvx_xalign512o WideReg:$a2a3, SingleReg:$a4), (ALIGNVrorer (EXTRACT_SUBREG WideReg:$a2a3, sub_v0), (EXTRACT_SUBREG WideReg:$a2a3, sub_v1), $a4)>;
+def: Pat<(int_kvx_xalign512o WideReg:$a2a3, Unsigned6:$a4), (ALIGNVreroi (EXTRACT_SUBREG WideReg:$a2a3, sub_v0), (EXTRACT_SUBREG WideReg:$a2a3, sub_v1), Unsigned6:$a4)>, Requires<[IsV1]>;
+def: Pat<(int_kvx_xalign512o WideReg:$a2a3, Unsigned6:$a4), (ALIGNVrorei (EXTRACT_SUBREG WideReg:$a2a3, sub_v0), (EXTRACT_SUBREG WideReg:$a2a3, sub_v1), Unsigned6:$a4)>, Requires<[IsV1]>;
+def: Pat<(int_kvx_xalign512o WideReg:$a2a3, SingleReg:$a4), (ALIGNVreror (EXTRACT_SUBREG WideReg:$a2a3, sub_v0), (EXTRACT_SUBREG WideReg:$a2a3, sub_v1), $a4)>, Requires<[IsV1]>;
+def: Pat<(int_kvx_xalign512o WideReg:$a2a3, SingleReg:$a4), (ALIGNVrorer (EXTRACT_SUBREG WideReg:$a2a3, sub_v0), (EXTRACT_SUBREG WideReg:$a2a3, sub_v1), $a4)>, Requires<[IsV1]>;
 
 // TCA arithmetic/conversion intrinsics that generate sub-vector register values
 // We use pseudo-instruction to hide from the compiler that these instructions
@@ -631,122 +631,137 @@ def: Pat<(int_kvx_xalign512o WideReg:$a2a3, SingleReg:$a4), (ALIGNVrorer (EXTRAC
 // instructions that can't be handled.
 let Constraints = "$vIn = $vOut" in {
 def CONVDHV0p : KVX_PSEUDO<(outs VectorReg:$vOut), (ins VectorReg:$vIn,
-                                 MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2), []>;
+                                 MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2), []>, Requires<[IsV1]>;
 
 def CONVDHV1p : KVX_PSEUDO<(outs VectorReg:$vOut), (ins VectorReg:$vIn,
-                                 MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2), []>;
+                                 MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2), []>, Requires<[IsV1]>;
 
 
 def CONVWBV0p : KVX_PSEUDO<(outs VectorReg:$vOut), (ins VectorReg:$vIn,
-                                 MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2), []>;
+                                 MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2), []>, Requires<[IsV1]>;
 
 def CONVWBV1p : KVX_PSEUDO<(outs VectorReg:$vOut), (ins VectorReg:$vIn,
-                                 MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2), []>;
+                                 MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2), []>, Requires<[IsV1]>;
 
 def CONVWBV2p : KVX_PSEUDO<(outs VectorReg:$vOut), (ins VectorReg:$vIn,
-                                 MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2), []>;
+                                 MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2), []>, Requires<[IsV1]>;
 
 def CONVWBV3p : KVX_PSEUDO<(outs VectorReg:$vOut), (ins VectorReg:$vIn,
-                                 MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2), []>;
+                                 MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2), []>, Requires<[IsV1]>;
 
 def FMMA242HW0p : KVX_PSEUDO<(outs VectorReg:$vOut), (ins VectorReg:$vIn,
-                                 WideReg:$a2, VectorReg:$a3, VectorReg:$a4), []>;
+                                 WideReg:$a2, VectorReg:$a3, VectorReg:$a4), []>, Requires<[IsV1]>;
 
 def FMMA242HW1p : KVX_PSEUDO<(outs VectorReg:$vOut), (ins VectorReg:$vIn,
-                                 WideReg:$a2, VectorReg:$a3, VectorReg:$a4), []>;
+                                 WideReg:$a2, VectorReg:$a3, VectorReg:$a4), []>, Requires<[IsV1]>;
 
 def FMMA242HW2p : KVX_PSEUDO<(outs VectorReg:$vOut), (ins VectorReg:$vIn,
-                                 WideReg:$a2, VectorReg:$a3, VectorReg:$a4), []>;
+                                 WideReg:$a2, VectorReg:$a3, VectorReg:$a4), []>, Requires<[IsV1]>;
 
 def FMMA242HW3p : KVX_PSEUDO<(outs VectorReg:$vOut), (ins VectorReg:$vIn,
-                                 WideReg:$a2, VectorReg:$a3, VectorReg:$a4), []>;
+                                 WideReg:$a2, VectorReg:$a3, VectorReg:$a4), []>, Requires<[IsV1]>;
 }
 
 def: Pat<(int_kvx_xconvdhv0 VectorReg:$o, MatrixReg:$a4, i32:$a1, i32:$a2),
-            (CONVDHV0p $o, $a4, RoundintMod:$a1, SaturateMod:$a2)>;
+            (CONVDHV0p $o, $a4, RoundintMod:$a1, SaturateMod:$a2)>, Requires<[IsV1]>;
 def: Pat<(int_kvx_xconvdhv1 VectorReg:$o, MatrixReg:$a4, i32:$a1, i32:$a2),
-            (CONVDHV1p $o, $a4, RoundintMod:$a1, SaturateMod:$a2)>;
+            (CONVDHV1p $o, $a4, RoundintMod:$a1, SaturateMod:$a2)>, Requires<[IsV1]>;
 
 def: Pat<(int_kvx_xconvdhv MatrixReg:$a4, i32:$a1, i32:$a2),
          (CONVDHV1p (CONVDHV0p (v256i1(IMPLICIT_DEF)), $a4, RoundintMod:$a1, SaturateMod:$a2),
-                    $a4, RoundintMod:$a1, SaturateMod:$a2)>;
+                    $a4, RoundintMod:$a1, SaturateMod:$a2)>, Requires<[IsV1]>;
 
 def: Pat<(int_kvx_xconvwbv0 VectorReg:$o, MatrixReg:$a4, i32:$a1, i32:$a2),
-         (CONVWBV0p $o, $a4, RoundintMod:$a1, SaturateMod:$a2)>;
+         (CONVWBV0p $o, $a4, RoundintMod:$a1, SaturateMod:$a2)>, Requires<[IsV1]>;
 def: Pat<(int_kvx_xconvwbv1 VectorReg:$o, MatrixReg:$a4, i32:$a1, i32:$a2),
-         (CONVWBV1p $o, $a4, RoundintMod:$a1, SaturateMod:$a2)>;
+         (CONVWBV1p $o, $a4, RoundintMod:$a1, SaturateMod:$a2)>, Requires<[IsV1]>;
 def: Pat<(int_kvx_xconvwbv2 VectorReg:$o, MatrixReg:$a4, i32:$a1, i32:$a2),
-         (CONVWBV2p $o, $a4, RoundintMod:$a1, SaturateMod:$a2)>;
+         (CONVWBV2p $o, $a4, RoundintMod:$a1, SaturateMod:$a2)>, Requires<[IsV1]>;
 def: Pat<(int_kvx_xconvwbv3 VectorReg:$o, MatrixReg:$a4, i32:$a1, i32:$a2),
-         (CONVWBV3p $o, $a4, RoundintMod:$a1, SaturateMod:$a2)>;
+         (CONVWBV3p $o, $a4, RoundintMod:$a1, SaturateMod:$a2)>, Requires<[IsV1]>;
 
 def: Pat<(int_kvx_xconvwbv MatrixReg:$a4, i32:$a1, i32:$a2),
          (CONVWBV3p (CONVWBV2p (CONVWBV1p
                     (CONVWBV0p (v256i1(IMPLICIT_DEF)), $a4, RoundintMod:$a1, SaturateMod:$a2),
                 $a4, RoundintMod:$a1, SaturateMod:$a2),
             $a4, RoundintMod:$a1, SaturateMod:$a2),
-          $a4, RoundintMod:$a1, SaturateMod:$a2)>;
+          $a4, RoundintMod:$a1, SaturateMod:$a2)>, Requires<[IsV1]>;
 
 def: Pat<(int_kvx_xfmma242hw0 VectorRegE:$o, WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
-         (FMMA242HW0p VectorRegE:$o, $a2, $a3, $a4)>;
+         (FMMA242HW0p VectorRegE:$o, $a2, $a3, $a4)>, Requires<[IsV1]>;
 def: Pat<(int_kvx_xfmma242hw1 VectorRegE:$o, WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
-         (FMMA242HW1p VectorRegE:$o, $a2, $a3, $a4)>;
+         (FMMA242HW1p VectorRegE:$o, $a2, $a3, $a4)>, Requires<[IsV1]>;
 def: Pat<(int_kvx_xfmma242hw2 VectorRegO:$o, WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
-         (FMMA242HW2p VectorRegO:$o, $a2, $a3, $a4)>;
+         (FMMA242HW2p VectorRegO:$o, $a2, $a3, $a4)>, Requires<[IsV1]>;
 def: Pat<(int_kvx_xfmma242hw3 VectorRegO:$o, WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
-         (FMMA242HW3p VectorRegO:$o, $a2, $a3, $a4)>;
+         (FMMA242HW3p VectorRegO:$o, $a2, $a3, $a4)>, Requires<[IsV1]>;
 def: Pat<(int_kvx_xfmma444hw WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
          (REG_SEQUENCE WideReg,
             (FMMA242HW1p (FMMA242HW0p (v256i1(IMPLICIT_DEF)), $a2, $a3, $a4), $a2, $a3, $a4),
             sub_v0,
             (FMMA242HW3p (FMMA242HW2p (v256i1(IMPLICIT_DEF)), $a2, $a3, $a4), $a2, $a3, $a4),
-            sub_v1)>;
+            sub_v1)>, Requires<[IsV1]>;
 
 // TCA arithmetic intrinsics
-def: Pat<(int_kvx_xmma444hbd0 VectorReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_S), (MMA444HBD0 $a2, $a3, $a4)>;
-def: Pat<(int_kvx_xmma444hbd1 VectorReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_S), (MMA444HBD1 $a2, $a3, $a4)>;
+def: Pat<(int_kvx_xmma444hbd0 VectorReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_S),
+         (MMA444HBD0 $a2, $a3, $a4)>, Requires<[IsV1]>;
+
+def: Pat<(int_kvx_xmma444hbd1 VectorReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_S),
+         (MMA444HBD1 $a2, $a3, $a4)>, Requires<[IsV1]>;
+
 def: Pat<(int_kvx_xmma484hbd WideReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_S),
          (MMA444HBD1
             (MMA444HBD0 $a2,
               (v256i1(EXTRACT_SUBREG $a3, sub_v0)),
               $a4),
             (v256i1(EXTRACT_SUBREG $a3, sub_v1)),
-            $a4)>;
+            $a4)>, Requires<[IsV1]>;
 
-def: Pat<(int_kvx_xmma444hd VectorReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_S), (MMA444HD $a2, $a3, $a4)>;
-def: Pat<(int_kvx_xmma444hbd0 VectorReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_SU), (MMA444SUHBD0 $a2, $a3, $a4)>;
-def: Pat<(int_kvx_xmma444hbd1 VectorReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_SU), (MMA444SUHBD1 $a2, $a3, $a4)>;
+def: Pat<(int_kvx_xmma444hd VectorReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_S),
+         (MMA444HD $a2, $a3, $a4)>, Requires<[IsV1]>;
+def: Pat<(int_kvx_xmma444hbd0 VectorReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_SU),
+         (MMA444SUHBD0 $a2, $a3, $a4)>, Requires<[IsV1]>;
+def: Pat<(int_kvx_xmma444hbd1 VectorReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_SU),
+         (MMA444SUHBD1 $a2, $a3, $a4)>, Requires<[IsV1]>;
 def: Pat<(int_kvx_xmma484hbd WideReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_SU),
          (MMA444SUHBD1
             (MMA444SUHBD0 $a2,
               (v256i1(EXTRACT_SUBREG $a3, sub_v0)),
               $a4),
             (v256i1(EXTRACT_SUBREG $a3, sub_v1)),
-            $a4)>;
+            $a4)>, Requires<[IsV1]>;
 
-def: Pat<(int_kvx_xmma444hd VectorReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_SU), (MMA444SUHD $a2, $a3, $a4)>;
-def: Pat<(int_kvx_xmma444hbd0 VectorReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_U), (MMA444UHBD0 $a2, $a3, $a4)>;
-def: Pat<(int_kvx_xmma444hbd1 VectorReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_U), (MMA444UHBD1 $a2, $a3, $a4)>;
+def: Pat<(int_kvx_xmma444hd VectorReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_SU),
+         (MMA444SUHD $a2, $a3, $a4)>, Requires<[IsV1]>;
+
+def: Pat<(int_kvx_xmma444hbd0 VectorReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_U),
+         (MMA444UHBD0 $a2, $a3, $a4)>, Requires<[IsV1]>;
+
+def: Pat<(int_kvx_xmma444hbd1 VectorReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_U),
+         (MMA444UHBD1 $a2, $a3, $a4)>, Requires<[IsV1]>;
+
 def: Pat<(int_kvx_xmma484hbd WideReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_U),
          (MMA444UHBD1
             (MMA444UHBD0 $a2,
               (v256i1(EXTRACT_SUBREG $a3, sub_v0)),
               $a4),
             (v256i1(EXTRACT_SUBREG $a3, sub_v1)),
-            $a4)>;
+            $a4)>, Requires<[IsV1]>;
 
 def: Pat<(int_kvx_xmma444hd VectorReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_U), (MMA444UHD $a2, $a3, $a4)>;
-def: Pat<(int_kvx_xmma444hbd0 VectorReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_US), (MMA444USHBD0 $a2, $a3, $a4)>;
-def: Pat<(int_kvx_xmma444hbd1 VectorReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_US), (MMA444USHBD1 $a2, $a3, $a4)>;
+def: Pat<(int_kvx_xmma444hbd0 VectorReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_US),
+         (MMA444USHBD0 $a2, $a3, $a4)>, Requires<[IsV1]>;
+def: Pat<(int_kvx_xmma444hbd1 VectorReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_US),
+         (MMA444USHBD1 $a2, $a3, $a4)>, Requires<[IsV1]>;
 def: Pat<(int_kvx_xmma484hbd WideReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_US),
          (MMA444USHBD1
             (MMA444USHBD0 $a2,
               (v256i1(EXTRACT_SUBREG $a3, sub_v0)),
               $a4),
             (v256i1(EXTRACT_SUBREG $a3, sub_v1)),
-            $a4)>;
+            $a4)>, Requires<[IsV1]>;
 
-def: Pat<(int_kvx_xmma444hd VectorReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_US), (MMA444USHD $a2, $a3, $a4)>;
+def: Pat<(int_kvx_xmma444hd VectorReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_US), (MMA444USHD $a2, $a3, $a4)>, Requires<[IsV1]>;
 def: Pat<(int_kvx_xmma484bw VectorReg:$a3, VectorReg:$a4, WideReg:$a2, UnSignMod_S), (MMA484BW $a2, $a3, $a4)>, Requires<[IsV1]>;
 def: Pat<(int_kvx_xmma484bw VectorReg:$a3, VectorReg:$a4, WideReg:$a2, UnSignMod_SU), (MMA484SUBW $a2, $a3, $a4)>, Requires<[IsV1]>;
 def: Pat<(int_kvx_xmma484bw VectorReg:$a3, VectorReg:$a4, WideReg:$a2, UnSignMod_U), (MMA484UBW $a2, $a3, $a4)>, Requires<[IsV1]>;
@@ -755,7 +770,9 @@ def: Pat<(int_kvx_xmma484bw VectorReg:$a3, VectorReg:$a4, WideReg:$a2, UnSignMod
 def: Pat<(int_kvx_xmt44d MatrixReg:$a1), (MT44D $a1)>, Requires<[IsV1]>;
 
 // TCA conversion intrinsics
-def: Pat<(int_kvx_xfscalewv VectorReg:$a5, i32:$a1, i32:$a2, i32:$a3), (FSCALEWV $a5, RoundingMod:$a1, SilentMod:$a2, RectifyMod:$a3)>;
+def: Pat<(int_kvx_xfscalewv VectorReg:$a5, i32:$a1, i32:$a2, i32:$a3),
+         (FSCALEWV $a5, RoundingMod:$a1, SilentMod:$a2, RectifyMod:$a3)>, Requires<[IsV1]>;
+
 def: Pat<(int_kvx_xfnarrowwhv WideReg:$a4, i32:$a1, i32:$a2), (FNARROWWHV $a4, RoundingMod:$a1, SilentMod:$a2)>;
 
 // TODO: T18719 We could have generic C code patterns, but that requires changing how we lower
@@ -993,15 +1010,15 @@ defm : FMMAS222W_CV1<faddcont, FMMA212W, int_kvx_fmma222w>, Requires<[IsV1]>;
 defm : FMMAS222W_CV1<fsubcont, FMMS212W, int_kvx_fmms222w>, Requires<[IsV1]>;
 // ----------------------- To fix END  -----------------------
 
-def: Pat<(int_kvx_alignov VectorRegE:$a2, VectorRegO:$a3, Unsigned6:$a4), (ALIGNOreroi $a2, $a3, Unsigned6:$a4)>;
-def: Pat<(int_kvx_alignov VectorRegO:$a2, VectorRegE:$a3, Unsigned6:$a4), (ALIGNOrorei $a2, $a3, Unsigned6:$a4)>;
-def: Pat<(int_kvx_alignov VectorRegE:$a2, VectorRegO:$a3, SingleReg:$a4), (ALIGNOreror $a2, $a3, $a4)>;
-def: Pat<(int_kvx_alignov VectorRegO:$a2, VectorRegE:$a3, SingleReg:$a4), (ALIGNOrorer $a2, $a3, $a4)>;
+def: Pat<(int_kvx_alignov VectorRegE:$a2, VectorRegO:$a3, Unsigned6:$a4), (ALIGNOreroi $a2, $a3, Unsigned6:$a4)>, Requires<[IsV1]>;
+def: Pat<(int_kvx_alignov VectorRegO:$a2, VectorRegE:$a3, Unsigned6:$a4), (ALIGNOrorei $a2, $a3, Unsigned6:$a4)>, Requires<[IsV1]>;
+def: Pat<(int_kvx_alignov VectorRegE:$a2, VectorRegO:$a3, SingleReg:$a4), (ALIGNOreror $a2, $a3, $a4)>, Requires<[IsV1]>;
+def: Pat<(int_kvx_alignov VectorRegO:$a2, VectorRegE:$a3, SingleReg:$a4), (ALIGNOrorer $a2, $a3, $a4)>, Requires<[IsV1]>;
 
-def: Pat<(int_kvx_alignv VectorRegE:$a2, VectorRegO:$a3, Unsigned6:$a4), (ALIGNVreroi $a2, $a3, Unsigned6:$a4)>;
-def: Pat<(int_kvx_alignv VectorRegO:$a2, VectorRegE:$a3, Unsigned6:$a4), (ALIGNVrorei $a2, $a3, Unsigned6:$a4)>;
-def: Pat<(int_kvx_alignv VectorRegE:$a2, VectorRegO:$a3, SingleReg:$a4), (ALIGNVreror $a2, $a3, $a4)>;
-def: Pat<(int_kvx_alignv VectorRegO:$a2, VectorRegE:$a3, SingleReg:$a4), (ALIGNVrorer $a2, $a3, $a4)>;
+def: Pat<(int_kvx_alignv VectorRegE:$a2, VectorRegO:$a3, Unsigned6:$a4), (ALIGNVreroi $a2, $a3, Unsigned6:$a4)>, Requires<[IsV1]>;
+def: Pat<(int_kvx_alignv VectorRegO:$a2, VectorRegE:$a3, Unsigned6:$a4), (ALIGNVrorei $a2, $a3, Unsigned6:$a4)>, Requires<[IsV1]>;
+def: Pat<(int_kvx_alignv VectorRegE:$a2, VectorRegO:$a3, SingleReg:$a4), (ALIGNVreror $a2, $a3, $a4)>, Requires<[IsV1]>;
+def: Pat<(int_kvx_alignv VectorRegO:$a2, VectorRegE:$a3, SingleReg:$a4), (ALIGNVrorer $a2, $a3, $a4)>, Requires<[IsV1]>;
 
 let Predicates = [IsV2] in {
 def: Pat<(int_kvx_xload256 (add i64:$mem, (shl i64:$off, (i64 5))), VariantMod:$mod0),

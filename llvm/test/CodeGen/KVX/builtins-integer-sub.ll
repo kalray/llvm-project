@@ -342,7 +342,6 @@ define <32 x i8> @sbfbv_s(<32 x i8> %0, <32 x i8> %1) {
 ; V2:       # %bb.0:
 ; V2-NEXT:    sbfsbo $r0 = $r0, $r4
 ; V2-NEXT:    sbfsbo $r1 = $r1, $r5
-; V2-NEXT:    ;;
 ; V2-NEXT:    sbfsbo $r2 = $r2, $r6
 ; V2-NEXT:    sbfsbo $r3 = $r3, $r7
 ; V2-NEXT:    ret

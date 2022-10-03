@@ -917,7 +917,6 @@ multiclass MC_1E<string OpcStr> {
 
 // multiclass MC_1F is used by:
 //   defm FCOMPW
-//   defm FCOMPNW
 multiclass MC_1F<string OpcStr> {
   def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, FloatcompMod:$a1),
@@ -929,6 +928,20 @@ multiclass MC_1F<string OpcStr> {
      !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
      [/* no straightforward pattern */],
      ALU_SWITCH_LITE_TINY_X_>;
+}
+
+//    defm FCOMPNW
+multiclass MC_1F_TINY<string OpcStr> {
+  def rr : KVX_INSTRUCTION
+    <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, FloatcompMod:$a1),
+     !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
+     [/* no straightforward pattern */],
+     ALU_TINY>;
+  def ri : KVX_INSTRUCTION_X
+    <(outs SingleReg:$a2), (ins SingleReg:$a3, Binary32:$a4, FloatcompMod:$a1),
+     !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
+     [/* no straightforward pattern */],
+     ALU_TINY_X_>;
 }
 
 // multiclass MC_20 is used by:
@@ -1666,7 +1679,7 @@ let hasSideEffects = 1 in
 defm DINVALL : MC_10<"dinvall">;
 
 let mayStore = 1 in
-defm DZEROL : MC_10<"dzerol">;
+defm DZEROL : MC_10<"dzerol">, Requires<[IsV1]>;
 
 let hasSideEffects = 1, mayLoad = 0, mayStore = 0 in
 defm I1INVALS : MC_10<"i1invals">;
@@ -1891,9 +1904,9 @@ defm MAXWP : MC_17_TINY<"maxwp">;
 defm MAXUWP : MC_17_TINY<"maxuwp">;
 
 let isAdd = 1 in
-defm ADDCWC : MC_17<"addcwc">;
+defm ADDCWC : MC_17<"addcwc">, Requires<[IsV1]>;
 
-defm SBFCWC : MC_17<"sbfcwc">;
+defm SBFCWC : MC_17<"sbfcwc">, Requires<[IsV1]>;
 
 let isAdd = 1 in
 defm ADDSWP : MC_17_SWITCH<"addswp">;
@@ -1924,13 +1937,13 @@ defm AVGRWP : MC_17_SWITCH<"avgrwp">;
 
 defm AVGRUWP : MC_17_SWITCH<"avgruwp">;
 
-defm LANDWP : MC_17<"landwp">;
+defm LANDWP : MC_17<"landwp">, Requires<[IsV1]>;
 
-defm LNANDWP : MC_17<"lnandwp">;
+defm LNANDWP : MC_17<"lnandwp">, Requires<[IsV1]>;
 
-defm LORWP : MC_17<"lorwp">;
+defm LORWP : MC_17<"lorwp">, Requires<[IsV1]>;
 
-defm LNORWP : MC_17<"lnorwp">;
+defm LNORWP : MC_17<"lnorwp">, Requires<[IsV1]>;
 
 let isAdd = 1 in
 defm ADDHQ : MC_17_TINY<"addhq">;
@@ -1963,16 +1976,16 @@ defm MAXUBO : MC_17_TINY<"maxubo">, Requires<[IsV2]>;
 defm MAXUHQ : MC_17_TINY<"maxuhq">;
 
 let isAdd = 1 in
-defm ADDCHCP : MC_17<"addchcp">;
+defm ADDCHCP : MC_17<"addchcp">, Requires<[IsV1]>;
 
-defm SBFCHCP : MC_17<"sbfchcp">;
+defm SBFCHCP : MC_17<"sbfchcp">, Requires<[IsV1]>;
 
 let isAdd = 1 in {
 defm ADDSHQ : MC_17_SWITCH<"addshq">;
 defm ADDSBO : MC_17_TINY<"addsbo">, Requires<[IsV2]>;
 }
 
-defm SBFSBO : MC_17<"sbfsbo">;
+defm SBFSBO : MC_17_TINY<"sbfsbo">, Requires<[IsV2]>;
 
 defm SBFSHQ : MC_17_SWITCH<"sbfshq">;
 
@@ -2008,15 +2021,15 @@ defm SBFX16BO : MC_17_TINY<"sbfx16bo">, Requires<[IsV2]>;
 
 defm SBFX16HQ : MC_17_SWITCH<"sbfx16hq">;
 
-defm AVGBO : MC_17<"avgbo">, Requires<[IsV2]>;
+defm AVGBO : MC_17_TINY<"avgbo">, Requires<[IsV2]>;
 
 defm AVGHQ : MC_17_SWITCH<"avghq">;
 
-defm AVGUBO : MC_17<"avgubo">, Requires<[IsV2]>;
+defm AVGUBO : MC_17_TINY<"avgubo">, Requires<[IsV2]>;
 
 defm AVGUHQ : MC_17_SWITCH<"avguhq">;
 
-defm AVGRBO : MC_17<"avgrbo">, Requires<[IsV2]>;
+defm AVGRBO : MC_17_TINY<"avgrbo">, Requires<[IsV2]>;
 
 defm AVGRHQ : MC_17_SWITCH<"avgrhq">;
 
@@ -2024,13 +2037,13 @@ defm AVGRUBO : MC_17<"avgrubo">, Requires<[IsV2]>;
 
 defm AVGRUHQ : MC_17_SWITCH<"avgruhq">;
 
-defm LANDHQ : MC_17<"landhq">;
+defm LANDHQ : MC_17<"landhq">, Requires<[IsV1]>;
 
-defm LNANDHQ : MC_17<"lnandhq">;
+defm LNANDHQ : MC_17<"lnandhq">, Requires<[IsV1]>;
 
-defm LORHQ : MC_17<"lorhq">;
+defm LORHQ : MC_17<"lorhq">, Requires<[IsV1]>;
 
-defm LNORHQ : MC_17<"lnorhq">;
+defm LNORHQ : MC_17<"lnorhq">, Requires<[IsV1]>;
 
 defm ADDX2WD : MC_13_SWITCH<"addx2wd">;
 
@@ -2299,7 +2312,7 @@ def CLRF : KVX_INSTRUCTION
    [/* no straightforward pattern */],
    ALU_SWITCH_LITE_TINY>;
 
-defm SATD : MC_18<"satd">;
+defm SATD : MC_18<"satd">, Requires<[IsV1]>;
 
 defm SRSD : MC_18<"srsd">;
 
@@ -2517,10 +2530,9 @@ def CMOVEBO : KVX_INSTRUCTION
   <(outs SingleReg:$a3o), (ins SingleReg:$a2, SingleReg:$a3, SingleReg:$a4, SimplecondMod:$a1),
    "cmovebo$a1 $a2 ? $a3 = $a4",
    [/* no straightforward pattern */],
-   ALU_LITE>;
+   ALU_TINY>, Requires<[IsV2]>;
 
-let Itinerary = ALU_LITE in
-defm FCOMPNW : MC_1F<"fcompnw">, Requires<[IsV2]>;
+defm FCOMPNW : MC_1F_TINY<"fcompnw">, Requires<[IsV2]>;
 
 defm FCOMPW : MC_1F<"fcompw">;
 
@@ -2534,7 +2546,7 @@ def FCOMPND : KVX_INSTRUCTION
   <(outs SingleReg:$r), (ins SingleReg:$lhs, SingleReg:$rhs, FloatcompMod:$m),
    "fcompnd$m $r = $lhs, $rhs",
    [/* no straightforward pattern */],
-   ALU_LITE>, Requires<[IsV2]>;
+   ALU_TINY>, Requires<[IsV2]>;
 
 def FCOMPNWP : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, FloatcompMod:$a1),
@@ -2637,7 +2649,7 @@ def XFFMA44HW : ROUNDING_SILENT_TERNARY<"xffma44hw", WideReg, VectorReg, VectorR
 def XFMMA484HW : ROUNDING_SILENT_TERNARY<"xfmma484hw", WideReg, WideReg, WideReg, TCA_FP16,
                 [(set v512i1:$o, (int_kvx_xfmma484hw v512i1:$a, v512i1:$lhs, v512i1:$rhs, RoundingMod:$r, SilentMod:$s))]>;
 
-def XFNARROW44WH : ROUNDING_SILENT_UNARY<"xfnarrow44wh", VectorReg, WideReg, BCU_CRRP_CRWL_CRWH,
+def XFNARROW44WH : ROUNDING_SILENT_UNARY<"xfnarrow44wh", VectorReg, WideReg, TCA,
                 [(set v256i1:$o, (int_kvx_xfnarrow44wh v512i1:$i, RoundingMod:$r, SilentMod:$s ))]>;
 
 def XMADD44BW0 : TERNARY<"xmadd44bw0", WideReg, VectorReg, VectorReg, TCA,
@@ -3041,25 +3053,25 @@ defm MULWP : MC_22<"mulwp">;
 
 defm MULHQ : MC_22<"mulhq">;
 
-defm MULWC : MC_22<"mulwc">;
+defm MULWC : MC_22<"mulwc">, Requires<[IsV1]>;
 
 def MULCWC : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "mulcwc $a1 = $a2, $a3",
    [/* no straightforward pattern */],
-   MAU>;
+   MAU>, Requires<[IsV1]>;
 
 def MULWDC : KVX_INSTRUCTION
   <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "mulwdc $a1 = $a2, $a3",
    [/* no straightforward pattern */],
-   MAU>;
+   MAU>, Requires<[IsV1]>;
 
 def MULCWDC : KVX_INSTRUCTION
   <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "mulcwdc $a1 = $a2, $a3",
    [/* no straightforward pattern */],
-   MAU>;
+   MAU>, Requires<[IsV1]>;
 
 def MULHWQ : KVX_INSTRUCTION
   <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
@@ -3215,7 +3227,7 @@ defm FMULWC : MC_2AM<"fmulwc">;
 
 defm FMULWDC : MC_2C<"fmulwdc">, Requires<[IsV1]>;
 
-defm FMULCWDC : MC_2C<"fmulcwdc">;
+defm FMULCWDC : MC_2C<"fmulcwdc">, Requires<[IsV1]>;
 
 let isAdd = 1 in
 defm FADDD : MC_29<"faddd">;
@@ -3341,16 +3353,16 @@ defm MOVETQ : MC_XMOVETQ<"movetq", ALU_LITE_CRWL, ALU_LITE_CRWH>, Requires<[IsV1
 
 defm XMOVETQ : MC_XMOVETQ<"xmovetq", ALU_TINY_CRWL, ALU_TINY_CRWH>, Requires<[IsV2]>;
 
-defm ALIGNO : MC_33<"aligno">;
+defm ALIGNO : MC_33<"aligno">, Requires<[IsV1]>;
 
-defm ALIGNV : MC_34<"alignv">;
+defm ALIGNV : MC_34<"alignv">, Requires<[IsV1]>;
 
 let Uses = [PCR] in {
 def MT44D : KVX_INSTRUCTION
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2),
    "mt44d $a1 = $a2",
    [/* no straightforward pattern */],
-   TCA>;
+   TCA>, Requires<[IsV1]>;
 
 def MMA484BW : KVX_INSTRUCTION
   <(outs WideReg:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
@@ -3362,67 +3374,67 @@ def MMA484UBW : KVX_INSTRUCTION
   <(outs WideReg:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma484ubw $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
-   TCA>;
+   TCA>, Requires<[IsV1]>;
 
 def MMA484SUBW : KVX_INSTRUCTION
   <(outs WideReg:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma484subw $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
-   TCA>;
+   TCA>, Requires<[IsV1]>;
 
 def MMA484USBW : KVX_INSTRUCTION
   <(outs WideReg:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma484usbw $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
-   TCA>;
+   TCA>, Requires<[IsV1]>;
 
 def MMA444HBD0 : KVX_INSTRUCTION
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma444hbd0 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
-   TCA>;
+   TCA>, Requires<[IsV1]>;
 
 def MMA444UHBD0 : KVX_INSTRUCTION
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma444uhbd0 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
-   TCA>;
+   TCA>, Requires<[IsV1]>;
 
 def MMA444SUHBD0 : KVX_INSTRUCTION
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma444suhbd0 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
-   TCA>;
+   TCA>, Requires<[IsV1]>;
 
 def MMA444USHBD0 : KVX_INSTRUCTION
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma444ushbd0 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
-   TCA>;
+   TCA>, Requires<[IsV1]>;
 
 def MMA444HBD1 : KVX_INSTRUCTION
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma444hbd1 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
-   TCA>;
+   TCA>, Requires<[IsV1]>;
 
 def MMA444UHBD1 : KVX_INSTRUCTION
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma444uhbd1 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
-   TCA>;
+   TCA>, Requires<[IsV1]>;
 
 def MMA444SUHBD1 : KVX_INSTRUCTION
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma444suhbd1 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
-   TCA>;
+   TCA>, Requires<[IsV1]>;
 
 def MMA444USHBD1 : KVX_INSTRUCTION
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma444ushbd1 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
-   TCA>;
+   TCA>, Requires<[IsV1]>;
 
 def MMA444HD : KVX_INSTRUCTION
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
@@ -3446,55 +3458,55 @@ def MMA444USHD : KVX_INSTRUCTION
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "mma444ushd $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
-   TCA>;
+   TCA>, Requires<[IsV1]>;
 
 def FMMA242HW0 : KVX_INSTRUCTION
   <(outs BlockReg0M4:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "fmma242hw0 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
-   TCA_FP16>;
+   TCA_FP16>, Requires<[IsV1]>;
 
 def FMMA242HW1 : KVX_INSTRUCTION
   <(outs BlockReg1M4:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "fmma242hw1 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
-   TCA_FP16>;
+   TCA_FP16>, Requires<[IsV1]>;
 
 def FMMA242HW2 : KVX_INSTRUCTION
   <(outs BlockReg2M4:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "fmma242hw2 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
-   TCA_FP16>;
+   TCA_FP16>, Requires<[IsV1]>;
 
 def FMMA242HW3 : KVX_INSTRUCTION
   <(outs BlockReg3M4:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "fmma242hw3 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
-   TCA_FP16>;
+   TCA_FP16>, Requires<[IsV1]>;
 
 def CONVDHV0 : KVX_INSTRUCTION
   <(outs BlockRegE:$a3), (ins MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2),
    "convdhv0$a1$a2 $a3 = $a4",
    [/* no straightforward pattern */],
-   TCA>;
+   TCA>, Requires<[IsV1]>;
 
 def CONVDHV1 : KVX_INSTRUCTION
   <(outs BlockRegO:$a3), (ins MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2),
    "convdhv1$a1$a2 $a3 = $a4",
    [/* no straightforward pattern */],
-   TCA>;
+   TCA>, Requires<[IsV1]>;
 
 def CONVWBV0 : KVX_INSTRUCTION
   <(outs CoproReg0M4:$a3), (ins MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2),
    "convwbv0$a1$a2 $a3 = $a4",
    [/* no straightforward pattern */],
-   TCA>;
+   TCA>, Requires<[IsV1]>;
 
 def CONVWBV1 : KVX_INSTRUCTION
   <(outs CoproReg1M4:$a3), (ins MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2),
    "convwbv1$a1$a2 $a3 = $a4",
    [/* no straightforward pattern */],
-   TCA>;
+   TCA>, Requires<[IsV1]>;
 
 def CONVWBV2 : KVX_INSTRUCTION
   <(outs CoproReg2M4:$a3), (ins MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2),
@@ -3506,19 +3518,19 @@ def CONVWBV3 : KVX_INSTRUCTION
   <(outs CoproReg3M4:$a3), (ins MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2),
    "convwbv3$a1$a2 $a3 = $a4",
    [/* no straightforward pattern */],
-   TCA>;
+   TCA>, Requires<[IsV1]>;
 
 def FSCALEWV : KVX_INSTRUCTION
   <(outs VectorReg:$a4), (ins VectorReg:$a5, RoundingMod:$a1, SilentMod:$a2, RectifyMod:$a3),
    "fscalewv$a1$a2$a3 $a4 = $a5",
    [/* no straightforward pattern */],
-   TCA>;
+   TCA>, Requires<[IsV1]>;
 
 def FNARROWWHV : KVX_INSTRUCTION
   <(outs VectorReg:$a3), (ins WideReg:$a4, RoundingMod:$a1, SilentMod:$a2),
    "fnarrowwhv$a1$a2 $a3 = $a4",
    [/* no straightforward pattern */],
-   TCA>;
+   TCA>, Requires<[IsV1]>;
 }
 
 let isPredicable = 1 in
@@ -3665,21 +3677,21 @@ defm XMOVEFO : I <"xmovefo", BCU_TINY_AUXW_CRRP, [VectorReg], [],[],[], [QuadReg
 // match rhs or lhs immediates, but that does not seem
 // to work as it does with isAdd attribute.
 let isCommutable = 1 in {
-defm ABDSBO : MC_17<"abdsbo">, Requires<[IsV2]>;
-defm ABDSHQ : MC_17<"abdshq">, Requires<[IsV2]>;
-defm ABDSW  : MC_17<"abdsw">,  Requires<[IsV2]>;
-defm ABDSWP : MC_17<"abdswp">, Requires<[IsV2]>;
-defm ABDSD : MC_17<"abdsd">, Requires<[IsV2]>;
+defm ABDSBO : MC_17_TINY<"abdsbo">, Requires<[IsV2]>;
+defm ABDSHQ : MC_17_TINY<"abdshq">, Requires<[IsV2]>;
+defm ABDSW  : MC_17_TINY<"abdsw">,  Requires<[IsV2]>;
+defm ABDSWP : MC_17_TINY<"abdswp">, Requires<[IsV2]>;
+defm ABDSD : MC_17_TINY<"abdsd">, Requires<[IsV2]>;
 }
 
 def FMM222W : FP_PairedReg_PairedReg_PairedReg_Transp_Round_Silent
-  <"fmm222w", MAU_FP>;
+  <"fmm222w", MAU_FP>, Requires<[IsV2]>;
 
 def FMMA222W : FP_PairedReg_PairedReg_PairedReg_Transp_Round_Silent_Accumulate
-  <"fmma222w", MAU_AUXR_FP>;
+  <"fmma222w", MAU_AUXR_FP>, Requires<[IsV2]>;
 
 def FMMS222W : FP_PairedReg_PairedReg_PairedReg_Transp_Round_Silent_Accumulate
-  <"fmms222w", MAU_AUXR_FP>;
+  <"fmms222w", MAU_AUXR_FP>, Requires<[IsV2]>;
 
 defm SLSBOS : MC_18<"slsbos">, Requires<[IsV2]>;
 defm SLUSBOS : MC_18<"slusbos">, Requires<[IsV2]>;

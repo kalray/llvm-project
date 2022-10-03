@@ -310,9 +310,12 @@ def : Pat<(v8i8(uaddsat v8i8:$v0, (v8i8(is_imm_vec_kvx_splat32_at:$IMM)) ) ),
 def : Pat<(v8i8(uaddsat v8i8:$v0, v8i8:$v1)), (ADDUSBOrr SingleReg:$v0, SingleReg:$v1)>, Requires<[IsV2]>;
 
 // ADDUSD
-def : Pat<(i64(uaddsat i64:$v, Wrapped64W:$i)), (ADDUSDri SingleReg:$v, (i32(trunc_imm_32 $i)), splat32_)>;
-def : Pat<(i64(uaddsat i64:$v, UnsignedSplat32Imm:$i)), (ADDUSDri SingleReg:$v, (i32(trunc_imm_32 $i)), splat32_at)>;
-def : Pat<(i64(uaddsat i64:$v0, i64:$v1)), (ADDUSDrr SingleReg:$v0, SingleReg:$v1)>;
+def : Pat<(i64(uaddsat i64:$v, Wrapped64W:$i)),
+          (ADDUSDri SingleReg:$v, (i32(trunc_imm_32 $i)), splat32_)>, Requires<[IsV2]>;
+def : Pat<(i64(uaddsat i64:$v, UnsignedSplat32Imm:$i)),
+          (ADDUSDri SingleReg:$v, (i32(trunc_imm_32 $i)), splat32_at)>, Requires<[IsV2]>;
+def : Pat<(i64(uaddsat i64:$v0, i64:$v1)),
+          (ADDUSDrr SingleReg:$v0, SingleReg:$v1)>, Requires<[IsV2]>;
 
 // ADDUSHQ
 def : Pat<(v2i16(uaddsat v2i16:$v0, (v2i16(is_imm_vec:$IMM)) ) ),
@@ -326,8 +329,10 @@ def : Pat<(v4i16(uaddsat v4i16:$v0, (v4i16(is_imm_vec_kvx_splat32_at:$IMM)) ) ),
 def : Pat<(v4i16(uaddsat v4i16:$v0, v4i16:$v1)), (ADDUSHQrr SingleReg:$v0, SingleReg:$v1)>, Requires<[IsV2]>;
 
 // ADDUSW
-def : Pat<(i32(uaddsat i32:$v, Wrapped32:$i)), (ADDUSWri SingleReg:$v, Wrapped32:$i, splat32_)>;
-def : Pat<(i32(uaddsat i32:$v0, i32:$v1)), (ADDUSWrr SingleReg:$v0, SingleReg:$v1)>;
+def : Pat<(i32(uaddsat i32:$v, Wrapped32:$i)),
+      (ADDUSWri SingleReg:$v, Wrapped32:$i, splat32_)>, Requires<[IsV2]>;
+def : Pat<(i32(uaddsat i32:$v0, i32:$v1)),
+      (ADDUSWrr SingleReg:$v0, SingleReg:$v1)>, Requires<[IsV2]>;
 
 // ADDUSWP
 def : Pat<(v2i32(uaddsat v2i32:$v0, (v2i32(is_imm_vec_kvx_splat32_:$IMM)) ) ),
@@ -1094,7 +1099,7 @@ def : Pat<(umax i64:$v1, Signed37:$v2), (MAXUDri37 SingleReg:$v1, Signed37:$v2)>
 def : Pat<(umax i64:$v1, Wrapped64:$v2), (MAXUDri64 SingleReg:$v1, Wrapped64:$v2)>;
 
 // MAXUBO
-defm MAXUBO : Word_RR_RIsplat_select_B<umax, MAXUBOri, MAXUBOrr>;
+defm MAXUBO : Word_RR_RIsplat_select_B<umax, MAXUBOri, MAXUBOrr>, Requires<[IsV2]>;
 
 // MAXUHQ
 defm MAXUHQ : Word_RR_RIsplat_select_H<umax, MAXUHQri, MAXUHQrr>;
@@ -1129,7 +1134,7 @@ def : Pat<(smin i64:$v1, Signed37:$v2), (MINDri37 SingleReg:$v1, Signed37:$v2)>;
 def : Pat<(smin i64:$v1, Wrapped64:$v2), (MINDri64 SingleReg:$v1, Wrapped64:$v2)>;
 
 // MINBO
-defm MINBO : Word_RR_RIsplat_select_B<smin, MINBOri, MINBOrr>;
+defm MINBO : Word_RR_RIsplat_select_B<smin, MINBOri, MINBOrr>, Requires<[IsV2]>;
 
 // MINHQ
 defm MINHQ : Word_RR_RIsplat_select_H<smin, MINHQri, MINHQrr>;
@@ -1141,7 +1146,7 @@ def : Pat<(umin i64:$v1, Signed37:$v2), (MINUDri37 SingleReg:$v1, Signed37:$v2)>
 def : Pat<(umin i64:$v1, Wrapped64:$v2), (MINUDri64 SingleReg:$v1, Wrapped64:$v2)>;
 
 // MINUBO
-defm MINUBO : Word_RR_RIsplat_select_B<umin, MINUBOri, MINUBOrr>;
+defm MINUBO : Word_RR_RIsplat_select_B<umin, MINUBOri, MINUBOrr>, Requires<[IsV2]>;
 
 // MINUHQ
 defm MINUHQ : Word_RR_RIsplat_select_H<umin, MINUHQri, MINUHQrr>;
@@ -1992,7 +1997,7 @@ def : Pat<(i64 (ushlsat i64:$rs1, i64:$rs2)),
           (SLUSDrr SingleReg:$rs1, SingleReg:$rs2)>, Requires<[IsV2]>;
 
 // SLUSHQS
-defm : HQShiftScalarOps<ushlsat, SLUSHQSri, SLUSHQSrr>;
+defm : HQShiftScalarOps<ushlsat, SLUSHQSri, SLUSHQSrr>, Requires<[IsV2]>;
 
 // SLUSW
 defm : ZEFPat<(i32 (ushlsat i32:$r, Unsigned6W:$im)),
