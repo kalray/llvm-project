@@ -1144,21 +1144,16 @@ define <8 x i8> @test_select_cc(<8 x i8> %a, <8 x i8> %b, <8 x i8> %c, <8 x i8> 
 ;
 ; CV2-LABEL: test_select_cc:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    srld $r2 = $r2, 32
-; CV2-NEXT:    srld $r3 = $r3, 32
-; CV2-NEXT:    zxwd $r4 = $r3
-; CV2-NEXT:    zxwd $r5 = $r2
-; CV2-NEXT:    ;;
 ; CV2-NEXT:    compnbo.lt $r2 = $r2, $r3
-; CV2-NEXT:    srld $r3 = $r1, 32
-; CV2-NEXT:    compnbo.lt $r4 = $r5, $r4
+; CV2-NEXT:    srld $r4 = $r3, 32
+; CV2-NEXT:    srld $r5 = $r2, 32
+; CV2-NEXT:    ;;
+; CV2-NEXT:    cmovebo.even $r2 ? $r0 = $r1
+; CV2-NEXT:    compnbo.lt $r3 = $r5, $r4
+; CV2-NEXT:    srld $r4 = $r1, 32
 ; CV2-NEXT:    srld $r5 = $r0, 32
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    zxwd $r0 = $r0
-; CV2-NEXT:    zxwd $r1 = $r1
-; CV2-NEXT:    cmovebo.even $r2 ? $r5 = $r3
-; CV2-NEXT:    ;;
-; CV2-NEXT:    cmovebo.even $r4 ? $r0 = $r1
+; CV2-NEXT:    cmovebo.even $r3 ? $r5 = $r4
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r0 = $r5, 63, 32
 ; CV2-NEXT:    ret

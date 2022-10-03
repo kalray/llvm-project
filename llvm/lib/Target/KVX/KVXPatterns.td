@@ -1355,7 +1355,7 @@ def : Pat<(v2i8 (extract_subvector (v8i8 SingleReg:$v), (i64 2))),(v2i8 (SRLWri 
 def : Pat<(v2i8 (extract_subvector (v8i8 SingleReg:$v), (i64 4))),(v2i8 (EXTFZ SingleReg:$v, 47,32))>;
 def : Pat<(v2i8 (extract_subvector (v8i8 SingleReg:$v), (i64 6))),(v2i8 (SRLDri SingleReg:$v, 48))>;
 
-def : Pat<(v4i8 (extract_subvector (v8i8 SingleReg:$v), (i64 0))),(v4i8 (ZXWD SingleReg:$v))>;
+def : Pat<(v4i8 (extract_subvector (v8i8 SingleReg:$v), (i64 0))),(v4i8 (COPY SingleReg:$v))>;
 def : Pat<(v4i8 (extract_subvector (v8i8 SingleReg:$v), (i64 4))),(v4i8 (SRLDri SingleReg:$v, 32))>;
 
 def : Pat<(v8i8 (v8_splat (i32 SingleReg:$s))), (SBMM8ri64 SingleReg:$s, 0x0101010101010101)>;

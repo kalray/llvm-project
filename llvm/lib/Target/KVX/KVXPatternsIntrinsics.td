@@ -1162,4 +1162,31 @@ def: Pat<(int_kvx_dflushl (add i64:$mem, i64:$off)),
 def: Pat<(int_kvx_dflushl (add i64:$mem, (shl i64:$off, (i64 6)))),
          (DFLUSHLrr SingleReg:$off, SingleReg:$mem, 1)>;
 
+def: Pat<(v4i16 (int_kvx_zxlbhq v8i8:$v)),
+         (ZXLBHQ SingleReg:$v)>;
+
+def: Pat<(v4i16 (int_kvx_zxmbhq v8i8:$v)),
+         (ZXMBHQ SingleReg:$v)>;
+
+
+def: Pat<(v2i32 (int_kvx_zxlhwp v4i16:$v)),
+         (ZXLHWP SingleReg:$v)>;
+
+def: Pat<(v2i32 (int_kvx_zxmhwp v4i16:$v)),
+         (ZXMHWP SingleReg:$v)>;
+
 } // let Predicates = [IsV2]
+
+def: Pat<(v4i16 (int_kvx_sxlbhq v8i8:$v)),
+         (SXLBHQ SingleReg:$v)>;
+
+def: Pat<(v4i16 (int_kvx_sxmbhq v8i8:$v)),
+         (SXMBHQ SingleReg:$v)>;
+
+
+def: Pat<(v2i32 (int_kvx_sxlhwp v4i16:$v)),
+         (SXLHWP SingleReg:$v)>;
+
+def: Pat<(v2i32 (int_kvx_sxmhwp v4i16:$v)),
+         (SXMHWP SingleReg:$v)>;
+

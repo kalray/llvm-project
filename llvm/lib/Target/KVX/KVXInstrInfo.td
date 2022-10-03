@@ -3757,4 +3757,16 @@ defm DPURGEL: DCACHE_MC <"dpurgel", int_kvx_dpurgel>;
 defm DFLUSHL: DCACHE_MC <"dflushl", int_kvx_dflushl>;
 }
 
+defm ZXLBHQ : I</*asm=*/"zxlbhq", /*itin=*/ALU_TINY, /*Ops=*/[SingleReg], /*Mods=*/[], /*MemOps=*/[], /*CC=*/[], /*Out=*/[SingleReg], /*InPlace=*/0,
+  /*pattern=*/ [(set v4i16:$r, (zext v4i8:$op0))]>;
+
+defm ZXMBHQ : I</*asm=*/"zxmbhq", /*itin=*/ALU_TINY, /*Ops=*/[SingleReg], /*Mods=*/[], /*MemOps=*/[], /*CC=*/[], /*Out=*/[SingleReg], /*InPlace=*/0,
+  /*pattern=*/ [(set v4i16:$r, (zext (v4i8( extract_subvector v8i8:$op0, (i64 4)))))]>;
+
+defm ZXLHWP : I</*asm=*/"zxlhwp", /*itin=*/ALU_TINY, /*Ops=*/[SingleReg], /*Mods=*/[], /*MemOps=*/[], /*CC=*/[], /*Out=*/[SingleReg], /*InPlace=*/0,
+  /*pattern=*/ [(set v2i32:$r, (zext v2i16:$op0))]>;
+
+defm ZXMHWP : I</*asm=*/"zxmhwp", /*itin=*/ALU_TINY, /*Ops=*/[SingleReg], /*Mods=*/[], /*MemOps=*/[], /*CC=*/[], /*Out=*/[SingleReg], /*InPlace=*/0,
+  /*pattern=*/ [(set v2i32:$r, (zext (v2i16( extract_subvector v4i16:$op0, (i64 2)))))]>;
+
 }

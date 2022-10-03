@@ -852,18 +852,31 @@ define <4 x i64> @test_fptoui_4xi64(<4 x half> %a) #0 {
 }
 
 define <4 x half> @test_uitofp_4xi16(<4 x i16> %a) #0 {
-; CHECK-LABEL: test_uitofp_4xi16:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    sbmm8 $r1 = $r0, 0x804000002010
-; CHECK-NEXT:    sbmm8 $r2 = $r0, 0x80400000201
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatuwp.rn $r0 = $r2, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatuwp.rn $r1 = $r1, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowwhq.rn $r0 = $r0r1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KV3_1-LABEL: test_uitofp_4xi16:
+; KV3_1:       # %bb.0:
+; KV3_1-NEXT:    sbmm8 $r1 = $r0, 0x804000002010
+; KV3_1-NEXT:    sbmm8 $r2 = $r0, 0x80400000201
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    floatuwp.rn $r0 = $r2, 0
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    floatuwp.rn $r1 = $r1, 0
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    fnarrowwhq.rn $r0 = $r0r1
+; KV3_1-NEXT:    ret
+; KV3_1-NEXT:    ;;
+;
+; KV3_2-LABEL: test_uitofp_4xi16:
+; KV3_2:       # %bb.0:
+; KV3_2-NEXT:    zxmhwp $r1 = $r0
+; KV3_2-NEXT:    zxlhwp $r2 = $r0
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    floatuwp.rn $r0 = $r2, 0
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    floatuwp.rn $r1 = $r1, 0
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    fnarrowwhq.rn $r0 = $r0r1
+; KV3_2-NEXT:    ret
+; KV3_2-NEXT:    ;;
   %r = uitofp <4 x i16> %a to <4 x half>
   ret <4 x half> %r
 }

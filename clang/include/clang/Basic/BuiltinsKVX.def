@@ -442,6 +442,12 @@ BUILTIN(__builtin_kvx_shrdqs, "V4LiV4LiULi", "n")
 BUILTIN(__builtin_kvx_stsud, "ULiULiULi", "n")
 BUILTIN(__builtin_kvx_stsuw, "UiUiUi", "n")
 
+KVX_BUILTIN(sxlbhq, "V4sV8c", "n", 1, "",)
+KVX_BUILTIN(sxmbhq, "V4sV8c", "n", 1, "",)
+
+KVX_BUILTIN(sxlhwp, "V2iV4s", "n", 1, "",)
+KVX_BUILTIN(sxmhwp, "V2iV4s", "n", 1, "",)
+
 //===----------------------------------------------------------------------===//
 // KV3 V2 builtins
 //===----------------------------------------------------------------------===//
@@ -456,6 +462,13 @@ KVX_BUILTIN(dpurgesw, "vULiULicC*", "n", 3, "kv3-2", KVX_CACHELEVEL)
 
 KVX_BUILTIN(dpurgel, "vvC*", "n", 1, "kv3-2", )
 KVX_BUILTIN(dflushl, "vvC*", "n", 1, "kv3-2", )
+
+KVX_BUILTIN(zxlbhq, "V4UsV8Uc", "n", 1, "kv3-2",)
+KVX_BUILTIN(zxmbhq, "V4UsV8Uc", "n", 1, "kv3-2",)
+
+KVX_BUILTIN(zxlhwp, "V2UiV4Us", "n", 1, "kv3-2",)
+KVX_BUILTIN(zxmhwp, "V2UiV4Us", "n", 1, "kv3-2",)
+
 //===----------------------------------------------------------------------===//
 // TCA
 //===----------------------------------------------------------------------===//

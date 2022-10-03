@@ -259,6 +259,17 @@ def int_kvx_asd: Intrinsic<[], [llvm_ptr_ty, llvm_i64_ty, llvm_i32_ty], [IntrWri
 def int_kvx_dpurgel : Intrinsic<[], [llvm_ptr_ty], [IntrArgMemOnly]>;
 def int_kvx_dflushl : Intrinsic<[], [llvm_ptr_ty], [IntrArgMemOnly]>;
 
+def int_kvx_sxlbhq : Intrinsic<[llvm_v4i16_ty], [llvm_v8i8_ty], [IntrNoMem]>;
+def int_kvx_sxmbhq : Intrinsic<[llvm_v4i16_ty], [llvm_v8i8_ty], [IntrNoMem]>;
+
+def int_kvx_zxlbhq  : Intrinsic<[llvm_v4i16_ty], [llvm_v8i8_ty], [IntrNoMem]>;
+def int_kvx_zxmbhq  : Intrinsic<[llvm_v4i16_ty], [llvm_v8i8_ty], [IntrNoMem]>;
+
+def int_kvx_sxlhwp : Intrinsic<[llvm_v2i32_ty], [llvm_v4i16_ty], [IntrNoMem]>;
+def int_kvx_sxmhwp : Intrinsic<[llvm_v2i32_ty], [llvm_v4i16_ty], [IntrNoMem]>;
+
+def int_kvx_zxlhwp  : Intrinsic<[llvm_v2i32_ty], [llvm_v4i16_ty], [IntrNoMem]>;
+def int_kvx_zxmhwp  : Intrinsic<[llvm_v2i32_ty], [llvm_v4i16_ty], [IntrNoMem]>;
 //===----------------------------------------------------------------------===//
 // TCA - tightly-coupled accelerator
 //===----------------------------------------------------------------------===//

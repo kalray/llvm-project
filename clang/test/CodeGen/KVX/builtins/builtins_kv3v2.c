@@ -478,3 +478,43 @@ void dflushl(long8 *w, long p) {
   __builtin_kvx_dflushl(&w[5]);
   __builtin_kvx_dflushl(&w[1024]);
 }
+
+typedef unsigned char uchar8 __attribute__ ((vector_size (sizeof(char) * 8)));
+typedef unsigned short ushort4 __attribute__ ((vector_size (sizeof(short) * 4)));
+typedef unsigned int uint2 __attribute__ ((vector_size (sizeof(int) * 2)));
+
+// CHECK-LABEL: @zxlbhq(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x i16> @llvm.kvx.zxlbhq(<8 x i8> [[V:%.*]])
+// CHECK-NEXT:    ret <4 x i16> [[TMP0]]
+//
+ushort4 zxlbhq(uchar8 v){
+  return __builtin_kvx_zxlbhq(v);
+}
+
+// CHECK-LABEL: @zxmbhq(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x i16> @llvm.kvx.zxmbhq(<8 x i8> [[V:%.*]])
+// CHECK-NEXT:    ret <4 x i16> [[TMP0]]
+//
+ushort4 zxmbhq(uchar8 v){
+  return __builtin_kvx_zxmbhq(v);
+}
+
+// CHECK-LABEL: @zxlhwp(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x i32> @llvm.kvx.zxlhwp(<4 x i16> [[V:%.*]])
+// CHECK-NEXT:    ret <2 x i32> [[TMP0]]
+//
+uint2 zxlhwp(ushort4 v){
+  return __builtin_kvx_zxlhwp(v);
+}
+
+// CHECK-LABEL: @zxmhwp(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x i32> @llvm.kvx.zxmhwp(<4 x i16> [[V:%.*]])
+// CHECK-NEXT:    ret <2 x i32> [[TMP0]]
+//
+uint2 zxmhwp(ushort4 v){
+  return __builtin_kvx_zxmhwp(v);
+}

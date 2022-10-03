@@ -668,16 +668,27 @@ define <2 x i64> @test_fptoui_2xi64(<2 x half> %a) #0 {
 }
 
 define <2 x half> @test_uitofp_2xi16(<2 x i16> %a) #0 {
-; CHECK-LABEL: test_uitofp_2xi16:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x80400000201
-; CHECK-NEXT:    make $r1 = 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    floatuwp.rn $r0 = $r0, 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowwhq.rn $r0 = $r0r1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KV3_1-LABEL: test_uitofp_2xi16:
+; KV3_1:       # %bb.0:
+; KV3_1-NEXT:    sbmm8 $r0 = $r0, 0x80400000201
+; KV3_1-NEXT:    make $r1 = 0
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    floatuwp.rn $r0 = $r0, 0
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    fnarrowwhq.rn $r0 = $r0r1
+; KV3_1-NEXT:    ret
+; KV3_1-NEXT:    ;;
+;
+; KV3_2-LABEL: test_uitofp_2xi16:
+; KV3_2:       # %bb.0:
+; KV3_2-NEXT:    zxlhwp $r0 = $r0
+; KV3_2-NEXT:    make $r1 = 0
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    floatuwp.rn $r0 = $r0, 0
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    fnarrowwhq.rn $r0 = $r0r1
+; KV3_2-NEXT:    ret
+; KV3_2-NEXT:    ;;
   %r = uitofp <2 x i16> %a to <2 x half>
   ret <2 x half> %r
 }
