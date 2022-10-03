@@ -2122,6 +2122,20 @@ def : Pat<(v4i32(zext v4i16:$v)),
 def : Pat<(v4i32(zext v4i16:$v)),
           (REG_SEQUENCE PairedReg, (ZXLHWP $v), sub_s0, (ZXMHWP $v), sub_s1)>, Requires<[IsV2]>;
 
+
+def : Pat<(v2i32(build_vector (i32 (sext_inreg (i32 (vector_extract v4i16:$v, (i64 2))), i16)),
+                              (i32 (sext_inreg (i32 (vector_extract v4i16:$v, (i64 3))), i16)))),
+          (SXMHWP SingleReg:$v)>;
+
+def : Pat<(v2i32 (sanyext (v2i16 (extract_subvector v4i16:$v, (i64 2))))),
+          (SXMHWP SingleReg:$v)>;
+
+def : Pat<(v2i32 (zext (v2i16 (extract_subvector v4i16:$v, (i64 2))))),
+          (ZXMHWP SingleReg:$v)>, Requires<[IsV2]>;
+
+def : Pat<(v2i32 (zext (v2i16 (extract_subvector v4i16:$v, (i64 2))))),
+          (SBMM8ri64 SingleReg:$v, 0x804000002010)>;
+
 // SXMBHQ
 def : Pat<(v4i16(sanyext (v4i8( extract_subvector v8i8:$v, (i64 4))))), (SXMBHQ $v)>;
 def : Pat<(v4i16(zext (v4i8( extract_subvector v8i8:$v, (i64 4))))),

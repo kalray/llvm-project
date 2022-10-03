@@ -1121,3 +1121,22 @@ define <4 x i16> @sxmbhq(<8 x i8> %0) {
 }
 
 declare <4 x i16> @llvm.kvx.sxmbhq(<8 x i8>)
+
+define <2 x i16> @subvect_2(<4 x i16> %0) {
+; ALL-LABEL: subvect_2:
+; ALL:       # %bb.0:
+; ALL-NEXT:    srld $r0 = $r0, 32
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;;
+  %2 = shufflevector <4 x i16> %0, <4 x i16> undef, <2 x i32> <i32 2, i32 3>
+  ret <2 x i16> %2
+}
+
+define <2 x i16> @subvect_0(<4 x i16> %0) {
+; ALL-LABEL: subvect_0:
+; ALL:       # %bb.0:
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;;
+  %2 = shufflevector <4 x i16> %0, <4 x i16> undef, <2 x i32> <i32 0, i32 1>
+  ret <2 x i16> %2
+}

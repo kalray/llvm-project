@@ -1207,6 +1207,18 @@ def : Pat<(i32 (sext_inreg (vector_extract (v4i16 SingleReg:$v), 2), i16)), (EXT
 def : Pat<(i32 (sext_inreg (vector_extract (v4i16 SingleReg:$v), 3), i16)), (SRADri SingleReg:$v, (i64 48))>;
 def : Pat<(i32 (sext_inreg (vector_extract v4i16:$v, i64:$p), i16)), (ZXHD (SRLDrr SingleReg:$v, (SLLWri SingleReg:$p, 4)))>;
 
+def : Pat<(v2i16 (extract_subvector (v4i16 SingleReg:$v), (i64 0))),
+          (v2i16 (COPY SingleReg:$v))>;
+
+def : Pat<(v2i16 (extract_subvector (v4i16 SingleReg:$v), (i64 2))),
+          (v2i16 (SRLDri SingleReg:$v, (i64 32)))>;
+
+def : Pat<(v2f16 (extract_subvector (v4f16 SingleReg:$v), (i64 0))),
+          (v2f16 (COPY SingleReg:$v))>;
+
+def : Pat<(v2f16 (extract_subvector (v4f16 SingleReg:$v), (i64 2))),
+          (v2f16 (SRLDri SingleReg:$v, (i64 32)))>;
+
 // v2i64
 def : Pat<(v2i64 (build_vector i64:$v1, i64:$v2)),
   (INSERT_SUBREG

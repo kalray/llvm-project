@@ -2779,4 +2779,23 @@ entry:
   ret float %conv
 }
 
+define <2 x half> @subvect_2(<4 x half> %0) {
+; CHECK-LABEL: subvect_2:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    srld $r0 = $r0, 32
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = shufflevector <4 x half> %0, <4 x half> undef, <2 x i32> <i32 2, i32 3>
+  ret <2 x half> %2
+}
+
+define <2 x half> @subvect_0(<4 x half> %0) {
+; CHECK-LABEL: subvect_0:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = shufflevector <4 x half> %0, <4 x half> undef, <2 x i32> <i32 0, i32 1>
+  ret <2 x half> %2
+}
+
 attributes #0 = { nounwind }
