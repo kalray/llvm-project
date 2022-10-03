@@ -333,14 +333,14 @@ signed getACSWAPOpcode(uint64_t Size, const MachineOperand MO, bool IsCV1) {
     int ACSWAPrr, ACSWAPri27, ACSWAPri54;
     switch (Size) {
     case 4:
-      ACSWAPrr = KVX::ACSWAPWrr_cv2;
-      ACSWAPri27 = KVX::ACSWAPWrri27_cv2;
-      ACSWAPri54 = KVX::ACSWAPWrri54_cv2;
+      ACSWAPrr = KVX::ACSWAPWr;
+      ACSWAPri27 = KVX::ACSWAPWri27;
+      ACSWAPri54 = KVX::ACSWAPWri54;
       break;
     case 8:
-      ACSWAPrr = KVX::ACSWAPDrr_cv2;
-      ACSWAPri27 = KVX::ACSWAPDrri27_cv2;
-      ACSWAPri54 = KVX::ACSWAPDrri54_cv2;
+      ACSWAPrr = KVX::ACSWAPDr;
+      ACSWAPri27 = KVX::ACSWAPDri27;
+      ACSWAPri54 = KVX::ACSWAPDri54;
       break;
     default:
       report_fatal_error("No ACSWAP Opcode for this Size");
@@ -557,12 +557,11 @@ static bool expandALOAD(unsigned int Opcode, const KVXInstrInfo *TII,
     int64_t Imm = Offset.isImm() ? Offset.getImm() : 0;
     auto I = BuildMI(CSLoopMBB, DL, TII->get(ACSWAP), Update);
     if (Imm != 0) {
-      assert(
-          ACSWAP == KVX::ACSWAPWrri27_cv2 || ACSWAP == KVX::ACSWAPWrri54_cv2 ||
-          ACSWAP == KVX::ACSWAPDrri27_cv2 || ACSWAP == KVX::ACSWAPDrri54_cv2);
+      assert(ACSWAP == KVX::ACSWAPWri27 || ACSWAP == KVX::ACSWAPWri54 ||
+             ACSWAP == KVX::ACSWAPDri27 || ACSWAP == KVX::ACSWAPDri54);
       I.addImm(Imm);
     } else
-      assert(ACSWAP == KVX::ACSWAPWrr_cv2 || ACSWAP == KVX::ACSWAPDrr_cv2);
+      assert(ACSWAP == KVX::ACSWAPWrr || ACSWAP == KVX::ACSWAPDr);
     I.addReg(Base)
         .addReg(UpdateFetch)
         .addImm(KVXMOD::BOOLCAS_V)
@@ -778,7 +777,7 @@ static bool expandATAS(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
         .addImm(KVXMOD::DOSCALE_);
   else
     //   acswapw $update, [$base] = $update$fetch
-    BuildMI(CSLoop2MBB, DL, TII->get(KVX::ACSWAPWrr_cv2), Update)
+    BuildMI(CSLoop2MBB, DL, TII->get(KVX::ACSWAPWr), Update)
         .addReg(Base)
         .addReg(UpdateFetch)
         .addImm(KVXMOD::BOOLCAS_V)
@@ -921,16 +920,15 @@ static bool expandACMPSWAP(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
     //  acswap $desired, $offset[$base] = $desired$expected
     int64_t Imm = Offset.getImm() ? Offset.getImm() : 0;
     if (Imm == 0) {
-      assert(ACSWAP == KVX::ACSWAPWrr_cv2 || ACSWAP == KVX::ACSWAPDrr_cv2);
+      assert(ACSWAP == KVX::ACSWAPWr || ACSWAP == KVX::ACSWAPDr);
       BuildMI(CSLoopMBB, DL, TII->get(ACSWAP), Desired)
           .addReg(Base)
           .addReg(DesiredExpected)
           .addImm(KVXMOD::BOOLCAS_V)
           .addImm(KVXMOD::COHERENCY_);
     } else {
-      assert(
-          ACSWAP == KVX::ACSWAPWrri27_cv2 || ACSWAP == KVX::ACSWAPWrri54_cv2 ||
-          ACSWAP == KVX::ACSWAPDrri27_cv2 || ACSWAP == KVX::ACSWAPDrri54_cv2);
+      assert(ACSWAP == KVX::ACSWAPWri27 || ACSWAP == KVX::ACSWAPWri54 ||
+             ACSWAP == KVX::ACSWAPDri27 || ACSWAP == KVX::ACSWAPDri54);
       BuildMI(CSLoopMBB, DL, TII->get(ACSWAP), Desired)
           .addImm(Imm)
           .addReg(Base)

@@ -18,7 +18,7 @@
 // CMULGHXDT FSRECWP
 
 // We can only generate 1 out of 7 variations of:
-// ACSWAPD ACSWAPW ALCLRD ALCLRW
+// ALCLRD ALCLRW
 
 // These instructions require i128 legalization
 // MADDDT MADDSUDT MADDUDT MADDUZDT MSBFDT MSBFSUDT MSBFUDT MSBFUZDT

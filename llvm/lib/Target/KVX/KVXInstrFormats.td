@@ -36,11 +36,14 @@ def IsV2 : Predicate<"Subtarget->isV2()">;
 // I1INVAL, DZEROL ..., the following are set by default:
 // mayLoad = 0, mayStore = 0, hasSideEffects = 1
 
+// If the instruction is and atomic swap in memory, it has a special rule to generate
+// the asm string, as well it defines that it mayLoad and mayStore
+
 // List of arguments:
-// <asm, itin, Ops, Mods, MemOps, CC, Out, InPlace, pattern>
+// <asm, itin, Ops, Mods, MemOps, CC, Out, InPlace, pattern, IsAtomicSwap>
 
 // String to copy/paste on use on definition of NEWINSTRUCTION:
-// defm NEWINSTRUCTION : I </*asm=*/, /*itin=*/, /*Ops=*/, /*Mods=*/, /*MemOps=*/, /*CC=*/, /*Out=*/, /*InPlace=*/, /*pattern=*/>;
+// defm NEWINSTRUCTION : I </*asm=*/, /*itin=*/, /*Ops=*/, /*Mods=*/, /*MemOps=*/, /*CC=*/, /*Out=*/, /*InPlace=*/, /*pattern=*/, /*IsAtomicSwap=*/>;
 
 // Dag to be matched:
 // (outs [Out.0:$r]),
@@ -61,7 +64,8 @@ multiclass I <string asm,
          list<DAGOperand> CC = [],
          list<DAGOperand> Out = [],
          bit InPlace = 0,
-         list<dag> pat = []> {
+         list<dag> pat = [],
+         bit IsAtomicSwap = 0> {
 
     // Filter out Qindex for generating the asm string from Mods and keep it in the dag
     defvar Mods = !filter(i, ModsAll, !not(!eq(i, QindexMod)));
@@ -151,12 +155,13 @@ multiclass I <string asm,
     defvar mayRaiseFPE = !not(!empty(!filter(i, Mods, !eq(i, SilentMod))));
 
     defvar MemOperation = !and(!empty(Out), !empty(Ops));
-    defvar ReadsMem = !not(!or(!empty(MemOps), !empty(Out), MemOperation));
-    defvar WritesMem = !xor(!xor(ReadsMem, !not(!empty(MemOps))), MemOperation);
+    defvar ReadsMem = !or(!not(!or(!empty(MemOps), !empty(Out), MemOperation)), IsAtomicSwap);
+    defvar WritesMem = !or(!xor(!xor(ReadsMem, !not(!empty(MemOps))), MemOperation), IsAtomicSwap);
 
     defvar CanPredicate = !and(!empty(CC), !not(!empty(MemOps)));
     // Should we add an inplace register in the input dag?
-    defvar AsmStr = !cond( !eq(WritesMem, 0) : !strconcat(asm, ModsStr, CC_Qindex_str, OutStr, " =", MemOpStr, OpsStr),
+    defvar AsmStr = !cond( IsAtomicSwap : !strconcat(asm, ModsStr, CC_Qindex_str, OutStr, ", ", MemOpStr, " =", OpsStr),
+                           !eq(WritesMem, 0) : !strconcat(asm, ModsStr, CC_Qindex_str, OutStr, " =", MemOpStr, OpsStr),
                            !eq(WritesMem, 1) : !strconcat(asm, ModsStr, CC_Qindex_str, OutStr, MemOpStr, " =", OpsStr));
 
     defvar ItirName = !cast<string>(itin);

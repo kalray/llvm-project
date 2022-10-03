@@ -6,9 +6,9 @@
 
 target triple = "kvx-kalray-cos"
 
-define i32 @acswapw(i32* %p, i32 %a, i32 %b){
+define i32 @acswapw(i32* %0, i32 %1, i32 %2) {
 ; CV1-LABEL: acswapw:
-; CV1:       # %bb.0: # %entry
+; CV1:       # %bb.0:
 ; CV1-NEXT:    copyd $r2 = $r1
 ; CV1-NEXT:    copyd $r3 = $r2
 ; CV1-NEXT:    ;;
@@ -19,24 +19,132 @@ define i32 @acswapw(i32* %p, i32 %a, i32 %b){
 ; CV1-NEXT:    ;;
 ;
 ; CV2-LABEL: acswapw:
-; CV2:       # %bb.0: # %entry
+; CV2:       # %bb.0:
 ; CV2-NEXT:    copyd $r2 = $r1
 ; CV2-NEXT:    copyd $r3 = $r2
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    acswapw.v $r0, [$r0] = $r2r3
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
-entry:
-  %0 = bitcast i32* %p to i8*
-  %1 = tail call i32 @llvm.kvx.acswapw(i8* %0, i32 %a, i32 %b)
-  ret i32 %1
+  %4 = bitcast i32* %0 to i8*
+  %5 = tail call i32 @llvm.kvx.acswapw(i8* %4, i32 %1, i32 %2, i32 0, i32 0)
+  ret i32 %5
 }
 
-declare i32 @llvm.kvx.acswapw(i8*, i32, i32) #1
+declare i32 @llvm.kvx.acswapw(i8*, i32, i32, i32, i32)
 
-define i64 @acswapd(i32* %p, i64 %a, i64 %b){
+define i32 @acswapw10(i32* %0, i32 %1, i32 %2) {
+; CV1-LABEL: acswapw10:
+; CV1:       # %bb.0:
+; CV1-NEXT:    copyd $r2 = $r1
+; CV1-NEXT:    copyd $r3 = $r2
+; CV1-NEXT:    ;;
+; CV1-NEXT:    acswapw 80[$r0] = $r2r3
+; CV1-NEXT:    ;;
+; CV1-NEXT:    copyd $r0 = $r2
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: acswapw10:
+; CV2:       # %bb.0:
+; CV2-NEXT:    copyd $r2 = $r1
+; CV2-NEXT:    copyd $r3 = $r2
+; CV2-NEXT:    ;;
+; CV2-NEXT:    acswapw.v $r0, 80[$r0] = $r2r3
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
+  %4 = getelementptr inbounds i32, i32* %0, i64 20
+  %5 = bitcast i32* %4 to i8*
+  %6 = tail call i32 @llvm.kvx.acswapw(i8* nonnull %5, i32 %1, i32 %2, i32 0, i32 0)
+  ret i32 %6
+}
+
+define i32 @acswapw37(i32* %0, i32 %1, i32 %2) {
+; CV1-LABEL: acswapw37:
+; CV1:       # %bb.0:
+; CV1-NEXT:    copyd $r2 = $r1
+; CV1-NEXT:    copyd $r3 = $r2
+; CV1-NEXT:    ;;
+; CV1-NEXT:    acswapw 0xffffffffc[$r0] = $r2r3
+; CV1-NEXT:    ;;
+; CV1-NEXT:    copyd $r0 = $r2
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: acswapw37:
+; CV2:       # %bb.0:
+; CV2-NEXT:    copyd $r2 = $r1
+; CV2-NEXT:    copyd $r3 = $r2
+; CV2-NEXT:    ;;
+; CV2-NEXT:    acswapw.v $r0, 0xffffffffc[$r0] = $r2r3
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
+  %4 = getelementptr inbounds i32, i32* %0, i64 17179869183
+  %5 = bitcast i32* %4 to i8*
+  %6 = tail call i32 @llvm.kvx.acswapw(i8* nonnull %5, i32 %1, i32 %2, i32 0, i32 0)
+  ret i32 %6
+}
+
+define i32 @acswapw64(i32* %0, i32 %1, i32 %2) {
+; CV1-LABEL: acswapw64:
+; CV1:       # %bb.0:
+; CV1-NEXT:    copyd $r2 = $r1
+; CV1-NEXT:    copyd $r3 = $r2
+; CV1-NEXT:    ;;
+; CV1-NEXT:    acswapw 0x1000000010[$r0] = $r2r3
+; CV1-NEXT:    ;;
+; CV1-NEXT:    copyd $r0 = $r2
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: acswapw64:
+; CV2:       # %bb.0:
+; CV2-NEXT:    copyd $r2 = $r1
+; CV2-NEXT:    copyd $r3 = $r2
+; CV2-NEXT:    ;;
+; CV2-NEXT:    acswapw.v $r0, 0x1000000010[$r0] = $r2r3
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
+  %4 = getelementptr inbounds i32, i32* %0, i64 17179869188
+  %5 = bitcast i32* %4 to i8*
+  %6 = tail call i32 @llvm.kvx.acswapw(i8* nonnull %5, i32 %1, i32 %2, i32 0, i32 0)
+  ret i32 %6
+}
+
+define i32 @acswapwxs(i32* %0, i32 %1, i32 %2, i32 %3) {
+; CV1-LABEL: acswapwxs:
+; CV1:       # %bb.0:
+; CV1-NEXT:    sxwd $r2 = $r3
+; CV1-NEXT:    copyd $r4 = $r1
+; CV1-NEXT:    copyd $r5 = $r2
+; CV1-NEXT:    ;;
+; CV1-NEXT:    acswapw.xs $r2[$r0] = $r4r5
+; CV1-NEXT:    ;;
+; CV1-NEXT:    copyd $r0 = $r4
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: acswapwxs:
+; CV2:       # %bb.0:
+; CV2-NEXT:    sxwd $r2 = $r3
+; CV2-NEXT:    copyd $r4 = $r1
+; CV2-NEXT:    copyd $r5 = $r2
+; CV2-NEXT:    ;;
+; CV2-NEXT:    addx4d $r0 = $r2, $r0
+; CV2-NEXT:    ;;
+; CV2-NEXT:    acswapw.v $r0, [$r0] = $r4r5
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
+  %5 = sext i32 %3 to i64
+  %6 = getelementptr inbounds i32, i32* %0, i64 %5
+  %7 = bitcast i32* %6 to i8*
+  %8 = tail call i32 @llvm.kvx.acswapw(i8* %7, i32 %1, i32 %2, i32 0, i32 0)
+  ret i32 %8
+}
+
+define i64 @acswapd(i64* %0, i64 %1, i64 %2) {
 ; CV1-LABEL: acswapd:
-; CV1:       # %bb.0: # %entry
+; CV1:       # %bb.0:
 ; CV1-NEXT:    copyd $r2 = $r1
 ; CV1-NEXT:    copyd $r3 = $r2
 ; CV1-NEXT:    ;;
@@ -47,21 +155,124 @@ define i64 @acswapd(i32* %p, i64 %a, i64 %b){
 ; CV1-NEXT:    ;;
 ;
 ; CV2-LABEL: acswapd:
-; CV2:       # %bb.0: # %entry
+; CV2:       # %bb.0:
 ; CV2-NEXT:    copyd $r2 = $r1
 ; CV2-NEXT:    copyd $r3 = $r2
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    acswapd.v $r0, [$r0] = $r2r3
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
-entry:
-  %0 = bitcast i32* %p to i8*
-  %1 = tail call i64 @llvm.kvx.acswapd(i8* %0, i64 %a, i64 %b)
-  ret i64 %1
+  %4 = bitcast i64* %0 to i8*
+  %5 = tail call i64 @llvm.kvx.acswapd(i8* %4, i64 %1, i64 %2, i32 0, i32 0)
+  ret i64 %5
 }
 
-declare i64 @llvm.kvx.acswapd(i8*, i64, i64) #1
+declare i64 @llvm.kvx.acswapd(i8*, i64, i64, i32, i32)
 
+define i64 @acswapd10(i64* %0, i64 %1, i64 %2) {
+; CV1-LABEL: acswapd10:
+; CV1:       # %bb.0:
+; CV1-NEXT:    copyd $r2 = $r1
+; CV1-NEXT:    copyd $r3 = $r2
+; CV1-NEXT:    ;;
+; CV1-NEXT:    acswapd 160[$r0] = $r2r3
+; CV1-NEXT:    ;;
+; CV1-NEXT:    copyd $r0 = $r2
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: acswapd10:
+; CV2:       # %bb.0:
+; CV2-NEXT:    copyd $r2 = $r1
+; CV2-NEXT:    copyd $r3 = $r2
+; CV2-NEXT:    ;;
+; CV2-NEXT:    acswapd.v $r0, 160[$r0] = $r2r3
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
+  %4 = getelementptr inbounds i64, i64* %0, i64 20
+  %5 = bitcast i64* %4 to i8*
+  %6 = tail call i64 @llvm.kvx.acswapd(i8* nonnull %5, i64 %1, i64 %2, i32 0, i32 0)
+  ret i64 %6
+}
+
+define i64 @acswapd37(i64* %0, i64 %1, i64 %2) {
+; CV1-LABEL: acswapd37:
+; CV1:       # %bb.0:
+; CV1-NEXT:    copyd $r2 = $r1
+; CV1-NEXT:    copyd $r3 = $r2
+; CV1-NEXT:    ;;
+; CV1-NEXT:    acswapd 0xffffffff8[$r0] = $r2r3
+; CV1-NEXT:    ;;
+; CV1-NEXT:    copyd $r0 = $r2
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: acswapd37:
+; CV2:       # %bb.0:
+; CV2-NEXT:    copyd $r2 = $r1
+; CV2-NEXT:    copyd $r3 = $r2
+; CV2-NEXT:    ;;
+; CV2-NEXT:    acswapd.v $r0, 0xffffffff8[$r0] = $r2r3
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
+  %4 = getelementptr inbounds i64, i64* %0, i64 8589934591
+  %5 = bitcast i64* %4 to i8*
+  %6 = tail call i64 @llvm.kvx.acswapd(i8* nonnull %5, i64 %1, i64 %2, i32 0, i32 0)
+  ret i64 %6
+}
+
+define i64 @acswapd64(i64* %0, i64 %1, i64 %2) {
+; CV1-LABEL: acswapd64:
+; CV1:       # %bb.0:
+; CV1-NEXT:    copyd $r2 = $r1
+; CV1-NEXT:    copyd $r3 = $r2
+; CV1-NEXT:    ;;
+; CV1-NEXT:    acswapd 0x1000000010[$r0] = $r2r3
+; CV1-NEXT:    ;;
+; CV1-NEXT:    copyd $r0 = $r2
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: acswapd64:
+; CV2:       # %bb.0:
+; CV2-NEXT:    copyd $r2 = $r1
+; CV2-NEXT:    copyd $r3 = $r2
+; CV2-NEXT:    ;;
+; CV2-NEXT:    acswapd.v $r0, 0x1000000010[$r0] = $r2r3
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
+  %4 = getelementptr inbounds i64, i64* %0, i64 8589934594
+  %5 = bitcast i64* %4 to i8*
+  %6 = tail call i64 @llvm.kvx.acswapd(i8* nonnull %5, i64 %1, i64 %2, i32 0, i32 0)
+  ret i64 %6
+}
+
+define i64 @acswapdxs(i64* %0, i64 %1, i64 %2, i64 %3) {
+; CV1-LABEL: acswapdxs:
+; CV1:       # %bb.0:
+; CV1-NEXT:    copyd $r4 = $r1
+; CV1-NEXT:    copyd $r5 = $r2
+; CV1-NEXT:    ;;
+; CV1-NEXT:    acswapd.xs $r3[$r0] = $r4r5
+; CV1-NEXT:    ;;
+; CV1-NEXT:    copyd $r0 = $r4
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: acswapdxs:
+; CV2:       # %bb.0:
+; CV2-NEXT:    addx8d $r0 = $r3, $r0
+; CV2-NEXT:    copyd $r4 = $r1
+; CV2-NEXT:    copyd $r5 = $r2
+; CV2-NEXT:    ;;
+; CV2-NEXT:    acswapd.v $r0, [$r0] = $r4r5
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
+  %5 = getelementptr inbounds i64, i64* %0, i64 %3
+  %6 = bitcast i64* %5 to i8*
+  %7 = tail call i64 @llvm.kvx.acswapd(i8* %6, i64 %1, i64 %2, i32 0, i32 0)
+  ret i64 %7
+}
 define i64 @aladdd(i8* readonly %p, i64 %v){
 ; CHECK-LABEL: aladdd:
 ; CHECK:       # %bb.0: # %entry
