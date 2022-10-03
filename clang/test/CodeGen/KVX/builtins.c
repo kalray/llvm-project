@@ -9,3 +9,12 @@
 void errop(void) {
   __builtin_kvx_errop();
 }
+
+// CHECK-LABEL: @trap(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    tail call void @llvm.trap()
+// CHECK-NEXT:    unreachable
+//
+void trap(void) {
+  __builtin_trap();
+}

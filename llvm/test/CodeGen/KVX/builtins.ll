@@ -40,3 +40,14 @@ define void @foo() {
 }
 
 declare void @llvm.kvx.errop()
+
+define void @trap() {
+; CHECK-LABEL: trap:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    errop
+; CHECK-NEXT:    ;;
+  tail call void @llvm.trap()
+  unreachable
+}
+
+declare void @llvm.trap()

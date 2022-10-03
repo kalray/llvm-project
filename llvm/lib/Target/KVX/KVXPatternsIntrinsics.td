@@ -10,6 +10,7 @@ def: Pat<(int_kvx_tlbiinval), (TLBIINVAL)>;
 def: Pat<(int_kvx_tlbprobe), (TLBPROBE)>;
 def: Pat<(int_kvx_tlbread), (TLBREAD)>;
 def: Pat<(int_kvx_tlbwrite), (TLBWRITE)>;
+def: Pat<(trap), (ERROP)>;
 
 def GETp : KVX_PSEUDO_W_SCHEDINFO<(outs SingleReg:$dst), (ins Sysnumber:$param), [], BCU>;
 
