@@ -260,3 +260,8 @@ typedef float float32x2_t __attribute__((__vector_size__(2 * sizeof(float))));
 float32x2_t lfwp(void *p) {
   return __builtin_kvx_lfwp(p, ".s", 1);
 }
+
+typedef long int64x4_t __attribute__((__vector_size__(4 * sizeof(long long int))));
+int64x4_t ldq(int64x4_t *p) {
+  return __builtin_kvx_ldq(p, "");
+}
