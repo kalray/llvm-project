@@ -54,25 +54,15 @@ int acswapwv(int *p, int a, int b) {
   return __builtin_kvx_acswapw(p, a, b);
 }
 
-// CHECK-LABEL: @acswapws(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = bitcast i32* [[P:%.*]] to i8*
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call i32 @llvm.kvx.acswapw(i8* [[TMP0]], i32 [[A:%.*]], i32 [[B:%.*]], i32 1, i32 2)
-// CHECK-NEXT:    ret i32 [[TMP1]]
 //
-int acswapws(int *p, int a, int b) {
-  return __builtin_kvx_acswapw(p, a, b, ".s");
-}
+// int acswapws(int *p, int a, int b) {
+//   return __builtin_kvx_acswapw(p, a, b, ".s");
+// }
 
-// CHECK-LABEL: @acswapwvs(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = bitcast i32* [[P:%.*]] to i8*
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call i32 @llvm.kvx.acswapw(i8* [[TMP0]], i32 [[A:%.*]], i32 [[B:%.*]], i32 0, i32 2)
-// CHECK-NEXT:    ret i32 [[TMP1]]
 //
-int acswapwvs(int *p, int a, int b) {
-  return __builtin_kvx_acswapw(p, a, b, ".v.s");
-}
+// int acswapwvs(int *p, int a, int b) {
+//   return __builtin_kvx_acswapw(p, a, b, ".v.s");
+// }
 
 // CHECK-LABEL: @acswapwg(
 // CHECK-NEXT:  entry:
@@ -114,25 +104,15 @@ long acswapdv(long *p, long a, long b) {
   return __builtin_kvx_acswapd(p, a, b, ".v");
 }
 
-// CHECK-LABEL: @acswapds(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = bitcast i64* [[P:%.*]] to i8*
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call i64 @llvm.kvx.acswapd(i8* [[TMP0]], i64 [[A:%.*]], i64 [[B:%.*]], i32 1, i32 2)
-// CHECK-NEXT:    ret i64 [[TMP1]]
 //
-long acswapds(long *p, long a, long b) {
-  return __builtin_kvx_acswapd(p, a, b, ".s");
-}
+// long acswapds(long *p, long a, long b) {
+//   return __builtin_kvx_acswapd(p, a, b, ".s");
+// }
 
-// CHECK-LABEL: @acswapdvs(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = bitcast i64* [[P:%.*]] to i8*
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call i64 @llvm.kvx.acswapd(i8* [[TMP0]], i64 [[A:%.*]], i64 [[B:%.*]], i32 0, i32 2)
-// CHECK-NEXT:    ret i64 [[TMP1]]
 //
-long acswapdvs(long *p, long a, long b) {
-  return __builtin_kvx_acswapd(p, a, b, ".v.s");
-}
+// long acswapdvs(long *p, long a, long b) {
+//   return __builtin_kvx_acswapd(p, a, b, ".v.s");
+// }
 
 // CHECK-LABEL: @acswapdg(
 // CHECK-NEXT:  entry:
@@ -176,25 +156,15 @@ long2 acswapqv(long2 *p, long2 a, long2 b) {
   return __builtin_kvx_acswapq(p, a, b, ".v");
 }
 
-// CHECK-LABEL: @acswapqs(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = bitcast <2 x i64>* [[P:%.*]] to i8*
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <2 x i64> @llvm.kvx.acswapq(i8* [[TMP0]], <2 x i64> [[A:%.*]], <2 x i64> [[B:%.*]], i32 1, i32 2)
-// CHECK-NEXT:    ret <2 x i64> [[TMP1]]
 //
-long2 acswapqs(long2 *p, long2 a, long2 b) {
-  return __builtin_kvx_acswapq(p, a, b, ".s");
-}
+// long2 acswapqs(long2 *p, long2 a, long2 b) {
+//   return __builtin_kvx_acswapq(p, a, b, ".s");
+// }
 
-// CHECK-LABEL: @acswapqvs(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = bitcast <2 x i64>* [[P:%.*]] to i8*
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <2 x i64> @llvm.kvx.acswapq(i8* [[TMP0]], <2 x i64> [[A:%.*]], <2 x i64> [[B:%.*]], i32 0, i32 2)
-// CHECK-NEXT:    ret <2 x i64> [[TMP1]]
 //
-long2 acswapqvs(long2 *p, long2 a, long2 b) {
-  return __builtin_kvx_acswapq(p, a, b, ".v.s");
-}
+// long2 acswapqvs(long2 *p, long2 a, long2 b) {
+//   return __builtin_kvx_acswapq(p, a, b, ".v.s");
+// }
 
 // CHECK-LABEL: @acswapqg(
 // CHECK-NEXT:  entry:
@@ -248,4 +218,110 @@ long2 acswapqvgri27(long2 *p, long2 a, long2 b) {
 //
 long2 acswapqvgri54(long2 *p, long2 a, long2 b) {
   return __builtin_kvx_acswapq(&p[4294967299], a, b, ".v.g");
+}
+
+// CHECK-LABEL: @alw(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = bitcast i32* [[V:%.*]] to i8*
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call i32 @llvm.kvx.alw(i8* [[TMP0]], i32 0)
+// CHECK-NEXT:    ret i32 [[TMP1]]
+//
+int alw(int *v) {
+  return __builtin_kvx_alw(v, "");
+}
+
+// CHECK-LABEL: @alw_ri10(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds i32, i32* [[V:%.*]], i64 1
+// CHECK-NEXT:    [[TMP0:%.*]] = bitcast i32* [[ARRAYIDX]] to i8*
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call i32 @llvm.kvx.alw(i8* nonnull [[TMP0]], i32 0)
+// CHECK-NEXT:    ret i32 [[TMP1]]
+//
+int alw_ri10(int *v) {
+  return __builtin_kvx_alw(&v[1], "");
+}
+
+// CHECK-LABEL: @alw_ri27(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds i32, i32* [[V:%.*]], i64 1000
+// CHECK-NEXT:    [[TMP0:%.*]] = bitcast i32* [[ARRAYIDX]] to i8*
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call i32 @llvm.kvx.alw(i8* nonnull [[TMP0]], i32 0)
+// CHECK-NEXT:    ret i32 [[TMP1]]
+//
+int alw_ri27(int *v) {
+  return __builtin_kvx_alw(&v[1000], "");
+}
+
+// CHECK-LABEL: @alw_ri64(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds i32, i32* [[V:%.*]], i64 9000000000
+// CHECK-NEXT:    [[TMP0:%.*]] = bitcast i32* [[ARRAYIDX]] to i8*
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call i32 @llvm.kvx.alw(i8* nonnull [[TMP0]], i32 0)
+// CHECK-NEXT:    ret i32 [[TMP1]]
+//
+int alw_ri64(int *v) {
+  return __builtin_kvx_alw(&v[9000000000], "");
+}
+
+// CHECK-LABEL: @alw_g(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = bitcast i32* [[V:%.*]] to i8*
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call i32 @llvm.kvx.alw(i8* [[TMP0]], i32 1)
+// CHECK-NEXT:    ret i32 [[TMP1]]
+//
+int alw_g(int *v) {
+  return __builtin_kvx_alw(v, ".g");
+}
+
+// CHECK-LABEL: @ald(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = bitcast i64* [[V:%.*]] to i8*
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call i64 @llvm.kvx.ald(i8* [[TMP0]], i32 0)
+// CHECK-NEXT:    ret i64 [[TMP1]]
+//
+long ald(long *v) {
+  return __builtin_kvx_ald(v, "");
+}
+
+// CHECK-LABEL: @ald_ri10(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds i64, i64* [[V:%.*]], i64 1
+// CHECK-NEXT:    [[TMP0:%.*]] = bitcast i64* [[ARRAYIDX]] to i8*
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call i64 @llvm.kvx.ald(i8* nonnull [[TMP0]], i32 0)
+// CHECK-NEXT:    ret i64 [[TMP1]]
+//
+long ald_ri10(long *v) {
+  return __builtin_kvx_ald(&v[1], "");
+}
+
+// CHECK-LABEL: @ald_ri27(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds i64, i64* [[V:%.*]], i64 1000
+// CHECK-NEXT:    [[TMP0:%.*]] = bitcast i64* [[ARRAYIDX]] to i8*
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call i64 @llvm.kvx.ald(i8* nonnull [[TMP0]], i32 0)
+// CHECK-NEXT:    ret i64 [[TMP1]]
+//
+long ald_ri27(long *v) {
+  return __builtin_kvx_ald(&v[1000], "");
+}
+
+// CHECK-LABEL: @ald_ri64(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds i64, i64* [[V:%.*]], i64 9000000000
+// CHECK-NEXT:    [[TMP0:%.*]] = bitcast i64* [[ARRAYIDX]] to i8*
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call i64 @llvm.kvx.ald(i8* nonnull [[TMP0]], i32 0)
+// CHECK-NEXT:    ret i64 [[TMP1]]
+//
+long ald_ri64(long *v) {
+  return __builtin_kvx_ald(&v[9000000000], "");
+}
+
+// CHECK-LABEL: @ald_g(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = bitcast i64* [[V:%.*]] to i8*
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call i64 @llvm.kvx.ald(i8* [[TMP0]], i32 1)
+// CHECK-NEXT:    ret i64 [[TMP1]]
+//
+long ald_g(long *v) {
+  return __builtin_kvx_ald(v, ".g");
 }

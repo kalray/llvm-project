@@ -18394,7 +18394,10 @@ static const KvxModifier KVX_BOOLCAS({{"", 1}, {"v", 0}});
 
 static const KvxModifier KVX_CACHELEVEL({{"l1", 0}, {"l2", 1}});
 
-static const KvxModifier KVX_COHERENCY({{"", 0}, {"g", 1}, {"s", 2}});
+static const KvxModifier KVX_COHERENCY(
+    {{"", 0},
+     {"g",
+      1} /*, {"s", 2}*/}); // System coherency is not implemented in cv2 yet.
 
 static const KvxModifier KVX_RCHANNEL({{"f", 0}, {"b", 1}});
 

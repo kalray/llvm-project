@@ -252,6 +252,9 @@ def llvm_descriptor_ty : LLVMPointerType<llvm_empty_ty>;          // { }*
 def llvm_metadata_ty   : LLVMType<MetadataVT>;                    // !{...}
 def llvm_token_ty      : LLVMType<token>;                         // token
 
+def llvm_ptr32_ty : LLVMPointerType<llvm_i32_ty>;
+def llvm_ptr64_ty : LLVMPointerType<llvm_i64_ty>;
+
 def llvm_x86mmx_ty     : LLVMType<x86mmx>;
 def llvm_ptrx86mmx_ty  : LLVMPointerType<llvm_x86mmx_ty>;         // <1 x i64>*
 

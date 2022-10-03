@@ -149,7 +149,7 @@ def BoolcasMod : Operand<i32>, ImmLeaf<i32, [{return (Imm == 0) || (Imm == 1);}]
   let PrintMethod = "printBoolcasMod";
 }
 
-def CoherencyMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 2);}]> {
+def CoherencyMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 1);}]> {
   let PrintMethod = "printCoherencyMod";
 }
 

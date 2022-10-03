@@ -273,58 +273,56 @@ define i64 @acswapdxs(i64* %0, i64 %1, i64 %2, i64 %3) {
   %7 = tail call i64 @llvm.kvx.acswapd(i8* %6, i64 %1, i64 %2, i32 0, i32 0)
   ret i64 %7
 }
-define i64 @aladdd(i8* readonly %p, i64 %v){
+
+define i64 @aladdd(i8* %0, i64 %1) {
 ; CHECK-LABEL: aladdd:
-; CHECK:       # %bb.0: # %entry
+; CHECK:       # %bb.0:
 ; CHECK-NEXT:    aladdd 0[$r0] = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-entry:
-  %0 = tail call i64 @llvm.kvx.aladdd(i8* %p, i64 %v)
-  ret i64 %0
+  %3 = tail call i64 @llvm.kvx.aladdd(i8* %0, i64 %1)
+  ret i64 %3
 }
 
-declare i64 @llvm.kvx.aladdd(i8*, i64) #3
+declare i64 @llvm.kvx.aladdd(i8*, i64)
 
-define i32 @aladdw(i8* readonly %p, i32 %v){
+define i32 @aladdw(i8* %0, i32 %1) {
 ; CHECK-LABEL: aladdw:
-; CHECK:       # %bb.0: # %entry
+; CHECK:       # %bb.0:
 ; CHECK-NEXT:    aladdw 0[$r0] = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-entry:
-  %0 = tail call i32 @llvm.kvx.aladdw(i8* %p, i32 %v)
-  ret i32 %0
+  %3 = tail call i32 @llvm.kvx.aladdw(i8* %0, i32 %1)
+  ret i32 %3
 }
 
-declare i32 @llvm.kvx.aladdw(i8*, i32) #3
+declare i32 @llvm.kvx.aladdw(i8*, i32)
 
-define i64 @alclrd(i8* readonly %p){
+define i64 @alclrd(i8* %0) {
 ; CHECK-LABEL: alclrd:
-; CHECK:       # %bb.0: # %entry
+; CHECK:       # %bb.0:
 ; CHECK-NEXT:    alclrd $r0 = 0[$r0]
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-entry:
-  %0 = tail call i64 @llvm.kvx.alclrd(i8* %p)
-  ret i64 %0
+  %2 = tail call i64 @llvm.kvx.alclrd(i8* %0)
+  ret i64 %2
 }
 
-declare i64 @llvm.kvx.alclrd(i8*) #3
+declare i64 @llvm.kvx.alclrd(i8*)
 
-define i32 @alclrw(i8* readonly %p){
+define i32 @alclrw(i8* %0) {
 ; CHECK-LABEL: alclrw:
-; CHECK:       # %bb.0: # %entry
+; CHECK:       # %bb.0:
 ; CHECK-NEXT:    alclrw $r0 = 0[$r0]
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-entry:
-  %0 = tail call i32 @llvm.kvx.alclrw(i8* %p)
-  ret i32 %0
+  %2 = tail call i32 @llvm.kvx.alclrw(i8* %0)
+  ret i32 %2
 }
 
-declare i32 @llvm.kvx.alclrw(i8*) #3
+declare i32 @llvm.kvx.alclrw(i8*)
+
