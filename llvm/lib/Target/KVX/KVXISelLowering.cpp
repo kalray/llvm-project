@@ -2377,6 +2377,9 @@ static SDValue combineSRA(SDNode *N, SelectionDAG &DAG) {
 
 static SDValue combineZext(SDNode *N, SelectionDAG &DAG) {
   SDValue N0 = N->getOperand(0);
+  if (N0->isUndef())
+    return SDValue();
+
   SDValue N00 = N0->getOperand(0);
   unsigned Opcode = N0->getOpcode();
 
