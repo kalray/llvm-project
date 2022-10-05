@@ -240,7 +240,9 @@ void KVXTTIImpl::getUnrollingPreferences(Loop *L, ScalarEvolution &SE,
                                          TTI::UnrollingPreferences &UP) {
   BaseT::getUnrollingPreferences(L, SE, UP);
   auto OptLvl = TM->getOptLevel();
-  UP.PartialOptSizeThreshold = 15;
+  // Disable loop unrolling for Os.
+  UP.OptSizeThreshold = 0;
+  UP.PartialOptSizeThreshold = 0;
   if (OptLvl < CodeGenOpt::Default)
     return;
 
