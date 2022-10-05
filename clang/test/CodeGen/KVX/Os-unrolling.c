@@ -11,55 +11,25 @@
 // OPS:       for.cond1.preheader.lr.ph:
 // OPS-NEXT:    [[CONV4:%.*]] = sext i16 [[VAL:%.*]] to i32
 // OPS-NEXT:    [[WIDE_TRIP_COUNT:%.*]] = zext i32 [[N]] to i64
-// OPS-NEXT:    [[XTRAITER:%.*]] = and i64 [[WIDE_TRIP_COUNT]], 1
-// OPS-NEXT:    [[TMP0:%.*]] = icmp eq i32 [[N]], 1
-// OPS-NEXT:    [[UNROLL_ITER:%.*]] = and i64 [[WIDE_TRIP_COUNT]], 4294967294
-// OPS-NEXT:    [[LCMP_MOD_NOT:%.*]] = icmp eq i64 [[XTRAITER]], 0
 // OPS-NEXT:    br label [[FOR_BODY3_LR_PH:%.*]]
 // OPS:       for.body3.lr.ph:
 // OPS-NEXT:    [[I_027:%.*]] = phi i32 [ 0, [[FOR_COND1_PREHEADER_LR_PH]] ], [ [[INC11:%.*]], [[FOR_INC10:%.*]] ]
 // OPS-NEXT:    [[MUL:%.*]] = mul i32 [[I_027]], [[N]]
-// OPS-NEXT:    br i1 [[TMP0]], label [[FOR_INC10_UNR_LCSSA:%.*]], label [[FOR_BODY3:%.*]]
+// OPS-NEXT:    br label [[FOR_BODY3:%.*]]
 // OPS:       for.body3:
-// OPS-NEXT:    [[INDVARS_IV:%.*]] = phi i64 [ [[INDVARS_IV_NEXT_1:%.*]], [[FOR_BODY3]] ], [ 0, [[FOR_BODY3_LR_PH]] ]
-// OPS-NEXT:    [[NITER:%.*]] = phi i64 [ [[NITER_NSUB_1:%.*]], [[FOR_BODY3]] ], [ [[UNROLL_ITER]], [[FOR_BODY3_LR_PH]] ]
-// OPS-NEXT:    [[TMP1:%.*]] = trunc i64 [[INDVARS_IV]] to i32
-// OPS-NEXT:    [[ADD:%.*]] = add i32 [[MUL]], [[TMP1]]
+// OPS-NEXT:    [[INDVARS_IV:%.*]] = phi i64 [ 0, [[FOR_BODY3_LR_PH]] ], [ [[INDVARS_IV_NEXT:%.*]], [[FOR_BODY3]] ]
+// OPS-NEXT:    [[TMP0:%.*]] = trunc i64 [[INDVARS_IV]] to i32
+// OPS-NEXT:    [[ADD:%.*]] = add i32 [[MUL]], [[TMP0]]
 // OPS-NEXT:    [[IDXPROM:%.*]] = zext i32 [[ADD]] to i64
 // OPS-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds i16, i16* [[A:%.*]], i64 [[IDXPROM]]
-// OPS-NEXT:    [[TMP2:%.*]] = load i16, i16* [[ARRAYIDX]], align 2, [[TBAA2:!tbaa !.*]]
-// OPS-NEXT:    [[CONV:%.*]] = sext i16 [[TMP2]] to i32
+// OPS-NEXT:    [[TMP1:%.*]] = load i16, i16* [[ARRAYIDX]], align 2, [[TBAA2:!tbaa !.*]]
+// OPS-NEXT:    [[CONV:%.*]] = sext i16 [[TMP1]] to i32
 // OPS-NEXT:    [[MUL5:%.*]] = mul nsw i32 [[CONV]], [[CONV4]]
 // OPS-NEXT:    [[ARRAYIDX9:%.*]] = getelementptr inbounds i32, i32* [[C:%.*]], i64 [[IDXPROM]]
 // OPS-NEXT:    store i32 [[MUL5]], i32* [[ARRAYIDX9]], align 4, [[TBAA6:!tbaa !.*]]
-// OPS-NEXT:    [[TMP3:%.*]] = trunc i64 [[INDVARS_IV]] to i32
-// OPS-NEXT:    [[TMP4:%.*]] = or i32 [[TMP3]], 1
-// OPS-NEXT:    [[ADD_1:%.*]] = add i32 [[MUL]], [[TMP4]]
-// OPS-NEXT:    [[IDXPROM_1:%.*]] = zext i32 [[ADD_1]] to i64
-// OPS-NEXT:    [[ARRAYIDX_1:%.*]] = getelementptr inbounds i16, i16* [[A]], i64 [[IDXPROM_1]]
-// OPS-NEXT:    [[TMP5:%.*]] = load i16, i16* [[ARRAYIDX_1]], align 2, [[TBAA2]]
-// OPS-NEXT:    [[CONV_1:%.*]] = sext i16 [[TMP5]] to i32
-// OPS-NEXT:    [[MUL5_1:%.*]] = mul nsw i32 [[CONV_1]], [[CONV4]]
-// OPS-NEXT:    [[ARRAYIDX9_1:%.*]] = getelementptr inbounds i32, i32* [[C]], i64 [[IDXPROM_1]]
-// OPS-NEXT:    store i32 [[MUL5_1]], i32* [[ARRAYIDX9_1]], align 4, [[TBAA6]]
-// OPS-NEXT:    [[INDVARS_IV_NEXT_1]] = add nuw nsw i64 [[INDVARS_IV]], 2
-// OPS-NEXT:    [[NITER_NSUB_1]] = add i64 [[NITER]], -2
-// OPS-NEXT:    [[NITER_NCMP_1:%.*]] = icmp eq i64 [[NITER_NSUB_1]], 0
-// OPS-NEXT:    br i1 [[NITER_NCMP_1]], label [[FOR_INC10_UNR_LCSSA]], label [[FOR_BODY3]], [[LOOP8:!llvm.loop !.*]]
-// OPS:       for.inc10.unr-lcssa:
-// OPS-NEXT:    [[INDVARS_IV_UNR:%.*]] = phi i64 [ 0, [[FOR_BODY3_LR_PH]] ], [ [[INDVARS_IV_NEXT_1]], [[FOR_BODY3]] ]
-// OPS-NEXT:    br i1 [[LCMP_MOD_NOT]], label [[FOR_INC10]], label [[FOR_BODY3_EPIL:%.*]]
-// OPS:       for.body3.epil:
-// OPS-NEXT:    [[TMP6:%.*]] = trunc i64 [[INDVARS_IV_UNR]] to i32
-// OPS-NEXT:    [[ADD_EPIL:%.*]] = add i32 [[MUL]], [[TMP6]]
-// OPS-NEXT:    [[IDXPROM_EPIL:%.*]] = zext i32 [[ADD_EPIL]] to i64
-// OPS-NEXT:    [[ARRAYIDX_EPIL:%.*]] = getelementptr inbounds i16, i16* [[A]], i64 [[IDXPROM_EPIL]]
-// OPS-NEXT:    [[TMP7:%.*]] = load i16, i16* [[ARRAYIDX_EPIL]], align 2, [[TBAA2]]
-// OPS-NEXT:    [[CONV_EPIL:%.*]] = sext i16 [[TMP7]] to i32
-// OPS-NEXT:    [[MUL5_EPIL:%.*]] = mul nsw i32 [[CONV_EPIL]], [[CONV4]]
-// OPS-NEXT:    [[ARRAYIDX9_EPIL:%.*]] = getelementptr inbounds i32, i32* [[C]], i64 [[IDXPROM_EPIL]]
-// OPS-NEXT:    store i32 [[MUL5_EPIL]], i32* [[ARRAYIDX9_EPIL]], align 4, [[TBAA6]]
-// OPS-NEXT:    br label [[FOR_INC10]]
+// OPS-NEXT:    [[INDVARS_IV_NEXT]] = add nuw nsw i64 [[INDVARS_IV]], 1
+// OPS-NEXT:    [[EXITCOND_NOT:%.*]] = icmp eq i64 [[INDVARS_IV_NEXT]], [[WIDE_TRIP_COUNT]]
+// OPS-NEXT:    br i1 [[EXITCOND_NOT]], label [[FOR_INC10]], label [[FOR_BODY3]], [[LOOP8:!llvm.loop !.*]]
 // OPS:       for.inc10:
 // OPS-NEXT:    [[INC11]] = add nuw i32 [[I_027]], 1
 // OPS-NEXT:    [[EXITCOND29_NOT:%.*]] = icmp eq i32 [[INC11]], [[N]]
