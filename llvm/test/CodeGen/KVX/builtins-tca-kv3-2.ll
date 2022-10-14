@@ -1027,19 +1027,21 @@ define void @xcopyx(<512 x i1>* nocapture %0) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xcopyx.zd $a4a5 = $a0a1
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xcopyx.ud $a6a7 = $a0a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xcopyx.tq $a0a1 = $a0a1
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xso 96[$r0] = $a3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xso 64[$r0] = $a2
-; CHECK-NEXT:    xcopyx.ud $a2a3 = $a0a1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xso 160[$r0] = $a5
-; CHECK-NEXT:    xcopyx.tq $a0a1 = $a0a1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xso 128[$r0] = $a4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 224[$r0] = $a3
+; CHECK-NEXT:    xso 224[$r0] = $a7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 192[$r0] = $a2
+; CHECK-NEXT:    xso 192[$r0] = $a6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xso 288[$r0] = $a1
 ; CHECK-NEXT:    ;;
@@ -1137,19 +1139,21 @@ define void @xsplatox(<512 x i1>* nocapture %0, <256 x i1>* nocapture readonly %
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xsplatox.zd $a4a5 = $a0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xsplatox.ud $a6a7 = $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xsplatox.tq $a0a1 = $a0
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xso 32[$r0] = $a3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xso 0[$r0] = $a2
-; CHECK-NEXT:    xsplatox.ud $a2a3 = $a0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xso 96[$r0] = $a5
-; CHECK-NEXT:    xsplatox.tq $a0a1 = $a0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xso 64[$r0] = $a4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 160[$r0] = $a3
+; CHECK-NEXT:    xso 160[$r0] = $a7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 128[$r0] = $a2
+; CHECK-NEXT:    xso 128[$r0] = $a6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xso 224[$r0] = $a1
 ; CHECK-NEXT:    ;;
@@ -1180,12 +1184,13 @@ define void @xsplatdo(<256 x i1>* nocapture %0) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xsplatdo $a1 = 0x1fffffffff
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xsplatdo $a2 = 0x18ffffffff9c
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xso 0[$r0] = $a0
-; CHECK-NEXT:    xsplatdo $a0 = 0x18ffffffff9c
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xso 32[$r0] = $a1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 64[$r0] = $a0
+; CHECK-NEXT:    xso 64[$r0] = $a2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = tail call <256 x i1> @llvm.kvx.xsplatdo(i64 511)

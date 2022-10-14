@@ -79,9 +79,10 @@ define void @test_moveto(i64 %a, i64 %b, i64 %c, i64 %d, <256 x i1>* %p0, <256 x
 ; CHECK-NEXT:    movetq $a0_lo = $r2, $r3
 ; CHECK-NEXT:    movetq $a0_hi = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 0[$r4] = $a0
 ; CHECK-NEXT:    movetq $a1_lo = $r1, $r0
 ; CHECK-NEXT:    movetq $a1_hi = $r3, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 0[$r4] = $a0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 0[$r5] = $a1
 ; CHECK-NEXT:    ret
@@ -805,8 +806,9 @@ define <4 x i64> @test_tca_builtins(i64 %0, i64 %1, i64 %2, i64 %3, <256 x i1>* 
 ; CHECK-NEXT:    movetq $a1_lo = $r35, $r1
 ; CHECK-NEXT:    movetq $a1_hi = $r33, $r34
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 0[$r4] = $a0
 ; CHECK-NEXT:    movetq $a4_hi = $r34, $r35
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sv 0[$r4] = $a0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a0 = 0[$r4]
 ; CHECK-NEXT:    ;;
@@ -827,9 +829,8 @@ define <4 x i64> @test_tca_builtins(i64 %0, i64 %1, i64 %2, i64 %3, <256 x i1>* 
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a0 = 0[$r6]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    aligno $r8r9r10r11 = $a4, $a5, 1
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    convdhv0.rn.sat $a4_lo = $a0a1a2a3
+; CHECK-NEXT:    aligno $r8r9r10r11 = $a4, $a5, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a7 = 32[$r5]
 ; CHECK-NEXT:    convdhv1.ru.satu $a4_hi = $a0a1a2a3
