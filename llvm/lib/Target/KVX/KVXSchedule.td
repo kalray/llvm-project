@@ -158,52 +158,61 @@ class InstrItinDataList <list<InstrItinData> _l> {
   list<InstrItinData> l = _l;
 }
 
-multiclass DataXYBase <bit hasXY, list<InstrStage> rt, list<int> lat_ops, list<InstrStage> rt_cv2> {
-  defvar base_single = [
+multiclass DataXYBase <bit hasXY, list<InstrStage> rt, list<int> lat_ops,
+                       list<InstrStage> rt_cv2, list<int> lat_ops_cv2> {
+  defvar has_cv2_rt = !not(!empty(rt_cv2));
+  defvar has_cv2_lat = !not(!empty(lat_ops_cv2));
+  defvar cv2_rt = !cond(has_cv2_rt: rt_cv2, 1: rt);
+  defvar cv2_lat = !cond(has_cv2_lat: lat_ops_cv2, 1: lat_ops);
+
+  defvar cv1_single = [
     InstrItinData<!cast<InstrItinClass>(NAME), rt, lat_ops, [], 1>,
   ];
-  defvar base_xy = [
+  defvar cv1_xy = [
     InstrItinData<!cast<InstrItinClass>(NAME # _X_), rt, lat_ops, [], 2>,
     InstrItinData<!cast<InstrItinClass>(NAME # _Y_), rt, lat_ops, [], 3>,
   ];
-  defvar base = !cond(hasXY: base_single # base_xy, 1: base_single);
+  defvar cv1 = !cond(hasXY: cv1_single # cv1_xy, 1: cv1_single);
 
   defvar cv2_single = [
-    InstrItinData<!cast<InstrItinClass>(NAME), rt_cv2, lat_ops, [], 1>,
+    InstrItinData<!cast<InstrItinClass>(NAME), cv2_rt, cv2_lat, [], 1>,
   ];
   defvar cv2_xy = [
-    InstrItinData<!cast<InstrItinClass>(NAME # _X_), rt_cv2, lat_ops, [], 2>,
-    InstrItinData<!cast<InstrItinClass>(NAME # _Y_), rt_cv2, lat_ops, [], 3>,
+    InstrItinData<!cast<InstrItinClass>(NAME # _X_), cv2_rt, cv2_lat, [], 2>,
+    InstrItinData<!cast<InstrItinClass>(NAME # _Y_), cv2_rt, cv2_lat, [], 3>,
   ];
   defvar cv2 = !cond(hasXY: cv2_single # cv2_xy, 1: cv2_single);
 
-  if !not(!empty(rt_cv2)) then {
-    def _IDL_CV1 : InstrItinDataList<base>;
+  if !or(has_cv2_rt, has_cv2_lat) then {
+    def _IDL_CV1 : InstrItinDataList<cv1>;
     def _IDL_CV2 : InstrItinDataList<cv2>;
   } else {
-    def _IDL : InstrItinDataList<base>;
+    def _IDL : InstrItinDataList<cv1>;
   }
 }
 
-multiclass DataXY <list<InstrStage> rt, list<int> lat_ops, list<InstrStage> rt_cv2=[]> {
-  defm "": DataXYBase</*hasXY*/ 1, rt, lat_ops, rt_cv2>;
+multiclass DataXY <list<InstrStage> rt, list<int> lat_ops,
+                   list<InstrStage> rt_cv2=[], list<int> lat_ops_cv2=[]> {
+  defm "": DataXYBase</*hasXY*/ 1, rt, lat_ops, rt_cv2, lat_ops_cv2>;
 }
 
-class LatOpsVariant <string _variant, list<int> _lat_ops> {
+class LatOpsVariant <string _variant, list<int> _lat_ops, list<int> _lat_ops_cv2=[]> {
   list<int> lat_ops = _lat_ops;
+  list<int> lat_ops_cv2 = _lat_ops_cv2;
   string variant = _variant;
 }
 
 multiclass DataXYVariantsBase <bit hasXY, list<InstrStage> rt, list<LatOpsVariant> lat_ops_variants, int issue_count, list<InstrStage> rt_cv2> {
+  defvar has_cv2_lat = !foldl(0, lat_ops_variants, b, lov, !or(b, !not(!empty(lov.lat_ops_cv2))));
   if !and(!ne(issue_count, 1), hasXY) then {
     def : KVX_Error<"XY instruction with base issue count != 1 not supported">;
   }
 
   foreach lov = lat_ops_variants in {
-    defm _#lov.variant: DataXYBase<hasXY, rt, lov.lat_ops, rt_cv2>;
+    defm _#lov.variant: DataXYBase<hasXY, rt, lov.lat_ops, rt_cv2, lov.lat_ops_cv2>;
   }
 
-  if !not(!empty(rt_cv2)) then {
+  if !or(!not(!empty(rt_cv2)), has_cv2_lat) then {
     def _IDL_CV1: InstrItinDataList<
       !foldl([]<InstrItinData>, lat_ops_variants, acc, lov,
         acc # !cast<InstrItinDataList>(NAME # _ # lov.variant # _IDL_CV1).l)>;
@@ -302,23 +311,43 @@ defvar WE2 = [3];
 defvar WE3 = [4];
 defvar WE4 = [5];
 defvar WE5 = [6];
+defvar WE6 = [7];
 defvar WSFU = [12];
+
+// NB = No Bypass. We assume there are always bypasses; when they aren't, we
+// must wait one more cycle. This is the case on the TCA.
+// TODO: handle TCA bypasses once they are clearly defined
+defvar WE3NB = WE4;
+defvar WE4NB = WE5;
+defvar WE5NB = WE6;
 
 defvar WE1_RR = WE1 # READ_RR;
 defvar WE1_ID = WE1 # READ_ID;
 defvar WE1_RRx2 = WE1 # READ_RRx2;
+
 defvar WE2_RR = WE2 # READ_RR;
 defvar WE2_RRx2 = WE2 # READ_RRx2;
 defvar WE2_RRx3 = WE2 # READ_RRx2 # READ_RR;
 defvar WE2_E1_RRx2 = WE2 # READ_E1 # READ_RRx2;
 defvar WE2_RRx5 = WE2 # READ_RRx5;
+
 defvar WE3_RRx2 = WE3 # READ_RRx2;
 defvar WE3_RRx2_ID = WE3 # READ_RRx2 # READ_ID;
 defvar WE3_RRx5 = WE3 # READ_RRx5;
 defvar WE3_RR_E1_RRx3 = WE3 # READ_RR_E1_RRx3;
 defvar WE3_RRx2_E1_RRx2 = WE3 # READ_RRx2_E1_RRx2;
+
+defvar WE3NB_RRx2 = WE3NB # READ_RRx2;
+defvar WE3NB_RRx2_ID = WE3NB_RRx2 # READ_ID;
+
 defvar WE4_RRx2 = WE4 # READ_RRx2;
+
+defvar WE4NB_RRx2 = WE4NB # READ_RRx2;
+
 defvar WE5_RRx2 = WE5 # READ_RRx2;
+
+defvar WE5NB_RRx2 = WE5NB # READ_RRx2;
+
 defvar WSFU_RRx2 = WSFU # READ_RRx2;
 
 defvar NOOP = []<int>;
@@ -341,27 +370,27 @@ defm ALL: DataSingleVariants<ALL_ITIN_RT, [
 
 defm ALU_NOP: DataSingle<NOP_ITIN_RT, NOOP>;
 defm ALU_TINY: DataXY<ALU_TINY_ITIN_RT, WE1_RRx2>;
-defm ALU_TINY_CRWH: DataSingle<ALU_TINY_CRWH_ITIN_RT, WE1_RRx2>;
-defm ALU_TINY_CRWL: DataSingle<ALU_TINY_CRWL_ITIN_RT, WE1_RRx2>;
+defm ALU_TINY_CRWH: DataSingle<ALU_TINY_CRWH_ITIN_RT, WE3NB_RRx2>;
+defm ALU_TINY_CRWL: DataSingle<ALU_TINY_CRWL_ITIN_RT, WE3NB_RRx2>;
 defm ALU_TINY_CRRP: DataSingle<ALU_TINY_CRRP_ITIN_RT, READ_RR>;
-defm ALU_TINY_CRRP_CRWL_CRWH: DataSingle<ALU_TINY_CRRP_CRWL_CRWH_ITIN_RT, WE2_RRx2>;
-defm ALU_TINY_CRWL_CRWH: DataXY<ALU_TINY_CRWL_CRWH_ITIN_RT, WE2>;
+defm ALU_TINY_CRRP_CRWL_CRWH: DataSingle<ALU_TINY_CRRP_CRWL_CRWH_ITIN_RT, WE3NB_RRx2>;
+defm ALU_TINY_CRWL_CRWH: DataXY<ALU_TINY_CRWL_CRWH_ITIN_RT, WE3NB>;
 defm ALU_LITE: DataXY<ALU_LITE_ITIN_RT, WE1_RRx2>;
-defm ALU_LITE_CRWL: DataSingle<ALU_LITE_CRWL_ITIN_RT, WE1_RRx2>;
-defm ALU_LITE_CRWH: DataSingle<ALU_LITE_CRWH_ITIN_RT, WE1_RRx2>;
+defm ALU_LITE_CRWL: DataSingle<ALU_LITE_CRWL_ITIN_RT, WE3NB_RRx2>;
+defm ALU_LITE_CRWH: DataSingle<ALU_LITE_CRWH_ITIN_RT, WE3NB_RRx2>;
 defm ALU_FULL: DataXY<ALU_FULL_ITIN_RT, WE1_RRx2>;
 defm ALU_FULL_SFU: DataSingle<ALU_FULL_ITIN_RT, WSFU_RRx2>;
 
 defm BCU: DataSingle<BCU_ITIN_RT, READ_ID>;
 
 defm BCU_CRRP_CRWL_CRWH: DataSingleVariants<BCU_CRRP_CRWL_CRWH_ITIN_RT, [
-  LatOpsVariant<"RR", WE3_RRx2>,
-  LatOpsVariant<"ID", WE3_RRx2_ID>
+  LatOpsVariant<"RR", WE3NB_RRx2>,
+  LatOpsVariant<"ID", WE3NB_RRx2_ID>
 ]>;
 
 defm BCU_TINY_AUXW_CRRP: DataSingleVariants<BCU_TINY_AUXW_CRRP_ITIN_RT, [
-  LatOpsVariant<"RR", WE3_RRx2>,
-  LatOpsVariant<"ID", WE3_RRx2_ID>
+  LatOpsVariant<"RR", WE3NB_RRx2>,
+  LatOpsVariant<"ID", WE3NB_RRx2_ID>
 ]>;
 
 defm BCU_TINY_TINY_MAU_XNOP: DataSingleVariants<BCU_TINY_TINY_MAU_XNOP_ITIN_RT, [
@@ -370,8 +399,8 @@ defm BCU_TINY_TINY_MAU_XNOP: DataSingleVariants<BCU_TINY_TINY_MAU_XNOP_ITIN_RT, 
 ]>;
 
 defm TCA: DataXYVariants<TCA_ITIN_RT, [
-  LatOpsVariant<"INT", WE3_RRx2>,
-  LatOpsVariant<"FP", WE5_RRx2>
+  LatOpsVariant<"INT", WE3NB_RRx2, /*CV2*/ WE3NB_RRx2>,
+  LatOpsVariant<"FP", WE5NB_RRx2, /*CV2*/ WE4NB_RRx2>
 ]>;
 
 // NOTE : stores have up to 5 operands
@@ -419,11 +448,13 @@ defm MAU_AUXR: DataXYVariants<MAU_AUXR_ITIN_RT, [
 def KVXItinList {
 list<InstrItinData> CV1Switch =
   ALU_SWITCH_LITE_TINY_IDL_CV1.l #
-  MAU_SWITCH_AUXR_EMPTY_IDL_CV1.l;
+  MAU_SWITCH_AUXR_EMPTY_IDL_CV1.l #
+  TCA_IDL_CV1.l;
 
 list<InstrItinData> CV2Switch =
   ALU_SWITCH_LITE_TINY_IDL_CV2.l #
-  MAU_SWITCH_AUXR_EMPTY_IDL_CV2.l;
+  MAU_SWITCH_AUXR_EMPTY_IDL_CV2.l #
+  TCA_IDL_CV2.l;
 
 list<InstrItinData> Common =
   ALL_IDL.l
@@ -433,7 +464,6 @@ list<InstrItinData> Common =
   # ALU_LITE_IDL.l # ALU_LITE_CRWL_IDL.l # ALU_LITE_CRWH_IDL.l
   # ALU_FULL_IDL.l # ALU_FULL_SFU_IDL.l
   # BCU_IDL.l # BCU_CRRP_CRWL_CRWH_IDL.l # BCU_TINY_AUXW_CRRP_IDL.l # BCU_TINY_TINY_MAU_XNOP_IDL.l
-  # TCA_IDL.l
   # LSU_IDL.l # LSU_CRRP_IDL.l # LSU_AUXR_IDL.l # LSU_AUXW_IDL.l # LSU_AUXR_AUXW_IDL.l
   # MAU_IDL.l # MAU_AUXR_IDL.l
   # [
