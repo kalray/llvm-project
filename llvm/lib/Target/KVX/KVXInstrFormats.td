@@ -197,13 +197,13 @@ multiclass MC_LOADS<string OpcStr, RegisterClass RC> {
 }
 
 multiclass MC_STORES<string OpcStr, RegisterClass RC> {
-  defm ri10 : I <OpcStr, LSU_AUXR_STORE, [RC], [], [Signed10, SingleReg], [], []>;
-  defm ri37 : I <OpcStr, LSU_AUXR_STORE_X_, [RC], [], [Signed37, SingleReg], [], []>;
-  defm ri64 : I <OpcStr, LSU_AUXR_STORE_Y_, [RC], [], [Wrapped64, SingleReg], [], []>;
-  defm rr   : I <OpcStr, LSU_AUXR_STORE, [RC], [DoscaleMod], [SingleReg, SingleReg], [], []>;
-  defm rrc  : I <OpcStr, LSU_AUXR_STORE, [RC], [], [SingleReg], [ScalarcondMod, SingleReg], []>;
-  defm ri27c: I <OpcStr, LSU_AUXR_STORE_X_, [RC], [], [Signed27, SingleReg], [ScalarcondMod, SingleReg], []>;
-  defm ri54c: I <OpcStr, LSU_AUXR_STORE_Y_, [RC], [], [Signed54, SingleReg], [ScalarcondMod, SingleReg], []>;
+  defm ri10 : I <OpcStr, LSU_AUXR_STORE_SV3, [RC], [], [Signed10, SingleReg], [], []>;
+  defm ri37 : I <OpcStr, LSU_AUXR_STORE_SV3_X_, [RC], [], [Signed37, SingleReg], [], []>;
+  defm ri64 : I <OpcStr, LSU_AUXR_STORE_SV3_Y_, [RC], [], [Wrapped64, SingleReg], [], []>;
+  defm rr   : I <OpcStr, LSU_AUXR_STORE_SV3, [RC], [DoscaleMod], [SingleReg, SingleReg], [], []>;
+  defm rrc  : I <OpcStr, LSU_AUXR_STORE_SV2, [RC], [], [SingleReg], [ScalarcondMod, SingleReg], []>;
+  defm ri27c: I <OpcStr, LSU_AUXR_STORE_SV3_X_, [RC], [], [Signed27, SingleReg], [ScalarcondMod, SingleReg], []>;
+  defm ri54c: I <OpcStr, LSU_AUXR_STORE_SV3_Y_, [RC], [], [Signed54, SingleReg], [ScalarcondMod, SingleReg], []>;
 }
 
 multiclass MC_LV<string OpcStr> {
@@ -486,11 +486,11 @@ multiclass CV2_ATOMIC_LOAD <string Opc, Intrinsic Int, ValueType VT,  RegisterCl
 }
 
 multiclass CV2_ATOMIC_STORE <string Opc, Intrinsic Int, ValueType VT,  RegisterClass RC = SingleReg> {
-  defm r : I</*asm=*/Opc, /*itin=*/LSU_AUXR_STORE, /*Ops=*/[RC], /*Mods=*/[CoherencyMod], /*MemOps=*/[SingleReg], /*CC=*/[], /*Out=*/[], /*InPlace=*/0,
+  defm r : I</*asm=*/Opc, /*itin=*/LSU_AUXR_STORE_SV2, /*Ops=*/[RC], /*Mods=*/[CoherencyMod], /*MemOps=*/[SingleReg], /*CC=*/[], /*Out=*/[], /*InPlace=*/0,
   /*pattern=*/ [(Int i64:$mem, VT:$op0, CoherencyMod:$mod0)]>;
-  defm ri27 : I</*asm=*/Opc, /*itin=*/LSU_AUXR_STORE_X_, /*Ops=*/[RC], /*Mods=*/[CoherencyMod], /*MemOps=*/[Signed27, SingleReg], /*CC=*/[], /*Out=*/[], /*InPlace=*/0,
+  defm ri27 : I</*asm=*/Opc, /*itin=*/LSU_AUXR_STORE_SV3_X_, /*Ops=*/[RC], /*Mods=*/[CoherencyMod], /*MemOps=*/[Signed27, SingleReg], /*CC=*/[], /*Out=*/[], /*InPlace=*/0,
   /*pattern=*/ [(Int (add i64:$mem, Signed27:$off), VT:$op0, CoherencyMod:$mod0)]>;
-  defm ri54 : I</*asm=*/Opc, /*itin=*/LSU_AUXR_STORE_Y_, /*Ops=*/[RC], /*Mods=*/[CoherencyMod], /*MemOps=*/[Signed54, SingleReg], /*CC=*/[], /*Out=*/[], /*InPlace=*/0,
+  defm ri54 : I</*asm=*/Opc, /*itin=*/LSU_AUXR_STORE_SV3_Y_, /*Ops=*/[RC], /*Mods=*/[CoherencyMod], /*MemOps=*/[Signed54, SingleReg], /*CC=*/[], /*Out=*/[], /*InPlace=*/0,
   /*pattern=*/ [(Int (add i64:$mem, Signed54:$off), VT:$op0, CoherencyMod:$mod0)]>;
 }
 

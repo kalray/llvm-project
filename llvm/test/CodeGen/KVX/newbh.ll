@@ -215,6 +215,7 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_1-NEXT:    faddd $r20 = $r20, $r20
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    sd 24[$r18] = $r20
+; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    cb.deqz $r0 ? .LBB0_26
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:  # %bb.16: # in Loop: Header=BB0_8 Depth=1
@@ -578,6 +579,7 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_2-NEXT:    faddd $r20 = $r20, $r20
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:    sd 24[$r18] = $r20
+; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:    cb.deqz $r0 ? .LBB0_26
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:  # %bb.16: # in Loop: Header=BB0_8 Depth=1

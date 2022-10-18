@@ -77,13 +77,13 @@ define <4 x i32> @test0(<4 x i32> %0, i8 %1) #1 {
 define i32 @test1(i32* nocapture %0, i32* nocapture readonly %1, i32 %2) #2 {
 ; CHECK-LABEL: test1:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    sxwd $r2 = $r2
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    copyd $r1 = $r0
-; CHECK-NEXT:    lwz.xs $r3 = $r2[$r1]
+; CHECK-NEXT:    sxwd $r2 = $r2
+; CHECK-NEXT:    copyd $r3 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw.xs $r2[$r1] = $r3
+; CHECK-NEXT:    lwz.xs $r1 = $r2[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sw.xs $r2[$r3] = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %4 = sext i32 %2 to i64

@@ -217,7 +217,7 @@ def GETSYSTEMREG : KVX_INSTRUCTION
   <(outs SingleReg:$dst), (ins SystemReg:$sr),
    "get $dst = $sr",
    [(set (i64 SingleReg:$dst), (GetSystemReg SystemReg:$sr))],
-   BCU_TINY_TINY_MAU_XNOP>;
+   BCU_TINY_TINY_MAU_XNOP_ID>;
 
 //
 // Function return
@@ -466,17 +466,17 @@ def : Pat<(v1024i1 (load:$LD SingleReg:$base)),
 let mayStore = 1 in
 {
 def SBp : KVX_PSEUDO_W_SCHEDINFO<
-        (outs), (ins Wrapped64:$offset, SingleReg:$base, SingleReg:$val), [], LSU_AUXR_STORE_Y_>;
+        (outs), (ins Wrapped64:$offset, SingleReg:$base, SingleReg:$val), [], LSU_AUXR_STORE_SV3_Y_>;
 def SHp : KVX_PSEUDO_W_SCHEDINFO<
-        (outs), (ins Wrapped64:$offset, SingleReg:$base, SingleReg:$val), [], LSU_AUXR_STORE_Y_>;
+        (outs), (ins Wrapped64:$offset, SingleReg:$base, SingleReg:$val), [], LSU_AUXR_STORE_SV3_Y_>;
 def SWp : KVX_PSEUDO_W_SCHEDINFO<
-        (outs), (ins Wrapped64:$offset, SingleReg:$base, SingleReg:$val), [], LSU_AUXR_STORE_Y_>;
+        (outs), (ins Wrapped64:$offset, SingleReg:$base, SingleReg:$val), [], LSU_AUXR_STORE_SV3_Y_>;
 def SDp : KVX_PSEUDO_W_SCHEDINFO<
-        (outs), (ins Wrapped64:$offset, SingleReg:$base, SingleReg:$val), [], LSU_AUXR_STORE_Y_>;
+        (outs), (ins Wrapped64:$offset, SingleReg:$base, SingleReg:$val), [], LSU_AUXR_STORE_SV3_Y_>;
 def SQp : KVX_PSEUDO_W_SCHEDINFO<
-        (outs), (ins Wrapped64:$offset, SingleReg:$base, PairedReg:$val), [], LSU_AUXR_STORE_Y_>;
+        (outs), (ins Wrapped64:$offset, SingleReg:$base, PairedReg:$val), [], LSU_AUXR_STORE_SV3_Y_>;
 def SOp : KVX_PSEUDO_W_SCHEDINFO<
-        (outs), (ins Wrapped64:$offset, SingleReg:$base, QuadReg:$val), [], LSU_AUXR_STORE_Y_>;
+        (outs), (ins Wrapped64:$offset, SingleReg:$base, QuadReg:$val), [], LSU_AUXR_STORE_SV3_Y_>;
 def SVp : KVX_PSEUDO_W_SCHEDINFO<
         (outs), (ins Wrapped64:$offset, SingleReg:$base, VectorReg:$val), [], LSU_STORE>;
 def SWIDEp : KVX_PSEUDO<

@@ -1395,6 +1395,12 @@ void SubtargetEmitter::EmitProcessorModels(raw_ostream &OS) {
     OS << "  " << (PostRAScheduler ? "true" : "false")  << ", // "
        << "PostRAScheduler\n";
 
+    bool IsVLIWProcessor =
+        (PM.ModelDef ? PM.ModelDef->getValueAsBit("IsVLIWProcessor") : false);
+
+    OS << "  " << (IsVLIWProcessor ? "true" : "false") << ", // "
+       << "IsVLIWProcessor\n";
+
     bool CompleteModel =
       (PM.ModelDef ? PM.ModelDef->getValueAsBit("CompleteModel") : false);
 
