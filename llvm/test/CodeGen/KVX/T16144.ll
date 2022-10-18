@@ -222,7 +222,7 @@ define internal i1 @atomic_flag_test_and_set_explicit(%struct.atomic_flag* %0, i
 ; CV2-NEXT:    cb.wnez $r2 ? .LBB2_17
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:  # %bb.11: # in Loop: Header=BB2_10 Depth=1
-; CV2-NEXT:    acswapw.v $r4, [$r0] = $r4r5
+; CV2-NEXT:    acswapw $r4, [$r0] = $r4r5
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    cb.even $r4 ? .LBB2_10
 ; CV2-NEXT:    ;;
@@ -272,7 +272,7 @@ define internal i1 @atomic_flag_test_and_set_explicit(%struct.atomic_flag* %0, i
 ; CV2-NEXT:    cb.wnez $r2 ? .LBB2_16
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:  # %bb.15: # in Loop: Header=BB2_14 Depth=1
-; CV2-NEXT:    acswapw.v $r4, [$r0] = $r4r5
+; CV2-NEXT:    acswapw $r4, [$r0] = $r4r5
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    cb.even $r4 ? .LBB2_14
 ; CV2-NEXT:    ;;
@@ -307,7 +307,7 @@ define internal i1 @atomic_flag_test_and_set_explicit(%struct.atomic_flag* %0, i
 ; CV2-NEXT:    cb.wnez $r2 ? .LBB2_17
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:  # %bb.8: # in Loop: Header=BB2_7 Depth=1
-; CV2-NEXT:    acswapw.v $r4, [$r0] = $r4r5
+; CV2-NEXT:    acswapw $r4, [$r0] = $r4r5
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    cb.even $r4 ? .LBB2_7
 ; CV2-NEXT:    ;;

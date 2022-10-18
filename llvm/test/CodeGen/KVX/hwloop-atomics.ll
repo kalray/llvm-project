@@ -73,7 +73,7 @@ define void @set(i32* nocapture %x, i32 %num){
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    sbfw $r6 = $r2, $r7
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    acswapw.v $r6, 28[$r12] = $r6r7
+; CV2-NEXT:    acswapw $r6, 28[$r12] = $r6r7
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    cb.even $r6 ? .LBB0_4
 ; CV2-NEXT:    ;;

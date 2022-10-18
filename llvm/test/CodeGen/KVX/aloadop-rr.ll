@@ -64,7 +64,7 @@ define void @foo32() {
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    orw $r4 = $r2, $r5
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    acswapw.v $r4, [$r0] = $r4r5
+; CV2-NEXT:    acswapw $r4, [$r0] = $r4r5
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    cb.even $r4 ? .LBB0_1
 ; CV2-NEXT:    ;;
@@ -134,7 +134,7 @@ define void @foo64() {
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    ord $r4 = $r2, $r5
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    acswapd.v $r4, [$r0] = $r4r5
+; CV2-NEXT:    acswapd $r4, [$r0] = $r4r5
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    cb.even $r4 ? .LBB1_1
 ; CV2-NEXT:    ;;

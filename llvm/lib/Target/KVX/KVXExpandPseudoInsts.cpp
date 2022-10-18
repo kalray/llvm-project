@@ -564,7 +564,7 @@ static bool expandALOAD(unsigned int Opcode, const KVXInstrInfo *TII,
       assert(ACSWAP == KVX::ACSWAPWrr || ACSWAP == KVX::ACSWAPDr);
     I.addReg(Base)
         .addReg(UpdateFetch)
-        .addImm(KVXMOD::BOOLCAS_V)
+        .addImm(KVXMOD::BOOLCAS_)
         .addImm(KVXMOD::COHERENCY_);
   }
   //   cb.even $update ? .csloop
@@ -780,7 +780,7 @@ static bool expandATAS(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
     BuildMI(CSLoop2MBB, DL, TII->get(KVX::ACSWAPWr), Update)
         .addReg(Base)
         .addReg(UpdateFetch)
-        .addImm(KVXMOD::BOOLCAS_V)
+        .addImm(KVXMOD::BOOLCAS_)
         .addImm(KVXMOD::COHERENCY_);
   //   cb.even $update ? .csloop
   BuildMI(CSLoop2MBB, DL, TII->get(KVX::CB))
@@ -924,7 +924,7 @@ static bool expandACMPSWAP(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
       BuildMI(CSLoopMBB, DL, TII->get(ACSWAP), Desired)
           .addReg(Base)
           .addReg(DesiredExpected)
-          .addImm(KVXMOD::BOOLCAS_V)
+          .addImm(KVXMOD::BOOLCAS_)
           .addImm(KVXMOD::COHERENCY_);
     } else {
       assert(ACSWAP == KVX::ACSWAPWri27 || ACSWAP == KVX::ACSWAPWri54 ||
@@ -933,7 +933,7 @@ static bool expandACMPSWAP(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
           .addImm(Imm)
           .addReg(Base)
           .addReg(DesiredExpected)
-          .addImm(KVXMOD::BOOLCAS_V)
+          .addImm(KVXMOD::BOOLCAS_)
           .addImm(KVXMOD::COHERENCY_);
     }
   }
