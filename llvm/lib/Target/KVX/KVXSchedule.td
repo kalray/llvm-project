@@ -37,39 +37,42 @@ def CRWL_FU : FuncUnit;
 def CRWH_FU : FuncUnit;
 foreach I = 0-3 in def NOP#I#_FU : FuncUnit;
 
-multiclass ItinSingle {
+multiclass ItinBaseSingle {
   def "": InstrItinClass;
   def _SRW: SchedWrite; // used for WriteRes model, complementary to itineraries
 }
 
-multiclass ItinXY<bit hasXY=1> {
-  defm "": ItinSingle;
-  if hasXY then {
-    defm _X_: ItinSingle;
-    defm _Y_: ItinSingle;
+class MyStringList<list<string> _l>{
+  list<string> l = _l;
+}
+
+multiclass ItinBase<bit hasXY, list<string> variants = [""]> {
+  foreach variant = variants in {
+    defvar fullName = !cond(!eq(variant, ""): NAME, 1: NAME#_#variant);
+    defm fullName: ItinBaseSingle;
+    if hasXY then {
+      defm fullName # _X_: ItinBaseSingle;
+      defm fullName # _Y_: ItinBaseSingle;
+    }
   }
+  def _VL: MyStringList<variants>;
 }
 
-multiclass ItinIntFp<bit hasXY=0> {
-  defm _INT: ItinXY<hasXY>;
-  defm _FP: ItinXY<hasXY>;
+multiclass ItinSingle<list<string> variants=[""]> {
+  defm "": ItinBase</*hasXY*/ 0, variants>;
 }
 
-multiclass ItinLoadStore<bit hasXY=0, bit hasALCLR=0> {
-  defm _LOAD: ItinXY<hasXY>;
-  defm _STORE: ItinXY<hasXY>;
-  if hasALCLR then {
-    defm _ALCLR: ItinXY<hasXY>;
-  }
+multiclass ItinXY<list<string> variants=[""]> {
+  defm "": ItinBase</*hasXY*/ 1, variants>;
 }
 
-defm ALL : ItinSingle;
+defm ALL : ItinSingle<["ID", "RR"]>;
 defm BCU : ItinSingle;
-defm BCU_TINY_TINY_MAU_XNOP : ItinSingle;
-defm BCU_CRRP_CRWL_CRWH : ItinSingle;
-defm BCU_TINY_AUXW_CRRP : ItinSingle;
+defm BCU_TINY_TINY_MAU_XNOP : ItinSingle<["ID", "RR"]>;
+defm BCU_CRRP_CRWL_CRWH : ItinSingle<["ID", "RR"]>;
+defm BCU_TINY_AUXW_CRRP : ItinSingle<["ID", "RR"]>;
 
-defm TCA : ItinIntFp</*hasXY*/1>;
+defm TCA : ItinXY<["INT", "FP"]>;
 
 defm ALU_NOP : ItinSingle;
 defm ALU_TINY : ItinXY;
@@ -84,14 +87,14 @@ defm ALU_TINY_CRWL_CRWH: ItinXY;
 defm ALU_FULL : ItinXY;
 defm ALU_FULL_SFU : ItinSingle;
 
-defm MAU : ItinIntFp</*hasXY*/ 1>;
-defm MAU_AUXR : ItinIntFp</*hasXY*/ 1>;
+defm MAU : ItinXY<["INT", "FP"]>;
+defm MAU_AUXR : ItinXY<["INT", "FP", "INT_AV1"]>; // AV1 = Accumulator Value at 1st operand
 
-defm LSU : ItinLoadStore</*hasXY*/ 1>;
-defm LSU_CRRP : ItinLoadStore</*hasXY*/ 1>;
-defm LSU_AUXR : ItinLoadStore</*hasXY*/ 1>;
-defm LSU_AUXW : ItinLoadStore</*hasXY*/ 1, /*hasALCLR*/ 1>;
-defm LSU_AUXR_AUXW : ItinLoadStore</*hasXY*/ 1>;
+defm LSU : ItinXY<["LOAD", "STORE"]>;
+defm LSU_CRRP : ItinXY<["STORE", "STORE_SV2", "STORE_SV3"]>; // SV2 = Store Value at 2nd operand
+defm LSU_AUXR : ItinXY<["STORE_SV2", "STORE_SV3"]>;
+defm LSU_AUXW : ItinXY<["LOAD", "ALCLR"]>;
+defm LSU_AUXR_AUXW : ItinXY<["LOAD", "LOAD_SV2", "LOAD_SV3"]>;
 
 defm XSWAP256 : ItinSingle;
 
@@ -100,7 +103,7 @@ defm XSWAP256 : ItinSingle;
 // Format: NAME_SWITCH_CV1VALUE_CV2VALUE
 
 defm ALU_SWITCH_LITE_TINY : ItinXY;
-defm MAU_SWITCH_AUXR_EMPTY : ItinIntFp</*hasXY*/ 1>;
+defm MAU_SWITCH_AUXR_EMPTY : ItinXY<["INT", "FP"]>;
 
 /**
  *  The KV3 pipeline has PF, ID, RR, E1..E5 stages
@@ -155,17 +158,25 @@ class InstrItinDataList <list<InstrItinData> _l> {
   list<InstrItinData> l = _l;
 }
 
-multiclass DataXY <list<InstrStage> rt, list<int> lat_ops, list<InstrStage> rt_cv2=[]> {
-  defvar base = [
+multiclass DataXYBase <bit hasXY, list<InstrStage> rt, list<int> lat_ops, list<InstrStage> rt_cv2> {
+  defvar base_single = [
     InstrItinData<!cast<InstrItinClass>(NAME), rt, lat_ops, [], 1>,
+  ];
+  defvar base_xy = [
     InstrItinData<!cast<InstrItinClass>(NAME # _X_), rt, lat_ops, [], 2>,
     InstrItinData<!cast<InstrItinClass>(NAME # _Y_), rt, lat_ops, [], 3>,
   ];
-  defvar cv2 = [
+  defvar base = !cond(hasXY: base_single # base_xy, 1: base_single);
+
+  defvar cv2_single = [
     InstrItinData<!cast<InstrItinClass>(NAME), rt_cv2, lat_ops, [], 1>,
+  ];
+  defvar cv2_xy = [
     InstrItinData<!cast<InstrItinClass>(NAME # _X_), rt_cv2, lat_ops, [], 2>,
     InstrItinData<!cast<InstrItinClass>(NAME # _Y_), rt_cv2, lat_ops, [], 3>,
   ];
+  defvar cv2 = !cond(hasXY: cv2_single # cv2_xy, 1: cv2_single);
+
   if !not(!empty(rt_cv2)) then {
     def _IDL_CV1 : InstrItinDataList<base>;
     def _IDL_CV2 : InstrItinDataList<cv2>;
@@ -174,14 +185,22 @@ multiclass DataXY <list<InstrStage> rt, list<int> lat_ops, list<InstrStage> rt_c
   }
 }
 
+multiclass DataXY <list<InstrStage> rt, list<int> lat_ops, list<InstrStage> rt_cv2=[]> {
+  defm "": DataXYBase</*hasXY*/ 1, rt, lat_ops, rt_cv2>;
+}
+
 class LatOpsVariant <string _variant, list<int> _lat_ops> {
   list<int> lat_ops = _lat_ops;
   string variant = _variant;
 }
 
-multiclass DataXYVariants <list<InstrStage> rt, list<LatOpsVariant> lat_ops_variants, list<InstrStage> rt_cv2=[]> {
+multiclass DataXYVariantsBase <bit hasXY, list<InstrStage> rt, list<LatOpsVariant> lat_ops_variants, int issue_count, list<InstrStage> rt_cv2> {
+  if !and(!ne(issue_count, 1), hasXY) then {
+    def : KVX_Error<"XY instruction with base issue count != 1 not supported">;
+  }
+
   foreach lov = lat_ops_variants in {
-    defm _#lov.variant: DataXY<rt, lov.lat_ops, rt_cv2>;
+    defm _#lov.variant: DataXYBase<hasXY, rt, lov.lat_ops, rt_cv2>;
   }
 
   if !not(!empty(rt_cv2)) then {
@@ -196,6 +215,14 @@ multiclass DataXYVariants <list<InstrStage> rt, list<LatOpsVariant> lat_ops_vari
       !foldl([]<InstrItinData>, lat_ops_variants, acc, lov,
         acc # !cast<InstrItinDataList>(NAME # _ # lov.variant # _IDL).l)>;
   }
+}
+
+multiclass DataXYVariants<list<InstrStage> rt, list<LatOpsVariant> lat_ops_variants, list<InstrStage> rt_cv2=[]> {
+  defm "": DataXYVariantsBase</*hasXY*/ 1, rt, lat_ops_variants, /*issue*/ 1, rt_cv2>;
+}
+
+multiclass DataSingleVariants<list<InstrStage> rt, list<LatOpsVariant> lat_ops_variants, int issue_count=1, list<InstrStage> rt_cv2=[]> {
+  defm "": DataXYVariantsBase</*hasXY*/ 0, rt, lat_ops_variants, issue_count, rt_cv2>;
 }
 
 multiclass DataSingle <list<InstrStage> rt, list<int> lat_ops, int issue_count=1> {
@@ -263,8 +290,12 @@ defvar ALL_ITIN_RT = XTINY # [ONE_BCU, ONE_TCA] # XNOP;
 
 defvar READ_ID = [1];
 defvar READ_RR = [2];
+defvar READ_E1 = [3];
 defvar READ_RRx2 = READ_RR # READ_RR;
+defvar READ_RRx3 = READ_RRx2 # READ_RR;
 defvar READ_RRx5 = READ_RRx2 # READ_RRx2 # READ_RR;
+defvar READ_RR_E1_RRx3 = READ_RR # READ_E1 # READ_RRx3;
+defvar READ_RRx2_E1_RRx2 = READ_RRx2 # READ_E1 # READ_RRx2;
 
 defvar WE1 = [2];
 defvar WE2 = [3];
@@ -274,13 +305,18 @@ defvar WE5 = [6];
 defvar WSFU = [12];
 
 defvar WE1_RR = WE1 # READ_RR;
-defvar WE1_ID = WE1 # READ_RR;
+defvar WE1_ID = WE1 # READ_ID;
 defvar WE1_RRx2 = WE1 # READ_RRx2;
 defvar WE2_RR = WE2 # READ_RR;
 defvar WE2_RRx2 = WE2 # READ_RRx2;
+defvar WE2_RRx3 = WE2 # READ_RRx2 # READ_RR;
+defvar WE2_E1_RRx2 = WE2 # READ_E1 # READ_RRx2;
 defvar WE2_RRx5 = WE2 # READ_RRx5;
 defvar WE3_RRx2 = WE3 # READ_RRx2;
+defvar WE3_RRx2_ID = WE3 # READ_RRx2 # READ_ID;
 defvar WE3_RRx5 = WE3 # READ_RRx5;
+defvar WE3_RR_E1_RRx3 = WE3 # READ_RR_E1_RRx3;
+defvar WE3_RRx2_E1_RRx2 = WE3 # READ_RRx2_E1_RRx2;
 defvar WE4_RRx2 = WE4 # READ_RRx2;
 defvar WE5_RRx2 = WE5 # READ_RRx2;
 defvar WSFU_RRx2 = WSFU # READ_RRx2;
@@ -289,11 +325,19 @@ defvar NOOP = []<int>;
 
 // ALU_LITE -> ALU_TINY
 defm ALU_SWITCH_LITE_TINY: DataXY<ALU_LITE_ITIN_RT, WE1_RRx2, /*CV2*/ALU_TINY_ITIN_RT>;
+
 // MAU + AUXR -> MAU
-defm MAU_SWITCH_AUXR_EMPTY: DataXYVariants<MAU_AUXR_ITIN_RT, [LatOpsVariant<"INT", WE2_RRx2>, LatOpsVariant<"FP", WE4_RRx2>], /*CV2*/MAU_ITIN_RT>;
+defm MAU_SWITCH_AUXR_EMPTY: DataXYVariants<MAU_AUXR_ITIN_RT, [
+  LatOpsVariant<"INT", WE2_RRx2>,
+  LatOpsVariant<"FP", WE4_RRx2>],
+  /*CV2*/MAU_ITIN_RT>;
 
 // Common
-defm ALL: DataSingle<ALL_ITIN_RT, NOOP, 8 /*ISSUE*/>; // ALL reserves all resources to ensure nothing else gets scheduled
+
+// ALL reserves all resources to ensure nothing else gets scheduled
+defm ALL: DataSingleVariants<ALL_ITIN_RT, [
+  LatOpsVariant<"ID", READ_ID>,
+  LatOpsVariant<"RR", WE1_RR>], 8 /*ISSUE*/>;
 
 defm ALU_NOP: DataSingle<NOP_ITIN_RT, NOOP>;
 defm ALU_TINY: DataXY<ALU_TINY_ITIN_RT, WE1_RRx2>;
@@ -309,25 +353,68 @@ defm ALU_FULL: DataXY<ALU_FULL_ITIN_RT, WE1_RRx2>;
 defm ALU_FULL_SFU: DataSingle<ALU_FULL_ITIN_RT, WSFU_RRx2>;
 
 defm BCU: DataSingle<BCU_ITIN_RT, READ_ID>;
-defm BCU_CRRP_CRWL_CRWH: DataSingle<BCU_CRRP_CRWL_CRWH_ITIN_RT, WE3_RRx2>;
-defm BCU_TINY_AUXW_CRRP: DataSingle<BCU_TINY_AUXW_CRRP_ITIN_RT, WE3_RRx2>;
-defm BCU_TINY_TINY_MAU_XNOP: DataSingle<BCU_TINY_TINY_MAU_XNOP_ITIN_RT, WE1_RR>;
 
-defm TCA: DataXYVariants<TCA_ITIN_RT, [LatOpsVariant<"INT", WE3_RRx2>, LatOpsVariant<"FP", WE5_RRx2>]>;
+defm BCU_CRRP_CRWL_CRWH: DataSingleVariants<BCU_CRRP_CRWL_CRWH_ITIN_RT, [
+  LatOpsVariant<"RR", WE3_RRx2>,
+  LatOpsVariant<"ID", WE3_RRx2_ID>
+]>;
+
+defm BCU_TINY_AUXW_CRRP: DataSingleVariants<BCU_TINY_AUXW_CRRP_ITIN_RT, [
+  LatOpsVariant<"RR", WE3_RRx2>,
+  LatOpsVariant<"ID", WE3_RRx2_ID>
+]>;
+
+defm BCU_TINY_TINY_MAU_XNOP: DataSingleVariants<BCU_TINY_TINY_MAU_XNOP_ITIN_RT, [
+  LatOpsVariant<"RR", WE1_RR>,
+  LatOpsVariant<"ID", WE1_ID>
+]>;
+
+defm TCA: DataXYVariants<TCA_ITIN_RT, [
+  LatOpsVariant<"INT", WE3_RRx2>,
+  LatOpsVariant<"FP", WE5_RRx2>
+]>;
 
 // NOTE : stores have up to 5 operands
-defm LSU: DataXYVariants<LSU_ITIN_RT, [LatOpsVariant<"STORE", READ_RRx5>, LatOpsVariant<"LOAD", WE3_RRx5>]>;
-defm LSU_CRRP: DataXYVariants<LSU_CRRP_ITIN_RT, [LatOpsVariant<"STORE", READ_RRx5>, LatOpsVariant<"LOAD", WE3_RRx5>]>;
+defm LSU: DataXYVariants<LSU_ITIN_RT, [
+  LatOpsVariant<"STORE", READ_RRx5>,
+  LatOpsVariant<"LOAD", WE3_RRx5>
+]>;
+
+defm LSU_CRRP: DataXYVariants<LSU_CRRP_ITIN_RT, [
+  LatOpsVariant<"STORE", READ_RRx5>,
+  LatOpsVariant<"STORE_SV2", READ_RR_E1_RRx3>,
+  LatOpsVariant<"STORE_SV3", READ_RRx2_E1_RRx2>,
+]>;
 
 // TODO : latency will be off for SV, and can't be easily fixed
 // Indeed, the QuadReg (who is read at E1) is either in 2nd or 3rd position
 // cf. MC_0B in KVXInstrInfo.td
-defm LSU_AUXR: DataXYVariants<LSU_AUXR_ITIN_RT, [LatOpsVariant<"STORE", READ_RRx5>, LatOpsVariant<"LOAD", WE3_RRx5>]>;
-defm LSU_AUXW: DataXYVariants<LSU_AUXW_ITIN_RT, [LatOpsVariant<"STORE", READ_RRx5>, LatOpsVariant<"LOAD", WE3_RRx5>, LatOpsVariant<"ALCLR", WE2_RRx5>]>;
-defm LSU_AUXR_AUXW: DataXYVariants<LSU_AUXR_AUXW_ITIN_RT, [LatOpsVariant<"STORE", READ_RRx5>, LatOpsVariant<"LOAD", WE3_RRx5>]>;
+defm LSU_AUXR: DataXYVariants<LSU_AUXR_ITIN_RT, [
+  LatOpsVariant<"STORE_SV2", READ_RR_E1_RRx3>,
+  LatOpsVariant<"STORE_SV3", READ_RRx2_E1_RRx2>,
+]>;
 
-defm MAU: DataXYVariants<MAU_ITIN_RT, [LatOpsVariant<"INT", WE2_RRx2>, LatOpsVariant<"FP", WE4_RRx2>]>;
-defm MAU_AUXR: DataXYVariants<MAU_AUXR_ITIN_RT, [LatOpsVariant<"INT", WE2_RRx2>, LatOpsVariant<"FP", WE4_RRx2>]>;
+defm LSU_AUXW: DataXYVariants<LSU_AUXW_ITIN_RT, [
+  LatOpsVariant<"LOAD", WE3_RRx5>,
+  LatOpsVariant<"ALCLR", WE2_RRx5>
+]>;
+
+defm LSU_AUXR_AUXW: DataXYVariants<LSU_AUXR_AUXW_ITIN_RT, [
+  LatOpsVariant<"LOAD_SV2", WE3_RR_E1_RRx3>,
+  LatOpsVariant<"LOAD_SV3", WE3_RRx2_E1_RRx2>,
+  LatOpsVariant<"LOAD", WE3_RRx5>
+]>;
+
+defm MAU: DataXYVariants<MAU_ITIN_RT, [
+  LatOpsVariant<"INT", WE2_RRx2>,
+  LatOpsVariant<"FP", WE4_RRx2>
+]>;
+
+defm MAU_AUXR: DataXYVariants<MAU_AUXR_ITIN_RT, [
+  LatOpsVariant<"INT", WE2_RRx3>,
+  LatOpsVariant<"INT_AV1", WE2_E1_RRx2>,
+  LatOpsVariant<"FP", WE4_RRx2>
+]>;
 
 def KVXItinList {
 list<InstrItinData> CV1Switch =
@@ -400,6 +487,7 @@ multiclass KVXSchedMachineModel<ProcessorItineraries Itin> {
     let IssueWidth = 8; // 8 ISSUE resources
     let LoadLatency = 5; // Cycles to access L1$, (23 cycles if miss)
     let PostRAScheduler = 1;
+    let IsVLIWProcessor = 1;
     let CompleteModel = 1;
     let MispredictPenalty = 0;
   }
@@ -594,7 +682,7 @@ foreach m = [KVXCV1SchedMachineModel, KVXCV2SchedMachineModel] in {
 
 // === Mappings for the CV1/CV2 invariant itinerary classes ===
 
-  defm ALL: KVXItinWriteResSingle<IS_CV1, [], /*issues*/ 8>;
+  defm ALL: KVXItinWriteResSingle<IS_CV1, [], /*issues*/ 8, ALL_VL.l>;
 
   defm ALU_NOP: KVXItinWriteResSingle<IS_CV1, ALU_NOP_RT>;
   defm ALU_TINY: KVXItinWriteResXY<IS_CV1, ALU_TINY_RT>;
@@ -610,20 +698,20 @@ foreach m = [KVXCV1SchedMachineModel, KVXCV2SchedMachineModel] in {
   defm ALU_FULL_SFU: KVXItinWriteResSingle<IS_CV1, ALU_FULL_RT>;
 
   defm BCU: KVXItinWriteResSingle<IS_CV1, BCU_RT>;
-  defm BCU_CRRP_CRWL_CRWH: KVXItinWriteResSingle<IS_CV1, BCU_CRRP_CRWL_CRWH_RT>;
-  defm BCU_TINY_AUXW_CRRP: KVXItinWriteResSingle<IS_CV1, BCU_TINY_AUXW_CRRP_RT>;
-  defm BCU_TINY_TINY_MAU_XNOP: KVXItinWriteResSingle<IS_CV1, BCU_TINY_TINY_MAU_XNOP_RT>;
+  defm BCU_CRRP_CRWL_CRWH: KVXItinWriteResSingle<IS_CV1, BCU_CRRP_CRWL_CRWH_RT, 1, BCU_CRRP_CRWL_CRWH_VL.l>;
+  defm BCU_TINY_AUXW_CRRP: KVXItinWriteResSingle<IS_CV1, BCU_TINY_AUXW_CRRP_RT, 1, BCU_TINY_AUXW_CRRP_VL.l>;
+  defm BCU_TINY_TINY_MAU_XNOP: KVXItinWriteResSingle<IS_CV1, BCU_TINY_TINY_MAU_XNOP_RT, 1, BCU_TINY_TINY_MAU_XNOP_VL.l>;
 
-  defm TCA: KVXItinWriteResSingle<IS_CV1, TCA_RT, 1, ["INT", "FP"]>;
+  defm TCA: KVXItinWriteResSingle<IS_CV1, TCA_RT, 1, TCA_VL.l>;
 
-  defm LSU: KVXItinWriteResXY<IS_CV1, LSU_RT, ["STORE", "LOAD"]>;
-  defm LSU_CRRP: KVXItinWriteResXY<IS_CV1, LSU_CRRP_RT, ["STORE", "LOAD"]>;
-  defm LSU_AUXR: KVXItinWriteResXY<IS_CV1, LSU_AUXR_RT, ["STORE", "LOAD"]>;
-  defm LSU_AUXW: KVXItinWriteResXY<IS_CV1, LSU_AUXW_RT, ["ALCLR", "STORE", "LOAD"]>;
-  defm LSU_AUXR_AUXW: KVXItinWriteResXY<IS_CV1, LSU_AUXR_AUXW_RT, ["STORE", "LOAD"]>;
+  defm LSU: KVXItinWriteResXY<IS_CV1, LSU_RT, LSU_VL.l>;
+  defm LSU_CRRP: KVXItinWriteResXY<IS_CV1, LSU_CRRP_RT, LSU_CRRP_VL.l>;
+  defm LSU_AUXR: KVXItinWriteResXY<IS_CV1, LSU_AUXR_RT, LSU_AUXR_VL.l>;
+  defm LSU_AUXW: KVXItinWriteResXY<IS_CV1, LSU_AUXW_RT, LSU_AUXW_VL.l>;
+  defm LSU_AUXR_AUXW: KVXItinWriteResXY<IS_CV1, LSU_AUXR_AUXW_RT, LSU_AUXR_AUXW_VL.l>;
 
-  defm MAU: KVXItinWriteResXY<IS_CV1, MAU_RT, ["INT", "FP"]>;
-  defm MAU_AUXR: KVXItinWriteResXY<IS_CV1, MAU_AUXR_RT, ["INT", "FP"]>;
+  defm MAU: KVXItinWriteResXY<IS_CV1, MAU_RT, MAU_VL.l>;
+  defm MAU_AUXR: KVXItinWriteResXY<IS_CV1, MAU_AUXR_RT, MAU_AUXR_VL.l>;
 
   let SchedModel = m in {
     // CopyI is expanded to ADDD -> ALU_TINY reservation table
@@ -635,5 +723,5 @@ foreach m = [KVXCV1SchedMachineModel, KVXCV2SchedMachineModel] in {
   // === Mappings for the CV1/CV2 switch itinerary classes ===
 
   defm ALU_SWITCH_LITE_TINY: KVXItinWriteResXY<IS_CV1, ALU_LITE_RT, NO_VARIANT, ALU_TINY_RT>;
-  defm MAU_SWITCH_AUXR_EMPTY: KVXItinWriteResXY<IS_CV1, MAU_AUXR_RT, ["INT", "FP"], MAU_RT>;
+  defm MAU_SWITCH_AUXR_EMPTY: KVXItinWriteResXY<IS_CV1, MAU_AUXR_RT, MAU_SWITCH_AUXR_EMPTY_VL.l, MAU_RT>;
 }

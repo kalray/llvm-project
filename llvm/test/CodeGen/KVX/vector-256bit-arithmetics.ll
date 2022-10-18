@@ -4794,10 +4794,10 @@ define <4 x double> @p_mul_add_v4f64_v4f64(<4 x double>* nocapture readonly %0, 
 ; CHECK-NEXT:    fadddp $r4r5 = $r8r9, $r0r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    so 0[$r2] = $r4r5r6r7
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r4
 ; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    copyd $r2 = $r6
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r3 = $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -5489,10 +5489,10 @@ define <8 x float> @p_mul_add_v8f32_v8f32(<8 x float>* nocapture readonly %0, <8
 ; CHECK-NEXT:    faddwq $r4r5 = $r8r9, $r4r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    so 0[$r2] = $r4r5r6r7
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r4
 ; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    copyd $r2 = $r6
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r3 = $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -5989,9 +5989,9 @@ define <8 x i32> @p_mul_add_v8i32_v8i32(<8 x i32>* nocapture readonly %0, <8 x i
 ; CHECK-LABEL: p_mul_add_v8i32_v8i32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lo $r8r9r10r11 = 0[$r0]
-; CHECK-NEXT:    copyd $r4 = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r32r33r34r35 = 0[$r1]
+; CHECK-NEXT:    copyd $r4 = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r0r1r2r3 = 0[$r4]
 ; CHECK-NEXT:    ;;

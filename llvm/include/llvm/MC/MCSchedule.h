@@ -299,6 +299,10 @@ struct MCSchedModel {
 
   bool PostRAScheduler; // default value is false
 
+  // IsVLIWProcessor indicates the target is VLIW, in which case data and output
+  // dependencies are not allowed to have a latency of 0
+  bool IsVLIWProcessor; // default value is false
+
   bool CompleteModel;
 
   unsigned ProcID;

@@ -683,51 +683,49 @@ define i32 @stackrealign4(i32 %n){
 ; CHECK-NEXT:    make $r16 = g11
 ; CHECK-NEXT:    make $r32 = g13
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 248[$r31] = $r1
 ; CHECK-NEXT:    make $r34 = g15
 ; CHECK-NEXT:    make $r36 = g17
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 248[$r31] = $r1
-; CHECK-NEXT:    make $r38 = g19
-; CHECK-NEXT:    make $r40 = g21
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r1 = 0[$r2]
 ; CHECK-NEXT:    make $r2 = g4
+; CHECK-NEXT:    make $r38 = g19
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    make $r40 = g21
 ; CHECK-NEXT:    make $r42 = g23
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 240[$r31] = $r1
 ; CHECK-NEXT:    make $r43 = g25
 ; CHECK-NEXT:    make $r45 = g27
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lwz $r1 = 0[$r5]
 ; CHECK-NEXT:    make $r47 = g29
 ; CHECK-NEXT:    make $r49 = g31
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 240[$r31] = $r1
 ; CHECK-NEXT:    make $r51 = g33
 ; CHECK-NEXT:    make $r53 = g35
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r1 = 0[$r5]
+; CHECK-NEXT:    sd 232[$r31] = $r1
 ; CHECK-NEXT:    make $r55 = g37
 ; CHECK-NEXT:    make $r57 = g39
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r59 = g41
-; CHECK-NEXT:    make $r61 = g43
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r19 = g47
-; CHECK-NEXT:    make $r63 = g45
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 232[$r31] = $r1
-; CHECK-NEXT:    make $r21 = g49
-; CHECK-NEXT:    make $r23 = g51
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r1 = 0[$r2]
 ; CHECK-NEXT:    make $r2 = g6
+; CHECK-NEXT:    make $r59 = g41
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    make $r61 = g43
+; CHECK-NEXT:    make $r63 = g45
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 224[$r31] = $r1
+; CHECK-NEXT:    make $r19 = g47
+; CHECK-NEXT:    make $r21 = g49
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lwz $r1 = 0[$r7]
+; CHECK-NEXT:    make $r23 = g51
 ; CHECK-NEXT:    make $r25 = g53
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r27 = g55
 ; CHECK-NEXT:    make $r29 = g57
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 224[$r31] = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r1 = 0[$r7]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 216[$r31] = $r1
 ; CHECK-NEXT:    ;;
