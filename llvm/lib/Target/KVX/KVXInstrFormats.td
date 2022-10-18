@@ -7,11 +7,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-// This is a hack to get an error message as assert does not work
-class KVX_Error<string s> {
-  dag fail = !dag(ins, []<DAGOperand>, [s]<string>);
-}
-
 def IsV1 : Predicate<"Subtarget->isV1()">;
 def IsV2 : Predicate<"Subtarget->isV2()">;
 

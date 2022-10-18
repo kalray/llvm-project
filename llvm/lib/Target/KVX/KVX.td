@@ -19,6 +19,12 @@ def FeatureV1 : SubtargetFeature<"v1", "IsV1", "true",
 def FeatureV2 : SubtargetFeature<"v2", "IsV2", "true",
                                  "Enable V2 only instructions">;
 
+
+// This is a hack to get an error message as assert does not work
+class KVX_Error<string s> {
+  dag fail = !dag(ins, []<DAGOperand>, [s]<string>);
+}
+
 //===----------------------------------------------------------------------===//
 //  Register Descriptions
 //===----------------------------------------------------------------------===//
