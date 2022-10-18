@@ -273,7 +273,7 @@ define void @_Z1av() {
 ; CV2-NEXT:  .LBB0_11:
 ; CV2-NEXT:    copyd $r2 = $r0
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    acswapd.v $r2, 24[$r12] = $r2r3
+; CV2-NEXT:    acswapd $r2, 24[$r12] = $r2r3
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    cb.odd $r2 ? .LBB0_13
 ; CV2-NEXT:    ;;
@@ -300,7 +300,7 @@ define void @_Z1av() {
 ; CV2-NEXT:  .LBB0_15:
 ; CV2-NEXT:    copyd $r2 = $r0
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    acswapd.v $r2, 24[$r12] = $r2r3
+; CV2-NEXT:    acswapd $r2, 24[$r12] = $r2r3
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    cb.odd $r2 ? .LBB0_17
 ; CV2-NEXT:    ;;
@@ -330,7 +330,7 @@ define void @_Z1av() {
 ; CV2-NEXT:  .LBB0_19:
 ; CV2-NEXT:    copyd $r2 = $r0
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    acswapd.v $r2, 24[$r12] = $r2r3
+; CV2-NEXT:    acswapd $r2, 24[$r12] = $r2r3
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    cb.odd $r2 ? .LBB0_21
 ; CV2-NEXT:    ;;
@@ -356,7 +356,7 @@ define void @_Z1av() {
 ; CV2-NEXT:  .LBB0_23:
 ; CV2-NEXT:    copyd $r2 = $r0
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    acswapd.v $r2, 24[$r12] = $r2r3
+; CV2-NEXT:    acswapd $r2, 24[$r12] = $r2r3
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    cb.odd $r2 ? .LBB0_25
 ; CV2-NEXT:    ;;
@@ -382,7 +382,7 @@ define void @_Z1av() {
 ; CV2-NEXT:  .LBB0_27:
 ; CV2-NEXT:    copyd $r2 = $r0
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    acswapd.v $r2, 24[$r12] = $r2r3
+; CV2-NEXT:    acswapd $r2, 24[$r12] = $r2r3
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    cb.odd $r2 ? .LBB0_29
 ; CV2-NEXT:    ;;
@@ -408,7 +408,7 @@ define void @_Z1av() {
 ; CV2-NEXT:  .LBB0_31:
 ; CV2-NEXT:    copyd $r2 = $r0
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    acswapd.v $r2, 24[$r12] = $r2r3
+; CV2-NEXT:    acswapd $r2, 24[$r12] = $r2r3
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    cb.odd $r2 ? .LBB0_33
 ; CV2-NEXT:    ;;
@@ -434,7 +434,7 @@ define void @_Z1av() {
 ; CV2-NEXT:  .LBB0_35:
 ; CV2-NEXT:    copyd $r2 = $r0
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    acswapd.v $r2, 24[$r12] = $r2r3
+; CV2-NEXT:    acswapd $r2, 24[$r12] = $r2r3
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    cb.odd $r2 ? .LBB0_37
 ; CV2-NEXT:    ;;
@@ -460,7 +460,7 @@ define void @_Z1av() {
 ; CV2-NEXT:  .LBB0_39:
 ; CV2-NEXT:    copyd $r2 = $r0
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    acswapd.v $r2, 24[$r12] = $r2r3
+; CV2-NEXT:    acswapd $r2, 24[$r12] = $r2r3
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    cb.odd $r2 ? .LBB0_41
 ; CV2-NEXT:    ;;
@@ -486,7 +486,7 @@ define void @_Z1av() {
 ; CV2-NEXT:  .LBB0_43:
 ; CV2-NEXT:    copyd $r2 = $r0
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    acswapd.v $r2, 24[$r12] = $r2r3
+; CV2-NEXT:    acswapd $r2, 24[$r12] = $r2r3
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    cb.odd $r2 ? .LBB0_45
 ; CV2-NEXT:    ;;

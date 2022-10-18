@@ -35,7 +35,7 @@ define i32 @f32min(i32 *%src, i32 %b) {
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    minw $r2 = $r1, $r3
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    acswapw.v $r2, [$r0] = $r2r3
+; CV2-NEXT:    acswapw $r2, [$r0] = $r2r3
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    cb.even $r2 ? .LBB0_1
 ; CV2-NEXT:    ;;
@@ -77,7 +77,7 @@ define i32 @f32max(i32 *%src, i32 %b) {
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    maxw $r2 = $r1, $r3
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    acswapw.v $r2, [$r0] = $r2r3
+; CV2-NEXT:    acswapw $r2, [$r0] = $r2r3
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    cb.even $r2 ? .LBB1_1
 ; CV2-NEXT:    ;;
@@ -119,7 +119,7 @@ define i32 @f32umin(i32 *%src, i32 %b) {
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    minuw $r2 = $r1, $r3
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    acswapw.v $r2, [$r0] = $r2r3
+; CV2-NEXT:    acswapw $r2, [$r0] = $r2r3
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    cb.even $r2 ? .LBB2_1
 ; CV2-NEXT:    ;;
@@ -161,7 +161,7 @@ define i32 @f32umax(i32 *%src, i32 %b) {
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    maxuw $r2 = $r1, $r3
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    acswapw.v $r2, [$r0] = $r2r3
+; CV2-NEXT:    acswapw $r2, [$r0] = $r2r3
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    cb.even $r2 ? .LBB3_1
 ; CV2-NEXT:    ;;
@@ -203,7 +203,7 @@ define i64 @f64min(i64 *%src, i64 %b) {
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    mind $r2 = $r1, $r3
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    acswapd.v $r2, [$r0] = $r2r3
+; CV2-NEXT:    acswapd $r2, [$r0] = $r2r3
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    cb.even $r2 ? .LBB4_1
 ; CV2-NEXT:    ;;
@@ -245,7 +245,7 @@ define i64 @f64max(i64 *%src, i64 %b) {
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    maxd $r2 = $r1, $r3
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    acswapd.v $r2, [$r0] = $r2r3
+; CV2-NEXT:    acswapd $r2, [$r0] = $r2r3
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    cb.even $r2 ? .LBB5_1
 ; CV2-NEXT:    ;;
@@ -287,7 +287,7 @@ define i64 @f64umin(i64 *%src, i64 %b) {
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    minud $r2 = $r1, $r3
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    acswapd.v $r2, [$r0] = $r2r3
+; CV2-NEXT:    acswapd $r2, [$r0] = $r2r3
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    cb.even $r2 ? .LBB6_1
 ; CV2-NEXT:    ;;
@@ -329,7 +329,7 @@ define i64 @f64umax(i64 *%src, i64 %b) {
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    maxud $r2 = $r1, $r3
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    acswapd.v $r2, [$r0] = $r2r3
+; CV2-NEXT:    acswapd $r2, [$r0] = $r2r3
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    cb.even $r2 ? .LBB7_1
 ; CV2-NEXT:    ;;
