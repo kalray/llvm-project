@@ -33,7 +33,7 @@ def PCRELGOTADDR : KVX_INSTRUCTION_Y
 
 def PICEXTERNINDIRECTION : KVX_INSTRUCTION_Y
     <(outs SingleReg:$addr), (ins SingleReg:$gotaddr, Wrapped64:$gotoff),
-    "ld $addr = @got( $gotoff )[$gotaddr]", [], LSU_AUXW_Y_LOAD>;
+    "ld $addr = @got( $gotoff )[$gotaddr]", [], LSU_AUXW_LOAD_Y_>;
 
 def : Pat<(i64 (PICExternIndirection (i64 tglobaladdr:$gotoff))),
   (PICEXTERNINDIRECTION (PCRELGOTADDR), Pcrel27:$gotoff)>;
