@@ -37,123 +37,70 @@ def CRWL_FU : FuncUnit;
 def CRWH_FU : FuncUnit;
 foreach I = 0-3 in def NOP#I#_FU : FuncUnit;
 
-// Itineraries shared between CV1 and CV2
-def ALL : InstrItinClass;
-def BCU : InstrItinClass;
-def BCU_TINY_TINY_MAU_XNOP : InstrItinClass;
-def BCU_CRRP_CRWL_CRWH : InstrItinClass;
-def BCU_TINY_AUXW_CRRP : InstrItinClass;
-def TCA_INT : InstrItinClass;
-def TCA_FP : InstrItinClass;
-def ALU_NOP : InstrItinClass;
-def ALU_TINY : InstrItinClass;
-def ALU_TINY_X_ : InstrItinClass;
-def ALU_TINY_Y_ : InstrItinClass;
-def ALU_LITE : InstrItinClass;
-def ALU_LITE_X_ : InstrItinClass;
-def ALU_LITE_Y_ : InstrItinClass;
-def ALU_LITE_CRWL : InstrItinClass;
-def ALU_LITE_CRWH : InstrItinClass;
-def ALU_TINY_CRWL : InstrItinClass;
-def ALU_TINY_CRWH : InstrItinClass;
-def ALU_FULL : InstrItinClass;
-def ALU_FULL_SFU : InstrItinClass;
-def ALU_FULL_X_ : InstrItinClass;
-def ALU_FULL_Y_ : InstrItinClass;
-def MAU_INT : InstrItinClass;
-def MAU_FP : InstrItinClass;
-def MAU_INT_X_ : InstrItinClass;
-def MAU_FP_X_ : InstrItinClass;
-def MAU_INT_Y_ : InstrItinClass;
-def MAU_FP_Y_ : InstrItinClass;
-def MAU_AUXR_INT : InstrItinClass;
-def MAU_AUXR_INT_X_ : InstrItinClass;
-def MAU_AUXR_INT_Y_ : InstrItinClass;
-def MAU_AUXR_FP : InstrItinClass;
-def MAU_AUXR_FP_X_ : InstrItinClass;
-def MAU_AUXR_FP_Y_ : InstrItinClass;
+multiclass ItinSingle {
+  def "": InstrItinClass;
+  def _SRW: SchedWrite; // used for WriteRes model, complementary to itineraries
+}
 
-def LSU_STORE : InstrItinClass;
-def LSU_STORE_X_ : InstrItinClass;
-def LSU_STORE_Y_ : InstrItinClass;
-def LSU_CRRP_STORE : InstrItinClass;
-def LSU_CRRP_STORE_X_ : InstrItinClass;
-def LSU_CRRP_STORE_Y_ : InstrItinClass;
-def LSU_AUXR_STORE : InstrItinClass;
-def LSU_AUXR_STORE_X_ : InstrItinClass;
-def LSU_AUXR_STORE_Y_ : InstrItinClass;
-def LSU_AUXW_STORE : InstrItinClass;
-def LSU_AUXW_STORE_X_ : InstrItinClass;
-def LSU_AUXW_STORE_Y_ : InstrItinClass;
-def LSU_AUXR_AUXW_STORE : InstrItinClass;
-def LSU_AUXR_AUXW_STORE_X_ : InstrItinClass;
-def LSU_AUXR_AUXW_STORE_Y_ : InstrItinClass;
+multiclass ItinXY<bit hasXY=1> {
+  defm "": ItinSingle;
+  if hasXY then {
+    defm _X_: ItinSingle;
+    defm _Y_: ItinSingle;
+  }
+}
 
-def LSU_LOAD : InstrItinClass;
-def LSU_LOAD_X_ : InstrItinClass;
-def LSU_LOAD_Y_ : InstrItinClass;
-def LSU_CRRP_LOAD : InstrItinClass;
-def LSU_CRRP_LOAD_X_ : InstrItinClass;
-def LSU_CRRP_LOAD_Y_ : InstrItinClass;
-def LSU_AUXR_LOAD : InstrItinClass;
-def LSU_AUXR_LOAD_X_ : InstrItinClass;
-def LSU_AUXR_LOAD_Y_ : InstrItinClass;
-def LSU_AUXW_LOAD : InstrItinClass;
-def LSU_AUXW_LOAD_X_ : InstrItinClass;
-def LSU_AUXW_LOAD_Y_ : InstrItinClass;
-def LSU_AUXR_AUXW_LOAD : InstrItinClass;
-def LSU_AUXR_AUXW_LOAD_X_ : InstrItinClass;
-def LSU_AUXR_AUXW_LOAD_Y_ : InstrItinClass;
+multiclass ItinIntFp<bit hasXY=0> {
+  defm _INT: ItinXY<hasXY>;
+  defm _FP: ItinXY<hasXY>;
+}
 
-def LSU_AUXW_ALCLR : InstrItinClass;
-def LSU_AUXW_ALCLR_X_ : InstrItinClass;
-def LSU_AUXW_ALCLR_Y_ : InstrItinClass;
+multiclass ItinLoadStore<bit hasXY=0, bit hasALCLR=0> {
+  defm _LOAD: ItinXY<hasXY>;
+  defm _STORE: ItinXY<hasXY>;
+  if hasALCLR then {
+    defm _ALCLR: ItinXY<hasXY>;
+  }
+}
 
-def XSWAP256 : InstrItinClass;
+defm ALL : ItinSingle;
+defm BCU : ItinSingle;
+defm BCU_TINY_TINY_MAU_XNOP : ItinSingle;
+defm BCU_CRRP_CRWL_CRWH : ItinSingle;
+defm BCU_TINY_AUXW_CRRP : ItinSingle;
 
-def ALU_TINY_CRRP : InstrItinClass;
-def ALU_TINY_CRRP_CRWL_CRWH : InstrItinClass;
-def ALU_TINY_CRWL_CRWH : InstrItinClass;
-def ALU_TINY_CRWL_CRWH_X_ : InstrItinClass;
-def ALU_TINY_CRWL_CRWH_Y_ : InstrItinClass;
+defm TCA : ItinIntFp</*hasXY*/1>;
+
+defm ALU_NOP : ItinSingle;
+defm ALU_TINY : ItinXY;
+defm ALU_LITE : ItinXY;
+defm ALU_LITE_CRWL : ItinSingle;
+defm ALU_LITE_CRWH : ItinSingle;
+defm ALU_TINY_CRWL : ItinSingle;
+defm ALU_TINY_CRWH : ItinSingle;
+defm ALU_TINY_CRRP : ItinSingle;
+defm ALU_TINY_CRRP_CRWL_CRWH : ItinSingle;
+defm ALU_TINY_CRWL_CRWH: ItinXY;
+defm ALU_FULL : ItinXY;
+defm ALU_FULL_SFU : ItinSingle;
+
+defm MAU : ItinIntFp</*hasXY*/ 1>;
+defm MAU_AUXR : ItinIntFp</*hasXY*/ 1>;
+
+defm LSU : ItinLoadStore</*hasXY*/ 1>;
+defm LSU_CRRP : ItinLoadStore</*hasXY*/ 1>;
+defm LSU_AUXR : ItinLoadStore</*hasXY*/ 1>;
+defm LSU_AUXW : ItinLoadStore</*hasXY*/ 1, /*hasALCLR*/ 1>;
+defm LSU_AUXR_AUXW : ItinLoadStore</*hasXY*/ 1>;
+
+defm XSWAP256 : ItinSingle;
+
 // Switch-itineraries for instructions whose reservation table changes
 // between CV1 and CV2
 // Format: NAME_SWITCH_CV1VALUE_CV2VALUE
 
-def ALU_SWITCH_LITE_TINY : InstrItinClass;
-def ALU_SWITCH_LITE_TINY_X_ : InstrItinClass;
-def ALU_SWITCH_LITE_TINY_Y_ : InstrItinClass;
-def MAU_SWITCH_AUXR_EMPTY_INT : InstrItinClass;
-def MAU_SWITCH_AUXR_EMPTY_INT_X_ : InstrItinClass;
-def MAU_SWITCH_AUXR_EMPTY_INT_Y_ : InstrItinClass;
-def MAU_SWITCH_AUXR_EMPTY_FP : InstrItinClass;
-def MAU_SWITCH_AUXR_EMPTY_FP_X_ : InstrItinClass;
-def MAU_SWITCH_AUXR_EMPTY_FP_Y_ : InstrItinClass;
-
-defvar ALL_ITIN_CLASSES = [
-  ALL, BCU, BCU_TINY_TINY_MAU_XNOP, BCU_CRRP_CRWL_CRWH, BCU_TINY_AUXW_CRRP,
-  TCA_INT, TCA_FP,
-  ALU_NOP, ALU_TINY, ALU_TINY_X_, ALU_TINY_Y_,
-  ALU_SWITCH_LITE_TINY, ALU_SWITCH_LITE_TINY_X_, ALU_SWITCH_LITE_TINY_Y_,
-  ALU_LITE, ALU_LITE_X_, ALU_LITE_Y_, ALU_LITE_CRWL, ALU_LITE_CRWH, ALU_TINY_CRWL, ALU_TINY_CRWH,
-  ALU_FULL, ALU_FULL_SFU, ALU_FULL_X_, ALU_FULL_Y_,
-  MAU_INT, MAU_FP, MAU_INT_X_, MAU_FP_X_, MAU_INT_Y_, MAU_FP_Y_,
-  MAU_AUXR_INT, MAU_AUXR_INT_X_, MAU_AUXR_INT_Y_, MAU_AUXR_FP, MAU_AUXR_FP_X_, MAU_AUXR_FP_Y_,
-  LSU_STORE, LSU_STORE_X_, LSU_STORE_Y_,
-  LSU_CRRP_STORE, LSU_CRRP_STORE_X_, LSU_CRRP_STORE_Y_,
-  LSU_AUXR_STORE, LSU_AUXR_STORE_X_, LSU_AUXR_STORE_Y_,
-  LSU_AUXW_STORE, LSU_AUXW_STORE_X_, LSU_AUXW_STORE_Y_,
-  LSU_AUXR_AUXW_STORE, LSU_AUXR_AUXW_STORE_X_, LSU_AUXR_AUXW_STORE_Y_,
-  LSU_LOAD, LSU_LOAD_X_, LSU_LOAD_Y_,
-  LSU_CRRP_LOAD, LSU_CRRP_LOAD_X_, LSU_CRRP_LOAD_Y_,
-  LSU_AUXR_LOAD, LSU_AUXR_LOAD_X_, LSU_AUXR_LOAD_Y_,
-  LSU_AUXW_LOAD, LSU_AUXW_LOAD_X_, LSU_AUXW_LOAD_Y_,
-  LSU_AUXR_AUXW_LOAD, LSU_AUXR_AUXW_LOAD_X_, LSU_AUXR_AUXW_LOAD_Y_,
-  LSU_AUXW_ALCLR, LSU_AUXW_ALCLR_X_, LSU_AUXW_ALCLR_Y_,
-  ALU_TINY_CRRP, ALU_TINY_CRRP_CRWL_CRWH, ALU_TINY_CRWL_CRWH, ALU_TINY_CRWL_CRWH_X_, ALU_TINY_CRWL_CRWH_Y_,
-  MAU_SWITCH_AUXR_EMPTY_INT, MAU_SWITCH_AUXR_EMPTY_INT_X_, MAU_SWITCH_AUXR_EMPTY_INT_Y_,
-  MAU_SWITCH_AUXR_EMPTY_FP, MAU_SWITCH_AUXR_EMPTY_FP_X_, MAU_SWITCH_AUXR_EMPTY_FP_Y_
-];
+defm ALU_SWITCH_LITE_TINY : ItinXY;
+defm MAU_SWITCH_AUXR_EMPTY : ItinIntFp</*hasXY*/ 1>;
 
 /**
  *  The KV3 pipeline has PF, ID, RR, E1..E5 stages
@@ -204,569 +151,227 @@ defvar ALL_ITIN_CLASSES = [
  * start of the list; hence, the operand list for a CB is [1] (reads at ID)
 **/
 
+class InstrItinDataList <list<InstrItinData> _l> {
+  list<InstrItinData> l = _l;
+}
+
+multiclass DataXY <list<InstrStage> rt, list<int> lat_ops, list<InstrStage> rt_cv2=[]> {
+  defvar base = [
+    InstrItinData<!cast<InstrItinClass>(NAME), rt, lat_ops, [], 1>,
+    InstrItinData<!cast<InstrItinClass>(NAME # _X_), rt, lat_ops, [], 2>,
+    InstrItinData<!cast<InstrItinClass>(NAME # _Y_), rt, lat_ops, [], 3>,
+  ];
+  defvar cv2 = [
+    InstrItinData<!cast<InstrItinClass>(NAME), rt_cv2, lat_ops, [], 1>,
+    InstrItinData<!cast<InstrItinClass>(NAME # _X_), rt_cv2, lat_ops, [], 2>,
+    InstrItinData<!cast<InstrItinClass>(NAME # _Y_), rt_cv2, lat_ops, [], 3>,
+  ];
+  if !not(!empty(rt_cv2)) then {
+    def _IDL_CV1 : InstrItinDataList<base>;
+    def _IDL_CV2 : InstrItinDataList<cv2>;
+  } else {
+    def _IDL : InstrItinDataList<base>;
+  }
+}
+
+class LatOpsVariant <string _variant, list<int> _lat_ops> {
+  list<int> lat_ops = _lat_ops;
+  string variant = _variant;
+}
+
+multiclass DataXYVariants <list<InstrStage> rt, list<LatOpsVariant> lat_ops_variants, list<InstrStage> rt_cv2=[]> {
+  foreach lov = lat_ops_variants in {
+    defm _#lov.variant: DataXY<rt, lov.lat_ops, rt_cv2>;
+  }
+
+  if !not(!empty(rt_cv2)) then {
+    def _IDL_CV1: InstrItinDataList<
+      !foldl([]<InstrItinData>, lat_ops_variants, acc, lov,
+        acc # !cast<InstrItinDataList>(NAME # _ # lov.variant # _IDL_CV1).l)>;
+    def _IDL_CV2: InstrItinDataList<
+      !foldl([]<InstrItinData>, lat_ops_variants, acc, lov,
+        acc # !cast<InstrItinDataList>(NAME # _ # lov.variant # _IDL_CV2).l)>;
+  } else {
+    def _IDL: InstrItinDataList<
+      !foldl([]<InstrItinData>, lat_ops_variants, acc, lov,
+        acc # !cast<InstrItinDataList>(NAME # _ # lov.variant # _IDL).l)>;
+  }
+}
+
+multiclass DataSingle <list<InstrStage> rt, list<int> lat_ops, int issue_count=1> {
+  def _IDL : InstrItinDataList<[InstrItinData<!cast<InstrItinClass>(NAME), rt, lat_ops, [], issue_count>]>;
+}
+
+defvar ONE_TINY = InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>;
+defvar ONE_LITE = InstrStage<1, [LITE0_FU, LITE1_FU], 0>;
+defvar ONE_FULL = InstrStage<1, [FULL_FU], 0>;
+defvar ONE_MAU = InstrStage<1, [MAU_FU], 0>;
+defvar ONE_AUXR = InstrStage<1, [AUXR_FU], 0>;
+defvar ONE_NOP = InstrStage<1, [NOP0_FU, NOP1_FU, NOP2_FU, NOP3_FU], 0>;
+defvar ONE_BCU = InstrStage<1, [BCU_FU], 0>;
+defvar ONE_TCA = InstrStage<1, [TCA_FU], 0>;
+defvar ONE_CRWL = InstrStage<1, [CRWL_FU], 0>;
+defvar ONE_CRWH = InstrStage<1, [CRWH_FU], 0>;
+defvar ONE_CRRP = InstrStage<1, [CRRP_FU], 0>;
+defvar ONE_AUXW = InstrStage<1, [AUXW_FU], 0>;
+defvar ONE_LSU = InstrStage<1, [LSU_FU], 0>;
+
+defvar XTINY = [
+  InstrStage<1, [TINY0_FU], 0>,
+  InstrStage<1, [TINY1_FU], 0>,
+  InstrStage<1, [TINY2_FU], 0>,
+  InstrStage<1, [TINY3_FU], 0>,
+];
+
+defvar XNOP = [
+  InstrStage<1, [NOP0_FU], 0>,
+  InstrStage<1, [NOP1_FU], 0>,
+  InstrStage<1, [NOP2_FU], 0>,
+  InstrStage<1, [NOP3_FU], 0>,
+];
+
+defvar ALU_TINY_ITIN_RT = [ONE_TINY];
+defvar ALU_LITE_ITIN_RT = [ONE_TINY, ONE_LITE];
+defvar ALU_FULL_ITIN_RT = [ONE_TINY, ONE_LITE, ONE_FULL];
+defvar ALU_TINY_CRRP_ITIN_RT = [ONE_TINY, ONE_CRRP];
+defvar ALU_TINY_CRWL_ITIN_RT = [ONE_TINY, ONE_CRWL];
+defvar ALU_TINY_CRWH_ITIN_RT = [ONE_TINY, ONE_CRWH];
+defvar ALU_TINY_CRWL_CRWH_ITIN_RT = [ONE_TINY, ONE_CRWL, ONE_CRWH];
+defvar ALU_TINY_CRRP_CRWL_CRWH_ITIN_RT = [ONE_TINY, ONE_CRRP, ONE_CRWL, ONE_CRWH];
+defvar ALU_LITE_CRWL_ITIN_RT = [ONE_TINY, ONE_LITE, ONE_CRWL];
+defvar ALU_LITE_CRWH_ITIN_RT = [ONE_TINY, ONE_LITE, ONE_CRWH];
+
+defvar NOP_ITIN_RT = [ONE_NOP];
+
+defvar BCU_ITIN_RT = [ONE_BCU];
+defvar BCU_CRRP_CRWL_CRWH_ITIN_RT = [ONE_BCU, ONE_CRRP, ONE_CRWL, ONE_CRWH];
+defvar BCU_TINY_AUXW_CRRP_ITIN_RT = [ONE_BCU, ONE_TINY, ONE_AUXW, ONE_CRRP];
+defvar BCU_TINY_TINY_MAU_XNOP_ITIN_RT = [ONE_BCU, ONE_TINY, ONE_TINY, ONE_MAU] # XNOP;
+
+defvar TCA_ITIN_RT = [ONE_TCA];
+
+defvar LSU_ITIN_RT = [ONE_TINY, ONE_LSU];
+defvar LSU_CRRP_ITIN_RT = [ONE_TINY, ONE_LSU, ONE_CRRP];
+defvar LSU_AUXR_ITIN_RT = [ONE_TINY, ONE_LSU, ONE_AUXR];
+defvar LSU_AUXW_ITIN_RT = [ONE_TINY, ONE_LSU, ONE_AUXW];
+defvar LSU_AUXR_AUXW_ITIN_RT = [ONE_TINY, ONE_LSU, ONE_AUXR, ONE_AUXW];
+
+defvar MAU_ITIN_RT = [ONE_TINY, ONE_MAU];
+defvar MAU_AUXR_ITIN_RT = [ONE_TINY, ONE_MAU, ONE_AUXR];
+
+defvar ALL_ITIN_RT = XTINY # [ONE_BCU, ONE_TCA] # XNOP;
+
+defvar READ_ID = [1];
+defvar READ_RR = [2];
+defvar READ_RRx2 = READ_RR # READ_RR;
+defvar READ_RRx5 = READ_RRx2 # READ_RRx2 # READ_RR;
+
+defvar WE1 = [2];
+defvar WE2 = [3];
+defvar WE3 = [4];
+defvar WE4 = [5];
+defvar WE5 = [6];
+defvar WSFU = [12];
+
+defvar WE1_RR = WE1 # READ_RR;
+defvar WE1_ID = WE1 # READ_RR;
+defvar WE1_RRx2 = WE1 # READ_RRx2;
+defvar WE2_RR = WE2 # READ_RR;
+defvar WE2_RRx2 = WE2 # READ_RRx2;
+defvar WE2_RRx5 = WE2 # READ_RRx5;
+defvar WE3_RRx2 = WE3 # READ_RRx2;
+defvar WE3_RRx5 = WE3 # READ_RRx5;
+defvar WE4_RRx2 = WE4 # READ_RRx2;
+defvar WE5_RRx2 = WE5 # READ_RRx2;
+defvar WSFU_RRx2 = WSFU # READ_RRx2;
+
+defvar NOOP = []<int>;
+
+// ALU_LITE -> ALU_TINY
+defm ALU_SWITCH_LITE_TINY: DataXY<ALU_LITE_ITIN_RT, WE1_RRx2, /*CV2*/ALU_TINY_ITIN_RT>;
+// MAU + AUXR -> MAU
+defm MAU_SWITCH_AUXR_EMPTY: DataXYVariants<MAU_AUXR_ITIN_RT, [LatOpsVariant<"INT", WE2_RRx2>, LatOpsVariant<"FP", WE4_RRx2>], /*CV2*/MAU_ITIN_RT>;
+
+// Common
+defm ALL: DataSingle<ALL_ITIN_RT, NOOP, 8 /*ISSUE*/>; // ALL reserves all resources to ensure nothing else gets scheduled
+
+defm ALU_NOP: DataSingle<NOP_ITIN_RT, NOOP>;
+defm ALU_TINY: DataXY<ALU_TINY_ITIN_RT, WE1_RRx2>;
+defm ALU_TINY_CRWH: DataSingle<ALU_TINY_CRWH_ITIN_RT, WE1_RRx2>;
+defm ALU_TINY_CRWL: DataSingle<ALU_TINY_CRWL_ITIN_RT, WE1_RRx2>;
+defm ALU_TINY_CRRP: DataSingle<ALU_TINY_CRRP_ITIN_RT, READ_RR>;
+defm ALU_TINY_CRRP_CRWL_CRWH: DataSingle<ALU_TINY_CRRP_CRWL_CRWH_ITIN_RT, WE2_RRx2>;
+defm ALU_TINY_CRWL_CRWH: DataXY<ALU_TINY_CRWL_CRWH_ITIN_RT, WE2>;
+defm ALU_LITE: DataXY<ALU_LITE_ITIN_RT, WE1_RRx2>;
+defm ALU_LITE_CRWL: DataSingle<ALU_LITE_CRWL_ITIN_RT, WE1_RRx2>;
+defm ALU_LITE_CRWH: DataSingle<ALU_LITE_CRWH_ITIN_RT, WE1_RRx2>;
+defm ALU_FULL: DataXY<ALU_FULL_ITIN_RT, WE1_RRx2>;
+defm ALU_FULL_SFU: DataSingle<ALU_FULL_ITIN_RT, WSFU_RRx2>;
+
+defm BCU: DataSingle<BCU_ITIN_RT, READ_ID>;
+defm BCU_CRRP_CRWL_CRWH: DataSingle<BCU_CRRP_CRWL_CRWH_ITIN_RT, WE3_RRx2>;
+defm BCU_TINY_AUXW_CRRP: DataSingle<BCU_TINY_AUXW_CRRP_ITIN_RT, WE3_RRx2>;
+defm BCU_TINY_TINY_MAU_XNOP: DataSingle<BCU_TINY_TINY_MAU_XNOP_ITIN_RT, WE1_RR>;
+
+defm TCA: DataXYVariants<TCA_ITIN_RT, [LatOpsVariant<"INT", WE3_RRx2>, LatOpsVariant<"FP", WE5_RRx2>]>;
+
+// NOTE : stores have up to 5 operands
+defm LSU: DataXYVariants<LSU_ITIN_RT, [LatOpsVariant<"STORE", READ_RRx5>, LatOpsVariant<"LOAD", WE3_RRx5>]>;
+defm LSU_CRRP: DataXYVariants<LSU_CRRP_ITIN_RT, [LatOpsVariant<"STORE", READ_RRx5>, LatOpsVariant<"LOAD", WE3_RRx5>]>;
+
+// TODO : latency will be off for SV, and can't be easily fixed
+// Indeed, the QuadReg (who is read at E1) is either in 2nd or 3rd position
+// cf. MC_0B in KVXInstrInfo.td
+defm LSU_AUXR: DataXYVariants<LSU_AUXR_ITIN_RT, [LatOpsVariant<"STORE", READ_RRx5>, LatOpsVariant<"LOAD", WE3_RRx5>]>;
+defm LSU_AUXW: DataXYVariants<LSU_AUXW_ITIN_RT, [LatOpsVariant<"STORE", READ_RRx5>, LatOpsVariant<"LOAD", WE3_RRx5>, LatOpsVariant<"ALCLR", WE2_RRx5>]>;
+defm LSU_AUXR_AUXW: DataXYVariants<LSU_AUXR_AUXW_ITIN_RT, [LatOpsVariant<"STORE", READ_RRx5>, LatOpsVariant<"LOAD", WE3_RRx5>]>;
+
+defm MAU: DataXYVariants<MAU_ITIN_RT, [LatOpsVariant<"INT", WE2_RRx2>, LatOpsVariant<"FP", WE4_RRx2>]>;
+defm MAU_AUXR: DataXYVariants<MAU_AUXR_ITIN_RT, [LatOpsVariant<"INT", WE2_RRx2>, LatOpsVariant<"FP", WE4_RRx2>]>;
+
 def KVXItinList {
-list<InstrItinData> CV1Switch = [
-  // ALU_LITE -> ALU_TINY
-  InstrItinData<ALU_SWITCH_LITE_TINY, [
-    InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
-    ], [2, 2, 2], [], 1
-  >,
-  InstrItinData<ALU_SWITCH_LITE_TINY_X_, [
-    InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
-    ], [2, 2, 2], [], 2
-  >,
-  InstrItinData<ALU_SWITCH_LITE_TINY_Y_, [
-    InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
-    ], [2, 2, 2], [], 3
-  >,
+list<InstrItinData> CV1Switch =
+  ALU_SWITCH_LITE_TINY_IDL_CV1.l #
+  MAU_SWITCH_AUXR_EMPTY_IDL_CV1.l;
 
-  // MAU + AUXR -> MAU, int
-  InstrItinData<MAU_SWITCH_AUXR_EMPTY_INT, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [MAU_FU], 0>,
-    InstrStage<1, [AUXR_FU], 0>
-    ], [3, 2, 2], [], 1
-  >,
-  InstrItinData<MAU_SWITCH_AUXR_EMPTY_INT_X_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [MAU_FU], 0>,
-    InstrStage<1, [AUXR_FU], 0>
-    ], [3, 2, 2], [], 2
-  >,
-  InstrItinData<MAU_SWITCH_AUXR_EMPTY_INT_Y_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [MAU_FU], 0>,
-    InstrStage<1, [AUXR_FU], 0>
-    ], [3, 2, 2], [], 3
-  >,
+list<InstrItinData> CV2Switch =
+  ALU_SWITCH_LITE_TINY_IDL_CV2.l #
+  MAU_SWITCH_AUXR_EMPTY_IDL_CV2.l;
 
-  // MAU + AUXR -> MAU, float
-  InstrItinData<MAU_SWITCH_AUXR_EMPTY_FP, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [MAU_FU], 0>,
-    InstrStage<1, [AUXR_FU], 0>
-    ], [5, 2, 2], [], 1
-  >,
-  InstrItinData<MAU_SWITCH_AUXR_EMPTY_FP_X_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [MAU_FU], 0>,
-    InstrStage<1, [AUXR_FU], 0>
-    ], [5, 2, 2], [], 2
-  >,
-  InstrItinData<MAU_SWITCH_AUXR_EMPTY_FP_Y_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [MAU_FU], 0>,
-    InstrStage<1, [AUXR_FU], 0>
-    ], [5, 2, 2], [], 3
-  >,
-];
-
-list<InstrItinData> CV2Switch = [
-  // ALU_LITE -> ALU_TINY
-  InstrItinData<ALU_SWITCH_LITE_TINY, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
-    ], [2, 2, 2], [], 1
-  >,
-  InstrItinData<ALU_SWITCH_LITE_TINY_X_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
-    ], [2, 2, 2], [], 2
-  >,
-  InstrItinData<ALU_SWITCH_LITE_TINY_Y_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
-    ], [2, 2, 2], [], 3
-  >,
-
-  // MAU + AUXR -> MAU, int
-    InstrItinData<MAU_SWITCH_AUXR_EMPTY_INT, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [MAU_FU], 0>,
-    ], [3, 2, 2], [], 1
-  >,
-  InstrItinData<MAU_SWITCH_AUXR_EMPTY_INT_X_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [MAU_FU], 0>,
-    ], [3, 2, 2], [], 2
-  >,
-  InstrItinData<MAU_SWITCH_AUXR_EMPTY_INT_Y_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [MAU_FU], 0>,
-    ], [3, 2, 2], [], 3
-  >,
-
-  // MAU + AUXR -> MAU, FP
-  InstrItinData<MAU_SWITCH_AUXR_EMPTY_FP, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [MAU_FU], 0>,
-    ], [5, 2, 2], [], 1
-  >,
-  InstrItinData<MAU_SWITCH_AUXR_EMPTY_FP_X_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [MAU_FU], 0>,
-    ], [5, 2, 2], [], 2
-  >,
-  InstrItinData<MAU_SWITCH_AUXR_EMPTY_FP_Y_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [MAU_FU], 0>,
-    ], [5, 2, 2], [], 3
-  >,
-];
-
-list<InstrItinData> Common = [
-  // ALL reserves all resources to ensure nothing else gets scheduled
-  InstrItinData<ALL, [
-    InstrStage<1, [TINY0_FU], 0>,
-    InstrStage<1, [TINY1_FU], 0>,
-    InstrStage<1, [TINY2_FU], 0>,
-    InstrStage<1, [TINY3_FU], 0>,
-    InstrStage<1, [BCU_FU], 0>,
-    InstrStage<1, [TCA_FU], 0>,
-    InstrStage<1, [NOP0_FU], 0>,
-    InstrStage<1, [NOP1_FU], 0>,
-    InstrStage<1, [NOP2_FU], 0>,
-    InstrStage<1, [NOP3_FU], 0>,
-    ], [], [], 8
-  >,
-  InstrItinData<ALU_NOP, [
-    InstrStage<1, [NOP0_FU, NOP1_FU, NOP2_FU, NOP3_FU]>
-    ], [], [], 1
-  >,
-  InstrItinData<ALU_TINY, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>,
-    ], [2, 2, 2], [], 1
-  >,
-  InstrItinData<ALU_TINY_X_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>,
-    ], [2, 2, 2], [], 2
-  >,
-  InstrItinData<ALU_TINY_Y_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
-    ], [2, 2, 2], [], 3
-  >,
-  InstrItinData<ALU_LITE, [
-    InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
-    ], [2, 2, 2], [], 1
-  >,
-  InstrItinData<ALU_LITE_X_, [
-    InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
-    ], [2, 2, 2], [], 2
-  >,
-  InstrItinData<ALU_LITE_Y_, [
-    InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU]>
-    ], [2, 2, 2], [], 3
-  >,
-  InstrItinData<ALU_LITE_CRWL, [
-    InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [CRWL_FU]>
-    ], [2, 2, 2], [], 1
-  >,
-  InstrItinData<ALU_LITE_CRWH, [
-    InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [CRWH_FU]>
-    ], [2, 2, 2], [], 1
-  >,
-  InstrItinData<ALU_TINY_CRWL, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [CRWL_FU]>
-    ], [2, 2, 2], [], 1
-  >,
-  InstrItinData<ALU_TINY_CRWH, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [CRWH_FU]>
-    ], [2, 2, 2], [], 1
-  >,
-  InstrItinData<ALU_FULL, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
-    InstrStage<1, [FULL_FU]>
-  ], [2, 2, 2], [], 1
-  >,
-  InstrItinData<ALU_FULL_SFU, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
-    InstrStage<1, [FULL_FU]>
-  ], [12, 2, 2], [], 1
-  >,
-  InstrItinData<ALU_FULL_X_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
-    InstrStage<1, [FULL_FU]>
-    ], [2, 2, 2], [], 2
-  >,
-  InstrItinData<ALU_FULL_Y_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
-    InstrStage<1, [FULL_FU]>
-    ], [2, 2, 2], [], 3
-  >,
-  InstrItinData<BCU, [
-    InstrStage<1, [BCU_FU]> // TODO: branch penalty not modeled
-    ], [1], [], 1
-  >,
-  InstrItinData<BCU_CRRP_CRWL_CRWH, [
-    InstrStage<1, [BCU_FU], 0>,
-    InstrStage<1, [CRRP_FU], 0>,
-    InstrStage<1, [CRWL_FU], 0>,
-    InstrStage<1, [CRWH_FU]>
-    ], [4, 2, 2], [], 1
-  >,
-  InstrItinData<BCU_TINY_AUXW_CRRP, [
-    InstrStage<1, [BCU_FU], 0>,
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [AUXW_FU], 0>,
-    InstrStage<1, [CRRP_FU]>
-    ], [4, 2, 2], [], 1
-  >,
-  // TODO : need to split this class into several to handle bypasses finely
-  // (SFRs have no bypasses but GPRs do)
-  InstrItinData<BCU_TINY_TINY_MAU_XNOP, [
-    InstrStage<1, [BCU_FU], 0>,
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [MAU_FU], 0>,
-    InstrStage<1, [NOP0_FU, NOP1_FU, NOP2_FU, NOP3_FU], 0>,
-    InstrStage<1, [NOP0_FU, NOP1_FU, NOP2_FU, NOP3_FU], 0>,
-    InstrStage<1, [NOP0_FU, NOP1_FU, NOP2_FU, NOP3_FU], 0>,
-    InstrStage<1, [NOP0_FU, NOP1_FU, NOP2_FU, NOP3_FU]>
-    ], [2, 2, 2], [], 1
-  >,
-  InstrItinData<TCA_INT, [
-    InstrStage<1, [TCA_FU]>
-    ], [4, 2, 2], [], 1
-  >,
-  InstrItinData<TCA_FP, [
-    InstrStage<1, [TCA_FU]>
-    ], [6, 2, 2], [], 1
-  >,
-  // NOTE : stores have up to 5 operands
-  InstrItinData<LSU_STORE, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [LSU_FU]>
-    ], [2, 2, 2, 2, 2], [], 1
-  >,
-  InstrItinData<LSU_STORE_X_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [LSU_FU]>
-    ], [2, 2, 2, 2, 2], [], 2
-  >,
-  InstrItinData<LSU_STORE_Y_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [LSU_FU]>
-    ], [2, 2, 2, 2, 2], [], 3
-  >,
-  // TODO : latency will be off for SV, and can't be easily fixed
-  // Indeed, the QuadReg (who is read at E1) is either in 2nd or 3rd position
-  // cf. MC_0B in KVXInstrInfo.td
-  InstrItinData<LSU_CRRP_STORE, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [LSU_FU], 0>,
-    InstrStage<1, [CRRP_FU]>
-    ], [2, 2, 2, 2, 2], [], 1
-  >,
-  InstrItinData<LSU_CRRP_STORE_X_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [LSU_FU], 0>,
-    InstrStage<1, [CRRP_FU]>
-    ], [2, 2, 2, 2, 2], [], 2
-  >,
-  InstrItinData<LSU_CRRP_STORE_Y_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [LSU_FU], 0>,
-    InstrStage<1, [CRRP_FU]>
-    ], [2, 2, 2, 2, 2], [], 3
-  >,
-  InstrItinData<LSU_AUXR_STORE, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [LSU_FU], 0>,
-    InstrStage<1, [AUXR_FU]>
-    ], [2, 2, 2, 2, 2], [], 1
-  >,
-  InstrItinData<LSU_AUXR_STORE_X_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [LSU_FU], 0>,
-    InstrStage<1, [AUXR_FU]>
-    ], [2, 2, 2, 2, 2], [], 2
-  >,
-  InstrItinData<LSU_AUXR_STORE_Y_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [LSU_FU], 0>,
-    InstrStage<1, [AUXR_FU]>
-    ], [2, 2, 2, 2, 2], [], 3
-  >,
-  InstrItinData<LSU_AUXW_STORE, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [LSU_FU], 0>,
-    InstrStage<1, [AUXW_FU]>
-    ], [2, 2, 2, 2, 2], [], 1
-  >,
-  InstrItinData<LSU_AUXW_STORE_X_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [LSU_FU], 0>,
-    InstrStage<1, [AUXW_FU]>
-    ], [2, 2, 2, 2, 2], [], 2
-  >,
-  InstrItinData<LSU_AUXW_STORE_Y_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [LSU_FU], 0>,
-    InstrStage<1, [AUXW_FU]>
-    ], [2, 2, 2, 2, 2], [], 3
-  >,
-  InstrItinData<LSU_AUXR_AUXW_STORE, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [LSU_FU], 0>,
-    InstrStage<1, [AUXR_FU], 0>,
-    InstrStage<1, [AUXW_FU]>
-    ], [2, 2, 2, 2, 2], [], 1
-  >,
-  InstrItinData<LSU_AUXR_AUXW_STORE_X_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [LSU_FU], 0>,
-    InstrStage<1, [AUXR_FU], 0>,
-    InstrStage<1, [AUXW_FU]>
-    ], [2, 2, 2, 2, 2], [], 2
-  >,
-  InstrItinData<LSU_AUXR_AUXW_STORE_Y_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [LSU_FU], 0>,
-    InstrStage<1, [AUXR_FU], 0>,
-    InstrStage<1, [AUXW_FU]>
-    ], [2, 2, 2, 2, 2], [], 3
-  >,
-  // ALCLRW, ALCLRD: result available at E2
-    InstrItinData<LSU_AUXW_ALCLR, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [LSU_FU], 0>,
-    InstrStage<1, [AUXW_FU]>
-    ], [3, 2, 2, 2, 2, 2], [], 1
-  >,
-  InstrItinData<LSU_AUXW_ALCLR_X_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [LSU_FU], 0>,
-    InstrStage<1, [AUXW_FU]>
-    ], [3, 2, 2, 2, 2, 2], [], 2
-  >,
-  InstrItinData<LSU_AUXW_ALCLR_Y_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [LSU_FU], 0>,
-    InstrStage<1, [AUXW_FU]>
-    ], [3, 2, 2, 2, 2, 2], [], 3
-  >,
-  InstrItinData<LSU_LOAD, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [LSU_FU]>
-    ], [4, 2, 2, 2, 2, 2], [], 1
-  >,
-  InstrItinData<LSU_LOAD_X_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [LSU_FU]>
-    ], [4, 2, 2, 2, 2, 2], [], 2
-  >,
-  InstrItinData<LSU_LOAD_Y_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [LSU_FU]>
-    ], [4, 2, 2, 2, 2, 2], [], 3
-  >,
-  InstrItinData<LSU_CRRP_LOAD, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [LSU_FU], 0>,
-    InstrStage<1, [CRRP_FU]>
-    ], [4, 2, 2, 2, 2, 2], [], 1
-  >,
-  InstrItinData<LSU_CRRP_LOAD_X_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [LSU_FU], 0>,
-    InstrStage<1, [CRRP_FU]>
-    ], [4, 2, 2, 2, 2, 2], [], 2
-  >,
-  InstrItinData<LSU_CRRP_LOAD_Y_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [LSU_FU], 0>,
-    InstrStage<1, [CRRP_FU]>
-    ], [4, 2, 2, 2, 2, 2], [], 3
-  >,
-  InstrItinData<LSU_AUXR_LOAD, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [LSU_FU], 0>,
-    InstrStage<1, [AUXR_FU]>
-    ], [4, 2, 2, 2, 2, 2], [], 1
-  >,
-  InstrItinData<LSU_AUXR_LOAD_X_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [LSU_FU], 0>,
-    InstrStage<1, [AUXR_FU]>
-    ], [4, 2, 2, 2, 2, 2], [], 2
-  >,
-  InstrItinData<LSU_AUXR_LOAD_Y_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [LSU_FU], 0>,
-    InstrStage<1, [AUXR_FU]>
-    ], [4, 2, 2, 2, 2, 2], [], 3
-  >,
-  InstrItinData<LSU_AUXW_LOAD, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [LSU_FU], 0>,
-    InstrStage<1, [AUXW_FU]>
-    ], [4, 2, 2, 2, 2, 2], [], 1
-  >,
-  InstrItinData<LSU_AUXW_LOAD_X_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [LSU_FU], 0>,
-    InstrStage<1, [AUXW_FU]>
-    ], [4, 2, 2, 2, 2, 2], [], 2
-  >,
-  InstrItinData<LSU_AUXW_LOAD_Y_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [LSU_FU], 0>,
-    InstrStage<1, [AUXW_FU]>
-    ], [4, 2, 2, 2, 2, 2], [], 3
-  >,
-  InstrItinData<LSU_AUXR_AUXW_LOAD, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [LSU_FU], 0>,
-    InstrStage<1, [AUXR_FU], 0>,
-    InstrStage<1, [AUXW_FU]>
-    ], [4, 2, 2, 2, 2, 2], [], 1
-  >,
-  InstrItinData<LSU_AUXR_AUXW_LOAD_X_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [LSU_FU], 0>,
-    InstrStage<1, [AUXR_FU], 0>,
-    InstrStage<1, [AUXW_FU]>
-    ], [4, 2, 2, 2, 2, 2], [], 2
-  >,
-  InstrItinData<LSU_AUXR_AUXW_LOAD_Y_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [LSU_FU], 0>,
-    InstrStage<1, [AUXR_FU], 0>,
-    InstrStage<1, [AUXW_FU]>
-    ], [4, 2, 2, 2, 2, 2], [], 3
-  >,
-  InstrItinData<MAU_INT, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [MAU_FU]>
-    ], [3, 2, 2], [], 1
-  >,
-  InstrItinData<MAU_FP, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [MAU_FU]>
-    ], [5, 2, 2], [], 1
-  >,
-  InstrItinData<MAU_INT_X_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [MAU_FU]>
-    ], [3, 2, 2], [], 2
-  >,
-  InstrItinData<MAU_FP_X_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [MAU_FU]>
-    ], [5, 2, 2], [], 2
-  >,
-  InstrItinData<MAU_INT_Y_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [MAU_FU]>
-    ], [3, 2, 2], [], 3
-  >,
-  InstrItinData<MAU_FP_Y_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [MAU_FU]>
-    ], [5, 2, 2], [], 3
-  >,
-  InstrItinData<MAU_AUXR_INT, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [MAU_FU], 0>,
-    InstrStage<1, [AUXR_FU]>
-    ], [3, 2, 2], [], 1
-  >,
-  InstrItinData<MAU_AUXR_INT_X_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [MAU_FU], 0>,
-    InstrStage<1, [AUXR_FU]>
-    ], [3, 2, 2], [], 2
-  >,
-  InstrItinData<MAU_AUXR_INT_Y_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [MAU_FU], 0>,
-    InstrStage<1, [AUXR_FU]>
-    ], [3, 2, 2], [], 3
-  >,
-  InstrItinData<MAU_AUXR_FP, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [MAU_FU], 0>,
-    InstrStage<1, [AUXR_FU]>
-    ], [5, 2, 2], [], 1
-  >,
-  InstrItinData<MAU_AUXR_FP_X_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [MAU_FU], 0>,
-    InstrStage<1, [AUXR_FU]>
-    ], [5, 2, 2], [], 2
-  >,
-  InstrItinData<MAU_AUXR_FP_Y_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [MAU_FU], 0>,
-    InstrStage<1, [AUXR_FU]>
-    ], [5, 2, 2], [], 3
-  >,
-  InstrItinData<ALU_TINY_CRRP, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [CRRP_FU]>
-    ], [2], [], 1
-  >,
-  InstrItinData<ALU_TINY_CRRP_CRWL_CRWH, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [CRRP_FU], 0>,
-    InstrStage<1, [CRWL_FU], 0>,
-    InstrStage<1, [CRWH_FU]>
-    ], [3, 2], [], 1
-  >,
-  InstrItinData<ALU_TINY_CRWL_CRWH, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [CRWL_FU], 0>,
-    InstrStage<1, [CRWH_FU]>
-    ], [3], [], 1
-  >,
-  InstrItinData<ALU_TINY_CRWL_CRWH_X_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [CRWL_FU], 0>,
-    InstrStage<1, [CRWH_FU]>
-    ], [3], [], 2
-  >,
-  InstrItinData<ALU_TINY_CRWL_CRWH_Y_, [
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [CRWL_FU], 0>,
-    InstrStage<1, [CRWH_FU]>
-    ], [3], [], 3
-  >,
-
-// TODO : add OperandLatencies here as well
+list<InstrItinData> Common =
+  ALL_IDL.l
+  # ALU_NOP_IDL.l
+  # ALU_TINY_IDL.l # ALU_TINY_CRRP_IDL.l # ALU_TINY_CRWH_IDL.l # ALU_TINY_CRWL_IDL.l
+  # ALU_TINY_CRWL_CRWH_IDL.l # ALU_TINY_CRRP_CRWL_CRWH_IDL.l
+  # ALU_LITE_IDL.l # ALU_LITE_CRWL_IDL.l # ALU_LITE_CRWH_IDL.l
+  # ALU_FULL_IDL.l # ALU_FULL_SFU_IDL.l
+  # BCU_IDL.l # BCU_CRRP_CRWL_CRWH_IDL.l # BCU_TINY_AUXW_CRRP_IDL.l # BCU_TINY_TINY_MAU_XNOP_IDL.l
+  # TCA_IDL.l
+  # LSU_IDL.l # LSU_CRRP_IDL.l # LSU_AUXR_IDL.l # LSU_AUXW_IDL.l # LSU_AUXR_AUXW_IDL.l
+  # MAU_IDL.l # MAU_AUXR_IDL.l
+  # [
+  // TODO : add OperandLatencies here as well
   // We need to expand XSWAP256p pseudos after packetizer. To correctly schedule/bundle them,
   // we need a dedicated scheduling itinerary for it.
   InstrItinData<XSWAP256, [
-    // movetq E == ALU_LITE_CRWL
-    InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [CRWL_FU], 0>,
-    // movetq O == ALU_LITE_CRWH
-    InstrStage<1, [LITE0_FU, LITE1_FU], 0>,
-    InstrStage<1, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
-    InstrStage<1, [CRWH_FU], 0>,
+    // moveto E == ALU_LITE_CRWL
+    ONE_LITE,
+    ONE_TINY,
+    ONE_CRWL,
+    // moveto O == ALU_LITE_CRWH
+    ONE_LITE,
+    ONE_TINY,
+    ONE_CRWH,
     // movefo == BCU_TINY_AUXW_CRRP
     InstrStage<3, [BCU_FU], 0>,
     InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<3, [AUXW_FU], 0>,
-    InstrStage<3, [CRRP_FU]>
+    InstrStage<3, [CRRP_FU], 0>
   ], [2, 4, 2, 2], [], 3>
 ];
 }
 
-multiclass KVX_ITINERARIES<list<InstrItinData> ItinList> {
+multiclass KVXItineraries<list<InstrItinData> ItinList> {
   def Itineraries:
     ProcessorItineraries<[
       TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU,
@@ -785,10 +390,10 @@ multiclass KVX_ITINERARIES<list<InstrItinData> ItinList> {
     ], [], ItinList>;
 }
 
-defm KVXCV1: KVX_ITINERARIES<KVXItinList.Common # KVXItinList.CV1Switch>;
-defm KVXCV2: KVX_ITINERARIES<KVXItinList.Common # KVXItinList.CV2Switch>;
+defm KVXCV1: KVXItineraries<KVXItinList.Common # KVXItinList.CV1Switch>;
+defm KVXCV2: KVXItineraries<KVXItinList.Common # KVXItinList.CV2Switch>;
 
-multiclass KVX_SCHED_MACHINE_MODEL<ProcessorItineraries Itin> {
+multiclass KVXSchedMachineModel<ProcessorItineraries Itin> {
   def SchedMachineModel: SchedMachineModel {
     let Itineraries = Itin;
     let MicroOpBufferSize = 0; // VLIW In-order
@@ -800,8 +405,8 @@ multiclass KVX_SCHED_MACHINE_MODEL<ProcessorItineraries Itin> {
   }
 }
 
-defm KVXCV1: KVX_SCHED_MACHINE_MODEL<KVXCV1Itineraries>;
-defm KVXCV2: KVX_SCHED_MACHINE_MODEL<KVXCV2Itineraries>;
+defm KVXCV1: KVXSchedMachineModel<KVXCV1Itineraries>;
+defm KVXCV2: KVXSchedMachineModel<KVXCV2Itineraries>;
 
 //===-- ProcResources --===//
 
@@ -815,10 +420,6 @@ defm KVXCV2: KVX_SCHED_MACHINE_MODEL<KVXCV2Itineraries>;
 // instructions using multiple resources of the same kind are incorrectly
 // modeled by LLVM. If we were to rely only on WriteRes entries, we would see
 // invalid bundles {GET, TINY, TINY, TINY}.
-
-foreach itinClass = ALL_ITIN_CLASSES in {
-  def itinClass # _SRW: SchedWrite;
-}
 
 def XSWAP256_SRW1: SchedWrite;
 def XSWAP256_SRW2: SchedWrite;
@@ -844,40 +445,78 @@ multiclass KVXItinWriteRes <SchedMachineModel model, InstrItinClass itinClass,
     def _IRW: ItinRW<[srw], [itinClass]>;
 }
 
-foreach m = [KVXCV1SchedMachineModel, KVXCV2SchedMachineModel] in {
-  def TINY_PR_#m: KVXProcResource<m, 4>;
-  def LITE_PR_#m: KVXProcResource<m, 2>;
-  def FULL_PR_#m: KVXProcResource<m, 1>;
-  def LSU_PR_#m: KVXProcResource<m, 1>;
-  def MAU_PR_#m: KVXProcResource<m, 1>;
-  def BCU_PR_#m: KVXProcResource<m, 1>;
-  def TCA_PR_#m: KVXProcResource<m, 1>;
-  def AUXR_PR_#m: KVXProcResource<m, 1>;
-  def AUXW_PR_#m: KVXProcResource<m, 1>;
-  def CRRP_PR_#m: KVXProcResource<m, 1>;
-  def CRWL_PR_#m: KVXProcResource<m, 1>;
-  def CRWH_PR_#m: KVXProcResource<m, 1>;
-  def NOP_PR_#m: KVXProcResource<m, 4>;
+multiclass KVXProcResourceDef <int count=1> {
+  def _CV1: KVXProcResource<KVXCV1SchedMachineModel, count>;
+  def _CV2: KVXProcResource<KVXCV2SchedMachineModel, count>;
+}
 
-  def CopyI_#m : SchedWrite;
+def CopyI: SchedWrite;
+
+defm TINY_PR: KVXProcResourceDef<4>;
+defm LITE_PR: KVXProcResourceDef<2>;
+defm FULL_PR: KVXProcResourceDef;
+defm LSU_PR: KVXProcResourceDef;
+defm MAU_PR: KVXProcResourceDef;
+defm BCU_PR: KVXProcResourceDef;
+defm TCA_PR: KVXProcResourceDef;
+defm AUXR_PR: KVXProcResourceDef;
+defm AUXW_PR: KVXProcResourceDef;
+defm CRRP_PR: KVXProcResourceDef;
+defm CRWL_PR: KVXProcResourceDef;
+defm CRWH_PR: KVXProcResourceDef;
+defm NOP_PR: KVXProcResourceDef<4>;
+
+multiclass KVXItinWriteResDefBase<bit isCV1, list<KVXProcResource> rt, int issueCount, list<KVXProcResource> rt2> {
+  defvar itinClass = !cast<InstrItinClass>(NAME);
+  defvar schedWrite = !cast<SchedWrite>(NAME # _SRW);
+  defvar nameWithCV = NAME # _ # !cond(isCV1: "CV1", 1: "CV2");
+  defvar schedModel = !cond(isCV1: KVXCV1SchedMachineModel, 1: KVXCV2SchedMachineModel);
+  defvar rt_cv2 = !cond(!size(rt2): rt2, 1: rt);
+  defvar rt_cv = !cond(isCV1: rt, 1: rt_cv2);
+  defm nameWithCV: KVXItinWriteRes<schedModel, itinClass, rt_cv, issueCount, schedWrite>;
+}
+
+defvar NO_VARIANT = [""];
+
+multiclass KVXItinWriteResDef<bit isCV1, list<KVXProcResource> rt, bit hasXY=0, int issueCount=1, list<string> variants = NO_VARIANT, list<KVXProcResource> rt2>{
+  if !and(!ne(issueCount, 1), hasXY) then {
+    def : KVX_Error<"XY instruction with base issue count != 1 not supported">;
+  }
+
+  foreach variant = variants in {
+    defvar fullName = !cond(!eq(variant, ""): NAME, true: NAME#_#variant);
+    defm fullName: KVXItinWriteResDefBase<isCV1, rt, issueCount, rt2>;
+    if hasXY then {
+      defm fullName # _X_: KVXItinWriteResDefBase<isCV1, rt, 2, rt2>;
+      defm fullName # _Y_: KVXItinWriteResDefBase<isCV1, rt, 3, rt2>;
+    }
+  }
+}
+
+multiclass KVXItinWriteResXY<bit isCV1, list<KVXProcResource> rt, list<string> variants=[""], list<KVXProcResource> rt2=[]> {
+  defm "": KVXItinWriteResDef<isCV1, rt, /*hasXY*/ 1, /*issueCount*/ 1, variants, rt2>;
+}
+
+multiclass KVXItinWriteResSingle<bit isCV1, list<KVXProcResource> rt, int issueCount=1, list<string> variants=[""], list<KVXProcResource> rt2=[]> {
+  defm "": KVXItinWriteResDef<isCV1, rt, /*hasXY*/ 0, issueCount, variants, rt2>;
 }
 
 foreach m = [KVXCV1SchedMachineModel, KVXCV2SchedMachineModel] in {
   defvar IS_CV1 = !eq(m, KVXCV1SchedMachineModel);
   defvar IS_CV2 = !eq(m, KVXCV2SchedMachineModel);
-  defvar NOP_PRM = !cond(IS_CV1 : NOP_PR_KVXCV1SchedMachineModel, IS_CV2 : NOP_PR_KVXCV2SchedMachineModel);
-  defvar TINY_PRM = !cond(IS_CV1 : TINY_PR_KVXCV1SchedMachineModel, IS_CV2 : TINY_PR_KVXCV2SchedMachineModel);
-  defvar LITE_PRM = !cond(IS_CV1 : LITE_PR_KVXCV1SchedMachineModel, IS_CV2 : LITE_PR_KVXCV2SchedMachineModel);
-  defvar FULL_PRM = !cond(IS_CV1 : FULL_PR_KVXCV1SchedMachineModel, IS_CV2 : FULL_PR_KVXCV2SchedMachineModel);
-  defvar CRWL_PRM = !cond(IS_CV1 : CRWL_PR_KVXCV1SchedMachineModel, IS_CV2 : CRWL_PR_KVXCV2SchedMachineModel);
-  defvar CRWH_PRM = !cond(IS_CV1 : CRWH_PR_KVXCV1SchedMachineModel, IS_CV2 : CRWH_PR_KVXCV2SchedMachineModel);
-  defvar CRRP_PRM = !cond(IS_CV1 : CRRP_PR_KVXCV1SchedMachineModel, IS_CV2 : CRRP_PR_KVXCV2SchedMachineModel);
-  defvar AUXR_PRM = !cond(IS_CV1 : AUXR_PR_KVXCV1SchedMachineModel, IS_CV2 : AUXR_PR_KVXCV2SchedMachineModel);
-  defvar AUXW_PRM = !cond(IS_CV1 : AUXW_PR_KVXCV1SchedMachineModel, IS_CV2 : AUXW_PR_KVXCV2SchedMachineModel);
-  defvar BCU_PRM = !cond(IS_CV1 : BCU_PR_KVXCV1SchedMachineModel, IS_CV2 : BCU_PR_KVXCV2SchedMachineModel);
-  defvar MAU_PRM = !cond(IS_CV1 : MAU_PR_KVXCV1SchedMachineModel, IS_CV2 : MAU_PR_KVXCV2SchedMachineModel);
-  defvar TCA_PRM = !cond(IS_CV1 : TCA_PR_KVXCV1SchedMachineModel, IS_CV2 : TCA_PR_KVXCV2SchedMachineModel);
-  defvar LSU_PRM = !cond(IS_CV1 : LSU_PR_KVXCV1SchedMachineModel, IS_CV2 : LSU_PR_KVXCV2SchedMachineModel);
+  defvar NOP_PRM = !cond(IS_CV1 : NOP_PR_CV1, IS_CV2 : NOP_PR_CV2);
+  defvar TINY_PRM = !cond(IS_CV1 : TINY_PR_CV1, IS_CV2 : TINY_PR_CV2);
+  defvar LITE_PRM = !cond(IS_CV1 : LITE_PR_CV1, IS_CV2 : LITE_PR_CV2);
+  defvar FULL_PRM = !cond(IS_CV1 : FULL_PR_CV1, IS_CV2 : FULL_PR_CV2);
+  defvar CRWL_PRM = !cond(IS_CV1 : CRWL_PR_CV1, IS_CV2 : CRWL_PR_CV2);
+  defvar CRWH_PRM = !cond(IS_CV1 : CRWH_PR_CV1, IS_CV2 : CRWH_PR_CV2);
+  defvar CRRP_PRM = !cond(IS_CV1 : CRRP_PR_CV1, IS_CV2 : CRRP_PR_CV2);
+  defvar AUXR_PRM = !cond(IS_CV1 : AUXR_PR_CV1, IS_CV2 : AUXR_PR_CV2);
+  defvar AUXW_PRM = !cond(IS_CV1 : AUXW_PR_CV1, IS_CV2 : AUXW_PR_CV2);
+  defvar BCU_PRM = !cond(IS_CV1 : BCU_PR_CV1, IS_CV2 : BCU_PR_CV2);
+  defvar MAU_PRM = !cond(IS_CV1 : MAU_PR_CV1, IS_CV2 : MAU_PR_CV2);
+  defvar TCA_PRM = !cond(IS_CV1 : TCA_PR_CV1, IS_CV2 : TCA_PR_CV2);
+  defvar LSU_PRM = !cond(IS_CV1 : LSU_PR_CV1, IS_CV2 : LSU_PR_CV2);
 
   /* Reservation table definitions */
   // TODO - the definition of XNOP_RU is inaccurate, as LLVM interprets it as
@@ -909,6 +548,9 @@ foreach m = [KVXCV1SchedMachineModel, KVXCV2SchedMachineModel] in {
 
   defvar ALU_TINY_CRWL_RT = TINY_RU # CRWL_RU;
   defvar ALU_TINY_CRWH_RT = TINY_RU # CRWH_RU;
+  defvar ALU_TINY_CRRP_RT = TINY_RU # CRRP_RU;
+  defvar ALU_TINY_CRWL_CRWH_RT = TINY_RU # CRWL_RU # CRWH_RU;
+  defvar ALU_TINY_CRRP_CRWL_CRWH_RT = TINY_RU # CRRP_RU # CRWL_RU # CRWH_RU;
 
   defvar ALU_FULL_RT = FULL_RU;
 
@@ -925,9 +567,6 @@ foreach m = [KVXCV1SchedMachineModel, KVXCV2SchedMachineModel] in {
 
   defvar LSU_AUXR_RT = LSU_RU # AUXR_RU;
 
-  defvar ALU_TINY_CRRP_CRWL_CRWH_RT = TINY_RU # CRRP_RU # CRWL_RU # CRWH_RU;
-  defvar ALU_TINY_CRRP_RT = TINY_RU # CRRP_RU;
-  defvar ALU_TINY_CRWL_CRWH_RT = TINY_RU # CRWL_RU # CRWH_RU;
 // Dedicated reservation table forXSWAP256: moveto + moveto + movefo
   defvar LSU_AUXW_RT = LSU_RU # AUXW_RU;
 
@@ -955,181 +594,46 @@ foreach m = [KVXCV1SchedMachineModel, KVXCV2SchedMachineModel] in {
 
 // === Mappings for the CV1/CV2 invariant itinerary classes ===
 
-  defm ALL#m: KVXItinWriteRes<m, ALL, [], 8, ALL_SRW>;
-  defm ALU_NOP#m: KVXItinWriteRes<m, ALU_NOP, ALU_NOP_RT, 1, ALU_NOP_SRW>;
+  defm ALL: KVXItinWriteResSingle<IS_CV1, [], /*issues*/ 8>;
 
-  defm ALU_TINY#m: KVXItinWriteRes<m, ALU_TINY, ALU_TINY_RT, 1, ALU_TINY_SRW>;
-  defm ALU_TINY_X_#m: KVXItinWriteRes<m, ALU_TINY_X_, ALU_TINY_RT, 2, ALU_TINY_X__SRW>;
-  defm ALU_TINY_Y_#m: KVXItinWriteRes<m, ALU_TINY_Y_, ALU_TINY_RT, 3, ALU_TINY_Y__SRW>;
+  defm ALU_NOP: KVXItinWriteResSingle<IS_CV1, ALU_NOP_RT>;
+  defm ALU_TINY: KVXItinWriteResXY<IS_CV1, ALU_TINY_RT>;
+  defm ALU_TINY_CRRP: KVXItinWriteResSingle<IS_CV1, ALU_TINY_CRRP_RT>;
+  defm ALU_TINY_CRWL: KVXItinWriteResSingle<IS_CV1, ALU_TINY_CRWL_RT>;
+  defm ALU_TINY_CRWH: KVXItinWriteResSingle<IS_CV1, ALU_TINY_CRWH_RT>;
+  defm ALU_TINY_CRWL_CRWH: KVXItinWriteResXY<IS_CV1, ALU_TINY_CRWL_CRWH_RT>;
+  defm ALU_TINY_CRRP_CRWL_CRWH: KVXItinWriteResSingle<IS_CV1, ALU_TINY_CRRP_CRWL_CRWH_RT>;
+  defm ALU_LITE: KVXItinWriteResXY<IS_CV1, ALU_LITE_RT>;
+  defm ALU_LITE_CRWL: KVXItinWriteResSingle<IS_CV1, ALU_LITE_CRWL_RT>;
+  defm ALU_LITE_CRWH: KVXItinWriteResSingle<IS_CV1, ALU_LITE_CRWH_RT>;
+  defm ALU_FULL: KVXItinWriteResXY<IS_CV1, ALU_FULL_RT>;
+  defm ALU_FULL_SFU: KVXItinWriteResSingle<IS_CV1, ALU_FULL_RT>;
 
-  defm ALU_LITE#m: KVXItinWriteRes<m, ALU_LITE, ALU_LITE_RT, 1, ALU_LITE_SRW>;
-  defm ALU_LITE_X_#m: KVXItinWriteRes<m, ALU_LITE_X_, ALU_LITE_RT, 2, ALU_LITE_X__SRW>;
-  defm ALU_LITE_Y_#m: KVXItinWriteRes<m, ALU_LITE_Y_, ALU_LITE_RT, 3, ALU_LITE_Y__SRW>;
+  defm BCU: KVXItinWriteResSingle<IS_CV1, BCU_RT>;
+  defm BCU_CRRP_CRWL_CRWH: KVXItinWriteResSingle<IS_CV1, BCU_CRRP_CRWL_CRWH_RT>;
+  defm BCU_TINY_AUXW_CRRP: KVXItinWriteResSingle<IS_CV1, BCU_TINY_AUXW_CRRP_RT>;
+  defm BCU_TINY_TINY_MAU_XNOP: KVXItinWriteResSingle<IS_CV1, BCU_TINY_TINY_MAU_XNOP_RT>;
 
-  defm ALU_LITE_CRWL#m: KVXItinWriteRes<m, ALU_LITE_CRWL, ALU_LITE_CRWL_RT, 1, ALU_LITE_CRWL_SRW>;
-  defm ALU_LITE_CRWH#m: KVXItinWriteRes<m, ALU_LITE_CRWH, ALU_LITE_CRWH_RT, 1, ALU_LITE_CRWH_SRW>;
+  defm TCA: KVXItinWriteResSingle<IS_CV1, TCA_RT, 1, ["INT", "FP"]>;
 
-  defm ALU_TINY_CRWL#m: KVXItinWriteRes<m, ALU_TINY_CRWL, ALU_TINY_CRWL_RT, 1, ALU_TINY_CRWL_SRW>;
-  defm ALU_TINY_CRWH#m: KVXItinWriteRes<m, ALU_TINY_CRWH, ALU_TINY_CRWH_RT, 1, ALU_TINY_CRWH_SRW>;
+  defm LSU: KVXItinWriteResXY<IS_CV1, LSU_RT, ["STORE", "LOAD"]>;
+  defm LSU_CRRP: KVXItinWriteResXY<IS_CV1, LSU_CRRP_RT, ["STORE", "LOAD"]>;
+  defm LSU_AUXR: KVXItinWriteResXY<IS_CV1, LSU_AUXR_RT, ["STORE", "LOAD"]>;
+  defm LSU_AUXW: KVXItinWriteResXY<IS_CV1, LSU_AUXW_RT, ["ALCLR", "STORE", "LOAD"]>;
+  defm LSU_AUXR_AUXW: KVXItinWriteResXY<IS_CV1, LSU_AUXR_AUXW_RT, ["STORE", "LOAD"]>;
 
-  defm ALU_FULL#m: KVXItinWriteRes<m, ALU_FULL, ALU_FULL_RT, 1, ALU_FULL_SRW>;
-  defm ALU_FULL_X_#m: KVXItinWriteRes<m, ALU_FULL_X_, ALU_FULL_RT, 2, ALU_FULL_X__SRW>;
-  defm ALU_FULL_Y_#m: KVXItinWriteRes<m, ALU_FULL_Y_, ALU_FULL_RT, 3, ALU_FULL_Y__SRW>;
-  defm ALU_FULL_SFU#m: KVXItinWriteRes<m, ALU_FULL_SFU, ALU_FULL_RT, 1, ALU_FULL_SFU_SRW>;
+  defm MAU: KVXItinWriteResXY<IS_CV1, MAU_RT, ["INT", "FP"]>;
+  defm MAU_AUXR: KVXItinWriteResXY<IS_CV1, MAU_AUXR_RT, ["INT", "FP"]>;
 
-  defm BCU#m: KVXItinWriteRes<m, BCU, BCU_RT, 1, BCU_SRW>;
-  defm BCU_CRRP_CRWL_CRWH#m:
-    KVXItinWriteRes<m, BCU_CRRP_CRWL_CRWH, BCU_CRRP_CRWL_CRWH_RT,
-                    1, BCU_CRRP_CRWL_CRWH_SRW>;
-  defm BCU_TINY_AUXW_CRRP#m:
-    KVXItinWriteRes<m, BCU_TINY_AUXW_CRRP, BCU_TINY_AUXW_CRRP_RT,
-                    1, BCU_TINY_AUXW_CRRP_SRW>;
-  /* TODO: SFRs do not have bypasses, GPRs do. The operand should have a negative
-  * ReadAdvance */
-  defm BCU_TINY_TINY_MAU_XNOP#m:
-    KVXItinWriteRes<m, BCU_TINY_TINY_MAU_XNOP, BCU_TINY_TINY_MAU_XNOP_RT,
-                    1, BCU_TINY_TINY_MAU_XNOP_SRW>;
-
-  defm TCA_INT#m: KVXItinWriteRes<m, TCA_INT, TCA_RT, 1, TCA_INT_SRW>;
-  defm TCA_FP#m: KVXItinWriteRes<m, TCA_FP, TCA_RT, 1, TCA_FP_SRW>;
-
-  defm LSU_STORE#m: KVXItinWriteRes<m, LSU_STORE, LSU_RT, 1, LSU_STORE_SRW>;
-  defm LSU_STORE_X_#m: KVXItinWriteRes<m, LSU_STORE_X_, LSU_RT, 2, LSU_STORE_X__SRW>;
-  defm LSU_STORE_Y_#m: KVXItinWriteRes<m, LSU_STORE_Y_, LSU_RT, 3, LSU_STORE_Y__SRW>;
-
-  defm LSU_CRRP_STORE#m: KVXItinWriteRes<m, LSU_CRRP_STORE, LSU_CRRP_RT, 1, LSU_CRRP_STORE_SRW>;
-  defm LSU_CRRP_STORE_X_#m: KVXItinWriteRes<m, LSU_CRRP_STORE_X_, LSU_CRRP_RT, 2, LSU_CRRP_STORE_X__SRW>;
-  defm LSU_CRRP_STORE_Y_#m: KVXItinWriteRes<m, LSU_CRRP_STORE_Y_, LSU_CRRP_RT, 3, LSU_CRRP_STORE_Y__SRW>;
-
-  defm LSU_AUXR_STORE#m: KVXItinWriteRes<m, LSU_AUXR_STORE, LSU_AUXR_RT, 1, LSU_AUXR_STORE_SRW>;
-  defm LSU_AUXR_STORE_X_#m: KVXItinWriteRes<m, LSU_AUXR_STORE_X_, LSU_AUXR_RT, 2, LSU_AUXR_STORE_X__SRW>;
-  defm LSU_AUXR_STORE_Y_#m: KVXItinWriteRes<m, LSU_AUXR_STORE_Y_, LSU_AUXR_RT, 3, LSU_AUXR_STORE_Y__SRW>;
-
-  defm LSU_AUXW_STORE#m: KVXItinWriteRes<m, LSU_AUXW_STORE, LSU_AUXW_RT, 1, LSU_AUXW_STORE_SRW>;
-  defm LSU_AUXW_STORE_X_#m: KVXItinWriteRes<m, LSU_AUXW_STORE_X_, LSU_AUXW_RT, 2, LSU_AUXW_STORE_X__SRW>;
-  defm LSU_AUXW_STORE_Y_#m: KVXItinWriteRes<m, LSU_AUXW_STORE_Y_, LSU_AUXW_RT, 3, LSU_AUXW_STORE_Y__SRW>;
-
-  defm LSU_AUXR_AUXW_STORE#m:
-    KVXItinWriteRes<m, LSU_AUXR_AUXW_STORE, LSU_AUXR_AUXW_RT, 1,
-                    LSU_AUXR_AUXW_STORE_SRW>;
-  defm LSU_AUXR_AUXW_STORE_X_#m:
-    KVXItinWriteRes<m, LSU_AUXR_AUXW_STORE_X_, LSU_AUXR_AUXW_RT, 2,
-                    LSU_AUXR_AUXW_STORE_X__SRW>;
-  defm LSU_AUXR_AUXW_STORE_Y_#m:
-    KVXItinWriteRes<m, LSU_AUXR_AUXW_STORE_Y_, LSU_AUXR_AUXW_RT, 3,
-                    LSU_AUXR_AUXW_STORE_Y__SRW>;
-
-  defm LSU_AUXW_ALCLR#m: KVXItinWriteRes<m, LSU_AUXW_ALCLR, LSU_AUXW_RT, 1, LSU_AUXW_ALCLR_SRW>;
-  defm LSU_AUXW_ALCLR_X_#m: KVXItinWriteRes<m, LSU_AUXW_ALCLR_X_, LSU_AUXW_RT, 2, LSU_AUXW_ALCLR_X__SRW>;
-  defm LSU_AUXW_ALCLR_Y_#m: KVXItinWriteRes<m, LSU_AUXW_ALCLR_Y_, LSU_AUXW_RT, 3, LSU_AUXW_ALCLR_Y__SRW>;
-
-  defm LSU_LOAD#m: KVXItinWriteRes<m, LSU_LOAD, LSU_RT, 1, LSU_LOAD_SRW>;
-  defm LSU_LOAD_X_#m: KVXItinWriteRes<m, LSU_LOAD_X_, LSU_RT, 2, LSU_LOAD_X__SRW>;
-  defm LSU_LOAD_Y_#m: KVXItinWriteRes<m, LSU_LOAD_Y_, LSU_RT, 3, LSU_LOAD_Y__SRW>;
-
-  defm LSU_CRRP_LOAD#m: KVXItinWriteRes<m, LSU_CRRP_LOAD, LSU_CRRP_RT, 1, LSU_CRRP_LOAD_SRW>;
-  defm LSU_CRRP_LOAD_X_#m: KVXItinWriteRes<m, LSU_CRRP_LOAD_X_, LSU_CRRP_RT, 2, LSU_CRRP_LOAD_X__SRW>;
-  defm LSU_CRRP_LOAD_Y_#m: KVXItinWriteRes<m, LSU_CRRP_LOAD_Y_, LSU_CRRP_RT, 3, LSU_CRRP_LOAD_Y__SRW>;
-
-  defm LSU_AUXR_LOAD#m: KVXItinWriteRes<m, LSU_AUXR_LOAD, LSU_AUXR_RT, 1, LSU_AUXR_LOAD_SRW>;
-  defm LSU_AUXR_LOAD_X_#m: KVXItinWriteRes<m, LSU_AUXR_LOAD_X_, LSU_AUXR_RT, 2, LSU_AUXR_LOAD_X__SRW>;
-  defm LSU_AUXR_LOAD_Y_#m: KVXItinWriteRes<m, LSU_AUXR_LOAD_Y_, LSU_AUXR_RT, 3, LSU_AUXR_LOAD_Y__SRW>;
-
-  defm LSU_AUXW_LOAD#m: KVXItinWriteRes<m, LSU_AUXW_LOAD, LSU_AUXW_RT, 1, LSU_AUXW_LOAD_SRW>;
-  defm LSU_AUXW_LOAD_X_#m: KVXItinWriteRes<m, LSU_AUXW_LOAD_X_, LSU_AUXW_RT, 2, LSU_AUXW_LOAD_X__SRW>;
-  defm LSU_AUXW_LOAD_Y_#m: KVXItinWriteRes<m, LSU_AUXW_LOAD_Y_, LSU_AUXW_RT, 3, LSU_AUXW_LOAD_Y__SRW>;
-
-  defm LSU_AUXR_AUXW_LOAD#m:
-    KVXItinWriteRes<m, LSU_AUXR_AUXW_LOAD, LSU_AUXR_AUXW_RT, 1,
-                    LSU_AUXR_AUXW_LOAD_SRW>;
-  defm LSU_AUXR_AUXW_LOAD_X_#m:
-    KVXItinWriteRes<m, LSU_AUXR_AUXW_LOAD_X_, LSU_AUXR_AUXW_RT, 2,
-                    LSU_AUXR_AUXW_LOAD_X__SRW>;
-  defm LSU_AUXR_AUXW_LOAD_Y_#m:
-    KVXItinWriteRes<m, LSU_AUXR_AUXW_LOAD_Y_, LSU_AUXR_AUXW_RT, 3,
-                    LSU_AUXR_AUXW_LOAD_Y__SRW>;
-
-  defm MAU_INT#m: KVXItinWriteRes<m, MAU_INT, MAU_RT, 1, MAU_INT_SRW>;
-  defm MAU_INT_X_#m: KVXItinWriteRes<m, MAU_INT_X_, MAU_RT, 2, MAU_INT_X__SRW>;
-  defm MAU_INT_Y_#m: KVXItinWriteRes<m, MAU_INT_Y_, MAU_RT, 3, MAU_INT_Y__SRW>;
-
-  defm MAU_AUXR_INT#m: KVXItinWriteRes<m, MAU_AUXR_INT, MAU_AUXR_RT, 1, MAU_AUXR_INT_SRW>;
-  defm MAU_AUXR_INT_X_#m: KVXItinWriteRes<m, MAU_AUXR_INT_X_, MAU_AUXR_RT, 2, MAU_AUXR_INT_X__SRW>;
-  defm MAU_AUXR_INT_Y_#m: KVXItinWriteRes<m, MAU_AUXR_INT_Y_, MAU_AUXR_RT, 3, MAU_AUXR_INT_Y__SRW>;
-
-  defm MAU_FP#m: KVXItinWriteRes<m, MAU_FP, MAU_RT, 1, MAU_FP_SRW>;
-  defm MAU_FP_X_#m: KVXItinWriteRes<m, MAU_FP_X_, MAU_RT, 2, MAU_FP_X__SRW>;
-  defm MAU_FP_Y_#m: KVXItinWriteRes<m, MAU_FP_Y_, MAU_RT, 3, MAU_FP_Y__SRW>;
-
-  defm MAU_AUXR_FP#m: KVXItinWriteRes<m, MAU_AUXR_FP, MAU_AUXR_RT, 1, MAU_AUXR_FP_SRW>;
-  defm MAU_AUXR_FP_X_#m: KVXItinWriteRes<m, MAU_AUXR_FP_X_, MAU_AUXR_RT, 2, MAU_AUXR_FP_X__SRW>;
-  defm MAU_AUXR_FP_Y_#m: KVXItinWriteRes<m, MAU_AUXR_FP_Y_, MAU_AUXR_RT, 3, MAU_AUXR_FP_Y__SRW>;
-
-  defvar CopyIM = !cond(
-    IS_CV1 : CopyI_KVXCV1SchedMachineModel,
-    IS_CV2 : CopyI_KVXCV2SchedMachineModel
-  );
   let SchedModel = m in {
     // CopyI is expanded to ADDD -> ALU_TINY reservation table
     let NumMicroOps = 1 in
-      def : KVXWriteRes<m, CopyIM, ALU_TINY_RT>;
-    def : InstRW<[CopyIM], (instrs COPY)>;
+      def : KVXWriteRes<m, CopyI, ALU_TINY_RT>;
+    def : InstRW<[CopyI], (instrs COPY)>;
   }
 
   // === Mappings for the CV1/CV2 switch itinerary classes ===
 
-  if IS_CV1 then {
-    // ALU_LITE -> ALU_TINY
-    defm: KVXItinWriteRes<m, ALU_SWITCH_LITE_TINY, ALU_LITE_RT, 1,
-                          ALU_SWITCH_LITE_TINY_SRW>;
-    defm: KVXItinWriteRes<m, ALU_SWITCH_LITE_TINY_X_, ALU_LITE_RT, 2,
-                          ALU_SWITCH_LITE_TINY_X__SRW>;
-    defm: KVXItinWriteRes<m, ALU_SWITCH_LITE_TINY_Y_, ALU_LITE_RT, 3,
-                          ALU_SWITCH_LITE_TINY_Y__SRW>;
-
-    // MAU + AUXR -> MAU, int
-    defm: KVXItinWriteRes<m, MAU_SWITCH_AUXR_EMPTY_INT, MAU_AUXR_RT, 1,
-                          MAU_SWITCH_AUXR_EMPTY_INT_SRW>;
-    defm: KVXItinWriteRes<m, MAU_SWITCH_AUXR_EMPTY_INT_X_, MAU_AUXR_RT, 2,
-                          MAU_SWITCH_AUXR_EMPTY_INT_X__SRW>;
-    defm: KVXItinWriteRes<m, MAU_SWITCH_AUXR_EMPTY_INT_Y_, MAU_AUXR_RT, 3,
-                          MAU_SWITCH_AUXR_EMPTY_INT_Y__SRW>;
-
-    // MAU + AUXR -> MAU, float
-    defm: KVXItinWriteRes<m, MAU_SWITCH_AUXR_EMPTY_FP, MAU_AUXR_RT, 1,
-                          MAU_SWITCH_AUXR_EMPTY_FP_SRW>;
-    defm: KVXItinWriteRes<m, MAU_SWITCH_AUXR_EMPTY_FP_X_, MAU_AUXR_RT, 2,
-                          MAU_SWITCH_AUXR_EMPTY_FP_X__SRW>;
-    defm: KVXItinWriteRes<m, MAU_SWITCH_AUXR_EMPTY_FP_Y_, MAU_AUXR_RT, 3,
-                          MAU_SWITCH_AUXR_EMPTY_FP_Y__SRW>;
-  } else {
-    // ALU_LITE -> ALU_TINY
-    defm: KVXItinWriteRes<m, ALU_SWITCH_LITE_TINY, ALU_TINY_RT, 1,
-                          ALU_SWITCH_LITE_TINY_SRW>;
-    defm: KVXItinWriteRes<m, ALU_SWITCH_LITE_TINY_X_, ALU_TINY_RT, 2,
-                          ALU_SWITCH_LITE_TINY_X__SRW>;
-    defm: KVXItinWriteRes<m, ALU_SWITCH_LITE_TINY_Y_, ALU_TINY_RT, 3,
-                          ALU_SWITCH_LITE_TINY_Y__SRW>;
-
-    // MAU + AUXR -> MAU, int
-    defm: KVXItinWriteRes<m, MAU_SWITCH_AUXR_EMPTY_INT, MAU_RT, 1,
-                          MAU_SWITCH_AUXR_EMPTY_INT_SRW>;
-    defm: KVXItinWriteRes<m, MAU_SWITCH_AUXR_EMPTY_INT_X_, MAU_RT, 2,
-                          MAU_SWITCH_AUXR_EMPTY_INT_X__SRW>;
-    defm: KVXItinWriteRes<m, MAU_SWITCH_AUXR_EMPTY_INT_Y_, MAU_RT, 3,
-                          MAU_SWITCH_AUXR_EMPTY_INT_Y__SRW>;
-
-    // MAU + AUXR -> MAU, float
-    defm: KVXItinWriteRes<m, MAU_SWITCH_AUXR_EMPTY_FP, MAU_RT, 1,
-                          MAU_SWITCH_AUXR_EMPTY_FP_SRW>;
-    defm: KVXItinWriteRes<m, MAU_SWITCH_AUXR_EMPTY_FP_X_, MAU_RT, 2,
-                          MAU_SWITCH_AUXR_EMPTY_FP_X__SRW>;
-    defm: KVXItinWriteRes<m, MAU_SWITCH_AUXR_EMPTY_FP_Y_, MAU_RT, 3,
-                          MAU_SWITCH_AUXR_EMPTY_FP_Y__SRW>;
-    defm: KVXItinWriteRes<m, ALU_TINY_CRRP_CRWL_CRWH, ALU_TINY_CRRP_CRWL_CRWH_RT, 1 /* issue width */, ALU_TINY_CRRP_CRWL_CRWH_SRW>;
-    defm: KVXItinWriteRes<m, ALU_TINY_CRRP, ALU_TINY_CRRP_RT, 1 /* issue width */, ALU_TINY_CRRP_SRW>;
-    defm: KVXItinWriteRes<m, ALU_TINY_CRWL_CRWH, ALU_TINY_CRWL_CRWH_RT, 1 /* issue width */, ALU_TINY_CRWL_CRWH_SRW>;
-    defm: KVXItinWriteRes<m, ALU_TINY_CRWL_CRWH_X_, ALU_TINY_CRWL_CRWH_RT, 2 /* issue width */, ALU_TINY_CRWL_CRWH_X__SRW>;
-    defm: KVXItinWriteRes<m, ALU_TINY_CRWL_CRWH_Y_, ALU_TINY_CRWL_CRWH_RT, 3 /* issue width */, ALU_TINY_CRWL_CRWH_Y__SRW>;
-  }
+  defm ALU_SWITCH_LITE_TINY: KVXItinWriteResXY<IS_CV1, ALU_LITE_RT, NO_VARIANT, ALU_TINY_RT>;
+  defm MAU_SWITCH_AUXR_EMPTY: KVXItinWriteResXY<IS_CV1, MAU_AUXR_RT, ["INT", "FP"], MAU_RT>;
 }
