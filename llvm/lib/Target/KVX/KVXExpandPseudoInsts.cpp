@@ -560,8 +560,9 @@ static bool expandALOAD(unsigned int Opcode, const KVXInstrInfo *TII,
       assert(ACSWAP == KVX::ACSWAPWri27 || ACSWAP == KVX::ACSWAPWri54 ||
              ACSWAP == KVX::ACSWAPDri27 || ACSWAP == KVX::ACSWAPDri54);
       I.addImm(Imm);
-    } else
-      assert(ACSWAP == KVX::ACSWAPWrr || ACSWAP == KVX::ACSWAPDr);
+    } else {
+      assert(ACSWAP == KVX::ACSWAPWr || ACSWAP == KVX::ACSWAPDr);
+    }
     I.addReg(Base)
         .addReg(UpdateFetch)
         .addImm(KVXMOD::BOOLCAS_)
