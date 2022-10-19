@@ -108,6 +108,8 @@ public:
                                QualType &Type) const override;
 
   bool hasSjLjLowering() const override { return true; }
+
+  bool isCLZForZeroUndef() const override { return false; }
 };
 
 } // namespace targets
