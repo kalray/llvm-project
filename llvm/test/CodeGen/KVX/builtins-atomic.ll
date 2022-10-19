@@ -23,11 +23,11 @@ define i32 @acswapw(i32* %0, i32 %1, i32 %2) {
 ; CV2-NEXT:    copyd $r2 = $r1
 ; CV2-NEXT:    copyd $r3 = $r2
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    acswapw.v $r0, [$r0] = $r2r3
+; CV2-NEXT:    acswapw $r0, [$r0] = $r2r3
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
   %4 = bitcast i32* %0 to i8*
-  %5 = tail call i32 @llvm.kvx.acswapw(i8* %4, i32 %1, i32 %2, i32 0, i32 0)
+  %5 = tail call i32 @llvm.kvx.acswapw(i8* %4, i32 %1, i32 %2, i32 1, i32 0)
   ret i32 %5
 }
 
@@ -50,12 +50,12 @@ define i32 @acswapw10(i32* %0, i32 %1, i32 %2) {
 ; CV2-NEXT:    copyd $r2 = $r1
 ; CV2-NEXT:    copyd $r3 = $r2
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    acswapw.v $r0, 80[$r0] = $r2r3
+; CV2-NEXT:    acswapw $r0, 80[$r0] = $r2r3
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
   %4 = getelementptr inbounds i32, i32* %0, i64 20
   %5 = bitcast i32* %4 to i8*
-  %6 = tail call i32 @llvm.kvx.acswapw(i8* nonnull %5, i32 %1, i32 %2, i32 0, i32 0)
+  %6 = tail call i32 @llvm.kvx.acswapw(i8* nonnull %5, i32 %1, i32 %2, i32 1, i32 0)
   ret i32 %6
 }
 
@@ -76,12 +76,12 @@ define i32 @acswapw37(i32* %0, i32 %1, i32 %2) {
 ; CV2-NEXT:    copyd $r2 = $r1
 ; CV2-NEXT:    copyd $r3 = $r2
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    acswapw.v $r0, 0xffffffffc[$r0] = $r2r3
+; CV2-NEXT:    acswapw $r0, 0xffffffffc[$r0] = $r2r3
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
   %4 = getelementptr inbounds i32, i32* %0, i64 17179869183
   %5 = bitcast i32* %4 to i8*
-  %6 = tail call i32 @llvm.kvx.acswapw(i8* nonnull %5, i32 %1, i32 %2, i32 0, i32 0)
+  %6 = tail call i32 @llvm.kvx.acswapw(i8* nonnull %5, i32 %1, i32 %2, i32 1, i32 0)
   ret i32 %6
 }
 
@@ -102,12 +102,12 @@ define i32 @acswapw64(i32* %0, i32 %1, i32 %2) {
 ; CV2-NEXT:    copyd $r2 = $r1
 ; CV2-NEXT:    copyd $r3 = $r2
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    acswapw.v $r0, 0x1000000010[$r0] = $r2r3
+; CV2-NEXT:    acswapw $r0, 0x1000000010[$r0] = $r2r3
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
   %4 = getelementptr inbounds i32, i32* %0, i64 17179869188
   %5 = bitcast i32* %4 to i8*
-  %6 = tail call i32 @llvm.kvx.acswapw(i8* nonnull %5, i32 %1, i32 %2, i32 0, i32 0)
+  %6 = tail call i32 @llvm.kvx.acswapw(i8* nonnull %5, i32 %1, i32 %2, i32 1, i32 0)
   ret i32 %6
 }
 
@@ -132,13 +132,13 @@ define i32 @acswapwxs(i32* %0, i32 %1, i32 %2, i32 %3) {
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    addx4d $r0 = $r2, $r0
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    acswapw.v $r0, [$r0] = $r4r5
+; CV2-NEXT:    acswapw $r0, [$r0] = $r4r5
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
   %5 = sext i32 %3 to i64
   %6 = getelementptr inbounds i32, i32* %0, i64 %5
   %7 = bitcast i32* %6 to i8*
-  %8 = tail call i32 @llvm.kvx.acswapw(i8* %7, i32 %1, i32 %2, i32 0, i32 0)
+  %8 = tail call i32 @llvm.kvx.acswapw(i8* %7, i32 %1, i32 %2, i32 1, i32 0)
   ret i32 %8
 }
 
@@ -159,11 +159,11 @@ define i64 @acswapd(i64* %0, i64 %1, i64 %2) {
 ; CV2-NEXT:    copyd $r2 = $r1
 ; CV2-NEXT:    copyd $r3 = $r2
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    acswapd.v $r0, [$r0] = $r2r3
+; CV2-NEXT:    acswapd $r0, [$r0] = $r2r3
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
   %4 = bitcast i64* %0 to i8*
-  %5 = tail call i64 @llvm.kvx.acswapd(i8* %4, i64 %1, i64 %2, i32 0, i32 0)
+  %5 = tail call i64 @llvm.kvx.acswapd(i8* %4, i64 %1, i64 %2, i32 1, i32 0)
   ret i64 %5
 }
 
@@ -186,12 +186,12 @@ define i64 @acswapd10(i64* %0, i64 %1, i64 %2) {
 ; CV2-NEXT:    copyd $r2 = $r1
 ; CV2-NEXT:    copyd $r3 = $r2
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    acswapd.v $r0, 160[$r0] = $r2r3
+; CV2-NEXT:    acswapd $r0, 160[$r0] = $r2r3
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
   %4 = getelementptr inbounds i64, i64* %0, i64 20
   %5 = bitcast i64* %4 to i8*
-  %6 = tail call i64 @llvm.kvx.acswapd(i8* nonnull %5, i64 %1, i64 %2, i32 0, i32 0)
+  %6 = tail call i64 @llvm.kvx.acswapd(i8* nonnull %5, i64 %1, i64 %2, i32 1, i32 0)
   ret i64 %6
 }
 
@@ -212,12 +212,12 @@ define i64 @acswapd37(i64* %0, i64 %1, i64 %2) {
 ; CV2-NEXT:    copyd $r2 = $r1
 ; CV2-NEXT:    copyd $r3 = $r2
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    acswapd.v $r0, 0xffffffff8[$r0] = $r2r3
+; CV2-NEXT:    acswapd $r0, 0xffffffff8[$r0] = $r2r3
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
   %4 = getelementptr inbounds i64, i64* %0, i64 8589934591
   %5 = bitcast i64* %4 to i8*
-  %6 = tail call i64 @llvm.kvx.acswapd(i8* nonnull %5, i64 %1, i64 %2, i32 0, i32 0)
+  %6 = tail call i64 @llvm.kvx.acswapd(i8* nonnull %5, i64 %1, i64 %2, i32 1, i32 0)
   ret i64 %6
 }
 
@@ -238,12 +238,12 @@ define i64 @acswapd64(i64* %0, i64 %1, i64 %2) {
 ; CV2-NEXT:    copyd $r2 = $r1
 ; CV2-NEXT:    copyd $r3 = $r2
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    acswapd.v $r0, 0x1000000010[$r0] = $r2r3
+; CV2-NEXT:    acswapd $r0, 0x1000000010[$r0] = $r2r3
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
   %4 = getelementptr inbounds i64, i64* %0, i64 8589934594
   %5 = bitcast i64* %4 to i8*
-  %6 = tail call i64 @llvm.kvx.acswapd(i8* nonnull %5, i64 %1, i64 %2, i32 0, i32 0)
+  %6 = tail call i64 @llvm.kvx.acswapd(i8* nonnull %5, i64 %1, i64 %2, i32 1, i32 0)
   ret i64 %6
 }
 
@@ -265,12 +265,12 @@ define i64 @acswapdxs(i64* %0, i64 %1, i64 %2, i64 %3) {
 ; CV2-NEXT:    copyd $r4 = $r1
 ; CV2-NEXT:    copyd $r5 = $r2
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    acswapd.v $r0, [$r0] = $r4r5
+; CV2-NEXT:    acswapd $r0, [$r0] = $r4r5
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
   %5 = getelementptr inbounds i64, i64* %0, i64 %3
   %6 = bitcast i64* %5 to i8*
-  %7 = tail call i64 @llvm.kvx.acswapd(i8* %6, i64 %1, i64 %2, i32 0, i32 0)
+  %7 = tail call i64 @llvm.kvx.acswapd(i8* %6, i64 %1, i64 %2, i32 1, i32 0)
   ret i64 %7
 }
 

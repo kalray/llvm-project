@@ -57,7 +57,7 @@ def: Pat<(int_kvx_sbmmt8 SingleReg:$r, Wrapped64:$r2), (SBMMT8ri64 SingleReg:$r,
 def: Pat<(int_kvx_sbmmt8 SingleReg:$r, SingleReg:$r2), (SBMMT8rr SingleReg:$r, SingleReg:$r2)>;
 
 multiclass ACSWAP_V1_ri<Intrinsic Int, ValueType Vt, Instruction riI, Operand riO> {
-  def: Pat<(Vt(Int (add i64:$addr, riO:$off), Vt:$update, Vt:$expect, 0, 0)),
+  def: Pat<(Vt(Int (add i64:$addr, riO:$off), Vt:$update, Vt:$expect, boolcas_, coherency_)),
            (Vt (EXTRACT_SUBREG (v2i64
              (riI riO:$off, SingleReg:$addr,
              (v2i64 (REG_SEQUENCE PairedReg,
@@ -70,7 +70,7 @@ multiclass ACSWAP_V1<Intrinsic Int, ValueType Vt, Instruction ri10, Instruction 
   defm  : ACSWAP_V1_ri<Int, Vt, ri10, Signed10>;
   defm : ACSWAP_V1_ri<Int, Vt, ri37, Signed37>;
   defm : ACSWAP_V1_ri<Int, Vt, ri64, Wrapped64>;
-  def : Pat<(Vt(Int i64:$addr, Vt:$update, Vt:$expect, 0, 0)),
+  def : Pat<(Vt(Int i64:$addr, Vt:$update, Vt:$expect, boolcas_, coherency_)),
                (Vt (EXTRACT_SUBREG (v2i64
                    (ri10 (i64 0), SingleReg:$addr,
                    (v2i64 (REG_SEQUENCE PairedReg,
@@ -78,7 +78,7 @@ multiclass ACSWAP_V1<Intrinsic Int, ValueType Vt, Instruction ri10, Instruction 
                            SingleReg:$expect, sub_s1)
                     ))), sub_s0))>, Requires<[IsV1]>;
 
-  def : Pat<(Vt(Int (add i64:$addr, i64:$off), Vt:$update, Vt:$expect, 0, 0)),
+  def : Pat<(Vt(Int (add i64:$addr, i64:$off), Vt:$update, Vt:$expect, boolcas_, coherency_)),
               (Vt (EXTRACT_SUBREG (v2i64
                 (rr SingleReg:$off, SingleReg:$addr,
                 (v2i64 (REG_SEQUENCE PairedReg,
@@ -86,7 +86,7 @@ multiclass ACSWAP_V1<Intrinsic Int, ValueType Vt, Instruction ri10, Instruction 
                   SingleReg:$expect, sub_s1)
                 ), (i32 0))), sub_s0))>, Requires<[IsV1]>;
 
-  def : Pat<(Vt(Int (add i64:$addr, (shl i64:$off, (i64 scale))), Vt:$update, Vt:$expect, 0, 0)),
+  def : Pat<(Vt(Int (add i64:$addr, (shl i64:$off, (i64 scale))), Vt:$update, Vt:$expect, boolcas_, coherency_)),
             (Vt (EXTRACT_SUBREG (v2i64
               (rr SingleReg:$off, SingleReg:$addr,
               (v2i64 (REG_SEQUENCE PairedReg,
