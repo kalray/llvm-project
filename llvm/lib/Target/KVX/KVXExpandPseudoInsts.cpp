@@ -1370,21 +1370,27 @@ static bool expandXSWAP256p(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
                << RName << " <--> " << VName << "\n");
     BuildMI(MBB, InsertHere, DL, TII->get(KVX::BUNDLE));
   }
-  auto &I2 = BuildMI(MBB, InsertHere, DL, TII->get(MOVEFO), R)
-                 .addReg(V, RegState::Kill);
-  auto &I3 = BuildMI(MBB, InsertHere, DL, TII->get(E), V_lo)
-                 .addReg(R0, RegState::Kill)
-                 .addReg(R1, RegState::Kill);
-  I2->bundleWithPred();
-  auto &I4 = BuildMI(MBB, InsertHere, DL, TII->get(O), V_hi)
-                 .addReg(R2, RegState::Kill)
-                 .addReg(R3, RegState::Kill);
-  I3->bundleWithPred();
-  I4->bundleWithPred();
+  BuildMI(MBB, InsertHere, DL, TII->get(MOVEFO), R).addReg(V, RegState::Kill);
+  BuildMI(MBB, InsertHere, DL, TII->get(E), V_lo)
+      .addReg(R0, RegState::Kill)
+      .addReg(R1, RegState::Kill);
+  BuildMI(MBB, InsertHere, DL, TII->get(O), V_hi)
+      .addReg(R2, RegState::Kill)
+      .addReg(R3, RegState::Kill);
+
+  auto Pos = --InsertHere;
   if (StandAlone)
     MI.eraseFromParent();
   else
     MI.eraseFromBundle();
+  if (!Pos->isBundledWithPred())
+    Pos->bundleWithPred();
+  --Pos;
+  if (!Pos->isBundledWithPred())
+    Pos->bundleWithPred();
+  --Pos;
+  if (!Pos->isBundledWithPred())
+    Pos->bundleWithPred();
   LLVM_DEBUG(dbgs() << "Swap bundle:"; MBB.dump());
   return true;
 }
