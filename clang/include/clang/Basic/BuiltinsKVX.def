@@ -469,6 +469,9 @@ KVX_BUILTIN(zxmbhq, "V4UsV8Uc", "n", 1, "kv3-2",)
 KVX_BUILTIN(zxlhwp, "V2UiV4Us", "n", 1, "kv3-2",)
 KVX_BUILTIN(zxmhwp, "V2UiV4Us", "n", 1, "kv3-2",)
 
+KVX_BUILTIN(stsuhq, "V4sV4sV4s", "n", 2, "kv3-2",)
+KVX_BUILTIN(stsuwp, "V2iV2iV2i", "n", 2, "kv3-2",)
+
 //===----------------------------------------------------------------------===//
 // TCA
 //===----------------------------------------------------------------------===//

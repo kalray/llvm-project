@@ -674,18 +674,12 @@ multiclass MC_17<string OpcStr> {
 //   defm SBFX16BO
 //   defm SBFX32D
 //   defm SBFX64D
-multiclass MC_17_TINY<string OpcStr> {
-  let isAsCheapAsAMove = 1 in
-  def rr : KVX_INSTRUCTION
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
-     !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [/* no straightforward pattern */],
-     ALU_TINY>;
-  def ri : KVX_INSTRUCTION_X
-    <(outs SingleReg:$a2), (ins SingleReg:$a3, Wrapped32:$a4, Splat32Mod:$a1),
-     !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
-     [/* no straightforward pattern */],
-     ALU_TINY_X_>;
+multiclass MC_17_TINY<string OpcStr, list<dag> patrr = []> {
+  defm rr : I <OpcStr, /*itin=*/ALU_TINY, /*Ops=*/[SingleReg, SingleReg], /*Mods=*/[],
+               /*MemOps=*/[], /*CC=*/[], /*Out=*/[SingleReg], /*InPlace=*/0, /*pattern=*/ patrr>;
+
+  defm ri : I <OpcStr, /*itin=*/ALU_TINY_X_, /*Ops=*/[SingleReg, Wrapped32], /*Mods=*/[Splat32Mod],
+               /*MemOps=*/[], /*CC=*/[], /*Out=*/[SingleReg]>;
 }
 
 // multiclass MC_17_SWITCH is used by:
@@ -3770,4 +3764,7 @@ defm ZXLHWP : I</*asm=*/"zxlhwp", /*itin=*/ALU_TINY, /*Ops=*/[SingleReg], /*Mods
 defm ZXMHWP : I</*asm=*/"zxmhwp", /*itin=*/ALU_TINY, /*Ops=*/[SingleReg], /*Mods=*/[], /*MemOps=*/[], /*CC=*/[], /*Out=*/[SingleReg], /*InPlace=*/0,
   /*pattern=*/ [(set v2i32:$r, (zext (v2i16( extract_subvector v4i16:$op0, (i64 2)))))]>;
 
+defm STSUHQ: MC_17_TINY <"stsuhq", [(set v4i16:$r, (int_kvx_stsuhq v4i16:$op0, v4i16:$op1))]>;
+
+defm STSUWP: MC_17_TINY <"stsuwp", [(set v2i32:$r, (int_kvx_stsuwp v2i32:$op0, v2i32:$op1))]>;
 }
