@@ -1175,6 +1175,17 @@ def: Pat<(v2i32 (int_kvx_zxlhwp v4i16:$v)),
 def: Pat<(v2i32 (int_kvx_zxmhwp v4i16:$v)),
          (ZXMHWP SingleReg:$v)>;
 
+def : Pat<(v4i16 (int_kvx_stsuhq v4i16:$op0, (v4i16(is_imm_vec_kvx_splat32_:$IMM)))),
+          (STSUHQri SingleReg:$op0, (build_imm_vec $IMM), splat32_)>;
+
+def : Pat<(v4i16 (int_kvx_stsuhq v4i16:$op0, (v4i16 (is_imm_vec_kvx_splat32_at:$IMM)))),
+          (STSUHQri SingleReg:$op0, (build_imm_vec $IMM), splat32_at)>;
+
+def : Pat<(v2i32 (int_kvx_stsuwp v2i32:$op0, (v2i32 (is_imm_vec_kvx_splat32_:$IMM)))),
+          (STSUWPri SingleReg:$op0, (build_imm_vec $IMM), splat32_)>;
+
+def : Pat<(v2i32 (int_kvx_stsuwp v2i32:$op0, (v2i32 (is_imm_vec_kvx_splat32_at:$IMM)))),
+          (STSUWPri SingleReg:$op0, (build_imm_vec $IMM), splat32_at)>;
 } // let Predicates = [IsV2]
 
 def: Pat<(v4i16 (int_kvx_sxlbhq v8i8:$v)),

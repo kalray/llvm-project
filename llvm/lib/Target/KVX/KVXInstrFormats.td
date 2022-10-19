@@ -163,8 +163,10 @@ multiclass I <string asm,
     defvar InstSz = !cond(!ne(ItirName, !subst("_Y_", "", ItirName)): 12,
                           !ne(ItirName, !subst("_X_", "", ItirName)): 8,
                           true : 4);
+    defvar CheapAsMove = !eq(ItirName, "ALU_TINY");
 // We define an "unamed" instruction, so it will be just the name of the definition it self.
   def "" : Instruction {
+    let isAsCheapAsAMove = CheapAsMove;
     let Pattern = pat;
     let Itinerary = itin;
     let OutOperandList = !cond(!empty(Out) : EmptyOutDag,

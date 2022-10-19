@@ -270,6 +270,9 @@ def int_kvx_sxmhwp : Intrinsic<[llvm_v2i32_ty], [llvm_v4i16_ty], [IntrNoMem]>;
 
 def int_kvx_zxlhwp  : Intrinsic<[llvm_v2i32_ty], [llvm_v4i16_ty], [IntrNoMem]>;
 def int_kvx_zxmhwp  : Intrinsic<[llvm_v2i32_ty], [llvm_v4i16_ty], [IntrNoMem]>;
+
+def int_kvx_stsuhq : Intrinsic<[llvm_v4i16_ty], [llvm_v4i16_ty, llvm_v4i16_ty], [IntrNoMem]>;
+def int_kvx_stsuwp : Intrinsic<[llvm_v2i32_ty], [llvm_v2i32_ty, llvm_v2i32_ty], [IntrNoMem]>;
 //===----------------------------------------------------------------------===//
 // TCA - tightly-coupled accelerator
 //===----------------------------------------------------------------------===//
