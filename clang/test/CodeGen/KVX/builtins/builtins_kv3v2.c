@@ -47,7 +47,7 @@ int acswapw(int *p, int a, int b) {
 // CHECK-LABEL: @acswapwv(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = bitcast i32* [[P:%.*]] to i8*
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call i32 @llvm.kvx.acswapw(i8* [[TMP0]], i32 [[A:%.*]], i32 [[B:%.*]], i32 0, i32 0)
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call i32 @llvm.kvx.acswapw(i8* [[TMP0]], i32 [[A:%.*]], i32 [[B:%.*]], i32 1, i32 0)
 // CHECK-NEXT:    ret i32 [[TMP1]]
 //
 int acswapwv(int *p, int a, int b) {

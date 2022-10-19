@@ -19562,7 +19562,8 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
 
     Function *Callee = CGM.getIntrinsic(Intr);
     auto *const Zero = ConstantInt::get(IntTy, 0);
-    return Builder.CreateCall(Callee, {Addr, Update, Expect, Zero, Zero});
+    auto *const One = ConstantInt::get(IntTy, 1);
+    return Builder.CreateCall(Callee, {Addr, Update, Expect, One, Zero});
   }
 
   case KVX::BI__builtin_kvx_alclrw: {
