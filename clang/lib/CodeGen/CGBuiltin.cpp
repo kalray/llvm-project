@@ -18405,7 +18405,7 @@ static const KvxModifier
     KVX_COLUMN({{"c0", 0}, {"c1", 1}, {"c2", 2}, {"c3", 3}});
 
 static const KvxModifier
-    KVX_ROUNDING({{"", 7}, {"rn", 0}, {"r1", 1}, {"rd", 2}, {"rz", 3}});
+    KVX_ROUNDING({{"", 7}, {"rn", 0}, {"ru", 1}, {"rd", 2}, {"rz", 3}});
 
 static const KvxModifier KVX_LSUCOND({{"dnez", 0},
                                       {"deqz", 1},
