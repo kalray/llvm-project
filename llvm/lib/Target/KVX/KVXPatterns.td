@@ -2055,15 +2055,26 @@ def : Pat<(vt (select i32:$cc, vt:$t, vt:$f)),
             sub_s3)>;
 }
 
-// For the moment we only use build_vector in tca for zeroinit
-def COPYZAp : KVX_PSEUDO<(outs VectorReg:$dst), (ins), []>;
-def COPYZWp : KVX_PSEUDO<(outs WideReg:$dst), (ins), []>;
-def COPYZXp : KVX_PSEUDO<(outs MatrixReg:$dst), (ins), []>;
+let Predicates = [IsV1] in {
+def: Pat<(v256i1 (build_vector)),
+         (COPY A48)>;
 
-def: Pat<(v256i1 (build_vector)), (COPYZAp)>; // A48, A49
-def: Pat<(v512i1 (build_vector)), (COPYZWp)>; // W25
-def: Pat<(v1024i1 (build_vector)), (COPYZXp)>; // X12
+def: Pat<(v512i1 (build_vector)),
+         (v512i1 (REG_SEQUENCE WideReg, A48, sub_v0, A48, sub_v1))>;
 
+def: Pat<(v1024i1 (build_vector)),
+         (v1024i1 (REG_SEQUENCE MatrixReg, A48, sub_v0, A48, sub_v1, A48, sub_v2, A48, sub_v3))>;
+}
+let Predicates = [IsV2] in {
+def: Pat<(v256i1 (build_vector)),
+         (XSPLATDOi16 0)>;
+
+def: Pat<(v512i1 (build_vector)),
+         (v512i1 (REG_SEQUENCE WideReg, (XSPLATDOi16 0), sub_v0, (XSPLATDOi43 0), sub_v1))>;
+
+def: Pat<(v1024i1 (build_vector)),
+         (v1024i1 (XSPLATOV (v256i1 (XSPLATDOi16 0)), shufflev_))>;
+}
 // SUBD: Only used for FrameLowering and replaced by the correct ADDD
 // instruction at eliminateFrameIndex(). Do not use it in any pattern!
 // TODO: Avoid this definition by using a pseudo instruction.
