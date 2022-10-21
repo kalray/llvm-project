@@ -735,18 +735,37 @@ multiclass SELECTCONDW<dag ntrue, dag nfalse, dag itrue, dag ifalse>
 
 // TCA select
 // We use a hacky method to perform a select for tca vector operations.
-// (select cc, v1, v2) becomes ALIGNV (v2, v1, cc * 64)
-// FIXME: For now we are enforcing it to be performed in a fixed rero
-// or rore. Perhaps this should be a pseudo and the correct instruction
-// chosen after reg-alloc?
+// (select cc, v1, v2) becomes ALIGNV (v2, v1, (0 or 32)).
+// If 0 it outputs falsev, if 32, it outputs truev.
 def : Pat <(select i32:$cc, v256i1:$truev, v256i1:$falsev),
-           (ALIGNVreror VectorReg:$falsev, VectorReg:$truev, (SLLWri SingleReg:$cc, 6))>, Requires<[IsV1]>;
+           (ALIGNVreror VectorReg:$falsev, VectorReg:$truev,
+           (CMOVEDri10 SingleReg:$cc, SingleReg:$cc, 32, scalarcond_wnez))>, Requires<[IsV1]>;
+
+def : Pat <(select i32:$cc, v256i1:$truev, v256i1:$falsev),
+           (XALIGNO (v512i1 (REG_SEQUENCE WideReg,
+                              VectorReg:$falsev, sub_v0,
+                              VectorReg:$truev, sub_v1)),
+                    (CMOVEDri10 SingleReg:$cc, SingleReg:$cc, 32, scalarcond_wnez))>, Requires<[IsV2]>;
 
 def : Pat <(select i32:$cc, v512i1:$truev, v512i1:$falsev),
            (REG_SEQUENCE WideReg,
            (ALIGNVreror (v256i1 (EXTRACT_SUBREG WideReg:$falsev, sub_v0)), (v256i1 (EXTRACT_SUBREG WideReg:$truev, sub_v0)), (SLLWri SingleReg:$cc, 6)), sub_v0,
            (ALIGNVrorer (v256i1 (EXTRACT_SUBREG WideReg:$falsev, sub_v1)), (v256i1 (EXTRACT_SUBREG WideReg:$truev, sub_v1)), (SLLWri SingleReg:$cc, 6)), sub_v1
            )>, Requires<[IsV1]>;
+
+def : Pat <(select i32:$cc, v512i1:$truev, v512i1:$falsev),
+           (REG_SEQUENCE WideReg,
+                    (XALIGNO (REG_SEQUENCE WideReg,
+                              (v256i1 (EXTRACT_SUBREG WideReg:$falsev, sub_v0)), sub_v0,
+                              (v256i1 (EXTRACT_SUBREG WideReg:$truev, sub_v0)), sub_v1),
+                              (CMOVEDri10 SingleReg:$cc, SingleReg:$cc, 32, scalarcond_wnez)),
+                    sub_v0,
+                    (XALIGNO (REG_SEQUENCE WideReg,
+                              (v256i1 (EXTRACT_SUBREG WideReg:$falsev, sub_v1)), sub_v0,
+                              (v256i1 (EXTRACT_SUBREG WideReg:$truev, sub_v1)), sub_v1),
+                              (CMOVEDri10 SingleReg:$cc, SingleReg:$cc, 32, scalarcond_wnez)),
+                    sub_v1)>, Requires<[IsV2]>;
+
 def : Pat <(select i32:$cc, v1024i1:$truev, v1024i1:$falsev),
            (REG_SEQUENCE MatrixReg,
            (ALIGNVreror (v256i1 (EXTRACT_SUBREG MatrixReg:$falsev, sub_v0)), (v256i1 (EXTRACT_SUBREG MatrixReg:$truev, sub_v0)), (SLLWri SingleReg:$cc, 6)), sub_v0,
@@ -754,6 +773,29 @@ def : Pat <(select i32:$cc, v1024i1:$truev, v1024i1:$falsev),
            (ALIGNVreror (v256i1 (EXTRACT_SUBREG MatrixReg:$falsev, sub_v2)), (v256i1 (EXTRACT_SUBREG MatrixReg:$truev, sub_v2)), (SLLWri SingleReg:$cc, 6)), sub_v2,
            (ALIGNVrorer (v256i1 (EXTRACT_SUBREG MatrixReg:$falsev, sub_v3)), (v256i1 (EXTRACT_SUBREG MatrixReg:$truev, sub_v3)), (SLLWri SingleReg:$cc, 6)), sub_v3
            )>, Requires<[IsV1]>;
+
+def : Pat <(select i32:$cc, v1024i1:$truev, v1024i1:$falsev),
+           (REG_SEQUENCE MatrixReg,
+                    (XALIGNO (REG_SEQUENCE WideReg,
+                              (v256i1 (EXTRACT_SUBREG MatrixReg:$falsev, sub_v0)), sub_v0,
+                              (v256i1 (EXTRACT_SUBREG MatrixReg:$truev, sub_v0)), sub_v1),
+                              (CMOVEDri10 SingleReg:$cc, SingleReg:$cc, 32, scalarcond_wnez)),
+                    sub_v0,
+                    (XALIGNO (REG_SEQUENCE WideReg,
+                              (v256i1 (EXTRACT_SUBREG MatrixReg:$falsev, sub_v1)), sub_v0,
+                              (v256i1 (EXTRACT_SUBREG MatrixReg:$truev, sub_v1)), sub_v1),
+                              (CMOVEDri10 SingleReg:$cc, SingleReg:$cc, 32, scalarcond_wnez)),
+                    sub_v1,
+                    (XALIGNO (REG_SEQUENCE WideReg,
+                              (v256i1 (EXTRACT_SUBREG MatrixReg:$falsev, sub_v2)), sub_v0,
+                              (v256i1 (EXTRACT_SUBREG MatrixReg:$truev, sub_v2)), sub_v1),
+                              (CMOVEDri10 SingleReg:$cc, SingleReg:$cc, 32, scalarcond_wnez)),
+                    sub_v2,
+                    (XALIGNO (REG_SEQUENCE WideReg,
+                              (v256i1 (EXTRACT_SUBREG MatrixReg:$falsev, sub_v3)), sub_v0,
+                              (v256i1 (EXTRACT_SUBREG MatrixReg:$truev, sub_v3)), sub_v1),
+                              (CMOVEDri10 SingleReg:$cc, SingleReg:$cc, 32, scalarcond_wnez)),
+                    sub_v3)>, Requires<[IsV2]>;
 
 defm : SELECTCONDW<(i32 i32:$truev), (i32 i32:$falsev), (i32 Wrapped32:$truev), (i32 Wrapped32:$falsev)>;
 defm : SELECTCONDW<(i64 i64:$truev), (i64 i64:$falsev), (i64 Wrapped64:$truev), (i64 Wrapped64:$falsev)>;

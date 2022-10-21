@@ -3737,13 +3737,13 @@ defm XFMAXHX: I</*asm=*/"xfmaxhx", /*itin=*/TCA_FP, /*Ops=*/[VectorReg, VectorRe
   /*pattern=*/ [(set v256i1:$r, (int_kvx_xfmaxhx VectorReg:$op0, VectorReg:$op1))]>;
 defm XFMINHX: I</*asm=*/"xfminhx", /*itin=*/TCA_FP, /*Ops=*/[VectorReg, VectorReg], /*Mods=*/[], /*MemOps=*/[], /*CC=*/[], /*Out=*/[VectorReg], /*InPlace=*/0,
   /*pattern=*/ [(set v256i1:$r, (int_kvx_xfminhx VectorReg:$op0, VectorReg:$op1))]>;
+}
 
 defm XSPLATOV: I</*asm=*/"xsplatov", /*itin=*/TCA_INT, /*Ops=*/[VectorReg], /*Mods=*/[ShuffleVMod], /*MemOps=*/[], /*CC=*/[], /*Out=*/[MatrixReg], /*InPlace=*/0,
   /*pattern=*/ [(set v1024i1:$r, (int_kvx_xsplatov v256i1:$op0, ShuffleVMod:$mod0))]>;
 
 defm XSPLATOX: I</*asm=*/"xsplatox", /*itin=*/TCA_INT, /*Ops=*/[VectorReg], /*Mods=*/[ShuffleXMod], /*MemOps=*/[], /*CC=*/[], /*Out=*/[WideReg], /*InPlace=*/0,
   /*pattern=*/ [(set v512i1:$r, (int_kvx_xsplatox v256i1:$op0, ShuffleXMod:$mod0))]>;
-}
 
 defm XSPLATDO: XSPLATDO_MC;
 
@@ -3767,4 +3767,6 @@ defm ZXMHWP : I</*asm=*/"zxmhwp", /*itin=*/ALU_TINY, /*Ops=*/[SingleReg], /*Mods
 defm STSUHQ: MC_17_TINY <"stsuhq", [(set v4i16:$r, (int_kvx_stsuhq v4i16:$op0, v4i16:$op1))]>;
 
 defm STSUWP: MC_17_TINY <"stsuwp", [(set v2i32:$r, (int_kvx_stsuwp v2i32:$op0, v2i32:$op1))]>;
+
+defm XALIGNO : I</*asm=*/"xaligno", /*itin=*/BCU_CRRP_CRWL_CRWH_RR, /*Ops=*/[BufferReg, SingleReg], /*Mods=*/[], /*MemOps=*/[], /*CC=*/[], /*Out=*/[VectorReg]>;
 }
