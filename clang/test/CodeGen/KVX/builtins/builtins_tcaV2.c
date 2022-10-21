@@ -626,3 +626,25 @@ void xsplatdo(__kvx_x256 *v) {
   v[1] = __builtin_kvx_xsplatdo(137438953471);
   v[2] = __builtin_kvx_xsplatdo(27487790694300);
 }
+
+// CHECK-LABEL: @xalign512o(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = load <512 x i1>, <512 x i1>* [[W:%.*]], align 32, [[TBAA6]]
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <256 x i1> @llvm.kvx.xalign512o(<512 x i1> [[TMP0]], i64 [[S:%.*]])
+// CHECK-NEXT:    store <256 x i1> [[TMP1]], <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
+// CHECK-NEXT:    ret void
+//
+void xalign512o(__kvx_x256 *v, __kvx_x512 *w, long s) {
+  *v = __builtin_kvx_xalign512o(*w, s);
+}
+
+// CHECK-LABEL: @xalign1024o(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = load <1024 x i1>, <1024 x i1>* [[M:%.*]], align 32, [[TBAA8]]
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <256 x i1> @llvm.kvx.xalign1024o(<1024 x i1> [[TMP0]], i64 [[S:%.*]])
+// CHECK-NEXT:    store <256 x i1> [[TMP1]], <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
+// CHECK-NEXT:    ret void
+//
+void xalign1024o(__kvx_x256 *v, __kvx_x1024 *m, long s) {
+  *v = __builtin_kvx_xalign1024o(*m, s);
+}

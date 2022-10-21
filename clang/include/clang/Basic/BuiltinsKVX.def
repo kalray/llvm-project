@@ -494,7 +494,7 @@ NARY_BUILTIN(xbuildfwm, "Tx1024Tx512Tx512", "n", 2)
 NARY_BUILTIN(xbuildfvw, "Tx512Tx256Tx256", "n", 2)
 
 NARY_BUILTIN(xaccess512o, "V4OiTx512Oi", "n", 2)
-NARY_BUILTIN(xalign512o, "Tx256Tx512Oi", "n", 2)
+NARY_BUILTIN(xalign512o, "Tx256Tx512UOi", "n", 2)
 
 BUILTIN(__builtin_kvx_xswap256, "V4OiTx256*V4Oi", "n")
 
@@ -583,6 +583,8 @@ KVX_BUILTIN(xfminhx, "Tx256Tx256Tx256", "n", 2, "kv3-2", )
 KVX_BUILTIN(xsplatov, "Tx1024Tx256cC*", "n", 2, "kv3-2", KVX_SHUFFLEV)
 KVX_BUILTIN(xsplatox, "Tx512Tx256cC*", "n", 2, "kv3-2", KVX_SHUFFLEX)
 KVX_BUILTIN(xsplatdo, "Tx256OIi", "n", 1, "kv3-2", )
+
+KVX_BUILTIN(xalign1024o, "Tx256Tx1024UOi", "n", 2, "kv3-2", )
 
 #undef KVX_BUILTIN
 #undef NARY_BUILTIN

@@ -2644,7 +2644,7 @@ def FFDMSAWP : ROUNDING_SILENT_TERNARY_AUXR_FP<"ffdmsawp", SingleReg, PairedReg,
 def FMULWCP : CONJ_ROUNDING_SILENT_BINOP<"fmulwcp", PairedReg, PairedReg, MAU_FP>;
 
 def XFSCALEWO : ROUNDING_SILENT_BINOP<"xfscalewo", VectorReg, VectorReg, SingleReg, BCU_CRRP_CRWL_CRWH_RR,
-                [(set v256i1:$o, (int_kvx_xfscalewo v256i1:$lhs, i32:$rhs, RoundingMod:$r, SilentMod:$s ))]>;
+                [(set v256i1:$o, (int_kvx_xfscalewo v256i1:$lhs, i32:$rhs, RoundingMod:$r, SilentMod:$s))]>;
 
 def XCLAMPWO : TERNARY<"xclampwo", VectorReg, VectorReg, VectorReg, TCA_INT,
                 [(set v256i1:$o, (int_kvx_xclampwo v256i1:$a, v256i1:$lhs, v256i1:$rhs))]>;
@@ -3768,5 +3768,9 @@ defm STSUHQ: MC_17_TINY <"stsuhq", [(set v4i16:$r, (int_kvx_stsuhq v4i16:$op0, v
 
 defm STSUWP: MC_17_TINY <"stsuwp", [(set v2i32:$r, (int_kvx_stsuwp v2i32:$op0, v2i32:$op1))]>;
 
-defm XALIGNO : I</*asm=*/"xaligno", /*itin=*/BCU_CRRP_CRWL_CRWH_RR, /*Ops=*/[BufferReg, SingleReg], /*Mods=*/[], /*MemOps=*/[], /*CC=*/[], /*Out=*/[VectorReg]>;
+defm XALIGNO : I</*asm=*/"xaligno", /*itin=*/BCU_CRRP_CRWL_CRWH_RR, /*Ops=*/[BufferReg, SingleReg], /*Mods=*/[], /*MemOps=*/[], /*CC=*/[], /*Out=*/[VectorReg],
+                 /*InPlace=*/0, /*pattern=*/ [(set v256i1:$r, (int_kvx_xalign512o BufferReg:$op0, SingleReg:$op1))]>;
+
+def : Pat <(v256i1(int_kvx_xalign1024o BufferReg:$op0, i64:$op1)),
+           (XALIGNO BufferReg:$op0, SingleReg:$op1)>;
 }
