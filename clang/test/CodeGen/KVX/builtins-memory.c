@@ -262,6 +262,11 @@ float32x2_t lfwp(void *p) {
 }
 
 typedef long int64x4_t __attribute__((__vector_size__(4 * sizeof(long long int))));
+// CHECK-LABEL: @ldq(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = load <4 x i64>, <4 x i64>* [[P:%.*]], align 32
+// CHECK-NEXT:    ret <4 x i64> [[TMP0]]
+//
 int64x4_t ldq(int64x4_t *p) {
   return __builtin_kvx_ldq(p, "");
 }

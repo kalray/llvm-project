@@ -58,10 +58,11 @@ BitVector KVXRegisterInfo::getReservedRegs(const MachineFunction &MF) const {
   markSuperRegs(Reserved, KVX::R13);
   markSuperRegs(Reserved, getFPReg());
 
-  // Mark all Zero TCA registers as reserved.
-  for (auto Reg :
-       {KVX::A48, KVX::A49, KVX::A50, KVX::A51, KVX::W24, KVX::W25, KVX::X12})
-    markSuperRegs(Reserved, Reg);
+  // In CV1 all TCA zero registers must be marked as reserved.
+  // FIXME: Watchtower, it assumes that C192..C255 are contiguous.
+  if (static_cast<const KVXSubtarget &>(MF.getSubtarget()).isV1())
+    for (unsigned Reg = KVX::C192; Reg <= KVX::C255; ++Reg)
+      markSuperRegs(Reserved, Reg);
 
   // Reserve a register if dynamic objects need stack realignment.
   if (needsLocalAreaRealignment(MF)) {

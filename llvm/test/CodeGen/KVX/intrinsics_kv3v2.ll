@@ -680,7 +680,7 @@ declare <2 x i32> @llvm.kvx.zxmhwp(<4 x i16>)
 
 define <4 x i16> @stsuhq(<4 x i16> %v, <4 x i16> %a) {
 ; CHECK-LABEL: stsuhq:
-; CHECK:       # %bb.0:
+; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    stsuhq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -693,7 +693,7 @@ declare <4 x i16> @llvm.kvx.stsuhq(<4 x i16>, <4 x i16>)
 
 define <4 x i16> @stsuhqri(<4 x i16> %v) {
 ; CHECK-LABEL: stsuhqri:
-; CHECK:       # %bb.0:
+; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    stsuhq $r0 = $r0, 0xc000f
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -704,7 +704,7 @@ entry:
 
 define <4 x i16> @stsuhqriat(<4 x i16> %v) {
 ; CHECK-LABEL: stsuhqriat:
-; CHECK:       # %bb.0:
+; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    stsuhq.@ $r0 = $r0, 0xc000f
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -715,7 +715,7 @@ entry:
 
 define <2 x i32> @stsuwp(<2 x i32> %v, <2 x i32> %a) {
 ; CHECK-LABEL: stsuwp:
-; CHECK:       # %bb.0:
+; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    stsuwp $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -728,7 +728,7 @@ declare <2 x i32> @llvm.kvx.stsuwp(<2 x i32>, <2 x i32>)
 
 define <2 x i32> @stsuwpri(<2 x i32> %v) {
 ; CHECK-LABEL: stsuwpri:
-; CHECK:       # %bb.0:
+; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    stsuwp $r0 = $r0, 999
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -739,7 +739,7 @@ entry:
 
 define <2 x i32> @stsuwpriat(<2 x i32> %v) {
 ; CHECK-LABEL: stsuwpriat:
-; CHECK:       # %bb.0:
+; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    stsuwp.@ $r0 = $r0, 0x3e7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
