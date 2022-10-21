@@ -805,3 +805,43 @@ define void @xloadbuff1024(<1024 x i1>* %0, i64 %1) {
 }
 
 declare <1024 x i1> @llvm.kvx.xloadbuff1024(i8*, i64, <1024 x i1>, i32, i32)
+
+define <4 x i64> @xaccess512o(<512 x i1>* nocapture readonly %0, i64 %1) {
+; CHECK-LABEL: xaccess512o:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    xlo $a1 = 32[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xlo $a0 = 0[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xaccesso $r0r1r2r3 = $a0..a1, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = load <512 x i1>, <512 x i1>* %0
+  %4 = tail call <4 x i64> @llvm.kvx.xaccess512o(<512 x i1> %3, i64 %1)
+  ret <4 x i64> %4
+}
+
+declare <4 x i64> @llvm.kvx.xaccess512o(<512 x i1>, i64)
+
+define <4 x i64> @xaccess1024o(<1024 x i1>* nocapture readonly %0, i64 %1) {
+; CHECK-LABEL: xaccess1024o:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    xlo $a3 = 96[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xlo $a2 = 64[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xlo $a1 = 32[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xlo $a0 = 0[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xaccesso $r0r1r2r3 = $a0..a3, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = load <1024 x i1>, <1024 x i1>* %0
+  %4 = tail call <4 x i64> @llvm.kvx.xaccess1024o(<1024 x i1> %3, i64 %1)
+  ret <4 x i64> %4
+}
+
+declare <4 x i64> @llvm.kvx.xaccess1024o(<1024 x i1>, i64)

@@ -3773,4 +3773,10 @@ defm XALIGNO : I</*asm=*/"xaligno", /*itin=*/BCU_CRRP_CRWL_CRWH_RR, /*Ops=*/[Buf
 
 def : Pat <(v256i1(int_kvx_xalign1024o BufferReg:$op0, i64:$op1)),
            (XALIGNO BufferReg:$op0, SingleReg:$op1)>;
+
+defm XACCESSO : I</*asm=*/"xaccesso", /*itin=*/BCU_TINY_AUXW_CRRP_RR, /*Ops=*/[BufferReg, SingleReg], /*Mods=*/[], /*MemOps=*/[], /*CC=*/[], /*Out=*/[QuadReg],
+                 /*InPlace=*/0, /*pattern=*/ [(set v4i64:$r, (int_kvx_xaccess512o BufferReg:$op0, SingleReg:$op1))]>;
+
+def : Pat <(v4i64(int_kvx_xaccess1024o BufferReg:$op0, i64:$op1)),
+           (XACCESSO BufferReg:$op0, SingleReg:$op1)>;
 }
