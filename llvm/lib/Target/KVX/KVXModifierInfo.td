@@ -10,7 +10,7 @@
 // This file was automatically generated,
 //   *DO NOT EDIT*,
 //   please contact code owner.
-// Last generated: 2020-06-20 21:47:17.938473.
+// Last generated: 2022-10-18 21:47:54.077870.
 
 
 class Scalarcond<int N> : PatLeaf<(i32 N)>;
@@ -136,3 +136,65 @@ class Coherency<int N> : PatLeaf<(i32 N)>;
 def coherency_ : Coherency<0>;
 def coherency_g : Coherency<1>;
 def coherency_s : Coherency<2>;
+
+class Shufflev<int N> : PatLeaf<(i32 N)>;
+def shufflev_ : Shufflev<0>;
+def shufflev_td : Shufflev<1>;
+
+class Shufflex<int N> : PatLeaf<(i32 N)>;
+def shufflex_ : Shufflex<0>;
+def shufflex_zd : Shufflex<1>;
+def shufflex_ud : Shufflex<2>;
+def shufflex_tq : Shufflex<3>;
+
+class Lsomask<int N> : PatLeaf<(i32 N)>;
+def lsomask_u0 : Lsomask<0>;
+def lsomask_u1 : Lsomask<1>;
+def lsomask_u2 : Lsomask<2>;
+def lsomask_u3 : Lsomask<3>;
+def lsomask_mt : Lsomask<4>;
+def lsomask_mf : Lsomask<5>;
+def lsomask_mtc : Lsomask<6>;
+def lsomask_mfc : Lsomask<7>;
+
+class Lsumask<int N> : PatLeaf<(i32 N)>;
+def lsumask_dnez : Lsumask<0>;
+def lsumask_deqz : Lsumask<1>;
+def lsumask_wnez : Lsumask<2>;
+def lsumask_weqz : Lsumask<3>;
+def lsumask_mt : Lsumask<4>;
+def lsumask_mf : Lsumask<5>;
+def lsumask_mtc : Lsumask<6>;
+def lsumask_mfc : Lsumask<7>;
+
+class Lsupack<int N> : PatLeaf<(i32 N)>;
+def lsupack_ : Lsupack<0>;
+def lsupack_q : Lsupack<1>;
+def lsupack_d : Lsupack<2>;
+def lsupack_w : Lsupack<3>;
+def lsupack_h : Lsupack<4>;
+def lsupack_b : Lsupack<5>;
+
+class Hindex<int N> : PatLeaf<(i32 N)>;
+def hindex_h0 : Hindex<0>;
+def hindex_h1 : Hindex<1>;
+
+class Qindex<int N> : PatLeaf<(i32 N)>;
+def qindex_q0 : Qindex<0>;
+def qindex_q1 : Qindex<1>;
+def qindex_q2 : Qindex<2>;
+def qindex_q3 : Qindex<3>;
+
+class Cachelev<int N> : PatLeaf<(i32 N)>;
+def cachelev_l1 : Cachelev<0>;
+def cachelev_l2 : Cachelev<1>;
+
+class Accesses<int N> : PatLeaf<(i32 N)>;
+def accesses_ : Accesses<0>;
+def accesses_w : Accesses<1>;
+def accesses_r : Accesses<2>;
+def accesses_wa : Accesses<3>;
+
+class Channel<int N> : PatLeaf<(i32 N)>;
+def channel_f : Channel<0>;
+def channel_b : Channel<1>;
