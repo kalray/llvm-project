@@ -1206,3 +1206,47 @@ define void @xsplatdo(<256 x i1>* nocapture %0) {
 }
 
 declare <256 x i1> @llvm.kvx.xsplatdo(i64)
+
+define void @xalign512o(<256 x i1>* nocapture %0, <512 x i1>* nocapture readonly %1, i64 %2) {
+; CHECK-LABEL: xalign512o:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    xlo $a1 = 32[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xlo $a0 = 0[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xaligno $a0 = $a0..a1, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 0[$r0] = $a0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %4 = load <512 x i1>, <512 x i1>* %1
+  %5 = tail call <256 x i1> @llvm.kvx.xalign512o(<512 x i1> %4, i64 %2)
+  store <256 x i1> %5, <256 x i1>* %0
+  ret void
+}
+
+declare <256 x i1> @llvm.kvx.xalign512o(<512 x i1>, i64)
+
+define void @xalign1024o(<256 x i1>* nocapture %0, <1024 x i1>* nocapture readonly %1, i64 %2) {
+; CHECK-LABEL: xalign1024o:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    xlo $a3 = 96[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xlo $a2 = 64[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xlo $a1 = 32[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xlo $a0 = 0[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xaligno $a0 = $a0..a3, $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 0[$r0] = $a0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %4 = load <1024 x i1>, <1024 x i1>* %1
+  %5 = tail call <256 x i1> @llvm.kvx.xalign1024o(<1024 x i1> %4, i64 %2)
+  store <256 x i1> %5, <256 x i1>* %0
+  ret void
+}
+
+declare <256 x i1> @llvm.kvx.xalign1024o(<1024 x i1>, i64)

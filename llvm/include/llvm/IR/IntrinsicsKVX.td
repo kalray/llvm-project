@@ -288,6 +288,7 @@ def int_kvx_xmovefo: Intrinsic<[llvm_v4i64_ty], [llvm_v256i1_ty], [IntrNoMem]>;
 def int_kvx_xswap256 : Intrinsic<[llvm_v4i64_ty, llvm_v256i1_ty], [llvm_v4i64_ty, llvm_v256i1_ty], [IntrNoMem]>;
 def int_kvx_xaccess512o : Intrinsic<[llvm_v4i64_ty], [llvm_v512i1_ty, llvm_i64_ty], [IntrNoMem]>;
 def int_kvx_xalign512o : Intrinsic<[llvm_v256i1_ty], [llvm_v512i1_ty, llvm_i64_ty], [IntrNoMem]>;
+def int_kvx_xalign1024o : Intrinsic<[llvm_v256i1_ty], [llvm_v1024i1_ty, llvm_i64_ty], [IntrNoMem]>;
 
 // Matrix / Wide sub-registers manipulation
 def int_kvx_xinsertwm : Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_v512i1_ty, llvm_i32_ty], [IntrNoMem]>;
