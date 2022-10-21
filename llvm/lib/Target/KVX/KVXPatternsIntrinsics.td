@@ -1201,3 +1201,11 @@ def: Pat<(v2i32 (int_kvx_sxlhwp v4i16:$v)),
 def: Pat<(v2i32 (int_kvx_sxmhwp v4i16:$v)),
          (SXMHWP SingleReg:$v)>;
 
+def : Pat <(int_kvx_xloadbuff1024 i64:$mem, i64:$op0, v1024i1:$z, VariantMod:$mod0, LsupackMod:$mod1),
+           (v1024i1(XLOrvp i64:$mem, i64:$op0, VariantMod:$mod0, LsupackMod:$mod1, v1024i1:$z))>;
+
+def : Pat <(int_kvx_xloadbuff1024 (add i64:$mem, Signed27:$off), i64:$op0, v1024i1:$z, VariantMod:$mod0, LsupackMod:$mod1),
+           (v1024i1(XLOri27vp Signed27:$off, i64:$mem, i64:$op0, VariantMod:$mod0, LsupackMod:$mod1, v1024i1:$z))>;
+
+def : Pat <(int_kvx_xloadbuff1024 (add i64:$mem, Signed54:$off), i64:$op0, v1024i1:$z, VariantMod:$mod0, LsupackMod:$mod1),
+           (v1024i1(XLOri54vp Signed54:$off, i64:$mem, i64:$op0, VariantMod:$mod0, LsupackMod:$mod1, v1024i1:$z))>;

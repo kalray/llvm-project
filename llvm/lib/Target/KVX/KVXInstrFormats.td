@@ -148,13 +148,14 @@ multiclass I <string asm,
 
     // Check if one of the elements of Mods is SilentMode, that returns a non-empty list with !filter
     defvar mayRaiseFPE = !not(!empty(!filter(i, Mods, !eq(i, SilentMod))));
-
+    defvar isLsupack   = !not(!empty(!filter(i, Mods, !eq(i, LsupackMod))));
     defvar MemOperation = !and(!empty(Out), !empty(Ops));
     defvar ReadsMem = !or(!not(!or(!empty(MemOps), !empty(Out), MemOperation)), IsAtomicSwap);
     defvar WritesMem = !or(!xor(!xor(ReadsMem, !not(!empty(MemOps))), MemOperation), IsAtomicSwap);
     defvar CanPredicate = !and(!empty(CC), !not(!empty(MemOps)));
     // Should we add an inplace register in the input dag?
-    defvar AsmStr = !cond( IsAtomicSwap : !strconcat(asm, ModsStr, CC_Qindex_str, OutStr, ", ", MemOpStr, " =", OpsStr),
+    defvar AsmStr = !cond( isLsupack : !strconcat(asm, ModsStr, OutStr, ",", OpsStr, " =", MemOpStr),
+                           IsAtomicSwap : !strconcat(asm, ModsStr, CC_Qindex_str, OutStr, ", ", MemOpStr, " =", OpsStr),
                            MemOperation : !strconcat(asm, ModsStr, CC_Qindex_str, MemOpStr),
                            !eq(WritesMem, 0) : !strconcat(asm, ModsStr, CC_Qindex_str, OutStr, " =", MemOpStr, OpsStr),
                            !eq(WritesMem, 1) : !strconcat(asm, ModsStr, CC_Qindex_str, OutStr, MemOpStr, " =", OpsStr));
@@ -289,7 +290,18 @@ multiclass MC_XLO <string OpcStr = "xlo"> {
   defm ri54cq : I <OpcStr, LSU_LOAD_Y_, [], [VariantMod, QindexMod], [Signed54, SingleReg], [LsumaskMod, SingleReg], [MatrixReg], 1,
                     [(set v1024i1:$r, (int_kvx_xloadsc1024 v1024i1:$z, (add i64:$mem, Signed54:$off), i64:$val, VariantMod:$mod0, LsumaskMod:$cond, QindexMod:$mod1))]>;
 
-  // Missing 21 definitions that require the TCA buffer here
+  // xlovariantlsupack registerAg, registerY = [registerZ]
+  defm rvp    : I <OpcStr, LSU_LOAD, [SingleReg], [VariantMod, LsupackMod], [SingleReg], [], [BufferReg], 1,
+                  [(set v512i1:$r, (int_kvx_xloadbuff512 i64:$mem, i64:$op0, v512i1:$z, VariantMod:$mod0, LsupackMod:$mod1))]>;
+
+  // xlovariantlsupack registerAg, registerY = offset27[registerZ]
+  defm ri27vp : I <OpcStr, LSU_LOAD_X_, [SingleReg], [VariantMod, LsupackMod], [Signed27, SingleReg], [], [BufferReg], 1,
+                  [(set v512i1:$r, (int_kvx_xloadbuff512 (add i64:$mem, Signed27:$off), i64:$op0, v512i1:$z, VariantMod:$mod0, LsupackMod:$mod1))]>;
+
+  // xlovariantlsupack registerAg, registerY = extend27 offset27[registerZ]
+  defm ri54vp : I <OpcStr, LSU_LOAD_Y_, [SingleReg], [VariantMod, LsupackMod], [Signed54, SingleReg], [], [BufferReg], 1,
+                  [(set v512i1:$r, (int_kvx_xloadbuff512 (add i64:$mem, Signed54:$off), i64:$op0, v512i1:$z, VariantMod:$mod0, LsupackMod:$mod1))]>;
+
   // xlovariantdoscale registerA = registerY[registerZ]
   defm rr     : I <OpcStr, LSU_LOAD, [], [VariantMod, DoscaleMod], [SingleReg, SingleReg], [], [VectorReg]>;
   // xlovariantdoscaleqindex registerAq = registerY[registerZ]

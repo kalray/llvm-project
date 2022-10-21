@@ -567,6 +567,9 @@ KVX_BUILTIN(xloadc1024, "Tx1024Tx1024&vC*V4icC*", "n", 4, "kv3-2", KVX_VARIANT, 
 KVX_BUILTIN(xloads1024, "Tx1024Tx1024&vC*cC*", "n", 3, "kv3-2", KVX_VARIANT, KVX_QINDEX)
 KVX_BUILTIN(xloadsc1024, "Tx1024Tx1024&vC*OiCcC*", "n", 4, "kv3-2", KVX_VARIANT, KVX_LSUMASK, KVX_QINDEX)
 
+KVX_BUILTIN(xloadbuff512, "Tx512vC*OiTx512cC*", "n", 4, "kv3-2", KVX_VARIANT, KVX_LSUPACK)
+KVX_BUILTIN(xloadbuff1024, "Tx1024vC*OiTx1024cC*", "n", 4, "kv3-2", KVX_VARIANT, KVX_LSUPACK)
+
 KVX_BUILTIN(xstore256, "vTx256vC*", "n", 2, "kv3-2", )
 KVX_BUILTIN(xstorec256, "vTx256vC*OicC*", "n", 4, "kv3-2", KVX_LSUMASK)
 

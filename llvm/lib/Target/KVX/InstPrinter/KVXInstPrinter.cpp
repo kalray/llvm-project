@@ -417,6 +417,20 @@ void KVXInstPrinter::printLsumaskMod(const MCInst *MI, unsigned OpNo,
   }
 }
 
+void KVXInstPrinter::printLsupackMod(const MCInst *MI, unsigned OpNo,
+                                     raw_ostream &O) {
+  const MCOperand &MO = MI->getOperand(OpNo);
+  unsigned M = MO.getImm();
+  if (!M)
+    return;
+
+  if (M > 5)
+    report_fatal_error("illegal lsupack value.");
+
+  const static std::string S = " qdwhb";
+  O << '.' << S[M];
+}
+
 void KVXInstPrinter::printColumnMod(const MCInst *MI, unsigned OpNo,
                                     raw_ostream &O) {
   int Column = MI->getOperand(OpNo).getImm();
