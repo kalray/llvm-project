@@ -362,6 +362,8 @@ def int_kvx_xfscalewo : Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_i32_ty
 def int_kvx_xload1024: Intrinsic<[llvm_v1024i1_ty], [llvm_ptr_ty, llvm_i32_ty], [IntrReadMem]>;
 def int_kvx_xload256: Intrinsic<[llvm_v256i1_ty], [llvm_ptr_ty, llvm_i32_ty], [IntrReadMem]>;
 def int_kvx_xload512: Intrinsic<[llvm_v512i1_ty], [llvm_ptr_ty, llvm_i32_ty], [IntrReadMem]>;
+def int_kvx_xloadbuff512 : Intrinsic<[llvm_v512i1_ty], [llvm_ptr_ty, llvm_i64_ty, llvm_v512i1_ty, llvm_i32_ty, llvm_i32_ty], [IntrReadMem]>;
+def int_kvx_xloadbuff1024 : Intrinsic<[llvm_v1024i1_ty], [llvm_ptr_ty, llvm_i64_ty, llvm_v1024i1_ty, llvm_i32_ty, llvm_i32_ty], [IntrReadMem]>;
 def int_kvx_xloadc1024: Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_ptr_ty, llvm_v4i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrReadMem]>;
 def int_kvx_xloadc256: Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_ptr_ty, llvm_i64_ty, llvm_i32_ty, llvm_i32_ty], [IntrReadMem]>;
 def int_kvx_xloadc512: Intrinsic<[llvm_v512i1_ty], [llvm_v512i1_ty, llvm_ptr_ty, llvm_i64_ty, llvm_i32_ty, llvm_i32_ty], [IntrReadMem]>;
@@ -384,7 +386,6 @@ def int_kvx_xstorec256: Intrinsic<[], [llvm_v256i1_ty, llvm_ptr_ty, llvm_i64_ty,
 def int_kvx_xsx48bw : Intrinsic<[llvm_v1024i1_ty], [llvm_v256i1_ty], [IntrReadMem]>;
 def int_kvx_xtrunc48wb : Intrinsic<[llvm_v256i1_ty], [llvm_v1024i1_ty], [IntrReadMem]>;
 def int_kvx_xzx48bw : Intrinsic<[llvm_v1024i1_ty], [llvm_v256i1_ty], [IntrReadMem]>;
-
 //===----------------------------------------------------------------------===//
 // ACB 4.8 TCA intrinsics. Should remove them in ACB 4.10
 //===----------------------------------------------------------------------===//

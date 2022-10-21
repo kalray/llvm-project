@@ -18432,6 +18432,9 @@ static const KvxModifier KVX_LSUMASK({{"dnez", 0},
                                       {"mfc", 7}});
 
 static const KvxModifier
+    KVX_LSUPACK({{"", 0}, {"q", 1}, {"d", 2}, {"w", 3}, {"h", 4}, {"b", 5}});
+
+static const KvxModifier
     KVX_QINDEX({{"q0", 0}, {"q1", 1}, {"q2", 2}, {"q3", 3}});
 
 static const KvxModifier KVX_SCALARCOND = KVX_LSUCOND;

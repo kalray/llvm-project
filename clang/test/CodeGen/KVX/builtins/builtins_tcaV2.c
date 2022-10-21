@@ -648,3 +648,29 @@ void xalign512o(__kvx_x256 *v, __kvx_x512 *w, long s) {
 void xalign1024o(__kvx_x256 *v, __kvx_x1024 *m, long s) {
   *v = __builtin_kvx_xalign1024o(*m, s);
 }
+
+// CHECK-LABEL: @xloadbuff512(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[W:%.*]], i64 3
+// CHECK-NEXT:    [[TMP0:%.*]] = bitcast <512 x i1>* [[ARRAYIDX]] to i8*
+// CHECK-NEXT:    [[TMP1:%.*]] = load <512 x i1>, <512 x i1>* [[W]], align 32, [[TBAA6]]
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <512 x i1> @llvm.kvx.xloadbuff512(i8* nonnull [[TMP0]], i64 [[S:%.*]], <512 x i1> [[TMP1]], i32 0, i32 5)
+// CHECK-NEXT:    store <512 x i1> [[TMP2]], <512 x i1>* [[W]], align 32, [[TBAA6]]
+// CHECK-NEXT:    ret void
+//
+void xloadbuff512(__kvx_x512 *w, long long s) {
+  *w = __builtin_kvx_xloadbuff512(&w[3], s, *w, ".b");
+}
+
+// CHECK-LABEL: @xloadbuff1024(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <1024 x i1>, <1024 x i1>* [[W:%.*]], i64 3
+// CHECK-NEXT:    [[TMP0:%.*]] = bitcast <1024 x i1>* [[ARRAYIDX]] to i8*
+// CHECK-NEXT:    [[TMP1:%.*]] = load <1024 x i1>, <1024 x i1>* [[W]], align 32, [[TBAA8]]
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <1024 x i1> @llvm.kvx.xloadbuff1024(i8* nonnull [[TMP0]], i64 [[S:%.*]], <1024 x i1> [[TMP1]], i32 0, i32 5)
+// CHECK-NEXT:    store <1024 x i1> [[TMP2]], <1024 x i1>* [[W]], align 32, [[TBAA8]]
+// CHECK-NEXT:    ret void
+//
+void xloadbuff1024(__kvx_x1024 *w, long long s) {
+  *w = __builtin_kvx_xloadbuff1024(&w[3], s, *w, ".b");
+}
