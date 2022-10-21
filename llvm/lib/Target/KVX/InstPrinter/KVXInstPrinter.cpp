@@ -40,10 +40,15 @@ void KVXInstPrinter::printRegName(raw_ostream &O, unsigned RegNo) const {
   O << getRegisterName(RegNo);
 }
 
-void
-KVXInstPrinter::printOperand(const MCInst *MI, unsigned OpNo,
-                             /*const MCSubtargetInfo &STI,*/ raw_ostream &O,
-                             const char *Modifier) {
+void KVXInstPrinter::printBuffer(const MCInst *MI, unsigned OpNo,
+                                 raw_ostream &O, const char *Modifier) {
+  const MCOperand &MO = MI->getOperand(OpNo);
+  O << getRegisterName(MO.getReg(), KVX::BuffName);
+}
+
+void KVXInstPrinter::printOperand(
+    const MCInst *MI, unsigned OpNo,
+    /*const MCSubtargetInfo &STI,*/ raw_ostream &O, const char *Modifier) {
   if (!(Modifier == 0 || Modifier[0] == 0))
     report_fatal_error("No modifiers supported");
 

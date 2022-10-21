@@ -17,6 +17,9 @@
 let Namespace = "KVX" in {
 include "KVXSubRegisterInfo.td"
 
+def BuffName : RegAltNameIndex;
+def LoHiXYZT : RegAltNameIndex;
+
 // KVX Register base class:
 //   - KVXRegister
 //   - KVXRegisterWithSubRegs
@@ -74,12 +77,14 @@ class XVR<bits<9> num, string n, list<Register> subregs, list<string> alt = []>
 }
 
 // XWR - Extension Wide Registers
+let RegAltNameIndices = [LoHiXYZT, BuffName] in
 class XWR<bits<9> num, string n, list<Register> subregs, list<string> alt = []>
       : KVXRegisterWithSubRegs<num, n, subregs, alt> {
   let SubRegIndices = [sub_v0, sub_v1];
 }
 
 // XMR - Extension Matrix Registers
+let RegAltNameIndices = [BuffName] in
 class XMR<bits<9> num, string n, list<Register> subregs, list<string> alt = []>
       : KVXRegisterWithSubRegs<num, n, subregs, alt> {
   let SubRegIndices = [sub_w0, sub_w1];
@@ -1740,5 +1745,19 @@ def CoproReg3M4 : RegisterClass<"KVX",
 
 // X8R - Extension 8-Register Buffer
 let Size = 2048, CopyCost = 8 in
-def Buffer8Reg : RegisterClass<"KVX", [untyped],
+def Buffer8Reg : RegisterClass<"KVX", [v256i8],
   2048, (add I0, I1, I2, I3, I4, I5, I6, I7)>;
+
+let Size = 0 in
+def TcaBuffer : RegisterClass<
+      /*string namespace*/ "KVX",
+      /*list<ValueType> regTypes*/[v512i1, v1024i1, v256i8],
+      /*int alignment*/ 256,
+      /*dag regList*/ !con(Buffer8Reg.MemberList, MatrixReg.MemberList, WideReg.MemberList)
+      //, RegAltNameIndex idx = NoRegAltName
+      >;
+
+def BufferReg : RegisterOperand<TcaBuffer> {
+  let PrintMethod = "printBuffer";
+}
+

@@ -8,8 +8,6 @@
 //===----------------------------------------------------------------------===//
 
 // This file was automatically generated,
-//   *DO NOT EDIT*,
-//   please contact code owner.
 // Last generated: 2020-09-16 15:58:51.230374.
 
 
