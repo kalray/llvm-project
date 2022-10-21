@@ -11,10 +11,7 @@
 //  Declarations that describe the KVX register files
 //===----------------------------------------------------------------------===//
 
-// This file was automatically generated,
-//   *DO NOT EDIT*,
-//   please contact code owner.
-// Last generated: 2020-06-20 21:47:17.940594.
+// Last update: 2022-10-04 00:58:11.349922
 
 
 let Namespace = "KVX" in {
@@ -49,14 +46,14 @@ class GPR<bits<9> num, string n, list<string> alt = []>
       : KVXRegister<num, n, alt>;
 
 // PGR - Paired General Registers
-class PGR<bits<9> num, string n, list<Register> subregs>
-      : KVXRegisterWithSubRegs<num, n, subregs> {
+class PGR<bits<9> num, string n, list<Register> subregs, list<string> alt = []>
+      : KVXRegisterWithSubRegs<num, n, subregs, alt> {
   let SubRegIndices = [sub_s0, sub_s1];
 }
 
 // QGR - Quadruple General Registers
-class QGR<bits<9> num, string n, list<Register> subregs>
-      : KVXRegisterWithSubRegs<num, n, subregs> {
+class QGR<bits<9> num, string n, list<Register> subregs, list<string> alt = []>
+      : KVXRegisterWithSubRegs<num, n, subregs, alt> {
   let SubRegIndices = [sub_p0, sub_p1];
 }
 
@@ -71,21 +68,26 @@ class XBR<bits<9> num, string n, list<Register> subregs, list<string> alt = []>
 }
 
 // XVR - Extension Vector Registers
-class XVR<bits<9> num, string n, list<Register> subregs>
-      : KVXRegisterWithSubRegs<num, n, subregs> {
+class XVR<bits<9> num, string n, list<Register> subregs, list<string> alt = []>
+      : KVXRegisterWithSubRegs<num, n, subregs, alt> {
   let SubRegIndices = [sub_b0, sub_b1];
 }
 
 // XWR - Extension Wide Registers
-class XWR<bits<9> num, string n, list<Register> subregs>
-      : KVXRegisterWithSubRegs<num, n, subregs> {
+class XWR<bits<9> num, string n, list<Register> subregs, list<string> alt = []>
+      : KVXRegisterWithSubRegs<num, n, subregs, alt> {
   let SubRegIndices = [sub_v0, sub_v1];
 }
 
 // XMR - Extension Matrix Registers
-class XMR<bits<9> num, string n, list<Register> subregs>
-      : KVXRegisterWithSubRegs<num, n, subregs> {
+class XMR<bits<9> num, string n, list<Register> subregs, list<string> alt = []>
+      : KVXRegisterWithSubRegs<num, n, subregs, alt> {
   let SubRegIndices = [sub_w0, sub_w1];
+}
+
+class X8R<bits<9> num, string n, list<Register> subregs, list<string> alt = []>
+      : KVXRegisterWithSubRegs<num, n, subregs, alt> {
+  let SubRegIndices = [sub_m0, sub_m1];
 }
 
 // System Function Registers
@@ -604,105 +606,105 @@ def VSFR255 : SFR<511, "$vsfr255", ["$s511"]>;
 
 
 // General-Purpose Registers
-def R0  : GPR< 0,  "$r0">, DwarfRegNum<[ 0]>;
-def R1  : GPR< 1,  "$r1">, DwarfRegNum<[ 1]>;
-def R2  : GPR< 2,  "$r2">, DwarfRegNum<[ 2]>;
-def R3  : GPR< 3,  "$r3">, DwarfRegNum<[ 3]>;
-def R4  : GPR< 4,  "$r4">, DwarfRegNum<[ 4]>;
-def R5  : GPR< 5,  "$r5">, DwarfRegNum<[ 5]>;
-def R6  : GPR< 6,  "$r6">, DwarfRegNum<[ 6]>;
-def R7  : GPR< 7,  "$r7">, DwarfRegNum<[ 7]>;
-def R8  : GPR< 8,  "$r8">, DwarfRegNum<[ 8]>;
-def R9  : GPR< 9,  "$r9">, DwarfRegNum<[ 9]>;
-def R10 : GPR<10, "$r10">, DwarfRegNum<[10]>;
-def R11 : GPR<11, "$r11">, DwarfRegNum<[11]>;
-def R12 : GPR<12, "$r12", ["$sp"]>, DwarfRegNum<[12]>;
-def R13 : GPR<13, "$r13", ["$tp"]>, DwarfRegNum<[13]>;
-def R14 : GPR<14, "$r14", ["$fp"]>, DwarfRegNum<[14]>;
-def R15 : GPR<15, "$r15">, DwarfRegNum<[15]>;
-def R16 : GPR<16, "$r16">, DwarfRegNum<[16]>;
-def R17 : GPR<17, "$r17">, DwarfRegNum<[17]>;
-def R18 : GPR<18, "$r18">, DwarfRegNum<[18]>;
-def R19 : GPR<19, "$r19">, DwarfRegNum<[19]>;
-def R20 : GPR<20, "$r20">, DwarfRegNum<[20]>;
-def R21 : GPR<21, "$r21">, DwarfRegNum<[21]>;
-def R22 : GPR<22, "$r22">, DwarfRegNum<[22]>;
-def R23 : GPR<23, "$r23">, DwarfRegNum<[23]>;
-def R24 : GPR<24, "$r24">, DwarfRegNum<[24]>;
-def R25 : GPR<25, "$r25">, DwarfRegNum<[25]>;
-def R26 : GPR<26, "$r26">, DwarfRegNum<[26]>;
-def R27 : GPR<27, "$r27">, DwarfRegNum<[27]>;
-def R28 : GPR<28, "$r28">, DwarfRegNum<[28]>;
-def R29 : GPR<29, "$r29">, DwarfRegNum<[29]>;
-def R30 : GPR<30, "$r30">, DwarfRegNum<[30]>;
-def R31 : GPR<31, "$r31">, DwarfRegNum<[31]>;
-def R32 : GPR<32, "$r32">, DwarfRegNum<[32]>;
-def R33 : GPR<33, "$r33">, DwarfRegNum<[33]>;
-def R34 : GPR<34, "$r34">, DwarfRegNum<[34]>;
-def R35 : GPR<35, "$r35">, DwarfRegNum<[35]>;
-def R36 : GPR<36, "$r36">, DwarfRegNum<[36]>;
-def R37 : GPR<37, "$r37">, DwarfRegNum<[37]>;
-def R38 : GPR<38, "$r38">, DwarfRegNum<[38]>;
-def R39 : GPR<39, "$r39">, DwarfRegNum<[39]>;
-def R40 : GPR<40, "$r40">, DwarfRegNum<[40]>;
-def R41 : GPR<41, "$r41">, DwarfRegNum<[41]>;
-def R42 : GPR<42, "$r42">, DwarfRegNum<[42]>;
-def R43 : GPR<43, "$r43">, DwarfRegNum<[43]>;
-def R44 : GPR<44, "$r44">, DwarfRegNum<[44]>;
-def R45 : GPR<45, "$r45">, DwarfRegNum<[45]>;
-def R46 : GPR<46, "$r46">, DwarfRegNum<[46]>;
-def R47 : GPR<47, "$r47">, DwarfRegNum<[47]>;
-def R48 : GPR<48, "$r48">, DwarfRegNum<[48]>;
-def R49 : GPR<49, "$r49">, DwarfRegNum<[49]>;
-def R50 : GPR<50, "$r50">, DwarfRegNum<[50]>;
-def R51 : GPR<51, "$r51">, DwarfRegNum<[51]>;
-def R52 : GPR<52, "$r52">, DwarfRegNum<[52]>;
-def R53 : GPR<53, "$r53">, DwarfRegNum<[53]>;
-def R54 : GPR<54, "$r54">, DwarfRegNum<[54]>;
-def R55 : GPR<55, "$r55">, DwarfRegNum<[55]>;
-def R56 : GPR<56, "$r56">, DwarfRegNum<[56]>;
-def R57 : GPR<57, "$r57">, DwarfRegNum<[57]>;
-def R58 : GPR<58, "$r58">, DwarfRegNum<[58]>;
-def R59 : GPR<59, "$r59">, DwarfRegNum<[59]>;
-def R60 : GPR<60, "$r60">, DwarfRegNum<[60]>;
-def R61 : GPR<61, "$r61">, DwarfRegNum<[61]>;
-def R62 : GPR<62, "$r62">, DwarfRegNum<[62]>;
-def R63 : GPR<63, "$r63">, DwarfRegNum<[63]>;
+def R0  : GPR< 0,  "$r0",       ["$r0r1.lo", "$r0r1r2r3.x"]>, DwarfRegNum<[ 0]>;
+def R1  : GPR< 1,  "$r1",       ["$r0r1.hi", "$r0r1r2r3.y"]>, DwarfRegNum<[ 1]>;
+def R2  : GPR< 2,  "$r2",       ["$r2r3.lo", "$r0r1r2r3.z"]>, DwarfRegNum<[ 2]>;
+def R3  : GPR< 3,  "$r3",       ["$r2r3.hi", "$r0r1r2r3.t"]>, DwarfRegNum<[ 3]>;
+def R4  : GPR< 4,  "$r4",       ["$r4r5.lo", "$r4r5r6r7.x"]>, DwarfRegNum<[ 4]>;
+def R5  : GPR< 5,  "$r5",       ["$r4r5.hi", "$r4r5r6r7.y"]>, DwarfRegNum<[ 5]>;
+def R6  : GPR< 6,  "$r6",       ["$r6r7.lo", "$r4r5r6r7.z"]>, DwarfRegNum<[ 6]>;
+def R7  : GPR< 7,  "$r7",       ["$r6r7.hi", "$r4r5r6r7.t"]>, DwarfRegNum<[ 7]>;
+def R8  : GPR< 8,  "$r8",     ["$r8r9.lo", "$r8r9r10r11.x"]>, DwarfRegNum<[ 8]>;
+def R9  : GPR< 9,  "$r9",     ["$r8r9.hi", "$r8r9r10r11.y"]>, DwarfRegNum<[ 9]>;
+def R10 : GPR<10, "$r10",   ["$r10r11.lo", "$r8r9r10r11.z"]>, DwarfRegNum<[10]>;
+def R11 : GPR<11, "$r11",   ["$r10r11.hi", "$r8r9r10r11.t"]>, DwarfRegNum<[11]>;
+def R12 : GPR<12, "$r12",                           ["$sp"]>, DwarfRegNum<[12]>;
+def R13 : GPR<13, "$r13",                           ["$tp"]>, DwarfRegNum<[13]>;
+def R14 : GPR<14, "$r14",                           ["$fp"]>, DwarfRegNum<[14]>;
+def R15 : GPR<15, "$r15",                           ["$rp"]>, DwarfRegNum<[15]>;
+def R16 : GPR<16, "$r16", ["$r16r17r18r19.x", "$r16r17.lo"]>, DwarfRegNum<[16]>;
+def R17 : GPR<17, "$r17", ["$r16r17r18r19.y", "$r16r17.hi"]>, DwarfRegNum<[17]>;
+def R18 : GPR<18, "$r18", ["$r18r19.lo", "$r16r17r18r19.z"]>, DwarfRegNum<[18]>;
+def R19 : GPR<19, "$r19", ["$r18r19.hi", "$r16r17r18r19.t"]>, DwarfRegNum<[19]>;
+def R20 : GPR<20, "$r20", ["$r20r21.lo", "$r20r21r22r23.x"]>, DwarfRegNum<[20]>;
+def R21 : GPR<21, "$r21", ["$r20r21r22r23.y", "$r20r21.hi"]>, DwarfRegNum<[21]>;
+def R22 : GPR<22, "$r22", ["$r20r21r22r23.z", "$r22r23.lo"]>, DwarfRegNum<[22]>;
+def R23 : GPR<23, "$r23", ["$r20r21r22r23.t", "$r22r23.hi"]>, DwarfRegNum<[23]>;
+def R24 : GPR<24, "$r24", ["$r24r25.lo", "$r24r25r26r27.x"]>, DwarfRegNum<[24]>;
+def R25 : GPR<25, "$r25", ["$r24r25r26r27.y", "$r24r25.hi"]>, DwarfRegNum<[25]>;
+def R26 : GPR<26, "$r26", ["$r24r25r26r27.z", "$r26r27.lo"]>, DwarfRegNum<[26]>;
+def R27 : GPR<27, "$r27", ["$r24r25r26r27.t", "$r26r27.hi"]>, DwarfRegNum<[27]>;
+def R28 : GPR<28, "$r28", ["$r28r29.lo", "$r28r29r30r31.x"]>, DwarfRegNum<[28]>;
+def R29 : GPR<29, "$r29", ["$r28r29.hi", "$r28r29r30r31.y"]>, DwarfRegNum<[29]>;
+def R30 : GPR<30, "$r30", ["$r30r31.lo", "$r28r29r30r31.z"]>, DwarfRegNum<[30]>;
+def R31 : GPR<31, "$r31", ["$r30r31.hi", "$r28r29r30r31.t"]>, DwarfRegNum<[31]>;
+def R32 : GPR<32, "$r32", ["$r32r33.lo", "$r32r33r34r35.x"]>, DwarfRegNum<[32]>;
+def R33 : GPR<33, "$r33", ["$r32r33.hi", "$r32r33r34r35.y"]>, DwarfRegNum<[33]>;
+def R34 : GPR<34, "$r34", ["$r34r35.lo", "$r32r33r34r35.z"]>, DwarfRegNum<[34]>;
+def R35 : GPR<35, "$r35", ["$r34r35.hi", "$r32r33r34r35.t"]>, DwarfRegNum<[35]>;
+def R36 : GPR<36, "$r36", ["$r36r37r38r39.x", "$r36r37.lo"]>, DwarfRegNum<[36]>;
+def R37 : GPR<37, "$r37", ["$r36r37r38r39.y", "$r36r37.hi"]>, DwarfRegNum<[37]>;
+def R38 : GPR<38, "$r38", ["$r38r39.lo", "$r36r37r38r39.z"]>, DwarfRegNum<[38]>;
+def R39 : GPR<39, "$r39", ["$r38r39.hi", "$r36r37r38r39.t"]>, DwarfRegNum<[39]>;
+def R40 : GPR<40, "$r40", ["$r40r41.lo", "$r40r41r42r43.x"]>, DwarfRegNum<[40]>;
+def R41 : GPR<41, "$r41", ["$r40r41r42r43.y", "$r40r41.hi"]>, DwarfRegNum<[41]>;
+def R42 : GPR<42, "$r42", ["$r42r43.lo", "$r40r41r42r43.z"]>, DwarfRegNum<[42]>;
+def R43 : GPR<43, "$r43", ["$r40r41r42r43.t", "$r42r43.hi"]>, DwarfRegNum<[43]>;
+def R44 : GPR<44, "$r44", ["$r44r45.lo", "$r44r45r46r47.x"]>, DwarfRegNum<[44]>;
+def R45 : GPR<45, "$r45", ["$r44r45r46r47.y", "$r44r45.hi"]>, DwarfRegNum<[45]>;
+def R46 : GPR<46, "$r46", ["$r46r47.lo", "$r44r45r46r47.z"]>, DwarfRegNum<[46]>;
+def R47 : GPR<47, "$r47", ["$r46r47.hi", "$r44r45r46r47.t"]>, DwarfRegNum<[47]>;
+def R48 : GPR<48, "$r48", ["$r48r49.lo", "$r48r49r50r51.x"]>, DwarfRegNum<[48]>;
+def R49 : GPR<49, "$r49", ["$r48r49r50r51.y", "$r48r49.hi"]>, DwarfRegNum<[49]>;
+def R50 : GPR<50, "$r50", ["$r50r51.lo", "$r48r49r50r51.z"]>, DwarfRegNum<[50]>;
+def R51 : GPR<51, "$r51", ["$r50r51.hi", "$r48r49r50r51.t"]>, DwarfRegNum<[51]>;
+def R52 : GPR<52, "$r52", ["$r52r53r54r55.x", "$r52r53.lo"]>, DwarfRegNum<[52]>;
+def R53 : GPR<53, "$r53", ["$r52r53r54r55.y", "$r52r53.hi"]>, DwarfRegNum<[53]>;
+def R54 : GPR<54, "$r54", ["$r54r55.lo", "$r52r53r54r55.z"]>, DwarfRegNum<[54]>;
+def R55 : GPR<55, "$r55", ["$r54r55.hi", "$r52r53r54r55.t"]>, DwarfRegNum<[55]>;
+def R56 : GPR<56, "$r56", ["$r56r57r58r59.x", "$r56r57.lo"]>, DwarfRegNum<[56]>;
+def R57 : GPR<57, "$r57", ["$r56r57r58r59.y", "$r56r57.hi"]>, DwarfRegNum<[57]>;
+def R58 : GPR<58, "$r58", ["$r58r59.lo", "$r56r57r58r59.z"]>, DwarfRegNum<[58]>;
+def R59 : GPR<59, "$r59", ["$r58r59.hi", "$r56r57r58r59.t"]>, DwarfRegNum<[59]>;
+def R60 : GPR<60, "$r60", ["$r60r61.lo", "$r60r61r62r63.x"]>, DwarfRegNum<[60]>;
+def R61 : GPR<61, "$r61", ["$r60r61r62r63.y", "$r60r61.hi"]>, DwarfRegNum<[61]>;
+def R62 : GPR<62, "$r62", ["$r60r61r62r63.z", "$r62r63.lo"]>, DwarfRegNum<[62]>;
+def R63 : GPR<63, "$r63", ["$r60r61r62r63.t", "$r62r63.hi"]>, DwarfRegNum<[63]>;
 
 
 // Paired General Registers
-def P0  : PGR< 0,   "$r0r1", [ R0,  R1]>;
-def P2  : PGR< 2,   "$r2r3", [ R2,  R3]>;
-def P4  : PGR< 4,   "$r4r5", [ R4,  R5]>;
-def P6  : PGR< 6,   "$r6r7", [ R6,  R7]>;
-def P8  : PGR< 8,   "$r8r9", [ R8,  R9]>;
-def P10 : PGR<10, "$r10r11", [R10, R11]>;
-def P12 : PGR<12, "$r12r13", [R12, R13]>;
-def P14 : PGR<14, "$r14r15", [R14, R15]>;
-def P16 : PGR<16, "$r16r17", [R16, R17]>;
-def P18 : PGR<18, "$r18r19", [R18, R19]>;
-def P20 : PGR<20, "$r20r21", [R20, R21]>;
-def P22 : PGR<22, "$r22r23", [R22, R23]>;
-def P24 : PGR<24, "$r24r25", [R24, R25]>;
-def P26 : PGR<26, "$r26r27", [R26, R27]>;
-def P28 : PGR<28, "$r28r29", [R28, R29]>;
-def P30 : PGR<30, "$r30r31", [R30, R31]>;
-def P32 : PGR<32, "$r32r33", [R32, R33]>;
-def P34 : PGR<34, "$r34r35", [R34, R35]>;
-def P36 : PGR<36, "$r36r37", [R36, R37]>;
-def P38 : PGR<38, "$r38r39", [R38, R39]>;
-def P40 : PGR<40, "$r40r41", [R40, R41]>;
-def P42 : PGR<42, "$r42r43", [R42, R43]>;
-def P44 : PGR<44, "$r44r45", [R44, R45]>;
-def P46 : PGR<46, "$r46r47", [R46, R47]>;
-def P48 : PGR<48, "$r48r49", [R48, R49]>;
-def P50 : PGR<50, "$r50r51", [R50, R51]>;
-def P52 : PGR<52, "$r52r53", [R52, R53]>;
-def P54 : PGR<54, "$r54r55", [R54, R55]>;
-def P56 : PGR<56, "$r56r57", [R56, R57]>;
-def P58 : PGR<58, "$r58r59", [R58, R59]>;
-def P60 : PGR<60, "$r60r61", [R60, R61]>;
-def P62 : PGR<62, "$r62r63", [R62, R63]>;
+def P0  : PGR< 0,   "$r0r1", [ R0,  R1],     ["$r0r1r2r3.lo"]>;
+def P2  : PGR< 2,   "$r2r3", [ R2,  R3],     ["$r0r1r2r3.hi"]>;
+def P4  : PGR< 4,   "$r4r5", [ R4,  R5],     ["$r4r5r6r7.lo"]>;
+def P6  : PGR< 6,   "$r6r7", [ R6,  R7],     ["$r4r5r6r7.hi"]>;
+def P8  : PGR< 8,   "$r8r9", [ R8,  R9],   ["$r8r9r10r11.lo"]>;
+def P10 : PGR<10, "$r10r11", [R10, R11],   ["$r8r9r10r11.hi"]>;
+def P12 : PGR<12, "$r12r13", [R12, R13], ["$r12r13r14r15.lo"]>;
+def P14 : PGR<14, "$r14r15", [R14, R15], ["$r12r13r14r15.hi"]>;
+def P16 : PGR<16, "$r16r17", [R16, R17], ["$r16r17r18r19.lo"]>;
+def P18 : PGR<18, "$r18r19", [R18, R19], ["$r16r17r18r19.hi"]>;
+def P20 : PGR<20, "$r20r21", [R20, R21], ["$r20r21r22r23.lo"]>;
+def P22 : PGR<22, "$r22r23", [R22, R23], ["$r20r21r22r23.hi"]>;
+def P24 : PGR<24, "$r24r25", [R24, R25], ["$r24r25r26r27.lo"]>;
+def P26 : PGR<26, "$r26r27", [R26, R27], ["$r24r25r26r27.hi"]>;
+def P28 : PGR<28, "$r28r29", [R28, R29], ["$r28r29r30r31.lo"]>;
+def P30 : PGR<30, "$r30r31", [R30, R31], ["$r28r29r30r31.hi"]>;
+def P32 : PGR<32, "$r32r33", [R32, R33], ["$r32r33r34r35.lo"]>;
+def P34 : PGR<34, "$r34r35", [R34, R35], ["$r32r33r34r35.hi"]>;
+def P36 : PGR<36, "$r36r37", [R36, R37], ["$r36r37r38r39.lo"]>;
+def P38 : PGR<38, "$r38r39", [R38, R39], ["$r36r37r38r39.hi"]>;
+def P40 : PGR<40, "$r40r41", [R40, R41], ["$r40r41r42r43.lo"]>;
+def P42 : PGR<42, "$r42r43", [R42, R43], ["$r40r41r42r43.hi"]>;
+def P44 : PGR<44, "$r44r45", [R44, R45], ["$r44r45r46r47.lo"]>;
+def P46 : PGR<46, "$r46r47", [R46, R47], ["$r44r45r46r47.hi"]>;
+def P48 : PGR<48, "$r48r49", [R48, R49], ["$r48r49r50r51.lo"]>;
+def P50 : PGR<50, "$r50r51", [R50, R51], ["$r48r49r50r51.hi"]>;
+def P52 : PGR<52, "$r52r53", [R52, R53], ["$r52r53r54r55.lo"]>;
+def P54 : PGR<54, "$r54r55", [R54, R55], ["$r52r53r54r55.hi"]>;
+def P56 : PGR<56, "$r56r57", [R56, R57], ["$r56r57r58r59.lo"]>;
+def P58 : PGR<58, "$r58r59", [R58, R59], ["$r56r57r58r59.hi"]>;
+def P60 : PGR<60, "$r60r61", [R60, R61], ["$r60r61r62r63.lo"]>;
+def P62 : PGR<62, "$r62r63", [R62, R63], ["$r60r61r62r63.hi"]>;
 
 
 // Quadruple General Registers
@@ -725,423 +727,522 @@ def Q60 : QGR<60, "$r60r61r62r63", [P60, P62]>;
 
 
 // Extension Coprocessor Registers
-def C0   : XCR<  0,  "$a0_x",  ["$a0.x"]>, DwarfRegNum<[256]>;
-def C1   : XCR<  1,  "$a0_y",  ["$a0.y"]>, DwarfRegNum<[257]>;
-def C2   : XCR<  2,  "$a0_z",  ["$a0.z"]>, DwarfRegNum<[258]>;
-def C3   : XCR<  3,  "$a0_t",  ["$a0.t"]>, DwarfRegNum<[259]>;
-def C4   : XCR<  4,  "$a1_x",  ["$a1.x"]>, DwarfRegNum<[260]>;
-def C5   : XCR<  5,  "$a1_y",  ["$a1.y"]>, DwarfRegNum<[261]>;
-def C6   : XCR<  6,  "$a1_z",  ["$a1.z"]>, DwarfRegNum<[262]>;
-def C7   : XCR<  7,  "$a1_t",  ["$a1.t"]>, DwarfRegNum<[263]>;
-def C8   : XCR<  8,  "$a2_x",  ["$a2.x"]>, DwarfRegNum<[264]>;
-def C9   : XCR<  9,  "$a2_y",  ["$a2.y"]>, DwarfRegNum<[265]>;
-def C10  : XCR< 10,  "$a2_z",  ["$a2.z"]>, DwarfRegNum<[266]>;
-def C11  : XCR< 11,  "$a2_t",  ["$a2.t"]>, DwarfRegNum<[267]>;
-def C12  : XCR< 12,  "$a3_x",  ["$a3.x"]>, DwarfRegNum<[268]>;
-def C13  : XCR< 13,  "$a3_y",  ["$a3.y"]>, DwarfRegNum<[269]>;
-def C14  : XCR< 14,  "$a3_z",  ["$a3.z"]>, DwarfRegNum<[270]>;
-def C15  : XCR< 15,  "$a3_t",  ["$a3.t"]>, DwarfRegNum<[271]>;
-def C16  : XCR< 16,  "$a4_x",  ["$a4.x"]>, DwarfRegNum<[272]>;
-def C17  : XCR< 17,  "$a4_y",  ["$a4.y"]>, DwarfRegNum<[273]>;
-def C18  : XCR< 18,  "$a4_z",  ["$a4.z"]>, DwarfRegNum<[274]>;
-def C19  : XCR< 19,  "$a4_t",  ["$a4.t"]>, DwarfRegNum<[275]>;
-def C20  : XCR< 20,  "$a5_x",  ["$a5.x"]>, DwarfRegNum<[276]>;
-def C21  : XCR< 21,  "$a5_y",  ["$a5.y"]>, DwarfRegNum<[277]>;
-def C22  : XCR< 22,  "$a5_z",  ["$a5.z"]>, DwarfRegNum<[278]>;
-def C23  : XCR< 23,  "$a5_t",  ["$a5.t"]>, DwarfRegNum<[279]>;
-def C24  : XCR< 24,  "$a6_x",  ["$a6.x"]>, DwarfRegNum<[280]>;
-def C25  : XCR< 25,  "$a6_y",  ["$a6.y"]>, DwarfRegNum<[281]>;
-def C26  : XCR< 26,  "$a6_z",  ["$a6.z"]>, DwarfRegNum<[282]>;
-def C27  : XCR< 27,  "$a6_t",  ["$a6.t"]>, DwarfRegNum<[283]>;
-def C28  : XCR< 28,  "$a7_x",  ["$a7.x"]>, DwarfRegNum<[284]>;
-def C29  : XCR< 29,  "$a7_y",  ["$a7.y"]>, DwarfRegNum<[285]>;
-def C30  : XCR< 30,  "$a7_z",  ["$a7.z"]>, DwarfRegNum<[286]>;
-def C31  : XCR< 31,  "$a7_t",  ["$a7.t"]>, DwarfRegNum<[287]>;
-def C32  : XCR< 32,  "$a8_x",  ["$a8.x"]>, DwarfRegNum<[288]>;
-def C33  : XCR< 33,  "$a8_y",  ["$a8.y"]>, DwarfRegNum<[289]>;
-def C34  : XCR< 34,  "$a8_z",  ["$a8.z"]>, DwarfRegNum<[290]>;
-def C35  : XCR< 35,  "$a8_t",  ["$a8.t"]>, DwarfRegNum<[291]>;
-def C36  : XCR< 36,  "$a9_x",  ["$a9.x"]>, DwarfRegNum<[292]>;
-def C37  : XCR< 37,  "$a9_y",  ["$a9.y"]>, DwarfRegNum<[293]>;
-def C38  : XCR< 38,  "$a9_z",  ["$a9.z"]>, DwarfRegNum<[294]>;
-def C39  : XCR< 39,  "$a9_t",  ["$a9.t"]>, DwarfRegNum<[295]>;
-def C40  : XCR< 40, "$a10_x", ["$a10.x"]>, DwarfRegNum<[296]>;
-def C41  : XCR< 41, "$a10_y", ["$a10.y"]>, DwarfRegNum<[297]>;
-def C42  : XCR< 42, "$a10_z", ["$a10.z"]>, DwarfRegNum<[298]>;
-def C43  : XCR< 43, "$a10_t", ["$a10.t"]>, DwarfRegNum<[299]>;
-def C44  : XCR< 44, "$a11_x", ["$a11.x"]>, DwarfRegNum<[300]>;
-def C45  : XCR< 45, "$a11_y", ["$a11.y"]>, DwarfRegNum<[301]>;
-def C46  : XCR< 46, "$a11_z", ["$a11.z"]>, DwarfRegNum<[302]>;
-def C47  : XCR< 47, "$a11_t", ["$a11.t"]>, DwarfRegNum<[303]>;
-def C48  : XCR< 48, "$a12_x", ["$a12.x"]>, DwarfRegNum<[304]>;
-def C49  : XCR< 49, "$a12_y", ["$a12.y"]>, DwarfRegNum<[305]>;
-def C50  : XCR< 50, "$a12_z", ["$a12.z"]>, DwarfRegNum<[306]>;
-def C51  : XCR< 51, "$a12_t", ["$a12.t"]>, DwarfRegNum<[307]>;
-def C52  : XCR< 52, "$a13_x", ["$a13.x"]>, DwarfRegNum<[308]>;
-def C53  : XCR< 53, "$a13_y", ["$a13.y"]>, DwarfRegNum<[309]>;
-def C54  : XCR< 54, "$a13_z", ["$a13.z"]>, DwarfRegNum<[310]>;
-def C55  : XCR< 55, "$a13_t", ["$a13.t"]>, DwarfRegNum<[311]>;
-def C56  : XCR< 56, "$a14_x", ["$a14.x"]>, DwarfRegNum<[312]>;
-def C57  : XCR< 57, "$a14_y", ["$a14.y"]>, DwarfRegNum<[313]>;
-def C58  : XCR< 58, "$a14_z", ["$a14.z"]>, DwarfRegNum<[314]>;
-def C59  : XCR< 59, "$a14_t", ["$a14.t"]>, DwarfRegNum<[315]>;
-def C60  : XCR< 60, "$a15_x", ["$a15.x"]>, DwarfRegNum<[316]>;
-def C61  : XCR< 61, "$a15_y", ["$a15.y"]>, DwarfRegNum<[317]>;
-def C62  : XCR< 62, "$a15_z", ["$a15.z"]>, DwarfRegNum<[318]>;
-def C63  : XCR< 63, "$a15_t", ["$a15.t"]>, DwarfRegNum<[319]>;
-def C64  : XCR< 64, "$a16_x", ["$a16.x"]>, DwarfRegNum<[320]>;
-def C65  : XCR< 65, "$a16_y", ["$a16.y"]>, DwarfRegNum<[321]>;
-def C66  : XCR< 66, "$a16_z", ["$a16.z"]>, DwarfRegNum<[322]>;
-def C67  : XCR< 67, "$a16_t", ["$a16.t"]>, DwarfRegNum<[323]>;
-def C68  : XCR< 68, "$a17_x", ["$a17.x"]>, DwarfRegNum<[324]>;
-def C69  : XCR< 69, "$a17_y", ["$a17.y"]>, DwarfRegNum<[325]>;
-def C70  : XCR< 70, "$a17_z", ["$a17.z"]>, DwarfRegNum<[326]>;
-def C71  : XCR< 71, "$a17_t", ["$a17.t"]>, DwarfRegNum<[327]>;
-def C72  : XCR< 72, "$a18_x", ["$a18.x"]>, DwarfRegNum<[328]>;
-def C73  : XCR< 73, "$a18_y", ["$a18.y"]>, DwarfRegNum<[329]>;
-def C74  : XCR< 74, "$a18_z", ["$a18.z"]>, DwarfRegNum<[330]>;
-def C75  : XCR< 75, "$a18_t", ["$a18.t"]>, DwarfRegNum<[331]>;
-def C76  : XCR< 76, "$a19_x", ["$a19.x"]>, DwarfRegNum<[332]>;
-def C77  : XCR< 77, "$a19_y", ["$a19.y"]>, DwarfRegNum<[333]>;
-def C78  : XCR< 78, "$a19_z", ["$a19.z"]>, DwarfRegNum<[334]>;
-def C79  : XCR< 79, "$a19_t", ["$a19.t"]>, DwarfRegNum<[335]>;
-def C80  : XCR< 80, "$a20_x", ["$a20.x"]>, DwarfRegNum<[336]>;
-def C81  : XCR< 81, "$a20_y", ["$a20.y"]>, DwarfRegNum<[337]>;
-def C82  : XCR< 82, "$a20_z", ["$a20.z"]>, DwarfRegNum<[338]>;
-def C83  : XCR< 83, "$a20_t", ["$a20.t"]>, DwarfRegNum<[339]>;
-def C84  : XCR< 84, "$a21_x", ["$a21.x"]>, DwarfRegNum<[340]>;
-def C85  : XCR< 85, "$a21_y", ["$a21.y"]>, DwarfRegNum<[341]>;
-def C86  : XCR< 86, "$a21_z", ["$a21.z"]>, DwarfRegNum<[342]>;
-def C87  : XCR< 87, "$a21_t", ["$a21.t"]>, DwarfRegNum<[343]>;
-def C88  : XCR< 88, "$a22_x", ["$a22.x"]>, DwarfRegNum<[344]>;
-def C89  : XCR< 89, "$a22_y", ["$a22.y"]>, DwarfRegNum<[345]>;
-def C90  : XCR< 90, "$a22_z", ["$a22.z"]>, DwarfRegNum<[346]>;
-def C91  : XCR< 91, "$a22_t", ["$a22.t"]>, DwarfRegNum<[347]>;
-def C92  : XCR< 92, "$a23_x", ["$a23.x"]>, DwarfRegNum<[348]>;
-def C93  : XCR< 93, "$a23_y", ["$a23.y"]>, DwarfRegNum<[349]>;
-def C94  : XCR< 94, "$a23_z", ["$a23.z"]>, DwarfRegNum<[350]>;
-def C95  : XCR< 95, "$a23_t", ["$a23.t"]>, DwarfRegNum<[351]>;
-def C96  : XCR< 96, "$a24_x", ["$a24.x"]>, DwarfRegNum<[352]>;
-def C97  : XCR< 97, "$a24_y", ["$a24.y"]>, DwarfRegNum<[353]>;
-def C98  : XCR< 98, "$a24_z", ["$a24.z"]>, DwarfRegNum<[354]>;
-def C99  : XCR< 99, "$a24_t", ["$a24.t"]>, DwarfRegNum<[355]>;
-def C100 : XCR<100, "$a25_x", ["$a25.x"]>, DwarfRegNum<[356]>;
-def C101 : XCR<101, "$a25_y", ["$a25.y"]>, DwarfRegNum<[357]>;
-def C102 : XCR<102, "$a25_z", ["$a25.z"]>, DwarfRegNum<[358]>;
-def C103 : XCR<103, "$a25_t", ["$a25.t"]>, DwarfRegNum<[359]>;
-def C104 : XCR<104, "$a26_x", ["$a26.x"]>, DwarfRegNum<[360]>;
-def C105 : XCR<105, "$a26_y", ["$a26.y"]>, DwarfRegNum<[361]>;
-def C106 : XCR<106, "$a26_z", ["$a26.z"]>, DwarfRegNum<[362]>;
-def C107 : XCR<107, "$a26_t", ["$a26.t"]>, DwarfRegNum<[363]>;
-def C108 : XCR<108, "$a27_x", ["$a27.x"]>, DwarfRegNum<[364]>;
-def C109 : XCR<109, "$a27_y", ["$a27.y"]>, DwarfRegNum<[365]>;
-def C110 : XCR<110, "$a27_z", ["$a27.z"]>, DwarfRegNum<[366]>;
-def C111 : XCR<111, "$a27_t", ["$a27.t"]>, DwarfRegNum<[367]>;
-def C112 : XCR<112, "$a28_x", ["$a28.x"]>, DwarfRegNum<[368]>;
-def C113 : XCR<113, "$a28_y", ["$a28.y"]>, DwarfRegNum<[369]>;
-def C114 : XCR<114, "$a28_z", ["$a28.z"]>, DwarfRegNum<[370]>;
-def C115 : XCR<115, "$a28_t", ["$a28.t"]>, DwarfRegNum<[371]>;
-def C116 : XCR<116, "$a29_x", ["$a29.x"]>, DwarfRegNum<[372]>;
-def C117 : XCR<117, "$a29_y", ["$a29.y"]>, DwarfRegNum<[373]>;
-def C118 : XCR<118, "$a29_z", ["$a29.z"]>, DwarfRegNum<[374]>;
-def C119 : XCR<119, "$a29_t", ["$a29.t"]>, DwarfRegNum<[375]>;
-def C120 : XCR<120, "$a30_x", ["$a30.x"]>, DwarfRegNum<[376]>;
-def C121 : XCR<121, "$a30_y", ["$a30.y"]>, DwarfRegNum<[377]>;
-def C122 : XCR<122, "$a30_z", ["$a30.z"]>, DwarfRegNum<[378]>;
-def C123 : XCR<123, "$a30_t", ["$a30.t"]>, DwarfRegNum<[379]>;
-def C124 : XCR<124, "$a31_x", ["$a31.x"]>, DwarfRegNum<[380]>;
-def C125 : XCR<125, "$a31_y", ["$a31.y"]>, DwarfRegNum<[381]>;
-def C126 : XCR<126, "$a31_z", ["$a31.z"]>, DwarfRegNum<[382]>;
-def C127 : XCR<127, "$a31_t", ["$a31.t"]>, DwarfRegNum<[383]>;
-def C128 : XCR<128, "$a32_x", ["$a32.x"]>, DwarfRegNum<[384]>;
-def C129 : XCR<129, "$a32_y", ["$a32.y"]>, DwarfRegNum<[385]>;
-def C130 : XCR<130, "$a32_z", ["$a32.z"]>, DwarfRegNum<[386]>;
-def C131 : XCR<131, "$a32_t", ["$a32.t"]>, DwarfRegNum<[387]>;
-def C132 : XCR<132, "$a33_x", ["$a33.x"]>, DwarfRegNum<[388]>;
-def C133 : XCR<133, "$a33_y", ["$a33.y"]>, DwarfRegNum<[389]>;
-def C134 : XCR<134, "$a33_z", ["$a33.z"]>, DwarfRegNum<[390]>;
-def C135 : XCR<135, "$a33_t", ["$a33.t"]>, DwarfRegNum<[391]>;
-def C136 : XCR<136, "$a34_x", ["$a34.x"]>, DwarfRegNum<[392]>;
-def C137 : XCR<137, "$a34_y", ["$a34.y"]>, DwarfRegNum<[393]>;
-def C138 : XCR<138, "$a34_z", ["$a34.z"]>, DwarfRegNum<[394]>;
-def C139 : XCR<139, "$a34_t", ["$a34.t"]>, DwarfRegNum<[395]>;
-def C140 : XCR<140, "$a35_x", ["$a35.x"]>, DwarfRegNum<[396]>;
-def C141 : XCR<141, "$a35_y", ["$a35.y"]>, DwarfRegNum<[397]>;
-def C142 : XCR<142, "$a35_z", ["$a35.z"]>, DwarfRegNum<[398]>;
-def C143 : XCR<143, "$a35_t", ["$a35.t"]>, DwarfRegNum<[399]>;
-def C144 : XCR<144, "$a36_x", ["$a36.x"]>, DwarfRegNum<[400]>;
-def C145 : XCR<145, "$a36_y", ["$a36.y"]>, DwarfRegNum<[401]>;
-def C146 : XCR<146, "$a36_z", ["$a36.z"]>, DwarfRegNum<[402]>;
-def C147 : XCR<147, "$a36_t", ["$a36.t"]>, DwarfRegNum<[403]>;
-def C148 : XCR<148, "$a37_x", ["$a37.x"]>, DwarfRegNum<[404]>;
-def C149 : XCR<149, "$a37_y", ["$a37.y"]>, DwarfRegNum<[405]>;
-def C150 : XCR<150, "$a37_z", ["$a37.z"]>, DwarfRegNum<[406]>;
-def C151 : XCR<151, "$a37_t", ["$a37.t"]>, DwarfRegNum<[407]>;
-def C152 : XCR<152, "$a38_x", ["$a38.x"]>, DwarfRegNum<[408]>;
-def C153 : XCR<153, "$a38_y", ["$a38.y"]>, DwarfRegNum<[409]>;
-def C154 : XCR<154, "$a38_z", ["$a38.z"]>, DwarfRegNum<[410]>;
-def C155 : XCR<155, "$a38_t", ["$a38.t"]>, DwarfRegNum<[411]>;
-def C156 : XCR<156, "$a39_x", ["$a39.x"]>, DwarfRegNum<[412]>;
-def C157 : XCR<157, "$a39_y", ["$a39.y"]>, DwarfRegNum<[413]>;
-def C158 : XCR<158, "$a39_z", ["$a39.z"]>, DwarfRegNum<[414]>;
-def C159 : XCR<159, "$a39_t", ["$a39.t"]>, DwarfRegNum<[415]>;
-def C160 : XCR<160, "$a40_x", ["$a40.x"]>, DwarfRegNum<[416]>;
-def C161 : XCR<161, "$a40_y", ["$a40.y"]>, DwarfRegNum<[417]>;
-def C162 : XCR<162, "$a40_z", ["$a40.z"]>, DwarfRegNum<[418]>;
-def C163 : XCR<163, "$a40_t", ["$a40.t"]>, DwarfRegNum<[419]>;
-def C164 : XCR<164, "$a41_x", ["$a41.x"]>, DwarfRegNum<[420]>;
-def C165 : XCR<165, "$a41_y", ["$a41.y"]>, DwarfRegNum<[421]>;
-def C166 : XCR<166, "$a41_z", ["$a41.z"]>, DwarfRegNum<[422]>;
-def C167 : XCR<167, "$a41_t", ["$a41.t"]>, DwarfRegNum<[423]>;
-def C168 : XCR<168, "$a42_x", ["$a42.x"]>, DwarfRegNum<[424]>;
-def C169 : XCR<169, "$a42_y", ["$a42.y"]>, DwarfRegNum<[425]>;
-def C170 : XCR<170, "$a42_z", ["$a42.z"]>, DwarfRegNum<[426]>;
-def C171 : XCR<171, "$a42_t", ["$a42.t"]>, DwarfRegNum<[427]>;
-def C172 : XCR<172, "$a43_x", ["$a43.x"]>, DwarfRegNum<[428]>;
-def C173 : XCR<173, "$a43_y", ["$a43.y"]>, DwarfRegNum<[429]>;
-def C174 : XCR<174, "$a43_z", ["$a43.z"]>, DwarfRegNum<[430]>;
-def C175 : XCR<175, "$a43_t", ["$a43.t"]>, DwarfRegNum<[431]>;
-def C176 : XCR<176, "$a44_x", ["$a44.x"]>, DwarfRegNum<[432]>;
-def C177 : XCR<177, "$a44_y", ["$a44.y"]>, DwarfRegNum<[433]>;
-def C178 : XCR<178, "$a44_z", ["$a44.z"]>, DwarfRegNum<[434]>;
-def C179 : XCR<179, "$a44_t", ["$a44.t"]>, DwarfRegNum<[435]>;
-def C180 : XCR<180, "$a45_x", ["$a45.x"]>, DwarfRegNum<[436]>;
-def C181 : XCR<181, "$a45_y", ["$a45.y"]>, DwarfRegNum<[437]>;
-def C182 : XCR<182, "$a45_z", ["$a45.z"]>, DwarfRegNum<[438]>;
-def C183 : XCR<183, "$a45_t", ["$a45.t"]>, DwarfRegNum<[439]>;
-def C184 : XCR<184, "$a46_x", ["$a46.x"]>, DwarfRegNum<[440]>;
-def C185 : XCR<185, "$a46_y", ["$a46.y"]>, DwarfRegNum<[441]>;
-def C186 : XCR<186, "$a46_z", ["$a46.z"]>, DwarfRegNum<[442]>;
-def C187 : XCR<187, "$a46_t", ["$a46.t"]>, DwarfRegNum<[443]>;
-def C188 : XCR<188, "$a47_x", ["$a47.x"]>, DwarfRegNum<[444]>;
-def C189 : XCR<189, "$a47_y", ["$a47.y"]>, DwarfRegNum<[445]>;
-def C190 : XCR<190, "$a47_z", ["$a47.z"]>, DwarfRegNum<[446]>;
-def C191 : XCR<191, "$a47_t", ["$a47.t"]>, DwarfRegNum<[447]>;
-def C192 : XCR<192, "$a48_x", ["$a48.x"]>, DwarfRegNum<[448]>;
-def C193 : XCR<193, "$a48_y", ["$a48.y"]>, DwarfRegNum<[449]>;
-def C194 : XCR<194, "$a48_z", ["$a48.z"]>, DwarfRegNum<[450]>;
-def C195 : XCR<195, "$a48_t", ["$a48.t"]>, DwarfRegNum<[451]>;
-def C196 : XCR<196, "$a49_x", ["$a49.x"]>, DwarfRegNum<[452]>;
-def C197 : XCR<197, "$a49_y", ["$a49.y"]>, DwarfRegNum<[453]>;
-def C198 : XCR<198, "$a49_z", ["$a49.z"]>, DwarfRegNum<[454]>;
-def C199 : XCR<199, "$a49_t", ["$a49.t"]>, DwarfRegNum<[455]>;
-def C200 : XCR<200, "$a50_x", ["$a50.x"]>, DwarfRegNum<[456]>;
-def C201 : XCR<201, "$a50_y", ["$a50.y"]>, DwarfRegNum<[457]>;
-def C202 : XCR<202, "$a50_z", ["$a50.z"]>, DwarfRegNum<[458]>;
-def C203 : XCR<203, "$a50_t", ["$a50.t"]>, DwarfRegNum<[459]>;
-def C204 : XCR<204, "$a51_x", ["$a51.x"]>, DwarfRegNum<[460]>;
-def C205 : XCR<205, "$a51_y", ["$a51.y"]>, DwarfRegNum<[461]>;
-def C206 : XCR<206, "$a51_z", ["$a51.z"]>, DwarfRegNum<[462]>;
-def C207 : XCR<207, "$a51_t", ["$a51.t"]>, DwarfRegNum<[463]>;
+def C0   : XCR<  0,  "$a0.x",  ["$a0_x"]>, DwarfRegNum<[256]>;
+def C1   : XCR<  1,  "$a0.y",  ["$a0_y"]>, DwarfRegNum<[257]>;
+def C2   : XCR<  2,  "$a0.z",  ["$a0_z"]>, DwarfRegNum<[258]>;
+def C3   : XCR<  3,  "$a0.t",  ["$a0_t"]>, DwarfRegNum<[259]>;
+def C4   : XCR<  4,  "$a1.x",  ["$a1_x"]>, DwarfRegNum<[260]>;
+def C5   : XCR<  5,  "$a1.y",  ["$a1_y"]>, DwarfRegNum<[261]>;
+def C6   : XCR<  6,  "$a1.z",  ["$a1_z"]>, DwarfRegNum<[262]>;
+def C7   : XCR<  7,  "$a1.t",  ["$a1_t"]>, DwarfRegNum<[263]>;
+def C8   : XCR<  8,  "$a2.x",  ["$a2_x"]>, DwarfRegNum<[264]>;
+def C9   : XCR<  9,  "$a2.y",  ["$a2_y"]>, DwarfRegNum<[265]>;
+def C10  : XCR< 10,  "$a2.z",  ["$a2_z"]>, DwarfRegNum<[266]>;
+def C11  : XCR< 11,  "$a2.t",  ["$a2_t"]>, DwarfRegNum<[267]>;
+def C12  : XCR< 12,  "$a3.x",  ["$a3_x"]>, DwarfRegNum<[268]>;
+def C13  : XCR< 13,  "$a3.y",  ["$a3_y"]>, DwarfRegNum<[269]>;
+def C14  : XCR< 14,  "$a3.z",  ["$a3_z"]>, DwarfRegNum<[270]>;
+def C15  : XCR< 15,  "$a3.t",  ["$a3_t"]>, DwarfRegNum<[271]>;
+def C16  : XCR< 16,  "$a4.x",  ["$a4_x"]>, DwarfRegNum<[272]>;
+def C17  : XCR< 17,  "$a4.y",  ["$a4_y"]>, DwarfRegNum<[273]>;
+def C18  : XCR< 18,  "$a4.z",  ["$a4_z"]>, DwarfRegNum<[274]>;
+def C19  : XCR< 19,  "$a4.t",  ["$a4_t"]>, DwarfRegNum<[275]>;
+def C20  : XCR< 20,  "$a5.x",  ["$a5_x"]>, DwarfRegNum<[276]>;
+def C21  : XCR< 21,  "$a5.y",  ["$a5_y"]>, DwarfRegNum<[277]>;
+def C22  : XCR< 22,  "$a5.z",  ["$a5_z"]>, DwarfRegNum<[278]>;
+def C23  : XCR< 23,  "$a5.t",  ["$a5_t"]>, DwarfRegNum<[279]>;
+def C24  : XCR< 24,  "$a6.x",  ["$a6_x"]>, DwarfRegNum<[280]>;
+def C25  : XCR< 25,  "$a6.y",  ["$a6_y"]>, DwarfRegNum<[281]>;
+def C26  : XCR< 26,  "$a6.z",  ["$a6_z"]>, DwarfRegNum<[282]>;
+def C27  : XCR< 27,  "$a6.t",  ["$a6_t"]>, DwarfRegNum<[283]>;
+def C28  : XCR< 28,  "$a7.x",  ["$a7_x"]>, DwarfRegNum<[284]>;
+def C29  : XCR< 29,  "$a7.y",  ["$a7_y"]>, DwarfRegNum<[285]>;
+def C30  : XCR< 30,  "$a7.z",  ["$a7_z"]>, DwarfRegNum<[286]>;
+def C31  : XCR< 31,  "$a7.t",  ["$a7_t"]>, DwarfRegNum<[287]>;
+def C32  : XCR< 32,  "$a8.x",  ["$a8_x"]>, DwarfRegNum<[288]>;
+def C33  : XCR< 33,  "$a8.y",  ["$a8_y"]>, DwarfRegNum<[289]>;
+def C34  : XCR< 34,  "$a8.z",  ["$a8_z"]>, DwarfRegNum<[290]>;
+def C35  : XCR< 35,  "$a8.t",  ["$a8_t"]>, DwarfRegNum<[291]>;
+def C36  : XCR< 36,  "$a9.x",  ["$a9_x"]>, DwarfRegNum<[292]>;
+def C37  : XCR< 37,  "$a9.y",  ["$a9_y"]>, DwarfRegNum<[293]>;
+def C38  : XCR< 38,  "$a9.z",  ["$a9_z"]>, DwarfRegNum<[294]>;
+def C39  : XCR< 39,  "$a9.t",  ["$a9_t"]>, DwarfRegNum<[295]>;
+def C40  : XCR< 40, "$a10.x", ["$a10_x"]>, DwarfRegNum<[296]>;
+def C41  : XCR< 41, "$a10.y", ["$a10_y"]>, DwarfRegNum<[297]>;
+def C42  : XCR< 42, "$a10.z", ["$a10_z"]>, DwarfRegNum<[298]>;
+def C43  : XCR< 43, "$a10.t", ["$a10_t"]>, DwarfRegNum<[299]>;
+def C44  : XCR< 44, "$a11.x", ["$a11_x"]>, DwarfRegNum<[300]>;
+def C45  : XCR< 45, "$a11.y", ["$a11_y"]>, DwarfRegNum<[301]>;
+def C46  : XCR< 46, "$a11.z", ["$a11_z"]>, DwarfRegNum<[302]>;
+def C47  : XCR< 47, "$a11.t", ["$a11_t"]>, DwarfRegNum<[303]>;
+def C48  : XCR< 48, "$a12.x", ["$a12_x"]>, DwarfRegNum<[304]>;
+def C49  : XCR< 49, "$a12.y", ["$a12_y"]>, DwarfRegNum<[305]>;
+def C50  : XCR< 50, "$a12.z", ["$a12_z"]>, DwarfRegNum<[306]>;
+def C51  : XCR< 51, "$a12.t", ["$a12_t"]>, DwarfRegNum<[307]>;
+def C52  : XCR< 52, "$a13.x", ["$a13_x"]>, DwarfRegNum<[308]>;
+def C53  : XCR< 53, "$a13.y", ["$a13_y"]>, DwarfRegNum<[309]>;
+def C54  : XCR< 54, "$a13.z", ["$a13_z"]>, DwarfRegNum<[310]>;
+def C55  : XCR< 55, "$a13.t", ["$a13_t"]>, DwarfRegNum<[311]>;
+def C56  : XCR< 56, "$a14.x", ["$a14_x"]>, DwarfRegNum<[312]>;
+def C57  : XCR< 57, "$a14.y", ["$a14_y"]>, DwarfRegNum<[313]>;
+def C58  : XCR< 58, "$a14.z", ["$a14_z"]>, DwarfRegNum<[314]>;
+def C59  : XCR< 59, "$a14.t", ["$a14_t"]>, DwarfRegNum<[315]>;
+def C60  : XCR< 60, "$a15.x", ["$a15_x"]>, DwarfRegNum<[316]>;
+def C61  : XCR< 61, "$a15.y", ["$a15_y"]>, DwarfRegNum<[317]>;
+def C62  : XCR< 62, "$a15.z", ["$a15_z"]>, DwarfRegNum<[318]>;
+def C63  : XCR< 63, "$a15.t", ["$a15_t"]>, DwarfRegNum<[319]>;
+def C64  : XCR< 64, "$a16.x", ["$a16_x"]>, DwarfRegNum<[320]>;
+def C65  : XCR< 65, "$a16.y", ["$a16_y"]>, DwarfRegNum<[321]>;
+def C66  : XCR< 66, "$a16.z", ["$a16_z"]>, DwarfRegNum<[322]>;
+def C67  : XCR< 67, "$a16.t", ["$a16_t"]>, DwarfRegNum<[323]>;
+def C68  : XCR< 68, "$a17.x", ["$a17_x"]>, DwarfRegNum<[324]>;
+def C69  : XCR< 69, "$a17.y", ["$a17_y"]>, DwarfRegNum<[325]>;
+def C70  : XCR< 70, "$a17.z", ["$a17_z"]>, DwarfRegNum<[326]>;
+def C71  : XCR< 71, "$a17.t", ["$a17_t"]>, DwarfRegNum<[327]>;
+def C72  : XCR< 72, "$a18.x", ["$a18_x"]>, DwarfRegNum<[328]>;
+def C73  : XCR< 73, "$a18.y", ["$a18_y"]>, DwarfRegNum<[329]>;
+def C74  : XCR< 74, "$a18.z", ["$a18_z"]>, DwarfRegNum<[330]>;
+def C75  : XCR< 75, "$a18.t", ["$a18_t"]>, DwarfRegNum<[331]>;
+def C76  : XCR< 76, "$a19.x", ["$a19_x"]>, DwarfRegNum<[332]>;
+def C77  : XCR< 77, "$a19.y", ["$a19_y"]>, DwarfRegNum<[333]>;
+def C78  : XCR< 78, "$a19.z", ["$a19_z"]>, DwarfRegNum<[334]>;
+def C79  : XCR< 79, "$a19.t", ["$a19_t"]>, DwarfRegNum<[335]>;
+def C80  : XCR< 80, "$a20.x", ["$a20_x"]>, DwarfRegNum<[336]>;
+def C81  : XCR< 81, "$a20.y", ["$a20_y"]>, DwarfRegNum<[337]>;
+def C82  : XCR< 82, "$a20.z", ["$a20_z"]>, DwarfRegNum<[338]>;
+def C83  : XCR< 83, "$a20.t", ["$a20_t"]>, DwarfRegNum<[339]>;
+def C84  : XCR< 84, "$a21.x", ["$a21_x"]>, DwarfRegNum<[340]>;
+def C85  : XCR< 85, "$a21.y", ["$a21_y"]>, DwarfRegNum<[341]>;
+def C86  : XCR< 86, "$a21.z", ["$a21_z"]>, DwarfRegNum<[342]>;
+def C87  : XCR< 87, "$a21.t", ["$a21_t"]>, DwarfRegNum<[343]>;
+def C88  : XCR< 88, "$a22.x", ["$a22_x"]>, DwarfRegNum<[344]>;
+def C89  : XCR< 89, "$a22.y", ["$a22_y"]>, DwarfRegNum<[345]>;
+def C90  : XCR< 90, "$a22.z", ["$a22_z"]>, DwarfRegNum<[346]>;
+def C91  : XCR< 91, "$a22.t", ["$a22_t"]>, DwarfRegNum<[347]>;
+def C92  : XCR< 92, "$a23.x", ["$a23_x"]>, DwarfRegNum<[348]>;
+def C93  : XCR< 93, "$a23.y", ["$a23_y"]>, DwarfRegNum<[349]>;
+def C94  : XCR< 94, "$a23.z", ["$a23_z"]>, DwarfRegNum<[350]>;
+def C95  : XCR< 95, "$a23.t", ["$a23_t"]>, DwarfRegNum<[351]>;
+def C96  : XCR< 96, "$a24.x", ["$a24_x"]>, DwarfRegNum<[352]>;
+def C97  : XCR< 97, "$a24.y", ["$a24_y"]>, DwarfRegNum<[353]>;
+def C98  : XCR< 98, "$a24.z", ["$a24_z"]>, DwarfRegNum<[354]>;
+def C99  : XCR< 99, "$a24.t", ["$a24_t"]>, DwarfRegNum<[355]>;
+def C100 : XCR<100, "$a25.x", ["$a25_x"]>, DwarfRegNum<[356]>;
+def C101 : XCR<101, "$a25.y", ["$a25_y"]>, DwarfRegNum<[357]>;
+def C102 : XCR<102, "$a25.z", ["$a25_z"]>, DwarfRegNum<[358]>;
+def C103 : XCR<103, "$a25.t", ["$a25_t"]>, DwarfRegNum<[359]>;
+def C104 : XCR<104, "$a26.x", ["$a26_x"]>, DwarfRegNum<[360]>;
+def C105 : XCR<105, "$a26.y", ["$a26_y"]>, DwarfRegNum<[361]>;
+def C106 : XCR<106, "$a26.z", ["$a26_z"]>, DwarfRegNum<[362]>;
+def C107 : XCR<107, "$a26.t", ["$a26_t"]>, DwarfRegNum<[363]>;
+def C108 : XCR<108, "$a27.x", ["$a27_x"]>, DwarfRegNum<[364]>;
+def C109 : XCR<109, "$a27.y", ["$a27_y"]>, DwarfRegNum<[365]>;
+def C110 : XCR<110, "$a27.z", ["$a27_z"]>, DwarfRegNum<[366]>;
+def C111 : XCR<111, "$a27.t", ["$a27_t"]>, DwarfRegNum<[367]>;
+def C112 : XCR<112, "$a28.x", ["$a28_x"]>, DwarfRegNum<[368]>;
+def C113 : XCR<113, "$a28.y", ["$a28_y"]>, DwarfRegNum<[369]>;
+def C114 : XCR<114, "$a28.z", ["$a28_z"]>, DwarfRegNum<[370]>;
+def C115 : XCR<115, "$a28.t", ["$a28_t"]>, DwarfRegNum<[371]>;
+def C116 : XCR<116, "$a29.x", ["$a29_x"]>, DwarfRegNum<[372]>;
+def C117 : XCR<117, "$a29.y", ["$a29_y"]>, DwarfRegNum<[373]>;
+def C118 : XCR<118, "$a29.z", ["$a29_z"]>, DwarfRegNum<[374]>;
+def C119 : XCR<119, "$a29.t", ["$a29_t"]>, DwarfRegNum<[375]>;
+def C120 : XCR<120, "$a30.x", ["$a30_x"]>, DwarfRegNum<[376]>;
+def C121 : XCR<121, "$a30.y", ["$a30_y"]>, DwarfRegNum<[377]>;
+def C122 : XCR<122, "$a30.z", ["$a30_z"]>, DwarfRegNum<[378]>;
+def C123 : XCR<123, "$a30.t", ["$a30_t"]>, DwarfRegNum<[379]>;
+def C124 : XCR<124, "$a31.x", ["$a31_x"]>, DwarfRegNum<[380]>;
+def C125 : XCR<125, "$a31.y", ["$a31_y"]>, DwarfRegNum<[381]>;
+def C126 : XCR<126, "$a31.z", ["$a31_z"]>, DwarfRegNum<[382]>;
+def C127 : XCR<127, "$a31.t", ["$a31_t"]>, DwarfRegNum<[383]>;
+def C128 : XCR<128, "$a32.x", ["$a32_x"]>, DwarfRegNum<[384]>;
+def C129 : XCR<129, "$a32.y", ["$a32_y"]>, DwarfRegNum<[385]>;
+def C130 : XCR<130, "$a32.z", ["$a32_z"]>, DwarfRegNum<[386]>;
+def C131 : XCR<131, "$a32.t", ["$a32_t"]>, DwarfRegNum<[387]>;
+def C132 : XCR<132, "$a33.x", ["$a33_x"]>, DwarfRegNum<[388]>;
+def C133 : XCR<133, "$a33.y", ["$a33_y"]>, DwarfRegNum<[389]>;
+def C134 : XCR<134, "$a33.z", ["$a33_z"]>, DwarfRegNum<[390]>;
+def C135 : XCR<135, "$a33.t", ["$a33_t"]>, DwarfRegNum<[391]>;
+def C136 : XCR<136, "$a34.x", ["$a34_x"]>, DwarfRegNum<[392]>;
+def C137 : XCR<137, "$a34.y", ["$a34_y"]>, DwarfRegNum<[393]>;
+def C138 : XCR<138, "$a34.z", ["$a34_z"]>, DwarfRegNum<[394]>;
+def C139 : XCR<139, "$a34.t", ["$a34_t"]>, DwarfRegNum<[395]>;
+def C140 : XCR<140, "$a35.x", ["$a35_x"]>, DwarfRegNum<[396]>;
+def C141 : XCR<141, "$a35.y", ["$a35_y"]>, DwarfRegNum<[397]>;
+def C142 : XCR<142, "$a35.z", ["$a35_z"]>, DwarfRegNum<[398]>;
+def C143 : XCR<143, "$a35.t", ["$a35_t"]>, DwarfRegNum<[399]>;
+def C144 : XCR<144, "$a36.x", ["$a36_x"]>, DwarfRegNum<[400]>;
+def C145 : XCR<145, "$a36.y", ["$a36_y"]>, DwarfRegNum<[401]>;
+def C146 : XCR<146, "$a36.z", ["$a36_z"]>, DwarfRegNum<[402]>;
+def C147 : XCR<147, "$a36.t", ["$a36_t"]>, DwarfRegNum<[403]>;
+def C148 : XCR<148, "$a37.x", ["$a37_x"]>, DwarfRegNum<[404]>;
+def C149 : XCR<149, "$a37.y", ["$a37_y"]>, DwarfRegNum<[405]>;
+def C150 : XCR<150, "$a37.z", ["$a37_z"]>, DwarfRegNum<[406]>;
+def C151 : XCR<151, "$a37.t", ["$a37_t"]>, DwarfRegNum<[407]>;
+def C152 : XCR<152, "$a38.x", ["$a38_x"]>, DwarfRegNum<[408]>;
+def C153 : XCR<153, "$a38.y", ["$a38_y"]>, DwarfRegNum<[409]>;
+def C154 : XCR<154, "$a38.z", ["$a38_z"]>, DwarfRegNum<[410]>;
+def C155 : XCR<155, "$a38.t", ["$a38_t"]>, DwarfRegNum<[411]>;
+def C156 : XCR<156, "$a39.x", ["$a39_x"]>, DwarfRegNum<[412]>;
+def C157 : XCR<157, "$a39.y", ["$a39_y"]>, DwarfRegNum<[413]>;
+def C158 : XCR<158, "$a39.z", ["$a39_z"]>, DwarfRegNum<[414]>;
+def C159 : XCR<159, "$a39.t", ["$a39_t"]>, DwarfRegNum<[415]>;
+def C160 : XCR<160, "$a40.x", ["$a40_x"]>, DwarfRegNum<[416]>;
+def C161 : XCR<161, "$a40.y", ["$a40_y"]>, DwarfRegNum<[417]>;
+def C162 : XCR<162, "$a40.z", ["$a40_z"]>, DwarfRegNum<[418]>;
+def C163 : XCR<163, "$a40.t", ["$a40_t"]>, DwarfRegNum<[419]>;
+def C164 : XCR<164, "$a41.x", ["$a41_x"]>, DwarfRegNum<[420]>;
+def C165 : XCR<165, "$a41.y", ["$a41_y"]>, DwarfRegNum<[421]>;
+def C166 : XCR<166, "$a41.z", ["$a41_z"]>, DwarfRegNum<[422]>;
+def C167 : XCR<167, "$a41.t", ["$a41_t"]>, DwarfRegNum<[423]>;
+def C168 : XCR<168, "$a42.x", ["$a42_x"]>, DwarfRegNum<[424]>;
+def C169 : XCR<169, "$a42.y", ["$a42_y"]>, DwarfRegNum<[425]>;
+def C170 : XCR<170, "$a42.z", ["$a42_z"]>, DwarfRegNum<[426]>;
+def C171 : XCR<171, "$a42.t", ["$a42_t"]>, DwarfRegNum<[427]>;
+def C172 : XCR<172, "$a43.x", ["$a43_x"]>, DwarfRegNum<[428]>;
+def C173 : XCR<173, "$a43.y", ["$a43_y"]>, DwarfRegNum<[429]>;
+def C174 : XCR<174, "$a43.z", ["$a43_z"]>, DwarfRegNum<[430]>;
+def C175 : XCR<175, "$a43.t", ["$a43_t"]>, DwarfRegNum<[431]>;
+def C176 : XCR<176, "$a44.x", ["$a44_x"]>, DwarfRegNum<[432]>;
+def C177 : XCR<177, "$a44.y", ["$a44_y"]>, DwarfRegNum<[433]>;
+def C178 : XCR<178, "$a44.z", ["$a44_z"]>, DwarfRegNum<[434]>;
+def C179 : XCR<179, "$a44.t", ["$a44_t"]>, DwarfRegNum<[435]>;
+def C180 : XCR<180, "$a45.x", ["$a45_x"]>, DwarfRegNum<[436]>;
+def C181 : XCR<181, "$a45.y", ["$a45_y"]>, DwarfRegNum<[437]>;
+def C182 : XCR<182, "$a45.z", ["$a45_z"]>, DwarfRegNum<[438]>;
+def C183 : XCR<183, "$a45.t", ["$a45_t"]>, DwarfRegNum<[439]>;
+def C184 : XCR<184, "$a46.x", ["$a46_x"]>, DwarfRegNum<[440]>;
+def C185 : XCR<185, "$a46.y", ["$a46_y"]>, DwarfRegNum<[441]>;
+def C186 : XCR<186, "$a46.z", ["$a46_z"]>, DwarfRegNum<[442]>;
+def C187 : XCR<187, "$a46.t", ["$a46_t"]>, DwarfRegNum<[443]>;
+def C188 : XCR<188, "$a47.x", ["$a47_x"]>, DwarfRegNum<[444]>;
+def C189 : XCR<189, "$a47.y", ["$a47_y"]>, DwarfRegNum<[445]>;
+def C190 : XCR<190, "$a47.z", ["$a47_z"]>, DwarfRegNum<[446]>;
+def C191 : XCR<191, "$a47.t", ["$a47_t"]>, DwarfRegNum<[447]>;
+def C192 : XCR<192, "$a48.x", ["$a48_x"]>, DwarfRegNum<[448]>;
+def C193 : XCR<193, "$a48.y", ["$a48_y"]>, DwarfRegNum<[449]>;
+def C194 : XCR<194, "$a48.z", ["$a48_z"]>, DwarfRegNum<[450]>;
+def C195 : XCR<195, "$a48.t", ["$a48_t"]>, DwarfRegNum<[451]>;
+def C196 : XCR<196, "$a49.x", ["$a49_x"]>, DwarfRegNum<[452]>;
+def C197 : XCR<197, "$a49.y", ["$a49_y"]>, DwarfRegNum<[453]>;
+def C198 : XCR<198, "$a49.z", ["$a49_z"]>, DwarfRegNum<[454]>;
+def C199 : XCR<199, "$a49.t", ["$a49_t"]>, DwarfRegNum<[455]>;
+def C200 : XCR<200, "$a50.x", ["$a50_x"]>, DwarfRegNum<[456]>;
+def C201 : XCR<201, "$a50.y", ["$a50_y"]>, DwarfRegNum<[457]>;
+def C202 : XCR<202, "$a50.z", ["$a50_z"]>, DwarfRegNum<[458]>;
+def C203 : XCR<203, "$a50.t", ["$a50_t"]>, DwarfRegNum<[459]>;
+def C204 : XCR<204, "$a51.x", ["$a51_x"]>, DwarfRegNum<[460]>;
+def C205 : XCR<205, "$a51.y", ["$a51_y"]>, DwarfRegNum<[461]>;
+def C206 : XCR<206, "$a51.z", ["$a51_z"]>, DwarfRegNum<[462]>;
+def C207 : XCR<207, "$a51.t", ["$a51_t"]>, DwarfRegNum<[463]>;
+def C208 : XCR<208, "$a52.x", ["$a52_x"]>, DwarfRegNum<[464]>;
+def C209 : XCR<209, "$a52.y", ["$a52_y"]>, DwarfRegNum<[465]>;
+def C210 : XCR<210, "$a52.z", ["$a52_z"]>, DwarfRegNum<[466]>;
+def C211 : XCR<211, "$a52.t", ["$a52_t"]>, DwarfRegNum<[467]>;
+def C212 : XCR<212, "$a53.x", ["$a53_x"]>, DwarfRegNum<[468]>;
+def C213 : XCR<213, "$a53.y", ["$a53_y"]>, DwarfRegNum<[469]>;
+def C214 : XCR<214, "$a53.z", ["$a53_z"]>, DwarfRegNum<[470]>;
+def C215 : XCR<215, "$a53.t", ["$a53_t"]>, DwarfRegNum<[471]>;
+def C216 : XCR<216, "$a54.x", ["$a54_x"]>, DwarfRegNum<[472]>;
+def C217 : XCR<217, "$a54.y", ["$a54_y"]>, DwarfRegNum<[473]>;
+def C218 : XCR<218, "$a54.z", ["$a54_z"]>, DwarfRegNum<[474]>;
+def C219 : XCR<219, "$a54.t", ["$a54_t"]>, DwarfRegNum<[475]>;
+def C220 : XCR<220, "$a55.x", ["$a55_x"]>, DwarfRegNum<[476]>;
+def C221 : XCR<221, "$a55.y", ["$a55_y"]>, DwarfRegNum<[477]>;
+def C222 : XCR<222, "$a55.z", ["$a55_z"]>, DwarfRegNum<[478]>;
+def C223 : XCR<223, "$a55.t", ["$a55_t"]>, DwarfRegNum<[479]>;
+def C224 : XCR<224, "$a56.x", ["$a56_x"]>, DwarfRegNum<[480]>;
+def C225 : XCR<225, "$a56.y", ["$a56_y"]>, DwarfRegNum<[481]>;
+def C226 : XCR<226, "$a56.z", ["$a56_z"]>, DwarfRegNum<[482]>;
+def C227 : XCR<227, "$a56.t", ["$a56_t"]>, DwarfRegNum<[483]>;
+def C228 : XCR<228, "$a57.x", ["$a57_x"]>, DwarfRegNum<[484]>;
+def C229 : XCR<229, "$a57.y", ["$a57_y"]>, DwarfRegNum<[485]>;
+def C230 : XCR<230, "$a57.z", ["$a57_z"]>, DwarfRegNum<[486]>;
+def C231 : XCR<231, "$a57.t", ["$a57_t"]>, DwarfRegNum<[487]>;
+def C232 : XCR<232, "$a58.x", ["$a58_x"]>, DwarfRegNum<[488]>;
+def C233 : XCR<233, "$a58.y", ["$a58_y"]>, DwarfRegNum<[489]>;
+def C234 : XCR<234, "$a58.z", ["$a58_z"]>, DwarfRegNum<[490]>;
+def C235 : XCR<235, "$a58.t", ["$a58_t"]>, DwarfRegNum<[491]>;
+def C236 : XCR<236, "$a59.x", ["$a59_x"]>, DwarfRegNum<[492]>;
+def C237 : XCR<237, "$a59.y", ["$a59_y"]>, DwarfRegNum<[493]>;
+def C238 : XCR<238, "$a59.z", ["$a59_z"]>, DwarfRegNum<[494]>;
+def C239 : XCR<239, "$a59.t", ["$a59_t"]>, DwarfRegNum<[495]>;
+def C240 : XCR<240, "$a60.x", ["$a60_x"]>, DwarfRegNum<[496]>;
+def C241 : XCR<241, "$a60.y", ["$a60_y"]>, DwarfRegNum<[497]>;
+def C242 : XCR<242, "$a60.z", ["$a60_z"]>, DwarfRegNum<[498]>;
+def C243 : XCR<243, "$a60.t", ["$a60_t"]>, DwarfRegNum<[499]>;
+def C244 : XCR<244, "$a61.x", ["$a61_x"]>, DwarfRegNum<[500]>;
+def C245 : XCR<245, "$a61.y", ["$a61_y"]>, DwarfRegNum<[501]>;
+def C246 : XCR<246, "$a61.z", ["$a61_z"]>, DwarfRegNum<[502]>;
+def C247 : XCR<247, "$a61.t", ["$a61_t"]>, DwarfRegNum<[503]>;
+def C248 : XCR<248, "$a62.x", ["$a62_x"]>, DwarfRegNum<[504]>;
+def C249 : XCR<249, "$a62.y", ["$a62_y"]>, DwarfRegNum<[505]>;
+def C250 : XCR<250, "$a62.z", ["$a62_z"]>, DwarfRegNum<[506]>;
+def C251 : XCR<251, "$a62.t", ["$a62_t"]>, DwarfRegNum<[507]>;
+def C252 : XCR<252, "$a63.x", ["$a63_x"]>, DwarfRegNum<[508]>;
+def C253 : XCR<253, "$a63.y", ["$a63_y"]>, DwarfRegNum<[509]>;
+def C254 : XCR<254, "$a63.z", ["$a63_z"]>, DwarfRegNum<[510]>;
+def C255 : XCR<255, "$a63.t", ["$a63_t"]>, DwarfRegNum<[511]>;
 
 
 // Extension Block Registers
-def B0   : XBR<  0,  "$a0_lo", [  C0,   C1],  ["$a0.lo"]>;
-def B1   : XBR<  1,  "$a0_hi", [  C2,   C3],  ["$a0.hi"]>;
-def B2   : XBR<  2,  "$a1_lo", [  C4,   C5],  ["$a1.lo"]>;
-def B3   : XBR<  3,  "$a1_hi", [  C6,   C7],  ["$a1.hi"]>;
-def B4   : XBR<  4,  "$a2_lo", [  C8,   C9],  ["$a2.lo"]>;
-def B5   : XBR<  5,  "$a2_hi", [ C10,  C11],  ["$a2.hi"]>;
-def B6   : XBR<  6,  "$a3_lo", [ C12,  C13],  ["$a3.lo"]>;
-def B7   : XBR<  7,  "$a3_hi", [ C14,  C15],  ["$a3.hi"]>;
-def B8   : XBR<  8,  "$a4_lo", [ C16,  C17],  ["$a4.lo"]>;
-def B9   : XBR<  9,  "$a4_hi", [ C18,  C19],  ["$a4.hi"]>;
-def B10  : XBR< 10,  "$a5_lo", [ C20,  C21],  ["$a5.lo"]>;
-def B11  : XBR< 11,  "$a5_hi", [ C22,  C23],  ["$a5.hi"]>;
-def B12  : XBR< 12,  "$a6_lo", [ C24,  C25],  ["$a6.lo"]>;
-def B13  : XBR< 13,  "$a6_hi", [ C26,  C27],  ["$a6.hi"]>;
-def B14  : XBR< 14,  "$a7_lo", [ C28,  C29],  ["$a7.lo"]>;
-def B15  : XBR< 15,  "$a7_hi", [ C30,  C31],  ["$a7.hi"]>;
-def B16  : XBR< 16,  "$a8_lo", [ C32,  C33],  ["$a8.lo"]>;
-def B17  : XBR< 17,  "$a8_hi", [ C34,  C35],  ["$a8.hi"]>;
-def B18  : XBR< 18,  "$a9_lo", [ C36,  C37],  ["$a9.lo"]>;
-def B19  : XBR< 19,  "$a9_hi", [ C38,  C39],  ["$a9.hi"]>;
-def B20  : XBR< 20, "$a10_lo", [ C40,  C41], ["$a10.lo"]>;
-def B21  : XBR< 21, "$a10_hi", [ C42,  C43], ["$a10.hi"]>;
-def B22  : XBR< 22, "$a11_lo", [ C44,  C45], ["$a11.lo"]>;
-def B23  : XBR< 23, "$a11_hi", [ C46,  C47], ["$a11.hi"]>;
-def B24  : XBR< 24, "$a12_lo", [ C48,  C49], ["$a12.lo"]>;
-def B25  : XBR< 25, "$a12_hi", [ C50,  C51], ["$a12.hi"]>;
-def B26  : XBR< 26, "$a13_lo", [ C52,  C53], ["$a13.lo"]>;
-def B27  : XBR< 27, "$a13_hi", [ C54,  C55], ["$a13.hi"]>;
-def B28  : XBR< 28, "$a14_lo", [ C56,  C57], ["$a14.lo"]>;
-def B29  : XBR< 29, "$a14_hi", [ C58,  C59], ["$a14.hi"]>;
-def B30  : XBR< 30, "$a15_lo", [ C60,  C61], ["$a15.lo"]>;
-def B31  : XBR< 31, "$a15_hi", [ C62,  C63], ["$a15.hi"]>;
-def B32  : XBR< 32, "$a16_lo", [ C64,  C65], ["$a16.lo"]>;
-def B33  : XBR< 33, "$a16_hi", [ C66,  C67], ["$a16.hi"]>;
-def B34  : XBR< 34, "$a17_lo", [ C68,  C69], ["$a17.lo"]>;
-def B35  : XBR< 35, "$a17_hi", [ C70,  C71], ["$a17.hi"]>;
-def B36  : XBR< 36, "$a18_lo", [ C72,  C73], ["$a18.lo"]>;
-def B37  : XBR< 37, "$a18_hi", [ C74,  C75], ["$a18.hi"]>;
-def B38  : XBR< 38, "$a19_lo", [ C76,  C77], ["$a19.lo"]>;
-def B39  : XBR< 39, "$a19_hi", [ C78,  C79], ["$a19.hi"]>;
-def B40  : XBR< 40, "$a20_lo", [ C80,  C81], ["$a20.lo"]>;
-def B41  : XBR< 41, "$a20_hi", [ C82,  C83], ["$a20.hi"]>;
-def B42  : XBR< 42, "$a21_lo", [ C84,  C85], ["$a21.lo"]>;
-def B43  : XBR< 43, "$a21_hi", [ C86,  C87], ["$a21.hi"]>;
-def B44  : XBR< 44, "$a22_lo", [ C88,  C89], ["$a22.lo"]>;
-def B45  : XBR< 45, "$a22_hi", [ C90,  C91], ["$a22.hi"]>;
-def B46  : XBR< 46, "$a23_lo", [ C92,  C93], ["$a23.lo"]>;
-def B47  : XBR< 47, "$a23_hi", [ C94,  C95], ["$a23.hi"]>;
-def B48  : XBR< 48, "$a24_lo", [ C96,  C97], ["$a24.lo"]>;
-def B49  : XBR< 49, "$a24_hi", [ C98,  C99], ["$a24.hi"]>;
-def B50  : XBR< 50, "$a25_lo", [C100, C101], ["$a25.lo"]>;
-def B51  : XBR< 51, "$a25_hi", [C102, C103], ["$a25.hi"]>;
-def B52  : XBR< 52, "$a26_lo", [C104, C105], ["$a26.lo"]>;
-def B53  : XBR< 53, "$a26_hi", [C106, C107], ["$a26.hi"]>;
-def B54  : XBR< 54, "$a27_lo", [C108, C109], ["$a27.lo"]>;
-def B55  : XBR< 55, "$a27_hi", [C110, C111], ["$a27.hi"]>;
-def B56  : XBR< 56, "$a28_lo", [C112, C113], ["$a28.lo"]>;
-def B57  : XBR< 57, "$a28_hi", [C114, C115], ["$a28.hi"]>;
-def B58  : XBR< 58, "$a29_lo", [C116, C117], ["$a29.lo"]>;
-def B59  : XBR< 59, "$a29_hi", [C118, C119], ["$a29.hi"]>;
-def B60  : XBR< 60, "$a30_lo", [C120, C121], ["$a30.lo"]>;
-def B61  : XBR< 61, "$a30_hi", [C122, C123], ["$a30.hi"]>;
-def B62  : XBR< 62, "$a31_lo", [C124, C125], ["$a31.lo"]>;
-def B63  : XBR< 63, "$a31_hi", [C126, C127], ["$a31.hi"]>;
-def B64  : XBR< 64, "$a32_lo", [C128, C129], ["$a32.lo"]>;
-def B65  : XBR< 65, "$a32_hi", [C130, C131], ["$a32.hi"]>;
-def B66  : XBR< 66, "$a33_lo", [C132, C133], ["$a33.lo"]>;
-def B67  : XBR< 67, "$a33_hi", [C134, C135], ["$a33.hi"]>;
-def B68  : XBR< 68, "$a34_lo", [C136, C137], ["$a34.lo"]>;
-def B69  : XBR< 69, "$a34_hi", [C138, C139], ["$a34.hi"]>;
-def B70  : XBR< 70, "$a35_lo", [C140, C141], ["$a35.lo"]>;
-def B71  : XBR< 71, "$a35_hi", [C142, C143], ["$a35.hi"]>;
-def B72  : XBR< 72, "$a36_lo", [C144, C145], ["$a36.lo"]>;
-def B73  : XBR< 73, "$a36_hi", [C146, C147], ["$a36.hi"]>;
-def B74  : XBR< 74, "$a37_lo", [C148, C149], ["$a37.lo"]>;
-def B75  : XBR< 75, "$a37_hi", [C150, C151], ["$a37.hi"]>;
-def B76  : XBR< 76, "$a38_lo", [C152, C153], ["$a38.lo"]>;
-def B77  : XBR< 77, "$a38_hi", [C154, C155], ["$a38.hi"]>;
-def B78  : XBR< 78, "$a39_lo", [C156, C157], ["$a39.lo"]>;
-def B79  : XBR< 79, "$a39_hi", [C158, C159], ["$a39.hi"]>;
-def B80  : XBR< 80, "$a40_lo", [C160, C161], ["$a40.lo"]>;
-def B81  : XBR< 81, "$a40_hi", [C162, C163], ["$a40.hi"]>;
-def B82  : XBR< 82, "$a41_lo", [C164, C165], ["$a41.lo"]>;
-def B83  : XBR< 83, "$a41_hi", [C166, C167], ["$a41.hi"]>;
-def B84  : XBR< 84, "$a42_lo", [C168, C169], ["$a42.lo"]>;
-def B85  : XBR< 85, "$a42_hi", [C170, C171], ["$a42.hi"]>;
-def B86  : XBR< 86, "$a43_lo", [C172, C173], ["$a43.lo"]>;
-def B87  : XBR< 87, "$a43_hi", [C174, C175], ["$a43.hi"]>;
-def B88  : XBR< 88, "$a44_lo", [C176, C177], ["$a44.lo"]>;
-def B89  : XBR< 89, "$a44_hi", [C178, C179], ["$a44.hi"]>;
-def B90  : XBR< 90, "$a45_lo", [C180, C181], ["$a45.lo"]>;
-def B91  : XBR< 91, "$a45_hi", [C182, C183], ["$a45.hi"]>;
-def B92  : XBR< 92, "$a46_lo", [C184, C185], ["$a46.lo"]>;
-def B93  : XBR< 93, "$a46_hi", [C186, C187], ["$a46.hi"]>;
-def B94  : XBR< 94, "$a47_lo", [C188, C189], ["$a47.lo"]>;
-def B95  : XBR< 95, "$a47_hi", [C190, C191], ["$a47.hi"]>;
-def B96  : XBR< 96, "$a48_lo", [C192, C193], ["$a48.lo"]>;
-def B97  : XBR< 97, "$a48_hi", [C194, C195], ["$a48.hi"]>;
-def B98  : XBR< 98, "$a49_lo", [C196, C197], ["$a49.lo"]>;
-def B99  : XBR< 99, "$a49_hi", [C198, C199], ["$a49.hi"]>;
-def B100 : XBR<100, "$a50_lo", [C200, C201], ["$a50.lo"]>;
-def B101 : XBR<101, "$a50_hi", [C202, C203], ["$a50.hi"]>;
-def B102 : XBR<102, "$a51_lo", [C204, C205], ["$a51.lo"]>;
-def B103 : XBR<103, "$a51_hi", [C206, C207], ["$a51.hi"]>;
-
+def B0   : XBR<  0,  "$a0.lo", [  C0,   C1],  ["$a0_lo"]>;
+def B1   : XBR<  1,  "$a0.hi", [  C2,   C3],  ["$a0_hi"]>;
+def B2   : XBR<  2,  "$a1.lo", [  C4,   C5],  ["$a1_lo"]>;
+def B3   : XBR<  3,  "$a1.hi", [  C6,   C7],  ["$a1_hi"]>;
+def B4   : XBR<  4,  "$a2.lo", [  C8,   C9],  ["$a2_lo"]>;
+def B5   : XBR<  5,  "$a2.hi", [ C10,  C11],  ["$a2_hi"]>;
+def B6   : XBR<  6,  "$a3.lo", [ C12,  C13],  ["$a3_lo"]>;
+def B7   : XBR<  7,  "$a3.hi", [ C14,  C15],  ["$a3_hi"]>;
+def B8   : XBR<  8,  "$a4.lo", [ C16,  C17],  ["$a4_lo"]>;
+def B9   : XBR<  9,  "$a4.hi", [ C18,  C19],  ["$a4_hi"]>;
+def B10  : XBR< 10,  "$a5.lo", [ C20,  C21],  ["$a5_lo"]>;
+def B11  : XBR< 11,  "$a5.hi", [ C22,  C23],  ["$a5_hi"]>;
+def B12  : XBR< 12,  "$a6.lo", [ C24,  C25],  ["$a6_lo"]>;
+def B13  : XBR< 13,  "$a6.hi", [ C26,  C27],  ["$a6_hi"]>;
+def B14  : XBR< 14,  "$a7.lo", [ C28,  C29],  ["$a7_lo"]>;
+def B15  : XBR< 15,  "$a7.hi", [ C30,  C31],  ["$a7_hi"]>;
+def B16  : XBR< 16,  "$a8.lo", [ C32,  C33],  ["$a8_lo"]>;
+def B17  : XBR< 17,  "$a8.hi", [ C34,  C35],  ["$a8_hi"]>;
+def B18  : XBR< 18,  "$a9.lo", [ C36,  C37],  ["$a9_lo"]>;
+def B19  : XBR< 19,  "$a9.hi", [ C38,  C39],  ["$a9_hi"]>;
+def B20  : XBR< 20, "$a10.lo", [ C40,  C41], ["$a10_lo"]>;
+def B21  : XBR< 21, "$a10.hi", [ C42,  C43], ["$a10_hi"]>;
+def B22  : XBR< 22, "$a11.lo", [ C44,  C45], ["$a11_lo"]>;
+def B23  : XBR< 23, "$a11.hi", [ C46,  C47], ["$a11_hi"]>;
+def B24  : XBR< 24, "$a12.lo", [ C48,  C49], ["$a12_lo"]>;
+def B25  : XBR< 25, "$a12.hi", [ C50,  C51], ["$a12_hi"]>;
+def B26  : XBR< 26, "$a13.lo", [ C52,  C53], ["$a13_lo"]>;
+def B27  : XBR< 27, "$a13.hi", [ C54,  C55], ["$a13_hi"]>;
+def B28  : XBR< 28, "$a14.lo", [ C56,  C57], ["$a14_lo"]>;
+def B29  : XBR< 29, "$a14.hi", [ C58,  C59], ["$a14_hi"]>;
+def B30  : XBR< 30, "$a15.lo", [ C60,  C61], ["$a15_lo"]>;
+def B31  : XBR< 31, "$a15.hi", [ C62,  C63], ["$a15_hi"]>;
+def B32  : XBR< 32, "$a16.lo", [ C64,  C65], ["$a16_lo"]>;
+def B33  : XBR< 33, "$a16.hi", [ C66,  C67], ["$a16_hi"]>;
+def B34  : XBR< 34, "$a17.lo", [ C68,  C69], ["$a17_lo"]>;
+def B35  : XBR< 35, "$a17.hi", [ C70,  C71], ["$a17_hi"]>;
+def B36  : XBR< 36, "$a18.lo", [ C72,  C73], ["$a18_lo"]>;
+def B37  : XBR< 37, "$a18.hi", [ C74,  C75], ["$a18_hi"]>;
+def B38  : XBR< 38, "$a19.lo", [ C76,  C77], ["$a19_lo"]>;
+def B39  : XBR< 39, "$a19.hi", [ C78,  C79], ["$a19_hi"]>;
+def B40  : XBR< 40, "$a20.lo", [ C80,  C81], ["$a20_lo"]>;
+def B41  : XBR< 41, "$a20.hi", [ C82,  C83], ["$a20_hi"]>;
+def B42  : XBR< 42, "$a21.lo", [ C84,  C85], ["$a21_lo"]>;
+def B43  : XBR< 43, "$a21.hi", [ C86,  C87], ["$a21_hi"]>;
+def B44  : XBR< 44, "$a22.lo", [ C88,  C89], ["$a22_lo"]>;
+def B45  : XBR< 45, "$a22.hi", [ C90,  C91], ["$a22_hi"]>;
+def B46  : XBR< 46, "$a23.lo", [ C92,  C93], ["$a23_lo"]>;
+def B47  : XBR< 47, "$a23.hi", [ C94,  C95], ["$a23_hi"]>;
+def B48  : XBR< 48, "$a24.lo", [ C96,  C97], ["$a24_lo"]>;
+def B49  : XBR< 49, "$a24.hi", [ C98,  C99], ["$a24_hi"]>;
+def B50  : XBR< 50, "$a25.lo", [C100, C101], ["$a25_lo"]>;
+def B51  : XBR< 51, "$a25.hi", [C102, C103], ["$a25_hi"]>;
+def B52  : XBR< 52, "$a26.lo", [C104, C105], ["$a26_lo"]>;
+def B53  : XBR< 53, "$a26.hi", [C106, C107], ["$a26_hi"]>;
+def B54  : XBR< 54, "$a27.lo", [C108, C109], ["$a27_lo"]>;
+def B55  : XBR< 55, "$a27.hi", [C110, C111], ["$a27_hi"]>;
+def B56  : XBR< 56, "$a28.lo", [C112, C113], ["$a28_lo"]>;
+def B57  : XBR< 57, "$a28.hi", [C114, C115], ["$a28_hi"]>;
+def B58  : XBR< 58, "$a29.lo", [C116, C117], ["$a29_lo"]>;
+def B59  : XBR< 59, "$a29.hi", [C118, C119], ["$a29_hi"]>;
+def B60  : XBR< 60, "$a30.lo", [C120, C121], ["$a30_lo"]>;
+def B61  : XBR< 61, "$a30.hi", [C122, C123], ["$a30_hi"]>;
+def B62  : XBR< 62, "$a31.lo", [C124, C125], ["$a31_lo"]>;
+def B63  : XBR< 63, "$a31.hi", [C126, C127], ["$a31_hi"]>;
+def B64  : XBR< 64, "$a32.lo", [C128, C129], ["$a32_lo"]>;
+def B65  : XBR< 65, "$a32.hi", [C130, C131], ["$a32_hi"]>;
+def B66  : XBR< 66, "$a33.lo", [C132, C133], ["$a33_lo"]>;
+def B67  : XBR< 67, "$a33.hi", [C134, C135], ["$a33_hi"]>;
+def B68  : XBR< 68, "$a34.lo", [C136, C137], ["$a34_lo"]>;
+def B69  : XBR< 69, "$a34.hi", [C138, C139], ["$a34_hi"]>;
+def B70  : XBR< 70, "$a35.lo", [C140, C141], ["$a35_lo"]>;
+def B71  : XBR< 71, "$a35.hi", [C142, C143], ["$a35_hi"]>;
+def B72  : XBR< 72, "$a36.lo", [C144, C145], ["$a36_lo"]>;
+def B73  : XBR< 73, "$a36.hi", [C146, C147], ["$a36_hi"]>;
+def B74  : XBR< 74, "$a37.lo", [C148, C149], ["$a37_lo"]>;
+def B75  : XBR< 75, "$a37.hi", [C150, C151], ["$a37_hi"]>;
+def B76  : XBR< 76, "$a38.lo", [C152, C153], ["$a38_lo"]>;
+def B77  : XBR< 77, "$a38.hi", [C154, C155], ["$a38_hi"]>;
+def B78  : XBR< 78, "$a39.lo", [C156, C157], ["$a39_lo"]>;
+def B79  : XBR< 79, "$a39.hi", [C158, C159], ["$a39_hi"]>;
+def B80  : XBR< 80, "$a40.lo", [C160, C161], ["$a40_lo"]>;
+def B81  : XBR< 81, "$a40.hi", [C162, C163], ["$a40_hi"]>;
+def B82  : XBR< 82, "$a41.lo", [C164, C165], ["$a41_lo"]>;
+def B83  : XBR< 83, "$a41.hi", [C166, C167], ["$a41_hi"]>;
+def B84  : XBR< 84, "$a42.lo", [C168, C169], ["$a42_lo"]>;
+def B85  : XBR< 85, "$a42.hi", [C170, C171], ["$a42_hi"]>;
+def B86  : XBR< 86, "$a43.lo", [C172, C173], ["$a43_lo"]>;
+def B87  : XBR< 87, "$a43.hi", [C174, C175], ["$a43_hi"]>;
+def B88  : XBR< 88, "$a44.lo", [C176, C177], ["$a44_lo"]>;
+def B89  : XBR< 89, "$a44.hi", [C178, C179], ["$a44_hi"]>;
+def B90  : XBR< 90, "$a45.lo", [C180, C181], ["$a45_lo"]>;
+def B91  : XBR< 91, "$a45.hi", [C182, C183], ["$a45_hi"]>;
+def B92  : XBR< 92, "$a46.lo", [C184, C185], ["$a46_lo"]>;
+def B93  : XBR< 93, "$a46.hi", [C186, C187], ["$a46_hi"]>;
+def B94  : XBR< 94, "$a47.lo", [C188, C189], ["$a47_lo"]>;
+def B95  : XBR< 95, "$a47.hi", [C190, C191], ["$a47_hi"]>;
+def B96  : XBR< 96, "$a48.lo", [C192, C193], ["$a48_lo"]>;
+def B97  : XBR< 97, "$a48.hi", [C194, C195], ["$a48_hi"]>;
+def B98  : XBR< 98, "$a49.lo", [C196, C197], ["$a49_lo"]>;
+def B99  : XBR< 99, "$a49.hi", [C198, C199], ["$a49_hi"]>;
+def B100 : XBR<100, "$a50.lo", [C200, C201], ["$a50_lo"]>;
+def B101 : XBR<101, "$a50.hi", [C202, C203], ["$a50_hi"]>;
+def B102 : XBR<102, "$a51.lo", [C204, C205], ["$a51_lo"]>;
+def B103 : XBR<103, "$a51.hi", [C206, C207], ["$a51_hi"]>;
+def B104 : XBR<104, "$a52.lo", [C208, C209], ["$a52_lo"]>;
+def B105 : XBR<105, "$a52.hi", [C210, C211], ["$a52_hi"]>;
+def B106 : XBR<106, "$a53.lo", [C212, C213], ["$a53_lo"]>;
+def B107 : XBR<107, "$a53.hi", [C214, C215], ["$a53_hi"]>;
+def B108 : XBR<108, "$a54.lo", [C216, C217], ["$a54_lo"]>;
+def B109 : XBR<109, "$a54.hi", [C218, C219], ["$a54_hi"]>;
+def B110 : XBR<110, "$a55.lo", [C220, C221], ["$a55_lo"]>;
+def B111 : XBR<111, "$a55.hi", [C222, C223], ["$a55_hi"]>;
+def B112 : XBR<112, "$a56.lo", [C224, C225], ["$a56_lo"]>;
+def B113 : XBR<113, "$a56.hi", [C226, C227], ["$a56_hi"]>;
+def B114 : XBR<114, "$a57.lo", [C228, C229], ["$a57_lo"]>;
+def B115 : XBR<115, "$a57.hi", [C230, C231], ["$a57_hi"]>;
+def B116 : XBR<116, "$a58.lo", [C232, C233], ["$a58_lo"]>;
+def B117 : XBR<117, "$a58.hi", [C234, C235], ["$a58_hi"]>;
+def B118 : XBR<118, "$a59.lo", [C236, C237], ["$a59_lo"]>;
+def B119 : XBR<119, "$a59.hi", [C238, C239], ["$a59_hi"]>;
+def B120 : XBR<120, "$a60.lo", [C240, C241], ["$a60_lo"]>;
+def B121 : XBR<121, "$a60.hi", [C242, C243], ["$a60_hi"]>;
+def B122 : XBR<122, "$a61.lo", [C244, C245], ["$a61_lo"]>;
+def B123 : XBR<123, "$a61.hi", [C246, C247], ["$a61_hi"]>;
+def B124 : XBR<124, "$a62.lo", [C248, C249], ["$a62_lo"]>;
+def B125 : XBR<125, "$a62.hi", [C250, C251], ["$a62_hi"]>;
+def B126 : XBR<126, "$a63.lo", [C252, C253], ["$a63_lo"]>;
+def B127 : XBR<127, "$a63.hi", [C254, C255], ["$a63_hi"]>;
 
 // Extension Vector Registers
-def A0  : XVR< 0,  "$a0", [B0,	B1]  >;
-def A1  : XVR< 1,  "$a1", [B2,	B3]  >;
-def A2  : XVR< 2,  "$a2", [B4,	B5]  >;
-def A3  : XVR< 3,  "$a3", [B6,	B7]  >;
-def A4  : XVR< 4,  "$a4", [B8,	B9]  >;
-def A5  : XVR< 5,  "$a5", [B10,	B11] >;
-def A6  : XVR< 6,  "$a6", [B12,	B13] >;
-def A7  : XVR< 7,  "$a7", [B14,	B15] >;
-def A8  : XVR< 8,  "$a8", [B16,	B17] >;
-def A9  : XVR< 9,  "$a9", [B18,	B19] >;
-def A10 : XVR<10, "$a10", [B20,	B21] >;
-def A11 : XVR<11, "$a11", [B22,	B23] >;
-def A12 : XVR<12, "$a12", [B24,	B25] >;
-def A13 : XVR<13, "$a13", [B26,	B27] >;
-def A14 : XVR<14, "$a14", [B28,	B29] >;
-def A15 : XVR<15, "$a15", [B30,	B31] >;
-def A16 : XVR<16, "$a16", [B32,	B33] >;
-def A17 : XVR<17, "$a17", [B34,	B35] >;
-def A18 : XVR<18, "$a18", [B36,	B37] >;
-def A19 : XVR<19, "$a19", [B38,	B39] >;
-def A20 : XVR<20, "$a20", [B40,	B41] >;
-def A21 : XVR<21, "$a21", [B42,	B43] >;
-def A22 : XVR<22, "$a22", [B44,	B45] >;
-def A23 : XVR<23, "$a23", [B46,	B47] >;
-def A24 : XVR<24, "$a24", [B48,	B49] >;
-def A25 : XVR<25, "$a25", [B50,	B51] >;
-def A26 : XVR<26, "$a26", [B52,	B53] >;
-def A27 : XVR<27, "$a27", [B54,	B55] >;
-def A28 : XVR<28, "$a28", [B56,	B57] >;
-def A29 : XVR<29, "$a29", [B58,	B59] >;
-def A30 : XVR<30, "$a30", [B60,	B61] >;
-def A31 : XVR<31, "$a31", [B62,	B63] >;
-def A32 : XVR<32, "$a32", [B64,	B65] >;
-def A33 : XVR<33, "$a33", [B66,	B67] >;
-def A34 : XVR<34, "$a34", [B68,	B69] >;
-def A35 : XVR<35, "$a35", [B70,	B71] >;
-def A36 : XVR<36, "$a36", [B72,	B73] >;
-def A37 : XVR<37, "$a37", [B74,	B75] >;
-def A38 : XVR<38, "$a38", [B76,	B77] >;
-def A39 : XVR<39, "$a39", [B78,	B79] >;
-def A40 : XVR<40, "$a40", [B80,	B81] >;
-def A41 : XVR<41, "$a41", [B82,	B83] >;
-def A42 : XVR<42, "$a42", [B84,	B85] >;
-def A43 : XVR<43, "$a43", [B86,	B87] >;
-def A44 : XVR<44, "$a44", [B88,	B89] >;
-def A45 : XVR<45, "$a45", [B90,	B91] >;
-def A46 : XVR<46, "$a46", [B92,	B93] >;
-def A47 : XVR<47, "$a47", [B94,	B95] >;
-def A48 : XVR<48, "$a48", [B96,	B97] >;
-def A49 : XVR<49, "$a49", [B98,	B99] >;
-def A50 : XVR<50, "$a50", [B100,B101]>;
-def A51 : XVR<51, "$a51", [B102,B103]>;
-
+def A0  : XVR< 0,  "$a0", [B0,  B1],          ["$a0a1a2a3.x, $a0a1.lo"]>;
+def A1  : XVR< 1,  "$a1", [B2,  B3],          ["$a0a1.hi, $a0a1a2a3.y"]>;
+def A2  : XVR< 2,  "$a2", [B4,  B5],          ["$a0a1a2a3.z, $a2a3.lo"]>;
+def A3  : XVR< 3,  "$a3", [B6,  B7],          ["$a2a3.hi, $a0a1a2a3.t"]>;
+def A4  : XVR< 4,  "$a4", [B8,  B9],          ["$a4a5a6a7.x, $a4a5.lo"]>;
+def A5  : XVR< 5,  "$a5", [B10,	B11],         ["$a4a5.hi, $a4a5a6a7.y"]>;
+def A6  : XVR< 6,  "$a6", [B12,	B13],         ["$a4a5a6a7.z, $a6a7.lo"]>;
+def A7  : XVR< 7,  "$a7", [B14,	B15],         ["$a6a7.hi, $a4a5a6a7.t"]>;
+def A8  : XVR< 8,  "$a8", [B16,	B17],       ["$a8a9.lo, $a8a9a10a11.x"]>;
+def A9  : XVR< 9,  "$a9", [B18,	B19],       ["$a8a9.hi, $a8a9a10a11.y"]>;
+def A10 : XVR<10, "$a10", [B20,	B21],     ["$a10a11.lo, $a8a9a10a11.z"]>;
+def A11 : XVR<11, "$a11", [B22,	B23],     ["$a10a11.hi, $a8a9a10a11.t"]>;
+def A12 : XVR<12, "$a12", [B24,	B25],   ["$a12a13.lo, $a12a13a14a15.x"]>;
+def A13 : XVR<13, "$a13", [B26,	B27],   ["$a12a13a14a15.y, $a12a13.hi"]>;
+def A14 : XVR<14, "$a14", [B28,	B29],   ["$a14a15.lo, $a12a13a14a15.z"]>;
+def A15 : XVR<15, "$a15", [B30,	B31],   ["$a14a15.hi, $a12a13a14a15.t"]>;
+def A16 : XVR<16, "$a16", [B32,	B33],   ["$a16a17.lo, $a16a17a18a19.x"]>;
+def A17 : XVR<17, "$a17", [B34,	B35],   ["$a16a17a18a19.y, $a16a17.hi"]>;
+def A18 : XVR<18, "$a18", [B36,	B37],   ["$a18a19.lo, $a16a17a18a19.z"]>;
+def A19 : XVR<19, "$a19", [B38,	B39],   ["$a18a19.hi, $a16a17a18a19.t"]>;
+def A20 : XVR<20, "$a20", [B40,	B41],   ["$a20a21a22a23.x, $a20a21.lo"]>;
+def A21 : XVR<21, "$a21", [B42,	B43],   ["$a20a21a22a23.y, $a20a21.hi"]>;
+def A22 : XVR<22, "$a22", [B44,	B45],   ["$a20a21a22a23.z, $a22a23.lo"]>;
+def A23 : XVR<23, "$a23", [B46,	B47],   ["$a22a23.hi, $a20a21a22a23.t"]>;
+def A24 : XVR<24, "$a24", [B48,	B49],   ["$a24a25a26a27.x, $a24a25.lo"]>;
+def A25 : XVR<25, "$a25", [B50,	B51],   ["$a24a25a26a27.y, $a24a25.hi"]>;
+def A26 : XVR<26, "$a26", [B52,	B53],   ["$a24a25a26a27.z, $a26a27.lo"]>;
+def A27 : XVR<27, "$a27", [B54,	B55],   ["$a26a27.hi, $a24a25a26a27.t"]>;
+def A28 : XVR<28, "$a28", [B56,	B57],   ["$a28a29a30a31.x, $a28a29.lo"]>;
+def A29 : XVR<29, "$a29", [B58,	B59],   ["$a28a29.hi, $a28a29a30a31.y"]>;
+def A30 : XVR<30, "$a30", [B60,	B61],   ["$a30a31.lo, $a28a29a30a31.z"]>;
+def A31 : XVR<31, "$a31", [B62,	B63],   ["$a30a31.hi, $a28a29a30a31.t"]>;
+def A32 : XVR<32, "$a32", [B64,	B65],   ["$a32a33.lo, $a32a33a34a35.x"]>;
+def A33 : XVR<33, "$a33", [B66,	B67],   ["$a32a33.hi, $a32a33a34a35.y"]>;
+def A34 : XVR<34, "$a34", [B68,	B69],   ["$a34a35.lo, $a32a33a34a35.z"]>;
+def A35 : XVR<35, "$a35", [B70,	B71],   ["$a32a33a34a35.t, $a34a35.hi"]>;
+def A36 : XVR<36, "$a36", [B72,	B73],   ["$a36a37.lo, $a36a37a38a39.x"]>;
+def A37 : XVR<37, "$a37", [B74,	B75],   ["$a36a37.hi, $a36a37a38a39.y"]>;
+def A38 : XVR<38, "$a38", [B76,	B77],   ["$a38a39.lo, $a36a37a38a39.z"]>;
+def A39 : XVR<39, "$a39", [B78,	B79],   ["$a38a39.hi, $a36a37a38a39.t"]>;
+def A40 : XVR<40, "$a40", [B80,	B81],   ["$a40a41.lo, $a40a41a42a43.x"]>;
+def A41 : XVR<41, "$a41", [B82,	B83],   ["$a40a41.hi, $a40a41a42a43.y"]>;
+def A42 : XVR<42, "$a42", [B84,	B85],   ["$a42a43.lo, $a40a41a42a43.z"]>;
+def A43 : XVR<43, "$a43", [B86,	B87],   ["$a42a43.hi, $a40a41a42a43.t"]>;
+def A44 : XVR<44, "$a44", [B88,	B89],   ["$a44a45.lo, $a44a45a46a47.x"]>;
+def A45 : XVR<45, "$a45", [B90,	B91],   ["$a44a45.hi, $a44a45a46a47.y"]>;
+def A46 : XVR<46, "$a46", [B92,	B93],   ["$a46a47.lo, $a44a45a46a47.z"]>;
+def A47 : XVR<47, "$a47", [B94,	B95],   ["$a46a47.hi, $a44a45a46a47.t"]>;
+def A48 : XVR<48, "$a48", [B96,	B97],   ["$a48a49.lo, $a48a49a50a51.x"]>;
+def A49 : XVR<49, "$a49", [B98,	B99],   ["$a48a49.hi, $a48a49a50a51.y"]>;
+def A50 : XVR<50, "$a50", [B100,B101],  ["$a50a51.lo, $a48a49a50a51.z"]>;
+def A51 : XVR<51, "$a51", [B102, B103], ["$a50a51.hi, $a48a49a50a51.t"]>;
+def A52 : XVR<52, "$a52", [B104, B105], ["$a52a53.lo, $a52a53a54a55.x"]>;
+def A53 : XVR<53, "$a53", [B106, B107], ["$a52a53a54a55.y, $a52a53.hi"]>;
+def A54 : XVR<54, "$a54", [B108, B109], ["$a54a55.lo, $a52a53a54a55.z"]>;
+def A55 : XVR<55, "$a55", [B110, B111], ["$a54a55.hi, $a52a53a54a55.t"]>;
+def A56 : XVR<56, "$a56", [B112, B113], ["$a56a57.lo, $a56a57a58a59.x"]>;
+def A57 : XVR<57, "$a57", [B114, B115], ["$a56a57a58a59.y, $a56a57.hi"]>;
+def A58 : XVR<58, "$a58", [B116, B117], ["$a58a59.lo, $a56a57a58a59.z"]>;
+def A59 : XVR<59, "$a59", [B118, B119], ["$a58a59.hi, $a56a57a58a59.t"]>;
+def A60 : XVR<60, "$a60", [B120, B121], ["$a60a61a62a63.x, $a60a61.lo"]>;
+def A61 : XVR<61, "$a61", [B122, B123], ["$a60a61a62a63.y, $a60a61.hi"]>;
+def A62 : XVR<62, "$a62", [B124, B125], ["$a60a61a62a63.z, $a62a63.lo"]>;
+def A63 : XVR<63, "$a63", [B126, B127], ["$a62a63.hi, $a60a61a62a63.t"]>;
 
 // Extension Wide Registers
-def W0  : XWR< 0,   "$a0a1", [A0,	A1] >;
-def W1  : XWR< 1,   "$a2a3", [A2,	A3] >;
-def W2  : XWR< 2,   "$a4a5", [A4,	A5] >;
-def W3  : XWR< 3,   "$a6a7", [A6,	A7] >;
-def W4  : XWR< 4,   "$a8a9", [A8,	A9] >;
-def W5  : XWR< 5, "$a10a11", [A10,A11]>;
-def W6  : XWR< 6, "$a12a13", [A12,A13]>;
-def W7  : XWR< 7, "$a14a15", [A14,A15]>;
-def W8  : XWR< 8, "$a16a17", [A16,A17]>;
-def W9  : XWR< 9, "$a18a19", [A18,A19]>;
-def W10 : XWR<10, "$a20a21", [A20,A21]>;
-def W11 : XWR<11, "$a22a23", [A22,A23]>;
-def W12 : XWR<12, "$a24a25", [A24,A25]>;
-def W13 : XWR<13, "$a26a27", [A26,A27]>;
-def W14 : XWR<14, "$a28a29", [A28,A29]>;
-def W15 : XWR<15, "$a30a31", [A30,A31]>;
-def W16 : XWR<16, "$a32a33", [A32,A33]>;
-def W17 : XWR<17, "$a34a35", [A34,A35]>;
-def W18 : XWR<18, "$a36a37", [A36,A37]>;
-def W19 : XWR<19, "$a38a39", [A38,A39]>;
-def W20 : XWR<20, "$a40a41", [A40,A41]>;
-def W21 : XWR<21, "$a42a43", [A42,A43]>;
-def W22 : XWR<22, "$a44a45", [A44,A45]>;
-def W23 : XWR<23, "$a46a47", [A46,A47]>;
-def W24 : XWR<24, "$a48a49", [A48,A49]>;
-def W25 : XWR<25, "$a50a51", [A50,A51]>;
+def W0  : XWR< 0,  "$a0a1", [A0,	A1],      ["$a0a1a2a3.lo", "$a0..a1"]>;
+def W1  : XWR< 1,  "$a2a3", [A2,	A3],      ["$a0a1a2a3.hi", "$a2..a3"]>;
+def W2  : XWR< 2,  "$a4a5", [A4,	A5],      ["$a4a5a6a7.lo", "$a4..a5"]>;
+def W3  : XWR< 3,  "$a6a7", [A6,	A7],      ["$a4a5a6a7.hi", "$a6..a7"]>;
+def W4  : XWR< 4,  "$a8a9", [A8,	A9],    ["$a8a9a10a11.lo", "$a8..a9"]>;
+def W5  : XWR< 5, "$a10a11", [A10,A11],   ["$a8a9a10a11.hi", "$a10..a11"]>;
+def W6  : XWR< 6, "$a12a13", [A12,A13], ["$a12a13a14a15.lo", "$a12..a13"]>;
+def W7  : XWR< 7, "$a14a15", [A14,A15], ["$a12a13a14a15.hi", "$a14..a15"]>;
+def W8  : XWR< 8, "$a16a17", [A16,A17], ["$a16a17a18a19.lo", "$a16..a17"]>;
+def W9  : XWR< 9, "$a18a19", [A18,A19], ["$a16a17a18a19.hi", "$a18..a19"]>;
+def W10 : XWR<10, "$a20a21", [A20,A21], ["$a20a21a22a23.lo", "$a20..a21"]>;
+def W11 : XWR<11, "$a22a23", [A22,A23], ["$a20a21a22a23.hi", "$a22..a23"]>;
+def W12 : XWR<12, "$a24a25", [A24,A25], ["$a24a25a26a27.lo", "$a24..a25"]>;
+def W13 : XWR<13, "$a26a27", [A26,A27], ["$a24a25a26a27.hi", "$a26..a27"]>;
+def W14 : XWR<14, "$a28a29", [A28,A29], ["$a28a29a30a31.lo", "$a28..a29"]>;
+def W15 : XWR<15, "$a30a31", [A30,A31], ["$a28a29a30a31.hi", "$a30..a31"]>;
+def W16 : XWR<16, "$a32a33", [A32,A33], ["$a32a33a34a35.lo", "$a32..a33"]>;
+def W17 : XWR<17, "$a34a35", [A34,A35], ["$a32a33a34a35.hi", "$a34..a35"]>;
+def W18 : XWR<18, "$a36a37", [A36,A37], ["$a36a37a38a39.lo", "$a36..a37"]>;
+def W19 : XWR<19, "$a38a39", [A38,A39], ["$a36a37a38a39.hi", "$a38..a39"]>;
+def W20 : XWR<20, "$a40a41", [A40,A41], ["$a40a41a42a43.lo", "$a40..a41"]>;
+def W21 : XWR<21, "$a42a43", [A42,A43], ["$a40a41a42a43.hi", "$a42..a43"]>;
+def W22 : XWR<22, "$a44a45", [A44,A45], ["$a44a45a46a47.lo", "$a44..a45"]>;
+def W23 : XWR<23, "$a46a47", [A46,A47], ["$a44a45a46a47.hi", "$a46..a47"]>;
+def W24 : XWR<24, "$a48a49", [A48,A49], ["$a48a49a50a51.lo", "$a48..a49"]>;
+def W25 : XWR<25, "$a50a51", [A50,A51], ["$a48a49a50a51.hi", "$a50..a51"]>;
+def W26 : XWR<26, "$a52a53", [A52,A53], ["$a52a53a54a55.lo", "$a52..a53"]>;
+def W27 : XWR<27, "$a54a55", [A54,A55], ["$a52a53a54a55.hi", "$a54..a55"]>;
+def W28 : XWR<28, "$a56a57", [A56,A57], ["$a56a57a58a59.lo", "$a56..a57"]>;
+def W29 : XWR<29, "$a58a59", [A58,A59], ["$a56a57a58a59.hi", "$a58..a59"]>;
+def W30 : XWR<30, "$a60a61", [A60,A61], ["$a60a61a62a63.lo", "$a60..a61"]>;
+def W31 : XWR<31, "$a62a63", [A62,A63], ["$a60a61a62a63.hi", "$a62..a63"]>;
 
 
 // Extension Matrix Registers
-def X0  : XMR< 0,     "$a0a1a2a3", [W0,	 W1]>;
-def X1  : XMR< 1,     "$a4a5a6a7", [W2,	 W3]>;
-def X2  : XMR< 2,   "$a8a9a10a11", [W4,	 W5]>;
-def X3  : XMR< 3, "$a12a13a14a15", [W6,	 W7]>;
-def X4  : XMR< 4, "$a16a17a18a19", [W8,	 W9]>;
-def X5  : XMR< 5, "$a20a21a22a23", [W10,W11]>;
-def X6  : XMR< 6, "$a24a25a26a27", [W12,W13]>;
-def X7  : XMR< 7, "$a28a29a30a31", [W14,W15]>;
-def X8  : XMR< 8, "$a32a33a34a35", [W16,W17]>;
-def X9  : XMR< 9, "$a36a37a38a39", [W18,W19]>;
-def X10 : XMR<10, "$a40a41a42a43", [W20,W21]>;
-def X11 : XMR<11, "$a44a45a46a47", [W22,W23]>;
-def X12 : XMR<12, "$a48a49a50a51", [W24,W25]>;
+def X0  : XMR< 0,     "$a0a1a2a3", [W0,	 W1], [  "$a0..a3"]>;
+def X1  : XMR< 1,     "$a4a5a6a7", [W2,	 W3], [  "$a4..a7"]>;
+def X2  : XMR< 2,  "$a8a9a10a11",  [W4,	 W5], [ "$a8..a11"]>;
+def X3  : XMR< 3, "$a12a13a14a15", [W6,	 W7], ["$a12..a15"]>;
+def X4  : XMR< 4, "$a16a17a18a19", [W8,	 W9], ["$a16..a19"]>;
+def X5  : XMR< 5, "$a20a21a22a23", [W10,W11], ["$a20..a23"]>;
+def X6  : XMR< 6, "$a24a25a26a27", [W12,W13], ["$a24..a27"]>;
+def X7  : XMR< 7, "$a28a29a30a31", [W14,W15], ["$a28..a31"]>;
+def X8  : XMR< 8, "$a32a33a34a35", [W16,W17], ["$a32..a35"]>;
+def X9  : XMR< 9, "$a36a37a38a39", [W18,W19], ["$a36..a39"]>;
+def X10 : XMR<10, "$a40a41a42a43", [W20,W21], ["$a40..a43"]>;
+def X11 : XMR<11, "$a44a45a46a47", [W22,W23], ["$a44..a47"]>;
+def X12 : XMR<12, "$a48a49a50a51", [W24,W25], ["$a48..a51"]>;
+def X13 : XMR<13, "$a52a53a54a55", [W26,W27], ["$a52..a55"]>;
+def X14 : XMR<14, "$a56a57a58a59", [W28,W29], ["$a56..a59"]>;
+def X15 : XMR<15, "$a60a61a62a63", [W30,W31], ["$a60..a63"]>;
 
-
+// Extension 2k-Register Buffer
+def I0 : X8R<0,  "$a0..a7",  [  X0, X1]>;
+def I1 : X8R<1,  "$a8..a15", [  X2, X3]>;
+def I2 : X8R<2, "$a16..a23", [  X4, X5]>;
+def I3 : X8R<3, "$a24..a31", [  X6, X7]>;
+def I4 : X8R<4, "$a32..a39", [  X8, X9]>;
+def I5 : X8R<5, "$a40..a47", [X10, X11]>;
+def I6 : X8R<6, "$a48..a55", [X12, X13]>;
+def I7 : X8R<7, "$a56..a63", [X14, X15]>;
 } // let Namespace = "KVX"
 
 
@@ -1263,7 +1364,13 @@ def CoproReg : RegisterClass<"KVX",
    C144, C145, C146, C147, C148, C149, C150, C151, C152, C153, C154, C155,
    C156, C157, C158, C159, C160, C161, C162, C163, C164, C165, C166, C167,
    C168, C169, C170, C171, C172, C173, C174, C175, C176, C177, C178, C179,
-   C180, C181, C182, C183, C184, C185, C186, C187, C188, C189, C190, C191)>;
+   C180, C181, C182, C183, C184, C185, C186, C187, C188, C189, C190, C191,
+   C192, C193, C194, C195, C196, C197, C198, C199, C200, C201, C202, C203,
+   C204, C205, C206, C207, C208, C209, C210, C211, C212, C213, C214, C215,
+   C216, C217, C218, C219, C220, C221, C222, C223, C224, C225, C226, C227,
+   C228, C229, C230, C231, C232, C233, C234, C235, C236, C237, C238, C239,
+   C240, C241, C242, C243, C244, C245, C246, C247, C248, C249, C250, C251,
+   C252, C253, C254, C255)>;
 
 // XBR - Extension Block Registers
 let Size = 128 in
@@ -1277,7 +1384,10 @@ def BlockReg : RegisterClass<"KVX",
     B48,  B49,  B50,  B51,  B52,  B53,  B54,  B55,  B56,  B57,  B58,  B59,
     B60,  B61,  B62,  B63,  B64,  B65,  B66,  B67,  B68,  B69,  B70,  B71,
     B72,  B73,  B74,  B75,  B76,  B77,  B78,  B79,  B80,  B81,  B82,  B83,
-    B84,  B85,  B86,  B87,  B88,  B89,  B90,  B91,  B92,  B93,  B94,  B95)>;
+    B84,  B85,  B86,  B87,  B88,  B89,  B90,  B91,  B92,  B93,  B94,  B95,
+    B96,  B97,  B98,  B99, B100, B101, B102, B103, B104, B105, B106, B107,
+   B108, B109, B110, B111, B112, B113, B114, B115, B116, B117, B118, B119,
+   B120, B121, B122, B123, B124, B125, B126, B127)>;
 
 // XVR - Extension Vector Registers
 let Size = 256 in
@@ -1287,37 +1397,26 @@ def VectorReg : RegisterClass<"KVX",
     A0,  A1,  A2,  A3,  A4,  A5,  A6,  A7,  A8,  A9, A10, A11, A12, A13, A14,
    A15, A16, A17, A18, A19, A20, A21, A22, A23, A24, A25, A26, A27, A28, A29,
    A30, A31, A32, A33, A34, A35, A36, A37, A38, A39, A40, A41, A42, A43, A44,
-   A45, A46, A47)>;
-
-let Size = 256, isAllocatable = 0, CopyCost = -1 in
-def ZeroVectorRegE : RegisterClass<"KVX",
-  [v256i1],
-  256, (add A48, A50)>;
-
-let Size = 256, isAllocatable = 0, CopyCost = -1 in
-def ZeroVectorRegO : RegisterClass<"KVX",
-  [v256i1],
-  256, (add A49, A51)>;
+   A45, A46, A47, A48, A49, A50, A51, A52, A53, A54, A55, A56, A57, A58, A59,
+   A60, A61, A62, A63)>;
 
 // XWR - Extension Wide Registers
-let Size = 512 in
+let Size = 512, CopyCost = 2 in
 def WideReg : RegisterClass<"KVX",
   [v512i1],
   512, (add
     W0,  W1,  W2,  W3,  W4,  W5,  W6,  W7,  W8,  W9, W10, W11, W12, W13, W14,
-   W15, W16, W17, W18, W19, W20, W21, W22, W23)>;
-
-let Size = 512, isAllocatable = 0, CopyCost = -1 in
-def ZeroWideReg : RegisterClass<"KVX",
-  [v512i1],
-  512, (add W24, W25)>;
+   W15, W16, W17, W18, W19, W20, W21, W22, W23, W24, W25, W26, W27, W28, W29,
+   W30, W31)>;
 
 // XMR - Extension Matrix Registers
-let Size = 1024 in
+let Size = 1024, CopyCost = 4 in
 def MatrixReg : RegisterClass<"KVX",
   [v1024i1],
   1024, (add
-    X0,  X1,  X2,  X3,  X4,  X5,  X6,  X7,  X8,  X9, X10, X11)>;
+    X0,  X1,  X2,  X3,  X4,  X5,  X6,  X7,  X8,  X9, X10, X11, X12, X13, X14,
+   X15)>;
+
 let Size = 1024, isAllocatable = 0, CopyCost = -1 in
 def ZeroMatrixReg : RegisterClass<"KVX",
   [v1024i1],
@@ -1519,7 +1618,8 @@ def VectorRegE : RegisterClass<"KVX",
   [v256i1],
   256, (add
     A0,  A2,  A4,  A6,  A8, A10, A12, A14, A16, A18, A20, A22, A24, A26, A28,
-   A30, A32, A34, A36, A38, A40, A42, A44, A46)>;
+   A30, A32, A34, A36, A38, A40, A42, A44, A46, A48, A50, A52, A54, A56, A58,
+   A60, A62)>;
 
 // XVR - Accelerator Registers Odd Numbered
 let Size = 256 in
@@ -1527,7 +1627,8 @@ def VectorRegO : RegisterClass<"KVX",
   [v256i1],
   256, (add
     A1,  A3,  A5,  A7,  A9, A11, A13, A15, A17, A19, A21, A23, A25, A27, A29,
-   A31, A33, A35, A37, A39, A41, A43, A45, A47)>;
+   A31, A33, A35, A37, A39, A41, A43, A45, A47, A49, A51, A53, A55, A57, A59,
+   A61, A63)>;
 
 // XBR - Block Registers Even Numbered
 let Size = 128 in
@@ -1537,7 +1638,9 @@ def BlockRegE : RegisterClass<"KVX",
      B0,   B2,   B4,   B6,   B8,  B10,  B12,  B14,  B16,  B18,  B20,  B22,
     B24,  B26,  B28,  B30,  B32,  B34,  B36,  B38,  B40,  B42,  B44,  B46,
     B48,  B50,  B52,  B54,  B56,  B58,  B60,  B62,  B64,  B66,  B68,  B70,
-    B72,  B74,  B76,  B78,  B80,  B82,  B84,  B86,  B88,  B90,  B92,  B94)>;
+    B72,  B74,  B76,  B78,  B80,  B82,  B84,  B86,  B88,  B90,  B92,  B94,
+    B96,  B98, B100, B102, B104, B106, B108, B110, B112, B114, B116, B118,
+   B120, B122, B124, B126)>;
 
 // XBR - Block Registers Odd Numbered
 let Size = 128 in
@@ -1547,7 +1650,9 @@ def BlockRegO : RegisterClass<"KVX",
      B1,   B3,   B5,   B7,   B9,  B11,  B13,  B15,  B17,  B19,  B21,  B23,
     B25,  B27,  B29,  B31,  B33,  B35,  B37,  B39,  B41,  B43,  B45,  B47,
     B49,  B51,  B53,  B55,  B57,  B59,  B61,  B63,  B65,  B67,  B69,  B71,
-    B73,  B75,  B77,  B79,  B81,  B83,  B85,  B87,  B89,  B91,  B93,  B95)>;
+    B73,  B75,  B77,  B79,  B81,  B83,  B85,  B87,  B89,  B91,  B93,  B95,
+    B97,  B99, B101, B103, B105, B107, B109, B111, B113, B115, B117, B119,
+   B121, B123, B125, B127)>;
 
 // XBR - Block Registers 0 Modulo 4
 let Size = 128 in
@@ -1555,7 +1660,8 @@ def BlockReg0M4 : RegisterClass<"KVX",
   [v128i1],
   128, (add
      B0,   B4,   B8,  B12,  B16,  B20,  B24,  B28,  B32,  B36,  B40,  B44,
-    B48,  B52,  B56,  B60,  B64,  B68,  B72,  B76,  B80,  B84,  B88,  B92)>;
+    B48,  B52,  B56,  B60,  B64,  B68,  B72,  B76,  B80,  B84,  B88,  B92,
+    B96, B100, B104, B108, B112, B116, B120, B124)>;
 
 // XBR - Block Registers 1 Modulo 4
 let Size = 128 in
@@ -1563,7 +1669,8 @@ def BlockReg1M4 : RegisterClass<"KVX",
   [v128i1],
   128, (add
      B1,   B5,   B9,  B13,  B17,  B21,  B25,  B29,  B33,  B37,  B41,  B45,
-    B49,  B53,  B57,  B61,  B65,  B69,  B73,  B77,  B81,  B85,  B89,  B93)>;
+    B49,  B53,  B57,  B61,  B65,  B69,  B73,  B77,  B81,  B85,  B89,  B93,
+    B97, B101, B105, B109, B113, B117, B121, B125)>;
 
 // XBR - Block Registers 2 Modulo 4
 let Size = 128 in
@@ -1571,7 +1678,8 @@ def BlockReg2M4 : RegisterClass<"KVX",
   [v128i1],
   128, (add
      B2,   B6,  B10,  B14,  B18,  B22,  B26,  B30,  B34,  B38,  B42,  B46,
-    B50,  B54,  B58,  B62,  B66,  B70,  B74,  B78,  B82,  B86,  B90,  B94)>;
+    B50,  B54,  B58,  B62,  B66,  B70,  B74,  B78,  B82,  B86,  B90,  B94,
+    B98, B102, B106, B110, B114, B118, B122, B126)>;
 
 // XBR - Block Registers 3 Modulo 4
 let Size = 128 in
@@ -1579,7 +1687,8 @@ def BlockReg3M4 : RegisterClass<"KVX",
   [v128i1],
   128, (add
      B3,   B7,  B11,  B15,  B19,  B23,  B27,  B31,  B35,  B39,  B43,  B47,
-    B51,  B55,  B59,  B63,  B67,  B71,  B75,  B79,  B83,  B87,  B91,  B95)>;
+    B51,  B55,  B59,  B63,  B67,  B71,  B75,  B79,  B83,  B87,  B91,  B95,
+    B99, B103, B107, B111, B115, B119, B123, B127)>;
 
 // XCR - Coprocessor Registers 0 Modulo 4
 let Size = 64 in
@@ -1589,7 +1698,9 @@ def CoproReg0M4 : RegisterClass<"KVX",
      C0,   C4,   C8,  C12,  C16,  C20,  C24,  C28,  C32,  C36,  C40,  C44,
     C48,  C52,  C56,  C60,  C64,  C68,  C72,  C76,  C80,  C84,  C88,  C92,
     C96, C100, C104, C108, C112, C116, C120, C124, C128, C132, C136, C140,
-   C144, C148, C152, C156, C160, C164, C168, C172, C176, C180, C184, C188)>;
+   C144, C148, C152, C156, C160, C164, C168, C172, C176, C180, C184, C188,
+   C192, C196, C200, C204, C208, C212, C216, C220, C224, C228, C232, C236,
+   C240, C244, C248, C252)>;
 
 // XCR - Coprocessor Registers 1 Modulo 4
 let Size = 64 in
@@ -1599,7 +1710,9 @@ def CoproReg1M4 : RegisterClass<"KVX",
      C1,   C5,   C9,  C13,  C17,  C21,  C25,  C29,  C33,  C37,  C41,  C45,
     C49,  C53,  C57,  C61,  C65,  C69,  C73,  C77,  C81,  C85,  C89,  C93,
     C97, C101, C105, C109, C113, C117, C121, C125, C129, C133, C137, C141,
-   C145, C149, C153, C157, C161, C165, C169, C173, C177, C181, C185, C189)>;
+   C145, C149, C153, C157, C161, C165, C169, C173, C177, C181, C185, C189,
+   C193, C197, C201, C205, C209, C213, C217, C221, C225, C229, C233, C237,
+   C241, C245, C249, C253)>;
 
 // XCR - Coprocessor Registers 2 Modulo 4
 let Size = 64 in
@@ -1609,7 +1722,9 @@ def CoproReg2M4 : RegisterClass<"KVX",
      C2,   C6,  C10,  C14,  C18,  C22,  C26,  C30,  C34,  C38,  C42,  C46,
     C50,  C54,  C58,  C62,  C66,  C70,  C74,  C78,  C82,  C86,  C90,  C94,
     C98, C102, C106, C110, C114, C118, C122, C126, C130, C134, C138, C142,
-   C146, C150, C154, C158, C162, C166, C170, C174, C178, C182, C186, C190)>;
+   C146, C150, C154, C158, C162, C166, C170, C174, C178, C182, C186, C190,
+   C194, C198, C202, C206, C210, C214, C218, C222, C226, C230, C234, C238,
+   C242, C246, C250, C254)>;
 
 // XCR - Coprocessor Registers 3 Modulo 4
 let Size = 64 in
@@ -1619,4 +1734,11 @@ def CoproReg3M4 : RegisterClass<"KVX",
      C3,   C7,  C11,  C15,  C19,  C23,  C27,  C31,  C35,  C39,  C43,  C47,
     C51,  C55,  C59,  C63,  C67,  C71,  C75,  C79,  C83,  C87,  C91,  C95,
     C99, C103, C107, C111, C115, C119, C123, C127, C131, C135, C139, C143,
-   C147, C151, C155, C159, C163, C167, C171, C175, C179, C183, C187, C191)>;
+   C147, C151, C155, C159, C163, C167, C171, C175, C179, C183, C187, C191,
+   C195, C199, C203, C207, C211, C215, C219, C223, C227, C231, C235, C239,
+   C243, C247, C251, C255)>;
+
+// X8R - Extension 8-Register Buffer
+let Size = 2048, CopyCost = 8 in
+def Buffer8Reg : RegisterClass<"KVX", [untyped],
+  2048, (add I0, I1, I2, I3, I4, I5, I6, I7)>;

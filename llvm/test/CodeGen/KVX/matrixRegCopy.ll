@@ -10,13 +10,13 @@ define void @c([512 x float]* %0, [512 x float]* %1, [768 x half]* %2, [512 x ha
 ; CHECK-NEXT:    compd.ltu $r0 = $r0, 508
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_1: # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    fmma242hw0 $a0_lo = $a0a1, $a0, $a0
+; CHECK-NEXT:    fmma242hw0 $a0.lo = $a0a1, $a0, $a0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmma242hw1 $a0_hi = $a0a1, $a0, $a0
+; CHECK-NEXT:    fmma242hw1 $a0.hi = $a0a1, $a0, $a0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmma242hw2 $a0_lo = $a0a1, $a0, $a0
+; CHECK-NEXT:    fmma242hw2 $a0.lo = $a0a1, $a0, $a0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmma242hw3 $a0_hi = $a0a1, $a0, $a0
+; CHECK-NEXT:    fmma242hw3 $a0.hi = $a0a1, $a0, $a0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv.c3 $a0a1a2a3 = 0[$r0]
 ; CHECK-NEXT:    ;;

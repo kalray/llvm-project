@@ -41,13 +41,13 @@ define i32 @a() {
 ; CHECK-NEXT:    alignv $a0 = $a0, $a3, $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_5: # in Loop: Header=BB0_1 Depth=1
-; CHECK-NEXT:    convwbv0.rz.sat $a2_x = $a0a1a2a3
+; CHECK-NEXT:    convwbv0.rz.sat $a2.x = $a0a1a2a3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    convwbv1.rz.sat $a2_y = $a0a1a2a3
+; CHECK-NEXT:    convwbv1.rz.sat $a2.y = $a0a1a2a3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    convwbv2.rz.sat $a2_z = $a0a1a2a3
+; CHECK-NEXT:    convwbv2.rz.sat $a2.z = $a0a1a2a3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    convwbv3.rz.sat $a2_t = $a0a1a2a3
+; CHECK-NEXT:    convwbv3.rz.sat $a2.t = $a0a1a2a3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 0[$r0] = $a2
 ; CHECK-NEXT:    addd $r0 = $r0, 2

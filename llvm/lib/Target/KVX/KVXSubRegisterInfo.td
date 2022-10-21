@@ -11,8 +11,13 @@
 //  Declarations that describe the KVX sub-register files
 //===----------------------------------------------------------------------===//
 // TCA sub-registers
+def sub_m0 : SubRegIndex<1024>;
+def sub_m1 : SubRegIndex<1024,1024>;
+
 def sub_w0 : SubRegIndex<512>;
 def sub_w1 : SubRegIndex<512,512>;
+def sub_w2 : ComposedSubRegIndex<sub_m1, sub_w0>;
+def sub_w3 : ComposedSubRegIndex<sub_m1, sub_w1>;
 
 def sub_v0 : SubRegIndex<256>;
 def sub_v1 : SubRegIndex<256,256>;

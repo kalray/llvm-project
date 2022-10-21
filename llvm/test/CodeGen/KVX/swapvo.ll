@@ -27,8 +27,8 @@ define i32 @main() {
 ; CV1-NEXT:    copyd $r2 = $r7
 ; CV1-NEXT:    make $r3 = 4
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    movetq $a0_lo = $r0, $r1
-; CV1-NEXT:    movetq $a0_hi = $r2, $r3
+; CV1-NEXT:    movetq $a0.lo = $r0, $r1
+; CV1-NEXT:    movetq $a0.hi = $r2, $r3
 ; CV1-NEXT:    movefo $r0r1r2r3 = $a0
 ; CV1-NEXT:    make $r4 = 0
 ; CV1-NEXT:    ;;
@@ -77,8 +77,8 @@ define i32 @main() {
 ; CV2-NEXT:    copyd $r2 = $r7
 ; CV2-NEXT:    make $r3 = 4
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xmovetq $a0_lo = $r0, $r1
-; CV2-NEXT:    xmovetq $a0_hi = $r2, $r3
+; CV2-NEXT:    xmovetq $a0.lo = $r0, $r1
+; CV2-NEXT:    xmovetq $a0.hi = $r2, $r3
 ; CV2-NEXT:    xmovefo $r0r1r2r3 = $a0
 ; CV2-NEXT:    make $r4 = 0
 ; CV2-NEXT:    ;;
