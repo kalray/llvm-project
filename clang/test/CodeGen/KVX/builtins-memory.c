@@ -116,7 +116,7 @@ void tlbwrite(void) {
 // CHECK-NEXT:    ret i8 [[TMP1]]
 //
 unsigned char lbz(void *p) {
-  return __builtin_kvx_lbz(p, ".u", 0);
+  return __builtin_kvx_lbz(p, ".u");
 }
 
 // CHECK-LABEL: @lbs(
