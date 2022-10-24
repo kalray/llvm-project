@@ -2149,6 +2149,7 @@ def FABSD : KVX_INSTRUCTION
    [(set f64:$a1, (fabs f64:$a2))],
    ALU_SWITCH_LITE_TINY>;
 
+let Uses = [CS] in
 def FSRECD : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fsrecd$a1 $a2 = $a3",
@@ -2161,6 +2162,7 @@ def FSRSRD : KVX_INSTRUCTION
    [/* no straightforward pattern */],
    ALU_LITE>;
 
+let Uses = [CS] in {
 def FWIDENLWD : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fwidenlwd$a1 $a2 = $a3",
@@ -2178,6 +2180,7 @@ def FNARROWDW : KVX_INSTRUCTION
    "fnarrowdw$a1$a2 $a3 = $a4",
    [/* no straightforward pattern */],
    ALU_FULL>;
+} // let Uses = [CS] in
 
 def FNEGW : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
@@ -2191,6 +2194,7 @@ def FABSW : KVX_INSTRUCTION
    [(set f32:$a1, (fabs f32:$a2))],
    ALU_SWITCH_LITE_TINY>;
 
+let Uses = [CS] in {
 def FRECW : KVX_INSTRUCTION
   <(outs SingleReg:$a3), (ins SingleReg:$a4, RoundingMod:$a1, SilentMod:$a2),
    "frecw$a1$a2 $a3 = $a4",
@@ -2208,6 +2212,7 @@ def FSRECW : KVX_INSTRUCTION
    "fsrecw$a1 $a2 = $a3",
    [/* no straightforward pattern */],
    ALU_LITE>;
+}
 
 def FSRSRW : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
@@ -2215,6 +2220,7 @@ def FSRSRW : KVX_INSTRUCTION
    [/* no straightforward pattern */],
    ALU_LITE>;
 
+let Uses = [CS] in {
 def FWIDENLHW : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fwidenlhw$a1 $a2 = $a3",
@@ -2232,6 +2238,7 @@ def FNARROWWH : KVX_INSTRUCTION
    "fnarrowwh$a1$a2 $a3 = $a4",
    [/* no straightforward pattern */],
    ALU_LITE>;
+} // let Uses = [CS] in
 
 def FNEGWP : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
@@ -2245,6 +2252,7 @@ def FABSWP : KVX_INSTRUCTION
    [(set v2f32:$a1, (fabs v2f32:$a2))],
    ALU_SWITCH_LITE_TINY>;
 
+let Uses = [CS] in
 def FSRECWP : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fsrecwp$a1 $a2 = $a3",
@@ -2257,18 +2265,21 @@ def FSRSRWP : KVX_INSTRUCTION
    [/* no straightforward pattern */],
    ALU_LITE>;
 
+let Uses = [CS] in
 def FWIDENLHWP : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fwidenlhwp$a1 $a2 = $a3",
    [/* no straightforward pattern */],
    ALU_LITE>;
 
+let Uses = [CS] in
 def FWIDENMHWP : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fwidenmhwp$a1 $a2 = $a3",
    [/* no straightforward pattern */],
    ALU_LITE>;
 
+let Uses = [CS] in
 def FNARROWDWP : KVX_INSTRUCTION
   <(outs SingleReg:$a3), (ins PairedReg:$a4, RoundingMod:$a1, SilentMod:$a2),
    "fnarrowdwp$a1$a2 $a3 = $a4",
@@ -2287,6 +2298,7 @@ def FABSHQ : KVX_INSTRUCTION
    [(set f16:$a1, (fabs f16:$a2))],
    ALU_SWITCH_LITE_TINY>;
 
+let Uses = [CS] in
 def FNARROWWHQ : KVX_INSTRUCTION
   <(outs SingleReg:$a3), (ins PairedReg:$a4, RoundingMod:$a1, SilentMod:$a2),
    "fnarrowwhq$a1$a2 $a3 = $a4",
@@ -2566,6 +2578,7 @@ def FCOMPNHQ : KVX_INSTRUCTION
    [/* no straightforward pattern */],
    ALU_SWITCH_LITE_TINY>;
 
+let Uses = [CS] in {
 def FSDIVD : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins PairedReg:$a3, SilentMod:$a1),
    "fsdivd$a1 $a2 = $a3",
@@ -2601,6 +2614,7 @@ def FCDIVWP : KVX_INSTRUCTION
    "fcdivwp$a1 $a2 = $a3",
    [/* no straightforward pattern */],
    ALU_LITE>;
+} // let Uses = [CS] in
 
 let Constraints = "$out = $acc" in
 class FFM_FAMILY_ACC <string OpcStr, RegisterClass RC_OUT, RegisterClass RC_IN, InstrItinClass itin>
@@ -2620,6 +2634,7 @@ class FFM_FAMILY<string OpcStr, RegisterClass RC_OUT, RegisterClass RC_IN, Instr
      itin>;
 
 let Predicates = [IsV2] in {
+let Uses = [CS] in {
 def FFDMAW : ROUNDING_SILENT_BINOP_FFDM<"ffdmaw", SingleReg, SingleReg, MAU_FP>;
 def FFDMAWP: ROUNDING_SILENT_BINOP_FFDM<"ffdmawp", SingleReg, PairedReg, MAU_FP>;
 
@@ -2642,6 +2657,7 @@ def FFDMSAW : ROUNDING_SILENT_TERNARY_AUXR_FP<"ffdmsaw", SingleReg, SingleReg, M
 def FFDMSAWP : ROUNDING_SILENT_TERNARY_AUXR_FP<"ffdmsawp", SingleReg, PairedReg, MAU_AUXR_FP>;
 
 def FMULWCP : CONJ_ROUNDING_SILENT_BINOP<"fmulwcp", PairedReg, PairedReg, MAU_FP>;
+}
 
 def XFSCALEWO : ROUNDING_SILENT_BINOP<"xfscalewo", VectorReg, VectorReg, SingleReg, BCU_CRRP_CRWL_CRWH_RR,
                 [(set v256i1:$o, (int_kvx_xfscalewo v256i1:$lhs, i32:$rhs, RoundingMod:$r, SilentMod:$s))]>;
@@ -2794,6 +2810,7 @@ def FMAXHQ : KVX_INSTRUCTION
    [(set v4f16:$a1, (fmaxnum v4f16:$a2, v4f16:$a3))],
    ALU_SWITCH_LITE_TINY>;
 
+let Uses = [CS] in {
 def FLOATD : KVX_INSTRUCTION
   <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
    "floatd$a1$a2 $a3 = $a4, $a5",
@@ -2865,6 +2882,7 @@ def FIXEDUW : KVX_INSTRUCTION
    "fixeduw$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */],
    MAU_FP>;
+}
 
 defm MADDD : MC_20<"maddd">;
 
@@ -3201,6 +3219,7 @@ def MM212W : KVX_INSTRUCTION
    [/* no straightforward pattern */],
    MAU_INT>;
 
+let Uses = [CS] in {
 defm FFMAD : MC_26<"ffmad">;
 
 defm FFMAWP : MC_27<"ffmawp">;
@@ -3340,6 +3359,7 @@ def FMM212W : KVX_INSTRUCTION
    "fmm212w$a1$a2 $a3 = $a4, $a5",
    [/* no straightforward pattern */],
    MAU_INT>;
+} // let Uses = [CS] in
 
 let isMoveReg = 1 in
 def COPYQ : KVX_INSTRUCTION
@@ -3355,6 +3375,7 @@ def COPYO : KVX_INSTRUCTION
    [/* no straightforward pattern */],
    LSU_AUXR_AUXW_LOAD>;
 
+let Uses = [PCR] in {
 defm MOVETQ : MC_XMOVETQ<"movetq", ALU_LITE_CRWL, ALU_LITE_CRWH>, Requires<[IsV1]>;
 
 defm XMOVETQ : MC_XMOVETQ<"xmovetq", ALU_TINY_CRWL, ALU_TINY_CRWH>, Requires<[IsV2]>;
@@ -3363,7 +3384,6 @@ defm ALIGNO : MC_33<"aligno">, Requires<[IsV1]>;
 
 defm ALIGNV : MC_34<"alignv">, Requires<[IsV1]>;
 
-let Uses = [PCR] in {
 def MT44D : KVX_INSTRUCTION
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2),
    "mt44d $a1 = $a2",
@@ -3466,6 +3486,7 @@ def MMA444USHD : KVX_INSTRUCTION
    [/* no straightforward pattern */],
    TCA_INT>, Requires<[IsV1]>;
 
+let Uses = [PCR, CS] in {
 def FMMA242HW0 : KVX_INSTRUCTION
   <(outs BlockReg0M4:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
    "fmma242hw0 $a1 = $a2, $a3, $a4",
@@ -3489,6 +3510,7 @@ def FMMA242HW3 : KVX_INSTRUCTION
    "fmma242hw3 $a1 = $a2, $a3, $a4",
    [/* no straightforward pattern */],
    TCA_FP>, Requires<[IsV1]>;
+} // let Uses = [PCR, CS] in
 
 def CONVDHV0 : KVX_INSTRUCTION
   <(outs BlockRegE:$a3), (ins MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2),
@@ -3532,12 +3554,13 @@ def FSCALEWV : KVX_INSTRUCTION
    [/* no straightforward pattern */],
    TCA_INT>, Requires<[IsV1]>;
 
+let Uses = [CS, PCR] in
 def FNARROWWHV : KVX_INSTRUCTION
   <(outs VectorReg:$a3), (ins WideReg:$a4, RoundingMod:$a1, SilentMod:$a2),
    "fnarrowwhv$a1$a2 $a3 = $a4",
    [/* no straightforward pattern */],
    TCA_INT>, Requires<[IsV1]>;
-}
+} // Uses = [CS, PCR]
 
 let isPredicable = 1 in
 def COPYD : KVX_INSTRUCTION
@@ -3690,6 +3713,7 @@ defm ABDSWP : MC_17_TINY<"abdswp">, Requires<[IsV2]>;
 defm ABDSD : MC_17_TINY<"abdsd">, Requires<[IsV2]>;
 }
 
+let Uses = [CS] in {
 def FMM222W : FP_PairedReg_PairedReg_PairedReg_Transp_Round_Silent
   <"fmm222w", MAU_FP>, Requires<[IsV2]>;
 
@@ -3698,6 +3722,7 @@ def FMMA222W : FP_PairedReg_PairedReg_PairedReg_Transp_Round_Silent_Accumulate
 
 def FMMS222W : FP_PairedReg_PairedReg_PairedReg_Transp_Round_Silent_Accumulate
   <"fmms222w", MAU_AUXR_FP>, Requires<[IsV2]>;
+} // let Uses = [CS] in
 
 defm SLSBOS : MC_18<"slsbos">, Requires<[IsV2]>;
 defm SLUSBOS : MC_18<"slusbos">, Requires<[IsV2]>;
