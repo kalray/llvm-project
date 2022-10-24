@@ -12,13 +12,11 @@ target triple = "kvx-kalray-cos"
 define float @setcs_asm(i64 %l, float %a, float %b) {
 ; CHECK-LABEL: setcs_asm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    faddw $r1 = $r1, $r2
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    set $cs = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP
-; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    faddw $r0 = $r1, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -30,13 +28,11 @@ entry:
 define float @setcs_builtin(i64 %l, float %a, float %b) {
 ; CHECK-LABEL: setcs_builtin:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    faddw $r1 = $r1, $r2
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    set $cs = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP
-; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    faddw $r0 = $r1, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -54,9 +50,7 @@ define float @setcs_asm2(i64 %l, float %a, float %b, float %c) {
 ; CHECK-NEXT:    set $cs = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP
-; CHECK-NEXT:    faddw $r1 = $r2, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    faddw $r0 = $r2, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -75,9 +69,7 @@ define float @setcs_builtin2(i64 %l, float %a, float %b, float %c) {
 ; CHECK-NEXT:    set $cs = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP
-; CHECK-NEXT:    faddw $r1 = $r2, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    faddw $r0 = $r2, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

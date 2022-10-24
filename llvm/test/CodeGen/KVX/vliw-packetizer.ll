@@ -67,13 +67,11 @@ entry:
 ; instruction on CS.
 define float @rule4_set(i64 %a, float %b, float %c) {
 ; CHECK-LABEL: rule4_set:
-; CHECK:         faddw $r1 = $r1, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    #APP
+; CHECK:         #APP
 ; CHECK-NEXT:    set $cs = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP
-; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    faddw $r0 = $r1, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ;
@@ -97,13 +95,11 @@ declare float @llvm.kvx.faddw(float, float, i32, i32) #2
 
 define float @rule4_set_builtins_only(i64 %a, float %b, float %c) {
 ; CHECK-LABEL: rule4_set_builtins_only:
-; CHECK:         faddw.rn $r1 = $r1, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    #APP
+; CHECK:         #APP
 ; CHECK-NEXT:    set $cs = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP
-; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    faddw.rn $r0 = $r1, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ;
@@ -125,13 +121,11 @@ entry:
 
 define float @rule4_wfxm(i64 %a, float %b, float %c) {
 ; CHECK-LABEL: rule4_wfxm:
-; CHECK:         faddw $r1 = $r1, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    #APP
+; CHECK:         #APP
 ; CHECK-NEXT:    wfxm $cs, $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP
-; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    faddw $r0 = $r1, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ;
@@ -153,13 +147,11 @@ entry:
 
 define float @rule4_wfxm_builtins_only(i64 %a, float %b, float %c) {
 ; CHECK-LABEL: rule4_wfxm_builtins_only:
-; CHECK:         faddw.rn $r1 = $r1, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    #APP
+; CHECK:         #APP
 ; CHECK-NEXT:    wfxm $cs, $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP
-; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    faddw.rn $r0 = $r1, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ;
@@ -183,13 +175,11 @@ declare void @llvm.kvx.wfxm(i32, i64)
 
 define float @rule4_wfxl(i64 %a, float %b, float %c) {
 ; CHECK-LABEL: rule4_wfxl:
-; CHECK:         faddw $r1 = $r1, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    #APP
+; CHECK:         #APP
 ; CHECK-NEXT:    wfxl $cs, $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP
-; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    faddw $r0 = $r1, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ;
