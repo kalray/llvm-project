@@ -423,46 +423,6 @@ def: Pat<(int_kvx_fsrecd f64:$v, i32:$silent), (FSRECD SingleReg:$v, SilentMod:$
 def: Pat<(int_kvx_fsrsrw f32:$v), (FSRSRW SingleReg:$v)>;
 def: Pat<(int_kvx_fsrsrd f64:$v), (FSRSRD SingleReg:$v)>;
 
-def: Pat<(int_kvx_maxhq v4i16:$v1, v4i16:$v2), (MAXHQrr SingleReg:$v1, SingleReg:$v2)>;
-def: Pat<(int_kvx_maxw i32:$v1, i32:$v2), (MAXWrr SingleReg:$v1, SingleReg:$v2)>;
-def: Pat<(int_kvx_maxw i32:$v1, Signed10W:$v2), (MAXWri10 SingleReg:$v1, Signed10W:$v2)>;
-def: Pat<(int_kvx_maxw i32:$v1, Signed37W:$v2), (MAXWri10 SingleReg:$v1, Signed37W:$v2)>;
-def: Pat<(int_kvx_maxwp v2i32:$v1, v2i32:$v2), (MAXWPrr SingleReg:$v1, SingleReg:$v2)>;
-def: Pat<(int_kvx_maxd i64:$v1, i64:$v2) ,(MAXDrr SingleReg:$v1, SingleReg:$v2)>;
-def: Pat<(int_kvx_maxd i64:$v1, Signed10:$v2) ,(MAXDri10 SingleReg:$v1, Signed10:$v2)>;
-def: Pat<(int_kvx_maxd i64:$v1, Signed37:$v2) ,(MAXDri37 SingleReg:$v1, Signed37:$v2)>;
-def: Pat<(int_kvx_maxd i64:$v1, Wrapped64:$v2) ,(MAXDri64 SingleReg:$v1, Wrapped64:$v2)>;
-
-def: Pat<(int_kvx_minhq v4i16:$v1, v4i16:$v2), (MINHQrr SingleReg:$v1, SingleReg:$v2)>;
-def: Pat<(int_kvx_minw i32:$v1, i32:$v2), (MINWrr SingleReg:$v1, SingleReg:$v2)>;
-def: Pat<(int_kvx_minw i32:$v1, Signed10W:$v2), (MINWri10 SingleReg:$v1, Signed10W:$v2)>;
-def: Pat<(int_kvx_minw i32:$v1, Signed37W:$v2), (MINWri10 SingleReg:$v1, Signed37W:$v2)>;
-def: Pat<(int_kvx_minwp v2i32:$v1, v2i32:$v2), (MINWPrr SingleReg:$v1, SingleReg:$v2)>;
-def: Pat<(int_kvx_mind i64:$v1, i64:$v2) ,(MINDrr SingleReg:$v1, SingleReg:$v2)>;
-def: Pat<(int_kvx_mind i64:$v1, Signed10:$v2) ,(MINDri10 SingleReg:$v1, Signed10:$v2)>;
-def: Pat<(int_kvx_mind i64:$v1, Signed37:$v2) ,(MINDri37 SingleReg:$v1, Signed37:$v2)>;
-def: Pat<(int_kvx_mind i64:$v1, Wrapped64:$v2) ,(MINDri64 SingleReg:$v1, Wrapped64:$v2)>;
-
-def: Pat<(int_kvx_maxuhq v4i16:$v1, v4i16:$v2), (MAXUHQrr SingleReg:$v1, SingleReg:$v2)>;
-def: Pat<(int_kvx_maxuw i32:$v1, i32:$v2), (MAXUWrr SingleReg:$v1, SingleReg:$v2)>;
-def: Pat<(int_kvx_maxuw i32:$v1, Signed10W:$v2), (MAXUWri10 SingleReg:$v1, Signed10W:$v2)>;
-def: Pat<(int_kvx_maxuw i32:$v1, Signed37W:$v2), (MAXUWri10 SingleReg:$v1, Signed37W:$v2)>;
-def: Pat<(int_kvx_maxuwp v2i32:$v1, v2i32:$v2), (MAXUWPrr SingleReg:$v1, SingleReg:$v2)>;
-def: Pat<(int_kvx_maxud i64:$v1, i64:$v2) ,(MAXUDrr SingleReg:$v1, SingleReg:$v2)>;
-def: Pat<(int_kvx_maxud i64:$v1, Signed10:$v2) ,(MAXUDri10 SingleReg:$v1, Signed10:$v2)>;
-def: Pat<(int_kvx_maxud i64:$v1, Signed37:$v2) ,(MAXUDri37 SingleReg:$v1, Signed37:$v2)>;
-def: Pat<(int_kvx_maxud i64:$v1, Wrapped64:$v2) ,(MAXUDri64 SingleReg:$v1, Wrapped64:$v2)>;
-
-def: Pat<(int_kvx_minuhq v4i16:$v1, v4i16:$v2), (MINUHQrr SingleReg:$v1, SingleReg:$v2)>;
-def: Pat<(int_kvx_minuw i32:$v1, i32:$v2), (MINUWrr SingleReg:$v1, SingleReg:$v2)>;
-def: Pat<(int_kvx_minuw i32:$v1, Signed10W:$v2), (MINUWri10 SingleReg:$v1, Signed10W:$v2)>;
-def: Pat<(int_kvx_minuw i32:$v1, Signed37W:$v2), (MINUWri10 SingleReg:$v1, Signed37W:$v2)>;
-def: Pat<(int_kvx_minuwp v2i32:$v1, v2i32:$v2), (MINUWPrr SingleReg:$v1, SingleReg:$v2)>;
-def: Pat<(int_kvx_minud i64:$v1, i64:$v2) ,(MINUDrr SingleReg:$v1, SingleReg:$v2)>;
-def: Pat<(int_kvx_minud i64:$v1, Signed10:$v2) ,(MINUDri10 SingleReg:$v1, Signed10:$v2)>;
-def: Pat<(int_kvx_minud i64:$v1, Signed37:$v2) ,(MINUDri37 SingleReg:$v1, Signed37:$v2)>;
-def: Pat<(int_kvx_minud i64:$v1, Wrapped64:$v2) ,(MINUDri64 SingleReg:$v1, Wrapped64:$v2)>;
-
 multiclass INT_MADDDT_FAMILY <Intrinsic int_madddt, bit isSub=0> {
   defvar rr = !cond(isSub:!cast<Instruction>(NAME),
                     !not(isSub):!cast<Instruction>(NAME # rr));
