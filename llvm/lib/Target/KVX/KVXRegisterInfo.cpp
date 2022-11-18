@@ -209,3 +209,12 @@ bool KVXRegisterInfo::isConstantPhysReg(MCRegister PhysReg) const {
 const uint32_t *KVXRegisterInfo::getNoPreservedMask() const {
   return CSR_NoRegs_RegMask;
 }
+
+ArrayRef<MCPhysReg>
+KVXRegisterInfo::getIntraCallClobberedRegs(const MachineFunction *MF) const {
+  // FIXME: If the function definition is available, parse it to detect which
+  // are not changed. e.g: No fp instructions and no set/wfx instructions, CS is
+  // not changed. Same for PCR.
+  return {KVX::PM0, KVX::PM1, KVX::PM2, KVX::PM3, KVX::PM4,
+          KVX::PM5, KVX::PM6, KVX::PM7, KVX::PCR, KVX::CS};
+}

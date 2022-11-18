@@ -46,6 +46,9 @@ struct KVXRegisterInfo : public KVXGenRegisterInfo {
 
   bool isConstantPhysReg(MCRegister PhysReg) const override;
   const uint32_t *getNoPreservedMask() const override;
+
+  ArrayRef<MCPhysReg>
+  getIntraCallClobberedRegs(const MachineFunction *MF) const override;
 };
 
 } // namespace llvm

@@ -193,17 +193,18 @@ define void @_pocl_kernel_math_kernel_nohwloop_fdiv_half( half %a, half %b, i64 
 ; CHECK-NEXT:    sd 48[$r12] = $r22
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 32[$r12] = $r20r21
-; CHECK-NEXT:    fwidenlhw $r20 = $r0
-; CHECK-NEXT:    fwidenlhw $r21 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 16[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r3
 ; CHECK-NEXT:    copyd $r19 = $r2
+; CHECK-NEXT:    copyd $r20 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r21 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB3_1: # %pregion_for_entry.pregion_for_init4.i
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    copyd $r0 = $r20
-; CHECK-NEXT:    copyd $r1 = $r21
+; CHECK-NEXT:    fwidenlhw $r0 = $r21
+; CHECK-NEXT:    fwidenlhw $r1 = $r20
 ; CHECK-NEXT:    call __divsf3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0

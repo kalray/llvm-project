@@ -10,17 +10,17 @@ define i32 @add_pm0() {
 ; CHECK-LABEL: add_pm0:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = a
-; CHECK-NEXT:    get $r1 = $pm0
+; CHECK-NEXT:    get $r2 = $pm0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r2 = 0[$r0]
+; CHECK-NEXT:    lwz $r1 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r1 = $r2, $r1
+; CHECK-NEXT:    addw $r1 = $r1, $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 0[$r0] = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call i64 @llvm.kvx.get(i32 13)
+  %0 = tail call i64 @llvm.read_register.i64(metadata !0)
   %1 = load i32, i32* @a, align 4
   %2 = trunc i64 %0 to i32
   %conv1 = add i32 %1, %2
@@ -28,5 +28,6 @@ entry:
   ret i32 undef
 }
 
-declare i64 @llvm.kvx.get(i32)
+declare i64 @llvm.read_register.i64(metadata)
 
+!0 = !{!"$pm0"}

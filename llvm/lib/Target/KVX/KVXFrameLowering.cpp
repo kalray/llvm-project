@@ -537,7 +537,7 @@ void KVXFrameLowering::emitStackCheck(MachineFunction &MF,
   unsigned StackLimitReg = findScratchRegister(MBB, false, KVX::R17);
   unsigned NewSPReg = findScratchRegister(MBB, false, KVX::R16);
   MachineBasicBlock::iterator CheckI = CheckMBB->begin();
-  BuildMI(*CheckMBB, CheckI, DL, TII->get(KVX::GETss2), StackLimitReg)
+  BuildMI(*CheckMBB, CheckI, DL, TII->get(KVX::GET), StackLimitReg)
       .addReg(KVX::SR)
       .setMIFlag(MachineInstr::FrameSetup);
   BuildMI(*CheckMBB, CheckI, DL, TII->get(getStackADDOpcode(StackSize)),
@@ -557,7 +557,7 @@ void KVXFrameLowering::emitStackCheck(MachineFunction &MF,
       .setMIFlags(MachineInstr::FrameSetup);
 
   MachineBasicBlock::iterator CallI = CallMBB->begin();
-  BuildMI(*CallMBB, CallI, DL, TII->get(KVX::GETss2), KVX::R0)
+  BuildMI(*CallMBB, CallI, DL, TII->get(KVX::GET), KVX::R0)
       .addReg(KVX::PC)
       .setMIFlags(MachineInstr::FrameSetup);
   BuildMI(*CallMBB, CallI, DL, TII->get(KVX::COPYD), KVX::R1).addReg(SPReg);

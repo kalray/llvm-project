@@ -42,7 +42,7 @@ define i32 @get(){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call i64 @llvm.kvx.get(i32 1)
+  %0 = tail call i64 @llvm.read_register.i64(metadata !0)
   %conv = trunc i64 %0 to i32
   ret i32 %conv
 }
@@ -159,3 +159,6 @@ entry:
 
 declare i32 @llvm.kvx.waitit(i64) #1
 
+declare i64 @llvm.read_register.i64(metadata)
+
+!0 = !{!"$ps"}

@@ -226,8 +226,8 @@ private:
     return !VT.getValueType().isVector();
   }
 
-  SDValue LowerINTRINSIC_WO_CHAIN(SDValue Op, SelectionDAG &DAG,
-                                  const KVXSubtarget *Subtarget) const;
+  SDValue LowerINTRINSIC(SDValue Op, SelectionDAG &DAG,
+                         const KVXSubtarget *Subtarget) const;
   MachineBasicBlock *
   EmitInstrWithCustomInserter(MachineInstr &MI,
                               MachineBasicBlock *MBB) const override;

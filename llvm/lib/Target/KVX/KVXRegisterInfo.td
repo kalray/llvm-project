@@ -100,175 +100,175 @@ class X16R<bits<2> num, string n, list<Register> subregs, list<string> alt = []>
 }
 
 // System Function Registers
-def PC      : SFR<  0,      "$pc",   ["$s0"]>, DwarfRegNum<[ 64]>;
-def PS      : SFR<  1,      "$ps",   ["$s1"]>, DwarfRegNum<[ 65]>;
-def PCR     : SFR<  2,     "$pcr",   ["$s2"]>, DwarfRegNum<[ 66]>;
-def RA      : SFR<  3,      "$ra",   ["$s3"]>, DwarfRegNum<[ 67]>;
-def CS      : SFR<  4,      "$cs",   ["$s4"]>, DwarfRegNum<[ 68]>;
-def CSIT    : SFR<  5,    "$csit",   ["$s5"]>, DwarfRegNum<[ 69]>;
-def AESPC   : SFR<  6,   "$aespc",   ["$s6"]>, DwarfRegNum<[ 70]>;
-def LS      : SFR<  7,      "$ls",   ["$s7"]>, DwarfRegNum<[ 71]>;
-def LE      : SFR<  8,      "$le",   ["$s8"]>, DwarfRegNum<[ 72]>;
-def LC      : SFR<  9,      "$lc",   ["$s9"]>, DwarfRegNum<[ 73]>;
-def IPE     : SFR< 10,     "$ipe",  ["$s10"]>, DwarfRegNum<[ 74]>;
-def MEN     : SFR< 11,     "$men",  ["$s11"]>, DwarfRegNum<[ 75]>;
-def PMC     : SFR< 12,     "$pmc",  ["$s12"]>, DwarfRegNum<[ 76]>;
-def PM0     : SFR< 13,     "$pm0",  ["$s13"]>, DwarfRegNum<[ 77]>;
-def PM1     : SFR< 14,     "$pm1",  ["$s14"]>, DwarfRegNum<[ 78]>;
-def PM2     : SFR< 15,     "$pm2",  ["$s15"]>, DwarfRegNum<[ 79]>;
-def PM3     : SFR< 16,     "$pm3",  ["$s16"]>, DwarfRegNum<[ 80]>;
-def PMSA    : SFR< 17,    "$pmsa",  ["$s17"]>, DwarfRegNum<[ 81]>;
-def TCR     : SFR< 18,     "$tcr",  ["$s18"]>, DwarfRegNum<[ 82]>;
-def T0V     : SFR< 19,     "$t0v",  ["$s19"]>, DwarfRegNum<[ 83]>;
-def T1V     : SFR< 20,     "$t1v",  ["$s20"]>, DwarfRegNum<[ 84]>;
-def T0R     : SFR< 21,     "$t0r",  ["$s21"]>, DwarfRegNum<[ 85]>;
-def T1R     : SFR< 22,     "$t1r",  ["$s22"]>, DwarfRegNum<[ 86]>;
-def WDV     : SFR< 23,     "$wdv",  ["$s23"]>, DwarfRegNum<[ 87]>;
-def WDR     : SFR< 24,     "$wdr",  ["$s24"]>, DwarfRegNum<[ 88]>;
-def ILE     : SFR< 25,     "$ile",  ["$s25"]>, DwarfRegNum<[ 89]>;
-def ILL     : SFR< 26,     "$ill",  ["$s26"]>, DwarfRegNum<[ 90]>;
-def ILR     : SFR< 27,     "$ilr",  ["$s27"]>, DwarfRegNum<[ 91]>;
-def MMC     : SFR< 28,     "$mmc",  ["$s28"]>, DwarfRegNum<[ 92]>;
-def TEL     : SFR< 29,     "$tel",  ["$s29"]>, DwarfRegNum<[ 93]>;
-def TEH     : SFR< 30,     "$teh",  ["$s30"]>, DwarfRegNum<[ 94]>;
-def RES31   : SFR< 31,   "$res31",  ["$s31"]>, DwarfRegNum<[ 95]>;
-def SYO     : SFR< 32,     "$syo",  ["$s32"]>, DwarfRegNum<[ 96]>;
-def HTO     : SFR< 33,     "$hto",  ["$s33"]>, DwarfRegNum<[ 97]>;
-def ITO     : SFR< 34,     "$ito",  ["$s34"]>, DwarfRegNum<[ 98]>;
-def DO      : SFR< 35,      "$do",  ["$s35"]>, DwarfRegNum<[ 99]>;
-def MO      : SFR< 36,      "$mo",  ["$s36"]>, DwarfRegNum<[100]>;
-def PSO     : SFR< 37,     "$pso",  ["$s37"]>, DwarfRegNum<[101]>;
-def RES38   : SFR< 38,   "$res38",  ["$s38"]>, DwarfRegNum<[102]>;
-def RES39   : SFR< 39,   "$res39",  ["$s39"]>, DwarfRegNum<[103]>;
-def DC      : SFR< 40,      "$dc",  ["$s40"]>, DwarfRegNum<[104]>;
-def DBA0    : SFR< 41,    "$dba0",  ["$s41"]>, DwarfRegNum<[105]>;
-def DBA1    : SFR< 42,    "$dba1",  ["$s42"]>, DwarfRegNum<[106]>;
-def DWA0    : SFR< 43,    "$dwa0",  ["$s43"]>, DwarfRegNum<[107]>;
-def DWA1    : SFR< 44,    "$dwa1",  ["$s44"]>, DwarfRegNum<[108]>;
-def MES     : SFR< 45,     "$mes",  ["$s45"]>, DwarfRegNum<[109]>;
-def WS      : SFR< 46,      "$ws",  ["$s46"]>, DwarfRegNum<[110]>;
-def RES47   : SFR< 47,   "$res47",  ["$s47"]>, DwarfRegNum<[111]>;
-def RES48   : SFR< 48,   "$res48",  ["$s48"]>, DwarfRegNum<[112]>;
-def RES49   : SFR< 49,   "$res49",  ["$s49"]>, DwarfRegNum<[113]>;
-def RES50   : SFR< 50,   "$res50",  ["$s50"]>, DwarfRegNum<[114]>;
-def RES51   : SFR< 51,   "$res51",  ["$s51"]>, DwarfRegNum<[115]>;
-def RES52   : SFR< 52,   "$res52",  ["$s52"]>, DwarfRegNum<[116]>;
-def RES53   : SFR< 53,   "$res53",  ["$s53"]>, DwarfRegNum<[117]>;
-def RES54   : SFR< 54,   "$res54",  ["$s54"]>, DwarfRegNum<[118]>;
-def RES55   : SFR< 55,   "$res55",  ["$s55"]>, DwarfRegNum<[119]>;
-def RES56   : SFR< 56,   "$res56",  ["$s56"]>, DwarfRegNum<[120]>;
-def RES57   : SFR< 57,   "$res57",  ["$s57"]>, DwarfRegNum<[121]>;
-def RES58   : SFR< 58,   "$res58",  ["$s58"]>, DwarfRegNum<[122]>;
-def RES59   : SFR< 59,   "$res59",  ["$s59"]>, DwarfRegNum<[123]>;
-def RES60   : SFR< 60,   "$res60",  ["$s60"]>, DwarfRegNum<[124]>;
-def RES61   : SFR< 61,   "$res61",  ["$s61"]>, DwarfRegNum<[125]>;
-def RES62   : SFR< 62,   "$res62",  ["$s62"]>, DwarfRegNum<[126]>;
-def RES63   : SFR< 63,   "$res63",  ["$s63"]>, DwarfRegNum<[127]>;
-def SPC_PL0 : SFR< 64, "$spc_pl0",  ["$s64"]>, DwarfRegNum<[128]>;
-def SPC_PL1 : SFR< 65, "$spc_pl1",  ["$s65"]>, DwarfRegNum<[129]>;
-def SPC_PL2 : SFR< 66, "$spc_pl2",  ["$s66"]>, DwarfRegNum<[130]>;
-def SPC_PL3 : SFR< 67, "$spc_pl3",  ["$s67"]>, DwarfRegNum<[131]>;
-def SPS_PL0 : SFR< 68, "$sps_pl0",  ["$s68"]>, DwarfRegNum<[132]>;
-def SPS_PL1 : SFR< 69, "$sps_pl1",  ["$s69"]>, DwarfRegNum<[133]>;
-def SPS_PL2 : SFR< 70, "$sps_pl2",  ["$s70"]>, DwarfRegNum<[134]>;
-def SPS_PL3 : SFR< 71, "$sps_pl3",  ["$s71"]>, DwarfRegNum<[135]>;
-def EA_PL0  : SFR< 72,  "$ea_pl0",  ["$s72"]>, DwarfRegNum<[136]>;
-def EA_PL1  : SFR< 73,  "$ea_pl1",  ["$s73"]>, DwarfRegNum<[137]>;
-def EA_PL2  : SFR< 74,  "$ea_pl2",  ["$s74"]>, DwarfRegNum<[138]>;
-def EA_PL3  : SFR< 75,  "$ea_pl3",  ["$s75"]>, DwarfRegNum<[139]>;
-def EV_PL0  : SFR< 76,  "$ev_pl0",  ["$s76"]>, DwarfRegNum<[140]>;
-def EV_PL1  : SFR< 77,  "$ev_pl1",  ["$s77"]>, DwarfRegNum<[141]>;
-def EV_PL2  : SFR< 78,  "$ev_pl2",  ["$s78"]>, DwarfRegNum<[142]>;
-def EV_PL3  : SFR< 79,  "$ev_pl3",  ["$s79"]>, DwarfRegNum<[143]>;
-def SR_PL0  : SFR< 80,  "$sr_pl0",  ["$s80"]>, DwarfRegNum<[144]>;
-def SR_PL1  : SFR< 81,  "$sr_pl1",  ["$s81"]>, DwarfRegNum<[145]>;
-def SR_PL2  : SFR< 82,  "$sr_pl2",  ["$s82"]>, DwarfRegNum<[146]>;
-def SR_PL3  : SFR< 83,  "$sr_pl3",  ["$s83"]>, DwarfRegNum<[147]>;
-def ES_PL0  : SFR< 84,  "$es_pl0",  ["$s84"]>, DwarfRegNum<[148]>;
-def ES_PL1  : SFR< 85,  "$es_pl1",  ["$s85"]>, DwarfRegNum<[149]>;
-def ES_PL2  : SFR< 86,  "$es_pl2",  ["$s86"]>, DwarfRegNum<[150]>;
-def ES_PL3  : SFR< 87,  "$es_pl3",  ["$s87"]>, DwarfRegNum<[151]>;
-def RES88   : SFR< 88,   "$res88",  ["$s88"]>, DwarfRegNum<[152]>;
-def RES89   : SFR< 89,   "$res89",  ["$s89"]>, DwarfRegNum<[153]>;
-def RES90   : SFR< 90,   "$res90",  ["$s90"]>, DwarfRegNum<[154]>;
-def RES91   : SFR< 91,   "$res91",  ["$s91"]>, DwarfRegNum<[155]>;
-def RES92   : SFR< 92,   "$res92",  ["$s92"]>, DwarfRegNum<[156]>;
-def RES93   : SFR< 93,   "$res93",  ["$s93"]>, DwarfRegNum<[157]>;
-def RES94   : SFR< 94,   "$res94",  ["$s94"]>, DwarfRegNum<[158]>;
-def RES95   : SFR< 95,   "$res95",  ["$s95"]>, DwarfRegNum<[159]>;
-def SYOW    : SFR< 96,    "$syow",  ["$s96"]>, DwarfRegNum<[160]>;
-def HTOW    : SFR< 97,    "$htow",  ["$s97"]>, DwarfRegNum<[161]>;
-def ITOW    : SFR< 98,    "$itow",  ["$s98"]>, DwarfRegNum<[162]>;
-def DOW     : SFR< 99,     "$dow",  ["$s99"]>, DwarfRegNum<[163]>;
-def MOW     : SFR<100,     "$mow", ["$s100"]>, DwarfRegNum<[164]>;
-def PSOW    : SFR<101,    "$psow", ["$s101"]>, DwarfRegNum<[165]>;
-def RES102  : SFR<102,  "$res102", ["$s102"]>, DwarfRegNum<[166]>;
-def RES103  : SFR<103,  "$res103", ["$s103"]>, DwarfRegNum<[167]>;
-def RES104  : SFR<104,  "$res104", ["$s104"]>, DwarfRegNum<[168]>;
-def RES105  : SFR<105,  "$res105", ["$s105"]>, DwarfRegNum<[169]>;
-def RES106  : SFR<106,  "$res106", ["$s106"]>, DwarfRegNum<[170]>;
-def RES107  : SFR<107,  "$res107", ["$s107"]>, DwarfRegNum<[171]>;
-def RES108  : SFR<108,  "$res108", ["$s108"]>, DwarfRegNum<[172]>;
-def RES109  : SFR<109,  "$res109", ["$s109"]>, DwarfRegNum<[173]>;
-def RES110  : SFR<110,  "$res110", ["$s110"]>, DwarfRegNum<[174]>;
-def RES111  : SFR<111,  "$res111", ["$s111"]>, DwarfRegNum<[175]>;
-def RES112  : SFR<112,  "$res112", ["$s112"]>, DwarfRegNum<[176]>;
-def RES113  : SFR<113,  "$res113", ["$s113"]>, DwarfRegNum<[177]>;
-def RES114  : SFR<114,  "$res114", ["$s114"]>, DwarfRegNum<[178]>;
-def RES115  : SFR<115,  "$res115", ["$s115"]>, DwarfRegNum<[179]>;
-def RES116  : SFR<116,  "$res116", ["$s116"]>, DwarfRegNum<[180]>;
-def RES117  : SFR<117,  "$res117", ["$s117"]>, DwarfRegNum<[181]>;
-def RES118  : SFR<118,  "$res118", ["$s118"]>, DwarfRegNum<[182]>;
-def RES119  : SFR<119,  "$res119", ["$s119"]>, DwarfRegNum<[183]>;
-def RES120  : SFR<120,  "$res120", ["$s120"]>, DwarfRegNum<[184]>;
-def RES121  : SFR<121,  "$res121", ["$s121"]>, DwarfRegNum<[185]>;
-def RES122  : SFR<122,  "$res122", ["$s122"]>, DwarfRegNum<[186]>;
-def RES123  : SFR<123,  "$res123", ["$s123"]>, DwarfRegNum<[187]>;
-def RES124  : SFR<124,  "$res124", ["$s124"]>, DwarfRegNum<[188]>;
-def RES125  : SFR<125,  "$res125", ["$s125"]>, DwarfRegNum<[189]>;
-def RES126  : SFR<126,  "$res126", ["$s126"]>, DwarfRegNum<[190]>;
-def RES127  : SFR<127,  "$res127", ["$s127"]>, DwarfRegNum<[191]>;
-def SPC     : SFR<128,     "$spc", ["$s128"]>, DwarfRegNum<[192]>;
-def RES129  : SFR<129,  "$res129", ["$s129"]>, DwarfRegNum<[193]>;
-def RES130  : SFR<130,  "$res130", ["$s130"]>, DwarfRegNum<[194]>;
-def RES131  : SFR<131,  "$res131", ["$s131"]>, DwarfRegNum<[195]>;
-def SPS     : SFR<132,     "$sps", ["$s132"]>, DwarfRegNum<[196]>;
-def RES133  : SFR<133,  "$res133", ["$s133"]>, DwarfRegNum<[197]>;
-def RES134  : SFR<134,  "$res134", ["$s134"]>, DwarfRegNum<[198]>;
-def RES135  : SFR<135,  "$res135", ["$s135"]>, DwarfRegNum<[199]>;
-def EA      : SFR<136,      "$ea", ["$s136"]>, DwarfRegNum<[200]>;
-def RES137  : SFR<137,  "$res137", ["$s137"]>, DwarfRegNum<[201]>;
-def RES138  : SFR<138,  "$res138", ["$s138"]>, DwarfRegNum<[202]>;
-def RES139  : SFR<139,  "$res139", ["$s139"]>, DwarfRegNum<[203]>;
-def EV      : SFR<140,      "$ev", ["$s140"]>, DwarfRegNum<[204]>;
-def RES141  : SFR<141,  "$res141", ["$s141"]>, DwarfRegNum<[205]>;
-def RES142  : SFR<142,  "$res142", ["$s142"]>, DwarfRegNum<[206]>;
-def RES143  : SFR<143,  "$res143", ["$s143"]>, DwarfRegNum<[207]>;
-def SR      : SFR<144,      "$sr", ["$s144"]>, DwarfRegNum<[208]>;
-def RES145  : SFR<145,  "$res145", ["$s145"]>, DwarfRegNum<[209]>;
-def RES146  : SFR<146,  "$res146", ["$s146"]>, DwarfRegNum<[210]>;
-def RES147  : SFR<147,  "$res147", ["$s147"]>, DwarfRegNum<[211]>;
-def ES      : SFR<148,      "$es", ["$s148"]>, DwarfRegNum<[212]>;
-def RES149  : SFR<149,  "$res149", ["$s149"]>, DwarfRegNum<[213]>;
-def RES150  : SFR<150,  "$res150", ["$s150"]>, DwarfRegNum<[214]>;
-def RES151  : SFR<151,  "$res151", ["$s151"]>, DwarfRegNum<[215]>;
-def RES152  : SFR<152,  "$res152", ["$s152"]>, DwarfRegNum<[216]>;
-def RES153  : SFR<153,  "$res153", ["$s153"]>, DwarfRegNum<[217]>;
-def RES154  : SFR<154,  "$res154", ["$s154"]>, DwarfRegNum<[218]>;
-def RES155  : SFR<155,  "$res155", ["$s155"]>, DwarfRegNum<[219]>;
-def RES156  : SFR<156,  "$res156", ["$s156"]>, DwarfRegNum<[220]>;
-def RES157  : SFR<157,  "$res157", ["$s157"]>, DwarfRegNum<[221]>;
-def RES158  : SFR<158,  "$res158", ["$s158"]>, DwarfRegNum<[222]>;
-def RES159  : SFR<159,  "$res159", ["$s159"]>, DwarfRegNum<[223]>;
-def RES160  : SFR<160,  "$res160", ["$s160"]>, DwarfRegNum<[224]>;
-def RES161  : SFR<161,  "$res161", ["$s161"]>, DwarfRegNum<[225]>;
-def RES162  : SFR<162,  "$res162", ["$s162"]>, DwarfRegNum<[226]>;
-def RES163  : SFR<163,  "$res163", ["$s163"]>, DwarfRegNum<[227]>;
-def RES164  : SFR<164,  "$res164", ["$s164"]>, DwarfRegNum<[228]>;
-def RES165  : SFR<165,  "$res165", ["$s165"]>, DwarfRegNum<[229]>;
-def RES166  : SFR<166,  "$res166", ["$s166"]>, DwarfRegNum<[230]>;
-def RES167  : SFR<167,  "$res167", ["$s167"]>, DwarfRegNum<[231]>;
-def RES168  : SFR<168,  "$res168", ["$s168"]>, DwarfRegNum<[232]>;
+def PC       : SFR<  0,      "$pc",                  ["$s0"]>, DwarfRegNum<[ 64]>;
+def PS       : SFR<  1,      "$ps",                  ["$s1"]>, DwarfRegNum<[ 65]>;
+def PCR      : SFR<  2,     "$pcr",                  ["$s2"]>, DwarfRegNum<[ 66]>;
+def RA       : SFR<  3,      "$ra",                  ["$s3"]>, DwarfRegNum<[ 67]>;
+def CS       : SFR<  4,      "$cs",                  ["$s4"]>, DwarfRegNum<[ 68]>;
+def CSIT     : SFR<  5,    "$csit",                  ["$s5"]>, DwarfRegNum<[ 69]>;
+def AESPC    : SFR<  6,   "$aespc",                  ["$s6"]>, DwarfRegNum<[ 70]>;
+def LS       : SFR<  7,      "$ls",                  ["$s7"]>, DwarfRegNum<[ 71]>;
+def LE       : SFR<  8,      "$le",                  ["$s8"]>, DwarfRegNum<[ 72]>;
+def LC       : SFR<  9,      "$lc",                  ["$s9"]>, DwarfRegNum<[ 73]>;
+def IPE      : SFR< 10,     "$ipe",                 ["$s10"]>, DwarfRegNum<[ 74]>;
+def MEN      : SFR< 11,     "$men",                 ["$s11"]>, DwarfRegNum<[ 75]>;
+def PMC      : SFR< 12,     "$pmc",                 ["$s12"]>, DwarfRegNum<[ 76]>;
+def PM0      : SFR< 13,     "$pm0",                 ["$s13"]>, DwarfRegNum<[ 77]>;
+def PM1      : SFR< 14,     "$pm1",                 ["$s14"]>, DwarfRegNum<[ 78]>;
+def PM2      : SFR< 15,     "$pm2",                 ["$s15"]>, DwarfRegNum<[ 79]>;
+def PM3      : SFR< 16,     "$pm3",                 ["$s16"]>, DwarfRegNum<[ 80]>;
+def PMSA     : SFR< 17,    "$pmsa",                 ["$s17"]>, DwarfRegNum<[ 81]>;
+def TCR      : SFR< 18,     "$tcr",                 ["$s18"]>, DwarfRegNum<[ 82]>;
+def T0V      : SFR< 19,     "$t0v",                 ["$s19"]>, DwarfRegNum<[ 83]>;
+def T1V      : SFR< 20,     "$t1v",                 ["$s20"]>, DwarfRegNum<[ 84]>;
+def T0R      : SFR< 21,     "$t0r",                 ["$s21"]>, DwarfRegNum<[ 85]>;
+def T1R      : SFR< 22,     "$t1r",                 ["$s22"]>, DwarfRegNum<[ 86]>;
+def WDV      : SFR< 23,     "$wdv",                 ["$s23"]>, DwarfRegNum<[ 87]>;
+def WDR      : SFR< 24,     "$wdr",                 ["$s24"]>, DwarfRegNum<[ 88]>;
+def ILE      : SFR< 25,     "$ile",                 ["$s25"]>, DwarfRegNum<[ 89]>;
+def ILL      : SFR< 26,     "$ill",                 ["$s26"]>, DwarfRegNum<[ 90]>;
+def ILR      : SFR< 27,     "$ilr",                 ["$s27"]>, DwarfRegNum<[ 91]>;
+def MMC      : SFR< 28,     "$mmc",                 ["$s28"]>, DwarfRegNum<[ 92]>;
+def TEL      : SFR< 29,     "$tel",                 ["$s29"]>, DwarfRegNum<[ 93]>;
+def TEH      : SFR< 30,     "$teh",                 ["$s30"]>, DwarfRegNum<[ 94]>;
+def IXC      : SFR< 31,     "$ixc",                 ["$s31"]>, DwarfRegNum<[ 95]>;
+def SYO      : SFR< 32,     "$syo",                 ["$s32"]>, DwarfRegNum<[ 96]>;
+def HTO      : SFR< 33,     "$hto",                 ["$s33"]>, DwarfRegNum<[ 97]>;
+def ITO      : SFR< 34,     "$ito",                 ["$s34"]>, DwarfRegNum<[ 98]>;
+def DO       : SFR< 35,      "$do",                 ["$s35"]>, DwarfRegNum<[ 99]>;
+def MO       : SFR< 36,      "$mo",                 ["$s36"]>, DwarfRegNum<[100]>;
+def PSO      : SFR< 37,     "$pso",                 ["$s37"]>, DwarfRegNum<[101]>;
+def TPCM0    : SFR< 38,     "$s38",     ["$res38", "$tpcm0"]>, DwarfRegNum<[102]>;
+def TPCM1    : SFR< 39,     "$s39",     ["$res39", "$tpcm1"]>, DwarfRegNum<[103]>;
+def DC       : SFR< 40,     "$s40",        ["$res40", "$dc"]>, DwarfRegNum<[104]>;
+def DBA0     : SFR< 41,    "$dba0",                 ["$s41"]>, DwarfRegNum<[105]>;
+def DBA1     : SFR< 42,    "$dba1",                 ["$s42"]>, DwarfRegNum<[106]>;
+def DWA0     : SFR< 43,    "$dwa0",                 ["$s43"]>, DwarfRegNum<[107]>;
+def DWA1     : SFR< 44,    "$dwa1",                 ["$s44"]>, DwarfRegNum<[108]>;
+def MES      : SFR< 45,     "$mes",                 ["$s45"]>, DwarfRegNum<[109]>;
+def WS       : SFR< 46,      "$ws",                 ["$s46"]>, DwarfRegNum<[110]>;
+def DC0      : SFR< 47,     "$s47",       ["$res47", "$dc0"]>, DwarfRegNum<[111]>;
+def DC1      : SFR< 48,     "$s48",       ["$res48", "$dc1"]>, DwarfRegNum<[112]>;
+def DC2      : SFR< 49,     "$s49",       ["$res49", "$dc2"]>, DwarfRegNum<[113]>;
+def DC3      : SFR< 50,     "$s50",       ["$res50", "$dc3"]>, DwarfRegNum<[114]>;
+def DBA2     : SFR< 51,     "$s51",      ["$res51", "$dba2"]>, DwarfRegNum<[115]>;
+def DBA3     : SFR< 52,     "$s52",      ["$res52", "$dba3"]>, DwarfRegNum<[116]>;
+def DWA2     : SFR< 53,     "$s53",      ["$res53", "$dwa2"]>, DwarfRegNum<[117]>;
+def DWA3     : SFR< 54,     "$s54",      ["$res54", "$dwa3"]>, DwarfRegNum<[118]>;
+def TPCM2    : SFR< 55,     "$s55",     ["$res55", "$tpcm2"]>, DwarfRegNum<[119]>;
+def TPCMC    : SFR< 56,     "$s56",     ["$res56", "$tpcmc"]>, DwarfRegNum<[120]>;
+def PM4      : SFR< 57,     "$s57",       ["$res57", "$pm4"]>, DwarfRegNum<[121]>;
+def PM5      : SFR< 58,     "$s58",       ["$res58", "$pm5"]>, DwarfRegNum<[122]>;
+def PM6      : SFR< 59,     "$s59",       ["$res59", "$pm6"]>, DwarfRegNum<[123]>;
+def PM7      : SFR< 60,     "$s60",       ["$res60", "$pm7"]>, DwarfRegNum<[124]>;
+def PMC2     : SFR< 61,     "$s61",      ["$res61", "$pmc2"]>, DwarfRegNum<[125]>;
+def SRHPC    : SFR< 62,     "$s62",     ["$res62", "$srhpc"]>, DwarfRegNum<[126]>;
+def FRCC     : SFR< 63,     "$s63",      ["$res63", "$frcc"]>, DwarfRegNum<[127]>;
+def SPC_PL0  : SFR< 64, "$spc_pl0",                 ["$s64"]>, DwarfRegNum<[128]>;
+def SPC_PL1  : SFR< 65, "$spc_pl1",                 ["$s65"]>, DwarfRegNum<[129]>;
+def SPC_PL2  : SFR< 66, "$spc_pl2",                 ["$s66"]>, DwarfRegNum<[130]>;
+def SPC_PL3  : SFR< 67, "$spc_pl3",                 ["$s67"]>, DwarfRegNum<[131]>;
+def SPS_PL0  : SFR< 68, "$sps_pl0",                 ["$s68"]>, DwarfRegNum<[132]>;
+def SPS_PL1  : SFR< 69, "$sps_pl1",                 ["$s69"]>, DwarfRegNum<[133]>;
+def SPS_PL2  : SFR< 70, "$sps_pl2",                 ["$s70"]>, DwarfRegNum<[134]>;
+def SPS_PL3  : SFR< 71, "$sps_pl3",                 ["$s71"]>, DwarfRegNum<[135]>;
+def EA_PL0   : SFR< 72,  "$ea_pl0",                 ["$s72"]>, DwarfRegNum<[136]>;
+def EA_PL1   : SFR< 73,  "$ea_pl1",                 ["$s73"]>, DwarfRegNum<[137]>;
+def EA_PL2   : SFR< 74,  "$ea_pl2",                 ["$s74"]>, DwarfRegNum<[138]>;
+def EA_PL3   : SFR< 75,  "$ea_pl3",                 ["$s75"]>, DwarfRegNum<[139]>;
+def EV_PL0   : SFR< 76,  "$ev_pl0",                 ["$s76"]>, DwarfRegNum<[140]>;
+def EV_PL1   : SFR< 77,  "$ev_pl1",                 ["$s77"]>, DwarfRegNum<[141]>;
+def EV_PL2   : SFR< 78,  "$ev_pl2",                 ["$s78"]>, DwarfRegNum<[142]>;
+def EV_PL3   : SFR< 79,  "$ev_pl3",                 ["$s79"]>, DwarfRegNum<[143]>;
+def SR_PL0   : SFR< 80,  "$sr_pl0",                 ["$s80"]>, DwarfRegNum<[144]>;
+def SR_PL1   : SFR< 81,  "$sr_pl1",                 ["$s81"]>, DwarfRegNum<[145]>;
+def SR_PL2   : SFR< 82,  "$sr_pl2",                 ["$s82"]>, DwarfRegNum<[146]>;
+def SR_PL3   : SFR< 83,  "$sr_pl3",                 ["$s83"]>, DwarfRegNum<[147]>;
+def ES_PL0   : SFR< 84,  "$es_pl0",                 ["$s84"]>, DwarfRegNum<[148]>;
+def ES_PL1   : SFR< 85,  "$es_pl1",                 ["$s85"]>, DwarfRegNum<[149]>;
+def ES_PL2   : SFR< 86,  "$es_pl2",                 ["$s86"]>, DwarfRegNum<[150]>;
+def ES_PL3   : SFR< 87,  "$es_pl3",                 ["$s87"]>, DwarfRegNum<[151]>;
+def SID_PL0  : SFR< 88,     "$s88",   ["$res88", "$sid_pl0"]>, DwarfRegNum<[152]>;
+def SID_PL1  : SFR< 89,     "$s89",   ["$res89", "$sid_pl1"]>, DwarfRegNum<[153]>;
+def SID_PL2  : SFR< 90,     "$s90",   ["$res90", "$sid_pl2"]>, DwarfRegNum<[154]>;
+def SID_PL3  : SFR< 91,     "$s91",   ["$res91", "$sid_pl3"]>, DwarfRegNum<[155]>;
+def SR1_PL0  : SFR< 92,     "$s92",   ["$res92", "$sr1_pl0"]>, DwarfRegNum<[156]>;
+def SR1_PL1  : SFR< 93,     "$s93",   ["$res93", "$sr1_pl1"]>, DwarfRegNum<[157]>;
+def SR1_PL2  : SFR< 94,     "$s94",   ["$res94", "$sr1_pl2"]>, DwarfRegNum<[158]>;
+def SR1_PL3  : SFR< 95,     "$s95",   ["$res95", "$sr1_pl3"]>, DwarfRegNum<[159]>;
+def SYOW     : SFR< 96,    "$syow",                 ["$s96"]>, DwarfRegNum<[160]>;
+def HTOW     : SFR< 97,    "$htow",                 ["$s97"]>, DwarfRegNum<[161]>;
+def ITOW     : SFR< 98,    "$itow",                 ["$s98"]>, DwarfRegNum<[162]>;
+def DOW      : SFR< 99,     "$dow",                 ["$s99"]>, DwarfRegNum<[163]>;
+def MOW      : SFR<100,     "$mow",                ["$s100"]>, DwarfRegNum<[164]>;
+def PSOW     : SFR<101,    "$psow",                ["$s101"]>, DwarfRegNum<[165]>;
+def RES102   : SFR<102,  "$res102",                ["$s102"]>, DwarfRegNum<[166]>;
+def RES103   : SFR<103,  "$res103",                ["$s103"]>, DwarfRegNum<[167]>;
+def TPCC_PL0 : SFR<104,    "$s104", ["$res104", "$tpcc_pl0"]>, DwarfRegNum<[168]>;
+def TPCC_PL1 : SFR<105,    "$s105", ["$res105", "$tpcc_pl1"]>, DwarfRegNum<[169]>;
+def TPCC_PL2 : SFR<106,    "$s106", ["$res106", "$tpcc_pl2"]>, DwarfRegNum<[170]>;
+def TPCC_PL3 : SFR<107,    "$s107", ["$res107", "$tpcc_pl3"]>, DwarfRegNum<[171]>;
+def RES108   : SFR<108,  "$res108",                ["$s108"]>, DwarfRegNum<[172]>;
+def RES109   : SFR<109,  "$res109",                ["$s109"]>, DwarfRegNum<[173]>;
+def RES110   : SFR<110,  "$res110",                ["$s110"]>, DwarfRegNum<[174]>;
+def RES111   : SFR<111,  "$res111",                ["$s111"]>, DwarfRegNum<[175]>;
+def RES112   : SFR<112,  "$res112",                ["$s112"]>, DwarfRegNum<[176]>;
+def RES113   : SFR<113,  "$res113",                ["$s113"]>, DwarfRegNum<[177]>;
+def RES114   : SFR<114,  "$res114",                ["$s114"]>, DwarfRegNum<[178]>;
+def RES115   : SFR<115,  "$res115",                ["$s115"]>, DwarfRegNum<[179]>;
+def RES116   : SFR<116,  "$res116",                ["$s116"]>, DwarfRegNum<[180]>;
+def RES117   : SFR<117,  "$res117",                ["$s117"]>, DwarfRegNum<[181]>;
+def RES118   : SFR<118,  "$res118",                ["$s118"]>, DwarfRegNum<[182]>;
+def RES119   : SFR<119,  "$res119",                ["$s119"]>, DwarfRegNum<[183]>;
+def RES120   : SFR<120,  "$res120",                ["$s120"]>, DwarfRegNum<[184]>;
+def RES121   : SFR<121,  "$res121",                ["$s121"]>, DwarfRegNum<[185]>;
+def RES122   : SFR<122,  "$res122",                ["$s122"]>, DwarfRegNum<[186]>;
+def RES123   : SFR<123,  "$res123",                ["$s123"]>, DwarfRegNum<[187]>;
+def RES124   : SFR<124,  "$res124",                ["$s124"]>, DwarfRegNum<[188]>;
+def RES125   : SFR<125,  "$res125",                ["$s125"]>, DwarfRegNum<[189]>;
+def RES126   : SFR<126,  "$res126",                ["$s126"]>, DwarfRegNum<[190]>;
+def RES127   : SFR<127,  "$res127",                ["$s127"]>, DwarfRegNum<[191]>;
+def SPC      : SFR<128,     "$spc",                ["$s128"]>, DwarfRegNum<[192]>;
+def RES129   : SFR<129,  "$res129",                ["$s129"]>, DwarfRegNum<[193]>;
+def RES130   : SFR<130,  "$res130",                ["$s130"]>, DwarfRegNum<[194]>;
+def RES131   : SFR<131,  "$res131",                ["$s131"]>, DwarfRegNum<[195]>;
+def SPS      : SFR<132,     "$sps",                ["$s132"]>, DwarfRegNum<[196]>;
+def RES133   : SFR<133,  "$res133",                ["$s133"]>, DwarfRegNum<[197]>;
+def RES134   : SFR<134,  "$res134",                ["$s134"]>, DwarfRegNum<[198]>;
+def RES135   : SFR<135,  "$res135",                ["$s135"]>, DwarfRegNum<[199]>;
+def EA       : SFR<136,      "$ea",                ["$s136"]>, DwarfRegNum<[200]>;
+def RES137   : SFR<137,  "$res137",                ["$s137"]>, DwarfRegNum<[201]>;
+def RES138   : SFR<138,  "$res138",                ["$s138"]>, DwarfRegNum<[202]>;
+def RES139   : SFR<139,  "$res139",                ["$s139"]>, DwarfRegNum<[203]>;
+def EV       : SFR<140,      "$ev",                ["$s140"]>, DwarfRegNum<[204]>;
+def RES141   : SFR<141,  "$res141",                ["$s141"]>, DwarfRegNum<[205]>;
+def RES142   : SFR<142,  "$res142",                ["$s142"]>, DwarfRegNum<[206]>;
+def RES143   : SFR<143,  "$res143",                ["$s143"]>, DwarfRegNum<[207]>;
+def SR       : SFR<144,      "$sr",                ["$s144"]>, DwarfRegNum<[208]>;
+def RES145   : SFR<145,  "$res145",                ["$s145"]>, DwarfRegNum<[209]>;
+def RES146   : SFR<146,  "$res146",                ["$s146"]>, DwarfRegNum<[210]>;
+def RES147   : SFR<147,  "$res147",                ["$s147"]>, DwarfRegNum<[211]>;
+def ES       : SFR<148,      "$es",                ["$s148"]>, DwarfRegNum<[212]>;
+def RES149   : SFR<149,  "$res149",                ["$s149"]>, DwarfRegNum<[213]>;
+def RES150   : SFR<150,  "$res150",                ["$s150"]>, DwarfRegNum<[214]>;
+def RES151   : SFR<151,  "$res151",                ["$s151"]>, DwarfRegNum<[215]>;
+def SID      : SFR<152,    "$s152",      ["$res152", "$sid"]>, DwarfRegNum<[216]>;
+def RES153   : SFR<153,  "$res153",                ["$s153"]>, DwarfRegNum<[217]>;
+def RES154   : SFR<154,  "$res154",                ["$s154"]>, DwarfRegNum<[218]>;
+def RES155   : SFR<155,  "$res155",                ["$s155"]>, DwarfRegNum<[219]>;
+def SR1      : SFR<156,    "$s156",      ["$res156", "$sr1"]>, DwarfRegNum<[220]>;
+def RES157   : SFR<157,  "$res157",                ["$s157"]>, DwarfRegNum<[221]>;
+def RES158   : SFR<158,  "$res158",                ["$s158"]>, DwarfRegNum<[222]>;
+def RES159   : SFR<159,  "$res159",                ["$s159"]>, DwarfRegNum<[223]>;
+def RES160   : SFR<160,  "$res160",                ["$s160"]>, DwarfRegNum<[224]>;
+def RES161   : SFR<161,  "$res161",                ["$s161"]>, DwarfRegNum<[225]>;
+def RES162   : SFR<162,  "$res162",                ["$s162"]>, DwarfRegNum<[226]>;
+def RES163   : SFR<163,  "$res163",                ["$s163"]>, DwarfRegNum<[227]>;
+def RES164   : SFR<164,  "$res164",                ["$s164"]>, DwarfRegNum<[228]>;
+def RES165   : SFR<165,  "$res165",                ["$s165"]>, DwarfRegNum<[229]>;
+def RES166   : SFR<166,  "$res166",                ["$s166"]>, DwarfRegNum<[230]>;
+def RES167   : SFR<167,  "$res167",                ["$s167"]>, DwarfRegNum<[231]>;
+def TPCC     : SFR<168,    "$s168",     ["$res168", "$tpcc"]>, DwarfRegNum<[232]>;
 def RES169  : SFR<169,  "$res169", ["$s169"]>, DwarfRegNum<[233]>;
 def RES170  : SFR<170,  "$res170", ["$s170"]>, DwarfRegNum<[234]>;
 def RES171  : SFR<171,  "$res171", ["$s171"]>, DwarfRegNum<[235]>;
@@ -1440,31 +1440,25 @@ def BufferReg : RegisterOperand<TcaBuffer> {
 
 let Size = 64, isAllocatable = 0, GeneratePressureSet = 0, CopyCost = 2 in {
 // SFR - System Function Registers
-def SystemReg : RegisterClass<"KVX",
-  [i32, i64],
-  64, (add
-        PC,      PS,     PCR,      RA,      CS,    CSIT,   AESPC,      LS,
-        LE,      LC,     IPE,     MEN,     PMC,     PM0,     PM1,     PM2,
-       PM3,    PMSA,     TCR,     T0V,     T1V,     T0R,     T1R,     WDV,
-       WDR,     ILE,     ILL,     ILR,     MMC,     TEL,     TEH,   RES31,
-       SYO,     HTO,     ITO,      DO,      MO,     PSO,   RES38,   RES39,
-        DC,    DBA0,    DBA1,    DWA0,    DWA1,     MES,      WS,   RES47,
-     RES48,   RES49,   RES50,   RES51,   RES52,   RES53,   RES54,   RES55,
-     RES56,   RES57,   RES58,   RES59,   RES60,   RES61,   RES62,   RES63,
-   SPC_PL0, SPC_PL1, SPC_PL2, SPC_PL3, SPS_PL0, SPS_PL1, SPS_PL2, SPS_PL3,
-    EA_PL0,  EA_PL1,  EA_PL2,  EA_PL3,  EV_PL0,  EV_PL1,  EV_PL2,  EV_PL3,
-    SR_PL0,  SR_PL1,  SR_PL2,  SR_PL3,  ES_PL0,  ES_PL1,  ES_PL2,  ES_PL3,
-     RES88,   RES89,   RES90,   RES91,   RES92,   RES93,   RES94,   RES95,
-      SYOW,    HTOW,    ITOW,     DOW,     MOW,    PSOW,  RES102,  RES103,
-    RES104,  RES105,  RES106,  RES107,  RES108,  RES109,  RES110,  RES111,
-    RES112,  RES113,  RES114,  RES115,  RES116,  RES117,  RES118,  RES119,
-    RES120,  RES121,  RES122,  RES123,  RES124,  RES125,  RES126,  RES127,
-       SPC,  RES129,  RES130,  RES131,     SPS,  RES133,  RES134,  RES135,
-        EA,  RES137,  RES138,  RES139,      EV,  RES141,  RES142,  RES143,
-        SR,  RES145,  RES146,  RES147,      ES,  RES149,  RES150,  RES151,
-    RES152,  RES153,  RES154,  RES155,  RES156,  RES157,  RES158,  RES159,
-    RES160,  RES161,  RES162,  RES163,  RES164,  RES165,  RES166,  RES167,
-    RES168,  RES169,  RES170,  RES171,  RES172,  RES173,  RES174,  RES175,
+def SystemReg : RegisterClass<"KVX", [i64], 64, (add
+    PC, PS, PCR, RA, CS, CSIT, AESPC, LS, LE, LC, IPE, MEN, PMC, PM0,
+    PM1, PM2, PM3, PMSA, TCR, T0V, T1V, T0R, T1R, WDV, WDR, ILE, ILL,
+    ILR, MMC, TEL, TEH, IXC, SYO, HTO, ITO, DO, MO, PSO, TPCM0, TPCM1,
+    DC, DBA0, DBA1, DWA0, DWA1, MES, WS, DC0, DC1, DC2, DC3, DBA2, DBA3,
+    DWA2, DWA3, TPCM2, TPCMC, PM4, PM5, PM6, PM7, PMC2, SRHPC, FRCC,
+    SPC_PL0, SPC_PL1, SPC_PL2, SPC_PL3, SPS_PL0, SPS_PL1, SPS_PL2,
+    SPS_PL3, EA_PL0, EA_PL1, EA_PL2, EA_PL3, EV_PL0, EV_PL1, EV_PL2,
+    EV_PL3, SR_PL0, SR_PL1, SR_PL2, SR_PL3, ES_PL0, ES_PL1, ES_PL2, ES_PL3,
+    SID_PL0, SID_PL1, SID_PL2, SID_PL3, SR1_PL0, SR1_PL1, SR1_PL2, SR1_PL3,
+    SYOW, HTOW, ITOW, DOW, MOW, PSOW, RES102, RES103, TPCC_PL0, TPCC_PL1,
+    TPCC_PL2, TPCC_PL3, RES108, RES109, RES110, RES111, RES112, RES113,
+    RES114, RES115, RES116, RES117, RES118, RES119, RES120, RES121, RES122,
+    RES123, RES124, RES125, RES126, RES127, SPC, RES129, RES130, RES131,
+    SPS, RES133, RES134, RES135, EA, RES137, RES138, RES139, EV, RES141,
+    RES142, RES143, SR, RES145, RES146, RES147, ES, RES149, RES150, RES151,
+    SID, RES153, RES154, RES155, SR1, RES157, RES158, RES159, RES160,
+    RES161, RES162, RES163, RES164, RES165, RES166, RES167, TPCC,
+    RES169,  RES170,  RES171,  RES172,  RES173,  RES174,  RES175,
     RES176,  RES177,  RES178,  RES179,  RES180,  RES181,  RES182,  RES183,
     RES184,  RES185,  RES186,  RES187,  RES188,  RES189,  RES190,  RES191,
     RES192,  RES193,  RES194,  RES195,  RES196,  RES197,  RES198,  RES199,
@@ -1508,187 +1502,88 @@ def SystemReg : RegisterClass<"KVX",
    VSFR240, VSFR241, VSFR242, VSFR243, VSFR244, VSFR245, VSFR246, VSFR247,
    VSFR248, VSFR249, VSFR250, VSFR251, VSFR252, VSFR253, VSFR254, VSFR255)>;
 
-// SFR - RegClas Implying Alone in Bundle
-def AloneReg : RegisterClass<"KVX",
-  [i32, i64],
-  64, (add
+def OnlyraReg : RegisterClass<"KVX", [i64], 64, (add RA)>;
+
+def AloneReg : RegisterClass<"KVX", [i64], 64, (add
         PS,     MMC, SPS_PL0, SPS_PL1, SPS_PL2, SPS_PL3,    SYOW,    HTOW,
       ITOW,     DOW,     MOW,    PSOW,     SPS)>;
 
-// SFR - Singleton RegClas with RA
-def OnlyraReg : RegisterClass<"KVX",
-  [i32, i64],
-  64, (add
-   RA)>;
+// Registers that can be used by get instruction
+def GetReg : RegisterClass<"KVX", [i64], 64, (add
+               PC,       PS,        PCR,        RA,        CS,      CSIT,     AESPC,        LS,
+               LE,       LC,        IPE,       MEN,       PMC,       PM0,       PM1,       PM2,
+              PM3,     PMSA,        TCR,       T0V,       T1V,       T0R,       T1R,       WDV,
+              WDR,       ILE,       ILL,       ILR,       MMC,       TEL,       TEH,       SYO,
+              HTO,       ITO,        DO,        MO,       PSO,      DBA0,      DBA1,      DWA0,
+             DWA1,       MES,        WS,    ES_PL0,    ES_PL1,    ES_PL2,    ES_PL3,   SID_PL0,
+          SID_PL1,   SID_PL2,   SID_PL3,        ES,  TPCC_PL0,  TPCC_PL1,  TPCC_PL2,  TPCC_PL3,
+              SPC,       SPS,        EA,        EV,        SR,   SPC_PL0,   SPC_PL1,   SPC_PL2,
+          SPC_PL3,    EA_PL0,    EA_PL1,    EA_PL2,    EA_PL3,    EV_PL0,    EV_PL1,    EV_PL2,
+           EV_PL3,    SR_PL0,    SR_PL1,    SR_PL2,    SR_PL3,        DC,       IXC,     TPCM0,
+            TPCM1,       DC0,       DC1,       DC2,       DC3,      DBA2,      DBA3,      DWA2,
+             DWA3,     TPCM2,     TPCMC,       PM4,       PM5,       PM6,       PM7,      PMC2,
+            SRHPC,      FRCC,   SPS_PL0,   SPS_PL1,   SPS_PL2,   SPS_PL3,       SID,       SR1,
+             TPCC,   SR1_PL0,   SR1_PL1,   SR1_PL2,   SR1_PL3)>;
 
-// SFR - Only GET System Registers
-def OnlygetReg : RegisterClass<"KVX",
-  [i32, i64],
-  64, (add
-        PC,      PS,     PCR,      RA,      CS,    CSIT,   AESPC,      LS,
-        LE,      LC,     IPE,     MEN,     PMC,     PM0,     PM1,     PM2,
-       PM3,    PMSA,     TCR,     T0V,     T1V,     T0R,     T1R,     WDV,
-       WDR,     ILE,     ILL,     ILR,     MMC,     TEL,     TEH,     SYO,
-       HTO,     ITO,      DO,      MO,     PSO,      DC,    DBA0,    DBA1,
-      DWA0,    DWA1,     MES,      WS, SPC_PL0, SPC_PL1, SPC_PL2, SPC_PL3,
-   SPS_PL0, SPS_PL1, SPS_PL2, SPS_PL3,  EA_PL0,  EA_PL1,  EA_PL2,  EA_PL3,
-    EV_PL0,  EV_PL1,  EV_PL2,  EV_PL3,  SR_PL0,  SR_PL1,  SR_PL2,  SR_PL3,
-    ES_PL0,  ES_PL1,  ES_PL2,  ES_PL3,     SPC,     SPS,      EA,      EV,
-        SR,      ES,   VSFR0,   VSFR1,   VSFR2,   VSFR3,   VSFR4,   VSFR5,
-     VSFR6,   VSFR7,   VSFR8,   VSFR9,  VSFR10,  VSFR11,  VSFR12,  VSFR13,
-    VSFR14,  VSFR15,  VSFR16,  VSFR17,  VSFR18,  VSFR19,  VSFR20,  VSFR21,
-    VSFR22,  VSFR23,  VSFR24,  VSFR25,  VSFR26,  VSFR27,  VSFR28,  VSFR29,
-    VSFR30,  VSFR31,  VSFR32,  VSFR33,  VSFR34,  VSFR35,  VSFR36,  VSFR37,
-    VSFR38,  VSFR39,  VSFR40,  VSFR41,  VSFR42,  VSFR43,  VSFR44,  VSFR45,
-    VSFR46,  VSFR47,  VSFR48,  VSFR49,  VSFR50,  VSFR51,  VSFR52,  VSFR53,
-    VSFR54,  VSFR55,  VSFR56,  VSFR57,  VSFR58,  VSFR59,  VSFR60,  VSFR61,
-    VSFR62,  VSFR63,  VSFR64,  VSFR65,  VSFR66,  VSFR67,  VSFR68,  VSFR69,
-    VSFR70,  VSFR71,  VSFR72,  VSFR73,  VSFR74,  VSFR75,  VSFR76,  VSFR77,
-    VSFR78,  VSFR79,  VSFR80,  VSFR81,  VSFR82,  VSFR83,  VSFR84,  VSFR85,
-    VSFR86,  VSFR87,  VSFR88,  VSFR89,  VSFR90,  VSFR91,  VSFR92,  VSFR93,
-    VSFR94,  VSFR95,  VSFR96,  VSFR97,  VSFR98,  VSFR99, VSFR100, VSFR101,
-   VSFR102, VSFR103, VSFR104, VSFR105, VSFR106, VSFR107, VSFR108, VSFR109,
-   VSFR110, VSFR111, VSFR112, VSFR113, VSFR114, VSFR115, VSFR116, VSFR117,
-   VSFR118, VSFR119, VSFR120, VSFR121, VSFR122, VSFR123, VSFR124, VSFR125,
-   VSFR126, VSFR127, VSFR128, VSFR129, VSFR130, VSFR131, VSFR132, VSFR133,
-   VSFR134, VSFR135, VSFR136, VSFR137, VSFR138, VSFR139, VSFR140, VSFR141,
-   VSFR142, VSFR143, VSFR144, VSFR145, VSFR146, VSFR147, VSFR148, VSFR149,
-   VSFR150, VSFR151, VSFR152, VSFR153, VSFR154, VSFR155, VSFR156, VSFR157,
-   VSFR158, VSFR159, VSFR160, VSFR161, VSFR162, VSFR163, VSFR164, VSFR165,
-   VSFR166, VSFR167, VSFR168, VSFR169, VSFR170, VSFR171, VSFR172, VSFR173,
-   VSFR174, VSFR175, VSFR176, VSFR177, VSFR178, VSFR179, VSFR180, VSFR181,
-   VSFR182, VSFR183, VSFR184, VSFR185, VSFR186, VSFR187, VSFR188, VSFR189,
-   VSFR190, VSFR191, VSFR192, VSFR193, VSFR194, VSFR195, VSFR196, VSFR197,
-   VSFR198, VSFR199, VSFR200, VSFR201, VSFR202, VSFR203, VSFR204, VSFR205,
-   VSFR206, VSFR207, VSFR208, VSFR209, VSFR210, VSFR211, VSFR212, VSFR213,
-   VSFR214, VSFR215, VSFR216, VSFR217, VSFR218, VSFR219, VSFR220, VSFR221,
-   VSFR222, VSFR223, VSFR224, VSFR225, VSFR226, VSFR227, VSFR228, VSFR229,
-   VSFR230, VSFR231, VSFR232, VSFR233, VSFR234, VSFR235, VSFR236, VSFR237,
-   VSFR238, VSFR239, VSFR240, VSFR241, VSFR242, VSFR243, VSFR244, VSFR245,
-   VSFR246, VSFR247, VSFR248, VSFR249, VSFR250, VSFR251, VSFR252, VSFR253,
-   VSFR254, VSFR255)>;
+// Registers that can be used by set instruction
+def SetReg : RegisterClass<"KVX", [i64], 64, (add
+      PS, PCR, RA, CS, CSIT, AESPC, LS, LE, LC, IPE, MEN, PMC, PM0, PM1, PM2, PM3, PMSA, TCR,
+      T0V, T1V, T0R, T1R, WDV, WDR, ILE, ILL, ILR, MMC, TEL, TEH, IXC, TPCM0, TPCM1, DC, DBA0,
+      DBA1, DWA0, DWA1, MES, WS, DC0, DC1, DC2, DC3, DBA2, DBA3, DWA2, DWA3, TPCM2, TPCMC, PM4,
+      PM5, PM6, PM7, PMC2, SRHPC, FRCC, SPC_PL0, SPC_PL1, SPC_PL2, SPC_PL3, SPS_PL0, SPS_PL1,
+      SPS_PL2, SPS_PL3, EA_PL0, EA_PL1, EA_PL2, EA_PL3, EV_PL0, EV_PL1, EV_PL2, EV_PL3, SR_PL0,
+      SR_PL1, SR_PL2, SR_PL3, ES_PL0, ES_PL1, ES_PL2, ES_PL3, SID_PL0, SID_PL1, SID_PL2, SID_PL3,
+      SR1_PL0, SR1_PL1, SR1_PL2, SR1_PL3, SYOW, HTOW, ITOW, DOW, MOW, PSOW, TPCC_PL0, TPCC_PL1,
+      TPCC_PL2, TPCC_PL3, SPC, SPS, EA, EV, SR, ES, SID, SR1, TPCC)>;
 
-// SFR - Only SET System Registers without PS
-def OnlysetReg : RegisterClass<"KVX",
-  [i32, i64],
-  64, (add
-        PS,     PCR,      RA,      CS,    CSIT,   AESPC,      LS,      LE,
-        LC,     IPE,     MEN,     PMC,     PM0,     PM1,     PM2,     PM3,
-      PMSA,     TCR,     T0V,     T1V,     T0R,     T1R,     WDV,     WDR,
-       ILE,     ILL,     ILR,     MMC,     TEL,     TEH,      DC,    DBA0,
-      DBA1,    DWA0,    DWA1,     MES,      WS, SPC_PL0, SPC_PL1, SPC_PL2,
-   SPC_PL3, SPS_PL0, SPS_PL1, SPS_PL2, SPS_PL3,  EA_PL0,  EA_PL1,  EA_PL2,
-    EA_PL3,  EV_PL0,  EV_PL1,  EV_PL2,  EV_PL3,  SR_PL0,  SR_PL1,  SR_PL2,
-    SR_PL3,  ES_PL0,  ES_PL1,  ES_PL2,  ES_PL3,     SPC,     SPS,      EA,
-        EV,      SR,      ES,   VSFR0,   VSFR1,   VSFR2,   VSFR3,   VSFR4,
-     VSFR5,   VSFR6,   VSFR7,   VSFR8,   VSFR9,  VSFR10,  VSFR11,  VSFR12,
-    VSFR13,  VSFR14,  VSFR15,  VSFR16,  VSFR17,  VSFR18,  VSFR19,  VSFR20,
-    VSFR21,  VSFR22,  VSFR23,  VSFR24,  VSFR25,  VSFR26,  VSFR27,  VSFR28,
-    VSFR29,  VSFR30,  VSFR31,  VSFR32,  VSFR33,  VSFR34,  VSFR35,  VSFR36,
-    VSFR37,  VSFR38,  VSFR39,  VSFR40,  VSFR41,  VSFR42,  VSFR43,  VSFR44,
-    VSFR45,  VSFR46,  VSFR47,  VSFR48,  VSFR49,  VSFR50,  VSFR51,  VSFR52,
-    VSFR53,  VSFR54,  VSFR55,  VSFR56,  VSFR57,  VSFR58,  VSFR59,  VSFR60,
-    VSFR61,  VSFR62,  VSFR63,  VSFR64,  VSFR65,  VSFR66,  VSFR67,  VSFR68,
-    VSFR69,  VSFR70,  VSFR71,  VSFR72,  VSFR73,  VSFR74,  VSFR75,  VSFR76,
-    VSFR77,  VSFR78,  VSFR79,  VSFR80,  VSFR81,  VSFR82,  VSFR83,  VSFR84,
-    VSFR85,  VSFR86,  VSFR87,  VSFR88,  VSFR89,  VSFR90,  VSFR91,  VSFR92,
-    VSFR93,  VSFR94,  VSFR95,  VSFR96,  VSFR97,  VSFR98,  VSFR99, VSFR100,
-   VSFR101, VSFR102, VSFR103, VSFR104, VSFR105, VSFR106, VSFR107, VSFR108,
-   VSFR109, VSFR110, VSFR111, VSFR112, VSFR113, VSFR114, VSFR115, VSFR116,
-   VSFR117, VSFR118, VSFR119, VSFR120, VSFR121, VSFR122, VSFR123, VSFR124,
-   VSFR125, VSFR126, VSFR127, VSFR128, VSFR129, VSFR130, VSFR131, VSFR132,
-   VSFR133, VSFR134, VSFR135, VSFR136, VSFR137, VSFR138, VSFR139, VSFR140,
-   VSFR141, VSFR142, VSFR143, VSFR144, VSFR145, VSFR146, VSFR147, VSFR148,
-   VSFR149, VSFR150, VSFR151, VSFR152, VSFR153, VSFR154, VSFR155, VSFR156,
-   VSFR157, VSFR158, VSFR159, VSFR160, VSFR161, VSFR162, VSFR163, VSFR164,
-   VSFR165, VSFR166, VSFR167, VSFR168, VSFR169, VSFR170, VSFR171, VSFR172,
-   VSFR173, VSFR174, VSFR175, VSFR176, VSFR177, VSFR178, VSFR179, VSFR180,
-   VSFR181, VSFR182, VSFR183, VSFR184, VSFR185, VSFR186, VSFR187, VSFR188,
-   VSFR189, VSFR190, VSFR191, VSFR192, VSFR193, VSFR194, VSFR195, VSFR196,
-   VSFR197, VSFR198, VSFR199, VSFR200, VSFR201, VSFR202, VSFR203, VSFR204,
-   VSFR205, VSFR206, VSFR207, VSFR208, VSFR209, VSFR210, VSFR211, VSFR212,
-   VSFR213, VSFR214, VSFR215, VSFR216, VSFR217, VSFR218, VSFR219, VSFR220,
-   VSFR221, VSFR222, VSFR223, VSFR224, VSFR225, VSFR226, VSFR227, VSFR228,
-   VSFR229, VSFR230, VSFR231, VSFR232, VSFR233, VSFR234, VSFR235, VSFR236,
-   VSFR237, VSFR238, VSFR239, VSFR240, VSFR241, VSFR242, VSFR243, VSFR244,
-   VSFR245, VSFR246, VSFR247, VSFR248, VSFR249, VSFR250, VSFR251, VSFR252,
-   VSFR253, VSFR254, VSFR255)>;
+// Registers that can be used by wfx instructions
+def FxReg : RegisterClass<"KVX", [i64], 64, (add
+       PS, PCR, CS, CSIT, IPE, MEN, PMC, TCR, ILE, ILL, ILR, MMC, TEL, TEH, IXC, DC, MES, WS,
+       DC0, DC1, DC2, DC3, PMC2, SPS_PL0, SPS_PL1, SPS_PL2, SPS_PL3, ES_PL0, ES_PL1, ES_PL2,
+       ES_PL3, SYOW, HTOW, ITOW, DOW, MOW, PSOW, TPCC_PL0, TPCC_PL1, TPCC_PL2, TPCC_PL3, SPS,
+       ES, TPCC)>;
 
-// SFR - Only FX System Registers without PS
-def OnlyfxReg : RegisterClass<"KVX",
-  [i32, i64],
-  64, (add
-       PCR,      CS,    CSIT,     IPE,     MEN,     PMC,     TCR,     ILE,
-       ILL,     ILR,     MMC,     TEL,     TEH,      DC,     MES,      WS,
-   SPS_PL0, SPS_PL1, SPS_PL2, SPS_PL3,  ES_PL0,  ES_PL1,  ES_PL2,  ES_PL3,
-       SPS,      ES)>;
+// Registers that can't be used by get instruction in cv1
+def GetNotCV1Reg : RegisterClass<"KVX", [i64], 64, (add
+      IXC,    TPCM0,    TPCM1,    DC0,      DC1,    DC2,    DC3,    DBA2,    DBA3,
+      DWA2,    DWA3,    TPCM2,    TPCMC,    PM4,    PM5,    PM6,    PM7,     PMC2,
+      SRHPC,   FRCC,  SPS_PL0,  SPS_PL1,  SPS_PL2, SPS_PL3, SID,    SR1,
+      TPCC,    SR1_PL0,    SR1_PL1,    SR1_PL2,    SR1_PL3)>;
 
-// SFR - Only SWAP System Registers without PS
-def OnlyswapReg : RegisterClass<"KVX",
-  [i32, i64],
-  64, (add
-        PC,     PCR,      RA,      CS,    CSIT,   AESPC,      LS,      LE,
-        LC,     IPE,     MEN,     PMC,     PM0,     PM1,     PM2,     PM3,
-      PMSA,     TCR,     T0V,     T1V,     T0R,     T1R,     WDV,     WDR,
-       ILE,     ILL,     ILR,     MMC,     TEL,     TEH,   RES31,     SYO,
-       HTO,     ITO,      DO,      MO,     PSO,   RES38,   RES39,      DC,
-      DBA0,    DBA1,    DWA0,    DWA1,     MES,      WS,   RES47,   RES48,
-     RES49,   RES50,   RES51,   RES52,   RES53,   RES54,   RES55,   RES56,
-     RES57,   RES58,   RES59,   RES60,   RES61,   RES62,   RES63, SPC_PL0,
-   SPC_PL1, SPC_PL2, SPC_PL3, SPS_PL0, SPS_PL1, SPS_PL2, SPS_PL3,  EA_PL0,
-    EA_PL1,  EA_PL2,  EA_PL3,  EV_PL0,  EV_PL1,  EV_PL2,  EV_PL3,  SR_PL0,
-    SR_PL1,  SR_PL2,  SR_PL3,  ES_PL0,  ES_PL1,  ES_PL2,  ES_PL3,   RES88,
-     RES89,   RES90,   RES91,   RES92,   RES93,   RES94,   RES95,    SYOW,
-      HTOW,    ITOW,     DOW,     MOW,    PSOW,  RES102,  RES103,  RES104,
-    RES105,  RES106,  RES107,  RES108,  RES109,  RES110,  RES111,  RES112,
-    RES113,  RES114,  RES115,  RES116,  RES117,  RES118,  RES119,  RES120,
-    RES121,  RES122,  RES123,  RES124,  RES125,  RES126,  RES127,     SPC,
-    RES129,  RES130,  RES131,     SPS,  RES133,  RES134,  RES135,      EA,
-    RES137,  RES138,  RES139,      EV,  RES141,  RES142,  RES143,      SR,
-    RES145,  RES146,  RES147,      ES,  RES149,  RES150,  RES151,  RES152,
-    RES153,  RES154,  RES155,  RES156,  RES157,  RES158,  RES159,  RES160,
-    RES161,  RES162,  RES163,  RES164,  RES165,  RES166,  RES167,  RES168,
-    RES169,  RES170,  RES171,  RES172,  RES173,  RES174,  RES175,  RES176,
-    RES177,  RES178,  RES179,  RES180,  RES181,  RES182,  RES183,  RES184,
-    RES185,  RES186,  RES187,  RES188,  RES189,  RES190,  RES191,  RES192,
-    RES193,  RES194,  RES195,  RES196,  RES197,  RES198,  RES199,  RES200,
-    RES201,  RES202,  RES203,  RES204,  RES205,  RES206,  RES207,  RES208,
-    RES209,  RES210,  RES211,  RES212,  RES213,  RES214,  RES215,  RES216,
-    RES217,  RES218,  RES219,  RES220,  RES221,  RES222,  RES223,  RES224,
-    RES225,  RES226,  RES227,  RES228,  RES229,  RES230,  RES231,  RES232,
-    RES233,  RES234,  RES235,  RES236,  RES237,  RES238,  RES239,  RES240,
-    RES241,  RES242,  RES243,  RES244,  RES245,  RES246,  RES247,  RES248,
-    RES249,  RES250,  RES251,  RES252,  RES253,  RES254,  RES255,   VSFR0,
-     VSFR1,   VSFR2,   VSFR3,   VSFR4,   VSFR5,   VSFR6,   VSFR7,   VSFR8,
-     VSFR9,  VSFR10,  VSFR11,  VSFR12,  VSFR13,  VSFR14,  VSFR15,  VSFR16,
-    VSFR17,  VSFR18,  VSFR19,  VSFR20,  VSFR21,  VSFR22,  VSFR23,  VSFR24,
-    VSFR25,  VSFR26,  VSFR27,  VSFR28,  VSFR29,  VSFR30,  VSFR31,  VSFR32,
-    VSFR33,  VSFR34,  VSFR35,  VSFR36,  VSFR37,  VSFR38,  VSFR39,  VSFR40,
-    VSFR41,  VSFR42,  VSFR43,  VSFR44,  VSFR45,  VSFR46,  VSFR47,  VSFR48,
-    VSFR49,  VSFR50,  VSFR51,  VSFR52,  VSFR53,  VSFR54,  VSFR55,  VSFR56,
-    VSFR57,  VSFR58,  VSFR59,  VSFR60,  VSFR61,  VSFR62,  VSFR63,  VSFR64,
-    VSFR65,  VSFR66,  VSFR67,  VSFR68,  VSFR69,  VSFR70,  VSFR71,  VSFR72,
-    VSFR73,  VSFR74,  VSFR75,  VSFR76,  VSFR77,  VSFR78,  VSFR79,  VSFR80,
-    VSFR81,  VSFR82,  VSFR83,  VSFR84,  VSFR85,  VSFR86,  VSFR87,  VSFR88,
-    VSFR89,  VSFR90,  VSFR91,  VSFR92,  VSFR93,  VSFR94,  VSFR95,  VSFR96,
-    VSFR97,  VSFR98,  VSFR99, VSFR100, VSFR101, VSFR102, VSFR103, VSFR104,
-   VSFR105, VSFR106, VSFR107, VSFR108, VSFR109, VSFR110, VSFR111, VSFR112,
-   VSFR113, VSFR114, VSFR115, VSFR116, VSFR117, VSFR118, VSFR119, VSFR120,
-   VSFR121, VSFR122, VSFR123, VSFR124, VSFR125, VSFR126, VSFR127, VSFR128,
-   VSFR129, VSFR130, VSFR131, VSFR132, VSFR133, VSFR134, VSFR135, VSFR136,
-   VSFR137, VSFR138, VSFR139, VSFR140, VSFR141, VSFR142, VSFR143, VSFR144,
-   VSFR145, VSFR146, VSFR147, VSFR148, VSFR149, VSFR150, VSFR151, VSFR152,
-   VSFR153, VSFR154, VSFR155, VSFR156, VSFR157, VSFR158, VSFR159, VSFR160,
-   VSFR161, VSFR162, VSFR163, VSFR164, VSFR165, VSFR166, VSFR167, VSFR168,
-   VSFR169, VSFR170, VSFR171, VSFR172, VSFR173, VSFR174, VSFR175, VSFR176,
-   VSFR177, VSFR178, VSFR179, VSFR180, VSFR181, VSFR182, VSFR183, VSFR184,
-   VSFR185, VSFR186, VSFR187, VSFR188, VSFR189, VSFR190, VSFR191, VSFR192,
-   VSFR193, VSFR194, VSFR195, VSFR196, VSFR197, VSFR198, VSFR199, VSFR200,
-   VSFR201, VSFR202, VSFR203, VSFR204, VSFR205, VSFR206, VSFR207, VSFR208,
-   VSFR209, VSFR210, VSFR211, VSFR212, VSFR213, VSFR214, VSFR215, VSFR216,
-   VSFR217, VSFR218, VSFR219, VSFR220, VSFR221, VSFR222, VSFR223, VSFR224,
-   VSFR225, VSFR226, VSFR227, VSFR228, VSFR229, VSFR230, VSFR231, VSFR232,
-   VSFR233, VSFR234, VSFR235, VSFR236, VSFR237, VSFR238, VSFR239, VSFR240,
-   VSFR241, VSFR242, VSFR243, VSFR244, VSFR245, VSFR246, VSFR247, VSFR248,
-   VSFR249, VSFR250, VSFR251, VSFR252, VSFR253, VSFR254, VSFR255)>;
+// Registers that can't be used by set/wfx instructions in cv1
+def SetFxNotCV1Reg : RegisterClass<"KVX", [i64], 64, (add
+          TPCM0, TPCM1, DBA2, DBA3, DWA2, DWA3, TPCM2, TPCMC, PM4, PM5, PM6, PM7,
+          SRHPC, FRCC, SID_PL0, SID_PL1, SID_PL2, SID_PL3, SR1_PL0, SR1_PL1, SR1_PL2,
+          SR1_PL3, SID, SR1, IXC, DC0, DC1, DC2, DC3, PMC2, TPCC_PL0, TPCC_PL1,
+          TPCC_PL2, TPCC_PL3, TPCC)>;
+
+// Registers that can't be used by get/set/wfx instructions in cv2
+def GetSetFxNotCV2Reg : RegisterClass<"KVX", [i64], 64, (add DC)>;
+
+def SwapReg : RegisterClass<"KVX", [i64], 64, (add
+         PC,      PS, PCR,       RA,       CS,     CSIT,    AESPC,       LS,
+         LE,       LC,      IPE,      MEN,      PMC,      PM0,      PM1,
+        PM2,      PM3,     PMSA,      TCR,      T0V,      T1V,      T0R,
+        T1R,      WDV,      WDR,      ILE,      ILL,      ILR,      MMC,
+        TEL,      TEH,      IXC,      SYO,      HTO,      ITO,       DO,
+         MO,      PSO,    TPCM0,    TPCM1,       DC,     DBA0,     DBA1,
+       DWA0,     DWA1,      MES,       WS,      DC0,      DC1,      DC2,
+        DC3,     DBA2,     DBA3,     DWA2,     DWA3,    TPCM2,    TPCMC,
+        PM4,      PM5,      PM6,      PM7,     PMC2,    SRHPC,     FRCC,
+    SPC_PL0,  SPC_PL1,  SPC_PL2,  SPC_PL3,  SPS_PL0,  SPS_PL1,  SPS_PL2,
+    SPS_PL3,   EA_PL0,   EA_PL1,   EA_PL2,   EA_PL3,   EV_PL0,   EV_PL1,
+     EV_PL2,   EV_PL3,   SR_PL0,   SR_PL1,   SR_PL2,   SR_PL3,   ES_PL0,
+     ES_PL1,   ES_PL2,   ES_PL3,  SID_PL0,  SID_PL1,  SID_PL2,  SID_PL3,
+    SR1_PL0,  SR1_PL1,  SR1_PL2,  SR1_PL3,     SYOW,     HTOW,     ITOW,
+        DOW,      MOW,     PSOW,   RES102,   RES103, TPCC_PL0, TPCC_PL1,
+   TPCC_PL2, TPCC_PL3,   RES108,   RES109,   RES110,   RES111,   RES112,
+     RES113,   RES114,   RES115,   RES116,   RES117,   RES118,   RES119,
+     RES120,   RES121,   RES122,   RES123,   RES124,   RES125,   RES126,
+     RES127,      SPC,   RES129,   RES130,   RES131,      SPS,   RES133,
+     RES134,   RES135,       EA,   RES137,   RES138,   RES139,       EV,
+     RES141,   RES142,   RES143,       SR,   RES145,   RES146,   RES147,
+         ES,   RES149,   RES150,   RES151,      SID,   RES153,   RES154,
+     RES155,      SR1,   RES157,   RES158,   RES159,   RES160,   RES161,
+     RES162,   RES163,   RES164,   RES165,   RES166,   RES167,     TPCC
+      )>;
 } // SFR register classes

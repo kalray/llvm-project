@@ -34,47 +34,11 @@ multiclass MC_00<string OpcStr> {
      ALL_ID>;
 }
 
-// multiclass MC_01 is used by:
-//   defm WFXL
-//   defm WFXM
-multiclass MC_01<string OpcStr> {
-  def rst2 : KVX_INSTRUCTION
-    <(outs OnlyfxReg:$a1), (ins SingleReg:$a2),
-     !strconcat (OpcStr, " $a1, $a2"),
-     [/* no straightforward pattern */],
-     BCU>;
-  def rsa : KVX_INSTRUCTION
-    <(outs AloneReg:$a1), (ins SingleReg:$a2),
-     !strconcat (OpcStr, " $a1, $a2"),
-     [/* no straightforward pattern */],
-     ALL_ID>;
-  def rst4 : KVX_INSTRUCTION
-    <(outs SystemReg:$a1), (ins SingleReg:$a2),
-     !strconcat (OpcStr, " $a1, $a2"),
-     [/* no straightforward pattern */],
-     BCU>;
-}
-
-// multiclass MC_02 is used by:
-//   defm GET
-multiclass MC_02<string OpcStr> {
-  def ss2 : KVX_INSTRUCTION
-    <(outs SingleReg:$a1), (ins OnlygetReg:$a2),
-     !strconcat (OpcStr, " $a1 = $a2"),
-     [/* no straightforward pattern */],
-     BCU_TINY_TINY_MAU_XNOP_ID>;
-  def ss3 : KVX_INSTRUCTION
-    <(outs SingleReg:$a1), (ins SystemReg:$a2),
-     !strconcat (OpcStr, " $a1 = $a2"),
-     [/* no straightforward pattern */],
-     BCU_TINY_TINY_MAU_XNOP_ID>;
-}
-
 // multiclass MC_03 is used by:
 //   defm SET
 multiclass MC_03<string OpcStr> {
   def rst3 : KVX_INSTRUCTION
-    <(outs OnlysetReg:$a1), (ins SingleReg:$a2),
+    <(outs SetReg:$a1), (ins SingleReg:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
      [/* no straightforward pattern */],
      BCU>;
@@ -83,16 +47,6 @@ multiclass MC_03<string OpcStr> {
      !strconcat (OpcStr, " $a1 = $a2"),
      [/* no straightforward pattern */],
      ALL_ID>;
-  def rsra : KVX_INSTRUCTION
-    <(outs OnlyraReg:$a1), (ins SingleReg:$a2),
-     !strconcat (OpcStr, " $a1 = $a2"),
-     [/* no straightforward pattern */],
-     BCU>;
-  def rst4 : KVX_INSTRUCTION
-    <(outs SystemReg:$a1), (ins SingleReg:$a2),
-     !strconcat (OpcStr, " $a1 = $a2"),
-     [/* no straightforward pattern */],
-     BCU>;
 }
 
 // multiclass MC_04 is used by:
@@ -100,7 +54,7 @@ multiclass MC_03<string OpcStr> {
 multiclass MC_04<string OpcStr> {
   let Constraints = "$a1 = $a1o, $a2 = $a2o" in
   def ss4 : KVX_INSTRUCTION
-    <(outs SingleReg:$a1o, OnlyswapReg:$a2o), (ins SingleReg:$a1, OnlyswapReg:$a2),
+    <(outs SingleReg:$a1o, SwapReg:$a2o), (ins SingleReg:$a1, SwapReg:$a2),
      !strconcat (OpcStr, " $a1 = $a2"),
      [/* no straightforward pattern */],
      BCU_TINY_TINY_MAU_XNOP_RR>;
@@ -110,12 +64,6 @@ multiclass MC_04<string OpcStr> {
      !strconcat (OpcStr, " $a1 = $a2"),
      [/* no straightforward pattern */],
      ALL_RR>;
-  let Constraints = "$a1 = $a1o, $a2 = $a2o" in
-  def ss3 : KVX_INSTRUCTION
-    <(outs SingleReg:$a1o, SystemReg:$a2o), (ins SingleReg:$a1, SystemReg:$a2),
-     !strconcat (OpcStr, " $a1 = $a2"),
-     [/* no straightforward pattern */],
-     BCU_TINY_TINY_MAU_XNOP_RR>;
 }
 
 
@@ -1559,7 +1507,7 @@ def IGOTO : KVX_INSTRUCTION
    [(brind i64:$a1)],
    BCU>;
 
-let Defs = [RA], isCall = 1, isIndirectBranch = 1 in
+let Defs = [RA, PM0, PM1, PM2, PM3, PM4, PM5, PM6, PM7, PCR, PMC, CS], isCall = 1, isIndirectBranch = 1 in
 def ICALL : KVX_INSTRUCTION
   <(outs), (ins SingleReg:$a1),
    "icall $a1",
@@ -1575,11 +1523,11 @@ def LOOPDO : KVX_INSTRUCTION
    [/* no straightforward pattern */],
    ALL_ID>;
 
-defm WFXL : MC_01<"wfxl">;
+defm WFXL : MC_WFX<"wfxl">;
 
-defm WFXM : MC_01<"wfxm">;
+defm WFXM : MC_WFX<"wfxm">;
 
-defm GET : MC_02<"get">;
+defm GET : I <"get", BCU_TINY_TINY_MAU_XNOP_RR, [GetReg], [], [],[],[SingleReg]>;
 
 let Constraints = "$a1 = $a1o" in
 def IGET : KVX_INSTRUCTION
@@ -1612,7 +1560,7 @@ def GOTO : KVX_INSTRUCTION
    [(br bb:$a1)],
    BCU>;
 
-let Defs = [RA], isCall = 1 in
+let Defs = [RA, PM0, PM1, PM2, PM3, PM4, PM5, PM6, PM7, PCR, PMC, CS], isCall = 1 in
 def CALL : KVX_INSTRUCTION
   <(outs), (ins Pcrel27:$a1),
    "call $a1",
@@ -2668,8 +2616,16 @@ defm FFMSWCP : I<"ffmswcp", MAU_AUXR_FP, [PairedReg, PairedReg], [ConjugateMod, 
 def XFSCALEWO : ROUNDING_SILENT_BINOP<"xfscalewo", VectorReg, VectorReg, SingleReg, BCU_CRRP_CRWL_CRWH_RR,
                 [(set v256i1:$o, (int_kvx_xfscalewo v256i1:$lhs, i32:$rhs, RoundingMod:$r, SilentMod:$s))]>;
 
+let Uses = [PCR] in {
 def XCLAMPWO : TERNARY<"xclampwo", VectorReg, VectorReg, VectorReg, TCA_INT,
                 [(set v256i1:$o, (int_kvx_xclampwo v256i1:$a, v256i1:$lhs, v256i1:$rhs))]>;
+
+let isMoveReg = 1 in {
+defm XCOPYV : I<"xcopyv", TCA_INT, [MatrixReg], [ShuffleVMod], [], [], [MatrixReg], 0,
+                [(set v1024i1:$r, (int_kvx_xcopyv v1024i1:$op0, ShuffleVMod:$mod0))]>;
+defm XCOPYX : I<"xcopyx", TCA_INT, [WideReg], [ShuffleXMod], [], [], [WideReg], 0,
+                [(set v512i1:$r, (int_kvx_xcopyx v512i1:$op0, ShuffleXMod:$mod0))]>;
+}
 
 def XFFMA44HW : ROUNDING_SILENT_TERNARY<"xffma44hw", WideReg, VectorReg, VectorReg, TCA_FP,
                 [(set v512i1:$o, (int_kvx_xffma44hw v256i1:$lhs, v256i1:$rhs, v512i1:$a, RoundingMod:$r, SilentMod:$s))]>;
@@ -2680,14 +2636,17 @@ def XFMMA484HW : ROUNDING_SILENT_TERNARY<"xfmma484hw", WideReg, WideReg, WideReg
 def XFNARROW44WH : ROUNDING_SILENT_UNARY<"xfnarrow44wh", VectorReg, WideReg, TCA_INT,
                 [(set v256i1:$o, (int_kvx_xfnarrow44wh v512i1:$i, RoundingMod:$r, SilentMod:$s ))]>;
 
+def XMADDIFWO : ROUNDING_SILENT_TERNARY<"xmaddifwo", VectorReg, VectorReg, VectorReg, TCA_INT,
+                [(set v256i1:$o, (int_kvx_xmaddifwo v256i1:$a, v256i1:$lhs, v256i1:$rhs, RoundingMod:$r, SilentMod:$s))]>;
+
+def XMSBFIFWO : ROUNDING_SILENT_TERNARY<"xmsbfifwo", VectorReg, VectorReg, VectorReg, TCA_INT,
+                [(set v256i1:$o, (int_kvx_xmsbfifwo v256i1:$a, v256i1:$lhs, v256i1:$rhs, RoundingMod:$r, SilentMod:$s))]>;
+
 def XMADD44BW0 : TERNARY<"xmadd44bw0", WideReg, VectorReg, VectorReg, TCA_INT,
                 [(set v512i1:$o, (int_kvx_xmadd44bw0 v256i1:$lhs, v256i1:$rhs, v512i1:$a, ExtendMul_S))]>;
 
 def XMADD44BW1 : TERNARY<"xmadd44bw1", WideReg, VectorReg, VectorReg, TCA_INT,
                 [(set v512i1:$o, (int_kvx_xmadd44bw1 v256i1:$lhs, v256i1:$rhs, v512i1:$a, ExtendMul_S))]>;
-
-def XMADDIFWO : ROUNDING_SILENT_TERNARY<"xmaddifwo", VectorReg, VectorReg, VectorReg, TCA_INT,
-                [(set v256i1:$o, (int_kvx_xmaddifwo v256i1:$a, v256i1:$lhs, v256i1:$rhs, RoundingMod:$r, SilentMod:$s))]>;
 
 def XMADDSU44BW0 : TERNARY<"xmaddsu44bw0", WideReg, VectorReg, VectorReg, TCA_INT,
                 [(set v512i1:$o, (int_kvx_xmadd44bw0 v256i1:$lhs, v256i1:$rhs, v512i1:$a, ExtendMul_SU))]>;
@@ -2725,9 +2684,6 @@ def XMMAU484BW : TERNARY<"xmmau484bw", WideReg, VectorReg, VectorReg, TCA_INT,
 def XMMAUS484BW : TERNARY<"xmmaus484bw", WideReg, VectorReg, VectorReg, TCA_INT,
                 [(set v512i1:$o, (int_kvx_xmma484bw v256i1:$lhs, v256i1:$rhs, v512i1:$a, UnSignMod_US))]>;
 
-def XMSBFIFWO : ROUNDING_SILENT_TERNARY<"xmsbfifwo", VectorReg, VectorReg, VectorReg, TCA_INT,
-                [(set v256i1:$o, (int_kvx_xmsbfifwo v256i1:$a, v256i1:$lhs, v256i1:$rhs, RoundingMod:$r, SilentMod:$s))]>;
-
 def XSX48BW : UNARY<"xsx48bw", MatrixReg, VectorReg, TCA_INT,
                 [(set v1024i1:$o, (int_kvx_xsx48bw v256i1:$i))]>;
 
@@ -2739,6 +2695,7 @@ def XTRUNC48WB : UNARY<"xtrunc48wb", VectorReg, MatrixReg, TCA_INT,
 
 def XMT44D : UNARY<"xmt44d", MatrixReg, MatrixReg, TCA_INT,
                 [(set v1024i1:$o, (int_kvx_xmt44d v1024i1:$i))]>;
+} // Uses = [PCR]
 
 def DFLUSHSW : CACHE_OP<"dflushsw", SingleReg, LSU_STORE,
                 [(int_kvx_dflushsw i64:$way, i64:$set, CacheLevelMod:$c)]>;
@@ -2759,14 +2716,9 @@ let AsmString = "xsendrecvo$mod0$mod1 $op0, $r", hasSideEffects = 1, mayLoad = ?
 defm XSENDRECVO : I <"xsendrecvo", ALU_TINY_CRRP_CRWL_CRWH, [VectorReg], [ChannelMod, ChannelMod], [], [], [VectorReg], 0,
                   [(set v256i1:$r, (int_kvx_xsendrecvo v256i1:$op0, ChannelMod:$mod0, ChannelMod:$mod1))]>;
 
-let isMoveReg = 1 in {
+let isMoveReg = 1 in
 defm XCOPYO : I<"xcopyo", BCU_CRRP_CRWL_CRWH_RR, [VectorReg], [], [], [], [VectorReg]>;
-defm XCOPYV : I<"xcopyv", TCA_INT, [MatrixReg], [ShuffleVMod], [], [], [MatrixReg], 0,
-                [(set v1024i1:$r, (int_kvx_xcopyv v1024i1:$op0, ShuffleVMod:$mod0))]>;
-defm XCOPYX : I<"xcopyx", TCA_INT, [WideReg], [ShuffleXMod], [], [], [WideReg], 0,
-                [(set v512i1:$r, (int_kvx_xcopyx v512i1:$op0, ShuffleXMod:$mod0))]>;
-}
-}
+} // isV2
 
 def FMIND : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
@@ -3566,7 +3518,7 @@ def FNARROWWHV : KVX_INSTRUCTION
    "fnarrowwhv$a1$a2 $a3 = $a4",
    [/* no straightforward pattern */],
    TCA_INT>, Requires<[IsV1]>;
-} // Uses = [CS, PCR]
+} // Uses = [PCR]
 
 let isPredicable = 1 in
 def COPYD : KVX_INSTRUCTION
