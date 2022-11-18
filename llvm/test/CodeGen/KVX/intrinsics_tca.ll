@@ -1027,22 +1027,22 @@ define <4 x i64> @test_tca_builtins(i64 %0, i64 %1, i64 %2, i64 %3, <256 x i1>* 
 define void @convdhv(<256 x i1>* nocapture %v, <1024 x i1>* nocapture readonly %m) {
 ; CHECK-LABEL: convdhv:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    lv $a0 = 0[$r0]
+; CHECK-NEXT:    lv $a4 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a7 = 96[$r1]
+; CHECK-NEXT:    lv $a3 = 96[$r1]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a6 = 64[$r1]
+; CHECK-NEXT:    lv $a2 = 64[$r1]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a5 = 32[$r1]
+; CHECK-NEXT:    lv $a1 = 32[$r1]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a4 = 0[$r1]
+; CHECK-NEXT:    lv $a0 = 0[$r1]
 ; CHECK-NEXT:    addd $r1 = $r1, 128
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    convdhv1.rn.sat $a0.hi = $a4a5a6a7
+; CHECK-NEXT:    convdhv1.rn.sat $a4.hi = $a0a1a2a3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    convdhv0.rn.satu $a0.lo = $a4a5a6a7
+; CHECK-NEXT:    convdhv0.rn.satu $a4.lo = $a0a1a2a3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 32[$r0] = $a0
+; CHECK-NEXT:    sv 32[$r0] = $a4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a3 = 96[$r1]
 ; CHECK-NEXT:    ;;
@@ -1077,31 +1077,31 @@ entry:
 define void @convwbv(<256 x i1>* nocapture %v, <1024 x i1>* nocapture readonly %m) {
 ; CHECK-LABEL: convwbv:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    lv $a0 = 0[$r0]
+; CHECK-NEXT:    lv $a4 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a7 = 96[$r1]
+; CHECK-NEXT:    lv $a3 = 96[$r1]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a6 = 64[$r1]
+; CHECK-NEXT:    lv $a2 = 64[$r1]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a5 = 32[$r1]
+; CHECK-NEXT:    lv $a1 = 32[$r1]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a4 = 0[$r1]
+; CHECK-NEXT:    lv $a0 = 0[$r1]
 ; CHECK-NEXT:    addd $r1 = $r1, 128
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    convwbv1.rn.sat $a0.y = $a4a5a6a7
+; CHECK-NEXT:    convwbv1.rn.sat $a4.y = $a0a1a2a3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    convwbv0.rn.satu $a0.x = $a4a5a6a7
+; CHECK-NEXT:    convwbv0.rn.satu $a4.x = $a0a1a2a3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    convwbv2.rd.sat $a0.z = $a4a5a6a7
+; CHECK-NEXT:    convwbv2.rd.sat $a4.z = $a0a1a2a3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyv $a1 = $a0
+; CHECK-NEXT:    copyv $a5 = $a4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    convwbv3.rhu.satu $a1.t = $a4a5a6a7
+; CHECK-NEXT:    convwbv3.rhu.satu $a5.t = $a0a1a2a3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 32[$r0] = $a1
-; CHECK-NEXT:    convwbv3.rn.sat $a0.t = $a4a5a6a7
+; CHECK-NEXT:    sv 32[$r0] = $a5
+; CHECK-NEXT:    convwbv3.rn.sat $a4.t = $a0a1a2a3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 0[$r0] = $a0
+; CHECK-NEXT:    sv 0[$r0] = $a4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a3 = 96[$r1]
 ; CHECK-NEXT:    ;;
@@ -1150,43 +1150,43 @@ define void @fmma444hw(<256 x i1>* nocapture %v, <512 x i1>* nocapture %w) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv $a2 = 0[$r1]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a4 = 64[$r0]
+; CHECK-NEXT:    lv $a6 = 64[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a1 = 32[$r0]
+; CHECK-NEXT:    lv $a4 = 32[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmma242hw0 $a0.lo = $a2a3, $a1, $a4
+; CHECK-NEXT:    fmma242hw0 $a0.lo = $a2a3, $a4, $a6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmma242hw1 $a0.hi = $a2a3, $a1, $a4
+; CHECK-NEXT:    fmma242hw1 $a0.hi = $a2a3, $a4, $a6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyv $a5 = $a0
+; CHECK-NEXT:    copyv $a1 = $a0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyv $a7 = $a5
+; CHECK-NEXT:    copyv $a5 = $a1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmma242hw2 $a7.lo = $a2a3, $a1, $a4
+; CHECK-NEXT:    fmma242hw2 $a5.lo = $a2a3, $a4, $a6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 32[$r0] = $a7
-; CHECK-NEXT:    fmma242hw3 $a5.hi = $a2a3, $a7, $a4
+; CHECK-NEXT:    sv 32[$r0] = $a5
+; CHECK-NEXT:    fmma242hw3 $a1.hi = $a2a3, $a5, $a6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 0[$r0] = $a0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 64[$r0] = $a5
+; CHECK-NEXT:    sv 64[$r0] = $a1
 ; CHECK-NEXT:    addd $r0 = $r1, 64
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a1 = 32[$r0]
+; CHECK-NEXT:    lv $a3 = 32[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lv $a0 = 0[$r0]
+; CHECK-NEXT:    lv $a2 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmma242hw0 $a2.lo = $a0a1, $a5, $a7
+; CHECK-NEXT:    fmma242hw0 $a0.lo = $a2a3, $a1, $a5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmma242hw1 $a2.hi = $a0a1, $a5, $a7
+; CHECK-NEXT:    fmma242hw1 $a0.hi = $a2a3, $a1, $a5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmma242hw2 $a3.lo = $a0a1, $a5, $a7
+; CHECK-NEXT:    fmma242hw2 $a7.lo = $a2a3, $a1, $a5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmma242hw3 $a3.hi = $a0a1, $a5, $a7
+; CHECK-NEXT:    fmma242hw3 $a7.hi = $a2a3, $a1, $a5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 224[$r1] = $a3
+; CHECK-NEXT:    sv 224[$r1] = $a7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sv 192[$r1] = $a2
+; CHECK-NEXT:    sv 192[$r1] = $a0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

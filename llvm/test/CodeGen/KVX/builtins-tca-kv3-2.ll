@@ -54,23 +54,23 @@ declare <256 x i1> @llvm.kvx.xclampwo(<256 x i1>, <256 x i1>, <256 x i1>)
 define void @xffma44hw_test(<512 x i1>* nocapture %0, <256 x i1>* nocapture readonly %1) {
 ; CHECK-LABEL: xffma44hw_test:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    xlo $a0 = 0[$r1]
+; CHECK-NEXT:    xlo $a2 = 0[$r1]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xlo $a3 = 32[$r0]
+; CHECK-NEXT:    xlo $a1 = 32[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xlo $a2 = 0[$r0]
+; CHECK-NEXT:    xlo $a0 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xffma44hw $a2a3 = $a0, $a0
+; CHECK-NEXT:    xffma44hw $a0a1 = $a2, $a2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xffma44hw.s $a2a3 = $a0, $a0
+; CHECK-NEXT:    xffma44hw.s $a0a1 = $a2, $a2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xffma44hw.rn $a2a3 = $a0, $a0
+; CHECK-NEXT:    xffma44hw.rn $a0a1 = $a2, $a2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xffma44hw.rz.s $a2a3 = $a0, $a0
+; CHECK-NEXT:    xffma44hw.rz.s $a0a1 = $a2, $a2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 32[$r0] = $a3
+; CHECK-NEXT:    xso 32[$r0] = $a1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 0[$r0] = $a2
+; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = load <256 x i1>, <256 x i1>* %1
@@ -160,48 +160,48 @@ declare <256 x i1> @llvm.kvx.xfnarrow44wh(<512 x i1>, i32, i32)
 define void @xmadd44bw_test(<256 x i1>* nocapture readonly %0, <512 x i1>* nocapture %1) {
 ; CHECK-LABEL: xmadd44bw_test:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    xlo $a0 = 0[$r0]
+; CHECK-NEXT:    xlo $a4 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xlo $a3 = 32[$r1]
+; CHECK-NEXT:    xlo $a1 = 32[$r1]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xlo $a2 = 0[$r1]
+; CHECK-NEXT:    xlo $a0 = 0[$r1]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xmadd44bw0 $a2a3 = $a0, $a0
+; CHECK-NEXT:    xmadd44bw0 $a0a1 = $a4, $a4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xcopyx $a4a5 = $a2a3
+; CHECK-NEXT:    xcopyx $a2a3 = $a0a1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xmadd44bw1 $a4a5 = $a0, $a0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 32[$r1] = $a5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 0[$r1] = $a4
-; CHECK-NEXT:    xcopyx $a4a5 = $a2a3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xmadd44bw0 $a4a5 = $a0, $a0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 32[$r1] = $a5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 0[$r1] = $a4
-; CHECK-NEXT:    xcopyx $a4a5 = $a2a3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xmaddsu44bw1 $a4a5 = $a0, $a0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 32[$r1] = $a5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 0[$r1] = $a4
-; CHECK-NEXT:    xcopyx $a4a5 = $a2a3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xmaddu44bw0 $a4a5 = $a0, $a0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 32[$r1] = $a5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 0[$r1] = $a4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xmaddu44bw1 $a2a3 = $a0, $a0
+; CHECK-NEXT:    xmadd44bw1 $a2a3 = $a4, $a4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xso 32[$r1] = $a3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xso 0[$r1] = $a2
+; CHECK-NEXT:    xcopyx $a2a3 = $a0a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xmadd44bw0 $a2a3 = $a4, $a4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 32[$r1] = $a3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 0[$r1] = $a2
+; CHECK-NEXT:    xcopyx $a2a3 = $a0a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xmaddsu44bw1 $a2a3 = $a4, $a4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 32[$r1] = $a3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 0[$r1] = $a2
+; CHECK-NEXT:    xcopyx $a2a3 = $a0a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xmaddu44bw0 $a2a3 = $a4, $a4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 32[$r1] = $a3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 0[$r1] = $a2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xmaddu44bw1 $a0a1 = $a4, $a4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 32[$r1] = $a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 0[$r1] = $a0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = load <256 x i1>, <256 x i1>* %0
@@ -340,23 +340,23 @@ declare <512 x i1> @llvm.kvx.xmma4164bw(<512 x i1>, <512 x i1>, <512 x i1>, i32)
 define void @xmma484bw_test(<512 x i1>* nocapture %0, <256 x i1>* nocapture readonly %1) {
 ; CHECK-LABEL: xmma484bw_test:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    xlo $a0 = 0[$r1]
+; CHECK-NEXT:    xlo $a2 = 0[$r1]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xlo $a3 = 32[$r0]
+; CHECK-NEXT:    xlo $a1 = 32[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xlo $a2 = 0[$r0]
+; CHECK-NEXT:    xlo $a0 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xmma484bw $a2a3 = $a0, $a0
+; CHECK-NEXT:    xmma484bw $a0a1 = $a2, $a2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xmmasu484bw $a2a3 = $a0, $a0
+; CHECK-NEXT:    xmmasu484bw $a0a1 = $a2, $a2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xmmau484bw $a2a3 = $a0, $a0
+; CHECK-NEXT:    xmmau484bw $a0a1 = $a2, $a2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xmmaus484bw $a2a3 = $a0, $a0
+; CHECK-NEXT:    xmmaus484bw $a0a1 = $a2, $a2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 32[$r0] = $a3
+; CHECK-NEXT:    xso 32[$r0] = $a1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 0[$r0] = $a2
+; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = load <256 x i1>, <256 x i1>* %1
@@ -1096,27 +1096,27 @@ declare <256 x i1> @llvm.kvx.xfminhx(<256 x i1>, <256 x i1>)
 define void @xsplatov(<1024 x i1>* nocapture %0, <256 x i1>* nocapture readonly %1) {
 ; CHECK-LABEL: xsplatov:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    xlo $a0 = 0[$r1]
+; CHECK-NEXT:    xlo $a4 = 0[$r1]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xsplatov $a4a5a6a7 = $a0
+; CHECK-NEXT:    xsplatov $a0a1a2a3 = $a4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xsplatov.td $a0a1a2a3 = $a0
+; CHECK-NEXT:    xsplatov.td $a4a5a6a7 = $a4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 96[$r0] = $a7
+; CHECK-NEXT:    xso 96[$r0] = $a3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 64[$r0] = $a6
+; CHECK-NEXT:    xso 64[$r0] = $a2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 32[$r0] = $a5
+; CHECK-NEXT:    xso 32[$r0] = $a1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 0[$r0] = $a4
+; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 224[$r0] = $a3
+; CHECK-NEXT:    xso 224[$r0] = $a7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 192[$r0] = $a2
+; CHECK-NEXT:    xso 192[$r0] = $a6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 160[$r0] = $a1
+; CHECK-NEXT:    xso 160[$r0] = $a5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 128[$r0] = $a0
+; CHECK-NEXT:    xso 128[$r0] = $a4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = load <256 x i1>, <256 x i1>* %1
@@ -1133,27 +1133,26 @@ declare <1024 x i1> @llvm.kvx.xsplatov(<256 x i1>, i32)
 define void @xsplatox(<512 x i1>* nocapture %0, <256 x i1>* nocapture readonly %1) {
 ; CHECK-LABEL: xsplatox:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    xlo $a0 = 0[$r1]
+; CHECK-NEXT:    xlo $a6 = 0[$r1]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xsplatox $a2a3 = $a0
+; CHECK-NEXT:    xsplatox $a0a1 = $a6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xsplatox.zd $a4a5 = $a0
+; CHECK-NEXT:    xsplatox.zd $a2a3 = $a6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xsplatox.ud $a6a7 = $a0
+; CHECK-NEXT:    xsplatox.ud $a4a5 = $a6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xsplatox.tq $a0a1 = $a0
+; CHECK-NEXT:    xso 32[$r0] = $a1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 32[$r0] = $a3
+; CHECK-NEXT:    xso 0[$r0] = $a0
+; CHECK-NEXT:    xsplatox.tq $a0a1 = $a6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 0[$r0] = $a2
+; CHECK-NEXT:    xso 96[$r0] = $a3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 96[$r0] = $a5
+; CHECK-NEXT:    xso 64[$r0] = $a2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 64[$r0] = $a4
+; CHECK-NEXT:    xso 160[$r0] = $a5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 160[$r0] = $a7
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 128[$r0] = $a6
+; CHECK-NEXT:    xso 128[$r0] = $a4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xso 224[$r0] = $a1
 ; CHECK-NEXT:    ;;
