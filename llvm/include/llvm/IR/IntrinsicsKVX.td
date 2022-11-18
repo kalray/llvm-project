@@ -233,10 +233,6 @@ def int_kvx_fwidenlhw: Intrinsic<[llvm_float_ty], [llvm_v4f16_ty, llvm_i32_ty], 
 def int_kvx_fwidenlhwp: Intrinsic<[llvm_v2f32_ty], [llvm_v4f16_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_fwidenmhwp: Intrinsic<[llvm_v2f32_ty], [llvm_v4f16_ty, llvm_i32_ty], [IntrNoMem]>;
 
-def int_kvx_cmovehq : Intrinsic<[llvm_v4i16_ty], [llvm_v4i16_ty, llvm_v4i16_ty, llvm_v4i16_ty, llvm_i32_ty], [IntrNoMem]>;
-def int_kvx_cmovewp : Intrinsic<[llvm_v2i32_ty], [llvm_v2i32_ty, llvm_v2i32_ty, llvm_v2i32_ty, llvm_i32_ty], [IntrNoMem]>;
-def int_kvx_cmoved : Intrinsic<[llvm_i64_ty], [llvm_i64_ty, llvm_i64_ty, llvm_i64_ty, llvm_i32_ty], [IntrNoMem]>;
-
 def int_kvx_loopdoexit : Intrinsic<[llvm_i64_ty], [], [IntrNoDuplicate]>;
 
 def int_kvx_fconjwc : Intrinsic<[llvm_v2f32_ty], [llvm_v2f32_ty], [IntrNoMem]>;
@@ -393,4 +389,10 @@ def int_kvx_xzx48bw : Intrinsic<[llvm_v1024i1_ty], [llvm_v256i1_ty], [IntrReadMe
 //===----------------------------------------------------------------------===//
 def int_kvx_alignov : Intrinsic<[llvm_v4i64_ty], [llvm_v256i1_ty, llvm_v256i1_ty, llvm_i64_ty], [IntrNoMem]>;
 def int_kvx_alignv : Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_v256i1_ty, llvm_i64_ty], [IntrNoMem]>;
+
+//===----------------------------------------------------------------------===//
+// Overloaded intrinsics
+//===----------------------------------------------------------------------===//
+def int_kvx_select_vec: Intrinsic<[llvm_anyvector_ty], [LLVMMatchType<0>, LLVMMatchType<0>, LLVMVectorOfBitcastsToInt<0>, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_select: Intrinsic<[llvm_any_ty], [LLVMMatchType<0>, LLVMMatchType<0>, llvm_i64_ty, llvm_i32_ty], [IntrNoMem]>;
 }  // TargetPrefix = "kvx"

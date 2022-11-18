@@ -44,6 +44,10 @@
 #    define KVX_BUILTIN(ID, TYPES, MODE, NARGS, CPUS, ...) BUILTIN(__builtin_kvx_ ## ID, TYPES, MODE)
 #endif
 
+#ifndef KVX_MANY_BUILTIN
+#    define KVX_MANY_BUILTIN(IDIn, TYPES, MODE, NARGS, CPUS, IDOut, Parts, Overloaded, ...) BUILTIN(__builtin_kvx_ ## IDIn, TYPES, MODE)
+#endif
+
 //===----------------------------------------------------------------------===//
 // BCU
 //===----------------------------------------------------------------------===//
@@ -112,14 +116,6 @@ BUILTIN(__builtin_kvx_lwz, "OivC*cC*.", "n")
 // FPU
 //===----------------------------------------------------------------------===//
 
-BUILTIN(__builtin_kvx_selectdp, "V2OiV2OiV2OiV2OicC*", "n")
-BUILTIN(__builtin_kvx_selectdq, "V4OiV4OiV4OiV4OicC*", "n")
-BUILTIN(__builtin_kvx_selectho, "V8sV8sV8sV8scC*", "n")
-BUILTIN(__builtin_kvx_selecthq, "V4sV4sV4sV4scC*", "n")
-BUILTIN(__builtin_kvx_selecthx, "V16sV16sV16sV16scC*", "n")
-BUILTIN(__builtin_kvx_selectwo, "V8iV8iV8iV8icC*", "n")
-BUILTIN(__builtin_kvx_selectwp, "V2iV2iV2iV2icC*", "n")
-BUILTIN(__builtin_kvx_selectwq, "V4iV4iV4iV4icC*", "n")
 BUILTIN(__builtin_kvx_fabsd, "dd", "n")
 BUILTIN(__builtin_kvx_fabsdp, "V2dV2d", "n")
 BUILTIN(__builtin_kvx_fabsdq, "V4dV4d", "n")
@@ -590,6 +586,36 @@ KVX_BUILTIN(xsplatdo, "Tx256OIi", "n", 1, "kv3-2", )
 KVX_BUILTIN(xalign1024o, "Tx256Tx1024UOi", "n", 2, "kv3-2", )
 KVX_BUILTIN(xaccess1024o, "V4OiTx1024UOi", "n", 2, "kv3-2", )
 
+
+// Builtins expanded into different/multiple ones
+KVX_MANY_BUILTIN(selectbo, "V8cV8cV8cV8UccC*", "n", 4, "kv3-2", kvx_select_vec, 1, true, KVX_SIMDCOND)
+KVX_MANY_BUILTIN(selectbp, "V2cV2cV2cV2UccC*", "n", 4, "kv3-2", kvx_select_vec, 1, true, KVX_SIMDCOND)
+KVX_MANY_BUILTIN(selectbq, "V4cV4cV4cV4UccC*", "n", 4, "kv3-2", kvx_select_vec, 1, true, KVX_SIMDCOND)
+KVX_MANY_BUILTIN(selectbv, "V32cV32cV32cV32UccC*", "n", 4, "kv3-2", kvx_select_vec, 4, true, KVX_SIMDCOND)
+KVX_MANY_BUILTIN(selectbx, "V16cV16cV16cV16UccC*", "n", 4, "kv3-2", kvx_select_vec, 2, true, KVX_SIMDCOND)
+KVX_MANY_BUILTIN(selectd, "UOiUOiUOiUOicC*", "n", 4, "", kvx_select, 1, true, KVX_SCALARCOND)
+KVX_MANY_BUILTIN(selectdp, "V2OiV2OiV2OiV2OicC*", "n", 4, "", kvx_select, 2, true, KVX_SCALARCOND)
+KVX_MANY_BUILTIN(selectdq, "V4OiV4OiV4OiV4OicC*", "n", 4, "", kvx_select, 4, true, KVX_SCALARCOND)
+KVX_MANY_BUILTIN(selectfd, "dddUOicC*", "n", 4, "", kvx_select, 1, true, KVX_SCALARCOND)
+KVX_MANY_BUILTIN(selectfdp, "V2dV2dV2dV2UOicC*", "n", 4, "", kvx_select, 2, true, KVX_SCALARCOND)
+KVX_MANY_BUILTIN(selectfdq, "V4dV4dV4dV4UOicC*", "n", 4, "", kvx_select, 4, true, KVX_SCALARCOND)
+KVX_MANY_BUILTIN(selectfho, "V8xV8xV8xV8UscC*", "n", 4, "", kvx_select_vec, 2, true, KVX_SIMDCOND)
+KVX_MANY_BUILTIN(selectfhp, "V2xV2xV2xV2UscC*", "n", 4, "", kvx_select_vec, 1, true, KVX_SIMDCOND)
+KVX_MANY_BUILTIN(selectfhq, "V4xV4xV4xV4UscC*", "n", 4, "", kvx_select_vec, 1, true, KVX_SIMDCOND)
+KVX_MANY_BUILTIN(selectfhx, "V16xV16xV16xV16UscC*", "n", 4, "", kvx_select_vec, 4, true, KVX_SIMDCOND)
+KVX_MANY_BUILTIN(selectfw, "fffUOicC*", "n", 4, "", kvx_select, 1, true, KVX_SCALARCOND)
+KVX_MANY_BUILTIN(selectfwo, "V8fV8fV8fV8UicC*", "n", 4, "", kvx_select_vec, 4, true, KVX_SIMDCOND)
+KVX_MANY_BUILTIN(selectfwp, "V2fV2fV2fV2UicC*", "n", 4, "", kvx_select_vec, 1, true, KVX_SIMDCOND)
+KVX_MANY_BUILTIN(selectfwq, "V4fV4fV4fV4UicC*", "n", 4, "", kvx_select_vec, 2, true, KVX_SIMDCOND)
+KVX_MANY_BUILTIN(selectho, "V8sV8sV8sV8UscC*", "n", 4, "", kvx_select_vec, 2, true, KVX_SIMDCOND)
+KVX_MANY_BUILTIN(selecthp, "V2sV2sV2sV2UscC*", "n", 4, "", kvx_select_vec, 1, true, KVX_SIMDCOND)
+KVX_MANY_BUILTIN(selecthq, "V4sV4sV4sV4UscC*", "n", 4, "", kvx_select_vec, 1, true, KVX_SIMDCOND)
+KVX_MANY_BUILTIN(selecthx, "V16sV16sV16sV16UscC*", "n", 4, "", kvx_select_vec, 4, true, KVX_SIMDCOND)
+KVX_MANY_BUILTIN(selectw, "UiUiUiUOicC*", "n", 4, "", kvx_select, 1, true, KVX_SCALARCOND)
+KVX_MANY_BUILTIN(selectwo, "V8iV8iV8iV8UicC*", "n", 4, "", kvx_select_vec, 4, true, KVX_SIMDCOND)
+KVX_MANY_BUILTIN(selectwp, "V2iV2iV2iV2UicC*", "n", 4, "", kvx_select_vec, 1, true, KVX_SIMDCOND)
+KVX_MANY_BUILTIN(selectwq, "V4iV4iV4iV4UicC*", "n", 4, "", kvx_select_vec, 2, true, KVX_SIMDCOND)
+#undef KVX_MANY_BUILTIN
 #undef KVX_BUILTIN
 #undef NARY_BUILTIN
 #undef BUILTIN
