@@ -1162,14 +1162,13 @@ define void @fmma444hw(<256 x i1>* nocapture %v, <512 x i1>* nocapture %w) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyv $a5 = $a0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyv $a1 = $a0
 ; CHECK-NEXT:    fmma242hw2 $a5.lo = $a2a3, $a1, $a4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 32[$r0] = $a5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyv $a1 = $a0
+; CHECK-NEXT:    fmma242hw3 $a1.hi = $a2a3, $a5, $a4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 0[$r0] = $a0
-; CHECK-NEXT:    fmma242hw3 $a1.hi = $a2a3, $a5, $a4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sv 64[$r0] = $a1
 ; CHECK-NEXT:    addd $r0 = $r1, 64

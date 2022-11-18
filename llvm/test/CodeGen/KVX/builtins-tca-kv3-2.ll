@@ -170,8 +170,6 @@ define void @xmadd44bw_test(<256 x i1>* nocapture readonly %0, <512 x i1>* nocap
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xcopyx $a4a5 = $a2a3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xcopyx $a6a7 = $a2a3
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xmadd44bw1 $a4a5 = $a0, $a0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xso 32[$r1] = $a5
@@ -179,24 +177,25 @@ define void @xmadd44bw_test(<256 x i1>* nocapture readonly %0, <512 x i1>* nocap
 ; CHECK-NEXT:    xso 0[$r1] = $a4
 ; CHECK-NEXT:    xcopyx $a4a5 = $a2a3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xmadd44bw0 $a6a7 = $a0, $a0
+; CHECK-NEXT:    xmadd44bw0 $a4a5 = $a0, $a0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 32[$r1] = $a7
+; CHECK-NEXT:    xso 32[$r1] = $a5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 0[$r1] = $a6
-; CHECK-NEXT:    xcopyx $a6a7 = $a2a3
+; CHECK-NEXT:    xso 0[$r1] = $a4
+; CHECK-NEXT:    xcopyx $a4a5 = $a2a3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xmaddsu44bw1 $a4a5 = $a0, $a0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xso 32[$r1] = $a5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xso 0[$r1] = $a4
+; CHECK-NEXT:    xcopyx $a4a5 = $a2a3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xmaddu44bw0 $a6a7 = $a0, $a0
+; CHECK-NEXT:    xmaddu44bw0 $a4a5 = $a0, $a0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 32[$r1] = $a7
+; CHECK-NEXT:    xso 32[$r1] = $a5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 0[$r1] = $a6
+; CHECK-NEXT:    xso 0[$r1] = $a4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xmaddu44bw1 $a2a3 = $a0, $a0
 ; CHECK-NEXT:    ;;
