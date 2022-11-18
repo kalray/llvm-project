@@ -149,16 +149,31 @@ void KVXInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
     return;
   }
 
-  if (KVX::SingleRegRegClass.contains(DstReg) &&
-      KVX::OnlygetRegRegClass.contains(SrcReg)) {
-    LLVM_DEBUG(dbgs() << "It is a GETss2.\n");
-    BuildMI(MBB, MBBI, DL, get(KVX::GETss2), DstReg).addReg(SrcReg);
+  if (KVX::GetRegRegClass.contains(SrcReg) &&
+      KVX::SingleRegRegClass.contains(DstReg) &&
+      ((Subtarget.isV1() && !KVX::GetNotCV1RegRegClass.contains(SrcReg)) ||
+       (Subtarget.isV2() &&
+        !KVX::GetSetFxNotCV2RegRegClass.contains(SrcReg)))) {
+    LLVM_DEBUG(dbgs() << "It is a GET.\n");
+    BuildMI(MBB, MBBI, DL, get(KVX::GET), DstReg)
+        .addReg(SrcReg, RegState::InternalRead | getKillRegState(KillSrc));
     return;
   }
-  if (KVX::SingleRegRegClass.contains(DstReg) &&
-      KVX::SystemRegRegClass.contains(SrcReg)) {
-    LLVM_DEBUG(dbgs() << "It is a GETss3.\n");
-    BuildMI(MBB, MBBI, DL, get(KVX::GETss3), DstReg).addReg(SrcReg);
+
+  if (KVX::SingleRegRegClass.contains(SrcReg) &&
+      KVX::SetRegRegClass.contains(DstReg) &&
+      ((Subtarget.isV1() && !KVX::SetFxNotCV1RegRegClass.contains(DstReg)) ||
+       (Subtarget.isV2() &&
+        !KVX::GetSetFxNotCV2RegRegClass.contains(DstReg)))) {
+    if (KVX::AloneRegRegClass.contains(DstReg)) {
+      LLVM_DEBUG(dbgs() << "It is a SETrsa.\n");
+      BuildMI(MBB, MBBI, DL, get(KVX::SETrsa), DstReg)
+          .addReg(SrcReg, getKillRegState(KillSrc));
+      return;
+    }
+    LLVM_DEBUG(dbgs() << "It is a SETrst3.\n");
+    BuildMI(MBB, MBBI, DL, get(KVX::SETrst3), DstReg)
+        .addReg(SrcReg, getKillRegState(KillSrc));
     return;
   }
 
@@ -309,7 +324,7 @@ void KVXInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
         .addImm(0)
         .addFrameIndex(FI)
         .addImm(KVXMOD::VARIANT_);
-    BuildMI(MBB, I, DL, get(KVX::SETrsra), KVX::RA)
+    BuildMI(MBB, I, DL, get(KVX::SETrst3), KVX::RA)
         .addReg(ScratchReg, RegState::Kill);
     return;
   } else
@@ -362,7 +377,7 @@ void KVXInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
     Pseudo = KVX::SMATRIXp;
     LLVM_DEBUG(dbgs() << "Matrix TCA register, storing using SMATRIXp.\n");
   } else if (KVX::OnlyraRegRegClass.hasSubClassEq(RC)) {
-    LLVM_DEBUG(dbgs() << "It is a RA register, using GETss2 and SDp.\n");
+    LLVM_DEBUG(dbgs() << "It is a RA register, using GET and SDp.\n");
 
     MachineFunction &MF = *MBB.getParent();
     const TargetSubtargetInfo &STI = MF.getSubtarget();
@@ -370,7 +385,7 @@ void KVXInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
     const MCRegisterInfo *MRI = STI.getRegisterInfo();
 
     Register ScratchReg = findScratchRegister(MBB, false, KVX::R16);
-    BuildMI(MBB, I, DL, get(KVX::GETss2), ScratchReg)
+    BuildMI(MBB, I, DL, get(KVX::GET), ScratchReg)
         .addReg(KVX::RA)
         .setMIFlags(MachineInstr::FrameSetup);
 
@@ -683,14 +698,10 @@ bool KVXInstrInfo::isSoloInstruction(const MachineInstr &MI) const {
   switch (MI.getOpcode()) {
   case KVX::SETrst3:
   case KVX::SETrsa:
-  case KVX::SETrsra:
-  case KVX::SETrst4:
-  case KVX::WFXLrst2:
-  case KVX::WFXLrsa:
-  case KVX::WFXLrst4:
-  case KVX::WFXMrst2:
-  case KVX::WFXMrsa:
-  case KVX::WFXMrst4:
+  case KVX::WFXLalone:
+  case KVX::WFXL:
+  case KVX::WFXMalone:
+  case KVX::WFXM:
     // SET, WFXL, and WFXM instructions have to be alone in a
     // bundle if they write an AloneReg register.
     if (KVX::AloneRegRegClass.contains(MI.getOperand(0).getReg()))
@@ -1405,3 +1416,23 @@ unsigned KVXInstrInfo::insertIndirectBranch(MachineBasicBlock &MBB,
       BuildMI(&MBB, DL, get(KVX::IGOTO)).addReg(Reg, getKillRegState(true));
   return Make->getDesc().Size + Igoto->getDesc().Size;
 }
+
+bool KVXInstrInfo::isSafeToMoveRegClassDefs(
+    const TargetRegisterClass *RC) const {
+  return (RC != &KVX::SwapRegRegClass) && (RC != &KVX::SystemRegRegClass) &&
+         (RC != &KVX::GetRegRegClass) && (RC != &KVX::SetRegRegClass) &&
+         (RC != &KVX::GetReg_and_SetRegRegClass) &&
+         (RC != &KVX::FxRegRegClass) &&
+         (RC != &KVX::FxReg_and_GetRegRegClass) &&
+         (RC != &KVX::SetFxNotCV1RegRegClass) &&
+         (RC != &KVX::GetNotCV1RegRegClass) &&
+         (RC != &KVX::GetNotCV1Reg_and_SetFxNotCV1RegRegClass) &&
+         (RC != &KVX::AloneRegRegClass) &&
+         (RC != &KVX::FxReg_and_GetNotCV1RegRegClass) &&
+         (RC != &KVX::FxReg_and_SetFxNotCV1RegRegClass) &&
+         (RC != &KVX::AloneReg_and_GetRegRegClass) &&
+         (RC != &KVX::GetNotCV1Reg_and_FxReg_and_SetFxNotCV1RegRegClass) &&
+         (RC != &KVX::AloneReg_and_GetNotCV1RegRegClass) &&
+         (RC != &KVX::GetSetFxNotCV2RegRegClass) &&
+         (RC != &KVX::OnlyraRegRegClass);
+} // end namespace KVX}

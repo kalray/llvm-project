@@ -21,7 +21,7 @@ void barrier(void) {
 
 // CHECK-LABEL: @get(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.read_volatile_register.i64(metadata !2)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.get(i32 1)
 // CHECK-NEXT:    [[CONV:%.*]] = trunc i64 [[TMP0]] to i32
 // CHECK-NEXT:    ret i32 [[CONV]]
 //
@@ -31,7 +31,7 @@ int get() {
 
 // CHECK-LABEL: @wfxl(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    tail call void @llvm.kvx.wfx(metadata !2, i64 2, i32 0)
+// CHECK-NEXT:    tail call void asm sideeffect "wfxl $$ps, $0", "r,~{$ps}"(i64 2) [[ATTR1:#.*]]
 // CHECK-NEXT:    ret void
 //
 void wfxl() {
@@ -40,7 +40,7 @@ void wfxl() {
 
 // CHECK-LABEL: @wfxm(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    tail call void @llvm.kvx.wfx(metadata !2, i64 2, i32 1)
+// CHECK-NEXT:    tail call void asm sideeffect "wfxm $$ps, $0", "r,~{$ps}"(i64 2) [[ATTR1]]
 // CHECK-NEXT:    ret void
 //
 void wfxm() {
@@ -49,7 +49,7 @@ void wfxm() {
 
 // CHECK-LABEL: @set(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    tail call void @llvm.write_register.i64(metadata !2, i64 2)
+// CHECK-NEXT:    tail call void asm sideeffect "set $$ps = $0", "r,~{$ps}"(i64 2) [[ATTR1]]
 // CHECK-NEXT:    ret void
 //
 void set() {

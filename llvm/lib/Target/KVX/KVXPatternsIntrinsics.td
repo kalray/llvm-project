@@ -12,8 +12,6 @@ def: Pat<(int_kvx_tlbread), (TLBREAD)>;
 def: Pat<(int_kvx_tlbwrite), (TLBWRITE)>;
 def: Pat<(trap), (ERROP)>;
 
-def GETp : KVX_PSEUDO_W_SCHEDINFO<(outs SingleReg:$dst), (ins Sysnumber:$param), [], BCU>;
-
 let Constraints = "$vIn = $vOut, $qIn = $qOut" in
 def XSWAP256p : KVX_PSEUDO_W_SCHEDINFO<(outs QuadReg:$qOut, VectorReg:$vOut), (ins QuadReg:$qIn, VectorReg:$vIn),[], XSWAP256>;
 
@@ -29,8 +27,6 @@ def ENDLOOP : KVX_PSEUDO <(outs), (ins Pcrel27:$LpHead,  Pcrel27:$LpExit, Pcrel2
 // Loop pattern-matched IR intrinsics
 def : Pat<(int_set_loop_iterations i64:$c), (LOOPDOp SingleReg:$c)>;
 def : Pat<(int_kvx_loopdoexit), (LOOPDO_ENDp)>;
-
-def: Pat<(int_kvx_get Sysnumber:$r), (GETp Sysnumber:$r)>;
 
 def: Pat<(int_kvx_syncgroup SingleReg:$r), (SYNCGROUP SingleReg:$r)>;
 def: Pat<(int_kvx_waitit i64:$r), (WAITIT SingleReg:$r)>;

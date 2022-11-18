@@ -19,6 +19,7 @@
 #include "llvm/CodeGen/CallingConvLower.h"
 #include "llvm/CodeGen/MachineJumpTableInfo.h"
 #include "llvm/CodeGen/MachineModuleInfo.h"
+#include "llvm/IR/IntrinsicsKVX.h"
 #include "llvm/Support/KnownBits.h"
 
 using namespace llvm;
@@ -521,6 +522,7 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::USUBSAT, I, Legal);
 
   setOperationAction(ISD::INTRINSIC_WO_CHAIN, MVT::Other, Custom);
+  setOperationAction(ISD::INTRINSIC_VOID, MVT::Other, Custom);
 
   setOperationAction(ISD::EH_SJLJ_LONGJMP, MVT::Other, Custom);
   setOperationAction(ISD::EH_SJLJ_SETJMP, MVT::i32, Custom);
@@ -1086,8 +1088,9 @@ SDValue KVXTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
       return Op;
     return SDValue();
   }
+  case ISD::INTRINSIC_VOID:
   case ISD::INTRINSIC_WO_CHAIN:
-    return LowerINTRINSIC_WO_CHAIN(Op, DAG, &Subtarget);
+    return LowerINTRINSIC(Op, DAG, &Subtarget);
   case ISD::EH_SJLJ_LONGJMP:
     return DAG.getNode(KVXISD::EH_SJLJ_LONGJMP, SDLoc(Op), MVT::Other,
                        Op.getOperand(0), Op.getOperand(1));
@@ -1601,11 +1604,21 @@ SDValue KVXTargetLowering::lowerBlockAddress(SDValue Op,
 
 Register KVXTargetLowering::getRegisterByName(const char *RegName, LLT Ty,
                                               const MachineFunction &MF) const {
-  unsigned RegNo = MatchRegisterName(RegName);
-  if (RegNo == 0) {
-    static StringRef Dollar = "$";
-    RegNo = MatchRegisterName(Dollar.str() + StringRef(RegName).str());
-  }
+  static StringRef Dollar = "$";
+  StringRef Str(RegName);
+
+  if (Str[0] != '$')
+    Str = StringRef(Dollar.str() + Str.str());
+
+  unsigned RegNo = MatchRegisterName(Str);
+
+  if (RegNo == 0)
+    RegNo = MatchRegisterAltName(Str);
+
+  if (RegNo == 0)
+    report_fatal_error("Could not get register by name: " +
+                       StringRef(RegName).str());
+
   return RegNo;
 }
 
@@ -2789,10 +2802,16 @@ KVXTargetLowering::EmitInstrWithCustomInserter(MachineInstr &MI,
   }
 }
 
-SDValue KVXTargetLowering::LowerINTRINSIC_WO_CHAIN(
-    SDValue Op, SelectionDAG &DAG, const KVXSubtarget *Subtarget) const {
-  unsigned IntNo = cast<ConstantSDNode>(Op.getOperand(0))->getZExtValue();
+SDValue KVXTargetLowering::LowerINTRINSIC(SDValue Op, SelectionDAG &DAG,
+                                          const KVXSubtarget *Subtarget) const {
   MVT VT = Op.getSimpleValueType();
+  unsigned IID = 0;
+  if (VT == MVT::Other) {
+    VT = Op.getOperand(1).getSimpleValueType();
+    IID = 1;
+  }
+  unsigned IntNo = cast<ConstantSDNode>(Op.getOperand(IID))->getZExtValue();
+
   SDLoc DL(Op);
   switch (IntNo) {
   default:
@@ -2814,6 +2833,48 @@ SDValue KVXTargetLowering::LowerINTRINSIC_WO_CHAIN(
                          DAG.getMCSymbol(S, PtrVT));
     }
     return DAG.getNode(KVXISD::AddrWrapper, DL, VT, DAG.getMCSymbol(S, PtrVT));
+  }
+
+  case Intrinsic::kvx_wfx: {
+    MDNodeSDNode *RegName = cast<MDNodeSDNode>(Op->getOperand(2));
+
+    const MDString *RegStr = cast<MDString>(RegName->getMD()->getOperand(0));
+
+    EVT VT(MVT::i64);
+    LLT Ty = VT.isSimple() ? getLLTForMVT(VT.getSimpleVT()) : LLT();
+    Register Reg = DAG.getTargetLoweringInfo().getRegisterByName(
+        RegStr->getString().data(), Ty, DAG.getMachineFunction());
+
+    auto V = cast<ConstantSDNode>(Op->getOperand(4))->getZExtValue();
+    if (!KVX::FxRegRegClass.contains(Reg)) {
+      errs() << "Register " << RegStr->getString() << "\n";
+      report_fatal_error("Can't use this register with wfxl/wfxm\n");
+    }
+
+    if (Subtarget->isV1()) {
+      if (KVX::SetFxNotCV1RegRegClass.contains(Reg)) {
+        errs() << "Register " << RegStr->getString() << "\n";
+        report_fatal_error(
+            "Can't generate wfxl/wfxm for the required register in Cv1");
+      }
+    } else if (KVX::GetSetFxNotCV2RegRegClass.contains(Reg)) {
+      errs() << "Register " << RegStr->getString() << "\n";
+      report_fatal_error(
+          "Can't generate wfxl/wfxm for the required register in Cv2");
+    }
+
+    unsigned Instr;
+    if (KVX::AloneRegRegClass.contains(Reg))
+      Instr = V ? KVX::WFXMalone : KVX::WFXLalone;
+    else
+      Instr = V ? KVX::WFXM : KVX::WFXL;
+
+    SDVTList VTs = DAG.getVTList(MVT::Other);
+    auto RegNode = DAG.getRegister(Reg, VT);
+    SDValue Ops[] = {Op->getOperand(0), RegNode, Op->getOperand(3)};
+    auto *New = DAG.getMachineNode(Instr, SDLoc(Op), VTs, Ops);
+
+    return SDValue(New, 0);
   }
   }
 }

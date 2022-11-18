@@ -146,21 +146,6 @@ static void BuildCMOVED(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
 
 // ========================================================================== //
 
-static bool expandGetInstr(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
-                           MachineBasicBlock::iterator MBBI) {
-  MachineInstr &MI = *MBBI;
-  DebugLoc DL = MI.getDebugLoc();
-
-  Register DestReg = MI.getOperand(0).getReg();
-  int64_t RegNo = MI.getOperand(1).getImm();
-
-  BuildMI(MBB, MBBI, DL, TII->get(KVX::GETss3), DestReg)
-      .addReg(KVX::SystemRegRegClass.getRegister(RegNo));
-
-  MI.eraseFromParent();
-  return true;
-}
-
 static bool expandCacheInstruction(const KVXInstrInfo *TII,
                                    MachineBasicBlock &MBB,
                                    MachineBasicBlock::iterator MBBI) {
@@ -1441,8 +1426,6 @@ bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
                                MachineBasicBlock::iterator &NextMBBI) {
   LLVM_DEBUG(dbgs() << "Expanding pseudo: "; MBBI->dump());
   switch (MBBI->getOpcode()) {
-  case KVX::GETp:
-    return expandGetInstr(TII, MBB, MBBI);
   default:
     break;
   }

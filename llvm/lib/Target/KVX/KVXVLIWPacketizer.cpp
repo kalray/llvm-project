@@ -153,14 +153,10 @@ bool KVXPacketizerList::isSoloInstruction(const MachineInstr &MI) {
       break;
     case KVX::SETrst3:
     case KVX::SETrsa:
-    case KVX::SETrsra:
-    case KVX::SETrst4:
-    case KVX::WFXLrst2:
-    case KVX::WFXLrsa:
-    case KVX::WFXLrst4:
-    case KVX::WFXMrst2:
-    case KVX::WFXMrsa:
-    case KVX::WFXMrst4:
+    case KVX::WFXL:
+    case KVX::WFXLalone:
+    case KVX::WFXM:
+    case KVX::WFXMalone:
       // SET, WFXL, and WFXM instructions have to be alone in a
       // bundle if they write an AloneReg register.
       Solo = KVX::AloneRegRegClass.contains(MI.getOperand(0).getReg());

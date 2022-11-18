@@ -118,6 +118,8 @@ public:
                                 MachineBasicBlock &NewDestBB,
                                 const DebugLoc &DL, int64_t BrOffset = 0,
                                 RegScavenger *RS = nullptr) const override;
+
+  bool isSafeToMoveRegClassDefs(const TargetRegisterClass *RC) const override;
 };
 
 } // namespace llvm

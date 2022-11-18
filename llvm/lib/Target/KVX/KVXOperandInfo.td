@@ -186,3 +186,5 @@ def ShuffleXMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 3);}
 def LsupackMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 5);}]> {
   let PrintMethod = "printLsupackMod";
 }
+
+def chain : Operand<OtherVT>;
