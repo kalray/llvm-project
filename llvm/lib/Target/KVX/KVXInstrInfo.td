@@ -2487,11 +2487,11 @@ def CMOVEHQ : KVX_INSTRUCTION
    [/* no straightforward pattern */],
    ALU_SWITCH_LITE_TINY>;
 
-let Constraints = "$a3 = $a3o" in
+let Constraints = "$f = $r" in
 def CMOVEBO : KVX_INSTRUCTION
-  <(outs SingleReg:$a3o), (ins SingleReg:$a2, SingleReg:$a3, SingleReg:$a4, SimplecondMod:$a1),
-   "cmovebo$a1 $a2 ? $a3 = $a4",
-   [/* no straightforward pattern */],
+  <(outs SingleReg:$r), (ins SingleReg:$c, SingleReg:$f, SingleReg:$t, SimplecondMod:$Mod),
+   "cmovebo$Mod $c ? $f = $t",
+   [(set v8i8:$r, (int_kvx_select_vec v8i8:$t, v8i8:$f, v8i8:$c, SimplecondMod:$Mod))],
    ALU_TINY>, Requires<[IsV2]>;
 
 defm FCOMPNW : MC_1F_TINY<"fcompnw">, Requires<[IsV2]>;

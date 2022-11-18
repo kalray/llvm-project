@@ -510,12 +510,41 @@ def: Pat<(int_kvx_srshqs v4i16:$v, Unsigned6:$s), (SRSHQSri SingleReg:$v, Unsign
 def: Pat<(int_kvx_srswps v2i32:$v, i64:$s), (SRSWPSrr SingleReg:$v, SingleReg:$s)>;
 def: Pat<(int_kvx_srswps v2i32:$v, Unsigned6:$s), (SRSWPSri SingleReg:$v, Unsigned6:$s)>;
 
-def: Pat<(int_kvx_cmovehq v4i16:$v1, v4i16:$v2, v4i16:$c, i32:$sc), (CMOVEHQ SingleReg:$c, SingleReg:$v1, SingleReg:$v2, SimplecondMod: $sc)>;
-def: Pat<(int_kvx_cmovewp v2i32:$v1, v2i32:$v2, v2i32:$c, i32:$sc), (CMOVEWP SingleReg:$c, SingleReg:$v1, SingleReg:$v2, SimplecondMod: $sc)>;
-def: Pat<(int_kvx_cmoved i64:$v1, Signed10:$v2, i64:$c, i32:$sc), (CMOVEDri10 SingleReg:$c, SingleReg:$v1, Signed10:$v2, ScalarcondMod: $sc)>;
-def: Pat<(int_kvx_cmoved i64:$v1, Signed37:$v2, i64:$c, i32:$sc), (CMOVEDri37 SingleReg:$c, SingleReg:$v1, Signed37:$v2, ScalarcondMod: $sc)>;
-def: Pat<(int_kvx_cmoved i64:$v1, Wrapped64:$v2, i64:$c, i32:$sc), (CMOVEDri37 SingleReg:$c, SingleReg:$v1, Wrapped64:$v2, ScalarcondMod: $sc)>;
-def: Pat<(int_kvx_cmoved i64:$v1, i64:$v2, i64:$c, i32:$sc), (CMOVEDrr SingleReg:$c, SingleReg:$v1, SingleReg:$v2, ScalarcondMod: $sc)>;
+multiclass INTR_SELECT_VEC<ValueType VT, ValueType CVT, Instruction I> {
+  def: Pat<(VT (int_kvx_select_vec VT:$t, VT:$f, CVT:$c, SimplecondMod:$sc)),
+           (VT (I SingleReg:$c, SingleReg:$f, VT:$t, SimplecondMod:$sc))>;
+}
+
+foreach vt = [v2i8, v4i8] in
+defm : INTR_SELECT_VEC<vt, vt, CMOVEBO>, Requires<[IsV2]>;
+
+foreach vt = [v2i16, v2f16] in
+defm : INTR_SELECT_VEC<vt, v2i16, CMOVEHQ>;
+
+foreach vt = [v4i16, v4f16] in
+defm : INTR_SELECT_VEC<vt, v4i16, CMOVEHQ>;
+
+foreach vt = [v2i32, v2f32] in
+defm : INTR_SELECT_VEC<vt, v2i32, CMOVEWP>;
+
+def: Pat<(i64(int_kvx_select Signed10:$t, i64:$f, i64:$c, i32:$sc)),
+         (CMOVEDri10 SingleReg:$c, SingleReg:$f, Signed10:$t, ScalarcondMod:$sc)>;
+
+def: Pat<(i64(int_kvx_select Signed37:$t, i64:$f, i64:$c, i32:$sc)),
+         (CMOVEDri37 SingleReg:$c, SingleReg:$f, Signed37:$t, ScalarcondMod:$sc)>;
+
+def: Pat<(i64(int_kvx_select Wrapped64:$t, i64:$f, i64:$c, i32:$sc)),
+         (CMOVEDri64 SingleReg:$c, SingleReg:$f, Wrapped64:$t, ScalarcondMod:$sc)>;
+
+def: Pat<(i32(int_kvx_select Signed10W:$t, i32:$f, i32:$c, i32:$sc)),
+         (CMOVEDri10 SingleReg:$c, SingleReg:$f, Signed10:$t, ScalarcondMod:$sc)>;
+
+def: Pat<(i32(int_kvx_select Signed37W:$t, i32:$f, i32:$c, i32:$sc)),
+         (CMOVEDri37 SingleReg:$c, SingleReg:$f, Signed37:$t, ScalarcondMod:$sc)>;
+
+foreach vt = [f32, i32, f64, i64] in
+def: Pat<(vt(int_kvx_select vt:$t, vt:$f, i64:$c, i32:$sc)),
+         (CMOVEDrr SingleReg:$c, SingleReg:$f, SingleReg:$t, ScalarcondMod:$sc)>;
 
 // widen patterns
 def: Pat<(int_kvx_fwidenmwd v2f32:$v, i32:$silent), (FWIDENMWD SingleReg:$v, SilentMod:$silent)>;
