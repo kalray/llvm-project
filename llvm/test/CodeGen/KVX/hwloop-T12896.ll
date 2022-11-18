@@ -31,22 +31,22 @@ define i32 @c() #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r0 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.wlez $r0 ? .LBB0_1
+; CHECK-NEXT:    cb.wlez $r0 ? .LBB0_3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.3: # %for.body.preheader
+; CHECK-NEXT:  # %bb.1: # %for.body.preheader
 ; CHECK-NEXT:    zxwd $r1 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r1, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_4: # %for.body
+; CHECK-NEXT:  .LBB0_2: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    sraw $r0 = $r0, 6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .__LOOPDO_0_END_:
-; CHECK-NEXT:    goto .LBB0_2
+; CHECK-NEXT:    goto .LBB0_4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_1:
-; CHECK-NEXT:  .LBB0_2: # %for.end
+; CHECK-NEXT:  .LBB0_3:
+; CHECK-NEXT:  .LBB0_4: # %for.end
 ; CHECK-NEXT:    make $r1 = a
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sh 0[$r1] = $r0

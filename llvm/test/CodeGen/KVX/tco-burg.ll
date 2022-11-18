@@ -19,9 +19,9 @@ define void @reveachList(i8* (i8*)* nocapture %f, %struct.list* readonly %l){
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    copyd $r19 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.deqz $r19 ? .LBB0_1
+; CHECK-NEXT:    cb.deqz $r19 ? .LBB0_2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.2: # %if.end
+; CHECK-NEXT:  # %bb.1: # %if.end
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    ld $r1 = 8[$r19]
 ; CHECK-NEXT:    call reveachList
@@ -38,7 +38,7 @@ define void @reveachList(i8* (i8*)* nocapture %f, %struct.list* readonly %l){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    igoto $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_1: # %return
+; CHECK-NEXT:  .LBB0_2: # %return
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]

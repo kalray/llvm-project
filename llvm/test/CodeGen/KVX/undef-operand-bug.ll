@@ -7,47 +7,47 @@ define void @zext_dagcombine_fail() {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_7
+; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_11
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1:
-; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_7
+; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_11
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.2:
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_7
+; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_11
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.3: # %.preheader3
-; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_7
+; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_11
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.4:
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_6
+; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_10
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.5:
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.weqz $r0 ? .LBB0_6
+; CHECK-NEXT:    cb.weqz $r0 ? .LBB0_10
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  # %bb.6:
+; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_10
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  # %bb.7:
+; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_10
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.8:
-; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_6
+; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_10
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.9:
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_6
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.10:
-; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_6
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.11:
+; CHECK-NEXT:  .LBB0_10:
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_6:
-; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_7:
+; CHECK-NEXT:  .LBB0_11:
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   br i1 undef, label %2, label %1

@@ -10,7 +10,7 @@ define i32 @f_setjmp() {
 ; CHECK-LABEL: f_setjmp:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r0 = buf
-; CHECK-NEXT:    make $r1 = .LBB0_3
+; CHECK-NEXT:    make $r1 = .LBB0_2
 ; CHECK-NEXT:    addd $r12 = $r12, -128
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    get $r16 = $ra
@@ -31,12 +31,12 @@ define i32 @f_setjmp() {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1:
 ; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    goto .LBB0_2
+; CHECK-NEXT:    goto .LBB0_3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_3: # Block address taken
+; CHECK-NEXT:  .LBB0_2: # Block address taken
 ; CHECK-NEXT:    make $r0 = 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_2:
+; CHECK-NEXT:  .LBB0_3:
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r20r21r22r23 = 16[$r12]
@@ -57,7 +57,7 @@ define i32 @f_setjmp() {
 ;
 ; PIC-LABEL: f_setjmp:
 ; PIC:       # %bb.0:
-; PIC-NEXT:    pcrel $r1 = @pcrel( .LBB0_3 )
+; PIC-NEXT:    pcrel $r1 = @pcrel( .LBB0_2 )
 ; PIC-NEXT:    addd $r12 = $r12, -128
 ; PIC-NEXT:    get $r16 = $ra
 ; PIC-NEXT:    ;;
@@ -80,12 +80,12 @@ define i32 @f_setjmp() {
 ; PIC-NEXT:    ;;
 ; PIC-NEXT:  # %bb.1:
 ; PIC-NEXT:    make $r0 = 0
-; PIC-NEXT:    goto .LBB0_2
+; PIC-NEXT:    goto .LBB0_3
 ; PIC-NEXT:    ;;
-; PIC-NEXT:  .LBB0_3: # Block address taken
+; PIC-NEXT:  .LBB0_2: # Block address taken
 ; PIC-NEXT:    make $r0 = 1
 ; PIC-NEXT:    ;;
-; PIC-NEXT:  .LBB0_2:
+; PIC-NEXT:  .LBB0_3:
 ; PIC-NEXT:    lq $r18r19 = 0[$r12]
 ; PIC-NEXT:    ;;
 ; PIC-NEXT:    lo $r20r21r22r23 = 16[$r12]

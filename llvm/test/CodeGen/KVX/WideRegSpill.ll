@@ -30,9 +30,9 @@ define i32 @a() {
 ; CV1-LABEL: a:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    make $r0 = 0
-; CV1-NEXT:    goto .LBB0_1
+; CV1-NEXT:    goto .LBB0_3
 ; CV1-NEXT:    ;;
-; CV1-NEXT:  .LBB0_2: # in Loop: Header=BB0_1 Depth=1
+; CV1-NEXT:  .LBB0_1: # in Loop: Header=BB0_3 Depth=1
 ; CV1-NEXT:    copyv $a2 = $a1
 ; CV1-NEXT:    compw.eq $r2 = $r3, 1
 ; CV1-NEXT:    ;;
@@ -43,7 +43,7 @@ define i32 @a() {
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    alignv $a0 = $a0, $a3, $r2
 ; CV1-NEXT:    ;;
-; CV1-NEXT:  .LBB0_5: # in Loop: Header=BB0_1 Depth=1
+; CV1-NEXT:  .LBB0_2: # in Loop: Header=BB0_3 Depth=1
 ; CV1-NEXT:    mt44d $a4a5a6a7 = $a0a1a2a3
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    sv 96[$r0] = $a7
@@ -56,8 +56,8 @@ define i32 @a() {
 ; CV1-NEXT:    addd $r0 = $r0, 2
 ; CV1-NEXT:    copyd $r2 = $r1
 ; CV1-NEXT:    ;;
-; CV1-NEXT:  .LBB0_1: # =>This Loop Header: Depth=1
-; CV1-NEXT:    # Child Loop BB0_4 Depth 2
+; CV1-NEXT:  .LBB0_3: # =>This Loop Header: Depth=1
+; CV1-NEXT:    # Child Loop BB0_5 Depth 2
 ; CV1-NEXT:    maxw $r1 = $r2, 0
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    sbfw $r3 = $r2, $r1
@@ -82,9 +82,9 @@ define i32 @a() {
 ; CV1-NEXT:    srlw $r4 = $r4, 1
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    msbfw $r3 = $r4, 3
-; CV1-NEXT:    cb.odd $r5 ? .LBB0_2
+; CV1-NEXT:    cb.odd $r5 ? .LBB0_1
 ; CV1-NEXT:    ;;
-; CV1-NEXT:  # %bb.3: # in Loop: Header=BB0_1 Depth=1
+; CV1-NEXT:  # %bb.4: # in Loop: Header=BB0_3 Depth=1
 ; CV1-NEXT:    zxbd $r3 = $r3
 ; CV1-NEXT:    make $r5 = 1
 ; CV1-NEXT:    ;;
@@ -98,23 +98,23 @@ define i32 @a() {
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    addw $r2 = $r2, -3
 ; CV1-NEXT:    ;;
-; CV1-NEXT:  .LBB0_4: # Parent Loop BB0_1 Depth=1
+; CV1-NEXT:  .LBB0_5: # Parent Loop BB0_3 Depth=1
 ; CV1-NEXT:    # => This Inner Loop Header: Depth=2
 ; CV1-NEXT:    addw $r2 = $r2, 3
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    compw.lt $r3 = $r2, -2
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    cb.odd $r3 ? .LBB0_4
+; CV1-NEXT:    cb.odd $r3 ? .LBB0_5
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    goto .LBB0_5
+; CV1-NEXT:    goto .LBB0_2
 ; CV1-NEXT:    ;;
 ;
 ; CV2-LABEL: a:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    make $r0 = 0
-; CV2-NEXT:    goto .LBB0_1
+; CV2-NEXT:    goto .LBB0_3
 ; CV2-NEXT:    ;;
-; CV2-NEXT:  .LBB0_2: # in Loop: Header=BB0_1 Depth=1
+; CV2-NEXT:  .LBB0_1: # in Loop: Header=BB0_3 Depth=1
 ; CV2-NEXT:    xcopyo $a3 = $a0
 ; CV2-NEXT:    compw.eq $r2 = $r3, 1
 ; CV2-NEXT:    ;;
@@ -124,7 +124,7 @@ define i32 @a() {
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    xaligno $a0 = $a2..a3, $r2
 ; CV2-NEXT:    ;;
-; CV2-NEXT:  .LBB0_5: # in Loop: Header=BB0_1 Depth=1
+; CV2-NEXT:  .LBB0_2: # in Loop: Header=BB0_3 Depth=1
 ; CV2-NEXT:    xmt44d $a4a5a6a7 = $a0a1a2a3
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    xso 96[$r0] = $a7
@@ -137,8 +137,8 @@ define i32 @a() {
 ; CV2-NEXT:    addd $r0 = $r0, 2
 ; CV2-NEXT:    copyd $r2 = $r1
 ; CV2-NEXT:    ;;
-; CV2-NEXT:  .LBB0_1: # =>This Loop Header: Depth=1
-; CV2-NEXT:    # Child Loop BB0_4 Depth 2
+; CV2-NEXT:  .LBB0_3: # =>This Loop Header: Depth=1
+; CV2-NEXT:    # Child Loop BB0_5 Depth 2
 ; CV2-NEXT:    maxw $r1 = $r2, 0
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    sbfw $r3 = $r2, $r1
@@ -163,9 +163,9 @@ define i32 @a() {
 ; CV2-NEXT:    srlw $r4 = $r4, 1
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    msbfw $r3 = $r4, 3
-; CV2-NEXT:    cb.odd $r5 ? .LBB0_2
+; CV2-NEXT:    cb.odd $r5 ? .LBB0_1
 ; CV2-NEXT:    ;;
-; CV2-NEXT:  # %bb.3: # in Loop: Header=BB0_1 Depth=1
+; CV2-NEXT:  # %bb.4: # in Loop: Header=BB0_3 Depth=1
 ; CV2-NEXT:    zxbd $r3 = $r3
 ; CV2-NEXT:    make $r5 = 1
 ; CV2-NEXT:    ;;
@@ -179,15 +179,15 @@ define i32 @a() {
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    addw $r2 = $r2, -3
 ; CV2-NEXT:    ;;
-; CV2-NEXT:  .LBB0_4: # Parent Loop BB0_1 Depth=1
+; CV2-NEXT:  .LBB0_5: # Parent Loop BB0_3 Depth=1
 ; CV2-NEXT:    # => This Inner Loop Header: Depth=2
 ; CV2-NEXT:    addw $r2 = $r2, 3
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    compw.lt $r3 = $r2, -2
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    cb.odd $r3 ? .LBB0_4
+; CV2-NEXT:    cb.odd $r3 ? .LBB0_5
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    goto .LBB0_5
+; CV2-NEXT:    goto .LBB0_2
 ; CV2-NEXT:    ;;
   %1 = tail call <512 x i1> @llvm.kvx.xbuildfvw(<256 x i1> undef, <256 x i1> undef)
   br label %2

@@ -133,12 +133,12 @@ define void @test5(i32 %0, i8* nocapture readnone %1) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r1 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.weqz $r1 ? .LBB9_1
+; CHECK-NEXT:    cb.weqz $r1 ? .LBB9_2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.2:
+; CHECK-NEXT:  # %bb.1:
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB9_1:
+; CHECK-NEXT:  .LBB9_2:
 ; CHECK-NEXT:    make $r1 = 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 0[$r0] = $r1

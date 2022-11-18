@@ -448,14 +448,14 @@ define void @multiple_st(i32* %0, i32 %1, i32 %2) {
 define i32 @select_make(i32* %0, i32 %1, i32 %2) {
 ; CHECK-LABEL: select_make:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    cb.weqz $r2 ? .LBB23_1
+; CHECK-NEXT:    cb.weqz $r2 ? .LBB23_2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.2:
+; CHECK-NEXT:  # %bb.1:
 ; CHECK-NEXT:    sw 0[$r0] = $r1
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB23_1:
+; CHECK-NEXT:  .LBB23_2:
 ; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r1

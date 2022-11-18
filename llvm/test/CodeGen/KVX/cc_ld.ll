@@ -141,13 +141,13 @@ return:
 define i32 @cc_wnez_ld_rr(i32 %c, i32* nocapture readonly %p) {
 ; CHECK-LABEL: cc_wnez_ld_rr:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    cb.weqz $r0 ? .LBB10_1
+; CHECK-NEXT:    cb.weqz $r0 ? .LBB10_2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.2: # %if.then
+; CHECK-NEXT:  # %bb.1: # %if.then
 ; CHECK-NEXT:    lwz $r0 = 0[$r1]
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB10_1:
+; CHECK-NEXT:  .LBB10_2:
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -553,12 +553,12 @@ return:
 define i8 @cc_rr_make_offset_min(i8 %v, i8* nocapture readonly %p, i32 %c) {
 ; CHECK-LABEL: cc_rr_make_offset_min:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    cb.weqz $r2 ? .LBB31_1
+; CHECK-NEXT:    cb.weqz $r2 ? .LBB31_2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.2: # %return
+; CHECK-NEXT:  # %bb.1: # %return
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB31_1: # %if.then
+; CHECK-NEXT:  .LBB31_2: # %if.then
 ; CHECK-NEXT:    lbz $r0 = 0x20000000000000[$r1]
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -579,12 +579,12 @@ return:
 define i8 @cc_rr_make_offset_max_neg(i8 %v, i8* nocapture readonly %p, i32 %c) {
 ; CHECK-LABEL: cc_rr_make_offset_max_neg:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    cb.weqz $r2 ? .LBB32_1
+; CHECK-NEXT:    cb.weqz $r2 ? .LBB32_2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.2: # %return
+; CHECK-NEXT:  # %bb.1: # %return
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB32_1: # %if.then
+; CHECK-NEXT:  .LBB32_2: # %if.then
 ; CHECK-NEXT:    lbz $r0 = 0xffdfffffffffffff[$r1]
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -664,13 +664,13 @@ define <4 x i64> @select_v4(<4 x i64> %0, <4 x i64> %1, i32 %2, i32 %3, <4 x i64
 ; CHECK-NEXT:    cb.weqz $r8 ? .LBB36_4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1:
-; CHECK-NEXT:    cb.weqz $r9 ? .LBB36_2
+; CHECK-NEXT:    cb.weqz $r9 ? .LBB36_3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.3:
+; CHECK-NEXT:  # %bb.2:
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r10]
 ; CHECK-NEXT:    goto .LBB36_4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB36_2:
+; CHECK-NEXT:  .LBB36_3:
 ; CHECK-NEXT:    copyo $r4r5r6r7 = $r0r1r2r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB36_4:
