@@ -149,7 +149,7 @@ void KVXLoadStorePackingPass::packAndReplaceLoad(Vec::iterator ItStart,
 
   LLVM_DEBUG(dbgs() << "added " << *mib << "\n");
 
-  unsigned Ind = KVX::sub_s0;
+  unsigned Ind = KVX::sub_d0;
   while (Count--) {
     unsigned re = ItStart->first->getOperand(0).getReg();
     ItStart->first->eraseFromParent();
@@ -196,7 +196,7 @@ void KVXLoadStorePackingPass::packAndReplaceStore(Vec::iterator ItStart,
 
   for (unsigned i = 0; i < Count; ++i) {
     SingleRegs[i] = MRI->createVirtualRegister(&KVX::SingleRegRegClass);
-    SeqMI.addReg(SingleRegs[i]).addImm(KVX::sub_s0 + i);
+    SeqMI.addReg(SingleRegs[i]).addImm(KVX::sub_d0 + i);
   }
 
   auto NewSt = BuildMI(*ItStart->first->getParent(), LocMII->first,

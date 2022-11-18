@@ -61,9 +61,9 @@ multiclass ACSWAP_V1_ri<Intrinsic Int, ValueType Vt, Instruction riI, Operand ri
            (Vt (EXTRACT_SUBREG (v2i64
              (riI riO:$off, SingleReg:$addr,
              (v2i64 (REG_SEQUENCE PairedReg,
-               SingleReg:$update, sub_s0,
-               SingleReg:$expect, sub_s1)
-             ))), sub_s0))>, Requires<[IsV1]>;
+               SingleReg:$update, sub_d0,
+               SingleReg:$expect, sub_d1)
+             ))), sub_d0))>, Requires<[IsV1]>;
 }
 
 multiclass ACSWAP_V1<Intrinsic Int, ValueType Vt, Instruction ri10, Instruction ri37, Instruction ri64, Instruction rr, int scale> {
@@ -74,25 +74,25 @@ multiclass ACSWAP_V1<Intrinsic Int, ValueType Vt, Instruction ri10, Instruction 
                (Vt (EXTRACT_SUBREG (v2i64
                    (ri10 (i64 0), SingleReg:$addr,
                    (v2i64 (REG_SEQUENCE PairedReg,
-                           SingleReg:$update, sub_s0,
-                           SingleReg:$expect, sub_s1)
-                    ))), sub_s0))>, Requires<[IsV1]>;
+                           SingleReg:$update, sub_d0,
+                           SingleReg:$expect, sub_d1)
+                    ))), sub_d0))>, Requires<[IsV1]>;
 
   def : Pat<(Vt(Int (add i64:$addr, i64:$off), Vt:$update, Vt:$expect, boolcas_, coherency_)),
               (Vt (EXTRACT_SUBREG (v2i64
                 (rr SingleReg:$off, SingleReg:$addr,
                 (v2i64 (REG_SEQUENCE PairedReg,
-                  SingleReg:$update, sub_s0,
-                  SingleReg:$expect, sub_s1)
-                ), (i32 0))), sub_s0))>, Requires<[IsV1]>;
+                  SingleReg:$update, sub_d0,
+                  SingleReg:$expect, sub_d1)
+                ), (i32 0))), sub_d0))>, Requires<[IsV1]>;
 
   def : Pat<(Vt(Int (add i64:$addr, (shl i64:$off, (i64 scale))), Vt:$update, Vt:$expect, boolcas_, coherency_)),
             (Vt (EXTRACT_SUBREG (v2i64
               (rr SingleReg:$off, SingleReg:$addr,
               (v2i64 (REG_SEQUENCE PairedReg,
-                SingleReg:$update, sub_s0,
-                SingleReg:$expect, sub_s1)
-              ), (i32 1))), sub_s0))>, Requires<[IsV1]>;
+                SingleReg:$update, sub_d0,
+                SingleReg:$expect, sub_d1)
+              ), (i32 1))), sub_d0))>, Requires<[IsV1]>;
 }
 let Predicates = [IsV1] in {
 defm : ACSWAP_V1<int_kvx_acswapw, i32, ACSWAPWri10, ACSWAPWri37, ACSWAPWri64, ACSWAPWrr, 2>;
@@ -109,7 +109,7 @@ multiclass ACSWAP_V2_ri<Intrinsic Int, ValueType Vt, Instruction riI, Operand ri
                 ), BoolcasMod:$bcm, CoherencyMod:$cm))>, Requires<[IsV2]>;
 }
 
-multiclass ACSWAP_V2<Intrinsic Int, ValueType Vt, Instruction ri27, Instruction ri54, Instruction r, RegisterClass D = PairedReg, RegisterClass S = SingleReg, ValueType VVt = v2i64, SubRegIndex i0 = sub_s0, SubRegIndex i1 = sub_s1> {
+multiclass ACSWAP_V2<Intrinsic Int, ValueType Vt, Instruction ri27, Instruction ri54, Instruction r, RegisterClass D = PairedReg, RegisterClass S = SingleReg, ValueType VVt = v2i64, SubRegIndex i0 = sub_d0, SubRegIndex i1 = sub_d1> {
   defm : ACSWAP_V2_ri<Int, Vt, ri27, Signed27, D, S, VVt, i0, i1>;
   defm : ACSWAP_V2_ri<Int, Vt, ri54, Signed54, D, S, VVt, i0, i1>;
   def: Pat<(Vt(Int i64:$addr, Vt:$update, Vt:$expect, BoolcasMod:$bcm, CoherencyMod:$cm)),
@@ -123,7 +123,7 @@ multiclass ACSWAP_V2<Intrinsic Int, ValueType Vt, Instruction ri27, Instruction 
 let Predicates = [IsV2] in {
 defm : ACSWAP_V2<int_kvx_acswapw, i32, ACSWAPWri27, ACSWAPWri54, ACSWAPWr>;
 defm : ACSWAP_V2<int_kvx_acswapd, i64, ACSWAPDri27, ACSWAPDri54, ACSWAPDr>;
-defm : ACSWAP_V2<int_kvx_acswapq, v2i64, ACSWAPQri27, ACSWAPQri54, ACSWAPQr, QuadReg, PairedReg, v4i64, sub_p0, sub_p1>;
+defm : ACSWAP_V2<int_kvx_acswapq, v2i64, ACSWAPQri27, ACSWAPQri54, ACSWAPQr, QuadReg, PairedReg, v4i64, sub_q0, sub_q1>;
 }
 
 def: Pat<(int_kvx_alclrw i64:$addr), (ALCLRWri10 (i64 0), SingleReg:$addr)>;
@@ -154,18 +154,18 @@ def: Pat<(int_kvx_fmulwq v4f32:$v1, v4f32:$v2, i32:$rounding, i32:$silent), (FMU
 
 def: Pat<(int_kvx_fmuldp v2f64:$v1, v2f64:$v2, i32:$rounding, i32:$silent),
   (v2f64 (REG_SEQUENCE PairedReg,
-    (FMULDrr (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_s0)), (f64 (EXTRACT_SUBREG PairedReg:$v2, sub_s0)), RoundingMod:$rounding, SilentMod:$silent), sub_s0,
-    (FMULDrr (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_s1)), (f64 (EXTRACT_SUBREG PairedReg:$v2, sub_s1)), RoundingMod:$rounding, SilentMod:$silent), sub_s1))>;
+    (FMULDrr (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_d0)), (f64 (EXTRACT_SUBREG PairedReg:$v2, sub_d0)), RoundingMod:$rounding, SilentMod:$silent), sub_d0,
+    (FMULDrr (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_d1)), (f64 (EXTRACT_SUBREG PairedReg:$v2, sub_d1)), RoundingMod:$rounding, SilentMod:$silent), sub_d1))>;
 
 multiclass FFM___<Intrinsic Int, KVX_INSTRUCTION Opcode, ValueType OperandTy, ValueType DataTy> {
   def: Pat<(Int OperandTy:$v1, OperandTy:$v2, OperandTy:$v3, i32:$rounding, i32:$silent),
     (OperandTy (REG_SEQUENCE PairedReg,
-      (Opcode (DataTy (EXTRACT_SUBREG PairedReg:$v3, sub_s0)),
-              (DataTy (EXTRACT_SUBREG PairedReg:$v1, sub_s0)),
-              (DataTy (EXTRACT_SUBREG PairedReg:$v2, sub_s0)), RoundingMod:$rounding, SilentMod:$silent), sub_s0,
-      (Opcode (DataTy (EXTRACT_SUBREG PairedReg:$v3, sub_s1)),
-              (DataTy (EXTRACT_SUBREG PairedReg:$v1, sub_s1)),
-              (DataTy (EXTRACT_SUBREG PairedReg:$v2, sub_s1)), RoundingMod:$rounding, SilentMod:$silent), sub_s1))>;
+      (Opcode (DataTy (EXTRACT_SUBREG PairedReg:$v3, sub_d0)),
+              (DataTy (EXTRACT_SUBREG PairedReg:$v1, sub_d0)),
+              (DataTy (EXTRACT_SUBREG PairedReg:$v2, sub_d0)), RoundingMod:$rounding, SilentMod:$silent), sub_d0,
+      (Opcode (DataTy (EXTRACT_SUBREG PairedReg:$v3, sub_d1)),
+              (DataTy (EXTRACT_SUBREG PairedReg:$v1, sub_d1)),
+              (DataTy (EXTRACT_SUBREG PairedReg:$v2, sub_d1)), RoundingMod:$rounding, SilentMod:$silent), sub_d1))>;
 }
 
 defm: FFM___<int_kvx_ffmawq, FFMAWPrr, v4f32, v2f32>, Requires<[IsV1]>;
@@ -192,10 +192,10 @@ def: Pat<(int_kvx_ffdmdawp v4f32:$v0, v4f32:$v1, v2f32:$v2, i32:$rounding, i32:$
           (FFMAWPrr
             (FFMAWPrr
               SingleReg:$v2,
-              (v2f32 (EXTRACT_SUBREG PairedReg:$v0, sub_s0)),
-              (v2f32 (EXTRACT_SUBREG PairedReg:$v1, sub_s0)), RoundingMod:$rounding, SilentMod:$silent),
-            (v2f32 (EXTRACT_SUBREG PairedReg:$v0, sub_s1)),
-            (v2f32 (EXTRACT_SUBREG PairedReg:$v1, sub_s1)),
+              (v2f32 (EXTRACT_SUBREG PairedReg:$v0, sub_d0)),
+              (v2f32 (EXTRACT_SUBREG PairedReg:$v1, sub_d0)), RoundingMod:$rounding, SilentMod:$silent),
+            (v2f32 (EXTRACT_SUBREG PairedReg:$v0, sub_d1)),
+            (v2f32 (EXTRACT_SUBREG PairedReg:$v1, sub_d1)),
             RoundingMod:$rounding, SilentMod:$silent
           )>, Requires<[IsV1]>;
 
@@ -213,10 +213,10 @@ def: Pat<(int_kvx_fmulwc v2f32:$v1, v2f32:$v2, i32:$conjugate, i32:$rounding, i3
 
 def: Pat<(int_kvx_fmulwcp v4f32:$v1, v4f32:$v2, i32:$conjugate, i32:$rounding, i32:$silent),
   (v4f32 (REG_SEQUENCE PairedReg,
-     (FMULWCrr (v2f32 (EXTRACT_SUBREG PairedReg:$v1, sub_s0)),
-               (v2f32 (EXTRACT_SUBREG PairedReg:$v2, sub_s0)), ConjugateMod:$conjugate, RoundingMod:$rounding, SilentMod:$silent), sub_s0,
-     (FMULWCrr (v2f32 (EXTRACT_SUBREG PairedReg:$v1, sub_s1)),
-               (v2f32 (EXTRACT_SUBREG PairedReg:$v2, sub_s1)), ConjugateMod:$conjugate, RoundingMod:$rounding, SilentMod:$silent), sub_s1))>, Requires<[IsV1]>;
+     (FMULWCrr (v2f32 (EXTRACT_SUBREG PairedReg:$v1, sub_d0)),
+               (v2f32 (EXTRACT_SUBREG PairedReg:$v2, sub_d0)), ConjugateMod:$conjugate, RoundingMod:$rounding, SilentMod:$silent), sub_d0,
+     (FMULWCrr (v2f32 (EXTRACT_SUBREG PairedReg:$v1, sub_d1)),
+               (v2f32 (EXTRACT_SUBREG PairedReg:$v2, sub_d1)), ConjugateMod:$conjugate, RoundingMod:$rounding, SilentMod:$silent), sub_d1))>, Requires<[IsV1]>;
 
 def: Pat<(int_kvx_fmulwcp v4f32:$v1, v4f32:$v2, i32:$conjugate, i32:$rounding, i32:$silent),
   (v4f32 (FMULWCP PairedReg:$v1, PairedReg:$v2, ConjugateMod:$conjugate, RoundingMod:$rounding, SilentMod:$silent))>, Requires<[IsV2]>;
@@ -224,12 +224,12 @@ def: Pat<(int_kvx_fmulwcp v4f32:$v1, v4f32:$v2, i32:$conjugate, i32:$rounding, i
 multiclass FMUL_DC<Intrinsic int_kvx_fmul, KVX_INSTRUCTION FFMS, KVX_INSTRUCTION FFMA> {
   def: Pat<(int_kvx_fmul v2f64:$v1, v2f64:$v2, i32:$rounding, i32:$silent),
     (v2f64 (REG_SEQUENCE PairedReg,
-      (FFMS (FMULDrr (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_s0)), (f64 (EXTRACT_SUBREG PairedReg:$v2, sub_s0)), RoundingMod:$rounding, SilentMod:$silent),
-            (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_s1)),
-            (f64 (EXTRACT_SUBREG PairedReg:$v2, sub_s1)), RoundingMod:$rounding, SilentMod:$silent), sub_s0,
-      (FFMA (FMULDrr (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_s0)), (f64 (EXTRACT_SUBREG PairedReg:$v2, sub_s1)), RoundingMod:$rounding, SilentMod:$silent),
-            (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_s1)),
-            (f64 (EXTRACT_SUBREG PairedReg:$v2, sub_s0)), RoundingMod:$rounding, SilentMod:$silent), sub_s1))>;
+      (FFMS (FMULDrr (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_d0)), (f64 (EXTRACT_SUBREG PairedReg:$v2, sub_d0)), RoundingMod:$rounding, SilentMod:$silent),
+            (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_d1)),
+            (f64 (EXTRACT_SUBREG PairedReg:$v2, sub_d1)), RoundingMod:$rounding, SilentMod:$silent), sub_d0,
+      (FFMA (FMULDrr (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_d0)), (f64 (EXTRACT_SUBREG PairedReg:$v2, sub_d1)), RoundingMod:$rounding, SilentMod:$silent),
+            (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_d1)),
+            (f64 (EXTRACT_SUBREG PairedReg:$v2, sub_d0)), RoundingMod:$rounding, SilentMod:$silent), sub_d1))>;
 }
 
 defm: FMUL_DC<int_kvx_fmuldc, FFMSDrr, FFMADrr>;
@@ -239,12 +239,12 @@ multiclass FFM__DC<Intrinsic int_kvx_ffmop, KVX_INSTRUCTION FOP, KVX_INSTRUCTION
   def: Pat<(int_kvx_ffmop v2f64:$v1, v2f64:$v2, v2f64:$v3, i32:$rounding, i32:$silent),
     (FOP
       (v2f64 (REG_SEQUENCE PairedReg,
-        (FFMS (FMULDrr (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_s0)), (f64 (EXTRACT_SUBREG PairedReg:$v2, sub_s0)), RoundingMod:$rounding, SilentMod:$silent),
-              (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_s1)),
-              (f64 (EXTRACT_SUBREG PairedReg:$v2, sub_s1)), RoundingMod:$rounding, SilentMod:$silent), sub_s0,
-        (FFMA (FMULDrr (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_s1)), (f64 (EXTRACT_SUBREG PairedReg:$v2, sub_s0)), RoundingMod:$rounding, SilentMod:$silent),
-              (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_s0)),
-              (f64 (EXTRACT_SUBREG PairedReg:$v2, sub_s1)), RoundingMod:$rounding, SilentMod:$silent), sub_s1)),
+        (FFMS (FMULDrr (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_d0)), (f64 (EXTRACT_SUBREG PairedReg:$v2, sub_d0)), RoundingMod:$rounding, SilentMod:$silent),
+              (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_d1)),
+              (f64 (EXTRACT_SUBREG PairedReg:$v2, sub_d1)), RoundingMod:$rounding, SilentMod:$silent), sub_d0,
+        (FFMA (FMULDrr (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_d1)), (f64 (EXTRACT_SUBREG PairedReg:$v2, sub_d0)), RoundingMod:$rounding, SilentMod:$silent),
+              (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_d0)),
+              (f64 (EXTRACT_SUBREG PairedReg:$v2, sub_d1)), RoundingMod:$rounding, SilentMod:$silent), sub_d1)),
       PairedReg:$v3, conjugate_, RoundingMod:$rounding, SilentMod:$silent)>;
 }
 
@@ -252,12 +252,12 @@ multiclass FFM__CDC<Intrinsic int_kvx_ffmop, KVX_INSTRUCTION FOP, KVX_INSTRUCTIO
   def: Pat<(int_kvx_ffmop v2f64:$v1, v2f64:$v2, v2f64:$v3, i32:$rounding, i32:$silent),
     (FOP
       (v2f64 (REG_SEQUENCE PairedReg,
-        (FFMS (FMULDrr (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_s0)), (f64 (EXTRACT_SUBREG PairedReg:$v2, sub_s0)), RoundingMod:$rounding, SilentMod:$silent),
-              (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_s1)),
-              (f64 (EXTRACT_SUBREG PairedReg:$v2, sub_s1)), RoundingMod:$rounding, SilentMod:$silent), sub_s0,
-        (FFMA (FMULDrr (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_s1)), (f64 (EXTRACT_SUBREG PairedReg:$v2, sub_s0)), RoundingMod:$rounding, SilentMod:$silent),
-              (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_s0)),
-              (f64 (EXTRACT_SUBREG PairedReg:$v2, sub_s1)), RoundingMod:$rounding, SilentMod:$silent), sub_s1)),
+        (FFMS (FMULDrr (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_d0)), (f64 (EXTRACT_SUBREG PairedReg:$v2, sub_d0)), RoundingMod:$rounding, SilentMod:$silent),
+              (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_d1)),
+              (f64 (EXTRACT_SUBREG PairedReg:$v2, sub_d1)), RoundingMod:$rounding, SilentMod:$silent), sub_d0,
+        (FFMA (FMULDrr (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_d1)), (f64 (EXTRACT_SUBREG PairedReg:$v2, sub_d0)), RoundingMod:$rounding, SilentMod:$silent),
+              (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_d0)),
+              (f64 (EXTRACT_SUBREG PairedReg:$v2, sub_d1)), RoundingMod:$rounding, SilentMod:$silent), sub_d1)),
       PairedReg:$v3, conjugate_c, RoundingMod:$rounding, SilentMod:$silent)>;
 }
 
@@ -278,12 +278,12 @@ defm: FFM__WC<int_kvx_ffmswc, FSBFWPrr, FMULWCrr>;
 multiclass FFM__WCP<Intrinsic int_kvx_fop, KVX_INSTRUCTION FOP, KVX_INSTRUCTION FMUL> {
   def: Pat<(int_kvx_fop v4f32:$v1, v4f32:$v2, v4f32:$v3, i32:$conjugate, i32:$rounding, i32:$silent),
     (v4f32 (REG_SEQUENCE PairedReg,
-       (FOP (FMUL (v2f32 (EXTRACT_SUBREG PairedReg:$v2, sub_s0)),
-                  (v2f32 (EXTRACT_SUBREG PairedReg:$v1, sub_s0)), ConjugateMod:$conjugate, RoundingMod:$rounding, SilentMod:$silent),
-            (v2f32 (EXTRACT_SUBREG PairedReg:$v3, sub_s0)), ConjugateMod:$conjugate, RoundingMod:$rounding, SilentMod:$silent), sub_s0,
-       (FOP (FMUL (v2f32 (EXTRACT_SUBREG PairedReg:$v2, sub_s1)),
-                  (v2f32 (EXTRACT_SUBREG PairedReg:$v1, sub_s1)), ConjugateMod:$conjugate, RoundingMod:$rounding, SilentMod:$silent),
-            (v2f32 (EXTRACT_SUBREG PairedReg:$v3, sub_s1)), ConjugateMod:$conjugate, RoundingMod:$rounding, SilentMod:$silent), sub_s1))>;
+       (FOP (FMUL (v2f32 (EXTRACT_SUBREG PairedReg:$v2, sub_d0)),
+                  (v2f32 (EXTRACT_SUBREG PairedReg:$v1, sub_d0)), ConjugateMod:$conjugate, RoundingMod:$rounding, SilentMod:$silent),
+            (v2f32 (EXTRACT_SUBREG PairedReg:$v3, sub_d0)), ConjugateMod:$conjugate, RoundingMod:$rounding, SilentMod:$silent), sub_d0,
+       (FOP (FMUL (v2f32 (EXTRACT_SUBREG PairedReg:$v2, sub_d1)),
+                  (v2f32 (EXTRACT_SUBREG PairedReg:$v1, sub_d1)), ConjugateMod:$conjugate, RoundingMod:$rounding, SilentMod:$silent),
+            (v2f32 (EXTRACT_SUBREG PairedReg:$v3, sub_d1)), ConjugateMod:$conjugate, RoundingMod:$rounding, SilentMod:$silent), sub_d1))>;
 }
 
 defm: FFM__WCP<int_kvx_ffmawcp, FADDWPrr, FMULWCrr>;
@@ -292,12 +292,12 @@ defm: FFM__WCP<int_kvx_ffmswcp, FSBFWPrr, FMULWCrr>;
 def: Pat<(int_kvx_fconjwc v2f32:$v), (FNEGD SingleReg:$v)>;
 def: Pat<(int_kvx_fconjwcp v4f32:$v),
   (v4f32 (REG_SEQUENCE PairedReg,
-    (FNEGD (v2f32 (EXTRACT_SUBREG PairedReg:$v, sub_s0))), sub_s0,
-    (FNEGD (v2f32 (EXTRACT_SUBREG PairedReg:$v, sub_s1))), sub_s1))>;
+    (FNEGD (v2f32 (EXTRACT_SUBREG PairedReg:$v, sub_d0))), sub_d0,
+    (FNEGD (v2f32 (EXTRACT_SUBREG PairedReg:$v, sub_d1))), sub_d1))>;
 def: Pat<(int_kvx_fconjdc v2f64:$v),
   (v2f64 (REG_SEQUENCE PairedReg,
-    (f64 (EXTRACT_SUBREG PairedReg:$v, sub_s0)), sub_s0,
-    (FNEGD (f64 (EXTRACT_SUBREG PairedReg:$v, sub_s1))), sub_s1))>;
+    (f64 (EXTRACT_SUBREG PairedReg:$v, sub_d0)), sub_d0,
+    (FNEGD (f64 (EXTRACT_SUBREG PairedReg:$v, sub_d1))), sub_d1))>;
 
 def: Pat<(int_kvx_ctzd i64:$r), (CTZD SingleReg:$r)>;
 def: Pat<(int_kvx_ctzw i32:$r), (CTZW SingleReg:$r)>;
@@ -397,13 +397,13 @@ def: Pat<(int_kvx_ffmsw f32:$v1, f32:$v2, f32:$v3, i32:$rounding, i32:$silent), 
 def: Pat<(int_kvx_ffmsd f64:$v1, f64:$v2, f64:$v3, i32:$rounding, i32:$silent), (FFMSDrr SingleReg:$v3, SingleReg:$v1, SingleReg:$v2, RoundingMod:$rounding, SilentMod:$silent)>;
 def: Pat<(int_kvx_ffmswd f32:$v1, f32:$v2, f64:$v3, i32:$rounding, i32:$silent), (FFMSWDrr SingleReg:$v3, SingleReg:$v1, SingleReg:$v2, RoundingMod:$rounding, SilentMod:$silent)>;
 def: Pat<(int_kvx_fcdivw f32:$v1, f32:$v2, i32:$silent), (FCDIVW (INSERT_SUBREG (INSERT_SUBREG (v2i64 (IMPLICIT_DEF)),
-    SingleReg:$v1, sub_s0), SingleReg:$v2, sub_s1), SilentMod:$silent)>;
+    SingleReg:$v1, sub_d0), SingleReg:$v2, sub_d1), SilentMod:$silent)>;
 def: Pat<(int_kvx_fcdivd f64:$v1, f64:$v2, i32:$silent), (FCDIVD (INSERT_SUBREG (INSERT_SUBREG (v2i64 (IMPLICIT_DEF)),
-    SingleReg:$v1, sub_s0), SingleReg:$v2, sub_s1), SilentMod:$silent)>;
+    SingleReg:$v1, sub_d0), SingleReg:$v2, sub_d1), SilentMod:$silent)>;
 def: Pat<(int_kvx_fsdivw f32:$v1, f32:$v2, i32:$silent), (FSDIVW (INSERT_SUBREG (INSERT_SUBREG (v2i64 (IMPLICIT_DEF)),
-    SingleReg:$v1, sub_s0), SingleReg:$v2, sub_s1), SilentMod:$silent)>;
+    SingleReg:$v1, sub_d0), SingleReg:$v2, sub_d1), SilentMod:$silent)>;
 def: Pat<(int_kvx_fsdivd f64:$v1, f64:$v2, i32:$silent), (FSDIVD (INSERT_SUBREG (INSERT_SUBREG (v2i64 (IMPLICIT_DEF)),
-    SingleReg:$v1, sub_s0), SingleReg:$v2, sub_s1), SilentMod:$silent)>;
+    SingleReg:$v1, sub_d0), SingleReg:$v2, sub_d1), SilentMod:$silent)>;
 def: Pat<(int_kvx_fsrecw f32:$v, i32:$silent), (FSRECW SingleReg:$v, SilentMod:$silent)>;
 def: Pat<(int_kvx_fsrecd f64:$v, i32:$silent), (FSRECD SingleReg:$v, SilentMod:$silent)>;
 def: Pat<(int_kvx_fsrsrw f32:$v), (FSRSRW SingleReg:$v)>;
@@ -866,22 +866,22 @@ defm : FMMAS222W<fsubcont, FMMS222W, int_kvx_fmms222w>, Requires<[IsV2]>;
 def : Pat<(v4f32 (int_matrix_multiply v4f32:$LHS, v4f32:$RHS, 2, 2, 2)),
           (FMMA212W
             (FMM212W
-              (INSF (v2f32(EXTRACT_SUBREG $LHS, sub_s0)), (v2f32(EXTRACT_SUBREG $LHS, sub_s1)), 63, 32),
-              (v2f32(EXTRACT_SUBREG $RHS, sub_s0)),
+              (INSF (v2f32(EXTRACT_SUBREG $LHS, sub_d0)), (v2f32(EXTRACT_SUBREG $LHS, sub_d1)), 63, 32),
+              (v2f32(EXTRACT_SUBREG $RHS, sub_d0)),
               rounding_, silent_
             ),
-            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $LHS, sub_s0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $LHS, sub_s1)), -4294967296)),
-            (v2f32(EXTRACT_SUBREG $RHS, sub_s1)),
+            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $LHS, sub_d0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $LHS, sub_d1)), -4294967296)),
+            (v2f32(EXTRACT_SUBREG $RHS, sub_d1)),
             rounding_, silent_)>, Requires<[IsV1]>;
 def : Pat<(int_kvx_fmm222w v4f32:$LHS, v4f32:$RHS, 0, i32:$r, i32:$s),
           (FMMA212W
             (FMM212W
-              (INSF (v2f32(EXTRACT_SUBREG $LHS, sub_s0)), (v2f32(EXTRACT_SUBREG $LHS, sub_s1)), 63, 32),
-              (v2f32(EXTRACT_SUBREG $RHS, sub_s0)),
+              (INSF (v2f32(EXTRACT_SUBREG $LHS, sub_d0)), (v2f32(EXTRACT_SUBREG $LHS, sub_d1)), 63, 32),
+              (v2f32(EXTRACT_SUBREG $RHS, sub_d0)),
               RoundingMod:$r, SilentMod:$s
             ),
-            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $LHS, sub_s0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $LHS, sub_s1)), -4294967296)),
-            (v2f32(EXTRACT_SUBREG $RHS, sub_s1)),
+            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $LHS, sub_d0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $LHS, sub_d1)), -4294967296)),
+            (v2f32(EXTRACT_SUBREG $RHS, sub_d1)),
             RoundingMod:$r, SilentMod:$s)>, Requires<[IsV1]>;
 
 
@@ -889,64 +889,64 @@ def : Pat<(int_kvx_fmm222w v4f32:$LHS, v4f32:$RHS, 0, i32:$r, i32:$s),
 def : Pat<(v4f32 (int_matrix_multiply (v4f32 (int_matrix_transpose v4f32:$LHS, 2, 2)), v4f32:$RHS, 2, 2, 2)),
           (FMMA212W
             (FMM212W
-              (v2f32(EXTRACT_SUBREG $LHS, sub_s0)),
-              (v2f32(EXTRACT_SUBREG $RHS, sub_s0)),
+              (v2f32(EXTRACT_SUBREG $LHS, sub_d0)),
+              (v2f32(EXTRACT_SUBREG $RHS, sub_d0)),
               rounding_, silent_
             ),
-            (v2f32(EXTRACT_SUBREG $LHS, sub_s1)),
-            (v2f32(EXTRACT_SUBREG $RHS, sub_s1)),
+            (v2f32(EXTRACT_SUBREG $LHS, sub_d1)),
+            (v2f32(EXTRACT_SUBREG $RHS, sub_d1)),
             rounding_, silent_)>, Requires<[IsV1]>;
 def : Pat<(int_kvx_fmm222w v4f32:$LHS, v4f32:$RHS, 1, i32:$r, i32:$s),
           (FMMA212W
             (FMM212W
-              (v2f32(EXTRACT_SUBREG $LHS, sub_s0)),
-              (v2f32(EXTRACT_SUBREG $RHS, sub_s0)),
+              (v2f32(EXTRACT_SUBREG $LHS, sub_d0)),
+              (v2f32(EXTRACT_SUBREG $RHS, sub_d0)),
               RoundingMod:$r, SilentMod:$s
             ),
-            (v2f32(EXTRACT_SUBREG $LHS, sub_s1)),
-            (v2f32(EXTRACT_SUBREG $RHS, sub_s1)),
+            (v2f32(EXTRACT_SUBREG $LHS, sub_d1)),
+            (v2f32(EXTRACT_SUBREG $RHS, sub_d1)),
             RoundingMod:$r, SilentMod:$s)>, Requires<[IsV1]>;
 // nt
 def : Pat<(v4f32 (int_matrix_multiply v4f32:$LHS, (v4f32 (int_matrix_transpose v4f32:$RHS, 2, 2)), 2, 2, 2)),
           (FMMA212W
             (FMM212W
-              (INSF (v2f32(EXTRACT_SUBREG $LHS, sub_s0)), (v2f32(EXTRACT_SUBREG $LHS, sub_s1)), 63, 32),
-              (INSF (v2f32(EXTRACT_SUBREG $RHS, sub_s0)), (v2f32(EXTRACT_SUBREG $RHS, sub_s1)), 63, 32),
+              (INSF (v2f32(EXTRACT_SUBREG $LHS, sub_d0)), (v2f32(EXTRACT_SUBREG $LHS, sub_d1)), 63, 32),
+              (INSF (v2f32(EXTRACT_SUBREG $RHS, sub_d0)), (v2f32(EXTRACT_SUBREG $RHS, sub_d1)), 63, 32),
               rounding_, silent_
             ),
-            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $LHS, sub_s0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $LHS, sub_s1)), -4294967296)),
-            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $RHS, sub_s0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $RHS, sub_s1)), -4294967296)),
+            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $LHS, sub_d0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $LHS, sub_d1)), -4294967296)),
+            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $RHS, sub_d0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $RHS, sub_d1)), -4294967296)),
             rounding_, silent_)>, Requires<[IsV1]>;
 def : Pat<(int_kvx_fmm222w v4f32:$LHS, v4f32:$RHS, 2, i32:$r, i32:$s),
           (FMMA212W
             (FMM212W
-              (INSF (v2f32(EXTRACT_SUBREG $LHS, sub_s0)), (v2f32(EXTRACT_SUBREG $LHS, sub_s1)), 63, 32),
-              (INSF (v2f32(EXTRACT_SUBREG $RHS, sub_s0)), (v2f32(EXTRACT_SUBREG $RHS, sub_s1)), 63, 32),
+              (INSF (v2f32(EXTRACT_SUBREG $LHS, sub_d0)), (v2f32(EXTRACT_SUBREG $LHS, sub_d1)), 63, 32),
+              (INSF (v2f32(EXTRACT_SUBREG $RHS, sub_d0)), (v2f32(EXTRACT_SUBREG $RHS, sub_d1)), 63, 32),
               RoundingMod:$r, SilentMod:$s
             ),
-            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $LHS, sub_s0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $LHS, sub_s1)), -4294967296)),
-            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $RHS, sub_s0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $RHS, sub_s1)), -4294967296)),
+            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $LHS, sub_d0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $LHS, sub_d1)), -4294967296)),
+            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $RHS, sub_d0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $RHS, sub_d1)), -4294967296)),
             RoundingMod:$r, SilentMod:$s)>, Requires<[IsV1]>;
 // tt
 def : Pat<(v4f32 (int_matrix_multiply (v4f32 (int_matrix_transpose v4f32:$LHS, 2, 2)), (v4f32 (int_matrix_transpose v4f32:$RHS, 2, 2)), 2, 2, 2)),
           (FMMA212W
             (FMM212W
-              (v2f32(EXTRACT_SUBREG $LHS, sub_s0)),
-              (INSF (v2f32(EXTRACT_SUBREG $RHS, sub_s0)), (v2f32(EXTRACT_SUBREG $RHS, sub_s1)), 63, 32),
+              (v2f32(EXTRACT_SUBREG $LHS, sub_d0)),
+              (INSF (v2f32(EXTRACT_SUBREG $RHS, sub_d0)), (v2f32(EXTRACT_SUBREG $RHS, sub_d1)), 63, 32),
               rounding_, silent_
             ),
-            (v2f32(EXTRACT_SUBREG $LHS, sub_s1)),
-            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $RHS, sub_s0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $RHS, sub_s1)), -4294967296)),
+            (v2f32(EXTRACT_SUBREG $LHS, sub_d1)),
+            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $RHS, sub_d0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $RHS, sub_d1)), -4294967296)),
             rounding_, silent_)>, Requires<[IsV1]>;
 def : Pat<(int_kvx_fmm222w v4f32:$LHS, v4f32:$RHS, 3, i32:$r, i32:$s),
           (FMMA212W
             (FMM212W
-              (v2f32(EXTRACT_SUBREG $LHS, sub_s0)),
-              (INSF (v2f32(EXTRACT_SUBREG $RHS, sub_s0)), (v2f32(EXTRACT_SUBREG $RHS, sub_s1)), 63, 32),
+              (v2f32(EXTRACT_SUBREG $LHS, sub_d0)),
+              (INSF (v2f32(EXTRACT_SUBREG $RHS, sub_d0)), (v2f32(EXTRACT_SUBREG $RHS, sub_d1)), 63, 32),
               RoundingMod:$r, SilentMod:$s
             ),
-            (v2f32(EXTRACT_SUBREG $LHS, sub_s1)),
-            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $RHS, sub_s0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $RHS, sub_s1)), -4294967296)),
+            (v2f32(EXTRACT_SUBREG $LHS, sub_d1)),
+            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $RHS, sub_d0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $RHS, sub_d1)), -4294967296)),
             RoundingMod:$r, SilentMod:$s)>, Requires<[IsV1]>;
 
 // FMMA222_CV1, FMMS222_CV1
@@ -955,96 +955,96 @@ def : Pat<(Node v4f32:$ACC, (int_matrix_multiply v4f32:$LHS, v4f32:$RHS, 2, 2, 2
           (Op
             (Op
               PairedReg:$ACC,
-              (INSF (v2f32(EXTRACT_SUBREG $LHS, sub_s0)), (v2f32(EXTRACT_SUBREG $LHS, sub_s1)), 63, 32),
-              (v2f32(EXTRACT_SUBREG $RHS, sub_s0)),
+              (INSF (v2f32(EXTRACT_SUBREG $LHS, sub_d0)), (v2f32(EXTRACT_SUBREG $LHS, sub_d1)), 63, 32),
+              (v2f32(EXTRACT_SUBREG $RHS, sub_d0)),
               rounding_, silent_
             ),
-            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $LHS, sub_s0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $LHS, sub_s1)), -4294967296)),
-            (v2f32(EXTRACT_SUBREG $RHS, sub_s1)),
+            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $LHS, sub_d0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $LHS, sub_d1)), -4294967296)),
+            (v2f32(EXTRACT_SUBREG $RHS, sub_d1)),
             rounding_, silent_)>;
 
 def : Pat<(KVX_Int v4f32:$LHS, v4f32:$RHS, v4f32:$ACC, 0, i32:$r, i32:$s),
           (Op
             (Op
               PairedReg:$ACC,
-              (INSF (v2f32(EXTRACT_SUBREG $LHS, sub_s0)), (v2f32(EXTRACT_SUBREG $LHS, sub_s1)), 63, 32),
-              (v2f32(EXTRACT_SUBREG $RHS, sub_s0)),
+              (INSF (v2f32(EXTRACT_SUBREG $LHS, sub_d0)), (v2f32(EXTRACT_SUBREG $LHS, sub_d1)), 63, 32),
+              (v2f32(EXTRACT_SUBREG $RHS, sub_d0)),
               RoundingMod:$r, SilentMod:$s
             ),
-            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $LHS, sub_s0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $LHS, sub_s1)), -4294967296)),
-            (v2f32(EXTRACT_SUBREG $RHS, sub_s1)),
+            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $LHS, sub_d0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $LHS, sub_d1)), -4294967296)),
+            (v2f32(EXTRACT_SUBREG $RHS, sub_d1)),
             RoundingMod:$r, SilentMod:$s)>;
 
 def : Pat<(Node v4f32:$ACC, (int_matrix_multiply (v4f32 (int_matrix_transpose v4f32:$LHS, 2, 2)), v4f32:$RHS, 2, 2, 2)),
           (Op
             (Op
               PairedReg:$ACC,
-              (v2f32(EXTRACT_SUBREG $LHS, sub_s0)),
-              (v2f32(EXTRACT_SUBREG $RHS, sub_s0)),
+              (v2f32(EXTRACT_SUBREG $LHS, sub_d0)),
+              (v2f32(EXTRACT_SUBREG $RHS, sub_d0)),
               rounding_, silent_
             ),
-            (v2f32(EXTRACT_SUBREG $LHS, sub_s1)),
-            (v2f32(EXTRACT_SUBREG $RHS, sub_s1)),
+            (v2f32(EXTRACT_SUBREG $LHS, sub_d1)),
+            (v2f32(EXTRACT_SUBREG $RHS, sub_d1)),
             rounding_, silent_)>;
 
 def : Pat<(KVX_Int v4f32:$LHS, v4f32:$RHS, v4f32:$ACC, 1, i32:$r, i32:$s),
           (Op
             (Op
               PairedReg:$ACC,
-              (v2f32(EXTRACT_SUBREG $LHS, sub_s0)),
-              (v2f32(EXTRACT_SUBREG $RHS, sub_s0)),
+              (v2f32(EXTRACT_SUBREG $LHS, sub_d0)),
+              (v2f32(EXTRACT_SUBREG $RHS, sub_d0)),
               RoundingMod:$r, SilentMod:$s
             ),
-            (v2f32(EXTRACT_SUBREG $LHS, sub_s1)),
-            (v2f32(EXTRACT_SUBREG $RHS, sub_s1)),
+            (v2f32(EXTRACT_SUBREG $LHS, sub_d1)),
+            (v2f32(EXTRACT_SUBREG $RHS, sub_d1)),
             RoundingMod:$r, SilentMod:$s)>;
 
 def : Pat<(Node v4f32:$ACC, (int_matrix_multiply v4f32:$LHS, (v4f32 (int_matrix_transpose v4f32:$RHS, 2, 2)), 2, 2, 2)),
           (Op
             (Op
               PairedReg:$ACC,
-              (INSF (v2f32(EXTRACT_SUBREG $LHS, sub_s0)), (v2f32(EXTRACT_SUBREG $LHS, sub_s1)), 63, 32),
-              (INSF (v2f32(EXTRACT_SUBREG $RHS, sub_s0)), (v2f32(EXTRACT_SUBREG $RHS, sub_s1)), 63, 32),
+              (INSF (v2f32(EXTRACT_SUBREG $LHS, sub_d0)), (v2f32(EXTRACT_SUBREG $LHS, sub_d1)), 63, 32),
+              (INSF (v2f32(EXTRACT_SUBREG $RHS, sub_d0)), (v2f32(EXTRACT_SUBREG $RHS, sub_d1)), 63, 32),
               rounding_, silent_
             ),
-            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $LHS, sub_s0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $LHS, sub_s1)), -4294967296)),
-            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $RHS, sub_s0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $RHS, sub_s1)), -4294967296)),
+            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $LHS, sub_d0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $LHS, sub_d1)), -4294967296)),
+            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $RHS, sub_d0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $RHS, sub_d1)), -4294967296)),
             rounding_, silent_)>;
 
 def : Pat<(KVX_Int v4f32:$LHS, v4f32:$RHS, v4f32:$ACC, 2, i32:$r, i32:$s),
           (Op
             (Op
               PairedReg:$ACC,
-              (INSF (v2f32(EXTRACT_SUBREG $LHS, sub_s0)), (v2f32(EXTRACT_SUBREG $LHS, sub_s1)), 63, 32),
-              (INSF (v2f32(EXTRACT_SUBREG $RHS, sub_s0)), (v2f32(EXTRACT_SUBREG $RHS, sub_s1)), 63, 32),
+              (INSF (v2f32(EXTRACT_SUBREG $LHS, sub_d0)), (v2f32(EXTRACT_SUBREG $LHS, sub_d1)), 63, 32),
+              (INSF (v2f32(EXTRACT_SUBREG $RHS, sub_d0)), (v2f32(EXTRACT_SUBREG $RHS, sub_d1)), 63, 32),
               RoundingMod:$r, SilentMod:$s
             ),
-            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $LHS, sub_s0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $LHS, sub_s1)), -4294967296)),
-            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $RHS, sub_s0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $RHS, sub_s1)), -4294967296)),
+            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $LHS, sub_d0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $LHS, sub_d1)), -4294967296)),
+            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $RHS, sub_d0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $RHS, sub_d1)), -4294967296)),
             RoundingMod:$r, SilentMod:$s)>;
 
 def : Pat<(Node v4f32:$ACC, (int_matrix_multiply (v4f32 (int_matrix_transpose v4f32:$LHS, 2, 2)), (v4f32 (int_matrix_transpose v4f32:$RHS, 2, 2)), 2, 2, 2)),
           (Op
             (Op
               PairedReg:$ACC,
-              (v2f32(EXTRACT_SUBREG $LHS, sub_s0)),
-              (INSF (v2f32(EXTRACT_SUBREG $RHS, sub_s0)), (v2f32(EXTRACT_SUBREG $RHS, sub_s1)), 63, 32),
+              (v2f32(EXTRACT_SUBREG $LHS, sub_d0)),
+              (INSF (v2f32(EXTRACT_SUBREG $RHS, sub_d0)), (v2f32(EXTRACT_SUBREG $RHS, sub_d1)), 63, 32),
               rounding_, silent_
             ),
-            (v2f32(EXTRACT_SUBREG $LHS, sub_s1)),
-            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $RHS, sub_s0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $RHS, sub_s1)), -4294967296)),
+            (v2f32(EXTRACT_SUBREG $LHS, sub_d1)),
+            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $RHS, sub_d0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $RHS, sub_d1)), -4294967296)),
             rounding_, silent_)>;
 
 def : Pat<(KVX_Int v4f32:$LHS, v4f32:$RHS, v4f32:$ACC, 3, i32:$r, i32:$s),
           (Op
             (Op
               PairedReg:$ACC,
-              (v2f32(EXTRACT_SUBREG $LHS, sub_s0)),
-              (INSF (v2f32(EXTRACT_SUBREG $RHS, sub_s0)), (v2f32(EXTRACT_SUBREG $RHS, sub_s1)), 63, 32),
+              (v2f32(EXTRACT_SUBREG $LHS, sub_d0)),
+              (INSF (v2f32(EXTRACT_SUBREG $RHS, sub_d0)), (v2f32(EXTRACT_SUBREG $RHS, sub_d1)), 63, 32),
               RoundingMod:$r, SilentMod:$s
             ),
-            (v2f32(EXTRACT_SUBREG $LHS, sub_s1)),
-            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $RHS, sub_s0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $RHS, sub_s1)), -4294967296)),
+            (v2f32(EXTRACT_SUBREG $LHS, sub_d1)),
+            (ORDrr (SRLDri (v2f32(EXTRACT_SUBREG $RHS, sub_d0)), 32), (ANDDri37 (v2f32(EXTRACT_SUBREG $RHS, sub_d1)), -4294967296)),
             RoundingMod:$r, SilentMod:$s)>;
 }
 
@@ -1115,24 +1115,24 @@ def: Pat<(int_kvx_xloadc512 v512i1:$z, i64:$mem, i64:$val, i32:$mod0, LsumaskMas
 
 def: Pat<(int_kvx_xloadc1024 v1024i1:$z, i64:$mem, v4i32:$val, i32:$mod0, LsumaskScalarMod:$cond),
          (REG_SEQUENCE MatrixReg,
-            (XLOrrc SingleReg:$mem, VariantMod:$mod0, (v256i1 (EXTRACT_SUBREG MatrixReg:$z, sub_v0)), LsumaskScalarMod:$cond, (i64 (EXTRACT_SUBREG PairedReg:$val, sub_s0))),
+            (XLOrrc SingleReg:$mem, VariantMod:$mod0, (v256i1 (EXTRACT_SUBREG MatrixReg:$z, sub_v0)), LsumaskScalarMod:$cond, (i64 (EXTRACT_SUBREG PairedReg:$val, sub_d0))),
             sub_v0,
-            (XLOri27c 32, SingleReg:$mem, VariantMod:$mod0, (v256i1 (EXTRACT_SUBREG MatrixReg:$z, sub_v1)), LsumaskScalarMod:$cond, (i64 (EXTRACT_SUBREG PairedReg:$val, sub_s0))),
+            (XLOri27c 32, SingleReg:$mem, VariantMod:$mod0, (v256i1 (EXTRACT_SUBREG MatrixReg:$z, sub_v1)), LsumaskScalarMod:$cond, (i64 (EXTRACT_SUBREG PairedReg:$val, sub_d0))),
             sub_v1,
-            (XLOri27c 64, SingleReg:$mem, VariantMod:$mod0, (v256i1 (EXTRACT_SUBREG MatrixReg:$z, sub_v1)), LsumaskScalarMod:$cond, (i64 (EXTRACT_SUBREG PairedReg:$val, sub_s0))),
+            (XLOri27c 64, SingleReg:$mem, VariantMod:$mod0, (v256i1 (EXTRACT_SUBREG MatrixReg:$z, sub_v1)), LsumaskScalarMod:$cond, (i64 (EXTRACT_SUBREG PairedReg:$val, sub_d0))),
             sub_v2,
-            (XLOri27c 96, SingleReg:$mem, VariantMod:$mod0, (v256i1 (EXTRACT_SUBREG MatrixReg:$z, sub_v1)), LsumaskScalarMod:$cond, (i64 (EXTRACT_SUBREG PairedReg:$val, sub_s0))),
+            (XLOri27c 96, SingleReg:$mem, VariantMod:$mod0, (v256i1 (EXTRACT_SUBREG MatrixReg:$z, sub_v1)), LsumaskScalarMod:$cond, (i64 (EXTRACT_SUBREG PairedReg:$val, sub_d0))),
             sub_v3)>;
 
 def: Pat<(int_kvx_xloadc1024 v1024i1:$z, i64:$mem, v4i32:$val, i32:$mod0, LsumaskMaskMod:$cond),
          (REG_SEQUENCE MatrixReg,
-            (XLOrrc SingleReg:$mem, VariantMod:$mod0, (v256i1 (EXTRACT_SUBREG MatrixReg:$z, sub_v0)), LsumaskMaskMod:$cond, (i64 (EXTRACT_SUBREG PairedReg:$val, sub_s0))),
+            (XLOrrc SingleReg:$mem, VariantMod:$mod0, (v256i1 (EXTRACT_SUBREG MatrixReg:$z, sub_v0)), LsumaskMaskMod:$cond, (i64 (EXTRACT_SUBREG PairedReg:$val, sub_d0))),
             sub_v0,
-            (XLOri27c 32, SingleReg:$mem, VariantMod:$mod0, (v256i1 (EXTRACT_SUBREG MatrixReg:$z, sub_v1)), LsumaskMaskMod:$cond, (SRLDri (i64 (EXTRACT_SUBREG PairedReg:$val, sub_s0)), 32)),
+            (XLOri27c 32, SingleReg:$mem, VariantMod:$mod0, (v256i1 (EXTRACT_SUBREG MatrixReg:$z, sub_v1)), LsumaskMaskMod:$cond, (SRLDri (i64 (EXTRACT_SUBREG PairedReg:$val, sub_d0)), 32)),
             sub_v1,
-            (XLOri27c 64, SingleReg:$mem, VariantMod:$mod0, (v256i1 (EXTRACT_SUBREG MatrixReg:$z, sub_v1)), LsumaskMaskMod:$cond, (i64 (EXTRACT_SUBREG PairedReg:$val, sub_s1))),
+            (XLOri27c 64, SingleReg:$mem, VariantMod:$mod0, (v256i1 (EXTRACT_SUBREG MatrixReg:$z, sub_v1)), LsumaskMaskMod:$cond, (i64 (EXTRACT_SUBREG PairedReg:$val, sub_d1))),
             sub_v2,
-            (XLOri27c 96, SingleReg:$mem, VariantMod:$mod0, (v256i1 (EXTRACT_SUBREG MatrixReg:$z, sub_v1)), LsumaskMaskMod:$cond, (SRLDri (i64 (EXTRACT_SUBREG PairedReg:$val, sub_s1)), 32)),
+            (XLOri27c 96, SingleReg:$mem, VariantMod:$mod0, (v256i1 (EXTRACT_SUBREG MatrixReg:$z, sub_v1)), LsumaskMaskMod:$cond, (SRLDri (i64 (EXTRACT_SUBREG PairedReg:$val, sub_d1)), 32)),
             sub_v3)>;
 
 def : Pat<(int_kvx_xstore256  v256i1:$op0, i64:$mem),

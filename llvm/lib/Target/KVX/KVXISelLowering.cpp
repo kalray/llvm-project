@@ -1135,8 +1135,8 @@ SDValue KVXTargetLowering::lowerMulExtend(const unsigned Opcode, SDValue Op,
       SDValue(DAG.getMachineNode(TargetInstruction, Loc, MVT::v2i64,
                                  Op.getOperand(0), Op1),
               0);
-  SDValue SubIdx0 = DAG.getTargetConstant(KVX::sub_s0, Loc, MVT::i32);
-  SDValue SubIdx1 = DAG.getTargetConstant(KVX::sub_s1, Loc, MVT::i32);
+  SDValue SubIdx0 = DAG.getTargetConstant(KVX::sub_d0, Loc, MVT::i32);
+  SDValue SubIdx1 = DAG.getTargetConstant(KVX::sub_d1, Loc, MVT::i32);
   SDValue Lo = SDValue(DAG.getMachineNode(TargetOpcode::EXTRACT_SUBREG, Loc,
                                           MVT::i64, {MulExt, SubIdx0}),
                        0);
@@ -1906,8 +1906,8 @@ KVXTargetLowering::lowerBUILD_VECTOR_V4_128bit(SDValue Op,
       DAG.getMachineNode(
           TargetOpcode::REG_SEQUENCE, DL, VT,
           {DAG.getTargetConstant(KVX::PairedRegRegClassID, DL, MVT::i64), VecHi,
-           DAG.getTargetConstant(KVX::sub_s1, DL, MVT::i64), VecLow,
-           DAG.getTargetConstant(KVX::sub_s0, DL, MVT::i64)}),
+           DAG.getTargetConstant(KVX::sub_d1, DL, MVT::i64), VecLow,
+           DAG.getTargetConstant(KVX::sub_d0, DL, MVT::i64)}),
       0);
 }
 
@@ -1998,11 +1998,11 @@ SDValue KVXTargetLowering::lowerINSERT_VECTOR_ELT(SDValue Op,
 }
 
 SDValue KVXTargetLowering::lowerINSERT_VECTOR_ELT_64bit_elt(
-    SDLoc &dl, SelectionDAG &DAG, SDValue Vec, SDValue Val,
-    uint64_t index) const {
-  SDValue subRegIdx = DAG.getTargetConstant(index + KVX::sub_s0, dl, MVT::i32);
-  return SDValue(DAG.getMachineNode(TargetOpcode::INSERT_SUBREG, dl,
-                                    Vec.getValueType(), {Vec, Val, subRegIdx}),
+    SDLoc &DL, SelectionDAG &DAG, SDValue Vec, SDValue Val,
+    uint64_t Index) const {
+  SDValue SubRegIdx = DAG.getTargetConstant(Index + KVX::sub_d0, DL, MVT::i32);
+  return SDValue(DAG.getMachineNode(TargetOpcode::INSERT_SUBREG, DL,
+                                    Vec.getValueType(), {Vec, Val, SubRegIdx}),
                  0);
 }
 

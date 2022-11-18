@@ -478,8 +478,8 @@ static bool expandALOAD(unsigned int Opcode, const KVXInstrInfo *TII,
   //   copy $output = $fetch
 
   Register UpdateFetch = MI.getOperand(1).getReg();
-  Register Update = TRI->getSubReg(UpdateFetch, KVX::sub_s0);
-  Register Fetch = TRI->getSubReg(UpdateFetch, KVX::sub_s1);
+  Register Update = TRI->getSubReg(UpdateFetch, KVX::sub_d0);
+  Register Fetch = TRI->getSubReg(UpdateFetch, KVX::sub_d1);
 
   unsigned COPY = MOSize == 4 ? KVX::COPYW : KVX::COPYD;
   unsigned LOAD = getLOADOpcode(MOSize, Offset);
@@ -623,8 +623,8 @@ static bool expandATAS(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   Register Value = MI.getOperand(7).getReg();
 
   Register UpdateFetch = MI.getOperand(1).getReg();
-  Register Update = TRI->getSubReg(UpdateFetch, KVX::sub_s0);
-  Register Fetch = TRI->getSubReg(UpdateFetch, KVX::sub_s1);
+  Register Update = TRI->getSubReg(UpdateFetch, KVX::sub_d0);
+  Register Fetch = TRI->getSubReg(UpdateFetch, KVX::sub_d1);
 
   Register Pos = MI.getOperand(2).getReg();
   Register Mask = MI.getOperand(3).getReg();
@@ -838,8 +838,8 @@ static bool expandACMPSWAP(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   Register Swap = MI.getOperand(5).getReg();
 
   Register DesiredExpected = MI.getOperand(1).getReg();
-  Register Desired = TRI->getSubReg(DesiredExpected, KVX::sub_s0);
-  Register Expected = TRI->getSubReg(DesiredExpected, KVX::sub_s1);
+  Register Desired = TRI->getSubReg(DesiredExpected, KVX::sub_d0);
+  Register Expected = TRI->getSubReg(DesiredExpected, KVX::sub_d1);
 
   //   copy $expected = $compare                  # iff $compare isn't a valid
   //                                              #   PairedReg subreg
@@ -1309,12 +1309,12 @@ static bool expandXSWAP256p(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
                          ") is not a VectorReg.");
   }
 
-  auto V_hi = TRI->getSubReg(V, KVX::sub_b1);
-  auto V_lo = TRI->getSubReg(V, KVX::sub_b0);
-  auto R0 = TRI->getSubReg(R, KVX::sub_s0);
-  auto R1 = TRI->getSubReg(R, KVX::sub_s1);
-  auto R2 = TRI->getSubReg(R, KVX::sub_s2);
-  auto R3 = TRI->getSubReg(R, KVX::sub_s3);
+  auto V_hi = TRI->getSubReg(V, KVX::sub_q1);
+  auto V_lo = TRI->getSubReg(V, KVX::sub_q0);
+  auto R0 = TRI->getSubReg(R, KVX::sub_d0);
+  auto R1 = TRI->getSubReg(R, KVX::sub_d1);
+  auto R2 = TRI->getSubReg(R, KVX::sub_d2);
+  auto R3 = TRI->getSubReg(R, KVX::sub_d3);
 
   unsigned E = Subtarget.isV1() ? KVX::MOVETQrrbe : KVX::XMOVETQrrbe;
   unsigned O = Subtarget.isV1() ? KVX::MOVETQrrbo : KVX::XMOVETQrrbo;
@@ -1529,29 +1529,29 @@ bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
   case KVX::SPCHECKp:
     return expandSPCHECK(TII, MBB, MBBI);
   case KVX::CONVDHV0p:
-    return expandTcaInplace(TII, MBB, MBBI, KVX::sub_b0, KVX::CONVDHV0);
+    return expandTcaInplace(TII, MBB, MBBI, KVX::sub_q0, KVX::CONVDHV0);
   case KVX::CONVDHV1p:
-    return expandTcaInplace(TII, MBB, MBBI, KVX::sub_b1, KVX::CONVDHV1);
+    return expandTcaInplace(TII, MBB, MBBI, KVX::sub_q1, KVX::CONVDHV1);
   case KVX::FMMA242HW0p:
-    return expandTcaInplace(TII, MBB, MBBI, KVX::sub_b0, KVX::FMMA242HW0);
+    return expandTcaInplace(TII, MBB, MBBI, KVX::sub_q0, KVX::FMMA242HW0);
   case KVX::FMMA242HW1p:
-    return expandTcaInplace(TII, MBB, MBBI, KVX::sub_b1, KVX::FMMA242HW1);
+    return expandTcaInplace(TII, MBB, MBBI, KVX::sub_q1, KVX::FMMA242HW1);
   case KVX::FMMA242HW2p:
-    return expandTcaInplace(TII, MBB, MBBI, KVX::sub_b0, KVX::FMMA242HW2);
+    return expandTcaInplace(TII, MBB, MBBI, KVX::sub_q0, KVX::FMMA242HW2);
   case KVX::FMMA242HW3p:
-    return expandTcaInplace(TII, MBB, MBBI, KVX::sub_b1, KVX::FMMA242HW3);
+    return expandTcaInplace(TII, MBB, MBBI, KVX::sub_q1, KVX::FMMA242HW3);
   case KVX::CONVWBV0p:
-    return expandTcaInplace(TII, MBB, MBBI, KVX::sub_c0, KVX::CONVWBV0);
+    return expandTcaInplace(TII, MBB, MBBI, KVX::sub_d0, KVX::CONVWBV0);
   case KVX::CONVWBV1p:
-    return expandTcaInplace(TII, MBB, MBBI, KVX::sub_c1, KVX::CONVWBV1);
+    return expandTcaInplace(TII, MBB, MBBI, KVX::sub_d1, KVX::CONVWBV1);
   case KVX::CONVWBV2p:
-    return expandTcaInplace(TII, MBB, MBBI, KVX::sub_c2, KVX::CONVWBV2);
+    return expandTcaInplace(TII, MBB, MBBI, KVX::sub_d2, KVX::CONVWBV2);
   case KVX::CONVWBV3p:
-    return expandTcaInplace(TII, MBB, MBBI, KVX::sub_c3, KVX::CONVWBV3);
+    return expandTcaInplace(TII, MBB, MBBI, KVX::sub_d3, KVX::CONVWBV3);
   case KVX::MOVETOHIp:
-    return expandTcaInplace(TII, MBB, MBBI, KVX::sub_b1, KVX::MOVETQrrbo);
+    return expandTcaInplace(TII, MBB, MBBI, KVX::sub_q1, KVX::MOVETQrrbo);
   case KVX::MOVETOLOp:
-    return expandTcaInplace(TII, MBB, MBBI, KVX::sub_b0, KVX::MOVETQrrbe);
+    return expandTcaInplace(TII, MBB, MBBI, KVX::sub_q0, KVX::MOVETQrrbe);
   case KVX::DINVALLp:
   case KVX::DTOUCHLp:
   case KVX::DZEROLp:
