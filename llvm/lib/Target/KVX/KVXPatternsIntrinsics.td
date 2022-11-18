@@ -266,16 +266,22 @@ defm: FFM__DC<int_kvx_ffmsdc, FSBFDP, FFMSDrr, FFMADrr>;
 defm: FFM__CDC<int_kvx_ffmacdc, FADDDP, FFMADrr, FFMSDrr>;
 defm: FFM__CDC<int_kvx_ffmscdc, FSBFDP, FFMADrr, FFMSDrr>;
 
-multiclass FFM__WC<Intrinsic int_kvx_fop, KVX_INSTRUCTION FOP, KVX_INSTRUCTION FMUL> {
+multiclass FFM__WC<Intrinsic int_kvx_fop, KVX_INSTRUCTION FOP, KVX_INSTRUCTION FMUL, KVX_INSTRUCTION FFMAS> {
+  def: Pat<(int_kvx_fop v2f32:$v1, v2f32:$v2, v2f32:$v3, i32:$conjugate, i32:$rounding, i32:$silent),
+    (FFMAS SingleReg:$v1, SingleReg:$v2, ConjugateMod:$conjugate, RoundingMod:$rounding, SilentMod:$silent, SingleReg:$v3)>, Requires<[IsV2]>;
+
   def: Pat<(int_kvx_fop v2f32:$v1, v2f32:$v2, v2f32:$v3, i32:$conjugate, i32:$rounding, i32:$silent),
     (FOP (FMUL SingleReg:$v2, SingleReg:$v1, ConjugateMod:$conjugate, RoundingMod:$rounding, SilentMod:$silent),
          SingleReg:$v3, ConjugateMod:$conjugate, RoundingMod:$rounding, SilentMod:$silent)>;
 }
 
-defm: FFM__WC<int_kvx_ffmawc, FADDWPrr, FMULWCrr>;
-defm: FFM__WC<int_kvx_ffmswc, FSBFWPrr, FMULWCrr>;
+defm: FFM__WC<int_kvx_ffmawc, FADDWPrr, FMULWCrr, FFMAWC>;
+defm: FFM__WC<int_kvx_ffmswc, FSBFWPrr, FMULWCrr, FFMSWC>;
 
-multiclass FFM__WCP<Intrinsic int_kvx_fop, KVX_INSTRUCTION FOP, KVX_INSTRUCTION FMUL> {
+multiclass FFM__WCP<Intrinsic int_kvx_fop, KVX_INSTRUCTION FOP, KVX_INSTRUCTION FMUL, KVX_INSTRUCTION FFMAS> {
+  def: Pat<(int_kvx_fop v4f32:$v1, v4f32:$v2, v4f32:$v3, i32:$conjugate, i32:$rounding, i32:$silent),
+    (FFMAS PairedReg:$v1, PairedReg:$v2, ConjugateMod:$conjugate, RoundingMod:$rounding, SilentMod:$silent, PairedReg:$v3)>, Requires<[IsV2]>;
+
   def: Pat<(int_kvx_fop v4f32:$v1, v4f32:$v2, v4f32:$v3, i32:$conjugate, i32:$rounding, i32:$silent),
     (v4f32 (REG_SEQUENCE PairedReg,
        (FOP (FMUL (v2f32 (EXTRACT_SUBREG PairedReg:$v2, sub_d0)),
@@ -286,8 +292,8 @@ multiclass FFM__WCP<Intrinsic int_kvx_fop, KVX_INSTRUCTION FOP, KVX_INSTRUCTION 
             (v2f32 (EXTRACT_SUBREG PairedReg:$v3, sub_d1)), ConjugateMod:$conjugate, RoundingMod:$rounding, SilentMod:$silent), sub_d1))>;
 }
 
-defm: FFM__WCP<int_kvx_ffmawcp, FADDWPrr, FMULWCrr>;
-defm: FFM__WCP<int_kvx_ffmswcp, FSBFWPrr, FMULWCrr>;
+defm: FFM__WCP<int_kvx_ffmawcp, FADDWPrr, FMULWCrr, FFMAWCP>;
+defm: FFM__WCP<int_kvx_ffmswcp, FSBFWPrr, FMULWCrr, FFMSWCP>;
 
 def: Pat<(int_kvx_fconjwc v2f32:$v), (FNEGD SingleReg:$v)>;
 def: Pat<(int_kvx_fconjwcp v4f32:$v),

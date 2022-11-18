@@ -2657,6 +2657,12 @@ def FFDMSAW : ROUNDING_SILENT_TERNARY_AUXR_FP<"ffdmsaw", SingleReg, SingleReg, M
 def FFDMSAWP : ROUNDING_SILENT_TERNARY_AUXR_FP<"ffdmsawp", SingleReg, PairedReg, MAU_AUXR_FP>;
 
 def FMULWCP : CONJ_ROUNDING_SILENT_BINOP<"fmulwcp", PairedReg, PairedReg, MAU_FP>;
+
+defm FFMAWC : I<"ffmawc", MAU_AUXR_FP, [SingleReg, SingleReg], [ConjugateMod, RoundingMod, SilentMod], [], [], [SingleReg], 1>;
+defm FFMSWC : I<"ffmswc", MAU_AUXR_FP, [SingleReg, SingleReg], [ConjugateMod, RoundingMod, SilentMod], [], [], [SingleReg], 1>;
+
+defm FFMAWCP : I<"ffmawcp", MAU_AUXR_FP, [PairedReg, PairedReg], [ConjugateMod, RoundingMod, SilentMod], [], [], [PairedReg], 1>;
+defm FFMSWCP : I<"ffmswcp", MAU_AUXR_FP, [PairedReg, PairedReg], [ConjugateMod, RoundingMod, SilentMod], [], [], [PairedReg], 1>;
 }
 
 def XFSCALEWO : ROUNDING_SILENT_BINOP<"xfscalewo", VectorReg, VectorReg, SingleReg, BCU_CRRP_CRWL_CRWH_RR,
