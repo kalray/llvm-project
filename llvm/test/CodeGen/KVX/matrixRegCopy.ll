@@ -42,11 +42,11 @@ define void @c([512 x float]* %0, [512 x float]* %1, [768 x half]* %2, [512 x ha
 10:
   %11 = bitcast half* undef to i8*
   %12 = getelementptr inbounds [768 x half], [768 x half]* %2, i64 undef, i64 undef
-  %13 = tail call <512 x i1> @llvm.kvx.xfmma444hw(<512 x i1> undef, <256 x i1> undef, <256 x i1> undef)
+  %13 = tail call <512 x i1> @llvm.kvx.xfmma444hw(<256 x i1> undef, <256 x i1> undef, <512 x i1> undef)
   %14 = tail call <1024 x i1> @llvm.kvx.lvc(<1024 x i1> undef, i8* nonnull undef, i32 3, i32 0)
   %15 = tail call <256 x i1> @llvm.kvx.xmovefmv(<1024 x i1> undef, i32 1)
-  %16 = tail call <512 x i1> @llvm.kvx.xfmma444hw(<512 x i1> undef, <256 x i1> undef, <256 x i1> undef)
-  %17 = tail call <512 x i1> @llvm.kvx.xfmma444hw(<512 x i1> undef, <256 x i1> undef, <256 x i1> undef)
+  %16 = tail call <512 x i1> @llvm.kvx.xfmma444hw(<256 x i1> undef, <256 x i1> undef, <512 x i1> undef)
+  %17 = tail call <512 x i1> @llvm.kvx.xfmma444hw(<256 x i1> undef, <256 x i1> undef, <512 x i1> undef)
   br i1 undef, label %10, label %18
 
 18:
@@ -66,6 +66,6 @@ define void @c([512 x float]* %0, [512 x float]* %1, [768 x half]* %2, [512 x ha
 declare <1024 x i1> @llvm.kvx.lvc(<1024 x i1>, i8*, i32, i32)
 declare <512 x i1> @llvm.kvx.xmovefmw(<1024 x i1>, i32)
 declare <256 x i1> @llvm.kvx.xmovefmv(<1024 x i1>, i32)
-declare <512 x i1> @llvm.kvx.xfmma444hw(<512 x i1>, <256 x i1>, <256 x i1>)
+declare <512 x i1> @llvm.kvx.xfmma444hw(<256 x i1>, <256 x i1>, <512 x i1>)
 declare <1024 x i1> @llvm.kvx.xbuildfwm(<512 x i1>, <512 x i1>)
 declare <1024 x i1> @llvm.kvx.xmt44d(<1024 x i1>)

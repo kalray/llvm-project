@@ -421,7 +421,7 @@ define void @test_fmma242hw3(<256 x i1>* %p0){
   ret void
 }
 
-declare <512 x i1> @llvm.kvx.xfmma444hw(<512 x i1>, <256 x i1>, <256 x i1>)
+declare <512 x i1> @llvm.kvx.xfmma444hw(<256 x i1>, <256 x i1>, <512 x i1>)
 define void @test_fmma444hw(<512 x i1>* %p0){
 ; CHECK-LABEL: test_fmma444hw:
 ; CHECK:       # %bb.0:
@@ -438,7 +438,7 @@ define void @test_fmma444hw(<512 x i1>* %p0){
 ; CHECK-NEXT:    sv 0[$r0] = $a0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %v1 = tail call <512 x i1> @llvm.kvx.xfmma444hw(<512 x i1> undef, <256 x i1> undef, <256 x i1> undef)
+  %v1 = tail call <512 x i1> @llvm.kvx.xfmma444hw(<256 x i1> undef, <256 x i1> undef, <512 x i1> undef)
   store <512 x i1> %v1, <512 x i1>* %p0, align 32
   ret void
 }
@@ -979,7 +979,7 @@ define <4 x i64> @test_tca_builtins(i64 %0, i64 %1, i64 %2, i64 %3, <256 x i1>* 
   %26 = tail call <256 x i1> @llvm.kvx.xfmma242hw1(<256 x i1> %25, <512 x i1> %23, <256 x i1> %22, <256 x i1> %25)
   %27 = tail call <256 x i1> @llvm.kvx.xfmma242hw2(<256 x i1> %26, <512 x i1> %23, <256 x i1> %26, <256 x i1> %25)
   %28 = tail call <256 x i1> @llvm.kvx.xfmma242hw3(<256 x i1> %27, <512 x i1> %23, <256 x i1> %26, <256 x i1> %27)
-  %29 = tail call <512 x i1> @llvm.kvx.xfmma444hw(<512 x i1> %23, <256 x i1> %27, <256 x i1> %28)
+  %29 = tail call <512 x i1> @llvm.kvx.xfmma444hw(<256 x i1> %27, <256 x i1> %28, <512 x i1> %23)
   %30 = tail call <1024 x i1> @llvm.kvx.xmma444hbd0(<256 x i1> %28, <256 x i1> %28, <1024 x i1> %20, i32 0)
   %31 = tail call <1024 x i1> @llvm.kvx.xmma444hbd1(<256 x i1> %28, <256 x i1> %28, <1024 x i1> %30, i32 0)
   %32 = tail call <1024 x i1> @llvm.kvx.xmma484hbd(<512 x i1> %29, <256 x i1> %28, <1024 x i1> %31, i32 0)
@@ -1205,7 +1205,7 @@ entry:
   store <256 x i1> %5, <256 x i1>* %v, align 32
   %arrayidx16 = getelementptr inbounds <512 x i1>, <512 x i1>* %w, i64 1
   %8 = load <512 x i1>, <512 x i1>* %arrayidx16, align 32
-  %9 = tail call <512 x i1> @llvm.kvx.xfmma444hw(<512 x i1> %8, <256 x i1> %7, <256 x i1> %6)
+  %9 = tail call <512 x i1> @llvm.kvx.xfmma444hw(<256 x i1> %7, <256 x i1> %6, <512 x i1> %8)
   %arrayidx19 = getelementptr inbounds <512 x i1>, <512 x i1>* %w, i64 3
   store <512 x i1> %9, <512 x i1>* %arrayidx19, align 32
   ret void

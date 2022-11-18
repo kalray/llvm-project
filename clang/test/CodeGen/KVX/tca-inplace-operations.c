@@ -208,16 +208,16 @@ void convwbv(__kvx_x256 *v, __kvx_x1024 *m) {
 // O0-NEXT:    [[TMP37:%.*]] = load <256 x i1>*, <256 x i1>** [[V_ADDR]], align 8
 // O0-NEXT:    [[ARRAYIDX15:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[TMP37]], i64 0
 // O0-NEXT:    store <256 x i1> [[TMP36]], <256 x i1>* [[ARRAYIDX15]], align 32
-// O0-NEXT:    [[TMP38:%.*]] = load <512 x i1>*, <512 x i1>** [[W_ADDR]], align 8
-// O0-NEXT:    [[ARRAYIDX16:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[TMP38]], i64 1
-// O0-NEXT:    [[TMP39:%.*]] = load <512 x i1>, <512 x i1>* [[ARRAYIDX16]], align 32
+// O0-NEXT:    [[TMP38:%.*]] = load <256 x i1>*, <256 x i1>** [[V_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX16:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[TMP38]], i64 2
+// O0-NEXT:    [[TMP39:%.*]] = load <256 x i1>, <256 x i1>* [[ARRAYIDX16]], align 32
 // O0-NEXT:    [[TMP40:%.*]] = load <256 x i1>*, <256 x i1>** [[V_ADDR]], align 8
-// O0-NEXT:    [[ARRAYIDX17:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[TMP40]], i64 2
+// O0-NEXT:    [[ARRAYIDX17:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[TMP40]], i64 1
 // O0-NEXT:    [[TMP41:%.*]] = load <256 x i1>, <256 x i1>* [[ARRAYIDX17]], align 32
-// O0-NEXT:    [[TMP42:%.*]] = load <256 x i1>*, <256 x i1>** [[V_ADDR]], align 8
-// O0-NEXT:    [[ARRAYIDX18:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[TMP42]], i64 1
-// O0-NEXT:    [[TMP43:%.*]] = load <256 x i1>, <256 x i1>* [[ARRAYIDX18]], align 32
-// O0-NEXT:    [[TMP44:%.*]] = call <512 x i1> @llvm.kvx.xfmma444hw(<512 x i1> [[TMP39]], <256 x i1> [[TMP41]], <256 x i1> [[TMP43]])
+// O0-NEXT:    [[TMP42:%.*]] = load <512 x i1>*, <512 x i1>** [[W_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX18:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[TMP42]], i64 1
+// O0-NEXT:    [[TMP43:%.*]] = load <512 x i1>, <512 x i1>* [[ARRAYIDX18]], align 32
+// O0-NEXT:    [[TMP44:%.*]] = call <512 x i1> @llvm.kvx.xfmma444hw(<256 x i1> [[TMP39]], <256 x i1> [[TMP41]], <512 x i1> [[TMP43]])
 // O0-NEXT:    [[TMP45:%.*]] = load <512 x i1>*, <512 x i1>** [[W_ADDR]], align 8
 // O0-NEXT:    [[ARRAYIDX19:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[TMP45]], i64 3
 // O0-NEXT:    store <512 x i1> [[TMP44]], <512 x i1>* [[ARRAYIDX19]], align 32
@@ -238,9 +238,9 @@ void convwbv(__kvx_x256 *v, __kvx_x1024 *m) {
 // O2-NEXT:    [[TMP7:%.*]] = call <256 x i1> @llvm.kvx.xfmma242hw3(<256 x i1> [[TMP5]], <512 x i1> [[TMP1]], <256 x i1> [[TMP6]], <256 x i1> [[TMP3]])
 // O2-NEXT:    store <256 x i1> [[TMP7]], <256 x i1>* [[ARRAYIDX3]], align 32, [[TBAA2]]
 // O2-NEXT:    store <256 x i1> [[TMP5]], <256 x i1>* [[V]], align 32, [[TBAA2]]
-// O2-NEXT:    [[ARRAYIDX16:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[W]], i64 1
-// O2-NEXT:    [[TMP8:%.*]] = load <512 x i1>, <512 x i1>* [[ARRAYIDX16]], align 32, [[TBAA8]]
-// O2-NEXT:    [[TMP9:%.*]] = call <512 x i1> @llvm.kvx.xfmma444hw(<512 x i1> [[TMP8]], <256 x i1> [[TMP7]], <256 x i1> [[TMP6]])
+// O2-NEXT:    [[ARRAYIDX18:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[W]], i64 1
+// O2-NEXT:    [[TMP8:%.*]] = load <512 x i1>, <512 x i1>* [[ARRAYIDX18]], align 32, [[TBAA8]]
+// O2-NEXT:    [[TMP9:%.*]] = call <512 x i1> @llvm.kvx.xfmma444hw(<256 x i1> [[TMP7]], <256 x i1> [[TMP6]], <512 x i1> [[TMP8]])
 // O2-NEXT:    [[ARRAYIDX19:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[W]], i64 3
 // O2-NEXT:    store <512 x i1> [[TMP9]], <512 x i1>* [[ARRAYIDX19]], align 32, [[TBAA8]]
 // O2-NEXT:    ret void
@@ -252,7 +252,7 @@ void fmma444hw(__kvx_x256 *v, __kvx_x512 *w) {
   v[1] = __builtin_kvx_xfmma242hw2(local, w[0], v[1], v[2]);
   v[2] = __builtin_kvx_xfmma242hw3(local, w[0], v[1], v[2]);
   v[0] = local;
-  w[3] = __builtin_kvx_xfmma444hw(w[1], v[2], v[1]);
+  w[3] = __builtin_kvx_xfmma444hw(v[2], v[1], w[1]);
 }
 
 // O0-LABEL: @test(
