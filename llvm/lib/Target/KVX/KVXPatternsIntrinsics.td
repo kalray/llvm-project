@@ -691,16 +691,16 @@ def CONVWBV2p : KVX_PSEUDO<(outs VectorReg:$vOut), (ins VectorReg:$vIn,
 def CONVWBV3p : KVX_PSEUDO<(outs VectorReg:$vOut), (ins VectorReg:$vIn,
                                  MatrixReg:$a4, RoundintMod:$a1, SaturateMod:$a2), []>, Requires<[IsV1]>;
 
-def FMMA242HW0p : KVX_PSEUDO<(outs VectorReg:$vOut), (ins VectorReg:$vIn,
+def FMMA242HW0p : KVX_PSEUDO<(outs VectorRegE:$vOut), (ins VectorRegE:$vIn,
                                  WideReg:$a2, VectorReg:$a3, VectorReg:$a4), []>, Requires<[IsV1]>;
 
-def FMMA242HW1p : KVX_PSEUDO<(outs VectorReg:$vOut), (ins VectorReg:$vIn,
+def FMMA242HW1p : KVX_PSEUDO<(outs VectorRegE:$vOut), (ins VectorRegE:$vIn,
                                  WideReg:$a2, VectorReg:$a3, VectorReg:$a4), []>, Requires<[IsV1]>;
 
-def FMMA242HW2p : KVX_PSEUDO<(outs VectorReg:$vOut), (ins VectorReg:$vIn,
+def FMMA242HW2p : KVX_PSEUDO<(outs VectorRegO:$vOut), (ins VectorRegO:$vIn,
                                  WideReg:$a2, VectorReg:$a3, VectorReg:$a4), []>, Requires<[IsV1]>;
 
-def FMMA242HW3p : KVX_PSEUDO<(outs VectorReg:$vOut), (ins VectorReg:$vIn,
+def FMMA242HW3p : KVX_PSEUDO<(outs VectorRegO:$vOut), (ins VectorRegO:$vIn,
                                  WideReg:$a2, VectorReg:$a3, VectorReg:$a4), []>, Requires<[IsV1]>;
 }
 

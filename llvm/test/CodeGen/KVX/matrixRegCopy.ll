@@ -14,9 +14,9 @@ define void @c([512 x float]* %0, [512 x float]* %1, [768 x half]* %2, [512 x ha
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmma242hw1 $a0.hi = $a0a1, $a0, $a0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmma242hw2 $a0.lo = $a0a1, $a0, $a0
+; CHECK-NEXT:    fmma242hw2 $a1.lo = $a0a1, $a0, $a0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmma242hw3 $a0.hi = $a0a1, $a0, $a0
+; CHECK-NEXT:    fmma242hw3 $a1.hi = $a0a1, $a0, $a0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lv.c3 $a0a1a2a3 = 0[$r0]
 ; CHECK-NEXT:    ;;
