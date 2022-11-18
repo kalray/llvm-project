@@ -50,8 +50,8 @@
 KVX_BUILTIN(await, "v", "n", 0, "", )
 KVX_BUILTIN(barrier, "v", "n", 0, "", )
 KVX_BUILTIN(errop, "v", "r", 0, "", )
-BUILTIN(__builtin_kvx_get, "OiUi", "n")
-BUILTIN(__builtin_kvx_set, "vUiOi", "n")
+BUILTIN(__builtin_kvx_get, "OiUIc", "n")
+BUILTIN(__builtin_kvx_set, "vUIcOi", "n")
 KVX_BUILTIN(sleep, "v", "n", 0, "", )
 KVX_BUILTIN(stop, "v", "n", 0, "", )
 BUILTIN(__builtin_kvx_syncgroup, "vUOi", "n")
@@ -61,8 +61,8 @@ KVX_BUILTIN(tlbprobe, "v", "n", 0, "", )
 KVX_BUILTIN(tlbread, "v", "n", 0, "", )
 KVX_BUILTIN(tlbwrite, "v", "", 0, "", )
 BUILTIN(__builtin_kvx_waitit, "UiUOi", "n")
-BUILTIN(__builtin_kvx_wfxl, "vUiUOi", "n")
-BUILTIN(__builtin_kvx_wfxm, "vUiUOi", "n")
+BUILTIN(__builtin_kvx_wfxl, "vUIcUOi", "n")
+BUILTIN(__builtin_kvx_wfxm, "vUIcUOi", "n")
 
 //===----------------------------------------------------------------------===//
 // LSU
