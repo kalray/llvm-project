@@ -45,12 +45,12 @@ define i32 @d() {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_1: # %for.cond
 ; CHECK-NEXT:    # =>This Loop Header: Depth=1
-; CHECK-NEXT:    # Child Loop BB0_3 Depth 2
+; CHECK-NEXT:    # Child Loop BB0_2 Depth 2
 ; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r19, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_3: # %for.body
+; CHECK-NEXT:  .LBB0_2: # %for.body
 ; CHECK-NEXT:    # Parent Loop BB0_1 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
 ; CHECK-NEXT:    addd $r1 = $r1, 1
@@ -59,7 +59,7 @@ define i32 @d() {
 ; CHECK-NEXT:    sw 0[$r20] = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .__LOOPDO_0_END_:
-; CHECK-NEXT:  # %bb.2: # %for.cond.cleanup
+; CHECK-NEXT:  # %bb.3: # %for.cond.cleanup
 ; CHECK-NEXT:    # in Loop: Header=BB0_1 Depth=1
 ; CHECK-NEXT:    call f
 ; CHECK-NEXT:    ;;

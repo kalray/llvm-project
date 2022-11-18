@@ -612,7 +612,11 @@ unsigned KVXInstrInfo::removeBranch(MachineBasicBlock &MBB,
   if (!I->getDesc().isUnconditionalBranch() &&
       !I->getDesc().isConditionalBranch())
     return 0;
-  // Remove the branch.
+
+  if (BytesRemoved)
+    *BytesRemoved = getInstSizeInBytes(*I);
+
+  // Remove the last branch.
   I->eraseFromParent();
 
   I = MBB.end();
@@ -623,9 +627,10 @@ unsigned KVXInstrInfo::removeBranch(MachineBasicBlock &MBB,
   if (!I->getDesc().isConditionalBranch())
     return 1;
 
-  // Remove the branch.
+  // Remove the CB
   if (BytesRemoved)
-    *BytesRemoved += I->getDesc().Size;
+    *BytesRemoved += getInstSizeInBytes(*I);
+
   I->eraseFromParent();
   return 2;
 }
@@ -1258,6 +1263,23 @@ bool KVXInstrInfo::PredicateInstruction(MachineInstr &MI,
 }
 
 unsigned KVXInstrInfo::getInstSizeInBytes(const MachineInstr &MI) const {
+  if (MI.isBundle()) {
+    MachineBasicBlock::const_instr_iterator I = MI.getIterator();
+    unsigned Size = 0;
+    while (I->isBundledWithSucc()) {
+      ++I;
+      Size += getInstSizeInBytes(*I);
+    }
+
+    return Size;
+  }
+
+  if (MI.isMetaInstruction())
+    return 0;
+
+  if (MI.getOpcode() == ISD::INLINEASM)
+    return std::max((unsigned)(MI.getDesc().Size), 4U);
+
   return MI.getDesc().Size;
 }
 
@@ -1352,3 +1374,34 @@ bool KVXInstrInfo::SubsumesPredicate(ArrayRef<MachineOperand> Pred1,
 }
 
 const KVXSubtarget &KVXInstrInfo::getSubtarget() const { return Subtarget; }
+
+bool KVXInstrInfo::isBranchOffsetInRange(unsigned BranchOpc,
+                                         int64_t BrOffset) const {
+  switch (BranchOpc) {
+  case KVX::GOTO:
+    return isInt<27>(BrOffset);
+  case KVX::IGOTO:
+    return true;
+  case KVX::CB:
+    return isInt<17>(BrOffset);
+  default: {
+    errs() << "Opcode: " << BranchOpc << '\n';
+    report_fatal_error("Unknown branch opcode.");
+  }
+  }
+}
+
+unsigned KVXInstrInfo::insertIndirectBranch(MachineBasicBlock &MBB,
+                                            MachineBasicBlock &NewDestBB,
+                                            const DebugLoc &DL,
+                                            int64_t BrOffset,
+                                            RegScavenger *RS) const {
+  Register Reg = findScratchRegister(MBB, true);
+  if (!Reg)
+    return 0;
+
+  auto Make = BuildMI(&MBB, DL, get(KVX::MAKEi64), Reg).addMBB(&NewDestBB);
+  auto Igoto =
+      BuildMI(&MBB, DL, get(KVX::IGOTO)).addReg(Reg, getKillRegState(true));
+  return Make->getDesc().Size + Igoto->getDesc().Size;
+}

@@ -28,12 +28,12 @@ if.end:                                           ; preds = %entry, %if.then
 define void @test1(i32 %a, i32* nocapture %p){
 ; CHECK-LABEL: test1:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    cb.weqz $r0 ? .LBB1_1
+; CHECK-NEXT:    cb.weqz $r0 ? .LBB1_2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.2: # %if.end
+; CHECK-NEXT:  # %bb.1: # %if.end
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB1_1: # %if.then
+; CHECK-NEXT:  .LBB1_2: # %if.then
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 0[$r1] = $r0
@@ -221,12 +221,12 @@ if.end:                                           ; preds = %entry, %if.then
 define void @test11(i64 %a, i64* nocapture %p){
 ; CHECK-LABEL: test11:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    cb.deqz $r0 ? .LBB11_1
+; CHECK-NEXT:    cb.deqz $r0 ? .LBB11_2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.2: # %if.end
+; CHECK-NEXT:  # %bb.1: # %if.end
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB11_1: # %if.then
+; CHECK-NEXT:  .LBB11_2: # %if.then
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 0[$r1] = $r0

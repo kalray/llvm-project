@@ -33,9 +33,9 @@ define dso_local void @matrix_mul_const(i32 %0, i32* nocapture %1, i16* nocaptur
 ; CHECK-NEXT:    srld $r10 = $r7, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r10 = $r10, 1
-; CHECK-NEXT:    goto .LBB0_2
+; CHECK-NEXT:    goto .LBB0_3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_10: # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:  .LBB0_2: # in Loop: Header=BB0_3 Depth=1
 ; CHECK-NEXT:    addw $r6 = $r6, $r0
 ; CHECK-NEXT:    addw $r16 = $r16, 1
 ; CHECK-NEXT:    ;;
@@ -43,17 +43,17 @@ define dso_local void @matrix_mul_const(i32 %0, i32* nocapture %1, i16* nocaptur
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.even $r17 ? .LBB0_11
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_2: # =>This Loop Header: Depth=1
-; CHECK-NEXT:    # Child Loop BB0_6 Depth 2
+; CHECK-NEXT:  .LBB0_3: # =>This Loop Header: Depth=1
 ; CHECK-NEXT:    # Child Loop BB0_9 Depth 2
-; CHECK-NEXT:    cb.even $r7 ? .LBB0_3
+; CHECK-NEXT:    # Child Loop BB0_5 Depth 2
+; CHECK-NEXT:    cb.even $r7 ? .LBB0_6
 ; CHECK-NEXT:    make $r32 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_8: # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:  .LBB0_4: # in Loop: Header=BB0_3 Depth=1
 ; CHECK-NEXT:    sbfd $r17 = $r32, $r4
 ; CHECK-NEXT:    addw $r32 = $r6, $r32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_9: # Parent Loop BB0_2 Depth=1
+; CHECK-NEXT:  .LBB0_5: # Parent Loop BB0_3 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
 ; CHECK-NEXT:    addd $r17 = $r17, -1
 ; CHECK-NEXT:    addw $r32 = $r32, 1
@@ -63,12 +63,12 @@ define dso_local void @matrix_mul_const(i32 %0, i32* nocapture %1, i16* nocaptur
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mulw $r34 = $r34, $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.dnez $r17 ? .LBB0_9
+; CHECK-NEXT:    cb.dnez $r17 ? .LBB0_5
 ; CHECK-NEXT:    sw.xs $r33[$r1] = $r34
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    goto .LBB0_10
+; CHECK-NEXT:    goto .LBB0_2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_3: # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:  .LBB0_6: # in Loop: Header=BB0_3 Depth=1
 ; CHECK-NEXT:    mulw $r17 = $r16, $r0
 ; CHECK-NEXT:    make $r32 = 0
 ; CHECK-NEXT:    ;;
@@ -76,18 +76,18 @@ define dso_local void @matrix_mul_const(i32 %0, i32* nocapture %1, i16* nocaptur
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compw.ltu $r17 = $r17, $r8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.odd $r17 ? .LBB0_8
+; CHECK-NEXT:    cb.odd $r17 ? .LBB0_4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.4: # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    cb.odd $r11 ? .LBB0_8
+; CHECK-NEXT:  # %bb.7: # in Loop: Header=BB0_3 Depth=1
+; CHECK-NEXT:    cb.odd $r11 ? .LBB0_4
 ; CHECK-NEXT:    make $r32 = 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.5: # in Loop: Header=BB0_2 Depth=1
+; CHECK-NEXT:  # %bb.8: # in Loop: Header=BB0_3 Depth=1
 ; CHECK-NEXT:    copyd $r17 = $r6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r10, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_6: # Parent Loop BB0_2 Depth=1
+; CHECK-NEXT:  .LBB0_9: # Parent Loop BB0_3 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
 ; CHECK-NEXT:    addw $r17 = $r17, 2
 ; CHECK-NEXT:    zxwd $r32 = $r17
@@ -104,11 +104,11 @@ define dso_local void @matrix_mul_const(i32 %0, i32* nocapture %1, i16* nocaptur
 ; CHECK-NEXT:    sd $r32[$r1] = $r33
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .__LOOPDO_0_END_:
-; CHECK-NEXT:  # %bb.7: # in Loop: Header=BB0_2 Depth=1
-; CHECK-NEXT:    cb.odd $r15 ? .LBB0_10
+; CHECK-NEXT:  # %bb.10: # in Loop: Header=BB0_3 Depth=1
+; CHECK-NEXT:    cb.odd $r15 ? .LBB0_2
 ; CHECK-NEXT:    copyd $r32 = $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    goto .LBB0_8
+; CHECK-NEXT:    goto .LBB0_4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_11:
 ; CHECK-NEXT:    ret

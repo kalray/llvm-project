@@ -53,7 +53,7 @@ define dso_local void @hwloop(i32* nocapture %0, i32* nocapture readonly %1) loc
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r3, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB1_2: # =>This Inner Loop Header: Depth=1
+; CHECK-NEXT:  .LBB1_1: # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    lwz.xs $r3 = $r2[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz.xs $r4 = $r2[$r0]
@@ -64,7 +64,7 @@ define dso_local void @hwloop(i32* nocapture %0, i32* nocapture readonly %1) loc
 ; CHECK-NEXT:    addd $r2 = $r2, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .__LOOPDO_0_END_:
-; CHECK-NEXT:  # %bb.1:
+; CHECK-NEXT:  # %bb.2:
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   br label %4

@@ -12,7 +12,7 @@ define void @f32(float* nocapture %0) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r2, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_2: # =>This Inner Loop Header: Depth=1
+; CHECK-NEXT:  .LBB0_1: # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    faddw $r2 = $r1, 0x3f800000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedw.rz $r5 = $r1, 0
@@ -50,7 +50,7 @@ define void @f32(float* nocapture %0) {
 ; CHECK-NEXT:    faddw $r1 = $r6, 0x3f800000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .__LOOPDO_0_END_:
-; CHECK-NEXT:  # %bb.1:
+; CHECK-NEXT:  # %bb.2:
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   br label %3
@@ -97,7 +97,7 @@ define void @f64(double* nocapture %0) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r2, .__LOOPDO_1_END_
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB1_2: # =>This Inner Loop Header: Depth=1
+; CHECK-NEXT:  .LBB1_1: # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    faddd $r2 = $r1, 0x3ff0000000000000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fixedd.rz $r5 = $r1, 0
@@ -135,7 +135,7 @@ define void @f64(double* nocapture %0) {
 ; CHECK-NEXT:    faddd $r1 = $r6, 0x3ff0000000000000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .__LOOPDO_1_END_:
-; CHECK-NEXT:  # %bb.1:
+; CHECK-NEXT:  # %bb.2:
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   br label %3

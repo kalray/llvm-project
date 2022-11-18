@@ -111,6 +111,13 @@ public:
   bool isEpilog(const MachineInstr *MI) const;
 
   const KVXSubtarget &getSubtarget() const;
+
+  bool isBranchOffsetInRange(unsigned, int64_t) const override;
+
+  unsigned insertIndirectBranch(MachineBasicBlock &MBB,
+                                MachineBasicBlock &NewDestBB,
+                                const DebugLoc &DL, int64_t BrOffset = 0,
+                                RegScavenger *RS = nullptr) const override;
 };
 
 } // namespace llvm

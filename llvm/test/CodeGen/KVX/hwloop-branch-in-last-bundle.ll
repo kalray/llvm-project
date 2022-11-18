@@ -26,28 +26,28 @@ define float @cholesky(%struct.loops_params_s* nocapture readonly %0) local_unna
 ; CHECK-NEXT:    loopdo $r3, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_1: # =>This Loop Header: Depth=1
-; CHECK-NEXT:    # Child Loop BB0_2 Depth 2
-; CHECK-NEXT:    # Child Loop BB0_4 Depth 3
+; CHECK-NEXT:    # Child Loop BB0_3 Depth 2
+; CHECK-NEXT:    # Child Loop BB0_5 Depth 3
 ; CHECK-NEXT:    make $r3 = 0
 ; CHECK-NEXT:    copyd $r4 = $r0
-; CHECK-NEXT:    goto .LBB0_2
+; CHECK-NEXT:    goto .LBB0_3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_5: # in Loop: Header=BB0_2 Depth=2
+; CHECK-NEXT:  .LBB0_2: # in Loop: Header=BB0_3 Depth=2
 ; CHECK-NEXT:    compw.gt $r5 = $r5, 3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.even $r5 ? .LBB0_6
+; CHECK-NEXT:    cb.even $r5 ? .LBB0_13
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_2: # Parent Loop BB0_1 Depth=1
+; CHECK-NEXT:  .LBB0_3: # Parent Loop BB0_1 Depth=1
 ; CHECK-NEXT:    # => This Loop Header: Depth=2
-; CHECK-NEXT:    # Child Loop BB0_4 Depth 3
+; CHECK-NEXT:    # Child Loop BB0_5 Depth 3
 ; CHECK-NEXT:    copyd $r5 = $r4
 ; CHECK-NEXT:    copyd $r6 = $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compw.lt $r4 = $r5, 4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.odd $r4 ? .LBB0_6
+; CHECK-NEXT:    cb.odd $r4 ? .LBB0_13
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.3: # in Loop: Header=BB0_2 Depth=2
+; CHECK-NEXT:  # %bb.4: # in Loop: Header=BB0_3 Depth=2
 ; CHECK-NEXT:    srsw $r4 = $r5, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addw $r3 = $r6, $r4
@@ -64,8 +64,8 @@ define float @cholesky(%struct.loops_params_s* nocapture readonly %0) local_unna
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addx4d $r9 = $r6, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_4: # Parent Loop BB0_1 Depth=1
-; CHECK-NEXT:    # Parent Loop BB0_2 Depth=2
+; CHECK-NEXT:  .LBB0_5: # Parent Loop BB0_1 Depth=1
+; CHECK-NEXT:    # Parent Loop BB0_3 Depth=2
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=3
 ; CHECK-NEXT:    lwz $r11 = 0[$r8]
 ; CHECK-NEXT:    ;;
@@ -88,9 +88,9 @@ define float @cholesky(%struct.loops_params_s* nocapture readonly %0) local_unna
 ; CHECK-NEXT:    compd.lt $r15 = $r15, $r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 4[$r10] = $r11
-; CHECK-NEXT:    cb.even $r15 ? .LBB0_5
+; CHECK-NEXT:    cb.even $r15 ? .LBB0_2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.8: # in Loop: Header=BB0_4 Depth=3
+; CHECK-NEXT:  # %bb.6: # in Loop: Header=BB0_5 Depth=3
 ; CHECK-NEXT:    lwz $r11 = 8[$r8]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r15 = 4[$r9]
@@ -112,9 +112,9 @@ define float @cholesky(%struct.loops_params_s* nocapture readonly %0) local_unna
 ; CHECK-NEXT:    compd.ge $r15 = $r15, $r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 8[$r10] = $r11
-; CHECK-NEXT:    cb.odd $r15 ? .LBB0_5
+; CHECK-NEXT:    cb.odd $r15 ? .LBB0_2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.9: # in Loop: Header=BB0_4 Depth=3
+; CHECK-NEXT:  # %bb.7: # in Loop: Header=BB0_5 Depth=3
 ; CHECK-NEXT:    lwz $r11 = 16[$r8]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r15 = 12[$r9]
@@ -136,9 +136,9 @@ define float @cholesky(%struct.loops_params_s* nocapture readonly %0) local_unna
 ; CHECK-NEXT:    compd.ge $r15 = $r15, $r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 12[$r10] = $r11
-; CHECK-NEXT:    cb.odd $r15 ? .LBB0_5
+; CHECK-NEXT:    cb.odd $r15 ? .LBB0_2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.10: # in Loop: Header=BB0_4 Depth=3
+; CHECK-NEXT:  # %bb.8: # in Loop: Header=BB0_5 Depth=3
 ; CHECK-NEXT:    lwz $r11 = 24[$r8]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r15 = 20[$r9]
@@ -160,9 +160,9 @@ define float @cholesky(%struct.loops_params_s* nocapture readonly %0) local_unna
 ; CHECK-NEXT:    compd.ge $r15 = $r15, $r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 16[$r10] = $r11
-; CHECK-NEXT:    cb.odd $r15 ? .LBB0_5
+; CHECK-NEXT:    cb.odd $r15 ? .LBB0_2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.11: # in Loop: Header=BB0_4 Depth=3
+; CHECK-NEXT:  # %bb.9: # in Loop: Header=BB0_5 Depth=3
 ; CHECK-NEXT:    lwz $r11 = 32[$r8]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r15 = 28[$r9]
@@ -184,9 +184,9 @@ define float @cholesky(%struct.loops_params_s* nocapture readonly %0) local_unna
 ; CHECK-NEXT:    compd.ge $r15 = $r15, $r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 20[$r10] = $r11
-; CHECK-NEXT:    cb.odd $r15 ? .LBB0_5
+; CHECK-NEXT:    cb.odd $r15 ? .LBB0_2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.12: # in Loop: Header=BB0_4 Depth=3
+; CHECK-NEXT:  # %bb.10: # in Loop: Header=BB0_5 Depth=3
 ; CHECK-NEXT:    lwz $r11 = 40[$r8]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r15 = 36[$r9]
@@ -208,9 +208,9 @@ define float @cholesky(%struct.loops_params_s* nocapture readonly %0) local_unna
 ; CHECK-NEXT:    compd.ge $r15 = $r15, $r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 24[$r10] = $r11
-; CHECK-NEXT:    cb.odd $r15 ? .LBB0_5
+; CHECK-NEXT:    cb.odd $r15 ? .LBB0_2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.13: # in Loop: Header=BB0_4 Depth=3
+; CHECK-NEXT:  # %bb.11: # in Loop: Header=BB0_5 Depth=3
 ; CHECK-NEXT:    lwz $r11 = 48[$r8]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r15 = 44[$r9]
@@ -232,9 +232,9 @@ define float @cholesky(%struct.loops_params_s* nocapture readonly %0) local_unna
 ; CHECK-NEXT:    compd.ge $r15 = $r15, $r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 28[$r10] = $r11
-; CHECK-NEXT:    cb.odd $r15 ? .LBB0_5
+; CHECK-NEXT:    cb.odd $r15 ? .LBB0_2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.14: # in Loop: Header=BB0_4 Depth=3
+; CHECK-NEXT:  # %bb.12: # in Loop: Header=BB0_5 Depth=3
 ; CHECK-NEXT:    addd $r6 = $r6, 16
 ; CHECK-NEXT:    lwz $r11 = 56[$r8]
 ; CHECK-NEXT:    ;;
@@ -259,16 +259,16 @@ define float @cholesky(%struct.loops_params_s* nocapture readonly %0) local_unna
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 32[$r10] = $r11
 ; CHECK-NEXT:    copyd $r10 = $r16
-; CHECK-NEXT:    cb.odd $r15 ? .LBB0_4
+; CHECK-NEXT:    cb.odd $r15 ? .LBB0_5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    goto .LBB0_5
+; CHECK-NEXT:    goto .LBB0_2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_6: # %.split
+; CHECK-NEXT:  .LBB0_13: # %.split
 ; CHECK-NEXT:    # in Loop: Header=BB0_1 Depth=1
 ; CHECK-NEXT:    nop
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .__LOOPDO_0_END_:
-; CHECK-NEXT:  # %bb.7:
+; CHECK-NEXT:  # %bb.14:
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = getelementptr inbounds %struct.loops_params_s, %struct.loops_params_s* %0, i64 0, i32 17

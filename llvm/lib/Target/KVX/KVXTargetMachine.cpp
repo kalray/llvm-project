@@ -222,6 +222,7 @@ void KVXPassConfig::addPreSched2() {
 
 void KVXPassConfig::addPreEmitPass() {
   addPass(createKVXExpandPseudoPass(KVX::PRE_BUNDLE));
+  addPass(&BranchRelaxationPassID);
   if (getOptLevel() != CodeGenOpt::None)
     addPass(&PostMachineSchedulerID);
 
