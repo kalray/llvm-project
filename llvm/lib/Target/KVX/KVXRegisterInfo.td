@@ -20,78 +20,75 @@ include "KVXSubRegisterInfo.td"
 def BuffName : RegAltNameIndex;
 def LoHiXYZT : RegAltNameIndex;
 
-// KVX Register base class:
-//   - KVXRegister
-//   - KVXRegisterWithSubRegs
-// Registers are identified with 9-bit ID numbers.
-// Registers with sub-registers are always covered by them.
-
-class KVXRegister<bits<9> num, string n, list<string> alt = []>
-      : Register<n, alt> {
-  let HWEncoding{8-0} = num;
-}
-
-class KVXRegisterWithSubRegs<bits<9> num, string n,
-                             list<Register> subregs, list<string> alt = []>
-      : RegisterWithSubRegs<n, subregs> {
-  let HWEncoding{8-0} = num;
-  let CoveredBySubRegs = 1;
-  list<string> AltNames = alt;
-}
-
-
 // SFR - System Function Registers
-class SFR<bits<9> num, string n, list<string> alt = []>
-      : KVXRegister<num, n, alt>;
+class SFR<bits<9> num, string n, list<string> alt = []> : Register<n, alt> {
+  let HWEncoding{8-0} = num;
+}
 
 // GPR - General-Purpose Registers
-class GPR<bits<9> num, string n, list<string> alt = []>
-      : KVXRegister<num, n, alt>;
+class GPR<bits<6> num, string n, list<string> alt = []> : Register<n, alt> {
+        let HWEncoding{5-0} = num;
+}
 
 // PGR - Paired General Registers
-class PGR<bits<9> num, string n, list<Register> subregs, list<string> alt = []>
-      : KVXRegisterWithSubRegs<num, n, subregs, alt> {
+class PGR<bits<5> num, string n, list<Register> subregs, list<string> alt = []> : RegisterWithSubRegs<n, subregs> {
+  list<string> AltNames = alt;
+  let CoveredBySubRegs = 1;
+  let HWEncoding{4-0} = num;
   let SubRegIndices = [sub_s0, sub_s1];
 }
 
 // QGR - Quadruple General Registers
-class QGR<bits<9> num, string n, list<Register> subregs, list<string> alt = []>
-      : KVXRegisterWithSubRegs<num, n, subregs, alt> {
+class QGR<bits<4> num, string n, list<Register> subregs, list<string> alt = []> : RegisterWithSubRegs<n, subregs> {
+  list<string> AltNames = alt;
+  let CoveredBySubRegs = 1;
+  let HWEncoding{3-0} = num;
   let SubRegIndices = [sub_p0, sub_p1];
 }
 
 // XCR - Extension Coprocessor Registers
-class XCR<bits<9> num, string n, list<string> alt = []>
-      : KVXRegister<num, n, alt>;
+class XCR<bits<8> num, string n, list<string> alt = []> : Register<n, alt> {
+  let HWEncoding{7-0} = num;
+}
 
 // XBR - Extension Block Registers
-class XBR<bits<9> num, string n, list<Register> subregs, list<string> alt = []>
-      : KVXRegisterWithSubRegs<num, n, subregs, alt> {
+class XBR<bits<7> num, string n, list<Register> subregs, list<string> alt = []> : RegisterWithSubRegs<n, subregs> {
+  list<string> AltNames = alt;
+  let CoveredBySubRegs = 1;
+  let HWEncoding{6-0} = num;
   let SubRegIndices = [sub_c0, sub_c1];
 }
 
 // XVR - Extension Vector Registers
-class XVR<bits<9> num, string n, list<Register> subregs, list<string> alt = []>
-      : KVXRegisterWithSubRegs<num, n, subregs, alt> {
+class XVR<bits<6> num, string n, list<Register> subregs, list<string> alt = []> : RegisterWithSubRegs<n, subregs> {
+  list<string> AltNames = alt;
+  let CoveredBySubRegs = 1;
+  let HWEncoding{5-0} = num;
   let SubRegIndices = [sub_b0, sub_b1];
 }
 
 // XWR - Extension Wide Registers
 let RegAltNameIndices = [LoHiXYZT, BuffName] in
-class XWR<bits<9> num, string n, list<Register> subregs, list<string> alt = []>
-      : KVXRegisterWithSubRegs<num, n, subregs, alt> {
+class XWR<bits<5> num, string n, list<Register> subregs, list<string> alt = []> : RegisterWithSubRegs<n, subregs> {
+  list<string> AltNames = alt;
+  let CoveredBySubRegs = 1;
+  let HWEncoding{4-0} = num;
   let SubRegIndices = [sub_v0, sub_v1];
 }
 
 // XMR - Extension Matrix Registers
 let RegAltNameIndices = [BuffName] in
-class XMR<bits<9> num, string n, list<Register> subregs, list<string> alt = []>
-      : KVXRegisterWithSubRegs<num, n, subregs, alt> {
+class XMR<bits<4> num, string n, list<Register> subregs, list<string> alt = []> : RegisterWithSubRegs<n, subregs> {
+  list<string> AltNames = alt;
+  let CoveredBySubRegs = 1;
+  let HWEncoding{3-0} = num;
   let SubRegIndices = [sub_w0, sub_w1];
 }
 
-class X8R<bits<9> num, string n, list<Register> subregs, list<string> alt = []>
-      : KVXRegisterWithSubRegs<num, n, subregs, alt> {
+class X8R<bits<3> num, string n, list<Register> subregs, list<string> alt = []> : RegisterWithSubRegs<n, subregs> {
+  list<string> AltNames = alt;
+  let CoveredBySubRegs = 1;
+  let HWEncoding{2-0} = num;
   let SubRegIndices = [sub_m0, sub_m1];
 }
 
@@ -679,56 +676,56 @@ def R63 : GPR<63, "$r63", ["$r60r61r62r63.t", "$r62r63.hi"]>, DwarfRegNum<[63]>;
 
 // Paired General Registers
 def P0  : PGR< 0,   "$r0r1", [ R0,  R1],     ["$r0r1r2r3.lo"]>;
-def P2  : PGR< 2,   "$r2r3", [ R2,  R3],     ["$r0r1r2r3.hi"]>;
-def P4  : PGR< 4,   "$r4r5", [ R4,  R5],     ["$r4r5r6r7.lo"]>;
-def P6  : PGR< 6,   "$r6r7", [ R6,  R7],     ["$r4r5r6r7.hi"]>;
-def P8  : PGR< 8,   "$r8r9", [ R8,  R9],   ["$r8r9r10r11.lo"]>;
-def P10 : PGR<10, "$r10r11", [R10, R11],   ["$r8r9r10r11.hi"]>;
-def P12 : PGR<12, "$r12r13", [R12, R13], ["$r12r13r14r15.lo"]>;
-def P14 : PGR<14, "$r14r15", [R14, R15], ["$r12r13r14r15.hi"]>;
-def P16 : PGR<16, "$r16r17", [R16, R17], ["$r16r17r18r19.lo"]>;
-def P18 : PGR<18, "$r18r19", [R18, R19], ["$r16r17r18r19.hi"]>;
-def P20 : PGR<20, "$r20r21", [R20, R21], ["$r20r21r22r23.lo"]>;
-def P22 : PGR<22, "$r22r23", [R22, R23], ["$r20r21r22r23.hi"]>;
-def P24 : PGR<24, "$r24r25", [R24, R25], ["$r24r25r26r27.lo"]>;
-def P26 : PGR<26, "$r26r27", [R26, R27], ["$r24r25r26r27.hi"]>;
-def P28 : PGR<28, "$r28r29", [R28, R29], ["$r28r29r30r31.lo"]>;
-def P30 : PGR<30, "$r30r31", [R30, R31], ["$r28r29r30r31.hi"]>;
-def P32 : PGR<32, "$r32r33", [R32, R33], ["$r32r33r34r35.lo"]>;
-def P34 : PGR<34, "$r34r35", [R34, R35], ["$r32r33r34r35.hi"]>;
-def P36 : PGR<36, "$r36r37", [R36, R37], ["$r36r37r38r39.lo"]>;
-def P38 : PGR<38, "$r38r39", [R38, R39], ["$r36r37r38r39.hi"]>;
-def P40 : PGR<40, "$r40r41", [R40, R41], ["$r40r41r42r43.lo"]>;
-def P42 : PGR<42, "$r42r43", [R42, R43], ["$r40r41r42r43.hi"]>;
-def P44 : PGR<44, "$r44r45", [R44, R45], ["$r44r45r46r47.lo"]>;
-def P46 : PGR<46, "$r46r47", [R46, R47], ["$r44r45r46r47.hi"]>;
-def P48 : PGR<48, "$r48r49", [R48, R49], ["$r48r49r50r51.lo"]>;
-def P50 : PGR<50, "$r50r51", [R50, R51], ["$r48r49r50r51.hi"]>;
-def P52 : PGR<52, "$r52r53", [R52, R53], ["$r52r53r54r55.lo"]>;
-def P54 : PGR<54, "$r54r55", [R54, R55], ["$r52r53r54r55.hi"]>;
-def P56 : PGR<56, "$r56r57", [R56, R57], ["$r56r57r58r59.lo"]>;
-def P58 : PGR<58, "$r58r59", [R58, R59], ["$r56r57r58r59.hi"]>;
-def P60 : PGR<60, "$r60r61", [R60, R61], ["$r60r61r62r63.lo"]>;
-def P62 : PGR<62, "$r62r63", [R62, R63], ["$r60r61r62r63.hi"]>;
+def P2  : PGR< 1,   "$r2r3", [ R2,  R3],     ["$r0r1r2r3.hi"]>;
+def P4  : PGR< 2,   "$r4r5", [ R4,  R5],     ["$r4r5r6r7.lo"]>;
+def P6  : PGR< 3,   "$r6r7", [ R6,  R7],     ["$r4r5r6r7.hi"]>;
+def P8  : PGR< 4,   "$r8r9", [ R8,  R9],   ["$r8r9r10r11.lo"]>;
+def P10 : PGR< 5, "$r10r11", [R10, R11],   ["$r8r9r10r11.hi"]>;
+def P12 : PGR< 6, "$r12r13", [R12, R13], ["$r12r13r14r15.lo"]>;
+def P14 : PGR< 7, "$r14r15", [R14, R15], ["$r12r13r14r15.hi"]>;
+def P16 : PGR< 8, "$r16r17", [R16, R17], ["$r16r17r18r19.lo"]>;
+def P18 : PGR< 9, "$r18r19", [R18, R19], ["$r16r17r18r19.hi"]>;
+def P20 : PGR<10, "$r20r21", [R20, R21], ["$r20r21r22r23.lo"]>;
+def P22 : PGR<11, "$r22r23", [R22, R23], ["$r20r21r22r23.hi"]>;
+def P24 : PGR<12, "$r24r25", [R24, R25], ["$r24r25r26r27.lo"]>;
+def P26 : PGR<13, "$r26r27", [R26, R27], ["$r24r25r26r27.hi"]>;
+def P28 : PGR<14, "$r28r29", [R28, R29], ["$r28r29r30r31.lo"]>;
+def P30 : PGR<15, "$r30r31", [R30, R31], ["$r28r29r30r31.hi"]>;
+def P32 : PGR<16, "$r32r33", [R32, R33], ["$r32r33r34r35.lo"]>;
+def P34 : PGR<17, "$r34r35", [R34, R35], ["$r32r33r34r35.hi"]>;
+def P36 : PGR<18, "$r36r37", [R36, R37], ["$r36r37r38r39.lo"]>;
+def P38 : PGR<19, "$r38r39", [R38, R39], ["$r36r37r38r39.hi"]>;
+def P40 : PGR<20, "$r40r41", [R40, R41], ["$r40r41r42r43.lo"]>;
+def P42 : PGR<21, "$r42r43", [R42, R43], ["$r40r41r42r43.hi"]>;
+def P44 : PGR<22, "$r44r45", [R44, R45], ["$r44r45r46r47.lo"]>;
+def P46 : PGR<23, "$r46r47", [R46, R47], ["$r44r45r46r47.hi"]>;
+def P48 : PGR<24, "$r48r49", [R48, R49], ["$r48r49r50r51.lo"]>;
+def P50 : PGR<25, "$r50r51", [R50, R51], ["$r48r49r50r51.hi"]>;
+def P52 : PGR<26, "$r52r53", [R52, R53], ["$r52r53r54r55.lo"]>;
+def P54 : PGR<27, "$r54r55", [R54, R55], ["$r52r53r54r55.hi"]>;
+def P56 : PGR<28, "$r56r57", [R56, R57], ["$r56r57r58r59.lo"]>;
+def P58 : PGR<29, "$r58r59", [R58, R59], ["$r56r57r58r59.hi"]>;
+def P60 : PGR<30, "$r60r61", [R60, R61], ["$r60r61r62r63.lo"]>;
+def P62 : PGR<31, "$r62r63", [R62, R63], ["$r60r61r62r63.hi"]>;
 
 
 // Quadruple General Registers
 def Q0  : QGR< 0,     "$r0r1r2r3", [ P0,  P2]>;
-def Q4  : QGR< 4,     "$r4r5r6r7", [ P4,  P6]>;
-def Q8  : QGR< 8,   "$r8r9r10r11", [ P8, P10]>;
-def Q12 : QGR<12, "$r12r13r14r15", [P12, P14]>;
-def Q16 : QGR<16, "$r16r17r18r19", [P16, P18]>;
-def Q20 : QGR<20, "$r20r21r22r23", [P20, P22]>;
-def Q24 : QGR<24, "$r24r25r26r27", [P24, P26]>;
-def Q28 : QGR<28, "$r28r29r30r31", [P28, P30]>;
-def Q32 : QGR<32, "$r32r33r34r35", [P32, P34]>;
-def Q36 : QGR<36, "$r36r37r38r39", [P36, P38]>;
-def Q40 : QGR<40, "$r40r41r42r43", [P40, P42]>;
-def Q44 : QGR<44, "$r44r45r46r47", [P44, P46]>;
-def Q48 : QGR<48, "$r48r49r50r51", [P48, P50]>;
-def Q52 : QGR<52, "$r52r53r54r55", [P52, P54]>;
-def Q56 : QGR<56, "$r56r57r58r59", [P56, P58]>;
-def Q60 : QGR<60, "$r60r61r62r63", [P60, P62]>;
+def Q4  : QGR< 1,     "$r4r5r6r7", [ P4,  P6]>;
+def Q8  : QGR< 2,   "$r8r9r10r11", [ P8, P10]>;
+def Q12 : QGR< 3, "$r12r13r14r15", [P12, P14]>;
+def Q16 : QGR< 4, "$r16r17r18r19", [P16, P18]>;
+def Q20 : QGR< 5, "$r20r21r22r23", [P20, P22]>;
+def Q24 : QGR< 6, "$r24r25r26r27", [P24, P26]>;
+def Q28 : QGR< 7, "$r28r29r30r31", [P28, P30]>;
+def Q32 : QGR< 8, "$r32r33r34r35", [P32, P34]>;
+def Q36 : QGR< 9, "$r36r37r38r39", [P36, P38]>;
+def Q40 : QGR<10, "$r40r41r42r43", [P40, P42]>;
+def Q44 : QGR<11, "$r44r45r46r47", [P44, P46]>;
+def Q48 : QGR<12, "$r48r49r50r51", [P48, P50]>;
+def Q52 : QGR<13, "$r52r53r54r55", [P52, P54]>;
+def Q56 : QGR<14, "$r56r57r58r59", [P56, P58]>;
+def Q60 : QGR<15, "$r60r61r62r63", [P60, P62]>;
 
 
 // Extension Coprocessor Registers
@@ -1406,7 +1403,7 @@ def VectorReg : RegisterClass<"KVX",
    A60, A61, A62, A63)>;
 
 // XWR - Extension Wide Registers
-let Size = 512, CopyCost = 2 in
+let Size = 512, CopyCost = 2, Weight = 8 in
 def WideReg : RegisterClass<"KVX",
   [v512i1],
   512, (add
@@ -1415,7 +1412,7 @@ def WideReg : RegisterClass<"KVX",
    W30, W31)>;
 
 // XMR - Extension Matrix Registers
-let Size = 1024, CopyCost = 4 in
+let Size = 1024, CopyCost = 4, Weight = 16 in
 def MatrixReg : RegisterClass<"KVX",
   [v1024i1],
   1024, (add
@@ -1617,138 +1614,54 @@ def OnlyswapReg : RegisterClass<"KVX",
    VSFR241, VSFR242, VSFR243, VSFR244, VSFR245, VSFR246, VSFR247, VSFR248,
    VSFR249, VSFR250, VSFR251, VSFR252, VSFR253, VSFR254, VSFR255)>;
 
+let Size = 256, Weight = 4 in {
 // XVR - Accelerator Registers Even Numbered
-let Size = 256 in
-def VectorRegE : RegisterClass<"KVX",
-  [v256i1],
-  256, (add
-    A0,  A2,  A4,  A6,  A8, A10, A12, A14, A16, A18, A20, A22, A24, A26, A28,
-   A30, A32, A34, A36, A38, A40, A42, A44, A46, A48, A50, A52, A54, A56, A58,
-   A60, A62)>;
-
+def VectorRegE : RegisterClass<"KVX", [v256i1], 256, (decimate VectorReg, 2)>;
 // XVR - Accelerator Registers Odd Numbered
-let Size = 256 in
-def VectorRegO : RegisterClass<"KVX",
-  [v256i1],
-  256, (add
-    A1,  A3,  A5,  A7,  A9, A11, A13, A15, A17, A19, A21, A23, A25, A27, A29,
-   A31, A33, A35, A37, A39, A41, A43, A45, A47, A49, A51, A53, A55, A57, A59,
-   A61, A63)>;
+def VectorRegO : RegisterClass<"KVX", [v256i1], 256, (decimate (shl VectorReg, 1), 2)>;
+}
 
+let Size = 128, Weight = 2 in {
 // XBR - Block Registers Even Numbered
-let Size = 128 in
-def BlockRegE : RegisterClass<"KVX",
-  [v128i1],
-  128, (add
-     B0,   B2,   B4,   B6,   B8,  B10,  B12,  B14,  B16,  B18,  B20,  B22,
-    B24,  B26,  B28,  B30,  B32,  B34,  B36,  B38,  B40,  B42,  B44,  B46,
-    B48,  B50,  B52,  B54,  B56,  B58,  B60,  B62,  B64,  B66,  B68,  B70,
-    B72,  B74,  B76,  B78,  B80,  B82,  B84,  B86,  B88,  B90,  B92,  B94,
-    B96,  B98, B100, B102, B104, B106, B108, B110, B112, B114, B116, B118,
-   B120, B122, B124, B126)>;
-
+def BlockRegE : RegisterClass<"KVX", [v128i1], 128, (decimate BlockReg, 2)>;
 // XBR - Block Registers Odd Numbered
-let Size = 128 in
-def BlockRegO : RegisterClass<"KVX",
-  [v128i1],
-  128, (add
-     B1,   B3,   B5,   B7,   B9,  B11,  B13,  B15,  B17,  B19,  B21,  B23,
-    B25,  B27,  B29,  B31,  B33,  B35,  B37,  B39,  B41,  B43,  B45,  B47,
-    B49,  B51,  B53,  B55,  B57,  B59,  B61,  B63,  B65,  B67,  B69,  B71,
-    B73,  B75,  B77,  B79,  B81,  B83,  B85,  B87,  B89,  B91,  B93,  B95,
-    B97,  B99, B101, B103, B105, B107, B109, B111, B113, B115, B117, B119,
-   B121, B123, B125, B127)>;
+def BlockRegO : RegisterClass<"KVX", [v128i1], 128, (decimate (shl BlockReg, 1), 2)>;
+}
 
 // XBR - Block Registers 0 Modulo 4
-let Size = 128 in
-def BlockReg0M4 : RegisterClass<"KVX",
-  [v128i1],
-  128, (add
-     B0,   B4,   B8,  B12,  B16,  B20,  B24,  B28,  B32,  B36,  B40,  B44,
-    B48,  B52,  B56,  B60,  B64,  B68,  B72,  B76,  B80,  B84,  B88,  B92,
-    B96, B100, B104, B108, B112, B116, B120, B124)>;
+let Size = 128, Weight = 2 in {
+def BlockReg0M4 : RegisterClass<"KVX", [v128i1], 128, (decimate BlockReg, 4)>;
 
 // XBR - Block Registers 1 Modulo 4
-let Size = 128 in
-def BlockReg1M4 : RegisterClass<"KVX",
-  [v128i1],
-  128, (add
-     B1,   B5,   B9,  B13,  B17,  B21,  B25,  B29,  B33,  B37,  B41,  B45,
-    B49,  B53,  B57,  B61,  B65,  B69,  B73,  B77,  B81,  B85,  B89,  B93,
-    B97, B101, B105, B109, B113, B117, B121, B125)>;
+def BlockReg1M4 : RegisterClass<"KVX", [v128i1], 128, (decimate (shl BlockReg, 1), 4)>;
 
 // XBR - Block Registers 2 Modulo 4
-let Size = 128 in
-def BlockReg2M4 : RegisterClass<"KVX",
-  [v128i1],
-  128, (add
-     B2,   B6,  B10,  B14,  B18,  B22,  B26,  B30,  B34,  B38,  B42,  B46,
-    B50,  B54,  B58,  B62,  B66,  B70,  B74,  B78,  B82,  B86,  B90,  B94,
-    B98, B102, B106, B110, B114, B118, B122, B126)>;
+def BlockReg2M4 : RegisterClass<"KVX", [v128i1], 128, (decimate (shl BlockReg, 2), 4)>;
 
 // XBR - Block Registers 3 Modulo 4
-let Size = 128 in
-def BlockReg3M4 : RegisterClass<"KVX",
-  [v128i1],
-  128, (add
-     B3,   B7,  B11,  B15,  B19,  B23,  B27,  B31,  B35,  B39,  B43,  B47,
-    B51,  B55,  B59,  B63,  B67,  B71,  B75,  B79,  B83,  B87,  B91,  B95,
-    B99, B103, B107, B111, B115, B119, B123, B127)>;
+def BlockReg3M4 : RegisterClass<"KVX", [v128i1], 128, (decimate (shl BlockReg, 3), 4)>;
+}
 
 // XCR - Coprocessor Registers 0 Modulo 4
-let Size = 64 in
-def CoproReg0M4 : RegisterClass<"KVX",
-  [v64i1],
-  64, (add
-     C0,   C4,   C8,  C12,  C16,  C20,  C24,  C28,  C32,  C36,  C40,  C44,
-    C48,  C52,  C56,  C60,  C64,  C68,  C72,  C76,  C80,  C84,  C88,  C92,
-    C96, C100, C104, C108, C112, C116, C120, C124, C128, C132, C136, C140,
-   C144, C148, C152, C156, C160, C164, C168, C172, C176, C180, C184, C188,
-   C192, C196, C200, C204, C208, C212, C216, C220, C224, C228, C232, C236,
-   C240, C244, C248, C252)>;
+let Size = 64, Weight = 1 in {
+def CoproReg0M4 : RegisterClass<"KVX", [v64i1], 64, (decimate CoproReg, 4)>;
 
 // XCR - Coprocessor Registers 1 Modulo 4
-let Size = 64 in
-def CoproReg1M4 : RegisterClass<"KVX",
-  [v64i1],
-  64, (add
-     C1,   C5,   C9,  C13,  C17,  C21,  C25,  C29,  C33,  C37,  C41,  C45,
-    C49,  C53,  C57,  C61,  C65,  C69,  C73,  C77,  C81,  C85,  C89,  C93,
-    C97, C101, C105, C109, C113, C117, C121, C125, C129, C133, C137, C141,
-   C145, C149, C153, C157, C161, C165, C169, C173, C177, C181, C185, C189,
-   C193, C197, C201, C205, C209, C213, C217, C221, C225, C229, C233, C237,
-   C241, C245, C249, C253)>;
+def CoproReg1M4 : RegisterClass<"KVX", [v64i1], 64, (decimate (shl CoproReg, 1), 4)>;
 
 // XCR - Coprocessor Registers 2 Modulo 4
-let Size = 64 in
-def CoproReg2M4 : RegisterClass<"KVX",
-  [v64i1],
-  64, (add
-     C2,   C6,  C10,  C14,  C18,  C22,  C26,  C30,  C34,  C38,  C42,  C46,
-    C50,  C54,  C58,  C62,  C66,  C70,  C74,  C78,  C82,  C86,  C90,  C94,
-    C98, C102, C106, C110, C114, C118, C122, C126, C130, C134, C138, C142,
-   C146, C150, C154, C158, C162, C166, C170, C174, C178, C182, C186, C190,
-   C194, C198, C202, C206, C210, C214, C218, C222, C226, C230, C234, C238,
-   C242, C246, C250, C254)>;
+def CoproReg2M4 : RegisterClass<"KVX", [v64i1], 64, (decimate (shl CoproReg, 2), 4)>;
 
 // XCR - Coprocessor Registers 3 Modulo 4
-let Size = 64 in
-def CoproReg3M4 : RegisterClass<"KVX",
-  [v64i1],
-  64, (add
-     C3,   C7,  C11,  C15,  C19,  C23,  C27,  C31,  C35,  C39,  C43,  C47,
-    C51,  C55,  C59,  C63,  C67,  C71,  C75,  C79,  C83,  C87,  C91,  C95,
-    C99, C103, C107, C111, C115, C119, C123, C127, C131, C135, C139, C143,
-   C147, C151, C155, C159, C163, C167, C171, C175, C179, C183, C187, C191,
-   C195, C199, C203, C207, C211, C215, C219, C223, C227, C231, C235, C239,
-   C243, C247, C251, C255)>;
+def CoproReg3M4 : RegisterClass<"KVX", [v64i1], 64, (decimate (shl CoproReg, 3), 4)>;
+}
 
 // X8R - Extension 8-Register Buffer
-let Size = 2048, CopyCost = 8 in
+let Size = 2048, CopyCost = 8, Weight = 32 in
 def Buffer8Reg : RegisterClass<"KVX", [v256i8],
   2048, (add I0, I1, I2, I3, I4, I5, I6, I7)>;
 
-let Size = 0 in
+let Size = 0, Weight = 1 in
 def TcaBuffer : RegisterClass<
       /*string namespace*/ "KVX",
       /*list<ValueType> regTypes*/[v512i1, v1024i1, v256i8],
