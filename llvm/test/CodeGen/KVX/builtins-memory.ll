@@ -4,18 +4,18 @@
 
 target triple = "kvx-kalray-cos"
 
-define void @dinval(){
-; CHECK-LABEL: dinval:
+define void @d1inval(){
+; CHECK-LABEL: d1inval:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    dinval
+; CHECK-NEXT:    d1inval
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  tail call void @llvm.kvx.dinval()
+  tail call void @llvm.kvx.d1inval()
   ret void
 }
 
-declare void @llvm.kvx.dinval() #1
+declare void @llvm.kvx.d1inval() #1
 
 define void @dinvall(i8* %p){
 ; CHECK-LABEL: dinvall:

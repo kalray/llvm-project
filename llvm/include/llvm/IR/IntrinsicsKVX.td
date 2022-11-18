@@ -2,7 +2,7 @@ let TargetPrefix = "kvx" in {
 
 def int_kvx_await : Intrinsic<[], [],[]>;
 def int_kvx_barrier : Intrinsic<[], [],[]>;
-def int_kvx_dinval : Intrinsic<[], [],[]>;
+def int_kvx_d1inval : Intrinsic<[], [],[]>;
 def int_kvx_errop : Intrinsic<[], [],[IntrNoReturn, IntrCold]>;
 def int_kvx_fence : Intrinsic<[], [],[]>;
 def int_kvx_i1inval : Intrinsic<[], [],[]>;

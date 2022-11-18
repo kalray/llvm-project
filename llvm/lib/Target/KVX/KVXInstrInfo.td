@@ -1635,10 +1635,10 @@ let hasSideEffects = 1, mayLoad = 0, mayStore = 0 in
 defm I1INVALS : MC_10<"i1invals">;
 
 let hasSideEffects = 1 in
-def DINVAL : KVX_INSTRUCTION
+def D1INVAL : KVX_INSTRUCTION
   <(outs), (ins),
-   "dinval",
-   [/* no straightforward pattern */],
+   "d1inval",
+   [(int_kvx_d1inval)],
    LSU_LOAD>;
 
 def I1INVAL : KVX_INSTRUCTION
