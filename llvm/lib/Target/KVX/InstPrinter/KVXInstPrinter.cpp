@@ -31,27 +31,10 @@ using namespace llvm;
 #define PRINT_ALIAS_INSTR
 #include "KVXGenAsmWriter.inc"
 
-// The chain operand confuses the tablegen's printInstruction operand order.
-// Define a custom printer for wfx instructions.
-//
-static void printWFX(const MCInst *MI, StringRef Annot, raw_ostream &O,
-                     KVXInstPrinter *P) {
-  O << "\t" << P->getMnemonic(MI).first
-    << P->getRegisterName(MI->getOperand(0).getReg()) << ", "
-    << P->getRegisterName(MI->getOperand(1).getReg());
-}
-
 void KVXInstPrinter::printInst(const MCInst *MI, uint64_t Address,
                                StringRef Annot, const MCSubtargetInfo &STI,
                                raw_ostream &O) {
-  switch (MI->getOpcode()) {
-  case KVX::WFXL:
-  case KVX::WFXLalone:
-  case KVX::WFXM:
-  case KVX::WFXMalone:
-    return printWFX(MI, Annot, O, this);
-  }
-  printInstruction(MI, Address, O);
+  return printInstruction(MI, Address, O);
 }
 
 void KVXInstPrinter::printRegName(raw_ostream &O, unsigned RegNo) const {

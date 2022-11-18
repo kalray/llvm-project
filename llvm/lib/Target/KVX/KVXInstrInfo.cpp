@@ -695,18 +695,18 @@ bool KVXInstrInfo::isSoloInstruction(const MachineInstr &MI) const {
       MI.isBundle())
     return true;
 
-  switch (MI.getOpcode()) {
-  case KVX::SETrst3:
-  case KVX::SETrsa:
-  case KVX::WFXLalone:
-  case KVX::WFXL:
-  case KVX::WFXMalone:
-  case KVX::WFXM:
-    // SET, WFXL, and WFXM instructions have to be alone in a
-    // bundle if they write an AloneReg register.
-    if (KVX::AloneRegRegClass.contains(MI.getOperand(0).getReg()))
+  if (MI.getNumOperands() > 0 && MI.getOperand(0).isReg() &&
+      KVX::AloneRegRegClass.contains(MI.getOperand(0).getReg() &&
+                                     MI.getOperand(0).isDef()))
+    return true;
+
+  if (!MI.getDesc().getNumImplicitDefs())
+    return false;
+
+  for (const MCPhysReg *ImpDef = MI.getDesc().getImplicitDefs(); *ImpDef;
+       ++ImpDef) {
+    if (KVX::AloneRegRegClass.contains((Register)(*ImpDef)))
       return true;
-    break;
   }
 
   return false;

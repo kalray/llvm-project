@@ -7,564 +7,321 @@ target triple = "kvx-kalray-cos"
 define void @wfxl_1(i64 %0) {
 ; CHECK-LABEL: wfxl_1:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    wfxl $ps, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
-  call void @llvm.kvx.wfx(metadata !2, i64 %3, i32 0)
+  tail call void @llvm.kvx.wfx(i32 1, i64 %0, i32 0)
   ret void
 }
 
-declare void @llvm.kvx.wfx(metadata, i64, i32)
+declare void @llvm.kvx.wfx(i32, i64, i32)
 
 define void @wfxl_2(i64 %0) {
 ; CHECK-LABEL: wfxl_2:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    wfxl $pcr, $r0
-; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
-  call void @llvm.kvx.wfx(metadata !3, i64 %3, i32 0)
+  tail call void @llvm.kvx.wfx(i32 2, i64 %0, i32 0)
   ret void
 }
 
 define void @wfxl_4(i64 %0) {
 ; CHECK-LABEL: wfxl_4:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    wfxl $cs, $r0
-; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
-  call void @llvm.kvx.wfx(metadata !4, i64 %3, i32 0)
+  tail call void @llvm.kvx.wfx(i32 4, i64 %0, i32 0)
   ret void
 }
 
 define void @wfxl_5(i64 %0) {
 ; CHECK-LABEL: wfxl_5:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    wfxl $csit, $r0
-; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
-  call void @llvm.kvx.wfx(metadata !5, i64 %3, i32 0)
+  tail call void @llvm.kvx.wfx(i32 5, i64 %0, i32 0)
   ret void
 }
 
 define void @wfxl_10(i64 %0) {
 ; CHECK-LABEL: wfxl_10:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    wfxl $ipe, $r0
-; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
-  call void @llvm.kvx.wfx(metadata !6, i64 %3, i32 0)
+  tail call void @llvm.kvx.wfx(i32 10, i64 %0, i32 0)
   ret void
 }
 
 define void @wfxl_11(i64 %0) {
 ; CHECK-LABEL: wfxl_11:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    wfxl $men, $r0
-; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
-  call void @llvm.kvx.wfx(metadata !7, i64 %3, i32 0)
+  tail call void @llvm.kvx.wfx(i32 11, i64 %0, i32 0)
   ret void
 }
 
 define void @wfxl_12(i64 %0) {
 ; CHECK-LABEL: wfxl_12:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    wfxl $pmc, $r0
-; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
-  call void @llvm.kvx.wfx(metadata !8, i64 %3, i32 0)
+  tail call void @llvm.kvx.wfx(i32 12, i64 %0, i32 0)
   ret void
 }
 
 define void @wfxl_18(i64 %0) {
 ; CHECK-LABEL: wfxl_18:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    wfxl $tcr, $r0
-; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
-  call void @llvm.kvx.wfx(metadata !9, i64 %3, i32 0)
+  tail call void @llvm.kvx.wfx(i32 18, i64 %0, i32 0)
   ret void
 }
 
 define void @wfxl_25(i64 %0) {
 ; CHECK-LABEL: wfxl_25:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    wfxl $ile, $r0
-; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
-  call void @llvm.kvx.wfx(metadata !10, i64 %3, i32 0)
+  tail call void @llvm.kvx.wfx(i32 25, i64 %0, i32 0)
   ret void
 }
 
 define void @wfxl_26(i64 %0) {
 ; CHECK-LABEL: wfxl_26:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    wfxl $ill, $r0
-; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
-  call void @llvm.kvx.wfx(metadata !11, i64 %3, i32 0)
+  tail call void @llvm.kvx.wfx(i32 26, i64 %0, i32 0)
   ret void
 }
 
 define void @wfxl_27(i64 %0) {
 ; CHECK-LABEL: wfxl_27:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    wfxl $ilr, $r0
-; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
-  call void @llvm.kvx.wfx(metadata !12, i64 %3, i32 0)
+  tail call void @llvm.kvx.wfx(i32 27, i64 %0, i32 0)
   ret void
 }
 
 define void @wfxl_28(i64 %0) {
 ; CHECK-LABEL: wfxl_28:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    wfxl $mmc, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
-  call void @llvm.kvx.wfx(metadata !13, i64 %3, i32 0)
+  tail call void @llvm.kvx.wfx(i32 28, i64 %0, i32 0)
   ret void
 }
 
 define void @wfxl_29(i64 %0) {
 ; CHECK-LABEL: wfxl_29:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    wfxl $tel, $r0
-; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
-  call void @llvm.kvx.wfx(metadata !14, i64 %3, i32 0)
+  tail call void @llvm.kvx.wfx(i32 29, i64 %0, i32 0)
   ret void
 }
 
 define void @wfxl_30(i64 %0) {
 ; CHECK-LABEL: wfxl_30:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    wfxl $teh, $r0
-; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
-  call void @llvm.kvx.wfx(metadata !15, i64 %3, i32 0)
+  tail call void @llvm.kvx.wfx(i32 30, i64 %0, i32 0)
   ret void
 }
 
 define void @wfxl_40(i64 %0) {
 ; CHECK-LABEL: wfxl_40:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    wfxl $s40, $r0
-; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
-  call void @llvm.kvx.wfx(metadata !16, i64 %3, i32 0)
+  tail call void @llvm.kvx.wfx(i32 40, i64 %0, i32 0)
   ret void
 }
 
 define void @wfxl_45(i64 %0) {
 ; CHECK-LABEL: wfxl_45:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    wfxl $mes, $r0
-; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
-  call void @llvm.kvx.wfx(metadata !17, i64 %3, i32 0)
+  tail call void @llvm.kvx.wfx(i32 45, i64 %0, i32 0)
   ret void
 }
 
 define void @wfxl_46(i64 %0) {
 ; CHECK-LABEL: wfxl_46:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    wfxl $ws, $r0
-; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
-  call void @llvm.kvx.wfx(metadata !18, i64 %3, i32 0)
+  tail call void @llvm.kvx.wfx(i32 46, i64 %0, i32 0)
   ret void
 }
 
 define void @wfxl_84(i64 %0) {
 ; CHECK-LABEL: wfxl_84:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    wfxl $es_pl0, $r0
-; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
-  call void @llvm.kvx.wfx(metadata !19, i64 %3, i32 0)
+  tail call void @llvm.kvx.wfx(i32 84, i64 %0, i32 0)
   ret void
 }
 
 define void @wfxl_85(i64 %0) {
 ; CHECK-LABEL: wfxl_85:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    wfxl $es_pl1, $r0
-; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
-  call void @llvm.kvx.wfx(metadata !20, i64 %3, i32 0)
+  tail call void @llvm.kvx.wfx(i32 85, i64 %0, i32 0)
   ret void
 }
 
 define void @wfxl_86(i64 %0) {
 ; CHECK-LABEL: wfxl_86:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    wfxl $es_pl2, $r0
-; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
-  call void @llvm.kvx.wfx(metadata !21, i64 %3, i32 0)
+  tail call void @llvm.kvx.wfx(i32 86, i64 %0, i32 0)
   ret void
 }
 
 define void @wfxl_87(i64 %0) {
 ; CHECK-LABEL: wfxl_87:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    wfxl $es_pl3, $r0
-; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
-  call void @llvm.kvx.wfx(metadata !22, i64 %3, i32 0)
+  tail call void @llvm.kvx.wfx(i32 87, i64 %0, i32 0)
   ret void
 }
 
 define void @wfxl_96(i64 %0) {
 ; CHECK-LABEL: wfxl_96:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    wfxl $syow, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
-  call void @llvm.kvx.wfx(metadata !23, i64 %3, i32 0)
+  tail call void @llvm.kvx.wfx(i32 96, i64 %0, i32 0)
   ret void
 }
 
 define void @wfxl_97(i64 %0) {
 ; CHECK-LABEL: wfxl_97:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    wfxl $htow, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
-  call void @llvm.kvx.wfx(metadata !24, i64 %3, i32 0)
+  tail call void @llvm.kvx.wfx(i32 97, i64 %0, i32 0)
   ret void
 }
 
 define void @wfxl_98(i64 %0) {
 ; CHECK-LABEL: wfxl_98:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    wfxl $itow, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
-  call void @llvm.kvx.wfx(metadata !25, i64 %3, i32 0)
+  tail call void @llvm.kvx.wfx(i32 98, i64 %0, i32 0)
   ret void
 }
 
 define void @wfxl_99(i64 %0) {
 ; CHECK-LABEL: wfxl_99:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    wfxl $dow, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
-  call void @llvm.kvx.wfx(metadata !26, i64 %3, i32 0)
+  tail call void @llvm.kvx.wfx(i32 99, i64 %0, i32 0)
   ret void
 }
 
 define void @wfxl_100(i64 %0) {
 ; CHECK-LABEL: wfxl_100:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    wfxl $mow, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
-  call void @llvm.kvx.wfx(metadata !27, i64 %3, i32 0)
+  tail call void @llvm.kvx.wfx(i32 100, i64 %0, i32 0)
   ret void
 }
 
 define void @wfxl_101(i64 %0) {
 ; CHECK-LABEL: wfxl_101:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    wfxl $psow, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
-  call void @llvm.kvx.wfx(metadata !28, i64 %3, i32 0)
+  tail call void @llvm.kvx.wfx(i32 101, i64 %0, i32 0)
   ret void
 }
 
 define void @wfxl_132(i64 %0) {
 ; CHECK-LABEL: wfxl_132:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    wfxl $sps, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
-  call void @llvm.kvx.wfx(metadata !29, i64 %3, i32 0)
+  tail call void @llvm.kvx.wfx(i32 132, i64 %0, i32 0)
   ret void
 }
 
 define void @wfxl_148(i64 %0) {
 ; CHECK-LABEL: wfxl_148:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    wfxl $es, $r0
-; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
-  call void @llvm.kvx.wfx(metadata !30, i64 %3, i32 0)
+  tail call void @llvm.kvx.wfx(i32 148, i64 %0, i32 0)
   ret void
 }
 
-!0 = !{i32 1, !"wchar_size", i32 4}
-!1 = !{!""}
-!2 = !{!"$ps"}
-!3 = !{!"$pcr"}
-!4 = !{!"$cs"}
-!5 = !{!"$csit"}
-!6 = !{!"$ipe"}
-!7 = !{!"$men"}
-!8 = !{!"$pmc"}
-!9 = !{!"$tcr"}
-!10 = !{!"$ile"}
-!11 = !{!"$ill"}
-!12 = !{!"$ilr"}
-!13 = !{!"$mmc"}
-!14 = !{!"$tel"}
-!15 = !{!"$teh"}
-!16 = !{!"$s40"}
-!17 = !{!"$mes"}
-!18 = !{!"$ws"}
-!19 = !{!"$es_pl0"}
-!20 = !{!"$es_pl1"}
-!21 = !{!"$es_pl2"}
-!22 = !{!"$es_pl3"}
-!23 = !{!"$syow"}
-!24 = !{!"$htow"}
-!25 = !{!"$itow"}
-!26 = !{!"$dow"}
-!27 = !{!"$mow"}
-!28 = !{!"$psow"}
-!29 = !{!"$sps"}
-!30 = !{!"$es"}

@@ -19560,19 +19560,12 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
       CGM.Error(E->getArg(0)->getBeginLoc(), OS.str());
       return nullptr;
     }
-    const auto &SysReg = SystemRegNames[SystemRegNumber];
-
-    assert(!SysReg.empty() && "Bad register name map.");
-
-    LLVMContext &Context = CGM.getLLVMContext();
-    llvm::Metadata *Ops[] = {llvm::MDString::get(Context, SysReg)};
-    llvm::MDNode *RegName = llvm::MDNode::get(Context, Ops);
-    llvm::Value *Metadata = llvm::MetadataAsValue::get(Context, RegName);
 
     Function *F = CGM.getIntrinsic(llvm::Intrinsic::kvx_wfx);
     Value *ArgValue = EmitScalarExpr(E->getArg(1));
     Value *InstrType = ConstantInt::get(IntTy, WFXM);
-    return Builder.CreateCall(F, {Metadata, ArgValue, InstrType});
+    Value *RegNum = ConstantInt::get(IntTy, SystemRegNumber);
+    return Builder.CreateCall(F, {RegNum, ArgValue, InstrType});
   }
 
   case KVX::BI__builtin_kvx_acswapd:

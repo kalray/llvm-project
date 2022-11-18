@@ -31,7 +31,7 @@ int get() {
 
 // CHECK-LABEL: @wfxl(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    tail call void @llvm.kvx.wfx(metadata !2, i64 2, i32 0)
+// CHECK-NEXT:    tail call void @llvm.kvx.wfx(i32 1, i64 2, i32 0)
 // CHECK-NEXT:    ret void
 //
 void wfxl() {
@@ -40,7 +40,7 @@ void wfxl() {
 
 // CHECK-LABEL: @wfxm(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    tail call void @llvm.kvx.wfx(metadata !2, i64 2, i32 1)
+// CHECK-NEXT:    tail call void @llvm.kvx.wfx(i32 1, i64 2, i32 1)
 // CHECK-NEXT:    ret void
 //
 void wfxm() {

@@ -531,22 +531,3 @@ multiclass DCACHE_MC<string Opc, Intrinsic Int> {
 
   defm rr : I</*asm=*/Opc, /*itin=*/LSU_AUXW_LOAD, /*Ops=*/[], /*Mods=*/[DoscaleMod], /*MemOps=*/[SingleReg, SingleReg]>;
 }
-
-// multiclass MC_WFX is used by:
-//   defm WFXL
-//   defm WFXM
-// TODO: We could parse the register and set defs only for that one once at MIR.
-// TODO: Fix scheduler for this new instructions.
-let Defs = [PM0, PM1, PM2, PM3, PM4, PM5, PM6, PM7, PCR, PMC, CS] in
-multiclass MC_WFX<string OpcStr> {
-  def "" : KVX_INSTRUCTION
-    <(outs chain:$oc), (ins FxReg:$z, SingleReg:$op0),
-     !strconcat (OpcStr, " $z, $op0"),
-     [],
-     BCU>;
-  def alone : KVX_INSTRUCTION
-    <(outs chain:$oc), (ins AloneReg:$z, SingleReg:$op0),
-     !strconcat (OpcStr, " $z, $op0"),
-     [],
-     ALL_ID>;
-}
