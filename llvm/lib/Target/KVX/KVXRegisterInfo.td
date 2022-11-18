@@ -35,7 +35,7 @@ class PGR<bits<5> num, string n, list<Register> subregs, list<string> alt = []> 
   list<string> AltNames = alt;
   let CoveredBySubRegs = 1;
   let HWEncoding{4-0} = num;
-  let SubRegIndices = [sub_s0, sub_s1];
+  let SubRegIndices = [sub_d0, sub_d1];
 }
 
 // QGR - Quadruple General Registers
@@ -43,7 +43,7 @@ class QGR<bits<4> num, string n, list<Register> subregs, list<string> alt = []> 
   list<string> AltNames = alt;
   let CoveredBySubRegs = 1;
   let HWEncoding{3-0} = num;
-  let SubRegIndices = [sub_p0, sub_p1];
+  let SubRegIndices = [sub_q0, sub_q1];
 }
 
 // XCR - Extension Coprocessor Registers
@@ -56,7 +56,7 @@ class XBR<bits<7> num, string n, list<Register> subregs, list<string> alt = []> 
   list<string> AltNames = alt;
   let CoveredBySubRegs = 1;
   let HWEncoding{6-0} = num;
-  let SubRegIndices = [sub_c0, sub_c1];
+  let SubRegIndices = [sub_d0, sub_d1];
 }
 
 // XVR - Extension Vector Registers
@@ -64,7 +64,7 @@ class XVR<bits<6> num, string n, list<Register> subregs, list<string> alt = []> 
   list<string> AltNames = alt;
   let CoveredBySubRegs = 1;
   let HWEncoding{5-0} = num;
-  let SubRegIndices = [sub_b0, sub_b1];
+  let SubRegIndices = [sub_q0, sub_q1];
 }
 
 // XWR - Extension Wide Registers
@@ -90,6 +90,13 @@ class X8R<bits<3> num, string n, list<Register> subregs, list<string> alt = []> 
   let CoveredBySubRegs = 1;
   let HWEncoding{2-0} = num;
   let SubRegIndices = [sub_m0, sub_m1];
+}
+
+class X16R<bits<2> num, string n, list<Register> subregs, list<string> alt = []> : RegisterWithSubRegs<n, subregs> {
+  list<string> AltNames = alt;
+  let CoveredBySubRegs = 1;
+  let HWEncoding{1-0} = num;
+  let SubRegIndices = [sub_2K0, sub_2K1];
 }
 
 // System Function Registers
@@ -1245,8 +1252,13 @@ def I4 : X8R<4, "$a32..a39", [  X8, X9]>;
 def I5 : X8R<5, "$a40..a47", [X10, X11]>;
 def I6 : X8R<6, "$a48..a55", [X12, X13]>;
 def I7 : X8R<7, "$a56..a63", [X14, X15]>;
-} // let Namespace = "KVX"
 
+// Extension 4k-Register Buffer
+def J0 : X16R<0,  "$a0..a15", [I0, I1]>;
+def J1 : X16R<1, "$a16..a31", [I2, I3]>;
+def J2 : X16R<2, "$a32..a47", [I4, I5]>;
+def J3 : X16R<3, "$a48..a63", [I6, I7]>;
+} // let Namespace = "KVX"
 
 // SFR - System Function Registers
 let Size = 64 in
@@ -1661,12 +1673,18 @@ let Size = 2048, CopyCost = 8, Weight = 32 in
 def Buffer8Reg : RegisterClass<"KVX", [v256i8],
   2048, (add I0, I1, I2, I3, I4, I5, I6, I7)>;
 
+// X16R - Extension 16-Register Buffer
+// AllocationPriority = 13 -> 4 register
+let Size = 4096, CopyCost = 16, AllocationPriority = 13, Weight = 64 in
+def Buffer16Reg : RegisterClass<"KVX", [v128i32],
+  4096, (add J0, J1, J2, J3)>;
+
 let Size = 0, Weight = 1 in
 def TcaBuffer : RegisterClass<
       /*string namespace*/ "KVX",
-      /*list<ValueType> regTypes*/[v512i1, v1024i1, v256i8],
+      /*list<ValueType> regTypes*/[v512i1, v1024i1,  v256i8, v128i32],
       /*int alignment*/ 256,
-      /*dag regList*/ !con(Buffer8Reg.MemberList, MatrixReg.MemberList, WideReg.MemberList)
+      /*dag regList*/ !con(WideReg.MemberList, MatrixReg.MemberList, Buffer8Reg.MemberList, Buffer16Reg.MemberList)
       //, RegAltNameIndex idx = NoRegAltName
       >;
 

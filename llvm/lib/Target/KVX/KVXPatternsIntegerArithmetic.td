@@ -366,12 +366,12 @@ def : Pat<(sub v2i32:$rs1, (v2i32(is_imm_vec_kvx_splat32_at:$IMM))), (ADDWPri Si
 // add immediate variants to v4i32, e.g.
 def : Pat<(v4i32 (add v4i32:$a1, v4i32:$a2)),
           (REG_SEQUENCE PairedReg,
-            (v2i32(ADDWPrr (v2i32(EXTRACT_SUBREG PairedReg:$a1, sub_s0)),
-                      (v2i32(EXTRACT_SUBREG PairedReg:$a2, sub_s0)))),
-            sub_s0,
-            (v2i32(ADDWPrr (v2i32(EXTRACT_SUBREG PairedReg:$a1, sub_s1)),
-                      (v2i32(EXTRACT_SUBREG PairedReg:$a2, sub_s1)))),
-            sub_s1)>;
+            (v2i32(ADDWPrr (v2i32(EXTRACT_SUBREG PairedReg:$a1, sub_d0)),
+                      (v2i32(EXTRACT_SUBREG PairedReg:$a2, sub_d0)))),
+            sub_d0,
+            (v2i32(ADDWPrr (v2i32(EXTRACT_SUBREG PairedReg:$a1, sub_d1)),
+                      (v2i32(EXTRACT_SUBREG PairedReg:$a2, sub_d1)))),
+            sub_d1)>;
 
 // ADDX*
 multiclass ADDXDPAT<dag sc, KVX_INSTRUCTION RRInstr, KVX_INSTRUCTION RIInstr> {
@@ -646,10 +646,10 @@ def : Pat<(sra (add ( add v2i32:$v0, v2i32:$v1 ), (v2i32 (v2_splat_1)) ), (v2i32
 // CBSWP
 def : Pat<(v4i32(ctpop v4i32:$v0)),
           (REG_SEQUENCE PairedReg,
-            (CBSWP(v2i32(EXTRACT_SUBREG PairedReg:$v0, sub_s0))),
-            sub_s0,
-            (CBSWP(v2i32(EXTRACT_SUBREG PairedReg:$v0, sub_s1))),
-            sub_s1)>;
+            (CBSWP(v2i32(EXTRACT_SUBREG PairedReg:$v0, sub_d0))),
+            sub_d0,
+            (CBSWP(v2i32(EXTRACT_SUBREG PairedReg:$v0, sub_d1))),
+            sub_d1)>;
 
 
 multiclass SELECT_COMP_PAT<PatFrag Comp, Comparison Mod, KVX_INSTRUCTION COMPrr, KVX_INSTRUCTION COMPri, ValueType SelectVT, ValueType CompareVT, KVX_INSTRUCTION NEG, Operand RIOp> {
@@ -705,14 +705,14 @@ multiclass COMP_Pat<PatFrag Node, Comparison Mod, Comparison RevMod> {
         (COMPNWP SingleReg:$lhs, SingleReg:$rhs, Mod)>;
   def : Pat<(v4i32 (Node v4i32:$lhs, v4i32:$rhs)),
         (v4i32 (REG_SEQUENCE PairedReg,
-            (v2i32 ( COMPNWP (v2i32 (EXTRACT_SUBREG PairedReg:$lhs, sub_s0)),
-                            (v2i32 (EXTRACT_SUBREG PairedReg:$rhs, sub_s0)),
+            (v2i32 ( COMPNWP (v2i32 (EXTRACT_SUBREG PairedReg:$lhs, sub_d0)),
+                            (v2i32 (EXTRACT_SUBREG PairedReg:$rhs, sub_d0)),
                    Mod)),
-            sub_s0,
-            (v2i32 (COMPNWP (v2i32 (EXTRACT_SUBREG PairedReg:$lhs, sub_s1)),
-                            (v2i32 (EXTRACT_SUBREG PairedReg:$rhs, sub_s1)),
+            sub_d0,
+            (v2i32 (COMPNWP (v2i32 (EXTRACT_SUBREG PairedReg:$lhs, sub_d1)),
+                            (v2i32 (EXTRACT_SUBREG PairedReg:$rhs, sub_d1)),
                    Mod)),
-            sub_s1))>;
+            sub_d1))>;
 
   // COMPUWD
   def : Pat<(i32 (Node (i64(zext i32:$lhs)), i64:$rhs)),
@@ -973,8 +973,8 @@ def : Pat<(add v4i16:$a1, (mul v4i16:$a2, v4i16:$a3)), (MADDHQrr SingleReg:$a1, 
 // MADDHWQ
 def : Pat<(v2i32(add (v2i32(KVX_sext_mul v2i16:$v0, v2i16:$v1)), v2i32:$v2)),
           (v2i32 (EXTRACT_SUBREG (v4i32
-                  (MADDHWQ (INSERT_SUBREG (v4i32 (IMPLICIT_DEF)), SingleReg:$v2, sub_s0), SingleReg:$v0, SingleReg:$v1)),
-            sub_s0))>;
+                  (MADDHWQ (INSERT_SUBREG (v4i32 (IMPLICIT_DEF)), SingleReg:$v2, sub_d0), SingleReg:$v0, SingleReg:$v1)),
+            sub_d0))>;
 
 def : Pat<(v4i32(add (v4i32(KVX_sext_mul v4i16:$v0, v4i16:$v1)), v4i32:$v2)),
           (v4i32(MADDHWQ PairedReg:$v2, SingleReg:$v0, SingleReg:$v1))>;
@@ -982,8 +982,8 @@ def : Pat<(v4i32(add (v4i32(KVX_sext_mul v4i16:$v0, v4i16:$v1)), v4i32:$v2)),
 // MADDSUHWQ
 def : Pat<(v2i32(add (v2i32(KVX_szext_mul v2i16:$v0, v2i16:$v1)), v2i32:$v2)),
           (v2i32 (EXTRACT_SUBREG (v4i32
-                  (MADDSUHWQ (INSERT_SUBREG (v4i32 (IMPLICIT_DEF)), SingleReg:$v2, sub_s0), SingleReg:$v0, SingleReg:$v1)),
-            sub_s0))>;
+                  (MADDSUHWQ (INSERT_SUBREG (v4i32 (IMPLICIT_DEF)), SingleReg:$v2, sub_d0), SingleReg:$v0, SingleReg:$v1)),
+            sub_d0))>;
 
 def : Pat<(v4i32(add (v4i32(KVX_szext_mul v4i16:$v0, v4i16:$v1)), v4i32:$v2)),
           (v4i32(MADDSUHWQ PairedReg:$v2, SingleReg:$v0, SingleReg:$v1))>;
@@ -1002,8 +1002,8 @@ def : Pat<(v2i64(add (v2i64(KVX_szext_mul v2i32:$v0, v2i32:$v1)), v2i64:$v2)),
 // MADDUHWQ
 def : Pat<(v2i32(add (v2i32(KVX_zext_mul v2i16:$v0, v2i16:$v1)), v2i32:$v2)),
           (v2i32 (EXTRACT_SUBREG (v4i32
-                  (MADDUHWQ (INSERT_SUBREG (v4i32 (IMPLICIT_DEF)), SingleReg:$v2, sub_s0), SingleReg:$v0, SingleReg:$v1)),
-            sub_s0))>;
+                  (MADDUHWQ (INSERT_SUBREG (v4i32 (IMPLICIT_DEF)), SingleReg:$v2, sub_d0), SingleReg:$v0, SingleReg:$v1)),
+            sub_d0))>;
 
 def : Pat<(v4i32(add (v4i32(KVX_zext_mul v4i16:$v0, v4i16:$v1)), v4i32:$v2)),
           (v4i32(MADDUHWQ PairedReg:$v2, SingleReg:$v0, SingleReg:$v1))>;
@@ -1047,15 +1047,15 @@ def : Pat<(v2i32 (add v2i32:$a1, (mul v2i32:$a2, v2i32:$a3))),
 def : Pat<(v4i32 (add v4i32:$a1, (mul v4i32:$a2, v4i32:$a3))),
       (REG_SEQUENCE PairedReg,
             (v2i32 (MADDWPrr
-                  (v2i32 (EXTRACT_SUBREG PairedReg:$a1, sub_s0)),
-                  (v2i32 (EXTRACT_SUBREG PairedReg:$a2, sub_s0)),
-                  (v2i32 (EXTRACT_SUBREG PairedReg:$a3, sub_s0)))),
-            sub_s0,
+                  (v2i32 (EXTRACT_SUBREG PairedReg:$a1, sub_d0)),
+                  (v2i32 (EXTRACT_SUBREG PairedReg:$a2, sub_d0)),
+                  (v2i32 (EXTRACT_SUBREG PairedReg:$a3, sub_d0)))),
+            sub_d0,
             (v2i32 (MADDWPrr
-                  (v2i32 (EXTRACT_SUBREG PairedReg:$a1, sub_s1)),
-                  (v2i32 (EXTRACT_SUBREG PairedReg:$a2, sub_s1)),
-                  (v2i32 (EXTRACT_SUBREG PairedReg:$a3, sub_s1)))),
-            sub_s1)>;
+                  (v2i32 (EXTRACT_SUBREG PairedReg:$a1, sub_d1)),
+                  (v2i32 (EXTRACT_SUBREG PairedReg:$a2, sub_d1)),
+                  (v2i32 (EXTRACT_SUBREG PairedReg:$a3, sub_d1)))),
+            sub_d1)>;
 
 // MAXD
 def : Pat<(smax i64:$v1, i64:$v2), (MAXDrr SingleReg:$v1, SingleReg:$v2)>;
@@ -1177,8 +1177,8 @@ def : Pat<(sub v4i16:$a1, (mul v4i16:$a2, v4i16:$a3)), (MSBFHQ SingleReg:$a1, Si
 // MSBFHWQ
 def : Pat<(v2i32(sub v2i32:$v2, (v2i32(KVX_sext_mul v2i16:$v0, v2i16:$v1)))),
           (v2i32 (EXTRACT_SUBREG (v4i32
-                  (MSBFHWQ (INSERT_SUBREG (v4i32 (IMPLICIT_DEF)), SingleReg:$v2, sub_s0), SingleReg:$v0, SingleReg:$v1)),
-            sub_s0))>;
+                  (MSBFHWQ (INSERT_SUBREG (v4i32 (IMPLICIT_DEF)), SingleReg:$v2, sub_d0), SingleReg:$v0, SingleReg:$v1)),
+            sub_d0))>;
 
 def : Pat<(v4i32(sub v4i32:$v2, (v4i32(KVX_sext_mul v4i16:$v0, v4i16:$v1)))),
           (v4i32(MSBFHWQ PairedReg:$v2, SingleReg:$v0, SingleReg:$v1))>;
@@ -1186,8 +1186,8 @@ def : Pat<(v4i32(sub v4i32:$v2, (v4i32(KVX_sext_mul v4i16:$v0, v4i16:$v1)))),
 // MSBFSUHWQ
 def : Pat<(v2i32(sub v2i32:$v2, (v2i32(KVX_szext_mul v2i16:$v0, v2i16:$v1)))),
           (v2i32 (EXTRACT_SUBREG (v4i32
-                  (MSBFSUHWQ (INSERT_SUBREG (v4i32 (IMPLICIT_DEF)), SingleReg:$v2, sub_s0), SingleReg:$v0, SingleReg:$v1)),
-            sub_s0))>;
+                  (MSBFSUHWQ (INSERT_SUBREG (v4i32 (IMPLICIT_DEF)), SingleReg:$v2, sub_d0), SingleReg:$v0, SingleReg:$v1)),
+            sub_d0))>;
 
 def : Pat<(v4i32(sub v4i32:$v2, (v4i32(KVX_szext_mul v4i16:$v0, v4i16:$v1)))),
           (v4i32(MSBFSUHWQ PairedReg:$v2, SingleReg:$v0, SingleReg:$v1))>;
@@ -1206,8 +1206,8 @@ def : Pat<(v2i64(sub v2i64:$v2, (v2i64(KVX_szext_mul v2i32:$v0, v2i32:$v1)))),
 // MSBFUHWQ
 def : Pat<(v2i32(sub v2i32:$v2, (v2i32(KVX_zext_mul v2i16:$v0, v2i16:$v1)))),
           (v2i32 (EXTRACT_SUBREG (v4i32
-                  (MSBFUHWQ (INSERT_SUBREG (v4i32 (IMPLICIT_DEF)), SingleReg:$v2, sub_s0), SingleReg:$v0, SingleReg:$v1)),
-            sub_s0))>;
+                  (MSBFUHWQ (INSERT_SUBREG (v4i32 (IMPLICIT_DEF)), SingleReg:$v2, sub_d0), SingleReg:$v0, SingleReg:$v1)),
+            sub_d0))>;
 
 def : Pat<(v4i32(sub v4i32:$v2, (v4i32(KVX_zext_mul v4i16:$v0, v4i16:$v1)))),
           (v4i32(MSBFUHWQ PairedReg:$v2, SingleReg:$v0, SingleReg:$v1))>;
@@ -1246,10 +1246,10 @@ def : Pat<(mul i64:$rs1, Signed37:$rs2), (MULDri37 SingleReg:$rs1, Signed37:$rs2
 def : Pat<(mul i64:$rs1, Wrapped64:$rs2), (MULDri64 SingleReg:$rs1, Wrapped64:$rs2)>, Requires<[IsV1]>;
 
 // MULDT
-def : Pat<(mulhs i64:$rs1, Signed10:$rs2), (i64 (EXTRACT_SUBREG (MULDTri10 SingleReg:$rs1, Signed10:$rs2), sub_s1))>, Requires<[IsV1]>;
-def : Pat<(mulhs i64:$rs1, Signed37:$rs2), (i64 (EXTRACT_SUBREG (MULDTri37 SingleReg:$rs1, Signed37:$rs2), sub_s1))>, Requires<[IsV1]>;
-def : Pat<(mulhs i64:$rs1, Wrapped64:$rs2), (i64 (EXTRACT_SUBREG (MULDTri64 SingleReg:$rs1, Wrapped64:$rs2), sub_s1))>, Requires<[IsV1]>;
-def : Pat<(mulhs i64:$rs1, i64:$rs2), (i64 (EXTRACT_SUBREG (MULDTrr SingleReg:$rs1, SingleReg:$rs2), sub_s1))>;
+def : Pat<(mulhs i64:$rs1, Signed10:$rs2), (i64 (EXTRACT_SUBREG (MULDTri10 SingleReg:$rs1, Signed10:$rs2), sub_d1))>, Requires<[IsV1]>;
+def : Pat<(mulhs i64:$rs1, Signed37:$rs2), (i64 (EXTRACT_SUBREG (MULDTri37 SingleReg:$rs1, Signed37:$rs2), sub_d1))>, Requires<[IsV1]>;
+def : Pat<(mulhs i64:$rs1, Wrapped64:$rs2), (i64 (EXTRACT_SUBREG (MULDTri64 SingleReg:$rs1, Wrapped64:$rs2), sub_d1))>, Requires<[IsV1]>;
+def : Pat<(mulhs i64:$rs1, i64:$rs2), (i64 (EXTRACT_SUBREG (MULDTrr SingleReg:$rs1, SingleReg:$rs2), sub_d1))>;
 
 def : Pat<(v2i64(KVX_sext_mul i64:$rs1, Signed10:$rs2)),  (v2i64(MULDTri10 SingleReg:$rs1, Signed10:$rs2))>, Requires<[IsV1]>;
 def : Pat<(v2i64(KVX_sext_mul i64:$rs1, Signed37:$rs2)),  (v2i64(MULDTri37 SingleReg:$rs1, Signed37:$rs2))>, Requires<[IsV1]>;
@@ -1261,7 +1261,7 @@ def : Pat<(mul v2i16:$rs1, v2i16:$rs2), (MULHQrr SingleReg:$rs1, SingleReg:$rs2)
 def : Pat<(mul v4i16:$rs1, v4i16:$rs2), (MULHQrr SingleReg:$rs1, SingleReg:$rs2)>;
 
 // MULHWQ
-def : Pat<(v2i32(KVX_sext_mul v2i16:$v0, v2i16:$v1)), (v2i32(EXTRACT_SUBREG (v4i32 (MULHWQ SingleReg:$v0, SingleReg:$v1)), sub_s0))>;
+def : Pat<(v2i32(KVX_sext_mul v2i16:$v0, v2i16:$v1)), (v2i32(EXTRACT_SUBREG (v4i32 (MULHWQ SingleReg:$v0, SingleReg:$v1)), sub_d0))>;
 def : Pat<(v4i32(KVX_sext_mul v4i16:$v0, v4i16:$v1)), (v4i32(MULHWQ SingleReg:$v0, SingleReg:$v1))>;
 
 // MULSUDT
@@ -1271,7 +1271,7 @@ def : Pat<(v2i64(KVX_szext_mul i64:$rs1, Wrapped64:$rs2)), (v2i64(MULSUDTri64 Si
 def : Pat<(v2i64(KVX_szext_mul i64:$rs1, i64:$rs2)), (v2i64(MULSUDTrr SingleReg:$rs1, SingleReg:$rs2))>;
 
 // MULSUHWQ
-def : Pat<(v2i32(KVX_szext_mul v2i16:$v0, v2i16:$v1)), (v2i32(EXTRACT_SUBREG (v4i32 (MULSUHWQ SingleReg:$v0, SingleReg:$v1)), sub_s0))>;
+def : Pat<(v2i32(KVX_szext_mul v2i16:$v0, v2i16:$v1)), (v2i32(EXTRACT_SUBREG (v4i32 (MULSUHWQ SingleReg:$v0, SingleReg:$v1)), sub_d0))>;
 def : Pat<(v4i32(KVX_szext_mul v4i16:$v0, v4i16:$v1)), (v4i32(MULSUHWQ SingleReg:$v0, SingleReg:$v1))>;
 
 // MULSUWD
@@ -1284,18 +1284,18 @@ def : Pat<(i64(KVX_szext_mul i32:$v0, (i32 (trunc i64:$v1)))), (i64(MULSUWDrr Si
 // MULSUWDP
 def : Pat<(v2i64(KVX_szext_mul v2i32:$v0, v2i32:$v1)), (v2i64 (MULSUWDP SingleReg:$v0, SingleReg:$v1))>;
 def : Pat<(v4i64(KVX_szext_mul v4i32:$v0, v4i32:$v1)), (v4i64 (REG_SEQUENCE QuadReg,
-                                                                  (v2i64 (MULSUWDP (v2i32 (EXTRACT_SUBREG PairedReg:$v0, sub_s0)),
-                                                                                   (v2i32 (EXTRACT_SUBREG PairedReg:$v1, sub_s0)))),
-                                                                  sub_p0,
-                                                                  (v2i64 (MULSUWDP (v2i32 (EXTRACT_SUBREG PairedReg:$v0, sub_s1)),
-                                                                                   (v2i32 (EXTRACT_SUBREG PairedReg:$v1, sub_s1)))),
-                                                                  sub_p1))>;
+                                                                  (v2i64 (MULSUWDP (v2i32 (EXTRACT_SUBREG PairedReg:$v0, sub_d0)),
+                                                                                   (v2i32 (EXTRACT_SUBREG PairedReg:$v1, sub_d0)))),
+                                                                  sub_q0,
+                                                                  (v2i64 (MULSUWDP (v2i32 (EXTRACT_SUBREG PairedReg:$v0, sub_d1)),
+                                                                                   (v2i32 (EXTRACT_SUBREG PairedReg:$v1, sub_d1)))),
+                                                                  sub_q1))>;
 
 // MULUDT
-def : Pat<(mulhu i64:$rs1, Signed10:$rs2), (i64 (EXTRACT_SUBREG (MULUDTri10 SingleReg:$rs1, Signed10:$rs2), sub_s1))>, Requires<[IsV1]>;
-def : Pat<(mulhu i64:$rs1, Wrapped64W:$rs2), (i64 (EXTRACT_SUBREG (MULUDTri37 SingleReg:$rs1, Wrapped64W:$rs2), sub_s1))>, Requires<[IsV1]>;
-def : Pat<(mulhu i64:$rs1, Wrapped64:$rs2), (i64 (EXTRACT_SUBREG (MULUDTri64 SingleReg:$rs1, Wrapped64:$rs2), sub_s1))>, Requires<[IsV1]>;
-def : Pat<(mulhu i64:$rs1, i64:$rs2), (i64 (EXTRACT_SUBREG (MULUDTrr SingleReg:$rs1, SingleReg:$rs2), sub_s1))>;
+def : Pat<(mulhu i64:$rs1, Signed10:$rs2), (i64 (EXTRACT_SUBREG (MULUDTri10 SingleReg:$rs1, Signed10:$rs2), sub_d1))>, Requires<[IsV1]>;
+def : Pat<(mulhu i64:$rs1, Wrapped64W:$rs2), (i64 (EXTRACT_SUBREG (MULUDTri37 SingleReg:$rs1, Wrapped64W:$rs2), sub_d1))>, Requires<[IsV1]>;
+def : Pat<(mulhu i64:$rs1, Wrapped64:$rs2), (i64 (EXTRACT_SUBREG (MULUDTri64 SingleReg:$rs1, Wrapped64:$rs2), sub_d1))>, Requires<[IsV1]>;
+def : Pat<(mulhu i64:$rs1, i64:$rs2), (i64 (EXTRACT_SUBREG (MULUDTrr SingleReg:$rs1, SingleReg:$rs2), sub_d1))>;
 
 def : Pat<(v2i64(KVX_zext_mul i64:$rs1, Unsigned10:$rs2)),  (v2i64(MULUDTri10 SingleReg:$rs1, Unsigned10:$rs2))>, Requires<[IsV1]>;
 def : Pat<(v2i64(KVX_zext_mul i64:$rs1, Signed37:$rs2)),  (v2i64(MULUDTri37 SingleReg:$rs1, Signed37:$rs2))>, Requires<[IsV1]>;
@@ -1303,7 +1303,7 @@ def : Pat<(v2i64(KVX_zext_mul i64:$rs1, Wrapped64:$rs2)), (v2i64(MULUDTri64 Sing
 def : Pat<(v2i64(KVX_zext_mul i64:$rs1, i64:$rs2)), (v2i64(MULUDTrr SingleReg:$rs1, SingleReg:$rs2))>;
 
 // MULUHWQ
-def : Pat<(v2i32(KVX_zext_mul v2i16:$v0, v2i16:$v1)), (v2i32(EXTRACT_SUBREG (v4i32 (MULUHWQ SingleReg:$v0, SingleReg:$v1)), sub_s0))>;
+def : Pat<(v2i32(KVX_zext_mul v2i16:$v0, v2i16:$v1)), (v2i32(EXTRACT_SUBREG (v4i32 (MULUHWQ SingleReg:$v0, SingleReg:$v1)), sub_d0))>;
 def : Pat<(v4i32(KVX_zext_mul v4i16:$v0, v4i16:$v1)), (v4i32(MULUHWQ SingleReg:$v0, SingleReg:$v1))>;
 
 // MULUWD
@@ -1318,12 +1318,12 @@ def : Pat<(i64(KVX_zext_mul (i32(trunc i64:$v0)), i32:$v1)), (i64(MULUWDrr Singl
 // MULUWDP
 def : Pat<(v2i64(KVX_zext_mul v2i32:$v0, v2i32:$v1)), (v2i64 (MULUWDP SingleReg:$v0, SingleReg:$v1))>;
 def : Pat<(v4i64(KVX_zext_mul v4i32:$v0, v4i32:$v1)), (v4i64 (REG_SEQUENCE QuadReg,
-                                                                  (v2i64 (MULUWDP (v2i32 (EXTRACT_SUBREG PairedReg:$v0, sub_s0)),
-                                                                                  (v2i32 (EXTRACT_SUBREG PairedReg:$v1, sub_s0)))),
-                                                                  sub_p0,
-                                                                  (v2i64 (MULUWDP (v2i32 (EXTRACT_SUBREG PairedReg:$v0, sub_s1)),
-                                                                                  (v2i32 (EXTRACT_SUBREG PairedReg:$v1, sub_s1)))),
-                                                                  sub_p1))>;
+                                                                  (v2i64 (MULUWDP (v2i32 (EXTRACT_SUBREG PairedReg:$v0, sub_d0)),
+                                                                                  (v2i32 (EXTRACT_SUBREG PairedReg:$v1, sub_d0)))),
+                                                                  sub_q0,
+                                                                  (v2i64 (MULUWDP (v2i32 (EXTRACT_SUBREG PairedReg:$v0, sub_d1)),
+                                                                                  (v2i32 (EXTRACT_SUBREG PairedReg:$v1, sub_d1)))),
+                                                                  sub_q1))>;
 
 // MULW
 defm : ZEFPat<(mul i32:$rs1, i32:$rs2), (MULWrr SingleReg:$rs1, SingleReg:$rs2)>;
@@ -1340,12 +1340,12 @@ def : Pat<(i64(KVX_sext_mul (i32(trunc i64:$v0)), i32:$v1)), (i64(MULWDrr Single
 // MULWDP
 def : Pat<(v2i64(KVX_sext_mul v2i32:$v0, v2i32:$v1)), (v2i64 (MULWDP SingleReg:$v0, SingleReg:$v1))>;
 def : Pat<(v4i64(KVX_sext_mul v4i32:$v0, v4i32:$v1)), (v4i64 (REG_SEQUENCE QuadReg,
-                                                                  (v2i64 (MULWDP (v2i32 (EXTRACT_SUBREG PairedReg:$v0, sub_s0)),
-                                                                                 (v2i32 (EXTRACT_SUBREG PairedReg:$v1, sub_s0)))),
-                                                                  sub_p0,
-                                                                  (v2i64 (MULWDP (v2i32 (EXTRACT_SUBREG PairedReg:$v0, sub_s1)),
-                                                                                 (v2i32 (EXTRACT_SUBREG PairedReg:$v1, sub_s1)))),
-                                                                  sub_p1))>;
+                                                                  (v2i64 (MULWDP (v2i32 (EXTRACT_SUBREG PairedReg:$v0, sub_d0)),
+                                                                                 (v2i32 (EXTRACT_SUBREG PairedReg:$v1, sub_d0)))),
+                                                                  sub_q0,
+                                                                  (v2i64 (MULWDP (v2i32 (EXTRACT_SUBREG PairedReg:$v0, sub_d1)),
+                                                                                 (v2i32 (EXTRACT_SUBREG PairedReg:$v1, sub_d1)))),
+                                                                  sub_q1))>;
 
 // MULWP
 def : Pat<(mul v2i32:$rs1, v2i32:$rs2), (MULWPrr SingleReg:$rs1, SingleReg:$rs2)>;
@@ -1706,12 +1706,12 @@ def : Pat<(sub v2i32:$rs1, v2i32:$rs2), (SBFWPrr SingleReg:$rs2, SingleReg:$rs1)
 
 def : Pat<(sub v4i32:$rs1, v4i32:$rs2),
       (REG_SEQUENCE PairedReg,
-            (v2i32 (SBFWPrr (v2i32(EXTRACT_SUBREG PairedReg:$rs2, sub_s1)),
-                            (v2i32(EXTRACT_SUBREG PairedReg:$rs1, sub_s1)))),
-            sub_s1,
-            (v2i32 (SBFWPrr (v2i32(EXTRACT_SUBREG PairedReg:$rs2, sub_s0)),
-                            (v2i32(EXTRACT_SUBREG PairedReg:$rs1, sub_s0)))),
-            sub_s0)>;
+            (v2i32 (SBFWPrr (v2i32(EXTRACT_SUBREG PairedReg:$rs2, sub_d1)),
+                            (v2i32(EXTRACT_SUBREG PairedReg:$rs1, sub_d1)))),
+            sub_d1,
+            (v2i32 (SBFWPrr (v2i32(EXTRACT_SUBREG PairedReg:$rs2, sub_d0)),
+                            (v2i32(EXTRACT_SUBREG PairedReg:$rs1, sub_d0)))),
+            sub_d0)>;
 
 // SBFX*
 multiclass SBFXDPAT<dag sc, KVX_INSTRUCTION RRInstr, KVX_INSTRUCTION RIInstr> {
@@ -2101,26 +2101,26 @@ def : Pat<(v2i32(zext v2i16:$v)),
           (SBMM8ri64 $v, 0x80400000201)>, Requires<[IsV1]>;
 
 // SXLHWP + SXLBHQ + SXMHWP + SXMBHQ
-def : Pat<(v4i32(sext (v4i8( extract_subvector v8i8:$v, (i64 4))))), (REG_SEQUENCE PairedReg, (SXLHWP(SXMBHQ $v)), sub_s0, (SXMHWP(SXMBHQ $v)), sub_s1)>;
-def : Pat<(v4i32(zanyext (v4i8( extract_subvector v8i8:$v, (i64 4))))), (REG_SEQUENCE PairedReg, (SBMM8ri64 $v, 0x2000000010), sub_s0,
-                                                          (SBMM8ri64 $v, 0x8000000040), sub_s1)>;
+def : Pat<(v4i32(sext (v4i8( extract_subvector v8i8:$v, (i64 4))))), (REG_SEQUENCE PairedReg, (SXLHWP(SXMBHQ $v)), sub_d0, (SXMHWP(SXMBHQ $v)), sub_d1)>;
+def : Pat<(v4i32(zanyext (v4i8( extract_subvector v8i8:$v, (i64 4))))), (REG_SEQUENCE PairedReg, (SBMM8ri64 $v, 0x2000000010), sub_d0,
+                                                          (SBMM8ri64 $v, 0x8000000040), sub_d1)>;
 
-def : Pat<(v4i32(sext (v4i8( extract_subvector v8i8:$v, (i64 0))))), (REG_SEQUENCE PairedReg, (SXLHWP(SXLBHQ $v)), sub_s0, (SXMHWP(SXLBHQ $v)), sub_s1)>;
-def : Pat<(v4i32(zanyext (v4i8( extract_subvector v8i8:$v, (i64 0))))), (REG_SEQUENCE PairedReg, (SBMM8ri37 $v, 0x200000001), sub_s0,
-                                                          (SBMM8ri37 $v, 0x800000004), sub_s1)>;
+def : Pat<(v4i32(sext (v4i8( extract_subvector v8i8:$v, (i64 0))))), (REG_SEQUENCE PairedReg, (SXLHWP(SXLBHQ $v)), sub_d0, (SXMHWP(SXLBHQ $v)), sub_d1)>;
+def : Pat<(v4i32(zanyext (v4i8( extract_subvector v8i8:$v, (i64 0))))), (REG_SEQUENCE PairedReg, (SBMM8ri37 $v, 0x200000001), sub_d0,
+                                                          (SBMM8ri37 $v, 0x800000004), sub_d1)>;
 
-def : Pat<(v4i32(sext v4i8:$v)), (REG_SEQUENCE PairedReg, (SXLHWP(SXLBHQ $v)), sub_s0, (SXMHWP(SXLBHQ $v)), sub_s1)>;
-def : Pat<(v4i32(zanyext v4i8:$v)), (REG_SEQUENCE PairedReg, (SBMM8ri37 $v, 0x200000001), sub_s0,
-                                                          (SBMM8ri37 $v, 0x800000004), sub_s1)>;
+def : Pat<(v4i32(sext v4i8:$v)), (REG_SEQUENCE PairedReg, (SXLHWP(SXLBHQ $v)), sub_d0, (SXMHWP(SXLBHQ $v)), sub_d1)>;
+def : Pat<(v4i32(zanyext v4i8:$v)), (REG_SEQUENCE PairedReg, (SBMM8ri37 $v, 0x200000001), sub_d0,
+                                                          (SBMM8ri37 $v, 0x800000004), sub_d1)>;
 
-def : Pat<(v4i32(sanyext v4i16:$v)), (REG_SEQUENCE PairedReg, (SXMHWP $v), sub_s1, (SXLHWP $v), sub_s0)>;
-
-def : Pat<(v4i32(zext v4i16:$v)),
-          (REG_SEQUENCE PairedReg, (SBMM8ri64 $v, 0x80400000201), sub_s0,
-                                   (SBMM8ri64 $v, 0x804000002010), sub_s1)>, Requires<[IsV1]>;
+def : Pat<(v4i32(sanyext v4i16:$v)), (REG_SEQUENCE PairedReg, (SXMHWP $v), sub_d1, (SXLHWP $v), sub_d0)>;
 
 def : Pat<(v4i32(zext v4i16:$v)),
-          (REG_SEQUENCE PairedReg, (ZXLHWP $v), sub_s0, (ZXMHWP $v), sub_s1)>, Requires<[IsV2]>;
+          (REG_SEQUENCE PairedReg, (SBMM8ri64 $v, 0x80400000201), sub_d0,
+                                   (SBMM8ri64 $v, 0x804000002010), sub_d1)>, Requires<[IsV1]>;
+
+def : Pat<(v4i32(zext v4i16:$v)),
+          (REG_SEQUENCE PairedReg, (ZXLHWP $v), sub_d0, (ZXMHWP $v), sub_d1)>, Requires<[IsV2]>;
 
 
 def : Pat<(v2i32(build_vector (i32 (sext_inreg (i32 (vector_extract v4i16:$v, (i64 2))), i16)),
@@ -2163,12 +2163,12 @@ foreach vtype = [ v2i8, v4i8, v2i16 ] in {
 }
 
 // Sign/Zero/Any extensions to v2i64
-def : Pat<(v2i64(sext v2i8:$v)), (v2i64 (REG_SEQUENCE PairedReg, (SXBD $v), sub_s0, (EXTFS $v, 15, 8), sub_s1))>;
-def : Pat<(v2i64(zanyext v2i8:$v)), (v2i64 (REG_SEQUENCE PairedReg, (ZXBD $v), sub_s0, (EXTFZ $v, 15, 8), sub_s1))>;
-def : Pat<(v2i64(sext v2i16:$v)), (v2i64 (REG_SEQUENCE PairedReg, (SXHD $v), sub_s0, (EXTFS $v, 31, 16), sub_s1))>;
-def : Pat<(v2i64(zanyext v2i16:$v)), (v2i64 (REG_SEQUENCE PairedReg, (ZXHD $v), sub_s0, (EXTFZ $v, 31, 16), sub_s1))>;
-def : Pat<(v2i64(sext v2i32:$v)), (v2i64 (REG_SEQUENCE PairedReg, (SXWD $v), sub_s0, (EXTFS $v, 63, 32), sub_s1))>;
-def : Pat<(v2i64(zanyext v2i32:$v)), (v2i64 (REG_SEQUENCE PairedReg, (ZXWD $v), sub_s0, (EXTFZ $v, 63, 32), sub_s1))>;
+def : Pat<(v2i64(sext v2i8:$v)), (v2i64 (REG_SEQUENCE PairedReg, (SXBD $v), sub_d0, (EXTFS $v, 15, 8), sub_d1))>;
+def : Pat<(v2i64(zanyext v2i8:$v)), (v2i64 (REG_SEQUENCE PairedReg, (ZXBD $v), sub_d0, (EXTFZ $v, 15, 8), sub_d1))>;
+def : Pat<(v2i64(sext v2i16:$v)), (v2i64 (REG_SEQUENCE PairedReg, (SXHD $v), sub_d0, (EXTFS $v, 31, 16), sub_d1))>;
+def : Pat<(v2i64(zanyext v2i16:$v)), (v2i64 (REG_SEQUENCE PairedReg, (ZXHD $v), sub_d0, (EXTFZ $v, 31, 16), sub_d1))>;
+def : Pat<(v2i64(sext v2i32:$v)), (v2i64 (REG_SEQUENCE PairedReg, (SXWD $v), sub_d0, (EXTFS $v, 63, 32), sub_d1))>;
+def : Pat<(v2i64(zanyext v2i32:$v)), (v2i64 (REG_SEQUENCE PairedReg, (ZXWD $v), sub_d0, (EXTFZ $v, 63, 32), sub_d1))>;
 
 def : Pat<(add v8i8:$v1, v8i8:$v2),
       (XORDrr

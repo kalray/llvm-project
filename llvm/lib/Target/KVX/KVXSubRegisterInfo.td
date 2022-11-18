@@ -11,8 +11,13 @@
 //  Declarations that describe the KVX sub-register files
 //===----------------------------------------------------------------------===//
 // TCA sub-registers
+def sub_2K0 : SubRegIndex<2048>;
+def sub_2K1 : SubRegIndex<2048,2048>;
+
 def sub_m0 : SubRegIndex<1024>;
 def sub_m1 : SubRegIndex<1024,1024>;
+def sub_m2 : ComposedSubRegIndex<sub_2K1, sub_m0>;
+def sub_m3 : ComposedSubRegIndex<sub_2K1, sub_m1>;
 
 def sub_w0 : SubRegIndex<512>;
 def sub_w1 : SubRegIndex<512,512>;
@@ -24,20 +29,14 @@ def sub_v1 : SubRegIndex<256,256>;
 def sub_v2 : ComposedSubRegIndex<sub_w1, sub_v0>;
 def sub_v3 : ComposedSubRegIndex<sub_w1, sub_v1>;
 
-def sub_b0 : SubRegIndex<128,  0>;
-def sub_b1 : SubRegIndex<128,128>;
-def sub_b2 : ComposedSubRegIndex<sub_v1, sub_b0>;
-def sub_b3 : ComposedSubRegIndex<sub_v1, sub_b1>;
+// Sub quad-word, common for CORE & TCA
+def sub_q0 : SubRegIndex<128,  0>;
+def sub_q1 : SubRegIndex<128,128>;
+def sub_q2 : ComposedSubRegIndex<sub_v1, sub_q0>;
+def sub_q3 : ComposedSubRegIndex<sub_v1, sub_q1>;
 
-def sub_c0 : SubRegIndex<64, 0>;
-def sub_c1 : SubRegIndex<64,64>;
-def sub_c2 : ComposedSubRegIndex<sub_b1,sub_c0>;
-def sub_c3 : ComposedSubRegIndex<sub_b1,sub_c1>;
-
-def sub_p0 : SubRegIndex<128,  0>;
-def sub_p1 : SubRegIndex<128,128>;
-
-def sub_s0 : SubRegIndex<64,  0>;
-def sub_s1 : SubRegIndex<64, 64>;
-def sub_s2 : ComposedSubRegIndex<sub_p1, sub_s0>;
-def sub_s3 : ComposedSubRegIndex<sub_p1, sub_s1>;
+// Sub double-word, common for CORE & TCA
+def sub_d0 : SubRegIndex<64,  0>;
+def sub_d1 : SubRegIndex<64, 64>;
+def sub_d2 : ComposedSubRegIndex<sub_q1, sub_d0>;
+def sub_d3 : ComposedSubRegIndex<sub_q1, sub_d1>;
