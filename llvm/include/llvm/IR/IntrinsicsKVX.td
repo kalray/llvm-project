@@ -17,7 +17,7 @@ def int_kvx_tlbwrite : Intrinsic<[], [],[]>;
 def int_kvx_syncgroup: Intrinsic<[], [llvm_i64_ty], []>;
 def int_kvx_waitit: Intrinsic<[llvm_i32_ty], [llvm_i64_ty], []>;
 
-def int_kvx_wfx : Intrinsic<[], [llvm_metadata_ty, llvm_i64_ty, llvm_i32_ty], [IntrHasSideEffects]>;
+def int_kvx_wfx : Intrinsic<[], [llvm_i32_ty, llvm_i64_ty, llvm_i32_ty], [IntrHasSideEffects]>;
 
 def int_kvx_dinvall: Intrinsic<[], [llvm_ptr_ty], []>;
 def int_kvx_dtouchl: Intrinsic<[], [llvm_ptr_ty], []>;

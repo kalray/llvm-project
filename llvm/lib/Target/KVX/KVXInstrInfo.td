@@ -1523,10 +1523,6 @@ def LOOPDO : KVX_INSTRUCTION
    [/* no straightforward pattern */],
    ALL_ID>;
 
-defm WFXL : MC_WFX<"wfxl">;
-
-defm WFXM : MC_WFX<"wfxm">;
-
 defm GET : I <"get", BCU_TINY_TINY_MAU_XNOP_RR, [GetReg], [], [],[],[SingleReg]>;
 
 let Constraints = "$a1 = $a1o" in
@@ -2582,7 +2578,6 @@ class FFM_FAMILY<string OpcStr, RegisterClass RC_OUT, RegisterClass RC_IN, Instr
      itin>;
 
 let Predicates = [IsV2] in {
-let Uses = [CS] in {
 def FFDMAW : ROUNDING_SILENT_BINOP_FFDM<"ffdmaw", SingleReg, SingleReg, MAU_FP>;
 def FFDMAWP: ROUNDING_SILENT_BINOP_FFDM<"ffdmawp", SingleReg, PairedReg, MAU_FP>;
 
@@ -2611,7 +2606,6 @@ defm FFMSWC : I<"ffmswc", MAU_AUXR_FP, [SingleReg, SingleReg], [ConjugateMod, Ro
 
 defm FFMAWCP : I<"ffmawcp", MAU_AUXR_FP, [PairedReg, PairedReg], [ConjugateMod, RoundingMod, SilentMod], [], [], [PairedReg], 1>;
 defm FFMSWCP : I<"ffmswcp", MAU_AUXR_FP, [PairedReg, PairedReg], [ConjugateMod, RoundingMod, SilentMod], [], [], [PairedReg], 1>;
-}
 
 def XFSCALEWO : ROUNDING_SILENT_BINOP<"xfscalewo", VectorReg, VectorReg, SingleReg, BCU_CRRP_CRWL_CRWH_RR,
                 [(set v256i1:$o, (int_kvx_xfscalewo v256i1:$lhs, i32:$rhs, RoundingMod:$r, SilentMod:$s))]>;
@@ -3762,4 +3756,51 @@ defm XACCESSO : I</*asm=*/"xaccesso", /*itin=*/BCU_TINY_AUXW_CRRP_RR, /*Ops=*/[B
 
 def : Pat <(v4i64(int_kvx_xaccess1024o BufferReg:$op0, i64:$op1)),
            (XACCESSO BufferReg:$op0, SingleReg:$op1)>;
+}
+
+defvar FxList = [PS, PCR, CS, CSIT, IPE, MEN, PMC, TCR, ILE, ILL, ILR, MMC, TEL, TEH, IXC, DC, MES, WS,
+       DC0, DC1, DC2, DC3, PMC2, SPS_PL0, SPS_PL1, SPS_PL2, SPS_PL3, ES_PL0, ES_PL1, ES_PL2,
+       ES_PL3, SYOW, HTOW, ITOW, DOW, MOW, PSOW, TPCC_PL0, TPCC_PL1, TPCC_PL2, TPCC_PL3, SPS,
+       ES, TPCC];
+
+defvar AloneList = [PS,     MMC, SPS_PL0, SPS_PL1, SPS_PL2, SPS_PL3,    SYOW,    HTOW,
+      ITOW,     DOW,     MOW,    PSOW,     SPS];
+
+defvar FxNotCV1List = [TPCM0, TPCM1, DBA2, DBA3, DWA2, DWA3, TPCM2, TPCMC, PM4, PM5, PM6, PM7,
+          SRHPC, FRCC, SID_PL0, SID_PL1, SID_PL2, SID_PL3, SR1_PL0, SR1_PL1, SR1_PL2,
+          SR1_PL3, SID, SR1, IXC, DC0, DC1, DC2, DC3, PMC2, TPCC_PL0, TPCC_PL1,
+          TPCC_PL2, TPCC_PL3, TPCC];
+
+defvar FxSideEffectsList = [PCR, CS, PM0, PM1, PM2, PM3, PM4, PM5, PM6, PM7];
+
+foreach Reg = FxList in {
+defvar Preds = !cond(!not(!empty(!filter(i, FxNotCV1List, !eq(i, Reg)))): [IsV2],
+                     !eq(DC, Reg): [IsV1],
+                     true: []<Predicate>);
+
+defvar Sched = !cond(!not(!empty(!filter(i, AloneList, !eq(i, Reg)))): ALL_ID,
+                     true: BCU);
+
+defvar SideEffects = !cond(!not(!empty(!filter(i, FxSideEffectsList, !eq(i, Reg)))):1,
+                           true: ?);
+
+defvar FpExcept = !eq(CS, Reg);
+
+defvar RegNum = !cast<int>(Reg.HWEncoding);
+
+let mayRaiseFPException = FpExcept, mayLoad = SideEffects, mayStore = SideEffects, isAsCheapAsAMove = 1, Uses = [Reg], Defs = [Reg], Predicates = Preds, hasSideEffects = SideEffects in {
+def WFXL_ # Reg : KVX_INSTRUCTION <
+          (outs),
+          (ins SingleReg:$op),
+          "wfxl $" # Reg.AsmName # ", $op",
+          [(int_kvx_wfx (i32 RegNum), i64:$op, (i32 0))],
+           Sched>;
+
+def WFXM_ # Reg : KVX_INSTRUCTION <
+          (outs),
+          (ins SingleReg:$op),
+          "wfxm $" # Reg.AsmName # ", $op",
+          [(int_kvx_wfx (i32 RegNum), i64:$op, (i32 1))],
+           Sched>;
+}
 }

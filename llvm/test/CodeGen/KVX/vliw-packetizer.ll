@@ -123,11 +123,9 @@ define float @rule4_wfxm_builtins_only(i64 %a, float %b, float %c) {
 ; ALL-NEXT:    ;;
 entry:
   %add = tail call float @llvm.kvx.faddw(float %b, float %c, i32 0, i32 0)
-  tail call void @llvm.kvx.wfx(metadata !0, i64 %a, i32 0)
+  tail call void @llvm.kvx.wfx(i32 4, i64 %a, i32 0)
   ret float %add
 }
-
-declare void @llvm.kvx.wfxm(i32, i64)
 
 define float @rule4_wfxl(i64 %a, float %b, float %c) {
 ; CHECK-LABEL: rule4_wfxl:
@@ -145,12 +143,12 @@ define float @rule4_wfxl(i64 %a, float %b, float %c) {
 ; RELAXED-NEXT:    ret
 ; RELAXED-NEXT:    ;;
 entry:
-  tail call void @llvm.kvx.wfx(metadata !0, i64 %a, i32 0)
+  tail call void @llvm.kvx.wfx(i32 4, i64 %a, i32 0)
   %add = fadd float %b, %c
   ret float %add
 }
 
-declare void @llvm.kvx.wfx(metadata, i64, i32)
+declare void @llvm.kvx.wfx(i32, i64, i32)
 
 attributes #0 = { nounwind }
 !0 = !{!"$cs"}

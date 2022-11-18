@@ -2836,45 +2836,31 @@ SDValue KVXTargetLowering::LowerINTRINSIC(SDValue Op, SelectionDAG &DAG,
   }
 
   case Intrinsic::kvx_wfx: {
-    MDNodeSDNode *RegName = cast<MDNodeSDNode>(Op->getOperand(2));
+    auto RegID = cast<ConstantSDNode>(Op->getOperand(2))->getZExtValue();
 
-    const MDString *RegStr = cast<MDString>(RegName->getMD()->getOperand(0));
+    MCRegister McReg = KVX::SystemRegRegClass.getRegister(RegID);
 
-    EVT VT(MVT::i64);
-    LLT Ty = VT.isSimple() ? getLLTForMVT(VT.getSimpleVT()) : LLT();
-    Register Reg = DAG.getTargetLoweringInfo().getRegisterByName(
-        RegStr->getString().data(), Ty, DAG.getMachineFunction());
+    if (!McReg.isValid())
+      report_fatal_error("Invalid register in wfxl/wfxm builtin.\n");
 
-    auto V = cast<ConstantSDNode>(Op->getOperand(4))->getZExtValue();
-    if (!KVX::FxRegRegClass.contains(Reg)) {
-      errs() << "Register " << RegStr->getString() << "\n";
-      report_fatal_error("Can't use this register with wfxl/wfxm\n");
-    }
+    Register Reg = McReg.id();
+    const StringRef RegStr = Subtarget->getRegisterInfo()->getName(Reg);
+    if (!KVX::FxRegRegClass.contains(Reg))
+      report_fatal_error("Invalid register in wfxl/wfxm builtin.\n");
 
     if (Subtarget->isV1()) {
       if (KVX::SetFxNotCV1RegRegClass.contains(Reg)) {
-        errs() << "Register " << RegStr->getString() << "\n";
+        errs() << "Register " << RegStr << "\n";
         report_fatal_error(
             "Can't generate wfxl/wfxm for the required register in Cv1");
       }
     } else if (KVX::GetSetFxNotCV2RegRegClass.contains(Reg)) {
-      errs() << "Register " << RegStr->getString() << "\n";
+      errs() << "Register " << RegStr << "\n";
       report_fatal_error(
           "Can't generate wfxl/wfxm for the required register in Cv2");
     }
 
-    unsigned Instr;
-    if (KVX::AloneRegRegClass.contains(Reg))
-      Instr = V ? KVX::WFXMalone : KVX::WFXLalone;
-    else
-      Instr = V ? KVX::WFXM : KVX::WFXL;
-
-    SDVTList VTs = DAG.getVTList(MVT::Other);
-    auto RegNode = DAG.getRegister(Reg, VT);
-    SDValue Ops[] = {Op->getOperand(0), RegNode, Op->getOperand(3)};
-    auto *New = DAG.getMachineNode(Instr, SDLoc(Op), VTs, Ops);
-
-    return SDValue(New, 0);
+    return Op;
   }
   }
 }

@@ -143,31 +143,31 @@ void KVXPacketizerList::endPacket(MachineBasicBlock *MBB,
 }
 
 bool KVXPacketizerList::isSoloInstruction(const MachineInstr &MI) {
-  bool Solo = false;
 
   if (MI.isInlineAsm() || MI.isBundle() || MI.isEHLabel()) {
-    Solo = true;
-  } else {
-    switch (MI.getOpcode()) {
-    default:
-      break;
-    case KVX::SETrst3:
-    case KVX::SETrsa:
-    case KVX::WFXL:
-    case KVX::WFXLalone:
-    case KVX::WFXM:
-    case KVX::WFXMalone:
-      // SET, WFXL, and WFXM instructions have to be alone in a
-      // bundle if they write an AloneReg register.
-      Solo = KVX::AloneRegRegClass.contains(MI.getOperand(0).getReg());
-      break;
+    PacketSize = MI.getDesc().getSize();
+    return true;
+  }
+
+  if (MI.getNumOperands() > 0 && MI.getOperand(0).isReg() &&
+      KVX::AloneRegRegClass.contains(MI.getOperand(0).getReg()) &&
+      MI.getOperand(0).isDef()) {
+    PacketSize = MI.getDesc().getSize();
+    return true;
+  }
+
+  if (!MI.getDesc().getNumImplicitDefs())
+    return false;
+
+  for (const MCPhysReg *ImpDef = MI.getDesc().getImplicitDefs(); *ImpDef;
+       ++ImpDef) {
+    if (KVX::AloneRegRegClass.contains((Register)(*ImpDef))) {
+      PacketSize = MI.getDesc().getSize();
+      return true;
     }
   }
 
-  if (Solo)
-    PacketSize = MI.getDesc().getSize();
-
-  return Solo;
+  return false;
 }
 
 bool KVXPacketizerList::ignorePseudoInstruction(const MachineInstr &MI,
