@@ -115,24 +115,6 @@ unsigned int avgruw(int v1, int v2) {
   return __builtin_kvx_avgw(v1, v2, ".ru");
 }
 
-// CHECK-LABEL: @fabsw(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.fabsw(float [[V:%.*]])
-// CHECK-NEXT:    ret float [[TMP0]]
-//
-float fabsw(float v) {
-  return __builtin_kvx_fabsw(v);
-}
-
-// CHECK-LABEL: @fabsd(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call double @llvm.kvx.fabsd(double [[V:%.*]])
-// CHECK-NEXT:    ret double [[TMP0]]
-//
-double fabsd(double v) {
-  return __builtin_kvx_fabsd(v);
-}
-
 // CHECK-LABEL: @fnegw(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.fnegw(float [[V:%.*]])

@@ -124,7 +124,6 @@ defm : ACSWAP_V2<int_kvx_acswapq, v2i64, ACSWAPQri27, ACSWAPQri54, ACSWAPQr, Qua
 def: Pat<(int_kvx_alclrw i64:$addr), (ALCLRWri10 (i64 0), SingleReg:$addr)>;
 def: Pat<(int_kvx_alclrd i64:$addr), (ALCLRDri10 (i64 0), SingleReg:$addr)>;
 
-def: Pat<(int_kvx_fabswp v2f32:$r), (FABSWP SingleReg:$r)>;
 def: Pat<(int_kvx_fnegwp v2f32:$r), (FNEGWP SingleReg:$r)>;
 
 def: Pat<(int_kvx_fmaxwp v2f32:$v1, v2f32:$v2), (FMAXWP SingleReg:$v1, SingleReg:$v2)>;
@@ -374,8 +373,12 @@ def: Pat<(int_kvx_avgrwp v2i32:$v1, v2i32:$v2), (AVGRWPrr SingleReg:$v1, SingleR
 def: Pat<(int_kvx_avgruw i32:$v1, i32:$v2), (AVGRUWrr SingleReg:$v1, SingleReg:$v2)>;
 def: Pat<(int_kvx_avgruwp v2i32:$v1, v2i32:$v2), (AVGRUWPrr SingleReg:$v1, SingleReg:$v2)>;
 
-def: Pat<(int_kvx_fabsw f32:$v), (FABSW SingleReg:$v)>;
-def: Pat<(int_kvx_fabsd f64:$v), (FABSD SingleReg:$v)>;
+def: Pat<(f32(int_fabs f32:$v)),
+         (FABSW SingleReg:$v)>;
+
+def: Pat<(f64(int_fabs f64:$v)),
+         (FABSD SingleReg:$v)>;
+
 def: Pat<(int_kvx_fnegw f32:$v), (FNEGW SingleReg:$v)>;
 def: Pat<(int_kvx_fnegd f64:$v), (FNEGD SingleReg:$v)>;
 def: Pat<(int_kvx_fmaxw f32:$v1, f32:$v2), (FMAXW SingleReg:$v1, SingleReg:$v2)>;

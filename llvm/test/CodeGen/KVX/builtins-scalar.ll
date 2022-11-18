@@ -260,32 +260,6 @@ entry:
 
 declare i32 @llvm.kvx.ctzw(i32) #1
 
-define float @fabsw(float %v){
-; CHECK-LABEL: fabsw:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fabsw $r0 = $r0
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
-entry:
-  %0 = tail call float @llvm.kvx.fabsw(float %v)
-  ret float %0
-}
-
-declare float @llvm.kvx.fabsw(float) #1
-
-define double @fabsd(double %v){
-; CHECK-LABEL: fabsd:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fabsd $r0 = $r0
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
-entry:
-  %0 = tail call double @llvm.kvx.fabsd(double %v)
-  ret double %0
-}
-
-declare double @llvm.kvx.fabsd(double) #1
-
 define float @fnegw(float %v){
 ; CHECK-LABEL: fnegw:
 ; CHECK:       # %bb.0: # %entry
@@ -980,4 +954,3 @@ define float @fnarrowdw(double %0) {
 }
 
 declare float @llvm.kvx.fnarrowdw(double, i32, i32) #1
-

@@ -19619,9 +19619,6 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     return Builder.CreateCall(Callee, Addr);
   }
 
-  case KVX::BI__builtin_kvx_fabswp:
-    return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_fabswp);
-
   case KVX::BI__builtin_kvx_fnegwp:
     return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_fnegwp);
 
@@ -19883,10 +19880,6 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_negdp:
   case KVX::BI__builtin_kvx_negdq:
     return KVX_emitIntNegBuiltin(*this, E);
-  case KVX::BI__builtin_kvx_fabsw:
-    return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_fabsw);
-  case KVX::BI__builtin_kvx_fabsd:
-    return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_fabsd);
   case KVX::BI__builtin_kvx_fnegw:
     return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_fnegw);
   case KVX::BI__builtin_kvx_fnegd:
@@ -19963,18 +19956,6 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_fnarrowdwq:
     return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fnarrowdwp, 1,
                                  DoubleTy, 4, 2, true, nullptr, FloatTy);
-  case KVX::BI__builtin_kvx_fabswq:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fabswp, 1, FloatTy, 4,
-                                 2);
-  case KVX::BI__builtin_kvx_fabswo:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fabswp, 1, FloatTy, 8,
-                                 2);
-  case KVX::BI__builtin_kvx_fabsdp:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fabsd, 1, DoubleTy, 2,
-                                 1);
-  case KVX::BI__builtin_kvx_fabsdq:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fabsd, 1, DoubleTy, 4,
-                                 1);
   case KVX::BI__builtin_kvx_fnegwq:
     return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fnegwp, 1, FloatTy, 4,
                                  2);
