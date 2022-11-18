@@ -76,7 +76,7 @@ BUILTIN(__builtin_kvx_aladdw, "Uiv*Ui", "n")
 BUILTIN(__builtin_kvx_alclrd, "Oiv*", "n")
 BUILTIN(__builtin_kvx_alclrw, "iv*", "n")
 BUILTIN(__builtin_kvx_dinvall, "vvC*", "n")
-KVX_BUILTIN(dinval, "v", "n", 0, "", )
+KVX_BUILTIN(d1inval, "v", "n", 0, "", )
 BUILTIN(__builtin_kvx_dtouchl, "vvC*", "n")
 BUILTIN(__builtin_kvx_dzerol, "vvC*", "n") // deprecated
 KVX_BUILTIN(fence, "v", "n", 0, "", )

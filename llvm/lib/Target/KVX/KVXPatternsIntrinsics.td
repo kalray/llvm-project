@@ -1,6 +1,5 @@
 def: Pat<(int_kvx_await), (AWAIT)>;
 def: Pat<(int_kvx_barrier), (BARRIER)>;
-def: Pat<(int_kvx_dinval), (DINVAL)>;
 def: Pat<(int_kvx_fence), (FENCE)>;
 def: Pat<(int_kvx_i1inval), (I1INVAL)>;
 def: Pat<(int_kvx_sleep), (SLEEP)>;
