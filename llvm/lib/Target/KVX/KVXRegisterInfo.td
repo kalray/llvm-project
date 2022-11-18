@@ -1260,8 +1260,186 @@ def J2 : X16R<2, "$a32..a47", [I4, I5]>;
 def J3 : X16R<3, "$a48..a63", [I6, I7]>;
 } // let Namespace = "KVX"
 
+// GPR - General-Purpose Registers
+let Size = 64 in
+def SingleReg : RegisterClass<"KVX",
+  [i64, i1, i8, i16, i32, f16, f32, f64, v2i8, v4i8, v8i8, v4i16, v2i16, v2i32, v4f16, v2f16, v2f32],
+  64, (add
+    R0,  R1,  R2,  R3,  R4,  R5,  R6,  R7,  R8,  R9, R10, R11, R12, R13, R14,
+   R15, R16, R17, R18, R19, R20, R21, R22, R23, R24, R25, R26, R27, R28, R29,
+   R30, R31, R32, R33, R34, R35, R36, R37, R38, R39, R40, R41, R42, R43, R44,
+   R45, R46, R47, R48, R49, R50, R51, R52, R53, R54, R55, R56, R57, R58, R59,
+   R60, R61, R62, R63)>;
+
+// PGR - Paired General Registers
+let Size = 128 in
+def PairedReg : RegisterClass<"KVX",
+  [v4i32, v2i64, v4f32, v2f64],
+  128, (add
+    P0,  P2,  P4,  P6,  P8, P10, P12, P14, P16, P18, P20, P22, P24, P26, P28,
+   P30, P32, P34, P36, P38, P40, P42, P44, P46, P48, P50, P52, P54, P56, P58,
+   P60, P62)>;
+
+// QGR - Quadruple General Registers
+let Size = 256 in
+def QuadReg : RegisterClass<"KVX",
+  [v4i64, v4f64],
+  256, (add
+    Q0,  Q4,  Q8, Q12, Q16, Q20, Q24, Q28, Q32, Q36, Q40, Q44, Q48, Q52, Q56,
+   Q60)>;
+
+// XCR - Extension Coprocessor Registers
+// AllocationPriority = 7 -> 256 registers
+let Size = 64, AllocationPriority = 7 in
+def CoproReg : RegisterClass<"KVX",
+  [v64i1],
+  64, (add
+     C0,   C1,   C2,   C3,   C4,   C5,   C6,   C7,   C8,   C9,  C10,  C11,
+    C12,  C13,  C14,  C15,  C16,  C17,  C18,  C19,  C20,  C21,  C22,  C23,
+    C24,  C25,  C26,  C27,  C28,  C29,  C30,  C31,  C32,  C33,  C34,  C35,
+    C36,  C37,  C38,  C39,  C40,  C41,  C42,  C43,  C44,  C45,  C46,  C47,
+    C48,  C49,  C50,  C51,  C52,  C53,  C54,  C55,  C56,  C57,  C58,  C59,
+    C60,  C61,  C62,  C63,  C64,  C65,  C66,  C67,  C68,  C69,  C70,  C71,
+    C72,  C73,  C74,  C75,  C76,  C77,  C78,  C79,  C80,  C81,  C82,  C83,
+    C84,  C85,  C86,  C87,  C88,  C89,  C90,  C91,  C92,  C93,  C94,  C95,
+    C96,  C97,  C98,  C99, C100, C101, C102, C103, C104, C105, C106, C107,
+   C108, C109, C110, C111, C112, C113, C114, C115, C116, C117, C118, C119,
+   C120, C121, C122, C123, C124, C125, C126, C127, C128, C129, C130, C131,
+   C132, C133, C134, C135, C136, C137, C138, C139, C140, C141, C142, C143,
+   C144, C145, C146, C147, C148, C149, C150, C151, C152, C153, C154, C155,
+   C156, C157, C158, C159, C160, C161, C162, C163, C164, C165, C166, C167,
+   C168, C169, C170, C171, C172, C173, C174, C175, C176, C177, C178, C179,
+   C180, C181, C182, C183, C184, C185, C186, C187, C188, C189, C190, C191,
+   C192, C193, C194, C195, C196, C197, C198, C199, C200, C201, C202, C203,
+   C204, C205, C206, C207, C208, C209, C210, C211, C212, C213, C214, C215,
+   C216, C217, C218, C219, C220, C221, C222, C223, C224, C225, C226, C227,
+   C228, C229, C230, C231, C232, C233, C234, C235, C236, C237, C238, C239,
+   C240, C241, C242, C243, C244, C245, C246, C247, C248, C249, C250, C251,
+   C252, C253, C254, C255)>;
+
+// XBR - Extension Block Registers
+// AllocationPriority = 8 -> 128 register
+let Size = 128, AllocationPriority = 8 in
+def BlockReg : RegisterClass<"KVX",
+  [v128i1],
+  128, (add
+     B0,   B1,   B2,   B3,   B4,   B5,   B6,   B7,   B8,   B9,  B10,  B11,
+    B12,  B13,  B14,  B15,  B16,  B17,  B18,  B19,  B20,  B21,  B22,  B23,
+    B24,  B25,  B26,  B27,  B28,  B29,  B30,  B31,  B32,  B33,  B34,  B35,
+    B36,  B37,  B38,  B39,  B40,  B41,  B42,  B43,  B44,  B45,  B46,  B47,
+    B48,  B49,  B50,  B51,  B52,  B53,  B54,  B55,  B56,  B57,  B58,  B59,
+    B60,  B61,  B62,  B63,  B64,  B65,  B66,  B67,  B68,  B69,  B70,  B71,
+    B72,  B73,  B74,  B75,  B76,  B77,  B78,  B79,  B80,  B81,  B82,  B83,
+    B84,  B85,  B86,  B87,  B88,  B89,  B90,  B91,  B92,  B93,  B94,  B95,
+    B96,  B97,  B98,  B99, B100, B101, B102, B103, B104, B105, B106, B107,
+   B108, B109, B110, B111, B112, B113, B114, B115, B116, B117, B118, B119,
+   B120, B121, B122, B123, B124, B125, B126, B127)>;
+
+// XVR - Extension Vector Registers
+// AllocationPriority = 9 -> 64 register
+let Size = 256, AllocationPriority = 9 in
+def VectorReg : RegisterClass<"KVX",
+  [v256i1],
+  256, (add
+    A0,  A1,  A2,  A3,  A4,  A5,  A6,  A7,  A8,  A9, A10, A11, A12, A13, A14,
+   A15, A16, A17, A18, A19, A20, A21, A22, A23, A24, A25, A26, A27, A28, A29,
+   A30, A31, A32, A33, A34, A35, A36, A37, A38, A39, A40, A41, A42, A43, A44,
+   A45, A46, A47, A48, A49, A50, A51, A52, A53, A54, A55, A56, A57, A58, A59,
+   A60, A61, A62, A63)>;
+
+// AllocationPriority = 10 -> 32 register
+// XWR - Extension Wide Registers
+let Size = 512, CopyCost = 2, AllocationPriority = 10, Weight = 8 in
+def WideReg : RegisterClass<"KVX",
+  [v512i1],
+  512, (add
+    W0,  W1,  W2,  W3,  W4,  W5,  W6,  W7,  W8,  W9, W10, W11, W12, W13, W14,
+   W15, W16, W17, W18, W19, W20, W21, W22, W23, W24, W25, W26, W27, W28, W29,
+   W30, W31)>;
+
+// AllocationPriority = 11 -> 16 register
+// XMR - Extension Matrix Registers
+let Size = 1024, CopyCost = 4, AllocationPriority = 11, Weight = 16 in
+def MatrixReg : RegisterClass<"KVX",
+  [v1024i1],
+  1024, (add
+    X0,  X1,  X2,  X3,  X4,  X5,  X6,  X7,  X8,  X9, X10, X11, X12, X13, X14,
+   X15)>;
+
+// AllocationPriority = 10 -> 32 register
+let Size = 256, AllocationPriority = 10, Weight = 4 in {
+// XVR - Accelerator Registers Even Numbered
+def VectorRegE : RegisterClass<"KVX", [v256i1], 256, (decimate VectorReg, 2)>;
+// XVR - Accelerator Registers Odd Numbered
+def VectorRegO : RegisterClass<"KVX", [v256i1], 256, (decimate (shl VectorReg, 1), 2)>;
+}
+
+// AllocationPriority = 9 -> 64 register
+let Size = 128, AllocationPriority = 9, Weight = 2 in {
+// XBR - Block Registers Even Numbered
+def BlockRegE : RegisterClass<"KVX", [v128i1], 128, (decimate BlockReg, 2)>;
+// XBR - Block Registers Odd Numbered
+def BlockRegO : RegisterClass<"KVX", [v128i1], 128, (decimate (shl BlockReg, 1), 2)>;
+}
+
+// AllocationPriority = 10 -> 32 register
+let Size = 128, AllocationPriority = 10, Weight = 2 in {
+// XBR - Block Registers 0 Modulo 4
+def BlockReg0M4 : RegisterClass<"KVX", [v128i1], 128, (decimate BlockReg, 4)>;
+
+// XBR - Block Registers 1 Modulo 4
+def BlockReg1M4 : RegisterClass<"KVX", [v128i1], 128, (decimate (shl BlockReg, 1), 4)>;
+
+// XBR - Block Registers 2 Modulo 4
+def BlockReg2M4 : RegisterClass<"KVX", [v128i1], 128, (decimate (shl BlockReg, 2), 4)>;
+
+// XBR - Block Registers 3 Modulo 4
+def BlockReg3M4 : RegisterClass<"KVX", [v128i1], 128, (decimate (shl BlockReg, 3), 4)>;
+}
+
+// AllocationPriority = 9 -> 64 register
+let Size = 64, AllocationPriority = 9, Weight = 1 in {
+// XCR - Coprocessor Registers 0 Modulo 4
+def CoproReg0M4 : RegisterClass<"KVX", [v64i1], 64, (decimate CoproReg, 4)>;
+
+// XCR - Coprocessor Registers 1 Modulo 4
+def CoproReg1M4 : RegisterClass<"KVX", [v64i1], 64, (decimate (shl CoproReg, 1), 4)>;
+
+// XCR - Coprocessor Registers 2 Modulo 4
+def CoproReg2M4 : RegisterClass<"KVX", [v64i1], 64, (decimate (shl CoproReg, 2), 4)>;
+
+// XCR - Coprocessor Registers 3 Modulo 4
+def CoproReg3M4 : RegisterClass<"KVX", [v64i1], 64, (decimate (shl CoproReg, 3), 4)>;
+}
+
+// AllocationPriority = 12 -> 8 register
+// X8R - Extension 8-Register Buffer
+let Size = 2048, CopyCost = 8, AllocationPriority = 12, Weight = 32 in
+def Buffer8Reg : RegisterClass<"KVX", [v256i8],
+  2048, (add I0, I1, I2, I3, I4, I5, I6, I7)>;
+
+// X16R - Extension 16-Register Buffer
+// AllocationPriority = 13 -> 4 register
+let Size = 4096, CopyCost = 16, AllocationPriority = 13, Weight = 64 in
+def Buffer16Reg : RegisterClass<"KVX", [v128i32],
+  4096, (add J0, J1, J2, J3)>;
+
+// AllocationPriority = 0, should allocate the exact matching register
+let Size = 0, Weight = 1, AllocationPriority = 0 in
+def TcaBuffer : RegisterClass<
+      /*string namespace*/ "KVX",
+      /*list<ValueType> regTypes*/[v512i1, v1024i1,  v256i8, v128i32],
+      /*int alignment*/ 256,
+      /*dag regList*/ !con(WideReg.MemberList, MatrixReg.MemberList, Buffer8Reg.MemberList, Buffer16Reg.MemberList)
+      //, RegAltNameIndex idx = NoRegAltName
+      >;
+
+def BufferReg : RegisterOperand<TcaBuffer> {
+  let PrintMethod = "printBuffer";
+}
+
+let Size = 64, isAllocatable = 0, GeneratePressureSet = 0, CopyCost = 2 in {
 // SFR - System Function Registers
-let Size = 64, isAllocatable = 0, GeneratePressureSet = 0, CopyCost = 2 in
 def SystemReg : RegisterClass<"KVX",
   [i32, i64],
   64, (add
@@ -1330,110 +1508,7 @@ def SystemReg : RegisterClass<"KVX",
    VSFR240, VSFR241, VSFR242, VSFR243, VSFR244, VSFR245, VSFR246, VSFR247,
    VSFR248, VSFR249, VSFR250, VSFR251, VSFR252, VSFR253, VSFR254, VSFR255)>;
 
-// GPR - General-Purpose Registers
-let Size = 64 in
-def SingleReg : RegisterClass<"KVX",
-  [i64, i1, i8, i16, i32, f16, f32, f64, v2i8, v4i8, v8i8, v4i16, v2i16, v2i32, v4f16, v2f16, v2f32],
-  64, (add
-    R0,  R1,  R2,  R3,  R4,  R5,  R6,  R7,  R8,  R9, R10, R11, R12, R13, R14,
-   R15, R16, R17, R18, R19, R20, R21, R22, R23, R24, R25, R26, R27, R28, R29,
-   R30, R31, R32, R33, R34, R35, R36, R37, R38, R39, R40, R41, R42, R43, R44,
-   R45, R46, R47, R48, R49, R50, R51, R52, R53, R54, R55, R56, R57, R58, R59,
-   R60, R61, R62, R63)>;
-
-// PGR - Paired General Registers
-let Size = 128 in
-def PairedReg : RegisterClass<"KVX",
-  [v4i32, v2i64, v4f32, v2f64],
-  128, (add
-    P0,  P2,  P4,  P6,  P8, P10, P12, P14, P16, P18, P20, P22, P24, P26, P28,
-   P30, P32, P34, P36, P38, P40, P42, P44, P46, P48, P50, P52, P54, P56, P58,
-   P60, P62)>;
-
-// QGR - Quadruple General Registers
-let Size = 256 in
-def QuadReg : RegisterClass<"KVX",
-  [v4i64, v4f64],
-  256, (add
-    Q0,  Q4,  Q8, Q12, Q16, Q20, Q24, Q28, Q32, Q36, Q40, Q44, Q48, Q52, Q56,
-   Q60)>;
-
-// XCR - Extension Coprocessor Registers
-let Size = 64 in
-def CoproReg : RegisterClass<"KVX",
-  [v64i1],
-  64, (add
-     C0,   C1,   C2,   C3,   C4,   C5,   C6,   C7,   C8,   C9,  C10,  C11,
-    C12,  C13,  C14,  C15,  C16,  C17,  C18,  C19,  C20,  C21,  C22,  C23,
-    C24,  C25,  C26,  C27,  C28,  C29,  C30,  C31,  C32,  C33,  C34,  C35,
-    C36,  C37,  C38,  C39,  C40,  C41,  C42,  C43,  C44,  C45,  C46,  C47,
-    C48,  C49,  C50,  C51,  C52,  C53,  C54,  C55,  C56,  C57,  C58,  C59,
-    C60,  C61,  C62,  C63,  C64,  C65,  C66,  C67,  C68,  C69,  C70,  C71,
-    C72,  C73,  C74,  C75,  C76,  C77,  C78,  C79,  C80,  C81,  C82,  C83,
-    C84,  C85,  C86,  C87,  C88,  C89,  C90,  C91,  C92,  C93,  C94,  C95,
-    C96,  C97,  C98,  C99, C100, C101, C102, C103, C104, C105, C106, C107,
-   C108, C109, C110, C111, C112, C113, C114, C115, C116, C117, C118, C119,
-   C120, C121, C122, C123, C124, C125, C126, C127, C128, C129, C130, C131,
-   C132, C133, C134, C135, C136, C137, C138, C139, C140, C141, C142, C143,
-   C144, C145, C146, C147, C148, C149, C150, C151, C152, C153, C154, C155,
-   C156, C157, C158, C159, C160, C161, C162, C163, C164, C165, C166, C167,
-   C168, C169, C170, C171, C172, C173, C174, C175, C176, C177, C178, C179,
-   C180, C181, C182, C183, C184, C185, C186, C187, C188, C189, C190, C191,
-   C192, C193, C194, C195, C196, C197, C198, C199, C200, C201, C202, C203,
-   C204, C205, C206, C207, C208, C209, C210, C211, C212, C213, C214, C215,
-   C216, C217, C218, C219, C220, C221, C222, C223, C224, C225, C226, C227,
-   C228, C229, C230, C231, C232, C233, C234, C235, C236, C237, C238, C239,
-   C240, C241, C242, C243, C244, C245, C246, C247, C248, C249, C250, C251,
-   C252, C253, C254, C255)>;
-
-// XBR - Extension Block Registers
-let Size = 128 in
-def BlockReg : RegisterClass<"KVX",
-  [v128i1],
-  128, (add
-     B0,   B1,   B2,   B3,   B4,   B5,   B6,   B7,   B8,   B9,  B10,  B11,
-    B12,  B13,  B14,  B15,  B16,  B17,  B18,  B19,  B20,  B21,  B22,  B23,
-    B24,  B25,  B26,  B27,  B28,  B29,  B30,  B31,  B32,  B33,  B34,  B35,
-    B36,  B37,  B38,  B39,  B40,  B41,  B42,  B43,  B44,  B45,  B46,  B47,
-    B48,  B49,  B50,  B51,  B52,  B53,  B54,  B55,  B56,  B57,  B58,  B59,
-    B60,  B61,  B62,  B63,  B64,  B65,  B66,  B67,  B68,  B69,  B70,  B71,
-    B72,  B73,  B74,  B75,  B76,  B77,  B78,  B79,  B80,  B81,  B82,  B83,
-    B84,  B85,  B86,  B87,  B88,  B89,  B90,  B91,  B92,  B93,  B94,  B95,
-    B96,  B97,  B98,  B99, B100, B101, B102, B103, B104, B105, B106, B107,
-   B108, B109, B110, B111, B112, B113, B114, B115, B116, B117, B118, B119,
-   B120, B121, B122, B123, B124, B125, B126, B127)>;
-
-// XVR - Extension Vector Registers
-let Size = 256 in
-def VectorReg : RegisterClass<"KVX",
-  [v256i1],
-  256, (add
-    A0,  A1,  A2,  A3,  A4,  A5,  A6,  A7,  A8,  A9, A10, A11, A12, A13, A14,
-   A15, A16, A17, A18, A19, A20, A21, A22, A23, A24, A25, A26, A27, A28, A29,
-   A30, A31, A32, A33, A34, A35, A36, A37, A38, A39, A40, A41, A42, A43, A44,
-   A45, A46, A47, A48, A49, A50, A51, A52, A53, A54, A55, A56, A57, A58, A59,
-   A60, A61, A62, A63)>;
-
-// XWR - Extension Wide Registers
-let Size = 512, CopyCost = 2, Weight = 8 in
-def WideReg : RegisterClass<"KVX",
-  [v512i1],
-  512, (add
-    W0,  W1,  W2,  W3,  W4,  W5,  W6,  W7,  W8,  W9, W10, W11, W12, W13, W14,
-   W15, W16, W17, W18, W19, W20, W21, W22, W23, W24, W25, W26, W27, W28, W29,
-   W30, W31)>;
-
-// XMR - Extension Matrix Registers
-let Size = 1024, CopyCost = 4, Weight = 16 in
-def MatrixReg : RegisterClass<"KVX",
-  [v1024i1],
-  1024, (add
-    X0,  X1,  X2,  X3,  X4,  X5,  X6,  X7,  X8,  X9, X10, X11, X12, X13, X14,
-   X15)>;
-
-
 // SFR - RegClas Implying Alone in Bundle
-let Size = 64, isAllocatable = 0, GeneratePressureSet = 0, CopyCost = 2 in
 def AloneReg : RegisterClass<"KVX",
   [i32, i64],
   64, (add
@@ -1441,14 +1516,12 @@ def AloneReg : RegisterClass<"KVX",
       ITOW,     DOW,     MOW,    PSOW,     SPS)>;
 
 // SFR - Singleton RegClas with RA
-let Size = 64, isAllocatable = 0, GeneratePressureSet = 0, CopyCost = 2 in
 def OnlyraReg : RegisterClass<"KVX",
   [i32, i64],
   64, (add
    RA)>;
 
 // SFR - Only GET System Registers
-let Size = 64, isAllocatable = 0, GeneratePressureSet = 0, CopyCost = 2 in
 def OnlygetReg : RegisterClass<"KVX",
   [i32, i64],
   64, (add
@@ -1496,7 +1569,6 @@ def OnlygetReg : RegisterClass<"KVX",
    VSFR254, VSFR255)>;
 
 // SFR - Only SET System Registers without PS
-let Size = 64, isAllocatable = 0, GeneratePressureSet = 0, CopyCost = 2 in
 def OnlysetReg : RegisterClass<"KVX",
   [i32, i64],
   64, (add
@@ -1543,7 +1615,6 @@ def OnlysetReg : RegisterClass<"KVX",
    VSFR253, VSFR254, VSFR255)>;
 
 // SFR - Only FX System Registers without PS
-let Size = 64, isAllocatable = 0, GeneratePressureSet = 0, CopyCost = 2 in
 def OnlyfxReg : RegisterClass<"KVX",
   [i32, i64],
   64, (add
@@ -1553,7 +1624,6 @@ def OnlyfxReg : RegisterClass<"KVX",
        SPS,      ES)>;
 
 // SFR - Only SWAP System Registers without PS
-let Size = 64, isAllocatable = 0, GeneratePressureSet = 0, CopyCost = 2 in
 def OnlyswapReg : RegisterClass<"KVX",
   [i32, i64],
   64, (add
@@ -1621,70 +1691,4 @@ def OnlyswapReg : RegisterClass<"KVX",
    VSFR233, VSFR234, VSFR235, VSFR236, VSFR237, VSFR238, VSFR239, VSFR240,
    VSFR241, VSFR242, VSFR243, VSFR244, VSFR245, VSFR246, VSFR247, VSFR248,
    VSFR249, VSFR250, VSFR251, VSFR252, VSFR253, VSFR254, VSFR255)>;
-
-let Size = 256, Weight = 4 in {
-// XVR - Accelerator Registers Even Numbered
-def VectorRegE : RegisterClass<"KVX", [v256i1], 256, (decimate VectorReg, 2)>;
-// XVR - Accelerator Registers Odd Numbered
-def VectorRegO : RegisterClass<"KVX", [v256i1], 256, (decimate (shl VectorReg, 1), 2)>;
-}
-
-let Size = 128, Weight = 2 in {
-// XBR - Block Registers Even Numbered
-def BlockRegE : RegisterClass<"KVX", [v128i1], 128, (decimate BlockReg, 2)>;
-// XBR - Block Registers Odd Numbered
-def BlockRegO : RegisterClass<"KVX", [v128i1], 128, (decimate (shl BlockReg, 1), 2)>;
-}
-
-// XBR - Block Registers 0 Modulo 4
-let Size = 128, Weight = 2 in {
-def BlockReg0M4 : RegisterClass<"KVX", [v128i1], 128, (decimate BlockReg, 4)>;
-
-// XBR - Block Registers 1 Modulo 4
-def BlockReg1M4 : RegisterClass<"KVX", [v128i1], 128, (decimate (shl BlockReg, 1), 4)>;
-
-// XBR - Block Registers 2 Modulo 4
-def BlockReg2M4 : RegisterClass<"KVX", [v128i1], 128, (decimate (shl BlockReg, 2), 4)>;
-
-// XBR - Block Registers 3 Modulo 4
-def BlockReg3M4 : RegisterClass<"KVX", [v128i1], 128, (decimate (shl BlockReg, 3), 4)>;
-}
-
-// XCR - Coprocessor Registers 0 Modulo 4
-let Size = 64, Weight = 1 in {
-def CoproReg0M4 : RegisterClass<"KVX", [v64i1], 64, (decimate CoproReg, 4)>;
-
-// XCR - Coprocessor Registers 1 Modulo 4
-def CoproReg1M4 : RegisterClass<"KVX", [v64i1], 64, (decimate (shl CoproReg, 1), 4)>;
-
-// XCR - Coprocessor Registers 2 Modulo 4
-def CoproReg2M4 : RegisterClass<"KVX", [v64i1], 64, (decimate (shl CoproReg, 2), 4)>;
-
-// XCR - Coprocessor Registers 3 Modulo 4
-def CoproReg3M4 : RegisterClass<"KVX", [v64i1], 64, (decimate (shl CoproReg, 3), 4)>;
-}
-
-// X8R - Extension 8-Register Buffer
-let Size = 2048, CopyCost = 8, Weight = 32 in
-def Buffer8Reg : RegisterClass<"KVX", [v256i8],
-  2048, (add I0, I1, I2, I3, I4, I5, I6, I7)>;
-
-// X16R - Extension 16-Register Buffer
-// AllocationPriority = 13 -> 4 register
-let Size = 4096, CopyCost = 16, AllocationPriority = 13, Weight = 64 in
-def Buffer16Reg : RegisterClass<"KVX", [v128i32],
-  4096, (add J0, J1, J2, J3)>;
-
-let Size = 0, Weight = 1 in
-def TcaBuffer : RegisterClass<
-      /*string namespace*/ "KVX",
-      /*list<ValueType> regTypes*/[v512i1, v1024i1,  v256i8, v128i32],
-      /*int alignment*/ 256,
-      /*dag regList*/ !con(WideReg.MemberList, MatrixReg.MemberList, Buffer8Reg.MemberList, Buffer16Reg.MemberList)
-      //, RegAltNameIndex idx = NoRegAltName
-      >;
-
-def BufferReg : RegisterOperand<TcaBuffer> {
-  let PrintMethod = "printBuffer";
-}
-
+} // SFR register classes
