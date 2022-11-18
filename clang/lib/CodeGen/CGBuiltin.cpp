@@ -19380,18 +19380,131 @@ KVX_emitVectorShiftingBuiltin(CodeGenFunction &CGF, const CallExpr *E,
 Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
                                            const CallExpr *E) {
   unsigned VectorSize;
+  static const std::string SystemRegNames[] = {
+      // System Function Registers
+      "$pc",      "$ps",      "$pcr",     "$ra",      "$cs",      "$csit",
+      "$aespc",   "$ls",      "$le",      "$lc",      "$ipe",     "$men",
+      "$pmc",     "$pm0",     "$pm1",     "$pm2",     "$pm3",     "$pmsa",
+      "$tcr",     "$t0v",     "$t1v",     "$t0r",     "$t1r",     "$wdv",
+      "$wdr",     "$ile",     "$ill",     "$ilr",     "$mmc",     "$tel",
+      "$teh",     "$ixc",     "$syo",     "$hto",     "$ito",     "$do",
+      "$mo",      "$pso",     "$s38",     "$s39",     "$s40",     "$dba0",
+      "$dba1",    "$dwa0",    "$dwa1",    "$mes",     "$ws",      "$s47",
+      "$s48",     "$s49",     "$s50",     "$s51",     "$s52",     "$s53",
+      "$s54",     "$s55",     "$s56",     "$s57",     "$s58",     "$s59",
+      "$s60",     "$s61",     "$s62",     "$s63",     "$spc_pl0", "$spc_pl1",
+      "$spc_pl2", "$spc_pl3", "$sps_pl0", "$sps_pl1", "$sps_pl2", "$sps_pl3",
+      "$ea_pl0",  "$ea_pl1",  "$ea_pl2",  "$ea_pl3",  "$ev_pl0",  "$ev_pl1",
+      "$ev_pl2",  "$ev_pl3",  "$sr_pl0",  "$sr_pl1",  "$sr_pl2",  "$sr_pl3",
+      "$es_pl0",  "$es_pl1",  "$es_pl2",  "$es_pl3",  "$s88",     "$s89",
+      "$s90",     "$s91",     "$s92",     "$s93",     "$s94",     "$s95",
+      "$syow",    "$htow",    "$itow",    "$dow",     "$mow",     "$psow",
+      "$res102",  "$res103",  "$s104",    "$s105",    "$s106",    "$s107",
+      "$res108",  "$res109",  "$res110",  "$res111",  "$res112",  "$res113",
+      "$res114",  "$res115",  "$res116",  "$res117",  "$res118",  "$res119",
+      "$res120",  "$res121",  "$res122",  "$res123",  "$res124",  "$res125",
+      "$res126",  "$res127",  "$spc",     "$res129",  "$res130",  "$res131",
+      "$sps",     "$res133",  "$res134",  "$res135",  "$ea",      "$res137",
+      "$res138",  "$res139",  "$ev",      "$res141",  "$res142",  "$res143",
+      "$sr",      "$res145",  "$res146",  "$res147",  "$es",      "$res149",
+      "$res150",  "$res151",  "$s152",    "$res153",  "$res154",  "$res155",
+      "$s156",    "$res157",  "$res158",  "$res159",  "$res160",  "$res161",
+      "$res162",  "$res163",  "$res164",  "$res165",  "$res166",  "$res167",
+      "$s168"};
 
   const auto &Target = getTarget();
 
-  switch (BuiltinID) {
-  case KVX::BI__builtin_kvx_get: {
-    SourceLocation Loc = E->getExprLoc();
-    Value *Reg =
-        EmitScalarConversion(EmitScalarExpr(E->getArg(0)),
-                             E->getArg(0)->getType(), getContext().IntTy, Loc);
+  const static std::set<unsigned short> SetFxNotCV1Regs = {
+      31, 38, 39, 47, 48, 49, 50,  51,  52,  53,  54,  55,  56,
+      57, 58, 59, 60, 61, 62, 63,  68,  69,  70,  71,  88,  89,
+      90, 91, 92, 93, 94, 95, 104, 105, 106, 107, 152, 156, 168,
+  };
 
-    Function *Callee = CGM.getIntrinsic(Intrinsic::kvx_get);
-    return Builder.CreateCall(Callee, {Reg});
+  const static std::set<unsigned short> GetSetFxCV1OnlyRegs = {40};
+
+  switch (BuiltinID) {
+  case KVX::BI__builtin_kvx_get:
+  case KVX::BI__builtin_kvx_set: {
+    const static std::set<unsigned short> GetRegs = {
+        0,   1,   2,   3,   4,   5,   6,   7,   8,   9,   10,  11, 12,  13,
+        14,  15,  16,  17,  18,  19,  20,  21,  22,  23,  24,  25, 26,  27,
+        28,  29,  30,  31,  32,  33,  34,  35,  36,  37,  38,  39, 40,  41,
+        42,  43,  44,  45,  46,  47,  48,  49,  50,  51,  52,  53, 54,  55,
+        56,  57,  58,  59,  60,  61,  62,  63,  64,  65,  66,  67, 68,  69,
+        70,  71,  72,  73,  74,  75,  76,  77,  78,  79,  80,  81, 82,  83,
+        84,  85,  86,  87,  88,  89,  90,  91,  92,  93,  94,  95, 104, 105,
+        106, 107, 128, 132, 136, 140, 144, 148, 152, 156, 168,
+    };
+
+    const static std::set<unsigned short> GetNotCV1Regs = {
+        31, 38, 39, 47, 48, 49, 50,  51,  52,  53,  54,  55,  56,
+        57, 58, 59, 60, 61, 62, 63,  68,  69,  70,  71,  88,  89,
+        90, 91, 92, 93, 94, 95, 104, 105, 106, 107, 152, 156, 168,
+    };
+
+    const static std::set<unsigned short> SetRegs = {
+        1,   2,   3,   4,   5,   6,   7,   8,   9,   10,  11,  12,  13,  14,
+        15,  16,  17,  18,  19,  20,  21,  22,  23,  24,  25,  26,  27,  28,
+        29,  30,  31,  38,  39,  40,  41,  42,  43,  44,  45,  46,  47,  48,
+        49,  50,  51,  52,  53,  54,  55,  56,  57,  58,  59,  60,  61,  62,
+        63,  64,  65,  66,  67,  68,  69,  70,  71,  72,  73,  74,  75,  76,
+        77,  78,  79,  80,  81,  82,  83,  84,  85,  86,  87,  88,  89,  90,
+        91,  92,  93,  94,  95,  96,  97,  98,  99,  100, 101, 104, 105, 106,
+        107, 128, 132, 136, 140, 144, 148, 152, 156, 168,
+    };
+
+    auto *SystemRegMacro = E->getArg(0)->IgnoreParenImpCasts();
+    uint64_t SystemRegNumber =
+        cast<clang::IntegerLiteral>(SystemRegMacro)->getValue().getZExtValue();
+
+    const auto Access = (BuiltinID == KVX::BI__builtin_kvx_get)
+                            ? SpecialRegisterAccessKind::VolatileRead
+                            : SpecialRegisterAccessKind::Write;
+
+    bool BadRegister = false;
+    std::string BadCpu = "";
+    std::string Action = "";
+    if (Access == SpecialRegisterAccessKind::Write) {
+      Action = "set";
+      if (SetRegs.find(SystemRegNumber) == SetRegs.end())
+        BadRegister = true;
+      else if (Target.getCPUstr() == "kv3-1") {
+        if (SetFxNotCV1Regs.count(SystemRegNumber))
+          BadCpu = "kv3-1";
+      } else if (GetSetFxCV1OnlyRegs.count(SystemRegNumber))
+        BadCpu = "kv3-2";
+    } else {
+      Action = "get";
+      if (GetRegs.find(SystemRegNumber) == GetRegs.end())
+        BadRegister = true;
+      else if (Target.getCPUstr() == "kv3-1") {
+        if (GetNotCV1Regs.count(SystemRegNumber))
+          BadCpu = "kv3-1";
+      } else if (GetSetFxCV1OnlyRegs.count(SystemRegNumber))
+        BadCpu = "kv3-2";
+    }
+
+    if (BadRegister) {
+      SmallString<64> Str;
+      raw_svector_ostream OS(Str);
+      OS << "Register #" << SystemRegNumber << " can't be used with " << Action
+         << " builtin.";
+      CGM.Error(E->getArg(0)->getBeginLoc(), OS.str());
+      return nullptr;
+    }
+
+    if (BadCpu != "") {
+      SmallString<64> Str;
+      raw_svector_ostream OS(Str);
+      OS << "Register #" << SystemRegNumber << " can't be used with " << Action
+         << " builtin for target cpu " << BadCpu << '.';
+      CGM.Error(E->getArg(0)->getBeginLoc(), OS.str());
+      return nullptr;
+    }
+
+    const auto &SystemReg = SystemRegNames[SystemRegNumber];
+    return EmitSpecialRegisterBuiltin(*this, E, Int64Ty, Int64Ty, Access,
+                                      SystemReg);
   }
 
   case KVX::BI__builtin_kvx_waitit:
@@ -19406,138 +19519,60 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   }
 
   case KVX::BI__builtin_kvx_wfxl:
-  case KVX::BI__builtin_kvx_wfxm:
-  case KVX::BI__builtin_kvx_set: {
-    std::string Asm, Constraints, SystemReg;
+  case KVX::BI__builtin_kvx_wfxm: {
+    bool WFXM = (BuiltinID == KVX::BI__builtin_kvx_wfxm);
 
     auto *SystemRegMacro = E->getArg(0)->IgnoreParenImpCasts();
-    uint64_t SystemRegNumber = 0;
-    bool SystemRegOutOfRange = true;
+    uint64_t SystemRegNumber =
+        cast<clang::IntegerLiteral>(SystemRegMacro)->getValue().getZExtValue();
 
-    if (SystemRegMacro->getStmtClass() == Stmt::IntegerLiteralClass) {
-      SystemRegNumber = cast<clang::IntegerLiteral>(SystemRegMacro)
-                            ->getValue()
-                            .getZExtValue();
-      if (isUInt<9>(SystemRegNumber))
-        SystemRegOutOfRange = false;
+    const static std::set<unsigned short> WfxRegs = {
+        1,  2,  4,  5,  10, 11,  12,  18,  25,  26,  27,  28,  29,  30,  31,
+        40, 45, 46, 47, 48, 49,  50,  61,  68,  69,  70,  71,  84,  85,  86,
+        87, 96, 97, 98, 99, 100, 101, 104, 105, 106, 107, 132, 148, 168,
+    };
+
+    bool BadRegister = false;
+    std::string BadCpu = "";
+    if (WfxRegs.find(SystemRegNumber) == WfxRegs.end())
+      BadRegister = true;
+    else if (Target.getCPUstr() == "kv3-1") {
+      if (SetFxNotCV1Regs.count(SystemRegNumber))
+        BadCpu = "kv3-1";
+    } else if (GetSetFxCV1OnlyRegs.count(SystemRegNumber))
+      BadCpu = "kv3-2";
+
+    const std::string Action = (WFXM) ? "wfxm" : "wfxl";
+    if (BadRegister) {
+      SmallString<64> Str;
+      raw_svector_ostream OS(Str);
+      OS << "Register #" << SystemRegNumber << " can't be used with " << Action
+         << " builtin.";
+      CGM.Error(E->getArg(0)->getBeginLoc(), OS.str());
+      return nullptr;
     }
 
-    if (SystemRegOutOfRange)
-      CGM.Error(E->getArg(0)->getBeginLoc(),
-                "this is not a valid system register");
-
-    static const std::string SystemRegNames[] = {
-        "pc",      "ps",      "pcr",     "ra",      "cs",      "csit",
-        "aespc",   "ls",      "le",      "lc",      "ipe",     "men",
-        "pmc",     "pm0",     "pm1",     "pm2",     "pm3",     "pmsa",
-        "tcr",     "t0v",     "t1v",     "t0r",     "t1r",     "wdv",
-        "wdr",     "ile",     "ill",     "ilr",     "mmc",     "tel",
-        "teh",     "res31",   "syo",     "hto",     "ito",     "do",
-        "mo",      "pso",     "res38",   "res39",   "dc",      "dba0",
-        "dba1",    "dwa0",    "dwa1",    "mes",     "ws",      "res47",
-        "res48",   "res49",   "res50",   "res51",   "res52",   "res53",
-        "res54",   "res55",   "res56",   "res57",   "res58",   "res59",
-        "res60",   "res61",   "res62",   "res63",   "spc_pl0", "spc_pl1",
-        "spc_pl2", "spc_pl3", "sps_pl0", "sps_pl1", "sps_pl2", "sps_pl3",
-        "ea_pl0",  "ea_pl1",  "ea_pl2",  "ea_pl3",  "ev_pl0",  "ev_pl1",
-        "ev_pl2",  "ev_pl3",  "sr_pl0",  "sr_pl1",  "sr_pl2",  "sr_pl3",
-        "es_pl0",  "es_pl1",  "es_pl2",  "es_pl3",  "es88",    "es89",
-        "es90",    "es91",    "es92",    "es93",    "es94",    "es95",
-        "syow",    "htow",    "itow",    "dow",     "mow",     "psow",
-        "res102",  "res103",  "res104",  "res105",  "res106",  "res107",
-        "res108",  "res109",  "res110",  "res111",  "res112",  "res113",
-        "res114",  "res115",  "res116",  "res117",  "res118",  "res119",
-        "res120",  "res121",  "res122",  "res123",  "res124",  "res125",
-        "res126",  "res127",  "spc",     "res129",  "res130",  "res131",
-        "sps",     "res133",  "res134",  "res135",  "ea",      "res137",
-        "res138",  "res139",  "ev",      "res141",  "res142",  "res143",
-        "sr",      "res145",  "res146",  "res147",  "es",      "res149",
-        "res150",  "res151",  "res152",  "res153",  "res154",  "res155",
-        "res156",  "res157",  "res158",  "res159",  "res160",  "res161",
-        "res162",  "res163",  "res164",  "res165",  "res166",  "res167",
-        "res168",  "res169",  "res170",  "res171",  "res172",  "res173",
-        "res174",  "res175",  "res176",  "res177",  "res178",  "res179",
-        "res180",  "res181",  "res182",  "res183",  "res184",  "res185",
-        "res186",  "res187",  "res188",  "res189",  "res190",  "res191",
-        "res192",  "res193",  "res194",  "res195",  "res196",  "res197",
-        "res198",  "res199",  "res200",  "res201",  "res202",  "res203",
-        "res204",  "res205",  "res206",  "res207",  "res208",  "res209",
-        "res210",  "res211",  "res212",  "res213",  "res214",  "res215",
-        "res216",  "res217",  "res218",  "res219",  "res220",  "res221",
-        "res222",  "res223",  "res224",  "res225",  "res226",  "res227",
-        "res228",  "res229",  "res230",  "res231",  "res232",  "res233",
-        "res234",  "res235",  "res236",  "res237",  "res238",  "res239",
-        "res240",  "res241",  "res242",  "res243",  "res244",  "res245",
-        "res246",  "res247",  "res248",  "res249",  "res250",  "res251",
-        "res252",  "res253",  "res254",  "res255",  "sfr0",    "sfr1",
-        "sfr2",    "sfr3",    "sfr4",    "sfr5",    "sfr6",    "sfr7",
-        "sfr8",    "sfr9",    "vsfr10",  "vsfr11",  "vsfr12",  "vsfr13",
-        "vsfr14",  "vsfr15",  "vsfr16",  "vsfr17",  "vsfr18",  "vsfr19",
-        "vsfr20",  "vsfr21",  "vsfr22",  "vsfr23",  "vsfr24",  "vsfr25",
-        "vsfr26",  "vsfr27",  "vsfr28",  "vsfr29",  "vsfr30",  "vsfr31",
-        "vsfr32",  "vsfr33",  "vsfr34",  "vsfr35",  "vsfr36",  "vsfr37",
-        "vsfr38",  "vsfr39",  "vsfr40",  "vsfr41",  "vsfr42",  "vsfr43",
-        "vsfr44",  "vsfr45",  "vsfr46",  "vsfr47",  "vsfr48",  "vsfr49",
-        "vsfr50",  "vsfr51",  "vsfr52",  "vsfr53",  "vsfr54",  "vsfr55",
-        "vsfr56",  "vsfr57",  "vsfr58",  "vsfr59",  "vsfr60",  "vsfr61",
-        "vsfr62",  "vsfr63",  "vsfr64",  "vsfr65",  "vsfr66",  "vsfr67",
-        "vsfr68",  "vsfr69",  "vsfr70",  "vsfr71",  "vsfr72",  "vsfr73",
-        "vsfr74",  "vsfr75",  "vsfr76",  "vsfr77",  "vsfr78",  "vsfr79",
-        "vsfr80",  "vsfr81",  "vsfr82",  "vsfr83",  "vsfr84",  "vsfr85",
-        "vsfr86",  "vsfr87",  "vsfr88",  "vsfr89",  "vsfr90",  "vsfr91",
-        "vsfr92",  "vsfr93",  "vsfr94",  "vsfr95",  "vsfr96",  "vsfr97",
-        "vsfr98",  "vsfr99",  "sfr100",  "sfr101",  "sfr102",  "sfr103",
-        "sfr104",  "sfr105",  "sfr106",  "sfr107",  "sfr108",  "sfr109",
-        "sfr110",  "sfr111",  "sfr112",  "sfr113",  "sfr114",  "sfr115",
-        "sfr116",  "sfr117",  "sfr118",  "sfr119",  "sfr120",  "sfr121",
-        "sfr122",  "sfr123",  "sfr124",  "sfr125",  "sfr126",  "sfr127",
-        "sfr128",  "sfr129",  "sfr130",  "sfr131",  "sfr132",  "sfr133",
-        "sfr134",  "sfr135",  "sfr136",  "sfr137",  "sfr138",  "sfr139",
-        "sfr140",  "sfr141",  "sfr142",  "sfr143",  "sfr144",  "sfr145",
-        "sfr146",  "sfr147",  "sfr148",  "sfr149",  "sfr150",  "sfr151",
-        "sfr152",  "sfr153",  "sfr154",  "sfr155",  "sfr156",  "sfr157",
-        "sfr158",  "sfr159",  "sfr160",  "sfr161",  "sfr162",  "sfr163",
-        "sfr164",  "sfr165",  "sfr166",  "sfr167",  "sfr168",  "sfr169",
-        "sfr170",  "sfr171",  "sfr172",  "sfr173",  "sfr174",  "sfr175",
-        "sfr176",  "sfr177",  "sfr178",  "sfr179",  "sfr180",  "sfr181",
-        "sfr182",  "sfr183",  "sfr184",  "sfr185",  "sfr186",  "sfr187",
-        "sfr188",  "sfr189",  "sfr190",  "sfr191",  "sfr192",  "sfr193",
-        "sfr194",  "sfr195",  "sfr196",  "sfr197",  "sfr198",  "sfr199",
-        "sfr200",  "sfr201",  "sfr202",  "sfr203",  "sfr204",  "sfr205",
-        "sfr206",  "sfr207",  "sfr208",  "sfr209",  "sfr210",  "sfr211",
-        "sfr212",  "sfr213",  "sfr214",  "sfr215",  "sfr216",  "sfr217",
-        "sfr218",  "sfr219",  "sfr220",  "sfr221",  "sfr222",  "sfr223",
-        "sfr224",  "sfr225",  "sfr226",  "sfr227",  "sfr228",  "sfr229",
-        "sfr230",  "sfr231",  "sfr232",  "sfr233",  "sfr234",  "sfr235",
-        "sfr236",  "sfr237",  "sfr238",  "sfr239",  "sfr240",  "sfr241",
-        "sfr242",  "sfr243",  "sfr244",  "sfr245",  "sfr246",  "sfr247",
-        "sfr248",  "sfr249",  "sfr250",  "sfr251",  "sfr252",  "sfr253",
-        "sfr254",  "sfr255"};
-
-    SystemReg = SystemRegNames[SystemRegNumber];
-
-    switch (BuiltinID) {
-    case KVX::BI__builtin_kvx_wfxl:
-      Asm = "wfxl $$" + SystemReg + ", $0";
-      break;
-    case KVX::BI__builtin_kvx_wfxm:
-      Asm = "wfxm $$" + SystemReg + ", $0";
-      break;
-    case KVX::BI__builtin_kvx_set:
-      Asm = "set $$" + SystemReg + " = $0";
-      break;
-    default:
-      llvm_unreachable("only supports wfxl, wfxm and set builtins");
+    if (BadCpu != "") {
+      SmallString<64> Str;
+      raw_svector_ostream OS(Str);
+      OS << "Register #" << SystemRegNumber << " can't be used with " << Action
+         << " builtin for target cpu " << BadCpu << '.';
+      CGM.Error(E->getArg(0)->getBeginLoc(), OS.str());
+      return nullptr;
     }
+    const auto &SysReg = SystemRegNames[SystemRegNumber];
 
-    Constraints = "r,~{$" + SystemReg + "}";
+    assert(!SysReg.empty() && "Bad register name map.");
 
-    llvm::FunctionType *FTy = llvm::FunctionType::get(VoidTy, {Int64Ty}, false);
-    llvm::InlineAsm *IA =
-        llvm::InlineAsm::get(FTy, Asm, Constraints, /*hasSideEffects=*/true);
-    llvm::CallInst *CI = Builder.CreateCall(IA, EmitScalarExpr(E->getArg(1)));
+    LLVMContext &Context = CGM.getLLVMContext();
+    llvm::Metadata *Ops[] = {llvm::MDString::get(Context, SysReg)};
+    llvm::MDNode *RegName = llvm::MDNode::get(Context, Ops);
+    llvm::Value *Metadata = llvm::MetadataAsValue::get(Context, RegName);
 
-    return CI;
+    Function *F = CGM.getIntrinsic(llvm::Intrinsic::kvx_wfx);
+    Value *ArgValue = EmitScalarExpr(E->getArg(1));
+    Value *InstrType = ConstantInt::get(IntTy, WFXM);
+    return Builder.CreateCall(F, {Metadata, ArgValue, InstrType});
   }
 
   case KVX::BI__builtin_kvx_acswapd:

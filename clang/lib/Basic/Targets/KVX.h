@@ -110,6 +110,10 @@ public:
   bool hasSjLjLowering() const override { return true; }
 
   bool isCLZForZeroUndef() const override { return false; }
+
+  bool isSPRegName(StringRef R) const override {
+    return R == "$sp" || R == "$r12";
+  }
 };
 
 } // namespace targets
