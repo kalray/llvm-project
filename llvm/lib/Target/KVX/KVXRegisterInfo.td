@@ -1261,7 +1261,7 @@ def J3 : X16R<3, "$a48..a63", [I6, I7]>;
 } // let Namespace = "KVX"
 
 // SFR - System Function Registers
-let Size = 64 in
+let Size = 64, isAllocatable = 0, GeneratePressureSet = 0, CopyCost = 2 in
 def SystemReg : RegisterClass<"KVX",
   [i32, i64],
   64, (add
@@ -1431,13 +1431,9 @@ def MatrixReg : RegisterClass<"KVX",
     X0,  X1,  X2,  X3,  X4,  X5,  X6,  X7,  X8,  X9, X10, X11, X12, X13, X14,
    X15)>;
 
-let Size = 1024, isAllocatable = 0, CopyCost = -1 in
-def ZeroMatrixReg : RegisterClass<"KVX",
-  [v1024i1],
-  1024, (add X12)>;
 
 // SFR - RegClas Implying Alone in Bundle
-let Size = 64 in
+let Size = 64, isAllocatable = 0, GeneratePressureSet = 0, CopyCost = 2 in
 def AloneReg : RegisterClass<"KVX",
   [i32, i64],
   64, (add
@@ -1445,14 +1441,14 @@ def AloneReg : RegisterClass<"KVX",
       ITOW,     DOW,     MOW,    PSOW,     SPS)>;
 
 // SFR - Singleton RegClas with RA
-let Size = 64 in
+let Size = 64, isAllocatable = 0, GeneratePressureSet = 0, CopyCost = 2 in
 def OnlyraReg : RegisterClass<"KVX",
   [i32, i64],
   64, (add
    RA)>;
 
 // SFR - Only GET System Registers
-let Size = 64 in
+let Size = 64, isAllocatable = 0, GeneratePressureSet = 0, CopyCost = 2 in
 def OnlygetReg : RegisterClass<"KVX",
   [i32, i64],
   64, (add
@@ -1500,7 +1496,7 @@ def OnlygetReg : RegisterClass<"KVX",
    VSFR254, VSFR255)>;
 
 // SFR - Only SET System Registers without PS
-let Size = 64 in
+let Size = 64, isAllocatable = 0, GeneratePressureSet = 0, CopyCost = 2 in
 def OnlysetReg : RegisterClass<"KVX",
   [i32, i64],
   64, (add
@@ -1547,7 +1543,7 @@ def OnlysetReg : RegisterClass<"KVX",
    VSFR253, VSFR254, VSFR255)>;
 
 // SFR - Only FX System Registers without PS
-let Size = 64 in
+let Size = 64, isAllocatable = 0, GeneratePressureSet = 0, CopyCost = 2 in
 def OnlyfxReg : RegisterClass<"KVX",
   [i32, i64],
   64, (add
@@ -1557,7 +1553,7 @@ def OnlyfxReg : RegisterClass<"KVX",
        SPS,      ES)>;
 
 // SFR - Only SWAP System Registers without PS
-let Size = 64 in
+let Size = 64, isAllocatable = 0, GeneratePressureSet = 0, CopyCost = 2 in
 def OnlyswapReg : RegisterClass<"KVX",
   [i32, i64],
   64, (add
