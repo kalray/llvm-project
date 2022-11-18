@@ -124,7 +124,19 @@ defm : ACSWAP_V2<int_kvx_acswapq, v2i64, ACSWAPQri27, ACSWAPQri54, ACSWAPQr, Qua
 def: Pat<(int_kvx_alclrw i64:$addr), (ALCLRWri10 (i64 0), SingleReg:$addr)>;
 def: Pat<(int_kvx_alclrd i64:$addr), (ALCLRDri10 (i64 0), SingleReg:$addr)>;
 
-def: Pat<(int_kvx_fnegwp v2f32:$r), (FNEGWP SingleReg:$r)>;
+foreach vt = [f16, v2f16, v4f16] in
+def: Pat<(vt (int_kvx_fneg vt:$v)),
+         (FNEGHQ SingleReg:$v)>;
+
+def: Pat<(f32 (int_kvx_fneg f32:$v)),
+         (FNEGW SingleReg:$v)>;
+
+def: Pat<(f64 (int_kvx_fneg f64:$v)),
+         (FNEGD SingleReg:$v)>;
+
+def: Pat<(v2f32(int_kvx_fneg v2f32:$r)),
+         (FNEGWP SingleReg:$r)>;
+
 
 def: Pat<(int_kvx_fmaxwp v2f32:$v1, v2f32:$v2), (FMAXWP SingleReg:$v1, SingleReg:$v2)>;
 def: Pat<(int_kvx_fminwp v2f32:$v1, v2f32:$v2), (FMINWP SingleReg:$v1, SingleReg:$v2)>;
@@ -379,8 +391,6 @@ def: Pat<(f32(int_fabs f32:$v)),
 def: Pat<(f64(int_fabs f64:$v)),
          (FABSD SingleReg:$v)>;
 
-def: Pat<(int_kvx_fnegw f32:$v), (FNEGW SingleReg:$v)>;
-def: Pat<(int_kvx_fnegd f64:$v), (FNEGD SingleReg:$v)>;
 def: Pat<(int_kvx_fmaxw f32:$v1, f32:$v2), (FMAXW SingleReg:$v1, SingleReg:$v2)>;
 def: Pat<(int_kvx_fmaxd f64:$v1, f64:$v2), (FMAXD SingleReg:$v1, SingleReg:$v2)>;
 def: Pat<(int_kvx_fminw f32:$v1, f32:$v2), (FMINW SingleReg:$v1, SingleReg:$v2)>;
