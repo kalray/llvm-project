@@ -19992,7 +19992,7 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmaw, true);
   case KVX::BI__builtin_kvx_ffmad:
     return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmad, true);
-  case KVX::BI__builtin_kvx_ffmaxwd:
+  case KVX::BI__builtin_kvx_ffmawd:
     return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmawd, true);
   case KVX::BI__builtin_kvx_ffmsw:
     return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmsw, true);

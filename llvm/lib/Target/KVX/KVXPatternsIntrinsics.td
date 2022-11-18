@@ -738,7 +738,7 @@ def: Pat<(int_kvx_xfmma242hw2 VectorRegO:$o, WideReg:$a2, VectorReg:$a3, VectorR
          (FMMA242HW2p VectorRegO:$o, $a2, $a3, $a4)>, Requires<[IsV1]>;
 def: Pat<(int_kvx_xfmma242hw3 VectorRegO:$o, WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
          (FMMA242HW3p VectorRegO:$o, $a2, $a3, $a4)>, Requires<[IsV1]>;
-def: Pat<(int_kvx_xfmma444hw WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
+def: Pat<(int_kvx_xfmma444hw VectorReg:$a3, VectorReg:$a4, WideReg:$a2),
          (REG_SEQUENCE WideReg,
             (FMMA242HW1p (FMMA242HW0p (v256i1(IMPLICIT_DEF)), $a2, $a3, $a4), $a2, $a3, $a4),
             sub_v0,

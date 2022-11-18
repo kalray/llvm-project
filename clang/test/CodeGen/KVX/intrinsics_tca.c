@@ -27,7 +27,7 @@ typedef long __attribute__((__vector_size__(32))) v4i64_t;
 // CHECK-NEXT:    [[TMP17:%.*]] = call <256 x i1> @llvm.kvx.xfmma242hw1(<256 x i1> [[TMP16]], <512 x i1> [[TMP14]], <256 x i1> [[TMP13]], <256 x i1> [[TMP16]])
 // CHECK-NEXT:    [[TMP18:%.*]] = call <256 x i1> @llvm.kvx.xfmma242hw2(<256 x i1> [[TMP17]], <512 x i1> [[TMP14]], <256 x i1> [[TMP17]], <256 x i1> [[TMP16]])
 // CHECK-NEXT:    [[TMP19:%.*]] = call <256 x i1> @llvm.kvx.xfmma242hw3(<256 x i1> [[TMP18]], <512 x i1> [[TMP14]], <256 x i1> [[TMP17]], <256 x i1> [[TMP18]])
-// CHECK-NEXT:    [[TMP20:%.*]] = call <512 x i1> @llvm.kvx.xfmma444hw(<512 x i1> [[TMP14]], <256 x i1> [[TMP18]], <256 x i1> [[TMP19]])
+// CHECK-NEXT:    [[TMP20:%.*]] = call <512 x i1> @llvm.kvx.xfmma444hw(<256 x i1> [[TMP18]], <256 x i1> [[TMP19]], <512 x i1> [[TMP14]])
 // CHECK-NEXT:    [[TMP21:%.*]] = call <1024 x i1> @llvm.kvx.xmma444hbd0(<256 x i1> [[TMP19]], <256 x i1> [[TMP19]], <1024 x i1> [[TMP11]], i32 0)
 // CHECK-NEXT:    [[TMP22:%.*]] = call <1024 x i1> @llvm.kvx.xmma444hbd1(<256 x i1> [[TMP19]], <256 x i1> [[TMP19]], <1024 x i1> [[TMP21]], i32 0)
 // CHECK-NEXT:    [[TMP23:%.*]] = call <1024 x i1> @llvm.kvx.xmma484hbd(<512 x i1> [[TMP20]], <256 x i1> [[TMP19]], <1024 x i1> [[TMP22]], i32 0)
@@ -97,7 +97,7 @@ v4i64_t test_tca_builtins(long a, long b, long c, long d, volatile __kvx_x256 *v
   lv = __builtin_kvx_xfmma242hw1(lv2, lw, lv, lv2);
   lv2 = __builtin_kvx_xfmma242hw2(lv, lw, lv, lv2);
   lv = __builtin_kvx_xfmma242hw3(lv2, lw, lv, lv2);
-  lw = __builtin_kvx_xfmma444hw(lw, lv2, lv);
+  lw = __builtin_kvx_xfmma444hw(lv2, lv, lw);
   lm = __builtin_kvx_xmma444hbd0(lv, lv, lm, ".s");
   lm = __builtin_kvx_xmma444hbd1(lv, lv, lm, ".s");
   lm = __builtin_kvx_xmma484hbd(lw, lv, lm, "");

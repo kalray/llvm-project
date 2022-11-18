@@ -322,7 +322,7 @@ def int_kvx_xfmma242hw0 : KVX_TCA_fmma;
 def int_kvx_xfmma242hw1 : KVX_TCA_fmma;
 def int_kvx_xfmma242hw2 : KVX_TCA_fmma;
 def int_kvx_xfmma242hw3 : KVX_TCA_fmma;
-def int_kvx_xfmma444hw : Intrinsic<[llvm_v512i1_ty], [llvm_v512i1_ty, llvm_v256i1_ty, llvm_v256i1_ty], [IntrReadMem]>;
+def int_kvx_xfmma444hw : Intrinsic<[llvm_v512i1_ty], [llvm_v256i1_ty, llvm_v256i1_ty, llvm_v512i1_ty], [IntrReadMem]>;
 
 class KVX_TCA_Ternary<list<LLVMType> args>
     : Intrinsic<args, !listconcat(args, [llvm_v256i1_ty], [llvm_v256i1_ty]), [IntrReadMem]>;

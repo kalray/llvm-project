@@ -328,13 +328,13 @@ double ffmad(double a, double b, double c) {
   return __builtin_kvx_ffmad(a, b, c, ".rz");
 }
 
-// CHECK-LABEL: @ffmaxwd(
+// CHECK-LABEL: @ffmawd(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call double @llvm.kvx.ffmawd(float [[A:%.*]], float [[B:%.*]], double [[C:%.*]], i32 3, i32 0)
 // CHECK-NEXT:    ret double [[TMP0]]
 //
-double ffmaxwd(float a, float b, double c) {
-  return __builtin_kvx_ffmaxwd(a, b, c, ".rz");
+double ffmawd(float a, float b, double c) {
+  return __builtin_kvx_ffmawd(a, b, c, ".rz");
 }
 
 // CHECK-LABEL: @ffmsw(
