@@ -588,6 +588,18 @@ KVX_BUILTIN(xaccess1024o, "V4OiTx1024UOi", "n", 2, "kv3-2", )
 
 
 // Builtins expanded into different/multiple ones
+KVX_MANY_BUILTIN(copysignd, "ddd", "n", 2, "", copysign, 1, true, )
+KVX_MANY_BUILTIN(copysigndp, "V2dV2dV2d", "n", 2, "", copysign, 2, true, )
+KVX_MANY_BUILTIN(copysigndq, "V4dV4dV4d", "n", 2, "", copysign, 4, true, )
+KVX_MANY_BUILTIN(copysignh, "xxx", "n", 2, "", copysign, 1, true, )
+KVX_MANY_BUILTIN(copysignho, "V8xV8xV8x", "n", 2, "", copysign, 2, true, )
+KVX_MANY_BUILTIN(copysignhp, "V2xV2xV2x", "n", 2, "", copysign, 1, true, )
+KVX_MANY_BUILTIN(copysignhq, "V4xV4xV4x", "n", 2, "", copysign, 1, true, )
+KVX_MANY_BUILTIN(copysignhx, "V16xV16xV16x", "n", 2, "", copysign, 4, true, )
+KVX_MANY_BUILTIN(copysignw, "fff", "n", 2, "", copysign, 1, true, )
+KVX_MANY_BUILTIN(copysignwo, "V8fV8fV8f", "n", 2, "", copysign, 4, true, )
+KVX_MANY_BUILTIN(copysignwp, "V2fV2fV2f", "n", 2, "", copysign, 1, true, )
+KVX_MANY_BUILTIN(copysignwq, "V4fV4fV4f", "n", 2, "", copysign, 2, true, )
 KVX_MANY_BUILTIN(selectbo, "V8cV8cV8cV8UccC*", "n", 4, "kv3-2", kvx_select_vec, 1, true, KVX_SIMDCOND)
 KVX_MANY_BUILTIN(selectbp, "V2cV2cV2cV2UccC*", "n", 4, "kv3-2", kvx_select_vec, 1, true, KVX_SIMDCOND)
 KVX_MANY_BUILTIN(selectbq, "V4cV4cV4cV4UccC*", "n", 4, "kv3-2", kvx_select_vec, 1, true, KVX_SIMDCOND)
