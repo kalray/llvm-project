@@ -23,13 +23,21 @@ declare <2 x float> @llvm.kvx.fmulwc(<2 x float>, <2 x float>, i32, i32, i32)
 
 
 define <2 x float> @ffmawc(<2 x float> %a, <2 x float> %b, <2 x float> %c) {
-; CHECK-LABEL: ffmawc:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmulwc.rn $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddwp.rn $r0 = $r0, $r2
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KVCV1-LABEL: ffmawc:
+; KVCV1:       # %bb.0: # %entry
+; KVCV1-NEXT:    fmulwc.rn $r0 = $r1, $r0
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    faddwp.rn $r0 = $r0, $r2
+; KVCV1-NEXT:    ret
+; KVCV1-NEXT:    ;;
+;
+; KVCV2-LABEL: ffmawc:
+; KVCV2:       # %bb.0: # %entry
+; KVCV2-NEXT:    ffmawc.rn $r2 = $r0, $r1
+; KVCV2-NEXT:    ;;
+; KVCV2-NEXT:    copyd $r0 = $r2
+; KVCV2-NEXT:    ret
+; KVCV2-NEXT:    ;;
 entry:
   %0 = tail call <2 x float> @llvm.kvx.ffmawc(<2 x float> %a, <2 x float> %b, <2 x float> %c, i32 0, i32 0, i32 0)
   ret <2 x float> %0
@@ -39,13 +47,21 @@ entry:
 declare <2 x float> @llvm.kvx.ffmawc(<2 x float>, <2 x float>, <2 x float>, i32, i32, i32)
 
 define <2 x float> @ffmswc(<2 x float> %a, <2 x float> %b, <2 x float> %c) {
-; CHECK-LABEL: ffmswc:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmulwc.rn $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfwp.rn $r0 = $r0, $r2
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KVCV1-LABEL: ffmswc:
+; KVCV1:       # %bb.0: # %entry
+; KVCV1-NEXT:    fmulwc.rn $r0 = $r1, $r0
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    fsbfwp.rn $r0 = $r0, $r2
+; KVCV1-NEXT:    ret
+; KVCV1-NEXT:    ;;
+;
+; KVCV2-LABEL: ffmswc:
+; KVCV2:       # %bb.0: # %entry
+; KVCV2-NEXT:    ffmswc.rn $r2 = $r0, $r1
+; KVCV2-NEXT:    ;;
+; KVCV2-NEXT:    copyd $r0 = $r2
+; KVCV2-NEXT:    ret
+; KVCV2-NEXT:    ;;
 entry:
   %0 = tail call <2 x float> @llvm.kvx.ffmswc(<2 x float> %a, <2 x float> %b, <2 x float> %c, i32 0, i32 0, i32 0)
   ret <2 x float> %0
@@ -67,13 +83,21 @@ entry:
 
 
 define <2 x float> @ffmacwc(<2 x float> %a, <2 x float> %b, <2 x float> %c) {
-; CHECK-LABEL: ffmacwc:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmulwc.c.rn $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddwp.c.rn $r0 = $r0, $r2
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KVCV1-LABEL: ffmacwc:
+; KVCV1:       # %bb.0: # %entry
+; KVCV1-NEXT:    fmulwc.c.rn $r0 = $r1, $r0
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    faddwp.c.rn $r0 = $r0, $r2
+; KVCV1-NEXT:    ret
+; KVCV1-NEXT:    ;;
+;
+; KVCV2-LABEL: ffmacwc:
+; KVCV2:       # %bb.0: # %entry
+; KVCV2-NEXT:    ffmawc.c.rn $r2 = $r0, $r1
+; KVCV2-NEXT:    ;;
+; KVCV2-NEXT:    copyd $r0 = $r2
+; KVCV2-NEXT:    ret
+; KVCV2-NEXT:    ;;
 entry:
   %0 = tail call <2 x float> @llvm.kvx.ffmawc(<2 x float> %a, <2 x float> %b, <2 x float> %c, i32 1, i32 0, i32 0)
   ret <2 x float> %0
@@ -81,13 +105,21 @@ entry:
 
 
 define <2 x float> @ffmscwc(<2 x float> %a, <2 x float> %b, <2 x float> %c) {
-; CHECK-LABEL: ffmscwc:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmulwc.c.rn $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfwp.c.rn $r0 = $r0, $r2
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KVCV1-LABEL: ffmscwc:
+; KVCV1:       # %bb.0: # %entry
+; KVCV1-NEXT:    fmulwc.c.rn $r0 = $r1, $r0
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    fsbfwp.c.rn $r0 = $r0, $r2
+; KVCV1-NEXT:    ret
+; KVCV1-NEXT:    ;;
+;
+; KVCV2-LABEL: ffmscwc:
+; KVCV2:       # %bb.0: # %entry
+; KVCV2-NEXT:    ffmswc.c.rn $r2 = $r0, $r1
+; KVCV2-NEXT:    ;;
+; KVCV2-NEXT:    copyd $r0 = $r2
+; KVCV2-NEXT:    ret
+; KVCV2-NEXT:    ;;
 entry:
   %0 = tail call <2 x float> @llvm.kvx.ffmswc(<2 x float> %a, <2 x float> %b, <2 x float> %c, i32 1, i32 0, i32 0)
   ret <2 x float> %0
@@ -133,17 +165,26 @@ declare <4 x float> @llvm.kvx.fmulwcp(<4 x float>, <4 x float>, i32, i32, i32)
 
 
 define <4 x float> @ffmawcp(<4 x float> %a, <4 x float> %b, <4 x float> %c) {
-; CHECK-LABEL: ffmawcp:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmulwc.rn $r1 = $r3, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulwc.rn $r0 = $r2, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddwp.rn $r1 = $r1, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddwp.rn $r0 = $r0, $r4
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KVCV1-LABEL: ffmawcp:
+; KVCV1:       # %bb.0: # %entry
+; KVCV1-NEXT:    fmulwc.rn $r1 = $r3, $r1
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    fmulwc.rn $r0 = $r2, $r0
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    faddwp.rn $r1 = $r1, $r5
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    faddwp.rn $r0 = $r0, $r4
+; KVCV1-NEXT:    ret
+; KVCV1-NEXT:    ;;
+;
+; KVCV2-LABEL: ffmawcp:
+; KVCV2:       # %bb.0: # %entry
+; KVCV2-NEXT:    ffmawcp.rn $r4r5 = $r0r1, $r2r3
+; KVCV2-NEXT:    ;;
+; KVCV2-NEXT:    copyd $r0 = $r4
+; KVCV2-NEXT:    copyd $r1 = $r5
+; KVCV2-NEXT:    ret
+; KVCV2-NEXT:    ;;
 entry:
   %0 = tail call <4 x float> @llvm.kvx.ffmawcp(<4 x float> %a, <4 x float> %b, <4 x float> %c, i32 0, i32 0, i32 0)
   ret <4 x float> %0
@@ -154,17 +195,26 @@ declare <4 x float> @llvm.kvx.ffmawcp(<4 x float>, <4 x float>, <4 x float>, i32
 
 
 define <4 x float> @ffmswcp(<4 x float> %a, <4 x float> %b, <4 x float> %c) {
-; CHECK-LABEL: ffmswcp:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmulwc.rn $r1 = $r3, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulwc.rn $r0 = $r2, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfwp.rn $r1 = $r1, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfwp.rn $r0 = $r0, $r4
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KVCV1-LABEL: ffmswcp:
+; KVCV1:       # %bb.0: # %entry
+; KVCV1-NEXT:    fmulwc.rn $r1 = $r3, $r1
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    fmulwc.rn $r0 = $r2, $r0
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    fsbfwp.rn $r1 = $r1, $r5
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    fsbfwp.rn $r0 = $r0, $r4
+; KVCV1-NEXT:    ret
+; KVCV1-NEXT:    ;;
+;
+; KVCV2-LABEL: ffmswcp:
+; KVCV2:       # %bb.0: # %entry
+; KVCV2-NEXT:    ffmswcp.rn $r4r5 = $r0r1, $r2r3
+; KVCV2-NEXT:    ;;
+; KVCV2-NEXT:    copyd $r0 = $r4
+; KVCV2-NEXT:    copyd $r1 = $r5
+; KVCV2-NEXT:    ret
+; KVCV2-NEXT:    ;;
 entry:
   %0 = tail call <4 x float> @llvm.kvx.ffmswcp(<4 x float> %a, <4 x float> %b, <4 x float> %c, i32 0, i32 0, i32 0)
   ret <4 x float> %0
@@ -195,17 +245,26 @@ entry:
 
 
 define <4 x float> @ffmacwcp(<4 x float> %a, <4 x float> %b, <4 x float> %c) {
-; CHECK-LABEL: ffmacwcp:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmulwc.c.rn $r1 = $r3, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulwc.c.rn $r0 = $r2, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddwp.c.rn $r1 = $r1, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddwp.c.rn $r0 = $r0, $r4
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KVCV1-LABEL: ffmacwcp:
+; KVCV1:       # %bb.0: # %entry
+; KVCV1-NEXT:    fmulwc.c.rn $r1 = $r3, $r1
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    fmulwc.c.rn $r0 = $r2, $r0
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    faddwp.c.rn $r1 = $r1, $r5
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    faddwp.c.rn $r0 = $r0, $r4
+; KVCV1-NEXT:    ret
+; KVCV1-NEXT:    ;;
+;
+; KVCV2-LABEL: ffmacwcp:
+; KVCV2:       # %bb.0: # %entry
+; KVCV2-NEXT:    ffmawcp.c.rn $r4r5 = $r0r1, $r2r3
+; KVCV2-NEXT:    ;;
+; KVCV2-NEXT:    copyd $r0 = $r4
+; KVCV2-NEXT:    copyd $r1 = $r5
+; KVCV2-NEXT:    ret
+; KVCV2-NEXT:    ;;
 entry:
   %0 = tail call <4 x float> @llvm.kvx.ffmawcp(<4 x float> %a, <4 x float> %b, <4 x float> %c, i32 1, i32 0, i32 0)
   ret <4 x float> %0
@@ -213,17 +272,26 @@ entry:
 
 
 define <4 x float> @ffmscwcp(<4 x float> %a, <4 x float> %b, <4 x float> %c) {
-; CHECK-LABEL: ffmscwcp:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmulwc.c.rn $r1 = $r3, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulwc.c.rn $r0 = $r2, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfwp.c.rn $r1 = $r1, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfwp.c.rn $r0 = $r0, $r4
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KVCV1-LABEL: ffmscwcp:
+; KVCV1:       # %bb.0: # %entry
+; KVCV1-NEXT:    fmulwc.c.rn $r1 = $r3, $r1
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    fmulwc.c.rn $r0 = $r2, $r0
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    fsbfwp.c.rn $r1 = $r1, $r5
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    fsbfwp.c.rn $r0 = $r0, $r4
+; KVCV1-NEXT:    ret
+; KVCV1-NEXT:    ;;
+;
+; KVCV2-LABEL: ffmscwcp:
+; KVCV2:       # %bb.0: # %entry
+; KVCV2-NEXT:    ffmswcp.c.rn $r4r5 = $r0r1, $r2r3
+; KVCV2-NEXT:    ;;
+; KVCV2-NEXT:    copyd $r0 = $r4
+; KVCV2-NEXT:    copyd $r1 = $r5
+; KVCV2-NEXT:    ret
+; KVCV2-NEXT:    ;;
 entry:
   %0 = tail call <4 x float> @llvm.kvx.ffmswcp(<4 x float> %a, <4 x float> %b, <4 x float> %c, i32 1, i32 0, i32 0)
   ret <4 x float> %0
@@ -279,25 +347,39 @@ entry:
 
 
 define <8 x float> @ffmawcq(<8 x float> %a, <8 x float> %b, <8 x float> %c) local_unnamed_addr #3 {
-; CHECK-LABEL: ffmawcq:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmulwc.rn $r1 = $r5, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulwc.rn $r0 = $r4, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulwc.rn $r3 = $r7, $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulwc.rn $r2 = $r6, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddwp.rn $r1 = $r1, $r9
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddwp.rn $r0 = $r0, $r8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddwp.rn $r3 = $r3, $r11
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddwp.rn $r2 = $r2, $r10
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KVCV1-LABEL: ffmawcq:
+; KVCV1:       # %bb.0: # %entry
+; KVCV1-NEXT:    fmulwc.rn $r1 = $r5, $r1
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    fmulwc.rn $r0 = $r4, $r0
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    fmulwc.rn $r3 = $r7, $r3
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    fmulwc.rn $r2 = $r6, $r2
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    faddwp.rn $r1 = $r1, $r9
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    faddwp.rn $r0 = $r0, $r8
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    faddwp.rn $r3 = $r3, $r11
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    faddwp.rn $r2 = $r2, $r10
+; KVCV1-NEXT:    ret
+; KVCV1-NEXT:    ;;
+;
+; KVCV2-LABEL: ffmawcq:
+; KVCV2:       # %bb.0: # %entry
+; KVCV2-NEXT:    ffmawcp.rn $r8r9 = $r0r1, $r4r5
+; KVCV2-NEXT:    ;;
+; KVCV2-NEXT:    ffmawcp.rn $r10r11 = $r2r3, $r6r7
+; KVCV2-NEXT:    ;;
+; KVCV2-NEXT:    copyd $r0 = $r8
+; KVCV2-NEXT:    copyd $r1 = $r9
+; KVCV2-NEXT:    ;;
+; KVCV2-NEXT:    copyd $r2 = $r10
+; KVCV2-NEXT:    copyd $r3 = $r11
+; KVCV2-NEXT:    ret
+; KVCV2-NEXT:    ;;
 entry:
   %0 = shufflevector <8 x float> %a, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %1 = shufflevector <8 x float> %b, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
@@ -313,25 +395,39 @@ entry:
 
 
 define <8 x float> @ffmswcq(<8 x float> %a, <8 x float> %b, <8 x float> %c) local_unnamed_addr #3 {
-; CHECK-LABEL: ffmswcq:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmulwc.rn $r1 = $r5, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulwc.rn $r0 = $r4, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulwc.rn $r3 = $r7, $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulwc.rn $r2 = $r6, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfwp.rn $r1 = $r1, $r9
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfwp.rn $r0 = $r0, $r8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfwp.rn $r3 = $r3, $r11
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfwp.rn $r2 = $r2, $r10
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KVCV1-LABEL: ffmswcq:
+; KVCV1:       # %bb.0: # %entry
+; KVCV1-NEXT:    fmulwc.rn $r1 = $r5, $r1
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    fmulwc.rn $r0 = $r4, $r0
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    fmulwc.rn $r3 = $r7, $r3
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    fmulwc.rn $r2 = $r6, $r2
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    fsbfwp.rn $r1 = $r1, $r9
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    fsbfwp.rn $r0 = $r0, $r8
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    fsbfwp.rn $r3 = $r3, $r11
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    fsbfwp.rn $r2 = $r2, $r10
+; KVCV1-NEXT:    ret
+; KVCV1-NEXT:    ;;
+;
+; KVCV2-LABEL: ffmswcq:
+; KVCV2:       # %bb.0: # %entry
+; KVCV2-NEXT:    ffmswcp.rn $r8r9 = $r0r1, $r4r5
+; KVCV2-NEXT:    ;;
+; KVCV2-NEXT:    ffmswcp.rn $r10r11 = $r2r3, $r6r7
+; KVCV2-NEXT:    ;;
+; KVCV2-NEXT:    copyd $r0 = $r8
+; KVCV2-NEXT:    copyd $r1 = $r9
+; KVCV2-NEXT:    ;;
+; KVCV2-NEXT:    copyd $r2 = $r10
+; KVCV2-NEXT:    copyd $r3 = $r11
+; KVCV2-NEXT:    ret
+; KVCV2-NEXT:    ;;
 entry:
   %0 = shufflevector <8 x float> %a, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %1 = shufflevector <8 x float> %b, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
@@ -379,25 +475,39 @@ entry:
 
 
 define <8 x float> @ffmacwcq(<8 x float> %a, <8 x float> %b, <8 x float> %c) local_unnamed_addr #3 {
-; CHECK-LABEL: ffmacwcq:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmulwc.c.rn $r1 = $r5, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulwc.c.rn $r0 = $r4, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulwc.c.rn $r3 = $r7, $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulwc.c.rn $r2 = $r6, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddwp.c.rn $r1 = $r1, $r9
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddwp.c.rn $r0 = $r0, $r8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddwp.c.rn $r3 = $r3, $r11
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddwp.c.rn $r2 = $r2, $r10
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KVCV1-LABEL: ffmacwcq:
+; KVCV1:       # %bb.0: # %entry
+; KVCV1-NEXT:    fmulwc.c.rn $r1 = $r5, $r1
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    fmulwc.c.rn $r0 = $r4, $r0
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    fmulwc.c.rn $r3 = $r7, $r3
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    fmulwc.c.rn $r2 = $r6, $r2
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    faddwp.c.rn $r1 = $r1, $r9
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    faddwp.c.rn $r0 = $r0, $r8
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    faddwp.c.rn $r3 = $r3, $r11
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    faddwp.c.rn $r2 = $r2, $r10
+; KVCV1-NEXT:    ret
+; KVCV1-NEXT:    ;;
+;
+; KVCV2-LABEL: ffmacwcq:
+; KVCV2:       # %bb.0: # %entry
+; KVCV2-NEXT:    ffmawcp.c.rn $r8r9 = $r0r1, $r4r5
+; KVCV2-NEXT:    ;;
+; KVCV2-NEXT:    ffmawcp.c.rn $r10r11 = $r2r3, $r6r7
+; KVCV2-NEXT:    ;;
+; KVCV2-NEXT:    copyd $r0 = $r8
+; KVCV2-NEXT:    copyd $r1 = $r9
+; KVCV2-NEXT:    ;;
+; KVCV2-NEXT:    copyd $r2 = $r10
+; KVCV2-NEXT:    copyd $r3 = $r11
+; KVCV2-NEXT:    ret
+; KVCV2-NEXT:    ;;
 entry:
   %0 = shufflevector <8 x float> %a, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %1 = shufflevector <8 x float> %b, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
@@ -413,25 +523,39 @@ entry:
 
 
 define <8 x float> @ffmscwcq(<8 x float> %a, <8 x float> %b, <8 x float> %c) local_unnamed_addr #3 {
-; CHECK-LABEL: ffmscwcq:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmulwc.c.rn $r1 = $r5, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulwc.c.rn $r0 = $r4, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulwc.c.rn $r3 = $r7, $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulwc.c.rn $r2 = $r6, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfwp.c.rn $r1 = $r1, $r9
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfwp.c.rn $r0 = $r0, $r8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfwp.c.rn $r3 = $r3, $r11
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfwp.c.rn $r2 = $r2, $r10
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KVCV1-LABEL: ffmscwcq:
+; KVCV1:       # %bb.0: # %entry
+; KVCV1-NEXT:    fmulwc.c.rn $r1 = $r5, $r1
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    fmulwc.c.rn $r0 = $r4, $r0
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    fmulwc.c.rn $r3 = $r7, $r3
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    fmulwc.c.rn $r2 = $r6, $r2
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    fsbfwp.c.rn $r1 = $r1, $r9
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    fsbfwp.c.rn $r0 = $r0, $r8
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    fsbfwp.c.rn $r3 = $r3, $r11
+; KVCV1-NEXT:    ;;
+; KVCV1-NEXT:    fsbfwp.c.rn $r2 = $r2, $r10
+; KVCV1-NEXT:    ret
+; KVCV1-NEXT:    ;;
+;
+; KVCV2-LABEL: ffmscwcq:
+; KVCV2:       # %bb.0: # %entry
+; KVCV2-NEXT:    ffmswcp.c.rn $r8r9 = $r0r1, $r4r5
+; KVCV2-NEXT:    ;;
+; KVCV2-NEXT:    ffmswcp.c.rn $r10r11 = $r2r3, $r6r7
+; KVCV2-NEXT:    ;;
+; KVCV2-NEXT:    copyd $r0 = $r8
+; KVCV2-NEXT:    copyd $r1 = $r9
+; KVCV2-NEXT:    ;;
+; KVCV2-NEXT:    copyd $r2 = $r10
+; KVCV2-NEXT:    copyd $r3 = $r11
+; KVCV2-NEXT:    ret
+; KVCV2-NEXT:    ;;
 entry:
   %0 = shufflevector <8 x float> %a, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %1 = shufflevector <8 x float> %b, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
