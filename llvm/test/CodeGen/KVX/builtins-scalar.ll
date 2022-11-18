@@ -260,32 +260,6 @@ entry:
 
 declare i32 @llvm.kvx.ctzw(i32) #1
 
-define float @fnegw(float %v){
-; CHECK-LABEL: fnegw:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fnegw $r0 = $r0
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
-entry:
-  %0 = tail call float @llvm.kvx.fnegw(float %v)
-  ret float %0
-}
-
-declare float @llvm.kvx.fnegw(float) #1
-
-define double @fnegd(double %v){
-; CHECK-LABEL: fnegd:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fnegd $r0 = $r0
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
-entry:
-  %0 = tail call double @llvm.kvx.fnegd(double %v)
-  ret double %0
-}
-
-declare double @llvm.kvx.fnegd(double) #1
-
 define half @fmaxh(half %0, half %1) {
 ; CHECK-LABEL: fmaxh:
 ; CHECK:       # %bb.0:

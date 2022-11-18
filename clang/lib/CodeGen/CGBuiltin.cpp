@@ -19618,10 +19618,6 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     Function *Callee = CGM.getIntrinsic(IDD);
     return Builder.CreateCall(Callee, Addr);
   }
-
-  case KVX::BI__builtin_kvx_fnegwp:
-    return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_fnegwp);
-
   case KVX::BI__builtin_kvx_bitcntw:
     return KVX_emitBitcountBuiltin(*this, E, 1, 1, nullptr,
                                    Intrinsic::kvx_clsw);
@@ -19880,10 +19876,6 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_negdp:
   case KVX::BI__builtin_kvx_negdq:
     return KVX_emitIntNegBuiltin(*this, E);
-  case KVX::BI__builtin_kvx_fnegw:
-    return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_fnegw);
-  case KVX::BI__builtin_kvx_fnegd:
-    return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_fnegd);
   case KVX::BI__builtin_kvx_fmaxw:
     return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fmaxw);
   case KVX::BI__builtin_kvx_fmaxd:
@@ -19956,18 +19948,6 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_fnarrowdwq:
     return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fnarrowdwp, 1,
                                  DoubleTy, 4, 2, true, nullptr, FloatTy);
-  case KVX::BI__builtin_kvx_fnegwq:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fnegwp, 1, FloatTy, 4,
-                                 2);
-  case KVX::BI__builtin_kvx_fnegwo:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fnegwp, 1, FloatTy, 8,
-                                 2);
-  case KVX::BI__builtin_kvx_fnegdp:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fnegd, 1, DoubleTy, 2,
-                                 1);
-  case KVX::BI__builtin_kvx_fnegdq:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fnegd, 1, DoubleTy, 4,
-                                 1);
   case KVX::BI__builtin_kvx_fmaxh:
     return KVX_emitF16ScalarBuiltin(2, *this, E, Intrinsic::kvx_fmaxhq);
   case KVX::BI__builtin_kvx_fmaxhq:
