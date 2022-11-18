@@ -52,3 +52,13 @@ entry:
   %div = fdiv arcp float %a, %b
   ret float %div
 }
+
+define float @fdiv(float %0) {
+; CHECK-LABEL: fdiv:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    frecw $r0 = $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = fdiv float 1.000000e+00, %0
+  ret float %2
+}

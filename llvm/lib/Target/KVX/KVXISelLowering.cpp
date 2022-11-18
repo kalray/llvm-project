@@ -1045,11 +1045,18 @@ SDValue KVXTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
   case ISD::ADDRSPACECAST:
     return lowerADDRSPACECAST(Op, DAG);
   case ISD::FDIV:
+    if (Op.getNode()->getFlags().hasAllowReciprocal() ||
+        (isa<ConstantFPSDNode>(Op.getOperand(0)) &&
+         cast<ConstantFPSDNode>(Op.getOperand(0))
+                 ->getConstantFPValue()
+                 ->getValue()
+                 .convertToFloat() == 1.0f))
+      return Op;
+    return SDValue();
   case ISD::FSQRT:
     if (Op.getNode()->getFlags().hasAllowReciprocal())
       return Op;
-    else
-      return SDValue();
+    return SDValue();
   case ISD::FMINNUM:
   case ISD::FMAXNUM: {
     if (Op.getNode()->getFlags().hasNoNaNs() || !Subtarget.isV1())
