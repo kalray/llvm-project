@@ -509,11 +509,11 @@ def: Pat<(i64(int_kvx_select Signed37:$t, i64:$f, i64:$c, i32:$sc)),
 def: Pat<(i64(int_kvx_select Wrapped64:$t, i64:$f, i64:$c, i32:$sc)),
          (CMOVEDri64 SingleReg:$c, SingleReg:$f, Wrapped64:$t, ScalarcondMod:$sc)>;
 
-def: Pat<(i32(int_kvx_select Signed10W:$t, i32:$f, i32:$c, i32:$sc)),
-         (CMOVEDri10 SingleReg:$c, SingleReg:$f, Signed10:$t, ScalarcondMod:$sc)>;
+def: Pat<(i32(int_kvx_select Signed10W:$t, i32:$f, i64:$c, i32:$sc)),
+         (CMOVEDri10 SingleReg:$c, SingleReg:$f, (imm32_to_imm64 $t), ScalarcondMod:$sc)>;
 
-def: Pat<(i32(int_kvx_select Signed37W:$t, i32:$f, i32:$c, i32:$sc)),
-         (CMOVEDri37 SingleReg:$c, SingleReg:$f, Signed37:$t, ScalarcondMod:$sc)>;
+def: Pat<(i32(int_kvx_select Signed37W:$t, i32:$f, i64:$c, i32:$sc)),
+         (CMOVEDri37 SingleReg:$c, SingleReg:$f, (imm32_to_imm64 $t), ScalarcondMod:$sc)>;
 
 foreach vt = [f32, i32, f64, i64] in
 def: Pat<(vt(int_kvx_select vt:$t, vt:$f, i64:$c, i32:$sc)),
