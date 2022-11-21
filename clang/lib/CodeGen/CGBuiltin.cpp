@@ -19820,14 +19820,21 @@ typedef struct {
 } float_mods_t;
 
 static StringRef KVX_getModStr(CodeGenFunction &CGF, const CallExpr *E,
-                               const unsigned N) {
-  if (!E->isNullPointerConstant(CGF.getContext(),
-                                Expr::NPC_NeverValueDependent) &&
-      !E->getArg(N)->isNullPointerConstant(CGF.getContext(),
-                                           Expr::NPC_NeverValueDependent))
-    return dyn_cast<clang::StringLiteral>(E->getArg(N)->IgnoreParenImpCasts())
-        ->getString();
-  return "";
+                               const unsigned N, bool &IsConsString) {
+  IsConsString = true;
+  if (E->isNullPointerConstant(CGF.getContext(),
+                               Expr::NPC_NeverValueDependent) ||
+      E->getArg(N)->isNullPointerConstant(CGF.getContext(),
+                                          Expr::NPC_NeverValueDependent))
+    return "";
+
+  const clang::Expr *V = E->getArg(N)->IgnoreParenImpCasts();
+  if (!isa<clang::StringLiteral>(V)) {
+    IsConsString = false;
+    return "";
+  }
+
+  return cast<clang::StringLiteral>(V)->getString();
 }
 
 static float_mods_t KVX_getFloatModifiers(CodeGenFunction &CGF,
@@ -19895,7 +19902,13 @@ static Value *KVX_emitMatrixMultiply(CodeGenFunction &CGF,
   if (!KVX_checkNargs(Nargs, CGF, E, true))
     return nullptr;
 
-  StringRef ModsStr = KVX_getModStr(CGF, E, Nargs);
+  bool GoodStr;
+  StringRef ModsStr = KVX_getModStr(CGF, E, Nargs, GoodStr);
+  if (!GoodStr) {
+    CGF.CGM.Error(E->getArg(Nargs)->getBeginLoc(),
+                  "Modifier should be a constant string.");
+    return nullptr;
+  }
   std::pair<StringRef, StringRef> Mods = ModsStr.split(".").second.split(".");
 
   auto MTM = KVX_getMatrixTransposeModifier(Mods.first);
@@ -19986,7 +19999,14 @@ static Value *KVX_emitNaryBuiltinCore(unsigned N, CodeGenFunction &CGF,
     return CGF.Builder.CreateCall(Callee, Args);
   }
 
-  StringRef ModStr = KVX_getModStr(CGF, E, N);
+  bool GoodStr;
+  StringRef ModStr = KVX_getModStr(CGF, E, N, GoodStr);
+  if (!GoodStr) {
+    CGF.CGM.Error(E->getArg(N)->getBeginLoc(),
+                  "Modifier should be a constant string.");
+    return nullptr;
+  }
+
   float_mods_t FloatMods =
       KVX_getFloatModifiers(CGF, E->getArg(N)->getBeginLoc(),
                             ModStr.split(".").second, HasRounding, true);
@@ -20222,7 +20242,11 @@ static Value *KVX_emit(unsigned NumArgs, CodeGenFunction &CGF,
   SmallVector<Value *, 4> Mods;
   if (!Modifiers.empty()) {
     const auto ModPos = NumArgs - 1;
-    auto ModTokens = KVX_getModStr(CGF, E, ModPos).split(".");
+    const auto *ModStr = E->getArg(ModPos)->IgnoreParenImpCasts();
+    if (!isa<clang::StringLiteral>(ModStr))
+      KVX_ModifierError(CGF.CGM, Modifiers, E->getArg(ModPos)->getBeginLoc());
+
+    auto ModTokens = cast<clang::StringLiteral>(ModStr)->getString().split(".");
     if (!ModTokens.first.empty()) {
       CGF.CGM.Error(E->getArg(ModPos)->getBeginLoc(),
                     "All modifiers should either be empty or start with '.'");
@@ -20507,7 +20531,13 @@ static Value *KVX_emitUnaryShiftingRoundingBuiltin(CodeGenFunction &CGF,
     CGF.CGM.Error(E->getArg(1)->getBeginLoc(),
                   "expects a 6-bit unsigned immediate in the second argument");
 
-  StringRef ModStr = KVX_getModStr(CGF, E, 2);
+  bool GoodStr;
+  StringRef ModStr = KVX_getModStr(CGF, E, 2, GoodStr);
+  if (!GoodStr) {
+    CGF.CGM.Error(E->getArg(2)->getBeginLoc(),
+                  "Modifier should be a constant string.");
+    return nullptr;
+  }
   float_mods_t FloatMods = KVX_getFloatModifiers(
       CGF, E->getArg(2)->getBeginLoc(), ModStr.split(".").second, true, false);
 
@@ -20622,7 +20652,13 @@ static Value *KVX_emitVectorBuiltin(CodeGenFunction &CGF, const CallExpr *E,
   Value *ConjugateArg = NULL;
 
   if (Rounding) {
-    StringRef ModStr = KVX_getModStr(CGF, E, NumOperands);
+    bool GoodStr;
+    StringRef ModStr = KVX_getModStr(CGF, E, NumOperands, GoodStr);
+    if (!GoodStr) {
+      CGF.CGM.Error(E->getArg(NumOperands)->getBeginLoc(),
+                    "Modifier should be a constant string.");
+      return nullptr;
+    }
     float_mods_t FloatMods =
         KVX_getFloatModifiers(CGF, E->getArg(NumOperands)->getBeginLoc(),
                               ModStr.split(".").second, true, true);
@@ -20952,7 +20988,14 @@ KVX_emitVectorShiftingBuiltin(CodeGenFunction &CGF, const CallExpr *E,
   }
   Value *ShiftArg = ConstantInt::get(CGF.Int64Ty, ShiftValue);
 
-  StringRef ModStr = KVX_getModStr(CGF, E, 2);
+  bool GoodStr;
+  StringRef ModStr = KVX_getModStr(CGF, E, 2, GoodStr);
+  if (!GoodStr) {
+    CGF.CGM.Error(E->getArg(2)->getBeginLoc(),
+                  "Modifier should be a constant string.");
+    return nullptr;
+  }
+
   float_mods_t FloatMods = KVX_getFloatModifiers(
       CGF, E->getArg(2)->getBeginLoc(), ModStr, true, true);
 
@@ -21597,7 +21640,7 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmaw, true);
   case KVX::BI__builtin_kvx_ffmad:
     return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmad, true);
-  case KVX::BI__builtin_kvx_ffmawd:
+  case KVX::BI__builtin_kvx_ffmaxwd:
     return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmawd, true);
   case KVX::BI__builtin_kvx_ffmsw:
     return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmsw, true);
@@ -21932,7 +21975,13 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     if (!KVX_checkNargs(NArgs, *this, E, true))
       return nullptr;
 
-    StringRef ModStr = KVX_getModStr(*this, E, NArgs);
+    bool GoodStr;
+    StringRef ModStr = KVX_getModStr(*this, E, NArgs, GoodStr);
+    if (!GoodStr) {
+      CGM.Error(E->getArg(NArgs)->getBeginLoc(),
+                "Modifier should be a constant string.");
+      return nullptr;
+    }
     float_mods_t FloatMods = KVX_getFloatModifiers(
         *this, E->getArg(NArgs)->getBeginLoc(), ModStr, true, true);
 

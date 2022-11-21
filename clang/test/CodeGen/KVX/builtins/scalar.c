@@ -298,7 +298,7 @@ double ffmad(double a, double b, double c) {
 // CHECK-NEXT:    ret double [[TMP0]]
 //
 double ffmawd(float a, float b, double c) {
-  return __builtin_kvx_ffmawd(a, b, c, ".rz");
+  return __builtin_kvx_ffmaxwd(a, b, c, ".rz");
 }
 
 // CHECK-LABEL: @ffmsw(
