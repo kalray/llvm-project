@@ -664,6 +664,7 @@ multiclass MC_17_TINY<string OpcStr, list<dag> patrr = []> {
 //   defm SBFX4HQ
 //   defm SBFX8HQ
 //   defm SBFX16HQ
+//   defm STSUD
 multiclass MC_17_SWITCH<string OpcStr> {
   def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
@@ -1660,11 +1661,7 @@ def NOP : KVX_INSTRUCTION
    [/* no straightforward pattern */],
    ALU_NOP>;
 
-def STSUD : KVX_INSTRUCTION
-  <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
-   "stsud $a1 = $a2, $a3",
-   [/* no straightforward pattern */],
-   ALU_SWITCH_LITE_TINY>;
+defm STSUD : MC_17_SWITCH<"stsud">;
 
 let isAdd = 1 in
 defm ADDD : MC_11<"addd">;
@@ -1756,11 +1753,7 @@ defm LORD : MC_13<"lord">;
 
 defm LNORD : MC_13<"lnord">;
 
-def STSUW : KVX_INSTRUCTION
-  <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
-   "stsuw $a1 = $a2, $a3",
-   [/* no straightforward pattern */],
-   ALU_SWITCH_LITE_TINY>;
+defm STSUW : MC_13_SWITCH<"stsuw">;
 
 let isAdd = 1 in
 defm ADDW : MC_14<"addw">;
@@ -3741,9 +3734,9 @@ defm ZXLHWP : I</*asm=*/"zxlhwp", /*itin=*/ALU_TINY, /*Ops=*/[SingleReg], /*Mods
 defm ZXMHWP : I</*asm=*/"zxmhwp", /*itin=*/ALU_TINY, /*Ops=*/[SingleReg], /*Mods=*/[], /*MemOps=*/[], /*CC=*/[], /*Out=*/[SingleReg], /*InPlace=*/0,
   /*pattern=*/ [(set v2i32:$r, (zext (v2i16( extract_subvector v4i16:$op0, (i64 2)))))]>;
 
-defm STSUHQ: MC_17_TINY <"stsuhq", [(set v4i16:$r, (int_kvx_stsuhq v4i16:$op0, v4i16:$op1))]>;
+defm STSUHQ: MC_17_TINY <"stsuhq", [(set v4i16:$r, (int_kvx_stsu v4i16:$op0, v4i16:$op1))]>;
 
-defm STSUWP: MC_17_TINY <"stsuwp", [(set v2i32:$r, (int_kvx_stsuwp v2i32:$op0, v2i32:$op1))]>;
+defm STSUWP: MC_17_TINY <"stsuwp", [(set v2i32:$r, (int_kvx_stsu v2i32:$op0, v2i32:$op1))]>;
 
 defm XALIGNO : I</*asm=*/"xaligno", /*itin=*/BCU_CRRP_CRWL_CRWH_RR, /*Ops=*/[BufferReg, SingleReg], /*Mods=*/[], /*MemOps=*/[], /*CC=*/[], /*Out=*/[VectorReg],
                  /*InPlace=*/0, /*pattern=*/ [(set v256i1:$r, (int_kvx_xalign512o BufferReg:$op0, SingleReg:$op1))]>;
@@ -3756,7 +3749,7 @@ defm XACCESSO : I</*asm=*/"xaccesso", /*itin=*/BCU_TINY_AUXW_CRRP_RR, /*Ops=*/[B
 
 def : Pat <(v4i64(int_kvx_xaccess1024o BufferReg:$op0, i64:$op1)),
            (XACCESSO BufferReg:$op0, SingleReg:$op1)>;
-}
+} // let Predicates = [IsV2]
 
 defvar FxList = [PS, PCR, CS, CSIT, IPE, MEN, PMC, TCR, ILE, ILL, ILR, MMC, TEL, TEH, IXC, DC, MES, WS,
        DC0, DC1, DC2, DC3, PMC2, SPS_PL0, SPS_PL1, SPS_PL2, SPS_PL3, ES_PL0, ES_PL1, ES_PL2,

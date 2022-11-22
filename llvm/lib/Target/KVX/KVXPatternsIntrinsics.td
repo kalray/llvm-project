@@ -343,8 +343,23 @@ def: Pat<(int_kvx_fnarrowdw f64:$v, i32:$rounding, i32:$silent), (FNARROWDW Sing
 def: Pat<(int_kvx_fnarrowdwp v2f64:$v, i32:$rounding, i32:$silent), (FNARROWDWP PairedReg:$v, RoundingMod:$rounding, SilentMod:$silent)>;
 
 def: Pat<(int_kvx_satd i64:$v, i32:$b), (SATDrr SingleReg:$v, SingleReg:$b)>;
-def: Pat<(int_kvx_stsuw i32:$x, i32:$y), (STSUW SingleReg:$x, SingleReg:$y)>;
-def: Pat<(int_kvx_stsud i64:$x, i64:$y), (STSUD SingleReg:$x, SingleReg:$y)>;
+
+def: Pat<(i32 (int_kvx_stsu i32:$x, i32:$y)),
+         (STSUWrr SingleReg:$x, SingleReg:$y)>;
+
+let Predicates = [IsV2] in {
+def: Pat<(i32 (int_kvx_stsu i32:$x, Wrapped32:$y)),
+         (STSUWri SingleReg:$x, Wrapped32:$y)>;
+
+def: Pat<(i64 (int_kvx_stsu i64:$x, Wrapped64W:$y)),
+         (STSUDri SingleReg:$x, (trunc_imm_32 $y), splat32_)>;
+
+def: Pat<(i64 (int_kvx_stsu i64:$x, UnsignedSplat32Imm:$y)),
+         (STSUDri SingleReg:$x, (trunc_imm_32 $y), splat32_at)>;
+} // IsV2
+
+def: Pat<(i64 (int_kvx_stsu i64:$x, i64:$y)),
+         (STSUDrr SingleReg:$x, SingleReg:$y)>;
 
 def: Pat<(int_kvx_aladdd i64:$addr, i64:$val), (ALADDDri10 (i64 0), SingleReg:$addr, SingleReg:$val)>;
 def: Pat<(int_kvx_aladdd AddrFI:$addr, i64:$val), (ALADDDri64 (i64 0), SingleReg:$addr, SingleReg:$val)>;
@@ -1178,16 +1193,25 @@ def: Pat<(v2i32 (int_kvx_zxlhwp v4i16:$v)),
 def: Pat<(v2i32 (int_kvx_zxmhwp v4i16:$v)),
          (ZXMHWP SingleReg:$v)>;
 
-def : Pat<(v4i16 (int_kvx_stsuhq v4i16:$op0, (v4i16(is_imm_vec_kvx_splat32_:$IMM)))),
+def : Pat<(v2i16 (int_kvx_stsu v2i16:$op0, (v2i16(is_imm_vec:$IMM)))),
           (STSUHQri SingleReg:$op0, (build_imm_vec $IMM), splat32_)>;
 
-def : Pat<(v4i16 (int_kvx_stsuhq v4i16:$op0, (v4i16 (is_imm_vec_kvx_splat32_at:$IMM)))),
+def : Pat<(v2i16 (int_kvx_stsu v2i16:$op0, v2i16:$op1)),
+          (STSUHQrr SingleReg:$op0, SingleReg:$op1)>;
+
+def : Pat<(v4i16 (int_kvx_stsu v4i16:$op0, (v4i16(is_imm_vec_kvx_splat32_:$IMM)))),
+          (STSUHQri SingleReg:$op0, (build_imm_vec $IMM), splat32_)>;
+
+def : Pat<(v4i16 (int_kvx_stsu v4i16:$op0, (v4i16 (is_imm_vec_kvx_splat32_at:$IMM)))),
           (STSUHQri SingleReg:$op0, (build_imm_vec $IMM), splat32_at)>;
 
-def : Pat<(v2i32 (int_kvx_stsuwp v2i32:$op0, (v2i32 (is_imm_vec_kvx_splat32_:$IMM)))),
+def : Pat<(v4i16 (int_kvx_stsu v4i16:$op0, (v4i16 (is_imm_vec_kvx_splat32_at:$IMM)))),
+          (STSUHQri SingleReg:$op0, (build_imm_vec $IMM), splat32_at)>;
+
+def : Pat<(v2i32 (int_kvx_stsu v2i32:$op0, (v2i32 (is_imm_vec_kvx_splat32_:$IMM)))),
           (STSUWPri SingleReg:$op0, (build_imm_vec $IMM), splat32_)>;
 
-def : Pat<(v2i32 (int_kvx_stsuwp v2i32:$op0, (v2i32 (is_imm_vec_kvx_splat32_at:$IMM)))),
+def : Pat<(v2i32 (int_kvx_stsu v2i32:$op0, (v2i32 (is_imm_vec_kvx_splat32_at:$IMM)))),
           (STSUWPri SingleReg:$op0, (build_imm_vec $IMM), splat32_at)>;
 } // let Predicates = [IsV2]
 
