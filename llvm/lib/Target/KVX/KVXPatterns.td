@@ -1072,6 +1072,9 @@ def : Pat<(v2i8 (is_imm_vec:$IMM)), (MAKEi16 (build_imm_vec $IMM))>;
 def : Pat<(v2i8 (build_vector i32:$v0, i32:$v1)), (INSF SingleReg:$v0, SingleReg:$v1, 15, 8)>;
 
 def : Pat<(v2i8 (trunc v2i16:$v)), (SBMM8ri37 $v, 0x401)>;
+def : Pat<(v2i8 (trunc (srl v2i16:$v, (v2i16 (v2_splat (i32 8)))))),
+          (SBMM8ri37 $v, 0x802)>;
+
 def : Pat<(v2i8 (trunc v2i32:$v)), (SBMM8ri37 $v, 0x1001)>;
 def : Pat<(v2i8 (trunc v2i64:$v)), (INSF (i64 (EXTRACT_SUBREG PairedReg:$v, sub_d0)),
                                          (i64 (EXTRACT_SUBREG PairedReg:$v, sub_d1)),
@@ -1095,6 +1098,9 @@ def : Pat<(v2i16 (build_vector (i32(vector_extract v2i16:$v, 1)), (i32(vector_ex
 def : Pat<(v2i16 (build_vector i32:$v0, i32:$v1)), (INSF SingleReg:$v0, SingleReg:$v1, 31, 16)>;
 
 def : Pat<(v2i16 (trunc v2i32:$v)), (SBMM8ri37 $v, 0x20100201)>;
+def : Pat<(v2i16 (trunc (srl v2i32:$v, (v2i32 (v2_splat (i32 16)))))),
+          (SBMM8ri37 $v, 0x80400804)>;
+
 def : Pat<(v2i16 (trunc v2i64:$v)), (INSF (i64 (EXTRACT_SUBREG PairedReg:$v, sub_d0)),
                                          (i64 (EXTRACT_SUBREG PairedReg:$v, sub_d1)),
                                          31, 16)>;
@@ -1117,6 +1123,9 @@ def : Pat<(v2i32 (trunc (v2i64 (build_vector i64:$s0, i64:$s1)))), (INSF SingleR
 def : Pat<(v2i32 (trunc v2i64:$v)), (INSF (i64 (EXTRACT_SUBREG PairedReg:$v, sub_d0)),
                                          (i64 (EXTRACT_SUBREG PairedReg:$v, sub_d1)),
                                          63, 32)>;
+
+def : Pat<(v2i32 (build_vector i32:$v0, (i32(trunc (i64 (srl i64:$v1, (i64 32))))))),
+          (INSF SingleReg:$v1, SingleReg:$v0, 31, 0)>;
 
 // v3i16
 def : Pat<(v4i16 (is_imm_vec_kvx_splat32_:$IMM)), (MAKEi43 (build_imm_vec $IMM))>;
@@ -1159,6 +1168,9 @@ def : Pat<(v4i8 (trunc v4i64:$v)), (INSF (INSF (i64 (EXTRACT_SUBREG QuadReg:$v, 
                                                 (i64 (EXTRACT_SUBREG QuadReg:$v, sub_d3)),
                                                15, 8),
                                          31, 16)>;
+
+def : Pat<(v4i8 (trunc (srl v4i16:$v, (v4i16 (v4_splat (i32 8)))))),
+          (SBMM8ri37 $v, 0x80200802)>;
 
 // v4i16
 def : Pat<(v4i16 (is_imm_vec_kvx_splat32_:$IMM)), (MAKEi43 (build_imm_vec $IMM))>;
