@@ -661,6 +661,18 @@ KVX_MANY_BUILTIN(selectw, "UiUiUiUOicC*", "n", 4, "", kvx_select, 1, true, KVX_S
 KVX_MANY_BUILTIN(selectwo, "V8iV8iV8iV8UicC*", "n", 4, "", kvx_select_vec, 4, true, KVX_SIMDCOND)
 KVX_MANY_BUILTIN(selectwp, "V2iV2iV2iV2UicC*", "n", 4, "", kvx_select_vec, 1, true, KVX_SIMDCOND)
 KVX_MANY_BUILTIN(selectwq, "V4iV4iV4iV4UicC*", "n", 4, "", kvx_select_vec, 2, true, KVX_SIMDCOND)
+KVX_MANY_BUILTIN(widenbho, "V8sV8ccC*", "n", 2, "", kvx_widenint, 2, true, KvxWidenInt)
+KVX_MANY_BUILTIN(widenbhp, "V2sV2ccC*", "n", 2, "", kvx_widenint, 1, true, KvxWidenInt)
+KVX_MANY_BUILTIN(widenbhq, "V4sV4ccC*", "n", 2, "", kvx_widenint, 1, true, KvxWidenInt)
+KVX_MANY_BUILTIN(widenbhv, "V32sV32ccC*", "n", 2, "", kvx_widenint, 8, true, KvxWidenInt)
+KVX_MANY_BUILTIN(widenbhx, "V16sV16ccC*", "n", 2, "", kvx_widenint, 4, true, KvxWidenInt)
+KVX_MANY_BUILTIN(widenhwo, "V8iV8scC*", "n", 2, "", kvx_widenint, 4, true, KvxWidenInt)
+KVX_MANY_BUILTIN(widenhwp, "V2iV2scC*", "n", 2, "", kvx_widenint, 1, true, KvxWidenInt)
+KVX_MANY_BUILTIN(widenhwq, "V4iV4scC*", "n", 2, "", kvx_widenint, 2, true, KvxWidenInt)
+KVX_MANY_BUILTIN(widenhwx, "V16iV16scC*", "n", 2, "", kvx_widenint, 8, true, KvxWidenInt)
+KVX_MANY_BUILTIN(widenwdo, "V8OiV8icC*", "n", 2, "", kvx_widenint, 8, true, KvxWidenInt)
+KVX_MANY_BUILTIN(widenwdp, "V2OiV2icC*", "n", 2, "", kvx_widenint, 2, true, KvxWidenInt)
+KVX_MANY_BUILTIN(widenwdq, "V4OiV4icC*", "n", 2, "", kvx_widenint, 4, true, KvxWidenInt)
 #undef KVX_MANY_BUILTIN
 #undef KVX_BUILTIN
 #undef NARY_BUILTIN

@@ -19,9 +19,7 @@ define void @_pocl_kernel_LUT_workgroup() {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addx2wp $r1 = $r1, $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srad $r1 = $r1, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxwd $r1 = $r1
+; CHECK-NEXT:    srld $r1 = $r1, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lbz $r1 = 0[$r1]
 ; CHECK-NEXT:    ;;

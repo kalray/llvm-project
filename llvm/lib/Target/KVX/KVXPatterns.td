@@ -1221,6 +1221,12 @@ def : Pat<(v8i8 (concat_vectors v4i8:$v0, v4i8:$v1)),
 // v2i32
 def : Pat<(extractelt (v2i32 SingleReg:$v), 0), (COPY SingleReg:$v)>;
 def : Pat<(extractelt (v2i32 SingleReg:$v), 1), (SRADri SingleReg :$v, (i64 32))>;
+def : Pat<(i64(sext(extractelt (v2i32 SingleReg:$v), 1))),
+          (SRADri SingleReg :$v, (i64 32))>;
+def : Pat<(i64(zanyext(extractelt (v2i32 SingleReg:$v), 1))),
+          (SRLDri SingleReg :$v, (i64 32))>;
+def : Pat<(shl(i64(zanyext(extractelt (v2i32 SingleReg:$v), 1))), (i64 32)),
+          (ANDDri37 SingleReg:$v, 0xFFFFFFFF00000000)>;
 def : Pat<(i32 (vector_extract v2i32:$v, i64:$p)), (SRLDrr SingleReg:$v, (SLLWri SingleReg:$p, 6))>;
 
 // v2i16
