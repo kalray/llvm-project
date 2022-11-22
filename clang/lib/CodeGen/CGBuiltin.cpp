@@ -18460,6 +18460,8 @@ static const KvxModifier KvxHindex({{"h0", 0}, {"h1", 1}});
 static const KvxModifier KvxLdStAddrSpaceMod(
     {{"", 0}, {".", 0}, {".u", 256}, {".us", 257}, {".s", 258}});
 
+static const KvxModifier KvxNarrowInt({{"", 0}, {"q", 1}, {"s", 2}, {"us", 3}});
+
 static const KvxModifier
     KvxUnSignMod({{"", 0}, {"s", 0}, {"su", 1}, {"u", 2}, {"us", 3}});
 

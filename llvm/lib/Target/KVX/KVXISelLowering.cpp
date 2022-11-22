@@ -2426,6 +2426,47 @@ static SDValue combineZext(SDNode *N, SelectionDAG &DAG) {
   return SDValue();
 }
 
+static SDValue combineNarrowInt(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
+                                SelectionDAG &Dag) {
+  auto ExtType = cast<ConstantSDNode>(N->getOperand(2))->getZExtValue();
+  auto &Op1 = N->getOperand(1);
+  auto InType = Op1.getValueType();
+  auto OutType = N->getValueType(0);
+  auto DL = SDLoc(N);
+
+  if (ExtType == 0) // modifier = "", normal truncate
+    return Dag.getAnyExtOrTrunc(N->getOperand(1), DL, OutType);
+
+  auto ShiftAmount =
+      Dag.getConstant(OutType.getScalarSizeInBits(), DL, MVT::i32);
+
+  if (InType.isVector())
+    ShiftAmount = Dag.getSplatBuildVector(InType, DL, ShiftAmount);
+
+  if (ExtType == 1) { // modifier = "q", truncate preserving upper halfs
+    auto Shr = Dag.getNode(ISD::SRL, DL, InType, Op1, ShiftAmount);
+    return Dag.getAnyExtOrTrunc(Shr, DL, OutType);
+  }
+
+  if (ExtType == 2) { // modifier = "s", sign-saturated truncate
+    SDValue Satshl = Dag.getNode(ISD::SSHLSAT, DL, InType, Op1, ShiftAmount);
+    SDValue Sat = Dag.getNode(ISD::SRL, DL, InType, Satshl, ShiftAmount);
+    return Dag.getAnyExtOrTrunc(Sat, DL, OutType);
+  }
+  // modifier = "us", unsign-saturate signed value
+  auto APIzero = APInt::getNullValue(InType.getScalarSizeInBits());
+  auto APIlo = APInt::getLowBitsSet(InType.getScalarSizeInBits(),
+                                    InType.getScalarSizeInBits() / 2);
+  auto Zero = Dag.getConstant(APIzero, DL, InType);
+  auto Max = Dag.getConstant(APIlo, DL, InType);
+  // Saturate signed value minimum to zero
+  SDValue SatMin = Dag.getNode(ISD::SMAX, DL, InType, Op1, Zero);
+  // Saturate signed value maximum to usigned max of target size
+  SDValue SatMax = Dag.getNode(ISD::SMIN, DL, InType, SatMin, Max);
+
+  return Dag.getAnyExtOrTrunc(SatMax, DL, OutType);
+}
+
 static SDValue combineWidenInt(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
                                SelectionDAG &Dag) {
   auto ExtType = cast<ConstantSDNode>(N->getOperand(2))->getZExtValue();
@@ -2453,12 +2494,13 @@ static SDValue combineIntrinsic(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
 
   auto Intr = cast<ConstantSDNode>(N->getOperand(0))->getZExtValue();
   switch (Intr) {
+  case Intrinsic::KVXIntrinsics::kvx_narrowint:
+    return combineNarrowInt(N, DCI, Dag);
   case Intrinsic::KVXIntrinsics::kvx_widenint:
     return combineWidenInt(N, DCI, Dag);
   default:
     return SDValue();
   }
-  return SDValue();
 }
 
 static SDValue combineMUL(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
