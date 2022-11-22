@@ -2079,6 +2079,8 @@ defm : SRS <v2i32, SRSWPSri, NEGWP>;
 // SXLBHQ,  ZXLBHQ
 def : Pat<(v2i16(sanyext v2i8:$v)), (SXLBHQ $v)>;
 def : Pat<(v2i16(zext v2i8:$v)), (SBMM8ri37 $v, 0x020001)>;
+def : Pat<(v2i16 (shl (v2i16 (allexts v2i8:$op0)), (v2i16 (v2_splat(i32 8))))),
+          (SBMM8ri37 SingleReg:$op0, 0x2000100)>;
 
 def : Pat<(v4i16(sanyext v4i8:$v)), (SXLBHQ $v)>;
 def : Pat<(v4i16(zext v4i8:$v)),
@@ -2091,6 +2093,12 @@ def : Pat<(v4i16(sanyext (v4i8( extract_subvector v8i8:$v, (i64 0))))), (SXLBHQ 
 
 def : Pat<(v4i16(zext (v4i8( extract_subvector v8i8:$v, (i64 0))))),
           (SBMM8ri64 $v, 0x08000400020001)>, Requires<[IsV1]>;
+
+def : Pat<(shl (v4i16 (allexts v4i8:$op0)), (v4i16 (v4_splat(i32 8)))),
+          (SBMM8ri64 SingleReg:$op0, 0x800040002000100)>;
+
+def : Pat<(shl (v4i16 (allexts (v4i8 (extract_subvector v8i8:$op0, (i64 4))))), (v4i16 (v4_splat(i32 8)))),
+          (SBMM8ri64 SingleReg:$op0, 0x8000400020001000)>;
 
 // SXLHWP ZXLHWP
 def : Pat<(v2i32(sext v2i8:$v)), (SXLHWP(SXLBHQ $v))>;
@@ -2135,6 +2143,12 @@ def : Pat<(v2i32 (zext (v2i16 (extract_subvector v4i16:$v, (i64 2))))),
 
 def : Pat<(v2i32 (zext (v2i16 (extract_subvector v4i16:$v, (i64 2))))),
           (SBMM8ri64 SingleReg:$v, 0x804000002010)>;
+
+def : Pat<(v2i32 ( shl ( v2i32 (allexts v2i16:$v)), (v2i32 (v2_splat (i32 16) )))),
+          (SBMM8rr SingleReg:$v, (MAKEi64 0x804000002010000))>;
+
+def : Pat<(v2i32 ( shl ( v2i32 (allexts (v2i16 (extract_subvector v4i16:$v, (i64 2))))), (v2i32 (v2_splat (i32 16) )))),
+          (SBMM8rr SingleReg:$v, (MAKEi64 0x8040000020100000))>;
 
 // SXMBHQ
 def : Pat<(v4i16(sanyext (v4i8( extract_subvector v8i8:$v, (i64 4))))), (SXMBHQ $v)>;

@@ -1020,9 +1020,6 @@ define <8 x i32> @div_v8i32_v8i32(<8 x i32> %0, <8 x i32> %1) {
 ; V1-NEXT:    srad $r0 = $r22, 32
 ; V1-NEXT:    srad $r1 = $r18, 32
 ; V1-NEXT:    copyd $r25 = $r0
-; V1-NEXT:    ;;
-; V1-NEXT:    sxwd $r0 = $r0
-; V1-NEXT:    sxwd $r1 = $r1
 ; V1-NEXT:    call __divdi3
 ; V1-NEXT:    ;;
 ; V1-NEXT:    sxwd $r0 = $r22
@@ -1033,9 +1030,6 @@ define <8 x i32> @div_v8i32_v8i32(<8 x i32> %0, <8 x i32> %1) {
 ; V1-NEXT:    srad $r0 = $r23, 32
 ; V1-NEXT:    srad $r1 = $r19, 32
 ; V1-NEXT:    copyd $r18 = $r0
-; V1-NEXT:    ;;
-; V1-NEXT:    sxwd $r0 = $r0
-; V1-NEXT:    sxwd $r1 = $r1
 ; V1-NEXT:    call __divdi3
 ; V1-NEXT:    ;;
 ; V1-NEXT:    sxwd $r0 = $r23
@@ -1046,9 +1040,6 @@ define <8 x i32> @div_v8i32_v8i32(<8 x i32> %0, <8 x i32> %1) {
 ; V1-NEXT:    srad $r0 = $r24, 32
 ; V1-NEXT:    srad $r1 = $r20, 32
 ; V1-NEXT:    copyd $r19 = $r0
-; V1-NEXT:    ;;
-; V1-NEXT:    sxwd $r0 = $r0
-; V1-NEXT:    sxwd $r1 = $r1
 ; V1-NEXT:    call __divdi3
 ; V1-NEXT:    ;;
 ; V1-NEXT:    sxwd $r0 = $r24
@@ -1059,9 +1050,6 @@ define <8 x i32> @div_v8i32_v8i32(<8 x i32> %0, <8 x i32> %1) {
 ; V1-NEXT:    srad $r0 = $r25, 32
 ; V1-NEXT:    srad $r1 = $r21, 32
 ; V1-NEXT:    copyd $r20 = $r0
-; V1-NEXT:    ;;
-; V1-NEXT:    sxwd $r0 = $r0
-; V1-NEXT:    sxwd $r1 = $r1
 ; V1-NEXT:    call __divdi3
 ; V1-NEXT:    ;;
 ; V1-NEXT:    sxwd $r0 = $r25
@@ -1120,9 +1108,6 @@ define <8 x i32> @div_v8i32_v8i32(<8 x i32> %0, <8 x i32> %1) {
 ; V2-NEXT:    srad $r0 = $r22, 32
 ; V2-NEXT:    srad $r1 = $r18, 32
 ; V2-NEXT:    copyd $r25 = $r0
-; V2-NEXT:    ;;
-; V2-NEXT:    sxwd $r0 = $r0
-; V2-NEXT:    sxwd $r1 = $r1
 ; V2-NEXT:    call __divdi3
 ; V2-NEXT:    ;;
 ; V2-NEXT:    sxwd $r0 = $r22
@@ -1133,9 +1118,6 @@ define <8 x i32> @div_v8i32_v8i32(<8 x i32> %0, <8 x i32> %1) {
 ; V2-NEXT:    srad $r0 = $r23, 32
 ; V2-NEXT:    srad $r1 = $r19, 32
 ; V2-NEXT:    copyd $r18 = $r0
-; V2-NEXT:    ;;
-; V2-NEXT:    sxwd $r0 = $r0
-; V2-NEXT:    sxwd $r1 = $r1
 ; V2-NEXT:    call __divdi3
 ; V2-NEXT:    ;;
 ; V2-NEXT:    sxwd $r0 = $r23
@@ -1146,9 +1128,6 @@ define <8 x i32> @div_v8i32_v8i32(<8 x i32> %0, <8 x i32> %1) {
 ; V2-NEXT:    srad $r0 = $r24, 32
 ; V2-NEXT:    srad $r1 = $r20, 32
 ; V2-NEXT:    copyd $r19 = $r0
-; V2-NEXT:    ;;
-; V2-NEXT:    sxwd $r0 = $r0
-; V2-NEXT:    sxwd $r1 = $r1
 ; V2-NEXT:    call __divdi3
 ; V2-NEXT:    ;;
 ; V2-NEXT:    sxwd $r0 = $r24
@@ -1159,9 +1138,6 @@ define <8 x i32> @div_v8i32_v8i32(<8 x i32> %0, <8 x i32> %1) {
 ; V2-NEXT:    srad $r0 = $r25, 32
 ; V2-NEXT:    srad $r1 = $r21, 32
 ; V2-NEXT:    copyd $r20 = $r0
-; V2-NEXT:    ;;
-; V2-NEXT:    sxwd $r0 = $r0
-; V2-NEXT:    sxwd $r1 = $r1
 ; V2-NEXT:    call __divdi3
 ; V2-NEXT:    ;;
 ; V2-NEXT:    sxwd $r0 = $r25
@@ -1219,8 +1195,6 @@ define <8 x i32> @div_v8i32_i32(<8 x i32> %0, i32 %1) {
 ; V1-NEXT:    srad $r0 = $r18, 32
 ; V1-NEXT:    copyd $r1 = $r22
 ; V1-NEXT:    copyd $r21 = $r0
-; V1-NEXT:    ;;
-; V1-NEXT:    sxwd $r0 = $r0
 ; V1-NEXT:    call __divdi3
 ; V1-NEXT:    ;;
 ; V1-NEXT:    sxwd $r0 = $r18
@@ -1231,8 +1205,6 @@ define <8 x i32> @div_v8i32_i32(<8 x i32> %0, i32 %1) {
 ; V1-NEXT:    srad $r0 = $r19, 32
 ; V1-NEXT:    copyd $r1 = $r22
 ; V1-NEXT:    copyd $r18 = $r0
-; V1-NEXT:    ;;
-; V1-NEXT:    sxwd $r0 = $r0
 ; V1-NEXT:    call __divdi3
 ; V1-NEXT:    ;;
 ; V1-NEXT:    sxwd $r0 = $r19
@@ -1243,8 +1215,6 @@ define <8 x i32> @div_v8i32_i32(<8 x i32> %0, i32 %1) {
 ; V1-NEXT:    srad $r0 = $r20, 32
 ; V1-NEXT:    copyd $r1 = $r22
 ; V1-NEXT:    copyd $r19 = $r0
-; V1-NEXT:    ;;
-; V1-NEXT:    sxwd $r0 = $r0
 ; V1-NEXT:    call __divdi3
 ; V1-NEXT:    ;;
 ; V1-NEXT:    sxwd $r0 = $r20
@@ -1255,8 +1225,6 @@ define <8 x i32> @div_v8i32_i32(<8 x i32> %0, i32 %1) {
 ; V1-NEXT:    srad $r0 = $r21, 32
 ; V1-NEXT:    copyd $r1 = $r22
 ; V1-NEXT:    copyd $r20 = $r0
-; V1-NEXT:    ;;
-; V1-NEXT:    sxwd $r0 = $r0
 ; V1-NEXT:    call __divdi3
 ; V1-NEXT:    ;;
 ; V1-NEXT:    sxwd $r0 = $r21
@@ -1311,8 +1279,6 @@ define <8 x i32> @div_v8i32_i32(<8 x i32> %0, i32 %1) {
 ; V2-NEXT:    srad $r0 = $r18, 32
 ; V2-NEXT:    copyd $r1 = $r22
 ; V2-NEXT:    copyd $r21 = $r0
-; V2-NEXT:    ;;
-; V2-NEXT:    sxwd $r0 = $r0
 ; V2-NEXT:    call __divdi3
 ; V2-NEXT:    ;;
 ; V2-NEXT:    sxwd $r0 = $r18
@@ -1323,8 +1289,6 @@ define <8 x i32> @div_v8i32_i32(<8 x i32> %0, i32 %1) {
 ; V2-NEXT:    srad $r0 = $r19, 32
 ; V2-NEXT:    copyd $r1 = $r22
 ; V2-NEXT:    copyd $r18 = $r0
-; V2-NEXT:    ;;
-; V2-NEXT:    sxwd $r0 = $r0
 ; V2-NEXT:    call __divdi3
 ; V2-NEXT:    ;;
 ; V2-NEXT:    sxwd $r0 = $r19
@@ -1335,8 +1299,6 @@ define <8 x i32> @div_v8i32_i32(<8 x i32> %0, i32 %1) {
 ; V2-NEXT:    srad $r0 = $r20, 32
 ; V2-NEXT:    copyd $r1 = $r22
 ; V2-NEXT:    copyd $r19 = $r0
-; V2-NEXT:    ;;
-; V2-NEXT:    sxwd $r0 = $r0
 ; V2-NEXT:    call __divdi3
 ; V2-NEXT:    ;;
 ; V2-NEXT:    sxwd $r0 = $r20
@@ -1347,8 +1309,6 @@ define <8 x i32> @div_v8i32_i32(<8 x i32> %0, i32 %1) {
 ; V2-NEXT:    srad $r0 = $r21, 32
 ; V2-NEXT:    copyd $r1 = $r22
 ; V2-NEXT:    copyd $r20 = $r0
-; V2-NEXT:    ;;
-; V2-NEXT:    sxwd $r0 = $r0
 ; V2-NEXT:    call __divdi3
 ; V2-NEXT:    ;;
 ; V2-NEXT:    sxwd $r0 = $r21

@@ -18463,6 +18463,8 @@ static const KvxModifier KvxLdStAddrSpaceMod(
 static const KvxModifier
     KvxUnSignMod({{"", 0}, {"s", 0}, {"su", 1}, {"u", 2}, {"us", 3}});
 
+static const KvxModifier KvxWidenInt({{"", 0}, {"z", 1}, {"q", 2}});
+
 typedef const std::vector<KvxModifier> KvxModifiers;
 
 static void KVX_emitInvalidIntrinsicForCPU(CodeGenModule &CGM,

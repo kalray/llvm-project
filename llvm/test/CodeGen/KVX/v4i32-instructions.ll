@@ -220,9 +220,6 @@ define <4 x i32> @test_div(<4 x i32> %a, <4 x i32> %b) #0 {
 ; CHECK-NEXT:    srad $r0 = $r20, 32
 ; CHECK-NEXT:    srad $r1 = $r18, 32
 ; CHECK-NEXT:    copyd $r21 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r0 = $r0
-; CHECK-NEXT:    sxwd $r1 = $r1
 ; CHECK-NEXT:    call __divdi3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxwd $r0 = $r20
@@ -233,9 +230,6 @@ define <4 x i32> @test_div(<4 x i32> %a, <4 x i32> %b) #0 {
 ; CHECK-NEXT:    srad $r0 = $r21, 32
 ; CHECK-NEXT:    srad $r1 = $r19, 32
 ; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r0 = $r0
-; CHECK-NEXT:    sxwd $r1 = $r1
 ; CHECK-NEXT:    call __divdi3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxwd $r0 = $r21
@@ -284,9 +278,6 @@ define <4 x i32> @test_rem(<4 x i32> %a, <4 x i32> %b) #0 {
 ; CHECK-NEXT:    srad $r0 = $r20, 32
 ; CHECK-NEXT:    srad $r1 = $r18, 32
 ; CHECK-NEXT:    copyd $r21 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r0 = $r0
-; CHECK-NEXT:    sxwd $r1 = $r1
 ; CHECK-NEXT:    call __moddi3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxwd $r0 = $r20
@@ -297,9 +288,6 @@ define <4 x i32> @test_rem(<4 x i32> %a, <4 x i32> %b) #0 {
 ; CHECK-NEXT:    srad $r0 = $r21, 32
 ; CHECK-NEXT:    srad $r1 = $r19, 32
 ; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r0 = $r0
-; CHECK-NEXT:    sxwd $r1 = $r1
 ; CHECK-NEXT:    call __moddi3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxwd $r0 = $r21
@@ -569,33 +557,17 @@ define <4 x i1> @test_icmp_ult(<4 x i32> %a, <4 x i32> %b) #0 {
 }
 
 define <4 x i64> @test_sext_2xi64(<4 x i32> %a) #0 {
-; CV1-LABEL: test_sext_2xi64:
-; CV1:       # %bb.0:
-; CV1-NEXT:    sxwd $r0 = $r0
-; CV1-NEXT:    srad $r2 = $r0, 32
-; CV1-NEXT:    srad $r3 = $r1, 32
-; CV1-NEXT:    ;;
-; CV1-NEXT:    sxwd $r2 = $r1
-; CV1-NEXT:    sxwd $r5 = $r2
-; CV1-NEXT:    ;;
-; CV1-NEXT:    copyd $r1 = $r5
-; CV1-NEXT:    sxwd $r3 = $r3
-; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
-;
-; CV2-LABEL: test_sext_2xi64:
-; CV2:       # %bb.0:
-; CV2-NEXT:    sxwd $r0 = $r0
-; CV2-NEXT:    srad $r2 = $r0, 32
-; CV2-NEXT:    srad $r3 = $r1, 32
-; CV2-NEXT:    ;;
-; CV2-NEXT:    sxwd $r2 = $r1
-; CV2-NEXT:    sxwd $r3 = $r3
-; CV2-NEXT:    sxwd $r5 = $r2
-; CV2-NEXT:    ;;
-; CV2-NEXT:    copyd $r1 = $r5
-; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CHECK-LABEL: test_sext_2xi64:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    sxwd $r2 = $r1
+; CHECK-NEXT:    srad $r3 = $r1, 32
+; CHECK-NEXT:    sxwd $r4 = $r0
+; CHECK-NEXT:    srad $r5 = $r0, 32
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r4
+; CHECK-NEXT:    copyd $r1 = $r5
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
   %r = sext <4 x i32> %a to <4 x i64>
   ret <4 x i64> %r
 }

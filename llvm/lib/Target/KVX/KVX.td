@@ -52,6 +52,10 @@ multiclass BITCAST <ValueType DstVT, ValueType SrcVT, RegisterClass RC> {
   def : Pat<(SrcVT (bitconvert (DstVT RC:$src))), (SrcVT RC:$src)>;
 }
 
+def allexts : PatFrags<(ops node:$op),
+                       [(sext node:$op),
+                        (zext node:$op),
+                        (anyext node:$op)]>;
 
 def trunc_imm_32 : SDNodeXForm<imm, [{
   return CurDAG->getTargetConstant(N->getZExtValue() & 0xffffffff, SDLoc(N), MVT::i32);

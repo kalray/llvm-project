@@ -530,6 +530,7 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   if (TM.Options.ExceptionModel == ExceptionHandling::SjLj)
     setLibcallName(RTLIB::UNWIND_RESUME, "_Unwind_SjLj_Resume");
 
+  setTargetDAGCombine(ISD::INTRINSIC_WO_CHAIN);
   setTargetDAGCombine(ISD::MUL);
   setTargetDAGCombine(ISD::SRA);
   setTargetDAGCombine(ISD::STORE);
@@ -2425,6 +2426,41 @@ static SDValue combineZext(SDNode *N, SelectionDAG &DAG) {
   return SDValue();
 }
 
+static SDValue combineWidenInt(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
+                               SelectionDAG &Dag) {
+  auto ExtType = cast<ConstantSDNode>(N->getOperand(2))->getZExtValue();
+  auto OutType = N->getValueType(0);
+  if (ExtType == 0) // "" modifier, sign-extend
+    return Dag.getSExtOrTrunc(N->getOperand(1), SDLoc(N), OutType);
+
+  auto Ext = Dag.getZExtOrTrunc(N->getOperand(1), SDLoc(N), OutType);
+  if (ExtType == 1) // ".z" modifier, zero extend
+    return Ext;
+
+  // ExtType == 2, ".q" modifier, anyextend and shiftleft to upper bits half
+  auto ShiftAmount =
+      Dag.getConstant(OutType.getScalarSizeInBits() / 2, SDLoc(N), MVT::i32);
+  if (OutType.isVector())
+    ShiftAmount = Dag.getSplatBuildVector(OutType, SDLoc(N), ShiftAmount);
+
+  return Dag.getNode(ISD::SHL, SDLoc(N), OutType, Ext, ShiftAmount);
+}
+
+static SDValue combineIntrinsic(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
+                                SelectionDAG &Dag) {
+  if (!isa<ConstantSDNode>(N->getOperand(0)))
+    return SDValue();
+
+  auto Intr = cast<ConstantSDNode>(N->getOperand(0))->getZExtValue();
+  switch (Intr) {
+  case Intrinsic::KVXIntrinsics::kvx_widenint:
+    return combineWidenInt(N, DCI, Dag);
+  default:
+    return SDValue();
+  }
+  return SDValue();
+}
+
 static SDValue combineMUL(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
                           SelectionDAG &Dag) {
   auto VT = N->getValueType(0);
@@ -2565,6 +2601,8 @@ SDValue KVXTargetLowering::PerformDAGCombine(SDNode *N,
   switch (N->getOpcode()) {
   default:
     break;
+  case ISD::INTRINSIC_WO_CHAIN:
+    return combineIntrinsic(N, DCI, DAG);
   case ISD::MUL:
     return combineMUL(N, DCI, DAG);
   case ISD::SRA:

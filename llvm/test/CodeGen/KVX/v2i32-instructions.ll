@@ -213,9 +213,6 @@ define <2 x i32> @test_div(<2 x i32> %a, <2 x i32> %b) #0 {
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    srad $r0 = $r19, 32
 ; ALL-NEXT:    srad $r1 = $r18, 32
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sxwd $r0 = $r0
-; ALL-NEXT:    sxwd $r1 = $r1
 ; ALL-NEXT:    call __divdi3
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    sxwd $r0 = $r19
@@ -255,9 +252,6 @@ define <2 x i32> @test_rem(<2 x i32> %a, <2 x i32> %b) #0 {
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    srad $r0 = $r19, 32
 ; ALL-NEXT:    srad $r1 = $r18, 32
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sxwd $r0 = $r0
-; ALL-NEXT:    sxwd $r1 = $r1
 ; ALL-NEXT:    call __moddi3
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    sxwd $r0 = $r19
