@@ -879,32 +879,6 @@ entry:
 
 declare i64 @llvm.kvx.satd(i64, i32) #1
 
-define i32 @stsuw(i32 %x, i32 %y){
-; CHECK-LABEL: stsuw:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    stsuw $r0 = $r0, $r1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
-entry:
-  %0 = tail call i32 @llvm.kvx.stsuw(i32 %x, i32 %y)
-  ret i32 %0
-}
-
-declare i32 @llvm.kvx.stsuw(i32, i32) #1
-
-define i64 @stsud(i64 %x, i64 %y){
-; CHECK-LABEL: stsud:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    stsud $r0 = $r0, $r1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
-entry:
-  %0 = tail call i64 @llvm.kvx.stsud(i64 %x, i64 %y)
-  ret i64 %0
-}
-
-declare i64 @llvm.kvx.stsud(i64, i64) #1
-
 define half @fnarrowwh(float %0) {
 ; CHECK-LABEL: fnarrowwh:
 ; CHECK:       # %bb.0:

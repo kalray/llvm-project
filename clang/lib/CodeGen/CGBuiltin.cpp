@@ -19693,12 +19693,6 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     return KVX_emitBitcountBuiltin(*this, E, VectorSize, 2, this->Int32Ty,
                                    Intrinsic::kvx_clswp);
 
-  case KVX::BI__builtin_kvx_stsud:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_stsud);
-
-  case KVX::BI__builtin_kvx_stsuw:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_stsuw);
-
   case KVX::BI__builtin_kvx_fmaxwp:
     return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fmaxwp);
 

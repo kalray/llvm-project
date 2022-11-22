@@ -544,24 +544,6 @@ long sbmmt8(long a, long b) {
   return __builtin_kvx_sbmmt8(a, b);
 }
 
-// CHECK-LABEL: @stsuw(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i32 @llvm.kvx.stsuw(i32 [[X:%.*]], i32 [[Y:%.*]])
-// CHECK-NEXT:    ret i32 [[TMP0]]
-//
-unsigned int stsuw(unsigned int x, unsigned int y) {
-  return __builtin_kvx_stsuw(x, y);
-}
-
-// CHECK-LABEL: @stsud(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.stsud(i64 [[X:%.*]], i64 [[Y:%.*]])
-// CHECK-NEXT:    ret i64 [[TMP0]]
-//
-unsigned long stsud(unsigned long x, unsigned long y) {
-  return __builtin_kvx_stsud(x, y);
-}
-
 // CHECK-LABEL: @fnarrowwh(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call half @llvm.kvx.fnarrowwh(float [[V:%.*]], i32 1, i32 1)
