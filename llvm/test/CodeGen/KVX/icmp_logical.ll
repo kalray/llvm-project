@@ -751,7 +751,7 @@ define <2 x i32> @set_eq_v2i32_rr(<2 x i32> %a, <2 x i32> %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnwp.eq $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x100000001
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0x1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -767,7 +767,7 @@ define <2 x i32> @set_eq_v2i32_ri(<2 x i32> %a){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compnwp.eq $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x100000001
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0x1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -781,7 +781,7 @@ define <2 x i32> @set_ne_v2i32_rr(<2 x i32> %a, <2 x i32> %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnwp.ne $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x100000001
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0x1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -797,7 +797,7 @@ define <2 x i32> @set_ne_v2i32_ri(<2 x i32> %a){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compnwp.ne $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x100000001
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0x1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -811,7 +811,7 @@ define <2 x i32> @set_ugt_v2i32_rr(<2 x i32> %a, <2 x i32> %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnwp.gtu $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x100000001
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0x1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -827,7 +827,7 @@ define <2 x i32> @set_ugt_v2i32_ri(<2 x i32> %a){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compnwp.gtu $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x100000001
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0x1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -841,7 +841,7 @@ define <2 x i32> @set_uge_v2i32_rr(<2 x i32> %a, <2 x i32> %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnwp.geu $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x100000001
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0x1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -857,7 +857,7 @@ define <2 x i32> @set_uge_v2i32_ri(<2 x i32> %a){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compnwp.geu $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x100000001
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0x1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -871,7 +871,7 @@ define <2 x i32> @set_ult_v2i32_rr(<2 x i32> %a, <2 x i32> %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnwp.ltu $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x100000001
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0x1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -887,7 +887,7 @@ define <2 x i32> @set_ult_v2i32_ri(<2 x i32> %a){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compnwp.ltu $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x100000001
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0x1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -901,7 +901,7 @@ define <2 x i32> @set_ule_v2i32_rr(<2 x i32> %a, <2 x i32> %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnwp.leu $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x100000001
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0x1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -917,7 +917,7 @@ define <2 x i32> @set_ule_v2i32_ri(<2 x i32> %a){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compnwp.leu $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x100000001
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0x1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -931,7 +931,7 @@ define <2 x i32> @set_sgt_v2i32_rr(<2 x i32> %a, <2 x i32> %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnwp.gt $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x100000001
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0x1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -947,7 +947,7 @@ define <2 x i32> @set_sgt_v2i32_ri(<2 x i32> %a){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compnwp.gt $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x100000001
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0x1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -961,7 +961,7 @@ define <2 x i32> @set_sge_v2i32_rr(<2 x i32> %a, <2 x i32> %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnwp.ge $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x100000001
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0x1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -977,7 +977,7 @@ define <2 x i32> @set_sge_v2i32_ri(<2 x i32> %a){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compnwp.ge $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x100000001
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0x1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -991,7 +991,7 @@ define <2 x i32> @set_slt_v2i32_rr(<2 x i32> %a, <2 x i32> %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnwp.lt $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x100000001
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0x1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1007,7 +1007,7 @@ define <2 x i32> @set_slt_v2i32_ri(<2 x i32> %a){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compnwp.lt $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x100000001
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0x1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1021,7 +1021,7 @@ define <2 x i32> @set_sle_v2i32_rr(<2 x i32> %a, <2 x i32> %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnwp.le $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x100000001
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0x1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1037,7 +1037,7 @@ define <2 x i32> @set_sle_v2i32_ri(<2 x i32> %a){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compnwp.le $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x100000001
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0x1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1051,7 +1051,7 @@ define <4 x i16> @set_eq_v4i16_rr(<4 x i16> %a, <4 x i16> %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnhq.eq $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x1000100010001
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0x10001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1067,7 +1067,7 @@ define <4 x i16> @set_eq_v4i16_ri(<4 x i16> %a){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compnhq.eq $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x1000100010001
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0x10001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1081,7 +1081,7 @@ define <4 x i16> @set_ne_v4i16_rr(<4 x i16> %a, <4 x i16> %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnhq.ne $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x1000100010001
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0x10001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1097,7 +1097,7 @@ define <4 x i16> @set_ne_v4i16_ri(<4 x i16> %a){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compnhq.ne $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x1000100010001
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0x10001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1111,7 +1111,7 @@ define <4 x i16> @set_ugt_v4i16_rr(<4 x i16> %a, <4 x i16> %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnhq.gtu $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x1000100010001
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0x10001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1127,7 +1127,7 @@ define <4 x i16> @set_ugt_v4i16_ri(<4 x i16> %a){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compnhq.gtu $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x1000100010001
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0x10001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1141,7 +1141,7 @@ define <4 x i16> @set_uge_v4i16_rr(<4 x i16> %a, <4 x i16> %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnhq.geu $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x1000100010001
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0x10001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1157,7 +1157,7 @@ define <4 x i16> @set_uge_v4i16_ri(<4 x i16> %a){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compnhq.geu $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x1000100010001
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0x10001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1171,7 +1171,7 @@ define <4 x i16> @set_ult_v4i16_rr(<4 x i16> %a, <4 x i16> %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnhq.ltu $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x1000100010001
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0x10001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1187,7 +1187,7 @@ define <4 x i16> @set_ult_v4i16_ri(<4 x i16> %a){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compnhq.ltu $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x1000100010001
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0x10001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1201,7 +1201,7 @@ define <4 x i16> @set_ule_v4i16_rr(<4 x i16> %a, <4 x i16> %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnhq.leu $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x1000100010001
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0x10001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1217,7 +1217,7 @@ define <4 x i16> @set_ule_v4i16_ri(<4 x i16> %a){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compnhq.leu $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x1000100010001
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0x10001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1231,7 +1231,7 @@ define <4 x i16> @set_sgt_v4i16_rr(<4 x i16> %a, <4 x i16> %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnhq.gt $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x1000100010001
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0x10001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1247,7 +1247,7 @@ define <4 x i16> @set_sgt_v4i16_ri(<4 x i16> %a){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compnhq.gt $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x1000100010001
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0x10001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1261,7 +1261,7 @@ define <4 x i16> @set_sge_v4i16_rr(<4 x i16> %a, <4 x i16> %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnhq.ge $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x1000100010001
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0x10001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1277,7 +1277,7 @@ define <4 x i16> @set_sge_v4i16_ri(<4 x i16> %a){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compnhq.ge $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x1000100010001
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0x10001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1291,7 +1291,7 @@ define <4 x i16> @set_slt_v4i16_rr(<4 x i16> %a, <4 x i16> %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnhq.lt $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x1000100010001
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0x10001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1307,7 +1307,7 @@ define <4 x i16> @set_slt_v4i16_ri(<4 x i16> %a){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compnhq.lt $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x1000100010001
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0x10001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1321,7 +1321,7 @@ define <4 x i16> @set_sle_v4i16_rr(<4 x i16> %a, <4 x i16> %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnhq.le $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x1000100010001
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0x10001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1337,7 +1337,7 @@ define <4 x i16> @set_sle_v4i16_ri(<4 x i16> %a){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compnhq.le $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r0 = $r0, 0x1000100010001
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0x10001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

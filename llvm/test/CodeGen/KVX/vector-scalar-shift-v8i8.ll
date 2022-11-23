@@ -67,15 +67,15 @@ entry:
 define <8 x i8> @lshiftR_imm(<8 x i8> %a){
 ; CV1-LABEL: lshiftR_imm:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
-; CV1-NEXT:    andd $r1 = $r0, 0xff00ff00ff00ff
+; CV1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; CV1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
 ; CV1-NEXT:    make $r2 = 3
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    srld $r0 = $r0, $r2
 ; CV1-NEXT:    srld $r1 = $r1, $r2
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
-; CV1-NEXT:    andd $r1 = $r1, 0xff00ff00ff00ff
+; CV1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; CV1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    ord $r0 = $r0, $r1
 ; CV1-NEXT:    ret
@@ -94,15 +94,15 @@ entry:
 define <8 x i8> @shiftL_imm(<8 x i8> %a){
 ; CV1-LABEL: shiftL_imm:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
-; CV1-NEXT:    andd $r1 = $r0, 0xff00ff00ff00ff
+; CV1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; CV1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
 ; CV1-NEXT:    make $r2 = 3
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    slld $r0 = $r0, $r2
 ; CV1-NEXT:    slld $r1 = $r1, $r2
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
-; CV1-NEXT:    andd $r1 = $r1, 0xff00ff00ff00ff
+; CV1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; CV1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    ord $r0 = $r0, $r1
 ; CV1-NEXT:    ret
@@ -182,14 +182,14 @@ entry:
 define <8 x i8> @lshiftR(<8 x i8> %a, i32 %c){
 ; CV1-LABEL: lshiftR:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
-; CV1-NEXT:    andd $r2 = $r0, 0xff00ff00ff00ff
+; CV1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; CV1-NEXT:    andd.@ $r2 = $r0, 0xff00ff
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    srld $r0 = $r0, $r1
 ; CV1-NEXT:    srld $r2 = $r2, $r1
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
-; CV1-NEXT:    andd $r1 = $r2, 0xff00ff00ff00ff
+; CV1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; CV1-NEXT:    andd.@ $r1 = $r2, 0xff00ff
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    ord $r0 = $r0, $r1
 ; CV1-NEXT:    ret
@@ -211,14 +211,14 @@ entry:
 define <8 x i8> @shiftL(<8 x i8> %a, i32 %c){
 ; CV1-LABEL: shiftL:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
-; CV1-NEXT:    andd $r2 = $r0, 0xff00ff00ff00ff
+; CV1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; CV1-NEXT:    andd.@ $r2 = $r0, 0xff00ff
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    slld $r0 = $r0, $r1
 ; CV1-NEXT:    slld $r2 = $r2, $r1
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
-; CV1-NEXT:    andd $r1 = $r2, 0xff00ff00ff00ff
+; CV1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; CV1-NEXT:    andd.@ $r1 = $r2, 0xff00ff
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    ord $r0 = $r0, $r1
 ; CV1-NEXT:    ret

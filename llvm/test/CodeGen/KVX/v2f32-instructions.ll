@@ -1261,7 +1261,7 @@ define <2 x float> @test_copysign(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-LABEL: test_copysign:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fabswp $r0 = $r0
-; CHECK-NEXT:    andd $r1 = $r1, 0x8000000080000000
+; CHECK-NEXT:    andd.@ $r1 = $r1, 0x80000000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -1308,7 +1308,7 @@ define <2 x double> @test_copysign_extended(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-LABEL: test_copysign_extended:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fabswp $r0 = $r0
-; CHECK-NEXT:    andd $r1 = $r1, 0x8000000080000000
+; CHECK-NEXT:    andd.@ $r1 = $r1, 0x80000000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r0 = $r0, $r1
 ; CHECK-NEXT:    ;;
@@ -1629,7 +1629,7 @@ entry:
 define <2 x float> @shuffle_v2float_1_1(<2 x float> %0, <2 x float> %1) #0 {
 ; CHECK-LABEL: shuffle_v2float_1_1:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x8040201080402010
+; CHECK-NEXT:    sbmm8.@ $r0 = $r0, 0x80402010
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1757,7 +1757,7 @@ entry:
 define <2 x float> @shuffle_v2float_3_3(<2 x float> %0, <2 x float> %1) #0 {
 ; CHECK-LABEL: shuffle_v2float_3_3:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r0 = $r1, 0x8040201080402010
+; CHECK-NEXT:    sbmm8.@ $r0 = $r1, 0x80402010
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

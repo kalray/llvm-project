@@ -1354,7 +1354,7 @@ def : Pat<(v2f32 (build_vector f32:$v0, f32:$v1)), (INSF SingleReg:$v0, SingleRe
 def : Pat<(v2f32 (build_vector (f32(vector_extract v2f32:$v, 1)), (f32(vector_extract v2f32:$v, 0)))),
           (SBMM8ri64 SingleReg:$v, 0x0804020180402010)>;
 def : Pat<(v2f32 (build_vector (f32(vector_extract v2f32:$v, 1)), (f32(vector_extract v2f32:$v, 1)))),
-          (SBMM8ri64 SingleReg:$v, 0x8040201080402010)>;
+          (SBMM8ri32s SingleReg:$v, 0x80402010)>;
 def : Pat<(v2f32 (build_vector (f32(vector_extract v2f32:$v0, 1)), (f32(vector_extract v2f32:$v1, 0)))),
           (SBMM8ri64 (INSF SingleReg:$v0, SingleReg:$v1, 31, 0), 0x0804020180402010)>;
 def : Pat<(f32 (vector_extract v2f32:$v, i64:$p)), (SRLDrr SingleReg:$v, (SLLWri SingleReg:$p, 5))>;
@@ -1464,13 +1464,13 @@ def : Pat<(fcopysign v2f16:$v1, v2f64:$v2),
           )>;
 
 def : Pat<(fcopysign v4f16:$v1, v4f16:$v2),
-          (ORDrr (FABSHQ SingleReg:$v1), (ANDDri64 SingleReg:$v2, 0x8000800080008000))>;
+          (ORDrr (FABSHQ SingleReg:$v1), (ANDDri32s SingleReg:$v2, 0x80008000))>;
 
 def : Pat<(fcopysign v2f32:$v1, v2f16:$v2),
           (ORDrr (FABSWP SingleReg:$v1), (SBMM8ri64 (ANDWri37 SingleReg:$v2, 0x80008000), 0x800000002000000))>;
 
 def : Pat<(fcopysign v2f32:$v1, v2f32:$v2),
-          (ORDrr (FABSWP SingleReg:$v1), (ANDDri64 SingleReg:$v2, 0x8000000080000000))>;
+          (ORDrr (FABSWP SingleReg:$v1), (ANDDri32s SingleReg:$v2, 0x80000000))>;
 
 def : Pat<(fcopysign v2f32:$v1, v2f64:$v2),
           (INSF
@@ -1485,9 +1485,9 @@ def : Pat<(fcopysign v2f32:$v1, v2f64:$v2),
 def : Pat<(fcopysign v4f16:$v1, v4f32:$v2),
           (ORDrr
             (FABSHQ SingleReg:$v1),
-            (ANDDri64
+            (ANDDri32s
               (FNARROWWHQ PairedReg:$v2, rounding_rna, silent_s),
-            0x8000800080008000))>;
+            0x80008000))>;
 
 def : Pat<(fcopysign v4f16:$v1, v4f64:$v2),
           (INSF
@@ -1507,12 +1507,12 @@ def : Pat<(fcopysign v4f32:$v1, v4f16:$v2),
           (REG_SEQUENCE PairedReg,
             (ORDrr
               (FABSWP (v2f32 (EXTRACT_SUBREG PairedReg:$v1, sub_d0))),
-              (SBMM8ri64 (ANDDri64 SingleReg:$v2, 0x8000800080008000), 0x800000002000000)
+              (SBMM8ri64 (ANDDri32s SingleReg:$v2, 0x80008000), 0x800000002000000)
             ),
             sub_d0,
             (ORDrr
               (FABSWP (v2f32 (EXTRACT_SUBREG PairedReg:$v1, sub_d1))),
-              (SBMM8ri64 (ANDDri64 SingleReg:$v2, 0x8000800080008000), 0x8000000020000000)
+              (SBMM8ri64 (ANDDri32s SingleReg:$v2, 0x80008000), 0x8000000020000000)
             ),
             sub_d1)>;
 
@@ -1520,16 +1520,16 @@ def : Pat<(fcopysign v4f32:$v1, v4f32:$v2),
           (REG_SEQUENCE PairedReg,
             (ORDrr
               (FABSWP (v2f32 (EXTRACT_SUBREG PairedReg:$v1, sub_d0))),
-              (ANDDri64
+              (ANDDri32s
                 (v2f32 (EXTRACT_SUBREG PairedReg:$v2, sub_d0)),
-                0x8000000080000000
+                0x80000000
               )),
               sub_d0,
             (ORDrr
               (FABSWP (v2f32 (EXTRACT_SUBREG PairedReg:$v1, sub_d1))),
-              (ANDDri64
+              (ANDDri32s
                 (v2f32 (EXTRACT_SUBREG PairedReg:$v2, sub_d1)),
-                0x8000000080000000
+                0x80000000
               )),
               sub_d1)>;
 

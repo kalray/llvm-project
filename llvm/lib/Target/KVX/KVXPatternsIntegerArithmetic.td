@@ -476,30 +476,6 @@ defm : VECADDXPAT<v2i32, (i32 2), ADDX4WPrr,  ADDX4WPri,  v2_splat, imm_vec_2bit
 defm : VECADDXPAT<v2i32, (i32 3), ADDX8WPrr,  ADDX8WPri,  v2_splat, imm_vec_3bit_splat_, imm_vec_3bit_splat_at, is_imm_vec_leq3bits>;
 defm : VECADDXPAT<v2i32, (i32 4), ADDX16WPrr, ADDX16WPri, v2_splat, imm_vec_4bit_splat_, imm_vec_4bit_splat_at, is_imm_vec_leq4bits>;
 
-// ANDD, CLRF
-def : Pat<(and i64:$rs1, Signed10:$rs2), (ANDDri10 SingleReg:$rs1, Signed10:$rs2)>;
-def : Pat<(and i64:$rs1, isNotShiftMask:$imm), (i64(CLRF SingleReg:$rs1, (notShiftMaskEnd $imm), (notShiftMaskStart $imm) ))>;
-def : Pat<(and i64:$rs1, isShiftMask:$imm), (CLRF SingleReg:$rs1, (ShiftMaskStart $imm), (ShiftMaskEnd $imm) )>;
-def : Pat<(and i64:$rs1, i64:$rs2), (ANDDrr SingleReg:$rs1, SingleReg:$rs2)>;
-def : Pat<(and i64:$rs1, Signed37:$rs2), (ANDDri37 SingleReg:$rs1, Signed37:$rs2)>;
-def : Pat<(and i64:$rs1, Wrapped64:$rs2), (ANDDri64 SingleReg:$rs1, Wrapped64:$rs2)>;
-
-foreach vtype = [ v8i8, v4i16, v2i32 ] in {
-    def : Pat<(and vtype:$rs1, (vtype (is_imm_vec:$IMM))), (ANDDri64 SingleReg:$rs1, (build_imm_vec $IMM))>;
-    def : Pat<(and vtype:$rs1, vtype:$rs2), (ANDDrr SingleReg:$rs1, SingleReg:$rs2)>;
-}
-
-// ANDND
-def : Pat<(and (not i64:$rs1), i64:$rs2), (ANDNDrr SingleReg:$rs1, SingleReg:$rs2)>;
-def : Pat<(and (not i64:$rs1), Signed10:$rs2), (ANDNDri10 SingleReg:$rs1, Signed10:$rs2)>;
-def : Pat<(and (not i64:$rs1), Signed37:$rs2), (ANDNDri37 SingleReg:$rs1, Signed37:$rs2)>;
-def : Pat<(and (not i64:$rs1), Wrapped64:$rs2), (ANDNDri64 SingleReg:$rs1, Wrapped64:$rs2)>;
-
-foreach vtype = [ v8i8, v4i16, v2i32 ] in {
-    def : Pat<(and (vnot vtype:$rs1), (vtype (is_imm_vec:$IMM))), (ANDNDri64 SingleReg:$rs1, (build_imm_vec $IMM))>;
-    def : Pat<(and (vnot vtype:$rs1), vtype:$rs2), (ANDNDrr SingleReg:$rs1, SingleReg:$rs2)>;
-}
-
 // ANDNW
 def : Pat<(i32(and (not i32:$rs1), i32:$rs2)), (ANDNWrr SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(i32(and (not i32:$r), Signed37W:$i)), (ANDNWri37 SingleReg:$r, imm:$i)>;
@@ -658,6 +634,12 @@ multiclass SELECT_COMP_PAT<PatFrag Comp, Comparison Mod, KVX_INSTRUCTION COMPrr,
 
   def : Pat<(SelectVT (select (i32 (Comp CompareVT:$lhs, CompareVT:$rhs)), (SelectVT -1), (SelectVT 0))),
         (NEG (COMPrr SingleReg:$lhs, SingleReg:$rhs, Mod))>;
+}
+
+// CLRF
+let AddedComplexity = 1 in {
+def : Pat<(and i64:$rs1, isNotShiftMask:$imm), (i64(CLRF SingleReg:$rs1, (notShiftMaskEnd $imm), (notShiftMaskStart $imm) ))>;
+def : Pat<(and i64:$rs1, isShiftMask:$imm), (CLRF SingleReg:$rs1, (ShiftMaskStart $imm), (ShiftMaskEnd $imm) )>;
 }
 
 multiclass COMP_Pat<PatFrag Node, Comparison Mod, Comparison RevMod> {
@@ -868,6 +850,7 @@ def : Pat<(v2i64 (zext (v2i32 (build_vector
          )))))),
          (v2i64 (DOT2WZP PairedReg:$lhs, PairedReg:$rhs))>;
 // EXTF
+let AddedComplexity = 2 in
 def : Pat<(and (srl i64:$v, Wrapped64:$shiftc), isMask:$andm), (EXTFZDp SingleReg:$v, Wrapped64:$andm, Wrapped64:$shiftc)>;
 
 // LANDD
@@ -1354,16 +1337,20 @@ def : Pat<(mul v2i32:$rs1, v2i32:$rs2), (MULWPrr SingleReg:$rs1, SingleReg:$rs2)
 def : Pat<(mul v4i32:$rs1, v4i32:$rs2), (MULWQ PairedReg:$rs1, PairedReg:$rs2)>;
 
 // NANDD
+let AddedComplexity = 2 in {
 def : Pat<(i64 (or (not i64:$r), (i64 Signed10:$i))), (NANDDri10 SingleReg:$r, (get_not_imm $i) )>;
+def : Pat<(i64 (or (not i64:$r), (i64 UnsignedSplat32Imm:$i))), (NANDDri32s SingleReg:$r, (trunc_imm_32 (get_not_imm $i)) )>;
 def : Pat<(i64 (or (not i64:$r), (i64 Signed37:$i))), (NANDDri37 SingleReg:$r, (get_not_imm $i) )>;
 def : Pat<(i64 (or (not i64:$r), (i64 Wrapped64:$i))), (NANDDri64 SingleReg:$r, (get_not_imm $i) )>;
 def : Pat<(not (and i64:$rs1, i64:$rs2)), (NANDDrr SingleReg:$rs1, SingleReg:$rs2)>;
 
-// TODO: ri10 patterns
 foreach vtype = [ v2i32, v4i16, v8i8 ] in {
+    def : Pat<(vnot (and vtype:$r, (vtype (is_imm_vec_kvx_splat32_at:$IMM)))),
+              (NANDDri32s SingleReg:$r, (trunc_imm_32 (build_imm_vec $IMM)))>;
     def : Pat<(vnot (and vtype:$r, (vtype (is_imm_vec_ri37:$IMM)))), (NANDDri37 SingleReg:$r, (build_imm_vec $IMM))>;
     def : Pat<(vnot (and vtype:$r, (vtype (is_imm_vec:$IMM)))), (NANDDri64 SingleReg:$r, (build_imm_vec $IMM))>;
     def : Pat<(vnot (and vtype:$rs1, vtype:$rs2)), (NANDDrr SingleReg:$rs1, SingleReg:$rs2)>;
+}
 }
 
 // NANDW
@@ -1393,37 +1380,30 @@ def : Pat<(vineg_ssat vt:$v),
 def : Pat<(vineg_ssat v2i16:$v),
           (NEGSHQ SingleReg:$v)>, Requires<[IsV2]>;
 
-// NXOR ri variants are not easy, as they become a single xor
-// NXORD
-def : Pat<(xor (xor i64:$rs1, i64:$rs2), (i64 -1)), (NXORDrr SingleReg:$rs1, SingleReg:$rs2)>;
-foreach vtype = [ v2i32, v4i16, v8i8 ] in
-    def : Pat<(vnot (xor vtype:$rs1, vtype:$rs2)), (NXORDrr SingleReg:$rs1, SingleReg:$rs2)>;
-
 // NXORW
 def : Pat<(xor (xor i32:$rs1, i32:$rs2), (i32 -1)), (NXORWrr SingleReg:$rs1, SingleReg:$rs2)>;
 foreach vtype = [ v2i8, v2i16, v4i8 ] in
     def : Pat<(vnot (xor vtype:$rs1, vtype:$rs2)), (NXORWrr SingleReg:$rs1, SingleReg:$rs2)>;
 
-// ORD
-def : Pat<(or i64:$rs1, i64:$rs2), (ORDrr SingleReg:$rs1, SingleReg:$rs2)>;
-def : Pat<(or i64:$rs1, Signed10:$rs2), (ORDri10 SingleReg:$rs1, Signed10:$rs2)>;
-def : Pat<(or i64:$rs1, Signed37:$rs2), (ORDri37 SingleReg:$rs1, Signed37:$rs2)>;
-def : Pat<(or i64:$rs1, Wrapped64:$rs2), (ORDri64 SingleReg:$rs1, Wrapped64:$rs2)>;
-
-foreach vtype = [ v8i8, v4i16, v2i32 ] in {
-    def : Pat<(or vtype:$rs1, vtype:$rs2), (ORDrr SingleReg:$rs1, SingleReg:$rs2)>;
-    def : Pat<(or vtype:$rs1, (vtype (is_imm_vec:$IMM))), (ORDri64 SingleReg:$rs1, (build_imm_vec $IMM))>;
-}
-
 // ORND
 def : Pat<(or (not i64:$rs1), i64:$rs2), (ORNDrr SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(ORNDriPat (or i64:$rs1, Signed10:$c1), Signed10), (ORNDri10 SingleReg:$rs1, Signed10:$c1)>;
+def : Pat<(ORNDriPat (or i64:$rs1, UnsignedSplat32Imm:$c1), UnsignedSplat32Imm), (ORNDri32s SingleReg:$rs1,(trunc_imm_32 $c1))>;
 def : Pat<(ORNDriPat (or i64:$rs1, Signed37:$c1), Signed37), (ORNDri37 SingleReg:$rs1, Signed37:$c1)>;
 def : Pat<(ORNDriPat (or i64:$rs1, Wrapped64:$c1), Wrapped64), (ORNDri64 SingleReg:$rs1, Wrapped64:$c1)>;
-// TODO: Add ri37 and ri10 to vector types
+
 foreach vtype = [ v8i8, v4i16, v2i32 ] in {
-    def : Pat<(or (vnot vtype:$rs1), (vtype (is_imm_vec:$IMM))), (ORNDri64 SingleReg:$rs1, (build_imm_vec $IMM))>;
-    def : Pat<(or (vnot vtype:$rs1), vtype:$rs2), (ORNDrr SingleReg:$rs1, SingleReg:$rs2)>;
+    def : Pat<(or (vnot vtype:$rs1), (vtype (is_imm_vec_kvx_splat32_at:$IMM))),
+              (ORNDri32s SingleReg:$rs1, (trunc_imm_32(build_imm_vec $IMM)))>;
+
+    def : Pat<(or (vnot vtype:$rs1), (vtype (is_imm_vec_ri37:$IMM))),
+              (ORNDri37 SingleReg:$rs1, (build_imm_vec $IMM))>;
+
+    def : Pat<(or (vnot vtype:$rs1), (vtype (is_imm_vec:$IMM))),
+              (ORNDri64 SingleReg:$rs1, (build_imm_vec $IMM))>;
+
+    def : Pat<(or (vnot vtype:$rs1), vtype:$rs2),
+              (ORNDrr SingleReg:$rs1, SingleReg:$rs2)>;
 }
 
 // ORNW
@@ -2187,26 +2167,26 @@ def : Pat<(v2i64(zanyext v2i32:$v)), (v2i64 (REG_SEQUENCE PairedReg, (ZXWD $v), 
 def : Pat<(add v8i8:$v1, v8i8:$v2),
       (XORDrr
             (ADDDrr
-                  (ANDDri64 SingleReg:$v1, 0x7f7f7f7f7f7f7f7f),
-                  (ANDDri64 SingleReg:$v2, 0x7f7f7f7f7f7f7f7f)
+                  (ANDDri32s SingleReg:$v1, 0x7f7f7f7f),
+                  (ANDDri32s SingleReg:$v2, 0x7f7f7f7f)
             ),
-            (ANDDri64
+            (ANDDri32s
                   (XORDrr
                         SingleReg:$v1, SingleReg:$v2
                   ),
-                  0x8080808080808080
+                  0x80808080
             )
       )>;
 
 def : Pat<(sub v8i8:$v1, v8i8:$v2),
       (XORDrr
-            (ANDDri64
+            (ANDDri32s
                   (NXORDrr SingleReg:$v1, SingleReg:$v2),
-                  0x8080808080808080
+                  0x80808080
             ),
             (SBFDrr
-                  (ANDDri64 SingleReg:$v2, 0x7f7f7f7f7f7f7f7f),
-                  (ORDri64 SingleReg:$v1, 0x8080808080808080)
+                  (ANDDri32s SingleReg:$v2, 0x7f7f7f7f),
+                  (ORDri32s SingleReg:$v1,  0x80808080)
             )
       )>;
 
@@ -2218,38 +2198,38 @@ def : Pat<(abs v8i8:$v),
 
 def : Pat<(v8i8(shl v8i8:$v, (v8i8 (v8_splat i32:$s)))),
           (ORDrr
-            (ANDDri64
+            (ANDDri32s
                   (SLLDrr
-                        (ANDDri64 SingleReg:$v, 0xff00ff00ff00ff00),
+                        (ANDDri32s SingleReg:$v, 0xff00ff00),
                   SingleReg:$s),
-            0xff00ff00ff00ff00),
-            (ANDDri64
+            0xff00ff00),
+            (ANDDri32s
                   (SLLDrr
-                        (ANDDri64 SingleReg:$v, 0xff00ff00ff00ff),
+                        (ANDDri32s SingleReg:$v, 0xff00ff),
                   SingleReg:$s),
-            0xff00ff00ff00ff))>;
+            0xff00ff))>;
 
 
 def : Pat<(v8i8(srl v8i8:$v, (v8i8 (v8_splat i32:$s)))),
           (ORDrr
-            (ANDDri64
+            (ANDDri32s
                   (SRLDrr
-                        (ANDDri64 SingleReg:$v, 0xff00ff00ff00ff00),
+                        (ANDDri32s SingleReg:$v, 0xff00ff00),
                   SingleReg:$s),
-            0xff00ff00ff00ff00),
-            (ANDDri64
+            0xff00ff00),
+            (ANDDri32s
                   (SRLDrr
-                        (ANDDri64 SingleReg:$v, 0xff00ff00ff00ff),
+                        (ANDDri32s SingleReg:$v, 0xff00ff),
                   SingleReg:$s),
-            0xff00ff00ff00ff))>;
+            0xff00ff))>;
 
 def : Pat<(v8i8(or (srl v8i8:$v, (v8i8 (v8_splat (i32 (sub (i32 8), i32:$s)))) ), (shl v8i8:$v, (v8i8 (v8_splat i32:$s))))),
           (ORDrr
-            (ANDDri64
+            (ANDDri32s
                   (SLLHQSrr
                         (SBMM8ri64 SingleReg:$v, 0x8080202008080202),
                   SingleReg:$s),
-            0xff00ff00ff00ff00),
+            0xff00ff00),
             (SRLHQSri
                   (SLLHQSrr
                         (SBMM8ri64 SingleReg:$v, 0x4040101004040101),
@@ -2258,11 +2238,11 @@ def : Pat<(v8i8(or (srl v8i8:$v, (v8i8 (v8_splat (i32 (sub (i32 8), i32:$s)))) )
 
 def : Pat<(v8i8(rotl v8i8:$v, (v8i8 (v8_splat i32:$s)))),
           (ORDrr
-            (ANDDri64
+            (ANDDri32s
                   (SLLHQSrr
                         (SBMM8ri64 SingleReg:$v, 0x8080202008080202),
                   SingleReg:$s),
-            0xff00ff00ff00ff00),
+            0xff00ff00),
             (SRLHQSri
                   (SLLHQSrr
                         (SBMM8ri64 SingleReg:$v, 0x4040101004040101),
@@ -2271,11 +2251,11 @@ def : Pat<(v8i8(rotl v8i8:$v, (v8i8 (v8_splat i32:$s)))),
 
 def : Pat<(v8i8(or (shl v8i8:$v, (v8i8 (v8_splat (i32 (sub (i32 8), i32:$s)))) ), (srl v8i8:$v, (v8i8 (v8_splat i32:$s))))),
           (ORDrr
-            (ANDNDri64
+            (ANDNDri32s
                   (SRLHQSrr
                         (SBMM8ri64 SingleReg:$v, 0x4040101004040101),
                   SingleReg:$s),
-            0xff00ff00ff00ff00),
+            0xff00ff00),
             (SLLHQSri
                   (SRLHQSrr
                         (SBMM8ri64 SingleReg:$v, 0x8080202008080202),
@@ -2284,11 +2264,11 @@ def : Pat<(v8i8(or (shl v8i8:$v, (v8i8 (v8_splat (i32 (sub (i32 8), i32:$s)))) )
 
 def : Pat<(v8i8(rotr v8i8:$v, (v8i8 (v8_splat i32:$s)))),
           (ORDrr
-            (ANDNDri64
+            (ANDNDri32s
                   (SRLHQSrr
                         (SBMM8ri64 SingleReg:$v, 0x4040101004040101),
                   SingleReg:$s),
-            0xff00ff00ff00ff00),
+            0xff00ff00),
             (SLLHQSri
                   (SRLHQSrr
                         (SBMM8ri64 SingleReg:$v, 0x8080202008080202),

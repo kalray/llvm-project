@@ -127,17 +127,17 @@ declare i32 @llvm.abs.i32(i32, i1 immarg)
 define <8 x i8> @v8i8abds_rr(<8 x i8> %0, <8 x i8> %1) #0 {
 ; V1-LABEL: v8i8abds_rr:
 ; V1:       # %bb.0:
+; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    sbmm8 $r2 = $r0, 0x4000200004000100
 ; V1-NEXT:    sbmm8 $r3 = $r1, 0x4000200004000100
 ; V1-NEXT:    ;;
-; V1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
-; V1-NEXT:    andd $r1 = $r1, 0xff00ff00ff00ff00
+; V1-NEXT:    andd.@ $r1 = $r1, 0xff00ff00
 ; V1-NEXT:    sbfshq $r2 = $r3, $r2
 ; V1-NEXT:    ;;
 ; V1-NEXT:    sbfshq $r0 = $r1, $r0
 ; V1-NEXT:    srlhqs $r1 = $r2, 8
 ; V1-NEXT:    ;;
-; V1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
+; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    ;;
 ; V1-NEXT:    ord $r0 = $r0, $r1
 ; V1-NEXT:    ;;
@@ -167,19 +167,18 @@ define <8 x i8> @v8i8abds_rr(<8 x i8> %0, <8 x i8> %1) #0 {
 define <8 x i8> @v8i8abds_ri_(<8 x i8> %0) #0 {
 ; V1-LABEL: v8i8abds_ri_:
 ; V1:       # %bb.0:
-; V1-NEXT:    make $r1 = 0x1004ff01
-; V1-NEXT:    sbmm8 $r2 = $r0, 0x4000200004000100
+; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; V1-NEXT:    sbmm8 $r1 = $r0, 0x4000200004000100
+; V1-NEXT:    make $r2 = 0x1004ff01
 ; V1-NEXT:    ;;
-; V1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
-; V1-NEXT:    sbmm8 $r3 = $r1, 0x4000200004000100
+; V1-NEXT:    andd.@ $r2 = $r2, 0xff00ff00
+; V1-NEXT:    sbmm8 $r3 = $r2, 0x4000200004000100
 ; V1-NEXT:    ;;
-; V1-NEXT:    andd $r1 = $r1, 0xff00ff00ff00ff00
-; V1-NEXT:    sbfshq $r2 = $r3, $r2
+; V1-NEXT:    sbfshq $r0 = $r2, $r0
+; V1-NEXT:    sbfshq $r1 = $r3, $r1
 ; V1-NEXT:    ;;
-; V1-NEXT:    sbfshq $r0 = $r1, $r0
-; V1-NEXT:    srlhqs $r1 = $r2, 8
-; V1-NEXT:    ;;
-; V1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
+; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; V1-NEXT:    srlhqs $r1 = $r1, 8
 ; V1-NEXT:    ;;
 ; V1-NEXT:    ord $r0 = $r0, $r1
 ; V1-NEXT:    ;;
@@ -209,19 +208,18 @@ define <8 x i8> @v8i8abds_ri_(<8 x i8> %0) #0 {
 define <8 x i8> @v8i8abds_ri_at(<8 x i8> %0) #0 {
 ; V1-LABEL: v8i8abds_ri_at:
 ; V1:       # %bb.0:
-; V1-NEXT:    make $r1 = 0x1004ff011004ff01
-; V1-NEXT:    sbmm8 $r2 = $r0, 0x4000200004000100
+; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; V1-NEXT:    sbmm8 $r1 = $r0, 0x4000200004000100
+; V1-NEXT:    make $r2 = 0x1004ff011004ff01
 ; V1-NEXT:    ;;
-; V1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
-; V1-NEXT:    sbmm8 $r3 = $r1, 0x4000200004000100
+; V1-NEXT:    andd.@ $r2 = $r2, 0xff00ff00
+; V1-NEXT:    sbmm8 $r3 = $r2, 0x4000200004000100
 ; V1-NEXT:    ;;
-; V1-NEXT:    andd $r1 = $r1, 0xff00ff00ff00ff00
-; V1-NEXT:    sbfshq $r2 = $r3, $r2
+; V1-NEXT:    sbfshq $r0 = $r2, $r0
+; V1-NEXT:    sbfshq $r1 = $r3, $r1
 ; V1-NEXT:    ;;
-; V1-NEXT:    sbfshq $r0 = $r1, $r0
-; V1-NEXT:    srlhqs $r1 = $r2, 8
-; V1-NEXT:    ;;
-; V1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
+; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; V1-NEXT:    srlhqs $r1 = $r1, 8
 ; V1-NEXT:    ;;
 ; V1-NEXT:    ord $r0 = $r0, $r1
 ; V1-NEXT:    ;;
@@ -251,19 +249,18 @@ define <8 x i8> @v8i8abds_ri_at(<8 x i8> %0) #0 {
 define <8 x i8> @v8i8abds_ri_at_2(<8 x i8> %0) #0 {
 ; V1-LABEL: v8i8abds_ri_at_2:
 ; V1:       # %bb.0:
+; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    make $r1 = 0x1004ff011004ff01
-; V1-NEXT:    sbmm8 $r2 = $r0, 0x4000200004000100
+; V1-NEXT:    sbmm8 $r3 = $r0, 0x4000200004000100
 ; V1-NEXT:    ;;
-; V1-NEXT:    andd $r1 = $r1, 0xff00ff00ff00ff00
-; V1-NEXT:    sbmm8 $r3 = $r1, 0x4000200004000100
-; V1-NEXT:    ;;
-; V1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
-; V1-NEXT:    sbfshq $r2 = $r2, $r3
+; V1-NEXT:    andd.@ $r1 = $r1, 0xff00ff00
+; V1-NEXT:    sbmm8 $r2 = $r1, 0x4000200004000100
 ; V1-NEXT:    ;;
 ; V1-NEXT:    sbfshq $r0 = $r0, $r1
-; V1-NEXT:    srlhqs $r1 = $r2, 8
+; V1-NEXT:    sbfshq $r2 = $r3, $r2
 ; V1-NEXT:    ;;
-; V1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
+; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; V1-NEXT:    srlhqs $r1 = $r2, 8
 ; V1-NEXT:    ;;
 ; V1-NEXT:    ord $r0 = $r0, $r1
 ; V1-NEXT:    ;;

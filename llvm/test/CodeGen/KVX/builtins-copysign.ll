@@ -67,7 +67,7 @@ define <4 x half> @copysignhq(<4 x half> %0, <4 x half> %1) {
 ; CHECK-LABEL: copysignhq:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fabshq $r0 = $r0
-; CHECK-NEXT:    andd $r1 = $r1, 0x8000800080008000
+; CHECK-NEXT:    andd.@ $r1 = $r1, 0x80008000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -82,7 +82,7 @@ define <2 x float> @copysignwp(<2 x float> %0, <2 x float> %1) {
 ; CHECK-LABEL: copysignwp:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fabswp $r0 = $r0
-; CHECK-NEXT:    andd $r1 = $r1, 0x8000000080000000
+; CHECK-NEXT:    andd.@ $r1 = $r1, 0x80000000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -149,8 +149,8 @@ define <8 x half> @copysignho(<8 x half> %0, <8 x half> %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fabshq $r0 = $r0
 ; CHECK-NEXT:    fabshq $r1 = $r1
-; CHECK-NEXT:    andd $r2 = $r2, 0x8000800080008000
-; CHECK-NEXT:    andd $r3 = $r3, 0x8000800080008000
+; CHECK-NEXT:    andd.@ $r2 = $r2, 0x80008000
+; CHECK-NEXT:    andd.@ $r3 = $r3, 0x80008000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r0 = $r0, $r2
 ; CHECK-NEXT:    ord $r1 = $r1, $r3
@@ -167,13 +167,13 @@ define <16 x half> @copysignhx(<16 x half> %0, <16 x half> %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fabshq $r0 = $r0
 ; CHECK-NEXT:    fabshq $r1 = $r1
-; CHECK-NEXT:    andd $r4 = $r4, 0x8000800080008000
-; CHECK-NEXT:    andd $r5 = $r5, 0x8000800080008000
+; CHECK-NEXT:    andd.@ $r4 = $r4, 0x80008000
+; CHECK-NEXT:    andd.@ $r5 = $r5, 0x80008000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fabshq $r2 = $r2
 ; CHECK-NEXT:    fabshq $r3 = $r3
-; CHECK-NEXT:    andd $r6 = $r6, 0x8000800080008000
-; CHECK-NEXT:    andd $r7 = $r7, 0x8000800080008000
+; CHECK-NEXT:    andd.@ $r6 = $r6, 0x80008000
+; CHECK-NEXT:    andd.@ $r7 = $r7, 0x80008000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r0 = $r0, $r4
 ; CHECK-NEXT:    ord $r1 = $r1, $r5
@@ -192,13 +192,13 @@ define <8 x float> @copysignwo(<8 x float> %0, <8 x float> %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fabswp $r2 = $r2
 ; CHECK-NEXT:    fabswp $r3 = $r3
-; CHECK-NEXT:    andd $r6 = $r6, 0x8000000080000000
-; CHECK-NEXT:    andd $r7 = $r7, 0x8000000080000000
+; CHECK-NEXT:    andd.@ $r6 = $r6, 0x80000000
+; CHECK-NEXT:    andd.@ $r7 = $r7, 0x80000000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fabswp $r0 = $r0
 ; CHECK-NEXT:    fabswp $r1 = $r1
-; CHECK-NEXT:    andd $r4 = $r4, 0x8000000080000000
-; CHECK-NEXT:    andd $r5 = $r5, 0x8000000080000000
+; CHECK-NEXT:    andd.@ $r4 = $r4, 0x80000000
+; CHECK-NEXT:    andd.@ $r5 = $r5, 0x80000000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r0 = $r0, $r4
 ; CHECK-NEXT:    ord $r1 = $r1, $r5
@@ -217,8 +217,8 @@ define <4 x float> @copysignwq(<4 x float> %0, <4 x float> %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fabswp $r0 = $r0
 ; CHECK-NEXT:    fabswp $r1 = $r1
-; CHECK-NEXT:    andd $r2 = $r2, 0x8000000080000000
-; CHECK-NEXT:    andd $r3 = $r3, 0x8000000080000000
+; CHECK-NEXT:    andd.@ $r2 = $r2, 0x80000000
+; CHECK-NEXT:    andd.@ $r3 = $r3, 0x80000000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r0 = $r0, $r2
 ; CHECK-NEXT:    ord $r1 = $r1, $r3
