@@ -855,7 +855,7 @@ define <4 x i16> @lnand(<4 x i16> %0, <4 x i16> %1) {
 ; V2-NEXT:    ;;
 ; V2-NEXT:    ord $r0 = $r1, $r0
 ; V2-NEXT:    ;;
-; V2-NEXT:    andd $r0 = $r0, 0x1000100010001
+; V2-NEXT:    andd.@ $r0 = $r0, 0x10001
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %3 = icmp eq <4 x i16> %0, zeroinitializer
@@ -905,7 +905,7 @@ define <4 x i16> @lor(<4 x i16> %0, <4 x i16> %1) {
 ; V2-NEXT:    ;;
 ; V2-NEXT:    compnhq.ne $r0 = $r0, $r1
 ; V2-NEXT:    ;;
-; V2-NEXT:    andd $r0 = $r0, 0x1000100010001
+; V2-NEXT:    andd.@ $r0 = $r0, 0x10001
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %3 = or <4 x i16> %1, %0
@@ -952,7 +952,7 @@ define <4 x i16> @lnor(<4 x i16> %0, <4 x i16> %1) {
 ; V2-NEXT:    ;;
 ; V2-NEXT:    compnhq.eq $r0 = $r0, $r1
 ; V2-NEXT:    ;;
-; V2-NEXT:    andd $r0 = $r0, 0x1000100010001
+; V2-NEXT:    andd.@ $r0 = $r0, 0x10001
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %3 = or <4 x i16> %1, %0
@@ -1124,7 +1124,7 @@ define <4 x i16> @nandd_v4i16_ri64_2(<4 x i16> %0) {
 define <4 x i16> @splat(i32 %0) {
 ; ALL-LABEL: splat:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    sbmm8 $r0 = $r0, 0x201020102010201
+; ALL-NEXT:    sbmm8.@ $r0 = $r0, 0x2010201
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
   %2 = trunc i32 %0 to i16
@@ -1136,7 +1136,7 @@ define <4 x i16> @splat(i32 %0) {
 define <4 x i16> @splat_0(<4 x i16> %0) {
 ; ALL-LABEL: splat_0:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    sbmm8 $r0 = $r0, 0x201020102010201
+; ALL-NEXT:    sbmm8.@ $r0 = $r0, 0x2010201
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
   %2 = shufflevector <4 x i16> %0, <4 x i16> undef, <4 x i32> zeroinitializer
@@ -1146,7 +1146,7 @@ define <4 x i16> @splat_0(<4 x i16> %0) {
 define <4 x i16> @splat_1(<4 x i16> %0) {
 ; ALL-LABEL: splat_1:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    sbmm8 $r0 = $r0, 0x804080408040804
+; ALL-NEXT:    sbmm8.@ $r0 = $r0, 0x8040804
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
   %2 = shufflevector <4 x i16> %0, <4 x i16> undef, <4 x i32> <i32 1, i32 1, i32 1, i32 1>
@@ -1156,7 +1156,7 @@ define <4 x i16> @splat_1(<4 x i16> %0) {
 define <4 x i16> @splat_1_32(i32 %0) {
 ; ALL-LABEL: splat_1_32:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    sbmm8 $r0 = $r0, 0x804080408040804
+; ALL-NEXT:    sbmm8.@ $r0 = $r0, 0x8040804
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
   %2 = lshr i32 %0, 16
@@ -1169,7 +1169,7 @@ define <4 x i16> @splat_1_32(i32 %0) {
 define <4 x i16> @splat_1_64(i64 %0) {
 ; ALL-LABEL: splat_1_64:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    sbmm8 $r0 = $r0, 0x804080408040804
+; ALL-NEXT:    sbmm8.@ $r0 = $r0, 0x8040804
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
   %2 = lshr i64 %0, 16
@@ -1182,7 +1182,7 @@ define <4 x i16> @splat_1_64(i64 %0) {
 define <4 x i16> @splat_2(<4 x i16> %0) {
 ; ALL-LABEL: splat_2:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    sbmm8 $r0 = $r0, 0x2010201020102010
+; ALL-NEXT:    sbmm8.@ $r0 = $r0, 0x20102010
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
   %2 = shufflevector <4 x i16> %0, <4 x i16> undef, <4 x i32> <i32 2, i32 2, i32 2, i32 2>
@@ -1192,7 +1192,7 @@ define <4 x i16> @splat_2(<4 x i16> %0) {
 define <4 x i16> @splat_2_64(i64 %0) {
 ; ALL-LABEL: splat_2_64:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    sbmm8 $r0 = $r0, 0x2010201020102010
+; ALL-NEXT:    sbmm8.@ $r0 = $r0, 0x20102010
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
   %2 = lshr i64 %0, 32
@@ -1205,7 +1205,7 @@ define <4 x i16> @splat_2_64(i64 %0) {
 define <4 x i16> @splat_3(<4 x i16> %0) {
 ; ALL-LABEL: splat_3:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    sbmm8 $r0 = $r0, 0x8040804080408040
+; ALL-NEXT:    sbmm8.@ $r0 = $r0, 0x80408040
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
   %2 = shufflevector <4 x i16> %0, <4 x i16> undef, <4 x i32> <i32 3, i32 3, i32 3, i32 3>
@@ -1215,7 +1215,7 @@ define <4 x i16> @splat_3(<4 x i16> %0) {
 define <4 x i16> @splat_3_64(i64 %0) {
 ; ALL-LABEL: splat_3_64:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    sbmm8 $r0 = $r0, 0x8040804080408040
+; ALL-NEXT:    sbmm8.@ $r0 = $r0, 0x80408040
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
   %2 = lshr i64 %0, 48
@@ -1279,7 +1279,7 @@ define <4 x i16> @add_splat_const_op1(<4 x i16> %vx) #0 {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    addhq.@ $r0 = $r0, 0x2a002a
 ; ALL-NEXT:    ;;
-; ALL-NEXT:    sbmm8 $r0 = $r0, 0x201020102010201
+; ALL-NEXT:    sbmm8.@ $r0 = $r0, 0x2010201
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
   %splatx = shufflevector <4 x i16> %vx, <4 x i16> undef, <4 x i32> zeroinitializer

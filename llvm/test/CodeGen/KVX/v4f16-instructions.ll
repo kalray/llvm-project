@@ -1921,7 +1921,7 @@ define <4 x half> @test_copysign(<4 x half> %a, <4 x half> %b) #0 {
 ; CHECK-LABEL: test_copysign:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fabshq $r0 = $r0
-; CHECK-NEXT:    andd $r1 = $r1, 0x8000800080008000
+; CHECK-NEXT:    andd.@ $r1 = $r1, 0x80008000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -1939,7 +1939,7 @@ define <4 x half> @test_copysign_v4f32(<4 x half> %a, <4 x float> %b) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fnarrowwhq.rna.s $r1 = $r2r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    andd $r1 = $r1, 0x8000800080008000
+; CHECK-NEXT:    andd.@ $r1 = $r1, 0x80008000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -1979,7 +1979,7 @@ define <4 x float> @test_copysign_extended(<4 x half> %a, <4 x half> %b) #0 {
 ; CHECK-LABEL: test_copysign_extended:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fabshq $r0 = $r0
-; CHECK-NEXT:    andd $r1 = $r1, 0x8000800080008000
+; CHECK-NEXT:    andd.@ $r1 = $r1, 0x80008000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r1 = $r0, $r1
 ; CHECK-NEXT:    ;;

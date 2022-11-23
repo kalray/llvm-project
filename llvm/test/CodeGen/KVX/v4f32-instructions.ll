@@ -1754,8 +1754,8 @@ define <4 x float> @test_copysign(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fabswp $r0 = $r0
 ; CHECK-NEXT:    fabswp $r1 = $r1
-; CHECK-NEXT:    andd $r2 = $r2, 0x8000000080000000
-; CHECK-NEXT:    andd $r3 = $r3, 0x8000000080000000
+; CHECK-NEXT:    andd.@ $r2 = $r2, 0x80000000
+; CHECK-NEXT:    andd.@ $r3 = $r3, 0x80000000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r0 = $r0, $r2
 ; CHECK-NEXT:    ord $r1 = $r1, $r3
@@ -1770,7 +1770,7 @@ define <4 x float> @test_copysign_v4f16(<4 x float> %a, <4 x half> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fabswp $r0 = $r0
 ; CHECK-NEXT:    fabswp $r1 = $r1
-; CHECK-NEXT:    andd $r2 = $r2, 0x8000800080008000
+; CHECK-NEXT:    andd.@ $r2 = $r2, 0x80008000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x800000002000000
 ; CHECK-NEXT:    sbmm8 $r3 = $r2, 0x8000000020000000
@@ -1814,8 +1814,8 @@ define <4 x double> @test_copysign_extended(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fabswp $r0 = $r0
 ; CHECK-NEXT:    fabswp $r1 = $r1
-; CHECK-NEXT:    andd $r2 = $r2, 0x8000000080000000
-; CHECK-NEXT:    andd $r3 = $r3, 0x8000000080000000
+; CHECK-NEXT:    andd.@ $r2 = $r2, 0x80000000
+; CHECK-NEXT:    andd.@ $r3 = $r3, 0x80000000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ord $r0 = $r0, $r2
 ; CHECK-NEXT:    ord $r1 = $r1, $r3
@@ -1837,7 +1837,7 @@ define <4 x float> @test_copysign_fp16(<4 x float> %a, <4 x half> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fabswp $r0 = $r0
 ; CHECK-NEXT:    fabswp $r1 = $r1
-; CHECK-NEXT:    andd $r2 = $r2, 0x8000800080008000
+; CHECK-NEXT:    andd.@ $r2 = $r2, 0x80008000
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x800000002000000
 ; CHECK-NEXT:    sbmm8 $r3 = $r2, 0x8000000020000000

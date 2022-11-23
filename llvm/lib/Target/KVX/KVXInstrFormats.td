@@ -34,11 +34,14 @@ def IsV2 : Predicate<"Subtarget->isV2()">;
 // If the instruction is and atomic swap in memory, it has a special rule to generate
 // the asm string, as well it defines that it mayLoad and mayStore
 
+// AddedComplex increases the pattern priority, making it have higher selection chance
+// against other patterns that match from the same root node.
+
 // List of arguments:
-// <asm, itin, Ops, Mods, MemOps, CC, Out, InPlace, pattern, IsAtomicSwap>
+// <asm, itin, Ops, Mods, MemOps, CC, Out, InPlace, pattern, IsAtomicSwap, AddedComplex>
 
 // String to copy/paste on use on definition of NEWINSTRUCTION:
-// defm NEWINSTRUCTION : I </*asm=*/, /*itin=*/, /*Ops=*/, /*Mods=*/, /*MemOps=*/, /*CC=*/, /*Out=*/, /*InPlace=*/, /*pattern=*/, /*IsAtomicSwap=*/>;
+// defm NEWINSTRUCTION : I </*asm=*/, /*itin=*/, /*Ops=*/, /*Mods=*/, /*MemOps=*/, /*CC=*/, /*Out=*/, /*InPlace=*/, /*pattern=*/, /*IsAtomicSwap=0*/, /*AddedComplex=0*/>;
 
 // Dag to be matched:
 // (outs [Out.0:$r]),
@@ -60,7 +63,8 @@ multiclass I <string asm,
          list<DAGOperand> Out = [],
          bit InPlace = 0,
          list<dag> pat = [],
-         bit IsAtomicSwap = 0> {
+         bit IsAtomicSwap = 0,
+         int AddedComplex = 0> {
 
     // Filter out Qindex for generating the asm string from Mods and keep it in the dag
     defvar Mods = !filter(i, ModsAll, !not(!eq(i, QindexMod)));
@@ -164,7 +168,8 @@ multiclass I <string asm,
     defvar InstSz = !cond(!ne(ItirName, !subst("_Y_", "", ItirName)): 12,
                           !ne(ItirName, !subst("_X_", "", ItirName)): 8,
                           true : 4);
-    defvar CheapAsMove = !eq(ItirName, "ALU_TINY");
+
+    defvar CheapAsMove = !and(!eq(InstSz, 4), !ne(ItirName, !subst("TINY", "", ItirName)));
 // We define an "unamed" instruction, so it will be just the name of the definition it self.
   def "" : Instruction {
     let isAsCheapAsAMove = CheapAsMove;
@@ -183,6 +188,7 @@ multiclass I <string asm,
     let Constraints = !cond(!ne(InPlace, 0): "$r = $z", true : "");
     let isPredicable = CanPredicate;
     let mayRaiseFPException = mayRaiseFPE;
+    let AddedComplexity = AddedComplex;
  }
 }
 

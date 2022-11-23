@@ -188,3 +188,15 @@ def LsupackMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 5);}]
 }
 
 def chain : Operand<OtherVT>;
+
+def build_imm_vec : SDNodeXForm<build_vector, [{
+  return KVX_LOW::buildImmVector(*N, *CurDAG);
+}]>;
+
+def is_imm_vec : PatLeaf<(build_vector), [{
+  return cast<BuildVectorSDNode>(N)->isConstant();
+}], build_imm_vec>;
+
+def is_imm_vec_kvx_splat32_at : PatLeaf<(build_vector), [{
+   return KVX_LOW::isKVXSplat32ImmVec(N, CurDAG, true);
+}], build_imm_vec>;

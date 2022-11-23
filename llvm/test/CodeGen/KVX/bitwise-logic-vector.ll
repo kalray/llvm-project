@@ -22,7 +22,7 @@ entry:
 define <8 x i8> @v8i8xor_imm(<8 x i8> %a){
 ; CHECK-LABEL: v8i8xor_imm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    xord $r0 = $r0, 0x303030303030303
+; CHECK-NEXT:    xord.@ $r0 = $r0, 0x3030303
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -44,7 +44,7 @@ entry:
 define <8 x i8> @v8i8or_imm(<8 x i8> %a){
 ; CHECK-LABEL: v8i8or_imm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    ord $r0 = $r0, 0xf0f0f0f0f0f0f0f
+; CHECK-NEXT:    ord.@ $r0 = $r0, 0xf0f0f0f
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -66,7 +66,7 @@ entry:
 define <8 x i8> @v8i8and_imm(<8 x i8> %a){
 ; CHECK-LABEL: v8i8and_imm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    andd $r0 = $r0, 0xf0f0f0f0f0f0f0f
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0xf0f0f0f
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -89,7 +89,7 @@ entry:
 define <8 x i8> @v8i8andn_imm(<8 x i8> %a){
 ; CHECK-LABEL: v8i8andn_imm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    andnd $r0 = $r0, 0x2b2b2b2b2b2b2b2b
+; CHECK-NEXT:    andnd.@ $r0 = $r0, 0x2b2b2b2b
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -113,7 +113,7 @@ entry:
 define <4 x i16> @v4i16xor_imm(<4 x i16> %a){
 ; CHECK-LABEL: v4i16xor_imm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    xord $r0 = $r0, 0x3000300030003
+; CHECK-NEXT:    xord.@ $r0 = $r0, 0x30003
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -135,7 +135,7 @@ entry:
 define <4 x i16> @v4i16or_imm(<4 x i16> %a){
 ; CHECK-LABEL: v4i16or_imm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    ord $r0 = $r0, 0xf000f000f000f
+; CHECK-NEXT:    ord.@ $r0 = $r0, 0xf000f
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -157,7 +157,7 @@ entry:
 define <4 x i16> @v4i16and_imm(<4 x i16> %a){
 ; CHECK-LABEL: v4i16and_imm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    andd $r0 = $r0, 0xf000f000f000f
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0xf000f
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -180,7 +180,7 @@ entry:
 define <4 x i16> @v4i16andn_imm(<4 x i16> %a){
 ; CHECK-LABEL: v4i16andn_imm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    andnd $r0 = $r0, 0x2b002b002b002b
+; CHECK-NEXT:    andnd.@ $r0 = $r0, 0x2b002b
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -205,7 +205,7 @@ entry:
 define <2 x i32> @v2i32xor_imm(<2 x i32> %a){
 ; CHECK-LABEL: v2i32xor_imm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    xord $r0 = $r0, 0x300000003
+; CHECK-NEXT:    xord.@ $r0 = $r0, 0x3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -227,7 +227,7 @@ entry:
 define <2 x i32> @v2i32or_imm(<2 x i32> %a){
 ; CHECK-LABEL: v2i32or_imm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    ord $r0 = $r0, 0xf0000000f
+; CHECK-NEXT:    ord.@ $r0 = $r0, 0xf
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -249,7 +249,7 @@ entry:
 define <2 x i32> @v2i32and_imm(<2 x i32> %a){
 ; CHECK-LABEL: v2i32and_imm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    andd $r0 = $r0, 0xf0000000f
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0xf
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -272,7 +272,7 @@ entry:
 define <2 x i32> @v2i32andn_imm(<2 x i32> %a){
 ; CHECK-LABEL: v2i32andn_imm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    andnd $r0 = $r0, 0x2b0000002b
+; CHECK-NEXT:    andnd.@ $r0 = $r0, 0x2b
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

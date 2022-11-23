@@ -131,9 +131,9 @@ define <3 x i16> @test_fshl_v3i16(<3 x i16> %a, <3 x i16> %b) {
 ; CV1-LABEL: test_fshl_v3i16:
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    neghq $r1 = $r1
-; CV1-NEXT:    andd $r2 = $r1, 0xf000f000f000f
+; CV1-NEXT:    andd.@ $r2 = $r1, 0xf000f
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    andd $r1 = $r1, 0xf000f000f000f
+; CV1-NEXT:    andd.@ $r1 = $r1, 0xf000f
 ; CV1-NEXT:    sllhqs $r3 = $r0, $r2
 ; CV1-NEXT:    extfz $r4 = $r2, 19, 16
 ; CV1-NEXT:    ;;
@@ -170,10 +170,10 @@ define <3 x i16> @test_fshl_v3i16(<3 x i16> %a, <3 x i16> %b) {
 ;
 ; CV2-LABEL: test_fshl_v3i16:
 ; CV2:       # %bb.0: # %entry
-; CV2-NEXT:    andd $r1 = $r1, 0xf000f000f000f
+; CV2-NEXT:    andd.@ $r1 = $r1, 0xf000f
 ; CV2-NEXT:    neghq $r2 = $r1
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    andd $r2 = $r2, 0xf000f000f000f
+; CV2-NEXT:    andd.@ $r2 = $r2, 0xf000f
 ; CV2-NEXT:    extfz $r3 = $r1, 19, 16
 ; CV2-NEXT:    sllhqs $r5 = $r0, $r1
 ; CV2-NEXT:    ;;
@@ -214,9 +214,9 @@ define <4 x i16> @test_fshl_v4i16(<4 x i16> %a, <4 x i16> %b) {
 ; CV1-LABEL: test_fshl_v4i16:
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    neghq $r1 = $r1
-; CV1-NEXT:    andd $r2 = $r1, 0xf000f000f000f
+; CV1-NEXT:    andd.@ $r2 = $r1, 0xf000f
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    andd $r1 = $r1, 0xf000f000f000f
+; CV1-NEXT:    andd.@ $r1 = $r1, 0xf000f
 ; CV1-NEXT:    sllhqs $r3 = $r0, $r2
 ; CV1-NEXT:    extfz $r4 = $r2, 19, 16
 ; CV1-NEXT:    ;;
@@ -253,10 +253,10 @@ define <4 x i16> @test_fshl_v4i16(<4 x i16> %a, <4 x i16> %b) {
 ;
 ; CV2-LABEL: test_fshl_v4i16:
 ; CV2:       # %bb.0: # %entry
-; CV2-NEXT:    andd $r1 = $r1, 0xf000f000f000f
+; CV2-NEXT:    andd.@ $r1 = $r1, 0xf000f
 ; CV2-NEXT:    neghq $r2 = $r1
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    andd $r2 = $r2, 0xf000f000f000f
+; CV2-NEXT:    andd.@ $r2 = $r2, 0xf000f
 ; CV2-NEXT:    extfz $r3 = $r1, 19, 16
 ; CV2-NEXT:    sllhqs $r5 = $r0, $r1
 ; CV2-NEXT:    ;;
@@ -297,9 +297,9 @@ define <8 x i16> @test_fshl_v8i16(<8 x i16> %a, <8 x i16> %b) {
 ; CV1-LABEL: test_fshl_v8i16:
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    neghq $r2 = $r2
-; CV1-NEXT:    andd $r4 = $r2, 0xf000f000f000f
+; CV1-NEXT:    andd.@ $r4 = $r2, 0xf000f
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    andd $r2 = $r2, 0xf000f000f000f
+; CV1-NEXT:    andd.@ $r2 = $r2, 0xf000f
 ; CV1-NEXT:    sllhqs $r5 = $r0, $r4
 ; CV1-NEXT:    extfz $r6 = $r4, 19, 16
 ; CV1-NEXT:    ;;
@@ -327,11 +327,11 @@ define <8 x i16> @test_fshl_v8i16(<8 x i16> %a, <8 x i16> %b) {
 ; CV1-NEXT:    extfz $r2 = $r2, 51, 48
 ; CV1-NEXT:    neghq $r3 = $r3
 ; CV1-NEXT:    insf $r5 = $r6, 31, 0
-; CV1-NEXT:    andd $r6 = $r3, 0xf000f000f000f
+; CV1-NEXT:    andd.@ $r6 = $r3, 0xf000f
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    srlhqs $r0 = $r0, $r2
 ; CV1-NEXT:    extfz $r2 = $r6, 19, 16
-; CV1-NEXT:    andd $r3 = $r3, 0xf000f000f000f
+; CV1-NEXT:    andd.@ $r3 = $r3, 0xf000f
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    sllhqs $r2 = $r1, $r2
 ; CV1-NEXT:    sllhqs $r7 = $r1, $r6
@@ -371,9 +371,9 @@ define <8 x i16> @test_fshl_v8i16(<8 x i16> %a, <8 x i16> %b) {
 ; CV2-LABEL: test_fshl_v8i16:
 ; CV2:       # %bb.0: # %entry
 ; CV2-NEXT:    neghq $r2 = $r2
-; CV2-NEXT:    andd $r4 = $r2, 0xf000f000f000f
+; CV2-NEXT:    andd.@ $r4 = $r2, 0xf000f
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    andd $r2 = $r2, 0xf000f000f000f
+; CV2-NEXT:    andd.@ $r2 = $r2, 0xf000f
 ; CV2-NEXT:    sllhqs $r5 = $r0, $r4
 ; CV2-NEXT:    extfz $r6 = $r4, 19, 16
 ; CV2-NEXT:    extfz $r7 = $r4, 35, 32
@@ -394,9 +394,9 @@ define <8 x i16> @test_fshl_v8i16(<8 x i16> %a, <8 x i16> %b) {
 ; CV2-NEXT:    insf $r8 = $r5, 15, 0
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    extfz $r2 = $r2, 51, 48
-; CV2-NEXT:    andd $r3 = $r3, 0xf000f000f000f
+; CV2-NEXT:    andd.@ $r3 = $r3, 0xf000f
 ; CV2-NEXT:    srlhqs $r5 = $r0, $r5
-; CV2-NEXT:    andd $r6 = $r6, 0xf000f000f000f
+; CV2-NEXT:    andd.@ $r6 = $r6, 0xf000f
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    srlhqs $r0 = $r0, $r2
 ; CV2-NEXT:    extfz $r2 = $r3, 19, 16
@@ -442,9 +442,9 @@ define <16 x i16> @test_fshl_v16i16(<16 x i16> %a, <16 x i16> %b) {
 ; CV1-LABEL: test_fshl_v16i16:
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    neghq $r4 = $r4
-; CV1-NEXT:    andd $r8 = $r4, 0xf000f000f000f
+; CV1-NEXT:    andd.@ $r8 = $r4, 0xf000f
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    andd $r4 = $r4, 0xf000f000f000f
+; CV1-NEXT:    andd.@ $r4 = $r4, 0xf000f
 ; CV1-NEXT:    sllhqs $r9 = $r0, $r8
 ; CV1-NEXT:    extfz $r10 = $r8, 19, 16
 ; CV1-NEXT:    ;;
@@ -471,12 +471,12 @@ define <16 x i16> @test_fshl_v16i16(<16 x i16> %a, <16 x i16> %b) {
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    extfz $r4 = $r4, 51, 48
 ; CV1-NEXT:    neghq $r5 = $r5
-; CV1-NEXT:    andd $r9 = $r5, 0xf000f000f000f
+; CV1-NEXT:    andd.@ $r9 = $r5, 0xf000f
 ; CV1-NEXT:    insf $r10 = $r9, 31, 0
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    srlhqs $r0 = $r0, $r4
 ; CV1-NEXT:    extfz $r4 = $r9, 19, 16
-; CV1-NEXT:    andd $r5 = $r5, 0xf000f000f000f
+; CV1-NEXT:    andd.@ $r5 = $r5, 0xf000f
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    sllhqs $r4 = $r1, $r4
 ; CV1-NEXT:    sllhqs $r11 = $r1, $r9
@@ -506,11 +506,11 @@ define <16 x i16> @test_fshl_v16i16(<16 x i16> %a, <16 x i16> %b) {
 ; CV1-NEXT:    extfz $r5 = $r5, 51, 48
 ; CV1-NEXT:    neghq $r6 = $r6
 ; CV1-NEXT:    insf $r9 = $r10, 31, 0
-; CV1-NEXT:    andd $r10 = $r6, 0xf000f000f000f
+; CV1-NEXT:    andd.@ $r10 = $r6, 0xf000f
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    srlhqs $r1 = $r1, $r5
 ; CV1-NEXT:    extfz $r5 = $r10, 19, 16
-; CV1-NEXT:    andd $r6 = $r6, 0xf000f000f000f
+; CV1-NEXT:    andd.@ $r6 = $r6, 0xf000f
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    sllhqs $r5 = $r2, $r5
 ; CV1-NEXT:    sllhqs $r11 = $r2, $r10
@@ -540,11 +540,11 @@ define <16 x i16> @test_fshl_v16i16(<16 x i16> %a, <16 x i16> %b) {
 ; CV1-NEXT:    extfz $r6 = $r6, 51, 48
 ; CV1-NEXT:    neghq $r7 = $r7
 ; CV1-NEXT:    insf $r9 = $r10, 31, 0
-; CV1-NEXT:    andd $r10 = $r7, 0xf000f000f000f
+; CV1-NEXT:    andd.@ $r10 = $r7, 0xf000f
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    srlhqs $r2 = $r2, $r6
 ; CV1-NEXT:    extfz $r6 = $r10, 19, 16
-; CV1-NEXT:    andd $r7 = $r7, 0xf000f000f000f
+; CV1-NEXT:    andd.@ $r7 = $r7, 0xf000f
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    sllhqs $r6 = $r3, $r6
 ; CV1-NEXT:    sllhqs $r11 = $r3, $r10
@@ -584,9 +584,9 @@ define <16 x i16> @test_fshl_v16i16(<16 x i16> %a, <16 x i16> %b) {
 ; CV2-LABEL: test_fshl_v16i16:
 ; CV2:       # %bb.0: # %entry
 ; CV2-NEXT:    neghq $r4 = $r4
-; CV2-NEXT:    andd $r8 = $r4, 0xf000f000f000f
+; CV2-NEXT:    andd.@ $r8 = $r4, 0xf000f
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    andd $r4 = $r4, 0xf000f000f000f
+; CV2-NEXT:    andd.@ $r4 = $r4, 0xf000f
 ; CV2-NEXT:    extfz $r9 = $r8, 19, 16
 ; CV2-NEXT:    sllhqs $r10 = $r0, $r8
 ; CV2-NEXT:    extfz $r11 = $r8, 35, 32
@@ -608,7 +608,7 @@ define <16 x i16> @test_fshl_v16i16(<16 x i16> %a, <16 x i16> %b) {
 ; CV2-NEXT:    srlhqs $r0 = $r0, $r4
 ; CV2-NEXT:    srlhqs $r9 = $r0, $r15
 ; CV2-NEXT:    insf $r10 = $r9, 15, 0
-; CV2-NEXT:    andd $r15 = $r5, 0xf000f000f000f
+; CV2-NEXT:    andd.@ $r15 = $r5, 0xf000f
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    extfz $r4 = $r15, 19, 16
 ; CV2-NEXT:    insf $r8 = $r11, 47, 0
@@ -621,7 +621,7 @@ define <16 x i16> @test_fshl_v16i16(<16 x i16> %a, <16 x i16> %b) {
 ; CV2-NEXT:    extfz $r11 = $r15, 35, 32
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r4 = $r10, 15, 0
-; CV2-NEXT:    andd $r5 = $r5, 0xf000f000f000f
+; CV2-NEXT:    andd.@ $r5 = $r5, 0xf000f
 ; CV2-NEXT:    sllhqs $r10 = $r1, $r11
 ; CV2-NEXT:    extfz $r11 = $r15, 51, 48
 ; CV2-NEXT:    ;;
@@ -638,7 +638,7 @@ define <16 x i16> @test_fshl_v16i16(<16 x i16> %a, <16 x i16> %b) {
 ; CV2-NEXT:    srlhqs $r1 = $r1, $r5
 ; CV2-NEXT:    insf $r9 = $r10, 15, 0
 ; CV2-NEXT:    srlhqs $r10 = $r1, $r11
-; CV2-NEXT:    andd $r11 = $r6, 0xf000f000f000f
+; CV2-NEXT:    andd.@ $r11 = $r6, 0xf000f
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    extfz $r5 = $r11, 19, 16
 ; CV2-NEXT:    neghq $r6 = $r6
@@ -647,7 +647,7 @@ define <16 x i16> @test_fshl_v16i16(<16 x i16> %a, <16 x i16> %b) {
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r1 = $r10, 47, 0
 ; CV2-NEXT:    sllhqs $r5 = $r2, $r5
-; CV2-NEXT:    andd $r6 = $r6, 0xf000f000f000f
+; CV2-NEXT:    andd.@ $r6 = $r6, 0xf000f
 ; CV2-NEXT:    extfz $r15 = $r11, 35, 32
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r5 = $r9, 15, 0
@@ -661,14 +661,14 @@ define <16 x i16> @test_fshl_v16i16(<16 x i16> %a, <16 x i16> %b) {
 ; CV2-NEXT:    srlhqs $r11 = $r2, $r6
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    extfz $r6 = $r6, 51, 48
-; CV2-NEXT:    andd $r7 = $r7, 0xf000f000f000f
+; CV2-NEXT:    andd.@ $r7 = $r7, 0xf000f
 ; CV2-NEXT:    insf $r10 = $r11, 15, 0
 ; CV2-NEXT:    extfz $r11 = $r6, 35, 32
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    srlhqs $r2 = $r2, $r6
 ; CV2-NEXT:    sllhqs $r5 = $r2, $r5
 ; CV2-NEXT:    srlhqs $r11 = $r2, $r11
-; CV2-NEXT:    andd $r15 = $r15, 0xf000f000f000f
+; CV2-NEXT:    andd.@ $r15 = $r15, 0xf000f
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    extfz $r6 = $r7, 19, 16
 ; CV2-NEXT:    extfz $r10 = $r15, 19, 16

@@ -288,21 +288,61 @@ multiclass MC_10<string OpcStr> {
      LSU_LOAD_Y_>;
 }
 
-// multiclass MC_11 is used by:
-//   defm ADDD
-//   defm SBFD
-//   defm MIND
-//   defm MINUD
-//   defm MAXD
-//   defm MAXUD
+// multiclass MC_BINOP_64 is used by:
 //   defm ANDD
-//   defm NANDD
 //   defm ORD
 //   defm NORD
 //   defm XORD
 //   defm NXORD
 //   defm ANDND
 //   defm ORND
+multiclass MC_BINOP_64<string OpcStr, PatFrag p> {
+  defm rr : I <OpcStr, /*itin=*/ALU_TINY, /*Ops=*/[SingleReg, SingleReg], /*Mods=*/[],
+              /*MemOps=*/[], /*CC=*/[], /*Out=*/[SingleReg], /*InPlace=*/0, /*pattern=*/
+              [(set i64:$r, (p i64:$op0, i64:$op1))]>;
+
+  defm ri10 : I <OpcStr, /*itin=*/ALU_TINY, /*Ops=*/[SingleReg, Signed10], /*Mods=*/[],
+              /*MemOps=*/[], /*CC=*/[], /*Out=*/[SingleReg], /*InPlace=*/0, /*pattern=*/
+              [(set i64:$r, (p i64:$op0, Signed10:$op1))], /*IsAtomicSwap*/ 0, /*added complexity*/ 2>;
+
+  defm ri32s: I <OpcStr # ".@", /*itin=*/ALU_TINY_X_, /*Ops=*/[SingleReg, Wrapped32], /*Mods=*/[],
+              /*MemOps=*/[], /*CC=*/[], /*Out=*/[SingleReg], /*InPlace=*/0, /*pattern=*/
+              []>;
+
+  defm ri37 : I <OpcStr, /*itin=*/ALU_TINY_X_, /*Ops=*/[SingleReg, Signed37], /*Mods=*/[],
+              /*MemOps=*/[], /*CC=*/[], /*Out=*/[SingleReg], /*InPlace=*/0, /*pattern=*/
+              [(set i64:$r, (p i64:$op0, Signed37:$op1))]>;
+
+  defm ri64 : I <OpcStr, /*itin=*/ALU_TINY_Y_, /*Ops=*/[SingleReg, Wrapped64], /*Mods=*/[],
+              /*MemOps=*/[], /*CC=*/[], /*Out=*/[SingleReg], /*InPlace=*/0, /*pattern=*/
+              [(set i64:$r, (p i64:$op0, Wrapped64:$op1))]>;
+  defvar ri32s = !cast<Instruction>(NAME # "ri32s");
+  defvar ri64 = !cast<Instruction>(NAME # "ri64");
+  defvar rr = !cast<Instruction>(NAME # "rr");
+
+  def : Pat<(i64 (p i64:$op0, UnsignedSplat32Imm:$op1)),
+            (ri32s SingleReg:$op0, (trunc_imm_32 $op1))>;
+
+  foreach vtype = [ v8i8, v4i16, v2i32 ] in {
+    def : Pat<(p vtype:$op0, (vtype (is_imm_vec_kvx_splat32_at:$op1))),
+              (ri32s SingleReg:$op0, (build_imm_vec $op1))>;
+
+    def : Pat<(p vtype:$op0, (vtype (is_imm_vec:$op1))),
+              (ri64 SingleReg:$op0, (build_imm_vec $op1))>;
+
+    def : Pat<(p vtype:$op0, vtype:$rs2),
+              (rr SingleReg:$op0, SingleReg:$rs2)>;
+  }
+}
+
+// multiclass MC_11 is used by:
+//   defm ADDD
+//   defm SBFD
+//   defm NANDD
+//   defm MIND
+//   defm MINUD
+//   defm MAXD
+//   defm MAXUD
 multiclass MC_11<string OpcStr> {
   let isAsCheapAsAMove = 1 in
   def rr : KVX_INSTRUCTION
@@ -326,6 +366,11 @@ multiclass MC_11<string OpcStr> {
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      ALU_TINY_Y_>;
+  def ri32s: KVX_INSTRUCTION_X
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped32:$a3),
+     !strconcat (OpcStr, ".@ $a1 = $a2, $a3"),
+     [/* no straightforward pattern */],
+     ALU_TINY_X_>;
 }
 
 // multiclass MC_12_SWITCH is used by:
@@ -335,23 +380,23 @@ multiclass MC_11<string OpcStr> {
 multiclass MC_12_SWITCH<string OpcStr> {
   def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
-     !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [/* no straightforward pattern */],
+     !strconcat (OpcStr, " $a1 = $a2, $a3"), [],
      ALU_SWITCH_LITE_TINY>;
   def ri10 : KVX_INSTRUCTION
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed10:$a3),
-     !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [/* no straightforward pattern */],
+     !strconcat (OpcStr, " $a1 = $a2, $a3"), [],
      ALU_SWITCH_LITE_TINY>;
+  def ri32s : KVX_INSTRUCTION_X
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped32:$a3),
+     !strconcat (OpcStr, ".@ $a1 = $a2, $a3"), [],
+     ALU_SWITCH_LITE_TINY_X_>;
   def ri37 : KVX_INSTRUCTION_X
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37:$a3),
-     !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [/* no straightforward pattern */],
+     !strconcat (OpcStr, " $a1 = $a2, $a3"), [],
      ALU_SWITCH_LITE_TINY_X_>;
   def ri64 : KVX_INSTRUCTION_Y
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped64:$a3),
-     !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [/* no straightforward pattern */],
+     !strconcat (OpcStr, " $a1 = $a2, $a3"), [],
      ALU_SWITCH_LITE_TINY_Y_>;
 }
 
@@ -450,6 +495,7 @@ multiclass MC_13<string OpcStr> {
 //   defm SBFX4UWD
 //   defm SBFX8UWD
 //   defm SBFX16UWD
+//   defm STSUW : ri variant is CV2 only
 multiclass MC_13_SWITCH<string OpcStr> {
   def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
@@ -1678,19 +1724,32 @@ defm MAXD : MC_11<"maxd">;
 
 defm MAXUD : MC_11<"maxud">;
 
-defm ANDD : MC_11<"andd">;
+defm ANDD : MC_BINOP_64<"andd", and>;
 
 defm NANDD : MC_11<"nandd">;
 
-defm ORD : MC_11<"ord">;
+defm ORD : MC_BINOP_64<"ord", or>;
 
-defm NORD : MC_11<"nord">;
+def norpfs : PatFrags<(ops node:$l, node:$r),
+                       [(and (not node:$l), (not node:$r)),
+                        (not (or node:$l, node:$r)),
+                        (vnot (or node:$l, node:$r))]>;
 
-defm XORD : MC_11<"xord">;
+defm NORD : MC_BINOP_64<"nord", norpfs>;
 
-defm NXORD : MC_11<"nxord">;
+defm XORD : MC_BINOP_64<"xord", xor>;
 
-defm ANDND : MC_11<"andnd">;
+def nxorpfs : PatFrags<(ops node:$l, node:$r),
+                       [(not (xor node:$l, node:$r)),
+                        (vnot (xor node:$l, node:$r))]>;
+
+defm NXORD : MC_BINOP_64<"nxord", nxorpfs>;
+
+def andnpfs : PatFrags<(ops node:$l, node:$r),
+                       [(and (not node:$l), node:$r),
+                        (and (vnot node:$l), node:$r)]>;
+
+defm ANDND : MC_BINOP_64<"andnd", andnpfs>;
 
 defm ORND : MC_11<"ornd">;
 
@@ -1753,7 +1812,7 @@ defm LORD : MC_13<"lord">;
 
 defm LNORD : MC_13<"lnord">;
 
-defm STSUW : MC_13_SWITCH<"stsuw">;
+defm STSUW : MC_13_SWITCH<"stsuw">; // ri variant cv2 only
 
 let isAdd = 1 in
 defm ADDW : MC_14<"addw">;
@@ -3514,6 +3573,7 @@ def COPYD : KVX_INSTRUCTION
    [/* no straightforward pattern */],
    ALU_TINY>;
 
+let AddedComplexity = 2 in
 def NOTD : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "notd $a1 = $a2",

@@ -654,7 +654,7 @@ define <8 x half> @shiftfho_four(<8 x half> %v, half %b) {
 ; CHECK-LABEL: shiftfho_four:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    copyd $r0 = $r1
-; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x201020102010201
+; CHECK-NEXT:    sbmm8.@ $r2 = $r2, 0x2010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r2
 ; CHECK-NEXT:    ret
@@ -669,7 +669,7 @@ define <8 x half> @shiftfho_five(<8 x half> %v, half %b) {
 ; CHECK-LABEL: shiftfho_five:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    srld $r0 = $r1, 16
-; CHECK-NEXT:    sbmm8 $r1 = $r2, 0x201020102010201
+; CHECK-NEXT:    sbmm8.@ $r1 = $r2, 0x2010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r2, 63, 48
 ; CHECK-NEXT:    ret
@@ -684,7 +684,7 @@ define <8 x half> @shiftfho_last(<8 x half> %v, half %b) {
 ; CHECK-LABEL: shiftfho_last:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    insf $r1 = $r2, 15, 0
-; CHECK-NEXT:    sbmm8 $r3 = $r2, 0x201020102010201
+; CHECK-NEXT:    sbmm8.@ $r3 = $r2, 0x2010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r0 = $r1, 0x201020102018040
 ; CHECK-NEXT:    copyd $r1 = $r3
@@ -781,7 +781,7 @@ entry:
 define <16 x half> @shiftfhx_last(<16 x half> %v, half %b) {
 ; CHECK-LABEL: shiftfhx_last:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r1 = $r4, 0x201020102010201
+; CHECK-NEXT:    sbmm8.@ $r1 = $r4, 0x2010201
 ; CHECK-NEXT:    insf $r3 = $r4, 15, 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbmm8 $r0 = $r3, 0x201020102018040

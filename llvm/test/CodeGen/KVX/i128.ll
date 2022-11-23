@@ -90,11 +90,8 @@ define i128 @nand(i128 %0, i128 %1) {
 define i128 @nor(i128 %0, i128 %1) {
 ; CHECK-LABEL: nor:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ord $r0 = $r2, $r0
-; CHECK-NEXT:    ord $r1 = $r3, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    notd $r0 = $r0
-; CHECK-NEXT:    notd $r1 = $r1
+; CHECK-NEXT:    nord $r0 = $r2, $r0
+; CHECK-NEXT:    nord $r1 = $r3, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = or i128 %1, %0
@@ -105,11 +102,8 @@ define i128 @nor(i128 %0, i128 %1) {
 define i128 @nor_2(i128 %0, i128 %1) {
 ; CHECK-LABEL: nor_2:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ord $r0 = $r2, $r0
-; CHECK-NEXT:    ord $r1 = $r3, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    notd $r0 = $r0
-; CHECK-NEXT:    notd $r1 = $r1
+; CHECK-NEXT:    nord $r0 = $r2, $r0
+; CHECK-NEXT:    nord $r1 = $r3, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = or i128 %1, %0

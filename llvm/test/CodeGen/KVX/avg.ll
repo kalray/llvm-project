@@ -1758,10 +1758,10 @@ define <8 x i8> @avg_v8i8(<8 x i8> %a, <8 x i8> %b) {
 ; KV3_1-LABEL: avg_v8i8:
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    xord $r0 = $r1, $r0
-; KV3_1-NEXT:    andd $r2 = $r0, 0x7f7f7f7f7f7f7f7f
-; KV3_1-NEXT:    andd $r3 = $r1, 0x7f7f7f7f7f7f7f7f
+; KV3_1-NEXT:    andd.@ $r2 = $r0, 0x7f7f7f7f
+; KV3_1-NEXT:    andd.@ $r3 = $r1, 0x7f7f7f7f
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    andd $r0 = $r0, 0x8080808080808080
+; KV3_1-NEXT:    andd.@ $r0 = $r0, 0x80808080
 ; KV3_1-NEXT:    addd $r1 = $r3, $r2
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    xord $r0 = $r1, $r0
@@ -1826,12 +1826,12 @@ define <8 x i8> @avg_v8i8_ri_(<8 x i8> %a) {
 ; KV3_1-LABEL: avg_v8i8_ri_:
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    make $r1 = 0x7f437f43
-; KV3_1-NEXT:    andd $r2 = $r0, 0x7f7f7f7f7f7f7f7f
+; KV3_1-NEXT:    andd.@ $r2 = $r0, 0x7f7f7f7f
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    xord $r0 = $r0, $r1
-; KV3_1-NEXT:    andd $r3 = $r1, 0x7f7f7f7f7f7f7f7f
+; KV3_1-NEXT:    andd.@ $r3 = $r1, 0x7f7f7f7f
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    andd $r0 = $r0, 0x8080808080808080
+; KV3_1-NEXT:    andd.@ $r0 = $r0, 0x80808080
 ; KV3_1-NEXT:    addd $r1 = $r2, $r3
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    xord $r0 = $r1, $r0
@@ -1896,12 +1896,12 @@ define <8 x i8> @avg_v8i8_ri_at(<8 x i8> %a) {
 ; KV3_1-LABEL: avg_v8i8_ri_at:
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    make $r1 = 0x7f437f437f437f43
-; KV3_1-NEXT:    andd $r2 = $r0, 0x7f7f7f7f7f7f7f7f
+; KV3_1-NEXT:    andd.@ $r2 = $r0, 0x7f7f7f7f
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    xord $r0 = $r0, $r1
-; KV3_1-NEXT:    andd $r3 = $r1, 0x7f7f7f7f7f7f7f7f
+; KV3_1-NEXT:    andd.@ $r3 = $r1, 0x7f7f7f7f
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    andd $r0 = $r0, 0x8080808080808080
+; KV3_1-NEXT:    andd.@ $r0 = $r0, 0x80808080
 ; KV3_1-NEXT:    addd $r1 = $r2, $r3
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    xord $r0 = $r1, $r0
@@ -1966,20 +1966,20 @@ define <8 x i8> @ravg_v8i8(<8 x i8> %a, <8 x i8> %b) {
 ; KV3_1-LABEL: ravg_v8i8:
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    xord $r0 = $r0, $r1
-; KV3_1-NEXT:    andd $r2 = $r1, 0x7f7f7f7f7f7f7f7f
-; KV3_1-NEXT:    andd $r3 = $r0, 0x7f7f7f7f7f7f7f7f
+; KV3_1-NEXT:    andd.@ $r2 = $r1, 0x7f7f7f7f
+; KV3_1-NEXT:    andd.@ $r3 = $r0, 0x7f7f7f7f
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    andd $r0 = $r0, 0x8080808080808080
+; KV3_1-NEXT:    andd.@ $r0 = $r0, 0x80808080
 ; KV3_1-NEXT:    addd $r1 = $r3, $r2
 ; KV3_1-NEXT:    make $r2 = 0x101010101010101
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    xord $r0 = $r1, $r0
-; KV3_1-NEXT:    andd $r1 = $r2, 0x7f7f7f7f7f7f7f7f
+; KV3_1-NEXT:    andd.@ $r1 = $r2, 0x7f7f7f7f
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    xord $r0 = $r0, $r2
-; KV3_1-NEXT:    andd $r3 = $r0, 0x7f7f7f7f7f7f7f7f
+; KV3_1-NEXT:    andd.@ $r3 = $r0, 0x7f7f7f7f
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    andd $r0 = $r0, 0x8080808080808080
+; KV3_1-NEXT:    andd.@ $r0 = $r0, 0x80808080
 ; KV3_1-NEXT:    addd $r1 = $r3, $r1
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    xord $r0 = $r1, $r0
@@ -2045,12 +2045,12 @@ define <8 x i8> @ravg_v8i8_ri_at(<8 x i8> %a) {
 ; KV3_1-LABEL: ravg_v8i8_ri_at:
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    make $r1 = 0x81e081e081e081e0
-; KV3_1-NEXT:    andd $r2 = $r0, 0x7f7f7f7f7f7f7f7f
+; KV3_1-NEXT:    andd.@ $r2 = $r0, 0x7f7f7f7f
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    xord $r0 = $r0, $r1
-; KV3_1-NEXT:    andd $r3 = $r1, 0x7f7f7f7f7f7f7f7f
+; KV3_1-NEXT:    andd.@ $r3 = $r1, 0x7f7f7f7f
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    andd $r0 = $r0, 0x8080808080808080
+; KV3_1-NEXT:    andd.@ $r0 = $r0, 0x80808080
 ; KV3_1-NEXT:    addd $r1 = $r2, $r3
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    xord $r0 = $r1, $r0
@@ -2115,23 +2115,23 @@ define <8 x i8> @avg_v8u8(<8 x i8> %a, <8 x i8> %b) {
 ; KV3_1-LABEL: avg_v8u8:
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    xord $r0 = $r1, $r0
-; KV3_1-NEXT:    andd $r2 = $r0, 0x7f7f7f7f7f7f7f7f
-; KV3_1-NEXT:    andd $r3 = $r1, 0x7f7f7f7f7f7f7f7f
+; KV3_1-NEXT:    andd.@ $r2 = $r0, 0x7f7f7f7f
+; KV3_1-NEXT:    andd.@ $r3 = $r1, 0x7f7f7f7f
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    andd $r0 = $r0, 0x8080808080808080
+; KV3_1-NEXT:    andd.@ $r0 = $r0, 0x80808080
 ; KV3_1-NEXT:    addd $r1 = $r3, $r2
 ; KV3_1-NEXT:    make $r2 = 1
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    xord $r0 = $r1, $r0
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
-; KV3_1-NEXT:    andd $r1 = $r0, 0xff00ff00ff00ff
+; KV3_1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; KV3_1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    srld $r0 = $r0, $r2
 ; KV3_1-NEXT:    srld $r1 = $r1, $r2
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
-; KV3_1-NEXT:    andd $r1 = $r1, 0xff00ff00ff00ff
+; KV3_1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; KV3_1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    ord $r0 = $r0, $r1
 ; KV3_1-NEXT:    ret
@@ -2152,25 +2152,25 @@ define <8 x i8> @avg_v8u8_ri_(<8 x i8> %a) {
 ; KV3_1-LABEL: avg_v8u8_ri_:
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    make $r1 = 0x7fff7fff
-; KV3_1-NEXT:    andd $r3 = $r0, 0x7f7f7f7f7f7f7f7f
+; KV3_1-NEXT:    andd.@ $r3 = $r0, 0x7f7f7f7f
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    xord $r0 = $r0, $r1
-; KV3_1-NEXT:    andd $r2 = $r1, 0x7f7f7f7f7f7f7f7f
+; KV3_1-NEXT:    andd.@ $r2 = $r1, 0x7f7f7f7f
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    andd $r0 = $r0, 0x8080808080808080
+; KV3_1-NEXT:    andd.@ $r0 = $r0, 0x80808080
 ; KV3_1-NEXT:    addd $r1 = $r3, $r2
 ; KV3_1-NEXT:    make $r2 = 1
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    xord $r0 = $r1, $r0
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
-; KV3_1-NEXT:    andd $r1 = $r0, 0xff00ff00ff00ff
+; KV3_1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; KV3_1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    srld $r0 = $r0, $r2
 ; KV3_1-NEXT:    srld $r1 = $r1, $r2
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
-; KV3_1-NEXT:    andd $r1 = $r1, 0xff00ff00ff00ff
+; KV3_1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; KV3_1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    ord $r0 = $r0, $r1
 ; KV3_1-NEXT:    ret
@@ -2191,25 +2191,25 @@ define <8 x i8> @avg_v8u8_ri_at(<8 x i8> %a) {
 ; KV3_1-LABEL: avg_v8u8_ri_at:
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    make $r1 = 0x7f017f017f017f01
-; KV3_1-NEXT:    andd $r3 = $r0, 0x7f7f7f7f7f7f7f7f
+; KV3_1-NEXT:    andd.@ $r3 = $r0, 0x7f7f7f7f
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    xord $r0 = $r0, $r1
-; KV3_1-NEXT:    andd $r2 = $r1, 0x7f7f7f7f7f7f7f7f
+; KV3_1-NEXT:    andd.@ $r2 = $r1, 0x7f7f7f7f
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    andd $r0 = $r0, 0x8080808080808080
+; KV3_1-NEXT:    andd.@ $r0 = $r0, 0x80808080
 ; KV3_1-NEXT:    addd $r1 = $r3, $r2
 ; KV3_1-NEXT:    make $r2 = 1
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    xord $r0 = $r1, $r0
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
-; KV3_1-NEXT:    andd $r1 = $r0, 0xff00ff00ff00ff
+; KV3_1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; KV3_1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    srld $r0 = $r0, $r2
 ; KV3_1-NEXT:    srld $r1 = $r1, $r2
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
-; KV3_1-NEXT:    andd $r1 = $r1, 0xff00ff00ff00ff
+; KV3_1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; KV3_1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    ord $r0 = $r0, $r1
 ; KV3_1-NEXT:    ret
@@ -2231,33 +2231,33 @@ define <8 x i8> @ravg_v8u8(<8 x i8> %a, <8 x i8> %b) {
 ; KV3_1-LABEL: ravg_v8u8:
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    xord $r0 = $r0, $r1
-; KV3_1-NEXT:    andd $r2 = $r1, 0x7f7f7f7f7f7f7f7f
-; KV3_1-NEXT:    andd $r3 = $r0, 0x7f7f7f7f7f7f7f7f
+; KV3_1-NEXT:    andd.@ $r2 = $r1, 0x7f7f7f7f
+; KV3_1-NEXT:    andd.@ $r3 = $r0, 0x7f7f7f7f
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    andd $r0 = $r0, 0x8080808080808080
+; KV3_1-NEXT:    andd.@ $r0 = $r0, 0x80808080
 ; KV3_1-NEXT:    addd $r1 = $r3, $r2
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    xord $r0 = $r1, $r0
 ; KV3_1-NEXT:    make $r1 = 0x101010101010101
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    xord $r0 = $r0, $r1
-; KV3_1-NEXT:    andd $r2 = $r0, 0x7f7f7f7f7f7f7f7f
-; KV3_1-NEXT:    andd $r3 = $r1, 0x7f7f7f7f7f7f7f7f
+; KV3_1-NEXT:    andd.@ $r2 = $r0, 0x7f7f7f7f
+; KV3_1-NEXT:    andd.@ $r3 = $r1, 0x7f7f7f7f
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    andd $r0 = $r0, 0x8080808080808080
+; KV3_1-NEXT:    andd.@ $r0 = $r0, 0x80808080
 ; KV3_1-NEXT:    addd $r1 = $r2, $r3
 ; KV3_1-NEXT:    make $r2 = 1
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    xord $r0 = $r1, $r0
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
-; KV3_1-NEXT:    andd $r1 = $r0, 0xff00ff00ff00ff
+; KV3_1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; KV3_1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    srld $r0 = $r0, $r2
 ; KV3_1-NEXT:    srld $r1 = $r1, $r2
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
-; KV3_1-NEXT:    andd $r1 = $r1, 0xff00ff00ff00ff
+; KV3_1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; KV3_1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    ord $r0 = $r0, $r1
 ; KV3_1-NEXT:    ret
@@ -2284,25 +2284,25 @@ define <8 x i8> @ravg_v8u8_ri_(<8 x i8> %a) {
 ; KV3_1-LABEL: ravg_v8u8_ri_:
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    make $r1 = 0x101010101010281
-; KV3_1-NEXT:    andd $r3 = $r0, 0x7f7f7f7f7f7f7f7f
+; KV3_1-NEXT:    andd.@ $r3 = $r0, 0x7f7f7f7f
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    xord $r0 = $r0, $r1
-; KV3_1-NEXT:    andd $r2 = $r1, 0x7f7f7f7f7f7f7f7f
+; KV3_1-NEXT:    andd.@ $r2 = $r1, 0x7f7f7f7f
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    andd $r0 = $r0, 0x8080808080808080
+; KV3_1-NEXT:    andd.@ $r0 = $r0, 0x80808080
 ; KV3_1-NEXT:    addd $r1 = $r3, $r2
 ; KV3_1-NEXT:    make $r2 = 1
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    xord $r0 = $r1, $r0
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
-; KV3_1-NEXT:    andd $r1 = $r0, 0xff00ff00ff00ff
+; KV3_1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; KV3_1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    srld $r0 = $r0, $r2
 ; KV3_1-NEXT:    srld $r1 = $r1, $r2
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
-; KV3_1-NEXT:    andd $r1 = $r1, 0xff00ff00ff00ff
+; KV3_1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; KV3_1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    ord $r0 = $r0, $r1
 ; KV3_1-NEXT:    ret
@@ -2325,25 +2325,25 @@ define <8 x i8> @ravg_v8u8_ri_at(<8 x i8> %a) {
 ; KV3_1-LABEL: ravg_v8u8_ri_at:
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    make $r1 = 0x8100810081008100
-; KV3_1-NEXT:    andd $r3 = $r0, 0x7f7f7f7f7f7f7f7f
+; KV3_1-NEXT:    andd.@ $r3 = $r0, 0x7f7f7f7f
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    xord $r0 = $r0, $r1
-; KV3_1-NEXT:    andd $r2 = $r1, 0x7f7f7f7f7f7f7f7f
+; KV3_1-NEXT:    andd.@ $r2 = $r1, 0x7f7f7f7f
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    andd $r0 = $r0, 0x8080808080808080
+; KV3_1-NEXT:    andd.@ $r0 = $r0, 0x80808080
 ; KV3_1-NEXT:    addd $r1 = $r3, $r2
 ; KV3_1-NEXT:    make $r2 = 1
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    xord $r0 = $r1, $r0
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
-; KV3_1-NEXT:    andd $r1 = $r0, 0xff00ff00ff00ff
+; KV3_1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; KV3_1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    srld $r0 = $r0, $r2
 ; KV3_1-NEXT:    srld $r1 = $r1, $r2
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    andd $r0 = $r0, 0xff00ff00ff00ff00
-; KV3_1-NEXT:    andd $r1 = $r1, 0xff00ff00ff00ff
+; KV3_1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; KV3_1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    ord $r0 = $r0, $r1
 ; KV3_1-NEXT:    ret

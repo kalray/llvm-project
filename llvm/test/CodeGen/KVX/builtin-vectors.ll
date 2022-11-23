@@ -211,7 +211,7 @@ entry:
 define <4 x i16> @abdhqs(<4 x i16> %a, i16 %b) {
 ; CHECK-LABEL: abdhqs:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x201020102010201
+; CHECK-NEXT:    sbmm8.@ $r1 = $r1, 0x2010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    abdhq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -229,7 +229,7 @@ declare i64 @llvm.kvx.sbmm8(i64, i64)
 define <8 x i16> @abdhos(<8 x i16> %a, i16 %b) {
 ; CHECK-LABEL: abdhos:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x201020102010201
+; CHECK-NEXT:    sbmm8.@ $r2 = $r2, 0x2010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    abdhq $r0 = $r0, $r2
 ; CHECK-NEXT:    abdhq $r1 = $r1, $r2
@@ -250,7 +250,7 @@ entry:
 define <16 x i16> @abdhxs(<16 x i16> %a, i16 %b) {
 ; CV1-LABEL: abdhxs:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    sbmm8 $r4 = $r4, 0x201020102010201
+; CV1-NEXT:    sbmm8.@ $r4 = $r4, 0x2010201
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    abdhq $r0 = $r0, $r4
 ; CV1-NEXT:    abdhq $r1 = $r1, $r4
@@ -262,7 +262,7 @@ define <16 x i16> @abdhxs(<16 x i16> %a, i16 %b) {
 ;
 ; CV2-LABEL: abdhxs:
 ; CV2:       # %bb.0: # %entry
-; CV2-NEXT:    sbmm8 $r4 = $r4, 0x201020102010201
+; CV2-NEXT:    sbmm8.@ $r4 = $r4, 0x2010201
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    abdhq $r0 = $r0, $r4
 ; CV2-NEXT:    abdhq $r1 = $r1, $r4
@@ -293,7 +293,7 @@ entry:
 define <2 x i32> @abdwps(<2 x i32> %a, i32 %b) {
 ; CHECK-LABEL: abdwps:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x804020108040201
+; CHECK-NEXT:    sbmm8.@ $r1 = $r1, 0x8040201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    abdwp $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -309,7 +309,7 @@ entry:
 define <4 x i32> @abdwqs(<4 x i32> %a, i32 %b) {
 ; CHECK-LABEL: abdwqs:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x804020108040201
+; CHECK-NEXT:    sbmm8.@ $r2 = $r2, 0x8040201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    abdwp $r0 = $r0, $r2
 ; CHECK-NEXT:    abdwp $r1 = $r1, $r2
@@ -330,7 +330,7 @@ entry:
 define <8 x i32> @abdwos(<8 x i32> %a, i32 %b) {
 ; CV1-LABEL: abdwos:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    sbmm8 $r4 = $r4, 0x804020108040201
+; CV1-NEXT:    sbmm8.@ $r4 = $r4, 0x8040201
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    abdwp $r0 = $r0, $r4
 ; CV1-NEXT:    abdwp $r1 = $r1, $r4
@@ -342,7 +342,7 @@ define <8 x i32> @abdwos(<8 x i32> %a, i32 %b) {
 ;
 ; CV2-LABEL: abdwos:
 ; CV2:       # %bb.0: # %entry
-; CV2-NEXT:    sbmm8 $r4 = $r4, 0x804020108040201
+; CV2-NEXT:    sbmm8.@ $r4 = $r4, 0x8040201
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    abdwp $r0 = $r0, $r4
 ; CV2-NEXT:    abdwp $r1 = $r1, $r4
@@ -1195,7 +1195,7 @@ entry:
 define <4 x i16> @addshqs(<4 x i16> %a, i16 %b) {
 ; CHECK-LABEL: addshqs:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x201020102010201
+; CHECK-NEXT:    sbmm8.@ $r1 = $r1, 0x2010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addshq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -1211,7 +1211,7 @@ entry:
 define <8 x i16> @addshos(<8 x i16> %a, i16 %b) {
 ; CHECK-LABEL: addshos:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x201020102010201
+; CHECK-NEXT:    sbmm8.@ $r2 = $r2, 0x2010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addshq $r0 = $r0, $r2
 ; CHECK-NEXT:    addshq $r1 = $r1, $r2
@@ -1232,7 +1232,7 @@ entry:
 define <16 x i16> @addshxs(<16 x i16> %a, i16 %b) {
 ; CV1-LABEL: addshxs:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    sbmm8 $r4 = $r4, 0x201020102010201
+; CV1-NEXT:    sbmm8.@ $r4 = $r4, 0x2010201
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    addshq $r0 = $r0, $r4
 ; CV1-NEXT:    addshq $r1 = $r1, $r4
@@ -1244,7 +1244,7 @@ define <16 x i16> @addshxs(<16 x i16> %a, i16 %b) {
 ;
 ; CV2-LABEL: addshxs:
 ; CV2:       # %bb.0: # %entry
-; CV2-NEXT:    sbmm8 $r4 = $r4, 0x201020102010201
+; CV2-NEXT:    sbmm8.@ $r4 = $r4, 0x2010201
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    addshq $r0 = $r0, $r4
 ; CV2-NEXT:    addshq $r1 = $r1, $r4
@@ -1275,7 +1275,7 @@ entry:
 define <2 x i32> @addswps(<2 x i32> %a, i32 %b) {
 ; CHECK-LABEL: addswps:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x804020108040201
+; CHECK-NEXT:    sbmm8.@ $r1 = $r1, 0x8040201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addswp $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -1291,7 +1291,7 @@ entry:
 define <4 x i32> @addswqs(<4 x i32> %a, i32 %b) {
 ; CHECK-LABEL: addswqs:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x804020108040201
+; CHECK-NEXT:    sbmm8.@ $r2 = $r2, 0x8040201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addswp $r0 = $r0, $r2
 ; CHECK-NEXT:    addswp $r1 = $r1, $r2
@@ -1312,7 +1312,7 @@ entry:
 define <8 x i32> @addswos(<8 x i32> %a, i32 %b) {
 ; CV1-LABEL: addswos:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    sbmm8 $r4 = $r4, 0x804020108040201
+; CV1-NEXT:    sbmm8.@ $r4 = $r4, 0x8040201
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    addswp $r0 = $r0, $r4
 ; CV1-NEXT:    addswp $r1 = $r1, $r4
@@ -1324,7 +1324,7 @@ define <8 x i32> @addswos(<8 x i32> %a, i32 %b) {
 ;
 ; CV2-LABEL: addswos:
 ; CV2:       # %bb.0: # %entry
-; CV2-NEXT:    sbmm8 $r4 = $r4, 0x804020108040201
+; CV2-NEXT:    sbmm8.@ $r4 = $r4, 0x8040201
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    addswp $r0 = $r0, $r4
 ; CV2-NEXT:    addswp $r1 = $r1, $r4
@@ -1609,7 +1609,7 @@ entry:
 define <4 x i16> @sbfshqs(<4 x i16> %a, i16 %b) {
 ; CHECK-LABEL: sbfshqs:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x201020102010201
+; CHECK-NEXT:    sbmm8.@ $r1 = $r1, 0x2010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfshq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -1625,7 +1625,7 @@ entry:
 define <8 x i16> @sbfshos(<8 x i16> %a, i16 %b) {
 ; CHECK-LABEL: sbfshos:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x201020102010201
+; CHECK-NEXT:    sbmm8.@ $r2 = $r2, 0x2010201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfshq $r0 = $r0, $r2
 ; CHECK-NEXT:    sbfshq $r1 = $r1, $r2
@@ -1646,7 +1646,7 @@ entry:
 define <16 x i16> @sbfshxs(<16 x i16> %a, i16 %b) {
 ; CV1-LABEL: sbfshxs:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    sbmm8 $r4 = $r4, 0x201020102010201
+; CV1-NEXT:    sbmm8.@ $r4 = $r4, 0x2010201
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    sbfshq $r0 = $r0, $r4
 ; CV1-NEXT:    sbfshq $r1 = $r1, $r4
@@ -1658,7 +1658,7 @@ define <16 x i16> @sbfshxs(<16 x i16> %a, i16 %b) {
 ;
 ; CV2-LABEL: sbfshxs:
 ; CV2:       # %bb.0: # %entry
-; CV2-NEXT:    sbmm8 $r4 = $r4, 0x201020102010201
+; CV2-NEXT:    sbmm8.@ $r4 = $r4, 0x2010201
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    sbfshq $r0 = $r0, $r4
 ; CV2-NEXT:    sbfshq $r1 = $r1, $r4
@@ -1689,7 +1689,7 @@ entry:
 define <2 x i32> @sbfswps(<2 x i32> %a, i32 %b) {
 ; CHECK-LABEL: sbfswps:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x804020108040201
+; CHECK-NEXT:    sbmm8.@ $r1 = $r1, 0x8040201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfswp $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -1705,7 +1705,7 @@ entry:
 define <4 x i32> @sbfswqs(<4 x i32> %a, i32 %b) {
 ; CHECK-LABEL: sbfswqs:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x804020108040201
+; CHECK-NEXT:    sbmm8.@ $r2 = $r2, 0x8040201
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sbfswp $r0 = $r0, $r2
 ; CHECK-NEXT:    sbfswp $r1 = $r1, $r2
@@ -1726,7 +1726,7 @@ entry:
 define <8 x i32> @sbfswos(<8 x i32> %a, i32 %b) {
 ; CV1-LABEL: sbfswos:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    sbmm8 $r4 = $r4, 0x804020108040201
+; CV1-NEXT:    sbmm8.@ $r4 = $r4, 0x8040201
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    sbfswp $r0 = $r0, $r4
 ; CV1-NEXT:    sbfswp $r1 = $r1, $r4
@@ -1738,7 +1738,7 @@ define <8 x i32> @sbfswos(<8 x i32> %a, i32 %b) {
 ;
 ; CV2-LABEL: sbfswos:
 ; CV2:       # %bb.0: # %entry
-; CV2-NEXT:    sbmm8 $r4 = $r4, 0x804020108040201
+; CV2-NEXT:    sbmm8.@ $r4 = $r4, 0x8040201
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    sbfswp $r0 = $r0, $r4
 ; CV2-NEXT:    sbfswp $r1 = $r1, $r4

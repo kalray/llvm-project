@@ -901,10 +901,6 @@ def imm32u_sub_1 : SDNodeXForm<imm, [{
   return CurDAG->getTargetConstant(N->getZExtValue() -1, SDLoc(N), MVT::i32);
 }]>;
 
-def build_imm_vec : SDNodeXForm<build_vector, [{
-  return KVX_LOW::buildImmVector(*N, *CurDAG);
-}]>;
-
 def build_imm_vec_rpt : SDNodeXForm<build_vector, [{
   return KVX_LOW::buildImmVector(*N, *CurDAG, 0, true);
 }]>;
@@ -940,10 +936,6 @@ def build_imm_vec_neg0 : SDNodeXForm<build_vector, [{
 def build_imm_vec_neg1 : SDNodeXForm<build_vector, [{
   return KVX_LOW::buildImmVector(*N, *CurDAG, 2);
 }]>;
-
-def is_imm_vec : PatLeaf<(build_vector), [{
-  return cast<BuildVectorSDNode>(N)->isConstant();
-}], build_imm_vec>;
 
 def is_imm_vec_ri37 : PatLeaf<(build_vector), [{
    return KVX_LOW::isKVXSplat32ImmVec(N, CurDAG, false);
@@ -987,10 +979,6 @@ def is_splat_build_vec_signed64 : PatLeaf<(build_vector), [{
 
 def is_imm_vec_kvx_splat32_ : PatLeaf<(build_vector), [{
    return KVX_LOW::isKVXSplat32ImmVec(N, CurDAG, false);
-}], build_imm_vec>;
-
-def is_imm_vec_kvx_splat32_at : PatLeaf<(build_vector), [{
-   return KVX_LOW::isKVXSplat32ImmVec(N, CurDAG, true);
 }], build_imm_vec>;
 
 def imm_vec_1bit_splat_ :  PatLeaf<(build_vector), [{
@@ -1115,7 +1103,7 @@ def : Pat<(v2i32 (build_vector i32:$v0, i32:$v1)), (INSF SingleReg:$v0, SingleRe
 def : Pat<(v2i32 (build_vector (i32(vector_extract v2i32:$v, 1)), (i32(vector_extract v2i32:$v, 0)))),
           (SBMM8ri64 SingleReg:$v, 0x0804020180402010)>;
 def : Pat<(v2i32 (build_vector (i32(vector_extract v2i32:$v, 1)), (i32(vector_extract v2i32:$v, 1)))),
-          (SBMM8ri64 SingleReg:$v, 0x8040201080402010)>;
+          (SBMM8ri32s SingleReg:$v, 0x80402010)>;
 def : Pat<(v2i32 (build_vector (i32(vector_extract v2i32:$v0, 1)), (i32(vector_extract v2i32:$v1, 0)))),
           (SBMM8ri64 (INSF SingleReg:$v0, SingleReg:$v1, 31, 0), 0x0804020180402010)>;
 
@@ -1176,23 +1164,23 @@ def : Pat<(v4i8 (trunc (srl v4i16:$v, (v4i16 (v4_splat (i32 8)))))),
 def : Pat<(v4i16 (is_imm_vec_kvx_splat32_:$IMM)), (MAKEi43 (build_imm_vec $IMM))>;
 def : Pat<(v4i16 (is_imm_vec:$IMM)), (MAKEi64 (build_imm_vec $IMM))>;
 def : Pat<(v4i16 (v4_splat (i32 (vector_extract v4i16:$v, 0)))),
-          (SBMM8ri64 SingleReg:$v, 0x0201020102010201)>;
+          (SBMM8ri32s SingleReg:$v, 0x02010201)>;
 def : Pat<(v4i16 (v4_splat i32:$v)),
-          (SBMM8ri64 SingleReg:$v, 0x0201020102010201)>;
+          (SBMM8ri32s SingleReg:$v, 0x02010201)>;
 def : Pat<(v4i16 (v4_splat (i32 (vector_extract v4i16:$v, 1)))),
-          (SBMM8ri64 SingleReg:$v, 0x0804080408040804)>;
+          (SBMM8ri32s SingleReg:$v, 0x08040804)>;
 def : Pat<(v4i16 (v4_splat (i32 (srl i32:$v, (i64 16))))),
-          (SBMM8ri64 SingleReg:$v, 0x0804080408040804)>;
+          (SBMM8ri32s SingleReg:$v, 0x08040804)>;
 def : Pat<(v4i16 (v4_splat (i32 (trunc (i64 (srl i64:$v, (i64 16))))))),
-          (SBMM8ri64 SingleReg:$v, 0x0804080408040804)>;
+          (SBMM8ri32s SingleReg:$v, 0x08040804)>;
 def : Pat<(v4i16 (v4_splat (i32 (vector_extract v4i16:$v, 2)))),
-          (SBMM8ri64 SingleReg:$v, 0x2010201020102010)>;
+          (SBMM8ri32s SingleReg:$v, 0x20102010)>;
 def : Pat<(v4i16 (v4_splat (i32 (trunc (i64 (srl i64:$v, (i64 32))))))),
-          (SBMM8ri64 SingleReg:$v, 0x2010201020102010)>;
+          (SBMM8ri32s SingleReg:$v, 0x20102010)>;
 def : Pat<(v4i16 (v4_splat (i32 (vector_extract v4i16:$v, 3)))),
-          (SBMM8ri64 SingleReg:$v, 0x8040804080408040)>;
+          (SBMM8ri32s SingleReg:$v, 0x80408040)>;
 def : Pat<(v4i16 (v4_splat (i32 (trunc (i64 (srl i64:$v, (i64 48))))))),
-          (SBMM8ri64 SingleReg:$v, 0x8040804080408040)>;
+          (SBMM8ri32s SingleReg:$v, 0x80408040)>;
 def : Pat<(v4i16 (build_vector i32:$v0, i32:$v1, i32:$v2, i32:$v3)),
           (INSF (INSF SingleReg:$v0, SingleReg:$v1, 31, 16), (INSF SingleReg:$v2, SingleReg:$v3, 31, 16), 63, 32)>;
 def : Pat<(v4i16 (concat_vectors v2i16:$v0, v2i16:$v1)),
@@ -1226,7 +1214,7 @@ def : Pat<(v8i8 (build_vector i32:$v0, i32:$v1, i32:$v2, i32:$v3, i32:$v4, i32:$
           (INSF (INSF SingleReg:$v4, SingleReg:$v5, 15, 8), (INSF SingleReg:$v6, SingleReg:$v7, 15, 8), 31, 16),
           63, 32)>;
 
-def : Pat<(v8i8 (v8_splat i32:$s)), (SBMM8ri64 SingleReg:$s, 0x0101010101010101)>;
+def : Pat<(v8i8 (v8_splat i32:$s)), (SBMM8ri32s SingleReg:$s, 0x01010101)>;
 def : Pat<(v8i8 (concat_vectors v4i8:$v0, v4i8:$v1)),
   (INSF  SingleReg:$v0, SingleReg:$v1, 63, 32)>;
 
@@ -1430,7 +1418,7 @@ def : Pat<(v2i8 (extract_subvector (v8i8 SingleReg:$v), (i64 6))),(v2i8 (SRLDri 
 def : Pat<(v4i8 (extract_subvector (v8i8 SingleReg:$v), (i64 0))),(v4i8 (COPY SingleReg:$v))>;
 def : Pat<(v4i8 (extract_subvector (v8i8 SingleReg:$v), (i64 4))),(v4i8 (SRLDri SingleReg:$v, 32))>;
 
-def : Pat<(v8i8 (v8_splat (i32 SingleReg:$s))), (SBMM8ri64 SingleReg:$s, 0x0101010101010101)>;
+def : Pat<(v8i8 (v8_splat (i32 SingleReg:$s))), (SBMM8ri32s SingleReg:$s, 0x01010101)>;
 
 // insert_vector_element
 // v2i16
@@ -1556,12 +1544,12 @@ def : Pat<(cttz v4i32:$v),
 
 def : Pat<(saddsat v8i8:$v0, v8i8:$v1),
           (ORDrr
-            (ANDDri64
+            (ANDDri32s
               (ADDSHQrr
-                (ANDDri64 SingleReg:$v0, 0xff00ff00ff00ff00),
-                (ANDDri64 SingleReg:$v1, 0xff00ff00ff00ff00)
+                (ANDDri32s SingleReg:$v0, 0xff00ff00),
+                (ANDDri32s SingleReg:$v1, 0xff00ff00)
               ),
-              0xff00ff00ff00ff00
+              0xff00ff00
             ),
             (SRLHQSri
               (ADDSHQrr
@@ -1593,22 +1581,22 @@ def : Pat<(uaddsat v8i8:$v0, v8i8:$v1),
               ),
               8
             ),
-            (ANDDri64
+            (ANDDri32s
               (ORDrr
                 (COMPNHQ
                   (ADDHQrr
-                    (ANDDri64 $v0, 0xff00ff00ff00ff00),
-                    (ANDDri64 $v1, 0xff00ff00ff00ff00)
+                    (ANDDri32s $v0, 0xff00ff00),
+                    (ANDDri32s $v1, 0xff00ff00)
                   ),
-                  (ANDDri64 $v0, 0xff00ff00ff00ff00),
+                  (ANDDri32s $v0, 0xff00ff00),
                   comparison_ltu
                 ),
                 (ADDHQrr
-                  (ANDDri64 $v0, 0xff00ff00ff00ff00),
-                  (ANDDri64 $v1, 0xff00ff00ff00ff00)
+                  (ANDDri32s $v0, 0xff00ff00),
+                  (ANDDri32s $v1, 0xff00ff00)
                 )
               ),
-              0xff00ff00ff00ff00
+              0xff00ff00
             )
           )>;
 
@@ -1626,12 +1614,12 @@ def : Pat<(uaddsat v2i32:$v0, v2i32:$v1),
 
 def : Pat<(ssubsat v8i8:$v0, v8i8:$v1),
           (ORDrr
-            (ANDDri64
+            (ANDDri32s
               (SBFSHQrr
-                (ANDDri64 SingleReg:$v1, 0xff00ff00ff00ff00),
-                (ANDDri64 SingleReg:$v0, 0xff00ff00ff00ff00)
+                (ANDDri32s SingleReg:$v1, 0xff00ff00),
+                (ANDDri32s SingleReg:$v0, 0xff00ff00)
               ),
-              0xff00ff00ff00ff00
+              0xff00ff00
             ),
             (SRLHQSri
               (SBFSHQrr
@@ -1671,22 +1659,22 @@ def : Pat<(usubsat v8i8:$v0, v8i8:$v1),
               ),
               8
             ),
-            (ANDDri64
+            (ANDDri32s
               (ANDDrr
                 (COMPNHQ
                   (SBFHQrr
-                    (ANDDri64 $v1, 0xff00ff00ff00ff00),
-                    (ANDDri64 $v0, 0xff00ff00ff00ff00)
+                    (ANDDri32s $v1, 0xff00ff00),
+                    (ANDDri32s $v0, 0xff00ff00)
                   ),
-                  (ANDDri64 $v0, 0xff00ff00ff00ff00),
+                  (ANDDri32s $v0, 0xff00ff00),
                   comparison_leu
                 ),
                 (SBFHQrr
-                  (ANDDri64 $v1, 0xff00ff00ff00ff00),
-                  (ANDDri64 $v0, 0xff00ff00ff00ff00)
+                  (ANDDri32s $v1, 0xff00ff00),
+                  (ANDDri32s $v0, 0xff00ff00)
                 )
               ),
-              0xff00ff00ff00ff00
+              0xff00ff00
             )
           )>;
 
@@ -1911,7 +1899,7 @@ def : Pat<(v4f16 (build_vector f16:$f0, (f16 undef), (f16 undef), (f16 undef))),
           (ZXHD SingleReg:$f0)>;
 
 def : Pat<(v4f16 (build_vector f16:$f0, f16:$f0, f16:$f0, f16:$f0)),
-          (SBMM8ri64 SingleReg:$f0, 0x0201020102010201)>;
+          (SBMM8ri32s SingleReg:$f0, 0x02010201)>;
 
 // v4i16
 def : Pat<(v4i16 (build_vector (i32 (vector_extract v4i16:$v0, 1)),
@@ -1958,9 +1946,11 @@ def : Pat<(vnot v4i8:$v), (NOTW SingleReg:$v)>;
 def : Pat<(vnot v2i8:$v), (NOTW SingleReg:$v)>;
 
 // NOTD, see KVXInstrInfo.td for i64
+let AddedComplexity = 4 in {
 def : Pat<(vnot v2i32:$v), (NOTD SingleReg:$v)>;
 def : Pat<(vnot v4i16:$v), (NOTD SingleReg:$v)>;
 def : Pat<(vnot v8i8:$v), (NOTD SingleReg:$v)>;
+}
 
 def: Pat<(KVXJT tjumptable:$a), (MAKEi64 Wrapped64:$a)>;
 def: Pat<(KVXJT_PCREL i64:$a), (PCRELmi64 SingleReg:$a)>;
