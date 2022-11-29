@@ -392,12 +392,12 @@ def : Pat<(f32 (fma:$dot2fma
                   (f32 (bitconvert (i32 (trunc i64:$t2)))),
                   (fpimm),
                   (f32 (fmulcont
-                      (f32 (bitconvert (i32 (trunc (srl i64:$t2, (i64 32)))))),
+                      (f32 (bitconvert (i32 (trunc (srl i64:$t2, (i32 32)))))),
                       (fpimm))))),
           (f32 (FDOT2Wri SingleReg:$t2, (build_fdot_imm $dot2fma)))>, Requires<[IsV1]>;
 
 def : Pat<(f32 (fma:$dot2fma
-                  (f32 (bitconvert (i32 (trunc (srl i64:$t2, (i64 32)))))),
+                  (f32 (bitconvert (i32 (trunc (srl i64:$t2, (i32 32)))))),
                   (fpimm),
                   (f32 (fmulcont
                       (f32 (bitconvert (i32 (trunc i64:$t2)))),
@@ -422,8 +422,8 @@ def : Pat<(f32 (faddcont (f32 (vector_extract (v2f32 (fmulcont v2f32:$lhs, v2f32
           (f32 (I SingleReg:$lhs, SingleReg:$rhs, rounding_, silent_))>;
 
 def : Pat<(f32 (faddcont (f32 (fmulcont
-                              (f32 (bitconvert (i32 (trunc (i64 (srl i64:$lhs, (i64 32))))))),
-                              (f32 (bitconvert (i32 (trunc (i64 (srl i64:$rhs, (i64 32))))))))),
+                              (f32 (bitconvert (i32 (trunc (i64 (srl i64:$lhs, (i32 32))))))),
+                              (f32 (bitconvert (i32 (trunc (i64 (srl i64:$rhs, (i32 32))))))))),
                      (f32 (fmulcont
                               (f32 (bitconvert (i32 (trunc i64:$lhs)))),
                               (f32 (bitconvert (i32 (trunc i64:$rhs)))))))),
@@ -433,20 +433,20 @@ def : Pat<(f32 (fma
                   (f32 (bitconvert (i32 (trunc i64:$t2)))),
                   (f32 (bitconvert (i32 (trunc i64:$t4)))),
                   (f32 (fmulcont
-                      (f32 (bitconvert (i32 (trunc (srl i64:$t2, (i64 32)))))),
-                      (f32 (bitconvert (i32 (trunc (srl i64:$t4, (i64 32)))))))))),
+                      (f32 (bitconvert (i32 (trunc (srl i64:$t2, (i32 32)))))),
+                      (f32 (bitconvert (i32 (trunc (srl i64:$t4, (i32 32)))))))))),
           (f32 (I SingleReg:$t2, SingleReg:$t4, rounding_, silent_))>;
 
 def : Pat<(f32 (fma:$dot2fma
                   (f32 (bitconvert (i32 (trunc i64:$t2)))),
                   (fpimm),
                   (f32 (fmulcont
-                      (f32 (bitconvert (i32 (trunc (srl i64:$t2, (i64 32)))))),
+                      (f32 (bitconvert (i32 (trunc (srl i64:$t2, (i32 32)))))),
                       (fpimm))))),
           (f32 (I SingleReg:$t2, (MAKEi64 (build_fdot_imm $dot2fma)), rounding_, silent_))>;
 
 def : Pat<(f32 (fma:$dot2fma
-                  (f32 (bitconvert (i32 (trunc (srl i64:$t2, (i64 32)))))),
+                  (f32 (bitconvert (i32 (trunc (srl i64:$t2, (i32 32)))))),
                   (fpimm),
                   (f32 (fmulcont
                       (f32 (bitconvert (i32 (trunc i64:$t2)))),
@@ -455,7 +455,7 @@ def : Pat<(f32 (fma:$dot2fma
 
 def : Pat<(f32 (faddcont (f32 (fmulcont
                               (f32 (vector_extract v2f32:$lhs, (i64 1))),
-                              (f32 (bitconvert (i32 (trunc (i64 (srl i64:$rhs, (i64 32))))))))),
+                              (f32 (bitconvert (i32 (trunc (i64 (srl i64:$rhs, (i32 32))))))))),
                      (f32 (fmulcont
                               (f32 (vector_extract v2f32:$lhs, (i64 0))),
                               (f32 ( bitconvert (i32 (trunc i64:$rhs)))))))),
@@ -1185,10 +1185,10 @@ def : Pat<(f64
 // Match the imaginary part using C complex code
 def : Pat<(f64
             (fma
-              (f64 (fpextend (f32 (bitconvert (i32 (trunc (i64 (srl i64:$t4, (i64 32))))))))),
+              (f64 (fpextend (f32 (bitconvert (i32 (trunc (i64 (srl i64:$t4, (i32 32))))))))),
               (f64 (fpextend (f32 (bitconvert (i32 (trunc i64:$t2)))))),
               (f64 (fmul
-                (f64 (fpextend (f32 (bitconvert (i32 (trunc (i64 (srl i64:$t2, (i64 32))))))))),
+                (f64 (fpextend (f32 (bitconvert (i32 (trunc (i64 (srl i64:$t2, (i32 32))))))))),
                 (f64 (fpextend (f32 (bitconvert (i32 (trunc i64:$t4))))))
           )))),
           (f64(EXTRACT_SUBREG (FMULWDCrr SingleReg:$t2, SingleReg:$t4, rounding_, silent_), sub_d1))>, Requires<[IsV1]>;
@@ -1199,8 +1199,8 @@ def : Pat<(f64
               (f64 (fpextend (f32 (bitconvert (i32 (trunc i64:$t4)))))),
               (f64 (fpextend (f32 (bitconvert (i32 (trunc i64:$t2)))))),
               (f64 (fneg (fmul
-                (f64 (fpextend (f32 (bitconvert (i32 (trunc (i64 (srl i64:$t4, (i64 32))))))))),
-                (f64 (fpextend (f32 (bitconvert (i32 (trunc (i64 (srl i64:$t2, (i64 32)))))))))
+                (f64 (fpextend (f32 (bitconvert (i32 (trunc (i64 (srl i64:$t4, (i32 32))))))))),
+                (f64 (fpextend (f32 (bitconvert (i32 (trunc (i64 (srl i64:$t2, (i32 32)))))))))
           ))))),
           (f64(EXTRACT_SUBREG (FMULWDCrr SingleReg:$t2, SingleReg:$t4, rounding_, silent_), sub_d0))>, Requires<[IsV1]>;
 // FMULWDP TODO: Add ri variants
@@ -1370,23 +1370,23 @@ def : Pat<(v4f16 (concat_vectors v2f16:$v0, v2f16:$v1)),
 
 // v2f32
 def : Pat<(extractelt (v2f32 SingleReg:$v), 0), (COPY SingleReg:$v)>;
-def : Pat<(extractelt (v2f32 SingleReg:$v), 1), (SRADri SingleReg :$v, (i64 32))>;
+def : Pat<(extractelt (v2f32 SingleReg:$v), 1), (SRADri SingleReg :$v, (i32 32))>;
 
 // v2f32 <--> complex<float> (i64)
 def ComplexToVec : Pat<(v2f32 (build_vector (f32(bitconvert(i32(trunc(i64 SingleReg:$d))))),
-                            (f32(bitconvert(i32(trunc(i64(srl (i64 SingleReg:$d), (i64 32))))))))),
+                            (f32(bitconvert(i32(trunc(i64(srl (i64 SingleReg:$d), (i32 32))))))))),
           (v2f32 SingleReg:$d)>;
 
-def VecToComplex : Pat<(i64( or (shl (anyext (i32 ( extractelt (v2i32 SingleReg:$v), (i64 1)))), (i64 32)),
+def VecToComplex : Pat<(i64( or (shl (anyext (i32 ( extractelt (v2i32 SingleReg:$v), (i64 1)))), (i32 32)),
                                (zext (i32 ( extractelt (v2i32 SingleReg:$v), (i64 0)))))),
           (i64 SingleReg:$v)>;
 def : Pat<(f32 (vector_extract v2f32:$v, i64:$p)), (SRLDrr SingleReg:$v, (SLLWri SingleReg:$p, 5))>;
 
 // v4f32
 def : Pat<(extractelt (v4f32 PairedReg:$v), 0), (f32 (EXTRACT_SUBREG $v, sub_d0))>;
-def : Pat<(extractelt (v4f32 PairedReg:$v), 1), (SRLDri (f32 (EXTRACT_SUBREG $v, sub_d0)), (i64 32))>;
+def : Pat<(extractelt (v4f32 PairedReg:$v), 1), (SRLDri (f32 (EXTRACT_SUBREG $v, sub_d0)), (i32 32))>;
 def : Pat<(extractelt (v4f32 PairedReg:$v), 2), (f32 (EXTRACT_SUBREG $v, sub_d1))>;
-def : Pat<(extractelt (v4f32 PairedReg:$v), 3), (SRLDri (f32 (EXTRACT_SUBREG $v, sub_d1)), (i64 32))>;
+def : Pat<(extractelt (v4f32 PairedReg:$v), 3), (SRLDri (f32 (EXTRACT_SUBREG $v, sub_d1)), (i32 32))>;
 
 def : Pat<(f32(extractelt v4f32:$v, i64:$s)),
           (f32
@@ -1429,13 +1429,13 @@ def : Pat<(f64 (vector_extract v2f64:$v, i64:$p)),
 
 // v2f16
 def : Pat<(extractelt v2f16:$v, 0), (COPY SingleReg:$v)>;
-def : Pat<(extractelt v2f16:$v, 1), (SRLWri SingleReg:$v, (i64 16))>;
+def : Pat<(extractelt v2f16:$v, 1), (SRLWri SingleReg:$v, (i32 16))>;
 
 // v4f16
 def : Pat<(extractelt (v4f16 SingleReg:$v), 0), (COPY SingleReg:$v)>;
 def : Pat<(extractelt (v4f16 SingleReg:$v), 1), (SRLWri SingleReg:$v, 16)>;
 def : Pat<(extractelt (v4f16 SingleReg:$v), 2), (SRLDri SingleReg:$v, 32)>;
-def : Pat<(extractelt (v4f16 SingleReg:$v), 3), (SRLDri SingleReg:$v, (i64 48))>;
+def : Pat<(extractelt (v4f16 SingleReg:$v), 3), (SRLDri SingleReg:$v, (i32 48))>;
 
 def : Pat<(fcopysign f64:$v1, f64:$v2), (INSF SingleReg:$v1, (f64 (SRADri SingleReg:$v2, 63)), 63, 63)>;
 def : Pat<(fcopysign f64:$v1, f32:$v2), (INSF SingleReg:$v1, (f64 (SRAWri SingleReg:$v2, 31)), 63, 63)>;

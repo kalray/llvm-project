@@ -1,8 +1,8 @@
 //===----------------------------------------------------------------------===//
 //  Integer Instructions - Patterns helpers
 //===----------------------------------------------------------------------===//
-def EXTFZDp : KVX_PSEUDO<(outs SingleReg:$out), (ins SingleReg:$a, Wrapped64:$andm, Wrapped64:$shifc), []>;
-def EXTFZWp : KVX_PSEUDO<(outs SingleReg:$out), (ins SingleReg:$a, Wrapped32:$andm, Wrapped64:$shifc), []>;
+def EXTFZDp : KVX_PSEUDO<(outs SingleReg:$out), (ins SingleReg:$a, Wrapped64:$andm, Wrapped32:$shifc), []>;
+def EXTFZWp : KVX_PSEUDO<(outs SingleReg:$out), (ins SingleReg:$a, Wrapped32:$andm, Wrapped32:$shifc), []>;
 
 def ORNDriPat : PatFrag<(ops node:$op0, node:$op1), (xor node:$op0, node:$op1), [{
     ConstantSDNode *c1 = dyn_cast<ConstantSDNode>(N->getOperand(1));
@@ -69,7 +69,7 @@ def isMask : PatLeaf<(imm), [{
   return N->getAPIntValue().isMask();
 }]>;
 
-defm : ZEFPat<(and (srl i32:$v, Wrapped64:$shiftc), isMask:$andm), (EXTFZWp SingleReg:$v, Wrapped32:$andm, Wrapped64:$shiftc)>;
+defm : ZEFPat<(and (srl i32:$v, Wrapped32:$shiftc), isMask:$andm), (EXTFZWp SingleReg:$v, Wrapped32:$andm, Wrapped32:$shiftc)>;
 
 //===----------------------------------------------------------------------===//
 //  Integer Instructions - Patterns
@@ -381,12 +381,12 @@ def : Pat<(add (shl i64:$r2, sc), i64:$r1), (RRInstr SingleReg:$r2, SingleReg:$r
 def : Pat<(add (shl i64:$r2, sc), Wrapped64W:$r1), (RIInstr SingleReg:$r2, (trunc_imm_32 imm:$r1), splat32_)>;
 def : Pat<(add (shl i64:$r2, sc), SignedSplat32Imm:$r1), (RIInstr SingleReg:$r2, (trunc_imm_32 imm:$r1), splat32_at)>;
 }
-defm : ADDXDPAT<(i64 6), ADDX64Drr, ADDX64Dri>, Requires<[IsV2]>;
-defm : ADDXDPAT<(i64 5), ADDX32Drr, ADDX32Dri>, Requires<[IsV2]>;
-defm : ADDXDPAT<(i64 4), ADDX16Drr, ADDX16Dri>;
-defm : ADDXDPAT<(i64 3), ADDX8Drr, ADDX8Dri>;
-defm : ADDXDPAT<(i64 2), ADDX4Drr, ADDX4Dri>;
-defm : ADDXDPAT<(i64 1), ADDX2Drr, ADDX2Dri>;
+defm : ADDXDPAT<(i32 6), ADDX64Drr, ADDX64Dri>, Requires<[IsV2]>;
+defm : ADDXDPAT<(i32 5), ADDX32Drr, ADDX32Dri>, Requires<[IsV2]>;
+defm : ADDXDPAT<(i32 4), ADDX16Drr, ADDX16Dri>;
+defm : ADDXDPAT<(i32 3), ADDX8Drr, ADDX8Dri>;
+defm : ADDXDPAT<(i32 2), ADDX4Drr, ADDX4Dri>;
+defm : ADDXDPAT<(i32 1), ADDX2Drr, ADDX2Dri>;
 
 multiclass ADDXUWDPAT<dag sc, KVX_INSTRUCTION RRInstr, KVX_INSTRUCTION RIInstr> {
 def : Pat<(add i64:$r1, (i64 (zext (shl i32:$r2, sc))) ), (RRInstr SingleReg:$r2, SingleReg:$r1)>;
@@ -394,12 +394,12 @@ def : Pat<(add (i64 (zext (shl i32:$r2, sc))), i64:$r1), (RRInstr SingleReg:$r2,
 
 def : Pat<(add (i64 (zext (shl i32:$r2, sc))), Wrapped64W:$r1), (RIInstr SingleReg:$r2, (trunc_imm_32 imm:$r1))>;
 }
-defm : ADDXUWDPAT<(i64 6), ADDX64UWDrr, ADDX64UWDri>, Requires<[IsV2]>;
-defm : ADDXUWDPAT<(i64 5), ADDX32UWDrr, ADDX32UWDri>, Requires<[IsV2]>;
-defm : ADDXUWDPAT<(i64 4), ADDX16UWDrr, ADDX16UWDri>;
-defm : ADDXUWDPAT<(i64 3), ADDX8UWDrr, ADDX8UWDri>;
-defm : ADDXUWDPAT<(i64 2), ADDX4UWDrr, ADDX4UWDri>;
-defm : ADDXUWDPAT<(i64 1), ADDX2UWDrr, ADDX2UWDri>;
+defm : ADDXUWDPAT<(i32 6), ADDX64UWDrr, ADDX64UWDri>, Requires<[IsV2]>;
+defm : ADDXUWDPAT<(i32 5), ADDX32UWDrr, ADDX32UWDri>, Requires<[IsV2]>;
+defm : ADDXUWDPAT<(i32 4), ADDX16UWDrr, ADDX16UWDri>;
+defm : ADDXUWDPAT<(i32 3), ADDX8UWDrr, ADDX8UWDri>;
+defm : ADDXUWDPAT<(i32 2), ADDX4UWDrr, ADDX4UWDri>;
+defm : ADDXUWDPAT<(i32 1), ADDX2UWDrr, ADDX2UWDri>;
 
 multiclass ADDXWPAT<dag sc, KVX_INSTRUCTION RRInstr, KVX_INSTRUCTION RIInstr> {
 defm : ZEFPat<(add i32:$r1, (shl i32:$r2, sc)), (RRInstr SingleReg:$r2, SingleReg:$r1)>;
@@ -407,12 +407,12 @@ defm : ZEFPat<(add (shl i32:$r2, sc), i32:$r1), (RRInstr SingleReg:$r2, SingleRe
 
 defm : ZEFPat<(add (shl i32:$r2, sc), Wrapped32:$r1), (RIInstr SingleReg:$r2, Wrapped32:$r1)>;
 }
-defm : ADDXWPAT<(i64 6), ADDX64Wrr, ADDX64Wri>, Requires<[IsV2]>;
-defm : ADDXWPAT<(i64 5), ADDX32Wrr, ADDX32Wri>, Requires<[IsV2]>;
-defm : ADDXWPAT<(i64 4), ADDX16Wrr, ADDX16Wri>;
-defm : ADDXWPAT<(i64 3), ADDX8Wrr, ADDX8Wri>;
-defm : ADDXWPAT<(i64 2), ADDX4Wrr, ADDX4Wri>;
-defm : ADDXWPAT<(i64 1), ADDX2Wrr, ADDX2Wri>;
+defm : ADDXWPAT<(i32 6), ADDX64Wrr, ADDX64Wri>, Requires<[IsV2]>;
+defm : ADDXWPAT<(i32 5), ADDX32Wrr, ADDX32Wri>, Requires<[IsV2]>;
+defm : ADDXWPAT<(i32 4), ADDX16Wrr, ADDX16Wri>;
+defm : ADDXWPAT<(i32 3), ADDX8Wrr, ADDX8Wri>;
+defm : ADDXWPAT<(i32 2), ADDX4Wrr, ADDX4Wri>;
+defm : ADDXWPAT<(i32 1), ADDX2Wrr, ADDX2Wri>;
 
 multiclass ADDXWDPAT<dag sc, KVX_INSTRUCTION RRInstr, KVX_INSTRUCTION RIInstr> {
 def : Pat<(add i64:$r1, (i64 (sext (shl i32:$r2, sc))) ), (RRInstr SingleReg:$r2, SingleReg:$r1)>;
@@ -420,12 +420,12 @@ def : Pat<(add (i64 (sext (shl i32:$r2, sc))), i64:$r1), (RRInstr SingleReg:$r2,
 
 def : Pat<(add (i64 (sext (shl i32:$r2, sc))), Wrapped64W:$r1), (RIInstr SingleReg:$r2, (trunc_imm_32 imm:$r1))>;
 }
-defm : ADDXWDPAT<(i64 6), ADDX64WDrr, ADDX64WDri>, Requires<[IsV2]>;
-defm : ADDXWDPAT<(i64 5), ADDX32WDrr, ADDX32WDri>, Requires<[IsV2]>;
-defm : ADDXWDPAT<(i64 4), ADDX16WDrr, ADDX16WDri>;
-defm : ADDXWDPAT<(i64 3), ADDX8WDrr, ADDX8WDri>;
-defm : ADDXWDPAT<(i64 2), ADDX4WDrr, ADDX4WDri>;
-defm : ADDXWDPAT<(i64 1), ADDX2WDrr, ADDX2WDri>;
+defm : ADDXWDPAT<(i32 6), ADDX64WDrr, ADDX64WDri>, Requires<[IsV2]>;
+defm : ADDXWDPAT<(i32 5), ADDX32WDrr, ADDX32WDri>, Requires<[IsV2]>;
+defm : ADDXWDPAT<(i32 4), ADDX16WDrr, ADDX16WDri>;
+defm : ADDXWDPAT<(i32 3), ADDX8WDrr, ADDX8WDri>;
+defm : ADDXWDPAT<(i32 2), ADDX4WDrr, ADDX4WDri>;
+defm : ADDXWDPAT<(i32 1), ADDX2WDrr, ADDX2WDri>;
 
 multiclass ADDXPAT_HalfSReg<ValueType vt, dag sc, KVX_INSTRUCTION RR, KVX_INSTRUCTION RI, PatLeaf VC> {
 def : Pat<(vt(add (shl vt:$v, (vt(v2_splat sc))), (vt(is_imm_vec:$IMM)))),
@@ -577,13 +577,13 @@ defm : AVGU_leq_32bits<v2i16, v2_splat_1, AVGUHQrr, AVGUHQri, AVGRUHQrr>;
 defm : AVGU_64bits<v4i16, v4_splat_1, AVGUHQrr, AVGUHQri, AVGRUHQrr>;
 
 // AVGUW / AVGRUW
-def : Pat<(srl  (nuwadd i32:$v0, Wrapped32:$v1), (i64 1)), (AVGUWri SingleReg:$v0, Wrapped32:$v1)>;
-def : Pat<(srl  (nuwadd i32:$v0, i32:$v1),       (i64 1)), (AVGUWrr SingleReg:$v0, SingleReg:$v1)>;
-def : Pat<(i32(trunc(i64(srl (add (zext i32:$v0), Unsigned64W:$v1), (i64 1))))), (AVGUWri SingleReg:$v0, (trunc_imm_32 $v1))>;
-def : Pat<(i32(trunc(i64(srl (add (zext i32:$v0), (zext i32:$v1)), (i64 1))))), (AVGUWrr SingleReg:$v0, SingleReg:$v1)>;
+def : Pat<(srl  (nuwadd i32:$v0, Wrapped32:$v1), (i32 1)), (AVGUWri SingleReg:$v0, Wrapped32:$v1)>;
+def : Pat<(srl  (nuwadd i32:$v0, i32:$v1),       (i32 1)), (AVGUWrr SingleReg:$v0, SingleReg:$v1)>;
+def : Pat<(i32(trunc(i64(srl (add (zext i32:$v0), Unsigned64W:$v1), (i32 1))))), (AVGUWri SingleReg:$v0, (trunc_imm_32 $v1))>;
+def : Pat<(i32(trunc(i64(srl (add (zext i32:$v0), (zext i32:$v1)), (i32 1))))), (AVGUWrr SingleReg:$v0, SingleReg:$v1)>;
 
 def : Pat<(srl (nuwadd (nuwadd i32:$v0, i32:$v1),  (i32 1)), (i32 1)), (AVGRUWrr SingleReg:$v0, SingleReg:$v1)>;
-def : Pat<(i32 (trunc(i64(srl  (add (add (zext i32:$v0), (zext i32:$v1)), (i64 1)), (i64 1))))), (AVGRUWrr SingleReg:$v0, SingleReg:$v1)>;
+def : Pat<(i32 (trunc(i64(srl  (add (add (zext i32:$v0), (zext i32:$v1)), (i64 1)), (i32 1))))), (AVGRUWrr SingleReg:$v0, SingleReg:$v1)>;
 
 // AVGUWP / AVGRUWP
 def : Pat<(srl ( nuwadd v2i32:$v, (v2i32 (build_vector (Wrapped32:$i), (i32 0))) ), (v2i32 (v2_splat_1) ) ), (AVGUWPri SingleReg:$v, (i32 (trunc_imm_32 imm:$i)), splat32_)>;
@@ -595,14 +595,14 @@ def : Pat<(srl ( nuwadd v2i32:$v0, v2i32:$v1 ), (v2i32 (v2_splat_1) ) ), (AVGUWP
 def : Pat<(srl ( nuwadd ( nuwadd v2i32:$v0, v2i32:$v1 ), (v2i32 (v2_splat_1))), (v2i32 (v2_splat_1)) ), (AVGRUWPrr SingleReg:$v1, SingleReg:$v0)>;
 
 // AVGW / AVGRW
-def : Pat<(sra  (add i32:$v0, Wrapped32:$v1), (i64 1)), (AVGWri SingleReg:$v0, Wrapped32:$v1)>;
-def : Pat<(sra  (add i32:$v0, i32:$v1),       (i64 1)), (AVGWrr SingleReg:$v0, SingleReg:$v1)>;
+def : Pat<(sra  (add i32:$v0, Wrapped32:$v1), (i32 1)), (AVGWri SingleReg:$v0, Wrapped32:$v1)>;
+def : Pat<(sra  (add i32:$v0, i32:$v1),       (i32 1)), (AVGWrr SingleReg:$v0, SingleReg:$v1)>;
 
-def : Pat<(srl  (nswadd i32:$v0, Wrapped32:$v1), (i64 1)), (AVGWri SingleReg:$v0, Wrapped32:$v1)>;
-def : Pat<(srl  (nswadd i32:$v0, i32:$v1),       (i64 1)), (AVGWrr SingleReg:$v0, SingleReg:$v1)>;
+def : Pat<(srl  (nswadd i32:$v0, Wrapped32:$v1), (i32 1)), (AVGWri SingleReg:$v0, Wrapped32:$v1)>;
+def : Pat<(srl  (nswadd i32:$v0, i32:$v1),       (i32 1)), (AVGWrr SingleReg:$v0, SingleReg:$v1)>;
 
-def : Pat<(sra  (add (add i32:$v0, i32:$v1),  (i32 1)), (i64 1)), (AVGRWrr SingleReg:$v0, SingleReg:$v1)>;
-def : Pat<(srl  (nswadd (nswadd i32:$v0, i32:$v1),  (i32 1)), (i64 1)), (AVGRWrr SingleReg:$v0, SingleReg:$v1)>;
+def : Pat<(sra  (add (add i32:$v0, i32:$v1),  (i32 1)), (i32 1)), (AVGRWrr SingleReg:$v0, SingleReg:$v1)>;
+def : Pat<(srl  (nswadd (nswadd i32:$v0, i32:$v1),  (i32 1)), (i32 1)), (AVGRWrr SingleReg:$v0, SingleReg:$v1)>;
 
 // AVGWP / AVGRWP
 def : Pat<(sra ( add v2i32:$v, (build_vector Wrapped32:$i, (i32 0) )), (v2i32 (v2_splat_1))),
@@ -785,8 +785,8 @@ def : Pat<(i64 (add ( ExtMul
                         (i32 (trunc (i64 SingleReg:$rhs)))
                     ),
                     ( ExtMul
-                    (i32 (trunc (i64 (srl (i64 SingleReg:$lhs), (i64 32))))),
-                    (i32 (trunc (i64 (srl (i64 SingleReg:$rhs), (i64 32)))))
+                    (i32 (trunc (i64 (srl (i64 SingleReg:$lhs), (i32 32))))),
+                    (i32 (trunc (i64 (srl (i64 SingleReg:$rhs), (i32 32)))))
                     ))),
            (i64 (RR SingleReg:$lhs, SingleReg:$rhs))>;
 
@@ -796,7 +796,7 @@ def : Pat<(i64 (add ( ExtMul
                     ),
                     ( ExtMul
                     (i32 (vector_extract v2i32:$lhs, 1)),
-                    (i32 (trunc (i64 (srl (i64 SingleReg:$rhs), (i64 32)))))
+                    (i32 (trunc (i64 (srl (i64 SingleReg:$rhs), (i32 32)))))
                     ))),
            (i64 (RR SingleReg:$lhs, SingleReg:$rhs))>;
 
@@ -805,7 +805,7 @@ def : Pat<(i64 (add ( ExtMul
                         (i32 (vector_extract v2i32:$rhs, 0))
                     ),
                     ( ExtMul
-                    (i32 (trunc (i64 (srl (i64 SingleReg:$lhs), (i64 32))))),
+                    (i32 (trunc (i64 (srl (i64 SingleReg:$lhs), (i32 32))))),
                     (i32 (vector_extract v2i32:$rhs, 1))
                     ))),
            (i64 (RR SingleReg:$lhs, SingleReg:$rhs))>;
@@ -826,11 +826,11 @@ def : Pat<(i32 (add (i32 (vector_extract (v2i32 (mul v2i32:$lhs, v2i32:$rhs)), (
                     (i32 (vector_extract (v2i32 (mul v2i32:$lhs, v2i32:$rhs)), (i64 1))))),
           (i32 (DOT2Wrr SingleReg:$lhs, SingleReg:$rhs))>;
 
-def : Pat<(i32 (add (i32 (mul (i32 (trunc (i64 (srl i64:$lhs, (i64 32))))), (i32 (trunc (i64 (srl i64:$rhs, (i64 32))))))),
+def : Pat<(i32 (add (i32 (mul (i32 (trunc (i64 (srl i64:$lhs, (i32 32))))), (i32 (trunc (i64 (srl i64:$rhs, (i32 32))))))),
                     (i32 (mul (i32 (trunc i64:$lhs)), (i32 (trunc i64:$rhs)))))),
           (i32 (DOT2Wrr SingleReg:$lhs, SingleReg:$rhs))>;
 
-def : Pat<(i32 (add (i32 (mul (i32 (vector_extract v2i32:$lhs, (i64 1))), (i32 (trunc (i64 (srl i64:$rhs, (i64 32))))))),
+def : Pat<(i32 (add (i32 (mul (i32 (vector_extract v2i32:$lhs, (i64 1))), (i32 (trunc (i64 (srl i64:$rhs, (i32 32))))))),
                     (i32 (mul (i32 (vector_extract v2i32:$lhs, (i64 0))), (i32 (trunc i64:$rhs)))))),
           (i32 (DOT2Wrr SingleReg:$lhs, SingleReg:$rhs))>;
 
@@ -851,7 +851,7 @@ def : Pat<(v2i64 (zext (v2i32 (build_vector
          (v2i64 (DOT2WZP PairedReg:$lhs, PairedReg:$rhs))>;
 // EXTF
 let AddedComplexity = 2 in
-def : Pat<(and (srl i64:$v, Wrapped64:$shiftc), isMask:$andm), (EXTFZDp SingleReg:$v, Wrapped64:$andm, Wrapped64:$shiftc)>;
+def : Pat<(and (srl i64:$v, Wrapped32:$shiftc), isMask:$andm), (EXTFZDp SingleReg:$v, Wrapped64:$andm, Wrapped32:$shiftc)>;
 
 // LANDD
 defm : ZEFPat<(and (i32 (setne i64:$v1, (i64 0))), (i32 (setne i64:$v2, (i64 0)))),
@@ -1427,15 +1427,15 @@ foreach vtype = [ v2i8, v4i8, v2i16 ] in {
 }
 
 // ROLW
-def : Pat<(rotl i32:$rs1, i64:$rs2), (ROLWrr SingleReg:$rs1, SingleReg:$rs2)>;
-def : Pat<(rotl i32:$rs, Unsigned6:$is), (ROLWri SingleReg:$rs, Unsigned6:$is)>;
+def : Pat<(rotl i32:$rs1, i32:$rs2), (ROLWrr SingleReg:$rs1, SingleReg:$rs2)>;
+def : Pat<(rotl i32:$rs, Unsigned6W:$is), (ROLWri SingleReg:$rs, Unsigned6W:$is)>;
 
 multiclass WPShiftScalarOps <SDNode Op, KVX_INSTRUCTION RI, KVX_INSTRUCTION RR, KVX_INSTRUCTION RI_w, KVX_INSTRUCTION RR_w>
 {
-def : Pat<(Op v2i32:$v0, (v2i32 ( v2_splat (i32 imm:$i)))), (RI SingleReg:$v0, (mod_32_imm_64 imm:$i))>;
+def : Pat<(Op v2i32:$v0, (v2i32 ( v2_splat (i32 imm:$i)))), (RI SingleReg:$v0, (mod_32_imm_32 imm:$i))>;
 def : Pat<(Op v2i32:$v0, (v2i32 ( v2_splat i32:$v1))), (RR SingleReg:$v0, SingleReg:$v1)>;
 def : Pat<(Op v2i32:$v, (v2i32 ( build_vector (i32 imm:$i0), (i32 imm:$i1)))),
-      (INSF(RI SingleReg:$v, (mod_32_imm_64 imm:$i1)), (RI_w SingleReg:$v, (mod_32_imm_64 imm:$i0)), 31, 0)>;
+      (INSF(RI SingleReg:$v, (mod_32_imm_32 imm:$i1)), (RI_w SingleReg:$v, (mod_32_imm_32 imm:$i0)), 31, 0)>;
 def : Pat<(Op v2i32:$v0, v2i32:$v1),
       (INSF(RR SingleReg:$v0, (EXTFZ SingleReg:$v1, 36, 32)), (RR_w SingleReg:$v0, SingleReg:$v1), 31, 0) >;
 }
@@ -1446,8 +1446,8 @@ def : Pat<(v2i32(or (srl v2i32:$r0, (v2i32 (v2_splat (i32 (sub (i32 32), i32:$r1
           (ROLWPSrr SingleReg:$r0, SingleReg:$r1)>;
 
 // RORW
-def : Pat<(rotr i32:$rs1, i64:$rs2), (RORWrr SingleReg:$rs1, SingleReg:$rs2)>;
-def : Pat<(rotr i32:$rs, Unsigned6:$is), (RORWri SingleReg:$rs, Unsigned6:$is)>;
+def : Pat<(rotr i32:$rs1, i32:$rs2), (RORWrr SingleReg:$rs1, SingleReg:$rs2)>;
+def : Pat<(rotr i32:$rs, Unsigned6W:$is), (RORWri SingleReg:$rs, Unsigned6W:$is)>;
 
 // RORWP
 defm : WPShiftScalarOps<rotr, RORWPSri, RORWPSrr, RORWri, RORWrr>;
@@ -1700,48 +1700,48 @@ def : Pat<(sub SignedSplat32Imm:$r1, (shl i64:$r2, sc)), (RIInstr SingleReg:$r2,
 def : Pat<(sub i64:$r1, (shl i64:$r2, sc)), (RRInstr SingleReg:$r2, SingleReg:$r1)>;
 }
 
-defm : SBFXDPAT<(i64 6), SBFX64Drr, SBFX64Dri>, Requires<[IsV2]>;
-defm : SBFXDPAT<(i64 5), SBFX32Drr, SBFX32Dri>, Requires<[IsV2]>;
-defm : SBFXDPAT<(i64 4), SBFX16Drr, SBFX16Dri>;
-defm : SBFXDPAT<(i64 3), SBFX8Drr, SBFX8Dri>;
-defm : SBFXDPAT<(i64 2), SBFX4Drr, SBFX4Dri>;
-defm : SBFXDPAT<(i64 1), SBFX2Drr, SBFX2Dri>;
+defm : SBFXDPAT<(i32 6), SBFX64Drr, SBFX64Dri>, Requires<[IsV2]>;
+defm : SBFXDPAT<(i32 5), SBFX32Drr, SBFX32Dri>, Requires<[IsV2]>;
+defm : SBFXDPAT<(i32 4), SBFX16Drr, SBFX16Dri>;
+defm : SBFXDPAT<(i32 3), SBFX8Drr, SBFX8Dri>;
+defm : SBFXDPAT<(i32 2), SBFX4Drr, SBFX4Dri>;
+defm : SBFXDPAT<(i32 1), SBFX2Drr, SBFX2Dri>;
 
 
 multiclass SBFXUWDPAT<dag sc, KVX_INSTRUCTION RRInstr, KVX_INSTRUCTION RIInstr> {
 def : Pat<(sub i64:$r1, (i64 (zext (shl i32:$r2, sc))) ), (RRInstr SingleReg:$r2, SingleReg:$r1)>;
 def : Pat<(sub Wrapped64W:$r1, (i64 (zext (shl i32:$r2, sc))) ), (RIInstr SingleReg:$r2, (trunc_imm_32 imm:$r1))>;
 }
-defm : SBFXUWDPAT<(i64 6), SBFX64UWDrr, SBFX64UWDri>, Requires<[IsV2]>;
-defm : SBFXUWDPAT<(i64 5), SBFX32UWDrr, SBFX32UWDri>, Requires<[IsV2]>;
-defm : SBFXUWDPAT<(i64 4), SBFX16UWDrr, SBFX16UWDri>;
-defm : SBFXUWDPAT<(i64 3), SBFX8UWDrr, SBFX8UWDri>;
-defm : SBFXUWDPAT<(i64 2), SBFX4UWDrr, SBFX4UWDri>;
-defm : SBFXUWDPAT<(i64 1), SBFX2UWDrr, SBFX2UWDri>;
+defm : SBFXUWDPAT<(i32 6), SBFX64UWDrr, SBFX64UWDri>, Requires<[IsV2]>;
+defm : SBFXUWDPAT<(i32 5), SBFX32UWDrr, SBFX32UWDri>, Requires<[IsV2]>;
+defm : SBFXUWDPAT<(i32 4), SBFX16UWDrr, SBFX16UWDri>;
+defm : SBFXUWDPAT<(i32 3), SBFX8UWDrr, SBFX8UWDri>;
+defm : SBFXUWDPAT<(i32 2), SBFX4UWDrr, SBFX4UWDri>;
+defm : SBFXUWDPAT<(i32 1), SBFX2UWDrr, SBFX2UWDri>;
 
 multiclass SBFXWPAT<dag sc, KVX_INSTRUCTION RRInstr, KVX_INSTRUCTION RIInstr> {
 defm : ZEFPat<(sub i32:$r1, (shl i32:$r2, sc)), (RRInstr SingleReg:$r2, SingleReg:$r1)>;
 defm : ZEFPat<(sub Wrapped32:$r1, (shl i32:$r2, sc)), (RIInstr SingleReg:$r2, Wrapped32:$r1)>;
 }
 
-defm : SBFXWPAT<(i64 6), SBFX64Wrr, SBFX64Wri>, Requires<[IsV2]>;
-defm : SBFXWPAT<(i64 5), SBFX32Wrr, SBFX32Wri>, Requires<[IsV2]>;
-defm : SBFXWPAT<(i64 4), SBFX16Wrr, SBFX16Wri>;
-defm : SBFXWPAT<(i64 3), SBFX8Wrr, SBFX8Wri>;
-defm : SBFXWPAT<(i64 2), SBFX4Wrr, SBFX4Wri>;
-defm : SBFXWPAT<(i64 1), SBFX2Wrr, SBFX2Wri>;
+defm : SBFXWPAT<(i32 6), SBFX64Wrr, SBFX64Wri>, Requires<[IsV2]>;
+defm : SBFXWPAT<(i32 5), SBFX32Wrr, SBFX32Wri>, Requires<[IsV2]>;
+defm : SBFXWPAT<(i32 4), SBFX16Wrr, SBFX16Wri>;
+defm : SBFXWPAT<(i32 3), SBFX8Wrr, SBFX8Wri>;
+defm : SBFXWPAT<(i32 2), SBFX4Wrr, SBFX4Wri>;
+defm : SBFXWPAT<(i32 1), SBFX2Wrr, SBFX2Wri>;
 
 multiclass SBFXWDPAT<dag sc, KVX_INSTRUCTION RRInstr, KVX_INSTRUCTION RIInstr> {
 def : Pat<(sub i64:$r1, (i64 (sext (shl i32:$r2, sc))) ), (RRInstr SingleReg:$r2, SingleReg:$r1)>;
 def : Pat<(sub Wrapped64W:$r1, (i64 (sext (shl i32:$r2, sc)))), (RIInstr SingleReg:$r2, (trunc_imm_32 imm:$r1))>;
 }
 
-defm : SBFXWDPAT<(i64 6), SBFX64WDrr, SBFX64WDri>, Requires<[IsV2]>;
-defm : SBFXWDPAT<(i64 5), SBFX32WDrr, SBFX32WDri>, Requires<[IsV2]>;
-defm : SBFXWDPAT<(i64 4), SBFX16WDrr, SBFX16WDri>;
-defm : SBFXWDPAT<(i64 3), SBFX8WDrr, SBFX8WDri>;
-defm : SBFXWDPAT<(i64 2), SBFX4WDrr, SBFX4WDri>;
-defm : SBFXWDPAT<(i64 1), SBFX2WDrr, SBFX2WDri>;
+defm : SBFXWDPAT<(i32 6), SBFX64WDrr, SBFX64WDri>, Requires<[IsV2]>;
+defm : SBFXWDPAT<(i32 5), SBFX32WDrr, SBFX32WDri>, Requires<[IsV2]>;
+defm : SBFXWDPAT<(i32 4), SBFX16WDrr, SBFX16WDri>;
+defm : SBFXWDPAT<(i32 3), SBFX8WDrr, SBFX8WDri>;
+defm : SBFXWDPAT<(i32 2), SBFX4WDrr, SBFX4WDri>;
+defm : SBFXWDPAT<(i32 1), SBFX2WDrr, SBFX2WDri>;
 
 multiclass SBFXPAT_HalfSReg<ValueType vt, dag sc, KVX_INSTRUCTION RR, KVX_INSTRUCTION RI> {
 def : Pat<(vt(sub (vt(is_imm_vec:$IMM)), (shl vt:$v, (vt(v2_splat sc))))),
@@ -1785,16 +1785,16 @@ defm : VECSBFXPAT<v2i32, (i32 4), SBFX16WPrr, SBFX16WPri, v2_splat>;
 
 multiclass HQShiftScalarOps <SDNode Op, KVX_INSTRUCTION RI, KVX_INSTRUCTION RR>
 {
-def : Pat<(Op v2i16:$v, (v2i16 ( v2_splat (i32 imm:$i)))), (RI SingleReg:$v, (mod_16_imm_64 imm:$i))>;
+def : Pat<(Op v2i16:$v, (v2i16 ( v2_splat (i32 imm:$i)))), (RI SingleReg:$v, (mod_16_imm_32 imm:$i))>;
 def : Pat<(Op v2i16:$v0, (v2i16 ( v2_splat i32:$v1))), (RR SingleReg:$v0, SingleReg:$v1)>;
-def : Pat<(Op v4i16:$v, (v4i16 ( v4_splat (i32 imm:$i)))), (RI SingleReg:$v, (mod_16_imm_64 imm:$i))>;
+def : Pat<(Op v4i16:$v, (v4i16 ( v4_splat (i32 imm:$i)))), (RI SingleReg:$v, (mod_16_imm_32 imm:$i))>;
 def : Pat<(Op v4i16:$v0, (v4i16 ( v4_splat i32:$v1))), (RR SingleReg:$v0, SingleReg:$v1)>;
 
-def : Pat<(Op v4i16:$v, (v4i16 ( v3_splat (i32 imm:$i)))), (RI SingleReg:$v, (mod_16_imm_64 imm:$i))>;
+def : Pat<(Op v4i16:$v, (v4i16 ( v3_splat (i32 imm:$i)))), (RI SingleReg:$v, (mod_16_imm_32 imm:$i))>;
 def : Pat<(Op v4i16:$v0, (v4i16 (v3_splat i32:$v1))), (RR SingleReg:$v0, SingleReg:$v1)>;
 
 def : Pat<(Op v2i16:$v, (v2i16 ( build_vector (i32 imm:$i0), (i32 imm:$i1)))),
-      (INSF (RI SingleReg:$v, (mod_16_imm_64 imm:$i1)), (RI SingleReg:$v, (mod_16_imm_64 imm:$i0)), 15, 0)>;
+      (INSF (RI SingleReg:$v, (mod_16_imm_32 imm:$i1)), (RI SingleReg:$v, (mod_16_imm_32 imm:$i0)), 15, 0)>;
 
 def : Pat<(Op v2i16:$v, (v2i16 ( build_vector (i32 i32:$s0), (i32 i32:$s1)))),
       (INSF (RR SingleReg:$v, SingleReg:$s1), (RR SingleReg:$v, SingleReg:$s0), 15, 0)>;
@@ -1804,9 +1804,9 @@ def : Pat<(Op v2i16:$v0, v2i16:$v1),
 
 // We can detect when some immediates are the same, and avoid all insf operations.
 def : Pat<(Op v4i16:$v, (v4i16 ( build_vector (i32 imm:$i0), (i32 imm:$i1), (i32 imm:$i2), (i32 undef)))),
-                  (INSF (RI SingleReg:$v, (mod_16_imm_64 imm:$i2)),
-                        (INSF (RI SingleReg:$v, (mod_16_imm_64 imm:$i1)),
-                              (RI SingleReg:$v, (mod_16_imm_64 imm:$i0)),
+                  (INSF (RI SingleReg:$v, (mod_16_imm_32 imm:$i2)),
+                        (INSF (RI SingleReg:$v, (mod_16_imm_32 imm:$i1)),
+                              (RI SingleReg:$v, (mod_16_imm_32 imm:$i0)),
                               15, 0),
                         31, 0)>;
 
@@ -1818,10 +1818,10 @@ def : Pat<(Op v4i16:$v, (v4i16 ( build_vector (i32 i32:$s0), (i32 i32:$s1), (i32
                         31, 0)>;
 
 def : Pat<(Op v4i16:$v, (v4i16 ( build_vector (i32 imm:$i0), (i32 imm:$i1), (i32 imm:$i2), (i32 imm:$i3)))),
-            (INSF (RI SingleReg:$v, (mod_16_imm_64 imm:$i3)),
-                  (INSF (RI SingleReg:$v, (mod_16_imm_64 imm:$i2)),
-                        (INSF (RI SingleReg:$v, (mod_16_imm_64 imm:$i1)),
-                              (RI SingleReg:$v, (mod_16_imm_64 imm:$i0)),
+            (INSF (RI SingleReg:$v, (mod_16_imm_32 imm:$i3)),
+                  (INSF (RI SingleReg:$v, (mod_16_imm_32 imm:$i2)),
+                        (INSF (RI SingleReg:$v, (mod_16_imm_32 imm:$i1)),
+                              (RI SingleReg:$v, (mod_16_imm_32 imm:$i0)),
                               15, 0),
                         31, 0),
                   47, 0)>;
@@ -1847,18 +1847,18 @@ def : Pat<(Op v4i16:$v0, v4i16:$v1),
 
 multiclass BOShiftScalarOps <SDNode Op, KVX_INSTRUCTION RI, KVX_INSTRUCTION RR>
 {
-def : Pat<(Op v2i8:$v, (v2i8 ( v2_splat (i32 imm:$i)))), (RI SingleReg:$v, (mod_8_imm_64 imm:$i))>;
+def : Pat<(Op v2i8:$v, (v2i8 ( v2_splat (i32 imm:$i)))), (RI SingleReg:$v, (mod_8_imm_32 imm:$i))>;
 def : Pat<(Op v2i8:$v0, (v2i8 ( v2_splat i32:$v1))), (RR SingleReg:$v0, SingleReg:$v1)>;
-def : Pat<(Op v4i8:$v, (v4i8 ( v4_splat (i32 imm:$i)))), (RI SingleReg:$v, (mod_8_imm_64 imm:$i))>;
+def : Pat<(Op v4i8:$v, (v4i8 ( v4_splat (i32 imm:$i)))), (RI SingleReg:$v, (mod_8_imm_32 imm:$i))>;
 def : Pat<(Op v4i8:$v0, (v4i8 ( v4_splat i32:$v1))), (RR SingleReg:$v0, SingleReg:$v1)>;
-def : Pat<(Op v8i8:$v, (v8i8 ( v8_splat (i32 imm:$i)))), (RI SingleReg:$v, (mod_8_imm_64 imm:$i))>;
+def : Pat<(Op v8i8:$v, (v8i8 ( v8_splat (i32 imm:$i)))), (RI SingleReg:$v, (mod_8_imm_32 imm:$i))>;
 def : Pat<(Op v8i8:$v0, (v8i8 ( v8_splat i32:$v1))), (RR SingleReg:$v0, SingleReg:$v1)>;
 
-def : Pat<(Op v4i8:$v, (v4i8 ( v3_splat (i32 imm:$i)))), (RI SingleReg:$v, (mod_8_imm_64 imm:$i))>;
+def : Pat<(Op v4i8:$v, (v4i8 ( v3_splat (i32 imm:$i)))), (RI SingleReg:$v, (mod_8_imm_32 imm:$i))>;
 def : Pat<(Op v4i8:$v0, (v4i8 (v3_splat i32:$v1))), (RR SingleReg:$v0, SingleReg:$v1)>;
 
 def : Pat<(Op v2i8:$v, (v2i8 ( build_vector (i32 imm:$i0), (i32 imm:$i1)))),
-      (INSF (RI SingleReg:$v, (mod_8_imm_64 imm:$i1)), (RI SingleReg:$v, (mod_8_imm_64 imm:$i0)), 7, 0)>;
+      (INSF (RI SingleReg:$v, (mod_8_imm_32 imm:$i1)), (RI SingleReg:$v, (mod_8_imm_32 imm:$i0)), 7, 0)>;
 
 def : Pat<(Op v2i8:$v, (v2i8 ( build_vector (i32 i32:$s0), (i32 i32:$s1)))),
       (INSF (RR SingleReg:$v, SingleReg:$s1), (RR SingleReg:$v, SingleReg:$s0), 7, 0)>;
@@ -1868,9 +1868,9 @@ def : Pat<(Op v2i8:$v0, v2i8:$v1),
 
 // We can detect when some immediates are the same, and avoid all insf operations.
 def : Pat<(Op v4i8:$v, (v4i8 ( build_vector (i32 imm:$i0), (i32 imm:$i1), (i32 imm:$i2), (i32 undef)))),
-                  (INSF (RI SingleReg:$v, (mod_8_imm_64 imm:$i2)),
-                        (INSF (RI SingleReg:$v, (mod_8_imm_64 imm:$i1)),
-                              (RI SingleReg:$v, (mod_8_imm_64 imm:$i0)),
+                  (INSF (RI SingleReg:$v, (mod_8_imm_32 imm:$i2)),
+                        (INSF (RI SingleReg:$v, (mod_8_imm_32 imm:$i1)),
+                              (RI SingleReg:$v, (mod_8_imm_32 imm:$i0)),
                               7, 0),
                         15, 0)>;
 
@@ -1882,10 +1882,10 @@ def : Pat<(Op v4i8:$v, (v4i8 ( build_vector (i32 i32:$s0), (i32 i32:$s1), (i32 i
                         15, 0)>;
 
 def : Pat<(Op v4i8:$v, (v4i8 ( build_vector (i32 imm:$i0), (i32 imm:$i1), (i32 imm:$i2), (i32 imm:$i3)))),
-            (INSF (RI SingleReg:$v, (mod_8_imm_64 imm:$i3)),
-                  (INSF (RI SingleReg:$v, (mod_8_imm_64 imm:$i2)),
-                        (INSF (RI SingleReg:$v, (mod_8_imm_64 imm:$i1)),
-                              (RI SingleReg:$v, (mod_8_imm_64 imm:$i0)),
+            (INSF (RI SingleReg:$v, (mod_8_imm_32 imm:$i3)),
+                  (INSF (RI SingleReg:$v, (mod_8_imm_32 imm:$i2)),
+                        (INSF (RI SingleReg:$v, (mod_8_imm_32 imm:$i1)),
+                              (RI SingleReg:$v, (mod_8_imm_32 imm:$i0)),
                               7, 0),
                         15, 0),
                   23, 0)>;
@@ -1927,8 +1927,8 @@ def : Pat<(Op v8i8:$v0, v8i8:$v1),
 }
 
 // SLLD
-def : Pat<(shl i64:$rs1, i64:$rs2), (SLLDrr SingleReg:$rs1, SingleReg:$rs2)>;
-def : Pat<(shl i64:$rs1, Unsigned6:$rs2), (SLLDri SingleReg:$rs1, Unsigned6:$rs2)>;
+def : Pat<(shl i64:$rs1, i32:$rs2), (SLLDrr SingleReg:$rs1, SingleReg:$rs2)>;
+def : Pat<(shl i64:$rs1, Unsigned6W:$rs2), (SLLDri SingleReg:$rs1, Unsigned6W:$rs2)>;
 
 // SLLBOS
 defm : BOShiftScalarOps<shl, SLLBOSri, SLLBOSrr>, Requires<[IsV2]>;
@@ -1937,8 +1937,8 @@ defm : BOShiftScalarOps<shl, SLLBOSri, SLLBOSrr>, Requires<[IsV2]>;
 defm : HQShiftScalarOps<shl, SLLHQSri, SLLHQSrr>;
 
 // SLLW
-defm : ZEFPat<(shl i32:$rs1, i64:$rs2), (SLLWrr SingleReg:$rs1, SingleReg:$rs2)>;
-defm : ZEFPat<(shl i32:$rs1, Unsigned6:$rs2), (SLLWri SingleReg:$rs1, Unsigned6:$rs2)>;
+defm : ZEFPat<(shl i32:$rs1, i32:$rs2), (SLLWrr SingleReg:$rs1, SingleReg:$rs2)>;
+defm : ZEFPat<(shl i32:$rs1, Unsigned6W:$rs2), (SLLWri SingleReg:$rs1, Unsigned6W:$rs2)>;
 
 // SLLWPS
 defm : WPShiftScalarOps<shl, SLLWPSri, SLLWPSrr, SLLWri, SLLWrr>;
@@ -1947,8 +1947,17 @@ defm : WPShiftScalarOps<shl, SLLWPSri, SLLWPSrr, SLLWri, SLLWrr>;
 defm : BOShiftScalarOps<sshlsat, SLSBOSri, SLSBOSrr>, Requires<[IsV2]>;
 
 // SLSD
+def : Pat<(i64 (sshlsat i64:$r, Unsigned6W:$im)),
+          (SLSDri SingleReg:$r, Unsigned6W:$im)>;
+
 def : Pat<(i64 (sshlsat i64:$r, Unsigned6:$im)),
-          (SLSDri SingleReg:$r, Unsigned6:$im)>;
+          (SLSDri SingleReg:$r, (trunc_imm_32 imm:$im))>;
+
+def : Pat<(i64 (sshlsat i64:$rs1, i32:$rs2)),
+          (SLSDrr SingleReg:$rs1, SingleReg:$rs2)>;
+
+def : Pat<(i64 (sshlsat i64:$rs1, (i64(allexts i32:$rs2)))),
+          (SLSDrr SingleReg:$rs1, SingleReg:$rs2)>;
 
 def : Pat<(i64 (sshlsat i64:$rs1, i64:$rs2)),
           (SLSDrr SingleReg:$rs1, SingleReg:$rs2)>;
@@ -1958,7 +1967,7 @@ defm : HQShiftScalarOps<sshlsat, SLSHQSri, SLSHQSrr>;
 
 // SLSW
 defm : ZEFPat<(i32 (sshlsat i32:$r, Unsigned6W:$im)),
-              (SLSWri SingleReg:$r, (imm32_to_imm64 imm:$im))>;
+              (SLSWri SingleReg:$r, Unsigned6W:$im)>;
 
 defm : ZEFPat<(i32 (sshlsat i32:$rs1, i32:$rs2)),
               (SLSWrr SingleReg:$rs1, SingleReg:$rs2)>;
@@ -1970,8 +1979,17 @@ defm: WPShiftScalarOps<sshlsat, SLSWPSri, SLSWPSrr, SLSWri, SLSWrr>;
 defm : BOShiftScalarOps<ushlsat, SLUSBOSri, SLUSBOSrr>, Requires<[IsV2]>;
 
 // SLUSD
+def : Pat<(i64 (ushlsat i64:$r, Unsigned6W:$im)),
+          (SLUSDri SingleReg:$r, Unsigned6W:$im)>, Requires<[IsV2]>;
+
 def : Pat<(i64 (ushlsat i64:$r, Unsigned6:$im)),
-          (SLUSDri SingleReg:$r, Unsigned6:$im)>, Requires<[IsV2]>;
+          (SLUSDri SingleReg:$r, (trunc_imm_32 imm:$im))>, Requires<[IsV2]>;
+
+def : Pat<(i64 (ushlsat i64:$rs1, i32:$rs2)),
+          (SLUSDrr SingleReg:$rs1, SingleReg:$rs2)>, Requires<[IsV2]>;
+
+def : Pat<(i64 (ushlsat i64:$rs1, (i64 (allexts i32:$rs2)))),
+          (SLUSDrr SingleReg:$rs1, SingleReg:$rs2)>, Requires<[IsV2]>;
 
 def : Pat<(i64 (ushlsat i64:$rs1, i64:$rs2)),
           (SLUSDrr SingleReg:$rs1, SingleReg:$rs2)>, Requires<[IsV2]>;
@@ -1996,8 +2014,8 @@ defm : ZEFPat<(i32 (ushlsat i32:$rs1, i32:$rs2)),
 defm: WPShiftScalarOps<ushlsat, SLUSWPSri, SLUSWPSrr, SLUSWri, SLUSWrr>, Requires<[IsV2]>;
 
 // SRAD
-def : Pat<(sra i64:$rs1, i64:$rs2), (SRADrr SingleReg:$rs1, SingleReg:$rs2)>;
-def : Pat<(sra i64:$rs1, Unsigned6:$rs2), (SRADri SingleReg:$rs1, Unsigned6:$rs2)>;
+def : Pat<(sra i64:$rs1, i32:$rs2), (SRADrr SingleReg:$rs1, SingleReg:$rs2)>;
+def : Pat<(sra i64:$rs1, Unsigned6W:$rs2), (SRADri SingleReg:$rs1, Unsigned6W:$rs2)>;
 
 // SRABOS
 defm : BOShiftScalarOps<sra, SRABOSri, SRABOSrr>, Requires<[IsV2]>;
@@ -2006,15 +2024,15 @@ defm : BOShiftScalarOps<sra, SRABOSri, SRABOSrr>, Requires<[IsV2]>;
 defm : HQShiftScalarOps<sra, SRAHQSri, SRAHQSrr>;
 
 // SRAW
-def : Pat<(sra i32:$rs1, i64:$rs2), (SRAWrr SingleReg:$rs1, SingleReg:$rs2)>;
-def : Pat<(sra i32:$rs1, Unsigned6:$rs2), (SRAWri SingleReg:$rs1, Unsigned6:$rs2)>;
+def : Pat<(sra i32:$rs1, i32:$rs2), (SRAWrr SingleReg:$rs1, SingleReg:$rs2)>;
+def : Pat<(sra i32:$rs1, Unsigned6W:$rs2), (SRAWri SingleReg:$rs1, Unsigned6W:$rs2)>;
 
 // SRAWPS
 defm : WPShiftScalarOps<sra, SRAWPSri, SRAWPSrr, SRAWri, SRAWrr>;
 
 // SRLD
-def : Pat<(srl i64:$rs1, i64:$rs2), (SRLDrr SingleReg:$rs1, SingleReg:$rs2)>;
-def : Pat<(srl i64:$rs1, Unsigned6:$rs2), (SRLDri SingleReg:$rs1, Unsigned6:$rs2)>;
+def : Pat<(srl i64:$rs1, i32:$rs2), (SRLDrr SingleReg:$rs1, SingleReg:$rs2)>;
+def : Pat<(srl i64:$rs1, Unsigned6W:$rs2), (SRLDri SingleReg:$rs1, Unsigned6W:$rs2)>;
 
 // SRLBOS
 defm : BOShiftScalarOps<srl, SRLBOSri, SRLBOSrr>, Requires<[IsV2]>;
@@ -2023,38 +2041,44 @@ defm : BOShiftScalarOps<srl, SRLBOSri, SRLBOSrr>, Requires<[IsV2]>;
 defm : HQShiftScalarOps<srl, SRLHQSri, SRLHQSrr>;
 
 // SRLW
-defm : ZEFPat<(srl i32:$rs1, i64:$rs2), (SRLWrr SingleReg:$rs1, SingleReg:$rs2)>;
-defm : ZEFPat<(srl i32:$rs1, Unsigned6:$rs2), (SRLWri SingleReg:$rs1, Unsigned6:$rs2)>;
+defm : ZEFPat<(srl i32:$rs1, i32:$rs2), (SRLWrr SingleReg:$rs1, SingleReg:$rs2)>;
+defm : ZEFPat<(srl i32:$rs1, Unsigned6W:$rs2), (SRLWri SingleReg:$rs1, Unsigned6W:$rs2)>;
 
 // SRLWPS
 defm : WPShiftScalarOps<srl, SRLWPSri, SRLWPSrr, SRLWri, SRLWrr>;
 
-multiclass SRS <ValueType vt, KVX_INSTRUCTION I, KVX_INSTRUCTION NEG> {
-      def : Pat<(vt (KVX_srs vt:$r, Unsigned6:$im)),
-                (I SingleReg:$r, Unsigned6:$im)>;
+multiclass SRS <ValueType vt, KVX_INSTRUCTION R, KVX_INSTRUCTION I, KVX_INSTRUCTION NEG> {
+      def : Pat<(vt (KVX_srs vt:$r, Unsigned6W:$im)),
+                (I SingleReg:$r, Unsigned6W:$im)>;
 
-      def : Pat<(vt (KVX_srsneg vt:$r, Unsigned6:$im)),
-                (NEG (I SingleReg:$r, Unsigned6:$im))>;
+      def : Pat<(vt (KVX_srs vt:$r, i32:$s)),
+                (I SingleReg:$r, SingleReg:$s)>;
+
+      def : Pat<(vt (KVX_srsneg vt:$r, Unsigned6W:$im)),
+                (NEG (I SingleReg:$r, Unsigned6W:$im))>;
+
+      def : Pat<(vt (KVX_srsneg vt:$r, i32:$s)),
+                (NEG (I SingleReg:$r, SingleReg:$s))>;
 }
 
 // SRSBOS
 foreach vt = [v2i8, v4i8, v8i8] in {
-defm : SRS <vt, SRSBOSri, NEGBO>, Requires<[IsV2]>;
+defm : SRS <vt, SRSBOSrr, SRSBOSri, NEGBO>, Requires<[IsV2]>;
 }
 
 // SRSD
-defm : SRS <i64, SRSDri, NEGD>;
+defm : SRS <i64, SRSDrr, SRSDri, NEGD>;
 
 // SRSHQS
 foreach vt = [v2i16, v4i16] in {
-defm : SRS <vt, SRSHQSri, NEGHQ>;
+defm : SRS <vt, SRSHQSrr, SRSHQSri, NEGHQ>;
 }
 
 // SRSW
-defm : SRS <i32, SRSWri, NEGW>;
+defm : SRS <i32, SRSWrr, SRSWri, NEGW>;
 
 // SRSWPS
-defm : SRS <v2i32, SRSWPSri, NEGWP>;
+defm : SRS <v2i32, SRSWPSrr, SRSWPSri, NEGWP>;
 
 // SXLBHQ,  ZXLBHQ
 def : Pat<(v2i16(sanyext v2i8:$v)), (SXLBHQ $v)>;
@@ -2196,6 +2220,19 @@ def : Pat<(abs v8i8:$v),
             (SBMM8ri37 (ABSHQ (SXMBHQ SingleReg:$v)), 0x40100401),
       32, 63)>;
 
+def : Pat<(v8i8(shl v8i8:$v, (v8i8 (v8_splat (i32 imm:$s))))),
+          (ORDrr
+            (ANDDri32s
+                  (SLLDri
+                        (ANDDri32s SingleReg:$v, 0xff00ff00),
+                  (i32 (mod_8_imm_32 $s))),
+            0xff00ff00),
+            (ANDDri32s
+                  (SLLDri
+                        (ANDDri32s SingleReg:$v, 0xff00ff),
+                  (i32 (mod_8_imm_32 $s))),
+            0xff00ff))>;
+
 def : Pat<(v8i8(shl v8i8:$v, (v8i8 (v8_splat i32:$s)))),
           (ORDrr
             (ANDDri32s
@@ -2209,6 +2246,19 @@ def : Pat<(v8i8(shl v8i8:$v, (v8i8 (v8_splat i32:$s)))),
                   SingleReg:$s),
             0xff00ff))>;
 
+
+def : Pat<(v8i8(srl v8i8:$v, (v8i8 (v8_splat (i32 imm:$s))))),
+          (ORDrr
+            (ANDDri32s
+                  (SRLDri
+                        (ANDDri32s SingleReg:$v, 0xff00ff00),
+                  (i32 (mod_8_imm_32 $s))),
+            0xff00ff00),
+            (ANDDri32s
+                  (SRLDrr
+                        (ANDDri32s SingleReg:$v, 0xff00ff),
+                  (i32 (mod_8_imm_32 $s))),
+            0xff00ff))>;
 
 def : Pat<(v8i8(srl v8i8:$v, (v8i8 (v8_splat i32:$s)))),
           (ORDrr
@@ -2234,6 +2284,19 @@ def : Pat<(v8i8(or (srl v8i8:$v, (v8i8 (v8_splat (i32 (sub (i32 8), i32:$s)))) )
                   (SLLHQSrr
                         (SBMM8ri64 SingleReg:$v, 0x4040101004040101),
                   SingleReg:$s),
+            8))>, Requires<[IsV1]>;
+
+def : Pat<(v8i8(rotl v8i8:$v, (v8i8 (v8_splat (i32 imm:$s))))),
+          (ORDrr
+            (ANDDri32s
+                  (SLLHQSri
+                        (SBMM8ri64 SingleReg:$v, 0x8080202008080202),
+                  (i32 (mod_8_imm_32 $s))),
+            0xff00ff00),
+            (SRLHQSri
+                  (SLLHQSrr
+                        (SBMM8ri64 SingleReg:$v, 0x4040101004040101),
+                  (i32 (mod_8_imm_32 $s))),
             8))>;
 
 def : Pat<(v8i8(rotl v8i8:$v, (v8i8 (v8_splat i32:$s)))),
@@ -2251,24 +2314,37 @@ def : Pat<(v8i8(rotl v8i8:$v, (v8i8 (v8_splat i32:$s)))),
 
 def : Pat<(v8i8(or (shl v8i8:$v, (v8i8 (v8_splat (i32 (sub (i32 8), i32:$s)))) ), (srl v8i8:$v, (v8i8 (v8_splat i32:$s))))),
           (ORDrr
-            (ANDNDri32s
+            (ANDDri32s
                   (SRLHQSrr
                         (SBMM8ri64 SingleReg:$v, 0x4040101004040101),
                   SingleReg:$s),
-            0xff00ff00),
+            0xff00ff),
             (SLLHQSri
                   (SRLHQSrr
                         (SBMM8ri64 SingleReg:$v, 0x8080202008080202),
                   SingleReg:$s),
+            8))>, Requires<[IsV1]>;
+
+def : Pat<(v8i8(rotr v8i8:$v, (v8i8 (v8_splat (i32 imm:$s))))),
+          (ORDrr
+            (ANDDri32s
+                  (SRLHQSri
+                        (SBMM8ri64 SingleReg:$v, 0x4040101004040101),
+                  (i32 (mod_8_imm_32 $s))),
+            0xff00ff),
+            (SLLHQSri
+                  (SRLHQSri
+                        (SBMM8ri64 SingleReg:$v, 0x8080202008080202),
+                  (i32 (mod_8_imm_32 $s))),
             8))>;
 
 def : Pat<(v8i8(rotr v8i8:$v, (v8i8 (v8_splat i32:$s)))),
           (ORDrr
-            (ANDNDri32s
+            (ANDDri32s
                   (SRLHQSrr
                         (SBMM8ri64 SingleReg:$v, 0x4040101004040101),
                   SingleReg:$s),
-            0xff00ff00),
+            0xff00ff),
             (SLLHQSri
                   (SRLHQSrr
                         (SBMM8ri64 SingleReg:$v, 0x8080202008080202),
