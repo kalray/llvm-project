@@ -2166,10 +2166,9 @@ define <8 x i8> @addx2_i8x8_ri_(<8 x i8> %a) {
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
-; V1-NEXT:    make $r2 = 1
 ; V1-NEXT:    ;;
-; V1-NEXT:    slld $r0 = $r0, $r2
-; V1-NEXT:    slld $r1 = $r1, $r2
+; V1-NEXT:    slld $r0 = $r0, 1
+; V1-NEXT:    slld $r1 = $r1, 1
 ; V1-NEXT:    ;;
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
@@ -2204,10 +2203,9 @@ define <8 x i8> @addx2_i8x8_ri_or(<8 x i8> %a) {
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
-; V1-NEXT:    make $r2 = 1
 ; V1-NEXT:    ;;
-; V1-NEXT:    slld $r0 = $r0, $r2
-; V1-NEXT:    slld $r1 = $r1, $r2
+; V1-NEXT:    slld $r0 = $r0, 1
+; V1-NEXT:    slld $r1 = $r1, 1
 ; V1-NEXT:    ;;
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
@@ -2234,10 +2232,9 @@ define <8 x i8> @not_addx2_i8x8_ri_or(<8 x i8> %a) {
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
-; V1-NEXT:    make $r2 = 1
 ; V1-NEXT:    ;;
-; V1-NEXT:    slld $r0 = $r0, $r2
-; V1-NEXT:    slld $r1 = $r1, $r2
+; V1-NEXT:    slld $r0 = $r0, 1
+; V1-NEXT:    slld $r1 = $r1, 1
 ; V1-NEXT:    ;;
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
@@ -2266,10 +2263,9 @@ define <8 x i8> @addx2_i8x8_ri_sub(<8 x i8> %a) {
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
-; V1-NEXT:    make $r2 = 1
 ; V1-NEXT:    ;;
-; V1-NEXT:    slld $r0 = $r0, $r2
-; V1-NEXT:    slld $r1 = $r1, $r2
+; V1-NEXT:    slld $r0 = $r0, 1
+; V1-NEXT:    slld $r1 = $r1, 1
 ; V1-NEXT:    ;;
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
@@ -2304,10 +2300,9 @@ define <8 x i8> @addx2_i8x8_ri_at(<8 x i8> %a) {
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
-; V1-NEXT:    make $r2 = 1
 ; V1-NEXT:    ;;
-; V1-NEXT:    slld $r0 = $r0, $r2
-; V1-NEXT:    slld $r1 = $r1, $r2
+; V1-NEXT:    slld $r0 = $r0, 1
+; V1-NEXT:    slld $r1 = $r1, 1
 ; V1-NEXT:    ;;
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
@@ -2342,10 +2337,9 @@ define <8 x i8> @addx2_i8x8_ri_at_or(<8 x i8> %a) {
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
-; V1-NEXT:    make $r2 = 1
 ; V1-NEXT:    ;;
-; V1-NEXT:    slld $r0 = $r0, $r2
-; V1-NEXT:    slld $r1 = $r1, $r2
+; V1-NEXT:    slld $r0 = $r0, 1
+; V1-NEXT:    slld $r1 = $r1, 1
 ; V1-NEXT:    ;;
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
@@ -2372,10 +2366,9 @@ define <8 x i8> @not_addx2_i8x8_ri_at_or(<8 x i8> %a) {
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
-; V1-NEXT:    make $r2 = 1
 ; V1-NEXT:    ;;
-; V1-NEXT:    slld $r0 = $r0, $r2
-; V1-NEXT:    slld $r1 = $r1, $r2
+; V1-NEXT:    slld $r0 = $r0, 1
+; V1-NEXT:    slld $r1 = $r1, 1
 ; V1-NEXT:    ;;
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
@@ -2404,10 +2397,9 @@ define <8 x i8> @addx2_i8x8_ri_at_sub(<8 x i8> %a) {
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
-; V1-NEXT:    make $r2 = 1
 ; V1-NEXT:    ;;
-; V1-NEXT:    slld $r0 = $r0, $r2
-; V1-NEXT:    slld $r1 = $r1, $r2
+; V1-NEXT:    slld $r0 = $r0, 1
+; V1-NEXT:    slld $r1 = $r1, 1
 ; V1-NEXT:    ;;
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
@@ -2442,11 +2434,10 @@ define <8 x i8> @addx2_i8x8_rr(<8 x i8> %a, <8 x i8> %b) {
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r2 = $r0, 0xff00ff
-; V1-NEXT:    make $r3 = 1
-; V1-NEXT:    ;;
-; V1-NEXT:    slld $r0 = $r0, $r3
-; V1-NEXT:    slld $r2 = $r2, $r3
 ; V1-NEXT:    andd.@ $r3 = $r1, 0x7f7f7f7f
+; V1-NEXT:    ;;
+; V1-NEXT:    slld $r0 = $r0, 1
+; V1-NEXT:    slld $r2 = $r2, 1
 ; V1-NEXT:    ;;
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r2 = $r2, 0xff00ff
@@ -2978,10 +2969,9 @@ define <8 x i8> @addx4_i8x8_ri_(<8 x i8> %a) {
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
-; V1-NEXT:    make $r2 = 2
 ; V1-NEXT:    ;;
-; V1-NEXT:    slld $r0 = $r0, $r2
-; V1-NEXT:    slld $r1 = $r1, $r2
+; V1-NEXT:    slld $r0 = $r0, 2
+; V1-NEXT:    slld $r1 = $r1, 2
 ; V1-NEXT:    ;;
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
@@ -3016,10 +3006,9 @@ define <8 x i8> @addx4_i8x8_ri_or(<8 x i8> %a) {
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
-; V1-NEXT:    make $r2 = 2
 ; V1-NEXT:    ;;
-; V1-NEXT:    slld $r0 = $r0, $r2
-; V1-NEXT:    slld $r1 = $r1, $r2
+; V1-NEXT:    slld $r0 = $r0, 2
+; V1-NEXT:    slld $r1 = $r1, 2
 ; V1-NEXT:    ;;
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
@@ -3046,10 +3035,9 @@ define <8 x i8> @not_addx4_i8x8_ri_or(<8 x i8> %a) {
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
-; V1-NEXT:    make $r2 = 2
 ; V1-NEXT:    ;;
-; V1-NEXT:    slld $r0 = $r0, $r2
-; V1-NEXT:    slld $r1 = $r1, $r2
+; V1-NEXT:    slld $r0 = $r0, 2
+; V1-NEXT:    slld $r1 = $r1, 2
 ; V1-NEXT:    ;;
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
@@ -3078,10 +3066,9 @@ define <8 x i8> @addx4_i8x8_ri_sub(<8 x i8> %a) {
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
-; V1-NEXT:    make $r2 = 2
 ; V1-NEXT:    ;;
-; V1-NEXT:    slld $r0 = $r0, $r2
-; V1-NEXT:    slld $r1 = $r1, $r2
+; V1-NEXT:    slld $r0 = $r0, 2
+; V1-NEXT:    slld $r1 = $r1, 2
 ; V1-NEXT:    ;;
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
@@ -3116,10 +3103,9 @@ define <8 x i8> @addx4_i8x8_ri_at(<8 x i8> %a) {
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
-; V1-NEXT:    make $r2 = 2
 ; V1-NEXT:    ;;
-; V1-NEXT:    slld $r0 = $r0, $r2
-; V1-NEXT:    slld $r1 = $r1, $r2
+; V1-NEXT:    slld $r0 = $r0, 2
+; V1-NEXT:    slld $r1 = $r1, 2
 ; V1-NEXT:    ;;
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
@@ -3154,10 +3140,9 @@ define <8 x i8> @addx4_i8x8_ri_at_or(<8 x i8> %a) {
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
-; V1-NEXT:    make $r2 = 2
 ; V1-NEXT:    ;;
-; V1-NEXT:    slld $r0 = $r0, $r2
-; V1-NEXT:    slld $r1 = $r1, $r2
+; V1-NEXT:    slld $r0 = $r0, 2
+; V1-NEXT:    slld $r1 = $r1, 2
 ; V1-NEXT:    ;;
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
@@ -3184,10 +3169,9 @@ define <8 x i8> @not_addx4_i8x8_ri_at_or(<8 x i8> %a) {
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
-; V1-NEXT:    make $r2 = 2
 ; V1-NEXT:    ;;
-; V1-NEXT:    slld $r0 = $r0, $r2
-; V1-NEXT:    slld $r1 = $r1, $r2
+; V1-NEXT:    slld $r0 = $r0, 2
+; V1-NEXT:    slld $r1 = $r1, 2
 ; V1-NEXT:    ;;
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
@@ -3216,10 +3200,9 @@ define <8 x i8> @addx4_i8x8_ri_at_sub(<8 x i8> %a) {
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
-; V1-NEXT:    make $r2 = 2
 ; V1-NEXT:    ;;
-; V1-NEXT:    slld $r0 = $r0, $r2
-; V1-NEXT:    slld $r1 = $r1, $r2
+; V1-NEXT:    slld $r0 = $r0, 2
+; V1-NEXT:    slld $r1 = $r1, 2
 ; V1-NEXT:    ;;
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
@@ -3254,11 +3237,10 @@ define <8 x i8> @addx4_i8x8_rr(<8 x i8> %a, <8 x i8> %b) {
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r2 = $r0, 0xff00ff
-; V1-NEXT:    make $r3 = 2
-; V1-NEXT:    ;;
-; V1-NEXT:    slld $r0 = $r0, $r3
-; V1-NEXT:    slld $r2 = $r2, $r3
 ; V1-NEXT:    andd.@ $r3 = $r1, 0x7f7f7f7f
+; V1-NEXT:    ;;
+; V1-NEXT:    slld $r0 = $r0, 2
+; V1-NEXT:    slld $r2 = $r2, 2
 ; V1-NEXT:    ;;
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r2 = $r2, 0xff00ff
@@ -3789,10 +3771,9 @@ define <8 x i8> @addx8_i8x8_ri_(<8 x i8> %a) {
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
-; V1-NEXT:    make $r2 = 3
 ; V1-NEXT:    ;;
-; V1-NEXT:    slld $r0 = $r0, $r2
-; V1-NEXT:    slld $r1 = $r1, $r2
+; V1-NEXT:    slld $r0 = $r0, 3
+; V1-NEXT:    slld $r1 = $r1, 3
 ; V1-NEXT:    ;;
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
@@ -3827,10 +3808,9 @@ define <8 x i8> @addx8_i8x8_ri_or(<8 x i8> %a) {
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
-; V1-NEXT:    make $r2 = 3
 ; V1-NEXT:    ;;
-; V1-NEXT:    slld $r0 = $r0, $r2
-; V1-NEXT:    slld $r1 = $r1, $r2
+; V1-NEXT:    slld $r0 = $r0, 3
+; V1-NEXT:    slld $r1 = $r1, 3
 ; V1-NEXT:    ;;
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
@@ -3857,10 +3837,9 @@ define <8 x i8> @not_addx8_i8x8_ri_or(<8 x i8> %a) {
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
-; V1-NEXT:    make $r2 = 3
 ; V1-NEXT:    ;;
-; V1-NEXT:    slld $r0 = $r0, $r2
-; V1-NEXT:    slld $r1 = $r1, $r2
+; V1-NEXT:    slld $r0 = $r0, 3
+; V1-NEXT:    slld $r1 = $r1, 3
 ; V1-NEXT:    ;;
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
@@ -3889,10 +3868,9 @@ define <8 x i8> @addx8_i8x8_ri_sub(<8 x i8> %a) {
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
-; V1-NEXT:    make $r2 = 3
 ; V1-NEXT:    ;;
-; V1-NEXT:    slld $r0 = $r0, $r2
-; V1-NEXT:    slld $r1 = $r1, $r2
+; V1-NEXT:    slld $r0 = $r0, 3
+; V1-NEXT:    slld $r1 = $r1, 3
 ; V1-NEXT:    ;;
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
@@ -3927,10 +3905,9 @@ define <8 x i8> @addx8_i8x8_ri_at(<8 x i8> %a) {
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
-; V1-NEXT:    make $r2 = 3
 ; V1-NEXT:    ;;
-; V1-NEXT:    slld $r0 = $r0, $r2
-; V1-NEXT:    slld $r1 = $r1, $r2
+; V1-NEXT:    slld $r0 = $r0, 3
+; V1-NEXT:    slld $r1 = $r1, 3
 ; V1-NEXT:    ;;
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
@@ -3965,10 +3942,9 @@ define <8 x i8> @addx8_i8x8_ri_at_or(<8 x i8> %a) {
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
-; V1-NEXT:    make $r2 = 3
 ; V1-NEXT:    ;;
-; V1-NEXT:    slld $r0 = $r0, $r2
-; V1-NEXT:    slld $r1 = $r1, $r2
+; V1-NEXT:    slld $r0 = $r0, 3
+; V1-NEXT:    slld $r1 = $r1, 3
 ; V1-NEXT:    ;;
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
@@ -3995,10 +3971,9 @@ define <8 x i8> @not_addx8_i8x8_ri_at_or(<8 x i8> %a) {
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
-; V1-NEXT:    make $r2 = 3
 ; V1-NEXT:    ;;
-; V1-NEXT:    slld $r0 = $r0, $r2
-; V1-NEXT:    slld $r1 = $r1, $r2
+; V1-NEXT:    slld $r0 = $r0, 3
+; V1-NEXT:    slld $r1 = $r1, 3
 ; V1-NEXT:    ;;
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
@@ -4027,10 +4002,9 @@ define <8 x i8> @addx8_i8x8_ri_at_sub(<8 x i8> %a) {
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
-; V1-NEXT:    make $r2 = 3
 ; V1-NEXT:    ;;
-; V1-NEXT:    slld $r0 = $r0, $r2
-; V1-NEXT:    slld $r1 = $r1, $r2
+; V1-NEXT:    slld $r0 = $r0, 3
+; V1-NEXT:    slld $r1 = $r1, 3
 ; V1-NEXT:    ;;
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
@@ -4065,11 +4039,10 @@ define <8 x i8> @addx8_i8x8_rr(<8 x i8> %a, <8 x i8> %b) {
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r2 = $r0, 0xff00ff
-; V1-NEXT:    make $r3 = 3
-; V1-NEXT:    ;;
-; V1-NEXT:    slld $r0 = $r0, $r3
-; V1-NEXT:    slld $r2 = $r2, $r3
 ; V1-NEXT:    andd.@ $r3 = $r1, 0x7f7f7f7f
+; V1-NEXT:    ;;
+; V1-NEXT:    slld $r0 = $r0, 3
+; V1-NEXT:    slld $r2 = $r2, 3
 ; V1-NEXT:    ;;
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r2 = $r2, 0xff00ff
@@ -4600,10 +4573,9 @@ define <8 x i8> @addx16_i8x8_ri_(<8 x i8> %a) {
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
-; V1-NEXT:    make $r2 = 4
 ; V1-NEXT:    ;;
-; V1-NEXT:    slld $r0 = $r0, $r2
-; V1-NEXT:    slld $r1 = $r1, $r2
+; V1-NEXT:    slld $r0 = $r0, 4
+; V1-NEXT:    slld $r1 = $r1, 4
 ; V1-NEXT:    ;;
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
@@ -4638,10 +4610,9 @@ define <8 x i8> @addx16_i8x8_ri_or(<8 x i8> %a) {
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
-; V1-NEXT:    make $r2 = 4
 ; V1-NEXT:    ;;
-; V1-NEXT:    slld $r0 = $r0, $r2
-; V1-NEXT:    slld $r1 = $r1, $r2
+; V1-NEXT:    slld $r0 = $r0, 4
+; V1-NEXT:    slld $r1 = $r1, 4
 ; V1-NEXT:    ;;
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
@@ -4668,10 +4639,9 @@ define <8 x i8> @not_addx16_i8x8_ri_or(<8 x i8> %a) {
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
-; V1-NEXT:    make $r2 = 4
 ; V1-NEXT:    ;;
-; V1-NEXT:    slld $r0 = $r0, $r2
-; V1-NEXT:    slld $r1 = $r1, $r2
+; V1-NEXT:    slld $r0 = $r0, 4
+; V1-NEXT:    slld $r1 = $r1, 4
 ; V1-NEXT:    ;;
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
@@ -4700,10 +4670,9 @@ define <8 x i8> @addx16_i8x8_ri_sub(<8 x i8> %a) {
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
-; V1-NEXT:    make $r2 = 4
 ; V1-NEXT:    ;;
-; V1-NEXT:    slld $r0 = $r0, $r2
-; V1-NEXT:    slld $r1 = $r1, $r2
+; V1-NEXT:    slld $r0 = $r0, 4
+; V1-NEXT:    slld $r1 = $r1, 4
 ; V1-NEXT:    ;;
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
@@ -4738,10 +4707,9 @@ define <8 x i8> @addx16_i8x8_ri_at(<8 x i8> %a) {
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
-; V1-NEXT:    make $r2 = 4
 ; V1-NEXT:    ;;
-; V1-NEXT:    slld $r0 = $r0, $r2
-; V1-NEXT:    slld $r1 = $r1, $r2
+; V1-NEXT:    slld $r0 = $r0, 4
+; V1-NEXT:    slld $r1 = $r1, 4
 ; V1-NEXT:    ;;
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
@@ -4776,10 +4744,9 @@ define <8 x i8> @addx16_i8x8_ri_at_or(<8 x i8> %a) {
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
-; V1-NEXT:    make $r2 = 4
 ; V1-NEXT:    ;;
-; V1-NEXT:    slld $r0 = $r0, $r2
-; V1-NEXT:    slld $r1 = $r1, $r2
+; V1-NEXT:    slld $r0 = $r0, 4
+; V1-NEXT:    slld $r1 = $r1, 4
 ; V1-NEXT:    ;;
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
@@ -4806,10 +4773,9 @@ define <8 x i8> @not_addx16_i8x8_ri_at_or(<8 x i8> %a) {
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
-; V1-NEXT:    make $r2 = 4
 ; V1-NEXT:    ;;
-; V1-NEXT:    slld $r0 = $r0, $r2
-; V1-NEXT:    slld $r1 = $r1, $r2
+; V1-NEXT:    slld $r0 = $r0, 4
+; V1-NEXT:    slld $r1 = $r1, 4
 ; V1-NEXT:    ;;
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
@@ -4838,10 +4804,9 @@ define <8 x i8> @addx16_i8x8_ri_at_sub(<8 x i8> %a) {
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
-; V1-NEXT:    make $r2 = 4
 ; V1-NEXT:    ;;
-; V1-NEXT:    slld $r0 = $r0, $r2
-; V1-NEXT:    slld $r1 = $r1, $r2
+; V1-NEXT:    slld $r0 = $r0, 4
+; V1-NEXT:    slld $r1 = $r1, 4
 ; V1-NEXT:    ;;
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
@@ -4876,11 +4841,10 @@ define <8 x i8> @addx16_i8x8_rr(<8 x i8> %a, <8 x i8> %b) {
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r2 = $r0, 0xff00ff
-; V1-NEXT:    make $r3 = 4
-; V1-NEXT:    ;;
-; V1-NEXT:    slld $r0 = $r0, $r3
-; V1-NEXT:    slld $r2 = $r2, $r3
 ; V1-NEXT:    andd.@ $r3 = $r1, 0x7f7f7f7f
+; V1-NEXT:    ;;
+; V1-NEXT:    slld $r0 = $r0, 4
+; V1-NEXT:    slld $r2 = $r2, 4
 ; V1-NEXT:    ;;
 ; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; V1-NEXT:    andd.@ $r2 = $r2, 0xff00ff

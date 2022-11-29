@@ -1490,20 +1490,31 @@ entry:
 }
 
 define <8 x i8> @rotl(<8 x i8> %v, i32 %s) {
-; ALL-LABEL: rotl:
-; ALL:       # %bb.0: # %entry
-; ALL-NEXT:    sbmm8 $r0 = $r0, 0x8080202008080202
-; ALL-NEXT:    sbmm8 $r2 = $r0, 0x4040101004040101
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sllhqs $r0 = $r0, $r1
-; ALL-NEXT:    sllhqs $r2 = $r2, $r1
-; ALL-NEXT:    ;;
-; ALL-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
-; ALL-NEXT:    srlhqs $r1 = $r2, 8
-; ALL-NEXT:    ;;
-; ALL-NEXT:    ord $r0 = $r0, $r1
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; CV1-LABEL: rotl:
+; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    sbmm8 $r0 = $r0, 0x8080202008080202
+; CV1-NEXT:    sbmm8 $r2 = $r0, 0x4040101004040101
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sllhqs $r0 = $r0, $r1
+; CV1-NEXT:    sllhqs $r2 = $r2, $r1
+; CV1-NEXT:    ;;
+; CV1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; CV1-NEXT:    srlhqs $r1 = $r2, 8
+; CV1-NEXT:    ;;
+; CV1-NEXT:    ord $r0 = $r0, $r1
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: rotl:
+; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    sllbos $r1 = $r0, $r1
+; CV2-NEXT:    sbfw $r2 = $r1, 8
+; CV2-NEXT:    ;;
+; CV2-NEXT:    srlbos $r0 = $r0, $r2
+; CV2-NEXT:    ;;
+; CV2-NEXT:    ord $r0 = $r0, $r1
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
 entry:
   %0 = trunc i32 %s to i8
   %1 = insertelement <8 x i8> undef, i8 %0, i32 0
@@ -1518,20 +1529,31 @@ entry:
 }
 
 define <8 x i8> @rotr(<8 x i8> %v, i32 %s) {
-; ALL-LABEL: rotr:
-; ALL:       # %bb.0: # %entry
-; ALL-NEXT:    sbmm8 $r0 = $r0, 0x4040101004040101
-; ALL-NEXT:    sbmm8 $r2 = $r0, 0x8080202008080202
-; ALL-NEXT:    ;;
-; ALL-NEXT:    srlhqs $r0 = $r0, $r1
-; ALL-NEXT:    srlhqs $r2 = $r2, $r1
-; ALL-NEXT:    ;;
-; ALL-NEXT:    andnd.@ $r0 = $r0, 0xff00ff00
-; ALL-NEXT:    sllhqs $r1 = $r2, 8
-; ALL-NEXT:    ;;
-; ALL-NEXT:    ord $r0 = $r0, $r1
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; CV1-LABEL: rotr:
+; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    sbmm8 $r0 = $r0, 0x4040101004040101
+; CV1-NEXT:    sbmm8 $r2 = $r0, 0x8080202008080202
+; CV1-NEXT:    ;;
+; CV1-NEXT:    srlhqs $r0 = $r0, $r1
+; CV1-NEXT:    srlhqs $r2 = $r2, $r1
+; CV1-NEXT:    ;;
+; CV1-NEXT:    andd.@ $r0 = $r0, 0xff00ff
+; CV1-NEXT:    sllhqs $r1 = $r2, 8
+; CV1-NEXT:    ;;
+; CV1-NEXT:    ord $r0 = $r0, $r1
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: rotr:
+; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    srlbos $r1 = $r0, $r1
+; CV2-NEXT:    sbfw $r2 = $r1, 8
+; CV2-NEXT:    ;;
+; CV2-NEXT:    sllbos $r0 = $r0, $r2
+; CV2-NEXT:    ;;
+; CV2-NEXT:    ord $r0 = $r0, $r1
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
 entry:
   %0 = trunc i32 %s to i8
   %1 = insertelement <8 x i8> undef, i8 %0, i32 0
@@ -1995,7 +2017,6 @@ define <8 x i8> @test_div_4(<8 x i8> %a, <8 x i8> %b) #0 {
 ; CV1-NEXT:    insf $r4 = $r2, 31, 16
 ; CV1-NEXT:    sxbd $r5 = $r5
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    make $r2 = 6
 ; CV1-NEXT:    insf $r3 = $r1, 15, 8
 ; CV1-NEXT:    sraw $r5 = $r5, 7
 ; CV1-NEXT:    ;;
@@ -2006,10 +2027,10 @@ define <8 x i8> @test_div_4(<8 x i8> %a, <8 x i8> %b) #0 {
 ; CV1-NEXT:    insf $r5 = $r4, 63, 32
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    andd.@ $r1 = $r5, 0xff00ff
-; CV1-NEXT:    andd.@ $r3 = $r5, 0xff00ff00
+; CV1-NEXT:    andd.@ $r2 = $r5, 0xff00ff00
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    srld $r1 = $r1, $r2
-; CV1-NEXT:    srld $r2 = $r3, $r2
+; CV1-NEXT:    srld $r1 = $r1, 6
+; CV1-NEXT:    srld $r2 = $r2, 6
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
 ; CV1-NEXT:    andd.@ $r2 = $r2, 0xff00ff00
@@ -2116,7 +2137,6 @@ define <8 x i8> @test_div_32(<8 x i8> %a, <8 x i8> %b) #0 {
 ; CV1-NEXT:    insf $r4 = $r2, 31, 16
 ; CV1-NEXT:    sxbd $r5 = $r5
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    make $r2 = 3
 ; CV1-NEXT:    insf $r3 = $r1, 15, 8
 ; CV1-NEXT:    sraw $r5 = $r5, 7
 ; CV1-NEXT:    ;;
@@ -2127,10 +2147,10 @@ define <8 x i8> @test_div_32(<8 x i8> %a, <8 x i8> %b) #0 {
 ; CV1-NEXT:    insf $r5 = $r4, 63, 32
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    andd.@ $r1 = $r5, 0xff00ff
-; CV1-NEXT:    andd.@ $r3 = $r5, 0xff00ff00
+; CV1-NEXT:    andd.@ $r2 = $r5, 0xff00ff00
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    srld $r1 = $r1, $r2
-; CV1-NEXT:    srld $r2 = $r3, $r2
+; CV1-NEXT:    srld $r1 = $r1, 3
+; CV1-NEXT:    srld $r2 = $r2, 3
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
 ; CV1-NEXT:    andd.@ $r2 = $r2, 0xff00ff00

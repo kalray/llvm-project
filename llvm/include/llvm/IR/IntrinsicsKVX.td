@@ -191,22 +191,6 @@ def int_kvx_sbmm8 : Intrinsic<[llvm_i64_ty], [llvm_i64_ty, llvm_i64_ty], [IntrNo
 def int_kvx_sbmmt8 : Intrinsic<[llvm_i64_ty], [llvm_i64_ty, llvm_i64_ty], [IntrNoMem]>;
 def int_kvx_satd : Intrinsic<[llvm_i64_ty], [llvm_i64_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_sbfcd: Intrinsic<[llvm_i64_ty], [llvm_i64_ty, llvm_i64_ty, llvm_i32_ty], []>;
-def int_kvx_slld : Intrinsic<[llvm_i64_ty], [llvm_i64_ty, llvm_i64_ty], [IntrNoMem]>;
-def int_kvx_sllhqs : Intrinsic<[llvm_v4i16_ty], [llvm_v4i16_ty, llvm_i64_ty], [IntrNoMem]>;
-def int_kvx_sllwps : Intrinsic<[llvm_v2i32_ty], [llvm_v2i32_ty, llvm_i64_ty], [IntrNoMem]>;
-def int_kvx_slsd : Intrinsic<[llvm_i64_ty], [llvm_i64_ty, llvm_i64_ty], [IntrNoMem]>;
-def int_kvx_slshqs : Intrinsic<[llvm_v4i16_ty], [llvm_v4i16_ty, llvm_i64_ty], [IntrNoMem]>;
-def int_kvx_slswps : Intrinsic<[llvm_v2i32_ty], [llvm_v2i32_ty, llvm_i64_ty], [IntrNoMem]>;
-def int_kvx_srad : Intrinsic<[llvm_i64_ty], [llvm_i64_ty, llvm_i64_ty], [IntrNoMem]>;
-def int_kvx_srahqs : Intrinsic<[llvm_v4i16_ty], [llvm_v4i16_ty, llvm_i64_ty], [IntrNoMem]>;
-def int_kvx_srawps : Intrinsic<[llvm_v2i32_ty], [llvm_v2i32_ty, llvm_i64_ty], [IntrNoMem]>;
-def int_kvx_srld : Intrinsic<[llvm_i64_ty], [llvm_i64_ty, llvm_i64_ty], [IntrNoMem]>;
-def int_kvx_srlhqs : Intrinsic<[llvm_v4i16_ty], [llvm_v4i16_ty, llvm_i64_ty], [IntrNoMem]>;
-def int_kvx_srlwps : Intrinsic<[llvm_v2i32_ty], [llvm_v2i32_ty, llvm_i64_ty], [IntrNoMem]>;
-def int_kvx_srsd : Intrinsic<[llvm_i64_ty], [llvm_i64_ty, llvm_i64_ty], [IntrNoMem]>;
-def int_kvx_srshqs : Intrinsic<[llvm_v4i16_ty], [llvm_v4i16_ty, llvm_i64_ty], [IntrNoMem]>;
-def int_kvx_srswps : Intrinsic<[llvm_v2i32_ty], [llvm_v2i32_ty, llvm_i64_ty], [IntrNoMem]>;
-
 def int_kvx_fnarrowwh: Intrinsic<[llvm_half_ty], [llvm_float_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_fnarrowwhq: Intrinsic<[llvm_v4f16_ty], [llvm_v4f32_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_fnarrowdw: Intrinsic<[llvm_float_ty], [llvm_double_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
@@ -380,6 +364,8 @@ def int_kvx_fneg: Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>], [IntrNoMem]>
 def int_kvx_narrowint: Intrinsic<[llvm_anyint_ty], [LLVMExtendedType<0>, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_select_vec: Intrinsic<[llvm_anyvector_ty], [LLVMMatchType<0>, LLVMMatchType<0>, LLVMVectorOfBitcastsToInt<0>, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_select: Intrinsic<[llvm_any_ty], [LLVMMatchType<0>, LLVMMatchType<0>, llvm_i64_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_shl: Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_shr: Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_stsu: Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>, LLVMMatchType<0>], [IntrNoMem]>;
 def int_kvx_widenint: Intrinsic<[llvm_anyint_ty], [LLVMTruncatedType<0>, llvm_i32_ty], [IntrNoMem]>;
 }  // TargetPrefix = "kvx"

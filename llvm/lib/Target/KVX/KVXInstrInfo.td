@@ -753,7 +753,7 @@ multiclass MC_18<string OpcStr> {
      [/* no straightforward pattern */],
      ALU_LITE>;
   def ri : KVX_INSTRUCTION
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Unsigned6:$a3),
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Unsigned6W:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      ALU_LITE>;
@@ -772,7 +772,7 @@ multiclass MC_18<string OpcStr> {
 let isAsCheapAsAMove = 1 in
 multiclass MC_18_TINY<string OpcStr> {
   def ri : KVX_INSTRUCTION
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Unsigned6:$a3),
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Unsigned6W:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      ALU_TINY>;
@@ -792,7 +792,7 @@ multiclass MC_18_TINY<string OpcStr> {
 //   defm SRLHQS
 multiclass MC_18_SWITCH<string OpcStr> {
   def ri : KVX_INSTRUCTION
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Unsigned6:$a3),
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Unsigned6W:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      ALU_SWITCH_LITE_TINY>;

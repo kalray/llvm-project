@@ -18481,6 +18481,11 @@ static const KvxModifier KvxLdStAddrSpaceMod(
 
 static const KvxModifier KvxNarrowInt({{"", 0}, {"q", 1}, {"s", 2}, {"us", 3}});
 
+static const KvxModifier KvxShiftLeft({{"", 0}, {"s", 1}, {"us", 2}, {"r", 3}});
+
+static const KvxModifier
+    KvxShiftRight({{"", 0}, {"a", 1}, {"as", 2}, {"r", 3}});
+
 static const KvxModifier
     KvxUnSignMod({{"", 0}, {"s", 0}, {"su", 1}, {"u", 2}, {"us", 3}});
 
@@ -20725,50 +20730,6 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
                                  {Intrinsic::kvx_avgwp, Intrinsic::kvx_avgrwp,
                                   Intrinsic::kvx_avguwp,
                                   Intrinsic::kvx_avgruwp});
-  case KVX::BI__builtin_kvx_shlhqs:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_sllhqs);
-  case KVX::BI__builtin_kvx_shlhos:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_sllhqs, 1, Int16Ty, 8,
-                                 4, false, EmitScalarExpr(E->getArg(1)));
-  case KVX::BI__builtin_kvx_shlhxs:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_sllhqs, 1, Int16Ty,
-                                 16, 4, false, EmitScalarExpr(E->getArg(1)));
-  case KVX::BI__builtin_kvx_shlwps:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_sllwps);
-  case KVX::BI__builtin_kvx_shlwqs:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_sllwps, 1, Int32Ty, 4,
-                                 2, false, EmitScalarExpr(E->getArg(1)));
-  case KVX::BI__builtin_kvx_shlwos:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_sllwps, 1, Int32Ty, 8,
-                                 2, false, EmitScalarExpr(E->getArg(1)));
-  case KVX::BI__builtin_kvx_shldps:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_slld, 1, Int64Ty, 2,
-                                 1, false, EmitScalarExpr(E->getArg(1)));
-  case KVX::BI__builtin_kvx_shldqs:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_slld, 1, Int64Ty, 4,
-                                 1, false, EmitScalarExpr(E->getArg(1)));
-  case KVX::BI__builtin_kvx_shrhqs:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_srlhqs);
-  case KVX::BI__builtin_kvx_shrhos:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_srlhqs, 1, Int16Ty, 8,
-                                 4, false, EmitScalarExpr(E->getArg(1)));
-  case KVX::BI__builtin_kvx_shrhxs:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_srlhqs, 1, Int16Ty,
-                                 16, 4, false, EmitScalarExpr(E->getArg(1)));
-  case KVX::BI__builtin_kvx_shrwps:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_srlwps);
-  case KVX::BI__builtin_kvx_shrwqs:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_srlwps, 1, Int32Ty, 4,
-                                 2, false, EmitScalarExpr(E->getArg(1)));
-  case KVX::BI__builtin_kvx_shrwos:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_srlwps, 1, Int32Ty, 8,
-                                 2, false, EmitScalarExpr(E->getArg(1)));
-  case KVX::BI__builtin_kvx_shrdps:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_srld, 1, Int64Ty, 2,
-                                 1, false, EmitScalarExpr(E->getArg(1)));
-  case KVX::BI__builtin_kvx_shrdqs:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_srld, 1, Int64Ty, 4,
-                                 1, false, EmitScalarExpr(E->getArg(1)));
   case KVX::BI__builtin_kvx_ffdmdaw:
     return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffdmdaw, true);
   case KVX::BI__builtin_kvx_ffdmdawp:

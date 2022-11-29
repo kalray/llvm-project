@@ -245,6 +245,29 @@ private:
 
   SDValue BuildSDIVPow2(SDNode *N, const APInt &Divisor, SelectionDAG &DAG,
                         SmallVectorImpl<SDNode *> &Created) const override;
+
+  MVT getScalarShiftAmountTy(const DataLayout &, EVT) const override {
+    return MVT::i32;
+  }
+
+  EVT getShiftAmountTy(EVT LHSTy, const DataLayout &DL,
+                       bool LegalTypes = true) const {
+    if (LHSTy.isVector())
+      return LHSTy;
+
+    return EVT(MVT::i32);
+  }
+
+  LLT getPreferredShiftAmountTy(LLT ShiftValueTy) const override {
+    if (ShiftValueTy.isVector())
+      return ShiftValueTy;
+
+    return LLT(MVT::i32);
+  }
+
+  MVT getVectorIdxTy(const DataLayout &DL) const override { return MVT::i64; }
+
+  bool isVectorShiftByScalarCheap(Type *Ty) const override { return true; }
 };
 
 } // namespace llvm
@@ -253,6 +276,8 @@ namespace KVX_LOW {
 llvm::SDValue buildImmVector(const llvm::SDNode &N, llvm::SelectionDAG &CurDag,
                              unsigned long Negative = 0,
                              bool AllowRepeatExtend = false);
+
+llvm::SDValue buildImmSplat(const llvm::SDNode &N, llvm::SelectionDAG &CurDag);
 
 llvm::SDValue buildFdotImm(llvm::SDNode &N, llvm::SelectionDAG &CurDag,
                            bool SwapLoHi = false, unsigned long Negative = 0);

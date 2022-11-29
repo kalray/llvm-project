@@ -873,7 +873,6 @@ define i128 @ashr_64(i128 %0) {
 define i128 @shl(i128 %0, i32 %1) {
 ; CHECK-LABEL: shl:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
@@ -895,7 +894,6 @@ define i128 @shl(i128 %0, i32 %1) {
 define i128 @lshr(i128 %0, i32 %1) {
 ; CHECK-LABEL: lshr:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
@@ -917,7 +915,6 @@ define i128 @lshr(i128 %0, i32 %1) {
 define i128 @ashr(i128 %0, i32 %1) {
 ; CHECK-LABEL: ashr:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    zxwd $r2 = $r2
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;

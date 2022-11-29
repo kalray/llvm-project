@@ -1086,18 +1086,41 @@ SDValue KVXTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
   case ISD::ROTL:
   case ISD::ROTR:
   case ISD::SHL:
-  case ISD::SRL: {
-    if (!(Op.getValueType().isSimple() &&
-          Op.getValueType().getSimpleVT().SimpleTy == MVT::v8i8))
+  case ISD::SRA:
+  case ISD::SRL:
+  case ISD::SSHLSAT:
+  case ISD::USHLSAT: {
+    if (!(Op.getValueType().isSimple()))
+      return SDValue();
+
+    auto VT = Op.getSimpleValueType();
+    if (VT.getSizeInBits() < 8)
       return SDValue();
 
     auto N1 = Op.getOperand(1);
-    if ((N1.getOpcode() == ISD::VECTOR_SHUFFLE &&
-         cast<ShuffleVectorSDNode>(N1)->isSplat()) ||
-        (N1.getOpcode() == ISD::BUILD_VECTOR &&
-         cast<BuildVectorSDNode>(N1)->getSplatValue()))
+
+    bool Ok = (N1.getOpcode() == ISD::SPLAT_VECTOR);
+    unsigned EltSize = VT.getScalarSizeInBits();
+    if (!Ok && N1.getOpcode() == ISD::VECTOR_SHUFFLE) {
+      auto *SV = cast<ShuffleVectorSDNode>(N1);
+      Ok = (SV->isSplat() || SV->isUndef());
+    }
+    if (!Ok && N1.getOpcode() == ISD::BUILD_VECTOR) {
+      auto *BV = cast<BuildVectorSDNode>(N1);
+      Ok = (BV->getSplatValue() != SDValue() ||
+            (BV->isConstant() && Op->getOpcode() == ISD::SHL && EltSize > 8));
+    }
+    auto *Node = Op.getNode();
+    if (!Ok)
+      return DAG.UnrollVectorOp(Node, 0);
+
+    if (VT.getFixedSizeInBits() <= 64)
       return Op;
-    return SDValue();
+
+    if (EltSize == 64)
+      return DAG.UnrollVectorOp(Node, 0);
+
+    return DAG.UnrollVectorOp(Node, 64 / EltSize);
   }
   case ISD::INTRINSIC_W_CHAIN:
     return LowerINTRINSIC(Op, DAG, &Subtarget, true);
@@ -2453,6 +2476,25 @@ static SDValue combineZext(SDNode *N, SelectionDAG &DAG) {
   return SDValue();
 }
 
+// This expands int_kvx_shl/int_kvx_shr nodes to sdnodes.
+static SDValue combineShifts(SDNode *N, SelectionDAG &Dag,
+                             const SmallVector<unsigned, 4> Opcodes) {
+  auto OpcIndex = cast<ConstantSDNode>(N->getOperand(3))->getZExtValue();
+  auto VT = N->getValueType(0);
+
+  auto DL = SDLoc(N);
+  auto ShiftAmount = N->getOperand(2);
+  unsigned Opcode = Opcodes[OpcIndex];
+  if (Opcode != KVXISD::SRS) {
+    if (VT.isVector())
+      ShiftAmount = Dag.getSplatBuildVector(VT, DL, ShiftAmount);
+    else if (VT != ShiftAmount.getValueType())
+      ShiftAmount = Dag.getAnyExtOrTrunc(ShiftAmount, DL, VT);
+  }
+
+  return Dag.getNode(Opcodes[OpcIndex], DL, VT, N->getOperand(1), ShiftAmount);
+}
+
 static SDValue combineNarrowInt(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
                                 SelectionDAG &Dag) {
   auto ExtType = cast<ConstantSDNode>(N->getOperand(2))->getZExtValue();
@@ -2521,6 +2563,11 @@ static SDValue combineIntrinsic(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
 
   auto Intr = cast<ConstantSDNode>(N->getOperand(0))->getZExtValue();
   switch (Intr) {
+  case Intrinsic::KVXIntrinsics::kvx_shl:
+    return combineShifts(N, Dag,
+                         {ISD::SHL, ISD::SSHLSAT, ISD::USHLSAT, ISD::ROTL});
+  case Intrinsic::KVXIntrinsics::kvx_shr:
+    return combineShifts(N, Dag, {ISD::SRL, ISD::SRA, KVXISD::SRS, ISD::ROTR});
   case Intrinsic::KVXIntrinsics::kvx_narrowint:
     return combineNarrowInt(N, DCI, Dag);
   case Intrinsic::KVXIntrinsics::kvx_widenint:
@@ -3580,7 +3627,7 @@ KVXTargetLowering::BuildSDIVPow2(SDNode *N, const APInt &Divisor,
   SDLoc Loc(N);
   auto Opcode = Divisor.isNegative() ? KVXISD::SRSNEG : KVXISD::SRS;
   auto SRSCst =
-      DAG.getConstant(Divisor.abs().countTrailingZeros(), Loc, MVT::i64);
+      DAG.getConstant(Divisor.abs().countTrailingZeros(), Loc, MVT::i32);
   auto SRSVal =
       DAG.getNode(Opcode, Loc, N->getValueType(0), N->getOperand(0), SRSCst);
   Created.push_back(SRSCst.getNode());
@@ -3800,6 +3847,9 @@ bool KVX_LOW::isKVXSplat32ImmVec(llvm::SDNode *N, llvm::SelectionDAG *CurDag,
   if (!BV->isConstant())
     return false;
 
+  if (BV->isUndef() || ISD::isConstantSplatVectorAllZeros(BV))
+    return true;
+
   auto VT = BV->getValueType(0);
 
   if (VT.getSizeInBits() > 64 || VT.getVectorNumElements() < 2 ||
@@ -3808,6 +3858,9 @@ bool KVX_LOW::isKVXSplat32ImmVec(llvm::SDNode *N, llvm::SelectionDAG *CurDag,
 
   if (VT.getSizeInBits() <= 32 && !SplatAt)
     return true;
+
+  if (N->getOpcode() == ISD::SPLAT_VECTOR)
+    return SplatAt;
 
   // From the start of 32 bits, check if the value is either
   // zero, for non-splat, for equals to the first half.
