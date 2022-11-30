@@ -347,10 +347,10 @@ def int_kvx_alignv : Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_v256i1_ty
 // Overloaded intrinsics
 //===----------------------------------------------------------------------===//
 def int_kvx_fadd : Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>, LLVMMatchType<0>, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
-def int_kvx_faddc : Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>, LLVMMatchType<0>, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_faddc : Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>, LLVMMatchType<0>, llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_fneg: Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>], [IntrNoMem]>;
 def int_kvx_fsbf : Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>, LLVMMatchType<0>, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
-def int_kvx_fsbfc : Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>, LLVMMatchType<0>, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_fsbfc : Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>, LLVMMatchType<0>, llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_narrowint: Intrinsic<[llvm_anyint_ty], [LLVMExtendedType<0>, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_select_vec: Intrinsic<[llvm_anyvector_ty], [LLVMMatchType<0>, LLVMMatchType<0>, LLVMVectorOfBitcastsToInt<0>, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_select: Intrinsic<[llvm_any_ty], [LLVMMatchType<0>, LLVMMatchType<0>, llvm_i64_ty, llvm_i32_ty], [IntrNoMem]>;

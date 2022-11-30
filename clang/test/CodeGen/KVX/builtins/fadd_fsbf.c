@@ -11,10 +11,10 @@ double faddd(double lhs, double rhs) {  return __builtin_kvx_faddd(lhs, rhs, ".r
 
 // CHECK-LABEL: @fadddc(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x double> @llvm.kvx.faddc.v2f64(<2 x double> [[LHS:%.*]], <2 x double> [[RHS:%.*]], i32 0, i32 0)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x double> @llvm.kvx.faddc.v2f64(<2 x double> [[LHS:%.*]], <2 x double> [[RHS:%.*]], i32 1, i32 0, i32 0)
 // CHECK-NEXT:    ret <2 x double> [[TMP0]]
 //
-v2f64 fadddc(v2f64 lhs, v2f64 rhs) {  return __builtin_kvx_fadddc(lhs, rhs, ".rn");}
+v2f64 fadddc(v2f64 lhs, v2f64 rhs) {  return __builtin_kvx_fadddc(lhs, rhs, ".c.rn");}
 
 // CHECK-LABEL: @fadddp(
 // CHECK-NEXT:  entry:
@@ -66,17 +66,17 @@ float faddw(float lhs, float rhs) {  return __builtin_kvx_faddw(lhs, rhs, ".rz")
 
 // CHECK-LABEL: @faddwc(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x float> @llvm.kvx.faddc.v2f32(<2 x float> [[LHS:%.*]], <2 x float> [[RHS:%.*]], i32 0, i32 0)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x float> @llvm.kvx.faddc.v2f32(<2 x float> [[LHS:%.*]], <2 x float> [[RHS:%.*]], i32 1, i32 0, i32 0)
 // CHECK-NEXT:    ret <2 x float> [[TMP0]]
 //
-v2f32 faddwc(v2f32 lhs, v2f32 rhs) {  return __builtin_kvx_faddwc(lhs, rhs, ".rn");}
+v2f32 faddwc(v2f32 lhs, v2f32 rhs) {  return __builtin_kvx_faddwc(lhs, rhs, ".c.rn");}
 
 // CHECK-LABEL: @faddwcp(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.kvx.faddc.v4f32(<4 x float> [[LHS:%.*]], <4 x float> [[RHS:%.*]], i32 0, i32 0)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.kvx.faddc.v4f32(<4 x float> [[LHS:%.*]], <4 x float> [[RHS:%.*]], i32 1, i32 0, i32 0)
 // CHECK-NEXT:    ret <4 x float> [[TMP0]]
 //
-v4f32 faddwcp(v4f32 lhs, v4f32 rhs) {  return __builtin_kvx_faddwcp(lhs, rhs, ".rn");}
+v4f32 faddwcp(v4f32 lhs, v4f32 rhs) {  return __builtin_kvx_faddwcp(lhs, rhs, ".c.rn");}
 
 // CHECK-LABEL: @faddwo(
 // CHECK-NEXT:  entry:
@@ -114,10 +114,10 @@ double fsbfd(double lhs, double rhs) {  return __builtin_kvx_fsbfd(lhs, rhs, ".r
 
 // CHECK-LABEL: @fsbfdc(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x double> @llvm.kvx.fsbfc.v2f64(<2 x double> [[LHS:%.*]], <2 x double> [[RHS:%.*]], i32 0, i32 0)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x double> @llvm.kvx.fsbfc.v2f64(<2 x double> [[LHS:%.*]], <2 x double> [[RHS:%.*]], i32 1, i32 0, i32 0)
 // CHECK-NEXT:    ret <2 x double> [[TMP0]]
 //
-v2f64 fsbfdc(v2f64 lhs, v2f64 rhs) {  return __builtin_kvx_fsbfdc(lhs, rhs, ".rn");}
+v2f64 fsbfdc(v2f64 lhs, v2f64 rhs) {  return __builtin_kvx_fsbfdc(lhs, rhs, ".c.rn");}
 
 // CHECK-LABEL: @fsbfdp(
 // CHECK-NEXT:  entry:
@@ -125,6 +125,13 @@ v2f64 fsbfdc(v2f64 lhs, v2f64 rhs) {  return __builtin_kvx_fsbfdc(lhs, rhs, ".rn
 // CHECK-NEXT:    ret <2 x double> [[TMP0]]
 //
 v2f64 fsbfdp(v2f64 lhs, v2f64 rhs) {  return __builtin_kvx_fsbfdp(lhs, rhs, ".rn");}
+
+// CHECK-LABEL: @fsbfdc2(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x double> @llvm.kvx.fsbfc.v2f64(<2 x double> [[LHS:%.*]], <2 x double> [[RHS:%.*]], i32 0, i32 0, i32 0)
+// CHECK-NEXT:    ret <2 x double> [[TMP0]]
+//
+v2f64 fsbfdc2(v2f64 lhs, v2f64 rhs) {  return __builtin_kvx_fsbfdc(lhs, rhs, ".rn");}
 
 // CHECK-LABEL: @fsbfdq(
 // CHECK-NEXT:  entry:
@@ -169,17 +176,17 @@ float fsbfw(float lhs, float rhs) {  return __builtin_kvx_fsbfw(lhs, rhs, ".rz")
 
 // CHECK-LABEL: @fsbfwc(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x float> @llvm.kvx.fsbfc.v2f32(<2 x float> [[LHS:%.*]], <2 x float> [[RHS:%.*]], i32 0, i32 0)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x float> @llvm.kvx.fsbfc.v2f32(<2 x float> [[LHS:%.*]], <2 x float> [[RHS:%.*]], i32 1, i32 0, i32 0)
 // CHECK-NEXT:    ret <2 x float> [[TMP0]]
 //
-v2f32 fsbfwc(v2f32 lhs, v2f32 rhs) {  return __builtin_kvx_fsbfwc(lhs, rhs, ".rn");}
+v2f32 fsbfwc(v2f32 lhs, v2f32 rhs) {  return __builtin_kvx_fsbfwc(lhs, rhs, ".c.rn");}
 
 // CHECK-LABEL: @fsbfwcp(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.kvx.fsbfc.v4f32(<4 x float> [[LHS:%.*]], <4 x float> [[RHS:%.*]], i32 0, i32 0)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.kvx.fsbfc.v4f32(<4 x float> [[LHS:%.*]], <4 x float> [[RHS:%.*]], i32 1, i32 0, i32 0)
 // CHECK-NEXT:    ret <4 x float> [[TMP0]]
 //
-v4f32 fsbfwcp(v4f32 lhs, v4f32 rhs) {  return __builtin_kvx_fsbfwcp(lhs, rhs, ".rn");}
+v4f32 fsbfwcp(v4f32 lhs, v4f32 rhs) {  return __builtin_kvx_fsbfwcp(lhs, rhs, ".c.rn");}
 
 // CHECK-LABEL: @fsbfwo(
 // CHECK-NEXT:  entry:
