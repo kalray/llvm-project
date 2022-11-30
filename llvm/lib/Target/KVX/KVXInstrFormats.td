@@ -246,25 +246,25 @@ multiclass MC_LV<string OpcStr> {
                   [(set v256i1:$r, (int_kvx_lv_cond VectorReg:$z, SingleReg:$mem,
                                     i64:$val, SpeculateMod:$mod0, ScalarcondMod:$cond))]>;
 
-  defm ri10cs : I <OpcStr, LSU_LOAD, [], [ColumnMod, SpeculateMod], [Signed10, SingleReg], [], [MatrixReg], 1,
+  defm ri10cs : I <OpcStr, LSU_LOAD, [], [SpeculateMod, ColumnMod], [Signed10, SingleReg], [], [MatrixReg], 1,
                   [(set v1024i1:$r, (int_kvx_lvc MatrixReg:$z, (add SingleReg:$mem, Signed10:$off),
-                                    ColumnMod:$mod0, SpeculateMod:$mod1))]>;
-  defm ri37cs : I <OpcStr, LSU_LOAD_X_, [], [ColumnMod, SpeculateMod], [Signed37, SingleReg], [], [MatrixReg], 1,
+                                    SpeculateMod:$mod0, ColumnMod:$mod1))]>;
+  defm ri37cs : I <OpcStr, LSU_LOAD_X_, [], [SpeculateMod, ColumnMod], [Signed37, SingleReg], [], [MatrixReg], 1,
                   [(set v1024i1:$r, (int_kvx_lvc MatrixReg:$z, (add SingleReg:$mem, Signed37:$off),
-                                    ColumnMod:$mod0, SpeculateMod:$mod1))]>;
-  defm ri64cs : I <OpcStr, LSU_LOAD_Y_, [], [ColumnMod, SpeculateMod], [Wrapped64, SingleReg], [], [MatrixReg], 1,
+                                    SpeculateMod:$mod0, ColumnMod:$mod1))]>;
+  defm ri64cs : I <OpcStr, LSU_LOAD_Y_, [], [SpeculateMod, ColumnMod], [Wrapped64, SingleReg], [], [MatrixReg], 1,
                   [(set v1024i1:$r, (int_kvx_lvc MatrixReg:$z, (add SingleReg:$mem, Wrapped64:$off),
-                                    ColumnMod:$mod0, SpeculateMod:$mod1))]>;
-  defm rrcs : I <OpcStr, LSU_LOAD, [], [ColumnMod, SpeculateMod, DoscaleMod], [SingleReg, SingleReg], [], [MatrixReg], 1>;
+                                    SpeculateMod:$mod0, ColumnMod:$mod1))]>;
+  defm rrcs : I <OpcStr, LSU_LOAD, [], [SpeculateMod, ColumnMod, DoscaleMod], [SingleReg, SingleReg], [], [MatrixReg], 1>;
 
-  defm ri27ccs : I <OpcStr, LSU_LOAD_X_, [], [ColumnMod, SpeculateMod], [Signed27, SingleReg], [ScalarcondMod, SingleReg], [MatrixReg], 1,
+  defm ri27ccs : I <OpcStr, LSU_LOAD_X_, [], [SpeculateMod, ColumnMod], [Signed27, SingleReg], [ScalarcondMod, SingleReg], [MatrixReg], 1,
                   [(set v1024i1:$r, (int_kvx_lvc_cond MatrixReg:$z, (add SingleReg:$mem, Signed27:$off),
-                                    i64:$val, ColumnMod:$mod0, SpeculateMod:$mod1, ScalarcondMod:$cond))]>;
+                                    i64:$val, SpeculateMod:$mod0, ColumnMod:$mod1, ScalarcondMod:$cond))]>;
 
-  defm ri54ccs : I <OpcStr, LSU_LOAD_Y_, [], [ColumnMod, SpeculateMod], [Signed54, SingleReg], [ScalarcondMod, SingleReg], [MatrixReg], 1,
+  defm ri54ccs : I <OpcStr, LSU_LOAD_Y_, [], [SpeculateMod, ColumnMod], [Signed54, SingleReg], [ScalarcondMod, SingleReg], [MatrixReg], 1,
                   [(set v1024i1:$r, (int_kvx_lvc_cond v1024i1:$z, (add SingleReg:$mem, Signed54:$off),
-                                    i64:$val, ColumnMod:$mod0, SpeculateMod:$mod1, ScalarcondMod:$cond))]>;
-  defm rrccs : I <OpcStr, LSU_LOAD, [], [ColumnMod, SpeculateMod], [SingleReg], [ScalarcondMod, SingleReg], [MatrixReg]>;
+                                    i64:$val, SpeculateMod:$mod0, ColumnMod:$mod1, ScalarcondMod:$cond))]>;
+  defm rrccs : I <OpcStr, LSU_LOAD, [], [SpeculateMod, ColumnMod], [SingleReg], [ScalarcondMod, SingleReg], [MatrixReg]>;
 }
 
 multiclass MC_XLO <string OpcStr = "xlo"> {

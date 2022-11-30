@@ -7,23 +7,23 @@ target triple = "kvx-kalray-cos"
 define void @test_lvc(<1024 x i1>* nocapture readonly %0, i8* %1, <1024 x i1>* nocapture %2, <1024 x i1>* nocapture readnone %3) {
 ; CV1-LABEL: test_lvc:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    lv $a3 = 96[$r0]
+; CV1-NEXT:    xlo.u $a3 = 96[$r0]
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    lv $a2 = 64[$r0]
+; CV1-NEXT:    xlo.u $a2 = 64[$r0]
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    lv $a1 = 32[$r0]
+; CV1-NEXT:    xlo.u $a1 = 32[$r0]
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    lv $a0 = 0[$r0]
+; CV1-NEXT:    xlo.u $a0 = 0[$r0]
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    lv.c2.s $a0a1a2a3 = 0[$r1]
+; CV1-NEXT:    xlo.u.c1 $a0a1a2a3 = 0[$r1]
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sv 96[$r2] = $a3
+; CV1-NEXT:    xso 96[$r2] = $a3
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sv 64[$r2] = $a2
+; CV1-NEXT:    xso 64[$r2] = $a2
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sv 32[$r2] = $a1
+; CV1-NEXT:    xso 32[$r2] = $a1
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sv 0[$r2] = $a0
+; CV1-NEXT:    xso 0[$r2] = $a0
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;;
   %5 = load <1024 x i1>, <1024 x i1>* %0, align 32

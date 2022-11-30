@@ -12,7 +12,7 @@ define i64 @asm_clobber_single_none(<2 x i64> %v, i64 returned %A) {
 ; CHECK-NEXT:    copyd $r3 = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
-; CHECK-NEXT:    movetq $r0r1 = $r0, $r1
+; CHECK-NEXT:    xmovetq $r0r1 = $r0, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    copyd $r0 = $r3
@@ -21,7 +21,7 @@ define i64 @asm_clobber_single_none(<2 x i64> %v, i64 returned %A) {
 entry:
   %vecext = extractelement <2 x i64> %v, i32 0
   %vecext1 = extractelement <2 x i64> %v, i32 1
-  %0 = tail call <2 x i64> asm sideeffect "movetq $0 = $1, $2", "=r,r,r,~{$r2}"(i64 %vecext, i64 %vecext1)
+  %0 = tail call <2 x i64> asm sideeffect "xmovetq $0 = $1, $2", "=r,r,r,~{$r2}"(i64 %vecext, i64 %vecext1)
   ret i64 %A
 }
 
@@ -31,14 +31,14 @@ define i64 @asm_clobber_single_single(i64 returned %A) {
 ; CHECK-NEXT:    copyd $r1 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
-; CHECK-NEXT:    movetq $r2r3 = $r1, $r1
+; CHECK-NEXT:    xmovetq $r2r3 = $r1, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = tail call <2 x i64> asm sideeffect "movetq $0 = $1, $1", "=r,r,~{$r0}"(i64 %A)
+  %0 = tail call <2 x i64> asm sideeffect "xmovetq $0 = $1, $1", "=r,r,~{$r0}"(i64 %A)
   ret i64 %A
 }
 

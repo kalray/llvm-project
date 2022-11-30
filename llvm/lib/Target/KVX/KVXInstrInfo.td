@@ -1425,7 +1425,7 @@ multiclass MC_34<string OpcStr> {
 }
 
 // multiclass MC_35 is used by:
-//   defm COPYV
+//   defm XCOPYV
 let isMoveReg = 1 in
 multiclass MC_35<string OpcStr> {
   def re : KVX_INSTRUCTION
@@ -1635,7 +1635,7 @@ defm LQ : MC_LOADS<"lq", PairedReg>;
 
 defm LO : MC_LOADS<"lo", QuadReg>;
 
-defm LV : MC_LV<"lv">, Requires<[IsV1]>;
+defm LV : MC_LV<"xlo.u">, Requires<[IsV1]>;
 
 defm XLO : MC_XLO, Requires<[IsV2]>;
 
@@ -1651,7 +1651,7 @@ defm SQ : MC_STORES<"sq", PairedReg>;
 
 defm SO : MC_STORES<"so", QuadReg>;
 
-defm SV : MC_SV<"sv">, Requires<[IsV1]>;
+defm SV : MC_SV<"xso">, Requires<[IsV1]>;
 
 defm XSO : MC_XSO, Requires<[IsV2]>;
 
@@ -2738,9 +2738,6 @@ def XZX48BW : UNARY<"xzx48bw", MatrixReg, VectorReg, TCA_INT,
 
 def XTRUNC48WB : UNARY<"xtrunc48wb", VectorReg, MatrixReg, TCA_INT,
                 [(set v256i1:$o, (int_kvx_xtrunc48wb v1024i1:$i))]>;
-
-def XMT44D : UNARY<"xmt44d", MatrixReg, MatrixReg, TCA_INT,
-                [(set v1024i1:$o, (int_kvx_xmt44d v1024i1:$i))]>;
 } // Uses = [PCR]
 
 def DFLUSHSW : CACHE_OP<"dflushsw", SingleReg, LSU_STORE,
@@ -3380,7 +3377,7 @@ def COPYO : KVX_INSTRUCTION
    LSU_AUXR_AUXW_LOAD>;
 
 let Uses = [PCR] in {
-defm MOVETQ : MC_XMOVETQ<"movetq", ALU_LITE_CRWL, ALU_LITE_CRWH>, Requires<[IsV1]>;
+defm MOVETQ : MC_XMOVETQ<"xmovetq", ALU_LITE_CRWL, ALU_LITE_CRWH>, Requires<[IsV1]>;
 
 defm XMOVETQ : MC_XMOVETQ<"xmovetq", ALU_TINY_CRWL, ALU_TINY_CRWH>, Requires<[IsV2]>;
 
@@ -3388,11 +3385,11 @@ defm ALIGNO : MC_33<"aligno">, Requires<[IsV1]>;
 
 defm ALIGNV : MC_34<"alignv">, Requires<[IsV1]>;
 
-def MT44D : KVX_INSTRUCTION
+def XMT44D : KVX_INSTRUCTION
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2),
-   "mt44d $a1 = $a2",
-   [/* no straightforward pattern */],
-   TCA_INT>, Requires<[IsV1]>;
+   "xmt44d $a1 = $a2",
+   [(set v1024i1:$a1, (int_kvx_xmt44d v1024i1:$a2))],
+   TCA_INT>;
 
 def MMA484BW : KVX_INSTRUCTION
   <(outs WideReg:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
@@ -3700,10 +3697,10 @@ def ABSBO : KVX_INSTRUCTION_X
    [(set v8i8:$a1, (abs v8i8:$a2))],
    ALU_TINY_X_>, Requires<[IsV2]>;
 
-defm COPYV : MC_35<"copyv">, Requires<[IsV1]>;
+defm COPYV : MC_35<"xcopyo">, Requires<[IsV1]>;
 
 let isMoveReg = 1 in {
-defm MOVEFO : MC_36<"movefo">, Requires<[IsV1]>;
+defm MOVEFO : MC_36<"xmovefo">, Requires<[IsV1]>;
 defm XMOVEFO : I <"xmovefo", BCU_TINY_AUXW_CRRP_RR, [VectorReg], [],[],[], [QuadReg]>, Requires<[IsV2]>;
 }
 

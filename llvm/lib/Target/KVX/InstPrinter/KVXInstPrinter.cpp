@@ -399,7 +399,7 @@ void KVXInstPrinter::printSpeculateMod(const MCInst *MI, unsigned OpNo,
     report_fatal_error("illegal silent mode");
 
   if (Silent & 1)
-    O << ".s";
+    O << "s";
 }
 
 void KVXInstPrinter::printQindexMod(const MCInst *MI, unsigned OpNo,

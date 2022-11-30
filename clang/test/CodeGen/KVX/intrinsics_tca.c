@@ -60,7 +60,7 @@ typedef long __attribute__((__vector_size__(32))) v4i64_t;
 // CHECK-NEXT:    [[TMP50:%.*]] = call <256 x i1> @llvm.kvx.lv(i8* nonnull [[TMP49]], i32 1)
 // CHECK-NEXT:    [[ARRAYIDX9:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 4
 // CHECK-NEXT:    [[TMP51:%.*]] = bitcast <256 x i1>* [[ARRAYIDX9]] to i8*
-// CHECK-NEXT:    [[TMP52:%.*]] = call <1024 x i1> @llvm.kvx.lvc(<1024 x i1> [[TMP41]], i8* nonnull [[TMP51]], i32 0, i32 1)
+// CHECK-NEXT:    [[TMP52:%.*]] = call <1024 x i1> @llvm.kvx.lvc(<1024 x i1> [[TMP41]], i8* nonnull [[TMP51]], i32 1, i32 0)
 // CHECK-NEXT:    [[ARRAYIDX10:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 5
 // CHECK-NEXT:    [[TMP53:%.*]] = bitcast <256 x i1>* [[ARRAYIDX10]] to i8*
 // CHECK-NEXT:    [[TMP54:%.*]] = call <1024 x i1> @llvm.kvx.lvc.cond(<1024 x i1> [[TMP52]], i8* nonnull [[TMP53]], i64 [[A:%.*]], i32 0, i32 0, i32 6)
@@ -126,7 +126,7 @@ v4i64_t test_tca_builtins(long a, long b, long c, long d, volatile __kvx_x256 *v
   lv = __builtin_kvx_xfscalewv(lv, "...relu");
   lv = __builtin_kvx_lv_cond(lv, &v[3], a, ".s.even");
   lv2 = __builtin_kvx_lv(v, ".s");
-  lm = __builtin_kvx_lvc(lm, &v[4], ".c0.s");
+  lm = __builtin_kvx_lvc(lm, &v[4], ".s.c0");
   lm = __builtin_kvx_lvc_cond(lm, &v[5], a, ".c0.odd");
   __builtin_kvx_sv(&v[0], lv2);
   __builtin_kvx_sv_cond(&v[1], lv2, 1, ".even");

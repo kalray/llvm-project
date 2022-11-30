@@ -9,7 +9,7 @@ target triple = "kvx-kalray-cos"
 define void @zeroinit256(<256 x i1> *%p) {
 ; CV1-LABEL: zeroinit256:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    sv 0[$r0] = $a48
+; CV1-NEXT:    xso 0[$r0] = $a48
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;;
 ;
@@ -27,13 +27,13 @@ define void @zeroinit256(<256 x i1> *%p) {
 define void @zeroinit512(<512 x i1> *%p) {
 ; CV1-LABEL: zeroinit512:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    copyv $a1 = $a48
+; CV1-NEXT:    xcopyo $a1 = $a48
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sv 32[$r0] = $a1
+; CV1-NEXT:    xso 32[$r0] = $a1
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    copyv $a0 = $a48
+; CV1-NEXT:    xcopyo $a0 = $a48
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sv 0[$r0] = $a0
+; CV1-NEXT:    xso 0[$r0] = $a0
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;;
 ;
@@ -55,21 +55,21 @@ define void @zeroinit512(<512 x i1> *%p) {
 define void @zeroinit1024(<1024 x i1> *%p) {
 ; CV1-LABEL: zeroinit1024:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    copyv $a3 = $a48
+; CV1-NEXT:    xcopyo $a3 = $a48
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sv 96[$r0] = $a3
+; CV1-NEXT:    xso 96[$r0] = $a3
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    copyv $a2 = $a48
+; CV1-NEXT:    xcopyo $a2 = $a48
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sv 64[$r0] = $a2
+; CV1-NEXT:    xso 64[$r0] = $a2
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    copyv $a1 = $a48
+; CV1-NEXT:    xcopyo $a1 = $a48
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sv 32[$r0] = $a1
+; CV1-NEXT:    xso 32[$r0] = $a1
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    copyv $a0 = $a48
+; CV1-NEXT:    xcopyo $a0 = $a48
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sv 0[$r0] = $a0
+; CV1-NEXT:    xso 0[$r0] = $a0
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;;
 ;

@@ -27,14 +27,14 @@ define i32 @main() {
 ; CV1-NEXT:    copyd $r2 = $r7
 ; CV1-NEXT:    make $r3 = 4
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    movetq $a0.lo = $r0, $r1
-; CV1-NEXT:    movetq $a0.hi = $r2, $r3
-; CV1-NEXT:    movefo $r0r1r2r3 = $a0
+; CV1-NEXT:    xmovetq $a0.lo = $r0, $r1
+; CV1-NEXT:    xmovetq $a0.hi = $r2, $r3
+; CV1-NEXT:    xmovefo $r0r1r2r3 = $a0
 ; CV1-NEXT:    make $r4 = 0
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    make $r0 = .L.str
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sv 0[$r12] = $a0
+; CV1-NEXT:    xso 0[$r12] = $a0
 ; CV1-NEXT:    copyd $r1 = $r4
 ; CV1-NEXT:    copyd $r2 = $r5
 ; CV1-NEXT:    copyd $r3 = $r6
@@ -42,10 +42,10 @@ define i32 @main() {
 ; CV1-NEXT:    copyd $r4 = $r7
 ; CV1-NEXT:    call printf
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    lv $a0 = 0[$r12]
+; CV1-NEXT:    xlo.u $a0 = 0[$r12]
 ; CV1-NEXT:    make $r0 = .L.str.1
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    movefo $r4r5r6r7 = $a0
+; CV1-NEXT:    xmovefo $r4r5r6r7 = $a0
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    copyd $r1 = $r4
 ; CV1-NEXT:    copyd $r2 = $r5
