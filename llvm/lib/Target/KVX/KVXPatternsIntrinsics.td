@@ -812,10 +812,6 @@ def: Pat<(int_kvx_xmma484hbd WideReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMo
             $a4)>, Requires<[IsV1]>;
 
 def: Pat<(int_kvx_xmma444hd VectorReg:$a3, VectorReg:$a4, MatrixReg:$a2, UnSignMod_US), (MMA444USHD $a2, $a3, $a4)>, Requires<[IsV1]>;
-def: Pat<(int_kvx_xmma484bw VectorReg:$a3, VectorReg:$a4, WideReg:$a2, UnSignMod_S), (MMA484BW $a2, $a3, $a4)>, Requires<[IsV1]>;
-def: Pat<(int_kvx_xmma484bw VectorReg:$a3, VectorReg:$a4, WideReg:$a2, UnSignMod_SU), (MMA484SUBW $a2, $a3, $a4)>, Requires<[IsV1]>;
-def: Pat<(int_kvx_xmma484bw VectorReg:$a3, VectorReg:$a4, WideReg:$a2, UnSignMod_U), (MMA484UBW $a2, $a3, $a4)>, Requires<[IsV1]>;
-def: Pat<(int_kvx_xmma484bw VectorReg:$a3, VectorReg:$a4, WideReg:$a2, UnSignMod_US), (MMA484USBW $a2, $a3, $a4)>, Requires<[IsV1]>;
 
 def: Pat<(int_kvx_xmt44d MatrixReg:$a1), (XMT44D $a1)>, Requires<[IsV1]>;
 

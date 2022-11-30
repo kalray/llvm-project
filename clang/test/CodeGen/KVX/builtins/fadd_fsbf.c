@@ -16,6 +16,19 @@ double faddd(double lhs, double rhs) {  return __builtin_kvx_faddd(lhs, rhs, ".r
 //
 v2f64 fadddc(v2f64 lhs, v2f64 rhs) {  return __builtin_kvx_fadddc(lhs, rhs, ".c.rn");}
 
+// CHECK-LABEL: @fadddcp(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <4 x double> [[LHS:%.*]], <4 x double> undef, <2 x i32> <i32 0, i32 1>
+// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <4 x double> [[RHS:%.*]], <4 x double> undef, <2 x i32> <i32 0, i32 1>
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <2 x double> @llvm.kvx.faddc.v2f64(<2 x double> [[TMP0]], <2 x double> [[TMP1]], i32 1, i32 0, i32 0)
+// CHECK-NEXT:    [[TMP3:%.*]] = shufflevector <4 x double> [[LHS]], <4 x double> undef, <2 x i32> <i32 2, i32 3>
+// CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <4 x double> [[RHS]], <4 x double> undef, <2 x i32> <i32 2, i32 3>
+// CHECK-NEXT:    [[TMP5:%.*]] = tail call <2 x double> @llvm.kvx.faddc.v2f64(<2 x double> [[TMP3]], <2 x double> [[TMP4]], i32 1, i32 0, i32 0)
+// CHECK-NEXT:    [[TMP6:%.*]] = shufflevector <2 x double> [[TMP2]], <2 x double> [[TMP5]], <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+// CHECK-NEXT:    ret <4 x double> [[TMP6]]
+//
+v4f64 fadddcp(v4f64 lhs, v4f64 rhs) {  return __builtin_kvx_fadddcp(lhs, rhs, ".c.rn");}
+
 // CHECK-LABEL: @fadddp(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x double> @llvm.kvx.fadd.v2f64(<2 x double> [[LHS:%.*]], <2 x double> [[RHS:%.*]], i32 0, i32 0)
@@ -118,6 +131,19 @@ double fsbfd(double lhs, double rhs) {  return __builtin_kvx_fsbfd(lhs, rhs, ".r
 // CHECK-NEXT:    ret <2 x double> [[TMP0]]
 //
 v2f64 fsbfdc(v2f64 lhs, v2f64 rhs) {  return __builtin_kvx_fsbfdc(lhs, rhs, ".c.rn");}
+
+// CHECK-LABEL: @fsbfdcp(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <4 x double> [[LHS:%.*]], <4 x double> undef, <2 x i32> <i32 0, i32 1>
+// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <4 x double> [[RHS:%.*]], <4 x double> undef, <2 x i32> <i32 0, i32 1>
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <2 x double> @llvm.kvx.fsbfc.v2f64(<2 x double> [[TMP0]], <2 x double> [[TMP1]], i32 1, i32 0, i32 0)
+// CHECK-NEXT:    [[TMP3:%.*]] = shufflevector <4 x double> [[LHS]], <4 x double> undef, <2 x i32> <i32 2, i32 3>
+// CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <4 x double> [[RHS]], <4 x double> undef, <2 x i32> <i32 2, i32 3>
+// CHECK-NEXT:    [[TMP5:%.*]] = tail call <2 x double> @llvm.kvx.fsbfc.v2f64(<2 x double> [[TMP3]], <2 x double> [[TMP4]], i32 1, i32 0, i32 0)
+// CHECK-NEXT:    [[TMP6:%.*]] = shufflevector <2 x double> [[TMP2]], <2 x double> [[TMP5]], <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+// CHECK-NEXT:    ret <4 x double> [[TMP6]]
+//
+v4f64 fsbfdcp(v4f64 lhs, v4f64 rhs) {  return __builtin_kvx_fsbfdcp(lhs, rhs, ".c.rn");}
 
 // CHECK-LABEL: @fsbfdp(
 // CHECK-NEXT:  entry:

@@ -1976,9 +1976,9 @@ defm MAXUBO : MC_17_TINY<"maxubo">, Requires<[IsV2]>;
 defm MAXUHQ : MC_17_TINY<"maxuhq">;
 
 let isAdd = 1 in
-defm ADDCHCP : MC_17<"addchcp">, Requires<[IsV1]>;
+defm ADDCHCP : MC_17<"addhcp.c">, Requires<[IsV1]>;
 
-defm SBFCHCP : MC_17<"sbfchcp">, Requires<[IsV1]>;
+defm SBFCHCP : MC_17<"sbfhcp.c">, Requires<[IsV1]>;
 
 let isAdd = 1 in {
 defm ADDSHQ : MC_17_SWITCH<"addshq">;
@@ -3092,7 +3092,7 @@ defm MULWC : MC_22<"mulwc">, Requires<[IsV1]>;
 
 def MULCWC : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
-   "mulcwc $a1 = $a2, $a3",
+   "mulwc.c $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    MAU_INT>, Requires<[IsV1]>;
 
@@ -3395,30 +3395,31 @@ def XMT44D : KVX_INSTRUCTION
    "xmt44d $a1 = $a2",
    [(set v1024i1:$a1, (int_kvx_xmt44d v1024i1:$a2))],
    TCA_INT>;
-
+let Predicates = [IsV1] in {
 def MMA484BW : KVX_INSTRUCTION
   <(outs WideReg:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
-   "mma484bw $a1 = $a2, $a3, $a4",
-   [/* no straightforward pattern */],
+   "xmma484bw $a1 = $a2, $a3, $a4",
+   [(set v512i1:$a1, (int_kvx_xmma484bw v256i1:$a3, v256i1:$a4, v512i1:$a2, UnSignMod_S))],
    TCA_INT>;
 
-def MMA484UBW : KVX_INSTRUCTION
+def XMMA484UBW : KVX_INSTRUCTION
   <(outs WideReg:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
-   "mma484ubw $a1 = $a2, $a3, $a4",
-   [/* no straightforward pattern */],
-   TCA_INT>, Requires<[IsV1]>;
+   "xmma484ubw $a1 = $a2, $a3, $a4",
+   [(set v512i1:$a1, (int_kvx_xmma484bw v256i1:$a3, v256i1:$a4, v512i1:$a2, UnSignMod_U))],
+   TCA_INT>;
 
-def MMA484SUBW : KVX_INSTRUCTION
+def XMMA484SUBW : KVX_INSTRUCTION
   <(outs WideReg:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
-   "mma484subw $a1 = $a2, $a3, $a4",
-   [/* no straightforward pattern */],
-   TCA_INT>, Requires<[IsV1]>;
+   "xmma484subw $a1 = $a2, $a3, $a4",
+   [(set v512i1:$a1, (int_kvx_xmma484bw v256i1:$a3, v256i1:$a4, v512i1:$a2, UnSignMod_SU))],
+   TCA_INT>;
 
-def MMA484USBW : KVX_INSTRUCTION
+def XMMA484USBW : KVX_INSTRUCTION
   <(outs WideReg:$a1), (ins WideReg:$a2, VectorReg:$a3, VectorReg:$a4),
-   "mma484usbw $a1 = $a2, $a3, $a4",
-   [/* no straightforward pattern */],
-   TCA_INT>, Requires<[IsV1]>;
+   "xmma484usbw $a1 = $a2, $a3, $a4",
+   [(set v512i1:$a1, (int_kvx_xmma484bw v256i1:$a3, v256i1:$a4, v512i1:$a2, UnSignMod_US))],
+   TCA_INT>;
+} // [IsV1]
 
 def MMA444HBD0 : KVX_INSTRUCTION
   <(outs MatrixReg:$a1), (ins MatrixReg:$a2, VectorReg:$a3, VectorReg:$a4),
