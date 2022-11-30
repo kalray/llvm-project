@@ -351,8 +351,8 @@ define { i64, i64 } @FSBFCDC(i64 %0, i64 %1, i64 %2, i64 %3) {
   ret { i64, i64 } %15
 }
 
-define i64 @FSBFCWC(i64 %0, i64 %1) {
-; CHECK-LABEL: FSBFCWC:
+define i64 @FSBFWCC(i64 %0, i64 %1) {
+; CHECK-LABEL: FSBFWCC:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fsbfw $r0 = $r1, $r0
 ; CHECK-NEXT:    srld $r2 = $r0, 32
@@ -391,8 +391,8 @@ define i64 @FSBFCWC(i64 %0, i64 %1) {
   ret i64 %21
 }
 
-define { i64, i64 } @FSBFCWCP(i64 %0, i64 %1, i64 %2, i64 %3) {
-; CHECK-LABEL: FSBFCWCP:
+define { i64, i64 } @FSBFWCCP(i64 %0, i64 %1, i64 %2, i64 %3) {
+; CHECK-LABEL: FSBFWCCP:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fsbfw $r0 = $r2, $r0
 ; CHECK-NEXT:    srld $r2 = $r1, 32
@@ -765,8 +765,8 @@ define { i64, i64 } @FSBFCDC_2(i64 %0, i64 %1, i64 %2, i64 %3) {
   ret { i64, i64 } %15
 }
 
-define i64 @FSBFCWC_2(i64 %0, i64 %1) {
-; CHECK-LABEL: FSBFCWC_2:
+define i64 @FSBFWCC_2(i64 %0, i64 %1) {
+; CHECK-LABEL: FSBFWCC_2:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fsbfw $r0 = $r1, $r0
 ; CHECK-NEXT:    srld $r2 = $r0, 32
@@ -805,8 +805,8 @@ define i64 @FSBFCWC_2(i64 %0, i64 %1) {
   ret i64 %21
 }
 
-define { i64, i64 } @FSBFCWCP_2(i64 %0, i64 %1, i64 %2, i64 %3) {
-; CHECK-LABEL: FSBFCWCP_2:
+define { i64, i64 } @FSBFWCCP_2(i64 %0, i64 %1, i64 %2, i64 %3) {
+; CHECK-LABEL: FSBFWCCP_2:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fsbfw $r0 = $r2, $r0
 ; CHECK-NEXT:    srld $r2 = $r1, 32
@@ -1076,8 +1076,8 @@ define <2 x double> @FSBFCDC_3(<2 x double> %0, <2 x double> %1) {
   ret <2 x double> %6
 }
 
-define <2 x float> @FSBFCWC_3(<2 x float> %0, <2 x float> %1) {
-; CHECK-LABEL: FSBFCWC_3:
+define <2 x float> @FSBFWCC_3(<2 x float> %0, <2 x float> %1) {
+; CHECK-LABEL: FSBFWCC_3:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srad $r2 = $r0, 32
 ; CHECK-NEXT:    ;;
@@ -1095,8 +1095,8 @@ define <2 x float> @FSBFCWC_3(<2 x float> %0, <2 x float> %1) {
   ret <2 x float> %6
 }
 
-define <4 x float> @FSBFCWCP_3(<4 x float> %0, <4 x float> %1) {
-; CHECK-LABEL: FSBFCWCP_3:
+define <4 x float> @FSBFWCCP_3(<4 x float> %0, <4 x float> %1) {
+; CHECK-LABEL: FSBFWCCP_3:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srad $r4 = $r0, 32
 ; CHECK-NEXT:    copyd $r5 = $r1

@@ -18326,12 +18326,6 @@ static Value *KVX_emitNaryBuiltinCore(unsigned N, CodeGenFunction &CGF,
   bool HasConjugateMod = ConjugateMod > 0;
   // Determine if the intrinsic has a conjugate modifier to set.
   switch (IntrinsicID) {
-  case Intrinsic::kvx_faddwp:
-  case Intrinsic::kvx_faddwq:
-  case Intrinsic::kvx_fsbfwp:
-  case Intrinsic::kvx_fsbfwq:
-  case Intrinsic::kvx_fadddp:
-  case Intrinsic::kvx_fsbfdp:
   case Intrinsic::kvx_fmulwc:
   case Intrinsic::kvx_fmulwcp:
   case Intrinsic::kvx_ffmawc:
@@ -19349,10 +19343,6 @@ static Value *KVX_emitVectorBuiltin(CodeGenFunction &CGF, const CallExpr *E,
     bool HasConjugateMod = ConjugateMod > 0;
     // Determine if the intrinsic has a conjugate modifier to set.
     switch (IntrinsicID) {
-    case Intrinsic::kvx_faddwq:
-    case Intrinsic::kvx_fsbfwq:
-    case Intrinsic::kvx_fadddp:
-    case Intrinsic::kvx_fsbfdp:
     case Intrinsic::kvx_fmulwcp:
     case Intrinsic::kvx_ffmawcp:
     case Intrinsic::kvx_ffmswcp:
@@ -20204,24 +20194,6 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_fminwp:
     return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fminwp);
 
-  case KVX::BI__builtin_kvx_faddwp:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_faddwp, true);
-
-  case KVX::BI__builtin_kvx_faddwq:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_faddwq, true);
-
-  case KVX::BI__builtin_kvx_fadddp:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fadddp, true);
-
-  case KVX::BI__builtin_kvx_fsbfwp:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fsbfwp, true);
-
-  case KVX::BI__builtin_kvx_fsbfwq:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fsbfwq, true);
-
-  case KVX::BI__builtin_kvx_fsbfdp:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fsbfdp, true);
-
   case KVX::BI__builtin_kvx_fmulwp:
     return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fmulwp, true);
 
@@ -20432,14 +20404,6 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fmind);
   case KVX::BI__builtin_kvx_frsrw:
     return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_frsrw, true);
-  case KVX::BI__builtin_kvx_faddw:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_faddw, true);
-  case KVX::BI__builtin_kvx_faddd:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_faddd, true);
-  case KVX::BI__builtin_kvx_fsbfw:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fsbfw, true);
-  case KVX::BI__builtin_kvx_fsbfd:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fsbfd, true);
   case KVX::BI__builtin_kvx_fmulw:
     return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fmulw, true);
   case KVX::BI__builtin_kvx_fmuld:
@@ -20538,18 +20502,6 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_fmindq:
     return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fmind, 2, DoubleTy, 4,
                                  1);
-  case KVX::BI__builtin_kvx_faddwo:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_faddwq, 2, FloatTy, 8,
-                                 4, true);
-  case KVX::BI__builtin_kvx_fadddq:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fadddp, 2, DoubleTy,
-                                 4, 2, true);
-  case KVX::BI__builtin_kvx_fsbfwo:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fsbfwq, 2, FloatTy, 8,
-                                 4, true);
-  case KVX::BI__builtin_kvx_fsbfdq:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fsbfdp, 2, DoubleTy,
-                                 4, 2, true);
   case KVX::BI__builtin_kvx_fmulh:
     return KVX_emitF16ScalarBuiltin(2, *this, E, Intrinsic::kvx_fmulhq, true);
   case KVX::BI__builtin_kvx_fmulhq:

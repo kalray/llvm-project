@@ -1186,27 +1186,24 @@ multiclass MC_29<string OpcStr> {
      MAU_FP>;
 }
 
-// multiclass MC_2A is used by:
-//   defm FDOT2W
-//   defm FMULWP
-multiclass MC_2A<string OpcStr> {
-  def ri : KVX_INSTRUCTION_CV1_Y
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary32x2:$a3),
-     !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [/* no straightforward pattern */],
-     MAU_FP_Y_>;
-  def rr : KVX_INSTRUCTION
-    <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
-     !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
-     [/* no straightforward pattern */],
-     MAU_FP>;
+multiclass MC_2A<string OpcStr, list<dag> RRpat = []> {
+  defm ri : I </*asm=*/OpcStr, /*itin=*/MAU_FP_Y_, /*Ops=*/[SingleReg, Binary32x2], /*Mods=*/[], /*MemOps=*/[], /*CC=*/[],
+               /*Out=*/[SingleReg], /*InPlace=*/0, /*pattern=*/[]>, Requires<[IsV1]>;
+
+  defm rr : I </*asm=*/OpcStr, /*itin=*/MAU_FP, /*Ops=*/[SingleReg, SingleReg], /*Mods=*/[RoundingMod, SilentMod], /*MemOps=*/[], /*CC=*/[],
+               /*Out=*/[SingleReg], /*InPlace=*/0, /*pattern=*/RRpat>;
 }
 
+defm FADDWC : MC_2A<"faddwc.c", [(set v2f32:$r, (int_kvx_faddc v2f32:$op0, v2f32:$op1, RoundingMod:$mod0, SilentMod:$mod1))]>;
+defm FADDWP : MC_2A<"faddwp", [(set v2f32:$r, (int_kvx_fadd v2f32:$op0, v2f32:$op1, RoundingMod:$mod0, SilentMod:$mod1))]>;
+defm FDOT2W : MC_2A<"fdot2w">;
+defm FMULWP : MC_2A<"fmulwp">;
+defm FSBFWC : MC_2A<"fsbfwc.c", [(set v2f32:$r, (int_kvx_fsbfc v2f32:$op0, v2f32:$op1, RoundingMod:$mod0, SilentMod:$mod1))]>;
+defm FSBFWP : MC_2A<"fsbfwp", [(set v2f32:$r, (int_kvx_fsbf v2f32:$op0, v2f32:$op1, RoundingMod:$mod0, SilentMod:$mod1))]>;
+
 // FIXME: For coolidge, this class should hold ri10,ri37,ri64 variants.
-// multiclass MC_2A is used by:
-//   defm FADDWP
+// multiclass MC_2AM is used by:
 //   defm FMULWC
-//   defm FSBFWP
 multiclass MC_2AM<string OpcStr> {
   def ri : KVX_INSTRUCTION_CV1_Y
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary32x2:$a3, ConjugateMod:$a4),
@@ -1239,9 +1236,9 @@ multiclass MC_2B<string OpcStr> {
 }
 
 // multiclass MC_2C is used by:
-//   defm FMULWDP
-//   defm FMULWDC
 //   defm FMULCWDC
+//   defm FMULWDC
+//   defm FMULWDP
 multiclass MC_2C<string OpcStr> {
   def ri : KVX_INSTRUCTION_CV1_Y
     <(outs PairedReg:$a1), (ins SingleReg:$a2, Binary32x2:$a3),
@@ -1905,10 +1902,9 @@ defm MAXWP : MC_17_TINY<"maxwp">;
 
 defm MAXUWP : MC_17_TINY<"maxuwp">;
 
-let isAdd = 1 in
-defm ADDCWC : MC_17<"addcwc">, Requires<[IsV1]>;
+defm ADDCWC : MC_17<"addwc.c">;
 
-defm SBFCWC : MC_17<"sbfcwc">, Requires<[IsV1]>;
+defm SBFCWC : MC_17<"sbfwc.c">;
 
 let isAdd = 1 in
 defm ADDSWP : MC_17_SWITCH<"addswp">;
@@ -2653,11 +2649,23 @@ def FFDMSAWP : ROUNDING_SILENT_TERNARY_AUXR_FP<"ffdmsawp", SingleReg, PairedReg,
 
 def FMULWCP : CONJ_ROUNDING_SILENT_BINOP<"fmulwcp", PairedReg, PairedReg, MAU_FP>;
 
-defm FFMAWC : I<"ffmawc", MAU_AUXR_FP, [SingleReg, SingleReg], [ConjugateMod, RoundingMod, SilentMod], [], [], [SingleReg], 1>;
-defm FFMSWC : I<"ffmswc", MAU_AUXR_FP, [SingleReg, SingleReg], [ConjugateMod, RoundingMod, SilentMod], [], [], [SingleReg], 1>;
+defm FFMAWC : I<"ffmawc", MAU_AUXR_FP, [SingleReg, SingleReg], [ConjugateMod, RoundingMod, SilentMod], [], [], [SingleReg], 1,
+            [(set v2f32:$r, (int_kvx_ffmawc v2f32:$op0, v2f32:$op1, v2f32:$z, ConjugateMod:$mod0, RoundingMod:$mod1, SilentMod:$mod2))],
+            0, 2>, Requires<[IsV2]>;
 
-defm FFMAWCP : I<"ffmawcp", MAU_AUXR_FP, [PairedReg, PairedReg], [ConjugateMod, RoundingMod, SilentMod], [], [], [PairedReg], 1>;
-defm FFMSWCP : I<"ffmswcp", MAU_AUXR_FP, [PairedReg, PairedReg], [ConjugateMod, RoundingMod, SilentMod], [], [], [PairedReg], 1>;
+defm FFMSWC : I<"ffmswc", MAU_AUXR_FP, [SingleReg, SingleReg], [ConjugateMod, RoundingMod, SilentMod], [], [], [SingleReg], 1,
+            [(set v2f32:$r, (int_kvx_ffmswc v2f32:$op0, v2f32:$op1, v2f32:$z, ConjugateMod:$mod0, RoundingMod:$mod1, SilentMod:$mod2))],
+            0, 2>, Requires<[IsV2]>;
+
+
+defm FFMAWCP : I<"ffmawcp", MAU_AUXR_FP, [PairedReg, PairedReg], [ConjugateMod, RoundingMod, SilentMod], [], [], [PairedReg], 1,
+            [(set v4f32:$r, (int_kvx_ffmawcp v4f32:$op0, v4f32:$op1, v4f32:$z, ConjugateMod:$mod0, RoundingMod:$mod1, SilentMod:$mod2))],
+            0, 2>, Requires<[IsV2]>;
+
+defm FFMSWCP : I<"ffmswcp", MAU_AUXR_FP, [PairedReg, PairedReg], [ConjugateMod, RoundingMod, SilentMod], [], [], [PairedReg], 1,
+            [(set v4f32:$r, (int_kvx_ffmswcp v4f32:$op0, v4f32:$op1, v4f32:$z, ConjugateMod:$mod0, RoundingMod:$mod1, SilentMod:$mod2))],
+            0, 2>, Requires<[IsV2]>;
+
 
 def XFSCALEWO : ROUNDING_SILENT_BINOP<"xfscalewo", VectorReg, VectorReg, SingleReg, BCU_CRRP_CRWL_CRWH_RR,
                 [(set v256i1:$o, (int_kvx_xfscalewo v256i1:$lhs, i32:$rhs, RoundingMod:$r, SilentMod:$s))]>;
@@ -3235,8 +3243,6 @@ defm FFMSHQ : MC_28<"ffmshq">;
 
 defm FMULD : MC_29<"fmuld">;
 
-defm FMULWP : MC_2A<"fmulwp">;
-
 defm FMULHQ : MC_2B<"fmulhq">;
 
 defm FMULWDP : MC_2C<"fmulwdp">;
@@ -3255,44 +3261,35 @@ defm FMULWDC : MC_2C<"fmulwdc">, Requires<[IsV1]>;
 
 defm FMULCWDC : MC_2C<"fmulcwdc">, Requires<[IsV1]>;
 
-let isAdd = 1 in
+let isAdd = 1 in {
 defm FADDD : MC_29<"faddd">;
 
-let isAdd = 1 in
-defm FADDWP : MC_2AM<"faddwp">;
+defm FADDHO : I <"faddho", MAU_FP, [PairedReg, PairedReg], [RoundingMod, SilentMod], [], [], [PairedReg]>;
 
-let isAdd = 1 in
 defm FADDHQ : MC_2B<"faddhq">;
 
-def FADDDP : KVX_INSTRUCTION
-  <(outs PairedReg:$a3), (ins PairedReg:$a4, PairedReg:$a5, ConjugateMod:$a6, RoundingMod:$a1, SilentMod:$a2),
-   "fadddp$a6$a1$a2 $a3 = $a4, $a5",
-   [/* no straightforward pattern */],
-   MAU_SWITCH_AUXR_EMPTY_FP>;
+defm FADDDP : I <"fadddp", MAU_SWITCH_AUXR_EMPTY_FP, [PairedReg, PairedReg], [RoundingMod, SilentMod], [], [], [PairedReg]>;
 
-def FADDWQ : KVX_INSTRUCTION
-  <(outs PairedReg:$a3), (ins PairedReg:$a4, PairedReg:$a5, ConjugateMod:$a6, RoundingMod:$a1, SilentMod:$a2),
-   "faddwq$a6$a1$a2 $a3 = $a4, $a5",
-   [/* no straightforward pattern */],
-   MAU_SWITCH_AUXR_EMPTY_FP>;
+defm FADDWQ : I <"faddwq", MAU_SWITCH_AUXR_EMPTY_FP, [PairedReg, PairedReg], [RoundingMod, SilentMod], [], [], [PairedReg]>;
+}
+
+defm FADDDC : I <"fadddc.c", MAU_SWITCH_AUXR_EMPTY_FP, [PairedReg, PairedReg], [RoundingMod, SilentMod], [], [], [PairedReg]>;
+
+defm FADDWCP : I <"faddwcp.c", MAU_SWITCH_AUXR_EMPTY_FP, [PairedReg, PairedReg], [RoundingMod, SilentMod], [], [], [PairedReg]>;
 
 defm FSBFD : MC_29<"fsbfd">;
 
-defm FSBFWP : MC_2AM<"fsbfwp">;
-
 defm FSBFHQ : MC_2B<"fsbfhq">;
 
-def FSBFDP : KVX_INSTRUCTION
-  <(outs PairedReg:$a3), (ins PairedReg:$a4, PairedReg:$a5, ConjugateMod:$a6, RoundingMod:$a1, SilentMod:$a2),
-   "fsbfdp$a6$a1$a2 $a3 = $a4, $a5",
-   [/* no straightforward pattern */],
-   MAU_SWITCH_AUXR_EMPTY_FP>;
+defm FSBFHO : I <"fsbfho", MAU_FP, [PairedReg, PairedReg], [RoundingMod, SilentMod], [], [], [PairedReg]>;
 
-def FSBFWQ : KVX_INSTRUCTION
-  <(outs PairedReg:$a3), (ins PairedReg:$a4, PairedReg:$a5, ConjugateMod:$a6, RoundingMod:$a1, SilentMod:$a2),
-   "fsbfwq$a6$a1$a2 $a3 = $a4, $a5",
-   [/* no straightforward pattern */],
-   MAU_SWITCH_AUXR_EMPTY_FP>;
+defm FSBFDP : I <"fsbfdp", MAU_SWITCH_AUXR_EMPTY_FP, [PairedReg, PairedReg], [RoundingMod, SilentMod], [], [], [PairedReg]>;
+
+defm FSBFDC : I <"fsbfdc.c", MAU_SWITCH_AUXR_EMPTY_FP, [PairedReg, PairedReg], [RoundingMod, SilentMod], [], [], [PairedReg]>;
+
+defm FSBFWQ : I <"fsbfwq", MAU_SWITCH_AUXR_EMPTY_FP, [PairedReg, PairedReg], [RoundingMod, SilentMod], [], [], [PairedReg]>;
+
+defm FSBFWCP : I <"fsbfwcp.c", MAU_SWITCH_AUXR_EMPTY_FP, [PairedReg, PairedReg], [RoundingMod, SilentMod], [], [], [PairedReg]>;
 
 defm FFMAHW : MC_2E_2<"ffmahw">;
 
@@ -3324,8 +3321,6 @@ defm FMULHW : MC_31_2<"fmulhw">;
 defm FMULW : MC_31<"fmulw">;
 
 defm FMULWD : MC_29<"fmulwd">;
-
-defm FDOT2W : MC_2A<"fdot2w">;
 
 defm FDOT2WD : MC_29<"fdot2wd">;
 

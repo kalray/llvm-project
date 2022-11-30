@@ -2556,6 +2556,24 @@ static SDValue combineWidenInt(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
   return Dag.getNode(ISD::SHL, SDLoc(N), OutType, Ext, ShiftAmount);
 }
 
+static SDValue combineFaddFsub(SDNode *N, SelectionDAG &Dag,
+                               unsigned KvxOpcode) {
+  EVT VT = N->getValueType(0);
+  if (VT != MVT::v8f16)
+    return SDValue();
+
+  SDLoc DL(N);
+  auto Mod0 = cast<ConstantSDNode>(N->getOperand(3))->getZExtValue();
+  auto Mod1 = cast<ConstantSDNode>(N->getOperand(4))->getZExtValue();
+  SmallVector<SDValue, 4> Args = {Dag.getBitcast(MVT::v2i64, N->getOperand(1)),
+                                  Dag.getBitcast(MVT::v2i64, N->getOperand(2)),
+                                  Dag.getTargetConstant(Mod0, DL, MVT::i32),
+                                  Dag.getTargetConstant(Mod1, DL, MVT::i32)};
+
+  SDValue Add(Dag.getMachineNode(KvxOpcode, DL, MVT::v2f64, Args), 0);
+  return Dag.getBitcast(VT, Add);
+}
+
 static SDValue combineIntrinsic(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
                                 SelectionDAG &Dag) {
   if (!isa<ConstantSDNode>(N->getOperand(0)))
@@ -2563,6 +2581,12 @@ static SDValue combineIntrinsic(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
 
   auto Intr = cast<ConstantSDNode>(N->getOperand(0))->getZExtValue();
   switch (Intr) {
+  case Intrinsic::KVXIntrinsics::kvx_fadd:
+    return combineFaddFsub(N, Dag, KVX::FADDHO);
+
+  case Intrinsic::KVXIntrinsics::kvx_fsbf:
+    return combineFaddFsub(N, Dag, KVX::FSBFHO);
+
   case Intrinsic::KVXIntrinsics::kvx_shl:
     return combineShifts(N, Dag,
                          {ISD::SHL, ISD::SSHLSAT, ISD::USHLSAT, ISD::ROTL});

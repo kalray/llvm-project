@@ -87,7 +87,7 @@ define <2 x float> @ffmacwc(<2 x float> %a, <2 x float> %b, <2 x float> %c) {
 ; KVCV1:       # %bb.0: # %entry
 ; KVCV1-NEXT:    fmulwc.c.rn $r0 = $r1, $r0
 ; KVCV1-NEXT:    ;;
-; KVCV1-NEXT:    faddwp.c.rn $r0 = $r0, $r2
+; KVCV1-NEXT:    faddwc.c.rn $r0 = $r0, $r2
 ; KVCV1-NEXT:    ret
 ; KVCV1-NEXT:    ;;
 ;
@@ -109,7 +109,7 @@ define <2 x float> @ffmscwc(<2 x float> %a, <2 x float> %b, <2 x float> %c) {
 ; KVCV1:       # %bb.0: # %entry
 ; KVCV1-NEXT:    fmulwc.c.rn $r0 = $r1, $r0
 ; KVCV1-NEXT:    ;;
-; KVCV1-NEXT:    fsbfwp.c.rn $r0 = $r0, $r2
+; KVCV1-NEXT:    fsbfwc.c.rn $r0 = $r0, $r2
 ; KVCV1-NEXT:    ret
 ; KVCV1-NEXT:    ;;
 ;
@@ -251,9 +251,9 @@ define <4 x float> @ffmacwcp(<4 x float> %a, <4 x float> %b, <4 x float> %c) {
 ; KVCV1-NEXT:    ;;
 ; KVCV1-NEXT:    fmulwc.c.rn $r0 = $r2, $r0
 ; KVCV1-NEXT:    ;;
-; KVCV1-NEXT:    faddwp.c.rn $r1 = $r1, $r5
+; KVCV1-NEXT:    faddwp.rn $r1 = $r1, $r5
 ; KVCV1-NEXT:    ;;
-; KVCV1-NEXT:    faddwp.c.rn $r0 = $r0, $r4
+; KVCV1-NEXT:    faddwp.rn $r0 = $r0, $r4
 ; KVCV1-NEXT:    ret
 ; KVCV1-NEXT:    ;;
 ;
@@ -278,9 +278,9 @@ define <4 x float> @ffmscwcp(<4 x float> %a, <4 x float> %b, <4 x float> %c) {
 ; KVCV1-NEXT:    ;;
 ; KVCV1-NEXT:    fmulwc.c.rn $r0 = $r2, $r0
 ; KVCV1-NEXT:    ;;
-; KVCV1-NEXT:    fsbfwp.c.rn $r1 = $r1, $r5
+; KVCV1-NEXT:    fsbfwp.rn $r1 = $r1, $r5
 ; KVCV1-NEXT:    ;;
-; KVCV1-NEXT:    fsbfwp.c.rn $r0 = $r0, $r4
+; KVCV1-NEXT:    fsbfwp.rn $r0 = $r0, $r4
 ; KVCV1-NEXT:    ret
 ; KVCV1-NEXT:    ;;
 ;
@@ -485,13 +485,13 @@ define <8 x float> @ffmacwcq(<8 x float> %a, <8 x float> %b, <8 x float> %c) loc
 ; KVCV1-NEXT:    ;;
 ; KVCV1-NEXT:    fmulwc.c.rn $r2 = $r6, $r2
 ; KVCV1-NEXT:    ;;
-; KVCV1-NEXT:    faddwp.c.rn $r1 = $r1, $r9
+; KVCV1-NEXT:    faddwp.rn $r1 = $r1, $r9
 ; KVCV1-NEXT:    ;;
-; KVCV1-NEXT:    faddwp.c.rn $r0 = $r0, $r8
+; KVCV1-NEXT:    faddwp.rn $r0 = $r0, $r8
 ; KVCV1-NEXT:    ;;
-; KVCV1-NEXT:    faddwp.c.rn $r3 = $r3, $r11
+; KVCV1-NEXT:    faddwp.rn $r3 = $r3, $r11
 ; KVCV1-NEXT:    ;;
-; KVCV1-NEXT:    faddwp.c.rn $r2 = $r2, $r10
+; KVCV1-NEXT:    faddwp.rn $r2 = $r2, $r10
 ; KVCV1-NEXT:    ret
 ; KVCV1-NEXT:    ;;
 ;
@@ -533,13 +533,13 @@ define <8 x float> @ffmscwcq(<8 x float> %a, <8 x float> %b, <8 x float> %c) loc
 ; KVCV1-NEXT:    ;;
 ; KVCV1-NEXT:    fmulwc.c.rn $r2 = $r6, $r2
 ; KVCV1-NEXT:    ;;
-; KVCV1-NEXT:    fsbfwp.c.rn $r1 = $r1, $r9
+; KVCV1-NEXT:    fsbfwp.rn $r1 = $r1, $r9
 ; KVCV1-NEXT:    ;;
-; KVCV1-NEXT:    fsbfwp.c.rn $r0 = $r0, $r8
+; KVCV1-NEXT:    fsbfwp.rn $r0 = $r0, $r8
 ; KVCV1-NEXT:    ;;
-; KVCV1-NEXT:    fsbfwp.c.rn $r3 = $r3, $r11
+; KVCV1-NEXT:    fsbfwp.rn $r3 = $r3, $r11
 ; KVCV1-NEXT:    ;;
-; KVCV1-NEXT:    fsbfwp.c.rn $r2 = $r2, $r10
+; KVCV1-NEXT:    fsbfwp.rn $r2 = $r2, $r10
 ; KVCV1-NEXT:    ret
 ; KVCV1-NEXT:    ;;
 ;
@@ -702,7 +702,7 @@ define <2 x double> @ffmacdc(<2 x double> %a, <2 x double> %b, <2 x double> %c) 
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad.rn $r6 = $r1, $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fadddp.c.rn $r0r1 = $r6r7, $r4r5
+; CHECK-NEXT:    fadddc.c.rn $r0r1 = $r6r7, $r4r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -725,7 +725,7 @@ define <2 x double> @ffmscdc(<2 x double> %a, <2 x double> %b, <2 x double> %c) 
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad.rn $r6 = $r1, $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfdp.c.rn $r0r1 = $r6r7, $r4r5
+; CHECK-NEXT:    fsbfdc.c.rn $r0r1 = $r6r7, $r4r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -919,9 +919,9 @@ define <4 x double> @ffmacdcp(<4 x double> %a, <4 x double> %b, <4 x double> %c)
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad.rn $r32 = $r3, $r7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fadddp.c.rn $r0r1 = $r16r17, $r8r9
+; CHECK-NEXT:    fadddc.c.rn $r0r1 = $r16r17, $r8r9
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fadddp.c.rn $r2r3 = $r32r33, $r10r11
+; CHECK-NEXT:    fadddc.c.rn $r2r3 = $r32r33, $r10r11
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -957,9 +957,9 @@ define <4 x double> @ffmscdcp(<4 x double> %a, <4 x double> %b, <4 x double> %c)
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad.rn $r32 = $r3, $r7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfdp.c.rn $r0r1 = $r16r17, $r8r9
+; CHECK-NEXT:    fsbfdc.c.rn $r0r1 = $r16r17, $r8r9
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfdp.c.rn $r2r3 = $r32r33, $r10r11
+; CHECK-NEXT:    fsbfdc.c.rn $r2r3 = $r32r33, $r10r11
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
