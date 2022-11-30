@@ -193,44 +193,6 @@ float frsrw(float a) {
   return __builtin_kvx_frsrw(a, ".rz");
 }
 
-// CHECK-LABEL: @faddw(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.faddw(float [[V1:%.*]], float [[V2:%.*]], i32 3, i32 0)
-// CHECK-NEXT:    ret float [[TMP0]]
-//
-float faddw(float v1, float v2) {
-  return __builtin_kvx_faddw(v1, v2, ".rz");
-}
-
-// CHECK-LABEL: @faddd(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[CONV:%.*]] = fpext float [[V1:%.*]] to double
-// CHECK-NEXT:    [[CONV1:%.*]] = fpext float [[V2:%.*]] to double
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call double @llvm.kvx.faddd(double [[CONV]], double [[CONV1]], i32 3, i32 0)
-// CHECK-NEXT:    ret double [[TMP0]]
-//
-double faddd(float v1, float v2) {
-  return __builtin_kvx_faddd(v1, v2, ".rz");
-}
-
-// CHECK-LABEL: @fsbfw(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.fsbfw(float [[V1:%.*]], float [[V2:%.*]], i32 3, i32 0)
-// CHECK-NEXT:    ret float [[TMP0]]
-//
-float fsbfw(float v1, float v2) {
-  return __builtin_kvx_fsbfw(v1, v2, ".rz");
-}
-
-// CHECK-LABEL: @fsbfd(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call double @llvm.kvx.fsbfd(double [[V1:%.*]], double [[V2:%.*]], i32 3, i32 0)
-// CHECK-NEXT:    ret double [[TMP0]]
-//
-double fsbfd(double v1, double v2) {
-  return __builtin_kvx_fsbfd(v1, v2, ".rz");
-}
-
 // CHECK-LABEL: @fmulh(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = insertelement <4 x half> undef, half [[A:%.*]], i64 0

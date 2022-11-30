@@ -368,63 +368,6 @@ entry:
 
 declare float @llvm.kvx.frsrw(float, i32, i32) #1
 
-define float @faddw(float %v1, float %v2){
-; CHECK-LABEL: faddw:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    faddw.rz $r0 = $r0, $r1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
-entry:
-  %0 = tail call float @llvm.kvx.faddw(float %v1, float %v2, i32 3, i32 0)
-  ret float %0
-}
-
-declare float @llvm.kvx.faddw(float, float, i32, i32) #1
-
-define double @faddd(float %v1, float %v2){
-; CHECK-LABEL: faddd:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fwidenlwd $r0 = $r0
-; CHECK-NEXT:    fwidenlwd $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddd.rz $r0 = $r0, $r1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
-entry:
-  %conv = fpext float %v1 to double
-  %conv1 = fpext float %v2 to double
-  %0 = tail call double @llvm.kvx.faddd(double %conv, double %conv1, i32 3, i32 0)
-  ret double %0
-}
-
-declare double @llvm.kvx.faddd(double, double, i32, i32) #1
-
-define float @fsbfw(float %v1, float %v2){
-; CHECK-LABEL: fsbfw:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fsbfw.rz $r0 = $r0, $r1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
-entry:
-  %0 = tail call float @llvm.kvx.fsbfw(float %v1, float %v2, i32 3, i32 0)
-  ret float %0
-}
-
-declare float @llvm.kvx.fsbfw(float, float, i32, i32) #1
-
-define double @fsbfd(double %v1, double %v2){
-; CHECK-LABEL: fsbfd:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fsbfd.rz $r0 = $r0, $r1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
-entry:
-  %0 = tail call double @llvm.kvx.fsbfd(double %v1, double %v2, i32 3, i32 0)
-  ret double %0
-}
-
-declare double @llvm.kvx.fsbfd(double, double, i32, i32) #1
-
 define half @fmulh_s(half %0, half %1) {
 ; CHECK-LABEL: fmulh_s:
 ; CHECK:       # %bb.0:

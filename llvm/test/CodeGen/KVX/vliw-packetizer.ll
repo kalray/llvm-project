@@ -64,7 +64,7 @@ entry:
   ret float %add
 }
 
-declare float @llvm.kvx.faddw(float, float, i32, i32) #2
+declare float @llvm.kvx.fadd.f32(float, float, i32, i32) #2
 
 define float @rule4_set_builtins_only(i64 %a, float %b, float %c) {
 ; CHECK-LABEL: rule4_set_builtins_only:
@@ -83,7 +83,7 @@ define float @rule4_set_builtins_only(i64 %a, float %b, float %c) {
 ; RELAXED-NEXT:    ;;
 entry:
   tail call void @llvm.write_register.i64(metadata !0, i64 %a) #0
-  %add = tail call float @llvm.kvx.faddw(float %b, float %c, i32 0, i32 0)
+  %add = tail call float @llvm.kvx.fadd.f32(float %b, float %c, i32 0, i32 0)
   ret float %add
 }
 
@@ -122,7 +122,7 @@ define float @rule4_wfxm_builtins_only(i64 %a, float %b, float %c) {
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
 entry:
-  %add = tail call float @llvm.kvx.faddw(float %b, float %c, i32 0, i32 0)
+  %add = tail call float @llvm.kvx.fadd.f32(float %b, float %c, i32 0, i32 0)
   tail call void @llvm.kvx.wfx(i32 4, i64 %a, i32 0)
   ret float %add
 }

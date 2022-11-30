@@ -13,7 +13,7 @@ target triple = "kvx-kalray-cos"
 define i64 @ADDCWCrr(i64 %c1, i64 %c2) {
 ; V1-LABEL: ADDCWCrr:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    addcwc $r0 = $r1, $r0
+; V1-NEXT:    addwc.c $r0 = $r1, $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -44,7 +44,7 @@ entry:
 define i64 @SBFCWCrr(i64 %c1, i64 %c2) {
 ; V1-LABEL: SBFCWCrr:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    sbfcwc $r0 = $r1, $r0
+; V1-NEXT:    sbfwc.c $r0 = $r1, $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -151,7 +151,7 @@ define i64 @ADDCHCP_half(i64 %0, i64 %1) {
 define i64 @ADDCWC(i64 %0, i64 %1) {
 ; V1-LABEL: ADDCWC:
 ; V1:       # %bb.0:
-; V1-NEXT:    addcwc $r0 = $r1, $r0
+; V1-NEXT:    addwc.c $r0 = $r1, $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -256,7 +256,7 @@ define i64 @SBFCHCP_half(i64 %0, i64 %1) {
 define i64 @SBFCWC(i64 %0, i64 %1) {
 ; V1-LABEL: SBFCWC:
 ; V1:       # %bb.0:
-; V1-NEXT:    sbfcwc $r0 = $r1, $r0
+; V1-NEXT:    sbfwc.c $r0 = $r1, $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -473,7 +473,7 @@ define i64 @ADDCHCP_2(i64 %0, i64 %1) {
 define i64 @ADDCWC_2(i64 %0, i64 %1) {
 ; V1-LABEL: ADDCWC_2:
 ; V1:       # %bb.0:
-; V1-NEXT:    addcwc $r0 = $r1, $r0
+; V1-NEXT:    addwc.c $r0 = $r1, $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
