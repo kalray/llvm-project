@@ -1194,11 +1194,13 @@ multiclass MC_2A<string OpcStr, list<dag> RRpat = []> {
                /*Out=*/[SingleReg], /*InPlace=*/0, /*pattern=*/RRpat>;
 }
 
-defm FADDWC : MC_2A<"faddwc.c", [(set v2f32:$r, (int_kvx_faddc v2f32:$op0, v2f32:$op1, RoundingMod:$mod0, SilentMod:$mod1))]>;
+defm FADDWC : MC_2A<"faddwc.c", [(set v2f32:$r, (int_kvx_faddc v2f32:$op0, v2f32:$op1, conjugate_c, RoundingMod:$mod0, SilentMod:$mod1))]>;
+let isAdd = 1 in {
 defm FADDWP : MC_2A<"faddwp", [(set v2f32:$r, (int_kvx_fadd v2f32:$op0, v2f32:$op1, RoundingMod:$mod0, SilentMod:$mod1))]>;
+}
 defm FDOT2W : MC_2A<"fdot2w">;
 defm FMULWP : MC_2A<"fmulwp">;
-defm FSBFWC : MC_2A<"fsbfwc.c", [(set v2f32:$r, (int_kvx_fsbfc v2f32:$op0, v2f32:$op1, RoundingMod:$mod0, SilentMod:$mod1))]>;
+defm FSBFWC : MC_2A<"fsbfwc.c", [(set v2f32:$r, (int_kvx_fsbfc v2f32:$op0, v2f32:$op1, conjugate_c, RoundingMod:$mod0, SilentMod:$mod1))]>;
 defm FSBFWP : MC_2A<"fsbfwp", [(set v2f32:$r, (int_kvx_fsbf v2f32:$op0, v2f32:$op1, RoundingMod:$mod0, SilentMod:$mod1))]>;
 
 // FIXME: For coolidge, this class should hold ri10,ri37,ri64 variants.
@@ -3268,14 +3270,18 @@ defm FADDHO : I <"faddho", MAU_FP, [PairedReg, PairedReg], [RoundingMod, SilentM
 
 defm FADDHQ : MC_2B<"faddhq">;
 
-defm FADDDP : I <"fadddp", MAU_SWITCH_AUXR_EMPTY_FP, [PairedReg, PairedReg], [RoundingMod, SilentMod], [], [], [PairedReg]>;
+defm FADDDP : I <"fadddp", MAU_SWITCH_AUXR_EMPTY_FP, [PairedReg, PairedReg], [RoundingMod, SilentMod], [], [], [PairedReg], 0,
+                 [(set v2f64:$r, (int_kvx_fadd v2f64:$op0, v2f64:$op1, RoundingMod:$mod0, SilentMod:$mod1))]>;
 
-defm FADDWQ : I <"faddwq", MAU_SWITCH_AUXR_EMPTY_FP, [PairedReg, PairedReg], [RoundingMod, SilentMod], [], [], [PairedReg]>;
+defm FADDWQ : I <"faddwq", MAU_SWITCH_AUXR_EMPTY_FP, [PairedReg, PairedReg], [RoundingMod, SilentMod], [], [], [PairedReg], 0,
+                 [(set v4f32:$r, (int_kvx_fadd v4f32:$op0, v4f32:$op1, RoundingMod:$mod0, SilentMod:$mod1))]>;
 }
 
-defm FADDDC : I <"fadddc.c", MAU_SWITCH_AUXR_EMPTY_FP, [PairedReg, PairedReg], [RoundingMod, SilentMod], [], [], [PairedReg]>;
+defm FADDDC : I <"fadddc.c", MAU_SWITCH_AUXR_EMPTY_FP, [PairedReg, PairedReg], [RoundingMod, SilentMod], [], [], [PairedReg], 0,
+                 [(set v2f64:$r, (int_kvx_faddc v2f64:$op0, v2f64:$op1, conjugate_c, RoundingMod:$mod0, SilentMod:$mod1))]>;
 
-defm FADDWCP : I <"faddwcp.c", MAU_SWITCH_AUXR_EMPTY_FP, [PairedReg, PairedReg], [RoundingMod, SilentMod], [], [], [PairedReg]>;
+defm FADDWCP : I <"faddwcp.c", MAU_SWITCH_AUXR_EMPTY_FP, [PairedReg, PairedReg], [RoundingMod, SilentMod], [], [], [PairedReg], 0,
+                [(set v4f32:$r, (int_kvx_faddc v4f32:$op0, v4f32:$op1, conjugate_c, RoundingMod:$mod0, SilentMod:$mod1))]>;
 
 defm FSBFD : MC_29<"fsbfd">;
 
@@ -3283,13 +3289,17 @@ defm FSBFHQ : MC_2B<"fsbfhq">;
 
 defm FSBFHO : I <"fsbfho", MAU_FP, [PairedReg, PairedReg], [RoundingMod, SilentMod], [], [], [PairedReg]>;
 
-defm FSBFDP : I <"fsbfdp", MAU_SWITCH_AUXR_EMPTY_FP, [PairedReg, PairedReg], [RoundingMod, SilentMod], [], [], [PairedReg]>;
+defm FSBFDP : I <"fsbfdp", MAU_SWITCH_AUXR_EMPTY_FP, [PairedReg, PairedReg], [RoundingMod, SilentMod], [], [], [PairedReg], 0,
+                [(set v2f64:$r, (int_kvx_fsbf v2f64:$op0, v2f64:$op1, RoundingMod:$mod0, SilentMod:$mod1))]>;
 
-defm FSBFDC : I <"fsbfdc.c", MAU_SWITCH_AUXR_EMPTY_FP, [PairedReg, PairedReg], [RoundingMod, SilentMod], [], [], [PairedReg]>;
+defm FSBFDC : I <"fsbfdc.c", MAU_SWITCH_AUXR_EMPTY_FP, [PairedReg, PairedReg], [RoundingMod, SilentMod], [], [], [PairedReg], 0,
+                [(set v2f64:$r, (int_kvx_fsbfc v2f64:$op0, v2f64:$op1, conjugate_c, RoundingMod:$mod0, SilentMod:$mod1))]>;
 
-defm FSBFWQ : I <"fsbfwq", MAU_SWITCH_AUXR_EMPTY_FP, [PairedReg, PairedReg], [RoundingMod, SilentMod], [], [], [PairedReg]>;
+defm FSBFWQ : I <"fsbfwq", MAU_SWITCH_AUXR_EMPTY_FP, [PairedReg, PairedReg], [RoundingMod, SilentMod], [], [], [PairedReg], 0,
+                 [(set v4f32:$r, (int_kvx_fsbf v4f32:$op0, v4f32:$op1, RoundingMod:$mod0, SilentMod:$mod1))]>;
 
-defm FSBFWCP : I <"fsbfwcp.c", MAU_SWITCH_AUXR_EMPTY_FP, [PairedReg, PairedReg], [RoundingMod, SilentMod], [], [], [PairedReg]>;
+defm FSBFWCP : I <"fsbfwcp.c", MAU_SWITCH_AUXR_EMPTY_FP, [PairedReg, PairedReg], [RoundingMod, SilentMod], [], [], [PairedReg], 0,
+                 [(set v4f32:$r, (int_kvx_fsbfc v4f32:$op0, v4f32:$op1, conjugate_c, RoundingMod:$mod0, SilentMod:$mod1))]>;
 
 defm FFMAHW : MC_2E_2<"ffmahw">;
 

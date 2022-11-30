@@ -18398,6 +18398,8 @@ static const KvxModifier KVX_COHERENCY(
      {"g",
       1} /*, {"s", 2}*/}); // System coherency is not implemented in cv2 yet.
 
+static const KvxModifier KVX_CONJUGATE({{"", 0}, {"c", 1}});
+
 static const KvxModifier KVX_RCHANNEL({{"f", 0}, {"b", 1}});
 
 static const KvxModifier
