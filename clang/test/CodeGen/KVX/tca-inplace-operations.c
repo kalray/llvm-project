@@ -601,7 +601,7 @@ void movefwv(__kvx_x256 *o, __kvx_x512 *a0) {
 // O0-NEXT:    [[TMP6:%.*]] = load <256 x i1>*, <256 x i1>** [[A_ADDR]], align 8
 // O0-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[TMP6]], i64 1
 // O0-NEXT:    [[TMP7:%.*]] = load <256 x i1>, <256 x i1>* [[ARRAYIDX3]], align 32
-// O0-NEXT:    [[TMP8:%.*]] = call <1024 x i1> @llvm.kvx.xbuildfvm(<256 x i1> [[TMP1]], <256 x i1> [[TMP3]], <256 x i1> [[TMP5]], <256 x i1> [[TMP7]])
+// O0-NEXT:    [[TMP8:%.*]] = call <1024 x i1> @llvm.kvx.xbuild1024(<256 x i1> [[TMP1]], <256 x i1> [[TMP3]], <256 x i1> [[TMP5]], <256 x i1> [[TMP7]])
 // O0-NEXT:    [[TMP9:%.*]] = load <1024 x i1>*, <1024 x i1>** [[M_ADDR]], align 8
 // O0-NEXT:    [[ARRAYIDX4:%.*]] = getelementptr inbounds <1024 x i1>, <1024 x i1>* [[TMP9]], i64 0
 // O0-NEXT:    store <1024 x i1> [[TMP8]], <1024 x i1>* [[ARRAYIDX4]], align 32
@@ -614,12 +614,12 @@ void movefwv(__kvx_x256 *o, __kvx_x512 *a0) {
 // O2-NEXT:    [[TMP1:%.*]] = load <256 x i1>, <256 x i1>* [[ARRAYIDX1]], align 32, [[TBAA2]]
 // O2-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[A]], i64 1
 // O2-NEXT:    [[TMP2:%.*]] = load <256 x i1>, <256 x i1>* [[ARRAYIDX3]], align 32, [[TBAA2]]
-// O2-NEXT:    [[TMP3:%.*]] = call <1024 x i1> @llvm.kvx.xbuildfvm(<256 x i1> [[TMP0]], <256 x i1> [[TMP1]], <256 x i1> [[TMP0]], <256 x i1> [[TMP2]])
+// O2-NEXT:    [[TMP3:%.*]] = call <1024 x i1> @llvm.kvx.xbuild1024(<256 x i1> [[TMP0]], <256 x i1> [[TMP1]], <256 x i1> [[TMP0]], <256 x i1> [[TMP2]])
 // O2-NEXT:    store <1024 x i1> [[TMP3]], <1024 x i1>* [[M:%.*]], align 32, [[TBAA6]]
 // O2-NEXT:    ret void
 //
 void buildfvm(__kvx_x256 *a, __kvx_x1024 *M) {
-  M[0] = __builtin_kvx_xbuildfvm(a[0], a[2], a[0], a[1]);
+  M[0] = __builtin_kvx_xbuild1024(a[0], a[2], a[0], a[1]);
 }
 
 // O0-LABEL: @buildfwm(
@@ -634,7 +634,7 @@ void buildfvm(__kvx_x256 *a, __kvx_x1024 *M) {
 // O0-NEXT:    [[TMP2:%.*]] = load <512 x i1>*, <512 x i1>** [[A_ADDR]], align 8
 // O0-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[TMP2]], i64 2
 // O0-NEXT:    [[TMP3:%.*]] = load <512 x i1>, <512 x i1>* [[ARRAYIDX1]], align 32
-// O0-NEXT:    [[TMP4:%.*]] = call <1024 x i1> @llvm.kvx.xbuildfwm(<512 x i1> [[TMP1]], <512 x i1> [[TMP3]])
+// O0-NEXT:    [[TMP4:%.*]] = call <1024 x i1> @llvm.kvx.xcat1024(<512 x i1> [[TMP1]], <512 x i1> [[TMP3]])
 // O0-NEXT:    [[TMP5:%.*]] = load <1024 x i1>*, <1024 x i1>** [[M_ADDR]], align 8
 // O0-NEXT:    [[ARRAYIDX2:%.*]] = getelementptr inbounds <1024 x i1>, <1024 x i1>* [[TMP5]], i64 1
 // O0-NEXT:    store <1024 x i1> [[TMP4]], <1024 x i1>* [[ARRAYIDX2]], align 32
@@ -644,7 +644,7 @@ void buildfvm(__kvx_x256 *a, __kvx_x1024 *M) {
 // O0-NEXT:    [[TMP8:%.*]] = load <512 x i1>*, <512 x i1>** [[A_ADDR]], align 8
 // O0-NEXT:    [[ARRAYIDX4:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[TMP8]], i64 1
 // O0-NEXT:    [[TMP9:%.*]] = load <512 x i1>, <512 x i1>* [[ARRAYIDX4]], align 32
-// O0-NEXT:    [[TMP10:%.*]] = call <1024 x i1> @llvm.kvx.xbuildfwm(<512 x i1> [[TMP7]], <512 x i1> [[TMP9]])
+// O0-NEXT:    [[TMP10:%.*]] = call <1024 x i1> @llvm.kvx.xcat1024(<512 x i1> [[TMP7]], <512 x i1> [[TMP9]])
 // O0-NEXT:    [[TMP11:%.*]] = load <1024 x i1>*, <1024 x i1>** [[M_ADDR]], align 8
 // O0-NEXT:    [[ARRAYIDX5:%.*]] = getelementptr inbounds <1024 x i1>, <1024 x i1>* [[TMP11]], i64 0
 // O0-NEXT:    store <1024 x i1> [[TMP10]], <1024 x i1>* [[ARRAYIDX5]], align 32
@@ -654,18 +654,18 @@ void buildfvm(__kvx_x256 *a, __kvx_x1024 *M) {
 // O2-NEXT:  entry:
 // O2-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[A:%.*]], i64 2
 // O2-NEXT:    [[TMP0:%.*]] = load <512 x i1>, <512 x i1>* [[ARRAYIDX]], align 32, [[TBAA8]]
-// O2-NEXT:    [[TMP1:%.*]] = call <1024 x i1> @llvm.kvx.xbuildfwm(<512 x i1> [[TMP0]], <512 x i1> [[TMP0]])
+// O2-NEXT:    [[TMP1:%.*]] = call <1024 x i1> @llvm.kvx.xcat1024(<512 x i1> [[TMP0]], <512 x i1> [[TMP0]])
 // O2-NEXT:    [[ARRAYIDX2:%.*]] = getelementptr inbounds <1024 x i1>, <1024 x i1>* [[M:%.*]], i64 1
 // O2-NEXT:    store <1024 x i1> [[TMP1]], <1024 x i1>* [[ARRAYIDX2]], align 32, [[TBAA6]]
 // O2-NEXT:    [[ARRAYIDX4:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[A]], i64 1
 // O2-NEXT:    [[TMP2:%.*]] = load <512 x i1>, <512 x i1>* [[ARRAYIDX4]], align 32, [[TBAA8]]
-// O2-NEXT:    [[TMP3:%.*]] = call <1024 x i1> @llvm.kvx.xbuildfwm(<512 x i1> [[TMP0]], <512 x i1> [[TMP2]])
+// O2-NEXT:    [[TMP3:%.*]] = call <1024 x i1> @llvm.kvx.xcat1024(<512 x i1> [[TMP0]], <512 x i1> [[TMP2]])
 // O2-NEXT:    store <1024 x i1> [[TMP3]], <1024 x i1>* [[M]], align 32, [[TBAA6]]
 // O2-NEXT:    ret void
 //
 void buildfwm(__kvx_x512 *a, __kvx_x1024 *M) {
-  M[1] = __builtin_kvx_xbuildfwm(a[2], a[2]);
-  M[0] = __builtin_kvx_xbuildfwm(a[2], a[1]);
+  M[1] = __builtin_kvx_xcat1024(a[2], a[2]);
+  M[0] = __builtin_kvx_xcat1024(a[2], a[1]);
 }
 
 // O0-LABEL: @buildfvw(
@@ -680,7 +680,7 @@ void buildfwm(__kvx_x512 *a, __kvx_x1024 *M) {
 // O0-NEXT:    [[TMP2:%.*]] = load <256 x i1>*, <256 x i1>** [[A_ADDR]], align 8
 // O0-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[TMP2]], i64 2
 // O0-NEXT:    [[TMP3:%.*]] = load <256 x i1>, <256 x i1>* [[ARRAYIDX1]], align 32
-// O0-NEXT:    [[TMP4:%.*]] = call <512 x i1> @llvm.kvx.xbuildfvw(<256 x i1> [[TMP1]], <256 x i1> [[TMP3]])
+// O0-NEXT:    [[TMP4:%.*]] = call <512 x i1> @llvm.kvx.xcat512(<256 x i1> [[TMP1]], <256 x i1> [[TMP3]])
 // O0-NEXT:    [[TMP5:%.*]] = load <512 x i1>*, <512 x i1>** [[W_ADDR]], align 8
 // O0-NEXT:    [[ARRAYIDX2:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[TMP5]], i64 0
 // O0-NEXT:    store <512 x i1> [[TMP4]], <512 x i1>* [[ARRAYIDX2]], align 32
@@ -691,10 +691,10 @@ void buildfwm(__kvx_x512 *a, __kvx_x1024 *M) {
 // O2-NEXT:    [[TMP0:%.*]] = load <256 x i1>, <256 x i1>* [[A:%.*]], align 32, [[TBAA2]]
 // O2-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[A]], i64 2
 // O2-NEXT:    [[TMP1:%.*]] = load <256 x i1>, <256 x i1>* [[ARRAYIDX1]], align 32, [[TBAA2]]
-// O2-NEXT:    [[TMP2:%.*]] = call <512 x i1> @llvm.kvx.xbuildfvw(<256 x i1> [[TMP0]], <256 x i1> [[TMP1]])
+// O2-NEXT:    [[TMP2:%.*]] = call <512 x i1> @llvm.kvx.xcat512(<256 x i1> [[TMP0]], <256 x i1> [[TMP1]])
 // O2-NEXT:    store <512 x i1> [[TMP2]], <512 x i1>* [[W:%.*]], align 32, [[TBAA8]]
 // O2-NEXT:    ret void
 //
 void buildfvw(__kvx_x256 *a, __kvx_x512 *W) {
-  W[0] = __builtin_kvx_xbuildfvw(a[0], a[2]);
+  W[0] = __builtin_kvx_xcat512(a[0], a[2]);
 }

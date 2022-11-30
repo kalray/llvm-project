@@ -624,19 +624,19 @@ def: Pat<(int_kvx_xmovefmv v1024i1:$a0, m_sub_v_imm_check:$pos),
 def: Pat<(int_kvx_xmovefwv v512i1:$a0, w_sub_v_imm_check:$pos),
     (v256i1(EXTRACT_SUBREG WideReg:$a0, (w_sub_v_imm_value imm:$pos)))>;
 
-def: Pat<(int_kvx_xbuildfvm v256i1:$v0, v256i1:$v1, v256i1:$v2, v256i1:$v3),
+def: Pat<(int_kvx_xbuild1024 v256i1:$v0, v256i1:$v1, v256i1:$v2, v256i1:$v3),
             (REG_SEQUENCE MatrixReg,
                 (v256i1 VectorReg:$v0), (i32 sub_v0),
                 (v256i1 VectorReg:$v1), (i32 sub_v1),
                 (v256i1 VectorReg:$v2), (i32 sub_v2),
                 (v256i1 VectorReg:$v3), (i32 sub_v3))>;
 
-def: Pat<(int_kvx_xbuildfwm v512i1:$w0, v512i1:$w1),
+def: Pat<(int_kvx_xcat1024 v512i1:$w0, v512i1:$w1),
             (REG_SEQUENCE MatrixReg,
                 (v512i1 WideReg:$w0), (i32 sub_w0),
                 (v512i1 WideReg:$w1), (i32 sub_w1))>;
 
-def: Pat<(int_kvx_xbuildfvw v256i1:$v0, v256i1:$v1),
+def: Pat<(int_kvx_xcat512 v256i1:$v0, v256i1:$v1),
             (REG_SEQUENCE WideReg,
                 (v256i1 VectorReg:$v0), (i32 sub_v0),
                 (v256i1 VectorReg:$v1), (i32 sub_v1))>;

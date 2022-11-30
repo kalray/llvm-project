@@ -14,9 +14,9 @@ typedef long __attribute__((__vector_size__(32))) v4i64_t;
 // CHECK-NEXT:    store volatile <256 x i1> [[TMP4]], <256 x i1>* [[ARRAYIDX4]], align 32, [[TBAA2]]
 // CHECK-NEXT:    [[TMP5:%.*]] = call <256 x i1> @llvm.kvx.xmoveoto(<4 x i64> <i64 0, i64 1, i64 2, i64 3>)
 // CHECK-NEXT:    [[TMP6:%.*]] = load volatile <256 x i1>, <256 x i1>* [[V]], align 32, [[TBAA2]]
-// CHECK-NEXT:    [[TMP7:%.*]] = call <512 x i1> @llvm.kvx.xbuildfvw(<256 x i1> [[TMP5]], <256 x i1> [[TMP6]])
+// CHECK-NEXT:    [[TMP7:%.*]] = call <512 x i1> @llvm.kvx.xcat512(<256 x i1> [[TMP5]], <256 x i1> [[TMP6]])
 // CHECK-NEXT:    [[TMP8:%.*]] = call <256 x i1> @llvm.kvx.xalign512o(<512 x i1> [[TMP7]], i64 16)
-// CHECK-NEXT:    [[TMP9:%.*]] = call <512 x i1> @llvm.kvx.xbuildfvw(<256 x i1> [[TMP5]], <256 x i1> [[TMP8]])
+// CHECK-NEXT:    [[TMP9:%.*]] = call <512 x i1> @llvm.kvx.xcat512(<256 x i1> [[TMP5]], <256 x i1> [[TMP8]])
 // CHECK-NEXT:    [[TMP10:%.*]] = call <4 x i64> @llvm.kvx.xaccess512o(<512 x i1> [[TMP9]], i64 1)
 // CHECK-NEXT:    [[TMP11:%.*]] = load volatile <1024 x i1>, <1024 x i1>* [[M:%.*]], align 32, [[TBAA6:!tbaa !.*]]
 // CHECK-NEXT:    [[TMP12:%.*]] = call <256 x i1> @llvm.kvx.xconvdhv0(<256 x i1> [[TMP5]], <1024 x i1> [[TMP11]], i32 0, i32 0)
@@ -79,9 +79,9 @@ v4i64_t test_tca_builtins(long a, long b, long c, long d, volatile __kvx_x256 *v
   v[1] = __builtin_kvx_xmoveto(1, 2, 3, 4);
   lv = __builtin_kvx_xmoveoto(vt);
   vt = __builtin_kvx_xmovefo(lv);
-  __kvx_x512 buf = __builtin_kvx_xbuildfvw(lv, v[0]);
+  __kvx_x512 buf = __builtin_kvx_xcat512(lv, v[0]);
   lv2 = __builtin_kvx_xalign512o(buf, 16);
-  __kvx_x512 buf2 = __builtin_kvx_xbuildfvw(lv, lv2);
+  __kvx_x512 buf2 = __builtin_kvx_xcat512(lv, lv2);
   vt = __builtin_kvx_xaccess512o(buf2, 1);
   __kvx_x1024 lm = m[0];
   lv = __builtin_kvx_xconvdhv0(lv, lm, ".RN.sat");
