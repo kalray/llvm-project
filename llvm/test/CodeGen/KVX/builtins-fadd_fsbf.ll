@@ -30,6 +30,24 @@ define <2 x double> @fadddc(<2 x double> %0, <2 x double> %1) {
 
 declare <2 x double> @llvm.kvx.faddc.v2f64(<2 x double>, <2 x double>, i32, i32, i32)
 
+define <4 x double> @fadddcp(<4 x double> %0, <4 x double> %1) {
+; CHECK-LABEL: fadddcp:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fadddc.c.rn $r0r1 = $r0r1, $r4r5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fadddc.c.rn $r2r3 = $r2r3, $r6r7
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = shufflevector <4 x double> %0, <4 x double> undef, <2 x i32> <i32 0, i32 1>
+  %4 = shufflevector <4 x double> %1, <4 x double> undef, <2 x i32> <i32 0, i32 1>
+  %5 = tail call <2 x double> @llvm.kvx.faddc.v2f64(<2 x double> %3, <2 x double> %4, i32 1, i32 0, i32 0)
+  %6 = shufflevector <4 x double> %0, <4 x double> undef, <2 x i32> <i32 2, i32 3>
+  %7 = shufflevector <4 x double> %1, <4 x double> undef, <2 x i32> <i32 2, i32 3>
+  %8 = tail call <2 x double> @llvm.kvx.faddc.v2f64(<2 x double> %6, <2 x double> %7, i32 1, i32 0, i32 0)
+  %9 = shufflevector <2 x double> %5, <2 x double> %8, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  ret <4 x double> %9
+}
+
 define <2 x double> @fadddp(<2 x double> %0, <2 x double> %1) {
 ; CHECK-LABEL: fadddp:
 ; CHECK:       # %bb.0:
@@ -197,6 +215,24 @@ define <2 x double> @fsbfdc(<2 x double> %0, <2 x double> %1) {
 }
 
 declare <2 x double> @llvm.kvx.fsbfc.v2f64(<2 x double>, <2 x double>, i32, i32, i32)
+
+define <4 x double> @fsbfdcp(<4 x double> %0, <4 x double> %1) {
+; CHECK-LABEL: fsbfdcp:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fsbfdc.c.rn $r0r1 = $r0r1, $r4r5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    fsbfdc.c.rn $r2r3 = $r2r3, $r6r7
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = shufflevector <4 x double> %0, <4 x double> undef, <2 x i32> <i32 0, i32 1>
+  %4 = shufflevector <4 x double> %1, <4 x double> undef, <2 x i32> <i32 0, i32 1>
+  %5 = tail call <2 x double> @llvm.kvx.fsbfc.v2f64(<2 x double> %3, <2 x double> %4, i32 1, i32 0, i32 0)
+  %6 = shufflevector <4 x double> %0, <4 x double> undef, <2 x i32> <i32 2, i32 3>
+  %7 = shufflevector <4 x double> %1, <4 x double> undef, <2 x i32> <i32 2, i32 3>
+  %8 = tail call <2 x double> @llvm.kvx.fsbfc.v2f64(<2 x double> %6, <2 x double> %7, i32 1, i32 0, i32 0)
+  %9 = shufflevector <2 x double> %5, <2 x double> %8, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  ret <4 x double> %9
+}
 
 define <2 x double> @fsbfdp(<2 x double> %0, <2 x double> %1) {
 ; CHECK-LABEL: fsbfdp:

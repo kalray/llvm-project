@@ -75,7 +75,7 @@ entry:
 define i64 @ADDCHCP(i64 %0, i64 %1) {
 ; V1-LABEL: ADDCHCP:
 ; V1:       # %bb.0:
-; V1-NEXT:    addchcp $r0 = $r0, $r1
+; V1-NEXT:    addhcp.c $r0 = $r0, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -122,7 +122,7 @@ define i64 @ADDCHCP(i64 %0, i64 %1) {
 define i64 @ADDCHCP_half(i64 %0, i64 %1) {
 ; V1-LABEL: ADDCHCP_half:
 ; V1:       # %bb.0:
-; V1-NEXT:    addchcp $r0 = $r0, $r1
+; V1-NEXT:    addhcp.c $r0 = $r0, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -180,7 +180,7 @@ define i64 @ADDCWC(i64 %0, i64 %1) {
 define i64 @SBFCHCP(i64 %0, i64 %1) {
 ; V1-LABEL: SBFCHCP:
 ; V1:       # %bb.0:
-; V1-NEXT:    sbfchcp $r0 = $r1, $r0
+; V1-NEXT:    sbfhcp.c $r0 = $r1, $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -227,7 +227,7 @@ define i64 @SBFCHCP(i64 %0, i64 %1) {
 define i64 @SBFCHCP_half(i64 %0, i64 %1) {
 ; V1-LABEL: SBFCHCP_half:
 ; V1:       # %bb.0:
-; V1-NEXT:    sbfchcp $r0 = $r1, $r0
+; V1-NEXT:    sbfhcp.c $r0 = $r1, $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -426,7 +426,7 @@ define %"struct.std::complex.1" @MULWDC(i64 %0, i64 %1) {
 define i64 @ADDCHCP_2(i64 %0, i64 %1) {
 ; V1-LABEL: ADDCHCP_2:
 ; V1:       # %bb.0:
-; V1-NEXT:    addchcp $r0 = $r1, $r0
+; V1-NEXT:    addhcp.c $r0 = $r1, $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;

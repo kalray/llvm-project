@@ -672,10 +672,10 @@ define void @test_mma444ushd(<1024 x i1>* %p0){
   ret void
 }
 
-define void @test_mma484bw(<512 x i1>* %p0){
-; CHECK-LABEL: test_mma484bw:
+define void @test_xmma484bw(<512 x i1>* %p0){
+; CHECK-LABEL: test_xmma484bw:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    mma484bw $a0a1 = $a0a1, $a0, $a0
+; CHECK-NEXT:    xmma484bw $a0a1 = $a0a1, $a0, $a0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xso 32[$r0] = $a1
 ; CHECK-NEXT:    ;;
@@ -687,10 +687,10 @@ define void @test_mma484bw(<512 x i1>* %p0){
   ret void
 }
 
-define void @test_mma484subw(<512 x i1>* %p0){
-; CHECK-LABEL: test_mma484subw:
+define void @test_xmma484subw(<512 x i1>* %p0){
+; CHECK-LABEL: test_xmma484subw:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    mma484subw $a0a1 = $a0a1, $a0, $a0
+; CHECK-NEXT:    xmma484subw $a0a1 = $a0a1, $a0, $a0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xso 32[$r0] = $a1
 ; CHECK-NEXT:    ;;
@@ -702,10 +702,10 @@ define void @test_mma484subw(<512 x i1>* %p0){
   ret void
 }
 
-define void @test_mma484ubw(<512 x i1>* %p0){
-; CHECK-LABEL: test_mma484ubw:
+define void @test_xmma484ubw(<512 x i1>* %p0){
+; CHECK-LABEL: test_xmma484ubw:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    mma484ubw $a0a1 = $a0a1, $a0, $a0
+; CHECK-NEXT:    xmma484ubw $a0a1 = $a0a1, $a0, $a0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xso 32[$r0] = $a1
 ; CHECK-NEXT:    ;;
@@ -717,10 +717,10 @@ define void @test_mma484ubw(<512 x i1>* %p0){
   ret void
 }
 
-define void @test_mma484usbw(<512 x i1>* %p0){
-; CHECK-LABEL: test_mma484usbw:
+define void @test_xmma484usbw(<512 x i1>* %p0){
+; CHECK-LABEL: test_xmma484usbw:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    mma484usbw $a0a1 = $a0a1, $a0, $a0
+; CHECK-NEXT:    xmma484usbw $a0a1 = $a0a1, $a0, $a0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xso 32[$r0] = $a1
 ; CHECK-NEXT:    ;;
@@ -905,13 +905,13 @@ define <4 x i64> @test_tca_builtins(i64 %0, i64 %1, i64 %2, i64 %3, <256 x i1>* 
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    mma444ushd $a0a1a2a3 = $a0a1a2a3, $a9, $a9
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma484bw $a6a7 = $a10a11, $a9, $a9
+; CHECK-NEXT:    xmma484bw $a6a7 = $a10a11, $a9, $a9
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma484subw $a6a7 = $a6a7, $a9, $a9
+; CHECK-NEXT:    xmma484subw $a6a7 = $a6a7, $a9, $a9
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma484ubw $a6a7 = $a6a7, $a9, $a9
+; CHECK-NEXT:    xmma484ubw $a6a7 = $a6a7, $a9, $a9
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    mma484usbw $a6a7 = $a6a7, $a9, $a9
+; CHECK-NEXT:    xmma484usbw $a6a7 = $a6a7, $a9, $a9
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xmt44d $a0a1a2a3 = $a0a1a2a3
 ; CHECK-NEXT:    ;;
@@ -931,7 +931,7 @@ define <4 x i64> @test_tca_builtins(i64 %0, i64 %1, i64 %2, i64 %3, <256 x i1>* 
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xlo.us.c0 $a0a1a2a3 = 128[$r4]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xlo.u.c0.odd $r0 ? $a0a1a2a3 = 160[$r4]
+; CHECK-NEXT:    xlo.u.odd.c0 $r0 ? $a0a1a2a3 = 160[$r4]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xso 0[$r4] = $a4
 ; CHECK-NEXT:    ;;

@@ -67,8 +67,8 @@ multiclass I <string asm,
          int AddedComplex = 0> {
 
     // Filter out Qindex for generating the asm string from Mods and keep it in the dag
-    defvar Mods = !filter(i, ModsAll, !not(!eq(i, QindexMod)));
-    defvar Qindex = !filter(i, ModsAll, !eq(i, QindexMod));
+    defvar Mods = !filter(i, ModsAll, !and(!ne(i, QindexMod), !ne(i, ColumnMod)));
+    defvar Qindex = !filter(i, ModsAll, !or(!eq(i, QindexMod), !eq(i, ColumnMod)));
     defvar EmptyList = []<string>;
     defvar EmptyOutDag = !dag(outs, []<DAGOperand>, []<string>);
     defvar EmptyInDag = !dag(ins, []<DAGOperand>, []<string>);
