@@ -485,7 +485,7 @@ list<InstrItinData> Common =
     ONE_LITE,
     ONE_TINY,
     ONE_CRWH,
-    // movefo == BCU_TINY_AUXW_CRRP
+    // xmovefo == BCU_TINY_AUXW_CRRP
     InstrStage<3, [BCU_FU], 0>,
     InstrStage<3, [TINY0_FU, TINY1_FU, TINY2_FU, TINY3_FU], 0>,
     InstrStage<3, [AUXW_FU], 0>,
@@ -692,7 +692,7 @@ foreach m = [KVXCV1SchedMachineModel, KVXCV2SchedMachineModel] in {
 
   defvar LSU_AUXR_RT = LSU_RU # AUXR_RU;
 
-// Dedicated reservation table forXSWAP256: moveto + moveto + movefo
+// Dedicated reservation table forXSWAP256: moveto + moveto + xmovefo
   defvar LSU_AUXW_RT = LSU_RU # AUXW_RU;
 
   defvar LSU_AUXR_AUXW_RT = LSU_RU # AUXW_RU # AUXR_RU;
@@ -702,7 +702,7 @@ foreach m = [KVXCV1SchedMachineModel, KVXCV2SchedMachineModel] in {
   defvar MAU_AUXR_RT = MAU_RU # AUXR_RU;
 
   // TODO: In cv2 the two LITE instructions are TINY.
-  // Dedicated reservation table for XSWAP256: moveto + moveto + movefo
+  // Dedicated reservation table for XSWAP256: moveto + moveto + xmovefo
   defvar XSWAP256_RT = ALU_LITE_CRWL_RT # ALU_LITE_CRWH_RT # BCU_TINY_AUXW_CRRP_RT;
 
   // Handling XSWAP256 separately

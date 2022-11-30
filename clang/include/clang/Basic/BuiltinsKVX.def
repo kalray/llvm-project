@@ -489,8 +489,8 @@ BUILTIN(__builtin_kvx_xfnarrowwhv, "Tx256Tx512cC*", "n")
 
 KVX_BUILTIN(lv, "Tx256vC*cC*", "n", 2, "kv3-1", KVX_SPECULATE)
 KVX_BUILTIN(lv_cond, "Tx256Tx256D&vC*OiCcC*", "n", 4, "kv3-1", KVX_SPECULATE, KVX_LSUCOND)
-KVX_BUILTIN(lvc, "Tx1024Tx1024&vC*cC*", "n", 3, "kv3-1", KVX_COLUMN, KVX_SPECULATE)
-KVX_BUILTIN(lvc_cond, "Tx1024Tx1024&vC*OicC*", "n", 4, "kv3-1", KVX_COLUMN, KVX_SPECULATE, KVX_LSUCOND)
+KVX_BUILTIN(lvc, "Tx1024Tx1024&vC*cC*", "n", 3, "kv3-1", KVX_SPECULATE, KVX_COLUMN)
+KVX_BUILTIN(lvc_cond, "Tx1024Tx1024&vC*OicC*", "n", 4, "kv3-1", KVX_SPECULATE, KVX_COLUMN, KVX_LSUCOND)
 
 KVX_BUILTIN(sv, "vvC*Tx256", "n", 2, "kv3-1", )
 KVX_BUILTIN(sv_cond, "vvC*Tx256OiCcC*", "n", 4, "kv3-1", KVX_LSUCOND)

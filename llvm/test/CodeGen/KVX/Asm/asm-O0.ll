@@ -16,7 +16,7 @@ define i64 @asm_clobber_single_none(<2 x i64> %v, i64 %A) {
 ; CHECK-NEXT:    sq 48[$r12] = $r0r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
-; CHECK-NEXT:    movetq $r4r5 = $r0, $r1
+; CHECK-NEXT:    xmovetq $r4r5 = $r0, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    ld $r0 = 40[$r12]
@@ -35,7 +35,7 @@ entry:
   %vecext = extractelement <2 x i64> %0, i32 0
   %1 = load <2 x i64>, <2 x i64>* %v.addr, align 16
   %vecext1 = extractelement <2 x i64> %1, i32 1
-  %2 = call <2 x i64> asm sideeffect "movetq $0 = $1, $2", "=r,r,r,~{$r2}"(i64 %vecext, i64 %vecext1)
+  %2 = call <2 x i64> asm sideeffect "xmovetq $0 = $1, $2", "=r,r,r,~{$r2}"(i64 %vecext, i64 %vecext1)
   store <2 x i64> %2, <2 x i64>* %out, align 16
   %3 = load i64, i64* %A.addr, align 8
   ret i64 %3
@@ -50,7 +50,7 @@ define i64 @asm_clobber_single_single(i64 %A) {
 ; CHECK-NEXT:    sd 24[$r12] = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
-; CHECK-NEXT:    movetq $r2r3 = $r1, $r1
+; CHECK-NEXT:    xmovetq $r2r3 = $r1, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    ld $r0 = 24[$r12]
@@ -64,7 +64,7 @@ entry:
   %v2i64 = alloca <2 x i64>, align 16
   store i64 %A, i64* %A.addr, align 8
   %0 = load i64, i64* %A.addr, align 8
-  %1 = call <2 x i64> asm sideeffect "movetq $0 = $1, $1", "=r,r,~{$r0}"(i64 %0)
+  %1 = call <2 x i64> asm sideeffect "xmovetq $0 = $1, $1", "=r,r,~{$r0}"(i64 %0)
   store <2 x i64> %1, <2 x i64>* %v2i64, align 16
   %2 = load i64, i64* %A.addr, align 8
   ret i64 %2

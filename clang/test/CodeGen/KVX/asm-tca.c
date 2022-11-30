@@ -4,22 +4,22 @@
 // CHECK-LABEL: @asm_tca(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[ADD:%.*]] = add nsw i64 [[A:%.*]], 1
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call { <256 x i1>, <256 x i1> } asm sideeffect "lv $0 = $3[$2]\0A\09
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call { <256 x i1>, <256 x i1> } asm sideeffect "xlo.u $0 = $3[$2]\0A\09
 // CHECK-NEXT:    [[ASMRESULT:%.*]] = extractvalue { <256 x i1>, <256 x i1> } [[TMP0]], 0
 // CHECK-NEXT:    [[ASMRESULT1:%.*]] = extractvalue { <256 x i1>, <256 x i1> } [[TMP0]], 1
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <256 x i1> asm sideeffect "copyv $0 = $1\0A\09
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <256 x i1> asm sideeffect "xcopyo $0 = $1\0A\09
 // CHECK-NEXT:    ret void
 //
 void asm_tca(void *v, long A) {
   long B = A + 1;
   __kvx_x256 out1, out2, out3;
-  __asm__ volatile("lv %0 = %3[%2]\n\t;;\n\t"
-                   "lv.s %1 = %4[%2]\n\t;;"
+  __asm__ volatile("xlo.u %0 = %3[%2]\n\t;;\n\t"
+                   "xlo.us %1 = %4[%2]\n\t;;"
                    : "=x"(out1), "=x"(out2)
                    : "r"(v), "r"(A), "r"(B)
                    : "$r0");
-  __asm__ volatile("copyv %0 = %1\n\t;;\n\t"
-                   "sv 0[%3] = %2"
+  __asm__ volatile("xcopyo %0 = %1\n\t;;\n\t"
+                   "xso 0[%3] = %2"
                    : "=x"(out3)
                    : "x"(out1), "x"(out2), "r"(v)
                    :);
@@ -27,13 +27,13 @@ void asm_tca(void *v, long A) {
 
 // CHECK-LABEL: @asm_clobber_vec_vec(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <256 x i1> asm sideeffect "copyv $0 = $1", "=x,x,~{$a0}"(<256 x i1> undef) [[ATTR3:#.*]], !srcloc !4
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <256 x i1> asm sideeffect "xcopyo $0 = $1", "=x,x,~{$a0}"(<256 x i1> undef) [[ATTR3:#.*]], !srcloc !4
 // CHECK-NEXT:    ret void
 //
 void asm_clobber_vec_vec(long A) {
   __kvx_x256 v4i64;
   __kvx_x256 tcav4i64;
-  __asm__ volatile("copyv %0 = %1"
+  __asm__ volatile("xcopyo %0 = %1"
                    : "=x"(v4i64)
                    : "x"(tcav4i64)
                    : "$a0");
@@ -41,13 +41,13 @@ void asm_clobber_vec_vec(long A) {
 
 // CHECK-LABEL: @asm_clobber_vec_block(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <256 x i1> asm sideeffect "copyv $0 = $1", "=x,x,~{$a0.hi}"(<256 x i1> undef) [[ATTR3]], !srcloc !5
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <256 x i1> asm sideeffect "xcopyo $0 = $1", "=x,x,~{$a0.hi}"(<256 x i1> undef) [[ATTR3]], !srcloc !5
 // CHECK-NEXT:    ret void
 //
 void asm_clobber_vec_block(long A) {
   __kvx_x256 v4i64;
   __kvx_x256 tcav4i64;
-  __asm__ volatile("copyv %0 = %1"
+  __asm__ volatile("xcopyo %0 = %1"
                    : "=x"(v4i64)
                    : "x"(tcav4i64)
                    : "$a0.hi");
@@ -56,11 +56,11 @@ void asm_clobber_vec_block(long A) {
 // CHECK-LABEL: @asm_clobber_wide_vec(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, <256 x i1>* [[A:%.*]], align 32, [[TBAA6:!tbaa !.*]]
-// CHECK-NEXT:    tail call void asm sideeffect "copyv $0 = $0", "x,~{$r0r1r2r3},~{$a0a1}"(<256 x i1> [[TMP0]]) [[ATTR3]], !srcloc !10
+// CHECK-NEXT:    tail call void asm sideeffect "xcopyo $0 = $0", "x,~{$r0r1r2r3},~{$a0a1}"(<256 x i1> [[TMP0]]) [[ATTR3]], !srcloc !10
 // CHECK-NEXT:    ret void
 //
 void asm_clobber_wide_vec(__kvx_x256 *a) {
-  __asm__ volatile("copyv %0 = %0"
+  __asm__ volatile("xcopyo %0 = %0"
                    :
                    : "x"(a[0])
                    : "$r0r1r2r3", "$a0a1");
@@ -69,7 +69,7 @@ void asm_clobber_wide_vec(__kvx_x256 *a) {
 // CHECK-LABEL: @asm_clobber_multiple_quad(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, <256 x i1>* [[C:%.*]], align 32, [[TBAA6]]
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call { <256 x i1>, <256 x i1> } asm sideeffect "copyv $0 = $1\0A\09
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call { <256 x i1>, <256 x i1> } asm sideeffect "xcopyo $0 = $1\0A\09
 // CHECK-NEXT:    [[ASMRESULT:%.*]] = extractvalue { <256 x i1>, <256 x i1> } [[TMP1]], 0
 // CHECK-NEXT:    [[ASMRESULT3:%.*]] = extractvalue { <256 x i1>, <256 x i1> } [[TMP1]], 1
 // CHECK-NEXT:    store <256 x i1> [[ASMRESULT]], <256 x i1>* [[C]], align 32, [[TBAA6]]
@@ -77,7 +77,7 @@ void asm_clobber_wide_vec(__kvx_x256 *a) {
 // CHECK-NEXT:    ret void
 //
 void asm_clobber_multiple_quad(__kvx_x256 *c, __kvx_x256 *b) {
-  __asm__ volatile("copyv %0 = %1\n\t;;\n\tcopyv %1 = %0"
+  __asm__ volatile("xcopyo %0 = %1\n\t;;\n\txcopyo %1 = %0"
                    : "=x"(c[0]), "=x"(b[0])
                    : "x"(c[0])
                    : "$r0r1r2r3", "$a0a1a2a3");
@@ -86,11 +86,11 @@ void asm_clobber_multiple_quad(__kvx_x256 *c, __kvx_x256 *b) {
 // CHECK-LABEL: @asm_clobber_quad_matrix(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, <256 x i1>* [[A:%.*]], align 32, [[TBAA6]]
-// CHECK-NEXT:    tail call void asm sideeffect "sv 0[$$r3] = $0", "x,~{$r0r1r2r3},~{$a0a1a2a3}"(<256 x i1> [[TMP0]]) [[ATTR3]], !srcloc !12
+// CHECK-NEXT:    tail call void asm sideeffect "xso 0[$$r3] = $0", "x,~{$r0r1r2r3},~{$a0a1a2a3}"(<256 x i1> [[TMP0]]) [[ATTR3]], !srcloc !12
 // CHECK-NEXT:    ret <256 x i1>* [[A]]
 //
 __kvx_x256 *asm_clobber_quad_matrix(__kvx_x256 *a) {
-  __asm__ volatile("sv 0[$r3] = %0"
+  __asm__ volatile("xso 0[$r3] = %0"
                    :
                    : "x"(a[0])
                    : "$r0r1r2r3", "$a0a1a2a3");
@@ -115,12 +115,12 @@ void use_wide_reg(__kvx_x512 *x, __kvx_x256 *v) {
 // CHECK-LABEL: @use_matrix_reg(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = load <1024 x i1>, <1024 x i1>* [[X:%.*]], align 32, [[TBAA16:!tbaa !.*]]
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <1024 x i1> asm sideeffect "mt44d $0 = $0", "=x,0,~{$r0r1r2r3},~{$a0a1a2a3}"(<1024 x i1> [[TMP0]]) [[ATTR3]], !srcloc !18
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <1024 x i1> asm sideeffect "xmt44d $0 = $0", "=x,0,~{$r0r1r2r3},~{$a0a1a2a3}"(<1024 x i1> [[TMP0]]) [[ATTR3]], !srcloc !18
 // CHECK-NEXT:    store <1024 x i1> [[TMP1]], <1024 x i1>* [[X]], align 32, [[TBAA16]]
 // CHECK-NEXT:    ret void
 //
 void use_matrix_reg(__kvx_x1024 *x) {
-  __asm__ volatile("mt44d %0 = %0"
+  __asm__ volatile("xmt44d %0 = %0"
                    : "+x"(x[0])
                    :
                    : "$r0r1r2r3", "$a0a1a2a3");

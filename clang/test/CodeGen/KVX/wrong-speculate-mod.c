@@ -7,6 +7,6 @@ v16i64 *toto;
 
 void xfail_load1024(v16i64 *addr) {
   __kvx_x1024 tca = *((__kvx_x1024 *)toto);
-  __builtin_kvx_lvc_cond(tca, addr, 1, ".su"); // expected-error {{This builtin accept a modifier string composed by: ['.c0', '.c1', '.c2', '.c3'], ['', '.', '.s'], ['.wlez', '.wnez', '.weqz', '.dgez', '.wgtz', '.even', '.dlez', '.dnez', '.wltz', '.deqz', '.odd', '.dgtz', '.wgez', '.dltz']}} expected-error {{cannot compile this builtin function yet}}
+  __builtin_kvx_lvc_cond(tca, addr, 1, ".su"); // expected-error {{This builtin accept a modifier string composed by: ['', '.', '.s'], ['.c0', '.c1', '.c2', '.c3'], ['.wlez', '.wnez', '.weqz', '.dgez', '.wgtz', '.even', '.dlez', '.dnez', '.wltz', '.deqz', '.odd', '.dgtz', '.wgez', '.dltz']}} expected-error {{cannot compile this builtin function yet}}
   *((__kvx_x1024 *)toto) = tca;
 }

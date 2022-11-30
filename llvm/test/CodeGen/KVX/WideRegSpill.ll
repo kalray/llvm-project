@@ -33,10 +33,10 @@ define i32 @a() {
 ; CV1-NEXT:    goto .LBB0_3
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:  .LBB0_1: # in Loop: Header=BB0_3 Depth=1
-; CV1-NEXT:    copyv $a2 = $a1
+; CV1-NEXT:    xcopyo $a2 = $a1
 ; CV1-NEXT:    compw.eq $r2 = $r3, 1
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    copyv $a3 = $a0
+; CV1-NEXT:    xcopyo $a3 = $a0
 ; CV1-NEXT:    sllw $r2 = $r2, 6
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    alignv $a1 = $a1, $a2, $r2
@@ -44,15 +44,15 @@ define i32 @a() {
 ; CV1-NEXT:    alignv $a0 = $a0, $a3, $r2
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:  .LBB0_2: # in Loop: Header=BB0_3 Depth=1
-; CV1-NEXT:    mt44d $a4a5a6a7 = $a0a1a2a3
+; CV1-NEXT:    xmt44d $a4a5a6a7 = $a0a1a2a3
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sv 96[$r0] = $a7
+; CV1-NEXT:    xso 96[$r0] = $a7
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sv 64[$r0] = $a6
+; CV1-NEXT:    xso 64[$r0] = $a6
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sv 32[$r0] = $a5
+; CV1-NEXT:    xso 32[$r0] = $a5
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sv 0[$r0] = $a4
+; CV1-NEXT:    xso 0[$r0] = $a4
 ; CV1-NEXT:    addd $r0 = $r0, 2
 ; CV1-NEXT:    copyd $r2 = $r1
 ; CV1-NEXT:    ;;

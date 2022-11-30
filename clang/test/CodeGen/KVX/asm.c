@@ -10,12 +10,12 @@ typedef long __attribute__((__vector_size__(128))) v16i64_t;
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[VECEXT:%.*]] = extractelement <2 x i64> [[V:%.*]], i32 0
 // CHECK-NEXT:    [[VECEXT1:%.*]] = extractelement <2 x i64> [[V]], i32 1
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x i64> asm sideeffect "movetq $0 = $1, $2", "=r,r,r,~{$r2}"(i64 [[VECEXT]], i64 [[VECEXT1]]) [[ATTR3:#.*]], !srcloc !2
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x i64> asm sideeffect "xmovetq $0 = $1, $2", "=r,r,r,~{$r2}"(i64 [[VECEXT]], i64 [[VECEXT1]]) [[ATTR3:#.*]], !srcloc !2
 // CHECK-NEXT:    ret i64 [[A:%.*]]
 //
 long asm_clobber_single_none(v2i64_t v, long A) {
   v2i64_t out;
-  __asm__ volatile("movetq %0 = %1, %2"
+  __asm__ volatile("xmovetq %0 = %1, %2"
                    : "=r"(out)            /*output operands */
                    : "r"(v[0]), "r"(v[1]) /* input operands */
                    : "$r2"                /* list of clobbered registers */
@@ -24,12 +24,12 @@ long asm_clobber_single_none(v2i64_t v, long A) {
 }
 // CHECK-LABEL: @asm_clobber_single_single(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x i64> asm sideeffect "movetq $0 = $1, $1", "=r,r,~{$r0}"(i64 [[A:%.*]]) [[ATTR3]], !srcloc !3
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x i64> asm sideeffect "xmovetq $0 = $1, $1", "=r,r,~{$r0}"(i64 [[A:%.*]]) [[ATTR3]], !srcloc !3
 // CHECK-NEXT:    ret i64 [[A]]
 //
 long asm_clobber_single_single(long A) {
   v2i64_t v2i64;
-  __asm__ volatile("movetq %0 = %1, %1"
+  __asm__ volatile("xmovetq %0 = %1, %1"
                    : "=r"(v2i64) /*output operands */
                    : "r"(A)      /* input operands */
                    : "$r0"       /* list of clobbered registers */
