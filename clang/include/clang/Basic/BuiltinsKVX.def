@@ -435,9 +435,9 @@ NARY_BUILTIN(xmovefmw, "Tx512Tx1024IUi", "n", 2)
 NARY_BUILTIN(xmovefmv, "Tx256Tx1024IUi", "n", 2)
 NARY_BUILTIN(xmovefwv, "Tx256Tx512IUi", "n", 2)
 
-NARY_BUILTIN(xbuildfvm, "Tx1024Tx256Tx256Tx256Tx256", "n", 4)
-NARY_BUILTIN(xbuildfwm, "Tx1024Tx512Tx512", "n", 2)
-NARY_BUILTIN(xbuildfvw, "Tx512Tx256Tx256", "n", 2)
+NARY_BUILTIN(xbuild1024, "Tx1024Tx256Tx256Tx256Tx256", "n", 4)
+NARY_BUILTIN(xcat1024, "Tx1024Tx512Tx512", "n", 2)
+NARY_BUILTIN(xcat512, "Tx512Tx256Tx256", "n", 2)
 
 NARY_BUILTIN(xaccess512o, "V4OiTx512UOi", "n", 2)
 NARY_BUILTIN(xalign512o, "Tx256Tx512UOi", "n", 2)

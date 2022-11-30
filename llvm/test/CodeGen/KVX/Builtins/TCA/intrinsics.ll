@@ -966,9 +966,9 @@ define <4 x i64> @test_tca_builtins(i64 %0, i64 %1, i64 %2, i64 %3, <256 x i1>* 
   store volatile <256 x i1> %12, <256 x i1>* %13
   %14 = tail call <256 x i1> @llvm.kvx.xmoveoto(<4 x i64> <i64 0, i64 1, i64 2, i64 3>)
   %15 = load volatile <256 x i1>, <256 x i1>* %4
-  %16 = tail call <512 x i1> @llvm.kvx.xbuildfvw(<256 x i1> %14, <256 x i1> %15)
+  %16 = tail call <512 x i1> @llvm.kvx.xcat512(<256 x i1> %14, <256 x i1> %15)
   %17 = tail call <256 x i1> @llvm.kvx.xalign512o(<512 x i1> %16, i64 16)
-  %18 = tail call <512 x i1> @llvm.kvx.xbuildfvw(<256 x i1> %14, <256 x i1> %17)
+  %18 = tail call <512 x i1> @llvm.kvx.xcat512(<256 x i1> %14, <256 x i1> %17)
   %19 = tail call <4 x i64> @llvm.kvx.xaccess512o(<512 x i1> %18, i64 1)
   %20 = load volatile <1024 x i1>, <1024 x i1>* %6
   %21 = tail call <256 x i1> @llvm.kvx.xconvdhv0(<256 x i1> %14, <1024 x i1> %20, i32 0, i32 0)
@@ -1459,12 +1459,12 @@ entry:
   %1 = load <256 x i1>, <256 x i1>* %arrayidx1, align 32
   %arrayidx3 = getelementptr inbounds <256 x i1>, <256 x i1>* %a, i64 1
   %2 = load <256 x i1>, <256 x i1>* %arrayidx3, align 32
-  %3 = tail call <1024 x i1> @llvm.kvx.xbuildfvm(<256 x i1> %0, <256 x i1> %1, <256 x i1> %0, <256 x i1> %2)
+  %3 = tail call <1024 x i1> @llvm.kvx.xbuild1024(<256 x i1> %0, <256 x i1> %1, <256 x i1> %0, <256 x i1> %2)
   store <1024 x i1> %3, <1024 x i1>* %M, align 128
   ret void
 }
 
-declare <1024 x i1> @llvm.kvx.xbuildfvm(<256 x i1>, <256 x i1>, <256 x i1>, <256 x i1>) #1
+declare <1024 x i1> @llvm.kvx.xbuild1024(<256 x i1>, <256 x i1>, <256 x i1>, <256 x i1>) #1
 
 define void @buildfwm(<512 x i1>* nocapture readonly %a, <1024 x i1>* nocapture %M) {
 ; CHECK-LABEL: buildfwm:
@@ -1504,17 +1504,17 @@ define void @buildfwm(<512 x i1>* nocapture readonly %a, <1024 x i1>* nocapture 
 entry:
   %arrayidx = getelementptr inbounds <512 x i1>, <512 x i1>* %a, i64 2
   %0 = load <512 x i1>, <512 x i1>* %arrayidx, align 32
-  %1 = tail call <1024 x i1> @llvm.kvx.xbuildfwm(<512 x i1> %0, <512 x i1> %0)
+  %1 = tail call <1024 x i1> @llvm.kvx.xcat1024(<512 x i1> %0, <512 x i1> %0)
   %arrayidx2 = getelementptr inbounds <1024 x i1>, <1024 x i1>* %M, i64 1
   store <1024 x i1> %1, <1024 x i1>* %arrayidx2, align 128
   %arrayidx4 = getelementptr inbounds <512 x i1>, <512 x i1>* %a, i64 1
   %2 = load <512 x i1>, <512 x i1>* %arrayidx4, align 32
-  %3 = tail call <1024 x i1> @llvm.kvx.xbuildfwm(<512 x i1> %0, <512 x i1> %2)
+  %3 = tail call <1024 x i1> @llvm.kvx.xcat1024(<512 x i1> %0, <512 x i1> %2)
   store <1024 x i1> %3, <1024 x i1>* %M, align 128
   ret void
 }
 
-declare <1024 x i1> @llvm.kvx.xbuildfwm(<512 x i1>, <512 x i1>) #1
+declare <1024 x i1> @llvm.kvx.xcat1024(<512 x i1>, <512 x i1>) #1
 
 define void @buildfvw(<256 x i1>* nocapture readonly %a, <512 x i1>* nocapture %W) {
 ; CHECK-LABEL: buildfvw:
@@ -1532,12 +1532,12 @@ entry:
   %0 = load <256 x i1>, <256 x i1>* %a, align 32
   %arrayidx1 = getelementptr inbounds <256 x i1>, <256 x i1>* %a, i64 2
   %1 = load <256 x i1>, <256 x i1>* %arrayidx1, align 32
-  %2 = tail call <512 x i1> @llvm.kvx.xbuildfvw(<256 x i1> %0, <256 x i1> %1)
+  %2 = tail call <512 x i1> @llvm.kvx.xcat512(<256 x i1> %0, <256 x i1> %1)
   store <512 x i1> %2, <512 x i1>* %W, align 32
   ret void
 }
 
-declare <512 x i1> @llvm.kvx.xbuildfvw(<256 x i1>, <256 x i1>) #1
+declare <512 x i1> @llvm.kvx.xcat512(<256 x i1>, <256 x i1>) #1
 declare <1024 x i1> @llvm.kvx.xmma444hbd0(<256 x i1>, <256 x i1>, <1024 x i1>, i32)
 declare <1024 x i1> @llvm.kvx.xmma444hbd1(<256 x i1>, <256 x i1>, <1024 x i1>, i32)
 declare <1024 x i1> @llvm.kvx.xmma484hbd(<512 x i1>, <256 x i1>, <1024 x i1>, i32)
