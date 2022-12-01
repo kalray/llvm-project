@@ -467,7 +467,6 @@ KVX_BUILTIN(xmma484bw, "Tx512Tx256Tx256Tx512cC*", "n", 4, "", KvxUnSignMod)
 KVX_BUILTIN(xmt44d, "Tx1024Tx1024", "n", 1, "", )
 
 BUILTIN(__builtin_kvx_xfscalewv, "Tx256Tx256cC*", "n")
-BUILTIN(__builtin_kvx_xfnarrowwhv, "Tx256Tx512cC*", "n")
 
 //===----------------------------------------------------------------------===//
 // KV3 V1 TCA builtins
@@ -496,13 +495,12 @@ KVX_BUILTIN(xzx48bw, "Tx1024Tx256", "n", 1, "kv3-2", )
 KVX_BUILTIN(xtrunc48wb, "Tx256Tx1024", "n", 1, "kv3-2", )
 KVX_BUILTIN(xffma44hw, "Tx512Tx256Tx256Tx512cC*", "n", 4, "kv3-2", KVX_ROUNDING, KVX_SILENT)
 BUILTIN(__builtin_kvx_xfmma484hw, "Tx512Tx512Tx512Tx512cC*", "n")
-BUILTIN(__builtin_kvx_xfnarrow44wh, "Tx256Tx512cC*", "n")
+KVX_BUILTIN(xfnarrow44wh, "Tx256Tx512cC*", "n", 2, "", KVX_ROUNDING, KVX_SILENT)
 BUILTIN(__builtin_kvx_xfscalewo, "Tx256Tx256icC*", "n")
 BUILTIN(__builtin_kvx_xmaddifwo, "Tx256Tx256Tx256Tx256cC*", "n")
 BUILTIN(__builtin_kvx_xmsbfifwo, "Tx256Tx256Tx256Tx256cC*", "n")
 
 BUILTIN(__builtin_kvx_fscalewv, "Tx256Tx256cC*", "n")
-BUILTIN(__builtin_kvx_fnarrowwhv, "Tx256Tx512cC*", "n")
 
 KVX_BUILTIN(xload256, "Tx256vC*cC*", "n", 2, "kv3-2", KVX_VARIANT)
 KVX_BUILTIN(xloadc256, "Tx256Tx256&vC*OiCcC*", "n", 4, "kv3-2", KVX_VARIANT, KVX_LSUMASK)

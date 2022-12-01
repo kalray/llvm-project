@@ -766,16 +766,16 @@ define void @test_fscalewv(<256 x i1>* %p0){
   ret void
 }
 
-declare <256 x i1> @llvm.kvx.xfnarrowwhv(<512 x i1>, i32, i32)
-define void @test_fnarrowwhv(<256 x i1>* %p0){
-; CHECK-LABEL: test_fnarrowwhv:
+declare <256 x i1> @llvm.kvx.xfnarrow44wh(<512 x i1>, i32, i32)
+define void @test_xfnarrow44wh(<256 x i1>* %p0){
+; CHECK-LABEL: test_xfnarrow44wh:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fnarrowwhv.rn $a0 = $a0a1
+; CHECK-NEXT:    fnarrow44wh.rn $a0 = $a0a1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %m1 = tail call <256 x i1> @llvm.kvx.xfnarrowwhv(<512 x i1> undef, i32 0, i32 0)
+  %m1 = tail call <256 x i1> @llvm.kvx.xfnarrow44wh(<512 x i1> undef, i32 0, i32 0)
   store <256 x i1> %m1, <256 x i1>* %p0, align 32
   ret void
 }
@@ -917,7 +917,7 @@ define <4 x i64> @test_tca_builtins(i64 %0, i64 %1, i64 %2, i64 %3, <256 x i1>* 
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fscalewv $a4 = $a5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowwhv.rn.s $a5 = $a6a7
+; CHECK-NEXT:    fnarrow44wh.rn.s $a5 = $a6a7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fscalewv.rn.relu $a4 = $a4
 ; CHECK-NEXT:    ;;
@@ -1002,7 +1002,7 @@ define <4 x i64> @test_tca_builtins(i64 %0, i64 %1, i64 %2, i64 %3, <256 x i1>* 
   %49 = tail call <512 x i1> @llvm.kvx.xmma484bw(<256 x i1> %28, <256 x i1> %28, <512 x i1> %48, i32 3)
   %50 = tail call <1024 x i1> @llvm.kvx.xmt44d(<1024 x i1> %45)
   %51 = tail call <256 x i1> @llvm.kvx.xfscalewv(<256 x i1> %27, i32 7, i32 0, i32 0)
-  %52 = tail call <256 x i1> @llvm.kvx.xfnarrowwhv(<512 x i1> %49, i32 0, i32 1)
+  %52 = tail call <256 x i1> @llvm.kvx.xfnarrow44wh(<512 x i1> %49, i32 0, i32 1)
   %53 = tail call <256 x i1> @llvm.kvx.xfscalewv(<256 x i1> %51, i32 0, i32 0, i32 1)
   %54 = tail call { <4 x i64>, <256 x i1> } @llvm.kvx.xswap256(<4 x i64> %19, <256 x i1> %53)
   %55 = extractvalue { <4 x i64>, <256 x i1> } %54, 1

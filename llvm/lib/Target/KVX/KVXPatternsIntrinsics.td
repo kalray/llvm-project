@@ -819,8 +819,6 @@ def: Pat<(int_kvx_xmt44d MatrixReg:$a1), (XMT44D $a1)>, Requires<[IsV1]>;
 def: Pat<(int_kvx_xfscalewv VectorReg:$a5, i32:$a1, i32:$a2, i32:$a3),
          (FSCALEWV $a5, RoundingMod:$a1, SilentMod:$a2, RectifyMod:$a3)>, Requires<[IsV1]>;
 
-def: Pat<(int_kvx_xfnarrowwhv WideReg:$a4, i32:$a1, i32:$a2), (FNARROWWHV $a4, RoundingMod:$a1, SilentMod:$a2)>;
-
 // TODO: T18719 We could have generic C code patterns, but that requires changing how we lower
 // vector_shuffle/build_vector for v4f32 vectors.
 // FMM222
