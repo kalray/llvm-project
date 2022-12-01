@@ -18474,6 +18474,8 @@ static const KvxModifier KvxLdStAddrSpaceMod(
 
 static const KvxModifier KvxNarrowInt({{"", 0}, {"q", 1}, {"s", 2}, {"us", 3}});
 
+static const KvxModifier KVXSignSat = KVX_SILENT;
+
 static const KvxModifier KvxShiftLeft({{"", 0}, {"s", 1}, {"us", 2}, {"r", 3}});
 
 static const KvxModifier

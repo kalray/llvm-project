@@ -3710,15 +3710,42 @@ defm MOVEFO : MC_36<"xmovefo">, Requires<[IsV1]>;
 defm XMOVEFO : I <"xmovefo", BCU_TINY_AUXW_CRRP_RR, [VectorReg], [],[],[], [QuadReg]>, Requires<[IsV2]>;
 }
 
+let Predicates = [IsV2] in {
 // TODO: Marking as commutable should allow patterns to
 // match rhs or lhs immediates, but that does not seem
 // to work as it does with isAdd attribute.
 let isCommutable = 1 in {
-defm ABDSBO : MC_17_TINY<"abdsbo">, Requires<[IsV2]>;
-defm ABDSHQ : MC_17_TINY<"abdshq">, Requires<[IsV2]>;
-defm ABDSW  : MC_17_TINY<"abdsw">,  Requires<[IsV2]>;
-defm ABDSWP : MC_17_TINY<"abdswp">, Requires<[IsV2]>;
-defm ABDSD : MC_17_TINY<"abdsd">, Requires<[IsV2]>;
+defm ABDSBO : MC_17_TINY<"abdsbo">;
+defm ABDSHQ : MC_17_TINY<"abdshq">;
+defm ABDSW  : MC_17_TINY<"abdsw">;
+defm ABDSWP : MC_17_TINY<"abdswp">;
+defm ABDSD : MC_17_TINY<"abdsd">;
+}
+defm ABSSBO : I </*asm=*/"abssbo", /*itin=*/ALU_TINY_X_, /*Ops=*/[SingleReg], /*Mods=*/[],
+                 /*MemOps=*/[], /*CC=*/[], /*Out=*/[SingleReg], /*inplace =*/ 0, /*pattern =*/
+                 [(set v8i8:$r, (abs (ssubsat immAllZerosV, v8i8:$op0)))], /*IsAtomicSwap = */ 0,
+                 /*added complexity */ 2>;
+
+defm ABSSHQ : I </*asm=*/"absshq", /*itin=*/ALU_TINY_X_, /*Ops=*/[SingleReg], /*Mods=*/[],
+                 /*MemOps=*/[], /*CC=*/[], /*Out=*/[SingleReg], /*inplace =*/ 0, /*pattern =*/
+                 [(set v4i16:$r, (abs (ssubsat immAllZerosV, v4i16:$op0)))], /*IsAtomicSwap = */ 0,
+                 /*added complexity */ 2>;
+
+defm ABSSW  : I </*asm=*/"abssw", /*itin=*/ALU_TINY_X_, /*Ops=*/[SingleReg], /*Mods=*/[],
+                 /*MemOps=*/[], /*CC=*/[], /*Out=*/[SingleReg], /*inplace =*/ 0, /*pattern =*/
+                 [(set i32:$r, (abs (ssubsat 0, i32:$op0)))], /*IsAtomicSwap = */ 0,
+                 /*added complexity */ 2>;
+
+defm ABSSWP : I </*asm=*/"absswp", /*itin=*/ALU_TINY_X_, /*Ops=*/[SingleReg], /*Mods=*/[],
+                 /*MemOps=*/[], /*CC=*/[], /*Out=*/[SingleReg], /*inplace =*/ 0, /*pattern =*/
+                 [(set v2i32:$r, (abs (ssubsat immAllZerosV, v2i32:$op0)))], /*IsAtomicSwap = */ 0,
+                 /*added complexity */ 2>;
+
+defm ABSSD : I </*asm=*/"abssd", /*itin=*/ALU_TINY_X_, /*Ops=*/[SingleReg], /*Mods=*/[],
+                 /*MemOps=*/[], /*CC=*/[], /*Out=*/[SingleReg], /*inplace =*/ 0, /*pattern =*/
+                 [(set i64:$r, (abs (ssubsat 0, i64:$op0)))], /*IsAtomicSwap = */ 0,
+                 /*added complexity */ 2>;
+
 }
 
 let Uses = [CS] in {
