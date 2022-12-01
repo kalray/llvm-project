@@ -50,7 +50,7 @@ typedef long __attribute__((__vector_size__(32))) v4i64_t;
 // CHECK-NEXT:    [[TMP40:%.*]] = call <512 x i1> @llvm.kvx.xmma484bw(<256 x i1> [[TMP19]], <256 x i1> [[TMP19]], <512 x i1> [[TMP39]], i32 3)
 // CHECK-NEXT:    [[TMP41:%.*]] = call <1024 x i1> @llvm.kvx.xmt44d(<1024 x i1> [[TMP36]])
 // CHECK-NEXT:    [[TMP42:%.*]] = call <256 x i1> @llvm.kvx.xfscalewv(<256 x i1> [[TMP18]], i32 7, i32 0, i32 0)
-// CHECK-NEXT:    [[TMP43:%.*]] = call <256 x i1> @llvm.kvx.xfnarrowwhv(<512 x i1> [[TMP40]], i32 0, i32 1)
+// CHECK-NEXT:    [[TMP43:%.*]] = call <256 x i1> @llvm.kvx.xfnarrow44wh(<512 x i1> [[TMP40]], i32 0, i32 1)
 // CHECK-NEXT:    [[TMP44:%.*]] = call <256 x i1> @llvm.kvx.xfscalewv(<256 x i1> [[TMP42]], i32 0, i32 0, i32 1)
 // CHECK-NEXT:    [[TMP45:%.*]] = call { <4 x i64>, <256 x i1> } @llvm.kvx.xswap256(<4 x i64> [[TMP10]], <256 x i1> [[TMP44]])
 // CHECK-NEXT:    [[TMP46:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP45]], 1
@@ -120,7 +120,7 @@ v4i64_t test_tca_builtins(long a, long b, long c, long d, volatile __kvx_x256 *v
   lw = __builtin_kvx_xmma484bw(lv, lv, lw, ".us");
   lm = __builtin_kvx_xmt44d(lm);
   lv = __builtin_kvx_xfscalewv(lv2, "");
-  lv2 = __builtin_kvx_xfnarrowwhv(lw, ".rn.s");
+  lv2 = __builtin_kvx_xfnarrow44wh(lw, ".rn.s");
   lv = __builtin_kvx_xfscalewv(lv, ".rn..relu");
   vt = __builtin_kvx_xswap256(&lv, vt);
   lv = __builtin_kvx_xfscalewv(lv, "...relu");

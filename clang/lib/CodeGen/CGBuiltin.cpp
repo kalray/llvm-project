@@ -20839,8 +20839,6 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     return KVX_emitRndintSatBuiltin(1, Intrinsic::kvx_xconvwbv, *this, E);
   case KVX::BI__builtin_kvx_xfscalewv:
     return KVX_emitScaleNarrowBuiltin(3, Intrinsic::kvx_xfscalewv, *this, E);
-  case KVX::BI__builtin_kvx_xfnarrow44wh:
-    return KVX_emitScaleNarrowBuiltin(2, Intrinsic::kvx_xfnarrow44wh, *this, E);
   case KVX::BI__builtin_kvx_xfscalewo:
     return KVX_emitScaleNarrowBuiltin(2, Intrinsic::kvx_xfscalewo, *this, E, 3);
   case KVX::BI__builtin_kvx_xfmma484hw:
@@ -20850,8 +20848,6 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     return KVX_emitScaleNarrowBuiltin(2, Intrinsic::kvx_xmaddifwo, *this, E, 4);
   case KVX::BI__builtin_kvx_xmsbfifwo:
     return KVX_emitScaleNarrowBuiltin(2, Intrinsic::kvx_xmsbfifwo, *this, E, 4);
-  case KVX::BI__builtin_kvx_xfnarrowwhv:
-    return KVX_emitScaleNarrowBuiltin(2, Intrinsic::kvx_xfnarrowwhv, *this, E);
   case KVX::BI__builtin_kvx_xswap256:
     return KVX_emit_xswap256(*this, E);
   }

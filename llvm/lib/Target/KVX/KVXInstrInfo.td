@@ -3564,8 +3564,8 @@ def FSCALEWV : KVX_INSTRUCTION
 let Uses = [CS, PCR] in
 def FNARROWWHV : KVX_INSTRUCTION
   <(outs VectorReg:$a3), (ins WideReg:$a4, RoundingMod:$a1, SilentMod:$a2),
-   "fnarrowwhv$a1$a2 $a3 = $a4",
-   [/* no straightforward pattern */],
+   "fnarrow44wh$a1$a2 $a3 = $a4",
+   [(set v256i1:$a3, (int_kvx_xfnarrow44wh WideReg:$a4, RoundingMod:$a1, SilentMod:$a2))],
    TCA_INT>, Requires<[IsV1]>;
 } // Uses = [PCR]
 

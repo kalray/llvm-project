@@ -307,7 +307,6 @@ def int_kvx_xfmaxhx : Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_v256i1_t
 def int_kvx_xfminhx : Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_v256i1_ty], [IntrNoMem]>;
 def int_kvx_xfmma484hw : Intrinsic<[llvm_v512i1_ty], [llvm_v512i1_ty, llvm_v512i1_ty, llvm_v512i1_ty, llvm_i32_ty, llvm_i32_ty], [IntrHasSideEffects]>;
 def int_kvx_xfnarrow44wh : Intrinsic<[llvm_v256i1_ty], [llvm_v512i1_ty, llvm_i32_ty, llvm_i32_ty], [IntrHasSideEffects]>;
-def int_kvx_xfnarrowwhv : Intrinsic<[llvm_v256i1_ty], [llvm_v512i1_ty, llvm_i32_ty, llvm_i32_ty], [IntrHasSideEffects]>;
 def int_kvx_xfscalewo : Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrHasSideEffects]>;
 def int_kvx_xload1024: Intrinsic<[llvm_v1024i1_ty], [llvm_ptr_ty, llvm_i32_ty], [IntrReadMem]>;
 def int_kvx_xload256: Intrinsic<[llvm_v256i1_ty], [llvm_ptr_ty, llvm_i32_ty], [IntrReadMem]>;
