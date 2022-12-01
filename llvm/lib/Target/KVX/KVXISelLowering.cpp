@@ -2556,6 +2556,18 @@ static SDValue combineWidenInt(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
   return Dag.getNode(ISD::SHL, SDLoc(N), OutType, Ext, ShiftAmount);
 }
 
+static SDValue combineAbs(SDNode *N, SelectionDAG &Dag) {
+  auto DoSat = cast<ConstantSDNode>(N->getOperand(2))->getZExtValue();
+  auto VT = N->getValueType(0);
+  auto Op = N->getOperand(1);
+  SDLoc DL(N);
+
+  if (DoSat) // ".s" modifier, do saturate
+    Op = Dag.getNode(ISD::SSUBSAT, DL, VT, Dag.getConstant(0, DL, VT), Op);
+
+  return Dag.getNode(ISD::ABS, DL, VT, Op);
+}
+
 static SDValue combineFaddFsub(SDNode *N, SelectionDAG &Dag,
                                unsigned KvxOpcode) {
   EVT VT = N->getValueType(0);
@@ -2581,6 +2593,8 @@ static SDValue combineIntrinsic(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
 
   auto Intr = cast<ConstantSDNode>(N->getOperand(0))->getZExtValue();
   switch (Intr) {
+  case Intrinsic::KVXIntrinsics::kvx_abs:
+    return combineAbs(N, Dag);
   case Intrinsic::KVXIntrinsics::kvx_fadd:
     return combineFaddFsub(N, Dag, KVX::FADDHO);
 

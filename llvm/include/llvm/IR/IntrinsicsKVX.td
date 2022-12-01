@@ -345,6 +345,7 @@ def int_kvx_alignv : Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_v256i1_ty
 //===----------------------------------------------------------------------===//
 // Overloaded intrinsics
 //===----------------------------------------------------------------------===//
+def int_kvx_abs : Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_fadd : Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>, LLVMMatchType<0>, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_faddc : Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>, LLVMMatchType<0>, llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_fneg: Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>], [IntrNoMem]>;
