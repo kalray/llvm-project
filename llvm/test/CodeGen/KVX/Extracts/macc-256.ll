@@ -124,7 +124,6 @@ define i32 @macc_256(<8 x i64>* nocapture %r, <4 x i64>* nocapture readonly %a, 
 ; CHECK-NEXT:    addcd.i $r4 = $r8, $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    muludt $r2r3 = $r2, $r35
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addcd $r5 = $r10, $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addcd $r6 = $r16, $r6
@@ -132,6 +131,7 @@ define i32 @macc_256(<8 x i64>* nocapture %r, <4 x i64>* nocapture readonly %a, 
 ; CHECK-NEXT:    addcd $r7 = $r2, $r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r15 = 8[$r1]
+; CHECK-NEXT:    compd.ltu $r36 = $r7, $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    madduzdt $r8r9 = $r15, $r32
 ; CHECK-NEXT:    ;;
@@ -140,30 +140,29 @@ define i32 @macc_256(<8 x i64>* nocapture %r, <4 x i64>* nocapture readonly %a, 
 ; CHECK-NEXT:    madduzdt $r16r17 = $r15, $r34
 ; CHECK-NEXT:    addcd.i $r5 = $r8, $r5
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    madduzdt $r2r3 = $r15, $r35
 ; CHECK-NEXT:    addcd $r6 = $r10, $r6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    madduzdt $r2r3 = $r15, $r35
-; CHECK-NEXT:    compd.ltu $r7 = $r7, $r2
-; CHECK-NEXT:    addcd $r36 = $r16, $r7
+; CHECK-NEXT:    addcd $r7 = $r16, $r7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addcd $r7 = $r2, $r7
+; CHECK-NEXT:    addcd $r15 = $r2, $r36
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r15 = 16[$r1]
+; CHECK-NEXT:    ld $r36 = 16[$r1]
+; CHECK-NEXT:    compd.ltu $r37 = $r15, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    madduzdt $r8r9 = $r15, $r32
+; CHECK-NEXT:    madduzdt $r8r9 = $r36, $r32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    madduzdt $r10r11 = $r15, $r33
+; CHECK-NEXT:    madduzdt $r10r11 = $r36, $r33
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    madduzdt $r16r17 = $r15, $r34
+; CHECK-NEXT:    madduzdt $r16r17 = $r36, $r34
 ; CHECK-NEXT:    addcd.i $r6 = $r8, $r6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addcd $r36 = $r10, $r36
+; CHECK-NEXT:    madduzdt $r2r3 = $r36, $r35
+; CHECK-NEXT:    addcd $r7 = $r10, $r7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    madduzdt $r2r3 = $r15, $r35
-; CHECK-NEXT:    compd.ltu $r7 = $r7, $r2
-; CHECK-NEXT:    addcd $r37 = $r16, $r7
+; CHECK-NEXT:    addcd $r15 = $r16, $r15
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addcd $r15 = $r2, $r7
+; CHECK-NEXT:    addcd $r36 = $r2, $r37
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r1 = 24[$r1]
 ; CHECK-NEXT:    ;;
@@ -172,28 +171,28 @@ define i32 @macc_256(<8 x i64>* nocapture %r, <4 x i64>* nocapture readonly %a, 
 ; CHECK-NEXT:    madduzdt $r10r11 = $r1, $r33
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    madduzdt $r16r17 = $r1, $r34
-; CHECK-NEXT:    addcd.i $r7 = $r8, $r36
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addcd $r8 = $r10, $r37
+; CHECK-NEXT:    addcd.i $r7 = $r8, $r7
+; CHECK-NEXT:    compd.ltu $r8 = $r36, $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    madduzdt $r2r3 = $r1, $r35
-; CHECK-NEXT:    addcd $r10 = $r16, $r15
-; CHECK-NEXT:    compd.ltu $r15 = $r15, $r2
+; CHECK-NEXT:    addcd $r1 = $r10, $r15
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addcd $r1 = $r2, $r15
+; CHECK-NEXT:    addcd $r10 = $r16, $r36
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addcd.i $r8 = $r9, $r8
+; CHECK-NEXT:    addcd $r8 = $r2, $r8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addcd $r9 = $r11, $r10
+; CHECK-NEXT:    compd.ltu $r1 = $r8, $r2
+; CHECK-NEXT:    addcd.i $r32 = $r9, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    compd.ltu $r1 = $r1, $r2
-; CHECK-NEXT:    addcd $r10 = $r17, $r1
+; CHECK-NEXT:    addcd $r33 = $r11, $r10
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addcd $r34 = $r17, $r8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    so 0[$r0] = $r4r5r6r7
-; CHECK-NEXT:    addcd $r11 = $r3, $r1
+; CHECK-NEXT:    addcd $r35 = $r3, $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    so 32[$r0] = $r8r9r10r11
-; CHECK-NEXT:    compd.ltu $r1 = $r11, $r3
+; CHECK-NEXT:    so 32[$r0] = $r32r33r34r35
+; CHECK-NEXT:    compd.ltu $r1 = $r35, $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
