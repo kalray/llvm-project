@@ -1,4 +1,4 @@
-; RUN: llc -O2 -o - %S/cc_ld.ll -stop-after=if-converter | FileCheck %s
+; RUN: llc -O2 -o - %S/load.ll -stop-after=if-converter | FileCheck %s
 ; CHECK: LBZri10
 ; CHECK: LBZri10
 ; CHECK: LBZri37
