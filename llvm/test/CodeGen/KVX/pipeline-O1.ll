@@ -141,6 +141,7 @@
 ; CHECK-NEXT: Insert XRay ops
 ; CHECK-NEXT: Implement the 'patchable-function' attribute
 ; CHECK-NEXT: KVX pseudo instruction expansion pass
+; CHECK-NEXT: Branch relaxation pass
 ; CHECK-NEXT: MachineDominator Tree Construction
 ; CHECK-NEXT: Machine Natural Loop Construction
 ; CHECK-NEXT: PostRA Machine Instruction Scheduler
