@@ -302,7 +302,8 @@ defvar READ_RR = [2];
 defvar READ_E1 = [3];
 defvar READ_RRx2 = READ_RR # READ_RR;
 defvar READ_RRx3 = READ_RRx2 # READ_RR;
-defvar READ_RRx5 = READ_RRx2 # READ_RRx2 # READ_RR;
+defvar READ_RRx4 = READ_RRx2 # READ_RRx2;
+defvar READ_RRx5 = READ_RRx4 # READ_RR;
 defvar READ_RR_E1_RRx3 = READ_RR # READ_E1 # READ_RRx3;
 defvar READ_RRx2_E1_RRx2 = READ_RRx2 # READ_E1 # READ_RRx2;
 
@@ -324,6 +325,7 @@ defvar WE5NB = WE6;
 defvar WE1_RR = WE1 # READ_RR;
 defvar WE1_ID = WE1 # READ_ID;
 defvar WE1_RRx2 = WE1 # READ_RRx2;
+defvar WE1_RRx4 = WE1 # READ_RRx4;
 
 defvar WE2_RR = WE2 # READ_RR;
 defvar WE2_RRx2 = WE2 # READ_RRx2;
@@ -378,7 +380,7 @@ defm ALU_TINY_CRWL_CRWH: DataXY<ALU_TINY_CRWL_CRWH_ITIN_RT, WE3NB>;
 defm ALU_LITE: DataXY<ALU_LITE_ITIN_RT, WE1_RRx2>;
 defm ALU_LITE_CRWL: DataSingle<ALU_LITE_CRWL_ITIN_RT, WE3NB_RRx2>;
 defm ALU_LITE_CRWH: DataSingle<ALU_LITE_CRWH_ITIN_RT, WE3NB_RRx2>;
-defm ALU_FULL: DataXY<ALU_FULL_ITIN_RT, WE1_RRx2>;
+defm ALU_FULL: DataXY<ALU_FULL_ITIN_RT, WE1_RRx4>; // x4 because of system regs uses on ADDCD/ADDCDI/SBFCD/SBFCDI
 defm ALU_FULL_SFU: DataSingle<ALU_FULL_ITIN_RT, WSFU_RRx2>;
 
 defm BCU: DataSingle<BCU_ITIN_RT, READ_ID>;
