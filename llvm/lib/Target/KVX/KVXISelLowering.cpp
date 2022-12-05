@@ -2913,6 +2913,32 @@ KVXTargetLowering::EmitInstrWithCustomInserter(MachineInstr &MI,
   }
 }
 
+// Tries matching (i64 (and $a, $n)) for i16 and i8 types when appropriate
+// Also tries matching (i64 (zextend $n)) for i32 type
+static void tryMatchStoreValue(llvm::SDValue &Sv, unsigned int Size) {
+  MVT SvVt = Sv.getSimpleValueType();
+  if (SvVt.SimpleTy == MVT::i64) {
+    if (Sv.getOpcode() == ISD::AND) {
+      auto *Mask = cast<ConstantSDNode>(Sv.getOperand(1));
+      if ((Size == 8 && Mask->getZExtValue() == (1 << 8) - 1) ||
+          (Size == 16 && Mask->getZExtValue() == (1 << 16) - 1))
+        Sv = Sv.getOperand(0);
+    } else if (Sv.getOpcode() == ISD::ZERO_EXTEND) {
+      MVT SvOpVt = Sv.getOperand(0).getSimpleValueType();
+      if (SvOpVt.getFixedSizeInBits() == Size)
+        Sv = Sv.getOperand(0);
+    }
+  }
+}
+
+static SDValue getConstantFromOp(SelectionDAG &DAG, SDValue Op, unsigned Index,
+                                 llvm::EVT VT) {
+  SDValue Operand = Op->getOperand(Index);
+  auto *OperandAsConst = dyn_cast<ConstantSDNode>(Operand);
+  unsigned Value = OperandAsConst->getZExtValue();
+  return DAG.getTargetConstant(Value, SDLoc(Operand), VT);
+}
+
 SDValue KVXTargetLowering::LowerINTRINSIC(SDValue Op, SelectionDAG &DAG,
                                           const KVXSubtarget *Subtarget,
                                           bool HasChain) const {
@@ -3029,27 +3055,47 @@ SDValue KVXTargetLowering::LowerINTRINSIC(SDValue Op, SelectionDAG &DAG,
     unsigned Size = SizeInfoAsConst->getZExtValue();
     SDValue SizeInfo = DAG.getTargetConstant(Size, SDLoc(SizeInfoOp), MVT::i64);
 
-    // Trying to match (i64 (and $a, $n)) for i16 and i8 types when appropriate
-    // Also try to match (i64 (zextend $n)) for i32 type
-    MVT SvVt = Sv.getSimpleValueType();
-    if (SvVt.SimpleTy == MVT::i64) {
-      if (Sv.getOpcode() == ISD::AND) {
-        auto *Mask = cast<ConstantSDNode>(Sv.getOperand(1));
-        if ((Size == 8 && Mask->getZExtValue() == (1 << 8) - 1) ||
-            (Size == 16 && Mask->getZExtValue() == (1 << 16) - 1))
-          Sv = Sv.getOperand(0);
-      } else if (Sv.getOpcode() == ISD::ZERO_EXTEND) {
-        MVT SvOpVt = Sv.getOperand(0).getSimpleValueType();
-        if (SvOpVt.getFixedSizeInBits() == Size)
-          Sv = Sv.getOperand(0);
-      }
-    }
+    tryMatchStoreValue(Sv, Size);
 
     SDValue Ptr = Op->getOperand(OpStart + 1);
     SDValue Ready = Op->getOperand(OpStart + 3);
 
     auto *New = DAG.getMachineNode(InstrID, SDLoc(Op), MVT::Other,
                                    {Ptr, Sv, SizeInfo, Ready, Chain});
+    return SDValue(New, 0);
+  }
+
+  case Intrinsic::kvx_storec:
+  case Intrinsic::kvx_storec_vol: {
+    bool Volatile = IntNo == Intrinsic::kvx_storec_vol;
+    unsigned InstrID = Volatile ? KVX::STORECpv : KVX::STORECp;
+    SDValue Sv = Op->getOperand(OpStart);
+    SDValue Chain = Op->getOperand(0);
+
+    SDValue SizeInfoOp = Op->getOperand(OpStart + 2);
+    auto *SizeInfoAsConst = dyn_cast<ConstantSDNode>(SizeInfoOp);
+    unsigned Size = SizeInfoAsConst->getZExtValue();
+    SDValue SizeInfo = DAG.getTargetConstant(Size, SDLoc(SizeInfoOp), MVT::i64);
+
+    tryMatchStoreValue(Sv, Size);
+
+    SDValue Ptr = Op->getOperand(OpStart + 1);
+    SDValue Cond = Op->getOperand(OpStart + 3);
+
+    SDValue ScalarcondMod = getConstantFromOp(DAG, Op, OpStart + 4, MVT::i32);
+    SDValue LsomaskMod = getConstantFromOp(DAG, Op, OpStart + 5, MVT::i32);
+
+    SmallVector<SDValue, 8> NewOps = {Ptr,           Sv,        SizeInfo, Cond,
+                                      ScalarcondMod, LsomaskMod};
+
+    if (Op.getNumOperands() > OpStart + 6) {
+      SDValue Ready = Op->getOperand(OpStart + 6);
+      NewOps.push_back(Ready);
+    }
+
+    NewOps.push_back(Chain);
+
+    auto *New = DAG.getMachineNode(InstrID, SDLoc(Op), MVT::Other, NewOps);
     return SDValue(New, 0);
   }
   }

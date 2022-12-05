@@ -142,6 +142,20 @@ def STOREpv : KVX_PSEUDO_W_SCHEDINFO<(outs),
   (ins SingleReg:$ptr, unknown:$sv, Wrapped64:$size, variable_ops),
   [], LSU_AUXR_STORE_SV2, "STOREpv [$ptr] = $sv, size: $size">;
 
+let mayStore = 1 in
+def STORECp: KVX_PSEUDO_W_SCHEDINFO<(outs),
+  (ins SingleReg:$ptr, unknown:$sv, Wrapped64:$size, SingleReg:$cond,
+       ScalarcondMod:$cmod, LsomaskMod:$mmod, variable_ops),
+  [], LSU_AUXR_STORE_SV2,
+  "STORECp $cond ? [$ptr] = $sv, size: $size, cmod: $cmod, mmod: $mmod">;
+
+let hasSideEffects = 1 in
+def STORECpv: KVX_PSEUDO_W_SCHEDINFO<(outs),
+  (ins SingleReg:$ptr, unknown:$sv, Wrapped64:$size, SingleReg:$cond,
+       ScalarcondMod:$cmod, LsomaskMod:$mmod, variable_ops),
+  [], LSU_AUXR_STORE_SV2,
+  "STORECpv $cond ? [$ptr] = $sv, size: $size, cmod: $cmod, mmod: $mmod">;
+
 //===----------------------------------------------------------------------===//
 // Peephole patterns.
 //===----------------------------------------------------------------------===//

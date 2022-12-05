@@ -125,6 +125,18 @@ BUILTIN(__builtin_kvx_store64, "vV2Uiv*.", "n")
 BUILTIN(__builtin_kvx_store128, "vV4Uiv*.", "n")
 BUILTIN(__builtin_kvx_store256, "vV8Uiv*.", "n")
 
+BUILTIN(__builtin_kvx_storecb, "vUOiv*UOicC*.", "n")
+BUILTIN(__builtin_kvx_storech, "vUOiv*UOicC*.", "n")
+BUILTIN(__builtin_kvx_storecw, "vUOiv*UOicC*.", "n")
+BUILTIN(__builtin_kvx_storecd, "vUOiv*UOicC*.", "n")
+BUILTIN(__builtin_kvx_storecq, "vULLLiv*UOicC*.", "n")
+BUILTIN(__builtin_kvx_storechf, "vxv*UOicC*.", "n")
+BUILTIN(__builtin_kvx_storecwf, "vfv*UOicC*.", "n")
+BUILTIN(__builtin_kvx_storecdf, "vdv*UOicC*.", "n")
+BUILTIN(__builtin_kvx_storec64, "vV2Uiv*UOicC*.", "n")
+BUILTIN(__builtin_kvx_storec128, "vV4Uiv*UOicC*.", "n")
+BUILTIN(__builtin_kvx_storec256, "vV8Uiv*UOicC*.", "n")
+
 //===----------------------------------------------------------------------===//
 // FPU
 //===----------------------------------------------------------------------===//

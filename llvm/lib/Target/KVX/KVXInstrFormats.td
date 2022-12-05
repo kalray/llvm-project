@@ -213,6 +213,12 @@ multiclass MC_STORES<string OpcStr, RegisterClass RC> {
   defm rrc  : I <OpcStr, LSU_AUXR_STORE_SV2, [RC], [], [SingleReg], [ScalarcondMod, SingleReg], []>;
   defm ri27c: I <OpcStr, LSU_AUXR_STORE_SV3_X_, [RC], [], [Signed27, SingleReg], [ScalarcondMod, SingleReg], []>;
   defm ri54c: I <OpcStr, LSU_AUXR_STORE_SV3_Y_, [RC], [], [Signed54, SingleReg], [ScalarcondMod, SingleReg], []>;
+  if !eq(RC, QuadReg) then {
+    // CV2 formats
+    defm rrm  : I <OpcStr, LSU_AUXR_STORE_SV2, [RC], [], [SingleReg], [LsomaskMod, SingleReg], []>;
+    defm ri27m: I <OpcStr, LSU_AUXR_STORE_SV3_X_, [RC], [], [Signed27, SingleReg], [LsomaskMod, SingleReg], []>;
+    defm ri54m: I <OpcStr, LSU_AUXR_STORE_SV3_Y_, [RC], [], [Signed54, SingleReg], [LsomaskMod, SingleReg], []>;
+  }
 }
 
 multiclass MC_LV<string OpcStr> {

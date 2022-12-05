@@ -509,9 +509,7 @@ define i128 @ld(i128* nocapture readonly %0) {
 define void @st(i128 %0, i128* nocapture %1) {
 ; CHECK-LABEL: st:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    sd 8[$r2] = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 0[$r2] = $r0
+; CHECK-NEXT:    sq 0[$r2] = $r0r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   store i128 %0, i128* %1
