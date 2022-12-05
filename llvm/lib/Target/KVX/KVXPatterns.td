@@ -156,6 +156,22 @@ def STORECpv: KVX_PSEUDO_W_SCHEDINFO<(outs),
   [], LSU_AUXR_STORE_SV2,
   "STORECpv $cond ? [$ptr] = $sv, size: $size, cmod: $cmod, mmod: $mmod">;
 
+let Constraints = "$lv = $plv" in
+let mayLoad = 1 in
+def LOADCup: KVX_PSEUDO_W_SCHEDINFO<(outs unknown:$lv),
+  (ins SingleReg:$ptr, unknown:$plv, Wrapped64:$size, SingleReg:$cond,
+       VariantMod:$vmod, ScalarcondMod:$cmod, LsomaskMod:$mmod),
+  [], LSU_AUXW_LOAD,
+  "LOADCp$vmod $cond ? $lv = [$ptr], size: $size, cmod: $cmod, mmod: $mmod">;
+
+let Constraints = "$lv = $plv" in
+let hasSideEffects = 1 in
+def LOADCupv: KVX_PSEUDO_W_SCHEDINFO<(outs unknown:$lv),
+  (ins SingleReg:$ptr, unknown:$plv, Wrapped64:$size, SingleReg:$cond,
+       VariantMod:$vmod, ScalarcondMod:$cmod, LsomaskMod:$mmod),
+  [], LSU_AUXW_LOAD,
+  "LOADCpv$vmod $cond ? $lv = [$ptr], size: $size, cmod: $cmod, mmod: $mmod">;
+
 //===----------------------------------------------------------------------===//
 // Peephole patterns.
 //===----------------------------------------------------------------------===//

@@ -1520,6 +1520,81 @@ static bool expandSTORECp(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   return true;
 }
 
+static bool expandLOADCup(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
+                          MachineInstr &MI) {
+  auto MII = MI.getIterator();
+  LLVM_DEBUG(dbgs() << "Expanding in expandLOADCup: "; MI.dump());
+
+  constexpr unsigned InOpStart = 1;
+
+  Register Ptr = getRegOrFail(MI.getOperand(InOpStart + 0),
+                              "Input operand 0 of LOADCup must be a register");
+  Register LV = getRegOrFail(MI.getOperand(InOpStart + 1),
+                             "Input operand 1 of LOADCup must be a register");
+  int64_t Size = getImmOrFail(MI.getOperand(InOpStart + 2),
+                              "Input operand 2 of LOADCup must be an immediate "
+                              "(the size of the loaded value)");
+  Register Cond = getRegOrFail(MI.getOperand(InOpStart + 3),
+                               "Input operand 3 of LOADCup must be a register");
+  int64_t VariantMod = getImmOrFail(
+      MI.getOperand(InOpStart + 4),
+      "Input operand 4 of LOADCup must be an immediate (VariantMod)");
+  int64_t ScalarcondMod = getImmOrFail(
+      MI.getOperand(InOpStart + 5),
+      "Input operand 5 of LOADCup must be an immediate (ScalarcondMod)");
+  int64_t LsomaskMod = getImmOrFail(
+      MI.getOperand(InOpStart + 6),
+      "Input operand 6 of LOADCup must be an immediate (LsomaskMod)");
+
+  if (ScalarcondMod >= 0 && LsomaskMod >= 0)
+    report_fatal_error("ScalarcondMod and LsomaskMod cannot be both >= 0");
+  bool HasLsomask = LsomaskMod >= 0;
+
+  if (HasLsomask) {
+    if (Size != 256)
+      report_fatal_error(
+          "LsomaskMod is only supported for 256-bit store value");
+    if (!TII->getSubtarget().isV2())
+      report_fatal_error("LsomaskMod is only supported on kv3-2");
+  }
+
+  unsigned IID;
+  switch (Size) {
+  case 8:
+    IID = KVX::LBZrrc;
+    break;
+  case 16:
+    IID = KVX::LHZrrc;
+    break;
+  case 32:
+    IID = KVX::LWZrrc;
+    break;
+  case 64:
+    IID = KVX::LDrrc;
+    break;
+  case 128:
+    IID = KVX::LQrrc;
+    break;
+  case 256:
+    IID = HasLsomask ? KVX::LOrrm : KVX::LOrrc;
+    break;
+  }
+
+  DebugLoc DL = MI.getDebugLoc();
+  auto CondOrMaskMod = HasLsomask ? LsomaskMod : ScalarcondMod;
+  BuildMI(MBB, MII, DL, TII->get(IID), LV)
+      .addReg(Ptr)
+      .addImm(VariantMod)
+      .addReg(LV)
+      .addImm(CondOrMaskMod)
+      .addReg(Cond);
+
+  // Remove the original pseudo instruction
+  removeInst(MI);
+
+  return true;
+}
+
 static bool expandInBundle(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
                            MachineBasicBlock::iterator MBBI) {
   auto I = MBBI->getIterator();
@@ -1545,6 +1620,10 @@ static bool expandInBundle(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
       case KVX::STORECp:
       case KVX::STORECpv:
         HasChanged |= expandSTORECp(TII, MBB, *I);
+        break;
+      case KVX::LOADCup:
+      case KVX::LOADCupv:
+        HasChanged |= expandLOADCup(TII, MBB, *I);
         break;
       default:
         break;
@@ -1789,6 +1868,9 @@ bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
   case KVX::STORECp:
   case KVX::STORECpv:
     return expandSTORECp(TII, MBB, *MBBI);
+  case KVX::LOADCup:
+  case KVX::LOADCupv:
+    return expandLOADCup(TII, MBB, *MBBI);
   case KVX::READYp1r:
   case KVX::READYp2r:
   case KVX::READYp3r:

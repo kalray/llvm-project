@@ -31,6 +31,10 @@ def int_kvx_storec: Intrinsic<[], [/*store value*/ llvm_any_ty, LLVMPointerTo<0>
                                    /*condition*/ llvm_i64_ty, /*lsucond*/ llvm_i32_ty, /*lsomask*/ llvm_i32_ty, /*optional ready*/ llvm_vararg_ty], [IntrWriteMem, IntrArgMemOnly]>;
 def int_kvx_storec_vol: Intrinsic<[], [/*store value*/ llvm_any_ty, LLVMPointerTo<0>, /*size*/ llvm_i32_ty,
                                    /*condition*/ llvm_i64_ty, /*lsucond*/ llvm_i32_ty, /*lsomask*/ llvm_i32_ty, /*optional ready*/ llvm_vararg_ty], [IntrHasSideEffects]>;
+def int_kvx_loadc_u: Intrinsic<[llvm_any_ty], [LLVMMatchType<0>, LLVMPointerTo<0>, /*size*/ llvm_i32_ty,
+                                   /*condition*/ llvm_i64_ty, /*variant*/ llvm_i32_ty, /*lsucond*/ llvm_i32_ty, /*lsomask*/ llvm_i32_ty], [IntrReadMem, IntrArgMemOnly]>;
+def int_kvx_loadc_u_vol: Intrinsic<[llvm_any_ty], [LLVMMatchType<0>, LLVMPointerTo<0>, /*size*/ llvm_i32_ty,
+                                   /*condition*/ llvm_i64_ty, /*variant*/ llvm_i32_ty, /*lsucond*/ llvm_i32_ty, /*lsomask*/ llvm_i32_ty], [IntrReadMem, IntrArgMemOnly]>;
 
 def int_kvx_acswapw: Intrinsic<[llvm_i32_ty], [llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrArgMemOnly]>;
 def int_kvx_acswapd: Intrinsic<[llvm_i64_ty], [llvm_ptr_ty, llvm_i64_ty, llvm_i64_ty, llvm_i32_ty, llvm_i32_ty], [IntrArgMemOnly]>;

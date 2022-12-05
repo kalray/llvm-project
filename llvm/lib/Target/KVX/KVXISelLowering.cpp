@@ -523,6 +523,7 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   for (auto I : {MVT::v8i8, MVT::v2i32, MVT::v4i32})
     setOperationAction(ISD::USUBSAT, I, Legal);
 
+  setOperationAction(ISD::INTRINSIC_W_CHAIN, MVT::Other, Custom);
   setOperationAction(ISD::INTRINSIC_WO_CHAIN, MVT::Other, Custom);
   setOperationAction(ISD::INTRINSIC_VOID, MVT::Other, Custom);
 
@@ -1098,6 +1099,8 @@ SDValue KVXTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
       return Op;
     return SDValue();
   }
+  case ISD::INTRINSIC_W_CHAIN:
+    return LowerINTRINSIC(Op, DAG, &Subtarget, true);
   case ISD::INTRINSIC_VOID:
     return LowerINTRINSIC(Op, DAG, &Subtarget, Op->getNumValues());
   case ISD::INTRINSIC_WO_CHAIN:
@@ -2915,7 +2918,7 @@ KVXTargetLowering::EmitInstrWithCustomInserter(MachineInstr &MI,
 
 // Tries matching (i64 (and $a, $n)) for i16 and i8 types when appropriate
 // Also tries matching (i64 (zextend $n)) for i32 type
-static void tryMatchStoreValue(llvm::SDValue &Sv, unsigned int Size) {
+static void tryMatchLoadStoreValue(llvm::SDValue &Sv, unsigned int Size) {
   MVT SvVt = Sv.getSimpleValueType();
   if (SvVt.SimpleTy == MVT::i64) {
     if (Sv.getOpcode() == ISD::AND) {
@@ -3055,7 +3058,7 @@ SDValue KVXTargetLowering::LowerINTRINSIC(SDValue Op, SelectionDAG &DAG,
     unsigned Size = SizeInfoAsConst->getZExtValue();
     SDValue SizeInfo = DAG.getTargetConstant(Size, SDLoc(SizeInfoOp), MVT::i64);
 
-    tryMatchStoreValue(Sv, Size);
+    tryMatchLoadStoreValue(Sv, Size);
 
     SDValue Ptr = Op->getOperand(OpStart + 1);
     SDValue Ready = Op->getOperand(OpStart + 3);
@@ -3077,7 +3080,7 @@ SDValue KVXTargetLowering::LowerINTRINSIC(SDValue Op, SelectionDAG &DAG,
     unsigned Size = SizeInfoAsConst->getZExtValue();
     SDValue SizeInfo = DAG.getTargetConstant(Size, SDLoc(SizeInfoOp), MVT::i64);
 
-    tryMatchStoreValue(Sv, Size);
+    tryMatchLoadStoreValue(Sv, Size);
 
     SDValue Ptr = Op->getOperand(OpStart + 1);
     SDValue Cond = Op->getOperand(OpStart + 3);
@@ -3096,6 +3099,36 @@ SDValue KVXTargetLowering::LowerINTRINSIC(SDValue Op, SelectionDAG &DAG,
     NewOps.push_back(Chain);
 
     auto *New = DAG.getMachineNode(InstrID, SDLoc(Op), MVT::Other, NewOps);
+    return SDValue(New, 0);
+  }
+
+  case Intrinsic::kvx_loadc_u:
+  case Intrinsic::kvx_loadc_u_vol: {
+    bool Volatile = IntNo == Intrinsic::kvx_loadc_u_vol;
+    unsigned InstrID = Volatile ? KVX::LOADCupv : KVX::LOADCup;
+
+    SDValue Chain = Op->getOperand(0);
+    SDValue Lv = Op->getOperand(OpStart);
+
+    SDValue SizeInfoOp = Op->getOperand(OpStart + 2);
+    auto *SizeInfoAsConst = dyn_cast<ConstantSDNode>(SizeInfoOp);
+    unsigned Size = SizeInfoAsConst->getZExtValue();
+    SDValue SizeInfo = DAG.getTargetConstant(Size, SDLoc(SizeInfoOp), MVT::i64);
+
+    tryMatchLoadStoreValue(Lv, Size);
+
+    SDValue Ptr = Op->getOperand(OpStart + 1);
+    SDValue Cond = Op->getOperand(OpStart + 3);
+
+    SDValue VariantMod = getConstantFromOp(DAG, Op, OpStart + 4, MVT::i32);
+    SDValue ScalarcondMod = getConstantFromOp(DAG, Op, OpStart + 5, MVT::i32);
+    SDValue LsomaskMod = getConstantFromOp(DAG, Op, OpStart + 6, MVT::i32);
+
+    SmallVector<SDValue, 8> NewOps = {
+        Ptr, Lv, SizeInfo, Cond, VariantMod, ScalarcondMod, LsomaskMod, Chain};
+
+    auto *New = DAG.getMachineNode(InstrID, SDLoc(Op),
+                                   {Lv.getValueType(), MVT::Other}, NewOps);
     return SDValue(New, 0);
   }
   }
