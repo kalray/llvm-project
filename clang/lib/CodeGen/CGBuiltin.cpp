@@ -18938,6 +18938,92 @@ KVX_emitLoadBuiltin(CodeGenFunction &CGF, const CallExpr *E,
   return Load;
 }
 
+static Value *KVX_emitStoreBuiltin(CodeGenFunction &CGF, const CallExpr *E,
+                                   llvm::Type *DataType,
+                                   llvm::Type *DataTypeIntrinsic = nullptr) {
+  if (E->getNumArgs() >= 5) {
+    CGF.CGM.Error(E->getBeginLoc(), "No more than 4 arguments are allowed");
+    return nullptr;
+  }
+
+  int VolatilePos = -1, ReadyPos = -1;
+
+  if (E->getNumArgs() == 3) {
+    (E->getArg(2)->isIntegerConstantExpr(CGF.getContext()) ? VolatilePos
+                                                           : ReadyPos) = 2;
+  } else if (E->getNumArgs() == 4) {
+    ReadyPos = 2;
+    VolatilePos = 3;
+  }
+
+  bool Volatile = false;
+  Value *Ready = nullptr;
+
+  if (VolatilePos >= 0) {
+    if (!E->getArg(VolatilePos)->isIntegerConstantExpr(CGF.getContext())) {
+      CGF.CGM.Error(
+          E->getArg(VolatilePos)->getBeginLoc(),
+          "volatile flag should be a constant argument (e.g. 0 or 1)");
+      return nullptr;
+    }
+    Volatile = E->getArg(VolatilePos)
+                   ->EvaluateKnownConstInt(CGF.getContext())
+                   .getBoolValue();
+  }
+  if (ReadyPos >= 0) {
+    if (!CGF.hasScalarEvaluationKind(E->getArg(ReadyPos)->getType())) {
+      CGF.CGM.Error(E->getArg(ReadyPos)->getBeginLoc(),
+                    "ready argument should be a scalar");
+      return nullptr;
+    }
+    Value *ScalarArg = CGF.EmitScalarExpr(E->getArg(ReadyPos));
+    if (ScalarArg->getType()->getPrimitiveSizeInBits().getFixedSize() > 256) {
+      CGF.CGM.Error(E->getArg(ReadyPos)->getBeginLoc(),
+                    "ready argument size > 256 bits not supported");
+      return nullptr;
+    }
+    Ready = ScalarArg;
+  }
+
+  const unsigned StoreSize = DataType->getPrimitiveSizeInBits().getFixedSize();
+
+  if (Ready && DataTypeIntrinsic)
+    DataType = DataTypeIntrinsic;
+
+  Value *ToStore = CGF.EmitScalarExpr(E->getArg(0));
+  Value *StoreVal = ToStore;
+
+  llvm::Type *StoreValType = StoreVal->getType();
+  if (StoreVal->getType() != DataType) {
+    if (DataType->isIntegerTy() && StoreValType->isIntegerTy()) {
+      // Truncate to the demanded integer type, since it is required to have
+      // pointer type corresponding to store value type for IR memory stores
+      StoreVal = CGF.Builder.CreateTrunc(StoreVal, DataType);
+    } else if (DataType->isVectorTy() || StoreValType->isVectorTy()) {
+      // Bitcast to given type
+      StoreVal = CGF.Builder.CreateBitCast(StoreVal, DataType);
+    }
+  }
+
+  Address Addr = CGF.EmitPointerWithAlignment(E->getArg(1));
+  llvm::Type *AType = StoreVal->getType()->getPointerTo();
+  auto AddrCast = CGF.Builder.CreatePointerBitCastOrAddrSpaceCast(Addr, AType);
+
+  if (Ready) {
+    unsigned IID = Volatile ? Intrinsic::kvx_store_vol : Intrinsic::kvx_store;
+    Value *Ptr = AddrCast.getPointer();
+    Value *SizeInfo = ConstantInt::get(CGF.Int32Ty, StoreSize);
+    SmallVector<Value *, 4> Ops = {StoreVal, Ptr, SizeInfo, Ready};
+    Function *StoreI =
+        CGF.CGM.getIntrinsic(IID, {StoreVal->getType(), Ready->getType()});
+    return CGF.Builder.CreateCall(StoreI, Ops);
+  }
+
+  llvm::StoreInst *Store = CGF.Builder.CreateStore(StoreVal, AddrCast);
+  Store->setVolatile(Volatile);
+  return Store;
+}
+
 static Value *KVX_emitVectorBuiltin(CodeGenFunction &CGF, const CallExpr *E,
                                     unsigned IntrinsicID, unsigned NumOperands,
                                     llvm::Type *InElementType,
@@ -19632,6 +19718,34 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     return KVX_emitLoadBuiltin(*this, E, llvm::FixedVectorType::get(FloatTy, 8));
   case KVX::BI__builtin_kvx_lfdq:
     return KVX_emitLoadBuiltin(*this, E, llvm::FixedVectorType::get(DoubleTy, 4));
+
+  case KVX::BI__builtin_kvx_storeb:
+    return KVX_emitStoreBuiltin(*this, E, Int8Ty, Int64Ty);
+  case KVX::BI__builtin_kvx_storeh:
+    return KVX_emitStoreBuiltin(*this, E, Int16Ty, Int64Ty);
+  case KVX::BI__builtin_kvx_storew:
+    return KVX_emitStoreBuiltin(*this, E, Int32Ty, Int64Ty);
+  case KVX::BI__builtin_kvx_stored:
+    return KVX_emitStoreBuiltin(*this, E, Int64Ty);
+  case KVX::BI__builtin_kvx_storeq:
+    return KVX_emitStoreBuiltin(*this, E,
+                                llvm::IntegerType::get(getLLVMContext(), 128),
+                                llvm::FixedVectorType::get(Int64Ty, 2));
+  case KVX::BI__builtin_kvx_storehf:
+    return KVX_emitStoreBuiltin(*this, E, HalfTy);
+  case KVX::BI__builtin_kvx_storewf:
+    return KVX_emitStoreBuiltin(*this, E, FloatTy);
+  case KVX::BI__builtin_kvx_storedf:
+    return KVX_emitStoreBuiltin(*this, E, DoubleTy);
+  case KVX::BI__builtin_kvx_store64:
+    return KVX_emitStoreBuiltin(
+        *this, E, llvm::FixedVectorType::get(Int64Ty, 1), Int64Ty);
+  case KVX::BI__builtin_kvx_store128:
+    return KVX_emitStoreBuiltin(*this, E,
+                                llvm::FixedVectorType::get(Int64Ty, 2));
+  case KVX::BI__builtin_kvx_store256:
+    return KVX_emitStoreBuiltin(*this, E,
+                                llvm::FixedVectorType::get(Int64Ty, 4));
 
   case KVX::BI__builtin_kvx_ready: {
     int N = E->getNumArgs();

@@ -127,6 +127,21 @@ def READYp4r : KVX_PSEUDO_W_SCHEDINFO<(outs SingleReg:$out),
   (ins unknown:$a, unknown:$b, unknown:$c, unknown:$d),
   [], ALU_TINY_X2, "READYp4r $a $b $c $d">;
 
+// We are using a hack here: latency of operations involving variable_ops will always be 0
+// By having the "ready" argument in variable_ops, we ensure the dependency remains 0 latency
+// (the store may then be put in the same bundle as READYp)
+// NOTE: the chain is also in the variable_ops (at the end of the operand list)
+let mayStore = 1 in
+def STOREp : KVX_PSEUDO_W_SCHEDINFO<(outs),
+  (ins SingleReg:$ptr, unknown:$sv, Wrapped64:$size, variable_ops),
+  [], LSU_AUXR_STORE_SV2, "STOREp [$ptr] = $sv, size: $size">;
+
+// Volatile version
+let hasSideEffects = 1 in
+def STOREpv : KVX_PSEUDO_W_SCHEDINFO<(outs),
+  (ins SingleReg:$ptr, unknown:$sv, Wrapped64:$size, variable_ops),
+  [], LSU_AUXR_STORE_SV2, "STOREpv [$ptr] = $sv, size: $size">;
+
 //===----------------------------------------------------------------------===//
 // Peephole patterns.
 //===----------------------------------------------------------------------===//

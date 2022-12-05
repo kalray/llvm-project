@@ -227,7 +227,7 @@ private:
   }
 
   SDValue LowerINTRINSIC(SDValue Op, SelectionDAG &DAG,
-                         const KVXSubtarget *Subtarget) const;
+                         const KVXSubtarget *Subtarget, bool HasChain) const;
   MachineBasicBlock *
   EmitInstrWithCustomInserter(MachineInstr &MI,
                               MachineBasicBlock *MBB) const override;

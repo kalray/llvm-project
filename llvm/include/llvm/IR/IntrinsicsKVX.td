@@ -25,6 +25,8 @@ def int_kvx_dzerol: Intrinsic<[], [llvm_ptr_ty], []>;
 def int_kvx_i1invals: Intrinsic<[], [llvm_ptr_ty], []>;
 
 def int_kvx_ready: Intrinsic<[llvm_i64_ty], [llvm_vararg_ty], [IntrNoMem]>;
+def int_kvx_store: Intrinsic<[], [/*store value*/ llvm_any_ty, LLVMPointerTo<0>, /*size*/ llvm_i32_ty, /*ready*/ llvm_any_ty], [IntrWriteMem, IntrArgMemOnly]>;
+def int_kvx_store_vol: Intrinsic<[], [/*store value*/ llvm_any_ty, LLVMPointerTo<0>, /*size*/ llvm_i32_ty, /*ready*/ llvm_any_ty], [IntrHasSideEffects]>;
 
 def int_kvx_acswapw: Intrinsic<[llvm_i32_ty], [llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrArgMemOnly]>;
 def int_kvx_acswapd: Intrinsic<[llvm_i64_ty], [llvm_ptr_ty, llvm_i64_ty, llvm_i64_ty, llvm_i32_ty, llvm_i32_ty], [IntrArgMemOnly]>;
