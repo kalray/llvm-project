@@ -1334,6 +1334,13 @@ static bool expandXSWAP256p(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   return true;
 }
 
+static void removeInst(llvm::MachineInstr &MI) {
+  if (MI.isInsideBundle())
+    MI.eraseFromBundle();
+  else
+    MI.eraseFromParent();
+}
+
 static bool expandREADYp(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
                          MachineInstr &MI) {
   auto MII = MI.getIterator();
@@ -1375,10 +1382,7 @@ static bool expandREADYp(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
         .addReg(OutRegs[3]);
 
   // Remove the original pseudo instruction
-  if (MI.isInsideBundle())
-    MI.eraseFromBundle();
-  else
-    MI.eraseFromParent();
+  removeInst(MI);
 
   return true;
 }
@@ -1387,6 +1391,12 @@ static Register getRegOrFail(MachineOperand &MO, StringRef ErrorMsg) {
   if (!MO.isReg())
     report_fatal_error(ErrorMsg);
   return MO.getReg();
+}
+
+static int64_t getImmOrFail(MachineOperand &MO, StringRef ErrorMsg) {
+  if (!MO.isImm())
+    report_fatal_error(ErrorMsg);
+  return MO.getImm();
 }
 
 static bool expandSTOREp(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
@@ -1402,13 +1412,12 @@ static bool expandSTOREp(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   Register SV =
       getRegOrFail(MI.getOperand(1), "Operand 1 of STOREp must be a register");
 
-  MachineOperand &SizeOp = MI.getOperand(2);
-  if (!SizeOp.isImm())
-    report_fatal_error("Operand 2 of STOREp must be an immediate (the size of "
-                       "the stored value)");
+  int64_t Size =
+      getImmOrFail(MI.getOperand(2), "Operand 2 of STOREp must be an immediate"
+                                     " (the size of the stored value)");
 
   unsigned IID;
-  switch (SizeOp.getImm()) {
+  switch (Size) {
   case 8:
     IID = KVX::SBri10;
     break;
@@ -1435,10 +1444,78 @@ static bool expandSTOREp(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   BuildMI(MBB, MII, DL, TII->get(IID)).addImm(0).addReg(Ptr).addReg(SV);
 
   // Remove the original pseudo instruction
-  if (MI.isInsideBundle())
-    MI.eraseFromBundle();
-  else
-    MI.eraseFromParent();
+  removeInst(MI);
+
+  return true;
+}
+
+static bool expandSTORECp(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
+                          MachineInstr &MI) {
+  auto MII = MI.getIterator();
+  LLVM_DEBUG(dbgs() << "Expanding in expandSTORECp: "; MI.dump());
+
+  Register Ptr =
+      getRegOrFail(MI.getOperand(0), "Operand 0 of STORECp must be a register");
+  Register SV =
+      getRegOrFail(MI.getOperand(1), "Operand 1 of STORECp must be a register");
+
+  int64_t Size =
+      getImmOrFail(MI.getOperand(2), "Operand 2 of STORECp must be an immediate"
+                                     " (the size of the stored value)");
+
+  Register Cond =
+      getRegOrFail(MI.getOperand(3), "Operand 3 of STORECp must be a register");
+  int64_t ScalarcondMod =
+      getImmOrFail(MI.getOperand(4),
+                   "Operand 4 of STORECp must be an immediate (ScalarcondMod)");
+  int64_t LsomaskMod =
+      getImmOrFail(MI.getOperand(5),
+                   "Operand 5 of STORECp must be an immediate (LsomaskMod)");
+
+  if (ScalarcondMod >= 0 && LsomaskMod >= 0)
+    report_fatal_error("ScalarcondMod and LsomaskMod cannot be both >= 0");
+  bool HasLsomask = LsomaskMod >= 0;
+
+  if (HasLsomask) {
+    if (Size != 256)
+      report_fatal_error(
+          "LsomaskMod is only supported for 256-bit store value");
+    if (!TII->getSubtarget().isV2())
+      report_fatal_error("LsomaskMod is only supported on kv3-2");
+  }
+
+  unsigned IID;
+  switch (Size) {
+  case 8:
+    IID = KVX::SBrrc;
+    break;
+  case 16:
+    IID = KVX::SHrrc;
+    break;
+  case 32:
+    IID = KVX::SWrrc;
+    break;
+  case 64:
+    IID = KVX::SDrrc;
+    break;
+  case 128:
+    IID = KVX::SQrrc;
+    break;
+  case 256:
+    IID = HasLsomask ? KVX::SOrrm : KVX::SOrrc;
+    break;
+  }
+
+  DebugLoc DL = MI.getDebugLoc();
+  auto Mod = HasLsomask ? LsomaskMod : ScalarcondMod;
+  BuildMI(MBB, MII, DL, TII->get(IID))
+      .addReg(Ptr)
+      .addReg(SV)
+      .addImm(Mod)
+      .addReg(Cond);
+
+  // Remove the original pseudo instruction
+  removeInst(MI);
 
   return true;
 }
@@ -1464,6 +1541,10 @@ static bool expandInBundle(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
       case KVX::STOREp:
       case KVX::STOREpv:
         HasChanged |= expandSTOREp(TII, MBB, *I);
+        break;
+      case KVX::STORECp:
+      case KVX::STORECpv:
+        HasChanged |= expandSTORECp(TII, MBB, *I);
         break;
       default:
         break;
@@ -1705,6 +1786,9 @@ bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
   case KVX::STOREp:
   case KVX::STOREpv:
     return expandSTOREp(TII, MBB, *MBBI);
+  case KVX::STORECp:
+  case KVX::STORECpv:
+    return expandSTORECp(TII, MBB, *MBBI);
   case KVX::READYp1r:
   case KVX::READYp2r:
   case KVX::READYp3r:

@@ -240,6 +240,34 @@ void KVXInstPrinter::printScalarcondMod(
   }
 }
 
+void KVXInstPrinter::printLsomaskMod(
+    const MCInst *MI, unsigned OpNo,
+    /*const MCSubtargetInfo &STI,*/ raw_ostream &O) {
+  const MCOperand &MO = MI->getOperand(OpNo);
+  int Variant = MO.getImm();
+  switch (Variant) {
+  case 0:
+  case 1:
+  case 2:
+  case 3:
+    report_fatal_error("Got .u0/.u1/.u2/.u3 for lsomask modifier");
+  case 4:
+    O << ".mt";
+    break;
+  case 5:
+    O << ".mf";
+    break;
+  case 6:
+    O << ".mtc";
+    break;
+  case 7:
+    O << ".mfc";
+    break;
+  default:
+    report_fatal_error("Unhandled value for lsomask modifier");
+  }
+}
+
 void KVXInstPrinter::printSimplecondMod(
     const MCInst *MI, unsigned OpNo,
     /*const MCSubtargetInfo &STI,*/ raw_ostream &O) {

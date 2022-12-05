@@ -52,6 +52,10 @@ def ScalarcondMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 13
   let PrintMethod = "printScalarcondMod";
 }
 
+def LsomaskMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 7);}]> {
+  let PrintMethod = "printLsomaskMod";
+}
+
 def SimplecondMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 7);}]> {
   let PrintMethod = "printSimplecondMod";
 }
