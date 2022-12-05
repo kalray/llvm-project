@@ -18949,19 +18949,27 @@ KVX_emitLoadBuiltin(CodeGenFunction &CGF, const CallExpr *E,
 
 static bool KVX_getVolatileReadyArgs(CodeGenFunction &CGF, const CallExpr *E,
                                      unsigned int NumPosArgs, bool &Volatile,
-                                     Value *&Ready) {
-  int VolatilePos = -1, ReadyPos = -1;
+                                     Value *&Ready, bool OnlyVolatile = false) {
+  // No var arg to parse
+  if (E->getNumArgs() == NumPosArgs)
+    return true;
 
   const int FirstExtraArgPos = NumPosArgs;
   const int SecondExtraArgPos = NumPosArgs + 1;
 
-  if (E->getNumArgs() == NumPosArgs + 1) {
-    (E->getArg(NumPosArgs)->isIntegerConstantExpr(CGF.getContext())
-         ? VolatilePos
-         : ReadyPos) = FirstExtraArgPos;
-  } else if (E->getNumArgs() == NumPosArgs + 2) {
-    ReadyPos = FirstExtraArgPos;
-    VolatilePos = SecondExtraArgPos;
+  int VolatilePos = OnlyVolatile ? FirstExtraArgPos : -1;
+  int ReadyPos = -1;
+
+  // Do not seek positions if there is only volatile flag to parse
+  if (!OnlyVolatile) {
+    if (E->getNumArgs() == NumPosArgs + 1) {
+      (E->getArg(NumPosArgs)->isIntegerConstantExpr(CGF.getContext())
+           ? VolatilePos
+           : ReadyPos) = FirstExtraArgPos;
+    } else if (E->getNumArgs() == NumPosArgs + 2) {
+      ReadyPos = FirstExtraArgPos;
+      VolatilePos = SecondExtraArgPos;
+    }
   }
 
   if (VolatilePos >= 0) {
@@ -18993,16 +19001,19 @@ static bool KVX_getVolatileReadyArgs(CodeGenFunction &CGF, const CallExpr *E,
   return true;
 }
 
-static Value *KVX_adaptStoreValue(CodeGenFunction &CGF, Value *StoreVal,
-                                  llvm::Type *DataType) {
+static bool KVX_getVolatileArg(CodeGenFunction &CGF, const CallExpr *E,
+                               unsigned int NumPosArgs, bool &Volatile) {
+  Value *Ready; // unused
+  return KVX_getVolatileReadyArgs(CGF, E, NumPosArgs, Volatile, Ready, true);
+}
+
+static Value *KVX_truncateOrBitcast(CodeGenFunction &CGF, Value *StoreVal,
+                                    llvm::Type *DataType) {
   llvm::Type *StoreValType = StoreVal->getType();
   if (StoreVal->getType() != DataType) {
     if (DataType->isIntegerTy() && StoreValType->isIntegerTy()) {
-      // Truncate to the demanded integer type, since it is required to have
-      // pointer type corresponding to store value type for IR memory stores
       StoreVal = CGF.Builder.CreateTrunc(StoreVal, DataType);
     } else if (DataType->isVectorTy() || StoreValType->isVectorTy()) {
-      // Bitcast to given type
       StoreVal = CGF.Builder.CreateBitCast(StoreVal, DataType);
     }
   }
@@ -19032,7 +19043,7 @@ static Value *KVX_emitStoreBuiltin(CodeGenFunction &CGF, const CallExpr *E,
     DataType = DataTypeIntrinsic;
 
   Value *ToStore = CGF.EmitScalarExpr(E->getArg(0));
-  Value *StoreVal = KVX_adaptStoreValue(CGF, ToStore, DataType);
+  Value *StoreVal = KVX_truncateOrBitcast(CGF, ToStore, DataType);
 
   Address Addr = CGF.EmitPointerWithAlignment(E->getArg(1));
   llvm::Type *AType = StoreVal->getType()->getPointerTo();
@@ -19054,19 +19065,18 @@ static Value *KVX_emitStoreBuiltin(CodeGenFunction &CGF, const CallExpr *E,
 }
 
 static bool KVX_getLsucondOrLsomask(CodeGenFunction &CGF, const Expr *E,
-                                    bool HasLsumask, int &LsucondMod,
-                                    int &LsomaskMod) {
+                                    StringRef ModStr, bool HasLsumask,
+                                    int &LsucondMod, int &LsomaskMod,
+                                    StringRef Name) {
   const auto &Target = CGF.getTarget();
   bool IsCV1 = Target.getCPUstr() == "kv3-1";
-
-  StringRef ModStr =
-      cast<clang::StringLiteral>(E)->getString().split(".").second;
 
   if ((LsomaskMod = KVX_LSOMASK.getModifierValue(ModStr)) >= 0) {
     if (!HasLsumask) {
       CGF.CGM.Error(E->getBeginLoc(),
                     "lsumask modifier is not available for this builtin. Try "
-                    "using __builtin_kvx_storec[64|128|256] instead");
+                    "using __builtin_kvx_" +
+                        std::string(Name) + "[64|128|256] instead");
       return false;
     }
     if (IsCV1) {
@@ -19100,7 +19110,7 @@ llvm::Value *KVX_extendVectorTo256(clang::CodeGen::CodeGenFunction &CGF,
   // Cast to vxi64 with x in {1, 2}
   unsigned NumElements = VectorSize / 64;
   auto *VectorType = llvm::FixedVectorType::get(CGF.Int64Ty, NumElements);
-  Vector = KVX_adaptStoreValue(CGF, Vector, VectorType);
+  Vector = KVX_truncateOrBitcast(CGF, Vector, VectorType);
 
   llvm::Type *ExtendedVecType = llvm::FixedVectorType::get(CGF.Int64Ty, 4);
   llvm::Value *ExtendedVec = UndefValue::get(ExtendedVecType);
@@ -19112,6 +19122,26 @@ llvm::Value *KVX_extendVectorTo256(clang::CodeGen::CodeGenFunction &CGF,
   }
 
   return ExtendedVec;
+}
+
+llvm::Value *KVX_extractVectorFrom256(clang::CodeGen::CodeGenFunction &CGF,
+                                      llvm::Value *Vector,
+                                      unsigned OriginalSize) {
+  assert(Vector->getType()->getPrimitiveSizeInBits().getFixedSize() == 256);
+
+  unsigned NumElements = OriginalSize / 64;
+  llvm::Type *ExtractedVecType =
+      llvm::FixedVectorType::get(CGF.Int64Ty, NumElements);
+  llvm::Value *ExtractedVec = UndefValue::get(ExtractedVecType);
+
+  for (unsigned I = 0; I < NumElements; I++) {
+    llvm::Value *Index = ConstantInt::get(CGF.IntTy, I);
+    llvm::Value *Extract = CGF.Builder.CreateExtractElement(Vector, Index);
+    ExtractedVec =
+        CGF.Builder.CreateInsertElement(ExtractedVec, Extract, Index);
+  }
+
+  return ExtractedVec;
 }
 
 static Value *KVX_emitStoreCondBuiltin(CodeGenFunction &CGF, const CallExpr *E,
@@ -19133,9 +19163,12 @@ static Value *KVX_emitStoreCondBuiltin(CodeGenFunction &CGF, const CallExpr *E,
     return nullptr;
 
   Value *Cond = CGF.EmitScalarExpr(E->getArg(2));
+  bool Unused;
+  StringRef ModsStr = KVX_getModStr(CGF, E, 3, Unused).split(".").second;
   int LsucondMod = -1, LsomaskMod = -1;
   if (!KVX_getLsucondOrLsomask(CGF, E->getArg(3)->IgnoreParenImpCasts(),
-                               HasLsomask, LsucondMod, LsomaskMod))
+                               ModsStr, HasLsomask, LsucondMod, LsomaskMod,
+                               "storec"))
     return nullptr;
 
   Value *LsucondModVal = ConstantInt::get(CGF.IntTy, LsucondMod);
@@ -19146,7 +19179,7 @@ static Value *KVX_emitStoreCondBuiltin(CodeGenFunction &CGF, const CallExpr *E,
     DataType = DataTypeIntrinsic;
 
   Value *ToStore = CGF.EmitScalarExpr(E->getArg(0));
-  Value *StoreVal = KVX_adaptStoreValue(CGF, ToStore, DataType);
+  Value *StoreVal = KVX_truncateOrBitcast(CGF, ToStore, DataType);
 
   if (LsomaskMod >= 0 && StoreSize < 256) {
     // .mtc and .mfc are not allowed with storec64 and storec128
@@ -19189,6 +19222,88 @@ static Value *KVX_emitStoreCondBuiltin(CodeGenFunction &CGF, const CallExpr *E,
   Function *StoreCI = CGF.CGM.getIntrinsic(IID, {StoreVal->getType()});
 
   return CGF.Builder.CreateCall(StoreCI, Ops);
+}
+
+static Value *KVX_emitLoadCondBuiltin(CodeGenFunction &CGF, const CallExpr *E,
+                                      llvm::Type *DataType,
+                                      llvm::Type *DataTypeIntrinsic = nullptr,
+                                      bool HasLsomask = false) {
+  constexpr int NumPosArgs = 4;
+
+  if (E->getNumArgs() > NumPosArgs + 1) {
+    CGF.CGM.Error(E->getBeginLoc(), "No more than " +
+                                        std::to_string(NumPosArgs + 1) +
+                                        " arguments are allowed");
+    return nullptr;
+  }
+
+  bool Volatile = false;
+  if (!KVX_getVolatileArg(CGF, E, NumPosArgs, Volatile))
+    return nullptr;
+
+  bool Unused;
+  StringRef ModsStr = KVX_getModStr(CGF, E, 3, Unused);
+  int NumDots = ModsStr.count('.');
+
+  // If it is a .variant.(lsucond|lsumask) format
+  int VariantMod = 0;
+  if (NumDots == 2) {
+    ModsStr = ModsStr.split(".").second; // eliminate first .
+    if ((VariantMod = KVX_VARIANT.getModifierValue(ModsStr.split(".").first)) <
+        0) {
+      CGF.CGM.Error(E->getArg(3)->IgnoreParenImpCasts()->getBeginLoc(),
+                    "invalid variant modifier, should be one of: " +
+                        KVX_VARIANT.getModifierStrList());
+      return nullptr;
+    }
+  }
+
+  ModsStr = ModsStr.split(".").second;
+  Value *Cond = CGF.EmitScalarExpr(E->getArg(2));
+  int LsucondMod = -1, LsomaskMod = -1;
+  if (!KVX_getLsucondOrLsomask(CGF, E->getArg(3)->IgnoreParenImpCasts(),
+                               ModsStr, HasLsomask, LsucondMod, LsomaskMod,
+                               "loadc"))
+    return nullptr;
+
+  Value *LsucondModVal = ConstantInt::get(CGF.IntTy, LsucondMod);
+  Value *LsumaskModVal = ConstantInt::get(CGF.IntTy, LsomaskMod);
+
+  unsigned LoadSize = DataType->getPrimitiveSizeInBits().getFixedSize();
+  llvm::Type *CastType = DataTypeIntrinsic ? DataTypeIntrinsic : DataType;
+
+  Value *Preload = CGF.EmitScalarExpr(E->getArg(0));
+  llvm::Type *OriginalType = Preload->getType();
+  Value *PreloadVal = KVX_truncateOrBitcast(CGF, Preload, CastType);
+
+  unsigned OriginalSize = LoadSize;
+  if (LsomaskMod >= 0 && OriginalSize < 256) {
+    PreloadVal = KVX_extendVectorTo256(CGF, PreloadVal);
+    LoadSize = 256;
+  }
+
+  Address Addr = CGF.EmitPointerWithAlignment(E->getArg(1));
+  llvm::Type *AType = PreloadVal->getType()->getPointerTo();
+  auto AddrCast = CGF.Builder.CreatePointerBitCastOrAddrSpaceCast(Addr, AType);
+
+  unsigned IID = Volatile ? Intrinsic::kvx_loadc_u_vol : Intrinsic::kvx_loadc_u;
+  Value *Ptr = AddrCast.getPointer();
+  Value *SizeInfo = ConstantInt::get(CGF.Int32Ty, LoadSize);
+
+  Value *VariantModVal = ConstantInt::get(CGF.Int32Ty, VariantMod);
+
+  SmallVector<Value *, 8> Ops = {PreloadVal,   Ptr,           SizeInfo,
+                                 Cond,         VariantModVal, LsucondModVal,
+                                 LsumaskModVal};
+  Function *LoadCI = CGF.CGM.getIntrinsic(IID, {PreloadVal->getType()});
+
+  Value *Call = CGF.Builder.CreateCall(LoadCI, Ops);
+
+  if (LsomaskMod >= 0 && OriginalSize < 256)
+    Call = KVX_extractVectorFrom256(CGF, Call, OriginalSize);
+
+  // Cast back to the original type
+  return KVX_truncateOrBitcast(CGF, Call, OriginalType);
 }
 
 static Value *KVX_emitVectorBuiltin(CodeGenFunction &CGF, const CallExpr *E,
@@ -19939,6 +20054,33 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
         *this, E, llvm::FixedVectorType::get(Int64Ty, 2), nullptr, true);
   case KVX::BI__builtin_kvx_storec256:
     return KVX_emitStoreCondBuiltin(
+        *this, E, llvm::FixedVectorType::get(Int64Ty, 4), nullptr, true);
+
+  case KVX::BI__builtin_kvx_loadcbz:
+    return KVX_emitLoadCondBuiltin(*this, E, Int8Ty, Int64Ty);
+  case KVX::BI__builtin_kvx_loadchz:
+    return KVX_emitLoadCondBuiltin(*this, E, Int16Ty, Int64Ty);
+  case KVX::BI__builtin_kvx_loadcwz:
+    return KVX_emitLoadCondBuiltin(*this, E, Int32Ty, Int64Ty);
+  case KVX::BI__builtin_kvx_loadcd:
+    return KVX_emitLoadCondBuiltin(*this, E, Int64Ty, Int64Ty);
+  case KVX::BI__builtin_kvx_loadcq:
+    return KVX_emitLoadCondBuiltin(*this, E,
+                                   llvm::FixedVectorType::get(Int64Ty, 2));
+  case KVX::BI__builtin_kvx_loadchf:
+    return KVX_emitLoadCondBuiltin(*this, E, HalfTy);
+  case KVX::BI__builtin_kvx_loadcwf:
+    return KVX_emitLoadCondBuiltin(*this, E, FloatTy);
+  case KVX::BI__builtin_kvx_loadcdf:
+    return KVX_emitLoadCondBuiltin(*this, E, DoubleTy);
+  case KVX::BI__builtin_kvx_loadc64:
+    return KVX_emitLoadCondBuiltin(
+        *this, E, llvm::FixedVectorType::get(Int32Ty, 2), nullptr, true);
+  case KVX::BI__builtin_kvx_loadc128:
+    return KVX_emitLoadCondBuiltin(
+        *this, E, llvm::FixedVectorType::get(Int64Ty, 2), nullptr, true);
+  case KVX::BI__builtin_kvx_loadc256:
+    return KVX_emitLoadCondBuiltin(
         *this, E, llvm::FixedVectorType::get(Int64Ty, 4), nullptr, true);
 
   case KVX::BI__builtin_kvx_ready: {

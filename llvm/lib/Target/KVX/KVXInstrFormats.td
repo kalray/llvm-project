@@ -203,6 +203,12 @@ multiclass MC_LOADS<string OpcStr, RegisterClass RC> {
   defm rrc  : I <OpcStr, LSU_AUXW_LOAD, [], [VariantMod], [SingleReg], [ScalarcondMod, SingleReg], [RC]>;
   defm ri27c: I <OpcStr, LSU_AUXW_LOAD_X_, [], [VariantMod], [Signed27, SingleReg], [ScalarcondMod, SingleReg], [RC]>;
   defm ri54c: I <OpcStr, LSU_AUXW_LOAD_Y_, [], [VariantMod], [Signed54, SingleReg], [ScalarcondMod, SingleReg], [RC]>;
+  if !eq(RC, QuadReg) then {
+    // CV2 formats
+    defm rrm    : I <OpcStr, LSU_AUXW_LOAD, [], [VariantMod], [SingleReg], [LsomaskMod, SingleReg], [RC]>;
+    defm ri27m : I <OpcStr, LSU_AUXW_LOAD_X_, [], [VariantMod], [Signed27, SingleReg], [LsomaskMod, SingleReg], [RC]>;
+    defm ri54m : I <OpcStr, LSU_AUXW_LOAD_Y_, [], [VariantMod], [Signed54, SingleReg], [LsomaskMod, SingleReg], [RC]>;
+  }
 }
 
 multiclass MC_STORES<string OpcStr, RegisterClass RC> {

@@ -111,6 +111,7 @@ BUILTIN(__builtin_kvx_lwq, "V4ivC*cC*.", "n")
 BUILTIN(__builtin_kvx_lwf, "fvC*cC*.", "n")
 BUILTIN(__builtin_kvx_lws, "OivC*cC*.", "n")
 BUILTIN(__builtin_kvx_lwz, "OivC*cC*.", "n")
+
 BUILTIN(__builtin_kvx_ready, "Oi.", "n")
 
 BUILTIN(__builtin_kvx_storeb, "vUOiv*.", "n")
@@ -136,6 +137,18 @@ BUILTIN(__builtin_kvx_storecdf, "vdv*UOicC*.", "n")
 BUILTIN(__builtin_kvx_storec64, "vV2Uiv*UOicC*.", "n")
 BUILTIN(__builtin_kvx_storec128, "vV4Uiv*UOicC*.", "n")
 BUILTIN(__builtin_kvx_storec256, "vV8Uiv*UOicC*.", "n")
+
+BUILTIN(__builtin_kvx_loadcbz, "UOiUOivC*UOicC*.", "n")
+BUILTIN(__builtin_kvx_loadchz, "UOiUOivC*UOicC*.", "n")
+BUILTIN(__builtin_kvx_loadcwz, "UOiUOivC*UOicC*.", "n")
+BUILTIN(__builtin_kvx_loadcd, "UOiUOivC*UOicC*.", "n")
+BUILTIN(__builtin_kvx_loadcq, "ULLLiULLLivC*UOicC*.", "n")
+BUILTIN(__builtin_kvx_loadchf, "xxvC*UOicC*.", "n")
+BUILTIN(__builtin_kvx_loadcwf, "ffvC*UOicC*.", "n")
+BUILTIN(__builtin_kvx_loadcdf, "ddvC*UOicC*.", "n")
+BUILTIN(__builtin_kvx_loadc64, "V2UiV2UivC*UOicC*.", "n")
+BUILTIN(__builtin_kvx_loadc128, "V4UiV4UivC*UOicC*.", "n")
+BUILTIN(__builtin_kvx_loadc256, "V8UiV8UivC*UOicC*.", "n")
 
 //===----------------------------------------------------------------------===//
 // FPU
