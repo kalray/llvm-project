@@ -19633,6 +19633,61 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_lfdq:
     return KVX_emitLoadBuiltin(*this, E, llvm::FixedVectorType::get(DoubleTy, 4));
 
+  case KVX::BI__builtin_kvx_ready: {
+    int N = E->getNumArgs();
+    unsigned int IID = Intrinsic::kvx_ready;
+
+    if (N == 0 || N > 4) {
+      CGM.Error(E->getBeginLoc(),
+                "__builtin_kvx_ready must have one to four arguments");
+      return nullptr;
+    }
+
+    SmallVector<Value *, 4> Args;
+    for (int I = 0; I < N; I++) {
+      if (E->getArg(I)->isIntegerConstantExpr(CGM.getContext())) {
+        CGM.Error(E->getArg(I)->getBeginLoc(),
+                  "Constant values should not be used in __builtin_kvx_ready");
+        return nullptr;
+      }
+      if (E->getArg(I)->getType()->isAggregateType()) {
+        CGM.Error(E->getArg(I)->getBeginLoc(),
+                  "Aggregate types not supported in __builtin_kvx_ready");
+        return nullptr;
+      }
+      Value *Arg = EmitScalarExpr(E->getArg(I));
+      llvm::Type *BitcastTy;
+      llvm::Type *ArgType = Arg->getType();
+      unsigned int Size = ArgType->getPrimitiveSizeInBits().getFixedSize();
+      switch (Size) {
+      case 16:
+        BitcastTy = HalfTy;
+        break;
+      case 32:
+        BitcastTy = Int32Ty;
+        break;
+      case 64:
+        BitcastTy = Int64Ty;
+        break;
+      case 128:
+        BitcastTy = llvm::FixedVectorType::get(Int64Ty, 2);
+        break;
+      case 256:
+        BitcastTy = llvm::FixedVectorType::get(Int64Ty, 4);
+        break;
+      default:
+        CGM.Error(
+            E->getArg(I)->getBeginLoc(),
+            "Scalar size > 256 bits not supported in __builtin_kvx_ready");
+        return nullptr;
+      }
+      Arg = Builder.CreateBitCast(Arg, BitcastTy);
+      Args.push_back(Arg);
+    }
+
+    return Builder.CreateCall(CGM.getIntrinsic(IID), Args);
+  }
+
   case KVX::BI__builtin_kvx_dinvall:
   case KVX::BI__builtin_kvx_dtouchl:
   case KVX::BI__builtin_kvx_dzerol:

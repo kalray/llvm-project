@@ -2904,6 +2904,48 @@ SDValue KVXTargetLowering::LowerINTRINSIC(SDValue Op, SelectionDAG &DAG,
   default:
     return Op; // Don't interfere with other intrinsics.
 
+  case Intrinsic::kvx_ready: {
+    int ReadyInstrID[] = {KVX::READYp1r, KVX::READYp2r, KVX::READYp3r,
+                          KVX::READYp4r};
+    int NumActualOperands =
+        Op->getNumOperands() - 1; // operand 0 is intrinsic ID
+    int InstrID = ReadyInstrID[NumActualOperands - 1];
+    SmallVector<SDValue, 4> MOps;
+    for (int I = 1; I < NumActualOperands + 1; I++) {
+      SDValue ThisOp = Op.getOperand(I);
+      MVT OVT = ThisOp.getSimpleValueType();
+      switch (OVT.SimpleTy) {
+      case MVT::f16:
+      case MVT::i32:
+      case MVT::i64:
+      case MVT::v2i64:
+      case MVT::v4i64:
+        break;
+      default:
+        return Op;
+      }
+
+      SDValue MatchedValue = ThisOp;
+
+      // Trying to match (i64 (bitconvert (f64 (fpextend f32:$a)))))
+      if (OVT.SimpleTy == MVT::i64) {
+        if (ThisOp.getOpcode() == ISD::BITCAST) {
+          SDValue FPExtend = ThisOp.getOperand(0);
+          if (FPExtend.getSimpleValueType().SimpleTy == MVT::f64 &&
+              FPExtend.getOpcode() == ISD::FP_EXTEND) {
+            SDValue F32Op = FPExtend.getOperand(0);
+            if (F32Op.getSimpleValueType().SimpleTy == MVT::f32)
+              MatchedValue = F32Op;
+          }
+        }
+      }
+
+      MOps.push_back(MatchedValue);
+    }
+    auto *New = DAG.getMachineNode(InstrID, SDLoc(Op), VT, MOps);
+    return SDValue(New, 0);
+  }
+
   case Intrinsic::eh_sjlj_lsda: {
     MachineFunction &MF = DAG.getMachineFunction();
     const TargetLowering &TLI = DAG.getTargetLoweringInfo();

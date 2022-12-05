@@ -1334,6 +1334,76 @@ static bool expandXSWAP256p(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   return true;
 }
 
+static bool expandREADYp(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
+                         MachineInstr &MI) {
+  auto MII = MI.getIterator();
+  LLVM_DEBUG(dbgs() << "Expanding: "; MI.dump());
+
+  int NumOperands = MI.getNumOperands();
+
+  MachineFunction *MF = MBB.getParent();
+  const KVXRegisterInfo *TRI =
+      (const KVXRegisterInfo *)MF->getSubtarget().getRegisterInfo();
+  SmallVector<Register, 4> OutRegs;
+  for (int I = 1; I < NumOperands; I++) {
+    MachineOperand &InRegOp = MI.getOperand(I);
+    if (!InRegOp.isReg())
+      report_fatal_error("Operands of READYp must be registers");
+    Register InReg = InRegOp.getReg();
+    if (KVX::SingleRegRegClass.contains(InReg))
+      OutRegs.push_back(InReg);
+    else if (KVX::PairedRegRegClass.contains(InReg) ||
+             KVX::QuadRegRegClass.contains(InReg))
+      OutRegs.push_back(TRI->getSubReg(InReg, KVX::sub_d0));
+    else
+      report_fatal_error(
+          "Operands of READYp must be either SingleReg, PairedReg or QuadReg");
+  }
+
+  if ((NumOperands - 1) % 2 == 1)
+    OutRegs.push_back(OutRegs[0]);
+
+  if (!MI.getOperand(0).isReg())
+    report_fatal_error("Output of READYp must be a register");
+  DebugLoc DL = MI.getDebugLoc();
+  BuildMI(MBB, MII, DL, TII->get(KVX::ORDrr), MI.getOperand(0).getReg())
+      .addReg(OutRegs[0])
+      .addReg(OutRegs[1]);
+  if (NumOperands > 3)
+    BuildMI(MBB, MII, DL, TII->get(KVX::ORDrr), MI.getOperand(0).getReg())
+        .addReg(OutRegs[2])
+        .addReg(OutRegs[3]);
+
+  if (MI.isInsideBundle())
+    MI.eraseFromBundle();
+  else
+    MI.eraseFromParent();
+
+  return true;
+}
+
+static bool expandInBundle(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
+                           MachineBasicBlock::iterator MBBI) {
+  auto I = MBBI->getIterator();
+  auto E = MBBI->getParent()->instr_end();
+  while (++I != E && I->isInsideBundle()) {
+    if (I->isPseudo()) {
+      switch (I->getOpcode()) {
+      case KVX::XSWAP256p:
+        return expandXSWAP256p(TII, MBB, MBBI);
+      case KVX::READYp1r:
+      case KVX::READYp2r:
+      case KVX::READYp3r:
+      case KVX::READYp4r:
+        return expandREADYp(TII, MBB, *I);
+      default:
+        break;
+      }
+    }
+  }
+  return false;
+}
+
 static bool expandSPCHECK(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
                           MachineBasicBlock::iterator MBBI) {
 
@@ -1560,8 +1630,14 @@ bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
     return false;
 
   switch (MBBI->getOpcode()) {
-  case KVX::XSWAP256p:
   case KVX::BUNDLE:
+    return expandInBundle(TII, MBB, MBBI);
+  case KVX::READYp1r:
+  case KVX::READYp2r:
+  case KVX::READYp3r:
+  case KVX::READYp4r:
+    return expandREADYp(TII, MBB, *MBBI);
+  case KVX::XSWAP256p:
     return expandXSWAP256p(TII, MBB, MBBI);
   // Must expand LOOPDO_END label to add NOP if last bundle is a branch
   // instruction. This is done after PRE_EMIT when all CFG optimizations have
