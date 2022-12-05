@@ -187,6 +187,8 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::ROTL, MVT::v2i32, Legal);
   setOperationAction(ISD::ROTR, MVT::v2i32, Legal);
 
+  setOperationAction(ISD::STORE, MVT::i128, Custom);
+
   for (auto VT : {MVT::i8, MVT::i32, MVT::i64, MVT::v2i8, MVT::v2i16,
                   MVT::v2i32, MVT::v4i8, MVT::v4i16, MVT::v8i8})
     setOperationAction(ISD::BITREVERSE, VT, Legal);
@@ -1097,8 +1099,9 @@ SDValue KVXTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
     return SDValue();
   }
   case ISD::INTRINSIC_VOID:
+    return LowerINTRINSIC(Op, DAG, &Subtarget, Op->getNumValues());
   case ISD::INTRINSIC_WO_CHAIN:
-    return LowerINTRINSIC(Op, DAG, &Subtarget);
+    return LowerINTRINSIC(Op, DAG, &Subtarget, false);
   case ISD::EH_SJLJ_LONGJMP:
     return DAG.getNode(KVXISD::EH_SJLJ_LONGJMP, SDLoc(Op), MVT::Other,
                        Op.getOperand(0), Op.getOperand(1));
@@ -1159,12 +1162,9 @@ SDValue KVXTargetLowering::lowerMulExtend(const unsigned Opcode, SDValue Op,
   return SDValue();
 }
 
-SDValue KVXTargetLowering::lowerSTORE(SDValue Op, SelectionDAG &DAG) const {
+static SDValue lowerXSTORE(SDValue Op, SelectionDAG &DAG) {
   SDValue STValue = Op->getOperand(1);
   auto VT = STValue.getSimpleValueType();
-  if (!(VT == MVT::v512i1 || VT == MVT::v1024i1))
-    return SDValue();
-
   SDValue Chain = Op.getOperand(0);
   int End = KVX::sub_v0 + (VT == MVT::v512i1 ? 1 : 3);
   auto Base = Op->getOperand(2).getValue(0);
@@ -1190,6 +1190,30 @@ SDValue KVXTargetLowering::lowerSTORE(SDValue Op, SelectionDAG &DAG) const {
     Chain = DAG.getStore(Chain, StoreDL, SubValue, Ptr, MachinePointerInfo());
   }
   return Chain;
+}
+
+static SDValue lowerSTOREI128(SDValue Op, SelectionDAG &DAG) {
+  SDLoc StoreDL(Op);
+  SDValue Chain = Op->getOperand(0);
+  SDValue STValue = Op->getOperand(1);
+  SDValue Ptr = Op->getOperand(2);
+  SDValue STValueBitcast = DAG.getBitcast(MVT::v2i64, STValue);
+  return DAG.getStore(Chain, StoreDL, STValueBitcast, Ptr,
+                      MachinePointerInfo());
+}
+
+SDValue KVXTargetLowering::lowerSTORE(SDValue Op, SelectionDAG &DAG) const {
+  SDValue STValue = Op->getOperand(1);
+  auto VT = STValue.getSimpleValueType();
+  switch (VT.SimpleTy) {
+  case MVT::v512i1:
+  case MVT::v1024i1:
+    return lowerXSTORE(Op, DAG);
+  case MVT::i128:
+    return lowerSTOREI128(Op, DAG);
+  default:
+    return SDValue();
+  }
 }
 
 SDValue KVXTargetLowering::lowerStackCheckAlloca(SDValue Op,
@@ -2890,14 +2914,13 @@ KVXTargetLowering::EmitInstrWithCustomInserter(MachineInstr &MI,
 }
 
 SDValue KVXTargetLowering::LowerINTRINSIC(SDValue Op, SelectionDAG &DAG,
-                                          const KVXSubtarget *Subtarget) const {
-  MVT VT = Op.getSimpleValueType();
-  unsigned IID = 0;
-  if (VT == MVT::Other) {
-    VT = Op.getOperand(1).getSimpleValueType();
-    IID = 1;
-  }
+                                          const KVXSubtarget *Subtarget,
+                                          bool HasChain) const {
+  MVT OutputVT = Op.getSimpleValueType();
+
+  unsigned IID = HasChain ? 1 : 0;
   unsigned IntNo = cast<ConstantSDNode>(Op.getOperand(IID))->getZExtValue();
+  unsigned OpStart = HasChain ? 2 : 1;
 
   SDLoc DL(Op);
   switch (IntNo) {
@@ -2942,7 +2965,7 @@ SDValue KVXTargetLowering::LowerINTRINSIC(SDValue Op, SelectionDAG &DAG,
 
       MOps.push_back(MatchedValue);
     }
-    auto *New = DAG.getMachineNode(InstrID, SDLoc(Op), VT, MOps);
+    auto *New = DAG.getMachineNode(InstrID, SDLoc(Op), OutputVT, MOps);
     return SDValue(New, 0);
   }
 
@@ -2958,10 +2981,11 @@ SDValue KVXTargetLowering::LowerINTRINSIC(SDValue Op, SelectionDAG &DAG,
 
     if (isPositionIndependent()) {
       auto PcRel = DAG.getNode(KVXISD::PICPCRelativeGOTAddr, DL, PtrVT);
-      return DAG.getNode(KVXISD::PICInternIndirection, DL, VT, PcRel,
+      return DAG.getNode(KVXISD::PICInternIndirection, DL, OutputVT, PcRel,
                          DAG.getMCSymbol(S, PtrVT));
     }
-    return DAG.getNode(KVXISD::AddrWrapper, DL, VT, DAG.getMCSymbol(S, PtrVT));
+    return DAG.getNode(KVXISD::AddrWrapper, DL, OutputVT,
+                       DAG.getMCSymbol(S, PtrVT));
   }
 
   case Intrinsic::kvx_wfx: {
@@ -2990,6 +3014,43 @@ SDValue KVXTargetLowering::LowerINTRINSIC(SDValue Op, SelectionDAG &DAG,
     }
 
     return Op;
+  }
+
+  case Intrinsic::kvx_store:
+  case Intrinsic::kvx_store_vol: {
+    bool Volatile = IntNo == Intrinsic::kvx_store_vol;
+    unsigned InstrID = Volatile ? KVX::STOREpv : KVX::STOREp;
+
+    SDValue Chain = Op->getOperand(0);
+    SDValue Sv = Op->getOperand(OpStart);
+
+    SDValue SizeInfoOp = Op->getOperand(OpStart + 2);
+    auto *SizeInfoAsConst = dyn_cast<ConstantSDNode>(SizeInfoOp);
+    unsigned Size = SizeInfoAsConst->getZExtValue();
+    SDValue SizeInfo = DAG.getTargetConstant(Size, SDLoc(SizeInfoOp), MVT::i64);
+
+    // Trying to match (i64 (and $a, $n)) for i16 and i8 types when appropriate
+    // Also try to match (i64 (zextend $n)) for i32 type
+    MVT SvVt = Sv.getSimpleValueType();
+    if (SvVt.SimpleTy == MVT::i64) {
+      if (Sv.getOpcode() == ISD::AND) {
+        auto *Mask = cast<ConstantSDNode>(Sv.getOperand(1));
+        if ((Size == 8 && Mask->getZExtValue() == (1 << 8) - 1) ||
+            (Size == 16 && Mask->getZExtValue() == (1 << 16) - 1))
+          Sv = Sv.getOperand(0);
+      } else if (Sv.getOpcode() == ISD::ZERO_EXTEND) {
+        MVT SvOpVt = Sv.getOperand(0).getSimpleValueType();
+        if (SvOpVt.getFixedSizeInBits() == Size)
+          Sv = Sv.getOperand(0);
+      }
+    }
+
+    SDValue Ptr = Op->getOperand(OpStart + 1);
+    SDValue Ready = Op->getOperand(OpStart + 3);
+
+    auto *New = DAG.getMachineNode(InstrID, SDLoc(Op), MVT::Other,
+                                   {Ptr, Sv, SizeInfo, Ready, Chain});
+    return SDValue(New, 0);
   }
   }
 }
