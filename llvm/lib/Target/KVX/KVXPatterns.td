@@ -107,6 +107,26 @@ def I1INVALSp : KVX_PSEUDO<(outs), (ins AddrRR:$addr), []>;
 let Constraints = "$output = $newsp" in
 def SPCHECKp : KVX_PSEUDO<(outs SingleReg:$output), (ins SingleReg:$newsp, SingleReg:$check), []>;
 
+let Size = 4 in
+def READYp1r : KVX_PSEUDO_W_SCHEDINFO<(outs SingleReg:$out),
+  (ins unknown:$a),
+  [], ALU_TINY, "READYp1r $a">;
+
+let Size = 4 in
+def READYp2r : KVX_PSEUDO_W_SCHEDINFO<(outs SingleReg:$out),
+  (ins unknown:$a, unknown:$b),
+  [], ALU_TINY, "READYp2r $a $b">;
+
+let Size = 8 in
+def READYp3r : KVX_PSEUDO_W_SCHEDINFO<(outs SingleReg:$out),
+  (ins unknown:$a, unknown:$b, unknown:$c),
+  [], ALU_TINY_X2, "READYp3r $a $b $c">;
+
+let Size = 8 in
+def READYp4r : KVX_PSEUDO_W_SCHEDINFO<(outs SingleReg:$out),
+  (ins unknown:$a, unknown:$b, unknown:$c, unknown:$d),
+  [], ALU_TINY_X2, "READYp4r $a $b $c $d">;
+
 //===----------------------------------------------------------------------===//
 // Peephole patterns.
 //===----------------------------------------------------------------------===//

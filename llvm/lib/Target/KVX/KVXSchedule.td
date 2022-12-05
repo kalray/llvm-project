@@ -76,6 +76,7 @@ defm TCA : ItinXY<["INT", "FP"]>;
 
 defm ALU_NOP : ItinSingle;
 defm ALU_TINY : ItinXY;
+defm ALU_TINY_X2 : ItinSingle;
 defm ALU_LITE : ItinXY;
 defm ALU_LITE_CRWL : ItinSingle;
 defm ALU_LITE_CRWH : ItinSingle;
@@ -267,6 +268,7 @@ defvar XNOP = [
 ];
 
 defvar ALU_TINY_ITIN_RT = [ONE_TINY];
+defvar ALU_TINY_X2_ITIN_RT = [ONE_TINY, ONE_TINY];
 defvar ALU_LITE_ITIN_RT = [ONE_TINY, ONE_LITE];
 defvar ALU_FULL_ITIN_RT = [ONE_TINY, ONE_LITE, ONE_FULL];
 defvar ALU_TINY_CRRP_ITIN_RT = [ONE_TINY, ONE_CRRP];
@@ -372,6 +374,7 @@ defm ALL: DataSingleVariants<ALL_ITIN_RT, [
 
 defm ALU_NOP: DataSingle<NOP_ITIN_RT, NOOP>;
 defm ALU_TINY: DataXY<ALU_TINY_ITIN_RT, WE1_RRx2>;
+defm ALU_TINY_X2: DataSingle<ALU_TINY_X2_ITIN_RT, WE1_RRx4, 2 /*ISSUE*/>;
 defm ALU_TINY_CRWH: DataSingle<ALU_TINY_CRWH_ITIN_RT, WE3NB_RRx2>;
 defm ALU_TINY_CRWL: DataSingle<ALU_TINY_CRWL_ITIN_RT, WE3NB_RRx2>;
 defm ALU_TINY_CRRP: DataSingle<ALU_TINY_CRRP_ITIN_RT, READ_RR>;
@@ -461,6 +464,7 @@ list<InstrItinData> CV2Switch =
 list<InstrItinData> Common =
   ALL_IDL.l
   # ALU_NOP_IDL.l
+  # ALU_TINY_X2_IDL.l
   # ALU_TINY_IDL.l # ALU_TINY_CRRP_IDL.l # ALU_TINY_CRWH_IDL.l # ALU_TINY_CRWL_IDL.l
   # ALU_TINY_CRWL_CRWH_IDL.l # ALU_TINY_CRRP_CRWL_CRWH_IDL.l
   # ALU_LITE_IDL.l # ALU_LITE_CRWL_IDL.l # ALU_LITE_CRWH_IDL.l
@@ -661,6 +665,7 @@ foreach m = [KVXCV1SchedMachineModel, KVXCV2SchedMachineModel] in {
   defvar ALU_NOP_RT = NOP_RU;
 
   defvar ALU_TINY_RT = TINY_RU;
+  defvar ALU_TINY_X2_RT = TINY_RU # TINY_RU;
   defvar ALU_LITE_RT = LITE_RU;
 
   defvar ALU_LITE_CRWL_RT = LITE_RU # CRWL_RU;
@@ -718,6 +723,7 @@ foreach m = [KVXCV1SchedMachineModel, KVXCV2SchedMachineModel] in {
 
   defm ALU_NOP: KVXItinWriteResSingle<IS_CV1, ALU_NOP_RT>;
   defm ALU_TINY: KVXItinWriteResXY<IS_CV1, ALU_TINY_RT>;
+  defm ALU_TINY_X2: KVXItinWriteResSingle<IS_CV1, ALU_TINY_X2_RT, /*issues*/ 2>;
   defm ALU_TINY_CRRP: KVXItinWriteResSingle<IS_CV1, ALU_TINY_CRRP_RT>;
   defm ALU_TINY_CRWL: KVXItinWriteResSingle<IS_CV1, ALU_TINY_CRWL_RT>;
   defm ALU_TINY_CRWH: KVXItinWriteResSingle<IS_CV1, ALU_TINY_CRWH_RT>;

@@ -111,6 +111,7 @@ BUILTIN(__builtin_kvx_lwq, "V4ivC*cC*.", "n")
 BUILTIN(__builtin_kvx_lwf, "fvC*cC*.", "n")
 BUILTIN(__builtin_kvx_lws, "OivC*cC*.", "n")
 BUILTIN(__builtin_kvx_lwz, "OivC*cC*.", "n")
+BUILTIN(__builtin_kvx_ready, "Oi.", "n")
 
 //===----------------------------------------------------------------------===//
 // FPU
