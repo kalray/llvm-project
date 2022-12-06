@@ -17729,9 +17729,6 @@ typedef enum ROUNDING {
   ROUNDING_INVALID = -1
 } rounding_t;
 
-typedef enum CACHELEVEL { CACHE_L1, CACHE_L2, CACHE_INVALID = -1 } cachelevel_t;
-
-
 enum ROUNDINT {
   ROUNDINT_RN,
   ROUNDINT_RU,
@@ -17741,19 +17738,6 @@ enum ROUNDINT {
 };
 
 enum SATURATE { SATURATE_SAT, SATURATE_SATU };
-
-// The enumerations below do not need to be synced with KVX.h
-// Indeed, these are builtin-specific enums not corresponding to any
-// instruction modifier.
-typedef enum {
-  AVERAGE_INVALID = -1,
-  AVERAGE_DEFAULT = 0,
-  AVERAGE_R = 1,
-  AVERAGE_U = 2,
-  AVERAGE_RU = 3
-} average_t;
-
-constexpr unsigned AVERAGE_SIZE = AVERAGE_RU + 1;
 
 typedef enum {
   BITCOUNT_INVALID = -1,
@@ -17788,15 +17772,6 @@ static rounding_t KVX_getRoundingModifier(const StringRef &Str) {
       .CaseLower("rd", ROUNDING_RD)
       .CaseLower("rz", ROUNDING_RZ)
       .Default(ROUNDING_INVALID);
-}
-
-static average_t KVX_getAverageModifier(const StringRef &Str) {
-  return StringSwitch<average_t>(Str)
-      .Case("", AVERAGE_DEFAULT)
-      .Case(".r", AVERAGE_R)
-      .Case(".u", AVERAGE_U)
-      .Case(".ru", AVERAGE_RU)
-      .Default(AVERAGE_INVALID);
 }
 
 static bitcount_t KVX_getBitcountModifier(const StringRef &Str) {
@@ -18464,6 +18439,8 @@ static const KvxModifier KVX_SIMDCOND({{"", 0},
 static const KvxModifier KVX_SPECULATE = KVX_SILENT;
 
 static const KvxModifier KVX_VARIANT({{"", 0}, {"s", 1}, {"u", 2}, {"us", 3}});
+
+static const KvxModifier KvxAverage({{"", 0}, {"r", 1}, {"u", 2}, {"ru", 3}});
 
 static const KvxModifier KvxDiffMod({{"", 0}, {"s", 1}, {"u", 2}});
 
@@ -19551,31 +19528,6 @@ static inline Value *KVX_emitAddSubCarryBuiltin(CodeGenFunction &CGF,
   return CGF.Builder.CreateCall(Callee, {LHSv, RHSv, CarryModVal});
 }
 
-typedef std::array<Intrinsic::KVXIntrinsics, AVERAGE_SIZE> average_intrinsics_t;
-
-static Value *KVX_emitIntAvgBuiltin(CodeGenFunction &CGF, const CallExpr *E,
-                                    unsigned VectorSize, unsigned SliceSize,
-                                    IntegerType *ElementType,
-                                    average_intrinsics_t AvgIntrinsics) {
-  constexpr int StringModOperand = 2;
-
-  const auto *SL = dyn_cast<clang::StringLiteral>(
-      E->getArg(StringModOperand)->IgnoreParenImpCasts());
-  auto Mods = SL->getString();
-
-  average_t AverageMod = KVX_getAverageModifier(Mods);
-  if (AverageMod == AVERAGE_INVALID) {
-    CGF.CGM.Error(E->getArg(StringModOperand)->getBeginLoc(),
-                  "invalid average_t modifier, expected \"\", \".r\", \".u\" "
-                  "or \".ru\"");
-    return nullptr;
-  }
-
-  auto Intrinsic = AvgIntrinsics[AverageMod];
-  return KVX_emitModBuiltin(CGF, E, VectorSize, SliceSize, ElementType,
-                            Intrinsic, StringModOperand);
-}
-
 static Value *KVX_emitBitcountBuiltin(CodeGenFunction &CGF, const CallExpr *E,
                                       unsigned VectorSize, unsigned SliceSize,
                                       IntegerType *ElementType,
@@ -20629,36 +20581,6 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     return KVX_emitWidenScalarVector(*this, E, Intrinsic::kvx_fwidenlhwp,
                                      Intrinsic::kvx_fwidenmhwp, HalfTy, FloatTy,
                                      8, 4);
-  case KVX::BI__builtin_kvx_avgw:
-    return KVX_emitIntAvgBuiltin(*this, E, 1, 1, nullptr,
-                                 {Intrinsic::kvx_avgw, Intrinsic::kvx_avgrw,
-                                  Intrinsic::kvx_avguw, Intrinsic::kvx_avgruw});
-  case KVX::BI__builtin_kvx_avghq:
-    VectorSize = 4;
-    goto avgh_common;
-  case KVX::BI__builtin_kvx_avgho:
-    VectorSize = 8;
-    goto avgh_common;
-  case KVX::BI__builtin_kvx_avghx:
-    VectorSize = 16;
-  avgh_common:
-    return KVX_emitIntAvgBuiltin(*this, E, VectorSize, 4, this->Int16Ty,
-                                 {Intrinsic::kvx_avghq, Intrinsic::kvx_avgrhq,
-                                  Intrinsic::kvx_avguhq,
-                                  Intrinsic::kvx_avgruhq});
-  case KVX::BI__builtin_kvx_avgwp:
-    VectorSize = 2;
-    goto avgw_common;
-  case KVX::BI__builtin_kvx_avgwq:
-    VectorSize = 4;
-    goto avgw_common;
-  case KVX::BI__builtin_kvx_avgwo:
-    VectorSize = 8;
-  avgw_common:
-    return KVX_emitIntAvgBuiltin(*this, E, VectorSize, 2, this->Int32Ty,
-                                 {Intrinsic::kvx_avgwp, Intrinsic::kvx_avgrwp,
-                                  Intrinsic::kvx_avguwp,
-                                  Intrinsic::kvx_avgruwp});
   case KVX::BI__builtin_kvx_ffdmdaw:
     return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffdmdaw, true);
   case KVX::BI__builtin_kvx_ffdmdawp:
