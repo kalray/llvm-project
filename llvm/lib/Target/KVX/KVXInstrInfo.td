@@ -676,6 +676,14 @@ multiclass MC_17_TINY<string OpcStr, list<dag> patrr = []> {
                /*MemOps=*/[], /*CC=*/[], /*Out=*/[SingleReg]>;
 }
 
+let Predicates = [IsV2], isCommutable = 1 in {
+defm ABDUD:  MC_17_TINY<"abdud", []>;
+defm ABDUW:  MC_17_TINY<"abduw", []>;
+defm ABDUWP: MC_17_TINY<"abduwp", []>;
+defm ABDUHQ: MC_17_TINY<"abduhq", []>;
+defm ABDUBO: MC_17_TINY<"abdubo", []>;
+}
+
 // multiclass MC_17_SWITCH is used by:
 //   defm ABDHQ
 //   defm ABDWP
@@ -1713,6 +1721,7 @@ defm ADDD : MC_11<"addd">;
 
 defm SBFD : MC_11<"sbfd">;
 
+let isCommutable = 1 in
 defm ABDD : MC_12_SWITCH<"abdd">;
 
 defm MIND : MC_11<"mind">;
@@ -1818,6 +1827,7 @@ defm ADDW : MC_14<"addw">;
 
 defm SBFW : MC_14<"sbfw">;
 
+let isCommutable = 1 in
 defm ABDW : MC_15<"abdw">;
 
 defm MINW : MC_14<"minw">;
@@ -1894,6 +1904,7 @@ defm ADDWP : MC_17_TINY<"addwp">;
 
 defm SBFWP : MC_17_TINY<"sbfwp">;
 
+let isCommutable = 1 in
 defm ABDWP : MC_17_SWITCH<"abdwp">;
 
 defm MINWP : MC_17_TINY<"minwp">;
@@ -1955,10 +1966,11 @@ defm SBFBO : MC_17_TINY<"sbfbo">, Requires<[IsV2]>;
 
 defm SBFHQ : MC_17_TINY<"sbfhq">;
 
+let isCommutable = 1 in {
 defm ABDBO : MC_17_TINY<"abdbo">, Requires<[IsV2]>;
 
 defm ABDHQ : MC_17_SWITCH<"abdhq">;
-
+}
 defm MINBO : MC_17_TINY<"minbo">, Requires<[IsV2]>;
 
 defm MINHQ : MC_17_TINY<"minhq">;

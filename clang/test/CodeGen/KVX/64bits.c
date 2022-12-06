@@ -3,9 +3,9 @@
 
 // CHECK-LABEL: @acswap64bits(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.abdd(i64 [[A:%.*]], i64 [[B:%.*]])
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.abd.i64(i64 [[A:%.*]], i64 [[B:%.*]], i32 0)
 // CHECK-NEXT:    ret i64 [[TMP0]]
 //
 long long int acswap64bits (long long int a, long long int b) {
-  return __builtin_kvx_abdd(a, b);
+  return __builtin_kvx_abdd(a, b, "");
 }

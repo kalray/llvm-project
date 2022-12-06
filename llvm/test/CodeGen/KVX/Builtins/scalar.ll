@@ -4,32 +4,6 @@
 
 target triple = "kvx-kalray-cos"
 
-define i32 @abdw(i32 %v1, i32 %v2){
-; CHECK-LABEL: abdw:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    abdw $r0 = $r0, $r1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
-entry:
-  %0 = tail call i32 @llvm.kvx.abdw(i32 %v1, i32 %v2)
-  ret i32 %0
-}
-
-declare i32 @llvm.kvx.abdw(i32, i32) #1
-
-define i64 @abdd(i64 %v1, i64 %v2){
-; CHECK-LABEL: abdd:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    abdd $r0 = $r0, $r1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
-entry:
-  %0 = tail call i64 @llvm.kvx.abdd(i64 %v1, i64 %v2)
-  ret i64 %0
-}
-
-declare i64 @llvm.kvx.abdd(i64, i64) #1
-
 define i64 @addcd(i64 %v1, i64 %v2) {
 ; CHECK-LABEL: addcd:
 ; CHECK:       # %bb.0: # %entry

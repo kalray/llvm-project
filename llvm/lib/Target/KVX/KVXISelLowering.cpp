@@ -2555,6 +2555,34 @@ static SDValue combineWidenInt(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
 
   return Dag.getNode(ISD::SHL, SDLoc(N), OutType, Ext, ShiftAmount);
 }
+static SDValue combineAbd(SDNode *N, SelectionDAG &Dag) {
+  unsigned NormalSatUn = cast<ConstantSDNode>(N->getOperand(3))->getZExtValue();
+  auto VT = N->getValueType(0);
+  auto Op0 = N->getOperand(1);
+  auto Op1 = N->getOperand(2);
+  SDLoc DL(N);
+
+  if (NormalSatUn > 2)
+    report_fatal_error("Got invalid modifier for kvx.abd intrinsic.\n");
+
+  if (NormalSatUn == 1) { // modifier == ".s", sign-saturate
+    auto Subsat = Dag.getNode(ISD::SSUBSAT, DL, VT, Op0, Op1);
+    return Dag.getNode(ISD::ABS, DL, VT, Subsat);
+  }
+
+  if (NormalSatUn == 2) { // modifier == ".u", unsign-diff
+    auto Umax = Dag.getNode(ISD::UMAX, DL, VT, Op0, Op1);
+    auto Umin = Dag.getNode(ISD::UMIN, DL, VT, Op0, Op1);
+    return Dag.getNode(ISD::SUB, DL, VT, Umax, Umin);
+  }
+
+  // NormalSatUn == 1 modifier == "", sign-diff
+  auto Sub = Dag.getNode(ISD::SUB, DL, VT, Op0, Op1);
+  SDNodeFlags Flags = Sub->getFlags(); // Avoid undefs optimisations.
+  Flags.setNoSignedWrap(true);
+  Sub->setFlags(Flags);
+  return Dag.getNode(ISD::ABS, DL, VT, Sub);
+}
 
 static SDValue combineAbs(SDNode *N, SelectionDAG &Dag) {
   auto DoSat = cast<ConstantSDNode>(N->getOperand(2))->getZExtValue();
@@ -2593,6 +2621,8 @@ static SDValue combineIntrinsic(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
 
   auto Intr = cast<ConstantSDNode>(N->getOperand(0))->getZExtValue();
   switch (Intr) {
+  case Intrinsic::KVXIntrinsics::kvx_abd:
+    return combineAbd(N, Dag);
   case Intrinsic::KVXIntrinsics::kvx_abs:
     return combineAbs(N, Dag);
   case Intrinsic::KVXIntrinsics::kvx_fadd:
@@ -2600,14 +2630,13 @@ static SDValue combineIntrinsic(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
 
   case Intrinsic::KVXIntrinsics::kvx_fsbf:
     return combineFaddFsub(N, Dag, KVX::FSBFHO);
-
+  case Intrinsic::KVXIntrinsics::kvx_narrowint:
+    return combineNarrowInt(N, DCI, Dag);
   case Intrinsic::KVXIntrinsics::kvx_shl:
     return combineShifts(N, Dag,
                          {ISD::SHL, ISD::SSHLSAT, ISD::USHLSAT, ISD::ROTL});
   case Intrinsic::KVXIntrinsics::kvx_shr:
     return combineShifts(N, Dag, {ISD::SRL, ISD::SRA, KVXISD::SRS, ISD::ROTR});
-  case Intrinsic::KVXIntrinsics::kvx_narrowint:
-    return combineNarrowInt(N, DCI, Dag);
   case Intrinsic::KVXIntrinsics::kvx_widenint:
     return combineWidenInt(N, DCI, Dag);
   default:

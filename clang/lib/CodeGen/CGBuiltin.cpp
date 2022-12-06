@@ -18465,6 +18465,8 @@ static const KvxModifier KVX_SPECULATE = KVX_SILENT;
 
 static const KvxModifier KVX_VARIANT({{"", 0}, {"s", 1}, {"u", 2}, {"us", 3}});
 
+static const KvxModifier KvxDiffMod({{"", 0}, {"s", 1}, {"u", 2}});
+
 static const KvxModifier KvxExtendMul({{"", 0}, {"s", 0}, {"su", 1}, {"u", 2}});
 
 static const KvxModifier KvxHindex({{"h0", 0}, {"h1", 1}});
@@ -20345,10 +20347,6 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fconjdc, 1, DoubleTy,
                                  4, 2, false);
 
-  case KVX::BI__builtin_kvx_abdw:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_abdw);
-  case KVX::BI__builtin_kvx_abdd:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_abdd);
   case KVX::BI__builtin_kvx_addcd:
     return KVX_emitAddSubCarryBuiltin(*this, E, true);
   case KVX::BI__builtin_kvx_sbfcd:
@@ -20631,28 +20629,6 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     return KVX_emitWidenScalarVector(*this, E, Intrinsic::kvx_fwidenlhwp,
                                      Intrinsic::kvx_fwidenmhwp, HalfTy, FloatTy,
                                      8, 4);
-  case KVX::BI__builtin_kvx_abdhq:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_abdhq);
-  case KVX::BI__builtin_kvx_abdho:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_abdhq, 2, Int16Ty, 8,
-                                 4, false);
-  case KVX::BI__builtin_kvx_abdhx:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_abdhq, 2, Int16Ty, 16,
-                                 4, false);
-  case KVX::BI__builtin_kvx_abdwp:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_abdwp);
-  case KVX::BI__builtin_kvx_abdwq:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_abdwp, 2, Int32Ty, 4,
-                                 2, false);
-  case KVX::BI__builtin_kvx_abdwo:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_abdwp, 2, Int32Ty, 8,
-                                 2, false);
-  case KVX::BI__builtin_kvx_abddp:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_abdd, 2, Int64Ty, 2,
-                                 1, false);
-  case KVX::BI__builtin_kvx_abddq:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_abdd, 2, Int64Ty, 4,
-                                 1, false);
   case KVX::BI__builtin_kvx_avgw:
     return KVX_emitIntAvgBuiltin(*this, E, 1, 1, nullptr,
                                  {Intrinsic::kvx_avgw, Intrinsic::kvx_avgrw,
