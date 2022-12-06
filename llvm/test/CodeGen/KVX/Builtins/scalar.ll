@@ -104,58 +104,6 @@ entry:
 
 declare i64 @llvm.kvx.sbfsd(i64, i64) #1
 
-define i32 @avgw(i32 %v1, i32 %v2){
-; CHECK-LABEL: avgw:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    avgw $r0 = $r0, $r1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
-entry:
-  %0 = tail call i32 @llvm.kvx.avgw(i32 %v1, i32 %v2)
-  ret i32 %0
-}
-
-declare i32 @llvm.kvx.avgw(i32, i32) #1
-
-define i32 @avguw(i32 %v1, i32 %v2){
-; CHECK-LABEL: avguw:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    avguw $r0 = $r0, $r1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
-entry:
-  %0 = tail call i32 @llvm.kvx.avguw(i32 %v1, i32 %v2)
-  ret i32 %0
-}
-
-declare i32 @llvm.kvx.avguw(i32, i32) #1
-
-define i32 @avgrw(i32 %v1, i32 %v2){
-; CHECK-LABEL: avgrw:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    avgrw $r0 = $r0, $r1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
-entry:
-  %0 = tail call i32 @llvm.kvx.avgrw(i32 %v1, i32 %v2)
-  ret i32 %0
-}
-
-declare i32 @llvm.kvx.avgrw(i32, i32) #1
-
-define i32 @avgruw(i32 %v1, i32 %v2){
-; CHECK-LABEL: avgruw:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    avgruw $r0 = $r0, $r1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
-entry:
-  %0 = tail call i32 @llvm.kvx.avgruw(i32 %v1, i32 %v2)
-  ret i32 %0
-}
-
-declare i32 @llvm.kvx.avgruw(i32, i32) #1
-
 define i64 @cbsd(i64 %l){
 ; CHECK-LABEL: cbsd:
 ; CHECK:       # %bb.0: # %entry

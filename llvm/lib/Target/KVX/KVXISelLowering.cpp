@@ -2555,6 +2555,7 @@ static SDValue combineWidenInt(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
 
   return Dag.getNode(ISD::SHL, SDLoc(N), OutType, Ext, ShiftAmount);
 }
+
 static SDValue combineAbd(SDNode *N, SelectionDAG &Dag) {
   unsigned NormalSatUn = cast<ConstantSDNode>(N->getOperand(3))->getZExtValue();
   auto VT = N->getValueType(0);
@@ -2596,6 +2597,43 @@ static SDValue combineAbs(SDNode *N, SelectionDAG &Dag) {
   return Dag.getNode(ISD::ABS, DL, VT, Op);
 }
 
+static SDValue combineAvg(SDNode *N, SelectionDAG &Dag) {
+  unsigned Type = cast<ConstantSDNode>(N->getOperand(3))->getZExtValue();
+  auto VT = N->getValueType(0);
+  auto Op0 = N->getOperand(1);
+  auto Op1 = N->getOperand(2);
+  SDLoc DL(N);
+
+  if (Type > 3)
+    report_fatal_error("Got invalid modifier for kvx.avg intrinsic.\n");
+
+  auto Add = Dag.getNode(ISD::ADD, DL, VT, Op0, Op1);
+
+  SDNodeFlags Flags = Add->getFlags();
+  if (Type > 1) // modifier == .u or .ur, mark with no unsigned wrap
+    Flags.setNoUnsignedWrap(true);
+  else
+    Flags.setNoSignedWrap(true);
+  Add->setFlags(Flags);
+
+  auto One = Dag.getConstant(1, DL, VT);
+  if (Type & 1) { // modifier == .r or .ur, add 1
+    Add = Dag.getNode(ISD::ADD, DL, VT, Add, One);
+    Flags = Add->getFlags();
+    if (Type > 1) // modifier == .u or .ur, mark with no unsigned wrap
+      Flags.setNoUnsignedWrap(true);
+    else
+      Flags.setNoSignedWrap(true);
+    Add->setFlags(Flags);
+  }
+
+  if (Type > 1) // unsigned, so logical shift right
+    return Dag.getNode(ISD::SRL, DL, VT, Add, One);
+
+  // signed, do an arithmetic shift right
+  return Dag.getNode(ISD::SRA, DL, VT, Add, One);
+}
+
 static SDValue combineFaddFsub(SDNode *N, SelectionDAG &Dag,
                                unsigned KvxOpcode) {
   EVT VT = N->getValueType(0);
@@ -2625,6 +2663,8 @@ static SDValue combineIntrinsic(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
     return combineAbd(N, Dag);
   case Intrinsic::KVXIntrinsics::kvx_abs:
     return combineAbs(N, Dag);
+  case Intrinsic::KVXIntrinsics::kvx_avg:
+    return combineAvg(N, Dag);
   case Intrinsic::KVXIntrinsics::kvx_fadd:
     return combineFaddFsub(N, Dag, KVX::FADDHO);
 

@@ -37,42 +37,6 @@ long sbfcdi(long v1, long v2) {
   return __builtin_kvx_sbfcd(v1, v2, ".i");
 }
 
-// CHECK-LABEL: @avgw(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i32 @llvm.kvx.avgw(i32 [[V1:%.*]], i32 [[V2:%.*]])
-// CHECK-NEXT:    ret i32 [[TMP0]]
-//
-int avgw(int v1, int v2) {
-  return __builtin_kvx_avgw(v1, v2, "");
-}
-
-// CHECK-LABEL: @avguw(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i32 @llvm.kvx.avguw(i32 [[V1:%.*]], i32 [[V2:%.*]])
-// CHECK-NEXT:    ret i32 [[TMP0]]
-//
-unsigned int avguw(unsigned int v1, unsigned int v2) {
-  return __builtin_kvx_avgw(v1, v2, ".u");
-}
-
-// CHECK-LABEL: @avgrw(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i32 @llvm.kvx.avgrw(i32 [[V1:%.*]], i32 [[V2:%.*]])
-// CHECK-NEXT:    ret i32 [[TMP0]]
-//
-int avgrw(int v1, int v2) {
-  return __builtin_kvx_avgw(v1, v2, ".r");
-}
-
-// CHECK-LABEL: @avgruw(
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i32 @llvm.kvx.avgruw(i32 [[V1:%.*]], i32 [[V2:%.*]])
-// CHECK-NEXT:    ret i32 [[TMP0]]
-//
-unsigned int avgruw(int v1, int v2) {
-  return __builtin_kvx_avgw(v1, v2, ".ru");
-}
-
 // CHECK-LABEL: @fmaxh(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = insertelement <4 x half> undef, half [[V1:%.*]], i64 0
