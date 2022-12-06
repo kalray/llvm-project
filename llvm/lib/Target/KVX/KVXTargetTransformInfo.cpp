@@ -49,7 +49,7 @@ bool KVXTTIImpl::isLoweredToCall(const Function *F) {
   if (F->isIntrinsic()) {
     auto ID = F->getIntrinsicID();
     // KVX instrinsics turn into instructions
-    if (ID >= Intrinsic::kvx_abdd)
+    if (ID >= Intrinsic::kvx_abd)
       return false;
   }
 

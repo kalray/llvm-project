@@ -944,6 +944,9 @@ def get_not_imm : SDNodeXForm<imm, [{
   return CurDAG->getTargetConstant(~N->getSExtValue(), SDLoc(N), N->getValueType(0));
 }]>;
 
+def get_neg_imm : SDNodeXForm<imm, [{
+  return CurDAG->getTargetConstant(-N->getSExtValue(), SDLoc(N), N->getValueType(0));
+}]>;
 
 def mod_8_imm_32 : SDNodeXForm<imm, [{
   return CurDAG->getTargetConstant(N->getZExtValue() % 8, SDLoc(N), MVT::i32);

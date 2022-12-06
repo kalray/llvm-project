@@ -391,10 +391,6 @@ def: Pat<(int_kvx_aladdd AddrFI:$addr, i64:$val), (ALADDDri64 (i64 0), SingleReg
 def: Pat<(int_kvx_aladdw i64:$addr, i32:$val), (ALADDWri10 (i64 0), SingleReg:$addr, SingleReg:$val)>;
 def: Pat<(int_kvx_aladdw AddrFI:$addr, i32:$val), (ALADDWri64 (i64 0), SingleReg:$addr, SingleReg:$val)>;
 
-def: Pat<(int_kvx_abdw i32:$v1, i32:$v2), (ABDWrr SingleReg:$v1, SingleReg:$v2)>;
-def: Pat<(int_kvx_abdwp v2i32:$v1, v2i32:$v2), (ABDWPrr SingleReg:$v1, SingleReg:$v2)>;
-def: Pat<(int_kvx_abdhq v4i16:$v1, v4i16:$v2), (ABDHQrr SingleReg:$v1, SingleReg:$v2)>;
-def: Pat<(int_kvx_abdd i64:$v1, i64:$v2), (ABDDrr SingleReg:$v1, SingleReg:$v2)>;
 def: Pat<(int_kvx_addsw i32:$v1, i32:$v2), (ADDSWrr SingleReg:$v1, SingleReg:$v2)>;
 def: Pat<(int_kvx_addsd i64:$v1, i64:$v2), (ADDSDrr SingleReg:$v1, SingleReg:$v2)>;
 def: Pat<(int_kvx_addshq v4i16:$v1, v4i16:$v2), (ADDSHQrr SingleReg:$v1, SingleReg:$v2)>;
