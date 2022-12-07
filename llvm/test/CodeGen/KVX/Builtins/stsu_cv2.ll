@@ -110,6 +110,126 @@ define <4 x i16> @stsuhqriat(<4 x i16> %0) {
   ret <4 x i16> %2
 }
 
+define <8 x i16> @stsuho(<8 x i16> %0, <8 x i16> %1) {
+; CHECK-LABEL: stsuho:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    stsuhq $r0 = $r0, $r2
+; CHECK-NEXT:    stsuhq $r1 = $r1, $r3
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = shufflevector <8 x i16> %0, <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  %4 = shufflevector <8 x i16> %1, <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  %5 = tail call <4 x i16> @llvm.kvx.stsu.v4i16(<4 x i16> %3, <4 x i16> %4)
+  %6 = shufflevector <8 x i16> %0, <8 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+  %7 = shufflevector <8 x i16> %1, <8 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+  %8 = tail call <4 x i16> @llvm.kvx.stsu.v4i16(<4 x i16> %6, <4 x i16> %7)
+  %9 = shufflevector <4 x i16> %5, <4 x i16> %8, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+  ret <8 x i16> %9
+}
+
+define <16 x i16> @stsuhx(<16 x i16> %0, <16 x i16> %1) {
+; CHECK-LABEL: stsuhx:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    stsuhq $r0 = $r0, $r4
+; CHECK-NEXT:    stsuhq $r1 = $r1, $r5
+; CHECK-NEXT:    stsuhq $r2 = $r2, $r6
+; CHECK-NEXT:    stsuhq $r3 = $r3, $r7
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = shufflevector <16 x i16> %0, <16 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  %4 = shufflevector <16 x i16> %1, <16 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  %5 = tail call <4 x i16> @llvm.kvx.stsu.v4i16(<4 x i16> %3, <4 x i16> %4)
+  %6 = shufflevector <16 x i16> %0, <16 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+  %7 = shufflevector <16 x i16> %1, <16 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+  %8 = tail call <4 x i16> @llvm.kvx.stsu.v4i16(<4 x i16> %6, <4 x i16> %7)
+  %9 = shufflevector <16 x i16> %0, <16 x i16> undef, <4 x i32> <i32 8, i32 9, i32 10, i32 11>
+  %10 = shufflevector <16 x i16> %1, <16 x i16> undef, <4 x i32> <i32 8, i32 9, i32 10, i32 11>
+  %11 = tail call <4 x i16> @llvm.kvx.stsu.v4i16(<4 x i16> %9, <4 x i16> %10)
+  %12 = shufflevector <16 x i16> %0, <16 x i16> undef, <4 x i32> <i32 12, i32 13, i32 14, i32 15>
+  %13 = shufflevector <16 x i16> %1, <16 x i16> undef, <4 x i32> <i32 12, i32 13, i32 14, i32 15>
+  %14 = tail call <4 x i16> @llvm.kvx.stsu.v4i16(<4 x i16> %12, <4 x i16> %13)
+  %15 = shufflevector <4 x i16> %5, <4 x i16> %8, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+  %16 = shufflevector <4 x i16> %11, <4 x i16> %14, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+  %17 = shufflevector <8 x i16> %15, <8 x i16> %16, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+  ret <16 x i16> %17
+}
+
+define void @stsuhv(<32 x i16>* noalias nocapture sret(<32 x i16>) align 32 %0, <32 x i16>* nocapture readonly %1, <32 x i16>* nocapture readonly %2) {
+; CHECK-LABEL: stsuhv:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    lo $r4r5r6r7 = 32[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lo $r8r9r10r11 = 32[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lo $r32r33r34r35 = 0[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lo $r0r1r2r3 = 0[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    stsuhq $r4 = $r4, $r8
+; CHECK-NEXT:    stsuhq $r5 = $r5, $r9
+; CHECK-NEXT:    stsuhq $r6 = $r6, $r10
+; CHECK-NEXT:    stsuhq $r7 = $r7, $r11
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 56[$r15] = $r7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    stsuhq $r0 = $r32, $r0
+; CHECK-NEXT:    stsuhq $r1 = $r33, $r1
+; CHECK-NEXT:    stsuhq $r2 = $r34, $r2
+; CHECK-NEXT:    stsuhq $r3 = $r35, $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 48[$r15] = $r6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 40[$r15] = $r5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 32[$r15] = $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 24[$r15] = $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 16[$r15] = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 8[$r15] = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 0[$r15] = $r0
+; CHECK-NEXT:    copyd $r0 = $r15
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %4 = load <32 x i16>, <32 x i16>* %1
+  %5 = load <32 x i16>, <32 x i16>* %2
+  %6 = shufflevector <32 x i16> %4, <32 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  %7 = shufflevector <32 x i16> %5, <32 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  %8 = tail call <4 x i16> @llvm.kvx.stsu.v4i16(<4 x i16> %6, <4 x i16> %7)
+  %9 = shufflevector <32 x i16> %4, <32 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+  %10 = shufflevector <32 x i16> %5, <32 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+  %11 = tail call <4 x i16> @llvm.kvx.stsu.v4i16(<4 x i16> %9, <4 x i16> %10)
+  %12 = shufflevector <32 x i16> %4, <32 x i16> undef, <4 x i32> <i32 8, i32 9, i32 10, i32 11>
+  %13 = shufflevector <32 x i16> %5, <32 x i16> undef, <4 x i32> <i32 8, i32 9, i32 10, i32 11>
+  %14 = tail call <4 x i16> @llvm.kvx.stsu.v4i16(<4 x i16> %12, <4 x i16> %13)
+  %15 = shufflevector <32 x i16> %4, <32 x i16> undef, <4 x i32> <i32 12, i32 13, i32 14, i32 15>
+  %16 = shufflevector <32 x i16> %5, <32 x i16> undef, <4 x i32> <i32 12, i32 13, i32 14, i32 15>
+  %17 = tail call <4 x i16> @llvm.kvx.stsu.v4i16(<4 x i16> %15, <4 x i16> %16)
+  %18 = shufflevector <32 x i16> %4, <32 x i16> undef, <4 x i32> <i32 16, i32 17, i32 18, i32 19>
+  %19 = shufflevector <32 x i16> %5, <32 x i16> undef, <4 x i32> <i32 16, i32 17, i32 18, i32 19>
+  %20 = tail call <4 x i16> @llvm.kvx.stsu.v4i16(<4 x i16> %18, <4 x i16> %19)
+  %21 = shufflevector <32 x i16> %4, <32 x i16> undef, <4 x i32> <i32 20, i32 21, i32 22, i32 23>
+  %22 = shufflevector <32 x i16> %5, <32 x i16> undef, <4 x i32> <i32 20, i32 21, i32 22, i32 23>
+  %23 = tail call <4 x i16> @llvm.kvx.stsu.v4i16(<4 x i16> %21, <4 x i16> %22)
+  %24 = shufflevector <32 x i16> %4, <32 x i16> undef, <4 x i32> <i32 24, i32 25, i32 26, i32 27>
+  %25 = shufflevector <32 x i16> %5, <32 x i16> undef, <4 x i32> <i32 24, i32 25, i32 26, i32 27>
+  %26 = tail call <4 x i16> @llvm.kvx.stsu.v4i16(<4 x i16> %24, <4 x i16> %25)
+  %27 = shufflevector <32 x i16> %4, <32 x i16> undef, <4 x i32> <i32 28, i32 29, i32 30, i32 31>
+  %28 = shufflevector <32 x i16> %5, <32 x i16> undef, <4 x i32> <i32 28, i32 29, i32 30, i32 31>
+  %29 = tail call <4 x i16> @llvm.kvx.stsu.v4i16(<4 x i16> %27, <4 x i16> %28)
+  %30 = shufflevector <4 x i16> %8, <4 x i16> %11, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+  %31 = shufflevector <4 x i16> %14, <4 x i16> %17, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+  %32 = shufflevector <4 x i16> %20, <4 x i16> %23, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+  %33 = shufflevector <4 x i16> %26, <4 x i16> %29, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+  %34 = shufflevector <8 x i16> %30, <8 x i16> %31, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+  %35 = shufflevector <8 x i16> %32, <8 x i16> %33, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+  %36 = shufflevector <16 x i16> %34, <16 x i16> %35, <32 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15, i32 16, i32 17, i32 18, i32 19, i32 20, i32 21, i32 22, i32 23, i32 24, i32 25, i32 26, i32 27, i32 28, i32 29, i32 30, i32 31>
+  store <32 x i16> %36, <32 x i16>* %0
+  ret void
+}
+
 define <2 x i32> @stsuwp(<2 x i32> %0, <2 x i32> %1) {
 ; CHECK-LABEL: stsuwp:
 ; CHECK:       # %bb.0:
@@ -121,6 +241,118 @@ define <2 x i32> @stsuwp(<2 x i32> %0, <2 x i32> %1) {
 }
 
 declare <2 x i32> @llvm.kvx.stsu.v2i32(<2 x i32>, <2 x i32>)
+
+define <4 x i32> @stsuwq(<4 x i32> %0, <4 x i32> %1) {
+; CHECK-LABEL: stsuwq:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    stsuwp $r0 = $r0, $r2
+; CHECK-NEXT:    stsuwp $r1 = $r1, $r3
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = shufflevector <4 x i32> %0, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
+  %4 = shufflevector <4 x i32> %1, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
+  %5 = tail call <2 x i32> @llvm.kvx.stsu.v2i32(<2 x i32> %3, <2 x i32> %4)
+  %6 = shufflevector <4 x i32> %0, <4 x i32> undef, <2 x i32> <i32 2, i32 3>
+  %7 = shufflevector <4 x i32> %1, <4 x i32> undef, <2 x i32> <i32 2, i32 3>
+  %8 = tail call <2 x i32> @llvm.kvx.stsu.v2i32(<2 x i32> %6, <2 x i32> %7)
+  %9 = shufflevector <2 x i32> %5, <2 x i32> %8, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  ret <4 x i32> %9
+}
+
+define <8 x i32> @stsuwo(<8 x i32> %0, <8 x i32> %1) {
+; CHECK-LABEL: stsuwo:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    stsuwp $r0 = $r0, $r4
+; CHECK-NEXT:    stsuwp $r1 = $r1, $r5
+; CHECK-NEXT:    stsuwp $r2 = $r2, $r6
+; CHECK-NEXT:    stsuwp $r3 = $r3, $r7
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = shufflevector <8 x i32> %0, <8 x i32> undef, <2 x i32> <i32 0, i32 1>
+  %4 = shufflevector <8 x i32> %1, <8 x i32> undef, <2 x i32> <i32 0, i32 1>
+  %5 = tail call <2 x i32> @llvm.kvx.stsu.v2i32(<2 x i32> %3, <2 x i32> %4)
+  %6 = shufflevector <8 x i32> %0, <8 x i32> undef, <2 x i32> <i32 2, i32 3>
+  %7 = shufflevector <8 x i32> %1, <8 x i32> undef, <2 x i32> <i32 2, i32 3>
+  %8 = tail call <2 x i32> @llvm.kvx.stsu.v2i32(<2 x i32> %6, <2 x i32> %7)
+  %9 = shufflevector <8 x i32> %0, <8 x i32> undef, <2 x i32> <i32 4, i32 5>
+  %10 = shufflevector <8 x i32> %1, <8 x i32> undef, <2 x i32> <i32 4, i32 5>
+  %11 = tail call <2 x i32> @llvm.kvx.stsu.v2i32(<2 x i32> %9, <2 x i32> %10)
+  %12 = shufflevector <8 x i32> %0, <8 x i32> undef, <2 x i32> <i32 6, i32 7>
+  %13 = shufflevector <8 x i32> %1, <8 x i32> undef, <2 x i32> <i32 6, i32 7>
+  %14 = tail call <2 x i32> @llvm.kvx.stsu.v2i32(<2 x i32> %12, <2 x i32> %13)
+  %15 = shufflevector <2 x i32> %5, <2 x i32> %8, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  %16 = shufflevector <2 x i32> %11, <2 x i32> %14, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  %17 = shufflevector <4 x i32> %15, <4 x i32> %16, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+  ret <8 x i32> %17
+}
+
+define void @stsuwx(<16 x i32>* noalias nocapture sret(<16 x i32>) align 32 %0, <16 x i32>* nocapture readonly %1, <16 x i32>* nocapture readonly %2) {
+; CHECK-LABEL: stsuwx:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    lo $r4r5r6r7 = 32[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lo $r8r9r10r11 = 32[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lo $r32r33r34r35 = 0[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lo $r0r1r2r3 = 0[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    stsuwp $r4 = $r4, $r8
+; CHECK-NEXT:    stsuwp $r5 = $r5, $r9
+; CHECK-NEXT:    stsuwp $r6 = $r6, $r10
+; CHECK-NEXT:    stsuwp $r7 = $r7, $r11
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sq 48[$r15] = $r6r7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    stsuwp $r0 = $r32, $r0
+; CHECK-NEXT:    stsuwp $r1 = $r33, $r1
+; CHECK-NEXT:    stsuwp $r2 = $r34, $r2
+; CHECK-NEXT:    stsuwp $r3 = $r35, $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sq 32[$r15] = $r4r5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sq 16[$r15] = $r2r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sq 0[$r15] = $r0r1
+; CHECK-NEXT:    copyd $r0 = $r15
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %4 = load <16 x i32>, <16 x i32>* %1
+  %5 = load <16 x i32>, <16 x i32>* %2
+  %6 = shufflevector <16 x i32> %4, <16 x i32> undef, <2 x i32> <i32 0, i32 1>
+  %7 = shufflevector <16 x i32> %5, <16 x i32> undef, <2 x i32> <i32 0, i32 1>
+  %8 = tail call <2 x i32> @llvm.kvx.stsu.v2i32(<2 x i32> %6, <2 x i32> %7)
+  %9 = shufflevector <16 x i32> %4, <16 x i32> undef, <2 x i32> <i32 2, i32 3>
+  %10 = shufflevector <16 x i32> %5, <16 x i32> undef, <2 x i32> <i32 2, i32 3>
+  %11 = tail call <2 x i32> @llvm.kvx.stsu.v2i32(<2 x i32> %9, <2 x i32> %10)
+  %12 = shufflevector <16 x i32> %4, <16 x i32> undef, <2 x i32> <i32 4, i32 5>
+  %13 = shufflevector <16 x i32> %5, <16 x i32> undef, <2 x i32> <i32 4, i32 5>
+  %14 = tail call <2 x i32> @llvm.kvx.stsu.v2i32(<2 x i32> %12, <2 x i32> %13)
+  %15 = shufflevector <16 x i32> %4, <16 x i32> undef, <2 x i32> <i32 6, i32 7>
+  %16 = shufflevector <16 x i32> %5, <16 x i32> undef, <2 x i32> <i32 6, i32 7>
+  %17 = tail call <2 x i32> @llvm.kvx.stsu.v2i32(<2 x i32> %15, <2 x i32> %16)
+  %18 = shufflevector <16 x i32> %4, <16 x i32> undef, <2 x i32> <i32 8, i32 9>
+  %19 = shufflevector <16 x i32> %5, <16 x i32> undef, <2 x i32> <i32 8, i32 9>
+  %20 = tail call <2 x i32> @llvm.kvx.stsu.v2i32(<2 x i32> %18, <2 x i32> %19)
+  %21 = shufflevector <16 x i32> %4, <16 x i32> undef, <2 x i32> <i32 10, i32 11>
+  %22 = shufflevector <16 x i32> %5, <16 x i32> undef, <2 x i32> <i32 10, i32 11>
+  %23 = tail call <2 x i32> @llvm.kvx.stsu.v2i32(<2 x i32> %21, <2 x i32> %22)
+  %24 = shufflevector <16 x i32> %4, <16 x i32> undef, <2 x i32> <i32 12, i32 13>
+  %25 = shufflevector <16 x i32> %5, <16 x i32> undef, <2 x i32> <i32 12, i32 13>
+  %26 = tail call <2 x i32> @llvm.kvx.stsu.v2i32(<2 x i32> %24, <2 x i32> %25)
+  %27 = shufflevector <16 x i32> %4, <16 x i32> undef, <2 x i32> <i32 14, i32 15>
+  %28 = shufflevector <16 x i32> %5, <16 x i32> undef, <2 x i32> <i32 14, i32 15>
+  %29 = tail call <2 x i32> @llvm.kvx.stsu.v2i32(<2 x i32> %27, <2 x i32> %28)
+  %30 = shufflevector <2 x i32> %8, <2 x i32> %11, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  %31 = shufflevector <2 x i32> %14, <2 x i32> %17, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  %32 = shufflevector <2 x i32> %20, <2 x i32> %23, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  %33 = shufflevector <2 x i32> %26, <2 x i32> %29, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  %34 = shufflevector <4 x i32> %30, <4 x i32> %31, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+  %35 = shufflevector <4 x i32> %32, <4 x i32> %33, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+  %36 = shufflevector <8 x i32> %34, <8 x i32> %35, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+  store <16 x i32> %36, <16 x i32>* %0
+  ret void
+}
 
 define <2 x i32> @stsuwpri(<2 x i32> %0) {
 ; CHECK-LABEL: stsuwpri:

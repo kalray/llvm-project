@@ -14,19 +14,23 @@ typedef signed short v2i16 __attribute__((__vector_size__(2 * sizeof(short))));
 typedef signed short v4i16 __attribute__((__vector_size__(4 * sizeof(short))));
 typedef signed short v8i16 __attribute__((__vector_size__(8 * sizeof(short))));
 typedef signed short v16i16 __attribute__((__vector_size__(16 * sizeof(short))));
+typedef signed short v32i16 __attribute__((__vector_size__(32 * sizeof(short))));
 
 typedef unsigned short v2u16 __attribute__((__vector_size__(2 * sizeof(short))));
 typedef unsigned short v4u16 __attribute__((__vector_size__(4 * sizeof(short))));
 typedef unsigned short v8u16 __attribute__((__vector_size__(8 * sizeof(short))));
 typedef unsigned short v16u16 __attribute__((__vector_size__(16 * sizeof(short))));
+typedef unsigned short v32u16 __attribute__((__vector_size__(32 * sizeof(short))));
 
 typedef signed int v2i32 __attribute__((__vector_size__(2 * sizeof(int))));
 typedef signed int v4i32 __attribute__((__vector_size__(4 * sizeof(int))));
 typedef signed int v8i32 __attribute__((__vector_size__(8 * sizeof(int))));
+typedef signed int v16i32 __attribute__((__vector_size__(16 * sizeof(int))));
 
 typedef unsigned int v2u32 __attribute__((__vector_size__(2 * sizeof(int))));
 typedef unsigned int v4u32 __attribute__((__vector_size__(4 * sizeof(int))));
 typedef unsigned int v8u32 __attribute__((__vector_size__(8 * sizeof(int))));
+typedef unsigned int v16u32 __attribute__((__vector_size__(16 * sizeof(int))));
 
 typedef signed long v2i64 __attribute__((__vector_size__(2 * sizeof(long))));
 typedef signed long v4i64 __attribute__((__vector_size__(4 * sizeof(long))));
