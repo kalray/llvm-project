@@ -18,7 +18,7 @@ define void @c([512 x float]* %0, [512 x float]* %1, [768 x half]* %2, [512 x ha
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmma242hw3 $a1.hi = $a0a1, $a0, $a0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xlo.us.c0 $a0a1a2a3 = 0[$r0]
+; CHECK-NEXT:    xlo.us.q0 $a0a1a2a3 = 0[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xmt44d $a0a1a2a3 = $a0a1a2a3
 ; CHECK-NEXT:    ;;

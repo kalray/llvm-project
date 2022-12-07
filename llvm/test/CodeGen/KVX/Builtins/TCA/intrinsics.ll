@@ -929,9 +929,9 @@ define <4 x i64> @test_tca_builtins(i64 %0, i64 %1, i64 %2, i64 %3, <256 x i1>* 
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xlo.us $a4 = 0[$r4]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xlo.us.c0 $a0a1a2a3 = 128[$r4]
+; CHECK-NEXT:    xlo.us.q0 $a0a1a2a3 = 128[$r4]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xlo.u.odd.c0 $r0 ? $a0a1a2a3 = 160[$r4]
+; CHECK-NEXT:    xlo.u.odd.q0 $r0 ? $a0a1a2a3 = 160[$r4]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xso 0[$r4] = $a4
 ; CHECK-NEXT:    ;;

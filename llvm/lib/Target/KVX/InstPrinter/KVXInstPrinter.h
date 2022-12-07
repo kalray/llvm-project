@@ -76,7 +76,6 @@ public:
   void printQindexMod(const MCInst *MI, unsigned OpNo, raw_ostream &O);
   void printLsumaskMod(const MCInst *MI, unsigned OpNo, raw_ostream &O);
   void printLsupackMod(const MCInst *MI, unsigned OpNo, raw_ostream &O);
-  void printColumnMod(const MCInst *MI, unsigned OpNo, raw_ostream &O);
   void printFloatcompMod(const MCInst *MI, unsigned OpNo, raw_ostream &O);
 
   void printBinary16ImmOperand(const MCInst *MI, unsigned OpNo, raw_ostream &O);

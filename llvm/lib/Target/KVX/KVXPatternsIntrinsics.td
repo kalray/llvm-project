@@ -648,14 +648,14 @@ def : Pat<(v256i1(int_kvx_lv (add i64:$mem, i64:$off), SpeculateMod:$mod0)),
 def : Pat<(v256i1(int_kvx_lv i64:$mem, SpeculateMod:$mod0)),
           (LVri10 0, SingleReg:$mem, SpeculateMod:$mod0)>;
 
-def : Pat<(v1024i1(int_kvx_lvc MatrixReg:$z, (add i64:$mem, (shl i64:$off, (i32 5))), ColumnMod:$mod0, SpeculateMod:$mod1)),
-          (LVrrcs SingleReg:$off, SingleReg:$mem, ColumnMod:$mod0, SpeculateMod:$mod1, scaling_xs, MatrixReg:$z)>;
+def : Pat<(v1024i1(int_kvx_lvc MatrixReg:$z, (add i64:$mem, (shl i64:$off, (i32 5))), QindexMod:$mod0, SpeculateMod:$mod1)),
+          (LVrrcs SingleReg:$off, SingleReg:$mem, QindexMod:$mod0, SpeculateMod:$mod1, scaling_xs, MatrixReg:$z)>;
 
-def : Pat<(v1024i1(int_kvx_lvc MatrixReg:$z, (add i64:$mem, i64:$off), ColumnMod:$mod0, SpeculateMod:$mod1)),
-          (LVrrcs SingleReg:$off, SingleReg:$mem, ColumnMod:$mod0, SpeculateMod:$mod1, scaling_, MatrixReg:$z)>;
+def : Pat<(v1024i1(int_kvx_lvc MatrixReg:$z, (add i64:$mem, i64:$off), QindexMod:$mod0, SpeculateMod:$mod1)),
+          (LVrrcs SingleReg:$off, SingleReg:$mem, QindexMod:$mod0, SpeculateMod:$mod1, scaling_, MatrixReg:$z)>;
 
-def : Pat<(v1024i1(int_kvx_lvc MatrixReg:$z, i64:$mem, ColumnMod:$mod0, SpeculateMod:$mod1)),
-          (LVri10cs 0, SingleReg:$mem, ColumnMod:$mod0, SpeculateMod:$mod1, MatrixReg:$z)>;
+def : Pat<(v1024i1(int_kvx_lvc MatrixReg:$z, i64:$mem, QindexMod:$mod0, SpeculateMod:$mod1)),
+          (LVri10cs 0, SingleReg:$mem, QindexMod:$mod0, SpeculateMod:$mod1, MatrixReg:$z)>;
 
 def : Pat<(int_kvx_sv  i64:$mem, v256i1:$op0),
           (SVri10 0, SingleReg:$mem, VectorReg:$op0)>;

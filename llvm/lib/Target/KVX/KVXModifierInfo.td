@@ -104,12 +104,6 @@ class Speculate<int N> : PatLeaf<(i32 N)>;
 def speculate_ : Speculate<0>;
 def speculate_s : Speculate<1>;
 
-class Column<int N> : PatLeaf<(i32 N)>;
-def column_c0 : Column<0>;
-def column_c1 : Column<1>;
-def column_c2 : Column<2>;
-def column_c3 : Column<3>;
-
 class Scaling<int N> : PatLeaf<(i32 N)>;
 def scaling_ : Scaling<0>;
 def scaling_xs : Scaling<1>;

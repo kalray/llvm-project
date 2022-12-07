@@ -460,16 +460,6 @@ void KVXInstPrinter::printLsupackMod(const MCInst *MI, unsigned OpNo,
   O << '.' << S[M];
 }
 
-void KVXInstPrinter::printColumnMod(const MCInst *MI, unsigned OpNo,
-                                    raw_ostream &O) {
-  int Column = MI->getOperand(OpNo).getImm();
-  if (!isUInt<2>(Column))
-    report_fatal_error("Unexpected column value for load matrix column, should "
-                       "be in range [0, 3].");
-
-  O << ".c" << Column;
-}
-
 void KVXInstPrinter::printFloatcompMod(const MCInst *MI, unsigned OpNo,
                                        raw_ostream &O) {
   const MCOperand &MO = MI->getOperand(OpNo);

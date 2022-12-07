@@ -126,8 +126,8 @@ v4i64_t test_tca_builtins(long a, long b, long c, long d, volatile __kvx_x256 *v
   lv = __builtin_kvx_xfscalewv(lv, "...relu");
   lv = __builtin_kvx_lv_cond(lv, &v[3], a, ".s.even");
   lv2 = __builtin_kvx_lv(v, ".s");
-  lm = __builtin_kvx_lvc(lm, &v[4], ".s.c0");
-  lm = __builtin_kvx_lvc_cond(lm, &v[5], a, ".c0.odd");
+  lm = __builtin_kvx_lvc(lm, &v[4], ".s.q0");
+  lm = __builtin_kvx_lvc_cond(lm, &v[5], a, ".q0.odd");
   __builtin_kvx_sv(&v[0], lv2);
   __builtin_kvx_sv_cond(&v[1], lv2, 1, ".even");
   w[0] = lw;
