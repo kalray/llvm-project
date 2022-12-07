@@ -18403,9 +18403,6 @@ static const KvxModifier KVX_CONJUGATE({{"", 0}, {"c", 1}});
 static const KvxModifier KVX_RCHANNEL({{"f", 0}, {"b", 1}});
 
 static const KvxModifier
-    KVX_COLUMN({{"c0", 0}, {"c1", 1}, {"c2", 2}, {"c3", 3}});
-
-static const KvxModifier
     KVX_ROUNDING({{"", 7}, {"rn", 0}, {"ru", 1}, {"rd", 2}, {"rz", 3}});
 
 static const KvxModifier KVX_LSUCOND({{"dnez", 0},

@@ -97,10 +97,6 @@ def SpeculateMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 3);
   let PrintMethod = "printSpeculateMod";
 }
 
-def ColumnMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 3);}]> {
-  let PrintMethod = "printColumnMod";
-}
-
 def DoscaleMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 1);}]> {
   let PrintMethod = "printDoscaleMod";
 }
