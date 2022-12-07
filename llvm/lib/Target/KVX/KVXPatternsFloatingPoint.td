@@ -1233,12 +1233,36 @@ def : Pat<(v4f16 (fpround v4f64:$val)), (FNARROWWHQ (REG_SEQUENCE PairedReg,
                                           rounding_, silent_)>;
 
 // FMAX
-def : Pat<(f16 (fmaxnum f16:$v0, f16:$v1)), (FMAXHQ $v0, $v1)>;
-def : Pat<(v2f16 (fmaxnum v2f16:$v0, v2f16:$v1)), (FMAXHQ $v0, $v1)>;
+foreach I = [int_kvx_max, fmaxnum] in {
+  foreach vt = [f16, v2f16, v4f16] in
+    def: Pat<(vt (I vt:$v1, vt:$v2)),
+             (FMAXHQ SingleReg:$v1, SingleReg:$v2)>;
+
+    def: Pat<(f64 (I f64:$v1, f64:$v2)),
+             (FMAXD SingleReg:$v1, SingleReg:$v2)>;
+
+    def: Pat<(f32 (I f32:$v1, f32:$v2)),
+             (FMAXW SingleReg:$v1, SingleReg:$v2)>;
+
+    def: Pat<(v2f32 (I v2f32:$v1, v2f32:$v2)),
+             (FMAXWP SingleReg:$v1, SingleReg:$v2)>;
+}
 
 // FMIN
-def : Pat<(f16 (fminnum f16:$v0, f16:$v1)), (FMINHQ $v0, $v1)>;
-def : Pat<(v2f16 (fminnum v2f16:$v0, v2f16:$v1)), (FMINHQ $v0, $v1)>;
+foreach I = [int_kvx_min, fminnum] in {
+  foreach vt = [f16, v2f16, v4f16] in
+    def: Pat<(vt (I vt:$v1, vt:$v2)),
+             (FMINHQ SingleReg:$v1, SingleReg:$v2)>;
+
+    def: Pat<(f64 (I f64:$v1, f64:$v2)),
+             (FMIND SingleReg:$v1, SingleReg:$v2)>;
+
+    def: Pat<(f32 (I f32:$v1, f32:$v2)),
+             (FMINW SingleReg:$v1, SingleReg:$v2)>;
+
+    def: Pat<(v2f32 (I v2f32:$v1, v2f32:$v2)),
+             (FMINWP SingleReg:$v1, SingleReg:$v2)>;
+}
 
 // FNEG
 def : Pat<(vfneg f16:$rs), (FNEGHQ SingleReg:$rs)>;

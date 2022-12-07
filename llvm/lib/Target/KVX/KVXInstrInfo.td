@@ -2159,13 +2159,13 @@ let Uses = [CS] in
 def FSRECD : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fsrecd$a1 $a2 = $a3",
-   [/* no straightforward pattern */],
+   [(set f64:$a2, (int_kvx_fsrec f64:$a3, SilentMod:$a1))],
    ALU_LITE>;
 
 def FSRSRD : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fsrsrd $a1 = $a2",
-   [/* no straightforward pattern */],
+   [(set f64:$a1, (int_kvx_fsrsr f64:$a2))],
    ALU_LITE>;
 
 let Uses = [CS] in {
@@ -2216,14 +2216,14 @@ def FRSRW : KVX_INSTRUCTION
 def FSRECW : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fsrecw$a1 $a2 = $a3",
-   [/* no straightforward pattern */],
+   [(set f32:$a2, (int_kvx_fsrec f32:$a3, SilentMod:$a1))],
    ALU_LITE>;
 }
 
 def FSRSRW : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fsrsrw $a1 = $a2",
-   [/* no straightforward pattern */],
+   [(set f32:$a1, (int_kvx_fsrsr f32:$a2))],
    ALU_LITE>;
 
 let Uses = [CS] in {
@@ -2262,13 +2262,13 @@ let Uses = [CS] in
 def FSRECWP : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fsrecwp$a1 $a2 = $a3",
-   [/* no straightforward pattern */],
+   [(set v2f32:$a2, (int_kvx_fsrec v2f32:$a3, SilentMod:$a1))],
    ALU_LITE>;
 
 def FSRSRWP : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "fsrsrwp $a1 = $a2",
-   [/* no straightforward pattern */],
+   [(set v2f32:$a1, (int_kvx_fsrsr v2f32:$a2))],
    ALU_LITE>;
 
 let Uses = [CS] in
@@ -2788,49 +2788,49 @@ defm XCOPYO : I<"xcopyo", BCU_CRRP_CRWL_CRWH_RR, [VectorReg], [], [], [], [Vecto
 def FMIND : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fmind $a1 = $a2, $a3",
-   [(set f64:$a1, (fminnum f64:$a2, f64:$a3))],
+   [],
    ALU_SWITCH_LITE_TINY>;
 
 def FMAXD : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fmaxd $a1 = $a2, $a3",
-   [(set f64:$a1, (fmaxnum f64:$a2, f64:$a3))],
+   [],
    ALU_SWITCH_LITE_TINY>;
 
 def FMINW : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fminw $a1 = $a2, $a3",
-   [(set f32:$a1, (fminnum f32:$a2, f32:$a3))],
+   [],
    ALU_SWITCH_LITE_TINY>;
 
 def FMAXW : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fmaxw $a1 = $a2, $a3",
-   [(set f32:$a1, (fmaxnum f32:$a2, f32:$a3))],
+   [],
    ALU_SWITCH_LITE_TINY>;
 
 def FMINWP : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fminwp $a1 = $a2, $a3",
-   [(set v2f32:$a1, (fminnum v2f32:$a2, v2f32:$a3))],
+   [],
    ALU_SWITCH_LITE_TINY>;
 
 def FMAXWP : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fmaxwp $a1 = $a2, $a3",
-   [(set v2f32:$a1, (fmaxnum v2f32:$a2, v2f32:$a3))],
+   [],
    ALU_SWITCH_LITE_TINY>;
 
 def FMINHQ : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fminhq $a1 = $a2, $a3",
-   [(set v4f16:$a1, (fminnum v4f16:$a2, v4f16:$a3))],
+   [],
    ALU_SWITCH_LITE_TINY>;
 
 def FMAXHQ : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "fmaxhq $a1 = $a2, $a3",
-   [(set v4f16:$a1, (fmaxnum v4f16:$a2, v4f16:$a3))],
+   [],
    ALU_SWITCH_LITE_TINY>;
 
 let Uses = [CS] in {
