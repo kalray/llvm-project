@@ -20143,12 +20143,6 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     return KVX_emitBitcountBuiltin(*this, E, VectorSize, 2, this->Int32Ty,
                                    Intrinsic::kvx_clswp);
 
-  case KVX::BI__builtin_kvx_fmaxwp:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fmaxwp);
-
-  case KVX::BI__builtin_kvx_fminwp:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fminwp);
-
   case KVX::BI__builtin_kvx_fmulwp:
     return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fmulwp, true);
 
@@ -20345,14 +20339,6 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_negdp:
   case KVX::BI__builtin_kvx_negdq:
     return KVX_emitIntNegBuiltin(*this, E);
-  case KVX::BI__builtin_kvx_fmaxw:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fmaxw);
-  case KVX::BI__builtin_kvx_fmaxd:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fmaxd);
-  case KVX::BI__builtin_kvx_fminw:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fminw);
-  case KVX::BI__builtin_kvx_fmind:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fmind);
   case KVX::BI__builtin_kvx_frsrw:
     return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_frsrw, true);
   case KVX::BI__builtin_kvx_fmulw:
@@ -20371,22 +20357,6 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmsd, true);
   case KVX::BI__builtin_kvx_ffmsxwd:
     return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmswd, true);
-  case KVX::BI__builtin_kvx_fcdivw:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fcdivw, false, true);
-  case KVX::BI__builtin_kvx_fcdivd:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fcdivd, false, true);
-  case KVX::BI__builtin_kvx_fsdivw:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fsdivw, false, true);
-  case KVX::BI__builtin_kvx_fsdivd:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fsdivd, false, true);
-  case KVX::BI__builtin_kvx_fsrecw:
-    return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_fsrecw, false, true);
-  case KVX::BI__builtin_kvx_fsrecd:
-    return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_fsrecd, false, true);
-  case KVX::BI__builtin_kvx_fsrsrw:
-    return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_fsrsrw);
-  case KVX::BI__builtin_kvx_fsrsrd:
-    return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_fsrsrd);
   case KVX::BI__builtin_kvx_sbmm8:
     return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_sbmm8);
   case KVX::BI__builtin_kvx_sbmmt8:
@@ -20409,50 +20379,6 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_fnarrowdwq:
     return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fnarrowdwp, 1,
                                  DoubleTy, 4, 2, true, nullptr, FloatTy);
-  case KVX::BI__builtin_kvx_fmaxh:
-    return KVX_emitF16ScalarBuiltin(2, *this, E, Intrinsic::kvx_fmaxhq);
-  case KVX::BI__builtin_kvx_fmaxhq:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fmaxhq);
-  case KVX::BI__builtin_kvx_fmaxho:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fmaxhq, 2, HalfTy, 8,
-                                 4);
-  case KVX::BI__builtin_kvx_fmaxhx:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fmaxhq, 2, HalfTy, 16,
-                                 4);
-  case KVX::BI__builtin_kvx_fmaxwq:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fmaxwp, 2, FloatTy, 4,
-                                 2);
-  case KVX::BI__builtin_kvx_fmaxwo:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fmaxwp, 2, FloatTy, 8,
-                                 2);
-  case KVX::BI__builtin_kvx_fmaxdp:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fmaxd, 2, DoubleTy, 2,
-                                 1);
-  case KVX::BI__builtin_kvx_fmaxdq:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fmaxd, 2, DoubleTy, 4,
-                                 1);
-  case KVX::BI__builtin_kvx_fminwq:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fminwp, 2, FloatTy, 4,
-                                 2);
-  case KVX::BI__builtin_kvx_fminh:
-    return KVX_emitF16ScalarBuiltin(2, *this, E, Intrinsic::kvx_fminhq);
-  case KVX::BI__builtin_kvx_fminhq:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fminhq);
-  case KVX::BI__builtin_kvx_fminho:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fminhq, 2, HalfTy, 8,
-                                 4);
-  case KVX::BI__builtin_kvx_fminhx:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fminhq, 2, HalfTy, 16,
-                                 4);
-  case KVX::BI__builtin_kvx_fminwo:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fminwp, 2, FloatTy, 8,
-                                 2);
-  case KVX::BI__builtin_kvx_fmindp:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fmind, 2, DoubleTy, 2,
-                                 1);
-  case KVX::BI__builtin_kvx_fmindq:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fmind, 2, DoubleTy, 4,
-                                 1);
   case KVX::BI__builtin_kvx_fmulh:
     return KVX_emitF16ScalarBuiltin(2, *this, E, Intrinsic::kvx_fmulhq, true);
   case KVX::BI__builtin_kvx_fmulhq:
