@@ -15,8 +15,10 @@
 #include "KVX.h"
 #include "KVXMachineFunctionInfo.h"
 #include "KVXTargetMachine.h"
+#include "llvm/ADT/APInt.h"
 #include "llvm/ADT/Statistic.h"
 #include "llvm/CodeGen/CallingConvLower.h"
+#include "llvm/CodeGen/ISDOpcodes.h"
 #include "llvm/CodeGen/MachineJumpTableInfo.h"
 #include "llvm/CodeGen/MachineModuleInfo.h"
 #include "llvm/IR/IntrinsicsKVX.h"
@@ -2536,24 +2538,72 @@ static SDValue combineNarrowInt(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
   return Dag.getAnyExtOrTrunc(SatMax, DL, OutType);
 }
 
+typedef enum { WidenNormal, WidenE, WidenO } widen_t;
+
 static SDValue combineWidenInt(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
-                               SelectionDAG &Dag) {
+                               SelectionDAG &Dag, widen_t WT = WidenNormal) {
   auto ExtType = cast<ConstantSDNode>(N->getOperand(2))->getZExtValue();
   auto OutType = N->getValueType(0);
+  SDLoc DL(N);
+  auto InVal = N->getOperand(1);
+  if (WT == WidenNormal) {
+    if (ExtType == 0) // "" modifier, sign-extend
+      return Dag.getSExtOrTrunc(InVal, DL, OutType);
+
+    auto Ext = Dag.getZExtOrTrunc(InVal, DL, OutType);
+    if (ExtType == 1) // ".z" modifier, zero extend
+      return Ext;
+
+    // ExtType == 2, ".q" modifier, anyextend and shiftleft to upper bits half
+    auto ShiftAmount =
+        Dag.getConstant(OutType.getScalarSizeInBits() / 2, DL, MVT::i32);
+    if (OutType.isVector())
+      ShiftAmount = Dag.getSplatBuildVector(OutType, DL, ShiftAmount);
+
+    return Dag.getNode(ISD::SHL, DL, OutType, Ext, ShiftAmount);
+  }
+  auto OrigVT = InVal.getValueType();
+  InVal = Dag.getNode(ISD::BITCAST, DL, OutType, InVal);
+  if (WT == WidenE) {   // Obtain the elements forming the lower half of the
+                        // elements of the output vector
+    if (ExtType == 0) { // "" modifier, sign-extend == sext_inreg
+      if (OutType.isVector())
+        return Dag.getNode(ISD::SIGN_EXTEND_INREG, DL, OutType, InVal,
+                           Dag.getValueType(OrigVT.getHalfNumVectorElementsVT(
+                               *Dag.getContext())));
+
+      return Dag.getNode(ISD::SIGN_EXTEND_INREG, DL, OutType, InVal,
+                         Dag.getValueType(OrigVT.getVectorElementType()));
+    }
+    if (ExtType == 1) { // zext == zero the upper bits
+      auto V = APInt::getLowBitsSet(OutType.getScalarSizeInBits(),
+                                    OrigVT.getScalarSizeInBits());
+      return Dag.getNode(ISD::AND, DL, OutType, InVal,
+                         Dag.getConstant(V, DL, OutType));
+    }
+    // move lower half to upper half
+    return Dag.getNode(
+        ISD::SHL, DL, OutType, InVal,
+        Dag.getConstant(OrigVT.getScalarSizeInBits(), DL, OutType));
+  }
+
+  // WT == O, Obtain the elements forming the upper half of the elements of the
+  // output vector
   if (ExtType == 0) // "" modifier, sign-extend
-    return Dag.getSExtOrTrunc(N->getOperand(1), SDLoc(N), OutType);
+    return Dag.getNode(
+        ISD::SRA, DL, OutType, InVal,
+        Dag.getConstant(OrigVT.getScalarSizeInBits(), DL, OutType));
 
-  auto Ext = Dag.getZExtOrTrunc(N->getOperand(1), SDLoc(N), OutType);
-  if (ExtType == 1) // ".z" modifier, zero extend
-    return Ext;
+  if (ExtType == 1) // zext == zero the upper bits
+    return Dag.getNode(
+        ISD::SRL, DL, OutType, InVal,
+        Dag.getConstant(OrigVT.getScalarSizeInBits(), DL, OutType));
 
-  // ExtType == 2, ".q" modifier, anyextend and shiftleft to upper bits half
-  auto ShiftAmount =
-      Dag.getConstant(OutType.getScalarSizeInBits() / 2, SDLoc(N), MVT::i32);
-  if (OutType.isVector())
-    ShiftAmount = Dag.getSplatBuildVector(OutType, SDLoc(N), ShiftAmount);
-
-  return Dag.getNode(ISD::SHL, SDLoc(N), OutType, Ext, ShiftAmount);
+  // zero the lower half
+  auto V = APInt::getHighBitsSet(OutType.getScalarSizeInBits(),
+                                 OrigVT.getScalarSizeInBits());
+  return Dag.getNode(ISD::AND, DL, OutType, InVal,
+                     Dag.getConstant(V, DL, OutType));
 }
 
 static SDValue combineAbd(SDNode *N, SelectionDAG &Dag) {
@@ -2679,6 +2729,12 @@ static SDValue combineIntrinsic(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
     return combineShifts(N, Dag, {ISD::SRL, ISD::SRA, KVXISD::SRS, ISD::ROTR});
   case Intrinsic::KVXIntrinsics::kvx_widenint:
     return combineWidenInt(N, DCI, Dag);
+  case Intrinsic::KVXIntrinsics::kvx_wideninte:
+  case Intrinsic::KVXIntrinsics::kvx_widenintes:
+    return combineWidenInt(N, DCI, Dag, WidenE);
+  case Intrinsic::KVXIntrinsics::kvx_wideninto:
+  case Intrinsic::KVXIntrinsics::kvx_widenintos:
+    return combineWidenInt(N, DCI, Dag, WidenO);
   default:
     return SDValue();
   }
