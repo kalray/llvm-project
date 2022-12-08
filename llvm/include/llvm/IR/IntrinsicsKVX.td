@@ -332,4 +332,8 @@ def int_kvx_shl: Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>, llvm_i32_ty, llv
 def int_kvx_shr: Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_stsu: Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>, LLVMMatchType<0>], [IntrNoMem]>;
 def int_kvx_widenint: Intrinsic<[llvm_anyint_ty], [LLVMTruncatedType<0>, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_wideninte: Intrinsic<[llvm_anyint_ty], [LLVMSubdivide2VectorType<0>, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_wideninto: Intrinsic<[llvm_anyint_ty], [LLVMSubdivide2VectorType<0>, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_widenintes: Intrinsic<[llvm_i64_ty], [llvm_v2i32_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_widenintos: Intrinsic<[llvm_i64_ty], [llvm_v2i32_ty, llvm_i32_ty], [IntrNoMem]>;
 }  // TargetPrefix = "kvx"
