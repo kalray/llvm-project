@@ -5,7 +5,6 @@ typedef long __attribute__((__vector_size__(2 * sizeof(long)))) v2i64;
 typedef long __attribute__((__vector_size__(4 * sizeof(long)))) v4i64;
 
 void wrong_ready(int sv, void * addr, unsigned long cond, v4i64 big_sv, v2i64 mid_sv){
-  __builtin_kvx_storecw(sv, addr, cond, ".mt"); // expected-error {{lsumask modifier is not available for this builtin. Try using __builtin_kvx_storec[64|128|256] instead}} expected-error {{cannot compile this builtin function yet}}
-  __builtin_kvx_storec256(big_sv, addr, cond, ".toto"); // expected-error {{Expects either a lsucond: ['.wlez', '.wnez', '.weqz', '.dgez', '.wgtz', '.even', '.dlez', '.dnez', '.wltz', '.deqz', '.odd', '.dgtz', '.wgez', '.dltz'] or a lsumask: ['.mt', '.mf', '.mtc', '.mfc']}} expected-error {{cannot compile this builtin function yet}}
-  __builtin_kvx_storec128(mid_sv, addr, cond, ".mfc"); // expected-error {{.mtc and .mfc modifiers are not available for this builtin. Try using __builtin_kvx_storec256 instead}} expected-error {{cannot compile this builtin function yet}}
+  __builtin_kvx_storecw(sv, addr, cond, ".mt"); // expected-error {{lsomask modifier is not available for this builtin. Try using __builtin_kvx_storec[64|128|256] instead}} expected-error {{cannot compile this builtin function yet}}
+  __builtin_kvx_storec256(big_sv, addr, cond, ".toto"); // expected-error {{Expects either a lsucond: ['.wlez', '.wnez', '.weqz', '.dgez', '.wgtz', '.even', '.dlez', '.dnez', '.wltz', '.deqz', '.odd', '.dgtz', '.wgez', '.dltz'] or a lsomask: ['.mt', '.mf']}} expected-error {{cannot compile this builtin function yet}}
 }

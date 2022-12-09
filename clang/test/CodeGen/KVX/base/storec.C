@@ -75,8 +75,6 @@ STOREC(256, v8i32, 256_wgtz, ".wgtz")
 // lsumask modifier
 STOREC(256, v8i32, 256_mt, ".mt")
 STOREC(256, v8i32, 256_mf, ".mf")
-STOREC(256, v8i32, 256_mtc, ".mtc")
-STOREC(256, v8i32, 256_mfc, ".mfc")
 STOREC(128, v4i32, 128_mt, ".mt")
 STOREC(128, v4i32, 128_mf, ".mf")
 STOREC(64, v2i32, 64_mt, ".mt")
