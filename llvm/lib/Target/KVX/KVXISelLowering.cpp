@@ -2497,6 +2497,41 @@ static SDValue combineShifts(SDNode *N, SelectionDAG &Dag,
   return Dag.getNode(Opcodes[OpcIndex], DL, VT, N->getOperand(1), ShiftAmount);
 }
 
+typedef enum { OpMulx, OpMaddx, OpMsbfx } MulSAOp;
+static SDValue combineExtendMulSA(SDNode *N,
+                                  TargetLowering::DAGCombinerInfo &DCI,
+                                  SelectionDAG &Dag, MulSAOp Op) {
+  const auto ExtTypePos = (Op == OpMulx) ? 3 : 4;
+  auto ExtType =
+      cast<ConstantSDNode>(N->getOperand(ExtTypePos))->getZExtValue();
+  unsigned MulOpcode;
+  switch (ExtType) {
+  case 0:
+    MulOpcode = KVXISD::SEXT_MUL;
+    break;
+  case 1:
+    MulOpcode = KVXISD::SZEXT_MUL;
+    break;
+  case 2:
+    MulOpcode = KVXISD::ZEXT_MUL;
+    break;
+  default:
+    report_fatal_error(
+        "Bad value for kvx-extend-multiply[add/sub] intrinsic.\n");
+  }
+  auto &Lhs = N->getOperand(1);
+  auto &Rhs = N->getOperand(2);
+  auto OutType = N->getValueType(0);
+  auto DL = SDLoc(N);
+  auto Mul = Dag.getNode(MulOpcode, DL, OutType, Lhs, Rhs);
+  if (Op == OpMulx)
+    return Mul;
+  auto &Acc = N->getOperand(3);
+  if (Op == OpMaddx)
+    return Dag.getNode(ISD::ADD, DL, OutType, Acc, Mul);
+  return Dag.getNode(ISD::SUB, DL, OutType, Acc, Mul);
+}
+
 static SDValue combineNarrowInt(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
                                 SelectionDAG &Dag) {
   auto ExtType = cast<ConstantSDNode>(N->getOperand(2))->getZExtValue();
@@ -2722,6 +2757,12 @@ static SDValue combineIntrinsic(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
     return combineFaddFsub(N, Dag, KVX::FSBFHO);
   case Intrinsic::KVXIntrinsics::kvx_narrowint:
     return combineNarrowInt(N, DCI, Dag);
+  case Intrinsic::KVXIntrinsics::kvx_maddx:
+    return combineExtendMulSA(N, DCI, Dag, OpMaddx);
+  case Intrinsic::KVXIntrinsics::kvx_msbfx:
+    return combineExtendMulSA(N, DCI, Dag, OpMsbfx);
+  case Intrinsic::KVXIntrinsics::kvx_mulx:
+    return combineExtendMulSA(N, DCI, Dag, OpMulx);
   case Intrinsic::KVXIntrinsics::kvx_shl:
     return combineShifts(N, Dag,
                          {ISD::SHL, ISD::SSHLSAT, ISD::USHLSAT, ISD::ROTL});
