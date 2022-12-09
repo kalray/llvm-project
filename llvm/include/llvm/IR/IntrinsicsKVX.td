@@ -323,8 +323,11 @@ def int_kvx_fsbfc : Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>, LLVMMatchTy
 def int_kvx_fsdiv: Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>, LLVMMatchType<0>, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_fsrec: Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_fsrsr: Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>], [IntrNoMem]>;
+def int_kvx_maddx: Intrinsic<[llvm_anyint_ty], [LLVMTruncatedType<0>, LLVMTruncatedType<0>, LLVMMatchType<0>, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_max: Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>, LLVMMatchType<0>], [IntrNoMem]>;
 def int_kvx_min: Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>, LLVMMatchType<0>], [IntrNoMem]>;
+def int_kvx_msbfx: Intrinsic<[llvm_anyint_ty], [LLVMTruncatedType<0>, LLVMTruncatedType<0>, LLVMMatchType<0>, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_mulx: Intrinsic<[llvm_anyint_ty], [LLVMTruncatedType<0>, LLVMTruncatedType<0>, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_narrowint: Intrinsic<[llvm_anyint_ty], [LLVMExtendedType<0>, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_select_vec: Intrinsic<[llvm_anyvector_ty], [LLVMMatchType<0>, LLVMMatchType<0>, LLVMVectorOfBitcastsToInt<0>, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_select: Intrinsic<[llvm_any_ty], [LLVMMatchType<0>, LLVMMatchType<0>, llvm_i64_ty, llvm_i32_ty], [IntrNoMem]>;
@@ -333,7 +336,7 @@ def int_kvx_shr: Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>, llvm_i32_ty, llv
 def int_kvx_stsu: Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>, LLVMMatchType<0>], [IntrNoMem]>;
 def int_kvx_widenint: Intrinsic<[llvm_anyint_ty], [LLVMTruncatedType<0>, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_wideninte: Intrinsic<[llvm_anyint_ty], [LLVMSubdivide2VectorType<0>, llvm_i32_ty], [IntrNoMem]>;
-def int_kvx_wideninto: Intrinsic<[llvm_anyint_ty], [LLVMSubdivide2VectorType<0>, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_widenintes: Intrinsic<[llvm_i64_ty], [llvm_v2i32_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_wideninto: Intrinsic<[llvm_anyint_ty], [LLVMSubdivide2VectorType<0>, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_widenintos: Intrinsic<[llvm_i64_ty], [llvm_v2i32_ty, llvm_i32_ty], [IntrNoMem]>;
 }  // TargetPrefix = "kvx"
