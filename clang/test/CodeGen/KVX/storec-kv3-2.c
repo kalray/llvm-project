@@ -26,22 +26,6 @@ void storec256_mt(v8i32 a, void *ptr, unsigned long cond) { __builtin_kvx_storec
 //
 void storec256_mf(v8i32 a, void *ptr, unsigned long cond) { __builtin_kvx_storec256(a, ptr, cond, ".mf"); }
 
-// CHECK-LABEL: @storec256_mtc(
-// CHECK-NEXT:    [[TMP4:%.*]] = bitcast <8 x i32> [[TMP0:%.*]] to <4 x i64>
-// CHECK-NEXT:    [[TMP5:%.*]] = bitcast i8* [[TMP1:%.*]] to <4 x i64>*
-// CHECK-NEXT:    tail call void (<4 x i64>, <4 x i64>*, i32, i64, i32, i32, ...) @llvm.kvx.storec.v4i64(<4 x i64> [[TMP4]], <4 x i64>* [[TMP5]], i32 256, i64 [[TMP2:%.*]], i32 -1, i32 6)
-// CHECK-NEXT:    ret void
-//
-void storec256_mtc(v8i32 a, void *ptr, unsigned long cond) { __builtin_kvx_storec256(a, ptr, cond, ".mtc"); }
-
-// CHECK-LABEL: @storec256_mfc(
-// CHECK-NEXT:    [[TMP4:%.*]] = bitcast <8 x i32> [[TMP0:%.*]] to <4 x i64>
-// CHECK-NEXT:    [[TMP5:%.*]] = bitcast i8* [[TMP1:%.*]] to <4 x i64>*
-// CHECK-NEXT:    tail call void (<4 x i64>, <4 x i64>*, i32, i64, i32, i32, ...) @llvm.kvx.storec.v4i64(<4 x i64> [[TMP4]], <4 x i64>* [[TMP5]], i32 256, i64 [[TMP2:%.*]], i32 -1, i32 7)
-// CHECK-NEXT:    ret void
-//
-void storec256_mfc(v8i32 a, void *ptr, unsigned long cond) { __builtin_kvx_storec256(a, ptr, cond, ".mfc"); }
-
 // CHECK-LABEL: @storec128_mt(
 // CHECK-NEXT:    [[TMP4:%.*]] = bitcast <4 x i32> [[TMP0:%.*]] to <2 x i64>
 // CHECK-NEXT:    [[TMP5:%.*]] = and i64 [[TMP2:%.*]], 65535

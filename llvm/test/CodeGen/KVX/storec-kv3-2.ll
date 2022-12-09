@@ -32,32 +32,6 @@ entry:
   ret void
 }
 
-define void @storec256_mtc(<8 x i32> %a, i8* %ptr, i64 %cond) {
-; CHECK-LABEL: storec256_mtc:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    so.mtc $r5 ? [$r4] = $r0r1r2r3
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
-entry:
-  %0 = bitcast <8 x i32> %a to <4 x i64>
-  %1 = bitcast i8* %ptr to <4 x i64>*
-  tail call void (<4 x i64>, <4 x i64>*, i32, i64, i32, i32, ...) @llvm.kvx.storec.v4i64(<4 x i64> %0, <4 x i64>* %1, i32 256, i64 %cond, i32 -1, i32 6)
-  ret void
-}
-
-define void @storec256_mfc(<8 x i32> %a, i8* %ptr, i64 %cond) {
-; CHECK-LABEL: storec256_mfc:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    so.mfc $r5 ? [$r4] = $r0r1r2r3
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
-entry:
-  %0 = bitcast <8 x i32> %a to <4 x i64>
-  %1 = bitcast i8* %ptr to <4 x i64>*
-  tail call void (<4 x i64>, <4 x i64>*, i32, i64, i32, i32, ...) @llvm.kvx.storec.v4i64(<4 x i64> %0, <4 x i64>* %1, i32 256, i64 %cond, i32 -1, i32 7)
-  ret void
-}
-
 define void @storec128_mt(<4 x i32> %a, i8* %ptr, i64 %cond) {
 ; CHECK-LABEL: storec128_mt:
 ; CHECK:       # %bb.0: # %entry

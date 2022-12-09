@@ -18437,7 +18437,9 @@ static const KvxModifier KVX_LSUMASK({{"dnez", 0},
                                       {"mfc", 7}});
 
 static const KvxModifier
-    KVX_LSOMASK({{"mt", 4}, {"mf", 5}, {"mtc", 6}, {"mfc", 7}});
+    KVX_LSOMASK_LOAD({{"mt", 4}, {"mf", 5}, {"mtc", 6}, {"mfc", 7}});
+
+static const KvxModifier KVX_LSOMASK_STORE({{"mt", 4}, {"mf", 5}});
 
 static const KvxModifier
     KVX_LSUPACK({{"", 0}, {"q", 1}, {"d", 2}, {"w", 3}, {"h", 4}, {"b", 5}});
@@ -19067,14 +19069,15 @@ static Value *KVX_emitStoreBuiltin(CodeGenFunction &CGF, const CallExpr *E,
 static bool KVX_getLsucondOrLsomask(CodeGenFunction &CGF, const Expr *E,
                                     StringRef ModStr, bool HasLsumask,
                                     int &LsucondMod, int &LsomaskMod,
-                                    StringRef Name) {
+                                    StringRef Name,
+                                    KvxModifier LsomaskModParser) {
   const auto &Target = CGF.getTarget();
   bool IsCV1 = Target.getCPUstr() == "kv3-1";
 
-  if ((LsomaskMod = KVX_LSOMASK.getModifierValue(ModStr)) >= 0) {
+  if ((LsomaskMod = LsomaskModParser.getModifierValue(ModStr)) >= 0) {
     if (!HasLsumask) {
       CGF.CGM.Error(E->getBeginLoc(),
-                    "lsumask modifier is not available for this builtin. Try "
+                    "lsomask modifier is not available for this builtin. Try "
                     "using __builtin_kvx_" +
                         std::string(Name) + "[64|128|256] instead");
       return false;
@@ -19094,8 +19097,8 @@ static bool KVX_getLsucondOrLsomask(CodeGenFunction &CGF, const Expr *E,
       !HasLsumask || IsCV1
           ? "Expects a lsucond, one of: " + KVX_LSUCOND.getModifierStrList()
           : "Expects either a lsucond: [" + KVX_LSUCOND.getModifierStrList() +
-                "]" + " or a lsumask: [" + KVX_LSOMASK.getModifierStrList() +
-                "]";
+                "]" + " or a lsomask: [" +
+                LsomaskModParser.getModifierStrList() + "]";
 
   CGF.CGM.Error(E->getBeginLoc(), ErrorMsg);
   return false;
@@ -19168,7 +19171,7 @@ static Value *KVX_emitStoreCondBuiltin(CodeGenFunction &CGF, const CallExpr *E,
   int LsucondMod = -1, LsomaskMod = -1;
   if (!KVX_getLsucondOrLsomask(CGF, E->getArg(3)->IgnoreParenImpCasts(),
                                ModsStr, HasLsomask, LsucondMod, LsomaskMod,
-                               "storec"))
+                               "storec", KVX_LSOMASK_STORE))
     return nullptr;
 
   Value *LsucondModVal = ConstantInt::get(CGF.IntTy, LsucondMod);
@@ -19182,14 +19185,6 @@ static Value *KVX_emitStoreCondBuiltin(CodeGenFunction &CGF, const CallExpr *E,
   Value *StoreVal = KVX_truncateOrBitcast(CGF, ToStore, DataType);
 
   if (LsomaskMod >= 0 && StoreSize < 256) {
-    // .mtc and .mfc are not allowed with storec64 and storec128
-    if (LsomaskMod == 6 || LsomaskMod == 7) {
-      CGF.CGM.Error(
-          E->getArg(3)->getBeginLoc(),
-          ".mtc and .mfc modifiers are not available for this builtin. Try "
-          "using __builtin_kvx_storec256 instead");
-      return nullptr;
-    }
     unsigned ShiftValue = StoreSize >> 3;  // bits -> bytes
     uint64_t Mask = (1 << ShiftValue) - 1; // 0xff for StoreSize == 64
 
@@ -19263,7 +19258,7 @@ static Value *KVX_emitLoadCondBuiltin(CodeGenFunction &CGF, const CallExpr *E,
   int LsucondMod = -1, LsomaskMod = -1;
   if (!KVX_getLsucondOrLsomask(CGF, E->getArg(3)->IgnoreParenImpCasts(),
                                ModsStr, HasLsomask, LsucondMod, LsomaskMod,
-                               "loadc"))
+                               "loadc", KVX_LSOMASK_LOAD))
     return nullptr;
 
   Value *LsucondModVal = ConstantInt::get(CGF.IntTy, LsucondMod);
