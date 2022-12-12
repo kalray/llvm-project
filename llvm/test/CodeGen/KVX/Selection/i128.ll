@@ -495,11 +495,7 @@ define i128 @MSBFUDT(i128 %0, i64 %1, i64 %2) {
 define i128 @ld(i128* nocapture readonly %0) {
 ; CHECK-LABEL: ld:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ld $r2 = 0[$r0]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r1 = 8[$r0]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r2
+; CHECK-NEXT:    lq $r0r1 = 0[$r0]
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = load i128, i128* %0

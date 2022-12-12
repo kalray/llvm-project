@@ -76,28 +76,27 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_1-NEXT:    copyd $r18 = $r1
 ; KV3_1-NEXT:    copyd $r19 = $r0
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    ld $r0 = 16[$r19]
+; KV3_1-NEXT:    lq $r22r23 = 16[$r19]
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    ld $r26 = 0[$r18]
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    ld $r20 = 24[$r18]
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    ld $r21 = 24[$r19]
+; KV3_1-NEXT:    ld $r24 = 32[$r19]
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    fsbfd $r0 = $r26, $r0
-; KV3_1-NEXT:    ld $r23 = 32[$r19]
+; KV3_1-NEXT:    fsbfd $r0 = $r26, $r22
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    copyd $r1 = $r20
 ; KV3_1-NEXT:    call __divdf3
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    lq $r28r29 = 8[$r18]
+; KV3_1-NEXT:    lq $r30r31 = 8[$r18]
 ; KV3_1-NEXT:    copyd $r1 = $r20
 ; KV3_1-NEXT:    copyd $r22 = $r0
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    fsbfd $r0 = $r28, $r21
+; KV3_1-NEXT:    fsbfd $r0 = $r30, $r23
 ; KV3_1-NEXT:    call __divdf3
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    fsbfd $r0 = $r29, $r23
+; KV3_1-NEXT:    fsbfd $r0 = $r31, $r24
 ; KV3_1-NEXT:    copyd $r1 = $r20
 ; KV3_1-NEXT:    copyd $r21 = $r0
 ; KV3_1-NEXT:    call __divdf3
@@ -151,9 +150,9 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_1-NEXT:    cb.wnez $r0 ? .LBB0_25
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:  .LBB0_7:
+; KV3_1-NEXT:    make $r3 = cp_free_list
 ; KV3_1-NEXT:    make $r27 = 0x3ff0000000000000
-; KV3_1-NEXT:    make $r30 = cp_free_list
-; KV3_1-NEXT:    make $r31 = 0
+; KV3_1-NEXT:    make $r28 = 0
 ; KV3_1-NEXT:    goto .LBB0_9
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:  .LBB0_8: # in Loop: Header=BB0_9 Depth=1
@@ -177,7 +176,7 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_1-NEXT:    copyd $r1 = $r0
 ; KV3_1-NEXT:    fcompd.olt $r2 = $r1, $r22
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    fadddp $r24r25 = $r0r1, $r28r29
+; KV3_1-NEXT:    fadddp $r24r25 = $r0r1, $r30r31
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    cb.weqz $r2 ? .LBB0_12
 ; KV3_1-NEXT:    ;;
@@ -194,9 +193,9 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_1-NEXT:    cb.weqz $r0 ? .LBB0_14
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:  # %bb.13: # in Loop: Header=BB0_9 Depth=1
-; KV3_1-NEXT:    fsbfd $r28 = $r20, $r28
+; KV3_1-NEXT:    fsbfd $r30 = $r20, $r30
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    sd 8[$r18] = $r28
+; KV3_1-NEXT:    sd 8[$r18] = $r30
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:  .LBB0_14: # in Loop: Header=BB0_9 Depth=1
 ; KV3_1-NEXT:    ld $r0 = 32[$r19]
@@ -206,9 +205,9 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_1-NEXT:    cb.wnez $r0 ? .LBB0_16
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:  # %bb.15: # in Loop: Header=BB0_9 Depth=1
-; KV3_1-NEXT:    fsbfd $r29 = $r20, $r29
+; KV3_1-NEXT:    fsbfd $r31 = $r20, $r31
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    sd 16[$r18] = $r29
+; KV3_1-NEXT:    sd 16[$r18] = $r31
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:  .LBB0_16: # in Loop: Header=BB0_9 Depth=1
 ; KV3_1-NEXT:    ld $r0 = 32[$r18]
@@ -219,14 +218,14 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_1-NEXT:    cb.deqz $r0 ? .LBB0_8
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:  # %bb.17: # in Loop: Header=BB0_9 Depth=1
-; KV3_1-NEXT:    ld $r21 = 0[$r30]
+; KV3_1-NEXT:    ld $r21 = 0[$r3]
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    cb.deqz $r21 ? .LBB0_19
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:  # %bb.18: # in Loop: Header=BB0_9 Depth=1
 ; KV3_1-NEXT:    ld $r0 = 112[$r21]
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    sd 0[$r30] = $r0
+; KV3_1-NEXT:    sd 0[$r3] = $r0
 ; KV3_1-NEXT:    goto .LBB0_20
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:  .LBB0_19: # in Loop: Header=BB0_9 Depth=1
@@ -236,26 +235,22 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_1-NEXT:    copyd $r21 = $r0
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:  .LBB0_20: # in Loop: Header=BB0_9 Depth=1
-; KV3_1-NEXT:    sw 40[$r21] = $r31
-; KV3_1-NEXT:    make $r0 = 2
+; KV3_1-NEXT:    sw 40[$r21] = $r28
+; KV3_1-NEXT:    copyd $r29 = $r28
+; KV3_1-NEXT:    copyd $r30 = $r28
+; KV3_1-NEXT:    copyd $r31 = $r28
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    sh 0[$r21] = $r0
+; KV3_1-NEXT:    copyd $r0 = $r28
+; KV3_1-NEXT:    make $r1 = 2
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    sd 48[$r21] = $r31
+; KV3_1-NEXT:    sh 0[$r21] = $r1
+; KV3_1-NEXT:    copyd $r1 = $r28
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    sd 56[$r21] = $r31
+; KV3_1-NEXT:    so 48[$r21] = $r28r29r30r31
+; KV3_1-NEXT:    copyd $r2 = $r28
+; KV3_1-NEXT:    copyd $r3 = $r28
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    sd 64[$r21] = $r31
-; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    sd 72[$r21] = $r31
-; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    sd 80[$r21] = $r31
-; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    sd 88[$r21] = $r31
-; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    sd 96[$r21] = $r31
-; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    sd 104[$r21] = $r31
+; KV3_1-NEXT:    so 80[$r21] = $r0r1r2r3
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    ld $r26 = 0[$r18]
 ; KV3_1-NEXT:    ;;
@@ -266,10 +261,10 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_1-NEXT:    copyd $r1 = $r20
 ; KV3_1-NEXT:    call __divdf3
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    lq $r28r29 = 8[$r18]
+; KV3_1-NEXT:    lq $r30r31 = 8[$r18]
 ; KV3_1-NEXT:    copyd $r22 = $r0
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    fsbfdp $r24r25 = $r28r29, $r24r25
+; KV3_1-NEXT:    fsbfdp $r24r25 = $r30r31, $r24r25
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    copyd $r0 = $r25
 ; KV3_1-NEXT:    copyd $r1 = $r20
@@ -353,10 +348,8 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    ld $r0 = 16[$r19]
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    ld $r21 = 24[$r19]
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    lq $r24r25 = 24[$r19]
 ; KV3_1-NEXT:    copyd $r1 = $r20
-; KV3_1-NEXT:    ld $r22 = 32[$r19]
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    fsbfd $r0 = $r26, $r0
 ; KV3_1-NEXT:    call __divdf3
@@ -364,9 +357,9 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_1-NEXT:    fcompd.olt $r0 = $r0, $r27
 ; KV3_1-NEXT:    fcompd.oge $r1 = $r0, $r23
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    fsbfd $r0 = $r28, $r21
+; KV3_1-NEXT:    fsbfd $r0 = $r30, $r24
 ; KV3_1-NEXT:    copyd $r1 = $r20
-; KV3_1-NEXT:    andw $r24 = $r1, $r0
+; KV3_1-NEXT:    andw $r21 = $r1, $r0
 ; KV3_1-NEXT:    call __divdf3
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    fcompd.olt $r0 = $r0, $r27
@@ -375,12 +368,13 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_1-NEXT:    andw $r0 = $r1, $r0
 ; KV3_1-NEXT:    copyd $r1 = $r20
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    fsbfd $r0 = $r29, $r22
-; KV3_1-NEXT:    andw $r21 = $r24, $r0
+; KV3_1-NEXT:    fsbfd $r0 = $r31, $r25
+; KV3_1-NEXT:    andw $r21 = $r21, $r0
 ; KV3_1-NEXT:    call __divdf3
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    fcompd.olt $r0 = $r0, $r27
 ; KV3_1-NEXT:    fcompd.oge $r1 = $r0, $r23
+; KV3_1-NEXT:    make $r3 = cp_free_list
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    andw $r0 = $r1, $r0
 ; KV3_1-NEXT:    ;;
@@ -436,28 +430,27 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_2-NEXT:    copyd $r18 = $r1
 ; KV3_2-NEXT:    copyd $r19 = $r0
 ; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    ld $r0 = 16[$r19]
+; KV3_2-NEXT:    lq $r22r23 = 16[$r19]
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:    ld $r26 = 0[$r18]
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:    ld $r20 = 24[$r18]
 ; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    ld $r21 = 24[$r19]
+; KV3_2-NEXT:    ld $r24 = 32[$r19]
 ; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    fsbfd $r0 = $r26, $r0
-; KV3_2-NEXT:    ld $r23 = 32[$r19]
+; KV3_2-NEXT:    fsbfd $r0 = $r26, $r22
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:    copyd $r1 = $r20
 ; KV3_2-NEXT:    call __divdf3
 ; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    lq $r28r29 = 8[$r18]
+; KV3_2-NEXT:    lq $r30r31 = 8[$r18]
 ; KV3_2-NEXT:    copyd $r1 = $r20
 ; KV3_2-NEXT:    copyd $r22 = $r0
 ; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    fsbfd $r0 = $r28, $r21
+; KV3_2-NEXT:    fsbfd $r0 = $r30, $r23
 ; KV3_2-NEXT:    call __divdf3
 ; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    fsbfd $r0 = $r29, $r23
+; KV3_2-NEXT:    fsbfd $r0 = $r31, $r24
 ; KV3_2-NEXT:    copyd $r1 = $r20
 ; KV3_2-NEXT:    copyd $r21 = $r0
 ; KV3_2-NEXT:    call __divdf3
@@ -512,10 +505,8 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:  .LBB0_7:
 ; KV3_2-NEXT:    make $r3 = cp_free_list
-; KV3_2-NEXT:    make $r27 = 0
-; KV3_2-NEXT:    make $r30 = 0x3ff0000000000000
-; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    make $r31 = 0x41d0000000000000
+; KV3_2-NEXT:    make $r27 = 0x3ff0000000000000
+; KV3_2-NEXT:    make $r28 = 0
 ; KV3_2-NEXT:    goto .LBB0_9
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:  .LBB0_8: # in Loop: Header=BB0_9 Depth=1
@@ -541,7 +532,7 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_2-NEXT:    copyd $r1 = $r0
 ; KV3_2-NEXT:    fcompd.olt $r2 = $r1, $r22
 ; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    fadddp $r24r25 = $r0r1, $r28r29
+; KV3_2-NEXT:    fadddp $r24r25 = $r0r1, $r30r31
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:    cb.weqz $r2 ? .LBB0_12
 ; KV3_2-NEXT:    ;;
@@ -558,9 +549,9 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_2-NEXT:    cb.weqz $r0 ? .LBB0_14
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:  # %bb.13: # in Loop: Header=BB0_9 Depth=1
-; KV3_2-NEXT:    fsbfd $r28 = $r20, $r28
+; KV3_2-NEXT:    fsbfd $r30 = $r20, $r30
 ; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    sd 8[$r18] = $r28
+; KV3_2-NEXT:    sd 8[$r18] = $r30
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:  .LBB0_14: # in Loop: Header=BB0_9 Depth=1
 ; KV3_2-NEXT:    ld $r0 = 32[$r19]
@@ -570,9 +561,9 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_2-NEXT:    cb.wnez $r0 ? .LBB0_16
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:  # %bb.15: # in Loop: Header=BB0_9 Depth=1
-; KV3_2-NEXT:    fsbfd $r29 = $r20, $r29
+; KV3_2-NEXT:    fsbfd $r31 = $r20, $r31
 ; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    sd 16[$r18] = $r29
+; KV3_2-NEXT:    sd 16[$r18] = $r31
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:  .LBB0_16: # in Loop: Header=BB0_9 Depth=1
 ; KV3_2-NEXT:    ld $r0 = 32[$r18]
@@ -600,26 +591,22 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_2-NEXT:    copyd $r21 = $r0
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:  .LBB0_20: # in Loop: Header=BB0_9 Depth=1
-; KV3_2-NEXT:    sw 40[$r21] = $r27
-; KV3_2-NEXT:    make $r0 = 2
+; KV3_2-NEXT:    sw 40[$r21] = $r28
+; KV3_2-NEXT:    copyd $r29 = $r28
+; KV3_2-NEXT:    copyd $r30 = $r28
+; KV3_2-NEXT:    copyd $r31 = $r28
 ; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    sh 0[$r21] = $r0
+; KV3_2-NEXT:    copyd $r0 = $r28
+; KV3_2-NEXT:    make $r1 = 2
 ; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    sd 48[$r21] = $r27
+; KV3_2-NEXT:    sh 0[$r21] = $r1
+; KV3_2-NEXT:    copyd $r1 = $r28
 ; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    sd 56[$r21] = $r27
+; KV3_2-NEXT:    so 48[$r21] = $r28r29r30r31
+; KV3_2-NEXT:    copyd $r2 = $r28
+; KV3_2-NEXT:    copyd $r3 = $r28
 ; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    sd 64[$r21] = $r27
-; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    sd 72[$r21] = $r27
-; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    sd 80[$r21] = $r27
-; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    sd 88[$r21] = $r27
-; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    sd 96[$r21] = $r27
-; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    sd 104[$r21] = $r27
+; KV3_2-NEXT:    so 80[$r21] = $r0r1r2r3
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:    ld $r26 = 0[$r18]
 ; KV3_2-NEXT:    ;;
@@ -630,10 +617,10 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_2-NEXT:    copyd $r1 = $r20
 ; KV3_2-NEXT:    call __divdf3
 ; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    lq $r28r29 = 8[$r18]
+; KV3_2-NEXT:    lq $r30r31 = 8[$r18]
 ; KV3_2-NEXT:    copyd $r22 = $r0
 ; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    fsbfdp $r24r25 = $r28r29, $r24r25
+; KV3_2-NEXT:    fsbfdp $r24r25 = $r30r31, $r24r25
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:    copyd $r0 = $r25
 ; KV3_2-NEXT:    copyd $r1 = $r20
@@ -645,10 +632,10 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_2-NEXT:    call __divdf3
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:    fcompd.oge $r1 = $r25, $r23
-; KV3_2-NEXT:    fcompnd.olt $r2 = $r25, $r30
+; KV3_2-NEXT:    fcompnd.olt $r2 = $r25, $r27
 ; KV3_2-NEXT:    copyd $r24 = $r0
 ; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    fcompnd.olt $r0 = $r24, $r30
+; KV3_2-NEXT:    fcompnd.olt $r0 = $r24, $r27
 ; KV3_2-NEXT:    cmoved.even $r1 ? $r2 = 0
 ; KV3_2-NEXT:    fcompd.oge $r3 = $r24, $r23
 ; KV3_2-NEXT:    ;;
@@ -671,22 +658,24 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_2-NEXT:    cb.wnez $r0 ? .LBB0_26
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:  # %bb.23: # in Loop: Header=BB0_9 Depth=1
-; KV3_2-NEXT:    fcompd.olt $r0 = $r22, $r30
+; KV3_2-NEXT:    fcompd.olt $r0 = $r22, $r27
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:    cb.weqz $r0 ? .LBB0_26
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:  # %bb.24: # in Loop: Header=BB0_9 Depth=1
-; KV3_2-NEXT:    fmuld $r0 = $r25, $r31
+; KV3_2-NEXT:    make $r29 = 0x41d0000000000000
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    fmuld $r0 = $r25, $r29
 ; KV3_2-NEXT:    call floor
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:    fixedd.rz $r25 = $r0, 0
 ; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    fmuld $r0 = $r24, $r31
+; KV3_2-NEXT:    fmuld $r0 = $r24, $r29
 ; KV3_2-NEXT:    call floor
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:    fixedd.rz $r24 = $r0, 0
 ; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    fmuld $r0 = $r22, $r31
+; KV3_2-NEXT:    fmuld $r0 = $r22, $r29
 ; KV3_2-NEXT:    call floor
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:    fixedd.rz $r0 = $r0, 0
@@ -712,33 +701,31 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:    ld $r0 = 16[$r19]
 ; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    ld $r21 = 24[$r19]
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    lq $r24r25 = 24[$r19]
 ; KV3_2-NEXT:    copyd $r1 = $r20
-; KV3_2-NEXT:    ld $r22 = 32[$r19]
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:    fsbfd $r0 = $r26, $r0
 ; KV3_2-NEXT:    call __divdf3
 ; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    fcompd.olt $r0 = $r0, $r30
+; KV3_2-NEXT:    fcompd.olt $r0 = $r0, $r27
 ; KV3_2-NEXT:    fcompd.oge $r1 = $r0, $r23
 ; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    fsbfd $r0 = $r28, $r21
+; KV3_2-NEXT:    fsbfd $r0 = $r30, $r24
 ; KV3_2-NEXT:    copyd $r1 = $r20
-; KV3_2-NEXT:    andw $r24 = $r1, $r0
+; KV3_2-NEXT:    andw $r21 = $r1, $r0
 ; KV3_2-NEXT:    call __divdf3
 ; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    fcompd.olt $r0 = $r0, $r30
+; KV3_2-NEXT:    fcompd.olt $r0 = $r0, $r27
 ; KV3_2-NEXT:    fcompd.oge $r1 = $r0, $r23
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:    andw $r0 = $r1, $r0
 ; KV3_2-NEXT:    copyd $r1 = $r20
 ; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    fsbfd $r0 = $r29, $r22
-; KV3_2-NEXT:    andw $r21 = $r24, $r0
+; KV3_2-NEXT:    fsbfd $r0 = $r31, $r25
+; KV3_2-NEXT:    andw $r21 = $r21, $r0
 ; KV3_2-NEXT:    call __divdf3
 ; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    fcompd.olt $r0 = $r0, $r30
+; KV3_2-NEXT:    fcompd.olt $r0 = $r0, $r27
 ; KV3_2-NEXT:    fcompd.oge $r1 = $r0, $r23
 ; KV3_2-NEXT:    make $r3 = cp_free_list
 ; KV3_2-NEXT:    ;;

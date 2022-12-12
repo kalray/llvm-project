@@ -14,21 +14,19 @@ target triple = "kvx-kalray-cos"
 define float @cholesky(%struct.loops_params_s* nocapture readonly %0) local_unnamed_addr #0 {
 ; CHECK-LABEL: cholesky:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ld $r2 = 360[$r0]
-; CHECK-NEXT:    make $r3 = 15
+; CHECK-NEXT:    ld $r1 = 360[$r0]
+; CHECK-NEXT:    make $r4 = 15
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    lq $r2r3 = 0[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r0 = 24[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r1 = 0[$r2]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r2 = 8[$r2]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    loopdo $r3, .__LOOPDO_0_END_
+; CHECK-NEXT:    loopdo $r4, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_1: # =>This Loop Header: Depth=1
 ; CHECK-NEXT:    # Child Loop BB0_3 Depth 2
 ; CHECK-NEXT:    # Child Loop BB0_5 Depth 3
-; CHECK-NEXT:    make $r3 = 0
+; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    copyd $r4 = $r0
 ; CHECK-NEXT:    goto .LBB0_3
 ; CHECK-NEXT:    ;;
@@ -41,7 +39,7 @@ define float @cholesky(%struct.loops_params_s* nocapture readonly %0) local_unna
 ; CHECK-NEXT:    # => This Loop Header: Depth=2
 ; CHECK-NEXT:    # Child Loop BB0_5 Depth 3
 ; CHECK-NEXT:    copyd $r5 = $r4
-; CHECK-NEXT:    copyd $r6 = $r3
+; CHECK-NEXT:    copyd $r6 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compw.lt $r4 = $r5, 4
 ; CHECK-NEXT:    ;;
@@ -50,19 +48,19 @@ define float @cholesky(%struct.loops_params_s* nocapture readonly %0) local_unna
 ; CHECK-NEXT:  # %bb.4: # in Loop: Header=BB0_3 Depth=2
 ; CHECK-NEXT:    srsw $r4 = $r5, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r3 = $r6, $r4
+; CHECK-NEXT:    addw $r1 = $r6, $r4
 ; CHECK-NEXT:    addw $r6 = $r6, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sxwd $r6 = $r6
-; CHECK-NEXT:    addw $r7 = $r3, -1
+; CHECK-NEXT:    addw $r7 = $r1, -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r7 = $r3
+; CHECK-NEXT:    sxwd $r7 = $r1
 ; CHECK-NEXT:    sxwd $r8 = $r7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addx4d $r8 = $r6, $r2
-; CHECK-NEXT:    addx4d $r10 = $r8, $r1
+; CHECK-NEXT:    addx4d $r8 = $r6, $r3
+; CHECK-NEXT:    addx4d $r10 = $r8, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addx4d $r9 = $r6, $r1
+; CHECK-NEXT:    addx4d $r9 = $r6, $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_5: # Parent Loop BB0_1 Depth=1
 ; CHECK-NEXT:    # Parent Loop BB0_3 Depth=2

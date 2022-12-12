@@ -4,13 +4,16 @@
 
 target triple = "kvx-kalray-cos"
 
-; Function Attrs: norecurse nounwind
+; FIXME: Here we could have sq, but kvx-load-store-packing
+; alias check is too conservative.
 define void @f2(i64* nocapture readonly %a, i64* nocapture %b) {
 ; CHECK-LABEL: f2:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lq $r2r3 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sq 0[$r1] = $r2r3
+; CHECK-NEXT:    sd 0[$r1] = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 8[$r1] = $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -30,7 +33,14 @@ define void @f4(i64* nocapture readonly %a, i64* nocapture %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    so 0[$r1] = $r4r5r6r7
+; CHECK-NEXT:    sd 0[$r1] = $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r2 = $r5
+; CHECK-NEXT:    copyd $r3 = $r6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sq 8[$r1] = $r2r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 24[$r1] = $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

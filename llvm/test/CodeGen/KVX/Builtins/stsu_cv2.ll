@@ -159,37 +159,25 @@ define void @stsuhv(<32 x i16>* noalias nocapture sret(<32 x i16>) align 32 %0, 
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lo $r4r5r6r7 = 32[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r8r9r10r11 = 32[$r1]
+; CHECK-NEXT:    lo $r8r9r10r11 = 0[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r32r33r34r35 = 0[$r0]
+; CHECK-NEXT:    lo $r32r33r34r35 = 32[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lo $r0r1r2r3 = 0[$r1]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    stsuhq $r4 = $r4, $r8
-; CHECK-NEXT:    stsuhq $r5 = $r5, $r9
-; CHECK-NEXT:    stsuhq $r6 = $r6, $r10
-; CHECK-NEXT:    stsuhq $r7 = $r7, $r11
+; CHECK-NEXT:    stsuhq $r4 = $r4, $r32
+; CHECK-NEXT:    stsuhq $r5 = $r5, $r33
+; CHECK-NEXT:    stsuhq $r6 = $r6, $r34
+; CHECK-NEXT:    stsuhq $r7 = $r7, $r35
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 56[$r15] = $r7
+; CHECK-NEXT:    stsuhq $r0 = $r8, $r0
+; CHECK-NEXT:    stsuhq $r1 = $r9, $r1
+; CHECK-NEXT:    stsuhq $r2 = $r10, $r2
+; CHECK-NEXT:    stsuhq $r3 = $r11, $r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    stsuhq $r0 = $r32, $r0
-; CHECK-NEXT:    stsuhq $r1 = $r33, $r1
-; CHECK-NEXT:    stsuhq $r2 = $r34, $r2
-; CHECK-NEXT:    stsuhq $r3 = $r35, $r3
+; CHECK-NEXT:    so 32[$r15] = $r4r5r6r7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 48[$r15] = $r6
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 40[$r15] = $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 32[$r15] = $r4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r15] = $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 16[$r15] = $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 8[$r15] = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 0[$r15] = $r0
+; CHECK-NEXT:    so 0[$r15] = $r0r1r2r3
 ; CHECK-NEXT:    copyd $r0 = $r15
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
