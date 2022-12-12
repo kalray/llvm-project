@@ -31,10 +31,20 @@ define void @f(i64* %v) #0 {
 ; CHECK-NEXT:    make $r0 = x
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r0 = 0[$r0]
+; CHECK-NEXT:    copyd $r4 = $r21
+; CHECK-NEXT:    copyd $r5 = $r22
+; CHECK-NEXT:    copyd $r6 = $r23
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    so 0[$r0] = $r20r21r22r23
+; CHECK-NEXT:    sd 0[$r0] = $r20
+; CHECK-NEXT:    copyd $r2 = $r25
+; CHECK-NEXT:    copyd $r7 = $r24
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    so 32[$r0] = $r24r25r26r27
+; CHECK-NEXT:    so 8[$r0] = $r4r5r6r7
+; CHECK-NEXT:    copyd $r3 = $r26
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sq 40[$r0] = $r2r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 56[$r0] = $r27
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r18 = 16[$r12]
 ; CHECK-NEXT:    ;;

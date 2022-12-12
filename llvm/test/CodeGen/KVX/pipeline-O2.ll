@@ -94,6 +94,7 @@
 ; CHECK-NEXT: Peephole Optimizations
 ; CHECK-NEXT: Remove dead machine instructions
 ; CHECK-NEXT: KVX pseudo instruction expansion pass
+; CHECK-NEXT: kvx-load-store-packing
 ; CHECK-NEXT: MachineDominator Tree Construction
 ; CHECK-NEXT: Machine Natural Loop Construction
 ; CHECK-NEXT: KVX Hardware loops

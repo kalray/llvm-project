@@ -37,7 +37,7 @@ static cl::opt<bool>
                          cl::desc("Disable Bundling Pass for KVX target"));
 
 static cl::opt<bool> DisableLoadStorePacking(
-    "disable-kvx-loadstore-packing", cl::Hidden, cl::init(true),
+    "disable-kvx-loadstore-packing", cl::Hidden, cl::init(false),
     cl::desc("Disable Load/Store Packing Pass for KVX target"));
 
 static cl::opt<std::string>
@@ -141,6 +141,14 @@ public:
 
   KVXTargetMachine &getKVXTargetMachine() const {
     return getTM<KVXTargetMachine>();
+  }
+
+  ScheduleDAGInstrs *
+  createMachineScheduler(MachineSchedContext *C) const override {
+    ScheduleDAGMILive *DAG = createGenericSchedLive(C);
+    DAG->addMutation(createLoadClusterDAGMutation(DAG->TII, DAG->TRI));
+    DAG->addMutation(createStoreClusterDAGMutation(DAG->TII, DAG->TRI));
+    return DAG;
   }
 
   ScheduleDAGInstrs *

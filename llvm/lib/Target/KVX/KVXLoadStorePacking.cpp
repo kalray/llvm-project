@@ -49,16 +49,19 @@ using namespace llvm;
 
 namespace {
 
-class KVXLoadStorePackingPass : public MachineFunctionPass {
+typedef enum { NOT_LDST, LOAD, LOAD_PSEUDO, STORE, STORE_PSEUDO } OpType;
 
-  using PairM = std::pair<MachineInstr *, unsigned>;
-  using Vec = SmallVector<PairM, 8>;
+using PairM = std::pair<MachineInstr *, unsigned>;
+using Vec = SmallVector<PairM, 8>;
+using BaseptrMap = llvm::DenseMap<MachineOperand, Vec>;
+
+class KVXLoadStorePackingPass : public MachineFunctionPass {
 
 public:
   static char ID;
 
   KVXLoadStorePackingPass() : MachineFunctionPass(ID) {
-    auto PR = PassRegistry::getPassRegistry();
+    auto *PR = PassRegistry::getPassRegistry();
     initializeKVXLoadStorePackingPassPass(*PR);
   }
 
@@ -77,84 +80,99 @@ private:
   const TargetRegisterInfo *TRI;
   AliasAnalysis *AA;
 
-  unsigned getPackOpcode(const bool isPair, const int64_t Index,
-                         const unsigned *Opcode);
+  unsigned getPackOpcode(const bool IsPair, const int64_t Index,
+                         const bool IsPseudo, const unsigned *Opcode);
 
-  void packAndReplaceLoad(Vec::iterator ItStart, unsigned Count);
-  void packAndReplaceStore(Vec::iterator ItStart, unsigned Count);
+  void packAndReplaceLoad(Vec::iterator ItStart, unsigned Count,
+                          const bool IsPseudo);
+  void packAndReplaceStore(Vec::iterator ItStart, unsigned Count,
+                           const bool IsPseudo);
 
   bool packBlock(MachineBasicBlock &MBB);
-  bool reorderInstr(llvm::DenseMap<MachineOperand, Vec> &, unsigned, unsigned);
+  bool sortAndPack(BaseptrMap &, OpType, unsigned);
 };
 
 } // end anonymous namespace
 
 char KVXLoadStorePackingPass::ID = 0;
 // FIXME: support rr insn
-static const unsigned LoadOpcodes[] = { KVX::LQri10, KVX::LQri37, KVX::LQri64,
-                                        KVX::LOri10, KVX::LOri37, KVX::LOri64 };
-static const unsigned StoreOpcodes[] = {
-  KVX::SQri10, KVX::SQri37, KVX::SQri64, KVX::SOri10, KVX::SOri37, KVX::SOri64
-};
+static const unsigned LoadOpcodes[] = {KVX::LQri10, KVX::LQri37, KVX::LQri64,
+                                       KVX::LQp,    KVX::LOri10, KVX::LOri37,
+                                       KVX::LOri64, KVX::LOp};
+
+static const unsigned StoreOpcodes[] = {KVX::SQri10, KVX::SQri37, KVX::SQri64,
+                                        KVX::SQp,    KVX::SOri10, KVX::SOri37,
+                                        KVX::SOri64, KVX::SOp};
 
 bool KVXLoadStorePackingPass::runOnMachineFunction(MachineFunction &MF) {
+
+  LLVM_DEBUG(dbgs() << "Running on function " << MF.getName() << '\n');
   bool Changed = false;
   MRI = std::addressof(MF.getRegInfo());
   TII = static_cast<const KVXInstrInfo *>(MF.getSubtarget().getInstrInfo());
   TRI = MF.getSubtarget().getRegisterInfo();
   AA = &getAnalysis<AAResultsWrapperPass>().getAAResults();
 
-  for (MachineBasicBlock &MBB : MF) {
+  for (MachineBasicBlock &MBB : MF)
     Changed |= packBlock(MBB);
-  }
 
   return Changed;
 }
 
-unsigned KVXLoadStorePackingPass::getPackOpcode(const bool isPair,
+unsigned KVXLoadStorePackingPass::getPackOpcode(const bool IsPair,
                                                 const int64_t Index,
+                                                const bool IsPseudo,
                                                 const unsigned *Opcodes) {
-  unsigned Opcode = isPair ? Opcodes[2] : Opcodes[5];
-  if (isInt<10>(Index)) {
-    Opcode = isPair ? Opcodes[0] : Opcodes[3];
-  } else if (isInt<37>(Index)) {
-    Opcode = isPair ? Opcodes[1] : Opcodes[4];
-  }
+  enum { Qri10, Qri37, Qri64, Qp, Ori10, Ori37, Ori64, Op };
 
-  return Opcode;
+  if (IsPseudo)
+    return IsPair ? Opcodes[Qp] : Opcodes[Op];
+
+  if (isInt<10>(Index))
+    return IsPair ? Opcodes[Qri10] : Opcodes[Ori10];
+
+  if (isInt<37>(Index))
+    return IsPair ? Opcodes[Qri37] : Opcodes[Ori37];
+
+  return IsPair ? Opcodes[Qri64] : Opcodes[Ori64];
+  ;
 }
 
 void KVXLoadStorePackingPass::packAndReplaceLoad(Vec::iterator ItStart,
-                                                 unsigned Count) {
-  const bool isPair = Count == 2;
+                                                 unsigned Count,
+                                                 bool IsPseudo) {
+  const bool IsPair = Count == 2;
   const unsigned Opcode = getPackOpcode(
-      isPair, (*ItStart).first->getOperand(1).getImm(), LoadOpcodes);
-  const TargetRegisterClass *TRC =
-      isPair ? &KVX::PairedRegRegClass : &KVX::QuadRegRegClass;
+      IsPair, (*ItStart).first->getOperand(1).getImm(), IsPseudo, LoadOpcodes);
 
-  auto LocMII = ItStart;
-  for (auto CurrentMII = ItStart; CurrentMII != ItStart + Count; ++CurrentMII) {
+  const TargetRegisterClass *TRC =
+      IsPair ? &KVX::PairedRegRegClass : &KVX::QuadRegRegClass;
+
+  auto *LocMII = ItStart;
+  for (auto *CurrentMII = ItStart; CurrentMII != ItStart + Count;
+       ++CurrentMII) {
+
     if (CurrentMII->second < LocMII->second)
       LocMII = CurrentMII;
   }
 
-  unsigned Reg = MRI->createVirtualRegister(TRC);
-  MachineInstrBuilder mib =
+  Register Reg = MRI->createVirtualRegister(TRC);
+  MachineInstrBuilder Mib =
       BuildMI(*LocMII->first->getParent(), LocMII->first,
               LocMII->first->getDebugLoc(), TII->get(Opcode), Reg);
 
-  mib.add(ItStart->first->getOperand(1))
+  Mib.add(ItStart->first->getOperand(1))
       .add(ItStart->first->getOperand(2))
       .add(ItStart->first->getOperand(3));
 
-  LLVM_DEBUG(dbgs() << "added " << *mib << "\n");
+  LLVM_DEBUG(dbgs() << "added " << *Mib << "\n");
 
   unsigned Ind = KVX::sub_d0;
   while (Count--) {
-    unsigned re = ItStart->first->getOperand(0).getReg();
+    Register Re = ItStart->first->getOperand(0).getReg();
     ItStart->first->eraseFromParent();
 
-    for (MachineRegisterInfo::reg_iterator RI = MRI->reg_begin(re),
+    for (MachineRegisterInfo::reg_iterator RI = MRI->reg_begin(Re),
                                            RE = MRI->reg_end();
          RI != RE;) {
       MachineOperand &O = *RI;
@@ -169,34 +187,38 @@ void KVXLoadStorePackingPass::packAndReplaceLoad(Vec::iterator ItStart,
     ++ItStart;
   }
 
-  LLVM_DEBUG(dbgs() << "added(2) " << *mib << "\n");
+  LLVM_DEBUG(dbgs() << "added(2) " << *Mib << "\n");
 }
 
 void KVXLoadStorePackingPass::packAndReplaceStore(Vec::iterator ItStart,
-                                                  unsigned Count) {
+                                                  unsigned Count,
+                                                  bool IsPseudo) {
 
-  const bool isPair = Count == 2;
+  const bool IsPair = Count == 2;
+
   const unsigned Opcode = getPackOpcode(
-      isPair, ItStart->first->getOperand(0).getImm(), StoreOpcodes);
-  const TargetRegisterClass *TRC =
-      isPair ? &KVX::PairedRegRegClass : &KVX::QuadRegRegClass;
+      IsPair, ItStart->first->getOperand(0).getImm(), IsPseudo, StoreOpcodes);
 
-  auto LocMII = ItStart;
-  for (auto CurrentMII = ItStart; CurrentMII != ItStart + Count; ++CurrentMII) {
+  const TargetRegisterClass *TRC =
+      IsPair ? &KVX::PairedRegRegClass : &KVX::QuadRegRegClass;
+
+  auto *LocMII = ItStart;
+  for (auto *CurrentMII = ItStart; CurrentMII != ItStart + Count;
+       ++CurrentMII) {
     if (CurrentMII->second > LocMII->second)
       LocMII = CurrentMII;
   }
 
-  unsigned Reg = MRI->createVirtualRegister(TRC);
+  Register Reg = MRI->createVirtualRegister(TRC);
 
   unsigned SingleRegs[4];
   auto SeqMI = BuildMI(*ItStart->first->getParent(), LocMII->first,
                        ItStart->first->getDebugLoc(),
                        TII->get(TargetOpcode::REG_SEQUENCE), Reg);
 
-  for (unsigned i = 0; i < Count; ++i) {
-    SingleRegs[i] = MRI->createVirtualRegister(&KVX::SingleRegRegClass);
-    SeqMI.addReg(SingleRegs[i]).addImm(KVX::sub_d0 + i);
+  for (unsigned I = 0; I < Count; ++I) {
+    SingleRegs[I] = MRI->createVirtualRegister(&KVX::SingleRegRegClass);
+    SeqMI.addReg(SingleRegs[I]).addImm(KVX::sub_d0 + I);
   }
 
   auto NewSt = BuildMI(*ItStart->first->getParent(), LocMII->first,
@@ -218,53 +240,62 @@ void KVXLoadStorePackingPass::packAndReplaceStore(Vec::iterator ItStart,
   }
 }
 
-// This should be a enum: NONE, LOAD, STORE
-static int getOpType(MachineBasicBlock::iterator MBBI) {
+// TODO: This is limited to pack 64 bits instructions together.
+// Should be able to pack {64 128 64} -> 256 bits for example.
+// Packing sub-64 bits would require fields extraction, not
+// sure it would be a good idea.
+static OpType getOpType(MachineBasicBlock::iterator MBBI) {
   switch (MBBI->getOpcode()) {
   default:
-    return 0;
+    return NOT_LDST;
   case KVX::LDp:
+    return LOAD_PSEUDO;
   case KVX::LDri10:
   case KVX::LDri37:
   case KVX::LDri64:
-    return 1;
+    return LOAD;
   case KVX::SDp:
+    return STORE_PSEUDO;
   case KVX::SDri10:
   case KVX::SDri37:
   case KVX::SDri64:
-    return 2;
+    return STORE;
   };
 }
 
 static int isValidMemoryOp(MachineBasicBlock::iterator MBBI) {
   if (MBBI->memoperands_empty())
     return false;
+
   const MachineMemOperand &MMO = **(MBBI->memoperands_begin());
   if (MMO.isVolatile() || MMO.isAtomic())
     return false;
 
   return true;
 }
-// Really bad name, it ain't reorder only, but sort and pack
-bool KVXLoadStorePackingPass::reorderInstr(
-    llvm::DenseMap<MachineOperand, Vec> &Map, unsigned Type,
-    unsigned OffsetInd) {
+
+bool KVXLoadStorePackingPass::sortAndPack(BaseptrMap &Map, OpType Type,
+                                          unsigned OffsetInd) {
+
   bool Changed = false;
   for (auto DM : Map) {
+    LLVM_DEBUG(DM.first.print(errs());
+               dbgs() << " == " << DM.second.size() << '\n');
     if (DM.getSecond().size() < 2)
       continue;
 
     llvm::sort(DM.getSecond().begin(), DM.getSecond().end(),
-               [OffsetInd](PairM const &a, PairM const &b) -> bool {
-                 return a.first->getOperand(OffsetInd).getImm() <
-                        b.first->getOperand(OffsetInd).getImm();
+               [OffsetInd](PairM const &A, PairM const &B) -> bool {
+                 return A.first->getOperand(OffsetInd).getImm() <
+                        B.first->getOperand(OffsetInd).getImm();
                });
 
-    auto It = DM.getSecond().begin();
-    auto ItE = DM.getSecond().end();
+    auto *It = DM.getSecond().begin();
+    auto *ItE = DM.getSecond().end();
     while (It != ItE) {
-      auto ItStart = It;
-      auto NIt = std::next(It);
+      LLVM_DEBUG(dbgs() << "Testing from: "; It->first->dump());
+      auto *ItStart = It;
+      auto *NIt = std::next(It);
       if (NIt == ItE)
         break;
 
@@ -284,11 +315,12 @@ bool KVXLoadStorePackingPass::reorderInstr(
       }
 
       if (Count > 1) {
-        // What happens if count == 3?
-        if (Type == 1)
-          packAndReplaceLoad(ItStart, Count == 4 ? Count : 2);
-        else if (Type == 2)
-          packAndReplaceStore(ItStart, Count == 4 ? Count : 2);
+        if (Type == LOAD || Type == LOAD_PSEUDO)
+          packAndReplaceLoad(ItStart, Count == 4 ? Count : 2,
+                             Type == LOAD_PSEUDO);
+        else
+          packAndReplaceStore(ItStart, Count == 4 ? Count : 2,
+                              Type == STORE_PSEUDO);
 
         Changed = true;
       }
@@ -301,28 +333,32 @@ bool KVXLoadStorePackingPass::reorderInstr(
 }
 
 bool KVXLoadStorePackingPass::packBlock(MachineBasicBlock &MBB) {
+  LLVM_DEBUG(dbgs() << "Running on BB: " << MBB.getName() << '\n');
   auto MBBI = MBB.begin();
   auto E = MBB.end();
   bool Changed = false;
 
-  llvm::DenseMap<MachineOperand, Vec> LdMap;
-  llvm::DenseMap<MachineOperand, Vec> StMap;
+  BaseptrMap LdMap, StMap, LdpMap, StpMap;
 
   unsigned MIInd = 0;
-  int const MaxJumps = 4;
+  int constexpr MaxJumps = 6;
   while (MBBI != E) {
     int Jumps = MaxJumps;
+    LLVM_DEBUG(dbgs() << "Can still jump up to " << Jumps << " instruction.\n");
 
     for (; MBBI != E; ++MBBI, ++MIInd) {
-      if (MBBI->isDebugInstr())
+      if (MBBI->isDebugInstr()) {
+        LLVM_DEBUG(dbgs() << "Ignore debug instruction: "; MBBI->dump());
         continue;
+      }
 
-      if (--Jumps == 0)
+      if (--Jumps == 0) {
+        LLVM_DEBUG(dbgs() << "Did search too long, bailing out.\n");
         break;
+      }
 
       auto Type = getOpType(MBBI);
-
-      if (!Type) {
+      if (Type == NOT_LDST) {
         // FIXME: hasUnmodeledSideEffects unusable now, should be added here
         if (MBBI->isCall() || MBBI->isTerminator()) {
           ++MBBI;
@@ -336,48 +372,80 @@ bool KVXLoadStorePackingPass::packBlock(MachineBasicBlock &MBB) {
       if (!isValidMemoryOp(MBBI))
         continue;
 
-      if (Type == 1) { // If it is a load, check alias against stores
-        bool isalias = false;
-        // Way over-conservative check below. We only need to check against
-        // operations that are inside the window of operations which we can
-        // merge to, not against all mem operations we've seen so far.
-        for (auto &v : StMap)
-          for (auto &i : v.second)
-            if (!isalias && MBBI->mayAlias(AA, *(i.first), /*UseTBAA*/ false)) {
-              ++MBBI;
-              ++MIInd;
-              isalias = true;
-            }
+      // TODO: Implement this hook
+      // TII->getMemOperandWithOffset(*MBBI, BaseOp, Offset, OffsetIsScalable,
+      // TRI);
 
-        if (isalias)
-          break;
-
-        Jumps = MaxJumps;
-        LdMap[MBBI->getOperand(2)].push_back(std::make_pair(&*MBBI, MIInd));
-      } else if (Type == 2) { // If it is a store, check alias against stores
-        // BUG?? Stores must check against loads as well???
-        bool isalias = false;
-        for (auto &v : StMap)
-          for (auto &i : v.second)
-            if (!isalias && MBBI->mayAlias(AA, *(i.first), /*UseTBAA*/ false)) {
-              ++MBBI;
-              ++MIInd;
-              isalias = true;
-            }
-
-        if (isalias)
-          break;
-
-        Jumps = MaxJumps;
-        StMap[MBBI->getOperand(1)].push_back(std::make_pair(&*MBBI, MIInd));
+      BaseptrMap *AddToP;
+      LLVM_DEBUG(dbgs() << "Adding to map ");
+      switch (Type) {
+      default: {
+        LLVM_DEBUG(dbgs() << "Store instruction: ";);
+        AddToP = &StMap;
+        break;
       }
-    }
+      case STORE_PSEUDO: {
+        LLVM_DEBUG(dbgs() << "Store pseudo: ";);
+        AddToP = &StpMap;
+        break;
+      }
+      case LOAD: {
+        LLVM_DEBUG(dbgs() << "load instruction: ";);
+        AddToP = &LdMap;
+        break;
+      }
+      case LOAD_PSEUDO: {
+        LLVM_DEBUG(dbgs() << "load pseudo: ";);
+        AddToP = &LdpMap;
+        break;
+      }
+      }
+      LLVM_DEBUG(MBBI->dump());
+      MachineOperand BaseOp = MBBI->getOperand(MBBI->mayStore() ? 1 : 2);
+      BaseptrMap &Map = *AddToP;
+      // TODO: The alias check is over-conservative. It should only check
+      // between instructions that overlap in execution time. E.g: Stores that
+      // all come after loads don't need to be checked against the loads for
+      // packing.
+      SmallVector<BaseptrMap *, 4> MapsToCheck = {&StMap, &StpMap};
+      if (Type == STORE || Type == STORE_PSEUDO) {
+        MapsToCheck.push_back(&LdMap);
+        MapsToCheck.push_back(&LdpMap);
+      }
 
-    Changed |= reorderInstr(LdMap, 1, 1);
-    Changed |= reorderInstr(StMap, 2, 0);
+      for (auto *Map : MapsToCheck)
+        for (auto &V : *Map)
+          for (auto &I : V.second)
+            // TODO: Implement method: TII->areMemAccessesTriviallyDisjoint
+            if (MBBI->mayAlias(AA, *(I.first), /*UseTBAA*/ false)) {
+              ++MBBI;
+              ++MIInd;
+              LLVM_DEBUG(dbgs() << "Ignoring it, as it aliases with: ";
+                         I.first->dump(););
+              goto IS_ALIAS;
+            }
+
+      Jumps = MaxJumps;
+      Map[BaseOp].push_back(std::make_pair(&*MBBI, MIInd));
+    }
+  IS_ALIAS:
+    LLVM_DEBUG(dbgs() << "Sort and pack " << LdMap.size()
+                      << " load instructions.\n");
+    Changed |= sortAndPack(LdMap, LOAD, 1);
+    LLVM_DEBUG(dbgs() << "Sort and pack " << LdpMap.size()
+                      << " load pseudos.\n");
+    Changed |= sortAndPack(LdpMap, LOAD_PSEUDO, 1);
+    LLVM_DEBUG(dbgs() << "Sort and pack " << StMap.size()
+                      << " store instructions.\n");
+    Changed |= sortAndPack(StMap, STORE, 0);
+    LLVM_DEBUG(dbgs() << "Sort and pack " << StpMap.size()
+                      << " store pseudos.\n");
+    Changed |= sortAndPack(StpMap, STORE_PSEUDO, 0);
 
     LdMap.clear();
     StMap.clear();
+    LdpMap.clear();
+    StpMap.clear();
   }
 
   return Changed;
