@@ -147,23 +147,22 @@ multiclass MC_0D<string OpcStr> {
 // multiclass MC_0E is used by:
 //   defm ALCLRW
 //   defm ALCLRD
-let mayLoad = 1, mayStore = 1 in
-multiclass MC_0E<string OpcStr> {
-  let isPredicable = 1 in {
+multiclass MC_0E<string OpcStr, ValueType vt, int shsz> {
+  let mayLoad = 1, mayStore = 1, isPredicable = 1 in {
   def ri10 : KVX_INSTRUCTION
     <(outs SingleReg:$a1), (ins Signed10:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2[$a3]"),
-     [/* no straightforward pattern */],
+     [(set vt:$a1, (int_kvx_alclr (add i64:$a3, Signed10:$a2)))],
      LSU_AUXW_ALCLR>;
   def ri37 : KVX_INSTRUCTION_X
     <(outs SingleReg:$a1), (ins Signed37:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2[$a3]"),
-     [/* no straightforward pattern */],
+     [(set vt:$a1, (int_kvx_alclr (add i64:$a3, Signed37:$a2)))],
      LSU_AUXW_ALCLR_X_>;
   def ri64 : KVX_INSTRUCTION_Y
     <(outs SingleReg:$a1), (ins Wrapped64:$a2, SingleReg:$a3),
      !strconcat (OpcStr, " $a1 = $a2[$a3]"),
-     [/* no straightforward pattern */],
+     [(set vt:$a1, (int_kvx_alclr (add i64:$a3, Wrapped64:$a2)))],
      LSU_AUXW_ALCLR_Y_>;
   def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, DoscaleMod:$a1),
@@ -171,24 +170,30 @@ multiclass MC_0E<string OpcStr> {
      [/* no straightforward pattern */],
      LSU_AUXW_ALCLR>;
   }
-  let Constraints = "$a3 = $a3o" in
+  defvar rr = !cast<Instruction>(NAME # "rr");
+  def : Pat <(vt (int_kvx_alclr (add i64:$a4, (shl i64:$a3, (i32 shsz))))),
+             (vt (rr SingleReg:$a3, SingleReg:$a4, scale_xs))>, Requires<[IsV1]>;
+
+  def : Pat <(vt (int_kvx_alclr (add i64:$a4, i64:$a3))),
+             (vt (rr SingleReg:$a3, SingleReg:$a4, scale_))>, Requires<[IsV1]>;
+
+  let mayLoad = 1, mayStore = 1, Constraints = "$a3 = $a3o" in {
   def rrc : KVX_INSTRUCTION
     <(outs SingleReg:$a3o), (ins SingleReg:$a4, SingleReg:$a3, ScalarcondMod:$a1, SingleReg:$a2),
      !strconcat (OpcStr, "$a1 $a2 ? $a3 = [$a4]"),
      [/* no straightforward pattern */],
      LSU_AUXW_ALCLR>;
-  let Constraints = "$a3 = $a3o" in
   def ri27c : KVX_INSTRUCTION_X
     <(outs SingleReg:$a3o), (ins Signed27:$a4, SingleReg:$a5, SingleReg:$a3, ScalarcondMod:$a1, SingleReg:$a2),
      !strconcat (OpcStr, "$a1 $a2 ? $a3 = $a4[$a5]"),
      [/* no straightforward pattern */],
      LSU_AUXW_ALCLR_X_>;
-  let Constraints = "$a3 = $a3o" in
   def ri54c : KVX_INSTRUCTION_Y
     <(outs SingleReg:$a3o), (ins Signed54:$a4, SingleReg:$a5, SingleReg:$a3, ScalarcondMod:$a1, SingleReg:$a2),
      !strconcat (OpcStr, "$a1 $a2 ? $a3 = $a4[$a5]"),
      [/* no straightforward pattern */],
      LSU_AUXW_ALCLR_Y_>;
+  }
 }
 
 // multiclass MC_0F is used by:
@@ -1668,9 +1673,9 @@ defm ACSWAPD : MC_0D<"acswapd">;
 
 defm ACSWAPQ : ACSWAPQ_MC, Requires<[IsV2]>;
 
-defm ALCLRW : MC_0E<"alclrw">;
+defm ALCLRW : MC_0E<"alclrw", i32, 2>;
 
-defm ALCLRD : MC_0E<"alclrd">;
+defm ALCLRD : MC_0E<"alclrd", i64, 3>;
 
 defm ALADDW : MC_0F<"aladdw">;
 

@@ -2282,7 +2282,9 @@ define <8 x i8> @avgbo_ri(<8 x i8> %0) {
 ;
 ; CV2-LABEL: avgbo_ri:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    avgbo $r0 = $r0, 42
+; CV2-NEXT:    make $r1 = 42
+; CV2-NEXT:    ;;
+; CV2-NEXT:    avgbo $r0 = $r1, $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
   %2 = tail call <8 x i8> @llvm.kvx.avg.v8i8(<8 x i8> %0, <8 x i8> <i8 42, i8 0, i8 0, i8 0, i8 0, i8 0, i8 0, i8 0>, i32 0)
@@ -2313,7 +2315,9 @@ define <2 x i8> @avgbp_ri(<2 x i8> %0) {
 ;
 ; CV2-LABEL: avgbp_ri:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    avgbo $r0 = $r0, 42
+; CV2-NEXT:    make $r1 = 42
+; CV2-NEXT:    ;;
+; CV2-NEXT:    avgbo $r0 = $r1, $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
   %2 = tail call <2 x i8> @llvm.kvx.avg.v2i8(<2 x i8> %0, <2 x i8> <i8 42, i8 0>, i32 0)
@@ -2354,7 +2358,9 @@ define <4 x i8> @avgbq_ri(<4 x i8> %0) {
 ;
 ; CV2-LABEL: avgbq_ri:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    avgbo $r0 = $r0, 42
+; CV2-NEXT:    make $r1 = 42
+; CV2-NEXT:    ;;
+; CV2-NEXT:    avgbo $r0 = $r1, $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
   %2 = tail call <4 x i8> @llvm.kvx.avg.v4i8(<4 x i8> %0, <4 x i8> <i8 42, i8 0, i8 0, i8 0>, i32 0)
@@ -2463,8 +2469,10 @@ define <16 x i8> @avgbx_ri(<16 x i8> %0) {
 ;
 ; CV2-LABEL: avgbx_ri:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    avgbo $r0 = $r0, 42
 ; CV2-NEXT:    srabos $r1 = $r1, 1
+; CV2-NEXT:    make $r2 = 42
+; CV2-NEXT:    ;;
+; CV2-NEXT:    avgbo $r0 = $r2, $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
   %2 = shufflevector <16 x i8> %0, <16 x i8> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
@@ -2660,10 +2668,12 @@ define <32 x i8> @avgbv_ri(<32 x i8> %0) {
 ;
 ; CV2-LABEL: avgbv_ri:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    avgbo $r0 = $r0, 42
 ; CV2-NEXT:    srabos $r1 = $r1, 1
 ; CV2-NEXT:    srabos $r2 = $r2, 1
 ; CV2-NEXT:    srabos $r3 = $r3, 1
+; CV2-NEXT:    make $r4 = 42
+; CV2-NEXT:    ;;
+; CV2-NEXT:    avgbo $r0 = $r4, $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
   %2 = shufflevector <32 x i8> %0, <32 x i8> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
@@ -2774,7 +2784,9 @@ define <2 x i8> @avgrbp_ri(<2 x i8> %0) {
 ;
 ; CV2-LABEL: avgrbp_ri:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    avgbo $r0 = $r0, 299
+; CV2-NEXT:    make $r1 = 299
+; CV2-NEXT:    ;;
+; CV2-NEXT:    avgbo $r0 = $r1, $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
   %2 = tail call <2 x i8> @llvm.kvx.avg.v2i8(<2 x i8> %0, <2 x i8> <i8 42, i8 0>, i32 1)
@@ -2816,7 +2828,9 @@ define <4 x i8> @avgrbq_ri(<4 x i8> %0) {
 ;
 ; CV2-LABEL: avgrbq_ri:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    avgbo $r0 = $r0, 0x101012b
+; CV2-NEXT:    make $r1 = 0x101012b
+; CV2-NEXT:    ;;
+; CV2-NEXT:    avgbo $r0 = $r1, $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
   %2 = tail call <4 x i8> @llvm.kvx.avg.v4i8(<4 x i8> %0, <4 x i8> <i8 42, i8 0, i8 0, i8 0>, i32 1)
@@ -2933,10 +2947,11 @@ define <16 x i8> @avgrbx_ri(<16 x i8> %0) {
 ;
 ; CV2-LABEL: avgrbx_ri:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    avgbo.@ $r1 = $r1, 0x1010101
 ; CV2-NEXT:    make $r2 = 0x10101010101012b
+; CV2-NEXT:    make $r3 = 0x101010101010101
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    avgbo $r0 = $r2, $r0
+; CV2-NEXT:    avgbo $r1 = $r3, $r1
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
   %2 = shufflevector <16 x i8> %0, <16 x i8> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
@@ -3150,12 +3165,13 @@ define <32 x i8> @avgrbv_ri(<32 x i8> %0) {
 ;
 ; CV2-LABEL: avgrbv_ri:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    avgbo.@ $r1 = $r1, 0x1010101
-; CV2-NEXT:    avgbo.@ $r2 = $r2, 0x1010101
 ; CV2-NEXT:    make $r4 = 0x10101010101012b
+; CV2-NEXT:    make $r5 = 0x101010101010101
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    avgbo $r0 = $r4, $r0
-; CV2-NEXT:    avgbo.@ $r3 = $r3, 0x1010101
+; CV2-NEXT:    avgbo $r1 = $r5, $r1
+; CV2-NEXT:    avgbo $r2 = $r5, $r2
+; CV2-NEXT:    avgbo $r3 = $r5, $r3
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
   %2 = shufflevector <32 x i8> %0, <32 x i8> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
@@ -3201,7 +3217,9 @@ define <8 x i8> @avgubo_ri(<8 x i8> %0) {
 ;
 ; CV2-LABEL: avgubo_ri:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    avgubo $r0 = $r0, 42
+; CV2-NEXT:    make $r1 = 42
+; CV2-NEXT:    ;;
+; CV2-NEXT:    avgubo $r0 = $r1, $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
   %2 = tail call <8 x i8> @llvm.kvx.avg.v8i8(<8 x i8> %0, <8 x i8> <i8 42, i8 0, i8 0, i8 0, i8 0, i8 0, i8 0, i8 0>, i32 2)
@@ -3232,7 +3250,9 @@ define <2 x i8> @avgubp_ri(<2 x i8> %0) {
 ;
 ; CV2-LABEL: avgubp_ri:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    avgubo $r0 = $r0, 42
+; CV2-NEXT:    make $r1 = 42
+; CV2-NEXT:    ;;
+; CV2-NEXT:    avgubo $r0 = $r1, $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
   %2 = tail call <2 x i8> @llvm.kvx.avg.v2i8(<2 x i8> %0, <2 x i8> <i8 42, i8 0>, i32 2)
@@ -3272,7 +3292,9 @@ define <4 x i8> @avgubq_ri(<4 x i8> %0) {
 ;
 ; CV2-LABEL: avgubq_ri:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    avgubo $r0 = $r0, 42
+; CV2-NEXT:    make $r1 = 42
+; CV2-NEXT:    ;;
+; CV2-NEXT:    avgubo $r0 = $r1, $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
   %2 = tail call <4 x i8> @llvm.kvx.avg.v4i8(<4 x i8> %0, <4 x i8> <i8 42, i8 0, i8 0, i8 0>, i32 2)
@@ -3315,8 +3337,10 @@ define <16 x i8> @avgubx_ri(<16 x i8> %0) {
 ;
 ; CV2-LABEL: avgubx_ri:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    avgubo $r0 = $r0, 42
 ; CV2-NEXT:    srlbos $r1 = $r1, 1
+; CV2-NEXT:    make $r2 = 42
+; CV2-NEXT:    ;;
+; CV2-NEXT:    avgubo $r0 = $r2, $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
   %2 = shufflevector <16 x i8> %0, <16 x i8> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
@@ -3379,10 +3403,12 @@ define <32 x i8> @avgubv_ri(<32 x i8> %0) {
 ;
 ; CV2-LABEL: avgubv_ri:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    avgubo $r0 = $r0, 42
 ; CV2-NEXT:    srlbos $r1 = $r1, 1
 ; CV2-NEXT:    srlbos $r2 = $r2, 1
 ; CV2-NEXT:    srlbos $r3 = $r3, 1
+; CV2-NEXT:    make $r4 = 42
+; CV2-NEXT:    ;;
+; CV2-NEXT:    avgubo $r0 = $r4, $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
   %2 = shufflevector <32 x i8> %0, <32 x i8> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
@@ -3679,8 +3705,10 @@ define <32 x i8> @avgrubv_ri(<32 x i8> %0) {
 define <8 x i16> @avgho_ri(<8 x i16> %0) {
 ; ALL-LABEL: avgho_ri:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    avghq $r0 = $r0, 42
 ; ALL-NEXT:    srahqs $r1 = $r1, 1
+; ALL-NEXT:    make $r2 = 42
+; ALL-NEXT:    ;;
+; ALL-NEXT:    avghq $r0 = $r2, $r0
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
   %2 = shufflevector <8 x i16> %0, <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
@@ -3694,7 +3722,9 @@ define <8 x i16> @avgho_ri(<8 x i16> %0) {
 define <2 x i16> @avghp_ri(<2 x i16> %0) {
 ; ALL-LABEL: avghp_ri:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    avghq $r0 = $r0, 42
+; ALL-NEXT:    make $r1 = 42
+; ALL-NEXT:    ;;
+; ALL-NEXT:    avghq $r0 = $r1, $r0
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
   %2 = tail call <2 x i16> @llvm.kvx.avg.v2i16(<2 x i16> %0, <2 x i16> <i16 42, i16 0>, i32 0)
@@ -3704,7 +3734,9 @@ define <2 x i16> @avghp_ri(<2 x i16> %0) {
 define <4 x i16> @avghq_ri(<4 x i16> %0) {
 ; ALL-LABEL: avghq_ri:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    avghq $r0 = $r0, 42
+; ALL-NEXT:    make $r1 = 42
+; ALL-NEXT:    ;;
+; ALL-NEXT:    avghq $r0 = $r1, $r0
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
   %2 = tail call <4 x i16> @llvm.kvx.avg.v4i16(<4 x i16> %0, <4 x i16> <i16 42, i16 0, i16 0, i16 0>, i32 0)
@@ -3714,20 +3746,23 @@ define <4 x i16> @avghq_ri(<4 x i16> %0) {
 define <16 x i16> @avghx_ri(<16 x i16> %0) {
 ; CV1-LABEL: avghx_ri:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    avghq $r0 = $r0, 42
 ; CV1-NEXT:    srahqs $r1 = $r1, 1
-; CV1-NEXT:    ;;
 ; CV1-NEXT:    srahqs $r2 = $r2, 1
+; CV1-NEXT:    make $r4 = 42
+; CV1-NEXT:    ;;
+; CV1-NEXT:    avghq $r0 = $r4, $r0
 ; CV1-NEXT:    srahqs $r3 = $r3, 1
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;;
 ;
 ; CV2-LABEL: avghx_ri:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    avghq $r0 = $r0, 42
 ; CV2-NEXT:    srahqs $r1 = $r1, 1
 ; CV2-NEXT:    srahqs $r2 = $r2, 1
 ; CV2-NEXT:    srahqs $r3 = $r3, 1
+; CV2-NEXT:    make $r4 = 42
+; CV2-NEXT:    ;;
+; CV2-NEXT:    avghq $r0 = $r4, $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
   %2 = shufflevector <16 x i16> %0, <16 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
@@ -3747,10 +3782,11 @@ define <16 x i16> @avghx_ri(<16 x i16> %0) {
 define <8 x i16> @avgrho_ri(<8 x i16> %0) {
 ; ALL-LABEL: avgrho_ri:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    avghq.@ $r1 = $r1, 0x10001
 ; ALL-NEXT:    make $r2 = 0x100010001002b
+; ALL-NEXT:    make $r3 = 0x1000100010001
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    avghq $r0 = $r2, $r0
+; ALL-NEXT:    avghq $r1 = $r3, $r1
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
   %2 = shufflevector <8 x i16> %0, <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
@@ -3764,7 +3800,9 @@ define <8 x i16> @avgrho_ri(<8 x i16> %0) {
 define <2 x i16> @avgrhp_ri(<2 x i16> %0) {
 ; ALL-LABEL: avgrhp_ri:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    avghq $r0 = $r0, 0x1002b
+; ALL-NEXT:    make $r1 = 0x1002b
+; ALL-NEXT:    ;;
+; ALL-NEXT:    avghq $r0 = $r1, $r0
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
   %2 = tail call <2 x i16> @llvm.kvx.avg.v2i16(<2 x i16> %0, <2 x i16> <i16 42, i16 0>, i32 1)
@@ -3784,16 +3822,30 @@ define <4 x i16> @avgrhq_ri(<4 x i16> %0) {
 }
 
 define <16 x i16> @avgrhx_ri(<16 x i16> %0) {
-; ALL-LABEL: avgrhx_ri:
-; ALL:       # %bb.0:
-; ALL-NEXT:    avghq.@ $r1 = $r1, 0x10001
-; ALL-NEXT:    avghq.@ $r2 = $r2, 0x10001
-; ALL-NEXT:    make $r4 = 0x100010001002b
-; ALL-NEXT:    ;;
-; ALL-NEXT:    avghq $r0 = $r4, $r0
-; ALL-NEXT:    avghq.@ $r3 = $r3, 0x10001
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; CV1-LABEL: avgrhx_ri:
+; CV1:       # %bb.0:
+; CV1-NEXT:    make $r4 = 0x100010001002b
+; CV1-NEXT:    make $r5 = 0x1000100010001
+; CV1-NEXT:    ;;
+; CV1-NEXT:    avghq $r0 = $r4, $r0
+; CV1-NEXT:    avghq $r1 = $r5, $r1
+; CV1-NEXT:    ;;
+; CV1-NEXT:    avghq $r2 = $r5, $r2
+; CV1-NEXT:    avghq $r3 = $r5, $r3
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: avgrhx_ri:
+; CV2:       # %bb.0:
+; CV2-NEXT:    make $r4 = 0x100010001002b
+; CV2-NEXT:    make $r5 = 0x1000100010001
+; CV2-NEXT:    ;;
+; CV2-NEXT:    avghq $r0 = $r4, $r0
+; CV2-NEXT:    avghq $r1 = $r5, $r1
+; CV2-NEXT:    avghq $r2 = $r5, $r2
+; CV2-NEXT:    avghq $r3 = $r5, $r3
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
   %2 = shufflevector <16 x i16> %0, <16 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %3 = tail call <4 x i16> @llvm.kvx.avg.v4i16(<4 x i16> %2, <4 x i16> <i16 42, i16 0, i16 0, i16 0>, i32 1)
   %4 = shufflevector <16 x i16> %0, <16 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
@@ -3811,8 +3863,10 @@ define <16 x i16> @avgrhx_ri(<16 x i16> %0) {
 define <8 x i16> @avguho_ri(<8 x i16> %0) {
 ; ALL-LABEL: avguho_ri:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    avguhq $r0 = $r0, 42
 ; ALL-NEXT:    srlhqs $r1 = $r1, 1
+; ALL-NEXT:    make $r2 = 42
+; ALL-NEXT:    ;;
+; ALL-NEXT:    avguhq $r0 = $r2, $r0
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
   %2 = shufflevector <8 x i16> %0, <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
@@ -3826,7 +3880,9 @@ define <8 x i16> @avguho_ri(<8 x i16> %0) {
 define <2 x i16> @avguhp_ri(<2 x i16> %0) {
 ; ALL-LABEL: avguhp_ri:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    avguhq $r0 = $r0, 42
+; ALL-NEXT:    make $r1 = 42
+; ALL-NEXT:    ;;
+; ALL-NEXT:    avguhq $r0 = $r1, $r0
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
   %2 = tail call <2 x i16> @llvm.kvx.avg.v2i16(<2 x i16> %0, <2 x i16> <i16 42, i16 0>, i32 2)
@@ -3836,7 +3892,9 @@ define <2 x i16> @avguhp_ri(<2 x i16> %0) {
 define <4 x i16> @avguhq_ri(<4 x i16> %0) {
 ; ALL-LABEL: avguhq_ri:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    avguhq $r0 = $r0, 42
+; ALL-NEXT:    make $r1 = 42
+; ALL-NEXT:    ;;
+; ALL-NEXT:    avguhq $r0 = $r1, $r0
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
   %2 = tail call <4 x i16> @llvm.kvx.avg.v4i16(<4 x i16> %0, <4 x i16> <i16 42, i16 0, i16 0, i16 0>, i32 2)
@@ -3846,20 +3904,23 @@ define <4 x i16> @avguhq_ri(<4 x i16> %0) {
 define <16 x i16> @avguhx_ri(<16 x i16> %0) {
 ; CV1-LABEL: avguhx_ri:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    avguhq $r0 = $r0, 42
 ; CV1-NEXT:    srlhqs $r1 = $r1, 1
-; CV1-NEXT:    ;;
 ; CV1-NEXT:    srlhqs $r2 = $r2, 1
+; CV1-NEXT:    make $r4 = 42
+; CV1-NEXT:    ;;
+; CV1-NEXT:    avguhq $r0 = $r4, $r0
 ; CV1-NEXT:    srlhqs $r3 = $r3, 1
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;;
 ;
 ; CV2-LABEL: avguhx_ri:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    avguhq $r0 = $r0, 42
 ; CV2-NEXT:    srlhqs $r1 = $r1, 1
 ; CV2-NEXT:    srlhqs $r2 = $r2, 1
 ; CV2-NEXT:    srlhqs $r3 = $r3, 1
+; CV2-NEXT:    make $r4 = 42
+; CV2-NEXT:    ;;
+; CV2-NEXT:    avguhq $r0 = $r4, $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
   %2 = shufflevector <16 x i16> %0, <16 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>

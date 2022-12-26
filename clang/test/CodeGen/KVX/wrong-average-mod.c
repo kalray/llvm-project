@@ -2,5 +2,5 @@
 // RUN: %clang_cc1 -triple kvx-kalray-cos -S -verify %s
 
 int xfail_avgw(int a, int b) {
-  return __builtin_kvx_avgw(a, b, ".r.u"); // expected-error {{invalid average_t modifier, expected "", ".r", ".u" or ".ru"}} expected-error {{cannot compile this builtin function yet}}
+  return __builtin_kvx_avgw(a, b, ".r.u"); // expected-error {{This builtin accept a modifier string composed by: ['', '.', '.r', '.u', '.ru']}} expected-error {{cannot compile this builtin function yet}}
 }
