@@ -104,9 +104,9 @@ class Speculate<int N> : PatLeaf<(i32 N)>;
 def speculate_ : Speculate<0>;
 def speculate_s : Speculate<1>;
 
-class Scaling<int N> : PatLeaf<(i32 N)>;
-def scaling_ : Scaling<0>;
-def scaling_xs : Scaling<1>;
+class Scale<int N> : PatLeaf<(i32 N)>;
+def scale_ : Scale<0>;
+def scale_xs : Scale<1>;
 
 class Splat32<int N> : PatLeaf<(i32 N)>;
 def splat32_ : Splat32<0>;

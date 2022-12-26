@@ -625,11 +625,11 @@ foreach vtype = [ v2i8, v4i8, v2i16 ] in {
     def : Pat<(and vtype:$rs1, (vtype (is_imm_vec:$IMM))), (ANDWri37 SingleReg:$rs1, (build_imm_vec $IMM))>;
     def : Pat<(and vtype:$rs1, vtype:$rs2), (ANDWrr SingleReg:$rs1, SingleReg:$rs2)>;
 }
-
 //                        VectorType,   vector_splat_1,  signed avg rr,      signed avg ri,      signed avgr rr
 multiclass AVG_leq_32bits<ValueType vt, PatFrags splat_1, KVX_INSTRUCTION rr, KVX_INSTRUCTION ri, KVX_INSTRUCTION Rrr> {
-def : Pat<(sra ( add vt:$v, (vt (is_imm_vec_ri37:$IMM))), (vt (splat_1))),
-          (ri SingleReg:$v, (i32 (build_imm_vec $IMM) ), splat32_)>;
+// Disable ri until T20027 is fixed
+// def : Pat<(sra ( add vt:$v, (vt (is_imm_vec_ri37:$IMM))), (vt (splat_1))),
+//           (ri SingleReg:$v, (i32 (build_imm_vec $IMM) ), splat32_)>;
 
 def : Pat<(sra ( add vt:$v0, vt:$v1 ), (vt (splat_1))),
           (rr SingleReg:$v1, SingleReg:$v0)>;
@@ -640,11 +640,12 @@ def : Pat<(sra ( add ( add vt:$v0, vt:$v1 ), (vt (splat_1)) ), (vt (splat_1))),
 
 //                        VectorType,   vector_splat_1,  signed avg rr,      signed avg ri,      signed avgr rr
 multiclass AVG_64bits <ValueType vt, PatFrags splat_1, KVX_INSTRUCTION rr, KVX_INSTRUCTION ri, KVX_INSTRUCTION Rrr> {
-def : Pat<(sra ( add vt:$v, (vt (is_imm_vec_kvx_splat32_:$IMM) ) ), (vt (splat_1))),
-          (ri SingleReg:$v, (i32 (build_imm_vec $IMM)), splat32_)>;
+// Disable ri until T20027 is fixed
+// def : Pat<(sra ( add vt:$v, (vt (is_imm_vec_kvx_splat32_:$IMM) ) ), (vt (splat_1))),
+//           (ri SingleReg:$v, (i32 (build_imm_vec $IMM)), splat32_)>;
 
-def : Pat<(sra ( add vt:$v, (vt (is_imm_vec_kvx_splat32_at:$IMM) ) ), (vt (splat_1))),
-          (ri SingleReg:$v, (i32 (build_imm_vec $IMM)), splat32_at)>;
+// def : Pat<(sra ( add vt:$v, (vt (is_imm_vec_kvx_splat32_at:$IMM) ) ), (vt (splat_1))),
+//           (ri SingleReg:$v, (i32 (build_imm_vec $IMM)), splat32_at)>;
 
 def : Pat<(sra ( add vt:$v0, vt:$v1 ), (vt (splat_1))),
           (rr SingleReg:$v1, SingleReg:$v0)>;
@@ -655,22 +656,23 @@ def : Pat<(sra ( add ( add vt:$v0, vt:$v1 ), (vt (splat_1))), (vt (splat_1))),
 
 // AVGBO / AVGRBO
 // v2i8
-defm : AVG_leq_32bits <v2i8, v2_splat_1, AVGBOrr, AVGBOri, AVGRBOrr>, Requires<[IsV2]>;
+defm : AVG_leq_32bits <v2i8, v2_splat_1, AVGBOrr, AVGBOrr, AVGRBOrr>, Requires<[IsV2]>;
 // v4i8
-defm : AVG_leq_32bits <v4i8, v4_splat_1, AVGBOrr, AVGBOri, AVGRBOrr>, Requires<[IsV2]>;
+defm : AVG_leq_32bits <v4i8, v4_splat_1, AVGBOrr, AVGBOrr, AVGRBOrr>, Requires<[IsV2]>;
 // v8i8
-defm : AVG_64bits <v8i8, v8_splat_1, AVGBOrr, AVGBOri, AVGRBOrr>, Requires<[IsV2]>;
+defm : AVG_64bits <v8i8, v8_splat_1, AVGBOrr, AVGBOrr, AVGRBOrr>, Requires<[IsV2]>;
 
 // AVGHQ / AVGRHQ
 // v2i16
-defm : AVG_leq_32bits<v2i16, v2_splat_1, AVGHQrr, AVGHQri, AVGRHQrr>;
+defm : AVG_leq_32bits<v2i16, v2_splat_1, AVGHQrr, AVGHQrr, AVGRHQrr>;
 // v4i16
-defm : AVG_64bits<v4i16, v4_splat_1, AVGHQrr, AVGHQri, AVGRHQrr>;
+defm : AVG_64bits<v4i16, v4_splat_1, AVGHQrr, AVGHQrr, AVGRHQrr>;
 
 //                        VectorType,   vector_splat_1,  unsigned avg rr,     unsigned avg ri,    unsigned avgr rr
 multiclass AVGU_leq_32bits<ValueType vt, PatFrags splat_1, KVX_INSTRUCTION rr, KVX_INSTRUCTION ri, KVX_INSTRUCTION Rrr> {
-def : Pat<(srl ( nuwadd vt:$v, (vt (is_imm_vec_ri37:$IMM) ) ), (vt (splat_1))),
-          (ri SingleReg:$v, (build_imm_vec $IMM), splat32_)>;
+// Disable ri until T20027 is fixed
+// def : Pat<(srl ( nuwadd vt:$v, (vt (is_imm_vec_ri37:$IMM) ) ), (vt (splat_1))),
+//           (ri SingleReg:$v, (build_imm_vec $IMM), splat32_)>;
 
 def : Pat<(srl ( nuwadd vt:$v0, vt:$v1 ), (vt (splat_1))),
           (rr SingleReg:$v1, SingleReg:$v0)>;
@@ -680,11 +682,12 @@ def : Pat<(srl ( nuwadd ( nuwadd vt:$v0, vt:$v1 ), (vt (splat_1)) ), (vt (splat_
 }
 
 multiclass AVGU_64bits <ValueType vt, PatFrags splat_1, KVX_INSTRUCTION rr, KVX_INSTRUCTION ri, KVX_INSTRUCTION Rrr> {
-def : Pat<(srl ( nuwadd vt:$v, (vt (is_imm_vec_kvx_splat32_:$IMM) ) ),
-          (vt (splat_1))), (ri SingleReg:$v, (i32 (build_imm_vec $IMM)), splat32_)>;
+// Disable ri until T20027 is fixed
+// def : Pat<(srl ( nuwadd vt:$v, (vt (is_imm_vec_kvx_splat32_:$IMM) ) ),
+//           (vt (splat_1))), (ri SingleReg:$v, (i32 (build_imm_vec $IMM)), splat32_)>;
 
-def : Pat<(srl ( nuwadd vt:$v, (vt (is_imm_vec_kvx_splat32_at:$IMM) ) ),
-          (vt (splat_1))), (ri SingleReg:$v, (i32 (build_imm_vec $IMM)), splat32_at)>;
+// def : Pat<(srl ( nuwadd vt:$v, (vt (is_imm_vec_kvx_splat32_at:$IMM) ) ),
+//           (vt (splat_1))), (ri SingleReg:$v, (i32 (build_imm_vec $IMM)), splat32_at)>;
 
 def : Pat<(srl ( nuwadd vt:$v0, vt:$v1 ), (vt (splat_1))),
           (rr SingleReg:$v1, SingleReg:$v0)>;

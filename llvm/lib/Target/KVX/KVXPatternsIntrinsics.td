@@ -121,8 +121,8 @@ defm : ACSWAP_V2<int_kvx_acswapd, i64, ACSWAPDri27, ACSWAPDri54, ACSWAPDr>;
 defm : ACSWAP_V2<int_kvx_acswapq, v2i64, ACSWAPQri27, ACSWAPQri54, ACSWAPQr, QuadReg, PairedReg, v4i64, sub_q0, sub_q1>;
 }
 
-def: Pat<(int_kvx_alclrw i64:$addr), (ALCLRWri10 (i64 0), SingleReg:$addr)>;
-def: Pat<(int_kvx_alclrd i64:$addr), (ALCLRDri10 (i64 0), SingleReg:$addr)>;
+def: Pat<(i32(int_kvx_alclr i64:$addr)), (ALCLRWri10 (i64 0), SingleReg:$addr)>;
+def: Pat<(i64(int_kvx_alclr i64:$addr)), (ALCLRDri10 (i64 0), SingleReg:$addr)>;
 
 foreach vt = [f16, v2f16, v4f16] in
 def: Pat<(vt (int_kvx_fneg vt:$v)),
@@ -599,19 +599,19 @@ def: Pat<(int_kvx_xcat512 v256i1:$v0, v256i1:$v1),
                 (v256i1 VectorReg:$v1), (i32 sub_v1))>;
 let Predicates = [IsV1] in {
 def : Pat<(v256i1(int_kvx_lv (add i64:$mem, (shl i64:$off, (i32 5))), SpeculateMod:$mod0)),
-          (LVrr SingleReg:$off, SingleReg:$mem, SpeculateMod:$mod0, scaling_xs)>;
+          (LVrr SingleReg:$off, SingleReg:$mem, SpeculateMod:$mod0, scale_xs)>;
 
 def : Pat<(v256i1(int_kvx_lv (add i64:$mem, i64:$off), SpeculateMod:$mod0)),
-          (LVrr SingleReg:$off, SingleReg:$mem, SpeculateMod:$mod0, scaling_)>;
+          (LVrr SingleReg:$off, SingleReg:$mem, SpeculateMod:$mod0, scale_)>;
 
 def : Pat<(v256i1(int_kvx_lv i64:$mem, SpeculateMod:$mod0)),
           (LVri10 0, SingleReg:$mem, SpeculateMod:$mod0)>;
 
 def : Pat<(v1024i1(int_kvx_lvc MatrixReg:$z, (add i64:$mem, (shl i64:$off, (i32 5))), QindexMod:$mod0, SpeculateMod:$mod1)),
-          (LVrrcs SingleReg:$off, SingleReg:$mem, QindexMod:$mod0, SpeculateMod:$mod1, scaling_xs, MatrixReg:$z)>;
+          (LVrrcs SingleReg:$off, SingleReg:$mem, QindexMod:$mod0, SpeculateMod:$mod1, scale_xs, MatrixReg:$z)>;
 
 def : Pat<(v1024i1(int_kvx_lvc MatrixReg:$z, (add i64:$mem, i64:$off), QindexMod:$mod0, SpeculateMod:$mod1)),
-          (LVrrcs SingleReg:$off, SingleReg:$mem, QindexMod:$mod0, SpeculateMod:$mod1, scaling_, MatrixReg:$z)>;
+          (LVrrcs SingleReg:$off, SingleReg:$mem, QindexMod:$mod0, SpeculateMod:$mod1, scale_, MatrixReg:$z)>;
 
 def : Pat<(v1024i1(int_kvx_lvc MatrixReg:$z, i64:$mem, QindexMod:$mod0, SpeculateMod:$mod1)),
           (LVri10cs 0, SingleReg:$mem, QindexMod:$mod0, SpeculateMod:$mod1, MatrixReg:$z)>;
@@ -1025,19 +1025,19 @@ def: Pat<(int_kvx_alignv VectorRegO:$a2, VectorRegE:$a3, SingleReg:$a4), (ALIGNV
 
 let Predicates = [IsV2] in {
 def: Pat<(int_kvx_xload256 (add i64:$mem, (shl i64:$off, (i32 5))), VariantMod:$mod0),
-         (XLOrr SingleReg:$off, SingleReg:$mem, VariantMod:$mod0,  scaling_xs)>;
+         (XLOrr SingleReg:$off, SingleReg:$mem, VariantMod:$mod0,  scale_xs)>;
 
 def: Pat<(int_kvx_xload256 (add i64:$mem, i64:$off), VariantMod:$mod0),
-         (XLOrr SingleReg:$off, SingleReg:$mem, VariantMod:$mod0,  scaling_)>;
+         (XLOrr SingleReg:$off, SingleReg:$mem, VariantMod:$mod0,  scale_)>;
 
 def: Pat<(int_kvx_xload256 i64:$mem, VariantMod:$mod0),
          (XLOri10 0, SingleReg:$mem, VariantMod:$mod0)>;
 
 def: Pat<(int_kvx_xloads1024 v1024i1:$z, (add i64:$mem, (shl i64:$off, (i32 5))), VariantMod:$mod0, QindexMod:$mod1),
-         (XLOrrq SingleReg:$off, SingleReg:$mem, VariantMod:$mod0, scaling_xs, QindexMod:$mod1, MatrixReg:$z)>;
+         (XLOrrq SingleReg:$off, SingleReg:$mem, VariantMod:$mod0, scale_xs, QindexMod:$mod1, MatrixReg:$z)>;
 
 def: Pat<(int_kvx_xloads1024 v1024i1:$z, (add i64:$mem, i64:$off), VariantMod:$mod0, QindexMod:$mod1),
-         (XLOrrq SingleReg:$off, SingleReg:$mem, VariantMod:$mod0, scaling_, QindexMod:$mod1, MatrixReg:$z)>;
+         (XLOrrq SingleReg:$off, SingleReg:$mem, VariantMod:$mod0, scale_, QindexMod:$mod1, MatrixReg:$z)>;
 
 def: Pat<(int_kvx_xloads1024 v1024i1:$z, i64:$mem, VariantMod:$mod0, QindexMod:$mod1),
          (XLOri10q 0, SingleReg:$mem, VariantMod:$mod0, QindexMod:$mod1, MatrixReg:$z)>;
@@ -1100,28 +1100,28 @@ def : Pat<(int_kvx_xstore256  v256i1:$op0, i64:$mem),
           (XSOri10 0, SingleReg:$mem, VectorReg:$op0)>;
 
 def: Pat<(int_kvx_xstore256 v256i1:$op0, (add i64:$mem, (shl i64:$off, (i32 5)))),
-         (XSOrr SingleReg:$off, SingleReg:$mem, VectorReg:$op0, scaling_xs)>;
+         (XSOrr SingleReg:$off, SingleReg:$mem, VectorReg:$op0, scale_xs)>;
 
 def: Pat<(int_kvx_xstore256 v256i1:$op0, (add i64:$mem, i64:$off)),
-         (XSOrr SingleReg:$off, SingleReg:$mem, VectorReg:$op0, scaling_)>;
+         (XSOrr SingleReg:$off, SingleReg:$mem, VectorReg:$op0, scale_)>;
 
 def: Pat<(int_kvx_dpurgel i64:$mem),
          (DPURGELri10 0, SingleReg:$mem)>;
 
 def: Pat<(int_kvx_dpurgel (add i64:$mem, i64:$off)),
-         (DPURGELrr SingleReg:$off, SingleReg:$mem, scaling_)>;
+         (DPURGELrr SingleReg:$off, SingleReg:$mem, scale_)>;
 
 def: Pat<(int_kvx_dpurgel (add i64:$mem, (shl i64:$off, (i32 6)))),
-         (DPURGELrr SingleReg:$off, SingleReg:$mem, scaling_xs)>;
+         (DPURGELrr SingleReg:$off, SingleReg:$mem, scale_xs)>;
 
 def: Pat<(int_kvx_dflushl i64:$mem),
          (DFLUSHLri10 0, SingleReg:$mem)>;
 
 def: Pat<(int_kvx_dflushl (add i64:$mem, i64:$off)),
-         (DFLUSHLrr SingleReg:$off, SingleReg:$mem, scaling_)>;
+         (DFLUSHLrr SingleReg:$off, SingleReg:$mem, scale_)>;
 
 def: Pat<(int_kvx_dflushl (add i64:$mem, (shl i64:$off, (i32 6)))),
-         (DFLUSHLrr SingleReg:$off, SingleReg:$mem, scaling_xs)>;
+         (DFLUSHLrr SingleReg:$off, SingleReg:$mem, scale_xs)>;
 
 def: Pat<(v4i16 (int_kvx_zxlbhq v8i8:$v)),
          (ZXLBHQ SingleReg:$v)>;

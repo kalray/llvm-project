@@ -17,9 +17,6 @@
 // CRCBELLW CRCBELMW CRCLELLW CRCLELMW CMULGLXDT CMULGMXDT CMULXDT
 // CMULGHXDT
 
-// We can only generate 1 out of 7 variations of:
-// ALCLRD ALCLRW
-
 // These instructions require i128 legalization
 // MADDDT MADDSUDT MADDUDT MADDUZDT MSBFDT MSBFSUDT MSBFUDT MSBFUZDT
 
@@ -434,24 +431,24 @@ multiclass LoadPatRI<PatFrag LoadOp, ValueType vt, KVX_PSEUDO_W_SCHEDINFO pinst,
 
 multiclass LoadPatRR<PatFrag LoadOp, ValueType vt, KVX_INSTRUCTION rr> {
   def : Pat<(vt (LoadOp:$LD (add SingleReg:$base, SingleReg:$offset))),
-            (rr SingleReg:$offset, SingleReg:$base, scaling_, (get_mem_mod $LD))>;
+            (rr SingleReg:$offset, SingleReg:$base, scale_, (get_mem_mod $LD))>;
   def : Pat<(vt (LoadOp:$LD (or SingleReg:$base, SingleReg:$offset))),
-            (rr SingleReg:$offset, SingleReg:$base, scaling_, (get_mem_mod $LD))>;
+            (rr SingleReg:$offset, SingleReg:$base, scale_, (get_mem_mod $LD))>;
 }
 
 multiclass LoadPatXS<PatFrag LoadOp, ValueType vt, int sc, KVX_INSTRUCTION rr> {
   def : Pat<(vt (LoadOp:$LD
                   (add SingleReg:$base, (shl SingleReg:$offset, (i32 sc))))),
-            (rr SingleReg:$offset, SingleReg:$base, (get_mem_mod $LD), scaling_xs)>;
+            (rr SingleReg:$offset, SingleReg:$base, (get_mem_mod $LD), scale_xs)>;
   def : Pat<(vt (LoadOp:$LD
                   (add (shl SingleReg:$offset, (i32 sc)), SingleReg:$base))),
-            (rr SingleReg:$offset, SingleReg:$base, (get_mem_mod $LD), scaling_xs)>;
+            (rr SingleReg:$offset, SingleReg:$base, (get_mem_mod $LD), scale_xs)>;
   def : Pat<(vt (LoadOp:$LD
                   (or SingleReg:$base, (shl SingleReg:$offset, (i32 sc))))),
-            (rr SingleReg:$offset, SingleReg:$base, (get_mem_mod $LD), scaling_xs)>;
+            (rr SingleReg:$offset, SingleReg:$base, (get_mem_mod $LD), scale_xs)>;
   def : Pat<(vt (LoadOp:$LD
                   (or (shl SingleReg:$offset, (i32 sc)), SingleReg:$base))),
-            (rr SingleReg:$offset, SingleReg:$base, (get_mem_mod $LD), scaling_xs)>;
+            (rr SingleReg:$offset, SingleReg:$base, (get_mem_mod $LD), scale_xs)>;
 }
 
 multiclass SimpleLoadPat<PatFrag LoadOp, ValueType vt, KVX_PSEUDO_W_SCHEDINFO pinst,
@@ -569,25 +566,25 @@ multiclass StorePatRI<PatFrag StoreOp, ValueType vt,
 multiclass StorePatRR<PatFrag StoreOp, ValueType vt,
                       KVX_INSTRUCTION rr, dag nval > {
   def : Pat<(StoreOp vt:$val, (add SingleReg:$base, SingleReg:$offset)),
-            (rr SingleReg:$offset, SingleReg:$base, nval, scaling_)>;
+            (rr SingleReg:$offset, SingleReg:$base, nval, scale_)>;
   def : Pat<(StoreOp vt:$val, (or SingleReg:$base, SingleReg:$offset)),
-            (rr SingleReg:$offset, SingleReg:$base, nval, scaling_)>;
+            (rr SingleReg:$offset, SingleReg:$base, nval, scale_)>;
 }
 
 multiclass StorePatXS<PatFrag StoreOp, ValueType vt, int sc,
                       KVX_INSTRUCTION rr, dag nval > {
   def : Pat<(StoreOp vt:$val,
               (add SingleReg:$base, (shl SingleReg:$offset, (i32 sc)))),
-            (rr SingleReg:$offset, SingleReg:$base, nval, scaling_xs)>;
+            (rr SingleReg:$offset, SingleReg:$base, nval, scale_xs)>;
   def : Pat<(StoreOp vt:$val,
               (add (shl SingleReg:$offset, (i32 sc)), SingleReg:$base)),
-            (rr SingleReg:$offset, SingleReg:$base, nval, scaling_xs)>;
+            (rr SingleReg:$offset, SingleReg:$base, nval, scale_xs)>;
   def : Pat<(StoreOp vt:$val,
               (or SingleReg:$base, (shl SingleReg:$offset, (i32 sc)))),
-            (rr SingleReg:$offset, SingleReg:$base, nval, scaling_xs)>;
+            (rr SingleReg:$offset, SingleReg:$base, nval, scale_xs)>;
   def : Pat<(StoreOp vt:$val,
               (or (shl SingleReg:$offset, (i32 sc)), SingleReg:$base)),
-            (rr SingleReg:$offset, SingleReg:$base, nval, scaling_xs)>;
+            (rr SingleReg:$offset, SingleReg:$base, nval, scale_xs)>;
 }
 
 multiclass SimpleStorePat<PatFrag StoreOp, ValueType vt, RegisterClass rc,
