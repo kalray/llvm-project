@@ -350,6 +350,7 @@ KVX_BUILTIN(sxmhwp, "V2iV4s", "n", 1, "",)
 //===----------------------------------------------------------------------===//
 // KV3 V2 builtins
 //===----------------------------------------------------------------------===//
+KVX_BUILTIN(addcd, "UOiUOiUOicC*", "n", 3, "", KVX_CARRY)
 KVX_BUILTIN(ald, "OivC*cC*", "n", 2, "kv3-2", KVX_COHERENCY)
 KVX_BUILTIN(alw, "ivC*cC*", "n", 2, "kv3-2", KVX_COHERENCY)
 KVX_BUILTIN(asd, "vv*OicC*", "n", 3, "kv3-2", KVX_COHERENCY)
@@ -427,7 +428,7 @@ KVX_BUILTIN(lv, "Tx256vC*cC*", "n", 2, "kv3-1", KVX_SPECULATE)
 KVX_BUILTIN(lv_cond, "Tx256Tx256D&vC*OiCcC*", "n", 4, "kv3-1", KVX_SPECULATE, KVX_LSUCOND)
 KVX_BUILTIN(lvc, "Tx1024Tx1024&vC*cC*", "n", 3, "kv3-1", KVX_SPECULATE, KVX_QINDEX)
 KVX_BUILTIN(lvc_cond, "Tx1024Tx1024&vC*OicC*", "n", 4, "kv3-1", KVX_SPECULATE, KVX_QINDEX, KVX_LSUCOND)
-
+KVX_BUILTIN(sbfcd, "UOiUOiUOicC*", "n", 3, "", KVX_CARRY)
 KVX_BUILTIN(sv, "vvC*Tx256", "n", 2, "kv3-1", )
 KVX_BUILTIN(sv_cond, "vvC*Tx256OiCcC*", "n", 4, "kv3-1", KVX_LSUCOND)
 
