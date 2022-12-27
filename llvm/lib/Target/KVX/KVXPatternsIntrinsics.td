@@ -458,6 +458,15 @@ def: Pat<(vt(int_kvx_select vt:$t, vt:$f, i64:$c, i32:$sc)),
          (CMOVEDrr SingleReg:$c, SingleReg:$f, SingleReg:$t, ScalarcondMod:$sc)>;
 
 // widen patterns
+def: Pat<(v2f64 (int_kvx_fwiden v2f32:$v, SilentMod:$silent)),
+         (REG_SEQUENCE PairedReg,
+            (FWIDENMWD SingleReg:$v, SilentMod:$silent), sub_d0,
+            (FWIDENLWD SingleReg:$v, SilentMod:$silent), sub_d1)>;
+
+def: Pat<(v4f32 (int_kvx_fwiden v4f16:$v, SilentMod:$silent)),
+         (REG_SEQUENCE PairedReg,
+            (FWIDENMHWP SingleReg:$v, SilentMod:$silent), sub_d0,
+            (FWIDENLHWP SingleReg:$v, SilentMod:$silent), sub_d1)>;
 
 // f16 patterns
 multiclass F16_SUBVECTOR__BINOP<Intrinsic I, Instruction RR> {

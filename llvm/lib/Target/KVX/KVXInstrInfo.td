@@ -2177,7 +2177,7 @@ let Uses = [CS] in {
 def FWIDENLWD : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fwidenlwd$a1 $a2 = $a3",
-   [/* no straightforward pattern */],
+   [(set f64:$a2, (f64 (int_kvx_fwiden f32:$a3, SilentMod:$a1)))],
    ALU_LITE>;
 
 def FWIDENMWD : KVX_INSTRUCTION
@@ -2235,7 +2235,7 @@ let Uses = [CS] in {
 def FWIDENLHW : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fwidenlhw$a1 $a2 = $a3",
-   [/* no straightforward pattern */],
+   [(set f32:$a2, (f32(int_kvx_fwiden f16:$a3, SilentMod:$a1)))],
    ALU_LITE>;
 
 def FWIDENMHW : KVX_INSTRUCTION
@@ -2280,7 +2280,7 @@ let Uses = [CS] in
 def FWIDENLHWP : KVX_INSTRUCTION
   <(outs SingleReg:$a2), (ins SingleReg:$a3, SilentMod:$a1),
    "fwidenlhwp$a1 $a2 = $a3",
-   [/* no straightforward pattern */],
+   [(set v2f32:$a2, (v2f32 (int_kvx_fwiden v2f16:$a3, SilentMod:$a1)))],
    ALU_LITE>;
 
 let Uses = [CS] in
