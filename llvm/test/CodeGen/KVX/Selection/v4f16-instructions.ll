@@ -2425,12 +2425,9 @@ define <4 x half> @test_insertelement3(<4 x half> %a, half %x) #0 {
 define <4 x half> @test_insertelement(<4 x half> %a, half %x, i64 %p) #0 {
 ; CHECK-LABEL: test_insertelement:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    insf $r1 = $r1, 31, 16
-; CHECK-NEXT:    insf $r2 = $r2, 31, 16
+; CHECK-NEXT:    sbmm8.@ $r1 = $r1, 0x2010201
+; CHECK-NEXT:    sbmm8.@ $r2 = $r2, 0x10001
 ; CHECK-NEXT:    make $r3 = 0x3000200010000
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r1 = $r1, 63, 32
-; CHECK-NEXT:    insf $r2 = $r2, 63, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compnhq.eq $r2 = $r3, $r2
 ; CHECK-NEXT:    ;;

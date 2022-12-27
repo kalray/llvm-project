@@ -1448,19 +1448,31 @@ define <16 x half> @mul_vv16f16_v16f16(<16 x half> %0, <16 x half> %1) {
 }
 
 define <16 x half> @mul_v16f16_f16(<16 x half> %0, half %1) {
-; CHECK-LABEL: mul_v16f16_f16:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    sbmm8.@ $r4 = $r4, 0x2010201
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulhq $r0 = $r4, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulhq $r1 = $r4, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulhq $r2 = $r4, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulhq $r3 = $r4, $r3
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: mul_v16f16_f16:
+; V1:       # %bb.0:
+; V1-NEXT:    sbmm8.@ $r4 = $r4, 0x2010201
+; V1-NEXT:    ;;
+; V1-NEXT:    fmulhq $r0 = $r4, $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    fmulhq $r1 = $r4, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    fmulhq $r2 = $r4, $r2
+; V1-NEXT:    ;;
+; V1-NEXT:    fmulhq $r3 = $r4, $r3
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: mul_v16f16_f16:
+; V2:       # %bb.0:
+; V2-NEXT:    sbmm8.@ $r5 = $r4, 0x2010201
+; V2-NEXT:    ;;
+; V2-NEXT:    copyd $r4 = $r5
+; V2-NEXT:    ;;
+; V2-NEXT:    fmulho $r2r3 = $r4r5, $r2r3
+; V2-NEXT:    ;;
+; V2-NEXT:    fmulho $r0r1 = $r4r5, $r0r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %3 = insertelement <16 x half> undef, half %1, i32 0
   %4 = shufflevector <16 x half> %3, <16 x half> undef, <16 x i32> zeroinitializer
   %5 = fmul <16 x half> %4, %0
@@ -1985,19 +1997,31 @@ define <16 x half> @add_v16f16_v16f16(<16 x half> %0, <16 x half> %1) {
 }
 
 define <16 x half> @add_v16f16_f16(<16 x half> %0, half %1) {
-; CHECK-LABEL: add_v16f16_f16:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    sbmm8.@ $r4 = $r4, 0x2010201
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddhq $r0 = $r4, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddhq $r1 = $r4, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddhq $r2 = $r4, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddhq $r3 = $r4, $r3
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: add_v16f16_f16:
+; V1:       # %bb.0:
+; V1-NEXT:    sbmm8.@ $r4 = $r4, 0x2010201
+; V1-NEXT:    ;;
+; V1-NEXT:    faddhq $r0 = $r4, $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    faddhq $r1 = $r4, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    faddhq $r2 = $r4, $r2
+; V1-NEXT:    ;;
+; V1-NEXT:    faddhq $r3 = $r4, $r3
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: add_v16f16_f16:
+; V2:       # %bb.0:
+; V2-NEXT:    sbmm8.@ $r5 = $r4, 0x2010201
+; V2-NEXT:    ;;
+; V2-NEXT:    copyd $r4 = $r5
+; V2-NEXT:    ;;
+; V2-NEXT:    faddho $r2r3 = $r4r5, $r2r3
+; V2-NEXT:    ;;
+; V2-NEXT:    faddho $r0r1 = $r4r5, $r0r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %3 = insertelement <16 x half> undef, half %1, i32 0
   %4 = shufflevector <16 x half> %3, <16 x half> undef, <16 x i32> zeroinitializer
   %5 = fadd <16 x half> %4, %0
@@ -2021,19 +2045,31 @@ define <16 x half> @sub_v16f16_v16f16(<16 x half> %0, <16 x half> %1) {
 }
 
 define <16 x half> @sub_v16f16_f16(<16 x half> %0, half %1) {
-; CHECK-LABEL: sub_v16f16_f16:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    sbmm8.@ $r4 = $r4, 0x2010201
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfhq $r0 = $r4, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfhq $r1 = $r4, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfhq $r2 = $r4, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fsbfhq $r3 = $r4, $r3
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: sub_v16f16_f16:
+; V1:       # %bb.0:
+; V1-NEXT:    sbmm8.@ $r4 = $r4, 0x2010201
+; V1-NEXT:    ;;
+; V1-NEXT:    fsbfhq $r0 = $r4, $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    fsbfhq $r1 = $r4, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    fsbfhq $r2 = $r4, $r2
+; V1-NEXT:    ;;
+; V1-NEXT:    fsbfhq $r3 = $r4, $r3
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: sub_v16f16_f16:
+; V2:       # %bb.0:
+; V2-NEXT:    sbmm8.@ $r5 = $r4, 0x2010201
+; V2-NEXT:    ;;
+; V2-NEXT:    copyd $r4 = $r5
+; V2-NEXT:    ;;
+; V2-NEXT:    fsbfho $r2r3 = $r4r5, $r2r3
+; V2-NEXT:    ;;
+; V2-NEXT:    fsbfho $r0r1 = $r4r5, $r0r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %3 = insertelement <16 x half> undef, half %1, i32 0
   %4 = shufflevector <16 x half> %3, <16 x half> undef, <16 x i32> zeroinitializer
   %5 = fsub <16 x half> %0, %4
@@ -2041,25 +2077,37 @@ define <16 x half> @sub_v16f16_f16(<16 x half> %0, half %1) {
 }
 
 define <16 x half> @mul_add_v16f16_v16f16(<16 x half> %0, <16 x half> %1, <16 x half> %2) {
-; CHECK-LABEL: mul_add_v16f16_v16f16:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    fmulhq $r0 = $r0, $r4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulhq $r1 = $r1, $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulhq $r2 = $r2, $r6
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulhq $r3 = $r3, $r7
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddhq $r0 = $r0, $r8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddhq $r1 = $r1, $r9
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddhq $r2 = $r2, $r10
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddhq $r3 = $r3, $r11
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: mul_add_v16f16_v16f16:
+; V1:       # %bb.0:
+; V1-NEXT:    fmulhq $r0 = $r0, $r4
+; V1-NEXT:    ;;
+; V1-NEXT:    fmulhq $r1 = $r1, $r5
+; V1-NEXT:    ;;
+; V1-NEXT:    fmulhq $r2 = $r2, $r6
+; V1-NEXT:    ;;
+; V1-NEXT:    fmulhq $r3 = $r3, $r7
+; V1-NEXT:    ;;
+; V1-NEXT:    faddhq $r0 = $r0, $r8
+; V1-NEXT:    ;;
+; V1-NEXT:    faddhq $r1 = $r1, $r9
+; V1-NEXT:    ;;
+; V1-NEXT:    faddhq $r2 = $r2, $r10
+; V1-NEXT:    ;;
+; V1-NEXT:    faddhq $r3 = $r3, $r11
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: mul_add_v16f16_v16f16:
+; V2:       # %bb.0:
+; V2-NEXT:    fmulho $r2r3 = $r2r3, $r6r7
+; V2-NEXT:    ;;
+; V2-NEXT:    fmulho $r0r1 = $r0r1, $r4r5
+; V2-NEXT:    ;;
+; V2-NEXT:    faddho $r2r3 = $r2r3, $r10r11
+; V2-NEXT:    ;;
+; V2-NEXT:    faddho $r0r1 = $r0r1, $r8r9
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %4 = fmul <16 x half> %0, %1
   %5 = fadd <16 x half> %4, %2
   ret <16 x half> %5
@@ -5973,21 +6021,33 @@ define <8 x i32> @p_mul_add_v8i32_v8i32(<8 x i32>* nocapture readonly %0, <8 x i
 }
 
 define <16 x half> @p_mul_vv16f16_v16f16(<16 x half>* nocapture readonly %0, <16 x half>* nocapture readonly %1) {
-; CHECK-LABEL: p_mul_vv16f16_v16f16:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r0r1r2r3 = 0[$r1]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulhq $r0 = $r4, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulhq $r1 = $r5, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulhq $r2 = $r6, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulhq $r3 = $r7, $r3
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: p_mul_vv16f16_v16f16:
+; V1:       # %bb.0:
+; V1-NEXT:    lo $r4r5r6r7 = 0[$r0]
+; V1-NEXT:    ;;
+; V1-NEXT:    lo $r0r1r2r3 = 0[$r1]
+; V1-NEXT:    ;;
+; V1-NEXT:    fmulhq $r0 = $r4, $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    fmulhq $r1 = $r5, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    fmulhq $r2 = $r6, $r2
+; V1-NEXT:    ;;
+; V1-NEXT:    fmulhq $r3 = $r7, $r3
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: p_mul_vv16f16_v16f16:
+; V2:       # %bb.0:
+; V2-NEXT:    lo $r4r5r6r7 = 0[$r0]
+; V2-NEXT:    ;;
+; V2-NEXT:    lo $r0r1r2r3 = 0[$r1]
+; V2-NEXT:    ;;
+; V2-NEXT:    fmulho $r2r3 = $r6r7, $r2r3
+; V2-NEXT:    ;;
+; V2-NEXT:    fmulho $r0r1 = $r4r5, $r0r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %3 = load <16 x half>, <16 x half>* %0, align 32
   %4 = load <16 x half>, <16 x half>* %1, align 32
   %5 = fmul <16 x half> %3, %4
@@ -5995,23 +6055,39 @@ define <16 x half> @p_mul_vv16f16_v16f16(<16 x half>* nocapture readonly %0, <16
 }
 
 define <16 x half> @p_mul_v16f16_f16(<16 x half>* nocapture readonly %0, half* nocapture readonly %1) {
-; CHECK-LABEL: p_mul_v16f16_f16:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    lhz $r1 = 0[$r1]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8.@ $r3 = $r1, 0x2010201
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulhq $r0 = $r4, $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulhq $r1 = $r5, $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulhq $r2 = $r6, $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulhq $r3 = $r7, $r3
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: p_mul_v16f16_f16:
+; V1:       # %bb.0:
+; V1-NEXT:    lhz $r1 = 0[$r1]
+; V1-NEXT:    ;;
+; V1-NEXT:    lo $r4r5r6r7 = 0[$r0]
+; V1-NEXT:    ;;
+; V1-NEXT:    sbmm8.@ $r3 = $r1, 0x2010201
+; V1-NEXT:    ;;
+; V1-NEXT:    fmulhq $r0 = $r4, $r3
+; V1-NEXT:    ;;
+; V1-NEXT:    fmulhq $r1 = $r5, $r3
+; V1-NEXT:    ;;
+; V1-NEXT:    fmulhq $r2 = $r6, $r3
+; V1-NEXT:    ;;
+; V1-NEXT:    fmulhq $r3 = $r7, $r3
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: p_mul_v16f16_f16:
+; V2:       # %bb.0:
+; V2-NEXT:    lhz $r1 = 0[$r1]
+; V2-NEXT:    ;;
+; V2-NEXT:    lo $r4r5r6r7 = 0[$r0]
+; V2-NEXT:    ;;
+; V2-NEXT:    sbmm8.@ $r1 = $r1, 0x2010201
+; V2-NEXT:    ;;
+; V2-NEXT:    copyd $r0 = $r1
+; V2-NEXT:    ;;
+; V2-NEXT:    fmulho $r2r3 = $r6r7, $r0r1
+; V2-NEXT:    ;;
+; V2-NEXT:    fmulho $r0r1 = $r4r5, $r0r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %3 = load <16 x half>, <16 x half>* %0, align 32
   %4 = load half, half* %1, align 2
   %5 = insertelement <16 x half> undef, half %4, i32 0
@@ -6524,21 +6600,33 @@ define <16 x half> @p_div_v16f16_f16(<16 x half>* nocapture readonly %0, half* n
 }
 
 define <16 x half> @p_add_v16f16_v16f16(<16 x half>* nocapture readonly %0, <16 x half>* nocapture readonly %1) {
-; CHECK-LABEL: p_add_v16f16_v16f16:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r0r1r2r3 = 0[$r1]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddhq $r0 = $r4, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddhq $r1 = $r5, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddhq $r2 = $r6, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddhq $r3 = $r7, $r3
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: p_add_v16f16_v16f16:
+; V1:       # %bb.0:
+; V1-NEXT:    lo $r4r5r6r7 = 0[$r0]
+; V1-NEXT:    ;;
+; V1-NEXT:    lo $r0r1r2r3 = 0[$r1]
+; V1-NEXT:    ;;
+; V1-NEXT:    faddhq $r0 = $r4, $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    faddhq $r1 = $r5, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    faddhq $r2 = $r6, $r2
+; V1-NEXT:    ;;
+; V1-NEXT:    faddhq $r3 = $r7, $r3
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: p_add_v16f16_v16f16:
+; V2:       # %bb.0:
+; V2-NEXT:    lo $r4r5r6r7 = 0[$r0]
+; V2-NEXT:    ;;
+; V2-NEXT:    lo $r0r1r2r3 = 0[$r1]
+; V2-NEXT:    ;;
+; V2-NEXT:    faddho $r2r3 = $r6r7, $r2r3
+; V2-NEXT:    ;;
+; V2-NEXT:    faddho $r0r1 = $r4r5, $r0r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %3 = load <16 x half>, <16 x half>* %0, align 32
   %4 = load <16 x half>, <16 x half>* %1, align 32
   %5 = fadd <16 x half> %3, %4
@@ -6546,23 +6634,39 @@ define <16 x half> @p_add_v16f16_v16f16(<16 x half>* nocapture readonly %0, <16 
 }
 
 define <16 x half> @p_add_v16f16_f16(<16 x half>* nocapture readonly %0, half* nocapture readonly %1) {
-; CHECK-LABEL: p_add_v16f16_f16:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    lhz $r1 = 0[$r1]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8.@ $r3 = $r1, 0x2010201
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddhq $r0 = $r4, $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddhq $r1 = $r5, $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddhq $r2 = $r6, $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddhq $r3 = $r7, $r3
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: p_add_v16f16_f16:
+; V1:       # %bb.0:
+; V1-NEXT:    lhz $r1 = 0[$r1]
+; V1-NEXT:    ;;
+; V1-NEXT:    lo $r4r5r6r7 = 0[$r0]
+; V1-NEXT:    ;;
+; V1-NEXT:    sbmm8.@ $r3 = $r1, 0x2010201
+; V1-NEXT:    ;;
+; V1-NEXT:    faddhq $r0 = $r4, $r3
+; V1-NEXT:    ;;
+; V1-NEXT:    faddhq $r1 = $r5, $r3
+; V1-NEXT:    ;;
+; V1-NEXT:    faddhq $r2 = $r6, $r3
+; V1-NEXT:    ;;
+; V1-NEXT:    faddhq $r3 = $r7, $r3
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: p_add_v16f16_f16:
+; V2:       # %bb.0:
+; V2-NEXT:    lhz $r1 = 0[$r1]
+; V2-NEXT:    ;;
+; V2-NEXT:    lo $r4r5r6r7 = 0[$r0]
+; V2-NEXT:    ;;
+; V2-NEXT:    sbmm8.@ $r1 = $r1, 0x2010201
+; V2-NEXT:    ;;
+; V2-NEXT:    copyd $r0 = $r1
+; V2-NEXT:    ;;
+; V2-NEXT:    faddho $r2r3 = $r6r7, $r0r1
+; V2-NEXT:    ;;
+; V2-NEXT:    faddho $r0r1 = $r4r5, $r0r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %3 = load <16 x half>, <16 x half>* %0, align 32
   %4 = load half, half* %1, align 2
   %5 = insertelement <16 x half> undef, half %4, i32 0
@@ -6572,38 +6676,62 @@ define <16 x half> @p_add_v16f16_f16(<16 x half>* nocapture readonly %0, half* n
 }
 
 define <16 x half> @p_mul_add_v16f16_v16f16(<16 x half>* nocapture readonly %0, <16 x half>* nocapture readonly %1, <16 x half>* nocapture %2) {
-; CHECK-LABEL: p_mul_add_v16f16_v16f16:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r8r9r10r11 = 0[$r1]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lo $r32r33r34r35 = 0[$r2]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulhq $r0 = $r5, $r9
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulhq $r1 = $r4, $r8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulhq $r3 = $r6, $r10
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmulhq $r7 = $r7, $r11
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddhq $r5 = $r33, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddhq $r4 = $r32, $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddhq $r6 = $r34, $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddhq $r7 = $r35, $r7
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    so 0[$r2] = $r4r5r6r7
-; CHECK-NEXT:    copyd $r0 = $r4
-; CHECK-NEXT:    copyd $r1 = $r5
-; CHECK-NEXT:    copyd $r2 = $r6
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r3 = $r7
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: p_mul_add_v16f16_v16f16:
+; V1:       # %bb.0:
+; V1-NEXT:    lo $r4r5r6r7 = 0[$r0]
+; V1-NEXT:    ;;
+; V1-NEXT:    lo $r8r9r10r11 = 0[$r1]
+; V1-NEXT:    ;;
+; V1-NEXT:    lo $r32r33r34r35 = 0[$r2]
+; V1-NEXT:    ;;
+; V1-NEXT:    fmulhq $r0 = $r7, $r11
+; V1-NEXT:    ;;
+; V1-NEXT:    fmulhq $r1 = $r6, $r10
+; V1-NEXT:    ;;
+; V1-NEXT:    fmulhq $r3 = $r5, $r9
+; V1-NEXT:    ;;
+; V1-NEXT:    fmulhq $r4 = $r4, $r8
+; V1-NEXT:    ;;
+; V1-NEXT:    faddhq $r7 = $r35, $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    faddhq $r6 = $r34, $r1
+; V1-NEXT:    ;;
+; V1-NEXT:    faddhq $r5 = $r33, $r3
+; V1-NEXT:    ;;
+; V1-NEXT:    faddhq $r4 = $r32, $r4
+; V1-NEXT:    ;;
+; V1-NEXT:    so 0[$r2] = $r4r5r6r7
+; V1-NEXT:    ;;
+; V1-NEXT:    copyd $r0 = $r4
+; V1-NEXT:    copyd $r1 = $r5
+; V1-NEXT:    copyd $r2 = $r6
+; V1-NEXT:    copyd $r3 = $r7
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: p_mul_add_v16f16_v16f16:
+; V2:       # %bb.0:
+; V2-NEXT:    lo $r4r5r6r7 = 0[$r0]
+; V2-NEXT:    ;;
+; V2-NEXT:    lo $r8r9r10r11 = 0[$r1]
+; V2-NEXT:    ;;
+; V2-NEXT:    fmulho $r0r1 = $r6r7, $r10r11
+; V2-NEXT:    ;;
+; V2-NEXT:    fmulho $r4r5 = $r4r5, $r8r9
+; V2-NEXT:    lo $r8r9r10r11 = 0[$r2]
+; V2-NEXT:    ;;
+; V2-NEXT:    faddho $r6r7 = $r10r11, $r0r1
+; V2-NEXT:    ;;
+; V2-NEXT:    faddho $r4r5 = $r8r9, $r4r5
+; V2-NEXT:    ;;
+; V2-NEXT:    so 0[$r2] = $r4r5r6r7
+; V2-NEXT:    ;;
+; V2-NEXT:    copyd $r0 = $r4
+; V2-NEXT:    copyd $r1 = $r5
+; V2-NEXT:    copyd $r2 = $r6
+; V2-NEXT:    copyd $r3 = $r7
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %4 = load <16 x half>, <16 x half>* %0, align 32
   %5 = load <16 x half>, <16 x half>* %1, align 32
   %6 = fmul <16 x half> %4, %5

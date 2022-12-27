@@ -7,7 +7,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-def DefaultShift : PatLeaf<(i64 0)>;
+def DefaultShift : PatLeaf<(i32 0)>;
 
 // Store
 defm : StorePat<store, f16, SingleReg, 1, SHp, SHri10,  SHri37,  SHri64, SHrr>;
@@ -74,6 +74,7 @@ def : Pat<(v2f16(fadd v2f16:$r, (v2f16 (is_imm_vec:$IMM)))), (v2f16 (FADDHQrr (Z
 def : Pat<(fadd v2f16:$rs1, v2f16:$rs2), (FADDHQrr (ZXWD SingleReg:$rs1), (ZXWD SingleReg:$rs2), rounding_, silent_)>;
 def : Pat<(v4f16(fadd v4f16:$r, (v4f16 (is_imm_vec:$IMM)))), (v4f16 (FADDHQri SingleReg:$r, (build_imm_vec $IMM)))>, Requires<[IsV1]>;
 def : Pat<(fadd v4f16:$rs1, v4f16:$rs2), (FADDHQrr SingleReg:$rs1, SingleReg:$rs2, rounding_, silent_)>;
+def : Pat<(fadd v8f16:$rs1, v8f16:$rs2), (FADDHO PairedReg:$rs1, PairedReg:$rs2, rounding_, silent_)>;
 def : Pat<(v2f32(fadd v2f32:$r, (v2f32 (is_imm_vec:$IMM)))), (v2f32 (FADDWPri SingleReg:$r, (build_imm_vec $IMM)))>, Requires<[IsV1]>;
 def : Pat<(fadd v2f32:$rs1, v2f32:$rs2), (FADDWPrr SingleReg:$rs1, SingleReg:$rs2, rounding_, silent_)>;
 def : Pat<(fadd v4f32:$rs1, v4f32:$rs2), (FADDWQ PairedReg:$rs1, PairedReg:$rs2, rounding_, silent_)>;
@@ -688,6 +689,7 @@ def : Pat<(v2f16 (fma v2f16:$rx, v2f16:$ry, v2f16:$rz)), (FFMAHQrr (ZXWD SingleR
 
 def : Pat<(v4f16 (fma v4f16:$rx, (v4f16 (is_imm_vec:$IMM)), v4f16:$rz)), (FFMAHQri SingleReg:$rz, SingleReg:$rx, (build_imm_vec $IMM))>, Requires<[IsV1]>;
 def : Pat<(v4f16 (fma v4f16:$rx, v4f16:$ry, v4f16:$rz)), (FFMAHQrr SingleReg:$rz, SingleReg:$rx, SingleReg:$ry, rounding_, silent_)>;
+def : Pat<(v8f16 (fma v8f16:$rx, v8f16:$ry, v8f16:$rz)), (FFMAHO PairedReg:$rx, PairedReg:$ry, rounding_, silent_, PairedReg:$rz)>, Requires<[IsV2]>;
 
 def : Pat<(v4f32 (fma v4f32:$lhs, v4f32:$rhs, v4f32:$acc)),
           (FFMAWQ PairedReg:$acc, PairedReg:$lhs, PairedReg:$rhs, rounding_, silent_)>, Requires<[IsV2]>;
@@ -733,6 +735,7 @@ def : Pat <(f64 (fsubcont f64:$r0, (fmulcont f64:$r2, f64:$r1))), (FFMSDrr Singl
 def : Pat <(v2f32 (fsubcont v2f32:$r0, (fmulcont v2f32:$r2, v2f32:$r1))), (FFMSWPrr SingleReg:$r0, SingleReg:$r1, SingleReg:$r2, rounding_, silent_)>;
 def : Pat <(v2f16 (fsubcont v2f16:$r0, (fmulcont v2f16:$r2, v2f16:$r1))), (FFMSHQrr (ZXWD SingleReg:$r0), (ZXWD SingleReg:$r1), (ZXWD SingleReg:$r2), rounding_, silent_)>;
 def : Pat <(v4f16 (fsubcont v4f16:$r0, (fmulcont v4f16:$r2, v4f16:$r1))), (FFMSHQrr SingleReg:$r0, SingleReg:$r1, SingleReg:$r2, rounding_, silent_)>;
+def : Pat <(v8f16 (fsubcont v8f16:$r0, (fmulcont v8f16:$r2, v8f16:$r1))), (FFMSHO PairedReg:$r1, PairedReg:$r2, rounding_, silent_, PairedReg:$r0)>, Requires<[IsV2]>;
 
 multiclass FFMSPAT<ValueType vt, KVX_INSTRUCTION FMS, KVX_INSTRUCTION MUL, RegisterClass RC> {
 def : Pat<(vt (fma (vfneg vt:$rx), vt:$ry, vt:$rz)),
@@ -748,6 +751,12 @@ defm : FFMSPAT<v2f32, FFMSWPrr, FMULWPrr, SingleReg>;
 defm : FFMSPAT<v2f16, FFMSHQrr, FMULHQrr, SingleReg>;
 defm : FFMSPAT<v4f16, FFMSHQrr, FMULHQrr, SingleReg>;
 defm : FFMSPAT<v4f32, FFMSWQ, FMULWQ, PairedReg>, Requires<[IsV2]>;
+
+def : Pat<(v8f16 (fma (vfneg v8f16:$rx), v8f16:$ry, v8f16:$rz)),
+          (FFMSHO PairedReg:$rx, PairedReg:$ry, rounding_, silent_, PairedReg:$rz)>;
+
+def : Pat<(v8f16 (fma v8f16:$rx, v8f16:$ry, (fneg (fmul v8f16:$rz, v8f16:$ra)))),
+          (FFMSHO PairedReg:$rz, PairedReg:$ra, rounding_, silent_, (FMULHO v8f16:$rx, v8f16:$ry, rounding_, silent_))>;
 
 // FFMSWDP
 // TODO: Add ri variants
@@ -991,6 +1000,7 @@ def : Pat<(v2f16(fmul v2f16:$r, (v2f16 (is_imm_vec:$IMM)))), (v2f16 (FMULHQri (Z
 def : Pat<(v2f16(fmul v2f16:$r, (v2f16 (is_imm_vec:$IMM)))), (v2f16 (FMULHQrr (ZXWD SingleReg:$r), (MAKEi43 (build_imm_vec $IMM)), rounding_, silent_))>;
 def : Pat<(fmul v2f16:$rs1, v2f16:$rs2), (FMULHQrr (ZXWD SingleReg:$rs1), (ZXWD SingleReg:$rs2), rounding_, silent_)>;
 def : Pat<(v4f16(fmul v4f16:$r, (v4f16 (is_imm_vec:$IMM)))), (v4f16 (FMULHQri SingleReg:$r, (build_imm_vec $IMM)))>, Requires<[IsV1]>;
+def : Pat<(fmul v8f16:$rs1, v8f16:$rs2), (FMULHO PairedReg:$rs1, PairedReg:$rs2, rounding_, silent_)>;
 def : Pat<(fmul v4f16:$rs1, v4f16:$rs2), (FMULHQrr SingleReg:$rs1, SingleReg:$rs2, rounding_, silent_)>;
 def : Pat<(v2f32(fmul v2f32:$r, (v2f32 (is_imm_vec:$IMM)))), (v2f32 (FMULWPri SingleReg:$r, (build_imm_vec $IMM)))>, Requires<[IsV1]>;
 def : Pat<(fmul v2f32:$rs1, v2f32:$rs2), (FMULWPrr SingleReg:$rs1, SingleReg:$rs2, rounding_, silent_)>;
@@ -1304,6 +1314,7 @@ def : Pat<(v2f32(fsub (v2f32 (is_imm_vec:$IMM)), v2f32:$r)), (FSBFWPri SingleReg
 def : Pat<(fsub v2f32:$rs1, v2f32:$rs2), (FSBFWPrr SingleReg:$rs2, SingleReg:$rs1, rounding_, silent_)>;
 def : Pat<(fsub v4f32:$rs1, v4f32:$rs2), (FSBFWQ PairedReg:$rs2, PairedReg:$rs1, rounding_, silent_)>;
 def : Pat<(fsub v2f64:$rs1, v2f64:$rs2), (FSBFDP PairedReg:$rs2, PairedReg:$rs1, rounding_, silent_)>;
+def : Pat<(fsub v8f16:$rs1, v8f16:$rs2), (FSBFHO PairedReg:$rs2, PairedReg:$rs1, rounding_, silent_)>;
 def : Pat<(v4f64 (fsub v4f64:$rs1, v4f64:$rs2)),
           (v4f64(REG_SEQUENCE QuadReg,
             (v2f64(FSBFDP
@@ -1621,16 +1632,10 @@ def : Pat<(v4f16 (insertelt v4f16:$to, f16:$e, i64:$idx)),
               (CMOVEHQ
                 (COMPNHQ
                   (MAKEi64 0x3000200010000),
-                  (INSF
-                    (INSF SingleReg:$idx, SingleReg:$idx, 31, 16),
-                    (INSF SingleReg:$idx, SingleReg:$idx, 31, 16),
-                    63, 32),
+                  (SBMM8ri32s SingleReg:$idx, 0x00010001),
                   comparison_eq),
                   SingleReg:$to,
-                  (INSF
-                    (INSF SingleReg:$e, SingleReg:$e, 31, 16),
-                    (INSF SingleReg:$e, SingleReg:$e, 31, 16),
-                    63, 32),
+                  (SBMM8ri32s SingleReg:$e, 0x02010201),
                 simplecond_nez)>;
 
 // v4f32

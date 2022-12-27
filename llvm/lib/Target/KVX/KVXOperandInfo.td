@@ -116,7 +116,7 @@ def Binary16 : Operand<f16>, FPImmLeaf<f16, [{
 }
 
 def Binary16x4 : Operand<v4f16>, FPImmLeaf<v4f16, [{
-      return isInt<64>(Imm.bitcastToAPInt().getZExtValue());
+      return isInt<64>(Imm.bitcastToAPInt().getSExtValue());
     }]> {
   let PrintMethod = "printBinary64ImmOperand";
 }

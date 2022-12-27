@@ -144,7 +144,7 @@ private:
   SDValue lowerBUILD_VECTOR(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerBUILD_VECTOR_V2_64bit(SDValue Op, SelectionDAG &DAG,
                                      bool useINSF = true) const;
-  SDValue lowerBUILD_VECTOR_V4_128bit(SDValue Op, SelectionDAG &DAG) const;
+  SDValue lowerBUILD_VECTOR_128bit(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerINSERT_VECTOR_ELT(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerINSERT_VECTOR_ELT_V4_128bit(SDLoc &DL, SelectionDAG &DAG,
                                            SDValue Vec, SDValue Val,
@@ -253,7 +253,7 @@ private:
   EVT getShiftAmountTy(EVT LHSTy, const DataLayout &DL,
                        bool LegalTypes = true) const {
     if (LHSTy.isVector())
-      return LHSTy;
+      return LHSTy.changeVectorElementTypeToInteger();
 
     return EVT(MVT::i32);
   }

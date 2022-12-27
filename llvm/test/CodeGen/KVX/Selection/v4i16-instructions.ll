@@ -802,12 +802,9 @@ define <4 x i16> @test_insertelement3(<4 x i16> %a, i16 %x) {
 define <4 x i16> @test_insertelement(<4 x i16> %a, i16 %x, i64 %p) {
 ; ALL-LABEL: test_insertelement:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    insf $r1 = $r1, 31, 16
-; ALL-NEXT:    insf $r2 = $r2, 31, 16
+; ALL-NEXT:    sbmm8.@ $r1 = $r1, 0x2010201
+; ALL-NEXT:    sbmm8.@ $r2 = $r2, 0x10001
 ; ALL-NEXT:    make $r3 = 0x3000200010000
-; ALL-NEXT:    ;;
-; ALL-NEXT:    insf $r1 = $r1, 63, 32
-; ALL-NEXT:    insf $r2 = $r2, 63, 32
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    compnhq.eq $r2 = $r3, $r2
 ; ALL-NEXT:    ;;

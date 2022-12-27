@@ -3252,15 +3252,23 @@ defm FFMAD : MC_26<"ffmad">;
 
 defm FFMAWP : MC_27<"ffmawp">;
 
+defm FFMAHO : I <"ffmaho", MAU_AUXR_FP, [PairedReg, PairedReg], [RoundingMod, SilentMod], [], [], [PairedReg], 1,
+                 [(set v8f16:$r, (v8f16 (int_kvx_ffma v8f16:$op0, v8f16:$op1, v8f16:$z, RoundingMod:$mod0, SilentMod:$mod1)))]>, Requires<[IsV2]>;
+
 defm FFMAHQ : MC_28<"ffmahq">;
 
-defm FFMSD : MC_26<"ffmsd">;
+defm FFMSHO : I <"ffmsho", MAU_AUXR_FP, [PairedReg, PairedReg], [RoundingMod, SilentMod], [], [], [PairedReg], 1,
+                 [(set v8f16:$r, (v8f16 (int_kvx_ffms v8f16:$op0, v8f16:$op1, v8f16:$z, RoundingMod:$mod0, SilentMod:$mod1)))]>, Requires<[IsV2]>;
+
 
 defm FFMSWP : MC_27<"ffmswp">;
 
 defm FFMSHQ : MC_28<"ffmshq">;
 
 defm FMULD : MC_29<"fmuld">;
+
+defm FMULHO : I <"fmulho", MAU_FP, [PairedReg, PairedReg], [RoundingMod, SilentMod], [], [], [PairedReg], 0,
+                 [(set v8f16:$r, (v8f16 (int_kvx_fmul v8f16:$op0, v8f16:$op1, RoundingMod:$mod0, SilentMod:$mod1)))]>;
 
 defm FMULHQ : MC_2B<"fmulhq">;
 
@@ -3283,7 +3291,8 @@ defm FMULCWDC : MC_2C<"fmulwdc.c">, Requires<[IsV1]>;
 let isAdd = 1 in {
 defm FADDD : MC_29<"faddd">;
 
-defm FADDHO : I <"faddho", MAU_FP, [PairedReg, PairedReg], [RoundingMod, SilentMod], [], [], [PairedReg]>;
+defm FADDHO : I <"faddho", MAU_FP, [PairedReg, PairedReg], [RoundingMod, SilentMod], [], [], [PairedReg], 0,
+                 [(set v8f16:$r, (v8f16 (int_kvx_fadd v8f16:$op0, v8f16:$op1, RoundingMod:$mod0, SilentMod:$mod1)))]>;
 
 defm FADDHQ : MC_2B<"faddhq">;
 
@@ -3304,7 +3313,8 @@ defm FSBFD : MC_29<"fsbfd">;
 
 defm FSBFHQ : MC_2B<"fsbfhq">;
 
-defm FSBFHO : I <"fsbfho", MAU_FP, [PairedReg, PairedReg], [RoundingMod, SilentMod], [], [], [PairedReg]>;
+defm FSBFHO : I <"fsbfho", MAU_FP, [PairedReg, PairedReg], [RoundingMod, SilentMod], [], [], [PairedReg], 0,
+                 [(set v8f16:$r, (v8f16 (int_kvx_fsbf v8f16:$op0, v8f16:$op1, RoundingMod:$mod0, SilentMod:$mod1)))]>;
 
 defm FSBFDP : I <"fsbfdp", MAU_SWITCH_AUXR_EMPTY_FP, [PairedReg, PairedReg], [RoundingMod, SilentMod], [], [], [PairedReg], 0,
                 [(set v2f64:$r, (int_kvx_fsbf v2f64:$op0, v2f64:$op1, RoundingMod:$mod0, SilentMod:$mod1))]>;

@@ -243,11 +243,16 @@ defm : BITCAST<v4i16, v8i8, SingleReg>;
 defm : BITCAST<v2f64, v2i64, PairedReg>;
 defm : BITCAST<v2f64, v4f32, PairedReg>;
 defm : BITCAST<v2f64, v4i32, PairedReg>;
+defm : BITCAST<v2f64, v8f16, PairedReg>;
 
 defm : BITCAST<v2i64, v4f32, PairedReg>;
 defm : BITCAST<v2i64, v4i32, PairedReg>;
+defm : BITCAST<v2i64, v8f16, PairedReg>;
 
 defm : BITCAST<v4f32, v4i32, PairedReg>;
+defm : BITCAST<v4f32, v8f16, PairedReg>;
+
+defm : BITCAST<v4i32, v8f16, PairedReg>;
 
 // 256 bit casts
 defm : BITCAST<v4f64, v4i64, QuadReg>;
@@ -328,12 +333,6 @@ def MAKETLS : KVX_INSTRUCTION_Y
   [],
   ALU_TINY_Y_>;
 
-// MAKE patterns disabled - selection is done in code
-/*
-def : Pat<(Signed16:$imm), (MAKEi16 Signed16:$imm)>;
-def : Pat<(Signed43:$imm), (MAKEi43 Signed43:$imm)>;
-def : Pat<(Wrapped64:$imm), (MAKEi64 Wrapped64:$imm)>;
-*/
 def : Pat<(KVXWrapper tglobaladdr:$dst), (MAKEi64 tglobaladdr:$dst)>;
 def : Pat<(KVXWrapper tglobaltlsaddr:$dst), (MAKETLS tglobaltlsaddr:$dst)>;
 def : Pat<(KVXWrapper tblockaddress:$dst), (MAKEi64 tblockaddress:$dst)>;
@@ -501,6 +500,7 @@ defm : LoadPat<load, v4i16, 3, LDp, LDri10, LDri37, LDri64, LDrr>;
 
 defm : LoadPat<load, v2i64, 4, LQp, LQri10, LQri37, LQri64, LQrr>;
 defm : LoadPat<load, v4i32, 4, LQp, LQri10, LQri37, LQri64, LQrr>;
+defm : LoadPat<load, v8f16, 4, LQp, LQri10, LQri37, LQri64, LQrr>;
 
 defm : LoadPat<load, v4i64, 5, LOp, LOri10, LOri37, LOri64, LOrr>;
 
@@ -637,6 +637,7 @@ defm : StorePat<store, v4i16, SingleReg, 3 , SDp, SDri10,  SDri37,  SDri64, SDrr
 
 defm : StorePat<store, v2i64, PairedReg, 4, SQp, SQri10,  SQri37,  SQri64, SQrr>;
 defm : StorePat<store, v4i32, PairedReg, 4, SQp, SQri10,  SQri37,  SQri64, SQrr>;
+defm : StorePat<store, v8f16, PairedReg, 4, SQp, SQri10,  SQri37,  SQri64, SQrr>;
 
 defm : StorePat<store, v4i64, QuadReg, 5, SOp, SOri10,  SOri37,  SOri64, SOrr>;
 defm : StorePat<store, v256i1,VectorReg,5, SVp, SVri10,  SVri37,  SVri64, SVrr>, Requires<[IsV1]>;
@@ -1331,6 +1332,15 @@ def : Pat<(v2f16 (extract_subvector (v4f16 SingleReg:$v), (i64 0))),
 def : Pat<(v2f16 (extract_subvector (v4f16 SingleReg:$v), (i64 2))),
           (v2f16 (SRLDri SingleReg:$v, (i32 32)))>;
 
+def : Pat<(v4f16 (extract_subvector (v8f16 PairedReg:$v), (i64 0))),
+          (v4f16 (EXTRACT_SUBREG $v, sub_d0))>;
+
+def : Pat<(v4f16 (extract_subvector (v8f16 PairedReg:$v), (i64 4))),
+          (v4f16 (EXTRACT_SUBREG $v, sub_d1))>;
+
+def : Pat<(v8f16 (concat_vectors (v4f16 SingleReg:$lo), (v4f16 SingleReg:$hi))),
+          (v8f16 (REG_SEQUENCE PairedReg, $lo, sub_d0, $hi, sub_d1))>;
+
 // v2i64
 def : Pat<(v2i64 (build_vector i64:$v1, i64:$v2)),
   (INSERT_SUBREG
@@ -1504,16 +1514,10 @@ def : Pat<(v4i16 (insertelt v4i16:$to, i16:$e, i64:$idx)),
               (CMOVEHQ
                 (COMPNHQ
                   (MAKEi64 0x3000200010000),
-                  (INSF
-                    (INSF SingleReg:$idx, SingleReg:$idx, 31, 16),
-                    (INSF SingleReg:$idx, SingleReg:$idx, 31, 16),
-                    63, 32),
+                  (SBMM8ri32s SingleReg:$idx, 0x00010001),
                   comparison_eq),
                   SingleReg:$to,
-                  (INSF
-                    (INSF SingleReg:$e, SingleReg:$e, 31, 16),
-                    (INSF SingleReg:$e, SingleReg:$e, 31, 16),
-                    63, 32),
+                  (SBMM8ri32s SingleReg:$e, 0x02010201),
                 simplecond_nez)>;
 
 // v4i32
@@ -1581,6 +1585,77 @@ def : Pat<(v4i64 (insertelt v4i64:$to, i64:$e, i64:$idx)),
             sub_d2,
             (CMOVEDrr (COMPDri10 SingleReg:$idx, 3, comparison_eq), (i64 (EXTRACT_SUBREG QuadReg:$to, sub_d3)), SingleReg:$e, scalarcond_odd),
             sub_d3)>;
+
+// v8f16
+foreach i = [0, 1, 2, 3] in
+def v8f16_insert # i : Pat<(v8f16 (insertelt v8f16:$to, f16:$e, (i64 i))),
+          (v8f16 (REG_SEQUENCE PairedReg,
+            (v4f16 (INSF (v4f16 (EXTRACT_SUBREG PairedReg:$to, sub_d0)), SingleReg:$e, !add(!mul(i, 16), 15), !mul(i, 16))), sub_d0,
+            (v4f16 (EXTRACT_SUBREG PairedReg:$to, sub_d1)), sub_d1))>;
+
+foreach i = [0, 1, 2, 3] in
+def v8f16_insert # !add(i, 4) : Pat<(v8f16 (insertelt v8f16:$to, f16:$e, (i64 !add(i, 4)))),
+          (v8f16 (REG_SEQUENCE PairedReg,
+            (v4f16 (INSF (v4f16 (EXTRACT_SUBREG PairedReg:$to, sub_d1)), SingleReg:$e, !add(!mul(i, 16), 15), !mul(i, 16))), sub_d1,
+            (v4f16 (EXTRACT_SUBREG PairedReg:$to, sub_d0)), sub_d0))>;
+
+def : Pat<(v8f16 (insertelt v8f16:$to, f16:$e, i64:$idx)),
+          (v8f16 (REG_SEQUENCE PairedReg,
+            (CMOVEHQ
+                (COMPNHQ
+                  (MAKEi64 0x3000200010000),
+                  (SBMM8ri32s SingleReg:$idx, 0x00010001),
+                  comparison_eq),
+                  (v4f16 (EXTRACT_SUBREG PairedReg:$to, sub_d0)),
+                  (SBMM8ri32s SingleReg:$e, 0x02010201),
+                simplecond_nez),
+            sub_d0,
+            (CMOVEHQ
+                (COMPNHQ
+                  (MAKEi64 0x7000600050004),
+                  (SBMM8ri32s SingleReg:$idx, 0x00010001),
+                  comparison_eq),
+                  (v4f16 (EXTRACT_SUBREG PairedReg:$to, sub_d1)),
+                  (SBMM8ri32s SingleReg:$e, 0x02010201),
+                simplecond_nez),
+            sub_d1))>;
+
+def : Pat<(f16 (extractelt v8f16:$from, (i64 0))),
+          (f16 (EXTRACT_SUBREG PairedReg:$from, sub_d0))>;
+
+def : Pat<(f16 (extractelt v8f16:$from, (i64 1))),
+          (f16 (SRLWri (v2f16(EXTRACT_SUBREG PairedReg:$from, sub_d0)), 16))>;
+
+def : Pat<(f16 (extractelt v8f16:$from, (i64 2))),
+          (f16 (EXTFZ (v2f16(EXTRACT_SUBREG PairedReg:$from, sub_d0)), 47, 32))>;
+
+def : Pat<(f16 (extractelt v8f16:$from, (i64 3))),
+          (f16 (SRLDri (v2f16(EXTRACT_SUBREG PairedReg:$from, sub_d0)), 48))>;
+
+def : Pat<(f16 (extractelt v8f16:$from, (i64 4))),
+          (f16 (EXTRACT_SUBREG PairedReg:$from, sub_d1))>;
+
+def : Pat<(f16 (extractelt v8f16:$from, (i64 5))),
+          (f16 (SRLWri (v2f16(EXTRACT_SUBREG PairedReg:$from, sub_d1)), 16))>;
+
+def : Pat<(f16 (extractelt v8f16:$from, (i64 6))),
+          (f16 (EXTFZ (v2f16(EXTRACT_SUBREG PairedReg:$from, sub_d1)), 47, 32))>;
+
+def : Pat<(f16 (extractelt v8f16:$from, (i64 7))),
+          (f16 (SRLDri (v2f16(EXTRACT_SUBREG PairedReg:$from, sub_d1)), 48))>;
+
+def : Pat<(f16(extractelt v8f16:$v, i64:$s)),
+          (f16 (SRLDrr
+              (v4f16 (CMOVEDrr
+                  (i32 (COMPWri SingleReg:$s, (i32 4), comparison_geu)),
+                  (v4f16 (EXTRACT_SUBREG (v8f16 PairedReg:$v), sub_d0)),
+                  (v4f16 (EXTRACT_SUBREG (v8f16 PairedReg:$v), sub_d1)),
+                  scalarcond_odd
+                )
+              ),
+              (i32 (SLLWri ( i32 (ANDWri10 (i64 SingleReg:$s), 3)), 4))
+            )
+          )>;
 
 //===----------------------------------------------------------------------===//
 //  Integer Bit Counting - Patterns
@@ -2102,7 +2177,7 @@ foreach vt = [ v2i8, v2f16, v2i16, v2f32, v2i32, v4i8, v4f16, v4i16, v8i8 ] in {
                 (CMOVEDrr SingleReg:$cc, SingleReg:$t, SingleReg:$f, scalarcond_even)>;
 }
 
-foreach vt = [ v2f64, v2i64, v4f32, v4i32 ] in {
+foreach vt = [ v2f64, v2i64, v4f32, v4i32, v8f16 ] in {
 def : Pat<(vt (select i32:$cc, vt:$t, vt:$f)),
             (REG_SEQUENCE PairedReg,
             (CMOVEDrr
