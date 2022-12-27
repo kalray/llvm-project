@@ -2647,24 +2647,31 @@ class FFM_FAMILY<string OpcStr, RegisterClass RC_OUT, RegisterClass RC_IN, Instr
 let Predicates = [IsV2] in {
 def FFDMAW : ROUNDING_SILENT_BINOP_FFDM<"ffdmaw", SingleReg, SingleReg, MAU_FP>;
 def FFDMAWP: ROUNDING_SILENT_BINOP_FFDM<"ffdmawp", SingleReg, PairedReg, MAU_FP>;
+defm FFDMAWQ : I<"ffdmawq", MAU_FP, [QuadReg, QuadReg], [RoundingMod, SilentMod], [], [], [PairedReg], 0>;
 
 def FFDMSW : ROUNDING_SILENT_BINOP_FFDM<"ffdmsw", SingleReg, SingleReg, MAU_FP>;
 def FFDMSWP: ROUNDING_SILENT_BINOP_FFDM<"ffdmswp", SingleReg, PairedReg, MAU_FP>;
+defm FFDMSWQ : I<"ffdmswq", MAU_FP, [QuadReg, QuadReg], [RoundingMod, SilentMod], [], [], [PairedReg], 0>;
 
 def FFMAWQ : FFM_FAMILY_ACC<"ffmawq", PairedReg, PairedReg, MAU_AUXR_FP>;
 def FFMSWQ : FFM_FAMILY_ACC<"ffmswq", PairedReg, PairedReg, MAU_AUXR_FP>;
 
-def FFDMDAW : FFM_FAMILY_ACC<"ffdmdaw", SingleReg, SingleReg, MAU_AUXR_FP>;
-def FFDMDAWP : FFM_FAMILY_ACC<"ffdmdawp", SingleReg, PairedReg, MAU_AUXR_FP>;
+def FFDMDAW : FFM_FAMILY_ACC<"ffdmdaw", SingleReg, SingleReg, MAU_AUXR_FP, int_kvx_ffdmda, f32, v2f32>;
+def FFDMDAWP : FFM_FAMILY_ACC<"ffdmdawp", SingleReg, PairedReg, MAU_AUXR_FP, int_kvx_ffdmda, v2f32, v4f32>;
+defm FFDMDAWQ : I<"ffdmdawq", MAU_AUXR_FP, [QuadReg, QuadReg], [RoundingMod, SilentMod], [], [], [PairedReg], 1>;
 
-def FFDMDSW : FFM_FAMILY_ACC<"ffdmdsw", SingleReg, SingleReg, MAU_AUXR_FP>;
-def FFDMDSWP : FFM_FAMILY_ACC<"ffdmdswp", SingleReg, PairedReg, MAU_AUXR_FP>;
 
-def FFDMASW : FFM_FAMILY_ACC<"ffdmasw", SingleReg, SingleReg, MAU_AUXR_FP>;
-def FFDMASWP : FFM_FAMILY_ACC<"ffdmaswp", SingleReg, PairedReg, MAU_AUXR_FP>;
+def FFDMDSW : FFM_FAMILY_ACC<"ffdmdsw", SingleReg, SingleReg, MAU_AUXR_FP, int_kvx_ffdmds, f32, v2f32>;
+def FFDMDSWP : FFM_FAMILY_ACC<"ffdmdswp", SingleReg, PairedReg, MAU_AUXR_FP, int_kvx_ffdmds, v2f32, v4f32>;
+defm FFDMDSWQ : I<"ffdmdswq", MAU_AUXR_FP, [QuadReg, QuadReg], [RoundingMod, SilentMod], [], [], [PairedReg], 1>;
 
-def FFDMSAW : ROUNDING_SILENT_TERNARY_AUXR_FP<"ffdmsaw", SingleReg, SingleReg, MAU_AUXR_FP>;
-def FFDMSAWP : ROUNDING_SILENT_TERNARY_AUXR_FP<"ffdmsawp", SingleReg, PairedReg, MAU_AUXR_FP>;
+def FFDMASW : FFM_FAMILY_ACC<"ffdmasw", SingleReg, SingleReg, MAU_AUXR_FP, int_kvx_ffdmas, f32, v2f32>;
+def FFDMASWP : FFM_FAMILY_ACC<"ffdmaswp", SingleReg, PairedReg, MAU_AUXR_FP, int_kvx_ffdmas, v2f32, v4f32>;
+defm FFDMASWQ : I<"ffdmaswq", MAU_AUXR_FP, [QuadReg, QuadReg], [RoundingMod, SilentMod], [], [], [PairedReg], 1>;
+
+def FFDMSAW : FFM_FAMILY_ACC<"ffdmsaw", SingleReg, SingleReg, MAU_AUXR_FP, int_kvx_ffdmsa, f32, v2f32>;
+def FFDMSAWP : FFM_FAMILY_ACC<"ffdmsawp", SingleReg, PairedReg, MAU_AUXR_FP, int_kvx_ffdmsa, v2f32, v4f32>;
+defm FFDMSAWQ : I<"ffdmsawq", MAU_AUXR_FP, [QuadReg, QuadReg], [RoundingMod, SilentMod], [], [], [PairedReg], 1>;
 
 def FMULWCP : CONJ_ROUNDING_SILENT_BINOP<"fmulwcp", PairedReg, PairedReg, MAU_FP>;
 

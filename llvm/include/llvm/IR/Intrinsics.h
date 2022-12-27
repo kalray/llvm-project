@@ -129,8 +129,9 @@ namespace Intrinsic {
       Subdivide2Argument,
       Subdivide4Argument,
       VecOfBitcastsToInt,
-      AMX
-    } Kind;
+    AMX,
+    DoubleVec,
+  } Kind;
 
     union {
       unsigned Integer_Width;
@@ -156,16 +157,17 @@ namespace Intrinsic {
              Kind == SameVecWidthArgument || Kind == PtrToArgument ||
              Kind == PtrToElt || Kind == VecElementArgument ||
              Kind == Subdivide2Argument || Kind == Subdivide4Argument ||
-             Kind == VecOfBitcastsToInt);
-      return Argument_Info >> 3;
+           Kind == VecOfBitcastsToInt || Kind == DoubleVec);
+    return Argument_Info >> 3;
     }
     ArgKind getArgumentKind() const {
       assert(Kind == Argument || Kind == ExtendArgument ||
              Kind == TruncArgument || Kind == HalfVecArgument ||
              Kind == SameVecWidthArgument || Kind == PtrToArgument ||
              Kind == VecElementArgument || Kind == Subdivide2Argument ||
-             Kind == Subdivide4Argument || Kind == VecOfBitcastsToInt);
-      return (ArgKind)(Argument_Info & 7);
+           Kind == Subdivide4Argument || Kind == VecOfBitcastsToInt ||
+           Kind == DoubleVec);
+    return (ArgKind)(Argument_Info & 7);
     }
 
     // VecOfAnyPtrsToElt uses both an overloaded argument (for address space)

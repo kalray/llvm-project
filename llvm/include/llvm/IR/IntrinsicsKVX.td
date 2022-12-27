@@ -316,6 +316,12 @@ def int_kvx_avg: Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>, LLVMMatchType<0>
 def int_kvx_fadd : Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>, LLVMMatchType<0>, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_faddc : Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>, LLVMMatchType<0>, llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_fcdiv: Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>, LLVMMatchType<0>, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_ffdma: Intrinsic<[llvm_anyfloat_ty], [LLVMDoubleElementsOfVecOrScalar<0>, LLVMDoubleElementsOfVecOrScalar<0>, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_ffdmas: Intrinsic<[llvm_anyfloat_ty], [LLVMDoubleElementsOfVecOrScalar<0>, LLVMDoubleElementsOfVecOrScalar<0>, LLVMMatchType<0>, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_ffdmda: Intrinsic<[llvm_anyfloat_ty], [LLVMDoubleElementsOfVecOrScalar<0>, LLVMDoubleElementsOfVecOrScalar<0>, LLVMMatchType<0>, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_ffdmds: Intrinsic<[llvm_anyfloat_ty], [LLVMDoubleElementsOfVecOrScalar<0>, LLVMDoubleElementsOfVecOrScalar<0>, LLVMMatchType<0>, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_ffdms: Intrinsic<[llvm_anyfloat_ty], [LLVMDoubleElementsOfVecOrScalar<0>, LLVMDoubleElementsOfVecOrScalar<0>, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_ffdmsa: Intrinsic<[llvm_anyfloat_ty], [LLVMDoubleElementsOfVecOrScalar<0>, LLVMDoubleElementsOfVecOrScalar<0>, LLVMMatchType<0>, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_ffma : Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>, LLVMMatchType<0>, LLVMMatchType<0>, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_ffms : Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>, LLVMMatchType<0>, LLVMMatchType<0>, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_fmul : Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>, LLVMMatchType<0>, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
