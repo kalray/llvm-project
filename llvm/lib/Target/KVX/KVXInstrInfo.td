@@ -2847,39 +2847,39 @@ def FMAXHQ : KVX_INSTRUCTION
 
 let Uses = [CS] in {
 def FLOATD : KVX_INSTRUCTION
-  <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
+  <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6W:$a5, RoundingMod:$a1, SilentMod:$a2),
    "floatd$a1$a2 $a3 = $a4, $a5",
-   [/* no straightforward pattern */],
+   [(set f64:$a3, (f64(int_kvx_floatd i64:$a4, Unsigned6W:$a5, RoundingMod:$a1, SilentMod:$a2)))],
    MAU_FP>;
 
 def FLOATWP : KVX_INSTRUCTION
-  <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
+  <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6W:$a5, RoundingMod:$a1, SilentMod:$a2),
    "floatwp$a1$a2 $a3 = $a4, $a5",
-   [/* no straightforward pattern */],
+   [(set v2f32:$a3, (v2f32(int_kvx_floatwp v2i32:$a4, Unsigned6W:$a5, RoundingMod:$a1, SilentMod:$a2)))],
    MAU_FP>;
 
 def FLOATW : KVX_INSTRUCTION
-  <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
+  <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6W:$a5, RoundingMod:$a1, SilentMod:$a2),
    "floatw$a1$a2 $a3 = $a4, $a5",
-   [/* no straightforward pattern */],
+   [(set f32:$a3, (f32(int_kvx_floatw i32:$a4, Unsigned6W:$a5, RoundingMod:$a1, SilentMod:$a2)))],
    MAU_FP>;
 
 def FLOATUD : KVX_INSTRUCTION
-  <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
+  <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6W:$a5, RoundingMod:$a1, SilentMod:$a2),
    "floatud$a1$a2 $a3 = $a4, $a5",
-   [/* no straightforward pattern */],
+   [(set f64:$a3, (f64(int_kvx_floatud i64:$a4, Unsigned6W:$a5, RoundingMod:$a1, SilentMod:$a2)))],
    MAU_FP>;
 
 def FLOATUWP : KVX_INSTRUCTION
-  <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
+  <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6W:$a5, RoundingMod:$a1, SilentMod:$a2),
    "floatuwp$a1$a2 $a3 = $a4, $a5",
-   [/* no straightforward pattern */],
+   [(set v2f32:$a3, (v2f32(int_kvx_floatuwp v2i32:$a4, Unsigned6W:$a5, RoundingMod:$a1, SilentMod:$a2)))],
    MAU_FP>;
 
 def FLOATUW : KVX_INSTRUCTION
-  <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
+  <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6W:$a5, RoundingMod:$a1, SilentMod:$a2),
    "floatuw$a1$a2 $a3 = $a4, $a5",
-   [/* no straightforward pattern */],
+   [(set f32:$a3, (f32(int_kvx_floatuw i32:$a4, Unsigned6W:$a5, RoundingMod:$a1, SilentMod:$a2)))],
    MAU_FP>;
 
 def FIXEDD : KVX_INSTRUCTION
