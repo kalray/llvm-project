@@ -323,12 +323,8 @@ multiclass FFM__WCP<Intrinsic int_kvx_fop, KVX_INSTRUCTION FOP, KVX_INSTRUCTION 
 defm: FFM__WCP<int_kvx_ffmawcp, FADDWPrr, FADDWCrr, FMULWCrr>;
 defm: FFM__WCP<int_kvx_ffmswcp, FSBFWPrr, FSBFWCrr, FMULWCrr>;
 
-def: Pat<(int_kvx_fconjwc v2f32:$v), (FNEGD SingleReg:$v)>;
-def: Pat<(int_kvx_fconjwcp v4f32:$v),
-  (v4f32 (REG_SEQUENCE PairedReg,
-    (FNEGD (v2f32 (EXTRACT_SUBREG PairedReg:$v, sub_d0))), sub_d0,
-    (FNEGD (v2f32 (EXTRACT_SUBREG PairedReg:$v, sub_d1))), sub_d1))>;
-def: Pat<(int_kvx_fconjdc v2f64:$v),
+def: Pat<(v2f32(int_kvx_fcconj v2f32:$v)), (FNEGD SingleReg:$v)>;
+def: Pat<(int_kvx_fcconj v2f64:$v),
   (v2f64 (REG_SEQUENCE PairedReg,
     (f64 (EXTRACT_SUBREG PairedReg:$v, sub_d0)), sub_d0,
     (FNEGD (f64 (EXTRACT_SUBREG PairedReg:$v, sub_d1))), sub_d1))>;
