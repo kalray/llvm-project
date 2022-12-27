@@ -170,13 +170,12 @@ def: Pat<(v4f32(int_kvx_fsbfc v4f32:$v1, v4f32:$v2, conjugate_, i32:$rounding, i
 def: Pat<(v2f64(int_kvx_fsbfc v2f64:$v1, v2f64:$v2, conjugate_, i32:$rounding, i32:$silent)),
           (FSBFDP PairedReg:$v1, PairedReg:$v2, RoundingMod:$rounding, SilentMod:$silent)>;
 
-def: Pat<(int_kvx_fmulwp v2f32:$v1, v2f32:$v2, i32:$rounding, i32:$silent), (FMULWPrr SingleReg:$v1, SingleReg:$v2, RoundingMod:$rounding, SilentMod:$silent)>;
-def: Pat<(int_kvx_fmulwq v4f32:$v1, v4f32:$v2, i32:$rounding, i32:$silent), (FMULWQ PairedReg:$v1, PairedReg:$v2, RoundingMod:$rounding, SilentMod:$silent)>;
+def: Pat<(v2f32(int_kvx_fmul v2f32:$v1, v2f32:$v2, i32:$rounding, i32:$silent)),
+         (FMULWPrr SingleReg:$v1, SingleReg:$v2, RoundingMod:$rounding, SilentMod:$silent)>;
 
-def: Pat<(int_kvx_fmuldp v2f64:$v1, v2f64:$v2, i32:$rounding, i32:$silent),
-  (v2f64 (REG_SEQUENCE PairedReg,
-    (FMULDrr (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_d0)), (f64 (EXTRACT_SUBREG PairedReg:$v2, sub_d0)), RoundingMod:$rounding, SilentMod:$silent), sub_d0,
-    (FMULDrr (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_d1)), (f64 (EXTRACT_SUBREG PairedReg:$v2, sub_d1)), RoundingMod:$rounding, SilentMod:$silent), sub_d1))>;
+def: Pat<(v4f32(int_kvx_fmul v4f32:$v1, v4f32:$v2, i32:$rounding, i32:$silent)),
+         (FMULWQ PairedReg:$v1, PairedReg:$v2, RoundingMod:$rounding, SilentMod:$silent)>;
+
 
 multiclass FFM___<Intrinsic Int, KVX_INSTRUCTION Opcode, ValueType OperandTy, ValueType DataTy> {
   def: Pat<(Int OperandTy:$v1, OperandTy:$v2, OperandTy:$v3, i32:$rounding, i32:$silent),
@@ -381,8 +380,8 @@ def: Pat<(f32(int_kvx_fadd f32:$v1, f32:$v2, i32:$rounding, i32:$silent)), (FADD
 def: Pat<(f64(int_kvx_fadd f64:$v1, f64:$v2, i32:$rounding, i32:$silent)), (FADDDrr SingleReg:$v1, SingleReg:$v2, RoundingMod:$rounding, SilentMod:$silent)>;
 def: Pat<(f32(int_kvx_fsbf f32:$v1, f32:$v2, i32:$rounding, i32:$silent)), (FSBFWrr SingleReg:$v1, SingleReg:$v2, RoundingMod:$rounding, SilentMod:$silent)>;
 def: Pat<(f64(int_kvx_fsbf f64:$v1, f64:$v2, i32:$rounding, i32:$silent)), (FSBFDrr SingleReg:$v1, SingleReg:$v2, RoundingMod:$rounding, SilentMod:$silent)>;
-def: Pat<(int_kvx_fmulw f32:$v1, f32:$v2, i32:$rounding, i32:$silent), (FMULWrr SingleReg:$v1, SingleReg:$v2, RoundingMod:$rounding, SilentMod:$silent)>;
-def: Pat<(int_kvx_fmuld f64:$v1, f64:$v2, i32:$rounding, i32:$silent), (FMULDrr SingleReg:$v1, SingleReg:$v2, RoundingMod:$rounding, SilentMod:$silent)>;
+def: Pat<(f32(int_kvx_fmul f32:$v1, f32:$v2, i32:$rounding, i32:$silent)), (FMULWrr SingleReg:$v1, SingleReg:$v2, RoundingMod:$rounding, SilentMod:$silent)>;
+def: Pat<(f64(int_kvx_fmul f64:$v1, f64:$v2, i32:$rounding, i32:$silent)), (FMULDrr SingleReg:$v1, SingleReg:$v2, RoundingMod:$rounding, SilentMod:$silent)>;
 def: Pat<(f64(int_kvx_fmulx f32:$v1, f32:$v2, i32:$rounding, i32:$silent)), (FMULWDrr SingleReg:$v1, SingleReg:$v2, RoundingMod:$rounding, SilentMod:$silent)>;
 def: Pat<(v2f64(int_kvx_fmulx v2f32:$v1, v2f32:$v2, i32:$rounding, i32:$silent)), (FMULWDPrr SingleReg:$v1, SingleReg:$v2, RoundingMod:$rounding, SilentMod:$silent)>;
 def: Pat<(f32(int_kvx_ffma f32:$v1, f32:$v2, f32:$v3, i32:$rounding, i32:$silent)), (FFMAWrr SingleReg:$v3, SingleReg:$v1, SingleReg:$v2, RoundingMod:$rounding, SilentMod:$silent)>;
@@ -459,24 +458,26 @@ def: Pat<(vt(int_kvx_select vt:$t, vt:$f, i64:$c, i32:$sc)),
          (CMOVEDrr SingleReg:$c, SingleReg:$f, SingleReg:$t, ScalarcondMod:$sc)>;
 
 // widen patterns
-def: Pat<(int_kvx_fwidenmwd v2f32:$v, i32:$silent), (FWIDENMWD SingleReg:$v, SilentMod:$silent)>;
-def: Pat<(int_kvx_fwidenlhwp v4f16:$v, i32:$silent), (FWIDENLHWP SingleReg:$v, SilentMod:$silent)>;
-def: Pat<(int_kvx_fwidenmhwp v4f16:$v, i32:$silent), (FWIDENMHWP SingleReg:$v, SilentMod:$silent)>;
-
-def: Pat<(int_kvx_fwidenlhw v4f16:$v, i32:$silent), (FWIDENLHW SingleReg:$v, SilentMod:$silent)>;
-def: Pat<(int_kvx_fwidenlhw (build_vector f16:$f1, (f16 undef), (f16 undef), (f16 undef)), i32:$silent), (FWIDENLHW SingleReg:$f1, SilentMod:$silent)>;
-
-def: Pat<(int_kvx_fwidenlwd v2f32:$v, i32:$silent), (FWIDENLWD SingleReg:$v, SilentMod:$silent)>;
-def: Pat<(int_kvx_fwidenlwd (build_vector f32:$f1, (f32 undef)), i32:$silent), (FWIDENLWD SingleReg:$f1, SilentMod:$silent)>;
 
 // f16 patterns
-def: Pat<(int_kvx_fmulhq v4f16:$v1, v4f16:$v2, i32:$rounding, i32:$silent), (FMULHQrr SingleReg:$v1, SingleReg:$v2, RoundingMod:$rounding, SilentMod:$silent)>;
-def: Pat<(int_kvx_fmulhq (build_vector f16:$f1, (f16 undef), (f16 undef), (f16 undef)),
-                         (build_vector f16:$f2, (f16 undef), (f16 undef), (f16 undef)), i32:$rounding, (i32 1)),
-         (FMULHQrr SingleReg:$f1, SingleReg:$f2, RoundingMod:$rounding, silent_s)>;
-def: Pat<(int_kvx_fmulhq (build_vector f16:$f1, (f16 undef), (f16 undef), (f16 undef)),
-                         (build_vector f16:$f2, (f16 undef), (f16 undef), (f16 undef)), i32:$rounding, (i32 0)),
-         (FMULHQrr (ZXHD SingleReg:$f1), (ZXHD SingleReg:$f2), RoundingMod:$rounding, silent_)>;
+multiclass F16_SUBVECTOR__BINOP<Intrinsic I, Instruction RR> {
+def: Pat<(v2f16 (I v2f16:$f1, v2f16:$f2, i32:$rounding, silent_)),
+         (RR (ZXWD SingleReg:$f1), (ZXWD SingleReg:$f2), RoundingMod:$rounding, silent_)>;
+
+def: Pat<(v2f16 (I v2f16:$f1, v2f16:$f2, i32:$rounding, silent_s)),
+         (RR SingleReg:$f1, SingleReg:$f2, RoundingMod:$rounding, silent_s)>;
+
+def: Pat<(f16 (I f16:$f1, f16:$f2, i32:$rounding, silent_)),
+         (RR (ZXHD SingleReg:$f1), (ZXHD SingleReg:$f2), RoundingMod:$rounding, silent_)>;
+
+def: Pat<(f16 (I f16:$f1, f16:$f2, i32:$rounding, silent_s)),
+         (RR SingleReg:$f1, SingleReg:$f2, RoundingMod:$rounding, silent_s)>;
+}
+
+def: Pat<(v4f16 (int_kvx_fmul v4f16:$v1, v4f16:$v2, i32:$rounding, i32:$silent)),
+         (FMULHQrr SingleReg:$v1, SingleReg:$v2, RoundingMod:$rounding, SilentMod:$silent)>;
+
+defm : F16_SUBVECTOR__BINOP<int_kvx_fmul, FMULHQrr>;
 
 def: Pat<(v4f16(int_kvx_ffma v4f16:$v1, v4f16:$v2, v4f16:$v3, i32:$rounding, i32:$silent)),
   (v4f16 (FFMAHQrr SingleReg:$v1, SingleReg:$v2, SingleReg:$v3, RoundingMod:$rounding, SilentMod:$silent))>;

@@ -52,3 +52,14 @@ define <8 x float> @fmulwo(<8 x float> %0, <8 x float> %1) {
   ret <8 x float> %9
 }
 
+declare <4 x float> @llvm.kvx.fmul.v4f32(<4 x float>, <4 x float>, i32, i32)
+
+define <4 x float> @fmulwq(<4 x float> %0, <4 x float> %1) {
+; CV2-LABEL: fmulwq:
+; CV2:       # %bb.0:
+; CV2-NEXT:    fmulwq.rn $r0r1 = $r0r1, $r2r3
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
+  %3 = tail call <4 x float> @llvm.kvx.fmul.v4f32(<4 x float> %0, <4 x float> %1, i32 0, i32 0)
+  ret <4 x float> %3
+}
