@@ -965,18 +965,18 @@ define <2 x float> @FMULCWC_3(<2 x float> %0, <2 x float> %1) {
 define <2 x double> @FMULCWDC_3(<2 x float> %0, <2 x float> %1) {
 ; CHECK-LABEL: FMULCWDC_3:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fwidenlwd $r4 = $r0
+; CHECK-NEXT:    fwidenmwd $r3 = $r0
 ; CHECK-NEXT:    fwidenmwd $r5 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld $r2 = $r5, $r4
-; CHECK-NEXT:    fwidenmwd $r3 = $r0
+; CHECK-NEXT:    fmuld $r0 = $r5, $r3
+; CHECK-NEXT:    fwidenlwd $r4 = $r0
 ; CHECK-NEXT:    fwidenlwd $r6 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fmuld $r0 = $r5, $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmsd $r2 = $r6, $r3
+; CHECK-NEXT:    fmuld $r2 = $r5, $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ffmad $r0 = $r6, $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ffmsd $r2 = $r6, $r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r2
 ; CHECK-NEXT:    ret

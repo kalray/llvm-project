@@ -299,6 +299,9 @@ def int_kvx_fadd : Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>, LLVMMatchTyp
 def int_kvx_faddc : Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>, LLVMMatchType<0>, llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_fcconj : Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>], [IntrNoMem]>;
 def int_kvx_fcdiv: Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>, LLVMMatchType<0>, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_fcfma : Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>, LLVMMatchType<0>, LLVMMatchType<0>, llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_fcfms : Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>, LLVMMatchType<0>, LLVMMatchType<0>, llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_fcmul : Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>, LLVMMatchType<0>, llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_ffdma: Intrinsic<[llvm_anyfloat_ty], [LLVMDoubleElementsOfVecOrScalar<0>, LLVMDoubleElementsOfVecOrScalar<0>, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_ffdmas: Intrinsic<[llvm_anyfloat_ty], [LLVMDoubleElementsOfVecOrScalar<0>, LLVMDoubleElementsOfVecOrScalar<0>, LLVMMatchType<0>, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_ffdmda: Intrinsic<[llvm_anyfloat_ty], [LLVMDoubleElementsOfVecOrScalar<0>, LLVMDoubleElementsOfVecOrScalar<0>, LLVMMatchType<0>, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;

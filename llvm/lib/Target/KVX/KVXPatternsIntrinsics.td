@@ -229,21 +229,21 @@ def: Pat<(int_kvx_fmm212w v2f32:$v1, v2f32:$v2, i32:$rounding, i32:$silent), (FM
 def: Pat<(int_kvx_fmma212w v2f32:$v1, v2f32:$v2, v4f32:$v3, i32:$rounding, i32:$silent), (FMMA212W PairedReg:$v3, SingleReg:$v1, SingleReg:$v2, RoundingMod:$rounding, SilentMod:$silent)>;
 def: Pat<(int_kvx_fmms212w v2f32:$v1, v2f32:$v2, v4f32:$v3, i32:$rounding, i32:$silent), (FMMS212W PairedReg:$v3, SingleReg:$v1, SingleReg:$v2, RoundingMod:$rounding, SilentMod:$silent)>;
 
-def: Pat<(int_kvx_fmulwc v2f32:$v1, v2f32:$v2, i32:$conjugate, i32:$rounding, i32:$silent),
-          (FMULWCrr SingleReg:$v1, SingleReg:$v2, ConjugateMod:$conjugate, RoundingMod:$rounding, SilentMod:$silent)>;
+def: Pat<(v2f32(int_kvx_fcmul v2f32:$v1, v2f32:$v2, i32:$conjugate, i32:$rounding, i32:$silent)),
+         (FMULWCrr SingleReg:$v1, SingleReg:$v2, ConjugateMod:$conjugate, RoundingMod:$rounding, SilentMod:$silent)>;
 
-def: Pat<(int_kvx_fmulwcp v4f32:$v1, v4f32:$v2, i32:$conjugate, i32:$rounding, i32:$silent),
+def: Pat<(v4f32(int_kvx_fcmul v4f32:$v1, v4f32:$v2, i32:$conjugate, i32:$rounding, i32:$silent)),
   (v4f32 (REG_SEQUENCE PairedReg,
      (FMULWCrr (v2f32 (EXTRACT_SUBREG PairedReg:$v1, sub_d0)),
                (v2f32 (EXTRACT_SUBREG PairedReg:$v2, sub_d0)), ConjugateMod:$conjugate, RoundingMod:$rounding, SilentMod:$silent), sub_d0,
      (FMULWCrr (v2f32 (EXTRACT_SUBREG PairedReg:$v1, sub_d1)),
                (v2f32 (EXTRACT_SUBREG PairedReg:$v2, sub_d1)), ConjugateMod:$conjugate, RoundingMod:$rounding, SilentMod:$silent), sub_d1))>, Requires<[IsV1]>;
 
-def: Pat<(int_kvx_fmulwcp v4f32:$v1, v4f32:$v2, i32:$conjugate, i32:$rounding, i32:$silent),
+def: Pat<(v4f32 (int_kvx_fcmul v4f32:$v1, v4f32:$v2, i32:$conjugate, i32:$rounding, i32:$silent)),
   (v4f32 (FMULWCP PairedReg:$v1, PairedReg:$v2, ConjugateMod:$conjugate, RoundingMod:$rounding, SilentMod:$silent))>, Requires<[IsV2]>;
 
-multiclass FMUL_DC<Intrinsic int_kvx_fmul, KVX_INSTRUCTION FFMS, KVX_INSTRUCTION FFMA> {
-  def: Pat<(int_kvx_fmul v2f64:$v1, v2f64:$v2, i32:$rounding, i32:$silent),
+multiclass FMUL_DC<KVX_INSTRUCTION FFMS, KVX_INSTRUCTION FFMA, Conjugate CM> {
+  def: Pat<(int_kvx_fcmul v2f64:$v1, v2f64:$v2, CM, i32:$rounding, i32:$silent),
     (v2f64 (REG_SEQUENCE PairedReg,
       (FFMS (FMULDrr (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_d0)), (f64 (EXTRACT_SUBREG PairedReg:$v2, sub_d0)), RoundingMod:$rounding, SilentMod:$silent),
             (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_d1)),
@@ -253,11 +253,11 @@ multiclass FMUL_DC<Intrinsic int_kvx_fmul, KVX_INSTRUCTION FFMS, KVX_INSTRUCTION
             (f64 (EXTRACT_SUBREG PairedReg:$v2, sub_d0)), RoundingMod:$rounding, SilentMod:$silent), sub_d1))>;
 }
 
-defm: FMUL_DC<int_kvx_fmuldc, FFMSDrr, FFMADrr>;
-defm: FMUL_DC<int_kvx_fmulcdc, FFMADrr, FFMSDrr>;
+defm: FMUL_DC<FFMSDrr, FFMADrr, conjugate_>;
+defm: FMUL_DC<FFMADrr, FFMSDrr, conjugate_c>;
 
-multiclass FFM__DC<Intrinsic int_kvx_ffmop, KVX_INSTRUCTION FOP, KVX_INSTRUCTION FFMS, KVX_INSTRUCTION FFMA> {
-  def: Pat<(int_kvx_ffmop v2f64:$v1, v2f64:$v2, v2f64:$v3, i32:$rounding, i32:$silent),
+multiclass FFM__DC<Intrinsic int_kvx_ffmop, KVX_INSTRUCTION FOP, KVX_INSTRUCTION FFMS, KVX_INSTRUCTION FFMA, Conjugate C> {
+  def: Pat<(v2f64(int_kvx_ffmop v2f64:$v1, v2f64:$v2, v2f64:$v3, C, i32:$rounding, i32:$silent)),
     (FOP
       (v2f64 (REG_SEQUENCE PairedReg,
         (FFMS (FMULDrr (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_d0)), (f64 (EXTRACT_SUBREG PairedReg:$v2, sub_d0)), RoundingMod:$rounding, SilentMod:$silent),
@@ -269,59 +269,37 @@ multiclass FFM__DC<Intrinsic int_kvx_ffmop, KVX_INSTRUCTION FOP, KVX_INSTRUCTION
       PairedReg:$v3, RoundingMod:$rounding, SilentMod:$silent)>;
 }
 
-multiclass FFM__CDC<Intrinsic int_kvx_ffmop, KVX_INSTRUCTION FOP, KVX_INSTRUCTION FFMS, KVX_INSTRUCTION FFMA> {
-  def: Pat<(int_kvx_ffmop v2f64:$v1, v2f64:$v2, v2f64:$v3, i32:$rounding, i32:$silent),
-    (FOP
-      (v2f64 (REG_SEQUENCE PairedReg,
-        (FFMS (FMULDrr (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_d0)), (f64 (EXTRACT_SUBREG PairedReg:$v2, sub_d0)), RoundingMod:$rounding, SilentMod:$silent),
-              (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_d1)),
-              (f64 (EXTRACT_SUBREG PairedReg:$v2, sub_d1)), RoundingMod:$rounding, SilentMod:$silent), sub_d0,
-        (FFMA (FMULDrr (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_d1)), (f64 (EXTRACT_SUBREG PairedReg:$v2, sub_d0)), RoundingMod:$rounding, SilentMod:$silent),
-              (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_d0)),
-              (f64 (EXTRACT_SUBREG PairedReg:$v2, sub_d1)), RoundingMod:$rounding, SilentMod:$silent), sub_d1)),
-      PairedReg:$v3, RoundingMod:$rounding, SilentMod:$silent)>;
-}
+defm: FFM__DC<int_kvx_fcfma, FADDDP, FFMSDrr, FFMADrr, conjugate_>;
+defm: FFM__DC<int_kvx_fcfms, FSBFDP, FFMSDrr, FFMADrr, conjugate_>;
+defm: FFM__DC<int_kvx_fcfma, FADDDC, FFMADrr, FFMSDrr, conjugate_c>;
+defm: FFM__DC<int_kvx_fcfms, FSBFDC, FFMADrr, FFMSDrr, conjugate_c>;
 
-defm: FFM__DC<int_kvx_ffmadc, FADDDP, FFMSDrr, FFMADrr>;
-defm: FFM__DC<int_kvx_ffmsdc, FSBFDP, FFMSDrr, FFMADrr>;
-defm: FFM__CDC<int_kvx_ffmacdc, FADDDC, FFMADrr, FFMSDrr>;
-defm: FFM__CDC<int_kvx_ffmscdc, FSBFDC, FFMADrr, FFMSDrr>;
-
-multiclass FFM__WC<Intrinsic int_kvx_fop, KVX_INSTRUCTION FOP, KVX_INSTRUCTION CFOP, KVX_INSTRUCTION FMUL> {
-  def: Pat<(int_kvx_fop v2f32:$v1, v2f32:$v2, v2f32:$v3, conjugate_, i32:$rounding, i32:$silent),
-    (FOP (FMUL SingleReg:$v2, SingleReg:$v1, conjugate_, RoundingMod:$rounding, SilentMod:$silent),
-         SingleReg:$v3, RoundingMod:$rounding, SilentMod:$silent)>;
-
-  def: Pat<(int_kvx_fop v2f32:$v1, v2f32:$v2, v2f32:$v3, conjugate_c, i32:$rounding, i32:$silent),
-    (CFOP (FMUL SingleReg:$v2, SingleReg:$v1, conjugate_c, RoundingMod:$rounding, SilentMod:$silent),
+multiclass FFM__WC<Intrinsic int_kvx_fop, KVX_INSTRUCTION FOP, Conjugate C> {
+  def: Pat<(v2f32(int_kvx_fop v2f32:$v1, v2f32:$v2, v2f32:$v3, C, i32:$rounding, i32:$silent)),
+    (FOP (FMULWCrr SingleReg:$v2, SingleReg:$v1, C, RoundingMod:$rounding, SilentMod:$silent),
          SingleReg:$v3, RoundingMod:$rounding, SilentMod:$silent)>;
 }
 
-defm: FFM__WC<int_kvx_ffmawc, FADDWPrr, FADDWCrr, FMULWCrr>;
-defm: FFM__WC<int_kvx_ffmswc, FSBFWPrr, FSBFWCrr, FMULWCrr>;
+defm: FFM__WC<int_kvx_fcfma, FADDWPrr, conjugate_>;
+defm: FFM__WC<int_kvx_fcfms, FSBFWPrr, conjugate_>;
+defm: FFM__WC<int_kvx_fcfma, FADDWCrr, conjugate_c>;
+defm: FFM__WC<int_kvx_fcfms, FSBFWCrr, conjugate_c>;
 
-multiclass FFM__WCP<Intrinsic int_kvx_fop, KVX_INSTRUCTION FOP, KVX_INSTRUCTION CFOP, KVX_INSTRUCTION FMUL> {
-  def: Pat<(int_kvx_fop v4f32:$v1, v4f32:$v2, v4f32:$v3, conjugate_, i32:$rounding, i32:$silent),
+multiclass FFM__WCP<Intrinsic int_kvx_fop, KVX_INSTRUCTION FOP, Conjugate C> {
+  def: Pat<(v4f32(int_kvx_fop v4f32:$v1, v4f32:$v2, v4f32:$v3, C, i32:$rounding, i32:$silent)),
     (v4f32 (REG_SEQUENCE PairedReg,
-       (FOP (FMUL (v2f32 (EXTRACT_SUBREG PairedReg:$v2, sub_d0)),
-                  (v2f32 (EXTRACT_SUBREG PairedReg:$v1, sub_d0)), conjugate_, RoundingMod:$rounding, SilentMod:$silent),
+       (FOP (FMULWCrr (v2f32 (EXTRACT_SUBREG PairedReg:$v2, sub_d0)),
+                  (v2f32 (EXTRACT_SUBREG PairedReg:$v1, sub_d0)), C, RoundingMod:$rounding, SilentMod:$silent),
             (v2f32 (EXTRACT_SUBREG PairedReg:$v3, sub_d0)), RoundingMod:$rounding, SilentMod:$silent), sub_d0,
-       (FOP (FMUL (v2f32 (EXTRACT_SUBREG PairedReg:$v2, sub_d1)),
-                  (v2f32 (EXTRACT_SUBREG PairedReg:$v1, sub_d1)), conjugate_, RoundingMod:$rounding, SilentMod:$silent),
-            (v2f32 (EXTRACT_SUBREG PairedReg:$v3, sub_d1)), RoundingMod:$rounding, SilentMod:$silent), sub_d1))>, Requires<[IsV1]>;
-
-  def: Pat<(int_kvx_fop v4f32:$v1, v4f32:$v2, v4f32:$v3, conjugate_c, i32:$rounding, i32:$silent),
-    (v4f32 (REG_SEQUENCE PairedReg,
-       (FOP (FMUL (v2f32 (EXTRACT_SUBREG PairedReg:$v2, sub_d0)),
-                  (v2f32 (EXTRACT_SUBREG PairedReg:$v1, sub_d0)), conjugate_c, RoundingMod:$rounding, SilentMod:$silent),
-            (v2f32 (EXTRACT_SUBREG PairedReg:$v3, sub_d0)), RoundingMod:$rounding, SilentMod:$silent), sub_d0,
-       (FOP (FMUL (v2f32 (EXTRACT_SUBREG PairedReg:$v2, sub_d1)),
-                  (v2f32 (EXTRACT_SUBREG PairedReg:$v1, sub_d1)), conjugate_c, RoundingMod:$rounding, SilentMod:$silent),
+       (FOP (FMULWCrr (v2f32 (EXTRACT_SUBREG PairedReg:$v2, sub_d1)),
+                  (v2f32 (EXTRACT_SUBREG PairedReg:$v1, sub_d1)), C, RoundingMod:$rounding, SilentMod:$silent),
             (v2f32 (EXTRACT_SUBREG PairedReg:$v3, sub_d1)), RoundingMod:$rounding, SilentMod:$silent), sub_d1))>, Requires<[IsV1]>;
 }
 
-defm: FFM__WCP<int_kvx_ffmawcp, FADDWPrr, FADDWCrr, FMULWCrr>;
-defm: FFM__WCP<int_kvx_ffmswcp, FSBFWPrr, FSBFWCrr, FMULWCrr>;
+defm: FFM__WCP<int_kvx_fcfma, FADDWPrr, conjugate_>;
+defm: FFM__WCP<int_kvx_fcfms, FSBFWCrr, conjugate_>;
+defm: FFM__WCP<int_kvx_fcfma, FADDWCrr, conjugate_c>;
+defm: FFM__WCP<int_kvx_fcfms, FSBFWCrr, conjugate_c>;
 
 def: Pat<(v2f32(int_kvx_fcconj v2f32:$v)), (FNEGD SingleReg:$v)>;
 def: Pat<(int_kvx_fcconj v2f64:$v),
