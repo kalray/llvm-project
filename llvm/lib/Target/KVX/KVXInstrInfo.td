@@ -3345,15 +3345,15 @@ defm FFMAWDP : MC_2F<"ffmawdp", int_kvx_ffmax>;
 
 defm FFMAHWQ : MC_30<"ffmahwq", int_kvx_ffmax>;
 
-defm FFMSHW : MC_2E_2<"ffmshw">;
+defm FFMSHW : MC_2E_2<"ffmshw", int_kvx_ffmsx>;
 
 defm FFMSW : MC_2E<"ffmsw">;
 
-defm FFMSWD : MC_26<"ffmswd">;
+defm FFMSWD : MC_26<"ffmswd", int_kvx_ffmsx>;
 
-defm FFMSWDP : MC_2F<"ffmswdp">;
+defm FFMSWDP : MC_2F<"ffmswdp", int_kvx_ffmsx>;
 
-defm FFMSHWQ : MC_30<"ffmshwq">;
+defm FFMSHWQ : MC_30<"ffmshwq", int_kvx_ffmsx>;
 
 let isAdd = 1 in
 defm FADDW : MC_31<"faddw">;

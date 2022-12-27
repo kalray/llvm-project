@@ -326,6 +326,7 @@ def int_kvx_ffdmsa: Intrinsic<[llvm_anyfloat_ty], [LLVMDoubleElementsOfVecOrScal
 def int_kvx_ffma : Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>, LLVMMatchType<0>, LLVMMatchType<0>, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_ffmax : Intrinsic<[llvm_anyfloat_ty], [LLVMTruncatedType<0>, LLVMTruncatedType<0>, LLVMMatchType<0>, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_ffms : Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>, LLVMMatchType<0>, LLVMMatchType<0>, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_ffmsx : Intrinsic<[llvm_anyfloat_ty], [LLVMTruncatedType<0>, LLVMTruncatedType<0>, LLVMMatchType<0>, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_fmul : Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>, LLVMMatchType<0>, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_fmulx : Intrinsic<[llvm_anyfloat_ty], [LLVMTruncatedType<0>, LLVMTruncatedType<0>, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_fneg: Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>], [IntrNoMem]>;
