@@ -654,9 +654,9 @@ define <8 x half> @shiftfho_four(<8 x half> %v, half %b) {
 ; CHECK-LABEL: shiftfho_four:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    copyd $r0 = $r1
-; CHECK-NEXT:    sbmm8.@ $r2 = $r2, 0x2010201
+; CHECK-NEXT:    sbmm8.@ $r3 = $r2, 0x2010201
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r2
+; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -700,35 +700,37 @@ define <16 x half> @shiftfhx_one(<16 x half> %v, half %b) {
 ; CV1-LABEL: shiftfhx_one:
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    srld $r0 = $r0, 16
-; CV1-NEXT:    srld $r5 = $r1, 16
-; CV1-NEXT:    srld $r6 = $r3, 16
+; CV1-NEXT:    srld $r5 = $r3, 16
+; CV1-NEXT:    srld $r6 = $r2, 16
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    srld $r2 = $r2, 16
-; CV1-NEXT:    insf $r5 = $r2, 63, 48
-; CV1-NEXT:    insf $r6 = $r4, 63, 48
+; CV1-NEXT:    srld $r3 = $r1, 16
+; CV1-NEXT:    insf $r5 = $r4, 63, 48
+; CV1-NEXT:    insf $r6 = $r3, 63, 48
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    insf $r0 = $r1, 63, 48
-; CV1-NEXT:    copyd $r1 = $r5
-; CV1-NEXT:    insf $r2 = $r3, 63, 48
-; CV1-NEXT:    copyd $r3 = $r6
+; CV1-NEXT:    insf $r3 = $r2, 63, 48
+; CV1-NEXT:    ;;
+; CV1-NEXT:    copyd $r1 = $r3
+; CV1-NEXT:    copyd $r2 = $r6
+; CV1-NEXT:    copyd $r3 = $r5
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;;
 ;
 ; CV2-LABEL: shiftfhx_one:
 ; CV2:       # %bb.0: # %entry
 ; CV2-NEXT:    srld $r0 = $r0, 16
-; CV2-NEXT:    srld $r5 = $r1, 16
+; CV2-NEXT:    srld $r5 = $r3, 16
 ; CV2-NEXT:    srld $r6 = $r2, 16
-; CV2-NEXT:    srld $r7 = $r3, 16
+; CV2-NEXT:    srld $r7 = $r1, 16
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r0 = $r1, 63, 48
-; CV2-NEXT:    insf $r5 = $r2, 63, 48
+; CV2-NEXT:    insf $r5 = $r4, 63, 48
 ; CV2-NEXT:    insf $r6 = $r3, 63, 48
-; CV2-NEXT:    insf $r7 = $r4, 63, 48
+; CV2-NEXT:    insf $r7 = $r2, 63, 48
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    copyd $r1 = $r5
+; CV2-NEXT:    copyd $r1 = $r7
 ; CV2-NEXT:    copyd $r2 = $r6
-; CV2-NEXT:    copyd $r3 = $r7
+; CV2-NEXT:    copyd $r3 = $r5
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
 entry:
@@ -741,35 +743,34 @@ define <16 x half> @shiftfhx_two(<16 x half> %v, half %b) {
 ; CV1-LABEL: shiftfhx_two:
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    srld $r0 = $r0, 32
-; CV1-NEXT:    srld $r5 = $r2, 32
+; CV1-NEXT:    srld $r6 = $r2, 32
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    insf $r3 = $r4, 15, 0
-; CV1-NEXT:    insf $r5 = $r3, 63, 32
+; CV1-NEXT:    insf $r6 = $r3, 63, 32
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    insf $r0 = $r1, 63, 32
 ; CV1-NEXT:    srld $r1 = $r1, 32
 ; CV1-NEXT:    sbmm8 $r3 = $r3, 0x201020180402010
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    insf $r1 = $r2, 63, 32
-; CV1-NEXT:    copyd $r2 = $r5
+; CV1-NEXT:    copyd $r2 = $r6
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;;
 ;
 ; CV2-LABEL: shiftfhx_two:
 ; CV2:       # %bb.0: # %entry
 ; CV2-NEXT:    srld $r0 = $r0, 32
-; CV2-NEXT:    srld $r5 = $r2, 32
+; CV2-NEXT:    srld $r5 = $r1, 32
+; CV2-NEXT:    srld $r6 = $r2, 32
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r0 = $r1, 63, 32
 ; CV2-NEXT:    insf $r3 = $r4, 15, 0
-; CV2-NEXT:    srld $r4 = $r1, 32
-; CV2-NEXT:    insf $r5 = $r3, 63, 32
+; CV2-NEXT:    insf $r5 = $r2, 63, 32
+; CV2-NEXT:    insf $r6 = $r3, 63, 32
 ; CV2-NEXT:    ;;
+; CV2-NEXT:    copyd $r1 = $r5
+; CV2-NEXT:    copyd $r2 = $r6
 ; CV2-NEXT:    sbmm8 $r3 = $r3, 0x201020180402010
-; CV2-NEXT:    insf $r4 = $r2, 63, 32
-; CV2-NEXT:    ;;
-; CV2-NEXT:    copyd $r1 = $r4
-; CV2-NEXT:    copyd $r2 = $r5
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
 entry:

@@ -15,7 +15,6 @@
 #include "KVX.h"
 #include "KVXMachineFunctionInfo.h"
 #include "KVXTargetMachine.h"
-#include "llvm/ADT/APInt.h"
 #include "llvm/ADT/Statistic.h"
 #include "llvm/CodeGen/CallingConvLower.h"
 #include "llvm/CodeGen/ISDOpcodes.h"
@@ -39,6 +38,357 @@ static cl::opt<bool> UseVLIWSched("use-kvx-vliw-sched", cl::Hidden,
                                   cl::desc("Use VLIW Scheduler."));
 
 #include "KVXGenCallingConv.inc"
+
+#ifndef NDEBUG
+inline static StringRef getMVTName(const MVT &T) {
+  switch (T.SimpleTy) {
+  case MVT::Other:
+    return "MVT::Other";
+  case MVT::i1:
+    return "MVT::i1";
+  case MVT::i8:
+    return "MVT::i8";
+  case MVT::i16:
+    return "MVT::i16";
+  case MVT::i32:
+    return "MVT::i32";
+  case MVT::i64:
+    return "MVT::i64";
+  case MVT::i128:
+    return "MVT::i128";
+  case MVT::Any:
+    return "MVT::Any";
+  case MVT::iAny:
+    return "MVT::iAny";
+  case MVT::fAny:
+    return "MVT::fAny";
+  case MVT::vAny:
+    return "MVT::vAny";
+  case MVT::f16:
+    return "MVT::f16";
+  case MVT::bf16:
+    return "MVT::bf16";
+  case MVT::f32:
+    return "MVT::f32";
+  case MVT::f64:
+    return "MVT::f64";
+  case MVT::f80:
+    return "MVT::f80";
+  case MVT::f128:
+    return "MVT::f128";
+  case MVT::ppcf128:
+    return "MVT::ppcf128";
+  case MVT::x86mmx:
+    return "MVT::x86mmx";
+  case MVT::x86amx:
+    return "MVT::x86amx";
+  case MVT::Glue:
+    return "MVT::Glue";
+  case MVT::isVoid:
+    return "MVT::isVoid";
+  case MVT::v1i1:
+    return "MVT::v1i1";
+  case MVT::v2i1:
+    return "MVT::v2i1";
+  case MVT::v4i1:
+    return "MVT::v4i1";
+  case MVT::v8i1:
+    return "MVT::v8i1";
+  case MVT::v16i1:
+    return "MVT::v16i1";
+  case MVT::v32i1:
+    return "MVT::v32i1";
+  case MVT::v64i1:
+    return "MVT::v64i1";
+  case MVT::v128i1:
+    return "MVT::v128i1";
+  case MVT::v256i1:
+    return "MVT::v256i1";
+  case MVT::v512i1:
+    return "MVT::v512i1";
+  case MVT::v1024i1:
+    return "MVT::v1024i1";
+  case MVT::v1i8:
+    return "MVT::v1i8";
+  case MVT::v2i8:
+    return "MVT::v2i8";
+  case MVT::v4i8:
+    return "MVT::v4i8";
+  case MVT::v8i8:
+    return "MVT::v8i8";
+  case MVT::v16i8:
+    return "MVT::v16i8";
+  case MVT::v32i8:
+    return "MVT::v32i8";
+  case MVT::v64i8:
+    return "MVT::v64i8";
+  case MVT::v128i8:
+    return "MVT::v128i8";
+  case MVT::v256i8:
+    return "MVT::v256i8";
+  case MVT::v1i16:
+    return "MVT::v1i16";
+  case MVT::v2i16:
+    return "MVT::v2i16";
+  case MVT::v3i16:
+    return "MVT::v3i16";
+  case MVT::v4i16:
+    return "MVT::v4i16";
+  case MVT::v8i16:
+    return "MVT::v8i16";
+  case MVT::v16i16:
+    return "MVT::v16i16";
+  case MVT::v32i16:
+    return "MVT::v32i16";
+  case MVT::v64i16:
+    return "MVT::v64i16";
+  case MVT::v128i16:
+    return "MVT::v128i16";
+  case MVT::v1i32:
+    return "MVT::v1i32";
+  case MVT::v2i32:
+    return "MVT::v2i32";
+  case MVT::v3i32:
+    return "MVT::v3i32";
+  case MVT::v4i32:
+    return "MVT::v4i32";
+  case MVT::v5i32:
+    return "MVT::v5i32";
+  case MVT::v8i32:
+    return "MVT::v8i32";
+  case MVT::v16i32:
+    return "MVT::v16i32";
+  case MVT::v32i32:
+    return "MVT::v32i32";
+  case MVT::v64i32:
+    return "MVT::v64i32";
+  case MVT::v128i32:
+    return "MVT::v128i32";
+  case MVT::v256i32:
+    return "MVT::v256i32";
+  case MVT::v512i32:
+    return "MVT::v512i32";
+  case MVT::v1024i32:
+    return "MVT::v1024i32";
+  case MVT::v2048i32:
+    return "MVT::v2048i32";
+  case MVT::v1i64:
+    return "MVT::v1i64";
+  case MVT::v2i64:
+    return "MVT::v2i64";
+  case MVT::v4i64:
+    return "MVT::v4i64";
+  case MVT::v8i64:
+    return "MVT::v8i64";
+  case MVT::v16i64:
+    return "MVT::v16i64";
+  case MVT::v32i64:
+    return "MVT::v32i64";
+  case MVT::v64i64:
+    return "MVT::v64i64";
+  case MVT::v128i64:
+    return "MVT::v128i64";
+  case MVT::v256i64:
+    return "MVT::v256i64";
+  case MVT::v1i128:
+    return "MVT::v1i128";
+  case MVT::v2f16:
+    return "MVT::v2f16";
+  case MVT::v3f16:
+    return "MVT::v3f16";
+  case MVT::v4f16:
+    return "MVT::v4f16";
+  case MVT::v8f16:
+    return "MVT::v8f16";
+  case MVT::v16f16:
+    return "MVT::v16f16";
+  case MVT::v32f16:
+    return "MVT::v32f16";
+  case MVT::v64f16:
+    return "MVT::v64f16";
+  case MVT::v128f16:
+    return "MVT::v128f16";
+  case MVT::v2bf16:
+    return "MVT::v2bf16";
+  case MVT::v3bf16:
+    return "MVT::v3bf16";
+  case MVT::v4bf16:
+    return "MVT::v4bf16";
+  case MVT::v8bf16:
+    return "MVT::v8bf16";
+  case MVT::v16bf16:
+    return "MVT::v16bf16";
+  case MVT::v32bf16:
+    return "MVT::v32bf16";
+  case MVT::v64bf16:
+    return "MVT::v64bf16";
+  case MVT::v128bf16:
+    return "MVT::v128bf16";
+  case MVT::v1f32:
+    return "MVT::v1f32";
+  case MVT::v2f32:
+    return "MVT::v2f32";
+  case MVT::v3f32:
+    return "MVT::v3f32";
+  case MVT::v4f32:
+    return "MVT::v4f32";
+  case MVT::v5f32:
+    return "MVT::v5f32";
+  case MVT::v8f32:
+    return "MVT::v8f32";
+  case MVT::v16f32:
+    return "MVT::v16f32";
+  case MVT::v32f32:
+    return "MVT::v32f32";
+  case MVT::v64f32:
+    return "MVT::v64f32";
+  case MVT::v128f32:
+    return "MVT::v128f32";
+  case MVT::v256f32:
+    return "MVT::v256f32";
+  case MVT::v512f32:
+    return "MVT::v512f32";
+  case MVT::v1024f32:
+    return "MVT::v1024f32";
+  case MVT::v2048f32:
+    return "MVT::v2048f32";
+  case MVT::v1f64:
+    return "MVT::v1f64";
+  case MVT::v2f64:
+    return "MVT::v2f64";
+  case MVT::v4f64:
+    return "MVT::v4f64";
+  case MVT::v8f64:
+    return "MVT::v8f64";
+  case MVT::v16f64:
+    return "MVT::v16f64";
+  case MVT::v32f64:
+    return "MVT::v32f64";
+  case MVT::v64f64:
+    return "MVT::v64f64";
+  case MVT::v128f64:
+    return "MVT::v128f64";
+  case MVT::v256f64:
+    return "MVT::v256f64";
+  case MVT::nxv1i1:
+    return "MVT::nxv1i1";
+  case MVT::nxv2i1:
+    return "MVT::nxv2i1";
+  case MVT::nxv4i1:
+    return "MVT::nxv4i1";
+  case MVT::nxv8i1:
+    return "MVT::nxv8i1";
+  case MVT::nxv16i1:
+    return "MVT::nxv16i1";
+  case MVT::nxv32i1:
+    return "MVT::nxv32i1";
+  case MVT::nxv64i1:
+    return "MVT::nxv64i1";
+  case MVT::nxv1i8:
+    return "MVT::nxv1i8";
+  case MVT::nxv2i8:
+    return "MVT::nxv2i8";
+  case MVT::nxv4i8:
+    return "MVT::nxv4i8";
+  case MVT::nxv8i8:
+    return "MVT::nxv8i8";
+  case MVT::nxv16i8:
+    return "MVT::nxv16i8";
+  case MVT::nxv32i8:
+    return "MVT::nxv32i8";
+  case MVT::nxv64i8:
+    return "MVT::nxv64i8";
+  case MVT::nxv1i16:
+    return "MVT::nxv1i16";
+  case MVT::nxv2i16:
+    return "MVT::nxv2i16";
+  case MVT::nxv4i16:
+    return "MVT::nxv4i16";
+  case MVT::nxv8i16:
+    return "MVT::nxv8i16";
+  case MVT::nxv16i16:
+    return "MVT::nxv16i16";
+  case MVT::nxv32i16:
+    return "MVT::nxv32i16";
+  case MVT::nxv1i32:
+    return "MVT::nxv1i32";
+  case MVT::nxv2i32:
+    return "MVT::nxv2i32";
+  case MVT::nxv4i32:
+    return "MVT::nxv4i32";
+  case MVT::nxv8i32:
+    return "MVT::nxv8i32";
+  case MVT::nxv16i32:
+    return "MVT::nxv16i32";
+  case MVT::nxv32i32:
+    return "MVT::nxv32i32";
+  case MVT::nxv1i64:
+    return "MVT::nxv1i64";
+  case MVT::nxv2i64:
+    return "MVT::nxv2i64";
+  case MVT::nxv4i64:
+    return "MVT::nxv4i64";
+  case MVT::nxv8i64:
+    return "MVT::nxv8i64";
+  case MVT::nxv16i64:
+    return "MVT::nxv16i64";
+  case MVT::nxv32i64:
+    return "MVT::nxv32i64";
+  case MVT::nxv1f16:
+    return "MVT::nxv1f16";
+  case MVT::nxv2f16:
+    return "MVT::nxv2f16";
+  case MVT::nxv4f16:
+    return "MVT::nxv4f16";
+  case MVT::nxv8f16:
+    return "MVT::nxv8f16";
+  case MVT::nxv16f16:
+    return "MVT::nxv16f16";
+  case MVT::nxv32f16:
+    return "MVT::nxv32f16";
+  case MVT::nxv2bf16:
+    return "MVT::nxv2bf16";
+  case MVT::nxv4bf16:
+    return "MVT::nxv4bf16";
+  case MVT::nxv8bf16:
+    return "MVT::nxv8bf16";
+  case MVT::nxv1f32:
+    return "MVT::nxv1f32";
+  case MVT::nxv2f32:
+    return "MVT::nxv2f32";
+  case MVT::nxv4f32:
+    return "MVT::nxv4f32";
+  case MVT::nxv8f32:
+    return "MVT::nxv8f32";
+  case MVT::nxv16f32:
+    return "MVT::nxv16f32";
+  case MVT::nxv1f64:
+    return "MVT::nxv1f64";
+  case MVT::nxv2f64:
+    return "MVT::nxv2f64";
+  case MVT::nxv4f64:
+    return "MVT::nxv4f64";
+  case MVT::nxv8f64:
+    return "MVT::nxv8f64";
+  case MVT::token:
+    return "MVT::token";
+  case MVT::Metadata:
+    return "MVT::Metadata";
+  case MVT::iPTR:
+    return "MVT::iPTR";
+  case MVT::iPTRAny:
+    return "MVT::iPTRAny";
+  case MVT::Untyped:
+    return "MVT::Untyped";
+  case MVT::funcref:
+    return "MVT::funcref";
+  case MVT::externref:
+    return "MVT::externref";
+  default:
+    llvm_unreachable("ILLEGAL VALUE TYPE!");
+  }
+}
+#endif
 
 static bool CC_SRET_KVX(unsigned ValNo, MVT ValVT, MVT LocVT,
                         CCValAssign::LocInfo LocInfo, ISD::ArgFlagsTy ArgFlags,
@@ -84,6 +434,7 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   addRegisterClass(MVT::v4f16, &KVX::SingleRegRegClass);
   addRegisterClass(MVT::v4f32, &KVX::PairedRegRegClass);
   addRegisterClass(MVT::v4f64, &KVX::QuadRegRegClass);
+  addRegisterClass(MVT::v8f16, &KVX::PairedRegRegClass);
   initializeTCARegisters();
 
   // Compute derived properties from the register classes
@@ -220,7 +571,7 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   for (auto VT : {MVT::v2f64, MVT::v2i64, MVT::v4f64, MVT::v4i64, MVT::v8i8})
     setOperationAction(ISD::SETCC, VT, Expand);
 
-  for (auto VT : {MVT::v4i32, MVT::v4f32})
+  for (auto VT : {MVT::v4i32, MVT::v4f32, MVT::v8f16})
     setOperationAction(ISD::BUILD_VECTOR, VT, Custom);
 
   for (auto VT : {MVT::v2i16, MVT::v4i16, MVT::v2i32, MVT::v2i64, MVT::v4i32,
@@ -250,7 +601,7 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::MULHS, MVT::v4i32, Expand);
 
   for (auto VT : {MVT::v2f16, MVT::v2f32, MVT::v4f16, MVT::v4f32, MVT::v2f64,
-                  MVT::v2i64, MVT::v4f64, MVT::v4i64}) {
+                  MVT::v2i64, MVT::v4f64, MVT::v4i64, MVT::v8f16}) {
     setOperationAction(ISD::VECTOR_SHUFFLE, VT, Expand);
     setOperationAction(ISD::SCALAR_TO_VECTOR, VT, Expand);
   }
@@ -330,7 +681,7 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::FCOPYSIGN, VT, Legal);
 
   for (auto VT : {MVT::f16, MVT::f32, MVT::f64, MVT::v2f16, MVT::v2f32,
-                  MVT::v2f64, MVT::v4f16, MVT::v4f32, MVT::v4f64}) {
+                  MVT::v2f64, MVT::v4f16, MVT::v4f32, MVT::v4f64, MVT::v8f16}) {
     auto Action = (VT == MVT::f16)
                       ? Promote
                       : ((VT > MVT::LAST_FP_VALUETYPE) ? Expand : LibCall);
@@ -469,7 +820,7 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
 
   setOperationAction(ISD::USHLSAT, MVT::i32, Legal);
 
-  if (!Subtarget.isV1())
+  if (!Subtarget.isV1()) {
     for (auto I : {ISD::ABS, ISD::ADD, ISD::SADDSAT, ISD::SETCC, ISD::SMAX,
                    ISD::SMIN, ISD::SHL, ISD::SRA, ISD::SRL, ISD::SSHLSAT,
                    ISD::SSUBSAT, ISD::SUB, ISD::UADDSAT, ISD::UMAX, ISD::UMIN,
@@ -477,6 +828,21 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
       for (auto VT : {MVT::i32, MVT::i64, MVT::v2i8, MVT::v2i16, MVT::v2i32,
                       MVT::v4i8, MVT::v4i16, MVT::v8i8})
         setOperationAction(I, VT, Legal);
+
+  } else {
+    // Fall-back to hq in cv1 using dag-combine
+    for (auto I : {ISD::FMA, ISD::FMUL, ISD::FSUB, ISD::FNEG, ISD::FADD})
+      setOperationAction(I, MVT::v8f16, Expand);
+  }
+  // Fall-back to hq using dag-combine
+  for (auto I : {ISD::FABS, ISD::FCOPYSIGN})
+    setOperationAction(I, MVT::v8f16, Expand);
+
+  setOperationAction(ISD::SETCC, MVT::v8f16, Custom);
+  setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v8f16, Legal);
+  setOperationAction(ISD::CONCAT_VECTORS, MVT::v8f16, Legal);
+  setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v8f16, Legal);
+  setOperationAction(ISD::SELECT, MVT::v8f16, Custom);
 
   // NOTE: We could use ACSWAPW instruction with some shifts and masks to
   // support custom lowering of i8 and i16 operations. See ASWAPp for i8.
@@ -497,7 +863,7 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   }
 
   for (auto VT : {MVT::v8f32, MVT::v8i32, MVT::v16f16, MVT::v16i16, MVT::v32i8,
-                  MVT::v8f16, MVT::v8i16, MVT::v16i8})
+                  MVT::v8i16, MVT::v16i8})
     setOperationAction(ISD::LOAD, VT, Custom);
 
   setMaxAtomicSizeInBitsSupported(64);
@@ -535,15 +901,16 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   if (TM.Options.ExceptionModel == ExceptionHandling::SjLj)
     setLibcallName(RTLIB::UNWIND_RESUME, "_Unwind_SjLj_Resume");
 
-  setTargetDAGCombine(ISD::INTRINSIC_WO_CHAIN);
-  setTargetDAGCombine(ISD::MUL);
-  setTargetDAGCombine(ISD::SRA);
-  setTargetDAGCombine(ISD::STORE);
-  setTargetDAGCombine(ISD::ZERO_EXTEND);
+  for (auto I : {ISD::FABS, ISD::FADD, ISD::FCOPYSIGN, ISD::FMA, ISD::FMUL,
+                 ISD::FSUB, ISD::FNEG, ISD::INTRINSIC_WO_CHAIN, ISD::MUL,
+                 ISD::SRA, ISD::STORE, ISD::ZERO_EXTEND})
+    setTargetDAGCombine(I);
 }
 
 EVT KVXTargetLowering::getSetCCResultType(const DataLayout &DL, LLVMContext &C,
                                           EVT VT) const {
+  LLVM_DEBUG(dbgs() << "Obtaining setcc result type for: "
+                    << getMVTName(VT.getSimpleVT()) << '\n');
   if (!VT.isVector())
     return MVT::i32;
   return EVT::getVectorVT(
@@ -583,53 +950,175 @@ const char *KVXTargetLowering::getTargetNodeName(unsigned Opcode) const {
 MVT KVXTargetLowering::getRegisterTypeForCallingConv(LLVMContext &Context,
                                                      CallingConv::ID CC,
                                                      EVT VT) const {
-  const TargetRegisterInfo *TRI = Subtarget.getRegisterInfo();
-  unsigned RegSize = TRI->getRegSizeInBits(KVX::SingleRegRegClass);
-  unsigned ScalarSize = VT.getScalarSizeInBits();
-
-  if (VT.isVector() && VT.getSizeInBits() > RegSize && ScalarSize <= RegSize) {
-    return ScalarSize == RegSize
-               ? VT.getVectorElementType().getSimpleVT()
-               : MVT::getVectorVT(VT.getVectorElementType().getSimpleVT(),
-                                  RegSize / ScalarSize);
+  LLVM_DEBUG(dbgs() << "KVX CC: Get register type for: "
+                    << (VT.isSimple() ? getMVTName(VT.getSimpleVT())
+                                      : "Not a simple type")
+                    << '\n');
+  if (VT.isVector()) {
+    if (VT.getVectorNumElements() == 1) {
+      LLVM_DEBUG(dbgs() << "KVX CC: A vector of 1 element is like a scalar.\n");
+      VT = VT.getScalarType();
+    } else {
+      LLVM_DEBUG(dbgs() << "KVX CC: It's a vector type, let the vector "
+                           "breakdown solve that.\n");
+      EVT IVT;
+      MVT RVT;
+      unsigned Ni;
+      getVectorTypeBreakdownForCallingConv(Context, CC, VT, IVT, Ni, RVT);
+      LLVM_DEBUG(dbgs() << "CC Reg type: " << getMVTName(RVT) << "\n");
+      return RVT;
+    }
   }
-
-  return TargetLowering::getRegisterTypeForCallingConv(Context, CC, VT);
+  if (VT.getSizeInBits() > 64) {
+    LLVM_DEBUG(dbgs() << "CC type is larger than 64bits, use MVT::i64.\n");
+    return MVT::i64;
+  }
+  if (isTypeLegal(VT)) {
+    assert(VT.isSimple() && "CC: Legal type that is not simple!");
+    LLVM_DEBUG(dbgs() << "CC: Legal type smaller-equals to 64 bits. Use it.\n");
+    return VT.getSimpleVT();
+  }
+  if (!VT.isSimple()) {
+    LLVM_DEBUG(
+        dbgs() << "CC: Not a simple type, use i64 for register value.\n");
+    return MVT::i64;
+  }
+  const auto SVT = VT.getSimpleVT();
+  if (SVT == MVT::i1 || SVT == MVT::i8 || SVT == MVT::i16) {
+    LLVM_DEBUG(dbgs() << "CC: MVT::i1/i8/i16 are passaed as a MVT::i32.\n");
+    return MVT::i32;
+  }
+  LLVM_DEBUG(dbgs() << "CC type fits in 64bits, use it.\n");
+  return VT.getSimpleVT();
 }
 
 unsigned KVXTargetLowering::getNumRegistersForCallingConv(LLVMContext &Context,
                                                           CallingConv::ID CC,
                                                           EVT VT) const {
+  if (VT.isVector()) {
+    LLVM_DEBUG(dbgs() << "CC NumRegs: Vector type,"
+                         " check in the Vector Breakdown.\n");
+    EVT IVT;
+    MVT RVT;
+    unsigned Ni;
+    unsigned Parts =
+        getVectorTypeBreakdownForCallingConv(Context, CC, VT, IVT, Ni, RVT);
+    LLVM_DEBUG(dbgs() << "CC NumRegs: " << Parts << "\n");
+    return Parts;
+  }
+
+  if (!VT.isSimple()) {
+    LLVM_DEBUG(dbgs() << "CC NumRegs: Not a simple type,"
+                         " use default hander.\n");
+    return TargetLowering::getNumRegistersForCallingConv(Context, CC, VT);
+  }
+
+  LLVM_DEBUG(dbgs() << "KVX CC: Discover number of regs for "
+                    << getMVTName(VT.getSimpleVT()) << '\n');
   const TargetRegisterInfo *TRI = Subtarget.getRegisterInfo();
   unsigned RegSize = TRI->getRegSizeInBits(KVX::SingleRegRegClass);
-
-  if (VT.isVector() && VT.getSizeInBits() > RegSize &&
-      VT.getScalarSizeInBits() <= RegSize)
-    return (VT.getSizeInBits() + RegSize - 1) / RegSize;
-
-  return TargetLowering::getNumRegistersForCallingConv(Context, CC, VT);
+  return (VT.getSizeInBits() + (RegSize - 1)) / RegSize;
 }
 
 unsigned KVXTargetLowering::getVectorTypeBreakdownForCallingConv(
     LLVMContext &Context, CallingConv::ID CC, EVT VT, EVT &IntermediateVT,
     unsigned &NumIntermediates, MVT &RegisterVT) const {
+  assert(VT.isVector() && "CC: vector breakdow for a non vector type!\n");
+  if (VT.getVectorNumElements() == 1) {
+    LLVM_DEBUG(dbgs() << "KVX CC vector type breakdown: "
+                      << " a vector of 1 element is just the element.\n");
+    VT = VT.getScalarType();
+    NumIntermediates = getNumRegistersForCallingConv(Context, CC, VT);
+    RegisterVT = getRegisterType(Context, VT);
+    IntermediateVT = EVT(RegisterVT);
+    return NumIntermediates;
+  }
+  if (VT.getScalarType() == MVT::i1) {
+    LLVM_DEBUG(dbgs() << "KVX CC vector type breakdown:"
+                      << " i1 vectors are transformed to i8.\n");
+    return getVectorTypeBreakdownForCallingConv(
+        Context, CC,
+        EVT::getVectorVT(Context, MVT::i8, VT.getVectorNumElements()),
+        IntermediateVT, NumIntermediates, RegisterVT);
+  }
 
-  const TargetRegisterInfo *TRI = Subtarget.getRegisterInfo();
-  unsigned RegSize = TRI->getRegSizeInBits(KVX::SingleRegRegClass);
-
-  if (VT.isVector() && VT.getSizeInBits() > RegSize &&
-      VT.getScalarSizeInBits() <= RegSize) {
-    RegisterVT =
-        KVXTargetLowering::getRegisterTypeForCallingConv(Context, CC, VT);
-    IntermediateVT = RegisterVT;
-    NumIntermediates =
-        KVXTargetLowering::getNumRegistersForCallingConv(Context, CC, VT);
-
+  if (!VT.isSimple()) {
+    auto SVT = VT.getScalarType();
+    IntermediateVT = MVT::i64;
+    if (SVT.getSizeInBits() == 64 && isTypeLegal(SVT)) {
+      IntermediateVT = SVT;
+      LLVM_DEBUG(
+          dbgs() << "KVX CC vector type breakdown: can use element type.\n");
+    } else if (SVT.getSizeInBits() < 64) {
+      auto SubVT = EVT::getVectorVT(Context, SVT,
+                                    ElementCount::getFixed(std::min(
+                                        VT.getVectorNumElements(),
+                                        (unsigned)(64 / SVT.getSizeInBits()))));
+      if (isTypeLegal(SubVT)) {
+        IntermediateVT = SubVT;
+        LLVM_DEBUG(dbgs() << "KVX CC vector type breakdown: can use 64 bit "
+                             "sub-vector type.\n");
+      }
+    } else {
+      LLVM_DEBUG(
+          dbgs() << "KVX CC vector type breakdown: Not a simple type vector "
+                    "or suitable element/subvector, use i64 register type.\n");
+    }
+    NumIntermediates = (VT.getSizeInBits() + 63U) / 64U;
+    RegisterVT = IntermediateVT.getSimpleVT();
+    LLVM_DEBUG(dbgs() << "Number of parts: " << NumIntermediates << '\n');
     return NumIntermediates;
   }
 
-  return TargetLowering::getVectorTypeBreakdownForCallingConv(
-      Context, CC, VT, IntermediateVT, NumIntermediates, RegisterVT);
+  if ((!isPowerOf2_32(VT.getVectorNumElements())) &&
+      (VT.getSizeInBits() % 64)) {
+    VT = VT.getPow2VectorType(Context);
+    LLVM_DEBUG(
+        dbgs() << "CC vector type has a non-power of 2 number of elements "
+                  "smaller than 64 bits, using this value instead: "
+               << getMVTName(VT.getSimpleVT()) << '\n');
+  }
+
+  LLVM_DEBUG(dbgs() << "KVX CC vector type breakdown for: "
+                    << getMVTName(VT.getSimpleVT()) << '\n');
+  if (VT.getSizeInBits() <= 64) {
+    if (!isTypeLegal(VT)) {
+      LLVM_DEBUG(dbgs() << "Not a legal type. Let generic code handle it.\n");
+      auto Parts = TargetLowering::getVectorTypeBreakdownForCallingConv(
+          Context, CC, VT, IntermediateVT, NumIntermediates, RegisterVT);
+      LLVM_DEBUG(dbgs() << "Number of parts: " << Parts << '\n');
+      return Parts;
+    }
+    LLVM_DEBUG(dbgs() << "Type fits in a SingleReg. Use just it.\n");
+    IntermediateVT = VT;
+    RegisterVT = VT.getSimpleVT();
+    NumIntermediates = 1;
+    return 1;
+  }
+  if (VT.getScalarSizeInBits() == 64) {
+    LLVM_DEBUG(dbgs() << "Scalarize vector of 64 bits sized elements.\n");
+    IntermediateVT = VT.getScalarType();
+    RegisterVT = IntermediateVT.getSimpleVT();
+    NumIntermediates = VT.getVectorNumElements();
+    return NumIntermediates;
+  }
+  if (VT.getScalarSizeInBits() > 64) {
+    LLVM_DEBUG(dbgs() << "Scalarize vector of elements larger than 64 bits.\n");
+    RegisterVT = MVT::i64;
+    IntermediateVT = EVT(MVT::i64);
+    NumIntermediates = (VT.getSizeInBits() + 63) / 64;
+    return NumIntermediates;
+  }
+  LLVM_DEBUG(dbgs() << "Split into smaller vectors.\n");
+  IntermediateVT = EVT::getVectorVT(Context, VT.getScalarType(),
+                                    64 / VT.getScalarSizeInBits());
+  RegisterVT = IntermediateVT.getSimpleVT();
+  NumIntermediates = (VT.getSizeInBits() + 63) / 64;
+  LLVM_DEBUG(dbgs() << "IntermediateVT: "
+                    << getMVTName(IntermediateVT.getSimpleVT())
+                    << "\nRegisterVT: " << getMVTName(RegisterVT)
+                    << "\nNumIntermediates: " << NumIntermediates << '\n');
+  return NumIntermediates;
 }
 
 bool KVXTargetLowering::CanLowerReturn(
@@ -1140,6 +1629,26 @@ SDValue KVXTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
   case ISD::EH_SJLJ_SETUP_DISPATCH:
     return DAG.getNode(KVXISD::EH_SJLJ_SETUP_DISPATCH, SDLoc(Op), MVT::Other,
                        Op.getOperand(0));
+  case ISD::SELECT: {
+    if (!Op.getOperand(0).getValueType().isVector())
+      return Op;
+    LLVM_FALLTHROUGH;
+  }
+  case ISD::SETCC: {
+    auto Evt = Op->getValueType(0);
+    if (!Evt.isSimple())
+      return SDValue();
+
+    if (!Evt.isVector())
+      return Op;
+
+    const auto Sz = Evt.getSizeInBits();
+    if (Sz <= 64)
+      return Op;
+
+    // Split vector op
+    return DAG.UnrollVectorOp(Op.getNode(), Sz / 64);
+  }
   }
 }
 
@@ -1838,9 +2347,10 @@ SDValue KVXTargetLowering::lowerBUILD_VECTOR(SDValue Op,
   switch (Op.getSimpleValueType().SimpleTy) {
   default:
     report_fatal_error("Unsupported lowering build_vector for this type!");
+  case MVT::v8f16:
   case MVT::v4i32:
   case MVT::v4f32:
-    return lowerBUILD_VECTOR_V4_128bit(Op, DAG);
+    return lowerBUILD_VECTOR_128bit(Op, DAG);
   case MVT::v256i1:
   case MVT::v512i1:
   case MVT::v1024i1:
@@ -1950,30 +2460,22 @@ SDValue KVXTargetLowering::lowerBUILD_VECTOR_V2_64bit(SDValue Op,
                                                        {SDOp1Val, ShiftedOp2}));
 }
 
-SDValue
-KVXTargetLowering::lowerBUILD_VECTOR_V4_128bit(SDValue Op,
-                                               SelectionDAG &DAG) const {
-  SDLoc DL(Op);
-  SDValue OpV[4];
-  for (int I = 0; I < 4; I++)
-    OpV[I] = Op.getOperand(I);
+SDValue KVXTargetLowering::lowerBUILD_VECTOR_128bit(SDValue Op,
+                                                    SelectionDAG &DAG) const {
+  BuildVectorSDNode *BVOp = cast<BuildVectorSDNode>(Op);
+  auto VT = Op.getValueType();
+  if (VT == MVT::v4f32 || VT == MVT::v4i32)
+    if (BVOp->getSplatValue() != SDValue())
+      return Op;
 
-  // Check that all operands are equal to each others
-  // Since equality is symmetric, no need to check all the values
-  bool AllEquals = true;
-  for (int I = 0; I < 4 && AllEquals; I++)
-    for (int J = I + 1; J < 4 && AllEquals; J++)
-      AllEquals &= OpV[I] == OpV[J];
-
-  if (AllEquals)
-    return Op;
-
-  EVT VT = Op.getValueType();
   LLVMContext &Ctx = *DAG.getContext();
   EVT HalfVT = VT.getHalfNumVectorElementsVT(Ctx);
-
-  SDValue VecLow = DAG.getNode(ISD::BUILD_VECTOR, DL, HalfVT, {OpV[0], OpV[1]});
-  SDValue VecHi = DAG.getNode(ISD::BUILD_VECTOR, DL, HalfVT, {OpV[2], OpV[3]});
+  SDLoc DL(Op);
+  unsigned HalfSz = Op->getNumOperands() / 2;
+  auto Lo = Op->ops().drop_back(HalfSz);
+  auto Hi = Op->ops().drop_front(HalfSz);
+  SDValue VecLow = DAG.getNode(ISD::BUILD_VECTOR, DL, HalfVT, Lo);
+  SDValue VecHi = DAG.getNode(ISD::BUILD_VECTOR, DL, HalfVT, Hi);
 
   return SDValue(
       DAG.getMachineNode(
@@ -2022,11 +2524,11 @@ SDValue KVXTargetLowering::lowerINSERT_VECTOR_ELT(SDValue Op,
 
   if (ConstantSDNode *InsertPos = dyn_cast<ConstantSDNode>(Idx)) {
 
-    if (Vec.getValueType() == MVT::v4f32 || Vec.getValueType() == MVT::v4i32)
+    if (VecVT == MVT::v4f32 || VecVT == MVT::v4i32 || VecVT == MVT::v8f16)
       return Op;
 
-    if (Vec.getValueType() == MVT::v2f64 || Vec.getValueType() == MVT::v2i64 ||
-        Vec.getValueType() == MVT::v4f64 || Vec.getValueType() == MVT::v4i64)
+    if (VecVT == MVT::v2f64 || VecVT == MVT::v2i64 || VecVT == MVT::v4f64 ||
+        VecVT == MVT::v4i64)
       return lowerINSERT_VECTOR_ELT_64bit_elt(DL, DAG, Vec, Val,
                                               InsertPos->getZExtValue());
 
@@ -2103,6 +2605,7 @@ KVXTargetLowering::lowerEXTRACT_VECTOR_ELT_REGISTER(SDValue Op,
   case MVT::v4f32:
   case MVT::v4i32:
   case MVT::v8i8:
+  case MVT::v8f16:
     return Op;
   }
 
@@ -2725,24 +3228,49 @@ static SDValue combineFaddFsub(SDNode *N, SelectionDAG &Dag,
   if (VT != MVT::v8f16)
     return SDValue();
 
-  SDLoc DL(N);
-  auto Mod0 = cast<ConstantSDNode>(N->getOperand(3))->getZExtValue();
-  auto Mod1 = cast<ConstantSDNode>(N->getOperand(4))->getZExtValue();
-  SmallVector<SDValue, 4> Args = {Dag.getBitcast(MVT::v2i64, N->getOperand(1)),
-                                  Dag.getBitcast(MVT::v2i64, N->getOperand(2)),
-                                  Dag.getTargetConstant(Mod0, DL, MVT::i32),
-                                  Dag.getTargetConstant(Mod1, DL, MVT::i32)};
+  static SDValue combineSplit(SDNode * N, TargetLowering::DAGCombinerInfo & DCI,
+                              SelectionDAG & Dag) {
+    auto VT = N->getValueType(0);
+    LLVMContext &C = *Dag.getContext();
+    const auto Opc = N->getOpcode();
+    if (!VT.isVector())
+      return SDValue();
 
-  SDValue Add(Dag.getMachineNode(KvxOpcode, DL, MVT::v2f64, Args), 0);
-  return Dag.getBitcast(VT, Add);
-}
+    auto &TLI = Dag.getTargetLoweringInfo();
+    if (TLI.isOperationLegalOrCustom(Opc, VT))
+      return SDValue();
+
+    auto HalfVT = VT.getHalfNumVectorElementsVT(C);
+    if (!TLI.isOperationLegalOrCustom(Opc, HalfVT))
+      return SDValue();
+
+    SmallVector<SDValue, 4> ArgsLo, ArgsHi;
+    SDLoc DL(N);
+
+    for (auto &Op : N->ops()) {
+      auto OpVT = Op.getValueType();
+      if (OpVT.isVector()) {
+        auto OpHalfVT = OpVT.getHalfNumVectorElementsVT(C);
+        auto LoHi = Dag.SplitVector(Op, DL, OpHalfVT, OpHalfVT);
+        ArgsLo.push_back(LoHi.first);
+        ArgsHi.push_back(LoHi.second);
+        continue;
+      }
+      ArgsLo.push_back(Op);
+      ArgsHi.push_back(Op);
+    }
+    auto Lo = Dag.getNode(Opc, DL, HalfVT, ArgsLo);
+    auto Hi = Dag.getNode(Opc, DL, HalfVT, ArgsHi);
+    return Dag.getNode(ISD::CONCAT_VECTORS, DL, VT, Lo, Hi);
+  }
 
 static SDValue combineIntrinsic(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
                                 SelectionDAG &Dag) {
   if (!isa<ConstantSDNode>(N->getOperand(0)))
     return SDValue();
 
-  auto Intr = cast<ConstantSDNode>(N->getOperand(0))->getZExtValue();
+    const auto &KVXSubtarget = (const class KVXSubtarget &)Dag.getSubtarget();
+    auto Intr = cast<ConstantSDNode>(N->getOperand(0))->getZExtValue();
   switch (Intr) {
   case Intrinsic::KVXIntrinsics::kvx_abd:
     return combineAbd(N, Dag);
@@ -2750,11 +3278,6 @@ static SDValue combineIntrinsic(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
     return combineAbs(N, Dag);
   case Intrinsic::KVXIntrinsics::kvx_avg:
     return combineAvg(N, Dag);
-  case Intrinsic::KVXIntrinsics::kvx_fadd:
-    return combineFaddFsub(N, Dag, KVX::FADDHO);
-
-  case Intrinsic::KVXIntrinsics::kvx_fsbf:
-    return combineFaddFsub(N, Dag, KVX::FSBFHO);
   case Intrinsic::KVXIntrinsics::kvx_narrowint:
     return combineNarrowInt(N, DCI, Dag);
   case Intrinsic::KVXIntrinsics::kvx_maddx:
@@ -2898,7 +3421,6 @@ static SDValue combineStore(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
   case MVT::v32i8:
     ToVT = EVT(MVT::v4i64);
     break;
-  case MVT::v8f16:
   case MVT::v8i16:
   case MVT::v16i8:
     ToVT = EVT(MVT::v2i64);
@@ -2921,7 +3443,15 @@ SDValue KVXTargetLowering::PerformDAGCombine(SDNode *N,
   switch (N->getOpcode()) {
   default:
     break;
-  case ISD::INTRINSIC_WO_CHAIN:
+    case ISD::FABS:
+    case ISD::FADD:
+    case ISD::FCOPYSIGN:
+    case ISD::FMA:
+    case ISD::FMUL:
+    case ISD::FNEG:
+    case ISD::FSUB:
+      return combineSplit(N, DCI, DAG);
+    case ISD::INTRINSIC_WO_CHAIN:
     return combineIntrinsic(N, DCI, DAG);
   case ISD::MUL:
     return combineMUL(N, DCI, DAG);
@@ -2943,7 +3473,6 @@ KVXTargetLowering::getPreferredVectorAction(MVT VT) const {
 
   switch (VT.SimpleTy) {
   case MVT::v8i1:
-  case MVT::v8f16:
   case MVT::v8i16:
   case MVT::v8f32:
   case MVT::v8i32:
@@ -3019,7 +3548,6 @@ void KVXTargetLowering::ReplaceNodeResults(SDNode *N,
     case MVT::v32i8:
       ToVT = EVT(MVT::v4i64);
       break;
-    case MVT::v8f16:
     case MVT::v8i16:
     case MVT::v16i8:
       ToVT = EVT(MVT::v2i64);
@@ -3878,8 +4406,10 @@ static uint64_t getImmVector(const llvm::BuildVectorSDNode *BV,
     for (unsigned I = 0; I < NumEltsToScan; I++)
       BaseValues[I] = BV->getOperand(I);
     for (unsigned I = NumEltsToScan; I < NumElts; I++)
-      assert(BaseValues[I % NumEltsToScan] == BV->getOperand(I) &&
-             "The extension is not a repetition of the first 64 bits");
+        assert((BaseValues[I % NumEltsToScan] == BV->getOperand(I) ||
+                BaseValues[I % NumEltsToScan].isUndef() ||
+                BV->getOperand(I).isUndef()) &&
+               "The extension is not a repetition of the first 64 bits");
   }
 #endif
 
@@ -3998,49 +4528,30 @@ llvm::SDValue KVX_LOW::extractSplatNode(const llvm::SDNode *N,
   assert(isSplatBuildVec(N, CurDag) && "N is not a splat build vector");
   const BuildVectorSDNode *BV = dyn_cast<BuildVectorSDNode>(N);
 
-  return BV->getOperand(0);
-}
+    return BV->getSplatValue();
+  }
 
 bool KVX_LOW::isSplatBuildVec(const llvm::SDNode *N,
                               const llvm::SelectionDAG *CurDag,
                               unsigned MakeImmSizeCheck) {
   const BuildVectorSDNode *BV = dyn_cast<BuildVectorSDNode>(N);
-
-  assert(BV && "isSplatBuildVec called with a non-buildvector node");
-
-  /* We must check that it is either a v4f32 or a v4i32 because this predicate
-     is used in a pattern intended for v4f32 or v4i32, and yet it is still
-     called with v2f64 build_vector for unknown reason */
-  const auto VT = BV->getValueType(0);
-  if (VT != MVT::v4f32 && VT != MVT::v4i32)
-    return false;
-
-  bool DoConstantCheck = MakeImmSizeCheck > 0;
-  if (DoConstantCheck && !BV->isConstant())
-    return false;
-
-  /* Check that each operand is equal. */
-  llvm::SDValue SplatVal;
-  bool FirstDefReached = false;
-  for (unsigned I = 1; I < BV->getNumOperands(); I++) {
-    auto CurVal = BV->getOperand(I);
-    if (!FirstDefReached) {
-      SplatVal = CurVal;
-      FirstDefReached = true;
-    }
-    if (CurVal != SplatVal)
+    SDValue SV = BV->getSplatValue();
+    if (SV == SDValue())
       return false;
-  }
+
+    if (SV->isUndef())
+      return true;
+
+    if (MakeImmSizeCheck == 0)
+      return true;
+
+    if (!BV->isConstant())
+      return false;
 
   /* Check that the immediate encoding the build_vector fits in ImmSizeCheck */
-  if (DoConstantCheck) {
     uint64_t V = getImmVector(BV, CurDag, 0, true);
-    if (!isIntN(MakeImmSizeCheck, V)) // MAKE immediate is always signed
-      return false;
+    return isIntN(MakeImmSizeCheck, V);
   }
-
-  return true;
-}
 
 bool KVX_LOW::isKVXSplat32ImmVec(llvm::SDNode *N, llvm::SelectionDAG *CurDag,
                                  bool SplatAt) {
