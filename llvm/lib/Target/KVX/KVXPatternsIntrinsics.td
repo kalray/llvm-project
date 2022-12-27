@@ -333,18 +333,19 @@ def: Pat<(int_kvx_fconjdc v2f64:$v),
     (f64 (EXTRACT_SUBREG PairedReg:$v, sub_d0)), sub_d0,
     (FNEGD (f64 (EXTRACT_SUBREG PairedReg:$v, sub_d1))), sub_d1))>;
 
-def: Pat<(int_kvx_ctzd i64:$r), (CTZD SingleReg:$r)>;
-def: Pat<(int_kvx_ctzw i32:$r), (CTZW SingleReg:$r)>;
-def: Pat<(int_kvx_ctzwp v2i32:$r), (CTZWP SingleReg:$r)>;
-def: Pat<(int_kvx_clzd i64:$r), (CLZD SingleReg:$r)>;
-def: Pat<(int_kvx_clzw i32:$r), (CLZW SingleReg:$r)>;
-def: Pat<(int_kvx_clzwp v2i32:$r), (CLZWP SingleReg:$r)>;
-def: Pat<(int_kvx_clsd i64:$r), (CLSD SingleReg:$r)>;
-def: Pat<(int_kvx_clsw i32:$r), (CLSW SingleReg:$r)>;
-def: Pat<(int_kvx_clswp v2i32:$r), (CLSWP SingleReg:$r)>;
-def: Pat<(int_kvx_cbsd i64:$r), (CBSD SingleReg:$r)>;
-def: Pat<(int_kvx_cbsw i32:$r), (CBSW SingleReg:$r)>;
-def: Pat<(int_kvx_cbswp v2i32:$r), (CBSWP SingleReg:$r)>;
+def: Pat<(i64(int_kvx_bitcnt i64:$r, (i32 3))), (CTZD SingleReg:$r)>;
+def: Pat<(i32(int_kvx_bitcnt i32:$r, (i32 3))), (CTZW SingleReg:$r)>;
+def: Pat<(v2i32(int_kvx_bitcnt v2i32:$r, (i32 3))), (CTZWP SingleReg:$r)>;
+def: Pat<(i64(int_kvx_bitcnt i64:$r, (i32 1))), (CLZD SingleReg:$r)>;
+def: Pat<(i32(int_kvx_bitcnt i32:$r, (i32 1))), (CLZW SingleReg:$r)>;
+def: Pat<(v2i32(int_kvx_bitcnt v2i32:$r, (i32 1))), (CLZWP SingleReg:$r)>;
+def: Pat<(i64(int_kvx_bitcnt i64:$r, (i32 2))), (CLSD SingleReg:$r)>;
+def: Pat<(i32(int_kvx_bitcnt i32:$r, (i32 2))), (CLSW SingleReg:$r)>;
+def: Pat<(v2i32(int_kvx_bitcnt v2i32:$r, (i32 2))), (CLSWP SingleReg:$r)>;
+def: Pat<(i64(int_kvx_bitcnt i64:$r, (i32 0))), (CBSD SingleReg:$r)>;
+def: Pat<(i32(int_kvx_bitcnt i32:$r, (i32 0))), (CBSW SingleReg:$r)>;
+def: Pat<(v2i32(int_kvx_bitcnt v2i32:$r, (i32 0))), (CBSWP SingleReg:$r)>;
+
 
 def: Pat<(int_kvx_fixedw f32:$f, i64:$shift, i32:$rounding, i32:$silent), (FIXEDW SingleReg:$f, Unsigned6:$shift, RoundingMod:$rounding, SilentMod:$silent)>;
 def: Pat<(int_kvx_fixeduw f32:$f, i64:$shift, i32:$rounding, i32:$silent), (FIXEDUW SingleReg:$f, Unsigned6:$shift, RoundingMod:$rounding, SilentMod:$silent)>;
