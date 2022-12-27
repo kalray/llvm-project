@@ -1183,3 +1183,8 @@ def : Pat <(v2f32 (int_kvx_ffmax v2f16:$lhs, v2f16:$rhs, v2f32:$acc, RoundingMod
            (v2f32 (EXTRACT_SUBREG (v4f32(FFMAHWQrr (v4f32 (REG_SEQUENCE PairedReg, SingleReg:$acc, sub_d0, (v2f32(MAKEi16 0)), sub_d1)),
                                                    (ZXWD SingleReg:$lhs), (ZXWD SingleReg:$rhs), RoundingMod:$r, SilentMod:$s)), sub_d0))>;
 
+def : Pat <(v2f32 (int_kvx_ffmsx v2f16:$lhs, v2f16:$rhs, v2f32:$acc, RoundingMod:$r, SilentMod:$s)),
+           (v2f32 (EXTRACT_SUBREG (v4f32(FFMSHWQrr (v4f32 (REG_SEQUENCE PairedReg, SingleReg:$acc, sub_d0, (v2f32(MAKEi16 0)), sub_d1)),
+                                                   (ZXWD SingleReg:$lhs), (ZXWD SingleReg:$rhs), RoundingMod:$r, SilentMod:$s)), sub_d0))>;
+
+def: Pat<(v4f16(int_kvx_ffms v4f16:$v1, v4f16:$v2, v4f16:$v3, i32:$rounding, i32:$silent)),
