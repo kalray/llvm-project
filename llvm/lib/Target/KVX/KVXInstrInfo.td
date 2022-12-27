@@ -1599,13 +1599,13 @@ let Constraints = "$a1 = $a1o" in
 def WAITIT : KVX_INSTRUCTION
   <(outs SingleReg:$a1o), (ins SingleReg:$a1),
    "waitit $a1",
-   [/* no straightforward pattern */],
+   [(set i32:$a1o, (int_kvx_waitit i64:$a1))],
    BCU_TINY_TINY_MAU_XNOP_ID>;
 
 def SYNCGROUP : KVX_INSTRUCTION
   <(outs), (ins SingleReg:$a1),
    "syncgroup $a1",
-   [/* no straightforward pattern */],
+   [(int_kvx_syncgroup SingleReg:$a1)],
    BCU>;
 
 let isBarrier = 1, isBranch = 1, isTerminator = 1 in

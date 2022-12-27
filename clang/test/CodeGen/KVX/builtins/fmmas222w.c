@@ -5,7 +5,7 @@ typedef float float4 __attribute__ ((vector_size (sizeof(float) * 4)));
 
 // CHECK-LABEL: @fmm(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.matrix.multiply.v4f32.v4f32.v4f32(<4 x float> [[LHS:%.*]], <4 x float> [[RHS:%.*]], i32 2, i32 2, i32 2)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.kvx.fmm222w(<4 x float> [[LHS:%.*]], <4 x float> [[RHS:%.*]], i32 0, i32 7, i32 0)
 // CHECK-NEXT:    ret <4 x float> [[TMP0]]
 //
 float4 fmm(float4 lhs, float4 rhs){
@@ -14,7 +14,7 @@ float4 fmm(float4 lhs, float4 rhs){
 
 // CHECK-LABEL: @fmm_2(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.matrix.multiply.v4f32.v4f32.v4f32(<4 x float> [[LHS:%.*]], <4 x float> [[RHS:%.*]], i32 2, i32 2, i32 2)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.kvx.fmm222w(<4 x float> [[LHS:%.*]], <4 x float> [[RHS:%.*]], i32 0, i32 7, i32 0)
 // CHECK-NEXT:    ret <4 x float> [[TMP0]]
 //
 float4 fmm_2(float4 lhs, float4 rhs){
@@ -23,9 +23,8 @@ float4 fmm_2(float4 lhs, float4 rhs){
 
 // CHECK-LABEL: @fmma222w(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.matrix.multiply.v4f32.v4f32.v4f32(<4 x float> [[LHS:%.*]], <4 x float> [[RHS:%.*]], i32 2, i32 2, i32 2)
-// CHECK-NEXT:    [[TMP1:%.*]] = fadd fast <4 x float> [[TMP0]], [[ACC:%.*]]
-// CHECK-NEXT:    ret <4 x float> [[TMP1]]
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.kvx.fmma222w(<4 x float> [[LHS:%.*]], <4 x float> [[RHS:%.*]], <4 x float> [[ACC:%.*]], i32 0, i32 7, i32 0)
+// CHECK-NEXT:    ret <4 x float> [[TMP0]]
 //
 float4 fmma222w(float4 lhs, float4 rhs, float4 acc){
     return __builtin_kvx_fmma222w(lhs, rhs, acc, "");
@@ -33,9 +32,8 @@ float4 fmma222w(float4 lhs, float4 rhs, float4 acc){
 
 // CHECK-LABEL: @fmma222w_2(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.matrix.multiply.v4f32.v4f32.v4f32(<4 x float> [[LHS:%.*]], <4 x float> [[RHS:%.*]], i32 2, i32 2, i32 2)
-// CHECK-NEXT:    [[TMP1:%.*]] = fadd fast <4 x float> [[TMP0]], [[ACC:%.*]]
-// CHECK-NEXT:    ret <4 x float> [[TMP1]]
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.kvx.fmma222w(<4 x float> [[LHS:%.*]], <4 x float> [[RHS:%.*]], <4 x float> [[ACC:%.*]], i32 0, i32 7, i32 0)
+// CHECK-NEXT:    ret <4 x float> [[TMP0]]
 //
 float4 fmma222w_2(float4 lhs, float4 rhs, float4 acc){
     return __builtin_kvx_fmma222w(lhs, rhs, acc, ".nn");
@@ -43,9 +41,8 @@ float4 fmma222w_2(float4 lhs, float4 rhs, float4 acc){
 
 // CHECK-LABEL: @fmms222w(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.matrix.multiply.v4f32.v4f32.v4f32(<4 x float> [[LHS:%.*]], <4 x float> [[RHS:%.*]], i32 2, i32 2, i32 2)
-// CHECK-NEXT:    [[TMP1:%.*]] = fsub fast <4 x float> [[ACC:%.*]], [[TMP0]]
-// CHECK-NEXT:    ret <4 x float> [[TMP1]]
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.kvx.fmms222w(<4 x float> [[LHS:%.*]], <4 x float> [[RHS:%.*]], <4 x float> [[ACC:%.*]], i32 0, i32 7, i32 0)
+// CHECK-NEXT:    ret <4 x float> [[TMP0]]
 //
 float4 fmms222w(float4 lhs, float4 rhs, float4 acc){
     return __builtin_kvx_fmms222w(lhs, rhs, acc, "");
@@ -53,9 +50,8 @@ float4 fmms222w(float4 lhs, float4 rhs, float4 acc){
 
 // CHECK-LABEL: @fmms222w_2(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.matrix.multiply.v4f32.v4f32.v4f32(<4 x float> [[LHS:%.*]], <4 x float> [[RHS:%.*]], i32 2, i32 2, i32 2)
-// CHECK-NEXT:    [[TMP1:%.*]] = fsub fast <4 x float> [[ACC:%.*]], [[TMP0]]
-// CHECK-NEXT:    ret <4 x float> [[TMP1]]
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.kvx.fmms222w(<4 x float> [[LHS:%.*]], <4 x float> [[RHS:%.*]], <4 x float> [[ACC:%.*]], i32 0, i32 7, i32 0)
+// CHECK-NEXT:    ret <4 x float> [[TMP0]]
 //
 float4 fmms222w_2(float4 lhs, float4 rhs, float4 acc){
     return __builtin_kvx_fmms222w(lhs, rhs, acc, ".nn");
@@ -63,9 +59,8 @@ float4 fmms222w_2(float4 lhs, float4 rhs, float4 acc){
 
 // CHECK-LABEL: @fmm_tn(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.matrix.transpose.v4f32(<4 x float> [[LHS:%.*]], i32 2, i32 2)
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x float> @llvm.matrix.multiply.v4f32.v4f32.v4f32(<4 x float> [[TMP0]], <4 x float> [[RHS:%.*]], i32 2, i32 2, i32 2)
-// CHECK-NEXT:    ret <4 x float> [[TMP1]]
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.kvx.fmm222w(<4 x float> [[LHS:%.*]], <4 x float> [[RHS:%.*]], i32 1, i32 7, i32 0)
+// CHECK-NEXT:    ret <4 x float> [[TMP0]]
 //
 float4 fmm_tn(float4 lhs, float4 rhs){
     return __builtin_kvx_fmm222w(lhs, rhs, ".tn");
@@ -73,9 +68,8 @@ float4 fmm_tn(float4 lhs, float4 rhs){
 
 // CHECK-LABEL: @fmm_2_tn(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.matrix.transpose.v4f32(<4 x float> [[LHS:%.*]], i32 2, i32 2)
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x float> @llvm.matrix.multiply.v4f32.v4f32.v4f32(<4 x float> [[TMP0]], <4 x float> [[RHS:%.*]], i32 2, i32 2, i32 2)
-// CHECK-NEXT:    ret <4 x float> [[TMP1]]
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.kvx.fmm222w(<4 x float> [[LHS:%.*]], <4 x float> [[RHS:%.*]], i32 1, i32 7, i32 0)
+// CHECK-NEXT:    ret <4 x float> [[TMP0]]
 //
 float4 fmm_2_tn(float4 lhs, float4 rhs){
     return __builtin_kvx_fmm222w(lhs, rhs, ".tn");
@@ -83,10 +77,8 @@ float4 fmm_2_tn(float4 lhs, float4 rhs){
 
 // CHECK-LABEL: @fmma222w_2_tn(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.matrix.transpose.v4f32(<4 x float> [[LHS:%.*]], i32 2, i32 2)
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x float> @llvm.matrix.multiply.v4f32.v4f32.v4f32(<4 x float> [[TMP0]], <4 x float> [[RHS:%.*]], i32 2, i32 2, i32 2)
-// CHECK-NEXT:    [[TMP2:%.*]] = fadd fast <4 x float> [[TMP1]], [[ACC:%.*]]
-// CHECK-NEXT:    ret <4 x float> [[TMP2]]
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.kvx.fmma222w(<4 x float> [[LHS:%.*]], <4 x float> [[RHS:%.*]], <4 x float> [[ACC:%.*]], i32 1, i32 7, i32 0)
+// CHECK-NEXT:    ret <4 x float> [[TMP0]]
 //
 float4 fmma222w_2_tn(float4 lhs, float4 rhs, float4 acc){
     return __builtin_kvx_fmma222w(lhs, rhs, acc, ".tn");
@@ -94,10 +86,8 @@ float4 fmma222w_2_tn(float4 lhs, float4 rhs, float4 acc){
 
 // CHECK-LABEL: @fmms222w_2_tn(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.matrix.transpose.v4f32(<4 x float> [[LHS:%.*]], i32 2, i32 2)
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x float> @llvm.matrix.multiply.v4f32.v4f32.v4f32(<4 x float> [[TMP0]], <4 x float> [[RHS:%.*]], i32 2, i32 2, i32 2)
-// CHECK-NEXT:    [[TMP2:%.*]] = fsub fast <4 x float> [[ACC:%.*]], [[TMP1]]
-// CHECK-NEXT:    ret <4 x float> [[TMP2]]
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.kvx.fmms222w(<4 x float> [[LHS:%.*]], <4 x float> [[RHS:%.*]], <4 x float> [[ACC:%.*]], i32 1, i32 7, i32 0)
+// CHECK-NEXT:    ret <4 x float> [[TMP0]]
 //
 float4 fmms222w_2_tn(float4 lhs, float4 rhs, float4 acc){
     return __builtin_kvx_fmms222w(lhs, rhs, acc, ".tn");
@@ -105,9 +95,8 @@ float4 fmms222w_2_tn(float4 lhs, float4 rhs, float4 acc){
 
 // CHECK-LABEL: @fmm_nt(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.matrix.transpose.v4f32(<4 x float> [[RHS:%.*]], i32 2, i32 2)
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x float> @llvm.matrix.multiply.v4f32.v4f32.v4f32(<4 x float> [[LHS:%.*]], <4 x float> [[TMP0]], i32 2, i32 2, i32 2)
-// CHECK-NEXT:    ret <4 x float> [[TMP1]]
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.kvx.fmm222w(<4 x float> [[LHS:%.*]], <4 x float> [[RHS:%.*]], i32 2, i32 7, i32 0)
+// CHECK-NEXT:    ret <4 x float> [[TMP0]]
 //
 float4 fmm_nt(float4 lhs, float4 rhs){
     return __builtin_kvx_fmm222w(lhs, rhs, ".nt");
@@ -115,9 +104,8 @@ float4 fmm_nt(float4 lhs, float4 rhs){
 
 // CHECK-LABEL: @fmm_2_nt(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.matrix.transpose.v4f32(<4 x float> [[RHS:%.*]], i32 2, i32 2)
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x float> @llvm.matrix.multiply.v4f32.v4f32.v4f32(<4 x float> [[LHS:%.*]], <4 x float> [[TMP0]], i32 2, i32 2, i32 2)
-// CHECK-NEXT:    ret <4 x float> [[TMP1]]
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.kvx.fmm222w(<4 x float> [[LHS:%.*]], <4 x float> [[RHS:%.*]], i32 2, i32 7, i32 0)
+// CHECK-NEXT:    ret <4 x float> [[TMP0]]
 //
 float4 fmm_2_nt(float4 lhs, float4 rhs){
     return __builtin_kvx_fmm222w(lhs, rhs, ".nt");
@@ -125,10 +113,8 @@ float4 fmm_2_nt(float4 lhs, float4 rhs){
 
 // CHECK-LABEL: @fmma222w_2_nt(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.matrix.transpose.v4f32(<4 x float> [[RHS:%.*]], i32 2, i32 2)
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x float> @llvm.matrix.multiply.v4f32.v4f32.v4f32(<4 x float> [[LHS:%.*]], <4 x float> [[TMP0]], i32 2, i32 2, i32 2)
-// CHECK-NEXT:    [[TMP2:%.*]] = fadd fast <4 x float> [[TMP1]], [[ACC:%.*]]
-// CHECK-NEXT:    ret <4 x float> [[TMP2]]
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.kvx.fmma222w(<4 x float> [[LHS:%.*]], <4 x float> [[RHS:%.*]], <4 x float> [[ACC:%.*]], i32 2, i32 7, i32 0)
+// CHECK-NEXT:    ret <4 x float> [[TMP0]]
 //
 float4 fmma222w_2_nt(float4 lhs, float4 rhs, float4 acc){
     return __builtin_kvx_fmma222w(lhs, rhs, acc, ".nt");
@@ -136,10 +122,8 @@ float4 fmma222w_2_nt(float4 lhs, float4 rhs, float4 acc){
 
 // CHECK-LABEL: @fmms222w_2_nt(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.matrix.transpose.v4f32(<4 x float> [[RHS:%.*]], i32 2, i32 2)
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x float> @llvm.matrix.multiply.v4f32.v4f32.v4f32(<4 x float> [[LHS:%.*]], <4 x float> [[TMP0]], i32 2, i32 2, i32 2)
-// CHECK-NEXT:    [[TMP2:%.*]] = fsub fast <4 x float> [[ACC:%.*]], [[TMP1]]
-// CHECK-NEXT:    ret <4 x float> [[TMP2]]
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.kvx.fmms222w(<4 x float> [[LHS:%.*]], <4 x float> [[RHS:%.*]], <4 x float> [[ACC:%.*]], i32 2, i32 7, i32 0)
+// CHECK-NEXT:    ret <4 x float> [[TMP0]]
 //
 float4 fmms222w_2_nt(float4 lhs, float4 rhs, float4 acc){
     return __builtin_kvx_fmms222w(lhs, rhs, acc, ".nt");
@@ -147,10 +131,8 @@ float4 fmms222w_2_nt(float4 lhs, float4 rhs, float4 acc){
 
 // CHECK-LABEL: @fmm_tt(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.matrix.transpose.v4f32(<4 x float> [[LHS:%.*]], i32 2, i32 2)
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x float> @llvm.matrix.transpose.v4f32(<4 x float> [[RHS:%.*]], i32 2, i32 2)
-// CHECK-NEXT:    [[TMP2:%.*]] = tail call <4 x float> @llvm.matrix.multiply.v4f32.v4f32.v4f32(<4 x float> [[TMP0]], <4 x float> [[TMP1]], i32 2, i32 2, i32 2)
-// CHECK-NEXT:    ret <4 x float> [[TMP2]]
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.kvx.fmm222w(<4 x float> [[LHS:%.*]], <4 x float> [[RHS:%.*]], i32 3, i32 7, i32 0)
+// CHECK-NEXT:    ret <4 x float> [[TMP0]]
 //
 float4 fmm_tt(float4 lhs, float4 rhs){
     return __builtin_kvx_fmm222w(lhs, rhs, ".tt");
@@ -158,10 +140,8 @@ float4 fmm_tt(float4 lhs, float4 rhs){
 
 // CHECK-LABEL: @fmm_2_tt(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.matrix.transpose.v4f32(<4 x float> [[LHS:%.*]], i32 2, i32 2)
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x float> @llvm.matrix.transpose.v4f32(<4 x float> [[RHS:%.*]], i32 2, i32 2)
-// CHECK-NEXT:    [[TMP2:%.*]] = tail call <4 x float> @llvm.matrix.multiply.v4f32.v4f32.v4f32(<4 x float> [[TMP0]], <4 x float> [[TMP1]], i32 2, i32 2, i32 2)
-// CHECK-NEXT:    ret <4 x float> [[TMP2]]
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.kvx.fmm222w(<4 x float> [[LHS:%.*]], <4 x float> [[RHS:%.*]], i32 3, i32 7, i32 0)
+// CHECK-NEXT:    ret <4 x float> [[TMP0]]
 //
 float4 fmm_2_tt(float4 lhs, float4 rhs){
     return __builtin_kvx_fmm222w(lhs, rhs, ".tt");
@@ -169,11 +149,8 @@ float4 fmm_2_tt(float4 lhs, float4 rhs){
 
 // CHECK-LABEL: @fmma222w_2_tt(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.matrix.transpose.v4f32(<4 x float> [[LHS:%.*]], i32 2, i32 2)
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x float> @llvm.matrix.transpose.v4f32(<4 x float> [[RHS:%.*]], i32 2, i32 2)
-// CHECK-NEXT:    [[TMP2:%.*]] = tail call <4 x float> @llvm.matrix.multiply.v4f32.v4f32.v4f32(<4 x float> [[TMP0]], <4 x float> [[TMP1]], i32 2, i32 2, i32 2)
-// CHECK-NEXT:    [[TMP3:%.*]] = fadd fast <4 x float> [[TMP2]], [[ACC:%.*]]
-// CHECK-NEXT:    ret <4 x float> [[TMP3]]
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.kvx.fmma222w(<4 x float> [[LHS:%.*]], <4 x float> [[RHS:%.*]], <4 x float> [[ACC:%.*]], i32 3, i32 7, i32 0)
+// CHECK-NEXT:    ret <4 x float> [[TMP0]]
 //
 float4 fmma222w_2_tt(float4 lhs, float4 rhs, float4 acc){
     return __builtin_kvx_fmma222w(lhs, rhs, acc, ".tt");
@@ -181,11 +158,8 @@ float4 fmma222w_2_tt(float4 lhs, float4 rhs, float4 acc){
 
 // CHECK-LABEL: @fmms222w_2_tt(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.matrix.transpose.v4f32(<4 x float> [[LHS:%.*]], i32 2, i32 2)
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x float> @llvm.matrix.transpose.v4f32(<4 x float> [[RHS:%.*]], i32 2, i32 2)
-// CHECK-NEXT:    [[TMP2:%.*]] = tail call <4 x float> @llvm.matrix.multiply.v4f32.v4f32.v4f32(<4 x float> [[TMP0]], <4 x float> [[TMP1]], i32 2, i32 2, i32 2)
-// CHECK-NEXT:    [[TMP3:%.*]] = fsub fast <4 x float> [[ACC:%.*]], [[TMP2]]
-// CHECK-NEXT:    ret <4 x float> [[TMP3]]
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x float> @llvm.kvx.fmms222w(<4 x float> [[LHS:%.*]], <4 x float> [[RHS:%.*]], <4 x float> [[ACC:%.*]], i32 3, i32 7, i32 0)
+// CHECK-NEXT:    ret <4 x float> [[TMP0]]
 //
 float4 fmms222w_2_tt(float4 lhs, float4 rhs, float4 acc){
     return __builtin_kvx_fmms222w(lhs, rhs, acc, ".tt");

@@ -1577,16 +1577,8 @@ define <4 x float> @test_fma(<4 x float> %a, <4 x float> %b, <4 x float> %c) #0 
 define <4 x float> @test_fabs(<4 x float> %a) #0 {
 ; CHECK-LABEL: test_fabs:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fabsw $r0 = $r0
-; CHECK-NEXT:    fabsw $r1 = $r1
-; CHECK-NEXT:    srad $r2 = $r1, 32
-; CHECK-NEXT:    srad $r3 = $r0, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fabsw $r2 = $r2
-; CHECK-NEXT:    fabsw $r3 = $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r3, 63, 32
-; CHECK-NEXT:    insf $r1 = $r2, 63, 32
+; CHECK-NEXT:    fabswp $r0 = $r0
+; CHECK-NEXT:    fabswp $r1 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <4 x float> @llvm.fabs.v4f32(<4 x float> %a)
