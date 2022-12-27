@@ -125,18 +125,17 @@ entry:
   ret <2 x float> %0
 }
 
-
-define <2 x float> @fconjwc(<2 x float> %a) {
+define <2 x float> @fconjwc(<2 x float> %0) {
 ; CHECK-LABEL: fconjwc:
-; CHECK:       # %bb.0: # %entry
+; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fnegd $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-entry:
-  %0 = tail call <2 x float> @llvm.kvx.fconjwc(<2 x float> %a)
-  ret <2 x float> %0
+  %2 = tail call <2 x float> @llvm.kvx.fcconj.v2f32(<2 x float> %0)
+  ret <2 x float> %2
 }
 
+declare <2 x float> @llvm.kvx.fcconj.v2f32(<2 x float>)
 
 declare <2 x float> @llvm.kvx.fconjwc(<2 x float>)
 
@@ -297,17 +296,19 @@ entry:
   ret <4 x float> %0
 }
 
-
-define <4 x float> @fconjwcp(<4 x float> %a) {
+define <4 x float> @fconjwcp(<4 x float> %0) {
 ; CHECK-LABEL: fconjwcp:
-; CHECK:       # %bb.0: # %entry
+; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fnegd $r0 = $r0
 ; CHECK-NEXT:    fnegd $r1 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-entry:
-  %0 = tail call <4 x float> @llvm.kvx.fconjwcp(<4 x float> %a)
-  ret <4 x float> %0
+  %2 = shufflevector <4 x float> %0, <4 x float> undef, <2 x i32> <i32 0, i32 1>
+  %3 = tail call <2 x float> @llvm.kvx.fcconj.v2f32(<2 x float> %2)
+  %4 = shufflevector <4 x float> %0, <4 x float> undef, <2 x i32> <i32 2, i32 3>
+  %5 = tail call <2 x float> @llvm.kvx.fcconj.v2f32(<2 x float> %4)
+  %6 = shufflevector <2 x float> %3, <2 x float> %5, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  ret <4 x float> %6
 }
 
 
@@ -569,10 +570,9 @@ entry:
   ret <8 x float> %8
 }
 
-
-define <8 x float> @fconjwcq(<8 x float> %a) local_unnamed_addr #3 {
+define <8 x float> @fconjwcq(<8 x float> %0) {
 ; KVCV1-LABEL: fconjwcq:
-; KVCV1:       # %bb.0: # %entry
+; KVCV1:       # %bb.0:
 ; KVCV1-NEXT:    fnegd $r0 = $r0
 ; KVCV1-NEXT:    fnegd $r1 = $r1
 ; KVCV1-NEXT:    ;;
@@ -582,20 +582,25 @@ define <8 x float> @fconjwcq(<8 x float> %a) local_unnamed_addr #3 {
 ; KVCV1-NEXT:    ;;
 ;
 ; KVCV2-LABEL: fconjwcq:
-; KVCV2:       # %bb.0: # %entry
+; KVCV2:       # %bb.0:
 ; KVCV2-NEXT:    fnegd $r0 = $r0
 ; KVCV2-NEXT:    fnegd $r1 = $r1
 ; KVCV2-NEXT:    fnegd $r2 = $r2
 ; KVCV2-NEXT:    fnegd $r3 = $r3
 ; KVCV2-NEXT:    ret
 ; KVCV2-NEXT:    ;;
-entry:
-  %0 = shufflevector <8 x float> %a, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
-  %1 = tail call <4 x float> @llvm.kvx.fconjwcp(<4 x float> %0)
-  %2 = shufflevector <8 x float> %a, <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
-  %3 = tail call <4 x float> @llvm.kvx.fconjwcp(<4 x float> %2)
-  %4 = shufflevector <4 x float> %1, <4 x float> %3, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
-  ret <8 x float> %4
+  %2 = shufflevector <8 x float> %0, <8 x float> undef, <2 x i32> <i32 0, i32 1>
+  %3 = tail call <2 x float> @llvm.kvx.fcconj.v2f32(<2 x float> %2)
+  %4 = shufflevector <8 x float> %0, <8 x float> undef, <2 x i32> <i32 2, i32 3>
+  %5 = tail call <2 x float> @llvm.kvx.fcconj.v2f32(<2 x float> %4)
+  %6 = shufflevector <8 x float> %0, <8 x float> undef, <2 x i32> <i32 4, i32 5>
+  %7 = tail call <2 x float> @llvm.kvx.fcconj.v2f32(<2 x float> %6)
+  %8 = shufflevector <8 x float> %0, <8 x float> undef, <2 x i32> <i32 6, i32 7>
+  %9 = tail call <2 x float> @llvm.kvx.fcconj.v2f32(<2 x float> %8)
+  %10 = shufflevector <2 x float> %3, <2 x float> %5, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  %11 = shufflevector <2 x float> %7, <2 x float> %9, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  %12 = shufflevector <4 x float> %10, <4 x float> %11, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+  ret <8 x float> %12
 }
 
 
@@ -733,24 +738,17 @@ entry:
   ret <2 x double> %0
 }
 
-
-declare <2 x double> @llvm.kvx.ffmscdc(<2 x double>, <2 x double>, <2 x double>,  i32, i32)
-
-
-define <2 x double> @fconjdc(<2 x double> %a) {
+define <2 x double> @fconjdc(<2 x double> %0) {
 ; CHECK-LABEL: fconjdc:
-; CHECK:       # %bb.0: # %entry
+; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fnegd $r1 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-entry:
-  %0 = tail call <2 x double> @llvm.kvx.fconjdc(<2 x double> %a)
-  ret <2 x double> %0
+  %2 = tail call <2 x double> @llvm.kvx.fcconj.v2f64(<2 x double> %0)
+  ret <2 x double> %2
 }
 
-
-declare <2 x double> @llvm.kvx.fconjdc(<2 x double>)
-
+declare <2 x double> @llvm.kvx.fcconj.v2f64(<2 x double>)
 
 define <4 x double> @fmuldcp(<4 x double> %a, <4 x double> %b) {
 ; CHECK-LABEL: fmuldcp:
@@ -975,19 +973,17 @@ entry:
   ret <4 x double> %8
 }
 
-
-define <4 x double> @fconjdcp(<4 x double> %a) {
+define <4 x double> @fconjdcp(<4 x double> %0) {
 ; CHECK-LABEL: fconjdcp:
-; CHECK:       # %bb.0: # %entry
+; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fnegd $r1 = $r1
 ; CHECK-NEXT:    fnegd $r3 = $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-entry:
-  %0 = shufflevector <4 x double> %a, <4 x double> undef, <2 x i32> <i32 0, i32 1>
-  %1 = tail call <2 x double> @llvm.kvx.fconjdc(<2 x double> %0)
-  %2 = shufflevector <4 x double> %a, <4 x double> undef, <2 x i32> <i32 2, i32 3>
-  %3 = tail call <2 x double> @llvm.kvx.fconjdc(<2 x double> %2)
-  %4 = shufflevector <2 x double> %1, <2 x double> %3, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
-  ret <4 x double> %4
+  %2 = shufflevector <4 x double> %0, <4 x double> undef, <2 x i32> <i32 0, i32 1>
+  %3 = tail call <2 x double> @llvm.kvx.fcconj.v2f64(<2 x double> %2)
+  %4 = shufflevector <4 x double> %0, <4 x double> undef, <2 x i32> <i32 2, i32 3>
+  %5 = tail call <2 x double> @llvm.kvx.fcconj.v2f64(<2 x double> %4)
+  %6 = shufflevector <2 x double> %3, <2 x double> %5, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  ret <4 x double> %6
 }
