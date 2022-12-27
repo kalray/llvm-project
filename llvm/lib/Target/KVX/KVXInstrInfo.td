@@ -2883,39 +2883,39 @@ def FLOATUW : KVX_INSTRUCTION
    MAU_FP>;
 
 def FIXEDD : KVX_INSTRUCTION
-  <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
+  <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6W:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fixedd$a1$a2 $a3 = $a4, $a5",
-   [/* no straightforward pattern */],
+   [(set i64:$a3, (i64(int_kvx_fixedd f64:$a4, Unsigned6W:$a5, RoundingMod:$a1, SilentMod:$a2)))],
    MAU_FP>;
 
 def FIXEDWP : KVX_INSTRUCTION
-  <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
+  <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6W:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fixedwp$a1$a2 $a3 = $a4, $a5",
-   [/* no straightforward pattern */],
+   [(set v2i32:$a3, (v2i32(int_kvx_fixedwp v2f32:$a4, Unsigned6W:$a5, RoundingMod:$a1, SilentMod:$a2)))],
    MAU_FP>;
 
 def FIXEDW : KVX_INSTRUCTION
-  <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
+  <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6W:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fixedw$a1$a2 $a3 = $a4, $a5",
-   [/* no straightforward pattern */],
+   [(set i32:$a3, (i32(int_kvx_fixedw f32:$a4, Unsigned6W:$a5, RoundingMod:$a1, SilentMod:$a2)))],
    MAU_FP>;
 
 def FIXEDUD : KVX_INSTRUCTION
-  <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
+  <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6W:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fixedud$a1$a2 $a3 = $a4, $a5",
-   [/* no straightforward pattern */],
+   [(set i64:$a3, (i64(int_kvx_fixedud f64:$a4, Unsigned6W:$a5, RoundingMod:$a1, SilentMod:$a2)))],
    MAU_FP>;
 
 def FIXEDUWP : KVX_INSTRUCTION
-  <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
+  <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6W:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fixeduwp$a1$a2 $a3 = $a4, $a5",
-   [/* no straightforward pattern */],
+   [(set v2i32:$a3, (v2i32(int_kvx_fixeduwp v2f32:$a4, Unsigned6W:$a5, RoundingMod:$a1, SilentMod:$a2)))],
    MAU_FP>;
 
 def FIXEDUW : KVX_INSTRUCTION
-  <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6:$a5, RoundingMod:$a1, SilentMod:$a2),
+  <(outs SingleReg:$a3), (ins SingleReg:$a4, Unsigned6W:$a5, RoundingMod:$a1, SilentMod:$a2),
    "fixeduw$a1$a2 $a3 = $a4, $a5",
-   [/* no straightforward pattern */],
+   [(set i32:$a3, (i32(int_kvx_fixeduw f32:$a4, Unsigned6W:$a5, RoundingMod:$a1, SilentMod:$a2)))],
    MAU_FP>;
 }
 
