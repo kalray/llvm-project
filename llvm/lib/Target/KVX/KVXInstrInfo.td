@@ -3335,15 +3335,15 @@ defm FSBFWQ : I <"fsbfwq", MAU_SWITCH_AUXR_EMPTY_FP, [PairedReg, PairedReg], [Ro
 defm FSBFWCP : I <"fsbfwcp.c", MAU_SWITCH_AUXR_EMPTY_FP, [PairedReg, PairedReg], [RoundingMod, SilentMod], [], [], [PairedReg], 0,
                  [(set v4f32:$r, (int_kvx_fsbfc v4f32:$op0, v4f32:$op1, conjugate_c, RoundingMod:$mod0, SilentMod:$mod1))]>;
 
-defm FFMAHW : MC_2E_2<"ffmahw">;
+defm FFMAHW : MC_2E_2<"ffmahw", int_kvx_ffmax>;
 
 defm FFMAW : MC_2E<"ffmaw">;
 
-defm FFMAWD : MC_26<"ffmawd">;
+defm FFMAWD : MC_26<"ffmawd", int_kvx_ffmax>;
 
-defm FFMAWDP : MC_2F<"ffmawdp">;
+defm FFMAWDP : MC_2F<"ffmawdp", int_kvx_ffmax>;
 
-defm FFMAHWQ : MC_30<"ffmahwq">;
+defm FFMAHWQ : MC_30<"ffmahwq", int_kvx_ffmax>;
 
 defm FFMSHW : MC_2E_2<"ffmshw">;
 

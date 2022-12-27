@@ -1178,3 +1178,8 @@ def : Pat <(int_kvx_xloadbuff1024 (add i64:$mem, Signed27:$off), i64:$op0, v1024
 
 def : Pat <(int_kvx_xloadbuff1024 (add i64:$mem, Signed54:$off), i64:$op0, v1024i1:$z, VariantMod:$mod0, LsupackMod:$mod1),
            (v1024i1(XLOri54vp Signed54:$off, i64:$mem, i64:$op0, VariantMod:$mod0, LsupackMod:$mod1, v1024i1:$z))>;
+
+def : Pat <(v2f32 (int_kvx_ffmax v2f16:$lhs, v2f16:$rhs, v2f32:$acc, RoundingMod:$r, SilentMod:$s)),
+           (v2f32 (EXTRACT_SUBREG (v4f32(FFMAHWQrr (v4f32 (REG_SEQUENCE PairedReg, SingleReg:$acc, sub_d0, (v2f32(MAKEi16 0)), sub_d1)),
+                                                   (ZXWD SingleReg:$lhs), (ZXWD SingleReg:$rhs), RoundingMod:$r, SilentMod:$s)), sub_d0))>;
+
