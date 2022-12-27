@@ -17716,112 +17716,12 @@ Value *CodeGenFunction::EmitHexagonBuiltinExpr(unsigned BuiltinID,
   return nullptr;
 }
 
-// Must keep these enums in sync with KVX.h
-typedef enum ROUNDING {
-  ROUNDING_RN,
-  ROUNDING_RU,
-  ROUNDING_RD,
-  ROUNDING_RZ,
-  ROUNDING_RNA,
-  ROUNDING_RNZ,
-  ROUNDING_RO,
-  ROUNDING_CS,
-  ROUNDING_INVALID = -1
-} rounding_t;
-
-enum ROUNDINT {
-  ROUNDINT_RN,
-  ROUNDINT_RU,
-  ROUNDINT_RD,
-  ROUNDINT_RZ,
-  ROUNDINT_RHU
-};
-
-enum SATURATE { SATURATE_SAT, SATURATE_SATU };
-
-typedef enum {
-  BITCOUNT_INVALID = -1,
-  BITCOUNT_POP = 0,
-  BITCOUNT_LZ = 1,
-  BITCOUNT_LS = 2,
-  BITCOUNT_TZ = 3
-} bitcount_t;
-
 typedef enum {
   SATURATE_INVALID = -1,
   SATURATE_DEFAULT = 0,
   SATURATE_SIGNED = 1,  // ".s"
   SATURATE_UNSIGNED = 2 // ".us"
 } saturate_t;
-
-typedef enum {
-  CARRY_INVALID = -1,
-  CARRY_DEFAULT = 0, // "": Consumption and Production
-  CARRY_PRODONLY = 1 // ".i": Only Production
-} carry_t;
-
-static int KVX_getConjugateModifier(const StringRef &Str) {
-  return llvm::StringSwitch<int>(Str).Case("", 0).Case("c", 1).Default(-1);
-}
-
-static rounding_t KVX_getRoundingModifier(const StringRef &Str) {
-  return llvm::StringSwitch<rounding_t>(Str)
-      .Case("", ROUNDING_CS)
-      .CaseLower("rn", ROUNDING_RN)
-      .CaseLower("ru", ROUNDING_RU)
-      .CaseLower("rd", ROUNDING_RD)
-      .CaseLower("rz", ROUNDING_RZ)
-      .Default(ROUNDING_INVALID);
-}
-
-static bitcount_t KVX_getBitcountModifier(const StringRef &Str) {
-  return StringSwitch<bitcount_t>(Str)
-      .Case("", BITCOUNT_POP)
-      .Case(".lz", BITCOUNT_LZ)
-      .Case(".ls", BITCOUNT_LS)
-      .Case(".tz", BITCOUNT_TZ)
-      .Default(BITCOUNT_INVALID);
-}
-
-static saturate_t KVX_getSaturateModifier(const StringRef &Str) {
-  return StringSwitch<saturate_t>(Str)
-      .Case("", SATURATE_DEFAULT)
-      .Case(".s", SATURATE_SIGNED)
-      .Case(".us", SATURATE_UNSIGNED)
-      .Default(SATURATE_INVALID);
-}
-
-static carry_t KVX_getCarryInitModifier(const StringRef &Str) {
-  return StringSwitch<carry_t>(Str)
-      .Case("", CARRY_DEFAULT)
-      .Case(".i", CARRY_PRODONLY)
-      .Default(CARRY_INVALID);
-}
-
-static int KVX_getSpeculateModValue(const StringRef &Str,
-                                    bool EnforceUPrefix = false) {
-  if (!EnforceUPrefix)
-    return StringSwitch<int>(Str).Case("", 0).Case("s", 1).Default(-1);
-  return StringSwitch<int>(Str).Case("u", 0).Case("us", 1).Default(-1);
-}
-
-typedef enum MATRIX_TRANSPOSE : signed char {
-  MTRANSPOSE_NN = 0, // normal normal
-  MTRANSPOSE_TN = 1, // transpose normal
-  MTRANSPOSE_NT = 2, // normal transpose
-  MTRANSPOSE_TT = 3, // transpose transpose
-  MTRANSPOSE_INVALID = 4
-} matrix_transpose_t;
-
-static matrix_transpose_t KVX_getMatrixTransposeModifier(const StringRef &Str) {
-  return llvm::StringSwitch<matrix_transpose_t>(Str)
-      .Case("", MTRANSPOSE_NN)
-      .CaseLower("nn", MTRANSPOSE_NN)
-      .CaseLower("tn", MTRANSPOSE_TN)
-      .CaseLower("nt", MTRANSPOSE_NT)
-      .CaseLower("tt", MTRANSPOSE_TT)
-      .Default(MTRANSPOSE_INVALID);
-}
 
 static Value *KVX_emit_xswap256(CodeGenFunction &CGF, const CallExpr *E) {
   if (E->getNumArgs() != 2) {
@@ -17846,153 +17746,6 @@ static Value *KVX_emit_xswap256(CodeGenFunction &CGF, const CallExpr *E) {
   CGF.Builder.CreateStore(CGF.Builder.CreateExtractValue(R, 1), AddrTCA);
 
   return CGF.Builder.CreateExtractValue(R, 0);
-}
-
-static Value *KVX_emitScaleNarrowBuiltin(unsigned NumMods, unsigned IntrinsicID,
-                                         CodeGenFunction &CGF,
-                                         const CallExpr *E,
-                                         unsigned NumArgs = 2) {
-  assert((NumArgs > 0) && "Zero number of args!");
-  if (E->getNumArgs() != NumArgs) {
-    CGF.CGM.Error(E->getBeginLoc(), "Incorrect number of arguments to builtin");
-    return nullptr;
-  }
-
-  SmallVector<Value *, 8> Args;
-  unsigned V = NumArgs - 1;
-
-  for (unsigned I = 0; I < V; I++)
-    Args.push_back(CGF.EmitScalarExpr(E->getArg(I)));
-
-  const clang::Expr *ModifierString = E->getArg(V)->IgnoreParenImpCasts();
-  if (ModifierString->isNullPointerConstant(CGF.getContext(),
-                                            Expr::NPC_NeverValueDependent)) {
-    CGF.CGM.Error(
-        E->getArg(V)->getBeginLoc(),
-        ((NumMods == 2)
-             ? "Must define rounding and silent modifiers."
-             : "Must define rounding, silent and rectify modifiers."));
-    return nullptr;
-  }
-  const auto *SL = dyn_cast<clang::StringLiteral>(ModifierString);
-  if (!SL) {
-    CGF.CGM.Error(E->getArg(V)->getBeginLoc(),
-                  ((NumMods == 2)
-                       ? "Modifiers must be a string. e.g. \".rn.s\"."
-                       : "Modifiers must be a string. e.g. \".rn.s.relu\"."));
-    return nullptr;
-  }
-  auto Mods = SL->getString().split(".").second.split(".");
-
-  rounding_t Round = KVX_getRoundingModifier(Mods.first);
-  if (Round != ROUNDING_INVALID)
-    Mods = Mods.second.split(".");
-
-  int Silent = KVX_getSpeculateModValue(Mods.first);
-  if (Silent >= 0) {
-    if (NumMods == 2)
-      Mods.first = Mods.second;
-    else
-      Mods = Mods.second.split(".");
-  }
-
-  int Rectify = 0;
-  if (NumMods == 3) {
-    Rectify = llvm::StringSwitch<int>(Mods.first)
-                  .CaseLower("", 0)
-                  .CaseLower("relu", 1)
-                  .Default(-1);
-    if (Rectify >= 0)
-      Mods.first = Mods.second;
-  }
-
-  if (!Mods.first.empty() ||
-      (Round < 0 && Silent < 0 && ((NumMods == 3) && Rectify < 0))) {
-    CGF.CGM.Error(E->getArg(V)->getBeginLoc(),
-                  "Invalid rounding modifer, should be one of: '. "
-                  ".rn .ru .rd .rz'.");
-    CGF.CGM.Error(E->getArg(V)->getBeginLoc(),
-                  "Invalid silent modifer, should be one '.' or '.s'.");
-    if (NumMods == 3)
-      CGF.CGM.Error(E->getArg(V)->getBeginLoc(),
-                    "Invalid silent modifer, should be one '.' or '.relu'.");
-
-    return nullptr;
-  }
-
-  if (Round == ROUNDING_INVALID)
-    Round = ROUNDING_CS;
-
-  if (Silent < 0)
-    Silent = 0;
-
-  if (Rectify < 0)
-    Rectify = 0;
-
-  Args.push_back(ConstantInt::get(CGF.IntTy, Round));
-  Args.push_back(ConstantInt::get(CGF.IntTy, Silent));
-  if (NumMods == 3)
-    Args.push_back(ConstantInt::get(CGF.IntTy, Rectify));
-
-  return CGF.Builder.CreateCall(CGF.CGM.getIntrinsic(IntrinsicID), Args);
-}
-
-static Value *KVX_emitRndintSatBuiltin(unsigned NumArgs, unsigned IntrinsicID,
-                                       CodeGenFunction &CGF,
-                                       const CallExpr *E) {
-  if (E->getNumArgs() != (NumArgs + 1)) {
-    CGF.CGM.Error(E->getBeginLoc(), "Incorrect number of arguments to builtin");
-    return nullptr;
-  }
-  SmallVector<Value *, 8> Args;
-  unsigned I = 0;
-  while (I < NumArgs)
-    Args.push_back(CGF.EmitScalarExpr(E->getArg(I++)));
-
-  const clang::Expr *ModifierString = E->getArg(I)->IgnoreParenImpCasts();
-  if (ModifierString->isNullPointerConstant(CGF.getContext(),
-                                            Expr::NPC_NeverValueDependent)) {
-    CGF.CGM.Error(E->getArg(I)->getBeginLoc(),
-                  "Must define integer rounding and saturation modifiers.");
-    return nullptr;
-  }
-  const auto *SL = dyn_cast<clang::StringLiteral>(ModifierString);
-  if (!SL) {
-    CGF.CGM.Error(E->getArg(I)->getBeginLoc(),
-                  "Modifiers must be a string. e.g. \".rn.sat\".");
-    return nullptr;
-  }
-  auto Mods = SL->getString().split(".").second.split(".");
-  int RoundInt = llvm::StringSwitch<int>(Mods.first)
-                     .CaseLower("rn", ROUNDINT_RN)
-                     .CaseLower("ru", ROUNDINT_RU)
-                     .CaseLower("rd", ROUNDINT_RD)
-                     .CaseLower("rz", ROUNDINT_RZ)
-                     .CaseLower("rhu", ROUNDINT_RHU)
-                     .Default(-1);
-  int Saturation = llvm::StringSwitch<int>(Mods.second)
-                       .CaseLower("sat", SATURATE_SAT)
-                       .CaseLower("satu", SATURATE_SATU)
-                       .Default(-1);
-
-  if (RoundInt < 0 || Saturation < 0) {
-    if (RoundInt < 0)
-      CGF.CGM.Error(E->getArg(I)->getBeginLoc(),
-                    "Invalid integer-rounding modifer, should be one of: '.rn "
-                    ".ru .rd .rz .rhu'.");
-
-    if (Saturation < 0)
-      CGF.CGM.Error(
-          E->getArg(I)->getBeginLoc(),
-          "Invalid saturate modifer, should be one '.sat' or '.satu'.");
-
-    return nullptr;
-  }
-
-  Args.push_back(ConstantInt::get(CGF.IntTy, RoundInt));
-  Args.push_back(ConstantInt::get(CGF.IntTy, Saturation));
-
-  return CGF.Builder.CreateCall(CGF.CGM.getIntrinsic(IntrinsicID), Args);
 }
 
 static Value *KVX_emitShiftBuiltin(CodeGenFunction &CGF, const CallExpr *E,
@@ -18078,265 +17831,6 @@ static Value *KVX_emitShiftBuiltin(CodeGenFunction &CGF, const CallExpr *E,
   return OutputV;
 }
 
-static bool KVX_checkNargs(unsigned N, CodeGenFunction &CGF, const CallExpr *E,
-                           bool HasModifierStr = false) {
-  if (E->getNumArgs() != ((HasModifierStr ? 1 : 0) + N)) {
-    CGF.CGM.Error(E->getBeginLoc(), "Incorrect number of arguments to builtin");
-    return false;
-  }
-  return true;
-}
-
-static constexpr const char *KVX_ERROR_INVALID_ROUNDING =
-    "invalid rounding modifier";
-static constexpr const char *KVX_ERROR_INVALID_SILENT =
-    "invalid silent modifier";
-
-typedef struct {
-  bool SilentMod;
-  rounding_t RoundingMod;
-  bool ConjugateMod;
-  bool IsValid;
-} float_mods_t;
-
-static StringRef KVX_getModStr(CodeGenFunction &CGF, const CallExpr *E,
-                               const unsigned N, bool &IsConsString) {
-  IsConsString = true;
-  if (E->isNullPointerConstant(CGF.getContext(),
-                               Expr::NPC_NeverValueDependent) ||
-      E->getArg(N)->isNullPointerConstant(CGF.getContext(),
-                                          Expr::NPC_NeverValueDependent))
-    return "";
-
-  const clang::Expr *V = E->getArg(N)->IgnoreParenImpCasts();
-  if (!isa<clang::StringLiteral>(V)) {
-    IsConsString = false;
-    return "";
-  }
-
-  return cast<clang::StringLiteral>(V)->getString();
-}
-
-static float_mods_t KVX_getFloatModifiers(CodeGenFunction &CGF,
-                                          const SourceLocation SL,
-                                          StringRef ModStr, bool HasRounding,
-                                          bool HasConjugate) {
-
-  float_mods_t FloatMods = {false, ROUNDING_CS, false, true};
-  std::pair<StringRef, StringRef> Mods = ModStr.split(".");
-
-  if (HasConjugate) {
-    int ConjugateMod = KVX_getConjugateModifier(Mods.first);
-    if (ConjugateMod != -1) {
-      Mods = Mods.second.split(".");
-      FloatMods.ConjugateMod = static_cast<bool>(ConjugateMod);
-    }
-  }
-
-  rounding_t RoundingMod = ROUNDING_INVALID;
-  if (HasRounding) {
-    RoundingMod = KVX_getRoundingModifier(Mods.first);
-    if (RoundingMod != ROUNDING_INVALID) {
-      Mods = Mods.second.split(".");
-      FloatMods.RoundingMod = static_cast<rounding_t>(RoundingMod);
-    }
-  }
-
-  int SilentMod = 0;
-  // Silent modifier and speculate modifier hold same options
-  SilentMod = KVX_getSpeculateModValue(Mods.first);
-  if (SilentMod == -1) {
-    if (HasRounding && RoundingMod == ROUNDING_INVALID)
-      CGF.CGM.Error(SL, KVX_ERROR_INVALID_ROUNDING);
-
-    CGF.CGM.Error(SL, KVX_ERROR_INVALID_SILENT);
-    FloatMods.IsValid = false;
-    return FloatMods;
-  }
-  FloatMods.SilentMod = static_cast<bool>(SilentMod);
-
-  if (RoundingMod == ROUNDING_INVALID)
-    RoundingMod = ROUNDING_CS;
-
-  if (Mods.second != "") {
-    CGF.CGM.Error(SL, "invalid modifier string");
-    FloatMods.IsValid = false;
-    return FloatMods;
-  }
-
-  return FloatMods;
-}
-
-enum KVX_ACCUMULATE : unsigned char { ACC_NO, ACC_ADD, ACC_SUB };
-
-static Value *KVX_emitMatrixMultiply(CodeGenFunction &CGF,
-                                     const llvm::Type *ElType, unsigned Lines,
-                                     unsigned InnerLineCols, unsigned Cols,
-                                     const CallExpr *E,
-                                     const KVX_ACCUMULATE Acc,
-                                     const unsigned KVXIntID) {
-
-  bool HasRounding = ElType->isFloatingPointTy();
-  unsigned Nargs = 2 + (Acc != ACC_NO);
-
-  if (!KVX_checkNargs(Nargs, CGF, E, true))
-    return nullptr;
-
-  bool GoodStr;
-  StringRef ModsStr = KVX_getModStr(CGF, E, Nargs, GoodStr);
-  if (!GoodStr) {
-    CGF.CGM.Error(E->getArg(Nargs)->getBeginLoc(),
-                  "Modifier should be a constant string.");
-    return nullptr;
-  }
-  std::pair<StringRef, StringRef> Mods = ModsStr.split(".").second.split(".");
-
-  auto MTM = KVX_getMatrixTransposeModifier(Mods.first);
-  float_mods_t FloatMods;
-  bool ValidModifier = MTM != MTRANSPOSE_INVALID;
-
-  if (!HasRounding) {
-    if (!ValidModifier)
-      CGF.CGM.Error(E->getArg(Nargs)->getBeginLoc(),
-                    "Invalid matrix transpose modifier.");
-  } else {
-    if (ValidModifier)
-      ModsStr = Mods.second;
-
-    else // if fp mods pass, already leave matrix transpose in the right value
-      MTM = MTRANSPOSE_NN;
-
-    FloatMods = KVX_getFloatModifiers(CGF, E->getArg(Nargs)->getBeginLoc(),
-                                      ModsStr, HasRounding, true);
-
-    if (!FloatMods.IsValid) {
-      if (!ValidModifier)
-        CGF.CGM.Error(E->getArg(Nargs)->getBeginLoc(),
-                      "Invalid matrix transpose modifier.");
-      return nullptr;
-    }
-  }
-
-  Value *LHSMM = CGF.EmitScalarExpr(E->getArg(0));
-  Value *RHSMM = CGF.EmitScalarExpr(E->getArg(1));
-
-  Value *LHSACC = nullptr;
-  if (Acc != ACC_NO)
-    LHSACC = CGF.EmitScalarExpr(E->getArg(2));
-
-  // If we use the default rounding and silent modifiers, we don't need
-  // to use the kvx specific builtins, we can use generic int.matrix.*
-  if ((!FloatMods.SilentMod) && (FloatMods.RoundingMod == ROUNDING_CS)) {
-    MatrixBuilder<CGBuilderTy> MB(CGF.Builder);
-
-    static_assert((MTRANSPOSE_TN ^ MTRANSPOSE_NT) == MTRANSPOSE_TT &&
-                      (MTRANSPOSE_TN & MTRANSPOSE_NT) == MTRANSPOSE_NN,
-                  "matrix_transpose_t values should be bitflags");
-    if (MTM & MTRANSPOSE_TN)
-      LHSMM = MB.CreateMatrixTranspose(LHSMM, Lines, InnerLineCols);
-
-    if (MTM & MTRANSPOSE_NT)
-      RHSMM = MB.CreateMatrixTranspose(RHSMM, InnerLineCols, Cols);
-
-    Value *MM =
-        MB.CreateMatrixMultiply(LHSMM, RHSMM, Lines, InnerLineCols, Cols);
-
-    if (Acc == ACC_ADD) {
-      CGF.Builder.getFastMathFlags().setFast(true);
-      return MB.CreateAdd(LHSACC, MM);
-    }
-
-    if (Acc == ACC_SUB) {
-      CGF.Builder.getFastMathFlags().setFast(true);
-      return MB.CreateSub(LHSACC, MM);
-    }
-
-    return MM;
-  }
-
-  SmallVector<Value *, 8> Args;
-  Args.push_back(LHSMM);
-  Args.push_back(RHSMM);
-
-  if (LHSACC != nullptr)
-    Args.push_back(LHSACC);
-
-  Args.push_back(ConstantInt::get(CGF.IntTy, MTM)); // Matrix transpose
-  Args.push_back(ConstantInt::get(CGF.IntTy, FloatMods.RoundingMod));
-  Args.push_back(ConstantInt::get(CGF.IntTy, FloatMods.SilentMod));
-
-  Function *Callee = CGF.CGM.getIntrinsic(KVXIntID);
-  return CGF.Builder.CreateCall(Callee, Args);
-}
-
-static Value *KVX_emitNaryBuiltinCore(unsigned N, CodeGenFunction &CGF,
-                                      const CallExpr *E, unsigned IntrinsicID,
-                                      SmallVector<Value *, 4> Args,
-                                      bool HasRounding = false,
-                                      bool HasSilent = false) {
-  if (!HasSilent) { // No modifiers
-    Function *Callee = CGF.CGM.getIntrinsic(IntrinsicID);
-    return CGF.Builder.CreateCall(Callee, Args);
-  }
-
-  bool GoodStr;
-  StringRef ModStr = KVX_getModStr(CGF, E, N, GoodStr);
-  if (!GoodStr) {
-    CGF.CGM.Error(E->getArg(N)->getBeginLoc(),
-                  "Modifier should be a constant string.");
-    return nullptr;
-  }
-
-  float_mods_t FloatMods =
-      KVX_getFloatModifiers(CGF, E->getArg(N)->getBeginLoc(),
-                            ModStr.split(".").second, HasRounding, true);
-
-  if (!FloatMods.IsValid)
-    return nullptr;
-
-  const auto RoundingMod = FloatMods.RoundingMod;
-  const auto SilentMod = FloatMods.SilentMod;
-  const auto ConjugateMod = FloatMods.ConjugateMod;
-
-  bool HasConjugateMod = ConjugateMod > 0;
-  // Determine if the intrinsic has a conjugate modifier to set.
-  switch (IntrinsicID) {
-  case Intrinsic::kvx_fmulwc:
-  case Intrinsic::kvx_fmulwcp:
-  case Intrinsic::kvx_ffmawc:
-  case Intrinsic::kvx_ffmawcp:
-  case Intrinsic::kvx_ffmswc:
-  case Intrinsic::kvx_ffmswcp:
-    Args.push_back(ConstantInt::get(CGF.IntTy, HasConjugateMod ? 1 : 0));
-    break;
-  case Intrinsic::kvx_fmuldc:
-    if (HasConjugateMod)
-      IntrinsicID = Intrinsic::kvx_fmulcdc;
-    break;
-  case Intrinsic::kvx_ffmadc:
-    if (HasConjugateMod)
-      IntrinsicID = Intrinsic::kvx_ffmacdc;
-    break;
-  case Intrinsic::kvx_ffmsdc:
-    if (HasConjugateMod)
-      IntrinsicID = Intrinsic::kvx_ffmscdc;
-    break;
-  default:
-    if (HasConjugateMod)
-      CGF.CGM.Error(E->getArg(1)->getBeginLoc(),
-                    "conjugate modifier not supported for this builtin");
-  }
-
-  if (HasRounding)
-    Args.push_back(ConstantInt::get(CGF.IntTy, RoundingMod));
-
-  if (HasSilent)
-    Args.push_back(ConstantInt::get(CGF.IntTy, SilentMod));
-
-  Function *Callee = CGF.CGM.getIntrinsic(IntrinsicID);
-  return CGF.Builder.CreateCall(Callee, Args);
-}
-
 struct KvxModifier : StringMap<int> {
   static const int INVALID_MODIFIER = -1;
   inline int getModifierValue(const StringRef &M) const {
@@ -18365,21 +17859,14 @@ struct KvxModifier : StringMap<int> {
 };
 
 static const KvxModifier KVX_BOOLCAS({{"", 1}, {"v", 0}});
-
 static const KvxModifier KVX_CACHELEVEL({{"l1", 0}, {"l2", 1}});
-
-static const KvxModifier KVX_COHERENCY(
-    {{"", 0},
-     {"g",
-      1} /*, {"s", 2}*/}); // System coherency is not implemented in cv2 yet.
-
+static const KvxModifier KVX_CARRY({{"", 0}, {"i", 1}});
+// System coherency (S == 2) is not implemented in cv2 yet.
+static const KvxModifier KVX_COHERENCY({{"", 0}, {"g", 1}});
 static const KvxModifier KVX_CONJUGATE({{"", 0}, {"c", 1}});
-
-static const KvxModifier KVX_RCHANNEL({{"f", 0}, {"b", 1}});
-
 static const KvxModifier
-    KVX_ROUNDING({{"", 7}, {"rn", 0}, {"ru", 1}, {"rd", 2}, {"rz", 3}});
-
+    KVX_LSOMASK_LOAD({{"mt", 4}, {"mf", 5}, {"mtc", 6}, {"mfc", 7}});
+static const KvxModifier KVX_LSOMASK_STORE({{"mt", 4}, {"mf", 5}});
 static const KvxModifier KVX_LSUCOND({{"dnez", 0},
                                       {"deqz", 1},
                                       {"dltz", 2},
@@ -18394,7 +17881,6 @@ static const KvxModifier KVX_LSUCOND({{"dnez", 0},
                                       {"wgez", 11},
                                       {"wlez", 12},
                                       {"wgtz", 13}});
-
 static const KvxModifier KVX_LSUMASK({{"dnez", 0},
                                       {"deqz", 1},
                                       {"wnez", 2},
@@ -18403,29 +17889,25 @@ static const KvxModifier KVX_LSUMASK({{"dnez", 0},
                                       {"mf", 5},
                                       {"mtc", 6},
                                       {"mfc", 7}});
-
-static const KvxModifier
-    KVX_LSOMASK_LOAD({{"mt", 4}, {"mf", 5}, {"mtc", 6}, {"mfc", 7}});
-
-static const KvxModifier KVX_LSOMASK_STORE({{"mt", 4}, {"mf", 5}});
-
 static const KvxModifier
     KVX_LSUPACK({{"", 0}, {"q", 1}, {"d", 2}, {"w", 3}, {"h", 4}, {"b", 5}});
-
+static const KvxModifier
+    KVX_MTRANSPOSE({{"", 0}, {"nn", 0}, {"tn", 1}, {"nt", 2}, {"tt", 3}});
 static const KvxModifier
     KVX_QINDEX({{"q0", 0}, {"q1", 1}, {"q2", 2}, {"q3", 3}});
-
+static const KvxModifier KVX_RCHANNEL({{"f", 0}, {"b", 1}});
+static const KvxModifier KVX_RECTIFY({{"", 0}, {"relu", 1}});
+static const KvxModifier
+    KVX_ROUNDING({{"", 7}, {"rn", 0}, {"ru", 1}, {"rd", 2}, {"rz", 3}});
+static const KvxModifier KVX_ROUNDINT(
+    {{"", 0}, {"rn", 0}, {"ru", 1}, {"rd", 2}, {"rz", 3}, {"rhu", 4}});
+static const KvxModifier KVX_SATURATE({{"sat", 0}, {"satu", 1}});
 static const KvxModifier KVX_SCALARCOND = KVX_LSUCOND;
-
 static const KvxModifier KVX_SCHANNEL = KVX_RCHANNEL;
-
 static const KvxModifier KVX_SHUFFLEV({{"", 0}, {"td", 1}});
-
 static const KvxModifier
     KVX_SHUFFLEX({{"", 0}, {"zd", 1}, {"ud", 2}, {"tq", 3}});
-
 static const KvxModifier KVX_SILENT({{"", 0}, {"s", 1}});
-
 static const KvxModifier KVX_SIMDCOND({{"", 0},
                                        {"nez", 0},
                                        {"eqz", 1},
@@ -18435,37 +17917,28 @@ static const KvxModifier KVX_SIMDCOND({{"", 0},
                                        {"gtz", 5},
                                        {"odd", 6},
                                        {"even", 7}});
-
 static const KvxModifier KVX_SPECULATE = KVX_SILENT;
-
 static const KvxModifier KVX_VARIANT({{"", 0}, {"s", 1}, {"u", 2}, {"us", 3}});
-
+// Synthetic modifiers for choosing different instructions
 static const KvxModifier KvxAverage({{"", 0}, {"r", 1}, {"u", 2}, {"ru", 3}});
-
+static const KvxModifier
+    KvxBitCount({{"", 0}, {"lz", 1}, {"ls", 2}, {"tz", 3}});
 static const KvxModifier KvxDiffMod({{"", 0}, {"s", 1}, {"u", 2}});
-
 static const KvxModifier KvxExtendMul({{"", 0}, {"s", 0}, {"su", 1}, {"u", 2}});
-
 static const KvxModifier KvxHindex({{"h0", 0}, {"h1", 1}});
-
 static const KvxModifier KvxLdStAddrSpaceMod(
     {{"", 0}, {".", 0}, {".u", 256}, {".us", 257}, {".s", 258}});
-
 static const KvxModifier KvxNarrowInt({{"", 0}, {"q", 1}, {"s", 2}, {"us", 3}});
-
-static const KvxModifier KVXSignSat = KVX_SILENT;
-
 static const KvxModifier KvxShiftLeft({{"", 0}, {"s", 1}, {"us", 2}, {"r", 3}});
-
 static const KvxModifier
     KvxShiftRight({{"", 0}, {"a", 1}, {"as", 2}, {"r", 3}});
-
+static const KvxModifier KVXSignSat = KVX_SILENT;
 static const KvxModifier
     KvxUnSignMod({{"", 0}, {"s", 0}, {"su", 1}, {"u", 2}, {"us", 3}});
-
 static const KvxModifier KvxWidenInt({{"", 0}, {"z", 1}, {"q", 2}});
 
 typedef const std::vector<KvxModifier> KvxModifiers;
+typedef std::vector<KvxModifier> KvxVecModifiers;
 
 static void KVX_emitInvalidIntrinsicForCPU(CodeGenModule &CGM,
                                            const CallExpr *E,
@@ -18481,7 +17954,7 @@ static void KVX_emitInvalidIntrinsicForCPU(CodeGenModule &CGM,
 
 void KVX_ModifierError(CodeGenModule &CGM, const KvxModifiers &Modifiers,
                        const SourceLocation &Loc) {
-  std::string ErrorM = "This builtin accept a modifier string composed by:";
+  std::string ErrorM = "This builtin accepts a modifier string composed by:";
   for (const auto &Mod : Modifiers) {
     ErrorM += " [";
     ErrorM += Mod.getModifierStrList();
@@ -18490,6 +17963,50 @@ void KVX_ModifierError(CodeGenModule &CGM, const KvxModifiers &Modifiers,
       ErrorM += ",";
   }
   CGM.Error(Loc, ErrorM);
+}
+
+static bool ParseModifiers(SmallVectorImpl<Value *> &Mods,
+                           const KvxModifiers &Modifiers,
+                           const clang::CallExpr *E, CodeGenModule &CGM,
+                           llvm::IntegerType *IntTy) {
+  const auto *ModStr = E->getArg(E->getNumArgs() - 1)->IgnoreParenImpCasts();
+
+  if (!isa<clang::StringLiteral>(ModStr)) {
+    KVX_ModifierError(CGM, Modifiers, ModStr->getBeginLoc());
+    return false;
+  }
+
+  auto ModTokens = cast<clang::StringLiteral>(ModStr)->getString().split(".");
+  if (!ModTokens.first.empty()) {
+    CGM.Error(ModStr->getBeginLoc(),
+              "All modifiers should either be empty or start with '.'");
+    return false;
+  }
+
+  ModTokens = ModTokens.second.split(".");
+
+  for (const auto &Mod : Modifiers) {
+    int ModVal = Mod.getModifierValue(ModTokens.first);
+
+    if (ModVal == KvxModifier::INVALID_MODIFIER) {
+      int DefaultVal = Mod.getModifierValue("");
+      if (DefaultVal == KvxModifier::INVALID_MODIFIER) {
+        KVX_ModifierError(CGM, Modifiers, ModStr->getBeginLoc());
+        return false;
+      }
+      ModVal = DefaultVal;
+    } else
+      ModTokens = ModTokens.second.split(".");
+
+    Mods.push_back(ConstantInt::get(IntTy, ModVal));
+  }
+
+  if (!ModTokens.first.empty()) {
+    KVX_ModifierError(CGM, Modifiers, ModStr->getBeginLoc());
+    return false;
+  }
+
+  return true;
 }
 
 static Value *KVX_emit(unsigned NumArgs, CodeGenFunction &CGF,
@@ -18540,41 +18057,9 @@ static Value *KVX_emit(unsigned NumArgs, CodeGenFunction &CGF,
   // Parse KVX modifiers if any.
   SmallVector<Value *, 4> Mods;
   if (!Modifiers.empty()) {
-    const auto ModPos = NumArgs - 1;
-    const auto *ModStr = E->getArg(ModPos)->IgnoreParenImpCasts();
-    if (!isa<clang::StringLiteral>(ModStr))
-      KVX_ModifierError(CGF.CGM, Modifiers, E->getArg(ModPos)->getBeginLoc());
-
-    auto ModTokens = cast<clang::StringLiteral>(ModStr)->getString().split(".");
-    if (!ModTokens.first.empty()) {
-      CGF.CGM.Error(E->getArg(ModPos)->getBeginLoc(),
-                    "All modifiers should either be empty or start with '.'");
+    if (!ParseModifiers(Mods, Modifiers, E, CGF.CGM, CGF.IntTy))
       return nullptr;
-    }
 
-    ModTokens = ModTokens.second.split(".");
-
-    for (const auto &Mod : Modifiers) {
-      int ModVal = Mod.getModifierValue(ModTokens.first);
-
-      if (ModVal == KvxModifier::INVALID_MODIFIER) {
-        int DefaultVal = Mod.getModifierValue("");
-        if (DefaultVal == KvxModifier::INVALID_MODIFIER) {
-          KVX_ModifierError(CGF.CGM, Modifiers,
-                            E->getArg(ModPos)->getBeginLoc());
-          return nullptr;
-        }
-        ModVal = DefaultVal;
-      } else
-        ModTokens = ModTokens.second.split(".");
-
-      Mods.push_back(ConstantInt::get(CGF.IntTy, ModVal));
-    }
-
-    if (!ModTokens.first.empty()) {
-      KVX_ModifierError(CGF.CGM, Modifiers, E->getArg(ModPos)->getBeginLoc());
-      return nullptr;
-    }
     --NumArgs;
   }
 
@@ -18667,192 +18152,6 @@ static Value *KVX_emit(unsigned NumArgs, CodeGenFunction &CGF,
   }
 
   return Results.back();
-}
-
-static Value *KVX_emitNaryBuiltin(unsigned N, CodeGenFunction &CGF,
-                                  const CallExpr *E, unsigned IntrinsicID,
-                                  bool HasRounding = false,
-                                  bool HasSilent = false,
-                                  bool BypassNumArgsCheck = false) {
-  HasSilent |= HasRounding;
-  if (!BypassNumArgsCheck && !KVX_checkNargs(N, CGF, E, HasSilent))
-    return nullptr;
-
-  SmallVector<Value *, 4> Args;
-  unsigned I = 0;
-  while (I < N)
-    Args.push_back(CGF.EmitScalarExpr(E->getArg(I++)));
-
-  return KVX_emitNaryBuiltinCore(N, CGF, E, IntrinsicID, Args, HasRounding,
-                                 HasSilent);
-}
-
-static Value *KVX_emitF16ScalarBuiltin(unsigned N, CodeGenFunction &CGF,
-                                       const CallExpr *E, unsigned IntrinsicID,
-                                       bool HasRounding = false,
-                                       bool HasSilent = false) {
-  HasSilent |= HasRounding;
-  if (!KVX_checkNargs(N, CGF, E, HasSilent))
-    return nullptr;
-
-  llvm::Type *V4F16 = llvm::FixedVectorType::get(CGF.HalfTy, 4);
-
-  SmallVector<Value *, 4> OutArgs;
-  for (unsigned i = 0; i < N; i++) {
-    Value *ArgVector = UndefValue::get(V4F16);
-    Value *InArg = CGF.EmitScalarExpr(E->getArg(i));
-    Value *Inserted =
-        CGF.Builder.CreateInsertElement(ArgVector, InArg, (uint64_t)0);
-    OutArgs.push_back(Inserted);
-  }
-
-  Value *VectorResult = KVX_emitNaryBuiltinCore(N, CGF, E, IntrinsicID, OutArgs,
-                                                HasRounding, HasSilent);
-
-  return CGF.Builder.CreateExtractElement(VectorResult, (uint64_t)0);
-}
-
-static Value *KVX_emitWidenScalarBuiltin(CodeGenFunction &CGF,
-                                         const CallExpr *E,
-                                         unsigned IntrinsicID,
-                                         llvm::Type *EltType,
-                                         unsigned VectorLength) {
-  constexpr int N = 1;
-  constexpr bool HasSilent = true;
-  constexpr bool HasRounding = false;
-  if (!KVX_checkNargs(N, CGF, E, HasSilent))
-    return nullptr;
-
-  llvm::Type *VecType = llvm::FixedVectorType::get(EltType, VectorLength);
-  Value *ArgVector = UndefValue::get(VecType);
-  Value *InArg = CGF.EmitScalarExpr(E->getArg(0));
-  Value *Inserted =
-      CGF.Builder.CreateInsertElement(ArgVector, InArg, (uint64_t)0);
-  SmallVector<Value *, 4> OutArgs = {Inserted};
-
-  return KVX_emitNaryBuiltinCore(N, CGF, E, IntrinsicID, OutArgs, HasRounding,
-                                 HasSilent);
-}
-
-static Value *KVX_emitWidenScalarVectorCore(
-    CodeGenFunction &CGF, const CallExpr *E, Value *InArg,
-    unsigned IntrinsicIDLow, unsigned IntrinsicIDHigh, llvm::Type *InEltType,
-    llvm::Type *OutEltType, unsigned VectorLength, unsigned SliceLength) {
-
-  if (SliceLength == VectorLength) {
-    SmallVector<Value *, 4> OutArg = {InArg};
-
-    Value *OutValLow =
-        KVX_emitNaryBuiltinCore(1, CGF, E, IntrinsicIDLow, OutArg, false, true);
-    Value *OutValHigh = KVX_emitNaryBuiltinCore(1, CGF, E, IntrinsicIDHigh,
-                                                OutArg, false, true);
-
-    llvm::Type *OutVecType =
-        llvm::FixedVectorType::get(OutEltType, VectorLength);
-    Value *OutVec = UndefValue::get(OutVecType);
-
-    unsigned OutValLength = VectorLength / 2;
-    assert(OutValLength > 0 && "Wrong VectorLength argument");
-    for (unsigned i = 0; i < VectorLength; i++) {
-      Value *TakeFrom = (i < OutValLength) ? OutValLow : OutValHigh;
-      Value *ToInsert =
-          (OutValLength > 1)
-              ? CGF.Builder.CreateExtractElement(TakeFrom, i % OutValLength)
-              : TakeFrom;
-      OutVec = CGF.Builder.CreateInsertElement(OutVec, ToInsert, i);
-    }
-
-    return OutVec;
-  }
-
-  assert(VectorLength % SliceLength == 0 &&
-         "VectorLength should be a multiple of SliceLength");
-  llvm::Type *SliceVecType = llvm::FixedVectorType::get(InEltType, SliceLength);
-  llvm::Type *OutVecType = llvm::FixedVectorType::get(OutEltType, VectorLength);
-  Value *OutVec = UndefValue::get(OutVecType);
-  for (unsigned i = 0; i < VectorLength / SliceLength; i++) {
-    // Constructing the slice
-    Value *SliceVec = UndefValue::get(SliceVecType);
-    for (unsigned j = 0; j < SliceLength; j++) {
-      Value *Extracted =
-          CGF.Builder.CreateExtractElement(InArg, i * SliceLength + j);
-      SliceVec = CGF.Builder.CreateInsertElement(SliceVec, Extracted, j);
-    }
-
-    // Emitting builtin code to convert the slice
-    Value *SliceResult = KVX_emitWidenScalarVectorCore(
-        CGF, E, SliceVec, IntrinsicIDLow, IntrinsicIDHigh, InEltType,
-        OutEltType, SliceLength, SliceLength);
-
-    // Inserting the result in the final vector
-    for (unsigned j = 0; j < SliceLength; j++) {
-      Value *Extracted = CGF.Builder.CreateExtractElement(SliceResult, j);
-      OutVec = CGF.Builder.CreateInsertElement(OutVec, Extracted,
-                                               i * SliceLength + j);
-    }
-  }
-
-  return OutVec;
-}
-
-static Value *
-KVX_emitWidenScalarVector(CodeGenFunction &CGF, const CallExpr *E,
-                          unsigned IntrinsicIDLow, unsigned IntrinsicIDHigh,
-                          llvm::Type *InEltType, llvm::Type *OutEltType,
-                          unsigned VectorLength, unsigned SliceLength) {
-  if (!KVX_checkNargs(1, CGF, E, true))
-    return nullptr;
-
-  Value *InArg = CGF.EmitScalarExpr(E->getArg(0));
-  return KVX_emitWidenScalarVectorCore(CGF, E, InArg, IntrinsicIDLow,
-                                       IntrinsicIDHigh, InEltType, OutEltType,
-                                       VectorLength, SliceLength);
-}
-
-static Value *KVX_emitUnaryShiftingRoundingBuiltin(CodeGenFunction &CGF,
-                                                   const CallExpr *E,
-                                                   unsigned IntrinsicID) {
-  Value *Arg1 = CGF.EmitScalarExpr(E->getArg(0));
-
-  auto *ShiftExpr = E->getArg(1)->IgnoreParenImpCasts();
-
-  uint64_t ShiftValue = 0;
-  bool EmitError = false;
-
-  if (ShiftExpr->getStmtClass() == Stmt::IntegerLiteralClass) {
-    ShiftValue =
-        cast<clang::IntegerLiteral>(ShiftExpr)->getValue().getZExtValue();
-    if (!isUInt<6>(ShiftValue))
-      EmitError = true;
-  } else
-    EmitError = true;
-  if (EmitError)
-    CGF.CGM.Error(E->getArg(1)->getBeginLoc(),
-                  "expects a 6-bit unsigned immediate in the second argument");
-
-  bool GoodStr;
-  StringRef ModStr = KVX_getModStr(CGF, E, 2, GoodStr);
-  if (!GoodStr) {
-    CGF.CGM.Error(E->getArg(2)->getBeginLoc(),
-                  "Modifier should be a constant string.");
-    return nullptr;
-  }
-  float_mods_t FloatMods = KVX_getFloatModifiers(
-      CGF, E->getArg(2)->getBeginLoc(), ModStr.split(".").second, true, false);
-
-  if (!FloatMods.IsValid)
-    return nullptr;
-  const auto SilentModifier = FloatMods.SilentMod;
-  const auto Modifier = FloatMods.RoundingMod;
-
-  Value *Arg2 = ConstantInt::get(CGF.Int64Ty, ShiftValue);
-  Value *Arg3 = ConstantInt::get(CGF.IntTy, Modifier);
-
-  Function *Callee = CGF.CGM.getIntrinsic(IntrinsicID);
-
-  Value *Arg4 = ConstantInt::get(CGF.IntTy, SilentModifier);
-
-  return CGF.Builder.CreateCall(Callee, {Arg1, Arg2, Arg3, Arg4});
 }
 
 static int KVX_getLoadAS(clang::ASTContext &Ctx, const clang::Expr *E,
@@ -19126,6 +18425,24 @@ llvm::Value *KVX_extractVectorFrom256(clang::CodeGen::CodeGenFunction &CGF,
   return ExtractedVec;
 }
 
+static StringRef KVX_getModStr(CodeGenFunction &CGF, const CallExpr *E,
+                               const unsigned N, bool &IsConsString) {
+  IsConsString = true;
+  if (E->isNullPointerConstant(CGF.getContext(),
+                               Expr::NPC_NeverValueDependent) ||
+      E->getArg(N)->isNullPointerConstant(CGF.getContext(),
+                                          Expr::NPC_NeverValueDependent))
+    return "";
+
+  const clang::Expr *V = E->getArg(N)->IgnoreParenImpCasts();
+  if (!isa<clang::StringLiteral>(V)) {
+    IsConsString = false;
+    return "";
+  }
+
+  return cast<clang::StringLiteral>(V)->getString();
+}
+
 static Value *KVX_emitStoreCondBuiltin(CodeGenFunction &CGF, const CallExpr *E,
                                        llvm::Type *DataType,
                                        llvm::Type *DataTypeIntrinsic = nullptr,
@@ -19280,127 +18597,12 @@ static Value *KVX_emitLoadCondBuiltin(CodeGenFunction &CGF, const CallExpr *E,
   return KVX_truncateOrBitcast(CGF, Call, OriginalType);
 }
 
-static Value *KVX_emitVectorBuiltin(CodeGenFunction &CGF, const CallExpr *E,
-                                    unsigned IntrinsicID, unsigned NumOperands,
-                                    llvm::Type *InElementType,
-                                    unsigned VectorSize, unsigned SliceSize,
-                                    bool Rounding = false,
-                                    Value *Scalar = nullptr,
-                                    llvm::Type *OutElementType = nullptr) {
-
-  if (!OutElementType)
-    OutElementType = InElementType;
-
-  auto *InVecTy = llvm::FixedVectorType::get(InElementType, VectorSize);
-  Value *Undef = UndefValue::get(InVecTy);
-
-  SmallVector<Value *, 3> Operands;
-  for (unsigned Op = 0; Op < NumOperands; Op++)
-    Operands.push_back(CGF.EmitScalarExpr(E->getArg(Op)));
-
-  Value *ModifierArg = NULL;
-  Value *SilentArg = NULL;
-  Value *ConjugateArg = NULL;
-
-  if (Rounding) {
-    bool GoodStr;
-    StringRef ModStr = KVX_getModStr(CGF, E, NumOperands, GoodStr);
-    if (!GoodStr) {
-      CGF.CGM.Error(E->getArg(NumOperands)->getBeginLoc(),
-                    "Modifier should be a constant string.");
-      return nullptr;
-    }
-    float_mods_t FloatMods =
-        KVX_getFloatModifiers(CGF, E->getArg(NumOperands)->getBeginLoc(),
-                              ModStr.split(".").second, true, true);
-
-    if (!FloatMods.IsValid)
-      return nullptr;
-    const auto ConjugateMod = FloatMods.ConjugateMod;
-    const auto RoundingMod = FloatMods.RoundingMod;
-    const auto SilentMod = FloatMods.SilentMod;
-
-    bool HasConjugateMod = ConjugateMod > 0;
-    // Determine if the intrinsic has a conjugate modifier to set.
-    switch (IntrinsicID) {
-    case Intrinsic::kvx_fmulwcp:
-    case Intrinsic::kvx_ffmawcp:
-    case Intrinsic::kvx_ffmswcp:
-      ConjugateArg = ConstantInt::get(CGF.IntTy, HasConjugateMod ? 1 : 0);
-      break;
-    case Intrinsic::kvx_fmuldc:
-      if (HasConjugateMod)
-        IntrinsicID = Intrinsic::kvx_fmulcdc;
-      break;
-    case Intrinsic::kvx_ffmadc:
-      if (HasConjugateMod)
-        IntrinsicID = Intrinsic::kvx_ffmacdc;
-      break;
-    case Intrinsic::kvx_ffmsdc:
-      if (HasConjugateMod)
-        IntrinsicID = Intrinsic::kvx_ffmscdc;
-      break;
-    default:
-      if (HasConjugateMod)
-        CGF.CGM.Error(E->getArg(NumOperands)->getBeginLoc(),
-                      "conjugate modifier not supported for this builtin");
-    }
-
-    ModifierArg = ConstantInt::get(CGF.IntTy, RoundingMod);
-
-    SilentArg = ConstantInt::get(CGF.IntTy, SilentMod);
-  }
-
-  Function *Callee = CGF.CGM.getIntrinsic(IntrinsicID);
-  auto *OutVecTy = llvm::FixedVectorType::get(OutElementType, VectorSize);
-  Value *Result = UndefValue::get(OutVecTy);
-  for (uint64_t i = 0; i < VectorSize; i += SliceSize) {
-    SmallVector<Value *, 3> SV;
-    if (SliceSize == 1) {
-      for (unsigned Op = 0; Op < NumOperands; Op++)
-        SV.push_back(CGF.Builder.CreateExtractElement(Operands[Op], i));
-    } else {
-      int Ind[64];
-      for (unsigned j = 0; j < SliceSize; j++)
-        Ind[j] = i + j;
-
-      for (unsigned Op = 0; Op < NumOperands; Op++)
-        SV.push_back(CGF.Builder.CreateShuffleVector(
-            Operands[Op], Undef, makeArrayRef(Ind, SliceSize)));
-    }
-    if (ConjugateArg)
-      SV.push_back(ConjugateArg);
-    if (ModifierArg)
-      SV.push_back(ModifierArg);
-    if (SilentArg)
-      SV.push_back(SilentArg);
-    if (Scalar)
-      SV.push_back(Scalar);
-
-    Value *OV = CGF.Builder.CreateCall(Callee, SV);
-    if (SliceSize == 1)
-      Result = CGF.Builder.CreateInsertElement(Result, OV, i);
-    else {
-      for (unsigned j = 0; j < SliceSize; j++) {
-        auto *v0 = CGF.Builder.CreateExtractElement(OV, (uint64_t)j);
-        Result = CGF.Builder.CreateInsertElement(Result, v0, i + j);
-      }
-    }
-  }
-  return Result;
-}
-
-static Value *KVX_emitModBuiltin(CodeGenFunction &CGF, const CallExpr *E,
-                                 unsigned VectorSize, unsigned SliceSize,
-                                 IntegerType *ElementType,
-                                 Intrinsic::KVXIntrinsics Intrinsic,
-                                 int StringModOperand) {
-  if (VectorSize == SliceSize)
-    return KVX_emitNaryBuiltin(StringModOperand, CGF, E, Intrinsic, false,
-                               false, true);
-
-  return KVX_emitVectorBuiltin(CGF, E, Intrinsic, StringModOperand, ElementType,
-                               VectorSize, SliceSize);
+static saturate_t KVX_getSaturateModifier(const StringRef &Str) {
+  return StringSwitch<saturate_t>(Str)
+      .Case("", SATURATE_DEFAULT)
+      .Case(".s", SATURATE_SIGNED)
+      .Case(".us", SATURATE_UNSIGNED)
+      .Default(SATURATE_INVALID);
 }
 
 // isAdd == false -> it is an subtraction
@@ -19462,6 +18664,13 @@ static inline Value *KVX_emitIntSubBuiltin(CodeGenFunction &CGF,
   return KVX_emitIntAddSubBuiltin(CGF, E, false);
 }
 
+static int KVX_getSpeculateModValue(const StringRef &Str,
+                                    bool EnforceUPrefix = false) {
+  if (!EnforceUPrefix)
+    return StringSwitch<int>(Str).Case("", 0).Case("s", 1).Default(-1);
+  return StringSwitch<int>(Str).Case("u", 0).Case("us", 1).Default(-1);
+}
+
 static inline Value *KVX_emitIntNegBuiltin(CodeGenFunction &CGF,
                                            const CallExpr *E) {
   constexpr int StringModOperand = 1;
@@ -19491,180 +18700,8 @@ static inline Value *KVX_emitIntNegBuiltin(CodeGenFunction &CGF,
   return nullptr;
 }
 
-static inline Value *KVX_emitAddSubCarryBuiltin(CodeGenFunction &CGF,
-                                                const CallExpr *E, bool isAdd) {
-  constexpr int StringModOperand = 2;
-  const auto *SL = dyn_cast<clang::StringLiteral>(
-      E->getArg(StringModOperand)->IgnoreParenImpCasts());
-  auto Mods = SL->getString();
-
-  carry_t CarryMod = KVX_getCarryInitModifier(Mods);
-  if (CarryMod == CARRY_INVALID) {
-    CGF.CGM.Error(E->getArg(1)->getBeginLoc(),
-                  "invalid carry_t modifier, expected \"\" or \".i\"");
-    return nullptr;
-  }
-
-  Value *CarryModVal = ConstantInt::get(CGF.IntTy, CarryMod);
-
-  int LHSpos = isAdd ? 0 : 1;
-  int RHSpos = isAdd ? 1 : 0;
-
-  const Expr *LHS = E->getArg(LHSpos);
-  Value *LHSv = CGF.EmitScalarExpr(LHS);
-
-  const Expr *RHS = E->getArg(RHSpos);
-  Value *RHSv = CGF.EmitScalarExpr(RHS);
-
-#ifndef NDEBUG
-  llvm::Type *LHSt = LHSv->getType();
-  llvm::Type *RHSt = RHSv->getType();
-  assert(LHSt == RHSt && LHSt == CGF.Int64Ty &&
-         "LHS and RHS types should be int64");
-#endif
-
-  auto IntrinsicID = isAdd ? Intrinsic::kvx_addcd : Intrinsic::kvx_sbfcd;
-  Function *Callee = CGF.CGM.getIntrinsic(IntrinsicID);
-  return CGF.Builder.CreateCall(Callee, {LHSv, RHSv, CarryModVal});
-}
-
-static Value *KVX_emitBitcountBuiltin(CodeGenFunction &CGF, const CallExpr *E,
-                                      unsigned VectorSize, unsigned SliceSize,
-                                      IntegerType *ElementType,
-                                      Intrinsic::KVXIntrinsics LsIntrinsic) {
-  constexpr int StringModOperand = 1;
-
-  const auto *SL = dyn_cast<clang::StringLiteral>(
-      E->getArg(StringModOperand)->IgnoreParenImpCasts());
-  auto Mods = SL->getString();
-
-  Intrinsic::IndependentIntrinsics BcIntrinsic;
-  bitcount_t BitcountMod = KVX_getBitcountModifier(Mods);
-  bool NeedsIsZeroUndefFlag = false;
-
-  switch (BitcountMod) {
-  case BITCOUNT_LS:
-    return KVX_emitModBuiltin(CGF, E, VectorSize, SliceSize, ElementType,
-                              LsIntrinsic, StringModOperand);
-  case BITCOUNT_INVALID:
-    CGF.CGM.Error(E->getArg(StringModOperand)->getBeginLoc(),
-                  "invalid bitcount_t modifier, expected \"\", \".lz\", "
-                  "\".ls\" or \".tz\"");
-    return nullptr;
-  case BITCOUNT_POP:
-    BcIntrinsic = Intrinsic::ctpop;
-    break;
-  case BITCOUNT_LZ:
-    BcIntrinsic = Intrinsic::ctlz;
-    NeedsIsZeroUndefFlag = true;
-    break;
-  case BITCOUNT_TZ:
-    BcIntrinsic = Intrinsic::cttz;
-    NeedsIsZeroUndefFlag = true;
-    break;
-  }
-
-  /* Emit the specialized intrinsic */
-  const Expr *ValExpr = E->getArg(0);
-  Value *Val = CGF.EmitScalarExpr(ValExpr);
-  llvm::Type *ValType = Val->getType();
-  Function *BcIntrinsicF = CGF.CGM.getIntrinsic(BcIntrinsic, {ValType});
-
-  if (NeedsIsZeroUndefFlag) {
-    ConstantInt *IsZeroUndefFlag =
-        ConstantInt::get(CGF.Builder.getInt1Ty(), false);
-    return CGF.Builder.CreateCall(BcIntrinsicF, {Val, IsZeroUndefFlag});
-  }
-
-  return CGF.Builder.CreateCall(BcIntrinsicF, {Val});
-}
-
-static Value *
-KVX_emitVectorShiftingBuiltin(CodeGenFunction &CGF, const CallExpr *E,
-                              unsigned IntrinsicID, llvm::Type *InputType,
-                              llvm::Type *OutputType, unsigned VectorSize,
-                              unsigned SliceSize) {
-
-  Value *V = CGF.EmitScalarExpr(E->getArg(0));
-
-  auto *InputVecTy = llvm::FixedVectorType::get(InputType, VectorSize);
-  Value *InputUndef = UndefValue::get(InputVecTy);
-
-  auto *OutputVecTy = llvm::FixedVectorType::get(OutputType, VectorSize);
-
-  auto *ShiftExpr = E->getArg(1)->IgnoreParenImpCasts();
-
-  uint64_t ShiftValue = 0;
-
-  if (ShiftExpr->getStmtClass() == Stmt::IntegerLiteralClass) {
-    ShiftValue =
-        cast<clang::IntegerLiteral>(ShiftExpr)->getValue().getZExtValue();
-    if (!isUInt<6>(ShiftValue)) {
-      CGF.CGM.Error(
-          E->getArg(1)->getBeginLoc(),
-          "expects a 6-bit unsigned immediate in the second argument");
-    }
-  } else {
-    CGF.CGM.Error(E->getArg(1)->getBeginLoc(),
-                  "expects a 6-bit unsigned immediate in the second argument");
-  }
-  Value *ShiftArg = ConstantInt::get(CGF.Int64Ty, ShiftValue);
-
-  bool GoodStr;
-  StringRef ModStr = KVX_getModStr(CGF, E, 2, GoodStr);
-  if (!GoodStr) {
-    CGF.CGM.Error(E->getArg(2)->getBeginLoc(),
-                  "Modifier should be a constant string.");
-    return nullptr;
-  }
-
-  float_mods_t FloatMods = KVX_getFloatModifiers(
-      CGF, E->getArg(2)->getBeginLoc(), ModStr, true, true);
-
-  if (!FloatMods.IsValid)
-    return nullptr;
-
-  const auto Modifier = FloatMods.RoundingMod;
-  const auto SilentModifier = FloatMods.SilentMod;
-
-  Value *ModifierArg = ConstantInt::get(CGF.IntTy, Modifier);
-
-  Value *SilentArg = ConstantInt::get(CGF.IntTy, SilentModifier);
-
-  Function *Callee = CGF.CGM.getIntrinsic(IntrinsicID);
-  Value *Result = UndefValue::get(OutputVecTy);
-  for (uint64_t i = 0; i < VectorSize; i += SliceSize) {
-    SmallVector<Value *, 4> SV;
-    if (SliceSize == 1)
-      SV.push_back(CGF.Builder.CreateExtractElement(V, i));
-    else {
-      int Ind[64];
-      for (unsigned j = 0; j < SliceSize; j++)
-        Ind[j] = i + j;
-
-      SV.push_back(CGF.Builder.CreateShuffleVector(
-          V, InputUndef, makeArrayRef(Ind, SliceSize)));
-    }
-    SV.push_back(ShiftArg);
-    SV.push_back(ModifierArg);
-    SV.push_back(SilentArg);
-
-    Value *OV = CGF.Builder.CreateCall(Callee, SV);
-    if (SliceSize == 1)
-      Result = CGF.Builder.CreateInsertElement(Result, OV, i);
-    else {
-      for (unsigned j = 0; j < SliceSize; j++) {
-        auto *v0 = CGF.Builder.CreateExtractElement(OV, (uint64_t)j);
-        Result = CGF.Builder.CreateInsertElement(Result, v0, i + j);
-      }
-    }
-  }
-  return Result;
-}
-
 Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
                                            const CallExpr *E) {
-  unsigned VectorSize;
   static const std::string SystemRegNames[] = {
       // System Function Registers
       "$pc",      "$ps",      "$pcr",     "$ra",      "$cs",      "$csit",
@@ -19790,17 +18827,6 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     const auto &SystemReg = SystemRegNames[SystemRegNumber];
     return EmitSpecialRegisterBuiltin(*this, E, Int64Ty, Int64Ty, Access,
                                       SystemReg);
-  }
-
-  case KVX::BI__builtin_kvx_waitit:
-    return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_waitit);
-  case KVX::BI__builtin_kvx_syncgroup: {
-    SourceLocation Loc = E->getExprLoc();
-    Value *A1 = EmitScalarConversion(EmitScalarExpr(E->getArg(0)),
-                                     E->getArg(0)->getType(),
-                                     getContext().UnsignedLongTy, Loc);
-    Function *Callee = CGM.getIntrinsic(Intrinsic::kvx_syncgroup);
-    return Builder.CreateCall(Callee, {A1});
   }
 
   case KVX::BI__builtin_kvx_wfxl:
@@ -20070,220 +19096,6 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     return Builder.CreateCall(CGM.getIntrinsic(IID), Args);
   }
 
-  case KVX::BI__builtin_kvx_dinvall:
-  case KVX::BI__builtin_kvx_dtouchl:
-  case KVX::BI__builtin_kvx_dzerol:
-  case KVX::BI__builtin_kvx_i1invals: {
-    Value *Addr = EmitScalarExpr(E->getArg(0));
-
-    unsigned IDD;
-    switch (BuiltinID) {
-    case KVX::BI__builtin_kvx_dinvall:
-      IDD = Intrinsic::kvx_dinvall;
-      break;
-    case KVX::BI__builtin_kvx_dtouchl:
-      IDD = Intrinsic::kvx_dtouchl;
-      break;
-    case KVX::BI__builtin_kvx_dzerol: {
-      IDD = Intrinsic::kvx_dzerol;
-      unsigned diagID =
-          CGM.getDiags().getCustomDiagID(DiagnosticsEngine::Warning, "%0");
-      CGM.getDiags().Report(E->getBeginLoc(), diagID)
-          << "__builtin_kvx_dzerol is deprecated and shouldn't be used";
-      break;
-    }
-    case KVX::BI__builtin_kvx_i1invals:
-      IDD = Intrinsic::kvx_i1invals;
-      break;
-    default:
-      llvm_unreachable("missing KVX load intrinsics");
-    }
-
-    Function *Callee = CGM.getIntrinsic(IDD);
-    return Builder.CreateCall(Callee, Addr);
-  }
-  case KVX::BI__builtin_kvx_bitcntw:
-    return KVX_emitBitcountBuiltin(*this, E, 1, 1, nullptr,
-                                   Intrinsic::kvx_clsw);
-  case KVX::BI__builtin_kvx_bitcntd:
-    VectorSize = 1;
-    goto bitcntd_common;
-  case KVX::BI__builtin_kvx_bitcntdp:
-    VectorSize = 2;
-    goto bitcntd_common;
-  case KVX::BI__builtin_kvx_bitcntdq:
-    VectorSize = 4;
-    goto bitcntd_common;
-  bitcntd_common:
-    return KVX_emitBitcountBuiltin(*this, E, VectorSize, 1, this->Int64Ty,
-                                   Intrinsic::kvx_clsd);
-  case KVX::BI__builtin_kvx_bitcntwp:
-    VectorSize = 2;
-    goto bitcntwp_common;
-  case KVX::BI__builtin_kvx_bitcntwq:
-    VectorSize = 4;
-    goto bitcntwp_common;
-  case KVX::BI__builtin_kvx_bitcntwo:
-    VectorSize = 8;
-    goto bitcntwp_common;
-  bitcntwp_common:
-    return KVX_emitBitcountBuiltin(*this, E, VectorSize, 2, this->Int32Ty,
-                                   Intrinsic::kvx_clswp);
-
-  case KVX::BI__builtin_kvx_fmulwp:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fmulwp, true);
-
-  case KVX::BI__builtin_kvx_fmulwc:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fmulwc, true);
-
-  case KVX::BI__builtin_kvx_fmulwq:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fmulwq, true);
-
-  case KVX::BI__builtin_kvx_fmulwcp:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fmulwcp, true);
-
-  case KVX::BI__builtin_kvx_fmuldp:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fmuldp, true);
-
-  case KVX::BI__builtin_kvx_fmuldc:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fmuldc, true);
-
-  case KVX::BI__builtin_kvx_fmm212w:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fmm212w, true);
-
-  case KVX::BI__builtin_kvx_fmm222w:
-    return KVX_emitMatrixMultiply(*this, FloatTy, 2, 2, 2, E, ACC_NO,
-                                  Intrinsic::kvx_fmm222w);
-
-  case KVX::BI__builtin_kvx_fmma222w:
-    return KVX_emitMatrixMultiply(*this, FloatTy, 2, 2, 2, E, ACC_ADD,
-                                  Intrinsic::kvx_fmma222w);
-
-  case KVX::BI__builtin_kvx_fmms222w:
-    return KVX_emitMatrixMultiply(*this, FloatTy, 2, 2, 2, E, ACC_SUB,
-                                  Intrinsic::kvx_fmms222w);
-
-  case KVX::BI__builtin_kvx_ffmah:
-    return KVX_emitF16ScalarBuiltin(3, *this, E, Intrinsic::kvx_ffmahq, true);
-
-  case KVX::BI__builtin_kvx_ffmahq:
-    return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmahq, true);
-
-  case KVX::BI__builtin_kvx_ffmaho:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_ffmahq, 3, HalfTy, 8,
-                                 4, true);
-
-  case KVX::BI__builtin_kvx_ffmahx:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_ffmahq, 3, HalfTy, 16,
-                                 4, true);
-
-  case KVX::BI__builtin_kvx_ffmawp:
-    return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmawp, true);
-
-  case KVX::BI__builtin_kvx_ffmawc:
-    return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmawc, true);
-
-  case KVX::BI__builtin_kvx_ffmawq:
-    return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmawq, true);
-
-  case KVX::BI__builtin_kvx_ffmawcp:
-    return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmawcp, true);
-
-  case KVX::BI__builtin_kvx_ffmadp:
-    return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmadp, true);
-
-  case KVX::BI__builtin_kvx_ffmadc:
-    return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmadc, true);
-
-  case KVX::BI__builtin_kvx_fmma212w:
-    return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_fmma212w, true);
-
-  case KVX::BI__builtin_kvx_ffmswp:
-    return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmswp, true);
-
-  case KVX::BI__builtin_kvx_ffmswc:
-    return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmswc, true);
-
-  case KVX::BI__builtin_kvx_ffmswq:
-    return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmswq, true);
-
-  case KVX::BI__builtin_kvx_ffmswcp:
-    return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmswcp, true);
-
-  case KVX::BI__builtin_kvx_ffmsdp:
-    return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmsdp, true);
-
-  case KVX::BI__builtin_kvx_ffmsdc:
-    return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmsdc, true);
-
-  case KVX::BI__builtin_kvx_fmms212w:
-    return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_fmms212w, true);
-
-  case KVX::BI__builtin_kvx_fixedw:
-    return KVX_emitUnaryShiftingRoundingBuiltin(*this, E,
-                                                Intrinsic::kvx_fixedw);
-
-  case KVX::BI__builtin_kvx_fixeduw:
-    return KVX_emitUnaryShiftingRoundingBuiltin(*this, E,
-                                                Intrinsic::kvx_fixeduw);
-
-  case KVX::BI__builtin_kvx_fixedd:
-    return KVX_emitUnaryShiftingRoundingBuiltin(*this, E,
-                                                Intrinsic::kvx_fixedd);
-
-  case KVX::BI__builtin_kvx_fixedud:
-    return KVX_emitUnaryShiftingRoundingBuiltin(*this, E,
-                                                Intrinsic::kvx_fixedud);
-
-  case KVX::BI__builtin_kvx_floatw:
-    return KVX_emitUnaryShiftingRoundingBuiltin(*this, E,
-                                                Intrinsic::kvx_floatw);
-
-  case KVX::BI__builtin_kvx_floatuw:
-    return KVX_emitUnaryShiftingRoundingBuiltin(*this, E,
-                                                Intrinsic::kvx_floatuw);
-
-  case KVX::BI__builtin_kvx_floatd:
-    return KVX_emitUnaryShiftingRoundingBuiltin(*this, E,
-                                                Intrinsic::kvx_floatd);
-
-  case KVX::BI__builtin_kvx_floatud:
-    return KVX_emitUnaryShiftingRoundingBuiltin(*this, E,
-                                                Intrinsic::kvx_floatud);
-
-  case KVX::BI__builtin_kvx_frecw:
-    return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_frecw, true);
-
-  case KVX::BI__builtin_kvx_aladdd: {
-    Value *Addr = EmitScalarExpr(E->getArg(0));
-    Value *Value = EmitScalarExpr(E->getArg(1));
-    return Builder.CreateCall(CGM.getIntrinsic(Intrinsic::kvx_aladdd),
-                              {Addr, Value});
-  }
-  case KVX::BI__builtin_kvx_aladdw: {
-    Value *Addr = EmitScalarExpr(E->getArg(0));
-    Value *Value = EmitScalarExpr(E->getArg(1));
-    return Builder.CreateCall(CGM.getIntrinsic(Intrinsic::kvx_aladdw),
-                              {Addr, Value});
-  }
-
-  case KVX::BI__builtin_kvx_fconjwc:
-    return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_fconjwc);
-  case KVX::BI__builtin_kvx_fconjwcp:
-    return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_fconjwcp);
-  case KVX::BI__builtin_kvx_fconjwcq:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fconjwcp, 1, FloatTy,
-                                 8, 4, false);
-  case KVX::BI__builtin_kvx_fconjdc:
-    return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_fconjdc);
-  case KVX::BI__builtin_kvx_fconjdcp:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fconjdc, 1, DoubleTy,
-                                 4, 2, false);
-
-  case KVX::BI__builtin_kvx_addcd:
-    return KVX_emitAddSubCarryBuiltin(*this, E, true);
-  case KVX::BI__builtin_kvx_sbfcd:
-    return KVX_emitAddSubCarryBuiltin(*this, E, false);
   case KVX::BI__builtin_kvx_addbo:
   case KVX::BI__builtin_kvx_addbx:
   case KVX::BI__builtin_kvx_addbv:
@@ -20298,6 +19110,7 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_adddp:
   case KVX::BI__builtin_kvx_adddq:
     return KVX_emitIntAddBuiltin(*this, E);
+
   case KVX::BI__builtin_kvx_sbfbo:
   case KVX::BI__builtin_kvx_sbfbx:
   case KVX::BI__builtin_kvx_sbfbv:
@@ -20312,6 +19125,7 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_sbfdp:
   case KVX::BI__builtin_kvx_sbfdq:
     return KVX_emitIntSubBuiltin(*this, E);
+
   case KVX::BI__builtin_kvx_negbo:
   case KVX::BI__builtin_kvx_negbx:
   case KVX::BI__builtin_kvx_negbv:
@@ -20326,266 +19140,7 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_negdp:
   case KVX::BI__builtin_kvx_negdq:
     return KVX_emitIntNegBuiltin(*this, E);
-  case KVX::BI__builtin_kvx_frsrw:
-    return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_frsrw, true);
-  case KVX::BI__builtin_kvx_fmulw:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fmulw, true);
-  case KVX::BI__builtin_kvx_fmuld:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fmuld, true);
-  case KVX::BI__builtin_kvx_ffmaw:
-    return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmaw, true);
-  case KVX::BI__builtin_kvx_ffmad:
-    return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmad, true);
-  case KVX::BI__builtin_kvx_ffmaxwd:
-    return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmawd, true);
-  case KVX::BI__builtin_kvx_ffmsw:
-    return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmsw, true);
-  case KVX::BI__builtin_kvx_ffmsd:
-    return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmsd, true);
-  case KVX::BI__builtin_kvx_ffmsxwd:
-    return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffmswd, true);
-  case KVX::BI__builtin_kvx_sbmm8:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_sbmm8);
-  case KVX::BI__builtin_kvx_sbmmt8:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_sbmmt8);
-  case KVX::BI__builtin_kvx_fnarrowwh:
-    return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_fnarrowwh, true,
-                               true);
-  case KVX::BI__builtin_kvx_fnarrowwhq:
-    return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_fnarrowwhq, true,
-                               true);
-  case KVX::BI__builtin_kvx_fnarrowwho:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fnarrowwhq, 1,
-                                 FloatTy, 8, 4, true, nullptr, HalfTy);
-  case KVX::BI__builtin_kvx_fnarrowdw:
-    return KVX_emitNaryBuiltin(1, *this, E, Intrinsic::kvx_fnarrowdw, true,
-                               true);
-  case KVX::BI__builtin_kvx_fnarrowdwp:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fnarrowdwp, 1,
-                                 DoubleTy, 2, 2, true, nullptr, FloatTy);
-  case KVX::BI__builtin_kvx_fnarrowdwq:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fnarrowdwp, 1,
-                                 DoubleTy, 4, 2, true, nullptr, FloatTy);
-  case KVX::BI__builtin_kvx_fmulh:
-    return KVX_emitF16ScalarBuiltin(2, *this, E, Intrinsic::kvx_fmulhq, true);
-  case KVX::BI__builtin_kvx_fmulhq:
-    return KVX_emitNaryBuiltin(2, *this, E, Intrinsic::kvx_fmulhq, true);
-  case KVX::BI__builtin_kvx_fmulho:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fmulhq, 2, HalfTy, 8,
-                                 4, true);
-  case KVX::BI__builtin_kvx_fmulhx:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fmulhq, 2, HalfTy, 16,
-                                 4, true);
-  case KVX::BI__builtin_kvx_fmulwo:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fmulwq, 2, FloatTy, 8,
-                                 4, true);
-  case KVX::BI__builtin_kvx_fmuldq:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fmuldp, 2, DoubleTy,
-                                 4, 2, true);
-  case KVX::BI__builtin_kvx_fmulwcq:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fmulwcp, 2, FloatTy,
-                                 8, 4, true);
-  case KVX::BI__builtin_kvx_fmuldcp:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_fmuldc, 2, DoubleTy,
-                                 4, 2, true);
-  case KVX::BI__builtin_kvx_ffmadcp:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_ffmadc, 3, DoubleTy,
-                                 4, 2, true);
-  case KVX::BI__builtin_kvx_ffmsdcp:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_ffmsdc, 3, DoubleTy,
-                                 4, 2, true);
-  case KVX::BI__builtin_kvx_ffmawo:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_ffmawq, 3, FloatTy, 8,
-                                 4, true);
-  case KVX::BI__builtin_kvx_ffmawcq:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_ffmawcp, 3, FloatTy,
-                                 8, 4, true);
-  case KVX::BI__builtin_kvx_ffmadq:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_ffmadp, 3, DoubleTy,
-                                 4, 2, true);
-  case KVX::BI__builtin_kvx_ffmswo:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_ffmswq, 3, FloatTy, 8,
-                                 4, true);
-  case KVX::BI__builtin_kvx_ffmswcq:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_ffmswcp, 3, FloatTy,
-                                 8, 4, true);
-  case KVX::BI__builtin_kvx_ffmsdq:
-    return KVX_emitVectorBuiltin(*this, E, Intrinsic::kvx_ffmsdp, 3, DoubleTy,
-                                 4, 2, true);
-  case KVX::BI__builtin_kvx_floatwp:
-    return KVX_emitUnaryShiftingRoundingBuiltin(*this, E,
-                                                Intrinsic::kvx_floatwp);
-  case KVX::BI__builtin_kvx_floatwq:
-    return KVX_emitVectorShiftingBuiltin(*this, E, Intrinsic::kvx_floatwp,
-                                         Int32Ty, FloatTy, 4, 2);
-  case KVX::BI__builtin_kvx_floatwo:
-    return KVX_emitVectorShiftingBuiltin(*this, E, Intrinsic::kvx_floatwp,
-                                         Int32Ty, FloatTy, 8, 2);
-  case KVX::BI__builtin_kvx_floatdp:
-    return KVX_emitVectorShiftingBuiltin(*this, E, Intrinsic::kvx_floatd,
-                                         Int64Ty, DoubleTy, 2, 1);
-  case KVX::BI__builtin_kvx_floatdq:
-    return KVX_emitVectorShiftingBuiltin(*this, E, Intrinsic::kvx_floatd,
-                                         Int64Ty, DoubleTy, 4, 1);
-  case KVX::BI__builtin_kvx_floatuwp:
-    return KVX_emitUnaryShiftingRoundingBuiltin(*this, E,
-                                                Intrinsic::kvx_floatuwp);
-  case KVX::BI__builtin_kvx_floatuwq:
-    return KVX_emitVectorShiftingBuiltin(*this, E, Intrinsic::kvx_floatuwp,
-                                         Int32Ty, FloatTy, 4, 2);
-  case KVX::BI__builtin_kvx_floatuwo:
-    return KVX_emitVectorShiftingBuiltin(*this, E, Intrinsic::kvx_floatuwp,
-                                         Int32Ty, FloatTy, 8, 2);
-  case KVX::BI__builtin_kvx_floatudp:
-    return KVX_emitVectorShiftingBuiltin(*this, E, Intrinsic::kvx_floatud,
-                                         Int64Ty, DoubleTy, 2, 1);
-  case KVX::BI__builtin_kvx_floatudq:
-    return KVX_emitVectorShiftingBuiltin(*this, E, Intrinsic::kvx_floatud,
-                                         Int64Ty, DoubleTy, 4, 1);
-  case KVX::BI__builtin_kvx_fixedwp:
-    return KVX_emitUnaryShiftingRoundingBuiltin(*this, E,
-                                                Intrinsic::kvx_fixedwp);
-  case KVX::BI__builtin_kvx_fixedwq:
-    return KVX_emitVectorShiftingBuiltin(*this, E, Intrinsic::kvx_fixedwp,
-                                         FloatTy, Int32Ty, 4, 2);
-  case KVX::BI__builtin_kvx_fixedwo:
-    return KVX_emitVectorShiftingBuiltin(*this, E, Intrinsic::kvx_fixedwp,
-                                         FloatTy, Int32Ty, 8, 2);
-  case KVX::BI__builtin_kvx_fixeddp:
-    return KVX_emitVectorShiftingBuiltin(*this, E, Intrinsic::kvx_fixedd,
-                                         DoubleTy, Int64Ty, 2, 1);
-  case KVX::BI__builtin_kvx_fixeddq:
-    return KVX_emitVectorShiftingBuiltin(*this, E, Intrinsic::kvx_fixedd,
-                                         DoubleTy, Int64Ty, 4, 1);
-  case KVX::BI__builtin_kvx_fixeduwp:
-    return KVX_emitUnaryShiftingRoundingBuiltin(*this, E,
-                                                Intrinsic::kvx_fixeduwp);
-  case KVX::BI__builtin_kvx_fixeduwq:
-    return KVX_emitVectorShiftingBuiltin(*this, E, Intrinsic::kvx_fixeduwp,
-                                         FloatTy, Int32Ty, 4, 2);
-  case KVX::BI__builtin_kvx_fixeduwo:
-    return KVX_emitVectorShiftingBuiltin(*this, E, Intrinsic::kvx_fixeduwp,
-                                         FloatTy, Int32Ty, 8, 2);
-  case KVX::BI__builtin_kvx_fixedudp:
-    return KVX_emitVectorShiftingBuiltin(*this, E, Intrinsic::kvx_fixedud,
-                                         DoubleTy, Int64Ty, 2, 1);
-  case KVX::BI__builtin_kvx_fixedudq:
-    return KVX_emitVectorShiftingBuiltin(*this, E, Intrinsic::kvx_fixedud,
-                                         DoubleTy, Int64Ty, 4, 1);
-  case KVX::BI__builtin_kvx_fwidenwd:
-    return KVX_emitWidenScalarBuiltin(*this, E, Intrinsic::kvx_fwidenlwd,
-                                      FloatTy, 2);
-  case KVX::BI__builtin_kvx_fwidenwdp:
-    return KVX_emitWidenScalarVector(*this, E, Intrinsic::kvx_fwidenlwd,
-                                     Intrinsic::kvx_fwidenmwd, FloatTy,
-                                     DoubleTy, 2, 2);
-  case KVX::BI__builtin_kvx_fwidenwdq:
-    return KVX_emitWidenScalarVector(*this, E, Intrinsic::kvx_fwidenlwd,
-                                     Intrinsic::kvx_fwidenmwd, FloatTy,
-                                     DoubleTy, 4, 2);
-  case KVX::BI__builtin_kvx_fwidenhw:
-    return KVX_emitWidenScalarBuiltin(*this, E, Intrinsic::kvx_fwidenlhw,
-                                      HalfTy, 4);
-  case KVX::BI__builtin_kvx_fwidenhwq:
-    return KVX_emitWidenScalarVector(*this, E, Intrinsic::kvx_fwidenlhwp,
-                                     Intrinsic::kvx_fwidenmhwp, HalfTy, FloatTy,
-                                     4, 4);
-  case KVX::BI__builtin_kvx_fwidenhwo:
-    return KVX_emitWidenScalarVector(*this, E, Intrinsic::kvx_fwidenlhwp,
-                                     Intrinsic::kvx_fwidenmhwp, HalfTy, FloatTy,
-                                     8, 4);
-  case KVX::BI__builtin_kvx_ffdmdaw:
-    return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffdmdaw, true);
-  case KVX::BI__builtin_kvx_ffdmdawp:
-    return KVX_emitNaryBuiltin(3, *this, E, Intrinsic::kvx_ffdmdawp, true);
-  case KVX::BI__builtin_kvx_ffdmdawq: {
-    constexpr unsigned NArgs = 3;
-    if (!KVX_checkNargs(NArgs, *this, E, true))
-      return nullptr;
 
-    bool GoodStr;
-    StringRef ModStr = KVX_getModStr(*this, E, NArgs, GoodStr);
-    if (!GoodStr) {
-      CGM.Error(E->getArg(NArgs)->getBeginLoc(),
-                "Modifier should be a constant string.");
-      return nullptr;
-    }
-    float_mods_t FloatMods = KVX_getFloatModifiers(
-        *this, E->getArg(NArgs)->getBeginLoc(), ModStr, true, true);
-
-    if (!FloatMods.IsValid)
-      return nullptr;
-
-    auto *const RoundingMod =
-        ConstantInt::get(this->IntTy, FloatMods.RoundingMod);
-    auto *const SilentMod = ConstantInt::get(this->IntTy, FloatMods.SilentMod);
-
-    /** This code computes the following:
-     * ASubvec[0] = vector(a[0], a[1], a[4], a[5]);
-     * ASubvec[1] = vector(a[2], a[3], a[6], a[7]);
-     * BSubvec[0] = vector(b[0], b[1], b[4], b[5]);
-     * BSubvec[1] = vector(b[2], b[3], b[6], b[7]);
-     * CSubvec[0] = vector(c[0], c[1]);
-     * CSubvec[1] = vector(c[2], c[3]);
-     * V0 = ffdmdawp(ASubvec[0], BSubvec[0], CSubvec[0]);
-     * V1 = ffdmdawp(ASubvec[1], BSubvec[1], CSubvec[1]);
-     * concatenate(V0, V1) // with a shufflevector
-     */
-    Value *A = this->EmitScalarExpr(E->getArg(0));
-    Value *B = this->EmitScalarExpr(E->getArg(1));
-    Value *C = this->EmitScalarExpr(E->getArg(2));
-
-    constexpr int VectorLength = 8;
-    constexpr int CVectorLength = VectorLength >> 1;
-    Value *AElt[VectorLength];
-    Value *BElt[VectorLength];
-    Value *CElt[CVectorLength];
-    for (int i = 0; i < VectorLength; i++) {
-      AElt[i] = this->Builder.CreateExtractElement(A, i);
-      BElt[i] = this->Builder.CreateExtractElement(B, i);
-      if (i < CVectorLength)
-        CElt[i] = this->Builder.CreateExtractElement(C, i);
-    }
-
-    llvm::Type *V4F32 = llvm::FixedVectorType::get(FloatTy, 4);
-    llvm::Type *V2F32 = llvm::FixedVectorType::get(FloatTy, 2);
-    Value *ASubvec[2] = {UndefValue::get(V4F32), UndefValue::get(V4F32)};
-    Value *BSubvec[2] = {UndefValue::get(V4F32), UndefValue::get(V4F32)};
-    Value *CSubvec[2] = {UndefValue::get(V2F32), UndefValue::get(V2F32)};
-
-    constexpr int SubvecLength = VectorLength >> 1;
-    constexpr int CSubvecLength = CVectorLength >> 1;
-    int SubvecIndices[2][SubvecLength] = {{0, 1, 4, 5}, {2, 3, 6, 7}};
-    for (int sv = 0; sv < 2; sv++) {
-      int InsertCount = 0;
-      for (int i : SubvecIndices[sv]) {
-        ASubvec[sv] = this->Builder.CreateInsertElement(ASubvec[sv], AElt[i],
-                                                        InsertCount);
-        BSubvec[sv] = this->Builder.CreateInsertElement(BSubvec[sv], BElt[i],
-                                                        InsertCount);
-        if (InsertCount < CSubvecLength)
-          CSubvec[sv] = this->Builder.CreateInsertElement(
-              CSubvec[sv], CElt[CSubvecLength * sv + InsertCount], InsertCount);
-
-        InsertCount++;
-      }
-    }
-
-    Value *Result[2];
-    Function *Callee = this->CGM.getIntrinsic(Intrinsic::kvx_ffdmdawp);
-    for (int sv = 0; sv < 2; sv++)
-      Result[sv] = this->Builder.CreateCall(
-          Callee,
-          {ASubvec[sv], BSubvec[sv], CSubvec[sv], RoundingMod, SilentMod});
-
-    constexpr int ResultVectorLength = CVectorLength;
-    SmallVector<Constant *, ResultVectorLength> MaskVector;
-    for (int i = 0; i < ResultVectorLength; i++)
-      MaskVector.push_back(ConstantInt::get(this->Int32Ty, i));
-    Value *MaskVec = ConstantVector::get(ArrayRef<Constant *>(MaskVector));
-
-    return this->Builder.CreateShuffleVector(Result[0], Result[1], MaskVec);
-  }
   case KVX::BI__builtin_kvx_shiftbo:
   case KVX::BI__builtin_kvx_shiftbx:
   case KVX::BI__builtin_kvx_shiftbv:
@@ -20606,13 +19161,11 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_shiftfdp:
   case KVX::BI__builtin_kvx_shiftfdq:
     return KVX_emitShiftBuiltin(*this, E, BuiltinID);
-/// TCA - GPR to TCA copy
-#define NARY_BUILTIN(ID, TYPES, MODE, ARGS)                                    \
-  case KVX::BI__builtin_kvx_##ID:                                              \
-    return KVX_emitNaryBuiltin(ARGS, *this, E, Intrinsic::kvx_##ID);
-#define NARY_BUILTIN(ID, TYPES, MODE, ARGS)                                    \
-  case KVX::BI__builtin_kvx_##ID:                                              \
-    return KVX_emitNaryBuiltin(ARGS, *this, E, Intrinsic::kvx_##ID);
+
+    /// TCA - GPR to TCA copy
+  case KVX::BI__builtin_kvx_xswap256:
+    return KVX_emit_xswap256(*this, E);
+
 #define KVX_BUILTIN(ID, TYPES, MODE, NARGS, CPUS, ...)                         \
   case KVX::BI__builtin_kvx_##ID: {                                            \
     const auto IDVal = Intrinsic::kvx_##ID;                                    \
@@ -20631,35 +19184,8 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
 
 #include "clang/Basic/BuiltinsKVX.def"
 
-  case KVX::BI__builtin_kvx_xconvdhv0:
-    return KVX_emitRndintSatBuiltin(2, Intrinsic::kvx_xconvdhv0, *this, E);
-  case KVX::BI__builtin_kvx_xconvdhv1:
-    return KVX_emitRndintSatBuiltin(2, Intrinsic::kvx_xconvdhv1, *this, E);
-  case KVX::BI__builtin_kvx_xconvwbv0:
-    return KVX_emitRndintSatBuiltin(2, Intrinsic::kvx_xconvwbv0, *this, E);
-  case KVX::BI__builtin_kvx_xconvwbv1:
-    return KVX_emitRndintSatBuiltin(2, Intrinsic::kvx_xconvwbv1, *this, E);
-  case KVX::BI__builtin_kvx_xconvwbv2:
-    return KVX_emitRndintSatBuiltin(2, Intrinsic::kvx_xconvwbv2, *this, E);
-  case KVX::BI__builtin_kvx_xconvwbv3:
-    return KVX_emitRndintSatBuiltin(2, Intrinsic::kvx_xconvwbv3, *this, E);
-  case KVX::BI__builtin_kvx_xconvdhv:
-    return KVX_emitRndintSatBuiltin(1, Intrinsic::kvx_xconvdhv, *this, E);
-  case KVX::BI__builtin_kvx_xconvwbv:
-    return KVX_emitRndintSatBuiltin(1, Intrinsic::kvx_xconvwbv, *this, E);
-  case KVX::BI__builtin_kvx_xfscalewv:
-    return KVX_emitScaleNarrowBuiltin(3, Intrinsic::kvx_xfscalewv, *this, E);
-  case KVX::BI__builtin_kvx_xfscalewo:
-    return KVX_emitScaleNarrowBuiltin(2, Intrinsic::kvx_xfscalewo, *this, E, 3);
-  case KVX::BI__builtin_kvx_xfmma484hw:
-    return KVX_emitScaleNarrowBuiltin(2, Intrinsic::kvx_xfmma484hw, *this, E,
-                                      4);
-  case KVX::BI__builtin_kvx_xmaddifwo:
-    return KVX_emitScaleNarrowBuiltin(2, Intrinsic::kvx_xmaddifwo, *this, E, 4);
-  case KVX::BI__builtin_kvx_xmsbfifwo:
-    return KVX_emitScaleNarrowBuiltin(2, Intrinsic::kvx_xmsbfifwo, *this, E, 4);
-  case KVX::BI__builtin_kvx_xswap256:
-    return KVX_emit_xswap256(*this, E);
+  default:
+    CGM.Error(E->getBeginLoc(), "Unhandled builtin.");
+    return nullptr;
   }
-  return nullptr;
 }

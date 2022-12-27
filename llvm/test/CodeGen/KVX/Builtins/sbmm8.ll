@@ -6,61 +6,67 @@
 
 target triple = "kvx-kalray-cos"
 
-define i64 @f_i10(i32 %c){
-; CHECK-LABEL: f_i10:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sxwd $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r0 = $r0, 16
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
-entry:
-  %conv = sext i32 %c to i64
-  %0 = tail call i64 @llvm.kvx.sbmm8(i64 %conv, i64 16)
-  ret i64 %0
-}
-
-declare i64 @llvm.kvx.sbmm8(i64, i64) #1
-
-define i64 @f_i37(i32 %c){
-; CHECK-LABEL: f_i37:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sxwd $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x10000000000
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
-entry:
-  %conv = sext i32 %c to i64
-  %0 = tail call i64 @llvm.kvx.sbmm8(i64 %conv, i64 1099511627776)
-  ret i64 %0
-}
-
-define i64 @f_i64(i32 %c){
-; CHECK-LABEL: f_i64:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sxwd $r0 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x101010101010101
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
-entry:
-  %conv = sext i32 %c to i64
-  %0 = tail call i64 @llvm.kvx.sbmm8(i64 %conv, i64 72340172838076673)
-  ret i64 %0
-}
-
-define i64 @f_rr(i32 %c, i64 %c2){
-; CHECK-LABEL: f_rr:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sxwd $r0 = $r0
-; CHECK-NEXT:    ;;
+define i64 @sbmm8(i64 %0, i64 %1) {
+; CHECK-LABEL: sbmm8:
+; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-entry:
-  %conv = sext i32 %c to i64
-  %0 = tail call i64 @llvm.kvx.sbmm8(i64 %conv, i64 %c2)
-  ret i64 %0
+  %3 = tail call i64 @llvm.kvx.sbmm8(i64 %0, i64 %1)
+  ret i64 %3
+}
+
+declare i64 @llvm.kvx.sbmm8(i64, i64)
+
+define i64 @sbmm8ri10(i64 %0) {
+; CHECK-LABEL: sbmm8ri10:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    sbmm8 $r0 = $r0, -512
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = tail call i64 @llvm.kvx.sbmm8(i64 %0, i64 -512)
+  ret i64 %2
+}
+
+define i64 @sbmm8ri37(i64 %0) {
+; CHECK-LABEL: sbmm8ri37:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    sbmm8 $r0 = $r0, -513
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = tail call i64 @llvm.kvx.sbmm8(i64 %0, i64 -513)
+  ret i64 %2
+}
+
+define i64 @sbmm8ri64(i64 %0) {
+; CHECK-LABEL: sbmm8ri64:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x2fffffffff
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = tail call i64 @llvm.kvx.sbmm8(i64 %0, i64 206158430207)
+  ret i64 %2
+}
+
+define i64 @sbmmt8(i64 %0, i64 %1) {
+; CHECK-LABEL: sbmmt8:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    sbmmt8 $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = tail call i64 @llvm.kvx.sbmmt8(i64 %0, i64 %1)
+  ret i64 %3
+}
+
+declare i64 @llvm.kvx.sbmmt8(i64, i64)
+
+define i64 @sbmmt8ri10(i64 %0) {
+; CHECK-LABEL: sbmmt8ri10:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    sbmmt8 $r0 = $r0, 512
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = tail call i64 @llvm.kvx.sbmmt8(i64 %0, i64 512)
+  ret i64 %2
 }
 

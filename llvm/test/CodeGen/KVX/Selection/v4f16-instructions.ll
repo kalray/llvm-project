@@ -1775,7 +1775,6 @@ define <4 x half> @test_minnum(<4 x half> %a, <4 x half> %b) #0 {
 ; KV3_1-NEXT:    fwidenlhwp $r22 = $r1
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    sq 32[$r12] = $r20r21
-; KV3_1-NEXT:    fwidenmhwp $r21 = $r0
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    sq 16[$r12] = $r18r19
 ; KV3_1-NEXT:    srld $r1 = $r22, 32
@@ -1783,6 +1782,7 @@ define <4 x half> @test_minnum(<4 x half> %a, <4 x half> %b) #0 {
 ; KV3_1-NEXT:    fwidenmhwp $r19 = $r1
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    srld $r0 = $r18, 32
+; KV3_1-NEXT:    fwidenmhwp $r21 = $r0
 ; KV3_1-NEXT:    call fminf
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    copyd $r0 = $r18
@@ -1852,7 +1852,6 @@ define <4 x half> @test_maxnum(<4 x half> %a, <4 x half> %b) #0 {
 ; KV3_1-NEXT:    fwidenlhwp $r22 = $r1
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    sq 32[$r12] = $r20r21
-; KV3_1-NEXT:    fwidenmhwp $r21 = $r0
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    sq 16[$r12] = $r18r19
 ; KV3_1-NEXT:    srld $r1 = $r22, 32
@@ -1860,6 +1859,7 @@ define <4 x half> @test_maxnum(<4 x half> %a, <4 x half> %b) #0 {
 ; KV3_1-NEXT:    fwidenmhwp $r19 = $r1
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    srld $r0 = $r18, 32
+; KV3_1-NEXT:    fwidenmhwp $r21 = $r0
 ; KV3_1-NEXT:    call fmaxf
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    copyd $r0 = $r18

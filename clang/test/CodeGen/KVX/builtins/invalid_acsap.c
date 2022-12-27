@@ -8,8 +8,7 @@ int acswapWD(int *p, int a, int b) {
   return (int)(c);
 }
 
-
-// ; CHECK: {{.*}} error: This builtin accept a modifier string composed by: ['', '.', '.v'], ['', '.', '.g']
+// ; CHECK: {{.*}} error: This builtin accepts a modifier string composed by: ['', '.', '.v'], ['', '.', '.g']
 // ; CHECK-NOT: {{.*}} error: Incorrect number of arguments to builtin
-// ; CHECK: {{.*}} error: This builtin accept a modifier string composed by: ['', '.', '.v'], ['', '.', '.g']
+// ; CHECK: {{.*}} error: This builtin accepts a modifier string composed by: ['', '.', '.v'], ['', '.', '.g']
 // ; CHECK-NOT: {{.*}} error: Incorrect number of arguments to builtin
