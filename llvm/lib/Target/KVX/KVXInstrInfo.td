@@ -1129,18 +1129,18 @@ multiclass MC_25<string OpcStr> {
 //   defm FFMSD
 //   defm FFMAWD
 //   defm FFMSWD
-multiclass MC_26<string OpcStr> {
+multiclass MC_26<string OpcStr, Intrinsic I, ValueType vt = f32, Operand ImmT = Binary32> {
   let Constraints = "$a1 = $a1o" in
   def ri : KVX_INSTRUCTION_CV1_Y
-    <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, Binary64:$a3),
+    <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, ImmT:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [/* no straightforward pattern */],
+     [(set f64:$a1o, (I vt:$a2, ImmT:$a3, f64:$a1, rounding_, silent_))],
      MAU_AUXR_FP_Y_>;
   let Constraints = "$a3 = $a3o" in
   def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a3o), (ins SingleReg:$a3, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
-     [/* no straightforward pattern */],
+     [(set f64:$a3o, (I vt:$a4, vt:$a5, f64:$a3, RoundingMod:$a1, SilentMod:$a2))],
      MAU_AUXR_FP>;
 }
 
@@ -1303,25 +1303,25 @@ multiclass MC_2E<string OpcStr> {
 // multiclass MC_2E_2 is used by:
 //   defm FFMAHW
 //   defm FFMSHW
-multiclass MC_2E_2<string OpcStr> {
-  let Constraints = "$a1 = $a1o" in
+multiclass MC_2E_2<string OpcStr, Intrinsic I> {
+  let Constraints = "$r = $acc" in
   def ri : KVX_INSTRUCTION_CV1_X
-    <(outs SingleReg:$a1o), (ins SingleReg:$a1, SingleReg:$a2, Binary32:$a3),
-     !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [/* no straightforward pattern */],
-     MAU_AUXR_FP_X_>;
-  let Constraints = "$a3 = $a3o" in
+    <(outs SingleReg:$r), (ins SingleReg:$acc, SingleReg:$lhs, Binary16:$rhs),
+     !strconcat (OpcStr, " $r = $lhs, $rhs"),
+     [(set f32:$r, (f32 (I f16:$lhs, Binary16:$rhs, f32:$acc, rounding_, silent_)))],
+     MAU_AUXR_FP_X_>, Requires<[IsV1]>;
+  let Constraints = "$r = $acc" in
   def rr : KVX_INSTRUCTION
-    <(outs SingleReg:$a3o), (ins SingleReg:$a3, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
-     !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
-     [/* no straightforward pattern */],
+    <(outs SingleReg:$r), (ins SingleReg:$acc, SingleReg:$rhs, SingleReg:$lhs, RoundingMod:$rm, SilentMod:$sm),
+     !strconcat (OpcStr, "$rm$sm $r = $rhs, $lhs"),
+     [(set f32:$r, (f32 (I f16:$lhs, f16:$rhs, f32:$acc, RoundingMod:$rm, SilentMod:$sm)))],
      MAU_AUXR_FP>;
 }
 
 // multiclass MC_2F is used by:
 //   defm FFMAWDP
 //   defm FFMSWDP
-multiclass MC_2F<string OpcStr> {
+multiclass MC_2F<string OpcStr, Intrinsic I> {
   let Constraints = "$a1 = $a1o" in
   def ri : KVX_INSTRUCTION_CV1_Y
     <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, Binary32x2:$a3),
@@ -1332,14 +1332,14 @@ multiclass MC_2F<string OpcStr> {
   def rr : KVX_INSTRUCTION
     <(outs PairedReg:$a3o), (ins PairedReg:$a3, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
-     [/* no straightforward pattern */],
+     [(set v2f64:$a3o, (I v2f32:$a4, v2f32:$a5, v2f64:$a3, RoundingMod:$a1, SilentMod:$a2))],
      MAU_AUXR_FP>;
 }
 
 // multiclass MC_30 is used by:
 //   defm FFMAHWQ
 //   defm FFMSHWQ
-multiclass MC_30<string OpcStr> {
+multiclass MC_30<string OpcStr, Intrinsic I> {
   let Constraints = "$a1 = $a1o" in
   def ri : KVX_INSTRUCTION_CV1_Y
     <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, Binary16x4:$a3),
@@ -1350,7 +1350,7 @@ multiclass MC_30<string OpcStr> {
   def rr : KVX_INSTRUCTION
     <(outs PairedReg:$a3o), (ins PairedReg:$a3, SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
-     [/* no straightforward pattern */],
+     [(set v4f32:$a3o, (I v4f16:$a4, v4f16:$a5, v4f32:$a3, RoundingMod:$a1, SilentMod:$a2))],
      MAU_AUXR_FP>;
 }
 
@@ -2653,8 +2653,8 @@ def FFDMSW : ROUNDING_SILENT_BINOP_FFDM<"ffdmsw", SingleReg, SingleReg, MAU_FP>;
 def FFDMSWP: ROUNDING_SILENT_BINOP_FFDM<"ffdmswp", SingleReg, PairedReg, MAU_FP>;
 defm FFDMSWQ : I<"ffdmswq", MAU_FP, [QuadReg, QuadReg], [RoundingMod, SilentMod], [], [], [PairedReg], 0>;
 
-def FFMAWQ : FFM_FAMILY_ACC<"ffmawq", PairedReg, PairedReg, MAU_AUXR_FP>;
-def FFMSWQ : FFM_FAMILY_ACC<"ffmswq", PairedReg, PairedReg, MAU_AUXR_FP>;
+def FFMAWQ : FFM_FAMILY_ACC<"ffmawq", PairedReg, PairedReg, MAU_AUXR_FP, int_kvx_ffma, v4f32, v4f32>;
+def FFMSWQ : FFM_FAMILY_ACC<"ffmswq", PairedReg, PairedReg, MAU_AUXR_FP, int_kvx_ffms, v4f32, v4f32>;
 
 def FFDMDAW : FFM_FAMILY_ACC<"ffdmdaw", SingleReg, SingleReg, MAU_AUXR_FP, int_kvx_ffdmda, f32, v2f32>;
 def FFDMDAWP : FFM_FAMILY_ACC<"ffdmdawp", SingleReg, PairedReg, MAU_AUXR_FP, int_kvx_ffdmda, v2f32, v4f32>;
@@ -2676,7 +2676,7 @@ defm FFDMSAWQ : I<"ffdmsawq", MAU_AUXR_FP, [QuadReg, QuadReg], [RoundingMod, Sil
 def FMULWCP : CONJ_ROUNDING_SILENT_BINOP<"fmulwcp", PairedReg, PairedReg, MAU_FP>;
 
 defm FFMAWC : I<"ffmawc", MAU_AUXR_FP, [SingleReg, SingleReg], [ConjugateMod, RoundingMod, SilentMod], [], [], [SingleReg], 1,
-            [(set v2f32:$r, (int_kvx_ffmawc v2f32:$op0, v2f32:$op1, v2f32:$z, ConjugateMod:$mod0, RoundingMod:$mod1, SilentMod:$mod2))],
+            [(set v2f32:$r, (int_kvx_fcfma v2f32:$op0, v2f32:$op1, v2f32:$z, ConjugateMod:$mod0, RoundingMod:$mod1, SilentMod:$mod2))],
             0, 2>, Requires<[IsV2]>;
 
 defm FFMSWC : I<"ffmswc", MAU_AUXR_FP, [SingleReg, SingleReg], [ConjugateMod, RoundingMod, SilentMod], [], [], [SingleReg], 1,
@@ -3255,7 +3255,7 @@ def MM212W : KVX_INSTRUCTION
    MAU_INT>;
 
 let Uses = [CS] in {
-defm FFMAD : MC_26<"ffmad">;
+defm FFMAD : MC_26<"ffmad", int_kvx_ffma, f64, Binary64>;
 
 defm FFMAWP : MC_27<"ffmawp">;
 
@@ -3267,6 +3267,7 @@ defm FFMAHQ : MC_28<"ffmahq">;
 defm FFMSHO : I <"ffmsho", MAU_AUXR_FP, [PairedReg, PairedReg], [RoundingMod, SilentMod], [], [], [PairedReg], 1,
                  [(set v8f16:$r, (v8f16 (int_kvx_ffms v8f16:$op0, v8f16:$op1, v8f16:$z, RoundingMod:$mod0, SilentMod:$mod1)))]>, Requires<[IsV2]>;
 
+defm FFMSD : MC_26<"ffmsd", int_kvx_ffms, f64, Binary64>;
 
 defm FFMSWP : MC_27<"ffmswp">;
 
