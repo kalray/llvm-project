@@ -2628,12 +2628,12 @@ def FCDIVWP : KVX_INSTRUCTION
 } // let Uses = [CS] in
 
 let Constraints = "$out = $acc" in
-class FFM_FAMILY_ACC <string OpcStr, RegisterClass RC_OUT, RegisterClass RC_IN, InstrItinClass itin>
+class FFM_FAMILY_ACC <string OpcStr, RegisterClass RC_OUT, RegisterClass RC_IN, InstrItinClass itin, Intrinsic I, ValueType vt_out, ValueType vt_in>
   : KVX_INSTRUCTION <
     (outs RC_OUT:$out),
     (ins RC_OUT:$acc, RC_IN:$lhs, RC_IN:$rhs, RoundingMod:$r, SilentMod:$s),
     !strconcat (OpcStr, "$r$s $out = $lhs, $rhs"),
-    [],
+    [(set vt_out:$out, (I vt_in:$lhs, vt_in:$rhs, vt_out:$acc, RoundingMod:$r, SilentMod:$s))],
     itin>;
 
 class FFM_FAMILY<string OpcStr, RegisterClass RC_OUT, RegisterClass RC_IN, InstrItinClass itin>
@@ -2680,16 +2680,16 @@ defm FFMAWC : I<"ffmawc", MAU_AUXR_FP, [SingleReg, SingleReg], [ConjugateMod, Ro
             0, 2>, Requires<[IsV2]>;
 
 defm FFMSWC : I<"ffmswc", MAU_AUXR_FP, [SingleReg, SingleReg], [ConjugateMod, RoundingMod, SilentMod], [], [], [SingleReg], 1,
-            [(set v2f32:$r, (int_kvx_ffmswc v2f32:$op0, v2f32:$op1, v2f32:$z, ConjugateMod:$mod0, RoundingMod:$mod1, SilentMod:$mod2))],
+            [(set v2f32:$r, (int_kvx_fcfms v2f32:$op0, v2f32:$op1, v2f32:$z, ConjugateMod:$mod0, RoundingMod:$mod1, SilentMod:$mod2))],
             0, 2>, Requires<[IsV2]>;
 
 
 defm FFMAWCP : I<"ffmawcp", MAU_AUXR_FP, [PairedReg, PairedReg], [ConjugateMod, RoundingMod, SilentMod], [], [], [PairedReg], 1,
-            [(set v4f32:$r, (int_kvx_ffmawcp v4f32:$op0, v4f32:$op1, v4f32:$z, ConjugateMod:$mod0, RoundingMod:$mod1, SilentMod:$mod2))],
+            [(set v4f32:$r, (int_kvx_fcfma v4f32:$op0, v4f32:$op1, v4f32:$z, ConjugateMod:$mod0, RoundingMod:$mod1, SilentMod:$mod2))],
             0, 2>, Requires<[IsV2]>;
 
 defm FFMSWCP : I<"ffmswcp", MAU_AUXR_FP, [PairedReg, PairedReg], [ConjugateMod, RoundingMod, SilentMod], [], [], [PairedReg], 1,
-            [(set v4f32:$r, (int_kvx_ffmswcp v4f32:$op0, v4f32:$op1, v4f32:$z, ConjugateMod:$mod0, RoundingMod:$mod1, SilentMod:$mod2))],
+            [(set v4f32:$r, (int_kvx_fcfms v4f32:$op0, v4f32:$op1, v4f32:$z, ConjugateMod:$mod0, RoundingMod:$mod1, SilentMod:$mod2))],
             0, 2>, Requires<[IsV2]>;
 
 
