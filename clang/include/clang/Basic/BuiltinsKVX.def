@@ -414,6 +414,7 @@ KVX_MANY_BUILTIN(faddhx, "V16xV16xV16xcC*",  "n", 3, "kv3-2", kvx_fadd,  2, true
 KVX_MANY_BUILTIN(faddw,  "fffcC*",           "n", 3, "", kvx_fadd,  1, true, KVX_ROUNDING, KVX_SILENT)
 KVX_MANY_BUILTIN(faddwc, "V2fV2fV2fcC*",     "n", 3, "", kvx_faddc, 1, true, KVX_CONJUGATE, KVX_ROUNDING, KVX_SILENT)
 KVX_MANY_BUILTIN(faddwcp, "V4fV4fV4fcC*",    "n", 3, "", kvx_faddc, 1, true, KVX_CONJUGATE, KVX_ROUNDING, KVX_SILENT)
+KVX_MANY_BUILTIN(faddwcq, "V8fV8fV8fcC*",    "n", 3, "", kvx_faddc, 2, true, KVX_CONJUGATE, KVX_ROUNDING, KVX_SILENT)
 KVX_MANY_BUILTIN(faddwo, "V8fV8fV8fcC*",     "n", 3, "", kvx_fadd,  2, true, KVX_ROUNDING, KVX_SILENT)
 KVX_MANY_BUILTIN(faddwp, "V2fV2fV2fcC*",     "n", 3, "", kvx_fadd,  1, true, KVX_ROUNDING, KVX_SILENT)
 KVX_MANY_BUILTIN(faddwq, "V4fV4fV4fcC*",     "n", 3, "", kvx_fadd,  1, true, KVX_ROUNDING, KVX_SILENT)

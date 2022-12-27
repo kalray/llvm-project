@@ -150,6 +150,24 @@ define <4 x float> @faddwcp(<4 x float> %0, <4 x float> %1) {
 
 declare <4 x float> @llvm.kvx.faddc.v4f32(<4 x float>, <4 x float>, i32, i32, i32)
 
+define <8 x float> @faddwcq(<8 x float> %0, <8 x float> %1) {
+; CHECK-LABEL: faddwcq:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    faddwcp.c.rn $r0r1 = $r0r1, $r4r5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    faddwcp.c.rn $r2r3 = $r2r3, $r6r7
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = shufflevector <8 x float> %0, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  %4 = shufflevector <8 x float> %1, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  %5 = tail call <4 x float> @llvm.kvx.faddc.v4f32(<4 x float> %3, <4 x float> %4, i32 1, i32 0, i32 0)
+  %6 = shufflevector <8 x float> %0, <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+  %7 = shufflevector <8 x float> %1, <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+  %8 = tail call <4 x float> @llvm.kvx.faddc.v4f32(<4 x float> %6, <4 x float> %7, i32 1, i32 0, i32 0)
+  %9 = shufflevector <4 x float> %5, <4 x float> %8, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+  ret <8 x float> %9
+}
+
 define <8 x float> @faddwo(<8 x float> %0, <8 x float> %1) {
 ; CHECK-LABEL: faddwo:
 ; CHECK:       # %bb.0:
