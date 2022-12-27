@@ -214,6 +214,19 @@ v2f32 fsbfwc(v2f32 lhs, v2f32 rhs) {  return __builtin_kvx_fsbfwc(lhs, rhs, ".c.
 //
 v4f32 fsbfwcp(v4f32 lhs, v4f32 rhs) {  return __builtin_kvx_fsbfwcp(lhs, rhs, ".c.rn");}
 
+// CHECK-LABEL: @fsbfwcq(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <8 x float> [[LHS:%.*]], <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <8 x float> [[RHS:%.*]], <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <4 x float> @llvm.kvx.fsbfc.v4f32(<4 x float> [[TMP0]], <4 x float> [[TMP1]], i32 1, i32 0, i32 1)
+// CHECK-NEXT:    [[TMP3:%.*]] = shufflevector <8 x float> [[LHS]], <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+// CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <8 x float> [[RHS]], <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+// CHECK-NEXT:    [[TMP5:%.*]] = tail call <4 x float> @llvm.kvx.fsbfc.v4f32(<4 x float> [[TMP3]], <4 x float> [[TMP4]], i32 1, i32 0, i32 1)
+// CHECK-NEXT:    [[TMP6:%.*]] = shufflevector <4 x float> [[TMP2]], <4 x float> [[TMP5]], <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+// CHECK-NEXT:    ret <8 x float> [[TMP6]]
+//
+v8f32 fsbfwcq(v8f32 lhs, v8f32 rhs) {  return __builtin_kvx_fsbfwcq(lhs, rhs, ".c.rn.s");}
+
 // CHECK-LABEL: @fsbfwo(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <8 x float> [[LHS:%.*]], <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
