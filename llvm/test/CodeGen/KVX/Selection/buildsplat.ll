@@ -41,11 +41,8 @@ define <4 x float> @test_buildsplat_float43(<4 x float> %a) #0 {
   ret <4 x float> %r
 }
 
-; Only one check here, because SelectionDAG reuses the same node
-; CHECK: MAKEi64 -9223372030412324863
-
 ; This is float 0x80000001, the corresponding <2 x float> immediate vector
-; will be 0x8000 0001 8000 0001 which only fits in 64 bits
+; will be 0x8000 0001 8000 0001 which only fits in 64 bits.
 define <4 x float> @test_buildsplat_float64(<4 x float> %a) #0 {
 ; ALL-LABEL: test_buildsplat_float64:
 ; ALL:       # %bb.0:
@@ -81,7 +78,7 @@ define <4 x i32> @test_buildsplat_nonconstant(<4 x i32> %a, i32 %b) #0 {
 define <4 x float> @test_buildsplat_float43undef1_1(<4 x float> %a) #0 {
 ; ALL-LABEL: test_buildsplat_float43undef1_1:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    make $r2 = 0x100000000
+; ALL-NEXT:    make $r2 = 0x100000001
 ; ALL-NEXT:    make $r3 = 0x100000001
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    fmulwq $r0r1 = $r0r1, $r2r3
@@ -110,7 +107,7 @@ define <4 x i32> @test_buildsplat_nonconstant1_1(<4 x i32> %a, i32 %b) #0 {
 define <4 x float> @test_buildsplat_float43undef1_2(<4 x float> %a) #0 {
 ; ALL-LABEL: test_buildsplat_float43undef1_2:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    make $r2 = 1
+; ALL-NEXT:    make $r2 = 0x100000001
 ; ALL-NEXT:    make $r3 = 0x100000001
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    fmulwq $r0r1 = $r0r1, $r2r3
@@ -140,7 +137,7 @@ define <4 x float> @test_buildsplat_float43undef1_3(<4 x float> %a) #0 {
 ; ALL-LABEL: test_buildsplat_float43undef1_3:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    make $r2 = 0x100000001
-; ALL-NEXT:    make $r3 = 0x100000000
+; ALL-NEXT:    make $r3 = 0x100000001
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    fmulwq $r0r1 = $r0r1, $r2r3
 ; ALL-NEXT:    ret
@@ -169,7 +166,7 @@ define <4 x float> @test_buildsplat_float43undef1_4(<4 x float> %a) #0 {
 ; ALL-LABEL: test_buildsplat_float43undef1_4:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    make $r2 = 0x100000001
-; ALL-NEXT:    make $r3 = 1
+; ALL-NEXT:    make $r3 = 0x100000001
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    fmulwq $r0r1 = $r0r1, $r2r3
 ; ALL-NEXT:    ret
@@ -198,6 +195,7 @@ define <4 x float> @test_buildsplat_float43undef2_1(<4 x float> %a) #0 {
 ; ALL-LABEL: test_buildsplat_float43undef2_1:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    make $r2 = 0x100000001
+; ALL-NEXT:    make $r3 = 0x100000001
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    fmulwq $r0r1 = $r0r1, $r2r3
 ; ALL-NEXT:    ret
@@ -225,6 +223,7 @@ define <4 x i32> @test_buildsplat_nonconstant2_1(<4 x i32> %a, i32 %b) #0 {
 define <4 x float> @test_buildsplat_float43undef2_2(<4 x float> %a) #0 {
 ; ALL-LABEL: test_buildsplat_float43undef2_2:
 ; ALL:       # %bb.0:
+; ALL-NEXT:    make $r2 = 0x100000001
 ; ALL-NEXT:    make $r3 = 0x100000001
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    fmulwq $r0r1 = $r0r1, $r2r3
@@ -253,8 +252,8 @@ define <4 x i32> @test_buildsplat_nonconstant2_2(<4 x i32> %a, i32 %b) #0 {
 define <4 x float> @test_buildsplat_float43undef2_3(<4 x float> %a) #0 {
 ; ALL-LABEL: test_buildsplat_float43undef2_3:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    make $r2 = 1
-; ALL-NEXT:    make $r3 = 0x100000000
+; ALL-NEXT:    make $r2 = 0x100000001
+; ALL-NEXT:    make $r3 = 0x100000001
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    fmulwq $r0r1 = $r0r1, $r2r3
 ; ALL-NEXT:    ret
@@ -282,8 +281,8 @@ define <4 x i32> @test_buildsplat_nonconstant2_3(<4 x i32> %a, i32 %b) #0 {
 define <4 x float> @test_buildsplat_float43undef2_4(<4 x float> %a) #0 {
 ; ALL-LABEL: test_buildsplat_float43undef2_4:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    make $r2 = 0x100000000
-; ALL-NEXT:    make $r3 = 1
+; ALL-NEXT:    make $r2 = 0x100000001
+; ALL-NEXT:    make $r3 = 0x100000001
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    fmulwq $r0r1 = $r0r1, $r2r3
 ; ALL-NEXT:    ret
@@ -311,9 +310,8 @@ define <4 x i32> @test_buildsplat_nonconstant2_4(<4 x i32> %a, i32 %b) #0 {
 define <4 x float> @test_buildsplat_float43undef2_5(<4 x float> %a) #0 {
 ; ALL-LABEL: test_buildsplat_float43undef2_5:
 ; ALL:       # %bb.0:
+; ALL-NEXT:    make $r2 = 0x100000000
 ; ALL-NEXT:    make $r3 = 0x100000000
-; ALL-NEXT:    ;;
-; ALL-NEXT:    copyd $r2 = $r3
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    fmulwq $r0r1 = $r0r1, $r2r3
 ; ALL-NEXT:    ret
@@ -341,9 +339,8 @@ define <4 x i32> @test_buildsplat_nonconstant2_5(<4 x i32> %a, i32 %b) #0 {
 define <4 x float> @test_buildsplat_float43undef2_6(<4 x float> %a) #0 {
 ; ALL-LABEL: test_buildsplat_float43undef2_6:
 ; ALL:       # %bb.0:
+; ALL-NEXT:    make $r2 = 1
 ; ALL-NEXT:    make $r3 = 1
-; ALL-NEXT:    ;;
-; ALL-NEXT:    copyd $r2 = $r3
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    fmulwq $r0r1 = $r0r1, $r2r3
 ; ALL-NEXT:    ret
@@ -368,10 +365,14 @@ define <4 x i32> @test_buildsplat_nonconstant2_6(<4 x i32> %a, i32 %b) #0 {
   ret <4 x i32> %r
 }
 
+; Operate over undefs is poison. Avoid it by detecting undefs
+; as part of the splat.
 define <4 x i32> @test_buildsplat_nonconstant3(<4 x i32> %a, i32 %b) #0 {
 ; ALL-LABEL: test_buildsplat_nonconstant3:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    insf $r2 = $r0, 63, 32
+; ALL-NEXT:    insf $r2 = $r2, 63, 32
+; ALL-NEXT:    ;;
+; ALL-NEXT:    copyd $r3 = $r2
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    mulwq $r0r1 = $r2r3, $r0r1
 ; ALL-NEXT:    ret
@@ -387,9 +388,8 @@ define <4 x i32> @test_buildsplat_nonconstant3(<4 x i32> %a, i32 %b) #0 {
 define <4 x i32> @test_buildsplat_int43undef2_6(<4 x i32> %a) #0 {
 ; ALL-LABEL: test_buildsplat_int43undef2_6:
 ; ALL:       # %bb.0:
+; ALL-NEXT:    make $r2 = 2
 ; ALL-NEXT:    make $r3 = 2
-; ALL-NEXT:    ;;
-; ALL-NEXT:    copyd $r2 = $r3
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    mulwq $r0r1 = $r0r1, $r2r3
 ; ALL-NEXT:    ret
