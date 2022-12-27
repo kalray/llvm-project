@@ -945,8 +945,25 @@ enum IIT_Info {
   IIT_V32 = 13,
   IIT_PTR = 14,
   IIT_ARG = 15,
+  IIT_I1 = 1,
+  IIT_I8 = 2,
+  IIT_I16 = 3,
+  IIT_I32 = 4,
+  IIT_I64 = 5,
+  IIT_F16 = 6,
+  IIT_F32 = 7,
+  IIT_F64 = 8,
+  IIT_V2 = 9,
+  IIT_V4 = 10,
+  IIT_V8 = 11,
+  IIT_V16 = 12,
+  IIT_V32 = 13,
+  IIT_PTR = 14,
+  IIT_ARG = 15,
 
   // Values from 16+ are only encodable with the inefficient encoding.
+  IIT_V64 = 16,
+  IIT_MMX = 17,
   IIT_V64 = 16,
   IIT_MMX = 17,
   IIT_TOKEN = 18,
@@ -959,6 +976,7 @@ enum IIT_Info {
   IIT_EXTEND_ARG = 25,
   IIT_TRUNC_ARG = 26,
   IIT_ANYPTR = 27,
+  IIT_V1 = 28,
   IIT_V1 = 28,
   IIT_VARARG = 29,
   IIT_HALF_VEC_ARG = 30,
@@ -990,6 +1008,7 @@ enum IIT_Info {
   IIT_ANYPTR_TO_ELT = 56,
   IIT_I2 = 57,
   IIT_I4 = 58,
+  IIT_DOUBLE_VEC = 59,
 };
 
 static void DecodeIITType(unsigned &NextElt, ArrayRef<unsigned char> Infos,
@@ -1228,6 +1247,12 @@ static void DecodeIITType(unsigned &NextElt, ArrayRef<unsigned char> Infos,
                                              ArgInfo));
     return;
   }
+  case IIT_DOUBLE_VEC: {
+    unsigned ArgInfo = (NextElt == Infos.size() ? 0 : Infos[NextElt++]);
+    OutputTable.push_back(
+        IITDescriptor::get(IITDescriptor::DoubleVec, ArgInfo));
+    return;
+  }
   }
   llvm_unreachable("unhandled");
 }
@@ -1370,6 +1395,13 @@ static Type *DecodeFixedType(ArrayRef<Intrinsic::IITDescriptor> &Infos,
   case IITDescriptor::AnyPtrToElt:
     // Return the overloaded type (which determines the pointers address space)
     return Tys[D.getOverloadArgNumber()];
+  case IITDescriptor::DoubleVec: {
+    Type *Ty = Tys[D.getArgumentNumber()];
+    VectorType *VTy = dyn_cast<VectorType>(Ty);
+    if (VTy)
+      return VectorType::getDoubleElementsVectorType(VTy);
+    return VectorType::get(Ty, ElementCount::get(2, false));
+  }
   }
   llvm_unreachable("unhandled");
 }
@@ -1713,6 +1745,22 @@ static bool matchIntrinsicType(
         return true;
       return ThisArgVecTy != VectorType::getInteger(ReferenceType);
     }
+  case IITDescriptor::DoubleVec: {
+    if (D.getArgumentNumber() >= ArgTys.size())
+      return IsDeferredCheck || DeferCheck(Ty);
+
+    if (!Ty->isVectorTy())
+      return true;
+
+    VectorType *ThisVt = dyn_cast<VectorType>(Ty);
+    auto *RefType = ArgTys[D.getArgumentNumber()];
+    auto *RefVecType = dyn_cast<VectorType>(RefType);
+
+    if (RefVecType)
+      return VectorType::getDoubleElementsVectorType(RefVecType) != ThisVt;
+
+    return VectorType::get(RefType, ElementCount::get(2, false)) != ThisVt;
+  }
   }
   llvm_unreachable("unhandled");
 }

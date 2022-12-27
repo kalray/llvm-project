@@ -3222,13 +3222,63 @@ static SDValue combineAvg(SDNode *N, SelectionDAG &Dag) {
   return Dag.getNode(ISD::SRA, DL, VT, Add, One);
 }
 
-static SDValue combineFaddFsub(SDNode *N, SelectionDAG &Dag,
-                               unsigned KvxOpcode) {
-  EVT VT = N->getValueType(0);
-  if (VT != MVT::v8f16)
-    return SDValue();
+typedef DenseMap<unsigned, unsigned> FromToTypeMap;
+typedef FromToTypeMap::const_iterator FromTo_t;
+static SDValue
+bitcastTypesAndMachineOp(unsigned MachineOpcode, SDNode *N, SelectionDAG &Dag,
+                         bool InPlace = true, unsigned Mods = 2,
+                         const FromToTypeMap Map = {{MVT::v8f32, MVT::v4i64}}) {
+  SmallVector<SDValue, 4> Args;
+  SDLoc DL(N);
+  for (auto A = 1U; A < N->getNumOperands() - Mods - InPlace; ++A) {
+    SDValue Op = N->getOperand(A);
+    EVT ArgVT = Op->getValueType(0);
+    FromTo_t FromTo = Map.find(ArgVT.getSimpleVT().SimpleTy);
+    if (FromTo == Map.end())
+      Args.push_back(Op);
+    else
+      Args.push_back(
+          Dag.getBitcast(MVT((MVT::SimpleValueType)FromTo->second), Op));
+  }
+  for (auto A = N->getNumOperands() - Mods; A < N->getNumOperands(); ++A)
+    Args.push_back(Dag.getTargetConstant(
+        cast<ConstantSDNode>(N->getOperand(A))->getZExtValue(), DL, MVT::i32));
+  if (InPlace) {
+    SDValue Op = N->getOperand(N->getNumOperands() - Mods - 1);
+    EVT ArgVT = Op->getValueType(0);
+    FromTo_t FromTo = Map.find(ArgVT.getSimpleVT().SimpleTy);
+    if (FromTo == Map.end())
+      Args.push_back(Op);
+    else
+      Args.push_back(
+          Dag.getBitcast(MVT((MVT::SimpleValueType)FromTo->second), Op));
+  }
+  EVT ResVT = N->getValueType(0);
+  FromTo_t FromTo = Map.find(ResVT.getSimpleVT().SimpleTy);
+  if (FromTo == Map.end())
+    return SDValue(Dag.getMachineNode(MachineOpcode, DL, ResVT, Args), 0);
 
-  static SDValue combineSplit(SDNode * N, TargetLowering::DAGCombinerInfo & DCI,
+  return Dag.getBitcast(
+      ResVT,
+      SDValue(Dag.getMachineNode(MachineOpcode, DL,
+                                 (MVT::SimpleValueType)FromTo->second, Args),
+              0));
+}
+
+static inline SDValue
+cv2Intrinsic(unsigned KvxOpcode, SDNode *N, SelectionDAG &Dag,
+             const KVXSubtarget &Subt, bool InPlace = true, unsigned Mods = 2,
+             const FromToTypeMap Map = {{MVT::v8f32, MVT::v4i64}},
+             MVT OutType = MVT::v4f32) {
+  if (N->getValueType(0) != OutType)
+    return SDValue();
+  if (Subt.isV1())
+    report_fatal_error("Can't emit a cv2 builtin for cv1");
+
+  return bitcastTypesAndMachineOp(KvxOpcode, N, Dag, InPlace, Mods, Map);
+}
+
+static SDValue combineSplit(SDNode * N, TargetLowering::DAGCombinerInfo & DCI,
                               SelectionDAG & Dag) {
     auto VT = N->getValueType(0);
     LLVMContext &C = *Dag.getContext();
@@ -3299,6 +3349,18 @@ static SDValue combineIntrinsic(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
   case Intrinsic::KVXIntrinsics::kvx_wideninto:
   case Intrinsic::KVXIntrinsics::kvx_widenintos:
     return combineWidenInt(N, DCI, Dag, WidenO);
+  case Intrinsic::KVXIntrinsics::kvx_ffdma:
+    return cv2Intrinsic(KVX::FFDMAWQ, N, Dag, KVXSubtarget, false);
+  case Intrinsic::KVXIntrinsics::kvx_ffdmas:
+    return cv2Intrinsic(KVX::FFDMASWQ, N, Dag, KVXSubtarget);
+  case Intrinsic::KVXIntrinsics::kvx_ffdmda:
+    return cv2Intrinsic(KVX::FFDMDAWQ, N, Dag, KVXSubtarget);
+  case Intrinsic::KVXIntrinsics::kvx_ffdmds:
+    return cv2Intrinsic(KVX::FFDMDSWQ, N, Dag, KVXSubtarget);
+  case Intrinsic::KVXIntrinsics::kvx_ffdmsa:
+    return cv2Intrinsic(KVX::FFDMSAWQ, N, Dag, KVXSubtarget);
+  case Intrinsic::KVXIntrinsics::kvx_ffdms:
+    return cv2Intrinsic(KVX::FFDMSWQ, N, Dag, KVXSubtarget, false);
   default:
     return SDValue();
   }

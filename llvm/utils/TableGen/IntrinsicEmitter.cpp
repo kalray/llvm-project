@@ -211,8 +211,25 @@ enum IIT_Info {
   IIT_V32 = 13,
   IIT_PTR = 14,
   IIT_ARG = 15,
+  IIT_I1 = 1,
+  IIT_I8 = 2,
+  IIT_I16 = 3,
+  IIT_I32 = 4,
+  IIT_I64 = 5,
+  IIT_F16 = 6,
+  IIT_F32 = 7,
+  IIT_F64 = 8,
+  IIT_V2 = 9,
+  IIT_V4 = 10,
+  IIT_V8 = 11,
+  IIT_V16 = 12,
+  IIT_V32 = 13,
+  IIT_PTR = 14,
+  IIT_ARG = 15,
 
   // Values from 16+ are only encodable with the inefficient encoding.
+  IIT_V64 = 16,
+  IIT_MMX = 17,
   IIT_V64 = 16,
   IIT_MMX = 17,
   IIT_TOKEN = 18,
@@ -225,6 +242,7 @@ enum IIT_Info {
   IIT_EXTEND_ARG = 25,
   IIT_TRUNC_ARG = 26,
   IIT_ANYPTR = 27,
+  IIT_V1 = 28,
   IIT_V1 = 28,
   IIT_VARARG = 29,
   IIT_HALF_VEC_ARG = 30,
@@ -256,6 +274,7 @@ enum IIT_Info {
   IIT_ANYPTR_TO_ELT = 56,
   IIT_I2 = 57,
   IIT_I4 = 58,
+  IIT_DOUBLE_VEC = 59,
 };
 
 static void EncodeFixedValueType(MVT::SimpleValueType VT,
@@ -351,6 +370,8 @@ static void EncodeFixedType(Record *R, std::vector<unsigned char> &ArgCodes,
       Sig.push_back(IIT_SUBDIVIDE4_ARG);
     else if (R->isSubClassOf("LLVMVectorOfBitcastsToInt"))
       Sig.push_back(IIT_VEC_OF_BITCASTS_TO_INT);
+    else if (R->isSubClassOf("LLVMDoubleElementsOfVecOrScalar"))
+      Sig.push_back(IIT_DOUBLE_VEC);
     else
       Sig.push_back(IIT_ARG);
     return Sig.push_back((Number << 3) | 7 /*IITDescriptor::AK_MatchType*/);
