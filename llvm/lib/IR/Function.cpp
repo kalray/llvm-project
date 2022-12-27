@@ -1360,17 +1360,17 @@ static bool matchIntrinsicType(
       if (D.getArgumentNumber() >= ArgTys.size())
         return IsDeferredCheck || DeferCheck(Ty);
 
-    Type *RefTy = ArgTys[D.getArgumentNumber()];
-    return Ty != RefTy->getExtendedType(false);
-  }
+      Type *RefTy = ArgTys[D.getArgumentNumber()];
+      return Ty != RefTy->getExtendedType(false);
+    }
     case IITDescriptor::TruncArgument: {
       // If this is a forward reference, defer the check for later.
       if (D.getArgumentNumber() >= ArgTys.size())
         return IsDeferredCheck || DeferCheck(Ty);
 
       Type *NewTy = ArgTys[D.getArgumentNumber()];
-    return Ty != NewTy->getTruncatedType(false);
-  }
+      return Ty != NewTy->getTruncatedType(false);
+    }
     case IITDescriptor::HalfVecArgument:
       // If this is a forward reference, defer the check for later.
       if (D.getArgumentNumber() >= ArgTys.size())
