@@ -3319,8 +3319,8 @@ static SDValue combineIntrinsic(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
   if (!isa<ConstantSDNode>(N->getOperand(0)))
     return SDValue();
 
-    const auto &KVXSubtarget = (const class KVXSubtarget &)Dag.getSubtarget();
-    auto Intr = cast<ConstantSDNode>(N->getOperand(0))->getZExtValue();
+  const auto &KVXSubtarget = (const class KVXSubtarget &)Dag.getSubtarget();
+  auto Intr = cast<ConstantSDNode>(N->getOperand(0))->getZExtValue();
   switch (Intr) {
   case Intrinsic::KVXIntrinsics::kvx_abd:
     return combineAbd(N, Dag);
