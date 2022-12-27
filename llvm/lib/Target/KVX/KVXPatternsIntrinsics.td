@@ -359,10 +359,8 @@ def: Pat<(int_kvx_floatuwp v2i32:$i, i64:$shift, i32:$rounding, i32:$silent), (F
 def: Pat<(int_kvx_floatd i64:$i, i64:$shift, i32:$rounding, i32:$silent), (FLOATD SingleReg:$i, Unsigned6:$shift, RoundingMod:$rounding, SilentMod:$silent)>;
 def: Pat<(int_kvx_floatud i64:$i, i64:$shift, i32:$rounding, i32:$silent), (FLOATUD SingleReg:$i, Unsigned6:$shift, RoundingMod:$rounding, SilentMod:$silent)>;
 
-def: Pat<(int_kvx_fnarrowwh f32:$v, i32:$rounding, i32:$silent), (FNARROWWH SingleReg:$v, RoundingMod:$rounding, SilentMod:$silent)>;
-def: Pat<(int_kvx_fnarrowwhq v4f32:$v, i32:$rounding, i32:$silent), (FNARROWWHQ PairedReg:$v, RoundingMod:$rounding, SilentMod:$silent)>;
-def: Pat<(int_kvx_fnarrowdw f64:$v, i32:$rounding, i32:$silent), (FNARROWDW SingleReg:$v, RoundingMod:$rounding, SilentMod:$silent)>;
-def: Pat<(int_kvx_fnarrowdwp v2f64:$v, i32:$rounding, i32:$silent), (FNARROWDWP PairedReg:$v, RoundingMod:$rounding, SilentMod:$silent)>;
+def: Pat<(v2f32(int_kvx_fmulx v2f16:$lhs, v2f16:$rhs, RoundingMod:$r, SilentMod:$s)),
+         (v2f32 (EXTRACT_SUBREG (v4f32 (FMULHWQrr SingleReg:$lhs, SingleReg:$rhs, RoundingMod:$r, SilentMod:$s)), sub_d0))>;
 
 def: Pat<(int_kvx_satd i64:$v, i32:$b), (SATDrr SingleReg:$v, SingleReg:$b)>;
 
@@ -418,8 +416,8 @@ def: Pat<(f32(int_kvx_fsbf f32:$v1, f32:$v2, i32:$rounding, i32:$silent)), (FSBF
 def: Pat<(f64(int_kvx_fsbf f64:$v1, f64:$v2, i32:$rounding, i32:$silent)), (FSBFDrr SingleReg:$v1, SingleReg:$v2, RoundingMod:$rounding, SilentMod:$silent)>;
 def: Pat<(int_kvx_fmulw f32:$v1, f32:$v2, i32:$rounding, i32:$silent), (FMULWrr SingleReg:$v1, SingleReg:$v2, RoundingMod:$rounding, SilentMod:$silent)>;
 def: Pat<(int_kvx_fmuld f64:$v1, f64:$v2, i32:$rounding, i32:$silent), (FMULDrr SingleReg:$v1, SingleReg:$v2, RoundingMod:$rounding, SilentMod:$silent)>;
-def: Pat<(int_kvx_fmulwd f32:$v1, f32:$v2, i32:$rounding, i32:$silent), (FMULWDrr SingleReg:$v1, SingleReg:$v2, RoundingMod:$rounding, SilentMod:$silent)>;
-def: Pat<(int_kvx_ffmaw f32:$v1, f32:$v2, f32:$v3, i32:$rounding, i32:$silent), (FFMAWrr SingleReg:$v3, SingleReg:$v1, SingleReg:$v2, RoundingMod:$rounding, SilentMod:$silent)>;
+def: Pat<(f64(int_kvx_fmulx f32:$v1, f32:$v2, i32:$rounding, i32:$silent)), (FMULWDrr SingleReg:$v1, SingleReg:$v2, RoundingMod:$rounding, SilentMod:$silent)>;
+def: Pat<(v2f64(int_kvx_fmulx v2f32:$v1, v2f32:$v2, i32:$rounding, i32:$silent)), (FMULWDPrr SingleReg:$v1, SingleReg:$v2, RoundingMod:$rounding, SilentMod:$silent)>;
 def: Pat<(int_kvx_ffmad f64:$v1, f64:$v2, f64:$v3, i32:$rounding, i32:$silent), (FFMADrr SingleReg:$v3, SingleReg:$v1, SingleReg:$v2, RoundingMod:$rounding, SilentMod:$silent)>;
 def: Pat<(int_kvx_ffmawd f32:$v1, f32:$v2, f64:$v3, i32:$rounding, i32:$silent), (FFMAWDrr SingleReg:$v3, SingleReg:$v1, SingleReg:$v2, RoundingMod:$rounding, SilentMod:$silent)>;
 def: Pat<(int_kvx_ffmsw f32:$v1, f32:$v2, f32:$v3, i32:$rounding, i32:$silent), (FFMSWrr SingleReg:$v3, SingleReg:$v1, SingleReg:$v2, RoundingMod:$rounding, SilentMod:$silent)>;

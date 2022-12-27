@@ -1278,7 +1278,7 @@ multiclass MC_2D<string OpcStr> {
   def rr : KVX_INSTRUCTION
     <(outs PairedReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
-     [/* no straightforward pattern */],
+     [(set v4f32:$a3, (v4f32(int_kvx_fmulx v4f16:$a4, v4f16:$a5, RoundingMod:$a1, SilentMod:$a2)))],
      MAU_FP>;
 }
 
@@ -1375,14 +1375,14 @@ multiclass MC_31<string OpcStr> {
 //   defm FMULHW
 multiclass MC_31_2<string OpcStr> {
   def ri : KVX_INSTRUCTION_CV1_X
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary32:$a3),
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Binary16:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
-     [/* no straightforward pattern */],
+     [(set f32:$a1, (f32(int_kvx_fmulx f16:$a2, Binary16:$a3, rounding_, silent_)))],
      MAU_FP_X_>;
   def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a3), (ins SingleReg:$a4, SingleReg:$a5, RoundingMod:$a1, SilentMod:$a2),
      !strconcat (OpcStr, "$a1$a2 $a3 = $a4, $a5"),
-     [/* no straightforward pattern */],
+     [(set f32:$a3, (f32(int_kvx_fmulx f16:$a4, f16:$a5, RoundingMod:$a1, SilentMod:$a2)))],
      MAU_FP>;
 }
 

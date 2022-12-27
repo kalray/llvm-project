@@ -737,8 +737,8 @@ CodeGenIntrinsic::CodeGenIntrinsic(Record *R,
       // overloaded, all the types can be specified directly.
       assert(((!TyEl->isSubClassOf("LLVMExtendedType") &&
                !TyEl->isSubClassOf("LLVMTruncatedType")) ||
-              VT == MVT::iAny || VT == MVT::vAny) &&
-             "Expected iAny or vAny type");
+              VT == MVT::iAny || VT == MVT::vAny || VT == MVT::fAny) &&
+             "Expected iAny or vAny or fAny type");
     } else {
       VT = getValueType(TyEl->getValueAsDef("VT"));
     }
@@ -773,8 +773,8 @@ CodeGenIntrinsic::CodeGenIntrinsic(Record *R,
       // overloaded, all the types can be specified directly.
       assert(((!TyEl->isSubClassOf("LLVMExtendedType") &&
                !TyEl->isSubClassOf("LLVMTruncatedType")) ||
-              VT == MVT::iAny || VT == MVT::vAny) &&
-             "Expected iAny or vAny type");
+              VT == MVT::iAny || VT == MVT::vAny || VT == MVT::fAny) &&
+             "Expected iAny or vAny or fAny type");
     } else
       VT = getValueType(TyEl->getValueAsDef("VT"));
 

@@ -1147,22 +1147,10 @@ static Type *DecodeFixedType(ArrayRef<Intrinsic::IITDescriptor> &Infos,
   }
   case IITDescriptor::Argument:
     return Tys[D.getArgumentNumber()];
-  case IITDescriptor::ExtendArgument: {
-    Type *Ty = Tys[D.getArgumentNumber()];
-    if (VectorType *VTy = dyn_cast<VectorType>(Ty))
-      return VectorType::getExtendedElementVectorType(VTy);
-
-    return IntegerType::get(Context, 2 * cast<IntegerType>(Ty)->getBitWidth());
-  }
-  case IITDescriptor::TruncArgument: {
-    Type *Ty = Tys[D.getArgumentNumber()];
-    if (VectorType *VTy = dyn_cast<VectorType>(Ty))
-      return VectorType::getTruncatedElementVectorType(VTy);
-
-    IntegerType *ITy = cast<IntegerType>(Ty);
-    assert(ITy->getBitWidth() % 2 == 0);
-    return IntegerType::get(Context, ITy->getBitWidth() / 2);
-  }
+  case IITDescriptor::ExtendArgument:
+    return Tys[D.getArgumentNumber()]->getExtendedType();
+  case IITDescriptor::TruncArgument:
+    return Tys[D.getArgumentNumber()]->getTruncatedType();
   case IITDescriptor::Subdivide2Argument:
   case IITDescriptor::Subdivide4Argument: {
     Type *Ty = Tys[D.getArgumentNumber()];
@@ -1372,31 +1360,17 @@ static bool matchIntrinsicType(
       if (D.getArgumentNumber() >= ArgTys.size())
         return IsDeferredCheck || DeferCheck(Ty);
 
-      Type *NewTy = ArgTys[D.getArgumentNumber()];
-      if (VectorType *VTy = dyn_cast<VectorType>(NewTy))
-        NewTy = VectorType::getExtendedElementVectorType(VTy);
-      else if (IntegerType *ITy = dyn_cast<IntegerType>(NewTy))
-        NewTy = IntegerType::get(ITy->getContext(), 2 * ITy->getBitWidth());
-      else
-        return true;
-
-      return Ty != NewTy;
-    }
+    Type *RefTy = ArgTys[D.getArgumentNumber()];
+    return Ty != RefTy->getExtendedType(false);
+  }
     case IITDescriptor::TruncArgument: {
       // If this is a forward reference, defer the check for later.
       if (D.getArgumentNumber() >= ArgTys.size())
         return IsDeferredCheck || DeferCheck(Ty);
 
       Type *NewTy = ArgTys[D.getArgumentNumber()];
-      if (VectorType *VTy = dyn_cast<VectorType>(NewTy))
-        NewTy = VectorType::getTruncatedElementVectorType(VTy);
-      else if (IntegerType *ITy = dyn_cast<IntegerType>(NewTy))
-        NewTy = IntegerType::get(ITy->getContext(), ITy->getBitWidth() / 2);
-      else
-        return true;
-
-      return Ty != NewTy;
-    }
+    return Ty != NewTy->getTruncatedType(false);
+  }
     case IITDescriptor::HalfVecArgument:
       // If this is a forward reference, defer the check for later.
       if (D.getArgumentNumber() >= ArgTys.size())

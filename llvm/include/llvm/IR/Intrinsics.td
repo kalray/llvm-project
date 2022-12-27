@@ -192,9 +192,10 @@ class LLVMMatchType<int num>
 }
 
 // Match the type of another intrinsic parameter that is expected to be based on
-// an integral type (i.e. either iN or <N x iM>), but change the scalar size to
-// be twice as wide or half as wide as the other type.  This is only useful when
-// the intrinsic is overloaded, so the matched type should be declared as iAny.
+// an integral/fp/vector type (i.e. either [fi]N or <N x [fi]M>), but change the
+// scalar size to be twice as wide or half as wide as the other type.  This is
+// only useful when the intrinsic is overloaded, so the matched type should be
+// declared as iAny or fAny.
 class LLVMExtendedType<int num> : LLVMMatchType<num>;
 class LLVMTruncatedType<int num> : LLVMMatchType<num>;
 
