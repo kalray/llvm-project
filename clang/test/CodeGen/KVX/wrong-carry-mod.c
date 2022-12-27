@@ -2,5 +2,5 @@
 // RUN: %clang_cc1 -triple kvx-kalray-cos -S -verify %s
 
 long long xfail_addcd(long long a, long long b) {
-  return __builtin_kvx_addcd(a, b, ".ii"); // expected-error {{invalid carry_t modifier, expected "" or ".i"}} expected-error {{cannot compile this builtin function yet}}
+  return __builtin_kvx_addcd(a, b, ".ii"); // expected-error {{This builtin accepts a modifier string composed by: ['', '.', '.i']}} expected-error {{cannot compile this builtin function yet}}
 }
