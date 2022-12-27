@@ -311,6 +311,7 @@ def int_kvx_ffms : Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>, LLVMMatchTyp
 def int_kvx_ffmsx : Intrinsic<[llvm_anyfloat_ty], [LLVMTruncatedType<0>, LLVMTruncatedType<0>, LLVMMatchType<0>, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_fmul : Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>, LLVMMatchType<0>, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_fmulx : Intrinsic<[llvm_anyfloat_ty], [LLVMTruncatedType<0>, LLVMTruncatedType<0>, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_fnarrow: Intrinsic<[llvm_anyfloat_ty], [LLVMExtendedType<0>, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_fneg: Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>], [IntrNoMem]>;
 def int_kvx_fsbf : Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>, LLVMMatchType<0>, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_fsbfc : Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>, LLVMMatchType<0>, llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;

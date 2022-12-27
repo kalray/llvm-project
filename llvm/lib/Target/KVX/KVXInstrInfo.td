@@ -2189,7 +2189,7 @@ def FWIDENMWD : KVX_INSTRUCTION
 def FNARROWDW : KVX_INSTRUCTION
   <(outs SingleReg:$a3), (ins SingleReg:$a4, RoundingMod:$a1, SilentMod:$a2),
    "fnarrowdw$a1$a2 $a3 = $a4",
-   [/* no straightforward pattern */],
+   [(set f32:$a3, (int_kvx_fnarrow f64:$a4, RoundingMod:$a1, SilentMod:$a2))],
    ALU_FULL>;
 } // let Uses = [CS] in
 
@@ -2247,7 +2247,7 @@ def FWIDENMHW : KVX_INSTRUCTION
 def FNARROWWH : KVX_INSTRUCTION
   <(outs SingleReg:$a3), (ins SingleReg:$a4, RoundingMod:$a1, SilentMod:$a2),
    "fnarrowwh$a1$a2 $a3 = $a4",
-   [/* no straightforward pattern */],
+   [(set f16:$a3, (int_kvx_fnarrow f32:$a4, RoundingMod:$a1, SilentMod:$a2))],
    ALU_LITE>;
 } // let Uses = [CS] in
 
@@ -2294,7 +2294,7 @@ let Uses = [CS] in
 def FNARROWDWP : KVX_INSTRUCTION
   <(outs SingleReg:$a3), (ins PairedReg:$a4, RoundingMod:$a1, SilentMod:$a2),
    "fnarrowdwp$a1$a2 $a3 = $a4",
-   [/* no straightforward pattern */],
+   [(set v2f32:$a3, (int_kvx_fnarrow v2f64:$a4, RoundingMod:$a1, SilentMod:$a2))],
    ALU_FULL>;
 
 def FNEGHQ : KVX_INSTRUCTION
@@ -2313,7 +2313,7 @@ let Uses = [CS] in
 def FNARROWWHQ : KVX_INSTRUCTION
   <(outs SingleReg:$a3), (ins PairedReg:$a4, RoundingMod:$a1, SilentMod:$a2),
    "fnarrowwhq$a1$a2 $a3 = $a4",
-   [/* no straightforward pattern */],
+   [(set v4f16:$a3, (int_kvx_fnarrow v4f32:$a4, RoundingMod:$a1, SilentMod:$a2))],
    ALU_LITE>;
 
 let Constraints = "$a1 = $a1o" in
