@@ -17766,20 +17766,29 @@ static Value *KVX_emitShiftBuiltin(CodeGenFunction &CGF, const CallExpr *E,
   case KVX::BI__builtin_kvx_shiftdq:
     ShiftIndexBits = 2;
     break;
+  case KVX::BI__builtin_kvx_shiftbo:
+  case KVX::BI__builtin_kvx_shiftdo:
+  case KVX::BI__builtin_kvx_shiftfdo:
   case KVX::BI__builtin_kvx_shiftfho:
   case KVX::BI__builtin_kvx_shiftfwo:
-  case KVX::BI__builtin_kvx_shiftbo:
   case KVX::BI__builtin_kvx_shiftho:
   case KVX::BI__builtin_kvx_shiftwo:
     ShiftIndexBits = 3;
     break;
-  case KVX::BI__builtin_kvx_shiftfhx:
   case KVX::BI__builtin_kvx_shiftbx:
+  case KVX::BI__builtin_kvx_shiftfhx:
+  case KVX::BI__builtin_kvx_shiftfwx:
   case KVX::BI__builtin_kvx_shifthx:
+  case KVX::BI__builtin_kvx_shiftwx:
     ShiftIndexBits = 4;
     break;
   case KVX::BI__builtin_kvx_shiftbv:
+  case KVX::BI__builtin_kvx_shiftfhv:
+  case KVX::BI__builtin_kvx_shifthv:
     ShiftIndexBits = 5;
+    break;
+  case KVX::BI__builtin_kvx_shiftbt:
+    ShiftIndexBits = 6;
     break;
   }
 
@@ -19142,24 +19151,31 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     return KVX_emitIntNegBuiltin(*this, E);
 
   case KVX::BI__builtin_kvx_shiftbo:
-  case KVX::BI__builtin_kvx_shiftbx:
+  case KVX::BI__builtin_kvx_shiftbt:
   case KVX::BI__builtin_kvx_shiftbv:
-  case KVX::BI__builtin_kvx_shifthq:
-  case KVX::BI__builtin_kvx_shiftho:
-  case KVX::BI__builtin_kvx_shifthx:
-  case KVX::BI__builtin_kvx_shiftwp:
-  case KVX::BI__builtin_kvx_shiftwq:
-  case KVX::BI__builtin_kvx_shiftwo:
+  case KVX::BI__builtin_kvx_shiftbx:
+  case KVX::BI__builtin_kvx_shiftdo:
   case KVX::BI__builtin_kvx_shiftdp:
   case KVX::BI__builtin_kvx_shiftdq:
-  case KVX::BI__builtin_kvx_shiftfhq:
-  case KVX::BI__builtin_kvx_shiftfho:
-  case KVX::BI__builtin_kvx_shiftfhx:
-  case KVX::BI__builtin_kvx_shiftfwp:
-  case KVX::BI__builtin_kvx_shiftfwq:
-  case KVX::BI__builtin_kvx_shiftfwo:
+  case KVX::BI__builtin_kvx_shiftfdo:
   case KVX::BI__builtin_kvx_shiftfdp:
   case KVX::BI__builtin_kvx_shiftfdq:
+  case KVX::BI__builtin_kvx_shiftfho:
+  case KVX::BI__builtin_kvx_shiftfhq:
+  case KVX::BI__builtin_kvx_shiftfhv:
+  case KVX::BI__builtin_kvx_shiftfhx:
+  case KVX::BI__builtin_kvx_shiftfwo:
+  case KVX::BI__builtin_kvx_shiftfwp:
+  case KVX::BI__builtin_kvx_shiftfwq:
+  case KVX::BI__builtin_kvx_shiftfwx:
+  case KVX::BI__builtin_kvx_shiftho:
+  case KVX::BI__builtin_kvx_shifthq:
+  case KVX::BI__builtin_kvx_shifthv:
+  case KVX::BI__builtin_kvx_shifthx:
+  case KVX::BI__builtin_kvx_shiftwo:
+  case KVX::BI__builtin_kvx_shiftwp:
+  case KVX::BI__builtin_kvx_shiftwq:
+  case KVX::BI__builtin_kvx_shiftwx:
     return KVX_emitShiftBuiltin(*this, E, BuiltinID);
 
     /// TCA - GPR to TCA copy

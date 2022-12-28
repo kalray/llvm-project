@@ -3,6 +3,7 @@ typedef signed char v4i8 __attribute__((__vector_size__(4 * sizeof(char))));
 typedef signed char v8i8 __attribute__((__vector_size__(8 * sizeof(char))));
 typedef signed char v16i8 __attribute__((__vector_size__(16 * sizeof(char))));
 typedef signed char v32i8 __attribute__((__vector_size__(32 * sizeof(char))));
+typedef signed char v64i8 __attribute__((__vector_size__(64 * sizeof(char))));
 
 typedef unsigned char v2u8 __attribute__((__vector_size__(2 * sizeof(char))));
 typedef unsigned char v4u8 __attribute__((__vector_size__(4 * sizeof(char))));
@@ -46,10 +47,13 @@ typedef half __attribute__((__vector_size__(2 * sizeof(half)))) v2f16;
 typedef half __attribute__((__vector_size__(4 * sizeof(half)))) v4f16;
 typedef half __attribute__((__vector_size__(8 * sizeof(half)))) v8f16;
 typedef half __attribute__((__vector_size__(16 * sizeof(half)))) v16f16;
+typedef half __attribute__((__vector_size__(32 * sizeof(half)))) v32f16;
 
 typedef float __attribute__((__vector_size__(2 * sizeof(float)))) v2f32;
 typedef float __attribute__((__vector_size__(4 * sizeof(float)))) v4f32;
 typedef float __attribute__((__vector_size__(8 * sizeof(float)))) v8f32;
+typedef float __attribute__((__vector_size__(16 * sizeof(float)))) v16f32;
 
 typedef double __attribute__((__vector_size__(2 * sizeof(double)))) v2f64;
 typedef double __attribute__((__vector_size__(4 * sizeof(double)))) v4f64;
+typedef double __attribute__((__vector_size__(8 * sizeof(double)))) v8f64;
