@@ -464,6 +464,12 @@ def : Pat<(f32 (faddcont (f32 (fmulcont
 defm : FDOT2WRR_FFDMAW<FDOT2Wrr>, Requires<[IsV1]>;
 defm : FDOT2WRR_FFDMAW<FFDMAW>, Requires<[IsV2]>;
 
+def fms: PatFrags<(ops node:$lhs, node:$rhs, node:$acc),
+                  [(fsubcont $acc, (fmulcont $lhs, $rhs)),
+                   (faddcont $acc, (fneg (fmulcont $lhs, $rhs))),
+                   (fma (fneg $lhs), $rhs, $acc),
+                   (fma $lhs, (fneg $rhs), $acc)]>;
+
 let Predicates = [IsV2] in  {
 // FFDMAWP
 def : Pat<(v2f32 (faddcont
@@ -501,6 +507,20 @@ def : Pat<(v2f32 (faddcont
             v2f32:$acc)),
          (FFDMDAWP SingleReg:$acc, PairedReg:$lhs, PairedReg:$rhs, rounding_, silent_)>;
 
+def : Pat<(v2f32 (fma v2f32:$lhsLo, v2f32:$rhsLo, (fma v2f32:$lhsHi, v2f32:$rhsHi, v2f32:$acc))),
+          (v2f32 (FFDMDAWP SingleReg:$acc,
+            (v4f32 (REG_SEQUENCE PairedReg, SingleReg:$lhsHi, sub_d1, SingleReg:$lhsLo, sub_d0)),
+            (v4f32 (REG_SEQUENCE PairedReg, SingleReg:$rhsHi, sub_d1, SingleReg:$rhsLo, sub_d1)),
+            rounding_, silent_))>;
+
+// FFDMDAWQ
+def PatFFDMDAWQ : Pat<(v4f32 (fma v4f32:$lhsLo, v4f32:$rhsLo, (fma v4f32:$lhsHi, v4f32:$rhsHi, v4f32:$acc))),
+          (v4f32 (FFDMDAWQ
+            (v4f64 (REG_SEQUENCE QuadReg, PairedReg:$lhsHi, sub_q1, PairedReg:$lhsLo, sub_q0)),
+            (v4f64 (REG_SEQUENCE QuadReg, PairedReg:$rhsHi, sub_q1, PairedReg:$rhsLo, sub_q0)),
+            rounding_, silent_,
+            PairedReg:$acc))>;
+
 // FFDMDSWP
 def : Pat<(v2f32 (fsubcont
           (fsubcont
@@ -522,6 +542,20 @@ def : Pat<(v2f32 (fsubcont
               (extract_subvector (fmulcont v4f32:$lhs, v4f32:$rhs), (i64 0)),
               (extract_subvector (fmulcont v4f32:$lhs, v4f32:$rhs), (i64 2))))),
          (FFDMDSWP SingleReg:$acc, PairedReg:$lhs, PairedReg:$rhs, rounding_, silent_)>;
+
+def : Pat<(v2f32 (fms v2f32:$lhsLo, v2f32:$rhsLo, (fms v2f32:$lhsHi, v2f32:$rhsHi, v2f32:$acc))),
+          (v2f32 (FFDMDSWP SingleReg:$acc,
+            (v4f32 (REG_SEQUENCE PairedReg, SingleReg:$lhsHi, sub_d1, SingleReg:$lhsLo, sub_d0)),
+            (v4f32 (REG_SEQUENCE PairedReg, SingleReg:$rhsHi, sub_d1, SingleReg:$rhsLo, sub_d1)),
+            rounding_, silent_))>;
+
+// FFDMDSWQ
+def PatFFDMDSWQ : Pat<(v4f32 (fms v4f32:$lhsLo, v4f32:$rhsLo, (fms v4f32:$lhsHi, v4f32:$rhsHi, v4f32:$acc))),
+          (v4f32 (FFDMDSWQ
+            (v4f64 (REG_SEQUENCE QuadReg, PairedReg:$lhsHi, sub_q1, PairedReg:$lhsLo, sub_q0)),
+            (v4f64 (REG_SEQUENCE QuadReg, PairedReg:$rhsHi, sub_q1, PairedReg:$rhsLo, sub_q0)),
+            rounding_, silent_,
+            PairedReg:$acc))>;
 
 // FFDMDSW
 def : Pat<(f32 (fsubcont
@@ -618,6 +652,20 @@ def : Pat<(v2f32 (fsubcont
           (extract_subvector (fmulcont v4f32:$lhs, v4f32:$rhs), (i64 2)))),
          (FFDMASWP SingleReg:$acc, PairedReg:$lhs, PairedReg:$rhs, rounding_, silent_)>;
 
+def : Pat<(v2f32 (fms v2f32:$lhsLo, v2f32:$rhsLo, (fma v2f32:$lhsHi, v2f32:$rhsHi, v2f32:$acc))),
+          (v2f32 (FFDMASWP SingleReg:$acc,
+            (v4f32 (REG_SEQUENCE PairedReg, SingleReg:$lhsHi, sub_d1, SingleReg:$lhsLo, sub_d0)),
+            (v4f32 (REG_SEQUENCE PairedReg, SingleReg:$rhsHi, sub_d1, SingleReg:$rhsLo, sub_d1)),
+            rounding_, silent_))>;
+
+// FFDMASWQ
+def PatFFDMASWQ : Pat<(v4f32 (fms v4f32:$lhsLo, v4f32:$rhsLo, (fma v4f32:$lhsHi, v4f32:$rhsHi, v4f32:$acc))),
+          (v4f32 (FFDMASWQ
+            (v4f64 (REG_SEQUENCE QuadReg, PairedReg:$lhsHi, sub_q1, PairedReg:$lhsLo, sub_q0)),
+            (v4f64 (REG_SEQUENCE QuadReg, PairedReg:$rhsHi, sub_q1, PairedReg:$rhsLo, sub_q0)),
+            rounding_, silent_,
+            PairedReg:$acc))>;
+
 // FFDMSAWP
 def : Pat<(v2f32 (faddcont
           v2f32:$acc,
@@ -639,6 +687,20 @@ def : Pat<(v2f32 (fsubcont
             (extract_subvector (fmulcont v4f32:$lhs, v4f32:$rhs), (i64 2))),
           (extract_subvector (fmulcont v4f32:$lhs, v4f32:$rhs), (i64 0)))),
          (FFDMSAWP SingleReg:$acc, PairedReg:$lhs, PairedReg:$rhs, rounding_, silent_)>;
+
+def : Pat<(v2f32 (fma v2f32:$lhsLo, v2f32:$rhsLo, (fms v2f32:$lhsHi, v2f32:$rhsHi, v2f32:$acc))),
+          (v2f32 (FFDMSAWP SingleReg:$acc,
+            (v4f32 (REG_SEQUENCE PairedReg, SingleReg:$lhsHi, sub_d1, SingleReg:$lhsLo, sub_d0)),
+            (v4f32 (REG_SEQUENCE PairedReg, SingleReg:$rhsHi, sub_d1, SingleReg:$rhsLo, sub_d1)),
+            rounding_, silent_))>;
+
+// FFDMSAWQ
+def PatFFDMSAWQ : Pat<(v4f32 (fma v4f32:$lhsLo, v4f32:$rhsLo, (fms v4f32:$lhsHi, v4f32:$rhsHi, v4f32:$acc))),
+          (v4f32 (FFDMSAWQ
+            (v4f64 (REG_SEQUENCE QuadReg, PairedReg:$lhsHi, sub_q1, PairedReg:$lhsLo, sub_q0)),
+            (v4f64 (REG_SEQUENCE QuadReg, PairedReg:$rhsHi, sub_q1, PairedReg:$rhsLo, sub_q0)),
+            rounding_, silent_,
+            PairedReg:$acc))>;
 
 // FFDMSW
 def : Pat<(f32 (fsubcont
