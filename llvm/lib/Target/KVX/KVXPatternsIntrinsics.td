@@ -216,9 +216,6 @@ def: Pat<(f32 (int_kvx_ffdmda v2f32:$v0, v2f32:$v1, f32:$v2, i32:$rounding, i32:
             , SingleReg:$v2, RoundingMod:$rounding, SilentMod:$silent
           )>, Requires<[IsV1]>;
 
-def: Pat<(f32(int_kvx_ffdmda v2f32:$v0, v2f32:$v1, f32:$v2, i32:$rounding, i32:$silent)),
-          (FFDMDAW $v2, $v0, $v1, RoundingMod:$rounding, SilentMod:$silent)>, Requires<[IsV2]>;
-
 def: Pat<(v2f32(int_kvx_ffdmda v4f32:$v0, v4f32:$v1, v2f32:$v2, i32:$rounding, i32:$silent)),
           (FFMAWPrr
             (FFMAWPrr
@@ -229,9 +226,6 @@ def: Pat<(v2f32(int_kvx_ffdmda v4f32:$v0, v4f32:$v1, v2f32:$v2, i32:$rounding, i
             (v2f32 (EXTRACT_SUBREG PairedReg:$v1, sub_d1)),
             RoundingMod:$rounding, SilentMod:$silent
           )>, Requires<[IsV1]>;
-
-def: Pat<(v2f32(int_kvx_ffdmda v4f32:$v0, v4f32:$v1, v2f32:$v2, i32:$rounding, i32:$silent)),
-          (FFDMDAWP $v2, $v0, $v1, RoundingMod:$rounding, SilentMod:$silent)>, Requires<[IsV2]>;
 
 def: Pat<(f32 (int_kvx_ffdms v2f32:$lhs, v2f32:$rhs, RoundingMod:$r, SilentMod:$s)),
          (FFDMSW SingleReg:$lhs, SingleReg:$rhs, RoundingMod:$r, SilentMod:$s)>, Requires<[IsV2]>;
