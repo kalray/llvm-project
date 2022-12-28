@@ -19166,6 +19166,88 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_xswap256:
     return KVX_emit_xswap256(*this, E);
 
+  case KVX::BI__builtin_kvx_ffdmdawq: {
+    KvxModifiers KvxMods = {KVX_ROUNDING, KVX_SILENT};
+    if (Target.getCPUstr() != "kv3-1")
+      return KVX_emit(4, *this, E, Intrinsic::kvx_ffdmda, KvxMods, "", 1, true);
+
+    if (E->getNumArgs() != 4) {
+      CGM.Error(E->getBeginLoc(), "Incorrect number of arguments to builtin");
+      return nullptr;
+    }
+
+    // Parse KVX modifiers if any.
+    SmallVector<Value *, 4> Mods;
+    KvxModifiers Modifiers = {KVX_ROUNDING, KVX_SILENT};
+    if (!ParseModifiers(Mods, Modifiers, E, CGM, IntTy))
+      return nullptr;
+
+    /** This code computes the following:
+     * ASubvec[0] = vector(a[0], a[1], a[4], a[5]);
+     * ASubvec[1] = vector(a[2], a[3], a[6], a[7]);
+     * BSubvec[0] = vector(b[0], b[1], b[4], b[5]);
+     * BSubvec[1] = vector(b[2], b[3], b[6], b[7]);
+     * CSubvec[0] = vector(c[0], c[1]);
+     * CSubvec[1] = vector(c[2], c[3]);
+     * V0 = ffdmdawp(ASubvec[0], BSubvec[0], CSubvec[0]);
+     * V1 = ffdmdawp(ASubvec[1], BSubvec[1], CSubvec[1]);
+     * concatenate(V0, V1) // with a shufflevector
+     */
+    Value *A = EmitScalarExpr(E->getArg(0));
+    Value *B = EmitScalarExpr(E->getArg(1));
+    Value *C = EmitScalarExpr(E->getArg(2));
+
+    constexpr int VectorLength = 8;
+    constexpr int CVectorLength = VectorLength >> 1;
+    Value *AElt[VectorLength];
+    Value *BElt[VectorLength];
+    Value *CElt[CVectorLength];
+    for (int i = 0; i < VectorLength; i++) {
+      AElt[i] = Builder.CreateExtractElement(A, i);
+      BElt[i] = Builder.CreateExtractElement(B, i);
+      if (i < CVectorLength)
+        CElt[i] = Builder.CreateExtractElement(C, i);
+    }
+
+    llvm::Type *V4F32 = llvm::FixedVectorType::get(FloatTy, 4);
+    llvm::Type *V2F32 = llvm::FixedVectorType::get(FloatTy, 2);
+    Value *ASubvec[2] = {UndefValue::get(V4F32), UndefValue::get(V4F32)};
+    Value *BSubvec[2] = {UndefValue::get(V4F32), UndefValue::get(V4F32)};
+    Value *CSubvec[2] = {UndefValue::get(V2F32), UndefValue::get(V2F32)};
+
+    constexpr int SubvecLength = VectorLength >> 1;
+    constexpr int CSubvecLength = CVectorLength >> 1;
+    int SubvecIndices[2][SubvecLength] = {{0, 1, 4, 5}, {2, 3, 6, 7}};
+    for (int sv = 0; sv < 2; sv++) {
+      int InsertCount = 0;
+      for (int i : SubvecIndices[sv]) {
+        ASubvec[sv] =
+            Builder.CreateInsertElement(ASubvec[sv], AElt[i], InsertCount);
+        BSubvec[sv] =
+            Builder.CreateInsertElement(BSubvec[sv], BElt[i], InsertCount);
+        if (InsertCount < CSubvecLength)
+          CSubvec[sv] = Builder.CreateInsertElement(
+              CSubvec[sv], CElt[CSubvecLength * sv + InsertCount], InsertCount);
+
+        InsertCount++;
+      }
+    }
+
+    Value *Result[2];
+    Function *Callee = CGM.getIntrinsic(Intrinsic::kvx_ffdmda, V2F32);
+    for (int sv = 0; sv < 2; sv++)
+      Result[sv] = Builder.CreateCall(
+          Callee, {ASubvec[sv], BSubvec[sv], CSubvec[sv], Mods[0], Mods[1]});
+
+    constexpr int ResultVectorLength = CVectorLength;
+    SmallVector<Constant *, ResultVectorLength> MaskVector;
+    for (int i = 0; i < ResultVectorLength; i++)
+      MaskVector.push_back(ConstantInt::get(Int32Ty, i));
+    Value *MaskVec = ConstantVector::get(ArrayRef<Constant *>(MaskVector));
+
+    return Builder.CreateShuffleVector(Result[0], Result[1], MaskVec);
+  }
+
 #define KVX_BUILTIN(ID, TYPES, MODE, NARGS, CPUS, ...)                         \
   case KVX::BI__builtin_kvx_##ID: {                                            \
     const auto IDVal = Intrinsic::kvx_##ID;                                    \

@@ -52,3 +52,109 @@ define <2 x float> @ffdmdawp(<4 x float> %0, <4 x float> %1, <2 x float> %2) {
 
 declare <2 x float> @llvm.kvx.ffdmda.v2f32(<4 x float>, <4 x float>, <2 x float>, i32, i32)
 
+define <4 x float> @ffdmdawq(<8 x float> %0, <8 x float> %1, <4 x float> %2) {
+; V1-LABEL: ffdmdawq:
+; V1:       # %bb.0:
+; V1-NEXT:    copyd $r2 = $r1
+; V1-NEXT:    copyd $r5 = $r2
+; V1-NEXT:    copyd $r6 = $r5
+; V1-NEXT:    copyd $r11 = $r6
+; V1-NEXT:    ;;
+; V1-NEXT:    ffmawp $r8 = $r0, $r4
+; V1-NEXT:    ;;
+; V1-NEXT:    ffmawp $r9 = $r2, $r6
+; V1-NEXT:    ;;
+; V1-NEXT:    ffmawp $r8 = $r5, $r11
+; V1-NEXT:    ;;
+; V1-NEXT:    ffmawp $r9 = $r3, $r7
+; V1-NEXT:    ;;
+; V1-NEXT:    copyd $r0 = $r8
+; V1-NEXT:    ;;
+; V1-NEXT:    copyd $r1 = $r9
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: ffdmdawq:
+; V2:       # %bb.0:
+; V2-NEXT:    copyd $r5 = $r2
+; V2-NEXT:    copyd $r6 = $r5
+; V2-NEXT:    copyd $r10 = $r4
+; V2-NEXT:    copyd $r11 = $r6
+; V2-NEXT:    ;;
+; V2-NEXT:    copyd $r2 = $r1
+; V2-NEXT:    copyd $r4 = $r0
+; V2-NEXT:    ;;
+; V2-NEXT:    ffdmdawp $r8 = $r4r5, $r10r11
+; V2-NEXT:    ;;
+; V2-NEXT:    ffdmdawp $r9 = $r2r3, $r6r7
+; V2-NEXT:    ;;
+; V2-NEXT:    copyd $r0 = $r8
+; V2-NEXT:    ;;
+; V2-NEXT:    copyd $r1 = $r9
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+  %4 = shufflevector <4 x float> %2, <4 x float> undef, <2 x i32> <i32 0, i32 1>
+  %5 = shufflevector <8 x float> %0, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 4, i32 5>
+  %6 = shufflevector <8 x float> %1, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 4, i32 5>
+  %7 = shufflevector <4 x float> %2, <4 x float> undef, <2 x i32> <i32 2, i32 3>
+  %8 = shufflevector <8 x float> %0, <8 x float> undef, <4 x i32> <i32 2, i32 3, i32 6, i32 7>
+  %9 = shufflevector <8 x float> %1, <8 x float> undef, <4 x i32> <i32 2, i32 3, i32 6, i32 7>
+  %10 = tail call <2 x float> @llvm.kvx.ffdmda.v2f32(<4 x float> %5, <4 x float> %6, <2 x float> %4, i32 7, i32 0)
+  %11 = tail call <2 x float> @llvm.kvx.ffdmda.v2f32(<4 x float> %8, <4 x float> %9, <2 x float> %7, i32 7, i32 0)
+  %12 = shufflevector <2 x float> %10, <2 x float> %11, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  ret <4 x float> %12
+}
+
+define <4 x float> @ffdmdawq_rn_s(<8 x float> %0, <8 x float> %1, <4 x float> %2) {
+; V1-LABEL: ffdmdawq_rn_s:
+; V1:       # %bb.0:
+; V1-NEXT:    copyd $r2 = $r1
+; V1-NEXT:    copyd $r5 = $r2
+; V1-NEXT:    copyd $r6 = $r5
+; V1-NEXT:    copyd $r11 = $r6
+; V1-NEXT:    ;;
+; V1-NEXT:    ffmawp.rn.s $r8 = $r0, $r4
+; V1-NEXT:    ;;
+; V1-NEXT:    ffmawp.rn.s $r9 = $r2, $r6
+; V1-NEXT:    ;;
+; V1-NEXT:    ffmawp.rn.s $r8 = $r5, $r11
+; V1-NEXT:    ;;
+; V1-NEXT:    ffmawp.rn.s $r9 = $r3, $r7
+; V1-NEXT:    ;;
+; V1-NEXT:    copyd $r0 = $r8
+; V1-NEXT:    ;;
+; V1-NEXT:    copyd $r1 = $r9
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: ffdmdawq_rn_s:
+; V2:       # %bb.0:
+; V2-NEXT:    copyd $r5 = $r2
+; V2-NEXT:    copyd $r6 = $r5
+; V2-NEXT:    copyd $r10 = $r4
+; V2-NEXT:    copyd $r11 = $r6
+; V2-NEXT:    ;;
+; V2-NEXT:    copyd $r2 = $r1
+; V2-NEXT:    copyd $r4 = $r0
+; V2-NEXT:    ;;
+; V2-NEXT:    ffdmdawp.rn.s $r8 = $r4r5, $r10r11
+; V2-NEXT:    ;;
+; V2-NEXT:    ffdmdawp.rn.s $r9 = $r2r3, $r6r7
+; V2-NEXT:    ;;
+; V2-NEXT:    copyd $r0 = $r8
+; V2-NEXT:    ;;
+; V2-NEXT:    copyd $r1 = $r9
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
+  %4 = shufflevector <4 x float> %2, <4 x float> undef, <2 x i32> <i32 0, i32 1>
+  %5 = shufflevector <8 x float> %0, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 4, i32 5>
+  %6 = shufflevector <8 x float> %1, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 4, i32 5>
+  %7 = shufflevector <4 x float> %2, <4 x float> undef, <2 x i32> <i32 2, i32 3>
+  %8 = shufflevector <8 x float> %0, <8 x float> undef, <4 x i32> <i32 2, i32 3, i32 6, i32 7>
+  %9 = shufflevector <8 x float> %1, <8 x float> undef, <4 x i32> <i32 2, i32 3, i32 6, i32 7>
+  %10 = tail call <2 x float> @llvm.kvx.ffdmda.v2f32(<4 x float> %5, <4 x float> %6, <2 x float> %4, i32 0, i32 1)
+  %11 = tail call <2 x float> @llvm.kvx.ffdmda.v2f32(<4 x float> %8, <4 x float> %9, <2 x float> %7, i32 0, i32 1)
+  %12 = shufflevector <2 x float> %10, <2 x float> %11, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  ret <4 x float> %12
+}
+
