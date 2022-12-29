@@ -268,6 +268,8 @@ private:
   MVT getVectorIdxTy(const DataLayout &DL) const override { return MVT::i64; }
 
   bool isVectorShiftByScalarCheap(Type *Ty) const override { return true; }
+
+  bool hasPairedLoad(EVT VT, Align &Alg) const override;
 };
 
 } // namespace llvm

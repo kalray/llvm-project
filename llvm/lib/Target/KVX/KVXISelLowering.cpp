@@ -4430,6 +4430,16 @@ KVXTargetLowering::BuildSDIVPow2(SDNode *N, const APInt &Divisor,
   return SRSVal;
 }
 
+bool KVXTargetLowering::hasPairedLoad(EVT VT, Align &Alg) const {
+  if (!VT.isSimple())
+    return false;
+
+  Alg = Align(1);
+  unsigned NumBits = VT.getSizeInBits();
+  bool Ret = NumBits >= 64 && NumBits <= 128 && isPowerOf2_32(NumBits);
+  return Ret;
+}
+
 // -----------------------------------------------------------------------------
 //        Namespace KVX_LOW
 // -----------------------------------------------------------------------------
