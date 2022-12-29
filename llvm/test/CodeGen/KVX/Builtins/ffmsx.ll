@@ -86,10 +86,6 @@ declare <4 x float> @llvm.kvx.ffmsx.v4f32(<4 x half>, <4 x half>, <4 x float>, i
 define <2 x float> @ffmsxhwp(<2 x half> %0, <2 x half> %1, <2 x float> %2) {
 ; ALL-LABEL: ffmsxhwp:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    zxwd $r0 = $r0
-; ALL-NEXT:    zxwd $r1 = $r1
-; ALL-NEXT:    make $r3 = 0
-; ALL-NEXT:    ;;
 ; ALL-NEXT:    ffmshwq.s $r2r3 = $r0, $r1
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    copyd $r0 = $r2

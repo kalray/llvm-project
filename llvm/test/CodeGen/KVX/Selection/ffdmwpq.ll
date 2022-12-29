@@ -47,9 +47,10 @@ define <2 x float> @ffdmdawp(<2 x float> %0, <2 x float> %1, <2 x float> %2, <2 
 ;
 ; V2-LABEL: ffdmdawp:
 ; V2:       # %bb.0:
-; V2-NEXT:    copyd $r2 = $r4
+; V2-NEXT:    copyd $r3 = $r1
+; V2-NEXT:    copyd $r5 = $r3
 ; V2-NEXT:    ;;
-; V2-NEXT:    ffdmdawp $r0 = $r2r3, $r0r1
+; V2-NEXT:    ffdmdawp $r0 = $r4r5, $r2r3
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %6 = fmul fast <2 x float> %4, %2
@@ -92,17 +93,18 @@ define <4 x float> @ffdmdswq(<4 x float> %0, <4 x float> %1, <4 x float> %2, <4 
 define <2 x float> @ffdmdswp(<2 x float> %0, <2 x float> %1, <2 x float> %2, <2 x float> %3, <2 x float> %4) {
 ; V1-LABEL: ffdmdswp:
 ; V1:       # %bb.0:
-; V1-NEXT:    ffmswp $r0 = $r3, $r1
+; V1-NEXT:    ffmswp $r0 = $r1, $r3
 ; V1-NEXT:    ;;
-; V1-NEXT:    ffmswp $r0 = $r4, $r2
+; V1-NEXT:    ffmswp $r0 = $r2, $r4
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
 ; V2-LABEL: ffdmdswp:
 ; V2:       # %bb.0:
-; V2-NEXT:    copyd $r2 = $r4
+; V2-NEXT:    copyd $r3 = $r1
+; V2-NEXT:    copyd $r5 = $r3
 ; V2-NEXT:    ;;
-; V2-NEXT:    ffdmdswp $r0 = $r2r3, $r0r1
+; V2-NEXT:    ffdmdswp $r0 = $r4r5, $r2r3
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %6 = fmul fast <2 x float> %3, %1
@@ -143,7 +145,7 @@ define <4 x float> @ffdmaswq(<4 x float> %0, <4 x float> %1, <4 x float> %2, <4 
 define <2 x float> @ffdmaswp(<2 x float> %0, <2 x float> %1, <2 x float> %2, <2 x float> %3, <2 x float> %4) {
 ; V1-LABEL: ffdmaswp:
 ; V1:       # %bb.0:
-; V1-NEXT:    ffmswp $r0 = $r1, $r3
+; V1-NEXT:    ffmswp $r0 = $r3, $r1
 ; V1-NEXT:    ;;
 ; V1-NEXT:    ffmawp $r0 = $r4, $r2
 ; V1-NEXT:    ret
@@ -196,13 +198,15 @@ define <2 x float> @ffdmsawp(<2 x float> %0, <2 x float> %1, <2 x float> %2, <2 
 ; V1:       # %bb.0:
 ; V1-NEXT:    ffmawp $r0 = $r3, $r1
 ; V1-NEXT:    ;;
-; V1-NEXT:    ffmswp $r0 = $r2, $r4
+; V1-NEXT:    ffmswp $r0 = $r4, $r2
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
 ; V2-LABEL: ffdmsawp:
 ; V2:       # %bb.0:
-; V2-NEXT:    ffdmaswp $r0 = $r2r3, $r0r1
+; V2-NEXT:    copyd $r5 = $r1
+; V2-NEXT:    ;;
+; V2-NEXT:    ffdmaswp $r0 = $r2r3, $r4r5
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %6 = fmul fast <2 x float> %3, %1

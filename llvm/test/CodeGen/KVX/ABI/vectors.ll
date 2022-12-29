@@ -59,7 +59,6 @@ entry:
   ret void
 }
 
-; FIXME: This should be a single bundle!
 define <3 x float> @float_3_ret() {
 ; CHECK-LABEL: float_3_ret:
 ; CHECK:       # %bb.0: # %entry
