@@ -192,3 +192,7 @@ def accesses_wa : Accesses<3>;
 class Channel<int N> : PatLeaf<(i32 N)>;
 def channel_f : Channel<0>;
 def channel_b : Channel<1>;
+
+class Any<int N> : PatLeaf<(i32 N)>;
+def any_nez : Silent<0>;
+def any_eqz : Silent<1>;

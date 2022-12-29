@@ -17929,6 +17929,7 @@ static const KvxModifier KVX_SIMDCOND({{"", 0},
 static const KvxModifier KVX_SPECULATE = KVX_SILENT;
 static const KvxModifier KVX_VARIANT({{"", 0}, {"s", 1}, {"u", 2}, {"us", 3}});
 // Synthetic modifiers for choosing different instructions
+static const KvxModifier KvxAny({{"", 0}, {"nez", 0}, {"eqz", 1}});
 static const KvxModifier KvxAverage({{"", 0}, {"r", 1}, {"u", 2}, {"ru", 3}});
 static const KvxModifier
     KvxBitCount({{"", 0}, {"lz", 1}, {"ls", 2}, {"tz", 3}});
@@ -18018,12 +18019,17 @@ static bool ParseModifiers(SmallVectorImpl<Value *> &Mods,
   return true;
 }
 
-static Value *KVX_emit(unsigned NumArgs, CodeGenFunction &CGF,
-                       const CallExpr *E, const unsigned IntrinsicID,
-                       KvxModifiers &Modifiers, const StringRef &CPUSstr,
-                       const unsigned NumParts = 1, bool Overloaded = false) {
+enum KVX_OVERLOAD_VALUE : int {
+  KVX_OVERLOAD_RES = INT_MAX,
+  KVX_NO_OVERLOAD = INT_MIN
+};
+
+static Value *KVX_emit(int NumArgs, CodeGenFunction &CGF, const CallExpr *E,
+                       const unsigned IntrinsicID, KvxModifiers &Modifiers,
+                       const StringRef &CPUSstr, int NumParts = 1,
+                       int Overloaded = KVX_NO_OVERLOAD) {
   // Double check the number of arguments, including the modifier string.
-  if (E->getNumArgs() != NumArgs) {
+  if ((int)(E->getNumArgs()) != NumArgs) {
     CGF.CGM.Error(E->getBeginLoc(), "Incorrect number of arguments to builtin");
     return nullptr;
   }
@@ -18037,7 +18043,7 @@ static Value *KVX_emit(unsigned NumArgs, CodeGenFunction &CGF,
     if (Rty->getNumElements() % NumParts)
       report_fatal_error("Internal clang error: Result vector type not a "
                          "multiple of number of parts");
-    for (unsigned I = 0; I < NumArgs; I++) {
+    for (int I = 0; I < NumArgs; I++) {
       llvm::FixedVectorType *Aty =
           dyn_cast<FixedVectorType>(CGF.ConvertType(E->getArg(I)->getType()));
       if (!Aty)
@@ -18073,26 +18079,36 @@ static Value *KVX_emit(unsigned NumArgs, CodeGenFunction &CGF,
   }
 
   Function *Callee;
-  if (!Overloaded)
+  int Pts = std::abs(NumParts);
+  if (Overloaded == KVX_NO_OVERLOAD)
     Callee = CGM.getIntrinsic(IntrinsicID);
   else {
-    llvm::Type *RT = CGF.ConvertType(E->getType());
-    if (NumParts > 1) {
+    auto Ty = (Overloaded == KVX_OVERLOAD_RES)
+                  ? E->getType()
+                  : E->getArg(Overloaded)->getType();
+
+    llvm::Type *RT = CGF.ConvertType(Ty);
+    // Split vector types used in overload if the
+    // call is split into distinct calls or if it
+    // is the type of a splitted argument.
+    if ((Pts > 1) && ((Pts == NumParts) || // Split into multiple calls
+                      (Overloaded != KVX_OVERLOAD_RES))) { // Split an argument
+
       auto *VRT = cast<llvm::FixedVectorType>(RT);
-      auto Vparts = VRT->getNumElements();
-      if (Vparts == NumParts)
+      int Vparts = VRT->getNumElements();
+      if (Vparts == Pts)
         RT = VRT->getElementType();
       else
         RT = FixedVectorType::get(VRT->getElementType(),
-                                  VRT->getNumElements() / NumParts);
+                                  VRT->getNumElements() / Pts);
     }
     Callee = CGM.getIntrinsic(IntrinsicID, RT);
   }
 
-  if (NumParts < 2) {
+  if (Pts == 1) {
     SmallVector<Value *, 4> Args;
 
-    for (unsigned I = 0; I < NumArgs; ++I)
+    for (int I = 0; I < NumArgs; ++I)
       Args.push_back(CGF.EmitScalarExpr(E->getArg(I)));
 
     if (!Mods.empty())
@@ -18101,11 +18117,11 @@ static Value *KVX_emit(unsigned NumArgs, CodeGenFunction &CGF,
     return CGF.Builder.CreateCall(Callee, Args);
   }
 
-  // Split all vector elements by their number of parts.
-  SmallVector<Value *, 8> Results;
-  for (unsigned Part = 0; Part < NumParts; ++Part) {
+  // Hacky hack: Negative NumParts means that vector arguments should be split
+  // in -NumParts slices, and joined congruently to a single intrinsic call.
+  if (Pts != NumParts) {
     SmallVector<Value *, 4> Args = {};
-    for (unsigned I = 0; I < NumArgs; ++I) {
+    for (int I = 0; I < NumArgs; ++I) {
       const auto *Arg = E->getArg(I);
       auto *Aty = CGF.ConvertType(Arg->getType());
 
@@ -18115,7 +18131,43 @@ static Value *KVX_emit(unsigned NumArgs, CodeGenFunction &CGF,
       }
       auto NumElts = cast<FixedVectorType>(Aty)->getNumElements();
 
-      auto NumEltsPerPart = NumElts / NumParts;
+      auto NumEltsPerPart = NumElts / Pts;
+      for (int Part = 0; Part < Pts; ++Part) {
+        if (NumEltsPerPart == 1) {
+          Args.push_back(
+              CGF.Builder.CreateExtractElement(CGF.EmitScalarExpr(Arg), Part));
+          continue;
+        }
+        SmallVector<int, 8> Inds;
+        for (int Pos = Part * NumEltsPerPart, C = NumEltsPerPart; C > 0;
+             --C, ++Pos)
+          Inds.push_back(Pos);
+
+        Args.push_back(CGF.Builder.CreateShuffleVector(
+            CGF.EmitScalarExpr(Arg), CGF.EmitScalarExpr(Arg), Inds));
+      }
+    }
+    if (!Mods.empty())
+      Args.append(Mods);
+
+    return CGF.Builder.CreateCall(Callee, Args);
+  }
+
+  // Split all vector elements by their number of parts.
+  SmallVector<Value *, 8> Results;
+  for (int Part = 0; Part < Pts; ++Part) {
+    SmallVector<Value *, 4> Args = {};
+    for (int I = 0; I < NumArgs; ++I) {
+      const auto *Arg = E->getArg(I);
+      auto *Aty = CGF.ConvertType(Arg->getType());
+
+      if (!Aty->isVectorTy()) {
+        Args.push_back(CGF.EmitScalarExpr(Arg));
+        continue;
+      }
+      auto NumElts = cast<FixedVectorType>(Aty)->getNumElements();
+
+      auto NumEltsPerPart = NumElts / Pts;
       if (NumEltsPerPart == 1) {
         Args.push_back(
             CGF.Builder.CreateExtractElement(CGF.EmitScalarExpr(Arg), Part));
@@ -19185,7 +19237,8 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_ffdmdawq: {
     KvxModifiers KvxMods = {KVX_ROUNDING, KVX_SILENT};
     if (Target.getCPUstr() != "kv3-1")
-      return KVX_emit(4, *this, E, Intrinsic::kvx_ffdmda, KvxMods, "", 1, true);
+      return KVX_emit(4, *this, E, Intrinsic::kvx_ffdmda, KvxMods, "", 1,
+                      KVX_OVERLOAD_RES);
 
     if (E->getNumArgs() != 4) {
       CGM.Error(E->getBeginLoc(), "Incorrect number of arguments to builtin");

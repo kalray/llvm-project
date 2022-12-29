@@ -1192,3 +1192,46 @@ def: Pat<(f16(int_kvx_ffms f16:$f1, f16:$f2, f16:$f3, i32:$rounding, silent_s)),
 
 def: Pat<(f16(int_kvx_ffms f16:$f1, f16:$f2, f16:$f3, i32:$rounding, silent_)),
   (f16 (FFMSHQrr (ZXHD SingleReg:$f1), (ZXHD SingleReg:$f2), (ZXHD SingleReg:$f3), RoundingMod:$rounding, silent_))>;
+
+foreach vt = [v8i8, v4i16, v2i32] in
+def: Pat<(int_kvx_any vt:$v, any_nez),
+         (COMPDri10 $v, 0, comparison_ne)>;
+
+foreach vt = [v8i8, v4i16, v2i32, i64] in {
+def: Pat<(int_kvx_any2 vt:$v0, vt:$v1, any_nez),
+         (LORDrr $v0, $v1)>;
+
+def: Pat<(int_kvx_any4 vt:$v0, vt:$v1, vt:$v2, vt:$v3, any_nez),
+         (ORWrr (LORDrr $v0, $v1), (LORDrr $v2, $v3))>;
+}
+
+multiclass ANYEQZ<ValueType vt, OutPatFrag LEAF, Instruction I = LORDrr> {
+    def: Pat<(int_kvx_any vt:$v, any_eqz),
+         (COMPDri10 (LEAF $v), (i64 0), comparison_ne)>;
+
+    def: Pat<(int_kvx_any2 vt:$v0, vt:$v1, any_eqz),
+             (I (LEAF $v0), (LEAF $v1))>;
+
+      def: Pat<(int_kvx_any4 vt:$v0, vt:$v1, vt:$v2, vt:$v3, any_eqz),
+               (ORWrr
+                  (I (LEAF $v0), (LEAF $v1)),
+                  (I (LEAF $v2), (LEAF $v3)))>;
+}
+
+class ANY_VECLEAF<Instruction I> :
+  OutPatFrag<(ops node:$v),
+             (i64(I $v, (i64 0), comparison_eq))>;
+
+def ANYi64LEAF :
+  OutPatFrag<(ops node:$v),
+             (i64(COPY $v))>;
+
+def ANYcv1i8LEAF :
+  OutPatFrag<(ops node:$v),
+             (ANDDrr (ADDDri64 $v, 0xfefefefefefefeff), (ANDNDri32s $v, 0x80808080))>;
+
+defm : ANYEQZ<v8i8, ANYcv1i8LEAF>, Requires<[IsV1]>;
+defm : ANYEQZ<v8i8, ANY_VECLEAF<COMPNBO>>, Requires<[IsV2]>;
+defm : ANYEQZ<v2i32, ANY_VECLEAF<COMPNWP>>;
+defm : ANYEQZ<v4i16, ANY_VECLEAF<COMPNHQ>>;
+defm : ANYEQZ<i64, ANYi64LEAF, LNANDDrr>;
