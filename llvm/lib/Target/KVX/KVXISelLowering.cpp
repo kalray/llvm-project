@@ -985,7 +985,7 @@ MVT KVXTargetLowering::getRegisterTypeForCallingConv(LLVMContext &Context,
   }
   const auto SVT = VT.getSimpleVT();
   if (SVT == MVT::i1 || SVT == MVT::i8 || SVT == MVT::i16) {
-    LLVM_DEBUG(dbgs() << "CC: MVT::i1/i8/i16 are passaed as a MVT::i32.\n");
+    LLVM_DEBUG(dbgs() << "CC: MVT::i1/i8/i16 are passed as a MVT::i32.\n");
     return MVT::i32;
   }
   LLVM_DEBUG(dbgs() << "CC type fits in 64bits, use it.\n");
@@ -1023,7 +1023,7 @@ unsigned KVXTargetLowering::getNumRegistersForCallingConv(LLVMContext &Context,
 unsigned KVXTargetLowering::getVectorTypeBreakdownForCallingConv(
     LLVMContext &Context, CallingConv::ID CC, EVT VT, EVT &IntermediateVT,
     unsigned &NumIntermediates, MVT &RegisterVT) const {
-  assert(VT.isVector() && "CC: vector breakdow for a non vector type!\n");
+  assert(VT.isVector() && "CC: vector breakdown for a non vector type!\n");
   if (VT.getVectorNumElements() == 1) {
     LLVM_DEBUG(dbgs() << "KVX CC vector type breakdown: "
                       << " a vector of 1 element is just the element.\n");
