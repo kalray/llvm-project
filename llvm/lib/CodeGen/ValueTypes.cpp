@@ -218,6 +218,10 @@ Type *EVT::getTypeForEVT(LLVMContext &Context) const {
     return FixedVectorType::get(Type::getInt1Ty(Context), 512);
   case MVT::v1024i1:
     return FixedVectorType::get(Type::getInt1Ty(Context), 1024);
+  case MVT::v2048i1:
+    return FixedVectorType::get(Type::getInt1Ty(Context), 2048);
+  case MVT::v4096i1:
+    return FixedVectorType::get(Type::getInt1Ty(Context), 4096);
   case MVT::v1i8:
     return FixedVectorType::get(Type::getInt8Ty(Context), 1);
   case MVT::v2i8:
