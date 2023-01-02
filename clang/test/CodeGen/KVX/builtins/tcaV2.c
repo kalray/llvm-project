@@ -695,3 +695,30 @@ long4 xaccess512o(__kvx_x512 *w, long long s) {
 long4 xaccess1024o(__kvx_x1024 *w, long long s) {
   return __builtin_kvx_xaccess1024o(*w, s);
 }
+
+// CHECK-LABEL: @binOps(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <256 x i1> @llvm.kvx.xsplatdo(i64 0)
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <256 x i1> @llvm.kvx.xandno(<256 x i1> [[TMP0]], <256 x i1> [[TMP0]])
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <256 x i1> @llvm.kvx.xando(<256 x i1> [[TMP1]], <256 x i1> [[TMP1]])
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <256 x i1> @llvm.kvx.xnando(<256 x i1> [[TMP2]], <256 x i1> [[TMP2]])
+// CHECK-NEXT:    [[TMP4:%.*]] = tail call <256 x i1> @llvm.kvx.xnoro(<256 x i1> [[TMP3]], <256 x i1> [[TMP3]])
+// CHECK-NEXT:    [[TMP5:%.*]] = tail call <256 x i1> @llvm.kvx.xnxoro(<256 x i1> [[TMP4]], <256 x i1> [[TMP4]])
+// CHECK-NEXT:    [[TMP6:%.*]] = tail call <256 x i1> @llvm.kvx.xorno(<256 x i1> [[TMP5]], <256 x i1> [[TMP5]])
+// CHECK-NEXT:    [[TMP7:%.*]] = tail call <256 x i1> @llvm.kvx.xoro(<256 x i1> [[TMP6]], <256 x i1> [[TMP6]])
+// CHECK-NEXT:    [[TMP8:%.*]] = tail call <256 x i1> @llvm.kvx.xxoro(<256 x i1> [[TMP7]], <256 x i1> [[TMP7]])
+// CHECK-NEXT:    store <256 x i1> [[TMP8]], <256 x i1>* [[P:%.*]], align 32, [[TBAA2]]
+// CHECK-NEXT:    ret void
+//
+void binOps(__kvx_x256 *p) {
+  __kvx_x256 v = __builtin_kvx_xsplatdo(0);
+  v = __builtin_kvx_xandno(v, v);
+  v = __builtin_kvx_xando(v, v);
+  v = __builtin_kvx_xnando(v, v);
+  v = __builtin_kvx_xnoro(v, v);
+  v = __builtin_kvx_xnxoro(v, v);
+  v = __builtin_kvx_xorno(v, v);
+  v = __builtin_kvx_xoro(v, v);
+  v = __builtin_kvx_xxoro(v, v);
+  *p = v;
+}
