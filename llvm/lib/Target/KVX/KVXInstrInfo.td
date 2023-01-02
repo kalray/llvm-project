@@ -2772,6 +2772,38 @@ def XZX48BW : UNARY<"xzx48bw", MatrixReg, VectorReg, TCA_INT,
 
 def XTRUNC48WB : UNARY<"xtrunc48wb", VectorReg, MatrixReg, TCA_INT,
                 [(set v256i1:$o, (int_kvx_xtrunc48wb v1024i1:$i))]>;
+
+defm XANDNO : I </*asm=*/"xandno", /*itin=*/TCA_INT, /*Ops=*/[VectorReg, VectorReg], /*Mods=*/[],
+                 /*MemOps=*/[], /*CC=*/[], /*Out=*/[VectorReg], /*inplace =*/ 0, /*pattern =*/
+                 [(set v256i1:$r, (int_kvx_xandno v256i1:$op0, v256i1:$op1))]>;
+
+defm XANDO : I </*asm=*/"xando", /*itin=*/TCA_INT, /*Ops=*/[VectorReg, VectorReg], /*Mods=*/[],
+                 /*MemOps=*/[], /*CC=*/[], /*Out=*/[VectorReg], /*inplace =*/ 0, /*pattern =*/
+                 [(set v256i1:$r, (int_kvx_xando v256i1:$op0, v256i1:$op1))]>;
+
+defm XNANDO : I </*asm=*/"xnando", /*itin=*/TCA_INT, /*Ops=*/[VectorReg, VectorReg], /*Mods=*/[],
+                 /*MemOps=*/[], /*CC=*/[], /*Out=*/[VectorReg], /*inplace =*/ 0, /*pattern =*/
+                 [(set v256i1:$r, (int_kvx_xnando v256i1:$op0, v256i1:$op1))]>;
+
+defm XNORO : I </*asm=*/"xnoro", /*itin=*/TCA_INT, /*Ops=*/[VectorReg, VectorReg], /*Mods=*/[],
+                 /*MemOps=*/[], /*CC=*/[], /*Out=*/[VectorReg], /*inplace =*/ 0, /*pattern =*/
+                 [(set v256i1:$r, (int_kvx_xnoro v256i1:$op0, v256i1:$op1))]>;
+
+defm XNXORO : I </*asm=*/"xnxoro", /*itin=*/TCA_INT, /*Ops=*/[VectorReg, VectorReg], /*Mods=*/[],
+                 /*MemOps=*/[], /*CC=*/[], /*Out=*/[VectorReg], /*inplace =*/ 0, /*pattern =*/
+                 [(set v256i1:$r, (int_kvx_xnxoro v256i1:$op0, v256i1:$op1))]>;
+
+defm XORNO : I </*asm=*/"xorno", /*itin=*/TCA_INT, /*Ops=*/[VectorReg, VectorReg], /*Mods=*/[],
+                 /*MemOps=*/[], /*CC=*/[], /*Out=*/[VectorReg], /*inplace =*/ 0, /*pattern =*/
+                 [(set v256i1:$r, (int_kvx_xorno v256i1:$op0, v256i1:$op1))]>;
+
+defm XORO : I </*asm=*/"xoro", /*itin=*/TCA_INT, /*Ops=*/[VectorReg, VectorReg], /*Mods=*/[],
+                 /*MemOps=*/[], /*CC=*/[], /*Out=*/[VectorReg], /*inplace =*/ 0, /*pattern =*/
+                 [(set v256i1:$r, (int_kvx_xoro v256i1:$op0, v256i1:$op1))]>;
+
+defm XXORO : I </*asm=*/"xxoro", /*itin=*/TCA_INT, /*Ops=*/[VectorReg, VectorReg], /*Mods=*/[],
+                 /*MemOps=*/[], /*CC=*/[], /*Out=*/[VectorReg], /*inplace =*/ 0, /*pattern =*/
+                 [(set v256i1:$r, (int_kvx_xxoro v256i1:$op0, v256i1:$op1))]>;
 } // Uses = [PCR]
 
 def DFLUSHSW : CACHE_OP<"dflushsw", SingleReg, LSU_STORE,
