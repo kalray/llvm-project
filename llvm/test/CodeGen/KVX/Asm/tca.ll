@@ -131,13 +131,12 @@ entry:
 define void @use_wide_reg(<512 x i1>* nocapture %x, <256 x i1>* nocapture readonly %v) #1 {
 ; CHECK-LABEL: use_wide_reg:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    xlo.u $a6 = 0[$r1]
 ; CHECK-NEXT:    copyd $r4 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xlo.u $a5 = 32[$r4]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xlo.u $a4 = 0[$r4]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xlo.u $a6 = 0[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    xmma484bw $a4a5 = $a4a5, $a6, $a6

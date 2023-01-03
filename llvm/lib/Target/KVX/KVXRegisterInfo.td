@@ -1364,20 +1364,20 @@ def CoproReg3M4 : RegisterClass<"KVX", [v64i1], 64, (decimate (shl CoproReg, 3),
 // AllocationPriority = 12 -> 8 register
 // X8R - Extension 8-Register Buffer
 let Size = 2048, CopyCost = 8, AllocationPriority = 12, Weight = 32 in
-def Buffer8Reg : RegisterClass<"KVX", [v256i8],
+def Buffer8Reg : RegisterClass<"KVX", [v2048i1],
   2048, (add I0, I1, I2, I3, I4, I5, I6, I7)>;
 
 // X16R - Extension 16-Register Buffer
 // AllocationPriority = 13 -> 4 register
 let Size = 4096, CopyCost = 16, AllocationPriority = 13, Weight = 64 in
-def Buffer16Reg : RegisterClass<"KVX", [v128i32],
+def Buffer16Reg : RegisterClass<"KVX", [v4096i1],
   4096, (add J0, J1, J2, J3)>;
 
 // AllocationPriority = 0, should allocate the exact matching register
 let Size = 0, Weight = 1, AllocationPriority = 0 in
 def TcaBuffer : RegisterClass<
       /*string namespace*/ "KVX",
-      /*list<ValueType> regTypes*/[v512i1, v1024i1,  v256i8, v128i32],
+      /*list<ValueType> regTypes*/[v512i1, v1024i1,  v2048i1, v4096i1],
       /*int alignment*/ 256,
       /*dag regList*/ !con(WideReg.MemberList, MatrixReg.MemberList, Buffer8Reg.MemberList, Buffer16Reg.MemberList)
       //, RegAltNameIndex idx = NoRegAltName

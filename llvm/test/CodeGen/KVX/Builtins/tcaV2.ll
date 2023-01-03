@@ -185,9 +185,9 @@ define void @xmadd44bw_test(<256 x i1>* nocapture readonly %0, <512 x i1>* nocap
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xmadd44bw1 $a2a3 = $a4, $a4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 32[$r1] = $a3
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xso 0[$r1] = $a2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 32[$r1] = $a3
 ; CHECK-NEXT:    xcopyx $a2a3 = $a0a1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xmadd44bw0 $a2a3 = $a4, $a4
@@ -281,9 +281,9 @@ define void @xmma4164bw_test(<512 x i1>* nocapture %0) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xmmaus4164bw $a0a1 = $a0a1, $a0a1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 32[$r0] = $a1
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xso 0[$r0] = $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 32[$r0] = $a1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = load <512 x i1>, <512 x i1>* %0
@@ -315,9 +315,9 @@ define void @xmma484bw_test(<512 x i1>* nocapture %0, <256 x i1>* nocapture read
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xmmaus484bw $a0a1 = $a2, $a2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 32[$r0] = $a1
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xso 0[$r0] = $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 32[$r0] = $a1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = load <256 x i1>, <256 x i1>* %1
@@ -444,13 +444,13 @@ define void @xmt44d_test(<1024 x i1>* nocapture %0) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xmt44d $a0a1a2a3 = $a0a1a2a3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 32[$r0] = $a1
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 96[$r0] = $a3
+; CHECK-NEXT:    xso 32[$r0] = $a1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xso 64[$r0] = $a2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 96[$r0] = $a3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = load <1024 x i1>, <1024 x i1>* %0
@@ -867,11 +867,9 @@ define void @xloadStore256(<256 x i1> addrspace(257)* %0) {
 define void @xloadStore512(<512 x i1> addrspace(258)* %0) {
 ; CHECK-LABEL: xloadStore512:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r1 = $r0, 64
+; CHECK-NEXT:    xlo.s $a0 = 64[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xlo.s $a1 = 32[$r1]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xlo.s $a0 = 0[$r1]
+; CHECK-NEXT:    xlo.s $a1 = 96[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xso 32[$r0] = $a1
 ; CHECK-NEXT:    ;;
@@ -887,23 +885,21 @@ define void @xloadStore512(<512 x i1> addrspace(258)* %0) {
 define void @xloadStore1024(<1024 x i1> addrspace(256)* %0) {
 ; CHECK-LABEL: xloadStore1024:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r1 = $r0, 128
+; CHECK-NEXT:    xlo.u $a0 = 192[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xlo.u $a3 = 96[$r1]
+; CHECK-NEXT:    xlo.u $a1 = 224[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xlo.u $a2 = 64[$r1]
+; CHECK-NEXT:    xlo.u $a2 = 128[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xlo.u $a1 = 32[$r1]
+; CHECK-NEXT:    xlo.u $a3 = 160[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xlo.u $a0 = 0[$r1]
+; CHECK-NEXT:    xso 32[$r0] = $a3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 32[$r0] = $a1
+; CHECK-NEXT:    xso 0[$r0] = $a2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 0[$r0] = $a0
+; CHECK-NEXT:    xso 96[$r0] = $a1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 96[$r0] = $a3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 64[$r0] = $a2
+; CHECK-NEXT:    xso 64[$r0] = $a0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = getelementptr inbounds <1024 x i1>, <1024 x i1> addrspace(256)* %0, i64 1
@@ -1291,9 +1287,9 @@ define void @xloadbuff512(<512 x i1>* %0, i64 %1) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xlo.b $a0..a1, $r1 = 192[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 32[$r0] = $a1
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xso 0[$r0] = $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 32[$r0] = $a1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = getelementptr inbounds <512 x i1>, <512 x i1>* %0, i64 3
@@ -1319,13 +1315,13 @@ define void @xloadbuff1024(<1024 x i1>* %0, i64 %1) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xlo.b $a0..a3, $r1 = 384[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 32[$r0] = $a1
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 96[$r0] = $a3
+; CHECK-NEXT:    xso 32[$r0] = $a1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xso 64[$r0] = $a2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 96[$r0] = $a3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = getelementptr inbounds <1024 x i1>, <1024 x i1>* %0, i64 3

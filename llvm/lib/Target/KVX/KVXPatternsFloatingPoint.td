@@ -22,15 +22,6 @@ defm : StorePatNode<truncstoref32, f64, 2, SWp, SWri10,  SWri37,  SWri64, SWrr,
                     (FNARROWDW SingleReg:$val, rounding_, silent_)>;
 defm : StorePat<store, v2f16, SingleReg, 2, SWp, SWri10,  SWri37,  SWri64, SWrr>;
 
-defm : StorePat<store, f64, SingleReg, 3, SDp, SDri10,  SDri37,  SDri64, SDrr>;
-defm : StorePat<store, v2f32, SingleReg, 3, SDp, SDri10,  SDri37,  SDri64, SDrr>;
-defm : StorePat<store, v4f16, SingleReg, 3, SDp, SDri10,  SDri37,  SDri64, SDrr>;
-
-defm : StorePat<store, v4f32, PairedReg, 4, SQp, SQri10,  SQri37,  SQri64, SQrr>;
-defm : StorePat<store, v2f64, PairedReg, 4, SQp, SQri10,  SQri37,  SQri64, SQrr>;
-
-defm : StorePat<store, v4f64, QuadReg, 5, SOp, SOri10,  SOri37,  SOri64, SOrr>;
-
 def fmulcont : PatFrag<(ops node:$op0, node:$op1), (fmul node:$op0, node:$op1), [{
     return N->getFlags().hasAllowContract();
   }]>;

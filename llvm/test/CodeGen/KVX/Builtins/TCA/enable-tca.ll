@@ -7,17 +7,16 @@ target triple = "kvx-kalray-cos"
 define void @foo(i8* nocapture %0, float* nocapture %1) {
 ; NORMAL-LABEL: foo:
 ; NORMAL:       # %bb.0:
+; NORMAL-NEXT:    lwz $r2 = 0[$r1]
+; NORMAL-NEXT:    ;;
 ; NORMAL-NEXT:    xlo.u $a3 = 96[$r0]
 ; NORMAL-NEXT:    ;;
 ; NORMAL-NEXT:    xlo.u $a2 = 64[$r0]
 ; NORMAL-NEXT:    ;;
 ; NORMAL-NEXT:    xlo.u $a1 = 32[$r0]
+; NORMAL-NEXT:    faddw $r2 = $r2, 0x42280000
 ; NORMAL-NEXT:    ;;
 ; NORMAL-NEXT:    xlo.u $a0 = 0[$r0]
-; NORMAL-NEXT:    ;;
-; NORMAL-NEXT:    lwz $r2 = 0[$r1]
-; NORMAL-NEXT:    ;;
-; NORMAL-NEXT:    faddw $r2 = $r2, 0x42280000
 ; NORMAL-NEXT:    ;;
 ; NORMAL-NEXT:    sw 0[$r1] = $r2
 ; NORMAL-NEXT:    make $r1 = 0x10000000000000
@@ -33,13 +32,13 @@ define void @foo(i8* nocapture %0, float* nocapture %1) {
 ; NORMAL-NEXT:    wfxm $pcr, $r1
 ; NORMAL-NEXT:    ;;
 ; NORMAL-NEXT:    #NO_APP
-; NORMAL-NEXT:    xso 96[$r0] = $a3
-; NORMAL-NEXT:    ;;
-; NORMAL-NEXT:    xso 64[$r0] = $a2
-; NORMAL-NEXT:    ;;
 ; NORMAL-NEXT:    xso 32[$r0] = $a1
 ; NORMAL-NEXT:    ;;
 ; NORMAL-NEXT:    xso 0[$r0] = $a0
+; NORMAL-NEXT:    ;;
+; NORMAL-NEXT:    xso 96[$r0] = $a3
+; NORMAL-NEXT:    ;;
+; NORMAL-NEXT:    xso 64[$r0] = $a2
 ; NORMAL-NEXT:    ret
 ; NORMAL-NEXT:    ;;
 ;
@@ -48,14 +47,14 @@ define void @foo(i8* nocapture %0, float* nocapture %1) {
 ; VLIW-NEXT:    lwz $r2 = 0[$r1]
 ; VLIW-NEXT:    make $r3 = 0x10000000000000
 ; VLIW-NEXT:    ;;
-; VLIW-NEXT:    xlo.u $a3 = 96[$r0]
-; VLIW-NEXT:    ;;
-; VLIW-NEXT:    xlo.u $a2 = 64[$r0]
+; VLIW-NEXT:    xlo.u $a0 = 0[$r0]
 ; VLIW-NEXT:    ;;
 ; VLIW-NEXT:    xlo.u $a1 = 32[$r0]
+; VLIW-NEXT:    ;;
+; VLIW-NEXT:    xlo.u $a2 = 64[$r0]
 ; VLIW-NEXT:    faddw $r2 = $r2, 0x42280000
 ; VLIW-NEXT:    ;;
-; VLIW-NEXT:    xlo.u $a0 = 0[$r0]
+; VLIW-NEXT:    xlo.u $a3 = 96[$r0]
 ; VLIW-NEXT:    ;;
 ; VLIW-NEXT:    sw 0[$r1] = $r2
 ; VLIW-NEXT:    make $r1 = 0x100000
@@ -70,11 +69,11 @@ define void @foo(i8* nocapture %0, float* nocapture %1) {
 ; VLIW-NEXT:    wfxm $pcr, $r1
 ; VLIW-NEXT:    ;;
 ; VLIW-NEXT:    #NO_APP
-; VLIW-NEXT:    xso 96[$r0] = $a3
-; VLIW-NEXT:    ;;
 ; VLIW-NEXT:    xso 0[$r0] = $a0
 ; VLIW-NEXT:    ;;
 ; VLIW-NEXT:    xso 64[$r0] = $a2
+; VLIW-NEXT:    ;;
+; VLIW-NEXT:    xso 96[$r0] = $a3
 ; VLIW-NEXT:    ;;
 ; VLIW-NEXT:    xso 32[$r0] = $a1
 ; VLIW-NEXT:    ret

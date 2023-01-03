@@ -27,21 +27,20 @@ define void @zeroinit256(<256 x i1> *%p) {
 define void @zeroinit512(<512 x i1> *%p) {
 ; CV1-LABEL: zeroinit512:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    xcopyo $a1 = $a48
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 32[$r0] = $a1
-; CV1-NEXT:    ;;
 ; CV1-NEXT:    xcopyo $a0 = $a48
 ; CV1-NEXT:    ;;
+; CV1-NEXT:    xcopyo $a1 = $a48
+; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 0[$r0] = $a0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 32[$r0] = $a1
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;;
 ;
 ; CV2-LABEL: zeroinit512:
 ; CV2:       # %bb.0:
+; CV2-NEXT:    xandno $a0 = $a0, $a0
 ; CV2-NEXT:    xsplatdo $a1 = 0
-; CV2-NEXT:    ;;
-; CV2-NEXT:    xsplatdo $a0 = 0
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    xso 32[$r0] = $a1
 ; CV2-NEXT:    ;;
@@ -55,21 +54,15 @@ define void @zeroinit512(<512 x i1> *%p) {
 define void @zeroinit1024(<1024 x i1> *%p) {
 ; CV1-LABEL: zeroinit1024:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    xcopyo $a3 = $a48
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 96[$r0] = $a3
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xcopyo $a2 = $a48
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 64[$r0] = $a2
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xcopyo $a1 = $a48
+; CV1-NEXT:    xmt44d $a0a1a2a3 = $a60a61a62a63
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 32[$r0] = $a1
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xcopyo $a0 = $a48
-; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 0[$r0] = $a0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 96[$r0] = $a3
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 64[$r0] = $a2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;;
 ;
@@ -79,15 +72,159 @@ define void @zeroinit1024(<1024 x i1> *%p) {
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    xsplatov $a0a1a2a3 = $a0
 ; CV2-NEXT:    ;;
+; CV2-NEXT:    xso 32[$r0] = $a1
+; CV2-NEXT:    ;;
+; CV2-NEXT:    xso 0[$r0] = $a0
+; CV2-NEXT:    ;;
 ; CV2-NEXT:    xso 96[$r0] = $a3
+; CV2-NEXT:    ;;
+; CV2-NEXT:    xso 64[$r0] = $a2
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
+  store <1024 x i1> zeroinitializer, <1024 x i1>* %p
+  ret void
+}
+
+define void @zeroinit2048(<2048 x i1> *%p) {
+; CV1-LABEL: zeroinit2048:
+; CV1:       # %bb.0:
+; CV1-NEXT:    xmt44d $a4a5a6a7 = $a60a61a62a63
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xmt44d $a0a1a2a3 = $a56a57a58a59
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 224[$r0] = $a7
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 96[$r0] = $a3
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 64[$r0] = $a2
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 32[$r0] = $a1
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 0[$r0] = $a0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 192[$r0] = $a6
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 160[$r0] = $a5
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 128[$r0] = $a4
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: zeroinit2048:
+; CV2:       # %bb.0:
+; CV2-NEXT:    xsplatdo $a0 = 0
+; CV2-NEXT:    ;;
+; CV2-NEXT:    xsplatov $a0a1a2a3 = $a0
+; CV2-NEXT:    ;;
+; CV2-NEXT:    xso 96[$r0] = $a3
+; CV2-NEXT:    xcopyv $a4a5a6a7 = $a0a1a2a3
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    xso 64[$r0] = $a2
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    xso 32[$r0] = $a1
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    xso 0[$r0] = $a0
+; CV2-NEXT:    ;;
+; CV2-NEXT:    xso 224[$r0] = $a7
+; CV2-NEXT:    ;;
+; CV2-NEXT:    xso 192[$r0] = $a6
+; CV2-NEXT:    ;;
+; CV2-NEXT:    xso 160[$r0] = $a5
+; CV2-NEXT:    ;;
+; CV2-NEXT:    xso 128[$r0] = $a4
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
-  store <1024 x i1> zeroinitializer, <1024 x i1>* %p
+  store <2048 x i1> zeroinitializer, <2048 x i1>* %p
+  ret void
+}
+
+define void @zeroinit4096(<4096 x i1> *%p) {
+; CV1-LABEL: zeroinit4096:
+; CV1:       # %bb.0:
+; CV1-NEXT:    xmt44d $a12a13a14a15 = $a48a49a50a51
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xmt44d $a8a9a10a11 = $a52a53a54a55
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xmt44d $a4a5a6a7 = $a56a57a58a59
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xmt44d $a0a1a2a3 = $a60a61a62a63
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 416[$r0] = $a13
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 384[$r0] = $a12
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 160[$r0] = $a5
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 128[$r0] = $a4
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 224[$r0] = $a7
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 192[$r0] = $a6
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 32[$r0] = $a1
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 0[$r0] = $a0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 96[$r0] = $a3
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 64[$r0] = $a2
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 480[$r0] = $a15
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 448[$r0] = $a14
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 288[$r0] = $a9
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 256[$r0] = $a8
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 352[$r0] = $a11
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 320[$r0] = $a10
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: zeroinit4096:
+; CV2:       # %bb.0:
+; CV2-NEXT:    xsplatdo $a0 = 0
+; CV2-NEXT:    ;;
+; CV2-NEXT:    xsplatov $a0a1a2a3 = $a0
+; CV2-NEXT:    ;;
+; CV2-NEXT:    xso 32[$r0] = $a1
+; CV2-NEXT:    xcopyv $a12a13a14a15 = $a0a1a2a3
+; CV2-NEXT:    ;;
+; CV2-NEXT:    xso 0[$r0] = $a0
+; CV2-NEXT:    xcopyv $a4a5a6a7 = $a0a1a2a3
+; CV2-NEXT:    ;;
+; CV2-NEXT:    xso 96[$r0] = $a3
+; CV2-NEXT:    xcopyv $a8a9a10a11 = $a0a1a2a3
+; CV2-NEXT:    ;;
+; CV2-NEXT:    xso 64[$r0] = $a2
+; CV2-NEXT:    ;;
+; CV2-NEXT:    xso 416[$r0] = $a13
+; CV2-NEXT:    ;;
+; CV2-NEXT:    xso 160[$r0] = $a5
+; CV2-NEXT:    ;;
+; CV2-NEXT:    xso 128[$r0] = $a4
+; CV2-NEXT:    ;;
+; CV2-NEXT:    xso 224[$r0] = $a7
+; CV2-NEXT:    ;;
+; CV2-NEXT:    xso 192[$r0] = $a6
+; CV2-NEXT:    ;;
+; CV2-NEXT:    xso 384[$r0] = $a12
+; CV2-NEXT:    ;;
+; CV2-NEXT:    xso 480[$r0] = $a15
+; CV2-NEXT:    ;;
+; CV2-NEXT:    xso 448[$r0] = $a14
+; CV2-NEXT:    ;;
+; CV2-NEXT:    xso 288[$r0] = $a9
+; CV2-NEXT:    ;;
+; CV2-NEXT:    xso 256[$r0] = $a8
+; CV2-NEXT:    ;;
+; CV2-NEXT:    xso 352[$r0] = $a11
+; CV2-NEXT:    ;;
+; CV2-NEXT:    xso 320[$r0] = $a10
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
+  store <4096 x i1> zeroinitializer, <4096 x i1>* %p
   ret void
 }

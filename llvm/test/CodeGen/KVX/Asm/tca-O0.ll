@@ -224,18 +224,17 @@ entry:
 define void @use_wide_reg(<512 x i1>* %w, <256 x i1>* %v) {
 ; CHECK-LABEL: use_wide_reg:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    xlo.u $a6 = 0[$r1]
 ; CHECK-NEXT:    copyd $r4 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r4
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 16[$r12] = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xlo.u $a5 = 32[$r4]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xlo.u $a4 = 0[$r4]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xlo.u $a6 = 0[$r1]
+; CHECK-NEXT:    sd 24[$r12] = $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 16[$r12] = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    xmma484bw $a4a5 = $a4a5, $a6, $a6
@@ -269,8 +268,6 @@ define void @use_matrix_reg(<1024 x i1>* %x) {
 ; CHECK-NEXT:    copyd $r4 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 24[$r12] = $r4
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xlo.u $a7 = 96[$r4]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xlo.u $a6 = 64[$r4]
@@ -278,6 +275,8 @@ define void @use_matrix_reg(<1024 x i1>* %x) {
 ; CHECK-NEXT:    xlo.u $a5 = 32[$r4]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xlo.u $a4 = 0[$r4]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 24[$r12] = $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    xmt44d $a4a5a6a7 = $a4a5a6a7

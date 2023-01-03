@@ -5,6 +5,244 @@
 // supported on these types. This test case checks that invalid uses of TCA
 // types are correctly prevented.
 
+// TCA 4096
+// typedef
+typedef __kvx_x4096 tca4096_t;
+void test4096Typedef(tca4096_t *inp, int *outp) {
+  tca4096_t *Matout = (tca4096_t *)outp;
+  *Matout = *inp;
+}
+
+// function argument
+void test4096Arg1(__kvx_x4096 Mat, int *ptr) { // expected-error {{invalid use of KVX TCA type}}
+  __kvx_x4096 *Matp = (__kvx_x4096 *)ptr;
+  *Matp = Mat;
+}
+
+void test4096Arg2(const __kvx_x4096 Mat, int *ptr) { // expected-error {{invalid use of KVX TCA type}}
+  __kvx_x4096 *Matp = (__kvx_x4096 *)ptr;
+  *Matp = Mat;
+}
+
+void test4096Arg3(__kvx_x4096 *Mat, int *ptr) {
+  __kvx_x4096 *Matp = (__kvx_x4096 *)ptr;
+  *Matp = *Mat;
+}
+
+void test4096Arg4(const __kvx_x4096 *const Mat, int *ptr) {
+  __kvx_x4096 *Matp = (__kvx_x4096 *)ptr;
+  *Matp = *Mat;
+}
+
+void test4096Arg5(__kvx_x4096 Mata[], int *ptr) {
+  __kvx_x4096 *Matp = (__kvx_x4096 *)ptr;
+  *Matp = Mata[0];
+}
+
+void test4096Arg6(const tca4096_t Mat, int *ptr) { // expected-error {{invalid use of KVX TCA type}}
+  __kvx_x4096 *Matp = (__kvx_x4096 *)ptr;
+  *Matp = Mat;
+}
+
+void test4096Arg7(const tca4096_t *Mat, int *ptr) {
+  __kvx_x4096 *Matp = (__kvx_x4096 *)ptr;
+  *Matp = *Mat;
+}
+
+// function return
+__kvx_x4096 test4096Ret1(int *ptr) { // expected-error {{invalid use of KVX TCA type}}
+  __kvx_x4096 *Matp = (__kvx_x4096 *)ptr;
+  return *Matp; // expected-error {{invalid use of KVX TCA type}}
+}
+
+const tca4096_t test4096Ret4(int *ptr) { // expected-error {{invalid use of KVX TCA type}}
+  __kvx_x4096 *Matp = (__kvx_x4096 *)ptr;
+  return *Matp; // expected-error {{invalid use of KVX TCA type}}
+}
+
+// global
+__kvx_x4096 globalBuff16;        // expected-error {{invalid use of KVX TCA type}}
+const __kvx_x4096 globalBuff162; // expected-error {{invalid use of KVX TCA type}}
+__kvx_x4096 *globalBuff16p;
+const __kvx_x4096 *const globalBuff16p2;
+tca4096_t globaltca4096_t; // expected-error {{invalid use of KVX TCA type}}
+
+// sizeof / alignof
+int test4096SizeofAlignof(int *ptr) {
+  __kvx_x4096 *Matp = (__kvx_x4096 *)ptr;
+  __kvx_x4096 Mat = *Matp;
+  unsigned sizet = sizeof(__kvx_x4096);
+  unsigned alignt = __alignof__(__kvx_x4096);
+  unsigned sizev = sizeof(Mat);
+  unsigned alignv = __alignof__(Mat);
+  return sizet + alignt + sizev + alignv;
+}
+
+// operators
+int test4096Operators1(__kvx_x4096 *ptr) {
+  __kvx_x4096 Mat1 = *(ptr + 0);
+  __kvx_x4096 Mat2 = *(ptr + 1);
+  __kvx_x4096 Mat3 = *(ptr + 2);
+  if (Mat1) // expected-error {{statement requires expression of scalar type ('__kvx_x4096' invalid)}}
+    *(ptr + 10) = Mat1;
+  if (!Mat2) // expected-error {{invalid argument type '__kvx_x4096' to unary expression}}
+    *(ptr + 11) = Mat3;
+  int c1 = Mat1 && Mat2; // expected-error {{invalid operands to binary expression ('__kvx_x4096' and '__kvx_x4096')}}
+  int c2 = Mat2 == Mat3; // expected-error {{invalid operands to binary expression ('__kvx_x4096' and '__kvx_x4096')}}
+  int c3 = Mat2 < Mat1;  // expected-error {{invalid operands to binary expression ('__kvx_x4096' and '__kvx_x4096')}}
+  return c1 || c2 || c3;
+}
+
+void test4096Operators2(int *ptr) {
+  __kvx_x4096 *Matp = (__kvx_x4096 *)ptr;
+  __kvx_x4096 Mat1 = *(Matp + 0);
+  __kvx_x4096 Mat2 = *(Matp + 1);
+  __kvx_x4096 Mat3 = *(Matp + 2);
+  Mat1 = -Mat1;       // expected-error {{invalid argument type '__kvx_x4096' to unary expression}}
+  Mat2 = Mat1 + Mat3; // expected-error {{invalid operands to binary expression ('__kvx_x4096' and '__kvx_x4096')}}
+  Mat2 = Mat2 * Mat3; // expected-error {{invalid operands to binary expression ('__kvx_x4096' and '__kvx_x4096')}}
+  Mat3 = Mat3 | Mat3; // expected-error {{invalid operands to binary expression ('__kvx_x4096' and '__kvx_x4096')}}
+  Mat3 = Mat3 << 2;   // expected-error {{invalid operands to binary expression ('__kvx_x4096' and 'int')}}
+  *(Matp + 10) = Mat1;
+  *(Matp + 11) = Mat2;
+  *(Matp + 12) = Mat3;
+}
+
+unsigned char test4096Operators3(int *ptr) {
+  __kvx_x4096 *Matp = (__kvx_x4096 *)ptr;
+  __kvx_x4096 Mat1 = *(Matp + 0);
+  __kvx_x4096 Mat2 = *(Matp + 1);
+  __kvx_x4096 Mat3 = *(Matp + 2);
+  Mat1 ? *(Matp + 10) = Mat2 : *(Matp + 11) = Mat3; // expected-error {{used type '__kvx_x4096' where arithmetic or pointer type is required}}
+  Mat2 = Mat3;
+  return Mat2[1]; // expected-error {{subscripted value is not an array, pointer, or vector}}
+}
+
+void test4096Operators4(int v, void *ptr) {
+  __kvx_x4096 *Matp = (__kvx_x4096 *)ptr;
+  __kvx_x4096 Mat1 = (__kvx_x4096)v;    // expected-error {{used type '__kvx_x4096' where arithmetic or pointer type is required}}
+  __kvx_x4096 Mat2 = (__kvx_x4096)Matp; // expected-error {{used type '__kvx_x4096' where arithmetic or pointer type is required}}
+}
+
+// TCA 2048
+// typedef
+typedef __kvx_x2048 tca2048_t;
+void test2048Typedef(tca2048_t *inp, int *outp) {
+  tca2048_t *Matout = (tca2048_t *)outp;
+  *Matout = *inp;
+}
+
+// function argument
+void test2048Arg1(__kvx_x2048 Mat, int *ptr) { // expected-error {{invalid use of KVX TCA type}}
+  __kvx_x2048 *Matp = (__kvx_x2048 *)ptr;
+  *Matp = Mat;
+}
+
+void test2048Arg2(const __kvx_x2048 Mat, int *ptr) { // expected-error {{invalid use of KVX TCA type}}
+  __kvx_x2048 *Matp = (__kvx_x2048 *)ptr;
+  *Matp = Mat;
+}
+
+void test2048Arg3(__kvx_x2048 *Mat, int *ptr) {
+  __kvx_x2048 *Matp = (__kvx_x2048 *)ptr;
+  *Matp = *Mat;
+}
+
+void test2048Arg4(const __kvx_x2048 *const Mat, int *ptr) {
+  __kvx_x2048 *Matp = (__kvx_x2048 *)ptr;
+  *Matp = *Mat;
+}
+
+void test2048Arg5(__kvx_x2048 Mata[], int *ptr) {
+  __kvx_x2048 *Matp = (__kvx_x2048 *)ptr;
+  *Matp = Mata[0];
+}
+
+void test2048Arg6(const tca2048_t Mat, int *ptr) { // expected-error {{invalid use of KVX TCA type}}
+  __kvx_x2048 *Matp = (__kvx_x2048 *)ptr;
+  *Matp = Mat;
+}
+
+void test2048Arg7(const tca2048_t *Mat, int *ptr) {
+  __kvx_x2048 *Matp = (__kvx_x2048 *)ptr;
+  *Matp = *Mat;
+}
+
+// function return
+__kvx_x2048 test2048Ret1(int *ptr) { // expected-error {{invalid use of KVX TCA type}}
+  __kvx_x2048 *Matp = (__kvx_x2048 *)ptr;
+  return *Matp; // expected-error {{invalid use of KVX TCA type}}
+}
+
+const tca2048_t test2048Ret4(int *ptr) { // expected-error {{invalid use of KVX TCA type}}
+  __kvx_x2048 *Matp = (__kvx_x2048 *)ptr;
+  return *Matp; // expected-error {{invalid use of KVX TCA type}}
+}
+
+// global
+__kvx_x2048 globalBuff8;        // expected-error {{invalid use of KVX TCA type}}
+const __kvx_x2048 globalBuff82; // expected-error {{invalid use of KVX TCA type}}
+__kvx_x2048 *globalBuff8p;
+const __kvx_x2048 *const globalBuff8p2;
+tca2048_t globaltca2048_t; // expected-error {{invalid use of KVX TCA type}}
+
+// sizeof / alignof
+int test2048SizeofAlignof(int *ptr) {
+  __kvx_x2048 *Matp = (__kvx_x2048 *)ptr;
+  __kvx_x2048 Mat = *Matp;
+  unsigned sizet = sizeof(__kvx_x2048);
+  unsigned alignt = __alignof__(__kvx_x2048);
+  unsigned sizev = sizeof(Mat);
+  unsigned alignv = __alignof__(Mat);
+  return sizet + alignt + sizev + alignv;
+}
+
+// operators
+int test2048Operators1(__kvx_x2048 *ptr) {
+  __kvx_x2048 Mat1 = *(ptr + 0);
+  __kvx_x2048 Mat2 = *(ptr + 1);
+  __kvx_x2048 Mat3 = *(ptr + 2);
+  if (Mat1) // expected-error {{statement requires expression of scalar type ('__kvx_x2048' invalid)}}
+    *(ptr + 10) = Mat1;
+  if (!Mat2) // expected-error {{invalid argument type '__kvx_x2048' to unary expression}}
+    *(ptr + 11) = Mat3;
+  int c1 = Mat1 && Mat2; // expected-error {{invalid operands to binary expression ('__kvx_x2048' and '__kvx_x2048')}}
+  int c2 = Mat2 == Mat3; // expected-error {{invalid operands to binary expression ('__kvx_x2048' and '__kvx_x2048')}}
+  int c3 = Mat2 < Mat1;  // expected-error {{invalid operands to binary expression ('__kvx_x2048' and '__kvx_x2048')}}
+  return c1 || c2 || c3;
+}
+
+void test2048Operators2(int *ptr) {
+  __kvx_x2048 *Matp = (__kvx_x2048 *)ptr;
+  __kvx_x2048 Mat1 = *(Matp + 0);
+  __kvx_x2048 Mat2 = *(Matp + 1);
+  __kvx_x2048 Mat3 = *(Matp + 2);
+  Mat1 = -Mat1;       // expected-error {{invalid argument type '__kvx_x2048' to unary expression}}
+  Mat2 = Mat1 + Mat3; // expected-error {{invalid operands to binary expression ('__kvx_x2048' and '__kvx_x2048')}}
+  Mat2 = Mat2 * Mat3; // expected-error {{invalid operands to binary expression ('__kvx_x2048' and '__kvx_x2048')}}
+  Mat3 = Mat3 | Mat3; // expected-error {{invalid operands to binary expression ('__kvx_x2048' and '__kvx_x2048')}}
+  Mat3 = Mat3 << 2;   // expected-error {{invalid operands to binary expression ('__kvx_x2048' and 'int')}}
+  *(Matp + 10) = Mat1;
+  *(Matp + 11) = Mat2;
+  *(Matp + 12) = Mat3;
+}
+
+unsigned char test2048Operators3(int *ptr) {
+  __kvx_x2048 *Matp = (__kvx_x2048 *)ptr;
+  __kvx_x2048 Mat1 = *(Matp + 0);
+  __kvx_x2048 Mat2 = *(Matp + 1);
+  __kvx_x2048 Mat3 = *(Matp + 2);
+  Mat1 ? *(Matp + 10) = Mat2 : *(Matp + 11) = Mat3; // expected-error {{used type '__kvx_x2048' where arithmetic or pointer type is required}}
+  Mat2 = Mat3;
+  return Mat2[1]; // expected-error {{subscripted value is not an array, pointer, or vector}}
+}
+
+void test2048Operators4(int v, void *ptr) {
+  __kvx_x2048 *Matp = (__kvx_x2048 *)ptr;
+  __kvx_x2048 Mat1 = (__kvx_x2048)v;    // expected-error {{used type '__kvx_x2048' where arithmetic or pointer type is required}}
+  __kvx_x2048 Mat2 = (__kvx_x2048)Matp; // expected-error {{used type '__kvx_x2048' where arithmetic or pointer type is required}}
+}
+
 // TCA 1024
 // typedef
 typedef __kvx_x1024 tca1024_t;

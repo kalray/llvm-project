@@ -17,13 +17,13 @@ define void @test_lvc(<1024 x i1>* nocapture readonly %0, i8* %1, <1024 x i1>* n
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xlo.u.q1 $a0a1a2a3 = 0[$r1]
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 96[$r2] = $a3
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 64[$r2] = $a2
-; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 32[$r2] = $a1
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 0[$r2] = $a0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 96[$r2] = $a3
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 64[$r2] = $a2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;;
   %5 = load <1024 x i1>, <1024 x i1>* %0, align 32
