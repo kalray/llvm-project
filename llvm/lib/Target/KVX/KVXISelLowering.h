@@ -270,6 +270,10 @@ private:
   bool isVectorShiftByScalarCheap(Type *Ty) const override { return true; }
 
   bool hasPairedLoad(EVT VT, Align &Alg) const override;
+
+  bool mergeStoresAfterLegalization(EVT MemVT) const override {
+    return MemVT.getScalarType() != MVT::i1;
+  }
 };
 
 } // namespace llvm

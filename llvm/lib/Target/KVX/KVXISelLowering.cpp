@@ -544,8 +544,6 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::ROTL, MVT::v2i32, Legal);
   setOperationAction(ISD::ROTR, MVT::v2i32, Legal);
 
-  setOperationAction(ISD::STORE, MVT::i128, Custom);
-
   for (auto VT : {MVT::i8, MVT::i32, MVT::i64, MVT::v2i8, MVT::v2i16,
                   MVT::v2i32, MVT::v4i8, MVT::v4i16, MVT::v8i8})
     setOperationAction(ISD::BITREVERSE, VT, Legal);
@@ -906,8 +904,8 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     setLibcallName(RTLIB::UNWIND_RESUME, "_Unwind_SjLj_Resume");
 
   for (auto I : {ISD::FABS, ISD::FADD, ISD::FCOPYSIGN, ISD::FMA, ISD::FMUL,
-                 ISD::FSUB, ISD::FNEG, ISD::INTRINSIC_WO_CHAIN, ISD::MUL,
-                 ISD::SRA, ISD::STORE, ISD::ZERO_EXTEND})
+                 ISD::FSUB, ISD::FNEG, ISD::INTRINSIC_WO_CHAIN, ISD::LOAD,
+                 ISD::MUL, ISD::SRA, ISD::STORE, ISD::ZERO_EXTEND})
     setTargetDAGCombine(I);
 }
 
@@ -1511,6 +1509,7 @@ SDValue KVXTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
   case ISD::BlockAddress:
     return lowerBlockAddress(Op, DAG);
   case ISD::BUILD_VECTOR:
+  case ISD::SPLAT_VECTOR:
     return lowerBUILD_VECTOR(Op, DAG);
   case ISD::INSERT_VECTOR_ELT:
     return lowerINSERT_VECTOR_ELT(Op, DAG);
@@ -1572,8 +1571,6 @@ SDValue KVXTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
   }
   case ISD::DYNAMIC_STACKALLOC:
     return lowerStackCheckAlloca(Op, DAG);
-  case ISD::STORE:
-    return lowerSTORE(Op, DAG);
   case ISD::SMUL_LOHI:
   case ISD::UMUL_LOHI:
     return lowerMulExtend(Op.getOpcode(), Op, DAG);
@@ -1701,60 +1698,6 @@ SDValue KVXTargetLowering::lowerMulExtend(const unsigned Opcode, SDValue Op,
   DAG.ReplaceAllUsesOfValueWith(Op.getValue(0), Lo);
   DAG.ReplaceAllUsesOfValueWith(Op.getValue(1), Hi);
   return SDValue();
-}
-
-static SDValue lowerXSTORE(SDValue Op, SelectionDAG &DAG) {
-  SDValue STValue = Op->getOperand(1);
-  auto VT = STValue.getSimpleValueType();
-  SDValue Chain = Op.getOperand(0);
-  int End = KVX::sub_v0 + (VT == MVT::v512i1 ? 1 : 3);
-  auto Base = Op->getOperand(2).getValue(0);
-  auto SDOffset = Op->getOperand(3);
-  auto Offset = 0;
-  SDLoc OffsetDL(SDOffset);
-  if (!SDOffset->isUndef()) {
-    if (auto *IntOffset = dyn_cast<ConstantSDNode>(SDOffset))
-      Offset = IntOffset->getSExtValue();
-    else
-      Base = DAG.getNode(ISD::ADD, OffsetDL, Base.getValueType());
-  }
-  SDLoc DataDL(STValue);
-  SDLoc StoreDL(Op);
-  for (int Sub = KVX::sub_v0; Sub <= End; Sub++, Offset += 32) {
-    SDValue SubIdx = DAG.getTargetConstant(Sub, DataDL, MVT::i32);
-    SDValue NewOffset = DAG.getConstant(Offset, OffsetDL, MVT::i64);
-    SDValue SubValue(DAG.getMachineNode(TargetOpcode::EXTRACT_SUBREG, DataDL,
-                                        MVT::v256i1, {STValue, SubIdx}),
-                     0);
-    SDValue Ptr =
-        DAG.getNode(ISD::ADD, OffsetDL, Base.getValueType(), {Base, NewOffset});
-    Chain = DAG.getStore(Chain, StoreDL, SubValue, Ptr, MachinePointerInfo());
-  }
-  return Chain;
-}
-
-static SDValue lowerSTOREI128(SDValue Op, SelectionDAG &DAG) {
-  SDLoc StoreDL(Op);
-  SDValue Chain = Op->getOperand(0);
-  SDValue STValue = Op->getOperand(1);
-  SDValue Ptr = Op->getOperand(2);
-  SDValue STValueBitcast = DAG.getBitcast(MVT::v2i64, STValue);
-  return DAG.getStore(Chain, StoreDL, STValueBitcast, Ptr,
-                      MachinePointerInfo());
-}
-
-SDValue KVXTargetLowering::lowerSTORE(SDValue Op, SelectionDAG &DAG) const {
-  SDValue STValue = Op->getOperand(1);
-  auto VT = STValue.getSimpleValueType();
-  switch (VT.SimpleTy) {
-  case MVT::v512i1:
-  case MVT::v1024i1:
-    return lowerXSTORE(Op, DAG);
-  case MVT::i128:
-    return lowerSTOREI128(Op, DAG);
-  default:
-    return SDValue();
-  }
 }
 
 SDValue KVXTargetLowering::lowerStackCheckAlloca(SDValue Op,
@@ -2249,6 +2192,10 @@ KVXTargetLowering::getRegForInlineAsmConstraint(const TargetRegisterInfo *TRI,
       return std::make_pair(0U, &KVX::WideRegRegClass);
     case MVT::v1024i1:
       return std::make_pair(0U, &KVX::MatrixRegRegClass);
+    case MVT::v2048i1:
+      return std::make_pair(0U, &KVX::Buffer8RegRegClass);
+    case MVT::v4096i1:
+      return std::make_pair(0U, &KVX::Buffer16RegRegClass);
     default:
       return TargetLowering::getRegForInlineAsmConstraint(TRI, Constraint, VT);
     }
@@ -2283,6 +2230,10 @@ KVXTargetLowering::getRegForInlineAsmConstraint(const TargetRegisterInfo *TRI,
     return std::make_pair(RegNo, &KVX::WideRegRegClass);
   if (KVX::MatrixRegRegClass.contains(RegNo))
     return std::make_pair(RegNo, &KVX::MatrixRegRegClass);
+  if (KVX::Buffer8RegRegClass.contains(RegNo))
+    return std::make_pair(RegNo, &KVX::Buffer8RegRegClass);
+  if (KVX::Buffer16RegRegClass.contains(RegNo))
+    return std::make_pair(RegNo, &KVX::Buffer16RegRegClass);
 
   return TargetLowering::getRegForInlineAsmConstraint(TRI, Constraint, VT);
 }
@@ -2358,6 +2309,8 @@ SDValue KVXTargetLowering::lowerBUILD_VECTOR(SDValue Op,
   case MVT::v256i1:
   case MVT::v512i1:
   case MVT::v1024i1:
+  case MVT::v2048i1:
+  case MVT::v4096i1:
     return lowerTCAZeroInit(Op, DAG);
   }
 }
@@ -3469,31 +3422,151 @@ static SDValue combineMUL(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
   return Dag.getNode(ISD::BITCAST, SDLoc(N), MVT::i128, Vec);
 }
 
+static SDValue splitLoad(LoadSDNode *LD, SelectionDAG &Dag, SDLoc DL) {
+  SDValue BasePtr = LD->getBasePtr();
+  EVT MemVT = LD->getMemoryVT();
+
+  const MachinePointerInfo &SrcValue = LD->getMemOperand()->getPointerInfo();
+
+  EVT LoVT, HiVT;
+  EVT LoMemVT, HiMemVT;
+  auto VT = LD->getValueType(0);
+
+  std::tie(LoVT, HiVT) = Dag.GetSplitDestVTs(VT);
+  std::tie(LoMemVT, HiMemVT) = Dag.GetSplitDestVTs(MemVT);
+
+  unsigned Size = LoMemVT.getStoreSize();
+  unsigned BaseAlign = LD->getAlignment();
+  unsigned HiAlign = MinAlign(BaseAlign, Size);
+
+  SDValue LoLoad = Dag.getExtLoad(ISD::NON_EXTLOAD, DL, LoVT, LD->getChain(),
+                                  BasePtr, SrcValue, LoMemVT, BaseAlign,
+                                  LD->getMemOperand()->getFlags());
+  SDValue HiPtr = Dag.getObjectPtrOffset(DL, BasePtr, TypeSize::Fixed(Size));
+  SDValue HiLoad =
+      Dag.getExtLoad(ISD::NON_EXTLOAD, DL, HiVT, LD->getChain(), HiPtr,
+                     SrcValue.getWithOffset(LoMemVT.getStoreSize()), HiMemVT,
+                     HiAlign, LD->getMemOperand()->getFlags());
+
+  SDValue Join = Dag.getNode(ISD::CONCAT_VECTORS, DL, VT, LoLoad, HiLoad);
+
+  SDValue Ops[] = {Join, Dag.getNode(ISD::TokenFactor, DL, MVT::Other,
+                                     LoLoad.getValue(1), HiLoad.getValue(1))};
+
+  return Dag.getMergeValues(Ops, DL);
+}
+
+static SDValue combineLoad(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
+                           SelectionDAG &Dag) {
+  LoadSDNode *LD = dyn_cast<LoadSDNode>(N);
+  if (!LD)
+    return SDValue();
+
+  auto VT = N->getValueType(0);
+  if (!VT.isVector() || VT.getScalarType() == MVT::i64)
+    return SDValue();
+
+  unsigned Sz = VT.getSizeInBits();
+  if (LD->isAtomic() || LD->getExtensionType() != ISD::NON_EXTLOAD)
+    return SDValue();
+
+  if (VT.getScalarType() == MVT::i1) {
+    if (Sz == 256 || !DCI.isAfterLegalizeDAG())
+      return SDValue();
+    if (Sz > 256)
+      return splitLoad(LD, Dag, SDLoc(N));
+  }
+
+  return SDValue(); // TODO: Do bitcast to non-tca types
+
+  // EVT ToVT = (Sz <= 64)?
+  //   EVT::getIntegerVT(*Dag.getContext(), Sz):
+  //   EVT::getVectorVT(*Dag.getContext(), MVT::i64, ElementCount::getFixed(Sz /
+  //   64));
+
+  // SDLoc DL(N);
+  // const MachinePointerInfo &SrcValue = LD->getMemOperand()->getPointerInfo();
+  // SDValue BasePtr = LD->getBasePtr();
+  // auto V = Dag.getExtLoad(ISD::NON_EXTLOAD, DL, ToVT, LD->getChain(),
+  //                    BasePtr, SrcValue.getWithOffset(VT.getStoreSize()),
+  //                    ToVT, LD->getAlign(), LD->getMemOperand()->getFlags());
+  // auto BC = Dag.getBitcast(VT, V);
+  // SDValue Ops[] = {BC, Dag.getNode(ISD::TokenFactor, DL, MVT::Other,
+  //                                    V.getValue(1))};
+  // return Dag.getMergeValues(Ops, DL);
+}
+
+SDValue SplitVectorStore(StoreSDNode *Store, SelectionDAG &Dag) {
+  SDValue Val = Store->getValue();
+  EVT VT = Val.getValueType();
+
+  EVT MemVT = Store->getMemoryVT();
+  SDValue Chain = Store->getChain();
+  SDValue BasePtr = Store->getBasePtr();
+  SDLoc SL(Store);
+
+  EVT LoVT, HiVT;
+  EVT LoMemVT, HiMemVT;
+  SDValue Lo, Hi;
+
+  std::tie(LoVT, HiVT) = Dag.GetSplitDestVTs(VT);
+  if (LoVT.isVector() && (1 == LoVT.getVectorNumElements())) {
+    LoVT = LoVT.getScalarType();
+    HiVT = LoVT;
+  }
+
+  std::tie(LoMemVT, HiMemVT) = Dag.GetSplitDestVTs(MemVT);
+  if (LoMemVT.isVector() && (1 == LoMemVT.getVectorNumElements())) {
+    LoMemVT = LoMemVT.getScalarType();
+    HiMemVT = LoMemVT;
+  }
+
+  std::tie(Lo, Hi) = Dag.SplitVector(Val, SL, LoVT, HiVT);
+
+  SDValue HiPtr = Dag.getObjectPtrOffset(SL, BasePtr, LoMemVT.getStoreSize());
+
+  const MachinePointerInfo &SrcValue = Store->getMemOperand()->getPointerInfo();
+  unsigned BaseAlign = Store->getAlignment();
+  unsigned Size = LoMemVT.getStoreSize();
+  unsigned HiAlign = MinAlign(BaseAlign, Size);
+
+  SDValue LoStore =
+      Dag.getTruncStore(Chain, SL, Lo, BasePtr, SrcValue, LoMemVT, BaseAlign,
+                        Store->getMemOperand()->getFlags());
+  SDValue HiStore =
+      Dag.getTruncStore(Chain, SL, Hi, HiPtr, SrcValue.getWithOffset(Size),
+                        HiMemVT, HiAlign, Store->getMemOperand()->getFlags());
+
+  return Dag.getNode(ISD::TokenFactor, SL, MVT::Other, LoStore, HiStore);
+}
+
 static SDValue combineStore(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
                             SelectionDAG &Dag) {
   StoreSDNode *ST = dyn_cast<StoreSDNode>(N);
   if (!ST)
     return SDValue();
+  if (ST->isTruncatingStore())
+    return SDValue();
+
   SDValue Value = ST->getValue();
   EVT VT = Value.getValueType();
-  if (!VT.isSimple())
+  if (!VT.isSimple() || !isPowerOf2_32(VT.getSizeInBits()))
     return SDValue();
-  EVT ToVT;
-  switch (VT.getSimpleVT().SimpleTy) {
-  case MVT::v8f32:
-  case MVT::v8i32:
-  case MVT::v16f16:
-  case MVT::v16i16:
-  case MVT::v32i8:
-    ToVT = EVT(MVT::v4i64);
-    break;
-  case MVT::v8i16:
-  case MVT::v16i8:
-    ToVT = EVT(MVT::v2i64);
-    break;
-  default:
-    return SDValue();
+
+  unsigned Sz = VT.getSizeInBits();
+  if (VT.getScalarType() == MVT::i1) {
+    if (Sz <= 256 || !DCI.isAfterLegalizeDAG())
+      return SDValue();
+    return SplitVectorStore(ST, Dag);
   }
+
+  if (Sz < 64)
+    return SDValue();
+
+  EVT ToVT = (Sz == 64) ? MVT::i64
+                        : EVT::getVectorVT(*Dag.getContext(), MVT::i64,
+                                           ElementCount::getFixed(Sz / 64));
+
   SDValue Chain = ST->getChain();
   SDValue Ptr = ST->getBasePtr();
 
@@ -3519,6 +3592,8 @@ SDValue KVXTargetLowering::PerformDAGCombine(SDNode *N,
       return combineSplit(N, DCI, DAG);
     case ISD::INTRINSIC_WO_CHAIN:
     return combineIntrinsic(N, DCI, DAG);
+  case ISD::LOAD:
+    return combineLoad(N, DCI, DAG);
   case ISD::MUL:
     return combineMUL(N, DCI, DAG);
   case ISD::SRA:
@@ -3646,13 +3721,9 @@ bool KVXTargetLowering::isStoreBitCastBeneficial(
   if (!BitcastVT.isSimple())
     return false;
 
-  switch (BitcastVT.getSimpleVT().SimpleTy) {
-  case MVT::v2i64:
-  case MVT::v4i64:
+  if (BitcastVT.getScalarType() == MVT::i64)
     return true;
-  default:
-    return false;
-  }
+  return false;
 }
 
 bool KVXTargetLowering::isOpFree(const SDNode *Node) const {

@@ -651,6 +651,11 @@ ArrayRef<const char *> KVXTargetInfo::getGCCRegNames() const {
       "$a40..a47",
       "$a48..a55",
       "$a56..a63",
+      // Extension 16-Register Buffer
+      "$a0..a15",
+      "$a16..a31",
+      "$a32..a47",
+      "$a48..a63",
       // System Function Registers
       "$pc",
       "$ps",
@@ -1806,22 +1811,18 @@ bool KVXTargetInfo::DecodeTargetTypeFromStr(const char *&Str,
                                             bool &AllowTypeModifiers,
                                             QualType &Type) const {
   switch (*Str++) {
-  case 'x': { // TCA vector type, should be of size 256, 512 or 1024
+  case 'x': { // TCA vector type
     AllowTypeModifiers = true;
     char *End;
     unsigned Size = strtoul(Str, &End, 10);
     assert(End != Str && "Missing tca vector size");
     Str = End;
     switch (Size) {
-    case 256:
-      Type = Context.KVXTCAVectorTy;
-      return false;
-    case 512:
-      Type = Context.KVXTCAWideTy;
-      return false;
-    case 1024:
-      Type = Context.KVXTCAMatrixTy;
-      return false;
+#define KVX_TCA_VECTOR_TYPE(Name, Id, Size)                                    \
+  case Size:                                                                   \
+    Type = Context.Kvx_x##Size##Ty;                                            \
+    return false;
+#include "clang/Basic/KVXTypes.def"
     default:
       llvm::errs() << "TCA vector size: " << Size << '\n';
       llvm_unreachable("Got unknow tca size");

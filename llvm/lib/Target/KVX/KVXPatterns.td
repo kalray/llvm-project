@@ -507,17 +507,6 @@ defm : LoadPat<load, v4i64, 5, LOp, LOri10, LOri37, LOri64, LOrr>;
 defm : LoadPat<load, v256i1, 5, LVp, LVri10, LVri37, LVri64, LVrr>, Requires<[IsV1]>;
 defm : LoadPat<load, v256i1, 5, LVp, XLOri10, XLOri37, XLOri64, XLOrr>, Requires<[IsV2]>;
 
-def : Pat<(v512i1 (load:$LD SingleReg:$base)),
-          (v512i1 (REG_SEQUENCE WideReg,
-                    (LVp (i64 32), SingleReg:$base, (get_mem_mod $LD)),  sub_v1,
-                    (LVp (i64 0), SingleReg:$base, (get_mem_mod $LD)),  sub_v0))>;
-def : Pat<(v1024i1 (load:$LD SingleReg:$base)),
-          (v1024i1 (REG_SEQUENCE MatrixReg,
-                    (LVp (i64 96), SingleReg:$base, (get_mem_mod $LD)), sub_v3,
-                    (LVp (i64 64), SingleReg:$base, (get_mem_mod $LD)), sub_v2,
-                    (LVp (i64 32), SingleReg:$base, (get_mem_mod $LD)), sub_v1,
-                    (LVp (i64 0), SingleReg:$base, (get_mem_mod $LD)),  sub_v0))>;
-
 
 //===----------------------------------------------------------------------===//
 // Store Patterns
@@ -631,13 +620,8 @@ defm : StorePat<store, v2i16, SingleReg, 2, SWp, SWri10,  SWri37,  SWri64, SWrr>
 defm : StorePat<store, v4i8, SingleReg, 2, SWp, SWri10,  SWri37,  SWri64, SWrr>;
 
 defm : StorePat<store, i64, SingleReg, 3, SDp, SDri10,  SDri37,  SDri64, SDrr>;
-defm : StorePat<store, v8i8, SingleReg, 3, SDp, SDri10,  SDri37,  SDri64, SDrr>;
-defm : StorePat<store, v2i32, SingleReg, 3, SDp, SDri10,  SDri37,  SDri64, SDrr>;
-defm : StorePat<store, v4i16, SingleReg, 3 , SDp, SDri10,  SDri37,  SDri64, SDrr>;
 
 defm : StorePat<store, v2i64, PairedReg, 4, SQp, SQri10,  SQri37,  SQri64, SQrr>;
-defm : StorePat<store, v4i32, PairedReg, 4, SQp, SQri10,  SQri37,  SQri64, SQrr>;
-defm : StorePat<store, v8f16, PairedReg, 4, SQp, SQri10,  SQri37,  SQri64, SQrr>;
 
 defm : StorePat<store, v4i64, QuadReg, 5, SOp, SOri10,  SOri37,  SOri64, SOrr>;
 defm : StorePat<store, v256i1,VectorReg,5, SVp, SVri10,  SVri37,  SVri64, SVrr>, Requires<[IsV1]>;
@@ -2224,24 +2208,41 @@ def : Pat<(vt (select i32:$cc, vt:$t, vt:$f)),
 }
 
 let Predicates = [IsV1] in {
-def: Pat<(v256i1 (build_vector)),
+def: Pat<(v256i1 (splat_vector (i32 0))),
          (COPY A48)>;
 
-def: Pat<(v512i1 (build_vector)),
+def: Pat<(v512i1 (splat_vector (i32 0))),
          (v512i1 (REG_SEQUENCE WideReg, A48, sub_v0, A48, sub_v1))>;
 
-def: Pat<(v1024i1 (build_vector)),
-         (v1024i1 (REG_SEQUENCE MatrixReg, A48, sub_v0, A48, sub_v1, A48, sub_v2, A48, sub_v3))>;
+def: Pat<(v1024i1 (splat_vector (i32 0))), (XMT44D X15)>;
+
+def: Pat<(v2048i1 (splat_vector (i32 0))),
+          (v2048i1 (REG_SEQUENCE Buffer8Reg, (XMT44D X14), sub_m0, (XMT44D X15), sub_m1))>;
+
+def: Pat<(v4096i1 (splat_vector (i32 0))),
+          (v4096i1 (REG_SEQUENCE Buffer16Reg, (XMT44D X15), sub_m0, (XMT44D X14), sub_m1, (XMT44D X13), sub_m2, (XMT44D X12), sub_m3))>;
 }
 let Predicates = [IsV2] in {
-def: Pat<(v256i1 (build_vector)),
+def: Pat<(v256i1 (splat_vector (i32 0))),
          (XSPLATDOi16 0)>;
 
-def: Pat<(v512i1 (build_vector)),
-         (v512i1 (REG_SEQUENCE WideReg, (XSPLATDOi16 0), sub_v0, (XSPLATDOi43 0), sub_v1))>;
+def: Pat<(v512i1 (splat_vector (i32 0))),
+         (v512i1 (REG_SEQUENCE WideReg, (XANDNO A0, A0), sub_v0, (XSPLATDOi16 0), sub_v1))>;
 
-def: Pat<(v1024i1 (build_vector)),
+def: Pat<(v1024i1 (splat_vector (i32 0))),
          (v1024i1 (XSPLATOV (v256i1 (XSPLATDOi16 0)), shufflev_))>;
+
+def: Pat<(v2048i1 (splat_vector (i32 0))),
+          (v2048i1 (REG_SEQUENCE Buffer8Reg,
+                    (v1024i1 (XSPLATOV (v256i1 (XSPLATDOi16 0)), shufflev_)), sub_m0,
+                    (v1024i1 (XSPLATOV (v256i1 (XSPLATDOi16 0)), shufflev_)), sub_m1))>;
+
+def: Pat<(v4096i1 (splat_vector (i32 0))),
+          (v4096i1 (REG_SEQUENCE Buffer16Reg,
+                    (v1024i1 (XSPLATOV (v256i1 (XSPLATDOi16 0)), shufflev_)), sub_m0,
+                    (v1024i1 (XSPLATOV (v256i1 (XSPLATDOi16 0)), shufflev_)), sub_m1,
+                    (v1024i1 (XSPLATOV (v256i1 (XSPLATDOi16 0)), shufflev_)), sub_m2,
+                    (v1024i1 (XSPLATOV (v256i1 (XSPLATDOi16 0)), shufflev_)), sub_m3))>;
 }
 // SUBD: Only used for FrameLowering and replaced by the correct ADDD
 // instruction at eliminateFrameIndex(). Do not use it in any pattern!
@@ -2276,3 +2277,57 @@ def KVX_eh_SjLj_LongJmp : KVX_PSEUDO<(outs), (ins SingleReg:$buf),
 def KVX_eh_SjLj_SetJmp  : KVX_PSEUDO<(outs SingleReg:$dst), (ins SingleReg:$buf),
                               [(set i32:$dst, (KVXeh_sjlj_setjmp i64:$buf))]>;
 }
+
+// TCA extracting sub-registers
+foreach i = [0, 1] in
+def : Pat<(v256i1 (extract_subvector (v512i1 WideReg:$v), (i64 !mul(i, 256)))),
+          (v256i1 (EXTRACT_SUBREG $v, !cast<SubRegIndex>("sub_v" # i)))>;
+
+foreach i = 0...3 in
+def : Pat<(v256i1 (extract_subvector (v1024i1 MatrixReg:$v), (i64 !mul(i, 256)))),
+          (v256i1 (EXTRACT_SUBREG $v, !cast<SubRegIndex>("sub_v" # i)))>;
+
+foreach i = 0...7 in
+def : Pat<(v256i1 (extract_subvector (v2048i1 Buffer8Reg:$v), (i64 !mul(i, 256)))),
+          (v256i1 (EXTRACT_SUBREG $v, !cast<SubRegIndex>("sub_v" # i)))>;
+
+foreach i = 0...15 in
+def : Pat<(v256i1 (extract_subvector (v4096i1 Buffer16Reg:$v), (i64 !mul(i, 256)))),
+          (v256i1 (EXTRACT_SUBREG $v, !cast<SubRegIndex>("sub_v" # i)))>;
+
+foreach i = [0, 1] in
+def : Pat<(v512i1 (extract_subvector (v1024i1 MatrixReg:$v), (i64 !mul(i, 512)))),
+          (v512i1 (EXTRACT_SUBREG $v, !cast<SubRegIndex>("sub_w" # i)))>;
+
+foreach i = 0...3 in
+def : Pat<(v512i1 (extract_subvector (v2048i1 Buffer8Reg:$v), (i64 !mul(i, 512)))),
+          (v512i1 (EXTRACT_SUBREG $v, !cast<SubRegIndex>("sub_w" # i)))>;
+
+foreach i = 0...7 in
+def : Pat<(v512i1 (extract_subvector (v4096i1 Buffer16Reg:$v), (i64 !mul(i, 512)))),
+          (v512i1 (EXTRACT_SUBREG $v, !cast<SubRegIndex>("sub_w" # i)))>;
+
+foreach i = [0, 1] in
+def : Pat<(v1024i1 (extract_subvector (v2048i1 Buffer8Reg:$v), (i64 !mul(i, 1024)))),
+          (v1024i1 (EXTRACT_SUBREG $v, !cast<SubRegIndex>("sub_m" # i)))>;
+
+foreach i = 0...3 in
+def : Pat<(v1024i1 (extract_subvector (v4096i1 Buffer16Reg:$v), (i64 !mul(i, 1024)))),
+          (v1024i1 (EXTRACT_SUBREG $v, !cast<SubRegIndex>("sub_m" # i)))>;
+
+foreach i = [0, 1] in
+def : Pat<(v2048i1 (extract_subvector (v4096i1 Buffer16Reg:$v), (i64 !mul(i, 2048)))),
+          (v2048i1 (EXTRACT_SUBREG $v, !cast<SubRegIndex>("sub_2K" # i)))>;
+
+// TCA composing larger types
+def : Pat <(v512i1 (concat_vectors v256i1:$lo, v256i1:$hi)),
+            (v512i1 (REG_SEQUENCE WideReg, $lo, sub_v0, $hi, sub_v1))>;
+
+def : Pat <(v1024i1 (concat_vectors v512i1:$lo, v512i1:$hi)),
+            (v1024i1 (REG_SEQUENCE MatrixReg, $lo, sub_w0, $hi, sub_w1))>;
+
+def : Pat <(v2048i1 (concat_vectors v1024i1:$lo, v1024i1:$hi)),
+            (v2048i1 (REG_SEQUENCE Buffer8Reg, $lo, sub_m0, $hi, sub_m1))>;
+
+def : Pat <(v4096i1 (concat_vectors v2048i1:$lo, v2048i1:$hi)),
+            (v4096i1 (REG_SEQUENCE Buffer16Reg, $lo, sub_2K0, $hi, sub_2K1))>;

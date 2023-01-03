@@ -649,46 +649,40 @@ define <4 x i32> @widenhwq_q(<4 x i16> %0) {
 define void @widenhwx(<16 x i32>* noalias nocapture sret(<16 x i32>) align 32 %0, <16 x i16> %1) {
 ; CV1-LABEL: widenhwx:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    sxlhwp $r4 = $r3
-; CV1-NEXT:    sxlhwp $r6 = $r2
+; CV1-NEXT:    sxlhwp $r4 = $r2
+; CV1-NEXT:    sxmhwp $r5 = $r2
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sxmhwp $r5 = $r3
-; CV1-NEXT:    sxlhwp $r8 = $r1
+; CV1-NEXT:    sxlhwp $r8 = $r0
+; CV1-NEXT:    sxmhwp $r9 = $r0
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sq 48[$r15] = $r4r5
-; CV1-NEXT:    sxlhwp $r2 = $r0
-; CV1-NEXT:    sxmhwp $r7 = $r2
+; CV1-NEXT:    sxlhwp $r6 = $r3
+; CV1-NEXT:    sxlhwp $r10 = $r1
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sq 32[$r15] = $r6r7
-; CV1-NEXT:    sxmhwp $r3 = $r0
-; CV1-NEXT:    sxmhwp $r9 = $r1
+; CV1-NEXT:    sxmhwp $r7 = $r3
+; CV1-NEXT:    sxmhwp $r11 = $r1
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sq 16[$r15] = $r8r9
+; CV1-NEXT:    so 32[$r15] = $r4r5r6r7
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sq 0[$r15] = $r2r3
+; CV1-NEXT:    so 0[$r15] = $r8r9r10r11
 ; CV1-NEXT:    copyd $r0 = $r15
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;;
 ;
 ; CV2-LABEL: widenhwx:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    sxlhwp $r4 = $r3
-; CV2-NEXT:    sxmhwp $r5 = $r3
-; CV2-NEXT:    sxlhwp $r6 = $r2
-; CV2-NEXT:    sxlhwp $r8 = $r1
+; CV2-NEXT:    sxlhwp $r4 = $r2
+; CV2-NEXT:    sxmhwp $r5 = $r2
+; CV2-NEXT:    sxlhwp $r8 = $r0
+; CV2-NEXT:    sxmhwp $r9 = $r0
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    sxlhwp $r2 = $r0
-; CV2-NEXT:    sxmhwp $r3 = $r0
-; CV2-NEXT:    sxmhwp $r7 = $r2
-; CV2-NEXT:    sxmhwp $r9 = $r1
+; CV2-NEXT:    sxlhwp $r6 = $r3
+; CV2-NEXT:    sxmhwp $r7 = $r3
+; CV2-NEXT:    sxlhwp $r10 = $r1
+; CV2-NEXT:    sxmhwp $r11 = $r1
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    sq 48[$r15] = $r4r5
+; CV2-NEXT:    so 32[$r15] = $r4r5r6r7
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    sq 32[$r15] = $r6r7
-; CV2-NEXT:    ;;
-; CV2-NEXT:    sq 16[$r15] = $r8r9
-; CV2-NEXT:    ;;
-; CV2-NEXT:    sq 0[$r15] = $r2r3
+; CV2-NEXT:    so 0[$r15] = $r8r9r10r11
 ; CV2-NEXT:    copyd $r0 = $r15
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
@@ -722,46 +716,40 @@ define void @widenhwx(<16 x i32>* noalias nocapture sret(<16 x i32>) align 32 %0
 define void @widenhwx_z(<16 x i32>* noalias nocapture sret(<16 x i32>) align 32 %0, <16 x i16> %1) {
 ; CV1-LABEL: widenhwx_z:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    sbmm8 $r4 = $r3, 0x80400000201
-; CV1-NEXT:    sbmm8 $r6 = $r2, 0x80400000201
+; CV1-NEXT:    sbmm8 $r4 = $r2, 0x80400000201
+; CV1-NEXT:    sbmm8 $r5 = $r2, 0x804000002010
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sbmm8 $r5 = $r3, 0x804000002010
-; CV1-NEXT:    sbmm8 $r8 = $r1, 0x80400000201
+; CV1-NEXT:    sbmm8 $r8 = $r0, 0x80400000201
+; CV1-NEXT:    sbmm8 $r9 = $r0, 0x804000002010
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sq 48[$r15] = $r4r5
-; CV1-NEXT:    sbmm8 $r2 = $r0, 0x80400000201
-; CV1-NEXT:    sbmm8 $r7 = $r2, 0x804000002010
+; CV1-NEXT:    sbmm8 $r6 = $r3, 0x80400000201
+; CV1-NEXT:    sbmm8 $r10 = $r1, 0x80400000201
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sq 32[$r15] = $r6r7
-; CV1-NEXT:    sbmm8 $r3 = $r0, 0x804000002010
-; CV1-NEXT:    sbmm8 $r9 = $r1, 0x804000002010
+; CV1-NEXT:    sbmm8 $r7 = $r3, 0x804000002010
+; CV1-NEXT:    sbmm8 $r11 = $r1, 0x804000002010
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sq 16[$r15] = $r8r9
+; CV1-NEXT:    so 32[$r15] = $r4r5r6r7
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sq 0[$r15] = $r2r3
+; CV1-NEXT:    so 0[$r15] = $r8r9r10r11
 ; CV1-NEXT:    copyd $r0 = $r15
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;;
 ;
 ; CV2-LABEL: widenhwx_z:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    zxlhwp $r4 = $r3
-; CV2-NEXT:    zxmhwp $r5 = $r3
-; CV2-NEXT:    zxlhwp $r6 = $r2
-; CV2-NEXT:    zxlhwp $r8 = $r1
+; CV2-NEXT:    zxlhwp $r4 = $r2
+; CV2-NEXT:    zxmhwp $r5 = $r2
+; CV2-NEXT:    zxlhwp $r8 = $r0
+; CV2-NEXT:    zxmhwp $r9 = $r0
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    zxlhwp $r2 = $r0
-; CV2-NEXT:    zxmhwp $r3 = $r0
-; CV2-NEXT:    zxmhwp $r7 = $r2
-; CV2-NEXT:    zxmhwp $r9 = $r1
+; CV2-NEXT:    zxlhwp $r6 = $r3
+; CV2-NEXT:    zxmhwp $r7 = $r3
+; CV2-NEXT:    zxlhwp $r10 = $r1
+; CV2-NEXT:    zxmhwp $r11 = $r1
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    sq 48[$r15] = $r4r5
+; CV2-NEXT:    so 32[$r15] = $r4r5r6r7
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    sq 32[$r15] = $r6r7
-; CV2-NEXT:    ;;
-; CV2-NEXT:    sq 16[$r15] = $r8r9
-; CV2-NEXT:    ;;
-; CV2-NEXT:    sq 0[$r15] = $r2r3
+; CV2-NEXT:    so 0[$r15] = $r8r9r10r11
 ; CV2-NEXT:    copyd $r0 = $r15
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
@@ -798,23 +786,21 @@ define void @widenhwx_q(<16 x i32>* noalias nocapture sret(<16 x i32>) align 32 
 ; CV1-NEXT:    make $r4 = 0x804000002010000
 ; CV1-NEXT:    make $r5 = 0x8040000020100000
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sbmm8 $r6 = $r3, $r4
 ; CV1-NEXT:    sbmm8 $r8 = $r2, $r4
-; CV1-NEXT:    ;;
-; CV1-NEXT:    sbmm8 $r7 = $r3, $r5
 ; CV1-NEXT:    sbmm8 $r9 = $r2, $r5
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sq 48[$r15] = $r6r7
-; CV1-NEXT:    sbmm8 $r2 = $r1, $r4
-; CV1-NEXT:    sbmm8 $r4 = $r0, $r4
+; CV1-NEXT:    sbmm8 $r32 = $r0, $r4
+; CV1-NEXT:    sbmm8 $r33 = $r0, $r5
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sq 32[$r15] = $r8r9
-; CV1-NEXT:    sbmm8 $r3 = $r1, $r5
-; CV1-NEXT:    sbmm8 $r5 = $r0, $r5
+; CV1-NEXT:    sbmm8 $r10 = $r3, $r4
+; CV1-NEXT:    sbmm8 $r34 = $r1, $r4
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sq 16[$r15] = $r2r3
+; CV1-NEXT:    sbmm8 $r11 = $r3, $r5
+; CV1-NEXT:    sbmm8 $r35 = $r1, $r5
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sq 0[$r15] = $r4r5
+; CV1-NEXT:    so 32[$r15] = $r8r9r10r11
+; CV1-NEXT:    ;;
+; CV1-NEXT:    so 0[$r15] = $r32r33r34r35
 ; CV1-NEXT:    copyd $r0 = $r15
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;;
@@ -824,23 +810,19 @@ define void @widenhwx_q(<16 x i32>* noalias nocapture sret(<16 x i32>) align 32 
 ; CV2-NEXT:    make $r4 = 0x804000002010000
 ; CV2-NEXT:    make $r5 = 0x8040000020100000
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    sbmm8 $r6 = $r3, $r4
-; CV2-NEXT:    sbmm8 $r7 = $r3, $r5
 ; CV2-NEXT:    sbmm8 $r8 = $r2, $r4
 ; CV2-NEXT:    sbmm8 $r9 = $r2, $r5
+; CV2-NEXT:    sbmm8 $r32 = $r0, $r4
+; CV2-NEXT:    sbmm8 $r33 = $r0, $r5
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    sbmm8 $r2 = $r1, $r4
-; CV2-NEXT:    sbmm8 $r3 = $r1, $r5
-; CV2-NEXT:    sbmm8 $r4 = $r0, $r4
-; CV2-NEXT:    sbmm8 $r5 = $r0, $r5
+; CV2-NEXT:    sbmm8 $r10 = $r3, $r4
+; CV2-NEXT:    sbmm8 $r11 = $r3, $r5
+; CV2-NEXT:    sbmm8 $r34 = $r1, $r4
+; CV2-NEXT:    sbmm8 $r35 = $r1, $r5
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    sq 48[$r15] = $r6r7
+; CV2-NEXT:    so 32[$r15] = $r8r9r10r11
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    sq 32[$r15] = $r8r9
-; CV2-NEXT:    ;;
-; CV2-NEXT:    sq 16[$r15] = $r2r3
-; CV2-NEXT:    ;;
-; CV2-NEXT:    sq 0[$r15] = $r4r5
+; CV2-NEXT:    so 0[$r15] = $r32r33r34r35
 ; CV2-NEXT:    copyd $r0 = $r15
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
