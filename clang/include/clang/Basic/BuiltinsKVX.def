@@ -287,8 +287,6 @@ KVX_BUILTIN(xalign512o, "Tx256Tx512UOi", "n", 2, "", )
 KVX_BUILTIN(xandno, "Tx256Tx256Tx256", "n", 2, "kv3-2",)
 KVX_BUILTIN(xando, "Tx256Tx256Tx256", "n", 2, "kv3-2",)
 KVX_BUILTIN(xbuild1024, "Tx1024Tx256Tx256Tx256Tx256", "n", 4, "", )
-KVX_BUILTIN(xcat1024, "Tx1024Tx512Tx512", "n", 2, "", )
-KVX_BUILTIN(xcat512, "Tx512Tx256Tx256", "n", 2, "", )
 KVX_BUILTIN(xclampwo, "Tx256Tx256Tx256Tx256", "n", 3, "kv3-2", )
 KVX_BUILTIN(xconvdhv,  "Tx256Tx1024cC*", "n", 2, "", KVX_ROUNDINT, KVX_SATURATE)
 KVX_BUILTIN(xconvdhv0, "Tx256Tx256Tx1024cC*", "n", 3, "", KVX_ROUNDINT, KVX_SATURATE)
@@ -889,6 +887,10 @@ KVX_MANY_BUILTIN(widenowdq, "V4OiV8icC*", "n", 2, "", kvx_widenintos, 4, KVX_NO_
 KVX_MANY_BUILTIN(widenwdo, "V8OiV8icC*", "n", 2, "", kvx_widenint, 8, KVX_OVERLOAD_RES, KvxWidenInt)
 KVX_MANY_BUILTIN(widenwdp, "V2OiV2icC*", "n", 2, "", kvx_widenint, 2, KVX_OVERLOAD_RES, KvxWidenInt)
 KVX_MANY_BUILTIN(widenwdq, "V4OiV4icC*", "n", 2, "", kvx_widenint, 4, KVX_OVERLOAD_RES, KvxWidenInt)
+KVX_MANY_BUILTIN(xcat1024, "Tx1024Tx512Tx512", "n", 2, "", kvx_cat, 1, KVX_OVERLOAD_RES, )
+KVX_MANY_BUILTIN(xcat2048, "Tx2048Tx1024Tx1024", "n", 2, "", kvx_cat, 1, KVX_OVERLOAD_RES, )
+KVX_MANY_BUILTIN(xcat4096, "Tx4096Tx2048Tx2048", "n", 2, "", kvx_cat, 1, KVX_OVERLOAD_RES, )
+KVX_MANY_BUILTIN(xcat512, "Tx512Tx256Tx256", "n", 2,  "", kvx_cat, 1, KVX_OVERLOAD_RES, )
 #undef KVX_MANY_BUILTIN
 #undef KVX_BUILTIN
 #undef BUILTIN

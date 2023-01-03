@@ -2319,15 +2319,19 @@ foreach i = [0, 1] in
 def : Pat<(v2048i1 (extract_subvector (v4096i1 Buffer16Reg:$v), (i64 !mul(i, 2048)))),
           (v2048i1 (EXTRACT_SUBREG $v, !cast<SubRegIndex>("sub_2K" # i)))>;
 
+def kvx_concat : PatFrags<(ops node:$lo, node:$hi),
+                          [(concat_vectors $lo, $hi),
+                           (int_kvx_cat $lo, $hi)]>;
+
 // TCA composing larger types
-def : Pat <(v512i1 (concat_vectors v256i1:$lo, v256i1:$hi)),
+def : Pat <(v512i1 (kvx_concat v256i1:$lo, v256i1:$hi)),
             (v512i1 (REG_SEQUENCE WideReg, $lo, sub_v0, $hi, sub_v1))>;
 
-def : Pat <(v1024i1 (concat_vectors v512i1:$lo, v512i1:$hi)),
+def : Pat <(v1024i1 (kvx_concat v512i1:$lo, v512i1:$hi)),
             (v1024i1 (REG_SEQUENCE MatrixReg, $lo, sub_w0, $hi, sub_w1))>;
 
-def : Pat <(v2048i1 (concat_vectors v1024i1:$lo, v1024i1:$hi)),
+def : Pat <(v2048i1 (kvx_concat v1024i1:$lo, v1024i1:$hi)),
             (v2048i1 (REG_SEQUENCE Buffer8Reg, $lo, sub_m0, $hi, sub_m1))>;
 
-def : Pat <(v4096i1 (concat_vectors v2048i1:$lo, v2048i1:$hi)),
+def : Pat <(v4096i1 (kvx_concat v2048i1:$lo, v2048i1:$hi)),
             (v4096i1 (REG_SEQUENCE Buffer16Reg, $lo, sub_2K0, $hi, sub_2K1))>;

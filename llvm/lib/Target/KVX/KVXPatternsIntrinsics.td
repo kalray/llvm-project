@@ -578,15 +578,6 @@ def: Pat<(int_kvx_xbuild1024 v256i1:$v0, v256i1:$v1, v256i1:$v2, v256i1:$v3),
                 (v256i1 VectorReg:$v2), (i32 sub_v2),
                 (v256i1 VectorReg:$v3), (i32 sub_v3))>;
 
-def: Pat<(int_kvx_xcat1024 v512i1:$w0, v512i1:$w1),
-            (REG_SEQUENCE MatrixReg,
-                (v512i1 WideReg:$w0), (i32 sub_w0),
-                (v512i1 WideReg:$w1), (i32 sub_w1))>;
-
-def: Pat<(int_kvx_xcat512 v256i1:$v0, v256i1:$v1),
-            (REG_SEQUENCE WideReg,
-                (v256i1 VectorReg:$v0), (i32 sub_v0),
-                (v256i1 VectorReg:$v1), (i32 sub_v1))>;
 let Predicates = [IsV1] in {
 def : Pat<(v256i1(int_kvx_lv (add i64:$mem, (shl i64:$off, (i32 5))), SpeculateMod:$mod0)),
           (LVrr SingleReg:$off, SingleReg:$mem, SpeculateMod:$mod0, scale_xs)>;

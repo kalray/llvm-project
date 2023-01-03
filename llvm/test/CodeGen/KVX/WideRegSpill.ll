@@ -195,7 +195,7 @@ define i32 @a() {
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    goto .LBB0_2
 ; CV2-NEXT:    ;;
-  %1 = tail call <512 x i1> @llvm.kvx.xcat512(<256 x i1> undef, <256 x i1> undef)
+  %1 = tail call <512 x i1> @llvm.kvx.cat.v512i1(<256 x i1> undef, <256 x i1> undef)
   br label %2
 
 2:
@@ -229,7 +229,7 @@ define i32 @a() {
 
 25:
   %26 = phi <512 x i1> [ %14, %2 ], [ %1, %21 ]
-  %27 = tail call <1024 x i1> @llvm.kvx.xcat1024(<512 x i1> %26, <512 x i1> undef)
+  %27 = tail call <1024 x i1> @llvm.kvx.cat.v1024i1(<512 x i1> %26, <512 x i1> undef)
   %28 = tail call <1024 x i1> @llvm.kvx.xmt44d(<1024 x i1> %27)
   %29 = inttoptr i64 %3 to <1024 x i1>*
   store <1024 x i1> %28, <1024 x i1>* %29, align 128
@@ -237,9 +237,9 @@ define i32 @a() {
   br label %2
 }
 
-declare <512 x i1> @llvm.kvx.xcat512(<256 x i1>, <256 x i1>)
+declare <512 x i1> @llvm.kvx.cat.v512i1(<256 x i1>, <256 x i1>)
 
-declare <1024 x i1> @llvm.kvx.xcat1024(<512 x i1>, <512 x i1>)
+declare <1024 x i1> @llvm.kvx.cat.v1024i1(<512 x i1>, <512 x i1>)
 
 declare <1024 x i1> @llvm.kvx.xmt44d(<1024 x i1>)
 
