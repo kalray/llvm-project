@@ -19317,6 +19317,20 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     return Builder.CreateShuffleVector(Result[0], Result[1], MaskVec);
   }
 
+  case KVX::BI__builtin_kvx_xundef1024:
+  case KVX::BI__builtin_kvx_xundef2048:
+  case KVX::BI__builtin_kvx_xundef256:
+  case KVX::BI__builtin_kvx_xundef4096:
+  case KVX::BI__builtin_kvx_xundef512:
+    return UndefValue::get(ConvertType(E->getType()));
+
+  case KVX::BI__builtin_kvx_xzero1024:
+  case KVX::BI__builtin_kvx_xzero2048:
+  case KVX::BI__builtin_kvx_xzero256:
+  case KVX::BI__builtin_kvx_xzero4096:
+  case KVX::BI__builtin_kvx_xzero512:
+    return Constant::getNullValue(ConvertType(E->getType()));
+
 #define KVX_BUILTIN(ID, TYPES, MODE, NARGS, CPUS, ...)                         \
   case KVX::BI__builtin_kvx_##ID: {                                            \
     const auto IDVal = Intrinsic::kvx_##ID;                                    \
