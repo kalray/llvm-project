@@ -722,3 +722,42 @@ void binOps(__kvx_x256 *p) {
   v = __builtin_kvx_xxoro(v, v);
   *p = v;
 }
+
+// CHECK-LABEL: @xcat2048(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2048 x i1> @llvm.kvx.cat.v2048i1(<1024 x i1> zeroinitializer, <1024 x i1> zeroinitializer)
+// CHECK-NEXT:    store <2048 x i1> [[TMP0]], <2048 x i1>* [[W:%.*]], align 32, [[TBAA10:!tbaa !.*]]
+// CHECK-NEXT:    ret void
+//
+void xcat2048(__kvx_x2048 *W) {
+  W[0] = __builtin_kvx_xcat2048(
+              __builtin_kvx_xzero1024(),
+              __builtin_kvx_xzero1024());
+}
+
+// O0-LABEL: @xcat4096(
+// O0-NEXT:  entry:
+// O0-NEXT:    [[W_ADDR:%.*]] = alloca <4096 x i1>*, align 8
+// O0-NEXT:    store <4096 x i1>* [[W:%.*]], <4096 x i1>** [[W_ADDR]], align 8
+// O0-NEXT:    [[TMP0:%.*]] = call <4096 x i1> @llvm.kvx.cat.v4096i1(<2048 x i1> zeroinitializer, <2048 x i1> zeroinitializer)
+// O0-NEXT:    [[TMP1:%.*]] = load <4096 x i1>*, <4096 x i1>** [[W_ADDR]], align 8
+// O0-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <4096 x i1>, <4096 x i1>* [[TMP1]], i64 0
+// O0-NEXT:    store <4096 x i1> [[TMP0]], <4096 x i1>* [[ARRAYIDX]], align 32
+// O0-NEXT:    ret void
+//
+// O2-LABEL: @xcat4096(
+// O2-NEXT:  entry:
+// O2-NEXT:    [[TMP0:%.*]] = call <4096 x i1> @llvm.kvx.cat.v4096i1(<2048 x i1> zeroinitializer, <2048 x i1> zeroinitializer)
+// O2-NEXT:    store <4096 x i1> [[TMP0]], <4096 x i1>* [[W:%.*]], align 32, [[TBAA12:!tbaa !.*]]
+// O2-NEXT:    ret void
+// CHECK-LABEL: @xcat4096(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4096 x i1> @llvm.kvx.cat.v4096i1(<2048 x i1> zeroinitializer, <2048 x i1> zeroinitializer)
+// CHECK-NEXT:    store <4096 x i1> [[TMP0]], <4096 x i1>* [[W:%.*]], align 32, [[TBAA12:!tbaa !.*]]
+// CHECK-NEXT:    ret void
+//
+void xcat4096(__kvx_x4096 *W) {
+  W[0] = __builtin_kvx_xcat4096(
+              __builtin_kvx_xzero2048(),
+              __builtin_kvx_xzero2048());
+}

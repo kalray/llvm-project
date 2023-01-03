@@ -175,6 +175,28 @@ void KVXInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
 
   // Between TCA registers
   if (!Subtarget.isV1()) {
+    if (KVX::Buffer16RegRegClass.contains(DstReg, SrcReg)) {
+      LLVM_DEBUG(dbgs() << "It is a TCA Buffer16, use 4x xcopyv.\n");
+      for (auto SubVec : {KVX::sub_m0, KVX::sub_m1, KVX::sub_m2, KVX::sub_m3}) {
+        auto Src = TRI->getSubReg(SrcReg, SubVec);
+        auto Dst = TRI->getSubReg(DstReg, SubVec);
+        BuildMI(MBB, MBBI, DL, get(KVX::XCOPYV), Dst)
+            .addReg(Src, getKillRegState(KillSrc))
+            .addImm(0);
+      }
+      return;
+    }
+    if (KVX::Buffer8RegRegClass.contains(DstReg, SrcReg)) {
+      LLVM_DEBUG(dbgs() << "It is a TCA Buffer8, use 2x xcopyv.\n");
+      for (auto SubVec : {KVX::sub_m0, KVX::sub_m1}) {
+        auto Src = TRI->getSubReg(SrcReg, SubVec);
+        auto Dst = TRI->getSubReg(DstReg, SubVec);
+        BuildMI(MBB, MBBI, DL, get(KVX::XCOPYV), Dst)
+            .addReg(Src, getKillRegState(KillSrc))
+            .addImm(0);
+      }
+      return;
+    }
     if (KVX::MatrixRegRegClass.contains(SrcReg, DstReg)) {
       BuildMI(MBB, MBBI, DL, get(KVX::XCOPYV), DstReg)
           .addReg(SrcReg, getKillRegState(KillSrc))
@@ -208,8 +230,7 @@ void KVXInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
       }
     }
 
-    if (KVX::WideRegRegClass.contains(DstReg) &&
-        KVX::WideRegRegClass.contains(SrcReg)) {
+    if (KVX::WideRegRegClass.contains(DstReg, SrcReg)) {
       LLVM_DEBUG(dbgs() << "It is a TCA WideReg, use 2x xcopyv.\n");
 
       auto Src = TRI->getSubReg(SrcReg, KVX::sub_v0);
@@ -223,11 +244,39 @@ void KVXInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
       return;
     }
 
-    if (KVX::MatrixRegRegClass.contains(DstReg) &&
-        KVX::MatrixRegRegClass.contains(SrcReg)) {
+    if (KVX::MatrixRegRegClass.contains(DstReg, SrcReg)) {
       LLVM_DEBUG(dbgs() << "It is a TCA MatrixReg, use 4x xcopyv.\n");
       auto VecType = KVX::COPYVre;
       for (auto SubVec : {KVX::sub_v0, KVX::sub_v1, KVX::sub_v2, KVX::sub_v3}) {
+        auto Src = TRI->getSubReg(SrcReg, SubVec);
+        auto Dst = TRI->getSubReg(DstReg, SubVec);
+        BuildMI(MBB, MBBI, DL, get(VecType), Dst)
+            .addReg(Src, getKillRegState(KillSrc));
+        VecType = VecType == KVX::COPYVre ? KVX::COPYVro : KVX::COPYVre;
+      }
+      return;
+    }
+    if (KVX::Buffer8RegRegClass.contains(DstReg, SrcReg)) {
+      LLVM_DEBUG(dbgs() << "It is a TCA Buffer8, use 8x xcopyv.\n");
+      auto VecType = KVX::COPYVre;
+      for (auto SubVec : {KVX::sub_v0, KVX::sub_v1, KVX::sub_v2, KVX::sub_v3,
+                          KVX::sub_v4, KVX::sub_v5, KVX::sub_v6, KVX::sub_v7}) {
+        auto Src = TRI->getSubReg(SrcReg, SubVec);
+        auto Dst = TRI->getSubReg(DstReg, SubVec);
+        BuildMI(MBB, MBBI, DL, get(VecType), Dst)
+            .addReg(Src, getKillRegState(KillSrc));
+        VecType = VecType == KVX::COPYVre ? KVX::COPYVro : KVX::COPYVre;
+      }
+      return;
+    }
+    if (KVX::Buffer16RegRegClass.contains(DstReg, SrcReg)) {
+      LLVM_DEBUG(dbgs() << "It is a TCA Buffer16, use 8x xcopyv.\n");
+      auto VecType = KVX::COPYVre;
+      for (auto SubVec :
+           {KVX::sub_v0, KVX::sub_v1, KVX::sub_v2, KVX::sub_v3, KVX::sub_v4,
+            KVX::sub_v5, KVX::sub_v6, KVX::sub_v7, KVX::sub_v8, KVX::sub_v9,
+            KVX::sub_v10, KVX::sub_v11, KVX::sub_v12, KVX::sub_v13,
+            KVX::sub_v14, KVX::sub_v15}) {
         auto Src = TRI->getSubReg(SrcReg, SubVec);
         auto Dst = TRI->getSubReg(DstReg, SubVec);
         BuildMI(MBB, MBBI, DL, get(VecType), Dst)

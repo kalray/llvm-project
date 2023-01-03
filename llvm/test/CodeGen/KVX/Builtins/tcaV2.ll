@@ -1426,3 +1426,85 @@ declare <256 x i1> @llvm.kvx.xorno(<256 x i1>, <256 x i1>)
 declare <256 x i1> @llvm.kvx.xoro(<256 x i1>, <256 x i1>)
 
 declare <256 x i1> @llvm.kvx.xxoro(<256 x i1>, <256 x i1>)
+
+define void @xcat2048(<2048 x i1>* nocapture %0) {
+; CHECK-LABEL: xcat2048:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    xsplatdo $a0 = 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xsplatov $a0a1a2a3 = $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 96[$r0] = $a3
+; CHECK-NEXT:    xcopyv $a4a5a6a7 = $a0a1a2a3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 64[$r0] = $a2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 32[$r0] = $a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 0[$r0] = $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 224[$r0] = $a7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 192[$r0] = $a6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 160[$r0] = $a5
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 128[$r0] = $a4
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = tail call <2048 x i1> @llvm.kvx.cat.v2048i1(<1024 x i1> zeroinitializer, <1024 x i1> zeroinitializer)
+  store <2048 x i1> %2, <2048 x i1>* %0
+  ret void
+}
+
+declare <2048 x i1> @llvm.kvx.cat.v2048i1(<1024 x i1>, <1024 x i1>)
+
+define void @xcat4096(<4096 x i1>* nocapture %0) {
+; CHECK-LABEL: xcat4096:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    xsplatdo $a0 = 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xsplatov $a0a1a2a3 = $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 32[$r0] = $a1
+; CHECK-NEXT:    xcopyv $a4a5a6a7 = $a0a1a2a3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 0[$r0] = $a0
+; CHECK-NEXT:    xcopyv $a8a9a10a11 = $a0a1a2a3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 96[$r0] = $a3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 64[$r0] = $a2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 160[$r0] = $a5
+; CHECK-NEXT:    xcopyv $a12a13a14a15 = $a4a5a6a7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 128[$r0] = $a4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 224[$r0] = $a7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 192[$r0] = $a6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 416[$r0] = $a13
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 384[$r0] = $a12
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 480[$r0] = $a15
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 448[$r0] = $a14
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 288[$r0] = $a9
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 256[$r0] = $a8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 352[$r0] = $a11
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 320[$r0] = $a10
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = tail call <4096 x i1> @llvm.kvx.cat.v4096i1(<2048 x i1> zeroinitializer, <2048 x i1> zeroinitializer)
+  store <4096 x i1> %2, <4096 x i1>* %0
+  ret void
+}
+
+declare <4096 x i1> @llvm.kvx.cat.v4096i1(<2048 x i1>, <2048 x i1>)

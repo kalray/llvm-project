@@ -157,8 +157,6 @@ def int_kvx_xmovefmw : Intrinsic<[llvm_v512i1_ty], [llvm_v1024i1_ty, llvm_i32_ty
 def int_kvx_xmovefmv : Intrinsic<[llvm_v256i1_ty], [llvm_v1024i1_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_xmovefwv : Intrinsic<[llvm_v256i1_ty], [llvm_v512i1_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_xbuild1024 : Intrinsic<[llvm_v1024i1_ty], [llvm_v256i1_ty, llvm_v256i1_ty, llvm_v256i1_ty, llvm_v256i1_ty], [IntrNoMem]>;
-def int_kvx_xcat1024 : Intrinsic<[llvm_v1024i1_ty], [llvm_v512i1_ty, llvm_v512i1_ty], [IntrNoMem]>;
-def int_kvx_xcat512 : Intrinsic<[llvm_v512i1_ty], [llvm_v256i1_ty, llvm_v256i1_ty], [IntrNoMem]>;
 
 // TCA arithmetic intrinsics
 class KVX_TCA_Inplace<list<LLVMType> args>
@@ -305,4 +303,5 @@ def int_kvx_wideninte: Intrinsic<[llvm_anyint_ty], [LLVMSubdivide2VectorType<0>,
 def int_kvx_widenintes: Intrinsic<[llvm_i64_ty], [llvm_v2i32_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_wideninto: Intrinsic<[llvm_anyint_ty], [LLVMSubdivide2VectorType<0>, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_widenintos: Intrinsic<[llvm_i64_ty], [llvm_v2i32_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_cat : Intrinsic<[llvm_anyvector_ty], [LLVMHalfElementsVectorType<0>, LLVMHalfElementsVectorType<0>], [IntrNoMem]>;
 }  // TargetPrefix = "kvx"
