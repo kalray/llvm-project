@@ -605,15 +605,15 @@ def : Pat<(int_kvx_sv  i64:$mem, v256i1:$op0),
 def: Pat<(int_kvx_xswap256 QuadReg:$r, VectorReg:$v),
          (XSWAP256p QuadReg:$r, VectorReg:$v)>;
 
-def: Pat<(int_kvx_xaccess512o WideReg:$a2a3, Unsigned6:$a4), (ALIGNOreroi (EXTRACT_SUBREG WideReg:$a2a3, sub_v0), (EXTRACT_SUBREG WideReg:$a2a3, sub_v1), Unsigned6:$a4)>, Requires<[IsV1]>;
-def: Pat<(int_kvx_xaccess512o WideReg:$a2a3, Unsigned6:$a4), (ALIGNOrorei (EXTRACT_SUBREG WideReg:$a2a3, sub_v0), (EXTRACT_SUBREG WideReg:$a2a3, sub_v1), Unsigned6:$a4)>, Requires<[IsV1]>;
-def: Pat<(int_kvx_xaccess512o WideReg:$a2a3, SingleReg:$a4), (ALIGNOreror (EXTRACT_SUBREG WideReg:$a2a3, sub_v0), (EXTRACT_SUBREG WideReg:$a2a3, sub_v1), $a4)>, Requires<[IsV1]>;
-def: Pat<(int_kvx_xaccess512o WideReg:$a2a3, SingleReg:$a4), (ALIGNOrorer (EXTRACT_SUBREG WideReg:$a2a3, sub_v0), (EXTRACT_SUBREG WideReg:$a2a3, sub_v1), $a4)>, Requires<[IsV1]>;
+def: Pat<(int_kvx_xaccesso WideReg:$a2a3, Unsigned6:$a4), (ALIGNOreroi (EXTRACT_SUBREG WideReg:$a2a3, sub_v0), (EXTRACT_SUBREG WideReg:$a2a3, sub_v1), Unsigned6:$a4)>, Requires<[IsV1]>;
+def: Pat<(int_kvx_xaccesso WideReg:$a2a3, Unsigned6:$a4), (ALIGNOrorei (EXTRACT_SUBREG WideReg:$a2a3, sub_v0), (EXTRACT_SUBREG WideReg:$a2a3, sub_v1), Unsigned6:$a4)>, Requires<[IsV1]>;
+def: Pat<(int_kvx_xaccesso WideReg:$a2a3, SingleReg:$a4), (ALIGNOreror (EXTRACT_SUBREG WideReg:$a2a3, sub_v0), (EXTRACT_SUBREG WideReg:$a2a3, sub_v1), $a4)>, Requires<[IsV1]>;
+def: Pat<(int_kvx_xaccesso WideReg:$a2a3, SingleReg:$a4), (ALIGNOrorer (EXTRACT_SUBREG WideReg:$a2a3, sub_v0), (EXTRACT_SUBREG WideReg:$a2a3, sub_v1), $a4)>, Requires<[IsV1]>;
 
-def: Pat<(int_kvx_xalign512o WideReg:$a2a3, Unsigned6:$a4), (ALIGNVreroi (EXTRACT_SUBREG WideReg:$a2a3, sub_v0), (EXTRACT_SUBREG WideReg:$a2a3, sub_v1), Unsigned6:$a4)>, Requires<[IsV1]>;
-def: Pat<(int_kvx_xalign512o WideReg:$a2a3, Unsigned6:$a4), (ALIGNVrorei (EXTRACT_SUBREG WideReg:$a2a3, sub_v0), (EXTRACT_SUBREG WideReg:$a2a3, sub_v1), Unsigned6:$a4)>, Requires<[IsV1]>;
-def: Pat<(int_kvx_xalign512o WideReg:$a2a3, SingleReg:$a4), (ALIGNVreror (EXTRACT_SUBREG WideReg:$a2a3, sub_v0), (EXTRACT_SUBREG WideReg:$a2a3, sub_v1), $a4)>, Requires<[IsV1]>;
-def: Pat<(int_kvx_xalign512o WideReg:$a2a3, SingleReg:$a4), (ALIGNVrorer (EXTRACT_SUBREG WideReg:$a2a3, sub_v0), (EXTRACT_SUBREG WideReg:$a2a3, sub_v1), $a4)>, Requires<[IsV1]>;
+def: Pat<(int_kvx_xaligno WideReg:$a2a3, Unsigned6:$a4), (ALIGNVreroi (EXTRACT_SUBREG WideReg:$a2a3, sub_v0), (EXTRACT_SUBREG WideReg:$a2a3, sub_v1), Unsigned6:$a4)>, Requires<[IsV1]>;
+def: Pat<(int_kvx_xaligno WideReg:$a2a3, Unsigned6:$a4), (ALIGNVrorei (EXTRACT_SUBREG WideReg:$a2a3, sub_v0), (EXTRACT_SUBREG WideReg:$a2a3, sub_v1), Unsigned6:$a4)>, Requires<[IsV1]>;
+def: Pat<(int_kvx_xaligno WideReg:$a2a3, SingleReg:$a4), (ALIGNVreror (EXTRACT_SUBREG WideReg:$a2a3, sub_v0), (EXTRACT_SUBREG WideReg:$a2a3, sub_v1), $a4)>, Requires<[IsV1]>;
+def: Pat<(int_kvx_xaligno WideReg:$a2a3, SingleReg:$a4), (ALIGNVrorer (EXTRACT_SUBREG WideReg:$a2a3, sub_v0), (EXTRACT_SUBREG WideReg:$a2a3, sub_v1), $a4)>, Requires<[IsV1]>;
 
 // TCA arithmetic/conversion intrinsics that generate sub-vector register values
 // We use pseudo-instruction to hide from the compiler that these instructions

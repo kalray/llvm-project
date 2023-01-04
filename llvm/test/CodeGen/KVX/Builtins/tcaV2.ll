@@ -1247,12 +1247,12 @@ define void @xalign512o(<256 x i1>* nocapture %0, <512 x i1>* nocapture readonly
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %4 = load <512 x i1>, <512 x i1>* %1
-  %5 = tail call <256 x i1> @llvm.kvx.xalign512o(<512 x i1> %4, i64 %2)
+  %5 = tail call <256 x i1> @llvm.kvx.xaligno.v512i1(<512 x i1> %4, i64 %2)
   store <256 x i1> %5, <256 x i1>* %0
   ret void
 }
 
-declare <256 x i1> @llvm.kvx.xalign512o(<512 x i1>, i64)
+declare <256 x i1> @llvm.kvx.xaligno.v512i1(<512 x i1>, i64)
 
 define void @xalign1024o(<256 x i1>* nocapture %0, <1024 x i1>* nocapture readonly %1, i64 %2) {
 ; CHECK-LABEL: xalign1024o:
@@ -1271,12 +1271,58 @@ define void @xalign1024o(<256 x i1>* nocapture %0, <1024 x i1>* nocapture readon
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %4 = load <1024 x i1>, <1024 x i1>* %1
-  %5 = tail call <256 x i1> @llvm.kvx.xalign1024o(<1024 x i1> %4, i64 %2)
+  %5 = tail call <256 x i1> @llvm.kvx.xaligno.v1024i1(<1024 x i1> %4, i64 %2)
   store <256 x i1> %5, <256 x i1>* %0
   ret void
 }
 
-declare <256 x i1> @llvm.kvx.xalign1024o(<1024 x i1>, i64)
+declare <256 x i1> @llvm.kvx.xaligno.v1024i1(<1024 x i1>, i64)
+
+define void @xalign2048o(<256 x i1>* nocapture %0, i64 %1) {
+; CHECK-LABEL: xalign2048o:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    xsplatdo $a0 = 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xsplatov $a0a1a2a3 = $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xcopyv $a4a5a6a7 = $a0a1a2a3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xaligno $a0 = $a0..a7, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 0[$r0] = $a0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = tail call <256 x i1> @llvm.kvx.xaligno.v2048i1(<2048 x i1> zeroinitializer, i64 %1)
+  store <256 x i1> %3, <256 x i1>* %0
+  ret void
+}
+
+declare <256 x i1> @llvm.kvx.xaligno.v2048i1(<2048 x i1>, i64)
+
+define void @xalign4096o(<256 x i1>* nocapture %0, i64 %1) {
+; CHECK-LABEL: xalign4096o:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    xsplatdo $a0 = 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xsplatov $a0a1a2a3 = $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xcopyv $a4a5a6a7 = $a0a1a2a3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xcopyv $a8a9a10a11 = $a0a1a2a3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xcopyv $a12a13a14a15 = $a0a1a2a3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xaligno $a0 = $a0..a15, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 0[$r0] = $a0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %3 = tail call <256 x i1> @llvm.kvx.xaligno.v4096i1(<4096 x i1> zeroinitializer, i64 %1)
+  store <256 x i1> %3, <256 x i1>* %0
+  ret void
+}
+
+declare <256 x i1> @llvm.kvx.xaligno.v4096i1(<4096 x i1>, i64)
 
 define void @xloadbuff512(<512 x i1>* %0, i64 %1) {
 ; CHECK-LABEL: xloadbuff512:
@@ -1346,11 +1392,11 @@ define <4 x i64> @xaccess512o(<512 x i1>* nocapture readonly %0, i64 %1) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = load <512 x i1>, <512 x i1>* %0
-  %4 = tail call <4 x i64> @llvm.kvx.xaccess512o(<512 x i1> %3, i64 %1)
+  %4 = tail call <4 x i64> @llvm.kvx.xaccesso.v512i1(<512 x i1> %3, i64 %1)
   ret <4 x i64> %4
 }
 
-declare <4 x i64> @llvm.kvx.xaccess512o(<512 x i1>, i64)
+declare <4 x i64> @llvm.kvx.xaccesso.v512i1(<512 x i1>, i64)
 
 define <4 x i64> @xaccess1024o(<1024 x i1>* nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: xaccess1024o:
@@ -1368,11 +1414,53 @@ define <4 x i64> @xaccess1024o(<1024 x i1>* nocapture readonly %0, i64 %1) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = load <1024 x i1>, <1024 x i1>* %0
-  %4 = tail call <4 x i64> @llvm.kvx.xaccess1024o(<1024 x i1> %3, i64 %1)
+  %4 = tail call <4 x i64> @llvm.kvx.xaccesso.v1024i1(<1024 x i1> %3, i64 %1)
   ret <4 x i64> %4
 }
 
-declare <4 x i64> @llvm.kvx.xaccess1024o(<1024 x i1>, i64)
+declare <4 x i64> @llvm.kvx.xaccesso.v1024i1(<1024 x i1>, i64)
+
+define <4 x i64> @xaccess2048o(i64 %0) {
+; CHECK-LABEL: xaccess2048o:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    xsplatdo $a0 = 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xsplatov $a0a1a2a3 = $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xcopyv $a4a5a6a7 = $a0a1a2a3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xaccesso $r0r1r2r3 = $a0..a7, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = tail call <4 x i64> @llvm.kvx.xaccesso.v2048i1(<2048 x i1> zeroinitializer, i64 %0)
+  ret <4 x i64> %2
+}
+
+declare <4 x i64> @llvm.kvx.xaccesso.v2048i1(<2048 x i1>, i64)
+
+define <4 x i64> @xaccess4096o(i64 %0) {
+; CHECK-LABEL: xaccess4096o:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    xsplatdo $a0 = 0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xsplatov $a0a1a2a3 = $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xcopyv $a4a5a6a7 = $a0a1a2a3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xcopyv $a8a9a10a11 = $a0a1a2a3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xcopyv $a12a13a14a15 = $a0a1a2a3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xaccesso $r0r1r2r3 = $a0..a15, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %2 = tail call <4 x i64> @llvm.kvx.xaccesso.v4096i1(<4096 x i1> zeroinitializer, i64 %0)
+  ret <4 x i64> %2
+}
+
+declare <4 x i64> @llvm.kvx.xaccesso.v4096i1(<4096 x i1>, i64)
 
 define void @binOps(<256 x i1>* nocapture %0) {
 ; CHECK-LABEL: binOps:
