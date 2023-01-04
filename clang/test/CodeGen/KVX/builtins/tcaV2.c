@@ -672,30 +672,52 @@ void xalign4096o(__kvx_x256 *v, long s) {
   *v = __builtin_kvx_xalign4096o(m, s);
 }
 
-// CHECK-LABEL: @xloadbuff512(
+// CHECK-LABEL: @xpreload512(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[W:%.*]], i64 3
-// CHECK-NEXT:    [[TMP0:%.*]] = bitcast <512 x i1>* [[ARRAYIDX]] to i8*
-// CHECK-NEXT:    [[TMP1:%.*]] = load <512 x i1>, <512 x i1>* [[W]], align 32, [[TBAA6]]
-// CHECK-NEXT:    [[TMP2:%.*]] = tail call <512 x i1> @llvm.kvx.xloadbuff512(i8* nonnull [[TMP0]], i64 [[S:%.*]], <512 x i1> [[TMP1]], i32 0, i32 5)
-// CHECK-NEXT:    store <512 x i1> [[TMP2]], <512 x i1>* [[W]], align 32, [[TBAA6]]
+// CHECK-NEXT:    [[TMP0:%.*]] = bitcast <512 x i1>* [[W:%.*]] to i8*
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <512 x i1> @llvm.kvx.xpreload.v512i1(<512 x i1> undef, i8* [[TMP0]], i64 [[S:%.*]], i32 0, i32 0)
+// CHECK-NEXT:    store <512 x i1> [[TMP1]], <512 x i1>* [[W]], align 32, [[TBAA6]]
 // CHECK-NEXT:    ret void
 //
-void xloadbuff512(__kvx_x512 *w, long long s) {
-  *w = __builtin_kvx_xloadbuff512(&w[3], s, *w, ".b");
+void xpreload512(__kvx_x512 *w, long long s) {
+  __kvx_x512 f;
+  *w = __builtin_kvx_xpreload512(f, w, s, "");
 }
 
-// CHECK-LABEL: @xloadbuff1024(
+// CHECK-LABEL: @xpreload1024(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <1024 x i1>, <1024 x i1>* [[W:%.*]], i64 3
-// CHECK-NEXT:    [[TMP0:%.*]] = bitcast <1024 x i1>* [[ARRAYIDX]] to i8*
-// CHECK-NEXT:    [[TMP1:%.*]] = load <1024 x i1>, <1024 x i1>* [[W]], align 32, [[TBAA8]]
-// CHECK-NEXT:    [[TMP2:%.*]] = tail call <1024 x i1> @llvm.kvx.xloadbuff1024(i8* nonnull [[TMP0]], i64 [[S:%.*]], <1024 x i1> [[TMP1]], i32 0, i32 5)
-// CHECK-NEXT:    store <1024 x i1> [[TMP2]], <1024 x i1>* [[W]], align 32, [[TBAA8]]
+// CHECK-NEXT:    [[TMP0:%.*]] = bitcast <1024 x i1>* [[W:%.*]] to i8*
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <1024 x i1> @llvm.kvx.xpreload.v1024i1(<1024 x i1> undef, i8* [[TMP0]], i64 [[S:%.*]], i32 3, i32 1)
+// CHECK-NEXT:    store <1024 x i1> [[TMP1]], <1024 x i1>* [[W]], align 32, [[TBAA8]]
 // CHECK-NEXT:    ret void
 //
-void xloadbuff1024(__kvx_x1024 *w, long long s) {
-  *w = __builtin_kvx_xloadbuff1024(&w[3], s, *w, ".b");
+void xpreload1024(__kvx_x1024 *w, long long s) {
+  __kvx_x1024 f;
+  *w = __builtin_kvx_xpreload1024(f, w, s, ".us.q");
+}
+
+// CHECK-LABEL: @xpreload2048(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = bitcast <2048 x i1>* [[W:%.*]] to i8*
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <2048 x i1> @llvm.kvx.xpreload.v2048i1(<2048 x i1> undef, i8* [[TMP0]], i64 [[S:%.*]], i32 1, i32 3)
+// CHECK-NEXT:    store <2048 x i1> [[TMP1]], <2048 x i1>* [[W]], align 32, [[TBAA10:!tbaa !.*]]
+// CHECK-NEXT:    ret void
+//
+void xpreload2048(__kvx_x2048 *w, long long s) {
+  __kvx_x2048 f;
+  *w = __builtin_kvx_xpreload2048(f, w, s, ".s.w");
+}
+
+// CHECK-LABEL: @xpreload4096(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = bitcast <4096 x i1>* [[W:%.*]] to i8*
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4096 x i1> @llvm.kvx.xpreload.v4096i1(<4096 x i1> undef, i8* [[TMP0]], i64 [[S:%.*]], i32 2, i32 5)
+// CHECK-NEXT:    store <4096 x i1> [[TMP1]], <4096 x i1>* [[W]], align 32, [[TBAA12:!tbaa !.*]]
+// CHECK-NEXT:    ret void
+//
+void xpreload4096(__kvx_x4096 *w, long long s) {
+  __kvx_x4096 f;
+  *w = __builtin_kvx_xpreload4096(f, w, s, ".u.b");
 }
 
 // CHECK-LABEL: @xaccess512o(
@@ -768,7 +790,7 @@ void binOps(__kvx_x256 *p) {
 // CHECK-LABEL: @xcat2048(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call <2048 x i1> @llvm.kvx.cat.v2048i1(<1024 x i1> zeroinitializer, <1024 x i1> zeroinitializer)
-// CHECK-NEXT:    store <2048 x i1> [[TMP0]], <2048 x i1>* [[W:%.*]], align 32, [[TBAA10:!tbaa !.*]]
+// CHECK-NEXT:    store <2048 x i1> [[TMP0]], <2048 x i1>* [[W:%.*]], align 32, [[TBAA10]]
 // CHECK-NEXT:    ret void
 //
 void xcat2048(__kvx_x2048 *W) {
@@ -795,7 +817,7 @@ void xcat2048(__kvx_x2048 *W) {
 // CHECK-LABEL: @xcat4096(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call <4096 x i1> @llvm.kvx.cat.v4096i1(<2048 x i1> zeroinitializer, <2048 x i1> zeroinitializer)
-// CHECK-NEXT:    store <4096 x i1> [[TMP0]], <4096 x i1>* [[W:%.*]], align 32, [[TBAA12:!tbaa !.*]]
+// CHECK-NEXT:    store <4096 x i1> [[TMP0]], <4096 x i1>* [[W:%.*]], align 32, [[TBAA12]]
 // CHECK-NEXT:    ret void
 //
 void xcat4096(__kvx_x4096 *W) {

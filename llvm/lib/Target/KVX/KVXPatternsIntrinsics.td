@@ -1152,15 +1152,6 @@ def: Pat<(v2i32 (int_kvx_sxlhwp v4i16:$v)),
 def: Pat<(v2i32 (int_kvx_sxmhwp v4i16:$v)),
          (SXMHWP SingleReg:$v)>;
 
-def : Pat <(int_kvx_xloadbuff1024 i64:$mem, i64:$op0, v1024i1:$z, VariantMod:$mod0, LsupackMod:$mod1),
-           (v1024i1(XLOrvp i64:$mem, i64:$op0, VariantMod:$mod0, LsupackMod:$mod1, v1024i1:$z))>;
-
-def : Pat <(int_kvx_xloadbuff1024 (add i64:$mem, Signed27:$off), i64:$op0, v1024i1:$z, VariantMod:$mod0, LsupackMod:$mod1),
-           (v1024i1(XLOri27vp Signed27:$off, i64:$mem, i64:$op0, VariantMod:$mod0, LsupackMod:$mod1, v1024i1:$z))>;
-
-def : Pat <(int_kvx_xloadbuff1024 (add i64:$mem, Signed54:$off), i64:$op0, v1024i1:$z, VariantMod:$mod0, LsupackMod:$mod1),
-           (v1024i1(XLOri54vp Signed54:$off, i64:$mem, i64:$op0, VariantMod:$mod0, LsupackMod:$mod1, v1024i1:$z))>;
-
 def : Pat <(v2f32 (int_kvx_ffmax v2f16:$lhs, v2f16:$rhs, v2f32:$acc, RoundingMod:$r, silent_)),
            (v2f32 (EXTRACT_SUBREG (v4f32(FFMAHWQrr (v4f32 (REG_SEQUENCE PairedReg, SingleReg:$acc, sub_d0, (v2f32(MAKEi16 0)), sub_d1)),
                                                    (ZXWD SingleReg:$lhs), (ZXWD SingleReg:$rhs), RoundingMod:$r, silent_)), sub_d0))>;
@@ -1234,3 +1225,16 @@ defm : ANYEQZ<v8i8, ANY_VECLEAF<COMPNBO>>, Requires<[IsV2]>;
 defm : ANYEQZ<v2i32, ANY_VECLEAF<COMPNWP>>;
 defm : ANYEQZ<v4i16, ANY_VECLEAF<COMPNHQ>>;
 defm : ANYEQZ<i64, ANYi64LEAF, LNANDDrr>;
+
+let Predicates = [IsV2] in {
+foreach vt = [v512i1, v1024i1, v2048i1, v4096i1] in {
+def : Pat <(vt (int_kvx_xpreload vt:$z, i64:$mem, i64:$op0, VariantMod:$mod0, LsupackMod:$mod1)),
+           (vt (XLOrvp i64:$mem, i64:$op0, VariantMod:$mod0, LsupackMod:$mod1, vt:$z))>;
+
+def : Pat <(int_kvx_xpreload vt:$z, (add i64:$mem, Signed27:$off), i64:$op0, VariantMod:$mod0, LsupackMod:$mod1),
+           (vt(XLOri27vp Signed27:$off, i64:$mem, i64:$op0, VariantMod:$mod0, LsupackMod:$mod1, vt:$z))>;
+
+def : Pat <(int_kvx_xpreload vt:$z, (add i64:$mem, Signed54:$off), i64:$op0, VariantMod:$mod0, LsupackMod:$mod1),
+           (vt(XLOri54vp Signed54:$off, i64:$mem, i64:$op0, VariantMod:$mod0, LsupackMod:$mod1, vt:$z))>;
+}
+} // IsV2
