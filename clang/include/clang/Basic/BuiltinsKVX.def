@@ -904,6 +904,14 @@ KVX_MANY_BUILTIN(xcat1024, "Tx1024Tx512Tx512", "n", 2, "", kvx_cat, 1, KVX_OVERL
 KVX_MANY_BUILTIN(xcat2048, "Tx2048Tx1024Tx1024", "n", 2, "", kvx_cat, 1, KVX_OVERLOAD_RES, )
 KVX_MANY_BUILTIN(xcat4096, "Tx4096Tx2048Tx2048", "n", 2, "", kvx_cat, 1, KVX_OVERLOAD_RES, )
 KVX_MANY_BUILTIN(xcat512, "Tx512Tx256Tx256", "n", 2,  "", kvx_cat, 1, KVX_OVERLOAD_RES, )
+KVX_MANY_BUILTIN(xhigh1024, "Tx1024Tx2048", "n", 1, "", kvx_high, 1, KVX_OVERLOAD_RES, )
+KVX_MANY_BUILTIN(xhigh2048, "Tx2048Tx4096", "n", 1, "", kvx_high, 1, KVX_OVERLOAD_RES, )
+KVX_MANY_BUILTIN(xhigh256, "Tx256Tx512", "n", 1,  "", kvx_high, 1, KVX_OVERLOAD_RES, )
+KVX_MANY_BUILTIN(xhigh512, "Tx512Tx1024", "n", 1,  "", kvx_high, 1, KVX_OVERLOAD_RES, )
+KVX_MANY_BUILTIN(xlow1024, "Tx1024Tx2048", "n", 1, "", kvx_low, 1, KVX_OVERLOAD_RES, )
+KVX_MANY_BUILTIN(xlow2048, "Tx2048Tx4096", "n", 1, "", kvx_low, 1, KVX_OVERLOAD_RES, )
+KVX_MANY_BUILTIN(xlow256, "Tx256Tx512", "n", 1,  "", kvx_low, 1, KVX_OVERLOAD_RES, )
+KVX_MANY_BUILTIN(xlow512, "Tx512Tx1024", "n", 1,  "", kvx_low, 1, KVX_OVERLOAD_RES, )
 #undef KVX_MANY_BUILTIN
 #undef KVX_BUILTIN
 #undef BUILTIN

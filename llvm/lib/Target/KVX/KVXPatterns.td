@@ -2335,3 +2335,15 @@ def : Pat <(v2048i1 (kvx_concat v1024i1:$lo, v1024i1:$hi)),
 
 def : Pat <(v4096i1 (kvx_concat v2048i1:$lo, v2048i1:$hi)),
             (v4096i1 (REG_SEQUENCE Buffer16Reg, $lo, sub_2K0, $hi, sub_2K1))>;
+
+multiclass XLowXHigh<ValueType vt, RegisterClass rc, string sub> {
+  defvar lo = !cast<SubRegIndex>(sub # "0");
+  defvar hi = !cast<SubRegIndex>(sub # "1");
+  def : Pat<(vt (int_kvx_low rc:$v)), (vt (EXTRACT_SUBREG $v, lo))>;
+  def : Pat<(vt (int_kvx_high rc:$v)), (vt (EXTRACT_SUBREG $v, hi))>;
+}
+
+defm : XLowXHigh<v256i1, WideReg, "sub_v">;
+defm : XLowXHigh<v512i1, MatrixReg, "sub_w">;
+defm : XLowXHigh<v1024i1, Buffer8Reg, "sub_m">;
+defm : XLowXHigh<v2048i1, Buffer16Reg, "sub_2K">;
