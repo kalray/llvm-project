@@ -17,6 +17,7 @@
 let Namespace = "KVX" in {
 include "KVXSubRegisterInfo.td"
 
+let FallbackRegAltNameIndex = NoRegAltName in
 def BuffName : RegAltNameIndex;
 def LoHiXYZT : RegAltNameIndex;
 

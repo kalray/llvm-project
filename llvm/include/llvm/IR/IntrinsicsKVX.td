@@ -144,10 +144,6 @@ def int_kvx_xmovefo: Intrinsic<[llvm_v4i64_ty], [llvm_v256i1_ty], [IntrNoMem]>;
 
 // atomic register copy/shift operations
 def int_kvx_xswap256 : Intrinsic<[llvm_v4i64_ty, llvm_v256i1_ty], [llvm_v4i64_ty, llvm_v256i1_ty], [IntrNoMem]>;
-def int_kvx_xaccess512o : Intrinsic<[llvm_v4i64_ty], [llvm_v512i1_ty, llvm_i64_ty], [IntrNoMem]>;
-def int_kvx_xaccess1024o : Intrinsic<[llvm_v4i64_ty], [llvm_v1024i1_ty, llvm_i64_ty], [IntrNoMem]>;
-def int_kvx_xalign512o : Intrinsic<[llvm_v256i1_ty], [llvm_v512i1_ty, llvm_i64_ty], [IntrNoMem]>;
-def int_kvx_xalign1024o : Intrinsic<[llvm_v256i1_ty], [llvm_v1024i1_ty, llvm_i64_ty], [IntrNoMem]>;
 
 // Matrix / Wide sub-registers manipulation
 def int_kvx_xinsertwm : Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_v512i1_ty, llvm_i32_ty], [IntrNoMem]>;
@@ -260,6 +256,7 @@ def int_kvx_any2: Intrinsic<[llvm_i64_ty], [llvm_any_ty, LLVMMatchType<0>, llvm_
 def int_kvx_any4: Intrinsic<[llvm_i64_ty], [llvm_any_ty, LLVMMatchType<0>, LLVMMatchType<0>, LLVMMatchType<0>, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_avg: Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>, LLVMMatchType<0>, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_bitcnt: Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_cat : Intrinsic<[llvm_anyvector_ty], [LLVMHalfElementsVectorType<0>, LLVMHalfElementsVectorType<0>], [IntrNoMem]>;
 def int_kvx_fadd : Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>, LLVMMatchType<0>, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_faddc : Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>, LLVMMatchType<0>, llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_fcconj : Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>], [IntrNoMem]>;
@@ -303,5 +300,6 @@ def int_kvx_wideninte: Intrinsic<[llvm_anyint_ty], [LLVMSubdivide2VectorType<0>,
 def int_kvx_widenintes: Intrinsic<[llvm_i64_ty], [llvm_v2i32_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_wideninto: Intrinsic<[llvm_anyint_ty], [LLVMSubdivide2VectorType<0>, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_widenintos: Intrinsic<[llvm_i64_ty], [llvm_v2i32_ty, llvm_i32_ty], [IntrNoMem]>;
-def int_kvx_cat : Intrinsic<[llvm_anyvector_ty], [LLVMHalfElementsVectorType<0>, LLVMHalfElementsVectorType<0>], [IntrNoMem]>;
+def int_kvx_xaccesso : Intrinsic<[llvm_v4i64_ty], [llvm_anyvector_ty, llvm_i64_ty], [IntrNoMem]>;
+def int_kvx_xaligno : Intrinsic<[llvm_v256i1_ty], [llvm_anyvector_ty, llvm_i64_ty], [IntrNoMem]>;
 }  // TargetPrefix = "kvx"

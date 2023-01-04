@@ -631,7 +631,7 @@ void xsplatdo(__kvx_x256 *v) {
 // CHECK-LABEL: @xalign512o(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = load <512 x i1>, <512 x i1>* [[W:%.*]], align 32, [[TBAA6]]
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <256 x i1> @llvm.kvx.xalign512o(<512 x i1> [[TMP0]], i64 [[S:%.*]])
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <256 x i1> @llvm.kvx.xaligno.v512i1(<512 x i1> [[TMP0]], i64 [[S:%.*]])
 // CHECK-NEXT:    store <256 x i1> [[TMP1]], <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
@@ -642,12 +642,34 @@ void xalign512o(__kvx_x256 *v, __kvx_x512 *w, long s) {
 // CHECK-LABEL: @xalign1024o(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = load <1024 x i1>, <1024 x i1>* [[M:%.*]], align 32, [[TBAA8]]
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <256 x i1> @llvm.kvx.xalign1024o(<1024 x i1> [[TMP0]], i64 [[S:%.*]])
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <256 x i1> @llvm.kvx.xaligno.v1024i1(<1024 x i1> [[TMP0]], i64 [[S:%.*]])
 // CHECK-NEXT:    store <256 x i1> [[TMP1]], <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void xalign1024o(__kvx_x256 *v, __kvx_x1024 *m, long s) {
   *v = __builtin_kvx_xalign1024o(*m, s);
+}
+
+// CHECK-LABEL: @xalign2048o(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <256 x i1> @llvm.kvx.xaligno.v2048i1(<2048 x i1> zeroinitializer, i64 [[S:%.*]])
+// CHECK-NEXT:    store <256 x i1> [[TMP0]], <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
+// CHECK-NEXT:    ret void
+//
+void xalign2048o(__kvx_x256 *v, long s) {
+  __kvx_x2048 m = __builtin_kvx_xzero2048();
+  *v = __builtin_kvx_xalign2048o(m, s);
+}
+
+// CHECK-LABEL: @xalign4096o(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <256 x i1> @llvm.kvx.xaligno.v4096i1(<4096 x i1> zeroinitializer, i64 [[S:%.*]])
+// CHECK-NEXT:    store <256 x i1> [[TMP0]], <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
+// CHECK-NEXT:    ret void
+//
+void xalign4096o(__kvx_x256 *v, long s) {
+  __kvx_x4096 m = __builtin_kvx_xzero4096();
+  *v = __builtin_kvx_xalign4096o(m, s);
 }
 
 // CHECK-LABEL: @xloadbuff512(
@@ -679,7 +701,7 @@ void xloadbuff1024(__kvx_x1024 *w, long long s) {
 // CHECK-LABEL: @xaccess512o(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = load <512 x i1>, <512 x i1>* [[W:%.*]], align 32, [[TBAA6]]
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.xaccess512o(<512 x i1> [[TMP0]], i64 [[S:%.*]])
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.xaccesso.v512i1(<512 x i1> [[TMP0]], i64 [[S:%.*]])
 // CHECK-NEXT:    ret <4 x i64> [[TMP1]]
 //
 long4 xaccess512o(__kvx_x512 *w, long long s) {
@@ -689,11 +711,31 @@ long4 xaccess512o(__kvx_x512 *w, long long s) {
 // CHECK-LABEL: @xaccess1024o(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = load <1024 x i1>, <1024 x i1>* [[W:%.*]], align 32, [[TBAA8]]
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.xaccess1024o(<1024 x i1> [[TMP0]], i64 [[S:%.*]])
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.xaccesso.v1024i1(<1024 x i1> [[TMP0]], i64 [[S:%.*]])
 // CHECK-NEXT:    ret <4 x i64> [[TMP1]]
 //
 long4 xaccess1024o(__kvx_x1024 *w, long long s) {
   return __builtin_kvx_xaccess1024o(*w, s);
+}
+
+// CHECK-LABEL: @xaccess2048o(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x i64> @llvm.kvx.xaccesso.v2048i1(<2048 x i1> zeroinitializer, i64 [[S:%.*]])
+// CHECK-NEXT:    ret <4 x i64> [[TMP0]]
+//
+long4 xaccess2048o(long long s) {
+  __kvx_x2048 w = __builtin_kvx_xzero2048();
+  return __builtin_kvx_xaccess2048o(w, s);
+}
+
+// CHECK-LABEL: @xaccess4096o(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4 x i64> @llvm.kvx.xaccesso.v4096i1(<4096 x i1> zeroinitializer, i64 [[S:%.*]])
+// CHECK-NEXT:    ret <4 x i64> [[TMP0]]
+//
+long4 xaccess4096o(long long s) {
+  __kvx_x4096 w = __builtin_kvx_xzero4096();
+  return __builtin_kvx_xaccess4096o(w, s);
 }
 
 // CHECK-LABEL: @binOps(

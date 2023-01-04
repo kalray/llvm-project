@@ -122,7 +122,7 @@ define <4 x i64> @test_xmovefo(<256 x i1>* %p0){
   ret <4 x i64> %v1
 }
 
-declare <4 x i64> @llvm.kvx.xaccess512o(<512 x i1>, i64)
+declare <4 x i64> @llvm.kvx.xaccesso.v512i1(<512 x i1>, i64)
 define <4 x i64> @test_alignovi(<512 x i1>* %p0){
 ; CHECK-LABEL: test_alignovi:
 ; CHECK:       # %bb.0:
@@ -135,7 +135,7 @@ define <4 x i64> @test_alignovi(<512 x i1>* %p0){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %v0 = load <512 x i1>, <512 x i1>* %p0
-  %v1 = tail call <4 x i64> @llvm.kvx.xaccess512o(<512 x i1> %v0, i64 16)
+  %v1 = tail call <4 x i64> @llvm.kvx.xaccesso.v512i1(<512 x i1> %v0, i64 16)
   ret <4 x i64> %v1
 }
 
@@ -151,11 +151,11 @@ define <4 x i64> @test_alignovr(<512 x i1>* %p0, i64 %s){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %v0 = load <512 x i1>, <512 x i1>* %p0
-  %v1 = tail call <4 x i64> @llvm.kvx.xaccess512o(<512 x i1> %v0, i64 %s)
+  %v1 = tail call <4 x i64> @llvm.kvx.xaccesso.v512i1(<512 x i1> %v0, i64 %s)
   ret <4 x i64> %v1
 }
 
-declare <256 x i1> @llvm.kvx.xalign512o(<512 x i1>, i64 immarg)
+declare <256 x i1> @llvm.kvx.xaligno.v512i1(<512 x i1>, i64 immarg)
 define void @test_alignvi(<512 x i1>* %p0){
 ; CHECK-LABEL: test_alignvi:
 ; CHECK:       # %bb.0:
@@ -169,7 +169,7 @@ define void @test_alignvi(<512 x i1>* %p0){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %v0 = load <512 x i1>, <512 x i1>* %p0
-  %v1 = tail call <256 x i1> @llvm.kvx.xalign512o(<512 x i1> %v0, i64 16)
+  %v1 = tail call <256 x i1> @llvm.kvx.xaligno.v512i1(<512 x i1> %v0, i64 16)
   %p1 = bitcast <512 x i1>* %p0 to <256 x i1>*
   store <256 x i1> %v1, <256 x i1>* %p1, align 32
   ret void
@@ -188,7 +188,7 @@ define void @test_alignvr(<512 x i1>* %p0, i64 %s){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %v0 = load <512 x i1>, <512 x i1>* %p0
-  %v1 = tail call <256 x i1> @llvm.kvx.xalign512o(<512 x i1> %v0, i64 %s)
+  %v1 = tail call <256 x i1> @llvm.kvx.xaligno.v512i1(<512 x i1> %v0, i64 %s)
   %p1 = bitcast <512 x i1>* %p0 to <256 x i1>*
   store <256 x i1> %v1, <256 x i1>* %p1, align 32
   ret void
@@ -966,9 +966,9 @@ define <4 x i64> @test_tca_builtins(i64 %0, i64 %1, i64 %2, i64 %3, <256 x i1>* 
   %14 = tail call <256 x i1> @llvm.kvx.xmoveoto(<4 x i64> <i64 0, i64 1, i64 2, i64 3>)
   %15 = load volatile <256 x i1>, <256 x i1>* %4
   %16 = tail call <512 x i1> @llvm.kvx.cat.v512i1(<256 x i1> %14, <256 x i1> %15)
-  %17 = tail call <256 x i1> @llvm.kvx.xalign512o(<512 x i1> %16, i64 16)
+  %17 = tail call <256 x i1> @llvm.kvx.xaligno.v512i1(<512 x i1> %16, i64 16)
   %18 = tail call <512 x i1> @llvm.kvx.cat.v512i1(<256 x i1> %14, <256 x i1> %17)
-  %19 = tail call <4 x i64> @llvm.kvx.xaccess512o(<512 x i1> %18, i64 1)
+  %19 = tail call <4 x i64> @llvm.kvx.xaccesso.v512i1(<512 x i1> %18, i64 1)
   %20 = load volatile <1024 x i1>, <1024 x i1>* %6
   %21 = tail call <256 x i1> @llvm.kvx.xconvdhv0(<256 x i1> %14, <1024 x i1> %20, i32 0, i32 0)
   %22 = tail call <256 x i1> @llvm.kvx.xconvdhv1(<256 x i1> %21, <1024 x i1> %20, i32 1, i32 1)
