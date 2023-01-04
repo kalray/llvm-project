@@ -303,4 +303,5 @@ def int_kvx_widenintos: Intrinsic<[llvm_i64_ty], [llvm_v2i32_ty, llvm_i32_ty], [
 def int_kvx_xaccesso : Intrinsic<[llvm_v4i64_ty], [llvm_anyvector_ty, llvm_i64_ty], [IntrNoMem]>;
 def int_kvx_xaligno : Intrinsic<[llvm_v256i1_ty], [llvm_anyvector_ty, llvm_i64_ty], [IntrNoMem]>;
 def int_kvx_xpreload : Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>, llvm_ptr_ty, llvm_i64_ty, llvm_i32_ty, llvm_i32_ty], [IntrReadMem]>;
+def int_kvx_xsplat : Intrinsic<[llvm_anyint_ty], [llvm_i64_ty], [IntrNoMem]>;
 }  // TargetPrefix = "kvx"

@@ -2347,3 +2347,138 @@ defm : XLowXHigh<v256i1, WideReg, "sub_v">;
 defm : XLowXHigh<v512i1, MatrixReg, "sub_w">;
 defm : XLowXHigh<v1024i1, Buffer8Reg, "sub_m">;
 defm : XLowXHigh<v2048i1, Buffer16Reg, "sub_2K">;
+
+def PopV256i1_rr : OutPatFrag <(ops node:$v), (REG_SEQUENCE VectorReg, (XMOVETQrrbe $v, $v), sub_q0, (XMOVETQrrbo $v, $v), sub_q1)>;
+def PopV256i1_ri16 : OutPatFrag <(ops node:$v), (XSPLATDOi16 $v)>;
+def PopV256i1_ri43 : OutPatFrag <(ops node:$v), (XSPLATDOi43 $v)>;
+def PopV256i1_ri64 : OutPatFrag <(ops node:$v), (XSPLATDOi64 $v)>;
+
+class PopV512i1<OutPatFrag Leaf256> :
+  OutPatFrag <(ops node:$v),
+          (REG_SEQUENCE WideReg,
+            (v256i1 (Leaf256 $v)), sub_v0,
+            (v256i1 (Leaf256 $v)), sub_v1)>;
+
+class Pop1024_cv1 <OutPatFrag Leaf256> :
+  OutPatFrag <(ops node:$v),
+          (REG_SEQUENCE MatrixReg,
+            (v256i1 (Leaf256 $v)), sub_v0,
+            (v256i1 (Leaf256 $v)), sub_v1,
+            (v256i1 (Leaf256 $v)), sub_v2,
+            (v256i1 (Leaf256 $v)), sub_v3)>;
+
+class Pop1024_cv2 <OutPatFrag Leaf256> :
+  OutPatFrag <(ops node:$v), (XSPLATOV (v256i1 (Leaf256 $v)), shufflev_)>;
+
+class Pop2048_cv1 <OutPatFrag Leaf1024> :
+  OutPatFrag <(ops node:$v),
+     (v2048i1 (REG_SEQUENCE Buffer8Reg,
+      (v1024i1 (Leaf1024 $v)), sub_m0,
+      (v1024i1 (XMT44D (v1024i1 (Leaf1024 $v)))), sub_m1))>;
+
+// The copy instruction, XMT44D for cv1, XCOPYV for cv2, could be passed as
+// argument (or just a COPY for cv2). But that seems to fail to generate the
+// pattern, altough it does not break in debug mode :/
+// In CV1 recurrently call XMT44D over the last, else it will do subreg copies.
+class Pop4096_cv1 <OutPatFrag Leaf1024> :
+  OutPatFrag <(ops node:$v),
+     (v4096i1 (REG_SEQUENCE Buffer16Reg,
+      (v1024i1 (Leaf1024 $v)), sub_m0,
+      (v1024i1 (XMT44D (v1024i1 (Leaf1024 $v)))), sub_m1,
+      (v1024i1 (XMT44D (XMT44D (v1024i1 (Leaf1024 $v))))), sub_m2,
+      (v1024i1 (XMT44D (XMT44D (XMT44D (v1024i1 (Leaf1024 $v)))))), sub_m3))>;
+
+class Pop2048_cv2 <OutPatFrag Leaf1024> :
+  OutPatFrag <(ops node:$v),
+     (v2048i1 (REG_SEQUENCE Buffer8Reg,
+      (v1024i1 (Leaf1024 $v)), sub_m0,
+      (v1024i1 (COPY (v1024i1 (Leaf1024 $v)))), sub_m1))>;
+
+class Pop4096_cv2 <OutPatFrag Leaf1024> :
+  OutPatFrag <(ops node:$v),
+     (v4096i1 (REG_SEQUENCE Buffer16Reg,
+      (v1024i1 (Leaf1024 $v)), sub_m0,
+      (v1024i1 (Leaf1024 $v)), sub_m1,
+      (v1024i1 (Leaf1024 $v)), sub_m2,
+      (v1024i1 (Leaf1024 $v)), sub_m3))>;
+
+// Common CV1 CV2, rr splat for 256 and 512 bits.
+def : Pat<(v256i1 (int_kvx_xsplat i64:$v)),
+          (v256i1 (PopV256i1_rr SingleReg:$v))>;
+
+def : Pat<(v512i1 (int_kvx_xsplat i64:$v)),
+          (v512i1 (PopV512i1<PopV256i1_rr> SingleReg:$v))>;
+
+// CV1 rr splat for up to 4096 bits.
+let Predicates = [IsV1] in {
+def : Pat<(v1024i1 (int_kvx_xsplat i64:$v)),
+          (v1024i1 (Pop1024_cv1<PopV256i1_rr> SingleReg:$v))>;
+
+def : Pat<(v2048i1 (int_kvx_xsplat i64:$v)),
+          (v2048i1 (Pop2048_cv1<Pop1024_cv1<PopV256i1_rr>> SingleReg:$v))>;
+
+def : Pat<(v4096i1 (int_kvx_xsplat i64:$v)),
+          (v4096i1 (Pop4096_cv1<Pop1024_cv1<PopV256i1_rr>> SingleReg:$v))>;
+}
+
+// TODO: This could be a multiclass that declares all immediate types.
+// Is seems not possible to pass a class as argument, perhaps we could instantiate
+// them and pass each one (for immediates 16/43/64 bits) as arguments.
+let Predicates = [IsV2] in {
+// CV2 rr splat for up to 4096 bits.
+def : Pat<(v1024i1 (int_kvx_xsplat i64:$v)),
+          (v1024i1 (Pop1024_cv2<PopV256i1_rr> SingleReg:$v))>;
+
+def : Pat<(v2048i1 (int_kvx_xsplat i64:$v)),
+          (v2048i1 (Pop2048_cv2<Pop1024_cv2<PopV256i1_rr>> SingleReg:$v))>;
+
+def : Pat<(v4096i1 (int_kvx_xsplat i64:$v)),
+          (v4096i1 (Pop4096_cv2<Pop1024_cv2<PopV256i1_rr>> SingleReg:$v))>;
+
+// CV2 Immediate patterns
+def : Pat<(v256i1 (int_kvx_xsplat Signed16:$v)),
+  (v256i1 (PopV256i1_ri16 Signed16:$v))>;
+
+def : Pat<(v256i1 (int_kvx_xsplat Signed43:$v)),
+  (v256i1 (PopV256i1_ri43 Signed43:$v))>;
+
+def : Pat<(v256i1 (int_kvx_xsplat Wrapped64:$v)),
+  (v256i1 (PopV256i1_ri64 Wrapped64:$v))>;
+
+def : Pat<(v512i1 (int_kvx_xsplat Signed16:$v)),
+          (v512i1 (PopV512i1<PopV256i1_ri16> Signed16:$v))>;
+
+def : Pat<(v512i1 (int_kvx_xsplat Signed43:$v)),
+          (v512i1 (PopV512i1<PopV256i1_ri43> Signed43:$v))>;
+
+def : Pat<(v512i1 (int_kvx_xsplat Wrapped64:$v)),
+          (v512i1 (PopV512i1<PopV256i1_ri64> Wrapped64:$v))>;
+
+def : Pat<(v1024i1 (int_kvx_xsplat Signed16:$v)),
+          (v1024i1 (Pop1024_cv2<PopV256i1_ri16> Signed16:$v))>;
+
+def : Pat<(v1024i1 (int_kvx_xsplat Signed43:$v)),
+          (v1024i1 (Pop1024_cv2<PopV256i1_ri43> Signed43:$v))>;
+
+def : Pat<(v1024i1 (int_kvx_xsplat Wrapped64:$v)),
+          (v1024i1 (Pop1024_cv2<PopV256i1_ri64> Wrapped64:$v))>;
+
+def : Pat<(v2048i1 (int_kvx_xsplat Signed16:$v)),
+          (v2048i1 (Pop2048_cv2<Pop1024_cv2<PopV256i1_ri16>> Signed16:$v))>;
+
+def : Pat<(v2048i1 (int_kvx_xsplat Signed43:$v)),
+          (v2048i1 (Pop2048_cv2<Pop1024_cv2<PopV256i1_ri43>> Signed43:$v))>;
+
+def : Pat<(v2048i1 (int_kvx_xsplat Wrapped64:$v)),
+          (v2048i1 (Pop2048_cv2<Pop1024_cv2<PopV256i1_ri64>> Wrapped64:$v))>;
+
+def : Pat<(v4096i1 (int_kvx_xsplat Signed16:$v)),
+          (v4096i1 (Pop4096_cv2<Pop1024_cv2<PopV256i1_ri16>> Signed16:$v))>;
+
+def : Pat<(v4096i1 (int_kvx_xsplat Signed43:$v)),
+          (v4096i1 (Pop4096_cv2<Pop1024_cv2<PopV256i1_ri43>> Signed43:$v))>;
+
+def : Pat<(v4096i1 (int_kvx_xsplat Wrapped64:$v)),
+          (v4096i1 (Pop4096_cv2<Pop1024_cv2<PopV256i1_ri64>> Wrapped64:$v))>;
+
+}
