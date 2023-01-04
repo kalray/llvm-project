@@ -214,8 +214,6 @@ def int_kvx_xfscalewo : Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_i32_ty
 def int_kvx_xload1024: Intrinsic<[llvm_v1024i1_ty], [llvm_ptr_ty, llvm_i32_ty], [IntrReadMem]>;
 def int_kvx_xload256: Intrinsic<[llvm_v256i1_ty], [llvm_ptr_ty, llvm_i32_ty], [IntrReadMem]>;
 def int_kvx_xload512: Intrinsic<[llvm_v512i1_ty], [llvm_ptr_ty, llvm_i32_ty], [IntrReadMem]>;
-def int_kvx_xloadbuff512 : Intrinsic<[llvm_v512i1_ty], [llvm_ptr_ty, llvm_i64_ty, llvm_v512i1_ty, llvm_i32_ty, llvm_i32_ty], [IntrReadMem]>;
-def int_kvx_xloadbuff1024 : Intrinsic<[llvm_v1024i1_ty], [llvm_ptr_ty, llvm_i64_ty, llvm_v1024i1_ty, llvm_i32_ty, llvm_i32_ty], [IntrReadMem]>;
 def int_kvx_xloadc1024: Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_ptr_ty, llvm_v4i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrReadMem]>;
 def int_kvx_xloadc256: Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_ptr_ty, llvm_i64_ty, llvm_i32_ty, llvm_i32_ty], [IntrReadMem]>;
 def int_kvx_xloadc512: Intrinsic<[llvm_v512i1_ty], [llvm_v512i1_ty, llvm_ptr_ty, llvm_i64_ty, llvm_i32_ty, llvm_i32_ty], [IntrReadMem]>;
@@ -304,4 +302,5 @@ def int_kvx_wideninto: Intrinsic<[llvm_anyint_ty], [LLVMSubdivide2VectorType<0>,
 def int_kvx_widenintos: Intrinsic<[llvm_i64_ty], [llvm_v2i32_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_xaccesso : Intrinsic<[llvm_v4i64_ty], [llvm_anyvector_ty, llvm_i64_ty], [IntrNoMem]>;
 def int_kvx_xaligno : Intrinsic<[llvm_v256i1_ty], [llvm_anyvector_ty, llvm_i64_ty], [IntrNoMem]>;
+def int_kvx_xpreload : Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>, llvm_ptr_ty, llvm_i64_ty, llvm_i32_ty, llvm_i32_ty], [IntrReadMem]>;
 }  // TargetPrefix = "kvx"

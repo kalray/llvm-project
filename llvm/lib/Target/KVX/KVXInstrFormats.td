@@ -309,16 +309,13 @@ multiclass MC_XLO <string OpcStr = "xlo"> {
                     [(set v1024i1:$r, (int_kvx_xloadsc1024 v1024i1:$z, (add i64:$mem, Signed54:$off), i64:$val, VariantMod:$mod0, LsumaskMod:$cond, QindexMod:$mod1))]>;
 
   // xlovariantlsupack registerAg, registerY = [registerZ]
-  defm rvp    : I <OpcStr, LSU_LOAD, [SingleReg], [VariantMod, LsupackMod], [SingleReg], [], [BufferReg], 1,
-                  [(set v512i1:$r, (int_kvx_xloadbuff512 i64:$mem, i64:$op0, v512i1:$z, VariantMod:$mod0, LsupackMod:$mod1))]>;
+  defm rvp    : I <OpcStr, LSU_LOAD, [SingleReg], [VariantMod, LsupackMod], [SingleReg], [], [BufferReg], 1>;
 
   // xlovariantlsupack registerAg, registerY = offset27[registerZ]
-  defm ri27vp : I <OpcStr, LSU_LOAD_X_, [SingleReg], [VariantMod, LsupackMod], [Signed27, SingleReg], [], [BufferReg], 1,
-                  [(set v512i1:$r, (int_kvx_xloadbuff512 (add i64:$mem, Signed27:$off), i64:$op0, v512i1:$z, VariantMod:$mod0, LsupackMod:$mod1))]>;
+  defm ri27vp : I <OpcStr, LSU_LOAD_X_, [SingleReg], [VariantMod, LsupackMod], [Signed27, SingleReg], [], [BufferReg], 1>;
 
   // xlovariantlsupack registerAg, registerY = extend27 offset27[registerZ]
-  defm ri54vp : I <OpcStr, LSU_LOAD_Y_, [SingleReg], [VariantMod, LsupackMod], [Signed54, SingleReg], [], [BufferReg], 1,
-                  [(set v512i1:$r, (int_kvx_xloadbuff512 (add i64:$mem, Signed54:$off), i64:$op0, v512i1:$z, VariantMod:$mod0, LsupackMod:$mod1))]>;
+  defm ri54vp : I <OpcStr, LSU_LOAD_Y_, [SingleReg], [VariantMod, LsupackMod], [Signed54, SingleReg], [], [BufferReg], 1>;
 
   // xlovariantdoscale registerA = registerY[registerZ]
   defm rr     : I <OpcStr, LSU_LOAD, [], [VariantMod, DoscaleMod], [SingleReg, SingleReg], [], [VectorReg]>;
