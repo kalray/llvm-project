@@ -2314,6 +2314,20 @@ public:
     return CreateShuffleVector(V1, V2, IntMask, Name);
   }
 
+  Value *CreateVectorConcat(Value *V1, Value *V2, const Twine &Name = "") {
+    assert(V1->getType()->isVectorTy() && "Concatenating V1, not a vector.");
+    assert(V2->getType()->isVectorTy() && "Concatenating V2, not a vector.");
+    assert(V2->getType() == V1->getType() &&
+           "Concatenating distinct vector types.");
+    int Sz =
+        cast<VectorType>(V1->getType())->getElementCount().getFixedValue() * 2;
+    SmallVector<int, 16> Mask;
+    for (int I = 0; I < Sz; ++I)
+      Mask.push_back(I);
+
+    return CreateShuffleVector(V1, V2, Mask, Name);
+  }
+
   /// See class ShuffleVectorInst for a description of the mask representation.
   Value *CreateShuffleVector(Value *V1, Value *V2, ArrayRef<int> Mask,
                              const Twine &Name = "") {
