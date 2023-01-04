@@ -1437,7 +1437,7 @@ multiclass MC_34<string OpcStr> {
 }
 
 // multiclass MC_35 is used by:
-//   defm XCOPYV
+//   defm XCOPYO - cv1
 let isMoveReg = 1 in
 multiclass MC_35<string OpcStr> {
   def re : KVX_INSTRUCTION
@@ -2703,6 +2703,7 @@ def XCLAMPWO : TERNARY<"xclampwo", VectorReg, VectorReg, VectorReg, TCA_INT,
 let isMoveReg = 1 in {
 defm XCOPYV : I<"xcopyv", TCA_INT, [MatrixReg], [ShuffleVMod], [], [], [MatrixReg], 0,
                 [(set v1024i1:$r, (int_kvx_xcopyv v1024i1:$op0, ShuffleVMod:$mod0))]>;
+
 defm XCOPYX : I<"xcopyx", TCA_INT, [WideReg], [ShuffleXMod], [], [], [WideReg], 0,
                 [(set v512i1:$r, (int_kvx_xcopyx v512i1:$op0, ShuffleXMod:$mod0))]>;
 }
