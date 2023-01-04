@@ -19308,13 +19308,7 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
       Result[sv] = Builder.CreateCall(
           Callee, {ASubvec[sv], BSubvec[sv], CSubvec[sv], Mods[0], Mods[1]});
 
-    constexpr int ResultVectorLength = CVectorLength;
-    SmallVector<Constant *, ResultVectorLength> MaskVector;
-    for (int i = 0; i < ResultVectorLength; i++)
-      MaskVector.push_back(ConstantInt::get(Int32Ty, i));
-    Value *MaskVec = ConstantVector::get(ArrayRef<Constant *>(MaskVector));
-
-    return Builder.CreateShuffleVector(Result[0], Result[1], MaskVec);
+    return Builder.CreateVectorConcat(Result[0], Result[1]);
   }
 
   case KVX::BI__builtin_kvx_xundef1024:
@@ -19330,6 +19324,11 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_xzero4096:
   case KVX::BI__builtin_kvx_xzero512:
     return Constant::getNullValue(ConvertType(E->getType()));
+  case KVX::BI__builtin_kvx_cat128:
+  case KVX::BI__builtin_kvx_cat256:
+  case KVX::BI__builtin_kvx_cat512:
+    return Builder.CreateVectorConcat(EmitScalarExpr(E->getArg(0)),
+                                      EmitScalarExpr(E->getArg(1)), "kvx_cat");
 
 #define KVX_BUILTIN(ID, TYPES, MODE, NARGS, CPUS, ...)                         \
   case KVX::BI__builtin_kvx_##ID: {                                            \
