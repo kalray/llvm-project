@@ -284,6 +284,8 @@ def int_kvx_fsdiv: Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>, LLVMMatchTyp
 def int_kvx_fsrec: Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_fsrsr: Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>], [IntrNoMem]>;
 def int_kvx_fwiden: Intrinsic<[llvm_anyfloat_ty], [LLVMTruncatedType<0>, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_high : Intrinsic<[llvm_anyvector_ty], [LLVMDoubleElementsOfVecOrScalar<0>], [IntrNoMem]>;
+def int_kvx_low : Intrinsic<[llvm_anyvector_ty], [LLVMDoubleElementsOfVecOrScalar<0>], [IntrNoMem]>;
 def int_kvx_maddx: Intrinsic<[llvm_anyint_ty], [LLVMTruncatedType<0>, LLVMTruncatedType<0>, LLVMMatchType<0>, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_max: Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>, LLVMMatchType<0>], [IntrNoMem]>;
 def int_kvx_min: Intrinsic<[llvm_anyfloat_ty], [LLVMMatchType<0>, LLVMMatchType<0>], [IntrNoMem]>;
