@@ -19329,6 +19329,19 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   case KVX::BI__builtin_kvx_cat512:
     return Builder.CreateVectorConcat(EmitScalarExpr(E->getArg(0)),
                                       EmitScalarExpr(E->getArg(1)), "kvx_cat");
+  case KVX::BI__builtin_kvx_low64:
+  case KVX::BI__builtin_kvx_low128:
+  case KVX::BI__builtin_kvx_low256:
+    return Builder
+        .SplitVector(EmitScalarExpr(E->getArg(0)), true, false, "kvx_low")
+        .first;
+
+  case KVX::BI__builtin_kvx_high64:
+  case KVX::BI__builtin_kvx_high128:
+  case KVX::BI__builtin_kvx_high256:
+    return Builder
+        .SplitVector(EmitScalarExpr(E->getArg(0)), false, true, "kvx_high")
+        .second;
 
 #define KVX_BUILTIN(ID, TYPES, MODE, NARGS, CPUS, ...)                         \
   case KVX::BI__builtin_kvx_##ID: {                                            \

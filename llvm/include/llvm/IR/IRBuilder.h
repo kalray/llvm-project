@@ -2551,6 +2551,47 @@ public:
     return CreateShuffleVector(V, PoisonValue::get(V->getType()), Mask, Name);
   }
 
+  // Return the demanded low/high (first/second) halfs of the vector. If not
+  // demanded, return undef. Return scalar types in low/high if the vector has
+  // only 2 elements.
+  std::pair<Value *, Value *> SplitVector(Value *V, bool GetLow = true,
+                                          bool GetHigh = true,
+                                          const Twine &Name = "") {
+    assert(V->getType()->isVectorTy() && "Splitting not a vector type.");
+    auto *VT = cast<VectorType>(V->getType());
+    int OutSize = VT->getElementCount().getFixedValue() / 2;
+    bool ExtractElement = OutSize == 1;
+    Type *OutVT = ExtractElement ? VT->getElementType()
+                                 : VectorType::getHalfElementsVectorType(VT);
+    Value *Lo, *Hi;
+
+    if (!GetLow)
+      Lo = UndefValue::get(OutVT);
+    else if (ExtractElement)
+      Lo = CreateExtractElement(V, 0UL, Name);
+    else {
+      SmallVector<int, 16> Mask;
+      for (int I = 0; I < OutSize; ++I)
+        Mask.push_back(I);
+
+      Lo = CreateShuffleVector(V, Mask, Name);
+    }
+
+    if (!GetHigh)
+      Hi = UndefValue::get(OutVT);
+    else if (ExtractElement)
+      Hi = CreateExtractElement(V, 1UL, Name);
+    else {
+      SmallVector<int, 16> Mask;
+      for (int I = 0; I < OutSize; ++I)
+        Mask.push_back(I + OutSize);
+
+      Hi = CreateShuffleVector(V, Mask, Name);
+    }
+
+    return std::make_pair(Lo, Hi);
+  }
+
   Value *CreateExtractValue(Value *Agg,
                             ArrayRef<unsigned> Idxs,
                             const Twine &Name = "") {
