@@ -1251,7 +1251,7 @@ multiclass MC_2B<string OpcStr> {
 }
 
 // multiclass MC_2C is used by:
-//   defm FMULCWDC
+//   defm FMULWDC.C
 //   defm FMULWDC
 //   defm FMULWDP
 multiclass MC_2C<string OpcStr> {
@@ -3121,7 +3121,7 @@ def MULWDC : KVX_INSTRUCTION
 
 def MULCWDC : KVX_INSTRUCTION
   <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
-   "mulcwdc $a1 = $a2, $a3",
+   "mulwdc.c $a1 = $a2, $a3",
    [/* no straightforward pattern */],
    MAU_INT>, Requires<[IsV1]>;
 
@@ -3278,7 +3278,7 @@ defm FMULWC : MC_2AM<"fmulwc">;
 
 defm FMULWDC : MC_2C<"fmulwdc">, Requires<[IsV1]>;
 
-defm FMULCWDC : MC_2C<"fmulcwdc">, Requires<[IsV1]>;
+defm FMULCWDC : MC_2C<"fmulwdc.c">, Requires<[IsV1]>;
 
 let isAdd = 1 in {
 defm FADDD : MC_29<"faddd">;
