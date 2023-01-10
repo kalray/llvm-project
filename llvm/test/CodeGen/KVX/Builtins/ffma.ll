@@ -94,7 +94,7 @@ define half @ffmah(half %0, half %1, half %2) {
 ; ALL-NEXT:    ffmahq.ru.s $r0 = $r1, $r2
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
-  %4 = tail call half @llvm.kvx.ffma.f16(half %0, half %1, half %2, i32 1, i32 1)
+  %4 = tail call half @llvm.kvx.ffma.f16(half %1, half %2, half %0, i32 1, i32 1)
   ret half %4
 }
 
@@ -106,7 +106,7 @@ define <2 x half> @ffmahp(<2 x half> %0, <2 x half> %1, <2 x half> %2) {
 ; ALL-NEXT:    ffmahq.rz.s $r0 = $r1, $r2
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
-  %4 = tail call <2 x half> @llvm.kvx.ffma.v2f16(<2 x half> %0, <2 x half> %1, <2 x half> %2, i32 3, i32 1)
+  %4 = tail call <2 x half> @llvm.kvx.ffma.v2f16(<2 x half> %1, <2 x half> %2, <2 x half> %0, i32 3, i32 1)
   ret <2 x half> %4
 }
 
@@ -118,7 +118,7 @@ define <4 x half> @ffmahq(<4 x half> %0, <4 x half> %1, <4 x half> %2) {
 ; ALL-NEXT:    ffmahq.ru.s $r0 = $r1, $r2
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
-  %4 = tail call <4 x half> @llvm.kvx.ffma.v4f16(<4 x half> %0, <4 x half> %1, <4 x half> %2, i32 1, i32 1)
+  %4 = tail call <4 x half> @llvm.kvx.ffma.v4f16(<4 x half> %1, <4 x half> %2, <4 x half> %0, i32 1, i32 1)
   ret <4 x half> %4
 }
 
@@ -222,3 +222,72 @@ define <4 x float> @ffmawq(<4 x float> %0, <4 x float> %1, <4 x float> %2) {
   ret <4 x float> %4
 }
 
+define <8 x half> @ffmaho(<8 x half> %0, <8 x half> %1, <8 x half> %2) {
+; CV1-LABEL: ffmaho:
+; CV1:       # %bb.0:
+; CV1-NEXT:    ffmahq.ru.s $r5 = $r1, $r3
+; CV1-NEXT:    ;;
+; CV1-NEXT:    ffmahq.ru.s $r4 = $r0, $r2
+; CV1-NEXT:    ;;
+; CV1-NEXT:    copyd $r0 = $r4
+; CV1-NEXT:    copyd $r1 = $r5
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: ffmaho:
+; CV2:       # %bb.0:
+; CV2-NEXT:    ffmaho.ru.s $r4r5 = $r0r1, $r2r3
+; CV2-NEXT:    ;;
+; CV2-NEXT:    copyd $r0 = $r4
+; CV2-NEXT:    copyd $r1 = $r5
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
+  %4 = tail call <8 x half> @llvm.kvx.ffma.v8f16(<8 x half> %0, <8 x half> %1, <8 x half> %2, i32 1, i32 1)
+  ret <8 x half> %4
+}
+
+declare <8 x half> @llvm.kvx.ffma.v8f16(<8 x half>, <8 x half>, <8 x half>, i32, i32)
+
+define <16 x half> @ffmahx(<16 x half> %0, <16 x half> %1, <16 x half> %2) {
+; CV1-LABEL: ffmahx:
+; CV1:       # %bb.0:
+; CV1-NEXT:    ffmahq.ru.s $r9 = $r1, $r5
+; CV1-NEXT:    ;;
+; CV1-NEXT:    ffmahq.ru.s $r8 = $r0, $r4
+; CV1-NEXT:    ;;
+; CV1-NEXT:    ffmahq.ru.s $r11 = $r3, $r7
+; CV1-NEXT:    ;;
+; CV1-NEXT:    ffmahq.ru.s $r10 = $r2, $r6
+; CV1-NEXT:    ;;
+; CV1-NEXT:    copyd $r0 = $r8
+; CV1-NEXT:    copyd $r1 = $r9
+; CV1-NEXT:    ;;
+; CV1-NEXT:    copyd $r2 = $r10
+; CV1-NEXT:    copyd $r3 = $r11
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;;
+;
+; CV2-LABEL: ffmahx:
+; CV2:       # %bb.0:
+; CV2-NEXT:    ffmaho.ru.s $r8r9 = $r0r1, $r4r5
+; CV2-NEXT:    ;;
+; CV2-NEXT:    ffmaho.ru.s $r10r11 = $r2r3, $r6r7
+; CV2-NEXT:    ;;
+; CV2-NEXT:    copyd $r0 = $r8
+; CV2-NEXT:    copyd $r1 = $r9
+; CV2-NEXT:    ;;
+; CV2-NEXT:    copyd $r2 = $r10
+; CV2-NEXT:    copyd $r3 = $r11
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;;
+  %4 = shufflevector <16 x half> %0, <16 x half> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+  %5 = shufflevector <16 x half> %1, <16 x half> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+  %6 = shufflevector <16 x half> %2, <16 x half> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+  %7 = tail call <8 x half> @llvm.kvx.ffma.v8f16(<8 x half> %4, <8 x half> %5, <8 x half> %6, i32 1, i32 1)
+  %8 = shufflevector <16 x half> %0, <16 x half> undef, <8 x i32> <i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+  %9 = shufflevector <16 x half> %1, <16 x half> undef, <8 x i32> <i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+  %10 = shufflevector <16 x half> %2, <16 x half> undef, <8 x i32> <i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+  %11 = tail call <8 x half> @llvm.kvx.ffma.v8f16(<8 x half> %8, <8 x half> %9, <8 x half> %10, i32 1, i32 1)
+  %12 = shufflevector <8 x half> %7, <8 x half> %11, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+  ret <16 x half> %12
+}
