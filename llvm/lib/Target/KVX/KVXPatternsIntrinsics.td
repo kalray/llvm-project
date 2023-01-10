@@ -513,16 +513,16 @@ def: Pat<(int_kvx_fmulhq (build_vector f16:$f1, (f16 undef), (f16 undef), (f16 u
                          (build_vector f16:$f2, (f16 undef), (f16 undef), (f16 undef)), i32:$rounding, (i32 0)),
          (FMULHQrr (ZXHD SingleReg:$f1), (ZXHD SingleReg:$f2), RoundingMod:$rounding, silent_)>;
 
-def: Pat<(int_kvx_ffmahq v4f16:$v1, v4f16:$v2, v4f16:$v3, i32:$rounding, i32:$silent),
-  (v4f16 (FFMAHQrr SingleReg:$v1, SingleReg:$v2, SingleReg:$v3, RoundingMod:$rounding, SilentMod:$silent))>;
+def: Pat<(int_kvx_ffmahq v4f16:$v1, v4f16:$v2, v4f16:$acc, i32:$rounding, i32:$silent),
+  (v4f16 (FFMAHQrr SingleReg:$acc, SingleReg:$v1, SingleReg:$v2, RoundingMod:$rounding, SilentMod:$silent))>;
 def: Pat<(int_kvx_ffmahq (build_vector f16:$f1, (f16 undef), (f16 undef), (f16 undef)),
                          (build_vector f16:$f2, (f16 undef), (f16 undef), (f16 undef)),
-                         (build_vector f16:$f3, (f16 undef), (f16 undef), (f16 undef)), i32:$rounding, (i32 1)),
-  (v4f16 (FFMAHQrr SingleReg:$f1, SingleReg:$f2, SingleReg:$f3, RoundingMod:$rounding, silent_s))>;
+                         (build_vector f16:$acc, (f16 undef), (f16 undef), (f16 undef)), i32:$rounding, (i32 1)),
+  (v4f16 (FFMAHQrr SingleReg:$acc, SingleReg:$f1, SingleReg:$f2, RoundingMod:$rounding, silent_s))>;
 def: Pat<(int_kvx_ffmahq (build_vector f16:$f1, (f16 undef), (f16 undef), (f16 undef)),
                          (build_vector f16:$f2, (f16 undef), (f16 undef), (f16 undef)),
-                         (build_vector f16:$f3, (f16 undef), (f16 undef), (f16 undef)), i32:$rounding, (i32 0)),
-  (v4f16 (FFMAHQrr (ZXHD SingleReg:$f1), (ZXHD SingleReg:$f2), (ZXHD SingleReg:$f3), RoundingMod:$rounding, silent_))>;
+                         (build_vector f16:$acc, (f16 undef), (f16 undef), (f16 undef)), i32:$rounding, (i32 0)),
+  (v4f16 (FFMAHQrr (ZXHD SingleReg:$acc), (ZXHD SingleReg:$f1), (ZXHD SingleReg:$f2), RoundingMod:$rounding, silent_))>;
 
 //===----------------------------------------------------------------------===//
 // TCA - tightly-coupled accelerator

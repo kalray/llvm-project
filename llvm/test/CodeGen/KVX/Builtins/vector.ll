@@ -251,7 +251,9 @@ declare <4 x float> @llvm.kvx.fmms212w(<2 x float>, <2 x float>, <4 x float>, i3
 define <4 x half> @ffmahq(<4 x half> %0, <4 x half> %1, <4 x half> %2) {
 ; CHECK-LABEL: ffmahq:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ffmahq.ru.s $r0 = $r1, $r2
+; CHECK-NEXT:    ffmahq.ru.s $r2 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %4 = tail call <4 x half> @llvm.kvx.ffmahq(<4 x half> %0, <4 x half> %1, <4 x half> %2, i32 1, i32 1)
@@ -263,9 +265,13 @@ declare <4 x half> @llvm.kvx.ffmahq(<4 x half>, <4 x half>, <4 x half>, i32, i32
 define <8 x half> @ffmaho(<8 x half> %0, <8 x half> %1, <8 x half> %2) {
 ; CHECK-LABEL: ffmaho:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ffmahq.ru.s $r0 = $r2, $r4
+; CHECK-NEXT:    ffmahq.ru.s $r4 = $r0, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmahq.ru.s $r1 = $r3, $r5
+; CHECK-NEXT:    ffmahq.ru.s $r5 = $r1, $r3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r4
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %4 = shufflevector <8 x half> %0, <8 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
@@ -283,13 +289,21 @@ define <8 x half> @ffmaho(<8 x half> %0, <8 x half> %1, <8 x half> %2) {
 define <16 x half> @ffmahx(<16 x half> %0, <16 x half> %1, <16 x half> %2) {
 ; CHECK-LABEL: ffmahx:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ffmahq.ru.s $r0 = $r4, $r8
+; CHECK-NEXT:    ffmahq.ru.s $r8 = $r0, $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmahq.ru.s $r1 = $r5, $r9
+; CHECK-NEXT:    ffmahq.ru.s $r9 = $r1, $r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmahq.ru.s $r2 = $r6, $r10
+; CHECK-NEXT:    ffmahq.ru.s $r10 = $r2, $r6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmahq.ru.s $r3 = $r7, $r11
+; CHECK-NEXT:    ffmahq.ru.s $r11 = $r3, $r7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r8
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r1 = $r9
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r2 = $r10
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r3 = $r11
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %4 = shufflevector <16 x half> %0, <16 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
