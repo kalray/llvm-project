@@ -245,7 +245,9 @@ declare double @llvm.kvx.fmuld(double, double, i32, i32) #1
 define half @ffmah_s(half %0, half %1, half %2) {
 ; CHECK-LABEL: ffmah_s:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ffmahq.ru.s $r0 = $r1, $r2
+; CHECK-NEXT:    ffmahq.ru.s $r2 = $r0, $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %4 = insertelement <4 x half> undef, half %0, i64 0
@@ -260,11 +262,11 @@ define half @ffmah(half %0, half %1, half %2) {
 ; CHECK-LABEL: ffmah:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    zxhd $r1 = $r1
-; CHECK-NEXT:    zxhd $r2 = $r2
+; CHECK-NEXT:    zxhd $r3 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    zxhd $r0 = $r0
+; CHECK-NEXT:    zxhd $r0 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ffmahq.ru $r0 = $r1, $r2
+; CHECK-NEXT:    ffmahq.ru $r0 = $r3, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %4 = insertelement <4 x half> undef, half %0, i64 0
