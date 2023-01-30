@@ -17,6 +17,7 @@ define i32 @c()  {
 ; CHECK-NEXT:    cb.weqz $r4 ? .LBB0_114
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %for.cond.preheader.preheader
+; CHECK-NEXT:    # implicit-def: $r3
 ; CHECK-NEXT:    make $r1 = b
 ; CHECK-NEXT:    make $r2 = 4
 ; CHECK-NEXT:    goto .LBB0_4

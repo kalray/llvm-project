@@ -686,9 +686,8 @@ bool KVXInstrInfo::isEpilog(const MachineInstr *MI) const {
 }
 
 bool KVXInstrInfo::isSoloInstruction(const MachineInstr &MI) const {
-  if (MI.isKill() || MI.isImplicitDef() || MI.isInlineAsm() ||
-      MI.isDebugInstr() || MI.isCFIInstruction() || MI.isLabel() ||
-      MI.isBundle())
+  if (MI.isInlineAsm() || MI.isDebugInstr() || MI.isCFIInstruction() ||
+      MI.isLabel() || MI.isBundle())
     return true;
 
   if (MI.getNumOperands() > 0 && MI.getOperand(0).isReg() &&

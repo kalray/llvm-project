@@ -206,9 +206,7 @@ define i32 @storecbc_r(i8 %a, i8* %ptr, i32* nocapture readonly %load, i64 %cond
   ; CHECK-LABEL: name: storecbc_r
   ; CHECK: bb.0.entry:
   ; CHECK:   liveins: $r0, $r1, $r2, $r3
-  ; CHECK:   BUNDLE implicit-def $r2, implicit killed $r2 {
-  ; CHECK:     $r2 = LWZri10 0, killed $r2, 0 :: (load 4 from %ir.load)
-  ; CHECK:   }
+  ; CHECK:   $r2 = LWZri10 0, killed $r2, 0 :: (load 4 from %ir.load)
   ; CHECK:   BUNDLE implicit-def $r2, implicit killed $r2, implicit killed $r1, implicit killed $r0, implicit killed $r3 {
   ; CHECK:     $r2 = READYp1r killed $r2
   ; CHECK:     STORECp killed $r1, killed $r0, 8, killed $r3, 2, -1, internal $r2
@@ -233,9 +231,7 @@ define i32 @storecbl_r(i64 %a, i8* %ptr, i32* nocapture readonly %load, i64 %con
   ; CHECK-LABEL: name: storecbl_r
   ; CHECK: bb.0.entry:
   ; CHECK:   liveins: $r0, $r1, $r2, $r3
-  ; CHECK:   BUNDLE implicit-def $r2, implicit killed $r2 {
-  ; CHECK:     $r2 = LWZri10 0, killed $r2, 0 :: (load 4 from %ir.load)
-  ; CHECK:   }
+  ; CHECK:   $r2 = LWZri10 0, killed $r2, 0 :: (load 4 from %ir.load)
   ; CHECK:   BUNDLE implicit-def $r2, implicit killed $r2, implicit killed $r1, implicit killed $r0, implicit killed $r3 {
   ; CHECK:     $r2 = READYp1r killed $r2
   ; CHECK:     STORECp killed $r1, killed $r0, 8, killed $r3, 2, -1, internal $r2
@@ -257,9 +253,7 @@ define i32 @storechs_r(i16 %a, i8* %ptr, i32* nocapture readonly %load, i64 %con
   ; CHECK-LABEL: name: storechs_r
   ; CHECK: bb.0.entry:
   ; CHECK:   liveins: $r0, $r1, $r2, $r3
-  ; CHECK:   BUNDLE implicit-def $r2, implicit killed $r2 {
-  ; CHECK:     $r2 = LWZri10 0, killed $r2, 0 :: (load 4 from %ir.load)
-  ; CHECK:   }
+  ; CHECK:   $r2 = LWZri10 0, killed $r2, 0 :: (load 4 from %ir.load)
   ; CHECK:   BUNDLE implicit-def $r2, implicit killed $r2, implicit killed $r1, implicit killed $r0, implicit killed $r3 {
   ; CHECK:     $r2 = READYp1r killed $r2
   ; CHECK:     STORECp killed $r1, killed $r0, 16, killed $r3, 2, -1, internal $r2
@@ -282,9 +276,7 @@ define i32 @storechl_r(i64 %a, i8* %ptr, i32* nocapture readonly %load, i64 %con
   ; CHECK-LABEL: name: storechl_r
   ; CHECK: bb.0.entry:
   ; CHECK:   liveins: $r0, $r1, $r2, $r3
-  ; CHECK:   BUNDLE implicit-def $r2, implicit killed $r2 {
-  ; CHECK:     $r2 = LWZri10 0, killed $r2, 0 :: (load 4 from %ir.load)
-  ; CHECK:   }
+  ; CHECK:   $r2 = LWZri10 0, killed $r2, 0 :: (load 4 from %ir.load)
   ; CHECK:   BUNDLE implicit-def $r2, implicit killed $r2, implicit killed $r1, implicit killed $r0, implicit killed $r3 {
   ; CHECK:     $r2 = READYp1r killed $r2
   ; CHECK:     STORECp killed $r1, killed $r0, 16, killed $r3, 2, -1, internal $r2
@@ -306,9 +298,7 @@ define i32 @storecwi_r(i32 %a, i8* %ptr, i32* nocapture readonly %load, i64 %con
   ; CHECK-LABEL: name: storecwi_r
   ; CHECK: bb.0.entry:
   ; CHECK:   liveins: $r0, $r1, $r2, $r3
-  ; CHECK:   BUNDLE implicit-def $r2, implicit killed $r2 {
-  ; CHECK:     $r2 = LWZri10 0, killed $r2, 0 :: (load 4 from %ir.load)
-  ; CHECK:   }
+  ; CHECK:   $r2 = LWZri10 0, killed $r2, 0 :: (load 4 from %ir.load)
   ; CHECK:   BUNDLE implicit-def $r2, implicit killed $r2, implicit killed $r1, implicit killed $r0, implicit killed $r3 {
   ; CHECK:     $r2 = READYp1r killed $r2
   ; CHECK:     STORECp killed $r1, killed $r0, 32, killed $r3, 2, -1, internal $r2
@@ -331,9 +321,7 @@ define i32 @storecwl_r(i64 %a, i8* %ptr, i32* nocapture readonly %load, i64 %con
   ; CHECK-LABEL: name: storecwl_r
   ; CHECK: bb.0.entry:
   ; CHECK:   liveins: $r0, $r1, $r2, $r3
-  ; CHECK:   BUNDLE implicit-def $r2, implicit killed $r2 {
-  ; CHECK:     $r2 = LWZri10 0, killed $r2, 0 :: (load 4 from %ir.load)
-  ; CHECK:   }
+  ; CHECK:   $r2 = LWZri10 0, killed $r2, 0 :: (load 4 from %ir.load)
   ; CHECK:   BUNDLE implicit-def $r2, implicit killed $r2, implicit killed $r1, implicit killed $r0, implicit killed $r3 {
   ; CHECK:     $r2 = READYp1r killed $r2
   ; CHECK:     STORECp killed $r1, killed $r0, 32, killed $r3, 2, -1, internal $r2
@@ -355,9 +343,7 @@ define i32 @storecdl_r(i64 %a, i8* %ptr, i32* nocapture readonly %load, i64 %con
   ; CHECK-LABEL: name: storecdl_r
   ; CHECK: bb.0.entry:
   ; CHECK:   liveins: $r0, $r1, $r2, $r3
-  ; CHECK:   BUNDLE implicit-def $r2, implicit killed $r2 {
-  ; CHECK:     $r2 = LWZri10 0, killed $r2, 0 :: (load 4 from %ir.load)
-  ; CHECK:   }
+  ; CHECK:   $r2 = LWZri10 0, killed $r2, 0 :: (load 4 from %ir.load)
   ; CHECK:   BUNDLE implicit-def $r2, implicit killed $r2, implicit killed $r1, implicit killed $r0, implicit killed $r3 {
   ; CHECK:     $r2 = READYp1r killed $r2
   ; CHECK:     STORECp killed $r1, killed $r0, 64, killed $r3, 2, -1, internal $r2
@@ -379,9 +365,7 @@ define i32 @storecq_r(i128 %a, i8* %ptr, i32* nocapture readonly %load, i64 %con
   ; CHECK-LABEL: name: storecq_r
   ; CHECK: bb.0.entry:
   ; CHECK:   liveins: $r0, $r1, $r2, $r3, $r4
-  ; CHECK:   BUNDLE implicit-def $r3, implicit killed $r3 {
-  ; CHECK:     $r3 = LWZri10 0, killed $r3, 0 :: (load 4 from %ir.load)
-  ; CHECK:   }
+  ; CHECK:   $r3 = LWZri10 0, killed $r3, 0 :: (load 4 from %ir.load)
   ; CHECK:   BUNDLE implicit-def $r3, implicit killed $r3, implicit killed $r2, implicit killed $p0, implicit killed $r4 {
   ; CHECK:     $r3 = READYp1r killed $r3
   ; CHECK:     STORECp killed $r2, killed $p0, 128, killed $r4, 2, -1, internal $r3
@@ -404,9 +388,7 @@ define i32 @storechf_r(half %a, i8* %ptr, i32* nocapture readonly %load, i64 %co
   ; CHECK-LABEL: name: storechf_r
   ; CHECK: bb.0.entry:
   ; CHECK:   liveins: $r0, $r1, $r2, $r3
-  ; CHECK:   BUNDLE implicit-def $r2, implicit killed $r2 {
-  ; CHECK:     $r2 = LWZri10 0, killed $r2, 0 :: (load 4 from %ir.load)
-  ; CHECK:   }
+  ; CHECK:   $r2 = LWZri10 0, killed $r2, 0 :: (load 4 from %ir.load)
   ; CHECK:   BUNDLE implicit-def $r2, implicit killed $r2, implicit killed $r1, implicit killed $r0, implicit killed $r3 {
   ; CHECK:     $r2 = READYp1r killed $r2
   ; CHECK:     STORECp killed $r1, killed $r0, 16, killed $r3, 2, -1, internal $r2
@@ -428,9 +410,7 @@ define i32 @storecwf_r(float %a, i8* %ptr, i32* nocapture readonly %load, i64 %c
   ; CHECK-LABEL: name: storecwf_r
   ; CHECK: bb.0.entry:
   ; CHECK:   liveins: $r0, $r1, $r2, $r3
-  ; CHECK:   BUNDLE implicit-def $r2, implicit killed $r2 {
-  ; CHECK:     $r2 = LWZri10 0, killed $r2, 0 :: (load 4 from %ir.load)
-  ; CHECK:   }
+  ; CHECK:   $r2 = LWZri10 0, killed $r2, 0 :: (load 4 from %ir.load)
   ; CHECK:   BUNDLE implicit-def $r2, implicit killed $r2, implicit killed $r1, implicit killed $r0, implicit killed $r3 {
   ; CHECK:     $r2 = READYp1r killed $r2
   ; CHECK:     STORECp killed $r1, killed $r0, 32, killed $r3, 2, -1, internal $r2
@@ -452,9 +432,7 @@ define i32 @storecdf_r(double %a, i8* %ptr, i32* nocapture readonly %load, i64 %
   ; CHECK-LABEL: name: storecdf_r
   ; CHECK: bb.0.entry:
   ; CHECK:   liveins: $r0, $r1, $r2, $r3
-  ; CHECK:   BUNDLE implicit-def $r2, implicit killed $r2 {
-  ; CHECK:     $r2 = LWZri10 0, killed $r2, 0 :: (load 4 from %ir.load)
-  ; CHECK:   }
+  ; CHECK:   $r2 = LWZri10 0, killed $r2, 0 :: (load 4 from %ir.load)
   ; CHECK:   BUNDLE implicit-def $r2, implicit killed $r2, implicit killed $r1, implicit killed $r0, implicit killed $r3 {
   ; CHECK:     $r2 = READYp1r killed $r2
   ; CHECK:     STORECp killed $r1, killed $r0, 64, killed $r3, 2, -1, internal $r2
@@ -476,9 +454,7 @@ define i32 @storec64_r(<2 x i32> %a, i8* %ptr, i32* nocapture readonly %load, i6
   ; CHECK-LABEL: name: storec64_r
   ; CHECK: bb.0.entry:
   ; CHECK:   liveins: $r0, $r1, $r2, $r3
-  ; CHECK:   BUNDLE implicit-def $r2, implicit killed $r2 {
-  ; CHECK:     $r2 = LWZri10 0, killed $r2, 0 :: (load 4 from %ir.load)
-  ; CHECK:   }
+  ; CHECK:   $r2 = LWZri10 0, killed $r2, 0 :: (load 4 from %ir.load)
   ; CHECK:   BUNDLE implicit-def $r2, implicit killed $r2, implicit killed $r1, implicit killed $r0, implicit killed $r3 {
   ; CHECK:     $r2 = READYp1r killed $r2
   ; CHECK:     STORECp killed $r1, killed $r0, 64, killed $r3, 2, -1, internal $r2
@@ -502,9 +478,7 @@ define i32 @storec128_r(<4 x i32> %a, i8* %ptr, i32* nocapture readonly %load, i
   ; CHECK-LABEL: name: storec128_r
   ; CHECK: bb.0.entry:
   ; CHECK:   liveins: $r0, $r1, $r2, $r3, $r4
-  ; CHECK:   BUNDLE implicit-def $r3, implicit killed $r3 {
-  ; CHECK:     $r3 = LWZri10 0, killed $r3, 0 :: (load 4 from %ir.load)
-  ; CHECK:   }
+  ; CHECK:   $r3 = LWZri10 0, killed $r3, 0 :: (load 4 from %ir.load)
   ; CHECK:   BUNDLE implicit-def $r3, implicit killed $r3, implicit killed $r2, implicit killed $p0, implicit killed $r4 {
   ; CHECK:     $r3 = READYp1r killed $r3
   ; CHECK:     STORECp killed $r2, killed $p0, 128, killed $r4, 2, -1, internal $r3
@@ -739,12 +713,8 @@ define void @storec_vol(i32 %a, i8* %ptr, i64 %cond) {
   ; CHECK-LABEL: name: storec_vol
   ; CHECK: bb.0.entry:
   ; CHECK:   liveins: $r0, $r1, $r2
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r0 {
-  ; CHECK:     $r0 = SXWD killed $r0
-  ; CHECK:   }
-  ; CHECK:   BUNDLE implicit $r1, implicit $r0, implicit $r2 {
-  ; CHECK:     STORECpv $r1, $r0, 32, $r2, 11, -1
-  ; CHECK:   }
+  ; CHECK:   $r0 = SXWD killed $r0
+  ; CHECK:   STORECpv $r1, $r0, 32, $r2, 11, -1
   ; CHECK:   BUNDLE implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
   ; CHECK:     STORECpv killed $r1, killed $r0, 32, killed $r2, 11, -1
   ; CHECK:     RET implicit $ra
@@ -763,12 +733,8 @@ define void @storec_novol(i32 %a, i8* %ptr, i64 %cond) {
   ; CHECK-LABEL: name: storec_novol
   ; CHECK: bb.0.entry:
   ; CHECK:   liveins: $r0, $r1, $r2
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r0 {
-  ; CHECK:     $r0 = SXWD killed $r0
-  ; CHECK:   }
-  ; CHECK:   BUNDLE implicit $r1, implicit $r0, implicit $r2 {
-  ; CHECK:     STORECp $r1, $r0, 32, $r2, 11, -1
-  ; CHECK:   }
+  ; CHECK:   $r0 = SXWD killed $r0
+  ; CHECK:   STORECp $r1, $r0, 32, $r2, 11, -1
   ; CHECK:   BUNDLE implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
   ; CHECK:     STORECp killed $r1, killed $r0, 32, killed $r2, 11, -1
   ; CHECK:     RET implicit $ra
@@ -839,22 +805,14 @@ define void @ready_then_storec(i32* nocapture readonly %addr0, i32* nocapture re
   ; CHECK-LABEL: name: ready_then_storec
   ; CHECK: bb.0.entry:
   ; CHECK:   liveins: $r0, $r1, $r2, $r3, $r4, $r5, $r6
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r0 {
-  ; CHECK:     $r0 = LWSri10 0, killed $r0, 0 :: (load 4 from %ir.addr0)
-  ; CHECK:   }
-  ; CHECK:   BUNDLE implicit-def $r1, implicit killed $r1 {
-  ; CHECK:     $r1 = LWSri10 0, killed $r1, 0 :: (load 4 from %ir.addr1)
-  ; CHECK:   }
-  ; CHECK:   BUNDLE implicit-def $r2, implicit killed $r2 {
-  ; CHECK:     $r2 = LWSri10 0, killed $r2, 0 :: (load 4 from %ir.addr2)
-  ; CHECK:   }
+  ; CHECK:   $r0 = LWSri10 0, killed $r0, 0 :: (load 4 from %ir.addr0)
+  ; CHECK:   $r1 = LWSri10 0, killed $r1, 0 :: (load 4 from %ir.addr1)
+  ; CHECK:   $r2 = LWSri10 0, killed $r2, 0 :: (load 4 from %ir.addr2)
   ; CHECK:   BUNDLE implicit-def $r7, implicit killed $r0, implicit $r1, implicit $r2, implicit killed $r3, implicit $r6 {
   ; CHECK:     $r7 = READYp3r $r0, $r1, $r2
   ; CHECK:     STORECp killed $r3, killed $r0, 32, $r6, 11, -1, internal $r7
   ; CHECK:   }
-  ; CHECK:   BUNDLE implicit killed $r4, implicit killed $r1, implicit $r6, implicit $r7 {
-  ; CHECK:     STORECp killed $r4, killed $r1, 32, $r6, 11, -1, $r7
-  ; CHECK:   }
+  ; CHECK:   STORECp killed $r4, killed $r1, 32, $r6, 11, -1, $r7
   ; CHECK:   BUNDLE implicit killed $r5, implicit killed $r2, implicit killed $r6, implicit killed $r7, implicit $ra {
   ; CHECK:     STORECp killed $r5, killed $r2, 32, killed $r6, 11, -1, killed $r7
   ; CHECK:     RET implicit $ra
@@ -886,24 +844,12 @@ define void @load_then_storec(i32* nocapture readonly %addr0, i32* nocapture rea
   ; CHECK: bb.1.if.then:
   ; CHECK:   successors: %bb.2(0x80000000)
   ; CHECK:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
-  ; CHECK:   BUNDLE implicit-def $r2, implicit killed $r2 {
-  ; CHECK:     $r2 = LWZri10 0, killed $r2, 0 :: (load 4 from %ir.addr2)
-  ; CHECK:   }
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r0 {
-  ; CHECK:     $r0 = LWZri10 0, killed $r0, 0 :: (load 4 from %ir.addr0)
-  ; CHECK:   }
-  ; CHECK:   BUNDLE implicit-def $r1, implicit killed $r1 {
-  ; CHECK:     $r1 = LWZri10 0, killed $r1, 0 :: (load 4 from %ir.addr1)
-  ; CHECK:   }
-  ; CHECK:   BUNDLE implicit killed $r3, implicit killed $r0 {
-  ; CHECK:     SWri10 0, killed $r3, killed $r0 :: (store 4 into %ir.to0)
-  ; CHECK:   }
-  ; CHECK:   BUNDLE implicit killed $r4, implicit killed $r1 {
-  ; CHECK:     SWri10 0, killed $r4, killed $r1 :: (store 4 into %ir.to1)
-  ; CHECK:   }
-  ; CHECK:   BUNDLE implicit killed $r5, implicit killed $r2 {
-  ; CHECK:     SWri10 0, killed $r5, killed $r2 :: (store 4 into %ir.to2)
-  ; CHECK:   }
+  ; CHECK:   $r2 = LWZri10 0, killed $r2, 0 :: (load 4 from %ir.addr2)
+  ; CHECK:   $r0 = LWZri10 0, killed $r0, 0 :: (load 4 from %ir.addr0)
+  ; CHECK:   $r1 = LWZri10 0, killed $r1, 0 :: (load 4 from %ir.addr1)
+  ; CHECK:   SWri10 0, killed $r3, killed $r0 :: (store 4 into %ir.to0)
+  ; CHECK:   SWri10 0, killed $r4, killed $r1 :: (store 4 into %ir.to1)
+  ; CHECK:   SWri10 0, killed $r5, killed $r2 :: (store 4 into %ir.to2)
   ; CHECK: bb.2.if.end:
   ; CHECK:   RET implicit $ra
 entry:

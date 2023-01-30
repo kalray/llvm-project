@@ -146,11 +146,15 @@ static void debugPrintPacket(MachineBasicBlock *MBB, MachineInstr *MIFirst,
   for (auto II = MIFirst->getIterator();
        II != MBB->end() && II != std::next(MILast->getIterator()); ++II) {
     MachineInstr *MIP = &*II;
-    LLVM_DEBUG(MIP->print(dbgs(), MST));
+    LLVM_DEBUG(MIP->print(dbgs() << "\t", MST));
   }
 }
 
 static void debugPrintMBB(MachineBasicBlock *MBB, ModuleSlotTracker *MST) {
+  if (MBB->size() == 0) {
+    LLVM_DEBUG(dbgs() << "\tEmpty.\n");
+    return;
+  }
   debugPrintPacket(MBB, &*MBB->begin(), &*std::prev(MBB->end()), MST);
 }
 #endif
@@ -245,7 +249,7 @@ void KVXPostPacketizer::runOnPacket(std::vector<MachineInstr *> &Packet,
   if (TerminatorExists) {
     KDEBUG("Will attempt to bundle this terminator with it:");
     MachineInstr *MITerminator = &*std::next(MILastIter);
-    LLVM_DEBUG(MITerminator->print(dbgs(), MST));
+    LLVM_DEBUG(MITerminator->print(dbgs() << "\t", MST));
   }
 #endif
 
@@ -281,6 +285,12 @@ void KVXPostPacketizer::runOnPacket(std::vector<MachineInstr *> &Packet,
       }
       MILastIter++;
     }
+  }
+
+  // Avoid bundling single instructions
+  if (MIFirstIter == MILastIter) {
+    KDEBUG("Not bundling a single instruction.");
+    return;
   }
 
   finalizeBundle(*MBB, MIFirstIter, std::next(MILastIter));
@@ -354,8 +364,7 @@ void KVXScheduleDAGMI::startBlock(MachineBasicBlock *MBB) {
     return;
   }
 
-  KDEBUG("Remove CFI, KILL and IMPLICIT_DEF instructions from MBB. CFIs will "
-         "be placed back later.");
+  KDEBUG("Temporarily remove CFIs from MBB.");
   KDEBUG("MBB content:");
 #ifndef NDEBUG
   const Function &F = MBB->getParent()->getFunction();
@@ -365,25 +374,19 @@ void KVXScheduleDAGMI::startBlock(MachineBasicBlock *MBB) {
   int CFICounter = 0;
 #endif
 
-  // Remove CFI instructions from MBB
-  // Also, remove completely IMPLICIT_DEF and KILL instructions, as they impair
-  // scheduling
+  // Remove CFIs from MBB
   auto Begin = MBB->begin();
   bool IsMBBStart = true;
   for (auto II = Begin, NII = std::next(II); II != MBB->end(); II = NII) {
     NII = std::next(II);
     MachineInstr *MII = &*II;
-    bool IsCFI = MII->isCFIInstruction();
-    if (IsCFI || MII->isImplicitDef() || MII->isKill()) {
+    if (MII->isCFIInstruction()) {
       MachineInstr *Attach;
-      if (IsCFI)
-        Attach = IsMBBStart ? nullptr : &*std::prev(II);
+      Attach = IsMBBStart ? nullptr : &*std::prev(II);
       MachineInstr *CFI = MBB->remove(MII);
-      if (IsCFI)
-        CFIs.push_back({CFI, Attach, IsMBBStart});
+      CFIs.push_back({CFI, Attach, IsMBBStart});
 #ifndef NDEBUG
-      if (IsCFI)
-        CFICounter++;
+      CFICounter++;
 #endif
     } else {
       IsMBBStart = false;
@@ -393,7 +396,7 @@ void KVXScheduleDAGMI::startBlock(MachineBasicBlock *MBB) {
 #ifndef NDEBUG
   KDEBUG("Number of CFI instructions removed:" << CFICounter);
   if (CFICounter > 0) {
-    KDEBUG("MBB content after CFI/KILL/IMPLICIT_DEF removal:");
+    KDEBUG("MBB content after CFIs removal:");
     debugPrintMBB(MBB, &MST);
   }
 #endif

@@ -222,6 +222,14 @@ entry:
 define void @blong8(<8 x i64>* noalias nocapture sret(<8 x i64>) %agg.result, i64 %a, i64 %b, i64 %c, i64 %d, i64 %e, i64 %f, i64 %g, i64 %h) {
 ; CHECK-LABEL: blong8:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    # kill: def $r3 killed $r3 killed $q0 def $q0
+; CHECK-NEXT:    # kill: def $r7 killed $r7 killed $q4 def $q4
+; CHECK-NEXT:    # kill: def $r2 killed $r2 killed $q0 def $q0
+; CHECK-NEXT:    # kill: def $r6 killed $r6 killed $q4 def $q4
+; CHECK-NEXT:    # kill: def $r1 killed $r1 killed $q0 def $q0
+; CHECK-NEXT:    # kill: def $r5 killed $r5 killed $q4 def $q4
+; CHECK-NEXT:    # kill: def $r0 killed $r0 killed $q0 def $q0
+; CHECK-NEXT:    # kill: def $r4 killed $r4 killed $q4 def $q4
 ; CHECK-NEXT:    so 32[$r15] = $r4r5r6r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    so 0[$r15] = $r0r1r2r3
@@ -425,6 +433,14 @@ entry:
 define void @bdouble8(<8 x double>* noalias nocapture sret(<8 x double>) %agg.result, double %a, double %b, double %c, double %d, double %e, double %f, double %g, double %h) {
 ; CHECK-LABEL: bdouble8:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    # kill: def $r3 killed $r3 killed $q0 def $q0
+; CHECK-NEXT:    # kill: def $r7 killed $r7 killed $q4 def $q4
+; CHECK-NEXT:    # kill: def $r2 killed $r2 killed $q0 def $q0
+; CHECK-NEXT:    # kill: def $r6 killed $r6 killed $q4 def $q4
+; CHECK-NEXT:    # kill: def $r1 killed $r1 killed $q0 def $q0
+; CHECK-NEXT:    # kill: def $r5 killed $r5 killed $q4 def $q4
+; CHECK-NEXT:    # kill: def $r0 killed $r0 killed $q0 def $q0
+; CHECK-NEXT:    # kill: def $r4 killed $r4 killed $q4 def $q4
 ; CHECK-NEXT:    so 32[$r15] = $r4r5r6r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    so 0[$r15] = $r0r1r2r3

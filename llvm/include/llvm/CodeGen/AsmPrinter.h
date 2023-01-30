@@ -525,6 +525,8 @@ public:
   /// instructions in verbose mode.
   virtual void emitImplicitDef(const MachineInstr *MI) const;
 
+  void emitKill(const MachineInstr *MI) const;
+
   /// Emit N NOP instructions.
   void emitNops(unsigned N);
 

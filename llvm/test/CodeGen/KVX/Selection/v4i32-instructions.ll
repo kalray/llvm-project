@@ -707,6 +707,7 @@ define <4 x i32> @revconcat(<2 x i32> %b, <2 x i32> %a){
 define void @bug() {
 ; CHECK-LABEL: bug:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    # implicit-def: $p2
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB40_1: # %loop
