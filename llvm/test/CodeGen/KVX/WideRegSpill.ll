@@ -29,6 +29,8 @@ target triple = "kvx-kalray-cos"
 define i32 @a() {
 ; CV1-LABEL: a:
 ; CV1:       # %bb.0:
+; CV1-NEXT:    # implicit-def: $w0
+; CV1-NEXT:    # implicit-def: $r2
 ; CV1-NEXT:    make $r0 = 0
 ; CV1-NEXT:    goto .LBB0_3
 ; CV1-NEXT:    ;;
@@ -100,6 +102,7 @@ define i32 @a() {
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:  .LBB0_5: # Parent Loop BB0_3 Depth=1
 ; CV1-NEXT:    # => This Inner Loop Header: Depth=2
+; CV1-NEXT:    # implicit-def: $w0
 ; CV1-NEXT:    addw $r2 = $r2, 3
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    compw.lt $r3 = $r2, -2
@@ -111,6 +114,8 @@ define i32 @a() {
 ;
 ; CV2-LABEL: a:
 ; CV2:       # %bb.0:
+; CV2-NEXT:    # implicit-def: $w0
+; CV2-NEXT:    # implicit-def: $r2
 ; CV2-NEXT:    make $r0 = 0
 ; CV2-NEXT:    goto .LBB0_3
 ; CV2-NEXT:    ;;
@@ -181,6 +186,7 @@ define i32 @a() {
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:  .LBB0_5: # Parent Loop BB0_3 Depth=1
 ; CV2-NEXT:    # => This Inner Loop Header: Depth=2
+; CV2-NEXT:    # implicit-def: $w0
 ; CV2-NEXT:    addw $r2 = $r2, 3
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    compw.lt $r3 = $r2, -2

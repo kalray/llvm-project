@@ -479,9 +479,7 @@ define i32 @loadc_vol(i32 %a, i8* %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadc_vol
   ; CHECK: bb.0.entry:
   ; CHECK:   liveins: $r0, $r1, $r2
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r0 {
-  ; CHECK:     $r0 = SXWD killed $r0
-  ; CHECK:   }
+  ; CHECK:   $r0 = SXWD killed $r0
   ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
   ; CHECK:     $r0 = LOADCupv killed $r1, killed $r0, 32, killed $r2, 0, 11, -1
   ; CHECK:     RET implicit $ra, implicit internal $r0
@@ -500,9 +498,7 @@ define i32 @loadc_novol(i32 %a, i8* %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadc_novol
   ; CHECK: bb.0.entry:
   ; CHECK:   liveins: $r0, $r1, $r2
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r0 {
-  ; CHECK:     $r0 = SXWD killed $r0
-  ; CHECK:   }
+  ; CHECK:   $r0 = SXWD killed $r0
   ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
   ; CHECK:     $r0 = LOADCup killed $r1, killed $r0, 32, killed $r2, 0, 11, -1
   ; CHECK:     RET implicit $ra, implicit internal $r0

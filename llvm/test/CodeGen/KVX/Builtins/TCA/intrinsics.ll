@@ -1235,6 +1235,7 @@ entry:
 define void @insertwm(<1024 x i1>* nocapture %a0, <512 x i1>* nocapture readonly %a1) {
 ; CHECK-LABEL: insertwm:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    # implicit-def: $x1
 ; CHECK-NEXT:    xlo.u $a0 = 96[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xlo.u $a0 = 64[$r0]
@@ -1274,6 +1275,7 @@ declare <1024 x i1> @llvm.kvx.xinsertwm(<1024 x i1>, <512 x i1>, i32) #1
 define void @insertvm(<1024 x i1>* nocapture %a0, <256 x i1>* nocapture readonly %a1) {
 ; CHECK-LABEL: insertvm:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    # implicit-def: $x1
 ; CHECK-NEXT:    xlo.u $a0 = 96[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xlo.u $a0 = 64[$r0]
@@ -1315,6 +1317,7 @@ declare <1024 x i1> @llvm.kvx.xinsertvm(<1024 x i1>, <256 x i1>, i32) #1
 define void @insertvw(<512 x i1>* nocapture %a0, <256 x i1>* nocapture readonly %a1) {
 ; CHECK-LABEL: insertvw:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    # implicit-def: $w1
 ; CHECK-NEXT:    xlo.u $a0 = 32[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xlo.u $a0 = 0[$r0]

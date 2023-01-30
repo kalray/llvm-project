@@ -12,6 +12,7 @@ define void @_pocl_kernel_math_kernel_nohwloop_frem( float %a, float %b, i64 %c,
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 56[$r12] = $r16
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    # implicit-def: $r22
 ; CHECK-NEXT:    sd 48[$r12] = $r22
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 32[$r12] = $r20r21
@@ -72,6 +73,7 @@ define void @_pocl_kernel_math_kernel_nohwloop_fdiv( float %a, float %b, i64 %c,
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 56[$r12] = $r16
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    # implicit-def: $r22
 ; CHECK-NEXT:    sd 48[$r12] = $r22
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 32[$r12] = $r20r21
@@ -131,6 +133,7 @@ define void @_pocl_kernel_math_kernel_nohwloop_fdiv_double( double %a, double %b
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 56[$r12] = $r16
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    # implicit-def: $r22
 ; CHECK-NEXT:    sd 48[$r12] = $r22
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 32[$r12] = $r20r21
@@ -190,6 +193,7 @@ define void @_pocl_kernel_math_kernel_nohwloop_fdiv_half( half %a, half %b, i64 
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 56[$r12] = $r16
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    # implicit-def: $r22
 ; CHECK-NEXT:    sd 48[$r12] = $r22
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 32[$r12] = $r20r21
@@ -320,6 +324,7 @@ define void @_pocl_kernel_math_kernel_nohwloop_fdiv_double_fast( double %a, doub
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 56[$r12] = $r16
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    # implicit-def: $r22
 ; CHECK-NEXT:    sd 48[$r12] = $r22
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 32[$r12] = $r20r21

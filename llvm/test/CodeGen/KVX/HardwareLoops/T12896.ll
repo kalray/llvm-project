@@ -34,6 +34,7 @@ define i32 @c() #0 {
 ; CHECK-NEXT:    cb.wlez $r0 ? .LBB0_3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %for.body.preheader
+; CHECK-NEXT:    # implicit-def: $r0
 ; CHECK-NEXT:    zxwd $r1 = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r1, .__LOOPDO_0_END_
@@ -46,6 +47,7 @@ define i32 @c() #0 {
 ; CHECK-NEXT:    goto .LBB0_4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_3:
+; CHECK-NEXT:    # implicit-def: $r0
 ; CHECK-NEXT:  .LBB0_4: # %for.end
 ; CHECK-NEXT:    make $r1 = a
 ; CHECK-NEXT:    ;;

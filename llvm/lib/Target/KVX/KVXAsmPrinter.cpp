@@ -110,6 +110,16 @@ void KVXAsmPrinter::emitInstruction(const MachineInstr *MI) {
     // Sort instructions in bundle.
     for (auto MII = ++MI->getIterator();
          MII != MI->getParent()->instr_end() && MII->isInsideBundle(); ++MII) {
+      switch (MII->getOpcode()) {
+      case KVX::IMPLICIT_DEF:
+        if (isVerbose())
+          AsmPrinter::emitImplicitDef(&*MII);
+        continue;
+      case KVX::KILL:
+        if (isVerbose())
+          AsmPrinter::emitKill(&*MII);
+        continue;
+      }
       MCInst TmpInst;
       LowerKVXMachineInstrToMCInst(&*MII, TmpInst, *this);
       Bundle.push_back(TmpInst);

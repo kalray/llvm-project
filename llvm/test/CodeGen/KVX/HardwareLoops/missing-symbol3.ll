@@ -302,6 +302,7 @@ define i32 @g(i32 %h)  {
 ; CHECK-NEXT:    cb.weqz $r2 ? .LBB1_11
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %for.body.preheader
+; CHECK-NEXT:    # implicit-def: $r1
 ; CHECK-NEXT:    addd $r2 = $r1, 32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB1_2: # %for.body
@@ -362,6 +363,7 @@ define i32 @g(i32 %h)  {
 ; CHECK-NEXT:  .LBB1_11: # %while.cond.preheader.thread
 ; CHECK-NEXT:    make $r1 = c
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    # implicit-def: $r1
 ; CHECK-NEXT:    ld $r2 = 0[$r1]
 ; CHECK-NEXT:    goto .LBB1_20
 ; CHECK-NEXT:    ;;
