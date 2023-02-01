@@ -2805,6 +2805,14 @@ defm XORO : I </*asm=*/"xoro", /*itin=*/TCA_INT, /*Ops=*/[VectorReg, VectorReg],
 defm XXORO : I </*asm=*/"xxoro", /*itin=*/TCA_INT, /*Ops=*/[VectorReg, VectorReg], /*Mods=*/[],
                  /*MemOps=*/[], /*CC=*/[], /*Out=*/[VectorReg], /*inplace =*/ 0, /*pattern =*/
                  [(set v256i1:$r, (int_kvx_xxoro v256i1:$op0, v256i1:$op1))]>;
+
+// This instruction is used for zero-initialize half of a 512 bit register while
+// using xsplatd 0 to initilize the other half. Using inplace, $z = $r avoids most
+// undesired dependencies. $z is an IMPLICIT_DEF, so regalloc should be free to take
+// an unused value.
+let AsmString = "xandno $r = $z, $z" in
+defm XZERO  : I </*asm=*/"xandno", /*itin=*/TCA_INT, /*Ops=*/[], /*Mods=*/[],
+                 /*MemOps=*/[], /*CC=*/[], /*Out=*/[VectorReg], /*inplace =*/ 1>;
 } // Uses = [PCR]
 
 def DFLUSHSW : CACHE_OP<"dflushsw", SingleReg, LSU_STORE,
