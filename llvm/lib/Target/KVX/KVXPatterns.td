@@ -2227,7 +2227,7 @@ def: Pat<(v256i1 (splat_vector (i32 0))),
          (XSPLATDOi16 0)>;
 
 def: Pat<(v512i1 (splat_vector (i32 0))),
-         (v512i1 (REG_SEQUENCE WideReg, (XANDNO A0, A0), sub_v0, (XSPLATDOi16 0), sub_v1))>;
+         (v512i1 (REG_SEQUENCE WideReg, (XZERO (v256i1 (IMPLICIT_DEF))), sub_v0, (XSPLATDOi16 0), sub_v1))>;
 
 def: Pat<(v1024i1 (splat_vector (i32 0))),
          (v1024i1 (XSPLATOV (v256i1 (XSPLATDOi16 0)), shufflev_))>;
