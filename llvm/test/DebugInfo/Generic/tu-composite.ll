@@ -1,5 +1,3 @@
-; XFAIL: kvx
-; T18164
 ; RUN: %llc_dwarf -filetype=obj -O0 < %s > %t
 ; RUN: llvm-dwarfdump -v -debug-info %t | FileCheck %s
 ; CHECK: [[TYPE:.*]]: DW_TAG_structure_type

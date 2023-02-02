@@ -158,7 +158,7 @@ define void @storeq(i128 %a, i8* nocapture %ptr) {
   ; CHECK: bb.0.entry:
   ; CHECK:   liveins: $r0, $r1, $r2
   ; CHECK:   BUNDLE implicit killed $r2, implicit killed $p0, implicit $ra {
-  ; CHECK:     SQri10 0, killed $r2, killed $p0 :: (store 16)
+  ; CHECK:     SQri10 0, killed $r2, killed $p0 :: (store 16 into %ir.0, align 8)
   ; CHECK:     RET implicit $ra
   ; CHECK:   }
 entry:

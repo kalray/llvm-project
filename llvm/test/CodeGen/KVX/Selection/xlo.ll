@@ -83,8 +83,8 @@ define void @xlori10_0x2(<512 x i1> addrspace(258)* %0) {
   ; CHECK: bb.0 (%ir-block.1):
   ; CHECK:   liveins: $r0
   ; CHECK:   [[COPY:%[0-9]+]]:singlereg = COPY $r0
-  ; CHECK:   dead %1:vectorreg = LVp 32, [[COPY]], 1
-  ; CHECK:   dead %2:vectorreg = LVp 0, [[COPY]], 1
+  ; CHECK:   dead %1:vectorreg = XLOri10 32, [[COPY]], 1 :: (volatile load 32 from %ir.0 + 32, addrspace 258)
+  ; CHECK:   dead %2:vectorreg = XLOri10 0, [[COPY]], 1 :: (volatile load 32 from %ir.0, addrspace 258)
   ; CHECK:   RET implicit $ra
   %2 = load volatile <512 x i1>, <512 x i1> addrspace(258)* %0
   ret void
@@ -95,9 +95,8 @@ define void @xlori10x2(<512 x i1> addrspace(256)* %0) {
   ; CHECK: bb.0 (%ir-block.1):
   ; CHECK:   liveins: $r0
   ; CHECK:   [[COPY:%[0-9]+]]:singlereg = COPY $r0
-  ; CHECK:   [[ADDDri10_:%[0-9]+]]:singlereg = nuw ADDDri10 [[COPY]], 448
-  ; CHECK:   dead %2:vectorreg = LVp 32, [[ADDDri10_]], 2
-  ; CHECK:   dead %3:vectorreg = LVp 0, [[ADDDri10_]], 2
+  ; CHECK:   dead %1:vectorreg = XLOri10 480, [[COPY]], 2 :: (volatile load 32 from %ir.2 + 32, addrspace 256)
+  ; CHECK:   dead %2:vectorreg = XLOri10 448, [[COPY]], 2 :: (volatile load 32 from %ir.2, addrspace 256)
   ; CHECK:   RET implicit $ra
   %2 = getelementptr inbounds <512 x i1>, <512 x i1> addrspace(256)* %0, i64 7
   %3 = load volatile <512 x i1>, <512 x i1> addrspace(256)* %2
@@ -109,9 +108,8 @@ define void @xlori37x2(<512 x i1> addrspace(257)* %0) {
   ; CHECK: bb.0 (%ir-block.1):
   ; CHECK:   liveins: $r0
   ; CHECK:   [[COPY:%[0-9]+]]:singlereg = COPY $r0
-  ; CHECK:   [[ADDDri37_:%[0-9]+]]:singlereg = nuw ADDDri37 [[COPY]], 512
-  ; CHECK:   dead %2:vectorreg = LVp 32, [[ADDDri37_]], 3
-  ; CHECK:   dead %3:vectorreg = LVp 0, [[ADDDri37_]], 3
+  ; CHECK:   dead %1:vectorreg = XLOri37 544, [[COPY]], 3 :: (volatile load 32 from %ir.2 + 32, addrspace 257)
+  ; CHECK:   dead %2:vectorreg = XLOri37 512, [[COPY]], 3 :: (volatile load 32 from %ir.2, addrspace 257)
   ; CHECK:   RET implicit $ra
   %2 = getelementptr inbounds <512 x i1>, <512 x i1> addrspace(257)* %0, i64 8
   %3 = load volatile <512 x i1>, <512 x i1> addrspace(257)* %2
@@ -123,9 +121,8 @@ define void @xlori64x2(<512 x i1>* %0) {
   ; CHECK: bb.0 (%ir-block.1):
   ; CHECK:   liveins: $r0
   ; CHECK:   [[COPY:%[0-9]+]]:singlereg = COPY $r0
-  ; CHECK:   [[ADDDri64_:%[0-9]+]]:singlereg = nuw ADDDri64 [[COPY]], 68719476736
-  ; CHECK:   dead %2:vectorreg = LVp 32, [[ADDDri64_]], 0
-  ; CHECK:   dead %3:vectorreg = LVp 0, [[ADDDri64_]], 0
+  ; CHECK:   dead %1:vectorreg = XLOri64 68719476768, [[COPY]], 0 :: (volatile load 32 from %ir.2 + 32)
+  ; CHECK:   dead %2:vectorreg = XLOri64 68719476736, [[COPY]], 0 :: (volatile load 32 from %ir.2)
   ; CHECK:   RET implicit $ra
   %2 = getelementptr inbounds <512 x i1>, <512 x i1>* %0, i64 1073741824
   %3 = load volatile <512 x i1>, <512 x i1>* %2
@@ -137,10 +134,10 @@ define void @xlori10_0x4(<1024 x i1> addrspace(258)* %0) {
   ; CHECK: bb.0 (%ir-block.1):
   ; CHECK:   liveins: $r0
   ; CHECK:   [[COPY:%[0-9]+]]:singlereg = COPY $r0
-  ; CHECK:   dead %1:vectorreg = LVp 96, [[COPY]], 1
-  ; CHECK:   dead %2:vectorreg = LVp 64, [[COPY]], 1
-  ; CHECK:   dead %3:vectorreg = LVp 32, [[COPY]], 1
-  ; CHECK:   dead %4:vectorreg = LVp 0, [[COPY]], 1
+  ; CHECK:   dead %1:vectorreg = XLOri10 96, [[COPY]], 1 :: (volatile load 32 from %ir.0 + 96, addrspace 258)
+  ; CHECK:   dead %2:vectorreg = XLOri10 64, [[COPY]], 1 :: (volatile load 32 from %ir.0 + 64, addrspace 258)
+  ; CHECK:   dead %3:vectorreg = XLOri10 32, [[COPY]], 1 :: (volatile load 32 from %ir.0 + 32, addrspace 258)
+  ; CHECK:   dead %4:vectorreg = XLOri10 0, [[COPY]], 1 :: (volatile load 32 from %ir.0, addrspace 258)
   ; CHECK:   RET implicit $ra
   %2 = load volatile <1024 x i1>, <1024 x i1> addrspace(258)* %0
   ret void
@@ -151,11 +148,10 @@ define void @xlori10x4(<1024 x i1> addrspace(256)* %0) {
   ; CHECK: bb.0 (%ir-block.1):
   ; CHECK:   liveins: $r0
   ; CHECK:   [[COPY:%[0-9]+]]:singlereg = COPY $r0
-  ; CHECK:   [[ADDDri10_:%[0-9]+]]:singlereg = nuw ADDDri10 [[COPY]], 384
-  ; CHECK:   dead %2:vectorreg = LVp 96, [[ADDDri10_]], 2
-  ; CHECK:   dead %3:vectorreg = LVp 64, [[ADDDri10_]], 2
-  ; CHECK:   dead %4:vectorreg = LVp 32, [[ADDDri10_]], 2
-  ; CHECK:   dead %5:vectorreg = LVp 0, [[ADDDri10_]], 2
+  ; CHECK:   dead %1:vectorreg = XLOri10 480, [[COPY]], 2 :: (volatile load 32 from %ir.2 + 96, addrspace 256)
+  ; CHECK:   dead %2:vectorreg = XLOri10 448, [[COPY]], 2 :: (volatile load 32 from %ir.2 + 64, addrspace 256)
+  ; CHECK:   dead %3:vectorreg = XLOri10 416, [[COPY]], 2 :: (volatile load 32 from %ir.2 + 32, addrspace 256)
+  ; CHECK:   dead %4:vectorreg = XLOri10 384, [[COPY]], 2 :: (volatile load 32 from %ir.2, addrspace 256)
   ; CHECK:   RET implicit $ra
   %2 = getelementptr inbounds <1024 x i1>, <1024 x i1> addrspace(256)* %0, i64 3
   %3 = load volatile <1024 x i1>, <1024 x i1> addrspace(256)* %2
@@ -167,11 +163,10 @@ define void @xlori37x4(<1024 x i1> addrspace(257)* %0) {
   ; CHECK: bb.0 (%ir-block.1):
   ; CHECK:   liveins: $r0
   ; CHECK:   [[COPY:%[0-9]+]]:singlereg = COPY $r0
-  ; CHECK:   [[ADDDri37_:%[0-9]+]]:singlereg = nuw ADDDri37 [[COPY]], 512
-  ; CHECK:   dead %2:vectorreg = LVp 96, [[ADDDri37_]], 3
-  ; CHECK:   dead %3:vectorreg = LVp 64, [[ADDDri37_]], 3
-  ; CHECK:   dead %4:vectorreg = LVp 32, [[ADDDri37_]], 3
-  ; CHECK:   dead %5:vectorreg = LVp 0, [[ADDDri37_]], 3
+  ; CHECK:   dead %1:vectorreg = XLOri37 608, [[COPY]], 3 :: (volatile load 32 from %ir.2 + 96, addrspace 257)
+  ; CHECK:   dead %2:vectorreg = XLOri37 576, [[COPY]], 3 :: (volatile load 32 from %ir.2 + 64, addrspace 257)
+  ; CHECK:   dead %3:vectorreg = XLOri37 544, [[COPY]], 3 :: (volatile load 32 from %ir.2 + 32, addrspace 257)
+  ; CHECK:   dead %4:vectorreg = XLOri37 512, [[COPY]], 3 :: (volatile load 32 from %ir.2, addrspace 257)
   ; CHECK:   RET implicit $ra
   %2 = getelementptr inbounds <1024 x i1>, <1024 x i1> addrspace(257)* %0, i64 4
   %3 = load volatile <1024 x i1>, <1024 x i1> addrspace(257)* %2
@@ -183,11 +178,10 @@ define void @xlori64x4(<1024 x i1>* %0) {
   ; CHECK: bb.0 (%ir-block.1):
   ; CHECK:   liveins: $r0
   ; CHECK:   [[COPY:%[0-9]+]]:singlereg = COPY $r0
-  ; CHECK:   [[ADDDri64_:%[0-9]+]]:singlereg = nuw ADDDri64 [[COPY]], 68719476736
-  ; CHECK:   dead %2:vectorreg = LVp 96, [[ADDDri64_]], 0
-  ; CHECK:   dead %3:vectorreg = LVp 64, [[ADDDri64_]], 0
-  ; CHECK:   dead %4:vectorreg = LVp 32, [[ADDDri64_]], 0
-  ; CHECK:   dead %5:vectorreg = LVp 0, [[ADDDri64_]], 0
+  ; CHECK:   dead %1:vectorreg = XLOri64 68719476832, [[COPY]], 0 :: (volatile load 32 from %ir.2 + 96)
+  ; CHECK:   dead %2:vectorreg = XLOri64 68719476800, [[COPY]], 0 :: (volatile load 32 from %ir.2 + 64)
+  ; CHECK:   dead %3:vectorreg = XLOri64 68719476768, [[COPY]], 0 :: (volatile load 32 from %ir.2 + 32)
+  ; CHECK:   dead %4:vectorreg = XLOri64 68719476736, [[COPY]], 0 :: (volatile load 32 from %ir.2)
   ; CHECK:   RET implicit $ra
   %2 = getelementptr inbounds <1024 x i1>, <1024 x i1>* %0, i64 536870912
   %3 = load volatile <1024 x i1>, <1024 x i1>* %2

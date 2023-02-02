@@ -1,5 +1,3 @@
-; XFAIL: kvx
-; T18164
 ; Test enumeration representation in DWARF debug info:
 ; * test value representation for each possible underlying integer type
 ; * test the integer type is as expected

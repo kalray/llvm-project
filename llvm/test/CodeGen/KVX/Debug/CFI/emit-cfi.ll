@@ -16,7 +16,7 @@
 ; CHECK-NEXT:         .size   foo, .Lfunc_end0-foo
 ; CHECK-NEXT:         .cfi_endproc
 
-target triple = "kvx-unknown-cos"
+target triple = "kvx-kalray-cos"
 
 define dso_local void @foo() #0 !dbg !7 {
   %1 = alloca [128 x i32], align 4

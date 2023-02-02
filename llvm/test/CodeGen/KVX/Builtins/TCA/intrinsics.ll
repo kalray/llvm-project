@@ -1236,20 +1236,22 @@ define void @insertwm(<1024 x i1>* nocapture %a0, <512 x i1>* nocapture readonly
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xlo.u $a0 = 64[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xlo.u $a0 = 32[$r0]
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xlo.u $a1 = 32[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xlo.u $a0 = 0[$r1]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xlo.u $a2 = 0[$r0]
+; CHECK-NEXT:    xlo.u $a2 = 32[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 32[$r0] = $a1
+; CHECK-NEXT:    xlo.u $a2 = 0[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 32[$r0] = $a1
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xcopyo $a2 = $a0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    # implicit-def: $w0
+; CHECK-NEXT:    # implicit-def: $w0
 ; CHECK-NEXT:    xcopyo $a3 = $a1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xso 64[$r0] = $a2
@@ -1274,11 +1276,11 @@ define void @insertvm(<1024 x i1>* nocapture %a0, <256 x i1>* nocapture readonly
 ; CHECK-NEXT:    # implicit-def: $x1
 ; CHECK-NEXT:    xlo.u $a0 = 96[$r0]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xlo.u $a0 = 64[$r0]
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xlo.u $a0 = 32[$r0]
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xlo.u $a0 = 0[$r1]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xlo.u $a1 = 64[$r0]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xlo.u $a1 = 32[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xlo.u $a1 = 0[$r0]
 ; CHECK-NEXT:    ;;
@@ -1292,6 +1294,8 @@ define void @insertvm(<1024 x i1>* nocapture %a0, <256 x i1>* nocapture readonly
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xso 64[$r0] = $a2
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    # implicit-def: $w0
+; CHECK-NEXT:    # implicit-def: $w0
 ; CHECK-NEXT:    xcopyo $a3 = $a0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xso 96[$r0] = $a3

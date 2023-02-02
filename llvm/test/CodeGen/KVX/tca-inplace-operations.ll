@@ -236,24 +236,27 @@ declare <256 x i1> @llvm.kvx.xmovetq(<256 x i1>, i64, i64, i32)
 define void @insertwm(<1024 x i1>* nocapture %0, <512 x i1>* nocapture readonly %1) {
 ; ALL-LABEL: insertwm:
 ; ALL:       # %bb.0:
+; ALL-NEXT:    # implicit-def: $x1
 ; ALL-NEXT:    xlo.u $a0 = 96[$r0]
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    xlo.u $a0 = 64[$r0]
-; ALL-NEXT:    ;;
-; ALL-NEXT:    xlo.u $a0 = 32[$r0]
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    xlo.u $a1 = 32[$r1]
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    xlo.u $a0 = 0[$r1]
 ; ALL-NEXT:    ;;
-; ALL-NEXT:    xlo.u $a2 = 0[$r0]
+; ALL-NEXT:    xlo.u $a2 = 32[$r0]
 ; ALL-NEXT:    ;;
-; ALL-NEXT:    xso 32[$r0] = $a1
+; ALL-NEXT:    xlo.u $a2 = 0[$r0]
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    xso 0[$r0] = $a0
 ; ALL-NEXT:    ;;
+; ALL-NEXT:    xso 32[$r0] = $a1
+; ALL-NEXT:    ;;
 ; ALL-NEXT:    xcopyo $a2 = $a0
 ; ALL-NEXT:    ;;
+; ALL-NEXT:    # implicit-def: $w0
+; ALL-NEXT:    # implicit-def: $w0
 ; ALL-NEXT:    xcopyo $a3 = $a1
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    xso 64[$r0] = $a2
@@ -274,13 +277,14 @@ declare <1024 x i1> @llvm.kvx.xinsertwm(<1024 x i1>, <512 x i1>, i32)
 define void @insertvm(<1024 x i1>* nocapture %0, <256 x i1>* nocapture readonly %1) {
 ; ALL-LABEL: insertvm:
 ; ALL:       # %bb.0:
+; ALL-NEXT:    # implicit-def: $x1
 ; ALL-NEXT:    xlo.u $a0 = 96[$r0]
 ; ALL-NEXT:    ;;
-; ALL-NEXT:    xlo.u $a0 = 64[$r0]
-; ALL-NEXT:    ;;
-; ALL-NEXT:    xlo.u $a0 = 32[$r0]
-; ALL-NEXT:    ;;
 ; ALL-NEXT:    xlo.u $a0 = 0[$r1]
+; ALL-NEXT:    ;;
+; ALL-NEXT:    xlo.u $a1 = 64[$r0]
+; ALL-NEXT:    ;;
+; ALL-NEXT:    xlo.u $a1 = 32[$r0]
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    xlo.u $a1 = 0[$r0]
 ; ALL-NEXT:    ;;
@@ -294,6 +298,8 @@ define void @insertvm(<1024 x i1>* nocapture %0, <256 x i1>* nocapture readonly 
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    xso 64[$r0] = $a2
 ; ALL-NEXT:    ;;
+; ALL-NEXT:    # implicit-def: $w0
+; ALL-NEXT:    # implicit-def: $w0
 ; ALL-NEXT:    xcopyo $a3 = $a0
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    xso 96[$r0] = $a3
@@ -314,6 +320,7 @@ declare <1024 x i1> @llvm.kvx.xinsertvm(<1024 x i1>, <256 x i1>, i32)
 define void @insertvw(<512 x i1>* nocapture %0, <256 x i1>* nocapture readonly %1) {
 ; ALL-LABEL: insertvw:
 ; ALL:       # %bb.0:
+; ALL-NEXT:    # implicit-def: $w1
 ; ALL-NEXT:    xlo.u $a0 = 0[$r1]
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    xlo.u $a1 = 32[$r0]
