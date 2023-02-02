@@ -1839,6 +1839,7 @@ bool KVXTargetInfo::DecodeTargetTypeFromStr(const char *&Str,
 void KVXTargetInfo::setSupportedOpenCLOpts() {
   auto &Opts = getSupportedOpenCLOpts();
 
+  Opts["cl_clang_storage_class_specifiers"] = true;
   Opts["cl_khr_byte_addressable_store"] = true;
   Opts["cl_khr_global_int32_base_atomics"] = true;
   Opts["cl_khr_global_int32_extended_atomics"] = true;
@@ -1846,6 +1847,7 @@ void KVXTargetInfo::setSupportedOpenCLOpts() {
   Opts["cl_khr_local_int32_extended_atomics"] = true;
   Opts["cl_khr_fp16"] = true;
   Opts["cl_khr_fp64"] = true;
+  Opts["__opencl_c_fp64"] = true;
   Opts["cl_khr_int64_base_atomics"] = true;
   Opts["cl_khr_int64_extended_atomics"] = true;
   Opts["cles_khr_int64"] = true;
