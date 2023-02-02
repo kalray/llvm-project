@@ -1,5 +1,3 @@
-; XFAIL: kvx
-; T18164
 ; RUN: rm -rf %t %t2
 ; RUN: %llc_dwarf -O0 -filetype=obj < %s > %t
 ; RUN: llvm-dwarfdump -verbose -name=vla %t > %t2

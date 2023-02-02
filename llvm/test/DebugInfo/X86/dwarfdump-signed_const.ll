@@ -1,5 +1,3 @@
-; XFAIL: kvx
-; T18164
 ;; This test checks whether DW_OP_consts is emitted correctly.
 
 ; RUN: llc %s -filetype=obj -o - | llvm-dwarfdump - | FileCheck %s

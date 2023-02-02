@@ -1,6 +1,5 @@
 ; For some reason, the output when targetting sparc is not quite as expected.
-; XFAIL: kvx, sparc
-; T18164
+; XFAIL: sparc
 
 ; RUN: %llc_dwarf -O0 -filetype=obj -dwarf-linkage-names=All < %s | llvm-dwarfdump -v -debug-info - | FileCheck %s
 

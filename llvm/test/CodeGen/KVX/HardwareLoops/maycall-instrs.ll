@@ -2,7 +2,7 @@
 ; RUN: llc  -disable-kvx-hwloops=false -O3 -o - %s | FileCheck %s
 ; RUN: clang -mllvm -disable-kvx-hwloops=false -O3 -c -o /dev/null %s
 
-target triple = "kvx-unknown-cos"
+target triple = "kvx-kalray-cos"
 
 define void @_pocl_kernel_math_kernel_nohwloop_frem( float %a, float %b, i64 %c, float addrspace(1)* %d) {
 ; CHECK-LABEL: _pocl_kernel_math_kernel_nohwloop_frem:

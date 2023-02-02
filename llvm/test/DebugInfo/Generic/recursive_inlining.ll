@@ -1,5 +1,3 @@
-; XFAIL: kvx
-; T18164
 ; RUN: %llc_dwarf -filetype=obj -O0 < %s | llvm-dwarfdump -v -debug-info - | FileCheck %s
 
 ; This isn't a very pretty test case - I imagine there might be other ways to

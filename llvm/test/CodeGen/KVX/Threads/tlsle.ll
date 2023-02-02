@@ -4,7 +4,7 @@
 ; RUN: clang -O2 -c -o /dev/null %s
 ; RUN: clang -O2 -march=kv3-2 -c -o /dev/null %s
 
-target triple = "kvx-unknown-cos"
+target triple = "kvx-kalray-cos"
 
 @tls = thread_local(localexec) global i32 0, align 4
 

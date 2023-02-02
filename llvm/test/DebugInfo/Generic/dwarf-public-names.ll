@@ -1,5 +1,3 @@
-; XFAIL: kvx
-; T18164
 ; RUN: %llc_dwarf -debugger-tune=gdb -filetype=obj -o %t.o < %s
 ; RUN: llvm-dwarfdump -debug-pubnames %t.o | FileCheck %s
 ; ModuleID = 'dwarf-public-names.cpp'

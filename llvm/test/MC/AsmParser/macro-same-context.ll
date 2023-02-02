@@ -3,7 +3,7 @@
 ; RUN: not llc < %s 2>&1 | FileCheck %s
 ; REQUIRES: default_triple
 ;; This test is expected to fail on AIX or KVX
-;; since the integrated assembly parser was not implemented yet.
+;; since the integrated assembly parser is not implemented yet.
 ; XFAIL: aix || kvx
 
 define void @test() {

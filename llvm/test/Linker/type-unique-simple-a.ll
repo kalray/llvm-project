@@ -1,7 +1,5 @@
 ; REQUIRES: default_triple
 
-; XFAIL: kvx
-
 ; RUN: llvm-link %s %p/type-unique-simple-b.ll -S -o %t
 ; RUN: cat %t | FileCheck %s -check-prefix=LINK
 ; RUN: %llc_dwarf -filetype=obj -O0 < %t > %t2

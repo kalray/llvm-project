@@ -1,5 +1,3 @@
-; XFAIL: kvx
-; T18164
 ; RUN: %llc_dwarf -O0 -filetype=obj -dwarf-linkage-names=Abstract < %s | llvm-dwarfdump -v -debug-info - > %t
 ; RUN: FileCheck %s -check-prefix=ONENAME < %t
 ; RUN: FileCheck %s -check-prefix=REF < %t 
