@@ -440,14 +440,21 @@ multiclass LoadPatXS<PatFrag LoadOp, ValueType vt, int sc, Instruction rr> {
                   (add SingleReg:$base, (shl SingleReg:$offset, (i32 sc))))),
             (rr SingleReg:$offset, SingleReg:$base, (get_mem_mod $LD), scale_xs)>;
   def : Pat<(vt (LoadOp:$LD
-                  (add (shl SingleReg:$offset, (i32 sc)), SingleReg:$base))),
-            (rr SingleReg:$offset, SingleReg:$base, (get_mem_mod $LD), scale_xs)>;
+                  (add SingleReg:$base, (mul i64:$offset, (i64 !shl(1, sc)))))),
+            (rr i64:$offset, SingleReg:$base, (get_mem_mod $LD), scale_xs)>;
+  def : Pat<(vt (LoadOp:$LD
+                  (add SingleReg:$base, (i64 (KVX_zext_mul i32:$offset, (i32 !shl(1, sc))))))),
+            (rr i32:$offset, SingleReg:$base, (get_mem_mod $LD), scale_xs)>;
+
   def : Pat<(vt (LoadOp:$LD
                   (or SingleReg:$base, (shl SingleReg:$offset, (i32 sc))))),
             (rr SingleReg:$offset, SingleReg:$base, (get_mem_mod $LD), scale_xs)>;
   def : Pat<(vt (LoadOp:$LD
-                  (or (shl SingleReg:$offset, (i32 sc)), SingleReg:$base))),
-            (rr SingleReg:$offset, SingleReg:$base, (get_mem_mod $LD), scale_xs)>;
+                  (or SingleReg:$base, (mul i64:$offset, (i64 !shl(1, sc)))))),
+            (rr i64:$offset, SingleReg:$base, (get_mem_mod $LD), scale_xs)>;
+  def : Pat<(vt (LoadOp:$LD
+                  (or SingleReg:$base, (i64 (KVX_zext_mul i32:$offset, (i32 !shl(1, sc))))))),
+            (rr i32:$offset, SingleReg:$base, (get_mem_mod $LD), scale_xs)>;
 }
 
 multiclass SimpleLoadPat<PatFrag LoadOp, ValueType vt, KVX_PSEUDO_W_SCHEDINFO pinst,
@@ -563,16 +570,16 @@ multiclass StorePatRR<PatFrag StoreOp, ValueType vt,
 multiclass StorePatXS<PatFrag StoreOp, ValueType vt, int sc,
                       Instruction rr, dag nval > {
   def : Pat<(StoreOp vt:$val,
-              (add SingleReg:$base, (shl SingleReg:$offset, (i32 sc)))),
+              (add SingleReg:$base, (shiftMulPats<sc, i64> i64:$offset))),
             (rr SingleReg:$offset, SingleReg:$base, nval, scale_xs)>;
   def : Pat<(StoreOp vt:$val,
-              (add (shl SingleReg:$offset, (i32 sc)), SingleReg:$base)),
+              (add (shiftMulPats<sc, i64> i64:$offset), SingleReg:$base)),
             (rr SingleReg:$offset, SingleReg:$base, nval, scale_xs)>;
   def : Pat<(StoreOp vt:$val,
-              (or SingleReg:$base, (shl SingleReg:$offset, (i32 sc)))),
+              (or SingleReg:$base, (shiftMulPats<sc, i64> i64:$offset))),
             (rr SingleReg:$offset, SingleReg:$base, nval, scale_xs)>;
   def : Pat<(StoreOp vt:$val,
-              (or (shl SingleReg:$offset, (i32 sc)), SingleReg:$base)),
+              (or (shiftMulPats<sc, i64> i64:$offset), SingleReg:$base)),
             (rr SingleReg:$offset, SingleReg:$base, nval, scale_xs)>;
 }
 

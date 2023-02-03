@@ -68,7 +68,7 @@ define <4 x i64> @test_fma_imm(<4 x i64> %a, <4 x i64> %b) #0 {
   ret <4 x i64> %ad
 }
 
-
+; Fixme: Should legalize this extraction avoiding using memory.
 define i64 @test_extract_i(<4 x i64> %a, i64 %idx) #0 {
 ; CHECK-LABEL: test_extract_i:
 ; CHECK:       # %bb.0:

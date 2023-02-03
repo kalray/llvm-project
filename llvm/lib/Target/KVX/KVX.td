@@ -43,6 +43,14 @@ include "KVXSchedule.td"
 
 include "KVXModifierInfo.td"
 
+//===----------------------------------------------------------------------===//
+// Reusable pattern fragments
+//===----------------------------------------------------------------------===//
+
+// Detects both shl and multiply by a constant
+class shiftMulPats <int shiftC, ValueType vt> :
+PatFrags<(ops node:$v), [(shl $v, (i32 shiftC)), (mul $v, (vt !shl(1, shiftC)))]>;
+
 def vineg : PatFrag<(ops node:$v), (sub immAllZerosV, node:$v)>;
 def vineg_ssat : PatFrag<(ops node:$v), (ssubsat immAllZerosV, node:$v)>;
 def vfneg : PatFrags<(ops node:$v), [(fsub immAllZerosV, node:$v), (fneg node:$v)]>;
