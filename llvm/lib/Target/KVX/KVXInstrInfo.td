@@ -301,7 +301,7 @@ multiclass MC_10<string OpcStr> {
 //   defm NXORD
 //   defm ANDND
 //   defm ORND
-multiclass MC_BINOP_64<string OpcStr, PatFrag p> {
+multiclass MC_BINOP_64<string OpcStr, PatFrags p> {
   defm rr : I <OpcStr, /*itin=*/ALU_TINY, /*Ops=*/[SingleReg, SingleReg], /*Mods=*/[],
               /*MemOps=*/[], /*CC=*/[], /*Out=*/[SingleReg], /*InPlace=*/0, /*pattern=*/
               [(set i64:$r, (p i64:$op0, i64:$op1))]>;
@@ -1737,11 +1737,11 @@ defm MAXD : MC_11<"maxd">;
 
 defm MAXUD : MC_11<"maxud">;
 
-defm ANDD : MC_BINOP_64<"andd", and>;
+defm ANDD : MC_BINOP_64<"andd", PatFrags<(ops node:$l, node:$r), [(and node:$l, node:$r)]>>;
 
 defm NANDD : MC_11<"nandd">;
 
-defm ORD : MC_BINOP_64<"ord", or>;
+defm ORD : MC_BINOP_64<"ord", PatFrags<(ops node:$l, node:$r), [(or node:$l, node:$r)]>>;
 
 def norpfs : PatFrags<(ops node:$l, node:$r),
                        [(and (not node:$l), (not node:$r)),
@@ -1750,7 +1750,7 @@ def norpfs : PatFrags<(ops node:$l, node:$r),
 
 defm NORD : MC_BINOP_64<"nord", norpfs>;
 
-defm XORD : MC_BINOP_64<"xord", xor>;
+defm XORD : MC_BINOP_64<"xord", PatFrags<(ops node:$l, node:$r), [(xor node:$l, node:$r)]>>;
 
 def nxorpfs : PatFrags<(ops node:$l, node:$r),
                        [(not (xor node:$l, node:$r)),

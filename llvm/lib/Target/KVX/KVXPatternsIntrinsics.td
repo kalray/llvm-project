@@ -174,7 +174,7 @@ def: Pat<(v4f32(int_kvx_fmul v4f32:$v1, v4f32:$v2, i32:$rounding, i32:$silent)),
          (FMULWQ PairedReg:$v1, PairedReg:$v2, RoundingMod:$rounding, SilentMod:$silent)>;
 
 
-multiclass FFM___<Intrinsic Int, KVX_INSTRUCTION Opcode, ValueType OperandTy, ValueType DataTy> {
+multiclass FFM___<Intrinsic Int, Instruction Opcode, ValueType OperandTy, ValueType DataTy> {
   def: Pat<(Int OperandTy:$v1, OperandTy:$v2, OperandTy:$v3, i32:$rounding, i32:$silent),
     (OperandTy (REG_SEQUENCE PairedReg,
       (Opcode (DataTy (EXTRACT_SUBREG PairedReg:$v3, sub_d0)),
@@ -252,7 +252,7 @@ def: Pat<(v4f32(int_kvx_fcmul v4f32:$v1, v4f32:$v2, i32:$conjugate, i32:$roundin
 def: Pat<(v4f32 (int_kvx_fcmul v4f32:$v1, v4f32:$v2, i32:$conjugate, i32:$rounding, i32:$silent)),
   (v4f32 (FMULWCP PairedReg:$v1, PairedReg:$v2, ConjugateMod:$conjugate, RoundingMod:$rounding, SilentMod:$silent))>, Requires<[IsV2]>;
 
-multiclass FMUL_DC<KVX_INSTRUCTION FFMS, KVX_INSTRUCTION FFMA, Conjugate CM> {
+multiclass FMUL_DC<Instruction FFMS, Instruction FFMA, Conjugate CM> {
   def: Pat<(int_kvx_fcmul v2f64:$v1, v2f64:$v2, CM, i32:$rounding, i32:$silent),
     (v2f64 (REG_SEQUENCE PairedReg,
       (FFMS (FMULDrr (f64 (EXTRACT_SUBREG PairedReg:$v1, sub_d0)), (f64 (EXTRACT_SUBREG PairedReg:$v2, sub_d0)), RoundingMod:$rounding, SilentMod:$silent),
@@ -266,7 +266,7 @@ multiclass FMUL_DC<KVX_INSTRUCTION FFMS, KVX_INSTRUCTION FFMA, Conjugate CM> {
 defm: FMUL_DC<FFMSDrr, FFMADrr, conjugate_>;
 defm: FMUL_DC<FFMADrr, FFMSDrr, conjugate_c>;
 
-multiclass FFM__DC<Intrinsic int_kvx_ffmop, KVX_INSTRUCTION FOP, KVX_INSTRUCTION FFMS, KVX_INSTRUCTION FFMA, Conjugate C> {
+multiclass FFM__DC<Intrinsic int_kvx_ffmop, Instruction FOP, Instruction FFMS, Instruction FFMA, Conjugate C> {
   def: Pat<(v2f64(int_kvx_ffmop v2f64:$v1, v2f64:$v2, v2f64:$v3, C, i32:$rounding, i32:$silent)),
     (FOP
       (v2f64 (REG_SEQUENCE PairedReg,
@@ -284,7 +284,7 @@ defm: FFM__DC<int_kvx_fcfms, FSBFDP, FFMSDrr, FFMADrr, conjugate_>;
 defm: FFM__DC<int_kvx_fcfma, FADDDC, FFMADrr, FFMSDrr, conjugate_c>;
 defm: FFM__DC<int_kvx_fcfms, FSBFDC, FFMADrr, FFMSDrr, conjugate_c>;
 
-multiclass FFM__WC<Intrinsic int_kvx_fop, KVX_INSTRUCTION FOP, Conjugate C> {
+multiclass FFM__WC<Intrinsic int_kvx_fop, Instruction FOP, Conjugate C> {
   def: Pat<(v2f32(int_kvx_fop v2f32:$v1, v2f32:$v2, v2f32:$v3, C, i32:$rounding, i32:$silent)),
     (FOP (FMULWCrr SingleReg:$v2, SingleReg:$v1, C, RoundingMod:$rounding, SilentMod:$silent),
          SingleReg:$v3, RoundingMod:$rounding, SilentMod:$silent)>;
@@ -295,7 +295,7 @@ defm: FFM__WC<int_kvx_fcfms, FSBFWPrr, conjugate_>;
 defm: FFM__WC<int_kvx_fcfma, FADDWCrr, conjugate_c>;
 defm: FFM__WC<int_kvx_fcfms, FSBFWCrr, conjugate_c>;
 
-multiclass FFM__WCP<Intrinsic int_kvx_fop, KVX_INSTRUCTION FOP, Conjugate C> {
+multiclass FFM__WCP<Intrinsic int_kvx_fop, Instruction FOP, Conjugate C> {
   def: Pat<(v4f32(int_kvx_fop v4f32:$v1, v4f32:$v2, v4f32:$v3, C, i32:$rounding, i32:$silent)),
     (v4f32 (REG_SEQUENCE PairedReg,
        (FOP (FMULWCrr (v2f32 (EXTRACT_SUBREG PairedReg:$v2, sub_d0)),
@@ -791,7 +791,7 @@ def : Pat<(int_kvx_fmm222w v4f32:$LHS, v4f32:$RHS, i32:$t, i32:$r, i32:$s),
           (FMM222W PairedReg:$LHS, PairedReg:$RHS, TransposeMod:$t, RoundingMod:$r, SilentMod:$s)>, Requires<[IsV2]>;
 
 // FMMA222, FMMS222
-multiclass FMMAS222W <PatFrag Node, KVX_INSTRUCTION Op, Intrinsic KVX_Int> {
+multiclass FMMAS222W <PatFrag Node, Instruction Op, Intrinsic KVX_Int> {
 def : Pat<(Node v4f32:$ACC, (int_matrix_multiply v4f32:$LHS, v4f32:$RHS, 2, 2, 2)),
           (Op PairedReg:$LHS, PairedReg:$RHS, PairedReg:$ACC, transpose_nn, rounding_, silent_)>;
 
@@ -905,7 +905,7 @@ def : Pat<(int_kvx_fmm222w v4f32:$LHS, v4f32:$RHS, 3, i32:$r, i32:$s),
             RoundingMod:$r, SilentMod:$s)>, Requires<[IsV1]>;
 
 // FMMA222_CV1, FMMS222_CV1
-multiclass FMMAS222W_CV1 <PatFrag Node, KVX_INSTRUCTION Op, Intrinsic KVX_Int> {
+multiclass FMMAS222W_CV1 <PatFrag Node, Instruction Op, Intrinsic KVX_Int> {
 def : Pat<(Node v4f32:$ACC, (int_matrix_multiply v4f32:$LHS, v4f32:$RHS, 2, 2, 2)),
           (Op
             (Op

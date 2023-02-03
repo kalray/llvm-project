@@ -701,7 +701,6 @@ foreach m = [KVXCV1SchedMachineModel, KVXCV2SchedMachineModel] in {
 
   defvar MAU_AUXR_RT = MAU_RU # AUXR_RU;
 
-  // TODO: In cv2 the two LITE instructions are TINY.
   // Dedicated reservation table for XSWAP256: moveto + moveto + xmovefo
   defvar XSWAP256_RT = ALU_LITE_CRWL_RT # ALU_LITE_CRWH_RT # BCU_TINY_AUXW_CRRP_RT;
 

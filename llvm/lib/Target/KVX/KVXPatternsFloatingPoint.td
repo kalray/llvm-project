@@ -394,7 +394,7 @@ def : Pat<(f32 (fma:$dot2fma
                       (fpimm))))),
           (f32 (FDOT2Wri SingleReg:$t2, (build_fdot_imm_swp $dot2fma)))>, Requires<[IsV1]>;
 
-multiclass FDOT2WRR_FFDMAW<KVX_INSTRUCTION I> {
+multiclass FDOT2WRR_FFDMAW<Instruction I> {
 def : Pat<(f32 (faddcont (f32 (vector_extract (v2f32 (fmulcont v2f32:$lhs, (is_imm_vec:$rhs))), (i64 0))),
                     (f32 (vector_extract (v2f32 (fmulcont v2f32:$lhs, (is_imm_vec:$rhs))), (i64 1))))),
           (f32 (I SingleReg:$lhs, (MAKEi64 (build_imm_vec $rhs)), rounding_, silent_))>;
@@ -803,7 +803,7 @@ def : Pat <(v8f16 (fms v8f16:$r2, v8f16:$r1, v8f16:$r0)),
             (FFMSHO PairedReg:$r1, PairedReg:$r2, rounding_, silent_, PairedReg:$r0)>, Requires<[IsV2]>;
 
 
-multiclass FFMSPAT<ValueType vt, KVX_INSTRUCTION FMS, KVX_INSTRUCTION MUL, RegisterClass RC> {
+multiclass FFMSPAT<ValueType vt, Instruction FMS, Instruction MUL, RegisterClass RC> {
 def : Pat<(vt (fms vt:$rx, vt:$ry, vt:$rz)),
           (FMS RC:$rz, RC:$rx, RC:$ry, rounding_, silent_)>;
 
@@ -844,7 +844,7 @@ def : Pat<(v4f32 (fma (vfneg v4f32:$rx), v4f32:$ry, v4f32:$rz)),
             sub_d1)>;
 
 
-multiclass FFMS_EXPAND_PAT<ValueType vt, ValueType small_vt, KVX_INSTRUCTION FMS, RegisterClass OutRegType> {
+multiclass FFMS_EXPAND_PAT<ValueType vt, ValueType small_vt, Instruction FMS, RegisterClass OutRegType> {
   def : Pat<(vt (fma (fneg  (vt (fpextend small_vt:$r1))), (vt (fpextend small_vt:$r2)), vt:$r0)),
             (FMS OutRegType:$r0, SingleReg:$r1, SingleReg:$r2, rounding_, silent_)>;
 
@@ -866,7 +866,7 @@ defm : FFMS_EXPAND_PAT<v4f32, v4f16, FFMSHWQrr, PairedReg>;
 defm : FFMS_EXPAND_PAT<v2f64, v2f32, FFMSWDPrr, PairedReg>;
 
 // FIXED
-multiclass FP_TO_INT<SDNode fp_to_int, KVX_INSTRUCTION i32inst, KVX_INSTRUCTION i64inst, KVX_INSTRUCTION v2i32inst> {
+multiclass FP_TO_INT<SDNode fp_to_int, Instruction i32inst, Instruction i64inst, Instruction v2i32inst> {
 def : Pat<(i32 (fp_to_int f16:$val)), (i32inst (FWIDENLHW SingleReg:$val, silent_), DefaultShift, rounding_rz, silent_)>;
 def : Pat<(i32 (fp_to_int f32:$val)), (i32inst SingleReg:$val, DefaultShift, rounding_rz, silent_)>;
 def : Pat<(i32 (fp_to_int f64:$val)), (i64inst SingleReg:$val, DefaultShift, rounding_rz, silent_)>;
@@ -995,7 +995,7 @@ defm : FP_TO_INT<fp_to_uint, FIXEDUW, FIXEDUD, FIXEDUWP>;
 
 // FLOAT
 // FIXME: f16 patterns have issues with double rounding / implement RTcalls ?
-multiclass INT_TO_FP<SDNode int_to_fp, KVX_INSTRUCTION i32inst, KVX_INSTRUCTION i64inst, KVX_INSTRUCTION v2i32inst, KVX_INSTRUCTION ext, KVX_INSTRUCTION shift> {
+multiclass INT_TO_FP<SDNode int_to_fp, Instruction i32inst, Instruction i64inst, Instruction v2i32inst, Instruction ext, Instruction shift> {
 def : Pat<(f16 (int_to_fp i32:$val)), (FNARROWWH (i32inst SingleReg:$val, DefaultShift, rounding_rn, silent_), rounding_rn, silent_)>;
 def : Pat<(f16 (int_to_fp i64:$val)), (FNARROWWH (FNARROWDW (i64inst SingleReg:$val, DefaultShift, rounding_rn, silent_), rounding_rn, silent_), rounding_rn, silent_)>;
 

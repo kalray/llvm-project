@@ -411,7 +411,7 @@ def get_mem_mod : SDNodeXForm<ld, [{
     return CurDAG->getTargetConstant(Mod, SDLoc(N), MVT::i32);
    }]>;
 
-multiclass LoadPatRI<PatFrag LoadOp, ValueType vt, KVX_PSEUDO_W_SCHEDINFO pinst, KVX_INSTRUCTION ri10, KVX_INSTRUCTION ri37, KVX_INSTRUCTION ri64> {
+multiclass LoadPatRI<PatFrag LoadOp, ValueType vt, KVX_PSEUDO_W_SCHEDINFO pinst, Instruction ri10, Instruction ri37, Instruction ri64> {
 
   def : Pat<(vt (LoadOp:$LD AddrFI:$base)), (pinst (i64 0), SingleReg:$base, (get_mem_mod $LD))>;
   def : Pat<(vt (LoadOp:$LD (add AddrFI:$base, Wrapped64:$offset))),
@@ -428,14 +428,14 @@ multiclass LoadPatRI<PatFrag LoadOp, ValueType vt, KVX_PSEUDO_W_SCHEDINFO pinst,
             (ri10 0, SingleReg:$base, (get_mem_mod $LD))>;
 }
 
-multiclass LoadPatRR<PatFrag LoadOp, ValueType vt, KVX_INSTRUCTION rr> {
+multiclass LoadPatRR<PatFrag LoadOp, ValueType vt, Instruction rr> {
   def : Pat<(vt (LoadOp:$LD (add SingleReg:$base, SingleReg:$offset))),
             (rr SingleReg:$offset, SingleReg:$base, scale_, (get_mem_mod $LD))>;
   def : Pat<(vt (LoadOp:$LD (or SingleReg:$base, SingleReg:$offset))),
             (rr SingleReg:$offset, SingleReg:$base, scale_, (get_mem_mod $LD))>;
 }
 
-multiclass LoadPatXS<PatFrag LoadOp, ValueType vt, int sc, KVX_INSTRUCTION rr> {
+multiclass LoadPatXS<PatFrag LoadOp, ValueType vt, int sc, Instruction rr> {
   def : Pat<(vt (LoadOp:$LD
                   (add SingleReg:$base, (shl SingleReg:$offset, (i32 sc))))),
             (rr SingleReg:$offset, SingleReg:$base, (get_mem_mod $LD), scale_xs)>;
@@ -451,7 +451,7 @@ multiclass LoadPatXS<PatFrag LoadOp, ValueType vt, int sc, KVX_INSTRUCTION rr> {
 }
 
 multiclass SimpleLoadPat<PatFrag LoadOp, ValueType vt, KVX_PSEUDO_W_SCHEDINFO pinst,
-                         KVX_INSTRUCTION ri10, KVX_INSTRUCTION ri37, KVX_INSTRUCTION ri64, KVX_INSTRUCTION rr> {
+                         Instruction ri10, Instruction ri37, Instruction ri64, Instruction rr> {
   def : Pat<(vt (LoadOp:$LD SingleReg:$base)),
             (ri10 (i64 0), SingleReg:$base, (get_mem_mod $LD))>;
   defm : LoadPatRI<LoadOp, vt, pinst, ri10, ri37, ri64>;
@@ -459,7 +459,7 @@ multiclass SimpleLoadPat<PatFrag LoadOp, ValueType vt, KVX_PSEUDO_W_SCHEDINFO pi
 }
 
 multiclass LoadPat<PatFrag LoadOp, ValueType vt, int sc, KVX_PSEUDO_W_SCHEDINFO pinst,
-                   KVX_INSTRUCTION ri10, KVX_INSTRUCTION ri37, KVX_INSTRUCTION ri64, KVX_INSTRUCTION rr> {
+                   Instruction ri10, Instruction ri37, Instruction ri64, Instruction rr> {
   def : Pat<(vt (LoadOp:$LD SingleReg:$base)),
             (ri10 (i64 0), SingleReg:$base, (get_mem_mod $LD))>;
   defm : LoadPatRI<LoadOp, vt, pinst, ri10, ri37, ri64>;
@@ -537,7 +537,7 @@ def SMATRIXp : KVX_PSEUDO<
 }
 
 multiclass StorePatRI<PatFrag StoreOp, ValueType vt,
-                      KVX_PSEUDO_W_SCHEDINFO pinst, dag nval, KVX_INSTRUCTION ri10, KVX_INSTRUCTION ri37, KVX_INSTRUCTION ri64> {
+                      KVX_PSEUDO_W_SCHEDINFO pinst, dag nval, Instruction ri10, Instruction ri37, Instruction ri64> {
   def : Pat<(StoreOp vt:$val, AddrFI:$base),
             (pinst (i64 0), SingleReg:$base, nval)>;
   def : Pat<(StoreOp vt:$val, (add AddrFI:$base, Wrapped64:$offset)),
@@ -553,7 +553,7 @@ multiclass StorePatRI<PatFrag StoreOp, ValueType vt,
 }
 
 multiclass StorePatRR<PatFrag StoreOp, ValueType vt,
-                      KVX_INSTRUCTION rr, dag nval > {
+                      Instruction rr, dag nval > {
   def : Pat<(StoreOp vt:$val, (add SingleReg:$base, SingleReg:$offset)),
             (rr SingleReg:$offset, SingleReg:$base, nval, scale_)>;
   def : Pat<(StoreOp vt:$val, (or SingleReg:$base, SingleReg:$offset)),
@@ -561,7 +561,7 @@ multiclass StorePatRR<PatFrag StoreOp, ValueType vt,
 }
 
 multiclass StorePatXS<PatFrag StoreOp, ValueType vt, int sc,
-                      KVX_INSTRUCTION rr, dag nval > {
+                      Instruction rr, dag nval > {
   def : Pat<(StoreOp vt:$val,
               (add SingleReg:$base, (shl SingleReg:$offset, (i32 sc)))),
             (rr SingleReg:$offset, SingleReg:$base, nval, scale_xs)>;
@@ -577,8 +577,8 @@ multiclass StorePatXS<PatFrag StoreOp, ValueType vt, int sc,
 }
 
 multiclass SimpleStorePat<PatFrag StoreOp, ValueType vt, RegisterClass rc,
-                          KVX_PSEUDO_W_SCHEDINFO pinst, KVX_INSTRUCTION ri10, KVX_INSTRUCTION ri37, KVX_INSTRUCTION ri64,
-                          KVX_INSTRUCTION rr> {
+                          KVX_PSEUDO_W_SCHEDINFO pinst, Instruction ri10, Instruction ri37, Instruction ri64,
+                          Instruction rr> {
   def : Pat<(StoreOp vt:$val, SingleReg:$base),
             (ri10 (i64 0), SingleReg:$base, (vt rc:$val))>;
   defm : StorePatRI<StoreOp, vt, pinst, (vt rc:$val), ri10, ri37, ri64>;
@@ -586,8 +586,8 @@ multiclass SimpleStorePat<PatFrag StoreOp, ValueType vt, RegisterClass rc,
 }
 
 multiclass StorePat<PatFrag StoreOp, ValueType vt, RegisterClass rc, int sc,
-                    KVX_PSEUDO_W_SCHEDINFO pinst, KVX_INSTRUCTION ri10, KVX_INSTRUCTION ri37, KVX_INSTRUCTION ri64,
-                    KVX_INSTRUCTION rr> {
+                    KVX_PSEUDO_W_SCHEDINFO pinst, Instruction ri10, Instruction ri37, Instruction ri64,
+                    Instruction rr> {
   def : Pat<(StoreOp vt:$val, SingleReg:$base),
             (ri10 (i64 0), SingleReg:$base, (vt rc:$val))>;
   defm : StorePatRI<StoreOp, vt, pinst, (vt rc:$val), ri10, ri37, ri64>;
@@ -596,8 +596,8 @@ multiclass StorePat<PatFrag StoreOp, ValueType vt, RegisterClass rc, int sc,
 }
 
 multiclass StorePatNode<PatFrag StoreOp, ValueType vt, int sc,
-                        KVX_PSEUDO_W_SCHEDINFO pinst, KVX_INSTRUCTION ri10, KVX_INSTRUCTION ri37, KVX_INSTRUCTION ri64,
-                        KVX_INSTRUCTION rr, dag nval> {
+                        KVX_PSEUDO_W_SCHEDINFO pinst, Instruction ri10, Instruction ri37, Instruction ri64,
+                        Instruction rr, dag nval> {
   def : Pat<(StoreOp vt:$val, SingleReg:$base),
             (ri10 (i64 0), SingleReg:$base, nval)>;
   defm : StorePatRI<StoreOp, vt, pinst, nval, ri10, ri37, ri64>;
@@ -633,7 +633,7 @@ def : Pat<(and SingleReg:$val,(i32 0xffff)), (ZXHD SingleReg:$val)>;
 def : Pat<(and SingleReg:$val,(i32 0xff)), (ZXBD SingleReg:$val)>;
 
 // eliminate zero extend for shift ops second operand
-multiclass SHIFT_PAT32<SDNode n, KVX_INSTRUCTION instr>
+multiclass SHIFT_PAT32<SDNode n, Instruction instr>
 {
   defm : ZEFPat<(n i32:$r1, (and SingleReg:$val,(i32 0xff))), (instr SingleReg:$r1, SingleReg:$val)>;
   defm : ZEFPat<(n i32:$r1, (and SingleReg:$val,(i32 0xffff))), (instr SingleReg:$r1, SingleReg:$val)>;
@@ -641,7 +641,7 @@ multiclass SHIFT_PAT32<SDNode n, KVX_INSTRUCTION instr>
   defm : ZEFPat<(n i32:$r1, (i32 (sext_inreg i32:$val,i8))), (instr SingleReg:$r1, SingleReg:$val)>;
   defm : ZEFPat<(n i32:$r1, (i32 (sext_inreg i32:$val,i16))), (instr SingleReg:$r1, SingleReg:$val)>;
 }
-multiclass SHIFT_PAT64<SDNode n, KVX_INSTRUCTION instr>
+multiclass SHIFT_PAT64<SDNode n, Instruction instr>
 {
         def : Pat<(n i64:$r1, (sext_inreg i32:$val,i8)),
                   (instr SingleReg:$r1, SingleReg:$val)>;
@@ -1070,7 +1070,7 @@ def imm_vec_4bit_splat_at :  PatLeaf<(build_vector), [{
          KVX_LOW::isKVXSplat32ImmVec(N, CurDAG, true);
 }], build_imm_vec>;
 
-multiclass KVX_VSELECT_SingleReg<ValueType vt, ValueType ct, KVX_INSTRUCTION instRR> {
+multiclass KVX_VSELECT_SingleReg<ValueType vt, ValueType ct, Instruction instRR> {
 def : Pat<(vt (vselect ct:$c, vt:$true, vt:$false)),
           (vt (instRR SingleReg:$c, SingleReg:$true, SingleReg:$false, simplecond_even))>;
 }
@@ -2135,7 +2135,7 @@ def: Pat<(v4i64 (bswap v4i64:$v)), (v4i64 (REG_SEQUENCE QuadReg,
                                       (SBMM8ri64 (i64(EXTRACT_SUBREG QuadReg:$v, sub_d2)), 0x0102040810204080), sub_d2,
                                       (SBMM8ri64 (i64(EXTRACT_SUBREG QuadReg:$v, sub_d3)), 0x0102040810204080), sub_d3))>;
 
-multiclass CMOVE_ENTIRE_VEC_IMM <ValueType vt, KVX_INSTRUCTION RI, SDNodeXForm build> {
+multiclass CMOVE_ENTIRE_VEC_IMM <ValueType vt, Instruction RI, SDNodeXForm build> {
 def : Pat<(vt (select i32:$cc, vt:$t, is_imm_vec:$f)),
             (vt (RI SingleReg:$cc, SingleReg:$t, (build $f), scalarcond_even))>;
 def : Pat<(vt (select i32:$cc, is_imm_vec:$t, vt:$f)),
