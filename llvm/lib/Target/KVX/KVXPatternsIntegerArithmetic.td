@@ -505,58 +505,83 @@ def : Pat<(v4i32 (add v4i32:$a1, v4i32:$a2)),
             sub_d1)>;
 
 // ADDX*
-multiclass ADDXDPAT<dag sc, Instruction RRInstr, Instruction RIInstr> {
-def : Pat<(add i64:$r1, (shl i64:$r2, sc)), (RRInstr SingleReg:$r2, SingleReg:$r1)>;
-def : Pat<(add (shl i64:$r2, sc), i64:$r1), (RRInstr SingleReg:$r2, SingleReg:$r1)>;
+multiclass ADDXDPAT<int shiftC, Instruction RRInstr, Instruction RIInstr> {
+let AddedComplexity = 1 in {
+def : Pat<(add i64:$r1, (shiftMulPats<shiftC, i64> i64:$r2)),
+          (RRInstr SingleReg:$r2, SingleReg:$r1)>;
 
-def : Pat<(add (shl i64:$r2, sc), Wrapped64W:$r1), (RIInstr SingleReg:$r2, (trunc_imm_32 imm:$r1), splat32_)>;
-def : Pat<(add (shl i64:$r2, sc), SignedSplat32Imm:$r1), (RIInstr SingleReg:$r2, (trunc_imm_32 imm:$r1), splat32_at)>;
+def : Pat<(add (shiftMulPats<shiftC, i64> i64:$r2), Wrapped64W:$r1),
+          (RIInstr SingleReg:$r2, (trunc_imm_32 imm:$r1), splat32_)>;
+
+def : Pat<(add (shiftMulPats<shiftC, i64> i64:$r2), SignedSplat32Imm:$r1),
+          (RIInstr SingleReg:$r2, (trunc_imm_32 imm:$r1), splat32_at)>;
 }
-defm : ADDXDPAT<(i32 6), ADDX64Drr, ADDX64Dri>, Requires<[IsV2]>;
-defm : ADDXDPAT<(i32 5), ADDX32Drr, ADDX32Dri>, Requires<[IsV2]>;
-defm : ADDXDPAT<(i32 4), ADDX16Drr, ADDX16Dri>;
-defm : ADDXDPAT<(i32 3), ADDX8Drr, ADDX8Dri>;
-defm : ADDXDPAT<(i32 2), ADDX4Drr, ADDX4Dri>;
-defm : ADDXDPAT<(i32 1), ADDX2Drr, ADDX2Dri>;
-
-multiclass ADDXUWDPAT<dag sc, Instruction RRInstr, Instruction RIInstr> {
-def : Pat<(add i64:$r1, (i64 (zext (shl i32:$r2, sc))) ), (RRInstr SingleReg:$r2, SingleReg:$r1)>;
-def : Pat<(add (i64 (zext (shl i32:$r2, sc))), i64:$r1), (RRInstr SingleReg:$r2, SingleReg:$r1)>;
-
-def : Pat<(add (i64 (zext (shl i32:$r2, sc))), Wrapped64W:$r1), (RIInstr SingleReg:$r2, (trunc_imm_32 imm:$r1))>;
 }
-defm : ADDXUWDPAT<(i32 6), ADDX64UWDrr, ADDX64UWDri>, Requires<[IsV2]>;
-defm : ADDXUWDPAT<(i32 5), ADDX32UWDrr, ADDX32UWDri>, Requires<[IsV2]>;
-defm : ADDXUWDPAT<(i32 4), ADDX16UWDrr, ADDX16UWDri>;
-defm : ADDXUWDPAT<(i32 3), ADDX8UWDrr, ADDX8UWDri>;
-defm : ADDXUWDPAT<(i32 2), ADDX4UWDrr, ADDX4UWDri>;
-defm : ADDXUWDPAT<(i32 1), ADDX2UWDrr, ADDX2UWDri>;
+defm : ADDXDPAT<6, ADDX64Drr, ADDX64Dri>, Requires<[IsV2]>;
+defm : ADDXDPAT<5, ADDX32Drr, ADDX32Dri>, Requires<[IsV2]>;
+defm : ADDXDPAT<4, ADDX16Drr, ADDX16Dri>;
+defm : ADDXDPAT<3, ADDX8Drr, ADDX8Dri>;
+defm : ADDXDPAT<2, ADDX4Drr, ADDX4Dri>;
+defm : ADDXDPAT<1, ADDX2Drr, ADDX2Dri>;
 
-multiclass ADDXWPAT<dag sc, Instruction RRInstr, Instruction RIInstr> {
-defm : ZEFPat<(add i32:$r1, (shl i32:$r2, sc)), (RRInstr SingleReg:$r2, SingleReg:$r1)>;
-defm : ZEFPat<(add (shl i32:$r2, sc), i32:$r1), (RRInstr SingleReg:$r2, SingleReg:$r1)>;
+class zextShiftMulPats <int shiftC, ValueType vt> :
+PatFrags<(ops node:$v),
+      [(zext (shl $v, (i32 shiftC))),
+       (zext (mul $v, (vt !shl(1, shiftC)))),
+       (KVX_zext_mul $v, (vt !shl(1, shiftC)))]>;
 
-defm : ZEFPat<(add (shl i32:$r2, sc), Wrapped32:$r1), (RIInstr SingleReg:$r2, Wrapped32:$r1)>;
+multiclass ADDXUWDPAT<int shiftC, Instruction RRInstr, Instruction RIInstr> {
+let AddedComplexity = 1 in {
+def : Pat<(add i64:$r1, (i64 (zextShiftMulPats<shiftC, i32> i32:$r2))),
+          (RRInstr SingleReg:$r2, SingleReg:$r1)>;
+
+def : Pat<(add (i64 (zextShiftMulPats<shiftC, i32> i32:$r2)), i64:$r1),
+          (RRInstr SingleReg:$r2, SingleReg:$r1)>;
+
+def : Pat<(add (i64 (zextShiftMulPats<shiftC, i32> i32:$r2)), Wrapped64W:$r1),
+          (RIInstr SingleReg:$r2, (trunc_imm_32 imm:$r1))>;
 }
-defm : ADDXWPAT<(i32 6), ADDX64Wrr, ADDX64Wri>, Requires<[IsV2]>;
-defm : ADDXWPAT<(i32 5), ADDX32Wrr, ADDX32Wri>, Requires<[IsV2]>;
-defm : ADDXWPAT<(i32 4), ADDX16Wrr, ADDX16Wri>;
-defm : ADDXWPAT<(i32 3), ADDX8Wrr, ADDX8Wri>;
-defm : ADDXWPAT<(i32 2), ADDX4Wrr, ADDX4Wri>;
-defm : ADDXWPAT<(i32 1), ADDX2Wrr, ADDX2Wri>;
-
-multiclass ADDXWDPAT<dag sc, Instruction RRInstr, Instruction RIInstr> {
-def : Pat<(add i64:$r1, (i64 (sext (shl i32:$r2, sc))) ), (RRInstr SingleReg:$r2, SingleReg:$r1)>;
-def : Pat<(add (i64 (sext (shl i32:$r2, sc))), i64:$r1), (RRInstr SingleReg:$r2, SingleReg:$r1)>;
-
-def : Pat<(add (i64 (sext (shl i32:$r2, sc))), Wrapped64W:$r1), (RIInstr SingleReg:$r2, (trunc_imm_32 imm:$r1))>;
 }
-defm : ADDXWDPAT<(i32 6), ADDX64WDrr, ADDX64WDri>, Requires<[IsV2]>;
-defm : ADDXWDPAT<(i32 5), ADDX32WDrr, ADDX32WDri>, Requires<[IsV2]>;
-defm : ADDXWDPAT<(i32 4), ADDX16WDrr, ADDX16WDri>;
-defm : ADDXWDPAT<(i32 3), ADDX8WDrr, ADDX8WDri>;
-defm : ADDXWDPAT<(i32 2), ADDX4WDrr, ADDX4WDri>;
-defm : ADDXWDPAT<(i32 1), ADDX2WDrr, ADDX2WDri>;
+defm : ADDXUWDPAT<6, ADDX64UWDrr, ADDX64UWDri>, Requires<[IsV2]>;
+defm : ADDXUWDPAT<5, ADDX32UWDrr, ADDX32UWDri>, Requires<[IsV2]>;
+defm : ADDXUWDPAT<4, ADDX16UWDrr, ADDX16UWDri>;
+defm : ADDXUWDPAT<3, ADDX8UWDrr, ADDX8UWDri>;
+defm : ADDXUWDPAT<2, ADDX4UWDrr, ADDX4UWDri>;
+defm : ADDXUWDPAT<1, ADDX2UWDrr, ADDX2UWDri>;
+
+multiclass ADDXWPAT<int shiftC, Instruction RRInstr, Instruction RIInstr> {
+defm : ZEFPat<(add i32:$r1, (shiftMulPats<shiftC, i32> i32:$r2)), (RRInstr SingleReg:$r2, SingleReg:$r1)>;
+defm : ZEFPat<(add (shiftMulPats<shiftC, i32> i32:$r2), i32:$r1), (RRInstr SingleReg:$r2, SingleReg:$r1)>;
+
+defm : ZEFPat<(add (shiftMulPats<shiftC, i32> i32:$r2), Wrapped32:$r1), (RIInstr SingleReg:$r2, Wrapped32:$r1)>;
+}
+defm : ADDXWPAT<6, ADDX64Wrr, ADDX64Wri>, Requires<[IsV2]>;
+defm : ADDXWPAT<5, ADDX32Wrr, ADDX32Wri>, Requires<[IsV2]>;
+defm : ADDXWPAT<4, ADDX16Wrr, ADDX16Wri>;
+defm : ADDXWPAT<3, ADDX8Wrr, ADDX8Wri>;
+defm : ADDXWPAT<2, ADDX4Wrr, ADDX4Wri>;
+defm : ADDXWPAT<1, ADDX2Wrr, ADDX2Wri>;
+
+class sextShiftMulPats <int shiftC, ValueType vt> :
+PatFrags<(ops node:$v),
+      [(sext (shl $v, (i32 shiftC))),
+       (sext (mul $v, (vt !shl(1, shiftC)))),
+       (KVX_sext_mul $v, (vt !shl(1, shiftC)))]>;
+
+multiclass ADDXWDPAT<int shiftC, Instruction RRInstr, Instruction RIInstr> {
+let AddedComplexity = 1 in {
+def : Pat<(add i64:$r1, (i64 (sextShiftMulPats<shiftC, i32> i32:$r2)) ), (RRInstr SingleReg:$r2, SingleReg:$r1)>;
+def : Pat<(add (i64 (sextShiftMulPats<shiftC, i32> i32:$r2)), i64:$r1), (RRInstr SingleReg:$r2, SingleReg:$r1)>;
+
+def : Pat<(add (i64 (sextShiftMulPats<shiftC, i32> i32:$r2)), Wrapped64W:$r1), (RIInstr SingleReg:$r2, (trunc_imm_32 imm:$r1))>;
+}
+}
+defm : ADDXWDPAT<6, ADDX64WDrr, ADDX64WDri>, Requires<[IsV2]>;
+defm : ADDXWDPAT<5, ADDX32WDrr, ADDX32WDri>, Requires<[IsV2]>;
+defm : ADDXWDPAT<4, ADDX16WDrr, ADDX16WDri>;
+defm : ADDXWDPAT<3, ADDX8WDrr, ADDX8WDri>;
+defm : ADDXWDPAT<2, ADDX4WDrr, ADDX4WDri>;
+defm : ADDXWDPAT<1, ADDX2WDrr, ADDX2WDri>;
 
 multiclass ADDXPAT_HalfSReg<ValueType vt, dag sc, Instruction RR, Instruction RI, PatLeaf VC> {
 def : Pat<(vt(add (shl vt:$v, (vt(v2_splat sc))), (vt(is_imm_vec:$IMM)))),
