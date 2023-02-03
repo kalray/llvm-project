@@ -445,9 +445,7 @@ entry:
 define <2 x i16> @avg_v2i16_ri(<2 x i16> %a) {
 ; CHECK-LABEL: avg_v2i16_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x30007
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    avghq $r0 = $r1, $r0
+; CHECK-NEXT:    avghq $r0 = $r0, 0x30007
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -472,9 +470,7 @@ entry:
 define <2 x i16> @ravg_v2i16_ri(<2 x i16> %a) {
 ; CHECK-LABEL: ravg_v2i16_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x818000
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    avghq $r0 = $r1, $r0
+; CHECK-NEXT:    avghq $r0 = $r0, 0x818000
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -512,9 +508,7 @@ entry:
 define <2 x i16> @avg_v2u16_ri(<2 x i16> %a) {
 ; CHECK-LABEL: avg_v2u16_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x80ffff
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    avguhq $r0 = $r1, $r0
+; CHECK-NEXT:    avguhq $r0 = $r0, 0x80ffff
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -574,9 +568,7 @@ entry:
 define <2 x i16> @ravg_v2u16_ri(<2 x i16> %a) {
 ; CHECK-LABEL: ravg_v2u16_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x810000
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    avguhq $r0 = $r1, $r0
+; CHECK-NEXT:    avguhq $r0 = $r0, 0x810000
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -600,9 +592,7 @@ entry:
 define <4 x i16> @avg_v4i16_ri_(<4 x i16> %a) {
 ; CHECK-LABEL: avg_v4i16_ri_:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x807fff
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    avghq $r0 = $r1, $r0
+; CHECK-NEXT:    avghq $r0 = $r0, 0x807fff
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -614,9 +604,7 @@ entry:
 define <4 x i16> @avg_v4i16_ri_at(<4 x i16> %a) {
 ; CHECK-LABEL: avg_v4i16_ri_at:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x807fff00807fff
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    avghq $r0 = $r1, $r0
+; CHECK-NEXT:    avghq.@ $r0 = $r0, 0x807fff
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -641,9 +629,7 @@ entry:
 define <4 x i16> @ravg_v4i16_ri_at(<4 x i16> %a) {
 ; CHECK-LABEL: ravg_v4i16_ri_at:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x81800000818000
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    avghq $r0 = $r1, $r0
+; CHECK-NEXT:    avghq.@ $r0 = $r0, 0x818000
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -667,9 +653,7 @@ entry:
 define <4 x i16> @avg_v4u16_ri_(<4 x i16> %a) {
 ; CHECK-LABEL: avg_v4u16_ri_:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x80ffff
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    avguhq $r0 = $r1, $r0
+; CHECK-NEXT:    avguhq $r0 = $r0, 0x80ffff
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -681,9 +665,7 @@ entry:
 define <4 x i16> @avg_v4u16_ri_at(<4 x i16> %a) {
 ; CHECK-LABEL: avg_v4u16_ri_at:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x80ffff0080ffff
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    avguhq $r0 = $r1, $r0
+; CHECK-NEXT:    avguhq.@ $r0 = $r0, 0x80ffff
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -727,9 +709,7 @@ entry:
 define <4 x i16> @ravg_v4u16_ri_at(<4 x i16> %a) {
 ; CHECK-LABEL: ravg_v4u16_ri_at:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x81000000810000
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    avguhq $r0 = $r1, $r0
+; CHECK-NEXT:    avguhq.@ $r0 = $r0, 0x810000
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -957,9 +937,7 @@ define <2 x i8> @avg_v2i8_ri(<2 x i8> %a) {
 ;
 ; KV3_2-LABEL: avg_v2i8_ri:
 ; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    make $r1 = 775
-; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    avgbo $r0 = $r1, $r0
+; KV3_2-NEXT:    avgbo $r0 = $r0, 775
 ; KV3_2-NEXT:    ret
 ; KV3_2-NEXT:    ;;
 entry:
@@ -1029,9 +1007,7 @@ define <2 x i8> @ravg_v2i8_ri(<2 x i8> %a) {
 ;
 ; KV3_2-LABEL: ravg_v2i8_ri:
 ; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    make $r1 = 0xffffffffffff8180
-; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    avgbo $r0 = $r1, $r0
+; KV3_2-NEXT:    avgbo $r0 = $r0, 0xffff8180
 ; KV3_2-NEXT:    ret
 ; KV3_2-NEXT:    ;;
 entry:
@@ -1134,9 +1110,7 @@ define <2 x i8> @avg_v2u8_ri(<2 x i8> %a) {
 ;
 ; KV3_2-LABEL: avg_v2u8_ri:
 ; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    make $r1 = 0xffffffffffff80ff
-; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    avgubo $r0 = $r1, $r0
+; KV3_2-NEXT:    avgubo $r0 = $r0, 0xffff80ff
 ; KV3_2-NEXT:    ret
 ; KV3_2-NEXT:    ;;
 entry:
@@ -1287,9 +1261,7 @@ define <2 x i8> @ravg_v2u8_ri(<2 x i8> %a) {
 ;
 ; KV3_2-LABEL: ravg_v2u8_ri:
 ; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    make $r1 = 0xffffffffffff8100
-; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    avgubo $r0 = $r1, $r0
+; KV3_2-NEXT:    avgubo $r0 = $r0, 0xffff8100
 ; KV3_2-NEXT:    ret
 ; KV3_2-NEXT:    ;;
 entry:
@@ -1376,9 +1348,7 @@ define <4 x i8> @avg_v4i8_ri_(<4 x i8> %a) {
 ;
 ; KV3_2-LABEL: avg_v4i8_ri_:
 ; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    make $r1 = 0x407f
-; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    avgbo $r0 = $r1, $r0
+; KV3_2-NEXT:    avgbo $r0 = $r0, 0x407f
 ; KV3_2-NEXT:    ret
 ; KV3_2-NEXT:    ;;
 entry:
@@ -1421,9 +1391,7 @@ define <4 x i8> @avg_v4i8_ri_2(<4 x i8> %a) {
 ;
 ; KV3_2-LABEL: avg_v4i8_ri_2:
 ; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    make $r1 = 0x7f1f7f1f
-; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    avgbo $r0 = $r1, $r0
+; KV3_2-NEXT:    avgbo $r0 = $r0, 0x7f1f7f1f
 ; KV3_2-NEXT:    ret
 ; KV3_2-NEXT:    ;;
 entry:
@@ -1513,9 +1481,7 @@ define <4 x i8> @ravg_v4i8_ri_at(<4 x i8> %a) {
 ;
 ; KV3_2-LABEL: ravg_v4i8_ri_at:
 ; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    make $r1 = 0xffffffff80818081
-; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    avgbo $r0 = $r1, $r0
+; KV3_2-NEXT:    avgbo $r0 = $r0, 0x80818081
 ; KV3_2-NEXT:    ret
 ; KV3_2-NEXT:    ;;
 entry:
@@ -1600,9 +1566,7 @@ define <4 x i8> @avg_v4u8_ri_(<4 x i8> %a) {
 ;
 ; KV3_2-LABEL: avg_v4u8_ri_:
 ; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    make $r1 = 0x80ff
-; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    avgubo $r0 = $r1, $r0
+; KV3_2-NEXT:    avgubo $r0 = $r0, 0x80ff
 ; KV3_2-NEXT:    ret
 ; KV3_2-NEXT:    ;;
 entry:
@@ -1644,9 +1608,7 @@ define <4 x i8> @avg_v4u8_ri_at(<4 x i8> %a) {
 ;
 ; KV3_2-LABEL: avg_v4u8_ri_at:
 ; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    make $r1 = 0xffffffff80ff80ff
-; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    avgubo $r0 = $r1, $r0
+; KV3_2-NEXT:    avgubo $r0 = $r0, 0x80ff80ff
 ; KV3_2-NEXT:    ret
 ; KV3_2-NEXT:    ;;
 entry:
@@ -1740,9 +1702,7 @@ define <4 x i8> @ravg_v4u8_ri_(<4 x i8> %a) {
 ;
 ; KV3_2-LABEL: ravg_v4u8_ri_:
 ; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    make $r1 = 0x1010081
-; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    avgubo $r0 = $r1, $r0
+; KV3_2-NEXT:    avgubo $r0 = $r0, 0x1010081
 ; KV3_2-NEXT:    ret
 ; KV3_2-NEXT:    ;;
 entry:
@@ -1784,9 +1744,7 @@ define <4 x i8> @ravg_v4u8_ri_2(<4 x i8> %a) {
 ;
 ; KV3_2-LABEL: ravg_v4u8_ri_2:
 ; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    make $r1 = 0xffffffff81008100
-; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    avgubo $r0 = $r1, $r0
+; KV3_2-NEXT:    avgubo $r0 = $r0, 0x81008100
 ; KV3_2-NEXT:    ret
 ; KV3_2-NEXT:    ;;
 entry:
@@ -1925,9 +1883,7 @@ define <8 x i8> @avg_v8i8_ri_(<8 x i8> %a) {
 ;
 ; KV3_2-LABEL: avg_v8i8_ri_:
 ; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    make $r1 = 0x7f437f43
-; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    avgbo $r0 = $r1, $r0
+; KV3_2-NEXT:    avgbo $r0 = $r0, 0x7f437f43
 ; KV3_2-NEXT:    ret
 ; KV3_2-NEXT:    ;;
 entry:
@@ -1997,9 +1953,7 @@ define <8 x i8> @avg_v8i8_ri_at(<8 x i8> %a) {
 ;
 ; KV3_2-LABEL: avg_v8i8_ri_at:
 ; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    make $r1 = 0x7f437f437f437f43
-; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    avgbo $r0 = $r1, $r0
+; KV3_2-NEXT:    avgbo.@ $r0 = $r0, 0x7f437f43
 ; KV3_2-NEXT:    ret
 ; KV3_2-NEXT:    ;;
 entry:
@@ -2148,9 +2102,7 @@ define <8 x i8> @ravg_v8i8_ri_at(<8 x i8> %a) {
 ;
 ; KV3_2-LABEL: ravg_v8i8_ri_at:
 ; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    make $r1 = 0x81e081e081e081e0
-; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    avgbo $r0 = $r1, $r0
+; KV3_2-NEXT:    avgbo.@ $r0 = $r0, 0x81e081e0
 ; KV3_2-NEXT:    ret
 ; KV3_2-NEXT:    ;;
 entry:
@@ -2224,9 +2176,7 @@ define <8 x i8> @avg_v8u8_ri_(<8 x i8> %a) {
 ;
 ; KV3_2-LABEL: avg_v8u8_ri_:
 ; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    make $r1 = 0x7fff7fff
-; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    avgubo $r0 = $r1, $r0
+; KV3_2-NEXT:    avgubo $r0 = $r0, 0x7fff7fff
 ; KV3_2-NEXT:    ret
 ; KV3_2-NEXT:    ;;
 entry:
@@ -2264,9 +2214,7 @@ define <8 x i8> @avg_v8u8_ri_at(<8 x i8> %a) {
 ;
 ; KV3_2-LABEL: avg_v8u8_ri_at:
 ; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    make $r1 = 0x7f017f017f017f01
-; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    avgubo $r0 = $r1, $r0
+; KV3_2-NEXT:    avgubo.@ $r0 = $r0, 0x7f017f01
 ; KV3_2-NEXT:    ret
 ; KV3_2-NEXT:    ;;
 entry:
@@ -2397,9 +2345,7 @@ define <8 x i8> @ravg_v8u8_ri_at(<8 x i8> %a) {
 ;
 ; KV3_2-LABEL: ravg_v8u8_ri_at:
 ; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    make $r1 = 0x8100810081008100
-; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    avgubo $r0 = $r1, $r0
+; KV3_2-NEXT:    avgubo.@ $r0 = $r0, 0x81008100
 ; KV3_2-NEXT:    ret
 ; KV3_2-NEXT:    ;;
 entry:
