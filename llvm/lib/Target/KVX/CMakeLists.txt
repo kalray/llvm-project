@@ -33,6 +33,7 @@ add_llvm_target(KVXCodeGen
     KVXHardwareLoopsPrepare.cpp
     KVXTargetTransformInfo.cpp
     KVXPostScheduler.cpp
+    KVXGenerated.cpp
 
     LINK_COMPONENTS
     Analysis
