@@ -31,10 +31,6 @@
 using namespace llvm;
 #define DEBUG_TYPE "KVX-isel"
 
-#define GET_INSTRINFO_CTOR_DTOR
-#include "KVXGenDFAPacketizer.inc"
-#include "KVXGenInstrInfo.inc"
-
 KVXInstrInfo::KVXInstrInfo(KVXSubtarget &ST)
     : KVXGenInstrInfo(KVX::ADJCALLSTACKDOWN, KVX::ADJCALLSTACKUP),
       Subtarget(ST) {}
