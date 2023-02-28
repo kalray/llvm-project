@@ -15,8 +15,7 @@ define i64 @foo(i32 %tmp7) {
 ; CHECK-NEXT:    [[TMP7:%.*]] = add <8 x i32> zeroinitializer, [[TMP6]]
 ; CHECK-NEXT:    [[TMP8:%.*]] = xor <8 x i32> [[TMP7]], zeroinitializer
 ; CHECK-NEXT:    [[TMP9:%.*]] = call i32 @llvm.vector.reduce.add.v8i32(<8 x i32> [[TMP8]])
-; CHECK-NEXT:    [[TMP10:%.*]] = call i32 @llvm.vector.reduce.add.v4i32(<4 x i32> zeroinitializer)
-; CHECK-NEXT:    [[OP_RDX:%.*]] = add i32 [[TMP9]], [[TMP10]]
+; CHECK-NEXT:    [[OP_RDX:%.*]] = add i32 [[TMP9]], 0
 ; CHECK-NEXT:    [[TMP64:%.*]] = zext i32 [[OP_RDX]] to i64
 ; CHECK-NEXT:    ret i64 [[TMP64]]
 ;

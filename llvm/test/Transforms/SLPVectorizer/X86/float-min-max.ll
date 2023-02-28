@@ -17,11 +17,10 @@ define i1 @test(float* %p1, float* %p2, i8* %p3, i1 %c) #0 {
 ; CHECK-NEXT:    [[UMIN3334:%.*]] = bitcast float* [[UMIN33]] to i8*
 ; CHECK-NEXT:    [[BOUND0:%.*]] = icmp ugt i8* [[P3:%.*]], [[UMIN22]]
 ; CHECK-NEXT:    [[FOUND_CONFLICT:%.*]] = and i1 [[BOUND0]], [[C:%.*]]
-; CHECK-NEXT:    [[CONFLICT_RDX:%.*]] = or i1 [[FOUND_CONFLICT]], [[C]]
 ; CHECK-NEXT:    [[BOUND042:%.*]] = icmp ugt i8* [[P3]], [[UMIN3334]]
 ; CHECK-NEXT:    [[FOUND_CONFLICT44:%.*]] = and i1 [[BOUND042]], [[C]]
-; CHECK-NEXT:    [[OP_RDX:%.*]] = or i1 [[C]], [[FOUND_CONFLICT]]
-; CHECK-NEXT:    [[OP_RDX1:%.*]] = or i1 [[OP_RDX]], [[FOUND_CONFLICT44]]
+; CHECK-NEXT:    [[OP_RDX:%.*]] = or i1 [[FOUND_CONFLICT]], [[FOUND_CONFLICT44]]
+; CHECK-NEXT:    [[OP_RDX1:%.*]] = or i1 [[C]], [[OP_RDX]]
 ; CHECK-NEXT:    ret i1 [[OP_RDX1]]
 ;
   %scevgep21 = getelementptr float, float* %p1, i32 0
