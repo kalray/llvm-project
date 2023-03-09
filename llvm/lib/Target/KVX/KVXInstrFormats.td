@@ -10,6 +10,32 @@
 def IsV1 : Predicate<"Subtarget->isV1()">;
 def IsV2 : Predicate<"Subtarget->isV2()">;
 
+class AWType<bits<3> t> { bits<3> Value = t; }
+
+// Access types should be such that
+// AWType<i> corresponds to (1 << (i-1)) size in byte
+// Must keep updated with getMemWidth in KVXInstrInfo.cpp
+def NoAccess : AWType<0>;
+def Byte : AWType<1>;
+def Half : AWType<2>;
+def Word : AWType<3>;
+def Double :  AWType<4>;
+def Quad : AWType<5>;
+def Octuple : AWType<6>;
+
+class InstKVX : Instruction {
+  bits<1> hasNoOffset = 0; // 1 if the memory instruction has no offset
+  let TSFlags{0} = hasNoOffset;
+
+  // relative position of .xs modifier from the first memory operand
+  // A value of 0 means there is no .xs modifier
+  bits<2> XSModRelPos = 0;
+  let TSFlags{2-1} = XSModRelPos;
+
+  AWType MemAccessSize = NoAccess; // size of memory access
+  let TSFlags{5-3} = MemAccessSize.Value;
+}
+
 // Generic KVX instruction definition.
 // It uses multiclass to be able to use defvar and generate input values checking
 // to automatically generate a standard dag to be matched as well the output asm.
@@ -171,7 +197,7 @@ multiclass I <string asm,
 
     defvar CheapAsMove = !and(!eq(InstSz, 4), !ne(ItirName, !subst("TINY", "", ItirName)));
 // We define an "unamed" instruction, so it will be just the name of the definition it self.
-  def "" : Instruction {
+  def "" : InstKVX {
     let isAsCheapAsAMove = CheapAsMove;
     let Pattern = pat;
     let Itinerary = itin;
@@ -189,6 +215,31 @@ multiclass I <string asm,
     let isPredicable = CanPredicate;
     let mayRaiseFPException = mayRaiseFPE;
     let AddedComplexity = AddedComplex;
+
+    /* --- KVX-specific flags --- */
+    let hasNoOffset = !lt(!size(MemOps), 2);
+
+    // Position of .xs mod, relative to Mods
+    defvar DoscaleModRelPos = !cond(
+      !ge(!size(Mods), 3): !cond(
+        !eq(Mods[0], DoscaleMod) : 0,
+        !eq(Mods[1], DoscaleMod) : 1,
+        !eq(Mods[2], DoscaleMod) : 2,
+        true : -1),
+      !ge(!size(Mods), 2): !cond(
+        !eq(Mods[0], DoscaleMod) : 0,
+        !eq(Mods[1], DoscaleMod) : 1,
+        true : -1),
+      !ge(!size(Mods), 1): !cond(
+        !eq(Mods[0], DoscaleMod) : 0,
+        true : -1),
+      true: -1
+    );
+
+    // Position of .xs mod, relative to Memops
+    let XSModRelPos = !cond(
+      !gt(DoscaleModRelPos, -1) : !add(!size(MemOps), !size(Ops), DoscaleModRelPos),
+      true : 0);
  }
 }
 
@@ -373,7 +424,7 @@ multiclass MC_XSO <string OpcStr = "xso"> {
 class KVX_INSTRUCTION
   <dag outs, dag ins, string asmstr, list<dag> pattern, InstrItinClass itin,
    int syllables=1>
-  : Instruction {
+  : InstKVX {
     dag OutOperandList = outs;
     dag InOperandList = ins;
     let AsmString = asmstr;

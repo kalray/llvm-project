@@ -100,13 +100,14 @@ multiclass MC_0D<string OpcStr> {
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [/* no straightforward pattern */],
      LSU_AUXR_AUXW_LOAD_SV3_Y_>;
-  let Constraints = "$a4 = $a4o" in
+  let XSModRelPos = 3, Constraints = "$a4 = $a4o" in
   def rr : KVX_INSTRUCTION
     <(outs PairedReg:$a4o), (ins SingleReg:$a2, SingleReg:$a3, PairedReg:$a4, DoscaleMod:$a1),
      !strconcat (OpcStr, "$a1 $a2[$a3] = $a4"),
      [/* no straightforward pattern */],
      LSU_AUXR_AUXW_LOAD_SV3>;
   }
+  let hasNoOffset = 1 in
   let Constraints = "$a4 = $a4o" in
   def rrc : KVX_INSTRUCTION
     <(outs PairedReg:$a4o), (ins SingleReg:$a3, PairedReg:$a4, ScalarcondMod:$a1, SingleReg:$a2),
@@ -127,6 +128,7 @@ multiclass MC_0D<string OpcStr> {
      LSU_AUXR_AUXW_LOAD_SV3_Y_>;
 
   // CV2 formats.
+  let hasNoOffset = 1 in
   def r : KVX_INSTRUCTION
     <(outs SingleReg:$regout), (ins SingleReg:$addr, PairedReg:$regin, BoolcasMod:$bcm, CoherencyMod:$com),
      !strconcat (OpcStr, "$bcm$com $regout, [$addr] = $regin"),
@@ -148,6 +150,9 @@ multiclass MC_0D<string OpcStr> {
 //   defm ALCLRW
 //   defm ALCLRD
 multiclass MC_0E<string OpcStr, ValueType vt, int shsz> {
+  defvar AccessSize = !cond(!eq(vt, i32): Word, !eq(vt, i64): Double);
+
+  let MemAccessSize = AccessSize in
   let mayLoad = 1, mayStore = 1, isPredicable = 1 in {
   def ri10 : KVX_INSTRUCTION
     <(outs SingleReg:$a1), (ins Signed10:$a2, SingleReg:$a3),
@@ -164,6 +169,8 @@ multiclass MC_0E<string OpcStr, ValueType vt, int shsz> {
      !strconcat (OpcStr, " $a1 = $a2[$a3]"),
      [(set vt:$a1, (int_kvx_alclr (add i64:$a3, Wrapped64:$a2)))],
      LSU_AUXW_ALCLR_Y_>;
+
+  let XSModRelPos = 2 in
   def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, DoscaleMod:$a1),
      !strconcat (OpcStr, "$a1 $a2 = $a3[$a4]"),
@@ -178,6 +185,7 @@ multiclass MC_0E<string OpcStr, ValueType vt, int shsz> {
              (vt (rr SingleReg:$a3, SingleReg:$a4, scale_))>, Requires<[IsV1]>;
 
   let mayLoad = 1, mayStore = 1, Constraints = "$a3 = $a3o" in {
+  let hasNoOffset = 1, MemAccessSize = AccessSize in
   def rrc : KVX_INSTRUCTION
     <(outs SingleReg:$a3o), (ins SingleReg:$a4, SingleReg:$a3, ScalarcondMod:$a1, SingleReg:$a2),
      !strconcat (OpcStr, "$a1 $a2 ? $a3 = [$a4]"),
@@ -221,13 +229,14 @@ multiclass MC_0F<string OpcStr> {
      !strconcat (OpcStr, " $a1[$a2] = $a3"),
      [/* no straightforward pattern */],
      LSU_AUXR_AUXW_LOAD_SV3_Y_>;
-  let Constraints = "$a4 = $a4o" in
+  let XSModRelPos = 3, Constraints = "$a4 = $a4o" in
   def rr : KVX_INSTRUCTION
     <(outs SingleReg:$a4o), (ins SingleReg:$a2, SingleReg:$a3, SingleReg:$a4, DoscaleMod:$a1),
      !strconcat (OpcStr, "$a1 $a2[$a3] = $a4"),
      [/* no straightforward pattern */],
      LSU_AUXR_AUXW_LOAD_SV3>;
   }
+  let hasNoOffset = 1 in
   let Constraints = "$a4 = $a4o" in
   def rrc : KVX_INSTRUCTION
     <(outs SingleReg:$a4o), (ins SingleReg:$a3, SingleReg:$a4, ScalarcondMod:$a1, SingleReg:$a2),
@@ -276,6 +285,7 @@ multiclass MC_10<string OpcStr> {
      [/* no straightforward pattern */],
      LSU_LOAD>;
   }
+  let hasNoOffset = 1 in
   def rrc : KVX_INSTRUCTION
     <(outs), (ins SingleReg:$a3, ScalarcondMod:$a1, SingleReg:$a2),
      !strconcat (OpcStr, "$a1 $a2 ? [$a3]"),
@@ -1629,56 +1639,76 @@ def CB : KVX_INSTRUCTION
    [/* no straightforward pattern */],
    BCU>;
 
-defm LBZ : MC_LOADS<"lbz", SingleReg>;
+let MemAccessSize = Byte in {
+  defm LBZ : MC_LOADS<"lbz", SingleReg>;
+  defm LBS : MC_LOADS<"lbs", SingleReg>;
+}
 
-defm LBS : MC_LOADS<"lbs", SingleReg>;
+let MemAccessSize = Half in {
+  defm LHZ : MC_LOADS<"lhz", SingleReg>;
+  defm LHS : MC_LOADS<"lhs", SingleReg>;
+}
 
-defm LHZ : MC_LOADS<"lhz", SingleReg>;
+let MemAccessSize = Word in {
+  defm LWZ : MC_LOADS<"lwz", SingleReg>;
+  defm LWS : MC_LOADS<"lws", SingleReg>;
+}
 
-defm LHS : MC_LOADS<"lhs", SingleReg>;
-
-defm LWZ : MC_LOADS<"lwz", SingleReg>;
-
-defm LWS : MC_LOADS<"lws", SingleReg>;
-
+let MemAccessSize = Double in
 defm LD : MC_LOADS<"ld", SingleReg>;
 
+let MemAccessSize = Quad in
 defm LQ : MC_LOADS<"lq", PairedReg>;
 
+let MemAccessSize = Octuple in
 defm LO : MC_LOADS<"lo", QuadReg>;
 
-defm LV : MC_LV<"xlo.u">, Requires<[IsV1]>;
+let MemAccessSize = Octuple in {
+  defm LV : MC_LV<"xlo.u">, Requires<[IsV1]>;
+  defm XLO : MC_XLO, Requires<[IsV2]>;
+}
 
-defm XLO : MC_XLO, Requires<[IsV2]>;
-
+let MemAccessSize = Byte in
 defm SB : MC_STORES<"sb", SingleReg>;
 
+let MemAccessSize = Half in
 defm SH : MC_STORES<"sh", SingleReg>;
 
+let MemAccessSize = Word in
 defm SW : MC_STORES<"sw", SingleReg>;
 
+let MemAccessSize = Double in
 defm SD : MC_STORES<"sd", SingleReg>;
 
+let MemAccessSize = Quad in
 defm SQ : MC_STORES<"sq", PairedReg>;
 
+let MemAccessSize = Octuple in
 defm SO : MC_STORES<"so", QuadReg>;
 
+let MemAccessSize = Octuple in
 defm SV : MC_SV<"xso">, Requires<[IsV1]>;
 
+let MemAccessSize = Octuple in
 defm XSO : MC_XSO, Requires<[IsV2]>;
 
+let MemAccessSize = Word in
 defm ACSWAPW : MC_0D<"acswapw">;
 
+let MemAccessSize = Double in
 defm ACSWAPD : MC_0D<"acswapd">;
 
+let MemAccessSize = Quad in
 defm ACSWAPQ : ACSWAPQ_MC, Requires<[IsV2]>;
 
 defm ALCLRW : MC_0E<"alclrw", i32, 2>;
 
 defm ALCLRD : MC_0E<"alclrd", i64, 3>;
 
+let MemAccessSize = Word in
 defm ALADDW : MC_0F<"aladdw">;
 
+let MemAccessSize = Double in
 defm ALADDD : MC_0F<"aladdd">;
 
 let mayLoad = 1 in
@@ -1690,7 +1720,7 @@ defm DINVALL : MC_10<"dinvall">;
 let mayStore = 1 in
 defm DZEROL : MC_10<"dzerol">, Requires<[IsV1]>;
 
-let hasSideEffects = 1, mayLoad = 0, mayStore = 0 in
+let hasSideEffects = 1 in
 defm I1INVALS : MC_10<"i1invals">;
 
 let hasSideEffects = 1 in
@@ -2830,7 +2860,7 @@ defm XRECVO : I <"xrecvo", ALU_TINY_CRWL_CRWH, [], [ChannelMod], [], [], [Vector
 let AsmString = "xsendo$mod0 $op0", hasSideEffects = 1, mayLoad = ?, mayStore = ? in
 defm XSENDO : I <"xsendo", ALU_TINY_CRRP, [VectorReg], [ChannelMod], [], [], [], 0,
                   [(int_kvx_xsendo v256i1:$op0, ChannelMod:$mod0)]>;
-let AsmString = "xsendrecvo$mod0$mod1 $op0, $r", hasSideEffects = 1, mayLoad = ?, mayStore = ? in
+let AsmString = "xsendrecvo$mod0$mod1 $op0, $r", hasSideEffects = ?, mayLoad = ?, mayStore = 1 in
 defm XSENDRECVO : I <"xsendrecvo", ALU_TINY_CRRP_CRWL_CRWH, [VectorReg], [ChannelMod, ChannelMod], [], [], [VectorReg], 0,
                   [(set v256i1:$r, (int_kvx_xsendrecvo v256i1:$op0, ChannelMod:$mod0, ChannelMod:$mod1))]>;
 
@@ -3947,7 +3977,7 @@ defvar FpExcept = !eq(CS, Reg);
 
 defvar RegNum = !cast<int>(Reg.HWEncoding);
 
-let mayRaiseFPException = FpExcept, mayLoad = SideEffects, mayStore = SideEffects, isAsCheapAsAMove = 1, Uses = [Reg], Defs = [Reg], Predicates = Preds, hasSideEffects = SideEffects in {
+let mayRaiseFPException = FpExcept, isAsCheapAsAMove = 1, Uses = [Reg], Defs = [Reg], Predicates = Preds, hasSideEffects = SideEffects in {
 def WFXL_ # Reg : KVX_INSTRUCTION <
           (outs),
           (ins SingleReg:$op),

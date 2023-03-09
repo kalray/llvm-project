@@ -50,9 +50,9 @@ define i32 @fn(i32* nocapture readonly %p) {
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    lwz $r0 = 96[$r0]
 ; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:    sw 16[$r12] = $r0
-; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    sw 8[$r12] = $r17
+; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    sw 16[$r12] = $r0
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    sw 0[$r12] = $r16
 ; FP-NONE-NEXT:    copyd $r0 = $r15

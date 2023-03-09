@@ -58,9 +58,9 @@ define i32 @fn(i32* nocapture readonly %a) {
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    lwz $r17 = 56[$r18]
 ; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:    sw 16[$r12] = $r17
-; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    sw 8[$r12] = $r16
+; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    sw 16[$r12] = $r17
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    sw 0[$r12] = $r15
 ; FP-NONE-NEXT:    call add
@@ -94,9 +94,9 @@ define i32 @fn(i32* nocapture readonly %a) {
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    lwz $r16 = 56[$r18]
 ; FP-NONE-NEXT:    ;;
-; FP-NONE-NEXT:    sw 8[$r12] = $r16
-; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    sw 0[$r12] = $r15
+; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    sw 8[$r12] = $r16
 ; FP-NONE-NEXT:    call add
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:    lq $r18r19 = 40[$r12]
