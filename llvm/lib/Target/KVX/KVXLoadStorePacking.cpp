@@ -170,7 +170,6 @@ void KVXLoadStorePackingPass::packAndReplaceLoad(Vec::iterator ItStart,
   unsigned Ind = KVX::sub_d0;
   while (Count--) {
     Register Re = ItStart->first->getOperand(0).getReg();
-    ItStart->first->eraseFromParent();
 
     for (MachineRegisterInfo::reg_iterator RI = MRI->reg_begin(Re),
                                            RE = MRI->reg_end();
@@ -182,7 +181,9 @@ void KVXLoadStorePackingPass::packAndReplaceLoad(Vec::iterator ItStart,
       O.substVirtReg(Reg, Ind, *TRI);
     }
     ++Ind;
-    LLVM_DEBUG(dbgs() << "removed " << *(ItStart->first) << "\n");
+
+    LLVM_DEBUG(dbgs() << "removing " << *ItStart->first << "\n");
+    ItStart->first->eraseFromParent();
 
     ++ItStart;
   }
@@ -233,10 +234,12 @@ void KVXLoadStorePackingPass::packAndReplaceStore(Vec::iterator ItStart,
             TII->get(TargetOpcode::COPY), SingleRegs[Ind])
         .add(ItStart->first->getOperand(2));
 
-    ItStart->first->eraseFromParent();
-    ++ItStart;
     ++Ind;
-    LLVM_DEBUG(dbgs() << "removed " << *ItStart->first << "\n");
+
+    LLVM_DEBUG(dbgs() << "removing " << *ItStart->first << "\n");
+    ItStart->first->eraseFromParent();
+
+    ++ItStart;
   }
 }
 
