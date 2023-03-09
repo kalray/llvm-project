@@ -16,6 +16,7 @@
 #define LLVM_LIB_TARGET_KVX_KVX_H
 
 #include "MCTargetDesc/KVXMCTargetDesc.h"
+#include "llvm/CodeGen/MachineInstr.h"
 #include "llvm/Target/TargetMachine.h"
 
 namespace llvm {
@@ -150,6 +151,34 @@ enum COHERENCY { COHERENCY_, COHERENCY_G, COHERENCY_S };
 enum BOOLCAS { BOOLCAS_V, BOOLCAS_ };
 
 } // namespace KVXMOD
+
+/// KVXII - This namespace holds all of the target specific flags that
+/// instruction info tracks.
+namespace KVXII {
+// MCInstrDesc TSFlags
+// *** Must match KVXInstrFormat.td ***
+enum {
+  /* --- bit 0 --- */
+  hasNoOffsetPos = 0,
+  hasNoOffsetMask = 1,
+
+  /* --- bits 2-1 --- */
+  XSModRelPosPos = 1,
+  XSModRelPosMask = 0x3,
+
+  /* --- bits 5-3 --- */
+  MemAccessSizePos = 3,
+  MemAccessSizeMask = 0x7
+
+  /* --- bits 63-6 not allocated yet --- */
+};
+
+inline uint64_t getKVXFlag(const MachineInstr &MI, int Pos, int Mask) {
+  uint64_t F = MI.getDesc().TSFlags;
+  return F >> Pos & Mask;
+}
+
+} // namespace KVXII
 
 namespace KVX {
 enum STAGE { PRE_RA, PRE_SCHED2, PRE_BUNDLE, PRE_EMIT };

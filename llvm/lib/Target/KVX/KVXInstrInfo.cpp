@@ -777,6 +777,158 @@ bool KVXInstrInfo::isSchedulingBoundaryPostRA(const MachineInstr &MI,
   return TargetInstrInfo::isSchedulingBoundaryPostRA(MI, MBB, MF);
 }
 
+/// Returns true if the memory instruction only has base operand
+/// Uses the hasNoOffset TSFlag
+static bool hasOnlyBaseMemOp(const MachineInstr &MI) {
+  unsigned F = MI.getDesc().TSFlags;
+  return (F >> KVXII::hasNoOffsetPos & 1);
+}
+
+/// Gets the position of the first memory operand
+/// Returns -1 if the instruction has no memory operand
+static int getFirstMemOpPos(const MachineInstr &MI) {
+  assert(MI.mayLoadOrStore());
+
+  // Some exceptions to the general rule..
+  switch (MI.getOpcode()) {
+  case KVX::DTOUCHLri10:
+  case KVX::DTOUCHLri37:
+  case KVX::DTOUCHLri64:
+  case KVX::DTOUCHLrr:
+  case KVX::DTOUCHLrrc:
+  case KVX::DTOUCHLri27c:
+  case KVX::DTOUCHLri54c:
+    return 0;
+  }
+
+  return MI.mayLoad() ? 1 : 0;
+}
+
+bool KVXInstrInfo::getBaseAndOffsetPosition(const MachineInstr &MI,
+                                            unsigned &BasePos,
+                                            unsigned &OffsetPos) const {
+  if (!MI.mayLoadOrStore() || hasOnlyBaseMemOp(MI))
+    return false;
+
+  int FirstMemOpPos = getFirstMemOpPos(MI);
+  if (FirstMemOpPos < 0)
+    return false;
+
+  OffsetPos = FirstMemOpPos;
+  BasePos = OffsetPos + 1;
+  return true;
+}
+
+/// Gets the width of the memory access.
+/// Uses the MemoryAccessWidth TSFlag
+static bool getMemWidth(const MachineInstr &MI, unsigned &Width) {
+  unsigned WidthType =
+      getKVXFlag(MI, KVXII::MemAccessSizePos, KVXII::MemAccessSizeMask);
+
+  if (!WidthType)
+    return false;
+
+  Width = 1 << (WidthType - 1);
+  return true;
+}
+
+/// Returns true if the instruction has .xs modifier set.
+/// Uses the XSModRelPos TSFlag
+bool hasXSMod(const MachineInstr &MI) {
+  unsigned XSModRelPos =
+      getKVXFlag(MI, KVXII::XSModRelPosPos, KVXII::XSModRelPosMask);
+
+  if (!XSModRelPos)
+    return false;
+
+  int FirstMemOpPos = getFirstMemOpPos(MI);
+  if (FirstMemOpPos < 0)
+    return false;
+
+  unsigned XSModPos = FirstMemOpPos + XSModRelPos;
+
+  return MI.getOperand(XSModPos).getImm() == KVXMOD::DOSCALE_XS;
+}
+
+bool KVXInstrInfo::getMemOperandsWithOffsetWidth(
+    const MachineInstr &MI, SmallVectorImpl<const MachineOperand *> &BaseOps,
+    int64_t &Offset, bool &OffsetIsScalable, unsigned &Width,
+    const TargetRegisterInfo *TRI) const {
+
+  unsigned BasePos, OffsetPos;
+
+  OffsetIsScalable = hasXSMod(MI);
+
+  if (!getMemWidth(MI, Width))
+    return false;
+
+  // Only base register -> offset is 0
+  if (hasOnlyBaseMemOp(MI)) {
+    Offset = 0;
+
+    int FirstMemOpPos = getFirstMemOpPos(MI);
+    if (FirstMemOpPos < 0)
+      return false;
+
+    BasePos = FirstMemOpPos;
+    BaseOps.push_back(&MI.getOperand(BasePos));
+    return true;
+  }
+
+  if (!getBaseAndOffsetPosition(MI, BasePos, OffsetPos))
+    return false;
+
+  // We are unable to get an immediate for the offset since it is a register
+  if (MI.getOperand(OffsetPos).isReg())
+    return false;
+
+  BaseOps.push_back(&MI.getOperand(BasePos));
+  Offset = MI.getOperand(OffsetPos).getImm();
+  return true;
+}
+
+bool KVXInstrInfo::areMemAccessesTriviallyDisjoint(
+    const MachineInstr &MI1, const MachineInstr &MI2) const {
+
+  assert(MI1.mayLoadOrStore() && MI2.mayLoadOrStore());
+
+  if (MI1.hasUnmodeledSideEffects() || MI2.hasUnmodeledSideEffects() ||
+      MI1.hasOrderedMemoryRef() || MI2.hasOrderedMemoryRef())
+    return false;
+
+  SmallVector<const MachineOperand *, 1> BaseOp1{}, BaseOp2{};
+  int64_t Offset1, Offset2;
+  bool OffsetIsScalable1, OffsetIsScalable2;
+  unsigned Width1, Width2;
+
+  if (!getMemOperandsWithOffsetWidth(MI1, BaseOp1, Offset1, OffsetIsScalable1,
+                                     Width1, nullptr))
+    return false;
+
+  if (OffsetIsScalable1)
+    Offset1 *= Width1;
+
+  if (!getMemOperandsWithOffsetWidth(MI2, BaseOp2, Offset2, OffsetIsScalable2,
+                                     Width2, nullptr))
+    return false;
+
+  if (OffsetIsScalable2)
+    Offset2 *= Width2;
+
+  assert(BaseOp1.size() == 1 && BaseOp2.size() == 1 &&
+         "More than 1 base operand not supported");
+
+  // Must be the same base register to prove disjointness
+  if (BaseOp1.front()->getReg() != BaseOp2.front()->getReg())
+    return false;
+
+  int64_t LowOffset = std::min(Offset1, Offset2);
+  int64_t HighOffset = std::max(Offset1, Offset2);
+  int64_t LowWidth = (LowOffset == Offset1) ? Width1 : Width2;
+
+  return (LowOffset + LowWidth <= HighOffset);
+}
+
 MachineBasicBlock *
 KVXInstrInfo::getBranchDestBlock(const MachineInstr &MI) const {
   switch (MI.getOpcode()) {

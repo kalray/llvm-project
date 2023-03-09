@@ -81,6 +81,17 @@ public:
                                   const MachineBasicBlock *MBB,
                                   const MachineFunction &MF) const override;
 
+  bool getBaseAndOffsetPosition(const MachineInstr &MI, unsigned &BasePos,
+                                unsigned &OffsetPos) const override;
+
+  bool getMemOperandsWithOffsetWidth(
+      const MachineInstr &MI, SmallVectorImpl<const MachineOperand *> &BaseOps,
+      int64_t &Offset, bool &OffsetIsScalable, unsigned &Width,
+      const TargetRegisterInfo *TRI) const override;
+
+  bool areMemAccessesTriviallyDisjoint(const MachineInstr &MIa,
+                                       const MachineInstr &MIb) const override;
+
   MachineBasicBlock *getBranchDestBlock(const MachineInstr &MI) const override;
 
   bool isPredicable(const MachineInstr &MI) const override;

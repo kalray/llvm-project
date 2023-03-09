@@ -146,8 +146,9 @@ public:
   ScheduleDAGInstrs *
   createMachineScheduler(MachineSchedContext *C) const override {
     ScheduleDAGMILive *DAG = createGenericSchedLive(C);
-    DAG->addMutation(createLoadClusterDAGMutation(DAG->TII, DAG->TRI));
-    DAG->addMutation(createStoreClusterDAGMutation(DAG->TII, DAG->TRI));
+    // TODO - These two mutations require to implement shouldClusterMemOps()
+    // DAG->addMutation(createLoadClusterDAGMutation(DAG->TII, DAG->TRI));
+    // DAG->addMutation(createStoreClusterDAGMutation(DAG->TII, DAG->TRI));
     return DAG;
   }
 
