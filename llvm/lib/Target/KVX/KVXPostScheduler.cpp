@@ -13,8 +13,8 @@
 
 #include "KVXPostScheduler.h"
 #include "KVXInstrInfo.h"
+#include "MCTargetDesc/KVXMCTargetDesc.h"
 #include "llvm/CodeGen/DFAPacketizer.h"
-#include "llvm/CodeGen/MachineInstrBundle.h"
 #include "llvm/CodeGen/MachineOperand.h"
 #include "llvm/CodeGen/ScheduleDAG.h"
 #include "llvm/CodeGen/SelectionDAGNodes.h"
@@ -48,7 +48,7 @@ static inline int canBundleWith(std::vector<MachineInstr *> Packet,
   auto ExitII = ExitMI->getIterator();
   while (ExitSU->getInstr() != nullptr && // the ExitSU exists
          &*ExitII != ExitSU->getInstr() &&
-         (ExitII->isDebugValue() | ExitII->isDebugLabel())) {
+         (ExitII->isDebugValue() || ExitII->isDebugLabel())) {
     ++ExitII;
     ++Distance;
   }
@@ -401,7 +401,123 @@ void KVXScheduleDAGMI::startBlock(MachineBasicBlock *MBB) {
   }
 #endif
 
+  if (!KVXScheduleDAGMI::DisableBundling) {
+    KDEBUG("Making SWAP pseudo-instructions (expanded after bundling).");
+#ifndef NDEBUG
+    KDEBUG("MBB content:");
+    debugPrintMBB(MBB, &MST);
+#endif
+
+    makeSwapPseudoInst();
+
+#ifndef NDEBUG
+    KDEBUG("MBB content after making SWAPs:");
+    debugPrintMBB(MBB, &MST);
+#endif
+  }
+
   ScheduleDAGMI::startBlock(MBB);
+}
+
+// Function that transforms register swaps into pseudo intruction
+// SWAP64p on COPYD chains.
+//
+// The map-based algorithm can be described as follows:
+// - The algorithm wants to detect a swap between R1 and R2
+// - There are two maps:
+//   - Potential map (Pot), it keeps the assignments RTEMP <- R1,
+//     where RTEMP is a temporary register used for the swap
+//   - Exchange map (Excg), based on the content of the Potential
+//     map, it keeps assignments R1 <- R2
+// - Based on Exchange map, if we find a R2 <- RTEMP instruction,
+//   we insert a new SWAP64p pseudo and remove the 3 instructions
+// - During the process, if a register used for swap is used for
+//   something else, it will be removed from both Pot and Excg,
+//   preventing a swap to be wrongly generated
+void KVXScheduleDAGMI::makeSwapPseudoInst() {
+  auto MIIFirst = MBB->begin();
+  while (MIIFirst != MBB->end()) {
+    // finding COPYDs chain
+    MIIFirst =
+        std::find_if(MIIFirst, MBB->end(), [](MachineBasicBlock::iterator MII) {
+          MachineInstr *MI = &*MII;
+          return MI->getOpcode() == KVX::COPYD;
+        });
+    auto MIILast =
+        std::find_if(MIIFirst, MBB->end(), [](MachineBasicBlock::iterator MII) {
+          MachineInstr *MI = &*MII;
+          return MI->getOpcode() != KVX::COPYD;
+        });
+
+    // perform SWAP analysis & generate SWAP instructions
+    std::map<Register, std::pair<Register, MachineInstr *>> Pot;
+    std::map<Register, Register> Excg;
+    for (auto MII = MIIFirst, NMII = std::next(MII); MII != MIILast;
+         MII = NMII) {
+      NMII = std::next(MII);
+
+      MachineInstr *MI = &*MII;
+      assert(MI->getOpcode() == KVX::COPYD);
+      MachineOperand XOp = MI->getOperand(0), YOp = MI->getOperand(1);
+      Register X = XOp.getReg(), Y = YOp.getReg();
+
+      // remove item from Pot and Excg if register is not killed
+      if (!YOp.isKill()) {
+        auto R = Pot.find(Y);
+        if (R != Pot.end())
+          Excg.erase(R->first);
+        Pot.erase(Y);
+      }
+      auto R = Pot.find(X);
+      if (R != Pot.end())
+        Excg.erase(R->first);
+      Pot[X] = std::make_pair(Y, MI);
+
+      if (std::any_of(Pot.begin(), Pot.end(),
+                      [X](auto PE) { return PE.second.first == X; }))
+        Excg[X] = Y;
+      auto Zp = std::find_if(Excg.begin(), Excg.end(),
+                             [X](auto EE) { return EE.second == X; });
+      auto Z = Zp->first;
+      if (Zp != Excg.end()) {
+        auto K = std::find_if(Pot.begin(), Pot.end(),
+                              [Z](auto PE) { return PE.second.first == Z; });
+        // at this point, we found a swap (R2 <- RTEMP)
+        if (K->first == Y) {
+          auto &DL = MI->getDebugLoc();
+          const MCInstrDesc &SwapDesc = TII->get(KVX::SWAP64p);
+          // emplacing SWAP instruction
+          BuildMI(*MBB, MII, DL, SwapDesc)
+              .addDef(X)
+              .addDef(Z)
+              .addUse(Z, RegState::Kill)
+              .addUse(X, RegState::Kill);
+          // removing COPYDs instructions that will be replaced with SWAP
+          MachineInstr *XMI = Pot[X].second, *YMI = Pot[Y].second,
+                       *ZMI = Pot[Z].second;
+          MBB->erase(XMI);
+          MBB->erase(YMI);
+          MBB->erase(ZMI);
+          // removing entries inside Pot and Excg maps for further analysis
+          Excg.erase(Z);
+          Excg.erase(X);
+          Pot.erase(X);
+          Pot.erase(Y);
+          Pot.erase(Z);
+
+#ifndef NDEBUG
+          KDEBUG("new SWAP on MBB:");
+          const Function &F = MBB->getParent()->getFunction();
+          const Module *M = F.getParent();
+          ModuleSlotTracker MST(M);
+          debugPrintMBB(MBB, &MST);
+#endif
+        }
+      }
+    }
+
+    MIIFirst = MIILast;
+  }
 }
 
 void KVXScheduleDAGMI::finishBlock() {

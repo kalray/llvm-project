@@ -1072,9 +1072,7 @@ define <8 x i8> @test_call_flipped(<8 x i8> %a, <8 x i8> %b) #0 {
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    sd 24[$r12] = $r16
 ; ALL-NEXT:    copyd $r0 = $r1
-; ALL-NEXT:    copyd $r2 = $r0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    copyd $r1 = $r2
+; ALL-NEXT:    copyd $r1 = $r0
 ; ALL-NEXT:    call test_callee
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    ld $r16 = 24[$r12]
@@ -1093,9 +1091,7 @@ define <8 x i8> @test_tailcall_flipped(<8 x i8> %a, <8 x i8> %b) #0 {
 ; ALL-LABEL: test_tailcall_flipped:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    copyd $r0 = $r1
-; ALL-NEXT:    copyd $r2 = $r0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    copyd $r1 = $r2
+; ALL-NEXT:    copyd $r1 = $r0
 ; ALL-NEXT:    goto test_callee
 ; ALL-NEXT:    ;;
   %r = tail call <8 x i8> @test_callee(<8 x i8> %b, <8 x i8> %a)

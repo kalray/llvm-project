@@ -469,9 +469,7 @@ define <4 x half> @test_call_flipped(<4 x half> %a, <4 x half> %b) #0 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    copyd $r0 = $r1
-; CHECK-NEXT:    copyd $r2 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r2
+; CHECK-NEXT:    copyd $r1 = $r0
 ; CHECK-NEXT:    call test_callee
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
@@ -489,9 +487,7 @@ define <4 x half> @test_tailcall_flipped(<4 x half> %a, <4 x half> %b) #0 {
 ; CHECK-LABEL: test_tailcall_flipped:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    copyd $r0 = $r1
-; CHECK-NEXT:    copyd $r2 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r2
+; CHECK-NEXT:    copyd $r1 = $r0
 ; CHECK-NEXT:    goto test_callee
 ; CHECK-NEXT:    ;;
   %r = tail call <4 x half> @test_callee(<4 x half> %b, <4 x half> %a)

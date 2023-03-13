@@ -115,6 +115,10 @@ public:
 #endif
   bool skipSingleInstrRegions() override { return false; }
 
+  // Creating SWAP instructions, could be useful before function calls or
+  // returns
+  void makeSwapPseudoInst();
+
 private:
   bool DisableBundling;
   MachineBasicBlock *MBB;

@@ -10,9 +10,7 @@ define <4 x i32> @cat128(<2 x i32> %0, <2 x i32> %1) {
 ; ALL-LABEL: cat128:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    copyd $r0 = $r1
-; ALL-NEXT:    copyd $r2 = $r0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    copyd $r1 = $r2
+; ALL-NEXT:    copyd $r1 = $r0
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
   %3 = shufflevector <2 x i32> %1, <2 x i32> %0, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
@@ -24,11 +22,8 @@ define <8 x i32> @cat256(<4 x i32> %0, <4 x i32> %1) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    copyd $r0 = $r2
 ; ALL-NEXT:    copyd $r1 = $r3
-; ALL-NEXT:    copyd $r4 = $r1
-; ALL-NEXT:    copyd $r5 = $r0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    copyd $r2 = $r5
-; ALL-NEXT:    copyd $r3 = $r4
+; ALL-NEXT:    copyd $r2 = $r0
+; ALL-NEXT:    copyd $r3 = $r1
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
   %3 = shufflevector <4 x i32> %1, <4 x i32> %0, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
