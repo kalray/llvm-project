@@ -1252,6 +1252,43 @@ static bool expandENDLOOP(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   return true;
 }
 
+static bool expandSWAP64p(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
+                          MachineBasicBlock::iterator MBBI) {
+  auto &DL = MBBI->getDebugLoc();
+  const MCInstrDesc &CpDesc = TII->get(KVX::COPYD);
+  Register R1, R2;
+  switch (MBBI->getOpcode()) {
+  // Put parallel assignment inside a bundle
+  case KVX::SWAP64p:
+    R1 = MBBI->getOperand(0).getReg();
+    R2 = MBBI->getOperand(1).getReg();
+    MachineInstr *IFirst, *ILast;
+    IFirst =
+        BuildMI(MBB, MBBI, DL, CpDesc).addDef(R1).addUse(R2, RegState::Kill);
+    ILast =
+        BuildMI(MBB, MBBI, DL, CpDesc).addDef(R2).addUse(R1, RegState::Kill);
+    finalizeBundle(MBB, IFirst->getIterator(), std::next(ILast->getIterator()));
+    MBB.erase(MBBI);
+    return true;
+  // Parallel assignment is already inside a bundle
+  case KVX::BUNDLE:
+    for (auto II = std::next(MBBI->getIterator());
+         II != MBB.end() && II != std::next(MBBI); II = std::next(II)) {
+      if (II->getOpcode() == KVX::SWAP64p) {
+        R1 = II->getOperand(0).getReg();
+        R2 = II->getOperand(1).getReg();
+        BuildMI(MBB, II, DL, CpDesc).addDef(R1).addUse(R2, RegState::Kill);
+        BuildMI(MBB, II, DL, CpDesc).addDef(R2).addUse(R1, RegState::Kill);
+        MBB.erase(II);
+        return true;
+      }
+    }
+    return false;
+  }
+  assert(false && "Unexpected pseudo");
+  return false;
+}
+
 static bool expandXSWAP256p(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
                             MachineBasicBlock::iterator MBBI) {
   bool StandAlone = MBBI->getOpcode() == KVX::XSWAP256p;
@@ -1625,6 +1662,9 @@ static bool expandInBundle(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
       case KVX::LOADCupv:
         HasChanged |= expandLOADCup(TII, MBB, *I);
         break;
+      case KVX::SWAP64p:
+        HasChanged |= expandSWAP64p(TII, MBB, MBBI);
+        break;
       default:
         break;
       }
@@ -1876,6 +1916,8 @@ bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
   case KVX::READYp3r:
   case KVX::READYp4r:
     return expandREADYp(TII, MBB, *MBBI);
+  case KVX::SWAP64p:
+    return expandSWAP64p(TII, MBB, MBBI);
   case KVX::XSWAP256p:
     return expandXSWAP256p(TII, MBB, MBBI);
   // Must expand LOOPDO_END label to add NOP if last bundle is a branch

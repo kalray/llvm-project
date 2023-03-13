@@ -318,9 +318,7 @@ define <2 x i32> @test_call_flipped(<2 x i32> %a, <2 x i32> %b) #0 {
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    sd 24[$r12] = $r16
 ; ALL-NEXT:    copyd $r0 = $r1
-; ALL-NEXT:    copyd $r2 = $r0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    copyd $r1 = $r2
+; ALL-NEXT:    copyd $r1 = $r0
 ; ALL-NEXT:    call test_callee
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    ld $r16 = 24[$r12]
@@ -338,9 +336,7 @@ define <2 x i32> @test_tailcall_flipped(<2 x i32> %a, <2 x i32> %b) {
 ; ALL-LABEL: test_tailcall_flipped:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    copyd $r0 = $r1
-; ALL-NEXT:    copyd $r2 = $r0
-; ALL-NEXT:    ;;
-; ALL-NEXT:    copyd $r1 = $r2
+; ALL-NEXT:    copyd $r1 = $r0
 ; ALL-NEXT:    goto test_callee
 ; ALL-NEXT:    ;;
   %r = tail call <2 x i32> @test_callee(<2 x i32> %b, <2 x i32> %a)

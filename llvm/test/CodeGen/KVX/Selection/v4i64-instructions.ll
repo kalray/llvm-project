@@ -384,21 +384,16 @@ define <4 x i64> @test_call_flipped(<4 x i64> %a, <4 x i64> %b) #0 {
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    copyd $r8 = $r3
-; CHECK-NEXT:    copyd $r9 = $r2
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r4
+; CHECK-NEXT:    copyd $r4 = $r0
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r1 = $r5
-; CHECK-NEXT:    copyd $r10 = $r1
-; CHECK-NEXT:    copyd $r11 = $r0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r2 = $r6
-; CHECK-NEXT:    copyd $r3 = $r7
-; CHECK-NEXT:    copyd $r4 = $r11
-; CHECK-NEXT:    copyd $r5 = $r10
+; CHECK-NEXT:    copyd $r5 = $r1
+; CHECK-NEXT:    copyd $r6 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r6 = $r9
-; CHECK-NEXT:    copyd $r7 = $r8
+; CHECK-NEXT:    copyd $r3 = $r7
+; CHECK-NEXT:    copyd $r7 = $r3
 ; CHECK-NEXT:    call test_callee
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
@@ -415,20 +410,15 @@ define <4 x i64> @test_call_flipped(<4 x i64> %a, <4 x i64> %b) #0 {
 define <4 x i64> @test_tailcall_flipped(<4 x i64> %a, <4 x i64> %b) #0 {
 ; CHECK-LABEL: test_tailcall_flipped:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    copyd $r8 = $r3
-; CHECK-NEXT:    copyd $r9 = $r2
-; CHECK-NEXT:    copyd $r10 = $r1
-; CHECK-NEXT:    copyd $r11 = $r0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r4
 ; CHECK-NEXT:    copyd $r1 = $r5
+; CHECK-NEXT:    copyd $r4 = $r0
+; CHECK-NEXT:    copyd $r5 = $r1
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r2 = $r6
 ; CHECK-NEXT:    copyd $r3 = $r7
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r4 = $r11
-; CHECK-NEXT:    copyd $r5 = $r10
-; CHECK-NEXT:    copyd $r6 = $r9
-; CHECK-NEXT:    copyd $r7 = $r8
+; CHECK-NEXT:    copyd $r6 = $r2
+; CHECK-NEXT:    copyd $r7 = $r3
 ; CHECK-NEXT:    goto test_callee
 ; CHECK-NEXT:    ;;
   %r = tail call <4 x i64> @test_callee(<4 x i64> %b, <4 x i64> %a)
@@ -921,11 +911,8 @@ define <4 x i64> @revconcat(<2 x i64> %b, <2 x i64> %a){
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    copyd $r1 = $r3
-; CHECK-NEXT:    copyd $r4 = $r1
-; CHECK-NEXT:    copyd $r5 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r2 = $r5
-; CHECK-NEXT:    copyd $r3 = $r4
+; CHECK-NEXT:    copyd $r2 = $r0
+; CHECK-NEXT:    copyd $r3 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %v = shufflevector <2 x i64> %a, <2 x i64> %b, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
