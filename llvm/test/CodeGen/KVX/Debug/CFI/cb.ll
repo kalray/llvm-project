@@ -83,6 +83,7 @@ define i32 @add_or_sub(i32 %x, i32 %y, i32 %doAdd) !dbg !7 {
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp6:

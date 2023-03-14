@@ -202,6 +202,14 @@ void KVXFrameLowering::emitEpilogue(MachineFunction &MF,
   unsigned Opcode = getStackADDOpcode(StackSize);
   emitAdjustSPReg(MBB, MBBI, DL, Opcode, StackSize, MachineInstr::FrameDestroy);
 
+  // Emit .cfi_def_cfa_offset 0
+  const KVXInstrInfo *TII = STI.getInstrInfo();
+  unsigned CFIIndex =
+      MF.addFrameInst(MCCFIInstruction::cfiDefCfaOffset(nullptr, 0));
+  BuildMI(MBB, MBBI, DL, TII->get(TargetOpcode::CFI_INSTRUCTION))
+      .addCFIIndex(CFIIndex)
+      .setMIFlags(MachineInstr::FrameDestroy);
+
   LLVM_DEBUG(dbgs() << "Epilogue has been generated.\n");
 }
 

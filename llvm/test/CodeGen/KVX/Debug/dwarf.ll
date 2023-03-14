@@ -94,6 +94,7 @@ define i32 @noalign(i32 %n, i32 %n2, i32 %n3) #0 !dbg !10 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r12 = $r12, 64
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp1:
@@ -226,6 +227,7 @@ define i32 @stackrealign1(i32 %n, i32 %n2, i32 %n3) #0 !dbg !32 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r12 = $r12, 256
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp3:
@@ -394,6 +396,7 @@ define i32 @stackrealign2(i32 %n) #0 !dbg !52 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r12 = $r12, 256
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp10:
@@ -573,6 +576,7 @@ define i32 @teststackalloca(i32 %n) #0 !dbg !88 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r12 = $r12, 64
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp17:
