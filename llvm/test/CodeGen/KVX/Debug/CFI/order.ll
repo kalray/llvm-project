@@ -104,6 +104,7 @@ define void @testuvec(<4 x i32>* nocapture readonly %A, <4 x i32>* nocapture rea
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 96
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp4:
@@ -217,6 +218,7 @@ define void @testsvec(<4 x i32>* nocapture readonly %A, <4 x i32>* nocapture rea
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 96
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp9:
@@ -273,6 +275,7 @@ define i32 @f() local_unnamed_addr #1 !dbg !47 {
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp11:
