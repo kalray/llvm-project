@@ -123,3 +123,4 @@ def KVX : Target {
 
 def : ProcessorModel<"kv3-1", KVXCV1SchedMachineModel, [FeatureV1]>;
 def : ProcessorModel<"kv3-2", KVXCV2SchedMachineModel, [FeatureV2]>;
+def : ProcessorModel<"kv4-1", KVXCV2SchedMachineModel, [FeatureV2]>;

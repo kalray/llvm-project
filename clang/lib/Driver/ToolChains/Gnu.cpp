@@ -1778,10 +1778,9 @@ static void findKVXMultilibs(const Driver &D, const llvm::Triple &TargetTriple,
   addMultilibFlag(TargetTriple.getArch() == llvm::Triple::kvx, "m64", Flags);
 
   const Arg *A = Args.getLastArg(clang::driver::options::OPT_march_EQ);
-  addMultilibFlag(A ? strncmp(A->getValue(), "kv3-1", 5) == 0 : true,
-                  "march=kv3-1", Flags);
-  addMultilibFlag(A ? strncmp(A->getValue(), "kv3-2", 5) == 0 : false,
-                  "march=kv3-2", Flags);
+  bool IsV1 = (!A || std::string(A->getValue()) == "kv3-1");
+  addMultilibFlag(IsV1, "march=kv3-1", Flags);
+  addMultilibFlag(!IsV1, "march=kv3-2", Flags);
 
   if (KVXMultilibs.select(Flags, Result.SelectedMultilib))
     Result.Multilibs = KVXMultilibs;

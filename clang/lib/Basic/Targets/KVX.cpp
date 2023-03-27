@@ -1832,6 +1832,11 @@ bool KVXTargetInfo::isValidCPUName(StringRef Name) const {
 }
 
 bool KVXTargetInfo::setCPU(const std::string &Name) {
+  if (Name == "kv4-1") {
+    CPU = "kv3-2";
+    return true;
+  }
+
   if (!isValidCPUName(Name))
     return false;
 
