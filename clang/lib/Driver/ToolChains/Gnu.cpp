@@ -1770,8 +1770,11 @@ static void findKVXMultilibs(const Driver &D, const llvm::Triple &TargetTriple,
   Multilib KV3132 = makeMultilib("32").flag("+m32").flag("+march=kv3-1");
   Multilib KV32 = makeMultilib("kv3-2").flag("+m64").flag("+march=kv3-2");
   Multilib KV3232 = makeMultilib("32/kv3-2").flag("+m32").flag("+march=kv3-2");
+  Multilib KV41 = makeMultilib("kv4-1").flag("+m64").flag("+march=kv4-1");
+  Multilib KV4132 = makeMultilib("32/kv4-1").flag("+m32").flag("+march=kv4-1");
 
-  MultilibSet KVXMultilibs = MultilibSet().Either({KV31, KV3132, KV32, KV3232});
+  MultilibSet KVXMultilibs =
+      MultilibSet().Either({KV31, KV3132, KV32, KV3232, KV41, KV4132});
 
   Multilib::flags_list Flags;
 
@@ -1779,8 +1782,11 @@ static void findKVXMultilibs(const Driver &D, const llvm::Triple &TargetTriple,
 
   const Arg *A = Args.getLastArg(clang::driver::options::OPT_march_EQ);
   bool IsV1 = (!A || std::string(A->getValue()) == "kv3-1");
+  bool IsV32 = (std::string(A->getValue()) == "kv3-2");
+  bool IsV41 = (std::string(A->getValue()) == "kv4-1");
   addMultilibFlag(IsV1, "march=kv3-1", Flags);
-  addMultilibFlag(!IsV1, "march=kv3-2", Flags);
+  addMultilibFlag(!IsV1 && IsV32, "march=kv3-2", Flags);
+  addMultilibFlag(!IsV1 && IsV41, "march=kv4-1", Flags);
 
   if (KVXMultilibs.select(Flags, Result.SelectedMultilib))
     Result.Multilibs = KVXMultilibs;

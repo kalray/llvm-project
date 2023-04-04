@@ -1,5 +1,6 @@
 // RUN: %clang -target kvx-cos -S -o - %s -E -dM | FileCheck %s --check-prefix V1
 // RUN: %clang -target kvx-cos -march=kv3-2 -S -o - %s -E -dM | FileCheck %s --check-prefix V2
+// RUN: %clang -target kvx-cos -march=kv4-1 -S -o - %s -E -dM | FileCheck %s --check-prefix V2
 
 // V1: #define __KV3__ 1
 // V2: #define __KV3__ 2

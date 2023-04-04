@@ -1761,11 +1761,26 @@ void KVXTargetInfo::adjust(DiagnosticsEngine &Diags, LangOptions &Opts) {
 void KVXTargetInfo::getTargetDefines(const LangOptions &Opts,
                                      MacroBuilder &Builder) const {
   Builder.defineMacro("__ELF__", "1");
-  Builder.defineMacro("__KVX__", "3");
-  Builder.defineMacro("__kvx__", "3");
+  if (CPU == "kv3-1" || CPU == "kv3-2") {
+    Builder.defineMacro("__KVX__", "3");
+    Builder.defineMacro("__kvx__", "3");
+  } else {
+    Builder.defineMacro("__KVX__", "4");
+    Builder.defineMacro("__kvx__", "4");
+  }
   Builder.defineMacro("__KV3_64__", "1");
 
-  if (CPU == "kv3-2") {
+  if (CPU == "kv4-1") {
+    Builder.defineMacro("__KV4__", "1");
+    Builder.defineMacro("__kv4__", "1");
+    Builder.defineMacro("__kv4_1__", "1");
+    Builder.defineMacro("__kvxarch_kv4_1", "1");
+    // For now defines Coolidge V2 flags to avoid to modify all the source codes
+    Builder.defineMacro("__KV3__", "2");
+    Builder.defineMacro("__kv3__", "2");
+    Builder.defineMacro("__kv3_2__", "1");
+    Builder.defineMacro("__kvxarch_kv3_2", "1");
+  } else if (CPU == "kv3-2") {
     Builder.defineMacro("__KV3__", "2");
     Builder.defineMacro("__kv3__", "2");
     Builder.defineMacro("__kv3_2__", "1");
@@ -1825,7 +1840,7 @@ const Builtin::Info KVXTargetInfo::BuiltinInfo[] = {
 };
 
 bool KVXTargetInfo::isValidCPUName(StringRef Name) const {
-  if (Name == "kv3-1" || Name == "kv3-2")
+  if (Name == "kv3-1" || Name == "kv3-2" || Name == "kv4-1")
     return true;
 
   return false;
