@@ -1203,7 +1203,6 @@ SDValue KVXTargetLowering::LowerFormalArguments(
                  *DAG.getContext());
   CCInfo.AnalyzeFormalArguments(Ins, CC_SRET_KVX);
 
-  unsigned MemArgsSaveSize = 0;
   unsigned InIdx = 0;
   KVXMachineFunctionInfo *KVXFI = MF.getInfo<KVXMachineFunctionInfo>();
 
@@ -1235,7 +1234,6 @@ SDValue KVXTargetLowering::LowerFormalArguments(
                     DAG.getFrameIndex(FI, getPointerTy(MF.getDataLayout())),
                     MachinePointerInfo::getFixedStack(MF, FI)));
 
-    MemArgsSaveSize += StoreSize;
   }
 
   if (IsVarArg) {
@@ -1249,7 +1247,6 @@ SDValue KVXTargetLowering::LowerFormalArguments(
 
     if (Idx >= ArgRegsSize) {
       FI = MFI.CreateFixedObject(8, VarArgsOffset, true);
-      MemArgsSaveSize += 8;
     } else {
       FI = -(int)(MFI.getNumFixedObjects() + 1);
       VarArgsOffset = (Idx - ArgRegs.size()) * 8;
@@ -1273,8 +1270,6 @@ SDValue KVXTargetLowering::LowerFormalArguments(
       OutChains.push_back(Store);
     }
   }
-
-  KVXFI->setMemArgsSaveSize(MemArgsSaveSize);
 
   // All stores are grouped in one node to allow the matching between
   // the size of Ins and InVals. This only happens for vararg functions.
@@ -1300,7 +1295,6 @@ SDValue KVXTargetLowering::LowerCall(CallLoweringInfo &CLI,
   bool isVarArg = CLI.IsVarArg;
   EVT PtrVT = getPointerTy(DAG.getDataLayout());
   MachineFunction &MF = DAG.getMachineFunction();
-  KVXMachineFunctionInfo *FuncInfo = MF.getInfo<KVXMachineFunctionInfo>();
 
   // Analyze operands of the call, assigning locations to each operand.
   SmallVector<CCValAssign, 16> ArgLocs;
@@ -1350,8 +1344,6 @@ SDValue KVXTargetLowering::LowerCall(CallLoweringInfo &CLI,
           DAG.getStore(Chain, DL, ArgValue, PtrOff, MachinePointerInfo()));
     }
   }
-
-  FuncInfo->setOutgoingArgsMaxSize(ArgsSize);
 
   // Join the stores, which are independent of one another.
   if (!MemOpChains.empty())
