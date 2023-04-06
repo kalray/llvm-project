@@ -70,6 +70,7 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
 
   auto &CTC = static_cast<const toolchains::ClusterOS &>(getToolChain());
 
+  const bool HasStdlib = !Args.hasArg(options::OPT_nostdlib);
   std::string LibDir, GCCLibDir, LLVMLibDir, LLVMTCLibDir;
   if (CTC.GCCInstallationIsValid()) {
     LibDir = CTC.getGCCInstallPath().str() + "/../../../../kvx-cos/lib" +
@@ -144,7 +145,7 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
       CmdArgs.push_back("-lomp");
 
     // -nostdlib option management
-    if (Args.hasArg(options::OPT_nostdlib))
+    if (!HasStdlib)
       CmdArgs.push_back(Args.MakeArgString("-nostdlib"));
 
     // -shared option management
@@ -208,8 +209,7 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
     if (Args.hasArg(options::OPT_fopenmp))
       CmdArgs.push_back("-lomp");
 
-    if (!Args.hasArg(options::OPT_nostdlib) &&
-        !Args.hasArg(options::OPT_nodefaultlibs)) {
+    if (HasStdlib && !Args.hasArg(options::OPT_nodefaultlibs)) {
       if (C.getDriver().CCCIsCXX()) {
         CmdArgs.push_back("-lstdc++");
         CmdArgs.push_back(Args.MakeArgString("-L" + GCCLibDir));
@@ -218,17 +218,13 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
 
       CmdArgs.push_back("-lclang_rt.builtins-kvx");
       CmdArgs.push_back("-lm");
-
-      if (!Args.hasArg(options::OPT_nostdlib)) {
-        CmdArgs.push_back("--start-group");
-        CmdArgs.push_back("-lc");
-        CmdArgs.push_back("-lmppacos");
-        CmdArgs.push_back("-lmppa_rsrc");
-        CmdArgs.push_back("-lgloss");
-        CmdArgs.push_back("-lmppa_fdt");
-        CmdArgs.push_back("--end-group");
-      }
-
+      CmdArgs.push_back("--start-group");
+      CmdArgs.push_back("-lc");
+      CmdArgs.push_back("-lmppacos");
+      CmdArgs.push_back("-lmppa_rsrc");
+      CmdArgs.push_back("-lgloss");
+      CmdArgs.push_back("-lmppa_fdt");
+      CmdArgs.push_back("--end-group");
       CmdArgs.push_back("-lclang_rt.builtins-kvx");
     }
 
@@ -237,10 +233,8 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
           std::string("-T") +
           std::string(Args.getLastArg(options::OPT_T)->getValue());
       CmdArgs.push_back(Args.MakeArgString(Targ));
-    } else {
-      if (!Args.hasArg(options::OPT_nostartfiles))
-        CmdArgs.push_back("-Tmppacos.ld");
-    }
+    } else if (HasStdlib && !Args.hasArg(options::OPT_nostartfiles))
+      CmdArgs.push_back("-Tmppacos.ld");
 
     if (Args.hasArg(options::OPT_v))
       CmdArgs.push_back("-v");

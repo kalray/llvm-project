@@ -2,3 +2,7 @@
 
 // CHECK-NOT: warning: argument unused during compilation: '-L/path/to/check'
 // CHECK: -L/path/to/check
+
+
+// RUN: %clang -### -v -march=kv3-1 -nostdlib %s 2>&1 | FileCheck %s --check-prefix=STDLIB 
+// STDLIB-NOT: "-Tmppacos.ld"
