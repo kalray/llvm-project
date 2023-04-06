@@ -29,10 +29,6 @@ private:
   int VarArgsFrameIndex = 0;
   /// Size of the save area used for varargs
   unsigned VarArgsSaveSize = 0;
-  /// Max size of outgoing args
-  unsigned OutgoingArgsMaxSize = 0;
-  // Arguments passed in memory size
-  unsigned MemArgsSaveSize = 0;
   /// Min-max index for callee saved frame indexes
   std::pair<int, int> MinMaxCSFrameIndexes = {0, 0};
   // FP index
@@ -61,15 +57,6 @@ public:
 
   unsigned getVarArgsSaveSize() const { return VarArgsSaveSize; }
   void setVarArgsSaveSize(unsigned Size) { VarArgsSaveSize = Size; }
-
-  unsigned getOutgoingArgsMaxSize() const { return OutgoingArgsMaxSize; }
-  void setOutgoingArgsMaxSize(unsigned Size) {
-    if (Size > OutgoingArgsMaxSize)
-      OutgoingArgsMaxSize = Size;
-  }
-
-  unsigned getMemArgsSaveSize() const { return MemArgsSaveSize; }
-  void setMemArgsSaveSize(unsigned Size) { MemArgsSaveSize = Size; }
 
   const std::pair<int, int> &getMinMaxCSFrameIndexes() const {
     return MinMaxCSFrameIndexes;

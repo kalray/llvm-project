@@ -132,17 +132,11 @@ void KVXFrameLowering::emitPrologue(MachineFunction &MF,
   MachineBasicBlock::iterator MBBI = MBB.begin();
   MachineFrameInfo &MFI = MF.getFrameInfo();
 
+  int64_t StackSize = MFI.getStackSize();
   LLVM_DEBUG(dbgs() << "VarArgsSaveSize=" << KVXFI->getVarArgsSaveSize()
                     << "\n");
-  LLVM_DEBUG(dbgs() << "OutgoingArgsMaxSize=" << KVXFI->getOutgoingArgsMaxSize()
-                    << "\n");
-  LLVM_DEBUG(dbgs() << "MemArgsSaveSize=" << KVXFI->getOutgoingArgsMaxSize()
-                    << "\n");
-  LLVM_DEBUG(dbgs() << "StackSize=" << MFI.getStackSize() << "\n");
-  LLVM_DEBUG(dbgs() << "StackAlign=" << getStackAlignment() << "\n");
-  LLVM_DEBUG(dbgs() << "LocalAreaOffset=" << getOffsetOfLocalArea() << "\n");
-
-  int64_t StackSize = MFI.getStackSize();
+  LLVM_DEBUG(dbgs() << "StackSize=" << StackSize << "\n");
+  LLVM_DEBUG(dbgs() << "LocalMaxAlign=" << KVXFI->getMaxAlignment() << "\n");
 
   if (StackSize == 0) {
     LLVM_DEBUG(dbgs() << "Stack size is 0, nothing to emit in Prologue.\n");
@@ -220,10 +214,11 @@ StackOffset KVXFrameLowering::getFrameIndexReference(const MachineFunction &MF,
   const MachineFrameInfo &MFI = MF.getFrameInfo();
 
   LLVM_DEBUG(dbgs() << "compute FrameIndexReference for FI(" << FI
-                    << "), object (size, align, offset): ("
+                    << "), object (size, align, offset, fixed): ("
                     << MFI.getObjectSize(FI) << ", "
                     << MFI.getObjectAlign(FI).value() << ", "
-                    << MFI.getObjectOffset(FI) << ")\n");
+                    << MFI.getObjectOffset(FI) << ", "
+                    << MFI.isFixedObjectIndex(FI) << ")\n");
 
   auto *KVXFI = MF.getInfo<KVXMachineFunctionInfo>();
   auto const &Indexes = KVXFI->getMinMaxCSFrameIndexes();
@@ -277,7 +272,7 @@ bool KVXFrameLowering::spillCalleeSavedRegisters(
 
   // Pack CSR stores
   for (const CalleeSavedInfo &CS : CSI) {
-    unsigned Reg = CS.getReg();
+    Register Reg = CS.getReg();
     const TargetRegisterClass *RC = TRI->getMinimalPhysRegClass(Reg);
 
     // Try to merge single regs into paired regs.
@@ -324,12 +319,12 @@ bool KVXFrameLowering::spillCalleeSavedRegisters(
   Register DwarfReg;
   unsigned CFIIndex;
 
-  for (unsigned i = 0; i < RegSaved.size(); ++i) {
-    TII->storeRegToStackSlot(MBB, MI, RegSaved[i], true, FrameIdxSaved[i],
-                             RCSaved[i], TRI);
+  for (unsigned I = 0; I < RegSaved.size(); ++I) {
+    TII->storeRegToStackSlot(MBB, MI, RegSaved[I], true, FrameIdxSaved[I],
+                             RCSaved[I], TRI);
 
     // Emit .cfi_offset for each packed SingleRegs.
-    for (auto SubReg : TRI->subregs_inclusive(RegSaved[i])) {
+    for (auto SubReg : TRI->subregs_inclusive(RegSaved[I])) {
       // Only for SingleRegs.
       if (KVX::SingleRegRegClass.contains(SubReg) ||
           KVX::OnlyraRegRegClass.contains(SubReg)) {
@@ -344,12 +339,12 @@ bool KVXFrameLowering::spillCalleeSavedRegisters(
     }
 
     // Set FP.
-    if (hasFP(MF) && RegSaved[i] == getFPReg()) {
-      KVXFI->setFPIndex(FrameIdxSaved[i]);
+    if (hasFP(MF) && RegSaved[I] == getFPReg()) {
+      KVXFI->setFPIndex(FrameIdxSaved[I]);
       // Correct ADDDri variant is selected at eliminateFrameIndex.
       BuildMI(MBB, MI, DL, TII->get(KVX::ADDDri64), getFPReg())
           .addReg(getSPReg())
-          .addFrameIndex(FrameIdxSaved[i])
+          .addFrameIndex(FrameIdxSaved[I])
           .setMIFlags(MachineInstr::FrameSetup);
 
       CFIIndex = MF.addFrameInst(
@@ -402,7 +397,7 @@ bool KVXFrameLowering::restoreCalleeSavedRegisters(
   SmallVector<int, 8> FrameIdxSaved;
 
   for (const CalleeSavedInfo &CS : reverse(CSI)) {
-    unsigned Reg = CS.getReg();
+    Register Reg = CS.getReg();
     const TargetRegisterClass *RC = TRI->getMinimalPhysRegClass(Reg);
 
     // COPY the ITAIL target address before CSR restoration.
@@ -457,9 +452,9 @@ bool KVXFrameLowering::restoreCalleeSavedRegisters(
   }
 
   // Emit load instructions.
-  for (unsigned i = 0; i < RegSaved.size(); ++i) {
-    TII->loadRegFromStackSlot(MBB, MI, RegSaved[i], FrameIdxSaved[i],
-                              RCSaved[i], TRI);
+  for (unsigned I = 0; I < RegSaved.size(); ++I) {
+    TII->loadRegFromStackSlot(MBB, MI, RegSaved[I], FrameIdxSaved[I],
+                              RCSaved[I], TRI);
   }
 
   return true;
@@ -528,8 +523,8 @@ void KVXFrameLowering::emitStackCheck(MachineFunction &MF,
 
   const KVXInstrInfo *TII = STI.getInstrInfo();
 
-  auto CheckMBB = MF.CreateMachineBasicBlock();
-  auto CallMBB = MF.CreateMachineBasicBlock();
+  auto *CheckMBB = MF.CreateMachineBasicBlock();
+  auto *CallMBB = MF.CreateMachineBasicBlock();
 
   MF.insert(MBB.getIterator(), CheckMBB);
   MF.insert(MBB.getIterator(), CallMBB);
@@ -542,8 +537,8 @@ void KVXFrameLowering::emitStackCheck(MachineFunction &MF,
   auto *KVXFI = MF.getInfo<KVXMachineFunctionInfo>();
   KVXFI->setOverflowMBB(CallMBB);
 
-  unsigned StackLimitReg = findScratchRegister(MBB, false, KVX::R17);
-  unsigned NewSPReg = findScratchRegister(MBB, false, KVX::R16);
+  Register StackLimitReg = findScratchRegister(MBB, false, KVX::R17);
+  Register NewSPReg = findScratchRegister(MBB, false, KVX::R16);
   MachineBasicBlock::iterator CheckI = CheckMBB->begin();
   BuildMI(*CheckMBB, CheckI, DL, TII->get(KVX::GET), StackLimitReg)
       .addReg(KVX::SR)
