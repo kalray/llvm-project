@@ -226,7 +226,7 @@ StackOffset KVXFrameLowering::getFrameIndexReference(const MachineFunction &MF,
   if (FI >= Indexes.first && FI <= Indexes.second)
     FrameReg = getSPReg();
   else if (KVXFI->isAdjustLocalAreaSP())
-    FrameReg = KVXFI->getAdjustedSP();
+    FrameReg = MFI.isFixedObjectIndex(FI) ? getSPReg() : KVXFI->getAdjustedSP();
   else
     FrameReg = hasFP(MF) ? getFPReg() : getSPReg();
 
