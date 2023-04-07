@@ -841,6 +841,10 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     // Fall-back to hq in cv1 using dag-combine
     for (auto I : {ISD::FMA, ISD::FMUL, ISD::FSUB, ISD::FNEG, ISD::FADD})
       setOperationAction(I, MVT::v8f16, Expand);
+
+    for (auto I : {ISD::SDIV, ISD::SREM, ISD::SDIVREM})
+      for (MVT VT : {MVT::v2i8, MVT::v4i8, MVT::v8i8})
+        setOperationAction(I, VT, Expand);
   }
   // Fall-back to hq using dag-combine
   for (auto I : {ISD::FABS, ISD::FCOPYSIGN})
@@ -4366,7 +4370,16 @@ SDValue
 KVXTargetLowering::BuildSDIVPow2(SDNode *N, const APInt &Divisor,
                                  SelectionDAG &DAG,
                                  SmallVectorImpl<SDNode *> &Created) const {
-  if (N->getOpcode() != ISD::SDIV || !N->getValueType(0).isSimple())
+
+  switch (N->getOpcode()) {
+  case ISD::SDIV:
+  case ISD::SREM:
+    break;
+  default:
+    return SDValue();
+  }
+
+  if (!N->getValueType(0).isSimple())
     return TargetLowering::BuildSDIVPow2(N, Divisor, DAG, Created);
 
   switch (N->getSimpleValueType(0).SimpleTy) {
