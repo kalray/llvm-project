@@ -2259,6 +2259,14 @@ def : Pat<(shl (v4i16 (allexts v4i8:$op0)), (v4i16 (v4_splat(i32 8)))),
 def : Pat<(shl (v4i16 (allexts (v4i8 (extract_subvector v8i8:$op0, (i64 4))))), (v4i16 (v4_splat(i32 8)))),
           (SBMM8ri64 SingleReg:$op0, 0x8000400020001000)>;
 
+def : Pat<(v2i32(zanyext v2i8:$v)), (SBMM8ri37 $v, 0x200000001)>;
+
+foreach i = [0, 2] in
+def : Pat<(v2i32(zanyext (v2i8 (extract_subvector v4i8:$v, (i64 i))))), (SBMM8ri37 $v, !shl(0x200000001, i))>;
+
+foreach i = [0, 2, 4, 6] in
+def : Pat<(v2i32(zanyext (v2i8 (extract_subvector v8i8:$v, (i64 i))))), (SBMM8ri37 $v, !shl(0x200000001, i))>;
+
 // SXLHWP ZXLHWP
 def : Pat<(v2i32(sext v2i8:$v)), (SXLHWP(SXLBHQ $v))>;
 def : Pat<(v2i32(zanyext v2i8:$v)), (SBMM8ri37 $v, 0x200000001)>;

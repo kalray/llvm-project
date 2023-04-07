@@ -2465,37 +2465,38 @@ define <4 x double> @test_copysign(<4 x double> %a, <4 x double> %b) #0 {
 define <4 x double> @test_copysign_v4f16(<4 x double> %a, <4 x half> %b) #0 {
 ; CV1-LABEL: test_copysign_v4f16:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    srld $r4 = $r4, 48
-; CV1-NEXT:    srlw $r5 = $r4, 16
-; CV1-NEXT:    sraw $r6 = $r4, 15
-; CV1-NEXT:    srld $r7 = $r4, 32
-; CV1-NEXT:    ;;
-; CV1-NEXT:    insf $r0 = $r6, 63, 63
 ; CV1-NEXT:    sraw $r4 = $r4, 15
+; CV1-NEXT:    srlw $r5 = $r4, 16
+; CV1-NEXT:    srld $r6 = $r4, 32
+; CV1-NEXT:    ;;
+; CV1-NEXT:    insf $r0 = $r4, 63, 63
+; CV1-NEXT:    sraw $r4 = $r6, 15
 ; CV1-NEXT:    sraw $r5 = $r5, 15
+; CV1-NEXT:    srlw $r7 = $r6, 16
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    insf $r1 = $r5, 63, 63
-; CV1-NEXT:    insf $r3 = $r4, 63, 63
+; CV1-NEXT:    insf $r2 = $r4, 63, 63
 ; CV1-NEXT:    sraw $r5 = $r7, 15
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    insf $r2 = $r5, 63, 63
+; CV1-NEXT:    insf $r3 = $r5, 63, 63
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;;
 ;
 ; CV2-LABEL: test_copysign_v4f16:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    sraw $r4 = $r4, 15
-; CV2-NEXT:    srlw $r5 = $r4, 16
-; CV2-NEXT:    srld $r6 = $r4, 32
-; CV2-NEXT:    srld $r7 = $r4, 48
+; CV2-NEXT:    srld $r5 = $r4, 32
+; CV2-NEXT:    srlw $r6 = $r4, 16
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r0 = $r4, 63, 63
 ; CV2-NEXT:    sraw $r5 = $r5, 15
 ; CV2-NEXT:    sraw $r6 = $r6, 15
+; CV2-NEXT:    srlw $r7 = $r5, 16
+; CV2-NEXT:    ;;
+; CV2-NEXT:    insf $r1 = $r6, 63, 63
+; CV2-NEXT:    insf $r2 = $r5, 63, 63
 ; CV2-NEXT:    sraw $r7 = $r7, 15
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    insf $r1 = $r5, 63, 63
-; CV2-NEXT:    insf $r2 = $r6, 63, 63
 ; CV2-NEXT:    insf $r3 = $r7, 63, 63
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
@@ -2527,16 +2528,16 @@ define <4 x double> @test_copysign_v4f32(<4 x double> %a, <4 x float> %b) #0 {
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    sraw $r4 = $r4, 31
 ; CV2-NEXT:    sraw $r5 = $r5, 31
-; CV2-NEXT:    srad $r6 = $r4, 32
-; CV2-NEXT:    srad $r7 = $r5, 32
+; CV2-NEXT:    srad $r6 = $r5, 32
+; CV2-NEXT:    srad $r7 = $r4, 32
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r0 = $r4, 63, 63
 ; CV2-NEXT:    insf $r2 = $r5, 63, 63
 ; CV2-NEXT:    sraw $r6 = $r6, 31
 ; CV2-NEXT:    sraw $r7 = $r7, 31
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    insf $r1 = $r6, 63, 63
-; CV2-NEXT:    insf $r3 = $r7, 63, 63
+; CV2-NEXT:    insf $r1 = $r7, 63, 63
+; CV2-NEXT:    insf $r3 = $r6, 63, 63
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
   %tb = fpext <4 x float> %b to <4 x double>

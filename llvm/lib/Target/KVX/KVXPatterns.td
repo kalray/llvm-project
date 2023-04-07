@@ -1630,20 +1630,47 @@ def : Pat<(f16(extractelt v8f16:$v, i64:$s)),
 //===----------------------------------------------------------------------===//
 //  Integer Bit Counting - Patterns
 //===----------------------------------------------------------------------===//
+// ctlz: Put each element in the upper part of a 32 bit space and set each element bit (31 - from_size) to 1
+// cttz: Put each element in the lower part of a 32 bit space and set each element bit (from_size) to 1
 
-// v4i32
+// v2i8
+def : Pat<(ctlz v2i8:$v),
+          (v2i8 (SBMM8ri37 (CLZWP (ORDri32s (SBMM8ri64 SingleReg:$v, 0x200000001000000), 0x800000)), 0x100001))>;
 
-def : Pat<(ctlz v4i32:$v),
-          (v4i32 (REG_SEQUENCE PairedReg,
-            (CLZWP (v2i32 (EXTRACT_SUBREG PairedReg:$v, sub_d0))), sub_d0,
-            (CLZWP (v2i32 (EXTRACT_SUBREG PairedReg:$v, sub_d1))), sub_d1
-          ))>;
+def : Pat<(cttz v2i8:$v),
+          (v2i8 (SBMM8ri37 (CTZWP (ORDri32s (SBMM8ri64 SingleReg:$v, 0x200000001), 0x100)), 0x100001))>;
 
-def : Pat<(cttz v4i32:$v),
-          (v4i32 (REG_SEQUENCE PairedReg,
-            (CTZWP (v2i32 (EXTRACT_SUBREG PairedReg:$v, sub_d0))), sub_d0,
-            (CTZWP (v2i32 (EXTRACT_SUBREG PairedReg:$v, sub_d1))), sub_d1
-          ))>;
+foreach i = [0, 2] in {
+def : Pat<(v2i8 (ctlz (extract_subvector v4i8:$v, (i64 i)))),
+          (v2i8 (SBMM8ri37 (CLZWP (ORDri32s (SBMM8ri64 SingleReg:$v, !shl(0x200000001000000, i)), 0x800000)), 0x100001))>;
+
+def : Pat<(v2i8 (cttz (extract_subvector v4i8:$v, (i64 i)))),
+          (v2i8 (SBMM8ri37 (CTZWP (ORDri32s (SBMM8ri64 SingleReg:$v, !shl(0x200000001, i)), 0x100)), 0x100001))>;
+}
+
+foreach j = [0, 4] in {
+foreach i = [0, 2] in {
+def : Pat<(v2i8 (ctlz (extract_subvector (v4i8 (extract_subvector v8i8:$v, (i64 j))), (i64 i)))),
+          (v2i8 (SBMM8ri37 (CLZWP (ORDri32s (SBMM8ri64 SingleReg:$v, !shl(0x200000001000000, !add(i, j))), 0x800000)), 0x100001))>;
+
+def : Pat<(v2i8 (cttz (extract_subvector (v4i8 (extract_subvector v8i8:$v, (i64 j))), (i64 i)))),
+          (v2i8 (SBMM8ri37 (CTZWP (ORDri32s (SBMM8ri64 SingleReg:$v, !shl(0x200000001, !add(i,j))), 0x100)), 0x100001))>;
+}
+}
+// v2i16
+def : Pat<(ctlz v2i16:$v),
+          (v2i16 (SBMM8ri37 (CLZWP (ORDri32s (SBMM8ri64 SingleReg:$v, 0x804000002010000), 0x8000)), 0x100001))>;
+
+def : Pat<(cttz v2i16:$v),
+          (v2i16 (SBMM8ri37 (CTZWP (ORDri32s (SBMM8ri64 SingleReg:$v, 0x80400000201), 0x10000)), 0x100001))>;
+
+foreach i = [0, 2] in {
+def : Pat<(v2i16 (ctlz (extract_subvector v4i16:$v, (i64 i)))),
+          (v2i16 (SBMM8ri37 (CLZWP (ORDri32s (SBMM8ri64 SingleReg:$v, !shl(0x804000002010000, !mul(i, 2))), 0x8000)), 0x100001))>;
+
+def : Pat<(v2i16 (cttz (extract_subvector v4i16:$v, (i64 i)))),
+          (v2i16 (SBMM8ri37 (CTZWP (ORDri32s (SBMM8ri64 SingleReg:$v, !shl(0x80400000201, !mul(i, 2))), 0x10000)), 0x100001))>;
+}
 
 //===----------------------------------------------------------------------===//
 //  Signed Saturated Addition/Subtraction - Patterns
