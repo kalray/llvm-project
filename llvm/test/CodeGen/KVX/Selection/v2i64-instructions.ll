@@ -126,21 +126,12 @@ define <2 x i64> @test_fma(<2 x i64> %a, <2 x i64> %b, <2 x i64> %c) {
 }
 
 define <2 x i64> @test_fma_imm(<2 x i64> %a, <2 x i64> %b) {
-; CV1-LABEL: test_fma_imm:
-; CV1:       # %bb.0:
-; CV1-NEXT:    maddd $r0 = $r2, 5
-; CV1-NEXT:    addx2d $r1 = $r3, $r1
-; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
-;
-; CV2-LABEL: test_fma_imm:
-; CV2:       # %bb.0:
-; CV2-NEXT:    addx2d $r1 = $r3, $r1
-; CV2-NEXT:    make $r4 = 5
-; CV2-NEXT:    ;;
-; CV2-NEXT:    maddd $r0 = $r2, $r4
-; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CHECK-LABEL: test_fma_imm:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    maddd $r0 = $r2, 5
+; CHECK-NEXT:    addx2d $r1 = $r3, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
   %m = mul <2 x i64> <i64 5, i64 2>, %b
   %ad = add <2 x i64> %a, %m
   ret <2 x i64> %ad

@@ -1121,6 +1121,7 @@ def : Pat<(add i64:$a1, (mul i64:$a2, i64:$a3)), (MADDDrr SingleReg:$a1, SingleR
 def : Pat<(add i64:$a1, (mul i64:$a2, Wrapped64:$a3)), (MADDDri64 SingleReg:$a1, SingleReg:$a2, Wrapped64:$a3)>, Requires<[IsV1]>;
 def : Pat<(add i64:$a1, (mul i64:$a2, Signed10:$a3)), (MADDDri10 SingleReg:$a1, SingleReg:$a2, Wrapped64:$a3)>, Requires<[IsV1]>;
 def : Pat<(add i64:$a1, (mul i64:$a2, Signed37:$a3)), (MADDDri37 SingleReg:$a1, SingleReg:$a2, Wrapped64:$a3)>, Requires<[IsV1]>;
+def : Pat<(add i64:$a1, (mul i64:$a2, Wrapped64W:$a3)), (MADDDri37 SingleReg:$a1, SingleReg:$a2, Wrapped64:$a3)>, Requires<[IsV2]>;
 
 // MADDHQ
 def : Pat<(add v2i16:$a1, (mul v2i16:$a2, (v2i16(is_imm_vec:$IMM)))), (MADDHQri37 SingleReg:$a1, SingleReg:$a2, (build_imm_vec $IMM))>, Requires<[IsV1]>;
