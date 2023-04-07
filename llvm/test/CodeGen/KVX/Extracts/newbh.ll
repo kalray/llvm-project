@@ -340,7 +340,7 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    orw $r0 = $r0, $r2
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:    addx8d $r0 = $r0, $r21
+; KV3_1-NEXT:    addx8uwd $r0 = $r0, $r21
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:    sd 48[$r0] = $r1
 ; KV3_1-NEXT:    ;;
@@ -693,7 +693,7 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:    orw $r0 = $r0, $r2
 ; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:    addx8d $r0 = $r0, $r21
+; KV3_2-NEXT:    addx8uwd $r0 = $r0, $r21
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:    sd 48[$r0] = $r1
 ; KV3_2-NEXT:    ;;

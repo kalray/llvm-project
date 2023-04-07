@@ -2135,8 +2135,8 @@ Register KVXTargetLowering::getRegisterByName(const char *RegName, LLT Ty,
     RegNo = MatchRegisterAltName(Str);
 
   if (RegNo == 0)
-    report_fatal_error("Could not get register by name: " +
-                       StringRef(RegName).str());
+    report_fatal_error(StringRef("Could not get register by name: " +
+                                 StringRef(RegName).str()));
 
   return RegNo;
 }
@@ -3723,8 +3723,62 @@ bool KVXTargetLowering::shouldReplaceBy(SDNode *From, unsigned ToOpcode) const {
     return true;
 
   // We prefer vector multiplies to vector shifts
-  case ISD::SHL:
-    return !From->getValueType(0).isVector();
+  case ISD::SHL: {
+    auto VT = From->getValueType(0);
+    if (VT.isVector()) {
+      // If not multiplied by a splat value, preserve the multiply
+      switch (From->getOpcode()) {
+      case ISD::MUL:
+      case ISD::MULHS:
+      case ISD::MULHU: {
+        const auto *Op1 = From->getOperand(1).getNode();
+        if (!isa<BuildVectorSDNode>(Op1))
+          return false;
+        auto *V = cast<BuildVectorSDNode>(Op1)->getConstantSplatNode();
+        if (!V)
+          return false;
+        // Vector multiply is prefered over vector shift,
+        // except for i8 vectors, as there are no such
+        // operation. However, in CV1, it is expanded to
+        // i16 vectors.
+        return VT.getScalarType() == MVT::i8 && !Subtarget.isV1();
+      }
+      default:
+        return true;
+      }
+    }
+
+    // If the scalar mul is used in multiple places, convert to shift.
+    if (!From->hasOneUse())
+      return true;
+
+    // Move to shifts before loads, stores and returns
+    switch (From->use_begin()->getOpcode()) {
+    case ISD::LOAD:
+    case ISD::STORE:
+    case ISD::CopyToReg: // Used before returns
+      return true;
+    case ISD::ADD:
+      // A madd adding/subtractin an immediate needs a make
+      auto User = From->use_begin();
+      if (isa<ConstantSDNode>(User->getOperand(1)))
+        return true;
+    }
+
+    switch (From->getOpcode()) {
+    case ISD::MUL:
+    case ISD::MULHS:
+    case ISD::MULHU: {
+      const auto *Op1 = From->getOperand(1).getNode();
+      if (!isa<ConstantSDNode>(Op1))
+        return false;
+      return !Subtarget.isV1() &&
+             !cast<ConstantSDNode>(Op1)->getAPIntValue().isSignedIntN(32);
+    }
+    default:
+      return true;
+    }
+  }
 
   // Avoid infinite convertion ROTL <-> ROTR
   case ISD::ROTL:

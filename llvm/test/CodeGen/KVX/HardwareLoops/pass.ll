@@ -343,12 +343,12 @@ define void @reg_imm_zero_positive_bump(i32* nocapture %x, i32 %start){
 ; CHECK-NEXT:    cb.wgtz $r1 ? .LBB8_3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %for.body.preheader
+; CHECK-NEXT:    sbfx4wd $r0 = $r1, $r0
 ; CHECK-NEXT:    sxwd $r2 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfx4d $r0 = $r2, $r0
-; CHECK-NEXT:    sbfd $r3 = $r2, 1
+; CHECK-NEXT:    sbfd $r2 = $r2, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    loopdo $r3, .__LOOPDO_8_END_
+; CHECK-NEXT:    loopdo $r2, .__LOOPDO_8_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB8_2: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
@@ -432,10 +432,9 @@ define void @reg_reg_positive_bump(i32* nocapture %x, i32 %start, i32 %end){
 ; CHECK-NEXT:    cb.odd $r3 ? .LBB10_3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %for.body.preheader
+; CHECK-NEXT:    addx4wd $r0 = $r1, $r0
 ; CHECK-NEXT:    sxwd $r2 = $r2
-; CHECK-NEXT:    sxwd $r3 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addx4d $r0 = $r3, $r0
 ; CHECK-NEXT:    sbfwd $r2 = $r1, $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r2, .__LOOPDO_10_END_

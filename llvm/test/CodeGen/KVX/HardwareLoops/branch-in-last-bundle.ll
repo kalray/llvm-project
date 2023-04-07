@@ -26,8 +26,8 @@ define float @cholesky(%struct.loops_params_s* nocapture readonly %0) local_unna
 ; CHECK-NEXT:  .LBB0_1: # =>This Loop Header: Depth=1
 ; CHECK-NEXT:    # Child Loop BB0_3 Depth 2
 ; CHECK-NEXT:    # Child Loop BB0_5 Depth 3
-; CHECK-NEXT:    make $r1 = 0
-; CHECK-NEXT:    copyd $r4 = $r0
+; CHECK-NEXT:    copyd $r1 = $r0
+; CHECK-NEXT:    make $r4 = 0
 ; CHECK-NEXT:    goto .LBB0_3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_2: # in Loop: Header=BB0_3 Depth=2
@@ -38,29 +38,26 @@ define float @cholesky(%struct.loops_params_s* nocapture readonly %0) local_unna
 ; CHECK-NEXT:  .LBB0_3: # Parent Loop BB0_1 Depth=1
 ; CHECK-NEXT:    # => This Loop Header: Depth=2
 ; CHECK-NEXT:    # Child Loop BB0_5 Depth 3
-; CHECK-NEXT:    copyd $r5 = $r4
-; CHECK-NEXT:    copyd $r6 = $r1
+; CHECK-NEXT:    copyd $r5 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    compw.lt $r4 = $r5, 4
+; CHECK-NEXT:    compw.lt $r1 = $r5, 4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.odd $r4 ? .LBB0_13
+; CHECK-NEXT:    cb.odd $r1 ? .LBB0_13
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.4: # in Loop: Header=BB0_3 Depth=2
-; CHECK-NEXT:    srsw $r4 = $r5, 1
+; CHECK-NEXT:    srsw $r1 = $r5, 1
+; CHECK-NEXT:    addw $r9 = $r4, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addw $r1 = $r6, $r4
-; CHECK-NEXT:    addw $r6 = $r6, 1
+; CHECK-NEXT:    addw $r4 = $r4, $r1
+; CHECK-NEXT:    sxwd $r6 = $r9
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r6 = $r6
-; CHECK-NEXT:    addw $r7 = $r1, -1
+; CHECK-NEXT:    sxwd $r7 = $r4
+; CHECK-NEXT:    addw $r8 = $r4, -1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r7 = $r1
-; CHECK-NEXT:    sxwd $r8 = $r7
+; CHECK-NEXT:    addx4wd $r8 = $r9, $r3
+; CHECK-NEXT:    addx4wd $r10 = $r8, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addx4d $r8 = $r6, $r3
-; CHECK-NEXT:    addx4d $r10 = $r8, $r2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addx4d $r9 = $r6, $r2
+; CHECK-NEXT:    addx4wd $r9 = $r9, $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_5: # Parent Loop BB0_1 Depth=1
 ; CHECK-NEXT:    # Parent Loop BB0_3 Depth=2

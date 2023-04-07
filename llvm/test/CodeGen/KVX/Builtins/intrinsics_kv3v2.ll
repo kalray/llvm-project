@@ -234,12 +234,11 @@ define <2 x i64> @acswapqvg(<2 x i64>* %0, <2 x i64> %1, <2 x i64> %2) {
 define <2 x i64> @acswapqvgr(<2 x i64>* %0, <2 x i64> %1, <2 x i64> %2, i32 %3) {
 ; CHECK-LABEL: acswapqvgr:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    sxwd $r4 = $r5
+; CHECK-NEXT:    addx16wd $r0 = $r5, $r0
 ; CHECK-NEXT:    copyd $r5 = $r2
 ; CHECK-NEXT:    copyd $r6 = $r3
 ; CHECK-NEXT:    copyd $r7 = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addx16d $r0 = $r4, $r0
 ; CHECK-NEXT:    copyd $r4 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    acswapq.v.g $r0r1, [$r0] = $r4r5r6r7

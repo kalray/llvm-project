@@ -144,9 +144,7 @@ define i32 @stackrealign2(i32 %n){
 ; CHECK-NEXT:    copyd $r1 = $r0
 ; CHECK-NEXT:    andd $r31 = $r12, -128
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r0 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addx4d $r0 = $r0, 31
+; CHECK-NEXT:    addx4wd $r0 = $r1, 31
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    andd $r0 = $r0, -32
 ; CHECK-NEXT:    ;;
@@ -541,9 +539,7 @@ define i32 @stackrealign4(i32 %n){
 ; CHECK-NEXT:    sq 384[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r8 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sxwd $r0 = $r8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addx4d $r0 = $r0, 31
+; CHECK-NEXT:    addx4wd $r0 = $r8, 31
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    andd $r0 = $r0, -32
 ; CHECK-NEXT:    ;;

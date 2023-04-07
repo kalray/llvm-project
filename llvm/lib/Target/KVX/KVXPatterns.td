@@ -424,6 +424,9 @@ multiclass LoadPatXS<PatFrag LoadOp, ValueType vt, int sc, Instruction rr> {
   def : Pat<(vt (LoadOp:$LD
                   (add SingleReg:$base, (i64 (KVX_zext_mul i32:$offset, (i32 !shl(1, sc))))))),
             (rr i32:$offset, SingleReg:$base, (get_mem_mod $LD), scale_xs)>;
+  def : Pat<(vt (LoadOp:$LD
+                  (add SingleReg:$base, (i64 (KVX_sext_mul i32:$offset, (i32 !shl(1, sc))))))),
+            (rr (SXWD i32:$offset), SingleReg:$base, (get_mem_mod $LD), scale_xs)>;
 
   def : Pat<(vt (LoadOp:$LD
                   (or SingleReg:$base, (shl SingleReg:$offset, (i32 sc))))),
@@ -434,6 +437,9 @@ multiclass LoadPatXS<PatFrag LoadOp, ValueType vt, int sc, Instruction rr> {
   def : Pat<(vt (LoadOp:$LD
                   (or SingleReg:$base, (i64 (KVX_zext_mul i32:$offset, (i32 !shl(1, sc))))))),
             (rr i32:$offset, SingleReg:$base, (get_mem_mod $LD), scale_xs)>;
+  def : Pat<(vt (LoadOp:$LD
+                  (or SingleReg:$base, (i64 (KVX_sext_mul i32:$offset, (i32 !shl(1, sc))))))),
+            (rr (SXWD i32:$offset), SingleReg:$base, (get_mem_mod $LD), scale_xs)>;
 }
 
 multiclass SimpleLoadPat<PatFrag LoadOp, ValueType vt, KVX_PSEUDO_W_SCHEDINFO pinst,

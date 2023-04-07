@@ -285,9 +285,7 @@ define i64 @not_madduwdri3(i64 %a, i32* nocapture readonly %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r1 = 0[$r1]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    slld $r1 = $r1, 32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r1, $r0
+; CHECK-NEXT:    maddd $r0 = $r1, 0x100000000
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ;
@@ -311,17 +309,13 @@ entry:
 define i64 @not_madduwdri_8(i64 %a, i32 %b) {
 ; CHECK-LABEL: not_madduwdri_8:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addx8d $r0 = $r1, $r0
+; CHECK-NEXT:    addx8uwd $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ;
 ; V2-LABEL: not_madduwdri_8:
 ; V2:       # %bb.0: # %entry
-; V2-NEXT:    zxwd $r1 = $r1
-; V2-NEXT:    ;;
-; V2-NEXT:    addx8d $r0 = $r1, $r0
+; V2-NEXT:    addx8uwd $r0 = $r1, $r0
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
 entry:

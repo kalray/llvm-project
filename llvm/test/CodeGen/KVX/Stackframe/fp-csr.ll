@@ -9,15 +9,14 @@ target triple = "kvx-kalray-cos"
 define i32 @foo(i32 %n, i32 %m) {
 ; CHECK-LABEL: foo:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    zxwd $r0 = $r0
+; CHECK-NEXT:    addx4uwd $r0 = $r0, 31
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    addx4d $r0 = $r0, 31
+; CHECK-NEXT:    clrf $r0 = $r0, 4, 34
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 16[$r12] = $r14
-; CHECK-NEXT:    clrf $r0 = $r0, 4, 34
 ; CHECK-NEXT:    addd $r14 = $r12, 16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sq 0[$r12] = $r18r19
