@@ -32,7 +32,7 @@ def PCRELGOTADDR : KVX_INSTRUCTION_Y
     <(outs SingleReg:$addr), (ins), "pcrel $addr = @gotaddr()", [], ALU_FULL_Y_>;
 
 def PICEXTERNINDIRECTION : KVX_INSTRUCTION_Y
-    <(outs SingleReg:$addr), (ins SingleReg:$gotaddr, Wrapped64:$gotoff),
+    <(outs SingleReg:$addr), (ins SingleReg:$gotaddr, Pcrel27:$gotoff),
     "ld $addr = @got( $gotoff )[$gotaddr]", [], LSU_AUXW_LOAD_Y_>;
 
 def : Pat<(i64 (PICExternIndirection (i64 tglobaladdr:$gotoff))),
@@ -42,14 +42,8 @@ let Defs=[RA], isCall=1 in
 def CALLPLT : KVX_INSTRUCTION
   <(outs), (ins Pcrel27:$pcreladdr),
    "call $pcreladdr",
-   [/* no direct match, see Call pattern below */],
+   [(Call (PICExternIndirection (i64 tglobaladdr:$pcreladdr)))],
    BCU>;
-
-
-// Do not indirect symbols for function calls (loader will)
-// NOTE: SingleReg:$gotaddr operand is unused here
-def : Pat<(Call (PICExternIndirection (i64 tglobaladdr:$gotoff))),
-          (CALLPLT Pcrel27:$gotoff)>;
 
 def PICPCREL : KVX_INSTRUCTION_Y
   <(outs SingleReg:$SingleReg), (ins Wrapped64:$Wrapped64),
