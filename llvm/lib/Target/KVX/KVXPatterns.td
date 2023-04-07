@@ -194,11 +194,6 @@ multiclass ZAext_And1_Pat<dag pattern, dag result> {
   def : Pat<(i64 (and (zanyext (i32 pattern)), 1)), result>;
 }
 
-// FIXME: clean code below
-
-def SDT_KVXCall : SDTypeProfile<0, -1, [SDTCisVT<0, i64>]>;
-def Call : SDNode<"KVXISD::CALL", SDT_KVXCall, [SDNPHasChain, SDNPOptInGlue, SDNPOutGlue, SDNPVariadic]>;
-
 // 16 bit casts
 defm : BITCAST<f16, v2i8, SingleReg>;
 
@@ -264,26 +259,25 @@ defm : BITCAST<v4i32, v8f16, PairedReg>;
 defm : BITCAST<v4f64, v4i64, QuadReg>;
 
 
+def SDTKVXTail : SDTypeProfile<0, -1, [SDTCisVT<0, i64>]>;
+def Tail : SDNode <"KVXISD::TAIL", SDTKVXTail, [SDNPHasChain, SDNPOptInGlue, SDNPOutGlue, SDNPVariadic]>;
+
 let isCall = 1, isBarrier = 1, isBranch = 1, isTerminator = 1, isReturn = 1, Uses = [R12] in
 def TAIL : KVX_INSTRUCTION
   <(outs), (ins Pcrel27:$a1),
    "goto $a1",
-   [ ],
+   [(Tail (KVXWrapper tglobaladdr:$a1))],
    BCU>;
+
+def : Pat<(Tail texternalsym:$func), (TAIL Pcrel27:$func)>;
 
 let isCall = 1, isBarrier = 1, isBranch = 1, isIndirectBranch = 1, isTerminator = 1, isReturn = 1, Uses = [R12] in
 def ITAIL : KVX_INSTRUCTION
   <(outs), (ins SingleReg:$a1),
    "igoto $a1",
-   [ ],
+   [(Tail SingleReg:$a1)],
    BCU>;
 
-def SDTKVXWrapper : SDTypeProfile<1, 1, [SDTCisSameAs<0, 1>, SDTCisPtrTy<0>]>;
-def SDTKVXTail : SDTypeProfile<0, -1, [SDTCisVT<0, i64>]>;
-
-def KVXWrapper : SDNode<"KVXISD::AddrWrapper", SDTKVXWrapper>;
-
-def Tail : SDNode <"KVXISD::TAIL", SDTKVXTail, [SDNPHasChain, SDNPOptInGlue, SDNPOutGlue, SDNPVariadic]>;
 
 def GetSystemReg : SDNode <"KVXISD::GetSystemReg", SDTypeProfile<1, 1, [SDTCisSameAs<0, 1>]>>;
 def GETSYSTEMREG : KVX_INSTRUCTION
@@ -291,27 +285,6 @@ def GETSYSTEMREG : KVX_INSTRUCTION
    "get $dst = $sr",
    [(set (i64 SingleReg:$dst), (GetSystemReg SystemReg:$sr))],
    BCU_TINY_TINY_MAU_XNOP_ID>;
-
-//
-// Function return
-//
-
-def KVXRetNode : SDNode<"KVXISD::RET", SDTNone,
-                       [SDNPHasChain, SDNPOptInGlue, SDNPMayLoad, SDNPVariadic]>;
-
-def : Pat<(KVXRetNode),(RET)>;
-
-def : Pat<(Call (KVXWrapper tglobaladdr:$func)),(CALL Pcrel27:$func)>;
-def : Pat<(Call texternalsym:$func),(CALL Pcrel27:$func)>;
-def : Pat<(Call SingleReg:$func),(ICALL SingleReg:$func)>;
-
-def : Pat<(Tail (KVXWrapper tglobaladdr:$func)),(TAIL Pcrel27:$func)>;
-def : Pat<(Tail texternalsym:$func), (TAIL Pcrel27:$func)>;
-def : Pat<(Tail SingleReg:$func),(ITAIL SingleReg:$func)>;
-
-/*let isBarrier = 1, isReturn = 1, isTerminator = 1 in
-def PseudoRET : KVX_PSEUDO<(outs), (ins), "ret", [(KVXRetNode)]>,
-PseudoInstExpansion<(KVXRet)>;*/
 
 //
 // Call frame magic

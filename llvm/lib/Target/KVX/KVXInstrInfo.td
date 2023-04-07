@@ -1556,11 +1556,14 @@ def ERROP : KVX_INSTRUCTION
    [(int_kvx_errop)],
    ALL_ID>;
 
+def KVXRetNode : SDNode<"KVXISD::RET", SDTNone,
+                       [SDNPHasChain, SDNPOptInGlue, SDNPMayLoad, SDNPVariadic]>;
+
 let Uses = [RA], isBarrier = 1, isReturn = 1, isTerminator = 1 in
 def RET : KVX_INSTRUCTION
   <(outs), (ins),
    "ret",
-   [/* no straightforward pattern */],
+   [(KVXRetNode)],
    BCU>;
 
 def RFE : KVX_INSTRUCTION
@@ -1574,13 +1577,6 @@ def IGOTO : KVX_INSTRUCTION
   <(outs), (ins SingleReg:$a1),
    "igoto $a1",
    [(brind i64:$a1)],
-   BCU>;
-
-let Defs = [RA, PM0, PM1, PM2, PM3, PM4, PM5, PM6, PM7, PCR, PMC, CS], isCall = 1, isIndirectBranch = 1 in
-def ICALL : KVX_INSTRUCTION
-  <(outs), (ins SingleReg:$a1),
-   "icall $a1",
-   [/* no straightforward pattern */],
    BCU>;
 
 defm SCALL : MC_00<"scall">;
@@ -1625,11 +1621,25 @@ def GOTO : KVX_INSTRUCTION
    [(br bb:$a1)],
    BCU>;
 
+def SDTKVXWrapper : SDTypeProfile<1, 1, [SDTCisSameAs<0, 1>, SDTCisPtrTy<0>]>;
+def KVXWrapper : SDNode<"KVXISD::AddrWrapper", SDTKVXWrapper>;
+def SDT_KVXCall : SDTypeProfile<0, -1, [SDTCisVT<0, i64>]>;
+def Call : SDNode<"KVXISD::CALL", SDT_KVXCall, [SDNPHasChain, SDNPOptInGlue, SDNPOutGlue, SDNPVariadic]>;
+
 let Defs = [RA, PM0, PM1, PM2, PM3, PM4, PM5, PM6, PM7, PCR, PMC, CS], isCall = 1 in
 def CALL : KVX_INSTRUCTION
   <(outs), (ins Pcrel27:$a1),
    "call $a1",
-   [/* no straightforward pattern */],
+   [(Call (KVXWrapper tglobaladdr:$a1))],
+   BCU>;
+
+def : Pat<(Call texternalsym:$func),(CALL Pcrel27:$func)>;
+
+let Defs = [RA, PM0, PM1, PM2, PM3, PM4, PM5, PM6, PM7, PCR, PMC, CS], isCall = 1, isIndirectBranch = 1 in
+def ICALL : KVX_INSTRUCTION
+  <(outs), (ins SingleReg:$a1),
+   "icall $a1",
+   [(Call SingleReg:$a1)],
    BCU>;
 
 let isBranch = 1, isTerminator = 1 in
