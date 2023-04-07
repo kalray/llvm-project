@@ -61,7 +61,7 @@ define i64 @f5(i64 %a, i32 %b){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %shl = shl i32 %b, 2
+  %shl = shl nuw i32 %b, 2
   %conv = zext i32 %shl to i64
   %sub = sub nsw i64 %a, %conv
   ret i64 %sub
@@ -74,7 +74,7 @@ define i64 @f6(i64 %a, i32 %b){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %mul = shl i32 %b, 2
+  %mul = shl nuw i32 %b, 2
   %conv = zext i32 %mul to i64
   %sub = sub nsw i64 %a, %conv
   ret i64 %sub
@@ -87,7 +87,7 @@ define i64 @f7(i64 %a, i32 %b){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %shl = shl i32 %b, 2
+  %shl = shl nsw i32 %b, 2
   %conv = sext i32 %shl to i64
   %sub = sub nsw i64 %a, %conv
   ret i64 %sub
@@ -148,7 +148,7 @@ define i64 @f5imm(i32 %b){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %shl = shl i32 %b, 2
+  %shl = shl nuw i32 %b, 2
   %conv = zext i32 %shl to i64
   %sub = sub nsw i64 123456, %conv
   ret i64 %sub
@@ -161,7 +161,7 @@ define i64 @f6imm(i32 %b){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %mul = shl i32 %b, 2
+  %mul = shl nuw i32 %b, 2
   %conv = zext i32 %mul to i64
   %sub = sub nsw i64 123456, %conv
   ret i64 %sub
@@ -174,7 +174,7 @@ define i64 @f7imm(i32 %b){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %shl = shl i32 %b, 2
+  %shl = shl nsw i32 %b, 2
   %conv = sext i32 %shl to i64
   %sub = sub nsw i64 -23456, %conv
   ret i64 %sub

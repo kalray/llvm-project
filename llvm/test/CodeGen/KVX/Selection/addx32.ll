@@ -101,7 +101,7 @@ define i64 @f5(i64 %a, i32 %b){
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
 entry:
-  %shl = shl i32 %b, 5
+  %shl = shl nuw i32 %b, 5
   %conv = zext i32 %shl to i64
   %add = add nsw i64 %conv, %a
   ret i64 %add
@@ -122,7 +122,7 @@ define i64 @f6(i64 %a, i32 %b){
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
 entry:
-  %shl = shl i32 %b, 5
+  %shl = shl nuw i32 %b, 5
   %conv = zext i32 %shl to i64
   %add = add nsw i64 %conv, %a
   ret i64 %add
@@ -143,7 +143,7 @@ define i64 @f7(i64 %a, i32 %b){
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
 entry:
-  %shl = shl i32 %b, 5
+  %shl = shl nsw i32 %b, 5
   %conv = sext i32 %shl to i64
   %add = add nsw i64 %conv, %a
   ret i64 %add
@@ -160,7 +160,9 @@ define i64 @f8(i64 %a, i32 %b){
 ;
 ; V2-LABEL: f8:
 ; V2:       # %bb.0: # %entry
-; V2-NEXT:    addx32wd $r0 = $r1, $r0
+; V2-NEXT:    sllw $r1 = $r1, 5
+; V2-NEXT:    ;;
+; V2-NEXT:    addwd $r0 = $r1, $r0
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
 entry:
@@ -265,7 +267,7 @@ define i64 @f5imm(i32 %b){
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
 entry:
-  %shl = shl i32 %b, 5
+  %shl = shl nuw i32 %b, 5
   %conv = zext i32 %shl to i64
   %add = add nuw nsw i64 %conv, 123456
   ret i64 %add
@@ -286,7 +288,7 @@ define i64 @f6imm(i32 %b){
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
 entry:
-  %shl = shl i32 %b, 5
+  %shl = shl nuw i32 %b, 5
   %conv = zext i32 %shl to i64
   %add = add nuw nsw i64 %conv, 123456
   ret i64 %add
@@ -309,7 +311,7 @@ define i64 @f7imm(i32 %b){
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
 entry:
-  %shl = shl i32 %b, 5
+  %shl = shl nsw i32 %b, 5
   %conv = sext i32 %shl to i64
   %add = add nsw i64 %conv, -23456
   ret i64 %add
@@ -332,7 +334,7 @@ define i64 @f8imm(i32 %b){
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
 entry:
-  %shl = shl i32 %b, 5
+  %shl = shl nsw i32 %b, 5
   %conv = sext i32 %shl to i64
   %sub = add nsw i64 %conv, -23456
   ret i64 %sub

@@ -126,11 +126,9 @@ define i32 @acswapwxs(i32* %0, i32 %1, i32 %2, i32 %3) {
 ;
 ; CV2-LABEL: acswapwxs:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    sxwd $r2 = $r3
+; CV2-NEXT:    addx4wd $r0 = $r3, $r0
 ; CV2-NEXT:    copyd $r4 = $r1
 ; CV2-NEXT:    copyd $r5 = $r2
-; CV2-NEXT:    ;;
-; CV2-NEXT:    addx4d $r0 = $r2, $r0
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    acswapw $r0, [$r0] = $r4r5
 ; CV2-NEXT:    ret
@@ -349,9 +347,7 @@ define i64 @alcldrixs(i64* %0, i32 %1) {
 ;
 ; CV2-LABEL: alcldrixs:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    sxwd $r1 = $r1
-; CV2-NEXT:    ;;
-; CV2-NEXT:    addx8d $r0 = $r1, $r0
+; CV2-NEXT:    addx8wd $r0 = $r1, $r0
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    alclrd $r0 = 0[$r0]
 ; CV2-NEXT:    ret
@@ -410,9 +406,7 @@ define i32 @alclwrixs(i32* %0, i32 %1) {
 ;
 ; CV2-LABEL: alclwrixs:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    sxwd $r1 = $r1
-; CV2-NEXT:    ;;
-; CV2-NEXT:    addx4d $r0 = $r1, $r0
+; CV2-NEXT:    addx4wd $r0 = $r1, $r0
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    alclrw $r0 = 0[$r0]
 ; CV2-NEXT:    ret

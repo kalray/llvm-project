@@ -4,6 +4,7 @@
 ; RUN: clang -O2 -march=kv3-1 -c -o /dev/null %s
 ; RUN: clang -O2 -march=kv3-2 -c -o /dev/null %s
 
+; Fixme: sxbd(sxbd)
 target triple = "kvx-kalray-cos"
 define i8 @serm_i8(i8 %0) {
 ; ALL-LABEL: serm_i8:
@@ -14,15 +15,18 @@ define i8 @serm_i8(i8 %0) {
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    addw $r1 = $r0, $r1
 ; ALL-NEXT:    ;;
-; ALL-NEXT:    andw $r1 = $r1, -8
+; ALL-NEXT:    sxbd $r1 = $r1
 ; ALL-NEXT:    ;;
-; ALL-NEXT:    sbfw $r0 = $r1, $r0
+; ALL-NEXT:    sraw $r1 = $r1, 3
+; ALL-NEXT:    ;;
+; ALL-NEXT:    sbfx8w $r0 = $r1, $r0
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
  %2 = srem i8 %0, 8
  ret i8 %2
 }
 
+; Fixme: sxhd(sxhd)
 define i16 @serm_i16(i16 %0) {
 ; ALL-LABEL: serm_i16:
 ; ALL:       # %bb.0:
@@ -32,9 +36,11 @@ define i16 @serm_i16(i16 %0) {
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    addw $r1 = $r0, $r1
 ; ALL-NEXT:    ;;
-; ALL-NEXT:    andw $r1 = $r1, -8
+; ALL-NEXT:    sxhd $r1 = $r1
 ; ALL-NEXT:    ;;
-; ALL-NEXT:    sbfw $r0 = $r1, $r0
+; ALL-NEXT:    sraw $r1 = $r1, 3
+; ALL-NEXT:    ;;
+; ALL-NEXT:    sbfx8w $r0 = $r1, $r0
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
  %2 = srem i16 %0, 8
@@ -46,9 +52,7 @@ define i32 @srem_i32(i32 %0) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    srsw $r1 = $r0, 5
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sllw $r1 = $r1, 5
-; CV1-NEXT:    ;;
-; CV1-NEXT:    sbfw $r0 = $r1, $r0
+; CV1-NEXT:    msbfw $r0 = $r1, 32
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;;
 ;
@@ -67,10 +71,9 @@ define i64 @srem_i64(i64 %0) {
 ; ALL-LABEL: srem_i64:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    srsd $r1 = $r0, 7
+; ALL-NEXT:    make $r2 = 128
 ; ALL-NEXT:    ;;
-; ALL-NEXT:    slld $r1 = $r1, 7
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sbfd $r0 = $r1, $r0
+; ALL-NEXT:    msbfd $r0 = $r1, $r2
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
  %2 = srem i64 %0, 128
@@ -121,15 +124,8 @@ define <2 x i8> @serm_v2i8(<2 x i8> %0) {
 ; CV2-LABEL: serm_v2i8:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    srsbos $r1 = $r0, 3
-; CV2-NEXT:    make $r2 = 0x80008
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    sxlbhq $r1 = $r1
-; CV2-NEXT:    ;;
-; CV2-NEXT:    mulhq $r1 = $r1, $r2
-; CV2-NEXT:    ;;
-; CV2-NEXT:    sbmm8 $r1 = $r1, 0x401
-; CV2-NEXT:    ;;
-; CV2-NEXT:    sbfbo $r0 = $r1, $r0
+; CV2-NEXT:    sbfx8bo $r0 = $r1, $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
  %2 = srem <2 x i8> %0, <i8 8, i8 8>
@@ -174,11 +170,11 @@ define <2 x i64> @serm_v2i64(<2 x i64> %0) {
 ; ALL-NEXT:    adduwd $r2 = $r2, $r1
 ; ALL-NEXT:    adduwd $r3 = $r3, $r0
 ; ALL-NEXT:    ;;
-; ALL-NEXT:    andd $r2 = $r2, -8
-; ALL-NEXT:    andd $r3 = $r3, -8
+; ALL-NEXT:    srad $r2 = $r2, 3
+; ALL-NEXT:    srad $r3 = $r3, 3
 ; ALL-NEXT:    ;;
-; ALL-NEXT:    sbfd $r0 = $r3, $r0
-; ALL-NEXT:    sbfd $r1 = $r2, $r1
+; ALL-NEXT:    sbfx8d $r0 = $r3, $r0
+; ALL-NEXT:    sbfx8d $r1 = $r2, $r1
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
  %2 = srem <2 x i64> %0, <i64 8, i64 8>
@@ -250,15 +246,8 @@ define <4 x i8> @serm_v4i8(<4 x i8> %0) {
 ; CV2-LABEL: serm_v4i8:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    srsbos $r1 = $r0, 3
-; CV2-NEXT:    make $r2 = 0x8000800080008
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    sxlbhq $r1 = $r1
-; CV2-NEXT:    ;;
-; CV2-NEXT:    mulhq $r1 = $r1, $r2
-; CV2-NEXT:    ;;
-; CV2-NEXT:    sbmm8 $r1 = $r1, 0x40100401
-; CV2-NEXT:    ;;
-; CV2-NEXT:    sbfbo $r0 = $r1, $r0
+; CV2-NEXT:    sbfx8bo $r0 = $r1, $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
  %2 = srem <4 x i8> %0, <i8 8, i8 8, i8 8, i8 8>
@@ -341,18 +330,18 @@ define <4 x i64> @serm_v4i64(<4 x i64> %0) {
 ; CV1-NEXT:    adduwd $r4 = $r4, $r1
 ; CV1-NEXT:    adduwd $r5 = $r5, $r0
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    andd $r4 = $r4, -8
-; CV1-NEXT:    andd $r5 = $r5, -8
+; CV1-NEXT:    srad $r4 = $r4, 3
+; CV1-NEXT:    srad $r5 = $r5, 3
 ; CV1-NEXT:    adduwd $r6 = $r6, $r2
 ; CV1-NEXT:    adduwd $r7 = $r7, $r3
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sbfd $r0 = $r5, $r0
-; CV1-NEXT:    sbfd $r1 = $r4, $r1
-; CV1-NEXT:    andd $r6 = $r6, -8
-; CV1-NEXT:    andd $r7 = $r7, -8
+; CV1-NEXT:    sbfx8d $r0 = $r5, $r0
+; CV1-NEXT:    sbfx8d $r1 = $r4, $r1
+; CV1-NEXT:    srad $r4 = $r6, 3
+; CV1-NEXT:    srad $r5 = $r7, 3
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sbfd $r2 = $r6, $r2
-; CV1-NEXT:    sbfd $r3 = $r7, $r3
+; CV1-NEXT:    sbfx8d $r2 = $r4, $r2
+; CV1-NEXT:    sbfx8d $r3 = $r5, $r3
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;;
 ;
@@ -373,15 +362,15 @@ define <4 x i64> @serm_v4i64(<4 x i64> %0) {
 ; CV2-NEXT:    adduwd $r6 = $r6, $r2
 ; CV2-NEXT:    adduwd $r7 = $r7, $r3
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    andd $r4 = $r4, -8
-; CV2-NEXT:    andd $r5 = $r5, -8
-; CV2-NEXT:    andd $r6 = $r6, -8
-; CV2-NEXT:    andd $r7 = $r7, -8
+; CV2-NEXT:    srad $r4 = $r4, 3
+; CV2-NEXT:    srad $r5 = $r5, 3
+; CV2-NEXT:    srad $r6 = $r6, 3
+; CV2-NEXT:    srad $r7 = $r7, 3
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    sbfd $r0 = $r5, $r0
-; CV2-NEXT:    sbfd $r1 = $r4, $r1
-; CV2-NEXT:    sbfd $r2 = $r6, $r2
-; CV2-NEXT:    sbfd $r3 = $r7, $r3
+; CV2-NEXT:    sbfx8d $r0 = $r5, $r0
+; CV2-NEXT:    sbfx8d $r1 = $r4, $r1
+; CV2-NEXT:    sbfx8d $r2 = $r6, $r2
+; CV2-NEXT:    sbfx8d $r3 = $r7, $r3
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
  %2 = srem <4 x i64> %0, <i64 8, i64 8, i64 8, i64 8>
@@ -522,22 +511,8 @@ define <8 x i8> @serm_v8i8(<8 x i8> %0) {
 ; CV2-LABEL: serm_v8i8:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    srsbos $r1 = $r0, 3
-; CV2-NEXT:    make $r2 = 0x8000800080008
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    sxlbhq $r1 = $r1
-; CV2-NEXT:    sxmbhq $r3 = $r1
-; CV2-NEXT:    ;;
-; CV2-NEXT:    mulhq $r3 = $r3, $r2
-; CV2-NEXT:    ;;
-; CV2-NEXT:    mulhq $r1 = $r1, $r2
-; CV2-NEXT:    ;;
-; CV2-NEXT:    sbmm8 $r2 = $r3, 0x40100401
-; CV2-NEXT:    ;;
-; CV2-NEXT:    sbmm8 $r1 = $r1, 0x40100401
-; CV2-NEXT:    ;;
-; CV2-NEXT:    insf $r1 = $r2, 63, 32
-; CV2-NEXT:    ;;
-; CV2-NEXT:    sbfbo $r0 = $r1, $r0
+; CV2-NEXT:    sbfx8bo $r0 = $r1, $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
  %2 = srem <8 x i8> %0, <i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8>
