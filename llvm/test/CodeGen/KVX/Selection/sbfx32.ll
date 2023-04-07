@@ -91,7 +91,7 @@ define i64 @f5(i64 %a, i32 %b){
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    sllw $r1 = $r1, 5
 ; V1-NEXT:    ;;
-; V1-NEXT:    sbfd $r0 = $r1, $r0
+; V1-NEXT:    sbfuwd $r0 = $r1, $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -112,7 +112,7 @@ define i64 @f6(i64 %a, i32 %b){
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    sllw $r1 = $r1, 5
 ; V1-NEXT:    ;;
-; V1-NEXT:    sbfd $r0 = $r1, $r0
+; V1-NEXT:    sbfuwd $r0 = $r1, $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -234,7 +234,7 @@ define i64 @f5imm(i32 %b){
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    sllw $r0 = $r0, 5
 ; V1-NEXT:    ;;
-; V1-NEXT:    sbfd $r0 = $r0, 0x1e240
+; V1-NEXT:    sbfuwd $r0 = $r0, 0x1e240
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -255,7 +255,7 @@ define i64 @f6imm(i32 %b){
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    sllw $r0 = $r0, 5
 ; V1-NEXT:    ;;
-; V1-NEXT:    sbfd $r0 = $r0, 0x1e240
+; V1-NEXT:    sbfuwd $r0 = $r0, 0x1e240
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -276,9 +276,7 @@ define i64 @f7imm(i32 %b){
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    sllw $r0 = $r0, 5
 ; V1-NEXT:    ;;
-; V1-NEXT:    sxwd $r0 = $r0
-; V1-NEXT:    ;;
-; V1-NEXT:    sbfd $r0 = $r0, 0xffffffffffffa460
+; V1-NEXT:    sbfwd $r0 = $r0, 0xffffa460
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;

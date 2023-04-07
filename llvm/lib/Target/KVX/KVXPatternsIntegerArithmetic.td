@@ -1837,13 +1837,19 @@ def : Pat<(v2i32(usubsat (v2i32(is_imm_vec_kvx_splat32_at:$IMM)), v2i32:$v0) ),
            (SBFUSWPri SingleReg:$v0, (i32(trunc_imm_32 (i32(build_imm_vec $IMM)))), splat32_at)>, Requires<[IsV2]>;
 def : Pat<(v2i32(usubsat v2i32:$v1, v2i32:$v0)), (SBFUSWPrr SingleReg:$v0, SingleReg:$v1)>, Requires<[IsV2]>;
 
-// SBFUWD ri variants are not usefull, as SBFD is cheaper
-// FIXME: In most cases we don't produce a zxwd,
-// so using SBFUWD is worse than using a SBFD
-// def : Pat<(i64 (sub i64:$d, (zext i32:$w))), (SBFUWDrr SingleReg:$d, SingleReg:$w)>;
+// SBFUWD
+def : Pat<(i64 (sub i64:$lhs, (zext i32:$rhs))),
+          (SBFUWDrr SingleReg:$rhs, SingleReg:$lhs)>;
 
-// SBFWD ri variants are not usefull, as SBFD is cheaper
-def : Pat<(i64 (sub i64:$d, (sext i32:$w))), (SBFWDrr SingleReg:$w, SingleReg:$d)>;
+def : Pat<(i64 (sub Wrapped64W:$lhs, (zext i32:$rhs))),
+          (SBFUWDri SingleReg:$rhs, (trunc_imm_32 $lhs))>;
+
+// SBFWD
+def : Pat<(i64 (sub i64:$lhs, (sext i32:$rhs))),
+          (SBFWDrr SingleReg:$rhs, SingleReg:$lhs)>;
+
+def : Pat<(i64 (sub Wrapped64W:$lhs, (sext i32:$rhs))),
+          (SBFWDri SingleReg:$rhs, (trunc_imm_32 $lhs))>;
 
 // SBFW
 defm : ZEFPat<(sub i32:$rs1, i32:$rs2), (SBFWrr SingleReg:$rs2, SingleReg:$rs1)>;

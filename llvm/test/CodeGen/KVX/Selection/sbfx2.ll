@@ -211,7 +211,7 @@ define i64 @f6imm(i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sllw $r0 = $r0, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfd $r0 = $r0, 0x1e240
+; CHECK-NEXT:    sbfuwd $r0 = $r0, 0x1e240
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

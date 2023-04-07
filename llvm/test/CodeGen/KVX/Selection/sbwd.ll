@@ -21,9 +21,7 @@ define i64 @SBFWD(i64 %0, i32 %1) {
 define i64 @SBFUWD(i64 %0, i32 %1) {
 ; CHECK-LABEL: SBFUWD:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfd $r0 = $r1, $r0
+; CHECK-NEXT:    sbfuwd $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = zext i32 %1 to i64
