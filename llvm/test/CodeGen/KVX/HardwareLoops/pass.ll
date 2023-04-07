@@ -125,10 +125,8 @@ define void @imm_nonzero_reg_negative_bump(i32* nocapture %x, i32 %n){
 ; CHECK-NEXT:    cb.odd $r2 ? .LBB3_3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %for.body.preheader
-; CHECK-NEXT:    sxwd $r1 = $r1
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r1 = 99
-; CHECK-NEXT:    sbfd $r2 = $r1, 100
+; CHECK-NEXT:    sbfwd $r2 = $r1, 100
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r2, .__LOOPDO_3_END_
 ; CHECK-NEXT:    ;;
@@ -209,10 +207,8 @@ define void @imm_zero_reg_negative_bump(i32* nocapture %x, i32 %n){
 ; CHECK-NEXT:    cb.wgtz $r1 ? .LBB5_3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %for.body.preheader
-; CHECK-NEXT:    sxwd $r1 = $r1
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r1 = 1
-; CHECK-NEXT:    sbfd $r2 = $r1, 1
+; CHECK-NEXT:    sbfwd $r2 = $r1, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r2, .__LOOPDO_5_END_
 ; CHECK-NEXT:    ;;
@@ -302,8 +298,7 @@ define void @reg_imm_nonzero_positive_bump(i32* nocapture %x, i32 %start){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %for.body.preheader
 ; CHECK-NEXT:    sxwd $r1 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfd $r2 = $r1, 100
+; CHECK-NEXT:    sbfwd $r2 = $r1, 100
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r2, .__LOOPDO_7_END_
 ; CHECK-NEXT:    ;;
@@ -344,9 +339,7 @@ define void @reg_imm_zero_positive_bump(i32* nocapture %x, i32 %start){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %for.body.preheader
 ; CHECK-NEXT:    sbfx4wd $r0 = $r1, $r0
-; CHECK-NEXT:    sxwd $r2 = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfd $r2 = $r2, 1
+; CHECK-NEXT:    sbfwd $r2 = $r1, 1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    loopdo $r2, .__LOOPDO_8_END_
 ; CHECK-NEXT:    ;;

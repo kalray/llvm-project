@@ -42,9 +42,9 @@ define void @InitDataSet(i32 %m, i16* nocapture %x, i32 %n, i16* nocapture %h) {
 ; CHECK-NEXT:  .LBB0_5: # %for.body4.preheader
 ; CHECK-NEXT:    zxwd $r6 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    maxud $r0 = $r6, 255
+; CHECK-NEXT:    maxud $r4 = $r6, 255
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfd $r0 = $r6, $r0
+; CHECK-NEXT:    sbfuwd $r0 = $r0, $r4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r4 = $r0, 1
 ; CHECK-NEXT:    ;;
@@ -129,7 +129,7 @@ define void @InitDataSet(i32 %m, i16* nocapture %x, i32 %n, i16* nocapture %h) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    maxud $r0 = $r4, 15
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfd $r0 = $r4, $r0
+; CHECK-NEXT:    sbfuwd $r0 = $r2, $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r1 = $r0, 1
 ; CHECK-NEXT:    ;;
