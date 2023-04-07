@@ -548,15 +548,25 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
                   MVT::v2i32, MVT::v4i8, MVT::v4i16, MVT::v8i8})
     setOperationAction(ISD::BITREVERSE, VT, Legal);
 
-  for (auto VT : {MVT::v2i8, MVT::v4i8, MVT::v8i8, MVT::v2i16, MVT::v4i16,
-                  MVT::v4i32, MVT::v2i64, MVT::v4i64}) {
-    setOperationAction(ISD::CTTZ, VT, Expand);
-    setOperationAction(ISD::CTLZ, VT, Expand);
-    setOperationAction(ISD::CTPOP, VT, Expand);
+  for (auto I : {ISD::CTTZ, ISD::CTLZ, ISD::CTPOP}) {
+    // Dag combine will split vectors by half
+    for (auto VT :
+         {MVT::v4i8, MVT::v8i8, MVT::v4i16, MVT::v4i32, MVT::v2i64, MVT::v4i64})
+      setOperationAction(I, VT, Expand);
+
+    // These are native types
+    for (auto VT : {MVT::v2i32, MVT::i64, MVT::i32})
+      setOperationAction(I, VT, Legal);
+
+    // CTPOP should be promoted
+    // CTTZ and CTLZ have patterns as the promotion/extension are
+    // produce inefficient code.
+    for (auto VT : {MVT::v2i8, MVT::v2i16})
+      if (I == ISD::CTPOP)
+        setOperationPromotedToType(I, VT, MVT::v2i32);
+      else
+        setOperationAction(I, VT, Legal);
   }
-  setOperationAction(ISD::CTLZ, MVT::v4i32, Legal);
-  setOperationAction(ISD::CTTZ, MVT::v4i32, Legal);
-  setOperationAction(ISD::CTPOP, MVT::v4i32, Legal);
 
   for (auto VT :
        {MVT::v4i64, MVT::v2i64, MVT::v4i32, MVT::v8i8, MVT::v2i8, MVT::v4i8}) {
@@ -645,10 +655,6 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::DYNAMIC_STACKALLOC, MVT::i64, Expand);
 
   setOperationAction(ISD::BR_JT, MVT::Other, Expand);
-
-  for (auto VT : { MVT::i32, MVT::i64 }) {
-    setOperationAction(ISD::CTPOP, VT, Legal);
-  }
 
   for (auto VT :
        {MVT::f16, MVT::f32, MVT::f64, MVT::v2f16, MVT::v2f32, MVT::v4f16}) {
@@ -788,8 +794,8 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     setLoadExtAction(ISD::EXTLOAD, VT, MVT::f64, Expand);
   }
 
-  for (auto I : {ISD::FP_TO_SINT, ISD::FP_TO_UINT, ISD::SINT_TO_FP,
-                 ISD::UINT_TO_FP, ISD::CTPOP}) {
+  for (auto I :
+       {ISD::FP_TO_SINT, ISD::FP_TO_UINT, ISD::SINT_TO_FP, ISD::UINT_TO_FP}) {
     setOperationPromotedToType(I, MVT::v2i16, MVT::v2i32);
     setOperationPromotedToType(I, MVT::v4i16, MVT::v4i32);
   }
@@ -903,9 +909,10 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   if (TM.Options.ExceptionModel == ExceptionHandling::SjLj)
     setLibcallName(RTLIB::UNWIND_RESUME, "_Unwind_SjLj_Resume");
 
-  for (auto I : {ISD::FABS, ISD::FADD, ISD::FCOPYSIGN, ISD::FMA, ISD::FMUL,
-                 ISD::FSUB, ISD::FNEG, ISD::INTRINSIC_WO_CHAIN, ISD::LOAD,
-                 ISD::MUL, ISD::SRA, ISD::STORE, ISD::ZERO_EXTEND})
+  for (auto I :
+       {ISD::CTLZ, ISD::CTTZ, ISD::CTPOP, ISD::FABS, ISD::FADD, ISD::FCOPYSIGN,
+        ISD::FMA, ISD::FMUL, ISD::FSUB, ISD::FNEG, ISD::INTRINSIC_WO_CHAIN,
+        ISD::LOAD, ISD::MUL, ISD::SRA, ISD::STORE, ISD::ZERO_EXTEND})
     setTargetDAGCombine(I);
 }
 
@@ -3127,39 +3134,51 @@ cv2Intrinsic(unsigned KvxOpcode, SDNode *N, SelectionDAG &Dag,
 
 static SDValue combineSplit(SDNode * N, TargetLowering::DAGCombinerInfo & DCI,
                               SelectionDAG & Dag) {
-    auto VT = N->getValueType(0);
-    LLVMContext &C = *Dag.getContext();
-    const auto Opc = N->getOpcode();
-    if (!VT.isVector())
-      return SDValue();
+  auto VT = N->getValueType(0);
+  LLVMContext &C = *Dag.getContext();
+  const auto Opc = N->getOpcode();
+  if (!VT.isVector() || VT.getVectorMinNumElements() == 1 ||
+      !isPowerOf2_32(VT.getVectorMinNumElements()))
+    return SDValue();
 
-    auto &TLI = Dag.getTargetLoweringInfo();
-    if (TLI.isOperationLegalOrCustom(Opc, VT))
-      return SDValue();
+  auto &TLI = Dag.getTargetLoweringInfo();
+  if (TLI.getOperationAction(Opc, VT) != TargetLowering::Expand)
+    return SDValue();
 
-    auto HalfVT = VT.getHalfNumVectorElementsVT(C);
-    if (!TLI.isOperationLegalOrCustom(Opc, HalfVT))
-      return SDValue();
+  auto HalfVT = VT.getVectorMinNumElements() == 2
+                    ? VT.getScalarType()
+                    : VT.getHalfNumVectorElementsVT(C);
+  SmallVector<SDValue, 4> ArgsLo, ArgsHi;
+  SDLoc DL(N);
 
-    SmallVector<SDValue, 4> ArgsLo, ArgsHi;
-    SDLoc DL(N);
-
-    for (auto &Op : N->ops()) {
-      auto OpVT = Op.getValueType();
-      if (OpVT.isVector()) {
-        auto OpHalfVT = OpVT.getHalfNumVectorElementsVT(C);
-        auto LoHi = Dag.SplitVector(Op, DL, OpHalfVT, OpHalfVT);
-        ArgsLo.push_back(LoHi.first);
-        ArgsHi.push_back(LoHi.second);
+  for (auto &Op : N->ops()) {
+    auto OpVT = Op.getValueType();
+    if (OpVT.isVector()) {
+      if (OpVT.getVectorMinNumElements() == 2) {
+        // Argument is broken into scalars
+        Dag.ExtractVectorElements(Op, ArgsLo, 0, 1, OpVT.getScalarType());
+        Dag.ExtractVectorElements(Op, ArgsHi, 1, 1, OpVT.getScalarType());
         continue;
       }
-      ArgsLo.push_back(Op);
-      ArgsHi.push_back(Op);
+      // Argument is split by half sized vectors
+      auto OpHalfVT = OpVT.getHalfNumVectorElementsVT(C);
+      auto LoHi = Dag.SplitVector(Op, DL, OpHalfVT, OpHalfVT);
+      ArgsLo.push_back(LoHi.first);
+      ArgsHi.push_back(LoHi.second);
+      continue;
     }
-    auto Lo = Dag.getNode(Opc, DL, HalfVT, ArgsLo);
-    auto Hi = Dag.getNode(Opc, DL, HalfVT, ArgsHi);
-    return Dag.getNode(ISD::CONCAT_VECTORS, DL, VT, Lo, Hi);
+    // Argument is a scalar, replicate it
+    ArgsLo.push_back(Op);
+    ArgsHi.push_back(Op);
   }
+  auto Lo = Dag.getNode(Opc, DL, HalfVT, ArgsLo);
+  auto Hi = Dag.getNode(Opc, DL, HalfVT, ArgsHi);
+
+  if (!HalfVT.isVector())
+    return Dag.getNode(ISD::BUILD_VECTOR, DL, VT, Lo, Hi);
+
+  return Dag.getNode(ISD::CONCAT_VECTORS, DL, VT, Lo, Hi);
+}
 
 static SDValue combineIntrinsic(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
                                 SelectionDAG &Dag) {
@@ -3472,15 +3491,18 @@ SDValue KVXTargetLowering::PerformDAGCombine(SDNode *N,
   switch (N->getOpcode()) {
   default:
     break;
-    case ISD::FABS:
-    case ISD::FADD:
-    case ISD::FCOPYSIGN:
-    case ISD::FMA:
-    case ISD::FMUL:
-    case ISD::FNEG:
-    case ISD::FSUB:
-      return combineSplit(N, DCI, DAG);
-    case ISD::INTRINSIC_WO_CHAIN:
+  case ISD::CTLZ:
+  case ISD::CTTZ:
+  case ISD::CTPOP:
+  case ISD::FABS:
+  case ISD::FADD:
+  case ISD::FCOPYSIGN:
+  case ISD::FMA:
+  case ISD::FMUL:
+  case ISD::FNEG:
+  case ISD::FSUB:
+    return combineSplit(N, DCI, DAG);
+  case ISD::INTRINSIC_WO_CHAIN:
     return combineIntrinsic(N, DCI, DAG);
   case ISD::LOAD:
     return combineLoad(N, DCI, DAG);
