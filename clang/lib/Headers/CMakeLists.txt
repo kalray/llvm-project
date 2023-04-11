@@ -157,6 +157,8 @@ set(x86_files
   immintrin.h
   invpcidintrin.h
   keylockerintrin.h
+  kvx_builtins.h
+  kvx_macros.h
   lwpintrin.h
   lzcntintrin.h
   mm3dnow.h
