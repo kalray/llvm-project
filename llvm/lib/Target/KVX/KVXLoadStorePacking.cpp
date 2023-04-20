@@ -106,6 +106,9 @@ static const unsigned StoreOpcodes[] = {KVX::SQri10, KVX::SQri37, KVX::SQri64,
 
 bool KVXLoadStorePackingPass::runOnMachineFunction(MachineFunction &MF) {
 
+  if (skipFunction(MF.getFunction()))
+    return false;
+
   LLVM_DEBUG(dbgs() << "Running on function " << MF.getName() << '\n');
   bool Changed = false;
   MRI = std::addressof(MF.getRegInfo());
