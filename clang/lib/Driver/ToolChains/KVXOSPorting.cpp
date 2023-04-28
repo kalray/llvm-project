@@ -116,6 +116,7 @@ Tool *KVXOSPorting::buildLinker() const {
 
 void KVXOSPorting::AddClangSystemIncludeArgs(const ArgList &DriverArgs,
                                              ArgStringList &CC1Args) const {
+  CC1Args.push_back("-ftls-model=local-exec");
   if (DriverArgs.hasArg(options::OPT_nostdinc) ||
       DriverArgs.hasArg(options::OPT_nostdlibinc))
     return;
