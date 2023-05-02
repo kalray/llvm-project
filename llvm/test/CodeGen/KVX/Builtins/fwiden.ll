@@ -33,8 +33,8 @@ declare <2 x float> @llvm.kvx.fwiden.v2f32(<2 x half>, i32)
 define <4 x float> @fwidenhwq(<4 x half> %0) {
 ; ALL-LABEL: fwidenhwq:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    fwidenmhwp.s $r0 = $r0
-; ALL-NEXT:    fwidenlhwp.s $r1 = $r0
+; ALL-NEXT:    fwidenlhwp.s $r0 = $r0
+; ALL-NEXT:    fwidenmhwp.s $r1 = $r0
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
   %2 = tail call <4 x float> @llvm.kvx.fwiden.v4f32(<4 x half> %0, i32 1)
@@ -46,12 +46,12 @@ declare <4 x float> @llvm.kvx.fwiden.v4f32(<4 x half>, i32)
 define <8 x float> @fwidenhwo(<8 x half> %0) {
 ; ALL-LABEL: fwidenhwo:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    fwidenmhwp.s $r0 = $r0
-; ALL-NEXT:    fwidenlhwp.s $r5 = $r0
+; ALL-NEXT:    fwidenlhwp.s $r0 = $r0
+; ALL-NEXT:    fwidenmhwp.s $r5 = $r0
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    copyd $r1 = $r5
-; ALL-NEXT:    fwidenmhwp.s $r2 = $r1
-; ALL-NEXT:    fwidenlhwp.s $r3 = $r1
+; ALL-NEXT:    fwidenlhwp.s $r2 = $r1
+; ALL-NEXT:    fwidenmhwp.s $r3 = $r1
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
   %2 = shufflevector <8 x half> %0, <8 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
@@ -77,8 +77,8 @@ declare double @llvm.kvx.fwiden.f64(float, i32)
 define <2 x double> @fwidenwdp(<2 x float> %0) {
 ; ALL-LABEL: fwidenwdp:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    fwidenmwd.s $r0 = $r0
-; ALL-NEXT:    fwidenlwd.s $r1 = $r0
+; ALL-NEXT:    fwidenlwd.s $r0 = $r0
+; ALL-NEXT:    fwidenmwd.s $r1 = $r0
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
   %2 = tail call <2 x double> @llvm.kvx.fwiden.v2f64(<2 x float> %0, i32 1)
@@ -90,12 +90,12 @@ declare <2 x double> @llvm.kvx.fwiden.v2f64(<2 x float>, i32)
 define <4 x double> @fwidenwdq(<4 x float> %0) {
 ; ALL-LABEL: fwidenwdq:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    fwidenmwd.s $r0 = $r0
-; ALL-NEXT:    fwidenlwd.s $r5 = $r0
+; ALL-NEXT:    fwidenlwd.s $r0 = $r0
+; ALL-NEXT:    fwidenmwd.s $r5 = $r0
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    copyd $r1 = $r5
-; ALL-NEXT:    fwidenmwd.s $r2 = $r1
-; ALL-NEXT:    fwidenlwd.s $r3 = $r1
+; ALL-NEXT:    fwidenlwd.s $r2 = $r1
+; ALL-NEXT:    fwidenmwd.s $r3 = $r1
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
   %2 = shufflevector <4 x float> %0, <4 x float> undef, <2 x i32> <i32 0, i32 1>
