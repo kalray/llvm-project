@@ -1755,6 +1755,9 @@ void KVXTargetInfo::adjust(LangOptions &Opts) {
     MaxVectorAlign = 0;
 }
 
+#define VECTOR_TYPE(base, count)                                               \
+  "" #base " __attribute__((vector_size(" #count " * sizeof(" #base "))))"
+
 void KVXTargetInfo::getTargetDefines(const LangOptions &Opts,
                                      MacroBuilder &Builder) const {
   Builder.defineMacro("__ELF__", "1");
@@ -1777,6 +1780,39 @@ void KVXTargetInfo::getTargetDefines(const LangOptions &Opts,
   Builder.defineMacro("__bypass", "__attribute__((address_space(256)))");
   Builder.defineMacro("__preload", "__attribute__((address_space(257)))");
   Builder.defineMacro("__speculate", "__attribute__((address_space(258)))");
+
+  Builder.defineMacro("__kvx_v8qi", VECTOR_TYPE(char, 8));
+  Builder.defineMacro("__kvx_v16qi", VECTOR_TYPE(char, 16));
+  Builder.defineMacro("__kvx_v32qi", VECTOR_TYPE(char, 32));
+  Builder.defineMacro("__kvx_v64qi", VECTOR_TYPE(char, 64));
+
+  Builder.defineMacro("__kvx_v4hi", VECTOR_TYPE(short, 4));
+  Builder.defineMacro("__kvx_v8hi", VECTOR_TYPE(short, 8));
+  Builder.defineMacro("__kvx_v16hi", VECTOR_TYPE(short, 16));
+  Builder.defineMacro("__kvx_v32hi", VECTOR_TYPE(short, 32));
+
+  Builder.defineMacro("__kvx_v2si", VECTOR_TYPE(int, 2));
+  Builder.defineMacro("__kvx_v4si", VECTOR_TYPE(int, 4));
+  Builder.defineMacro("__kvx_v8si", VECTOR_TYPE(int, 8));
+  Builder.defineMacro("__kvx_v16si", VECTOR_TYPE(int, 16));
+
+  Builder.defineMacro("__kvx_v2di", VECTOR_TYPE(long, 2));
+  Builder.defineMacro("__kvx_v4di", VECTOR_TYPE(long, 4));
+  Builder.defineMacro("__kvx_v8di", VECTOR_TYPE(long, 8));
+
+  Builder.defineMacro("__kvx_v4hf", VECTOR_TYPE(_Float16, 4));
+  Builder.defineMacro("__kvx_v8hf", VECTOR_TYPE(_Float16, 8));
+  Builder.defineMacro("__kvx_v16hf", VECTOR_TYPE(_Float16, 16));
+  Builder.defineMacro("__kvx_v32hf", VECTOR_TYPE(_Float16, 32));
+
+  Builder.defineMacro("__kvx_v2sf", VECTOR_TYPE(float, 2));
+  Builder.defineMacro("__kvx_v4sf", VECTOR_TYPE(float, 4));
+  Builder.defineMacro("__kvx_v8sf", VECTOR_TYPE(float, 8));
+  Builder.defineMacro("__kvx_v16sf", VECTOR_TYPE(float, 16));
+
+  Builder.defineMacro("__kvx_v2df", VECTOR_TYPE(double, 2));
+  Builder.defineMacro("__kvx_v4df", VECTOR_TYPE(double, 4));
+  Builder.defineMacro("__kvx_v8df", VECTOR_TYPE(double, 8));
 }
 
 const Builtin::Info KVXTargetInfo::BuiltinInfo[] = {
