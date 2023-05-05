@@ -1,4 +1,4 @@
-// RUN: %clang_cc1 -x c /dev/null -E -dM -triple=kvx-cos | FileCheck %s
+// RUN: %clang_cc1 -x c /dev/null -E -dM -triple=kvx-kalray-cos | FileCheck %s
 
 // CHECK: #define __CHAR16_TYPE__ unsigned short
 // CHECK: #define __CHAR32_TYPE__ unsigned int
@@ -34,3 +34,4 @@
 // CHECK: #define __UINT_LEAST8_TYPE__ unsigned char
 // CHECK: #define __WCHAR_TYPE__ int
 // CHECK: #define __WINT_TYPE__ unsigned int
+// KVX: #define __BIGGEST_ALIGNMENT__ 32

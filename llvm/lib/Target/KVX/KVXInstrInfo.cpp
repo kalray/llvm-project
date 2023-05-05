@@ -24,9 +24,9 @@
 #include "llvm/CodeGen/MachineRegisterInfo.h"
 #include "llvm/CodeGen/RegisterScavenging.h"
 #include "llvm/MC/MCDwarf.h"
+#include "llvm/MC/TargetRegistry.h"
 #include "llvm/Support/Debug.h"
 #include "llvm/Support/ErrorHandling.h"
-#include "llvm/Support/TargetRegistry.h"
 
 using namespace llvm;
 #define DEBUG_TYPE "KVX-isel"
@@ -1423,11 +1423,11 @@ bool KVXInstrInfo::PredicateInstruction(MachineInstr &MI,
     // TODO: Allow predicating register copies into cmoves.
 
     // Remove doScale argument
-    MI.RemoveOperand(MI.mayLoad() ? 4 : 3);
+    MI.removeOperand(MI.mayLoad() ? 4 : 3);
     // Remove zero offset operand
-    MI.RemoveOperand(MI.mayLoad() ? 1 : 0);
+    MI.removeOperand(MI.mayLoad() ? 1 : 0);
   } else if (MustRemoveOffset)
-    MI.RemoveOperand(MI.mayLoad() ? 1 : 0);
+    MI.removeOperand(MI.mayLoad() ? 1 : 0);
 
   MI.setDesc(get(NewOpcode));
 
@@ -1594,19 +1594,17 @@ bool KVXInstrInfo::isBranchOffsetInRange(unsigned BranchOpc,
   }
 }
 
-unsigned KVXInstrInfo::insertIndirectBranch(MachineBasicBlock &MBB,
-                                            MachineBasicBlock &NewDestBB,
-                                            const DebugLoc &DL,
-                                            int64_t BrOffset,
-                                            RegScavenger *RS) const {
+void KVXInstrInfo::insertIndirectBranch(MachineBasicBlock &MBB,
+                                        MachineBasicBlock &NewDestBB,
+                                        MachineBasicBlock &RestoreBB,
+                                        const DebugLoc &DL, int64_t BrOffset,
+                                        RegScavenger *RS) const {
   Register Reg = findScratchRegister(MBB, true);
   if (!Reg)
-    return 0;
+    return;
 
-  auto Make = BuildMI(&MBB, DL, get(KVX::MAKEi64), Reg).addMBB(&NewDestBB);
-  auto Igoto =
-      BuildMI(&MBB, DL, get(KVX::IGOTO)).addReg(Reg, getKillRegState(true));
-  return Make->getDesc().Size + Igoto->getDesc().Size;
+  BuildMI(&MBB, DL, get(KVX::MAKEi64), Reg).addMBB(&NewDestBB);
+  BuildMI(&MBB, DL, get(KVX::IGOTO)).addReg(Reg, getKillRegState(true));
 }
 
 bool KVXInstrInfo::isSafeToMoveRegClassDefs(

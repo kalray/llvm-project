@@ -1933,7 +1933,7 @@ define <4 x half> @test_copysign_v4f32(<4 x half> %a, <4 x float> %b) #0 {
 ; CHECK-NEXT:    copyd $r2 = $r1
 ; CHECK-NEXT:    copyd $r3 = $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    fnarrowwhq.rna.s $r1 = $r2r3
+; CHECK-NEXT:    fnarrowwhq $r1 = $r2r3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    andd.@ $r1 = $r1, 0x80008000
 ; CHECK-NEXT:    ;;
@@ -1949,21 +1949,21 @@ define <4 x half> @test_copysign_v4f32(<4 x half> %a, <4 x float> %b) #0 {
 define <4 x half> @test_copysign_v4f64(<4 x half> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: test_copysign_v4f64:
 ; CHECK:       # %bb.0:
+; CHECK-NEXT:    copyd $r4 = $r1
 ; CHECK-NEXT:    copyd $r5 = $r2
 ; CHECK-NEXT:    copyd $r6 = $r3
-; CHECK-NEXT:    copyd $r8 = $r1
+; CHECK-NEXT:    copyd $r7 = $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srld $r1 = $r8, 63
-; CHECK-NEXT:    srld $r2 = $r5, 63
+; CHECK-NEXT:    fabshq $r0 = $r0
+; CHECK-NEXT:    fnarrowdwp $r3 = $r6r7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 15, 15
+; CHECK-NEXT:    fnarrowdwp $r2 = $r4r5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 31, 31
-; CHECK-NEXT:    srld $r2 = $r6, 63
+; CHECK-NEXT:    fnarrowwhq $r1 = $r2r3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r2, 47, 47
+; CHECK-NEXT:    andd.@ $r1 = $r1, 0x80008000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r1, 63, 63
+; CHECK-NEXT:    ord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %tb = fptrunc <4 x double> %b to <4 x half>

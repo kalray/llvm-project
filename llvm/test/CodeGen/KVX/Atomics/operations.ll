@@ -187,10 +187,8 @@ define i8 @atomic_test_and_set(i8* %ptr) {
 ; CV1-NEXT:    cb.even $r4 ? .LBB5_1
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:  .LBB5_3:
-; CV1-NEXT:    zxbd $r0 = $r2
+; CV1-NEXT:    compw.ne $r0 = $r2, 0
 ; CV1-NEXT:    fence
-; CV1-NEXT:    ;;
-; CV1-NEXT:    compw.ne $r0 = $r0, 0
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;;
 ;
@@ -220,10 +218,8 @@ define i8 @atomic_test_and_set(i8* %ptr) {
 ; CV2-NEXT:    cb.even $r4 ? .LBB5_1
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:  .LBB5_3:
-; CV2-NEXT:    zxbd $r0 = $r2
+; CV2-NEXT:    compw.ne $r0 = $r2, 0
 ; CV2-NEXT:    fence
-; CV2-NEXT:    ;;
-; CV2-NEXT:    compw.ne $r0 = $r0, 0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
   %res = atomicrmw xchg i8* %ptr, i8 1 seq_cst

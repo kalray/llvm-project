@@ -167,6 +167,16 @@ ASM_FUNCTION_WASM32_RE = re.compile(
     r'^\s*(\.Lfunc_end[0-9]+:\n|end_function)',
     flags=(re.M | re.S))
 
+ASM_FUNCTION_KVX_RE = re.compile(
+   r'^[ \t]*(?P<func>[A-z0-9][^:]*):[^\n]*\n' # Obtain function name
+   r'([ \t]+.cfi_startproc\n)?'  # drop cfi noise
+   r'(?P<body>.*?)\n' # Body of the function
+   r'.Lfunc_end[0-9]+:', # .Lfunc_end0: or # -- End function
+   flags=(re.M | re.S))
+
+SCRUB_LOOP_COMMENT_RE = re.compile(
+    r'# =>This Inner Loop Header:.*|# in Loop:.*', flags=re.M)
+
 ASM_FUNCTION_VE_RE = re.compile(
     r'^_?(?P<func>[^:]+):[ \t]*#+[ \t]*@(?P=func)\n'
     r'(?P<body>^##?[ \t]+[^:]+:.*?)\s*'
@@ -210,16 +220,6 @@ ASM_FUNCTION_LOONGARCH_RE = re.compile(
     r'(?P<body>^##?[ \t]+[^:]+:.*?)\s*'
     r'.Lfunc_end[0-9]+:\n',
     flags=(re.M | re.S))
-
-ASM_FUNCTION_KVX_RE = re.compile(
-   r'^[ \t]*(?P<func>[A-z0-9][^:]*):[^\n]*\n' # Obtain function name
-   r'([ \t]+.cfi_startproc\n)?'  # drop cfi noise
-   r'(?P<body>.*?)\n' # Body of the function
-   r'.Lfunc_end[0-9]+:', # .Lfunc_end0: or # -- End function
-   flags=(re.M | re.S))
-
-SCRUB_LOOP_COMMENT_RE = re.compile(
-    r'# =>This Inner Loop Header:.*|# in Loop:.*', flags=re.M)
 
 SCRUB_X86_SHUFFLES_RE = (
     re.compile(
@@ -501,12 +501,12 @@ def get_run_handler(triple):
       'sparc': (scrub_asm_sparc, ASM_FUNCTION_SPARC_RE),
       's390x': (scrub_asm_systemz, ASM_FUNCTION_SYSTEMZ_RE),
       'wasm32': (scrub_asm_wasm32, ASM_FUNCTION_WASM32_RE),
+      'kvx'  : (scrub_asm_kvx, ASM_FUNCTION_KVX_RE),
       've': (scrub_asm_ve, ASM_FUNCTION_VE_RE),
       'csky': (scrub_asm_csky, ASM_FUNCTION_CSKY_RE),
       'nvptx': (scrub_asm_nvptx, ASM_FUNCTION_NVPTX_RE),
       'loongarch32': (scrub_asm_loongarch, ASM_FUNCTION_LOONGARCH_RE),
-      'loongarch64': (scrub_asm_loongarch, ASM_FUNCTION_LOONGARCH_RE),
-      'kvx'  : (scrub_asm_kvx, ASM_FUNCTION_KVX_RE),
+      'loongarch64': (scrub_asm_loongarch, ASM_FUNCTION_LOONGARCH_RE)
   }
   handler = None
   best_prefix = ''

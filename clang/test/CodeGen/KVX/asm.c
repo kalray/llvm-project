@@ -8,9 +8,9 @@ typedef long __attribute__((__vector_size__(128))) v16i64_t;
 
 // CHECK-LABEL: @asm_clobber_single_none(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[VECEXT:%.*]] = extractelement <2 x i64> [[V:%.*]], i32 0
-// CHECK-NEXT:    [[VECEXT1:%.*]] = extractelement <2 x i64> [[V]], i32 1
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x i64> asm sideeffect "xmovetq $0 = $1, $2", "=r,r,r,~{$r2}"(i64 [[VECEXT]], i64 [[VECEXT1]]) [[ATTR3:#.*]], !srcloc !2
+// CHECK-NEXT:    [[VECEXT:%.*]] = extractelement <2 x i64> [[V:%.*]], i64 0
+// CHECK-NEXT:    [[VECEXT1:%.*]] = extractelement <2 x i64> [[V]], i64 1
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x i64> asm sideeffect "xmovetq $0 = $1, $2", "=r,r,r,~{$r2}"(i64 [[VECEXT]], i64 [[VECEXT1]]) #[[ATTR3:[0-9]+]], !srcloc !2
 // CHECK-NEXT:    ret i64 [[A:%.*]]
 //
 long asm_clobber_single_none(v2i64_t v, long A) {
@@ -24,7 +24,7 @@ long asm_clobber_single_none(v2i64_t v, long A) {
 }
 // CHECK-LABEL: @asm_clobber_single_single(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x i64> asm sideeffect "xmovetq $0 = $1, $1", "=r,r,~{$r0}"(i64 [[A:%.*]]) [[ATTR3]], !srcloc !3
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x i64> asm sideeffect "xmovetq $0 = $1, $1", "=r,r,~{$r0}"(i64 [[A:%.*]]) #[[ATTR3]], !srcloc !3
 // CHECK-NEXT:    ret i64 [[A]]
 //
 long asm_clobber_single_single(long A) {
@@ -39,8 +39,8 @@ long asm_clobber_single_single(long A) {
 
 // CHECK-LABEL: @asm_clobber_single_pair(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    tail call void asm sideeffect "", "r,~{$r0r1}"(i8* [[A:%.*]]) [[ATTR3]], !srcloc !4
-// CHECK-NEXT:    ret i8* [[A]]
+// CHECK-NEXT:    tail call void asm sideeffect "", "r,~{$r0r1}"(ptr [[A:%.*]]) #[[ATTR3]], !srcloc !4
+// CHECK-NEXT:    ret ptr [[A]]
 //
 void *asm_clobber_single_pair(void *A) {
   __asm__ volatile(""
@@ -52,8 +52,8 @@ void *asm_clobber_single_pair(void *A) {
 
 // CHECK-LABEL: @asm_clobber_single_quad(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    tail call void asm sideeffect "copyd $$r0 = $0", "r,~{$r0r1r2r3}"(i8* [[B:%.*]]) [[ATTR3]], !srcloc !5
-// CHECK-NEXT:    ret i8* [[C:%.*]]
+// CHECK-NEXT:    tail call void asm sideeffect "copyd $$r0 = $0", "r,~{$r0r1r2r3}"(ptr [[B:%.*]]) #[[ATTR3]], !srcloc !5
+// CHECK-NEXT:    ret ptr [[C:%.*]]
 //
 void *asm_clobber_single_quad(void *A, void *B, void *C) {
   __asm__ volatile("copyd $r0 = %0"
@@ -65,7 +65,7 @@ void *asm_clobber_single_quad(void *A, void *B, void *C) {
 
 // CHECK-LABEL: @asm_clobber_double_single(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    tail call void asm sideeffect "", "r,~{$r1}"(<2 x i64> [[A:%.*]]) [[ATTR3]], !srcloc !6
+// CHECK-NEXT:    tail call void asm sideeffect "", "r,~{$r1}"(<2 x i64> [[A:%.*]]) #[[ATTR3]], !srcloc !6
 // CHECK-NEXT:    ret <2 x i64> [[A]]
 //
 v2i64_t asm_clobber_double_single(v2i64_t a) {
@@ -78,7 +78,7 @@ v2i64_t asm_clobber_double_single(v2i64_t a) {
 
 // CHECK-LABEL: @asm_clobber_double_double(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    tail call void asm sideeffect "", "~{$r0r1}"() [[ATTR3]], !srcloc !7
+// CHECK-NEXT:    tail call void asm sideeffect "", "~{$r0r1}"() #[[ATTR3]], !srcloc !7
 // CHECK-NEXT:    ret <2 x i64> [[A:%.*]]
 //
 v2i64_t asm_clobber_double_double(v2i64_t a) {
@@ -92,7 +92,7 @@ v2i64_t asm_clobber_double_double(v2i64_t a) {
 
 // CHECK-LABEL: @asm_clobber_double_quad(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    tail call void asm sideeffect "", "~{$r0r1r2r3}"() [[ATTR3]], !srcloc !8
+// CHECK-NEXT:    tail call void asm sideeffect "", "~{$r0r1r2r3}"() #[[ATTR3]], !srcloc !8
 // CHECK-NEXT:    ret <2 x i64> [[A:%.*]]
 //
 v2i64_t asm_clobber_double_quad(v2i64_t a) {
@@ -106,11 +106,11 @@ v2i64_t asm_clobber_double_quad(v2i64_t a) {
 
 // CHECK-LABEL: @asm_clobber_multiple_quad(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    tail call void asm sideeffect "", "~{$r0r1r2r3}"() [[ATTR3]], !srcloc !9
-// CHECK-NEXT:    [[VECEXT:%.*]] = extractelement <2 x i64> [[B:%.*]], i32 0
-// CHECK-NEXT:    [[VECEXT1:%.*]] = extractelement <2 x i64> [[B]], i32 1
+// CHECK-NEXT:    tail call void asm sideeffect "", "~{$r0r1r2r3}"() #[[ATTR3]], !srcloc !9
+// CHECK-NEXT:    [[VECEXT:%.*]] = extractelement <2 x i64> [[B:%.*]], i64 0
+// CHECK-NEXT:    [[VECEXT1:%.*]] = extractelement <2 x i64> [[B]], i64 1
 // CHECK-NEXT:    [[ADD:%.*]] = add nsw i64 [[VECEXT]], [[VECEXT1]]
-// CHECK-NEXT:    [[VECEXT2:%.*]] = extractelement <4 x i64> [[C:%.*]], i32 0
+// CHECK-NEXT:    [[VECEXT2:%.*]] = extractelement <4 x i64> [[C:%.*]], i64 0
 // CHECK-NEXT:    [[ADD3:%.*]] = add nsw i64 [[ADD]], [[VECEXT2]]
 // CHECK-NEXT:    [[CONV:%.*]] = sitofp i64 [[ADD3]] to float
 // CHECK-NEXT:    [[ADD4:%.*]] = fadd float [[CONV]], [[A:%.*]]
@@ -128,7 +128,7 @@ float asm_clobber_multiple_quad(float a, v2i64_t b, v4i64_t c) {
 
 // CHECK-LABEL: @asm_clobber_quad_single(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    tail call void asm sideeffect "", "~{$r0}"() [[ATTR3]], !srcloc !10
+// CHECK-NEXT:    tail call void asm sideeffect "", "~{$r0}"() #[[ATTR3]], !srcloc !10
 // CHECK-NEXT:    ret void
 //
 void asm_clobber_quad_single(v4i64_t a) {
@@ -141,7 +141,7 @@ void asm_clobber_quad_single(v4i64_t a) {
 
 // CHECK-LABEL: @asm_clobber_quad_double(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    tail call void asm sideeffect "", "r"(<4 x i64> [[A:%.*]]) [[ATTR3]], !srcloc !11
+// CHECK-NEXT:    tail call void asm sideeffect "", "r"(<4 x i64> [[A:%.*]]) #[[ATTR3]], !srcloc !11
 // CHECK-NEXT:    ret <4 x i64> [[A]]
 //
 v4i64_t asm_clobber_quad_double(v4i64_t a) {
@@ -154,7 +154,7 @@ v4i64_t asm_clobber_quad_double(v4i64_t a) {
 
 // CHECK-LABEL: @asm_clobber_quad_quad(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    tail call void asm sideeffect "", "~{$r0r1r2r3}"() [[ATTR3]], !srcloc !12
+// CHECK-NEXT:    tail call void asm sideeffect "", "~{$r0r1r2r3}"() #[[ATTR3]], !srcloc !12
 // CHECK-NEXT:    ret <4 x i64> [[A:%.*]]
 //
 v4i64_t asm_clobber_quad_quad(v4i64_t a) {
@@ -167,7 +167,7 @@ v4i64_t asm_clobber_quad_quad(v4i64_t a) {
 
 // CHECK-LABEL: @asm_clobber_quad_quad_use(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    tail call void asm sideeffect "", "~{$r0},~{$r2r3}"() [[ATTR3]], !srcloc !13
+// CHECK-NEXT:    tail call void asm sideeffect "", "~{$r0},~{$r2r3}"() #[[ATTR3]], !srcloc !13
 // CHECK-NEXT:    ret <4 x i64> [[A:%.*]]
 //
 v4i64_t asm_clobber_quad_quad_use(v4i64_t a) {

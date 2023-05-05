@@ -31,9 +31,9 @@ v4f16 fnarrowwhq(v4f32 v) {
 
 // CHECK-LABEL: @fnarrowwho(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <8 x float> [[V:%.*]], <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <8 x float> [[V:%.*]], <8 x float> poison, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x half> @llvm.kvx.fnarrow.v4f16(<4 x float> [[TMP0]], i32 1, i32 1)
-// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <8 x float> [[V]], <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <8 x float> [[V]], <8 x float> poison, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
 // CHECK-NEXT:    [[TMP3:%.*]] = tail call <4 x half> @llvm.kvx.fnarrow.v4f16(<4 x float> [[TMP2]], i32 1, i32 1)
 // CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <4 x half> [[TMP1]], <4 x half> [[TMP3]], <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
 // CHECK-NEXT:    ret <8 x half> [[TMP4]]
@@ -53,9 +53,9 @@ v2f32 fnarrowdwp(v2f64 v) {
 
 // CHECK-LABEL: @fnarrowdwq(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <4 x double> [[V:%.*]], <4 x double> undef, <2 x i32> <i32 0, i32 1>
+// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <4 x double> [[V:%.*]], <4 x double> poison, <2 x i32> <i32 0, i32 1>
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call <2 x float> @llvm.kvx.fnarrow.v2f32(<2 x double> [[TMP0]], i32 1, i32 1)
-// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <4 x double> [[V]], <4 x double> undef, <2 x i32> <i32 2, i32 3>
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <4 x double> [[V]], <4 x double> poison, <2 x i32> <i32 2, i32 3>
 // CHECK-NEXT:    [[TMP3:%.*]] = tail call <2 x float> @llvm.kvx.fnarrow.v2f32(<2 x double> [[TMP2]], i32 1, i32 1)
 // CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <2 x float> [[TMP1]], <2 x float> [[TMP3]], <4 x i32> <i32 0, i32 1, i32 2, i32 3>
 // CHECK-NEXT:    ret <4 x float> [[TMP4]]

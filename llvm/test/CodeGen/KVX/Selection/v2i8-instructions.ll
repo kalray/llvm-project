@@ -504,8 +504,8 @@ define <2 x i8> @test_select_cc(<2 x i8> %a, <2 x i8> %b, <2 x i8> %c, <2 x i8> 
 ; V1-NEXT:    sxlbhq $r2 = $r2
 ; V1-NEXT:    sxlbhq $r3 = $r3
 ; V1-NEXT:    ;;
-; V1-NEXT:    sbmm8 $r0 = $r0, 0x20001
-; V1-NEXT:    sbmm8 $r1 = $r1, 0x20001
+; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    sxlbhq $r1 = $r1
 ; V1-NEXT:    compnhq.lt $r2 = $r2, $r3
 ; V1-NEXT:    ;;
 ; V1-NEXT:    andw $r2 = $r2, 0xff00ff
@@ -1084,6 +1084,7 @@ define <2 x i8> @test_div_neg64(<2 x i8> %a, <2 x i8> %b) #0 {
 ; V1-NEXT:    insf $r2 = $r1, 15, 8
 ; V1-NEXT:    ;;
 ; V1-NEXT:    sxlbhq $r1 = $r2
+; V1-NEXT:    make $r2 = 0x10001
 ; V1-NEXT:    ;;
 ; V1-NEXT:    addhq $r0 = $r0, $r1
 ; V1-NEXT:    ;;
@@ -1100,11 +1101,13 @@ define <2 x i8> @test_div_neg64(<2 x i8> %a, <2 x i8> %b) #0 {
 ; V1-NEXT:    ;;
 ; V1-NEXT:    insf $r0 = $r1, 15, 8
 ; V1-NEXT:    ;;
-; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x20001
 ; V1-NEXT:    ;;
-; V1-NEXT:    neghq $r0 = $r0
+; V1-NEXT:    neghq $r1 = $r0
 ; V1-NEXT:    ;;
-; V1-NEXT:    sbmm8 $r0 = $r0, 0x401
+; V1-NEXT:    cmovehq.even $r2 ? $r1 = $r0
+; V1-NEXT:    ;;
+; V1-NEXT:    sbmm8 $r0 = $r1, 0x401
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;

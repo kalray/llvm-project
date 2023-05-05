@@ -12,7 +12,7 @@ void d1inval() {
 
 // CHECK-LABEL: @_Z7dinvallPc(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    tail call void @llvm.kvx.dinvall(i8* [[P:%.*]])
+// CHECK-NEXT:    tail call void @llvm.kvx.dinvall(ptr [[P:%.*]])
 // CHECK-NEXT:    ret void
 //
 void dinvall(char *p) {
@@ -21,7 +21,7 @@ void dinvall(char *p) {
 
 // CHECK-LABEL: @_Z7dtouchlPc(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    tail call void @llvm.kvx.dtouchl(i8* [[P:%.*]])
+// CHECK-NEXT:    tail call void @llvm.kvx.dtouchl(ptr [[P:%.*]])
 // CHECK-NEXT:    ret void
 //
 void dtouchl(char *p) {
@@ -30,7 +30,7 @@ void dtouchl(char *p) {
 
 // CHECK-LABEL: @_Z6dzerolPc(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    tail call void @llvm.kvx.dzerol(i8* [[P:%.*]])
+// CHECK-NEXT:    tail call void @llvm.kvx.dzerol(ptr [[P:%.*]])
 // CHECK-NEXT:    ret void
 //
 void dzerol(char *p) {
@@ -57,7 +57,7 @@ void i1inval(void) {
 
 // CHECK-LABEL: @_Z8i1invalsPc(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    tail call void @llvm.kvx.i1invals(i8* [[P:%.*]])
+// CHECK-NEXT:    tail call void @llvm.kvx.i1invals(ptr [[P:%.*]])
 // CHECK-NEXT:    ret void
 //
 void i1invals(char *p) {
@@ -111,9 +111,9 @@ void tlbwrite(void) {
 
 // CHECK-LABEL: @_Z3lbzPv(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = addrspacecast i8* [[P:%.*]] to i8 addrspace(256)*
-// CHECK-NEXT:    [[TMP1:%.*]] = load i8, i8 addrspace(256)* [[TMP0]], align 1
-// CHECK-NEXT:    ret i8 [[TMP1]]
+// CHECK-NEXT:    [[TMP0:%.*]] = addrspacecast ptr [[P:%.*]] to ptr addrspace(256)
+// CHECK-NEXT:    [[KVXLD:%.*]] = load i8, ptr addrspace(256) [[TMP0]], align 1
+// CHECK-NEXT:    ret i8 [[KVXLD]]
 //
 unsigned char lbz(void *p) {
   return __builtin_kvx_lbz(p, ".u", false);
@@ -121,9 +121,9 @@ unsigned char lbz(void *p) {
 
 // CHECK-LABEL: @_Z3lbsPv(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = addrspacecast i8* [[P:%.*]] to i8 addrspace(256)*
-// CHECK-NEXT:    [[TMP1:%.*]] = load i8, i8 addrspace(256)* [[TMP0]], align 1
-// CHECK-NEXT:    [[CONV:%.*]] = sext i8 [[TMP1]] to i32
+// CHECK-NEXT:    [[TMP0:%.*]] = addrspacecast ptr [[P:%.*]] to ptr addrspace(256)
+// CHECK-NEXT:    [[KVXLD:%.*]] = load i8, ptr addrspace(256) [[TMP0]], align 1
+// CHECK-NEXT:    [[CONV:%.*]] = sext i8 [[KVXLD]] to i32
 // CHECK-NEXT:    ret i32 [[CONV]]
 //
 int lbs(void *p) {
@@ -132,10 +132,9 @@ int lbs(void *p) {
 
 // CHECK-LABEL: @_Z3lhzPv(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = bitcast i8* [[P:%.*]] to i16*
-// CHECK-NEXT:    [[TMP1:%.*]] = addrspacecast i16* [[TMP0]] to i16 addrspace(256)*
-// CHECK-NEXT:    [[TMP2:%.*]] = load i16, i16 addrspace(256)* [[TMP1]], align 2
-// CHECK-NEXT:    ret i16 [[TMP2]]
+// CHECK-NEXT:    [[TMP0:%.*]] = addrspacecast ptr [[P:%.*]] to ptr addrspace(256)
+// CHECK-NEXT:    [[KVXLD:%.*]] = load i16, ptr addrspace(256) [[TMP0]], align 1
+// CHECK-NEXT:    ret i16 [[KVXLD]]
 //
 unsigned short lhz(void *p) {
   return __builtin_kvx_lhz(p, ".u", false);
@@ -143,11 +142,10 @@ unsigned short lhz(void *p) {
 
 // CHECK-LABEL: @_Z3lhsPv(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = bitcast i8* [[P:%.*]] to i16*
-// CHECK-NEXT:    [[TMP1:%.*]] = addrspacecast i16* [[TMP0]] to i16 addrspace(256)*
-// CHECK-NEXT:    [[TMP2:%.*]] = load i16, i16 addrspace(256)* [[TMP1]], align 2
-// CHECK-NEXT:    [[TMP3:%.*]] = sext i16 [[TMP2]] to i64
-// CHECK-NEXT:    ret i64 [[TMP3]]
+// CHECK-NEXT:    [[TMP0:%.*]] = addrspacecast ptr [[P:%.*]] to ptr addrspace(256)
+// CHECK-NEXT:    [[KVXLD:%.*]] = load i16, ptr addrspace(256) [[TMP0]], align 1
+// CHECK-NEXT:    [[TMP1:%.*]] = sext i16 [[KVXLD]] to i64
+// CHECK-NEXT:    ret i64 [[TMP1]]
 //
 long lhs(void *p) {
   return __builtin_kvx_lhs(p, ".u", false);
@@ -155,10 +153,9 @@ long lhs(void *p) {
 
 // CHECK-LABEL: @_Z3lwzPv(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = bitcast i8* [[P:%.*]] to i32*
-// CHECK-NEXT:    [[TMP1:%.*]] = addrspacecast i32* [[TMP0]] to i32 addrspace(256)*
-// CHECK-NEXT:    [[TMP2:%.*]] = load i32, i32 addrspace(256)* [[TMP1]], align 4
-// CHECK-NEXT:    ret i32 [[TMP2]]
+// CHECK-NEXT:    [[TMP0:%.*]] = addrspacecast ptr [[P:%.*]] to ptr addrspace(256)
+// CHECK-NEXT:    [[KVXLD:%.*]] = load i32, ptr addrspace(256) [[TMP0]], align 1
+// CHECK-NEXT:    ret i32 [[KVXLD]]
 //
 unsigned int lwz(void *p) {
   return __builtin_kvx_lwz(p, ".u", false);
@@ -166,11 +163,10 @@ unsigned int lwz(void *p) {
 
 // CHECK-LABEL: @_Z3lwsPv(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = bitcast i8* [[P:%.*]] to i32*
-// CHECK-NEXT:    [[TMP1:%.*]] = addrspacecast i32* [[TMP0]] to i32 addrspace(256)*
-// CHECK-NEXT:    [[TMP2:%.*]] = load i32, i32 addrspace(256)* [[TMP1]], align 4
-// CHECK-NEXT:    [[TMP3:%.*]] = sext i32 [[TMP2]] to i64
-// CHECK-NEXT:    ret i64 [[TMP3]]
+// CHECK-NEXT:    [[TMP0:%.*]] = addrspacecast ptr [[P:%.*]] to ptr addrspace(256)
+// CHECK-NEXT:    [[KVXLD:%.*]] = load i32, ptr addrspace(256) [[TMP0]], align 1
+// CHECK-NEXT:    [[TMP1:%.*]] = sext i32 [[KVXLD]] to i64
+// CHECK-NEXT:    ret i64 [[TMP1]]
 //
 long lws(void *p) {
   return __builtin_kvx_lws(p, ".u", false);
@@ -178,10 +174,9 @@ long lws(void *p) {
 
 // CHECK-LABEL: @_Z3lwfPv(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = bitcast i8* [[P:%.*]] to float*
-// CHECK-NEXT:    [[TMP1:%.*]] = addrspacecast float* [[TMP0]] to float addrspace(258)*
-// CHECK-NEXT:    [[TMP2:%.*]] = load volatile float, float addrspace(258)* [[TMP1]], align 4
-// CHECK-NEXT:    ret float [[TMP2]]
+// CHECK-NEXT:    [[TMP0:%.*]] = addrspacecast ptr [[P:%.*]] to ptr addrspace(258)
+// CHECK-NEXT:    [[KVXLD:%.*]] = load volatile float, ptr addrspace(258) [[TMP0]], align 1
+// CHECK-NEXT:    ret float [[KVXLD]]
 //
 float lwf(void *p) {
   return __builtin_kvx_lwf(p, ".s", true);
@@ -189,10 +184,9 @@ float lwf(void *p) {
 
 // CHECK-LABEL: @_Z2ldPv(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = bitcast i8* [[P:%.*]] to i64*
-// CHECK-NEXT:    [[TMP1:%.*]] = addrspacecast i64* [[TMP0]] to i64 addrspace(258)*
-// CHECK-NEXT:    [[TMP2:%.*]] = load volatile i64, i64 addrspace(258)* [[TMP1]], align 8
-// CHECK-NEXT:    ret i64 [[TMP2]]
+// CHECK-NEXT:    [[TMP0:%.*]] = addrspacecast ptr [[P:%.*]] to ptr addrspace(258)
+// CHECK-NEXT:    [[KVXLD:%.*]] = load volatile i64, ptr addrspace(258) [[TMP0]], align 1
+// CHECK-NEXT:    ret i64 [[KVXLD]]
 //
 long ld(void *p) {
   return __builtin_kvx_ld(p, ".s", true);
@@ -200,10 +194,9 @@ long ld(void *p) {
 
 // CHECK-LABEL: @_Z3ldfPv(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = bitcast i8* [[P:%.*]] to double*
-// CHECK-NEXT:    [[TMP1:%.*]] = addrspacecast double* [[TMP0]] to double addrspace(258)*
-// CHECK-NEXT:    [[TMP2:%.*]] = load volatile double, double addrspace(258)* [[TMP1]], align 8
-// CHECK-NEXT:    ret double [[TMP2]]
+// CHECK-NEXT:    [[TMP0:%.*]] = addrspacecast ptr [[P:%.*]] to ptr addrspace(258)
+// CHECK-NEXT:    [[KVXLD:%.*]] = load volatile double, ptr addrspace(258) [[TMP0]], align 1
+// CHECK-NEXT:    ret double [[KVXLD]]
 //
 double ldf(void *p) {
   return __builtin_kvx_ldf(p, ".s", true);
@@ -213,10 +206,9 @@ typedef char int8x8_t __attribute__((__vector_size__(8 * sizeof(char))));
 
 // CHECK-LABEL: @_Z3lboPv(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = bitcast i8* [[P:%.*]] to <8 x i8>*
-// CHECK-NEXT:    [[TMP1:%.*]] = addrspacecast <8 x i8>* [[TMP0]] to <8 x i8> addrspace(258)*
-// CHECK-NEXT:    [[TMP2:%.*]] = load volatile <8 x i8>, <8 x i8> addrspace(258)* [[TMP1]], align 8
-// CHECK-NEXT:    ret <8 x i8> [[TMP2]]
+// CHECK-NEXT:    [[TMP0:%.*]] = addrspacecast ptr [[P:%.*]] to ptr addrspace(258)
+// CHECK-NEXT:    [[KVXLD:%.*]] = load volatile <8 x i8>, ptr addrspace(258) [[TMP0]], align 1
+// CHECK-NEXT:    ret <8 x i8> [[KVXLD]]
 //
 int8x8_t lbo(void *p) {
   return __builtin_kvx_lbo(p, ".s", true);
@@ -226,10 +218,9 @@ typedef short int16x4_t __attribute__((__vector_size__(4 * sizeof(short))));
 
 // CHECK-LABEL: @_Z3lhqPv(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = bitcast i8* [[P:%.*]] to <4 x i16>*
-// CHECK-NEXT:    [[TMP1:%.*]] = addrspacecast <4 x i16>* [[TMP0]] to <4 x i16> addrspace(258)*
-// CHECK-NEXT:    [[TMP2:%.*]] = load volatile <4 x i16>, <4 x i16> addrspace(258)* [[TMP1]], align 8
-// CHECK-NEXT:    ret <4 x i16> [[TMP2]]
+// CHECK-NEXT:    [[TMP0:%.*]] = addrspacecast ptr [[P:%.*]] to ptr addrspace(258)
+// CHECK-NEXT:    [[KVXLD:%.*]] = load volatile <4 x i16>, ptr addrspace(258) [[TMP0]], align 1
+// CHECK-NEXT:    ret <4 x i16> [[KVXLD]]
 //
 int16x4_t lhq(void *p) {
   return __builtin_kvx_lhq(p, ".s", true);
@@ -239,10 +230,9 @@ typedef int int32x2_t __attribute__((__vector_size__(2 * sizeof(int))));
 
 // CHECK-LABEL: @_Z3lwpPv(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = bitcast i8* [[P:%.*]] to <2 x i32>*
-// CHECK-NEXT:    [[TMP1:%.*]] = addrspacecast <2 x i32>* [[TMP0]] to <2 x i32> addrspace(258)*
-// CHECK-NEXT:    [[TMP2:%.*]] = load volatile <2 x i32>, <2 x i32> addrspace(258)* [[TMP1]], align 8
-// CHECK-NEXT:    ret <2 x i32> [[TMP2]]
+// CHECK-NEXT:    [[TMP0:%.*]] = addrspacecast ptr [[P:%.*]] to ptr addrspace(258)
+// CHECK-NEXT:    [[KVXLD:%.*]] = load volatile <2 x i32>, ptr addrspace(258) [[TMP0]], align 1
+// CHECK-NEXT:    ret <2 x i32> [[KVXLD]]
 //
 int32x2_t lwp(void *p) {
   return __builtin_kvx_lwp(p, ".s", true);
@@ -252,10 +242,9 @@ typedef float float32x2_t __attribute__((__vector_size__(2 * sizeof(float))));
 
 // CHECK-LABEL: @_Z4lfwpPv(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = bitcast i8* [[P:%.*]] to <2 x float>*
-// CHECK-NEXT:    [[TMP1:%.*]] = addrspacecast <2 x float>* [[TMP0]] to <2 x float> addrspace(258)*
-// CHECK-NEXT:    [[TMP2:%.*]] = load volatile <2 x float>, <2 x float> addrspace(258)* [[TMP1]], align 8
-// CHECK-NEXT:    ret <2 x float> [[TMP2]]
+// CHECK-NEXT:    [[TMP0:%.*]] = addrspacecast ptr [[P:%.*]] to ptr addrspace(258)
+// CHECK-NEXT:    [[KVXLD:%.*]] = load volatile <2 x float>, ptr addrspace(258) [[TMP0]], align 1
+// CHECK-NEXT:    ret <2 x float> [[KVXLD]]
 //
 float32x2_t lfwp(void *p) {
   return __builtin_kvx_lfwp(p, ".s", true);

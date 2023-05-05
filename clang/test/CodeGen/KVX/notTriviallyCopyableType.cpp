@@ -6,7 +6,7 @@ struct B {
 };
 
 // See that v0 passed as pointer
-// CHECK: void @_Z7test_it1B(%struct.B* %v0)
+// CHECK: void @_Z7test_it1B(ptr noundef %v0)
 void test_it(B v0){
     B x = (B&&)v0;
 }
@@ -16,8 +16,8 @@ int main() {
     B iii = {1,2};
     test_it(iii);
 }
-// CHECK: %iii = alloca %struct.B, align 4
-// CHECK-NEXT: %agg.tmp = alloca %struct.B, align 4
-// CHECK-NEXT: call void @_ZN1BC1Eii(%struct.B* nonnull dereferenceable(8) %iii, i32 1, i32 2)
-// CHECK-NEXT: call void @_ZN1BC1ERKS_(%struct.B* nonnull dereferenceable(8) %agg.tmp, %struct.B* nonnull align 4 dereferenceable(8) %iii)
-// CHECK-NEXT: call void @_Z7test_it1B(%struct.B* %agg.tmp)
+// CHECK: iii = alloca %struct.B, align 4
+// CHECK-NEXT: agg.tmp = alloca %struct.B, align 4
+// CHECK-NEXT: call void @_ZN1BC1Eii(ptr noundef nonnull align 4 dereferenceable(8) %iii, i32 noundef 1, i32 noundef 2)
+// CHECK-NEXT: call void @_ZN1BC1ERKS_(ptr noundef nonnull align 4 dereferenceable(8) %agg.tmp, ptr noundef nonnull align 4 dereferenceable(8) %iii)
+// CHECK-NEXT: call void @_Z7test_it1B(ptr noundef %agg.tmp)

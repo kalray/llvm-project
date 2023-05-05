@@ -25,7 +25,7 @@ v8i32 cat256(v4i32 hi, v4i32 lo) {
 // CHECK-LABEL: @cat512(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[KVX_CAT:%.*]] = shufflevector <8 x i32> [[LO:%.*]], <8 x i32> [[HI:%.*]], <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
-// CHECK-NEXT:    store <16 x i32> [[KVX_CAT]], <16 x i32>* [[AGG_RESULT:%.*]], align 32, [[TBAA2:!tbaa !.*]]
+// CHECK-NEXT:    store <16 x i32> [[KVX_CAT]], ptr [[AGG_RESULT:%.*]], align 32, !tbaa [[TBAA2:![0-9]+]]
 // CHECK-NEXT:    ret void
 //
 v16i32 cat512(v8i32 hi, v8i32 lo) {
@@ -52,7 +52,7 @@ v4i32 low128(v8i32 v) {
 
 // CHECK-LABEL: @low256(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[V:%.*]] = load <16 x i32>, <16 x i32>* [[TMP0:%.*]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[V:%.*]] = load <16 x i32>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    [[KVX_LOW:%.*]] = shufflevector <16 x i32> [[V]], <16 x i32> poison, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
 // CHECK-NEXT:    ret <8 x i32> [[KVX_LOW]]
 //
@@ -80,7 +80,7 @@ v4i32 high128(v8i32 v) {
 
 // CHECK-LABEL: @high256(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[V:%.*]] = load <16 x i32>, <16 x i32>* [[TMP0:%.*]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[V:%.*]] = load <16 x i32>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    [[KVX_HIGH:%.*]] = shufflevector <16 x i32> [[V]], <16 x i32> poison, <8 x i32> <i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
 // CHECK-NEXT:    ret <8 x i32> [[KVX_HIGH]]
 //

@@ -5,21 +5,20 @@ typedef double double16 __attribute__ ((__vector_size__ (16 * sizeof(double))));
 
 // CHECK-LABEL: @fn(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[RESULT_PTR:%.*]] = alloca i8*, align 8
+// CHECK-NEXT:    [[RESULT_PTR:%.*]] = alloca ptr, align 8
 // CHECK-NEXT:    [[A_ADDR:%.*]] = alloca <16 x double>, align 32
 // CHECK-NEXT:    [[B_ADDR:%.*]] = alloca <16 x double>, align 32
-// CHECK-NEXT:    [[TMP2:%.*]] = bitcast <16 x double>* [[AGG_RESULT:%.*]] to i8*
-// CHECK-NEXT:    store i8* [[TMP2]], i8** [[RESULT_PTR]], align 8
-// CHECK-NEXT:    [[A:%.*]] = load <16 x double>, <16 x double>* [[TMP0:%.*]], align 32
-// CHECK-NEXT:    [[B:%.*]] = load <16 x double>, <16 x double>* [[TMP1:%.*]], align 32
-// CHECK-NEXT:    store <16 x double> [[A]], <16 x double>* [[A_ADDR]], align 32
-// CHECK-NEXT:    store <16 x double> [[B]], <16 x double>* [[B_ADDR]], align 32
-// CHECK-NEXT:    [[TMP3:%.*]] = load <16 x double>, <16 x double>* [[A_ADDR]], align 32
-// CHECK-NEXT:    [[TMP4:%.*]] = load <16 x double>, <16 x double>* [[B_ADDR]], align 32
-// CHECK-NEXT:    [[ADD:%.*]] = fadd <16 x double> [[TMP3]], [[TMP4]]
-// CHECK-NEXT:    store <16 x double> [[ADD]], <16 x double>* [[AGG_RESULT]], align 32
-// CHECK-NEXT:    [[TMP5:%.*]] = load <16 x double>, <16 x double>* [[AGG_RESULT]], align 32
-// CHECK-NEXT:    store <16 x double> [[TMP5]], <16 x double>* [[AGG_RESULT]], align 32
+// CHECK-NEXT:    store ptr [[AGG_RESULT:%.*]], ptr [[RESULT_PTR]], align 8
+// CHECK-NEXT:    [[A:%.*]] = load <16 x double>, ptr [[TMP0:%.*]], align 32
+// CHECK-NEXT:    [[B:%.*]] = load <16 x double>, ptr [[TMP1:%.*]], align 32
+// CHECK-NEXT:    store <16 x double> [[A]], ptr [[A_ADDR]], align 32
+// CHECK-NEXT:    store <16 x double> [[B]], ptr [[B_ADDR]], align 32
+// CHECK-NEXT:    [[TMP2:%.*]] = load <16 x double>, ptr [[A_ADDR]], align 32
+// CHECK-NEXT:    [[TMP3:%.*]] = load <16 x double>, ptr [[B_ADDR]], align 32
+// CHECK-NEXT:    [[ADD:%.*]] = fadd <16 x double> [[TMP2]], [[TMP3]]
+// CHECK-NEXT:    store <16 x double> [[ADD]], ptr [[AGG_RESULT]], align 32
+// CHECK-NEXT:    [[TMP4:%.*]] = load <16 x double>, ptr [[AGG_RESULT]], align 32
+// CHECK-NEXT:    store <16 x double> [[TMP4]], ptr [[AGG_RESULT]], align 32
 // CHECK-NEXT:    ret void
 //
 double16 fn(double16 a, double16 b) {

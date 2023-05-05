@@ -36,9 +36,7 @@ StringRef selectKVXCPU(StringRef CPU);
 
 Target &getTheKVXTarget();
 
-MCCodeEmitter *createKVXMCCodeEmitter(const MCInstrInfo &MCII,
-                                      const MCRegisterInfo &MRI,
-                                      MCContext &Ctx);
+MCCodeEmitter *createKVXMCCodeEmitter(const MCInstrInfo &MCII, MCContext &Ctx);
 MCAsmBackend *createKVXAsmBackend(const Target &T, const MCSubtargetInfo &STI,
                                   const MCRegisterInfo &MRI,
                                   const MCTargetOptions &Options);

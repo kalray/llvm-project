@@ -1,3 +1,6 @@
+// XFAIL: kvx
+// See T20690
+
 // RUN: %clang -### %s 2>&1 | FileCheck -check-prefix=CHECK-NO-MODULES %s
 // RUN: %clang -fcxx-modules -### %s 2>&1 | FileCheck -check-prefix=CHECK-NO-MODULES %s
 // RUN: %clang -fmodules -fno-cxx-modules -### %s 2>&1 | FileCheck -check-prefix=CHECK-NO-MODULES %s

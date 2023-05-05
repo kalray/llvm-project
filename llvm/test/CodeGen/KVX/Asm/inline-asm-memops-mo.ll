@@ -3,43 +3,53 @@
 ; RUN: clang -c -o /dev/null %s
 
 target triple = "kvx-kalray-cos"
+; double asm_memory_operand_m(double *m) {
+;     double v;
+;     asm ("ld %0 = %1"
+;      : "+r" (v)
+;      : "m" (*m));
+;     return v;
+; }
 
-define double @asm_memory_operand_m() {
+; typedef struct {
+;     double x[2];
+; } st;
+
+; double asm_memory_operand_m2(st *m) {
+;         double v;
+;     asm ("ld %0 = %1"
+;      : "+r" (v)
+;      : "o" (m->x[1]));
+;     return v;
+; }
+
+define double @asm_memory_operand_m(ptr noundef readonly %m) {
 ; CHECK-LABEL: asm_memory_operand_m:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r12, 24
-; CHECK-NEXT:    ;;
+; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    ld $r0 = 0[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP
-; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %1 = alloca i64, align 8
-  %2 = bitcast i64* %1 to i8*
-  %3 = call double asm sideeffect "ld $0 = $1", "=r,*m"(i64* nonnull %1)
-  ret double %3
-}
+  entry:
+  %0 = tail call double asm "ld $0 = $1", "=r,*m,0"(ptr elementtype(double) %m, double undef)
+  ret double %0
+  }
 
-define double @asm_memory_operand_m2() {
+define double @asm_memory_operand_m2(ptr noundef readonly %m) {
 ; CHECK-LABEL: asm_memory_operand_m2:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r0 = $r12, 16
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    addd $r0 = $r0, 8
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    ld $r0 = 0[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP
-; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %1 = alloca [2 x i64], align 8
-  %2 = bitcast [2 x i64]* %1 to i8*
-  %3 = call double asm sideeffect "ld $0 = $1", "=r,*o"([2 x i64]* nonnull %1)
-  ret double %3
+entry:
+  %arrayidx = getelementptr inbounds [2 x double], ptr %m, i64 0, i64 1
+  %0 = tail call double asm "ld $0 = $1", "=r,*o,0"(ptr nonnull elementtype(double) %arrayidx, double undef)
+  ret double %0
 }

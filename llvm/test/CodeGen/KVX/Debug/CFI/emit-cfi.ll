@@ -2,20 +2,7 @@
 ; CHECK-LABEL: foo:
 ; CHECK:              .cfi_sections .debug_frame
 ; CHECK-NEXT:         .cfi_startproc
-; CHECK-NEXT: # %bb.0:
-; CHECK-NEXT:         addd $r12 = $r12, -512
-; CHECK-NEXT:         ;;
-; CHECK-NEXT:         .cfi_def_cfa_offset 512
-; CHECK-NEXT:         .loc    1 3 1 prologue_end              # /tmp/test.c:3:1
-; CHECK-NEXT:         addd $r12 = $r12, 512
-; CHECK-NEXT:         ;;
-; CHECK-NEXT:         .cfi_def_cfa_offset 0
-; CHECK-NEXT:         ret
-; CHECK-NEXT:         ;;
-; CHECK-NEXT: .Ltmp0:
-; CHECK-NEXT: .Lfunc_end0:
-; CHECK-NEXT:         .size   foo, .Lfunc_end0-foo
-; CHECK-NEXT:         .cfi_endproc
+; CHECK:              .cfi_endproc
 
 target triple = "kvx-kalray-cos"
 

@@ -6,12 +6,12 @@ typedef long long long4 __attribute__((vector_size(sizeof(long long) * 4)));
 
 // CHECK-LABEL: @xfscalewo_test(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, <256 x i1>* [[V:%.*]], align 32, [[TBAA2:!tbaa !.*]]
+// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, ptr [[V:%.*]], align 32, !tbaa [[TBAA2:![0-9]+]]
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call <256 x i1> @llvm.kvx.xfscalewo(<256 x i1> [[TMP0]], i32 [[S:%.*]], i32 7, i32 0)
 // CHECK-NEXT:    [[TMP2:%.*]] = tail call <256 x i1> @llvm.kvx.xfscalewo(<256 x i1> [[TMP1]], i32 [[S]], i32 7, i32 1)
 // CHECK-NEXT:    [[TMP3:%.*]] = tail call <256 x i1> @llvm.kvx.xfscalewo(<256 x i1> [[TMP2]], i32 [[S]], i32 0, i32 0)
 // CHECK-NEXT:    [[TMP4:%.*]] = tail call <256 x i1> @llvm.kvx.xfscalewo(<256 x i1> [[TMP3]], i32 [[S]], i32 0, i32 1)
-// CHECK-NEXT:    store <256 x i1> [[TMP4]], <256 x i1>* [[V]], align 32, [[TBAA2]]
+// CHECK-NEXT:    store <256 x i1> [[TMP4]], ptr [[V]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void xfscalewo_test(__kvx_x256 *v, int s) {
@@ -23,9 +23,9 @@ void xfscalewo_test(__kvx_x256 *v, int s) {
 
 // CHECK-LABEL: @xclampwo_test(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, ptr [[V:%.*]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call <256 x i1> @llvm.kvx.xclampwo(<256 x i1> [[TMP0]], <256 x i1> [[TMP0]], <256 x i1> [[TMP0]])
-// CHECK-NEXT:    store <256 x i1> [[TMP1]], <256 x i1>* [[V]], align 32, [[TBAA2]]
+// CHECK-NEXT:    store <256 x i1> [[TMP1]], ptr [[V]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void xclampwo_test(__kvx_x256 *v) {
@@ -34,13 +34,13 @@ void xclampwo_test(__kvx_x256 *v) {
 
 // CHECK-LABEL: @xffma44hw_test(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
-// CHECK-NEXT:    [[TMP1:%.*]] = load <512 x i1>, <512 x i1>* [[ACC:%.*]], align 32, [[TBAA6:!tbaa !.*]]
+// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, ptr [[V:%.*]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    [[TMP1:%.*]] = load <512 x i1>, ptr [[ACC:%.*]], align 32, !tbaa [[TBAA6:![0-9]+]]
 // CHECK-NEXT:    [[TMP2:%.*]] = tail call <512 x i1> @llvm.kvx.xffma44hw(<256 x i1> [[TMP0]], <256 x i1> [[TMP0]], <512 x i1> [[TMP1]], i32 7, i32 0)
 // CHECK-NEXT:    [[TMP3:%.*]] = tail call <512 x i1> @llvm.kvx.xffma44hw(<256 x i1> [[TMP0]], <256 x i1> [[TMP0]], <512 x i1> [[TMP2]], i32 7, i32 1)
 // CHECK-NEXT:    [[TMP4:%.*]] = tail call <512 x i1> @llvm.kvx.xffma44hw(<256 x i1> [[TMP0]], <256 x i1> [[TMP0]], <512 x i1> [[TMP3]], i32 1, i32 0)
 // CHECK-NEXT:    [[TMP5:%.*]] = tail call <512 x i1> @llvm.kvx.xffma44hw(<256 x i1> [[TMP0]], <256 x i1> [[TMP0]], <512 x i1> [[TMP4]], i32 3, i32 1)
-// CHECK-NEXT:    store <512 x i1> [[TMP5]], <512 x i1>* [[ACC]], align 32, [[TBAA6]]
+// CHECK-NEXT:    store <512 x i1> [[TMP5]], ptr [[ACC]], align 32, !tbaa [[TBAA6]]
 // CHECK-NEXT:    ret void
 //
 void xffma44hw_test(__kvx_x512 *acc, __kvx_x256 *v) {
@@ -53,12 +53,12 @@ void xffma44hw_test(__kvx_x512 *acc, __kvx_x256 *v) {
 
 // CHECK-LABEL: @xfmma484hw_test(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <512 x i1>, <512 x i1>* [[ACC:%.*]], align 32, [[TBAA6]]
+// CHECK-NEXT:    [[TMP0:%.*]] = load <512 x i1>, ptr [[ACC:%.*]], align 32, !tbaa [[TBAA6]]
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call <512 x i1> @llvm.kvx.xfmma484hw(<512 x i1> [[TMP0]], <512 x i1> [[TMP0]], <512 x i1> [[TMP0]], i32 7, i32 0)
 // CHECK-NEXT:    [[TMP2:%.*]] = tail call <512 x i1> @llvm.kvx.xfmma484hw(<512 x i1> [[TMP1]], <512 x i1> [[TMP1]], <512 x i1> [[TMP1]], i32 7, i32 1)
 // CHECK-NEXT:    [[TMP3:%.*]] = tail call <512 x i1> @llvm.kvx.xfmma484hw(<512 x i1> [[TMP2]], <512 x i1> [[TMP2]], <512 x i1> [[TMP2]], i32 0, i32 0)
 // CHECK-NEXT:    [[TMP4:%.*]] = tail call <512 x i1> @llvm.kvx.xfmma484hw(<512 x i1> [[TMP3]], <512 x i1> [[TMP3]], <512 x i1> [[TMP3]], i32 3, i32 1)
-// CHECK-NEXT:    store <512 x i1> [[TMP4]], <512 x i1>* [[ACC]], align 32, [[TBAA6]]
+// CHECK-NEXT:    store <512 x i1> [[TMP4]], ptr [[ACC]], align 32, !tbaa [[TBAA6]]
 // CHECK-NEXT:    ret void
 //
 void xfmma484hw_test(__kvx_x512 *acc) {
@@ -70,21 +70,21 @@ void xfmma484hw_test(__kvx_x512 *acc) {
 
 // CHECK-LABEL: @xfnarrow44wh_test(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <512 x i1>, <512 x i1>* [[W:%.*]], align 32, [[TBAA6]]
+// CHECK-NEXT:    [[TMP0:%.*]] = load <512 x i1>, ptr [[W:%.*]], align 32, !tbaa [[TBAA6]]
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call <256 x i1> @llvm.kvx.xfnarrow44wh(<512 x i1> [[TMP0]], i32 7, i32 0)
-// CHECK-NEXT:    store <256 x i1> [[TMP1]], <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
-// CHECK-NEXT:    [[TMP2:%.*]] = load <512 x i1>, <512 x i1>* [[W]], align 32, [[TBAA6]]
+// CHECK-NEXT:    store <256 x i1> [[TMP1]], ptr [[V:%.*]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    [[TMP2:%.*]] = load <512 x i1>, ptr [[W]], align 32, !tbaa [[TBAA6]]
 // CHECK-NEXT:    [[TMP3:%.*]] = tail call <256 x i1> @llvm.kvx.xfnarrow44wh(<512 x i1> [[TMP2]], i32 7, i32 1)
-// CHECK-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 1
-// CHECK-NEXT:    store <256 x i1> [[TMP3]], <256 x i1>* [[ARRAYIDX3]], align 32, [[TBAA2]]
-// CHECK-NEXT:    [[TMP4:%.*]] = load <512 x i1>, <512 x i1>* [[W]], align 32, [[TBAA6]]
+// CHECK-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <256 x i1>, ptr [[V]], i64 1
+// CHECK-NEXT:    store <256 x i1> [[TMP3]], ptr [[ARRAYIDX3]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    [[TMP4:%.*]] = load <512 x i1>, ptr [[W]], align 32, !tbaa [[TBAA6]]
 // CHECK-NEXT:    [[TMP5:%.*]] = tail call <256 x i1> @llvm.kvx.xfnarrow44wh(<512 x i1> [[TMP4]], i32 3, i32 0)
-// CHECK-NEXT:    [[ARRAYIDX5:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 2
-// CHECK-NEXT:    store <256 x i1> [[TMP5]], <256 x i1>* [[ARRAYIDX5]], align 32, [[TBAA2]]
-// CHECK-NEXT:    [[TMP6:%.*]] = load <512 x i1>, <512 x i1>* [[W]], align 32, [[TBAA6]]
+// CHECK-NEXT:    [[ARRAYIDX5:%.*]] = getelementptr inbounds <256 x i1>, ptr [[V]], i64 2
+// CHECK-NEXT:    store <256 x i1> [[TMP5]], ptr [[ARRAYIDX5]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    [[TMP6:%.*]] = load <512 x i1>, ptr [[W]], align 32, !tbaa [[TBAA6]]
 // CHECK-NEXT:    [[TMP7:%.*]] = tail call <256 x i1> @llvm.kvx.xfnarrow44wh(<512 x i1> [[TMP6]], i32 1, i32 1)
-// CHECK-NEXT:    [[ARRAYIDX7:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 3
-// CHECK-NEXT:    store <256 x i1> [[TMP7]], <256 x i1>* [[ARRAYIDX7]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[ARRAYIDX7:%.*]] = getelementptr inbounds <256 x i1>, ptr [[V]], i64 3
+// CHECK-NEXT:    store <256 x i1> [[TMP7]], ptr [[ARRAYIDX7]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void xfnarrow44wh_test(__kvx_x256 *v, __kvx_x512 *w) {
@@ -96,19 +96,19 @@ void xfnarrow44wh_test(__kvx_x256 *v, __kvx_x512 *w) {
 
 // CHECK-LABEL: @xmadd44bw_test(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
-// CHECK-NEXT:    [[TMP1:%.*]] = load <512 x i1>, <512 x i1>* [[W:%.*]], align 32, [[TBAA6]]
+// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, ptr [[V:%.*]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    [[TMP1:%.*]] = load <512 x i1>, ptr [[W:%.*]], align 32, !tbaa [[TBAA6]]
 // CHECK-NEXT:    [[TMP2:%.*]] = tail call <512 x i1> @llvm.kvx.xmadd44bw0(<256 x i1> [[TMP0]], <256 x i1> [[TMP0]], <512 x i1> [[TMP1]], i32 0)
 // CHECK-NEXT:    [[TMP3:%.*]] = tail call <512 x i1> @llvm.kvx.xmadd44bw1(<256 x i1> [[TMP0]], <256 x i1> [[TMP0]], <512 x i1> [[TMP2]], i32 0)
-// CHECK-NEXT:    store <512 x i1> [[TMP3]], <512 x i1>* [[W]], align 32, [[TBAA6]]
+// CHECK-NEXT:    store <512 x i1> [[TMP3]], ptr [[W]], align 32, !tbaa [[TBAA6]]
 // CHECK-NEXT:    [[TMP4:%.*]] = tail call <512 x i1> @llvm.kvx.xmadd44bw0(<256 x i1> [[TMP0]], <256 x i1> [[TMP0]], <512 x i1> [[TMP2]], i32 0)
-// CHECK-NEXT:    store <512 x i1> [[TMP4]], <512 x i1>* [[W]], align 32, [[TBAA6]]
+// CHECK-NEXT:    store <512 x i1> [[TMP4]], ptr [[W]], align 32, !tbaa [[TBAA6]]
 // CHECK-NEXT:    [[TMP5:%.*]] = tail call <512 x i1> @llvm.kvx.xmadd44bw1(<256 x i1> [[TMP0]], <256 x i1> [[TMP0]], <512 x i1> [[TMP2]], i32 1)
-// CHECK-NEXT:    store <512 x i1> [[TMP5]], <512 x i1>* [[W]], align 32, [[TBAA6]]
+// CHECK-NEXT:    store <512 x i1> [[TMP5]], ptr [[W]], align 32, !tbaa [[TBAA6]]
 // CHECK-NEXT:    [[TMP6:%.*]] = tail call <512 x i1> @llvm.kvx.xmadd44bw0(<256 x i1> [[TMP0]], <256 x i1> [[TMP0]], <512 x i1> [[TMP2]], i32 2)
-// CHECK-NEXT:    store <512 x i1> [[TMP6]], <512 x i1>* [[W]], align 32, [[TBAA6]]
+// CHECK-NEXT:    store <512 x i1> [[TMP6]], ptr [[W]], align 32, !tbaa [[TBAA6]]
 // CHECK-NEXT:    [[TMP7:%.*]] = tail call <512 x i1> @llvm.kvx.xmadd44bw1(<256 x i1> [[TMP0]], <256 x i1> [[TMP0]], <512 x i1> [[TMP2]], i32 1)
-// CHECK-NEXT:    store <512 x i1> [[TMP7]], <512 x i1>* [[W]], align 32, [[TBAA6]]
+// CHECK-NEXT:    store <512 x i1> [[TMP7]], ptr [[W]], align 32, !tbaa [[TBAA6]]
 // CHECK-NEXT:    ret void
 //
 void xmadd44bw_test(__kvx_x256 *v, __kvx_x512 *w) {
@@ -122,12 +122,12 @@ void xmadd44bw_test(__kvx_x256 *v, __kvx_x512 *w) {
 
 // CHECK-LABEL: @xmaddifwo_test(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, ptr [[V:%.*]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call <256 x i1> @llvm.kvx.xmaddifwo(<256 x i1> [[TMP0]], <256 x i1> [[TMP0]], <256 x i1> [[TMP0]], i32 7, i32 0)
 // CHECK-NEXT:    [[TMP2:%.*]] = tail call <256 x i1> @llvm.kvx.xmaddifwo(<256 x i1> [[TMP1]], <256 x i1> [[TMP1]], <256 x i1> [[TMP1]], i32 7, i32 1)
 // CHECK-NEXT:    [[TMP3:%.*]] = tail call <256 x i1> @llvm.kvx.xmaddifwo(<256 x i1> [[TMP2]], <256 x i1> [[TMP2]], <256 x i1> [[TMP2]], i32 0, i32 0)
 // CHECK-NEXT:    [[TMP4:%.*]] = tail call <256 x i1> @llvm.kvx.xmaddifwo(<256 x i1> [[TMP3]], <256 x i1> [[TMP3]], <256 x i1> [[TMP3]], i32 3, i32 1)
-// CHECK-NEXT:    store <256 x i1> [[TMP4]], <256 x i1>* [[V]], align 32, [[TBAA2]]
+// CHECK-NEXT:    store <256 x i1> [[TMP4]], ptr [[V]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void xmaddifwo_test(__kvx_x256 *v) {
@@ -139,13 +139,13 @@ void xmaddifwo_test(__kvx_x256 *v) {
 
 // CHECK-LABEL: @xmma4164bw_test(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <512 x i1>, <512 x i1>* [[W:%.*]], align 32, [[TBAA6]]
+// CHECK-NEXT:    [[TMP0:%.*]] = load <512 x i1>, ptr [[W:%.*]], align 32, !tbaa [[TBAA6]]
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call <512 x i1> @llvm.kvx.xmma4164bw(<512 x i1> [[TMP0]], <512 x i1> [[TMP0]], <512 x i1> [[TMP0]], i32 0)
 // CHECK-NEXT:    [[TMP2:%.*]] = tail call <512 x i1> @llvm.kvx.xmma4164bw(<512 x i1> [[TMP1]], <512 x i1> [[TMP1]], <512 x i1> [[TMP1]], i32 0)
 // CHECK-NEXT:    [[TMP3:%.*]] = tail call <512 x i1> @llvm.kvx.xmma4164bw(<512 x i1> [[TMP2]], <512 x i1> [[TMP2]], <512 x i1> [[TMP2]], i32 1)
 // CHECK-NEXT:    [[TMP4:%.*]] = tail call <512 x i1> @llvm.kvx.xmma4164bw(<512 x i1> [[TMP3]], <512 x i1> [[TMP3]], <512 x i1> [[TMP3]], i32 2)
 // CHECK-NEXT:    [[TMP5:%.*]] = tail call <512 x i1> @llvm.kvx.xmma4164bw(<512 x i1> [[TMP4]], <512 x i1> [[TMP4]], <512 x i1> [[TMP4]], i32 3)
-// CHECK-NEXT:    store <512 x i1> [[TMP5]], <512 x i1>* [[W]], align 32, [[TBAA6]]
+// CHECK-NEXT:    store <512 x i1> [[TMP5]], ptr [[W]], align 32, !tbaa [[TBAA6]]
 // CHECK-NEXT:    ret void
 //
 void xmma4164bw_test(__kvx_x512 *w) {
@@ -158,13 +158,13 @@ void xmma4164bw_test(__kvx_x512 *w) {
 
 // CHECK-LABEL: @xmma484bw_test(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
-// CHECK-NEXT:    [[TMP1:%.*]] = load <512 x i1>, <512 x i1>* [[W:%.*]], align 32, [[TBAA6]]
+// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, ptr [[V:%.*]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    [[TMP1:%.*]] = load <512 x i1>, ptr [[W:%.*]], align 32, !tbaa [[TBAA6]]
 // CHECK-NEXT:    [[TMP2:%.*]] = tail call <512 x i1> @llvm.kvx.xmma484bw(<256 x i1> [[TMP0]], <256 x i1> [[TMP0]], <512 x i1> [[TMP1]], i32 0)
 // CHECK-NEXT:    [[TMP3:%.*]] = tail call <512 x i1> @llvm.kvx.xmma484bw(<256 x i1> [[TMP0]], <256 x i1> [[TMP0]], <512 x i1> [[TMP2]], i32 1)
 // CHECK-NEXT:    [[TMP4:%.*]] = tail call <512 x i1> @llvm.kvx.xmma484bw(<256 x i1> [[TMP0]], <256 x i1> [[TMP0]], <512 x i1> [[TMP3]], i32 2)
 // CHECK-NEXT:    [[TMP5:%.*]] = tail call <512 x i1> @llvm.kvx.xmma484bw(<256 x i1> [[TMP0]], <256 x i1> [[TMP0]], <512 x i1> [[TMP4]], i32 3)
-// CHECK-NEXT:    store <512 x i1> [[TMP5]], <512 x i1>* [[W]], align 32, [[TBAA6]]
+// CHECK-NEXT:    store <512 x i1> [[TMP5]], ptr [[W]], align 32, !tbaa [[TBAA6]]
 // CHECK-NEXT:    ret void
 //
 void xmma484bw_test(__kvx_x512 *w, __kvx_x256 *v) {
@@ -177,12 +177,12 @@ void xmma484bw_test(__kvx_x512 *w, __kvx_x256 *v) {
 
 // CHECK-LABEL: @xmsbfifwo_test(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, ptr [[V:%.*]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call <256 x i1> @llvm.kvx.xmsbfifwo(<256 x i1> [[TMP0]], <256 x i1> [[TMP0]], <256 x i1> [[TMP0]], i32 7, i32 0)
 // CHECK-NEXT:    [[TMP2:%.*]] = tail call <256 x i1> @llvm.kvx.xmsbfifwo(<256 x i1> [[TMP1]], <256 x i1> [[TMP1]], <256 x i1> [[TMP1]], i32 7, i32 1)
 // CHECK-NEXT:    [[TMP3:%.*]] = tail call <256 x i1> @llvm.kvx.xmsbfifwo(<256 x i1> [[TMP2]], <256 x i1> [[TMP2]], <256 x i1> [[TMP2]], i32 0, i32 0)
 // CHECK-NEXT:    [[TMP4:%.*]] = tail call <256 x i1> @llvm.kvx.xmsbfifwo(<256 x i1> [[TMP3]], <256 x i1> [[TMP3]], <256 x i1> [[TMP3]], i32 3, i32 1)
-// CHECK-NEXT:    store <256 x i1> [[TMP4]], <256 x i1>* [[V]], align 32, [[TBAA2]]
+// CHECK-NEXT:    store <256 x i1> [[TMP4]], ptr [[V]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void xmsbfifwo_test(__kvx_x256 *v) {
@@ -194,9 +194,9 @@ void xmsbfifwo_test(__kvx_x256 *v) {
 
 // CHECK-LABEL: @xsx48bw_test(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, ptr [[V:%.*]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call <1024 x i1> @llvm.kvx.xsx48bw(<256 x i1> [[TMP0]])
-// CHECK-NEXT:    store <1024 x i1> [[TMP1]], <1024 x i1>* [[M:%.*]], align 32, [[TBAA8:!tbaa !.*]]
+// CHECK-NEXT:    store <1024 x i1> [[TMP1]], ptr [[M:%.*]], align 32, !tbaa [[TBAA8:![0-9]+]]
 // CHECK-NEXT:    ret void
 //
 void xsx48bw_test(__kvx_x1024 *m, __kvx_x256 *v) {
@@ -205,9 +205,9 @@ void xsx48bw_test(__kvx_x1024 *m, __kvx_x256 *v) {
 
 // CHECK-LABEL: @xzx48bw_test(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, ptr [[V:%.*]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call <1024 x i1> @llvm.kvx.xzx48bw(<256 x i1> [[TMP0]])
-// CHECK-NEXT:    store <1024 x i1> [[TMP1]], <1024 x i1>* [[M:%.*]], align 32, [[TBAA8]]
+// CHECK-NEXT:    store <1024 x i1> [[TMP1]], ptr [[M:%.*]], align 32, !tbaa [[TBAA8]]
 // CHECK-NEXT:    ret void
 //
 void xzx48bw_test(__kvx_x1024 *m, __kvx_x256 *v) {
@@ -216,9 +216,9 @@ void xzx48bw_test(__kvx_x1024 *m, __kvx_x256 *v) {
 
 // CHECK-LABEL: @xtrunc48wb_test(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <1024 x i1>, <1024 x i1>* [[M:%.*]], align 32, [[TBAA8]]
+// CHECK-NEXT:    [[TMP0:%.*]] = load <1024 x i1>, ptr [[M:%.*]], align 32, !tbaa [[TBAA8]]
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call <256 x i1> @llvm.kvx.xtrunc48wb(<1024 x i1> [[TMP0]])
-// CHECK-NEXT:    store <256 x i1> [[TMP1]], <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
+// CHECK-NEXT:    store <256 x i1> [[TMP1]], ptr [[V:%.*]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void xtrunc48wb_test(__kvx_x1024 *m, __kvx_x256 *v) {
@@ -227,9 +227,9 @@ void xtrunc48wb_test(__kvx_x1024 *m, __kvx_x256 *v) {
 
 // CHECK-LABEL: @xmt44d_test(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <1024 x i1>, <1024 x i1>* [[M:%.*]], align 32, [[TBAA8]]
+// CHECK-NEXT:    [[TMP0:%.*]] = load <1024 x i1>, ptr [[M:%.*]], align 32, !tbaa [[TBAA8]]
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call <1024 x i1> @llvm.kvx.xmt44d(<1024 x i1> [[TMP0]])
-// CHECK-NEXT:    store <1024 x i1> [[TMP1]], <1024 x i1>* [[M]], align 32, [[TBAA8]]
+// CHECK-NEXT:    store <1024 x i1> [[TMP1]], ptr [[M]], align 32, !tbaa [[TBAA8]]
 // CHECK-NEXT:    ret void
 //
 void xmt44d_test(__kvx_x1024 *m) {
@@ -238,20 +238,17 @@ void xmt44d_test(__kvx_x1024 *m) {
 
 // CHECK-LABEL: @xload256(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V:%.*]], i64 1
-// CHECK-NEXT:    [[TMP0:%.*]] = bitcast <256 x i1>* [[ARRAYIDX]] to i8*
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <256 x i1> @llvm.kvx.xload256(i8* nonnull [[TMP0]], i32 0)
-// CHECK-NEXT:    store <256 x i1> [[TMP1]], <256 x i1>* [[V]], align 32, [[TBAA2]]
-// CHECK-NEXT:    [[ARRAYIDX2:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 3
-// CHECK-NEXT:    [[TMP2:%.*]] = bitcast <256 x i1>* [[ARRAYIDX2]] to i8*
-// CHECK-NEXT:    [[TMP3:%.*]] = tail call <256 x i1> @llvm.kvx.xload256(i8* nonnull [[TMP2]], i32 1)
-// CHECK-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 2
-// CHECK-NEXT:    store <256 x i1> [[TMP3]], <256 x i1>* [[ARRAYIDX3]], align 32, [[TBAA2]]
-// CHECK-NEXT:    [[TMP4:%.*]] = tail call <256 x i1> @llvm.kvx.xload256(i8* nonnull [[TMP2]], i32 2)
-// CHECK-NEXT:    store <256 x i1> [[TMP4]], <256 x i1>* [[ARRAYIDX3]], align 32, [[TBAA2]]
-// CHECK-NEXT:    [[TMP5:%.*]] = bitcast <256 x i1>* [[ARRAYIDX3]] to i8*
-// CHECK-NEXT:    [[TMP6:%.*]] = tail call <256 x i1> @llvm.kvx.xload256(i8* nonnull [[TMP5]], i32 3)
-// CHECK-NEXT:    store <256 x i1> [[TMP6]], <256 x i1>* [[V]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <256 x i1>, ptr [[V:%.*]], i64 1
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <256 x i1> @llvm.kvx.xload256(ptr nonnull [[ARRAYIDX]], i32 0)
+// CHECK-NEXT:    store <256 x i1> [[TMP0]], ptr [[V]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    [[ARRAYIDX2:%.*]] = getelementptr inbounds <256 x i1>, ptr [[V]], i64 3
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <256 x i1> @llvm.kvx.xload256(ptr nonnull [[ARRAYIDX2]], i32 1)
+// CHECK-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <256 x i1>, ptr [[V]], i64 2
+// CHECK-NEXT:    store <256 x i1> [[TMP1]], ptr [[ARRAYIDX3]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <256 x i1> @llvm.kvx.xload256(ptr nonnull [[ARRAYIDX2]], i32 2)
+// CHECK-NEXT:    store <256 x i1> [[TMP2]], ptr [[ARRAYIDX3]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <256 x i1> @llvm.kvx.xload256(ptr nonnull [[ARRAYIDX3]], i32 3)
+// CHECK-NEXT:    store <256 x i1> [[TMP3]], ptr [[V]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void xload256(__kvx_x256 *v) {
@@ -263,19 +260,16 @@ void xload256(__kvx_x256 *v) {
 
 // CHECK-LABEL: @xloadc256(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V:%.*]], i64 1
-// CHECK-NEXT:    [[TMP0:%.*]] = bitcast <256 x i1>* [[ARRAYIDX]] to i8*
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <256 x i1> @llvm.kvx.xloadc256(<256 x i1> undef, i8* nonnull [[TMP0]], i64 [[X:%.*]], i32 0, i32 4)
-// CHECK-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 3
-// CHECK-NEXT:    [[TMP2:%.*]] = bitcast <256 x i1>* [[ARRAYIDX1]] to i8*
+// CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <256 x i1>, ptr [[V:%.*]], i64 1
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <256 x i1> @llvm.kvx.xloadc256(<256 x i1> undef, ptr nonnull [[ARRAYIDX]], i64 [[X:%.*]], i32 0, i32 4)
+// CHECK-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <256 x i1>, ptr [[V]], i64 3
 // CHECK-NEXT:    [[TOBOOL_NOT:%.*]] = icmp eq i64 [[X]], 0
 // CHECK-NEXT:    [[CONV:%.*]] = zext i1 [[TOBOOL_NOT]] to i64
-// CHECK-NEXT:    [[TMP3:%.*]] = tail call <256 x i1> @llvm.kvx.xloadc256(<256 x i1> [[TMP1]], i8* nonnull [[TMP2]], i64 [[CONV]], i32 1, i32 5)
-// CHECK-NEXT:    [[TMP4:%.*]] = tail call <256 x i1> @llvm.kvx.xloadc256(<256 x i1> [[TMP3]], i8* nonnull [[TMP2]], i64 0, i32 2, i32 6)
-// CHECK-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 2
-// CHECK-NEXT:    [[TMP5:%.*]] = bitcast <256 x i1>* [[ARRAYIDX3]] to i8*
-// CHECK-NEXT:    [[TMP6:%.*]] = tail call <256 x i1> @llvm.kvx.xloadc256(<256 x i1> [[TMP4]], i8* nonnull [[TMP5]], i64 1, i32 3, i32 7)
-// CHECK-NEXT:    store <256 x i1> [[TMP6]], <256 x i1>* [[V]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <256 x i1> @llvm.kvx.xloadc256(<256 x i1> [[TMP0]], ptr nonnull [[ARRAYIDX1]], i64 [[CONV]], i32 1, i32 5)
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <256 x i1> @llvm.kvx.xloadc256(<256 x i1> [[TMP1]], ptr nonnull [[ARRAYIDX1]], i64 0, i32 2, i32 6)
+// CHECK-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <256 x i1>, ptr [[V]], i64 2
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <256 x i1> @llvm.kvx.xloadc256(<256 x i1> [[TMP2]], ptr nonnull [[ARRAYIDX3]], i64 1, i32 3, i32 7)
+// CHECK-NEXT:    store <256 x i1> [[TMP3]], ptr [[V]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void xloadc256(__kvx_x256 *v, long x) {
@@ -288,12 +282,11 @@ void xloadc256(__kvx_x256 *v, long x) {
 
 // CHECK-LABEL: @xloads1024(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = bitcast <1024 x i1>* [[M:%.*]] to i8*
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <1024 x i1> @llvm.kvx.xloads1024(<1024 x i1> undef, i8* [[TMP0]], i32 0, i32 0)
-// CHECK-NEXT:    [[TMP2:%.*]] = tail call <1024 x i1> @llvm.kvx.xloads1024(<1024 x i1> [[TMP1]], i8* [[TMP0]], i32 0, i32 1)
-// CHECK-NEXT:    [[TMP3:%.*]] = tail call <1024 x i1> @llvm.kvx.xloads1024(<1024 x i1> [[TMP2]], i8* [[TMP0]], i32 1, i32 2)
-// CHECK-NEXT:    [[TMP4:%.*]] = tail call <1024 x i1> @llvm.kvx.xloads1024(<1024 x i1> [[TMP3]], i8* [[TMP0]], i32 3, i32 3)
-// CHECK-NEXT:    store <1024 x i1> [[TMP4]], <1024 x i1>* [[M]], align 32, [[TBAA8]]
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <1024 x i1> @llvm.kvx.xloads1024(<1024 x i1> undef, ptr [[M:%.*]], i32 0, i32 0)
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <1024 x i1> @llvm.kvx.xloads1024(<1024 x i1> [[TMP0]], ptr [[M]], i32 0, i32 1)
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <1024 x i1> @llvm.kvx.xloads1024(<1024 x i1> [[TMP1]], ptr [[M]], i32 1, i32 2)
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <1024 x i1> @llvm.kvx.xloads1024(<1024 x i1> [[TMP2]], ptr [[M]], i32 3, i32 3)
+// CHECK-NEXT:    store <1024 x i1> [[TMP3]], ptr [[M]], align 32, !tbaa [[TBAA8]]
 // CHECK-NEXT:    ret void
 //
 void xloads1024(__kvx_x1024 *m) {
@@ -306,14 +299,13 @@ void xloads1024(__kvx_x1024 *m) {
 
 // CHECK-LABEL: @xloadsc1024(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = bitcast <1024 x i1>* [[M:%.*]] to i8*
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <1024 x i1> @llvm.kvx.xloadsc1024(<1024 x i1> undef, i8* [[TMP0]], i64 [[X:%.*]], i32 0, i32 4, i32 0)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <1024 x i1> @llvm.kvx.xloadsc1024(<1024 x i1> undef, ptr [[M:%.*]], i64 [[X:%.*]], i32 0, i32 4, i32 0)
 // CHECK-NEXT:    [[TOBOOL_NOT:%.*]] = icmp eq i64 [[X]], 0
 // CHECK-NEXT:    [[CONV:%.*]] = zext i1 [[TOBOOL_NOT]] to i64
-// CHECK-NEXT:    [[TMP2:%.*]] = tail call <1024 x i1> @llvm.kvx.xloadsc1024(<1024 x i1> [[TMP1]], i8* [[TMP0]], i64 [[CONV]], i32 1, i32 5, i32 1)
-// CHECK-NEXT:    [[TMP3:%.*]] = tail call <1024 x i1> @llvm.kvx.xloadsc1024(<1024 x i1> [[TMP2]], i8* [[TMP0]], i64 0, i32 2, i32 6, i32 2)
-// CHECK-NEXT:    [[TMP4:%.*]] = tail call <1024 x i1> @llvm.kvx.xloadsc1024(<1024 x i1> [[TMP3]], i8* [[TMP0]], i64 1, i32 3, i32 7, i32 3)
-// CHECK-NEXT:    store <1024 x i1> [[TMP4]], <1024 x i1>* [[M]], align 32, [[TBAA8]]
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <1024 x i1> @llvm.kvx.xloadsc1024(<1024 x i1> [[TMP0]], ptr [[M]], i64 [[CONV]], i32 1, i32 5, i32 1)
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <1024 x i1> @llvm.kvx.xloadsc1024(<1024 x i1> [[TMP1]], ptr [[M]], i64 0, i32 2, i32 6, i32 2)
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <1024 x i1> @llvm.kvx.xloadsc1024(<1024 x i1> [[TMP2]], ptr [[M]], i64 1, i32 3, i32 7, i32 3)
+// CHECK-NEXT:    store <1024 x i1> [[TMP3]], ptr [[M]], align 32, !tbaa [[TBAA8]]
 // CHECK-NEXT:    ret void
 //
 void xloadsc1024(__kvx_x1024 *m, long x) {
@@ -326,15 +318,13 @@ void xloadsc1024(__kvx_x1024 *m, long x) {
 
 // CHECK-LABEL: @xload512(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = bitcast <512 x i1>* [[M:%.*]] to i8*
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <512 x i1> @llvm.kvx.xload512(i8* [[TMP0]], i32 0)
-// CHECK-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[M]], i64 1
-// CHECK-NEXT:    store <512 x i1> [[TMP1]], <512 x i1>* [[ARRAYIDX1]], align 32, [[TBAA6]]
-// CHECK-NEXT:    [[ARRAYIDX2:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[M]], i64 [[X:%.*]]
-// CHECK-NEXT:    [[TMP2:%.*]] = bitcast <512 x i1>* [[ARRAYIDX2]] to i8*
-// CHECK-NEXT:    [[TMP3:%.*]] = tail call <512 x i1> @llvm.kvx.xload512(i8* [[TMP2]], i32 0)
-// CHECK-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[M]], i64 2
-// CHECK-NEXT:    store <512 x i1> [[TMP3]], <512 x i1>* [[ARRAYIDX3]], align 32, [[TBAA6]]
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <512 x i1> @llvm.kvx.xload512(ptr [[M:%.*]], i32 0)
+// CHECK-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <512 x i1>, ptr [[M]], i64 1
+// CHECK-NEXT:    store <512 x i1> [[TMP0]], ptr [[ARRAYIDX1]], align 32, !tbaa [[TBAA6]]
+// CHECK-NEXT:    [[ARRAYIDX2:%.*]] = getelementptr inbounds <512 x i1>, ptr [[M]], i64 [[X:%.*]]
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <512 x i1> @llvm.kvx.xload512(ptr [[ARRAYIDX2]], i32 0)
+// CHECK-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <512 x i1>, ptr [[M]], i64 2
+// CHECK-NEXT:    store <512 x i1> [[TMP1]], ptr [[ARRAYIDX3]], align 32, !tbaa [[TBAA6]]
 // CHECK-NEXT:    ret void
 //
 void xload512(__kvx_x512 *m, long x) {
@@ -346,15 +336,13 @@ void xload512(__kvx_x512 *m, long x) {
 
 // CHECK-LABEL: @xload1024(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = bitcast <1024 x i1>* [[M:%.*]] to i8*
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <1024 x i1> @llvm.kvx.xload1024(i8* [[TMP0]], i32 0)
-// CHECK-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <1024 x i1>, <1024 x i1>* [[M]], i64 1
-// CHECK-NEXT:    store <1024 x i1> [[TMP1]], <1024 x i1>* [[ARRAYIDX1]], align 32, [[TBAA8]]
-// CHECK-NEXT:    [[ARRAYIDX2:%.*]] = getelementptr inbounds <1024 x i1>, <1024 x i1>* [[M]], i64 [[X:%.*]]
-// CHECK-NEXT:    [[TMP2:%.*]] = bitcast <1024 x i1>* [[ARRAYIDX2]] to i8*
-// CHECK-NEXT:    [[TMP3:%.*]] = tail call <1024 x i1> @llvm.kvx.xload1024(i8* [[TMP2]], i32 1)
-// CHECK-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <1024 x i1>, <1024 x i1>* [[M]], i64 2
-// CHECK-NEXT:    store <1024 x i1> [[TMP3]], <1024 x i1>* [[ARRAYIDX3]], align 32, [[TBAA8]]
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <1024 x i1> @llvm.kvx.xload1024(ptr [[M:%.*]], i32 0)
+// CHECK-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <1024 x i1>, ptr [[M]], i64 1
+// CHECK-NEXT:    store <1024 x i1> [[TMP0]], ptr [[ARRAYIDX1]], align 32, !tbaa [[TBAA8]]
+// CHECK-NEXT:    [[ARRAYIDX2:%.*]] = getelementptr inbounds <1024 x i1>, ptr [[M]], i64 [[X:%.*]]
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <1024 x i1> @llvm.kvx.xload1024(ptr [[ARRAYIDX2]], i32 1)
+// CHECK-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <1024 x i1>, ptr [[M]], i64 2
+// CHECK-NEXT:    store <1024 x i1> [[TMP1]], ptr [[ARRAYIDX3]], align 32, !tbaa [[TBAA8]]
 // CHECK-NEXT:    ret void
 //
 void xload1024(__kvx_x1024 *m, long x) {
@@ -364,19 +352,16 @@ void xload1024(__kvx_x1024 *m, long x) {
 
 // CHECK-LABEL: @xloadc512(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[V:%.*]], i64 1
-// CHECK-NEXT:    [[TMP0:%.*]] = bitcast <512 x i1>* [[ARRAYIDX]] to i8*
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <512 x i1> @llvm.kvx.xloadc512(<512 x i1> undef, i8* nonnull [[TMP0]], i64 [[X:%.*]], i32 0, i32 0)
-// CHECK-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[V]], i64 3
-// CHECK-NEXT:    [[TMP2:%.*]] = bitcast <512 x i1>* [[ARRAYIDX1]] to i8*
+// CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <512 x i1>, ptr [[V:%.*]], i64 1
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <512 x i1> @llvm.kvx.xloadc512(<512 x i1> undef, ptr nonnull [[ARRAYIDX]], i64 [[X:%.*]], i32 0, i32 0)
+// CHECK-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <512 x i1>, ptr [[V]], i64 3
 // CHECK-NEXT:    [[TOBOOL_NOT:%.*]] = icmp eq i64 [[X]], 0
 // CHECK-NEXT:    [[CONV:%.*]] = zext i1 [[TOBOOL_NOT]] to i64
-// CHECK-NEXT:    [[TMP3:%.*]] = tail call <512 x i1> @llvm.kvx.xloadc512(<512 x i1> [[TMP1]], i8* nonnull [[TMP2]], i64 [[CONV]], i32 1, i32 3)
-// CHECK-NEXT:    [[TMP4:%.*]] = tail call <512 x i1> @llvm.kvx.xloadc512(<512 x i1> [[TMP3]], i8* nonnull [[TMP2]], i64 0, i32 2, i32 6)
-// CHECK-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[V]], i64 2
-// CHECK-NEXT:    [[TMP5:%.*]] = bitcast <512 x i1>* [[ARRAYIDX3]] to i8*
-// CHECK-NEXT:    [[TMP6:%.*]] = tail call <512 x i1> @llvm.kvx.xloadc512(<512 x i1> [[TMP4]], i8* nonnull [[TMP5]], i64 1, i32 3, i32 7)
-// CHECK-NEXT:    store <512 x i1> [[TMP6]], <512 x i1>* [[V]], align 32, [[TBAA6]]
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <512 x i1> @llvm.kvx.xloadc512(<512 x i1> [[TMP0]], ptr nonnull [[ARRAYIDX1]], i64 [[CONV]], i32 1, i32 3)
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <512 x i1> @llvm.kvx.xloadc512(<512 x i1> [[TMP1]], ptr nonnull [[ARRAYIDX1]], i64 0, i32 2, i32 6)
+// CHECK-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <512 x i1>, ptr [[V]], i64 2
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <512 x i1> @llvm.kvx.xloadc512(<512 x i1> [[TMP2]], ptr nonnull [[ARRAYIDX3]], i64 1, i32 3, i32 7)
+// CHECK-NEXT:    store <512 x i1> [[TMP3]], ptr [[V]], align 32, !tbaa [[TBAA6]]
 // CHECK-NEXT:    ret void
 //
 void xloadc512(__kvx_x512 *v, long x) {
@@ -389,17 +374,14 @@ void xloadc512(__kvx_x512 *v, long x) {
 
 // CHECK-LABEL: @xloadc1024(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <1024 x i1>, <1024 x i1>* [[V:%.*]], i64 1
-// CHECK-NEXT:    [[TMP0:%.*]] = bitcast <1024 x i1>* [[ARRAYIDX]] to i8*
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <1024 x i1> @llvm.kvx.xloadc1024(<1024 x i1> undef, i8* nonnull [[TMP0]], <4 x i32> [[X:%.*]], i32 0, i32 0)
-// CHECK-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <1024 x i1>, <1024 x i1>* [[V]], i64 3
-// CHECK-NEXT:    [[TMP2:%.*]] = bitcast <1024 x i1>* [[ARRAYIDX1]] to i8*
-// CHECK-NEXT:    [[TMP3:%.*]] = tail call <1024 x i1> @llvm.kvx.xloadc1024(<1024 x i1> [[TMP1]], i8* nonnull [[TMP2]], <4 x i32> [[X]], i32 1, i32 3)
-// CHECK-NEXT:    [[TMP4:%.*]] = tail call <1024 x i1> @llvm.kvx.xloadc1024(<1024 x i1> [[TMP3]], i8* nonnull [[TMP2]], <4 x i32> [[X]], i32 2, i32 6)
-// CHECK-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <1024 x i1>, <1024 x i1>* [[V]], i64 2
-// CHECK-NEXT:    [[TMP5:%.*]] = bitcast <1024 x i1>* [[ARRAYIDX3]] to i8*
-// CHECK-NEXT:    [[TMP6:%.*]] = tail call <1024 x i1> @llvm.kvx.xloadc1024(<1024 x i1> [[TMP4]], i8* nonnull [[TMP5]], <4 x i32> [[X]], i32 3, i32 7)
-// CHECK-NEXT:    store <1024 x i1> [[TMP6]], <1024 x i1>* [[V]], align 32, [[TBAA8]]
+// CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <1024 x i1>, ptr [[V:%.*]], i64 1
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <1024 x i1> @llvm.kvx.xloadc1024(<1024 x i1> undef, ptr nonnull [[ARRAYIDX]], <4 x i32> [[X:%.*]], i32 0, i32 0)
+// CHECK-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <1024 x i1>, ptr [[V]], i64 3
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <1024 x i1> @llvm.kvx.xloadc1024(<1024 x i1> [[TMP0]], ptr nonnull [[ARRAYIDX1]], <4 x i32> [[X]], i32 1, i32 3)
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <1024 x i1> @llvm.kvx.xloadc1024(<1024 x i1> [[TMP1]], ptr nonnull [[ARRAYIDX1]], <4 x i32> [[X]], i32 2, i32 6)
+// CHECK-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <1024 x i1>, ptr [[V]], i64 2
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <1024 x i1> @llvm.kvx.xloadc1024(<1024 x i1> [[TMP2]], ptr nonnull [[ARRAYIDX3]], <4 x i32> [[X]], i32 3, i32 7)
+// CHECK-NEXT:    store <1024 x i1> [[TMP3]], ptr [[V]], align 32, !tbaa [[TBAA8]]
 // CHECK-NEXT:    ret void
 //
 void xloadc1024(__kvx_x1024 *v, int4 x) {
@@ -412,8 +394,8 @@ void xloadc1024(__kvx_x1024 *v, int4 x) {
 
 // CHECK-LABEL: @xstore256(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
-// CHECK-NEXT:    tail call void @llvm.kvx.xstore256(<256 x i1> [[TMP0]], i8* [[P:%.*]])
+// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, ptr [[V:%.*]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    tail call void @llvm.kvx.xstore256(<256 x i1> [[TMP0]], ptr [[P:%.*]])
 // CHECK-NEXT:    ret void
 //
 void xstore256(__kvx_x256 *v, void *p) {
@@ -422,8 +404,8 @@ void xstore256(__kvx_x256 *v, void *p) {
 
 // CHECK-LABEL: @xstorec256(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
-// CHECK-NEXT:    tail call void @llvm.kvx.xstorec256(<256 x i1> [[TMP0]], i8* [[P:%.*]], i64 1, i32 4)
+// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, ptr [[V:%.*]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    tail call void @llvm.kvx.xstorec256(<256 x i1> [[TMP0]], ptr [[P:%.*]], i64 1, i32 4)
 // CHECK-NEXT:    ret void
 //
 void xstorec256( __kvx_x256 *v, void *p, long c) {
@@ -432,9 +414,9 @@ void xstorec256( __kvx_x256 *v, void *p, long c) {
 
 // CHECK-LABEL: @xloadStore256(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1> addrspace(257)* [[V:%.*]], i64 1
-// CHECK-NEXT:    [[TMP0:%.*]] = load volatile <256 x i1>, <256 x i1> addrspace(257)* [[ARRAYIDX]], align 32, [[TBAA2]]
-// CHECK-NEXT:    store volatile <256 x i1> [[TMP0]], <256 x i1> addrspace(257)* [[V]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <256 x i1>, ptr addrspace(257) [[V:%.*]], i64 1
+// CHECK-NEXT:    [[TMP0:%.*]] = load volatile <256 x i1>, ptr addrspace(257) [[ARRAYIDX]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    store volatile <256 x i1> [[TMP0]], ptr addrspace(257) [[V]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void xloadStore256(volatile __preload __kvx_x256 *v) {
@@ -443,9 +425,9 @@ void xloadStore256(volatile __preload __kvx_x256 *v) {
 
 // CHECK-LABEL: @xloadStore512(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1> addrspace(258)* [[V:%.*]], i64 1
-// CHECK-NEXT:    [[TMP0:%.*]] = load volatile <512 x i1>, <512 x i1> addrspace(258)* [[ARRAYIDX]], align 32, [[TBAA6]]
-// CHECK-NEXT:    store volatile <512 x i1> [[TMP0]], <512 x i1> addrspace(258)* [[V]], align 32, [[TBAA6]]
+// CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <512 x i1>, ptr addrspace(258) [[V:%.*]], i64 1
+// CHECK-NEXT:    [[TMP0:%.*]] = load volatile <512 x i1>, ptr addrspace(258) [[ARRAYIDX]], align 32, !tbaa [[TBAA6]]
+// CHECK-NEXT:    store volatile <512 x i1> [[TMP0]], ptr addrspace(258) [[V]], align 32, !tbaa [[TBAA6]]
 // CHECK-NEXT:    ret void
 //
 void xloadStore512(volatile __speculate __kvx_x512 *v) {
@@ -454,9 +436,9 @@ void xloadStore512(volatile __speculate __kvx_x512 *v) {
 
 // CHECK-LABEL: @xloadStore1024(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <1024 x i1>, <1024 x i1> addrspace(256)* [[V:%.*]], i64 1
-// CHECK-NEXT:    [[TMP0:%.*]] = load volatile <1024 x i1>, <1024 x i1> addrspace(256)* [[ARRAYIDX]], align 32, [[TBAA8]]
-// CHECK-NEXT:    store volatile <1024 x i1> [[TMP0]], <1024 x i1> addrspace(256)* [[V]], align 32, [[TBAA8]]
+// CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <1024 x i1>, ptr addrspace(256) [[V:%.*]], i64 1
+// CHECK-NEXT:    [[TMP0:%.*]] = load volatile <1024 x i1>, ptr addrspace(256) [[ARRAYIDX]], align 32, !tbaa [[TBAA8]]
+// CHECK-NEXT:    store volatile <1024 x i1> [[TMP0]], ptr addrspace(256) [[V]], align 32, !tbaa [[TBAA8]]
 // CHECK-NEXT:    ret void
 //
 void xloadStore1024(volatile __bypass __kvx_x1024 *v) {
@@ -465,10 +447,10 @@ void xloadStore1024(volatile __bypass __kvx_x1024 *v) {
 
 // CHECK-LABEL: @xsendo(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
-// CHECK-NEXT:    tail call void @llvm.kvx.xsendo(<256 x i1> [[TMP0]], i32 1) [[ATTR1:#.*]]
-// CHECK-NEXT:    [[TMP1:%.*]] = load <256 x i1>, <256 x i1>* [[V]], align 32, [[TBAA2]]
-// CHECK-NEXT:    tail call void @llvm.kvx.xsendo(<256 x i1> [[TMP1]], i32 0) [[ATTR1]]
+// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, ptr [[V:%.*]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    tail call void @llvm.kvx.xsendo(<256 x i1> [[TMP0]], i32 1) #[[ATTR1:[0-9]+]]
+// CHECK-NEXT:    [[TMP1:%.*]] = load <256 x i1>, ptr [[V]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    tail call void @llvm.kvx.xsendo(<256 x i1> [[TMP1]], i32 0) #[[ATTR1]]
 // CHECK-NEXT:    ret void
 //
 void xsendo(__kvx_x256 *v) {
@@ -478,11 +460,11 @@ void xsendo(__kvx_x256 *v) {
 
 // CHECK-LABEL: @xrecvo(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <256 x i1> @llvm.kvx.xrecvo(i32 1) [[ATTR1]]
-// CHECK-NEXT:    store <256 x i1> [[TMP0]], <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <256 x i1> @llvm.kvx.xrecvo(i32 0) [[ATTR1]]
-// CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 1
-// CHECK-NEXT:    store <256 x i1> [[TMP1]], <256 x i1>* [[ARRAYIDX]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <256 x i1> @llvm.kvx.xrecvo(i32 1) #[[ATTR1]]
+// CHECK-NEXT:    store <256 x i1> [[TMP0]], ptr [[V:%.*]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <256 x i1> @llvm.kvx.xrecvo(i32 0) #[[ATTR1]]
+// CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <256 x i1>, ptr [[V]], i64 1
+// CHECK-NEXT:    store <256 x i1> [[TMP1]], ptr [[ARRAYIDX]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void xrecvo(__kvx_x256 *v) {
@@ -492,23 +474,23 @@ void xrecvo(__kvx_x256 *v) {
 
 // CHECK-LABEL: @xsendrecvo(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <256 x i1> @llvm.kvx.xsendrecvo(<256 x i1> [[TMP0]], i32 1, i32 1) [[ATTR1]]
-// CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 2
-// CHECK-NEXT:    store <256 x i1> [[TMP1]], <256 x i1>* [[ARRAYIDX]], align 32, [[TBAA2]]
-// CHECK-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 1
-// CHECK-NEXT:    [[TMP2:%.*]] = load <256 x i1>, <256 x i1>* [[ARRAYIDX1]], align 32, [[TBAA2]]
-// CHECK-NEXT:    [[TMP3:%.*]] = tail call <256 x i1> @llvm.kvx.xsendrecvo(<256 x i1> [[TMP2]], i32 0, i32 1) [[ATTR1]]
-// CHECK-NEXT:    [[ARRAYIDX2:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 4
-// CHECK-NEXT:    store <256 x i1> [[TMP3]], <256 x i1>* [[ARRAYIDX2]], align 32, [[TBAA2]]
-// CHECK-NEXT:    [[TMP4:%.*]] = load <256 x i1>, <256 x i1>* [[V]], align 32, [[TBAA2]]
-// CHECK-NEXT:    [[TMP5:%.*]] = tail call <256 x i1> @llvm.kvx.xsendrecvo(<256 x i1> [[TMP4]], i32 1, i32 0) [[ATTR1]]
-// CHECK-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 3
-// CHECK-NEXT:    store <256 x i1> [[TMP5]], <256 x i1>* [[ARRAYIDX3]], align 32, [[TBAA2]]
-// CHECK-NEXT:    [[TMP6:%.*]] = load <256 x i1>, <256 x i1>* [[ARRAYIDX1]], align 32, [[TBAA2]]
-// CHECK-NEXT:    [[TMP7:%.*]] = tail call <256 x i1> @llvm.kvx.xsendrecvo(<256 x i1> [[TMP6]], i32 0, i32 0) [[ATTR1]]
-// CHECK-NEXT:    [[ARRAYIDX5:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 5
-// CHECK-NEXT:    store <256 x i1> [[TMP7]], <256 x i1>* [[ARRAYIDX5]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, ptr [[V:%.*]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <256 x i1> @llvm.kvx.xsendrecvo(<256 x i1> [[TMP0]], i32 1, i32 1) #[[ATTR1]]
+// CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <256 x i1>, ptr [[V]], i64 2
+// CHECK-NEXT:    store <256 x i1> [[TMP1]], ptr [[ARRAYIDX]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <256 x i1>, ptr [[V]], i64 1
+// CHECK-NEXT:    [[TMP2:%.*]] = load <256 x i1>, ptr [[ARRAYIDX1]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <256 x i1> @llvm.kvx.xsendrecvo(<256 x i1> [[TMP2]], i32 0, i32 1) #[[ATTR1]]
+// CHECK-NEXT:    [[ARRAYIDX2:%.*]] = getelementptr inbounds <256 x i1>, ptr [[V]], i64 4
+// CHECK-NEXT:    store <256 x i1> [[TMP3]], ptr [[ARRAYIDX2]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    [[TMP4:%.*]] = load <256 x i1>, ptr [[V]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    [[TMP5:%.*]] = tail call <256 x i1> @llvm.kvx.xsendrecvo(<256 x i1> [[TMP4]], i32 1, i32 0) #[[ATTR1]]
+// CHECK-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <256 x i1>, ptr [[V]], i64 3
+// CHECK-NEXT:    store <256 x i1> [[TMP5]], ptr [[ARRAYIDX3]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    [[TMP6:%.*]] = load <256 x i1>, ptr [[ARRAYIDX1]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    [[TMP7:%.*]] = tail call <256 x i1> @llvm.kvx.xsendrecvo(<256 x i1> [[TMP6]], i32 0, i32 0) #[[ATTR1]]
+// CHECK-NEXT:    [[ARRAYIDX5:%.*]] = getelementptr inbounds <256 x i1>, ptr [[V]], i64 5
+// CHECK-NEXT:    store <256 x i1> [[TMP7]], ptr [[ARRAYIDX5]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void xsendrecvo(__kvx_x256 *v) {
@@ -520,13 +502,13 @@ void xsendrecvo(__kvx_x256 *v) {
 
 // CHECK-LABEL: @xcopyv(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <1024 x i1>, <1024 x i1>* [[V:%.*]], align 32, [[TBAA8]]
+// CHECK-NEXT:    [[TMP0:%.*]] = load <1024 x i1>, ptr [[V:%.*]], align 32, !tbaa [[TBAA8]]
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call <1024 x i1> @llvm.kvx.xcopyv(<1024 x i1> [[TMP0]], i32 0)
-// CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <1024 x i1>, <1024 x i1>* [[V]], i64 3
-// CHECK-NEXT:    store <1024 x i1> [[TMP1]], <1024 x i1>* [[ARRAYIDX]], align 32, [[TBAA8]]
+// CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <1024 x i1>, ptr [[V]], i64 3
+// CHECK-NEXT:    store <1024 x i1> [[TMP1]], ptr [[ARRAYIDX]], align 32, !tbaa [[TBAA8]]
 // CHECK-NEXT:    [[TMP2:%.*]] = tail call <1024 x i1> @llvm.kvx.xcopyv(<1024 x i1> [[TMP0]], i32 1)
-// CHECK-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <1024 x i1>, <1024 x i1>* [[V]], i64 1
-// CHECK-NEXT:    store <1024 x i1> [[TMP2]], <1024 x i1>* [[ARRAYIDX1]], align 32, [[TBAA8]]
+// CHECK-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <1024 x i1>, ptr [[V]], i64 1
+// CHECK-NEXT:    store <1024 x i1> [[TMP2]], ptr [[ARRAYIDX1]], align 32, !tbaa [[TBAA8]]
 // CHECK-NEXT:    ret void
 //
 void xcopyv(__kvx_x1024 *v) {
@@ -536,19 +518,19 @@ void xcopyv(__kvx_x1024 *v) {
 
 // CHECK-LABEL: @xcopyx(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <512 x i1>, <512 x i1>* [[V:%.*]], align 32, [[TBAA6]]
+// CHECK-NEXT:    [[TMP0:%.*]] = load <512 x i1>, ptr [[V:%.*]], align 32, !tbaa [[TBAA6]]
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call <512 x i1> @llvm.kvx.xcopyx(<512 x i1> [[TMP0]], i32 0)
-// CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[V]], i64 1
-// CHECK-NEXT:    store <512 x i1> [[TMP1]], <512 x i1>* [[ARRAYIDX]], align 32, [[TBAA6]]
+// CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <512 x i1>, ptr [[V]], i64 1
+// CHECK-NEXT:    store <512 x i1> [[TMP1]], ptr [[ARRAYIDX]], align 32, !tbaa [[TBAA6]]
 // CHECK-NEXT:    [[TMP2:%.*]] = tail call <512 x i1> @llvm.kvx.xcopyx(<512 x i1> [[TMP0]], i32 1)
-// CHECK-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[V]], i64 2
-// CHECK-NEXT:    store <512 x i1> [[TMP2]], <512 x i1>* [[ARRAYIDX1]], align 32, [[TBAA6]]
+// CHECK-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <512 x i1>, ptr [[V]], i64 2
+// CHECK-NEXT:    store <512 x i1> [[TMP2]], ptr [[ARRAYIDX1]], align 32, !tbaa [[TBAA6]]
 // CHECK-NEXT:    [[TMP3:%.*]] = tail call <512 x i1> @llvm.kvx.xcopyx(<512 x i1> [[TMP0]], i32 2)
-// CHECK-NEXT:    [[ARRAYIDX2:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[V]], i64 3
-// CHECK-NEXT:    store <512 x i1> [[TMP3]], <512 x i1>* [[ARRAYIDX2]], align 32, [[TBAA6]]
+// CHECK-NEXT:    [[ARRAYIDX2:%.*]] = getelementptr inbounds <512 x i1>, ptr [[V]], i64 3
+// CHECK-NEXT:    store <512 x i1> [[TMP3]], ptr [[ARRAYIDX2]], align 32, !tbaa [[TBAA6]]
 // CHECK-NEXT:    [[TMP4:%.*]] = tail call <512 x i1> @llvm.kvx.xcopyx(<512 x i1> [[TMP0]], i32 3)
-// CHECK-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[V]], i64 4
-// CHECK-NEXT:    store <512 x i1> [[TMP4]], <512 x i1>* [[ARRAYIDX3]], align 32, [[TBAA6]]
+// CHECK-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <512 x i1>, ptr [[V]], i64 4
+// CHECK-NEXT:    store <512 x i1> [[TMP4]], ptr [[ARRAYIDX3]], align 32, !tbaa [[TBAA6]]
 // CHECK-NEXT:    ret void
 //
 void xcopyx(__kvx_x512 *v) {
@@ -560,12 +542,12 @@ void xcopyx(__kvx_x512 *v) {
 
 // CHECK-LABEL: @xfminmaxhx(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
-// CHECK-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 1
-// CHECK-NEXT:    [[TMP1:%.*]] = load <256 x i1>, <256 x i1>* [[ARRAYIDX1]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, ptr [[V:%.*]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <256 x i1>, ptr [[V]], i64 1
+// CHECK-NEXT:    [[TMP1:%.*]] = load <256 x i1>, ptr [[ARRAYIDX1]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    [[TMP2:%.*]] = tail call <256 x i1> @llvm.kvx.xfmaxhx(<256 x i1> [[TMP0]], <256 x i1> [[TMP1]])
 // CHECK-NEXT:    [[TMP3:%.*]] = tail call <256 x i1> @llvm.kvx.xfminhx(<256 x i1> [[TMP2]], <256 x i1> [[TMP0]])
-// CHECK-NEXT:    store <256 x i1> [[TMP3]], <256 x i1>* [[V]], align 32, [[TBAA2]]
+// CHECK-NEXT:    store <256 x i1> [[TMP3]], ptr [[V]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void xfminmaxhx(__kvx_x256 *v) {
@@ -574,12 +556,12 @@ void xfminmaxhx(__kvx_x256 *v) {
 
 // CHECK-LABEL: @xsplatov(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, <256 x i1>* [[C:%.*]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, ptr [[C:%.*]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call <1024 x i1> @llvm.kvx.xsplatov(<256 x i1> [[TMP0]], i32 0)
-// CHECK-NEXT:    store <1024 x i1> [[TMP1]], <1024 x i1>* [[V:%.*]], align 32, [[TBAA8]]
+// CHECK-NEXT:    store <1024 x i1> [[TMP1]], ptr [[V:%.*]], align 32, !tbaa [[TBAA8]]
 // CHECK-NEXT:    [[TMP2:%.*]] = tail call <1024 x i1> @llvm.kvx.xsplatov(<256 x i1> [[TMP0]], i32 1)
-// CHECK-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <1024 x i1>, <1024 x i1>* [[V]], i64 1
-// CHECK-NEXT:    store <1024 x i1> [[TMP2]], <1024 x i1>* [[ARRAYIDX1]], align 32, [[TBAA8]]
+// CHECK-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <1024 x i1>, ptr [[V]], i64 1
+// CHECK-NEXT:    store <1024 x i1> [[TMP2]], ptr [[ARRAYIDX1]], align 32, !tbaa [[TBAA8]]
 // CHECK-NEXT:    ret void
 //
 void xsplatov(__kvx_x1024 *v, __kvx_x256 *c) {
@@ -589,18 +571,18 @@ void xsplatov(__kvx_x1024 *v, __kvx_x256 *c) {
 
 // CHECK-LABEL: @xsplatox(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, <256 x i1>* [[C:%.*]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, ptr [[C:%.*]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call <512 x i1> @llvm.kvx.xsplatox(<256 x i1> [[TMP0]], i32 0)
-// CHECK-NEXT:    store <512 x i1> [[TMP1]], <512 x i1>* [[V:%.*]], align 32, [[TBAA6]]
+// CHECK-NEXT:    store <512 x i1> [[TMP1]], ptr [[V:%.*]], align 32, !tbaa [[TBAA6]]
 // CHECK-NEXT:    [[TMP2:%.*]] = tail call <512 x i1> @llvm.kvx.xsplatox(<256 x i1> [[TMP0]], i32 1)
-// CHECK-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[V]], i64 1
-// CHECK-NEXT:    store <512 x i1> [[TMP2]], <512 x i1>* [[ARRAYIDX1]], align 32, [[TBAA6]]
+// CHECK-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <512 x i1>, ptr [[V]], i64 1
+// CHECK-NEXT:    store <512 x i1> [[TMP2]], ptr [[ARRAYIDX1]], align 32, !tbaa [[TBAA6]]
 // CHECK-NEXT:    [[TMP3:%.*]] = tail call <512 x i1> @llvm.kvx.xsplatox(<256 x i1> [[TMP0]], i32 2)
-// CHECK-NEXT:    [[ARRAYIDX2:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[V]], i64 2
-// CHECK-NEXT:    store <512 x i1> [[TMP3]], <512 x i1>* [[ARRAYIDX2]], align 32, [[TBAA6]]
+// CHECK-NEXT:    [[ARRAYIDX2:%.*]] = getelementptr inbounds <512 x i1>, ptr [[V]], i64 2
+// CHECK-NEXT:    store <512 x i1> [[TMP3]], ptr [[ARRAYIDX2]], align 32, !tbaa [[TBAA6]]
 // CHECK-NEXT:    [[TMP4:%.*]] = tail call <512 x i1> @llvm.kvx.xsplatox(<256 x i1> [[TMP0]], i32 3)
-// CHECK-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <512 x i1>, <512 x i1>* [[V]], i64 3
-// CHECK-NEXT:    store <512 x i1> [[TMP4]], <512 x i1>* [[ARRAYIDX3]], align 32, [[TBAA6]]
+// CHECK-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <512 x i1>, ptr [[V]], i64 3
+// CHECK-NEXT:    store <512 x i1> [[TMP4]], ptr [[ARRAYIDX3]], align 32, !tbaa [[TBAA6]]
 // CHECK-NEXT:    ret void
 //
 void xsplatox(__kvx_x512 *v, __kvx_x256 *c) {
@@ -613,13 +595,13 @@ void xsplatox(__kvx_x512 *v, __kvx_x256 *c) {
 // CHECK-LABEL: @xsplatdo(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call <256 x i1> @llvm.kvx.xsplatdo(i64 511)
-// CHECK-NEXT:    store <256 x i1> [[TMP0]], <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
+// CHECK-NEXT:    store <256 x i1> [[TMP0]], ptr [[V:%.*]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call <256 x i1> @llvm.kvx.xsplatdo(i64 137438953471)
-// CHECK-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 1
-// CHECK-NEXT:    store <256 x i1> [[TMP1]], <256 x i1>* [[ARRAYIDX1]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <256 x i1>, ptr [[V]], i64 1
+// CHECK-NEXT:    store <256 x i1> [[TMP1]], ptr [[ARRAYIDX1]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    [[TMP2:%.*]] = tail call <256 x i1> @llvm.kvx.xsplatdo(i64 27487790694300)
-// CHECK-NEXT:    [[ARRAYIDX2:%.*]] = getelementptr inbounds <256 x i1>, <256 x i1>* [[V]], i64 2
-// CHECK-NEXT:    store <256 x i1> [[TMP2]], <256 x i1>* [[ARRAYIDX2]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[ARRAYIDX2:%.*]] = getelementptr inbounds <256 x i1>, ptr [[V]], i64 2
+// CHECK-NEXT:    store <256 x i1> [[TMP2]], ptr [[ARRAYIDX2]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void xsplatdo(__kvx_x256 *v) {
@@ -630,9 +612,9 @@ void xsplatdo(__kvx_x256 *v) {
 
 // CHECK-LABEL: @xalign512o(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <512 x i1>, <512 x i1>* [[W:%.*]], align 32, [[TBAA6]]
+// CHECK-NEXT:    [[TMP0:%.*]] = load <512 x i1>, ptr [[W:%.*]], align 32, !tbaa [[TBAA6]]
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call <256 x i1> @llvm.kvx.xaligno.v512i1(<512 x i1> [[TMP0]], i64 [[S:%.*]])
-// CHECK-NEXT:    store <256 x i1> [[TMP1]], <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
+// CHECK-NEXT:    store <256 x i1> [[TMP1]], ptr [[V:%.*]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void xalign512o(__kvx_x256 *v, __kvx_x512 *w, long s) {
@@ -641,9 +623,9 @@ void xalign512o(__kvx_x256 *v, __kvx_x512 *w, long s) {
 
 // CHECK-LABEL: @xalign1024o(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <1024 x i1>, <1024 x i1>* [[M:%.*]], align 32, [[TBAA8]]
+// CHECK-NEXT:    [[TMP0:%.*]] = load <1024 x i1>, ptr [[M:%.*]], align 32, !tbaa [[TBAA8]]
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call <256 x i1> @llvm.kvx.xaligno.v1024i1(<1024 x i1> [[TMP0]], i64 [[S:%.*]])
-// CHECK-NEXT:    store <256 x i1> [[TMP1]], <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
+// CHECK-NEXT:    store <256 x i1> [[TMP1]], ptr [[V:%.*]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void xalign1024o(__kvx_x256 *v, __kvx_x1024 *m, long s) {
@@ -653,7 +635,7 @@ void xalign1024o(__kvx_x256 *v, __kvx_x1024 *m, long s) {
 // CHECK-LABEL: @xalign2048o(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call <256 x i1> @llvm.kvx.xaligno.v2048i1(<2048 x i1> zeroinitializer, i64 [[S:%.*]])
-// CHECK-NEXT:    store <256 x i1> [[TMP0]], <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
+// CHECK-NEXT:    store <256 x i1> [[TMP0]], ptr [[V:%.*]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void xalign2048o(__kvx_x256 *v, long s) {
@@ -664,7 +646,7 @@ void xalign2048o(__kvx_x256 *v, long s) {
 // CHECK-LABEL: @xalign4096o(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call <256 x i1> @llvm.kvx.xaligno.v4096i1(<4096 x i1> zeroinitializer, i64 [[S:%.*]])
-// CHECK-NEXT:    store <256 x i1> [[TMP0]], <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
+// CHECK-NEXT:    store <256 x i1> [[TMP0]], ptr [[V:%.*]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void xalign4096o(__kvx_x256 *v, long s) {
@@ -674,9 +656,8 @@ void xalign4096o(__kvx_x256 *v, long s) {
 
 // CHECK-LABEL: @xpreload512(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = bitcast <512 x i1>* [[W:%.*]] to i8*
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <512 x i1> @llvm.kvx.xpreload.v512i1(<512 x i1> undef, i8* [[TMP0]], i64 [[S:%.*]], i32 0, i32 0)
-// CHECK-NEXT:    store <512 x i1> [[TMP1]], <512 x i1>* [[W]], align 32, [[TBAA6]]
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <512 x i1> @llvm.kvx.xpreload.v512i1(<512 x i1> undef, ptr [[W:%.*]], i64 [[S:%.*]], i32 0, i32 0)
+// CHECK-NEXT:    store <512 x i1> [[TMP0]], ptr [[W]], align 32, !tbaa [[TBAA6]]
 // CHECK-NEXT:    ret void
 //
 void xpreload512(__kvx_x512 *w, long long s) {
@@ -686,9 +667,8 @@ void xpreload512(__kvx_x512 *w, long long s) {
 
 // CHECK-LABEL: @xpreload1024(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = bitcast <1024 x i1>* [[W:%.*]] to i8*
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <1024 x i1> @llvm.kvx.xpreload.v1024i1(<1024 x i1> undef, i8* [[TMP0]], i64 [[S:%.*]], i32 3, i32 1)
-// CHECK-NEXT:    store <1024 x i1> [[TMP1]], <1024 x i1>* [[W]], align 32, [[TBAA8]]
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <1024 x i1> @llvm.kvx.xpreload.v1024i1(<1024 x i1> undef, ptr [[W:%.*]], i64 [[S:%.*]], i32 3, i32 1)
+// CHECK-NEXT:    store <1024 x i1> [[TMP0]], ptr [[W]], align 32, !tbaa [[TBAA8]]
 // CHECK-NEXT:    ret void
 //
 void xpreload1024(__kvx_x1024 *w, long long s) {
@@ -698,9 +678,8 @@ void xpreload1024(__kvx_x1024 *w, long long s) {
 
 // CHECK-LABEL: @xpreload2048(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = bitcast <2048 x i1>* [[W:%.*]] to i8*
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <2048 x i1> @llvm.kvx.xpreload.v2048i1(<2048 x i1> undef, i8* [[TMP0]], i64 [[S:%.*]], i32 1, i32 3)
-// CHECK-NEXT:    store <2048 x i1> [[TMP1]], <2048 x i1>* [[W]], align 32, [[TBAA10:!tbaa !.*]]
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2048 x i1> @llvm.kvx.xpreload.v2048i1(<2048 x i1> undef, ptr [[W:%.*]], i64 [[S:%.*]], i32 1, i32 3)
+// CHECK-NEXT:    store <2048 x i1> [[TMP0]], ptr [[W]], align 32, !tbaa [[TBAA10:![0-9]+]]
 // CHECK-NEXT:    ret void
 //
 void xpreload2048(__kvx_x2048 *w, long long s) {
@@ -710,9 +689,8 @@ void xpreload2048(__kvx_x2048 *w, long long s) {
 
 // CHECK-LABEL: @xpreload4096(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = bitcast <4096 x i1>* [[W:%.*]] to i8*
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4096 x i1> @llvm.kvx.xpreload.v4096i1(<4096 x i1> undef, i8* [[TMP0]], i64 [[S:%.*]], i32 2, i32 5)
-// CHECK-NEXT:    store <4096 x i1> [[TMP1]], <4096 x i1>* [[W]], align 32, [[TBAA12:!tbaa !.*]]
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <4096 x i1> @llvm.kvx.xpreload.v4096i1(<4096 x i1> undef, ptr [[W:%.*]], i64 [[S:%.*]], i32 2, i32 5)
+// CHECK-NEXT:    store <4096 x i1> [[TMP0]], ptr [[W]], align 32, !tbaa [[TBAA12:![0-9]+]]
 // CHECK-NEXT:    ret void
 //
 void xpreload4096(__kvx_x4096 *w, long long s) {
@@ -722,7 +700,7 @@ void xpreload4096(__kvx_x4096 *w, long long s) {
 
 // CHECK-LABEL: @xaccess512o(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <512 x i1>, <512 x i1>* [[W:%.*]], align 32, [[TBAA6]]
+// CHECK-NEXT:    [[TMP0:%.*]] = load <512 x i1>, ptr [[W:%.*]], align 32, !tbaa [[TBAA6]]
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.xaccesso.v512i1(<512 x i1> [[TMP0]], i64 [[S:%.*]])
 // CHECK-NEXT:    ret <4 x i64> [[TMP1]]
 //
@@ -732,7 +710,7 @@ long4 xaccess512o(__kvx_x512 *w, long long s) {
 
 // CHECK-LABEL: @xaccess1024o(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <1024 x i1>, <1024 x i1>* [[W:%.*]], align 32, [[TBAA8]]
+// CHECK-NEXT:    [[TMP0:%.*]] = load <1024 x i1>, ptr [[W:%.*]], align 32, !tbaa [[TBAA8]]
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.xaccesso.v1024i1(<1024 x i1> [[TMP0]], i64 [[S:%.*]])
 // CHECK-NEXT:    ret <4 x i64> [[TMP1]]
 //
@@ -771,7 +749,7 @@ long4 xaccess4096o(long long s) {
 // CHECK-NEXT:    [[TMP6:%.*]] = tail call <256 x i1> @llvm.kvx.xorno(<256 x i1> [[TMP5]], <256 x i1> [[TMP5]])
 // CHECK-NEXT:    [[TMP7:%.*]] = tail call <256 x i1> @llvm.kvx.xoro(<256 x i1> [[TMP6]], <256 x i1> [[TMP6]])
 // CHECK-NEXT:    [[TMP8:%.*]] = tail call <256 x i1> @llvm.kvx.xxoro(<256 x i1> [[TMP7]], <256 x i1> [[TMP7]])
-// CHECK-NEXT:    store <256 x i1> [[TMP8]], <256 x i1>* [[P:%.*]], align 32, [[TBAA2]]
+// CHECK-NEXT:    store <256 x i1> [[TMP8]], ptr [[P:%.*]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void binOps(__kvx_x256 *p) {
@@ -790,7 +768,7 @@ void binOps(__kvx_x256 *p) {
 // CHECK-LABEL: @xcat2048(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call <2048 x i1> @llvm.kvx.cat.v2048i1(<1024 x i1> zeroinitializer, <1024 x i1> zeroinitializer)
-// CHECK-NEXT:    store <2048 x i1> [[TMP0]], <2048 x i1>* [[W:%.*]], align 32, [[TBAA10]]
+// CHECK-NEXT:    store <2048 x i1> [[TMP0]], ptr [[W:%.*]], align 32, !tbaa [[TBAA10]]
 // CHECK-NEXT:    ret void
 //
 void xcat2048(__kvx_x2048 *W) {
@@ -817,7 +795,7 @@ void xcat2048(__kvx_x2048 *W) {
 // CHECK-LABEL: @xcat4096(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call <4096 x i1> @llvm.kvx.cat.v4096i1(<2048 x i1> zeroinitializer, <2048 x i1> zeroinitializer)
-// CHECK-NEXT:    store <4096 x i1> [[TMP0]], <4096 x i1>* [[W:%.*]], align 32, [[TBAA12]]
+// CHECK-NEXT:    store <4096 x i1> [[TMP0]], ptr [[W:%.*]], align 32, !tbaa [[TBAA12]]
 // CHECK-NEXT:    ret void
 //
 void xcat4096(__kvx_x4096 *W) {

@@ -15,7 +15,7 @@ target triple = "kvx-kalray-cos"
 define i32 @add_or_sub(i32 %x, i32 %y, i32 %doAdd) !dbg !7 {
 ; CHECK-LABEL: add_or_sub:
 ; CHECK:       .Lfunc_begin0:
-; CHECK-NEXT:    .file 1 "/work1/csix/work/csw-llvm/llvm-project/test.c"
+; CHECK-NEXT:    .file 1 "/work1/csix/work/csw-llvm/llvm-project" "test.c"
 ; CHECK-NEXT:    .loc 1 4 0 # test.c:4:0
 ; CHECK-NEXT:    .cfi_sections .debug_frame
 ; CHECK-NEXT:    .cfi_startproc

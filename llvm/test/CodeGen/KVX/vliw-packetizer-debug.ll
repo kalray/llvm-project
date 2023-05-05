@@ -11,7 +11,7 @@ target triple = "kvx-kalray-cos"
 define i32 @debug_sanity(i32* nocapture %p, i32 %a, i32 %b, i32 %c, i32 %d) !dbg !7 {
 ; CHECK-LABEL: debug_sanity:
 ; CHECK:       .Lfunc_begin0:
-; CHECK-NEXT:    .file 1 "/dir/source.c"
+; CHECK-NEXT:    .file 1 "/dir" "source.c"
 ; CHECK-NEXT:    .loc 1 5 0
 ; CHECK-NEXT:    .cfi_sections .debug_frame
 ; CHECK-NEXT:    .cfi_startproc

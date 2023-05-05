@@ -25,7 +25,7 @@
 //===----------------------------------------------------------------------===//
 
 def SDTKVXBRCond : SDTypeProfile<0, 3,
-      [SDTCisInt<0>, SDTCisVT<1, iPTR>, SDTCisVT<2, i32>]>;
+      [SDTCisInt<0>, SDTCisVT<1, OtherVT>, SDTCisVT<2, i32>]>;
 def SDTKVXComp : SDTypeProfile<1, 3,
       [SDTCisInt<0>, SDTCisSameAs<0, 1>, SDTCisSameAs<0, 2>, SDTCisVT<3, i32>]>;
 def SDTKVXJTPcrel
@@ -56,9 +56,9 @@ def KVX_srsneg: SDNode<"KVXISD::SRSNEG", SDT_KVX_X_XY, []>;
 //===----------------------------------------------------------------------===//
 
 def : Pat<(KVXBRCond i32:$lhs, bb:$dst, i32:$mod),
-            (CB SingleReg:$lhs, Pcrel17:$dst, ScalarcondMod:$mod)>;
+            (CB SingleReg:$lhs, Pcrel17Imm:$dst, ScalarcondMod:$mod)>;
 def : Pat<(KVXBRCond i64:$lhs, bb:$dst, i32:$mod),
-            (CB SingleReg:$lhs, Pcrel17:$dst, ScalarcondMod:$mod)>;
+            (CB SingleReg:$lhs, Pcrel17Imm:$dst, ScalarcondMod:$mod)>;
 
 
 def : Pat<(KVXComp i32:$lhs, i32:$rhs, i32:$mod),
@@ -681,8 +681,8 @@ def : Pat<(i64 (sext_inreg SingleReg:$val, i32)), (SXWD SingleReg:$val)>;
 def : Pat<(v8i8 (sext_inreg SingleReg:$val, v8i1)), (COPY SingleReg:$val)>;
 
 // Conditional branch
-def : Pat<(brcond i32:$cond, bb:$dst), (CB SingleReg:$cond, Pcrel17:$dst, scalarcond_wnez)>;
-def : Pat<(brcond i64:$cond, bb:$dst), (CB SingleReg:$cond, Pcrel17:$dst, scalarcond_dnez)>;
+def : Pat<(brcond i32:$cond, bb:$dst), (CB SingleReg:$cond, Pcrel17Imm:$dst, scalarcond_wnez)>;
+def : Pat<(brcond i64:$cond, bb:$dst), (CB SingleReg:$cond, Pcrel17Imm:$dst, scalarcond_dnez)>;
 
 
 // This ADDDri64 is modified at eliminateFrameIndex. Correct immediate variant
@@ -1351,6 +1351,12 @@ def : Pat<(v4i64 (build_vector i64:$v1, i64:$v2, i64:$v3, i64:$v4)),
 
 def : Pat<(v4i64 (concat_vectors v2i64:$v0, v2i64:$v1)),
   (INSERT_SUBREG (INSERT_SUBREG (v4i64 (IMPLICIT_DEF)), $v0, sub_q0), $v1, sub_q1)>;
+
+def : Pat<(v4i64 (insert_subvector v4i64:$v0, v2i64:$v1, (i64 0))),
+  (INSERT_SUBREG QuadReg:$v0, PairedReg:$v1, sub_q0)>;
+
+def : Pat<(v4i64 (insert_subvector v4i64:$v0, v2i64:$v1, (i64 2))),
+  (INSERT_SUBREG QuadReg:$v0, PairedReg:$v1, sub_q1)>;
 
 // v2i32
 def : Pat<(v2i32 (extract_subvector (v4i32 PairedReg:$v), (i64 0))),

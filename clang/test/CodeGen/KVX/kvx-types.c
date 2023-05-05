@@ -6,13 +6,13 @@
 
 // CHECK-LABEL: @qi(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[V64:%.*]] = load <64 x i8>, <64 x i8>* [[TMP0:%.*]], align 32, [[TBAA2:!tbaa !.*]]
-// CHECK-NEXT:    [[VECEXT:%.*]] = extractelement <8 x i8> [[V8:%.*]], i32 7
-// CHECK-NEXT:    [[VECEXT1:%.*]] = extractelement <16 x i8> [[V16:%.*]], i32 15
+// CHECK-NEXT:    [[VECEXT:%.*]] = extractelement <8 x i8> [[V8:%.*]], i64 7
+// CHECK-NEXT:    [[VECEXT1:%.*]] = extractelement <16 x i8> [[V16:%.*]], i64 15
 // CHECK-NEXT:    [[ADD:%.*]] = add i8 [[VECEXT1]], [[VECEXT]]
-// CHECK-NEXT:    [[VECEXT3:%.*]] = extractelement <32 x i8> [[V32:%.*]], i32 31
+// CHECK-NEXT:    [[VECEXT3:%.*]] = extractelement <32 x i8> [[V32:%.*]], i64 31
 // CHECK-NEXT:    [[ADD5:%.*]] = add i8 [[ADD]], [[VECEXT3]]
-// CHECK-NEXT:    [[VECEXT6:%.*]] = extractelement <64 x i8> [[V64]], i32 63
+// CHECK-NEXT:    [[TMP1:%.*]] = getelementptr inbounds <64 x i8>, ptr [[TMP0:%.*]], i64 0, i64 63
+// CHECK-NEXT:    [[VECEXT6:%.*]] = load i8, ptr [[TMP1]], align 1
 // CHECK-NEXT:    [[ADD8:%.*]] = add i8 [[ADD5]], [[VECEXT6]]
 // CHECK-NEXT:    ret i8 [[ADD8]]
 //
@@ -22,13 +22,13 @@ char qi(__kvx_v8qi v8, __kvx_v16qi v16, __kvx_v32qi v32, __kvx_v64qi v64) {
 
 // CHECK-LABEL: @hi(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[V32:%.*]] = load <32 x i16>, <32 x i16>* [[TMP0:%.*]], align 32, [[TBAA2]]
-// CHECK-NEXT:    [[VECEXT:%.*]] = extractelement <4 x i16> [[V4:%.*]], i32 3
-// CHECK-NEXT:    [[VECEXT1:%.*]] = extractelement <8 x i16> [[V8:%.*]], i32 7
+// CHECK-NEXT:    [[VECEXT:%.*]] = extractelement <4 x i16> [[V4:%.*]], i64 3
+// CHECK-NEXT:    [[VECEXT1:%.*]] = extractelement <8 x i16> [[V8:%.*]], i64 7
 // CHECK-NEXT:    [[ADD:%.*]] = add i16 [[VECEXT1]], [[VECEXT]]
-// CHECK-NEXT:    [[VECEXT3:%.*]] = extractelement <16 x i16> [[V16:%.*]], i32 15
+// CHECK-NEXT:    [[VECEXT3:%.*]] = extractelement <16 x i16> [[V16:%.*]], i64 15
 // CHECK-NEXT:    [[ADD5:%.*]] = add i16 [[ADD]], [[VECEXT3]]
-// CHECK-NEXT:    [[VECEXT6:%.*]] = extractelement <32 x i16> [[V32]], i32 31
+// CHECK-NEXT:    [[TMP1:%.*]] = getelementptr inbounds <32 x i16>, ptr [[TMP0:%.*]], i64 0, i64 31
+// CHECK-NEXT:    [[VECEXT6:%.*]] = load i16, ptr [[TMP1]], align 2
 // CHECK-NEXT:    [[ADD8:%.*]] = add i16 [[ADD5]], [[VECEXT6]]
 // CHECK-NEXT:    ret i16 [[ADD8]]
 //
@@ -38,13 +38,13 @@ short hi(__kvx_v4hi v4, __kvx_v8hi v8, __kvx_v16hi v16, __kvx_v32hi v32) {
 
 // CHECK-LABEL: @si(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[V16:%.*]] = load <16 x i32>, <16 x i32>* [[TMP0:%.*]], align 32, [[TBAA2]]
-// CHECK-NEXT:    [[VECEXT:%.*]] = extractelement <2 x i32> [[V2:%.*]], i32 1
-// CHECK-NEXT:    [[VECEXT1:%.*]] = extractelement <4 x i32> [[V4:%.*]], i32 3
+// CHECK-NEXT:    [[VECEXT:%.*]] = extractelement <2 x i32> [[V2:%.*]], i64 1
+// CHECK-NEXT:    [[VECEXT1:%.*]] = extractelement <4 x i32> [[V4:%.*]], i64 3
 // CHECK-NEXT:    [[ADD:%.*]] = add nsw i32 [[VECEXT1]], [[VECEXT]]
-// CHECK-NEXT:    [[VECEXT2:%.*]] = extractelement <8 x i32> [[V8:%.*]], i32 7
+// CHECK-NEXT:    [[VECEXT2:%.*]] = extractelement <8 x i32> [[V8:%.*]], i64 7
 // CHECK-NEXT:    [[ADD3:%.*]] = add nsw i32 [[ADD]], [[VECEXT2]]
-// CHECK-NEXT:    [[VECEXT4:%.*]] = extractelement <16 x i32> [[V16]], i32 15
+// CHECK-NEXT:    [[TMP1:%.*]] = getelementptr inbounds <16 x i32>, ptr [[TMP0:%.*]], i64 0, i64 15
+// CHECK-NEXT:    [[VECEXT4:%.*]] = load i32, ptr [[TMP1]], align 4
 // CHECK-NEXT:    [[ADD5:%.*]] = add nsw i32 [[ADD3]], [[VECEXT4]]
 // CHECK-NEXT:    ret i32 [[ADD5]]
 //
@@ -54,11 +54,11 @@ int si(__kvx_v2si v2, __kvx_v4si v4, __kvx_v8si v8, __kvx_v16si v16) {
 
 // CHECK-LABEL: @di(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[V8:%.*]] = load <8 x i64>, <8 x i64>* [[TMP0:%.*]], align 32, [[TBAA2]]
-// CHECK-NEXT:    [[VECEXT:%.*]] = extractelement <2 x i64> [[V2:%.*]], i32 1
-// CHECK-NEXT:    [[VECEXT1:%.*]] = extractelement <4 x i64> [[V4:%.*]], i32 3
+// CHECK-NEXT:    [[VECEXT:%.*]] = extractelement <2 x i64> [[V2:%.*]], i64 1
+// CHECK-NEXT:    [[VECEXT1:%.*]] = extractelement <4 x i64> [[V4:%.*]], i64 3
 // CHECK-NEXT:    [[ADD:%.*]] = add nsw i64 [[VECEXT1]], [[VECEXT]]
-// CHECK-NEXT:    [[VECEXT2:%.*]] = extractelement <8 x i64> [[V8]], i32 7
+// CHECK-NEXT:    [[TMP1:%.*]] = getelementptr inbounds <8 x i64>, ptr [[TMP0:%.*]], i64 0, i64 7
+// CHECK-NEXT:    [[VECEXT2:%.*]] = load i64, ptr [[TMP1]], align 8
 // CHECK-NEXT:    [[ADD3:%.*]] = add nsw i64 [[ADD]], [[VECEXT2]]
 // CHECK-NEXT:    ret i64 [[ADD3]]
 //
@@ -68,13 +68,13 @@ long di(__kvx_v2di v2, __kvx_v4di v4, __kvx_v8di v8) {
 
 // CHECK-LABEL: @hf(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[V32:%.*]] = load <32 x half>, <32 x half>* [[TMP0:%.*]], align 32, [[TBAA2]]
-// CHECK-NEXT:    [[VECEXT:%.*]] = extractelement <4 x half> [[V4:%.*]], i32 3
-// CHECK-NEXT:    [[VECEXT1:%.*]] = extractelement <8 x half> [[V8:%.*]], i32 7
+// CHECK-NEXT:    [[VECEXT:%.*]] = extractelement <4 x half> [[V4:%.*]], i64 3
+// CHECK-NEXT:    [[VECEXT1:%.*]] = extractelement <8 x half> [[V8:%.*]], i64 7
 // CHECK-NEXT:    [[ADD:%.*]] = fadd half [[VECEXT]], [[VECEXT1]]
-// CHECK-NEXT:    [[VECEXT2:%.*]] = extractelement <16 x half> [[V16:%.*]], i32 15
+// CHECK-NEXT:    [[VECEXT2:%.*]] = extractelement <16 x half> [[V16:%.*]], i64 15
 // CHECK-NEXT:    [[ADD3:%.*]] = fadd half [[ADD]], [[VECEXT2]]
-// CHECK-NEXT:    [[VECEXT4:%.*]] = extractelement <32 x half> [[V32]], i32 31
+// CHECK-NEXT:    [[TMP1:%.*]] = getelementptr inbounds <32 x half>, ptr [[TMP0:%.*]], i64 0, i64 31
+// CHECK-NEXT:    [[VECEXT4:%.*]] = load half, ptr [[TMP1]], align 2
 // CHECK-NEXT:    [[ADD5:%.*]] = fadd half [[ADD3]], [[VECEXT4]]
 // CHECK-NEXT:    ret half [[ADD5]]
 //
@@ -84,13 +84,13 @@ _Float16 hf(__kvx_v4hf v4, __kvx_v8hf v8, __kvx_v16hf v16, __kvx_v32hf v32) {
 
 // CHECK-LABEL: @sf(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[V16:%.*]] = load <16 x float>, <16 x float>* [[TMP0:%.*]], align 32, [[TBAA2]]
-// CHECK-NEXT:    [[VECEXT:%.*]] = extractelement <2 x float> [[V2:%.*]], i32 1
-// CHECK-NEXT:    [[VECEXT1:%.*]] = extractelement <4 x float> [[V4:%.*]], i32 3
+// CHECK-NEXT:    [[VECEXT:%.*]] = extractelement <2 x float> [[V2:%.*]], i64 1
+// CHECK-NEXT:    [[VECEXT1:%.*]] = extractelement <4 x float> [[V4:%.*]], i64 3
 // CHECK-NEXT:    [[ADD:%.*]] = fadd float [[VECEXT]], [[VECEXT1]]
-// CHECK-NEXT:    [[VECEXT2:%.*]] = extractelement <8 x float> [[V8:%.*]], i32 7
+// CHECK-NEXT:    [[VECEXT2:%.*]] = extractelement <8 x float> [[V8:%.*]], i64 7
 // CHECK-NEXT:    [[ADD3:%.*]] = fadd float [[ADD]], [[VECEXT2]]
-// CHECK-NEXT:    [[VECEXT4:%.*]] = extractelement <16 x float> [[V16]], i32 15
+// CHECK-NEXT:    [[TMP1:%.*]] = getelementptr inbounds <16 x float>, ptr [[TMP0:%.*]], i64 0, i64 15
+// CHECK-NEXT:    [[VECEXT4:%.*]] = load float, ptr [[TMP1]], align 4
 // CHECK-NEXT:    [[ADD5:%.*]] = fadd float [[ADD3]], [[VECEXT4]]
 // CHECK-NEXT:    ret float [[ADD5]]
 //
@@ -100,14 +100,28 @@ float sf(__kvx_v2sf v2, __kvx_v4sf v4, __kvx_v8sf v8, __kvx_v16sf v16) {
 
 // CHECK-LABEL: @df(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[V8:%.*]] = load <8 x double>, <8 x double>* [[TMP0:%.*]], align 32, [[TBAA2]]
-// CHECK-NEXT:    [[VECEXT:%.*]] = extractelement <2 x double> [[V2:%.*]], i32 1
-// CHECK-NEXT:    [[VECEXT1:%.*]] = extractelement <4 x double> [[V4:%.*]], i32 3
+// CHECK-NEXT:    [[VECEXT:%.*]] = extractelement <2 x double> [[V2:%.*]], i64 1
+// CHECK-NEXT:    [[VECEXT1:%.*]] = extractelement <4 x double> [[V4:%.*]], i64 3
 // CHECK-NEXT:    [[ADD:%.*]] = fadd double [[VECEXT]], [[VECEXT1]]
-// CHECK-NEXT:    [[VECEXT2:%.*]] = extractelement <8 x double> [[V8]], i32 7
+// CHECK-NEXT:    [[TMP1:%.*]] = getelementptr inbounds <8 x double>, ptr [[TMP0:%.*]], i64 0, i64 7
+// CHECK-NEXT:    [[VECEXT2:%.*]] = load double, ptr [[TMP1]], align 8
 // CHECK-NEXT:    [[ADD3:%.*]] = fadd double [[ADD]], [[VECEXT2]]
 // CHECK-NEXT:    ret double [[ADD3]]
 //
 double df(__kvx_v2df v2, __kvx_v4df v4, __kvx_v8df v8) {
   return v2[1] + v4[3] + v8[7];
+}
+
+// CHECK-LABEL: @test_vector(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[ADD_PTR:%.*]] = getelementptr inbounds <256 x i1>, ptr [[PTR1:%.*]], i64 2
+// CHECK-NEXT:    [[TMP0:%.*]] = load <256 x i1>, ptr [[ADD_PTR]], align 32, !tbaa [[TBAA2:![0-9]+]]
+// CHECK-NEXT:    [[ADD_PTR1:%.*]] = getelementptr inbounds <256 x i1>, ptr [[PTR2:%.*]], i64 1
+// CHECK-NEXT:    store <256 x i1> [[TMP0]], ptr [[ADD_PTR1]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    ret void
+//
+void test_vector(void *ptr1, void *ptr2) {
+  __kvx_x256 *inp = (__kvx_x256 *)ptr1;
+  __kvx_x256 *outp = (__kvx_x256 *)ptr2;
+  *(outp + 1) = *(inp + 2);
 }

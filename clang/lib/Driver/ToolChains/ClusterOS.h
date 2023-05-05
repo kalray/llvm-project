@@ -96,6 +96,25 @@ public:
   StringRef getGCCInstallPath() const;
   StringRef getGCCMultilibGCCSuffix() const;
 
+  /// IsIntegratedAssemblerDefault - Does this tool chain enable -integrated-as
+  /// by default.
+  bool IsIntegratedAssemblerDefault() const override { return false; }
+
+  /// IsIntegratedBackendDefault - Does this tool chain enable
+  /// -fintegrated-objemitter by default.
+  bool IsIntegratedBackendDefault() const override { return false; }
+
+  /// IsIntegratedBackendSupported - Does this tool chain support
+  /// -fintegrated-objemitter.
+  bool IsIntegratedBackendSupported() const override { return false; }
+
+  /// IsNonIntegratedBackendSupported - Does this tool chain support
+  /// -fno-integrated-objemitter.
+  bool IsNonIntegratedBackendSupported() const override { return true; }
+
+  /// Check if the toolchain should use the integrated backend.
+  // bool useIntegratedBackend() const;
+
 protected:
   Tool *buildAssembler() const override;
   Tool *buildLinker() const override;

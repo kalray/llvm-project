@@ -19508,7 +19508,7 @@ static Value *KVX_emitShiftBuiltin(CodeGenFunction &CGF, const CallExpr *E,
 
   const Expr *Input = E->getArg(0);
   llvm::VectorType *VT = (llvm::VectorType *)CGF.ConvertType(Input->getType());
-  unsigned long VectorSize = VT->getElementCount().getValue();
+  unsigned long VectorSize = VT->getElementCount().getFixedValue();
   Value *InputV = CGF.EmitScalarExpr(Input);
 
   const Expr *Fill = E->getArg(2);
@@ -19953,32 +19953,22 @@ KVX_emitLoadBuiltin(CodeGenFunction &CGF, const CallExpr *E,
                   "\"modifierString\"[ bool isVolatile]");
     return nullptr;
   }
-  int AS =
-      KVX_getLoadAS(CGF.getContext(), E->getArg(1)->IgnoreParenImpCasts(), Mod);
-
-  if (AS == KvxModifier::INVALID_MODIFIER)
-    CGF.CGM.Error(E->getArg(1)->getBeginLoc(), "invalid value");
 
   Address Addr = CGF.EmitPointerWithAlignment(E->getArg(0));
+  if (int AS = KVX_getLoadAS(CGF.getContext(),
+                             E->getArg(1)->IgnoreParenImpCasts(), Mod)) {
 
-  bool Volatile = KVX_isVolatile(CGF, E);
-  llvm::Type *ASType = DataType->getPointerTo(AS);
+    if (AS == KvxModifier::INVALID_MODIFIER)
+      CGF.CGM.Error(E->getArg(1)->getBeginLoc(), "invalid value");
 
-  auto AddrCast = CGF.Builder.CreatePointerBitCastOrAddrSpaceCast(Addr, ASType);
-  auto *Load = CGF.Builder.CreateLoad(AddrCast);
-  Load->setVolatile(Volatile);
-  Align AlignmentInBytes;
-  if (DataType->isVectorTy())
-    AlignmentInBytes =
-        CGF.CGM.getContext()
-            .toCharUnitsFromBits(DataType->getScalarSizeInBits() *
-                llvm::cast<llvm::FixedVectorType>(DataType)->getNumElements())
-            .getAsAlign();
-  else
-    AlignmentInBytes = CGF.CGM.getContext()
-                           .toCharUnitsFromBits(DataType->getScalarSizeInBits())
-                           .getAsAlign();
-  Load->setAlignment(AlignmentInBytes);
+    llvm::Type *ASType = DataType->getPointerTo(AS);
+    Addr = CGF.Builder.CreateAddrSpaceCast(Addr, ASType);
+  }
+
+  auto *Load = CGF.Builder.CreateAlignedLoad(DataType, Addr.getPointer(),
+                                             Addr.getAlignment(), "kvxld");
+
+  Load->setVolatile(KVX_isVolatile(CGF, E));
 
   return Load;
 }
@@ -20082,12 +20072,10 @@ static Value *KVX_emitStoreBuiltin(CodeGenFunction &CGF, const CallExpr *E,
   Value *StoreVal = KVX_truncateOrBitcast(CGF, ToStore, DataType);
 
   Address Addr = CGF.EmitPointerWithAlignment(E->getArg(1));
-  llvm::Type *AType = StoreVal->getType()->getPointerTo();
-  auto AddrCast = CGF.Builder.CreatePointerBitCastOrAddrSpaceCast(Addr, AType);
 
   if (Ready) {
     unsigned IID = Volatile ? Intrinsic::kvx_store_vol : Intrinsic::kvx_store;
-    Value *Ptr = AddrCast.getPointer();
+    Value *Ptr = Addr.getPointer();
     Value *SizeInfo = ConstantInt::get(CGF.Int32Ty, StoreSize);
     SmallVector<Value *, 4> Ops = {StoreVal, Ptr, SizeInfo, Ready};
     Function *StoreI =
@@ -20095,9 +20083,8 @@ static Value *KVX_emitStoreBuiltin(CodeGenFunction &CGF, const CallExpr *E,
     return CGF.Builder.CreateCall(StoreI, Ops);
   }
 
-  llvm::StoreInst *Store = CGF.Builder.CreateStore(StoreVal, AddrCast);
-  Store->setVolatile(Volatile);
-  return Store;
+  return CGF.Builder.CreateAlignedStore(StoreVal, Addr.getPointer(),
+                                        Addr.getAlignment(), Volatile);
 }
 
 static bool KVX_getLsucondOrLsomask(CodeGenFunction &CGF, const Expr *E,
@@ -20254,12 +20241,9 @@ static Value *KVX_emitStoreCondBuiltin(CodeGenFunction &CGF, const CallExpr *E,
     StoreSize = 256;
   }
 
-  Address Addr = CGF.EmitPointerWithAlignment(E->getArg(1));
-  llvm::Type *AType = StoreVal->getType()->getPointerTo();
-  auto AddrCast = CGF.Builder.CreatePointerBitCastOrAddrSpaceCast(Addr, AType);
+  Value *Ptr = CGF.EmitPointerWithAlignment(E->getArg(1)).getPointer();
 
   unsigned IID = Volatile ? Intrinsic::kvx_storec_vol : Intrinsic::kvx_storec;
-  Value *Ptr = AddrCast.getPointer();
   Value *SizeInfo = ConstantInt::get(CGF.Int32Ty, StoreSize);
 
   SmallVector<Value *, 8> Ops = {StoreVal, Ptr,           SizeInfo,
@@ -20329,12 +20313,9 @@ static Value *KVX_emitLoadCondBuiltin(CodeGenFunction &CGF, const CallExpr *E,
     LoadSize = 256;
   }
 
-  Address Addr = CGF.EmitPointerWithAlignment(E->getArg(1));
-  llvm::Type *AType = PreloadVal->getType()->getPointerTo();
-  auto AddrCast = CGF.Builder.CreatePointerBitCastOrAddrSpaceCast(Addr, AType);
+  Value *Ptr = CGF.EmitPointerWithAlignment(E->getArg(1)).getPointer();
 
   unsigned IID = Volatile ? Intrinsic::kvx_loadc_u_vol : Intrinsic::kvx_loadc_u;
-  Value *Ptr = AddrCast.getPointer();
   Value *SizeInfo = ConstantInt::get(CGF.Int32Ty, LoadSize);
 
   Value *VariantModVal = ConstantInt::get(CGF.Int32Ty, VariantMod);

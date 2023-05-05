@@ -1,5 +1,5 @@
 // RUN: %clang_cc1 -fexperimental-max-bitint-width=1024 -fsyntax-only -verify %s
-
+// UNSUPPORTED: kvx
 void f() {
   _Static_assert(__BITINT_MAXWIDTH__ == 1024, "Macro value is unexpected.");
 

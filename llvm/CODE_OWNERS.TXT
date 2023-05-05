@@ -225,10 +225,6 @@ N: Evgeniy Stepanov
 E: eugenis@google.com
 D: MemorySanitizer (LLVM part)
 
-N: Laurent Thevenoux
-E: lthevenoux@kalray.eu
-D: KVX Backend
-
 N: Craig Topper
 E: craig.topper@gmail.com
 D: X86 Backend

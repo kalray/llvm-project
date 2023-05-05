@@ -7,7 +7,7 @@ target triple = "kvx-kalray-cos"
 define void @f() local_unnamed_addr #0 !dbg !7 {
 ; CHECK-LABEL: f:
 ; CHECK:       .Lfunc_begin0:
-; CHECK-NEXT:    .file 1 "d/cfi.c"
+; CHECK-NEXT:    .file 1 "d" "cfi.c"
 ; CHECK-NEXT:    .loc 1 3 0 # cfi.c:3:0
 ; CHECK-NEXT:    .cfi_sections .debug_frame
 ; CHECK-NEXT:    .cfi_startproc
@@ -92,7 +92,7 @@ define i8 @h() local_unnamed_addr #0 !dbg !28 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_register 67, 16
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
-; CHECK-NEXT:    .loc 1 0 0 prologue_end # cfi.c:0:0
+; CHECK-NEXT:    .loc 1 0 0 is_stmt 0 # cfi.c:0:0
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 67, -8
@@ -110,7 +110,7 @@ define i8 @h() local_unnamed_addr #0 !dbg !28 {
 ; CHECK-NEXT:    #DEBUG_VALUE: h:b <- [DW_OP_LLVM_fragment 8 8] -2
 ; CHECK-NEXT:    #DEBUG_VALUE: h:b <- [DW_OP_LLVM_fragment 16 8] -3
 ; CHECK-NEXT:    #DEBUG_VALUE: h:b <- [DW_OP_LLVM_fragment 24 8] -4
-; CHECK-NEXT:    .loc 1 33 3 # cfi.c:33:3
+; CHECK-NEXT:    .loc 1 33 3 prologue_end is_stmt 1 # cfi.c:33:3
 ; CHECK-NEXT:    addd $r12 = $r14, -16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r14 = 16[$r12]

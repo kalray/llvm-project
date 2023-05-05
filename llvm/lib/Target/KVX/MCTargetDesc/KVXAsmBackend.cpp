@@ -15,7 +15,6 @@
 #include "llvm/MC/MCObjectWriter.h"
 #include "llvm/MC/MCSubtargetInfo.h"
 #include "llvm/MC/MCValue.h"
-#include "llvm/Support/TargetRegistry.h"
 
 using namespace llvm;
 
@@ -35,7 +34,8 @@ public:
     return false;
   }
 
-  bool writeNopData(raw_ostream &OS, uint64_t Count) const override {
+  bool writeNopData(raw_ostream &OS, uint64_t Count,
+                    const MCSubtargetInfo *STI) const override {
     // FIXME writeNopData() unimplemented
     return true;
   }

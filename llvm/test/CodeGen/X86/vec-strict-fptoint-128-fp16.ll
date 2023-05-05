@@ -309,7 +309,7 @@ define <8 x i1> @strict_vector_fptosi_v8f16_to_v8i1(<8 x half> %a) #0 {
 define <8 x i1> @strict_vector_fptoui_v8f16_to_v8i1(<8 x half> %a) #0 {
 ; CHECK-LABEL: strict_vector_fptoui_v8f16_to_v8i1:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    vcvttph2dq %xmm0, %ymm0
+; CHECK-NEXT:    vcvttph2udq %xmm0, %ymm0
 ; CHECK-NEXT:    vpslld $31, %ymm0, %ymm0
 ; CHECK-NEXT:    vpmovd2m %ymm0, %k0
 ; CHECK-NEXT:    vpmovm2w %k0, %xmm0

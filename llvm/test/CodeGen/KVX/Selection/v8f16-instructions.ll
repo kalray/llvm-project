@@ -3798,13 +3798,13 @@ define <8 x half> @test_copysign(<8 x half> %a, <8 x half> %b) #0 {
 define <8 x half> @test_copysign_v4f32(<8 x half> %a, <8 x float> %b) #0 {
 ; CV1-LABEL: test_copysign_v4f32:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    fnarrowwhq.rna.s $r2 = $r2r3
-; CV1-NEXT:    fnarrowwhq.rna.s $r3 = $r4r5
+; CV1-NEXT:    fnarrowwhq $r2 = $r2r3
+; CV1-NEXT:    fnarrowwhq $r4 = $r4r5
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    fabshq $r0 = $r0
 ; CV1-NEXT:    fabshq $r1 = $r1
 ; CV1-NEXT:    andd.@ $r2 = $r2, 0x80008000
-; CV1-NEXT:    andd.@ $r3 = $r3, 0x80008000
+; CV1-NEXT:    andd.@ $r3 = $r4, 0x80008000
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    ord $r0 = $r0, $r2
 ; CV1-NEXT:    ord $r1 = $r1, $r3
@@ -3815,11 +3815,11 @@ define <8 x half> @test_copysign_v4f32(<8 x half> %a, <8 x float> %b) #0 {
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    fabshq $r0 = $r0
 ; CV2-NEXT:    fabshq $r1 = $r1
-; CV2-NEXT:    fnarrowwhq.rna.s $r2 = $r2r3
-; CV2-NEXT:    fnarrowwhq.rna.s $r3 = $r4r5
+; CV2-NEXT:    fnarrowwhq $r2 = $r2r3
+; CV2-NEXT:    fnarrowwhq $r4 = $r4r5
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    andd.@ $r2 = $r2, 0x80008000
-; CV2-NEXT:    andd.@ $r3 = $r3, 0x80008000
+; CV2-NEXT:    andd.@ $r3 = $r4, 0x80008000
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    ord $r0 = $r0, $r2
 ; CV2-NEXT:    ord $r1 = $r1, $r3

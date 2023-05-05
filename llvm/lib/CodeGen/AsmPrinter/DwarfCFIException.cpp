@@ -112,8 +112,8 @@ void DwarfCFIException::beginFunction(const MachineFunction *MF) {
   if (MAI.getExceptionHandlingType() != ExceptionHandling::None)
     shouldEmitCFI =
         MAI.usesCFIForEH() && (shouldEmitPersonality || shouldEmitMoves);
-  else
-    shouldEmitCFI = Asm->needsCFIForDebug() && shouldEmitMoves;
+
+  shouldEmitCFI |= (Asm->needsCFIForDebug() && shouldEmitMoves);
 
   beginFragment(&*MF->begin(), getExceptionSym);
 }

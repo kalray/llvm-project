@@ -5,7 +5,7 @@
 // CHECK-LABEL: @xsplat256rr(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call <256 x i1> @llvm.kvx.xsplat.v256i1(i64 [[C:%.*]])
-// CHECK-NEXT:    store <256 x i1> [[TMP0]], <256 x i1>* [[V:%.*]], align 32, [[TBAA2:!tbaa !.*]]
+// CHECK-NEXT:    store <256 x i1> [[TMP0]], ptr [[V:%.*]], align 32, !tbaa [[TBAA2:![0-9]+]]
 // CHECK-NEXT:    ret void
 //
 void xsplat256rr(__kvx_x256 *v, long c) {
@@ -15,7 +15,7 @@ void xsplat256rr(__kvx_x256 *v, long c) {
 // CHECK-LABEL: @xsplat256ri16(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call <256 x i1> @llvm.kvx.xsplat.v256i1(i64 32767)
-// CHECK-NEXT:    store <256 x i1> [[TMP0]], <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
+// CHECK-NEXT:    store <256 x i1> [[TMP0]], ptr [[V:%.*]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void xsplat256ri16(__kvx_x256 *v, long c) {
@@ -25,7 +25,7 @@ void xsplat256ri16(__kvx_x256 *v, long c) {
 // CHECK-LABEL: @xsplat256ri37(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call <256 x i1> @llvm.kvx.xsplat.v256i1(i64 32768)
-// CHECK-NEXT:    store <256 x i1> [[TMP0]], <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
+// CHECK-NEXT:    store <256 x i1> [[TMP0]], ptr [[V:%.*]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void xsplat256ri37(__kvx_x256 *v, long c) {
@@ -35,7 +35,7 @@ void xsplat256ri37(__kvx_x256 *v, long c) {
 // CHECK-LABEL: @xsplat256ri64(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call <256 x i1> @llvm.kvx.xsplat.v256i1(i64 8796093022208)
-// CHECK-NEXT:    store <256 x i1> [[TMP0]], <256 x i1>* [[V:%.*]], align 32, [[TBAA2]]
+// CHECK-NEXT:    store <256 x i1> [[TMP0]], ptr [[V:%.*]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void xsplat256ri64(__kvx_x256 *v, long c) {
@@ -45,7 +45,7 @@ void xsplat256ri64(__kvx_x256 *v, long c) {
 // CHECK-LABEL: @xsplat512rr(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call <512 x i1> @llvm.kvx.xsplat.v512i1(i64 [[C:%.*]])
-// CHECK-NEXT:    store <512 x i1> [[TMP0]], <512 x i1>* [[V:%.*]], align 32, [[TBAA6:!tbaa !.*]]
+// CHECK-NEXT:    store <512 x i1> [[TMP0]], ptr [[V:%.*]], align 32, !tbaa [[TBAA6:![0-9]+]]
 // CHECK-NEXT:    ret void
 //
 void xsplat512rr(__kvx_x512 *v, long c) {
@@ -55,7 +55,7 @@ void xsplat512rr(__kvx_x512 *v, long c) {
 // CHECK-LABEL: @xsplat512ri16(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call <512 x i1> @llvm.kvx.xsplat.v512i1(i64 32767)
-// CHECK-NEXT:    store <512 x i1> [[TMP0]], <512 x i1>* [[V:%.*]], align 32, [[TBAA6]]
+// CHECK-NEXT:    store <512 x i1> [[TMP0]], ptr [[V:%.*]], align 32, !tbaa [[TBAA6]]
 // CHECK-NEXT:    ret void
 //
 void xsplat512ri16(__kvx_x512 *v, long c) {
@@ -65,7 +65,7 @@ void xsplat512ri16(__kvx_x512 *v, long c) {
 // CHECK-LABEL: @xsplat512ri37(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call <512 x i1> @llvm.kvx.xsplat.v512i1(i64 32768)
-// CHECK-NEXT:    store <512 x i1> [[TMP0]], <512 x i1>* [[V:%.*]], align 32, [[TBAA6]]
+// CHECK-NEXT:    store <512 x i1> [[TMP0]], ptr [[V:%.*]], align 32, !tbaa [[TBAA6]]
 // CHECK-NEXT:    ret void
 //
 void xsplat512ri37(__kvx_x512 *v, long c) {
@@ -75,7 +75,7 @@ void xsplat512ri37(__kvx_x512 *v, long c) {
 // CHECK-LABEL: @xsplat512ri64(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call <512 x i1> @llvm.kvx.xsplat.v512i1(i64 8796093022208)
-// CHECK-NEXT:    store <512 x i1> [[TMP0]], <512 x i1>* [[V:%.*]], align 32, [[TBAA6]]
+// CHECK-NEXT:    store <512 x i1> [[TMP0]], ptr [[V:%.*]], align 32, !tbaa [[TBAA6]]
 // CHECK-NEXT:    ret void
 //
 void xsplat512ri64(__kvx_x512 *v, long c) {
@@ -85,7 +85,7 @@ void xsplat512ri64(__kvx_x512 *v, long c) {
 // CHECK-LABEL: @xsplat1024rr(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call <1024 x i1> @llvm.kvx.xsplat.v1024i1(i64 [[C:%.*]])
-// CHECK-NEXT:    store <1024 x i1> [[TMP0]], <1024 x i1>* [[V:%.*]], align 32, [[TBAA8:!tbaa !.*]]
+// CHECK-NEXT:    store <1024 x i1> [[TMP0]], ptr [[V:%.*]], align 32, !tbaa [[TBAA8:![0-9]+]]
 // CHECK-NEXT:    ret void
 //
 void xsplat1024rr(__kvx_x1024 *v, long c) {
@@ -95,7 +95,7 @@ void xsplat1024rr(__kvx_x1024 *v, long c) {
 // CHECK-LABEL: @xsplat1024ri16(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call <1024 x i1> @llvm.kvx.xsplat.v1024i1(i64 32767)
-// CHECK-NEXT:    store <1024 x i1> [[TMP0]], <1024 x i1>* [[V:%.*]], align 32, [[TBAA8]]
+// CHECK-NEXT:    store <1024 x i1> [[TMP0]], ptr [[V:%.*]], align 32, !tbaa [[TBAA8]]
 // CHECK-NEXT:    ret void
 //
 void xsplat1024ri16(__kvx_x1024 *v, long c) {
@@ -105,7 +105,7 @@ void xsplat1024ri16(__kvx_x1024 *v, long c) {
 // CHECK-LABEL: @xsplat1024ri37(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call <1024 x i1> @llvm.kvx.xsplat.v1024i1(i64 32768)
-// CHECK-NEXT:    store <1024 x i1> [[TMP0]], <1024 x i1>* [[V:%.*]], align 32, [[TBAA8]]
+// CHECK-NEXT:    store <1024 x i1> [[TMP0]], ptr [[V:%.*]], align 32, !tbaa [[TBAA8]]
 // CHECK-NEXT:    ret void
 //
 void xsplat1024ri37(__kvx_x1024 *v, long c) {
@@ -115,7 +115,7 @@ void xsplat1024ri37(__kvx_x1024 *v, long c) {
 // CHECK-LABEL: @xsplat1024ri64(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call <1024 x i1> @llvm.kvx.xsplat.v1024i1(i64 8796093022208)
-// CHECK-NEXT:    store <1024 x i1> [[TMP0]], <1024 x i1>* [[V:%.*]], align 32, [[TBAA8]]
+// CHECK-NEXT:    store <1024 x i1> [[TMP0]], ptr [[V:%.*]], align 32, !tbaa [[TBAA8]]
 // CHECK-NEXT:    ret void
 //
 void xsplat1024ri64(__kvx_x1024 *v, long c) {
@@ -125,7 +125,7 @@ void xsplat1024ri64(__kvx_x1024 *v, long c) {
 // CHECK-LABEL: @xsplat2048rr(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call <2048 x i1> @llvm.kvx.xsplat.v2048i1(i64 [[C:%.*]])
-// CHECK-NEXT:    store <2048 x i1> [[TMP0]], <2048 x i1>* [[V:%.*]], align 32, [[TBAA10:!tbaa !.*]]
+// CHECK-NEXT:    store <2048 x i1> [[TMP0]], ptr [[V:%.*]], align 32, !tbaa [[TBAA10:![0-9]+]]
 // CHECK-NEXT:    ret void
 //
 void xsplat2048rr(__kvx_x2048 *v, long c) {
@@ -135,7 +135,7 @@ void xsplat2048rr(__kvx_x2048 *v, long c) {
 // CHECK-LABEL: @xsplat2048ri16(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call <2048 x i1> @llvm.kvx.xsplat.v2048i1(i64 32767)
-// CHECK-NEXT:    store <2048 x i1> [[TMP0]], <2048 x i1>* [[V:%.*]], align 32, [[TBAA10]]
+// CHECK-NEXT:    store <2048 x i1> [[TMP0]], ptr [[V:%.*]], align 32, !tbaa [[TBAA10]]
 // CHECK-NEXT:    ret void
 //
 void xsplat2048ri16(__kvx_x2048 *v, long c) {
@@ -145,7 +145,7 @@ void xsplat2048ri16(__kvx_x2048 *v, long c) {
 // CHECK-LABEL: @xsplat2048ri37(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call <2048 x i1> @llvm.kvx.xsplat.v2048i1(i64 32768)
-// CHECK-NEXT:    store <2048 x i1> [[TMP0]], <2048 x i1>* [[V:%.*]], align 32, [[TBAA10]]
+// CHECK-NEXT:    store <2048 x i1> [[TMP0]], ptr [[V:%.*]], align 32, !tbaa [[TBAA10]]
 // CHECK-NEXT:    ret void
 //
 void xsplat2048ri37(__kvx_x2048 *v, long c) {
@@ -155,7 +155,7 @@ void xsplat2048ri37(__kvx_x2048 *v, long c) {
 // CHECK-LABEL: @xsplat2048ri64(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call <2048 x i1> @llvm.kvx.xsplat.v2048i1(i64 8796093022208)
-// CHECK-NEXT:    store <2048 x i1> [[TMP0]], <2048 x i1>* [[V:%.*]], align 32, [[TBAA10]]
+// CHECK-NEXT:    store <2048 x i1> [[TMP0]], ptr [[V:%.*]], align 32, !tbaa [[TBAA10]]
 // CHECK-NEXT:    ret void
 //
 void xsplat2048ri64(__kvx_x2048 *v, long c) {
@@ -165,7 +165,7 @@ void xsplat2048ri64(__kvx_x2048 *v, long c) {
 // CHECK-LABEL: @xsplat4096rr(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call <4096 x i1> @llvm.kvx.xsplat.v4096i1(i64 [[C:%.*]])
-// CHECK-NEXT:    store <4096 x i1> [[TMP0]], <4096 x i1>* [[V:%.*]], align 32, [[TBAA12:!tbaa !.*]]
+// CHECK-NEXT:    store <4096 x i1> [[TMP0]], ptr [[V:%.*]], align 32, !tbaa [[TBAA12:![0-9]+]]
 // CHECK-NEXT:    ret void
 //
 void xsplat4096rr(__kvx_x4096 *v, long c) {
@@ -175,7 +175,7 @@ void xsplat4096rr(__kvx_x4096 *v, long c) {
 // CHECK-LABEL: @xsplat4096ri16(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call <4096 x i1> @llvm.kvx.xsplat.v4096i1(i64 32767)
-// CHECK-NEXT:    store <4096 x i1> [[TMP0]], <4096 x i1>* [[V:%.*]], align 32, [[TBAA12]]
+// CHECK-NEXT:    store <4096 x i1> [[TMP0]], ptr [[V:%.*]], align 32, !tbaa [[TBAA12]]
 // CHECK-NEXT:    ret void
 //
 void xsplat4096ri16(__kvx_x4096 *v, long c) {
@@ -185,7 +185,7 @@ void xsplat4096ri16(__kvx_x4096 *v, long c) {
 // CHECK-LABEL: @xsplat4096ri37(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call <4096 x i1> @llvm.kvx.xsplat.v4096i1(i64 32768)
-// CHECK-NEXT:    store <4096 x i1> [[TMP0]], <4096 x i1>* [[V:%.*]], align 32, [[TBAA12]]
+// CHECK-NEXT:    store <4096 x i1> [[TMP0]], ptr [[V:%.*]], align 32, !tbaa [[TBAA12]]
 // CHECK-NEXT:    ret void
 //
 void xsplat4096ri37(__kvx_x4096 *v, long c) {
@@ -195,7 +195,7 @@ void xsplat4096ri37(__kvx_x4096 *v, long c) {
 // CHECK-LABEL: @xsplat4096ri64(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call <4096 x i1> @llvm.kvx.xsplat.v4096i1(i64 8796093022208)
-// CHECK-NEXT:    store <4096 x i1> [[TMP0]], <4096 x i1>* [[V:%.*]], align 32, [[TBAA12]]
+// CHECK-NEXT:    store <4096 x i1> [[TMP0]], ptr [[V:%.*]], align 32, !tbaa [[TBAA12]]
 // CHECK-NEXT:    ret void
 //
 void xsplat4096ri64(__kvx_x4096 *v, long c) {

@@ -9,9 +9,9 @@
 
 #include "KVXOSPorting.h"
 #include "CommonArgs.h"
-#include "InputInfo.h"
 #include "clang/Driver/Compilation.h"
 #include "clang/Driver/Driver.h"
+#include "clang/Driver/InputInfo.h"
 #include "clang/Driver/Options.h"
 #include "llvm/ADT/SmallString.h"
 #include "llvm/Option/ArgList.h"
@@ -60,8 +60,6 @@ void kvxosporting::Linker::ConstructJob(Compilation &C, const JobAction &JA,
   std::string LDPrefix = llvm::sys::path::parent_path(LDPath).str();
 
   if (!Args.hasArg(options::OPT_nostdlib)) {
-    // crti.o
-    // crtbegin.o
     CmdArgs.push_back(
         Args.MakeArgString(LDPrefix + "/../kvx-llvm/elf/lib/crt0.o"));
   }
@@ -82,9 +80,6 @@ void kvxosporting::Linker::ConstructJob(Compilation &C, const JobAction &JA,
     CmdArgs.push_back("--end-group");
 
     Args.AddAllArgs(CmdArgs, options::OPT_T, options::OPT_L, options::OPT_l);
-
-    // crtend.o
-    // crtn.o
   }
   Args.AddAllArgValues(CmdArgs, options::OPT_Wl_COMMA);
 

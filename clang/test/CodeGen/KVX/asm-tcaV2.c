@@ -4,8 +4,8 @@
 #include "vector-types.h"
 
 // CHECK-LABEL: @use_2k_buff(
-// CHECK-NEXT:    [[TMP3:%.*]] = load <2048 x i1>, <2048 x i1>* [[TMP0:%.*]], align 32, [[TBAA2:!tbaa !.*]]
-// CHECK-NEXT:    [[TMP4:%.*]] = tail call <256 x i1> asm sideeffect "xaligno $0 = $1, $2", "=x,x,r,0"(<2048 x i1> [[TMP3]], i32 [[TMP1:%.*]], <256 x i1> undef) [[ATTR2:#.*]], !srcloc !6
+// CHECK-NEXT:    [[TMP3:%.*]] = load <2048 x i1>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA3:![0-9]+]]
+// CHECK-NEXT:    [[TMP4:%.*]] = tail call <256 x i1> asm sideeffect "xaligno $0 = $1, $2", "=x,x,r,0"(<2048 x i1> [[TMP3]], i32 [[TMP1:%.*]], <256 x i1> undef) #[[ATTR2:[0-9]+]], !srcloc !7
 // CHECK-NEXT:    ret void
 //
 void use_2k_buff(__kvx_x2048 *x, int c) {
@@ -17,8 +17,8 @@ void use_2k_buff(__kvx_x2048 *x, int c) {
 }
 
 // CHECK-LABEL: @use_4k_buff(
-// CHECK-NEXT:    [[TMP3:%.*]] = load <4096 x i1>, <4096 x i1>* [[TMP0:%.*]], align 32, [[TBAA7:!tbaa !.*]]
-// CHECK-NEXT:    [[TMP4:%.*]] = tail call <256 x i1> asm sideeffect "xaligno $0 = $1, $2", "=x,x,r,0"(<4096 x i1> [[TMP3]], i32 [[TMP1:%.*]], <256 x i1> undef) [[ATTR2]], !srcloc !9
+// CHECK-NEXT:    [[TMP3:%.*]] = load <4096 x i1>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA8:![0-9]+]]
+// CHECK-NEXT:    [[TMP4:%.*]] = tail call <256 x i1> asm sideeffect "xaligno $0 = $1, $2", "=x,x,r,0"(<4096 x i1> [[TMP3]], i32 [[TMP1:%.*]], <256 x i1> undef) #[[ATTR2]], !srcloc !10
 // CHECK-NEXT:    ret void
 //
 void use_4k_buff(__kvx_x4096 *x, int c) {
@@ -30,8 +30,8 @@ void use_4k_buff(__kvx_x4096 *x, int c) {
 }
 
 // CHECK-LABEL: @use_2k_buff_clobber(
-// CHECK-NEXT:    [[TMP3:%.*]] = load <4096 x i1>, <4096 x i1>* [[TMP0:%.*]], align 32, [[TBAA7]]
-// CHECK-NEXT:    [[TMP4:%.*]] = tail call <256 x i1> asm sideeffect "xaligno $0 = $1, $2", "=x,x,r,0,~{$a0..a7}"(<4096 x i1> [[TMP3]], i32 [[TMP1:%.*]], <256 x i1> undef) [[ATTR2]], !srcloc !10
+// CHECK-NEXT:    [[TMP3:%.*]] = load <4096 x i1>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA8]]
+// CHECK-NEXT:    [[TMP4:%.*]] = tail call <256 x i1> asm sideeffect "xaligno $0 = $1, $2", "=x,x,r,0,~{$a0..a7}"(<4096 x i1> [[TMP3]], i32 [[TMP1:%.*]], <256 x i1> undef) #[[ATTR2]], !srcloc !11
 // CHECK-NEXT:    ret void
 //
 void use_2k_buff_clobber(__kvx_x4096 *x, int c) {
@@ -43,8 +43,8 @@ void use_2k_buff_clobber(__kvx_x4096 *x, int c) {
 }
 
 // CHECK-LABEL: @use_4k_buff_clobber(
-// CHECK-NEXT:    [[TMP3:%.*]] = load <4096 x i1>, <4096 x i1>* [[TMP0:%.*]], align 32, [[TBAA7]]
-// CHECK-NEXT:    [[TMP4:%.*]] = tail call <256 x i1> asm sideeffect "xaligno $0 = $1, $2", "=x,x,r,0,~{$a0..a15}"(<4096 x i1> [[TMP3]], i32 [[TMP1:%.*]], <256 x i1> undef) [[ATTR2]], !srcloc !11
+// CHECK-NEXT:    [[TMP3:%.*]] = load <4096 x i1>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA8]]
+// CHECK-NEXT:    [[TMP4:%.*]] = tail call <256 x i1> asm sideeffect "xaligno $0 = $1, $2", "=x,x,r,0,~{$a0..a15}"(<4096 x i1> [[TMP3]], i32 [[TMP1:%.*]], <256 x i1> undef) #[[ATTR2]], !srcloc !12
 // CHECK-NEXT:    ret void
 //
 void use_4k_buff_clobber(__kvx_x4096 *x, int c) {

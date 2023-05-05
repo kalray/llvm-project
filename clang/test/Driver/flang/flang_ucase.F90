@@ -1,3 +1,4 @@
+! UNSUPPORTED: kvx
 ! Check that flang -fc1 is invoked when in --driver-mode=flang.
 
 ! This is a copy of flang.f90 because the driver has logic in it which
@@ -42,7 +43,7 @@
 ! CHECK-S-DAG: "-S"
 ! CHECK-S-DAG: "-o" "{{[^"]*}}.s"
 
-! RUN: %clang --driver-mode=flang -### -fintegrated-as -target x86_64     %s 2>&1 | FileCheck --check-prefixes=ALL,CHECK-EMIT-OBJ %s
+! RUN: %clang --driver-mode=flang -### -fintegrated-as     %s 2>&1 | FileCheck --check-prefixes=ALL,CHECK-EMIT-OBJ %s
 ! CHECK-EMIT-OBJ-DAG: "-emit-obj"
 ! CHECK-EMIT-OBJ-DAG: "-o" "{{[^"]*}}.o"
 

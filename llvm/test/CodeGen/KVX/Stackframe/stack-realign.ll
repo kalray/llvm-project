@@ -691,7 +691,7 @@ define i32 @stackrealign4(i32 %n){
 ; CHECK-NEXT:    make $r42 = g23
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 240[$r31] = $r1
-; CHECK-NEXT:    make $r43 = g25
+; CHECK-NEXT:    make $r44 = g25
 ; CHECK-NEXT:    make $r45 = g27
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r1 = 0[$r5]
@@ -760,7 +760,7 @@ define i32 @stackrealign4(i32 %n){
 ; CHECK-NEXT:    lwz $r41 = 0[$r2]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r2 = g26
-; CHECK-NEXT:    lwz $r44 = 0[$r2]
+; CHECK-NEXT:    lwz $r43 = 0[$r2]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    make $r2 = g28
 ; CHECK-NEXT:    lwz $r46 = 0[$r2]
@@ -844,7 +844,7 @@ define i32 @stackrealign4(i32 %n){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r42 = 0[$r42]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r43 = 0[$r43]
+; CHECK-NEXT:    lwz $r44 = 0[$r44]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz $r45 = 0[$r45]
 ; CHECK-NEXT:    ;;
@@ -964,9 +964,9 @@ define i32 @stackrealign4(i32 %n){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 128[$r12] = $r46
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 120[$r12] = $r43
+; CHECK-NEXT:    sw 120[$r12] = $r44
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sw 112[$r12] = $r44
+; CHECK-NEXT:    sw 112[$r12] = $r43
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sw 104[$r12] = $r42
 ; CHECK-NEXT:    ;;

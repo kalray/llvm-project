@@ -14,6 +14,7 @@
 #ifndef LLVM_CLANG_BASIC_TARGETINFO_H
 #define LLVM_CLANG_BASIC_TARGETINFO_H
 
+#include "clang/AST/ASTContext.h"
 #include "clang/Basic/AddressSpaces.h"
 #include "clang/Basic/BitmaskEnum.h"
 #include "clang/Basic/CodeGenOptions.h"
@@ -49,7 +50,6 @@ class DiagnosticsEngine;
 class LangOptions;
 class CodeGenOptions;
 class MacroBuilder;
-class ASTContext;
 
 namespace Builtin { struct Info; }
 

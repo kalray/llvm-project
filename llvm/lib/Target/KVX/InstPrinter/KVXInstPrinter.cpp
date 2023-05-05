@@ -60,26 +60,8 @@ void KVXInstPrinter::printOperand(
     return;
   }
 
-  if (MO.isFPImm()) {
-    unsigned Opcode = MI->getOpcode();
-    switch (Opcode) {
-    // FP is a half
-    case KVX::MAKEi16:
-      printBinary16ImmOperand(MI, OpNo, O);
-      break;
-    // FP is a float
-    case KVX::MAKEi43:
-    case KVX::CMOVEDri37:
-      printBinary32ImmOperand(MI, OpNo, O);
-      break;
-    // FP is a double
-    case KVX::MAKEi64:
-    case KVX::CMOVEDri64:
-      printBinary64ImmOperand(MI, OpNo, O);
-      break;
-    default:
-      report_fatal_error("unable to determine FPImm size");
-    }
+  if (MO.isDFPImm() || MO.isSFPImm()) {
+    report_fatal_error("No fp immediate should be used in MachineOperands.");
     return;
   }
 
@@ -494,66 +476,12 @@ void KVXInstPrinter::printFloatcompMod(const MCInst *MI, unsigned OpNo,
   }
 }
 
-void KVXInstPrinter::printBinary16ImmOperand(const MCInst *MI, unsigned OpNo,
-                                             raw_ostream &O) {
-  printFPImmOperand(MI, OpNo, 16, O);
-  return;
-}
-void KVXInstPrinter::printBinary32ImmOperand(const MCInst *MI, unsigned OpNo,
-                                             raw_ostream &O) {
-  printFPImmOperand(MI, OpNo, 32, O);
-  return;
-}
-void KVXInstPrinter::printBinary64ImmOperand(const MCInst *MI, unsigned OpNo,
-                                             raw_ostream &O) {
-  printFPImmOperand(MI, OpNo, 64, O);
-  return;
-}
-
 void KVXInstPrinter::printFPImmOperand(const MCInst *MI, unsigned OpNo,
-                                       unsigned Size, raw_ostream &O) {
-  const MCOperand &MO = MI->getOperand(OpNo);
-  if (!MO.isFPImm()) {
-    if (MO.isImm())
-      return printOperand(MI, OpNo, O);
-
-    LLVM_DEBUG(MI->dump(); errs() << "Bad FP operand:"; MO.dump());
-    report_fatal_error("illegal fp operand");
-  }
-  switch (Size) {
-  // FP is a half
-  case 16: {
-    // Convert FPImm to an hexadecimal integer string.
-    std::stringstream s;
-    // MC can't converts half to double, so half float value holds
-    // on the 16 least significant bits of a double)
-    double i = MO.getFPImm();
-    s << "0x" << std::hex << *reinterpret_cast<uint16_t *>(&i);
-    O << s.str();
-  } break;
-  // FP is a float
-  case 32: {
-    // Convert FPImm to an hexadecimal integer string
-    std::stringstream s;
-    // MC converts all floating point immediate operands to double.
-    // Convert them back to float should be safe except for nan
-    // payload values.
-    auto f = float(MO.getFPImm());
-    s << "0x" << std::hex << *reinterpret_cast<uint32_t *>(&f);
-    O << s.str();
-  } break;
-  // FP is a double
-  case 64: {
-    // Convert FPImm to an hexadecimal integer string
-    std::stringstream s;
-    double i = MO.getFPImm();
-    s << "0x" << std::hex << *reinterpret_cast<uint64_t *>(&i);
-    O << s.str();
-  } break;
-  default:
-    report_fatal_error("illegal size");
-  }
-  return;
+                                       raw_ostream &O) {
+  int64_t Im = MI->getOperand(OpNo).getImm();
+  std::stringstream S;
+  S << "0x" << std::hex << Im;
+  O << S.str();
 }
 
 void KVXInstPrinter::printSplat32Mod(const MCInst *MI, unsigned OpNo,

@@ -18,6 +18,7 @@
 #include "KVX.h"
 #include "llvm/CodeGen/SelectionDAG.h"
 #include "llvm/CodeGen/TargetLowering.h"
+#include "llvm/IR/IRBuilder.h"
 
 // KVXISD = KVX Instruction Selection DAG
 
@@ -68,9 +69,9 @@ public:
 
   bool shouldInsertFencesForAtomic(const Instruction *I) const override;
 
-  Instruction *emitLeadingFence(IRBuilder<> &Builder, Instruction *Inst,
+  Instruction *emitLeadingFence(IRBuilderBase &Builder, Instruction *Inst,
                                 AtomicOrdering Ord) const override;
-  Instruction *emitTrailingFence(IRBuilder<> &Builder, Instruction *Inst,
+  Instruction *emitTrailingFence(IRBuilderBase &Builder, Instruction *Inst,
                                  AtomicOrdering Ord) const override;
 
   TargetLoweringBase::LegalizeTypeAction
@@ -82,11 +83,11 @@ public:
   // Returns true if the target allows unaligned memory accesses of the
   // specified type.
   bool allowsMisalignedMemoryAccesses(
-      EVT VT, unsigned AddrSpace = 0, unsigned Align = 1,
+      EVT, unsigned AddrSpace = 0, Align Alignment = Align(1),
       MachineMemOperand::Flags Flags = MachineMemOperand::MONone,
       bool *Fast = nullptr) const override {
     if (Fast)
-      *Fast = (Align >= 32);
+      *Fast = (Alignment.value() >= 32);
     return true;
   }
   // LLT variant.
@@ -97,6 +98,11 @@ public:
     if (Fast)
       *Fast = (Alignment >= Align(32));
     return true;
+  }
+
+  bool decomposeMulByConstant(LLVMContext &Context, EVT VT,
+                              SDValue C) const override {
+    return false;
   }
 
 private:
@@ -217,7 +223,8 @@ private:
     return VT == MVT::f16 || VT == MVT::f32 || VT == MVT::f64;
   }
 
-  bool shouldReplaceBy(SDNode *From, unsigned ToOpcode) const override;
+  bool shouldReplaceBy(SDNode *From, unsigned ToOpcode,
+                       SmallVector<SDValue> ConcatOps = {}) const override;
 
   // For scalar types we reduce one instruction, as we do not require
   // to materialize the constant -1.

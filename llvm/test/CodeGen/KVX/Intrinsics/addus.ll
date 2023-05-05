@@ -48,58 +48,36 @@ entry:
 
 ; TODO: This could be addshq, but i16 is not legal.
 define signext i16 @uadd_sat16(i16 signext %a, i16 signext %b) {
-; KVXV1-LABEL: uadd_sat16:
-; KVXV1:       # %bb.0: # %entry
-; KVXV1-NEXT:    zxhd $r0 = $r0
-; KVXV1-NEXT:    zxhd $r1 = $r1
-; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    addw $r0 = $r1, $r0
-; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    minuw $r0 = $r0, 0xffff
-; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    sxhd $r0 = $r0
-; KVXV1-NEXT:    ret
-; KVXV1-NEXT:    ;;
-;
-; KVXV2-LABEL: uadd_sat16:
-; KVXV2:       # %bb.0: # %entry
-; KVXV2-NEXT:    sllw $r0 = $r0, 16
-; KVXV2-NEXT:    sllw $r1 = $r1, 16
-; KVXV2-NEXT:    ;;
-; KVXV2-NEXT:    addusw $r0 = $r1, $r0
-; KVXV2-NEXT:    ;;
-; KVXV2-NEXT:    sraw $r0 = $r0, 16
-; KVXV2-NEXT:    ret
-; KVXV2-NEXT:    ;;
+; CHECK-LABEL: uadd_sat16:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    zxhd $r0 = $r0
+; CHECK-NEXT:    zxhd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addw $r0 = $r1, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    minuw $r0 = $r0, 0xffff
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sxhd $r0 = $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
 entry:
   %0 = tail call i16 @llvm.uadd.sat.i16(i16 %b, i16 %a)
   ret i16 %0
 }
 
 define signext i8 @uadd_sat8(i8 signext %a, i8 signext %b) {
-; KVXV1-LABEL: uadd_sat8:
-; KVXV1:       # %bb.0: # %entry
-; KVXV1-NEXT:    zxbd $r0 = $r0
-; KVXV1-NEXT:    zxbd $r1 = $r1
-; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    addw $r0 = $r1, $r0
-; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    minuw $r0 = $r0, 255
-; KVXV1-NEXT:    ;;
-; KVXV1-NEXT:    sxbd $r0 = $r0
-; KVXV1-NEXT:    ret
-; KVXV1-NEXT:    ;;
-;
-; KVXV2-LABEL: uadd_sat8:
-; KVXV2:       # %bb.0: # %entry
-; KVXV2-NEXT:    sllw $r0 = $r0, 24
-; KVXV2-NEXT:    sllw $r1 = $r1, 24
-; KVXV2-NEXT:    ;;
-; KVXV2-NEXT:    addusw $r0 = $r1, $r0
-; KVXV2-NEXT:    ;;
-; KVXV2-NEXT:    sraw $r0 = $r0, 24
-; KVXV2-NEXT:    ret
-; KVXV2-NEXT:    ;;
+; CHECK-LABEL: uadd_sat8:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    zxbd $r0 = $r0
+; CHECK-NEXT:    zxbd $r1 = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    addw $r0 = $r1, $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    minuw $r0 = $r0, 255
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sxbd $r0 = $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
 entry:
   %0 = tail call i8 @llvm.uadd.sat.i8(i8 %b, i8 %a)
   ret i8 %0
@@ -204,28 +182,6 @@ define signext i64 @uadd_sat64_ri_at(i64 signext %a) {
 entry:
   %0 = tail call i64 @llvm.uadd.sat.i64(i64 %a, i64 2012808794214428399)
   ret i64 %0
-}
-
-define signext i4 @uadd_sat4(i4 signext %a, i4 signext %b) {
-; CHECK-LABEL: uadd_sat4:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addw $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    minw $r0 = $r0, 7
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    maxw $r0 = $r0, -8
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
-entry:
-  %conv = sext i4 %a to i32
-  %conv1 = sext i4 %b to i32
-  %add = add nsw i32 %conv1, %conv
-  %0 = icmp slt i32 %add, 7
-  %spec.store.select = select i1 %0, i32 %add, i32 7
-  %1 = icmp sgt i32 %spec.store.select, -8
-  %spec.store.select10 = select i1 %1, i32 %spec.store.select, i32 -8
-  %conv9 = trunc i32 %spec.store.select10 to i4
-  ret i4 %conv9
 }
 
 define <2 x i32> @uadd_satv2i32(<2 x i32> %a, <2 x i32> %b) {

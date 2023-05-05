@@ -467,7 +467,7 @@ bool KVXFrameLowering::hasFP(const MachineFunction &MF) const {
   const TargetRegisterInfo *RegInfo = MF.getSubtarget().getRegisterInfo();
 
   return MF.getFrameInfo().hasVarSizedObjects() ||
-         RegInfo->needsStackRealignment(MF);
+         RegInfo->hasStackRealignment(MF);
 }
 
 bool KVXFrameLowering::hasReservedCallFrame(const MachineFunction &MF) const {

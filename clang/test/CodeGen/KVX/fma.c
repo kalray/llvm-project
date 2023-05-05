@@ -7,7 +7,7 @@ _Float16 fmaf16(_Float16, _Float16, _Float16);
 
 // CHECK-LABEL: @my_fma(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = call double @llvm.fma.f64(double [[X:%.*]], double [[Y:%.*]], double [[Z:%.*]])
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call double @llvm.fma.f64(double [[X:%.*]], double [[Y:%.*]], double [[Z:%.*]])
 // CHECK-NEXT:    ret double [[TMP0]]
 //
 double my_fma(double x, double y, double z)
@@ -17,7 +17,7 @@ double my_fma(double x, double y, double z)
 
 // CHECK-LABEL: @my_fmaf(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = call float @llvm.fma.f32(float [[X:%.*]], float [[Y:%.*]], float [[Z:%.*]])
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.fma.f32(float [[X:%.*]], float [[Y:%.*]], float [[Z:%.*]])
 // CHECK-NEXT:    ret float [[TMP0]]
 //
 float my_fmaf(float x, float y, float z)
@@ -28,7 +28,7 @@ float my_fmaf(float x, float y, float z)
 // TODO: Make the same happen to half arguments.
 // CHECK-LABEL: @my_fmah(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[CALL:%.*]] = call half @fmaf16(half [[X:%.*]], half [[Y:%.*]], half [[Z:%.*]]) [[ATTR4:#.*]]
+// CHECK-NEXT:    [[CALL:%.*]] = tail call half @fmaf16(half noundef [[X:%.*]], half noundef [[Y:%.*]], half noundef [[Z:%.*]]) #[[ATTR4:[0-9]+]]
 // CHECK-NEXT:    ret half [[CALL]]
 //
 _Float16 my_fmah(_Float16 x, _Float16 y, _Float16 z)

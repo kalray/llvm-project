@@ -18,5 +18,9 @@
 // CHECK-NEXT: -BuiltinType {{.*}} '__kvx_x512'
 // CHECK: TypedefDecl {{.*}} implicit __kvx_x1024 '__kvx_x1024'
 // CHECK-NEXT: -BuiltinType {{.*}} '__kvx_x1024'
+// CHECK: TypedefDecl {{.*}} implicit __kvx_x2048 '__kvx_x2048'
+// CHECK-NEXT: -BuiltinType {{.*}} '__kvx_x2048'
+// CHECK: TypedefDecl {{.*}} implicit __kvx_x4096 '__kvx_x4096'
+// CHECK-NEXT: -BuiltinType {{.*}} '__kvx_x4096'
 
 // OTHER-NOT: __kvx_x

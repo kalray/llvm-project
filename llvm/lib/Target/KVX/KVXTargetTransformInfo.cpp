@@ -237,8 +237,9 @@ bool KVXTTIImpl::isHardwareLoopProfitableCheck(Loop *L, ScalarEvolution &SE) {
 //       features or the cost (e.g. ARMTargetTransformInfo.cpp)?
 //       Unrolling may prevent hwloops, e.g.
 void KVXTTIImpl::getUnrollingPreferences(Loop *L, ScalarEvolution &SE,
-                                         TTI::UnrollingPreferences &UP) {
-  BaseT::getUnrollingPreferences(L, SE, UP);
+                                         TTI::UnrollingPreferences &UP,
+                                         OptimizationRemarkEmitter *ORE) {
+  BaseT::getUnrollingPreferences(L, SE, UP, ORE);
   auto OptLvl = TM->getOptLevel();
   // Disable loop unrolling for Os.
   UP.OptSizeThreshold = 0;
@@ -289,8 +290,8 @@ unsigned KVXTTIImpl::getInliningThresholdMultiplier() const {
 
 unsigned KVXTTIImpl::getNumberOfRegisters(unsigned ClassID) const { return 64; }
 
-bool KVXTTIImpl::isLSRCostLess(TargetTransformInfo::LSRCost &C1,
-                               TargetTransformInfo::LSRCost &C2) const {
+bool KVXTTIImpl::isLSRCostLess(const TargetTransformInfo::LSRCost &C1,
+                               const TargetTransformInfo::LSRCost &C2) const {
   // Care first for num-regs then number of inst.
   // Care last for ImmCost and scale.
   // TODO: Check if NumRegs really matches the actual use of registers.

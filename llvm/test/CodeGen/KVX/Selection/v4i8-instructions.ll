@@ -715,8 +715,8 @@ define <4 x i8> @test_select_cc(<4 x i8> %a, <4 x i8> %b, <4 x i8> %c, <4 x i8> 
 ; CV1-NEXT:    sxlbhq $r2 = $r2
 ; CV1-NEXT:    sxlbhq $r3 = $r3
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sbmm8 $r0 = $r0, 0x8000400020001
-; CV1-NEXT:    sbmm8 $r1 = $r1, 0x8000400020001
+; CV1-NEXT:    sxlbhq $r0 = $r0
+; CV1-NEXT:    sxlbhq $r1 = $r1
 ; CV1-NEXT:    compnhq.lt $r2 = $r2, $r3
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    andd.@ $r2 = $r2, 0xff00ff

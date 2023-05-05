@@ -7,7 +7,7 @@ target triple = "kvx-kalray-cos"
 define void @testuvec(<4 x i32>* nocapture readonly %A, <4 x i32>* nocapture readonly %B, <4 x i32>* nocapture %R) local_unnamed_addr #0 !dbg !7 {
 ; CHECK-LABEL: testuvec:
 ; CHECK:       .Lfunc_begin0:
-; CHECK-NEXT:    .file 1 "d/cfi-order.c"
+; CHECK-NEXT:    .file 1 "d" "cfi-order.c"
 ; CHECK-NEXT:    .loc 1 5 0 # cfi-order.c:5:0
 ; CHECK-NEXT:    .cfi_sections .debug_frame
 ; CHECK-NEXT:    .cfi_startproc
@@ -44,8 +44,6 @@ define void @testuvec(<4 x i32>* nocapture readonly %A, <4 x i32>* nocapture rea
 ; CHECK-NEXT:    .cfi_offset 18, -72
 ; CHECK-NEXT:  .Ltmp0:
 ; CHECK-NEXT:    #DEBUG_VALUE: testuvec:R <- $r18
-; CHECK-NEXT:    #DEBUG_VALUE: testuvec:B <- $r1
-; CHECK-NEXT:    #DEBUG_VALUE: testuvec:A <- $r0
 ; CHECK-NEXT:    .loc 1 5 49 prologue_end # cfi-order.c:5:49
 ; CHECK-NEXT:    lq $r22r23 = 0[$r0]
 ; CHECK-NEXT:    ;;
@@ -157,8 +155,6 @@ define void @testsvec(<4 x i32>* nocapture readonly %A, <4 x i32>* nocapture rea
 ; CHECK-NEXT:    .cfi_offset 18, -72
 ; CHECK-NEXT:  .Ltmp5:
 ; CHECK-NEXT:    #DEBUG_VALUE: testsvec:R <- $r18
-; CHECK-NEXT:    #DEBUG_VALUE: testsvec:B <- $r1
-; CHECK-NEXT:    #DEBUG_VALUE: testsvec:A <- $r0
 ; CHECK-NEXT:    .loc 1 6 49 prologue_end # cfi-order.c:6:49
 ; CHECK-NEXT:    lq $r22r23 = 0[$r0]
 ; CHECK-NEXT:    ;;
@@ -248,11 +244,7 @@ define i32 @f() local_unnamed_addr #1 !dbg !47 {
 ; CHECK-NEXT:  .Ltmp10:
 ; CHECK-NEXT:    #DEBUG_VALUE: f:S3 <- undef
 ; CHECK-NEXT:    #DEBUG_VALUE: f:U3 <- undef
-; CHECK-NEXT:    #DEBUG_VALUE: f:U1 <- undef
-; CHECK-NEXT:    #DEBUG_VALUE: f:U2 <- undef
-; CHECK-NEXT:    #DEBUG_VALUE: f:S1 <- undef
-; CHECK-NEXT:    #DEBUG_VALUE: f:S2 <- undef
-; CHECK-NEXT:    .loc 1 0 0 prologue_end # cfi-order.c:0:0
+; CHECK-NEXT:    .loc 1 0 0 is_stmt 0 # cfi-order.c:0:0
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 67, -8
@@ -261,11 +253,12 @@ define i32 @f() local_unnamed_addr #1 !dbg !47 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa 14, 16
 ; CHECK-NEXT:    .cfi_offset 14, -16
+; CHECK-NEXT:  .Ltmp11:
 ; CHECK-NEXT:    #DEBUG_VALUE: f:S2 <- undef
 ; CHECK-NEXT:    #DEBUG_VALUE: f:S1 <- undef
 ; CHECK-NEXT:    #DEBUG_VALUE: f:U2 <- undef
 ; CHECK-NEXT:    #DEBUG_VALUE: f:U1 <- undef
-; CHECK-NEXT:    .loc 1 32 3 # cfi-order.c:32:3
+; CHECK-NEXT:    .loc 1 32 3 prologue_end is_stmt 1 # cfi-order.c:32:3
 ; CHECK-NEXT:    addd $r12 = $r14, -16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r14 = 16[$r12]
@@ -278,7 +271,7 @@ define i32 @f() local_unnamed_addr #1 !dbg !47 {
 ; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .Ltmp11:
+; CHECK-NEXT:  .Ltmp12:
 entry:
   call void @llvm.dbg.value(metadata <4 x i32> <i32 2, i32 undef, i32 undef, i32 undef>, metadata !58, metadata !DIExpression()), !dbg !69
   call void @llvm.dbg.value(metadata <4 x i32> <i32 2, i32 undef, i32 undef, i32 undef>, metadata !51, metadata !DIExpression()), !dbg !69

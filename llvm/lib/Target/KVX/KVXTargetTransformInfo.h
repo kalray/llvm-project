@@ -44,7 +44,8 @@ public:
         ST(TM->getSubtargetImpl(F)), TLI(ST->getTargetLowering()) {}
 
   void getUnrollingPreferences(Loop *L, ScalarEvolution &SE,
-                               TTI::UnrollingPreferences &UP);
+                               TTI::UnrollingPreferences &UP,
+                               OptimizationRemarkEmitter *ORE);
 
   bool isHardwareLoopProfitable(Loop *L, ScalarEvolution &SE,
                                 AssumptionCache &AC, TargetLibraryInfo *LibInfo,
@@ -52,12 +53,14 @@ public:
   bool shouldAddRemainderMetaData();
   bool isLoweredToCall(const Function *F);
   bool isLoweredToCall(const CallInst &CI);
-  bool isLSRCostLess(TargetTransformInfo::LSRCost &C1,
-                     TargetTransformInfo::LSRCost &C2) const;
+  bool isLSRCostLess(const TargetTransformInfo::LSRCost &C1,
+                     const TargetTransformInfo::LSRCost &C2) const;
   unsigned getInliningThresholdMultiplier() const;
 
   unsigned getNumberOfRegisters(unsigned ClassID) const;
-  unsigned getRegisterBitWidth(bool Vector) const { return 64; }
+  TypeSize getRegisterBitWidth(bool Vector) const {
+    return TypeSize::Fixed(Vector ? 256 : 64);
+  }
 
   TargetTransformInfo::PopcntSupportKind
   getPopcntSupport(unsigned IntTyWidthInBit) const;

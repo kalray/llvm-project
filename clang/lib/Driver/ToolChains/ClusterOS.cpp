@@ -9,9 +9,9 @@
 
 #include "ClusterOS.h"
 #include "CommonArgs.h"
-#include "InputInfo.h"
 #include "clang/Driver/Compilation.h"
 #include "clang/Driver/Driver.h"
+#include "clang/Driver/InputInfo.h"
 #include "clang/Driver/Options.h"
 #include "llvm/ADT/SmallString.h"
 #include "llvm/Option/ArgList.h"
@@ -91,19 +91,17 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
     std::string LDPrefix = llvm::sys::path::parent_path(LDPath).str();
 
     const Arg *A = Args.getLastArg(options::OPT_march_EQ);
-    if (A && strcmp(A->getValue(), "kv3-2") == 0) {
-      LibDir = LDPrefix + "/../kvx-cos/lib/kv3-2";
-      GCCLibDir = LDPrefix + "/../lib/gcc/kvx-cos/" +
-                  CTC.getGCCVersion().data() + "/kv3-2";
-      LLVMLibDir = LDPrefix + "/../lib/llvm/cos/kv3-2";
-      LLVMTCLibDir = LDPrefix + "/../kvx-llvm/cos/lib/kv3-2";
-    } else {
-      LibDir = LDPrefix + "/../kvx-cos/lib";
-      GCCLibDir =
-          LDPrefix + "/../lib/gcc/kvx-cos/" + CTC.getGCCVersion().data();
-      LLVMLibDir = LDPrefix + "/../lib/llvm/cos";
-      LLVMTCLibDir = LDPrefix + "/../kvx-llvm/cos/lib";
-    }
+    std::string SubFolder;
+    if (!A || llvm::StringRef(A->getValue()) == "kv3-1")
+      SubFolder = "";
+    else
+      SubFolder = "/" + std::string(A->getValue());
+
+    LibDir = LDPrefix + "/../kvx-cos/lib" + SubFolder;
+    GCCLibDir = LDPrefix + "/../lib/gcc/kvx-cos/" + CTC.getGCCVersion().data() +
+                SubFolder;
+    LLVMLibDir = LDPrefix + "/../lib/llvm/cos" + SubFolder;
+    LLVMTCLibDir = LDPrefix + "/../kvx-llvm/cos/lib" + SubFolder;
   }
 
   ArgStringList CmdArgs;

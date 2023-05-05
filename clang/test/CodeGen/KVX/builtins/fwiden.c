@@ -32,9 +32,9 @@ v4f32 fwidenhwq(v4f16 v) {
 
 // CHECK-LABEL: @fwidenhwo(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <8 x half> [[V:%.*]], <8 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <8 x half> [[V:%.*]], <8 x half> poison, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x float> @llvm.kvx.fwiden.v4f32(<4 x half> [[TMP0]], i32 1)
-// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <8 x half> [[V]], <8 x half> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <8 x half> [[V]], <8 x half> poison, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
 // CHECK-NEXT:    [[TMP3:%.*]] = tail call <4 x float> @llvm.kvx.fwiden.v4f32(<4 x half> [[TMP2]], i32 1)
 // CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <4 x float> [[TMP1]], <4 x float> [[TMP3]], <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
 // CHECK-NEXT:    ret <8 x float> [[TMP4]]
@@ -63,9 +63,9 @@ v2f64 fwidenwdp(v2f32 v) {
 
 // CHECK-LABEL: @fwidenwdq(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <4 x float> [[V:%.*]], <4 x float> undef, <2 x i32> <i32 0, i32 1>
+// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <4 x float> [[V:%.*]], <4 x float> poison, <2 x i32> <i32 0, i32 1>
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call <2 x double> @llvm.kvx.fwiden.v2f64(<2 x float> [[TMP0]], i32 1)
-// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <4 x float> [[V]], <4 x float> undef, <2 x i32> <i32 2, i32 3>
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <4 x float> [[V]], <4 x float> poison, <2 x i32> <i32 2, i32 3>
 // CHECK-NEXT:    [[TMP3:%.*]] = tail call <2 x double> @llvm.kvx.fwiden.v2f64(<2 x float> [[TMP2]], i32 1)
 // CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <2 x double> [[TMP1]], <2 x double> [[TMP3]], <4 x i32> <i32 0, i32 1, i32 2, i32 3>
 // CHECK-NEXT:    ret <4 x double> [[TMP4]]

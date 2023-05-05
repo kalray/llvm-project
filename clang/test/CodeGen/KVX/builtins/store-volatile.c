@@ -6,17 +6,14 @@
 
 // CHECK-LABEL: @ld(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = bitcast i8* [[P:%.*]] to i64*
-// CHECK-NEXT:    [[TMP1:%.*]] = load volatile i64, i64* [[TMP0]], align 8
-// CHECK-NEXT:    [[TMP2:%.*]] = load volatile i64, i64* [[TMP0]], align 8
-// CHECK-NEXT:    [[TMP3:%.*]] = load volatile i64, i64* [[TMP0]], align 8
-// CHECK-NEXT:    [[TMP4:%.*]] = load volatile i64, i64* [[TMP0]], align 8
-// CHECK-NEXT:    [[SEXT:%.*]] = shl i64 [[TMP4]], 32
-// CHECK-NEXT:    [[CONV4:%.*]] = ashr exact i64 [[SEXT]], 32
-// CHECK-NEXT:    ret i64 [[CONV4]]
+// CHECK-NEXT:    [[KVXLD:%.*]] = load volatile i64, ptr [[P:%.*]], align 1
+// CHECK-NEXT:    [[KVXLD1:%.*]] = load volatile i64, ptr [[P]], align 1
+// CHECK-NEXT:    [[KVXLD2:%.*]] = load volatile i64, ptr [[P]], align 1
+// CHECK-NEXT:    [[KVXLD3:%.*]] = load volatile i64, ptr [[P]], align 1
+// CHECK-NEXT:    ret i64 [[KVXLD3]]
 //
 long ld(volatile void *p) {
-  int ret;
+  long ret;
   ret = __builtin_kvx_ld(p, "", TRUE);
   ret = __builtin_kvx_ld(p, "", TRUE);
   ret = __builtin_kvx_ld(p, "", FALSE);

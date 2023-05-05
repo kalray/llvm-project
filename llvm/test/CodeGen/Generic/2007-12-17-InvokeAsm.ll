@@ -1,7 +1,8 @@
 ; RUN: llc -no-integrated-as < %s
 
 ; The test uses inline assembly with x86-specific constraints.
-; UNSUPPORTED: nvptx
+; kvx does not support cfi exception model
+; UNSUPPORTED: nvptx, kvx
 
 
 define fastcc void @bc__support__high_resolution_time__initialize_clock_rate() personality i32 (...)* @__gxx_personality_v0 {

@@ -159,7 +159,7 @@ entry:
 define i32 @foo_speculative_x(<4 x i32> addrspace(258)* nocapture readonly %v, i32 %x){
 ; CHECK-LABEL: foo_speculative_x:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sxwd $r1 = $r1
+; CHECK-NEXT:    andw $r1 = $r1, 3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    lwz.s.xs $r0 = $r1[$r0]
 ; CHECK-NEXT:    ret

@@ -12,7 +12,9 @@
 
 
 def Pcrel27 : Operand<iPTR> {}
+def Pcrel27Imm : Operand<OtherVT> {}
 def Pcrel17 : Operand<iPTR> {}
+def Pcrel17Imm : Operand<OtherVT> {}
 def Sysnumber : Operand<i32>, ImmLeaf<i32, [{return isInt<12>(Imm);}]>;
 def Unsigned6 : Operand<i64>, ImmLeaf<i64, [{return isUInt<6>(Imm);}]>;
 def Unsigned6W : Operand<i32>, ImmLeaf<i32, [{return isUInt<6>(Imm);}]>;
@@ -112,31 +114,31 @@ def ConjugateMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 1);
 def Binary16 : Operand<f16>, FPImmLeaf<f16, [{
       return isUInt<16>(Imm.bitcastToAPInt().getZExtValue());
     }]> {
-  let PrintMethod = "printBinary16ImmOperand";
+  let PrintMethod = "printFPImmOperand";
 }
 
 def Binary16x4 : Operand<v4f16>, FPImmLeaf<v4f16, [{
       return isInt<64>(Imm.bitcastToAPInt().getSExtValue());
     }]> {
-  let PrintMethod = "printBinary64ImmOperand";
+  let PrintMethod = "printFPImmOperand";
 }
 
 def Binary32 : Operand<f32>, FPImmLeaf<f32, [{
       return isUInt<32>(Imm.bitcastToAPInt().getZExtValue());
     }]> {
-  let PrintMethod = "printBinary32ImmOperand";
+  let PrintMethod = "printFPImmOperand";
 }
 
 def Binary32x2 : Operand<v2f32>, FPImmLeaf<v2f32, [{
       return isInt<64>(Imm.bitcastToAPInt().getZExtValue());
     }]> {
-  let PrintMethod = "printBinary64ImmOperand";
+  let PrintMethod = "printFPImmOperand";
 }
 
 def Binary64 : Operand<f64>, FPImmLeaf<f64, [{
       return isUInt<64>(Imm.bitcastToAPInt().getZExtValue());
     }]> {
-  let PrintMethod = "printBinary64ImmOperand";
+  let PrintMethod = "printFPImmOperand";
 }
 
 def TransposeMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 3);}]> {

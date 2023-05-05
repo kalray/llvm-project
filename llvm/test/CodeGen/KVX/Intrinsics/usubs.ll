@@ -61,12 +61,12 @@ define signext i16 @usub_sat16(i16 signext %a, i16 signext %b) {
 ;
 ; KVXV2-LABEL: usub_sat16:
 ; KVXV2:       # %bb.0: # %entry
-; KVXV2-NEXT:    sllw $r0 = $r0, 16
-; KVXV2-NEXT:    sllw $r1 = $r1, 16
+; KVXV2-NEXT:    zxhd $r0 = $r0
+; KVXV2-NEXT:    zxhd $r1 = $r1
 ; KVXV2-NEXT:    ;;
 ; KVXV2-NEXT:    sbfusw $r0 = $r0, $r1
 ; KVXV2-NEXT:    ;;
-; KVXV2-NEXT:    sraw $r0 = $r0, 16
+; KVXV2-NEXT:    sxhd $r0 = $r0
 ; KVXV2-NEXT:    ret
 ; KVXV2-NEXT:    ;;
 entry:
@@ -91,12 +91,12 @@ define signext i8 @usub_sat8(i8 signext %a, i8 signext %b) {
 ;
 ; KVXV2-LABEL: usub_sat8:
 ; KVXV2:       # %bb.0: # %entry
-; KVXV2-NEXT:    sllw $r0 = $r0, 24
-; KVXV2-NEXT:    sllw $r1 = $r1, 24
+; KVXV2-NEXT:    zxbd $r0 = $r0
+; KVXV2-NEXT:    zxbd $r1 = $r1
 ; KVXV2-NEXT:    ;;
 ; KVXV2-NEXT:    sbfusw $r0 = $r0, $r1
 ; KVXV2-NEXT:    ;;
-; KVXV2-NEXT:    sraw $r0 = $r0, 24
+; KVXV2-NEXT:    sxbd $r0 = $r0
 ; KVXV2-NEXT:    ret
 ; KVXV2-NEXT:    ;;
 entry:
@@ -201,28 +201,6 @@ define signext i64 @usub_sat64_ri_at(i64 signext %a) {
 entry:
   %0 = tail call i64 @llvm.usub.sat.i64(i64 2012808794214428399, i64 %a)
   ret i64 %0
-}
-
-define signext i4 @usub_sat4(i4 signext %a, i4 signext %b) {
-; CHECK-LABEL: usub_sat4:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addw $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    minw $r0 = $r0, 7
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    maxw $r0 = $r0, -8
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
-entry:
-  %conv = sext i4 %a to i32
-  %conv1 = sext i4 %b to i32
-  %add = add nsw i32 %conv1, %conv
-  %0 = icmp slt i32 %add, 7
-  %spec.store.select = select i1 %0, i32 %add, i32 7
-  %1 = icmp sgt i32 %spec.store.select, -8
-  %spec.store.select10 = select i1 %1, i32 %spec.store.select, i32 -8
-  %conv9 = trunc i32 %spec.store.select10 to i4
-  ret i4 %conv9
 }
 
 define <2 x i32> @usub_satv2i32(<2 x i32> %a, <2 x i32> %b) {

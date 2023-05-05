@@ -461,7 +461,7 @@ define i32 @main(i32 %argc, i8** nocapture readnone %argv)  {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.6: # %vector.ph
 ; CHECK-NEXT:    # in Loop: Header=BB1_2 Depth=1
-; CHECK-NEXT:    andd $r0 = $r1, -2
+; CHECK-NEXT:    andd $r0 = $r22, -2
 ; CHECK-NEXT:    andd $r2 = $r1, -2
 ; CHECK-NEXT:    copyd $r3 = $r27
 ; CHECK-NEXT:    ;;

@@ -1753,44 +1753,82 @@ define <4 x float> @test_copysign(<4 x float> %a, <4 x float> %b) #0 {
 }
 
 define <4 x float> @test_copysign_v4f16(<4 x float> %a, <4 x half> %b) #0 {
-; CHECK-LABEL: test_copysign_v4f16:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    fabswp $r0 = $r0
-; CHECK-NEXT:    fabswp $r1 = $r1
-; CHECK-NEXT:    andd.@ $r2 = $r2, 0x80008000
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x800000002000000
-; CHECK-NEXT:    sbmm8 $r3 = $r2, 0x8000000020000000
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ord $r0 = $r0, $r2
-; CHECK-NEXT:    ord $r1 = $r1, $r3
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KV3_1-LABEL: test_copysign_v4f16:
+; KV3_1:       # %bb.0:
+; KV3_1-NEXT:    fwidenmhwp $r3 = $r2
+; KV3_1-NEXT:    fwidenlhwp $r4 = $r2
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    fabswp $r0 = $r0
+; KV3_1-NEXT:    fabswp $r1 = $r1
+; KV3_1-NEXT:    andd.@ $r2 = $r3, 0x80000000
+; KV3_1-NEXT:    andd.@ $r3 = $r4, 0x80000000
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ord $r0 = $r0, $r3
+; KV3_1-NEXT:    ord $r1 = $r1, $r2
+; KV3_1-NEXT:    ret
+; KV3_1-NEXT:    ;;
+;
+; KV3_2-LABEL: test_copysign_v4f16:
+; KV3_2:       # %bb.0:
+; KV3_2-NEXT:    fabswp $r0 = $r0
+; KV3_2-NEXT:    fabswp $r1 = $r1
+; KV3_2-NEXT:    fwidenmhwp $r3 = $r2
+; KV3_2-NEXT:    fwidenlhwp $r4 = $r2
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    andd.@ $r2 = $r3, 0x80000000
+; KV3_2-NEXT:    andd.@ $r3 = $r4, 0x80000000
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ord $r0 = $r0, $r3
+; KV3_2-NEXT:    ord $r1 = $r1, $r2
+; KV3_2-NEXT:    ret
+; KV3_2-NEXT:    ;;
   %tb = fpext <4 x half> %b to <4 x float>
   %r = call <4 x float> @llvm.copysign.v4f32(<4 x float> %a, <4 x float> %tb)
   ret <4 x float> %r
 }
 
 define <4 x float> @test_copysign_v4f64(<4 x float> %a, <4 x double> %b) #0 {
-; CHECK-LABEL: test_copysign_v4f64:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    copyd $r4 = $r2
-; CHECK-NEXT:    copyd $r5 = $r3
-; CHECK-NEXT:    copyd $r6 = $r4
-; CHECK-NEXT:    copyd $r7 = $r5
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    srld $r2 = $r6, 63
-; CHECK-NEXT:    srld $r3 = $r4, 63
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r3, 31, 31
-; CHECK-NEXT:    insf $r1 = $r2, 31, 31
-; CHECK-NEXT:    srld $r2 = $r7, 63
-; CHECK-NEXT:    srld $r3 = $r5, 63
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    insf $r0 = $r3, 63, 63
-; CHECK-NEXT:    insf $r1 = $r2, 63, 63
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KV3_1-LABEL: test_copysign_v4f64:
+; KV3_1:       # %bb.0:
+; KV3_1-NEXT:    copyd $r4 = $r2
+; KV3_1-NEXT:    copyd $r5 = $r3
+; KV3_1-NEXT:    copyd $r6 = $r4
+; KV3_1-NEXT:    copyd $r7 = $r5
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    fabswp $r1 = $r1
+; KV3_1-NEXT:    fnarrowdwp $r3 = $r6r7
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    fabswp $r0 = $r0
+; KV3_1-NEXT:    fnarrowdwp $r2 = $r4r5
+; KV3_1-NEXT:    andd.@ $r3 = $r3, 0x80000000
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ord $r1 = $r1, $r3
+; KV3_1-NEXT:    andd.@ $r2 = $r2, 0x80000000
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ord $r0 = $r0, $r2
+; KV3_1-NEXT:    ret
+; KV3_1-NEXT:    ;;
+;
+; KV3_2-LABEL: test_copysign_v4f64:
+; KV3_2:       # %bb.0:
+; KV3_2-NEXT:    copyd $r4 = $r2
+; KV3_2-NEXT:    copyd $r5 = $r3
+; KV3_2-NEXT:    copyd $r6 = $r4
+; KV3_2-NEXT:    copyd $r7 = $r5
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    fabswp $r0 = $r0
+; KV3_2-NEXT:    fabswp $r1 = $r1
+; KV3_2-NEXT:    fnarrowdwp $r3 = $r6r7
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    fnarrowdwp $r2 = $r4r5
+; KV3_2-NEXT:    andd.@ $r3 = $r3, 0x80000000
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ord $r1 = $r1, $r3
+; KV3_2-NEXT:    andd.@ $r2 = $r2, 0x80000000
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ord $r0 = $r0, $r2
+; KV3_2-NEXT:    ret
+; KV3_2-NEXT:    ;;
   %tb = fptrunc <4 x double> %b to <4 x float>
   %r = call <4 x float> @llvm.copysign.v4f32(<4 x float> %a, <4 x float> %tb)
   ret <4 x float> %r
@@ -1820,19 +1858,35 @@ define <4 x double> @test_copysign_extended(<4 x float> %a, <4 x float> %b) #0 {
 }
 
 define <4 x float> @test_copysign_fp16(<4 x float> %a, <4 x half> %b) #0 {
-; CHECK-LABEL: test_copysign_fp16:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    fabswp $r0 = $r0
-; CHECK-NEXT:    fabswp $r1 = $r1
-; CHECK-NEXT:    andd.@ $r2 = $r2, 0x80008000
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x800000002000000
-; CHECK-NEXT:    sbmm8 $r3 = $r2, 0x8000000020000000
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ord $r0 = $r0, $r2
-; CHECK-NEXT:    ord $r1 = $r1, $r3
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; KV3_1-LABEL: test_copysign_fp16:
+; KV3_1:       # %bb.0:
+; KV3_1-NEXT:    fwidenmhwp $r3 = $r2
+; KV3_1-NEXT:    fwidenlhwp $r4 = $r2
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    fabswp $r0 = $r0
+; KV3_1-NEXT:    fabswp $r1 = $r1
+; KV3_1-NEXT:    andd.@ $r2 = $r3, 0x80000000
+; KV3_1-NEXT:    andd.@ $r3 = $r4, 0x80000000
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ord $r0 = $r0, $r3
+; KV3_1-NEXT:    ord $r1 = $r1, $r2
+; KV3_1-NEXT:    ret
+; KV3_1-NEXT:    ;;
+;
+; KV3_2-LABEL: test_copysign_fp16:
+; KV3_2:       # %bb.0:
+; KV3_2-NEXT:    fabswp $r0 = $r0
+; KV3_2-NEXT:    fabswp $r1 = $r1
+; KV3_2-NEXT:    fwidenmhwp $r3 = $r2
+; KV3_2-NEXT:    fwidenlhwp $r4 = $r2
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    andd.@ $r2 = $r3, 0x80000000
+; KV3_2-NEXT:    andd.@ $r3 = $r4, 0x80000000
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ord $r0 = $r0, $r3
+; KV3_2-NEXT:    ord $r1 = $r1, $r2
+; KV3_2-NEXT:    ret
+; KV3_2-NEXT:    ;;
   %eb = fpext <4 x half> %b to <4 x float>
   %r = call <4 x float> @llvm.copysign.v4f32(<4 x float> %a, <4 x float> %eb)
   ret <4 x float> %r

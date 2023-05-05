@@ -81,8 +81,8 @@ unsigned long fixedud(double x) {
 // CHECK-NEXT:    [[TMP2:%.*]] = tail call i64 @llvm.kvx.fixedd(double [[TMP1]], i32 3, i32 0, i32 0)
 // CHECK-NEXT:    [[TMP3:%.*]] = extractelement <2 x double> [[TMP0]], i64 1
 // CHECK-NEXT:    [[TMP4:%.*]] = tail call i64 @llvm.kvx.fixedd(double [[TMP3]], i32 3, i32 0, i32 0)
-// CHECK-NEXT:    [[TMP5:%.*]] = insertelement <2 x i64> undef, i64 [[TMP2]], i32 0
-// CHECK-NEXT:    [[TMP6:%.*]] = insertelement <2 x i64> [[TMP5]], i64 [[TMP4]], i32 1
+// CHECK-NEXT:    [[TMP5:%.*]] = insertelement <2 x i64> undef, i64 [[TMP2]], i64 0
+// CHECK-NEXT:    [[TMP6:%.*]] = insertelement <2 x i64> [[TMP5]], i64 [[TMP4]], i64 1
 // CHECK-NEXT:    [[TMP7:%.*]] = bitcast <2 x i64> [[TMP6]] to <2 x double>
 // CHECK-NEXT:    ret <2 x double> [[TMP7]]
 //
@@ -99,10 +99,10 @@ v2f64 fixeddp(v2i64 v) { return __builtin_kvx_fixeddp(v, 3, ".rn"); }
 // CHECK-NEXT:    [[TMP6:%.*]] = tail call i64 @llvm.kvx.fixedd(double [[TMP5]], i32 3, i32 0, i32 0)
 // CHECK-NEXT:    [[TMP7:%.*]] = extractelement <4 x double> [[TMP0]], i64 3
 // CHECK-NEXT:    [[TMP8:%.*]] = tail call i64 @llvm.kvx.fixedd(double [[TMP7]], i32 3, i32 0, i32 0)
-// CHECK-NEXT:    [[TMP9:%.*]] = insertelement <4 x i64> undef, i64 [[TMP2]], i32 0
-// CHECK-NEXT:    [[TMP10:%.*]] = insertelement <4 x i64> [[TMP9]], i64 [[TMP4]], i32 1
-// CHECK-NEXT:    [[TMP11:%.*]] = insertelement <4 x i64> [[TMP10]], i64 [[TMP6]], i32 2
-// CHECK-NEXT:    [[TMP12:%.*]] = insertelement <4 x i64> [[TMP11]], i64 [[TMP8]], i32 3
+// CHECK-NEXT:    [[TMP9:%.*]] = insertelement <4 x i64> undef, i64 [[TMP2]], i64 0
+// CHECK-NEXT:    [[TMP10:%.*]] = insertelement <4 x i64> [[TMP9]], i64 [[TMP4]], i64 1
+// CHECK-NEXT:    [[TMP11:%.*]] = insertelement <4 x i64> [[TMP10]], i64 [[TMP6]], i64 2
+// CHECK-NEXT:    [[TMP12:%.*]] = insertelement <4 x i64> [[TMP11]], i64 [[TMP8]], i64 3
 // CHECK-NEXT:    [[TMP13:%.*]] = bitcast <4 x i64> [[TMP12]] to <4 x double>
 // CHECK-NEXT:    ret <4 x double> [[TMP13]]
 //
@@ -115,8 +115,8 @@ v4f64 fixeddq(v4i64 v) { return __builtin_kvx_fixeddq(v, 3, ".rn"); }
 // CHECK-NEXT:    [[TMP2:%.*]] = tail call i64 @llvm.kvx.fixedud(double [[TMP1]], i32 3, i32 0, i32 0)
 // CHECK-NEXT:    [[TMP3:%.*]] = extractelement <2 x double> [[TMP0]], i64 1
 // CHECK-NEXT:    [[TMP4:%.*]] = tail call i64 @llvm.kvx.fixedud(double [[TMP3]], i32 3, i32 0, i32 0)
-// CHECK-NEXT:    [[TMP5:%.*]] = insertelement <2 x i64> undef, i64 [[TMP2]], i32 0
-// CHECK-NEXT:    [[TMP6:%.*]] = insertelement <2 x i64> [[TMP5]], i64 [[TMP4]], i32 1
+// CHECK-NEXT:    [[TMP5:%.*]] = insertelement <2 x i64> undef, i64 [[TMP2]], i64 0
+// CHECK-NEXT:    [[TMP6:%.*]] = insertelement <2 x i64> [[TMP5]], i64 [[TMP4]], i64 1
 // CHECK-NEXT:    [[TMP7:%.*]] = bitcast <2 x i64> [[TMP6]] to <2 x double>
 // CHECK-NEXT:    ret <2 x double> [[TMP7]]
 //
@@ -133,10 +133,10 @@ v2f64 fixedudp(v2u64 v) { return __builtin_kvx_fixedudp(v, 3, ".rn"); }
 // CHECK-NEXT:    [[TMP6:%.*]] = tail call i64 @llvm.kvx.fixedud(double [[TMP5]], i32 3, i32 0, i32 0)
 // CHECK-NEXT:    [[TMP7:%.*]] = extractelement <4 x double> [[TMP0]], i64 3
 // CHECK-NEXT:    [[TMP8:%.*]] = tail call i64 @llvm.kvx.fixedud(double [[TMP7]], i32 3, i32 0, i32 0)
-// CHECK-NEXT:    [[TMP9:%.*]] = insertelement <4 x i64> undef, i64 [[TMP2]], i32 0
-// CHECK-NEXT:    [[TMP10:%.*]] = insertelement <4 x i64> [[TMP9]], i64 [[TMP4]], i32 1
-// CHECK-NEXT:    [[TMP11:%.*]] = insertelement <4 x i64> [[TMP10]], i64 [[TMP6]], i32 2
-// CHECK-NEXT:    [[TMP12:%.*]] = insertelement <4 x i64> [[TMP11]], i64 [[TMP8]], i32 3
+// CHECK-NEXT:    [[TMP9:%.*]] = insertelement <4 x i64> undef, i64 [[TMP2]], i64 0
+// CHECK-NEXT:    [[TMP10:%.*]] = insertelement <4 x i64> [[TMP9]], i64 [[TMP4]], i64 1
+// CHECK-NEXT:    [[TMP11:%.*]] = insertelement <4 x i64> [[TMP10]], i64 [[TMP6]], i64 2
+// CHECK-NEXT:    [[TMP12:%.*]] = insertelement <4 x i64> [[TMP11]], i64 [[TMP8]], i64 3
 // CHECK-NEXT:    [[TMP13:%.*]] = bitcast <4 x i64> [[TMP12]] to <4 x double>
 // CHECK-NEXT:    ret <4 x double> [[TMP13]]
 //
@@ -144,13 +144,13 @@ v4f64 fixedudq(v4u64 v) { return __builtin_kvx_fixedudq(v, 3, ".rn"); }
 
 // CHECK-LABEL: @fixeduwo(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <8 x float> [[V:%.*]], <8 x float> undef, <2 x i32> <i32 0, i32 1>
+// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <8 x float> [[V:%.*]], <8 x float> poison, <2 x i32> <i32 0, i32 1>
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call <2 x i32> @llvm.kvx.fixeduwp(<2 x float> [[TMP0]], i32 3, i32 0, i32 0)
-// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <8 x float> [[V]], <8 x float> undef, <2 x i32> <i32 2, i32 3>
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <8 x float> [[V]], <8 x float> poison, <2 x i32> <i32 2, i32 3>
 // CHECK-NEXT:    [[TMP3:%.*]] = tail call <2 x i32> @llvm.kvx.fixeduwp(<2 x float> [[TMP2]], i32 3, i32 0, i32 0)
-// CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <8 x float> [[V]], <8 x float> undef, <2 x i32> <i32 4, i32 5>
+// CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <8 x float> [[V]], <8 x float> poison, <2 x i32> <i32 4, i32 5>
 // CHECK-NEXT:    [[TMP5:%.*]] = tail call <2 x i32> @llvm.kvx.fixeduwp(<2 x float> [[TMP4]], i32 3, i32 0, i32 0)
-// CHECK-NEXT:    [[TMP6:%.*]] = shufflevector <8 x float> [[V]], <8 x float> undef, <2 x i32> <i32 6, i32 7>
+// CHECK-NEXT:    [[TMP6:%.*]] = shufflevector <8 x float> [[V]], <8 x float> poison, <2 x i32> <i32 6, i32 7>
 // CHECK-NEXT:    [[TMP7:%.*]] = tail call <2 x i32> @llvm.kvx.fixeduwp(<2 x float> [[TMP6]], i32 3, i32 0, i32 0)
 // CHECK-NEXT:    [[TMP8:%.*]] = shufflevector <2 x i32> [[TMP1]], <2 x i32> [[TMP3]], <4 x i32> <i32 0, i32 1, i32 2, i32 3>
 // CHECK-NEXT:    [[TMP9:%.*]] = shufflevector <2 x i32> [[TMP5]], <2 x i32> [[TMP7]], <4 x i32> <i32 0, i32 1, i32 2, i32 3>
@@ -168,9 +168,9 @@ v2u32 fixeduwp(v2f32 v) { return __builtin_kvx_fixeduwp(v, 3, ".rn"); }
 
 // CHECK-LABEL: @fixeduwq(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <4 x float> [[V:%.*]], <4 x float> undef, <2 x i32> <i32 0, i32 1>
+// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <4 x float> [[V:%.*]], <4 x float> poison, <2 x i32> <i32 0, i32 1>
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call <2 x i32> @llvm.kvx.fixeduwp(<2 x float> [[TMP0]], i32 3, i32 0, i32 0)
-// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <4 x float> [[V]], <4 x float> undef, <2 x i32> <i32 2, i32 3>
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <4 x float> [[V]], <4 x float> poison, <2 x i32> <i32 2, i32 3>
 // CHECK-NEXT:    [[TMP3:%.*]] = tail call <2 x i32> @llvm.kvx.fixeduwp(<2 x float> [[TMP2]], i32 3, i32 0, i32 0)
 // CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <2 x i32> [[TMP1]], <2 x i32> [[TMP3]], <4 x i32> <i32 0, i32 1, i32 2, i32 3>
 // CHECK-NEXT:    ret <4 x i32> [[TMP4]]
@@ -179,13 +179,13 @@ v4u32 fixeduwq(v4f32 v) { return __builtin_kvx_fixeduwq(v, 3, ".rn"); }
 
 // CHECK-LABEL: @fixedwo(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <8 x float> [[V:%.*]], <8 x float> undef, <2 x i32> <i32 0, i32 1>
+// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <8 x float> [[V:%.*]], <8 x float> poison, <2 x i32> <i32 0, i32 1>
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call <2 x i32> @llvm.kvx.fixedwp(<2 x float> [[TMP0]], i32 3, i32 0, i32 0)
-// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <8 x float> [[V]], <8 x float> undef, <2 x i32> <i32 2, i32 3>
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <8 x float> [[V]], <8 x float> poison, <2 x i32> <i32 2, i32 3>
 // CHECK-NEXT:    [[TMP3:%.*]] = tail call <2 x i32> @llvm.kvx.fixedwp(<2 x float> [[TMP2]], i32 3, i32 0, i32 0)
-// CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <8 x float> [[V]], <8 x float> undef, <2 x i32> <i32 4, i32 5>
+// CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <8 x float> [[V]], <8 x float> poison, <2 x i32> <i32 4, i32 5>
 // CHECK-NEXT:    [[TMP5:%.*]] = tail call <2 x i32> @llvm.kvx.fixedwp(<2 x float> [[TMP4]], i32 3, i32 0, i32 0)
-// CHECK-NEXT:    [[TMP6:%.*]] = shufflevector <8 x float> [[V]], <8 x float> undef, <2 x i32> <i32 6, i32 7>
+// CHECK-NEXT:    [[TMP6:%.*]] = shufflevector <8 x float> [[V]], <8 x float> poison, <2 x i32> <i32 6, i32 7>
 // CHECK-NEXT:    [[TMP7:%.*]] = tail call <2 x i32> @llvm.kvx.fixedwp(<2 x float> [[TMP6]], i32 3, i32 0, i32 0)
 // CHECK-NEXT:    [[TMP8:%.*]] = shufflevector <2 x i32> [[TMP1]], <2 x i32> [[TMP3]], <4 x i32> <i32 0, i32 1, i32 2, i32 3>
 // CHECK-NEXT:    [[TMP9:%.*]] = shufflevector <2 x i32> [[TMP5]], <2 x i32> [[TMP7]], <4 x i32> <i32 0, i32 1, i32 2, i32 3>
@@ -203,9 +203,9 @@ v2i32 fixedwp(v2f32 v) { return __builtin_kvx_fixedwp(v, 3, ".rn"); }
 
 // CHECK-LABEL: @fixedwq(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <4 x float> [[V:%.*]], <4 x float> undef, <2 x i32> <i32 0, i32 1>
+// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <4 x float> [[V:%.*]], <4 x float> poison, <2 x i32> <i32 0, i32 1>
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call <2 x i32> @llvm.kvx.fixedwp(<2 x float> [[TMP0]], i32 3, i32 0, i32 0)
-// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <4 x float> [[V]], <4 x float> undef, <2 x i32> <i32 2, i32 3>
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <4 x float> [[V]], <4 x float> poison, <2 x i32> <i32 2, i32 3>
 // CHECK-NEXT:    [[TMP3:%.*]] = tail call <2 x i32> @llvm.kvx.fixedwp(<2 x float> [[TMP2]], i32 3, i32 0, i32 0)
 // CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <2 x i32> [[TMP1]], <2 x i32> [[TMP3]], <4 x i32> <i32 0, i32 1, i32 2, i32 3>
 // CHECK-NEXT:    ret <4 x i32> [[TMP4]]

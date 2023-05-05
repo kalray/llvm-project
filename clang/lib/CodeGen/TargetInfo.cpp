@@ -11507,8 +11507,8 @@ Address KVXABIInfo::EmitVAArg(CodeGenFunction &CGF, Address VAListAddr,
     AI.setCoerceToType(ArgTy);
 
   CGBuilderTy &Builder = CGF.Builder;
-  Address Addr(Builder.CreateLoad(VAListAddr, "ap.cur"), SlotSize);
-  llvm::Type *ArgPtrTy = llvm::PointerType::getUnqual(ArgTy);
+  Address Addr = Address(Builder.CreateLoad(VAListAddr, "ap.cur"),
+                         getVAListElementType(CGF), SlotSize);
 
   auto AllocSize = getDataLayout().getTypeAllocSize(AI.getCoerceToType());
   CharUnits Stride = CharUnits::fromQuantity(AllocSize).alignTo(SlotSize);
@@ -11516,7 +11516,7 @@ Address KVXABIInfo::EmitVAArg(CodeGenFunction &CGF, Address VAListAddr,
   Address NextPtr = Builder.CreateConstInBoundsByteGEP(Addr, Stride, "ap.next");
   Builder.CreateStore(NextPtr.getPointer(), VAListAddr);
 
-  return Builder.CreateBitCast(Addr, ArgPtrTy, "arg.addr");
+  return CGF.Builder.CreateElementBitCast(Addr, CGF.ConvertTypeForMem(Ty));
 }
 
 ABIArgInfo KVXABIInfo::classifyBigType(QualType Ty) const {

@@ -1092,8 +1092,10 @@ public:
   /// `From` to a `ToOpcode` node of the same ValueType. This can be
   /// used by the target to prevent undesired dag combinations, such
   /// as converting a vector multiplication by a vector shift, or
-  /// infinite expansions between ROTL and ROTR.
-  virtual bool shouldReplaceBy(SDNode *From, unsigned ToOpcode) const {
+  /// infinite expansions between ROTL and ROTR. Optional field
+  /// Ops hold the new instruction operands.
+  virtual bool shouldReplaceBy(SDNode *From, unsigned ToOpcode,
+                               SmallVector<SDValue> Ops = {}) const {
     return true;
   }
 

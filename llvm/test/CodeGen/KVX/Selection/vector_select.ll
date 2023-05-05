@@ -39,17 +39,16 @@ define void @test_v2_select(<2 x i8> * %m, <2 x i8> * %n){
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    lhz $r2 = 0[$r0]
 ; CV1-NEXT:    make $r3 = 0
-; CV1-NEXT:    make $r5 = -1
+; CV1-NEXT:    make $r4 = -1
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    lhz $r1 = 0[$r1]
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    sbmm8 $r2 = $r2, 0x20001
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sbmm8 $r1 = $r1, 0x20001
+; CV1-NEXT:    sxlbhq $r1 = $r1
 ; CV1-NEXT:    compnhq.eq $r3 = $r2, $r3
-; CV1-NEXT:    sxlbhq $r4 = $r1
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    compnhq.gt $r4 = $r4, $r5
+; CV1-NEXT:    compnhq.gt $r4 = $r1, $r4
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    andw $r3 = $r3, $r4
 ; CV1-NEXT:    ;;
@@ -103,11 +102,10 @@ define void @test_v3_select(<3 x i8> * %m, <3 x i8> * %n){
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    sbmm8 $r2 = $r2, 0x8000400020001
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sbmm8 $r1 = $r1, 0x8000400020001
+; CV1-NEXT:    sxlbhq $r1 = $r1
 ; CV1-NEXT:    compnhq.eq $r3 = $r2, $r3
-; CV1-NEXT:    sxlbhq $r5 = $r1
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    compnhq.gt $r4 = $r5, $r4
+; CV1-NEXT:    compnhq.gt $r4 = $r1, $r4
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    andd $r3 = $r3, $r4
 ; CV1-NEXT:    ;;
@@ -165,17 +163,16 @@ define void @test_v4_select(<4 x i8> * %m, <4 x i8> * %n){
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    lwz $r2 = 0[$r0]
 ; CV1-NEXT:    make $r3 = 0
-; CV1-NEXT:    make $r5 = -1
+; CV1-NEXT:    make $r4 = -1
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    lwz $r1 = 0[$r1]
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    sbmm8 $r2 = $r2, 0x8000400020001
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sbmm8 $r1 = $r1, 0x8000400020001
+; CV1-NEXT:    sxlbhq $r1 = $r1
 ; CV1-NEXT:    compnhq.eq $r3 = $r2, $r3
-; CV1-NEXT:    sxlbhq $r4 = $r1
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    compnhq.gt $r4 = $r4, $r5
+; CV1-NEXT:    compnhq.gt $r4 = $r1, $r4
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    andd $r3 = $r3, $r4
 ; CV1-NEXT:    ;;
@@ -222,35 +219,32 @@ define void @test_v8_select(<8 x i8> * %m, <8 x i8> * %n){
 ; CV1-LABEL: test_v8_select:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    ld $r2 = 0[$r0]
-; CV1-NEXT:    make $r3 = 0
-; CV1-NEXT:    make $r4 = -1
+; CV1-NEXT:    make $r4 = 0
+; CV1-NEXT:    make $r6 = -1
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    ld $r1 = 0[$r1]
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    sbmm8 $r2 = $r2, 0x8000400020001
-; CV1-NEXT:    sbmm8 $r5 = $r2, 0x80004000200010
+; CV1-NEXT:    sbmm8 $r3 = $r2, 0x80004000200010
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    compnhq.eq $r3 = $r2, $r3
-; CV1-NEXT:    sxmbhq $r6 = $r1
-; CV1-NEXT:    sxlbhq $r7 = $r1
-; CV1-NEXT:    compnhq.eq $r8 = $r5, $r3
+; CV1-NEXT:    sxlbhq $r1 = $r1
+; CV1-NEXT:    compnhq.eq $r4 = $r2, $r4
+; CV1-NEXT:    sxmbhq $r5 = $r1
+; CV1-NEXT:    compnhq.eq $r7 = $r3, $r4
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    compnhq.gt $r4 = $r7, $r4
-; CV1-NEXT:    compnhq.gt $r6 = $r6, $r4
+; CV1-NEXT:    compnhq.gt $r6 = $r1, $r6
+; CV1-NEXT:    compnhq.gt $r8 = $r5, $r6
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    andd $r3 = $r3, $r4
-; CV1-NEXT:    andd $r6 = $r8, $r6
+; CV1-NEXT:    andd $r4 = $r4, $r6
+; CV1-NEXT:    andd $r6 = $r7, $r8
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    andd.@ $r3 = $r3, 0xff00ff
-; CV1-NEXT:    andd.@ $r4 = $r6, 0xff00ff
-; CV1-NEXT:    sbmm8 $r6 = $r1, 0x80004000200010
+; CV1-NEXT:    andd.@ $r4 = $r4, 0xff00ff
+; CV1-NEXT:    andd.@ $r6 = $r6, 0xff00ff
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sbmm8 $r1 = $r1, 0x8000400020001
-; CV1-NEXT:    cmovehq.even $r4 ? $r5 = $r6
+; CV1-NEXT:    cmovehq.even $r4 ? $r2 = $r1
+; CV1-NEXT:    cmovehq.even $r6 ? $r3 = $r5
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sbmm8 $r1 = $r5, 0x40100401
-; CV1-NEXT:    cmovehq.even $r3 ? $r2 = $r1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    sbmm8 $r1 = $r3, 0x40100401
 ; CV1-NEXT:    sbmm8 $r2 = $r2, 0x40100401
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    insf $r2 = $r1, 63, 32
@@ -301,60 +295,55 @@ define void @test_v16_select(<16 x i8> * %m, <16 x i8> * %n){
 ; CV1-LABEL: test_v16_select:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    lq $r2r3 = 0[$r0]
-; CV1-NEXT:    make $r8 = 0
-; CV1-NEXT:    make $r11 = -1
+; CV1-NEXT:    make $r7 = 0
+; CV1-NEXT:    make $r8 = -1
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    lq $r4r5 = 0[$r1]
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    sbmm8 $r3 = $r3, 0x80004000200010
 ; CV1-NEXT:    sbmm8 $r6 = $r3, 0x8000400020001
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sxlbhq $r10 = $r5
-; CV1-NEXT:    sxmbhq $r15 = $r5
-; CV1-NEXT:    compnhq.eq $r17 = $r6, $r8
-; CV1-NEXT:    compnhq.eq $r32 = $r3, $r8
+; CV1-NEXT:    sxmbhq $r5 = $r5
+; CV1-NEXT:    sxlbhq $r9 = $r5
+; CV1-NEXT:    compnhq.eq $r10 = $r6, $r7
+; CV1-NEXT:    compnhq.eq $r11 = $r3, $r7
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    sbmm8 $r1 = $r2, 0x8000400020001
 ; CV1-NEXT:    sbmm8 $r2 = $r2, 0x80004000200010
-; CV1-NEXT:    compnhq.gt $r10 = $r10, $r11
-; CV1-NEXT:    compnhq.gt $r15 = $r15, $r11
+; CV1-NEXT:    compnhq.gt $r15 = $r9, $r8
+; CV1-NEXT:    compnhq.gt $r16 = $r5, $r8
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sxlbhq $r7 = $r4
-; CV1-NEXT:    sxmbhq $r9 = $r4
-; CV1-NEXT:    andd $r10 = $r17, $r10
-; CV1-NEXT:    andd $r15 = $r32, $r15
+; CV1-NEXT:    sxmbhq $r4 = $r4
+; CV1-NEXT:    andd $r10 = $r10, $r15
+; CV1-NEXT:    andd $r11 = $r11, $r16
+; CV1-NEXT:    sxlbhq $r17 = $r4
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sbmm8 $r5 = $r5, 0x8000400020001
-; CV1-NEXT:    compnhq.gt $r7 = $r7, $r11
-; CV1-NEXT:    compnhq.gt $r9 = $r9, $r11
-; CV1-NEXT:    sbmm8 $r16 = $r5, 0x80004000200010
-; CV1-NEXT:    ;;
-; CV1-NEXT:    compnhq.eq $r8 = $r2, $r8
+; CV1-NEXT:    compnhq.eq $r7 = $r2, $r7
 ; CV1-NEXT:    andd.@ $r10 = $r10, 0xff00ff
-; CV1-NEXT:    andd.@ $r11 = $r15, 0xff00ff
-; CV1-NEXT:    compnhq.eq $r15 = $r1, $r8
+; CV1-NEXT:    andd.@ $r11 = $r11, 0xff00ff
+; CV1-NEXT:    compnhq.eq $r15 = $r1, $r7
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    andd $r5 = $r8, $r9
-; CV1-NEXT:    cmovehq.even $r10 ? $r6 = $r5
-; CV1-NEXT:    andd $r7 = $r15, $r7
-; CV1-NEXT:    sbmm8 $r17 = $r4, 0x80004000200010
+; CV1-NEXT:    cmovehq.even $r11 ? $r3 = $r5
+; CV1-NEXT:    cmovehq.even $r10 ? $r6 = $r9
+; CV1-NEXT:    compnhq.gt $r8 = $r4, $r8
+; CV1-NEXT:    compnhq.gt $r16 = $r17, $r8
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sbmm8 $r4 = $r4, 0x8000400020001
-; CV1-NEXT:    andd.@ $r5 = $r5, 0xff00ff
+; CV1-NEXT:    sbmm8 $r3 = $r3, 0x40100401
+; CV1-NEXT:    andd $r5 = $r7, $r8
+; CV1-NEXT:    andd $r7 = $r15, $r16
 ; CV1-NEXT:    sbmm8 $r9 = $r6, 0x40100401
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    cmovehq.even $r5 ? $r2 = $r17
-; CV1-NEXT:    cmovehq.even $r11 ? $r3 = $r16
+; CV1-NEXT:    andd.@ $r5 = $r5, 0xff00ff
 ; CV1-NEXT:    andd.@ $r6 = $r7, 0xff00ff
+; CV1-NEXT:    insf $r9 = $r3, 63, 32
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    cmovehq.even $r6 ? $r1 = $r4
-; CV1-NEXT:    sbmm8 $r3 = $r3, 0x40100401
+; CV1-NEXT:    cmovehq.even $r6 ? $r1 = $r17
+; CV1-NEXT:    cmovehq.even $r5 ? $r2 = $r4
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    sbmm8 $r2 = $r2, 0x40100401
 ; CV1-NEXT:    sbmm8 $r8 = $r1, 0x40100401
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    insf $r8 = $r2, 63, 32
-; CV1-NEXT:    insf $r9 = $r3, 63, 32
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    sq 0[$r0] = $r8r9
 ; CV1-NEXT:    ret
@@ -402,101 +391,91 @@ define void @test_v32_select(<32 x i8> * %m, <32 x i8> * %n){
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    lo $r4r5r6r7 = 0[$r1]
 ; CV1-NEXT:    ;;
+; CV1-NEXT:    sbmm8 $r3 = $r11, 0x8000400020001
+; CV1-NEXT:    sbmm8 $r11 = $r11, 0x80004000200010
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sbmm8 $r10 = $r10, 0x80004000200010
+; CV1-NEXT:    sbmm8 $r15 = $r10, 0x8000400020001
+; CV1-NEXT:    compnhq.eq $r32 = $r3, $r16
+; CV1-NEXT:    compnhq.eq $r33 = $r11, $r16
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sbmm8 $r1 = $r8, 0x8000400020001
+; CV1-NEXT:    sbmm8 $r8 = $r8, 0x80004000200010
+; CV1-NEXT:    compnhq.eq $r34 = $r15, $r16
+; CV1-NEXT:    compnhq.eq $r35 = $r10, $r16
+; CV1-NEXT:    ;;
 ; CV1-NEXT:    sbmm8 $r9 = $r9, 0x80004000200010
 ; CV1-NEXT:    sbmm8 $r17 = $r9, 0x8000400020001
+; CV1-NEXT:    compnhq.eq $r36 = $r1, $r16
+; CV1-NEXT:    compnhq.eq $r37 = $r8, $r16
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sxmbhq $r33 = $r5
-; CV1-NEXT:    compnhq.eq $r35 = $r17, $r16
-; CV1-NEXT:    compnhq.eq $r36 = $r9, $r16
+; CV1-NEXT:    sxmbhq $r5 = $r5
+; CV1-NEXT:    compnhq.eq $r16 = $r9, $r16
 ; CV1-NEXT:    sxlbhq $r38 = $r5
+; CV1-NEXT:    compnhq.eq $r39 = $r17, $r16
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sbmm8 $r8 = $r8, 0x80004000200010
-; CV1-NEXT:    sbmm8 $r15 = $r8, 0x8000400020001
-; CV1-NEXT:    compnhq.gt $r33 = $r33, $r2
-; CV1-NEXT:    compnhq.gt $r38 = $r38, $r2
+; CV1-NEXT:    sxmbhq $r6 = $r6
+; CV1-NEXT:    compnhq.gt $r40 = $r38, $r2
+; CV1-NEXT:    compnhq.gt $r41 = $r5, $r2
+; CV1-NEXT:    sxlbhq $r43 = $r6
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    andd $r33 = $r36, $r33
-; CV1-NEXT:    andd $r35 = $r35, $r38
-; CV1-NEXT:    sbmm8 $r38 = $r5, 0x80004000200010
-; CV1-NEXT:    sxmbhq $r40 = $r4
+; CV1-NEXT:    sxmbhq $r4 = $r4
+; CV1-NEXT:    andd $r16 = $r16, $r41
+; CV1-NEXT:    andd $r39 = $r39, $r40
+; CV1-NEXT:    sxlbhq $r40 = $r4
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sbmm8 $r5 = $r5, 0x8000400020001
-; CV1-NEXT:    andd.@ $r33 = $r33, 0xff00ff
-; CV1-NEXT:    andd.@ $r35 = $r35, 0xff00ff
-; CV1-NEXT:    sxlbhq $r39 = $r4
+; CV1-NEXT:    andd.@ $r16 = $r16, 0xff00ff
+; CV1-NEXT:    andd.@ $r39 = $r39, 0xff00ff
+; CV1-NEXT:    compnhq.gt $r41 = $r40, $r2
+; CV1-NEXT:    compnhq.gt $r44 = $r4, $r2
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    cmovehq.even $r33 ? $r9 = $r38
-; CV1-NEXT:    cmovehq.even $r35 ? $r17 = $r5
-; CV1-NEXT:    compnhq.gt $r40 = $r40, $r2
-; CV1-NEXT:    compnhq.eq $r42 = $r8, $r16
+; CV1-NEXT:    cmovehq.even $r16 ? $r9 = $r5
+; CV1-NEXT:    andd $r16 = $r37, $r44
+; CV1-NEXT:    cmovehq.even $r39 ? $r17 = $r38
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    sbmm8 $r5 = $r17, 0x40100401
 ; CV1-NEXT:    sbmm8 $r9 = $r9, 0x40100401
-; CV1-NEXT:    compnhq.gt $r33 = $r39, $r2
-; CV1-NEXT:    compnhq.eq $r41 = $r15, $r16
+; CV1-NEXT:    andd $r17 = $r36, $r41
+; CV1-NEXT:    compnhq.gt $r36 = $r6, $r2
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sbmm8 $r1 = $r10, 0x8000400020001
 ; CV1-NEXT:    insf $r5 = $r9, 63, 32
-; CV1-NEXT:    andd $r17 = $r42, $r40
+; CV1-NEXT:    andd.@ $r9 = $r16, 0xff00ff
+; CV1-NEXT:    andd.@ $r16 = $r17, 0xff00ff
+; CV1-NEXT:    compnhq.gt $r17 = $r43, $r2
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    andd.@ $r9 = $r17, 0xff00ff
-; CV1-NEXT:    sbmm8 $r10 = $r10, 0x80004000200010
-; CV1-NEXT:    andd $r17 = $r41, $r33
-; CV1-NEXT:    sxlbhq $r37 = $r6
+; CV1-NEXT:    cmovehq.even $r16 ? $r1 = $r40
+; CV1-NEXT:    cmovehq.even $r9 ? $r8 = $r4
+; CV1-NEXT:    andd $r9 = $r34, $r17
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    andd.@ $r17 = $r17, 0xff00ff
-; CV1-NEXT:    sbmm8 $r33 = $r4, 0x80004000200010
-; CV1-NEXT:    sxmbhq $r35 = $r6
-; CV1-NEXT:    compnhq.eq $r36 = $r1, $r16
-; CV1-NEXT:    ;;
-; CV1-NEXT:    sbmm8 $r4 = $r4, 0x8000400020001
-; CV1-NEXT:    cmovehq.even $r9 ? $r8 = $r33
-; CV1-NEXT:    compnhq.gt $r35 = $r35, $r2
-; CV1-NEXT:    compnhq.eq $r38 = $r10, $r16
-; CV1-NEXT:    ;;
+; CV1-NEXT:    andd $r1 = $r35, $r36
+; CV1-NEXT:    sbmm8 $r4 = $r1, 0x40100401
 ; CV1-NEXT:    sbmm8 $r8 = $r8, 0x40100401
-; CV1-NEXT:    compnhq.gt $r9 = $r37, $r2
-; CV1-NEXT:    cmovehq.even $r17 ? $r15 = $r4
-; CV1-NEXT:    ;;
-; CV1-NEXT:    sbmm8 $r3 = $r11, 0x8000400020001
-; CV1-NEXT:    sbmm8 $r4 = $r15, 0x40100401
-; CV1-NEXT:    andd $r9 = $r36, $r9
-; CV1-NEXT:    andd $r15 = $r38, $r35
-; CV1-NEXT:    ;;
-; CV1-NEXT:    andd.@ $r9 = $r9, 0xff00ff
-; CV1-NEXT:    sbmm8 $r11 = $r11, 0x80004000200010
-; CV1-NEXT:    sxlbhq $r32 = $r7
-; CV1-NEXT:    compnhq.eq $r34 = $r3, $r16
-; CV1-NEXT:    ;;
-; CV1-NEXT:    insf $r4 = $r8, 63, 32
-; CV1-NEXT:    andd.@ $r8 = $r15, 0xff00ff
-; CV1-NEXT:    compnhq.eq $r16 = $r11, $r16
-; CV1-NEXT:    sxmbhq $r17 = $r7
-; CV1-NEXT:    ;;
-; CV1-NEXT:    compnhq.gt $r2 = $r32, $r2
-; CV1-NEXT:    sbmm8 $r6 = $r6, 0x8000400020001
-; CV1-NEXT:    sbmm8 $r15 = $r6, 0x80004000200010
-; CV1-NEXT:    compnhq.gt $r17 = $r17, $r2
-; CV1-NEXT:    ;;
-; CV1-NEXT:    cmovehq.even $r9 ? $r1 = $r6
-; CV1-NEXT:    andd $r2 = $r34, $r2
-; CV1-NEXT:    cmovehq.even $r8 ? $r10 = $r15
-; CV1-NEXT:    ;;
-; CV1-NEXT:    andd $r1 = $r16, $r17
-; CV1-NEXT:    andd.@ $r2 = $r2, 0xff00ff
-; CV1-NEXT:    sbmm8 $r6 = $r1, 0x40100401
-; CV1-NEXT:    sbmm8 $r8 = $r10, 0x40100401
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
-; CV1-NEXT:    insf $r6 = $r8, 63, 32
-; CV1-NEXT:    sbmm8 $r8 = $r7, 0x80004000200010
+; CV1-NEXT:    sxmbhq $r7 = $r7
+; CV1-NEXT:    sxlbhq $r42 = $r7
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sbmm8 $r7 = $r7, 0x8000400020001
-; CV1-NEXT:    cmovehq.even $r1 ? $r11 = $r8
+; CV1-NEXT:    compnhq.gt $r2 = $r7, $r2
+; CV1-NEXT:    insf $r4 = $r8, 63, 32
+; CV1-NEXT:    andd.@ $r8 = $r9, 0xff00ff
+; CV1-NEXT:    compnhq.gt $r9 = $r42, $r2
+; CV1-NEXT:    ;;
+; CV1-NEXT:    andd $r2 = $r33, $r2
+; CV1-NEXT:    andd $r8 = $r32, $r9
+; CV1-NEXT:    cmovehq.even $r1 ? $r10 = $r6
+; CV1-NEXT:    cmovehq.even $r8 ? $r15 = $r43
+; CV1-NEXT:    ;;
+; CV1-NEXT:    sbmm8 $r1 = $r10, 0x40100401
+; CV1-NEXT:    sbmm8 $r6 = $r15, 0x40100401
+; CV1-NEXT:    ;;
+; CV1-NEXT:    andd.@ $r1 = $r2, 0xff00ff
+; CV1-NEXT:    andd.@ $r2 = $r8, 0xff00ff
+; CV1-NEXT:    insf $r6 = $r1, 63, 32
+; CV1-NEXT:    ;;
+; CV1-NEXT:    cmovehq.even $r2 ? $r3 = $r42
+; CV1-NEXT:    cmovehq.even $r1 ? $r11 = $r7
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    sbmm8 $r1 = $r11, 0x40100401
-; CV1-NEXT:    cmovehq.even $r2 ? $r3 = $r7
-; CV1-NEXT:    ;;
 ; CV1-NEXT:    sbmm8 $r7 = $r3, 0x40100401
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    insf $r7 = $r1, 63, 32

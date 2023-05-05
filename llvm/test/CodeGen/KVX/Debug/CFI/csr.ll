@@ -1032,8 +1032,6 @@ define i32 @fsum6_sum(i32 %first, i32 %second, ...) local_unnamed_addr #0 !dbg !
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args2 <- [DW_OP_constu 120, DW_OP_minus, DW_OP_deref] $r14
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args <- [DW_OP_constu 112, DW_OP_minus, DW_OP_deref] $r14
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:result <- undef
-; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:second <- $r1
-; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:first <- $r0
 ; CHECK-NEXT:    sd 16[$r14] = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .loc 1 300 3 is_stmt 1 # cfi-csr.c:300:3
@@ -1094,27 +1092,25 @@ define i32 @fsum6_sum(i32 %first, i32 %second, ...) local_unnamed_addr #0 !dbg !
 ; CHECK-NEXT:  .LBB8_3: # %while.cond4
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args <- [DW_OP_constu 112, DW_OP_minus, DW_OP_deref] $r14
-; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:result <- [DW_OP_plus_uconst 1, DW_OP_stack_value] $r0
+; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:result <- [DW_OP_LLVM_arg 0, DW_OP_consts 8, DW_OP_LLVM_arg 0, DW_OP_plus, DW_OP_minus, DW_OP_consts 8, DW_OP_div, DW_OP_LLVM_arg 0, DW_OP_plus, DW_OP_stack_value] undef
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args2 <- $r1
 ; CHECK-NEXT:    .loc 1 306 15 # cfi-csr.c:306:15
 ; CHECK-NEXT:    sd -24[$r14] = $r1
 ; CHECK-NEXT:    addw $r0 = $r0, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .Ltmp80:
 ; CHECK-NEXT:    addd $r1 = $r1, 8
 ; CHECK-NEXT:    lwz $r2 = -8[$r1]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .Ltmp81:
+; CHECK-NEXT:  .Ltmp80:
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:v <- $r2
-; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:result <- [DW_OP_plus_uconst 2, DW_OP_stack_value] $r0
+; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:result <- [DW_OP_LLVM_arg 0, DW_OP_consts 8, DW_OP_LLVM_arg 0, DW_OP_plus, DW_OP_minus, DW_OP_consts 8, DW_OP_div, DW_OP_consts 1, DW_OP_LLVM_arg 0, DW_OP_plus, DW_OP_plus, DW_OP_stack_value] undef
 ; CHECK-NEXT:    .loc 1 306 3 # cfi-csr.c:306:3
 ; CHECK-NEXT:    cb.wgtz $r2 ? .LBB8_3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .Ltmp82:
+; CHECK-NEXT:  .Ltmp81:
 ; CHECK-NEXT:  # %bb.4: # %while.end11
-; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args <- [DW_OP_constu 112, DW_OP_minus, DW_OP_deref] $r14
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:v <- $r2
-; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:result <- [DW_OP_plus_uconst 2, DW_OP_stack_value] $r0
+; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args <- [DW_OP_constu 112, DW_OP_minus, DW_OP_deref] $r14
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:result <- undef
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args2 <- [DW_OP_constu 120, DW_OP_minus, DW_OP_deref] $r14
 ; CHECK-NEXT:    .loc 1 309 3 is_stmt 1 # cfi-csr.c:309:3
@@ -1124,7 +1120,7 @@ define i32 @fsum6_sum(i32 %first, i32 %second, ...) local_unnamed_addr #0 !dbg !
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r14 = 32[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .Ltmp83:
+; CHECK-NEXT:  .Ltmp82:
 ; CHECK-NEXT:    ld $r16 = 40[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
@@ -1133,7 +1129,7 @@ define i32 @fsum6_sum(i32 %first, i32 %second, ...) local_unnamed_addr #0 !dbg !
 ; CHECK-NEXT:    .cfi_def_cfa_offset 0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .Ltmp84:
+; CHECK-NEXT:  .Ltmp83:
 entry:
   %args = alloca i8*, align 8
   %args2 = alloca i8*, align 8

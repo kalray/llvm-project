@@ -4,35 +4,35 @@
 
 // CHECK-LABEL: @xzero1024(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    store <1024 x i1> zeroinitializer, <1024 x i1>* [[V:%.*]], align 32, [[TBAA2:!tbaa !.*]]
+// CHECK-NEXT:    store <1024 x i1> zeroinitializer, ptr [[V:%.*]], align 32, !tbaa [[TBAA2:![0-9]+]]
 // CHECK-NEXT:    ret void
 //
 void xzero1024(__kvx_x1024 *v) { *v = __builtin_kvx_xzero1024(); }
 
 // CHECK-LABEL: @xzero2048(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    store <2048 x i1> zeroinitializer, <2048 x i1>* [[V:%.*]], align 32, [[TBAA6:!tbaa !.*]]
+// CHECK-NEXT:    store <2048 x i1> zeroinitializer, ptr [[V:%.*]], align 32, !tbaa [[TBAA6:![0-9]+]]
 // CHECK-NEXT:    ret void
 //
 void xzero2048(__kvx_x2048 *v) { *v = __builtin_kvx_xzero2048(); }
 
 // CHECK-LABEL: @xzero256(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    store <256 x i1> zeroinitializer, <256 x i1>* [[V:%.*]], align 32, [[TBAA8:!tbaa !.*]]
+// CHECK-NEXT:    store <256 x i1> zeroinitializer, ptr [[V:%.*]], align 32, !tbaa [[TBAA8:![0-9]+]]
 // CHECK-NEXT:    ret void
 //
 void xzero256(__kvx_x256 *v) { *v = __builtin_kvx_xzero256(); }
 
 // CHECK-LABEL: @xzero4096(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    store <4096 x i1> zeroinitializer, <4096 x i1>* [[V:%.*]], align 32, [[TBAA10:!tbaa !.*]]
+// CHECK-NEXT:    store <4096 x i1> zeroinitializer, ptr [[V:%.*]], align 32, !tbaa [[TBAA10:![0-9]+]]
 // CHECK-NEXT:    ret void
 //
 void xzero4096(__kvx_x4096 *v) { *v = __builtin_kvx_xzero4096(); }
 
 // CHECK-LABEL: @xzero512(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    store <512 x i1> zeroinitializer, <512 x i1>* [[V:%.*]], align 32, [[TBAA12:!tbaa !.*]]
+// CHECK-NEXT:    store <512 x i1> zeroinitializer, ptr [[V:%.*]], align 32, !tbaa [[TBAA12:![0-9]+]]
 // CHECK-NEXT:    ret void
 //
 void xzero512(__kvx_x512 *v) { *v = __builtin_kvx_xzero512(); }

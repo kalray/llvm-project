@@ -1102,8 +1102,8 @@ void AsmPrinter::emitKill(const MachineInstr *MI) const {
     OS << ' ' << (Op.isDef() ? "def " : "killed ")
        << printReg(Op.getReg(), MF->getSubtarget().getRegisterInfo());
   }
-  AP.OutStreamer->AddComment(OS.str());
-  AP.OutStreamer->addBlankLine();
+  OutStreamer->AddComment(OS.str());
+  OutStreamer->addBlankLine();
 }
 
 /// emitDebugValueComment - This method handles the target-independent form
@@ -1261,8 +1261,9 @@ bool AsmPrinter::needsSEHMoves() {
 }
 
 bool AsmPrinter::needsCFIForDebug() const {
-  return MAI->getExceptionHandlingType() == ExceptionHandling::None &&
-         MAI->doesUseCFIForDebug() && ModuleCFISection == CFISection::Debug;
+  return MAI->doesUseCFIForDebug() ||
+         (MAI->getExceptionHandlingType() == ExceptionHandling::None &&
+          ModuleCFISection == CFISection::Debug);
 }
 
 void AsmPrinter::emitCFIInstruction(const MachineInstr &MI) {

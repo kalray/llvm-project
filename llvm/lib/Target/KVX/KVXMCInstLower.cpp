@@ -40,18 +40,8 @@ static bool LowerKVXMachineOperandToMCOperand(const MachineOperand &MO,
     break;
   case MachineOperand::MO_FPImmediate: {
     const ConstantFP *Imm = MO.getFPImm();
-    if (Imm->getType()->isHalfTy()) {
-      // force half value to hold in the 16 least significant bit of a double
-      double d;
-      uint64_t n = Imm->getValueAPF().bitcastToAPInt().getZExtValue();
-      std::memcpy(&d, &n, sizeof n);
-      MCOp = MCOperand::createFPImm(d);
-    } else if (Imm->getType()->isFloatTy())
-      MCOp = MCOperand::createFPImm(Imm->getValueAPF().convertToFloat());
-    else if (Imm->getType()->isDoubleTy())
-      MCOp = MCOperand::createFPImm(Imm->getValueAPF().convertToDouble());
-    else
-      llvm_unreachable("unknown floating point immediate type");
+    auto V = Imm->getValueAPF().bitcastToAPInt().getZExtValue();
+    MCOp = MCOperand::createImm(V);
     break;
   }
   case MachineOperand::MO_Immediate:

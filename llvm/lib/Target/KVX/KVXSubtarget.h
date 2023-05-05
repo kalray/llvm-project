@@ -70,7 +70,7 @@ public:
 
   void overrideSchedPolicy(MachineSchedPolicy &Policy,
                            unsigned NumRegionInstrs) const override;
-  bool enableAdvancedRASplitCost() const override;
+
   bool enableSubRegLiveness() const override;
   bool enableMachineSchedDefaultSched() const override;
   bool enablePostRAScheduler() const override;

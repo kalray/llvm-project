@@ -45,7 +45,6 @@ public:
 } // end anonymous namespace
 
 MCCodeEmitter *llvm::createKVXMCCodeEmitter(const MCInstrInfo &MCII,
-                                            const MCRegisterInfo &MRI,
                                             MCContext &Ctx) {
   return new KVXMCCodeEmitter(MCII, Ctx);
 }

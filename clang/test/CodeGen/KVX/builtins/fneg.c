@@ -19,8 +19,8 @@ double fnegd(double v) {
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call double @llvm.kvx.fneg.f64(double [[TMP0]])
 // CHECK-NEXT:    [[TMP2:%.*]] = extractelement <2 x double> [[V]], i64 1
 // CHECK-NEXT:    [[TMP3:%.*]] = tail call double @llvm.kvx.fneg.f64(double [[TMP2]])
-// CHECK-NEXT:    [[TMP4:%.*]] = insertelement <2 x double> undef, double [[TMP1]], i32 0
-// CHECK-NEXT:    [[TMP5:%.*]] = insertelement <2 x double> [[TMP4]], double [[TMP3]], i32 1
+// CHECK-NEXT:    [[TMP4:%.*]] = insertelement <2 x double> undef, double [[TMP1]], i64 0
+// CHECK-NEXT:    [[TMP5:%.*]] = insertelement <2 x double> [[TMP4]], double [[TMP3]], i64 1
 // CHECK-NEXT:    ret <2 x double> [[TMP5]]
 //
 v2f64 fnegdp(v2f64 v) {
@@ -37,10 +37,10 @@ v2f64 fnegdp(v2f64 v) {
 // CHECK-NEXT:    [[TMP5:%.*]] = tail call double @llvm.kvx.fneg.f64(double [[TMP4]])
 // CHECK-NEXT:    [[TMP6:%.*]] = extractelement <4 x double> [[V]], i64 3
 // CHECK-NEXT:    [[TMP7:%.*]] = tail call double @llvm.kvx.fneg.f64(double [[TMP6]])
-// CHECK-NEXT:    [[TMP8:%.*]] = insertelement <4 x double> undef, double [[TMP1]], i32 0
-// CHECK-NEXT:    [[TMP9:%.*]] = insertelement <4 x double> [[TMP8]], double [[TMP3]], i32 1
-// CHECK-NEXT:    [[TMP10:%.*]] = insertelement <4 x double> [[TMP9]], double [[TMP5]], i32 2
-// CHECK-NEXT:    [[TMP11:%.*]] = insertelement <4 x double> [[TMP10]], double [[TMP7]], i32 3
+// CHECK-NEXT:    [[TMP8:%.*]] = insertelement <4 x double> undef, double [[TMP1]], i64 0
+// CHECK-NEXT:    [[TMP9:%.*]] = insertelement <4 x double> [[TMP8]], double [[TMP3]], i64 1
+// CHECK-NEXT:    [[TMP10:%.*]] = insertelement <4 x double> [[TMP9]], double [[TMP5]], i64 2
+// CHECK-NEXT:    [[TMP11:%.*]] = insertelement <4 x double> [[TMP10]], double [[TMP7]], i64 3
 // CHECK-NEXT:    ret <4 x double> [[TMP11]]
 //
 v4f64 fnegdq(v4f64 v) {
@@ -58,9 +58,9 @@ half fnegh(half v) {
 
 // CHECK-LABEL: @fnegho(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <8 x half> [[V:%.*]], <8 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <8 x half> [[V:%.*]], <8 x half> poison, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x half> @llvm.kvx.fneg.v4f16(<4 x half> [[TMP0]])
-// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <8 x half> [[V]], <8 x half> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <8 x half> [[V]], <8 x half> poison, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
 // CHECK-NEXT:    [[TMP3:%.*]] = tail call <4 x half> @llvm.kvx.fneg.v4f16(<4 x half> [[TMP2]])
 // CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <4 x half> [[TMP1]], <4 x half> [[TMP3]], <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
 // CHECK-NEXT:    ret <8 x half> [[TMP4]]
@@ -89,13 +89,13 @@ v4f16 fneghq(v4f16 v) {
 
 // CHECK-LABEL: @fneghx(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <16 x half> [[V:%.*]], <16 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <16 x half> [[V:%.*]], <16 x half> poison, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x half> @llvm.kvx.fneg.v4f16(<4 x half> [[TMP0]])
-// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <16 x half> [[V]], <16 x half> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <16 x half> [[V]], <16 x half> poison, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
 // CHECK-NEXT:    [[TMP3:%.*]] = tail call <4 x half> @llvm.kvx.fneg.v4f16(<4 x half> [[TMP2]])
-// CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <16 x half> [[V]], <16 x half> undef, <4 x i32> <i32 8, i32 9, i32 10, i32 11>
+// CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <16 x half> [[V]], <16 x half> poison, <4 x i32> <i32 8, i32 9, i32 10, i32 11>
 // CHECK-NEXT:    [[TMP5:%.*]] = tail call <4 x half> @llvm.kvx.fneg.v4f16(<4 x half> [[TMP4]])
-// CHECK-NEXT:    [[TMP6:%.*]] = shufflevector <16 x half> [[V]], <16 x half> undef, <4 x i32> <i32 12, i32 13, i32 14, i32 15>
+// CHECK-NEXT:    [[TMP6:%.*]] = shufflevector <16 x half> [[V]], <16 x half> poison, <4 x i32> <i32 12, i32 13, i32 14, i32 15>
 // CHECK-NEXT:    [[TMP7:%.*]] = tail call <4 x half> @llvm.kvx.fneg.v4f16(<4 x half> [[TMP6]])
 // CHECK-NEXT:    [[TMP8:%.*]] = shufflevector <4 x half> [[TMP1]], <4 x half> [[TMP3]], <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
 // CHECK-NEXT:    [[TMP9:%.*]] = shufflevector <4 x half> [[TMP5]], <4 x half> [[TMP7]], <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
@@ -118,13 +118,13 @@ float fnegw(float v) {
 
 // CHECK-LABEL: @fnegwo(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <8 x float> [[V:%.*]], <8 x float> undef, <2 x i32> <i32 0, i32 1>
+// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <8 x float> [[V:%.*]], <8 x float> poison, <2 x i32> <i32 0, i32 1>
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call <2 x float> @llvm.kvx.fneg.v2f32(<2 x float> [[TMP0]])
-// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <8 x float> [[V]], <8 x float> undef, <2 x i32> <i32 2, i32 3>
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <8 x float> [[V]], <8 x float> poison, <2 x i32> <i32 2, i32 3>
 // CHECK-NEXT:    [[TMP3:%.*]] = tail call <2 x float> @llvm.kvx.fneg.v2f32(<2 x float> [[TMP2]])
-// CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <8 x float> [[V]], <8 x float> undef, <2 x i32> <i32 4, i32 5>
+// CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <8 x float> [[V]], <8 x float> poison, <2 x i32> <i32 4, i32 5>
 // CHECK-NEXT:    [[TMP5:%.*]] = tail call <2 x float> @llvm.kvx.fneg.v2f32(<2 x float> [[TMP4]])
-// CHECK-NEXT:    [[TMP6:%.*]] = shufflevector <8 x float> [[V]], <8 x float> undef, <2 x i32> <i32 6, i32 7>
+// CHECK-NEXT:    [[TMP6:%.*]] = shufflevector <8 x float> [[V]], <8 x float> poison, <2 x i32> <i32 6, i32 7>
 // CHECK-NEXT:    [[TMP7:%.*]] = tail call <2 x float> @llvm.kvx.fneg.v2f32(<2 x float> [[TMP6]])
 // CHECK-NEXT:    [[TMP8:%.*]] = shufflevector <2 x float> [[TMP1]], <2 x float> [[TMP3]], <4 x i32> <i32 0, i32 1, i32 2, i32 3>
 // CHECK-NEXT:    [[TMP9:%.*]] = shufflevector <2 x float> [[TMP5]], <2 x float> [[TMP7]], <4 x i32> <i32 0, i32 1, i32 2, i32 3>
@@ -146,9 +146,9 @@ v2f32 fnegwp(v2f32 v) {
 
 // CHECK-LABEL: @fnegwq(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <4 x float> [[V:%.*]], <4 x float> undef, <2 x i32> <i32 0, i32 1>
+// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <4 x float> [[V:%.*]], <4 x float> poison, <2 x i32> <i32 0, i32 1>
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call <2 x float> @llvm.kvx.fneg.v2f32(<2 x float> [[TMP0]])
-// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <4 x float> [[V]], <4 x float> undef, <2 x i32> <i32 2, i32 3>
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <4 x float> [[V]], <4 x float> poison, <2 x i32> <i32 2, i32 3>
 // CHECK-NEXT:    [[TMP3:%.*]] = tail call <2 x float> @llvm.kvx.fneg.v2f32(<2 x float> [[TMP2]])
 // CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <2 x float> [[TMP1]], <2 x float> [[TMP3]], <4 x i32> <i32 0, i32 1, i32 2, i32 3>
 // CHECK-NEXT:    ret <4 x float> [[TMP4]]

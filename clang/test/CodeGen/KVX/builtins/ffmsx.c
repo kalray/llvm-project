@@ -25,13 +25,13 @@ float ffmsxhwrr(half v0, half v1, float v2) { return __builtin_kvx_ffmsxhw(v0, v
 
 // CHECK-LABEL: @ffmsxhwo(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <8 x half> [[V0:%.*]], <8 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
-// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <8 x half> [[V1:%.*]], <8 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
-// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <8 x float> [[V2:%.*]], <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <8 x half> [[V0:%.*]], <8 x half> poison, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <8 x half> [[V1:%.*]], <8 x half> poison, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <8 x float> [[V2:%.*]], <8 x float> poison, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
 // CHECK-NEXT:    [[TMP3:%.*]] = tail call <4 x float> @llvm.kvx.ffmsx.v4f32(<4 x half> [[TMP0]], <4 x half> [[TMP1]], <4 x float> [[TMP2]], i32 7, i32 0)
-// CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <8 x half> [[V0]], <8 x half> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
-// CHECK-NEXT:    [[TMP5:%.*]] = shufflevector <8 x half> [[V1]], <8 x half> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
-// CHECK-NEXT:    [[TMP6:%.*]] = shufflevector <8 x float> [[V2]], <8 x float> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+// CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <8 x half> [[V0]], <8 x half> poison, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+// CHECK-NEXT:    [[TMP5:%.*]] = shufflevector <8 x half> [[V1]], <8 x half> poison, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+// CHECK-NEXT:    [[TMP6:%.*]] = shufflevector <8 x float> [[V2]], <8 x float> poison, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
 // CHECK-NEXT:    [[TMP7:%.*]] = tail call <4 x float> @llvm.kvx.ffmsx.v4f32(<4 x half> [[TMP4]], <4 x half> [[TMP5]], <4 x float> [[TMP6]], i32 7, i32 0)
 // CHECK-NEXT:    [[TMP8:%.*]] = shufflevector <4 x float> [[TMP3]], <4 x float> [[TMP7]], <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
 // CHECK-NEXT:    ret <8 x float> [[TMP8]]
@@ -89,13 +89,13 @@ v2f64 ffmsxwdp(v2f32 v0, v2f32 v1, v2f64 v2) { return __builtin_kvx_ffmsxwdp(v0,
 
 // CHECK-LABEL: @ffmsxwdq(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <4 x float> [[V0:%.*]], <4 x float> undef, <2 x i32> <i32 0, i32 1>
-// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <4 x float> [[V1:%.*]], <4 x float> undef, <2 x i32> <i32 0, i32 1>
-// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <4 x double> [[V2:%.*]], <4 x double> undef, <2 x i32> <i32 0, i32 1>
+// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <4 x float> [[V0:%.*]], <4 x float> poison, <2 x i32> <i32 0, i32 1>
+// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <4 x float> [[V1:%.*]], <4 x float> poison, <2 x i32> <i32 0, i32 1>
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <4 x double> [[V2:%.*]], <4 x double> poison, <2 x i32> <i32 0, i32 1>
 // CHECK-NEXT:    [[TMP3:%.*]] = tail call <2 x double> @llvm.kvx.ffmsx.v2f64(<2 x float> [[TMP0]], <2 x float> [[TMP1]], <2 x double> [[TMP2]], i32 7, i32 0)
-// CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <4 x float> [[V0]], <4 x float> undef, <2 x i32> <i32 2, i32 3>
-// CHECK-NEXT:    [[TMP5:%.*]] = shufflevector <4 x float> [[V1]], <4 x float> undef, <2 x i32> <i32 2, i32 3>
-// CHECK-NEXT:    [[TMP6:%.*]] = shufflevector <4 x double> [[V2]], <4 x double> undef, <2 x i32> <i32 2, i32 3>
+// CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <4 x float> [[V0]], <4 x float> poison, <2 x i32> <i32 2, i32 3>
+// CHECK-NEXT:    [[TMP5:%.*]] = shufflevector <4 x float> [[V1]], <4 x float> poison, <2 x i32> <i32 2, i32 3>
+// CHECK-NEXT:    [[TMP6:%.*]] = shufflevector <4 x double> [[V2]], <4 x double> poison, <2 x i32> <i32 2, i32 3>
 // CHECK-NEXT:    [[TMP7:%.*]] = tail call <2 x double> @llvm.kvx.ffmsx.v2f64(<2 x float> [[TMP4]], <2 x float> [[TMP5]], <2 x double> [[TMP6]], i32 7, i32 0)
 // CHECK-NEXT:    [[TMP8:%.*]] = shufflevector <2 x double> [[TMP3]], <2 x double> [[TMP7]], <4 x i32> <i32 0, i32 1, i32 2, i32 3>
 // CHECK-NEXT:    ret <4 x double> [[TMP8]]

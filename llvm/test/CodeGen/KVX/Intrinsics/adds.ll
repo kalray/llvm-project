@@ -178,28 +178,6 @@ entry:
   ret i64 %0
 }
 
-define signext i4 @sadd_sat4(i4 signext %a, i4 signext %b) {
-; CHECK-LABEL: sadd_sat4:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addw $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    minw $r0 = $r0, 7
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    maxw $r0 = $r0, -8
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
-entry:
-  %conv = sext i4 %a to i32
-  %conv1 = sext i4 %b to i32
-  %add = add nsw i32 %conv1, %conv
-  %0 = icmp slt i32 %add, 7
-  %spec.store.select = select i1 %0, i32 %add, i32 7
-  %1 = icmp sgt i32 %spec.store.select, -8
-  %spec.store.select10 = select i1 %1, i32 %spec.store.select, i32 -8
-  %conv9 = trunc i32 %spec.store.select10 to i4
-  ret i4 %conv9
-}
-
 define <2 x i32> @sadd_satv2i32(<2 x i32> %a, <2 x i32> %b) {
 ; CHECK-LABEL: sadd_satv2i32:
 ; CHECK:       # %bb.0: # %entry

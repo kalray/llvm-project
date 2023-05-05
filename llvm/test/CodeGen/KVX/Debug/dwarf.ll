@@ -9,7 +9,7 @@ target triple = "kvx-kalray-cos"
 define i32 @noalign(i32 %n, i32 %n2, i32 %n3) #0 !dbg !10 {
 ; CHECK-LABEL: noalign:
 ; CHECK:       .Lfunc_begin0:
-; CHECK-NEXT:    .file 1 "d/dwarf.c"
+; CHECK-NEXT:    .file 1 "d" "dwarf.c"
 ; CHECK-NEXT:    .loc 1 5 0 # dwarf.c:5:0
 ; CHECK-NEXT:    .cfi_sections .debug_frame
 ; CHECK-NEXT:    .cfi_startproc

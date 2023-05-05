@@ -7510,6 +7510,7 @@ VPlan &LoopVectorizationPlanner::getBestPlanFor(ElementCount VF) const {
   }
   llvm_unreachable("No plan found!");
 }
+
 static void addMetaDataToRemainderLoops(Loop *L, const StringRef &Str) {
   SmallVector<Metadata *, 4> MDs;
   // Reserve first location for self reference to the LoopID metadata node.
@@ -7543,6 +7544,13 @@ static void addMetaDataToRemainderLoops(Loop *L, const StringRef &Str) {
     NewLoopID->replaceOperandWith(0, NewLoopID);
     L->setLoopID(NewLoopID);
   }
+}
+
+static void AddRuntimeUnrollDisableMetaData(Loop *L) {
+  addMetaDataToRemainderLoops(L, "llvm.loop.unroll.disable");
+}
+static void AddRemainderMetaData(Loop *L) {
+  addMetaDataToRemainderLoops(L, "llvm.loop.remainder");
 }
 
 void LoopVectorizationPlanner::executePlan(ElementCount BestVF, unsigned BestUF,

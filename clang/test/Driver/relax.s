@@ -1,5 +1,6 @@
 // REQUIRES: x86-registered-target
-// RUN: %clang -target x86_64 -### -c -integrated-as -Wa,--mrelax-relocations=yes %s 2>&1 | FileCheck  %s
+// UNSUPPORTED: kvx
+// RUN: %clang -### -c -integrated-as -Wa,--mrelax-relocations=yes %s 2>&1 | FileCheck  %s
 
 // CHECK: "-cc1as"
 // CHECK: "--mrelax-relocations"

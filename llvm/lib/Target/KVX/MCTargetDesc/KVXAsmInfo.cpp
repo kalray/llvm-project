@@ -29,4 +29,7 @@ KVXMCAsmInfo::KVXMCAsmInfo(const Triple &TT) {
   SupportsDebugInformation = true;
   UseIntegratedAssembler = false;
   UsesELFSectionDirectiveForBSS = true;
+  UsesCFIForDebug = true;
+  ParseInlineAsmUsingAsmParser = false;
+  PreserveAsmComments = true;
 }

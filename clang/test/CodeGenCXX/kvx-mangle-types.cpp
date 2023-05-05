@@ -8,3 +8,9 @@ void f3(__kvx_x512 *vp) {}
 
 // CHECK: __kvx_x1024
 void f3(__kvx_x1024 *vp) {}
+
+// CHECK: __kvx_x2048
+void f4(__kvx_x2048 *vp) {}
+
+// CHECK: __kvx_x4096
+void f5(__kvx_x4096 *vp) {}

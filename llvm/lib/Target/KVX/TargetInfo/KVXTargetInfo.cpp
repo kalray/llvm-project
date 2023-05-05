@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
+#include "llvm/MC/TargetRegistry.h"
 #include "llvm/Target/TargetMachine.h"
-#include "llvm/Support/TargetRegistry.h"
 using namespace llvm;
 
 namespace llvm {

@@ -1729,9 +1729,6 @@ static uint64_t getRawAttributeMask(Attribute::AttrKind Val) {
                     " 'nofree', ignoring it.\n";
     return 0; // TODO: NoFree is used in optimization passes.
     // Use something useless for us, such as SwiftSelf.
-  case Attribute::NoSync:
-    llvm_unreachable("nosync attribute not supported in raw format");
-    break;
   case Attribute::MPPANative:
     return 1ULL << 63;
   default:

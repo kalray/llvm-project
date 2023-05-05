@@ -15,7 +15,7 @@
 #include "KVX.h"
 #include "KVXFrameLowering.h"
 #include "llvm/CodeGen/MachineScheduler.h"
-#include "llvm/Support/TargetRegistry.h"
+#include "llvm/MC/TargetRegistry.h"
 
 using namespace llvm;
 
@@ -58,9 +58,6 @@ void KVXSubtarget::overrideSchedPolicy(MachineSchedPolicy &Policy,
   Policy.ShouldTrackPressure = true;
 }
 
-bool KVXSubtarget::enableAdvancedRASplitCost() const {
-  return OptLevel > CodeGenOpt::Default;
-};
 bool KVXSubtarget::enableMachineScheduler() const { return true; }
 bool KVXSubtarget::enableMachineSchedDefaultSched() const { return false; }
 bool KVXSubtarget::enablePostRAScheduler() const { return true; }

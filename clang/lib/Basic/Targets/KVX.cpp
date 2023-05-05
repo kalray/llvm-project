@@ -1747,8 +1747,8 @@ bool KVXTargetInfo::validateAsmConstraint(
   return false;
 }
 
-void KVXTargetInfo::adjust(LangOptions &Opts) {
-  TargetInfo::adjust(Opts);
+void KVXTargetInfo::adjust(DiagnosticsEngine &Diags, LangOptions &Opts) {
+  TargetInfo::adjust(Diags, Opts);
 
   // Keep vector aligned to its size.
   if (Opts.OpenCL)
@@ -1870,7 +1870,7 @@ bool KVXTargetInfo::DecodeTargetTypeFromStr(const char *&Str,
     break;
   }
   return true;
-};
+}
 
 void KVXTargetInfo::setSupportedOpenCLOpts() {
   auto &Opts = getSupportedOpenCLOpts();

@@ -8229,11 +8229,9 @@ static void handleCFGuardAttr(Sema &S, Decl *D, const ParsedAttr &AL) {
 static void handleMPPANativeAttr(Sema &S, Decl *D, const ParsedAttr &AL) {
   if (!isFunctionOrMethod(D)) {
     S.Diag(D->getLocation(), diag::warn_attribute_wrong_decl_type)
-    << "'MPPANative'" << ExpectedFunction;
+        << AL << ExpectedFunction;
     return;
   }
-  if (!checkAttributeNumArgs(S, AL, 0))
-    return;
   handleSimpleAttribute<MPPANativeAttr>(S, D, AL);
 }
 

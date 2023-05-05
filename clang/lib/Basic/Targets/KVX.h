@@ -63,7 +63,7 @@ public:
     DoubleFormat = &llvm::APFloat::IEEEdouble();
     LongDoubleFormat = &llvm::APFloat::IEEEdouble();
 
-    MaxVectorAlign = 256;
+    MaxVectorAlign = NewAlign = SuitableAlign = 256;
     MaxAtomicPromoteWidth = MaxAtomicInlineWidth = 64;
     resetDataLayout("e-S256-p:64:64-i1:8-i8:8-i16:16-i32:32-i64:64-"
                     "v64:64-v128:128-v256:256-v512:256-v1024:256-"
@@ -71,9 +71,9 @@ public:
     CPU = "kv3-1"; // Set the default cpu as kv3-1
   }
 
-  void adjust(LangOptions &Opts) override;
-  void getTargetDefines(const LangOptions &Opts, MacroBuilder &Builder) const
-      override;
+  void adjust(DiagnosticsEngine &Diags, LangOptions &Opts) override;
+  void getTargetDefines(const LangOptions &Opts,
+                        MacroBuilder &Builder) const override;
 
   ArrayRef<Builtin::Info> getTargetBuiltins() const override {
     return llvm::makeArrayRef(BuiltinInfo, clang::KVX::LastTSBuiltin -

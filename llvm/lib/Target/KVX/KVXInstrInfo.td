@@ -1616,7 +1616,7 @@ def SYNCGROUP : KVX_INSTRUCTION
 
 let isBarrier = 1, isBranch = 1, isTerminator = 1 in
 def GOTO : KVX_INSTRUCTION
-  <(outs), (ins Pcrel27:$a1),
+  <(outs), (ins Pcrel27Imm:$a1),
    "goto $a1",
    [(br bb:$a1)],
    BCU>;
@@ -1644,7 +1644,7 @@ def ICALL : KVX_INSTRUCTION
 
 let isBranch = 1, isTerminator = 1 in
 def CB : KVX_INSTRUCTION
-  <(outs), (ins SingleReg:$a2, Pcrel17:$a3, ScalarcondMod:$a1),
+  <(outs), (ins SingleReg:$a2, Pcrel17Imm:$a3, ScalarcondMod:$a1),
    "cb$a1 $a2 ? $a3",
    [/* no straightforward pattern */],
    BCU>;

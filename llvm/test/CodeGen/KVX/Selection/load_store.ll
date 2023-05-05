@@ -1178,7 +1178,7 @@ entry:
 define void @ls_2k(<2048 x i1> * %0, i64 %1) {
 ; CV1-LABEL: ls_2k:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    slld $r1 = $r1, 11
+; CV1-NEXT:    slld $r1 = $r1, 8
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xlo.u $a4 = $r1[$r0]
 ; CV1-NEXT:    addd $r2 = $r0, $r1
@@ -1217,7 +1217,7 @@ define void @ls_2k(<2048 x i1> * %0, i64 %1) {
 ;
 ; CV2-LABEL: ls_2k:
 ; CV2:       # %bb.0: # %entry
-; CV2-NEXT:    slld $r1 = $r1, 11
+; CV2-NEXT:    slld $r1 = $r1, 8
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    xlo $a4 = $r1[$r0]
 ; CV2-NEXT:    addd $r2 = $r0, $r1
@@ -1263,7 +1263,7 @@ entry:
 define void @ls_4k(<4096 x i1> * %0, i64 %1) {
 ; CV1-LABEL: ls_4k:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    slld $r1 = $r1, 12
+; CV1-NEXT:    slld $r1 = $r1, 9
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xlo.u $a10 = $r1[$r0]
 ; CV1-NEXT:    addd $r2 = $r0, $r1
@@ -1334,7 +1334,7 @@ define void @ls_4k(<4096 x i1> * %0, i64 %1) {
 ;
 ; CV2-LABEL: ls_4k:
 ; CV2:       # %bb.0: # %entry
-; CV2-NEXT:    slld $r1 = $r1, 12
+; CV2-NEXT:    slld $r1 = $r1, 9
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    xlo $a10 = $r1[$r0]
 ; CV2-NEXT:    addd $r2 = $r0, $r1

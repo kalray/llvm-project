@@ -46,6 +46,10 @@ inline static StringRef getMVTName(const MVT &T) {
     return "MVT::Other";
   case MVT::i1:
     return "MVT::i1";
+  case MVT::i2:
+    return "MVT::i2";
+  case MVT::i4:
+    return "MVT::i4";
   case MVT::i8:
     return "MVT::i8";
   case MVT::i16:
@@ -1216,10 +1220,22 @@ SDValue KVXTargetLowering::LowerFormalArguments(
 
   unsigned InIdx = 0;
   KVXMachineFunctionInfo *KVXFI = MF.getInfo<KVXMachineFunctionInfo>();
+  MachineFrameInfo &MFI = MF.getFrameInfo();
+
+  LLVM_DEBUG(dbgs() << "KVXTargetLowering::LowerFormalArguments "
+                    << ArgLocs.size() << " arguments to lower.\n");
+  LLVM_DEBUG(dbgs() << "IsVarArg? " << IsVarArg << '\n');
 
   for (auto &VA : ArgLocs) {
+    LLVM_DEBUG(dbgs() << "Argument LocInfo: " << VA.getLocInfo() << '\n');
     if (VA.isRegLoc()) {
       EVT RegVT = VA.getLocVT();
+#ifndef NDEBUG
+      LLVM_DEBUG(dbgs() << "Argument passed in register.\n");
+      if (RegVT.isSimple())
+        LLVM_DEBUG(dbgs() << "Argument type: "
+                          << getMVTName(RegVT.getSimpleVT()) << '\n');
+#endif
 
       unsigned VReg;
       VReg = RegInfo.createVirtualRegister(&KVX::SingleRegRegClass);
@@ -1229,17 +1245,19 @@ SDValue KVXTargetLowering::LowerFormalArguments(
 
       RegInfo.addLiveIn(VA.getLocReg(), VReg);
       SDValue ArgIn = DAG.getCopyFromReg(Chain, DL, VReg, RegVT);
-
+      LLVM_DEBUG(dbgs() << "Create copy to virtual reg: ");
+      LLVM_DEBUG(ArgIn.dump());
       InVals.push_back(ArgIn);
       ++InIdx;
       continue;
     }
 
     assert(VA.isMemLoc());
+    LLVM_DEBUG(dbgs() << "Argument passed in memory.\n");
 
     unsigned Offset = VA.getLocMemOffset();
     unsigned StoreSize = VA.getValVT().getStoreSize();
-    int FI = MF.getFrameInfo().CreateFixedObject(StoreSize, Offset, false);
+    int FI = MFI.CreateFixedObject(StoreSize, Offset, false);
     InVals.push_back(
         DAG.getLoad(VA.getValVT(), DL, Chain,
                     DAG.getFrameIndex(FI, getPointerTy(MF.getDataLayout())),
@@ -1252,7 +1270,6 @@ SDValue KVXTargetLowering::LowerFormalArguments(
     unsigned Idx = CCInfo.getFirstUnallocated(ArgRegs);
     int VarArgsOffset = CCInfo.getNextStackOffset();
     int VarArgsSaveSize = 0;
-    MachineFrameInfo &MFI = MF.getFrameInfo();
     const unsigned ArgRegsSize = ArgRegs.size();
     int FI;
 
@@ -1288,6 +1305,7 @@ SDValue KVXTargetLowering::LowerFormalArguments(
     OutChains.push_back(Chain);
     Chain = DAG.getNode(ISD::TokenFactor, DL, MVT::Other, OutChains);
   }
+  LLVM_DEBUG(DAG.dump());
 
   return Chain;
 }
@@ -1738,7 +1756,7 @@ bool KVXTargetLowering::shouldInsertFencesForAtomic(
          isa<AtomicCmpXchgInst>(I);
 }
 
-Instruction *KVXTargetLowering::emitLeadingFence(IRBuilder<> &Builder,
+Instruction *KVXTargetLowering::emitLeadingFence(IRBuilderBase &Builder,
                                                  Instruction *Inst,
                                                  AtomicOrdering Ord) const {
   unsigned AS;
@@ -1782,7 +1800,7 @@ Instruction *KVXTargetLowering::emitLeadingFence(IRBuilder<> &Builder,
   }
 }
 
-Instruction *KVXTargetLowering::emitTrailingFence(IRBuilder<> &Builder,
+Instruction *KVXTargetLowering::emitTrailingFence(IRBuilderBase &Builder,
                                                   Instruction *Inst,
                                                   AtomicOrdering Ord) const {
   unsigned AS;
@@ -1993,15 +2011,25 @@ SDValue KVXTargetLowering::lowerVAARG(SDValue Op, SelectionDAG &DAG) const {
       DAG.getLoad(PtrVT, DL, InChain, VAListPtr, MachinePointerInfo(SV));
   // Increment the pointer, VAList, to the next vaarg.
   // Increment va_list pointer to the next multiple of 64 bits / 8 bytes
-  int increment = (VT.getSizeInBits() + 63) / 64 * 8;
+  int Increment = (VT.getSizeInBits() + 63) / 64 * 8;
+  EVT LVT = (Increment == 1) ? EVT(MVT::i64) : VT;
   SDValue NextPtr = DAG.getNode(ISD::ADD, DL, PtrVT, VAList,
-                                DAG.getIntPtrConstant(increment, DL));
+                                DAG.getIntPtrConstant(Increment, DL));
   // Store the incremented VAList to the legalized pointer.
   InChain = DAG.getStore(VAList.getValue(1), DL, NextPtr, VAListPtr,
                          MachinePointerInfo(SV));
   // Load the actual argument out of the pointer VAList.
   // We can't count on greater alignment than the word size.
-  return DAG.getLoad(VT, DL, InChain, VAList, MachinePointerInfo(), 8);
+  auto V = DAG.getLoad(VT, DL, InChain, VAList, MachinePointerInfo(), 8);
+  if (LVT == VT)
+    return V;
+  if (VT.getSizeInBits() == 64)
+    return DAG.getBitcast(VT, V);
+  EVT TmpVT(MVT::getIntegerVT(VT.getFixedSizeInBits()));
+  V = DAG.getAnyExtOrTrunc(V, DL, TmpVT);
+  if (TmpVT == VT)
+    return V;
+  return DAG.getBitcast(VT, V);
 }
 
 SDValue KVXTargetLowering::lowerFRAMEADDR(SDValue Op, SelectionDAG &DAG) const {
@@ -3717,10 +3745,15 @@ bool KVXTargetLowering::enableAggressiveFMAFusion(EVT VT) const {
   }
 }
 
-bool KVXTargetLowering::shouldReplaceBy(SDNode *From, unsigned ToOpcode) const {
+bool KVXTargetLowering::shouldReplaceBy(SDNode *From, unsigned ToOpcode,
+                                        SmallVector<SDValue> Ops) const {
   switch (ToOpcode) {
   default:
     return true;
+
+  case ISD::CONCAT_VECTORS:
+    return (Ops.empty() || Ops.size() == 2 ||
+            Ops.begin()->getValueSizeInBits() == 64);
 
   // We prefer vector multiplies to vector shifts
   case ISD::SHL: {

@@ -766,7 +766,7 @@ entry:
 define i64 @lnandd_f16(half %a, half %b){
 ; CHECK-LABEL: lnandd_f16:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r2 = 0x0
+; CHECK-NEXT:    make $r2 = 0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fcompnhq.oeq $r0 = $r0, $r2
 ; CHECK-NEXT:    fcompnhq.oeq $r1 = $r1, $r2

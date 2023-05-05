@@ -6,11 +6,12 @@ target triple = "kvx-kalray-cos"
 define void @storeb(i64 %a, i8* nocapture %ptr) {
   ; CHECK-LABEL: name: storeb
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1
-  ; CHECK:   BUNDLE implicit killed $r1, implicit killed $r0, implicit $ra {
-  ; CHECK:     SBri10 0, killed $r1, killed $r0 :: (store 1 into %ir.ptr)
-  ; CHECK:     RET implicit $ra
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit killed $r1, implicit killed $r0, implicit $ra {
+  ; CHECK-NEXT:     SBri10 0, killed $r1, killed $r0 :: (store (s8) into %ir.ptr)
+  ; CHECK-NEXT:     RET implicit $ra
+  ; CHECK-NEXT:   }
 entry:
   %0 = trunc i64 %a to i8
   store i8 %0, i8* %ptr
@@ -20,16 +21,17 @@ entry:
 define i32 @storeb_r(i64 %a, i8* %ptr, i32* nocapture readonly %load) {
   ; CHECK-LABEL: name: storeb_r
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2
-  ; CHECK:   $r2 = LWZri10 0, killed $r2, 0 :: (load 4 from %ir.load)
-  ; CHECK:   BUNDLE implicit-def $r2, implicit killed $r2, implicit killed $r1, implicit killed $r0 {
-  ; CHECK:     $r2 = READYp1r killed $r2
-  ; CHECK:     STOREp killed $r1, killed $r0, 8, internal $r2
-  ; CHECK:   }
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r2, implicit $ra {
-  ; CHECK:     $r0 = COPYD killed $r2
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   $r2 = LWZri10 0, killed $r2, 0 :: (load (s32) from %ir.load)
+  ; CHECK-NEXT:   BUNDLE implicit-def $r2, implicit killed $r2, implicit killed $r1, implicit killed $r0 {
+  ; CHECK-NEXT:     $r2 = READYp1r killed $r2
+  ; CHECK-NEXT:     STOREp killed $r1, killed $r0, 8, internal $r2
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     $r0 = COPYD killed $r2
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
 entry:
   %0 = load i32, i32* %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
@@ -46,11 +48,12 @@ declare void @llvm.kvx.store.i64.p0i64.i32(i64, i64*, i32, i32)
 define void @storeh(i64 %a, i8* nocapture %ptr) {
   ; CHECK-LABEL: name: storeh
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1
-  ; CHECK:   BUNDLE implicit killed $r1, implicit killed $r0, implicit $ra {
-  ; CHECK:     SHri10 0, killed $r1, killed $r0 :: (store 2 into %ir.1)
-  ; CHECK:     RET implicit $ra
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit killed $r1, implicit killed $r0, implicit $ra {
+  ; CHECK-NEXT:     SHri10 0, killed $r1, killed $r0 :: (store (s16) into %ir.1)
+  ; CHECK-NEXT:     RET implicit $ra
+  ; CHECK-NEXT:   }
 entry:
   %0 = trunc i64 %a to i16
   %1 = bitcast i8* %ptr to i16*
@@ -61,16 +64,17 @@ entry:
 define i32 @storeh_r(i64 %a, i8* %ptr, i32* nocapture readonly %load) {
   ; CHECK-LABEL: name: storeh_r
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2
-  ; CHECK:   $r2 = LWZri10 0, killed $r2, 0 :: (load 4 from %ir.load)
-  ; CHECK:   BUNDLE implicit-def $r2, implicit killed $r2, implicit killed $r1, implicit killed $r0 {
-  ; CHECK:     $r2 = READYp1r killed $r2
-  ; CHECK:     STOREp killed $r1, killed $r0, 16, internal $r2
-  ; CHECK:   }
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r2, implicit $ra {
-  ; CHECK:     $r0 = COPYD killed $r2
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   $r2 = LWZri10 0, killed $r2, 0 :: (load (s32) from %ir.load)
+  ; CHECK-NEXT:   BUNDLE implicit-def $r2, implicit killed $r2, implicit killed $r1, implicit killed $r0 {
+  ; CHECK-NEXT:     $r2 = READYp1r killed $r2
+  ; CHECK-NEXT:     STOREp killed $r1, killed $r0, 16, internal $r2
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     $r0 = COPYD killed $r2
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
 entry:
   %0 = load i32, i32* %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
@@ -83,11 +87,12 @@ entry:
 define void @storew(i64 %a, i8* nocapture %ptr) {
   ; CHECK-LABEL: name: storew
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1
-  ; CHECK:   BUNDLE implicit killed $r1, implicit killed $r0, implicit $ra {
-  ; CHECK:     SWri10 0, killed $r1, killed $r0 :: (store 4 into %ir.1)
-  ; CHECK:     RET implicit $ra
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit killed $r1, implicit killed $r0, implicit $ra {
+  ; CHECK-NEXT:     SWri10 0, killed $r1, killed $r0 :: (store (s32) into %ir.1)
+  ; CHECK-NEXT:     RET implicit $ra
+  ; CHECK-NEXT:   }
 entry:
   %0 = trunc i64 %a to i32
   %1 = bitcast i8* %ptr to i32*
@@ -98,16 +103,17 @@ entry:
 define i32 @storew_r(i64 %a, i8* %ptr, i32* nocapture readonly %load) {
   ; CHECK-LABEL: name: storew_r
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2
-  ; CHECK:   $r2 = LWZri10 0, killed $r2, 0 :: (load 4 from %ir.load)
-  ; CHECK:   BUNDLE implicit-def $r2, implicit killed $r2, implicit killed $r1, implicit killed $r0 {
-  ; CHECK:     $r2 = READYp1r killed $r2
-  ; CHECK:     STOREp killed $r1, killed $r0, 32, internal $r2
-  ; CHECK:   }
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r2, implicit $ra {
-  ; CHECK:     $r0 = COPYD killed $r2
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   $r2 = LWZri10 0, killed $r2, 0 :: (load (s32) from %ir.load)
+  ; CHECK-NEXT:   BUNDLE implicit-def $r2, implicit killed $r2, implicit killed $r1, implicit killed $r0 {
+  ; CHECK-NEXT:     $r2 = READYp1r killed $r2
+  ; CHECK-NEXT:     STOREp killed $r1, killed $r0, 32, internal $r2
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     $r0 = COPYD killed $r2
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
 entry:
   %0 = load i32, i32* %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
@@ -120,11 +126,12 @@ entry:
 define void @stored(i64 %a, i8* nocapture %ptr) {
   ; CHECK-LABEL: name: stored
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1
-  ; CHECK:   BUNDLE implicit killed $r1, implicit killed $r0, implicit $ra {
-  ; CHECK:     SDri10 0, killed $r1, killed $r0 :: (store 8 into %ir.0)
-  ; CHECK:     RET implicit $ra
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit killed $r1, implicit killed $r0, implicit $ra {
+  ; CHECK-NEXT:     SDri10 0, killed $r1, killed $r0 :: (store (s64) into %ir.0)
+  ; CHECK-NEXT:     RET implicit $ra
+  ; CHECK-NEXT:   }
 entry:
   %0 = bitcast i8* %ptr to i64*
   store i64 %a, i64* %0
@@ -134,16 +141,17 @@ entry:
 define i32 @stored_r(i64 %a, i8* %ptr, i32* nocapture readonly %load) {
   ; CHECK-LABEL: name: stored_r
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2
-  ; CHECK:   $r2 = LWZri10 0, killed $r2, 0 :: (load 4 from %ir.load)
-  ; CHECK:   BUNDLE implicit-def $r2, implicit killed $r2, implicit killed $r1, implicit killed $r0 {
-  ; CHECK:     $r2 = READYp1r killed $r2
-  ; CHECK:     STOREp killed $r1, killed $r0, 64, internal $r2
-  ; CHECK:   }
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r2, implicit $ra {
-  ; CHECK:     $r0 = COPYD killed $r2
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   $r2 = LWZri10 0, killed $r2, 0 :: (load (s32) from %ir.load)
+  ; CHECK-NEXT:   BUNDLE implicit-def $r2, implicit killed $r2, implicit killed $r1, implicit killed $r0 {
+  ; CHECK-NEXT:     $r2 = READYp1r killed $r2
+  ; CHECK-NEXT:     STOREp killed $r1, killed $r0, 64, internal $r2
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     $r0 = COPYD killed $r2
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
 entry:
   %0 = load i32, i32* %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
@@ -156,11 +164,12 @@ entry:
 define void @storeq(i128 %a, i8* nocapture %ptr) {
   ; CHECK-LABEL: name: storeq
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2
-  ; CHECK:   BUNDLE implicit killed $r2, implicit killed $p0, implicit $ra {
-  ; CHECK:     SQri10 0, killed $r2, killed $p0 :: (store 16 into %ir.0, align 8)
-  ; CHECK:     RET implicit $ra
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit killed $r2, implicit killed $p0, implicit $ra {
+  ; CHECK-NEXT:     SQri10 0, killed $r2, killed $p0 :: (store (s128) into %ir.0, align 8)
+  ; CHECK-NEXT:     RET implicit $ra
+  ; CHECK-NEXT:   }
 entry:
   %0 = bitcast i8* %ptr to i128*
   store i128 %a, i128* %0
@@ -170,16 +179,17 @@ entry:
 define i32 @storeq_r(i128 %a, i8* %ptr, i32* nocapture readonly %load) {
   ; CHECK-LABEL: name: storeq_r
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2, $r3
-  ; CHECK:   $r3 = LWZri10 0, killed $r3, 0 :: (load 4 from %ir.load)
-  ; CHECK:   BUNDLE implicit-def $r3, implicit killed $r3, implicit killed $r2, implicit killed $p0 {
-  ; CHECK:     $r3 = READYp1r killed $r3
-  ; CHECK:     STOREp killed $r2, killed $p0, 128, internal $r3
-  ; CHECK:   }
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r3, implicit $ra {
-  ; CHECK:     $r0 = COPYD killed $r3
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   $r3 = LWZri10 0, killed $r3, 0 :: (load (s32) from %ir.load)
+  ; CHECK-NEXT:   BUNDLE implicit-def $r3, implicit killed $r3, implicit killed $r2, implicit killed $p0 {
+  ; CHECK-NEXT:     $r3 = READYp1r killed $r3
+  ; CHECK-NEXT:     STOREp killed $r2, killed $p0, 128, internal $r3
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r3, implicit $ra {
+  ; CHECK-NEXT:     $r0 = COPYD killed $r3
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
 entry:
   %0 = load i32, i32* %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
@@ -195,11 +205,12 @@ declare void @llvm.kvx.store.v2i64.p0v2i64.i32(<2 x i64>, <2 x i64>*, i32, i32)
 define void @storehf(half %a, i8* nocapture %ptr) {
   ; CHECK-LABEL: name: storehf
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1
-  ; CHECK:   BUNDLE implicit killed $r1, implicit killed $r0, implicit $ra {
-  ; CHECK:     SHri10 0, killed $r1, killed $r0 :: (store 2 into %ir.0)
-  ; CHECK:     RET implicit $ra
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit killed $r1, implicit killed $r0, implicit $ra {
+  ; CHECK-NEXT:     SHri10 0, killed $r1, killed $r0 :: (store (s16) into %ir.0)
+  ; CHECK-NEXT:     RET implicit $ra
+  ; CHECK-NEXT:   }
 entry:
   %0 = bitcast i8* %ptr to half*
   store half %a, half* %0
@@ -209,16 +220,17 @@ entry:
 define i32 @storehf_r(half %a, i8* %ptr, i32* nocapture readonly %load) {
   ; CHECK-LABEL: name: storehf_r
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2
-  ; CHECK:   $r2 = LWZri10 0, killed $r2, 0 :: (load 4 from %ir.load)
-  ; CHECK:   BUNDLE implicit-def $r2, implicit killed $r2, implicit killed $r1, implicit killed $r0 {
-  ; CHECK:     $r2 = READYp1r killed $r2
-  ; CHECK:     STOREp killed $r1, killed $r0, 16, internal $r2
-  ; CHECK:   }
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r2, implicit $ra {
-  ; CHECK:     $r0 = COPYD killed $r2
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   $r2 = LWZri10 0, killed $r2, 0 :: (load (s32) from %ir.load)
+  ; CHECK-NEXT:   BUNDLE implicit-def $r2, implicit killed $r2, implicit killed $r1, implicit killed $r0 {
+  ; CHECK-NEXT:     $r2 = READYp1r killed $r2
+  ; CHECK-NEXT:     STOREp killed $r1, killed $r0, 16, internal $r2
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     $r0 = COPYD killed $r2
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
 entry:
   %0 = load i32, i32* %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
@@ -233,11 +245,12 @@ declare void @llvm.kvx.store.f16.p0f16.i32(half, half*, i32, i32)
 define void @storewf(float %a, i8* nocapture %ptr) {
   ; CHECK-LABEL: name: storewf
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1
-  ; CHECK:   BUNDLE implicit killed $r1, implicit killed $r0, implicit $ra {
-  ; CHECK:     SWri10 0, killed $r1, killed $r0 :: (store 4 into %ir.0)
-  ; CHECK:     RET implicit $ra
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit killed $r1, implicit killed $r0, implicit $ra {
+  ; CHECK-NEXT:     SWri10 0, killed $r1, killed $r0 :: (store (s32) into %ir.0)
+  ; CHECK-NEXT:     RET implicit $ra
+  ; CHECK-NEXT:   }
 entry:
   %0 = bitcast i8* %ptr to float*
   store float %a, float* %0
@@ -247,16 +260,17 @@ entry:
 define i32 @storewf_r(float %a, i8* %ptr, i32* nocapture readonly %load) {
   ; CHECK-LABEL: name: storewf_r
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2
-  ; CHECK:   $r2 = LWZri10 0, killed $r2, 0 :: (load 4 from %ir.load)
-  ; CHECK:   BUNDLE implicit-def $r2, implicit killed $r2, implicit killed $r1, implicit killed $r0 {
-  ; CHECK:     $r2 = READYp1r killed $r2
-  ; CHECK:     STOREp killed $r1, killed $r0, 32, internal $r2
-  ; CHECK:   }
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r2, implicit $ra {
-  ; CHECK:     $r0 = COPYD killed $r2
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   $r2 = LWZri10 0, killed $r2, 0 :: (load (s32) from %ir.load)
+  ; CHECK-NEXT:   BUNDLE implicit-def $r2, implicit killed $r2, implicit killed $r1, implicit killed $r0 {
+  ; CHECK-NEXT:     $r2 = READYp1r killed $r2
+  ; CHECK-NEXT:     STOREp killed $r1, killed $r0, 32, internal $r2
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     $r0 = COPYD killed $r2
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
 entry:
   %0 = load i32, i32* %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
@@ -271,11 +285,12 @@ declare void @llvm.kvx.store.f32.p0f32.i32(float, float*, i32, i32)
 define void @storedf(double %a, i8* nocapture %ptr) {
   ; CHECK-LABEL: name: storedf
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1
-  ; CHECK:   BUNDLE implicit killed $r1, implicit killed $r0, implicit $ra {
-  ; CHECK:     SDri10 0, killed $r1, killed $r0 :: (store 8 into %ir.0)
-  ; CHECK:     RET implicit $ra
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit killed $r1, implicit killed $r0, implicit $ra {
+  ; CHECK-NEXT:     SDri10 0, killed $r1, killed $r0 :: (store (s64) into %ir.0)
+  ; CHECK-NEXT:     RET implicit $ra
+  ; CHECK-NEXT:   }
 entry:
   %0 = bitcast i8* %ptr to double*
   store double %a, double* %0
@@ -285,16 +300,17 @@ entry:
 define i32 @storedf_r(double %a, i8* %ptr, i32* nocapture readonly %load) {
   ; CHECK-LABEL: name: storedf_r
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2
-  ; CHECK:   $r2 = LWZri10 0, killed $r2, 0 :: (load 4 from %ir.load)
-  ; CHECK:   BUNDLE implicit-def $r2, implicit killed $r2, implicit killed $r1, implicit killed $r0 {
-  ; CHECK:     $r2 = READYp1r killed $r2
-  ; CHECK:     STOREp killed $r1, killed $r0, 64, internal $r2
-  ; CHECK:   }
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r2, implicit $ra {
-  ; CHECK:     $r0 = COPYD killed $r2
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   $r2 = LWZri10 0, killed $r2, 0 :: (load (s32) from %ir.load)
+  ; CHECK-NEXT:   BUNDLE implicit-def $r2, implicit killed $r2, implicit killed $r1, implicit killed $r0 {
+  ; CHECK-NEXT:     $r2 = READYp1r killed $r2
+  ; CHECK-NEXT:     STOREp killed $r1, killed $r0, 64, internal $r2
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     $r0 = COPYD killed $r2
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
 entry:
   %0 = load i32, i32* %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
@@ -309,11 +325,12 @@ declare void @llvm.kvx.store.f64.p0f64.i32(double, double*, i32, i32)
 define void @store64(<2 x i32> %a, i8* nocapture %ptr) {
   ; CHECK-LABEL: name: store64
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1
-  ; CHECK:   BUNDLE implicit killed $r1, implicit killed $r0, implicit $ra {
-  ; CHECK:     SDri10 0, killed $r1, killed $r0 :: (store 8 into %ir.0)
-  ; CHECK:     RET implicit $ra
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit killed $r1, implicit killed $r0, implicit $ra {
+  ; CHECK-NEXT:     SDri10 0, killed $r1, killed $r0 :: (store (s64) into %ir.0)
+  ; CHECK-NEXT:     RET implicit $ra
+  ; CHECK-NEXT:   }
 entry:
   %0 = bitcast i8* %ptr to <2 x i32>*
   store <2 x i32> %a, <2 x i32>* %0
@@ -323,16 +340,17 @@ entry:
 define i32 @store64_r(<2 x i32> %a, i8* %ptr, i32* nocapture readonly %load) {
   ; CHECK-LABEL: name: store64_r
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2
-  ; CHECK:   $r2 = LWZri10 0, killed $r2, 0 :: (load 4 from %ir.load)
-  ; CHECK:   BUNDLE implicit-def $r2, implicit killed $r2, implicit killed $r1, implicit killed $r0 {
-  ; CHECK:     $r2 = READYp1r killed $r2
-  ; CHECK:     STOREp killed $r1, killed $r0, 64, internal $r2
-  ; CHECK:   }
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r2, implicit $ra {
-  ; CHECK:     $r0 = COPYD killed $r2
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   $r2 = LWZri10 0, killed $r2, 0 :: (load (s32) from %ir.load)
+  ; CHECK-NEXT:   BUNDLE implicit-def $r2, implicit killed $r2, implicit killed $r1, implicit killed $r0 {
+  ; CHECK-NEXT:     $r2 = READYp1r killed $r2
+  ; CHECK-NEXT:     STOREp killed $r1, killed $r0, 64, internal $r2
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     $r0 = COPYD killed $r2
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
 entry:
   %0 = load i32, i32* %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
@@ -347,11 +365,12 @@ entry:
 define void @store128(<4 x i32> %a, i8* nocapture %ptr) {
   ; CHECK-LABEL: name: store128
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2
-  ; CHECK:   BUNDLE implicit killed $r2, implicit killed $p0, implicit $ra {
-  ; CHECK:     SQri10 0, killed $r2, killed $p0 :: (store 16 into %ir.0)
-  ; CHECK:     RET implicit $ra
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit killed $r2, implicit killed $p0, implicit $ra {
+  ; CHECK-NEXT:     SQri10 0, killed $r2, killed $p0 :: (store (s128) into %ir.0)
+  ; CHECK-NEXT:     RET implicit $ra
+  ; CHECK-NEXT:   }
 entry:
   %0 = bitcast i8* %ptr to <4 x i32>*
   store <4 x i32> %a, <4 x i32>* %0
@@ -361,16 +380,17 @@ entry:
 define i32 @store128_r(<4 x i32> %a, i8* %ptr, i32* nocapture readonly %load) {
   ; CHECK-LABEL: name: store128_r
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2, $r3
-  ; CHECK:   $r3 = LWZri10 0, killed $r3, 0 :: (load 4 from %ir.load)
-  ; CHECK:   BUNDLE implicit-def $r3, implicit killed $r3, implicit killed $r2, implicit killed $p0 {
-  ; CHECK:     $r3 = READYp1r killed $r3
-  ; CHECK:     STOREp killed $r2, killed $p0, 128, internal $r3
-  ; CHECK:   }
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r3, implicit $ra {
-  ; CHECK:     $r0 = COPYD killed $r3
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   $r3 = LWZri10 0, killed $r3, 0 :: (load (s32) from %ir.load)
+  ; CHECK-NEXT:   BUNDLE implicit-def $r3, implicit killed $r3, implicit killed $r2, implicit killed $p0 {
+  ; CHECK-NEXT:     $r3 = READYp1r killed $r3
+  ; CHECK-NEXT:     STOREp killed $r2, killed $p0, 128, internal $r3
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r3, implicit $ra {
+  ; CHECK-NEXT:     $r0 = COPYD killed $r3
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
 entry:
   %0 = load i32, i32* %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
@@ -384,11 +404,12 @@ entry:
 define void @store256(<8 x i32> %a, i8* nocapture %ptr) {
   ; CHECK-LABEL: name: store256
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2, $r3, $r4
-  ; CHECK:   BUNDLE implicit killed $r4, implicit killed $q0, implicit $ra {
-  ; CHECK:     SOri10 0, killed $r4, killed $q0 :: (store 32 into %ir.0)
-  ; CHECK:     RET implicit $ra
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit killed $r4, implicit killed $q0, implicit $ra {
+  ; CHECK-NEXT:     SOri10 0, killed $r4, killed $q0 :: (store (s256) into %ir.0)
+  ; CHECK-NEXT:     RET implicit $ra
+  ; CHECK-NEXT:   }
 entry:
   %0 = bitcast i8* %ptr to <8 x i32>*
   store <8 x i32> %a, <8 x i32>* %0
@@ -398,16 +419,17 @@ entry:
 define i32 @store256_r(<8 x i32> %a, i8* %ptr, i32* nocapture readonly %load) {
   ; CHECK-LABEL: name: store256_r
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
-  ; CHECK:   $r5 = LWZri10 0, killed $r5, 0 :: (load 4 from %ir.load)
-  ; CHECK:   BUNDLE implicit-def $r5, implicit killed $r5, implicit killed $r4, implicit killed $q0 {
-  ; CHECK:     $r5 = READYp1r killed $r5
-  ; CHECK:     STOREp killed $r4, killed $q0, 256, internal $r5
-  ; CHECK:   }
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r5, implicit $ra {
-  ; CHECK:     $r0 = COPYD killed $r5
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   $r5 = LWZri10 0, killed $r5, 0 :: (load (s32) from %ir.load)
+  ; CHECK-NEXT:   BUNDLE implicit-def $r5, implicit killed $r5, implicit killed $r4, implicit killed $q0 {
+  ; CHECK-NEXT:     $r5 = READYp1r killed $r5
+  ; CHECK-NEXT:     STOREp killed $r4, killed $q0, 256, internal $r5
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r5, implicit $ra {
+  ; CHECK-NEXT:     $r0 = COPYD killed $r5
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
 entry:
   %0 = load i32, i32* %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
@@ -423,12 +445,13 @@ declare void @llvm.kvx.store.v4i64.p0v4i64.i32(<4 x i64>, <4 x i64>*, i32, i32)
 define void @store_vol(i32 %a, i8* %ptr) {
   ; CHECK-LABEL: name: store_vol
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1
-  ; CHECK:   SWri10 0, $r1, $r0 :: (volatile store 4 into %ir.0)
-  ; CHECK:   BUNDLE implicit killed $r1, implicit killed $r0, implicit $ra {
-  ; CHECK:     SWri10 0, killed $r1, killed $r0 :: (volatile store 4 into %ir.0)
-  ; CHECK:     RET implicit $ra
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   SWri10 0, $r1, $r0 :: (volatile store (s32) into %ir.0)
+  ; CHECK-NEXT:   BUNDLE implicit killed $r1, implicit killed $r0, implicit $ra {
+  ; CHECK-NEXT:     SWri10 0, killed $r1, killed $r0 :: (volatile store (s32) into %ir.0)
+  ; CHECK-NEXT:     RET implicit $ra
+  ; CHECK-NEXT:   }
 entry:
   %0 = bitcast i8* %ptr to i32*
   store volatile i32 %a, i32* %0
@@ -439,11 +462,12 @@ entry:
 define void @store_novol(i32 %a, i8* nocapture %ptr) {
   ; CHECK-LABEL: name: store_novol
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1
-  ; CHECK:   BUNDLE implicit killed $r1, implicit killed $r0, implicit $ra {
-  ; CHECK:     SWri10 0, killed $r1, killed $r0 :: (store 4 into %ir.0)
-  ; CHECK:     RET implicit $ra
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit killed $r1, implicit killed $r0, implicit $ra {
+  ; CHECK-NEXT:     SWri10 0, killed $r1, killed $r0 :: (store (s32) into %ir.0)
+  ; CHECK-NEXT:     RET implicit $ra
+  ; CHECK-NEXT:   }
 entry:
   %0 = bitcast i8* %ptr to i32*
   store i32 %a, i32* %0
@@ -453,19 +477,20 @@ entry:
 define i32 @store_r_vol(i32 %a, i8* %ptr, i32* nocapture readonly %load) {
   ; CHECK-LABEL: name: store_r_vol
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2
-  ; CHECK:   BUNDLE implicit-def $r2, implicit-def $r3, implicit killed $r2, implicit killed $r0 {
-  ; CHECK:     $r2 = LWZri10 0, killed $r2, 0 :: (load 4 from %ir.load)
-  ; CHECK:     $r3 = SXWD killed $r0
-  ; CHECK:   }
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r2, implicit $r1, implicit $r3 {
-  ; CHECK:     $r0 = READYp1r killed $r2
-  ; CHECK:     STOREpv $r1, $r3, 32, internal $r0
-  ; CHECK:   }
-  ; CHECK:   BUNDLE implicit killed $r1, implicit killed $r3, implicit killed $r0, implicit $ra {
-  ; CHECK:     STOREpv killed $r1, killed $r3, 32, $r0
-  ; CHECK:     RET implicit $ra, implicit killed $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $r2, implicit-def $r3, implicit killed $r2, implicit killed $r0 {
+  ; CHECK-NEXT:     $r2 = LWZri10 0, killed $r2, 0 :: (load (s32) from %ir.load)
+  ; CHECK-NEXT:     $r3 = SXWD killed $r0
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r2, implicit $r1, implicit $r3 {
+  ; CHECK-NEXT:     $r0 = READYp1r killed $r2
+  ; CHECK-NEXT:     STOREpv $r1, $r3, 32, internal $r0
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit killed $r1, implicit killed $r3, implicit killed $r0, implicit $ra {
+  ; CHECK-NEXT:     STOREpv killed $r1, killed $r3, 32, $r0
+  ; CHECK-NEXT:     RET implicit $ra, implicit killed $r0
+  ; CHECK-NEXT:   }
 entry:
   %0 = load i32, i32* %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
@@ -482,19 +507,20 @@ declare void @llvm.kvx.store.vol.i64.p0i64.i32(i64, i64*, i32, i32)
 define i32 @store_r_novol(i32 %a, i8* %ptr, i32* nocapture readonly %load) {
   ; CHECK-LABEL: name: store_r_novol
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2
-  ; CHECK:   BUNDLE implicit-def $r2, implicit-def $r3, implicit killed $r2, implicit killed $r0 {
-  ; CHECK:     $r2 = LWZri10 0, killed $r2, 0 :: (load 4 from %ir.load)
-  ; CHECK:     $r3 = SXWD killed $r0
-  ; CHECK:   }
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r2, implicit $r1, implicit $r3 {
-  ; CHECK:     $r0 = READYp1r killed $r2
-  ; CHECK:     STOREp $r1, $r3, 32, internal $r0
-  ; CHECK:   }
-  ; CHECK:   BUNDLE implicit killed $r1, implicit killed $r3, implicit killed $r0, implicit $ra {
-  ; CHECK:     STOREp killed $r1, killed $r3, 32, $r0
-  ; CHECK:     RET implicit $ra, implicit killed $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $r2, implicit-def $r3, implicit killed $r2, implicit killed $r0 {
+  ; CHECK-NEXT:     $r2 = LWZri10 0, killed $r2, 0 :: (load (s32) from %ir.load)
+  ; CHECK-NEXT:     $r3 = SXWD killed $r0
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r2, implicit $r1, implicit $r3 {
+  ; CHECK-NEXT:     $r0 = READYp1r killed $r2
+  ; CHECK-NEXT:     STOREp $r1, $r3, 32, internal $r0
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit killed $r1, implicit killed $r3, implicit killed $r0, implicit $ra {
+  ; CHECK-NEXT:     STOREp killed $r1, killed $r3, 32, $r0
+  ; CHECK-NEXT:     RET implicit $ra, implicit killed $r0
+  ; CHECK-NEXT:   }
 entry:
   %0 = load i32, i32* %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
@@ -509,19 +535,20 @@ entry:
 define void @ready_then_store(i32* nocapture readonly %addr0, i32* nocapture readonly %addr1, i32* nocapture readonly %addr2, i32* %to0, i32* %to1, i32* %to2) {
   ; CHECK-LABEL: name: ready_then_store
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
-  ; CHECK:   $r0 = LWSri10 0, killed $r0, 0 :: (load 4 from %ir.addr0)
-  ; CHECK:   $r1 = LWSri10 0, killed $r1, 0 :: (load 4 from %ir.addr1)
-  ; CHECK:   $r2 = LWSri10 0, killed $r2, 0 :: (load 4 from %ir.addr2)
-  ; CHECK:   BUNDLE implicit-def $r6, implicit killed $r0, implicit $r1, implicit $r2, implicit killed $r3 {
-  ; CHECK:     $r6 = READYp3r $r0, $r1, $r2
-  ; CHECK:     STOREp killed $r3, killed $r0, 32, internal $r6
-  ; CHECK:   }
-  ; CHECK:   STOREp killed $r4, killed $r1, 32, $r6
-  ; CHECK:   BUNDLE implicit killed $r5, implicit killed $r2, implicit killed $r6, implicit $ra {
-  ; CHECK:     STOREp killed $r5, killed $r2, 32, killed $r6
-  ; CHECK:     RET implicit $ra
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   $r0 = LWSri10 0, killed $r0, 0 :: (load (s32) from %ir.addr0)
+  ; CHECK-NEXT:   $r1 = LWSri10 0, killed $r1, 0 :: (load (s32) from %ir.addr1)
+  ; CHECK-NEXT:   $r2 = LWSri10 0, killed $r2, 0 :: (load (s32) from %ir.addr2)
+  ; CHECK-NEXT:   BUNDLE implicit-def $r6, implicit killed $r0, implicit $r1, implicit $r2, implicit killed $r3 {
+  ; CHECK-NEXT:     $r6 = READYp3r $r0, $r1, $r2
+  ; CHECK-NEXT:     STOREp killed $r3, killed $r0, 32, internal $r6
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   STOREp killed $r4, killed $r1, 32, $r6
+  ; CHECK-NEXT:   BUNDLE implicit killed $r5, implicit killed $r2, implicit killed $r6, implicit $ra {
+  ; CHECK-NEXT:     STOREp killed $r5, killed $r2, 32, killed $r6
+  ; CHECK-NEXT:     RET implicit $ra
+  ; CHECK-NEXT:   }
 entry:
   %0 = load i32, i32* %addr0
   %1 = load i32, i32* %addr1
@@ -543,16 +570,17 @@ entry:
 define void @load_then_store(i32* nocapture readonly %addr0, i32* nocapture readonly %addr1, i32* nocapture readonly %addr2, i32* nocapture %to0, i32* nocapture %to1, i32* nocapture %to2) {
   ; CHECK-LABEL: name: load_then_store
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
-  ; CHECK:   $r0 = LWZri10 0, killed $r0, 0 :: (load 4 from %ir.addr0)
-  ; CHECK:   $r1 = LWZri10 0, killed $r1, 0 :: (load 4 from %ir.addr1)
-  ; CHECK:   $r2 = LWZri10 0, killed $r2, 0 :: (load 4 from %ir.addr2)
-  ; CHECK:   SWri10 0, killed $r3, killed $r0 :: (store 4 into %ir.to0)
-  ; CHECK:   SWri10 0, killed $r4, killed $r1 :: (store 4 into %ir.to1)
-  ; CHECK:   BUNDLE implicit killed $r5, implicit killed $r2, implicit $ra {
-  ; CHECK:     SWri10 0, killed $r5, killed $r2 :: (store 4 into %ir.to2)
-  ; CHECK:     RET implicit $ra
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   $r0 = LWZri10 0, killed $r0, 0 :: (load (s32) from %ir.addr0)
+  ; CHECK-NEXT:   $r1 = LWZri10 0, killed $r1, 0 :: (load (s32) from %ir.addr1)
+  ; CHECK-NEXT:   $r2 = LWZri10 0, killed $r2, 0 :: (load (s32) from %ir.addr2)
+  ; CHECK-NEXT:   SWri10 0, killed $r3, killed $r0 :: (store (s32) into %ir.to0)
+  ; CHECK-NEXT:   SWri10 0, killed $r4, killed $r1 :: (store (s32) into %ir.to1)
+  ; CHECK-NEXT:   BUNDLE implicit killed $r5, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     SWri10 0, killed $r5, killed $r2 :: (store (s32) into %ir.to2)
+  ; CHECK-NEXT:     RET implicit $ra
+  ; CHECK-NEXT:   }
 entry:
   %0 = load i32, i32* %addr0
   %1 = load i32, i32* %addr1

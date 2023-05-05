@@ -494,10 +494,6 @@ N: Abhina Sreeskantharajan
 E: Abhina.Sreeskantharajan@ibm.com
 D: z/OS support
 
-N: Laurent Thevenoux
-E: lthevenoux@kalray.eu
-D: Maintaining the KVX Backend
-
 N: Alp Toker
 E: alp@nuanti.com
 W: http://atoker.com/

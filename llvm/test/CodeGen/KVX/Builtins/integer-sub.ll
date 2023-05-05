@@ -701,11 +701,11 @@ define <8 x i32> @sbfwo(<8 x i32> %0, <8 x i32> %1) {
 define <8 x i32> @sbfwo_s(<8 x i32> %0, <8 x i32> %1) {
 ; V1-LABEL: sbfwo_s:
 ; V1:       # %bb.0:
-; V1-NEXT:    sbfswp $r2 = $r2, $r6
-; V1-NEXT:    sbfswp $r3 = $r3, $r7
-; V1-NEXT:    ;;
 ; V1-NEXT:    sbfswp $r0 = $r0, $r4
 ; V1-NEXT:    sbfswp $r1 = $r1, $r5
+; V1-NEXT:    ;;
+; V1-NEXT:    sbfswp $r2 = $r2, $r6
+; V1-NEXT:    sbfswp $r3 = $r3, $r7
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -722,19 +722,28 @@ define <8 x i32> @sbfwo_s(<8 x i32> %0, <8 x i32> %1) {
 }
 
 define <8 x i32> @sbfwo_us(<8 x i32> %0, <8 x i32> %1) {
-; CHECK-LABEL: sbfwo_us:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    maxuwp $r4 = $r4, $r0
-; CHECK-NEXT:    maxuwp $r5 = $r5, $r1
-; CHECK-NEXT:    maxuwp $r6 = $r6, $r2
-; CHECK-NEXT:    maxuwp $r7 = $r7, $r3
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbfwp $r0 = $r0, $r4
-; CHECK-NEXT:    sbfwp $r1 = $r1, $r5
-; CHECK-NEXT:    sbfwp $r2 = $r2, $r6
-; CHECK-NEXT:    sbfwp $r3 = $r3, $r7
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; V1-LABEL: sbfwo_us:
+; V1:       # %bb.0:
+; V1-NEXT:    maxuwp $r4 = $r4, $r0
+; V1-NEXT:    maxuwp $r5 = $r5, $r1
+; V1-NEXT:    maxuwp $r6 = $r6, $r2
+; V1-NEXT:    maxuwp $r7 = $r7, $r3
+; V1-NEXT:    ;;
+; V1-NEXT:    sbfwp $r0 = $r0, $r4
+; V1-NEXT:    sbfwp $r1 = $r1, $r5
+; V1-NEXT:    sbfwp $r2 = $r2, $r6
+; V1-NEXT:    sbfwp $r3 = $r3, $r7
+; V1-NEXT:    ret
+; V1-NEXT:    ;;
+;
+; V2-LABEL: sbfwo_us:
+; V2:       # %bb.0:
+; V2-NEXT:    sbfuswp $r0 = $r0, $r4
+; V2-NEXT:    sbfuswp $r1 = $r1, $r5
+; V2-NEXT:    sbfuswp $r2 = $r2, $r6
+; V2-NEXT:    sbfuswp $r3 = $r3, $r7
+; V2-NEXT:    ret
+; V2-NEXT:    ;;
   %3 = tail call <8 x i32> @llvm.usub.sat.v8i32(<8 x i32> %1, <8 x i32> %0)
   ret <8 x i32> %3
 }

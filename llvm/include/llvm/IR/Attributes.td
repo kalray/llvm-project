@@ -123,8 +123,8 @@ def InlineHint : EnumAttr<"inlinehint", [FnAttr]>;
 /// Force argument to be passed in register.
 def InReg : EnumAttr<"inreg", [ParamAttr, RetAttr]>;
 
-/// K1GCC function.
-def MPPANative : EnumAttr<"MPPANative">;
+/// KVX-GCC function.
+def MPPANative : EnumAttr<"mppa_native", [FnAttr]>;
 
 /// Build jump-instruction tables and replace refs.
 def JumpTable : EnumAttr<"jumptable", [FnAttr]>;

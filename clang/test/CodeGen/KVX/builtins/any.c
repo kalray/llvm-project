@@ -21,10 +21,10 @@ uint64_t anybo_eqz(v8i8 a) { return __builtin_kvx_anybo(a, ".eqz"); }
 
 // CHECK-LABEL: @anybv_nez(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <32 x i8> [[A:%.*]], <32 x i8> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
-// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <32 x i8> [[A]], <32 x i8> undef, <8 x i32> <i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
-// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <32 x i8> [[A]], <32 x i8> undef, <8 x i32> <i32 16, i32 17, i32 18, i32 19, i32 20, i32 21, i32 22, i32 23>
-// CHECK-NEXT:    [[TMP3:%.*]] = shufflevector <32 x i8> [[A]], <32 x i8> undef, <8 x i32> <i32 24, i32 25, i32 26, i32 27, i32 28, i32 29, i32 30, i32 31>
+// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <32 x i8> [[A:%.*]], <32 x i8> poison, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <32 x i8> [[A]], <32 x i8> poison, <8 x i32> <i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <32 x i8> [[A]], <32 x i8> poison, <8 x i32> <i32 16, i32 17, i32 18, i32 19, i32 20, i32 21, i32 22, i32 23>
+// CHECK-NEXT:    [[TMP3:%.*]] = shufflevector <32 x i8> [[A]], <32 x i8> poison, <8 x i32> <i32 24, i32 25, i32 26, i32 27, i32 28, i32 29, i32 30, i32 31>
 // CHECK-NEXT:    [[TMP4:%.*]] = tail call i64 @llvm.kvx.any4.v8i8(<8 x i8> [[TMP0]], <8 x i8> [[TMP1]], <8 x i8> [[TMP2]], <8 x i8> [[TMP3]], i32 0)
 // CHECK-NEXT:    ret i64 [[TMP4]]
 //
@@ -32,10 +32,10 @@ uint64_t anybv_nez(v32i8 a) { return __builtin_kvx_anybv(a, ".nez"); }
 
 // CHECK-LABEL: @anybv_eqz(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <32 x i8> [[A:%.*]], <32 x i8> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
-// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <32 x i8> [[A]], <32 x i8> undef, <8 x i32> <i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
-// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <32 x i8> [[A]], <32 x i8> undef, <8 x i32> <i32 16, i32 17, i32 18, i32 19, i32 20, i32 21, i32 22, i32 23>
-// CHECK-NEXT:    [[TMP3:%.*]] = shufflevector <32 x i8> [[A]], <32 x i8> undef, <8 x i32> <i32 24, i32 25, i32 26, i32 27, i32 28, i32 29, i32 30, i32 31>
+// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <32 x i8> [[A:%.*]], <32 x i8> poison, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <32 x i8> [[A]], <32 x i8> poison, <8 x i32> <i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <32 x i8> [[A]], <32 x i8> poison, <8 x i32> <i32 16, i32 17, i32 18, i32 19, i32 20, i32 21, i32 22, i32 23>
+// CHECK-NEXT:    [[TMP3:%.*]] = shufflevector <32 x i8> [[A]], <32 x i8> poison, <8 x i32> <i32 24, i32 25, i32 26, i32 27, i32 28, i32 29, i32 30, i32 31>
 // CHECK-NEXT:    [[TMP4:%.*]] = tail call i64 @llvm.kvx.any4.v8i8(<8 x i8> [[TMP0]], <8 x i8> [[TMP1]], <8 x i8> [[TMP2]], <8 x i8> [[TMP3]], i32 1)
 // CHECK-NEXT:    ret i64 [[TMP4]]
 //
@@ -43,8 +43,8 @@ uint64_t anybv_eqz(v32i8 a) { return __builtin_kvx_anybv(a, ".eqz"); }
 
 // CHECK-LABEL: @anybx_nez(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <16 x i8> [[A:%.*]], <16 x i8> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
-// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <16 x i8> [[A]], <16 x i8> undef, <8 x i32> <i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <16 x i8> [[A:%.*]], <16 x i8> poison, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <16 x i8> [[A]], <16 x i8> poison, <8 x i32> <i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
 // CHECK-NEXT:    [[TMP2:%.*]] = tail call i64 @llvm.kvx.any2.v8i8(<8 x i8> [[TMP0]], <8 x i8> [[TMP1]], i32 0)
 // CHECK-NEXT:    ret i64 [[TMP2]]
 //
@@ -52,8 +52,8 @@ uint64_t anybx_nez(v16i8 a) { return __builtin_kvx_anybx(a, ".nez"); }
 
 // CHECK-LABEL: @anybx_eqz(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <16 x i8> [[A:%.*]], <16 x i8> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
-// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <16 x i8> [[A]], <16 x i8> undef, <8 x i32> <i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <16 x i8> [[A:%.*]], <16 x i8> poison, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <16 x i8> [[A]], <16 x i8> poison, <8 x i32> <i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
 // CHECK-NEXT:    [[TMP2:%.*]] = tail call i64 @llvm.kvx.any2.v8i8(<8 x i8> [[TMP0]], <8 x i8> [[TMP1]], i32 1)
 // CHECK-NEXT:    ret i64 [[TMP2]]
 //
@@ -101,8 +101,8 @@ uint64_t anydq_eqz(v4i64 a) { return __builtin_kvx_anydq(a, ".eqz"); }
 
 // CHECK-LABEL: @anyho_nez(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <8 x i16> [[A:%.*]], <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
-// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <8 x i16> [[A]], <8 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <8 x i16> [[A:%.*]], <8 x i16> poison, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <8 x i16> [[A]], <8 x i16> poison, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
 // CHECK-NEXT:    [[TMP2:%.*]] = tail call i64 @llvm.kvx.any2.v4i16(<4 x i16> [[TMP0]], <4 x i16> [[TMP1]], i32 0)
 // CHECK-NEXT:    ret i64 [[TMP2]]
 //
@@ -110,8 +110,8 @@ uint64_t anyho_nez(v8i16 a) { return __builtin_kvx_anyho(a, ".nez"); }
 
 // CHECK-LABEL: @anyho_eqz(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <8 x i16> [[A:%.*]], <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
-// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <8 x i16> [[A]], <8 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <8 x i16> [[A:%.*]], <8 x i16> poison, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <8 x i16> [[A]], <8 x i16> poison, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
 // CHECK-NEXT:    [[TMP2:%.*]] = tail call i64 @llvm.kvx.any2.v4i16(<4 x i16> [[TMP0]], <4 x i16> [[TMP1]], i32 1)
 // CHECK-NEXT:    ret i64 [[TMP2]]
 //
@@ -133,10 +133,10 @@ uint64_t anyhq_eqz(v4i16 a) { return __builtin_kvx_anyhq(a, ".eqz"); }
 
 // CHECK-LABEL: @anyhx_nez(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <16 x i16> [[A:%.*]], <16 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
-// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <16 x i16> [[A]], <16 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
-// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <16 x i16> [[A]], <16 x i16> undef, <4 x i32> <i32 8, i32 9, i32 10, i32 11>
-// CHECK-NEXT:    [[TMP3:%.*]] = shufflevector <16 x i16> [[A]], <16 x i16> undef, <4 x i32> <i32 12, i32 13, i32 14, i32 15>
+// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <16 x i16> [[A:%.*]], <16 x i16> poison, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <16 x i16> [[A]], <16 x i16> poison, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <16 x i16> [[A]], <16 x i16> poison, <4 x i32> <i32 8, i32 9, i32 10, i32 11>
+// CHECK-NEXT:    [[TMP3:%.*]] = shufflevector <16 x i16> [[A]], <16 x i16> poison, <4 x i32> <i32 12, i32 13, i32 14, i32 15>
 // CHECK-NEXT:    [[TMP4:%.*]] = tail call i64 @llvm.kvx.any4.v4i16(<4 x i16> [[TMP0]], <4 x i16> [[TMP1]], <4 x i16> [[TMP2]], <4 x i16> [[TMP3]], i32 0)
 // CHECK-NEXT:    ret i64 [[TMP4]]
 //
@@ -144,10 +144,10 @@ uint64_t anyhx_nez(v16i16 a) { return __builtin_kvx_anyhx(a, ".nez"); }
 
 // CHECK-LABEL: @anyhx_eqz(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <16 x i16> [[A:%.*]], <16 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
-// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <16 x i16> [[A]], <16 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
-// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <16 x i16> [[A]], <16 x i16> undef, <4 x i32> <i32 8, i32 9, i32 10, i32 11>
-// CHECK-NEXT:    [[TMP3:%.*]] = shufflevector <16 x i16> [[A]], <16 x i16> undef, <4 x i32> <i32 12, i32 13, i32 14, i32 15>
+// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <16 x i16> [[A:%.*]], <16 x i16> poison, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <16 x i16> [[A]], <16 x i16> poison, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <16 x i16> [[A]], <16 x i16> poison, <4 x i32> <i32 8, i32 9, i32 10, i32 11>
+// CHECK-NEXT:    [[TMP3:%.*]] = shufflevector <16 x i16> [[A]], <16 x i16> poison, <4 x i32> <i32 12, i32 13, i32 14, i32 15>
 // CHECK-NEXT:    [[TMP4:%.*]] = tail call i64 @llvm.kvx.any4.v4i16(<4 x i16> [[TMP0]], <4 x i16> [[TMP1]], <4 x i16> [[TMP2]], <4 x i16> [[TMP3]], i32 1)
 // CHECK-NEXT:    ret i64 [[TMP4]]
 //
@@ -155,10 +155,10 @@ uint64_t anyhx_eqz(v16i16 a) { return __builtin_kvx_anyhx(a, ".eqz"); }
 
 // CHECK-LABEL: @anywo_nez(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <8 x i32> [[A:%.*]], <8 x i32> undef, <2 x i32> <i32 0, i32 1>
-// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <8 x i32> [[A]], <8 x i32> undef, <2 x i32> <i32 2, i32 3>
-// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <8 x i32> [[A]], <8 x i32> undef, <2 x i32> <i32 4, i32 5>
-// CHECK-NEXT:    [[TMP3:%.*]] = shufflevector <8 x i32> [[A]], <8 x i32> undef, <2 x i32> <i32 6, i32 7>
+// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <8 x i32> [[A:%.*]], <8 x i32> poison, <2 x i32> <i32 0, i32 1>
+// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <8 x i32> [[A]], <8 x i32> poison, <2 x i32> <i32 2, i32 3>
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <8 x i32> [[A]], <8 x i32> poison, <2 x i32> <i32 4, i32 5>
+// CHECK-NEXT:    [[TMP3:%.*]] = shufflevector <8 x i32> [[A]], <8 x i32> poison, <2 x i32> <i32 6, i32 7>
 // CHECK-NEXT:    [[TMP4:%.*]] = tail call i64 @llvm.kvx.any4.v2i32(<2 x i32> [[TMP0]], <2 x i32> [[TMP1]], <2 x i32> [[TMP2]], <2 x i32> [[TMP3]], i32 0)
 // CHECK-NEXT:    ret i64 [[TMP4]]
 //
@@ -166,10 +166,10 @@ uint64_t anywo_nez(v8i32 a) { return __builtin_kvx_anywo(a, ".nez"); }
 
 // CHECK-LABEL: @anywo_eqz(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <8 x i32> [[A:%.*]], <8 x i32> undef, <2 x i32> <i32 0, i32 1>
-// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <8 x i32> [[A]], <8 x i32> undef, <2 x i32> <i32 2, i32 3>
-// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <8 x i32> [[A]], <8 x i32> undef, <2 x i32> <i32 4, i32 5>
-// CHECK-NEXT:    [[TMP3:%.*]] = shufflevector <8 x i32> [[A]], <8 x i32> undef, <2 x i32> <i32 6, i32 7>
+// CHECK-NEXT:    [[TMP0:%.*]] = shufflevector <8 x i32> [[A:%.*]], <8 x i32> poison, <2 x i32> <i32 0, i32 1>
+// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <8 x i32> [[A]], <8 x i32> poison, <2 x i32> <i32 2, i32 3>
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <8 x i32> [[A]], <8 x i32> poison, <2 x i32> <i32 4, i32 5>
+// CHECK-NEXT:    [[TMP3:%.*]] = shufflevector <8 x i32> [[A]], <8 x i32> poison, <2 x i32> <i32 6, i32 7>
 // CHECK-NEXT:    [[TMP4:%.*]] = tail call i64 @llvm.kvx.any4.v2i32(<2 x i32> [[TMP0]], <2 x i32> [[TMP1]], <2 x i32> [[TMP2]], <2 x i32> [[TMP3]], i32 1)
 // CHECK-NEXT:    ret i64 [[TMP4]]
 //

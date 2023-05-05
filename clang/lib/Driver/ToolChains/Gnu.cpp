@@ -1775,9 +1775,6 @@ static void findKVXMultilibs(const Driver &D, const llvm::Triple &TargetTriple,
 
   Multilib::flags_list Flags;
 
-  // Triple::kvx is 64 bits by default. We only support 64 bits mode but add m32
-  // flag here to properly filter the 32 bits GCC's multilib.
-  addMultilibFlag(TargetTriple.getArch() != llvm::Triple::kvx, "m32", Flags);
   addMultilibFlag(TargetTriple.getArch() == llvm::Triple::kvx, "m64", Flags);
 
   const Arg *A = Args.getLastArg(clang::driver::options::OPT_march_EQ);

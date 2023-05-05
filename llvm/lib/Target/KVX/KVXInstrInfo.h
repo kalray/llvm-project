@@ -125,10 +125,11 @@ public:
 
   bool isBranchOffsetInRange(unsigned, int64_t) const override;
 
-  unsigned insertIndirectBranch(MachineBasicBlock &MBB,
-                                MachineBasicBlock &NewDestBB,
-                                const DebugLoc &DL, int64_t BrOffset = 0,
-                                RegScavenger *RS = nullptr) const override;
+  virtual void insertIndirectBranch(MachineBasicBlock &MBB,
+                                    MachineBasicBlock &NewDestBB,
+                                    MachineBasicBlock &RestoreBB,
+                                    const DebugLoc &DL, int64_t BrOffset = 0,
+                                    RegScavenger *RS = nullptr) const override;
 
   bool isSafeToMoveRegClassDefs(const TargetRegisterClass *RC) const override;
 };

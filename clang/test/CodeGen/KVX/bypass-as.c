@@ -14,7 +14,7 @@ struct S {
 
 // CHECK-LABEL: @bypass_i8(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load i8, i8 addrspace(256)* [[I:%.*]], align 1, [[TBAA2:!tbaa !.*]]
+// CHECK-NEXT:    [[TMP0:%.*]] = load i8, ptr addrspace(256) [[I:%.*]], align 1, !tbaa [[TBAA2:![0-9]+]]
 // CHECK-NEXT:    ret i8 [[TMP0]]
 //
 char bypass_i8(__bypass char *i) {
@@ -23,7 +23,7 @@ char bypass_i8(__bypass char *i) {
 
 // CHECK-LABEL: @bypass_i16(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load i16, i16 addrspace(256)* [[I:%.*]], align 2, [[TBAA5:!tbaa !.*]]
+// CHECK-NEXT:    [[TMP0:%.*]] = load i16, ptr addrspace(256) [[I:%.*]], align 2, !tbaa [[TBAA5:![0-9]+]]
 // CHECK-NEXT:    ret i16 [[TMP0]]
 //
 short bypass_i16(__bypass short *i) {
@@ -32,7 +32,7 @@ short bypass_i16(__bypass short *i) {
 
 // CHECK-LABEL: @bypass_i32(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load i32, i32 addrspace(256)* [[I:%.*]], align 4, [[TBAA7:!tbaa !.*]]
+// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr addrspace(256) [[I:%.*]], align 4, !tbaa [[TBAA7:![0-9]+]]
 // CHECK-NEXT:    ret i32 [[TMP0]]
 //
 int bypass_i32(__bypass int *i) {
@@ -41,7 +41,7 @@ int bypass_i32(__bypass int *i) {
 
 // CHECK-LABEL: @bypass_i64(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load i64, i64 addrspace(256)* [[I:%.*]], align 8, [[TBAA9:!tbaa !.*]]
+// CHECK-NEXT:    [[TMP0:%.*]] = load i64, ptr addrspace(256) [[I:%.*]], align 8, !tbaa [[TBAA9:![0-9]+]]
 // CHECK-NEXT:    ret i64 [[TMP0]]
 //
 long bypass_i64(__bypass long *i) {
@@ -50,7 +50,7 @@ long bypass_i64(__bypass long *i) {
 
 // CHECK-LABEL: @fbypass_f32(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load float, float addrspace(256)* [[F:%.*]], align 4, [[TBAA11:!tbaa !.*]]
+// CHECK-NEXT:    [[TMP0:%.*]] = load float, ptr addrspace(256) [[F:%.*]], align 4, !tbaa [[TBAA11:![0-9]+]]
 // CHECK-NEXT:    ret float [[TMP0]]
 //
 float fbypass_f32(__bypass float *f) {
@@ -59,7 +59,7 @@ float fbypass_f32(__bypass float *f) {
 
 // CHECK-LABEL: @fbypass_f64(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load double, double addrspace(256)* [[D:%.*]], align 8, [[TBAA13:!tbaa !.*]]
+// CHECK-NEXT:    [[TMP0:%.*]] = load double, ptr addrspace(256) [[D:%.*]], align 8, !tbaa [[TBAA13:![0-9]+]]
 // CHECK-NEXT:    ret double [[TMP0]]
 //
 double fbypass_f64(__bypass double *d) {
@@ -68,7 +68,7 @@ double fbypass_f64(__bypass double *d) {
 
 // CHECK-LABEL: @fbypass_v2f32(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <2 x float>, <2 x float> addrspace(256)* [[V:%.*]], align 8, [[TBAA2]]
+// CHECK-NEXT:    [[TMP0:%.*]] = load <2 x float>, ptr addrspace(256) [[V:%.*]], align 8, !tbaa [[TBAA2]]
 // CHECK-NEXT:    ret <2 x float> [[TMP0]]
 //
 v2f32 fbypass_v2f32(__bypass v2f32 *v) {
@@ -77,7 +77,7 @@ v2f32 fbypass_v2f32(__bypass v2f32 *v) {
 
 // CHECK-LABEL: @fbypass_v4f32(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <4 x float>, <4 x float> addrspace(256)* [[V:%.*]], align 16, [[TBAA2]]
+// CHECK-NEXT:    [[TMP0:%.*]] = load <4 x float>, ptr addrspace(256) [[V:%.*]], align 16, !tbaa [[TBAA2]]
 // CHECK-NEXT:    ret <4 x float> [[TMP0]]
 //
 v4f32 fbypass_v4f32(__bypass v4f32 *v) {
@@ -86,8 +86,7 @@ v4f32 fbypass_v4f32(__bypass v4f32 *v) {
 
 // CHECK-LABEL: @foo_bypass_a(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[A:%.*]] = getelementptr inbounds [[STRUCT_S:%.*]], [[STRUCT_S]] addrspace(256)* [[S:%.*]], i64 0, i32 0
-// CHECK-NEXT:    [[TMP0:%.*]] = load i32, i32 addrspace(256)* [[A]], align 4, [[TBAA15:!tbaa !.*]]
+// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr addrspace(256) [[S:%.*]], align 4, !tbaa [[TBAA15:![0-9]+]]
 // CHECK-NEXT:    ret i32 [[TMP0]]
 //
 int foo_bypass_a(__bypass struct S *s) {
@@ -96,8 +95,8 @@ int foo_bypass_a(__bypass struct S *s) {
 
 // CHECK-LABEL: @foo_bypass_b(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[B:%.*]] = getelementptr inbounds [[STRUCT_S:%.*]], [[STRUCT_S]] addrspace(256)* [[S:%.*]], i64 0, i32 1
-// CHECK-NEXT:    [[TMP0:%.*]] = load i32, i32 addrspace(256)* [[B]], align 4, [[TBAA17:!tbaa !.*]]
+// CHECK-NEXT:    [[B:%.*]] = getelementptr inbounds [[STRUCT_S:%.*]], ptr addrspace(256) [[S:%.*]], i64 0, i32 1
+// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr addrspace(256) [[B]], align 4, !tbaa [[TBAA17:![0-9]+]]
 // CHECK-NEXT:    ret i32 [[TMP0]]
 //
 int foo_bypass_b(__bypass struct S *s) {
@@ -106,8 +105,8 @@ int foo_bypass_b(__bypass struct S *s) {
 
 // CHECK-LABEL: @foo_bypass_c(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[C:%.*]] = getelementptr inbounds [[STRUCT_S:%.*]], [[STRUCT_S]] addrspace(256)* [[S:%.*]], i64 0, i32 2
-// CHECK-NEXT:    [[TMP0:%.*]] = load i32, i32 addrspace(256)* [[C]], align 4, [[TBAA18:!tbaa !.*]]
+// CHECK-NEXT:    [[C:%.*]] = getelementptr inbounds [[STRUCT_S:%.*]], ptr addrspace(256) [[S:%.*]], i64 0, i32 2
+// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr addrspace(256) [[C]], align 4, !tbaa [[TBAA18:![0-9]+]]
 // CHECK-NEXT:    ret i32 [[TMP0]]
 //
 int foo_bypass_c(__bypass struct S *s) {
@@ -116,8 +115,8 @@ int foo_bypass_c(__bypass struct S *s) {
 
 // CHECK-LABEL: @foo_bypass_d(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[D:%.*]] = getelementptr inbounds [[STRUCT_S:%.*]], [[STRUCT_S]] addrspace(256)* [[S:%.*]], i64 0, i32 3
-// CHECK-NEXT:    [[TMP0:%.*]] = load i32, i32 addrspace(256)* [[D]], align 4, [[TBAA19:!tbaa !.*]]
+// CHECK-NEXT:    [[D:%.*]] = getelementptr inbounds [[STRUCT_S:%.*]], ptr addrspace(256) [[S:%.*]], i64 0, i32 3
+// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr addrspace(256) [[D]], align 4, !tbaa [[TBAA19:![0-9]+]]
 // CHECK-NEXT:    ret i32 [[TMP0]]
 //
 int foo_bypass_d(__bypass struct S *s) {
@@ -126,8 +125,8 @@ int foo_bypass_d(__bypass struct S *s) {
 
 // CHECK-LABEL: @foo_bypass_3(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <4 x i32>, <4 x i32> addrspace(256)* [[V:%.*]], align 16, [[TBAA2]]
-// CHECK-NEXT:    [[VECEXT:%.*]] = extractelement <4 x i32> [[TMP0]], i32 3
+// CHECK-NEXT:    [[TMP0:%.*]] = getelementptr inbounds <4 x i32>, ptr addrspace(256) [[V:%.*]], i64 0, i64 3
+// CHECK-NEXT:    [[VECEXT:%.*]] = load i32, ptr addrspace(256) [[TMP0]], align 4
 // CHECK-NEXT:    ret i32 [[VECEXT]]
 //
 int foo_bypass_3(__bypass v4i32 *v) {
@@ -136,7 +135,7 @@ int foo_bypass_3(__bypass v4i32 *v) {
 
 // CHECK-LABEL: @foo_bypass_x(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <4 x i32>, <4 x i32> addrspace(256)* [[V:%.*]], align 16, [[TBAA2]]
+// CHECK-NEXT:    [[TMP0:%.*]] = load <4 x i32>, ptr addrspace(256) [[V:%.*]], align 16, !tbaa [[TBAA2]]
 // CHECK-NEXT:    [[VECEXT:%.*]] = extractelement <4 x i32> [[TMP0]], i32 [[X:%.*]]
 // CHECK-NEXT:    ret i32 [[VECEXT]]
 //
@@ -146,7 +145,7 @@ int foo_bypass_x(__bypass v4i32 *v, int x) {
 
 // CHECK-LABEL: @foo_default(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load i32, i32* [[I:%.*]], align 4, [[TBAA7]]
+// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[I:%.*]], align 4, !tbaa [[TBAA7]]
 // CHECK-NEXT:    ret i32 [[TMP0]]
 //
 int foo_default(int *i) {
@@ -155,8 +154,7 @@ int foo_default(int *i) {
 
 // CHECK-LABEL: @foo_default_a(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[A:%.*]] = getelementptr inbounds [[STRUCT_S:%.*]], %struct.S* [[S:%.*]], i64 0, i32 0
-// CHECK-NEXT:    [[TMP0:%.*]] = load i32, i32* [[A]], align 4, [[TBAA15]]
+// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[S:%.*]], align 4, !tbaa [[TBAA15]]
 // CHECK-NEXT:    ret i32 [[TMP0]]
 //
 int foo_default_a(struct S *s) {
@@ -165,8 +163,8 @@ int foo_default_a(struct S *s) {
 
 // CHECK-LABEL: @foo_default_b(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[B:%.*]] = getelementptr inbounds [[STRUCT_S:%.*]], %struct.S* [[S:%.*]], i64 0, i32 1
-// CHECK-NEXT:    [[TMP0:%.*]] = load i32, i32* [[B]], align 4, [[TBAA17]]
+// CHECK-NEXT:    [[B:%.*]] = getelementptr inbounds [[STRUCT_S:%.*]], ptr [[S:%.*]], i64 0, i32 1
+// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[B]], align 4, !tbaa [[TBAA17]]
 // CHECK-NEXT:    ret i32 [[TMP0]]
 //
 int foo_default_b(struct S *s) {
@@ -175,8 +173,8 @@ int foo_default_b(struct S *s) {
 
 // CHECK-LABEL: @foo_default_c(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[C:%.*]] = getelementptr inbounds [[STRUCT_S:%.*]], %struct.S* [[S:%.*]], i64 0, i32 2
-// CHECK-NEXT:    [[TMP0:%.*]] = load i32, i32* [[C]], align 4, [[TBAA18]]
+// CHECK-NEXT:    [[C:%.*]] = getelementptr inbounds [[STRUCT_S:%.*]], ptr [[S:%.*]], i64 0, i32 2
+// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[C]], align 4, !tbaa [[TBAA18]]
 // CHECK-NEXT:    ret i32 [[TMP0]]
 //
 int foo_default_c(struct S *s) {
@@ -185,8 +183,8 @@ int foo_default_c(struct S *s) {
 
 // CHECK-LABEL: @foo_default_d(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[D:%.*]] = getelementptr inbounds [[STRUCT_S:%.*]], %struct.S* [[S:%.*]], i64 0, i32 3
-// CHECK-NEXT:    [[TMP0:%.*]] = load i32, i32* [[D]], align 4, [[TBAA19]]
+// CHECK-NEXT:    [[D:%.*]] = getelementptr inbounds [[STRUCT_S:%.*]], ptr [[S:%.*]], i64 0, i32 3
+// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[D]], align 4, !tbaa [[TBAA19]]
 // CHECK-NEXT:    ret i32 [[TMP0]]
 //
 int foo_default_d(struct S *s) {
@@ -195,8 +193,8 @@ int foo_default_d(struct S *s) {
 
 // CHECK-LABEL: @foo_default_3(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <4 x i32>, <4 x i32>* [[V:%.*]], align 16, [[TBAA2]]
-// CHECK-NEXT:    [[VECEXT:%.*]] = extractelement <4 x i32> [[TMP0]], i32 3
+// CHECK-NEXT:    [[TMP0:%.*]] = getelementptr inbounds <4 x i32>, ptr [[V:%.*]], i64 0, i64 3
+// CHECK-NEXT:    [[VECEXT:%.*]] = load i32, ptr [[TMP0]], align 4
 // CHECK-NEXT:    ret i32 [[VECEXT]]
 //
 int foo_default_3(v4i32 *v) {
@@ -205,7 +203,7 @@ int foo_default_3(v4i32 *v) {
 
 // CHECK-LABEL: @foo_default_x(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load <4 x i32>, <4 x i32>* [[V:%.*]], align 16, [[TBAA2]]
+// CHECK-NEXT:    [[TMP0:%.*]] = load <4 x i32>, ptr [[V:%.*]], align 16, !tbaa [[TBAA2]]
 // CHECK-NEXT:    [[VECEXT:%.*]] = extractelement <4 x i32> [[TMP0]], i32 [[X:%.*]]
 // CHECK-NEXT:    ret i32 [[VECEXT]]
 //

@@ -5,7 +5,7 @@
 // CHECK-LABEL: @high256(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call <256 x i1> @llvm.kvx.high.v256i1(<512 x i1> zeroinitializer)
-// CHECK-NEXT:    store <256 x i1> [[TMP0]], <256 x i1>* [[R:%.*]], align 32, [[TBAA2:!tbaa !.*]]
+// CHECK-NEXT:    store <256 x i1> [[TMP0]], ptr [[R:%.*]], align 32, !tbaa [[TBAA2:![0-9]+]]
 // CHECK-NEXT:    ret void
 //
 void high256(__kvx_x256 *r) {
@@ -16,7 +16,7 @@ void high256(__kvx_x256 *r) {
 // CHECK-LABEL: @high512(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call <512 x i1> @llvm.kvx.high.v512i1(<1024 x i1> zeroinitializer)
-// CHECK-NEXT:    store <512 x i1> [[TMP0]], <512 x i1>* [[R:%.*]], align 32, [[TBAA6:!tbaa !.*]]
+// CHECK-NEXT:    store <512 x i1> [[TMP0]], ptr [[R:%.*]], align 32, !tbaa [[TBAA6:![0-9]+]]
 // CHECK-NEXT:    ret void
 //
 void high512(__kvx_x512 *r) {
@@ -27,7 +27,7 @@ void high512(__kvx_x512 *r) {
 // CHECK-LABEL: @high1024(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call <1024 x i1> @llvm.kvx.high.v1024i1(<2048 x i1> zeroinitializer)
-// CHECK-NEXT:    store <1024 x i1> [[TMP0]], <1024 x i1>* [[R:%.*]], align 32, [[TBAA8:!tbaa !.*]]
+// CHECK-NEXT:    store <1024 x i1> [[TMP0]], ptr [[R:%.*]], align 32, !tbaa [[TBAA8:![0-9]+]]
 // CHECK-NEXT:    ret void
 //
 void high1024(__kvx_x1024 *r) {
@@ -39,7 +39,7 @@ void high1024(__kvx_x1024 *r) {
 // CHECK-LABEL: @xhigh2048(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = tail call <2048 x i1> @llvm.kvx.high.v2048i1(<4096 x i1> zeroinitializer)
-// CHECK-NEXT:    store <2048 x i1> [[TMP0]], <2048 x i1>* [[R:%.*]], align 32, [[TBAA10:!tbaa !.*]]
+// CHECK-NEXT:    store <2048 x i1> [[TMP0]], ptr [[R:%.*]], align 32, !tbaa [[TBAA10:![0-9]+]]
 // CHECK-NEXT:    ret void
 //
 void xhigh2048(__kvx_x2048 *r) {

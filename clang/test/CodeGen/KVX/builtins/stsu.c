@@ -19,8 +19,8 @@ typedef unsigned uint;
 // CHECK-NEXT:    [[TMP3:%.*]] = extractelement <2 x i64> [[L]], i64 1
 // CHECK-NEXT:    [[TMP4:%.*]] = extractelement <2 x i64> [[R]], i64 1
 // CHECK-NEXT:    [[TMP5:%.*]] = tail call i64 @llvm.kvx.stsu.i64(i64 [[TMP3]], i64 [[TMP4]])
-// CHECK-NEXT:    [[TMP6:%.*]] = insertelement <2 x i64> undef, i64 [[TMP2]], i32 0
-// CHECK-NEXT:    [[TMP7:%.*]] = insertelement <2 x i64> [[TMP6]], i64 [[TMP5]], i32 1
+// CHECK-NEXT:    [[TMP6:%.*]] = insertelement <2 x i64> undef, i64 [[TMP2]], i64 0
+// CHECK-NEXT:    [[TMP7:%.*]] = insertelement <2 x i64> [[TMP6]], i64 [[TMP5]], i64 1
 // CHECK-NEXT:    ret <2 x i64> [[TMP7]]
 //
 ulong2 stsudp(ulong2 l, ulong2 r) {
@@ -41,10 +41,10 @@ ulong2 stsudp(ulong2 l, ulong2 r) {
 // CHECK-NEXT:    [[TMP9:%.*]] = extractelement <4 x i64> [[L]], i64 3
 // CHECK-NEXT:    [[TMP10:%.*]] = extractelement <4 x i64> [[R]], i64 3
 // CHECK-NEXT:    [[TMP11:%.*]] = tail call i64 @llvm.kvx.stsu.i64(i64 [[TMP9]], i64 [[TMP10]])
-// CHECK-NEXT:    [[TMP12:%.*]] = insertelement <4 x i64> undef, i64 [[TMP2]], i32 0
-// CHECK-NEXT:    [[TMP13:%.*]] = insertelement <4 x i64> [[TMP12]], i64 [[TMP5]], i32 1
-// CHECK-NEXT:    [[TMP14:%.*]] = insertelement <4 x i64> [[TMP13]], i64 [[TMP8]], i32 2
-// CHECK-NEXT:    [[TMP15:%.*]] = insertelement <4 x i64> [[TMP14]], i64 [[TMP11]], i32 3
+// CHECK-NEXT:    [[TMP12:%.*]] = insertelement <4 x i64> undef, i64 [[TMP2]], i64 0
+// CHECK-NEXT:    [[TMP13:%.*]] = insertelement <4 x i64> [[TMP12]], i64 [[TMP5]], i64 1
+// CHECK-NEXT:    [[TMP14:%.*]] = insertelement <4 x i64> [[TMP13]], i64 [[TMP8]], i64 2
+// CHECK-NEXT:    [[TMP15:%.*]] = insertelement <4 x i64> [[TMP14]], i64 [[TMP11]], i64 3
 // CHECK-NEXT:    ret <4 x i64> [[TMP15]]
 //
 ulong4 stsudq(ulong4 l, ulong4 r) {
@@ -53,8 +53,8 @@ ulong4 stsudq(ulong4 l, ulong4 r) {
 
 // CHECK-LABEL: @stsudo(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[L:%.*]] = load <8 x i64>, <8 x i64>* [[TMP0:%.*]], align 32, [[TBAA2:!tbaa !.*]]
-// CHECK-NEXT:    [[R:%.*]] = load <8 x i64>, <8 x i64>* [[TMP1:%.*]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[L:%.*]] = load <8 x i64>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2:![0-9]+]]
+// CHECK-NEXT:    [[R:%.*]] = load <8 x i64>, ptr [[TMP1:%.*]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    [[TMP2:%.*]] = extractelement <8 x i64> [[L]], i64 0
 // CHECK-NEXT:    [[TMP3:%.*]] = extractelement <8 x i64> [[R]], i64 0
 // CHECK-NEXT:    [[TMP4:%.*]] = tail call i64 @llvm.kvx.stsu.i64(i64 [[TMP2]], i64 [[TMP3]])
@@ -79,15 +79,15 @@ ulong4 stsudq(ulong4 l, ulong4 r) {
 // CHECK-NEXT:    [[TMP23:%.*]] = extractelement <8 x i64> [[L]], i64 7
 // CHECK-NEXT:    [[TMP24:%.*]] = extractelement <8 x i64> [[R]], i64 7
 // CHECK-NEXT:    [[TMP25:%.*]] = tail call i64 @llvm.kvx.stsu.i64(i64 [[TMP23]], i64 [[TMP24]])
-// CHECK-NEXT:    [[TMP26:%.*]] = insertelement <8 x i64> undef, i64 [[TMP4]], i32 0
-// CHECK-NEXT:    [[TMP27:%.*]] = insertelement <8 x i64> [[TMP26]], i64 [[TMP7]], i32 1
-// CHECK-NEXT:    [[TMP28:%.*]] = insertelement <8 x i64> [[TMP27]], i64 [[TMP10]], i32 2
-// CHECK-NEXT:    [[TMP29:%.*]] = insertelement <8 x i64> [[TMP28]], i64 [[TMP13]], i32 3
-// CHECK-NEXT:    [[TMP30:%.*]] = insertelement <8 x i64> [[TMP29]], i64 [[TMP16]], i32 4
-// CHECK-NEXT:    [[TMP31:%.*]] = insertelement <8 x i64> [[TMP30]], i64 [[TMP19]], i32 5
-// CHECK-NEXT:    [[TMP32:%.*]] = insertelement <8 x i64> [[TMP31]], i64 [[TMP22]], i32 6
-// CHECK-NEXT:    [[TMP33:%.*]] = insertelement <8 x i64> [[TMP32]], i64 [[TMP25]], i32 7
-// CHECK-NEXT:    store <8 x i64> [[TMP33]], <8 x i64>* [[AGG_RESULT:%.*]], align 32, [[TBAA2]]
+// CHECK-NEXT:    [[TMP26:%.*]] = insertelement <8 x i64> undef, i64 [[TMP4]], i64 0
+// CHECK-NEXT:    [[TMP27:%.*]] = insertelement <8 x i64> [[TMP26]], i64 [[TMP7]], i64 1
+// CHECK-NEXT:    [[TMP28:%.*]] = insertelement <8 x i64> [[TMP27]], i64 [[TMP10]], i64 2
+// CHECK-NEXT:    [[TMP29:%.*]] = insertelement <8 x i64> [[TMP28]], i64 [[TMP13]], i64 3
+// CHECK-NEXT:    [[TMP30:%.*]] = insertelement <8 x i64> [[TMP29]], i64 [[TMP16]], i64 4
+// CHECK-NEXT:    [[TMP31:%.*]] = insertelement <8 x i64> [[TMP30]], i64 [[TMP19]], i64 5
+// CHECK-NEXT:    [[TMP32:%.*]] = insertelement <8 x i64> [[TMP31]], i64 [[TMP22]], i64 6
+// CHECK-NEXT:    [[TMP33:%.*]] = insertelement <8 x i64> [[TMP32]], i64 [[TMP25]], i64 7
+// CHECK-NEXT:    store <8 x i64> [[TMP33]], ptr [[AGG_RESULT:%.*]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 ulong8 stsudo(ulong8 l, ulong8 r) {

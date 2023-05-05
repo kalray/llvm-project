@@ -348,7 +348,7 @@ i128 MSBFUDT(i128 c, unsigned long a, unsigned long b){
 
 // CHECK-LABEL: @ld(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = load i128, i128* [[A:%.*]], align 16, [[TBAA2:!tbaa !.*]]
+// CHECK-NEXT:    [[TMP0:%.*]] = load i128, ptr [[A:%.*]], align 16, !tbaa [[TBAA2:![0-9]+]]
 // CHECK-NEXT:    ret i128 [[TMP0]]
 //
 i128 ld(i128 *a){
@@ -357,7 +357,7 @@ i128 ld(i128 *a){
 
 // CHECK-LABEL: @st(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    store i128 [[V:%.*]], i128* [[A:%.*]], align 16, [[TBAA2]]
+// CHECK-NEXT:    store i128 [[V:%.*]], ptr [[A:%.*]], align 16, !tbaa [[TBAA2]]
 // CHECK-NEXT:    ret void
 //
 void st(i128 v, i128 *a){
@@ -414,10 +414,9 @@ int nez(i128 a){
 
 // CHECK-LABEL: @gez(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[A_LOBIT:%.*]] = lshr i128 [[A:%.*]], 127
-// CHECK-NEXT:    [[TMP0:%.*]] = trunc i128 [[A_LOBIT]] to i32
-// CHECK-NEXT:    [[DOTNOT:%.*]] = xor i32 [[TMP0]], 1
-// CHECK-NEXT:    ret i32 [[DOTNOT]]
+// CHECK-NEXT:    [[CMP:%.*]] = icmp sgt i128 [[A:%.*]], -1
+// CHECK-NEXT:    [[CONV:%.*]] = zext i1 [[CMP]] to i32
+// CHECK-NEXT:    ret i32 [[CONV]]
 //
 int gez(i128 a){
   return a >= 0;

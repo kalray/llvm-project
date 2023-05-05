@@ -16,8 +16,8 @@ double fmuld(double v1, double v2) { return __builtin_kvx_fmuld(v1, v2, ".rz"); 
 // CHECK-NEXT:    [[TMP3:%.*]] = extractelement <2 x double> [[V1]], i64 1
 // CHECK-NEXT:    [[TMP4:%.*]] = extractelement <2 x double> [[V2]], i64 1
 // CHECK-NEXT:    [[TMP5:%.*]] = tail call double @llvm.kvx.fmul.f64(double [[TMP3]], double [[TMP4]], i32 0, i32 0)
-// CHECK-NEXT:    [[TMP6:%.*]] = insertelement <2 x double> undef, double [[TMP2]], i32 0
-// CHECK-NEXT:    [[TMP7:%.*]] = insertelement <2 x double> [[TMP6]], double [[TMP5]], i32 1
+// CHECK-NEXT:    [[TMP6:%.*]] = insertelement <2 x double> undef, double [[TMP2]], i64 0
+// CHECK-NEXT:    [[TMP7:%.*]] = insertelement <2 x double> [[TMP6]], double [[TMP5]], i64 1
 // CHECK-NEXT:    ret <2 x double> [[TMP7]]
 //
 v2f64 fmuldp(v2f64 v1, v2f64 v2) { return __builtin_kvx_fmuldp(v1, v2, ".rn"); }
@@ -35,10 +35,10 @@ v2f64 fmuldp(v2f64 v1, v2f64 v2) { return __builtin_kvx_fmuldp(v1, v2, ".rn"); }
 // CHECK-NEXT:    [[TMP9:%.*]] = extractelement <4 x double> [[V1]], i64 3
 // CHECK-NEXT:    [[TMP10:%.*]] = extractelement <4 x double> [[V2]], i64 3
 // CHECK-NEXT:    [[TMP11:%.*]] = tail call double @llvm.kvx.fmul.f64(double [[TMP9]], double [[TMP10]], i32 0, i32 0)
-// CHECK-NEXT:    [[TMP12:%.*]] = insertelement <4 x double> undef, double [[TMP2]], i32 0
-// CHECK-NEXT:    [[TMP13:%.*]] = insertelement <4 x double> [[TMP12]], double [[TMP5]], i32 1
-// CHECK-NEXT:    [[TMP14:%.*]] = insertelement <4 x double> [[TMP13]], double [[TMP8]], i32 2
-// CHECK-NEXT:    [[TMP15:%.*]] = insertelement <4 x double> [[TMP14]], double [[TMP11]], i32 3
+// CHECK-NEXT:    [[TMP12:%.*]] = insertelement <4 x double> undef, double [[TMP2]], i64 0
+// CHECK-NEXT:    [[TMP13:%.*]] = insertelement <4 x double> [[TMP12]], double [[TMP5]], i64 1
+// CHECK-NEXT:    [[TMP14:%.*]] = insertelement <4 x double> [[TMP13]], double [[TMP8]], i64 2
+// CHECK-NEXT:    [[TMP15:%.*]] = insertelement <4 x double> [[TMP14]], double [[TMP11]], i64 3
 // CHECK-NEXT:    ret <4 x double> [[TMP15]]
 //
 v4f64 fmuldq(v4f64 v1, v4f64 v2) { return __builtin_kvx_fmuldq(v1, v2, ".rn"); }

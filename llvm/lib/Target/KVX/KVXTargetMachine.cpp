@@ -22,8 +22,8 @@
 #include "llvm/CodeGen/TargetLoweringObjectFileImpl.h"
 #include "llvm/CodeGen/TargetPassConfig.h"
 #include "llvm/IR/LegacyPassManager.h"
+#include "llvm/MC/TargetRegistry.h"
 #include "llvm/Support/FormattedStream.h"
-#include "llvm/Support/TargetRegistry.h"
 #include "llvm/Target/TargetOptions.h"
 
 using namespace llvm;
@@ -123,6 +123,9 @@ KVXTargetMachine::KVXTargetMachine(const Target &T, const Triple &TT,
 
   Options.DisableIntegratedAS = true;
   Options.BinutilsVersion = {2, 37};
+  Options.EnableFastISel = false;
+  Options.EnableGlobalISel = false;
+  Options.EnableCFIFixup = true;
   setSupportsDebugEntryValues(true);
   initAsmInfo();
 }
@@ -247,7 +250,7 @@ bool KVXPassConfig::addPreISel() {
 }
 
 TargetTransformInfo
-KVXTargetMachine::getTargetTransformInfo(const Function &F) {
+KVXTargetMachine::getTargetTransformInfo(const Function &F) const {
   return TargetTransformInfo(KVXTTIImpl(this, F));
 }
 

@@ -28,14 +28,14 @@ float frecw(float a) { return __builtin_kvx_frecw(a, ".rz"); }
 // CHECK-NEXT:    [[TMP13:%.*]] = tail call float @llvm.kvx.frecw(float [[TMP12]], i32 3, i32 1)
 // CHECK-NEXT:    [[TMP14:%.*]] = extractelement <8 x float> [[A]], i64 7
 // CHECK-NEXT:    [[TMP15:%.*]] = tail call float @llvm.kvx.frecw(float [[TMP14]], i32 3, i32 1)
-// CHECK-NEXT:    [[TMP16:%.*]] = insertelement <8 x float> undef, float [[TMP1]], i32 0
-// CHECK-NEXT:    [[TMP17:%.*]] = insertelement <8 x float> [[TMP16]], float [[TMP3]], i32 1
-// CHECK-NEXT:    [[TMP18:%.*]] = insertelement <8 x float> [[TMP17]], float [[TMP5]], i32 2
-// CHECK-NEXT:    [[TMP19:%.*]] = insertelement <8 x float> [[TMP18]], float [[TMP7]], i32 3
-// CHECK-NEXT:    [[TMP20:%.*]] = insertelement <8 x float> [[TMP19]], float [[TMP9]], i32 4
-// CHECK-NEXT:    [[TMP21:%.*]] = insertelement <8 x float> [[TMP20]], float [[TMP11]], i32 5
-// CHECK-NEXT:    [[TMP22:%.*]] = insertelement <8 x float> [[TMP21]], float [[TMP13]], i32 6
-// CHECK-NEXT:    [[TMP23:%.*]] = insertelement <8 x float> [[TMP22]], float [[TMP15]], i32 7
+// CHECK-NEXT:    [[TMP16:%.*]] = insertelement <8 x float> undef, float [[TMP1]], i64 0
+// CHECK-NEXT:    [[TMP17:%.*]] = insertelement <8 x float> [[TMP16]], float [[TMP3]], i64 1
+// CHECK-NEXT:    [[TMP18:%.*]] = insertelement <8 x float> [[TMP17]], float [[TMP5]], i64 2
+// CHECK-NEXT:    [[TMP19:%.*]] = insertelement <8 x float> [[TMP18]], float [[TMP7]], i64 3
+// CHECK-NEXT:    [[TMP20:%.*]] = insertelement <8 x float> [[TMP19]], float [[TMP9]], i64 4
+// CHECK-NEXT:    [[TMP21:%.*]] = insertelement <8 x float> [[TMP20]], float [[TMP11]], i64 5
+// CHECK-NEXT:    [[TMP22:%.*]] = insertelement <8 x float> [[TMP21]], float [[TMP13]], i64 6
+// CHECK-NEXT:    [[TMP23:%.*]] = insertelement <8 x float> [[TMP22]], float [[TMP15]], i64 7
 // CHECK-NEXT:    ret <8 x float> [[TMP23]]
 //
 v8f32 frecwo(v8f32 a) { return __builtin_kvx_frecwo(a, ".rz.s"); }
@@ -46,8 +46,8 @@ v8f32 frecwo(v8f32 a) { return __builtin_kvx_frecwo(a, ".rz.s"); }
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call float @llvm.kvx.frecw(float [[TMP0]], i32 3, i32 1)
 // CHECK-NEXT:    [[TMP2:%.*]] = extractelement <2 x float> [[A]], i64 1
 // CHECK-NEXT:    [[TMP3:%.*]] = tail call float @llvm.kvx.frecw(float [[TMP2]], i32 3, i32 1)
-// CHECK-NEXT:    [[TMP4:%.*]] = insertelement <2 x float> undef, float [[TMP1]], i32 0
-// CHECK-NEXT:    [[TMP5:%.*]] = insertelement <2 x float> [[TMP4]], float [[TMP3]], i32 1
+// CHECK-NEXT:    [[TMP4:%.*]] = insertelement <2 x float> undef, float [[TMP1]], i64 0
+// CHECK-NEXT:    [[TMP5:%.*]] = insertelement <2 x float> [[TMP4]], float [[TMP3]], i64 1
 // CHECK-NEXT:    ret <2 x float> [[TMP5]]
 //
 v2f32 frecwp(v2f32 a) { return __builtin_kvx_frecwp(a, ".rz.s"); }
@@ -62,10 +62,10 @@ v2f32 frecwp(v2f32 a) { return __builtin_kvx_frecwp(a, ".rz.s"); }
 // CHECK-NEXT:    [[TMP5:%.*]] = tail call float @llvm.kvx.frecw(float [[TMP4]], i32 3, i32 1)
 // CHECK-NEXT:    [[TMP6:%.*]] = extractelement <4 x float> [[A]], i64 3
 // CHECK-NEXT:    [[TMP7:%.*]] = tail call float @llvm.kvx.frecw(float [[TMP6]], i32 3, i32 1)
-// CHECK-NEXT:    [[TMP8:%.*]] = insertelement <4 x float> undef, float [[TMP1]], i32 0
-// CHECK-NEXT:    [[TMP9:%.*]] = insertelement <4 x float> [[TMP8]], float [[TMP3]], i32 1
-// CHECK-NEXT:    [[TMP10:%.*]] = insertelement <4 x float> [[TMP9]], float [[TMP5]], i32 2
-// CHECK-NEXT:    [[TMP11:%.*]] = insertelement <4 x float> [[TMP10]], float [[TMP7]], i32 3
+// CHECK-NEXT:    [[TMP8:%.*]] = insertelement <4 x float> undef, float [[TMP1]], i64 0
+// CHECK-NEXT:    [[TMP9:%.*]] = insertelement <4 x float> [[TMP8]], float [[TMP3]], i64 1
+// CHECK-NEXT:    [[TMP10:%.*]] = insertelement <4 x float> [[TMP9]], float [[TMP5]], i64 2
+// CHECK-NEXT:    [[TMP11:%.*]] = insertelement <4 x float> [[TMP10]], float [[TMP7]], i64 3
 // CHECK-NEXT:    ret <4 x float> [[TMP11]]
 //
 v4f32 frecwq(v4f32 a) { return __builtin_kvx_frecwq(a, ".rz.s"); }

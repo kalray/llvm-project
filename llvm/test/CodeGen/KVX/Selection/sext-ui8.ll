@@ -11,8 +11,6 @@ target triple = "kvx-kalray-cos"
 define void @test5(i8 %b, i8 %c){
 ; CHECK-LABEL: test5:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    zxbd $r0 = $r0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sllw $r0 = $r0, $r1
 ; CHECK-NEXT:    make $r1 = a
 ; CHECK-NEXT:    ;;
