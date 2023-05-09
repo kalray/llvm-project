@@ -56,12 +56,13 @@ define i32 @main(i32 %0, i8** nocapture readnone %1) local_unnamed_addr {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_2: # Parent Loop BB0_1 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
-; CHECK-NEXT:    lq $r4r5 = 0[$r3]
+; CHECK-NEXT:    ld $r4 = 0[$r3]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddd $r4 = $r4, $r5
-; CHECK-NEXT:    ld $r5 = 16[$r3]
+; CHECK-NEXT:    lq $r6r7 = 8[$r3]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddd $r4 = $r4, $r5
+; CHECK-NEXT:    faddd $r4 = $r4, $r6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    faddd $r4 = $r4, $r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmuld $r4 = $r4, 0x3fd555475a31a4be
 ; CHECK-NEXT:    ;;
@@ -110,12 +111,13 @@ define i32 @main(i32 %0, i8** nocapture readnone %1) local_unnamed_addr {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_6: # Parent Loop BB0_1 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
-; CHECK-NEXT:    lq $r4r5 = 0[$r3]
+; CHECK-NEXT:    ld $r4 = 0[$r3]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddd $r4 = $r4, $r5
-; CHECK-NEXT:    ld $r5 = 16[$r3]
+; CHECK-NEXT:    lq $r6r7 = 8[$r3]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddd $r4 = $r4, $r5
+; CHECK-NEXT:    faddd $r4 = $r4, $r6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    faddd $r4 = $r4, $r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmuld $r4 = $r4, 0x3fd555475a31a4be
 ; CHECK-NEXT:    ;;
@@ -164,12 +166,13 @@ define i32 @main(i32 %0, i8** nocapture readnone %1) local_unnamed_addr {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_10: # Parent Loop BB0_1 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
-; CHECK-NEXT:    lq $r4r5 = 0[$r3]
+; CHECK-NEXT:    ld $r4 = 0[$r3]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddd $r4 = $r4, $r5
-; CHECK-NEXT:    ld $r5 = 16[$r3]
+; CHECK-NEXT:    lq $r6r7 = 8[$r3]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddd $r4 = $r4, $r5
+; CHECK-NEXT:    faddd $r4 = $r4, $r6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    faddd $r4 = $r4, $r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmuld $r4 = $r4, 0x3fd555475a31a4be
 ; CHECK-NEXT:    ;;
@@ -218,12 +221,13 @@ define i32 @main(i32 %0, i8** nocapture readnone %1) local_unnamed_addr {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_14: # Parent Loop BB0_1 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
-; CHECK-NEXT:    lq $r4r5 = 0[$r3]
+; CHECK-NEXT:    ld $r4 = 0[$r3]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddd $r4 = $r4, $r5
-; CHECK-NEXT:    ld $r5 = 16[$r3]
+; CHECK-NEXT:    lq $r6r7 = 8[$r3]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    faddd $r4 = $r4, $r5
+; CHECK-NEXT:    faddd $r4 = $r4, $r6
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    faddd $r4 = $r4, $r7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    fmuld $r4 = $r4, 0x3fd555475a31a4be
 ; CHECK-NEXT:    ;;

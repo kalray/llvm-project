@@ -345,6 +345,7 @@ bool KVXLoadStorePackingPass::packBlock(MachineBasicBlock &MBB) {
   bool Changed = false;
 
   BaseptrMap LdMap, StMap, LdpMap, StpMap;
+  llvm::DenseSet<MachineInstr *> OthersLD, OthersST;
 
   unsigned MIInd = 0;
   int constexpr MaxJumps = 6;
@@ -353,6 +354,7 @@ bool KVXLoadStorePackingPass::packBlock(MachineBasicBlock &MBB) {
     LLVM_DEBUG(dbgs() << "Can still jump up to " << Jumps << " instruction.\n");
 
     for (; MBBI != E; ++MBBI, ++MIInd) {
+      LLVM_DEBUG(dbgs() << "Looking at instruction: "; MBBI->dump(););
       if (MBBI->isDebugInstr()) {
         LLVM_DEBUG(dbgs() << "Ignore debug instruction: "; MBBI->dump());
         continue;
@@ -365,8 +367,20 @@ bool KVXLoadStorePackingPass::packBlock(MachineBasicBlock &MBB) {
 
       auto Type = getOpType(MBBI);
       if (Type == NOT_LDST) {
+        if (MBBI->mayLoad()) {
+          LLVM_DEBUG(dbgs() << "Not a packable load, add it to be tested.\n");
+          OthersLD.insert(&*MBBI);
+        }
+
+        if (MBBI->mayStore()) {
+          LLVM_DEBUG(dbgs() << "Not a packable store, add it to be tested.\n");
+          OthersST.insert(&*MBBI);
+        }
+
         // FIXME: hasUnmodeledSideEffects unusable now, should be added here
         if (MBBI->isCall() || MBBI->isTerminator()) {
+          LLVM_DEBUG(dbgs()
+                     << "Terminator or call instruction, stop search.\n");
           ++MBBI;
           ++MIInd;
           break;
@@ -414,9 +428,26 @@ bool KVXLoadStorePackingPass::packBlock(MachineBasicBlock &MBB) {
       // all come after loads don't need to be checked against the loads for
       // packing.
       SmallVector<BaseptrMap *, 4> MapsToCheck = {&StMap, &StpMap};
+
+      for (const auto *I : OthersST)
+        if (MBBI->mayAlias(AA, *I, false)) {
+          ++MBBI;
+          ++MIInd;
+          LLVM_DEBUG(dbgs() << "Ignoring it, as it aliases with: "; I->dump(););
+          goto IS_ALIAS;
+        }
+
       if (Type == STORE || Type == STORE_PSEUDO) {
         MapsToCheck.push_back(&LdMap);
         MapsToCheck.push_back(&LdpMap);
+        for (const auto *I : OthersLD)
+          if (MBBI->mayAlias(AA, *I, false)) {
+            ++MBBI;
+            ++MIInd;
+            LLVM_DEBUG(dbgs() << "Ignoring it, as it aliases with: ";
+                       I->dump(););
+            goto IS_ALIAS;
+          }
       }
 
       for (auto *Map : MapsToCheck)
@@ -448,6 +479,8 @@ bool KVXLoadStorePackingPass::packBlock(MachineBasicBlock &MBB) {
                       << " store pseudos.\n");
     Changed |= sortAndPack(StpMap, STORE_PSEUDO, 0);
 
+    OthersLD.clear();
+    OthersST.clear();
     LdMap.clear();
     StMap.clear();
     LdpMap.clear();
