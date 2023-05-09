@@ -597,12 +597,10 @@ define i32 @u_gez(i128 %0) {
 define i32 @gtz(i128 %0) {
 ; CHECK-LABEL: gtz:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    compd.ne $r0 = $r0, 0
-; CHECK-NEXT:    compd.gt $r2 = $r1, 0
+; CHECK-NEXT:    compd.gt $r0 = $r1, 0
+; CHECK-NEXT:    compd.ne $r2 = $r0, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.deqz $r1 ? $r2 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r2
+; CHECK-NEXT:    cmoved.deqz $r1 ? $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = icmp sgt i128 %0, 0
@@ -644,12 +642,10 @@ define i32 @u_ltz(i128 %0) {
 define i32 @lez(i128 %0) {
 ; CHECK-LABEL: lez:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    compd.eq $r0 = $r0, 0
-; CHECK-NEXT:    compd.lt $r2 = $r1, 0
+; CHECK-NEXT:    compd.lt $r0 = $r1, 0
+; CHECK-NEXT:    compd.eq $r2 = $r0, 0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.deqz $r1 ? $r2 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r2
+; CHECK-NEXT:    cmoved.deqz $r1 ? $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = icmp slt i128 %0, 1
@@ -699,13 +695,11 @@ define i32 @ne(i128 %0, i128 %1) {
 define i32 @gt(i128 %0, i128 %1) {
 ; CHECK-LABEL: gt:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    compd.gtu $r0 = $r0, $r2
+; CHECK-NEXT:    compd.gt $r0 = $r1, $r3
 ; CHECK-NEXT:    compd.eq $r1 = $r1, $r3
-; CHECK-NEXT:    compd.gt $r4 = $r1, $r3
+; CHECK-NEXT:    compd.gtu $r2 = $r0, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r1 ? $r4 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r4
+; CHECK-NEXT:    cmoved.wnez $r1 ? $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = icmp sgt i128 %0, %1
@@ -716,13 +710,11 @@ define i32 @gt(i128 %0, i128 %1) {
 define i32 @u_gt(i128 %0, i128 %1) {
 ; CHECK-LABEL: u_gt:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    compd.gtu $r0 = $r0, $r2
+; CHECK-NEXT:    compd.gtu $r0 = $r1, $r3
 ; CHECK-NEXT:    compd.eq $r1 = $r1, $r3
-; CHECK-NEXT:    compd.gtu $r4 = $r1, $r3
+; CHECK-NEXT:    compd.gtu $r2 = $r0, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r1 ? $r4 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r4
+; CHECK-NEXT:    cmoved.wnez $r1 ? $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = icmp ugt i128 %0, %1
@@ -733,13 +725,11 @@ define i32 @u_gt(i128 %0, i128 %1) {
 define i32 @ge(i128 %0, i128 %1) {
 ; CHECK-LABEL: ge:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    compd.geu $r0 = $r0, $r2
+; CHECK-NEXT:    compd.ge $r0 = $r1, $r3
 ; CHECK-NEXT:    compd.eq $r1 = $r1, $r3
-; CHECK-NEXT:    compd.ge $r4 = $r1, $r3
+; CHECK-NEXT:    compd.geu $r2 = $r0, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r1 ? $r4 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r4
+; CHECK-NEXT:    cmoved.wnez $r1 ? $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = icmp sge i128 %0, %1
@@ -750,13 +740,11 @@ define i32 @ge(i128 %0, i128 %1) {
 define i32 @uge(i128 %0, i128 %1) {
 ; CHECK-LABEL: uge:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    compd.geu $r0 = $r0, $r2
+; CHECK-NEXT:    compd.geu $r0 = $r1, $r3
 ; CHECK-NEXT:    compd.eq $r1 = $r1, $r3
-; CHECK-NEXT:    compd.geu $r4 = $r1, $r3
+; CHECK-NEXT:    compd.geu $r2 = $r0, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r1 ? $r4 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r4
+; CHECK-NEXT:    cmoved.wnez $r1 ? $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = icmp uge i128 %0, %1
@@ -767,13 +755,11 @@ define i32 @uge(i128 %0, i128 %1) {
 define i32 @lt(i128 %0, i128 %1) {
 ; CHECK-LABEL: lt:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    compd.ltu $r0 = $r0, $r2
+; CHECK-NEXT:    compd.lt $r0 = $r1, $r3
 ; CHECK-NEXT:    compd.eq $r1 = $r1, $r3
-; CHECK-NEXT:    compd.lt $r4 = $r1, $r3
+; CHECK-NEXT:    compd.ltu $r2 = $r0, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r1 ? $r4 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r4
+; CHECK-NEXT:    cmoved.wnez $r1 ? $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = icmp slt i128 %0, %1
@@ -784,13 +770,11 @@ define i32 @lt(i128 %0, i128 %1) {
 define i32 @ult(i128 %0, i128 %1) {
 ; CHECK-LABEL: ult:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    compd.ltu $r0 = $r0, $r2
+; CHECK-NEXT:    compd.ltu $r0 = $r1, $r3
 ; CHECK-NEXT:    compd.eq $r1 = $r1, $r3
-; CHECK-NEXT:    compd.ltu $r4 = $r1, $r3
+; CHECK-NEXT:    compd.ltu $r2 = $r0, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r1 ? $r4 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r4
+; CHECK-NEXT:    cmoved.wnez $r1 ? $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = icmp ult i128 %0, %1
@@ -801,13 +785,11 @@ define i32 @ult(i128 %0, i128 %1) {
 define i32 @le(i128 %0, i128 %1) {
 ; CHECK-LABEL: le:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    compd.leu $r0 = $r0, $r2
+; CHECK-NEXT:    compd.le $r0 = $r1, $r3
 ; CHECK-NEXT:    compd.eq $r1 = $r1, $r3
-; CHECK-NEXT:    compd.le $r4 = $r1, $r3
+; CHECK-NEXT:    compd.leu $r2 = $r0, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r1 ? $r4 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r4
+; CHECK-NEXT:    cmoved.wnez $r1 ? $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = icmp sle i128 %0, %1
@@ -818,13 +800,11 @@ define i32 @le(i128 %0, i128 %1) {
 define i32 @ule(i128 %0, i128 %1) {
 ; CHECK-LABEL: ule:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    compd.leu $r0 = $r0, $r2
+; CHECK-NEXT:    compd.leu $r0 = $r1, $r3
 ; CHECK-NEXT:    compd.eq $r1 = $r1, $r3
-; CHECK-NEXT:    compd.leu $r4 = $r1, $r3
+; CHECK-NEXT:    compd.leu $r2 = $r0, $r2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r1 ? $r4 = $r0
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r0 = $r4
+; CHECK-NEXT:    cmoved.wnez $r1 ? $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = icmp ule i128 %0, %1

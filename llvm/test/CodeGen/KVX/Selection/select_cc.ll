@@ -11,10 +11,12 @@ target triple = "kvx-kalray-cos"
 define i32 @f(i32 %a){
 ; CHECK-LABEL: f:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = 5
-; CHECK-NEXT:    copyw $r1 = $r0
+; CHECK-NEXT:    make $r1 = 7
+; CHECK-NEXT:    make $r2 = 5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wlez $r1 ? $r0 = 7
+; CHECK-NEXT:    cmoved.wgtz $r0 ? $r1 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -58,31 +60,31 @@ entry:
 define <4 x half> @f_Select32PAT(<4 x half> %x, <4 x half> %y){
 ; CV1-LABEL: f_Select32PAT:
 ; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    fcompnhq.olt $r2 = $r0, $r1
 ; CV1-NEXT:    srlw $r3 = $r0, 16
 ; CV1-NEXT:    srlw $r4 = $r1, 16
 ; CV1-NEXT:    srld $r5 = $r0, 32
-; CV1-NEXT:    srld $r6 = $r1, 32
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    fcompnhq.olt $r2 = $r0, $r1
+; CV1-NEXT:    srld $r6 = $r0, 48
 ; CV1-NEXT:    fcompnhq.olt $r7 = $r3, $r4
-; CV1-NEXT:    srld $r8 = $r0, 48
+; CV1-NEXT:    srld $r8 = $r1, 32
 ; CV1-NEXT:    srld $r9 = $r1, 48
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    andw $r2 = $r2, 1
 ; CV1-NEXT:    andw $r7 = $r7, 1
-; CV1-NEXT:    fcompnhq.olt $r10 = $r5, $r6
-; CV1-NEXT:    fcompnhq.olt $r11 = $r8, $r9
+; CV1-NEXT:    fcompnhq.olt $r10 = $r5, $r8
+; CV1-NEXT:    fcompnhq.olt $r11 = $r6, $r9
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    cmoved.wnez $r2 ? $r0 = $r1
+; CV1-NEXT:    andw $r1 = $r10, 1
+; CV1-NEXT:    andw $r2 = $r11, 1
 ; CV1-NEXT:    cmoved.wnez $r7 ? $r3 = $r4
-; CV1-NEXT:    andw $r10 = $r10, 1
-; CV1-NEXT:    andw $r11 = $r11, 1
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    cmoved.wnez $r10 ? $r5 = $r6
-; CV1-NEXT:    cmoved.wnez $r11 ? $r8 = $r9
+; CV1-NEXT:    cmoved.wnez $r1 ? $r5 = $r8
+; CV1-NEXT:    cmoved.wnez $r2 ? $r6 = $r9
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    insf $r0 = $r3, 31, 16
-; CV1-NEXT:    insf $r5 = $r8, 31, 16
+; CV1-NEXT:    insf $r5 = $r6, 31, 16
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    insf $r0 = $r5, 63, 32
 ; CV1-NEXT:    ret

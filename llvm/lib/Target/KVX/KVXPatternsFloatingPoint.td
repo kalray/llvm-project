@@ -357,13 +357,13 @@ def : Pat<(v4i32 (setuo v4f32:$rz, v4f32:$ry)),
                   floatcomp_ult))),
               sub_d1))>;
 
-defm : SELECTCONDW<(f16 f16:$truev), (f16 f16:$falsev),(f16 Binary16:$truev), (f16 Binary16:$falsev)>;
-defm : SELECTCONDW<(f32 f32:$truev), (f32 f32:$falsev),(f32 Binary32:$truev), (f32 Binary32:$falsev)>;
-defm : SELECTCONDW<(f64 f64:$truev), (f64 f64:$falsev),(f64 Binary64:$truev), (f64 Binary64:$falsev)>;
+defm : SELECTCONDW<f16>;
+defm : SELECTCONDW<f32>;
+defm : SELECTCONDW<f64>;
 
-defm : SELECTCONDD<(f16 f16:$truev), (f16 f16:$falsev),(f16 Binary16:$truev), (f16 Binary16:$falsev)>;
-defm : SELECTCONDD<(f32 f32:$truev), (f32 f32:$falsev),(f32 Binary32:$truev), (f32 Binary32:$falsev)>;
-defm : SELECTCONDD<(f64 f64:$truev), (f64 f64:$falsev),(f64 Binary64:$truev), (f64 Binary64:$falsev)>;
+defm : SELECTCONDD<f16>;
+defm : SELECTCONDD<f32>;
+defm : SELECTCONDD<f64>;
 
 // FDOT2W
 def : Pat<(f32 (faddcont (f32 (vector_extract (v2f32 (fmulcont v2f32:$lhs, (is_imm_vec:$rhs))), (i64 0))),

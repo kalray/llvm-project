@@ -496,7 +496,7 @@ def : Pat<(i64(add i64:$v0, isZeroExtended:$v1)), (ADDUWDrr SingleReg:$v1, Singl
 // ADDW
 defm : ZEFPat<(add i32:$rs1, i32:$rs2), (ADDWrr SingleReg:$rs1, SingleReg:$rs2)>;
 defm : ZEFPat<(add i32:$rs1, Signed10W:$rs2), (ADDWri10 SingleReg:$rs1, Signed10W:$rs2)>;
-defm : ZEFPat<(add i32:$rs1, Signed37W:$rs2), (ADDWri37 SingleReg:$rs1, Signed37W:$rs2)>;
+defm : ZEFPat<(add i32:$rs1, Wrapped32:$rs2), (ADDWri37 SingleReg:$rs1, Wrapped32:$rs2)>;
 
 // ADDWD
 // TODO: Add ri variant
@@ -654,7 +654,7 @@ defm : VECADDXPAT<v2i32, (i32 4), ADDX16WPrr, ADDX16WPri, v2_splat, imm_vec_4bit
 
 // ANDNW
 def : Pat<(i32(and (not i32:$rs1), i32:$rs2)), (ANDNWrr SingleReg:$rs1, SingleReg:$rs2)>;
-def : Pat<(i32(and (not i32:$r), Signed37W:$i)), (ANDNWri37 SingleReg:$r, imm:$i)>;
+def : Pat<(i32(and (not i32:$r), Wrapped32:$i)), (ANDNWri37 SingleReg:$r, imm:$i)>;
 
 foreach vtype = [ v2i8, v2i16, v4i8 ] in {
     def : Pat<(and (vnot vtype:$rs1), (vtype (is_imm_vec:$IMM))), (ANDNWri37 SingleReg:$rs1, (build_imm_vec $IMM))>;
@@ -664,7 +664,7 @@ foreach vtype = [ v2i8, v2i16, v4i8 ] in {
 // ANDW
 defm : ZEFPat<(and i32:$rs1, i32:$rs2), (ANDWrr SingleReg:$rs1, SingleReg:$rs2)>;
 defm : ZEFPat<(and i32:$rs1, Signed10W:$rs2), (ANDWri10 SingleReg:$rs1, Signed10W:$rs2)>;
-defm : ZEFPat<(and i32:$rs1, Signed37W:$rs2), (ANDWri37 SingleReg:$rs1, Signed37W:$rs2)>;
+defm : ZEFPat<(and i32:$rs1, Wrapped32:$rs2), (ANDWri37 SingleReg:$rs1, Wrapped32:$rs2)>;
 
 foreach vtype = [ v2i8, v4i8, v2i16 ] in {
     def : Pat<(and vtype:$rs1, (vtype (is_imm_vec:$IMM))), (ANDWri37 SingleReg:$rs1, (build_imm_vec $IMM))>;
@@ -1266,7 +1266,7 @@ defm MAXUHQ : Word_RR_RIsplat_select_H<umax, MAXUHQri, MAXUHQrr>;
 // MAXUW
 defm : ZEFPat<(umax i32:$v1, i32:$v2), (MAXUWrr SingleReg:$v1, SingleReg:$v2)>;
 defm : ZEFPat<(umax i32:$v1, Signed10W:$v2), (MAXUWri10 SingleReg:$v1, Signed10W:$v2)>;
-defm : ZEFPat<(umax i32:$v1, Signed37W:$v2), (MAXUWri37 SingleReg:$v1, Signed37W:$v2)>;
+defm : ZEFPat<(umax i32:$v1, Wrapped32:$v2), (MAXUWri37 SingleReg:$v1, Wrapped32:$v2)>;
 
 multiclass Word_RR_RIsplat_select_v2 <SDNode irnode, Instruction rinode, Instruction rrnode>
 {
@@ -1281,7 +1281,7 @@ defm MAXUWP : Word_RR_RIsplat_select_v2<umax, MAXUWPri, MAXUWPrr>;
 // MAXW
 def : Pat<(smax i32:$v1, i32:$v2), (MAXWrr SingleReg:$v1, SingleReg:$v2)>;
 def : Pat<(smax i32:$v1, Signed10W:$v2), (MAXWri10 SingleReg:$v1, Signed10W:$v2)>;
-def : Pat<(smax i32:$v1, Signed37W:$v2), (MAXWri37 SingleReg:$v1, Signed37W:$v2)>;
+def : Pat<(smax i32:$v1, Wrapped32:$v2), (MAXWri37 SingleReg:$v1, Wrapped32:$v2)>;
 
 // MAXWP
 defm MAXWP : Word_RR_RIsplat_select_v2<smax, MAXWPri, MAXWPrr>;
@@ -1313,7 +1313,7 @@ defm MINUHQ : Word_RR_RIsplat_select_H<umin, MINUHQri, MINUHQrr>;
 // MINUW
 defm : ZEFPat<(umin i32:$v1, i32:$v2), (MINUWrr SingleReg:$v1, SingleReg:$v2)>;
 defm : ZEFPat<(umin i32:$v1, Signed10W:$v2), (MINUWri10 SingleReg:$v1, Signed10W:$v2)>;
-defm : ZEFPat<(umin i32:$v1, Signed37W:$v2), (MINUWri37 SingleReg:$v1, Signed37W:$v2)>;
+defm : ZEFPat<(umin i32:$v1, Wrapped32:$v2), (MINUWri37 SingleReg:$v1, Wrapped32:$v2)>;
 
 // MINUWP
 defm MINUWP : Word_RR_RIsplat_select_v2<umin, MINUWPri, MINUWPrr>;
@@ -1321,7 +1321,7 @@ defm MINUWP : Word_RR_RIsplat_select_v2<umin, MINUWPri, MINUWPrr>;
 // MINW
 def : Pat<(smin i32:$v1, i32:$v2), (MINWrr SingleReg:$v1, SingleReg:$v2)>;
 def : Pat<(smin i32:$v1, Signed10W:$v2), (MINWri10 SingleReg:$v1, Signed10W:$v2)>;
-def : Pat<(smin i32:$v1, Signed37W:$v2), (MINWri37 SingleReg:$v1, Signed37W:$v2)>;
+def : Pat<(smin i32:$v1, Wrapped32:$v2), (MINWri37 SingleReg:$v1, Wrapped32:$v2)>;
 
 // MINWP
 defm MINWP : Word_RR_RIsplat_select_v2<smin, MINWPri, MINWPrr>;
@@ -1585,7 +1585,7 @@ foreach vtype = [ v8i8, v4i16, v2i32 ] in {
 // ORNW
 def : Pat<(or (not i32:$rs1), i32:$rs2), (ORNWrr SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(ORNDriPat (or i32:$rs1, Signed10W:$c1), Signed10W), (ORNWri10 SingleReg:$rs1, Signed10W:$c1)>;
-def : Pat<(ORNDriPat (or i32:$rs1, Signed37W:$c1), Signed37W), (ORNWri37 SingleReg:$rs1, Signed37W:$c1)>;
+def : Pat<(ORNDriPat (or i32:$rs1, Wrapped32:$c1), Wrapped32), (ORNWri37 SingleReg:$rs1, Wrapped32:$c1)>;
 // TODO: Add ri10 to vector types
 foreach vtype = [ v2i8, v4i8, v2i16 ] in {
     def : Pat<(or (vnot vtype:$rs1), (vtype (is_imm_vec:$IMM))), (ORNWri37 SingleReg:$rs1, (build_imm_vec $IMM))>;
@@ -1595,7 +1595,7 @@ foreach vtype = [ v2i8, v4i8, v2i16 ] in {
 // ORW
 defm : ZEFPat<(or i32:$rs1, i32:$rs2), (ORWrr SingleReg:$rs1, SingleReg:$rs2)>;
 defm : ZEFPat<(or i32:$rs1, Signed10W:$rs2), (ORWri10 SingleReg:$rs1, Signed10W:$rs2)>;
-defm : ZEFPat<(or i32:$rs1, Signed37W:$rs2), (ORWri37 SingleReg:$rs1, Signed37W:$rs2)>;
+defm : ZEFPat<(or i32:$rs1, Wrapped32:$rs2), (ORWri37 SingleReg:$rs1, Wrapped32:$rs2)>;
 
 foreach vtype = [ v2i8, v4i8, v2i16 ] in {
     def : Pat<(or vtype:$rs1, vtype:$rs2), (ORWrr SingleReg:$rs1, SingleReg:$rs2)>;
@@ -1855,7 +1855,7 @@ def : Pat<(i64 (sub Wrapped64W:$lhs, (sext i32:$rhs))),
 // SBFW
 defm : ZEFPat<(sub i32:$rs1, i32:$rs2), (SBFWrr SingleReg:$rs2, SingleReg:$rs1)>;
 defm : ZEFPat<(sub Signed10W:$rs1, i32:$rs2), (SBFWri10 SingleReg:$rs2, Signed10W:$rs1)>;
-defm : ZEFPat<(sub Signed37W:$rs1, i32:$rs2), (SBFWri37 SingleReg:$rs2, Signed37W:$rs1)>;
+defm : ZEFPat<(sub Wrapped32:$rs1, i32:$rs2), (SBFWri37 SingleReg:$rs2, Wrapped32:$rs1)>;
 
 // SBFWP
 def : Pat<(sub (v2i32 (v2i32(is_imm_vec_kvx_splat32_:$IMM))), v2i32:$r),
@@ -2366,7 +2366,7 @@ foreach vtype = [ v8i8, v4i16, v2i32 ] in {
 // XORW
 defm : ZEFPat<(xor i32:$rs1, i32:$rs2), (XORWrr SingleReg:$rs1, SingleReg:$rs2)>;
 defm : ZEFPat<(xor i32:$rs1, Signed10W:$rs2), (XORWri10 SingleReg:$rs1, Signed10W:$rs2)>;
-defm : ZEFPat<(xor i32:$rs1, Signed37W:$rs2), (XORWri37 SingleReg:$rs1, Signed37W:$rs2)>;
+defm : ZEFPat<(xor i32:$rs1, Wrapped32:$rs2), (XORWri37 SingleReg:$rs1, Wrapped32:$rs2)>;
 
 foreach vtype = [ v2i8, v4i8, v2i16 ] in {
     def : Pat<(xor vtype:$rs1, (vtype (is_imm_vec:$IMM))), (XORWri37 SingleReg:$rs1, (build_imm_vec $IMM))>;

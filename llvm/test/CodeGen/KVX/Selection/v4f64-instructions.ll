@@ -2292,16 +2292,16 @@ define <4 x double> @test_minnum_fast(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-NEXT:    fcompd.olt $r8 = $r1, $r5
 ; CV1-NEXT:    fcompd.olt $r9 = $r0, $r4
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    fcompd.olt $r10 = $r2, $r6
-; CV1-NEXT:    fcompd.olt $r11 = $r3, $r7
-; CV1-NEXT:    ;;
 ; CV1-NEXT:    cmoved.wnez $r9 ? $r4 = $r0
 ; CV1-NEXT:    cmoved.wnez $r8 ? $r5 = $r1
 ; CV1-NEXT:    ;;
+; CV1-NEXT:    fcompd.olt $r0 = $r2, $r6
+; CV1-NEXT:    fcompd.olt $r1 = $r3, $r7
+; CV1-NEXT:    ;;
 ; CV1-NEXT:    copyd $r0 = $r4
 ; CV1-NEXT:    copyd $r1 = $r5
-; CV1-NEXT:    cmoved.wnez $r10 ? $r6 = $r2
-; CV1-NEXT:    cmoved.wnez $r11 ? $r7 = $r3
+; CV1-NEXT:    cmoved.wnez $r0 ? $r6 = $r2
+; CV1-NEXT:    cmoved.wnez $r1 ? $r7 = $r3
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    copyd $r2 = $r6
 ; CV1-NEXT:    copyd $r3 = $r7
@@ -2411,16 +2411,16 @@ define <4 x double> @test_maxnum_fast(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-NEXT:    fcompd.olt $r8 = $r5, $r1
 ; CV1-NEXT:    fcompd.olt $r9 = $r4, $r0
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    fcompd.olt $r10 = $r6, $r2
-; CV1-NEXT:    fcompd.olt $r11 = $r7, $r3
-; CV1-NEXT:    ;;
 ; CV1-NEXT:    cmoved.wnez $r9 ? $r4 = $r0
 ; CV1-NEXT:    cmoved.wnez $r8 ? $r5 = $r1
 ; CV1-NEXT:    ;;
+; CV1-NEXT:    fcompd.olt $r0 = $r6, $r2
+; CV1-NEXT:    fcompd.olt $r1 = $r7, $r3
+; CV1-NEXT:    ;;
 ; CV1-NEXT:    copyd $r0 = $r4
 ; CV1-NEXT:    copyd $r1 = $r5
-; CV1-NEXT:    cmoved.wnez $r10 ? $r6 = $r2
-; CV1-NEXT:    cmoved.wnez $r11 ? $r7 = $r3
+; CV1-NEXT:    cmoved.wnez $r0 ? $r6 = $r2
+; CV1-NEXT:    cmoved.wnez $r1 ? $r7 = $r3
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    copyd $r2 = $r6
 ; CV1-NEXT:    copyd $r3 = $r7

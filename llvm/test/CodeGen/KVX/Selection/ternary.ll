@@ -102,13 +102,12 @@ define i64 @Int64TernaryGlobalGlobal(i1 %value){
 ; CHECK-LABEL: Int64TernaryGlobalGlobal:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    andw $r0 = $r0, 1
+; CHECK-NEXT:    make $r1 = g1
+; CHECK-NEXT:    make $r2 = g2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r0 = g1
-; CHECK-NEXT:    copyw $r1 = $r0
+; CHECK-NEXT:    cmoved.wnez $r0 ? $r2 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r1 ? $r0 = g2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r0 = 0[$r0]
+; CHECK-NEXT:    ld $r0 = 0[$r2]
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -258,13 +257,12 @@ define double @FloatTernaryGlobalGlobal(i1 %value){
 ; CHECK-LABEL: FloatTernaryGlobalGlobal:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    andw $r0 = $r0, 1
+; CHECK-NEXT:    make $r1 = gf1
+; CHECK-NEXT:    make $r2 = gf2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r0 = gf1
-; CHECK-NEXT:    copyw $r1 = $r0
+; CHECK-NEXT:    cmoved.wnez $r0 ? $r2 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r1 ? $r0 = gf2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    ld $r0 = 0[$r0]
+; CHECK-NEXT:    ld $r0 = 0[$r2]
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -413,13 +411,12 @@ define i32 @Int32TernaryGlobalGlobal(i1 %value){
 ; CHECK-LABEL: Int32TernaryGlobalGlobal:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    andw $r0 = $r0, 1
+; CHECK-NEXT:    make $r1 = gi32_1
+; CHECK-NEXT:    make $r2 = gi32_2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    make $r0 = gi32_1
-; CHECK-NEXT:    copyw $r1 = $r0
+; CHECK-NEXT:    cmoved.wnez $r0 ? $r2 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.weqz $r1 ? $r0 = gi32_2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    lwz $r0 = 0[$r0]
+; CHECK-NEXT:    lwz $r0 = 0[$r2]
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -508,10 +505,12 @@ entry:
 define i32 @Int32TernaryCond1(i32 %v){
 ; CHECK-LABEL: Int32TernaryCond1:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = 5
-; CHECK-NEXT:    copyw $r1 = $r0
+; CHECK-NEXT:    make $r1 = 7
+; CHECK-NEXT:    make $r2 = 5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r1 ? $r0 = 7
+; CHECK-NEXT:    cmoved.weqz $r0 ? $r1 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -523,10 +522,12 @@ entry:
 define i32 @Int32TernaryCond2(i32 %v){
 ; CHECK-LABEL: Int32TernaryCond2:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = 7
-; CHECK-NEXT:    copyw $r1 = $r0
+; CHECK-NEXT:    make $r1 = 5
+; CHECK-NEXT:    make $r2 = 7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r1 ? $r0 = 5
+; CHECK-NEXT:    cmoved.weqz $r0 ? $r1 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -538,10 +539,12 @@ entry:
 define i32 @Int32TernaryCond3(i32 %v){
 ; CHECK-LABEL: Int32TernaryCond3:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = 5
-; CHECK-NEXT:    copyw $r1 = $r0
+; CHECK-NEXT:    make $r1 = 7
+; CHECK-NEXT:    make $r2 = 5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wgez $r1 ? $r0 = 7
+; CHECK-NEXT:    cmoved.wltz $r0 ? $r1 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -553,10 +556,12 @@ entry:
 define i32 @Int32TernaryCond4(i32 %v){
 ; CHECK-LABEL: Int32TernaryCond4:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = 5
-; CHECK-NEXT:    copyw $r1 = $r0
+; CHECK-NEXT:    make $r1 = 7
+; CHECK-NEXT:    make $r2 = 5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wltz $r1 ? $r0 = 7
+; CHECK-NEXT:    cmoved.wgez $r0 ? $r1 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -568,10 +573,12 @@ entry:
 define i32 @Int32TernaryCond5(i32 %v){
 ; CHECK-LABEL: Int32TernaryCond5:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = 5
-; CHECK-NEXT:    copyw $r1 = $r0
+; CHECK-NEXT:    make $r1 = 7
+; CHECK-NEXT:    make $r2 = 5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wgtz $r1 ? $r0 = 7
+; CHECK-NEXT:    cmoved.wlez $r0 ? $r1 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -583,10 +590,12 @@ entry:
 define i32 @Int32TernaryCond6(i32 %v){
 ; CHECK-LABEL: Int32TernaryCond6:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = 5
-; CHECK-NEXT:    copyw $r1 = $r0
+; CHECK-NEXT:    make $r1 = 7
+; CHECK-NEXT:    make $r2 = 5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wlez $r1 ? $r0 = 7
+; CHECK-NEXT:    cmoved.wgtz $r0 ? $r1 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -598,10 +607,12 @@ entry:
 define i32 @Int32TernaryCond7(i32 %v){
 ; CHECK-LABEL: Int32TernaryCond7:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = 5
-; CHECK-NEXT:    copyw $r1 = $r0
+; CHECK-NEXT:    make $r1 = 7
+; CHECK-NEXT:    make $r2 = 5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.odd $r1 ? $r0 = 7
+; CHECK-NEXT:    cmoved.even $r0 ? $r1 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -614,10 +625,12 @@ entry:
 define i32 @Int32TernaryCond8(i32 %v){
 ; CHECK-LABEL: Int32TernaryCond8:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = 7
-; CHECK-NEXT:    copyw $r1 = $r0
+; CHECK-NEXT:    make $r1 = 5
+; CHECK-NEXT:    make $r2 = 7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.odd $r1 ? $r0 = 5
+; CHECK-NEXT:    cmoved.even $r0 ? $r1 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -630,10 +643,12 @@ entry:
 define i64 @Int64TernaryCond1(i64 %v){
 ; CHECK-LABEL: Int64TernaryCond1:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = 5
-; CHECK-NEXT:    copyd $r1 = $r0
+; CHECK-NEXT:    make $r1 = 7
+; CHECK-NEXT:    make $r2 = 5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.dnez $r1 ? $r0 = 7
+; CHECK-NEXT:    cmoved.deqz $r0 ? $r1 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -645,10 +660,12 @@ entry:
 define i64 @Int64TernaryCond2(i64 %v){
 ; CHECK-LABEL: Int64TernaryCond2:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = 7
-; CHECK-NEXT:    copyd $r1 = $r0
+; CHECK-NEXT:    make $r1 = 5
+; CHECK-NEXT:    make $r2 = 7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.dnez $r1 ? $r0 = 5
+; CHECK-NEXT:    cmoved.deqz $r0 ? $r1 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -660,10 +677,12 @@ entry:
 define i64 @Int64TernaryCond3(i64 %v){
 ; CHECK-LABEL: Int64TernaryCond3:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = 5
-; CHECK-NEXT:    copyd $r1 = $r0
+; CHECK-NEXT:    make $r1 = 7
+; CHECK-NEXT:    make $r2 = 5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.dgez $r1 ? $r0 = 7
+; CHECK-NEXT:    cmoved.dltz $r0 ? $r1 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -675,10 +694,12 @@ entry:
 define i64 @Int64TernaryCond4(i64 %v){
 ; CHECK-LABEL: Int64TernaryCond4:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = 5
-; CHECK-NEXT:    copyd $r1 = $r0
+; CHECK-NEXT:    make $r1 = 7
+; CHECK-NEXT:    make $r2 = 5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.dltz $r1 ? $r0 = 7
+; CHECK-NEXT:    cmoved.dgez $r0 ? $r1 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -690,10 +711,12 @@ entry:
 define i64 @Int64TernaryCond5(i64 %v){
 ; CHECK-LABEL: Int64TernaryCond5:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = 5
-; CHECK-NEXT:    copyd $r1 = $r0
+; CHECK-NEXT:    make $r1 = 7
+; CHECK-NEXT:    make $r2 = 5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.dgtz $r1 ? $r0 = 7
+; CHECK-NEXT:    cmoved.dlez $r0 ? $r1 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -705,10 +728,12 @@ entry:
 define i64 @Int64TernaryCond6(i64 %v){
 ; CHECK-LABEL: Int64TernaryCond6:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = 5
-; CHECK-NEXT:    copyd $r1 = $r0
+; CHECK-NEXT:    make $r1 = 7
+; CHECK-NEXT:    make $r2 = 5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.dlez $r1 ? $r0 = 7
+; CHECK-NEXT:    cmoved.dgtz $r0 ? $r1 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -720,10 +745,12 @@ entry:
 define i64 @Int64TernaryCond7(i64 %v){
 ; CHECK-LABEL: Int64TernaryCond7:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = 5
-; CHECK-NEXT:    copyw $r1 = $r0
+; CHECK-NEXT:    make $r1 = 7
+; CHECK-NEXT:    make $r2 = 5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.odd $r1 ? $r0 = 7
+; CHECK-NEXT:    cmoved.even $r0 ? $r1 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -736,10 +763,12 @@ entry:
 define i64 @Int64TernaryCond8(i64 %v){
 ; CHECK-LABEL: Int64TernaryCond8:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = 7
-; CHECK-NEXT:    copyw $r1 = $r0
+; CHECK-NEXT:    make $r1 = 5
+; CHECK-NEXT:    make $r2 = 7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.odd $r1 ? $r0 = 5
+; CHECK-NEXT:    cmoved.even $r0 ? $r1 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -752,10 +781,12 @@ entry:
 define half @Float16TernaryCond(i32 %v){
 ; CHECK-LABEL: Float16TernaryCond:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = 0x4700
-; CHECK-NEXT:    copyw $r1 = $r0
+; CHECK-NEXT:    make $r1 = 0x4500
+; CHECK-NEXT:    make $r2 = 0x4700
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r1 ? $r0 = 0x4500
+; CHECK-NEXT:    cmoved.weqz $r0 ? $r1 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -767,10 +798,12 @@ entry:
 define float @FloatTernaryCond1(i32 %v){
 ; CHECK-LABEL: FloatTernaryCond1:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = 0x40a00000
-; CHECK-NEXT:    copyw $r1 = $r0
+; CHECK-NEXT:    make $r1 = 0x40e00000
+; CHECK-NEXT:    make $r2 = 0x40a00000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r1 ? $r0 = 0x40e00000
+; CHECK-NEXT:    cmoved.weqz $r0 ? $r1 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -782,10 +815,12 @@ entry:
 define float @FloatTernaryCond2(i32 %v){
 ; CHECK-LABEL: FloatTernaryCond2:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = 0x40e00000
-; CHECK-NEXT:    copyw $r1 = $r0
+; CHECK-NEXT:    make $r1 = 0x40a00000
+; CHECK-NEXT:    make $r2 = 0x40e00000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r1 ? $r0 = 0x40a00000
+; CHECK-NEXT:    cmoved.weqz $r0 ? $r1 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -797,10 +832,12 @@ entry:
 define float @FloatTernaryCond3(i32 %v){
 ; CHECK-LABEL: FloatTernaryCond3:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = 0x40a00000
-; CHECK-NEXT:    copyw $r1 = $r0
+; CHECK-NEXT:    make $r1 = 0x40e00000
+; CHECK-NEXT:    make $r2 = 0x40a00000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wgez $r1 ? $r0 = 0x40e00000
+; CHECK-NEXT:    cmoved.wltz $r0 ? $r1 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -812,10 +849,12 @@ entry:
 define float @FloatTernaryCond4(i32 %v){
 ; CHECK-LABEL: FloatTernaryCond4:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = 0x40a00000
-; CHECK-NEXT:    copyw $r1 = $r0
+; CHECK-NEXT:    make $r1 = 0x40e00000
+; CHECK-NEXT:    make $r2 = 0x40a00000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wltz $r1 ? $r0 = 0x40e00000
+; CHECK-NEXT:    cmoved.wgez $r0 ? $r1 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -827,10 +866,12 @@ entry:
 define float @FloatTernaryCond5(i32 %v){
 ; CHECK-LABEL: FloatTernaryCond5:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = 0x40a00000
-; CHECK-NEXT:    copyw $r1 = $r0
+; CHECK-NEXT:    make $r1 = 0x40e00000
+; CHECK-NEXT:    make $r2 = 0x40a00000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wgtz $r1 ? $r0 = 0x40e00000
+; CHECK-NEXT:    cmoved.wlez $r0 ? $r1 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -842,10 +883,12 @@ entry:
 define float @FloatTernaryCond6(i32 %v){
 ; CHECK-LABEL: FloatTernaryCond6:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = 0x40a00000
-; CHECK-NEXT:    copyw $r1 = $r0
+; CHECK-NEXT:    make $r1 = 0x40e00000
+; CHECK-NEXT:    make $r2 = 0x40a00000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wlez $r1 ? $r0 = 0x40e00000
+; CHECK-NEXT:    cmoved.wgtz $r0 ? $r1 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -857,10 +900,12 @@ entry:
 define float @FloatTernaryCond7(i32 %v){
 ; CHECK-LABEL: FloatTernaryCond7:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = 0x40a00000
-; CHECK-NEXT:    copyw $r1 = $r0
+; CHECK-NEXT:    make $r1 = 0x40e00000
+; CHECK-NEXT:    make $r2 = 0x40a00000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.odd $r1 ? $r0 = 0x40e00000
+; CHECK-NEXT:    cmoved.even $r0 ? $r1 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -873,10 +918,12 @@ entry:
 define float @FloatTernaryCond8(i32 %v){
 ; CHECK-LABEL: FloatTernaryCond8:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = 0x40e00000
-; CHECK-NEXT:    copyw $r1 = $r0
+; CHECK-NEXT:    make $r1 = 0x40a00000
+; CHECK-NEXT:    make $r2 = 0x40e00000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.odd $r1 ? $r0 = 0x40a00000
+; CHECK-NEXT:    cmoved.even $r0 ? $r1 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -889,10 +936,12 @@ entry:
 define double @DoubleTernaryCond1(i32 %v){
 ; CHECK-LABEL: DoubleTernaryCond1:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = 0x4014000000000000
-; CHECK-NEXT:    copyw $r1 = $r0
+; CHECK-NEXT:    make $r1 = 0x401c000000000000
+; CHECK-NEXT:    make $r2 = 0x4014000000000000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r1 ? $r0 = 0x401c000000000000
+; CHECK-NEXT:    cmoved.weqz $r0 ? $r1 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -904,10 +953,12 @@ entry:
 define double @DoubleTernaryCond2(i32 %v){
 ; CHECK-LABEL: DoubleTernaryCond2:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = 0x401c000000000000
-; CHECK-NEXT:    copyw $r1 = $r0
+; CHECK-NEXT:    make $r1 = 0x4014000000000000
+; CHECK-NEXT:    make $r2 = 0x401c000000000000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r1 ? $r0 = 0x4014000000000000
+; CHECK-NEXT:    cmoved.weqz $r0 ? $r1 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -919,10 +970,12 @@ entry:
 define double @DoubleTernaryCond3(i32 %v){
 ; CHECK-LABEL: DoubleTernaryCond3:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = 0x4014000000000000
-; CHECK-NEXT:    copyw $r1 = $r0
+; CHECK-NEXT:    make $r1 = 0x401c000000000000
+; CHECK-NEXT:    make $r2 = 0x4014000000000000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wgez $r1 ? $r0 = 0x401c000000000000
+; CHECK-NEXT:    cmoved.wltz $r0 ? $r1 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -934,10 +987,12 @@ entry:
 define double @DoubleTernaryCond4(i32 %v){
 ; CHECK-LABEL: DoubleTernaryCond4:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = 0x4014000000000000
-; CHECK-NEXT:    copyw $r1 = $r0
+; CHECK-NEXT:    make $r1 = 0x401c000000000000
+; CHECK-NEXT:    make $r2 = 0x4014000000000000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wltz $r1 ? $r0 = 0x401c000000000000
+; CHECK-NEXT:    cmoved.wgez $r0 ? $r1 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -949,10 +1004,12 @@ entry:
 define double @DoubleTernaryCond5(i32 %v){
 ; CHECK-LABEL: DoubleTernaryCond5:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = 0x4014000000000000
-; CHECK-NEXT:    copyw $r1 = $r0
+; CHECK-NEXT:    make $r1 = 0x401c000000000000
+; CHECK-NEXT:    make $r2 = 0x4014000000000000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wgtz $r1 ? $r0 = 0x401c000000000000
+; CHECK-NEXT:    cmoved.wlez $r0 ? $r1 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -964,10 +1021,12 @@ entry:
 define double @DoubleTernaryCond6(i32 %v){
 ; CHECK-LABEL: DoubleTernaryCond6:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = 0x4014000000000000
-; CHECK-NEXT:    copyw $r1 = $r0
+; CHECK-NEXT:    make $r1 = 0x401c000000000000
+; CHECK-NEXT:    make $r2 = 0x4014000000000000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wlez $r1 ? $r0 = 0x401c000000000000
+; CHECK-NEXT:    cmoved.wgtz $r0 ? $r1 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -979,10 +1038,12 @@ entry:
 define double @DoubleTernaryCond7(i32 %v){
 ; CHECK-LABEL: DoubleTernaryCond7:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = 0x4014000000000000
-; CHECK-NEXT:    copyw $r1 = $r0
+; CHECK-NEXT:    make $r1 = 0x401c000000000000
+; CHECK-NEXT:    make $r2 = 0x4014000000000000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.odd $r1 ? $r0 = 0x401c000000000000
+; CHECK-NEXT:    cmoved.even $r0 ? $r1 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -995,10 +1056,12 @@ entry:
 define double @DoubleTernaryCond8(i32 %v){
 ; CHECK-LABEL: DoubleTernaryCond8:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = 0x401c000000000000
-; CHECK-NEXT:    copyw $r1 = $r0
+; CHECK-NEXT:    make $r1 = 0x4014000000000000
+; CHECK-NEXT:    make $r2 = 0x401c000000000000
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.odd $r1 ? $r0 = 0x4014000000000000
+; CHECK-NEXT:    cmoved.even $r0 ? $r1 = $r2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -1011,9 +1074,9 @@ entry:
 define i32 @Int32TernaryCondRegImm1(i32 %v, i32 %v1){
 ; CHECK-LABEL: Int32TernaryCondRegImm1:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    copyd $r2 = $r1
+; CHECK-NEXT:    make $r2 = 7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wnez $r0 ? $r2 = 7
+; CHECK-NEXT:    cmoved.weqz $r0 ? $r2 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
@@ -1027,7 +1090,9 @@ entry:
 define i32 @Int32TernaryCondRegImm2(i32 %v, i32 %v1){
 ; CHECK-LABEL: Int32TernaryCondRegImm2:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    cmoved.weqz $r0 ? $r1 = 7
+; CHECK-NEXT:    make $r2 = 7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.weqz $r0 ? $r1 = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
@@ -1041,9 +1106,9 @@ entry:
 define i32 @Int32TernaryCondRegImm3(i32 %v, i32 %v1){
 ; CHECK-LABEL: Int32TernaryCondRegImm3:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    copyd $r2 = $r1
+; CHECK-NEXT:    make $r2 = 7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wgez $r0 ? $r2 = 7
+; CHECK-NEXT:    cmoved.wltz $r0 ? $r2 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
@@ -1057,9 +1122,9 @@ entry:
 define i32 @Int32TernaryCondRegImm4(i32 %v, i32 %v1){
 ; CHECK-LABEL: Int32TernaryCondRegImm4:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    copyd $r2 = $r1
+; CHECK-NEXT:    make $r2 = 7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wltz $r0 ? $r2 = 7
+; CHECK-NEXT:    cmoved.wgez $r0 ? $r2 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
@@ -1073,9 +1138,9 @@ entry:
 define i32 @Int32TernaryCondRegImm5(i32 %v, i32 %v1){
 ; CHECK-LABEL: Int32TernaryCondRegImm5:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    copyd $r2 = $r1
+; CHECK-NEXT:    make $r2 = 7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wgtz $r0 ? $r2 = 7
+; CHECK-NEXT:    cmoved.wlez $r0 ? $r2 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
@@ -1089,9 +1154,9 @@ entry:
 define i32 @Int32TernaryCondRegImm6(i32 %v, i32 %v1){
 ; CHECK-LABEL: Int32TernaryCondRegImm6:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    copyd $r2 = $r1
+; CHECK-NEXT:    make $r2 = 7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.wlez $r0 ? $r2 = 7
+; CHECK-NEXT:    cmoved.wgtz $r0 ? $r2 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
@@ -1105,9 +1170,9 @@ entry:
 define i32 @Int32TernaryCondRegImm7(i32 %v, i32 %v1){
 ; CHECK-LABEL: Int32TernaryCondRegImm7:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    copyd $r2 = $r1
+; CHECK-NEXT:    make $r2 = 7
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cmoved.odd $r0 ? $r2 = 7
+; CHECK-NEXT:    cmoved.even $r0 ? $r2 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
@@ -1122,7 +1187,9 @@ entry:
 define i32 @Int32TernaryCondRegImm8(i32 %v, i32 %v1){
 ; CHECK-LABEL: Int32TernaryCondRegImm8:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    cmoved.even $r0 ? $r1 = 7
+; CHECK-NEXT:    make $r2 = 7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    cmoved.even $r0 ? $r1 = $r2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret

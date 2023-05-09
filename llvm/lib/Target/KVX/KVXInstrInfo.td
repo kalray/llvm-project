@@ -572,7 +572,7 @@ multiclass MC_14<string OpcStr> {
      [/* no straightforward pattern */],
      ALU_TINY>;
   def ri37 : KVX_INSTRUCTION_X
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37W:$a3),
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped32:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      ALU_TINY_X_>;
@@ -593,7 +593,7 @@ multiclass MC_15<string OpcStr> {
      [/* no straightforward pattern */],
      ALU_SWITCH_LITE_TINY>;
   def ri37 : KVX_INSTRUCTION_X
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37W:$a3),
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped32:$a3),
      !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      ALU_SWITCH_LITE_TINY_X_>;

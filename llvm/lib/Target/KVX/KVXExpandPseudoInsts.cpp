@@ -93,59 +93,6 @@ bool KVXExpandPseudo::expandMBB(MachineBasicBlock &MBB) {
   return Modified;
 }
 
-// Build a KVX::CMOVED MachineInstr from SELECT.
-static void BuildCMOVED(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
-                        MachineBasicBlock::iterator MBBI, Register DestReg,
-                        Register ValReg, Register CondReg,
-                        unsigned CondMod /*KVXMOD::SCALARCOND*/) {
-  MachineInstr &MI = *MBBI;
-  DebugLoc DL = MI.getDebugLoc();
-
-  switch (MI.getOperand(ValReg).getType()) {
-  case MachineOperand::MO_GlobalAddress:
-    BuildMI(MBB, MBBI, DL, TII->get(KVX::CMOVEDri64), DestReg)
-        .addReg(CondReg)
-        .addReg(DestReg)
-        .addGlobalAddress(MI.getOperand(ValReg).getGlobal())
-        .addImm(CondMod);
-    break;
-  case MachineOperand::MO_Register: {
-    BuildMI(MBB, MBBI, DL, TII->get(KVX::CMOVEDrr), DestReg)
-        .addReg(CondReg)
-        .addReg(DestReg)
-        .addReg(MI.getOperand(ValReg).getReg())
-        .addImm(CondMod);
-  } break;
-  case MachineOperand::MO_Immediate: {
-    int64_t ValImm = MI.getOperand(ValReg).getImm();
-    BuildMI(MBB, MBBI, DL,
-            TII->get(GetImmOpCode(ValImm, KVX::CMOVEDri10, KVX::CMOVEDri37,
-                                  KVX::CMOVEDri64)),
-            DestReg)
-        .addReg(CondReg)
-        .addReg(DestReg)
-        .addImm(ValImm)
-        .addImm(CondMod);
-  } break;
-  case MachineOperand::MO_FPImmediate: {
-    const ConstantFP *ValImm = MI.getOperand(ValReg).getFPImm();
-    BuildMI(MBB, MBBI, DL,
-            TII->get(ValImm->getType()->isFloatTy() ? KVX::CMOVEDri37
-                                                    : KVX::CMOVEDri64),
-            DestReg)
-        .addReg(CondReg)
-        .addReg(DestReg)
-        .addFPImm(ValImm)
-        .addImm(CondMod);
-  } break;
-  default:
-    report_fatal_error("Operator type not handled");
-    break;
-  }
-}
-
-// ========================================================================== //
-
 static bool expandCacheInstruction(const KVXInstrInfo *TII,
                                    MachineBasicBlock &MBB,
                                    MachineBasicBlock::iterator MBBI) {
@@ -203,82 +150,6 @@ static bool expandCacheInstruction(const KVXInstrInfo *TII,
 }
 
 // ========================================================================== //
-
-static bool expandSELECT(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
-                         MachineBasicBlock::iterator MBBI) {
-  MachineInstr &MI = *MBBI;
-  DebugLoc DL = MI.getDebugLoc();
-
-  Register DestReg = MI.getOperand(0).getReg();
-  Register ScratchReg = MI.getOperand(1).getReg();
-  Register CondReg = MI.getOperand(2).getReg();
-  unsigned TrueReg = 3;
-  MachineOperand TrueVal = MI.getOperand(TrueReg);
-  unsigned FalseReg = 4;
-  MachineOperand FalseVal = MI.getOperand(FalseReg);
-  unsigned CondMod = MI.getOperand(5).getImm();
-
-  if (FalseVal.isImm() || FalseVal.isFPImm() || FalseVal.isGlobal()) {
-    // FalseVal is an immediate, inverse the condition to select
-    // FalseVal using faster CMOVED with immediate.
-    // TODO: Use a method based on KVXMOD::SCALARCOND enum.
-    CondMod = CondMod % 2 == 0 ? CondMod + 1 : CondMod - 1;
-
-    if (TrueVal.isReg()) {
-      Register Reg = TrueVal.getReg();
-
-      if (Reg != DestReg) {
-        BuildMI(MBB, MBBI, DL, TII->get(KVX::COPYD), ScratchReg).addReg(Reg);
-        BuildCMOVED(TII, MBB, MBBI, ScratchReg, FalseReg, CondReg, CondMod);
-        BuildMI(MBB, MBBI, DL, TII->get(KVX::COPYD), DestReg)
-            .addReg(ScratchReg);
-      } else {
-        BuildCMOVED(TII, MBB, MBBI, Reg, FalseReg, CondReg, CondMod);
-      }
-
-    } else {
-
-      if (DestReg == CondReg) {
-        // Use ScartchReg to hold CondReg and optimize scheduling with
-        // immediate materialization.
-        unsigned COPY = isScalarcondWord(CondMod) ? KVX::COPYW : KVX::COPYD;
-        BuildMI(MBB, MBBI, DL, TII->get(COPY), ScratchReg).addReg(CondReg);
-        DestReg = CondReg;
-      } else {
-        ScratchReg = CondReg;
-      }
-
-      if (TrueVal.isImm()) {
-        int64_t TrueImm = TrueVal.getImm();
-        unsigned MAKEi = GetImmMakeOpCode(TrueImm);
-        BuildMI(MBB, MBBI, DL, TII->get(MAKEi), DestReg).addImm(TrueImm);
-      } else if (TrueVal.isFPImm()) {
-        unsigned MAKEi;
-        if (TrueVal.getFPImm()->getType()->isDoubleTy())
-          MAKEi = KVX::MAKEi64;
-        else if (TrueVal.getFPImm()->getType()->isFloatTy())
-          MAKEi = KVX::MAKEi43;
-        else
-          MAKEi = KVX::MAKEi16;
-        BuildMI(MBB, MBBI, DL, TII->get(MAKEi), DestReg)
-            .addFPImm(TrueVal.getFPImm());
-      } else if (TrueVal.isGlobal()) {
-        BuildMI(MBB, MBBI, DL, TII->get(KVX::MAKEi64), DestReg)
-            .addGlobalAddress(TrueVal.getGlobal());
-      }
-
-      BuildCMOVED(TII, MBB, MBBI, DestReg, FalseReg, ScratchReg, CondMod);
-    }
-
-  } else if (!FalseVal.isReg()) {
-    MI.print(errs());
-    report_fatal_error("FalseVal is not a register");
-  } else
-    BuildCMOVED(TII, MBB, MBBI, FalseVal.getReg(), TrueReg, CondReg, CondMod);
-
-  MI.eraseFromParent();
-  return true;
-}
 
 // Return load opcode used by atomic operations.
 unsigned getLOADOpcode(uint64_t Size, const MachineOperand MO) {
@@ -1775,8 +1646,6 @@ bool KVXExpandPseudo::expandMI(MachineBasicBlock &MBB,
 
   const auto &Subtarget = TII->getSubtarget();
   switch (MBBI->getOpcode()) {
-  case KVX::SELECTp:
-    return expandSELECT(TII, MBB, MBBI);
   case KVX::ALOADADDp:
   case KVX::ALOADSUBp:
   case KVX::ALOADANDp:
