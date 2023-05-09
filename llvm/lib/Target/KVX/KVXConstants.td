@@ -10,6 +10,8 @@
 class i32_const<int N> : PatLeaf<(i32 N)>;
 def i32_max : i32_const<2147483647>;
 def i32_min : i32_const<-2147483648>;
+def i32_i16umax : i32_const<65535>;
+def i32_i8umax : i32_const<255>;
 
 class i64_const<int N> : PatLeaf<(i64 N)>;
 def i64_i32_max : i64_const<2147483647>;

@@ -456,6 +456,9 @@ def : Pat<(v8i8(uaddsat v8i8:$v0, (v8i8(is_imm_vec_kvx_splat32_at:$IMM)) ) ),
            (ADDUSBOri SingleReg:$v0, (i32(trunc_imm_32 (i32(build_imm_vec $IMM)))), splat32_at)>, Requires<[IsV2]>;
 def : Pat<(v8i8(uaddsat v8i8:$v0, v8i8:$v1)), (ADDUSBOrr SingleReg:$v0, SingleReg:$v1)>, Requires<[IsV2]>;
 
+def : Pat<(i32 (sext_inreg (umin (add (and (assertsext SingleReg:$t4), i32_i8umax), (and (assertsext SingleReg:$t2), i32_i8umax)), i32_i8umax) , i8)),
+          (i32 (ADDUSBOrr $t4, $t2))>, Requires<[IsV2]>;
+
 // ADDUSD
 def : Pat<(i64(uaddsat i64:$v, Wrapped64W:$i)),
           (ADDUSDri SingleReg:$v, (i32(trunc_imm_32 $i)), splat32_)>, Requires<[IsV2]>;
@@ -474,6 +477,9 @@ def : Pat<(v4i16(uaddsat v4i16:$v0, (v4i16(is_imm_vec_kvx_splat32_:$IMM)) ) ),
 def : Pat<(v4i16(uaddsat v4i16:$v0, (v4i16(is_imm_vec_kvx_splat32_at:$IMM)) ) ),
            (ADDUSHQri SingleReg:$v0, (i32(trunc_imm_32 (i32(build_imm_vec $IMM)))), splat32_at)>, Requires<[IsV2]>;
 def : Pat<(v4i16(uaddsat v4i16:$v0, v4i16:$v1)), (ADDUSHQrr SingleReg:$v0, SingleReg:$v1)>, Requires<[IsV2]>;
+
+def : Pat<(i32 (sext_inreg (umin (add (and (assertsext SingleReg:$t4), i32_i16umax), (and (assertsext SingleReg:$t2), i32_i16umax)), i32_i16umax) , i16)),
+          (i32 (ADDUSHQrr $t4, $t2))>, Requires<[IsV2]>;
 
 // ADDUSW
 def : Pat<(i32(uaddsat i32:$v, Wrapped32:$i)),
