@@ -25,7 +25,6 @@
 #include "llvm/CodeGen/RegisterScavenging.h"
 #include "llvm/MC/MCDwarf.h"
 #include "llvm/MC/TargetRegistry.h"
-#include "llvm/Support/Debug.h"
 #include "llvm/Support/ErrorHandling.h"
 
 using namespace llvm;
@@ -372,7 +371,7 @@ void KVXInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
     report_fatal_error("Don't know how to load register from the stack.");
 
   auto MIB = BuildMI(MBB, I, DL, get(Pseudo))
-                 .addReg(DstReg, RegState::DefineNoRead)
+                 .addReg(DstReg, getDefRegState(true))
                  .addImm(0)
                  .addFrameIndex(FI)
                  .addImm(KVXMOD::VARIANT_);

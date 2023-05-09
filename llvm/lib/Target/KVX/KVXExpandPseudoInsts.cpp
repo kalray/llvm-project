@@ -1591,12 +1591,6 @@ static bool expandWideMatrixLoadsStores(const KVXInstrInfo *TII,
     VariantKill = MI.getOperand(3).getImm();
   }
 
-  MachineFunction *MF = MBB.getParent();
-  const KVXRegisterInfo *TRI =
-      (const KVXRegisterInfo *)MF->getSubtarget().getRegisterInfo();
-
-  LLVM_DEBUG(dbgs() << "Creating a " << (IsStore ? "store from" : "load to")
-                    << " register: " << TRI->getRegAsmName(InOutReg) << '\n');
   int End;
   if (KVX::MatrixRegRegClass.contains(InOutReg))
     End = 4;
@@ -1608,21 +1602,16 @@ static bool expandWideMatrixLoadsStores(const KVXInstrInfo *TII,
 
   LLVM_DEBUG(dbgs() << "It will require " << End << " lv operations\n");
 
-  for (int C = 0; C < End; C++) {
-    Register SubReg = TRI->getSubReg(InOutReg, KVX::sub_v0 + C);
-
-    LLVM_DEBUG(dbgs() << "Acting in register #:" << C << " ("
-                      << TRI->getRegAsmName(SubReg) << ").\n");
-
+  for (int C = 0, SubReg = KVX::sub_v0; C < End; C++, ++SubReg) {
     if (IsStore)
       BuildMI(MBB, MBBI, DL, TII->get(GetImmOpCode(Offset, ri10, ri37, ri64)))
           .addImm(Offset)
           .addReg(Base)
-          .addReg(SubReg, VariantKill);
+          .addReg(InOutReg, VariantKill, SubReg);
 
     else
       BuildMI(MBB, MBBI, DL, TII->get(GetImmOpCode(Offset, ri10, ri37, ri64)))
-          .addReg(SubReg, RegState::DefineNoRead)
+          .addReg(InOutReg, RegState::Define, SubReg)
           .addImm(Offset)
           .addReg(Base)
           .addImm(VariantKill);

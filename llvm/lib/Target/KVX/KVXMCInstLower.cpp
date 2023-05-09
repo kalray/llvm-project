@@ -13,17 +13,15 @@
 //===----------------------------------------------------------------------===//
 
 #include "KVX.h"
-#include "llvm/CodeGen/AsmPrinter.h"
-#include "llvm/CodeGen/MachineFunction.h"
-#include "llvm/CodeGen/MachineInstr.h"
-#include "llvm/CodeGen/MachineOperand.h"
+#include "KVXAsmPrinter.h"
+#include "KVXRegisterInfo.h"
 #include "llvm/IR/Constants.h"
-
 
 using namespace llvm;
 
 static bool LowerKVXMachineOperandToMCOperand(const MachineOperand &MO,
-                                              MCOperand &MCOp, AsmPrinter &AP) {
+                                              MCOperand &MCOp,
+                                              KVXAsmPrinter &AP) {
   switch (MO.getType()) {
   default:
     errs() << "MachineOperand type #: " << (unsigned)(MO.getType()) << '\n';
@@ -33,11 +31,17 @@ static bool LowerKVXMachineOperandToMCOperand(const MachineOperand &MO,
     MCOp = MCOperand::createExpr(
         MCSymbolRefExpr::create(MO.getMBB()->getSymbol(), AP.OutContext));
     break;
-  case MachineOperand::MO_Register:
+  case MachineOperand::MO_Register: {
     if (MO.isImplicit())
       return false;
-    MCOp = MCOperand::createReg(MO.getReg());
+
+    Register Reg = MO.getReg();
+    if (MO.getSubReg())
+      Reg = AP.TRI->getSubReg(Reg, MO.getSubReg());
+
+    MCOp = MCOperand::createReg(Reg);
     break;
+  }
   case MachineOperand::MO_FPImmediate: {
     const ConstantFP *Imm = MO.getFPImm();
     auto V = Imm->getValueAPF().bitcastToAPInt().getZExtValue();
@@ -75,7 +79,7 @@ static bool LowerKVXMachineOperandToMCOperand(const MachineOperand &MO,
 }
 
 void llvm::LowerKVXMachineInstrToMCInst(const MachineInstr *MI, MCInst &OutMI,
-                                        AsmPrinter &AP) {
+                                        KVXAsmPrinter &AP) {
   OutMI.setOpcode(MI->getOpcode());
 
   for (const MachineOperand &MO : MI->operands()) {

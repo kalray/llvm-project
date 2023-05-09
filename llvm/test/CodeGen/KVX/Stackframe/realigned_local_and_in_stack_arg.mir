@@ -98,7 +98,7 @@ body:             |
   ; CHECK: $r1 = MAKEi64 @v
   ; CHECK-NOT: $r1 =
   ; CHECK-NOT: $r0 =
-  ; CHECK: $r1 = LDri10 0, killed $r1, 0 :: (dereferenceable load 8 from @v)
+  ; CHECK: $r1 = LDri10 0, killed $r1, 0 :: (dereferenceable load {{.*}} from @v)
   ; CHECK-NOT: $r1 =
   ; CHECK-NOT: $r0 =
   ; CHECK: $r0 = COMPDrr killed $r1, killed $r0, 0

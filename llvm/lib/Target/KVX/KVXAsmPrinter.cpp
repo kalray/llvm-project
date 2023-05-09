@@ -12,40 +12,12 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "KVX.h"
-
+#include "KVXAsmPrinter.h"
 #include "InstPrinter/KVXInstPrinter.h"
-#include "llvm/CodeGen/AsmPrinter.h"
-#include "llvm/MC/MCStreamer.h"
-#include "llvm/MC/TargetRegistry.h"
-#include "llvm/Support/raw_ostream.h"
-
-using namespace llvm;
-class KVXAsmPrinter : public AsmPrinter {
-public:
-  explicit KVXAsmPrinter(TargetMachine &TM,
-                         std::unique_ptr<MCStreamer> Streamer)
-      : AsmPrinter(TM, std::move(Streamer)) {}
-
-  StringRef getPassName() const override { return "KVX Assembly Printer"; }
-
-  void emitInstruction(const MachineInstr *MI) override;
-
-  bool emitPseudoExpansionLowering(MCStreamer &OutStreamer,
-                                   const MachineInstr *MI);
-
-  bool PrintAsmOperand(const MachineInstr *MI, unsigned OpNo,
-                       const char *ExtraCode, raw_ostream &OS) override;
-  bool PrintAsmMemoryOperand(const MachineInstr *MI, unsigned OpNo,
-                             const char *ExtraCode, raw_ostream &OS) override;
-
-  void emitDebugValue(const MCExpr *Value, unsigned Size) const override;
-
-  void emitInlineAsmEnd(const MCSubtargetInfo &StartInfo,
-                        const MCSubtargetInfo *EndInfo) const override;
-};
-
 #include "KVXGenMCPseudoLowering.inc"
+#include "llvm/CodeGen/TargetSubtargetInfo.h"
+#include "llvm/MC/TargetRegistry.h"
+
 static inline bool sortStr(const MCInst &Lhs, const MCInst &Rhs) {
   // Sort them in a string comparison manner
   std::string LhsStr, RhsStr;
@@ -98,6 +70,11 @@ bool comparePairs(const MCInst &Lhs, const MCInst &Rhs) {
     return false;
 
   return sortStr(Lhs, Rhs);
+}
+
+bool KVXAsmPrinter::runOnMachineFunction(MachineFunction &MF) {
+  TRI = MF.getSubtarget().getRegisterInfo();
+  return AsmPrinter::runOnMachineFunction(MF);
 }
 
 void KVXAsmPrinter::emitInstruction(const MachineInstr *MI) {

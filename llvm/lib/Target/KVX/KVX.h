@@ -197,7 +197,7 @@ unsigned GetImmMakeOpCode(int64_t imm);
 FunctionPass *createKVXISelDag(KVXTargetMachine &TM);
 
 void LowerKVXMachineInstrToMCInst(const MachineInstr *MI, MCInst &OutMI,
-                                  AsmPrinter &AP);
+                                  KVXAsmPrinter &AP);
 
 FunctionPass *createKVXExpandPseudoPass(KVX::STAGE);
 FunctionPass *createKVXLoadStorePackingPass();
