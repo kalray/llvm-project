@@ -1,4 +1,4 @@
-// UNSUPPORTED: powerpc64-ibm-aix
+// UNSUPPORTED: powerpc64-ibm-aix, kvx
 // RUN: rm -rf %t.dir
 // RUN: rm -rf %t.cdb
 // RUN: mkdir -p %t.dir

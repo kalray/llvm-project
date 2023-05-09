@@ -15,7 +15,6 @@
 #include "InstPrinter/KVXInstPrinter.h"
 #include "KVXAsmInfo.h"
 #include "KVXTargetStreamer.h"
-#include "llvm/ADT/STLExtras.h"
 #include "llvm/MC/MCAsmInfo.h"
 #include "llvm/MC/MCDwarf.h"
 #include "llvm/MC/MCInstrInfo.h"
@@ -23,7 +22,6 @@
 #include "llvm/MC/MCStreamer.h"
 #include "llvm/MC/MCSubtargetInfo.h"
 #include "llvm/MC/TargetRegistry.h"
-#include "llvm/Support/ErrorHandling.h"
 
 #define GET_INSTRINFO_MC_DESC
 #include "KVXGenInstrInfo.inc"
@@ -99,8 +97,7 @@ extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeKVXTargetMC() {
                                             createKVXTargetStreamer);
   TargetRegistry::RegisterMCSubtargetInfo(getTheKVXTarget(),
                                           createKVXMCSubtargetInfo);
-  TargetRegistry::RegisterMCAsmBackend(getTheKVXTarget(), createKVXAsmBackend);
+  TargetRegistry::RegisterMCAsmBackend(getTheKVXTarget(), nullptr);
   // This is a dummy RegisterMCCodeEmitter. Avoid functions it does not support.
-  TargetRegistry::RegisterMCCodeEmitter(getTheKVXTarget(),
-                                        createKVXMCCodeEmitter);
+  TargetRegistry::RegisterMCCodeEmitter(getTheKVXTarget(), nullptr);
 }

@@ -1,4 +1,4 @@
-// UNSUPPORTED: powerpc64-ibm-aix
+// UNSUPPORTED: powerpc64-ibm-aix, kvx
 // REQUIRES: shell
 
 // RUN: rm -rf %t && mkdir %t

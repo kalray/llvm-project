@@ -37,9 +37,6 @@ StringRef selectKVXCPU(StringRef CPU);
 Target &getTheKVXTarget();
 
 MCCodeEmitter *createKVXMCCodeEmitter(const MCInstrInfo &MCII, MCContext &Ctx);
-MCAsmBackend *createKVXAsmBackend(const Target &T, const MCSubtargetInfo &STI,
-                                  const MCRegisterInfo &MRI,
-                                  const MCTargetOptions &Options);
 std::unique_ptr<MCObjectTargetWriter> createKVXELFObjectWriter(bool Is64Bit,
                                                                uint8_t OSABI);
 } // namespace llvm
