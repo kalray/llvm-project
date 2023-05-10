@@ -1638,26 +1638,26 @@ def : Pat<(f16(extractelt v8f16:$v, i64:$s)),
 
 // v2i8
 def : Pat<(ctlz v2i8:$v),
-          (v2i8 (SBMM8ri37 (CLZWP (ORDri32s (SBMM8ri64 SingleReg:$v, 0x200000001000000), 0x800000)), 0x100001))>;
+          (v2i8 (SBMM8ri37 (CLZWP (ORDri32s (SBMM8ri64 SingleReg:$v, 0x200000001000000), 0x800000)), 0x1001))>;
 
 def : Pat<(cttz v2i8:$v),
-          (v2i8 (SBMM8ri37 (CTZWP (ORDri32s (SBMM8ri64 SingleReg:$v, 0x200000001), 0x100)), 0x100001))>;
+          (v2i8 (SBMM8ri37 (CTZWP (ORDri32s (SBMM8ri64 SingleReg:$v, 0x200000001), 0x100)), 0x1001))>;
 
 foreach i = [0, 2] in {
 def : Pat<(v2i8 (ctlz (extract_subvector v4i8:$v, (i64 i)))),
-          (v2i8 (SBMM8ri37 (CLZWP (ORDri32s (SBMM8ri64 SingleReg:$v, !shl(0x200000001000000, i)), 0x800000)), 0x100001))>;
+          (v2i8 (SBMM8ri37 (CLZWP (ORDri32s (SBMM8ri64 SingleReg:$v, !shl(0x200000001000000, i)), 0x800000)), 0x1001))>;
 
 def : Pat<(v2i8 (cttz (extract_subvector v4i8:$v, (i64 i)))),
-          (v2i8 (SBMM8ri37 (CTZWP (ORDri32s (SBMM8ri64 SingleReg:$v, !shl(0x200000001, i)), 0x100)), 0x100001))>;
+          (v2i8 (SBMM8ri37 (CTZWP (ORDri32s (SBMM8ri64 SingleReg:$v, !shl(0x200000001, i)), 0x100)), 0x1001))>;
 }
 
 foreach j = [0, 4] in {
 foreach i = [0, 2] in {
 def : Pat<(v2i8 (ctlz (extract_subvector (v4i8 (extract_subvector v8i8:$v, (i64 j))), (i64 i)))),
-          (v2i8 (SBMM8ri37 (CLZWP (ORDri32s (SBMM8ri64 SingleReg:$v, !shl(0x200000001000000, !add(i, j))), 0x800000)), 0x100001))>;
+          (v2i8 (SBMM8ri37 (CLZWP (ORDri32s (SBMM8ri64 SingleReg:$v, !shl(0x200000001000000, !add(i, j))), 0x800000)), 0x1001))>;
 
 def : Pat<(v2i8 (cttz (extract_subvector (v4i8 (extract_subvector v8i8:$v, (i64 j))), (i64 i)))),
-          (v2i8 (SBMM8ri37 (CTZWP (ORDri32s (SBMM8ri64 SingleReg:$v, !shl(0x200000001, !add(i,j))), 0x100)), 0x100001))>;
+          (v2i8 (SBMM8ri37 (CTZWP (ORDri32s (SBMM8ri64 SingleReg:$v, !shl(0x200000001, !add(i,j))), 0x100)), 0x1001))>;
 }
 }
 // v2i16
@@ -2498,3 +2498,44 @@ def : Pat<(v4096i1 (int_kvx_xsplat Wrapped64:$v)),
           (v4096i1 (Pop4096_cv2<Pop1024_cv2<PopV256i1_ri64>> Wrapped64:$v))>;
 
 }
+
+def : Pat<(v8i8 (insert_subvector (v8i8 (insert_subvector v8i8:$v0, v2i8:$v1, (i64 4)) ), v2i8:$v2, (i64 6))),
+          (v8i8 (INSF SingleReg:$v0, (INSF SingleReg:$v1, SingleReg:$v2, 31, 16), 63, 32))>;
+
+def : Pat<(v8i8 (insert_subvector v8i8:$v0, v2i8:$v1, (i64 4))),
+          (v8i8 (INSF SingleReg:$v0, SingleReg:$v1, 47, 32))>;
+
+def : Pat<(v8i8 (insert_subvector v8i8:$v0, v4i8:$v1, (i64 4))),
+          (v8i8 (INSF SingleReg:$v0, SingleReg:$v1, 63, 32))>;
+
+def : Pat<(v8i8 (insert_subvector v8i8:$v0, v2i8:$v1, (i64 6))),
+          (v8i8 (INSF SingleReg:$v0, SingleReg:$v1, 63, 48))>;
+
+def : Pat<(v8i8 (concat_vectors v4i8:$v0, (v4i8 undef))),
+          (v8i8 (COPY SingleReg:$v0))>;
+
+def : Pat<(v4i16 (insert_subvector v4i16:$v0, v2i16:$v1, (i64 2))),
+          (v4i16 (INSF SingleReg:$v0, SingleReg:$v1, 63, 32))>;
+
+def : Pat<(v4i16 (concat_vectors v2i16:$v0, (v2i16 undef))),
+          (v4i16 (COPY SingleReg:$v0))>;
+
+def : Pat<(v4i32 (insert_subvector v4i32:$v0, v2i32:$v1, (i64 2))),
+          (v4i32 (REG_SEQUENCE PairedReg,
+                   (v2i32 (EXTRACT_SUBREG PairedReg:$v0, sub_d0)), sub_d0,
+                   SingleReg:$v1, sub_d1))>;
+
+def : Pat<(v4f32 (insert_subvector v4f32:$v0, v2f32:$v1, (i64 2))),
+          (v4f32 (REG_SEQUENCE PairedReg,
+                   (v2f32 (EXTRACT_SUBREG PairedReg:$v0, sub_d0)), sub_d0,
+                   SingleReg:$v1, sub_d1))>;
+
+def : Pat<(v4i64 (insert_subvector v4i64:$v0, v2i64:$v1, (i64 2))),
+          (v4i64 (REG_SEQUENCE QuadReg,
+                   (v2i64 (EXTRACT_SUBREG QuadReg:$v0, sub_q0)), sub_q0,
+                   PairedReg:$v1, sub_q1))>;
+
+def : Pat<(v4f64 (insert_subvector v4f64:$v0, v2f64:$v1, (i64 2))),
+          (v4f64 (REG_SEQUENCE QuadReg,
+                   (v2f64 (EXTRACT_SUBREG QuadReg:$v0, sub_q0)), sub_q0,
+                   PairedReg:$v1, sub_q1))>;

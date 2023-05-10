@@ -59,7 +59,7 @@ define <2 x i8> @cttzv2i8(<2 x i8> %a) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ctzwp $r0 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x100001
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %res = call <2 x i8> @llvm.cttz.v2i8(<2 x i8> %a)
@@ -115,8 +115,8 @@ define <4 x i8> @cttzv4i8(<4 x i8> %a) {
 ; CHECK-NEXT:    ctzwp $r0 = $r0
 ; CHECK-NEXT:    ctzwp $r1 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x100001
-; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x100001
+; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x1001
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 16
 ; CHECK-NEXT:    ret
@@ -191,12 +191,12 @@ define <8 x i8> @cttzv8i8(<8 x i8> %a) {
 ; CV1-NEXT:    ctzwp $r3 = $r3
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    ctzwp $r0 = $r0
-; CV1-NEXT:    sbmm8 $r1 = $r1, 0x100001
+; CV1-NEXT:    sbmm8 $r1 = $r1, 0x1001
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sbmm8 $r2 = $r2, 0x100001
-; CV1-NEXT:    sbmm8 $r3 = $r3, 0x100001
+; CV1-NEXT:    sbmm8 $r2 = $r2, 0x1001
+; CV1-NEXT:    sbmm8 $r3 = $r3, 0x1001
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    sbmm8 $r0 = $r0, 0x100001
+; CV1-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CV1-NEXT:    insf $r2 = $r1, 31, 16
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    insf $r0 = $r3, 31, 16
@@ -219,15 +219,15 @@ define <8 x i8> @cttzv8i8(<8 x i8> %a) {
 ; CV2-NEXT:    ord.@ $r2 = $r2, 256
 ; CV2-NEXT:    ord.@ $r3 = $r3, 256
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    sbmm8 $r1 = $r1, 0x100001
+; CV2-NEXT:    sbmm8 $r1 = $r1, 0x1001
 ; CV2-NEXT:    ctzwp $r2 = $r2
 ; CV2-NEXT:    ctzwp $r3 = $r3
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    ctzwp $r0 = $r0
-; CV2-NEXT:    sbmm8 $r2 = $r2, 0x100001
-; CV2-NEXT:    sbmm8 $r3 = $r3, 0x100001
+; CV2-NEXT:    sbmm8 $r2 = $r2, 0x1001
+; CV2-NEXT:    sbmm8 $r3 = $r3, 0x1001
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    sbmm8 $r0 = $r0, 0x100001
+; CV2-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CV2-NEXT:    insf $r2 = $r1, 31, 16
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    insf $r0 = $r3, 31, 16
