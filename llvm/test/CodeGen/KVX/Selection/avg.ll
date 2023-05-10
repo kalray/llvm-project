@@ -387,12 +387,10 @@ entry:
   ret <2 x i32> %shr
 }
 
-; Same as up there, can generatet this by subtracting
-; 0x100000001 from the immediate.
 define <2 x i32> @ravg_v2u32_ri_(<2 x i32> %a) {
 ; CHECK-LABEL: ravg_v2u32_ri_:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    avgrwp $r0 = $r0, 3
+; CHECK-NEXT:    avgruwp $r0 = $r0, 3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

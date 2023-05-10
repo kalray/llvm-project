@@ -3947,12 +3947,12 @@ define <16 x i16> @avgruhx_ri(<16 x i16> %0) {
 define <8 x i32> @avgruwo_ri(<8 x i32> %0) {
 ; ALL-LABEL: avgruwo_ri:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    avgrwp $r1 = $r1, 0
-; ALL-NEXT:    avgrwp $r2 = $r2, 0
+; ALL-NEXT:    avgruwp $r1 = $r1, 0
+; ALL-NEXT:    avgruwp $r2 = $r2, 0
 ; ALL-NEXT:    make $r4 = 0x10000002b
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    addwp $r0 = $r0, $r4
-; ALL-NEXT:    avgrwp $r3 = $r3, 0
+; ALL-NEXT:    avgruwp $r3 = $r3, 0
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    srlwps $r0 = $r0, 1
 ; ALL-NEXT:    ret
@@ -3988,7 +3988,7 @@ define <2 x i32> @avgruwp_ri(<2 x i32> %0) {
 define <4 x i32> @avgruwq_ri(<4 x i32> %0) {
 ; ALL-LABEL: avgruwq_ri:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    avgrwp $r1 = $r1, 0
+; ALL-NEXT:    avgruwp $r1 = $r1, 0
 ; ALL-NEXT:    make $r2 = 0x10000002b
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    addwp $r0 = $r0, $r2

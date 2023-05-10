@@ -973,10 +973,6 @@ def build_imm_vec_neg1 : SDNodeXForm<build_vector, [{
   return KVX_LOW::buildImmVector(*N, *CurDAG, 2);
 }]>;
 
-def is_imm_vec_ri37 : PatLeaf<(build_vector), [{
-   return KVX_LOW::isKVXSplat32ImmVec(N, CurDAG, false);
-}], build_imm_vec>;
-
 def is_imm_vec_leq1bit : PatLeaf<(build_vector), [{
   return KVX_LOW::isImmVecOfLeqNbits(N, CurDAG, 1);
 }], build_imm_vec>;
@@ -2160,9 +2156,9 @@ def : Pat<(vt (select i32:$cc, vt:$t, is_imm_vec:$f)),
             (vt (RI SingleReg:$cc, SingleReg:$t, (build $f), scalarcond_even))>;
 def : Pat<(vt (select i32:$cc, is_imm_vec:$t, vt:$f)),
             (vt (RI SingleReg:$cc, SingleReg:$f, (build $t), scalarcond_odd))>;
-def : Pat<(vt (select i32:$cc, vt:$t, is_imm_vec_ri37:$f)),
+def : Pat<(vt (select i32:$cc, vt:$t, is_imm_vec_kvx_splat32_:$f)),
             (vt (CMOVEDri37 SingleReg:$cc, SingleReg:$t, (build $f), scalarcond_even))>;
-def : Pat<(vt (select i32:$cc, is_imm_vec_ri37:$t, vt:$f)),
+def : Pat<(vt (select i32:$cc, is_imm_vec_kvx_splat32_:$t, vt:$f)),
             (vt (CMOVEDri37 SingleReg:$cc, SingleReg:$f, (build $t), scalarcond_odd))>;
 }
 

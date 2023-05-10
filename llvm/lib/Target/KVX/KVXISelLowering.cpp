@@ -907,6 +907,16 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   for (auto I : {MVT::v8i8, MVT::v2i32, MVT::v4i32})
     setOperationAction(ISD::USUBSAT, I, Legal);
 
+  for (auto I :
+       {ISD::AVGFLOORS, ISD::AVGFLOORU, ISD::AVGCEILS, ISD::AVGCEILU}) {
+    for (auto VT : {MVT::i32, MVT::v2i16, MVT::v2i32, MVT::v4i16})
+      setOperationAction(I, VT, Legal);
+
+    auto Action = Subtarget.isV1() ? Promote : Legal;
+    for (auto VT : {MVT::v2i8, MVT::v4i8, MVT::v8i8})
+      setOperationAction(I, VT, Action);
+  }
+
   setOperationAction(ISD::INTRINSIC_W_CHAIN, MVT::Other, Custom);
   setOperationAction(ISD::INTRINSIC_WO_CHAIN, MVT::Other, Custom);
   setOperationAction(ISD::INTRINSIC_VOID, MVT::Other, Custom);
