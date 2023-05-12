@@ -924,14 +924,14 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::EH_SJLJ_LONGJMP, MVT::Other, Custom);
   setOperationAction(ISD::EH_SJLJ_SETJMP, MVT::i32, Custom);
   setOperationAction(ISD::EH_SJLJ_SETUP_DISPATCH, MVT::Other, Custom);
-  if (TM.Options.ExceptionModel == ExceptionHandling::SjLj)
-    setLibcallName(RTLIB::UNWIND_RESUME, "_Unwind_SjLj_Resume");
 
   for (auto I :
        {ISD::CTLZ, ISD::CTTZ, ISD::CTPOP, ISD::FABS, ISD::FADD, ISD::FCOPYSIGN,
         ISD::FMA, ISD::FMUL, ISD::FSUB, ISD::FNEG, ISD::INTRINSIC_WO_CHAIN,
         ISD::LOAD, ISD::MUL, ISD::SRA, ISD::STORE, ISD::ZERO_EXTEND})
     setTargetDAGCombine(I);
+
+  setLibcallName(RTLIB::UNWIND_RESUME, "_Unwind_SjLj_Resume");
 }
 
 EVT KVXTargetLowering::getSetCCResultType(const DataLayout &DL, LLVMContext &C,
