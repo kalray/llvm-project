@@ -376,7 +376,7 @@ static void ___kmp_env_blk_parse_windows(
         { "HOME=/home/lev", "TERM=xterm", NULL }
 */
 
-#if KMP_OS_UNIX
+#if KMP_OS_UNIX || KMP_OS_CLUSTER_OS
 static void
 ___kmp_env_blk_parse_unix(kmp_env_blk_t *block, // M: Env block to fill.
                           char **env // I: Unix environment to parse.

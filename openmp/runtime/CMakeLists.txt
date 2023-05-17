@@ -162,7 +162,6 @@ set(MIPS64 FALSE)
 set(MIPS FALSE)
 set(RISCV64 FALSE)
 set(KVX FALSE)
-
 if("${LIBOMP_ARCH}" STREQUAL "i386" OR "${LIBOMP_ARCH}" STREQUAL "32")    # IA-32 architecture
   set(IA32 TRUE)
 elseif("${LIBOMP_ARCH}" STREQUAL "x86_64" OR "${LIBOMP_ARCH}" STREQUAL "32e") # Intel(R) 64 architecture
@@ -182,7 +181,7 @@ elseif("${LIBOMP_ARCH}" STREQUAL "aarch64_a64fx") # AARCH64_A64FX architecture
 elseif("${LIBOMP_ARCH}" STREQUAL "mic") # Intel(R) Many Integrated Core Architecture
   set(MIC TRUE)
 elseif("${LIBOMP_ARCH}" STREQUAL "mips") # MIPS architecture
-  set(MIPS TRUE)
+    set(MIPS TRUE)
 elseif("${LIBOMP_ARCH}" STREQUAL "mips64") # MIPS64 architecture
     set(MIPS64 TRUE)
   elseif("${LIBOMP_ARCH}" STREQUAL "riscv64") # RISCV64 architecture

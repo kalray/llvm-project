@@ -77,7 +77,7 @@
 #endif
 
 #if (1 != KMP_OS_LINUX + KMP_OS_DRAGONFLY + KMP_OS_FREEBSD + KMP_OS_NETBSD +   \
-              KMP_OS_OPENBSD + KMP_OS_DARWIN + KMP_OS_WINDOWS + KMP_OS_HURD +   \
+              KMP_OS_OPENBSD + KMP_OS_DARWIN + KMP_OS_WINDOWS + KMP_OS_HURD +  \
               KMP_OS_CLUSTER_OS)
 #error Unknown OS
 #endif

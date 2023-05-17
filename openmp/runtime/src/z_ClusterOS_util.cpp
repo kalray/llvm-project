@@ -32,14 +32,13 @@
 #include <ctype.h>
 #include <fcntl.h>
 
-#include "tsan_annotations.h"
-
 struct kmp_sys_timer {
   struct timespec start;
 };
 
 // Convert timespec to nanoseconds.
-#define TS2NS(timespec) (((timespec).tv_sec * 1e9) + (timespec).tv_nsec)
+#define TS2NS(timespec)                                                        \
+  (((timespec).tv_sec * (long int)1e9) + (timespec).tv_nsec)
 
 static struct kmp_sys_timer __kmp_sys_timer_data;
 
@@ -73,7 +72,7 @@ static void __kmp_print_cond(char *buffer, kmp_cond_align_t *cond) {
 
 int __kmp_futex_determine_capable() {
   int loc = 0;
-  int rc = syscall(__NR_futex, &loc, FUTEX_WAKE, 1, NULL, NULL, 0);
+  long rc = syscall(__NR_futex, &loc, FUTEX_WAKE, 1, NULL, NULL, 0);
   int retval = (rc == 0) || (errno != ENOSYS);
 
   KA_TRACE(10,
@@ -87,22 +86,11 @@ int __kmp_futex_determine_capable() {
 #endif // KMP_USE_FUTEX
 
 void __kmp_terminate_thread(int gtid) {
-#ifdef KMP_CANCEL_THREADS
-  int status;
-#endif
   kmp_info_t *th = __kmp_threads[gtid];
 
   if (!th)
     return;
 
-#ifdef KMP_CANCEL_THREADS
-  KA_TRACE(10, ("__kmp_terminate_thread: kill (%d)\n", gtid));
-  status = pthread_cancel(th->th.th_info.ds.ds_thread);
-  if (status != 0 && status != ESRCH) {
-    __kmp_fatal(KMP_MSG(CantTerminateWorkerThread), KMP_ERR(status),
-                __kmp_msg_null);
-  }
-#endif
   KMP_YIELD(TRUE);
 } //
 
@@ -120,9 +108,6 @@ static kmp_int32 __kmp_set_stack_info(int gtid, kmp_info_t *th) {
 }
 
 static void *__kmp_launch_worker(void *thr) {
-#ifdef KMP_CANCEL_THREADS
-  int status, old_type, old_state;
-#endif
 #ifdef KMP_BLOCK_SIGNALS
   sigset_t new_set, old_set;
 #endif /* KMP_BLOCK_SIGNALS */
@@ -141,22 +126,6 @@ static void *__kmp_launch_worker(void *thr) {
   __kmp_stats_thread_ptr->startLife();
   KMP_SET_THREAD_STATE(IDLE);
   KMP_INIT_PARTITIONED_TIMERS(OMP_idle);
-#endif
-
-#if USE_ITT_BUILD
-  __kmp_itt_thread_name(gtid);
-#endif /* USE_ITT_BUILD */
-
-#if KMP_AFFINITY_SUPPORTED
-  __kmp_affinity_set_init_mask(gtid, FALSE);
-#endif
-
-#ifdef KMP_CANCEL_THREADS
-  status = pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, &old_type);
-  KMP_CHECK_SYSFAIL("pthread_setcanceltype", status);
-  // josh todo: isn't PTHREAD_CANCEL_ENABLE default for newly-created threads?
-  status = pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, &old_state);
-  KMP_CHECK_SYSFAIL("pthread_setcancelstate", status);
 #endif
 
 #ifdef KMP_BLOCK_SIGNALS
@@ -208,23 +177,10 @@ static void *__kmp_launch_monitor(void *thr) {
 
   KMP_MB();
 
-#if USE_ITT_BUILD
-  // Instruct Intel(R) Threading Tools to ignore monitor thread.
-  __kmp_itt_thread_ignore();
-#endif /* USE_ITT_BUILD */
-
   __kmp_set_stack_info(((kmp_info_t *)thr)->th.th_info.ds.ds_gtid,
                        (kmp_info_t *)thr);
 
   __kmp_check_stack_overlap((kmp_info_t *)thr);
-
-#ifdef KMP_CANCEL_THREADS
-  status = pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, &old_type);
-  KMP_CHECK_SYSFAIL("pthread_setcanceltype", status);
-  // josh todo: isn't PTHREAD_CANCEL_ENABLE default for newly-created threads?
-  status = pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, &old_state);
-  KMP_CHECK_SYSFAIL("pthread_setcancelstate", status);
-#endif
 
 #if KMP_REAL_TIME_FIX
   // This is a potential fix which allows application with real-time scheduling
@@ -677,7 +633,6 @@ void __kmp_reap_monitor(kmp_info_t *th) {
 #endif // KMP_USE_MONITOR
 
 void __kmp_reap_worker(kmp_info_t *th) {
-  int status;
   void *exit_val;
 
   KMP_MB(); /* Flush all pending memory write invalidates.  */
@@ -685,8 +640,8 @@ void __kmp_reap_worker(kmp_info_t *th) {
   KA_TRACE(
       10, ("__kmp_reap_worker: try to reap T#%d\n", th->th.th_info.ds.ds_gtid));
 
-  status = pthread_join(th->th.th_info.ds.ds_thread, &exit_val);
 #ifdef KMP_DEBUG
+  int status = pthread_join(th->th.th_info.ds.ds_thread, &exit_val);
   /* Don't expose these to the user until we understand when they trigger */
   if (status != 0) {
     __kmp_fatal(KMP_MSG(ReapWorkerError), KMP_ERR(status), __kmp_msg_null);
@@ -696,6 +651,8 @@ void __kmp_reap_worker(kmp_info_t *th) {
                   "exit_val = %p\n",
                   th->th.th_info.ds.ds_gtid, exit_val));
   }
+#else
+  pthread_join(th->th.th_info.ds.ds_thread, &exit_val);
 #endif /* KMP_DEBUG */
 
   KA_TRACE(10, ("__kmp_reap_worker: done reaping T#%d\n",
@@ -732,6 +689,7 @@ static void __kmp_team_handler(int signo) {
       if (__kmp_debug_buf) {
         __kmp_dump_debug_buffer();
       }
+      __kmp_unregister_library(); // cleanup shared memory
       KMP_MB(); // Flush all pending memory write invalidates.
       TCW_4(__kmp_global.g.g_abort, signo);
       KMP_MB(); // Flush all pending memory write invalidates.
@@ -832,29 +790,9 @@ void __kmp_remove_signals(void) {
 #endif // KMP_HANDLE_SIGNALS
 
 void __kmp_enable(int new_state) {
-#ifdef KMP_CANCEL_THREADS
-  int status, old_state;
-  status = pthread_setcancelstate(new_state, &old_state);
-  KMP_CHECK_SYSFAIL("pthread_setcancelstate", status);
-  KMP_DEBUG_ASSERT(old_state == PTHREAD_CANCEL_DISABLE);
-#endif
 }
 
 void __kmp_disable(int *old_state) {
-#ifdef KMP_CANCEL_THREADS
-  int status;
-  status = pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, old_state);
-  KMP_CHECK_SYSFAIL("pthread_setcancelstate", status);
-#endif
-}
-
-void __kmp_register_atfork(void) {
-  // ADDED compared to z_Linux_util.cpp
-  // ClusterOS doesn't use processes, this function is only used with UNIX
-  // sytems.
-  __kmp_msg(kmp_ms_warning,
-            KMP_MSG(LibNotSupport, "ClusterOS", "__kmp_register_atfork"), NULL,
-            __kmp_msg_null);
 }
 
 void __kmp_suspend_initialize(void) {
@@ -866,7 +804,6 @@ void __kmp_suspend_initialize(void) {
 }
 
 void __kmp_suspend_initialize_thread(kmp_info_t *th) {
-  ANNOTATE_HAPPENS_AFTER(&th->th.th_suspend_init_count);
   int old_value = KMP_ATOMIC_LD_RLX(&th->th.th_suspend_init_count);
   int new_value = __kmp_fork_count + 1;
   // Return if already initialized
@@ -888,7 +825,6 @@ void __kmp_suspend_initialize_thread(kmp_info_t *th) {
                                 &__kmp_suspend_mutex_attr);
     KMP_CHECK_SYSFAIL("pthread_mutex_init", status);
     KMP_ATOMIC_ST_REL(&th->th.th_suspend_init_count, new_value);
-    ANNOTATE_HAPPENS_BEFORE(&th->th.th_suspend_init_count);
   }
 }
 
@@ -941,8 +877,7 @@ static inline void __kmp_suspend_template(int th_gtid, C *flag) {
 
   __kmp_suspend_initialize_thread(th);
 
-  status = pthread_mutex_lock(&th->th.th_suspend_mx.m_mutex);
-  KMP_CHECK_SYSFAIL("pthread_mutex_lock", status);
+  __kmp_lock_suspend_mx(th);
 
   KF_TRACE(10, ("__kmp_suspend_template: T#%d setting sleep bit for spin(%p)\n",
                 th_gtid, flag->get()));
@@ -950,19 +885,24 @@ static inline void __kmp_suspend_template(int th_gtid, C *flag) {
   /* TODO: shouldn't this use release semantics to ensure that
      __kmp_suspend_initialize_thread gets called first? */
   old_spin = flag->set_sleeping();
+  TCW_PTR(th->th.th_sleep_loc, (void *)flag);
+  th->th.th_sleep_loc_type = flag->get_type();
   if (__kmp_dflt_blocktime == KMP_MAX_BLOCKTIME &&
       __kmp_pause_status != kmp_soft_paused) {
     flag->unset_sleeping();
-    status = pthread_mutex_unlock(&th->th.th_suspend_mx.m_mutex);
-    KMP_CHECK_SYSFAIL("pthread_mutex_unlock", status);
+    TCW_PTR(th->th.th_sleep_loc, NULL);
+    th->th.th_sleep_loc_type = flag_unset;
+    __kmp_unlock_suspend_mx(th);
     return;
   }
   KF_TRACE(5, ("__kmp_suspend_template: T#%d set sleep bit for spin(%p)==%x,"
                " was %x\n",
                th_gtid, flag->get(), flag->load(), old_spin));
 
-  if (flag->done_check_val(old_spin)) {
-    old_spin = flag->unset_sleeping();
+  if (flag->done_check_val(old_spin) || flag->done_check()) {
+    flag->unset_sleeping();
+    TCW_PTR(th->th.th_sleep_loc, NULL);
+    th->th.th_sleep_loc_type = flag_unset;
     KF_TRACE(5, ("__kmp_suspend_template: T#%d false alarm, reset sleep bit "
                  "for spin(%p)\n",
                  th_gtid, flag->get()));
@@ -971,7 +911,6 @@ static inline void __kmp_suspend_template(int th_gtid, C *flag) {
        "with low probability" return when the condition variable has
        not been signaled or broadcast */
     int deactivated = FALSE;
-    TCW_PTR(th->th.th_sleep_loc, (void *)flag);
 
     while (flag->is_sleeping()) {
 #ifdef DEBUG_SUSPEND
@@ -992,6 +931,9 @@ static inline void __kmp_suspend_template(int th_gtid, C *flag) {
         }
         deactivated = TRUE;
       }
+
+      KMP_DEBUG_ASSERT(th->th.th_sleep_loc);
+      KMP_DEBUG_ASSERT(flag->get_type() == th->th.th_sleep_loc_type);
 
 #if USE_SUSPEND_TIMEOUT
       struct timespec now;
@@ -1017,10 +959,22 @@ static inline void __kmp_suspend_template(int th_gtid, C *flag) {
                     th_gtid));
       status = pthread_cond_wait(&th->th.th_suspend_cv.c_cond,
                                  &th->th.th_suspend_mx.m_mutex);
-#endif
+#endif // USE_SUSPEND_TIMEOUT
 
       if ((status != 0) && (status != EINTR) && (status != ETIMEDOUT)) {
         KMP_SYSFAIL("pthread_cond_wait", status);
+      }
+
+      KMP_DEBUG_ASSERT(flag->get_type() == flag->get_ptr_type());
+
+      if (!flag->is_sleeping() &&
+          ((status == EINTR) || (status == ETIMEDOUT))) {
+        // if interrupt or timeout, and thread is no longer sleeping, we need to
+        // make sure sleep_loc gets reset; however, this shouldn't be needed if
+        // we woke up with resume
+        flag->unset_sleeping();
+        TCW_PTR(th->th.th_sleep_loc, NULL);
+        th->th.th_sleep_loc_type = flag_unset;
       }
 #ifdef KMP_DEBUG
       if (status == ETIMEDOUT) {
@@ -1031,6 +985,8 @@ static inline void __kmp_suspend_template(int th_gtid, C *flag) {
           KF_TRACE(2, ("__kmp_suspend_template: T#%d timeout wakeup, sleep bit "
                        "not set!\n",
                        th_gtid));
+          TCW_PTR(th->th.th_sleep_loc, NULL);
+          th->th.th_sleep_loc_type = flag_unset;
         }
       } else if (flag->is_sleeping()) {
         KF_TRACE(100,
@@ -1048,6 +1004,13 @@ static inline void __kmp_suspend_template(int th_gtid, C *flag) {
       }
     }
   }
+  // We may have had the loop variable set before entering the loop body;
+  // so we need to reset sleep_loc.
+  TCW_PTR(th->th.th_sleep_loc, NULL);
+  th->th.th_sleep_loc_type = flag_unset;
+
+  KMP_DEBUG_ASSERT(!flag->is_sleeping());
+  KMP_DEBUG_ASSERT(!th->th.th_sleep_loc);
 #ifdef DEBUG_SUSPEND
   {
     char buffer[128];
@@ -1057,8 +1020,7 @@ static inline void __kmp_suspend_template(int th_gtid, C *flag) {
   }
 #endif
 
-  status = pthread_mutex_unlock(&th->th.th_suspend_mx.m_mutex);
-  KMP_CHECK_SYSFAIL("pthread_mutex_unlock", status);
+  __kmp_unlock_suspend_mx(th);
   KF_TRACE(30, ("__kmp_suspend_template: T#%d exit\n", th_gtid));
 }
 
@@ -1070,6 +1032,10 @@ template <bool C, bool S>
 void __kmp_suspend_64(int th_gtid, kmp_flag_64<C, S> *flag) {
   __kmp_suspend_template(th_gtid, flag);
 }
+template <bool C, bool S>
+void __kmp_atomic_suspend_64(int th_gtid, kmp_atomic_flag_64<C, S> *flag) {
+  __kmp_suspend_template(th_gtid, flag);
+}
 void __kmp_suspend_oncore(int th_gtid, kmp_flag_oncore *flag) {
   __kmp_suspend_template(th_gtid, flag);
 }
@@ -1077,6 +1043,10 @@ void __kmp_suspend_oncore(int th_gtid, kmp_flag_oncore *flag) {
 template void __kmp_suspend_32<false, false>(int, kmp_flag_32<false, false> *);
 template void __kmp_suspend_64<false, true>(int, kmp_flag_64<false, true> *);
 template void __kmp_suspend_64<true, false>(int, kmp_flag_64<true, false> *);
+template void
+__kmp_atomic_suspend_64<false, true>(int, kmp_atomic_flag_64<false, true> *);
+template void
+__kmp_atomic_suspend_64<true, false>(int, kmp_atomic_flag_64<true, false> *);
 
 /* This routine signals the thread specified by target_gtid to wake up
    after setting the sleep bit indicated by the flag argument to FALSE.
@@ -1097,42 +1067,52 @@ static inline void __kmp_resume_template(int target_gtid, C *flag) {
 
   __kmp_suspend_initialize_thread(th);
 
-  status = pthread_mutex_lock(&th->th.th_suspend_mx.m_mutex);
-  KMP_CHECK_SYSFAIL("pthread_mutex_lock", status);
+  __kmp_lock_suspend_mx(th);
 
-  if (!flag) { // coming from __kmp_null_resume_wrapper
+  if (!flag || flag != th->th.th_sleep_loc) {
+    // coming from __kmp_null_resume_wrapper, or thread is now sleeping on a
+    // different location; wake up at new location
     flag = (C *)CCAST(void *, th->th.th_sleep_loc);
   }
 
   // First, check if the flag is null or its type has changed. If so, someone
   // else woke it up.
-  if (!flag || flag->get_type() != flag->get_ptr_type()) { // get_ptr_type
-    // simply shows what
-    // flag was cast to
+  if (!flag) { // Thread doesn't appear to be sleeping on anything
     KF_TRACE(5, ("__kmp_resume_template: T#%d exiting, thread T#%d already "
                  "awake: flag(%p)\n",
-                 gtid, target_gtid, NULL));
-    status = pthread_mutex_unlock(&th->th.th_suspend_mx.m_mutex);
-    KMP_CHECK_SYSFAIL("pthread_mutex_unlock", status);
+                 gtid, target_gtid, (void *)NULL));
+    __kmp_unlock_suspend_mx(th);
+    return;
+  } else if (flag->get_type() != th->th.th_sleep_loc_type) {
+    // Flag type does not appear to match this function template; possibly the
+    // thread is sleeping on something else. Try null resume again.
+    KF_TRACE(
+        5,
+        ("__kmp_resume_template: T#%d retrying, thread T#%d Mismatch flag(%p), "
+         "spin(%p) type=%d ptr_type=%d\n",
+         gtid, target_gtid, flag, flag->get(), flag->get_type(),
+         th->th.th_sleep_loc_type));
+    __kmp_unlock_suspend_mx(th);
+    __kmp_null_resume_wrapper(th);
     return;
   } else { // if multiple threads are sleeping, flag should be internally
     // referring to a specific thread here
-    typename C::flag_t old_spin = flag->unset_sleeping();
-    if (!flag->is_sleeping_val(old_spin)) {
+    if (!flag->is_sleeping()) {
       KF_TRACE(5, ("__kmp_resume_template: T#%d exiting, thread T#%d already "
-                   "awake: flag(%p): "
-                   "%u => %u\n",
-                   gtid, target_gtid, flag->get(), old_spin, flag->load()));
-      status = pthread_mutex_unlock(&th->th.th_suspend_mx.m_mutex);
-      KMP_CHECK_SYSFAIL("pthread_mutex_unlock", status);
+                   "awake: flag(%p): %u\n",
+                   gtid, target_gtid, flag->get(), (unsigned int)flag->load()));
+      __kmp_unlock_suspend_mx(th);
       return;
     }
-    KF_TRACE(5, ("__kmp_resume_template: T#%d about to wakeup T#%d, reset "
-                 "sleep bit for flag's loc(%p): "
-                 "%u => %u\n",
-                 gtid, target_gtid, flag->get(), old_spin, flag->load()));
   }
+  KMP_DEBUG_ASSERT(flag);
+  flag->unset_sleeping();
   TCW_PTR(th->th.th_sleep_loc, NULL);
+  th->th.th_sleep_loc_type = flag_unset;
+
+  KF_TRACE(5, ("__kmp_resume_template: T#%d about to wakeup T#%d, reset "
+               "sleep bit for flag's loc(%p): %u\n",
+               gtid, target_gtid, flag->get(), (unsigned int)flag->load()));
 
 #ifdef DEBUG_SUSPEND
   {
@@ -1144,8 +1124,7 @@ static inline void __kmp_resume_template(int target_gtid, C *flag) {
 #endif
   status = pthread_cond_signal(&th->th.th_suspend_cv.c_cond);
   KMP_CHECK_SYSFAIL("pthread_cond_signal", status);
-  status = pthread_mutex_unlock(&th->th.th_suspend_mx.m_mutex);
-  KMP_CHECK_SYSFAIL("pthread_mutex_unlock", status);
+  __kmp_unlock_suspend_mx(th);
   KF_TRACE(30, ("__kmp_resume_template: T#%d exiting after signaling wake up"
                 " for T#%d\n",
                 gtid, target_gtid));
@@ -1159,12 +1138,19 @@ template <bool C, bool S>
 void __kmp_resume_64(int target_gtid, kmp_flag_64<C, S> *flag) {
   __kmp_resume_template(target_gtid, flag);
 }
+template <bool C, bool S>
+void __kmp_atomic_resume_64(int target_gtid, kmp_atomic_flag_64<C, S> *flag) {
+  __kmp_resume_template(target_gtid, flag);
+}
 void __kmp_resume_oncore(int target_gtid, kmp_flag_oncore *flag) {
   __kmp_resume_template(target_gtid, flag);
 }
 
 template void __kmp_resume_32<false, true>(int, kmp_flag_32<false, true> *);
+template void __kmp_resume_32<false, false>(int, kmp_flag_32<false, false> *);
 template void __kmp_resume_64<false, true>(int, kmp_flag_64<false, true> *);
+template void
+__kmp_atomic_resume_64<false, true>(int, kmp_atomic_flag_64<false, true> *);
 
 #if KMP_USE_MONITOR
 void __kmp_resume_monitor() {
@@ -1233,12 +1219,21 @@ double __kmp_read_cpu_time(void) {
 
   /*t =*/times(&buffer);
 
-  return (buffer.tms_utime + buffer.tms_cutime) / (double)CLOCKS_PER_SEC;
+  return (double)(buffer.tms_utime + buffer.tms_cutime) /
+         (double)CLOCKS_PER_SEC;
 }
 
 int __kmp_read_system_info(struct kmp_sys_info *info) {
-  printf("__kmp_read_system_info uninmplemented for COS\n");
-  return 0;
+  info->maxrss = 0; /* the maximum resident set size utilized (in kilobytes) */
+  info->minflt = 0; /* the number of page faults serviced without any I/O */
+  info->majflt = 0; /* the number of page faults serviced that required I/O */
+  info->nswap = 0; // the number of times a process was "swapped" out of memory
+  info->inblock = 0; // the number of times the file system had to perform input
+  info->oublock = 0; // number of times the file system had to perform output
+  info->nvcsw = 0; /* the number of times a context switch was voluntarily */
+  info->nivcsw = 0; /* the number of times a context switch was forced */
+
+  return 1;
 }
 
 void __kmp_read_system_time(double *delta) {
@@ -1250,7 +1245,7 @@ void __kmp_read_system_time(double *delta) {
   status = gettimeofday(&tval, NULL);
   KMP_CHECK_SYSFAIL_ERRNO("gettimeofday", status);
   TIMEVAL_TO_TIMESPEC(&tval, &stop);
-  t_ns = TS2NS(stop) - TS2NS(__kmp_sys_timer_data.start);
+  t_ns = (double)(TS2NS(stop) - TS2NS(__kmp_sys_timer_data.start));
   *delta = (t_ns * 1e-9);
 }
 
@@ -1298,7 +1293,7 @@ void __kmp_runtime_initialize(void) {
   if (sysconf(_SC_THREADS)) {
 
     /* Query the maximum number of threads */
-    __kmp_sys_max_nth = sysconf(_SC_THREAD_THREADS_MAX);
+    __kmp_type_convert(sysconf(_SC_THREAD_THREADS_MAX), &(__kmp_sys_max_nth));
     if (__kmp_sys_max_nth == -1) {
       /* Unlimited threads for NPTL */
       __kmp_sys_max_nth = INT_MAX;
@@ -1324,13 +1319,14 @@ void __kmp_runtime_initialize(void) {
   KMP_CHECK_SYSFAIL("pthread_mutexattr_init", status);
   status = pthread_mutex_init(&__kmp_wait_mx.m_mutex, &mutex_attr);
   KMP_CHECK_SYSFAIL("pthread_mutex_init", status);
+  status = pthread_mutexattr_destroy(&mutex_attr);
+  KMP_CHECK_SYSFAIL("pthread_mutexattr_destroy", status);
   status = pthread_condattr_init(&cond_attr);
   KMP_CHECK_SYSFAIL("pthread_condattr_init", status);
   status = pthread_cond_init(&__kmp_wait_cv.c_cond, &cond_attr);
   KMP_CHECK_SYSFAIL("pthread_cond_init", status);
-#if USE_ITT_BUILD
-  __kmp_itt_initialize();
-#endif /* USE_ITT_BUILD */
+  status = pthread_condattr_destroy(&cond_attr);
+  KMP_CHECK_SYSFAIL("pthread_condattr_destroy", status);
 
   __kmp_init_runtime = TRUE;
 }
@@ -1341,10 +1337,6 @@ void __kmp_runtime_destroy(void) {
   if (!__kmp_init_runtime) {
     return; // Nothing to do.
   }
-
-#if USE_ITT_BUILD
-  __kmp_itt_destroy();
-#endif /* USE_ITT_BUILD */
 
   status = pthread_key_delete(__kmp_gtid_threadprivate_key);
   KMP_CHECK_SYSFAIL("pthread_key_delete", status);
@@ -1357,10 +1349,6 @@ void __kmp_runtime_destroy(void) {
   if (status != 0 && status != EBUSY) {
     KMP_SYSFAIL("pthread_cond_destroy", status);
   }
-#if KMP_AFFINITY_SUPPORTED
-  __kmp_affinity_uninitialize();
-#endif
-
   __kmp_init_runtime = FALSE;
 }
 
@@ -1370,22 +1358,12 @@ void __kmp_thread_sleep(int millis) { sleep((millis + 500) / 1000); }
 
 /* Calculate the elapsed wall clock time for the user */
 void __kmp_elapsed(double *t) {
-  int status;
-#ifdef FIX_SGI_CLOCK
-  struct timespec ts;
-
-  status = clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts);
-  KMP_CHECK_SYSFAIL_ERRNO("clock_gettime", status);
-  *t =
-      (double)ts.tv_nsec * (1.0 / (double)KMP_NSEC_PER_SEC) + (double)ts.tv_sec;
-#else
   struct timeval tv;
 
-  status = gettimeofday(&tv, NULL);
+  int status = gettimeofday(&tv, NULL);
   KMP_CHECK_SYSFAIL_ERRNO("gettimeofday", status);
   *t =
       (double)tv.tv_usec * (1.0 / (double)KMP_USEC_PER_SEC) + (double)tv.tv_sec;
-#endif
 }
 
 /* Calculate the elapsed wall clock tick for the user */
@@ -1551,165 +1529,40 @@ int __kmp_invoke_microtask(microtask_t pkfn, int gtid, int tid, int argc,
   return 1;
 }
 
-// Functions for hidden helper task
-namespace {
-// Condition variable for initializing hidden helper team
-pthread_cond_t hidden_helper_threads_initz_cond_var;
-pthread_mutex_t hidden_helper_threads_initz_lock;
-volatile int hidden_helper_initz_signaled = FALSE;
-
-// Condition variable for deinitializing hidden helper team
-pthread_cond_t hidden_helper_threads_deinitz_cond_var;
-pthread_mutex_t hidden_helper_threads_deinitz_lock;
-volatile int hidden_helper_deinitz_signaled = FALSE;
-
-// Condition variable for the wrapper function of main thread
-pthread_cond_t hidden_helper_main_thread_cond_var;
-pthread_mutex_t hidden_helper_main_thread_lock;
-volatile int hidden_helper_main_thread_signaled = FALSE;
-
-// Semaphore for worker threads. We don't use condition variable here in case
-// that when multiple signals are sent at the same time, only one thread might
-// be waken.
-sem_t hidden_helper_task_sem;
-} // namespace
-
 void __kmp_hidden_helper_worker_thread_wait() {
-  int status = sem_wait(&hidden_helper_task_sem);
-  KMP_CHECK_SYSFAIL("sem_wait", status);
+  KMP_ASSERT(0 && "Hidden helper task is not supported on this OS");
 }
 
 void __kmp_do_initialize_hidden_helper_threads() {
-  // Initialize condition variable
-  int status =
-      pthread_cond_init(&hidden_helper_threads_initz_cond_var, nullptr);
-  KMP_CHECK_SYSFAIL("pthread_cond_init", status);
-
-  status = pthread_cond_init(&hidden_helper_threads_deinitz_cond_var, nullptr);
-  KMP_CHECK_SYSFAIL("pthread_cond_init", status);
-
-  status = pthread_cond_init(&hidden_helper_main_thread_cond_var, nullptr);
-  KMP_CHECK_SYSFAIL("pthread_cond_init", status);
-
-  status = pthread_mutex_init(&hidden_helper_threads_initz_lock, nullptr);
-  KMP_CHECK_SYSFAIL("pthread_mutex_init", status);
-
-  status = pthread_mutex_init(&hidden_helper_threads_deinitz_lock, nullptr);
-  KMP_CHECK_SYSFAIL("pthread_mutex_init", status);
-
-  status = pthread_mutex_init(&hidden_helper_main_thread_lock, nullptr);
-  KMP_CHECK_SYSFAIL("pthread_mutex_init", status);
-
-  // Initialize the semaphore
-  status = sem_init(&hidden_helper_task_sem, 0, 0);
-  KMP_CHECK_SYSFAIL("sem_init", status);
-
-  // Create a new thread to finish initialization
-  pthread_t handle;
-  status = pthread_create(
-      &handle, nullptr,
-      [](void *) -> void * {
-        __kmp_hidden_helper_threads_initz_routine();
-        return nullptr;
-      },
-      nullptr);
-  KMP_CHECK_SYSFAIL("pthread_create", status);
+  KMP_ASSERT(0 && "Hidden helper task is not supported on this OS");
 }
 
 void __kmp_hidden_helper_threads_initz_wait() {
-  // Initial thread waits here for the completion of the initialization. The
-  // condition variable will be notified by main thread of hidden helper teams.
-  int status = pthread_mutex_lock(&hidden_helper_threads_initz_lock);
-  KMP_CHECK_SYSFAIL("pthread_mutex_lock", status);
-
-  if (!TCR_4(hidden_helper_initz_signaled)) {
-    status = pthread_cond_wait(&hidden_helper_threads_initz_cond_var,
-                               &hidden_helper_threads_initz_lock);
-    KMP_CHECK_SYSFAIL("pthread_cond_wait", status);
-  }
-
-  status = pthread_mutex_unlock(&hidden_helper_threads_initz_lock);
-  KMP_CHECK_SYSFAIL("pthread_mutex_unlock", status);
+  KMP_ASSERT(0 && "Hidden helper task is not supported on this OS");
 }
 
 void __kmp_hidden_helper_initz_release() {
-  // After all initialization, reset __kmp_init_hidden_helper_threads to false.
-  int status = pthread_mutex_lock(&hidden_helper_threads_initz_lock);
-  KMP_CHECK_SYSFAIL("pthread_mutex_lock", status);
-
-  status = pthread_cond_signal(&hidden_helper_threads_initz_cond_var);
-  KMP_CHECK_SYSFAIL("pthread_cond_wait", status);
-
-  TCW_SYNC_4(hidden_helper_initz_signaled, TRUE);
-
-  status = pthread_mutex_unlock(&hidden_helper_threads_initz_lock);
-  KMP_CHECK_SYSFAIL("pthread_mutex_unlock", status);
+  KMP_ASSERT(0 && "Hidden helper task is not supported on this OS");
 }
 
 void __kmp_hidden_helper_main_thread_wait() {
-  // The main thread of hidden helper team will be blocked here. The
-  // condition variable can only be signal in the destructor of RTL.
-  int status = pthread_mutex_lock(&hidden_helper_main_thread_lock);
-  KMP_CHECK_SYSFAIL("pthread_mutex_lock", status);
-
-  if (!TCR_4(hidden_helper_main_thread_signaled)) {
-    status = pthread_cond_wait(&hidden_helper_main_thread_cond_var,
-                               &hidden_helper_main_thread_lock);
-    KMP_CHECK_SYSFAIL("pthread_cond_wait", status);
-  }
-
-  status = pthread_mutex_unlock(&hidden_helper_main_thread_lock);
-  KMP_CHECK_SYSFAIL("pthread_mutex_unlock", status);
+  KMP_ASSERT(0 && "Hidden helper task is not supported on this OS");
 }
 
 void __kmp_hidden_helper_main_thread_release() {
-  // The initial thread of OpenMP RTL should call this function to wake up the
-  // main thread of hidden helper team.
-  int status = pthread_mutex_lock(&hidden_helper_main_thread_lock);
-  KMP_CHECK_SYSFAIL("pthread_mutex_lock", status);
-
-  status = pthread_cond_signal(&hidden_helper_main_thread_cond_var);
-  KMP_CHECK_SYSFAIL("pthread_cond_signal", status);
-
-  // The hidden helper team is done here
-  TCW_SYNC_4(hidden_helper_main_thread_signaled, TRUE);
-
-  status = pthread_mutex_unlock(&hidden_helper_main_thread_lock);
-  KMP_CHECK_SYSFAIL("pthread_mutex_unlock", status);
+  KMP_ASSERT(0 && "Hidden helper task is not supported on this OS");
 }
 
 void __kmp_hidden_helper_worker_thread_signal() {
-  int status = sem_post(&hidden_helper_task_sem);
-  KMP_CHECK_SYSFAIL("sem_post", status);
+  KMP_ASSERT(0 && "Hidden helper task is not supported on this OS");
 }
 
 void __kmp_hidden_helper_threads_deinitz_wait() {
-  // Initial thread waits here for the completion of the deinitialization. The
-  // condition variable will be notified by main thread of hidden helper teams.
-  int status = pthread_mutex_lock(&hidden_helper_threads_deinitz_lock);
-  KMP_CHECK_SYSFAIL("pthread_mutex_lock", status);
-
-  if (!TCR_4(hidden_helper_deinitz_signaled)) {
-    status = pthread_cond_wait(&hidden_helper_threads_deinitz_cond_var,
-                               &hidden_helper_threads_deinitz_lock);
-    KMP_CHECK_SYSFAIL("pthread_cond_wait", status);
-  }
-
-  status = pthread_mutex_unlock(&hidden_helper_threads_deinitz_lock);
-  KMP_CHECK_SYSFAIL("pthread_mutex_unlock", status);
+  KMP_ASSERT(0 && "Hidden helper task is not supported on this OS");
 }
 
 void __kmp_hidden_helper_threads_deinitz_release() {
-  int status = pthread_mutex_lock(&hidden_helper_threads_deinitz_lock);
-  KMP_CHECK_SYSFAIL("pthread_mutex_lock", status);
-
-  status = pthread_cond_signal(&hidden_helper_threads_deinitz_cond_var);
-  KMP_CHECK_SYSFAIL("pthread_cond_wait", status);
-
-  TCW_SYNC_4(hidden_helper_deinitz_signaled, TRUE);
-
-  status = pthread_mutex_unlock(&hidden_helper_threads_deinitz_lock);
-  KMP_CHECK_SYSFAIL("pthread_mutex_unlock", status);
+  KMP_ASSERT(0 && "Hidden helper task is not supported on this OS");
 }
 
 // end of file //

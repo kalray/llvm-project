@@ -90,7 +90,7 @@ add_subdirectory(runtime)
 add_subdirectory(libompd)
 
 if (OPENMP_ENABLE_LIBOMPTARGET)
-  # Check that the library can acutally be built.
+  # Check that the library can actually be built.
   if (APPLE OR WIN32 OR KVX)
     message(FATAL_ERROR "libomptarget cannot be built on Windows and MacOS X!")
   elseif (NOT OPENMP_HAVE_STD_CPP14_FLAG)

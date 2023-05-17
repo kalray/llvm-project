@@ -1276,6 +1276,9 @@ bool __kmp_atomic_compare_store_rel(std::atomic<T> *p, T expected, T desired) {
 extern void *__kmp_lookup_symbol(const char *name);
 #define KMP_DLSYM(name) __kmp_lookup_symbol(name)
 #define KMP_DLSYM_NEXT(name) nullptr
+#elif KMP_OS_CLUSTER_OS
+#define KMP_DLSYM(name) nullptr
+#define KMP_DLSYM_NEXT(name) nullptr
 #else
 #define KMP_DLSYM(name) dlsym(RTLD_DEFAULT, name)
 #define KMP_DLSYM_NEXT(name) dlsym(RTLD_NEXT, name)

@@ -200,16 +200,11 @@ int __kmp_get_global_thread_id() {
   if (i < 0)
     return i;
 
-#if KMP_OS_CLUSTER_OS
-// FIXME: The following test is disabled for ClusterOS since
-// StackOverflow detection doesn't seem properly supported.
-#else
   /* dynamically updated stack window for uber threads to avoid get_specific
      call */
   if (!TCR_4(other_threads[i]->th.th_info.ds.ds_stackgrow)) {
     KMP_FATAL(StackOverflow, i);
   }
-#endif
 
   stack_base = (char *)other_threads[i]->th.th_info.ds.ds_stackbase;
   if (stack_addr > stack_base) {
@@ -6865,14 +6860,8 @@ void __kmp_unregister_library(void) {
   value = __kmp_env_get(name);
 #endif
 
-#if KMP_OS_CLUSTER_OS
-  // FIXME: The following asserts are disabled for ClusterOS since
-  // __kmp_registration_flag and __kmp_registration_str doesn't seem
-  // to be correctly initialized.
-#else
   KMP_DEBUG_ASSERT(__kmp_registration_flag != 0);
   KMP_DEBUG_ASSERT(__kmp_registration_str != NULL);
-#endif
   if (value != NULL && strcmp(value, __kmp_registration_str) == 0) {
 //  Ok, this is our variable. Delete it.
 #if defined(KMP_USE_SHM)

@@ -1420,12 +1420,13 @@ int FTN_STDCALL KMP_EXPAND_NAME(FTN_PAUSE_RESOURCE)(kmp_pause_status_t kind,
   else {
 #if KMP_OS_CLUSTER_OS
     return 1;
-#endif
+#else
     int (*fptr)(kmp_pause_status_t, int);
     if ((*(void **)(&fptr) = KMP_DLSYM("tgt_pause_resource")))
       return (*fptr)(kind, device_num);
     else
       return 1; // just fail if there is no libomptarget
+#endif
   }
 #endif
 }
@@ -1433,7 +1434,7 @@ int FTN_STDCALL KMP_EXPAND_NAME(FTN_PAUSE_RESOURCE)(kmp_pause_status_t kind,
 // Compiler will ensure that this is only called from host in sequential region
 int FTN_STDCALL
     KMP_EXPAND_NAME(FTN_PAUSE_RESOURCE_ALL)(kmp_pause_status_t kind) {
-#ifdef KMP_STUB || KMP_OS_CLUSTER_OS
+#if defined(KMP_STUB) || defined(KMP_OS_CLUSTER_OS)
   return 1; // just fail
 #else
   int fails = 0;
