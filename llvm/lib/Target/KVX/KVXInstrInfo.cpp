@@ -1124,13 +1124,13 @@ bool KVXInstrInfo::isProfitableToIfCvt(MachineBasicBlock &MBB,
 
   bool OneDefines = false;
   for (const auto &I : MBB) {
-    if (I.isDebugInstr())
+    if (I.isDebugInstr() || !I.getNumExplicitDefs())
       continue;
 
     if (OneDefines)
       return false;
 
-    OneDefines |= (I.getOperand(0).isReg() && I.getOperand(0).isDef());
+    OneDefines = true;
   }
   return true;
 }
