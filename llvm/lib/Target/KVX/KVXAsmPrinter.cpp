@@ -117,7 +117,7 @@ void KVXAsmPrinter::emitInstruction(const MachineInstr *MI) {
   // To avoid test crashes dumping a stack trace, avoid
   // using emitRawText when requested to emit object files.
   if (OutStreamer->hasRawTextSupport())
-    OutStreamer->emitRawText(StringRef("\t;;\n"));
+    OutStreamer->emitRawText(StringRef("\t;;"));
 }
 
 bool KVXAsmPrinter::PrintAsmOperand(const MachineInstr *MI, unsigned OpNo,
