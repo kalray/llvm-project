@@ -165,15 +165,6 @@ void KVXPostPacketizer::runOnPacket(std::vector<MachineInstr *> &Packet,
                                     SUnit *ExitSU) {
   assert(!Packet.empty());
 
-  // Move solo instructions above the future bundle
-  // NOTE: not all instructions are scheduled (debug instrutions are not), so
-  // we need to investigate all instructions between the beginning and the
-  // end of the bundle.
-  MachineInstr *MIFirst = Packet.front();
-  auto MIFirstIter = MIFirst->getIterator();
-  MachineInstr *MILast = Packet.back();
-  MachineBasicBlock::iterator MISoloInsertPoint = MILast->getIterator();
-
 #ifndef NDEBUG
   const Function &F = MBB->getParent()->getFunction();
   const Module *M = F.getParent();
@@ -182,49 +173,56 @@ void KVXPostPacketizer::runOnPacket(std::vector<MachineInstr *> &Packet,
 
 #ifndef NDEBUG
   KDEBUG("Potential packet to examine:");
-  debugPrintPacket(MBB, MIFirst, MILast, &MST);
+  debugPrintPacket(MBB, Packet.front(), Packet.back(), &MST);
   KDEBUG("End of packet");
 #endif
 
-  KDEBUG("Moving solo instructions after the bundle...");
-  auto PI = Packet.begin(); // manual iteration through the packet
+#ifndef NDEBUG
+  if (Packet.size() > 1)
+    for (MachineInstr *MI : Packet)
+      assert(!TII->isSoloInstruction(*MI) &&
+             "The solo instruction is not alone in the packet!");
+#endif
+
+  MachineInstr *SoloMI =
+      TII->isSoloInstruction(*Packet.front()) ? Packet.front() : nullptr;
+
+  // The packet might have unscheduled solo instructions such as DBG_VALUE
+  // or DBG_LABEL. These instructions are not scheduled (so they are not part
+  // of the packet), and yet they could be between two instructions of the same
+  // packet:
+  //    INST1 at cycle 2
+  //    DBG_VALUE
+  //    INST2 at cycle 2
+  //
+  // These must be moved after the last instruction of the bundle.
+
+  MachineInstr *MIFirst = Packet.front();
+  auto MIFirstIter = MIFirst->getIterator();
+  MachineInstr *MILast = Packet.back();
+  MachineBasicBlock::iterator MISoloInsertPoint = MILast->getIterator();
+
+  KDEBUG("Moving unscheduled solo instructions after the bundle...");
   for (auto II = MIFirstIter, NII = std::next(II);
        II != MBB->end() && II != std::next(MILast->getIterator()); II = NII) {
     NII = std::next(II);
 
-    MachineInstr &MI = *II;
-    MachineInstr *MIP = &MI;
+    MachineInstr *MI = &*II;
 
-    if (TII->isSoloInstruction(MI)) {
-      if (MIP != MILast) {
+    // Move it if it is an unscheduled solo instruction
+    if (MI != SoloMI && TII->isSoloInstruction(*MI)) {
+      if (MI != MILast) {
         KDEBUG("Moving this solo instruction after bundle\n-> ");
-        LLVM_DEBUG(MIP->print(dbgs(), MST));
+        LLVM_DEBUG(MI->print(dbgs(), MST));
         // Moving after the last instruction.
         // Initially, the insert point is after the bundle. It is updated to
         // conserve the order of the moved instructions.
-        MachineInstr *Removed = MBB->remove(MIP);
+        MachineInstr *Removed = MBB->remove(MI);
         MISoloInsertPoint = MBB->insertAfter(MISoloInsertPoint, Removed);
       }
-
-      // Remove the instruction from Packet to prevent its bundling
-      // We do this only if it actually is in the packet!
-      // (indeed, some instructions are not scheduled, cf the NOTE)
-      if (*PI == MIP) {
-        PI = Packet.erase(PI);
-      }
-    } else if (*PI == MIP) {
-      // Not a solo instruction, but it is in the packet. Advance the packet
-      // iterator.
-      ++PI;
     }
   }
   KDEBUG("Moving done.");
-
-  // Do not bundle if the bundle became empty
-  if (Packet.empty()) {
-    KDEBUG("Bundle is now empty, skipping it");
-    return;
-  }
 
   // Reload iterators before bundling
   MIFirst = Packet.front();
@@ -241,19 +239,20 @@ void KVXPostPacketizer::runOnPacket(std::vector<MachineInstr *> &Packet,
   // Case 1 and 2 can be simplified to checking if MILastIter != MBB->end()
   // Case 3 means there is no terminator to bundle
   bool TerminatorExists = IsLast && std::next(MILastIter) != MBB->end();
+  bool TryBundlingTerminator = TerminatorExists && !SoloMI;
 
 #ifndef NDEBUG
   KDEBUG("Bundle content:");
   debugPrintPacket(MBB, MIFirst, MILast, &MST);
   KDEBUG("End of bundle content\n");
-  if (TerminatorExists) {
+  if (TryBundlingTerminator) {
     KDEBUG("Will attempt to bundle this terminator with it:");
     MachineInstr *MITerminator = &*std::next(MILastIter);
     LLVM_DEBUG(MITerminator->print(dbgs() << "\t", MST));
   }
 #endif
 
-  if (TerminatorExists) {
+  if (TryBundlingTerminator) {
     // Try bundling the instruction after the last instruction of the packet
     MachineInstr *MITerminator = &*std::next(MILastIter);
 #ifndef NDEBUG
